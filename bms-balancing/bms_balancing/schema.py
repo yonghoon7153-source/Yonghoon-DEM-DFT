@@ -72,6 +72,19 @@ def receipt_roles(kind: str) -> tuple:
 #:   읽히므로 pandas 는 입력 파싱을 바꿀 수 있는 축이다 — 적고 안 대면 그 서명은 무엇을 고정하는지 말할 수 없다.
 ENV_KEYS = ("python", "numpy", "scipy", "pandas", "platform")
 
+
+def env_axes_missing(env) -> list:
+    """`env` 에서 **없거나 공백뿐인** 필수 축 목록 — 환경 기록의 "존재·비공백" 규칙은 이 함수 **하나**다.
+
+    ⚠ Codex R14 후속(`f21cb648`): 규칙이 두 벌이었다. degeneracy **본문** 검사는 `str(v or "").strip()` 로
+      공백을 걸렀는데 sidecar 검사(`check_u14`)는 `in (None, "")` 이라 `"   "`·`"\t\n"` 이 통과했다.
+      우리가 회신에 적은 "존재·비공백" 이 절반만 구현돼 있었던 것이다. 두 자리가 같은 함수를 부른다.
+      `str(... or "")` 은 None·빈값을 함께 흡수하고, `.strip()` 은 유니코드 공백(NBSP 포함)까지 깎는다.
+    """
+    if not isinstance(env, dict):
+        return list(ENV_KEYS)
+    return [k for k in ENV_KEYS if not str(env.get(k) or "").strip()]
+
 #: ⚠ Codex R13 P2-1: 유한성 검사 **앞에** 타입·모양 계약이 없었다. `best_obj=true` 는 `float(True)==1.0`
 #: 이라 정상 scalar 1.0 인 정본과 "같다" 로 읽혔고, `best_p=[]`·`LLI_percent={}` 도 문제 0 이었다.
 #: 과학 값의 계약은 (a) 무엇인지 (b) 몇 개인지 (c) 유한한지 — 셋 다다.
@@ -177,7 +190,7 @@ def check_degeneracy_shape(j: dict) -> list:
         if not isinstance(e, dict):
             p.append(f"env 가 객체가 아니다 ({e!r})")
         else:
-            miss = [k for k in ENV_KEYS if not str(e.get(k) or "").strip()]
+            miss = env_axes_missing(e)
             if miss:
                 p.append(f"env 에 필수 축이 없다 ({miss}) — 요구: {' · '.join(ENV_KEYS)}")
     return p

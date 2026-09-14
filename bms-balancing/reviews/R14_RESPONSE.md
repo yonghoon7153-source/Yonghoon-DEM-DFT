@@ -10,7 +10,7 @@
 |---|---|
 | 리뷰 대상 | `1bb45b358db4850c73e185d5f851e35fbcff9ad6` |
 | 이 회신의 코드 | 아래 §4 (커밋 SHA 는 push 후 확정) |
-| 회귀 | `python3 -m pytest tests/ -q` → **284 passed** (리뷰 대상 시점 277) |
+| 회귀 | `python3 -m pytest tests/ -q` → **286 passed** (리뷰 대상 시점 277) |
 | 판정 수용 | R14 NO-GO · **U18b 이관 수용 · 재계산 불필요** — 그대로 받는다. 과학 값은 하나도 다시 계산하지 않았고 옛 sidecar 도 고치지 않았다 |
 
 ## 1. 발견별 대응
@@ -75,3 +75,23 @@ $ python3 scripts/check_u14.py --new out/archive/legacy_r6_u14 --schema-only →
 `17995cfd…` 로 고정해 심사한 원본이고, 고치면 그 식별이 깨진다. 정정은 이 회신과 §1 P2-3 의 두 문서(현행
 `R13_RESPONSE.md` · 증거 README)에 둔다. 다음 요청문부터 **승격 전/후 명령을 구분하고 기준을 full commit 으로**
 적는다.
+
+---
+
+## 7. 후속 확인 (`f21cb648`) 에 대한 2 차 회신 — P2-2 의 공백값 잔여 닫음
+
+리뷰어가 `f21cb648` 을 다시 봤다: **P2-1 종결 · P2-3 종결 · P2-2 부분**. 남은 것 하나는 우리 잘못이 맞다.
+
+| 항목 | 리뷰어 실측 | 원인 | 수정 | 회귀 |
+|---|---|---|---|---|
+| P2-2 잔여 | `env.scipy` 가 `""`·`null` 이면 rc 2 인데 **`"   "`·`"\t\n"` 이면 rc 0** | 우리 검사가 `in (None, "")` 였다 — 회신과 주석에 적은 **"존재·비공백"** 이 절반만 구현됐다. degeneracy **본문** 검사는 이미 `str(v or "").strip()` 로 재고 있었으므로 **규칙이 두 벌**이었다는 뜻이기도 하다 | 규칙을 **한 자리**로: `schema.env_axes_missing(env)` 를 만들고 본문 검사와 sidecar 검사가 **같은 함수**를 부른다. `str(… or "")` 가 None·빈값을 흡수하고 `.strip()` 이 유니코드 공백(NBSP 포함)까지 깎는다 | `test_h02` 확장 — 네 종류 × 다섯 축 × **다섯 빈값**(`""` · `"   "` · `"\t\n"` · NBSP · `null`) 전부 rc 2. 기존 축(키 누락 · python 만 · env 전체 부재 · 온전 대조군 rc 0)은 그대로 |
+
+리뷰어가 종결로 본 둘은 우리 쪽에서도 그대로 둔다 — `_untracked_files()` 와 root 밖 sibling 회귀(P2-1),
+full commit 기준 고정과 자기대조 rc 2 기록(P2-3).
+
+검증 (방금 실행): **286 passed** · `check_u14 --new out --schema-only` rc 0 · legacy archive rc 2 (40·25·6·1) —
+과학 값·산출 bytes 는 이번에도 건드리지 않았다. 리뷰 패키지 원문은 `reviews/r14_repros/codex/followup_f21cb648/`
+(zip sha256 `f1d39ff1d5fe1797b2d3de0932fb6febb62acc8b7b05bef38d4e08c66df0fef7`).
+
+열린 것은 §5 그대로다 (`legacy_transition_approved` · 기록용 CLI 인자 필수화 · U18-05 · 조건 6·8 · openpyxl ·
+r11 대체 증거). 리뷰어도 그것들을 이번 종결의 차단 사유로 세지 않았다.

@@ -116,6 +116,35 @@ def load_full_cell(root: Path, state: str, workbook: Path | None = None, identit
     return c[ok].to_numpy(float), v[ok].to_numpy(float)
 
 
+#: 정본 로스터 밖의 문헌 한 파일을 받을 때 쓰는 소스 라벨 — `SI_SOURCES` 에 넣지 않는다
+#: (거기 넣으면 `canonical_combo_keys` 의 32 조합이 바뀌어 정본 산출 전체가 흔들린다).
+EXTERNAL_SI_SOURCE = "external"
+
+
+def load_literature_file(path, identity: dict | None = None):
+    """**한 파일**에 든 Si·Gr 문헌 곡선 → `load_literature` 와 같은 4 튜플.
+
+    pyDMA 예제(`pydma_example_Si_Gr_literature.xlsx`)의 레이아웃이다: 한 시트에
+    `Si_capacity`·`Si_voltage`·`Gr_capacity`·`Gr_voltage` 가 있고 **열마다 길이가 달라** NaN 꼬리가 다르다
+    (MATLAB `run_validation.m` 도 열마다 `~isnan` 으로 따로 자른다). 여기서도 열별로 자른다 — 행 단위
+    `dropna` 는 가장 짧은 열에 맞춰 다른 곡선을 잘라낸다.
+
+    `identity` 를 주면 `{"gr": …, "si": …}` 를 **같은 파일**로 채운다. 한 파일이 두 곡선을 다 주므로
+    두 역할의 sha256 이 같은 것이 사실이고, receipt 역할 넷(`REQUIRED_ROLES`)은 그대로 지켜진다.
+    """
+    src = read_input(Path(path))
+    df = pd.read_excel(src.stream())
+    need = ("Si_capacity", "Si_voltage", "Gr_capacity", "Gr_voltage")
+    missing = [c for c in need if c not in df.columns]
+    if missing:
+        raise SystemExit(f"{path}: 문헌 열이 없다 {missing} — 필요한 열 {list(need)}")
+    if identity is not None:
+        ident = src.identity()
+        identity.update({"gr": dict(ident), "si": dict(ident)})
+    col = lambda c: df[c].dropna().to_numpy(float)
+    return col("Si_capacity"), col("Si_voltage"), col("Gr_capacity"), col("Gr_voltage")
+
+
 def load_literature(root: Path, si_source: str = "Li", identity: dict | None = None):
     """Gr 은 항상 Si_Gr_literature_OCP.xlsx, Si 만 선택 소스로 교체. `identity` 를 주면 파싱한 bytes 의 경로·sha256 을
     `{"gr": …, "si": …}` 로 채운다 (Codex R6-03)."""

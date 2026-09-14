@@ -52,7 +52,7 @@ def load_cycle(df: pd.DataFrame, cycle: int):
 
 def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=None,
                n_starts: int = 20, seed: int = 0, scale_seed: int = 0, w_dqdv: float = 0.0, run_id: str = "",
-               log=None) -> dict:
+               literature=None, log=None) -> dict:
     """사이클마다 적합 → {"rows": [CYCLES_ROW dict …], "consumed": 공통 receipt, "settings": 기록된 optimizer 설정}.
 
     입력 셋(기준 반쪽전지 · 풀셀 워크북 · 문헌 Si/Gr)은 한 번 읽은 bytes 로 파싱하고 그 bytes 를 해시한다.
@@ -66,7 +66,17 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=
     hb = D.read_input(half_cell)
     half = HalfCell(hb.stream(), window=11, poly_order=3)
     lit_id: dict = {}
-    si_c, si_v, gr_c, gr_v = D.load_literature(root, si_source, identity=lit_id)
+    # ⚠ `literature` 는 정본 8 소스 **밖**의 검증 데이터를 받는 길이다 (pyDMA 예제처럼 Si·Gr 이 한 파일).
+    #   로스터 이름 하나에 남의 파일을 밀어 넣으면 receipt 가 거짓말을 하므로 라벨도 `external` 로 짝을 맞춘다.
+    if literature is not None:
+        if si_source != D.EXTERNAL_SI_SOURCE:
+            raise ValueError(f"외부 문헌 파일을 주면 si_source 는 '{D.EXTERNAL_SI_SOURCE}' 여야 한다 (받은 값 {si_source!r}) — "
+                             f"로스터 이름은 그 소스의 데이터를 뜻한다")
+        si_c, si_v, gr_c, gr_v = D.load_literature_file(literature, identity=lit_id)
+    else:
+        if si_source == D.EXTERNAL_SI_SOURCE:
+            raise ValueError(f"si_source 가 '{D.EXTERNAL_SI_SOURCE}' 인데 --literature 가 없다 — 무엇을 읽었는지 말할 수 없다")
+        si_c, si_v, gr_c, gr_v = D.load_literature(root, si_source, identity=lit_id)
     blend = Blend(si_c, si_v, gr_c, gr_v, window=11, poly_order=3)
     fb = D.read_input(full_cell)
     df = read_workbook(fb.stream())

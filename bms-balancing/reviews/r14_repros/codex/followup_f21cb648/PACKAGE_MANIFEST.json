@@ -1,0 +1,122 @@
+{
+  "scope": "Packaging integrity only, not execution attestation",
+  "target_head": "f21cb6480fc27857c7aac67e823cae62b1443830",
+  "target_tree": "8365e7ef2646fb3c9d1f6ad3aa2a213a0c81ff10",
+  "payloads": [
+    {
+      "path": "R14_F21_FOLLOWUP_REVIEW.md",
+      "bytes": 7099,
+      "sha256": "9f2dbf67fab711d2f2b14ca3274c836f5a89df33e3cef8abdf5b2ce7f2d37655"
+    },
+    {
+      "path": "R14_F21_REPRO_README.md",
+      "bytes": 3371,
+      "sha256": "dda45ff244262787be75403e04017b55f29635b50b6fe1c58a0009ee5fc5490c"
+    },
+    {
+      "path": "R14_F21_VALIDATION_RESULTS.json",
+      "bytes": 1152,
+      "sha256": "78da6c912fd4b560e5756560ff74b2f79d21d7c18b4238b8a3ad33c3d7a4e8c3"
+    },
+    {
+      "path": "R14_F21_selected_pytest.xml",
+      "bytes": 36109,
+      "sha256": "cb9dcbd76d52c6b427515b6584d3c56528d01e4859c01b778c2f70bfa9b1799e"
+    },
+    {
+      "path": "r14_followup_checks.py",
+      "bytes": 2431,
+      "sha256": "21096164018a449cac27ee52fa2f6f6d88ee25f23364ffcbeeb5419eb057bcaa"
+    },
+    {
+      "path": "r14_nested_output_check.py",
+      "bytes": 2429,
+      "sha256": "7ee8882d4cd1341f1119c2163eb71a15e09e969f486b55e911e197b7c9fc22c2"
+    },
+    {
+      "path": "r14_env_schema_checks.py",
+      "bytes": 3931,
+      "sha256": "2fdc81e04e83b9dc5464b3ca38ea74b5674d30cd141ef29b86b843725692eb6f"
+    },
+    {
+      "path": "r14_env_value_checks_f21cb648.py",
+      "bytes": 2463,
+      "sha256": "28bfce6533568291af1154243aa27e94aafb479bf2650eaabe97472afff5a701"
+    },
+    {
+      "path": "r14_response_preservation_audit.py",
+      "bytes": 2970,
+      "sha256": "e580f689a19d6e168ef6ecf5a31164c32f3160c4787ef5773f334fc3847407db"
+    },
+    {
+      "path": "r14_f21_nested_output/results.json",
+      "bytes": 1484,
+      "sha256": "c91f7cf1c0e1a225aa59a4ce2402216d2299ce7fa8998aa8131b5f97823be3e3"
+    },
+    {
+      "path": "r14_f21_env_schema_results.json",
+      "bytes": 37000,
+      "sha256": "5c0cd527661f0b93b58dbb0dd98c9db29217d967dd1bcd4ca3fcc5b720f4ab40"
+    },
+    {
+      "path": "r14_env_value_results_f21cb648.json",
+      "bytes": 13847,
+      "sha256": "6164805670a78f36f40fd659150f2738ef525a9be69397fbfb80d069c11e2756"
+    },
+    {
+      "path": "r14_f21_cli_checks/current_schema.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_f21_cli_checks/current_schema.stdout.txt",
+      "bytes": 744,
+      "sha256": "0ac625dba8ebbc5a8fa17c82c4711da3ebc45f38221761c4c77385bc795b348c"
+    },
+    {
+      "path": "r14_f21_cli_checks/legacy_schema.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_f21_cli_checks/legacy_schema.stdout.txt",
+      "bytes": 4062,
+      "sha256": "c72883b390da63a154f6dcae2bbbed362d37a76951788e834c204ece410ba3eb"
+    },
+    {
+      "path": "r14_f21_cli_checks/new_vs_current_head.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_f21_cli_checks/new_vs_current_head.stdout.txt",
+      "bytes": 3996,
+      "sha256": "7addfe2445d2a4fd5c97938df474a8b98e7d8304dddce54a262cf22b8028c98f"
+    },
+    {
+      "path": "r14_f21_cli_checks/new_vs_legacy.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_f21_cli_checks/new_vs_legacy.stdout.txt",
+      "bytes": 4279,
+      "sha256": "0d5ce0c2d6b343ff9fe3c9b1df665a0bbbe724def6faeb66d1479319d3a1e0f1"
+    },
+    {
+      "path": "r14_f21_cli_checks/new_vs_prepromotion.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_f21_cli_checks/new_vs_prepromotion.stdout.txt",
+      "bytes": 4335,
+      "sha256": "97e6c3ed26e44c11fbb973c107ac91af3cd00d322206a6a81d01b321e5dc6dc1"
+    },
+    {
+      "path": "r14_f21_cli_checks/results.json",
+      "bytes": 6141,
+      "sha256": "081298ddd6b3cb76605bddb5e5e8300ea12ac794e18310dadf44c94c31969380"
+    }
+  ]
+}

@@ -369,8 +369,10 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
             if not (isinstance(meta.get("env"), dict) and meta["env"]):
                 R["missing"].append(f"{f.name}.meta: env 가 비어 있다")
             else:
-                R["missing"] += [f"{f.name}.meta: env.{k} 가 비어 있다 (환경 축 다섯을 다 적어야 한다)"
-                                 for k in S.ENV_KEYS if meta["env"].get(k) in (None, "")]
+                # ⚠ R14 후속(f21cb648): 전 판은 `in (None, "")` 이라 공백뿐인 값(`"   "`·`"\t\n"`)이 통과했다.
+                #   판정은 `S.env_axes_missing` **한 자리**다 — degeneracy 본문 검사와 같은 함수를 쓴다.
+                R["missing"] += [f"{f.name}.meta: env.{k} 가 비어 있다 (환경 축 다섯을 다 적어야 한다 — 공백은 값이 아니다)"
+                                 for k in S.env_axes_missing(meta["env"])]
             # ⚠ Codex R11 P1-9: 신고된 위험은 값으로 소비한다 (있기만 하면 되는 것이 아니다).
             # ⚠ 자체 리뷰 C03 (렌즈 2곳): 전 판은 `if k in meta` 라 **키를 지우면 검사가 안 돌았다** — 같은 dirty
             #   트리에서 돈 두 실행 중 정직하게 신고한 쪽만 rc 2 이고 입 다문 쪽은 rc 0 이었다 (게이트가 침묵에

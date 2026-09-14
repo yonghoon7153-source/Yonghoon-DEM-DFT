@@ -105,5 +105,14 @@ def test_h02_partial_env_in_a_new_sidecar_is_a_contract_violation(tmp_path, name
     rc, out = run(only_python)
     assert rc == 2 and "env" in out, ("python 하나만 남겨도 통과했다 (R14 P2-2)", rc, out[-900:])
 
+    # ⚠ R14 후속(f21cb648): 키 누락은 막혔지만 **공백뿐인 값**은 통과했다 — `in (None, "")` 은 `"   "`·`"\t\n"` 을
+    #   빈값으로 안 본다. 우리가 "존재·비공백" 이라고 적은 계약이 절반만 구현돼 있었다. degeneracy **본문** 쪽은
+    #   이미 `str(v or "").strip()` 로 재고 있었으므로 규칙이 두 벌이었다는 뜻이기도 하다.
+    for blank in ("", "   ", "\t\n", "\u00a0", None):
+        for k in S.ENV_KEYS:
+            rc, out = run(dict(full, env=dict(full["env"], **{k: blank})))
+            assert rc == 2, (f"env.{k} = {blank!r} 인데 통과했다", rc, out[-900:])
+            assert f"env.{k}" in out or "env" in out, (k, blank, out[-600:])
+
     rc, out = run({k: v for k, v in full.items() if k != "env"})      # 전부 없으면 원래도 rc 2
     assert rc == 2, (rc, out[-900:])

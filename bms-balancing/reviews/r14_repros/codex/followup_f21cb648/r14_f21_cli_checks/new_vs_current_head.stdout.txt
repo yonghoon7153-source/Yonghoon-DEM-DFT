@@ -1,0 +1,22 @@
+정본을 `HEAD` 에서 읽었다 — 산출 26 개
+산출 13 개 점검 (out)
+  정본 선택 정책: **historical** — 역사 리비전 — 그 커밋 당시의 정본, 즉 가장 높은 판 (`--old-rev` 로 명시했을 때만)
+  명부(roster): 정본 13 · 새 산출 13 · 대조 13
+  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)
+
+■ **독립 baseline 이 아니다** 13 — candidate 와 baseline 이 같은 object 를 가리킨다 (hardlink/symlink). 자기대조는 승격 근거가 아니다 (Codex R11 P1-5)
+  - degeneracy_100_Li.json: 새 산출과 정본의 run id 가 같다 ('ef1c63ebae6e4540a22998fdbdbe10de') — 같은 시도의 사본이지 독립 baseline 이 아니다 (run id 는 시도마다 새로 만든다)
+  - degeneracy_200_Li.json: 새 산출과 정본의 run id 가 같다 ('1f01ad071e304a62abbe15162c60a7bc') — 같은 시도의 사본이지 독립 baseline 이 아니다 (run id 는 시도마다 새로 만든다)
+  - degeneracy_300_0009_Li.json: 새 산출과 정본의 run id 가 같다 ('7ccaee121cb8428089fd411aa733e574') — 같은 시도의 사본이지 독립 baseline 이 아니다 (run id 는 시도마다 새로 만든다)
+  - degeneracy_300_0147_Li.json: 새 산출과 정본의 run id 가 같다 ('4a562f40a20849018b17c1fba76ec9cd') — 같은 시도의 사본이지 독립 baseline 이 아니다 (run id 는 시도마다 새로 만든다)
+  - matrix_100.csv: 새 산출과 정본의 run id 가 같다 ('942578bbfaa54c65ad209d69b5a85e7b') — 같은 시도의 사본이지 독립 baseline 이 아니다 (run id 는 시도마다 새로 만든다)
+  - matrix_200.csv: 새 산출과 정본의 run id 가 같다 ('3f7aa78a8e0a4d2783b1f8698d5d5592') — 같은 시도의 사본이지 독립 baseline 이 아니다 (run id 는 시도마다 새로 만든다)
+  - matrix_300_0009.csv: 새 산출과 정본의 run id 가 같다 ('e647dccd08074588b1d5ccbc21a94f34') — 같은 시도의 사본이지 독립 baseline 이 아니다 (run id 는 시도마다 새로 만든다)
+  - matrix_300_0147.csv: 새 산출과 정본의 run id 가 같다 ('90700b1925ec4ff3b634129c59756757') — 같은 시도의 사본이지 독립 baseline 이 아니다 (run id 는 시도마다 새로 만든다)
+  - ne_shape_GITT_Li.csv: 새 산출과 정본의 run id 가 같다 ('b4b58d4bef68431d8c41d2b3dd4d5747') — 같은 시도의 사본이지 독립 baseline 이 아니다 (run id 는 시도마다 새로 만든다)
+  - profile_gamma_100_Li.csv: 새 산출과 정본의 run id 가 같다 ('40c763ec9fce48fe80144ba4724161c2') — 같은 시도의 사본이지 독립 baseline 이 아니다 (run id 는 시도마다 새로 만든다)
+  - profile_gamma_200_Li.csv: 새 산출과 정본의 run id 가 같다 ('69daca18a9f24dc687106d3fb2fa11c2') — 같은 시도의 사본이지 독립 baseline 이 아니다 (run id 는 시도마다 새로 만든다)
+  - profile_gamma_300_0009_Li.csv: 새 산출과 정본의 run id 가 같다 ('89458e098412453eaa01beb87e84c9d1') — 같은 시도의 사본이지 독립 baseline 이 아니다 (run id 는 시도마다 새로 만든다)
+  - profile_gamma_300_0147_Li.csv: 새 산출과 정본의 run id 가 같다 ('48f5ab4cac4243ff813680d3ba8dc8de') — 같은 시도의 사본이지 독립 baseline 이 아니다 (run id 는 시도마다 새로 만든다)
+  숫자: 대조 **미완** — 명부/묶음/스키마/내용/조건/환경 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)
+PROMOTION {"promotion_eligible": false, "rc": 2, "subset": false, "roster": {"old": 13, "new": 13, "compared": 13, "missing_in_new": [], "extra_in_new": []}, "blocked_by": {"schema": 0, "provenance_cols": 0, "content": 0, "unit": 0, "controls": 0, "env": 0, "numbers": 0, "alias": 13, "provenance": 0, "inputs": 0, "inputs_uncomparable": 0, "env_uncomparable": 0, "stale": 0, "baseline_absent": 0}, "policy": "historical", "new": "out", "old": "/tmp/tmpmvuap45g"}

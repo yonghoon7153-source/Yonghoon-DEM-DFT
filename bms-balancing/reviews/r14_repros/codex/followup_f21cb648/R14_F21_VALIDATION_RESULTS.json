@@ -1,0 +1,12 @@
+{
+  "target_head": "f21cb6480fc27857c7aac67e823cae62b1443830",
+  "scope": "R14 three P2 follow-up only, not entire harness or COMSOL",
+  "verdict": "NO-GO for complete R14 closure; actual U18b transition accepted, no scientific rerun needed",
+  "conditions": {"P2-1": "closed", "P2-2": "missing keys closed; whitespace-only values still accepted", "P2-3": "closed"},
+  "pytest": {"passed": 274, "deselected": 10, "duration_seconds": 296.40, "exit_code": 0, "new_tests_passed": 7, "user_reported_full_suite": 284, "full_suite_independently_confirmed": false},
+  "env_scipy_values": {"complete": 0, "empty_string": 2, "null": 2, "spaces": 0, "tabs_newlines": 0},
+  "all_env_value_cases_promotion_eligible": false,
+  "preservation": {"out_tree": "1da2e9f5600dc5f91dd0a989188ef7b0ecb19437", "actual_files_identical_to_prior_commit": 52, "request_sha256": "17995cfd90cd838c1cc1a1df43b6cceecf59ecc615878a75c491e7fea04f9f77", "prior_review_zip_sha256": "72f9556e2230e7c3638303176b9bf6b9a7364f27c8273427f5a628c7450114bd"},
+  "target_changes": "none",
+  "not_executed": ["Original scientific fitting", "COMSOL", "Dynamic bypass or mutation replay", "Octave"]
+}

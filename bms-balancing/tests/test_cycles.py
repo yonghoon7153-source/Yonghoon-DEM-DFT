@@ -144,3 +144,69 @@ def test_cy_05_start_seed_and_scale_seed_are_separate_controls(tmp_path):
     assert ma["scale_seed"] == 0 and mc["scale_seed"] == 1 and mb["seed"] == 1
     assert "scale_seed" in S.meta_controls("cycles") and "seed" in S.meta_controls("cycles")
     assert ma["run_id"] != mb["run_id"]
+
+
+# ── 외부 문헌 파일 (pyDMA 예제 형식) — 정본 8 소스 로스터를 건드리지 않고 검증 데이터를 받는다 ────────────
+def _pydma_literature(src: pathlib.Path, path: pathlib.Path):
+    """pyDMA 예제의 문헌 레이아웃: 한 시트에 `Si_capacity/Si_voltage/Gr_capacity/Gr_voltage` (열마다 길이가 다르다).
+
+    합성 원자료의 Gr/Si 를 그 모양으로 옮겨 적는다 — 열마다 NaN 꼬리가 다른 것까지 재현한다.
+    """
+    import pandas as pd
+    gr = pd.read_excel(src / "data/literature/Si_Gr_literature_OCP.xlsx")
+    si = pd.read_csv(src / "data/literature/Si_OCP_sources/Li.csv")
+    n = max(len(gr), len(si))
+    pad = lambda a: list(a) + [float("nan")] * (n - len(a))
+    pd.DataFrame({"Si_capacity": pad(si["normalizedCapacity"]), "Si_voltage": pad(si["voltage"]),
+                  "Gr_capacity": pad(gr["Gr_capacity"].dropna()), "Gr_voltage": pad(gr["Gr_voltage"].dropna())
+                  }).to_excel(path, index=False)
+    return path
+
+
+def test_cy_06_external_literature_file_is_read_and_receipted_as_itself(tmp_path):
+    """[pyDMA 검증, 2026-09-14] 검증 데이터(pyDMA 예제)는 **자기 문헌 파일**을 들고 온다 — Si·Gr 이 한 시트에 있고
+    정본 8 소스 로스터에 속하지 않는다. 그 파일을 로스터 이름 하나에 밀어 넣으면 receipt 가 거짓말을 하므로
+    (`literature.si` 가 `Li.csv` 라고 적히는데 실제 bytes 는 남의 파일) **외부 문헌 경로**를 따로 받는다.
+
+    계약: 같은 receipt 역할 넷을 그대로 지키되 `literature.gr`·`literature.si` 가 **그 파일**을 가리킨다 —
+    한 파일이 두 곡선을 다 주므로 두 역할의 sha256 이 같은 것이 사실이다.
+    """
+    src = _synth_root(tmp_path)
+    lit = _pydma_literature(src, tmp_path / "pydma_lit.xlsx")
+    si_c, si_v, gr_c, gr_v = C.D.load_literature_file(lit)
+    assert len(si_c) == len(si_v) > 2 and len(gr_c) == len(gr_v) > 2
+    assert not (np.isnan(si_c).any() or np.isnan(gr_c).any()), "열마다 NaN 꼬리를 따로 잘라야 한다"
+
+    wb = _cycle_workbook(src, tmp_path / "cyc.xlsx", n_cycles=2)
+    out = C.fit_cycles(src, src / "data/half_cell/GITT/pristine.xlsx", wb, "external",
+                       cell="pydma", n_starts=2, seed=0, scale_seed=0, literature=lit)
+    import hashlib
+    want = hashlib.sha256(lit.read_bytes()).hexdigest()
+    rec = json.loads(out["rows"][0]["consumed_inputs"])
+    assert set(S.REQUIRED_ROLES) == {"full_cell", "half_cell", "literature.gr", "literature.si"}
+    assert rec["literature"]["gr"]["sha256"] == want and rec["literature"]["si"]["sha256"] == want, rec
+    assert pathlib.Path(rec["literature"]["si"]["path"]).name == lit.name, rec
+    assert not S.validate_receipt(out["rows"][0]["consumed_inputs"], out["rows"][0]["inputs_sha"], "cy06"), "계약 위반"
+
+
+def test_cy_07_external_literature_and_the_source_label_must_agree(tmp_path):
+    """짝이 안 맞는 호출은 **입력 오류(rc 2)** 다 — 외부 파일을 주면서 로스터 이름을 대거나(그 이름의 데이터가
+    아니다), `external` 이라 해 놓고 파일을 안 주거나(무엇을 읽었는지 말할 수 없다) 둘 다 막는다."""
+    src = _synth_root(tmp_path)
+    lit = _pydma_literature(src, tmp_path / "pydma_lit.xlsx")
+    wb = _cycle_workbook(src, tmp_path / "cyc.xlsx", n_cycles=2)
+    base = [sys.executable, str(ROOT / "scripts/fit_cycles.py"), "--data-root", str(src),
+            "--half-cell", str(src / "data/half_cell/GITT/pristine.xlsx"), "--full-cell", str(wb),
+            "--cell", "pydma", "--starts", "2", "--out", str(tmp_path / "o")]
+
+    r = subprocess.run(base + ["--si-source", "Li", "--literature", str(lit)],
+                       capture_output=True, text=True, cwd=ROOT, timeout=300)
+    assert r.returncode == 2 and "external" in (r.stdout + r.stderr), (r.returncode, r.stdout[-400:], r.stderr[-400:])
+
+    r = subprocess.run(base + ["--si-source", "external"], capture_output=True, text=True, cwd=ROOT, timeout=300)
+    assert r.returncode == 2 and "--literature" in (r.stdout + r.stderr), (r.returncode, r.stdout[-400:], r.stderr[-400:])
+
+    r = subprocess.run(base + ["--si-source", "external", "--literature", str(lit)],
+                       capture_output=True, text=True, cwd=ROOT, timeout=600)
+    assert r.returncode == 0, (r.returncode, r.stdout[-600:], r.stderr[-600:])
+    assert (tmp_path / "o" / "cycles_pydma_external.csv").is_file(), list((tmp_path / "o").iterdir())

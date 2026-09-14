@@ -331,7 +331,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 284 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 286 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh
@@ -384,7 +384,12 @@ OUT=out_u18b STATES='100 200 300_0009 300_0147' ./scripts/run_states.sh 2>&1 | t
 혼재는 범위 한정 예외로 기록(U18-05) · 기록용 CLI 인자 필수화는 열림 · 역사 bytes 유지.
 
 `reviews/R14_REQUEST.md` 는 **고치지 않는다** — 리뷰어가 sha256 `17995cfd…` 로 고정해 심사한 원본이다. 정정은 회신과
-현행 문서에 둔다. 284 passed.
+현행 문서에 둔다.
+
+**후속 확인 (`f21cb648`)**: P2-1·P2-3 **종결**, P2-2 는 공백값 하나 남았다 — `env.scipy` 가 `"   "`·`"\t\n"` 이어도 rc 0 이었다.
+우리 검사가 `in (None, "")` 이라 **"존재·비공백" 이 절반만** 구현됐고, degeneracy 본문 검사는 이미 strip 을 쓰고 있었으니
+**규칙이 두 벌**이었다. `schema.env_axes_missing` 한 자리로 합치고 두 곳이 같은 함수를 부르게 했다. `test_h02` 가 네 종류 ×
+다섯 축 × 다섯 빈값(빈 문자열·공백·탭줄바꿈·NBSP·null)을 전부 rc 2 로 고정한다. 286 passed.
 
 ### 14 차 게이트 리뷰 요청 — `reviews/R14_REQUEST.md` (대상 `1bb45b3`, 2026-09-14)
 

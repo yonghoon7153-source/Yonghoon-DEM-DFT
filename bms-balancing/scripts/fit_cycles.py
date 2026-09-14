@@ -40,7 +40,10 @@ def main(argv=None) -> int:
     ap.add_argument("--half-cell", required=True, type=pathlib.Path, help="기준(pristine) 반쪽전지 xlsx")
     ap.add_argument("--full-cell", required=True, type=pathlib.Path, help="풀셀 사이클 워크북 ('<cycle>_capacity' 열)")
     ap.add_argument("--cell", required=True, help="셀 라벨 (산출 이름 cycles_<cell>_<si>.csv)")
-    ap.add_argument("--si-source", default="Li", choices=D.SI_SOURCES)
+    ap.add_argument("--si-source", default="Li", choices=(*D.SI_SOURCES, D.EXTERNAL_SI_SOURCE),
+                    help=f"정본 8 소스 중 하나, 또는 '{D.EXTERNAL_SI_SOURCE}' (그때는 --literature 필수)")
+    ap.add_argument("--literature", default=None, type=pathlib.Path,
+                    help="정본 로스터 밖의 문헌 파일 (Si_capacity/Si_voltage/Gr_capacity/Gr_voltage 한 시트) — pyDMA 예제 같은 검증 데이터용. 주면 --si-source 는 external 이어야 한다")
     ap.add_argument("--cycles", default="", help="쉼표 목록 — 비우면 워크북의 전부")
     ap.add_argument("--starts", type=int, default=20, help="MultiStart 시작점 수 (원본 electrode_balancing_blend 은 20)")
     ap.add_argument("--seed", type=int, default=0, help="MultiStart 시작점 seed — 이것만 바꿔 두 번 돌리면 '시작점이 정한 적합인가' 를 묻는다")
@@ -64,7 +67,7 @@ def main(argv=None) -> int:
     try:
         res = C.fit_cycles(root, a.half_cell, a.full_cell, a.si_source, cell=a.cell, cycles=cycles,
                            n_starts=a.starts, seed=a.seed, scale_seed=a.scale_seed, w_dqdv=a.w_dqdv, run_id=rid,
-                           log=lambda s: print(s, flush=True))
+                           literature=a.literature, log=lambda s: print(s, flush=True))
     except (ValueError, KeyError) as e:
         print(f"! {e} → 종료 코드 2"); return 2
     except RuntimeError as e:
@@ -78,6 +81,7 @@ def main(argv=None) -> int:
         pv = git_provenance(cwd=str(REPO_DIR), artifact=str(art), output_roots=(str(a.out), "out"))
         meta = sidecar_dict(art.name, data, run_id=rid, started=started, argv=list(sys.argv), pv=pv, extra={
             "cell": a.cell, "si_source": a.si_source, "starts": int(a.starts), "seed": int(a.seed),
+            "literature": (str(a.literature) if a.literature else None),
             "scale_seed": int(a.scale_seed),
             "w_dqdv": float(a.w_dqdv), "cycles": res["cycles"], "status": "complete",
             "data_root": str(root), "half_cell_path": str(a.half_cell), "full_cell_path": str(a.full_cell),
