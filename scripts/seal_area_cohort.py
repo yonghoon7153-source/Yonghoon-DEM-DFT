@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """S3 코호트 봉인 — raw 가용성 **전수** 목록 + 파일 지문 → `docs/data/area_s2_cohort.tsv`.
 
-계약 §5-v3 ③ (Codex 2라운드): *"raw 가용성 전수 목록·포함/제외 사유·파일 지문을 독립적으로
+계약 §5-v3 ③ (Codex 2라운드) + **§5-v4 D-2**(3라운드, 쌍 step 규칙): *"raw 가용성 전수 목록·포함/제외 사유·파일 지문을 독립적으로
 봉인하고, **build_network 성공 여부를 본 뒤 제외하지 말고** 가용 원자료의 기술적 실패를
 상태로 보존"*.
 
@@ -38,8 +38,30 @@ def _load(name, path):
 
 _PC = _load('_pc_seal', SCRIPTS / 'plastic_coverage.py')
 
+#: 계약 §5-v4 D-2 — atom 은 contact 과 **같은 step** 이거나 **5,000 step 이내로 뒤**여야 한다.
+#  ⚠ 규칙이 계약에만 있으면 샌다 (CLAUDE.md ④).  실제로 `lhs00_029` 가 −150,000 으로 통과했고
+#  Codex 가 뒤늦게 잡았다 — 원인은 데이터 결함이 아니라 **전송 누락**이었지만, 도구가 그것을
+#  못 본 것이 문제다.  ⇒ 여기서 강제한다.  ⛔ 결과를 보고 이 값을 늘리지 말 것.
+PAIR_MAX_GAP = 5000
+
+
+def step_of(p: Path):
+    """(파일명 step, **본문** `ITEM: TIMESTEP` step) — 파일명을 믿지 않는다."""
+    m = re.search(r'_(\d+)\.liggghts$', Path(p).name)
+    name_step = int(m.group(1)) if m else None
+    body = None
+    try:
+        with open(p, 'r', errors='replace') as f:
+            if f.readline().strip().startswith('ITEM: TIMESTEP'):
+                body = int(f.readline().strip())
+    except Exception:
+        body = None
+    return name_step, body
+
+
 COLS = ['case', 'status', 'design_family', 'family_source', 'n_types', 'deck', 'deck_sha256',
-        'atom_file', 'atom_sha256', 'contact_file', 'contact_sha256', 'reason']
+        'atom_file', 'atom_sha256', 'contact_file', 'contact_sha256',
+        'step_atom', 'step_contact', 'step_gap', 'reason']
 DESIGN_CSV = ROOT / 'docs' / 'data' / 'lhs_design_20260818.csv'   # 설계족의 **정본** (`block` 열)
 BLOCK_NTYPES = {'bimodal': '3', 'mono_AM_S': '2', 'mono_AM_P': '2'}
 HEAD_RE = re.compile(r'^#\s*(\S+):\s*(\S+)\s*\((\d+)-type\)')
@@ -112,6 +134,21 @@ def seal_case(case_dir: Path, deck_dir: Path | None, design: dict | None = None)
     else:
         row['atom_file'], row['contact_file'] = str(hit[0]), str(hit[1])
         row['atom_sha256'], row['contact_sha256'] = sha256(hit[0]), sha256(hit[1])
+        #  ★ 계약 §5-v4 D-2 를 **여기서** 건다 — 파일명이 아니라 본문 step 으로.
+        na, ba = step_of(hit[0]); nc_, bc = step_of(hit[1])
+        if (ba is not None and na is not None and ba != na) or \
+           (bc is not None and nc_ is not None and bc != nc_):
+            problems.append('STEP_NAME_MISMATCH')      # 파일명이 본문과 다르다
+        sa = ba if ba is not None else na
+        sc = bc if bc is not None else nc_
+        row['step_atom'] = '' if sa is None else str(sa)
+        row['step_contact'] = '' if sc is None else str(sc)
+        if sa is None or sc is None:
+            problems.append('STEP_UNREADABLE')
+        else:
+            row['step_gap'] = str(sa - sc)
+            if not 0 <= sa - sc <= PAIR_MAX_GAP:
+                problems.append('REFUSED_INPUT_PAIR_STEP')
     fatal = [x for x in problems if x != 'FAMILY_CONFLICT']
     row['status'] = ('RAW_OK' if not problems else '+'.join(problems))
     if fatal and dk is None and hit is None:
@@ -167,7 +204,8 @@ def write_tsv(rows, out: Path, root: Path):
     fam = {}
     for r in rows:
         fam[r['design_family']] = fam.get(r['design_family'], 0) + 1
-    hdr = [f'# S3 코호트 봉인 — raw 가용성 전수 목록 (계약 §5-v3 ③).  생성 {_dt.date.today().isoformat()} · 도구 커밋 {sha}',
+    hdr = [f'# S3 코호트 봉인 — raw 가용성 전수 목록 (계약 §5-v3 ③ · 쌍 step 규칙 §5-v4 D-2: '
+           f'0 ≤ step_atom − step_contact ≤ {PAIR_MAX_GAP}).  생성 {_dt.date.today().isoformat()} · 도구 커밋 {sha}',
            f'# root = {root}',
            '# ⛔ 솔버를 부르지 않았다 — 포함/제외는 파일 실재로만.  이 목록 전부를 S3 가 돌리고 실패는 REFUSED 로 보존한다.',
            '# 설계족 분포: ' + ' · '.join(f'{k} {v}' for k, v in sorted(fam.items())),
@@ -239,6 +277,32 @@ def _selftest() -> int:
     same_hash = all(before[k].split('\t')[COLS.index('atom_sha256')] == after[k][ix['atom_sha256']]
                     and before[k].split('\t')[COLS.index('deck_sha256')] == after[k][ix['deck_sha256']]
                     for k in after)
+    # ══ §5-v4 D-2 회귀 — 쌍 step 규칙을 **도구가** 강제하는가 (R3-06) ══
+    t2 = Path(tempfile.mkdtemp())
+    def mk2(name, a_name, c_name, a_body=None):
+        d = t2 / name; q = d / f'post_{name}'; q.mkdir(parents=True)
+        (d / f'input_{name}.liggghts').write_text(f'# {name}: bimodal (3-type) | LHS design\n')
+        hdr = f'ITEM: TIMESTEP\n{a_body}\n' if a_body is not None else ''
+        (q / a_name).write_text(hdr + 'ITEM: ATOMS id type radius x y z\n1 1 0.0005 0 0 0\n')
+        (q / c_name).write_text('ITEM: ENTRIES c_cpl[1]\n')
+    mk2('lhs00_910', 'atom_2840000.liggghts', 'contact_2840000.liggghts')      # 같은 step
+    mk2('lhs00_911', 'atom_2845000.liggghts', 'contact_2840000.liggghts')      # atom 5,000 뒤
+    mk2('lhs00_912', 'atom_2690000.liggghts', 'contact_2840000.liggghts')      # ★ 실제로 걸렸던 −150,000
+    mk2('lhs00_913', 'atom_2850000.liggghts', 'contact_2840000.liggghts')      # +10,000 = 규칙 밖
+    mk2('lhs00_914', 'atom_2840000.liggghts', 'contact_2840000.liggghts', a_body=2690000)  # 파일명 거짓말
+    b2 = {r['case']: r for r in seal(t2, t2)}
+    chk('⑨ 같은 step 쌍은 통과', b2['lhs00_910']['status'] == 'RAW_OK'
+        and b2['lhs00_910']['step_gap'] == '0')
+    chk('⑨b atom 이 5,000 뒤도 통과 (코퍼스 다수가 이 모양이다)',
+        b2['lhs00_911']['status'] == 'RAW_OK' and b2['lhs00_911']['step_gap'] == '5000')
+    chk('⑨c ★ −150,000 은 거부된다 (lhs00_029 가 통과했던 자리)',
+        'REFUSED_INPUT_PAIR_STEP' in b2['lhs00_912']['status'], b2['lhs00_912']['status'])
+    chk('⑨d +10,000 도 거부된다 (한쪽만 넓지 않다)',
+        'REFUSED_INPUT_PAIR_STEP' in b2['lhs00_913']['status'], b2['lhs00_913']['status'])
+    chk('⑨e ★ 파일명이 본문과 다르면 잡는다 (파일명을 믿지 않는다)',
+        'STEP_NAME_MISMATCH' in b2['lhs00_914']['status'], b2['lhs00_914']['status'])
+    chk('⑨f step 열이 TSV 에 실린다', all(k in COLS for k in ('step_atom', 'step_contact', 'step_gap')))
+
     chk('⑧ refill: 해시 열 바이트 불변 · 설계족 3/5 채움 · 헤더 분포 갱신', n == 3 and tot == 5 and same_hash
         and after['lhs00_900'][ix['design_family']] == 'mono_AM_P'
         and '설계족 분포: bimodal 1 · mono_AM_P 1 · mono_AM_S 3' in out.read_text(encoding='utf-8'),
