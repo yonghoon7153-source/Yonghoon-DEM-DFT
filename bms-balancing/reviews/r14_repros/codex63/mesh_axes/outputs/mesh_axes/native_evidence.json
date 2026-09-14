@@ -1,0 +1,1355 @@
+[
+  {
+    "name": "Axes300R40",
+    "job_id": "f211901885774793ab39e89ebee0144f",
+    "native_status": "completed",
+    "source_sha256": "b4298feb95a6dd2306967fad44c55ab668450633c0a0ec7760681c3b76047e44",
+    "mph_sha256": "8be66085dc14475d768e203e459b7286e974b29b99431db2c1663f92580abe69",
+    "actual_component_mesh": [
+      "AXES_ACTUAL_MESH=mesh1|edges=300|vertices=301"
+    ],
+    "actual_element_domain_counts": {
+      "mesh1": {
+        "1": 120,
+        "2": 60,
+        "3": 120
+      }
+    },
+    "particle_settings": [
+      "AXES_PARTICLE=pce1|Nel=40|Nord=1|Distribution=CubicRoot",
+      "AXES_PARTICLE=pce2|Nel=40|Nord=1|Distribution=CubicRoot"
+    ],
+    "native_log_element_counts": [
+      300,
+      40,
+      40
+    ],
+    "native_degrees_of_freedom": [
+      "Number of degrees of freedom solved for: 1202 (plus 12 internal DOFs).",
+      "Number of degrees of freedom solved for: 11725 (plus 12 internal DOFs)."
+    ],
+    "time_solver_property_count": 1143,
+    "unread_properties": [],
+    "stored_times": 215,
+    "last_time_s": 5.0,
+    "max_observed_stored_time_spacing_s": 0.05000000000000071,
+    "native_accepted_rows": 215,
+    "native_max_step_s": 0.05,
+    "native_step_at_0p04s": [
+      {
+        "step_index": 25,
+        "time_s": 0.04,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "25        0.04       0.005 out   60   34   66     2     0      0  1.2e-10  4.3e-14"
+      }
+    ],
+    "native_step_near_peak": [
+      {
+        "step_index": 20,
+        "time_s": 0.02,
+        "stepsize_s": 0.0025,
+        "raw_native_log_line": "20        0.02      0.0025 out   50   29   56     2     0      0  1.7e-10  9.9e-15"
+      },
+      {
+        "step_index": 21,
+        "time_s": 0.025,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "21       0.025       0.005 out   52   30   58     2     0      0  9.5e-11  6.2e-14"
+      },
+      {
+        "step_index": 22,
+        "time_s": 0.0275,
+        "stepsize_s": 0.0025,
+        "raw_native_log_line": "22      0.0275      0.0025 out   54   31   60     2     0      0  5.2e-11  2.2e-15"
+      },
+      {
+        "step_index": 23,
+        "time_s": 0.03,
+        "stepsize_s": 0.0025,
+        "raw_native_log_line": "23        0.03      0.0025 out   56   32   62     2     0      0  1.5e-10  4.3e-15"
+      },
+      {
+        "step_index": 24,
+        "time_s": 0.035,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "24       0.035       0.005 out   58   33   64     2     0      0  1.2e-10  5.5e-14"
+      },
+      {
+        "step_index": 25,
+        "time_s": 0.04,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "25        0.04       0.005 out   60   34   66     2     0      0  1.2e-10  4.3e-14"
+      },
+      {
+        "step_index": 26,
+        "time_s": 0.045,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "26       0.045       0.005 out   62   35   68     2     0      0  6.6e-11  6.3e-14"
+      },
+      {
+        "step_index": 27,
+        "time_s": 0.05,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "27        0.05       0.005 out   64   36   70     2     0      0  4.3e-11  5.5e-14"
+      },
+      {
+        "step_index": 28,
+        "time_s": 0.055,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "28       0.055       0.005 out   66   37   72     2     0      0  1.2e-10  5.5e-14"
+      },
+      {
+        "step_index": 29,
+        "time_s": 0.06,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "29        0.06       0.005 out   68   38   74     2     0      0  2.2e-10  5.2e-14"
+      }
+    ],
+    "scale_related_settings": [
+      {
+        "path": "sol1/v1/scalemethod",
+        "type": "String",
+        "value_text": "[auto]"
+      },
+      {
+        "path": "sol1/v1/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/resscalemethod",
+        "type": "String",
+        "value_text": "[auto]"
+      },
+      {
+        "path": "sol1/v1/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_cl/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v1/comp1_cl/scaleval",
+        "type": "Double",
+        "value_text": "[1000.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_cl/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_cl/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce1_cs/scalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce1_cs/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce1_cs/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce1_cs/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce2_cs/scalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce2_cs/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce2_cs/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce2_cs/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_phil/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v1/comp1_phil/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_phil/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_phil/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_phis/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v1/comp1_phis/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_phis/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_phis/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/scalemethod",
+        "type": "String",
+        "value_text": "[auto]"
+      },
+      {
+        "path": "sol1/v2/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/resscalemethod",
+        "type": "String",
+        "value_text": "[auto]"
+      },
+      {
+        "path": "sol1/v2/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_cl/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_cl/scaleval",
+        "type": "Double",
+        "value_text": "[1000.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_cl/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_cl/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce1_cs/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce1_cs/scaleval",
+        "type": "Double",
+        "value_text": "[10000.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce1_cs/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce1_cs/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce2_cs/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce2_cs/scaleval",
+        "type": "Double",
+        "value_text": "[10000.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce2_cs/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce2_cs/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_phil/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_phil/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_phil/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_phil/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_phis/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_phis/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_phis/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_phis/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/t1/atolglobalmethod",
+        "type": "String",
+        "value_text": "[scaled]"
+      },
+      {
+        "path": "sol1/t1/atolglobalvaluemethod",
+        "type": "String",
+        "value_text": "[factor]"
+      },
+      {
+        "path": "sol1/t1/atolglobalfactor",
+        "type": "Double",
+        "value_text": "[0.1]"
+      },
+      {
+        "path": "sol1/t1/atolglobal",
+        "type": "Double",
+        "value_text": "[0.001]"
+      },
+      {
+        "path": "sol1/t1/atolmethod",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, global, comp1_liion_pce1_cs, global, comp1_liion_pce2_cs, global, comp1_phil, global, comp1_phis, global]]"
+      },
+      {
+        "path": "sol1/t1/atolvaluemethod",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, factor, comp1_liion_pce1_cs, factor, comp1_liion_pce2_cs, factor, comp1_phil, factor, comp1_phis, factor]]"
+      },
+      {
+        "path": "sol1/t1/atolfactor",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, 0.1, comp1_liion_pce1_cs, 0.1, comp1_liion_pce2_cs, 0.1, comp1_phil, 0.1, comp1_phis, 0.1]]"
+      },
+      {
+        "path": "sol1/t1/atol",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, 1e-3, comp1_liion_pce1_cs, 1e-3, comp1_liion_pce2_cs, 1e-3, comp1_phil, 1e-3, comp1_phis, 1e-3]]"
+      },
+      {
+        "path": "sol1/t1/atoludot",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, 1e-3, comp1_liion_pce1_cs, 1e-3, comp1_liion_pce2_cs, 1e-3, comp1_phil, 1e-3, comp1_phis, 1e-3]]"
+      },
+      {
+        "path": "sol1/t1/atolmethodAUX",
+        "type": "String",
+        "value_text": "[global]"
+      },
+      {
+        "path": "sol1/t1/atolvaluemethodAUX",
+        "type": "String",
+        "value_text": "[factor]"
+      },
+      {
+        "path": "sol1/t1/atolfactorAUX",
+        "type": "Double",
+        "value_text": "[0.1]"
+      },
+      {
+        "path": "sol1/t1/atolAUX",
+        "type": "Double",
+        "value_text": "[0.001]"
+      },
+      {
+        "path": "sol1/t1/atoludotAUX",
+        "type": "Double",
+        "value_text": "[0.001]"
+      },
+      {
+        "path": "sol1/t1/fc1/atolchoice",
+        "type": "String",
+        "value_text": "[fullerrorest]"
+      },
+      {
+        "path": "sol1/t1/fc1/atolthreshold",
+        "type": "Double",
+        "value_text": "[0.1]"
+      }
+    ]
+  },
+  {
+    "name": "Axes300R80",
+    "job_id": "a4d58eb7f97c48cc9109657d4a8f0ba3",
+    "native_status": "completed",
+    "source_sha256": "f2745f4a157ab5102ff69a980da177060d2323722ab0f79079e3c531212dd2f2",
+    "mph_sha256": "6f9c498f952832d2921c8427230c3dfe8c2201f6659bbb152fc05abf8daa65de",
+    "actual_component_mesh": [
+      "AXES_ACTUAL_MESH=mesh1|edges=300|vertices=301"
+    ],
+    "actual_element_domain_counts": {
+      "mesh1": {
+        "1": 120,
+        "2": 60,
+        "3": 120
+      }
+    },
+    "particle_settings": [
+      "AXES_PARTICLE=pce1|Nel=80|Nord=1|Distribution=CubicRoot",
+      "AXES_PARTICLE=pce2|Nel=80|Nord=1|Distribution=CubicRoot"
+    ],
+    "native_log_element_counts": [
+      300,
+      80,
+      80
+    ],
+    "native_degrees_of_freedom": [
+      "Number of degrees of freedom solved for: 1202 (plus 12 internal DOFs).",
+      "Number of degrees of freedom solved for: 21405 (plus 12 internal DOFs)."
+    ],
+    "time_solver_property_count": 1143,
+    "unread_properties": [],
+    "stored_times": 235,
+    "last_time_s": 5.0,
+    "max_observed_stored_time_spacing_s": 0.05000000000000071,
+    "native_accepted_rows": 235,
+    "native_max_step_s": 0.05,
+    "native_step_at_0p04s": [
+      {
+        "step_index": 40,
+        "time_s": 0.04,
+        "stepsize_s": 0.002,
+        "raw_native_log_line": "40        0.04       0.002 out   90   49   96     2     0      0    1e-10  1.1e-14"
+      }
+    ],
+    "native_step_near_peak": [
+      {
+        "step_index": 28,
+        "time_s": 0.02,
+        "stepsize_s": 0.0016,
+        "raw_native_log_line": "28        0.02      0.0016 out   66   37   72     2     0      0  1.2e-10  3.7e-14"
+      },
+      {
+        "step_index": 29,
+        "time_s": 0.0216,
+        "stepsize_s": 0.0016,
+        "raw_native_log_line": "29      0.0216      0.0016 out   68   38   74     2     0      0  2.1e-10  2.5e-14"
+      },
+      {
+        "step_index": 30,
+        "time_s": 0.0232,
+        "stepsize_s": 0.0016,
+        "raw_native_log_line": "30      0.0232      0.0016 out   70   39   76     2     0      0  1.5e-10  2.3e-14"
+      },
+      {
+        "step_index": 31,
+        "time_s": 0.0248,
+        "stepsize_s": 0.0016,
+        "raw_native_log_line": "31      0.0248      0.0016 out   72   40   78     2     0      0  2.3e-10  1.4e-14"
+      },
+      {
+        "step_index": 32,
+        "time_s": 0.0264,
+        "stepsize_s": 0.0016,
+        "raw_native_log_line": "32      0.0264      0.0016 out   74   41   80     2     0      0  1.7e-10  1.2e-14"
+      },
+      {
+        "step_index": 33,
+        "time_s": 0.028,
+        "stepsize_s": 0.0016,
+        "raw_native_log_line": "33       0.028      0.0016 out   76   42   82     2     0      0  2.3e-11  1.2e-14"
+      },
+      {
+        "step_index": 34,
+        "time_s": 0.029,
+        "stepsize_s": 0.001,
+        "raw_native_log_line": "34       0.029       0.001 out   78   43   84     2     0      0  9.2e-11    1e-15"
+      },
+      {
+        "step_index": 35,
+        "time_s": 0.03,
+        "stepsize_s": 0.001,
+        "raw_native_log_line": "35        0.03       0.001 out   80   44   86     2     0      0  8.9e-11    1e-15"
+      },
+      {
+        "step_index": 36,
+        "time_s": 0.032,
+        "stepsize_s": 0.002,
+        "raw_native_log_line": "36       0.032       0.002 out   82   45   88     2     0      0  1.8e-10  1.1e-14"
+      },
+      {
+        "step_index": 37,
+        "time_s": 0.034,
+        "stepsize_s": 0.002,
+        "raw_native_log_line": "37       0.034       0.002 out   84   46   90     2     0      0  1.3e-10  5.9e-15"
+      },
+      {
+        "step_index": 38,
+        "time_s": 0.036,
+        "stepsize_s": 0.002,
+        "raw_native_log_line": "38       0.036       0.002 out   86   47   92     2     0      0  2.1e-10  1.2e-14"
+      },
+      {
+        "step_index": 39,
+        "time_s": 0.038,
+        "stepsize_s": 0.002,
+        "raw_native_log_line": "39       0.038       0.002 out   88   48   94     2     0      0  6.2e-11  1.1e-14"
+      },
+      {
+        "step_index": 40,
+        "time_s": 0.04,
+        "stepsize_s": 0.002,
+        "raw_native_log_line": "40        0.04       0.002 out   90   49   96     2     0      0    1e-10  1.1e-14"
+      },
+      {
+        "step_index": 41,
+        "time_s": 0.042,
+        "stepsize_s": 0.002,
+        "raw_native_log_line": "41       0.042       0.002 out   92   50   98     2     0      0  1.1e-10  7.3e-15"
+      },
+      {
+        "step_index": 42,
+        "time_s": 0.044,
+        "stepsize_s": 0.002,
+        "raw_native_log_line": "42       0.044       0.002 out   94   51  100     2     0      0  1.5e-10  5.7e-15"
+      },
+      {
+        "step_index": 43,
+        "time_s": 0.046,
+        "stepsize_s": 0.002,
+        "raw_native_log_line": "43       0.046       0.002 out   96   52  102     2     0      0  1.4e-10    5e-15"
+      },
+      {
+        "step_index": 44,
+        "time_s": 0.048,
+        "stepsize_s": 0.002,
+        "raw_native_log_line": "44       0.048       0.002 out   98   53  104     2     0      0  2.5e-11  4.1e-15"
+      },
+      {
+        "step_index": 45,
+        "time_s": 0.05,
+        "stepsize_s": 0.002,
+        "raw_native_log_line": "45        0.05       0.002 out  100   54  106     2     0      0  9.1e-11  3.2e-15"
+      },
+      {
+        "step_index": 46,
+        "time_s": 0.054,
+        "stepsize_s": 0.004,
+        "raw_native_log_line": "46       0.054       0.004 out  102   55  108     2     0      0  6.6e-11  3.2e-14"
+      },
+      {
+        "step_index": 47,
+        "time_s": 0.057,
+        "stepsize_s": 0.003,
+        "raw_native_log_line": "47       0.057       0.003 out  104   56  110     2     0      0  7.8e-11  8.3e-15"
+      },
+      {
+        "step_index": 48,
+        "time_s": 0.06,
+        "stepsize_s": 0.003,
+        "raw_native_log_line": "48        0.06       0.003 out  106   57  112     2     0      0  1.1e-10  1.7e-14"
+      }
+    ],
+    "scale_related_settings": [
+      {
+        "path": "sol1/v1/scalemethod",
+        "type": "String",
+        "value_text": "[auto]"
+      },
+      {
+        "path": "sol1/v1/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/resscalemethod",
+        "type": "String",
+        "value_text": "[auto]"
+      },
+      {
+        "path": "sol1/v1/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_cl/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v1/comp1_cl/scaleval",
+        "type": "Double",
+        "value_text": "[1000.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_cl/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_cl/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce1_cs/scalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce1_cs/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce1_cs/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce1_cs/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce2_cs/scalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce2_cs/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce2_cs/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce2_cs/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_phil/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v1/comp1_phil/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_phil/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_phil/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_phis/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v1/comp1_phis/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_phis/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_phis/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/scalemethod",
+        "type": "String",
+        "value_text": "[auto]"
+      },
+      {
+        "path": "sol1/v2/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/resscalemethod",
+        "type": "String",
+        "value_text": "[auto]"
+      },
+      {
+        "path": "sol1/v2/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_cl/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_cl/scaleval",
+        "type": "Double",
+        "value_text": "[1000.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_cl/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_cl/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce1_cs/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce1_cs/scaleval",
+        "type": "Double",
+        "value_text": "[10000.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce1_cs/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce1_cs/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce2_cs/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce2_cs/scaleval",
+        "type": "Double",
+        "value_text": "[10000.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce2_cs/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce2_cs/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_phil/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_phil/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_phil/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_phil/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_phis/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_phis/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_phis/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_phis/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/t1/atolglobalmethod",
+        "type": "String",
+        "value_text": "[scaled]"
+      },
+      {
+        "path": "sol1/t1/atolglobalvaluemethod",
+        "type": "String",
+        "value_text": "[factor]"
+      },
+      {
+        "path": "sol1/t1/atolglobalfactor",
+        "type": "Double",
+        "value_text": "[0.1]"
+      },
+      {
+        "path": "sol1/t1/atolglobal",
+        "type": "Double",
+        "value_text": "[0.001]"
+      },
+      {
+        "path": "sol1/t1/atolmethod",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, global, comp1_liion_pce1_cs, global, comp1_liion_pce2_cs, global, comp1_phil, global, comp1_phis, global]]"
+      },
+      {
+        "path": "sol1/t1/atolvaluemethod",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, factor, comp1_liion_pce1_cs, factor, comp1_liion_pce2_cs, factor, comp1_phil, factor, comp1_phis, factor]]"
+      },
+      {
+        "path": "sol1/t1/atolfactor",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, 0.1, comp1_liion_pce1_cs, 0.1, comp1_liion_pce2_cs, 0.1, comp1_phil, 0.1, comp1_phis, 0.1]]"
+      },
+      {
+        "path": "sol1/t1/atol",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, 1e-3, comp1_liion_pce1_cs, 1e-3, comp1_liion_pce2_cs, 1e-3, comp1_phil, 1e-3, comp1_phis, 1e-3]]"
+      },
+      {
+        "path": "sol1/t1/atoludot",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, 1e-3, comp1_liion_pce1_cs, 1e-3, comp1_liion_pce2_cs, 1e-3, comp1_phil, 1e-3, comp1_phis, 1e-3]]"
+      },
+      {
+        "path": "sol1/t1/atolmethodAUX",
+        "type": "String",
+        "value_text": "[global]"
+      },
+      {
+        "path": "sol1/t1/atolvaluemethodAUX",
+        "type": "String",
+        "value_text": "[factor]"
+      },
+      {
+        "path": "sol1/t1/atolfactorAUX",
+        "type": "Double",
+        "value_text": "[0.1]"
+      },
+      {
+        "path": "sol1/t1/atolAUX",
+        "type": "Double",
+        "value_text": "[0.001]"
+      },
+      {
+        "path": "sol1/t1/atoludotAUX",
+        "type": "Double",
+        "value_text": "[0.001]"
+      },
+      {
+        "path": "sol1/t1/fc1/atolchoice",
+        "type": "String",
+        "value_text": "[fullerrorest]"
+      },
+      {
+        "path": "sol1/t1/fc1/atolthreshold",
+        "type": "Double",
+        "value_text": "[0.1]"
+      }
+    ]
+  },
+  {
+    "name": "Axes600R40",
+    "job_id": "7e78bebd745e437da5bb8fe77a01ef84",
+    "native_status": "completed",
+    "source_sha256": "8ad0b8b31f47896bc8dbc46e80cc61373278edd8efd8ee21c8ed56312a5d1448",
+    "mph_sha256": "e3e87359e14cc278076ed503925ad97d6cc4107a21aae5aa295f9cec0dc50a9e",
+    "actual_component_mesh": [
+      "AXES_ACTUAL_MESH=mesh1|edges=600|vertices=601"
+    ],
+    "actual_element_domain_counts": {
+      "mesh1": {
+        "1": 240,
+        "2": 120,
+        "3": 240
+      }
+    },
+    "particle_settings": [
+      "AXES_PARTICLE=pce1|Nel=40|Nord=1|Distribution=CubicRoot",
+      "AXES_PARTICLE=pce2|Nel=40|Nord=1|Distribution=CubicRoot"
+    ],
+    "native_log_element_counts": [
+      600,
+      40,
+      40
+    ],
+    "native_degrees_of_freedom": [
+      "Number of degrees of freedom solved for: 2402 (plus 12 internal DOFs).",
+      "Number of degrees of freedom solved for: 23365 (plus 12 internal DOFs)."
+    ],
+    "time_solver_property_count": 1143,
+    "unread_properties": [],
+    "stored_times": 215,
+    "last_time_s": 5.0,
+    "max_observed_stored_time_spacing_s": 0.05000000000000071,
+    "native_accepted_rows": 215,
+    "native_max_step_s": 0.05,
+    "native_step_at_0p04s": [
+      {
+        "step_index": 25,
+        "time_s": 0.04,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "25        0.04       0.005 out   60   34   66     2     0      0    9e-11  4.5e-14"
+      }
+    ],
+    "native_step_near_peak": [
+      {
+        "step_index": 20,
+        "time_s": 0.02,
+        "stepsize_s": 0.0025,
+        "raw_native_log_line": "20        0.02      0.0025 out   50   29   56     2     0      0  2.1e-10  7.6e-15"
+      },
+      {
+        "step_index": 21,
+        "time_s": 0.025,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "21       0.025       0.005 out   52   30   58     2     0      0  1.3e-10  6.3e-14"
+      },
+      {
+        "step_index": 22,
+        "time_s": 0.0275,
+        "stepsize_s": 0.0025,
+        "raw_native_log_line": "22      0.0275      0.0025 out   54   31   60     2     0      0  1.3e-10  1.5e-15"
+      },
+      {
+        "step_index": 23,
+        "time_s": 0.03,
+        "stepsize_s": 0.0025,
+        "raw_native_log_line": "23        0.03      0.0025 out   56   32   62     2     0      0  2.1e-10    6e-15"
+      },
+      {
+        "step_index": 24,
+        "time_s": 0.035,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "24       0.035       0.005 out   58   33   64     2     0      0  9.4e-11  5.3e-14"
+      },
+      {
+        "step_index": 25,
+        "time_s": 0.04,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "25        0.04       0.005 out   60   34   66     2     0      0    9e-11  4.5e-14"
+      },
+      {
+        "step_index": 26,
+        "time_s": 0.045,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "26       0.045       0.005 out   62   35   68     2     0      0  2.5e-11  7.3e-14"
+      },
+      {
+        "step_index": 27,
+        "time_s": 0.05,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "27        0.05       0.005 out   64   36   70     2     0      0  2.7e-10  5.7e-14"
+      },
+      {
+        "step_index": 28,
+        "time_s": 0.055,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "28       0.055       0.005 out   66   37   72     2     0      0  6.9e-10  5.4e-14"
+      },
+      {
+        "step_index": 29,
+        "time_s": 0.06,
+        "stepsize_s": 0.005,
+        "raw_native_log_line": "29        0.06       0.005 out   68   38   74     2     0      0  1.1e-10    5e-14"
+      }
+    ],
+    "scale_related_settings": [
+      {
+        "path": "sol1/v1/scalemethod",
+        "type": "String",
+        "value_text": "[auto]"
+      },
+      {
+        "path": "sol1/v1/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/resscalemethod",
+        "type": "String",
+        "value_text": "[auto]"
+      },
+      {
+        "path": "sol1/v1/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_cl/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v1/comp1_cl/scaleval",
+        "type": "Double",
+        "value_text": "[1000.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_cl/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_cl/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce1_cs/scalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce1_cs/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce1_cs/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce1_cs/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce2_cs/scalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce2_cs/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce2_cs/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_liion_pce2_cs/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_phil/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v1/comp1_phil/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_phil/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_phil/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_phis/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v1/comp1_phis/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v1/comp1_phis/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v1/comp1_phis/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/scalemethod",
+        "type": "String",
+        "value_text": "[auto]"
+      },
+      {
+        "path": "sol1/v2/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/resscalemethod",
+        "type": "String",
+        "value_text": "[auto]"
+      },
+      {
+        "path": "sol1/v2/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_cl/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_cl/scaleval",
+        "type": "Double",
+        "value_text": "[1000.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_cl/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_cl/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce1_cs/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce1_cs/scaleval",
+        "type": "Double",
+        "value_text": "[10000.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce1_cs/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce1_cs/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce2_cs/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce2_cs/scaleval",
+        "type": "Double",
+        "value_text": "[10000.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce2_cs/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_liion_pce2_cs/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_phil/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_phil/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_phil/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_phil/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_phis/scalemethod",
+        "type": "String",
+        "value_text": "[manual]"
+      },
+      {
+        "path": "sol1/v2/comp1_phis/scaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/v2/comp1_phis/resscalemethod",
+        "type": "String",
+        "value_text": "[parent]"
+      },
+      {
+        "path": "sol1/v2/comp1_phis/resscaleval",
+        "type": "Double",
+        "value_text": "[1.0]"
+      },
+      {
+        "path": "sol1/t1/atolglobalmethod",
+        "type": "String",
+        "value_text": "[scaled]"
+      },
+      {
+        "path": "sol1/t1/atolglobalvaluemethod",
+        "type": "String",
+        "value_text": "[factor]"
+      },
+      {
+        "path": "sol1/t1/atolglobalfactor",
+        "type": "Double",
+        "value_text": "[0.1]"
+      },
+      {
+        "path": "sol1/t1/atolglobal",
+        "type": "Double",
+        "value_text": "[0.001]"
+      },
+      {
+        "path": "sol1/t1/atolmethod",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, global, comp1_liion_pce1_cs, global, comp1_liion_pce2_cs, global, comp1_phil, global, comp1_phis, global]]"
+      },
+      {
+        "path": "sol1/t1/atolvaluemethod",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, factor, comp1_liion_pce1_cs, factor, comp1_liion_pce2_cs, factor, comp1_phil, factor, comp1_phis, factor]]"
+      },
+      {
+        "path": "sol1/t1/atolfactor",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, 0.1, comp1_liion_pce1_cs, 0.1, comp1_liion_pce2_cs, 0.1, comp1_phil, 0.1, comp1_phis, 0.1]]"
+      },
+      {
+        "path": "sol1/t1/atol",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, 1e-3, comp1_liion_pce1_cs, 1e-3, comp1_liion_pce2_cs, 1e-3, comp1_phil, 1e-3, comp1_phis, 1e-3]]"
+      },
+      {
+        "path": "sol1/t1/atoludot",
+        "type": "StringArray",
+        "value_text": "[[comp1_cl, 1e-3, comp1_liion_pce1_cs, 1e-3, comp1_liion_pce2_cs, 1e-3, comp1_phil, 1e-3, comp1_phis, 1e-3]]"
+      },
+      {
+        "path": "sol1/t1/atolmethodAUX",
+        "type": "String",
+        "value_text": "[global]"
+      },
+      {
+        "path": "sol1/t1/atolvaluemethodAUX",
+        "type": "String",
+        "value_text": "[factor]"
+      },
+      {
+        "path": "sol1/t1/atolfactorAUX",
+        "type": "Double",
+        "value_text": "[0.1]"
+      },
+      {
+        "path": "sol1/t1/atolAUX",
+        "type": "Double",
+        "value_text": "[0.001]"
+      },
+      {
+        "path": "sol1/t1/atoludotAUX",
+        "type": "Double",
+        "value_text": "[0.001]"
+      },
+      {
+        "path": "sol1/t1/fc1/atolchoice",
+        "type": "String",
+        "value_text": "[fullerrorest]"
+      },
+      {
+        "path": "sol1/t1/fc1/atolthreshold",
+        "type": "Double",
+        "value_text": "[0.1]"
+      }
+    ]
+  }
+]

@@ -1,0 +1,101 @@
+    static Object readSetting(com.comsol.model.PropFeature f,String p) {
+        switch(f.getValueType(p)) {
+            case "Boolean": return f.getBoolean(p);
+            case "BooleanArray": return f.getBooleanArray(p);
+            case "BooleanMatrix": return f.getBooleanMatrix(p);
+            case "String": return f.getString(p);
+            case "StringArray": return f.getStringArray(p);
+            case "StringMatrix": return f.getStringMatrix(p);
+            case "Int": return f.getInt(p);
+            case "IntArray": return f.getIntArray(p);
+            case "IntMatrix": return f.getIntMatrix(p);
+            case "Double": return f.getDouble(p);
+            case "DoubleArray": return f.getDoubleArray(p);
+            case "DoubleMatrix": case "DoubleRowMatrix": return f.getDoubleMatrix(p);
+            default: throw new IllegalArgumentException(f.getValueType(p));
+        }
+    }
+    static void dumpSettings(com.comsol.model.SolverFeature f,String path) {
+        System.out.println("AXES_SOLVER_NODE="+path+"|"+f.getType());
+        for(String p:f.properties()) try {
+            System.out.println("AXES_SOLVER_PROP="+path+"/"+p+"|"+f.getValueType(p)+"|"+Arrays.deepToString(new Object[]{readSetting(f,p)}));
+        } catch(Exception e) { System.out.println("AXES_SOLVER_PROP_UNREAD="+path+"/"+p+"|"+e); }
+        for(String child:f.feature().tags()) dumpSettings(f.feature(child),path+"/"+child);
+    }
+    static void runtimeSettings(Model m,String sol,String time) throws Exception {
+        // Read back actual settings before the solve. No settings changed here.
+        String[][] settings={
+            {"key","actual_value"},
+            {"solution_tag",sol},{"time_tag",time},
+            {"study_tlist",m.study("std1").feature("time").getString("tlist")},
+            {"geometry_length_unit",m.component("comp1").geom("geom1").lengthUnit()},
+            {"geometry_dimension",Integer.toString(m.component("comp1").geom("geom1").getSDim())},
+            {"rtol",Double.toString(m.sol(sol).feature(time).getDouble("rtol"))},
+            {"initialstepbdf",Double.toString(m.sol(sol).feature(time).getDouble("initialstepbdf"))},
+            {"initialstepbdfactive",m.sol(sol).feature(time).getString("initialstepbdfactive")},
+            {"maxstepconstraintbdf",m.sol(sol).feature(time).getString("maxstepconstraintbdf")},
+            {"maxstepbdf",Double.toString(m.sol(sol).feature(time).getDouble("maxstepbdf"))},
+            {"tstepsbdf",m.sol(sol).feature(time).getString("tstepsbdf")},
+            {"tout",m.sol(sol).feature(time).getString("tout")},
+            {"consistent",m.sol(sol).feature(time).getString("consistent")},
+            {"atolglobalmethod",m.sol(sol).feature(time).getString("atolglobalmethod")},
+            {"atolglobalvaluemethod",m.sol(sol).feature(time).getString("atolglobalvaluemethod")},
+            {"atolglobalfactor",Double.toString(m.sol(sol).feature(time).getDouble("atolglobalfactor"))},
+            {"atolglobal",Double.toString(m.sol(sol).feature(time).getDouble("atolglobal"))},
+            {"eventtol",Double.toString(m.sol(sol).feature(time).getDouble("eventtol"))},
+            {"electrolyte_positive_check","POSTPROCESSING_ONLY; not a StopCondition"},
+            {"profile_time_interpolation","off; all stored solnum; no t property set"},
+            {"profile_spatial_evaluation","domain-selected FE Interp; recover off; ext 0; 241 common coordinates"}
+        };
+        table("axes_runtime_settings.csv",settings);
+        for(String f:m.sol(sol).feature().tags()) if(m.sol(sol).feature(f).getType().equals("Time")||m.sol(sol).feature(f).getType().equals("Variables")) dumpSettings(m.sol(sol).feature(f),sol+"/"+f);
+        for(int d=1;d<=3;d++) System.out.println("AXES_PHYSICAL_MESH_DOMAIN="+d+"|numelem="+m.component("comp1").mesh("mesh1").feature("edg1").feature("dis"+d).getString("numelem"));
+        for(String pce:new String[]{"pce1","pce2"}) {
+            PhysicsFeature pin=m.component("comp1").physics("liion").feature(pce).feature("pin1");
+            System.out.println("AXES_PARTICLE="+pce+"|Nel="+pin.getString("Nel")+"|Nord="+pin.getString("Nord")+"|Distribution="+pin.getString("Distribution"));
+        }
+    }
+    static void spatialProfiles(Model m) throws Exception {
+        for(String mesh:m.component("comp1").mesh().tags()) {
+            System.out.println("AXES_ACTUAL_MESH="+mesh+"|edges="+m.component("comp1").mesh(mesh).getNumElem("edg")+"|vertices="+m.component("comp1").mesh(mesh).getNumVertex());
+            System.out.println("AXES_MESH_ELEMENT_DOMAINS="+mesh+"|"+Arrays.toString(m.component("comp1").mesh(mesh).getElemEntity("edg")));
+        }
+        double ln=m.param().evaluate("L_el"),ls=m.param().evaluate("L_sep"),lp=m.param().evaluate("L_pos");
+        double[][] times=evaluate(m,"profiletimes","EvalGlobal",new String[]{"t"},new String[]{"s"},null);
+        for(int domain:new int[]{1,3}) {
+            String electrode=domain==1?"N":"P",tag="profile"+electrode;
+            double start=domain==1?0:ln+ls,length=domain==1?ln:lp;
+            double[] coordinates=new double[241];
+            for(int j=0;j<coordinates.length;j++) coordinates[j]=start+length*j/240.0;
+            coordinates[0]=start; coordinates[240]=start+length;
+            m.result().numerical().create(tag,"Interp");
+            m.result().numerical(tag).set("data","daudit");
+            m.result().numerical(tag).selection().geom("geom1",1);
+            m.result().numerical(tag).selection().set(new int[]{domain});
+            m.result().numerical(tag).set("coord",new double[][]{coordinates});
+            m.result().numerical(tag).set("ext",0.0);
+            m.result().numerical(tag).set("recover","off");
+            m.result().numerical(tag).set("timeinterp","off");
+            m.result().numerical(tag).set("coorderr","on");
+            m.result().numerical(tag).set("expr",new String[]{"t","x","liion.socloc_surface","liion.cs_average/liion.csmax","liion.Eeq_per1","liion.etamid_per1","phil","dom"});
+            m.result().numerical(tag).set("unit",new String[]{"s","m","1","1","V","V","V","1"});
+            System.out.println("AXES_PROFILE_UNIT="+electrode+"|"+m.result().numerical(tag).getValueType("unit")+"|"+Arrays.toString(m.result().numerical(tag).getStringArray("unit")));
+            double[][][] data=m.result().numerical(tag).getData();
+            if(data.length!=8 || data[0].length!=times[0].length) throw new IllegalStateException("Profile expression/time shape mismatch "+electrode);
+            String[][] rows=new String[times[0].length*coordinates.length+1][8];
+            rows[0]=new String[]{"time_s","coordinate_m","x_surface","x_particle_average","Eeq_V","etaMid_V","phil_V","domain_id"};
+            for(int ti=0;ti<times[0].length;ti++) {
+                for(int e=0;e<8;e++) if(data[e][ti].length!=coordinates.length) throw new IllegalStateException("Profile coordinate shape mismatch "+electrode);
+                for(int j=0;j<coordinates.length;j++) {
+                    if(Math.abs(data[0][ti][j]-times[0][ti])>1e-12) throw new IllegalStateException("Profile time mismatch "+electrode);
+                    if(Math.abs(data[1][ti][j]-coordinates[j])>1e-15 || Math.abs(data[7][ti][j]-domain)>1e-9) throw new IllegalStateException("Profile coordinate/domain mismatch "+electrode);
+                    for(int e=0;e<8;e++) {
+                        if(!Double.isFinite(data[e][ti][j])) throw new IllegalStateException("Nonfinite profile "+electrode+" expression "+e+" time "+ti+" point "+j);
+                        rows[1+ti*coordinates.length+j][e]=Double.toString(data[e][ti][j]);
+                    }
+                }
+            }
+            table("axes_profile_"+electrode+".csv",rows);
+            System.out.println("AXES_PROFILE="+electrode+"|time_count="+times[0].length+"|coordinate_count="+coordinates.length+"|timeinterp=off|FE_spatial_interp=true|domain="+domain);
+        }
+    }

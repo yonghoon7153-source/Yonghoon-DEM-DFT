@@ -1,0 +1,19 @@
+# Fresh mesh-axis comparison design
+
+Scope: the three newly submitted 5 s jobs only: 300 physical elements / 40 radial elements, 300/80, and 600/40. Older preflight jobs and results are not comparison inputs. No COMSOL execution is performed by this analysis.
+
+The primary comparisons are 300/40→300/80 (radial refinement only) and 300/40→600/40 (physical-coordinate refinement only). All non-mesh configuration fields must be equal; source/config hashes and job IDs are recorded. Source/native audits establish parameters not exported in these CSVs; a CSV comparison alone does not prove their invariance.
+
+The proposed requested time grid has 187 distinct points: 0, .0001, .0002, .0005, .001, .002, .005, .01; .02:.01:1; 1.05:.05:5. The early window [0,1] has 107 points. All stored rows are available, but comparison uses only requested points present uniquely and exactly in both datasets as parsed Decimal times. Missing or duplicate requested times prevent a pass. There is no temporal interpolation or nearest-time substitution.
+
+Global and collector boundary CSVs retain the preflight schema. Cell voltage is phiS_P−phiS_N. At every common comparison time, signed differences between runs are computed for V, ΔEeq, ΔetaMid, and ΔphiL. At the same instant as maximum |difference in V|, the signed component differences are reported and their sum is checked against the voltage difference. Individual component maxima and their own times are also reported, so unrelated maxima are not incorrectly summed.
+
+Native `Interp` exports `axes_profile_N.csv` and `axes_profile_P.csv`, with columns time_s,coordinate_m,x_surface,x_particle_average,Eeq_V,etaMid_V,phil_V,domain_id. Domain IDs must be 1 and 3 respectively (numeric validation tolerance 1e-9). Every stored time must contain 241 fixed common physical coordinates in each electrode: N [0,52e-6] m and P [77e-6,121e-6] m. Values are COMSOL finite-element spatial interpolations on this prescribed grid. The external analysis adds no spatial interpolation. The actual core solver settings in `axes_runtime_settings.csv` are also compared for equality across the three fresh jobs.
+
+Profiles are sorted by coordinate and matched by sample index. Coordinate values must match the prescribed grid and the other run to within 1e-15 m; this tolerance validates coordinate identity and is not interpolation or a spatial error estimate. The actual maximum coordinate mismatch is reported. Duplicate coordinates, wrong counts, missing time slices, or different grids prevent a profile pass.
+
+For both [0,1] and [0,5], report maximum pointwise |surface-x difference|, electrode, time, coordinate, both original values, and signed difference. Report electrode-specific maxima, and surface-vs-particle-average differences as context. The 241-point maximum is a sampled maximum, not a proof over continuous space. Electrode extrema alone are not treated as pointwise profile agreement.
+
+Acceptance criteria remain max|ΔV|≤1 mV and max pointwise|Δx_surface|≤1e-4 over each complete requested window. Meeting criteria means bounded pairwise sensitivity agreement, not an unrestricted proof of convergence. Exceeding either threshold, incomplete exports, or unavailable exact times must remain explicit. No threshold relaxation or OCP adjustment is performed.
+
+Before comparisons, each new job is checked for finite tables, aligned scalar times, voltage decomposition identity, actual Eeq/direct surface Eeq identity, surface reaction input identity, total Li conservation, surface table bounds, and positive electrolyte concentration. Failed native states remain failed. OCP-specific incomplete classifications require a stored guard/range violation or corresponding native error evidence; unrelated failures are not relabeled OCP failures. The earlier `INCOMPLETE_RANGE_STOP` job is neither rewritten nor used as an input.

@@ -1,0 +1,77 @@
+{
+  "scope": "Three completed 5-second jobs; existing exact-time comparison CSVs only",
+  "method": "187 prescribed native stored times; fixed 241-point FE spatial profiles per electrode; no temporal or external spatial interpolation",
+  "plot_note": "Lines join sample markers as visual guides. Axis scales differ between rows. Extrema are sampled, not continuous.",
+  "comparisons": [
+    {
+      "first": "Axes300R40",
+      "second": "Axes300R80",
+      "prescribed_stored_times_used": 187,
+      "window_s": [
+        0,
+        5
+      ],
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "0.04",
+        "V_first_V": 2.2377974090102875,
+        "V_second_V": 2.2403027198739136,
+        "difference_V_second_minus_first_V": 0.0025053108636261,
+        "difference_delta_Eeq_V": 0.0025506300937527,
+        "difference_delta_etaMid_V": -4.5776895549964e-05,
+        "difference_delta_phiL_V": 4.576654234e-07,
+        "difference_decomposition_residual_V": -3.6e-17
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "N",
+        "time_s_exact": "0.04",
+        "sample_index": 240,
+        "coordinate_first_m": 5.2e-05,
+        "coordinate_second_m": 5.2e-05,
+        "x_surface_first": 0.011840794827564697,
+        "x_surface_second": 0.011882618811944879,
+        "signed_difference_second_minus_first_x": 4.1823984380182e-05,
+        "absolute_difference_x": 4.1823984380182e-05
+      },
+      "within_sampled_limits": false
+    },
+    {
+      "first": "Axes300R40",
+      "second": "Axes600R40",
+      "prescribed_stored_times_used": 187,
+      "window_s": [
+        0,
+        5
+      ],
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "0.001",
+        "V_first_V": 2.2308285543296176,
+        "V_second_V": 2.2308285543404844,
+        "difference_V_second_minus_first_V": 1.08668e-11,
+        "difference_delta_Eeq_V": 8.81429e-11,
+        "difference_delta_etaMid_V": -7.1213927e-11,
+        "difference_delta_phiL_V": -6.0628e-12,
+        "difference_decomposition_residual_V": 6.27e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "P",
+        "time_s_exact": "5",
+        "sample_index": 240,
+        "coordinate_first_m": 0.000121,
+        "coordinate_second_m": 0.000121,
+        "x_surface_first": 0.9232992546149947,
+        "x_surface_second": 0.9232992493863009,
+        "signed_difference_second_minus_first_x": -5.2286938e-09,
+        "absolute_difference_x": 5.2286938e-09
+      },
+      "within_sampled_limits": true
+    }
+  ],
+  "input_sha256": {
+    "outputs\\mesh_axes\\results\\analysis.json": "a1b03e3a74a46219f0456ca4d1bd726aaf99e8f23b50183900d988d36a71fcca",
+    "outputs\\mesh_axes\\results\\Axes300R40_vs_Axes300R80_0_to_5s.csv": "2b1d68d044ae1053815f369889e62d5828f6e3957d85ecfedd98acc41245d89b",
+    "outputs\\mesh_axes\\results\\Axes300R40_vs_Axes300R80_0_to_5s_profile_at_surface_peak.csv": "cc2a4112843ad8e4b8ac7373ad44a66b131510cb975af3d543766031babc3b80",
+    "outputs\\mesh_axes\\results\\Axes300R40_vs_Axes600R40_0_to_5s.csv": "7ad48e43f143f8807896904cfeb6bc181798f95e158fcd4def349e4ba1503dd9",
+    "outputs\\mesh_axes\\results\\Axes300R40_vs_Axes600R40_0_to_5s_profile_at_surface_peak.csv": "a2abd501f79d7a6a8801935482ffb9685907f0030e050976fb46dca2ea18846f"
+  },
+  "all_tracked_inputs_unchanged_after_plot": true
+}

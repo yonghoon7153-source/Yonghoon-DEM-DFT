@@ -1,0 +1,15 @@
+{
+  "job_id": "a4d58eb7f97c48cc9109657d4a8f0ba3",
+  "state": "completed",
+  "phase": "finished",
+  "worker_started_at": "2026-09-13T12:42:53.413034+00:00",
+  "updated_epoch": 1789303486.7305658,
+  "updated_at": "2026-09-13T12:44:46.730566+00:00",
+  "child_pid": 10580,
+  "compile_returncode": 0,
+  "batch_returncode": 0,
+  "output": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\comsol63\\.comsol-jobs\\a4d58eb7f97c48cc9109657d4a8f0ba3\\result_Model.mph",
+  "output_bytes": 87538355,
+  "license_checkout": "not_tested_by_probe",
+  "result_validation": "not_performed"
+}
