@@ -88,19 +88,19 @@
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
     <span class="badge" style="background:#ede9fe;color:#5b21b6">해석</span>
     {% if not it.citable %}<span class="badge" style="background:#fee2e2;color:#b91c1c">citable = no</span>{% endif %}
-    <b style="font-size:.92rem">{{ it.title }}</b>
+    <b style="font-size:.92rem">{{ it.title|mdlite }}</b>
     <span class="mono muted" style="font-size:.7rem;margin-left:auto">{{ it.date }}</span>
   </div>
-  {% if it.status %}<div class="muted" style="font-size:.74rem;margin-top:2px">{{ it.status }}</div>{% endif %}
+  {% if it.status %}<div class="muted" style="font-size:.74rem;margin-top:2px">{{ it.status|mdlite }}</div>{% endif %}
   {% if it.headline %}<div style="margin-top:8px;font-size:.86rem;line-height:1.6">{{ it.headline|mdlite }}</div>{% endif %}
   {# 숫자 표 — 원본은 각 표의 source 파일이다. 화면이 값을 보관하지 않는다. #}
   {% for tb in it.tables %}
   <div style="margin-top:12px">
-    {% if tb.title %}<div style="font-size:.8rem;font-weight:700">{{ tb.title }}</div>{% endif %}
+    {% if tb.title %}<div style="font-size:.8rem;font-weight:700">{{ tb.title|mdlite }}</div>{% endif %}
     {% if tb.error %}<div style="color:var(--red);font-size:.76rem">⛔ 표가 어긋난다 — {{ tb.error }}</div>{% endif %}
     <div style="overflow-x:auto">
       <table class="mdl-tbl" style="margin-top:5px;font-size:.76rem">
-        <thead><tr>{% for c in tb.columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+        <thead><tr>{% for c in tb.columns %}<th>{{ c|mdlite }}</th>{% endfor %}</tr></thead>
         <tbody>{% for r in tb.rows %}<tr>{% for c in r %}<td>{{ c|mdlite }}</td>{% endfor %}</tr>{% endfor %}</tbody>
       </table>
     </div>

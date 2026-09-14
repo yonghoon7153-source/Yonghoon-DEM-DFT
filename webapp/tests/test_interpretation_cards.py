@@ -149,3 +149,40 @@ def test_malformed_table_is_reported_not_hidden(tmp_path):
     tb = V.interpretation_cards_for("x", root=tmp_path)[0]["tables"][0]
     assert tb["error"] and "[0]" in tb["error"], f"어긋난 행을 안 잡았다: {tb}"
 
+
+def test_no_literal_markdown_asterisks_on_the_card(client):
+    """⛔음성: 원장 문자열의 `**` 가 **기호로** 화면에 나오면 잡는다.
+
+    2026-09-14 실측 — 표 제목만 `|mdlite` 를 안 타서 "창이 **좁아진다**고" 가 별표째 나왔다.
+    셀·설명은 필터를 탔는데 제목만 빠진 자리였다. 새 필드를 늘릴 때 같은 구멍이 또 난다.
+    ⚠ 못 하는 것: script·style·주석 안은 안 본다 (JS 리터럴의 `**` 는 정당하다).
+    """
+    import re as _re
+    h = client.get(f"/composition/{ND}").get_data(as_text=True)
+    body = _re.sub(r"<script.*?</script>", "", h, flags=_re.S)
+    body = _re.sub(r"<style.*?</style>", "", body, flags=_re.S)
+    body = _re.sub(r"<!--.*?-->", "", body, flags=_re.S)
+    hits = [m.group(0).replace("\n", " ") for m in _re.finditer(r".{0,40}\*\*.{0,40}", body, _re.S)]
+    assert not hits, f"별표가 기호로 노출된 자리 {len(hits)}곳: {hits[:3]}"
+
+
+def test_card_markdown_actually_becomes_bold(client):
+    """양성: 카드의 `**강조**` 가 실제로 <b>/<strong> 으로 바뀐다.
+
+    ⚠ 위 음성만 있으면 "필터가 문자열을 통째로 지워도" 통과한다 — 별표가 없어지니까.
+      강조가 **살아서 태그로** 나왔는지 같이 본다.
+    """
+    h = client.get(f"/composition/{ND}").get_data(as_text=True)
+    tabs = V.interpretation_cards_for(ND)[0]["tables"]
+    marked = [t for t in tabs if "**" in t["title"]]
+    assert marked, "전제 실패: 제목에 강조가 든 표가 없다 (이 시험이 공허해진다)"
+    # ⛔ 강조 **안쪽 단어만** 찾으면 안 된다 — 같은 단어가 카드 머리글에도 강조로 들어 있어서
+    #   표 제목의 강조를 통째로 지워도 통과했다 (2026-09-14 실측, 고장 주입으로 잡음).
+    #   **제목 전체**를 렌더된 형태로 만들어 대조한다: 별표가 남아도, 강조가 사라져도 어긋난다.
+    import re as _re
+    for t in marked:
+        want_b = _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", t["title"])
+        want_s = _re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t["title"])
+        assert (want_b in h) or (want_s in h), \
+            f"표 제목이 렌더된 형태로 안 나온다: {want_s[:70]}"
+
