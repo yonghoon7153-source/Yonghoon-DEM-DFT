@@ -3,13 +3,35 @@
 > 세션이 바뀌어도 유지되는 미결 사항 추적. 닫을 때 날짜+근거를 남기고 ✅로 옮긴다.
 > 등록: 2026-07-27 (MAX 감사 후속).
 
-## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-15 새벽 — ⏭-NOW-g 가 최신 (V100 열림 · G1 은 modelc 대기)**)
+## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-15 새벽 — ⏭-NOW-h 가 최신 (E′ 파일럿 V100 에서 실행 중)**)
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 >
 > ⚠ **이 절의 상태 문장은 실측으로만 쓴다.** 2026-09-07 까지 여기 머리가 "ORCA 8잡 실행 중"
 > 이었는데 같은 날 실측은 **프로세스 0개**였다 — 워처·기억이 아니라 `ps`·receipt·git log 로
 > 받친다(`kb/projects/restart_runbook_2026_09_07.md`). 세션을 닫을 때 이 절을 갱신한다.
+
+### ⏭-NOW-h. 2026-09-15 새벽 — **E′ 파일럿이 V100 에서 돈다.**
+
+| 트랙 | 상태 |
+|---|---|
+| **E′ 파일럿** | 🟢 **실행 중** — V100 tmux `eprime`. out_root `$STORE/runs/eprime_2026_09_14`, 로그 `$STORE/runs/eprime_2026_09_14.log`. 준비 5 + MD 11 호출 = **30런**, 상한 10 / 120 GPU-h (비준). code_id `634da438b`. 감시는 `tools/doping/watch_eprime.py --out_root …` |
+| **G1 (Li₂S 1층)** | ⏸ kgy 의 modelc 끝나고. GPU OOM 이력 있음 — 사다리 ② `diago_david_ndim=2` → ③ CPU NP=8 → ④ KISTI (`db/properties/li2s_layer1_g1_prereg_2026_09_14.json` §6c) |
+| **회신 BR 후속** | ⏸ 300 K hold 연장(동역학 갇힘 진단 ②)은 G1 뒤. 나머지 4시드 보류 유지 |
+
+**바로 볼 것 (순서)**
+1. **첫 prep 이 rc=0 인가.** `torch 2.14 + fairchem 2.22` 는 공식 조합이 아니고, 확인된 것은
+   **단일점 추론 한 번**뿐이다. 수백 스텝 FIRE 가 첫 실사용이라 여기가 첫 위험 자리다.
+2. **속도 시험(H0 600 K s1) 실측 GPU-h.** 소상한 10 을 넘으면 러너가 스스로 멈춘다(rc=4).
+   넘지 않으면 남은 29런 투영이 총상한 120 과 대조된다.
+3. 끝나면 집계·자격 판정은 **러너 밖**이다 (`msd_diffusive_check.aggregation_eligible`).
+
+**V100 접속 규율** (`kb/platforms/v100_uma_setup_2026_09_14.md` 함정 ⑥·⑦)
+- `LD_LIBRARY_PATH` 를 **셸에 export 하지 않는다** — `env … python` 앞자리에만. 전역이면 ssh 가 깨진다.
+- ssh 는 `env -u LD_LIBRARY_PATH ssh $SSHOPT kgy@59.12.161.91`. `~/.ssh` 가 root 소유라
+  설정 파일을 못 쓴다 → 옵션을 명령줄로.
+- repo 갱신은 `git archive` 한 스트림. ⛔ **라운드가 도는 중에 `tools/` 를 통째로 덮지 않는다** —
+  manifest 의 `code_id` 와 실제 실행 코드가 갈라진다. 필요한 파일만 `git show` 로 집는다.
 
 ### ⏭-NOW-g. 2026-09-15 새벽 — **V100 이 열렸다. G1 은 modelc 뒤.**
 
