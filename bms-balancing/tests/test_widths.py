@@ -186,3 +186,45 @@ def test_w06_fit_cycles_records_bounds_against_the_box_it_used(tmp_path):
 
     for r in at_lb:
         assert "gamma_Si=lb" in r["bounds"], (r["cycle"], r["gamma_Si"], r["bounds"], lb_gamma)
+
+
+# ── W-08 ────────────────────────────────────────────────────────────────
+def test_w08_a_hex_digest_that_looks_like_a_float_is_not_an_infinite_number():
+    """[W-08] `schema._finite_problems` 가 JSON 안의 **모든 문자열**에 `float()` 를 걸어 유한성을 본다.
+    의도는 손으로 쓴 `"1e999"`·`"Infinity"` 를 잡는 것이었는데(자체 리뷰 C06), **hex digest 가 우연히 과학적
+    표기법처럼 생기면 같이 걸린다.**
+
+        float("796984e18157") == inf        # 796984 × 10^18157
+
+    `inputs_sha` 는 12 자 hex 이고 `run_id` 는 32 자 hex 다. 즉 **입력이 바뀔 때마다 주사위를 굴리는 셈**이고,
+    걸리면 정상 산출이 "스키마 위반" 으로 게시를 거부당한다. 실측으로 한 번 터졌다 —
+    `test_i6p_05` 가 `! degeneracy 산출이 스키마를 어긴다 (1 건) … degeneracy.inputs_sha: 유한하지 않은 값
+    ('796984e18157')` 로 실패했다 (tmp_path 가 digest 에 들어가 실행마다 값이 달라진다).
+
+    계약: **식별자 필드는 숫자가 아니다.** 숫자 필드의 `"1e999"` 는 계속 잡고, digest·id 는 라벨로 둔다.
+    """
+    import math
+    from bms_balancing import schema as S
+
+    assert math.isinf(float("796984e18157")), "전제가 바뀌었다 — 이 문자열은 inf 로 파싱돼야 한다"
+
+    # (1) digest 가 그렇게 생겼어도 문제로 세지 않는다
+    assert S._finite_problems({"inputs_sha": "796984e18157"}, "d") == []
+    assert S._finite_problems({"run_id": "796984e18157be4f796984e18157be4f"}, "d") == []
+
+    # (2) 그렇다고 C06 의 구멍이 다시 열리면 안 된다 — **숫자 필드**의 무한대는 그대로 잡는다
+    assert S._finite_problems({"best_obj": "1e999"}, "d"), "숫자 필드의 무한 문자열은 계속 잡아야 한다"
+    assert S._finite_problems({"LLI_percent": {"min": "Infinity"}}, "d")
+    assert S._finite_problems({"tol_percent_of_best": float("inf")}, "d")
+
+
+def test_w08b_check_degeneracy_publishes_an_artifact_whose_digest_looks_numeric():
+    """[W-08b] 위 결함의 **산출 쪽 모습**: 그런 digest 를 가진 정상 degeneracy JSON 이 거부됐다.
+
+    여기서는 `_finite_problems` 가 내는 메시지만 본다 (다른 계약 위반은 이 시험의 축이 아니다).
+    """
+    from bms_balancing import schema as S
+    j = {"state": "100", "si_source": "Li", "half_cell": "GITT", "run_id": "796984e18157be4f796984e18157be4f",
+         "inputs_sha": "796984e18157", "best_obj": 1.0, "n_starts": 1}
+    bad = [m for m in S._finite_problems({k: v for k, v in j.items()}, "degeneracy") if "유한하지" in m]
+    assert bad == [], bad

@@ -831,17 +831,36 @@ def check_gamma_roster(rows: list) -> list:
     return p
 
 
-def _finite_problems(x, where: str) -> list:
-    """중첩 구조 안의 모든 숫자가 유한한가 (Codex R11 P1-8)."""
+#: **식별자**로만 쓰는 필드 — 값이 hex digest·uuid 라서 숫자로 읽으면 안 된다 (W-08).
+#: 정확한 이름과 접미사 둘 다 본다. 여기 없는 이름은 여전히 숫자 취급이므로 C06 의 구멍은 그대로 막혀 있다.
+LABEL_KEYS = ("run_id", "inputs_sha", "ref_inputs_sha", "sha256", "digest")
+LABEL_SUFFIXES = ("_sha", "_sha256", "_id", "_digest")
+
+
+def _is_label_key(key) -> bool:
+    return isinstance(key, str) and (key in LABEL_KEYS or key.endswith(LABEL_SUFFIXES))
+
+
+def _finite_problems(x, where: str, key=None) -> list:
+    """중첩 구조 안의 모든 숫자가 유한한가 (Codex R11 P1-8).
+
+    ⚠ W-08 (2026-09-14): 문자열 가지가 **식별자까지** 숫자로 읽었다. `inputs_sha` 는 12 자 hex, `run_id` 는
+      32 자 hex 라 가끔 과학적 표기법처럼 생긴다 — `float("796984e18157")` 는 `inf` 다. 그러면 정상 산출이
+      "유한하지 않은 값" 으로 게시를 거부당한다. **입력이 바뀔 때마다 주사위를 굴리는 셈**이라 재현이 어렵고,
+      실제로 `test_i6p_05` 가 그렇게 한 번 빨갛게 났다 (tmp_path 가 digest 에 들어간다).
+      그래서 **키 이름으로** 라벨을 가른다 — 숫자 필드의 `"1e999"` 는 계속 잡는다 (C06 의 축은 그대로다).
+    """
     if isinstance(x, bool):
         return []
     if isinstance(x, (int, float)):
         return [] if math.isfinite(x) else [f"{where}: 유한하지 않은 값 ({x!r})"]
     if isinstance(x, dict):
-        return [m for k, v in x.items() for m in _finite_problems(v, f"{where}.{k}")]
+        return [m for k, v in x.items() for m in _finite_problems(v, f"{where}.{k}", k)]
     if isinstance(x, (list, tuple)):
-        return [m for i, v in enumerate(x) for m in _finite_problems(v, f"{where}[{i}]")]
+        return [m for i, v in enumerate(x) for m in _finite_problems(v, f"{where}[{i}]", key)]
     if isinstance(x, str):
+        if _is_label_key(key):
+            return []
         # ⚠ 자체 리뷰 C06: 전 판은 str 을 그냥 통과시켜 손으로 쓴 JSON 의 `"1e999"`·`"Infinity"`·`"nan"` 이
         #   문제 0 이었다 (CSV 쪽은 `float()` 로 강제 파싱하는데 JSON 쪽만 비대칭). `_num_diff` 도 `float()` 를
         #   쓰므로 양쪽 다 `"1e999"` 면 `inf == inf` 로 숫자 차이까지 0 이 된다. 같은 규칙을 적용한다 —

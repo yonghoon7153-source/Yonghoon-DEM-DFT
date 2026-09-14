@@ -99,7 +99,8 @@ fi
 
 echo
 echo "══ 5. payload 전수 대조 + 보존 대상 복사 ═══════════════════════════"
-DEST="$DEST" TMP="$TMP" MAN="$MAN" KEEP_EXT="$KEEP_EXT" MAX_KEEP_BYTES="$MAX_KEEP_BYTES" \
+MAN_REL_OUT="$TMP/.man_rel"
+DEST="$DEST" TMP="$TMP" MAN="$MAN" KEEP_EXT="$KEEP_EXT" MAX_KEEP_BYTES="$MAX_KEEP_BYTES" MAN_REL_OUT="$MAN_REL_OUT" \
 python3 - <<'PY' || exit 1
 import hashlib, json, os, pathlib, shutil, sys
 dest = pathlib.Path(os.environ["DEST"]); tmp = pathlib.Path(os.environ["TMP"])
@@ -154,6 +155,10 @@ man_out.parent.mkdir(parents=True, exist_ok=True)
 shutil.copyfile(man, man_out)
 print(f"  manifest 자신도 보존: {man_rel} "
       f"(self-SHA {hashlib.sha256(man_out.read_bytes()).hexdigest()[:16]}…)")
+# ⚠ 묶음 안에 **이전 묶음의 manifest 가 같이 들어오는 일이 있다** (late_cap_a 에 radial320_timecap 것이
+#   딸려 왔다). 그러니 뒤에 오는 검사가 `rglob` 으로 아무거나 집으면 엉뚱한 것과 대조한다 — 이번 것의
+#   경로를 그대로 넘긴다. (2026-09-14 실측: 그렇게 집어서 "일치 21 · 불일치 1" 이 나왔다.)
+pathlib.Path(os.environ["MAN_REL_OUT"]).write_text(str(man_rel), encoding="utf-8")
 
 dest.mkdir(parents=True, exist_ok=True)
 (dest / "FULL_LISTING.tsv").write_text(
@@ -181,25 +186,31 @@ raise SystemExit(1 if bad else 0)
 PY
 
 echo
+echo
 echo "══ 7. 다음 (사람이 확인하고 친다) ══════════════════════════════════"
+MAN_REL="$(cat "$TMP/.man_rel" 2>/dev/null || echo '')"
+PREFIX="$(git rev-parse --show-prefix)"          # 저장소 루트에서 본 이 디렉터리
 cat <<NEXT
   git add "$DEST"
   git commit -m "bms: ${NAME} 원문 보존 (md·json·csv·txt; mph·log·java·py·그림 제외)"
   git push -u origin claude/bms-alpha-beta-verify
 
-  그 다음 커밋 안의 bytes 도 한 번 더 대조한다 (규칙이 실제로 먹었는지):
-  git stash list >/dev/null; python3 - <<'CHECK'
+  그 다음 커밋 안의 bytes 를 재대조한다 (줄끝 정규화가 안 먹었는지 — 이 스크립트의 존재 이유).
+  ⚠ 두 가지를 틀리기 쉽다: \\`git show HEAD:<경로>\\` 는 **저장소 루트** 기준이고,
+    묶음에 이전 묶음의 manifest 가 딸려 오는 일이 있어 **이번 것을 명시**해야 한다.
+  python3 - <<'CHECK'
 import hashlib, json, pathlib, subprocess
-dest = "$DEST"
-man = next(pathlib.Path(dest).rglob("package_manifest.json"))
+dest = "${PREFIX}${DEST}"                     # 저장소 루트 기준
+man  = pathlib.Path(dest) / "${MAN_REL}"      # 이번 묶음의 manifest (rglob 쓰지 말 것)
 m = json.loads(man.read_text(encoding="utf-8"))
-ok = bad = 0
+print("manifest self-SHA:", hashlib.sha256(man.read_bytes()).hexdigest())
+ok = bad = skip = 0
 for e in m["entries"]:
     rel = f"{dest}/{e['path']}"
     try: blob = subprocess.run(["git","show",f"HEAD:{rel}"],capture_output=True,check=True).stdout
-    except subprocess.CalledProcessError: continue
+    except subprocess.CalledProcessError: skip += 1; continue
     if hashlib.sha256(blob).hexdigest() == e["sha256"]: ok += 1
-    else: bad += 1; print("  커밋 bytes 불일치:", e["path"])
-print(f"  커밋(HEAD) 안 bytes: 일치 {ok} · 불일치 {bad}")
+    else: bad += 1; print("  X 커밋 bytes 불일치:", e["path"])
+print("커밋(HEAD) 안 bytes: 일치 %d · 불일치 %d · 미보존 %d" % (ok, bad, skip))
 CHECK
 NEXT
