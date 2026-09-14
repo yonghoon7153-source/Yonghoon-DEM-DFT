@@ -90,9 +90,10 @@ def test_two_contenders_that_both_observe_absence_do_not_both_acquire(
     for t in ts:
         t.join(timeout=10)
     kinds = sorted(k for k, _ in results)
+    # 증인 문구는 결정적이어야 한다 (변이 재생의 증인은 접두 대조다 — token
+    # repr·PID 가 들어가면 조각마다 달라진다, 12조각 실측).
     assert kinds == ["acquired", "refused"], (
-        f"두 contender 의 결과가 {kinds} — 정확히 하나만 잡아야 한다 (62차 P0-2): "
-        f"{results}")
+        f"두 contender 의 결과가 {kinds} — 정확히 하나만 잡아야 한다 (62차 P0-2)")
     for k, v in results:
         if k == "acquired":
             io_mod.release_run_lock(v)
@@ -132,7 +133,7 @@ print("held")
     for line in sorted(log, key=lambda s: int(s.split()[2])):
         active += 1 if line.startswith("in ") else -1
         peak = max(peak, active)
-    assert peak == 1, f"동시에 잡은 프로세스가 {peak} 개다 (62차 P0-2): {log}"
+    assert peak == 1, f"동시에 잡은 프로세스가 {peak} 개다 (62차 P0-2)"
 
 
 # ── P1-1 ──────────────────────────────────────────────────────────────────

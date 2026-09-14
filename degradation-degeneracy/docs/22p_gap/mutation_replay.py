@@ -2729,15 +2729,11 @@ EXPECT: dict = {
             "tests/test_evidence_layer_58.py::test_the_execution_receipt_binds_the_interpreter_itself",
             "tests/test_evidence_layer_58.py::test_the_execution_receipt_binds_what_the_interpreter_actually_loads",
         ],
-        # ★ 61차 P1-3 — 증인이 바뀌었다. `startup` 을 비우면 이제 **영수증
-        #   완전성 검사**가 먼저 문다 (`startup.startup_history` 가 없으므로).
-        #   축의 물음("실행이 실제로 올린 것이 증거 안인가")은 그대로이고,
-        #   더 이른 층이 같은 것을 막는다. 증인은 실측한 그 층의 거부다.
         "witness": {
             "tests/test_evidence_layer_58.py::test_the_execution_receipt_binds_the_interpreter_itself":
-                "_ReplayError: 환경 영수증이 **불완전**하다 — 측정이 실패한 항목이 있다: startup.startup_history",
+                "mutation_replay._ReplayError: 환경 영수증이 **불완전**하다 — 측정이 실패한 항목이 있다: startup: None · startup.startup_history: None . 못 잰 환경으로 만든 증거는 '같은 환경' 을 주장할 수 없다.",
             "tests/test_evidence_layer_58.py::test_the_execution_receipt_binds_what_the_interpreter_actually_loads":
-                "_ReplayError: 환경 영수증이 **불완전**하다 — 측정이 실패한 항목이 있다: startup.startup_history",
+                "mutation_replay._ReplayError: 환경 영수증이 **불완전**하다 — 측정이 실패한 항목이 있다: startup: None · startup.startup_history: None . 못 잰 환경으로 만든 증거는 '같은 환경' 을 주장할 수 없다.",
         }
     },
     "frozen-seal-is-consulted-first-g58": {
@@ -3794,14 +3790,16 @@ EXPECT: dict = {
             }
     },
     "incomplete_receipt_is_refused-g61": {
-            "fail": [
-                    "tests/test_evidence_receipt_61.py::test_a_failed_package_listing_is_also_refused",
-                    "tests/test_evidence_receipt_61.py::test_an_incomplete_receipt_is_refused_by_the_reader"
-            ],
-            "witness": {
-                    "tests/test_evidence_receipt_61.py::test_a_failed_package_listing_is_also_refused": "Failed: DID NOT RAISE _ReplayError",
-                    "tests/test_evidence_receipt_61.py::test_an_incomplete_receipt_is_refused_by_the_reader": "Failed: DID NOT RAISE _ReplayError"
-            }
+        "fail": [
+            "tests/test_evidence_receipt_61.py::test_a_failed_package_listing_is_also_refused",
+            "tests/test_evidence_receipt_61.py::test_an_incomplete_receipt_is_refused_by_the_reader",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_61.py::test_a_failed_package_listing_is_also_refused":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_61.py::test_an_incomplete_receipt_is_refused_by_the_reader":
+                "Failed: DID NOT RAISE _ReplayError",
+        }
     },
     "evidence-binds-the-environment": {
         "fail": [
@@ -3809,7 +3807,7 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_docs_lint.py::test_the_evidence_binds_the_execution_environment":
-                "AssertionError: 환경변수 DD_SMOOTH_CACHE 이 바뀌었는데 실행 영수증이 그대로다",
+                "_mutation_replay_probe._ReplayError: 환경 영수증이 **불완전**하다 — 측정이 비었거나 서로 어긋난다: env 가 비었다 (62차 자체 리뷰 F5)",
         }
     },
     "mount-root-is-filesystem-relative": {
@@ -4745,9 +4743,9 @@ EXPECT: dict = {
             "tests/test_run_lock_62.py::test_a_live_holder_in_another_process_is_refused_by_pid":
                 "Failed: DID NOT RAISE RuntimeError",
             "tests/test_run_lock_62.py::test_eight_processes_racing_for_one_lock_yield_exactly_one_holder":
-                "AssertionError: 동시에 잡은 프로세스가 7 개다 (62차 P0-2): ['in 30163 1818848132497', 'in 30168 1819052511863', 'in 30169 1819100351093', 'in 30165 1819112265542', 'out 30163 1819148303183', 'in 30164 181915144254",
+                "AssertionError: 동시에 잡은 프로세스가 8 개다 (62차 P0-2)",
             "tests/test_run_lock_62.py::test_two_contenders_that_both_observe_absence_do_not_both_acquire":
-                "AssertionError: 두 contender 의 결과가 ['acquired', 'acquired'] — 정확히 하나만 잡아야 한다 (62차 P0-2): [('acquired', RunLock(/tmp/pytest-of-root/pytest-55/test_two_contenders_that_both_0/.run.lock ino=1961461 pid=30",
+                "AssertionError: 두 contender 의 결과가 ['acquired', 'acquired'] — 정확히 하나만 잡아야 한다 (62차 P0-2)",
         }
     },
     "run-sig-has-no-staging-pathname-g62": {
@@ -4759,7 +4757,7 @@ EXPECT: dict = {
             "tests/test_lock_lifetime_62.py::test_the_run_spec_does_not_carry_a_staging_pathname":
                 "AssertionError: manifest 에 staging 경로가 굳었다 (62차 P0-5)",
             "tests/test_lock_lifetime_62.py::test_the_same_logical_fit_resumed_keeps_one_run_signature":
-                "AssertionError: 같은 논리 실행이 서명을 2 개 만들었다: ['fit_completed_7ca90b01d4b5.jsonl', 'fit_completed_d10e1ad82fa3.jsonl'] — random staging pathname 이 run_spec 에 들어갔다 (62차 P0-5)",
+                "AssertionError: 같은 논리 실행이 서명을 2 개 만들었다 — random staging pathname 이 run_spec 에 들어갔다 (62차 P0-5)",
         }
     },
     "schema-refuses-empty-receipts-g62": {

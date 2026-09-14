@@ -191,10 +191,15 @@ def test_an_incomplete_receipt_is_refused_by_the_reader(tmp_path, monkeypatch):
 
     영수증에 실패가 적혀도 읽는 쪽이 그냥 받으면 층이 없는 것과 같다.
     """
+    # ★ 62차 마감 — 영수증은 **그 항목만** 실패한 완전한 것이어야 한다. 최소
+    #   dict 는 62차의 schema·부모 대조 층이 먼저 거부해 이 시험이 완전성
+    #   reader 의 증인이 아니게 됐다 (12조각 재생 실측: 변이가 안 물었다).
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from receipt_fixture import full_receipt
+
     mr = _mr()
-    bad = {"packages": {"status": "measured", "dists": {}},
-           "startup": {"startup_history": {"status": "failed",
-                                           "reason": "시험"}}}
+    bad = full_receipt()
+    bad["startup"]["startup_history"] = {"status": "failed", "reason": "시험"}
     monkeypatch.setattr(mr, "_observed_receipt", lambda: bad)
     with pytest.raises(mr._ReplayError) as ei:
         mr._execution_receipt()
@@ -232,11 +237,11 @@ def test_a_failed_package_listing_is_also_refused(monkeypatch):
     `{"<unavailable>": ""}` 라는 정상 dict 로 바꿨다. 규칙이 한 자리에 있지
     않으면 남은 중복이 곧 다음 반례다 — 이 저장소가 반복해서 겪은 형태다.
     """
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from receipt_fixture import full_receipt
+
     mr = _mr()
-    bad = {"packages": {"status": "failed", "reason": "시험"},
-           "startup": {"startup_history": {"status": "measured",
-                                           "modules": {"os": "d"},
-                                           "unfiled": 0}}}
+    bad = full_receipt(packages={"status": "failed", "reason": "시험"})
     monkeypatch.setattr(mr, "_observed_receipt", lambda: bad)
     with pytest.raises(mr._ReplayError):
         mr._execution_receipt()

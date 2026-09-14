@@ -242,7 +242,7 @@ def test_the_same_logical_fit_resumed_keeps_one_run_signature(tmp_path):
               resume=True)
     journals = sorted(p.name for p in out.glob("fit_completed_*.jsonl"))
     assert len(journals) == 1, (
-        f"같은 논리 실행이 서명을 {len(journals)} 개 만들었다: {journals} — "
+        f"같은 논리 실행이 서명을 {len(journals)} 개 만들었다 — "
         "random staging pathname 이 run_spec 에 들어갔다 (62차 P0-5)")
 
 
