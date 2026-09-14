@@ -1,9 +1,14 @@
 {
- "run": "/home/kgy/work/runs/li2s_layer1_g2/A/seed1",
+ "run": "db/properties/li2s_layer1_g2_raw/A_seed1",
  "record_has_gate_input": false,
  "출처": "thermo.csv 역추적 (기록 아님)",
  "win_ps": 10.0,
  "n_frames": 11,
+ "★_통계의_뜻": {
+  "P_sd_GPa": "저장된 표본의 **표준편차**다. 평균의 신뢰구간이 아니고 자기상관이 크다.",
+  "rho_flat_pct": "(최대−최소)/평균이다. **표류·평형을 검정한 값이 아니다.**",
+  "P_GPa": "**운동 항을 포함한 총 수압**이다. 평균이 0에 가까워도 응력텐서 전체가 0은 아니다."
+ },
  "T_mean_K": 299.76363636363635,
  "P_mean_GPa": -0.02664545454545455,
  "P_sd_GPa": 0.07853878485991954,
@@ -20,5 +25,56 @@
  "band_card": "db/properties/lpscl_li2s_layer1_amendment_2026_09_12.json",
  "dev_pct_vs_center": -17.86126774916774,
  "in_band": false,
- "G4_fires": true
+ "G4_fires": true,
+ "G4_role": "alert",
+ "G4_원인_지정": null,
+ "허용_서술": "마지막 10 ps 에서 목표 근처의 총 수압 평균과 좁은 밀도 범위가 관측됐다. 충분한 밀도 이완·준비 이력 소멸·모델의 압력–부피 정확성은 아직 확인되지 않았다.",
+ "hold_trend": {
+  "hold_from_ps": 1000.0,
+  "hold_to_ps": 1050.0,
+  "hold_len_ps": 50.0,
+  "n_frames": 51,
+  "n_blocks": 5,
+  "blocks": [
+   {
+    "t_from_ps": 1000.0,
+    "t_to_ps": 1010.0,
+    "n": 11,
+    "P_mean_GPa": -0.02230909090909091,
+    "rho_mean": 1.566281818181818
+   },
+   {
+    "t_from_ps": 1011.0,
+    "t_to_ps": 1020.0,
+    "n": 10,
+    "P_mean_GPa": -0.0009300000000000017,
+    "rho_mean": 1.5728000000000002
+   },
+   {
+    "t_from_ps": 1021.0,
+    "t_to_ps": 1030.0,
+    "n": 10,
+    "P_mean_GPa": 0.007290000000000002,
+    "rho_mean": 1.5706600000000002
+   },
+   {
+    "t_from_ps": 1031.0,
+    "t_to_ps": 1040.0,
+    "n": 10,
+    "P_mean_GPa": 0.011710000000000003,
+    "rho_mean": 1.57162
+   },
+   {
+    "t_from_ps": 1041.0,
+    "t_to_ps": 1050.0,
+    "n": 10,
+    "P_mean_GPa": -0.025980000000000003,
+    "rho_mean": 1.57279
+   }
+  ],
+  "rho_slope_per_ps": 0.00012304977375565538,
+  "rho_drift_pct_over_hold": 0.39169334706098674,
+  "block_rho_spread_pct": 0.4149749122148986,
+  "⛔": "관측이지 평형 검정이 아니다. 표류 없음은 **이 구간의 안정**만 지지한다."
+ }
 }

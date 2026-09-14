@@ -2077,7 +2077,7 @@
    },
    "title": "1층 비정질 밀도 — G4 는 합격선이 아니라 **적정성 경보**다",
    "statement": "결정상 부피가법 기준 대비 밀도 이탈을 **보고한다**. 밴드 이탈은 **원인 미분류의 적정성 경보**이며 셀 오류·모델 오류·후보상 기각 중 어느 것도 확정하지 않는다. 밴드 안에 들어와도 물리적 대표성이 입증되지 않는다. 현재 방어 가능한 서술의 최대치는 '선언된 절차로 얻은 후보 한 구조가 결정 부피가법 기준보다 X % 낮다' 이다. ⛔ '유리는 보통 2–10 % 성기다' 를 허용 오차의 몫처럼 빼지 않는다 — 결정상 혼합의 부피가법은 비정질 혼합상의 과잉부피·구조 이력을 포함하지 않는다. 밀도 합격선을 나중에 만들려면 (a) 대상과 비교 가능한 조성·제조 이력·측정법을 가진 **독립적인 비정질 밀도 자료**와 (b) 사용 목적상 허용 오차, 둘 다에 결박해야 한다. 그 근거가 없으면 숫자를 새로 만들지 않고 경보로 남긴다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "method_ref": "tools/ionic/melt_quench_uma.py --gate_check",
    "card": "db/properties/lpscl_li2s_layer1_g2_seed1_2026_09_14.json",
    "evidence": [
@@ -2089,7 +2089,22 @@
     "위 (a)+(b) 를 만족하는 독립 비정질 밀도 자료가 확보되면 합격선 결정을 **별도 ID** 로 새로 등록한다 (이 결정을 고쳐 쓰지 않는다)"
    ],
    "enforcement": "`--gate_check` 가 'G4_fires' 를 경보로 출력하고 원인을 지정하지 않는다. 결과 기록·원고에서 '셀 문제' 등 원인 지정 문구를 쓰지 않는다.",
-   "⚠_비준_대기": "1저자 ratify 전에는 active 가 아니다 (agent 는 대필만 한다)."
+   "ratification": {
+    "state": "ratified",
+    "actor_id": "yonghoon",
+    "role": "scientific_owner",
+    "timestamp": "2026-09-14T00:00:00Z",
+    "commit": "ba3428bf9709b0ae33d204b0830b868dd05c2c92",
+    "decision_digest": "sha256:0efbdd0c3517d6bfd789c6b306f0b498ba6bd7bc2bdae1c4cc2ca9dc22d6801e",
+    "evidence_digest": "sha256:55c83e501d82f3ac912bd493cfcda985008c650349ea52c5c5329d8e0de8b37c",
+    "max_release_status": "approved",
+    "max_allowed_uses": [
+     "diagnostic",
+     "manuscript",
+     "closure"
+    ],
+    "_note": "1저자 승인 2026-09-14. 지시 원문: **\"비준\"** — 회신 BR Q1 을 그대로 채택한 것이다. ⚠ **agent 대필**: 이 항목은 claude 가 받아 적었고, 승인 주체는 1저자다."
+   }
   }
  ]
 }
