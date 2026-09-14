@@ -1,0 +1,62 @@
+{
+  "checked_at_utc": "2026-09-14T11:55:05.187557+00:00",
+  "status": "MANDATORY_CHECKS_COMPLETE",
+  "new_name": "Caps300R320LateCapA5s",
+  "new_job_id": "c40c05d3cfb643a4b706345637b00f57",
+  "new_source_sha256": "a03abb905454de63b34b55e314ed09f3cb6414d58444e8b605962166a872531f",
+  "new_MPH_sha256": "d8aef38aa2623f41c4c21a6f57634606e498f3aae622ccec49518372d484f3c8",
+  "new_MPH_bytes": 1480451795,
+  "new_native_state": "completed",
+  "exactly_one_new_authorized_job": true,
+  "existing_reference_jobs_rerun": false,
+  "prior_job_count": 30,
+  "prior_native_files_rehashed_unchanged": 233,
+  "baseline_atomic_identity_verified": {
+    "name": "Caps300R320H0125",
+    "source_path": "outputs/comsol63/radial320_timecap/Caps300R320H0125.java",
+    "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "job_id": "18a00b03e38d4694b9ba30d88e7008f4"
+  },
+  "only_Time_and_Variables_difference_is_authorized_cap": true,
+  "property_count": 1143,
+  "property_differences": {
+    "sol1/t1/maxstepexpressionbdf": {
+      "baseline": [
+        "String",
+        "[if(t<0.1[s],0.000125[s],0.1[s])]"
+      ],
+      "new": [
+        "String",
+        "[if(t<0.1[s],0.000125[s],if(t<1[s],0.005[s],0.025[s]))]"
+      ]
+    }
+  },
+  "native_step_cap_compliance": true,
+  "both_later_actual_maxima_reduced": true,
+  "sampled_sensitivity_within_limits": true,
+  "true_error_or_overall_convergence_established": false,
+  "effects_of_two_late_intervals_independently_isolated": false,
+  "parallel_arithmetic_limit": "User-authorized baseline2/new16 cores; no identical-parallel-arithmetic claim. Time/Variables scientific properties differ only in approved cap expression.",
+  "local_inventory_before_count": 1099,
+  "unchanged_current_bytes_count": 1098,
+  "authorized_changes_with_before_bytes_preserved": [
+    {
+      "path": "outputs/NEXT_RUN_PLAN.md",
+      "before_bytes": 10121,
+      "before_sha256": "70a031f51f1796c02cedbe4da7f100ab7827f136b222340b59d9b690cab839bb",
+      "after_bytes": 5386,
+      "after_sha256": "1e243f6952674657d6d0e551ae44e53037b4c3e8c3e9e9848d6cbbd96fd4b000",
+      "before_backup_path": "outputs/late_cap_a/NEXT_RUN_PLAN_before_late_cap_a.md"
+    }
+  ],
+  "preservation_limit": "Named current local evidence inventory only, not recipient verification of all these files. Prior receiving-side report:160payload+manifest/history333; old967 direct56=55unchanged plus matching old-plan backup.",
+  "historical_range_job_state": "failed",
+  "historical_range_classification": "INCOMPLETE_RANGE_STOP preserved; unrelated failures not reclassified",
+  "electrolyte_positive_check": "POSTPROCESSING_ONLY",
+  "execution_cores_baseline": 2,
+  "execution_cores_new": 16,
+  "execution_wall_clock_allowance_seconds_baseline": 1200,
+  "execution_wall_clock_allowance_seconds_new": 1800,
+  "physical_time_seconds": 5,
+  "additional_runs": 0
+}

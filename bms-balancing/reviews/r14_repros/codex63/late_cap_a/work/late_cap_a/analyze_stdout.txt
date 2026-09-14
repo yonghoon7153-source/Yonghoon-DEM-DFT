@@ -1,0 +1,279 @@
+{
+  "primary_pass": true,
+  "jobs": [
+    {
+      "name": "Caps300R320H0125",
+      "job_id": "18a00b03e38d4694b9ba30d88e7008f4",
+      "status": "analyzed",
+      "rows": 987,
+      "physical_checks_pass": true,
+      "error": null
+    },
+    {
+      "name": "Caps300R320LateCapA5s",
+      "job_id": "c40c05d3cfb643a4b706345637b00f57",
+      "status": "analyzed",
+      "rows": 1155,
+      "physical_checks_pass": true,
+      "error": null
+    }
+  ],
+  "windows": [
+    {
+      "time_basis": "requested_grid",
+      "window_s": [
+        0.1,
+        1.0
+      ],
+      "compared_times": 91,
+      "complete": true,
+      "max_abs_voltage_difference_V": 2.0165373344e-06,
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "0.22",
+        "V_first_V": 2.255482999380483,
+        "V_second_V": 2.2554809828431486,
+        "difference_V_second_minus_first_V": -2.0165373344e-06,
+        "difference_delta_Eeq_V": -2.0491910251e-06,
+        "difference_delta_etaMid_V": 3.312788333e-08,
+        "difference_delta_phiL_V": -4.741932e-10,
+        "difference_decomposition_residual_V": 5.7e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "N",
+        "time_s_exact": "0.22",
+        "sample_index": 240,
+        "coordinate_first_m": 5.2e-05,
+        "coordinate_second_m": 5.2e-05,
+        "x_surface_first": 0.012133906658964196,
+        "x_surface_second": 0.01213387296863272,
+        "signed_difference_second_minus_first_x": -3.3690331476e-08,
+        "absolute_difference_x": 3.3690331476e-08
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "requested_grid",
+      "window_s": [
+        1.0,
+        5.0
+      ],
+      "compared_times": 81,
+      "complete": true,
+      "max_abs_voltage_difference_V": 2.3442301413e-06,
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "1.7",
+        "V_first_V": 2.3005995217649353,
+        "V_second_V": 2.300597177534794,
+        "difference_V_second_minus_first_V": -2.3442301413e-06,
+        "difference_delta_Eeq_V": -2.389373429e-06,
+        "difference_delta_etaMid_V": 4.5904620328e-08,
+        "difference_delta_phiL_V": -7.613328e-10,
+        "difference_decomposition_residual_V": 1.72e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "N",
+        "time_s_exact": "1.7",
+        "sample_index": 240,
+        "coordinate_first_m": 5.2e-05,
+        "coordinate_second_m": 5.2e-05,
+        "x_surface_first": 0.012872545019936121,
+        "x_surface_second": 0.012872506317301118,
+        "signed_difference_second_minus_first_x": -3.8702635003e-08,
+        "absolute_difference_x": 3.8702635003e-08
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "requested_grid",
+      "window_s": [
+        0.0,
+        1.0
+      ],
+      "compared_times": 107,
+      "complete": true,
+      "max_abs_voltage_difference_V": 2.0165373344e-06,
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "0.22",
+        "V_first_V": 2.255482999380483,
+        "V_second_V": 2.2554809828431486,
+        "difference_V_second_minus_first_V": -2.0165373344e-06,
+        "difference_delta_Eeq_V": -2.0491910251e-06,
+        "difference_delta_etaMid_V": 3.312788333e-08,
+        "difference_delta_phiL_V": -4.741932e-10,
+        "difference_decomposition_residual_V": 5.7e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "N",
+        "time_s_exact": "0.22",
+        "sample_index": 240,
+        "coordinate_first_m": 5.2e-05,
+        "coordinate_second_m": 5.2e-05,
+        "x_surface_first": 0.012133906658964196,
+        "x_surface_second": 0.01213387296863272,
+        "signed_difference_second_minus_first_x": -3.3690331476e-08,
+        "absolute_difference_x": 3.3690331476e-08
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "requested_grid",
+      "window_s": [
+        0.0,
+        5.0
+      ],
+      "compared_times": 187,
+      "complete": true,
+      "max_abs_voltage_difference_V": 2.3442301413e-06,
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "1.7",
+        "V_first_V": 2.3005995217649353,
+        "V_second_V": 2.300597177534794,
+        "difference_V_second_minus_first_V": -2.3442301413e-06,
+        "difference_delta_Eeq_V": -2.389373429e-06,
+        "difference_delta_etaMid_V": 4.5904620328e-08,
+        "difference_delta_phiL_V": -7.613328e-10,
+        "difference_decomposition_residual_V": 1.72e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "N",
+        "time_s_exact": "1.7",
+        "sample_index": 240,
+        "coordinate_first_m": 5.2e-05,
+        "coordinate_second_m": 5.2e-05,
+        "x_surface_first": 0.012872545019936121,
+        "x_surface_second": 0.012872506317301118,
+        "signed_difference_second_minus_first_x": -3.8702635003e-08,
+        "absolute_difference_x": 3.8702635003e-08
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "all_exact_common_stored",
+      "window_s": [
+        0.1,
+        1.0
+      ],
+      "compared_times": 99,
+      "complete": true,
+      "max_abs_voltage_difference_V": 2.0165373344e-06,
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "0.22",
+        "V_first_V": 2.255482999380483,
+        "V_second_V": 2.2554809828431486,
+        "difference_V_second_minus_first_V": -2.0165373344e-06,
+        "difference_delta_Eeq_V": -2.0491910251e-06,
+        "difference_delta_etaMid_V": 3.312788333e-08,
+        "difference_delta_phiL_V": -4.741932e-10,
+        "difference_decomposition_residual_V": 5.7e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "N",
+        "time_s_exact": "0.22",
+        "sample_index": 240,
+        "coordinate_first_m": 5.2e-05,
+        "coordinate_second_m": 5.2e-05,
+        "x_surface_first": 0.012133906658964196,
+        "x_surface_second": 0.01213387296863272,
+        "signed_difference_second_minus_first_x": -3.3690331476e-08,
+        "absolute_difference_x": 3.3690331476e-08
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "all_exact_common_stored",
+      "window_s": [
+        1.0,
+        5.0
+      ],
+      "compared_times": 81,
+      "complete": true,
+      "max_abs_voltage_difference_V": 2.3442301413e-06,
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "1.7",
+        "V_first_V": 2.3005995217649353,
+        "V_second_V": 2.300597177534794,
+        "difference_V_second_minus_first_V": -2.3442301413e-06,
+        "difference_delta_Eeq_V": -2.389373429e-06,
+        "difference_delta_etaMid_V": 4.5904620328e-08,
+        "difference_delta_phiL_V": -7.613328e-10,
+        "difference_decomposition_residual_V": 1.72e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "N",
+        "time_s_exact": "1.7",
+        "sample_index": 240,
+        "coordinate_first_m": 5.2e-05,
+        "coordinate_second_m": 5.2e-05,
+        "x_surface_first": 0.012872545019936121,
+        "x_surface_second": 0.012872506317301118,
+        "signed_difference_second_minus_first_x": -3.8702635003e-08,
+        "absolute_difference_x": 3.8702635003e-08
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "all_exact_common_stored",
+      "window_s": [
+        0.0,
+        1.0
+      ],
+      "compared_times": 906,
+      "complete": true,
+      "max_abs_voltage_difference_V": 2.0165373344e-06,
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "0.22",
+        "V_first_V": 2.255482999380483,
+        "V_second_V": 2.2554809828431486,
+        "difference_V_second_minus_first_V": -2.0165373344e-06,
+        "difference_delta_Eeq_V": -2.0491910251e-06,
+        "difference_delta_etaMid_V": 3.312788333e-08,
+        "difference_delta_phiL_V": -4.741932e-10,
+        "difference_decomposition_residual_V": 5.7e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "N",
+        "time_s_exact": "0.22",
+        "sample_index": 240,
+        "coordinate_first_m": 5.2e-05,
+        "coordinate_second_m": 5.2e-05,
+        "x_surface_first": 0.012133906658964196,
+        "x_surface_second": 0.01213387296863272,
+        "signed_difference_second_minus_first_x": -3.3690331476e-08,
+        "absolute_difference_x": 3.3690331476e-08
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "all_exact_common_stored",
+      "window_s": [
+        0.0,
+        5.0
+      ],
+      "compared_times": 986,
+      "complete": true,
+      "max_abs_voltage_difference_V": 2.3442301413e-06,
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "1.7",
+        "V_first_V": 2.3005995217649353,
+        "V_second_V": 2.300597177534794,
+        "difference_V_second_minus_first_V": -2.3442301413e-06,
+        "difference_delta_Eeq_V": -2.389373429e-06,
+        "difference_delta_etaMid_V": 4.5904620328e-08,
+        "difference_delta_phiL_V": -7.613328e-10,
+        "difference_decomposition_residual_V": 1.72e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "N",
+        "time_s_exact": "1.7",
+        "sample_index": 240,
+        "coordinate_first_m": 5.2e-05,
+        "coordinate_second_m": 5.2e-05,
+        "x_surface_first": 0.012872545019936121,
+        "x_surface_second": 0.012872506317301118,
+        "signed_difference_second_minus_first_x": -3.8702635003e-08,
+        "absolute_difference_x": 3.8702635003e-08
+      },
+      "within_limits": true
+    }
+  ]
+}

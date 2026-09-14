@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "scope": "Native job identity/uniqueness and old native byte preservation only; not a numerical solve-success assertion.",
+  "recorded_at_utc": "2026-09-14T11:56:05.444321+00:00",
+  "prior_native_job_ids": 30,
+  "prior_native_files_rehashed_unchanged": 233,
+  "prior_status_files_unchanged": 30,
+  "new_job_ids": [
+    "c40c05d3cfb643a4b706345637b00f57"
+  ],
+  "new_execution_count": 1,
+  "reference_jobs_rerun": false,
+  "new_state": "completed",
+  "native_completed": true,
+  "compile_returncode": 0,
+  "batch_returncode": 0,
+  "source_sha256": "a03abb905454de63b34b55e314ed09f3cb6414d58444e8b605962166a872531f",
+  "requested_cores": 16,
+  "worker_timeout_seconds": 1800,
+  "prevalidation20_rejection": "Root records tool range validation before job creation; no second native job ID exists.",
+  "old_failed_job_state_preserved": true,
+  "full_workspace_preservation": "Separate root audit",
+  "COMSOL_calls": 0,
+  "old_file_mutations": 0,
+  "automatic_retry_or_additional_run": false
+}

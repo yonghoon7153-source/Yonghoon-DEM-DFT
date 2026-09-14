@@ -1,0 +1,58 @@
+{
+  "recorded_at_utc": "2026-09-14T11:44:25.780334+00:00",
+  "original_generation_receipt": {
+    "path": "outputs/COMSOL63_R320_TIMECAP_HANDOFF_RECEIPT.json",
+    "sha256": "584131590642a4c6169709538564cb8559bc211fc8a3a133e10c41de46c5f7c8",
+    "preserved_unchanged": true,
+    "historical_null_recipient_fields_not_rewritten": true
+  },
+  "prior_R320_timecap_archive": {
+    "path": "outputs/COMSOL63_R320_TIMECAP_HANDOFF.zip",
+    "local_generation_record_bytes": 632054218,
+    "local_generation_record_sha256": "e38968f13e3fae64948c2234fb020cad1d5f1119fc8535aa7fc8766e69274f67",
+    "payload_count": 160,
+    "entries_including_manifest": 161,
+    "current_file_size_and_current_preservation_ledger_match_receipt": true,
+    "fresh_full_archive_digest_by_this_script": false,
+    "digest_evidence_basis": "Original generation receipt, root fresh preservation ledger, and separately appended recipient confirmation. Avoided redundant full archive hashing."
+  },
+  "separate_recipient_confirmation": {
+    "path": "outputs/post_r320_timecap_plan/RECEIPT_CONFIRMATION.json",
+    "sha256": "97e682e6585fb5c98673d8e06e28b7416493ec881fd7f79a1ef6bff1ac7abeef",
+    "evidence_type": "User-reported receiving-side verification recorded by root; recipient filesystem not independently opened by this auditor.",
+    "received_raw_bytes_and_sha_report_match_local_generation_record": true,
+    "all160_payload_size_SHA_CRC_user_confirmed": true,
+    "historical333_archived_bytes_user_confirmed": true,
+    "direct_scope_of_old967_current_paths": {
+      "historical_local_inventory_count": 967,
+      "direct_archive_members_from_inventory": 56,
+      "unchanged_direct_members": 55,
+      "changed_plan_before_copy_verified": 1,
+      "all967_externally_verified": false,
+      "limit": "Only 56 listed current member paths are directly represented: 55 unchanged and one changed NEXT_RUN_PLAN with matching historical before bytes in its backup. Historical333 archived-byte confirmation is separate, not additional current paths."
+    },
+    "old_status_text_scope": "The confirmation preserves its planning-time authorization status; the subsequent CandidateA approval is recorded separately."
+  },
+  "current_local_preservation": {
+    "path": "outputs/late_cap_a/preserved_before.json",
+    "sha256": "28056f27f28641701e8d430e931e551112e74c089d4fdc32d85628bec5a1625e",
+    "entries": 1099,
+    "all1099_externally_verified": false,
+    "full_final_verification": "Separate root final checks; this record does not claim all current paths are in the new delivery."
+  },
+  "new_candidate_A": {
+    "source_name": "Caps300R320LateCapA5s",
+    "job_id": "c40c05d3cfb643a4b706345637b00f57",
+    "prior_baseline_reexecuted": false,
+    "new_delivery_recipient_identity": "No new receiving-side verification in this record; any generation receipt is separate.",
+    "native_completion_and_numerical_outcome": "Separate final native audit and result report."
+  },
+  "prior_TIME_CAPS_raw_zip_difference_cause": "UNRESOLVED",
+  "COMSOL_calls": 0,
+  "old_file_mutations": 0,
+  "input_sha256": {
+    "outputs/COMSOL63_R320_TIMECAP_HANDOFF_RECEIPT.json": "584131590642a4c6169709538564cb8559bc211fc8a3a133e10c41de46c5f7c8",
+    "outputs/post_r320_timecap_plan/RECEIPT_CONFIRMATION.json": "97e682e6585fb5c98673d8e06e28b7416493ec881fd7f79a1ef6bff1ac7abeef",
+    "outputs/late_cap_a/preserved_before.json": "28056f27f28641701e8d430e931e551112e74c089d4fdc32d85628bec5a1625e"
+  }
+}

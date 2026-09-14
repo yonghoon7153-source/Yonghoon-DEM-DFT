@@ -1,0 +1,253 @@
+{
+  "scope": "Read-only distribution of one existing native accepted-step history. No COMSOL, no new source or run, no old file edit.",
+  "baseline_identity": {
+    "name": "Caps300R320H0125",
+    "job_id": "18a00b03e38d4694b9ba30d88e7008f4",
+    "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "source_path": "outputs\\comsol63\\.comsol-jobs\\18a00b03e38d4694b9ba30d88e7008f4\\Caps300R320H0125.java"
+  },
+  "source_sha256_before": {
+    "outputs\\radial320_timecap\\Caps300R320H0125_accepted_steps.csv": "245b92722adb41da6ba5f45c240dd8dcbab819ca8f737a45be55b16eed67a852",
+    "outputs\\model_audit\\18a00b03e38d4694b9ba30d88e7008f4\\preflight_global.csv": "b8976f4b484097a49bdd3295a4e683ded181a794ad297f55784587dbad499585",
+    "outputs\\comsol63\\.comsol-jobs\\18a00b03e38d4694b9ba30d88e7008f4\\Caps300R320H0125.java": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "outputs\\radial320_timecap\\native_steps_summary.json": "bf865898bda70577a996fe386d61d76e6a973a5ef4da821b81f1ccfcfe15436a"
+  },
+  "method": {
+    "boundary_ownership": "Use only fully contained intervals lo<=start<end<=hi. Arrival at 1 s belongs to 0.1–1; departure from 1 s belongs to 1–5. Crossings are reported, never split or interpolated.",
+    "raw_arithmetic": "Decimal end-start from all 987 raw preflight_global times independently equals all 986 existing accepted CSV h/start/end triples exactly.",
+    "statistics": "Unweighted interval distribution. Median is central order statistic or arithmetic mean of two central values. Mean is sum(h)/n with Decimal precision 40; repeating decimal means are rounded at that precision.",
+    "percentiles": "Nearest-rank order statistics: sorted h at one-based ceil(p*n), p=.1/.9. No quantile interpolation.",
+    "nominal_bins": "Display bins quantize exact h to a 1e-12 s grid with ROUND_HALF_EVEN; each actual-to-nominal error <=0.5e-12 s (checked <=1e-12 s). Exact source h strings remain unchanged in interval subsets.",
+    "cap_counts": "Report strict h>candidate as well as h>candidate+1e-12 s; the latter avoids interpreting serialization roundoff as a material exceedance. No change to actual steps or original data."
+  },
+  "stored_time_count": 987,
+  "accepted_interval_count": 986,
+  "all_986_intervals_independent_exact_match": true,
+  "crossing_intervals": [],
+  "windows": [
+    {
+      "window": "0p1_to_1",
+      "start_s_exact": "0.1",
+      "end_s_exact": "1",
+      "count": 98,
+      "sum_h_s_exact": "0.90000000000000000",
+      "min_h_s_exact": "0.000125",
+      "median_h_s_exact": "0.01",
+      "mean_h_s_decimal_40_digits": "0.009183673469387755102040816326530612244898",
+      "max_h_s_exact": "0.01",
+      "p10_h_s_exact": "0.005",
+      "p90_h_s_exact": "0.01",
+      "first_interval": {
+        "start_time_s_exact": "0.1",
+        "end_time_s_exact": "0.100125",
+        "actual_step_s_exact": "0.000125",
+        "interval_required_cap_s_exact": "0.1",
+        "region": "after_0.1",
+        "within_cap_with_1e-12s_roundoff": "True",
+        "at_cap_with_1e-12s_roundoff": "False",
+        "step_to_cap_ratio": "0.00125",
+        "step_index": "808",
+        "time_log_s": "0.10013",
+        "step_log_s": "0.000125",
+        "raw_native_log_line": "808     0.10013    0.000125 out 1626  817 1632     2     0      0  1.5e-11  4.4e-16"
+      },
+      "last_interval": {
+        "start_time_s_exact": "0.99",
+        "end_time_s_exact": "1.0",
+        "actual_step_s_exact": "0.01",
+        "interval_required_cap_s_exact": "0.1",
+        "region": "after_0.1",
+        "within_cap_with_1e-12s_roundoff": "True",
+        "at_cap_with_1e-12s_roundoff": "False",
+        "step_to_cap_ratio": "0.1",
+        "step_index": "905",
+        "time_log_s": "1",
+        "step_log_s": "0.01",
+        "raw_native_log_line": "905           1        0.01 out 1820  914 1826     2     0      0  3.8e-11  2.2e-16"
+      },
+      "nominal_h_frequencies": [
+        {
+          "nominal_h_s": "0.000125000000",
+          "count": 1,
+          "raw_min_h_s_exact": "0.000125",
+          "raw_max_h_s_exact": "0.000125",
+          "max_abs_rounding_s_exact": "0E-12"
+        },
+        {
+          "nominal_h_s": "0.000250000000",
+          "count": 1,
+          "raw_min_h_s_exact": "0.000250",
+          "raw_max_h_s_exact": "0.000250",
+          "max_abs_rounding_s_exact": "0E-12"
+        },
+        {
+          "nominal_h_s": "0.000500000000",
+          "count": 1,
+          "raw_min_h_s_exact": "0.000500",
+          "raw_max_h_s_exact": "0.000500",
+          "max_abs_rounding_s_exact": "0E-12"
+        },
+        {
+          "nominal_h_s": "0.001000000000",
+          "count": 1,
+          "raw_min_h_s_exact": "0.00100000000000001",
+          "raw_max_h_s_exact": "0.00100000000000001",
+          "max_abs_rounding_s_exact": "1E-17"
+        },
+        {
+          "nominal_h_s": "0.002000000000",
+          "count": 1,
+          "raw_min_h_s_exact": "0.00200000000000000",
+          "raw_max_h_s_exact": "0.00200000000000000",
+          "max_abs_rounding_s_exact": "0E-17"
+        },
+        {
+          "nominal_h_s": "0.003062500000",
+          "count": 2,
+          "raw_min_h_s_exact": "0.00306249999999999",
+          "raw_max_h_s_exact": "0.0030625",
+          "max_abs_rounding_s_exact": "1E-17"
+        },
+        {
+          "nominal_h_s": "0.005000000000",
+          "count": 4,
+          "raw_min_h_s_exact": "0.00499999999999999",
+          "raw_max_h_s_exact": "0.00500000000000001",
+          "max_abs_rounding_s_exact": "1E-17"
+        },
+        {
+          "nominal_h_s": "0.010000000000",
+          "count": 87,
+          "raw_min_h_s_exact": "0.01",
+          "raw_max_h_s_exact": "0.01",
+          "max_abs_rounding_s_exact": "0E-12"
+        }
+      ],
+      "candidate_caps": [
+        {
+          "candidate_cap_s_exact": "0.005",
+          "existing_intervals_strictly_greater": 88,
+          "existing_intervals_greater_beyond_1e_12_s": 87,
+          "existing_intervals_at_cap_within_1e_12_s": 4,
+          "count_fraction_exact": "87/98",
+          "target_would_exclude_existing_intervals": true,
+          "mathematical_minimum_intervals_if_cap_holds_over_whole_window": 180,
+          "minimum_note": "Geometric lower bound ceil(duration/cap), not a predicted simulated count or runtime."
+        },
+        {
+          "candidate_cap_s_exact": "0.05",
+          "existing_intervals_strictly_greater": 0,
+          "existing_intervals_greater_beyond_1e_12_s": 0,
+          "existing_intervals_at_cap_within_1e_12_s": 0,
+          "count_fraction_exact": "0/98",
+          "target_would_exclude_existing_intervals": false,
+          "mathematical_minimum_intervals_if_cap_holds_over_whole_window": 18,
+          "minimum_note": "Geometric lower bound ceil(duration/cap), not a predicted simulated count or runtime."
+        }
+      ],
+      "source_interval_subset_csv": "accepted_intervals_0p1_to_1.csv",
+      "fully_covers_window_exactly": true,
+      "independent_raw_check": "PASS"
+    },
+    {
+      "window": "1_to_5",
+      "start_s_exact": "1",
+      "end_s_exact": "5",
+      "count": 81,
+      "sum_h_s_exact": "4.00",
+      "min_h_s_exact": "0.02",
+      "median_h_s_exact": "0.05",
+      "mean_h_s_decimal_40_digits": "0.04938271604938271604938271604938271604938",
+      "max_h_s_exact": "0.05",
+      "p10_h_s_exact": "0.05",
+      "p90_h_s_exact": "0.05",
+      "first_interval": {
+        "start_time_s_exact": "1.0",
+        "end_time_s_exact": "1.02",
+        "actual_step_s_exact": "0.02",
+        "interval_required_cap_s_exact": "0.1",
+        "region": "after_0.1",
+        "within_cap_with_1e-12s_roundoff": "True",
+        "at_cap_with_1e-12s_roundoff": "False",
+        "step_to_cap_ratio": "0.2",
+        "step_index": "906",
+        "time_log_s": "1.02",
+        "step_log_s": "0.02",
+        "raw_native_log_line": "906        1.02        0.02 out 1822  915 1828     2     0      0  1.9e-11  2.2e-16"
+      },
+      "last_interval": {
+        "start_time_s_exact": "4.95",
+        "end_time_s_exact": "5.0",
+        "actual_step_s_exact": "0.05",
+        "interval_required_cap_s_exact": "0.1",
+        "region": "after_0.1",
+        "within_cap_with_1e-12s_roundoff": "True",
+        "at_cap_with_1e-12s_roundoff": "False",
+        "step_to_cap_ratio": "0.5",
+        "step_index": "986",
+        "time_log_s": "5",
+        "step_log_s": "0.05",
+        "raw_native_log_line": "986           5        0.05 out 1982  995 1988     2     0      0  4.1e-12  2.2e-16"
+      },
+      "nominal_h_frequencies": [
+        {
+          "nominal_h_s": "0.020000000000",
+          "count": 1,
+          "raw_min_h_s_exact": "0.02",
+          "raw_max_h_s_exact": "0.02",
+          "max_abs_rounding_s_exact": "0E-12"
+        },
+        {
+          "nominal_h_s": "0.030000000000",
+          "count": 1,
+          "raw_min_h_s_exact": "0.03",
+          "raw_max_h_s_exact": "0.03",
+          "max_abs_rounding_s_exact": "0E-12"
+        },
+        {
+          "nominal_h_s": "0.050000000000",
+          "count": 79,
+          "raw_min_h_s_exact": "0.05",
+          "raw_max_h_s_exact": "0.05",
+          "max_abs_rounding_s_exact": "0E-12"
+        }
+      ],
+      "candidate_caps": [
+        {
+          "candidate_cap_s_exact": "0.025",
+          "existing_intervals_strictly_greater": 80,
+          "existing_intervals_greater_beyond_1e_12_s": 80,
+          "existing_intervals_at_cap_within_1e_12_s": 0,
+          "count_fraction_exact": "80/81",
+          "target_would_exclude_existing_intervals": true,
+          "mathematical_minimum_intervals_if_cap_holds_over_whole_window": 160,
+          "minimum_note": "Geometric lower bound ceil(duration/cap), not a predicted simulated count or runtime."
+        },
+        {
+          "candidate_cap_s_exact": "0.05",
+          "existing_intervals_strictly_greater": 0,
+          "existing_intervals_greater_beyond_1e_12_s": 0,
+          "existing_intervals_at_cap_within_1e_12_s": 79,
+          "count_fraction_exact": "0/81",
+          "target_would_exclude_existing_intervals": false,
+          "mathematical_minimum_intervals_if_cap_holds_over_whole_window": 80,
+          "minimum_note": "Geometric lower bound ceil(duration/cap), not a predicted simulated count or runtime."
+        }
+      ],
+      "source_interval_subset_csv": "accepted_intervals_1_to_5.csv",
+      "fully_covers_window_exactly": true,
+      "independent_raw_check": "PASS"
+    }
+  ],
+  "limits": "Counts describe the existing history only. Candidate caps can force smaller admissible intervals, but actual future adaptive intervals, cost, accuracy and convergence have not been computed.",
+  "source_sha256_after": {
+    "outputs\\radial320_timecap\\Caps300R320H0125_accepted_steps.csv": "245b92722adb41da6ba5f45c240dd8dcbab819ca8f737a45be55b16eed67a852",
+    "outputs\\model_audit\\18a00b03e38d4694b9ba30d88e7008f4\\preflight_global.csv": "b8976f4b484097a49bdd3295a4e683ded181a794ad297f55784587dbad499585",
+    "outputs\\comsol63\\.comsol-jobs\\18a00b03e38d4694b9ba30d88e7008f4\\Caps300R320H0125.java": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "outputs\\radial320_timecap\\native_steps_summary.json": "bf865898bda70577a996fe386d61d76e6a973a5ef4da821b81f1ccfcfe15436a"
+  },
+  "old_input_bytes_unchanged": true,
+  "both_proposed_domains_exclude_some_existing_intervals": true,
+  "cap_0p05_excludes_no_existing_intervals_in_both_windows": true,
+  "status": "PASS"
+}

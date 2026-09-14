@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "job_id": "fa3657582d2a480c9e7d36180e3c6a89",
+  "kind": "connection_probe",
+  "source_name": "ConnectionProbe.java",
+  "source_sha256": "120f48f8e1f06c013fb0bfcf8bfbd0c89258e40bc1c9b8bc015d7e25767a561b",
+  "comsol_root": "C:\\Program Files\\COMSOL\\COMSOL63\\Multiphysics",
+  "cores": 1,
+  "timeout_seconds": 300,
+  "created_at": "2026-09-13T09:40:48.398504+00:00"
+}
