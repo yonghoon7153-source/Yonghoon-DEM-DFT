@@ -217,7 +217,7 @@ cat <<NEXT
   git push -u origin claude/bms-alpha-beta-verify
 
   그 다음 커밋 안의 bytes 를 재대조한다 (줄끝 정규화가 안 먹었는지 — 이 스크립트의 존재 이유).
-  ⚠ 두 가지를 틀리기 쉽다: \\`git show HEAD:<경로>\\` 는 **저장소 루트** 기준이고,
+  ⚠ 두 가지를 틀리기 쉽다: 'git show HEAD:<경로>' 는 **저장소 루트** 기준이고,
     묶음에 이전 묶음의 manifest 가 딸려 오는 일이 있어 **이번 것을 명시**해야 한다.
   python3 - <<'CHECK'
 import hashlib, json, pathlib, subprocess
