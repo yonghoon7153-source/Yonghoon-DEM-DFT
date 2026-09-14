@@ -225,48 +225,104 @@ def load_inventory(root: str):
 #  ③ CI 가 돌리는 것의 **의존 폐포**
 # ══════════════════════════════════════════════════════════════════════
 
-def _toplevel_imports(src: str):
-    """모듈 **최상위**(try 블록 포함) import 만.  함수 안 지연 import 는 세지 않는다."""
-    got = set()
+def _swallows_import_error(node) -> bool:
+    """이 `try` 의 `except` 들이 import 실패를 **삼키는가** (다시 raise 하지 않고).
 
-    def _add(node):
-        if isinstance(node, ast.Import):
-            for a in node.names:
-                got.add(a.name.split('.')[0])
-        elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
-            got.add(node.module.split('.')[0])
+    ★ 2026-09-14 (`R4-09` 후속) — 판정문: *"모든 선택적 GPU 패키지를 무조건 설치하는 것도
+    맞지 않다"* · *"정적 import 감사는 완전한 실행 의존 폐포라고 부르지 말아야 한다."*
+    `step3_sigma.py` 의 `cupy`·`cupyx`·`pyamg` 는 전부 `try/except ImportError` 안이고
+    **등록된 fallback**(Jacobi-CG · CPU 경로)이 있다.  그것을 CI 에 요구하면 검사기가
+    *"돌아가는 코드"* 를 빨간불로 만든다.
+    ⚠ 면죄부가 아니다 — 핸들러가 **다시 raise** 하면 가드가 아니고(필수 의존), 같은 이름을
+    가드 **밖에서도** import 하면 그쪽이 이긴다 (검사 ④i·④j).
+    """
+    hit = False
+    for h in node.handlers:
+        #  ⚠ **무조건** 다시 raise 할 때만 가드가 아니다 (핸들러 본문의 직계 문장).
+        #    `if REQUIRE_GPU: raise SystemExit(...)` 처럼 **등록된 opt-in 플래그 아래**
+        #    조건부로 올리는 것은 기본 경로에서 삼키므로 여전히 가드다 —
+        #    `step3_sigma.py` 의 cupy 분기가 정확히 그 모양이고, 그 파일의 selftest 는
+        #    `sys.modules['cupy'] = None` 로 **CPU 경로를 강제**해 실제로 통과한다.
+        #    ⚠ 한계: 조건이 실제로 기본값에서 거짓인지는 정적으로 모른다.  그래서 이 검사를
+        #      **완전한 실행 의존 폐포라고 부르지 않는다** (판정문 §6 의 그 문장).
+        if any(isinstance(n, ast.Raise) for n in h.body):
+            return False                          # 무조건 다시 올린다 = 필수 의존
+        t = h.type
+        if t is None:
+            hit = True                            # bare except
+            continue
+        for e in (t.elts if isinstance(t, ast.Tuple) else [t]):
+            if getattr(e, 'id', getattr(e, 'attr', '')) in (
+                    'ImportError', 'ModuleNotFoundError', 'Exception', 'BaseException'):
+                hit = True
+    return hit
+
+
+def _imports(src: str, deep: bool):
+    """→ (가드 **밖** import, 가드 **안** import).  이름 단위, 최상위 패키지만."""
+    plain, guarded = set(), set()
     try:
         tree = ast.parse(src)
     except SyntaxError:
-        return got
-    for n in tree.body:
-        _add(n)
-        if isinstance(n, (ast.Try, ast.If, ast.With)):
-            for s in ast.walk(n):
-                _add(s)
-    return got
+        return plain, guarded
+
+    def add(node, g):
+        tgt = guarded if g else plain
+        if isinstance(node, ast.Import):
+            for a in node.names:
+                tgt.add(a.name.split('.')[0])
+        elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
+            tgt.add(node.module.split('.')[0])
+
+    def walk(node, g):
+        for child in ast.iter_child_nodes(node):
+            if isinstance(child, ast.Try) and _swallows_import_error(child):
+                for n in child.body:
+                    add(n, True); walk(n, True)
+                for n in child.handlers + child.orelse + child.finalbody:
+                    add(n, g); walk(n, g)
+                continue
+            add(child, g)
+            walk(child, g)
+
+    if deep:
+        walk(tree, False)
+    else:
+        for n in tree.body:
+            if isinstance(n, ast.Try) and _swallows_import_error(n):
+                for m in n.body:
+                    add(m, True); walk(m, True)
+                for m in n.handlers + n.orelse + n.finalbody:
+                    add(m, False); walk(m, False)
+            elif isinstance(n, (ast.Try, ast.If, ast.With)):
+                add(n, False); walk(n, False)
+            else:
+                add(n, False)
+    return plain, guarded
+
+
+def _toplevel_imports(src: str):
+    """모듈 **최상위**(try·if·with 블록 포함) 의 **가드 밖** import 만.
+
+    함수 안 지연 import 는 세지 않는다 (모듈을 import 해도 그 경로가 돈다는 보장이 없다).
+    ⚠ `try/except ImportError` 로 **삼켜지는** import 도 세지 않는다 — 등록된 fallback 이
+      있는 선택 의존이라 CI 에 요구하면 돌아가는 코드를 빨간불로 만든다 (`_swallows_import_error`).
+    """
+    return _imports(src, deep=False)[0]
 
 
 def _all_imports(src: str):
-    """AST 전체의 import (깊이 무관).  **진입점 파일**에 쓴다 — 그 파일은 통째로 도니까
-    `main()` 안의 `import app` 도 실제로 실행된다.
+    """AST 전체의 **가드 밖** import (깊이 무관).  **진입점 파일**에 쓴다 — 그 파일은 통째로
+    도니까 `main()` 안의 `import app` 도 실제로 실행된다.
 
     ⚠ 이것이 없으면 웹앱 테스트의 의존을 통째로 놓친다: 다섯 테스트가 전부
       `def main(): import app` 꼴이라 최상위만 보면 flask 가 안 보이고, 그래서 CI 가
       flask 를 안 깔아도 검사가 초록이었다 (R19 Q6 P2 의 바로 그 상태).
+    ⚠ 반대 방향의 과조임도 실재했다 — 가드를 안 보면 `step3_sigma.py` 의 `cupy`·`cupyx`·
+      `pyamg` 를 CI 에 요구하게 된다 (4라운드 `R4-09` 후속).  그 셋은 `try/except ImportError`
+      안이고 등록된 CPU fallback 이 있다.
     """
-    got = set()
-    try:
-        tree = ast.parse(src)
-    except SyntaxError:
-        return got
-    for n in ast.walk(tree):
-        if isinstance(n, ast.Import):
-            for a in n.names:
-                got.add(a.name.split('.')[0])
-        elif isinstance(n, ast.ImportFrom) and n.level == 0 and n.module:
-            got.add(n.module.split('.')[0])
-    return got
+    return _imports(src, deep=True)[0]
 
 
 def import_closure(root: str, starts, top_starts=()):
@@ -290,12 +346,20 @@ def import_closure(root: str, starts, top_starts=()):
     std = set(getattr(sys, 'stdlib_module_names', ()))
     starts = list(starts)
     queue = [(r, True) for r in starts] + [(r, False) for r in top_starts]
-    seen, third = set(), set()
+    #  ★★ `seen` 은 파일이 아니라 **(파일, 검사 모드)** 다 (2026-09-14, `R4-09`).
+    #    초판은 집합이라 파일만 봤고, 큐가 LIFO 라 **약한 모드(top-only)가 먼저** 꺼내져
+    #    같은 파일의 **강한 모드(전체 AST)가 생략**됐다 — 확장을 넣자 실 리포에서
+    #    `adjustText`·`cupy`·`cupyx`·`pyamg` 가 direct 검사에서 **사라졌다**.
+    #    범위를 늘린 변경이 기존 검사 강도를 **깎은** 것이다.  ⇒ 강한 쪽으로 병합한다.
+    seen, third = {}, set()
     while queue:
         rel, is_start = queue.pop()
-        if rel in seen or not rel.endswith('.py'):
+        if not rel.endswith('.py'):
             continue
-        seen.add(rel)
+        prev = seen.get(rel)                       # None 처음 · True 강한 모드로 봄 · False 약한 모드만
+        if prev is True or (prev is False and not is_start):
+            continue
+        seen[rel] = bool(is_start) or bool(prev)
         fp = os.path.join(root, rel)
         if not os.path.exists(fp):
             continue
@@ -649,6 +713,41 @@ def _selftest():
     #  ④d 드라이버가 CI 레인에 **없으면** 확장하지 않는다 (안 도는 것을 요구하지 않는다)
     w(WORKFLOW, '  - run: python -m pip install --quiet numpy\n')
     chk('④d 드라이버가 CI 에 없으면 확장하지 않는다', driver_expanded_starts(root) == [])
+    #  ★★ ④f **범위를 늘리면 기존 검사가 약해져서는 안 된다** (2026-09-14, 4라운드 `R4-09`).
+    #     어제 넣은 확장이 바로 그 결함을 만들었다: 큐가 LIFO 라 **약한 모드(top-only)가 먼저**
+    #     꺼내지고 `seen` 이 파일만 봐서 **강한 모드(전체 AST)가 생략**됐다.  실 리포에서
+    #     `adjustText`·`cupy`·`cupyx`·`pyamg` 네 이름이 direct 에서 **사라졌다**.
+    #     ⇒ 파일별 검사 모드를 **강한 쪽으로 병합**한다.
+    w('scripts/e.py', 'import argparse\n\n\ndef go():\n    import r4_only_inside_a_function\n')
+    _direct_only = import_closure(root, ['scripts/e.py'])
+    _both = import_closure(root, ['scripts/e.py'], ['scripts/e.py'])
+    chk('★★④f 확장에 같은 파일이 들어와도 direct 의 **전체 AST** 검사가 살아 있다 (R4-09)',
+        'r4_only_inside_a_function' in _direct_only
+        and 'r4_only_inside_a_function' in _both,
+        f'direct만={sorted(_direct_only)} · direct+확장={sorted(_both)}')
+    chk('④g 확장에만 있는 파일은 여전히 최상위만 센다 (④e 와 모순되지 않는다)',
+        'r4_only_inside_a_function' not in import_closure(root, [], ['scripts/e.py']))
+    #  ★★ ④h~④j **가드된 선택 의존을 CI 에 요구하지 않는다** (`R4-09` 후속).
+    #     판정문: *"모든 선택적 GPU 패키지를 무조건 설치하는 것도 맞지 않다."*
+    #     실물: `step3_sigma.py` 의 cupy·cupyx·pyamg 는 전부 try/except 안이고 등록된 CPU
+    #     fallback 이 있는데, 가드를 안 보면 검사기가 **돌아가는 코드를 빨간불로** 만든다.
+    w('scripts/g.py', 'import argparse\ntry:\n    import r4_optional_pkg\n'
+                      'except ImportError:\n    r4_optional_pkg = None\n')
+    chk('★★④h try/except ImportError 로 **삼키는** import 는 요구하지 않는다',
+        'r4_optional_pkg' not in import_closure(root, ['scripts/g.py']))
+    w('scripts/g.py', 'import argparse\nimport r4_optional_pkg\ntry:\n    import r4_optional_pkg\n'
+                      'except ImportError:\n    pass\n')
+    chk('★④i 같은 이름을 가드 **밖에서도** import 하면 요구한다 (가드는 면죄부가 아니다)',
+        'r4_optional_pkg' in import_closure(root, ['scripts/g.py']))
+    w('scripts/g.py', 'import argparse\ntry:\n    import r4_optional_pkg\n'
+                      'except ImportError:\n    raise\n')
+    chk('★④j 핸들러가 **무조건** 다시 raise 하면 가드가 아니다 (필수 의존)',
+        'r4_optional_pkg' in import_closure(root, ['scripts/g.py']))
+    w('scripts/g.py', 'import argparse\nREQUIRE = False\ntry:\n    import r4_optional_pkg\n'
+                      'except Exception:\n    if REQUIRE:\n        raise SystemExit(1)\n'
+                      '    r4_optional_pkg = None\n')
+    chk('④j2 **조건부** raise (등록된 opt-in 플래그) 는 여전히 가드다 — step3_sigma 의 cupy 모양',
+        'r4_optional_pkg' not in import_closure(root, ['scripts/g.py']))
     #  ④e 드라이버 확장은 **최상위만** 센다 — `--selftest` 가 함수 안 GPU import 까지
     #     탄다는 보장이 없다.  전체 AST 로 세면 cupy·taichi 를 CI 에 요구하게 된다.
     w('scripts/d.py', 'import pandas\n\n\ndef gpu():\n    import cupy\n    return cupy\n')

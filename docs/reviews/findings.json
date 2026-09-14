@@ -3359,6 +3359,152 @@
    "title": "봉인 도구가 보증하지 않는 것 셋 (판정문 §6.4) — atom 지문 소실 · 행 소실 · refill 무검증",
    "note": "3라운드 판정문 §6.4 가 `scripts/seal_area_cohort.py` 에 대해 셋을 지적했다.  `R3-06`(step pair)\n과 **다른 축**이라 따로 등재한다 — 옛 계약은 ⓐ만 `§5-v4 D-8` 에 적고 ⓑⓒ 는 어디에도 안 적었다.\n\nⓐ **contact 결손 시 존재하는 atom 의 경로·지문까지 비운다** (`:107`–114).  거짓 `RAW_OK` 는\n   아니지만 **pending 입력 이력이 사라져** 결손 행의 빈 칸이 *\"atom 도 없다\"* 로 읽힌다.\nⓑ **디렉터리 inventory 라 설계 폴더가 통째로 없으면 행 자체가 사라진다.**  계약 `D-1` 이 주\n   ID 를 `lhs00_000`–`129` 로 고정한 이상 이것은 전수가 아니다.\nⓒ **`refill_family` 가 중복 ID·깨진 지문을 검증하지 않는다** — 그런데 이 함수는 봉인 파일을\n   **다시 쓴다**.  검증 없이 쓰면 손상을 세탁한다.\n★ 판정문의 틀: *\"생성기의 성공을 봉인 유효성 검사의 성공으로 읽지 말 것.\"*\n\n★ **2026-09-14 셋 다 수정.**\n· ⓐ `27bff9f8a` — contact 가 없어도 **있는 atom** 의 경로·sha256·본문 step 을 적는다.\n  ⚠ 상태는 그대로 `RAW_MISSING_CONTACT` (거짓 `RAW_OK` 승격 아님) — ⑩ 이 상태와 기록을 **같이** 문다.\n· ⓑ `13bdf5f01` — `seal()` 이 **등록부 ∪ 디렉터리** 전수다.  없는 것은 `CASE_DIR_MISSING`.\n  ⚠ 등록부로 **좁히지도** 않는다 (등록 밖 폴더도 행을 남긴다, ⑪b).\n· ⓒ `13bdf5f01` — `refill_family` 가 fail-closed: `DUPLICATE_CASE_ID` · `BROKEN_SHA`\n  (64자 16진수가 아닌 지문; **빈칸은 결손이라 정상**).\n★ 규율 ② — 회귀를 먼저 넣고 옛 코드에서 빨간불을 확인했다: `⑩ atom=(빈칸) · sha=0자` ·\n`⑪ 행 자체가 없다` · `⑫` · `⑫b`.  ⑩c·⑪b·⑫c 는 그때도 초록이라 **과조임이 아니다**\n(진짜 없는 atom 은 빈칸 유지 · 등록 밖 폴더 보존 · 정상 TSV refill 통과).\n★ 실측: 커밋된 `area_s2_cohort.tsv` 131행이 새 검증을 통과한다 (중복 0 · 깨진 지문 0 ·\n비-RAW_OK 4 = `lhs00_034`·`089`·`098` + `perc`).\n⚠ **커밋된 TSV 는 아직 옛 판 봉인**이다 — 결손 3행의 atom 칸이 비어 있고 `step_*` 열도 없다.\n다음 봉인(마감 2026-09-17 이후)에서 채워지고, 그때 127쌍 전부가 pair 규칙을 통과하는지\n**기계가** 확인한다.\n⚠ 이 셋을 고쳤다고 봉인이 **솔버 성공**을 보증하게 되는 것은 아니다 — 판정문의 그 문장은\n그대로 유효하다.\n★ 시점: 4라운드 요청서(`2a8484d5c`) 송부 **후**.  검토 기준 커밋 `fef88a760` 은 안 건드렸다 —\n요청서 §6 ⓒ 가 *\"봉인 전에 고쳐야 하는가\"* 로 묻는 항목이라, 판정문이 오면 *\"이미 고쳤다\"* 로 답한다.",
    "claimed_fixed_sha": "13bdf5f01494e1308f4335cb93b81c6afe9a143c"
+  },
+  {
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round4_20260914.md",
+   "status": "open",
+   "id": "R4-01",
+   "severity": "P1",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round4_20260914.md",
+    "scripts/seal_s3_prerun.py",
+    "scripts/audit_constriction_deleted.py",
+    "scripts/network_conductivity.py"
+   ],
+   "title": "정상 raw 가 세 채널 모두 `NO_NETWORK` 로 바뀌고 **빈 B_ch 로 봉인 rc=0** 이 나간다",
+   "note": "판정문 §2 `R4-01`.  실제 호출로 재현됐다.  세 갈래가 겹친다:\nⓐ **채널 철자가 다르다** — `seal_s3_prerun.py:166` 의 기본 채널은 `ion`/`electron`/`thermal` 인데\n   실제 `audit_constriction_deleted.py:189` 키는 `ionic`/`electronic`/`thermal` ⇒ KeyError.\nⓑ **빈 type_map 을 덱으로 안 채운다** (`:196`) · **`plate_z=None` 을 넘긴다** (`:198`) —\n   `network_conductivity.py:210` 은 `plate_z` 에서 반지름을 뺀다 ⇒ NoneType 산술 오류.\nⓒ **예외를 전부 `NO_NETWORK` 로 바꾼다** (`:207`) ⇒ 기술 오류가 *\"물리적으로 망이 없음\"* 으로\n   둔갑하고 세 `B_ch` 가 0개가 되는데 봉인은 **rc=0** 으로 나간다.\n★ 같은 6입자·4접촉 합성 raw 를 올바른 덱 사상·경계로 넣으면 실제로 양수 baseline 이 나온다:\n   ionic 8.361460589538375e-11 · electronic 8.361460589538375e-11 · thermal 5.586990878858949e-10.\n⚠ 그 숫자는 **합성 함수 결과**이지 실제 전극 전도도 측정값이 아니다.\n⇒ 무너지는 주장 = *\"정상 baseline 으로 `B_ch` 를 봉인한다\"*.  §1.1 의 조건부 방어(baseline 을\n본다는 것 자체는 부정한 선택이 아니다)가 **이 구현에서는 전제부터 깨진다**.\n필수 대조: 정상 raw → 덱 상 사상·경계 → 세 양수 baseline → 그 ID 가 `B_ch` 에 들어감 → 파일 왕복.\n잘못된 채널·읽기 실패·예외는 **`ERROR` 상태**로 남기고 **실행 허가 봉인을 발행하지 않는다**."
+  },
+  {
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round4_20260914.md",
+   "status": "open",
+   "id": "R4-02",
+   "severity": "P1",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round4_20260914.md",
+    "scripts/seal_s3_prerun.py",
+    "docs/data/area_s2_cohort.tsv"
+   ],
+   "title": "봉인이 인용한 지문과 **실제로 읽는 파일·ID 집합**이 다를 수 있다",
+   "note": "판정문 §2 `R4-02`.  `seal_s3_prerun.py:102` 는 TSV 에서 `case`/`status` 만 남기고 **raw 경로·\nSHA·step 을 버린다**.  `:196` 의 loader 는 현재 폴더에서 파일을 **다시 발견**한다.  설계 CSV 도\n해시만 찍고 **ID 대조에는 안 쓴다**.\n★ 실제 파일 반례: ① step 100 쌍을 TSV 에 봉인 → ② 같은 폴더에 step 200 추가 →\n③ **TSV SHA 는 불변인데 loader 는 step 200 을 읽고 sealer 는 그대로 rc=0**.\n⇒ 철자·인자를 고쳐도 없어지지 않는 **독립적인 연결 결함**이다 (`R4-01` 과 별개).\n또한: 중복 ID 는 **마지막 행이 덮어쓴다** · 등록 밖 rogue 허용 · 현재 TSV 의 `perc` 까지 **131개를\n주 코호트로 순회**한다 · **빈 TSV + 없는 설계 CSV** 를 허용일 분기에 넣으면 `n_cohort_ids=0` ·\n빈 design SHA 의 봉인을 rc=0 으로 쓴다.\n필수 조건 (판정문 인용): 주 코호트 ID 는 설계 **130개와 정확히 같고 각 1회** · `perc` 는 주 집합\n**밖**에 별도 보관 · 계산은 **지정 세대의 실제 경로와 원 바이트 SHA 를 검증한 파일만** 사용 ·\nID×채널마다 σ_old·단위·정규화·채택 상태·실제 input/config/solver 식별자 저장 · 없는 설계·중복·\nextra·잘못된 지문·기술 실패는 **실행 허가 봉인을 거부**.\n⚠ *\"봉인 파일의 존재만 검사하는 러너\"* 로는 부족하다 — 내용·생성 세대·원자료·등록 조건을 함께\n대조해야 하고, 기존 봉인을 **조용히 덮어쓰지 말고 불변 버전으로** 남겨야 한다."
+  },
+  {
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round4_20260914.md",
+   "status": "open",
+   "id": "R4-03",
+   "severity": "P2",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round4_20260914.md",
+    "scripts/seal_s3_prerun.py",
+    "scripts/measure_rho.py"
+   ],
+   "title": "solver 기록이 **최종 채택 해**의 기록이 아니다 (봉인기·ρ 양쪽)",
+   "note": "판정문 §2 `R4-03`.  `seal_s3_prerun.py:205` 는 **모든 case/channel 호출을 합치고**, `:146` 은\nCG 호출이 둘 이상이면 fallback · 마지막 CG info 를 최종 채택 상태로 읽는다.\n실제 반례 둘: ⓐ 서로 다른 **두 망**에서 각각 CG info=0 한 번 → `fallback_seen=true` (거짓)\nⓑ CG info=8 뒤 **spsolve 채택** → `final_adopted_info=8` · `fallback_seen=false` (거짓).\n⇒ case×channel×**generation** 별 호출과 실제 최종 채택 함수를 **분리**해야 한다.  직접해·solve\n없음·모든 망 오류가 같은 `None` 으로 합쳐지면 안 된다.\n★ ρ 도구에도 같은 종류가 남았다 — `measure_rho.py:216` 은 **전체 path 가 정확히 spsolve** 인\n경우만 direct 로 본다.  fallback 이 발화한 64노드 SE 망에서:\n```\npath_A = path_B = cg>cg+ilu>spsolve\nsigma_A = sigma_B = 3.723418957700393e-7\ncg_info_final_A = cg_info_final_B = None\nstatus=OK, rho_kind=iterative, tol_gate=applicable, delta_pct=0\n```\n실제 최종해는 **direct/direct** 인데 버린 CG 를 조인 기록이 *반복해 민감도*로 발행된다.\n⚠ **직접해 수치가 틀렸다는 반례가 아니라 진단 종류가 틀렸다는 반례**다.\n⇒ direct/direct → `TOL_NOT_APPLICABLE` · iterative/iterative → 정지 기준 진단 · **방식 전환** →\n`solver-path sensitivity` 로 가른다.  finite·최종 상태·잔차/보존 증거는 별도 유지.\n★ 계약 `§5-v4 B` 의 *\"런 전 양쪽 최종 채택 상태\"* 도 **시간축을 분리**해야 한다 — baseline 은\n지금 기록 가능하지만 **아직 안 돌린 S3 의 채택 결과는 기록할 수 없다**.  런 전에는 양 세대의\n**정책**과 baseline 의 실제 채택 상태를 봉인하고, S3 의 채택 상태는 **그 봉인 ID 를 참조한 후속\n영수증**으로 남긴다."
+  },
+  {
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round4_20260914.md",
+   "status": "open",
+   "id": "R4-04",
+   "severity": "P2",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round4_20260914.md",
+    "scripts/measure_rho.py"
+   ],
+   "title": "**같은 정지 기준**이 `TIGHTEN_NOOP` 를 통과한다 (등호 허용 · legacy tol 분기)",
+   "note": "판정문 §5 `R4-04`.  현대 SciPy 의 rtol+atol 동시 조임 수정은 **CONFIRMED** (기준\n1.4142135623730953e-5 → 1.4142135623730952e-8, 해도 비트 동일이 아니었다).\n그러나 `measure_rho.py:226` 의 조건이 `crit_B < crit_A × (1 + 1e-12)` 라 **같은 양수 기준도\n참**이고, `:92` 의 **legacy `tol` 분기는 atol 을 함께 안 줄인다**.\n실제 SciPy 를 tol→rtol shim 으로 부른 대조:\n```\ntol  A=1e-5, B=1.0000000000000002e-6\natol A=B=.001\n결속 기준 A=B=.001        ← 안 줄었다\nCG info A=B=0, 해 비트 동일\n```\n그 기록을 현행 `measure_case` 분류기에 넣으면 **OK · delta_pct=0** 이 나온다.\n⚠ 뒷부분은 **합성 기록 주입**이라 *\"실제 코퍼스에 이미 이 행이 있다\"* 는 뜻이 아니다.\n⇒ legacy 를 계속 지원한다면 **결속 절대 기준도 함께** 조이고, 양의 유한 criterion 에서\n**엄격히 줄어듦** 과 **등록 factor 와의 일치**를 따로 검사한다."
+  },
+  {
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round4_20260914.md",
+   "status": "open",
+   "id": "R4-05",
+   "severity": "P2",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round4_20260914.md",
+    "scripts/measure_rho.py"
+   ],
+   "title": "ρ CSV 가 **새 필드 8개를 조용히 버린다** (`extrasaction=ignore` + 옛 18열)",
+   "note": "판정문 §5 `R4-05`.  `measure_rho.py:492` 의 CSV `fieldnames` 가 **옛 18열**이고\n`extrasaction='ignore'` 다.  실제 main 을 합성 1행으로 돌려 CSV 를 다시 읽으면 rc=0 인데\n다음이 **전부 없다**:\n`cg_info_final_A` · `cg_info_final_B` · `crit_A` · `crit_B` · `fallback_A` · `fallback_B` ·\n`n_cg_A` · `tol_gate`.  요약 JSON 도 per-case 필드를 복구하지 못한다.\n★ **메모리에서 수집했다** 와 **회수한 산출물이 증서를 갖고 있다** 는 다르다 — `R3-04` 가\n고쳤다고 한 바로 그 기록이 **파일에는 안 남는다**.\n⇒ 새 필드를 **명시적 행 스키마**로 만들고 **실제 CLI → CSV 재독입** 통합 회귀를 넣는다.\n⚠ NaN/Inf → `NONFINITE` 분류는 실제 분기에서 CONFIRMED 다.  그러나 `R4-03` 의 direct\n오분류와 이 저장 손실 때문에 **`R3-04` 전체 폐쇄는 REFUTED**.\n⚠ 과거 저장 270행(30건×채널)의 숫자를 이 반례만으로 전부 무효로 보지는 않는다."
+  },
+  {
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round4_20260914.md",
+   "status": "open",
+   "id": "R4-06",
+   "severity": "P2",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round4_20260914.md",
+    "scripts/seal_area_cohort.py"
+   ],
+   "title": "본문 step **파싱 실패**와 **pair 선택 규칙**이 아직 fail-closed 가 아니다",
+   "note": "판정문 §4.2 `R4-06`.  `seal_area_cohort.py:142` 는 본문 step 이 없으면 **파일명 step 으로\n돌아간다**.  `:110` 은 **먼저 발견한 디렉터리**의 독립적인 최신 atom/contact 를 고른다.\n실제 임시 raw 반례 셋:\n① 양쪽에서 `ITEM: TIMESTEP` 본문을 없앰 → **`RAW_OK`** · step 100/100 · gap 0\n② `contact_100` + `atom_100` + `atom_10100` → **유효 같은-step 쌍이 있는데** `atom_10100` 을\n   골라 `REFUSED_INPUT_PAIR_STEP`\n③ `post_a` 에 100쌍 · `post_z` 에 200쌍 → 케이스 최대 contact 200 대신 **먼저 발견한 100** 선택\n`Simulation Finished` 도 이 도구는 검사하지 않는다.\n⇒ 필수 정정: **본문 step 파싱 실패를 거부** · 케이스 **전체** contact 후보 중 **최대 본문 step**\n선택 → **같은 step atom 우선**, 없을 때만 등록된 +5000 이내 대안 · 동률·충돌 처리와 완료 증거\n고정 · 이 **선택기를 sealer/baseline/runner 가 공유**하고 실제 파일 SHA 를 넘긴다.\n★ 판정문 판단: *\"inventory 도구로만 쓰는 것은 가능하지만 D-1/D-2 **최종 입력 증서**로 읽으면\n안 된다.\"*\n★ **D-8 은 신규 finding 이 아니라 공개 미폐쇄 사항**이라고 판정했다 (우리는 `R3-07` ⓐ 로\n`13bdf5f01`·`27bff9f8a` 에서 이미 고쳤다 — 기준 커밋 `fef88a760` 이후라 리뷰 범위 밖).\n⚠ *\"기존 빈칸을 **그때 atom 이 없었다** 는 증거로 사용하면 안 된다\"* 는 그대로 유효하다."
+  },
+  {
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round4_20260914.md",
+   "status": "open",
+   "id": "R4-07",
+   "severity": "P2",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round4_20260914.md",
+    "docs/area_contract_20260913.md",
+    "scripts/seal_s3_prerun.py"
+   ],
+   "title": "**\"09-17 전에는 안 함\" 은 고정 마감이 아니다** — 봉인 시점 선택 여지가 남는다",
+   "note": "판정문 §4 `R4-07`.  계약 `D-3` 은 **봉인 순간을 마감으로 삼되 09-17 이전에는 봉인하지 않는다**\n고 한다.  요청서 §6 의 *\"마감 09-17\"* 이라는 우리 요약과 **다르다**.  현재 코드는 **최초\n허용일만** 검사한다.\n⇒ 09-17 · 18 · 20 중 **언제 멈출지 고정되지 않는다**.  수신 상황·baseline 분류·dry-run 결과를\n본 뒤 봉인 시점을 고를 여지가 남는다.\n⚠ *\"실제로 유리한 시점을 골랐다\"* 는 증거가 아니라 **런 전 사전등록에 남은 선택 여지**라는 P2.\n⇒ 저자가 **결과를 더 보기 전에** 둘 중 하나를 명시해야 한다:\n  ⓐ 시간대까지 포함한 **고정 수신 종료 timestamp**\n  ⓑ 또는 **결과와 무관한 결정론적 종료 규칙** + 최장 대기 + 미완료 처리\n⛔ **Codex 는 저자 대신 특정 시각을 만들어 넣지 않았다.**  ⇒ 이 항목은 **사용자 결정 대기**다 —\n에이전트가 임의로 시각을 정하면 그 자체가 사전등록의 훼손이다."
+  },
+  {
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round4_20260914.md",
+   "status": "open",
+   "id": "R4-08",
+   "severity": "P2",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round4_20260914.md",
+    "scripts/audit_transport_cap_equivalence.py",
+    "scripts/network_conductivity.py"
+   ],
+   "title": "양성 대조가 **ψ 정의**와 **floor-only 영역**을 고정하지 못한다 (두 변이가 초록)",
+   "note": "판정문 §3 `R4-08`.  실제 변이 대조:\n```\n현재 baseline              13/13 PASS\nS3 교정을 no-op 으로       12/13, ⑦ FAIL   ← 유효\nfloor 1e-4 → 0             13/13 PASS      ← 못 잡는다\nψ 지수 1.5 → 1.0           13/13 PASS      ← 못 잡는다\n```\n원인: **솔버가 돌려준 ψ 를 기대식에도 쓴다** ⇒ 잘못 바뀐 ψ 가 기대값을 **같이 움직인다**.\n지수를 1.0 으로 바꾸면 ψ = .706702569471662 인데도 전부 통과한다.\n⇒ 생산 계산을 다시 구현할 필요는 없고, **고정 기하에서 s 와 ψ 를 독립 계산하는 작은 oracle**\n이 필요하다.\n★ floor 대조의 δ=.2 는 실제로 **s ≥ 1 clamp 의 ψ=0** 이라 **0 < ψ ≤ 1e-4 인 floor-only 영역**을\n시험하지 않는다.  실제 함수 경계값:\n```\ns=.997  ψ=.00016431676725155   old 1793.0848241072367  S3 4.8413290250895515e-5  (원래 비절단)\ns=.998  ψ=.00008944271909999   old 0                   S3 0    (floor 제거 시 old 3290.8064548625366 / new 2.6326451638900366e-5)\ns=1     ψ=0                    old 0                   S3 0    (clamp — 계속 0)\n```\n⇒ 계약이 약속한 *\"floor 위·아래·clamp 각각\"* 을 **실제로 분리**한다 (.997/.998/1 독립 핀 +\nfloor 삭제 변이의 실패).\n★ *\"한 간선이면 충분한가\"* 에 대한 답: 관계식의 한 정상 지점과 no-op 감지는 **충분히 보여\n준다**.  그러나 채널 dispatch · raw→network · 정규화 · 바닥 양쪽 · 최종 수렴 · 원파일 소비를\n한꺼번에 보증하기엔 **부족**하다 ⇒ 같은 활성 기하의 **여러 채널 대조** + **실제 네트워크 통합\n대조 1건**.  ⚠ 이것은 *\"전 코호트에서 큰 σ 변화가 나와야 한다\"* 와 다르다."
+  },
+  {
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round4_20260914.md",
+   "status": "open",
+   "id": "R4-09",
+   "severity": "P2",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round4_20260914.md",
+    "scripts/check_selftest_inventory.py"
+   ],
+   "title": "★ **우리가 오늘 넣은 폐포 확장이 기존 검사를 약화시켰다** (LIFO + 파일 단위 `seen`)",
+   "note": "판정문 §6 `R4-09`.  `SELF-32` 수정(`c8dfb1b64`)이 pandas 를 잡은 것은 **CONFIRMED**.\n그러나 `check_selftest_inventory.py:292` 가 **전체 AST 모드 direct 뒤에 top-only expanded 를\n넣고 LIFO 로 꺼내며**, `:296` 의 `seen` 이 **파일만** 본다 ⇒ **약한 검사를 먼저 하면 강한 검사가\n생략된다**.\n실제 함수·동일 합성 파일:\n```\ndirect 에만 포함        → {r4_definitely_uninstalled_package}\ndirect + expanded 양쪽  → 빈 집합          ← 약해졌다\n```\n실 리포에서도 expanded 를 넣으면 direct 에서 **발견하던 네 이름이 사라진다**:\n`adjustText` · `cupy` · `cupyx` · `pyamg`.\n⚠ 그 넷이 모든 CI flag 에서 필수라는 증거는 아니다 — 증명된 것은 **범위 추가가 기존 검사\n강도를 보존하지 않는 처리 결함**이다.\n⇒ **파일별 검사 모드를 강한 쪽으로 병합**하고, 승격되면 **재방문**한다.\n★ 또한 *\"함수 안 import 라 불필요\"* 라는 우리 처리도 **성립하지 않는다** — 함수 안 필수\nimport 를 쓰는 합성 selftest 에서 inventory 는 rc=0·errors=[] 인데 그 selftest 자체는\n`ModuleNotFoundError`·rc=1 이다.  ⚠ 반대로 **모든 선택적 GPU 패키지를 무조건 설치하는 것도\n맞지 않다** — 실제 19 flag 중 18개가 9종 차단하에 rc=0 이었다 (1개는 Windows 실행별칭 문제로\n중단, Linux CI 증거 아님).\n⇒ 판정: **9종 전부 필수 설치라는 결론은 지지되지 않는다.**  CI 가 실제 선택한 (파일, flag)별로\n성공·의도된 skip·fallback 을 기록하고 **최소 의존 환경**에서 돌려야 하며, 정적 import 감사를\n**완전한 실행 의존 폐포라고 부르지 말아야** 한다."
+  },
+  {
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round4_20260914.md",
+   "status": "open",
+   "id": "R4-10",
+   "severity": "P2",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round4_20260914.md",
+    "scripts/seal_s3_prerun.py"
+   ],
+   "title": "★ 날짜 selftest 가 **오늘만 초록**이다 — 허용일(09-17)을 주입하면 ③b 가 빨간불",
+   "note": "판정문 §2 `R4-10`.  오늘(09-14) 의 일반 실행 rc=2·출력 없음, dry-run rc=0·봉인 파일 없음은\n실제 CLI 로 **CONFIRMED**.  그러나 `seal_s3_prerun.py:259` 의 selftest 에 **09-17 을 주입하면**\n빈 root 의 봉인을 쓴 뒤 ③b 가 파일 부재를 요구해 **23 PASS · ③b FAIL · rc=1** 이다.\n⇒ 도구가 **실제로 일해야 하는 날에 자기검사가 깨진다**.\n⇒ 날짜를 **고정 입력**으로 시험해 ⓐ 기준일 **전 거부** 와 ⓑ 기준일 **이후 정상 입력 봉인** 을\n**매번 함께** 검증한다.  ⛔ 파일 부재 검사를 **삭제해서 초록으로 만들라는 뜻이 아니다**.\n★ 우리 주장 하나가 뒤집혔다 — *\"dry-run 이 봉인을 안 쓰므로 S3 는 그때까지 기계적으로 시작할\n수 없다\"* 는 **REFUTED**.  좁은 주장(dry-run 이 안 쓴다)만 맞고, **봉인을 요구하는 러너가\n없으므로** 기계적 차단은 존재하지 않는다."
   }
  ]
 }
