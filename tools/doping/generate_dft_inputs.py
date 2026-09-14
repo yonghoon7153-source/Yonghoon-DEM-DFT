@@ -277,8 +277,18 @@ def preflight_pseudos(species, pseudo_dir, pp_names=None):
 def snapshots_from_traj(traj, times_ps, save_fs, out_dir, label, seed,
                         pseudo_dir, ecutwfc=52, ecutrho=520, pp_names=None,
                         mixing_mode='plain', mixing_beta=0.2, electron_maxstep=100,
-                        mixing_ndim=8, occupations=None, smearing='mv', degauss=0.01):
-    """궤적에서 카드 규칙대로 프레임을 뽑아 frame.xyz + scf.in + 대조 해시를 쓴다."""
+                        mixing_ndim=8, occupations=None, smearing='gaussian', degauss=0.01):
+    """궤적에서 카드 규칙대로 프레임을 뽑아 frame.xyz + scf.in + 대조 해시를 쓴다.
+
+    ⛔ 2026-09-14 — 기본 smearing 이 **`mv`(cold)였다.** 형제 함수 `scf_from_xyz` 는
+      2026-09-11 에 `gaussian` 으로 고쳤는데 이쪽은 안 고쳐서, CLI(`--smearing gaussian`)로
+      부르면 안전하고 **함수를 직접 부르면 위험한** 상태였다. 뜨거운 황화물 MD 스냅샷에서
+      `mv` 는 음의 점유를 허용해 SCF 를 무너뜨린다 (실측 118,698 Ry 발산, `runs/fc_pilot`).
+      두 경로의 기본값을 맞춘다. 자체시험이 CLI 기본값과 함수 기본값의 일치를 강제한다.
+
+    ⚠ `occupations=None` → **`fixed`** 다. 절연체로 **선언된** 구조에만 맞다. 융체·고온
+      스냅샷처럼 갭이 닫힐 수 있는 프레임에는 호출부가 `occupations='smearing'` 을 줘야 한다
+      — 이 함수는 온도를 모르므로 대신 판단하지 않는다."""
     from ase.io import read as _read, write as _write
     out_dir = Path(out_dir)
     idxs = [frame_index_for_time(t, save_fs) for t in times_ps]
@@ -634,6 +644,11 @@ def collect_results(out_dir, label, seed, max_dev_A=1e-6):
     return res
 
 
+def _cli_defaults():
+    """argparse 기본값을 **파서에서** 읽는다 (문서에 적힌 값이 아니라 실제 값)."""
+    return [(a.dest, a.default) for a in _build_parser()._actions]
+
+
 def _selftest():
     import tempfile, hashlib as _h
     from ase import Atoms
@@ -689,6 +704,13 @@ def _selftest():
             "스냅샷 2개 · index 규칙 적용")
         chk((d / "out" / "lbl_s2_t0ps" / "scf.in").is_file(), "scf.in 생성")
         chk(m["snapshots"][0]["coord_sha256"] == coord_digest(a1), "좌표 해시가 frame 과 일치")
+        # ⑪ 2026-09-14 — 형제 함수·CLI 와 기본 smearing 이 갈리면 **함수 직접 호출 경로만** 위험해진다
+        import inspect as _ins
+        _fd = _ins.signature(snapshots_from_traj).parameters["smearing"].default
+        _sd = _ins.signature(scf_from_xyz).parameters["smearing"].default
+        _cd = [a for a in _cli_defaults() if a[0] == "smearing"]
+        chk(_fd == _sd == "gaussian" and _cd and _cd[0][1] == "gaussian",
+            f"뜨거운 스냅샷 기본 smearing 이 세 경로에서 같다 (함수 {_fd} · 형제 {_sd} · CLI {_cd[0][1] if _cd else '?'})")
         try:
             snapshots_from_traj(tr, [10.0], 100, d / "out2", "lbl", "s2", d / "pp")
             chk(False, "\u26d4음성: 범위 밖 프레임을 조용히 대체하면 안 된다")
@@ -1032,7 +1054,8 @@ def _dt_now():
     return _d.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
 
 
-def main():
+def _build_parser():
+    """CLI 파서를 만든다. ⭐ 따로 뺀 이유: 자체시험이 **문서가 아니라 파서에서** 기본값을 읽는다."""
     p = argparse.ArgumentParser(description=__doc__,
                                formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--ranking',
@@ -1085,6 +1108,11 @@ def main():
                   help='HUBBARD 항목 (예: "Nd-4f 6.0"). ⛔ 원자가에 없는 껍질에 걸지 말 것')
     p.add_argument('--pp', nargs='*', default=[],
                   help='유사포텐셜 파일명 덮어쓰기 (예: Nd=Nd.paw.z_14.atompaw...upf)')
+    return p
+
+
+def main():
+    p = _build_parser()
     args = p.parse_args()
 
     def _kv(items):
