@@ -158,6 +158,9 @@ jobs:
       - name: 웹앱 — 작업일지(worklog) 페이지
         run: python webapp/test_worklog_page.py
 
+      - name: 웹앱 — 런처 포트 선점 (거짓 초록 회귀)
+        run: python scripts/test_webapp_launcher.py
+
       - name: 웹앱 — 온도 · 압력 배선
         run: python webapp/test_temp_pressure_wiring.py
 

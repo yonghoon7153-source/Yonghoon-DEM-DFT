@@ -9,6 +9,7 @@
 #   bash scripts/run_dem_webapp.sh --open       # 실행 + 브라우저 열기
 #   bash scripts/run_dem_webapp.sh --bg --open  # 백그라운드 + 브라우저 (셸을 안 잡는다)
 #   bash scripts/run_dem_webapp.sh --no-pull    # 오프라인/작업 중일 때
+#   bash scripts/run_dem_webapp.sh --stop       # 그 포트를 쥔 인스턴스만 멈춘다 (pid 파일 안 믿는다)
 #   PORT=5050 bash scripts/run_dem_webapp.sh    # 포트 바꾸기
 #
 # 환경변수로 경로를 바꿀 수 있다 (기본값은 이 랩 WSL 규약):
@@ -17,16 +18,45 @@
 set -uo pipefail
 
 PORT="${PORT:-5002}"
-OPEN=0; BG=0; PULL=1
+OPEN=0; BG=0; PULL=1; STOP=0
 for a in "$@"; do
   case "$a" in
     --open) OPEN=1;;
     --bg) BG=1;;
     --no-pull) PULL=0;;
-    -h|--help) sed -n '1,22p' "$0"; exit 0;;
-    *) echo "알 수 없는 인자: $a  (--open · --bg · --no-pull)"; exit 2;;
+    --stop) STOP=1;;
+    -h|--help) sed -n '1,23p' "$0"; exit 0;;
+    *) echo "알 수 없는 인자: $a  (--open · --bg · --no-pull · --stop)"; exit 2;;
   esac
 done
+
+#  ★★ 2026-09-14 실사고 — **옛 인스턴스를 안 멈춰서 새 코드가 영영 안 떴다.**
+#    옛 판은 포트를 확인하지 않고 그냥 `python3 app.py` 를 또 띄웠다.  포트가 물려 있으면
+#    새 프로세스는 bind 실패로 죽는데, 준비 검사가 `connect_ex==0` 만 봐서 **옛 프로세스
+#    덕분에 즉시 통과**하고 `✓ PID …` 를 찍었다 = 거짓 초록.  사용자는 "git pull 했고
+#    런처가 ✓ 라는데 새 라우트가 404" 를 보게 된다 (worklog 페이지에서 실제로 겪음).
+#    ⇒ 포트 기준으로 **먼저 멈추고** 띄운다.  pid 파일은 낡을 수 있어 믿지 않는다.
+_port_pid() {                       # 그 포트를 LISTEN 중인 PID (없으면 빈 문자열)
+  local p=''
+  p="$(ss -ltnp 2>/dev/null | awk -v pat=":$PORT\$" 'NR>1 && $4 ~ pat' \
+       | grep -oE 'pid=[0-9]+' | head -1 | cut -d= -f2)"
+  [ -z "$p" ] && p="$(lsof -ti tcp:"$PORT" -sTCP:LISTEN 2>/dev/null | head -1)"
+  printf '%s' "$p"
+}
+_stop_port() {                      # 그 포트를 비운다 (TERM → 안 죽으면 KILL)
+  local pid; pid="$(_port_pid)"
+  [ -z "$pid" ] && { echo "[dem] 포트 $PORT 비어 있음"; return 0; }
+  echo "[dem] 포트 $PORT 를 PID $pid 가 쓰고 있다 — 옛 인스턴스를 멈춘다"
+  kill "$pid" 2>/dev/null
+  for _ in $(seq 1 20); do
+    sleep 0.5; [ -z "$(_port_pid)" ] && { echo "[dem] 옛 인스턴스 종료 ✓"; return 0; }
+  done
+  pid="$(_port_pid)"
+  [ -n "$pid" ] && { echo "[dem] TERM 무시 → KILL $pid"; kill -9 "$pid" 2>/dev/null; sleep 1; }
+  [ -z "$(_port_pid)" ] && { echo "[dem] 옛 인스턴스 종료 ✓"; return 0; }
+  echo "[dem] ⛔ 포트 $PORT 를 못 비웠다 (PID $(_port_pid)) — 직접 kill 후 다시"; return 1
+}
+if [ "$STOP" = 1 ]; then _stop_port; exit $?; fi
 
 #  코드 = 이 스크립트가 있는 리포 (자기 위치로 찾는다 — 경로를 적어 두면 또 틀린다)
 CODE="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd)"
@@ -126,6 +156,9 @@ _open() {
   echo "[dem] 브라우저를 못 열었다 — 직접 여세요: $URL"
 }
 
+#  ★ 띄우기 전에 포트를 비운다 — 이걸 빼면 위 지뢰(거짓 초록)가 그대로 재발한다
+_stop_port || exit 1
+
 cd "$CODE/webapp" || exit 1
 if [ "$BG" = 1 ]; then
   LOG="$DATA/webapp/dem_webapp.log"
@@ -135,6 +168,7 @@ if [ "$BG" = 1 ]; then
   echo "$PID" > "$DATA/webapp/dem_webapp.pid"
   #  뜰 때까지 잠깐 기다렸다가 연다 (바로 열면 연결 거부 화면이 뜬다)
   for _ in $(seq 1 40); do
+    kill -0 "$PID" 2>/dev/null || break        # ★ 우리 프로세스가 죽었으면 즉시 탈출
     if python3 -c "import socket,sys; s=socket.socket(); s.settimeout(.3); sys.exit(0 if s.connect_ex(('127.0.0.1',$PORT))==0 else 1)"; then break; fi
     sleep 0.5
   done

@@ -294,6 +294,11 @@
   },
   "pitfalls": [
     {
+      "symptom": "git pull 했는데 웹앱에 새 라우트가 404 (런처는 ✓ PID 를 찍는다)",
+      "cause": "옛 인스턴스가 포트를 계속 물고 있어 새 프로세스는 bind 실패로 죽는데, 준비 검사가 connect_ex==0 만 봐서 옛 프로세스로 통과한다 (거짓 초록)",
+      "fix": "bash scripts/run_dem_webapp.sh --stop 후 재기동 (런처가 이제 포트 기준으로 먼저 멈춘다). ⚠ pkill -f 'webapp/app.py' 는 안 맞는다 — cmdline 이 'python3 app.py' 다"
+    },
+    {
       "symptom": "Phase A/SDCP 팔 0 (게이트 ABORT · 미정의-이름 오탐 114건)",
       "cause": "pyflakes 미설치 → 미정의-이름 게이트가 최소-AST 폴백, 중첩함수 클로저 변수를 미정의로 오탐",
       "fix": "pip install pyflakes — setup [4/7] 에 포함. ⚠ 옛 stoic-knuth 판 setup 스크립트엔 없어 sdcp 판 curl 을 써야 한다"

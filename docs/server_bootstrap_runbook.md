@@ -107,6 +107,7 @@ DL="/mnt/c/Users/안용훈/Downloads"; cp <파일> "$DL/"                # 윈�
 | 프로세스 확인 착오 | `kill <틀린PID>` / tail ^C를 런 종료로 오인 | `pgrep -af 'step4_dyn\|mpm3d'` 로 이름 검색, ^C는 tail만 멈춤 |
 | 실행 중 코드 교체 | git checkout 해도 옛 코드로 계속 돔 | 파이썬은 시작 시점 로드 — **kill 후 재시작** 필수 |
 | pyflakes 미설치 | Phase A/SDCP **팔 0** (미정의-이름 게이트 ABORT, 오탐 114건) | setup [4/7] pyflakes 설치·[7/7] import 검증 — ⚠ **sdcp 판 curl** 로만 (옛 stoic-knuth 판엔 없음) |
+| 런처가 옛 인스턴스를 안 죽임 | `git pull` 해도 웹앱에 **새 라우트가 404**, 런처는 `✓ PID` 를 찍음 (거짓 초록) | `run_dem_webapp.sh` 가 포트 기준 `_stop_port` 로 **먼저 종료 후 기동** + `--stop` 모드.  ⚠ `pkill -f webapp/app.py` 는 안 맞는다 (cmdline 이 `python3 app.py`) |
 
 ⚠ 이 런북과 setup 스크립트가 **정본**이다 — 새 지뢰를 밟으면 여기와 setup_gpu_server.sh 에
 같이 추가할 것 (둘이 어긋나면 setup 스크립트가 우선).
