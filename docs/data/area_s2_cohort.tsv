@@ -1,8 +1,8 @@
-# S3 코호트 봉인 — raw 가용성 전수 목록 (계약 §5-v3 ③).  생성 2026-09-13 · 도구 커밋 e554cbd4a
+# S3 코호트 봉인 — raw 가용성 전수 목록 (계약 §5-v3 ③).  생성 2026-09-14 · 도구 커밋 d02ed257f
 # root = /home/yonghoon71/lhs_local
 # ⛔ 솔버를 부르지 않았다 — 포함/제외는 파일 실재로만.  이 목록 전부를 S3 가 돌리고 실패는 REFUSED 로 보존한다.
+# 설계족 분포: UNKNOWN 1 · mono_AM_P 15 · mono_AM_S 15
 # ⚠ 설계족이 mono 뿐이면 AREA-11(AM_P–AM_S · AM_P 반경 이종쌍) 효과는 이 코호트로 검증할 수 없다.
-# 설계족 분포: UNKNOWN 1 · mono_AM_P 15 · mono_AM_S 15   (출처: docs/data/lhs_design_20260818.csv `block` 열; 해시 열은 refill 에서 불변)
 case	status	design_family	family_source	n_types	deck	deck_sha256	atom_file	atom_sha256	contact_file	contact_sha256	reason
 lhs00_100	RAW_OK	mono_AM_S	design_csv	2	/home/yonghoon71/lhs_local/lhs00_100/input_lhs00_100.liggghts	48e480f14adb78ffc1006db1e8fd58eca62e454bc1b07fcd939995b728a30de6	/home/yonghoon71/lhs_local/lhs00_100/post_lhs00_100/atom_3380000.liggghts	14c5251ea9c70ea69807daffa23a307fb80672a8356f9eeb690d7441adf83e5b	/home/yonghoon71/lhs_local/lhs00_100/post_lhs00_100/contact_3380000.liggghts	9971ddca7b91189355e87bca00672f57492007e76e4bcfa442f633a03de29ffb	포함: 원자료·덱 실재 (솔버 성공 여부는 보지 않았다)
 lhs00_101	RAW_OK	mono_AM_S	design_csv	2	/home/yonghoon71/lhs_local/lhs00_101/input_lhs00_101.liggghts	cd47ca453837893e2069120b80a96ed39017931a364fe7d769998212e27bce4b	/home/yonghoon71/lhs_local/lhs00_101/post_lhs00_101/atom_2940000.liggghts	0fba958201786804ea88a073d2d721a20a51bfa45c55e845d120ea605ccf99c1	/home/yonghoon71/lhs_local/lhs00_101/post_lhs00_101/contact_2940000.liggghts	b644aa7d183364cc246953715753855f316d383b3a854f5ee85c481e5050d205	포함: 원자료·덱 실재 (솔버 성공 여부는 보지 않았다)
@@ -34,4 +34,4 @@ lhs00_126	RAW_OK	mono_AM_P	design_csv	2	/home/yonghoon71/lhs_local/lhs00_126/inp
 lhs00_127	RAW_OK	mono_AM_P	design_csv	2	/home/yonghoon71/lhs_local/lhs00_127/input_lhs00_127.liggghts	b92f9e16aa69891873432011dd52893d075ec5a8e224ace03c05b570a20a0e79	/home/yonghoon71/lhs_local/lhs00_127/post_lhs00_127/atom_2440000.liggghts	33041ecf81f9b4249f0be2654b9a141880b61336f6955d0561ef22cc32121843	/home/yonghoon71/lhs_local/lhs00_127/post_lhs00_127/contact_2440000.liggghts	c5f283d5a4dc719de25498b4cb815424c9cee7a9753018de265c903518b48bbf	포함: 원자료·덱 실재 (솔버 성공 여부는 보지 않았다)
 lhs00_128	RAW_OK	mono_AM_P	design_csv	2	/home/yonghoon71/lhs_local/lhs00_128/input_lhs00_128.liggghts	00ddd41898fb93164895eb46ad635ffcd95a535f5e1a282a6e4be116886e9d14	/home/yonghoon71/lhs_local/lhs00_128/post_lhs00_128/atom_2640000.liggghts	638cb80677a69b0edf4b3f426828964944efe2301e387a2c14f4c6e93c2a0ff2	/home/yonghoon71/lhs_local/lhs00_128/post_lhs00_128/contact_2640000.liggghts	3fa7d258dd0dbc3d1ea3a9f24e2ee769e1635cdc40c8fda9874c04bbc32aebf8	포함: 원자료·덱 실재 (솔버 성공 여부는 보지 않았다)
 lhs00_129	RAW_OK	mono_AM_P	design_csv	2	/home/yonghoon71/lhs_local/lhs00_129/input_lhs00_129.liggghts	7655bfec1e019bfbe2cf39697e18cfd27bfde090b641030258562c4b6e395d64	/home/yonghoon71/lhs_local/lhs00_129/post_lhs00_129/atom_2910000.liggghts	75775d13e54b64c3c1bd3e6f942ae73c619cebfff65bfb101b947ef322cdcbf2	/home/yonghoon71/lhs_local/lhs00_129/post_lhs00_129/contact_2910000.liggghts	0beeb61e20c323019fc0b773347160838ccd55bd1cd2c9a0d4fa63a7eb8999d2	포함: 원자료·덱 실재 (솔버 성공 여부는 보지 않았다)
-perc	DECK_MISSING+RAW_MISSING_ATOM	UNKNOWN									제외 사유 = DECK_MISSING, RAW_MISSING_ATOM (기술적 결손; 솔버 이전)
+perc	DECK_MISSING+RAW_MISSING_ATOM	UNKNOWN									케이스 폴더 아님 — 덱도 원자료도 없다 (행은 남긴다)
