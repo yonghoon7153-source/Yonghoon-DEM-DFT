@@ -3506,6 +3506,21 @@
    ],
    "title": "★ 날짜 selftest 가 **오늘만 초록**이다 — 허용일(09-17)을 주입하면 ③b 가 빨간불",
    "note": "판정문 §2 `R4-10`.  오늘(09-14) 의 일반 실행 rc=2·출력 없음, dry-run rc=0·봉인 파일 없음은\n실제 CLI 로 **CONFIRMED**.  그러나 `seal_s3_prerun.py:259` 의 selftest 에 **09-17 을 주입하면**\n빈 root 의 봉인을 쓴 뒤 ③b 가 파일 부재를 요구해 **23 PASS · ③b FAIL · rc=1** 이다.\n⇒ 도구가 **실제로 일해야 하는 날에 자기검사가 깨진다**.\n⇒ 날짜를 **고정 입력**으로 시험해 ⓐ 기준일 **전 거부** 와 ⓑ 기준일 **이후 정상 입력 봉인** 을\n**매번 함께** 검증한다.  ⛔ 파일 부재 검사를 **삭제해서 초록으로 만들라는 뜻이 아니다**.\n★ 우리 주장 하나가 뒤집혔다 — *\"dry-run 이 봉인을 안 쓰므로 S3 는 그때까지 기계적으로 시작할\n수 없다\"* 는 **REFUTED**.  좁은 주장(dry-run 이 안 쓴다)만 맞고, **봉인을 요구하는 러너가\n없으므로** 기계적 차단은 존재하지 않는다."
+  },
+  {
+   "id": "PS-01",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "user",
+   "opened_in": "dem_scripts/ps_sweep_6mah_20260914/README.md",
+   "evidence_tests": [
+    "dem_scripts/ps_sweep_6mah_20260914/README.md",
+    "scripts/make_ps_sweep_decks.py",
+    "docs/data/phase_a_6mah/precompute.json"
+   ],
+   "title": "P:S 스윕 덱이 ibb 에서 **입자를 0개 삽입**하고 죽는다 (원인 미확정)",
+   "note": "2026-09-14 밤, `ps_10_0_r45` (job 178871, 그리고 2코어 재제출본)이 둘 다 즉시 실패.\n로그 실측:\n```\nINFO: Particle insertion ins_mix: inserted 0 particle templates (mass 0.000000e+00) at step 1\nWARNING: Particle insertion: Less insertions than requested (../fix_insert.cpp:814)\n       1        0   ← atoms = 0, 정착 200,000 스텝 내내 0\n====== Z_MAX (center): -1e+20 ======      ← compute reduce max z 가 빈 그룹에 -BIG\n====== PLATE HEIGHT: -1e+20 ======\nERROR: Mesh (id top_mesh): All 2 mesh elements have been lost / left the domain.\n```\n⇒ 죽은 자리는 mesh 지만 **진짜 고장은 삽입 0** 이다.  플래튼이 `-1e20` 에 생긴 건 결과다.\n\n★ **배제된 것 (실측)**:\n· **코어 수 아님** — 10랭크(`1 by 1 by 2`, 178871)·2랭크·1랭크 전부 동일하게 0.\n· **시드 아님** — 5덱 25개 전수 소수 확인 (`ps_10_0` 20000003·21300029·22600001·23900027·\n  25200011 … `ps_0_10` 48000013·49300033·50600009·51900019·53200009).  원본 시드\n  (15485863·15485867·32452843·49979687·80363)로 되돌려도 **0**.\n· **`r_AM_P` 축소 아님** — 6.0e-3 으로 되돌려도 **0**.  부피 계산으로도 이미 약했다:\n  원본 실측 AM_P 126 · AM_S 1,372 · SE 158,688 = 고체 243,066 µm³ vs 생성본 예측\n  282 · 1,375 · 158,765 = 236,845 µm³ — **총수도 부피도 거의 같다**.\n· **덱 본문의 다른 변경 아님** — 원본 `docs/data/phase_a_6mah/in.real_4.liggghts` 와 전수\n  diff 결과 차이는 `r_AM_P` · 시드 5개 · 이름/주석 **셋뿐**.  `volumefraction_region 0.321` ·\n  `maxattempt 15000` · region · dt · 벽 · 박스 · 접촉법칙 전부 바이트 동일.\n\n⬜ **남은 용의자 둘**: ⓐ 환경/빌드 (현 ibb 빌드 = `LIGGGHTS-PUBLIC 3.8.0, compiled\n2026-03-26, git 3d5c00f2`; 4/21 세대는 다른 빌드였을 수 있다) ⓑ `particledistribution/\ndiscrete` · `insert/pack volumefraction_region` 줄 자체.\n⚠ A/B 의 `D` 팔은 **완전한 원본이 아니다** — 시드·반지름만 되돌렸고 분포 줄은 10:0 판\n(`2 pts1 0.816 pts3 0.184`)이다.  원본은 3템플릿이다.  ⇒ ⓑ 를 아직 못 지웠다.\n\n★ **근본 원인(프로세스)**: 생성기 `make_ps_sweep_decks.py` 의 selftest 50개는 **텍스트가\n맞는지**만 본다.  LIGGGHTS 가 그 덱으로 **입자를 실제로 넣는지**는 한 번도 안 봤고, README 가\n*\"런 뒤 실제 개수와 대조할 것\"* 이라고 **사람에게 떠넘겼다**.  리포는 규칙 J 로 *\"생산\n엔트리포인트를 초소형 픽스처로 실제로 돌려라\"* 를 강제하는데 **덱 생성기에만 그 게이트가\n없다**.  ⇒ 원인 확정 후 그 게이트를 만든다.\n⚠ 나머지 4덱(`7_3`·`5_5`·`3_7`·`0_10`)은 **한 번도 안 돌았다**.  같은 구조라 같은 자리에서\n죽을 공산이 커 사슬을 `scontrol hold` 로 잡아 뒀다 (178872~178875)."
   }
  ]
 }
