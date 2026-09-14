@@ -133,6 +133,7 @@ run 'webapp: pipeline_provenance' python3 webapp/test_pipeline_provenance.py
 run 'webapp: predictor_ui'        python3 webapp/test_predictor_ui_and_sigma_grain.py
 run 'webapp: security_phase_a'    python3 webapp/test_security_phase_a.py
 run 'webapp: seminar_page'        python3 webapp/test_seminar_page.py
+run 'webapp: worklog_page'        python3 webapp/test_worklog_page.py
 run 'webapp: temp_pressure'       python3 webapp/test_temp_pressure_wiring.py
 #  ★ v3 (2026-09-09) — 화면이 원장을 따라가는가 + **원장을 보여 주는 페이지가 금지값을
 #    안 찍는가**.  후자가 이 검사의 요점이다: 초판 구현이 `/ledger` 에서 11 건, `/` 에서

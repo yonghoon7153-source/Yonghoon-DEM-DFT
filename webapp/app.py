@@ -4119,6 +4119,77 @@ def api_seminar_deck():
                      download_name=os.path.basename(_SEMINAR_DECK))
 
 
+# ─────────────────────────  작업일지 (worklog / 주간보고)  ─────────────────────────
+#  주 단위 진행 슬라이드텍스트(docs/seminar/weekly_YYYYMMDD_slide_text.md)를 링크로 모아
+#  HTML 로 렌더한다.  ⚠ 인용 금지값 누수는 scripts/check_review_findings.py --ban-sweep
+#  (docs/**/*.md 포함)가 CI 에서 막는다 — 이 창구는 그 통과분만 렌더한다.
+_WORKLOG_SUBDIR = 'docs/seminar'
+
+
+def _worklog_entries():
+    """weekly_YYYYMMDD_slide_text.md 목록 (최신순) → [{key,date,title,file}]."""
+    import os as _os
+    import re as _re
+    base = _repo_path(_WORKLOG_SUBDIR)
+    ents = []
+    try:
+        names = _os.listdir(base)
+    except OSError:
+        names = []
+    for fn in names:
+        m = _re.fullmatch(r'weekly_(\d{8})_slide_text\.md', fn)
+        if not m:
+            continue
+        key = m.group(1)
+        title = ''
+        try:
+            with open(_os.path.join(base, fn), encoding='utf-8') as f:
+                for line in f:
+                    if line.startswith('# '):
+                        title = line[2:].strip()
+                        break
+        except OSError:
+            pass
+        ents.append({'key': key, 'date': f'{key[:4]}-{key[4:6]}-{key[6:8]}',
+                     'title': title or f'주간보고 {key}', 'file': fn})
+    ents.sort(key=lambda e: e['key'], reverse=True)
+    return ents
+
+
+@app.route('/worklog')
+def worklog_index():
+    """작업일지 — 주간보고를 링크로 모아 본다."""
+    return render_template('worklog.html', active='worklog',
+                           entries=_worklog_entries())
+
+
+@app.route('/worklog/<key>')
+def worklog_view(key):
+    """주간보고 한 편을 HTML 로 렌더 (8자리 날짜 키만 — 경로탈출 차단)."""
+    import os as _os
+    import re as _re
+    if not _re.fullmatch(r'\d{8}', key or ''):
+        abort(404)
+    path = _os.path.join(_repo_path(_WORKLOG_SUBDIR), f'weekly_{key}_slide_text.md')
+    if not _os.path.isfile(path):
+        abort(404)
+    with open(path, encoding='utf-8') as f:
+        md_text = f.read()
+    try:
+        import markdown
+        body = markdown.markdown(md_text, extensions=['tables', 'fenced_code'])
+    except ImportError:
+        body = '<pre>' + md_text.replace('&', '&amp;').replace('<', '&lt;') + '</pre>'
+    title = ''
+    for line in md_text.splitlines():
+        if line.startswith('# '):
+            title = line[2:].strip()
+            break
+    return render_template('worklog_view.html', active='worklog', body=body,
+                           title=title or f'주간보고 {key}',
+                           date=f'{key[:4]}-{key[4:6]}-{key[6:8]}', key=key)
+
+
 @app.route('/litdb')
 def litdb_page():
     """논문 digest 통합 검색 — 전 브랜치의 litdb 카드 + 작업노트를 한 화면에서."""

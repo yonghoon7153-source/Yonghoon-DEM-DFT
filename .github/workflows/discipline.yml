@@ -36,7 +36,7 @@ jobs:
         #    러너에서 5개가 전부 import 에서 죽는다 — 배선해 놓고 안 도는 상태였다
         #    (Codex R19 Q6 P2).  이제 `check_selftest_inventory` 가 의존 폐포를
         #    계산해 이 줄과 대조하므로, 빠지면 검사가 잡는다.
-        run: python -m pip install --quiet numpy scipy matplotlib flask requests networkx adjustText
+        run: python -m pip install --quiet numpy scipy matplotlib flask requests networkx adjustText markdown
 
       - name: 실행 계약 단일 출처 (selftest)
         run: python scripts/run_contract.py --selftest
@@ -154,6 +154,9 @@ jobs:
 
       - name: 웹앱 — 세미나 페이지 (철회 게이트 계약)
         run: python webapp/test_seminar_page.py
+
+      - name: 웹앱 — 작업일지(worklog) 페이지
+        run: python webapp/test_worklog_page.py
 
       - name: 웹앱 — 온도 · 압력 배선
         run: python webapp/test_temp_pressure_wiring.py

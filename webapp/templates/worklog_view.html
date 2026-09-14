@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% set active = "worklog" %}
+{% block title %}{{ title }} — 작업일지{% endblock %}
+
+{% block content %}
+<style>
+  .worklog-doc { max-width:920px; line-height:1.6; }
+  .worklog-doc h1 { font-size:22px; border-bottom:2px solid var(--accent,#1a56db); padding-bottom:8px; }
+  .worklog-doc h2 { font-size:17px; color:var(--accent,#1a56db); margin-top:26px; }
+  .worklog-doc h3 { font-size:14px; margin-top:18px; }
+  .worklog-doc pre { background:var(--code-bg,#0e1116); color:var(--code-fg,#e6edf3);
+                     border:1px solid rgba(127,127,127,.25); border-radius:8px; padding:14px 16px;
+                     overflow-x:auto; white-space:pre; font:500 13px/1.55 'JetBrains Mono',monospace; }
+  .worklog-doc table { border-collapse:collapse; width:100%; margin:12px 0; font-size:13px; }
+  .worklog-doc th, .worklog-doc td { border:1px solid rgba(127,127,127,.3); padding:7px 11px;
+                                     text-align:left; vertical-align:top; }
+  .worklog-doc th { background:rgba(26,86,219,.12); font-weight:600; }
+  .worklog-doc blockquote { border-left:3px solid var(--accent,#1a56db); margin:10px 0; padding:6px 14px;
+                            color:var(--dim,#667); background:rgba(127,127,127,.06); border-radius:0 6px 6px 0; }
+  .worklog-doc code { background:rgba(127,127,127,.15); padding:1px 5px; border-radius:4px;
+                      font:500 12px 'JetBrains Mono',monospace; }
+  .worklog-doc pre code { background:none; padding:0; }
+  .worklog-doc hr { border:none; border-top:1px solid rgba(127,127,127,.25); margin:22px 0; }
+  .worklog-back { display:inline-block; margin-bottom:14px; color:var(--accent,#1a56db);
+                  text-decoration:none; font-weight:600; }
+  .worklog-meta { font:600 12px/1 'JetBrains Mono',monospace; color:var(--dim,#667); margin-bottom:10px; }
+</style>
+
+<a class="worklog-back" href="/worklog">&larr; 작업일지</a>
+<div class="worklog-meta">{{ date }}</div>
+<article class="card worklog-doc">
+{{ body|safe }}
+</article>
+{% endblock %}
