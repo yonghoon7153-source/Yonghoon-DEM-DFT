@@ -3482,7 +3482,7 @@
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_area_round4_20260914.md",
-   "status": "open",
+   "status": "claimed_fixed",
    "id": "R4-09",
    "severity": "P2",
    "evidence_tests": [
@@ -3490,7 +3490,8 @@
     "scripts/check_selftest_inventory.py"
    ],
    "title": "★ **우리가 오늘 넣은 폐포 확장이 기존 검사를 약화시켰다** (LIFO + 파일 단위 `seen`)",
-   "note": "판정문 §6 `R4-09`.  `SELF-32` 수정(`c8dfb1b64`)이 pandas 를 잡은 것은 **CONFIRMED**.\n그러나 `check_selftest_inventory.py:292` 가 **전체 AST 모드 direct 뒤에 top-only expanded 를\n넣고 LIFO 로 꺼내며**, `:296` 의 `seen` 이 **파일만** 본다 ⇒ **약한 검사를 먼저 하면 강한 검사가\n생략된다**.\n실제 함수·동일 합성 파일:\n```\ndirect 에만 포함        → {r4_definitely_uninstalled_package}\ndirect + expanded 양쪽  → 빈 집합          ← 약해졌다\n```\n실 리포에서도 expanded 를 넣으면 direct 에서 **발견하던 네 이름이 사라진다**:\n`adjustText` · `cupy` · `cupyx` · `pyamg`.\n⚠ 그 넷이 모든 CI flag 에서 필수라는 증거는 아니다 — 증명된 것은 **범위 추가가 기존 검사\n강도를 보존하지 않는 처리 결함**이다.\n⇒ **파일별 검사 모드를 강한 쪽으로 병합**하고, 승격되면 **재방문**한다.\n★ 또한 *\"함수 안 import 라 불필요\"* 라는 우리 처리도 **성립하지 않는다** — 함수 안 필수\nimport 를 쓰는 합성 selftest 에서 inventory 는 rc=0·errors=[] 인데 그 selftest 자체는\n`ModuleNotFoundError`·rc=1 이다.  ⚠ 반대로 **모든 선택적 GPU 패키지를 무조건 설치하는 것도\n맞지 않다** — 실제 19 flag 중 18개가 9종 차단하에 rc=0 이었다 (1개는 Windows 실행별칭 문제로\n중단, Linux CI 증거 아님).\n⇒ 판정: **9종 전부 필수 설치라는 결론은 지지되지 않는다.**  CI 가 실제 선택한 (파일, flag)별로\n성공·의도된 skip·fallback 을 기록하고 **최소 의존 환경**에서 돌려야 하며, 정적 import 감사를\n**완전한 실행 의존 폐포라고 부르지 말아야** 한다."
+   "note": "판정문 §6 `R4-09`.  `SELF-32` 수정(`c8dfb1b64`)이 pandas 를 잡은 것은 **CONFIRMED**.\n그러나 `check_selftest_inventory.py:292` 가 **전체 AST 모드 direct 뒤에 top-only expanded 를\n넣고 LIFO 로 꺼내며**, `:296` 의 `seen` 이 **파일만** 본다 ⇒ **약한 검사를 먼저 하면 강한 검사가\n생략된다**.\n실제 함수·동일 합성 파일:\n```\ndirect 에만 포함        → {r4_definitely_uninstalled_package}\ndirect + expanded 양쪽  → 빈 집합          ← 약해졌다\n```\n실 리포에서도 expanded 를 넣으면 direct 에서 **발견하던 네 이름이 사라진다**:\n`adjustText` · `cupy` · `cupyx` · `pyamg`.\n⚠ 그 넷이 모든 CI flag 에서 필수라는 증거는 아니다 — 증명된 것은 **범위 추가가 기존 검사\n강도를 보존하지 않는 처리 결함**이다.\n⇒ **파일별 검사 모드를 강한 쪽으로 병합**하고, 승격되면 **재방문**한다.\n★ 또한 *\"함수 안 import 라 불필요\"* 라는 우리 처리도 **성립하지 않는다** — 함수 안 필수\nimport 를 쓰는 합성 selftest 에서 inventory 는 rc=0·errors=[] 인데 그 selftest 자체는\n`ModuleNotFoundError`·rc=1 이다.  ⚠ 반대로 **모든 선택적 GPU 패키지를 무조건 설치하는 것도\n맞지 않다** — 실제 19 flag 중 18개가 9종 차단하에 rc=0 이었다 (1개는 Windows 실행별칭 문제로\n중단, Linux CI 증거 아님).\n⇒ 판정: **9종 전부 필수 설치라는 결론은 지지되지 않는다.**  CI 가 실제 선택한 (파일, flag)별로\n성공·의도된 skip·fallback 을 기록하고 **최소 의존 환경**에서 돌려야 하며, 정적 import 감사를\n**완전한 실행 의존 폐포라고 부르지 말아야** 한다.\n\n★ **2026-09-14 수정** (`73ae6b775`).\nⓐ `seen` 을 집합 → **(파일, 검사 모드)** 로 바꿔 **강한 쪽으로 병합**한다.  회귀 ④f 가 옛 코드에서\n   `direct만=['r4_only_inside_a_function'] · direct+확장=[]` 로 빨간불임을 먼저 확인했다.\nⓑ 그 수정이 **반대 방향 과조임**을 드러냈다 — `cupy`·`cupyx`·`pyamg` 를 요구하기 시작했는데 셋 다\n   `step3_sigma.py` 의 `try/except` 안이고 등록된 CPU fallback 이 있다.  ⇒ `_swallows_import_error()`\n   신설: import 실패를 **삼키는** try 안의 import 는 요구하지 않는다.\n   ⚠ 면죄부가 아니다 — 가드 **밖에서도** import 하면 그쪽이 이기고(④i), 핸들러가 **무조건** 다시\n   raise 하면 필수 의존이다(④j).  `if REQUIRE_GPU: raise` 같은 **조건부** raise 는 가드다(④j2).\n요구 집합 14종 → **9종**.  `pandas` 는 그대로 잡힌다 (워크플로에서 빼면 rc=1, 실측).\nselftest **32/32 PASS**.\n⚠ **한계를 그대로 둔다** — 조건이 기본값에서 실제로 거짓인지는 정적으로 모른다.  이것을\n**완전한 실행 의존 폐포라고 부르지 않는다** (판정문 §6 의 그 문장).  진짜 확인은 CI 가 드라이버로\n128개 selftest 를 **실제로 돌리는 것**이다.\n⬜ 판정문이 요구한 *\"CI 가 실제 선택한 (파일, flag)별로 성공·의도된 skip·fallback 을 기록하고\n최소 의존 환경에서 실행\"* 은 **미실행**이다.",
+   "claimed_fixed_sha": "73ae6b7758504c258d6b9bd1f5cdd9168b0006f2"
   },
   {
    "owner": "claude",
