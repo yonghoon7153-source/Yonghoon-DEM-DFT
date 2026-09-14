@@ -249,6 +249,49 @@ def _selftest() -> int:
         and a0 == a1 == r,
         f'A {A0:.10g} → {A1:.10g} · a_eff {a0:.10g} = {a1:.10g}')
 
+    # ══ S3 대조 (R3-02, Codex 3라운드 §3.1 · 계약 §5-v4 C) ══════════════════════════
+    #   등록된 음성 대조 둘(coverage 셀 불변 · hertzian Rc bitwise 불변)은 **no-op 도 통과**한다.
+    #   통과 자체가 결함은 아니지만 **전환을 안 해도 통과**하므로 전환을 잡지 못한다.
+    #   ⇒ 실제 build_network 의 활성 간선에서 Rc_new/Rc_old = ψ² 를 요구하는 **양성 대조**를
+    #     두고, **no-op 변이는 반드시 실패**하게 한다.  ⛔ "전 코호트 σ 가 반드시 달라야 한다"
+    #     는 게이트는 만들지 않는다 (활성 간선이 없는 망에서는 무변화가 정상이다).
+    S3_OLD = ('                R_constriction = 1.0 / '
+              '(sigma_rel_contact * k_weight * 2 * a_eff * psi)')
+    S3_NEW = ('                R_constriction = psi / '
+              '(sigma_rel_contact * k_weight * 2 * a_eff)')
+    #   ⚠ 기본 픽스처(δ .2 µm)는 **floor 아래**라 Rc = 0 이다 — 양성 대조는 활성 분기가
+    #     필요하므로 겹침을 줄여 ψ > 1e-4 인 쌍을 쓴다 (δ .02 µm, 실측으로 고른 값).
+    _pc = _load('_pc_s3')
+    _D_ACT, _D_FLOOR = 0.02, 0.2
+    e_old = real_solver_edges(_load_nc('_nc_s3_old', _pc), delta_um=_D_ACT)[0]
+    e_s3 = real_solver_edges(_load_nc('_nc_s3_new', _pc, [(S3_OLD, S3_NEW)]), delta_um=_D_ACT)[0]
+    e_nop = real_solver_edges(_load_nc('_nc_s3_nop', _pc, [(S3_OLD, S3_OLD + '  # no-op')]),
+                              delta_um=_D_ACT)[0]
+    #   ⚠ ψ 를 감사가 **다시 구현하면 안 된다** (이 파일 §_load_nc 의 교훈).  그렇다고 비의
+    #     제곱근으로 읽으면 `ratio == sqrt(ratio)²` 라는 **항등식**이 되어 판별력이 0 이다.
+    #     ⇒ 세 번째 변이로 **솔버가 ψ 를 직접 돌려주게** 해서 그 값과 비교한다.
+    S3_PSI = '                R_constriction = psi'
+    psi_probe = real_solver_edges(_load_nc('_nc_s3_psi', _pc, [(S3_OLD, S3_PSI)]),
+                                  delta_um=_D_ACT)[0]['R_constriction']
+    ratio = e_s3['R_constriction'] / e_old['R_constriction']
+    chk('⑦ ★ S3 양성 대조: 실제 build_network 에서 Rc_new/Rc_old = ψ² (ψ 는 솔버가 돌려준 값)',
+        e_old['R_constriction'] > 0 and 0.0 < psi_probe < 1.0
+        and abs(ratio - psi_probe ** 2) < 1e-12,
+        f'비 = {ratio!r} · ψ(솔버) = {psi_probe!r} · ψ² = {psi_probe ** 2!r}')
+    nop_ratio = e_nop['R_constriction'] / e_old['R_constriction']
+    chk('⑦b ★ no-op 변이는 이 대조에서 **반드시 실패**한다 (음성 대조만으로는 못 잡던 자리)',
+        nop_ratio == 1.0 and abs(nop_ratio - psi_probe ** 2) > 1e-6,
+        f'no-op 비 = {nop_ratio!r} ≠ ψ² {psi_probe ** 2!r}')
+    chk('⑦c σ 는 비감소 — 활성 분기에서 Rc_new ≤ Rc_old 이므로 R_total 이 안 늘어난다',
+        e_s3['R_total'] <= e_old['R_total'],
+        f"R_total {e_old['R_total']!r} → {e_s3['R_total']!r}")
+    #   floor 아래(ψ ≤ 1e-4)는 **0 → 0** 이다 — floor 복원은 이 시험이 아니다 (R3-02).
+    _fl_old = real_solver_edges(_load_nc('_nc_fl_old', _pc), delta_um=_D_FLOOR)[0]
+    _fl_s3 = real_solver_edges(_load_nc('_nc_fl_s3', _pc, [(S3_OLD, S3_NEW)]), delta_um=_D_FLOOR)[0]
+    chk('⑦d floor 아래는 전환해도 0 → 0 (복원은 별도 축)',
+        _fl_old['R_constriction'] == 0.0 and _fl_s3['R_constriction'] == 0.0,
+        f"{_fl_old['R_constriction']!r} / {_fl_s3['R_constriction']!r}")
+
     # ⑥ ★ P2-R2-06 — **실제 솔버**로 대조한다 (감사의 ψ 재구현이 아니라 build_network 자신).
     #    cap 2π→π 를 plastic 에 물린 솔버와 원판 솔버가 같은 Rc·R_total 을 내야 한다.
     pc_base = _load('_pc_s6b'); pc_s2 = _load('_pc_s6s', [(CAP_LINE, CAP_LINE_S2)])
