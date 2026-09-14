@@ -533,6 +533,8 @@ def composition(cid):
         decisions=V.decisions_for(cid),
         cards=V.closure_cards_for(cid, D._PREFIX.get(cid, [cid])),
         hazards=V.hazards_for(cid),
+        # 해석 카드 — 값이 아니라 **서술**이다. 카드가 자기 조성을 선언한 것만 온다 (2026-09-14)
+        interps=V.interpretation_cards_for(cid),
         notices=V.metric_notices(cid),
         # 이 계열에 등록된 적 없는 축 — TODO 로 광고하지 않고 접는다 (P0-09)
         other_family=V.other_family_axes(cid, fams, vals, set(

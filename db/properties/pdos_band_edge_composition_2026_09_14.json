@@ -1,0 +1,152 @@
+[
+ {
+  "label": "ndo_lpscl16_n5fu",
+  "csv": "db/properties/ndo_lpscl16_n5fu_pdos.csv",
+  "energy_column": "E_minus_Ef",
+  "elements": [
+   "Li",
+   "P",
+   "S",
+   "Cl",
+   "O",
+   "Nd"
+  ],
+  "n_rows": 5259,
+  "dos_threshold_frac_of_max": 0.02,
+  "dos_threshold": 2.8532678,
+  "VBM_read": -0.587,
+  "CBM_read": 2.353,
+  "gap_read_eV": 2.94,
+  "⚠_gap": "DOS 문턱 판독이라 정본이 아니다 — 정본 갭은 fixed-occ nscf 고유값이다 (~0.3 eV 과소)",
+  "VBM_window_eV": [
+   -2.587,
+   -0.587
+  ],
+  "VBM_window_rel": [
+   -2.0,
+   0.0
+  ],
+  "VBM_composition_pct": {
+   "S": 77.34,
+   "Li": 11.17,
+   "Cl": 5.93,
+   "Nd": 3.66,
+   "O": 1.65,
+   "P": 0.25
+  },
+  "VBM_integral": 7977.68339,
+  "CBM_window_eV": [
+   2.353,
+   4.353
+  ],
+  "CBM_window_rel": [
+   0.0,
+   2.0
+  ],
+  "CBM_composition_pct": {
+   "Li": 29.7,
+   "Nd": 27.84,
+   "S": 21.42,
+   "P": 15.86,
+   "Cl": 2.91,
+   "O": 2.27
+  },
+  "CBM_integral": 3240.706329999999
+ },
+ {
+  "label": "modelc_undoped",
+  "csv": "db/properties/modelc_pdos_element_smooth.csv",
+  "energy_column": "E_minus_VBM",
+  "elements": [
+   "Li",
+   "P",
+   "S",
+   "Cl"
+  ],
+  "n_rows": 1300,
+  "dos_threshold_frac_of_max": 0.02,
+  "dos_threshold": 1.249918,
+  "VBM_read": -0.25,
+  "CBM_read": 1.95,
+  "gap_read_eV": 2.2,
+  "⚠_gap": "DOS 문턱 판독이라 정본이 아니다 — 정본 갭은 fixed-occ nscf 고유값이다 (~0.3 eV 과소)",
+  "VBM_window_eV": [
+   -2.25,
+   -0.25
+  ],
+  "VBM_window_rel": [
+   -2.0,
+   0.0
+  ],
+  "VBM_composition_pct": {
+   "S": 83.13,
+   "Li": 10.5,
+   "Cl": 5.99,
+   "P": 0.38
+  },
+  "VBM_integral": 7628.998800000001,
+  "CBM_window_eV": [
+   1.95,
+   3.95
+  ],
+  "CBM_window_rel": [
+   0.0,
+   2.0
+  ],
+  "CBM_composition_pct": {
+   "S": 41.71,
+   "P": 35.3,
+   "Li": 21.08,
+   "Cl": 1.92
+  },
+  "CBM_integral": 1927.6834000000001
+ },
+ {
+  "label": "lpscl16_undoped",
+  "csv": "db/properties/lpscl16_pdos_element_smooth.csv",
+  "energy_column": "E_minus_VBM",
+  "elements": [
+   "Li",
+   "P",
+   "S",
+   "Cl"
+  ],
+  "n_rows": 1300,
+  "dos_threshold_frac_of_max": 0.02,
+  "dos_threshold": 1.249918,
+  "VBM_read": -0.25,
+  "CBM_read": 1.95,
+  "gap_read_eV": 2.2,
+  "⚠_gap": "DOS 문턱 판독이라 정본이 아니다 — 정본 갭은 fixed-occ nscf 고유값이다 (~0.3 eV 과소)",
+  "VBM_window_eV": [
+   -2.25,
+   -0.25
+  ],
+  "VBM_window_rel": [
+   -2.0,
+   0.0
+  ],
+  "VBM_composition_pct": {
+   "S": 83.13,
+   "Li": 10.5,
+   "Cl": 5.99,
+   "P": 0.38
+  },
+  "VBM_integral": 7628.998800000001,
+  "CBM_window_eV": [
+   1.95,
+   3.95
+  ],
+  "CBM_window_rel": [
+   0.0,
+   2.0
+  ],
+  "CBM_composition_pct": {
+   "S": 41.71,
+   "P": 35.3,
+   "Li": 21.08,
+   "Cl": 1.92
+  },
+  "CBM_integral": 1927.6834000000001
+ }
+]

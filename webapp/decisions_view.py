@@ -118,6 +118,54 @@ def closure_cards_for(cid: str, prefixes=None, root=None) -> list:
     return out
 
 
+def interpretation_cards_for(cid: str, root=None) -> list:
+    """이 조성의 **해석 카드** (`schema: interpretation_card/v1`).
+
+    왜 파일명 접두어로 찾지 않나 (2026-09-14): `closure_cards_for` 는 접두어로 찾는데,
+    그 방식은 이름이 우연히 겹치면 남의 조성 화면에 뜬다. 해석은 서술이라 그 사고가 더
+    비싸다 — **카드가 `composition` 으로 자기 소속을 선언**하게 하고 그것만 본다.
+
+    ⛔ 이 함수가 못 하는 것
+      · 내용을 판정하지 않는다. `citable` 을 그대로 실어 보낼 뿐이다.
+      · 못 읽은 파일을 **조용히 건너뛰지 않는다** — `error` 를 달아 돌려준다.
+        (조용히 빼면 화면이 '해석 카드 없음' 으로 보이고, 그건 사실이 아니다.)
+    """
+    base = Path(root) if root else ROOT
+    d = base / "db" / "properties"
+    if not d.exists():
+        return []
+    out = []
+    for f in sorted(d.glob("*.json")):
+        try:
+            head = f.read_text(encoding="utf-8", errors="ignore")[:400]
+        except OSError:
+            continue
+        if "interpretation_card/v1" not in head:
+            continue
+        try:
+            j = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as e:
+            out.append({"file": f"db/properties/{f.name}", "composition": None,
+                        "error": f"{type(e).__name__} — 못 읽었다", "title": f.name})
+            continue
+        if j.get("composition") != cid:
+            continue
+        out.append({
+            "file": f"db/properties/{f.name}", "composition": cid,
+            "date": str(j.get("date") or _date_of(f.name)),
+            "status": str(j.get("status") or ""),
+            "citable": bool(j.get("citable")),
+            "title": str(j.get("제목") or j.get("title") or f.stem),
+            "headline": str(j.get("★_한_줄") or ""),
+            "allowed": list(j.get("허용_서술_이대로만") or []),
+            "forbidden": list(j.get("금지_서술") or []),
+            "counter": list(j.get("3_반대_증거_숨기지_않는다") or []),
+            "open": list(j.get("미결_이것이_있어야_주장이_선다") or []),
+        })
+    out.sort(key=lambda r: r.get("date") or "", reverse=True)
+    return out
+
+
 def _card_title(f: Path) -> str:
     """카드의 한 줄 정체. 없으면 빈 문자열 — **지어내지 않는다**."""
     try:

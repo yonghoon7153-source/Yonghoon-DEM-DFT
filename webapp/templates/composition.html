@@ -73,6 +73,62 @@
 </details>
 {% endif %}
 
+{# ── 해석 카드 (2026-09-14) — **값이 아니라 서술**이다 ──────────────────────────
+   왜 화면에 올리나: 값의 지위는 원장이 지키는데, "이 값을 무엇으로 설명하나" 는 말로만
+   돌아다녔다. 랩 미팅에서 'Nd 3+ 유지 → 산화 안정' 이 그렇게 돌았고 우리 계산엔 그 연결이
+   없었다. 서술도 원장에 두고 화면은 **읽기만** 한다.
+   ⛔ 화면이 판정하지 않는다 — citable·허용·금지는 카드가 적은 그대로 낸다. #}
+{% if interps %}
+{% for it in interps %}
+<div class="card" style="margin-bottom:14px;border-left:4px solid #7c3aed">
+  {% if it.error %}
+  <b style="color:var(--red)">⛔ 해석 카드를 못 읽었다</b>
+  <div class="mono muted" style="font-size:.72rem">{{ it.file }} — {{ it.error }}</div>
+  {% else %}
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <span class="badge" style="background:#ede9fe;color:#5b21b6">해석</span>
+    {% if not it.citable %}<span class="badge" style="background:#fee2e2;color:#b91c1c">citable = no</span>{% endif %}
+    <b style="font-size:.92rem">{{ it.title }}</b>
+    <span class="mono muted" style="font-size:.7rem;margin-left:auto">{{ it.date }}</span>
+  </div>
+  {% if it.status %}<div class="muted" style="font-size:.74rem;margin-top:2px">{{ it.status }}</div>{% endif %}
+  {% if it.headline %}<div style="margin-top:8px;font-size:.86rem;line-height:1.6">{{ it.headline|mdlite }}</div>{% endif %}
+  {% if it.counter %}
+  <details class="v3-fold" style="margin-top:8px">
+    <summary><b style="color:#c05621">반대 증거 {{ it.counter|length }}건</b>
+      <span class="muted" style="font-weight:400">— 숨기지 않는다</span></summary>
+    <ul style="margin:6px 0 0;font-size:.8rem;line-height:1.6">
+      {% for c in it.counter %}<li>{{ c|mdlite }}</li>{% endfor %}</ul>
+  </details>
+  {% endif %}
+  {% if it.allowed or it.forbidden %}
+  <div class="grid grid-2" style="margin-top:10px;gap:10px">
+    {% if it.allowed %}
+    <div><div class="muted" style="font-size:.72rem;font-weight:700">허용 서술 (이대로만)</div>
+      <ul style="margin:4px 0 0;font-size:.78rem;line-height:1.55">
+        {% for x in it.allowed %}<li>{{ x|mdlite }}</li>{% endfor %}</ul></div>
+    {% endif %}
+    {% if it.forbidden %}
+    <div><div class="muted" style="font-size:.72rem;font-weight:700;color:var(--red)">금지 서술</div>
+      <ul style="margin:4px 0 0;font-size:.78rem;line-height:1.55">
+        {% for x in it.forbidden %}<li>{{ x|mdlite }}</li>{% endfor %}</ul></div>
+    {% endif %}
+  </div>
+  {% endif %}
+  {% if it.open %}
+  <details class="v3-fold" style="margin-top:8px">
+    <summary><b>미결 {{ it.open|length }}건</b>
+      <span class="muted" style="font-weight:400">— 이것이 있어야 주장이 선다</span></summary>
+    <ul style="margin:6px 0 0;font-size:.78rem;line-height:1.55">
+      {% for x in it.open %}<li>{{ x|mdlite }}</li>{% endfor %}</ul>
+  </details>
+  {% endif %}
+  <div class="mono muted" style="font-size:.68rem;margin-top:8px">{{ it.file }} — 원본은 이 파일이다</div>
+  {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
 <!-- canonical metric badges -->
 {# ⚠ 하드코딩하면 레지스트리에 metric 이 늘어도 label·unit 이 빈칸으로 렌더된다
    (2026-08-07 Codex 5라운드 실측). data.metric_meta() 에서 만든다. #}
