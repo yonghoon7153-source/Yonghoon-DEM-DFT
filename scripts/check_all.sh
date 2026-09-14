@@ -172,6 +172,9 @@ run 'review_before_after --selftest' python3 scripts/build_review_before_after.p
 run 'seal_area_cohort   --selftest' python3 scripts/seal_area_cohort.py --selftest
 #  ★ 2026-09-13 (계약 §5-v3 ①) — ρ 측정: 생산 솔버를 허용오차 ×0.1 로 두 번, 실제 경로·kwarg 기록.
 run 'measure_rho        --selftest' python3 scripts/measure_rho.py --selftest
+#  ★★ 2026-09-14 (계약 §5-v4 A·B·D-3) — S3 **런 전** 봉인.  라벨·순서자리·솔버 환경을
+#    결과를 보기 전에 못박고, 마감(2026-09-17) 전 쓰기를 **거부**한다 (selftest 가 단언).
+run 'seal_s3_prerun     --selftest' python3 scripts/seal_s3_prerun.py --selftest
 run 'check_doc_refs          --selftest' python3 scripts/check_doc_refs.py --selftest
 run 'check_cohort_packages  (커밋된 패키지 ↔ 원장)' python3 scripts/check_cohort_packages.py
 run 'audit_adjudication   (원시 감사 ↔ 판정 원장)' python3 scripts/check_audit_adjudication.py
