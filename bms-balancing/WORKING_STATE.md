@@ -394,12 +394,28 @@ python3 scripts/check_u14.py --new out --renormalize
 #      (도구 기본값 `out/` 은 그대로). 이 절차는 `promotion_eligible` 이 아니라 3 단계 출력을 붙인 커밋 메시지가 근거다.
 mkdir -p out/archive/legacy_r6_u14
 git mv out/*.csv out/*.json out/archive/legacy_r6_u14/          # 13 산출 + sidecar (meta.json 도 *.json 에 든다)
-mv out_u18b/*.csv out_u18b/*.json out/                            # 새 정본 (ne_shape_GITT_Li.csv + meta 포함 — run_states.sh 끝의 shape_step 이 만든 것)
-ls out_u18b/                                                    # 로그만 남아야 한다; 남은 로그는 out_u18.log 와 함께 커밋하지 않는다
-python3 scripts/check_u14.py --new out --schema-only            # ★ 계약 위반 0 이어야 한다 — degeneracy digest 4 도 shape 4 도 사라진다
+mv out_u18b/*.csv out_u18b/*.json out/                          # 새 정본 (ne_shape_GITT_Li.csv + meta 포함 — 끝의 shape_step 이 만든 것)
+ls out_u18b/                                                    # 로그만 남아야 한다; 로그는 ~/out_u18b.log 와 함께 커밋하지 않는다
+#    ⚠ archive 는 **자기 문서를 갖는다** (`out/archive/README.md` — 왜 얼어붙었는지). 새 식구를 그 표에 적지 않으면
+#      다음 사람은 legacy_r6_u14/ 가 무엇인지 모른다. 같은 커밋에 넣는다:
+python3 - <<'PYARCH'
+import pathlib
+p = pathlib.Path("out/archive/README.md"); s = p.read_text(encoding="utf-8")
+row = ("| `legacy_r6_u14/` (26 파일) | **U18 승격 전의 정본** — 게시·서명 계약이 R13 이전이라 receipt·env·argv·roster 가 없다 "
+       "(`check_u14 --new out --schema-only` 가 rc 2 로 말하던 그 묶음). U18b 재실행이 **같은 숫자**를 새 계약으로 다시 서명해 "
+       "정본이 됐고, 이것은 조건 7 의 보존 요구(\"기존 provenance-incomplete out/ 는 보존\")대로 얼려 둔다 | "
+       "`R13_RESPONSE.md` §8 · `WORKING_STATE.md` U18 런북 |\n")
+i = s.index("\n\n## 왜 여기로 왔나")
+s = s[:i] + "\n" + row.rstrip("\n") + s[i:]
+p.write_text(s, encoding="utf-8"); print("archive README 갱신")
+PYARCH
+python3 scripts/check_u14.py --new out --schema-only            # ★ 계약 위반 0 이어야 한다 — degeneracy digest 4 도 shape 4 도
+#      사라지고 provenance 도 0 이다 (U18-02 고침) → **rc 0** 이 기대값이다 (schema-only 는 baseline_absent 만 남는다)
 python3 scripts/check_u14.py --new out --old-rev HEAD           # 정본(git) 대 새 out/: 3 단계와 같은 판정이어야 한다
 python3 scripts/compare_states.py out                           # §1-10 표 재생 — '묶음 불일치' 경고가 없어야 한다
-git add out/ && git commit -m "U18 — 새 게시·서명 스키마로 네 상태 + shape 재실행 (숫자 동일; 옛 정본은 out/archive/legacy_r6_u14/)" && git push
+git add out/ out/archive/README.md
+git commit -m "U18b — 새 게시·서명 스키마로 네 상태 + shape 재실행 (숫자 동일; 옛 정본은 out/archive/legacy_r6_u14/)"
+git push -u origin claude/bms-alpha-beta-verify
 #    커밋 메시지 본문에 3 단계의 PROMOTION 줄을 그대로 붙인다 (승격의 근거는 그것이다).
 
 # ── 5. ~~MATLAB 한 줄씩~~ → **닫힘 (U15, 2026-09-11)**: 둘 다 Python 과 일치 ────────────────────
