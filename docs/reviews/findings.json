@@ -3343,6 +3343,22 @@
    "title": "CI 의존 폐포가 **드라이버가 펴는 116개**를 안 봤다 — 검사기는 초록인데 CI 는 pandas 로 빨간불",
    "note": "`scripts/check_selftest_inventory.py` 의 `ci_python_targets()` 는 워크플로 **본문에 이름이 적힌**\n스크립트만 정규식으로 찾는다 (43개).  그런데 워크플로는 드라이버 한 줄\n(`check_selftest_inventory.py --run-fast`) 로 등재된 `fast` **116 파일**을 돌린다.  그 116개의\nimport 는 폐포 **밖**이었다.\n⇒ `run_network_full_corrections.py` 의 최상위 `import pandas` (line 60) 가 안 보였고, CI 가\n`ModuleNotFoundError: No module named 'pandas'` 로 **연속 네 번 빨간불**이었다\n(run 532 `44fdd97ce` · 533 `697f8efda` · 534 `51c5ceac4` · 535 `dbf29689e`).\n⚠ 그 사이 `bash scripts/check_all.sh` 는 **전부 초록**이었다 — 이 컨테이너에는 pandas 가 있다.\n워크플로 주석은 *\"이제 의존 폐포를 계산해 이 줄과 대조하므로, 빠지면 검사가 잡는다\"* 라고\n적고 있었는데 **안 잡았다**.\n★ 이것은 CLAUDE.md 규율 ⑤ 의 재발이다 — *\"후보를 고르는 코드가 곧 사각지대다.\"*  같은 축에서\n이번에는 **대상이 CI 의존**이다 (앞선 것: 규칙 M 의 이름 조각 필터 · 평문만 읽던 ban-sweep).\n⚠ 더 나쁜 것은 **CI 가 fail-closed 게이트**라는 점이다 — 빨간 CI 는 러너가 사용자의 GPU 런을\n막는 자리다 (CLAUDE.md: *\"원장 오타 하나가 계산을 세운다\"*).\n\n★ **2026-09-14 수정.**  `driver_expanded_starts()` 신설 — 드라이버가 CI 레인에 있으면 등재된\n`fast` 진입점을 폐포의 시작점으로 **편다**.  단 그 진입점은 **최상위 import 만** 센다:\n`--selftest` 경로가 함수 안 GPU import 까지 탄다는 보장이 없어, 전체 AST 로 세면\ncupy·taichi·mph·sklearn 까지 CI 에 요구하게 된다 (실측: 전체 AST 10종 요구 vs 최상위 **pandas\n하나** — 실제로 빨간불이던 바로 그것).  CI pip 줄에 `pandas` 를 넣었다.\n★ 규율 ② 판별력 실증 — **옛 코드 × 옛 리포**(= CI 가 빨간불이던 상태)에서 `✓ 전부 분류돼\n있다` · rc=0 = **false-green** 이었고, 새 코드는 같은 상태에서 rc=1 로 `CI 가 pandas 를 깔지\n않는다` 를 낸다.  selftest ④b~④e 가 픽스처로 상주한다 (④c 가 확장을 빼면 안 보임을 = 옛 판의\nfalse-green 을 못박고, ④e 가 cupy 를 요구하지 않음을 문다).\n⬜ **미해결**: 나머지 9종(cupy·taichi·mph·sklearn·h5py·joblib·docx·pptx·cupyx)은 함수 안/가드된\nimport 라 지금은 요구하지 않는다.  그중 하나가 최상위로 올라오면 같은 방식으로 빨간불이 되는데,\n그때 CI 에 깔 수 없는 것(cupy·mph)이면 등재를 `fast` → `gpu`/`external` 로 옮겨야 한다.",
    "claimed_fixed_sha": "c8dfb1b64645b13fcab41de3edb01562bd57e488"
+  },
+  {
+   "id": "R3-07",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round3_20260914.md",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round3_20260914.md",
+    "scripts/seal_area_cohort.py",
+    "docs/area_contract_20260913.md"
+   ],
+   "title": "봉인 도구가 보증하지 않는 것 셋 (판정문 §6.4) — atom 지문 소실 · 행 소실 · refill 무검증",
+   "note": "3라운드 판정문 §6.4 가 `scripts/seal_area_cohort.py` 에 대해 셋을 지적했다.  `R3-06`(step pair)\n과 **다른 축**이라 따로 등재한다 — 옛 계약은 ⓐ만 `§5-v4 D-8` 에 적고 ⓑⓒ 는 어디에도 안 적었다.\n\nⓐ **contact 결손 시 존재하는 atom 의 경로·지문까지 비운다** (`:107`–114).  거짓 `RAW_OK` 는\n   아니지만 **pending 입력 이력이 사라져** 결손 행의 빈 칸이 *\"atom 도 없다\"* 로 읽힌다.\nⓑ **디렉터리 inventory 라 설계 폴더가 통째로 없으면 행 자체가 사라진다.**  계약 `D-1` 이 주\n   ID 를 `lhs00_000`–`129` 로 고정한 이상 이것은 전수가 아니다.\nⓒ **`refill_family` 가 중복 ID·깨진 지문을 검증하지 않는다** — 그런데 이 함수는 봉인 파일을\n   **다시 쓴다**.  검증 없이 쓰면 손상을 세탁한다.\n★ 판정문의 틀: *\"생성기의 성공을 봉인 유효성 검사의 성공으로 읽지 말 것.\"*\n\n★ **2026-09-14 셋 다 수정.**\n· ⓐ `27bff9f8a` — contact 가 없어도 **있는 atom** 의 경로·sha256·본문 step 을 적는다.\n  ⚠ 상태는 그대로 `RAW_MISSING_CONTACT` (거짓 `RAW_OK` 승격 아님) — ⑩ 이 상태와 기록을 **같이** 문다.\n· ⓑ `13bdf5f01` — `seal()` 이 **등록부 ∪ 디렉터리** 전수다.  없는 것은 `CASE_DIR_MISSING`.\n  ⚠ 등록부로 **좁히지도** 않는다 (등록 밖 폴더도 행을 남긴다, ⑪b).\n· ⓒ `13bdf5f01` — `refill_family` 가 fail-closed: `DUPLICATE_CASE_ID` · `BROKEN_SHA`\n  (64자 16진수가 아닌 지문; **빈칸은 결손이라 정상**).\n★ 규율 ② — 회귀를 먼저 넣고 옛 코드에서 빨간불을 확인했다: `⑩ atom=(빈칸) · sha=0자` ·\n`⑪ 행 자체가 없다` · `⑫` · `⑫b`.  ⑩c·⑪b·⑫c 는 그때도 초록이라 **과조임이 아니다**\n(진짜 없는 atom 은 빈칸 유지 · 등록 밖 폴더 보존 · 정상 TSV refill 통과).\n★ 실측: 커밋된 `area_s2_cohort.tsv` 131행이 새 검증을 통과한다 (중복 0 · 깨진 지문 0 ·\n비-RAW_OK 4 = `lhs00_034`·`089`·`098` + `perc`).\n⚠ **커밋된 TSV 는 아직 옛 판 봉인**이다 — 결손 3행의 atom 칸이 비어 있고 `step_*` 열도 없다.\n다음 봉인(마감 2026-09-17 이후)에서 채워지고, 그때 127쌍 전부가 pair 규칙을 통과하는지\n**기계가** 확인한다.\n⚠ 이 셋을 고쳤다고 봉인이 **솔버 성공**을 보증하게 되는 것은 아니다 — 판정문의 그 문장은\n그대로 유효하다.\n★ 시점: 4라운드 요청서(`2a8484d5c`) 송부 **후**.  검토 기준 커밋 `fef88a760` 은 안 건드렸다 —\n요청서 §6 ⓒ 가 *\"봉인 전에 고쳐야 하는가\"* 로 묻는 항목이라, 판정문이 오면 *\"이미 고쳤다\"* 로 답한다.",
+   "claimed_fixed_sha": "13bdf5f01494e1308f4335cb93b81c6afe9a143c"
   }
  ]
 }
