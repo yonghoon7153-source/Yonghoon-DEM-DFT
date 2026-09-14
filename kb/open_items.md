@@ -18,6 +18,7 @@
 | **E′ 파일럿** | 🟢 **실행 중** — V100 tmux `eprime`. out_root `$STORE/runs/eprime_2026_09_14`, 로그 `$STORE/runs/eprime_2026_09_14.log`. 준비 5 + MD 11 호출 = **30런**, 상한 10 / 120 GPU-h (비준). code_id `634da438b`. 감시는 `tools/doping/watch_eprime.py --out_root …` |
 | **G1 (Li₂S 1층)** | ⏸ kgy 의 modelc 끝나고. GPU OOM 이력 있음 — 사다리 ② `diago_david_ndim=2` → ③ CPU NP=8 → ④ KISTI (`db/properties/li2s_layer1_g1_prereg_2026_09_14.json` §6c) |
 | **회신 BR 후속** | ⏸ 300 K hold 연장(동역학 갇힘 진단 ②)은 G1 뒤. 나머지 4시드 보류 유지 |
+| **브랜치 병합** | 🆕 origin 토큰 열림 → 23개 브랜치 전수 조사 완료 (`docs/handoff_merge_from_lldvar_20260915.md`). **우리 계보의 포크 셋** 발견 — 그중 `claude/windows-reinstall-backup-oducnh` 12커밋에 **SDCP 원고 v5 DFT methodology·Table S1** 이 있고 우리에겐 파일 5개가 없다. 원고 마감 9/16 |
 
 **바로 볼 것 (순서)**
 1. **첫 prep 이 rc=0 인가.** `torch 2.14 + fairchem 2.22` 는 공식 조합이 아니고, 확인된 것은
