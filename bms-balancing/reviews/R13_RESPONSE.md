@@ -10,6 +10,7 @@
 | 증거 커밋 | `84ab3b3e40d771b044ccc4310ae4ecf59487d8ce` (`reviews/r13_repros/replay_ours_after_fixes/`, 코드 diff 0 — `git diff ef8e8f681050ee649783a8d85a9d584880c8aa80 84ab3b3e40d771b044ccc4310ae4ecf59487d8ce -- '*.py' '*.sh'`) |
 | 회귀 | `python3 -m pytest tests/ -q` → **262 passed** (리뷰 대상 시점 236) |
 | 브랜치 | `claude/bms-alpha-beta-verify` |
+| 회신 이후 코드 | `066866595ab71827ef2d98e7a6cf26136df21495` — 조건 7 의 **실데이터 재실행**이 발견 셋을 냈다 (§8). §4 증거는 `ef8e8f6…` 시점 것이고 아직 재생성하지 않았다 |
 
 ## 1. 발견별 — 재현 · 원인 · 수정 · 회귀
 
@@ -66,7 +67,7 @@ clean 트리에서 `promotion_eligible: true`.
 | 4 | BOM/파싱 실패의 구조화된 CLI 결과 · helper 와 CLI 둘 다 회귀 | 닫음 (P2-3, `test_g12` 는 CLI 경로) |
 | 5 | 증거 유효성/도달/개별/종결 분리 · 정확한 개별 명부 | 닫음 (P1-3 · P2-5; r11 은 `closed: false` · `closed_with_substitutes: false` 로 **정직하게** 남는다 — `publish:profile_partial_stdout` 에 대체 증거가 없다) |
 | 6 | 초기화 경계 재설계 · 동적 검증 | 코드 순서는 닫음 (P1-4). **동적 인증은 하지 않았다** — `test_g10` 은 AST 순서 검사이지 우회 재현이 아니다. 열린 항목으로 남긴다 |
-| 7 | shape 전용 계약 → producer→wrapper→U14 완주 · 기존 `out/` 보존, 별도 출력에 실제 재실행 | 계약·완주(합성)까지 닫음. **실데이터 재실행은 미완** — 원자료가 있는 기계에서 (§2 끝) |
+| 7 | shape 전용 계약 → producer→wrapper→U14 완주 · 기존 `out/` 보존, 별도 출력에 실제 재실행 | 계약·완주(합성) 닫음. 실데이터 **1 차 실행함** (`out_u18`, 기존 `out/` 보존) — 숫자 0 변화, 그러나 발견 셋이 나와 승격하지 않았다. **아직 열림** — 2 차(U18b) 진행 중 (§8) |
 | 8 | 기존 GO 전제(공통 snapshot · dataset manifest · run receipt · partial 수명 · locator 무결성)에 대한 명시적 판단 | **열림** — 이번 라운드는 신규 9 건 + Q6 만 닫았다. 전체 GO 로 바꾸지 않는다 (아래 §5) |
 
 ## 4. 증거 (`reviews/r13_repros/replay_ours_after_fixes/`, 커밋 `84ab3b3e40d771b044ccc4310ae4ecf59487d8ce`)
@@ -99,7 +100,7 @@ leaf 별 판정은 d5d143f 판(직전 증거 커밋 71f3a86)과 동일하다 —
 | Q5 locator | 충돌 안 함, 정보로 표시 | 수용. C34 는 아직 열림 (소비자 미부착) |
 | Q6 | shape 는 전용 배선 뒤 재생성 · degeneracy digest 는 새 provenance 실행으로 분리 · 소급 보수 금지 | 수용 그대로 (§2). degeneracy digest 4 는 손대지 않았다 — 새 실행(U18)이 새 provenance 로 만든다 |
 
-## 6. fixture 감사 — 여덟~열두 번째
+## 6. fixture 감사 — 여덟~열세 번째
 
 | 회 | 무엇이 거짓이었나 |
 |---|---|
@@ -107,15 +108,47 @@ leaf 별 판정은 d5d143f 판(직전 증거 커밋 71f3a86)과 동일하다 —
 | 9 (P1-2·P2-1·P2-4) | `_deg()` 등 degeneracy fixture 의 `best_p` 길이 2 · `env={"numpy"}` 만 |
 | 10 (P2-2·P2-3) | g12 가 meta 없이 데이터만 둬 "묶음 미완" 으로 먼저 거부돼 BOM 경로에 닿지 않았다 · `matrix_row()/_full_matrix_rows/_u14_dirs` 의 `scale_audit_*="{}"` |
 | 11 (P2-5) | 러너 안 inline fixture (`r9._full_row` · `r6_adapted._full_matrix` · `r9_05_adapted`) 가 `"{}"` 감사 + authority 1/2 — 새 검사에 먼저 거부돼 R7-05·R9-05 가 `오류` 가 됐다 |
+| 13 (U18-03) | `test_g29` 의 첫 fixture 가 3 행짜리 matrix 를 canonical 이름에 뒀다 — P1-1 의 자리 규칙(좁힌 실행은 정본이 아니다)에 걸려 env 축에 닿기 전에 content 로 먼저 막혔다. 정본 자리에는 정본 모집단(`_canonical_combo_rows`)을 둔다 |
 | 12 (Q6) | `kind_of` 가 fail-closed 가 되자 `test_review_findings` 의 세 fixture(`r4_06` · `r4_07` · `r5_04`)가 깨졌다 — production `write_meta` 를 `out/100.csv` · `out/old.csv` · `out/profile.csv` 로 부르고 있었고, `body_roster` 가 그 이름을 조용히 profile 로 읽어 통과했다. 등록된 이름으로 고쳤고 `write_meta` 는 이제 등록되지 않은 이름에 meta 를 쓰지 않는다 (`test_g26`). shape 축 자체는 검사하는 회귀가 없었으므로, 새 축을 위반하는 fixture 를 일부러 만들어 걸리는지 확인했다 (`g19` 모르는 이름 · `g21` receipt 없음 · `g22` 자기 authority/선언 밖 상태/pairing 위조 · `g23` roster 위조 · `g24` 증인 한쪽만 빈 칸/nan/중복) |
 
 ## 7. 열린 것 (이번 라운드가 닫지 않은 것 — GO 로 바꾸지 않는다)
 
 | 항목 | 상태 |
 |---|---|
-| 조건 7 의 실데이터 재실행 | 사용자 기계 (`WORKING_STATE.md` U18 4 단계) |
+| 조건 7 의 실데이터 재실행 | 1 차 실행 완료·발견 셋 닫음, **승격 안 함** → 2 차(U18b) 진행 중 (§8 · `WORKING_STATE.md` 2c) |
+| §4 증거의 현행 커밋 재생성 | 열림 — U18b 승격 뒤 한 번에 (지금 증거는 `ef8e8f6…` 시점) |
 | 조건 6 의 동적 인증 · 조건 8 의 다섯 축 (snapshot · manifest · run receipt · partial 수명 · locator) | 열림 |
 | C34 `receipt_paths` 소비자 · C25 before-evidence 40-hex | 열림 (C25 는 보관 패키지라 안 고친다) |
 | `openpyxl` 이 `env_signature`/`ENV_KEYS` 에 없음 (리뷰어 정적 지적) | 열림 — 넣으면 세 종류의 sidecar 계약과 fixture 가 같이 바뀌므로 별도 라운드로 |
 | C28 none 회귀가 rc 1 만 봄 · C31 | 열림 |
 | r11 `publish:profile_partial_stdout` 미실행(그룹 중단) 대체 증거 없음 | 열림 — `closed_with_substitutes: false` 로 그대로 적혀 있다 |
+
+---
+
+## 8. 조건 7 의 실데이터 재실행 — 1 차(U18)와 그것이 드러낸 것 셋 (2026-09-13/14, 회신 이후)
+
+> 이 절은 위 표의 코드 정본(`ef8e8f6…`) **이후**다. §4 증거는 그 시점 것이며 **재생성하지 않았다** — 조건 7 을
+> 닫으려면 2 차 실행 승격 뒤 현행 커밋에서 다시 뽑아야 한다 (§7 에 열린 항목으로 적었다).
+
+원자료가 있는 기계에서 `OUT=out_u18 STATES='100 200 300_0009 300_0147' STARTS=24 ./scripts/run_states.sh`
+(2026-09-13 20:02–22:39 KST, 13/13 게시, 반쪽전지 소스 100·200·300_0009=GITT · 300_0147=step_005C).
+기존 `out/` 은 손대지 않았다 (조건 7 의 보존 요구).
+
+**숫자는 하나도 안 움직였다** — `check_u14 --new out_u18 --old out` 이 `numbers 0`, 명부 13/13 · 대조 13.
+바뀐 것은 서명 축뿐이다. 그런데 승격은 못 했고 발견 셋이 나왔다.
+
+| # | 실측 | 원인 | 수정 | 회귀 |
+|---|---|---|---|---|
+| U18-01 | shape 가 `ne_shape_step_005C_Li.csv` 로 게시됐다 (정본 이름은 `ne_shape_GITT_Li.csv`) | main 의 `--source "${SHAPE_SRC:-${SRC:-GITT}}"` — `SRC` 는 상태 loop 의 변수라 **마지막 상태**(300_0147, step_005C 전용)의 소스가 샜다. `test_g25` 는 `shape_step` 을 `--source GITT` 로 직접 불러 이 줄을 지나지 않는다 | shape 소스는 loop 와 무관하게 `SHAPE_SRC` 아니면 GITT, 요약 줄에 찍는다 | `test_g27` — production 스크립트를 **통째로** 돈다 (적합 세 명령은 PATH shim 이 rc 7 로 즉시 실패, `ne_shape` 호출은 argv 만 기록) |
+| U18-02 | 13 중 **11** 이 `git_state_changed_during_run: true`. 트리는 깨끗했다 | `run` 의 시작 provenance 가 `provenance.py "$art"` 라 CLI 기본값 `output_roots=("out",)` 을 썼다 → `OUT=out_u18` 은 그 밖의 untracked 디렉터리라 **코드 변경**으로 분류 → `git_dirty_at_start: true`. 끝 상태는 `write_meta` 가 `output_roots=(out_dir,"out")` 로 물어 false → "실행 중 변경". 첫 산출만 clean (그때는 디렉터리가 비어 git 이 아무것도 보고하지 않는다) | CLI 가 둘째 인자부터를 산출 root 로 받고(`out` 은 늘 포함), `run` 이 `"${OUT:-out}"` 을 넘긴다 | `test_g28` — 산출 둘을 연달아 게시해 둘째의 `git_modified_code_at_start == ['out_alt/']` 를 재현 |
+| U18-03 | 대조가 rc **2**(계약 위반)를 냈고 근거는 정본 `ne_shape_GITT_Li.csv.meta` 에 `env` 가 없다는 것 **하나** | 옛 정본의 **나이**를 새 산출의 위반으로 청구했다 — 자체 리뷰 C16 이 입력 identity 축에서 닫은 것과 같은 비대칭 (`env` 계약은 R10 P1-7 뒤에 생겼다) | `env_uncomparable` 버킷: 정본이 안 적었으면 **대조 불가**(rc 는 안 바꾸고 승격만 불가), **새 산출**이 안 적으면 그대로 계약 위반 | `test_g29` + 대조군 (새 산출에서 `env` 를 지우면 rc 2 · `schema` blocker) |
+
+U18-02 는 위조 방향이 아니라 **거짓 양성**이다. 다만 `provenance.py` 머리말이 경고하는 고장 — "플래그가 늘 켜져
+정보가 사라진다" — 을 wrapper 쪽에서 재현한 것이라, 그 축의 신호는 죽어 있었다.
+
+**1 차 산출은 승격하지 않는다.** 고침은 다음 실행의 서명을 고칠 뿐 이미 적힌 sidecar 의 `true` 를 바꾸지 않고,
+`matrix_100` 은 그 위에 **실제로** 실행 중 커밋이 바뀌었다 (`d07a77a` → `c9dd822` — 그 시간에 `git pull` 이 돌았다).
+사면 규칙을 만들지 않고 깨끗한 트리에서 2 차(U18b)를 돈다. 승격 조건은 `numbers 0` · 계약 축 전부 0 ·
+`provenance 0` 이고 **`inputs_uncomparable` 과 `env_uncomparable` 만 > 0** (둘 다 옛 정본의 나이 — 1 차 실측 17 · 1).
+
+회귀 전체: **277 passed**.
