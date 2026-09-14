@@ -1,7 +1,7 @@
 ---
 title: "오프라인 백업 인덱스 — repo 밖에 있는 원자료가 어디 있나"
 date: 2026-08-20
-updated: 2026-08-20
+updated: 2026-08-24
 tags: [archive, backup, provenance, raw-data, cube, aimd, lobster, kisti]
 status: 실측 인덱스 (2026-08-20 전수조사)
 confidence: high
@@ -214,6 +214,11 @@ elastic_static,elastic_mlip_600K,elastic_mlip_600K_clamped_backup}`
 0. ⛔ **D: 한 매체가 이제 유일본을 둘 들고 있다** (2026-08-20). 백업 A/B(KISTI)에
    더해 DEM 작업환경 이미지(C, 48.8 GB)까지 여기로 왔다. 이 디스크 하나가 죽으면
    두 계열이 동시에 사라진다. 이중화 우선순위가 그만큼 올라갔다.
+   ⛔ **2026-08-24 악화 확인**: 작업 중인 repo 사본 7개도 전부 D: 다
+   (`Yonghoon-DEM-DFT` 계열 — 탐색기 스크린샷 판독). 즉 이 디스크 하나가
+   백업 A/B/C **와 미푸시 커밋·`.gitignore` 로컬 전용 자산**(litdb/inbox PDF 등)까지
+   동시에 들고 있다. 정정 경위와 재설치 대비 순서는
+   `kb/methodology/windows_reinstall_backup_2026_08_24.md`.
 1. ⛔⛔ **단일 매체이자 유일본이다.** T7 Shield 외장 SSD 한 벌뿐이고 사본이 없다.
    **그리고 2026-08-20 확인 — KISTI 원본은 남아 있지 않다** (1저자). 즉 이 백업은
    *사본*이 아니라 **그 계산들의 마지막 실물**이다. 디스크가 죽으면 b2o3 ELF/CDD/Bader

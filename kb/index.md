@@ -1,17 +1,17 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-14 · managed-files: 423
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-14 · managed-files: 425
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 222건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 224건)
 - 2026-09-14 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-14 · `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나 · 발송됨
 - 2026-09-14 · `kb/reviews/codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 회신 — G4 는 합격선이 아니라 경보. '셀 문제 배제' 는 받아들일 수 없다 · 회신됨
 - 2026-09-14 · `kb/reports/weekly_2026_09_14.md` — 주간 정리 2026-09-07 ~ 09-13 (주간보고 초안) · 완료 (2026-09-14 · 다음 주 문서는 새 파일)
-- 2026-09-14 · `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 다섯과 순서 · 완료
+- 2026-09-14 · `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 일곱과 순서 · 완료
 - 2026-09-13 · `kb/methodology/silent_wrong_path_2026_09_13.md` — 조용히 틀린 경로 — 하루에 여섯 번 나온 한 부류 · 채택
 - 2026-09-13 · `kb/reviews/codex_BP_prompt_static_pair_result_2026_09_13.md` — 회신 BP 요청 — 정적대조 2 SCF 실행 결과 (BO 조건 1 이행) · 파일럿 보고량 재질의 · 발송대기
 - 2026-09-13 · `kb/reviews/codex_BP_reply_static_pair_result_2026_09_13.md` — 회신 BP 접수 — 조건 1 이행 인정 · 파일럿 조건부 GO (셀 정책 구현 불일치로 즉시 실행 승인은 아님) · 접수
@@ -53,7 +53,7 @@
 - `kb/physics/vacancy_effects.md` — Vacancy Effects in Argyrodite
 - `kb/physics/vacancy_mechanism_corrected_2026_05_08.md` — Vacancy + Halogen Distribution → Adhesion: Corrected Mechanism
 
-## methodology/ (55)
+## methodology/ (56)
 - `kb/methodology/PHASE1_QUICKSTART_doping.md` — Phase 1 Quickstart Guide
 - `kb/methodology/adhesion_calibration_decision_2026_05_17.md` — Adhesion Calibration Decision — 2026-05-17
 - `kb/methodology/adhesion_energy.md` — Adhesion Energy (Wad) Calculation
@@ -99,7 +99,7 @@
 - `kb/methodology/name_vs_substance_2026_09_09.md` — 이름과 실체가 갈린다 — 하루에 여섯 번 (2026-09-09)  (2026-09-09 · 진행)
 - `kb/methodology/nd_vs_O_isolation_campaign_2026_06_18.md` — Nd vs O 분리 — "Nd가 특별한가, O 운반체일 뿐인가" 정량 캠페인
 - `kb/methodology/o2_muO_screening_2026_09_07.md` — LPSCl + O₂ — 산소 화학퍼텐셜(μ_O) 전방향 스크리닝  (2026-09-07 · 1차 결과)
-- `kb/methodology/offline_archive_index_2026_08_20.md` — 오프라인 백업 인덱스 — repo 밖에 있는 원자료가 어디 있나  (2026-08-20 · 실측 인덱스 (2026-08-20 전수조사))
+- `kb/methodology/offline_archive_index_2026_08_20.md` — 오프라인 백업 인덱스 — repo 밖에 있는 원자료가 어디 있나  (2026-08-24 · 실측 인덱스 (2026-08-20 전수조사))
 - `kb/methodology/probe_language_reference.md` — Probe 언어 레퍼런스 — 각 계산이 무엇이고, 어떻게 구하고, 논문/figure에 어떻게 쓰는가
 - `kb/methodology/ps4_libration_dopant_2026_08_28.md` — T16 — PS₄ 는 안 돈다(재확인). 그런데 **+O 가 흔들림 원뿔을 좁힌다**(신규)  (2026-08-28 · 채택)
 - `kb/methodology/qe_disk_reclaim_2026_09_12.md` — QE 디스크 회수 절차 — 파동함수는 스크래치, 정본은 텍스트 (kgy 2026-09-12, 306 GB)  (2026-09-12 · 채택)
@@ -108,6 +108,7 @@
 - `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1  (2026-08-11 · 실행 대기 (도구 검증 완료 · 입력 2종 회수 필요))
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 - `kb/methodology/vanhove_plateau_70traj_2026_08_28.md` — van Hove 70궤적 — 고원은 세 계 공통이고, 고원 안 온도차는 대부분 못 읽는다  (2026-08-28 · 채택)
+- `kb/methodology/windows_reinstall_backup_2026_08_24.md` — Windows 재설치 전 백업 — C: 오판 정정과 실제 위험처  (2026-08-24 · 진행 — 스크린샷 판독은 확정, C: 실사는 미실시)
 - `kb/methodology/zn_cu_hull_estimand_2026_09_03.md` — 보고량 카드 — Cu–Zn convex hull (Zn ALZIB C1 후속)  (2026-09-03 · 제안)
 
 ## results/ (95)
@@ -397,19 +398,20 @@
 - `kb/questions/sdcp_site_preference.md` — SDCP 조각은 LiNiO₂(104)에서 Li 자리와 Ni 자리 중 어디에 붙는가 [active]  (2026-08-11 · active)
 - `kb/questions/sdcp_stageA_holdout_selector_2026_08_30.md` — estimand 카드 — Stage A 홀드아웃: UMA 선택기가 DFT 순위를 맞히나 [open]  (2026-08-30 · open)
 
-## syntheses/ (7)
+## syntheses/ (8)
 - `kb/syntheses/binder_adsorption_charge_state_2026_08_29.md` — 음이온성 바인더의 흡착에너지 — ICEP 의 (−H) 는 탈양성자가 아니라 H 이동이었다  (2026-08-29 · 판독 완료 — ICEP 본문 + SI, Kang 본문 + SI 모두 확보)
 - `kb/syntheses/cathode_coating_computational_lineage.md` — 양극 코팅 계산 계보 — Wolverton → Ceder → Mo 라인과 우리 LPSCl 산화축의 관계  (2026-09-12 · 진행)
 - `kb/syntheses/li3n_barrier_revision_defense_2026_08_12.md` — Li3N(001) 장벽 — 리비전 방어 카드 (AF-ASSB 원고 v5)  (2026-08-13 · 확정 — 2026-08-12: 0.118 로 통일 · 궤적 패널 제외…)
 - `kb/syntheses/md_sampling_variance_defense_2026_08_25.md` — 왜 3시드·200 ps·β 게이트인가 — 짧은 단일 런은 산포를 없애지 않고 가린다  (2026-08-25 · 방어논지)
 - `kb/syntheses/nd_doping_two_axis_verdict.md` — Nd₂O₃ 도핑 — 열역학 창과 전자구조가 **같은 방향으로** 진다  (2026-08-12 · 진행)
+- `kb/syntheses/sdcp_eads_revision_defense_2026_08_23.md` — SDCP E_ads — 리비전 방어 카드 (원고 v5, SI 미기재분)  (2026-08-23 · 확정 — 2026-08-23 사용자 결정: 이 두 항목은 SI 에 넣…)
 - `kb/syntheses/why_so3h_not_deprotonated_2026_08_29.md` — 왜 SO₃H 만 계산했나 — 원고에 그대로 쓸 근거 5  (2026-08-29 · 초안 — 1저자·공저자 확인 대기 (2026-08-29 all-sto…)
 - `kb/syntheses/xu2026_li_nd_rebuttal.md` — Xu 2026 의 "Li–Nd alloy SEI" 주장은 열역학·전자구조로 기각된다  (2026-08-13 · 방어 중 — Li₃Nd c→c NEB **완료·인용 가능** (0.2…)
 
 ## platforms/ (3)
 - `kb/platforms/literature_db_tools.md` — Literature DB 자동화 도구
 - `kb/platforms/ml_automation_platforms.md` — ML / Automation Platform Survey
-- `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 다섯과 순서  (2026-09-14 · 완료)
+- `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 일곱과 순서  (2026-09-14 · 완료)
 
 ## descriptors/ (1)
 - `kb/descriptors/coating_descriptor_catalog.md` — 황화물 코팅 소재 Descriptor Catalog
