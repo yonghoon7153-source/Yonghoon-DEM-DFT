@@ -53,6 +53,29 @@ RE_REGMIX = re.compile(r'^\s*region\s+\S+\s+block\s+([0-9.eE+-]+)\s+([0-9.eE+-]+
 RE_DENS = re.compile(r'density\s+constant\s+([0-9.eE+-]+)')
 RE_RAD = re.compile(r'radius\s+constant\s+\$\{(\w+)\}')
 RE_MAXATT = re.compile(r'(maxattempt\s+)(\d+)')
+RE_REGBOX = re.compile(r'^region\s+reg_box\s+block\b', re.M)
+
+#: ★★ 2026-09-15 (`PS-01` 둘째 원인) — **MPI 분해 축**.  박스가 0.05 × 0.05 × **1.01 m** 로
+#   z 로 극단적으로 길어서 LIGGGHTS 가 z 를 쪼갠다 (`1 by 1 by P`).  삽입 영역은 z 0.005–0.30
+#   이라 **한 proc 에만** 걸리고, 나머지는 영역 없이 배정을 받아 실패한다.
+#   `processors * * 1` 로 x·y 로만 쪼개면 모든 proc 이 z 전 구간과 영역을 공유한다.
+PROC_GRID = 'processors * * 1'
+
+#: ⚠⚠ **랭크 수는 검증된 값만 쓴다.**  실측 (`ps_10_0_r45`, 요청 159,167):
+#       np  격자          maxattempt   삽입          경고
+#        1  —               200,000   159,167       없음   ✓
+#        2  2 by 1 by 1     400,000   159,167       없음   ✓   ← 생산 규약 (실배치 확인)
+#        4  2 by 2 by 1     400,000         0     Less…    ⛔
+#        4  2 by 2 by 1   4,000,000   119,679     Less…    ⛔
+#       10  5 by 2 by 1     400,000   142,965     Less…    ⛔
+#       10  5 by 2 by 1   4,000,000    16,202     Less…    ⛔
+#   ⚠ **기전을 모른다** — 예산에도 랭크에도 단조롭지 않고 (예산을 10배 올리면 오히려 줄었다),
+#   np=10 의 두 값 차 159,167 − 142,965 = **16,202** 가 큰-예산 런의 삽입수와 정확히 같은 것도
+#   설명 못 한다.  np=10 의 x 폭 0.01 m 가 AM_P 지름 0.009 m 와 거의 같은 것은 부분 원인일 수
+#   있으나, np=4 (0.025 m = 충분히 넓다) 가 0 인 것은 그것으로 설명되지 않는다.
+#   ⇒ 기전 대신 **관측**을 규약으로 쓴다: np ∈ {1, 2} 만 정확한 개수를 냈다.
+#   ⛔ 부분 삽입(10 % 빠진 침대)은 조성이 달라 **다른 물건**이다 — 폐기 대상.
+MPI_VERIFIED_MAX = 2
 
 #: ★★ 2026-09-15 (`PS-01`) — `maxattempt` 는 **입자당이 아니라 삽입 전체의 시도 예산**이다.
 #   원본 덱의 15,000 으로 159,167 개를 넣으라고 하면 입자당 0.094 회 — 한 번씩 시도해 볼
@@ -245,6 +268,15 @@ def make_deck(text, tag_old, tag_new, p, s, seeds, r_am_p='', am_mass=0.816, not
     n_tot = sum(cnt.values())
 
     #  ★ `maxattempt` — 예상 입자수에 비례해 잡고, 못 미치면 **덱을 내보내지 않는다** (`PS-01`).
+    #  ★ MPI 분해를 x·y 로 눕힌다 (`PS-01` 둘째 원인).  `create_box` 앞이어야 한다.
+    had_proc = bool(re.search(r'^processors\s', out, re.M))
+    if not had_proc:
+        m_rb = RE_REGBOX.search(out)
+        if not m_rb:
+            sys.exit('⛔ `region reg_box` 를 못 찾아 `processors` 줄을 넣을 자리가 없다 — '
+                     '덱 구조가 바뀌었다 (PS-01).')
+        out = out[:m_rb.start()] + PROC_GRID + '\n' + out[m_rb.start():]
+
     m_old = RE_MAXATT.search(out)
     att_old = int(m_old.group(2)) if m_old else 0
     att = int(maxattempt) if maxattempt else max(
@@ -273,6 +305,11 @@ def make_deck(text, tag_old, tag_new, p, s, seeds, r_am_p='', am_mass=0.816, not
             f'#   원본 덱에서 **조성·시드·태그' + ('·AM_P 반지름' if r_am_p else '') +
             '만** 변경.  재료(E_SE 포함) · 접촉법칙 ·',
             f'#   dt · press_speed · target_press · volumefraction · RVE · run 스텝수 전부 불변.']
+    if not had_proc:
+        head.append(f'#   ⚠ 예외 둘 — `{PROC_GRID}` 를 새로 넣었다 (원본에 없다).')
+        head.append(f'#     없으면 LIGGGHTS 가 z 를 쪼개고, 삽입 영역이 한 proc 에만 걸려')
+        head.append(f'#     **입자가 0 개** 들어간다 (원장 `PS-01` 둘째 원인).')
+        head.append(f'#     ⛔ 랭크는 **{MPI_VERIFIED_MAX} 이하**만 검증됐다 — 4·10 은 부분 삽입이 난다.')
     if m_old and att != att_old:
         head.append(f'#   ⚠ 예외 하나 — `maxattempt` {att_old:,} → {att:,} (원본과 다르다).')
         head.append(f'#     원본 값으로는 이 빌드에서 **입자가 0 개 삽입**된다 (원장 `PS-01`).')
@@ -301,7 +338,11 @@ def main(argv=None):
                     help='삽입 시도 예산 (기본 = 예상 입자수 × %g, 하한 %d).  '
                          '예상 입자수의 %g배 미만이면 거부한다 — PS-01'
                          % (MAXATT_DEFAULT_FACTOR, MAXATT_FLOOR, MAXATT_MIN_FACTOR))
-    ap.add_argument('--mpi', type=int, default=10, help='실행 명령에 찍을 MPI 랭크 수')
+    ap.add_argument('--mpi', type=int, default=MPI_VERIFIED_MAX,
+                    help='실행 명령에 찍을 MPI 랭크 수 (검증된 상한 %d — PS-01)'
+                         % MPI_VERIFIED_MAX)
+    ap.add_argument('--allow-unverified-mpi', action='store_true',
+                    help='검증 안 된 랭크 수를 강행 (부분 삽입 위험 — 런마다 개수 검산 필수)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
 
@@ -309,6 +350,13 @@ def main(argv=None):
         return _selftest()
     if not a.deck:
         ap.error('--deck 이 필요합니다 (또는 --selftest)')
+
+    if a.mpi > MPI_VERIFIED_MAX and not a.allow_unverified_mpi:
+        sys.exit(f'⛔ --mpi {a.mpi} 는 검증되지 않았다 — 실측에서 4·10 랭크는 부분 삽입을 냈다\n'
+                 f'   (np=4 → 0 또는 119,679 · np=10 → 142,965 또는 16,202, 요청 159,167).\n'
+                 f'   부분 삽입 침대는 조성이 달라 **다른 물건**이다.\n'
+                 f'   → --mpi {MPI_VERIFIED_MAX} 이하로 내리거나, 강행하려면 '
+                 f'--allow-unverified-mpi 를 주고 런마다 개수를 검산할 것 (PS-01).')
 
     text = open(a.deck).read()
     m = RE_MKDIR.search(text)
@@ -445,8 +493,10 @@ def _selftest():
     #  ⚠ 헤더 길이를 **세어서** 쓴다 — 하드코딩 9 는 헤더가 한 줄만 늘어도 거짓 실패를 낸다
     #    (`PS-01` 로 maxattempt 정정 3줄이 붙자 실제로 그랬다).  검사의 뜻은 **본문** 보존이다.
     _hdr = d73.split('\n').index(deck.split('\n')[0])
+    #  의도한 삽입(`processors`)은 세어서 빼 준다 — 검사의 뜻은 **삼킴 없음**이지 줄 수 동결이 아니다
+    _added = 1 if (PROC_GRID in d73 and PROC_GRID not in deck) else 0
     chk('★ 본문 줄 수 보존 (생성기가 빈 줄을 삼키지 않는다)',
-        len(d73.split('\n')) - _hdr == len(deck.split('\n')))
+        len(d73.split('\n')) - _hdr == len(deck.split('\n')) + _added)
     chk('★ 분포 줄 뒤의 빈 줄이 살아 있다',
         re.search(r'particledistribution/discrete[^\n]*\n\n', d73) is not None)
     chk('시드가 전부 갈렸다 (원본 시드가 하나도 안 남는다)',
@@ -519,6 +569,24 @@ def _selftest():
         not _rejects(deck, maxattempt=200_000))
     chk('★ 금지선 바로 아래(150,000 ≈ 0.94배)는 거부된다 — 게이트가 공허하지 않다',
         _rejects(deck, maxattempt=150_000))
+
+    # ── ★★ MPI 분해 축 (`PS-01` 둘째 원인) ───────────────────────────────────
+    #    z 로 쪼개지면 삽입 영역이 한 proc 에만 걸려 0 개가 들어간다.  실측:
+    #    `1 by 1 by 2` → 0 개  ·  `2 by 1 by 1`(processors * * 1) → 159,167 ✓
+    chk('★★ 덱이 `processors * * 1` 을 달고 나온다 (없으면 z 분할 → 입자 0 개)',
+        PROC_GRID in d73)
+    _lines = d73.split('\n')
+    chk('★ 그 줄이 `region reg_box` **앞**에 있다 (create_box 뒤면 LIGGGHTS 가 거부한다)',
+        _lines.index(PROC_GRID) < next(i for i, l in enumerate(_lines)
+                                       if l.startswith('region reg_box')))
+    #  ⚠ 부분문자열로 세면 안 된다 — 헤더 주석이 `processors * * 1` 을 백틱으로 인용한다.
+    #    세어야 하는 것은 **실행되는 줄**이다 (내 첫 판이 이걸 틀려 거짓 실패를 냈다).
+    _re2 = make_deck(d73, 'ps_7_3_r45', 'ps_7_3_r45b', 7, 3, seeds_for(2))
+    chk('★ 이미 있으면 두 번 넣지 않는다 (재생성 멱등)',
+        sum(1 for l in _re2.split('\n') if l.startswith('processors')) == 1)
+    chk('★★ 헤더가 "원본에 없던 줄" 임을 밝힌다 (거짓 "바이트 동일" 금지)',
+        'processors' in d73[:d73.index(deck.split('\n')[0])])
+
     chk('AM_S·SE 개수는 불변', c45['pts2'] == c6['pts2'] and c45['pts3'] == c6['pts3'])
 
     # ── 가드가 실제로 죽는가 ──

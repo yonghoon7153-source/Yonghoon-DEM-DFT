@@ -47,11 +47,11 @@ AM_P 가 2.37배 많아지는 것 = (6.0/4.5)³.  SE·AM_S 개수는 그대로�
 
 ```bash
 cd dem_scripts/ps_sweep_6mah_20260914
-mpirun --oversubscribe -np 10 liggghts -in in.ps_10_0_r45.liggghts 2>&1 | tee log_ps_10_0_r45.out
-mpirun --oversubscribe -np 10 liggghts -in in.ps_7_3_r45.liggghts 2>&1 | tee log_ps_7_3_r45.out
-mpirun --oversubscribe -np 10 liggghts -in in.ps_5_5_r45.liggghts 2>&1 | tee log_ps_5_5_r45.out
-mpirun --oversubscribe -np 10 liggghts -in in.ps_3_7_r45.liggghts 2>&1 | tee log_ps_3_7_r45.out
-mpirun --oversubscribe -np 10 liggghts -in in.ps_0_10_r45.liggghts 2>&1 | tee log_ps_0_10_r45.out
+mpirun --oversubscribe -np 2 liggghts -in in.ps_10_0_r45.liggghts 2>&1 | tee log_ps_10_0_r45.out
+mpirun --oversubscribe -np 2 liggghts -in in.ps_7_3_r45.liggghts 2>&1 | tee log_ps_7_3_r45.out
+mpirun --oversubscribe -np 2 liggghts -in in.ps_5_5_r45.liggghts 2>&1 | tee log_ps_5_5_r45.out
+mpirun --oversubscribe -np 2 liggghts -in in.ps_3_7_r45.liggghts 2>&1 | tee log_ps_3_7_r45.out
+mpirun --oversubscribe -np 2 liggghts -in in.ps_0_10_r45.liggghts 2>&1 | tee log_ps_0_10_r45.out
 ```
 
 각 덱은 자기 이름의 `post_ps_<비>_r45/` · `restart_ps_<비>_r45/` · `plate_ps_<비>_r45.stl`
@@ -114,6 +114,43 @@ awk 'NR==4{n=$1} NR>9{c[$2]++} END{printf "%s  총 %d  AM_P %d  AM_S %d  SE %d\n
 ⛔ 1.2 는 *"이 아래는 확실히 실패"* 라는 증거 기반 하한이지 **충분 조건이 아니다** —
 참 문턱은 모른다 (아는 두 점: 0.094배 실패 · 1.2566배 성공).
 
+## 4-보-2. ⛔ `processors * * 1` 과 **랭크 상한 2** (사고 `PS-01` 둘째 원인)
+
+`maxattempt` 를 고쳐도 **2랭크에서 여전히 0 개**가 들어갔다.  원인은 **MPI 분해 축**이다.
+
+박스가 0.05 × 0.05 × **1.01 m** 로 z 로 극단적으로 길어서 LIGGGHTS 가 z 를 쪼갠다
+(`1 by 1 by P`).  삽입 영역은 z 0.005–0.30 이라 **한 proc 에만** 걸리고, 나머지 proc 은
+영역이 없는데도 배정을 받아 전부 실패한다.  `processors * * 1` 로 x·y 로만 쪼개면
+모든 proc 이 z 전 구간과 영역을 공유한다.
+
+| np | 격자 | `maxattempt` | 삽입 (요청 159,167) | |
+|---:|---|---:|---:|---|
+| 1 | — | 200,000 | **159,167** | ✓ 경고 없음 |
+| **2** | `2 by 1 by 1` | 400,000 | **159,167** | ✓ 경고 없음 · **생산 규약** |
+| 2 | `1 by 1 by 2` | 400,000 | 0 | ⛔ |
+| 4 | `2 by 2 by 1` | 400,000 | 0 | ⛔ |
+| 4 | `2 by 2 by 1` | 4,000,000 | 119,679 | ⛔ |
+| 10 | `5 by 2 by 1` | 400,000 | 142,965 | ⛔ |
+| 10 | `5 by 2 by 1` | 4,000,000 | 16,202 | ⛔ |
+
+⚠⚠ **기전을 모른다.**  예산에도 랭크에도 단조롭지 않다 — 예산을 10배 올리면 np=4 는
+0 → 119,679 로 **늘고** np=10 은 142,965 → 16,202 로 **줄었다**.  `16,202` 가 마침
+`159,167 − 142,965` 와 정확히 같은 것도 설명하지 못한다.  np=10 의 x 폭 0.01 m 가 AM_P
+지름 0.009 m 와 거의 같은 것은 부분 원인일 수 있으나, np=4 (0.025 m = 충분히 넓다)가
+0 인 것은 그것으로 설명되지 않는다.
+
+⇒ 기전 대신 **관측을 규약으로 쓴다**: `np ∈ {1, 2}` 만 정확한 개수를 냈다.  생성기가
+`--mpi > 2` 를 **거부**한다 (`--allow-unverified-mpi` 로만 강행 가능).
+
+⛔ **부분 삽입 런은 전량 폐기한다.**  10 % 빠진 침대는 조성이 다른 **다른 물건**이다.
+런마다 아래를 확인할 것 — `Less insertions` 가 한 줄이라도 뜨면 그 런은 버린다.
+
+```bash
+grep -E "inserted [0-9]+ particle|Less insertions" <케이스>/log.liggghts
+```
+
+★ **실배치 확인 완료** (2026-09-15, ibb, np=2): `ps_10_0_r45` 가 **159,167 · 경고 없음**.
+
 ## 5. 알아 둘 것 (건드리지 않은 것)
 
 - `variable plate_z equal ${z_max}+${r_AM_P}+${plate_margin}` 는 **모든 케이스가 r_AM_P**
@@ -122,8 +159,10 @@ awk 'NR==4{n=$1} NR>9{c[$2]++} END{printf "%s  총 %d  AM_P %d  AM_S %d  SE %d\n
   시간 비용**이고, 원본 규약이라 그대로 뒀다.
 - 접촉법칙 · `coefficient*` 9종 · `dt` · `press_speed` · `target_press` ·
   `volumefraction_region` · run 스텝수 · RVE 전부 원본과 **바이트 동일**하다.
-  ⛔ **예외 하나**: `maxattempt` 15000 → 400000 (§4-보).  원본 값으로는 이 빌드에서
-  입자가 0 개 들어간다.  ⇒ 이 줄을 *"실행 파라미터 전부 불변"* 으로 읽지 말 것.
+  ⛔ **예외 둘**: ① `maxattempt` 15000 → 400000 (§4-보) ② `processors * * 1` **신규**
+  (§4-보-2).  원본 값·원본 분해로는 이 빌드에서 입자가 0 개 들어간다.
+  ⇒ 이 줄을 *"실행 파라미터 전부 불변"* 으로 읽지 말 것.
+  ⛔ 랭크도 **2 이하**만 검증됐다 — 4·10 은 부분 삽입을 낸다.
 
 ## 6. 재생성
 
