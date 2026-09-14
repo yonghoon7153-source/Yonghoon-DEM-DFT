@@ -1,0 +1,98 @@
+{
+  "new_name": "Caps300R160H0250",
+  "new_job_id": "15e5d7433a6a4956b820cf6952330735",
+  "new_source_sha256": "4b4ff66bca7a161f6acffd5b125ddf695fee95fb82cdb4ded1e8b63391e1e5f0",
+  "new_MPH_sha256": "8772769460a758e84379be27775d64b317ef1b1bb05802694cd9e4386ce7bb10",
+  "new_MPH_bytes": 390769644,
+  "new_native_state": "completed",
+  "exactly_one_new_authorized_job": true,
+  "existing_reference_jobs_rerun": false,
+  "baseline_atomic_identity_verified": {
+    "name": "Caps300R160H0500",
+    "source_path": "outputs/comsol63/radial160/Caps300R160H0500.java",
+    "source_sha256": "874e70a9d6531a2a83ebd05f439d514c324b3ca79875494b1cf304797cc90e26",
+    "job_id": "450b46add79c439bbce5886454c4328a"
+  },
+  "all_Time_and_Variables_properties_except_cap_expression_equal": true,
+  "property_count": 1143,
+  "property_differences": {
+    "sol1/t1/maxstepexpressionbdf": {
+      "baseline": [
+        "String",
+        "[if(t<0.1[s],0.0005[s],0.1[s])]"
+      ],
+      "new": [
+        "String",
+        "[if(t<0.1[s],0.00025[s],0.1[s])]"
+      ]
+    }
+  },
+  "native_step_cap_compliance": true,
+  "true_time_error_or_full_time_convergence_established": false,
+  "temporal_limit": "One initial-cap halving measures sensitivity only; later0.1s cap unchanged. Do not ignore time effect solely because below1mV or call80H0500vs160H0250 pure radial.",
+  "local_inventory_before_count": 758,
+  "unchanged_current_bytes_count": 751,
+  "authorized_changes_with_before_bytes_preserved": [
+    {
+      "path": "outputs/NEXT_RUN_PLAN.md",
+      "before_bytes": 3632,
+      "before_sha256": "f0fbf5ada6b45206c57d260b34bc462dd51e4bf3eed524b2d7bd20dec193a6d4",
+      "after_bytes": 3244,
+      "after_sha256": "399a5ee7eada4b465f98b6261557e0b080d8294b9fd3f90cafdb97766a1edda0",
+      "before_backup_path": "outputs/radial160_timecap/NEXT_RUN_PLAN_before_timecap160.md"
+    },
+    {
+      "path": "outputs/radial160/README_PACKAGE_KO.md",
+      "before_bytes": 4504,
+      "before_sha256": "1dc1e8d539c90f0739c389066d3b80d612f24da1dda86d393a43eb8969541eb9",
+      "after_bytes": 5124,
+      "after_sha256": "59a5dab9cf4f094f4eb129e6c926d303cf1bbdb5b9d588928dc729d4995db3a4",
+      "before_backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/README_PACKAGE_KO.md"
+    },
+    {
+      "path": "outputs/radial160/comparison_contract.json",
+      "before_bytes": 5673,
+      "before_sha256": "dc03064c40ec126c7c59f2b08ccf8bf3a87ba7aaf878445c69a51813c16c20ed",
+      "after_bytes": 6462,
+      "after_sha256": "e0fb7662ff0e053fe1ef93568526692835c66c30e6367b26cf5d5b84540f6ef5",
+      "before_backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/comparison_contract.json"
+    },
+    {
+      "path": "outputs/radial160/figures/radial160_comparison_summary.json",
+      "before_bytes": 4942,
+      "before_sha256": "a92c4db4f473be8ee55a43048a20c179f081cbc3d55ea9d1a8c87173bdc1b42f",
+      "after_bytes": 4942,
+      "after_sha256": "a4024967cd8ee541a12330946fe4d9b3bb604f738c0cc30394f69aa4009afd2f",
+      "before_backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/figures/radial160_comparison_summary.json"
+    },
+    {
+      "path": "outputs/radial160/results/analysis.json",
+      "before_bytes": 374756,
+      "before_sha256": "d65d8fa868c3748282312ae306fe6f3f7437cb19c2944ed5e19463aa43a0dfe5",
+      "after_bytes": 375575,
+      "after_sha256": "9e3ea502b57df4ca43520010a7763b14a1d0ec6a3115ae04838b7f02a87af2c8",
+      "before_backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/results/analysis.json"
+    },
+    {
+      "path": "work/radial160/analyze_results.py",
+      "before_bytes": 33973,
+      "before_sha256": "349c60bc79748361545a7bfbe6f9b4cc066ac3e707a18ed5e287ed8317c66f36",
+      "after_bytes": 34392,
+      "after_sha256": "a0f7f20e7f20e116c160c7dc44b4f847a8a7fad12b5ecc798ae6a6a608494b99",
+      "before_backup_path": "outputs/radial160_timecap/corrections/before/work/radial160/analyze_results.py"
+    },
+    {
+      "path": "work/radial160/prepare_source.py",
+      "before_bytes": 5213,
+      "before_sha256": "8cf090167ed662e8a414fed0692b2e05b936c8b59aea087c834467a3a6912f23",
+      "after_bytes": 5411,
+      "after_sha256": "25c2ad1226852b68d5f6301e9ae9d6f15fd36b4127d6149541b28226a3a3f022",
+      "before_backup_path": "outputs/radial160_timecap/corrections/before/work/radial160/prepare_source.py"
+    }
+  ],
+  "preservation_limit": "Current local-byte inventory, not external verification of663 or all current files. Recipient verified originalRADIAL160 rawSHA/160payload/manifest/historical333 separately.",
+  "historical_range_job_state": "failed",
+  "historical_range_classification": "INCOMPLETE_RANGE_STOP preserved; no other failure classification",
+  "electrolyte_positive_check": "POSTPROCESSING_ONLY",
+  "additional_runs": 0
+}

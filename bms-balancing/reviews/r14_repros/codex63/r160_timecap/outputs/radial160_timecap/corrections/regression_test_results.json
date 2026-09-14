@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "tests_run": 24,
+  "existing_numerical_tests": 13,
+  "metadata_tests": 11,
+  "command": "python -B -m unittest discover -s work/radial160 -p \"test_*.py\" -v",
+  "observed_result": "Ran 24 tests; OK",
+  "execution": "Observed tool result before this ledger was written; not rerun by this finalizer.",
+  "environment_note": "Initial restricted-token tempfile access failed. Same test command passed with ordinary-user sandbox exception; no administrator or ACL changes.",
+  "scope": "Includes isolated real source preparation; no COMSOL execution; scratch fixtures excluded from delivery."
+}

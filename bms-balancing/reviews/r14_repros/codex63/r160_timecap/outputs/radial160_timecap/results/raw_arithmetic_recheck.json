@@ -1,0 +1,98 @@
+{
+  "status": "PASS",
+  "method": "Independent raw boundary arithmetic and exact (time, coordinate) profile join; analyzer not imported; no interpolation.",
+  "jobs": [
+    "450b46add79c439bbce5886454c4328a",
+    "15e5d7433a6a4956b820cf6952330735"
+  ],
+  "windows": [
+    {
+      "time_basis": "requested_grid",
+      "end_s": 1,
+      "count": 107,
+      "voltage_peak_time_s_exact": "0.005",
+      "signed_voltage_difference_V_exact": "-0.000002175461073",
+      "same_time_decomposition_V_exact": [
+        "-0.0000022063610998",
+        "3.1477828350E-8",
+        "-5.778016E-10"
+      ],
+      "decomposition_residual_V_exact": "5.0E-17",
+      "surface_peak": {
+        "time_s_exact": "0.002",
+        "electrode": "P",
+        "coordinate_m_exact": "0.000121",
+        "first_x_exact": "0.9240499558036168",
+        "second_x_exact": "0.9240499988068328",
+        "abs_difference_x_exact": "4.30032160E-8"
+      },
+      "matched_profile_rows": 51574
+    },
+    {
+      "time_basis": "requested_grid",
+      "end_s": 5,
+      "count": 187,
+      "voltage_peak_time_s_exact": "0.005",
+      "signed_voltage_difference_V_exact": "-0.000002175461073",
+      "same_time_decomposition_V_exact": [
+        "-0.0000022063610998",
+        "3.1477828350E-8",
+        "-5.778016E-10"
+      ],
+      "decomposition_residual_V_exact": "5.0E-17",
+      "surface_peak": {
+        "time_s_exact": "0.002",
+        "electrode": "P",
+        "coordinate_m_exact": "0.000121",
+        "first_x_exact": "0.9240499558036168",
+        "second_x_exact": "0.9240499988068328",
+        "abs_difference_x_exact": "4.30032160E-8"
+      },
+      "matched_profile_rows": 90134
+    },
+    {
+      "time_basis": "all_exact_common_stored",
+      "end_s": 1,
+      "count": 282,
+      "voltage_peak_time_s_exact": "0.005",
+      "signed_voltage_difference_V_exact": "-0.000002175461073",
+      "same_time_decomposition_V_exact": [
+        "-0.0000022063610998",
+        "3.1477828350E-8",
+        "-5.778016E-10"
+      ],
+      "decomposition_residual_V_exact": "5.0E-17",
+      "surface_peak": {
+        "time_s_exact": "0.002",
+        "electrode": "P",
+        "coordinate_m_exact": "0.000121",
+        "first_x_exact": "0.9240499558036168",
+        "second_x_exact": "0.9240499988068328",
+        "abs_difference_x_exact": "4.30032160E-8"
+      },
+      "matched_profile_rows": 135924
+    },
+    {
+      "time_basis": "all_exact_common_stored",
+      "end_s": 5,
+      "count": 363,
+      "voltage_peak_time_s_exact": "0.005",
+      "signed_voltage_difference_V_exact": "-0.000002175461073",
+      "same_time_decomposition_V_exact": [
+        "-0.0000022063610998",
+        "3.1477828350E-8",
+        "-5.778016E-10"
+      ],
+      "decomposition_residual_V_exact": "5.0E-17",
+      "surface_peak": {
+        "time_s_exact": "0.002",
+        "electrode": "P",
+        "coordinate_m_exact": "0.000121",
+        "first_x_exact": "0.9240499558036168",
+        "second_x_exact": "0.9240499988068328",
+        "abs_difference_x_exact": "4.30032160E-8"
+      },
+      "matched_profile_rows": 174966
+    }
+  ]
+}

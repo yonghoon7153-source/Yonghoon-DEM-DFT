@@ -1,0 +1,23 @@
+{
+  "archive_path": "outputs/COMSOL63_TIME_CAPS_HANDOFF.zip",
+  "archive_bytes": 325347218,
+  "archive_sha256": "beac1f1df18c2a2613cc5b9da711f1f742aced4f13b79d44d03ca084463f0268",
+  "entries_including_manifest": 202,
+  "all_crc_ok": true,
+  "all_entry_sha256_and_sizes_match": true,
+  "manifest_sha256": "e7646aedf322195545744ee718275ae2cfaa3e5c0bf92bd15115896f99732a3f",
+  "historical_333_checked_from_final_archive": true,
+  "historical_333_method": "Read exactly four inputs from final outer ZIP; verify 330 inner ZIP members + 3 loose historical files, without prior loose payload files",
+  "historical_verified_count": 333,
+  "local_current_bytes_verified_separately": 468,
+  "second_reported_raw_PREFLIGHT_archive_available": false,
+  "new_job_ids": [
+    "176aef69e14646908f49f85c9821df2c",
+    "b6752f9caed845f88551386132051aa8",
+    "8ffe3cf123fd4c5cb1bc481f7a603a76",
+    "72c9c6b5210a4e0d96b74290e4392423"
+  ],
+  "new_native_jobs_completed": 4,
+  "additional_runs": 0,
+  "long_protocol_runs": 0
+}

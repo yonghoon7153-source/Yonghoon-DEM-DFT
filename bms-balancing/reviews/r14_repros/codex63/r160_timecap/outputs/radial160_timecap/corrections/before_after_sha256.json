@@ -1,0 +1,180 @@
+{
+  "scope": "Authorized historical R160 baseline metadata correction. Original archive, raw data, solver results and archive manifest remain immutable.",
+  "self_excluded": true,
+  "allowed_changed_paths": [
+    "work/radial160/prepare_source.py",
+    "work/radial160/analyze_results.py",
+    "outputs/radial160/comparison_contract.json",
+    "outputs/radial160/results/analysis.json",
+    "outputs/radial160/figures/radial160_comparison_summary.json",
+    "outputs/radial160/README_PACKAGE_KO.md"
+  ],
+  "entries": [
+    {
+      "path": "work/radial160/prepare_source.py",
+      "before_bytes": 5213,
+      "before_sha256": "8cf090167ed662e8a414fed0692b2e05b936c8b59aea087c834467a3a6912f23",
+      "before_backup_path": "outputs/radial160_timecap/corrections/before/work/radial160/prepare_source.py",
+      "after_bytes": 5411,
+      "after_sha256": "25c2ad1226852b68d5f6301e9ae9d6f15fd36b4127d6149541b28226a3a3f022",
+      "reason": "Write and verify the primary baseline identity atomically."
+    },
+    {
+      "path": "work/radial160/analyze_results.py",
+      "before_bytes": 33973,
+      "before_sha256": "349c60bc79748361545a7bfbe6f9b4cc066ac3e707a18ed5e287ed8317c66f36",
+      "before_backup_path": "outputs/radial160_timecap/corrections/before/work/radial160/analyze_results.py",
+      "after_bytes": 34392,
+      "after_sha256": "a0f7f20e7f20e116c160c7dc44b4f847a8a7fad12b5ecc798ae6a6a608494b99",
+      "reason": "Reject inconsistent baseline metadata before numerical analysis."
+    },
+    {
+      "path": "outputs/radial160/comparison_contract.json",
+      "before_bytes": 5673,
+      "before_sha256": "dc03064c40ec126c7c59f2b08ccf8bf3a87ba7aaf878445c69a51813c16c20ed",
+      "before_backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/comparison_contract.json",
+      "after_bytes": 6462,
+      "after_sha256": "e0fb7662ff0e053fe1ef93568526692835c66c30e6367b26cf5d5b84540f6ef5",
+      "reason": "Correct primary baseline identity and separate historical ancestor."
+    },
+    {
+      "path": "outputs/radial160/results/analysis.json",
+      "before_bytes": 374756,
+      "before_sha256": "d65d8fa868c3748282312ae306fe6f3f7437cb19c2944ed5e19463aa43a0dfe5",
+      "before_backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/results/analysis.json",
+      "after_bytes": 375575,
+      "after_sha256": "9e3ea502b57df4ca43520010a7763b14a1d0ec6a3115ae04838b7f02a87af2c8",
+      "reason": "Synchronize copied contract and its SHA only; numerical data unchanged."
+    },
+    {
+      "path": "outputs/radial160/figures/radial160_comparison_summary.json",
+      "before_bytes": 4942,
+      "before_sha256": "a92c4db4f473be8ee55a43048a20c179f081cbc3d55ea9d1a8c87173bdc1b42f",
+      "before_backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/figures/radial160_comparison_summary.json",
+      "after_bytes": 4942,
+      "after_sha256": "a4024967cd8ee541a12330946fe4d9b3bb604f738c0cc30394f69aa4009afd2f",
+      "reason": "Update the analysis input SHA only."
+    },
+    {
+      "path": "outputs/radial160/README_PACKAGE_KO.md",
+      "before_bytes": 4504,
+      "before_sha256": "1dc1e8d539c90f0739c389066d3b80d612f24da1dda86d393a43eb8969541eb9",
+      "before_backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/README_PACKAGE_KO.md",
+      "after_bytes": 5124,
+      "after_sha256": "59a5dab9cf4f094f4eb129e6c926d303cf1bbdb5b9d588928dc729d4995db3a4",
+      "reason": "Explain immutable archive manifest versus current corrected metadata."
+    }
+  ],
+  "created_files": [
+    {
+      "path": "work/radial160/baseline_metadata.py",
+      "bytes": 3572,
+      "sha256": "eb2e8c6456bbb23653800de72b730e1bbb4ca1e9944faa9725705081db012893"
+    },
+    {
+      "path": "work/radial160/test_baseline_metadata.py",
+      "bytes": 9487,
+      "sha256": "168ab041c8db03ce12c4d2989998de6e96e2869fb9b9ecf610875f0fb60a9b8c"
+    },
+    {
+      "path": "work/radial160/correct_current_metadata.py",
+      "bytes": 3651,
+      "sha256": "5c01b8c6b3cd173a26ff158ee2ac0d878f8cbfe10e8393b000323130860339ed"
+    },
+    {
+      "path": "work/radial160_timecap/finalize_corrections.py",
+      "bytes": 7735,
+      "sha256": "7ca54f42dc6e0e2f53b6c2a3bf8db27a5b7d971f50fd34675ae9547a8347db47"
+    },
+    {
+      "path": "outputs/radial160_timecap/corrections/CORRECTION_LOG_KO.md",
+      "bytes": 5573,
+      "sha256": "a29282a1ae5fd09449223a22d8a53670b31e5302f457741cbecd9c7beef2a1ac"
+    },
+    {
+      "path": "outputs/radial160_timecap/corrections/regression_test_results.json",
+      "bytes": 626,
+      "sha256": "4033b824c5336a0c33a9077cabe21e537708d900f9a60c5c689ddf8225fae5a3"
+    },
+    {
+      "path": "outputs/radial160/current_metadata_manifest.json",
+      "bytes": 2984,
+      "sha256": "e58c203a90794a89d2117684714a2c7b06e34022b725c5530564f234cb61da7e"
+    }
+  ],
+  "unchanged_archival_artifacts": [
+    {
+      "path": "outputs/COMSOL63_RADIAL160_HANDOFF.zip",
+      "bytes": 226198096,
+      "sha256": "39ded591a29568d58b57791bf68147292a9cef06660de40b1c5e45ed16b434bc",
+      "verified_unchanged": true
+    },
+    {
+      "path": "outputs/radial160/package_manifest.json",
+      "bytes": 33348,
+      "sha256": "6ab54917edbec8eda5d19b4add2233c3daf09ff55ee2a9ef98dbb84f67cc584b",
+      "verified_unchanged": true
+    },
+    {
+      "path": "outputs/COMSOL63_RADIAL160_HANDOFF_RECEIPT.json",
+      "bytes": 907,
+      "sha256": "56f7c0afc70232dea270f1543f732a6b840abf27b551ac38eb812a5ef5bcc591",
+      "verified_unchanged": true
+    },
+    {
+      "path": "outputs/COMSOL63_RADIAL160_HANDOFF.zip.sha256",
+      "bytes": 98,
+      "sha256": "8f59f5dcebb470359159f4f287280b264fdfca5cbddca12a73045f3465668176",
+      "verified_unchanged": true
+    }
+  ],
+  "verification": {
+    "all_11_before_backups_match": true,
+    "analysis_data_except_contract_and_hash_unchanged": true,
+    "figure_summary_only_analysis_input_hash_changed": true,
+    "preservation_anchor_path": "outputs/radial160_timecap/preserved_before.json",
+    "preservation_anchor_sha256": "31b7aca970c683748057bfb660d1779f3c3e4bbd80f82913954cd4a0084c5639",
+    "prior_files_checked": 758,
+    "prior_files_unchanged": 752,
+    "actual_changed_prior_files": [
+      {
+        "path": "outputs/radial160/README_PACKAGE_KO.md",
+        "before_sha256": "1dc1e8d539c90f0739c389066d3b80d612f24da1dda86d393a43eb8969541eb9",
+        "after_sha256": "59a5dab9cf4f094f4eb129e6c926d303cf1bbdb5b9d588928dc729d4995db3a4",
+        "classification": "authorized_metadata_correction"
+      },
+      {
+        "path": "outputs/radial160/comparison_contract.json",
+        "before_sha256": "dc03064c40ec126c7c59f2b08ccf8bf3a87ba7aaf878445c69a51813c16c20ed",
+        "after_sha256": "e0fb7662ff0e053fe1ef93568526692835c66c30e6367b26cf5d5b84540f6ef5",
+        "classification": "authorized_metadata_correction"
+      },
+      {
+        "path": "outputs/radial160/figures/radial160_comparison_summary.json",
+        "before_sha256": "a92c4db4f473be8ee55a43048a20c179f081cbc3d55ea9d1a8c87173bdc1b42f",
+        "after_sha256": "a4024967cd8ee541a12330946fe4d9b3bb604f738c0cc30394f69aa4009afd2f",
+        "classification": "authorized_metadata_correction"
+      },
+      {
+        "path": "outputs/radial160/results/analysis.json",
+        "before_sha256": "d65d8fa868c3748282312ae306fe6f3f7437cb19c2944ed5e19463aa43a0dfe5",
+        "after_sha256": "9e3ea502b57df4ca43520010a7763b14a1d0ec6a3115ae04838b7f02a87af2c8",
+        "classification": "authorized_metadata_correction"
+      },
+      {
+        "path": "work/radial160/analyze_results.py",
+        "before_sha256": "349c60bc79748361545a7bfbe6f9b4cc066ac3e707a18ed5e287ed8317c66f36",
+        "after_sha256": "a0f7f20e7f20e116c160c7dc44b4f847a8a7fad12b5ecc798ae6a6a608494b99",
+        "classification": "authorized_metadata_correction"
+      },
+      {
+        "path": "work/radial160/prepare_source.py",
+        "before_sha256": "8cf090167ed662e8a414fed0692b2e05b936c8b59aea087c834467a3a6912f23",
+        "after_sha256": "25c2ad1226852b68d5f6301e9ae9d6f15fd36b4127d6149541b28226a3a3f022",
+        "classification": "authorized_metadata_correction"
+      }
+    ],
+    "only_allowed_metadata_or_parent_changes": true,
+    "all_prior_java_mph_csv_log_png_pdf_unchanged": true
+  }
+}

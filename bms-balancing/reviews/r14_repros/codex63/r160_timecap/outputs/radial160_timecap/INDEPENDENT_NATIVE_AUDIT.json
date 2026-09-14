@@ -1,0 +1,214 @@
+{
+  "reviewer_scope": "Independent source/native audit; no COMSOL invocation",
+  "started_at": "2026-09-14T13:59:36.642705+09:00",
+  "source": {
+    "pass": true,
+    "baseline_identity": {
+      "name": "Caps300R160H0500",
+      "source_path": "outputs/comsol63/radial160/Caps300R160H0500.java",
+      "source_sha256": "874e70a9d6531a2a83ebd05f439d514c324b3ca79875494b1cf304797cc90e26",
+      "job_id": "450b46add79c439bbce5886454c4328a"
+    },
+    "new_identity": {
+      "name": "Caps300R160H0250",
+      "source_path": "outputs/comsol63/radial160_timecap/Caps300R160H0250.java",
+      "source_sha256": "4b4ff66bca7a161f6acffd5b125ddf695fee95fb82cdb4ded1e8b63391e1e5f0",
+      "job_id": "15e5d7433a6a4956b820cf6952330735"
+    },
+    "allowed_transform_full_text_equal": true,
+    "identifier_occurrences_changed": 2,
+    "expression_occurrences_changed": 2,
+    "runAll_count": 1,
+    "physical_elements": [
+      120,
+      60,
+      120
+    ],
+    "radial_elements_each": 160,
+    "requested_time_count": 187,
+    "first_second_requested_time_count": 107,
+    "all_other_source_bytes_equal_after_line_ending_normalization": true,
+    "external_read_process_network_additions": false,
+    "contract_config_job_identity_checks_pass": true
+  },
+  "native": {
+    "pass": true,
+    "job_id": "15e5d7433a6a4956b820cf6952330735",
+    "native_state": "completed",
+    "compile_returncode": 0,
+    "batch_returncode": 0,
+    "matching_exact_source_job_requests": [
+      "15e5d7433a6a4956b820cf6952330735"
+    ],
+    "actual_mesh_elements": [
+      300,
+      160,
+      160
+    ],
+    "degrees_of_freedom_and_internal": [
+      [
+        "1202",
+        "12"
+      ],
+      [
+        "40765",
+        "12"
+      ]
+    ],
+    "actual_element_domain_counts": {
+      "1": 120,
+      "2": 60,
+      "3": 120
+    },
+    "Time_and_Variables_property_count": 1143,
+    "unread_properties": 0,
+    "property_differences": {
+      "sol1/t1/maxstepexpressionbdf": {
+        "baseline": "String|[if(t<0.1[s],0.0005[s],0.1[s])]",
+        "new": "String|[if(t<0.1[s],0.00025[s],0.1[s])]"
+      }
+    },
+    "runtime_setting_differences": {
+      "maxstepexpressionbdf": [
+        "if(t<0.1[s],0.0005[s],0.1[s])",
+        "if(t<0.1[s],0.00025[s],0.1[s])"
+      ]
+    },
+    "stored_rows_including_t0": 586,
+    "accepted_intervals": 585,
+    "all_187_requested_times_stored_exactly": true,
+    "early_interval_definition": "End time <= 0.1 s, including arrival at 0.1 s; t=0 is not an interval",
+    "early_intervals": 407,
+    "early_intervals_at_cap": 398,
+    "early_max_h_s_exact": "0.00025000000000001",
+    "late_intervals": 178,
+    "late_max_h_s_exact": "0.05",
+    "late_intervals_larger_than_early_cap": 177,
+    "boundary_crossings": 0,
+    "all_intervals_within_cap": true,
+    "roundoff_tolerance_s_exact": "1E-12",
+    "native_printed_rows_and_rounding_match": true,
+    "derived_accepted_csv_independently_matched": true,
+    "boundary_intervals": [
+      {
+        "step_index": 405,
+        "start_time_s_exact": "0.09925",
+        "end_time_s_exact": "0.0995",
+        "actual_step_s_exact": "0.00025",
+        "region": "before_0.1",
+        "at_cap": true,
+        "native_time": "0.0995",
+        "native_step": "0.00025"
+      },
+      {
+        "step_index": 406,
+        "start_time_s_exact": "0.0995",
+        "end_time_s_exact": "0.09975",
+        "actual_step_s_exact": "0.00025",
+        "region": "before_0.1",
+        "at_cap": true,
+        "native_time": "0.09975",
+        "native_step": "0.00025"
+      },
+      {
+        "step_index": 407,
+        "start_time_s_exact": "0.09975",
+        "end_time_s_exact": "0.1",
+        "actual_step_s_exact": "0.00025",
+        "region": "arrives_at_0.1",
+        "at_cap": true,
+        "native_time": "0.1",
+        "native_step": "0.00025"
+      },
+      {
+        "step_index": 408,
+        "start_time_s_exact": "0.1",
+        "end_time_s_exact": "0.10025",
+        "actual_step_s_exact": "0.00025",
+        "region": "after_0.1",
+        "at_cap": false,
+        "native_time": "0.10025",
+        "native_step": "0.00025"
+      },
+      {
+        "step_index": 409,
+        "start_time_s_exact": "0.10025",
+        "end_time_s_exact": "0.10075",
+        "actual_step_s_exact": "0.00050",
+        "region": "after_0.1",
+        "at_cap": false,
+        "native_time": "0.10075",
+        "native_step": "0.0005"
+      },
+      {
+        "step_index": 410,
+        "start_time_s_exact": "0.10075",
+        "end_time_s_exact": "0.10175000000000001",
+        "actual_step_s_exact": "0.00100000000000001",
+        "region": "after_0.1",
+        "at_cap": false,
+        "native_time": "0.10175",
+        "native_step": "0.001"
+      }
+    ],
+    "interval_arriving_at_0p01": [
+      {
+        "step_index": 47,
+        "start_time_s_exact": "0.009750000000000002",
+        "end_time_s_exact": "0.01",
+        "actual_step_s_exact": "0.000249999999999998",
+        "region": "before_0.1",
+        "at_cap": true,
+        "native_time": "0.01",
+        "native_step": "0.00025"
+      }
+    ],
+    "interval_arriving_at_0p04": [
+      {
+        "step_index": 167,
+        "start_time_s_exact": "0.03975000000000001",
+        "end_time_s_exact": "0.04",
+        "actual_step_s_exact": "0.00024999999999999",
+        "region": "before_0.1",
+        "at_cap": true,
+        "native_time": "0.04",
+        "native_step": "0.00025"
+      }
+    ],
+    "baseline_early_intervals": 210,
+    "full_baseline_and_new_stored_time_histories_equal": false,
+    "all_numeric_scalar_tables_finite_and_time_aligned": true,
+    "nonzero_guard_rows": 0,
+    "OCP_surface_and_physical_concentration_bounds_pass": true,
+    "minimum_electrolyte_concentration_mol_m3_exact": "1194.4372147785807",
+    "electrolyte_check_scope": "Postprocessing only; not real-time stopping",
+    "solver_expression_evaluation_point": "Not inferred; observed interval compliance only",
+    "accuracy_claim": "Cap compliance does not establish true time error or full convergence",
+    "root_step_summary_independently_matched": true
+  },
+  "input_sha256": {
+    "outputs/comsol63/radial160/Caps300R160H0500.java": "874e70a9d6531a2a83ebd05f439d514c324b3ca79875494b1cf304797cc90e26",
+    "outputs/comsol63/radial160_timecap/Caps300R160H0250.java": "4b4ff66bca7a161f6acffd5b125ddf695fee95fb82cdb4ded1e8b63391e1e5f0",
+    "outputs/radial160_timecap/comparison_contract.json": "2b9ef2142c32aebe3bd4868f3c98b1ac92d974480dd3b294ae618e455800cb9e",
+    "outputs/radial160_timecap/source_configs.json": "ac28faf48230ef50356ac94e61839740795d3d298e2931f7ca48f2672acddcd0",
+    "outputs/radial160_timecap/jobs.json": "47c4dda430a7f8d3d5109db9ae4a49461035127279e7ab286691403d096eec85",
+    "outputs/comsol63/.comsol-jobs/15e5d7433a6a4956b820cf6952330735/status.json": "58e989989e0f2f87be5c1cd1cc376ac0d9528a915e67051c5f0f8b8c10205586",
+    "outputs/comsol63/.comsol-jobs/15e5d7433a6a4956b820cf6952330735/request.json": "2e333d49b6177cf933831a9d8091144910fd1fb4bf157bb2e01f1c2e5c58bb13",
+    "outputs/comsol63/.comsol-jobs/15e5d7433a6a4956b820cf6952330735/Caps300R160H0250.java": "4b4ff66bca7a161f6acffd5b125ddf695fee95fb82cdb4ded1e8b63391e1e5f0",
+    "outputs/comsol63/.comsol-jobs/15e5d7433a6a4956b820cf6952330735/batch.log": "1718494866eef62ef133e4687b150bd9469ed66555966dd7aa6efb228710373a",
+    "outputs/comsol63/.comsol-jobs/15e5d7433a6a4956b820cf6952330735/console.log": "e61ea08bcf660d2e9f69ccede32973987be7e34ce8eeed4abc1cacc3fea018bc",
+    "outputs/comsol63/.comsol-jobs/450b46add79c439bbce5886454c4328a/console.log": "3a2b978abc1aedb9f67ad14844824f3d5ab7dfc52caabba85917be6f9673e6e1",
+    "outputs/model_audit/15e5d7433a6a4956b820cf6952330735/axes_runtime_settings.csv": "d7fbcf2d12566fecc07e952cd9c1317778154207754d272fafc7dd77b8937be3",
+    "outputs/model_audit/450b46add79c439bbce5886454c4328a/axes_runtime_settings.csv": "a0ba50ef314bb12ea20d83a2b2cb93f3e6bf8d9d217caf14ba92d98f86308fa5",
+    "outputs/model_audit/15e5d7433a6a4956b820cf6952330735/preflight_global.csv": "939f47b8b9266408c66d9e5a17938272ae219ff43915e431d5dd25fb81f4c3d9",
+    "outputs/radial160_timecap/Caps300R160H0250_accepted_steps.csv": "2f88f9d61e80104e1e086daccd2be8e0f38c04e298d6f64cbdd21ed05a321d4c",
+    "outputs/model_audit/15e5d7433a6a4956b820cf6952330735/preflight_boundary1.csv": "32f6ff6523bf566381c3f20fe5e3b3dd1e52e9345176de1bb440650dcb781b04",
+    "outputs/model_audit/15e5d7433a6a4956b820cf6952330735/preflight_boundary4.csv": "5844cca917a5dbda41b35dd79ea9909e26805f8874e664262c7191d5272144ca",
+    "outputs/model_audit/15e5d7433a6a4956b820cf6952330735/preflight_MinLine_ce.csv": "5feb856ab6ed8c85c66323c7c790a76a51c6b6dbcf92aabb10240ff85eda53ae",
+    "outputs/model_audit/15e5d7433a6a4956b820cf6952330735/preflight_MaxLine_ce.csv": "32d62ea6e4b103cb8995032f1d3a220e6b9bbd2f09a2f59237123968e87a0d23",
+    "outputs/model_audit/450b46add79c439bbce5886454c4328a/preflight_global.csv": "1e7b933a5603d12a026c0b575ea21a253acd50f1d6afc1e91263c5f95de2eaf1",
+    "outputs/radial160_timecap/Caps300R160H0250_step_summary.json": "7a02187c870446800d3cdc24cf60dc4a9351439b7c6776b92244c877c5e101d4"
+  },
+  "all_tracked_inputs_unchanged_during_audit": true,
+  "finished_at": "2026-09-14T13:59:37.568395+09:00"
+}

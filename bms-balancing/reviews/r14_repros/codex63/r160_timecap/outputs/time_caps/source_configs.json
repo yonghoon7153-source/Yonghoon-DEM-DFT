@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Caps300R40H1000",
+    "physical_elements_total": 300,
+    "physical_elements_by_domain": [
+      120,
+      60,
+      120
+    ],
+    "particle_elements_each": 40,
+    "seconds": 5,
+    "early_cap_s": 0.001,
+    "early_cap_s_exact": "0.001",
+    "later_cap_s": 0.1,
+    "cap_transition_time_s": 0.1,
+    "maxstepexpressionbdf": "if(t<0.1[s],0.001[s],0.1[s])",
+    "source_sha256": "23ee9e54f4e3923aaf9590e82ac908e104591633d1f1e67357d96acd3096b044",
+    "relative_path": "time_caps/Caps300R40H1000.java",
+    "parameters_unchanged": true,
+    "baseline_source_path": "outputs/comsol63/mesh_axes/Axes300R40.java",
+    "baseline_source_sha256": "b4298feb95a6dd2306967fad44c55ab668450633c0a0ec7760681c3b76047e44"
+  },
+  {
+    "name": "Caps300R40H0500",
+    "physical_elements_total": 300,
+    "physical_elements_by_domain": [
+      120,
+      60,
+      120
+    ],
+    "particle_elements_each": 40,
+    "seconds": 5,
+    "early_cap_s": 0.0005,
+    "early_cap_s_exact": "0.0005",
+    "later_cap_s": 0.1,
+    "cap_transition_time_s": 0.1,
+    "maxstepexpressionbdf": "if(t<0.1[s],0.0005[s],0.1[s])",
+    "source_sha256": "369918b44fa911f97d840a8922b90e810c3f46c48905325e8b97a6e491b469b2",
+    "relative_path": "time_caps/Caps300R40H0500.java",
+    "parameters_unchanged": true,
+    "baseline_source_path": "outputs/comsol63/mesh_axes/Axes300R40.java",
+    "baseline_source_sha256": "b4298feb95a6dd2306967fad44c55ab668450633c0a0ec7760681c3b76047e44"
+  },
+  {
+    "name": "Caps300R80H1000",
+    "physical_elements_total": 300,
+    "physical_elements_by_domain": [
+      120,
+      60,
+      120
+    ],
+    "particle_elements_each": 80,
+    "seconds": 5,
+    "early_cap_s": 0.001,
+    "early_cap_s_exact": "0.001",
+    "later_cap_s": 0.1,
+    "cap_transition_time_s": 0.1,
+    "maxstepexpressionbdf": "if(t<0.1[s],0.001[s],0.1[s])",
+    "source_sha256": "bb05708d6d4a92e78a21046d0afabff3a296391a23a6f43c1065ae6b9c81d9e2",
+    "relative_path": "time_caps/Caps300R80H1000.java",
+    "parameters_unchanged": true,
+    "baseline_source_path": "outputs/comsol63/mesh_axes/Axes300R80.java",
+    "baseline_source_sha256": "f2745f4a157ab5102ff69a980da177060d2323722ab0f79079e3c531212dd2f2"
+  },
+  {
+    "name": "Caps300R80H0500",
+    "physical_elements_total": 300,
+    "physical_elements_by_domain": [
+      120,
+      60,
+      120
+    ],
+    "particle_elements_each": 80,
+    "seconds": 5,
+    "early_cap_s": 0.0005,
+    "early_cap_s_exact": "0.0005",
+    "later_cap_s": 0.1,
+    "cap_transition_time_s": 0.1,
+    "maxstepexpressionbdf": "if(t<0.1[s],0.0005[s],0.1[s])",
+    "source_sha256": "6ab32b93310657265906cc858af3847d662923cf7dd8964feb74ed6cbe86f2b1",
+    "relative_path": "time_caps/Caps300R80H0500.java",
+    "parameters_unchanged": true,
+    "baseline_source_path": "outputs/comsol63/mesh_axes/Axes300R80.java",
+    "baseline_source_sha256": "f2745f4a157ab5102ff69a980da177060d2323722ab0f79079e3c531212dd2f2"
+  }
+]

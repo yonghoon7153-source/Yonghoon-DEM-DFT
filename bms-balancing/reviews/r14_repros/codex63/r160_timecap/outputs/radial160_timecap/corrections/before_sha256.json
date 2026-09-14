@@ -1,0 +1,71 @@
+{
+  "scope": "Exact before bytes prior to authorized metadata correction; original archive and archive manifest stay immutable",
+  "entries": [
+    {
+      "path": "work/radial160/prepare_source.py",
+      "before_bytes": 5213,
+      "before_sha256": "8cf090167ed662e8a414fed0692b2e05b936c8b59aea087c834467a3a6912f23",
+      "backup_path": "outputs/radial160_timecap/corrections/before/work/radial160/prepare_source.py"
+    },
+    {
+      "path": "work/radial160/analyze_results.py",
+      "before_bytes": 33973,
+      "before_sha256": "349c60bc79748361545a7bfbe6f9b4cc066ac3e707a18ed5e287ed8317c66f36",
+      "backup_path": "outputs/radial160_timecap/corrections/before/work/radial160/analyze_results.py"
+    },
+    {
+      "path": "outputs/radial160/comparison_contract.json",
+      "before_bytes": 5673,
+      "before_sha256": "dc03064c40ec126c7c59f2b08ccf8bf3a87ba7aaf878445c69a51813c16c20ed",
+      "backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/comparison_contract.json"
+    },
+    {
+      "path": "outputs/radial160/results/analysis.json",
+      "before_bytes": 374756,
+      "before_sha256": "d65d8fa868c3748282312ae306fe6f3f7437cb19c2944ed5e19463aa43a0dfe5",
+      "backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/results/analysis.json"
+    },
+    {
+      "path": "outputs/radial160/figures/radial160_comparison_summary.json",
+      "before_bytes": 4942,
+      "before_sha256": "a92c4db4f473be8ee55a43048a20c179f081cbc3d55ea9d1a8c87173bdc1b42f",
+      "backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/figures/radial160_comparison_summary.json"
+    },
+    {
+      "path": "outputs/radial160/README_PACKAGE_KO.md",
+      "before_bytes": 4504,
+      "before_sha256": "1dc1e8d539c90f0739c389066d3b80d612f24da1dda86d393a43eb8969541eb9",
+      "backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/README_PACKAGE_KO.md"
+    },
+    {
+      "path": "outputs/radial160/RADIAL160_RESULTS_KO.md",
+      "before_bytes": 10661,
+      "before_sha256": "71c6f6e717e4e52cc74b07e3639b70ca2ef9052a502fb8f86332734942556fcf",
+      "backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/RADIAL160_RESULTS_KO.md"
+    },
+    {
+      "path": "outputs/radial160/results/analysis.md",
+      "before_bytes": 2518,
+      "before_sha256": "0813e4983764935ee855cd4f6f341b52e9ea28cf9b4d787baa59488e58e843f9",
+      "backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/results/analysis.md"
+    },
+    {
+      "path": "outputs/radial160/package_manifest.json",
+      "before_bytes": 33348,
+      "before_sha256": "6ab54917edbec8eda5d19b4add2233c3daf09ff55ee2a9ef98dbb84f67cc584b",
+      "backup_path": "outputs/radial160_timecap/corrections/before/outputs/radial160/package_manifest.json"
+    },
+    {
+      "path": "outputs/COMSOL63_RADIAL160_HANDOFF_RECEIPT.json",
+      "before_bytes": 907,
+      "before_sha256": "56f7c0afc70232dea270f1543f732a6b840abf27b551ac38eb812a5ef5bcc591",
+      "backup_path": "outputs/radial160_timecap/corrections/before/outputs/COMSOL63_RADIAL160_HANDOFF_RECEIPT.json"
+    },
+    {
+      "path": "outputs/COMSOL63_RADIAL160_HANDOFF.zip.sha256",
+      "before_bytes": 98,
+      "before_sha256": "8f59f5dcebb470359159f4f287280b264fdfca5cbddca12a73045f3465668176",
+      "backup_path": "outputs/radial160_timecap/corrections/before/outputs/COMSOL63_RADIAL160_HANDOFF.zip.sha256"
+    }
+  ]
+}

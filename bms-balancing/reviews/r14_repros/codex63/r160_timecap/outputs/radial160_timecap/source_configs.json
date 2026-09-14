@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Caps300R160H0500",
+    "physical_elements_total": 300,
+    "physical_elements_by_domain": [
+      120,
+      60,
+      120
+    ],
+    "particle_elements_each": 160,
+    "seconds": 5,
+    "early_cap_s": 0.0005,
+    "early_cap_s_exact": "0.0005",
+    "later_cap_s": 0.1,
+    "cap_transition_time_s": 0.1,
+    "maxstepexpressionbdf": "if(t<0.1[s],0.0005[s],0.1[s])",
+    "source_sha256": "874e70a9d6531a2a83ebd05f439d514c324b3ca79875494b1cf304797cc90e26",
+    "relative_path": "radial160/Caps300R160H0500.java",
+    "parameters_unchanged": true,
+    "baseline_source_path": "outputs/comsol63/time_caps/Caps300R80H0500.java",
+    "baseline_source_sha256": "6ab32b93310657265906cc858af3847d662923cf7dd8964feb74ed6cbe86f2b1"
+  },
+  {
+    "name": "Caps300R160H0250",
+    "physical_elements_total": 300,
+    "physical_elements_by_domain": [
+      120,
+      60,
+      120
+    ],
+    "particle_elements_each": 160,
+    "seconds": 5,
+    "early_cap_s": 0.00025,
+    "early_cap_s_exact": "0.00025",
+    "later_cap_s": 0.1,
+    "cap_transition_time_s": 0.1,
+    "maxstepexpressionbdf": "if(t<0.1[s],0.00025[s],0.1[s])",
+    "source_sha256": "4b4ff66bca7a161f6acffd5b125ddf695fee95fb82cdb4ded1e8b63391e1e5f0",
+    "relative_path": "radial160_timecap/Caps300R160H0250.java",
+    "parameters_unchanged": true,
+    "baseline_source_path": "outputs/comsol63/radial160/Caps300R160H0500.java",
+    "baseline_source_sha256": "874e70a9d6531a2a83ebd05f439d514c324b3ca79875494b1cf304797cc90e26"
+  }
+]
