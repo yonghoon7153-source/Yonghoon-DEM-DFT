@@ -263,3 +263,125 @@ def test_the_run_spec_does_not_carry_a_staging_pathname(tmp_path):
     spec = m.get("run_spec") or {}
     bc = str(spec.get("base_config", ""))
     assert "fit-stage-" not in bc and bc, f"run_spec.base_config = {bc!r}"
+
+
+# ── 62차 자체 리뷰 (순서-TOCTOU 렌즈) — capability 는 lock **앞에서** 발행된다 ──
+#
+# 실측: lock 이 살아 있는 보유자에게 거부되거나, 발행과 lock 사이(입력 승인 ·
+# discharged state · dry-run 표본 solve)에서 예외가 나면 `discard_capability_on_abort`
+# 를 지나지 않아 capability 와 dir fd 가 남았다 (`live_caps 0→1 · open_dir_fds
+# 0→1`). 리뷰어의 P1-2 계측을 둘째 contender 로 다시 재면 그대로 1/1 이다.
+# "commit 에 도달하지 못한 **모든** 종료" 가 되려면 try 가 발행 직후에 열려야 한다.
+_HOLDER = r"""
+import sys, os
+sys.path.insert(0, sys.argv[1])
+from src.io import acquire_run_lock, release_run_lock
+tok = acquire_run_lock(sys.argv[2], sys.argv[3])
+print(os.getpid(), flush=True)
+sys.stdin.readline()
+release_run_lock(tok)
+"""
+
+
+def _hold(d: Path, name: str):
+    import subprocess
+    p = subprocess.Popen([sys.executable, "-c", _HOLDER, str(REPO), str(d), name],
+                         stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+    assert p.stdout.readline().strip().isdigit()
+    return p
+
+
+def _release(p) -> None:
+    p.stdin.write("\n")
+    p.stdin.flush()
+    p.wait(timeout=20)
+
+
+def test_fit_refused_by_a_live_lock_holder_discards_the_capability(tmp_path):
+    import src.fitting as F
+
+    in_dir = _tiny_curves(tmp_path / "in")
+    out = tmp_path / "out"
+    out.mkdir()
+    p = _hold(out, ".fit.lock")
+    n_caps, n_fds = _live_caps(), _open_dir_fds()
+    try:
+        with pytest.raises(RuntimeError, match="이미 실행 중"):
+            F.run_fit(in_dir, out, _OBJ_CFG, {"a": {"w_pocv": 1.0}}, _BOUNDS,
+                      "expanded", 1, nproc=1)
+    finally:
+        _release(p)
+    assert (_live_caps(), _open_dir_fds()) == (n_caps, n_fds), (
+        "lock 에 거부된 fit 이 capability/fd 를 살려 뒀다 (62차 자체 리뷰 F1)")
+
+
+def test_fit_failure_before_the_lock_discards_the_capability(tmp_path, monkeypatch):
+    import src.fitting as F
+
+    def _boom(*a, **k):
+        raise RuntimeError("시험이 만든 입력 승인 실패")
+
+    monkeypatch.setattr(F, "_assert_fit_input_is_authorized", _boom)
+    in_dir = _tiny_curves(tmp_path / "in")
+    n_caps, n_fds = _live_caps(), _open_dir_fds()
+    with pytest.raises(RuntimeError, match="시험이 만든"):
+        F.run_fit(in_dir, tmp_path / "out", _OBJ_CFG, {"a": {"w_pocv": 1.0}},
+                  _BOUNDS, "expanded", 1, nproc=1)
+    assert (_live_caps(), _open_dir_fds()) == (n_caps, n_fds), (
+        "lock 앞에서 죽은 fit 이 capability/fd 를 살려 뒀다 (62차 자체 리뷰 F1)")
+
+
+def _grid_mocks(monkeypatch, discharged):
+    import src.grid as G
+
+    class _B:
+        @staticmethod
+        def from_config(cfg):
+            return object()
+
+    monkeypatch.setattr(G, "get_discharged_state", discharged)
+    monkeypatch.setattr(G, "_discharged_kw", lambda cfg, claim: {})
+    monkeypatch.setattr(G, "Baseline", _B)
+    return G
+
+
+_CFG = {"leg": "smoke-leg", "solver": "fake", "seed": 1,
+        "postprocess": {"n_interp": 10}}
+
+
+@pytest.mark.parametrize("dry_run", [False, True])
+def test_grid_failure_before_the_lock_discards_the_capability(tmp_path, monkeypatch,
+                                                              dry_run):
+    def _boom(cfg, **kw):
+        raise RuntimeError("시험이 만든 완방상태 실패")
+
+    G = _grid_mocks(monkeypatch, _boom)
+    out = tmp_path / "results" / "_smoke" / "grid_pre"
+    n_caps, n_fds = _live_caps(), _open_dir_fds()
+    with pytest.raises(RuntimeError, match="시험이 만든"):
+        G.run_grid(_CFG, [], nproc=1, chunk_size=1, out_dir=out, dry_run=dry_run)
+    assert (_live_caps(), _open_dir_fds()) == (n_caps, n_fds), (
+        f"lock 앞에서 죽은 grid(dry_run={dry_run}) 가 capability/fd 를 살려 뒀다 "
+        "(62차 자체 리뷰 F1)")
+
+
+def test_grid_refused_by_a_live_lock_holder_discards_the_capability(tmp_path,
+                                                                    monkeypatch):
+    from dataclasses import dataclass
+
+    @dataclass
+    class _D:
+        x: float = 0.0
+
+    G = _grid_mocks(monkeypatch, lambda cfg, **kw: _D())
+    out = tmp_path / "results" / "_smoke" / "grid_held"
+    out.mkdir(parents=True)
+    p = _hold(out, ".run.lock")
+    n_caps, n_fds = _live_caps(), _open_dir_fds()
+    try:
+        with pytest.raises(RuntimeError, match="이미 실행 중"):
+            G.run_grid(_CFG, [], nproc=1, chunk_size=1, out_dir=out)
+    finally:
+        _release(p)
+    assert (_live_caps(), _open_dir_fds()) == (n_caps, n_fds), (
+        "lock 에 거부된 grid 가 capability/fd 를 살려 뒀다 (62차 자체 리뷰 F1)")

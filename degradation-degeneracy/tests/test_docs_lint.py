@@ -11828,8 +11828,9 @@ def test_the_evidence_binds_the_execution_environment(tmp_path):
         f"환경변수 {name} 이 바뀌었는데 실행 영수증이 그대로다")
 
     # 비-Python 입력(requirements)도 결속돼 있어야 한다
-    assert any("requirements" in k for k in base["inputs"]), (
-        f"의존성 선언이 증거 밖이다: {sorted(base['inputs'])[:6]}")
+    # ★ 62차 ε′ — `inputs` 도 typed 가 됐다 (`{"status", "files"}`).
+    assert any("requirements" in k for k in base["inputs"]["files"]), (
+        f"의존성 선언이 증거 밖이다: {sorted(base['inputs']['files'])[:6]}")
 
 
 def test_the_replayed_run_sees_only_a_declared_environment(monkeypatch):

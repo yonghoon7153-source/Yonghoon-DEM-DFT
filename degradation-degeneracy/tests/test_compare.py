@@ -937,7 +937,14 @@ def _complete_artifact(tmp_path, repo_root=None, objectives=("pocv_dvdq",)):
     #   그 한 단계를 여기서 대신한다. 안 하면 이 fixture 가 만든 것은
     #   "게이트를 통과한 적 없는데 승격되는 산출" 이고 — 그것이 바로 P0-8 이
     #   막으려는 것이다.
-    from tools.preserve import EXEC_CLASS_CANONICAL, _record_execution_class
+    from tools.preserve import (EXEC_CLASS_CANONICAL, _record_execution_class,
+                                seal_run_identity)
+    # ★ 62차 α′ — `sign_producer` 가 grid 시점에 봉인했고 그 뒤에 fit manifest 를
+    #   더 썼다. 승격은 봉인이 지금 있는 실행 manifest 를 **다** 담을 때만
+    #   identity 를 만들므로 (P0-1), commit 과 같은 순서로 **다시 봉인한 뒤**
+    #   등록한다. 이 fixture 가 62차 전에 통과하던 것은 승격이 subset seal 을
+    #   관용했기 때문이다 — fixture 가 진실을 가리고 있었다 (규율 2).
+    seal_run_identity(d)
     _record_execution_class(
         d, EXEC_CLASS_CANONICAL,
         evidence="시험 fixture `_complete_artifact` 가 정본 산출로 합성했다")

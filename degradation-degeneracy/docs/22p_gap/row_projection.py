@@ -1106,6 +1106,21 @@ def _crossed_modules(src: str) -> set:
                             f"✗ `import {al.name}` 을 alias 없이 쓴다 — producer "
                             "닫힘이 `src.scoring.foo` 형태를 따라가려면 "
                             f"`import {al.name} as <이름>` 이어야 한다")
+                # ★ 62차 자체 리뷰 (sig-완전성 F2) — 부모 package 를 import 하면
+                #   `S.scoring` 이 이름 공간 뿌리인데 `S` 는 target 에 없어
+                #   "이름 공간이 아님이 증명됐다" 가 됐다. fail-closed 로 거부.
+                elif any(m.startswith(al.name + ".") for m in _PRODUCER_MODULES):
+                    raise SystemExit(
+                        f"✗ producer module 의 부모 package `{al.name}` 을 import "
+                        f"한다 — `{al.asname or al.name}.<module>` 은 이름 공간 "
+                        "뿌리이고 닫힘이 그것을 따라갈 수 없다. "
+                        "`import src.scoring as <이름>` 으로 쓰라 (fail-closed)")
+        elif isinstance(node, ast.ImportFrom):
+            # ★ 62차 자체 리뷰 (F2) — `from src import scoring [as me]` 도 같은
+            #   이름 공간이다. 예전 판은 `ast.Import` 만 봤다.
+            for al in node.names:
+                if node.module and f"{node.module}.{al.name}" in _PRODUCER_MODULES:
+                    out.add(al.asname or al.name)
     return out
 
 
@@ -1410,10 +1425,23 @@ def _binding_shadows(node) -> set:
 
 
 def _own_shadows(node) -> set:
-    """이 **한 scope** 가 스스로 묶는 이름 (자식 함수는 안 본다)."""
+    """이 **한 scope** 가 스스로 묶는 이름 (자식 함수는 안 본다).
+
+    ★ 62차 자체 리뷰 (sig-완전성 F3) — **함수·lambda 만** 결속 shadow 를 준다.
+      함수 안의 지역 결속은 정적이다 (결속 앞의 load 는 `UnboundLocalError`).
+      class 본문과 module 문장의 `for`/`with as`/`except as` 는 `LOAD_NAME` 이라
+      **위치에 따라** builtin 을 본다 — 결속 앞의 load · `except as` 의 unbind ·
+      `del` 뒤. 그 scope 에 결속 shadow 를 주면 그 자리의 능력 load 가 면제된다
+      (실측: `if True: with nullcontext(…) as getattr: EXT = getattr` 한 문장이
+      MODULE_EFFECTS 의 한 node 라 통째로 면제 — digest 같고 출력 다름).
+      fail-closed: 그런 scope 는 shadow 없음 (정상 코드가 능력 이름을 class
+      본문에서 다시 묶는 일은 없고, 있으면 거부가 맞다).
+    """
     import ast
 
     out: set = set()
+    if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+        return out
     args = getattr(node, "args", None)
     if isinstance(args, ast.arguments):
         for a in (list(args.args) + list(args.posonlyargs)
@@ -2092,9 +2120,13 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
             # ★ 49차 P0-2 — `sc.foo` (Import + Attribute). 48차는 이 문법을
             #   전혀 따라가지 않아, import 형태만 바꾸면 채점 의미가 통째로
             #   닫힘 밖으로 나갔다.
-            if kind == "rp" and isinstance(sub_node, ast.Attribute) \
+            # ★ 62차 자체 리뷰 (sig-완전성 F1) — 건너간 module 이 **자기** 이름
+            #   공간을 `import src.scoring as me` 로 열고 `me.external(...)` 을
+            #   부르는 것도 따라간다. P0-7 은 table 만 module 별로 줬고 이 분기는
+            #   primary 만 봤다 (실측: digest 같고 출력 다름).
+            if isinstance(sub_node, ast.Attribute) \
                     and isinstance(sub_node.value, ast.Name) \
-                    and sub_node.value.id in mods:
+                    and sub_node.value.id in tables[kind][0]:
                 attr = sub_node.attr
                 if attr not in sdefs:
                     raise SystemExit(

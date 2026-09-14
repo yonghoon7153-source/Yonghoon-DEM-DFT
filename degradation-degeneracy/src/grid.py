@@ -580,100 +580,104 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
                                                 conditions=conditions,
                                                 dry_run=dry_run, leg=leg,
                                                 may_open=may_open)
-    # ★ 60차 P0-4 — gate 뒤의 **모든** 쓰기를 판정한 실물 아래로 옮긴다. gate 가
-    #   자리를 만들고 handle 을 들고 왔으므로 여기서 `mkdir` 할 것도, 이름을
-    #   다시 해석할 것도 없다. 이름으로 쓰면 판정과 쓰기 사이에 이름 아래가
-    #   바뀌었을 때 바이트가 밖으로 나가고, 마지막 검사는 그것을 못 되돌린다.
-    named_out = out_dir                         # 사람이 준 이름 — 기록과 다음
-                                                # phase 가 여는 자리
-    if _exec_cap is not None:
-        from tools.preserve import staged_root
-        out_dir = staged_root(_exec_cap)
-    else:                                       # dry-run 등 권한이 없는 경로
-        out_dir.mkdir(parents=True, exist_ok=True)
-    protocol_name = cfg.get(GRID_PROTOCOL_KEY, "charge_first")
-
-    # ── resume: 완료 조건 건너뛰기 ──
-    done: set[str] = load_completed(out_dir) if resume else set()
-    todo = [c for c in conditions if c.cond_id not in done]
-    if resume and done:
-        log.info("resume: %d개 완료 확인, %d개 남음", len(done), len(todo))
-    elif not resume and not dry_run:
-        prev = load_completed(out_dir)
-        if prev:
-            log.warning(
-                "출력 디렉터리에 이미 완료 기록 %d건이 있는데 --resume 없이 실행합니다. "
-                "전부 재계산되고 청크가 중복 누적됩니다. "
-                "이어서 하려면 --resume, 새로 하려면 다른 --out 을 쓰세요.", len(prev))
-
-    # ── 완방상태는 병렬 전에 1회 산출 (워커에 값만 전달) ──
-    # ★ 51차 P0-A4 — **승인이 가리키는 바이트만** 읽는다. 승인 축의
-    #   `discharged_cache_sha256` 가 hex64 면 그 바이트를 그대로 파싱하고,
-    #   `null` 이면 캐시를 아예 안 읽고 계산한다 (승인 뒤에 생긴 캐시가 조용히
-    #   쓰이는 것을 막는다). 승인이 없는 smoke 실행은 예전대로다.
-    d = get_discharged_state(cfg, **_discharged_kw(cfg, _claim))
-    d_dict = asdict(d)
-    b = Baseline.from_config(cfg)
-    guards = cfg.get("guards", {})
-
-    # ── 사전 검증: guards 위반 조건은 solve 없이 즉시 failed 처리 ──
-    feasible, infeasible = [], []
-    for c in todo:
-        try:
-            build_overrides(c.lli, c.lam_pe, c.lam_ne, c.lam_pe_type,
-                            c.lam_ne_type, b, d, guards)
-            feasible.append(c)
-        except InfeasibleConditionError as e:
-            infeasible.append((c, str(e)))
-
-    # ── dry-run: 조건 수 · 예상시간 · 예상용량 출력 후 종료 ──
-    if dry_run:
-        n = len(feasible)
-        sample = feasible[: min(3, n)]
-        if sample:
-            t0 = time.perf_counter()
-            for c in sample:
-                _solve_condition(cfg, c, d_dict, protocol_name)
-            per = (time.perf_counter() - t0) / len(sample)
-        else:
-            per = 0.0
-        est_min = per * n / max(nproc, 1) / 60
-        n_interp = int(cfg["postprocess"]["n_interp"])
-        est_mb = n * n_interp * 15 * 8 / 1e6  # 15열 × float64
-        print(f"[dry-run] 조건 수: {len(conditions)} "
-              f"(완료 스킵 {len(done)}, guards 불능 {len(infeasible)}, 실행 대상 {n})")
-        print(f"[dry-run] 실측 {per:.1f} s/cond × {n} / {nproc} proc ≈ {est_min:.1f} min")
-        print(f"[dry-run] 예상 출력 크기 ≈ {est_mb:.0f} MB (parquet 압축 전)")
-        for c, reason in infeasible[:5]:
-            print(f"[dry-run] 불능 예시: lli={c.lli} lam_pe={c.lam_pe} "
-                  f"lam_ne={c.lam_ne} → {reason}")
-        # ★ 49차 P0-3 — dry-run 은 실행권을 **되돌린다.** 47차가 dry-run 면제를
-        #   없앤 것은 옳다 (여기서 solver 를 최대 세 번 부른다). 그런데 48차가
-        #   claim 에 원장 전이를 붙이면서, dry-run 은 계획을 `running` 으로
-        #   옮겨 놓고 phase 를 하나도 닫지 않은 채 끝나게 됐다 — finalize 는
-        #   "phase 가 남았다" 며 거부하므로 그 다리는 다시 시작할 수도 닫을
-        #   수도 없는 terminal 상태로 굳었다. 면제가 아니라 되돌림이 답이다.
-        if _claim is not None:
-            from tools.preserve import release_leg_run
-
-            release_leg_run(_claim.leg_id, token=_claim.token)
-            log.info("dry-run 이라 실행권을 되돌렸다 — 계획은 planned 로 남는다")
-        # ★ 62차 P1-2 — 실행권만이 아니라 **실행 class 권한과 그 handle 도**
-        #   되돌린다. 리뷰어가 빈 dry-run 으로 쟀다: `new_live_capability_count 1
-        #   · new_open_directory_fd_count 1`. commit 에 못 가는 종료는 폐기다.
-        from tools.preserve import discard_capability_on_abort
-        discard_capability_on_abort(_exec_cap, log=log)
-        return {"dry_run": True, "n_total": len(conditions), "n_todo": n,
-                "n_infeasible": len(infeasible), "est_min": est_min}
-
-    # ── 동시 실행 방지 (청크 덮어쓰기·집계 오염 차단) ──
-    # ★ 62차 P0-3 — 임계구역은 merge · manifest · commit(`write_curves_manifest`
-    #   안) · phase receipt 까지 덮고 release 가 **마지막**이다. 옛 구조는 청크
-    #   루프만 잠갔고, 리뷰어는 그 뒤에서 둘째 실행이 같은 자리를 잡아 첫
-    #   capability 가 둘째 bytes 를 봉인하는 것을 쟀다. token(dirfd+inode) 이라
-    #   commit 이 handle 을 닫은 뒤에도 놓을 수 있다 (`src/io.py` `RunLock`).
-    tok = acquire_run_lock(out_dir)
+    # ★ 62차 자체 리뷰 (순서-TOCTOU F1) — fit 과 같은 문장: capability 는 gate 가
+    #   발행했고 lock 은 아직 멀다. 완방상태·dry-run 표본 solve·lock 거부에서
+    #   죽으면 권한이 남았다 (실측 live_caps 0→1). try 를 발행 직후에 연다.
+    tok = None
     try:
+        # ★ 60차 P0-4 — gate 뒤의 **모든** 쓰기를 판정한 실물 아래로 옮긴다. gate 가
+        #   자리를 만들고 handle 을 들고 왔으므로 여기서 `mkdir` 할 것도, 이름을
+        #   다시 해석할 것도 없다. 이름으로 쓰면 판정과 쓰기 사이에 이름 아래가
+        #   바뀌었을 때 바이트가 밖으로 나가고, 마지막 검사는 그것을 못 되돌린다.
+        named_out = out_dir                         # 사람이 준 이름 — 기록과 다음
+                                                    # phase 가 여는 자리
+        if _exec_cap is not None:
+            from tools.preserve import staged_root
+            out_dir = staged_root(_exec_cap)
+        else:                                       # dry-run 등 권한이 없는 경로
+            out_dir.mkdir(parents=True, exist_ok=True)
+        protocol_name = cfg.get(GRID_PROTOCOL_KEY, "charge_first")
+
+        # ── resume: 완료 조건 건너뛰기 ──
+        done: set[str] = load_completed(out_dir) if resume else set()
+        todo = [c for c in conditions if c.cond_id not in done]
+        if resume and done:
+            log.info("resume: %d개 완료 확인, %d개 남음", len(done), len(todo))
+        elif not resume and not dry_run:
+            prev = load_completed(out_dir)
+            if prev:
+                log.warning(
+                    "출력 디렉터리에 이미 완료 기록 %d건이 있는데 --resume 없이 실행합니다. "
+                    "전부 재계산되고 청크가 중복 누적됩니다. "
+                    "이어서 하려면 --resume, 새로 하려면 다른 --out 을 쓰세요.", len(prev))
+
+        # ── 완방상태는 병렬 전에 1회 산출 (워커에 값만 전달) ──
+        # ★ 51차 P0-A4 — **승인이 가리키는 바이트만** 읽는다. 승인 축의
+        #   `discharged_cache_sha256` 가 hex64 면 그 바이트를 그대로 파싱하고,
+        #   `null` 이면 캐시를 아예 안 읽고 계산한다 (승인 뒤에 생긴 캐시가 조용히
+        #   쓰이는 것을 막는다). 승인이 없는 smoke 실행은 예전대로다.
+        d = get_discharged_state(cfg, **_discharged_kw(cfg, _claim))
+        d_dict = asdict(d)
+        b = Baseline.from_config(cfg)
+        guards = cfg.get("guards", {})
+
+        # ── 사전 검증: guards 위반 조건은 solve 없이 즉시 failed 처리 ──
+        feasible, infeasible = [], []
+        for c in todo:
+            try:
+                build_overrides(c.lli, c.lam_pe, c.lam_ne, c.lam_pe_type,
+                                c.lam_ne_type, b, d, guards)
+                feasible.append(c)
+            except InfeasibleConditionError as e:
+                infeasible.append((c, str(e)))
+
+        # ── dry-run: 조건 수 · 예상시간 · 예상용량 출력 후 종료 ──
+        if dry_run:
+            n = len(feasible)
+            sample = feasible[: min(3, n)]
+            if sample:
+                t0 = time.perf_counter()
+                for c in sample:
+                    _solve_condition(cfg, c, d_dict, protocol_name)
+                per = (time.perf_counter() - t0) / len(sample)
+            else:
+                per = 0.0
+            est_min = per * n / max(nproc, 1) / 60
+            n_interp = int(cfg["postprocess"]["n_interp"])
+            est_mb = n * n_interp * 15 * 8 / 1e6  # 15열 × float64
+            print(f"[dry-run] 조건 수: {len(conditions)} "
+                  f"(완료 스킵 {len(done)}, guards 불능 {len(infeasible)}, 실행 대상 {n})")
+            print(f"[dry-run] 실측 {per:.1f} s/cond × {n} / {nproc} proc ≈ {est_min:.1f} min")
+            print(f"[dry-run] 예상 출력 크기 ≈ {est_mb:.0f} MB (parquet 압축 전)")
+            for c, reason in infeasible[:5]:
+                print(f"[dry-run] 불능 예시: lli={c.lli} lam_pe={c.lam_pe} "
+                      f"lam_ne={c.lam_ne} → {reason}")
+            # ★ 49차 P0-3 — dry-run 은 실행권을 **되돌린다.** 47차가 dry-run 면제를
+            #   없앤 것은 옳다 (여기서 solver 를 최대 세 번 부른다). 그런데 48차가
+            #   claim 에 원장 전이를 붙이면서, dry-run 은 계획을 `running` 으로
+            #   옮겨 놓고 phase 를 하나도 닫지 않은 채 끝나게 됐다 — finalize 는
+            #   "phase 가 남았다" 며 거부하므로 그 다리는 다시 시작할 수도 닫을
+            #   수도 없는 terminal 상태로 굳었다. 면제가 아니라 되돌림이 답이다.
+            if _claim is not None:
+                from tools.preserve import release_leg_run
+
+                release_leg_run(_claim.leg_id, token=_claim.token)
+                log.info("dry-run 이라 실행권을 되돌렸다 — 계획은 planned 로 남는다")
+            # ★ 62차 P1-2 — 실행권만이 아니라 **실행 class 권한과 그 handle 도**
+            #   되돌린다. 리뷰어가 빈 dry-run 으로 쟀다: `new_live_capability_count 1
+            #   · new_open_directory_fd_count 1`. commit 에 못 가는 종료는 폐기다.
+            from tools.preserve import discard_capability_on_abort
+            discard_capability_on_abort(_exec_cap, log=log)
+            return {"dry_run": True, "n_total": len(conditions), "n_todo": n,
+                    "n_infeasible": len(infeasible), "est_min": est_min}
+
+        # ── 동시 실행 방지 (청크 덮어쓰기·집계 오염 차단) ──
+        # ★ 62차 P0-3 — 임계구역은 merge · manifest · commit(`write_curves_manifest`
+        #   안) · phase receipt 까지 덮고 release 가 **마지막**이다. 옛 구조는 청크
+        #   루프만 잠갔고, 리뷰어는 그 뒤에서 둘째 실행이 같은 자리를 잡아 첫
+        #   capability 가 둘째 bytes 를 봉인하는 것을 쟀다. token(dirfd+inode) 이라
+        #   commit 이 handle 을 닫은 뒤에도 놓을 수 있다 (`src/io.py` `RunLock`).
+        tok = acquire_run_lock(out_dir)
 
         # ── ★ F74/F82: 실행 서명 + 시작 기록 + resume 가드 ──
         from src.baseline import _cache_path as _dsp
@@ -856,7 +860,8 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
     finally:
         # ★ 61차 P1-1 · 62차 P1-1 — 오류를 삼키지 않는다. 내 lock 이 사라졌거나
         #   다른 inode 로 바뀌었으면 여기서 올린다.
-        release_run_lock(tok)
+        if tok is not None:
+            release_run_lock(tok)
     return summary
 
 

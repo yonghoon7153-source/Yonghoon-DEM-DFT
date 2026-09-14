@@ -23,6 +23,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import os
 import pathlib
 import re
 import shutil
@@ -447,10 +448,11 @@ MUTANTS = [
      "    pass",
      "released_run_returns_the_plan_to_planned"),
     ("dry-run-releases-the-claim", GRID,
-     "        if _claim is not None:\n"
-     "            from tools.preserve import release_leg_run",
-     "        if False:\n"
-     "            from tools.preserve import release_leg_run",
+     # ★ 62차 자체 리뷰 F1 — try 가 발행 직후로 올라가며 한 단 들어갔다.
+     "            if _claim is not None:\n"
+     "                from tools.preserve import release_leg_run",
+     "            if False:\n"
+     "                from tools.preserve import release_leg_run",
      "dry_run_does_not_strand_the_plan_in_running"),
     ("roster-is-a-set", RP,
      "            dup = sorted({x for x in v if v.count(x) > 1})\n"
@@ -1393,9 +1395,9 @@ MUTANTS = [
      "        raise",
      "fit_failure_before_commit_discards_the_capability"),
     ("grid-dry-run-discards-the-capability-g62", GRID,               # P1-2
-     "        discard_capability_on_abort(_exec_cap, log=log)\n"
-     '        return {"dry_run": True',
-     '        return {"dry_run": True',
+     "            discard_capability_on_abort(_exec_cap, log=log)\n"
+     '            return {"dry_run": True',
+     '            return {"dry_run": True',
      "grid_dry_run_discards_the_capability"),
     ("grid-manifest-locator-is-the-name-g62", GRID,                  # P0-4
      '        "curves_parquet": (str(Path(named_out) / Path(merged).name)\n'
@@ -1429,10 +1431,11 @@ MUTANTS = [
     # ── ζ′ 승격 primitive (P0-8) ──
     ("promotion-checks-derived-freshness-g62", ARCHIVE,              # P0-8
      # 옛 코드 그대로 — smoke 판정만 하고 freshness 는 wrapper 에 맡긴다.
-     "        from tools.preserve import assert_promotable\n"
-     '        assert_promotable([a.run_dir], "보관 묶음", dest=a.out_dir)',
-     "        from tools.preserve import assert_not_smoke_provenance\n"
-     '        assert_not_smoke_provenance([a.run_dir], "보관 묶음", dest=a.out_dir)',
+     '            assert_promotable([a.run_dir], "보관 묶음", dest=a.out_dir)\n'
+     "            res = bundle(a.run_dir, a.out_dir)",
+     "            from tools.preserve import assert_not_smoke_provenance\n"
+     '            assert_not_smoke_provenance([a.run_dir], "보관 묶음", dest=a.out_dir)\n'
+     "            res = bundle(a.run_dir, a.out_dir)",
      "direct_bundle_refuses_a_stale_derived_artifact or "
      "the_promotion_primitive_is_one_function"),
     # ── δ′ producer scope (P0-6 · P0-7) ──
@@ -1487,6 +1490,68 @@ MUTANTS = [
      '    mismatch = _schema_mismatc\u0068(receipt, _RECEIPT_SCHEMA, "receipt")',
      "    mismatch = None",
      "a_receipt_that_only_says_measured_is_still_refused"),
+    # ── 62차 자체 리뷰 (`/self-review` 4 렌즈) 가 세운 방어 ──
+    ("capability-discarded-before-the-lock-g62", FITTING,           # TOCTOU F1
+     "    tok = None\n    try:\n"
+     '        _assert_fit_input_is_authorized(claim, _fit_axis, _staged["in_dir"])',
+     "    tok = None\n"
+     '    _assert_fit_input_is_authorized(claim, _fit_axis, _staged["in_dir"])\n'
+     "    try:",
+     "fit_failure_before_the_lock_discards_the_capability"),
+    ("grid-discards-before-the-lock-g62", GRID,                      # TOCTOU F1
+     "    except BaseException:\n"
+     "        # ★ 62차 P1-2 — commit 에 도달하지 못한 종료는 권한을 버린다. commit\n"
+     "        #   뒤의 예외에서는 이미 소비돼 있고 폐기는 멱등이다.\n"
+     "        from tools.preserve import discard_capability_on_abort\n"
+     "        discard_capability_on_abort(_exec_cap, log=log)",
+     "    except BaseException:\n"
+     "        from tools.preserve import discard_capability_on_abort\n"
+     "        if tok is not None:\n"
+     "            discard_capability_on_abort(_exec_cap, log=log)",
+     "grid_failure_before_the_lock_discards_the_capability or "
+     "grid_refused_by_a_live_lock_holder_discards_the_capability"),
+    ("promotion-holds-the-run-locks-g62", ARCHIVE,                   # TOCTOU F2
+     "        toks = [acquire_run_lock(a.run_dir, name)\n"
+     '                for name in (".fit.lock", ".run.lock")]',
+     "        toks = []",
+     "direct_bundle_holds_the_run_locks_while_copying"),
+    ("class-body-bindings-are-not-shadows-g62", RP,                  # sig F3
+     "    if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):\n"
+     "        return out",
+     "    if False:\n        return out",
+     "a_class_body_binding_does_not_shadow_a_load_before_it or "
+     "a_module_compound_statement_binding_does_not_exempt_a_capability"),
+    ("from-imports-are-namespace-targets-g62", RP,                   # sig F2
+     "        elif isinstance(node, ast.ImportFrom):",
+     "        elif False:",
+     "from_import_aliases_are_namespace_targets"),
+    ("parent-package-import-is-refused-g62", RP,                     # sig F2
+     '                elif any(m.startswith(al.name + ".") for m in _PRODUCER_MODULES):',
+     "                elif False:",
+     "importing_the_parent_package_is_refused"),
+    ("crossed-module-self-alias-is-followed-g62", RP,                # sig F1
+     "                    and sub_node.value.id in tables[kind][0]:",
+     '                    and sub_node.value.id in tables["rp"][0]:',
+     "the_crossed_module_own_namespace_access_enters_the_closure"),
+    ("history-refuses-a-vanished-module-g62", MR,                    # receipt F2
+     '                return {"status": "failed",\n'
+     '                        "reason": "startup 이 올린 module %s 을 지금 찾을 수 "\n'
+     '                                  "없다 — 올렸다 지운 module 은 잴 수 없다" % _nm}',
+     "                _unfiled += 1\n                continue",
+     "a_startup_module_removed_after_import_is_a_failed_measurement"),
+    ("dist-info-bytes-are-in-the-receipt-g62", MR,                   # receipt F3
+     '            elif os.path.isdir(f) and (nm.endswith(".dist-info")\n'
+     '                                       or nm.endswith(".egg-info")):',
+     "            elif False:",
+     "dist_info_files_on_pythonpath_are_inside_the_receipt"),
+    ("parent-cross-checks-customization-g62", MR,                    # receipt F1
+     "    _assert_customization_matches_paren\u0074(got)",
+     "    pass",
+     "the_parent_cross_checks_the_customization_bytes"),
+    ("schema-refuses-empty-receipts-g62", MR,                        # receipt F5
+     '    if cross:\n        raise _ReplayErro\u0072(',
+     '    if False:\n        raise _ReplayError(',
+     "the_schema_refuses_empty_or_inconsistent_receipts"),
 
     # γ (61차 P1-2·P1-3) — 이번 라운드가 세운 층.
     #   선언 자신이 preimage 로 세어지지 않게 철자를 escape 한다.
@@ -1578,9 +1643,10 @@ MULTI = [
          '        todo.append(("sc", MODULE_EFFECTS))'),
      ], "producer_digest_crosses_into_src_scoring"),
     ("closure-follows-module-aliases", RP, [
-        ("            if kind == \"rp\" and isinstance(sub_node, ast.Attribute) \\\n"
+        # ★ 62차 자체 리뷰 (sig-완전성 F1) — 분기가 module 별 table 로 옮겨 갔다.
+        ("            if isinstance(sub_node, ast.Attribute) \\\n"
          "                    and isinstance(sub_node.value, ast.Name) \\\n"
-         "                    and sub_node.value.id in mods:",
+         "                    and sub_node.value.id in tables[kind][0]:",
          "            if False:"),
         ("    if MODULE_EFFECTS in sdefs:\n"
          '        todo.append(("sc", MODULE_EFFECTS))',
@@ -4657,9 +4723,19 @@ def _env_facts_measured(NAMES):
                               f"{(_r.stderr or '')[-200:]}"}
         _names = set()
         for _ln in (_r.stderr or "").splitlines():
-            if "|" in _ln:
-                _names.add(_ln.rsplit("|", 1)[-1].strip())
-        _names = {n for n in _names if n and not n.startswith("import ")}
+            # ★ 62차 자체 리뷰 (영수증 F2) — 자료 줄만 받는다. 헤더 줄
+            #   `import time: self [us] | cumulative | imported package` 는
+            #   첫 칸이 숫자가 아니다. 예전 판은 `imported package` 를 module
+            #   이름으로 받아 `find_spec → None` 을 `unfiled` 로 셌고, 그 경로가
+            #   올렸다 **지운** module 도 같이 삼켰다.
+            if not _ln.startswith("import time:") or _ln.count("|") != 2:
+                continue
+            _self, _cum, _nm_ = (x.strip() for x in _ln[len("import time:"):]
+                                 .split("|"))
+            if not (_self.isdigit() and _cum.isdigit()):
+                continue
+            _names.add(_nm_)
+        _names = {n for n in _names if n}
         if not _names:
             return {"status": "failed",
                     "reason": "importtime 로그에서 module 이름을 하나도 "
@@ -4677,7 +4753,20 @@ def _env_facts_measured(NAMES):
                         "reason": "startup module %s 의 spec 을 못 찾았다: %r"
                                   % (_nm, _exc)}
             _o = getattr(_sp_, "origin", None) if _sp_ is not None else None
-            if _sp_ is None or _o in (None, "built-in", "frozen"):
+            if _sp_ is None:
+                # ★ 62차 자체 리뷰 (영수증 F2) — startup 이 올린 이름을 지금 못
+                #   찾으면 그것은 "파일 없는 정상" 이 아니라 **올렸다 지운**
+                #   module 이다 (리뷰 실측: 미측정 파일을 import 해 값을 남기고
+                #   sys.modules·파일을 지우면 digest 가 안 움직였다). 유일한
+                #   정상 사례는 `site` 가 시도만 하고 실패한 customize import 다.
+                if _nm in ("sitecustomize", "usercustomize") \
+                        and cust.get(_nm) == "<absent>":
+                    _unfiled += 1
+                    continue
+                return {"status": "failed",
+                        "reason": "startup 이 올린 module %s 을 지금 찾을 수 "
+                                  "없다 — 올렸다 지운 module 은 잴 수 없다" % _nm}
+            if _o in (None, "built-in", "frozen"):
                 _unfiled += 1           # builtin·frozen·namespace — 정상이다
                 continue
             # ★ 62차 P1-4 — origin 이 파일이 아니면(zip 등) 예전 판은 builtin 과
@@ -4722,6 +4811,16 @@ def _env_facts_measured(NAMES):
             elif os.path.isfile(os.path.join(f, "__init__.py")):
                 reachable["%d/%s/__init__.py" % (_i, nm)] = _d(
                     os.path.join(f, "__init__.py"))
+            # ★ 62차 자체 리뷰 (영수증 F3) — distribution metadata 도 바이트다.
+            #   `*.dist-info/entry_points.txt` 하나로 pytest plugin 이 올라오는데
+            #   예전 판은 `.py` 만 담아 digest 가 같았다 (실측). dist-info /
+            #   egg-info 아래 파일 전부를 같은 키 공간에 담는다.
+            elif os.path.isdir(f) and (nm.endswith(".dist-info")
+                                       or nm.endswith(".egg-info")):
+                for fn in sorted(os.listdir(f)):
+                    fp = os.path.join(f, fn)
+                    if os.path.isfile(fp):
+                        reachable["%d/%s/%s" % (_i, nm, fn)] = _d(fp)
 
     return {"status": "measured",                    # 62차 P1-4 — typed
             "executable_sha256": _d(sys.executable),
@@ -4783,7 +4882,16 @@ def _receipt_facts(NAMES, GLOBS, ROOT):
             for dist in _md.distributions(path=[_entry]):
                 nm = (dist.metadata or {}).get("Name")
                 if not nm:
-                    continue
+                    # ★ 62차 자체 리뷰 (영수증 F4) — Name 없는 dist 를 건너뛰면
+                    #   그 dist 를 지운 것과 digest 가 같다. Python 은 디렉터리
+                    #   stem 으로 찾으므로 (`noname-1.0.dist-info` → `noname`)
+                    #   같은 키를 쓴다. stem 도 없으면 측정 실패다.
+                    _p = getattr(dist, "_path", None)
+                    _stem = (os.path.basename(str(_p)).split("-")[0]
+                             if _p is not None else "")
+                    if not _stem:
+                        raise RuntimeError("이름을 정할 수 없는 distribution: %r" % (_p,))
+                    nm = _stem
                 nm, ver = str(nm).lower(), str(dist.version)
                 if nm in pkgs:
                     shadowed.append([nm, _i, ver])
@@ -4821,11 +4929,17 @@ def _probe_names() -> tuple:
 #:   frame 이 둘이면, 닫는 frame 이 없으면 거부. atexit 는 탐침의 print 뒤에
 #:   돌므로 그 출력은 언제나 "뒤에 더 있는 줄" 이다.
 #:
-#:   한계 (요청문에 적는다): startup 코드가 `sys.stdout` 자체를 바꿔 치우면 진짜
-#:   frame 을 삼키고 위조 frame 을 낼 수 있다. 그 환경은 영수증의
-#:   `customization.sitecustomize` 바이트에 남지만, 그 바이트를 재는 것도 같은
-#:   프로세스다 — 환경을 그 환경 안에서 재는 층의 한계이고, 여기서는 "stdout
-#:   에 덧붙이기" 를 닫는다.
+#:   한계 (요청문에 적는다 — 62차 자체 리뷰가 실측했다): child 안에서 도는
+#:   startup 코드 **전부**가 위조자다 — `sys.stdout` 교체, fd 층(`dup2` 로 1 을
+#:   돌리고 원본에 write), `builtins.print` 교체는 진짜 frame 을 삼키고 세탁본을
+#:   낸다 (셋 다 ACCEPTED 로 실측). child 는 `sys.orig_argv` 로 자기 `-c` 소스를
+#:   읽어 frame 도 안다. 여기서 닫은 것은 "stdout 에 **덧붙이기**" (atexit ·
+#:   `os.write` 앞뒤) 뿐이다. 그래서 둘째 층을 둔다 — 부모가 **자기 프로세스에서**
+#:   `customization`(site · sitecustomize · usercustomize 바이트)을 재서 child 의
+#:   값과 대조한다 (`_assert_customization_matches_parent`). child 가 자기 위조
+#:   파일을 `<absent>` 로 세탁하면 거기서 걸린다. 위조자가 자기 해시를 정직하게
+#:   적는 경우는 여전히 못 막는다 — 환경을 그 환경 안에서 재는 층의 한계이고,
+#:   종결은 §0 의 독립 replay 다.
 _FRAME_PREFIX = "DD-RECEIPT-"
 
 #: parser 의 **소스** — 부모와 심어 놓은 증언 node 가 같은 문자열을 쓴다 (규칙을
@@ -4873,15 +4987,52 @@ def _run_probe(tail_expr: str, cwd, what: str) -> dict:
         raise _ReplayError(f"{what} 탐침의 출력을 받을 수 없다: {exc}") from None
 
 
-def _observed_environment() -> dict:
-    """탐침을 **실제로 띄워서** 그 프로세스가 본 것을 받아 온다 (58차 L11).
+def _parent_customization_view() -> dict:
+    """부모가 **자기 프로세스에서** 잰 customization (62차 자체 리뷰 F1).
 
-    실패하면 fail-closed — 환경을 못 재면 증거를 쓸 수 없다. (여기서 조용히
-    빈 값을 넣으면 "안 쟀다" 가 "같다" 로 번역되고, 그것이 이 라운드가 반복해
-    거절한 형태다.)
+    child 가 `sys.modules` 의 `site`·`sitecustomize`·`usercustomize` 의 `__file__`
+    을 해시하는 것을 부모는 **같은 검색 순서로 파일을 찾아** 재현한다: 재생 env
+    의 `PYTHONPATH` 항목 → 부모의 `sys.path` (child 도 같은 인터프리터라 stdlib ·
+    site-packages 자리가 같다). 첫 번째로 찾은 파일이 child 가 import 한 것이다.
+    `site` 는 같은 인터프리터의 같은 파일이다.
     """
-    return _run_probe(f"_env_facts({_probe_names()!r})", _sandboxed(ROOT),
-                      "환경")
+    import site as _site
+
+    def _d(p):
+        h = hashlib.sha256()
+        with open(p, "rb") as fh:
+            for c in iter(lambda: fh.read(1 << 16), b""):
+                h.update(c)
+        return h.hexdigest()[:16]
+
+    env = replay_env()
+    dirs = [x for x in str(env.get("PYTHONPATH", "")).split(os.pathsep) if x]
+    dirs += [p for p in sys.path if p and p not in dirs]
+    out = {"site": _d(_site.__file__)}
+    for n in ("sitecustomize", "usercustomize"):
+        found = "<absent>"
+        for d in dirs:
+            f = os.path.join(d, n + ".py")
+            if os.path.isfile(f):
+                found = _d(f)
+                break
+        out[n] = found
+    return out
+
+
+def _assert_customization_matches_parent(receipt: dict) -> None:
+    """child 의 `customization` 이 부모의 시야와 같은가 (62차 자체 리뷰 F1)."""
+    want = _parent_customization_view()
+    got = ((receipt.get("startup") or {}).get("customization")
+           if isinstance(receipt, dict) else None) or {}
+    diff = sorted(k for k in set(want) | set(got) if want.get(k) != got.get(k))
+    if diff:
+        raise _ReplayError(
+            "환경 영수증의 customization 이 부모가 본 것과 다르다: "
+            + " · ".join(f"{k}: child={got.get(k)!r} parent={want.get(k)!r}"
+                         for k in diff)
+            + " — startup 코드가 자기 파일을 세탁했거나 검색 순서가 어긋났다. "
+            "못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 F1)")
 
 
 def _observed_receipt() -> dict:
@@ -4998,6 +5149,8 @@ def _execution_receipt() -> dict:
     # ★ 61차 P1-3 — **불완전한 측정으로는 증거를 못 만든다.** 영수증에 실패가
     #   적혀도 읽는 쪽이 그냥 받으면 층이 없는 것과 같다.
     _assert_receipt_is_complete(got)
+    # ★ 62차 자체 리뷰 (영수증 F1) — 둘째 층: 부모가 잰 customization 과 대조.
+    _assert_customization_matches_parent(got)
     return got
 
 
@@ -5044,7 +5197,11 @@ _RECEIPT_SCHEMA = {
     "startup": {
         "status": "measured",
         "executable_sha256": _HEX16,
-        "customization": _Map(_Or(_HEX16, "<absent>")),
+        # ★ 62차 자체 리뷰 (영수증 F5) — 키 집합을 고정한다 (`_Map` 이면
+        #   `{"whatever": "<absent>"}` 도 통과했다).
+        "customization": {"site": _Or(_HEX16, "<absent>"),
+                          "sitecustomize": _Or(_HEX16, "<absent>"),
+                          "usercustomize": _Or(_HEX16, "<absent>")},
         "startup_modules": _Map(_HEX16),
         "startup_history": {"status": "measured", "modules": _Map(_HEX16),
                             "unfiled": int},
@@ -5139,6 +5296,28 @@ def _assert_receipt_is_complete(receipt: dict) -> None:
         raise _ReplayError(
             "환경 영수증이 **불완전**하다 — schema 에 안 맞는다: " + mismatch
             + " . `status` 만 measured 인 본문은 측정이 아니다 (62차 P2-1)")
+    # ★ 62차 자체 리뷰 (영수증 F5) — "아무것도 안 잰" 영수증과 교차 필드
+    #   불일치도 measured 가 아니다. 진짜 탐침은 startup module 을 반드시
+    #   올리고(`site` 자신), `replay_env` 는 `PYTHONHASHSEED` 를 반드시 넣으며,
+    #   `startup.env`·`startup.version` 은 같은 프로세스가 같은 규칙으로 잰다.
+    st = receipt["startup"]
+    cross = []
+    if not st["startup_modules"]:
+        cross.append("startup.startup_modules 가 비었다")
+    if not receipt["env"]:
+        cross.append("env 가 비었다")
+    if st["env"] != receipt["env"]:
+        cross.append("startup.env 가 env 와 다르다")
+    if st["version"] != receipt["interpreter"]:
+        cross.append("startup.version 이 interpreter 와 다르다")
+    if st["startup_history"]["unfiled"] < 0 \
+            or any(v < 0 for v in receipt["packages"]["positions"].values()) \
+            or any(s[1] < 0 for s in receipt["packages"]["shadowed"]):
+        cross.append("음수 위치/개수")
+    if cross:
+        raise _ReplayError(
+            "환경 영수증이 **불완전**하다 — 측정이 비었거나 서로 어긋난다: "
+            + " · ".join(cross) + " (62차 자체 리뷰 F5)")
 
 
 def _execution_receipt_digest(body: dict | None = None) -> str:

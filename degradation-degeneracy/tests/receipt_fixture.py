@@ -13,6 +13,20 @@ import copy
 _H = "0123456789abcdef"
 
 
+def _parent_view() -> dict:
+    """★ 62차 자체 리뷰 F1 — 부모가 child 의 customization 을 자기 시야와
+    대조하므로, 완전한 영수증은 그 값을 **실제 부모 시야**에서 가져와야 한다."""
+    import sys
+    from pathlib import Path
+
+    gap = Path(__file__).resolve().parent.parent / "docs" / "22p_gap"
+    if str(gap) not in sys.path:
+        sys.path.insert(0, str(gap))
+    import mutation_replay as mr
+
+    return mr._parent_customization_view()
+
+
 def full_receipt(**over) -> dict:
     """schema 에 정확히 맞는 영수증. `over` 는 최상위 키를 덮는다."""
     rec = {
@@ -26,8 +40,7 @@ def full_receipt(**over) -> dict:
         "startup": {
             "status": "measured",
             "executable_sha256": _H,
-            "customization": {"site": _H, "sitecustomize": "<absent>",
-                              "usercustomize": "<absent>"},
+            "customization": _parent_view(),
             "startup_modules": {"os": _H},
             "startup_history": {"status": "measured",
                                 "modules": {"os": _H}, "unfiled": 3},

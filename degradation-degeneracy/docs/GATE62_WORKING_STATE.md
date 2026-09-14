@@ -243,3 +243,35 @@ sealed-record scan + fit resume 단계 (smoke_e2e.sh) → 전체 회귀 결과 �
 | 3b | nested `wsweep/` 은 등록 자체가 없다 (`weight_sweep.py` 가 issue/commit 을 안 부름) → 부모 승격이 nested 를 판정 안 함 | §0 신고 후보 |
 | 4 | 봉인 형식 edge (non-JSON · 빈 목록 · 파생 이름 · 중복 항목 · 두 번 읽는 사이 삭제) | 전부 fail-closed |
 | 5 | 가용성: grid commit → fit 시작만(거부 ✔) → fit commit + 파생 + nested + attempts → resume 중(거부 ✔) → resume commit + report 갱신 → 승격 | 살아 있음 |
+
+### 렌즈 순서-TOCTOU — 결론이_바뀜 0 · 서술만_바뀜 2 (둘 다 코드로 닫음) · 사소 1
+
+| # | 실측 | 고침 |
+|---|---|---|
+| F1 | capability 는 lock **앞에서** 발행된다. lock 이 살아 있는 보유자에게 거부되거나 발행↔lock 사이(입력 승인 · 완방상태 · dry-run 표본 solve)에서 죽으면 `discard` 를 못 지나 `live_caps 0→1 · open_dir_fds 0→1` — 리뷰어의 P1-2 계측이 둘째 contender 로 그대로 재현 | fit·grid 모두 `tok = None; try:` 를 **발행 직후**에 열고 `finally` 는 `tok is not None` 일 때만 release. 회귀 5건 (`test_lock_lifetime_62.py` 뒤쪽: fit 보유자 거부 · fit lock 앞 예외 · grid lock 앞 예외 ×2(dry-run 포함) · grid 보유자 거부) — RED 관측 뒤 GREEN |
+| F2 | `assert_promotable` 은 검사 **시점** 문장이고 `bundle()` 은 그 뒤 바이트를 복사 — 사이에 fit 이 같은 자리에서 시작하면 묶음이 진행 중 상태를 담는다 (lock 없음 실측) | `archive_bundle.main` 이 `.fit.lock`·`.run.lock` 을 token 으로 잡고 검사+복사를 끝낸 뒤 놓는다 (살아 있는 실행이 있으면 거부). 회귀 `test_direct_bundle_holds_the_run_locks_while_copying` |
+| F3 | `_run_fit_locked` docstring 이 61차 순서를 말함 | 정정 |
+| 미재현 | 12 프로세스 × 150회 acquire/hold/release peak 1 · `/proc/self/fd/N` 위 lock 은 dir_fd 가 **새 fd** 라 N 이 닫히고 rename 돼도 맞는 파일을 지움 · commit 뒤 receipt 예외·commit 부분 실패 → discard 가 옳고 같은 프로세스 재시도 OK · `_promotion_content_id` 두 읽기 사이 재봉인은 양성 | — |
+
+### 렌즈 sig-완전성 — **결론이_바뀜 3** (전부 코드로 닫음) · 사소 2
+
+| # | 실측 (digest 같고 출력 다름) | 고침 |
+|---|---|---|
+| F1 | 건너간 scoring 이 `import src.scoring as me` + `me.external(...)` 로 **자기** 이름 공간을 열면 닫힘이 안 따라감 — P0-7 은 table 만 module 별로 줬고 walk 는 primary 의 `mods` 만 봤다 | Attribute 분기가 `tables[kind][0]` 을 본다. 회귀 `test_the_crossed_module_own_namespace_access_enters_the_closure` |
+| F2 | `from src import scoring as me` · `import src as S; S.scoring` 두 import 형태가 `_crossed_modules` 밖 → `getattr(me, "x")` 가 "이름 공간이 아님이 증명됐다" | `ImportFrom` 도 수집, 부모 package import 는 fail-closed 거부. 회귀 2+1 |
+| F3 | class 본문·module 문장의 `for`/`with as`/`except as` 결속을 scope 전체 shadow 로 봤다 — `LOAD_NAME` 은 위치 의존 (결속 앞 load · `del` 뒤 · unbind). `if True: with nullcontext(…) as getattr: EXT = getattr` 한 문장이 MODULE_EFFECTS 의 한 node 라 통째 면제 | `_own_shadows` 는 함수·lambda 에만 결속 shadow 를 준다 (fail-closed). δ′ 첫 판의 시험 2건이 반대를 고정하고 있었다 → 뒤집음 |
+| F4 | P0-6 over-refusal: class 본문 안 method 의 default 가 class-local 을 못 봄 | F3 로 class 본문에 shadow 가 없어져 소멸 (실제 closure 통과 확인) |
+| F5 | (diff 밖) `_stage_fit_inputs` 가 저장소 밖 절대 경로 입력을 staging 못 함 (`SameFileError`) | §0 신고 후보 — 이번엔 안 고침 |
+
+### 렌즈 영수증 위조 — 서술만_바뀜 4 (코드로 닫음) · 사소 2
+
+| # | 실측 | 고침 |
+|---|---|---|
+| F1 | frame 의 한계는 "`sys.stdout` 교체" 보다 넓다 — fd 층(`dup2`) · `builtins.print` 교체도 ACCEPTED, child 는 `sys.orig_argv` 로 frame 을 안다. 주석의 "customization 에 남는다" 는 거짓 (부모가 그 필드를 아무것과도 대조 안 함) | 주석 정정 + 둘째 층 `_parent_customization_view()`/`_assert_customization_matches_parent()` — 부모가 자기 프로세스에서 site/sitecustomize/usercustomize 를 같은 검색 순서로 찾아 해시, child 의 `<absent>` 세탁을 거부. fixture 도 부모 시야를 쓴다 |
+| F2 | `find_spec → None` 을 `unfiled` 로 셈 → 올렸다 **지운** module 이 영수증 밖. 기본 환경의 None 둘은 importtime **헤더 줄** `imported package` 와 실패한 `usercustomize` 시도 | 헤더 줄 파싱 제거(자료 줄만), None 은 `<absent>` 인 customize 만 unfiled, 나머지 `failed` |
+| F3 | PYTHONPATH 의 `*.dist-info/entry_points.txt` 가 영수증 밖 — digest 같고 pytest plugin 로드 다름 | `importable_roots` 가 dist-info/egg-info 아래 파일 전부를 담는다 |
+| F4 | Name 없는 dist 는 건너뜀 (Python 은 stem 으로 찾음) | stem 키 |
+| F5 | schema 가 전부 빈 영수증·교차 필드 불일치를 받음 | customization 키 고정 · 빈 startup_modules/env 거부 · `startup.env==env` · `startup.version==interpreter` · 음수 거부 |
+| 사소 | `_observed_environment` 죽은 코드 | 삭제 |
+
+변이 축: 재조준 4 (`dry-run-releases-the-claim` · `grid-dry-run-discards-the-capability-g62` · `promotion-checks-derived-freshness-g62` · `closure-follows-module-aliases` site 0) + 신설 11 (`capability-discarded-before-the-lock` · `grid-discards-before-the-lock` · `promotion-holds-the-run-locks` · `class-body-bindings-are-not-shadows` · `from-imports-are-namespace-targets` · `parent-package-import-is-refused` · `crossed-module-self-alias-is-followed` · `history-refuses-a-vanished-module` · `dist-info-bytes-are-in-the-receipt` · `parent-cross-checks-customization` · `schema-refuses-empty-receipts`). `--check-preimages` rc 0.

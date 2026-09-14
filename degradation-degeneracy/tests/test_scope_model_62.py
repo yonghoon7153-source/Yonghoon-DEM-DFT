@@ -100,12 +100,14 @@ def test_the_analyzer_does_not_carry_class_locals_into_methods():
         "Python 은 그렇게 동작하지 않는다 (62차 P0-6)")
 
 
-def test_class_locals_still_shadow_inside_the_class_body():
-    """반대 방향 — class 본문 **안에서는** 가린다 (거부가 넓어지면 안 된다)."""
+def test_class_locals_do_not_shadow_inside_the_class_body_either():
+    """★ 62차 자체 리뷰 F3 가 첫 판을 뒤집었다 — class 본문의 load 는 위치
+    의존(`LOAD_NAME`)이라 결속 shadow 를 **주지 않는다** (fail-closed). 첫 판은
+    "class 본문 안에서는 가린다" 를 시험했고 그것이 결속 앞 load 의 면제였다."""
     tree = ast.parse(_CLASS_LOCAL)
     cls = tree.body[1]
     h = cls.body[1].value                                    # `H = getattr`
-    assert "getattr" in _shadow_map(cls)[id(h)]
+    assert "getattr" not in _shadow_map(cls)[id(h)]
 
 
 def test_a_class_local_does_not_exempt_a_capability_in_a_method():
@@ -216,7 +218,9 @@ def test_a_comprehension_in_a_class_body_sees_only_its_first_iterable():
     first_iter = comp.generators[0].iter.elts[0]             # class 본문에서 평가
     elt = comp.elt                                           # 자식 scope
     sm = _shadow_map(cls)
-    assert "getattr" in sm[id(first_iter)]
+    # 첫 iterable 은 class 본문에서 평가된다 — 그리고 class 본문은 결속 shadow 를
+    # 안 준다 (62차 자체 리뷰 F3). 본문(elt)은 자식 scope 라 역시 안 본다.
+    assert "getattr" not in sm[id(first_iter)]
     assert "getattr" not in sm[id(elt)]
 
 
@@ -266,3 +270,104 @@ def test_the_unmodified_scoring_module_still_passes_its_own_table():
     rp = _rp()
     src, sc = _real_sources()
     rp._producer_closure(src, sc)
+
+
+# ── 62차 자체 리뷰 (sig-완전성 렌즈) — 세 구멍 ───────────────────────────
+#
+# F1  건너간 module 의 **자기** 이름 공간 접근(`import src.scoring as me` +
+#     `me.external(...)`)을 닫힘이 따라가지 않았다 — P0-7 은 table 만 module 별로
+#     줬지 닫힘 walk 는 primary 만 `sc.foo` 를 따라갔다 (digest 같고 출력 다름).
+# F2  `from src import scoring as me` · `import src as S; S.scoring` 두 import
+#     형태를 `_crossed_modules` 가 안 보고, 그 이름은 "이름 공간이 아님이 증명됐다"
+#     가 됐다 — primary·scoring 양쪽.
+# F3  class 본문·module 문장의 `for`/`with as`/`except as` 결속을 scope 전체의
+#     shadow 로 봤다. 그 자리의 LOAD_NAME 은 **위치에 따라** builtin 이다 (결속
+#     앞의 load · `del` 뒤 · `except as` 의 unbind). 함수 안은 정적(UnboundLocal)
+#     이라 안전하지만 class/module 은 아니다 → fail-closed: 함수·lambda 가 아닌
+#     scope 는 결속 shadow 를 **주지 않는다**.
+def test_python_class_body_load_before_the_binding_is_the_builtin():
+    ns: dict = {}
+    exec(compile(textwrap.dedent('''
+        class C:
+            H = getattr
+            for getattr in (None,):
+                pass
+    '''), "<cls>", "exec"), ns)                              # noqa: S102
+    assert ns["C"].H is builtins.getattr
+
+
+def test_a_class_body_binding_does_not_shadow_a_load_before_it():
+    """★ F3 — class 본문의 결속은 위치 의존이라 shadow 로 쓰지 않는다."""
+    src = textwrap.dedent('''
+        import src.scoring as sc
+
+        class C:
+            H = [getattr][0]                 # 결속 **앞** — builtin 이다
+            for getattr in (None,):
+                pass
+    ''')
+    cls = ast.parse(src).body[1]
+    load = cls.body[0].value.value.elts[0]
+    assert "getattr" not in _shadow_map(cls)[id(load)], (
+        "class 본문의 for 결속이 그 앞의 load 를 가렸다 (62차 자체 리뷰 F3)")
+    with pytest.raises(SystemExit, match="능력을 값으로"):
+        _rp()._assert_no_dynamic_resolution(cls, "C", *_tables(src))
+
+
+def test_a_module_compound_statement_binding_does_not_exempt_a_capability():
+    """★ F3 e2e 형태 — module 문장 하나(`if`)가 MODULE_EFFECTS 의 한 node 다.
+    그 안의 `with … as getattr` 가 통째 shadow 가 되면 능력 값 흐름이 빠져나갔다."""
+    src = textwrap.dedent('''
+        import contextlib
+        import src.scoring as sc
+
+        if True:
+            with contextlib.nullcontext([getattr][0](sc, "add_error_columns")) as getattr:
+                EXT = getattr
+    ''')
+    node = ast.parse(src).body[2]
+    with pytest.raises(SystemExit, match="능력을 값으로"):
+        _rp()._assert_no_dynamic_resolution(node, "<module>", *_tables(src))
+
+
+def test_the_crossed_module_own_namespace_access_enters_the_closure():
+    """★ F1 — scoring 이 `import src.scoring as me` 로 자기 이름 공간을 열고
+    `me.external(...)` 을 부르면 `src.scoring:external` 이 닫힘에 있어야 한다."""
+    rp = _rp()
+    src, sc = _real_sources()
+    anchor = "    out = df.copy()\n    for k in MODES:"
+    sc2 = sc.replace("def add_error_columns(",
+                     "import src.scoring as me\n\n\ndef external(df):\n"
+                     "    return df\n\n\ndef add_error_columns(", 1)
+    sc2 = sc2.replace(anchor, "    out = df.copy()\n    out = me.external(out)\n"
+                              "    for k in MODES:", 1)
+    keys = set(rp._producer_closure(src, sc2))
+    assert "src.scoring:external" in keys, (
+        f"건너간 module 의 자기 이름 공간 접근을 안 따라갔다: "
+        f"{sorted(k for k in keys if k.startswith('src.scoring:'))} (62차 자체 리뷰 F1)")
+
+
+@pytest.mark.parametrize("imp,use", [
+    ("from src import scoring as me", 'getattr(me, "add_error_columns")'),
+    ("from src import scoring", 'getattr(scoring, "add_error_columns")'),
+])
+def test_from_import_aliases_are_namespace_targets(imp, use):
+    """★ F2 — `from src import scoring as me` 도 이름 공간이다."""
+    rp = _rp()
+    src, sc = _real_sources()
+    anchor = "    out = df.copy()\n    for k in MODES:"
+    sc2 = sc.replace("def add_error_columns(", f"{imp}\n\n\ndef add_error_columns(", 1)
+    sc2 = sc2.replace(anchor, f"    out = df.copy()\n    _ = {use}\n    for k in MODES:", 1)
+    # 상수 이름이라 "계산해서 건넨다" 층은 안 걸린다 — 남는 것은 대상 판정뿐
+    with pytest.raises(SystemExit, match="이름 공간"):
+        rp._producer_closure(src, sc2)
+
+
+def test_importing_the_parent_package_is_refused():
+    """★ F2 — `import src as S` 뒤 `S.scoring` 은 이름 공간 뿌리인데 `S` 가
+    target 에 없었다. 부모 package import 는 fail-closed 로 거부한다."""
+    rp = _rp()
+    src, sc = _real_sources()
+    sc2 = sc.replace("def add_error_columns(", "import src as S\n\n\ndef add_error_columns(", 1)
+    with pytest.raises(SystemExit, match="package|src"):
+        rp._producer_closure(src, sc2)

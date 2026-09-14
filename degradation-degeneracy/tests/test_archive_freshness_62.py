@@ -122,3 +122,38 @@ def test_the_promotion_primitive_is_one_function():
         "archive_bundle.main 이 assert_promotable() 을 안 지난다 (62차 P0-8)")
     assert "assert_not_smoke_provenance" not in names, (
         "smoke 판정을 primitive 밖에서 따로 부른다 — 두 검사가 갈린다")
+
+
+def test_direct_bundle_holds_the_run_locks_while_copying(tmp_path, ledger,
+                                                         monkeypatch):
+    """★ 62차 자체 리뷰 (순서-TOCTOU F2) — `assert_promotable` 은 검사 시점의
+    문장이고 `bundle()` 은 그 뒤의 바이트를 복사한다. 사이에 fit 이 같은
+    자리에서 시작하면 묶음은 진행 중 상태를 담는다. 승격은 복사가 끝날 때까지
+    실행 lock 을 들어 writer 부재를 증명해야 한다."""
+    import tools.archive_bundle as AB
+    import tools.compare_objectives as CO
+    from src.io import acquire_run_lock
+
+    run = _committed_fit_run(tmp_path / "results" / "run", ledger)
+    monkeypatch.setattr(CO, "verify_derived_freshness",
+                        lambda run_dir, tol=0.02: {"ok": True, "fail": []})
+    seen: dict = {}
+
+    def _bundle(run_dir, out_dir, *a, **k):
+        for name in (".fit.lock", ".run.lock"):
+            try:
+                tok = acquire_run_lock(run_dir, name)
+            except RuntimeError:
+                seen[name] = "held"
+            else:
+                from src.io import release_run_lock
+                release_run_lock(tok)
+                seen[name] = "free"
+        return {"copied": 1, "external": [], "missing": [], "nested": []}
+
+    monkeypatch.setattr(AB, "bundle", _bundle)
+    assert AB.main(["bundle", str(run), str(tmp_path / "artifacts" / "run")]) == 0
+    assert seen == {".fit.lock": "held", ".run.lock": "held"}, (
+        f"복사 중에 실행 lock 이 잡혀 있지 않다: {seen} (62차 자체 리뷰 F2)")
+    for name in (".fit.lock", ".run.lock"):
+        assert not (run / name).exists(), f"승격 뒤 {name} 이 남았다"

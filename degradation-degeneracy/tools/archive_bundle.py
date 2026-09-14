@@ -535,9 +535,21 @@ def main(argv=None) -> int:
         # ★ 62차 P0-8 — smoke 판정과 파생 freshness 를 **한 primitive** 로.
         #   전에는 freshness 가 `scripts/archive_results.sh` 에만 있어서 이
         #   진입점을 직접 부르면 stale 파생이 그대로 묶였다.
+        # ★ 62차 자체 리뷰 (순서-TOCTOU F2) — 승격 판정은 검사 **시점**의
+        #   문장이고 `bundle()` 은 그 뒤의 바이트를 복사한다. 그 사이에 fit 이
+        #   같은 자리에서 시작하면 묶음이 진행 중 상태를 담는다. 실행 lock 둘을
+        #   복사가 끝날 때까지 들어 writer 부재를 증명한다 (token 이라 commit
+        #   과 무관하게 놓을 수 있고, 살아 있는 실행이 있으면 여기서 거부된다).
+        from src.io import acquire_run_lock, release_run_lock
         from tools.preserve import assert_promotable
-        assert_promotable([a.run_dir], "보관 묶음", dest=a.out_dir)
-        res = bundle(a.run_dir, a.out_dir)
+        toks = [acquire_run_lock(a.run_dir, name)
+                for name in (".fit.lock", ".run.lock")]
+        try:
+            assert_promotable([a.run_dir], "보관 묶음", dest=a.out_dir)
+            res = bundle(a.run_dir, a.out_dir)
+        finally:
+            for tok in toks:
+                release_run_lock(tok)
         print(f"복사 {res['copied']}개"
               + (f", 하위 실행 {res['nested']}" if res["nested"] else ""))
         if res["external"]:

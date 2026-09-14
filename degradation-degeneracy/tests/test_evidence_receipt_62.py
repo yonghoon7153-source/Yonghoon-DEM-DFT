@@ -44,6 +44,8 @@ if str(REPO / "docs" / "22p_gap") not in sys.path:
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from receipt_fixture import full_receipt                        # noqa: E402
 
+_H16 = "0123456789abcdef"
+
 
 def _mr():
     import mutation_replay as mr
@@ -203,19 +205,21 @@ def test_a_snapshot_is_measured_once_and_its_parts_agree(monkeypatch):
 
     def _once():
         n["calls"] += 1
-        return full_receipt(interpreter=f"3.11.{n['calls']}")   # 부를 때마다 다르다
+        r = full_receipt()
+        r["inputs"]["files"] = {"configs/base.yaml": _H16, "n.txt": _H16[:15] + str(n["calls"])}
+        return r                                            # 부를 때마다 다르다
 
     monkeypatch.setattr(mr, "_observed_receipt", _once)
     snap = mr.take_receipt_snapshot()
     assert n["calls"] == 1
     body = snap.body()
-    assert body["interpreter"] == "3.11.1"
+    assert body["inputs"]["files"]["n.txt"].endswith("1")
     assert snap.digest == mr._execution_receipt_digest(body)
     assert snap.tag == mr.environment_tag(body)
     assert snap.tag == snap.digest[:16], "tag 와 digest 가 같은 직렬화에서 나오지 않았다"
     # 스냅샷은 불변이다 — body() 는 사본을 준다
     snap.body()["interpreter"] = "x"
-    assert snap.body()["interpreter"] == "3.11.1"
+    assert snap.body()["interpreter"] != "x"
 
 
 def _calls_in(fn_name: str) -> set:
@@ -248,7 +252,7 @@ def test_the_runner_and_checker_do_not_remeasure_the_receipt(fn):
 
 def test_write_coverage_records_exactly_the_snapshot(tmp_path, monkeypatch):
     mr = _mr()
-    rec = full_receipt(interpreter="3.11.9")
+    rec = full_receipt()
     monkeypatch.setattr(mr, "_observed_receipt", lambda: rec)
     snap = mr.take_receipt_snapshot()
     monkeypatch.setattr(mr, "_observed_receipt",
@@ -295,3 +299,124 @@ def test_the_real_probe_output_matches_the_schema(tmp_path):
     mr = _mr()
     got = _receipt_in({}, tmp_path)
     mr._assert_receipt_is_complete(got)
+
+
+# ── 62차 자체 리뷰 (영수증 위조 렌즈) ─────────────────────────────────────
+#
+# F2  `find_spec → None` 을 `unfiled` 로 셌다 — startup 에 올렸다 **지운** module
+#     (파일도 지움) 이 영수증 밖 (importtime 로그엔 남는데 spec 이 None).
+#     헤더 줄 `imported package` 와 실패한 `usercustomize` 시도가 그 경로의
+#     정상 사례라 `unfiled=22` 에 둘이 섞여 있었다.
+# F3  PYTHONPATH root 의 `*.dist-info/entry_points.txt` 가 영수증 밖 — 같은
+#     digest 로 pytest plugin 이 로드되거나 안 되거나.
+# F4  Name 없는 dist-info 는 조용히 건너뜀 (Python 은 디렉터리 stem 으로 찾는다).
+# F5  schema 가 전부 빈 영수증·교차 필드 불일치를 받는다.
+# F1  frame 의 한계: child 의 startup 코드 전부 (sys.stdout 교체 · fd 층 ·
+#     builtins.print) 는 못 막는다. 부모가 **자기 프로세스에서** customization
+#     (site/sitecustomize/usercustomize 바이트)을 재서 child 의 값과 대조하면
+#     "<absent>" 세탁은 잡힌다.
+def test_a_startup_module_removed_after_import_is_a_failed_measurement(tmp_path):
+    """★ F2 — 올렸다 지운 module: 로그에 이름이 남고 spec 은 None → failed."""
+    site = tmp_path / "site"
+    site.mkdir()
+    (site / "sitecustomize.py").write_text(
+        "import os, sys\n"
+        "p = os.path.join(os.path.dirname(__file__), 'ghost62.py')\n"
+        "open(p, 'w').write('VALUE = 1\\n')\n"
+        "import ghost62\n"
+        "del sys.modules['ghost62']\n"
+        "os.remove(p)\n", encoding="utf-8")
+    got = _receipt_in({"PYTHONPATH": str(site)}, tmp_path)
+    hist = got["startup"]["startup_history"]
+    assert hist.get("status") == "failed", (
+        f"올렸다 지운 module 이 unfiled 로 세탁됐다: {hist.get('status')} "
+        f"unfiled={hist.get('unfiled')} (62차 자체 리뷰 F2)")
+    assert "ghost62" in hist.get("reason", "")
+
+
+def test_the_importtime_header_line_is_not_a_module(tmp_path):
+    """F2 의 정상 사례 — 헤더 줄 `imported package` 와 실패한 `usercustomize`
+    시도는 module 이 아니다. 기본 환경은 여전히 measured 여야 한다."""
+    got = _receipt_in({}, tmp_path)
+    hist = got["startup"]["startup_history"]
+    assert hist["status"] == "measured", hist
+    assert "imported package" not in hist["modules"]
+
+
+def test_dist_info_files_on_pythonpath_are_inside_the_receipt(tmp_path):
+    """★ F3 — `entry_points.txt` 의 바이트가 바뀌면 영수증이 움직여야 한다."""
+    root = tmp_path / "root"
+    _dist(root, "1.0")
+    ep = root / "dup62-1.0.dist-info" / "entry_points.txt"
+    ep.write_text("[pytest11]\nevil = evilplug\n", encoding="utf-8")
+    a = _receipt_in({"PYTHONPATH": str(root)}, tmp_path)
+    ep.write_text("", encoding="utf-8")
+    b = _receipt_in({"PYTHONPATH": str(root)}, tmp_path)
+    assert a["startup"]["importable_roots"] != b["startup"]["importable_roots"], (
+        "entry_points.txt 를 바꿨는데 importable_roots 가 그대로다 (62차 자체 리뷰 F3)")
+    assert any(k.endswith("entry_points.txt") for k in a["startup"]["importable_roots"])
+
+
+def test_a_distribution_without_a_name_is_keyed_by_its_stem(tmp_path):
+    """★ F4 — Python 은 `noname-1.0.dist-info` 를 `noname` 으로 찾는다."""
+    root = tmp_path / "root"
+    d = root / "noname62-1.0.dist-info"
+    d.mkdir(parents=True)
+    (d / "METADATA").write_text("Metadata-Version: 2.1\nVersion: 1.0\n",
+                                encoding="utf-8")
+    got = _receipt_in({"PYTHONPATH": str(root)}, tmp_path)["packages"]
+    assert got["dists"].get("noname62") == "1.0", (
+        f"Name 없는 dist 가 사라졌다: {sorted(got['dists'])[:5]} (62차 자체 리뷰 F4)")
+
+
+@pytest.mark.parametrize("mutate,why", [
+    (lambda r: r["startup"].__setitem__("customization", {"whatever": "<absent>"}),
+     "customization 키 집합"),
+    (lambda r: r["startup"].__setitem__("startup_modules", {}), "빈 startup_modules"),
+    (lambda r: (r.__setitem__("env", {}), r["startup"].__setitem__("env", {})),
+     "빈 env"),
+    (lambda r: r["startup"].__setitem__("version", "9.9.9"), "startup.version ≠ interpreter"),
+    (lambda r: r["startup"].__setitem__("env", {"PYTHONHASHSEED": "1"}),
+     "startup.env ≠ env"),
+    (lambda r: r["startup"]["startup_history"].__setitem__("unfiled", -5), "음수 int"),
+])
+def test_the_schema_refuses_empty_or_inconsistent_receipts(mutate, why):
+    """★ F5 — "아무것도 안 잰" 영수증과 교차 필드 불일치는 measured 가 아니다."""
+    mr = _mr()
+    rec = full_receipt()
+    mutate(rec)
+    with pytest.raises(mr._ReplayError, match="불완전|실패|schema"):
+        mr._assert_receipt_is_complete(rec)
+    _ = why
+
+
+def test_the_parent_cross_checks_the_customization_bytes(tmp_path, monkeypatch):
+    """★ F1 — child 가 `sitecustomize` 를 `<absent>` 로 세탁하면 부모가 자기
+    프로세스에서 잰 값과 어긋나 거부한다."""
+    mr = _mr()
+    site = tmp_path / "site"
+    site.mkdir()
+    (site / "sitecustomize.py").write_text("X = 1\n", encoding="utf-8")
+    real_env = mr.replay_env
+
+    def _env():
+        e = dict(real_env())
+        e["PYTHONPATH"] = str(site)
+        return e
+
+    monkeypatch.setattr(mr, "replay_env", _env)
+    rec = full_receipt()
+    rec["startup"]["customization"]["sitecustomize"] = "<absent>"   # 세탁본
+    monkeypatch.setattr(mr, "_observed_receipt", lambda: rec)
+    with pytest.raises(mr._ReplayError, match="sitecustomize"):
+        mr._execution_receipt()
+    honest = full_receipt()
+    honest["startup"]["customization"] = mr._parent_customization_view()
+    monkeypatch.setattr(mr, "_observed_receipt", lambda: honest)
+    assert mr._execution_receipt() == honest
+
+
+def test_the_real_probe_agrees_with_the_parent_view(tmp_path):
+    mr = _mr()
+    got = _receipt_in({}, tmp_path)
+    assert got["startup"]["customization"] == mr._parent_customization_view()

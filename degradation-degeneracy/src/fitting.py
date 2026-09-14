@@ -1002,40 +1002,46 @@ def _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives, bounds,
     claim, _fit_axis, _exec_cap = _assert_fit_authorized(_live, out_dir,
                                                          leg=leg,
                                                          may_open=may_open)
-    _assert_fit_input_is_authorized(claim, _fit_axis, _staged["in_dir"])
-    # ★ 60차 P0-4 — grid 와 **같은 문장**. gate 뒤의 모든 쓰기를 판정한 실물
-    #   아래로 옮긴다 (면제 판정이 두 진입점에 있으면 배선도 두 진입점에
-    #   있어야 하고, 그러면 하나가 또 빠진다 — 58차 L1 의 교훈).
-    #
-    # ★ 61차 P0-2 — 그런데 60차는 `out_dir` **자체를** 갈아 치웠다. 그러면 그
-    #   아래의 모든 코드가 — 쓰는 코드뿐 아니라 **적는** 코드까지 — handle
-    #   경로를 본다. 성공하면 fd 가 닫히므로 굳은 provenance 가 존재하지 않는
-    #   자리를 가리킨다 (리뷰어 실측: `manifest.fits_parquet:
-    #   /proc/self/fd/3/fits.parquet`, `..._exists_after_success: false`).
-    #
-    #   그래서 값을 **둘로 나눈다**: 실제 writer 만 `write_root` 를 받고,
-    #   기록·요약·phase receipt 는 `logical_out`·`logical_in` 을 적는다.
-    logical_out = out_dir
-    logical_in = Path(in_dir)
-    if _exec_cap is not None:
-        from tools.preserve import staged_root
-        write_root = staged_root(_exec_cap)
-    else:
-        out_dir.mkdir(parents=True, exist_ok=True)
-        write_root = out_dir
-    # ★ 62차 P0-3 — 임계구역은 **commit 과 receipt 까지** 덮는다. 61차 P1-1 은
-    #   commit 을 lock 해제 **뒤로** 옮겼다 — lock 이 `staged_root(cap)` 경로
-    #   아래 있어서 commit 이 fd 를 닫으면 release 가 죽었기 때문이다. 그러자
-    #   리뷰어가 그 틈을 그대로 쟀다: 첫 실행이 lock 을 놓은 뒤 둘째가 같은
-    #   자리를 잡아 `manifest.yaml` 을 바꾸고, 첫 capability 가 **둘째 bytes**
-    #   를 canonical 로 봉인했다 (`first_commit_sealed_second_writer: true`).
-    #
-    #   그래서 lock 이 경로가 아니라 **dirfd + inode token** 이 됐다
-    #   (`src/io.py` `RunLock`). commit 이 handle 을 닫아도 token 의 dirfd 는
-    #   따로 살아 있으므로 release 는 마지막에 온다:
-    #   compute → commit(seal·class) → receipt → release.
-    tok = acquire_run_lock(write_root, ".fit.lock")
+    # ★ 62차 자체 리뷰 (순서-TOCTOU F1) — capability 는 lock **앞에서** 발행된다.
+    #   입력 승인·staging·lock 거부(살아 있는 보유자)에서 죽으면 P1-2 의
+    #   `discard` 를 못 지나 capability 와 dir fd 가 남았다 (실측: live_caps
+    #   0→1 · open_dir_fds 0→1 — 리뷰어의 P1-2 계측 그대로). 그래서 try 는
+    #   발행 직후에 열리고, release 는 lock 을 잡았을 때만 한다.
+    tok = None
     try:
+        _assert_fit_input_is_authorized(claim, _fit_axis, _staged["in_dir"])
+        # ★ 60차 P0-4 — grid 와 **같은 문장**. gate 뒤의 모든 쓰기를 판정한 실물
+        #   아래로 옮긴다 (면제 판정이 두 진입점에 있으면 배선도 두 진입점에
+        #   있어야 하고, 그러면 하나가 또 빠진다 — 58차 L1 의 교훈).
+        #
+        # ★ 61차 P0-2 — 그런데 60차는 `out_dir` **자체를** 갈아 치웠다. 그러면 그
+        #   아래의 모든 코드가 — 쓰는 코드뿐 아니라 **적는** 코드까지 — handle
+        #   경로를 본다. 성공하면 fd 가 닫히므로 굳은 provenance 가 존재하지 않는
+        #   자리를 가리킨다 (리뷰어 실측: `manifest.fits_parquet:
+        #   /proc/self/fd/3/fits.parquet`, `..._exists_after_success: false`).
+        #
+        #   그래서 값을 **둘로 나눈다**: 실제 writer 만 `write_root` 를 받고,
+        #   기록·요약·phase receipt 는 `logical_out`·`logical_in` 을 적는다.
+        logical_out = out_dir
+        logical_in = Path(in_dir)
+        if _exec_cap is not None:
+            from tools.preserve import staged_root
+            write_root = staged_root(_exec_cap)
+        else:
+            out_dir.mkdir(parents=True, exist_ok=True)
+            write_root = out_dir
+        # ★ 62차 P0-3 — 임계구역은 **commit 과 receipt 까지** 덮는다. 61차 P1-1 은
+        #   commit 을 lock 해제 **뒤로** 옮겼다 — lock 이 `staged_root(cap)` 경로
+        #   아래 있어서 commit 이 fd 를 닫으면 release 가 죽었기 때문이다. 그러자
+        #   리뷰어가 그 틈을 그대로 쟀다: 첫 실행이 lock 을 놓은 뒤 둘째가 같은
+        #   자리를 잡아 `manifest.yaml` 을 바꾸고, 첫 capability 가 **둘째 bytes**
+        #   를 canonical 로 봉인했다 (`first_commit_sealed_second_writer: true`).
+        #
+        #   그래서 lock 이 경로가 아니라 **dirfd + inode token** 이 됐다
+        #   (`src/io.py` `RunLock`). commit 이 handle 을 닫아도 token 의 dirfd 는
+        #   따로 살아 있으므로 release 는 마지막에 온다:
+        #   compute → commit(seal·class) → receipt → release.
+        tok = acquire_run_lock(write_root, ".fit.lock")
         summary = _run_fit_locked(_staged["in_dir"], write_root, obj_cfg,
                                   objectives, bounds,
                                   bounds_preset, n_restarts, nproc, use_noisy,
@@ -1068,7 +1074,8 @@ def _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives, bounds,
     finally:
         # ★ 61차 P1-1 — release 는 오류를 삼키지 않는다. 62차 P1-1 — 내 lock
         #   이 사라졌거나 다른 inode 로 바뀌었으면 여기서 **올린다**.
-        release_run_lock(tok)
+        if tok is not None:
+            release_run_lock(tok)
     return summary
 
 
@@ -1089,9 +1096,11 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
       아니라 `logical_in`·`logical_out` 이다 — 성공하면 앞의 둘은 사라진다.
       안 주면 실제 자리를 그대로 쓴다 (예전 동작이고, 시험이 그것을 막는다).
 
-    ★ 59차 M1 · 61차 P1-1 — `exec_capability` 인자는 **없어졌다.** 굳히는 것은
-      이제 호출자(`_run_fit_staged()`)가 lock 정리까지 끝낸 뒤에 한다. 여기서
-      굳히면 fd 가 닫힌 뒤에 lock 을 지우게 되고, 그 실패는 조용히 삼켜졌다.
+    ★ 59차 M1 · 61차 P1-1 · 62차 P0-3 — `exec_capability` 인자는 **없어졌다.**
+      굳히는 것은 호출자(`_run_fit_staged()`)가 한다 — 62차부터는 lock 을
+      **든 채로** (compute → commit → receipt → release; lock 이 token 이라
+      commit 이 fd 를 닫아도 놓을 수 있다). 61차는 lock 정리 뒤에 굳혔고 그
+      틈이 62차 P0-3 이 됐다.
 
     ★ 51차 P0-A3 — `in_dir`·`base_config` 는 **staging 사본**을 가리킨다.
       `stage_root` 는 그 사본의 뿌리이고, 봉인 map 의 키를 원래 저장소 상대
