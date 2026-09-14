@@ -83,10 +83,18 @@ class _Recorder:
             #  ★ SELF-31: scipy ≥ 1.12 의 정지 조건은 max(rtol·‖b‖, atol) 이고 생산은 rtol 을 안 넘긴다
             #    → 기본 rtol=1e-5 가 지배, atol=1e-8 은 **안 걸린다** (‖b‖~1).  그래서 조임은 **rtol** 에 건다.
             #    (atol 만 조인 첫 판은 σ 가 비트 동일 = 거짓 0 이었다.)
-            if rec.factor is not None and kwarg == 'atol' and 'rtol' not in kw:
-                used['rtol'] = RTOL_DEFAULT * rec.factor
-            elif rec.factor is not None and kwarg:
-                used[kwarg] = kw[kwarg] * rec.factor
+            #  ⚠⚠ R3-03 (Codex 3라운드) — 옛 판은 키 우선순위 tol→atol→rtol 로 **하나만** 골라
+            #    조였다.  그래서 생산이 SELF-31 처방대로 `rtol=1e-8, atol=0` 을 **함께** 넘기면
+            #    `kwarg='atol'` 이 뽑히고 `atol *= factor` = 0 → **상대 허용오차가 안 바뀐다**
+            #    → A/B 해가 bitwise 동일 = false-zero 재발.  ⇒ 키를 고르지 말고 **정지 기준**
+            #    `max(rtol·‖b‖, atol)` 이 factor 배로 줄도록 **관련된 것을 전부** 조인다.
+            if rec.factor is not None:
+                if kwarg == 'tol':                       # 옛 scipy: tol 이 상대 허용오차다
+                    used['tol'] = kw['tol'] * rec.factor
+                else:
+                    used['rtol'] = kw.get('rtol', RTOL_DEFAULT) * rec.factor
+                    if 'atol' in kw:
+                        used['atol'] = kw['atol'] * rec.factor
             rec.bnorm = float(np.linalg.norm(b))
             try:
                 V, info = rec._cg(A, b, **used)
@@ -95,10 +103,14 @@ class _Recorder:
                 #  생산의 분기가 그대로 타게 둔다 (기록만 남긴다).
                 rec.calls.append({'fn': 'cg', 'kwarg': kwarg, 'value': used.get(kwarg), 'result': 'TypeError'})
                 raise
+            _rt = used.get('tol', used.get('rtol', RTOL_DEFAULT))
+            _at = used.get('atol', 0.0)
             rec.calls.append({'fn': 'cg', 'kwarg': kwarg, 'value': used.get(kwarg), 'info': int(info),
                               'M': 'M' in kw, 'maxiter': kw.get('maxiter'),
-                              'rtol_used': used.get('rtol', RTOL_DEFAULT), 'atol_used': used.get('atol', 0.0),
-                              'binding': ('rtol' if used.get('rtol', RTOL_DEFAULT) * rec.bnorm >= used.get('atol', 0.0) else 'atol')})
+                              'rtol_used': _rt, 'atol_used': _at,
+                              #  실제 정지 기준 — 이것이 A/B 에서 안 줄면 조임이 **판별력 0** 이다
+                              'crit': max(_rt * rec.bnorm, _at),
+                              'binding': ('rtol' if _rt * rec.bnorm >= _at else 'atol')})
             return V, info
 
         def spsolve(A, b, *a, **kw):
@@ -122,11 +134,30 @@ class _Recorder:
                 seq.append('cg+ilu' if c.get('M') else 'cg')
         return '>'.join(seq) or 'none'
 
+    def _eff(self):
+        return [c for c in self.calls if c['fn'] == 'cg' and c.get('result') != 'TypeError']
+
     def kwarg(self):
-        for c in self.calls:
-            if c['fn'] == 'cg' and c.get('result') != 'TypeError':
-                return c['kwarg'], c['value'], c.get('info')
-        return '', None, None
+        e = self._eff()
+        return (e[0]['kwarg'], e[0]['value'], e[0].get('info')) if e else ('', None, None)
+
+    def adopted(self):
+        """**채택된** 해의 상태 — ⚠ R3-04: 옛 판은 첫 cg 의 info 를 적었다.  fallback 이
+        일어나면(cg info=1 → ILU-cg info=0) 채택되지 않은 해의 상태를 보고한 셈이다.
+
+        → (info, n_cg, fell_back).  마지막 유효 cg 가 채택된 해다 (그 뒤 spsolve 로
+        넘어갔으면 반복해가 아니므로 info 는 의미가 없고 None 을 준다).
+        """
+        e = self._eff()
+        if not e:
+            return None, 0, False
+        last_is_cg = self.calls and self.calls[-1]['fn'] == 'cg'
+        return (e[-1].get('info') if last_is_cg else None), len(e), len(e) > 1
+
+    def crit(self):
+        """채택된 해의 실제 정지 기준 (없으면 None)."""
+        e = self._eff()
+        return e[-1]['crit'] if e else None
 
     def criterion(self):
         """실제 정지 기준 → (rtol_used, atol_used, binding) — 첫 유효 cg 호출 기준."""
@@ -147,9 +178,14 @@ def solve_pair(nc, net):
             gB, sB = nc.solve_network(net, mode='full')
     ka, va, ia = ra.kwarg(); kb, vb, _ib = rb.kwarg()
     rA, aA, bindA = ra.criterion(); rB, aB, _bB = rb.criterion()
+    #  R3-04: **채택된** 해의 상태 (fallback 뒤에도 첫 해를 적던 것을 고친다)
+    fa, na, fba = ra.adopted(); fb, nb, fbb = rb.adopted()
+    cA, cB = ra.crit(), rb.crit()
     return dict(sigma_A=sA, sigma_B=sB, path_A=ra.path(), path_B=rb.path(),
                 kwarg=ka, tol_A=va, tol_B=vb, info_A=ia, n_nodes=n_nodes,
-                rtol_A=rA, rtol_B=rB, atol_A=aA, binding_A=bindA)
+                rtol_A=rA, rtol_B=rB, atol_A=aA, binding_A=bindA,
+                info_final_A=fa, info_final_B=fb, n_cg_A=na, n_cg_B=nb,
+                fallback_A=fba, fallback_B=fbb, crit_A=cA, crit_B=cB)
 
 
 def measure_case(case_dir: Path, deck_dir, channels):
@@ -177,15 +213,30 @@ def measure_case(case_dir: Path, deck_dir, channels):
             rows.append({'case': case_dir.name, 'channel': ch, 'status': 'NO_NETWORK'}); continue
         r = solve_pair(_S0._NC, net)
         sA, sB = r['sigma_A'], r['sigma_B']
+        kind = 'direct' if r['path_A'] == 'spsolve' and r['path_B'] == 'spsolve' else 'iterative'
         if sA is None or sB is None:
             status, delta, kind = 'SOLVE_NONE', '', 'none'
+        #  ⚠ R3-04: 옛 판은 None 만 걸렀다 — NaN/inf 가 **OK 로 발행**되고 집계를 오염시켰다
+        elif not (np.isfinite(sA) and np.isfinite(sB)):
+            status, delta = 'NONFINITE', ''
+        elif not sA:
+            status, delta = 'OLD_ZERO', ''
+        #  ⚠ R3-03: 조여도 **정지 기준이 안 줄면** 판별력 0 이다 (거짓 0 의 자리).
+        #    직접해는 반복 허용오차 자체가 없으므로 이 검사를 적용하지 않는다.
+        elif kind == 'iterative' and not (r['crit_A'] and r['crit_B']
+                                          and r['crit_B'] < r['crit_A'] * (1 + 1e-12)):
+            status, delta = 'TIGHTEN_NOOP', ''
         else:
-            delta = 100.0 * abs(sB - sA) / abs(sA) if sA else ''
-            kind = 'direct' if r['path_A'] == 'spsolve' and r['path_B'] == 'spsolve' else 'iterative'
+            delta = 100.0 * abs(sB - sA) / abs(sA)
             status = 'OK'
         rows.append({'case': case_dir.name, 'channel': ch, 'status': status, 'rho_kind': kind,
                      'n_nodes': r['n_nodes'], 'path_A': r['path_A'], 'path_B': r['path_B'],
                      'kwarg': r['kwarg'], 'tol_A': r['tol_A'], 'tol_B': r['tol_B'], 'cg_info_A': r['info_A'],
+                     'cg_info_final_A': r['info_final_A'], 'cg_info_final_B': r['info_final_B'],
+                     'n_cg_A': r['n_cg_A'], 'fallback_A': r['fallback_A'], 'fallback_B': r['fallback_B'],
+                     'crit_A': r['crit_A'], 'crit_B': r['crit_B'],
+                     #  §8-B: 직접해는 **반복 허용오차에 한해** 비적용 (finite·성공 검사는 유지)
+                     'tol_gate': 'TOL_NOT_APPLICABLE' if kind == 'direct' else 'applicable',
                      'rtol_A': r['rtol_A'], 'rtol_B': r['rtol_B'], 'atol_A': r['atol_A'], 'binding_A': r['binding_A'],
                      'sigma_ratio_A': sA, 'sigma_ratio_B': sB, 'delta_pct': delta})
     return rows
@@ -199,13 +250,20 @@ def summarize(rows, channels):
            'date': _dt.date.today().isoformat(), 'channels': {}}
     for ch in channels:
         sub = [r for r in rows if r['channel'] == ch]
-        ok = [r for r in sub if r['status'] == 'OK' and r['delta_pct'] != '']
+        #  ⚠ R3-04: 비유한 값이 섞이면 max 가 **행 순서에 따라** 0.0 이 되기도 NaN 이 되기도
+        #    했다.  OK 만 세고, 그래도 한 번 더 유한성을 확인한다 (fail-closed).
+        ok = [r for r in sub if r['status'] == 'OK' and r['delta_pct'] != ''
+              and np.isfinite(r['delta_pct'])]
         it = [r for r in ok if r['rho_kind'] == 'iterative']
         dr = [r for r in ok if r['rho_kind'] == 'direct']
         out['channels'][ch] = {
             'n_cases': len(sub), 'n_ok': len(ok), 'n_iterative': len(it), 'n_direct': len(dr),
             'n_no_network': sum(1 for r in sub if r['status'] == 'NO_NETWORK'),
             'n_solve_none': sum(1 for r in sub if r['status'] == 'SOLVE_NONE'),
+            'n_nonfinite': sum(1 for r in sub if r['status'] == 'NONFINITE'),
+            'n_old_zero': sum(1 for r in sub if r['status'] == 'OLD_ZERO'),
+            'n_tighten_noop': sum(1 for r in sub if r['status'] == 'TIGHTEN_NOOP'),
+            'n_fallback': sum(1 for r in sub if r.get('fallback_A') or r.get('fallback_B')),
             'rho_pct_max_iterative': (max(r['delta_pct'] for r in it) if it else None),
             'rho_pct_max_all': (max(r['delta_pct'] for r in ok) if ok else None),
             'paths': sorted({r['path_A'] for r in ok}),
@@ -328,6 +386,53 @@ def _selftest() -> int:
     chk('⑤c 원상복구: TIGHTEN 이 기본값으로 돌아왔다', TIGHTEN == _saved == 0.1)
     #  ④ 래퍼가 빠져나가면 모듈의 cg/spsolve 가 원상복구된다
     chk('④ 래퍼 원상복구', nc.cg is _S0._NC.cg and callable(nc.spsolve))
+
+    # ══ Codex 3라운드 회귀 (R3-03 · R3-04) — 전부 옛 판에서 빨간불이어야 한다 ══
+    class _Fake:                     # 생산 solve 를 흉내내는 최소 모듈 대역
+        def __init__(self, infos): self._infos, self.spsolve = list(infos), (lambda A, b, *a, **k: b)
+        def cg(self, A, b, **kw): return b, self._infos.pop(0)
+
+    _A = np.eye(2); _b = np.array([1.0, 0.0])
+
+    #  ⑥ R3-03 — 생산이 rtol 과 atol 을 **함께** 넘겨도 조임이 rtol 에 들어간다.
+    #     옛 판은 키 우선순위(tol→atol→rtol)로 atol 만 골라 `atol*factor` 를 했고,
+    #     처방값 atol=0 이면 **아무것도 안 조여졌다** (기준 불변 = false-zero).
+    f6 = _Fake([0])
+    with _Recorder(f6, factor=0.01) as r6:
+        f6.cg(_A, _b, rtol=1e-8, atol=0.0)
+    c6 = r6.calls[-1]
+    chk('⑥ ★ rtol+atol 을 함께 넘겨도 rtol 이 조여진다 (R3-03)',
+        abs(c6['rtol_used'] - 1e-10) < 1e-22, f"rtol_used={c6['rtol_used']:.3g}")
+    chk('⑥b 정지 기준이 실제로 factor 배로 줄었다',
+        abs(c6['crit'] - 1e-10) < 1e-22, f"crit={c6['crit']:.3g}")
+
+    #  ⑦ R3-04 — fallback 이 일어나면 **채택된**(마지막) 해의 상태를 보고한다.
+    #     옛 판의 kwarg() 는 첫 호출(info=1, 채택 안 됨)을 적었다.
+    f7 = _Fake([1, 0])
+    with _Recorder(f7) as r7:
+        f7.cg(_A, _b, atol=1e-8)                 # 실패
+        f7.cg(_A, _b, atol=1e-8, M='ilu')        # fallback 성공 ← 채택
+    chk('⑦ 첫 해의 info 는 1 (기록은 남긴다)', r7.kwarg()[2] == 1)
+    chk('⑦b ★ 채택된 해의 info 는 0 이고 fallback 이 표시된다 (R3-04)',
+        r7.adopted() == (0, 2, True), str(r7.adopted()))
+
+    #  ⑧⑨ R3-04 — NaN 이 OK 로 새지 않고, 집계가 **행 순서에 무관**하다.
+    def _row(st, d):
+        return {'channel': 'ion', 'status': st, 'rho_kind': 'iterative', 'delta_pct': d,
+                'path_A': 'cg', 'path_B': 'cg', 'kwarg': 'atol', 'binding_A': 'rtol',
+                'rtol_A': 1e-5, 'rtol_B': 1e-6, 'atol_A': 1e-8, 'n_nodes': 40000,
+                'fallback_A': False, 'fallback_B': False, 'crit_A': 1e-5, 'crit_B': 1e-6}
+    _rows = [_row('OK', 0.0), _row('NONFINITE', ''), _row('OK', 2.0)]
+    s1 = summarize(_rows, ['ion'])['channels']['ion']
+    s2 = summarize(list(reversed(_rows)), ['ion'])['channels']['ion']
+    chk('⑧ ★ NONFINITE 는 OK 로 세지 않는다 (R3-04)',
+        s1['n_ok'] == 2 and s1['n_nonfinite'] == 1, f"n_ok={s1['n_ok']} n_nonfinite={s1['n_nonfinite']}")
+    chk('⑨ ★ 집계가 행 순서에 무관하다 (옛 판은 0.0 ↔ NaN 로 갈렸다)',
+        s1['rho_pct_max_all'] == s2['rho_pct_max_all'] == 2.0,
+        f"{s1['rho_pct_max_all']} vs {s2['rho_pct_max_all']}")
+    chk('⑩ 새 상태가 요약에 세어진다 (OLD_ZERO · TIGHTEN_NOOP · fallback)',
+        all(k in s1 for k in ('n_old_zero', 'n_tighten_noop', 'n_fallback')))
+
     print('ρ 측정 SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
