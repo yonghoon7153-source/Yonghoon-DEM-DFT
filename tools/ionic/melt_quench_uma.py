@@ -46,6 +46,20 @@ EV_A3_TO_GPA = 160.21766208
 # ⭐ 배로스탯 설정은 여기 한 곳에만 있다 — 대조 잡(--npt_control)이 생산 런과 **같은 설정**을 쓰지 않으면
 #    아무것도 증명하지 못한다. 바꾸려면 여기서 바꾸고, 두 경로가 같이 따라간다.
 BARO = {"taut_fs": 100.0, "taup_fs": 1000.0, "compressibility_au": 8.0}   # 8.0 Å³/eV ≈ 1/(20 GPa)
+# ⭐ 앙상블 **선언** — G4("담금질은 NPT(0 GPa)")가 읽을 값이다. 실제로 쓰는 자리(run_melt_quench)와
+#    같은 상수에서 plan.json 으로 내려가고, --gate_check 가 그것을 다시 읽어 thermo.csv 와 대조한다.
+#    2026-09-14 추가: 이 필드가 없어서 seed1 의 앙상블을 thermo 에서 **역추적**해야 했다 —
+#    게이트가 읽을 값이 기록에 없는 것은 9/13 에 부류로 정리한 '조용히 틀린 경로' 다.
+ENSEMBLE = {"ensemble": "NPT", "thermostat": "Berendsen", "barostat": "Berendsen",
+            "target_pressure_GPa": 0.0, "barostat_params": dict(BARO),
+            "⛔_엄밀성": "Berendsen 은 부피 변동을 정확한 NPT 분포로 표본화하지 않는다 "
+                        "(Bernetti–Bussi 2020) — 구조 생성용이지 앙상블 통계용이 아니다."}
+FINAL_RELAX = {"kind": "FIRE", "fmax_eV_A": 0.05, "cell": "fixed",
+               "⛔": "밀도는 **마지막 NPT 셀**의 값이고 구조 지표는 그 셀을 고정한 완화 구조의 값이다 "
+                     "(개정 ③ — '300 K 평형 유리의 평균값' 이 아니다)."}
+BAND_CARD = "db/properties/lpscl_li2s_layer1_amendment_2026_09_12.json"
+BAND_PATH = ("1_바꾸는_것", "⑤_밴드_산수_정정")   # → 중심 · 밴드_±15%
+P_TOL_GPA = 0.10        # --gate_check: |⟨P⟩| 허용 (npt_control 의 --control_p_tol 과 같은 눈금)
 SYSTEMS = {                       # 식단위 조성 · 기본 n_fu
     "A":              ({"Li": 4, "P": 1, "S": 4, "Cl": 1}, 40),
     "B":              ({"Li": 3, "P": 1, "S": 4, "Cl": 0}, 50),
@@ -503,6 +517,91 @@ def write_gr_csv(cols, path):
             f.write(",".join(f"{cols[k][i]:.5f}" for k in keys) + "\n")
 
 
+def build_plan(system, seed, sym, density, T_melt, T_final, melt_ps,
+               quench_rate, quench_ps, hold_ps, dt_fs, save_ps):
+    """plan.json 의 내용. **게이트가 읽을 값이 여기서 들어간다** — 읽는 곳은 `--gate_check`."""
+    return {"system": system, "seed": seed, "n_atoms": len(sym),
+            "composition": {e: sym.count(e) for e in sorted(set(sym))},
+            "start_density_g_cm3": density, "T_melt_K": T_melt, "T_final_K": T_final, "melt_ps": melt_ps,
+            "quench_rate_K_s": quench_rate, "quench_ps": quench_ps, "hold_ps": hold_ps, "dt_fs": dt_fs,
+            "save_ps": save_ps,   # ⛔ 빠뜨리면 --melt_check 가 dt 를 **유도**한다 (2026-09-12)
+            "G2_declared_before_results": True,
+            "card": "db/properties/lpscl_li2s_interphase_prereg_2026_09_11.json",
+            # ⭐ 게이트가 읽는 값 — 누가 읽나: `--gate_check`. 없으면 그 모드가 **기록없음** 으로 fail-closed 한다.
+            "게이트_입력": {"G2_quench_rate_K_s": quench_rate, **ENSEMBLE, "final_relax": FINAL_RELAX,
+                         "G4_band_card": BAND_CARD, "읽는_곳": "melt_quench_uma.py --gate_check <run_dir>"}}
+
+
+# ───────────────────────── --gate_check: 기록이 게이트를 먹여주는가 ─────────────────────────
+def read_thermo(path):
+    """thermo.csv → {열이름: np.array}. 열이 없으면 **죽는다** (없는 값을 0 으로 그리지 않는다)."""
+    lines = pathlib.Path(path).read_text(encoding="utf-8").strip().splitlines()
+    if len(lines) < 2:
+        raise ValueError(f"{path}: 자료 줄이 없다")
+    keys = lines[0].split(",")
+    cols = np.array([[float(x) for x in ln.split(",")] for ln in lines[1:] if ln.strip()])
+    return {k: cols[:, i] for i, k in enumerate(keys)}
+
+
+def read_band(card=BAND_CARD):
+    """G4 밴드를 **카드에서** 읽는다 — 도구가 숫자를 자체 보관하지 않는다.
+    절이나 키가 없으면 KeyError 로 죽는다: '못 찾음' 을 기본값으로 채우지 않는다."""
+    q = pathlib.Path(card)
+    if not q.exists():                       # repo 루트 상대 (도구가 어디서 불리든 같은 카드)
+        q = pathlib.Path(__file__).resolve().parents[2] / card
+    d = json.loads(q.read_text(encoding="utf-8"))
+    for k in BAND_PATH:
+        if not isinstance(d, dict) or k not in d:
+            raise KeyError(f"{q}: 밴드 절 '{k}' 가 없다 — 밴드를 도구가 지어내지 않는다")
+        d = d[k]
+    lo, hi = d["밴드_±15%"]
+    return float(d["중심"]), float(lo), float(hi)
+
+
+def gate_check(run, band_card=BAND_CARD, win_ps=10.0, p_tol=P_TOL_GPA, log=print):
+    """plan.json 의 **앙상블 선언**이 있는지 보고, 있으면 thermo.csv 로 대조한 뒤 G4(밀도 밴드)를 찍는다.
+
+    ⛔ 이 함수가 못 하는 것
+      · 판정하지 않는다 — G4 가 '밴드 밖' 으로 발화하는지까지만 말하고, 원인(UMA·셀·담금질)은 안 가른다.
+      · ⟨P⟩≈0 을 정확한 NPT 표본화의 증명으로 읽지 않는다 (Berendsen).
+      · 기록이 없는 옛 런에서 thermo 로 **역추적**은 하되, 그것을 기록으로 승격하지 않는다.
+    """
+    run = pathlib.Path(run)
+    plan = json.loads((run / "plan.json").read_text(encoding="utf-8"))
+    g = plan.get("게이트_입력")
+    res = {"run": str(run), "record_has_gate_input": bool(g),
+           "출처": "plan.json 선언" if g else "thermo.csv 역추적 (기록 아님)"}
+    if not g:
+        log("⛔ plan.json 에 `게이트_입력` 이 없다 — G4 가 요구하는 앙상블·목표압력이 **기록에 없다**.")
+        log("   2026-09-12 이전 실행이다. 아래 수치는 thermo 에서 역추적한 것이고, 기록이 아니다.")
+    t = read_thermo(run / "thermo.csv")
+    tail = t["t_ps"] >= t["t_ps"].max() - win_ps
+    P, rho, T = t["P_GPa"][tail], t["density_g_cm3"][tail], t["T_K"][tail]
+    res.update({"win_ps": win_ps, "n_frames": int(tail.sum()),
+                "T_mean_K": float(T.mean()),
+                "P_mean_GPa": float(P.mean()), "P_sd_GPa": float(P.std(ddof=1)) if tail.sum() > 1 else 0.0,
+                "rho_mean": float(rho.mean()), "rho_min": float(rho.min()), "rho_max": float(rho.max()),
+                "rho_last": float(t["density_g_cm3"][-1])})
+    tgt = float(g["target_pressure_GPa"]) if g else 0.0
+    res["target_pressure_GPa"] = tgt
+    res["pressure_ok"] = abs(res["P_mean_GPa"] - tgt) <= p_tol
+    res["rho_flat_pct"] = 100.0 * (res["rho_max"] - res["rho_min"]) / res["rho_mean"]
+    c, lo, hi = read_band(band_card)
+    res.update({"band_center": c, "band_lo": lo, "band_hi": hi, "band_card": str(band_card),
+                "dev_pct_vs_center": 100.0 * (res["rho_last"] / c - 1.0),
+                "in_band": bool(lo <= res["rho_last"] <= hi)})
+    res["G4_fires"] = not res["in_band"]
+    log(f"  앙상블 기록 {'있음' if g else '⛔없음'} · {res['출처']}")
+    log(f"  마지막 {win_ps:.0f} ps: ⟨P⟩ {res['P_mean_GPa']:+.3f} ± {res['P_sd_GPa']:.3f} GPa "
+        f"(목표 {tgt:+.2f}, 허용 ±{p_tol}) → {'⭕' if res['pressure_ok'] else '⛔'}")
+    log(f"  ρ {res['rho_min']:.4f}–{res['rho_max']:.4f} (폭 {res['rho_flat_pct']:.2f} %) · "
+        f"마지막 {res['rho_last']:.4f} g/cm³")
+    log(f"  밴드 [{lo:.4f}, {hi:.4f}] 중심 {c:.4f} → {res['dev_pct_vs_center']:+.2f} % · "
+        + ("G4 **발화**" if res["G4_fires"] else "밴드 안"))
+    log("  ⛔ 원인은 이 모드가 안 가른다 — UMA(황화물 연화)·셀·담금질 중 무엇인지는 G1 이 먼저 답한다.")
+    return res
+
+
 # ───────────────────────── selftest ─────────────────────────
 def _selftest():
     ok = bad = 0
@@ -688,6 +787,67 @@ def _selftest():
     pos_w = pos_b + walk
     _t, m_w = npt_msd(symb, pos_w, cells_b, 1.0)
     chk(m_w["P"][-1] > 3.0, f"움직이는 골격은 잡아낸다 (MSD {m_w['P'][-1]:.2f} Å²)")
+    # ⑧ --gate_check: 기록 ↔ 실행 ↔ 게이트 (2026-09-14)
+    import tempfile, inspect
+    def _mkrun(d, plan, rows):
+        d = pathlib.Path(d); d.mkdir(parents=True, exist_ok=True)
+        (d / "plan.json").write_text(json.dumps(plan, ensure_ascii=False), encoding="utf-8")
+        with open(d / "thermo.csv", "w") as f:
+            f.write("t_ps,T_K,T_set_K,density_g_cm3,volume_A3,E_pot_eV,P_GPa,P_virial_GPa\n")
+            for r in rows:
+                f.write(",".join(f"{x:.4f}" for x in r) + "\n")
+        return d
+    def _rows(rho_tail, p_tail):
+        out = []
+        for i in range(100):                      # 앞 50 프레임은 **일부러 거칠게** 둔다 (창 시험)
+            calm = i >= 50
+            out.append((float(i), 300.0 if calm else 1200.0, 300.0 if calm else 1200.0,
+                        rho_tail if calm else 1.2000, 8000.0, -1000.0,
+                        (p_tail + 0.02 * ((-1) ** i)) if calm else 5.0,
+                        0.0))
+        return out
+    sym_A, _pos, _cell = build_random_cell("A", seed=1)
+    plan_ok = build_plan("A", 1, sym_A, 1.2, 1200.0, 300.0, 100.0, 1e12, 900.0, 50.0, 2.0, 1.0)
+    gi = plan_ok.get("게이트_입력", {})       # ⛔ 필드가 사라지면 **빨간불**이지 예외가 아니다
+    chk(gi.get("ensemble") == "NPT" and gi.get("target_pressure_GPa") == 0.0,
+        "build_plan 이 앙상블·목표압력을 plan 에 **기록**한다 (G4 가 읽을 값)")
+    src = inspect.getsource(run_melt_quench)
+    chk("NPTBerendsen" in src and "pressure_au=0.0" in src
+        and ENSEMBLE["barostat"] == "Berendsen" and ENSEMBLE["target_pressure_GPa"] == 0.0,
+        "선언(ENSEMBLE) 이 실행 경로(NPTBerendsen · pressure_au=0.0)와 같은 것을 말한다")
+    c0, lo0, hi0 = read_band()
+    chk(abs(c0 - 1.91347) < 1e-4 and abs(lo0 / c0 - 0.85) < 1e-4 and abs(hi0 / c0 - 1.15) < 1e-4,
+        f"read_band 가 카드에서 중심 {c0:.5f} · ±15 % 밴드를 읽는다 (도구가 숫자를 안 갖는다)")
+    with tempfile.TemporaryDirectory() as td:
+        td = pathlib.Path(td)
+        r = gate_check(_mkrun(td / "good", plan_ok, _rows(1.9000, 0.00)), win_ps=10.0, log=lambda *a: None)
+        chk(r["record_has_gate_input"] and r["pressure_ok"] and r["in_band"] and not r["G4_fires"],
+            "정상 런: 기록 있음 · ⟨P⟩≈0 · 밴드 안 → G4 침묵")
+        chk(abs(r["P_mean_GPa"]) < 0.05,
+            f"⛔음성: 창이 **마지막 {10:.0f} ps 만** 본다 — 앞 50 ps 의 P=5 GPa 가 안 섞인다 (⟨P⟩ {r['P_mean_GPa']:+.3f})")
+        plan_old = {k: v for k, v in plan_ok.items() if k != "게이트_입력"}
+        r2 = gate_check(_mkrun(td / "old", plan_old, _rows(1.9000, 0.00)), win_ps=10.0, log=lambda *a: None)
+        chk(r2["record_has_gate_input"] is False and "역추적" in r2["출처"],
+            "⛔음성: 게이트_입력 없는 옛 plan 을 **기록없음** 으로 잡고 역추적이라고 이름 붙인다")
+        r3 = gate_check(_mkrun(td / "poff", plan_ok, _rows(1.9000, 0.50)), win_ps=10.0, log=lambda *a: None)
+        chk(not r3["pressure_ok"], f"⛔음성: ⟨P⟩ {r3['P_mean_GPa']:+.2f} GPa 가 목표 0 에서 벗어난 것을 잡는다")
+        r4 = gate_check(_mkrun(td / "thin", plan_ok, _rows(1.5717, 0.00)), win_ps=10.0, log=lambda *a: None)
+        chk(r4["G4_fires"] and abs(r4["dev_pct_vs_center"] + 17.86) < 0.02,
+            f"⛔음성: 밴드 밖 밀도에 G4 가 발화한다 ({r4['dev_pct_vs_center']:+.2f} %)")
+        bad_card = td / "nocard.json"
+        bad_card.write_text(json.dumps({"1_바꾸는_것": {}}, ensure_ascii=False), encoding="utf-8")
+        try:
+            read_band(bad_card); hit = False
+        except KeyError:
+            hit = True
+        chk(hit, "⛔음성: 밴드 절이 없는 카드에서 기본값으로 때우지 않고 죽는다")
+        empty = td / "empty"; empty.mkdir()
+        (empty / "thermo.csv").write_text("t_ps,T_K\n", encoding="utf-8")
+        try:
+            read_thermo(empty / "thermo.csv"); hit2 = False
+        except ValueError:
+            hit2 = True
+        chk(hit2, "⛔음성: 자료 줄 없는 thermo.csv 를 빈 배열로 넘기지 않는다")
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
 
@@ -731,9 +891,18 @@ def main():
     ap.add_argument("--control_tol", type=float, default=0.03, help="--npt_control 통과 문턱 |Δρ/ρ_UMA(0K)|")
     ap.add_argument("--control_out", help="--npt_control 출력 폴더 (기본 <out_root>/npt_control)")
     ap.add_argument("--dry_run", action="store_true", help="셀만 만들고 계획을 찍는다 (UMA 안 부름)")
+    ap.add_argument("--gate_check", metavar="RUN_DIR",
+                    help="plan.json 의 앙상블 선언 + thermo.csv 대조 + G4 밴드 (판정 아님, 기록 점검)")
+    ap.add_argument("--band_card", default=BAND_CARD, help="--gate_check G4 밴드 출처 카드")
+    ap.add_argument("--gate_win_ps", type=float, default=10.0, help="--gate_check 평균 창 [ps]")
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
+    if a.gate_check:
+        r = gate_check(a.gate_check, a.band_card, a.gate_win_ps)
+        (pathlib.Path(a.gate_check) / "gate_check.json").write_text(
+            json.dumps(r, ensure_ascii=False, indent=1), encoding="utf-8")
+        raise SystemExit(0 if (r["record_has_gate_input"] and r["pressure_ok"]) else 2)
     if a.pcheck:
         from ase.io import read
         calc = make_calc(a.device, a.turbo)
@@ -797,11 +966,8 @@ def main():
     quench_ps, n_q = schedule(a.T_melt, a.T_final, a.quench_rate, a.dt_fs)
     sym, pos, cell = build_random_cell(a.system, a.seed, a.density, a.n_fu)
     out = pathlib.Path(a.out_root) / a.system / f"seed{a.seed}"; out.mkdir(parents=True, exist_ok=True)
-    plan = {"system": a.system, "seed": a.seed, "n_atoms": len(sym), "composition": {e: sym.count(e) for e in sorted(set(sym))},
-            "start_density_g_cm3": a.density, "T_melt_K": a.T_melt, "T_final_K": a.T_final, "melt_ps": a.melt_ps,
-            "quench_rate_K_s": a.quench_rate, "quench_ps": quench_ps, "hold_ps": a.hold_ps, "dt_fs": a.dt_fs,
-            "save_ps": a.save_ps,   # ⛔ 빠뜨리면 --melt_check 가 dt 를 **유도**한다 (2026-09-12)
-            "G2_declared_before_results": True, "card": "db/properties/lpscl_li2s_interphase_prereg_2026_09_11.json"}
+    plan = build_plan(a.system, a.seed, sym, a.density, a.T_melt, a.T_final, a.melt_ps,
+                      a.quench_rate, quench_ps, a.hold_ps, a.dt_fs, a.save_ps)
     (out / "plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=1))
     from ase import Atoms
     from ase.io import write
