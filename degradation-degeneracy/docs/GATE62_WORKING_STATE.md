@@ -327,3 +327,10 @@ table 무관 → 대상 판정이 갈리는 자리로 재조준 · `promotion-re
 축 33 (접수 22 + 자체 리뷰 11) 중 실행 32 · 선언 1.
 
 wiki lint: 0 errors. strict smoke: ✅ 54 · exit 0 (`0dcbc17`).
+
+### 전체 회귀 (마감 트리 `2a4ca8a`)
+
+`python -m pytest tests/ -q` → **1713 passed · 1 failed · 1 xfailed** (26분 22초).
+실패 1 = `test_a_smoke_run_cannot_be_promoted_to_a_canonical_report` — 작업 트리에
+`results/grid_fit_v4` 가 없는 환경 결손 (61차 리뷰어 환경과 같은 이유). 요청문
+환경 안내에 적었다. 요청문 `docs/22p_gap/GATE62_REQUEST.md` 완성.

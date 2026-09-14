@@ -118,7 +118,7 @@ wsweep 디렉터리를 갈아 끼워도 `archive_bundle bundle` 이 안 거부�
 | P0-3 | fit/grid 가 봉인·commit 전에 lock 을 놓음 → 첫 실행이 둘째 bytes 봉인 | token 이 dir_fd 를 들고 있어 commit 이 handle 을 닫은 뒤에도 놓는다 → compute → commit → receipt → release. grid 는 merge·manifest·`write_curves_manifest`·`phase_done` 까지 lock 안 | `test_lock_lifetime_62.py` (fit 순서 spy · grid AST `min(release)`) · smoke 7b (resume 뒤 lock 정리) | `fit-commits-inside-the-lock-g62` · `grid-merges-inside-the-lock-g62` |
 | P0-4 | grid `manifest.yaml` 의 `curves_parquet=/proc/self/fd/N/…` 이 fit 에 봉인됨 | `_grid_manifest_payload(named_out, merged, …)` — 이름 기준 | 같은 파일 2건 · smoke 8b (굳은 기록 scan) | `grid-manifest-locator-is-the-name-g62` |
 | P0-5 | random `fit-stage-*` 가 run_spec 에 → run_sig 매번 변경, resume 무효 | `"base_config": _ck(...)` — staging 뿌리 기준 논리 key (`base_config_sha` 와 같은 key) | 같은 파일 2건 (resume → journal 1개 · manifest 에 `fit-stage-` 없음) · smoke 7b | `run-sig-has-no-staging-pathname-g62` |
-| P0-6 | class local 을 method 에, parameter 를 definition head 에 적용 | `_definition_head()` 는 바깥 집합, class 는 자식 scope 에 `inherited`. **자체 리뷰가 하나 더**: class 본문·module 문장의 결속은 `LOAD_NAME` 이라 위치 의존 → 함수·lambda 만 결속 shadow (fail-closed) | `test_scope_model_62.py` 27건 (Python 진실 exec + 분석기 + guard e2e) | `definition-head-is-the-enclosing-scope-g62` · `class-locals-stay-in-the-class-body-g62` · `class-body-bindings-are-not-shadows-g62` |
+| P0-6 | class local 을 method 에, parameter 를 definition head 에 적용 | `_definition_head()` 는 바깥 집합, class 는 자식 scope 에 `inherited`. **자체 리뷰가 하나 더**: class 본문·module 문장의 결속은 `LOAD_NAME` 이라 위치 의존 → 함수·lambda 만 결속 shadow (fail-closed) | `test_scope_model_62.py` 27건 (Python 진실 exec + 분석기 + guard e2e) | `definition-head-is-the-enclosing-scope-g62` · `class-body-bindings-are-not-shadows-g62` · (declared) `class-locals-stay-in-the-class-body-g62` — F3 가 class 의 `here == inherited` 로 만들어 의미를 못 바꾼다, 사유는 `DECLARED_MASKED` |
 | P0-7 | crossed scoring 을 primary 의 symbol table 로 분석 | `_producer_closure` 가 module 별 table (`tables["rp"|"sc"]`). **자체 리뷰가 둘 더**: 건너간 module 의 자기 이름 공간 접근을 walk 가 따라감 · `from src import scoring as me` 수집, `import src as S` 는 fail-closed 거부 | 같은 파일 | `crossed-module-uses-its-own-symbol-table-g62` · `crossed-module-self-alias-is-followed-g62` · `from-imports-are-namespace-targets-g62` · `parent-package-import-is-refused-g62` · (재조준) `closure-follows-module-aliases` |
 | P0-8 | direct `archive_bundle bundle` 이 derived freshness 우회 | `assert_promotable()` = smoke·등록·봉인 + freshness, `archive_bundle.main` 이 지난다. **자체 리뷰가 하나 더**: 검사↔복사 사이 writer 를 막으려고 `.fit.lock`·`.run.lock` 을 든 채 검사+복사 | `test_archive_freshness_62.py` 5건 | `promotion-checks-derived-freshness-g62` · `promotion-holds-the-run-locks-g62` |
 | P1-1 | own lock 의 malformed/unreadable 을 release 가 삼킴 | release 는 token 만 받고 inode 로 판정 — 사라짐/바뀜은 올리고, 경로 인자는 `TypeError` | `test_run_lock_62.py` · 61차 `test_logical_paths_61.py` 2건 정정 | `release-consumes-a-token-not-a-path-g62` · `release-refuses-a-replaced-inode-g62` · `release-refuses-a-vanished-lock-g62` · (재조준) g61 2개 |
@@ -134,7 +134,79 @@ wsweep 디렉터리를 갈아 끼워도 `archive_bundle bundle` 이 안 거부�
 
 ## §2 증거 — 전부 이 브랜치 head 에서 실행한 출력이다
 
-{{EVIDENCE}}
+### 2.1 판정 좌표
+
+```
+판정 대상 코드          0dcbc17aa73ef1fc8ac681e2b0617da68a86ceb4
+source_digest          fd7c90edbc56ff1f          (직전 4227b40871fa0c10)
+그 뒤 RUN_SCOPE diff    없음
+    git log --oneline 0dcbc17..HEAD -- src tools configs scripts run.sh requirements*.txt
+    → 빈 출력
+```
+
+### 2.2 회귀
+
+```
+python -m pytest tests/ -q      1713 passed, 1 failed, 1 xfailed   (26분 22초)
+    실패 1 = tests/test_docs_lint.py::test_a_smoke_run_cannot_be_promoted_to_a_canonical_report
+             — 작업 트리에 results/grid_fit_v4 (gitignored 실물) 가 없는 환경 결손.
+             61차 리뷰어 환경에서도 같은 이유로 빨갰다. 코드 발견이 아니다.
+./scripts/smoke_e2e.sh          pipeline smoke 통과 (✅ 54건, exit 0) — 0dcbc17, RUN_SCOPE clean
+                                새 단계 7b (resume → journal 1 · lock 정리 · 봉인/승격 판정 · 보고서 갱신)
+                                · 8b (굳은 기록 58개 scan: handle·staging·없는 경로 0) 포함
+wiki/tools/lint.py              0 errors
+```
+
+회귀는 12조각 증거 커밋(`2a4ca8a`) 트리에서 받았다. 그 뒤 커밋은 `docs/` 만
+건드렸다 — RUN_SCOPE 의 dirty 판정은 `src/ tools/ configs/ scripts/ run.sh
+requirements*.txt` 만 보므로 smoke 의 전제는 그대로다.
+
+### 2.3 변이 등록부와 전수 재생
+
+```
+MUTANTS 235 · MULTI 31 · EXPECT 256 · DECLARED_MASKED 11
+62차 축 33 (접수 16건에 22 · 자체 리뷰 11) — 실행 32 · declared 1
+g61 재조준 4 (lock 2 · closure 2)
+
+--check-preimages               모든 변이 지점이 정확히 한 번 나타난다
+slice 1..12 (HEAD 1b4a837, 순차)  전부 rc=0
+--check-coverage s*.json        등록부 scenario 266 (executable 255 · declared 11)
+                                조각 12개에서 관측 266
+                                조각 합집합이 등록부 전체를 정확히 덮었다
+```
+
+**전수 재생을 세 번 돌렸다.** ① `6c54429` 4조각 빨강 — 증인 문구에 journal
+이름·token repr·PID 로그가 들어가 조각마다 달라졌고(증인은 접두 대조), ε′ 의
+schema·교차 층이 옛 축 2개의 실패 이유를 바꿨고, 61차 최소 dict fixture 가 부모
+대조 층에 먼저 거부돼 `incomplete_receipt_is_refused-g61` 이 안 물었다.
+② `dbfbbf8` 1조각 빨강 — 8 프로세스 경쟁의 동시 보유자 수가 변이 아래서 7/8 로
+흔들렸다. ③ `1b4a837` 12/12. 그리고 EXPECT 관측 자체가 셋을 잡았다 (§3).
+
+### 2.4 cohort 세대 전환 (g16 → g17) · `d145790`
+
+```
+g16_2026_09_09  active → frozen  (journal seq 15)
+g17_2026_09_14  새 active · docs/22p_gap/proj_g17
+
+pin  compute            fa5b9324c01ab7f0 → 14ff767d5fbd0d9d
+     row_projection     0e22767966646d49 → f85fc2b39e15d3d0
+     producer_semantic  2e2ddce417ecf0db → 814278bfcb82fa2f
+     src_scoring        69e69cb046f4b4ae (변동 없음)
+     analysis_spec      43d74dd385b1f66d… (변동 없음)
+영수증 core_sha256       d6ae274f6e06d95a9028cebd6a7551f2d23e5fb74367576c57afab22b178ca7d
+validator                fd7c90edbc56ff1f (검사 34건)
+행 바이트                 ad598fe77e75afec — **열세 세대째 같다**
+```
+
+원자료는 이 컨테이너에 없어 `tools.archive_bundle restore artifacts/paired_fixed5_v4`
+로 복원한 뒤 돌렸다 (bundle `check` 가 member 를 재해시하므로 바이트는 같다).
+`row_projection.py paired_fixed5_v4 --cohort g17_2026_09_14` → 6138행 · restart
+30690행 · 전체 True · by_obj True · fits삼중 True · 봉인일치 True.
+
+pin 을 움직인 것은 δ′ + 자체 리뷰 sig 렌즈 셋이다 — 전부 producer analyzer 의
+scope 규칙이다. `src_scoring` 과 analysis spec 이 그대로이고 행 바이트가 안
+움직인 것이 "이번 라운드는 증거·경계층만 건드렸고 계산식은 안 건드렸다" 를
+실물로 말한다.
 
 ---
 

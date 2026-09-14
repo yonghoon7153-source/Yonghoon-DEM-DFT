@@ -7027,3 +7027,21 @@ schema 가 빈 영수증을 받는다는 것을 닫았다.
 4. **자체 리뷰 4 렌즈가 결론이_바뀜 3 을 잡았다** — 전부 δ′ 의 scope 축에서.
    판정을 닫은 코드가 판정과 같은 형태의 구멍을 옆에 남기는 것을 외부 리뷰
    전에 실측으로 봤다.
+
+### 마감 — 실측 (2026-09-14)
+
+```
+판정 대상 코드      0dcbc17aa73ef1fc8ac681e2b0617da68a86ceb4 · source_digest fd7c90edbc56ff1f
+전체 회귀           1713 passed · 1 failed (환경: results/grid_fit_v4 없음) · 1 xfailed  (26분)
+strict smoke        ✅ 54 · exit 0  (7b resume 순서 e2e · 8b 굳은 기록 scan 포함)
+변이 등록부         MUTANTS 235 · MULTI 31 · EXPECT 256 · DECLARED_MASKED 11 — 62차 축 33
+12조각 전수 재생    세 번 만에 12/12 (HEAD 1b4a837) · 합집합 266 = executable 255 + declared 11
+세대 전환           g16 freeze → g17 (d145790) · 행 바이트 ad598fe77e75afec 열세 세대째
+wiki lint           0 errors
+요청문              docs/22p_gap/GATE62_REQUEST.md
+```
+
+전수 재생이 세 번인 이유는 전부 **증인** 쪽이었다 — 문구에 비결정 값(journal
+이름·token repr·PID 로그·동시 보유자 수)이 들어가 조각마다 달라졌고, 새 층이
+옛 축의 실패 이유를 바꿨다. 61차의 교훈("증인은 접두 대조라 한 글자가 전부")
+에 한 줄이 는다: **증인 문구에는 실행마다 달라지는 값을 넣지 않는다.**
