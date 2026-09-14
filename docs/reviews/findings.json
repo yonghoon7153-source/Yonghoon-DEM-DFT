@@ -3267,7 +3267,7 @@
   {
    "id": "R3-03",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_area_round3_20260914.md",
@@ -3276,12 +3276,13 @@
     "scripts/measure_rho.py"
    ],
    "title": "`measure_rho` 의 키 우선순위 `tol→atol→rtol` — rtol 처방을 넣으면 **atol 만 조여져** false-zero 가 재발한다",
-   "note": "`scripts/measure_rho.py:81`–100.  rtol 과 atol 을 함께 넘기면 앞선 키가 이겨 **rtol 이 안 바뀐다**.\n실측 (3000×3000 SPD):\n```\n기본 호출  rtol=1e-8, atol=0\n×0.001    rtol=1e-8, atol=0     ← 상대 허용오차 불변\nA/B 해 bitwise 동일, max|Δx| = 0\n대조: 실제로 rtol=1e-11 로 조이면 max|Δx| = 4.567929932154752e-9\n```\n⚠ **저장된 30건은 유효하다** — 생산이 atol-only 호출이라 `--tighten` 이 실제로 rtol 을 조였다.\n이 finding 이 막는 것은 **SELF-31 처방(rtol 명시)을 도입한 뒤의 경로**다: 그때부터 ρ 도구가\n조인다고 보고하면서 아무것도 안 조이는 false-green 이 된다 (같은 축에서 네 번째).\n처방: 실제 사용한 **양쪽의 rtol·atol·maxiter·전처리기**를 산출에 기록하고, **조이려는 손잡이가\n실제로 바뀌었는지**를 검사한다 (해가 bitwise 동일하면 판별력 0 이므로 거부)."
+   "note": "`scripts/measure_rho.py:81`–100.  rtol 과 atol 을 함께 넘기면 앞선 키가 이겨 **rtol 이 안 바뀐다**.\n실측 (3000×3000 SPD):\n```\n기본 호출  rtol=1e-8, atol=0\n×0.001    rtol=1e-8, atol=0     ← 상대 허용오차 불변\nA/B 해 bitwise 동일, max|Δx| = 0\n대조: 실제로 rtol=1e-11 로 조이면 max|Δx| = 4.567929932154752e-9\n```\n⚠ **저장된 30건은 유효하다** — 생산이 atol-only 호출이라 `--tighten` 이 실제로 rtol 을 조였다.\n이 finding 이 막는 것은 **SELF-31 처방(rtol 명시)을 도입한 뒤의 경로**다: 그때부터 ρ 도구가\n조인다고 보고하면서 아무것도 안 조이는 false-green 이 된다 (같은 축에서 네 번째).\n처방: 실제 사용한 **양쪽의 rtol·atol·maxiter·전처리기**를 산출에 기록하고, **조이려는 손잡이가\n실제로 바뀌었는지**를 검사한다 (해가 bitwise 동일하면 판별력 0 이므로 거부).\n\n★ **2026-09-14 수정.**  키를 고르지 않고 **정지 기준** `max(rtol·‖b‖, atol)` 이 factor 배로 줄도록 관련된 것을 전부 조인다 (옛 scipy 의 `tol` 은 그 자리가 상대값이라 따로 처리).  호출마다 `crit` 을 기록하고 반복해인데 `crit_B < crit_A` 가 아니면 행을 **`TIGHTEN_NOOP`** 으로 내보낸다 = 조임의 **판별력**을 행 단위로 문다.\n★ 규율 ② — 옛 판에서 회귀가 실제로 빨간불이다: `⑥ rtol_used = 1e-8` (조임 전과 동일) · `⑥b crit = 1e-8`.  selftest ⑥⑥b 상주.\n⚠ **저장된 270행은 유효하다** — 생산이 atol-only 호출이라 `--tighten` 이 실제로 rtol 을 조였다.",
+   "claimed_fixed_sha": "d3c7380e63099a0f65775ab3bab59904e87b5159"
   },
   {
    "id": "R3-04",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_area_round3_20260914.md",
@@ -3290,7 +3291,8 @@
     "scripts/measure_rho.py"
    ],
    "title": "ρ 산출의 `OK` 가 **최종 채택 해**를 보증하지 않는다 — fallback 뒤에도 첫 해의 info 를 적고 NaN 도 OK 로 발행된다",
-   "note": "`scripts/measure_rho.py:125` · `:148` · `:180` · `:202`.  실측 (64노드 큐브, 첫 CG 만 maxiter=1 로 강제해\n**실제 fallback** 을 태움):\n```\nCG(info=1) → ILU-CG(info=0)\n최종 σ_A = 0.15976350010981333 · σ_B = 0.15976325932953783\n저장 info_A = 1   ← 채택되지 않은 첫 해의 상태\n저장 info_B = 없음\n```\n★ 또한 양의 유한 저항을 1e-308 로 두면 실제 생산 solve 가 overflow/singular 로 **NaN** 을 내는데\n`measure_case` 는 None 만 거르므로 **OK** 를 발행한다.  정상 Δ=0 행 뒤에 NaN 행을 넣으면 summarize 가\n`n_ok=2, rho_max_all=0.0` 을 낸다 (순서를 바꾸면 max=NaN — 즉 **집계가 순서 의존**이다).\n⚠ 이 극단 저항이 실제 LHS 범위라는 주장이 아니다 — 현재 270행에 NaN 은 없다.  반례가 짚는 것은\n**새 입력에 대한 계측기의 유효성 검사와 최종 상태 기록**이다.\n처방 (§8-B): 최종 **채택** 해의 수렴 상태·잔차를 기록 · finite 검사를 OK 의 전제로 · 집계를 순서\n무관하게 · **직접해는 반복 허용오차에 한해 `TOL_NOT_APPLICABLE`** 로 분리하고 finite·성공·보존 검사는\n유지한다.  ⛔ 직접해를 두 번 똑같이 풀어 나온 0 을 정확성 증거로 읽지 않는다."
+   "note": "`scripts/measure_rho.py:125` · `:148` · `:180` · `:202`.  실측 (64노드 큐브, 첫 CG 만 maxiter=1 로 강제해\n**실제 fallback** 을 태움):\n```\nCG(info=1) → ILU-CG(info=0)\n최종 σ_A = 0.15976350010981333 · σ_B = 0.15976325932953783\n저장 info_A = 1   ← 채택되지 않은 첫 해의 상태\n저장 info_B = 없음\n```\n★ 또한 양의 유한 저항을 1e-308 로 두면 실제 생산 solve 가 overflow/singular 로 **NaN** 을 내는데\n`measure_case` 는 None 만 거르므로 **OK** 를 발행한다.  정상 Δ=0 행 뒤에 NaN 행을 넣으면 summarize 가\n`n_ok=2, rho_max_all=0.0` 을 낸다 (순서를 바꾸면 max=NaN — 즉 **집계가 순서 의존**이다).\n⚠ 이 극단 저항이 실제 LHS 범위라는 주장이 아니다 — 현재 270행에 NaN 은 없다.  반례가 짚는 것은\n**새 입력에 대한 계측기의 유효성 검사와 최종 상태 기록**이다.\n처방 (§8-B): 최종 **채택** 해의 수렴 상태·잔차를 기록 · finite 검사를 OK 의 전제로 · 집계를 순서\n무관하게 · **직접해는 반복 허용오차에 한해 `TOL_NOT_APPLICABLE`** 로 분리하고 finite·성공·보존 검사는\n유지한다.  ⛔ 직접해를 두 번 똑같이 풀어 나온 0 을 정확성 증거로 읽지 않는다.\n\n★ **2026-09-14 수정.**  ⓐ `adopted()` 신설 — **채택된**(마지막) 해의 info·호출 수·fallback 여부를 따로 싣는다 (첫 해의 기록도 남긴다).  ⓑ `NONFINITE` 상태 신설 — NaN/inf 가 OK 로 발행되지 않는다.  ⓒ 집계를 OK 로 한정하고 유한성을 한 번 더 확인해 **행 순서 의존을 제거**했다 (`n_nonfinite`·`n_old_zero`·`n_tighten_noop`·`n_fallback` 을 요약에 싣는다).  ⓓ 직접해는 행에 `tol_gate=TOL_NOT_APPLICABLE` — 반복 허용오차 게이트만 비적용이고 finite·성공 검사는 유지한다 (§8-B).\n★ 규율 ② — 옛 판에서 `⑦b adopted = (1, 2, False)` 로 실패한다 (채택 안 된 첫 해의 info).  selftest ⑦⑦b⑧⑨⑩ 상주.  ⚠ ⑧⑨⑩ 은 **새로 생긴 상태**를 무는 것이라 옛 판에 대응물이 없어 \"실패로 증명\" 되지는 않는다.",
+   "claimed_fixed_sha": "d3c7380e63099a0f65775ab3bab59904e87b5159"
   },
   {
    "id": "R3-05",
