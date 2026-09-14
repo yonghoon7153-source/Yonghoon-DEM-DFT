@@ -1,0 +1,222 @@
+{
+  "scope": "Four completed 5-second jobs; no new COMSOL run",
+  "method": "Exact Decimal selection of 187 prescribed stored times; native accepted intervals; domain-separated 241-point FE profiles",
+  "temporal_interpolation": false,
+  "external_spatial_interpolation": false,
+  "figure_notes": [
+    "Different voltage units in panels A and B",
+    "Connecting lines only guide the eye between sample markers",
+    "Step interval compliance does not reveal COMSOL internal expression evaluation time"
+  ],
+  "comparisons": [
+    {
+      "first": "Caps300R40H1000",
+      "second": "Caps300R40H0500",
+      "prescribed_times": 187,
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "0.06",
+        "V_first_V": 2.2405354950141123,
+        "V_second_V": 2.2405353023301724,
+        "difference_V_second_minus_first_V": -1.926839399e-07,
+        "difference_delta_Eeq_V": -1.94455226e-07,
+        "difference_delta_etaMid_V": 1.842800353e-09,
+        "difference_delta_phiL_V": -7.15137e-11,
+        "difference_decomposition_residual_V": -5.53e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "P",
+        "time_s_exact": "0.01",
+        "sample_index": 240,
+        "coordinate_first_m": 0.000121,
+        "coordinate_second_m": 0.000121,
+        "x_surface_first": 0.9240371569043392,
+        "x_surface_second": 0.9240371788470025,
+        "signed_difference_second_minus_first_x": 2.19426633e-08,
+        "absolute_difference_x": 2.19426633e-08
+      },
+      "within_sampled_limits": true
+    },
+    {
+      "first": "Caps300R80H1000",
+      "second": "Caps300R80H0500",
+      "prescribed_times": 187,
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "0.02",
+        "V_first_V": 2.236747745621924,
+        "V_second_V": 2.236746323200518,
+        "difference_V_second_minus_first_V": -1.422421406e-06,
+        "difference_delta_Eeq_V": -1.4402259731e-06,
+        "difference_delta_etaMid_V": 1.8228240691e-08,
+        "difference_delta_phiL_V": -4.236731e-10,
+        "difference_decomposition_residual_V": -4.91e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "P",
+        "time_s_exact": "0.005",
+        "sample_index": 240,
+        "coordinate_first_m": 0.000121,
+        "coordinate_second_m": 0.000121,
+        "x_surface_first": 0.9240426622237182,
+        "x_surface_second": 0.9240427548411541,
+        "signed_difference_second_minus_first_x": 9.26174359e-08,
+        "absolute_difference_x": 9.26174359e-08
+      },
+      "within_sampled_limits": true
+    },
+    {
+      "first": "Caps300R40H1000",
+      "second": "Caps300R80H1000",
+      "prescribed_times": 187,
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "0.04",
+        "V_first_V": 2.2377942704945633,
+        "V_second_V": 2.240300967011931,
+        "difference_V_second_minus_first_V": 0.0025066965173677,
+        "difference_delta_Eeq_V": 0.0025520266227622,
+        "difference_delta_etaMid_V": -4.5788393197023e-05,
+        "difference_delta_phiL_V": 4.582878024e-07,
+        "difference_decomposition_residual_V": 1.23e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "N",
+        "time_s_exact": "0.04",
+        "sample_index": 240,
+        "coordinate_first_m": 5.2e-05,
+        "coordinate_second_m": 5.2e-05,
+        "x_surface_first": 0.011840741847120861,
+        "x_surface_second": 0.011882589301172466,
+        "signed_difference_second_minus_first_x": 4.1847454051605e-05,
+        "absolute_difference_x": 4.1847454051605e-05
+      },
+      "within_sampled_limits": false
+    },
+    {
+      "first": "Caps300R40H0500",
+      "second": "Caps300R80H0500",
+      "prescribed_times": 187,
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "0.04",
+        "V_first_V": 2.2377940937996006,
+        "V_second_V": 2.2403000748868878,
+        "difference_V_second_minus_first_V": 0.0025059810872872,
+        "difference_delta_Eeq_V": 0.0025513010196297,
+        "difference_delta_etaMid_V": -4.577803802097e-05,
+        "difference_delta_phiL_V": 4.581056781e-07,
+        "difference_decomposition_residual_V": 3.7e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "N",
+        "time_s_exact": "0.04",
+        "sample_index": 240,
+        "coordinate_first_m": 5.2e-05,
+        "coordinate_second_m": 5.2e-05,
+        "x_surface_first": 0.01184073886082281,
+        "x_surface_second": 0.011882574283142029,
+        "signed_difference_second_minus_first_x": 4.1835422319219e-05,
+        "absolute_difference_x": 4.1835422319219e-05
+      },
+      "within_sampled_limits": false
+    }
+  ],
+  "native_step_display": [
+    {
+      "name": "Caps300R40H1000",
+      "total_native_intervals": 290,
+      "intervals_displayed_end_at_or_before_0p13s": 119,
+      "early_cap_s": 0.001,
+      "early_actual_max_s": "0.00100000000000001",
+      "late_actual_max_s": "0.05"
+    },
+    {
+      "name": "Caps300R80H1000",
+      "total_native_intervals": 288,
+      "intervals_displayed_end_at_or_before_0p13s": 119,
+      "early_cap_s": 0.001,
+      "early_actual_max_s": "0.00100000000000001",
+      "late_actual_max_s": "0.05"
+    },
+    {
+      "name": "Caps300R40H0500",
+      "total_native_intervals": 389,
+      "intervals_displayed_end_at_or_before_0p13s": 218,
+      "early_cap_s": 0.0005,
+      "early_actual_max_s": "0.00050000000000001",
+      "late_actual_max_s": "0.05"
+    },
+    {
+      "name": "Caps300R80H0500",
+      "total_native_intervals": 387,
+      "intervals_displayed_end_at_or_before_0p13s": 218,
+      "early_cap_s": 0.0005,
+      "early_actual_max_s": "0.00050000000000001",
+      "late_actual_max_s": "0.05"
+    }
+  ],
+  "early_accepted_time_history_comparisons": [
+    {
+      "first": "Caps300R40H1000",
+      "second": "Caps300R40H0500",
+      "early_step_counts": [
+        111,
+        209
+      ],
+      "accepted_end_time_sequences_exact_equal": false,
+      "accepted_end_time_sequences_equal_within_1e-12s": false,
+      "max_time_difference_matching_index_s_exact": null,
+      "note": "Matching index comparison only when counts match; no interpolation."
+    },
+    {
+      "first": "Caps300R80H1000",
+      "second": "Caps300R80H0500",
+      "early_step_counts": [
+        111,
+        209
+      ],
+      "accepted_end_time_sequences_exact_equal": false,
+      "accepted_end_time_sequences_equal_within_1e-12s": false,
+      "max_time_difference_matching_index_s_exact": null,
+      "note": "Matching index comparison only when counts match; no interpolation."
+    },
+    {
+      "first": "Caps300R40H1000",
+      "second": "Caps300R80H1000",
+      "early_step_counts": [
+        111,
+        111
+      ],
+      "accepted_end_time_sequences_exact_equal": false,
+      "accepted_end_time_sequences_equal_within_1e-12s": true,
+      "max_time_difference_matching_index_s_exact": "7E-18",
+      "note": "Matching index comparison only when counts match; no interpolation."
+    },
+    {
+      "first": "Caps300R40H0500",
+      "second": "Caps300R80H0500",
+      "early_step_counts": [
+        209,
+        209
+      ],
+      "accepted_end_time_sequences_exact_equal": true,
+      "accepted_end_time_sequences_equal_within_1e-12s": true,
+      "max_time_difference_matching_index_s_exact": "0E-8",
+      "note": "Matching index comparison only when counts match; no interpolation."
+    }
+  ],
+  "input_sha256": {
+    "outputs\\time_caps\\results\\analysis.json": "87fbc2073d16e38d877496f0e1871bac40dd7206badea9443f4b1324955a262f",
+    "outputs\\time_caps\\source_configs.json": "4cd95373cefe47b6ff21a19dd46a8ceff6a702614ab3d974da5fec0cb8de271b",
+    "outputs\\time_caps\\jobs.json": "efa8f2f6787998cfbdd5b8b22dff366647182c9627a3af29c3fbc069659f47a4",
+    "outputs\\time_caps\\native_steps_summary.json": "74378f492bd19f12cfb29b5f561d249d881584f8d48b27fcba246a8473b3cfca",
+    "outputs\\time_caps\\final_checks.json": "3996211072df63406b6d8599f6de227cbe53025a2d083cff80375820bbf8a7fe",
+    "outputs\\time_caps\\results\\Caps300R40H1000_vs_Caps300R40H0500_0_to_5s.csv": "d1f461e1099f39dde240c98f19f933dd1b96fd8204f42ae638bcfc244bc136ba",
+    "outputs\\time_caps\\results\\Caps300R80H1000_vs_Caps300R80H0500_0_to_5s.csv": "654d2f57bb68d4b65d21e5b707c4511b2d1f0518c5bf685ce3534e872b809cf0",
+    "outputs\\time_caps\\results\\Caps300R40H1000_vs_Caps300R80H1000_0_to_5s.csv": "bfe3cd79554b88df25936602df382e1d505d1fcd9d5cdbf5304cd811f79c2c1f",
+    "outputs\\time_caps\\results\\Caps300R40H0500_vs_Caps300R80H0500_0_to_5s.csv": "519da6cd29fa903015132533eaf2b042cfddaea5b9e9e73abde36d5beddd58a5",
+    "outputs\\time_caps\\Caps300R40H1000_accepted_steps.csv": "68c3b1030ce05b8f803dfab148af94b2269e291ae5904f6e1d2f70a32fbbaaf3",
+    "outputs\\time_caps\\Caps300R80H1000_accepted_steps.csv": "ef002c6af9af92b5297536d81a3496e3a71007ed4d53c803cc035614070fb1bc",
+    "outputs\\time_caps\\Caps300R40H0500_accepted_steps.csv": "7191b3afdf838f82e962bf88908b4baa1d89ab9707bc72b31a9e4a51d0accad8",
+    "outputs\\time_caps\\Caps300R80H0500_accepted_steps.csv": "e868673f6040ceff191a4d7093b8fe23ebc0e76de293591599b2bd7dad1c7938",
+    "outputs\\time_caps\\results\\Caps300R40H0500_vs_Caps300R80H0500_0_to_5s_profile_at_surface_peak.csv": "3a4cf5d94879f7e29b1a522adf4feaaf132cefd5a2a9b0feed969f1c896bdb47"
+  },
+  "all_tracked_inputs_unchanged_after_plot": true
+}

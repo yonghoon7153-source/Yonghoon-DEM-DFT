@@ -1,0 +1,116 @@
+{
+  "name": "Caps300R40H1000",
+  "job_id": "176aef69e14646908f49f85c9821df2c",
+  "config": {
+    "name": "Caps300R40H1000",
+    "physical_elements_total": 300,
+    "physical_elements_by_domain": [
+      120,
+      60,
+      120
+    ],
+    "particle_elements_each": 40,
+    "seconds": 5,
+    "early_cap_s": 0.001,
+    "early_cap_s_exact": "0.001",
+    "later_cap_s": 0.1,
+    "cap_transition_time_s": 0.1,
+    "maxstepexpressionbdf": "if(t<0.1[s],0.001[s],0.1[s])",
+    "source_sha256": "23ee9e54f4e3923aaf9590e82ac908e104591633d1f1e67357d96acd3096b044",
+    "relative_path": "time_caps/Caps300R40H1000.java",
+    "parameters_unchanged": true,
+    "baseline_source_path": "outputs/comsol63/mesh_axes/Axes300R40.java",
+    "baseline_source_sha256": "b4298feb95a6dd2306967fad44c55ab668450633c0a0ec7760681c3b76047e44"
+  },
+  "shape": [
+    300,
+    40
+  ],
+  "status": "analyzed",
+  "native_status": {
+    "state": "completed",
+    "compile_returncode": 0,
+    "batch_returncode": 0,
+    "error": null
+  },
+  "source_sha256": "23ee9e54f4e3923aaf9590e82ac908e104591633d1f1e67357d96acd3096b044",
+  "source_hash_matches_config": true,
+  "source_hash_matches_job_record": true,
+  "rows": 291,
+  "first_time_s_exact": "0.0",
+  "last_time_s_exact": "5.0",
+  "checks": {
+    "voltage_identity": true,
+    "total_Li_conservation": true,
+    "positive_electrolyte": true,
+    "guard_never_true": true,
+    "sampled_surface_N_inside_range": true,
+    "Eeq_N_equals_surface_function": true,
+    "reaction_input_N_equals_surface": true,
+    "fixed_grid_surface_N_inside_range": true,
+    "sampled_surface_P_inside_range": true,
+    "Eeq_P_equals_surface_function": true,
+    "reaction_input_P_equals_surface": true,
+    "fixed_grid_surface_P_inside_range": true
+  },
+  "physical_checks_pass": true,
+  "metrics": {
+    "max_abs_identity_residual_V": 5.17e-16,
+    "max_relative_total_Li_drift": 2.5984253363147195e-15,
+    "ce_min_mol_m3": 1194.4372376479294,
+    "max_abs_Eeq_surface_residual_N_V": 0.0,
+    "max_abs_reaction_input_surface_residual_N_x": 0.0,
+    "max_abs_eta_minus_etaMid_N_V": 0.0,
+    "max_abs_Eeq_surface_residual_P_V": 0.0,
+    "max_abs_reaction_input_surface_residual_P_x": 0.0,
+    "max_abs_eta_minus_etaMid_P_V": 0.0
+  },
+  "profile_validation": {
+    "N": {
+      "rows": 70131,
+      "unique_times": 291,
+      "points_per_time": 241,
+      "max_coordinate_error_from_prescribed_grid_m": 1.333333333333e-20
+    },
+    "P": {
+      "rows": 70131,
+      "unique_times": 291,
+      "points_per_time": 241,
+      "max_coordinate_error_from_prescribed_grid_m": 3e-20
+    }
+  },
+  "runtime_settings": {
+    "solution_tag": "sol1",
+    "time_tag": "t1",
+    "study_tlist": "0 0.0001 0.0002 0.0005 0.001 0.002 0.005 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.11 0.12 0.13 0.14 0.15 0.16 0.17 0.18 0.19 0.2 0.21 0.22 0.23 0.24 0.25 0.26 0.27 0.28 0.29 0.3 0.31 0.32 0.33 0.34 0.35 0.36 0.37 0.38 0.39 0.4 0.41 0.42 0.43 0.44 0.45 0.46 0.47 0.48 0.49 0.5 0.51 0.52 0.53 0.54 0.55 0.56 0.57 0.58 0.59 0.6 0.61 0.62 0.63 0.64 0.65 0.66 0.67 0.68 0.69 0.7 0.71 0.72 0.73 0.74 0.75 0.76 0.77 0.78 0.79 0.8 0.81 0.82 0.83 0.84 0.85 0.86 0.87 0.88 0.89 0.9 0.91 0.92 0.93 0.94 0.95 0.96 0.97 0.98 0.99 1 1.05 1.1 1.15 1.2 1.25 1.3 1.35 1.4 1.45 1.5 1.55 1.6 1.65 1.7 1.75 1.8 1.85 1.9 1.95 2 2.05 2.1 2.15 2.2 2.25 2.3 2.35 2.4 2.45 2.5 2.55 2.6 2.65 2.7 2.75 2.8 2.85 2.9 2.95 3 3.05 3.1 3.15 3.2 3.25 3.3 3.35 3.4 3.45 3.5 3.55 3.6 3.65 3.7 3.75 3.8 3.85 3.9 3.95 4 4.05 4.1 4.15 4.2 4.25 4.3 4.35 4.4 4.45 4.5 4.55 4.6 4.65 4.7 4.75 4.8 4.85 4.9 4.95 5",
+    "geometry_length_unit": "m",
+    "geometry_dimension": "1",
+    "rtol": "1.0E-6",
+    "initialstepbdf": "1.0E-5",
+    "initialstepbdfactive": "on",
+    "maxstepconstraintbdf": "expr",
+    "maxstepexpressionbdf": "if(t<0.1[s],0.001[s],0.1[s])",
+    "maxstepbdf": "0.1",
+    "tstepsbdf": "strict",
+    "tout": "tsteps",
+    "consistent": "bweuler",
+    "atolglobalmethod": "scaled",
+    "atolglobalvaluemethod": "factor",
+    "atolglobalfactor": "0.1",
+    "atolglobal": "0.001",
+    "eventtol": "0.01",
+    "electrolyte_positive_check": "POSTPROCESSING_ONLY; not a StopCondition",
+    "profile_time_interpolation": "off; all stored solnum; no t property set",
+    "profile_spatial_evaluation": "domain-selected FE Interp; recover off; ext 0; 241 common coordinates"
+  },
+  "csv_sha256": {
+    "preflight_global.csv": "d97c51bf73b5174d287d27057e238135b986419c8a28060b21745dc46a9c4e2e",
+    "preflight_boundary1.csv": "6d7b96179b4e96fca4ad99418510fa9492a550cc0bcf7098f0b82b11a0ab237d",
+    "preflight_boundary4.csv": "7b40b72f744156eb06dcf5f0e49173393f0dbb9b503abebba7ca66fd5dbeab6d",
+    "preflight_MinLine_ce.csv": "945e523004c17583f4480cb98c0872ae1da506021c6bbdc3598bd0bb0bf4261e",
+    "preflight_MaxLine_ce.csv": "9bb31228062b743164ed94611bf1399f05381df41d06557b19667049d82d3297",
+    "axes_profile_N.csv": "874dd6f4d5dc1e0627e18e390ce43f005e8140f368cacf55fdccfb2d49ae2979",
+    "axes_profile_P.csv": "eece67a917c7128fb4e339f25dea1e6c0eff230f41474b0236023769aa207b5e",
+    "axes_runtime_settings.csv": "c803d03d2292179b9263f8d359cf7c19e94739a70eb9c5e1cbf03241666226f5"
+  }
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Caps300R40H1000",
+    "only_authorized_cap_class_and_logging_changes": true,
+    "reverse_transform_equals_reviewed_source": true,
+    "full_source_sha256": "23ee9e54f4e3923aaf9590e82ac908e104591633d1f1e67357d96acd3096b044",
+    "unchanged_materials_parameters_initialization_guard_profile_timegrid": true,
+    "external_file_read_process_network_apis": [],
+    "transient_runAll_calls": 1,
+    "final_time_s": 5
+  },
+  {
+    "name": "Caps300R40H0500",
+    "only_authorized_cap_class_and_logging_changes": true,
+    "reverse_transform_equals_reviewed_source": true,
+    "full_source_sha256": "369918b44fa911f97d840a8922b90e810c3f46c48905325e8b97a6e491b469b2",
+    "unchanged_materials_parameters_initialization_guard_profile_timegrid": true,
+    "external_file_read_process_network_apis": [],
+    "transient_runAll_calls": 1,
+    "final_time_s": 5
+  },
+  {
+    "name": "Caps300R80H1000",
+    "only_authorized_cap_class_and_logging_changes": true,
+    "reverse_transform_equals_reviewed_source": true,
+    "full_source_sha256": "bb05708d6d4a92e78a21046d0afabff3a296391a23a6f43c1065ae6b9c81d9e2",
+    "unchanged_materials_parameters_initialization_guard_profile_timegrid": true,
+    "external_file_read_process_network_apis": [],
+    "transient_runAll_calls": 1,
+    "final_time_s": 5
+  },
+  {
+    "name": "Caps300R80H0500",
+    "only_authorized_cap_class_and_logging_changes": true,
+    "reverse_transform_equals_reviewed_source": true,
+    "full_source_sha256": "6ab32b93310657265906cc858af3847d662923cf7dd8964feb74ed6cbe86f2b1",
+    "unchanged_materials_parameters_initialization_guard_profile_timegrid": true,
+    "external_file_read_process_network_apis": [],
+    "transient_runAll_calls": 1,
+    "final_time_s": 5
+  }
+]

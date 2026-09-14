@@ -1,0 +1,41 @@
+{
+  "scope": "Proposal A only: four fresh 5-second runs; no 600/80, no full protocol, no additional runs",
+  "jobs": [
+    {
+      "name": "Caps300R40H1000",
+      "job_id": "176aef69e14646908f49f85c9821df2c",
+      "source_sha256": "23ee9e54f4e3923aaf9590e82ac908e104591633d1f1e67357d96acd3096b044",
+      "early_cap_s": 0.001,
+      "cores": 2,
+      "timeout_seconds": 600,
+      "max_physical_time_s": 5
+    },
+    {
+      "name": "Caps300R40H0500",
+      "job_id": "b6752f9caed845f88551386132051aa8",
+      "source_sha256": "369918b44fa911f97d840a8922b90e810c3f46c48905325e8b97a6e491b469b2",
+      "early_cap_s": 0.0005,
+      "cores": 2,
+      "timeout_seconds": 600,
+      "max_physical_time_s": 5
+    },
+    {
+      "name": "Caps300R80H1000",
+      "job_id": "8ffe3cf123fd4c5cb1bc481f7a603a76",
+      "source_sha256": "bb05708d6d4a92e78a21046d0afabff3a296391a23a6f43c1065ae6b9c81d9e2",
+      "early_cap_s": 0.001,
+      "cores": 2,
+      "timeout_seconds": 600,
+      "max_physical_time_s": 5
+    },
+    {
+      "name": "Caps300R80H0500",
+      "job_id": "72c9c6b5210a4e0d96b74290e4392423",
+      "source_sha256": "6ab32b93310657265906cc858af3847d662923cf7dd8964feb74ed6cbe86f2b1",
+      "early_cap_s": 0.0005,
+      "cores": 2,
+      "timeout_seconds": 600,
+      "max_physical_time_s": 5
+    }
+  ]
+}

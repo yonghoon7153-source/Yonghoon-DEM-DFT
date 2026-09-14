@@ -1,0 +1,5720 @@
+{
+  "properties": [
+    {
+      "path": "sol1/v1/control",
+      "type": "String",
+      "value_text": "[cdi]"
+    },
+    {
+      "path": "sol1/v1/initmethod",
+      "type": "String",
+      "value_text": "[init]"
+    },
+    {
+      "path": "sol1/v1/initsol",
+      "type": "String",
+      "value_text": "[zero]"
+    },
+    {
+      "path": "sol1/v1/initsolhide",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v1/initsoluse",
+      "type": "String",
+      "value_text": "[current]"
+    },
+    {
+      "path": "sol1/v1/oldinitsoluse",
+      "type": "Int",
+      "value_text": "[0]"
+    },
+    {
+      "path": "sol1/v1/initsolusesolnumhide",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v1/initsolusesolnum",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v1/solvertype",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v1/solnum",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/v1/timeinterp",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v1/t",
+      "type": "Double",
+      "value_text": "[0.0]"
+    },
+    {
+      "path": "sol1/v1/manualsol",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v1/manualsolnum",
+      "type": "DoubleArray",
+      "value_text": "[[1.0]]"
+    },
+    {
+      "path": "sol1/v1/manualsolnum_vector_method",
+      "type": "String",
+      "value_text": "[step]"
+    },
+    {
+      "path": "sol1/v1/manualsolnum_vector_start",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v1/manualsolnum_vector_stop",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v1/manualsolnum_vector_step",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v1/manualsolnum_vector_numvalues",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v1/manualsolnum_vector_function",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v1/manualsolnum_vector_interval",
+      "type": "String",
+      "value_text": "[octave]"
+    },
+    {
+      "path": "sol1/v1/manualsolnum_vector_freqperdec",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v1/listsol",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v1/listsolnum",
+      "type": "IntArray",
+      "value_text": "[[1]]"
+    },
+    {
+      "path": "sol1/v1/scalemethod",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/v1/scaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v1/resscalemethod",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/v1/resscaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v1/resscalethresh",
+      "type": "Double",
+      "value_text": "[100.0]"
+    },
+    {
+      "path": "sol1/v1/notsolmethod",
+      "type": "String",
+      "value_text": "[init]"
+    },
+    {
+      "path": "sol1/v1/notsol",
+      "type": "String",
+      "value_text": "[zero]"
+    },
+    {
+      "path": "sol1/v1/notsolhide",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v1/notsoluse",
+      "type": "String",
+      "value_text": "[current]"
+    },
+    {
+      "path": "sol1/v1/oldnotsoluse",
+      "type": "Int",
+      "value_text": "[0]"
+    },
+    {
+      "path": "sol1/v1/notsolusesolnumhide",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v1/notsolusesolnum",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v1/notsolvertype",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v1/notsolnum",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/v1/nottimeinterp",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v1/nott",
+      "type": "Double",
+      "value_text": "[0.0]"
+    },
+    {
+      "path": "sol1/v1/notmanualsol",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v1/notmanualsolnum",
+      "type": "DoubleArray",
+      "value_text": "[[1.0]]"
+    },
+    {
+      "path": "sol1/v1/notmanualsolnum_vector_method",
+      "type": "String",
+      "value_text": "[step]"
+    },
+    {
+      "path": "sol1/v1/notmanualsolnum_vector_start",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v1/notmanualsolnum_vector_stop",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v1/notmanualsolnum_vector_step",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v1/notmanualsolnum_vector_numvalues",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v1/notmanualsolnum_vector_function",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v1/notmanualsolnum_vector_interval",
+      "type": "String",
+      "value_text": "[octave]"
+    },
+    {
+      "path": "sol1/v1/notmanualsolnum_vector_freqperdec",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v1/notlistsol",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v1/notlistsolnum",
+      "type": "IntArray",
+      "value_text": "[[1]]"
+    },
+    {
+      "path": "sol1/v1/initparametersmethod",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/v1/clistctrl",
+      "type": "StringArray",
+      "value_text": "[[t1_timestep]]"
+    },
+    {
+      "path": "sol1/v1/cname",
+      "type": "StringArray",
+      "value_text": "[[timestep]]"
+    },
+    {
+      "path": "sol1/v1/clist",
+      "type": "DoubleRowMatrix",
+      "value_text": "[[[1.0E-5]]]"
+    },
+    {
+      "path": "sol1/v1/keeplog",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/v1/message",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v1/const",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/storesol",
+      "type": "String",
+      "value_text": "[init]"
+    },
+    {
+      "path": "sol1/v1/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/comp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl]]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/compintuse",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/compint",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/compintstatuse",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/compintstat",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/solvefor",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/reconstruct",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/usestoresel",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/storesel",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/valuetype",
+      "type": "String",
+      "value_text": "[complex]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/variables",
+      "type": "String",
+      "value_text": "[comp1_cl]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/scalemethod",
+      "type": "String",
+      "value_text": "[manual]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/scaleval",
+      "type": "Double",
+      "value_text": "[1000.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/resscalemethod",
+      "type": "String",
+      "value_text": "[parent]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/resscaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/resscalethresh",
+      "type": "Double",
+      "value_text": "[100.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_cl/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/comp",
+      "type": "StringArray",
+      "value_text": "[[comp1.liion.cs_pce1]]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/compintuse",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/compint",
+      "type": "StringArray",
+      "value_text": "[[comp1.liion.uflux.cs_pce1, comp1.liion.dflux.cs_pce1]]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/compintstatuse",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/compintstat",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/solvefor",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/reconstruct",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/usestoresel",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/storesel",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/valuetype",
+      "type": "String",
+      "value_text": "[complex]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/variables",
+      "type": "String",
+      "value_text": "[comp1_liion_pce1_cs]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/scalemethod",
+      "type": "String",
+      "value_text": "[parent]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/scaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/resscalemethod",
+      "type": "String",
+      "value_text": "[parent]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/resscaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/resscalethresh",
+      "type": "Double",
+      "value_text": "[100.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce1_cs/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/comp",
+      "type": "StringArray",
+      "value_text": "[[comp1.liion.cs_pce2]]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/compintuse",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/compint",
+      "type": "StringArray",
+      "value_text": "[[comp1.liion.uflux.cs_pce2, comp1.liion.dflux.cs_pce2]]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/compintstatuse",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/compintstat",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/solvefor",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/reconstruct",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/usestoresel",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/storesel",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/valuetype",
+      "type": "String",
+      "value_text": "[complex]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/variables",
+      "type": "String",
+      "value_text": "[comp1_liion_pce2_cs]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/scalemethod",
+      "type": "String",
+      "value_text": "[parent]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/scaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/resscalemethod",
+      "type": "String",
+      "value_text": "[parent]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/resscaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/resscalethresh",
+      "type": "Double",
+      "value_text": "[100.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_liion_pce2_cs/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/comp",
+      "type": "StringArray",
+      "value_text": "[[comp1.phil]]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/compintuse",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/compint",
+      "type": "StringArray",
+      "value_text": "[[comp1.uflux.phil, comp1.dflux.phil]]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/compintstatuse",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/compintstat",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/solvefor",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/reconstruct",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/usestoresel",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/storesel",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/valuetype",
+      "type": "String",
+      "value_text": "[complex]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/variables",
+      "type": "String",
+      "value_text": "[comp1_phil]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/scalemethod",
+      "type": "String",
+      "value_text": "[manual]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/scaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/resscalemethod",
+      "type": "String",
+      "value_text": "[parent]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/resscaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/resscalethresh",
+      "type": "Double",
+      "value_text": "[100.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_phil/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/comp",
+      "type": "StringArray",
+      "value_text": "[[comp1.phis]]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/compintuse",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/compint",
+      "type": "StringArray",
+      "value_text": "[[comp1.uflux.phis, comp1.dflux.phis]]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/compintstatuse",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/compintstat",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/solvefor",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/reconstruct",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/usestoresel",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/storesel",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/valuetype",
+      "type": "String",
+      "value_text": "[complex]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/variables",
+      "type": "String",
+      "value_text": "[comp1_phis]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/scalemethod",
+      "type": "String",
+      "value_text": "[manual]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/scaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/resscalemethod",
+      "type": "String",
+      "value_text": "[parent]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/resscaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/resscalethresh",
+      "type": "Double",
+      "value_text": "[100.0]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v1/comp1_phis/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/v2/control",
+      "type": "String",
+      "value_text": "[time]"
+    },
+    {
+      "path": "sol1/v2/initmethod",
+      "type": "String",
+      "value_text": "[sol]"
+    },
+    {
+      "path": "sol1/v2/initsol",
+      "type": "String",
+      "value_text": "[sol1]"
+    },
+    {
+      "path": "sol1/v2/initsolhide",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/initsoluse",
+      "type": "String",
+      "value_text": "[sol2]"
+    },
+    {
+      "path": "sol1/v2/oldinitsoluse",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/v2/initsolusesolnumhide",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v2/initsolusesolnum",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v2/solvertype",
+      "type": "String",
+      "value_text": "[solnum]"
+    },
+    {
+      "path": "sol1/v2/solnum",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/v2/timeinterp",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/t",
+      "type": "Double",
+      "value_text": "[0.0]"
+    },
+    {
+      "path": "sol1/v2/manualsol",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/manualsolnum",
+      "type": "DoubleArray",
+      "value_text": "[[1.0]]"
+    },
+    {
+      "path": "sol1/v2/manualsolnum_vector_method",
+      "type": "String",
+      "value_text": "[step]"
+    },
+    {
+      "path": "sol1/v2/manualsolnum_vector_start",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v2/manualsolnum_vector_stop",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v2/manualsolnum_vector_step",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v2/manualsolnum_vector_numvalues",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v2/manualsolnum_vector_function",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v2/manualsolnum_vector_interval",
+      "type": "String",
+      "value_text": "[octave]"
+    },
+    {
+      "path": "sol1/v2/manualsolnum_vector_freqperdec",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v2/listsol",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/listsolnum",
+      "type": "IntArray",
+      "value_text": "[[1]]"
+    },
+    {
+      "path": "sol1/v2/scalemethod",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/v2/scaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v2/resscalemethod",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/v2/resscaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v2/resscalethresh",
+      "type": "Double",
+      "value_text": "[100.0]"
+    },
+    {
+      "path": "sol1/v2/notsolmethod",
+      "type": "String",
+      "value_text": "[sol]"
+    },
+    {
+      "path": "sol1/v2/notsol",
+      "type": "String",
+      "value_text": "[sol1]"
+    },
+    {
+      "path": "sol1/v2/notsolhide",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/notsoluse",
+      "type": "String",
+      "value_text": "[sol2]"
+    },
+    {
+      "path": "sol1/v2/oldnotsoluse",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/v2/notsolusesolnumhide",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v2/notsolusesolnum",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v2/notsolvertype",
+      "type": "String",
+      "value_text": "[solnum]"
+    },
+    {
+      "path": "sol1/v2/notsolnum",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/v2/nottimeinterp",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/nott",
+      "type": "Double",
+      "value_text": "[0.0]"
+    },
+    {
+      "path": "sol1/v2/notmanualsol",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/notmanualsolnum",
+      "type": "DoubleArray",
+      "value_text": "[[1.0]]"
+    },
+    {
+      "path": "sol1/v2/notmanualsolnum_vector_method",
+      "type": "String",
+      "value_text": "[step]"
+    },
+    {
+      "path": "sol1/v2/notmanualsolnum_vector_start",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v2/notmanualsolnum_vector_stop",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v2/notmanualsolnum_vector_step",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v2/notmanualsolnum_vector_numvalues",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v2/notmanualsolnum_vector_function",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v2/notmanualsolnum_vector_interval",
+      "type": "String",
+      "value_text": "[octave]"
+    },
+    {
+      "path": "sol1/v2/notmanualsolnum_vector_freqperdec",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v2/notlistsol",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/notlistsolnum",
+      "type": "IntArray",
+      "value_text": "[[1]]"
+    },
+    {
+      "path": "sol1/v2/initparametersmethod",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/v2/clistctrl",
+      "type": "StringArray",
+      "value_text": "[[t1_t, t1_timestep]]"
+    },
+    {
+      "path": "sol1/v2/cname",
+      "type": "StringArray",
+      "value_text": "[[t, timestep]]"
+    },
+    {
+      "path": "sol1/v2/clist",
+      "type": "DoubleRowMatrix",
+      "value_text": "[[[0.0, 1.0E-4, 2.0E-4, 5.0E-4, 0.001, 0.002, 0.005, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.2, 0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.3, 0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.4, 0.41, 0.42, 0.43, 0.44, 0.45, 0.46, 0.47, 0.48, 0.49, 0.5, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56, 0.57, 0.58, 0.59, 0.6, 0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.7, 0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.8, 0.81, 0.82, 0.83, 0.84, 0.85, 0.86, 0.87, 0.88, 0.89, 0.9, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99, 1.0, 1.05, 1.1, 1.15, 1.2, 1.25, 1.3, 1.35, 1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0, 2.05, 2.1, 2.15, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.5, 2.55, 2.6, 2.65, 2.7, 2.75, 2.8, 2.85, 2.9, 2.95, 3.0, 3.05, 3.1, 3.15, 3.2, 3.25, 3.3, 3.35, 3.4, 3.45, 3.5, 3.55, 3.6, 3.65, 3.7, 3.75, 3.8, 3.85, 3.9, 3.95, 4.0, 4.05, 4.1, 4.15, 4.2, 4.25, 4.3, 4.35, 4.4, 4.45, 4.5, 4.55, 4.6, 4.65, 4.7, 4.75, 4.8, 4.85, 4.9, 4.95, 5.0], [1.0E-5]]]"
+    },
+    {
+      "path": "sol1/v2/keeplog",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/v2/message",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/v2/const",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/storesol",
+      "type": "String",
+      "value_text": "[init]"
+    },
+    {
+      "path": "sol1/v2/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/comp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl]]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/compintuse",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/compint",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/compintstatuse",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/compintstat",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/solvefor",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/reconstruct",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/usestoresel",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/storesel",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/valuetype",
+      "type": "String",
+      "value_text": "[complex]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/variables",
+      "type": "String",
+      "value_text": "[comp1_cl]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/scalemethod",
+      "type": "String",
+      "value_text": "[manual]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/scaleval",
+      "type": "Double",
+      "value_text": "[1000.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/resscalemethod",
+      "type": "String",
+      "value_text": "[parent]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/resscaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/resscalethresh",
+      "type": "Double",
+      "value_text": "[100.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_cl/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/comp",
+      "type": "StringArray",
+      "value_text": "[[comp1.liion.cs_pce1]]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/compintuse",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/compint",
+      "type": "StringArray",
+      "value_text": "[[comp1.liion.uflux.cs_pce1, comp1.liion.dflux.cs_pce1]]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/compintstatuse",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/compintstat",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/solvefor",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/reconstruct",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/usestoresel",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/storesel",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/valuetype",
+      "type": "String",
+      "value_text": "[complex]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/variables",
+      "type": "String",
+      "value_text": "[comp1_liion_pce1_cs]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/scalemethod",
+      "type": "String",
+      "value_text": "[manual]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/scaleval",
+      "type": "Double",
+      "value_text": "[10000.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/resscalemethod",
+      "type": "String",
+      "value_text": "[parent]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/resscaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/resscalethresh",
+      "type": "Double",
+      "value_text": "[100.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce1_cs/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/comp",
+      "type": "StringArray",
+      "value_text": "[[comp1.liion.cs_pce2]]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/compintuse",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/compint",
+      "type": "StringArray",
+      "value_text": "[[comp1.liion.uflux.cs_pce2, comp1.liion.dflux.cs_pce2]]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/compintstatuse",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/compintstat",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/solvefor",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/reconstruct",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/usestoresel",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/storesel",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/valuetype",
+      "type": "String",
+      "value_text": "[complex]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/variables",
+      "type": "String",
+      "value_text": "[comp1_liion_pce2_cs]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/scalemethod",
+      "type": "String",
+      "value_text": "[manual]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/scaleval",
+      "type": "Double",
+      "value_text": "[10000.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/resscalemethod",
+      "type": "String",
+      "value_text": "[parent]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/resscaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/resscalethresh",
+      "type": "Double",
+      "value_text": "[100.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_liion_pce2_cs/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/comp",
+      "type": "StringArray",
+      "value_text": "[[comp1.phil]]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/compintuse",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/compint",
+      "type": "StringArray",
+      "value_text": "[[comp1.uflux.phil, comp1.dflux.phil]]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/compintstatuse",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/compintstat",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/solvefor",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/reconstruct",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/usestoresel",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/storesel",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/valuetype",
+      "type": "String",
+      "value_text": "[complex]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/variables",
+      "type": "String",
+      "value_text": "[comp1_phil]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/scalemethod",
+      "type": "String",
+      "value_text": "[manual]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/scaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/resscalemethod",
+      "type": "String",
+      "value_text": "[parent]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/resscaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/resscalethresh",
+      "type": "Double",
+      "value_text": "[100.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_phil/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/comp",
+      "type": "StringArray",
+      "value_text": "[[comp1.phis]]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/compintuse",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/compint",
+      "type": "StringArray",
+      "value_text": "[[comp1.uflux.phis, comp1.dflux.phis]]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/compintstatuse",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/compintstat",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/solvefor",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/reconstruct",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/usestoresel",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/storesel",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/valuetype",
+      "type": "String",
+      "value_text": "[complex]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/variables",
+      "type": "String",
+      "value_text": "[comp1_phis]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/scalemethod",
+      "type": "String",
+      "value_text": "[manual]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/scaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/resscalemethod",
+      "type": "String",
+      "value_text": "[parent]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/resscaleval",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/resscalethresh",
+      "type": "Double",
+      "value_text": "[100.0]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/v2/comp1_phis/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/control",
+      "type": "String",
+      "value_text": "[user]"
+    },
+    {
+      "path": "sol1/t1/usetunit",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/tunit",
+      "type": "String",
+      "value_text": "[s]"
+    },
+    {
+      "path": "sol1/t1/tlist",
+      "type": "DoubleArray",
+      "value_text": "[[0.0, 1.0E-4, 2.0E-4, 5.0E-4, 0.001, 0.002, 0.005, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.2, 0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.3, 0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.4, 0.41, 0.42, 0.43, 0.44, 0.45, 0.46, 0.47, 0.48, 0.49, 0.5, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56, 0.57, 0.58, 0.59, 0.6, 0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.7, 0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.8, 0.81, 0.82, 0.83, 0.84, 0.85, 0.86, 0.87, 0.88, 0.89, 0.9, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99, 1.0, 1.05, 1.1, 1.15, 1.2, 1.25, 1.3, 1.35, 1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0, 2.05, 2.1, 2.15, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.5, 2.55, 2.6, 2.65, 2.7, 2.75, 2.8, 2.85, 2.9, 2.95, 3.0, 3.05, 3.1, 3.15, 3.2, 3.25, 3.3, 3.35, 3.4, 3.45, 3.5, 3.55, 3.6, 3.65, 3.7, 3.75, 3.8, 3.85, 3.9, 3.95, 4.0, 4.05, 4.1, 4.15, 4.2, 4.25, 4.3, 4.35, 4.4, 4.45, 4.5, 4.55, 4.6, 4.65, 4.7, 4.75, 4.8, 4.85, 4.9, 4.95, 5.0]]"
+    },
+    {
+      "path": "sol1/t1/tlist_vector_method",
+      "type": "String",
+      "value_text": "[step]"
+    },
+    {
+      "path": "sol1/t1/tlist_vector_start",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/t1/tlist_vector_stop",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/t1/tlist_vector_step",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/t1/tlist_vector_numvalues",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/t1/tlist_vector_function",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/t1/tlist_vector_interval",
+      "type": "String",
+      "value_text": "[octave]"
+    },
+    {
+      "path": "sol1/t1/tlist_vector_freqperdec",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/t1/tout",
+      "type": "String",
+      "value_text": "[tsteps]"
+    },
+    {
+      "path": "sol1/t1/tstepsstore",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/rtol",
+      "type": "Double",
+      "value_text": "[1.0E-6]"
+    },
+    {
+      "path": "sol1/t1/atolglobalmethod",
+      "type": "String",
+      "value_text": "[scaled]"
+    },
+    {
+      "path": "sol1/t1/atolglobalvaluemethod",
+      "type": "String",
+      "value_text": "[factor]"
+    },
+    {
+      "path": "sol1/t1/atolglobalfactor",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/tderglobalmethod",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/tderglobalfactor",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/atolglobal",
+      "type": "Double",
+      "value_text": "[0.001]"
+    },
+    {
+      "path": "sol1/t1/ewtrescale",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/atolmethod",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, global, comp1_liion_pce1_cs, global, comp1_liion_pce2_cs, global, comp1_phil, global, comp1_phis, global]]"
+    },
+    {
+      "path": "sol1/t1/atolvaluemethod",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, factor, comp1_liion_pce1_cs, factor, comp1_liion_pce2_cs, factor, comp1_phil, factor, comp1_phis, factor]]"
+    },
+    {
+      "path": "sol1/t1/atolfactor",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, 0.1, comp1_liion_pce1_cs, 0.1, comp1_liion_pce2_cs, 0.1, comp1_phil, 0.1, comp1_phis, 0.1]]"
+    },
+    {
+      "path": "sol1/t1/tdermethod",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, auto, comp1_liion_pce1_cs, auto, comp1_liion_pce2_cs, auto, comp1_phil, auto, comp1_phis, auto]]"
+    },
+    {
+      "path": "sol1/t1/tderfactor",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, 1.0, comp1_liion_pce1_cs, 1.0, comp1_liion_pce2_cs, 1.0, comp1_phil, 1.0, comp1_phis, 1.0]]"
+    },
+    {
+      "path": "sol1/t1/atol",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, 1e-3, comp1_liion_pce1_cs, 1e-3, comp1_liion_pce2_cs, 1e-3, comp1_phil, 1e-3, comp1_phis, 1e-3]]"
+    },
+    {
+      "path": "sol1/t1/atoludot",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, 1e-3, comp1_liion_pce1_cs, 1e-3, comp1_liion_pce2_cs, 1e-3, comp1_phil, 1e-3, comp1_phis, 1e-3]]"
+    },
+    {
+      "path": "sol1/t1/atolmethodAUX",
+      "type": "String",
+      "value_text": "[global]"
+    },
+    {
+      "path": "sol1/t1/atolvaluemethodAUX",
+      "type": "String",
+      "value_text": "[factor]"
+    },
+    {
+      "path": "sol1/t1/atolfactorAUX",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/tdermethodAUX",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/tderfactorAUX",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/atolAUX",
+      "type": "Double",
+      "value_text": "[0.001]"
+    },
+    {
+      "path": "sol1/t1/atoludotAUX",
+      "type": "Double",
+      "value_text": "[0.001]"
+    },
+    {
+      "path": "sol1/t1/odesolvertype",
+      "type": "String",
+      "value_text": "[implicit]"
+    },
+    {
+      "path": "sol1/t1/timemethod",
+      "type": "String",
+      "value_text": "[bdf]"
+    },
+    {
+      "path": "sol1/t1/tstepsbdf",
+      "type": "String",
+      "value_text": "[strict]"
+    },
+    {
+      "path": "sol1/t1/endtimeinterpolation",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/initialstepbdf",
+      "type": "Double",
+      "value_text": "[1.0E-5]"
+    },
+    {
+      "path": "sol1/t1/initialstepbdfactive",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/maxstepconstraintbdf",
+      "type": "String",
+      "value_text": "[expr]"
+    },
+    {
+      "path": "sol1/t1/maxstepbdf",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/maxstepexpressionbdf",
+      "type": "String",
+      "value_text": "[if(t<0.1[s],0.001[s],0.1[s])]"
+    },
+    {
+      "path": "sol1/t1/maxorder",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/minorder",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/bdforder",
+      "type": "String",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/initialstepfractionbdf-1",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/initialstepgrowthratebdf-1",
+      "type": "Double",
+      "value_text": "[1.5]"
+    },
+    {
+      "path": "sol1/t1/initialstepfractionbdf-2",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/initialstepgrowthratebdf-2",
+      "type": "Double",
+      "value_text": "[1.5]"
+    },
+    {
+      "path": "sol1/t1/initialstepfractionbdf-3",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/initialstepgrowthratebdf-3",
+      "type": "Double",
+      "value_text": "[1.2]"
+    },
+    {
+      "path": "sol1/t1/initialstepfractionbdf-4",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/initialstepgrowthratebdf-4",
+      "type": "Double",
+      "value_text": "[1.15]"
+    },
+    {
+      "path": "sol1/t1/initialstepfractionbdf-5",
+      "type": "Double",
+      "value_text": "[0.001]"
+    },
+    {
+      "path": "sol1/t1/initialstepgrowthratebdf-5",
+      "type": "Double",
+      "value_text": "[1.1]"
+    },
+    {
+      "path": "sol1/t1/timestepbdf",
+      "type": "String",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/eventtol",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/stabcntrl",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/masssingular",
+      "type": "String",
+      "value_text": "[maybe]"
+    },
+    {
+      "path": "sol1/t1/consistent",
+      "type": "String",
+      "value_text": "[bweuler]"
+    },
+    {
+      "path": "sol1/t1/bwinitstepfrac",
+      "type": "Double",
+      "value_text": "[0.001]"
+    },
+    {
+      "path": "sol1/t1/bwinitfactor",
+      "type": "Double",
+      "value_text": "[20.0]"
+    },
+    {
+      "path": "sol1/t1/estrat",
+      "type": "String",
+      "value_text": "[include]"
+    },
+    {
+      "path": "sol1/t1/tstepsgenalpha",
+      "type": "String",
+      "value_text": "[free]"
+    },
+    {
+      "path": "sol1/t1/initialstepgenalpha",
+      "type": "Double",
+      "value_text": "[0.001]"
+    },
+    {
+      "path": "sol1/t1/initialstepgenalphaactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/maxstepconstraintgenalpha",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/maxstepgenalpha",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/maxstepexpressiongenalpha",
+      "type": "String",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/incrdelay",
+      "type": "Int",
+      "value_text": "[15]"
+    },
+    {
+      "path": "sol1/t1/incrdelayactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/rhoinf",
+      "type": "Double",
+      "value_text": "[0.75]"
+    },
+    {
+      "path": "sol1/t1/predictor",
+      "type": "String",
+      "value_text": "[linear]"
+    },
+    {
+      "path": "sol1/t1/timestepgenalpha",
+      "type": "String",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/rescaleafterinitbw",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/timemethodexp",
+      "type": "String",
+      "value_text": "[rk]"
+    },
+    {
+      "path": "sol1/t1/rkmethod",
+      "type": "String",
+      "value_text": "[rk34]"
+    },
+    {
+      "path": "sol1/t1/tstepsrk34",
+      "type": "String",
+      "value_text": "[free]"
+    },
+    {
+      "path": "sol1/t1/initialsteprk34",
+      "type": "Double",
+      "value_text": "[0.001]"
+    },
+    {
+      "path": "sol1/t1/initialsteprk34active",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/timesteprk34",
+      "type": "String",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/tstepsck5",
+      "type": "String",
+      "value_text": "[free]"
+    },
+    {
+      "path": "sol1/t1/initialstepck5",
+      "type": "Double",
+      "value_text": "[0.001]"
+    },
+    {
+      "path": "sol1/t1/initialstepck5active",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/timestepck5",
+      "type": "String",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/tstepsdopri5",
+      "type": "String",
+      "value_text": "[free]"
+    },
+    {
+      "path": "sol1/t1/initialstepdopri5",
+      "type": "Double",
+      "value_text": "[0.001]"
+    },
+    {
+      "path": "sol1/t1/initialstepdopri5active",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/dopripicontrol",
+      "type": "String",
+      "value_text": "[smooth]"
+    },
+    {
+      "path": "sol1/t1/maxstepconstraintdopri5",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/maxstepdopri5",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/maxstepexpressiondopri5",
+      "type": "String",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/doprigrowmin",
+      "type": "Double",
+      "value_text": "[0.2]"
+    },
+    {
+      "path": "sol1/t1/doprigrowmax",
+      "type": "Double",
+      "value_text": "[10.0]"
+    },
+    {
+      "path": "sol1/t1/doprisafe",
+      "type": "Double",
+      "value_text": "[0.9]"
+    },
+    {
+      "path": "sol1/t1/timestepdopri5",
+      "type": "String",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/rkstiffcheck",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/erkorder",
+      "type": "Int",
+      "value_text": "[4]"
+    },
+    {
+      "path": "sol1/t1/tstepping",
+      "type": "String",
+      "value_text": "[manual]"
+    },
+    {
+      "path": "sol1/t1/rktimestep",
+      "type": "String",
+      "value_text": "[1.e-3]"
+    },
+    {
+      "path": "sol1/t1/exprs",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/updtstep",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/ntimestepsupdate",
+      "type": "Int",
+      "value_text": "[10]"
+    },
+    {
+      "path": "sol1/t1/mlinsolver",
+      "type": "String",
+      "value_text": "[dDef]"
+    },
+    {
+      "path": "sol1/t1/algebraicsolvemethodRK",
+      "type": "String",
+      "value_text": "[full]"
+    },
+    {
+      "path": "sol1/t1/algebraicsolveeverynRK",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/algebraicsolveeverydtRK",
+      "type": "Double",
+      "value_text": "[0.0]"
+    },
+    {
+      "path": "sol1/t1/algebraicsolvemethod",
+      "type": "String",
+      "value_text": "[n]"
+    },
+    {
+      "path": "sol1/t1/algebraicsolveeveryn",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/algebraicsolveeverydt",
+      "type": "Double",
+      "value_text": "[0.0]"
+    },
+    {
+      "path": "sol1/t1/updtlvl",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/ntimestepsupdateab3loc",
+      "type": "Int",
+      "value_text": "[100]"
+    },
+    {
+      "path": "sol1/t1/rtstepab3loc",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/checkvalidity",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/plot",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/plotgroup",
+      "type": "String",
+      "value_text": "[Default]"
+    },
+    {
+      "path": "sol1/t1/plotfreq",
+      "type": "String",
+      "value_text": "[tout]"
+    },
+    {
+      "path": "sol1/t1/probesel",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/t1/probes",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/probefreq",
+      "type": "String",
+      "value_text": "[tsteps]"
+    },
+    {
+      "path": "sol1/t1/reacf",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/lumpedflux",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/storeudot",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/eventout",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/complex",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/solref",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/assumeperiodic",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/starttime",
+      "type": "Double",
+      "value_text": "[0.0]"
+    },
+    {
+      "path": "sol1/t1/solutionperiod",
+      "type": "Double",
+      "value_text": "[0.0]"
+    },
+    {
+      "path": "sol1/t1/cosimstoressol",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/cosim",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/cosiminput",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/cosimoutput",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/cosimconsistent",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/uselsqtimedata",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/tlistlsq",
+      "type": "DoubleRowMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/excludelsqtimes",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/lsqtimesout",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/t1/clistctrl",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/cname",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/clist",
+      "type": "DoubleArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/keeplog",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/message",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/t1/const",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[[Maximum step constraint, maxstepconstraintbdf, auto, expr], [Steps taken by solver, tstepsbdf, free, strict], [Initial step, initialstepbdf, (1)[s], 1.0E-5], [Relative tolerance, rtol, 1e-5, 1.0E-6], [Times to store, tout, tlist, tsteps]]]"
+    },
+    {
+      "path": "sol1/t1/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[tstepsbdffreestrict]]]"
+    },
+    {
+      "path": "sol1/t1/fieldselection",
+      "type": "String",
+      "value_text": "[comp1_cl]"
+    },
+    {
+      "path": "sol1/t1/dDef/linsolver",
+      "type": "String",
+      "value_text": "[mumps]"
+    },
+    {
+      "path": "sol1/t1/dDef/mumpsalloc",
+      "type": "Double",
+      "value_text": "[1.2]"
+    },
+    {
+      "path": "sol1/t1/dDef/mumpsreorder",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/dDef/mumpsrreorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/dDef/reusereorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/dDef/pivotenable",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/dDef/thresh",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/dDef/pivotperturb",
+      "type": "Double",
+      "value_text": "[1.0E-8]"
+    },
+    {
+      "path": "sol1/t1/dDef/mumpsblr",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/dDef/mumpsblrtol",
+      "type": "Double",
+      "value_text": "[1.0E-8]"
+    },
+    {
+      "path": "sol1/t1/dDef/mumpsblrtype",
+      "type": "String",
+      "value_text": "[normal]"
+    },
+    {
+      "path": "sol1/t1/dDef/ooc",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/dDef/memfracooc",
+      "type": "Double",
+      "value_text": "[0.99]"
+    },
+    {
+      "path": "sol1/t1/dDef/incore",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/dDef/minicmemory",
+      "type": "Double",
+      "value_text": "[512.0]"
+    },
+    {
+      "path": "sol1/t1/dDef/usetotmemory",
+      "type": "Double",
+      "value_text": "[0.8]"
+    },
+    {
+      "path": "sol1/t1/dDef/internalmemusage",
+      "type": "Double",
+      "value_text": "[3.0]"
+    },
+    {
+      "path": "sol1/t1/dDef/oocmemory",
+      "type": "Double",
+      "value_text": "[512.0]"
+    },
+    {
+      "path": "sol1/t1/dDef/pardreorder",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/dDef/pardschedule",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/dDef/pardrreorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/dDef/pivotstrategy",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/dDef/pardmtsolve",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/dDef/clusterpardiso",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/dDef/preorder",
+      "type": "String",
+      "value_text": "[nd]"
+    },
+    {
+      "path": "sol1/t1/dDef/pivotrefines",
+      "type": "Int",
+      "value_text": "[0]"
+    },
+    {
+      "path": "sol1/t1/dDef/errorchk",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/dDef/rhob",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/dDef/iterrefine",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/dDef/maxrefinesteps",
+      "type": "Int",
+      "value_text": "[15]"
+    },
+    {
+      "path": "sol1/t1/dDef/errorratiobound",
+      "type": "Double",
+      "value_text": "[0.5]"
+    },
+    {
+      "path": "sol1/t1/dDef/nliniterrefine",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/dDef/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/dDef/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/aDef/symmetric",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/aDef/matrixformat",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/aDef/rowscale",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/aDef/nullfun",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/aDef/orthonormallimit",
+      "type": "Double",
+      "value_text": "[1.0E7]"
+    },
+    {
+      "path": "sol1/t1/aDef/storeresidual",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/aDef/convinfo",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/aDef/logsampling",
+      "type": "Double",
+      "value_text": "[0.005]"
+    },
+    {
+      "path": "sol1/t1/aDef/recoverysavinginfo",
+      "type": "String",
+      "value_text": "[frompreferences]"
+    },
+    {
+      "path": "sol1/t1/aDef/recoverysavingratio",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/aDef/recoverysaveforce",
+      "type": "String",
+      "value_text": "[frompreferences]"
+    },
+    {
+      "path": "sol1/t1/aDef/recoverysaveevery",
+      "type": "Double",
+      "value_text": "[1800.0]"
+    },
+    {
+      "path": "sol1/t1/aDef/blocksize",
+      "type": "Int",
+      "value_text": "[1000]"
+    },
+    {
+      "path": "sol1/t1/aDef/blocksizeactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/aDef/assemdistrsol",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/aDef/cachepattern",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/aDef/cachepatternmethod",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/aDef/cachepatternexpr",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/t1/aDef/assemloc",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/aDef/optthread",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/aDef/statblockdistr",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/aDef/complexfun",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/aDef/matherr",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/aDef/checkmatherr",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/aDef/elemdatainit",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/aDef/globalcache",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/aDef/assemtol",
+      "type": "Double",
+      "value_text": "[1.0E-12]"
+    },
+    {
+      "path": "sol1/t1/aDef/keep",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/aDef/L",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/aDef/K",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/aDef/D",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/aDef/E",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/aDef/M",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/aDef/N",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/aDef/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/aDef/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/fc1/linsolver",
+      "type": "String",
+      "value_text": "[d1]"
+    },
+    {
+      "path": "sol1/t1/fc1/dtech",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/fc1/initstep",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/fc1/minstep",
+      "type": "Double",
+      "value_text": "[1.0E-4]"
+    },
+    {
+      "path": "sol1/t1/fc1/rstep",
+      "type": "Double",
+      "value_text": "[10.0]"
+    },
+    {
+      "path": "sol1/t1/fc1/rstepabs",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/fc1/useminsteprecovery",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/fc1/minsteprecovery",
+      "type": "Double",
+      "value_text": "[0.75]"
+    },
+    {
+      "path": "sol1/t1/fc1/ntermauto",
+      "type": "String",
+      "value_text": "[tol]"
+    },
+    {
+      "path": "sol1/t1/fc1/maxiter",
+      "type": "Int",
+      "value_text": "[4]"
+    },
+    {
+      "path": "sol1/t1/fc1/ntolfact",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/fc1/niter",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/fc1/termonres",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/fc1/reserrfact",
+      "type": "Double",
+      "value_text": "[1000.0]"
+    },
+    {
+      "path": "sol1/t1/fc1/backmethod",
+      "type": "String",
+      "value_text": "[fullest]"
+    },
+    {
+      "path": "sol1/t1/fc1/backtrackonce",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/fc1/backdampstep",
+      "type": "Double",
+      "value_text": "[0.5]"
+    },
+    {
+      "path": "sol1/t1/fc1/maxdamp",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/fc1/mindamp",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/fc1/ratelimit",
+      "type": "Double",
+      "value_text": "[0.9]"
+    },
+    {
+      "path": "sol1/t1/fc1/ratelimitactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/fc1/jtech",
+      "type": "String",
+      "value_text": "[minimal]"
+    },
+    {
+      "path": "sol1/t1/fc1/useheuristicfact",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/fc1/ntermconst",
+      "type": "String",
+      "value_text": "[tol]"
+    },
+    {
+      "path": "sol1/t1/fc1/adapttol",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/fc1/atolchoice",
+      "type": "String",
+      "value_text": "[fullerrorest]"
+    },
+    {
+      "path": "sol1/t1/fc1/adapttolcflweight",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/fc1/adapttolerrweight",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/fc1/initiallintol",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/fc1/etamax",
+      "type": "Double",
+      "value_text": "[0.9]"
+    },
+    {
+      "path": "sol1/t1/fc1/atolthreshold",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/fc1/dampexponent",
+      "type": "Double",
+      "value_text": "[2.0]"
+    },
+    {
+      "path": "sol1/t1/fc1/dampfactor",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/fc1/stabacc",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/t1/fc1/aaccdim",
+      "type": "Int",
+      "value_text": "[10]"
+    },
+    {
+      "path": "sol1/t1/fc1/aaccmix",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/fc1/aaccdelay",
+      "type": "Int",
+      "value_text": "[0]"
+    },
+    {
+      "path": "sol1/t1/fc1/aaccfact",
+      "type": "Double",
+      "value_text": "[10.0]"
+    },
+    {
+      "path": "sol1/t1/fc1/damp",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/fc1/initsteph",
+      "type": "Double",
+      "value_text": "[1.0E-4]"
+    },
+    {
+      "path": "sol1/t1/fc1/minsteph",
+      "type": "Double",
+      "value_text": "[1.0E-8]"
+    },
+    {
+      "path": "sol1/t1/fc1/plot",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/fc1/plotgroup",
+      "type": "String",
+      "value_text": "[Default]"
+    },
+    {
+      "path": "sol1/t1/fc1/probesel",
+      "type": "String",
+      "value_text": "[none]"
+    },
+    {
+      "path": "sol1/t1/fc1/probes",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/fc1/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/fc1/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/d1/linsolver",
+      "type": "String",
+      "value_text": "[pardiso]"
+    },
+    {
+      "path": "sol1/t1/d1/mumpsalloc",
+      "type": "Double",
+      "value_text": "[1.2]"
+    },
+    {
+      "path": "sol1/t1/d1/mumpsreorder",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/d1/mumpsrreorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/d1/reusereorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/d1/pivotenable",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/d1/thresh",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/d1/pivotperturb",
+      "type": "Double",
+      "value_text": "[1.0E-13]"
+    },
+    {
+      "path": "sol1/t1/d1/mumpsblr",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/d1/mumpsblrtol",
+      "type": "Double",
+      "value_text": "[1.0E-8]"
+    },
+    {
+      "path": "sol1/t1/d1/mumpsblrtype",
+      "type": "String",
+      "value_text": "[normal]"
+    },
+    {
+      "path": "sol1/t1/d1/ooc",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/d1/memfracooc",
+      "type": "Double",
+      "value_text": "[0.99]"
+    },
+    {
+      "path": "sol1/t1/d1/incore",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/d1/minicmemory",
+      "type": "Double",
+      "value_text": "[512.0]"
+    },
+    {
+      "path": "sol1/t1/d1/usetotmemory",
+      "type": "Double",
+      "value_text": "[0.8]"
+    },
+    {
+      "path": "sol1/t1/d1/internalmemusage",
+      "type": "Double",
+      "value_text": "[3.0]"
+    },
+    {
+      "path": "sol1/t1/d1/oocmemory",
+      "type": "Double",
+      "value_text": "[512.0]"
+    },
+    {
+      "path": "sol1/t1/d1/pardreorder",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/d1/pardschedule",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/d1/pardrreorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/d1/pivotstrategy",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/d1/pardmtsolve",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/d1/clusterpardiso",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/d1/preorder",
+      "type": "String",
+      "value_text": "[nd]"
+    },
+    {
+      "path": "sol1/t1/d1/pivotrefines",
+      "type": "Int",
+      "value_text": "[0]"
+    },
+    {
+      "path": "sol1/t1/d1/errorchk",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/d1/rhob",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/d1/iterrefine",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/d1/maxrefinesteps",
+      "type": "Int",
+      "value_text": "[15]"
+    },
+    {
+      "path": "sol1/t1/d1/errorratiobound",
+      "type": "Double",
+      "value_text": "[0.5]"
+    },
+    {
+      "path": "sol1/t1/d1/nliniterrefine",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/d1/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/d1/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i1/linsolver",
+      "type": "String",
+      "value_text": "[gmres]"
+    },
+    {
+      "path": "sol1/t1/i1/itrestart",
+      "type": "Int",
+      "value_text": "[50]"
+    },
+    {
+      "path": "sol1/t1/i1/prefuntype",
+      "type": "String",
+      "value_text": "[left]"
+    },
+    {
+      "path": "sol1/t1/i1/irestol",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/i1/nlinnormuse",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i1/nlinnormlevel",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i1/usenlweights",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/gcrodr",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i1/eigk",
+      "type": "Int",
+      "value_text": "[25]"
+    },
+    {
+      "path": "sol1/t1/i1/keepy",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/nrkeepss",
+      "type": "Int",
+      "value_text": "[5]"
+    },
+    {
+      "path": "sol1/t1/i1/gcrodrrel",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/i1/eigkrel",
+      "type": "Double",
+      "value_text": "[0.5]"
+    },
+    {
+      "path": "sol1/t1/i1/maxlinit",
+      "type": "Int",
+      "value_text": "[1000]"
+    },
+    {
+      "path": "sol1/t1/i1/iterm",
+      "type": "String",
+      "value_text": "[tol]"
+    },
+    {
+      "path": "sol1/t1/i1/iter",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i1/rhob",
+      "type": "Double",
+      "value_text": "[400.0]"
+    },
+    {
+      "path": "sol1/t1/i1/errorchk",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/maxilinit",
+      "type": "Int",
+      "value_text": "[100]"
+    },
+    {
+      "path": "sol1/t1/i1/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i1/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/prefun",
+      "type": "String",
+      "value_text": "[ilu]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/droptype",
+      "type": "String",
+      "value_text": "[tol]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/droptol",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/fillratio",
+      "type": "Double",
+      "value_text": "[2.0]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/respectpattern",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/thresh",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/iterm",
+      "type": "String",
+      "value_text": "[iter]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/iter",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/relax",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/ilutdroptol",
+      "type": "Double",
+      "value_text": "[0.001]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/ilutfillratio",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/preorder",
+      "type": "String",
+      "value_text": "[nd]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/rhob",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/hybridization",
+      "type": "String",
+      "value_text": "[single]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/hybridvar",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, comp1_liion_pce1_cs, comp1_liion_pce2_cs, comp1_phil, comp1_phis]]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/hybridvarspec",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/hybridcomp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl, comp1.liion.cs_pce1, comp1.liion.cs_pce2, comp1.phil, comp1.phis]]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/matrixformat",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i1/ilDef/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/prefun",
+      "type": "String",
+      "value_text": "[saamg]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/mgcycle",
+      "type": "String",
+      "value_text": "[v]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/mindofthread",
+      "type": "Int",
+      "value_text": "[5000]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/mcasegen",
+      "type": "String",
+      "value_text": "[any]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/gmglevels",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/scale",
+      "type": "Double",
+      "value_text": "[2.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/geomuse",
+      "type": "StringArray",
+      "value_text": "[[geom1]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/massem",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/mkeep",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/rmethod",
+      "type": "String",
+      "value_text": "[longest]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/mcaseuse",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/mcaseassem",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/prefermatfree",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/iterm",
+      "type": "String",
+      "value_text": "[iter]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/iter",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/mglevels",
+      "type": "Int",
+      "value_text": "[5]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/maxcoarsedof",
+      "type": "Int",
+      "value_text": "[50000]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/coarseningmethod",
+      "type": "String",
+      "value_text": "[parallel]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/strconnamgp",
+      "type": "Double",
+      "value_text": "[0.25]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/amgcompwise",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/prolongatoronlystrongconn",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/prolongatortruncation",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/amgauto",
+      "type": "Int",
+      "value_text": "[3]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/loweramg",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/assemall",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/strconn",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/useaggressive",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/nullspace",
+      "type": "String",
+      "value_text": "[constant]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/saamgcompwise",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/compactaggregation",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/reuseprolongators",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/usesmooth",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/aggmethod",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/agglevel",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/jacdamp",
+      "type": "Double",
+      "value_text": "[0.6666666666666666]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/usefilter",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/rhob",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/negcoupl",
+      "type": "Double",
+      "value_text": "[0.25]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/negcouplactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/enrich",
+      "type": "Double",
+      "value_text": "[0.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/enrichactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/coarsening",
+      "type": "String",
+      "value_text": "[brutal]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/coarseningactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/poscoupl",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/poscouplactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/interpolation",
+      "type": "String",
+      "value_text": "[standard]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/interpolationactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/jacinterp",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/jacinterpactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/truncinterp",
+      "type": "Double",
+      "value_text": "[0.2]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/truncinterpactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/slaplacemain",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/addweakcontribslaplacemain",
+      "type": "StringArray",
+      "value_text": "[[liion, auto]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/weakexprslaplacemain",
+      "type": "StringArray",
+      "value_text": "[[liion, ]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/epsslaplacemain",
+      "type": "StringArray",
+      "value_text": "[[liion, 1]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/kwslaplacemain",
+      "type": "StringArray",
+      "value_text": "[[liion, off]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/addweakcontribslaplacemainAUX",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/epsslaplacemainAUX",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/kwslaplacemainAUX",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/weakexprslaplacemainAUX",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/slaplacemg",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/addweakcontribslaplacemg",
+      "type": "StringArray",
+      "value_text": "[[liion, auto]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/weakexprslaplacemg",
+      "type": "StringArray",
+      "value_text": "[[liion, ]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/epsslaplacemg",
+      "type": "StringArray",
+      "value_text": "[[liion, 1]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/slaplaceminlevelmg",
+      "type": "StringArray",
+      "value_text": "[[liion, 1]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/slaplacemaxlevelmg",
+      "type": "StringArray",
+      "value_text": "[[liion, 100]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/slaplacemaxlevelmgactive",
+      "type": "StringArray",
+      "value_text": "[[liion, off]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/kwslaplacemg",
+      "type": "StringArray",
+      "value_text": "[[liion, off]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/addweakcontribslaplacemgAUX",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/epsslaplacemgAUX",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/slaplaceminlevelmgAUX",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/slaplacemaxlevelmgAUX",
+      "type": "Int",
+      "value_text": "[100]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/slaplacemaxlevelmgAUXactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/kwslaplacemgAUX",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/weakexprslaplacemgAUX",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/hybridization",
+      "type": "String",
+      "value_text": "[single]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/hybridvar",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, comp1_liion_pce1_cs, comp1_liion_pce2_cs, comp1_phil, comp1_phis]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/hybridvarspec",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/hybridcomp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl, comp1.liion.cs_pce1, comp1.liion.cs_pce2, comp1.phil, comp1.phis]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/matrixformat",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/physicsselectionmain",
+      "type": "String",
+      "value_text": "[liion]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/physicsselectionmg",
+      "type": "String",
+      "value_text": "[liion]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/prefun",
+      "type": "String",
+      "value_text": "[sor]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/iterm",
+      "type": "String",
+      "value_text": "[iter]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/iter",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/relax",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/sorblocked",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/reusedata",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/reusepattern",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/rhob",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/hybridization",
+      "type": "String",
+      "value_text": "[single]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/hybridvar",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, comp1_liion_pce1_cs, comp1_liion_pce2_cs, comp1_phil, comp1_phis]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/hybridvarspec",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/hybridcomp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl, comp1.liion.cs_pce1, comp1.liion.cs_pce2, comp1.phil, comp1.phis]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/matrixformat",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/soDef/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/linesweeptype",
+      "type": "String",
+      "value_text": "[sor]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/iterm",
+      "type": "String",
+      "value_text": "[iter]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/iter",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/linerelax",
+      "type": "Double",
+      "value_text": "[0.5]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/linealgorithm",
+      "type": "String",
+      "value_text": "[mesh]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/linemethod",
+      "type": "String",
+      "value_text": "[coupled]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/maxlinemesh",
+      "type": "Int",
+      "value_text": "[20]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/linemethodmatrix",
+      "type": "String",
+      "value_text": "[uncoupled]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/linevar",
+      "type": "String",
+      "value_text": "[comp1_cl]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/maxline",
+      "type": "Int",
+      "value_text": "[20]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/lineblocked",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/reuseprolongators",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/reuselines",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/reusepattern",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/prefun",
+      "type": "String",
+      "value_text": "[sorline]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/seconditer",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/relax",
+      "type": "Double",
+      "value_text": "[0.7]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/hybridization",
+      "type": "String",
+      "value_text": "[single]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/hybridvar",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, comp1_liion_pce1_cs, comp1_liion_pce2_cs, comp1_phil, comp1_phis]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/hybridvarspec",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/hybridcomp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl, comp1.liion.cs_pce1, comp1.liion.cs_pce2, comp1.phil, comp1.phis]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/matrixformat",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/pr/sl1/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/prefun",
+      "type": "String",
+      "value_text": "[soru]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/iterm",
+      "type": "String",
+      "value_text": "[iter]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/iter",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/relax",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/sorblocked",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/reusedata",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/reusepattern",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/rhob",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/hybridization",
+      "type": "String",
+      "value_text": "[single]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/hybridvar",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, comp1_liion_pce1_cs, comp1_liion_pce2_cs, comp1_phil, comp1_phis]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/hybridvarspec",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/hybridcomp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl, comp1.liion.cs_pce1, comp1.liion.cs_pce2, comp1.phil, comp1.phis]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/matrixformat",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/soDef/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/linesweeptype",
+      "type": "String",
+      "value_text": "[soru]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/iterm",
+      "type": "String",
+      "value_text": "[iter]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/iter",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/linerelax",
+      "type": "Double",
+      "value_text": "[0.5]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/linealgorithm",
+      "type": "String",
+      "value_text": "[mesh]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/linemethod",
+      "type": "String",
+      "value_text": "[coupled]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/maxlinemesh",
+      "type": "Int",
+      "value_text": "[20]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/linemethodmatrix",
+      "type": "String",
+      "value_text": "[uncoupled]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/linevar",
+      "type": "String",
+      "value_text": "[comp1_cl]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/maxline",
+      "type": "Int",
+      "value_text": "[20]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/lineblocked",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/reuseprolongators",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/reuselines",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/reusepattern",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/prefun",
+      "type": "String",
+      "value_text": "[sorline]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/seconditer",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/relax",
+      "type": "Double",
+      "value_text": "[0.7]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/hybridization",
+      "type": "String",
+      "value_text": "[single]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/hybridvar",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, comp1_liion_pce1_cs, comp1_liion_pce2_cs, comp1_phil, comp1_phis]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/hybridvarspec",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/hybridcomp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl, comp1.liion.cs_pce1, comp1.liion.cs_pce2, comp1.phil, comp1.phis]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/matrixformat",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/po/sl1/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/linsolver",
+      "type": "String",
+      "value_text": "[mumps]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/mumpsalloc",
+      "type": "Double",
+      "value_text": "[1.2]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/mumpsreorder",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/mumpsrreorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/reusereorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/pivotenable",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/thresh",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/pivotperturb",
+      "type": "Double",
+      "value_text": "[1.0E-8]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/mumpsblr",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/mumpsblrtol",
+      "type": "Double",
+      "value_text": "[1.0E-8]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/mumpsblrtype",
+      "type": "String",
+      "value_text": "[normal]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/ooc",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/memfracooc",
+      "type": "Double",
+      "value_text": "[0.99]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/incore",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/minicmemory",
+      "type": "Double",
+      "value_text": "[512.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/usetotmemory",
+      "type": "Double",
+      "value_text": "[0.8]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/internalmemusage",
+      "type": "Double",
+      "value_text": "[3.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/oocmemory",
+      "type": "Double",
+      "value_text": "[512.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/pardreorder",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/pardschedule",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/pardrreorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/pivotstrategy",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/pardmtsolve",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/clusterpardiso",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/preorder",
+      "type": "String",
+      "value_text": "[nd]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/pivotrefines",
+      "type": "Int",
+      "value_text": "[0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/errorchk",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/itol",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/dDef/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/linsolver",
+      "type": "String",
+      "value_text": "[pardiso]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/mumpsalloc",
+      "type": "Double",
+      "value_text": "[1.2]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/mumpsreorder",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/mumpsrreorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/reusereorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/pivotenable",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/thresh",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/pivotperturb",
+      "type": "Double",
+      "value_text": "[1.0E-13]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/mumpsblr",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/mumpsblrtol",
+      "type": "Double",
+      "value_text": "[1.0E-8]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/mumpsblrtype",
+      "type": "String",
+      "value_text": "[normal]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/ooc",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/memfracooc",
+      "type": "Double",
+      "value_text": "[0.99]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/incore",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/minicmemory",
+      "type": "Double",
+      "value_text": "[512.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/usetotmemory",
+      "type": "Double",
+      "value_text": "[0.8]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/internalmemusage",
+      "type": "Double",
+      "value_text": "[3.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/oocmemory",
+      "type": "Double",
+      "value_text": "[512.0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/pardreorder",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/pardschedule",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/pardrreorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/pivotstrategy",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/pardmtsolve",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/clusterpardiso",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/preorder",
+      "type": "String",
+      "value_text": "[nd]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/pivotrefines",
+      "type": "Int",
+      "value_text": "[0]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/errorchk",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/itol",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i1/mg1/cs/d1/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i2/linsolver",
+      "type": "String",
+      "value_text": "[gmres]"
+    },
+    {
+      "path": "sol1/t1/i2/itrestart",
+      "type": "Int",
+      "value_text": "[50]"
+    },
+    {
+      "path": "sol1/t1/i2/prefuntype",
+      "type": "String",
+      "value_text": "[left]"
+    },
+    {
+      "path": "sol1/t1/i2/irestol",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/i2/nlinnormuse",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i2/nlinnormlevel",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i2/usenlweights",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/gcrodr",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i2/eigk",
+      "type": "Int",
+      "value_text": "[25]"
+    },
+    {
+      "path": "sol1/t1/i2/keepy",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/nrkeepss",
+      "type": "Int",
+      "value_text": "[5]"
+    },
+    {
+      "path": "sol1/t1/i2/gcrodrrel",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/i2/eigkrel",
+      "type": "Double",
+      "value_text": "[0.5]"
+    },
+    {
+      "path": "sol1/t1/i2/maxlinit",
+      "type": "Int",
+      "value_text": "[1000]"
+    },
+    {
+      "path": "sol1/t1/i2/iterm",
+      "type": "String",
+      "value_text": "[tol]"
+    },
+    {
+      "path": "sol1/t1/i2/iter",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i2/rhob",
+      "type": "Double",
+      "value_text": "[400.0]"
+    },
+    {
+      "path": "sol1/t1/i2/errorchk",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/maxilinit",
+      "type": "Int",
+      "value_text": "[100]"
+    },
+    {
+      "path": "sol1/t1/i2/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i2/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/prefun",
+      "type": "String",
+      "value_text": "[ilu]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/droptype",
+      "type": "String",
+      "value_text": "[tol]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/droptol",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/fillratio",
+      "type": "Double",
+      "value_text": "[2.0]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/respectpattern",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/thresh",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/iterm",
+      "type": "String",
+      "value_text": "[iter]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/iter",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/relax",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/ilutdroptol",
+      "type": "Double",
+      "value_text": "[0.001]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/ilutfillratio",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/preorder",
+      "type": "String",
+      "value_text": "[nd]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/rhob",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/hybridization",
+      "type": "String",
+      "value_text": "[single]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/hybridvar",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, comp1_liion_pce1_cs, comp1_liion_pce2_cs, comp1_phil, comp1_phis]]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/hybridvarspec",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/hybridcomp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl, comp1.liion.cs_pce1, comp1.liion.cs_pce2, comp1.phil, comp1.phis]]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/matrixformat",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i2/ilDef/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/prefun",
+      "type": "String",
+      "value_text": "[gmg]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/mgcycle",
+      "type": "String",
+      "value_text": "[v]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/mindofthread",
+      "type": "Int",
+      "value_text": "[5000]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/mcasegen",
+      "type": "String",
+      "value_text": "[any]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/gmglevels",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/scale",
+      "type": "Double",
+      "value_text": "[2.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/geomuse",
+      "type": "StringArray",
+      "value_text": "[[geom1]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/massem",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/mkeep",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/rmethod",
+      "type": "String",
+      "value_text": "[longest]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/mcaseuse",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/mcaseassem",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/prefermatfree",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/iterm",
+      "type": "String",
+      "value_text": "[iter]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/iter",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/mglevels",
+      "type": "Int",
+      "value_text": "[5]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/maxcoarsedof",
+      "type": "Int",
+      "value_text": "[5000]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/coarseningmethod",
+      "type": "String",
+      "value_text": "[parallel]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/strconnamgp",
+      "type": "Double",
+      "value_text": "[0.25]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/amgcompwise",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/prolongatoronlystrongconn",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/prolongatortruncation",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/amgauto",
+      "type": "Int",
+      "value_text": "[3]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/loweramg",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/assemall",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/strconn",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/useaggressive",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/nullspace",
+      "type": "String",
+      "value_text": "[constant]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/saamgcompwise",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/compactaggregation",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/reuseprolongators",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/usesmooth",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/aggmethod",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/agglevel",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/jacdamp",
+      "type": "Double",
+      "value_text": "[0.6666666666666666]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/usefilter",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/rhob",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/negcoupl",
+      "type": "Double",
+      "value_text": "[0.25]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/negcouplactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/enrich",
+      "type": "Double",
+      "value_text": "[0.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/enrichactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/coarsening",
+      "type": "String",
+      "value_text": "[brutal]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/coarseningactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/poscoupl",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/poscouplactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/interpolation",
+      "type": "String",
+      "value_text": "[standard]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/interpolationactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/jacinterp",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/jacinterpactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/truncinterp",
+      "type": "Double",
+      "value_text": "[0.2]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/truncinterpactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/slaplacemain",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/addweakcontribslaplacemain",
+      "type": "StringArray",
+      "value_text": "[[liion, auto]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/weakexprslaplacemain",
+      "type": "StringArray",
+      "value_text": "[[liion, ]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/epsslaplacemain",
+      "type": "StringArray",
+      "value_text": "[[liion, 1]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/kwslaplacemain",
+      "type": "StringArray",
+      "value_text": "[[liion, off]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/addweakcontribslaplacemainAUX",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/epsslaplacemainAUX",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/kwslaplacemainAUX",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/weakexprslaplacemainAUX",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/slaplacemg",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/addweakcontribslaplacemg",
+      "type": "StringArray",
+      "value_text": "[[liion, auto]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/weakexprslaplacemg",
+      "type": "StringArray",
+      "value_text": "[[liion, ]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/epsslaplacemg",
+      "type": "StringArray",
+      "value_text": "[[liion, 1]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/slaplaceminlevelmg",
+      "type": "StringArray",
+      "value_text": "[[liion, 1]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/slaplacemaxlevelmg",
+      "type": "StringArray",
+      "value_text": "[[liion, 100]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/slaplacemaxlevelmgactive",
+      "type": "StringArray",
+      "value_text": "[[liion, off]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/kwslaplacemg",
+      "type": "StringArray",
+      "value_text": "[[liion, off]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/addweakcontribslaplacemgAUX",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/epsslaplacemgAUX",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/slaplaceminlevelmgAUX",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/slaplacemaxlevelmgAUX",
+      "type": "Int",
+      "value_text": "[100]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/slaplacemaxlevelmgAUXactive",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/kwslaplacemgAUX",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/weakexprslaplacemgAUX",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/hybridization",
+      "type": "String",
+      "value_text": "[single]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/hybridvar",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, comp1_liion_pce1_cs, comp1_liion_pce2_cs, comp1_phil, comp1_phis]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/hybridvarspec",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/hybridcomp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl, comp1.liion.cs_pce1, comp1.liion.cs_pce2, comp1.phil, comp1.phis]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/matrixformat",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/physicsselectionmain",
+      "type": "String",
+      "value_text": "[liion]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/physicsselectionmg",
+      "type": "String",
+      "value_text": "[liion]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/prefun",
+      "type": "String",
+      "value_text": "[sor]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/iterm",
+      "type": "String",
+      "value_text": "[iter]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/iter",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/relax",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/sorblocked",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/reusedata",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/reusepattern",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/rhob",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/hybridization",
+      "type": "String",
+      "value_text": "[single]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/hybridvar",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, comp1_liion_pce1_cs, comp1_liion_pce2_cs, comp1_phil, comp1_phis]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/hybridvarspec",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/hybridcomp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl, comp1.liion.cs_pce1, comp1.liion.cs_pce2, comp1.phil, comp1.phis]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/matrixformat",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/soDef/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/linesweeptype",
+      "type": "String",
+      "value_text": "[sor]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/iterm",
+      "type": "String",
+      "value_text": "[iter]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/iter",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/linerelax",
+      "type": "Double",
+      "value_text": "[0.5]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/linealgorithm",
+      "type": "String",
+      "value_text": "[mesh]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/linemethod",
+      "type": "String",
+      "value_text": "[coupled]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/maxlinemesh",
+      "type": "Int",
+      "value_text": "[20]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/linemethodmatrix",
+      "type": "String",
+      "value_text": "[uncoupled]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/linevar",
+      "type": "String",
+      "value_text": "[comp1_cl]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/maxline",
+      "type": "Int",
+      "value_text": "[20]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/lineblocked",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/reuseprolongators",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/reuselines",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/reusepattern",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/prefun",
+      "type": "String",
+      "value_text": "[sorline]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/seconditer",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/relax",
+      "type": "Double",
+      "value_text": "[0.7]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/hybridization",
+      "type": "String",
+      "value_text": "[single]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/hybridvar",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, comp1_liion_pce1_cs, comp1_liion_pce2_cs, comp1_phil, comp1_phis]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/hybridvarspec",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/hybridcomp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl, comp1.liion.cs_pce1, comp1.liion.cs_pce2, comp1.phil, comp1.phis]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/matrixformat",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/pr/sl1/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/prefun",
+      "type": "String",
+      "value_text": "[soru]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/iterm",
+      "type": "String",
+      "value_text": "[iter]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/iter",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/relax",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/sorblocked",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/reusedata",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/reusepattern",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/rhob",
+      "type": "Double",
+      "value_text": "[1.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/hybridization",
+      "type": "String",
+      "value_text": "[single]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/hybridvar",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, comp1_liion_pce1_cs, comp1_liion_pce2_cs, comp1_phil, comp1_phis]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/hybridvarspec",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/hybridcomp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl, comp1.liion.cs_pce1, comp1.liion.cs_pce2, comp1.phil, comp1.phis]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/matrixformat",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/soDef/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/linesweeptype",
+      "type": "String",
+      "value_text": "[soru]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/iterm",
+      "type": "String",
+      "value_text": "[iter]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/iter",
+      "type": "Int",
+      "value_text": "[2]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/linerelax",
+      "type": "Double",
+      "value_text": "[0.5]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/linealgorithm",
+      "type": "String",
+      "value_text": "[mesh]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/linemethod",
+      "type": "String",
+      "value_text": "[coupled]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/maxlinemesh",
+      "type": "Int",
+      "value_text": "[20]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/linemethodmatrix",
+      "type": "String",
+      "value_text": "[uncoupled]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/linevar",
+      "type": "String",
+      "value_text": "[comp1_cl]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/maxline",
+      "type": "Int",
+      "value_text": "[20]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/lineblocked",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/reuseprolongators",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/reuselines",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/reusepattern",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/prefun",
+      "type": "String",
+      "value_text": "[sorline]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/seconditer",
+      "type": "Int",
+      "value_text": "[1]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/relax",
+      "type": "Double",
+      "value_text": "[0.7]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/hybridization",
+      "type": "String",
+      "value_text": "[single]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/hybridvar",
+      "type": "StringArray",
+      "value_text": "[[comp1_cl, comp1_liion_pce1_cs, comp1_liion_pce2_cs, comp1_phil, comp1_phis]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/hybridvarspec",
+      "type": "String",
+      "value_text": "[all]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/hybridcomp",
+      "type": "StringArray",
+      "value_text": "[[comp1.cl, comp1.liion.cs_pce1, comp1.liion.cs_pce2, comp1.phil, comp1.phis]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/matrixformat",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/po/sl1/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/linsolver",
+      "type": "String",
+      "value_text": "[mumps]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/mumpsalloc",
+      "type": "Double",
+      "value_text": "[1.2]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/mumpsreorder",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/mumpsrreorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/reusereorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/pivotenable",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/thresh",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/pivotperturb",
+      "type": "Double",
+      "value_text": "[1.0E-8]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/mumpsblr",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/mumpsblrtol",
+      "type": "Double",
+      "value_text": "[1.0E-8]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/mumpsblrtype",
+      "type": "String",
+      "value_text": "[normal]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/ooc",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/memfracooc",
+      "type": "Double",
+      "value_text": "[0.99]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/incore",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/minicmemory",
+      "type": "Double",
+      "value_text": "[512.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/usetotmemory",
+      "type": "Double",
+      "value_text": "[0.8]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/internalmemusage",
+      "type": "Double",
+      "value_text": "[3.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/oocmemory",
+      "type": "Double",
+      "value_text": "[512.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/pardreorder",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/pardschedule",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/pardrreorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/pivotstrategy",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/pardmtsolve",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/clusterpardiso",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/preorder",
+      "type": "String",
+      "value_text": "[nd]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/pivotrefines",
+      "type": "Int",
+      "value_text": "[0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/errorchk",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/itol",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/dDef/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/linsolver",
+      "type": "String",
+      "value_text": "[pardiso]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/mumpsalloc",
+      "type": "Double",
+      "value_text": "[1.2]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/mumpsreorder",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/mumpsrreorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/reusereorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/pivotenable",
+      "type": "String",
+      "value_text": "[on]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/thresh",
+      "type": "Double",
+      "value_text": "[0.01]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/pivotperturb",
+      "type": "Double",
+      "value_text": "[1.0E-13]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/mumpsblr",
+      "type": "String",
+      "value_text": "[off]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/mumpsblrtol",
+      "type": "Double",
+      "value_text": "[1.0E-8]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/mumpsblrtype",
+      "type": "String",
+      "value_text": "[normal]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/ooc",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/memfracooc",
+      "type": "Double",
+      "value_text": "[0.99]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/incore",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/minicmemory",
+      "type": "Double",
+      "value_text": "[512.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/usetotmemory",
+      "type": "Double",
+      "value_text": "[0.8]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/internalmemusage",
+      "type": "Double",
+      "value_text": "[3.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/oocmemory",
+      "type": "Double",
+      "value_text": "[512.0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/pardreorder",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/pardschedule",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/pardrreorder",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/pivotstrategy",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/pardmtsolve",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/clusterpardiso",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/preorder",
+      "type": "String",
+      "value_text": "[nd]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/pivotrefines",
+      "type": "Int",
+      "value_text": "[0]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/errorchk",
+      "type": "String",
+      "value_text": "[auto]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/itol",
+      "type": "Double",
+      "value_text": "[0.1]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/i2/mg1/cs/d1/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    },
+    {
+      "path": "sol1/t1/stguard/stopcondterminateon",
+      "type": "StringArray",
+      "value_text": "[[true, true]]"
+    },
+    {
+      "path": "sol1/t1/stguard/stopcondActive",
+      "type": "StringArray",
+      "value_text": "[[on, on]]"
+    },
+    {
+      "path": "sol1/t1/stguard/stopconddesc",
+      "type": "StringArray",
+      "value_text": "[[OCP surface outside table, Invalid surface concentration]]"
+    },
+    {
+      "path": "sol1/t1/stguard/stopcondarr",
+      "type": "StringArray",
+      "value_text": "[[(comp1.minsurf1(comp1.liion.socloc_surface)<0)||(comp1.maxsurf1(comp1.liion.socloc_surface)>0.98)||(comp1.minsurf3(comp1.liion.socloc_surface)<0.2228930343076256)||(comp1.maxsurf3(comp1.liion.socloc_surface)>0.983245033354389), (comp1.minsurf1(comp1.liion.socloc_surface)<=0)||(comp1.maxsurf1(comp1.liion.socloc_surface)>=1)||(comp1.minsurf3(comp1.liion.socloc_surface)<=0)||(comp1.maxsurf3(comp1.liion.socloc_surface)>=1)]]"
+    },
+    {
+      "path": "sol1/t1/stguard/stopcond",
+      "type": "String",
+      "value_text": "[]"
+    },
+    {
+      "path": "sol1/t1/stguard/updateEventSettings",
+      "type": "Boolean",
+      "value_text": "[false]"
+    },
+    {
+      "path": "sol1/t1/stguard/eventstopActive",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/stguard/eventstopName",
+      "type": "StringArray",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/stguard/storestopcondsol",
+      "type": "String",
+      "value_text": "[stepbefore_stepafter]"
+    },
+    {
+      "path": "sol1/t1/stguard/stopcondwarn",
+      "type": "Boolean",
+      "value_text": "[true]"
+    },
+    {
+      "path": "sol1/t1/stguard/changedproperties",
+      "type": "StringMatrix",
+      "value_text": "[[]]"
+    },
+    {
+      "path": "sol1/t1/stguard/lastchangedproperty",
+      "type": "StringMatrix",
+      "value_text": "[[[]]]"
+    }
+  ],
+  "unread": []
+}

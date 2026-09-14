@@ -1,0 +1,23 @@
+{
+  "name": "Caps300R160H0500",
+  "source_sha256": "874e70a9d6531a2a83ebd05f439d514c324b3ca79875494b1cf304797cc90e26",
+  "baseline_source_sha256": "6ab32b93310657265906cc858af3847d662923cf7dd8964feb74ed6cbe86f2b1",
+  "only_changes": [
+    "Java class/label identifier",
+    "two Particle Intercalation Nel values80 to160"
+  ],
+  "reverse_transform_exact_equal": true,
+  "physical_parameters_OCP_initialization_timegrid_profiles_guard_unchanged": true,
+  "external_file_read_process_network_API_hits": [],
+  "runAll_calls": 1,
+  "seconds": 5,
+  "physical_elements_by_domain": [
+    120,
+    60,
+    120
+  ],
+  "physical_radii_unchanged_um": {
+    "negative": 7.5,
+    "positive": 10
+  }
+}

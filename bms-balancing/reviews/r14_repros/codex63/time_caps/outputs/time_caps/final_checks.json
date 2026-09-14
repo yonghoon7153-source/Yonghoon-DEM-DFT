@@ -1,0 +1,124 @@
+{
+  "jobs": [
+    {
+      "name": "Caps300R40H1000",
+      "job_id": "176aef69e14646908f49f85c9821df2c",
+      "source_sha256": "23ee9e54f4e3923aaf9590e82ac908e104591633d1f1e67357d96acd3096b044",
+      "native_state": "completed",
+      "mph_sha256": "1c4ba34cafc9c96513285a30d6477ae2abc2cbb8cd0782492669e221aff63470",
+      "mph_bytes": 61041616
+    },
+    {
+      "name": "Caps300R40H0500",
+      "job_id": "b6752f9caed845f88551386132051aa8",
+      "source_sha256": "369918b44fa911f97d840a8922b90e810c3f46c48905325e8b97a6e491b469b2",
+      "native_state": "completed",
+      "mph_sha256": "63f4f22f408ee0e256f7af95e7ca3f6056575175efd308eae5340734695a32db",
+      "mph_bytes": 79669033
+    },
+    {
+      "name": "Caps300R80H1000",
+      "job_id": "8ffe3cf123fd4c5cb1bc481f7a603a76",
+      "source_sha256": "bb05708d6d4a92e78a21046d0afabff3a296391a23a6f43c1065ae6b9c81d9e2",
+      "native_state": "completed",
+      "mph_sha256": "9f34593bf1035dff74e3b4c9a405e97e01baebee0f003db5e958500f91f3fd73",
+      "mph_bytes": 106065915
+    },
+    {
+      "name": "Caps300R80H0500",
+      "job_id": "72c9c6b5210a4e0d96b74290e4392423",
+      "source_sha256": "6ab32b93310657265906cc858af3847d662923cf7dd8964feb74ed6cbe86f2b1",
+      "native_state": "completed",
+      "mph_sha256": "9f7ed0135d71cc274e3959c5aa7d33ec9dcfb6121f8f12c66b7367f0d10364ee",
+      "mph_bytes": 140029888
+    }
+  ],
+  "exactly_four_authorized_submissions": true,
+  "all_recorded_Time_and_Variables_settings_equal_except_authorized_cap_expression": true,
+  "actual_property_differences": {
+    "Caps300R40H1000": {},
+    "Caps300R40H0500": {
+      "sol1/t1/maxstepexpressionbdf": {
+        "reference": [
+          "String",
+          "[if(t<0.1[s],0.001[s],0.1[s])]"
+        ],
+        "current": [
+          "String",
+          "[if(t<0.1[s],0.0005[s],0.1[s])]"
+        ]
+      }
+    },
+    "Caps300R80H1000": {},
+    "Caps300R80H0500": {
+      "sol1/t1/maxstepexpressionbdf": {
+        "reference": [
+          "String",
+          "[if(t<0.1[s],0.001[s],0.1[s])]"
+        ],
+        "current": [
+          "String",
+          "[if(t<0.1[s],0.0005[s],0.1[s])]"
+        ]
+      }
+    }
+  },
+  "early_step_history_comparisons": [
+    {
+      "first": "Caps300R40H1000",
+      "second": "Caps300R40H0500",
+      "early_step_counts": [
+        111,
+        209
+      ],
+      "accepted_end_time_sequences_exact_equal": false,
+      "accepted_end_time_sequences_equal_within_1e-12s": false,
+      "max_time_difference_matching_index_s_exact": null,
+      "note": "Matching index comparison only when counts match; no interpolation."
+    },
+    {
+      "first": "Caps300R80H1000",
+      "second": "Caps300R80H0500",
+      "early_step_counts": [
+        111,
+        209
+      ],
+      "accepted_end_time_sequences_exact_equal": false,
+      "accepted_end_time_sequences_equal_within_1e-12s": false,
+      "max_time_difference_matching_index_s_exact": null,
+      "note": "Matching index comparison only when counts match; no interpolation."
+    },
+    {
+      "first": "Caps300R40H1000",
+      "second": "Caps300R80H1000",
+      "early_step_counts": [
+        111,
+        111
+      ],
+      "accepted_end_time_sequences_exact_equal": false,
+      "accepted_end_time_sequences_equal_within_1e-12s": true,
+      "max_time_difference_matching_index_s_exact": "7E-18",
+      "note": "Matching index comparison only when counts match; no interpolation."
+    },
+    {
+      "first": "Caps300R40H0500",
+      "second": "Caps300R80H0500",
+      "early_step_counts": [
+        209,
+        209
+      ],
+      "accepted_end_time_sequences_exact_equal": true,
+      "accepted_end_time_sequences_equal_within_1e-12s": true,
+      "max_time_difference_matching_index_s_exact": "0E-8",
+      "note": "Matching index comparison only when counts match; no interpolation."
+    }
+  ],
+  "locally_preserved_file_count": 468,
+  "all_current_local_bytes_match_before_ledger": true,
+  "local_preservation_scope": "Current bytes read locally; recipient verification coverage is separately documented in zip_identity/",
+  "historical_range_native_state": "failed",
+  "historical_range_classification": "INCOMPLETE_RANGE_STOP retained; no new failure was assigned this class",
+  "analysis_regression_tests": "11 passed (independent analysis agent)",
+  "actual_step_regression_tests": "6 passed",
+  "additional_COMSOL_runs": "None beyond the four recorded jobs; no 600/80 or protocol work"
+}
