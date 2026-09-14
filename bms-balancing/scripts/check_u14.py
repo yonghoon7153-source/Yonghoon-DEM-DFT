@@ -361,8 +361,16 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
             #   그 축을 통째로 건너뛴다 (전 판은 지워도 통과했다).
             R["missing"] += [f"{f.name}.meta: {k}" for k in (*S.meta_controls(kind), *META_REQUIRED)
                              if meta.get(k) in (None, "")]
+            # ⚠ Codex R14 P2-2: 전 판은 "비어 있지 않은 dict 인가" 까지만 봤다 — `env={"python": …}` 하나만
+            #   남겨도 schema-only 가 rc 0 이었다. `ENV_KEYS` 다섯 축 검사는 **baseline 비교 경로**에만 있어서,
+            #   U18-03 의 논리("새 산출의 환경 계약은 schema-only 가 독립적으로 강제한다")가 미완이었다.
+            #   baseline 과 **무관하게** 새 sidecar 전부에 다섯 축의 존재·비공백을 요구한다. 옛 정본의 부재는
+            #   여전히 비교 경로의 `env_uncomparable`(rc 4)이고 이 검사와 섞이지 않는다.
             if not (isinstance(meta.get("env"), dict) and meta["env"]):
                 R["missing"].append(f"{f.name}.meta: env 가 비어 있다")
+            else:
+                R["missing"] += [f"{f.name}.meta: env.{k} 가 비어 있다 (환경 축 다섯을 다 적어야 한다)"
+                                 for k in S.ENV_KEYS if meta["env"].get(k) in (None, "")]
             # ⚠ Codex R11 P1-9: 신고된 위험은 값으로 소비한다 (있기만 하면 되는 것이 아니다).
             # ⚠ 자체 리뷰 C03 (렌즈 2곳): 전 판은 `if k in meta` 라 **키를 지우면 검사가 안 돌았다** — 같은 dirty
             #   트리에서 돈 두 실행 중 정직하게 신고한 쪽만 rc 2 이고 입 다문 쪽은 rc 0 이었다 (게이트가 침묵에

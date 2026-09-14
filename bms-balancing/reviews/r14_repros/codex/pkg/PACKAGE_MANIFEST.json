@@ -1,0 +1,121 @@
+{
+  "scope": "Review packaging integrity only, not execution attestation",
+  "target_head": "1bb45b358db4850c73e185d5f851e35fbcff9ad6",
+  "payloads": [
+    {
+      "path": "HARNESS_R14_1BB45B35_CODEX_REVIEW.md",
+      "bytes": 14870,
+      "sha256": "2211c5e6f131a37d96914c93649533367c0670bab66e72537f803d970006fcaa"
+    },
+    {
+      "path": "R14_REPRO_README.md",
+      "bytes": 4436,
+      "sha256": "e9de6515c7d9c19eb3569297d4acfab21fa266d8f82084372caaf1cbfcea180e"
+    },
+    {
+      "path": "R14_VALIDATION_RESULTS.json",
+      "bytes": 1943,
+      "sha256": "6e4723953c58d8f94180c836338db407c26bfba3365ebd2b35bd04e849d7dd6a"
+    },
+    {
+      "path": "r14_run_checks.py",
+      "bytes": 3204,
+      "sha256": "f2e1aa30485b167c6ced869aa2f97b7f650a209211cc066a58a2308422d446dd"
+    },
+    {
+      "path": "r14_nested_output_check.py",
+      "bytes": 2429,
+      "sha256": "7ee8882d4cd1341f1119c2163eb71a15e09e969f486b55e911e197b7c9fc22c2"
+    },
+    {
+      "path": "r14_env_schema_checks.py",
+      "bytes": 3931,
+      "sha256": "2fdc81e04e83b9dc5464b3ca38ea74b5674d30cd141ef29b86b843725692eb6f"
+    },
+    {
+      "path": "harness_r14_archive_audit.py",
+      "bytes": 6013,
+      "sha256": "cb0309c6d5fa37fc0f19ccb6bc91547fc26937276889c511874a2bebac4f51b2"
+    },
+    {
+      "path": "R14_selected_pytest.xml",
+      "bytes": 35119,
+      "sha256": "3654485242c85de6f09b6745cc98549eeeb2eb0908bc92625d49ca8827d98bea"
+    },
+    {
+      "path": "r14_nested_output_checks/results.json",
+      "bytes": 1509,
+      "sha256": "ff8d38077e53e26443bae66e3f380724ffc812f90999b481385a875a480e0d4d"
+    },
+    {
+      "path": "r14_env_schema_results.json",
+      "bytes": 35121,
+      "sha256": "73ad9085c1aced7fe5c1c54526f8b686d2d8fa3f02144a6085230b62df3ab995"
+    },
+    {
+      "path": "r14_cli_checks/compare_states.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_cli_checks/compare_states.stdout.txt",
+      "bytes": 2876,
+      "sha256": "6c87c325c56a3852c8648a73afe078614a76596912aac7efd00da3537e21973d"
+    },
+    {
+      "path": "r14_cli_checks/current_schema.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_cli_checks/current_schema.stdout.txt",
+      "bytes": 744,
+      "sha256": "0ac625dba8ebbc5a8fa17c82c4711da3ebc45f38221761c4c77385bc795b348c"
+    },
+    {
+      "path": "r14_cli_checks/legacy_schema.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_cli_checks/legacy_schema.stdout.txt",
+      "bytes": 4062,
+      "sha256": "c72883b390da63a154f6dcae2bbbed362d37a76951788e834c204ece410ba3eb"
+    },
+    {
+      "path": "r14_cli_checks/new_vs_current_head.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_cli_checks/new_vs_current_head.stdout.txt",
+      "bytes": 3996,
+      "sha256": "0cf180002048522c1d7ecefe0d9ac2d2d302c286255f97ecb68d54fd5e8bd99e"
+    },
+    {
+      "path": "r14_cli_checks/new_vs_legacy.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_cli_checks/new_vs_legacy.stdout.txt",
+      "bytes": 4279,
+      "sha256": "0d5ce0c2d6b343ff9fe3c9b1df665a0bbbe724def6faeb66d1479319d3a1e0f1"
+    },
+    {
+      "path": "r14_cli_checks/new_vs_prepromotion.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_cli_checks/new_vs_prepromotion.stdout.txt",
+      "bytes": 4303,
+      "sha256": "808feac7954fe158438c539eb056ea08f3e83e2fcd25d6a6c29b9c3714318bb3"
+    },
+    {
+      "path": "r14_cli_checks/results.json",
+      "bytes": 6452,
+      "sha256": "ebe9fce2d15071b0d7c7de2a16656a0da5d03c12808e304dfd17787c9e0f5e09"
+    }
+  ]
+}

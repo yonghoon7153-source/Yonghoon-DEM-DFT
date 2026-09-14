@@ -1,0 +1,27 @@
+{
+  "review": "R14 bms-balancing scientific harness",
+  "target_head": "1bb45b358db4850c73e185d5f851e35fbcff9ad6",
+  "target_tree": "128fc38539fb7d996610f843b996855bd7f7b99d",
+  "request_sha256": "17995cfd90cd838c1cc1a1df43b6cceecf59ecc615878a75c491e7fea04f9f77",
+  "verdict": "NO-GO for full closure of the R14 request; actual U18b legacy transition accepted, no scientific rerun requested",
+  "evidence_type": "Summary of observed checks, not an independent execution attestation",
+  "findings": [
+    {"id": "P2-1", "scope": "normal nested output path false-positive dirty classification"},
+    {"id": "P2-2", "scope": "incomplete candidate sidecar env accepted by schema-only; remaining scope of R13 P2-4"},
+    {"id": "P2-3", "scope": "post-promotion HEAD and evidence-code baseline documentation contexts are stale"}
+  ],
+  "pytest": {
+    "passed": 267,
+    "deselected": 10,
+    "duration_seconds": 242.46,
+    "exit_code": 0,
+    "full_277_run": false,
+    "selection": "not d10_12 and not d10_13 and not d10_14 and not e11_09 and not e11_10 and not e11_17 and not e11_18 and not d8_07 and not d9_08 and not d7_05"
+  },
+  "matlab_helper": {"wrapper_exit_code": 0, "executed_stages": [4, 5], "unexecuted_stages": [1, 2, 3], "reason": "octave-cli not installed"},
+  "archive": {"legacy_files_byte_identical": 26, "promoted_artifacts": 13, "shared_numeric_values_compared": 5184, "numeric_differences": 0},
+  "code_diff": {"df6413d_to_target_python_shell_paths": 0, "ef8e8f6_to_target_python_shell_paths": 17},
+  "target_git_status_after": "",
+  "not_performed": ["Original real-data STATES optimization", "Historical security bypass or mutation replay", "COMSOL execution", "Target source/canonical data changes or Git commit/push"],
+  "results": {"cli": "r14_cli_checks/results.json", "nested_output": "r14_nested_output_checks/results.json", "environment_schema": "r14_env_schema_results.json", "pytest": "R14_selected_pytest.xml"}
+}

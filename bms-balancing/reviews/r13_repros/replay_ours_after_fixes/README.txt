@@ -10,7 +10,11 @@ Codex R13 (대상 94add7b) 수정 뒤 재생 — 코드 커밋 df6413d649ef51ace
 (`replay_codex_r*.py` · `reviews/evidence_gate.py`)의 bytes 가 그 커밋의 blob 과 같아야 `evidence_eligible: true` 다.
 작업트리는 실행 전후 clean (`git status --porcelain` 은 이 디렉터리의 파일뿐 — 러너 JSON 의 `dirty_paths` 가 그것을 적는다).
 
-    git diff ef8e8f6 HEAD --name-only -- '*.py' '*.sh'      # → 0 개여야 한다 (증거 커밋은 이 디렉터리만 더한다)
+    git diff df6413d649ef51ace16d634c3856f857d598c79d 1bb45b358db4850c73e185d5f851e35fbcff9ad6 \
+        --name-only -- '*.py' '*.sh'                        # → 0 개 (증거 커밋은 이 디렉터리와 문서만 더한다)
+    ⚠ Codex R14 P2-3: 전 판은 `git diff ef8e8f6 HEAD …` 였다 — 옛 코드 정본에서 이어받은 문맥이고 이 증거의
+      생성 커밋(df6413d)과 대상 HEAD 사이를 재지 않는다. 대상 HEAD 에서 그 명령은 **17 개**를 낸다 (실측).
+      비교 범위는 **full commit 두 개로 고정**한다.
 
 만든 명령 (bms-balancing 에서, HEAD=$(git rev-parse HEAD), R6_OLD_OUT=`git archive bfc4623^ out` 26 파일):
     python3 reviews/r6_repros/codex_r6_mutation_audit.py                          > codex_r6_mutation_audit.txt

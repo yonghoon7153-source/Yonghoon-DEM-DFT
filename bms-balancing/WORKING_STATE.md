@@ -331,7 +331,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 277 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 284 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh
@@ -367,6 +367,24 @@ python3 -m pytest tests/ -q         # 277 passed
 #    ⚠ 도는 동안 `~/dd` 에서 git 명령(pull·checkout·commit)을 **하지 않는다** — 그것이 첫 판 matrix_100 을 깬 것이다.
 OUT=out_u18b STATES='100 200 300_0009 300_0147' ./scripts/run_states.sh 2>&1 | tee ~/out_u18b.log
 #    shape 는 이제 wrapper 가 GITT 로 건다 (U18-01 고침) — `ne_shape_GITT_Li.csv` 가 나와야 한다. 끝나면 3 단계로.
+
+### 14 차 결과 — **NO-GO · P2 3 건, 전부 닫음** (`reviews/R14_RESPONSE.md`, 2026-09-14)
+
+리뷰어는 **U18b 이관을 수용**하고 **재계산을 요구하지 않았다** (옛 26 개 bytes·새 13 개 계약·공통 수치 5,184 개 차이 0 을
+자기 기계에서 확인). 남은 셋은 좁은 P2 다.
+
+| # | 반례 | 고침 | 회귀 |
+|---|---|---|---|
+| P2-1 | `OUT=reports/out_u18` 같은 **중첩** 산출 경로가 코드 변경으로 분류된다 — `git status -unormal` 이 `?? reports/` 로 접기 때문 | 접힌 항목이 지정 root 를 품으면 그 경로만 `-uall` 로 다시 물어 실제 파일로 펴서 분류 (`provenance._untracked_files`) | `test_h01` — 중첩 clean · root 밖 sibling 은 여전히 dirty 이고 **실제 파일명**을 지목 |
+| P2-2 | 새 sidecar 에 `env={"python": …}` 만 남겨도 `--schema-only` rc 0 | baseline 과 무관하게 새 sidecar 전부에 `ENV_KEYS` 다섯 축 존재·비공백 요구 | `test_h02` — 네 종류 × 축 하나씩 뺀 다섯 + 리뷰어 반례 + 대조군 |
+| P2-3 | 승격 **뒤** `--old-rev HEAD` 는 rc 4 가 아니라 **rc 2 · alias 13**(자기대조 거부, 맞는 동작). 증거 README 의 코드 동일성 명령은 17 개를 낸다 | 기준을 full commit 으로 고정 — `42314198…`(= `37a889b^`) 대비 rc 4, 증거 명령은 `df6413d…→1bb45b3…`(0 개) | 문서 정정 (실측 재현은 회신 §2) |
+
+리뷰어 §7 답 처리: `env_uncomparable` 수용(P2-2 로 완성) · `--accept-uncomparable` 대신 **`legacy_transition_approved`**
+별도 판정 권고는 **동의하되 이번엔 미구현**(게이트 계약 변경, 다음 라운드) · 승격 묶음은 **기본 단일 commit**, 이번
+혼재는 범위 한정 예외로 기록(U18-05) · 기록용 CLI 인자 필수화는 열림 · 역사 bytes 유지.
+
+`reviews/R14_REQUEST.md` 는 **고치지 않는다** — 리뷰어가 sha256 `17995cfd…` 로 고정해 심사한 원본이다. 정정은 회신과
+현행 문서에 둔다. 284 passed.
 
 ### 14 차 게이트 리뷰 요청 — `reviews/R14_REQUEST.md` (대상 `1bb45b3`, 2026-09-14)
 

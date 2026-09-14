@@ -1,0 +1,583 @@
+{
+  "scope": "Ordinary metadata validation; disposable copies only; no model execution",
+  "target": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r14-target-wsl/bms-balancing",
+  "fixture_root": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn",
+  "cases": [
+    {
+      "artifact": "matrix_100.csv",
+      "mode": "complete_env",
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/complete_env",
+        "old": null
+      },
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/complete_env)\n  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\nPROMOTION {\"promotion_eligible\": false, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 0, \"inputs\": 0, \"inputs_uncomparable\": 0, \"env_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/complete_env\", \"old\": null}\n",
+      "stderr": "",
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r14-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/complete_env",
+        "--schema-only"
+      ],
+      "fixture_dir": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/complete_env",
+      "artifact_bytes_unchanged": true,
+      "original_artifact_and_sidecar_unchanged": true
+    },
+    {
+      "artifact": "matrix_100.csv",
+      "mode": "python_only_env",
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/python_only_env",
+        "old": null
+      },
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/python_only_env)\n  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\nPROMOTION {\"promotion_eligible\": false, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 0, \"inputs\": 0, \"inputs_uncomparable\": 0, \"env_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/python_only_env\", \"old\": null}\n",
+      "stderr": "",
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r14-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/python_only_env",
+        "--schema-only"
+      ],
+      "fixture_dir": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/python_only_env",
+      "artifact_bytes_unchanged": true,
+      "original_artifact_and_sidecar_unchanged": true
+    },
+    {
+      "artifact": "matrix_100.csv",
+      "mode": "env_missing",
+      "rc": 2,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 2,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 2,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/env_missing",
+        "old": null
+      },
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/env_missing)\n  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)\n\n■ 새 스키마 누락 2 — 옛 코드로 만든 산출이거나 묶음이 미완이다 (재실행이 이 트리에서 돌았는지 확인)\n  - matrix_100.csv.meta: env\n  - matrix_100.csv.meta: env 가 비어 있다\nPROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 2, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 0, \"inputs\": 0, \"inputs_uncomparable\": 0, \"env_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/env_missing\", \"old\": null}\n",
+      "stderr": "",
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r14-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/env_missing",
+        "--schema-only"
+      ],
+      "fixture_dir": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/matrix_100_csv/env_missing",
+      "artifact_bytes_unchanged": true,
+      "original_artifact_and_sidecar_unchanged": true
+    },
+    {
+      "artifact": "profile_gamma_100_Li.csv",
+      "mode": "complete_env",
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/complete_env",
+        "old": null
+      },
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/complete_env)\n  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\nPROMOTION {\"promotion_eligible\": false, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 0, \"inputs\": 0, \"inputs_uncomparable\": 0, \"env_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/complete_env\", \"old\": null}\n",
+      "stderr": "",
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r14-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/complete_env",
+        "--schema-only"
+      ],
+      "fixture_dir": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/complete_env",
+      "artifact_bytes_unchanged": true,
+      "original_artifact_and_sidecar_unchanged": true
+    },
+    {
+      "artifact": "profile_gamma_100_Li.csv",
+      "mode": "python_only_env",
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/python_only_env",
+        "old": null
+      },
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/python_only_env)\n  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\nPROMOTION {\"promotion_eligible\": false, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 0, \"inputs\": 0, \"inputs_uncomparable\": 0, \"env_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/python_only_env\", \"old\": null}\n",
+      "stderr": "",
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r14-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/python_only_env",
+        "--schema-only"
+      ],
+      "fixture_dir": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/python_only_env",
+      "artifact_bytes_unchanged": true,
+      "original_artifact_and_sidecar_unchanged": true
+    },
+    {
+      "artifact": "profile_gamma_100_Li.csv",
+      "mode": "env_missing",
+      "rc": 2,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 2,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 2,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/env_missing",
+        "old": null
+      },
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/env_missing)\n  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)\n\n■ 새 스키마 누락 2 — 옛 코드로 만든 산출이거나 묶음이 미완이다 (재실행이 이 트리에서 돌았는지 확인)\n  - profile_gamma_100_Li.csv.meta: env\n  - profile_gamma_100_Li.csv.meta: env 가 비어 있다\nPROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 2, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 0, \"inputs\": 0, \"inputs_uncomparable\": 0, \"env_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/env_missing\", \"old\": null}\n",
+      "stderr": "",
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r14-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/env_missing",
+        "--schema-only"
+      ],
+      "fixture_dir": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/profile_gamma_100_Li_csv/env_missing",
+      "artifact_bytes_unchanged": true,
+      "original_artifact_and_sidecar_unchanged": true
+    },
+    {
+      "artifact": "ne_shape_GITT_Li.csv",
+      "mode": "complete_env",
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/complete_env",
+        "old": null
+      },
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/complete_env)\n  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\nPROMOTION {\"promotion_eligible\": false, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 0, \"inputs\": 0, \"inputs_uncomparable\": 0, \"env_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/complete_env\", \"old\": null}\n",
+      "stderr": "",
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r14-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/complete_env",
+        "--schema-only"
+      ],
+      "fixture_dir": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/complete_env",
+      "artifact_bytes_unchanged": true,
+      "original_artifact_and_sidecar_unchanged": true
+    },
+    {
+      "artifact": "ne_shape_GITT_Li.csv",
+      "mode": "python_only_env",
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/python_only_env",
+        "old": null
+      },
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/python_only_env)\n  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\nPROMOTION {\"promotion_eligible\": false, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 0, \"inputs\": 0, \"inputs_uncomparable\": 0, \"env_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/python_only_env\", \"old\": null}\n",
+      "stderr": "",
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r14-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/python_only_env",
+        "--schema-only"
+      ],
+      "fixture_dir": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/python_only_env",
+      "artifact_bytes_unchanged": true,
+      "original_artifact_and_sidecar_unchanged": true
+    },
+    {
+      "artifact": "ne_shape_GITT_Li.csv",
+      "mode": "env_missing",
+      "rc": 2,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 2,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 2,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/env_missing",
+        "old": null
+      },
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/env_missing)\n  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)\n\n■ 새 스키마 누락 2 — 옛 코드로 만든 산출이거나 묶음이 미완이다 (재실행이 이 트리에서 돌았는지 확인)\n  - ne_shape_GITT_Li.csv.meta: env\n  - ne_shape_GITT_Li.csv.meta: env 가 비어 있다\nPROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 2, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 0, \"inputs\": 0, \"inputs_uncomparable\": 0, \"env_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/env_missing\", \"old\": null}\n",
+      "stderr": "",
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r14-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/env_missing",
+        "--schema-only"
+      ],
+      "fixture_dir": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/ne_shape_GITT_Li_csv/env_missing",
+      "artifact_bytes_unchanged": true,
+      "original_artifact_and_sidecar_unchanged": true
+    },
+    {
+      "artifact": "degeneracy_100_Li.json",
+      "mode": "complete_env",
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/complete_env",
+        "old": null
+      },
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/complete_env)\n  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\nPROMOTION {\"promotion_eligible\": false, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 0, \"inputs\": 0, \"inputs_uncomparable\": 0, \"env_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/complete_env\", \"old\": null}\n",
+      "stderr": "",
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r14-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/complete_env",
+        "--schema-only"
+      ],
+      "fixture_dir": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/complete_env",
+      "artifact_bytes_unchanged": true,
+      "original_artifact_and_sidecar_unchanged": true
+    },
+    {
+      "artifact": "degeneracy_100_Li.json",
+      "mode": "python_only_env",
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/python_only_env",
+        "old": null
+      },
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/python_only_env)\n  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\nPROMOTION {\"promotion_eligible\": false, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 0, \"inputs\": 0, \"inputs_uncomparable\": 0, \"env_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/python_only_env\", \"old\": null}\n",
+      "stderr": "",
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r14-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/python_only_env",
+        "--schema-only"
+      ],
+      "fixture_dir": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/python_only_env",
+      "artifact_bytes_unchanged": true,
+      "original_artifact_and_sidecar_unchanged": true
+    },
+    {
+      "artifact": "degeneracy_100_Li.json",
+      "mode": "env_missing",
+      "rc": 2,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 2,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 2,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/env_missing",
+        "old": null
+      },
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/env_missing)\n  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)\n\n■ 새 스키마 누락 2 — 옛 코드로 만든 산출이거나 묶음이 미완이다 (재실행이 이 트리에서 돌았는지 확인)\n  - degeneracy_100_Li.json.meta: env\n  - degeneracy_100_Li.json.meta: env 가 비어 있다\nPROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 2, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 0, \"inputs\": 0, \"inputs_uncomparable\": 0, \"env_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/env_missing\", \"old\": null}\n",
+      "stderr": "",
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r14-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/env_missing",
+        "--schema-only"
+      ],
+      "fixture_dir": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_env_schema_a2tlyfgn/degeneracy_100_Li_json/env_missing",
+      "artifact_bytes_unchanged": true,
+      "original_artifact_and_sidecar_unchanged": true
+    }
+  ]
+}

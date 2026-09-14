@@ -164,7 +164,7 @@ true` 가 됐고 **그 상태만 다시 게시**해 닫았다 (산출마다 독�
 | `check_u14 --new out_u18b --old out` | **rc 4** · `numbers 0` · 명부 13/13/13 (missing·extra 없음) · 계약 축(schema·provenance_cols·content·unit·controls·env·alias·inputs·provenance·stale) **전부 0** · 남은 것은 `inputs_uncomparable 17` · `env_uncomparable 1` **뿐** — 둘 다 옛 정본의 나이다 |
 | 승격 (`37a889b`) | 옛 정본 26 파일을 `out/archive/legacy_r6_u14/` 로 **얼려 보존**(조건 7 의 요구), 새 묶음이 `out/` 이 됐다. archive 는 자기 문서(`out/archive/README.md`)에 그 사실을 적는다 |
 | 승격 뒤 `check_u14 --new out --schema-only` | **rc 0** — 사용자 기계와 **fresh clone(다른 기계)** 둘 다. 서명이 git 왕복(줄끝 정규화)을 견딘다는 뜻이고 U14-01 축을 실데이터로 다시 건 것이다 |
-| 승격 뒤 `--old-rev HEAD` (git 의 옛 정본 대 새 `out/`) | rc 4 · 13/13 대조 · `numbers 0` — 3 단계와 같은 판정 |
+| 승격 뒤 `--old-rev <승격 직전 커밋>` | **`--old-rev 42314198e0beee59834d394cdba2757183503b59`** (= `37a889b^`) → rc 4 · 13/13 · `numbers 0` · `inputs_uncomparable 17` · `env_uncomparable 1` — 3 단계와 같은 판정. ⚠ **승격 커밋 뒤에는 `--old-rev HEAD` 를 쓰면 안 된다**: 그때 HEAD 의 `out/` 은 이미 새 정본이라 같은 run_id 13 개와 자기대조가 되고 도구가 `alias 13` 으로 **거부(rc 2)** 한다 — 맞는 동작이다 (Codex R14 P2-3, 실측 재현) |
 | `compare_states.py out` | degeneracy 4/4 사용 · 제외 0 · "A 축에서 LLI 가 항상 가장 좁은가: **예**" · 묶음 불일치 경고 없음 |
 | 옛 묶음(`out/archive/legacy_r6_u14/`) | `--schema-only` 가 **40 · 25 · 6 · 1** 을 그대로 낸다 — 표본이 바이트 단위로 살아 있다 |
 

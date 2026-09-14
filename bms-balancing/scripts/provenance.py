@@ -54,6 +54,22 @@ def env_signature() -> dict:
             "pandas": ver("pandas"), "platform": platform.platform()}
 
 
+def _untracked_files(top, folded: str) -> list:
+    """접힌 untracked 디렉터리 하나를 **실제 파일 목록**으로 편다 (Codex R14 P2-1).
+
+    `git status -uall -- <dir>` 은 그 경로 아래만 훑으므로 저장소 전체를 `-uall` 로 바꾸는 비용이 없다.
+    실패하면 접힌 이름을 그대로 돌려준다 — 모르는 채로 clean 이라고 말하지 않는다."""
+    try:
+        raw = _git(top, "status", "--porcelain", "-z", "--untracked-files=all", "--", folded)
+    except Exception:                                     # noqa: BLE001
+        return [folded]
+    out = []
+    for rec in raw.split("\0"):
+        if rec[:2] == "??" and rec[3:]:
+            out.append(rec[3:])
+    return out or [folded]
+
+
 def git_provenance(cwd: str | None = None, artifact=None, output_roots=("out",)) -> dict:
     """{git_commit, git_dirty(코드), git_modified_outputs[...], git_modified_code[...]}. git 이 없으면 None 들.
     `cwd` 를 안 주면 **이 스크립트가 속한 `bms-balancing/`** 이 기준이다 (R6 내부 F7: 호출자의 cwd 에 따라 같은
@@ -101,8 +117,22 @@ def git_provenance(cwd: str | None = None, artifact=None, output_roots=("out",))
             #   untracked 라 안쪽까지 세면 플래그가 늘 켜져 정보가 사라진다 (그래서 전 판이 `-uno` 였다). 하지만
             #   바깥의 untracked 는 실행되는 코드일 수 있다 — `sitecustomize.py` 가 실제로 import 돼 돌았는데
             #   provenance 는 clean 이라고 적었다. 모르는 채로 clean 이라고 말하지 않는다.
-            if not inside:
-                code.append(rel)
+            if inside:
+                continue
+            # ⚠ Codex R14 P2-1: `-uall` 이 아닌 `normal` 은 untracked 디렉터리를 **상위 하나로 접어서** 준다
+            #   (`reports/out_u18/…` → `?? reports/`). 접힌 상위는 지정 root 안이 아니므로 전 판은 정상 산출
+            #   경로를 **코드 변경**으로 셌다 — 중첩 OUT 이면 늘 dirty 였다. 시작·끝에 같은 OUT 을 넘기는
+            #   U18-02 의 고침으로는 안 닫힌다. 접힌 항목이 **지정 root 를 품고 있으면** 그 경로만 다시 물어
+            #   실제 파일로 펴서 분류한다 (root 밖 sibling 은 그대로 코드로 남고, 이제 접힌 이름이 아니라
+            #   무엇이 바뀌었는지를 지목한다). 전체를 `-uall` 로 바꾸지 않는 이유: 큰 untracked 트리에서
+            #   sidecar 의 `git_modified_code` 가 수천 줄이 된다.
+            if rel.endswith("/") and any(path in root.parents for root in roots):
+                for sub in _untracked_files(top, rel):
+                    sp = (top / sub).resolve()
+                    if not any(r == sp or r in sp.parents for r in roots):
+                        code.append(sub)
+                continue
+            code.append(rel)
             continue
         if inside:
             outputs.append(str(path.relative_to(base)) if base in path.parents else rel)

@@ -1,0 +1,31 @@
+정본을 `37a889b^` 에서 읽었다 — 산출 26 개
+산출 13 개 점검 (out)
+  정본 선택 정책: **historical** — 역사 리비전 — 그 커밋 당시의 정본, 즉 가장 높은 판 (`--old-rev` 로 명시했을 때만)
+  명부(roster): 정본 13 · 새 산출 13 · 대조 13
+  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)
+
+■ **입력 identity 대조 불가** 17 — 한쪽이 자기 입력을 안 적었다 (정본이 옛 스키마면 여기로 온다). 숫자가 같아도 **같은 입력을 먹었다는 증명은 없다** → 승격 불가 (Codex R11 P1-1)
+  - matrix_100.csv: target 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - matrix_100.csv: ref 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - matrix_200.csv: target 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - matrix_200.csv: ref 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - matrix_300_0009.csv: target 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - matrix_300_0009.csv: ref 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - matrix_300_0147.csv: target 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - matrix_300_0147.csv: ref 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - ne_shape_GITT_Li.csv: target 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - profile_gamma_100_Li.csv: target 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - profile_gamma_100_Li.csv: ref 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - profile_gamma_200_Li.csv: target 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - profile_gamma_200_Li.csv: ref 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - profile_gamma_300_0009_Li.csv: target 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - profile_gamma_300_0009_Li.csv: ref 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - profile_gamma_300_0147_Li.csv: target 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+  - profile_gamma_300_0147_Li.csv: ref 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)
+
+■ **환경(env) 대조 불가** 1 — **정본이** 환경을 안 적었다 (옛 스키마면 여기로 온다). 새 산출의 계약 위반이 아니므로 rc 2 가 아니지만, 같은 환경의 재현이라고 말할 수 없다 → 승격 불가 (U18-03 · 자체 리뷰 C16 과 같은 비대칭)
+  - ne_shape_GITT_Li.csv.meta: env 를 **정본이** 안 적었다 — 같은 환경에서 돌았다고 말할 수 없다 (승격 불가)
+
+  정본에 없던 필드 8 — 스키마 추가분이다 (숫자가 움직인 것이 아니다): combo_roster, gamma_roster
+  숫자: 정본(/tmp/tmppi3o2m8m)과 전부 같다 — 그러나 입력 identity · 환경 를 댈 수 없어 **승격 대상은 아니다**
+PROMOTION {"promotion_eligible": false, "rc": 4, "subset": false, "roster": {"old": 13, "new": 13, "compared": 13, "missing_in_new": [], "extra_in_new": []}, "blocked_by": {"schema": 0, "provenance_cols": 0, "content": 0, "unit": 0, "controls": 0, "env": 0, "numbers": 0, "alias": 0, "provenance": 0, "inputs": 0, "inputs_uncomparable": 17, "env_uncomparable": 1, "stale": 0, "baseline_absent": 0}, "policy": "historical", "new": "out", "old": "/tmp/tmppi3o2m8m"}
