@@ -107,6 +107,39 @@ def proc_list() -> list[tuple[str, list[str]]]:
     return out
 
 
+def gpu_samples(n=6, dt=0.5) -> list[tuple[float, float]]:
+    """(util %, mem MiB) 를 n 번 찍는다.
+
+    ⛔ **한 번만 찍지 않는다.** 2026-09-14 에 같은 자리에서 세 번 틀렸다 — `0 %, 4 MiB`
+      한 점을 보고 '멈췄다'고 경보를 울렸는데, 열 번 찍으니 `0,0,0,95,95,94,96,95,95,0`
+      이었다. GPU util 은 표본이지 상태가 아니다.
+    """
+    out = []
+    for i in range(max(1, n)):
+        if i:
+            time.sleep(dt)
+        raw = sh("nvidia-smi --query-gpu=utilization.gpu,memory.used "
+                 "--format=csv,noheader,nounits")
+        for line in raw.splitlines()[:1]:
+            try:
+                u, m = (x.strip() for x in line.split(","))
+                out.append((float(u), float(m)))
+            except ValueError:
+                pass
+    return out
+
+
+def gpu_line(sams) -> str:
+    """표본을 한 줄로. '못 찍었다' 와 '0 이었다' 를 구분한다."""
+    if not sams:
+        return "(nvidia-smi 못 읽음)"
+    us = [u for u, _ in sams]
+    ms = [m for _, m in sams]
+    busy = sum(1 for u in us if u > 0)
+    return (f"util {min(us):.0f}–{max(us):.0f} % (표본 {len(us)}개 중 {busy}개가 >0)"
+            f" · mem {min(ms):.0f}–{max(ms):.0f} MiB")
+
+
 def sh(cmd) -> str:
     try:
         return subprocess.run(cmd, shell=True, capture_output=True,
@@ -220,25 +253,29 @@ def log_state(path) -> dict:
     """
     f = Path(path) if path else None
     if f is None or not f.is_file():
-        return {"상태": "못찾음", "step": None, "fire": None}
+        return {"상태": "못찾음", "step": None, "fire": None, "phase": None}
     try:
         lines = f.read_text(encoding="utf-8", errors="ignore").split("\n")
     except OSError as e:
-        return {"상태": f"깨짐({type(e).__name__})", "step": None, "fire": None}
-    step, fire = None, None
+        return {"상태": f"깨짐({type(e).__name__})", "step": None, "fire": None,
+                "phase": None}
+    step, fire, phase = None, None, None
     for ln in lines:
         s = ln.strip()
         if s.startswith("▶ "):
-            step, fire = s[2:].split(" …")[0].strip(), None      # 새 스텝 → 진행 초기화
+            step, fire, phase = s[2:].split(" …")[0].strip(), None, None   # 새 스텝 → 초기화
+        elif "Model is being compiled" in s and step is not None:
+            phase = "컴파일"
         elif s.startswith("FIRE:") and step is not None:
             tok = s.split()
             if len(tok) >= 5:
                 try:
                     fire = {"n": int(tok[1]), "E_eV": float(tok[3]),
                             "fmax_eV_A": float(tok[4])}
+                    phase = "FIRE"
                 except ValueError:
                     pass
-    return {"상태": "ok", "step": step, "fire": fire}
+    return {"상태": "ok", "step": step, "fire": fire, "phase": phase}
 
 
 # ── 화면 ────────────────────────────────────────────────────────────────────
@@ -246,7 +283,7 @@ def fmt(v, spec="{:.3f}") -> str:
     return MISSING if v is None else spec.format(v)
 
 
-def render(out_root, log=None) -> int:
+def render(out_root, log=None, n_gpu=6) -> int:
     out_root = Path(out_root)
     print(f"════════ {time.strftime('%Y-%m-%d %H:%M:%S')}  E′ 파일럿 watch ════════")
     print(f"out_root: {out_root}")
@@ -286,9 +323,12 @@ def render(out_root, log=None) -> int:
             print(f"  ▶ 지금: {ls['step']}  FIRE {fr['n']} 스텝 · "
                   f"fmax {fr['fmax_eV_A']:.4f} → 목표 {EP.PREP_FMAX} eV/Å · "
                   f"E {fr['E_eV']:.4f} eV")
+        elif ls["phase"] == "컴파일":
+            print(f"  ▶ 지금: {ls['step']}  **torch.compile 중** — 첫 스텝만 낸다"
+                  f" (GPU util 이 0 과 95 를 오간다. 멈춘 게 아니다)")
         else:
-            print(f"  ▶ 지금: {ls['step']}  (FIRE 줄 아직 없음 — 체크포인트 "
-                  f"읽는 중일 수 있다. rchar 로 확인)")
+            print(f"  ▶ 지금: {ls['step']}  (FIRE 줄도 컴파일 표시도 없음 — "
+                  f"체크포인트 읽는 중일 수 있다. rchar 로 확인)")
     elif log:
         print(f"  (러너 로그 {ls['상태']})")
     for r in prep_rows(out_root):
@@ -319,9 +359,9 @@ def render(out_root, log=None) -> int:
         print(f"  {tagp} {r['구조']:12s} T{r['T']:<5d} s{r['seed']}  {state}")
 
     # ⑤ GPU
-    g = sh("nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total "
-           "--format=csv,noheader")
-    print(f"\n── GPU ── {g or '(nvidia-smi 없음)'}")
+    print(f"\n── GPU ── {gpu_line(gpu_samples(n_gpu))}")
+    if n_gpu <= 1:
+        print("   ⚠ 표본 1개 — 0 % 가 나와도 '멈췄다'로 읽지 마라 (--gpu_n 을 올려라)")
     return 0
 
 
@@ -472,6 +512,33 @@ def _selftest() -> int:
             log_state(None)["상태"] == "못찾음",
             "⛔음성: 로그가 없으면 '못찾음' 이다 (0 스텝으로 그리지 않는다)")
 
+        # ── 컴파일 단계를 FIRE 진행으로 착각하지 않는다 ──
+        lg.write_text(
+            "▶ prep/H0_host …\n"
+            "WARNING:root:Model is being compiled this might take a while for the first time\n",
+            encoding="utf-8")
+        s = log_state(lg)
+        chk(s["phase"] == "컴파일" and s["fire"] is None,
+            "양성: torch.compile 중임을 읽는다 (FIRE 0 스텝으로 그리지 않는다)")
+        lg.write_text(lg.read_text(encoding="utf-8")
+                      + "FIRE:    0 01:59:00    -1300.000000        1.1000\n",
+                      encoding="utf-8")
+        chk(log_state(lg)["phase"] == "FIRE",
+            "양성: FIRE 줄이 뜨면 단계가 컴파일→FIRE 로 넘어간다")
+        lg.write_text(lg.read_text(encoding="utf-8") + "▶ prep/P1_Al2O3_A …\n",
+                      encoding="utf-8")
+        chk(log_state(lg)["phase"] is None,
+            "⛔음성: 새 스텝에서 단계가 초기화된다 (앞 스텝의 컴파일 표시가 안 새어 나온다)")
+
+        # ── GPU: '못 찍음' 과 '0 이었음' 을 구분한다 ──
+        chk(gpu_line([]) == "(nvidia-smi 못 읽음)",
+            "⛔음성: GPU 를 못 찍은 것을 '0 %' 로 그리지 않는다")
+        chk("6개 중 0개가 >0" in gpu_line([(0.0, 10.0)] * 6),
+            "양성: 표본이 전부 0 이면 그렇게 적는다 (표본 수를 같이 보여준다)")
+        chk("6개 중 3개가 >0" in gpu_line(
+            [(0.0, 10.0), (0.0, 10.0), (95.0, 20.0), (94.0, 20.0), (96.0, 30.0), (0.0, 30.0)]),
+            "양성: 0 과 95 가 섞이면 '몇 개가 >0' 로 보여준다 (한 점으로 판단 못 하게)")
+
         # ── 계획을 베끼지 않았다는 증거: 러너의 상수와 같은 것을 쓴다 ──
         chk(TOTAL_PS == EP.EQUILIB_PS + EP.PROD_PS == 205.0,
             "양성: 런 길이를 러너 상수에서 가져온다 (여기 숫자를 따로 안 적는다)")
@@ -485,13 +552,15 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="E′ 파일럿 감시 (판정하지 않는다)")
     ap.add_argument("--out_root", default=None)
     ap.add_argument("--log", default=None, help="러너 stdout 로그 (신선도 표시용)")
+    ap.add_argument("--gpu_n", type=int, default=6,
+                    help="GPU 표본 수 (기본 6 — 한 점으로 판단하지 않는다)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
     if not a.out_root:
         ap.error("--out_root 가 필요하다")
-    return render(a.out_root, a.log)
+    return render(a.out_root, a.log, a.gpu_n)
 
 
 if __name__ == "__main__":
