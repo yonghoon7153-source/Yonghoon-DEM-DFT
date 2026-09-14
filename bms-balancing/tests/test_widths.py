@@ -419,3 +419,98 @@ def test_w15_the_width_columns_are_a_tagged_union_not_just_optional(tmp_path):
     # (3) 모르는 상태
     weird = dict(ok_off, width_status="maybe")
     assert probs(weird), "선언에 없는 width_status 가 통과했다"
+
+
+# ══ W-16~W-18: 폭을 읽는 쪽 (`scripts/width_report.py`) ═════════════════════
+#
+# 비교는 **축 하나만 달라야** 뜻이 있다. 손으로 두 번 돌리면 한 줄에서 seed 를 흘려도 눈에 안 보이므로
+# (`run_states.sh` 가 같은 이유로 스크립트다), 읽는 쪽이 sidecar 를 보고 **거부**한다.
+
+def _fake_widths_csv(d, name, *, w_dqdv, seed=0, spans=(1.0, 5.0, 2.0)):
+    """폭이 실린 cycles CSV + sidecar 한 벌 — 리포터는 순수 reader 라 적합을 안 돌려도 된다."""
+    import json as _j
+    from bms_balancing import schema as S                  # noqa: PLC0415
+    d.mkdir(parents=True, exist_ok=True)
+    art = d / name
+    rows = []
+    for k in (0, 1):
+        r = {c: "" for c in S.CYCLES_ROW}
+        r.update(cell="syn", cycle=str(k), C_cell="1", x_cell="1", a_PE="1.1", b_PE="0", a_NE="1.1",
+                 b_NE="0", gamma_Si="0.25", c_lit="1", obj="1", rmse_pocv="1", rmse_dvdq="1", rmse_dqdv="1",
+                 n_starts="4", n_accepted="4", scale_seed="0", scale_pocv="1", scale_dvdq="1", scale_dqdv="1",
+                 bounds="-", run_id="r", inputs_sha="s", consumed_inputs="{}",
+                 width_status="measured", width_tol="0.01", width_is_lower_bound="True")
+        for m, sp in zip(("LAM_PE", "LAM_NE", "LLI"), spans):
+            r[m] = str(k * 0.01)
+            r[f"{m}_lo"] = str(k * 0.01 - sp / 200.0)      # 폭 = sp %p (행 단위는 분수)
+            r[f"{m}_hi"] = str(k * 0.01 + sp / 200.0)
+        rows.append(r)
+    with art.open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=list(S.CYCLES_ROW)); w.writeheader(); w.writerows(rows)
+    meta = {"cell": "syn", "si_source": "Li", "starts": 4, "seed": seed, "scale_seed": 0,
+            "w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": float(w_dqdv), "optimizer": "L-BFGS-B (scipy)",
+            "lb": [1.0, -0.5, 1.0, -0.5, 0.0], "ub": [1.4, 0.0, 1.4, 0.1, 0.5],
+            "initial": [1.08, -0.04, 1.05, -0.03, 0.25], "gamma_prefit": False, "gamma_lb": None,
+            "n_multistart": 4, "cycles": [0, 1],
+            "widths": True, "width_tol": 0.01, "width_starts": 3, "width_method": "near_optimal_extrema"}
+    art.with_name(art.name + ".meta.json").write_text(
+        _j.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return art
+
+
+def _report(*args):
+    import subprocess
+    return subprocess.run([sys.executable, str(ROOT / "scripts/width_report.py"), *map(str, args)],
+                          cwd=ROOT, capture_output=True, text=True, timeout=300)
+
+
+def test_w16_width_report_prints_the_interval_and_compares_one_axis(tmp_path):
+    """[W-16] 표와 비교가 실제로 나온다. 비교는 **축 하나**(w_dqdv)만 다를 때."""
+    a = _fake_widths_csv(tmp_path / "w0", "cycles_syn_Li.csv", w_dqdv=0, spans=(1.0, 20.0, 4.0))
+    b = _fake_widths_csv(tmp_path / "w1", "cycles_syn_Li.csv", w_dqdv=1, spans=(1.0, 10.0, 8.0))
+    r = _report(a)
+    assert r.returncode == 0 and "하한" in r.stdout, (r.returncode, r.stdout[-600:], r.stderr[-400:])
+    r = _report(a, b, "--axis", "w_dqdv")
+    assert r.returncode == 0, (r.returncode, r.stdout[-600:], r.stderr[-600:])
+    assert "좁아졌다" in r.stdout and "넓어졌다" in r.stdout, r.stdout[-800:]
+    assert "0.500" in r.stdout, ("LAM_NE 20→10 %p 면 비가 0.5 여야 한다", r.stdout[-800:])
+
+
+def test_w17_width_report_refuses_a_comparison_that_moved_two_things(tmp_path):
+    """[W-17] **가드가 이 도구의 값어치다.** 축 말고 다른 설정이 다르면 비교를 거부하고 **무엇이 다른지 짚는다**.
+    거부하지 않으면 "dQ/dV 를 넣으니 폭이 좁아졌다" 가 실은 seed 차이인 경우를 못 가른다."""
+    a = _fake_widths_csv(tmp_path / "A", "cycles_syn_Li.csv", w_dqdv=0, seed=0)
+    b = _fake_widths_csv(tmp_path / "B", "cycles_syn_Li.csv", w_dqdv=1, seed=7)      # 둘이 움직였다
+    r = _report(a, b, "--axis", "w_dqdv")
+    assert r.returncode == 2, (r.returncode, r.stdout[-400:])
+    assert "다른 설정이 다르다" in r.stderr and "seed" in r.stderr, r.stderr[-500:]
+
+    same = _fake_widths_csv(tmp_path / "C", "cycles_syn_Li.csv", w_dqdv=0, seed=0)   # 축이 안 움직였다
+    r = _report(a, same, "--axis", "w_dqdv")
+    assert r.returncode == 2 and "가 같다" in r.stderr, (r.returncode, r.stderr[-400:])
+
+
+def test_w18_width_report_refuses_artifacts_that_carry_no_width(tmp_path):
+    """[W-18] 폭 없는 산출이나 **안 잰 행이 섞인** 산출로는 표를 그리지 않는다 — 모집단을 말할 수 없다."""
+    from bms_balancing import schema as S                  # noqa: PLC0415
+    a = _fake_widths_csv(tmp_path / "A", "cycles_syn_Li.csv", w_dqdv=0)
+
+    rows = list(csv.DictReader(a.open(encoding="utf-8")))
+    rows[1]["width_status"] = "not_requested"
+    for c in ("width_tol", "width_is_lower_bound", "LAM_PE_lo", "LAM_PE_hi",
+              "LAM_NE_lo", "LAM_NE_hi", "LLI_lo", "LLI_hi"):
+        rows[1][c] = ""
+    mixed = tmp_path / "M" / "cycles_syn_Li.csv"
+    mixed.parent.mkdir(parents=True, exist_ok=True)
+    with mixed.open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=list(S.CYCLES_ROW)); w.writeheader(); w.writerows(rows)
+    r = _report(mixed)
+    assert r.returncode == 2 and "measured" in r.stderr, (r.returncode, r.stderr[-400:])
+
+    bare = tmp_path / "N" / "cycles_syn_Li.csv"
+    bare.parent.mkdir(parents=True, exist_ok=True)
+    cols = [c for c in S.CYCLES_ROW if not c.startswith("width") and not c.endswith(("_lo", "_hi"))]
+    with bare.open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader(); w.writerows(rows)
+    r = _report(bare)
+    assert r.returncode == 2 and "폭 열이 없다" in r.stderr, (r.returncode, r.stderr[-400:])

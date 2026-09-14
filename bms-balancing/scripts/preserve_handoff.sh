@@ -87,8 +87,29 @@ echo "  풀린 항목 $(find "$TMP" -type f | wc -l) 개 → $TMP"
 
 echo
 echo "══ 4. manifest 찾기·자체 해시 대조 ═════════════════════════════════"
-MAN="$(find "$TMP" -name package_manifest.json -type f | head -1)"
-[ -n "$MAN" ] || { echo "! package_manifest.json 을 못 찾았다" >&2; exit 1; }
+# ⚠ 묶음에는 **이전 묶음의 manifest 가 같이 들어온다** (late_cap_a 에 radial320_timecap 것이 딸려 왔고,
+#   core16_control 에는 셋이 들어온다). `head -1` 로 아무거나 집으면 엉뚱한 것으로 보존한다.
+#   `--expect-manifest-sha` 를 주면 **그 해시를 가진 것**을 고른다 — 못 찾으면 멈춘다.
+ALL_MAN="$(find "$TMP" -name package_manifest.json -type f | sort)"
+[ -n "$ALL_MAN" ] || { echo "! package_manifest.json 을 못 찾았다" >&2; exit 1; }
+N_MAN="$(printf '%s\n' "$ALL_MAN" | wc -l)"
+if [ "$N_MAN" -gt 1 ]; then
+  echo "  ⚠ manifest 가 $N_MAN 개다 (이전 묶음 것이 같이 들어왔다):"
+  printf '%s\n' "$ALL_MAN" | while read -r f; do
+    printf '      %s  %s\n' "$(sha256sum "$f" | cut -c1-16)" "${f#$TMP/}"
+  done
+fi
+MAN=""
+if [ -n "$EXP_MSHA" ]; then
+  MAN="$(printf '%s\n' "$ALL_MAN" | while read -r f; do
+           if [ "$(sha256sum "$f" | cut -d' ' -f1)" = "$EXP_MSHA" ]; then printf '%s' "$f"; break; fi
+         done)"
+  [ -n "$MAN" ] || { echo "! 전달값 $EXP_MSHA 를 가진 manifest 가 ZIP 안에 없다 — 멈춘다" >&2; exit 1; }
+  echo "  → 전달 해시로 골랐다"
+else
+  MAN="$(printf '%s\n' "$ALL_MAN" | head -1)"
+  [ "$N_MAN" -gt 1 ] && echo "  ⚠ --expect-manifest-sha 가 없어 첫 번째를 골랐다 — 이번 것이 맞는지 확인할 것"
+fi
 MSHA="$(sha256sum "$MAN" | cut -d' ' -f1)"
 echo "  manifest   ${MAN#$TMP/}"
 echo "  self-SHA   $MSHA"
