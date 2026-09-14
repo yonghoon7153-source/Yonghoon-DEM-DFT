@@ -183,3 +183,23 @@ def test_commit_records_say_they_were_sealed(tmp_path, ledger):
     rec = P.read_execution_class(P.run_content_id(out), ledger=ledger)
     assert rec.get("sealed") is True, (
         f"commit 이 만든 레코드가 봉인 사실을 안 말한다: {rec}")
+
+
+def test_a_stale_seal_is_refused_even_when_a_legacy_record_matches(tmp_path, ledger):
+    """★ P0-1 의 첫 규칙(낡은 봉인 거부)만이 막는 자리 — legacy 로 등록된
+    grid 상태(봉인 없음, `sealed: false`) 위에 fit 이 굳힌 뒤 fit member 를
+    지우면, 낡은 봉인을 무시하고 지금 있는 것으로 되돌아갈 때 legacy id 가
+    맞아 `sealed` 규칙도 못 막는다. (EXPECT 관측: 앞 시험은 셋째 규칙이
+    먼저 걸려 첫 규칙의 증인이 아니었다.)"""
+    out = tmp_path / "results" / "run"
+    _grid_outputs(out)
+    P._record_execution_class(out, P.EXEC_CLASS_CANONICAL,
+                              evidence="시험이 흉내 낸 legacy 분류", ledger=ledger)
+    _fit_starts(out)
+    _fit_finishes(out)
+    _commit(out, ledger, "fit")
+    _promote(out)
+    for name in ("manifest.yaml", "manifest_start.yaml", "manifest_grid.yaml"):
+        (out / name).unlink()
+    with pytest.raises(P.PreserveError, match="낡았다"):
+        _promote(out)

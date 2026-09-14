@@ -1419,7 +1419,10 @@ MUTANTS = [
      "        return run_content_id(d, dir_fd=dir_fd), False\n"
      "    if False:\n"
      "        raise PreserveError(",
-     "deleting_fit_members_after_a_fit_commit_is_not_promotable"),
+     # ★ EXPECT 관측 — 앞 시험은 셋째 규칙(`sealed` 레코드는 봉인 없이 거부)이
+     #   먼저 걸려 첫 규칙의 증인이 아니었다. legacy 레코드(`sealed: false`)
+     #   위의 낡은 봉인만이 첫 규칙 홀로 막는 자리다.
+     "a_stale_seal_is_refused_even_when_a_legacy_record_matches"),
     ("promotion-refuses-a-subset-seal-g62", PRESERVE,                # P0-1
      "    extra = sorted(present - covered)\n    if extra:",
      "    extra = sorted(present - covered)\n    if False:",
@@ -1447,8 +1450,11 @@ MUTANTS = [
     ("class-locals-stay-in-the-class-body-g62", RP,                  # P0-6
      "    nested = inherited if isinstance(node, ast.ClassDef) else here",
      "    nested = here",
-     "the_analyzer_does_not_carry_class_locals_into_methods or "
-     "a_class_local_does_not_exempt_a_capability_in_a_method"),
+     # ★ **declared** (아래 DECLARED_MASKED) — 자체 리뷰 F3 가 class 본문의 결속
+     #   shadow 를 아예 없앴으므로 class 의 `here == inherited` 이고 이 변이는
+     #   의미를 못 바꾼다. 방어는 `class-body-bindings-are-not-shadows-g62` 로
+     #   옮겨 갔다 (EXPECT 관측: fail 집합 비어 있음).
+     None),
     ("crossed-module-uses-its-own-symbol-table-g62", RP,             # P0-7
      '        "sc": (s_mods, _source_reflection_locals(_s_tree),\n'
      "               _module_string_consts(_s_tree),\n"
@@ -1456,8 +1462,11 @@ MUTANTS = [
      "               _namespace_targets(scoring_src, s_mods),\n"
      "               _imported_module_names(scoring_src)),",
      '        "sc": (mods, reflect, consts, caps, targets, modnames),',
-     "a_capability_alias_inside_the_scoring_module_is_refused or "
-     "a_namespace_alias_inside_the_scoring_module_is_refused"),
+     # ★ EXPECT 관측 — `a_capability_alias…` 는 seed 능력(`getattr`)의 값 흐름이라
+     #   어느 table 로도 거부돼 증인이 못 된다. 대상 판정(`targets`)이 갈리는
+     #   자리만 증인이다.
+     "a_namespace_alias_inside_the_scoring_module_is_refused or "
+     "from_import_aliases_are_namespace_targets"),
     # ── ε′ 증거 영수증 (P1-3 ~ P1-6 · P2-1) ──
     #   ★ 이 파일이 자기 변이 대상이다 — 선언이 자기 preimage 로 세어지지 않게
     #     철자를 escape 한다.
@@ -2016,6 +2025,13 @@ MULTI = [
 #: **관측되지 않는다고 신고하는** 항목. 왜 안 보이는지와 그래도 왜 남기는지를
 #: 여기 적는다 — "masked but retained" 를 조용히 두지 않는다.
 DECLARED_MASKED = {
+    "class-locals-stay-in-the-class-body-g62": (
+        "62차 자체 리뷰 F3 가 class 본문·module 문장의 결속 shadow 를 없애 "
+        "(`_own_shadows` 는 함수·lambda 만) class 의 `here == inherited` 가 됐다 — "
+        "`nested = here` 는 의미를 안 바꾼다. 같은 방어는 "
+        "`class-body-bindings-are-not-shadows-g62` 가 잰다. 축을 남기는 이유: "
+        "P0-6(a) 의 규칙(자식 scope 는 class 의 바깥 집합을 받는다)이 코드에 "
+        "그대로 있고, F3 가 되돌려지면 이 변이가 다시 물어야 한다."),
     "shadows-are-scoped-g60":
         "60차 P0-11 은 shadow 를 **scope 별**로 좁혔다 (59차는 `ast.walk` 로 "
         "중첩 함수의 매개변수까지 한 set 에 합쳤다). 의미는 그것이 맞다. "
@@ -4423,6 +4439,376 @@ EXPECT: dict = {
             "witness": {
                     "tests/test_staged_writes_60.py::test_the_gate_creates_the_place_and_always_carries_a_handle": "FileNotFoundError: [Errno 2] No such file or directory"
             }
+    },
+    # ── 62차 — 접수 16건 + 자체 리뷰 4 렌즈의 축. 전부 `--emit-expect` 로 관측 ──
+    "capability-discarded-before-the-lock-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_fit_failure_before_the_lock_discards_the_capability",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_fit_failure_before_the_lock_discards_the_capability":
+                "AssertionError: lock 앞에서 죽은 fit 이 capability/fd 를 살려 뒀다 (62차 자체 리뷰 F1)",
+        }
+    },
+    "class-body-bindings-are-not-shadows-g62": {
+        "fail": [
+            "tests/test_scope_model_62.py::test_a_class_body_binding_does_not_shadow_a_load_before_it",
+            "tests/test_scope_model_62.py::test_a_module_compound_statement_binding_does_not_exempt_a_capability",
+        ],
+        "witness": {
+            "tests/test_scope_model_62.py::test_a_class_body_binding_does_not_shadow_a_load_before_it":
+                "AssertionError: class 본문의 for 결속이 그 앞의 load 를 가렸다 (62차 자체 리뷰 F3)",
+            "tests/test_scope_model_62.py::test_a_module_compound_statement_binding_does_not_exempt_a_capability":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "coverage-records-the-snapshot-it-was-given-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_write_coverage_records_exactly_the_snapshot",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_write_coverage_records_exactly_the_snapshot":
+                "AssertionError: 다시 쟀다",
+        }
+    },
+    "crossed-module-self-alias-is-followed-g62": {
+        "fail": [
+            "tests/test_scope_model_62.py::test_the_crossed_module_own_namespace_access_enters_the_closure",
+        ],
+        "witness": {
+            "tests/test_scope_model_62.py::test_the_crossed_module_own_namespace_access_enters_the_closure":
+                "AssertionError: 건너간 module 의 자기 이름 공간 접근을 안 따라갔다: ['src.scoring:<module-effects>', 'src.scoring:DEFAULT_TOL', 'src.scoring:MODES', 'src.scoring:add_error_columns', 'src.scoring:apply_bias_correction',",
+        }
+    },
+    "crossed-module-uses-its-own-symbol-table-g62": {
+        "fail": [
+            "tests/test_scope_model_62.py::test_a_namespace_alias_inside_the_scoring_module_is_refused",
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring as me-getattr(me, \"add_error_columns\")]",
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring-getattr(scoring, \"add_error_columns\")]",
+        ],
+        "witness": {
+            "tests/test_scope_model_62.py::test_a_namespace_alias_inside_the_scoring_module_is_refused":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring as me-getattr(me, \"add_error_columns\")]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring-getattr(scoring, \"add_error_columns\")]":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "definition-head-is-the-enclosing-scope-g62": {
+        "fail": [
+            "tests/test_scope_model_62.py::test_a_parameter_does_not_exempt_a_capability_in_the_head[\\nimport src.scoring as sc\\n\\ndef f(getattr, k=[getattr][0](sc, \"add_error_columns\")):\\n    h = getattr                      # \\ubcf8\\ubb38\\uc5d0\\uc11c\\ub294 \\ub9e4\\uac1c\\ubcc0\\uc218\\ub2e4\\n    return k                         # default \\ub294 \\uc815\\uc758 \\uc2dc\\uc810\\uc5d0 module \\uc744 \\uc5f4\\uc5c8\\ub2e4\\n-1]",
+            "tests/test_scope_model_62.py::test_a_parameter_does_not_exempt_a_capability_in_the_head[\\nimport src.scoring as sc\\n\\ndef keep(cap):\\n    def deco(fn):\\n        return fn\\n    return deco\\n\\n@keep([getattr][0](sc, \"add_error_columns\"))   # decorator \\uc778\\uc790\\ub3c4 \\ubc14\\uae65 scope \\ub2e4\\ndef f(getattr):\\n    return None\\n-2]",
+            "tests/test_scope_model_62.py::test_the_analyzer_does_not_shadow_the_default_with_the_parameter",
+        ],
+        "witness": {
+            "tests/test_scope_model_62.py::test_a_parameter_does_not_exempt_a_capability_in_the_head[\\nimport src.scoring as sc\\n\\ndef f(getattr, k=[getattr][0](sc, \"add_error_columns\")):\\n    h = getattr                      # \\ubcf8\\ubb38\\uc5d0\\uc11c\\ub294 \\ub9e4\\uac1c\\ubcc0\\uc218\\ub2e4\\n    return k                         # default \\ub294 \\uc815\\uc758 \\uc2dc\\uc810\\uc5d0 module \\uc744 \\uc5f4\\uc5c8\\ub2e4\\n-1]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_scope_model_62.py::test_a_parameter_does_not_exempt_a_capability_in_the_head[\\nimport src.scoring as sc\\n\\ndef keep(cap):\\n    def deco(fn):\\n        return fn\\n    return deco\\n\\n@keep([getattr][0](sc, \"add_error_columns\"))   # decorator \\uc778\\uc790\\ub3c4 \\ubc14\\uae65 scope \\ub2e4\\ndef f(getattr):\\n    return None\\n-2]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_scope_model_62.py::test_the_analyzer_does_not_shadow_the_default_with_the_parameter":
+                "AssertionError: 매개변수가 definition head 를 가렸다: ['getattr', 'k'] (62차 P0-6)",
+        }
+    },
+    "dist-info-bytes-are-in-the-receipt-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_dist_info_files_on_pythonpath_are_inside_the_receipt",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_dist_info_files_on_pythonpath_are_inside_the_receipt":
+                "AssertionError: entry_points.txt 를 바꿨는데 importable_roots 가 그대로다 (62차 자체 리뷰 F3)",
+        }
+    },
+    "fit-commits-inside-the-lock-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_fit_releases_the_lock_only_after_commit_and_receipt",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_fit_releases_the_lock_only_after_commit_and_receipt":
+                "AssertionError: fit 의 순서가 ['release', 'commit:free', 'receipt:held', 'release'] — commit·receipt 가 lock 안에 있고 release 가 마지막이어야 한다 (62차 P0-3)",
+        }
+    },
+    "fit-failure-discards-the-capability-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_fit_failure_before_commit_discards_the_capability",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_fit_failure_before_commit_discards_the_capability":
+                "AssertionError: 실패한 fit 이 capability 를 살려 뒀다: 1 vs 0 (62차 P1-2)",
+        }
+    },
+    "from-imports-are-namespace-targets-g62": {
+        "fail": [
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring as me-getattr(me, \"add_error_columns\")]",
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring-getattr(scoring, \"add_error_columns\")]",
+        ],
+        "witness": {
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring as me-getattr(me, \"add_error_columns\")]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring-getattr(scoring, \"add_error_columns\")]":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "grid-discards-before-the-lock-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_grid_failure_before_the_lock_discards_the_capability[False]",
+            "tests/test_lock_lifetime_62.py::test_grid_failure_before_the_lock_discards_the_capability[True]",
+            "tests/test_lock_lifetime_62.py::test_grid_refused_by_a_live_lock_holder_discards_the_capability",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_grid_failure_before_the_lock_discards_the_capability[False]":
+                "AssertionError: lock 앞에서 죽은 grid(dry_run=False) 가 capability/fd 를 살려 뒀다 (62차 자체 리뷰 F1)",
+            "tests/test_lock_lifetime_62.py::test_grid_failure_before_the_lock_discards_the_capability[True]":
+                "AssertionError: lock 앞에서 죽은 grid(dry_run=True) 가 capability/fd 를 살려 뒀다 (62차 자체 리뷰 F1)",
+            "tests/test_lock_lifetime_62.py::test_grid_refused_by_a_live_lock_holder_discards_the_capability":
+                "AssertionError: lock 에 거부된 grid 가 capability/fd 를 살려 뒀다 (62차 자체 리뷰 F1)",
+        }
+    },
+    "grid-dry-run-discards-the-capability-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_grid_dry_run_discards_the_capability",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_grid_dry_run_discards_the_capability":
+                "AssertionError: dry-run 이 capability 를 살려 뒀다: 1 vs 0 (62차 P1-2)",
+        }
+    },
+    "grid-manifest-locator-is-the-name-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_grid_manifest_payload_records_the_logical_curves_path",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_grid_manifest_payload_records_the_logical_curves_path":
+                "AssertionError: handle 경로를 적었다: /proc/self/fd/3/curves.parquet (62차 P0-4)",
+        }
+    },
+    "grid-merges-inside-the-lock-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_grid_source_releases_the_lock_after_merge_manifest_commit_and_receipt",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_grid_source_releases_the_lock_after_merge_manifest_commit_and_receipt":
+                "AssertionError: run_grid 가 merge_chunks(line 769) 보다 먼저 lock 을 놓는다 (line 768) — 임계구역이 commit 을 못 덮는다 (62차 P0-3)",
+        }
+    },
+    "history-refuses-a-vanished-module-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_a_startup_module_removed_after_import_is_a_failed_measurement",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_a_startup_module_removed_after_import_is_a_failed_measurement":
+                "AssertionError: 올렸다 지운 module 이 unfiled 로 세탁됐다: measured unfiled=22 (62차 자체 리뷰 F2)",
+        }
+    },
+    "packages-keep-the-first-distribution-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_duplicate_distributions_keep_the_first_and_record_the_rest",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_duplicate_distributions_keep_the_first_and_record_the_rest":
+                "AssertionError: 뒤 root 가 앞 root 를 덮었다: 2.0 (62차 P1-5)",
+        }
+    },
+    "parent-cross-checks-customization-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_the_parent_cross_checks_the_customization_bytes",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_the_parent_cross_checks_the_customization_bytes":
+                "Failed: DID NOT RAISE _ReplayError",
+        }
+    },
+    "parent-package-import-is-refused-g62": {
+        "fail": [
+            "tests/test_scope_model_62.py::test_importing_the_parent_package_is_refused",
+        ],
+        "witness": {
+            "tests/test_scope_model_62.py::test_importing_the_parent_package_is_refused":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "promotion-checks-derived-freshness-g62": {
+        "fail": [
+            "tests/test_archive_freshness_62.py::test_direct_bundle_refuses_a_stale_derived_artifact",
+            "tests/test_archive_freshness_62.py::test_the_promotion_primitive_is_one_function",
+        ],
+        "witness": {
+            "tests/test_archive_freshness_62.py::test_direct_bundle_refuses_a_stale_derived_artifact":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_archive_freshness_62.py::test_the_promotion_primitive_is_one_function":
+                "AssertionError: archive_bundle.main 이 assert_promotable() 을 안 지난다 (62차 P0-8)",
+        }
+    },
+    "promotion-holds-the-run-locks-g62": {
+        "fail": [
+            "tests/test_archive_freshness_62.py::test_direct_bundle_holds_the_run_locks_while_copying",
+        ],
+        "witness": {
+            "tests/test_archive_freshness_62.py::test_direct_bundle_holds_the_run_locks_while_copying":
+                "AssertionError: 복사 중에 실행 lock 이 잡혀 있지 않다: {'.fit.lock': 'free', '.run.lock': 'free'} (62차 자체 리뷰 F2)",
+        }
+    },
+    "promotion-refuses-a-stale-seal-g62": {
+        "fail": [
+            "tests/test_promotion_seal_62.py::test_a_stale_seal_is_refused_even_when_a_legacy_record_matches",
+        ],
+        "witness": {
+            "tests/test_promotion_seal_62.py::test_a_stale_seal_is_refused_even_when_a_legacy_record_matches":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "promotion-refuses-a-subset-seal-g62": {
+        "fail": [
+            "tests/test_promotion_seal_62.py::test_an_in_progress_fit_in_a_committed_grid_dir_is_not_promotable",
+        ],
+        "witness": {
+            "tests/test_promotion_seal_62.py::test_an_in_progress_fit_in_a_committed_grid_dir_is_not_promotable":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "receipt-is-framed-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_an_atexit_forgery_in_sitecustomize_is_refused",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_an_atexit_forgery_in_sitecustomize_is_refused":
+                "Failed: DID NOT RAISE _ReplayError",
+        }
+    },
+    "receipt-schema-is-exact-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-\\ucd5c\\uc0c1\\uc704\\uc5d0 \\ubaa8\\ub974\\ub294 \\ud0a4]",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-digest \\uac00 hex16 \\uc774 \\uc544\\ub2c8\\ub2e4]",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-dists \\uac00 list]",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-history \\uc5d0 \\ubaa8\\ub974\\ub294 \\ud0a4]",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-inputs \\uc5d0 sentinel \\ubb38\\uc790\\uc5f4]",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-startup.pth \\uac00 \\uc5c6\\ub2e4]",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-unfiled \\uac00 \\ubb38\\uc790\\uc5f4]",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-\\ucd5c\\uc0c1\\uc704\\uc5d0 \\ubaa8\\ub974\\ub294 \\ud0a4]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-digest \\uac00 hex16 \\uc774 \\uc544\\ub2c8\\ub2e4]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-dists \\uac00 list]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-history \\uc5d0 \\ubaa8\\ub974\\ub294 \\ud0a4]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-inputs \\uc5d0 sentinel \\ubb38\\uc790\\uc5f4]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-startup.pth \\uac00 \\uc5c6\\ub2e4]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-unfiled \\uac00 \\ubb38\\uc790\\uc5f4]":
+                "TypeError: '<' not supported between instances of 'str' and 'int'",
+        }
+    },
+    "release-consumes-a-token-not-a-path-g62": {
+        "fail": [
+            "tests/test_run_lock_62.py::test_the_path_based_release_is_gone",
+        ],
+        "witness": {
+            "tests/test_run_lock_62.py::test_the_path_based_release_is_gone":
+                "AttributeError: 'PosixPath' object has no attribute 'released'",
+        }
+    },
+    "release-refuses-a-replaced-inode-g62": {
+        "fail": [
+            "tests/test_logical_paths_61.py::test_releasing_a_missing_or_foreign_lock_is_loud_but_never_deletes",
+            "tests/test_run_lock_62.py::test_release_refuses_a_lock_whose_name_now_points_at_another_inode",
+        ],
+        "witness": {
+            "tests/test_logical_paths_61.py::test_releasing_a_missing_or_foreign_lock_is_loud_but_never_deletes":
+                "Failed: DID NOT RAISE RuntimeError",
+            "tests/test_run_lock_62.py::test_release_refuses_a_lock_whose_name_now_points_at_another_inode":
+                "Failed: DID NOT RAISE RuntimeError",
+        }
+    },
+    "release-refuses-a-vanished-lock-g62": {
+        "fail": [
+            "tests/test_run_lock_62.py::test_release_refuses_when_its_own_lock_has_vanished",
+        ],
+        "witness": {
+            "tests/test_run_lock_62.py::test_release_refuses_when_its_own_lock_has_vanished":
+                "Failed: DID NOT RAISE RuntimeError",
+        }
+    },
+    "run-lock-exclusivity-is-a-kernel-op-g62": {
+        "fail": [
+            "tests/test_io_bookkeeping.py::test_run_lock_blocks_concurrent_run",
+            "tests/test_run_lock_62.py::test_a_live_holder_in_another_process_is_refused_by_pid",
+            "tests/test_run_lock_62.py::test_eight_processes_racing_for_one_lock_yield_exactly_one_holder",
+            "tests/test_run_lock_62.py::test_two_contenders_that_both_observe_absence_do_not_both_acquire",
+        ],
+        "witness": {
+            "tests/test_io_bookkeeping.py::test_run_lock_blocks_concurrent_run":
+                "Failed: DID NOT RAISE RuntimeError",
+            "tests/test_run_lock_62.py::test_a_live_holder_in_another_process_is_refused_by_pid":
+                "Failed: DID NOT RAISE RuntimeError",
+            "tests/test_run_lock_62.py::test_eight_processes_racing_for_one_lock_yield_exactly_one_holder":
+                "AssertionError: 동시에 잡은 프로세스가 7 개다 (62차 P0-2): ['in 30163 1818848132497', 'in 30168 1819052511863', 'in 30169 1819100351093', 'in 30165 1819112265542', 'out 30163 1819148303183', 'in 30164 181915144254",
+            "tests/test_run_lock_62.py::test_two_contenders_that_both_observe_absence_do_not_both_acquire":
+                "AssertionError: 두 contender 의 결과가 ['acquired', 'acquired'] — 정확히 하나만 잡아야 한다 (62차 P0-2): [('acquired', RunLock(/tmp/pytest-of-root/pytest-55/test_two_contenders_that_both_0/.run.lock ino=1961461 pid=30",
+        }
+    },
+    "run-sig-has-no-staging-pathname-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_the_run_spec_does_not_carry_a_staging_pathname",
+            "tests/test_lock_lifetime_62.py::test_the_same_logical_fit_resumed_keeps_one_run_signature",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_the_run_spec_does_not_carry_a_staging_pathname":
+                "AssertionError: manifest 에 staging 경로가 굳었다 (62차 P0-5)",
+            "tests/test_lock_lifetime_62.py::test_the_same_logical_fit_resumed_keeps_one_run_signature":
+                "AssertionError: 같은 논리 실행이 서명을 2 개 만들었다: ['fit_completed_7ca90b01d4b5.jsonl', 'fit_completed_d10e1ad82fa3.jsonl'] — random staging pathname 이 run_spec 에 들어갔다 (62차 P0-5)",
+        }
+    },
+    "schema-refuses-empty-receipts-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-\\ube48 env]",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-\\ube48 startup_modules]",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-\\uc74c\\uc218 int]",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-startup.env \\u2260 env]",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-startup.version \\u2260 interpreter]",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-\\ube48 env]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-\\ube48 startup_modules]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-\\uc74c\\uc218 int]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-startup.env \\u2260 env]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-startup.version \\u2260 interpreter]":
+                "Failed: DID NOT RAISE _ReplayError",
+        }
+    },
+    "sealed-records-need-their-seal-g62": {
+        "fail": [
+            "tests/test_promotion_seal_62.py::test_deleting_the_seal_does_not_reopen_the_prefix",
+        ],
+        "witness": {
+            "tests/test_promotion_seal_62.py::test_deleting_the_seal_does_not_reopen_the_prefix":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "unreadable-bytes-fail-the-section-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_an_unreadable_startup_byte_makes_the_section_failed",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_an_unreadable_startup_byte_makes_the_section_failed":
+                "AssertionError: 읽기 실패가 정상 값으로 적혔다",
+        }
+    },
+    "zip-origins-are-hashed-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_a_zip_imported_startup_module_is_hashed_not_unfiled",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_a_zip_imported_startup_module_is_hashed_not_unfiled":
+                "AssertionError: {'reason': '이름은 받았는데 해시한 파일이 하나도 없다', 'status': 'failed'}",
+        }
     },
 }
 

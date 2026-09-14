@@ -259,9 +259,11 @@ def test_a_namespace_alias_inside_the_scoring_module_is_refused():
     anchor = "    out = df.copy()\n    for k in MODES:"
     sc2 = sc.replace("def add_error_columns(",
                      "import src.scoring as me\n\n\ndef add_error_columns(", 1)
-    sc2 = sc2.replace(anchor, "    out = df.copy()\n    _ = getattr(me, tol)\n"
+    # 상수 이름으로 연다 — 비상수면 "계산해서 건넨다" 층이 table 과 무관하게
+    # 먼저 걸려 이 시험이 per-module table 의 증인이 못 된다 (EXPECT 관측).
+    sc2 = sc2.replace(anchor, "    out = df.copy()\n    _ = getattr(me, \"add_error_columns\")\n"
                               "    for k in MODES:", 1)
-    with pytest.raises(SystemExit, match="이름 공간|계산해서"):
+    with pytest.raises(SystemExit, match="이름 공간"):
         rp._producer_closure(src, sc2)
 
 
