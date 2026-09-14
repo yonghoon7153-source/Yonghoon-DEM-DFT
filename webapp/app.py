@@ -322,7 +322,9 @@ def doc(rel):
 #   그림만 남는다. 대신 인용은 금지하고 정본으로 보낸다.
 @app.route("/pipeline")
 def pipeline():
-    return render_template("pipeline.html", active="pipeline")
+    # 라운드 수는 상수가 아니라 원장에서 센다 (content.latest_gate_round 주석)
+    return render_template("pipeline.html", active="pipeline",
+                           gate_round=C.latest_gate_round())
 
 
 # ─────────────────────────────────────────────────────────────────────────

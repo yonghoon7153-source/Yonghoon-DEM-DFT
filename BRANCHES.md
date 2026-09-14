@@ -155,3 +155,12 @@ claude/zip-git-gpu-setup-vdqdtd  →  claude/14-gate-code-review-9qkx05
 
 합치는 방향은 **본체가 서브를 merge** 하는 쪽 하나다. 반대로 하면 게이트
 브랜치의 이력이 서브로 흘러가 판정 대상 커밋을 흐린다.
+
+### 2026-09-14 — 본체가 서브를 merge 했다 (`cf9bad4`)
+
+방향은 규칙대로 본체 ← 서브. merge-base `fdd3929`. 겹친 파일 0. 서브가
+경계를 넘긴 `webapp/` 6 파일은 사용자 지시에 따른 것이라 그대로 받았고, 그
+예외는 `CLAUDE.md` 하드룰 1 에 **한 줄**로 적었다 (예외도 한 곳에만). 확인
+절차와 실측은 merge 커밋 메시지와 `bms-balancing/MERGE_BRIEF_FOR_GATE.md`.
+서브 브랜치는 그대로 살아 있고 소유 경로도 그대로다 — merge 는 흡수가 아니라
+동기화다.

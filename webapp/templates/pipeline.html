@@ -363,7 +363,7 @@
       </g>
       <g class="dg-layer l-2">
         <rect x="30" y="68" width="700" height="46" rx="9"/>
-        <text x="48" y="88" class="dg-t dg-l dg-t-b">② 적대적 게이트 리뷰 — 57라운드</text>
+        <text x="48" y="88" class="dg-t dg-l dg-t-b">② 적대적 게이트 리뷰{% if gate_round %} — {{ gate_round }}라운드{% endif %}</text>
         <text x="48" y="106" class="dg-t dg-l dg-small">외부 리뷰어가 반례를 만든다. GO 가 나오기 전에는 본 실행을 시작하지 않는다</text>
       </g>
       <g class="dg-layer l-3">
@@ -430,7 +430,7 @@
   <h2 class="pipe-h"><span class="pipe-n">7</span> 어디서 무엇을 읽나</h2>
   <div class="pipe-map">
     <a class="pm" href="/results"><b>Phase 결과</b><span>실행 산출물과 노트 — 수치의 정본으로 가는 입구</span></a>
-    <a class="pm" href="/gate"><b>게이트 원장</b><span>적대적 리뷰 57라운드의 발견과 처리</span></a>
+    <a class="pm" href="/gate"><b>게이트 원장</b><span>적대적 리뷰{% if gate_round %} {{ gate_round }}라운드{% endif %}의 발견과 처리</span></a>
     <a class="pm" href="/questions"><b>열린 질문</b><span>아직 답이 없는 것. Evidence For / Against / Gap 으로 갈라 쌓는다</span></a>
     <a class="pm" href="/concepts"><b>개념</b><span>축퇴·모드 정의 같은, 우리가 정리해 쓴 판단</span></a>
     <a class="pm" href="/papers"><b>논문 digest</b><span>흡수한 원문의 절별 해체분석 — 봉인된 1층</span></a>

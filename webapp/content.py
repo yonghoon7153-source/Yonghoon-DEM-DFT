@@ -730,6 +730,26 @@ def gate_round_meta(title: str, body: str) -> dict:
     }
 
 
+_ROUND_HEAD = re.compile(r"^## §\d+\s+(\d+)차", re.M)
+
+
+def latest_gate_round() -> int | None:
+    """원장(`08_REVIEW_RESPONSE.md`)의 `## §N M차 …` 제목에서 **가장 큰 M**.
+
+    ⚠ 화면에 라운드 수를 상수로 적으면 그 순간 사본이 되고 낡는다 —
+      `pipeline.html` 이 "57라운드" 를 박아 둔 채 넉 라운드를 지나쳤다
+      (2026-09-14 서브 브랜치 신고). 그래서 `/trust` 처럼 **세어서** 만든다.
+    못 세면 `None` 을 돌려주고 화면은 숫자를 **비운다** (틀린 수보다 없는 편이
+    낫다 — 하드룰 4).
+    """
+    try:
+        txt = GATE_DOC.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    nums = [int(m.group(1)) for m in _ROUND_HEAD.finditer(txt)]
+    return max(nums) if nums else None
+
+
 def gate_sections(show: int = 3) -> dict:
     if not GATE_DOC.is_file():
         return {"available": False, "path": GATE_DOC.relative_to(ROOT).as_posix()}

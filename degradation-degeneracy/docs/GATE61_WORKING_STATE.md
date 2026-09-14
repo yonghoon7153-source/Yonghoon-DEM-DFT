@@ -198,3 +198,32 @@ pin 을 움직인 것은 δ(P1-4) 다 — analyzer 가 comprehension 을 자식 
 python -m pytest tests/ -q      1615 passed, 1 xfailed   (44분 26초, exit 0)
 ./scripts/smoke_e2e.sh          pipeline smoke 통과 (✅ 52건, exit 0)
 ```
+
+## 62차 준비 메모 (2026-09-14, 서브 브랜치 merge 뒤)
+
+서브(`claude/bms-alpha-beta-verify`)를 `cf9bad4` 로 merge 했다. 서브가
+`bms-balancing/HANDOFF_TO_GATE.md` §2d 에 적어 둔 62차 제안을 본체가 읽고
+**아직 실행하지 않은 채** 여기 옮긴다 — 정본은 그 문서다.
+
+| 제안 | 본체 판단 |
+|---|---|
+| 정상 production 순서 **전체**를 도는 e2e (grid 굳힘 → fit → commit → report → **resume** → report 갱신 → 승격) | **한다.** 60·61차가 같은 축에서 연속 P0 를 냈다 — 조각 시험이 순서를 못 봤다. 62차 요청 전 첫 작업 |
+| 요청 전 `/self-review` (렌즈 `순서-TOCTOU` · `sig-완전성`) | **한다.** 10차에 CONFIRMED 3건이 전부 외부 리뷰와 같은 축이었다 |
+| pyDMA 외부 검증을 요청문에 싣기 (`bms-balancing/reviews/BML_R1_RESPONSE.md` §12) | **싣는다.** LLI 세 구현 0.09~0.18 %p 일치 · LAM 두 축 1.0~1.5 %p 흩어짐 · γ 설정 12배 이동에도 CU2 네 값 불변 — 합성 진실 밖의 독립 근거. ⚠ 데이터 한 세트·optimizer 한 종·pyDMA 는 기록값이라는 경고를 같이 옮긴다 |
+| 축퇴 폭 측정법(근최적 집합 위 제약 최적화 + 등식 프로파일)을 본체에 쓸지 | **보류.** 서브 스스로 "하한이고 tol 은 통계가 아니다" 라 적었다. `hessian.py` 처럼 참고 진단이면 몰라도 결론 근거로 쓰려면 봉인 fits 에서 재계산되는 provenance 가 먼저다 |
+| `wiki/` 후보 — 방법론 개념 페이지 · Schmitt 2022 실측 추가 · chain rule 결함 | **보류.** ingest 는 논문 에이전트 비용이 크다. 서브 §3 목록을 그대로 후보로 둔다 |
+
+**서브가 던진 확인 하나** (HANDOFF §3-3): 규진팀 `dv_cell_model` 은 좌표를
+`(x−b)/a` 로 바꾸면서 도함수에 `1/a` 를 안 곱한다 (7~15 % 계통 오차). 본체의
+dV/dQ 항에 같은 자리가 있는지 — 확인 결과는 이 절 아래에 적는다.
+
+이 라운드의 61차 NO-GO(P0 8건)는 그대로 열려 있다. 위 표는 그 대응과 별개로
+**요청문을 보내기 전**에 할 일이다.
+
+**확인 결과 (방금 읽음)**: 본체에는 그 자리가 **구조적으로 없다.**
+`src/objective.py:249` 가 `compute_features(target.x, v_model, …)` 로 **재구성한
+full-cell 전압을 full-cell 축 x 로 직접 수치 미분**한다
+(`:168` `np.gradient(_smooth(v), x)`). 규진팀 코드처럼 반쪽전지 dV/dQ 표를
+변환 좌표 `(x−b)/a` 로 찾아 쓰는 경로가 없으므로 곱해야 할 `1/a` 자체가
+등장하지 않는다. 즉 해당 없음 — 다만 이것은 "본체 dV/dQ 항이 옳다" 의 증명이
+아니라 **그 특정 결함이 들어올 자리가 없다**는 확인이다.

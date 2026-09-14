@@ -50,3 +50,9 @@ mode-observability/data/
 # 규칙이 있어 새 satellite 의 __pycache__ 가 untracked 로 떴다)
 __pycache__/
 *.py[cod]
+
+# 셀 자료 트리 — bms-balancing/scripts/prepare_cell.py · fixed_hc.py 가 만드는
+# 곳에 **규진팀 원자료 xlsx 사본**이 들어간다. 저장소는 public 이다.
+# 사용자 기계의 clone 루트가 ~/dd 라 루트 바로 아래 cells/ 가 생겼고,
+# bms-balancing/.gitignore 는 상위 디렉터리를 못 막는다 (HANDOFF_TO_GATE.md §2b).
+cells/
