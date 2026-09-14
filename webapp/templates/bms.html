@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+{% block title %}BMS α·β 트랙 — 지금까지 이룬 것{% endblock %}
+{% block content %}
+{# 2026-09-14. 이 화면은 `/handover` (BMS 협업 방향) 를 대신한다 — 방향을 묻던
+   단계가 끝났고, 이제 **무엇이 닫혔고 무엇이 안 닫혔는가**가 자리를 물려받는다.
+
+   ⚠ 규율 셋 (handover 에서 그대로 이어받는다)
+   1. **숫자는 사본이다.** 정본은 artifact + `bms-balancing/reviews/*.md` ·
+      `bms-balancing/docs/*.md` 이고, 화면에도 그렇게 적는다 (하드룰 4).
+   2. **경고를 떼지 않는다.** "충족" 옆의 "그러나 전체 수렴은 미완" 을 떼면
+      그 순간 다른 주장이 된다. §5 가 그 자리다.
+   3. **이룬 것과 안 이룬 것을 같은 크기로 적는다.** 성과만 모아 놓은 화면은
+      이 저장소의 규율과 반대 방향이다. #}
+<header class="phead phead-pipe">
+  <p class="eyebrow">2026-09-14 기준 · bms-balancing</p>
+  <h1>지금까지 이룬 것</h1>
+  <p class="lead">BMS 쪽 작업은 <b>세 갈래로 독립</b>해 있다 — 규진팀 마이크로쇼츠
+    COMSOL 모델, α·β 산출을 서명·검증하는 하네스, 그리고 α·β 열화 정량화 자체.
+    셋은 서로 다른 속도로 움직였고 <b>닫힌 정도도 다르다.</b> 이 화면은 그 셋을
+    나란히 놓고, 각 갈래에서 <b>실측으로 닫힌 것</b>과 <b>아직 아닌 것</b>을
+    같은 크기로 적는다.</p>
+</header>
+
+<div class="pipe-cite">
+  <b>이 화면의 숫자는 전부 사본이다.</b> 인용 근거로 쓰지 않는다. 정본은 산출
+  artifact 와 그 <code class="mono">.meta.json</code>, 그리고
+  <code class="mono">bms-balancing/reviews/</code> ·
+  <code class="mono">bms-balancing/docs/</code> 의 원문이다. 원문에 붙어 있는
+  모집단·범위 경고를 뗀 채로 옮기지 않는다.
+</div>
+
+<!-- ══ 1 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">1</span> 세 갈래 — 어디까지 왔나</h2>
+
+  <div class="pipe-phases">
+    <div class="ph">
+      <span class="ph-n">① COMSOL</span>
+      <h3>마이크로쇼츠 6.3 재구축</h3>
+      <p>원본 모델에 대해 우리가 세웠던 주장(M1)을 <b>철회</b>하고 명세를 다시
+        썼다. 여섯 축의 수렴 진단이 원문 대조·재계산까지 끝났다. <b>전체 수렴은
+        미완이고 본 실행은 보류</b> — 모델 검증 완료가 아니다.</p>
+    </div>
+    <div class="ph">
+      <span class="ph-n">② 하네스</span>
+      <h3>α·β 산출 검증층</h3>
+      <p>산출 다섯 종에 계약·서명·validator 를 붙였고 외부 적대적 게이트 리뷰
+        R13·R14 를 통과했다. <b>R14 GO 는 범위 한정</b>이다.</p>
+    </div>
+    <div class="ph">
+      <span class="ph-n">③ 정량화</span>
+      <h3>BML α·β 열화 정량화</h3>
+      <p>반복값의 원인을 찾아 닫았고, 공개 도구 pyDMA 의 <b>정답 있는 데이터</b>로
+        우리 포팅을 걸었다. <b>LLI 는 맞고 LAM 두 축은 안 맞는다</b> — 그리고
+        그것이 설정 문제가 아님을 결정 실험으로 확정했다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">2</span> ③ 정량화 — 가장 크게 닫힌 것</h2>
+
+  <p class="pipe-p">이 갈래가 이번 작업의 <b>과학적 결론</b>을 낸 곳이다. 네 단계를
+    밟았고, 각 단계가 앞 단계의 답을 한 번씩 뒤집었다.</p>
+
+  <ol class="pipe-find">
+    <li>
+      <h3>받은 결과를 그대로 세었다 — 경계에 붙은 값들</h3>
+      <p>규진팀 실험 CSV 전부에서 피팅 결과 <b>97 행</b>을 세었다. <b>32 행</b>이
+        상자 경계에 정확히 붙어 있고, <b>16 행</b>이 음수 LAM(전극이 늘어났다는
+        뜻)이며, 한 상태의 LAM<sub>NE</sub> 폭이 <b>34.7 %p</b> 였다. 강한 음수는
+        전부 <code class="mono">a_NE</code> 가 상한에 붙은 행이다 — 측정이 아니라
+        <b>경계가 만든 값</b>이다.</p>
+    </li>
+    <li>
+      <h3>원본 MATLAB 을 받아 주장을 확정·철회했다</h3>
+      <p>추측으로 세운 주장 사슬을 <b>전부 철회</b>하고 소스에서 다시 세웠다.
+        <code class="mono">a_NE ≥ 1</code> 은 버그가 아니라 <b>의도된 물리 제약</b>
+        이었고, 반복값의 원인은 <code class="mono">rng(0)</code> 오염이었다 —
+        <b>규진팀이 이미 찾아서 고친 것</b>이다. 우리가 새로 발견한 결함이 아니라는
+        사실을 그대로 적었다.</p>
+    </li>
+    <li>
+      <h3>우리가 다시 뽑았다 — 두 경로가 일치한다</h3>
+      <p>그들 파이프라인을 <code class="mono">rng</code> 없이 돌린 것과 우리 Python
+        포팅이 <b>~1e-3 안에서 일치</b>하고 난간 경고가 <b>0</b> 이다. 시작점만 바꾼
+        재실행의 차이는 <b>1e-7</b> — 즉 시작점이 정한 적합이 아니다. 반복값 문제는
+        여기서 닫혔다.</p>
+    </li>
+    <li>
+      <h3>pyDMA 의 정답 있는 데이터에 걸었다</h3>
+      <p>공개 도구 pyDMA 의 검증 예제(P45B 셀)에 우리 포팅을 걸었다. <b>LLI 는 세
+        구현이 0.09~0.18 %p 안에서 일치</b>한다. <b>LAM 두 축은 1.0~1.5 %p 로
+        흩어지고 CU2 음극은 부호까지 갈린다.</b> 그리고 우리만 다른 게 아니다 —
+        pyDMA <b>자신의 두 방법도</b> 같은 축에서 부호가 갈린다.</p>
+    </li>
+  </ol>
+
+  <h3 class="tw-h3">결정 실험 — "설정이 달라서 아닌가?" 에 답했다</h3>
+
+  <p class="pipe-p">남은 의심은 설정이었다. pyDMA 의 Track C 는 γ 를 반쪽전지만으로
+    먼저 적합해 초기값으로 쓰고 하한을 0.02 로 둔다. 우리는 초기값 0.25 · 하한 0
+    이었다. 그래서 <code class="mono">fit_gamma_si</code> 를 포팅해 설정을 맞추고
+    다시 돌렸다.</p>
+
+  <div class="pg-tablewrap">
+    <table class="pg-table">
+      <thead><tr><th>실행 (CU2)</th><th>LLI</th><th>LAM<sub>ca</sub></th><th>LAM<sub>an</sub></th><th>γ</th></tr></thead>
+      <tbody>
+        <tr><td>우리 기본 — γ 초기 0.25 · 하한 0</td><td>3.00</td><td>1.98</td><td>−1.26</td><td>0.2407</td></tr>
+        <tr><td>우리 Track C — γ 초기 0.0200 · 하한 0.02</td><td>3.00</td><td>1.98</td><td>−1.26</td><td>0.2407</td></tr>
+        <tr><td><b>pyDMA blend (참조)</b></td><td><b>3.18</b></td><td><b>1.55</b></td><td><b>+0.27</b></td><td><b>0.2240</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pipe-quote pipe-quote-bad">
+    <p><b>γ 초기값을 12 배 옮겼는데 네 값이 표시 자리까지 전부 같다.</b> 즉 LAM
+      차이는 <b>설정이 아니다.</b> multistart 가 초기값과 무관하게 같은 점으로
+      가므로 "덜 수렴해서 다르다" 도 아니다 — <b>목적함수·파라미터화가 다르면 최소가
+      다른 곳에 있다</b>는 뜻이다.</p>
+  </div>
+
+  <p class="pipe-p"><b>결론:</b> 이 데이터에서 <b>LAM 분할은 점추정으로 보고할 수
+    없고 폭과 함께 보고해야 한다.</b> 이것은 이 저장소가 합성 진실의 축퇴 행렬로
+    재던 것과 <b>같은 결론에 외부 공개 데이터로 독립 도달</b>한 것이다.
+    <b>LLI 결론은 흔들리지 않는다.</b></p>
+
+  <p class="pipe-note"><b>이번에 새로 생긴 열린 항목.</b> 우리 γ 사전 적합이
+    Track C 의 0.224 가 아니라 <b>하한 0.02 에 붙는다</b>. 문헌 곡선의 방향 규약 ·
+    반쪽전지 선택 · 재정규화 구간을 의심하지만 <b>아직 확인하지 않았다.</b>
+    다만 위 표 때문에 <b>이 항목이 LAM 결론을 바꾸지는 않는다</b> — 우선순위는 낮다.</p>
+</section>
+
+<!-- ══ 3 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">3</span> ② 하네스 — 숫자가 살아남게 만든 층</h2>
+
+  <p class="pipe-p">위 ③ 의 결론이 의미를 가지려면 <b>그 숫자가 어디서 어떤 코드로
+    나왔는지</b>가 고정돼야 한다. 그 층을 이 갈래에서 만들었다.</p>
+
+  <div class="pipe-two">
+    <div class="pipe-card pc-a">
+      <span class="pc-tag">만든 것</span>
+      <h3>산출 계약 다섯 종</h3>
+      <p><code class="mono">matrix</code> · <code class="mono">profile</code> ·
+        <code class="mono">degeneracy</code> · <code class="mono">shape</code> ·
+        <code class="mono">cycles</code>. 종류 판정이 <b>fail-closed</b> 라 모르는
+        형식은 통과가 아니라 거부다.</p>
+    </div>
+    <div class="pipe-card pc-a">
+      <span class="pc-tag">만든 것</span>
+      <h3>실행 서명 (provenance)</h3>
+      <p>행마다 <code class="mono">run_id</code>·receipt, sidecar 에 git 전/후 ·
+        env · argv · 입력 roster · 소비한 입력. 산출 도중 트리가 바뀌면
+        <b>그것도 기록에 남는다.</b></p>
+    </div>
+    <div class="pipe-card pc-a">
+      <span class="pc-tag">만든 것</span>
+      <h3>승격 게이트</h3>
+      <p><code class="mono">check_u14</code> 가 스키마·단위·환경·입력·기준선을
+        축별로 본다. 비교 <b>불가능</b>한 축(예: 기준선에 env 기록이 없음)은 통과도
+        불통과도 아닌 <b>별도 코드</b>로 뺀다 — 모르는 것을 안다고 적지 않는다.</p>
+    </div>
+    <div class="pipe-card pc-b">
+      <span class="pc-tag">통과한 것</span>
+      <h3>외부 적대적 게이트 리뷰</h3>
+      <p>R13 은 승격·legacy 동결 조건을 닫았고, <b>R14 는 GO</b> 다. 리뷰어가
+        인용한 tree 해시를 우리 쪽에서 확인해 일치시켰다.</p>
+    </div>
+  </div>
+
+  <p class="pipe-note"><b>GO 의 범위를 넓히지 않는다.</b> R14 GO 는 <b>R14 범위
+    한정</b>이다 — 전체 하네스 · BML 과학 타당성 · COMSOL · 장시간 실행 승인이
+    아니다. 리뷰어는 전수 재실행을 하지 않았다고 스스로 밝혔고, 그 말을 그대로
+    옮겨 둔다. 열린 조건도 남아 있다.</p>
+</section>
+
+<!-- ══ 4 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">4</span> ① COMSOL — 여섯 축이 원문 대조까지 끝났다</h2>
+
+  <p class="pipe-p">이 갈래는 계산이 <b>다른 기계</b>에서 돌고 결과가 ZIP 으로
+    건너온다. 그래서 규율이 하나 더 붙는다 — <b>받은 요약을 그대로 옮기지 않고</b>
+    원시 CSV 에서 이쪽 산술로 다시 계산해 같은지 본다. 여섯 축 전부 그 대조를
+    마쳤다.</p>
+
+  <div class="pg-tablewrap">
+    <table class="pg-table">
+      <thead><tr><th>축</th><th>흔든 것</th><th>최대 전압 차</th><th>판정 (기준 1 mV)</th></tr></thead>
+      <tbody>
+        <tr><td>물리 메시</td><td>300/40 → 600/40</td><td>1.1e-11 V</td><td>충족</td></tr>
+        <tr><td>입자 반경</td><td>40 → 80</td><td>2.505 mV @0.04 s</td><td><b>초과</b></td></tr>
+        <tr><td>입자 반경</td><td>80 → 160</td><td>1.248218114 mV @0.01 s</td><td><b>초과</b></td></tr>
+        <tr><td>입자 반경</td><td>160 → 320</td><td>0.6170341087208 mV @0.002 s</td><td>충족</td></tr>
+        <tr><td>초기 시간상한</td><td>160H0500 → 160H0250</td><td>0.002175461073 mV @0.005 s</td><td>충족</td></tr>
+        <tr><td>초기 시간상한</td><td>320H0250 → 320H0125</td><td>0.0012699200233 mV @0.002 s</td><td>충족</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="pipe-p"><b>여기서 읽히는 것 하나.</b> 물리축은 일찌감치 수렴했고
+    <b>반경축이 원인</b>이었다 — 시간상한을 반으로 줄여도 반경 차이가 그대로
+    남는 것을 따로 확인해 그 둘을 분리했다. <b>여기서 읽으면 안 되는 것 하나.</b>
+    위 값들은 서로 <b>다른 시각</b>의 최대값이라 <b>수열이 아니다</b> — 비를 내어
+    수렴 차수로 읽지 않는다.</p>
+
+  <p class="pipe-p"><b>증거 보존.</b> 건너온 묶음 일곱 개를 <b>bytes 그대로</b>
+    저장하고 각 항목의 sha256 을 옆의 manifest 와 대조했다. 줄끝 정규화로 bytes 가
+    갈리는 사고를 한 번 겪고(그리고 되돌리고) <code class="mono">.gitattributes</code>
+    규칙을 묶음마다 <b>먼저</b> 넣는 순서로 바꿨다.</p>
+
+  <p class="pipe-note"><b>이 갈래는 아직 "모델 검증 완료" 가 아니다.</b> 여섯 축의
+    <b>이번 표본 민감도</b>가 기준을 만족했다는 것이고, 전체 수렴 · 0.1 s 이후 시간
+    정확도 · 참값 오차 · 장시간 운전 GO 는 <b>전부 미입증</b>이다. 4.25 V CV 가
+    양극 OCP 표 하한과 충돌하는 문제도 그대로다. 전해질 양수는 <b>후처리 검사</b>이고
+    실시간 중단은 미구현이다.</p>
+</section>
+
+<!-- ══ 5 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">5</span> 아직 아닌 것 — 경고를 떼지 않는다</h2>
+
+  <p class="pipe-p">위 넷을 읽고 나갈 때 <b>같이 가져가야 하는 문장들</b>이다.
+    떼면 다른 주장이 된다.</p>
+
+  <div class="pipe-two">
+    <div class="pipe-card pc-b">
+      <span class="pc-tag">① COMSOL</span>
+      <h3>본 실행 보류</h3>
+      <p>전체 메시·시간 수렴 미완. 원본/실험 OCP·물성 출처 대조 미완. 전체
+        프로토콜 · 12 h 휴지 · 유한 누설 · sweep 미실행. <b>"본 실행 GO" 는 이
+        저장소 어디에도 없다.</b></p>
+    </div>
+    <div class="pipe-card pc-b">
+      <span class="pc-tag">② 하네스</span>
+      <h3>열린 조건이 남아 있다</h3>
+      <p>동적 인증과 다섯 축을 포함한 리뷰 조건, 기록용 CLI 인자 필수화,
+        <code class="mono">openpyxl</code> 을 환경 축에 넣는 문제 등. GO 는
+        <b>그 라운드의 범위</b>에만 걸린다.</p>
+    </div>
+    <div class="pipe-card pc-b">
+      <span class="pc-tag">③ 정량화</span>
+      <h3>LAM 은 점추정으로 못 낸다</h3>
+      <p>데이터 한 세트 · 사이클 몇 개 · optimizer 한 종류다. 그리고 pyDMA 참조값은
+        <b>우리가 pyDMA 를 직접 돌린 것이 아니라</b> 검증 스크립트에 적힌 기록이다.</p>
+    </div>
+    <div class="pipe-card pc-b">
+      <span class="pc-tag">전 갈래</span>
+      <h3>원자료는 이 저장소에 없다</h3>
+      <p>규진팀 원자료(xlsx) · <code class="mono">.mph</code> · MATLAB 원본은
+        <b>공개 저장소에 커밋하지 않는다.</b> 화면과 문서에는 <b>결론만</b> 있고,
+        재현하려면 원자료를 가진 기계가 필요하다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">6</span> 원문은 어디에</h2>
+
+  <p class="pipe-p">이 화면은 사본이다. 아래가 정본이고, 인용은 이쪽에서 한다.
+    (이 앱은 <code class="mono">wiki/</code> 와
+    <code class="mono">degradation-degeneracy/</code> 계열만 서빙하므로 아래 경로는
+    <b>링크가 아니라 파일 위치</b>다.)</p>
+
+  <div class="pg-tablewrap">
+    <table class="pg-table">
+      <thead><tr><th>무엇</th><th>어디</th></tr></thead>
+      <tbody>
+        <tr><td>세 갈래 현재 상태 · 재개 runbook</td><td><code class="mono">bms-balancing/WORKING_STATE.md</code></td></tr>
+        <tr><td>③ 정량화 — 전 라운드 원장 (pyDMA 검증 포함)</td><td><code class="mono">bms-balancing/reviews/BML_R1_RESPONSE.md</code></td></tr>
+        <tr><td>① COMSOL 재구축 명세 · 진단 §8~§15</td><td><code class="mono">bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code></td></tr>
+        <tr><td>① 건너온 묶음 원문 (bytes 보존 + 대조 기록)</td><td><code class="mono">bms-balancing/reviews/r14_repros/codex63/</code></td></tr>
+        <tr><td>② 게이트 리뷰 R13 · R14 요청·회신 원문</td><td><code class="mono">bms-balancing/reviews/</code></td></tr>
+        <tr><td>산출 자체 (정본 수치)</td><td>산출 <code class="mono">.csv</code> + 나란한 <code class="mono">.meta.json</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="pipe-note"><b>이 화면을 고칠 때.</b> 숫자를 여기서 새로 만들지 않는다.
+    원문이 바뀌면 원문을 먼저 고치고 <b>그 다음에</b> 이 사본을 맞춘다. 순서를
+    뒤집으면 화면이 정본 행세를 하게 된다 (하드룰 4).</p>
+</section>
+{% endblock %}

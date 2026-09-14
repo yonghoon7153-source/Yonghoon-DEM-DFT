@@ -55,12 +55,13 @@
     <kbd class="kbd" id="cmdkhint">⌘K</kbd>
   </button>
 
-  {# 방향 — 위키보다 **위**에 둔다. 이 화면은 "무엇을 알고 있나" 가 아니라
-     "다음에 무엇을 할 것인가" 이고, 지금 이 저장소에서 가장 앞에 놓고
-     고민해야 하는 자리다 (2026-09-09 BMS 논의). #}
-  <div class="nav-section" id="nav-dir">방향</div>
+  {# BMS 트랙 — 위키보다 **위**에 둔다. 2026-09-14 에 이 자리의 물음이 바뀌었다:
+     "다음에 무엇을 할 것인가"(옛 `/handover`, BMS 협업 방향)가 끝나고
+     **"무엇이 닫혔고 무엇이 안 닫혔는가"** 가 들어왔다. 여전히 이 저장소에서
+     가장 앞에 놓고 봐야 하는 자리라 위치는 그대로 둔다. #}
+  <div class="nav-section" id="nav-dir">BMS 트랙</div>
   <ul class="nav-links" aria-labelledby="nav-dir">
-    <li><a href="/handover"{% if active=='handover' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-compass"></use></svg>BMS 협업 방향<span class="nav-tag">지금 최우선</span></a></li>
+    <li><a href="/bms"{% if active=='bms' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-compass"></use></svg>지금까지 이룬 것<span class="nav-tag">세 갈래</span></a></li>
   </ul>
 
   <div class="nav-section" id="nav-wiki">위키</div>
