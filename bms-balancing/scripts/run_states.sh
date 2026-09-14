@@ -338,9 +338,13 @@ for st in $STATES; do
       || fail=$((fail+1))
 done
 
+# ⚠ U18-01 (2026-09-13 실측): 전 판은 `--source "${SHAPE_SRC:-${SRC:-GITT}}"` 였다 — `SRC` 는 위 loop 의 **상태별** 변수라
+#   마지막 상태의 소스가 새어 들어갔고, STATES 끝이 `300_0147`(step_005C 전용)이면 shape 가 `ne_shape_step_005C_Li.csv`
+#   로 게시됐다 (정본은 `ne_shape_GITT_Li.csv`). shape 소스는 loop 와 무관하다: SHAPE_SRC 아니면 GITT (회귀 `test_g27`).
+SHAPE_SRC="${SHAPE_SRC:-GITT}"
 shape_rc=0
 shape_step "$OUT" env PYTHONUNBUFFERED=1 python3 scripts/ne_shape.py \
-  --out-dir "$OUT" --write "$OUT" --source "${SHAPE_SRC:-${SRC:-GITT}}" --si-source "$SI" \
+  --out-dir "$OUT" --write "$OUT" --source "$SHAPE_SRC" --si-source "$SI" \
   > "$OUT/ne_shape.log" 2>&1 || shape_rc=$?
 partial=0
 case "$shape_rc" in
@@ -359,7 +363,7 @@ elif [ "$fail" -eq 0 ]; then
 else
   say '실패 %d 건 — 위의 .log 를 볼 것\n' "$fail"
 fi
-say "설정: STATES='%s' STARTS=%s SI=%s\n" "$STATES" "$STARTS" "$SI"
+say "설정: STATES='%s' STARTS=%s SI=%s SHAPE_SRC=%s\n" "$STATES" "$STARTS" "$SI" "$SHAPE_SRC"
 say "반쪽전지 소스:%s\n" "$USED"
 say "⚠ 소스가 섞였으면 그 상태끼리는 직접 비교하지 말 것 (축이 다르다)\n"
 exit $(( fail > 0 ? 1 : (${partial:-0} > 0 ? 3 : 0) ))   # 부분은 성공으로 세탁하지 않는다 (Codex R11 P2-2)

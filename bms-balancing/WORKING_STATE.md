@@ -56,8 +56,8 @@ bytecode 만 막았고(C08·C09), `rc 0` 인데 승격 불가인 상태를 런�
 
 | 트랙 | 판정 | 지금 상태 |
 |---|---|---|
-| ① mph 마이크로 쇼츠 | NO-GO ×2 (v1·v2) → **6.3 재구축 제한 검증 '뒷받침됨'** (Codex 독립 검토 2026-09-13, 원문 `reviews/r14_repros/codex63/`) | **문서 v3: M1 철회** (`cEeqref_mat = from_mat` — 값 칸의 사용자 식은 선택되지 않았다; `MPH_R1_RESPONSE.md` §6). 재구축은 §0-a 대로 — §5 검산값 `x_NCM 0.924064`·`x_Gr 0.0117207` 이 독립 산술로 재현됐고 초기 OCV 2.1653 V 는 MCMB 표 가파른 구간(오류 아님). **전체 프로토콜은 보류**: 4.25 V CV 가 양극 OCP 표 하한(x=0.2229 → 평형 4.1856 V)과 충돌 → OCP 범위 중단조건·phase 별 cutoff·시간간격·mesh 비교 (`docs/COMSOL_REBUILD_SPEC.md` §8). **현지 사전 진단 (§9, 2026-09-13 밤)**: 초기 Eeq 3.578387/1.413053 V (차 2.165333 V, 보정 안 함) · 표 내부 평형 OCV 상한 4.185562 V · 표면 조성 표 이탈을 실제 감지해 `INCOMPLETE_RANGE_STOP` 으로 보존 · 2.7 V cutoff 가 첫 충전 안 막음 · 축소 조건 CC→CV→휴지→방전 전이 확인(eventtol 1e-6, 2 s → 2.000002 s). **미완**: 메시 수렴(150/20→300/40 최대 2.041557 mV > 1 mV) · 저전류 CV 완료 · 전해질 양수 검사는 후처리뿐 · 원본/실험 OCP·물성 출처 대조 · 전체 프로토콜·유한 누설·sweep. **전체 운전 보류 유지 — GO 아님**. 원문 `PREFLIGHT_RESULTS_KO.md`·`NEXT_RUN_PLAN.md` 는 `reviews/r14_repros/codex63/preflight/` 에 보존 (둘 다 원문 — 후자는 sha 일치, 전자는 원본이 CRLF 라 LF 정규화 사본이고 CRLF 로 되돌리면 manifest sha 와 일치). **메시 축별 진단 (§10, ZIP `96321b94…` 미첨부·전달 요약 기준)**: 반경축 300/40→300/80 최대 2.505 mV @0.04 s (1 mV 초과, 거의 전부 Eeq 항) · 물리축 300/40→600/40 1.1e-11 V (충족) · 두 실행의 내부 step 이 달라(0.005/0.002 s) 시간 효과와 미분리 → 다음은 제안 A(300/40·300/80 × 초기 최대 step 0.001·0.0005 s, 4 회; 600/80 보류). 보존 증거 미결 1 (이전 ZIP 포장본 식별 불일치 46,999,470 B/`3bc4e4e4…` vs 47,006,147 B/`097d4b65…`, 내부 330 개 명세는 일치 — 변조 단정도 전수 검증 완료도 아님). **전체 메시 수렴 미완 · 본 실행 보류** |
-| ② R13 하네스 | NO-GO (P1 4 · P2 5) | **P1-1~P2-5 · §5 Q6 전부 닫음** (262 passed). 남은 것: 실데이터로 shape 재생성(사용자 기계, 아래 U18 4 단계) · 단일 회신 `reviews/R13_RESPONSE.md` |
+| ① mph 마이크로 쇼츠 | NO-GO ×2 (v1·v2) → **6.3 재구축 제한 검증 '뒷받침됨'** (Codex 독립 검토 2026-09-13, 원문 `reviews/r14_repros/codex63/`) | **문서 v3: M1 철회** (`cEeqref_mat = from_mat` — 값 칸의 사용자 식은 선택되지 않았다; `MPH_R1_RESPONSE.md` §6). 재구축은 §0-a 대로 — §5 검산값 `x_NCM 0.924064`·`x_Gr 0.0117207` 이 독립 산술로 재현됐고 초기 OCV 2.1653 V 는 MCMB 표 가파른 구간(오류 아님). **전체 프로토콜은 보류**: 4.25 V CV 가 양극 OCP 표 하한(x=0.2229 → 평형 4.1856 V)과 충돌 → OCP 범위 중단조건·phase 별 cutoff·시간간격·mesh 비교 (`docs/COMSOL_REBUILD_SPEC.md` §8). **현지 사전 진단 (§9, 2026-09-13 밤)**: 초기 Eeq 3.578387/1.413053 V (차 2.165333 V, 보정 안 함) · 표 내부 평형 OCV 상한 4.185562 V · 표면 조성 표 이탈을 실제 감지해 `INCOMPLETE_RANGE_STOP` 으로 보존 · 2.7 V cutoff 가 첫 충전 안 막음 · 축소 조건 CC→CV→휴지→방전 전이 확인(eventtol 1e-6, 2 s → 2.000002 s). **미완**: 메시 수렴(150/20→300/40 최대 2.041557 mV > 1 mV) · 저전류 CV 완료 · 전해질 양수 검사는 후처리뿐 · 원본/실험 OCP·물성 출처 대조 · 전체 프로토콜·유한 누설·sweep. **전체 운전 보류 유지 — GO 아님**. 원문 `PREFLIGHT_RESULTS_KO.md`·`NEXT_RUN_PLAN.md` 는 `reviews/r14_repros/codex63/preflight/` 에 보존 (둘 다 원문 — 후자는 sha 일치, 전자는 원본이 CRLF 라 LF 정규화 사본이고 CRLF 로 되돌리면 manifest sha 와 일치). **메시 축별 진단 (§10, ZIP `96321b94…` 미첨부·전달 요약 기준)**: 반경축 300/40→300/80 최대 2.505 mV @0.04 s (1 mV 초과, 거의 전부 Eeq 항) · 물리축 300/40→600/40 1.1e-11 V (충족) · 두 실행의 내부 step 이 달라(0.005/0.002 s) 시간 효과와 미분리 → 다음은 제안 A(300/40·300/80 × 초기 최대 step 0.001·0.0005 s, 4 회; 600/80 보류). 보존 증거 미결 1 (이전 ZIP 포장본 식별 불일치 46,999,470 B/`3bc4e4e4…` vs 47,006,147 B/`097d4b65…`, 내부 330 개 명세는 일치 — 변조 단정도 전수 검증 완료도 아님). **전체 메시 수렴 미완 · 본 실행 보류**. 2026-09-14: ZIP 은 사용자 WSL 에 풀렸다(`~/mesh_axes/`, 명세 139 항목 · 비교 CSV 187/107 행 = 전달 요약과 일치) — 터미널 붙여넣기로는 넘치므로 원문 묶음(md·json·csv; mph·console.log·axes_profile·java 제외)을 `reviews/r14_repros/codex63/mesh_axes/` 로 **사용자가 커밋**해 받기로 (`.gitattributes` `-text` 로 bytes 보존, `package_manifest.json` 의 sha256 과 여기서 대조) |
+| ② R13 하네스 | NO-GO (P1 4 · P2 5) | **P1-1~P2-5 · §5 Q6 전부 닫음** (262 passed). **U18 본 실행 끝남** (사용자 기계 2026-09-13 20:02–22:39, 13/13, STARTS=24, 소스 100·200·300_0009=GITT · 300_0147=step_005C). 드러난 것 **U18-01**: shape 가 `ne_shape_step_005C_Li.csv` 로 게시됨 — wrapper 의 `${SRC:-GITT}` 가 마지막 상태의 loop 변수를 새게 했다 (회귀 `test_g27`, 고침). 남은 것: shape 만 GITT 로 다시 (아래 2b) → 3 단계 대조 → 4 단계 승격 · 단일 회신 `reviews/R13_RESPONSE.md` 조건 7 갱신 |
 | ③ BML α·β 난간 | NO-GO (B1~B5 전부 미증명/반박) | **주장 사슬 전부 철회** → 원인은 `rng(0)` 오염(§9) → **우리가 다시 뽑는다** (전권, `BML_R1_RESPONSE.md` §10): (a) `matlab/fit_cycles_driver.m` · (b) `scripts/fit_cycles.py` · 난간 `scripts/check_rails.py` (받은 xlsx 4 개에서 §6 재현). **닫힘 (§11)**: 같은 입력(HD_knee)에서 규진팀 표만 반복 패턴, 그들 파이프라인 rng 없이(a)·우리 포팅(b) 둘 다 경고 0 이고 서로 ~1e-3 (= scale 표본 크기) 안에서 일치 · 시작점 의존 1e-7. 원인 = `rng(0)` 오염 확정. 받은 L_* 표 4 개는 근거로 쓰지 않는다 |
 
 **세 라운드 공통 교훈**: 정정이 또 다른 단정이 됐다. "세 모드 붕괴" 를 고치며 "LLI 는 독립"
@@ -329,7 +329,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 274 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 275 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh
@@ -340,6 +340,17 @@ rm -rf out_u14_smoke
 # ── 2. 본 실행 — 정본을 덮지 않고 **다른 디렉터리로** 받는다 (몇 시간) ────────────────────────────
 #    정본(out/)을 먼저 덮으면 "숫자가 움직였나" 를 댈 대상이 사라진다. 네 상태 × 세 명령 = 12 회.
 OUT=out_u14 STATES='100 200 300_0009 300_0147' ./scripts/run_states.sh 2>&1 | tee out_u14.log
+
+# ── 2b. U18-01 뒷수습 (2026-09-13 본 실행에서 드러남) — shape 소스가 마지막 상태의 것으로 샜다 ────────────
+#    실측: 13 산출 중 shape 가 `ne_shape_step_005C_Li.csv` (정본은 `ne_shape_GITT_Li.csv`). 원인은 wrapper 의
+#    `--source "${SHAPE_SRC:-${SRC:-GITT}}"` — loop 변수 `SRC` 가 300_0147 의 step_005C 로 남아 있었다. 고침(SHAPE_SRC 아니면
+#    GITT, 요약 줄에 찍음; 회귀 `test_g27` 은 production 스크립트를 통째로 돌린다). shape 만 다시 만든다 — producer 가 자기
+#    sidecar 를 스스로 쓰므로(`sidecar_dict`) 직접 불러도 wrapper 를 거친 것과 같은 산출이다. 잘못 만든 것은 지우지 않고
+#    옆으로 치운다 (check_u14 는 하위 디렉터리를 안 본다 → 승격 대상에서만 빠진다).
+git pull --rebase origin claude/bms-alpha-beta-verify
+mkdir -p out_u18/wrong_source && mv out_u18/ne_shape_step_005C_Li.csv out_u18/ne_shape_step_005C_Li.csv.meta.json out_u18/wrong_source/
+python3 scripts/ne_shape.py --out-dir out_u18 --write out_u18 --source GITT --si-source Li 2>&1 | tee out_u18/ne_shape_GITT.log | tail -3
+python3 scripts/check_u14.py --new out_u18 --schema-only | tail -1      # 계약 위반 0 이어야 한다
 
 # ── 3. 대조 — 새 스키마 + 정본과 같은 숫자인가 ───────────────────────────────────────────────────
 python3 scripts/check_u14.py --new out_u18 --old out   # 0 = 승격 가능 · 1 = 숫자가 다름 · 2 = 계약 위반 · 3 = 부분 · 4 = 승격 불가

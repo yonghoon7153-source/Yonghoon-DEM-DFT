@@ -17,3 +17,8 @@
 #   가 정확히 그 bytes 를 서명하고 러너가 매번 대조한다. git 이 줄끝을 정규화하면 fresh clone 에서 digest 가
 #   깨진다 (실측: R11 패키지의 `r11_data_contract_results.json` 은 CRLF 로 왔다). 그래서 여기만 변환을 끈다.
 reviews/*/codex/** -text
+
+# ⚠ 2026-09-14: 6.3 재구축 handoff 원문(`reviews/r14_repros/codex63/mesh_axes/`)도 **bytes 그대로** — 옆의
+#   `package_manifest.json` 이 항목별 sha256 을 갖고 있어 그것과 대조한다. preflight 사본은 이 규칙이 없어 CRLF→LF 로
+#   저장됐다 (`reviews/r14_repros/codex63/preflight/README.md` 가 그 차이를 적는다).
+reviews/r14_repros/codex63/mesh_axes/** -text

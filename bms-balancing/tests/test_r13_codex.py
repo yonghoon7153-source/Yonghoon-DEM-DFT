@@ -727,3 +727,51 @@ def test_g26_write_meta_refuses_an_unregistered_artifact_name(tmp_path):
     assert r.returncode == 0, r.stderr[-600:]
     meta = json.loads((root / "out" / "matrix_100.csv.meta.json").read_text(encoding="utf-8"))
     assert meta["roster"] == {"kind": "matrix", "rows": 1}, meta["roster"]
+
+
+def test_g27_wrapper_shape_source_is_not_the_last_state_s_loop_variable(tmp_path):
+    """[U18-01, 2026-09-13 실측] `STATES='100 200 300_0009 300_0147'` 본 실행(사용자 기계)이 shape 를
+    **`ne_shape_step_005C_Li.csv`** 로 게시했다 — 정본은 `ne_shape_GITT_Li.csv` 다. main 의 호출이
+    `--source "${SHAPE_SRC:-${SRC:-GITT}}"` 라서 loop 의 상태별 변수 `SRC` 가 **마지막 상태의 소스**(300_0147 은 step_005C
+    전용)로 남아 새어 들어갔다. g25 는 `shape_step` 을 `--source GITT` 로 직접 불러 이 줄을 지나지 않았다.
+
+    회귀는 production 스크립트를 **통째로** 돈다 — 적합 세 명령은 PATH shim 이 즉시 실패시키고(rc 7),
+    `scripts/ne_shape.py` 호출은 argv 만 적는다. shape 소스는 SHAPE_SRC 없이는 GITT, 있으면 그것이고 요약 줄이 찍는다."""
+    import os, subprocess
+    repo = pathlib.Path(__file__).resolve().parents[1]
+    root = tmp_path / "root"
+    (root / "data/half_cell/GITT").mkdir(parents=True); (root / "data/half_cell/step_005C").mkdir(parents=True)
+    (root / "data/half_cell/GITT/100.xlsx").write_bytes(b"")                  # 100 은 GITT 만
+    (root / "data/half_cell/step_005C/300_0147_005C.xlsx").write_bytes(b"")   # 300_0147 은 step_005C 만 → pick_src 가 그리 고른다
+    shim = tmp_path / "shim"; shim.mkdir()
+    argv_out = tmp_path / "ne_shape_argv.txt"
+    (shim / "python3").write_text(
+        "#!/usr/bin/env bash\n"
+        'for a in "$@"; do case "$a" in\n'
+        "  bms_balancing.verify) exit 7 ;;\n"
+        '  scripts/ne_shape.py) printf \'%s\\n\' "$@" > "$G27_ARGV"; echo "SHAPE_RESULT {}"; exit 1 ;;\n'
+        "esac; done\n"
+        'exec "$G27_REAL" "$@"\n', encoding="utf-8")
+    (shim / "python3").chmod(0o755)
+
+    def run(extra):
+        env = dict(os.environ, BMS_DATA_ROOT=str(root), STATES="100 300_0147", STARTS="1", SI="Li",
+                   OUT=str(tmp_path / "out"), G27_ARGV=str(argv_out), G27_REAL=sys.executable,
+                   PATH=str(shim) + os.pathsep + str(pathlib.Path(sys.executable).parent) + os.pathsep
+                        + os.environ.get("PATH", ""))
+        env.pop("SHAPE_SRC", None); env.pop("SRC", None); env.update(extra)
+        if argv_out.exists():
+            argv_out.unlink()
+        p = subprocess.run(["bash", str(repo / "scripts/run_states.sh")], cwd=repo, env=env,
+                           capture_output=True, text=True, encoding="utf-8", timeout=600)
+        text = p.stdout + p.stderr
+        assert argv_out.exists(), text[-2500:]
+        argv = argv_out.read_text(encoding="utf-8").splitlines()
+        return argv[argv.index("--source") + 1], text
+
+    src, text = run({})
+    assert "100=GITT" in text and "300_0147=step_005C" in text, text[-1500:]   # 섞인 실행이 맞다
+    assert src == "GITT", f"shape 소스가 마지막 상태의 loop 변수를 따랐다: {src!r}"
+    assert "SHAPE_SRC=GITT" in text, text[-800:]                                # 요약 줄이 shape 소스를 찍는다
+    src, text = run({"SHAPE_SRC": "step_005C"})                                  # 명시 override 는 그대로 따른다
+    assert src == "step_005C" and "SHAPE_SRC=step_005C" in text, (src, text[-800:])
