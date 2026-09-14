@@ -643,9 +643,13 @@ def test_f26_the_shape_reader_reports_a_rejected_matrix_as_a_missing_pair(tmp_pa
     ns = _mod_ne_shape()
     src = (ROOT / "scripts/ne_shape.py").read_text(encoding="utf-8")
     assert "fitted_pair_info" in src
-    # 실제 정본에서 reader 를 부르면 거부된다 (그것이 이 발견의 전제다)
+    # 옛 스키마 묶음에서 reader 를 부르면 거부된다 (그것이 이 발견의 전제다).
+    # ⚠ U18b 승격(2026-09-14): 그 표본은 이제 정본이 아니라 **얼려 둔 archive** 다 — `out/matrix_*.csv` 는 새 계약이라
+    #   거부되지 않는다. 살아 있는 파이프라인 경로에 표본을 두면 재실행 한 번에 전제가 사라진다 (U14-05 와 같은 축).
+    legacy = ROOT / "out" / "archive" / "legacy_r6_u14"
+    assert (legacy / "matrix_100.csv").is_file(), "옛 스키마 표본이 사라졌다 (조건 7 의 보존 대상)"
     with pytest.raises(RuntimeError, match="공용 스키마 검증 실패"):
-        ns.fitted_pair_info(ROOT / "out", "100", "GITT", "Li")
+        ns.fitted_pair_info(legacy, "100", "GITT", "Li")
     # 그러나 그 예외가 main 밖으로 새지 않고 이유가 남아야 한다
     caller = src[src.index("def main("):]
     assert "fitted_pair_info" in caller and "except RuntimeError" in caller, \

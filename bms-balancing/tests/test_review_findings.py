@@ -1262,7 +1262,12 @@ def test_ne_shape_artifact_uses_lf_and_provenance_helper(tmp_path):
 
 #: `ne_shape` CSV 에서 **숫자가 아닌** 열 — 값 대신 문자열로 둔다.
 #: `gamma_witness` 는 '없음' 이 들어가고(R3-03), `run_id` 는 R6 내부 F02 가 붙인 provenance 다.
-NE_SHAPE_TEXT_COLS = ("gamma_witness", "run_id")
+# ⚠ U18b 승격(2026-09-14): 정본 `out/ne_shape_GITT_Li.csv` 가 새 계약(22 열)으로 바뀌자 이 tuple 이 모르는
+#   `inputs_sha`·`consumed_inputs` 를 float() 로 읽어 세 테스트가 ValueError 로 깨졌다 — i6w_07 이 2026-09-12 에
+#   경고한 바로 그 고장이다 (그때는 커밋된 산출이 옛 스키마라 합성 파일로만 걸렸다). 목록을 손으로 들고 있지
+#   말고 **schema 정본에서 유도**한다: 열이 또 늘어도 helper 는 안 깨진다.
+from bms_balancing import schema as _S_shape                          # noqa: E402
+NE_SHAPE_TEXT_COLS = ("gamma_witness",) + tuple(c for c in _S_shape.SHAPE_NON_NUMERIC if c != "state")
 
 
 def _ne_shape_csv(path=None):

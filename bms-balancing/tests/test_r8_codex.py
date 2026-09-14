@@ -141,9 +141,15 @@ def test_d8_02_check_u14_consumes_only_the_verified_unit_and_requires_the_proven
     verify.atomic_write_csv(m, stripped, list(stripped[0])); _sign(m, "r8-m", "100", full=True)
     rc, out, _ = _cli("check_u14.py", "--new", new, "--schema-only")
     assert rc == 2 and "ref_inputs_sha" in out, (rc, out)
-    # 현행 정본 out/ 은 그 열이 없다 — 도구가 그것을 **말해야** 한다 (조용히 "전부 갖췄다" 가 아니라)
-    rc, out, _ = _cli("check_u14.py", "--new", ROOT / "out", "--schema-only")
+    # 옛 스키마 묶음에는 그 열이 없다 — 도구가 그것을 **말해야** 한다 (조용히 "전부 갖췄다" 가 아니라).
+    # ⚠ U18b 승격(2026-09-14): 표본은 `out/` 이 아니라 `out/archive/legacy_r6_u14/` 다. 승격 뒤 정본은 rc 0 이고
+    #   (그것이 승격의 뜻이다), 옛 묶음은 조건 7 대로 얼려 보존됐다 — blocked_by 40·25·6·1 이 그대로 재현된다.
+    legacy = ROOT / "out" / "archive" / "legacy_r6_u14"
+    rc, out, _ = _cli("check_u14.py", "--new", legacy, "--schema-only")
     assert rc == 2 and "ref_inputs_sha" in out and ("출처" in out or "provenance" in out), (rc, out[-800:])
+    # 그리고 **현행 정본은 통과한다** — 이 검사가 "늘 rc 2" 를 재는 것이 아님을 같이 고정한다
+    rc, out, _ = _cli("check_u14.py", "--new", ROOT / "out", "--schema-only")
+    assert rc == 0, (rc, out[-800:])
 
 
 # ── R8-03 ────────────────────────────────────────────────────────────────────────────────────
