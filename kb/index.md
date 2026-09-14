@@ -7,10 +7,10 @@
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 220건)
-- 2026-09-14 · `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나 · 발송대기
+- 2026-09-14 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-09-14 · `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나 · 발송됨
 - 2026-09-14 · `kb/reports/weekly_2026_09_14.md` — 주간 정리 2026-09-07 ~ 09-13 (주간보고 초안) · 완료 (2026-09-14 · 다음 주 문서는 새 파일)
 - 2026-09-13 · `kb/methodology/silent_wrong_path_2026_09_13.md` — 조용히 틀린 경로 — 하루에 여섯 번 나온 한 부류 · 채택
-- 2026-09-13 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-13 · `kb/reviews/codex_BP_prompt_static_pair_result_2026_09_13.md` — 회신 BP 요청 — 정적대조 2 SCF 실행 결과 (BO 조건 1 이행) · 파일럿 보고량 재질의 · 발송대기
 - 2026-09-13 · `kb/reviews/codex_BP_reply_static_pair_result_2026_09_13.md` — 회신 BP 접수 — 조건 1 이행 인정 · 파일럿 조건부 GO (셀 정책 구현 불일치로 즉시 실행 승인은 아님) · 접수
 - 2026-09-13 · `kb/reviews/codex_BQ2_reply_fix_verification_2026_09_13.md` — 회신 BQ-2 — 수정본 검증 (NO-GO) · 회신됨-NO-GO
@@ -209,7 +209,7 @@
 
 ## reviews/ (140)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
-- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-13 · 자동생성)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-14 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
 - `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
@@ -282,7 +282,7 @@
 - `kb/reviews/codex_BQ7_prompt_eprime_v52_2026_09_13.md` — 회신 BQ-7 프롬프트 — 카드 v5.2: ② 를 도구 실검사와 맞췄다 (aggregation_eligible)  (2026-09-13 · 발송 대기)
 - `kb/reviews/codex_BQ_prompt_eos_v0_disordered_2026_09_13.md` — 회신 BQ — 무질서 초격자에서 **per-구조 EOS V₀ 가 성립하는가** (§4b 차단)
 - `kb/reviews/codex_BQ_reply_eos_v0_disordered_2026_09_13.md` — 회신 BQ — 예비 판정 (원문)
-- `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나  (2026-09-14 · 발송대기)
+- `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나  (2026-09-14 · 발송됨)
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서)  (2026-08-20 · 리뷰대기)
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)

@@ -3,7 +3,7 @@ title: "리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도
 date: 2026-09-14
 updated: 2026-09-14
 tags: [review, codex, li2s, layer1, estimand, density, gate, uma]
-status: 발송대기
+status: 발송됨
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -86,6 +86,9 @@ LPSCl 이 Li₂S 와 만나 생기는 **비정질 계면상 후보 구조군**. 
 - 셋 중 어느 것이 **판정에 들어갈 자격**이 있고, 어느 것이 진단으로만 남나?
 
 ### 질문 4. turbo 실행모드의 **응력** — 구멍인가
+
+> ⭕ **발송 직후 실측으로 닫혔다 (2026-09-14)**: 같은 구조에 turbo/기본 단일점을 각각 찍었더니
+> P(virial, 0 K) 가 **둘 다 −0.346 GPa** 였다. turbo 는 원인에서 빠진다. 아래 질문은 기록으로 남긴다.
 
 `db/properties/uma_turbo_equivalence_2026_09_11.json` 은 turbo 를 승인하면서 스스로 적었다:
 *"힘만 봤다 — 에너지·응력은 안 봤다."* 그리고 1층 melt-quench 를 "이 판정과 무관" 이라고

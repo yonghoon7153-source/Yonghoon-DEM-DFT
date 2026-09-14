@@ -91,7 +91,7 @@ evidenceScope: multi-source-primary
 | BQ6 | 2026-09-13 | `codex_BQ6_prompt_eprime_v51_2026_09_13.md` | `codex_BQ6_reply_eprime_v51_2026_09_13.md` | 회신됨-②미해제 | 같은 라벨 · 주제 토큰 일치 ['eprime', 'v51'] |
 | BQ7 | 2026-09-13 | `codex_BQ7_prompt_eprime_v52_2026_09_13.md` | — | 발송 대기 | — |
 | BQ | 2026-09-13 | `codex_BQ_prompt_eos_v0_disordered_2026_09_13.md` | `codex_BQ_reply_eos_v0_disordered_2026_09_13.md` | (frontmatter 없음) | 같은 라벨 · 주제 토큰 일치 ['disordered', 'eos', 'v0']; 판정 인용 16회 |
-| BR | 2026-09-14 | `codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` | — | 발송대기 | — |
+| BR | 2026-09-14 | `codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` | — | 발송됨 | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
