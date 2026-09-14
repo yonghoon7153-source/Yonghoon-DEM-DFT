@@ -331,7 +331,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 290 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 291 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh
@@ -385,6 +385,8 @@ OUT=out_u18b STATES='100 200 300_0009 300_0147' ./scripts/run_states.sh 2>&1 | t
 
 `reviews/R14_REQUEST.md` 는 **고치지 않는다** — 리뷰어가 sha256 `17995cfd…` 로 고정해 심사한 원본이다. 정정은 회신과
 현행 문서에 둔다.
+
+**종결 (`3aca090`, 2026-09-14): R14 GO** — P2-1·P2-2·P2-3 전부 종결 인정. 리뷰어가 인용한 tree `84a4bac041643fb4dd9b5885ffa57f3f83eaefd8` 를 우리 쪽에서 확인했고 일치한다. 근거: 관련 회귀 9 개 통과(빈값 100 조합 포함) · 현행 rc 0 · legacy rc 2(40·25·6·1) · 기존 산출 52 파일 불변. 리뷰어는 **286 전수를 재실행하지 않았다**고 밝혔고 Octave·동적 재생도 안 돌렸다. 이 GO 는 **R14 범위 한정** — 전체 하네스·BML 과학 타당성·COMSOL·장시간 실행 승인이 아니다. 패키지 원문은 `reviews/r14_repros/codex/closure_3aca090/`.
 
 **후속 확인 (`f21cb648`)**: P2-1·P2-3 **종결**, P2-2 는 공백값 하나 남았다 — `env.scipy` 가 `"   "`·`"\t\n"` 이어도 rc 0 이었다.
 우리 검사가 `in (None, "")` 이라 **"존재·비공백" 이 절반만** 구현됐고, degeneracy 본문 검사는 이미 strip 을 쓰고 있었으니

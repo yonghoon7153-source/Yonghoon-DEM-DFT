@@ -186,7 +186,8 @@ def build(root: Path, source: str, state: str, si_source: str,
 
 
 def multistart(obj: Objective, n_starts: int = 24, seed: int = 0,
-               x0: np.ndarray | None = None, require_success: bool = True):
+               x0: np.ndarray | None = None, require_success: bool = True,
+               lb=None, ub=None):
     """fmincon+MultiStart 대응 — L-BFGS-B 다중 시작.
 
     ⚠ 2026-09-10 리뷰 [A3]: 전 판은 `OptimizeResult.success` 를 보지 않아
@@ -195,13 +196,17 @@ def multistart(obj: Objective, n_starts: int = 24, seed: int = 0,
       기본으로 거른다. 거른 개수는 `multistart.last_stats` 와 stderr 에 남긴다
       — 조용히 버리면 그것대로 감사가 안 된다.
     """
+    # ⚠ 경계는 인자로 받는다 (기본은 원본 lb5/ub5). pyDMA Track C 대조처럼 γ 하한을 0.02 로 올리는 실행이 있고,
+    #   그때 **무작위 시작점도 같은 경계 안**에서 뽑혀야 한다 — 모듈 상수를 읽으면 시작점만 옛 경계를 쓴다.
+    lo = LB5 if lb is None else np.asarray(lb, dtype=float)
+    hi = UB5 if ub is None else np.asarray(ub, dtype=float)
     rng = np.random.default_rng(seed)
     starts = [np.asarray(x0, dtype=float)] if x0 is not None else []
-    starts += list(LB5 + rng.random((n_starts, 5)) * (UB5 - LB5))
+    starts += list(lo + rng.random((n_starts, 5)) * (hi - lo))
     best, best_val = None, np.inf
     all_sols = []
     stats = {"tried": 0, "raised": 0, "not_success": 0, "nonfinite": 0, "accepted": 0}
-    bounds = list(zip(LB5, UB5))
+    bounds = list(zip(lo, hi))
     for s in starts:
         stats["tried"] += 1
         try:

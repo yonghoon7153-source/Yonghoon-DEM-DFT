@@ -49,6 +49,9 @@ def main(argv=None) -> int:
     ap.add_argument("--seed", type=int, default=0, help="MultiStart 시작점 seed — 이것만 바꿔 두 번 돌리면 '시작점이 정한 적합인가' 를 묻는다")
     ap.add_argument("--scale-seed", type=int, default=0, help="목적함수 scale 표본 seed (R5-07) — 시작점 실험에서는 고정한다")
     ap.add_argument("--w-dqdv", type=float, default=0.0, help='dQ/dV 항 가중 (원본 기본 0 = "방법3")')
+    ap.add_argument("--gamma-prefit", action="store_true",
+                    help="γ 를 반쪽전지만으로 먼저 적합해 초기값으로 (fit_gamma_si.m · pyDMA Track C 규약)")
+    ap.add_argument("--gamma-lb", type=float, default=None, help="γ 하한 (기본 0.0; Track C 는 0.02)")
     ap.add_argument("--out", required=True, type=pathlib.Path, help="산출 디렉터리")
     ap.add_argument("--run-id", default=None)
     a = ap.parse_args(argv)
@@ -67,7 +70,8 @@ def main(argv=None) -> int:
     try:
         res = C.fit_cycles(root, a.half_cell, a.full_cell, a.si_source, cell=a.cell, cycles=cycles,
                            n_starts=a.starts, seed=a.seed, scale_seed=a.scale_seed, w_dqdv=a.w_dqdv, run_id=rid,
-                           literature=a.literature, log=lambda s: print(s, flush=True))
+                           literature=a.literature, gamma_prefit=a.gamma_prefit, gamma_lb=a.gamma_lb,
+                           log=lambda s: print(s, flush=True))
     except (ValueError, KeyError) as e:
         print(f"! {e} → 종료 코드 2"); return 2
     except RuntimeError as e:
@@ -82,6 +86,7 @@ def main(argv=None) -> int:
         meta = sidecar_dict(art.name, data, run_id=rid, started=started, argv=list(sys.argv), pv=pv, extra={
             "cell": a.cell, "si_source": a.si_source, "starts": int(a.starts), "seed": int(a.seed),
             "literature": (str(a.literature) if a.literature else None),
+            "gamma_prefit": bool(a.gamma_prefit), "gamma_lb": a.gamma_lb,
             "scale_seed": int(a.scale_seed),
             "w_dqdv": float(a.w_dqdv), "cycles": res["cycles"], "status": "complete",
             "data_root": str(root), "half_cell_path": str(a.half_cell), "full_cell_path": str(a.full_cell),

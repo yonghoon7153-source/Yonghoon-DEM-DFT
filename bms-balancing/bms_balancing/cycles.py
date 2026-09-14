@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 
 from . import data as D
-from .model import LB5, UB5, Blend, HalfCell, Objective, _extract, degradation_modes
+from .model import LB5, UB5, Blend, HalfCell, Objective, _extract, degradation_modes, fit_gamma_si
 from .schema import inputs_digest
 from .verify import active_bounds, multistart
 
@@ -52,7 +52,8 @@ def load_cycle(df: pd.DataFrame, cycle: int):
 
 def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=None,
                n_starts: int = 20, seed: int = 0, scale_seed: int = 0, w_dqdv: float = 0.0, run_id: str = "",
-               literature=None, log=None) -> dict:
+               literature=None, gamma_prefit: bool = False, gamma_lb: float | None = None,
+               log=None) -> dict:
     """사이클마다 적합 → {"rows": [CYCLES_ROW dict …], "consumed": 공통 receipt, "settings": 기록된 optimizer 설정}.
 
     입력 셋(기준 반쪽전지 · 풀셀 워크북 · 문헌 Si/Gr)은 한 번 읽은 bytes 로 파싱하고 그 bytes 를 해시한다.
@@ -88,7 +89,24 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=
     if 0 not in want:
         raise ValueError(f"cycle 0 (기준행) 이 없다 — 항등식의 분모가 없다 (있는 사이클: {have})")
     consumed = {"half_cell": hb.identity(), "full_cell": fb.identity(), "literature": lit_id}
-    settings = {"lb": [float(x) for x in LB5], "ub": [float(x) for x in UB5], "initial": list(INITIAL5),
+    # ⚠ γ 사전 적합 (pyDMA Track C 대조): 반쪽전지만으로 γ 를 먼저 적합해 초기값으로 쓴다 (`fit_gamma_si.m`).
+    #   하한도 함께 올릴 수 있다 (Track C 는 0.02). **둘 다 기록되는 실행 조건**이다 — 조용히 바뀌면 두 실행의
+    #   차이를 설정 탓인지 데이터 탓인지 가를 수 없다.
+    lb5 = np.asarray(LB5, dtype=float).copy()
+    initial5 = np.asarray(INITIAL5, dtype=float).copy()
+    gamma_init = None
+    if gamma_lb is not None:
+        lb5[4] = float(gamma_lb)
+    if gamma_prefit:
+        gf = fit_gamma_si(half.ne_capacity, half.ne_voltage, si_c, si_v, gr_c, gr_v,
+                          gamma_range=(float(lb5[4]), float(UB5[4])))
+        gamma_init = float(gf.gamma_Si_fit)
+        initial5[4] = gamma_init
+        say(f"  γ 사전 적합 (반쪽전지만): {gamma_init:.4f} · RMSE {gf.rmse:.6g}")
+    settings = {"lb": [float(x) for x in lb5], "ub": [float(x) for x in UB5],
+                "initial": [float(x) for x in initial5],
+                "gamma_prefit": bool(gamma_prefit), "gamma_init": gamma_init,
+                "gamma_lb": (float(gamma_lb) if gamma_lb is not None else None),
                 "free": ["a_PE", "b_PE", "a_NE", "b_NE", "gamma_Si"], "n_multistart": int(n_starts),
                 "seed": int(seed), "scale_seed": int(scale_seed), "w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": float(w_dqdv),
                 "optimizer": "L-BFGS-B (scipy)"}
@@ -97,7 +115,7 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=
         c, v = load_cycle(df, k)
         obj = Objective(half, blend, c, v, window=11, poly_order=3, w_pocv=1.0, w_dvdq=1.0, w_dqdv=w_dqdv,
                         use_peak_weight=True, scale_seed=scale_seed)
-        best, val, _ = multistart(obj, n_starts=n_starts, seed=seed, x0=np.asarray(INITIAL5, dtype=float))
+        best, val, _ = multistart(obj, n_starts=n_starts, seed=seed, x0=initial5, lb=lb5, ub=UB5)
         if best is None:
             raise RuntimeError(f"cycle {k}: 채택된 적합이 없다 ({multistart.last_stats})")
         fits[k] = (obj, np.asarray(best, dtype=float), float(val), dict(multistart.last_stats))

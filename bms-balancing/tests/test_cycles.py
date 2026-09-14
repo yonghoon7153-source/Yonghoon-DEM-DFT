@@ -256,3 +256,30 @@ def test_cy_09_fit_gamma_si_refuses_non_overlapping_voltage_windows():
     q = np.linspace(0.0, 1.0, 50)
     with pytest.raises(ValueError, match="겹치지"):
         M.fit_gamma_si(q, q * 0.1 + 2.0, q, q * 0.1, q, q * 0.1)
+
+
+def test_cy_10_gamma_prefit_and_lower_bound_are_recorded_controls(tmp_path):
+    """[pyDMA Track C 대조, 2026-09-14] Track C 는 γ 를 **반쪽전지만으로 먼저 적합**해 그 값을 초기값으로 쓰고
+    하한을 0.02 로 둔다. 우리 기본은 초기값 0.25 · 하한 0 이었다 — LAM 차이가 **설정 탓인지 식별 가능성 탓인지**
+    가르려면 그 축을 맞출 수 있어야 한다.
+
+    계약: 두 축은 **기록되는 실행 조건**이다. 조용히 바뀌면 두 실행의 차이를 무엇에 돌릴지 알 수 없다.
+    """
+    src = _synth_root(tmp_path)
+    wb = _cycle_workbook(src, tmp_path / "cyc.xlsx", n_cycles=2)
+    hc = src / "data/half_cell/GITT/pristine.xlsx"
+    base = dict(cell="pf", n_starts=2, seed=0, scale_seed=0)
+
+    off = C.fit_cycles(src, hc, wb, "Li", **base)
+    assert off["settings"]["gamma_prefit"] is False and off["settings"]["gamma_init"] is None
+    assert off["settings"]["initial"][4] == 0.25 and off["settings"]["lb"][4] == 0.0
+
+    on = C.fit_cycles(src, hc, wb, "Li", gamma_prefit=True, gamma_lb=0.02, **base)
+    s = on["settings"]
+    assert s["gamma_prefit"] is True and s["gamma_lb"] == 0.02
+    g = s["gamma_init"]
+    assert isinstance(g, float) and 0.02 <= g <= 0.5, s
+    assert s["initial"][4] == g, "사전 적합 γ 가 초기값이어야 한다"
+    assert s["lb"][4] == 0.02 and s["ub"][4] == 0.5, s
+    for r in on["rows"]:
+        assert r["gamma_Si"] >= 0.02 - 1e-12, (r["cycle"], r["gamma_Si"])
