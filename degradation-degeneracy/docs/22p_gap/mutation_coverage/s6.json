@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-14T20:04:04Z",
+  "at": "2026-09-14T21:00:33Z",
   "binding": {
     "execution": {
       "env": {
@@ -464,13 +464,13 @@
       }
     },
     "execution_digest": "d194be06fecb9ce90f8280861cdd74654edae1013f5ff3b38d9470bde8071ddd",
-    "expect_digest": "3883cfbbe07713271279fc7511546e42830f024e0ddd7c6d1ccfa972fa618fd0",
-    "head": "dbfbbf821afe6a6dffed21455590568f11392f8b",
+    "expect_digest": "729150dc9d89de22dc0aeb53f7b73121c5ddf319b246583989ca184c5028c67a",
+    "head": "1b4a837064a150ae7119dbb15bd42ada18f85cba",
     "registry_digest": "eb73be3be3e345c129325ab51c31127382bccab1a81d84079053adca4eeb2e03",
     "reports_dir": "s6",
-    "runner_digest": "6d70518256bcb1a890d73b927f5e94853da30f715cdbe18e935a2a22151c17a5",
-    "transcript_digest": "4380339a607195edf1655cf4c49bd53a7b074a3c934c455e1f25ff5d23ea01a0",
-    "tree_digest": "6f4a80b1c33dee92d1886a2348f55915446e85e7deb2482a4367b1cae34fc837"
+    "runner_digest": "c17436928b6f2a8301d8c32a02f0a64e9e0c70d782451e38222315040add948f",
+    "transcript_digest": "6fcd755506e7f437018eecf0c9b94792ae4a2059b6c3e09e9804d90cf5a57f4c",
+    "tree_digest": "b572d41b13304f22eba281f04cea070519919bd7e41393cba2d415641d909cae"
   },
   "scenarios": {
     "anchor-repair-holds-the-lifecycle-lock": {
@@ -478,7 +478,7 @@
       "class": "executable",
       "kexpr": "stale_anchor_repair_cannot_rewind_the_head",
       "ran": true,
-      "report_sha256": "3d6b6872ff84c9af31943cd19d08c1e73dfdbdacbe7f8ece4a73599ac6df6446",
+      "report_sha256": "7ca55d02703efde52be0780dcab05a8ae3a41b238c97d2ae4b4cae296b998c5b",
       "sites": 1
     },
     "canon-absorbs-the-pep701-empty-piece": {
@@ -486,7 +486,7 @@
       "class": "executable",
       "kexpr": "canonical_form_agrees_on_every_supported_interpreter",
       "ran": true,
-      "report_sha256": "bc85b105ebcb70a4df4a13d2f6863a7eb1a52a0d5572ac6a85da94c977bcbdca",
+      "report_sha256": "8027dfd7b8f120499ad398b6a3b73a4fbb0d4fdb4c18ba728f135502d14d0844",
       "sites": 1
     },
     "claim-write-is-all-or-nothing": {
@@ -494,7 +494,7 @@
       "class": "executable",
       "kexpr": "short_write_does_not_leave_a_truncated_claim",
       "ran": true,
-      "report_sha256": "b401908fa94714fa1cf9041888d30af28925ba763ed3170adbac063ce12d1581",
+      "report_sha256": "420954ede8cf8cae4614497f5f26b17a668f5aa23bbd5e2a28dbde3839e933ac",
       "sites": 1
     },
     "comprehensions-are-their-own-scope-g61": {
@@ -502,7 +502,7 @@
       "class": "executable",
       "kexpr": "the_analyzer_does_not_shadow_the_enclosing_scope or the_target_is_still_shadowed_inside_the_comprehension or the_outermost_iterable_is_evaluated_in_the_enclosing_scope",
       "ran": true,
-      "report_sha256": "a2ec435b7c005b7be5737388c7f1eb1d2b4e127b4d3218f8eef613033d40b4fd",
+      "report_sha256": "4fcb04dac702fff129cd410e0093449ae36c9cda53bf4ad2088c3f98e7f9ce40",
       "sites": 2
     },
     "decorators-are-import-time-effects-g58": {
@@ -510,7 +510,7 @@
       "class": "executable",
       "kexpr": "a_name_only_decorator_changes_the_identity_when_its_body_changes",
       "ran": true,
-      "report_sha256": "6fe09ead421eee4e68becdcfcfef705e4cb60220f25d25a7e541b98ff75043b3",
+      "report_sha256": "da259bf8ed659eba2f86b262642cf876489078b496cc9e4885c17095fc2ee544",
       "sites": 1
     },
     "exec-class-record-is-read-back-g59": {
@@ -518,7 +518,7 @@
       "class": "executable",
       "kexpr": "a_short_write_never_publishes_a_partial_record",
       "ran": true,
-      "report_sha256": "80b9aa7de6ada58e0a5b84522e71c2d2edd42aceb225babea585dd2383c0c107",
+      "report_sha256": "b5225ddcaa383398cbd44483c9a44712a58f0477376f548e474f3a08fbef52da",
       "sites": 1
     },
     "fit-axis-seals-the-config-closure": {
@@ -526,7 +526,7 @@
       "class": "executable",
       "kexpr": "base_config_parent_is_inside_the_approval_digest",
       "ran": true,
-      "report_sha256": "b04a6787c0affe6d30aa106debd407d6aefaabc91a11c67110334918fbaf40d0",
+      "report_sha256": "f46e28acac8c79971cf74a41e3c25deec9680e9b2a1e52f26e632f63978b2c62",
       "sites": 1
     },
     "freeze-holds-the-publish-lock": {
@@ -534,7 +534,7 @@
       "class": "executable",
       "kexpr": "publication_cannot_land_after_the_cohort_was_frozen",
       "ran": true,
-      "report_sha256": "1dbbc1080420da4f8070190f0e243e19ab66628459a070f017867a495c6c3882",
+      "report_sha256": "a882260721abada461e8f26f6b9bf29d0ac0515a6e02b36e30ac6a79f9dd799e",
       "sites": 1
     },
     "generation-namespace-guard": {
@@ -542,7 +542,7 @@
       "class": "executable",
       "kexpr": "current_generation_cannot_be_used_as_its_own_staging",
       "ran": true,
-      "report_sha256": "26c3c0ab71cad3279ad11a79e8ccbcd70c8bfce326f08f238ec2a6681f615407",
+      "report_sha256": "d4aa349154b3164837331394492de04b9daab52267d79b3a7365ee31c2e9df2f",
       "sites": 1
     },
     "idempotent-shares-the-validator": {
@@ -557,7 +557,7 @@
       "class": "executable",
       "kexpr": "same_ledger_argument_always_names_the_same_claims_root",
       "ran": true,
-      "report_sha256": "5aba1709967ff03d58d2f435301aca66aef7a6c6c6b137a2703efa066a146beb",
+      "report_sha256": "59f504c526d84a4273a289b103b3bbc6f7b0a1784c32801301fe785e73848715",
       "sites": 1
     },
     "missing-journal-with-a-live-anchor": {
@@ -565,7 +565,7 @@
       "class": "executable",
       "kexpr": "deleting_the_journal_does_not_erase_the_freeze",
       "ran": true,
-      "report_sha256": "e7a3ba4078391aaa0e13be299a63af8367be7c625915c36d1c8caedee6e1c7ab",
+      "report_sha256": "2ed3b6d07c8fa17bb2dc5690e20b3c8b47899bb8c65c901c0ddb578481817263",
       "sites": 1
     },
     "mount-root-is-filesystem-relative": {
@@ -573,7 +573,7 @@
       "class": "executable",
       "kexpr": "bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph",
       "ran": true,
-      "report_sha256": "417fad12630fab7d78a40c463d76e042440ad128abefba34a64f07d0ea416874",
+      "report_sha256": "f190a201d19978155878f67670b3286b4724e3919cf685d822dbf4fd7dcc853c",
       "sites": 2
     },
     "phase-input-binding-covers-the-package": {
@@ -581,7 +581,7 @@
       "class": "executable",
       "kexpr": "grid_receipt_binds_every_curve_input_not_just_the_parquet",
       "ran": true,
-      "report_sha256": "0213e61d87d0d4fc344fbd4eb003e2e417157d69d72be30bd7e9836a26396a53",
+      "report_sha256": "1fe932e4413bca32d7977d15d9217b52962c7724d10c1457b2fa2ffbcf5ee603",
       "sites": 1
     },
     "planned-binds-the-execution-record": {
@@ -589,7 +589,7 @@
       "class": "executable",
       "kexpr": "planned_index_is_bound_to_the_real",
       "ran": true,
-      "report_sha256": "a7d96ec3c6310a2bd61e30145137b9e92c0ac3415cf1b4dc6072453f8bf28297",
+      "report_sha256": "78a8c0f1bb12b00b8b0511f2b2c28c5389b65b4cffddc0fb35ef312014c2e55d",
       "sites": 1
     },
     "producer-canon-drops-empty-fields": {
@@ -597,7 +597,7 @@
       "class": "executable",
       "kexpr": "producer_digest_is_the_same_on_every_python_here",
       "ran": true,
-      "report_sha256": "1378ccb5fcee60162587cb2f696937dd643a036f2cb4a87685ed01dc86144b7b",
+      "report_sha256": "3f059145d99ca2454105577f605db5b1bad964254b782b2341f2a5839056f359",
       "sites": 1
     },
     "promotion-refuses-a-subset-seal-g62": {
@@ -605,7 +605,7 @@
       "class": "executable",
       "kexpr": "an_in_progress_fit_in_a_committed_grid_dir_is_not_promotable",
       "ran": true,
-      "report_sha256": "1c22b492a247fa07864011b5808f3c4d378c72f5b283a7978895a9c416bcf6b5",
+      "report_sha256": "0133e830850e258bfe56191537606cc5b443e902a1f381cd62bea4ca43a1fa0a",
       "sites": 1
     },
     "records-keep-the-logical-input-g61": {
@@ -613,7 +613,7 @@
       "class": "executable",
       "kexpr": "the_sealed_input_path_exists_after_a_successful_fit",
       "ran": true,
-      "report_sha256": "fe694af9bd82af0969b0a1b295ace72d9218e8d51561e1e5f46dd4e5c40403f8",
+      "report_sha256": "ed1beb43a26071c1cfe81ad3c83c4f0c2b9cc3795ae61f017ce0b1d38d368797",
       "sites": 1
     },
     "rollback-only-on-certain-non-commit": {
@@ -621,7 +621,7 @@
       "class": "executable",
       "kexpr": "durability_error_after_the_ledger_commit_keeps_the_claim or uncertain_ledger_write_never_discards_the_claim or failure_while_leaving_the_ledger_lock_preserves_the_authority",
       "ran": true,
-      "report_sha256": "b11ac02c283390d0c8f7122048e734630da624beaf88e78d1c211d7aebbbc3ab",
+      "report_sha256": "ddaa49e80c1a26cef749e8b534b9e762d18dd96e4660c9c5d8c9792c2a65523d",
       "sites": 1
     },
     "sealed-records-need-their-seal-g62": {
@@ -629,7 +629,7 @@
       "class": "executable",
       "kexpr": "deleting_the_seal_does_not_reopen_the_prefix",
       "ran": true,
-      "report_sha256": "576d684c2c0ba514a8478f8bc1870f851ba5405f56d03d93dc698b98f9e7528d",
+      "report_sha256": "c43ea155923c6fbc2dcff7d743533e70d67bca9ac1e69a1fc070be5c122eb493",
       "sites": 1
     },
     "thaw-is-refused-before-the-first-write": {
@@ -637,7 +637,7 @@
       "class": "executable",
       "kexpr": "publisher_refuses_a_thawed_cohort_before_the_first_write",
       "ran": true,
-      "report_sha256": "f2df2b9aee5b94dd69b765ded9ccf71894f2ea2aad5d409db547541c8c3a5989",
+      "report_sha256": "e6391299a661e8192992e37c058a4151775f8ea635503e4c24e9b157d4d4be6e",
       "sites": 2
     },
     "unreadable-bytes-fail-the-section-g62": {
@@ -645,7 +645,7 @@
       "class": "executable",
       "kexpr": "an_unreadable_startup_byte_makes_the_section_failed",
       "ran": true,
-      "report_sha256": "e045fe050b6f58309143db6d92b11a9717dbff57274be8f22e5f83f469df7c62",
+      "report_sha256": "eac365595e90dcb234a5c40e9742224364bd647786ab4cc573eca4ca4bbfe614",
       "sites": 1
     }
   },

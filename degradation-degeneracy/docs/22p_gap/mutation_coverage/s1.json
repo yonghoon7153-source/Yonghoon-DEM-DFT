@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-14T19:40:25Z",
+  "at": "2026-09-14T20:36:40Z",
   "binding": {
     "execution": {
       "env": {
@@ -464,13 +464,13 @@
       }
     },
     "execution_digest": "d194be06fecb9ce90f8280861cdd74654edae1013f5ff3b38d9470bde8071ddd",
-    "expect_digest": "3883cfbbe07713271279fc7511546e42830f024e0ddd7c6d1ccfa972fa618fd0",
-    "head": "dbfbbf821afe6a6dffed21455590568f11392f8b",
+    "expect_digest": "729150dc9d89de22dc0aeb53f7b73121c5ddf319b246583989ca184c5028c67a",
+    "head": "1b4a837064a150ae7119dbb15bd42ada18f85cba",
     "registry_digest": "eb73be3be3e345c129325ab51c31127382bccab1a81d84079053adca4eeb2e03",
     "reports_dir": "s1",
-    "runner_digest": "6d70518256bcb1a890d73b927f5e94853da30f715cdbe18e935a2a22151c17a5",
-    "transcript_digest": "b66480d2922bd8df4000ce97d7860ea6714dcd4b073e5cdf4ded712d76391cad",
-    "tree_digest": "6f4a80b1c33dee92d1886a2348f55915446e85e7deb2482a4367b1cae34fc837"
+    "runner_digest": "c17436928b6f2a8301d8c32a02f0a64e9e0c70d782451e38222315040add948f",
+    "transcript_digest": "510b373cbc8d25eb7219dd116e3f781597e3032205dfdccff713cb8e83d387ce",
+    "tree_digest": "b572d41b13304f22eba281f04cea070519919bd7e41393cba2d415641d909cae"
   },
   "scenarios": {
     "a-caller-supplied-callee-is-refused-g60": {
@@ -478,7 +478,7 @@
       "class": "executable",
       "kexpr": "a_caller_supplied_binding_is_not_a_proof_of_non_namespace",
       "ran": true,
-      "report_sha256": "a617b607eedc9345fee13ce6143dde9bd703f51f937cad323639590cadadf350",
+      "report_sha256": "103b74891a743f69cb6e57acc18738bb8137dec67cecc92e122115e3ad1471ef",
       "sites": 1
     },
     "both-pointers-checked": {
@@ -486,7 +486,7 @@
       "class": "executable",
       "kexpr": "pointer_moved_by_another",
       "ran": true,
-      "report_sha256": "c136a34ae89982ddaaaadc9feeb717e6b2e8e1a720e82da3ccc5f2966535bd21",
+      "report_sha256": "6f9347f56ce9c2f4b316d9390d79dfb7f46741be7ee6a317868427fbdb2f5554",
       "sites": 1
     },
     "claim-bytes-are-verified-on-disk": {
@@ -494,7 +494,7 @@
       "class": "executable",
       "kexpr": "lying_write_is_caught_by_reading_the_bytes_back",
       "ran": true,
-      "report_sha256": "56c1f15410e3f3a8face77f3eedc8bcdd1ed6d3db234f96aeefb89ac53646e98",
+      "report_sha256": "69b3d7813b6975d8ec02d378c4bdf25487d4013efa533d31b4754e785cc0a362",
       "sites": 1
     },
     "closure-refuses-dynamic-resolution": {
@@ -502,7 +502,7 @@
       "class": "executable",
       "kexpr": "dynamic_name_resolution_inside_the_closure_is_fail_closed",
       "ran": true,
-      "report_sha256": "52f70c12882f0411d8a12d5ae0c0324994dfc5df06e69ef2075e9801cac4915a",
+      "report_sha256": "28bd7e8e4f586fe7af42a25935323319f1a2ccce6d43cc020b57a13e523e9262",
       "sites": 1
     },
     "crash-recovery-is-idempotent": {
@@ -510,7 +510,7 @@
       "class": "executable",
       "kexpr": "finalize_is_idempotent_after_a_crash_before_cleanup",
       "ran": true,
-      "report_sha256": "dcbc38e9165f576dc2ebd63220065de872ea2e2fc6748d98d6b2ec423df2dbdd",
+      "report_sha256": "6e0b171c7aa42c8e0d6e3932edd62678d92f9181e604de3891524172cda8fee7",
       "sites": 1
     },
     "dunder-as-a-string-is-still-a-dunder": {
@@ -518,7 +518,7 @@
       "class": "executable",
       "kexpr": "dunder_named_by_a_string_literal_is_still_a_dunder",
       "ran": true,
-      "report_sha256": "eded6659c23a2745557346fbdefab5062e00158512b720c45d4f2b81f577c23f",
+      "report_sha256": "13d84e69b2366237fe6655287524b5f9b246e64893392c19f7de4299922bda99",
       "sites": 1
     },
     "finalize-requires-the-consumed-binding-g59": {
@@ -526,7 +526,7 @@
       "class": "executable",
       "kexpr": "finalize_refuses_a_later_phase_with_no_recorded_predecessor",
       "ran": true,
-      "report_sha256": "ad1997dde6302993b8cd03733d906969ad80b215acc3b2b8c6a3d6020d048c1d",
+      "report_sha256": "b82666e4932dd222996ff66635f359be747e1226d21aa17a2ecd5929bf51b311",
       "sites": 1
     },
     "flock-two-publisher": {
@@ -534,7 +534,7 @@
       "class": "executable",
       "kexpr": "two_independent_publishers",
       "ran": true,
-      "report_sha256": "bd890feda3c66c0e4286b547934cd77fa90c7b7f916fcd55ac0c8ba450d3ee9a",
+      "report_sha256": "95992b04ba679e9417dc304d604e3f330e6b1aa2c38aaf833262a50092d3e6bb",
       "sites": 2
     },
     "frozen-destination-is-monotonic": {
@@ -542,7 +542,7 @@
       "class": "executable",
       "kexpr": "later_active_record_cannot_thaw_a_frozen_destination",
       "ran": true,
-      "report_sha256": "f37fe4fb046d84338de1ade06c50366337bfbd4ec06266e456ef6a7fab37418b",
+      "report_sha256": "b0af08e7d81e26cf47ed144d8e000ad1653bb4ca5b10ceef556766d3387e65d8",
       "sites": 2
     },
     "grid-merges-inside-the-lock-g62": {
@@ -550,7 +550,7 @@
       "class": "executable",
       "kexpr": "grid_source_releases_the_lock_after_merge_manifest_commit_and_receipt",
       "ran": true,
-      "report_sha256": "aba74c09849e9a7d932f441eace0c80b3a0feebd348cb7cc8d7135f7ce44a980",
+      "report_sha256": "161dc3330f3eb0e3d3bd8709a40bea258ce7e145ca3e62ccd92496e0a1e6c04a",
       "sites": 1
     },
     "issuance-fsync-is-strict-g58": {
@@ -558,7 +558,7 @@
       "class": "executable",
       "kexpr": "issuance_fails_closed_when_a_directory_cannot_be_flushed",
       "ran": true,
-      "report_sha256": "1896666716455617dd711d539aa5e05f67a08271003de1303619ed707e82fadf",
+      "report_sha256": "ad242f3ff0b518e43c21a9859a6d4fd7414b0749c6853b8a3b8f580be390ad8d",
       "sites": 1
     },
     "lifecycle-owned-evidence-is-refused-g58": {
@@ -566,7 +566,7 @@
       "class": "executable",
       "kexpr": "normal_finalize_cannot_forge_the_migration_provenance or lifecycle_owned_evidence_keys_are_refused_from_callers",
       "ran": true,
-      "report_sha256": "36cf5839a05b450b0d4402b6c7b90c02da69e4776463de341dea2d930c6aabdf",
+      "report_sha256": "de92616965501b8702896afb7ca14406f440b980eb981faec5b08d350935bcc1",
       "sites": 1
     },
     "module-docstring-is-bound-g60": {
@@ -574,7 +574,7 @@
       "class": "executable",
       "kexpr": "the_module_docstring_is_inside_the_identity",
       "ran": true,
-      "report_sha256": "520203ce9e883b4e0030be0b0fb0a28d9982aab1773e73a6160f1154f5bbe3e0",
+      "report_sha256": "0f84f2b0015f057f3e40d94aad5dda1f793afb0537c19dde78411eb456d52245",
       "sites": 1
     },
     "parent-package-import-is-refused-g62": {
@@ -582,7 +582,7 @@
       "class": "executable",
       "kexpr": "importing_the_parent_package_is_refused",
       "ran": true,
-      "report_sha256": "ebc739db69dbe28961206b8332bfcef05a83469a02a2db5df42fe75bd430f562",
+      "report_sha256": "f9b833605a5a74b4642a3e47fb9315eedebc250ccdfde57f2a73ae68e760cb6a",
       "sites": 1
     },
     "pin-is-publication-authority": {
@@ -590,7 +590,7 @@
       "class": "executable",
       "kexpr": "producer_pin_is_part",
       "ran": true,
-      "report_sha256": "2c2a2b247f5916c73a248e3c9fa344194e5c0e50c4d50cf13e401deb97e7c572",
+      "report_sha256": "a8bf1779630e8955de2f560505e474dd33c109d0b76973e60dc277e72166ccff",
       "sites": 1
     },
     "prelock-digest-check": {
@@ -598,7 +598,7 @@
       "class": "executable",
       "kexpr": "wrong_bytes_are_never_locked",
       "ran": true,
-      "report_sha256": "252761833a6dbd6d9c03be7211bb82f24f8d89910ad1689c7605bd67df816d5d",
+      "report_sha256": "08a764ef4b3433e3513ad44181efcd1ae37b0b1d656c68bb169e9af48f981c59",
       "sites": 1
     },
     "producer-normalizes-the-node": {
@@ -606,7 +606,7 @@
       "class": "executable",
       "kexpr": "producer_digest_sees_decorators",
       "ran": true,
-      "report_sha256": "033114047bce44853b1564ddc4904bdb8753e932d136c887b58c9487f6ef4d30",
+      "report_sha256": "03696be8ed5166e9ad91b851dbad4cd9f9b3f16fcc5727588d3dbcd7dd0ca08b",
       "sites": 3
     },
     "receipt-is-bound-to-the-mutant": {
@@ -614,7 +614,7 @@
       "class": "executable",
       "kexpr": "receipt_is_bound_to_the_exact_mutant",
       "ran": true,
-      "report_sha256": "0c75ecf52a0444b54e26e97e72b6e7fcc98aaa25713a65c28a33bc09c5332e75",
+      "report_sha256": "7cf6ad646da74a148e9bbfa2b0c02d8de7ad205ecd15b752c2931885dfbc3347",
       "sites": 1
     },
     "release-returns-the-plan": {
@@ -622,7 +622,7 @@
       "class": "executable",
       "kexpr": "released_run_returns_the_plan_to_planned",
       "ran": true,
-      "report_sha256": "9fc652353bd3b64c2b67e6787fd7595e5a08f93c3685fc0a08753bcffc206f6c",
+      "report_sha256": "af097b224af58cc4b2ad94b8bbd912c7d1e8862c14f25d9b1f8962f80f4cc131",
       "sites": 1
     },
     "run-sig-has-no-staging-pathname-g62": {
@@ -630,7 +630,7 @@
       "class": "executable",
       "kexpr": "the_same_logical_fit_resumed_keeps_one_run_signature or the_run_spec_does_not_carry_a_staging_pathname",
       "ran": true,
-      "report_sha256": "93edde55904b1c49d89dc2703112f08fe1e7dd38f64096c34246892ecfe15f6d",
+      "report_sha256": "77cbdc8b4ac4f33b15f20f1b51aada928a7cd7433392c0c771a4a7c5a35df4bc",
       "sites": 1
     },
     "source-reflection-covers-the-loader-protocol": {
@@ -638,7 +638,7 @@
       "class": "executable",
       "kexpr": "producer_cannot_reach_its_own_bytes_through_the_module_loader",
       "ran": true,
-      "report_sha256": "a42fa3ca14768756ca3cb4280fcc7ec2ce53cb9178bea1aee7897495875dc8a1",
+      "report_sha256": "fad8bf07a623bef84475245a5948963ddb0d7cc19c987e5a3ac7f6c853e50b1a",
       "sites": 2
     },
     "token-path-alias-is-refused": {
@@ -646,7 +646,7 @@
       "class": "executable",
       "kexpr": "symlinked_token_path_cannot_split_the_attempt_lock",
       "ran": true,
-      "report_sha256": "f039f839ffa3e40900178acf4dfd9cb1381f4545218e5e0db7de6ce153a97a6f",
+      "report_sha256": "fe4f9db64e4597c397b3b7593ae2987da39a5753e3c8c59678864cc287e5393c",
       "sites": 1
     },
     "wrapped-dunder-names-are-refused": {
@@ -654,7 +654,7 @@
       "class": "executable",
       "kexpr": "dunder_named_indirectly_is_still_refused",
       "ran": true,
-      "report_sha256": "549169fe8b6a32479574280e67e9c46ed5c049a271c7aca9b7248d0e0539d684",
+      "report_sha256": "7dc832b96eb3eb836bf20de3e0c707d891c0184b2d34d8a0fbe85d42e81d4c8b",
       "sites": 2
     }
   },
