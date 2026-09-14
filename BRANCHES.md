@@ -164,3 +164,27 @@ claude/zip-git-gpu-setup-vdqdtd  →  claude/14-gate-code-review-9qkx05
 절차와 실측은 merge 커밋 메시지와 `bms-balancing/MERGE_BRIEF_FOR_GATE.md`.
 서브 브랜치는 그대로 살아 있고 소유 경로도 그대로다 — merge 는 흡수가 아니라
 동기화다.
+
+### 2026-09-14 — merge 뒤 인수인계 전수 확인 (본체가 직접 돌렸다)
+
+`bms-balancing/MERGE_BRIEF_FOR_GATE.md` 는 본체에 **검증 넷(§5)** 과
+**판단 여섯(§6)** 을 남겼다. 요약을 믿지 말라는 것이 그 문서의 요구라 전부
+이 컨테이너에서 실제로 돌렸다.
+
+| 항목 | 결과 |
+|---|---|
+| §5-1 하네스 테스트 | `310 passed · 1 failed` (538.87s). 실패는 **내 간섭**이다 — `test_d9_08` 이 시작 시점 HEAD 를 `--expected-head` 로 고정해 격리 스냅샷에서 도구를 돌리는데, 실행 도중 내가 위키를 커밋해 HEAD 가 움직였다. HEAD 를 고정하고 그 시험만 다시 돌려 **1 passed** 로 확인했다. 즉 `WORKING_STATE.md` 의 "311 passed 기대" 핀은 지켜진다. **교훈: 이 하네스가 도는 동안 커밋하지 않는다** |
+| §5-2 하네스 계약 `check_u14 --schema-only` | rc 0 · `blocked_by` 의 schema·content·unit·controls·numbers·alias **전부 0** · 남은 것은 `baseline_absent 1` (대조가 없으니 정상) |
+| §5-3 보존 묶음 bytes | 여덟 묶음 **불일치 0** — merge 가 줄끝을 정규화하지 않았다. 서브가 적어 둔 수치와 일치 (162·140·90·186·114·112·103·136) |
+| §5-4 webapp 화면 | 라우트 21 개 전부 200. `/alphabeta` 에 "쉬운 말로" 칸 9 개 + 용어 절, `plain.css` 200 (2615 bytes), 쓰인 `pl*` 클래스가 전부 CSS 에 있다. **서브가 못 한 검증을 닫았다** |
+| §6-1 `webapp/` 수용 | 받았다. 예외는 `CLAUDE.md` 하드룰 1 에 한 줄 |
+| §6-2 `pipeline.html` 라운드 수 | 하드코딩을 없애고 **원장에서 세는** 자리로 바꿨다 (렌더 실측: 62) |
+| §6-3 루트 `.gitignore` 의 `cells/` | 들어갔다 (`.gitignore:58`) |
+| §6-4 62차 게이트 준비 | 요청문 `degradation-degeneracy/docs/22p_gap/GATE62_REQUEST.md` §4 에 pyDMA 외부 검증을 경고와 함께 실었다. 순서 전체 e2e 는 smoke 7b·8b, `/self-review` 는 §3 |
+| §6-5 `wiki/` 후보 3건 | **채택하고 반영했다** (2026-09-14). 새 개념 페이지 `near-optimal-set-width-measurement`, Schmitt 페이지에 12 mV 문턱 폭, 계보 페이지에 chain rule 결함. 원문은 `wiki/raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md` 에 봉인 |
+| §6-6 축퇴 폭 측정법을 본체에 쓸지 | **아직 정하지 않았다.** `degradation-degeneracy/src/` 에 이 계열 도구가 없음을 확인했다 (가장 가까운 `hessian.py` 는 스스로 "결론 근거 아님" 으로 강등돼 있다). 판단 근거는 위키 페이지에 정리했고 옮기려면 `src/` 를 건드리므로 **RUN_SCOPE 안** — 게이트 라운드 중에는 시작하지 않는다 |
+
+덤으로, 인수인계 §3-3 이 본체에 물어보라고 한 것 하나를 닫았다: 규진팀
+MATLAB 의 chain rule 결함(dV/dQ 에 `1/α` 누락)이 **본체에는 없다.**
+`src/objective.py` · `src/curves.py` 가 합성된 곡선을 수치미분하므로 `1/α` 가
+자동으로 들어간다 (α=0.80 대조 실측: `1/α` 포함본과 6.4e-06, 누락본과 7.9e-01).
