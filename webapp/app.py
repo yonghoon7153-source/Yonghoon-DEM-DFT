@@ -355,6 +355,30 @@ def bms():
     return render_template("bms.html", active="bms")
 
 
+@app.route("/alphabeta")
+def alphabeta():
+    """α·β 검증 — **원문 그대로 + 쉬운 말 칸**. (2026-09-14)
+
+    앞선 `/handover`(BMS 협업 방향)의 본문을 **한 글자도 안 고치고** 되살린
+    화면이다. 방향 논의는 끝났지만 그 안의 기술적 검증(§2~§4)은 그대로 값이
+    있고, 지금은 그것을 **BMS 를 모르는 사람도 읽을 수 있게** 하는 쪽이 필요했다.
+
+    그래서 더한 것은 둘뿐이다:
+      · §0 용어 — 여덟 개를 그 자리에서 정의한다
+      · 절마다 `<div class="plain">` "쉬운 말로" 칸
+
+    ⚠ 쉬운 말 칸의 규율 **비유 금지**. 비유는 이해한 느낌만 주고 틀린 그림을
+      남긴다 — 전지에서는 특히 그렇다 ("물탱크" 하나로 LAM 과 LLI 가 뭉개진다).
+      대신 용어를 정의하고 한 문장에 하나씩만 담는다.
+
+    ⚠ `/pipeline`·`/trust`·`/bms` 와 같은 규율이다: **여기서 숫자를 새로 만들지
+      않는다.** 쉬운 말 칸도 원문에 있는 숫자만 다시 말한다 — 반올림하거나
+      "대략" 으로 뭉개면 그 순간 다른 값이 된다. 원문 §7 의 경고도 쉬운 말로
+      같이 옮겼다 (경고를 뗀 쉬운 말은 쉬운 말이 아니라 틀린 말이다).
+    """
+    return render_template("alphabeta.html", active="alphabeta")
+
+
 @app.route("/trust")
 def trust():
     return render_template("trust.html", active="trust",

@@ -138,7 +138,10 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=
             # ⚠ scale 은 행이 스스로 말한다 (R5-07) — 두 seed 실행의 scale 열이 같아야 그 차이가 시작점의 것이다
             "scale_seed": int(scale_seed), "scale_pocv": o.scales.get("pocv"), "scale_dvdq": o.scales.get("dvdq"),
             "scale_dqdv": o.scales.get("dqdv"),
-            "bounds": ",".join(active_bounds(p)) or "-", "run_id": run_id,
+            # ⚠ W-06: 경계 판정은 **이 실행이 쓴 상자**로 한다. 상자를 안 넘기던 판은 `--gamma-lb 0.05` 로
+            #   올린 하한에 γ 가 정확히 붙어도 `b_PE=ub` 만 적고 γ 는 자유로운 것처럼 내보냈다 (실측).
+            #   "경계에 붙은 값" 을 세는 것이 규진팀 97 행에서 32 행을 잡아낸 그 검사다 (§2).
+            "bounds": ",".join(active_bounds(p, lb=lb5, ub=UB5)) or "-", "run_id": run_id,
             "inputs_sha": inputs_digest(rec), "consumed_inputs": json.dumps(rec, ensure_ascii=False, sort_keys=True),
         })
     return {"rows": rows, "consumed": consumed, "settings": settings, "cycles": want}

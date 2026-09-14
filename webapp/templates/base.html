@@ -9,6 +9,8 @@
 {# ⚠ 인라인 <script> 를 쓰지 않는다 — CSP 가 script-src 'self' 라서 막힌다.
    테마 초기화도 static/js/boot.js 로 뺐다 (문서 <head> 에서 동기 로드 → FOUC 없음). #}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v={{ asset_version }}">
+{# 쉬운 말 칸·용어 목록 (2026-09-14, `/alphabeta`). style.css 가 토큰을 먼저 정의해야 하므로 **뒤에** 온다. #}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/plain.css') }}?v={{ asset_version }}">
 <script src="{{ url_for('static', filename='js/boot.js') }}?v={{ asset_version }}"></script>
 {% block head %}{% endblock %}
 </head>
@@ -62,6 +64,7 @@
   <div class="nav-section" id="nav-dir">BMS 트랙</div>
   <ul class="nav-links" aria-labelledby="nav-dir">
     <li><a href="/bms"{% if active=='bms' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-compass"></use></svg>지금까지 이룬 것<span class="nav-tag">세 갈래</span></a></li>
+    <li><a href="/alphabeta"{% if active=='alphabeta' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-question"></use></svg>α·β 가 맞는가<span class="nav-tag">쉬운 말 같이</span></a></li>
   </ul>
 
   <div class="nav-section" id="nav-wiki">위키</div>

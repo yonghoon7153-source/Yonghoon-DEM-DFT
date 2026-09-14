@@ -2926,7 +2926,13 @@ def test_r5_08_one_run_id_per_command_and_helpers_check_the_field_not_a_substrin
     id 는 명령 시작 때 하나로 고정하고, 검사는 CSV 의 `run_id` 열(전 행) / JSON 의 `run_id` 필드로 한다.
     """
     import io, contextlib, os, subprocess, sys as _s
-    _r3_profile_mocks(tmp_path, __import__("pytest").MonkeyPatch())      # 실패 optimizer 는 여기서 성공으로 바꾼다
+    # ⚠ W-07 (2026-09-14): 이 줄은 `MonkeyPatch()` 를 만들어 **손잡이를 버렸다** — `undo()` 를 부를 수 없으니
+    #   `_r3_profile_mocks` 가 건 패치(`verify.minimize` → 항상 success=False, `verify.multistart` → 상수)가
+    #   **세션 끝까지 남았다.** 알파벳 순으로 뒤에 오는 파일의 테스트가 그것을 뒤집어쓴다 (실측: `tests/test_widths.py`
+    #   의 세 건이 단독 실행은 통과, 전체 실행은 실패 — 4-벡터 `[1.2,-0.25,1.4,-0.15]` 가 5-파라미터 목적함수로
+    #   들어왔다). 손잡이를 잡고 아래 `finally` 에서 같이 되돌린다. 재발은 `tests/conftest.py` 가 막는다.
+    mp0 = __import__("pytest").MonkeyPatch()
+    _r3_profile_mocks(tmp_path, mp0)                                     # 실패 optimizer 는 여기서 성공으로 바꾼다
     center = np.array([1.2, -0.25, 1.2, -0.15, 0.25])
     def ok(fun, start, **kw):
         x = np.array([1.2, -0.25, 1.2, -0.15]); return SimpleNamespace(x=x, fun=float(fun(x)), success=True)
@@ -2940,7 +2946,7 @@ def test_r5_08_one_run_id_per_command_and_helpers_check_the_field_not_a_substrin
         printed = buf.getvalue().strip().splitlines()[-1].split("run_id ")[1].rstrip(")")
         assert rc == 0 and len(rows) == verify.S.CANONICAL_GAMMA_GRID_N and ids == {printed}, (ids, printed)
     finally:
-        mp.undo()
+        mp.undo(); mp0.undo()                    # 둘 다 되돌린다 (W-07) — 아래는 전부 subprocess 라 mock 이 필요 없다
     root = tmp_path / "repo"; _fixture_repo(root, outputs=("out/matrix_old.csv",))
     art, log = root / "out" / "matrix_old.csv", tmp_path / "run.log"
     env = dict(os.environ, STARTS="1", SI="Li", BMS_DATA_ROOT="synthetic", OUT=str(root / "out"))

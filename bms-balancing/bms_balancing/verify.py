@@ -185,6 +185,32 @@ def build(root: Path, source: str, state: str, si_source: str,
     return obj
 
 
+def resolve_box(lb=None, ub=None):
+    """상자를 **한 자리에서** 정하고 검사한다 (기본은 원본 `LB5`/`UB5`).
+
+    ⚠ W-01~W-05 (2026-09-14): 폭을 재는 세 함수(`active_bounds`·`near_optimal_extrema`·
+      `mode_profile_extrema`)가 상자를 모듈 상수로 **하드코딩**하고 있었다. `fit_cycles` 는 이미
+      `--gamma-lb` 로 상자를 바꾸므로(`multistart` 만 `lb`/`ub` 를 받았다), 그대로 폭을 붙이면
+      **적합은 좁은 상자에서 하고 폭은 넓은 상자에서 재는** 산출이 나온다. 규칙을 한 함수로 모은다 —
+      R14 P2-2 에서 "존재·비공백" 규칙이 두 벌이라 절반만 구현됐던 것과 같은 교훈이다.
+
+    검사는 fail-closed 다. 폭은 인용되는 숫자라, 뒤집힌 상자로 조용히 이상한 폭을 내는 것보다
+    거절하는 편이 낫다.
+    """
+    lo = np.asarray(LB5 if lb is None else lb, dtype=float)
+    hi = np.asarray(UB5 if ub is None else ub, dtype=float)
+    if lo.shape != (5,) or hi.shape != (5,):
+        raise ValueError(f"상자는 5-파라미터여야 한다 — lb {tuple(lo.shape)} · ub {tuple(hi.shape)}")
+    if not np.all(np.isfinite(lo)) or not np.all(np.isfinite(hi)):
+        raise ValueError(f"상자에 비유한 값이 있다 — lb {lo.tolist()} · ub {hi.tolist()}")
+    bad = [i for i in range(5) if lo[i] > hi[i]]
+    if bad:
+        names = ["a_PE", "b_PE", "a_NE", "b_NE", "gamma_Si"]
+        raise ValueError("lb > ub 인 축: " + ", ".join(
+            f"{names[i]} [{lo[i]}, {hi[i]}]" for i in bad))
+    return lo, hi
+
+
 def multistart(obj: Objective, n_starts: int = 24, seed: int = 0,
                x0: np.ndarray | None = None, require_success: bool = True,
                lb=None, ub=None):
@@ -198,8 +224,7 @@ def multistart(obj: Objective, n_starts: int = 24, seed: int = 0,
     """
     # ⚠ 경계는 인자로 받는다 (기본은 원본 lb5/ub5). pyDMA Track C 대조처럼 γ 하한을 0.02 로 올리는 실행이 있고,
     #   그때 **무작위 시작점도 같은 경계 안**에서 뽑혀야 한다 — 모듈 상수를 읽으면 시작점만 옛 경계를 쓴다.
-    lo = LB5 if lb is None else np.asarray(lb, dtype=float)
-    hi = UB5 if ub is None else np.asarray(ub, dtype=float)
+    lo, hi = resolve_box(lb, ub)
     rng = np.random.default_rng(seed)
     starts = [np.asarray(x0, dtype=float)] if x0 is not None else []
     starts += list(lo + rng.random((n_starts, 5)) * (hi - lo))
@@ -236,13 +261,20 @@ def multistart(obj: Objective, n_starts: int = 24, seed: int = 0,
 multistart.last_stats = {}
 
 
-def active_bounds(p, tol=1e-6):
+def active_bounds(p, tol=1e-6, lb=None, ub=None):
+    """해가 **실제로 쓴 상자**의 경계에 붙었는가 (기본 상자는 `LB5`/`UB5`).
+
+    ⚠ W-01: 상자를 안 받던 판은 `--gamma-lb 0.02` 로 돌린 적합이 γ=0.0200 에 정확히 붙어도 `[]` 를 냈다.
+      "경계에 붙은 값" 을 세는 것은 이 프로젝트가 규진팀 97 행에서 32 행을 잡아낸 바로 그 검사다
+      (`BML_R1_RESPONSE` §2). 우리 산출에서 그걸 못 세면 같은 종류의 사실을 숨기는 셈이다.
+    """
+    lo, hi = resolve_box(lb, ub)
     names = ["a_PE", "b_PE", "a_NE", "b_NE", "gamma_Si"]
     hits = []
     for i, n in enumerate(names):
-        if abs(p[i] - LB5[i]) < tol:
+        if abs(p[i] - lo[i]) < tol:
             hits.append(f"{n}=lb")
-        if abs(p[i] - UB5[i]) < tol:
+        if abs(p[i] - hi[i]) < tol:
             hits.append(f"{n}=ub")
     return hits
 
@@ -311,7 +343,8 @@ def cmd_port(args):
 # ── C. 축퇴 ────────────────────────────────────────────────────────────
 
 def near_optimal_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
-                         tol: float, seeds: list, n_starts: int = 8, seed: int = 0):
+                         tol: float, seeds: list, n_starts: int = 8, seed: int = 0,
+                         lb=None, ub=None):
     """근최적 집합 {p : obj(p) ≤ best_obj·(1+tol)} 위에서 각 mode 의 min·max.
 
     ⚠ 2026-09-10 리뷰 [B1]: 전 판은 최적점 둘레에 등방 Gaussian 400점을 뿌리고
@@ -330,7 +363,8 @@ def near_optimal_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
     못하게 한다.
     """
     limit = best_val * (1.0 + tol)
-    bounds = list(zip(LB5, UB5))
+    lo, hi = resolve_box(lb, ub)                     # ⚠ W-02: 상자는 인자다 (적합이 쓴 그것과 같아야 한다)
+    bounds = list(zip(lo, hi))
     rng = np.random.default_rng(seed + 7)
     # 시작점은 **상자 전체**에 뿌린다. 최적점 둘레에만 뿌리면 멀리 뻗은
     # 골짜기 끝을 못 민다 — 그게 전 판이 0 %p 를 보고한 이유다.
@@ -339,9 +373,9 @@ def near_optimal_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
     for i in range(5):                               # 각 축의 양 끝에서 한 번씩
         for frac in (0.02, 0.98):
             q = np.asarray(best, float).copy()
-            q[i] = LB5[i] + frac * (UB5[i] - LB5[i])
+            q[i] = lo[i] + frac * (hi[i] - lo[i])
             starts.append(q)
-    starts += list(LB5 + rng.random((n_starts, 5)) * (UB5 - LB5))
+    starts += list(lo + rng.random((n_starts, 5)) * (hi - lo))
 
     def mode_of(p, key):
         return degradation_modes(ref_p, ref_c, np.asarray(p, float), c_cell)[key]
@@ -394,7 +428,8 @@ def near_optimal_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
 
 def mode_profile_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
                          tol: float, n_grid: int = 21, n_starts: int = 3,
-                         seed: int = 0, hint: dict | None = None):
+                         seed: int = 0, hint: dict | None = None,
+                         lb=None, ub=None):
     """각 mode 값 v 가 근최적 집합 안에서 **도달 가능한가**를 직접 묻는다.
 
         for v in grid:   min_p obj(p)  s.t.  mode(p) = v,  lb ≤ p ≤ ub
@@ -412,9 +447,10 @@ def mode_profile_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
     실어 그 사실을 지운 채 인용하지 못하게 한다.
     """
     limit = best_val * (1.0 + tol)
-    bounds = list(zip(LB5, UB5))
+    lo, hi = resolve_box(lb, ub)                     # ⚠ W-03: bounds 와 **격자를 까는 box** 둘 다 이 상자다
+    bounds = list(zip(lo, hi))
     rng = np.random.default_rng(seed + 11)
-    box = LB5 + rng.random((256, 5)) * (UB5 - LB5)
+    box = lo + rng.random((256, 5)) * (hi - lo)
 
     def mode_of(p, key):
         return degradation_modes(ref_p, ref_c, np.asarray(p, float), c_cell)[key]
@@ -442,7 +478,7 @@ def mode_profile_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
             g_lo, g_hi = v_lo, v_hi
         grid = np.unique(np.concatenate([np.linspace(g_lo, g_hi, n_grid), [v_best]]))
         starts = [np.asarray(best, float)]
-        starts += list(LB5 + rng.random((n_starts, 5)) * (UB5 - LB5))
+        starts += list(lo + rng.random((n_starts, 5)) * (hi - lo))
 
         attainable = []
         for v in grid:
