@@ -92,6 +92,7 @@ scripts/network_conductivity.py	--selftest-temp	fast	none	claude	초록 0.7s (�
 scripts/network_mode_io.py	--selftest	fast	none	claude	초록 0.1s (실측)
 scripts/network_projection_preflight.py	--selftest	fast	none	claude	초록 0.1s (실측)
 scripts/oat_sensitivity.py	--selftest	fast	check_all	claude	초록 0.3s (실측)
+scripts/pa_watch.sh	--selftest	fast	none	claude	초록 0.2s (실측)
 scripts/patch_kit_quasistatic.py	--selftest	fast	none	claude	초록 0.1s (실측)
 scripts/pellet_rve_sigma.py	--selftest	fast	none	claude	초록 10.1s (실측)
 scripts/perf_reduced_order.py	--selftest	fast	none	claude	초록 0.1s (실측)
