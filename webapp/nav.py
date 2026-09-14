@@ -64,11 +64,17 @@ SECTIONS: list[dict] = [
         {"url": "/todo", "label": "미결 리스트", "icon": "📋", "active": "todo",
          "sub": "판정 대기 · PDF 확보 대기 · ML 후속", "kw": "open items todo 미결"},
         {"url": "/log", "label": "작업 기록", "icon": "✎", "active": "log",
-         "also": ["requests", "sdcp"], "sub": "날짜별 작업 기록 · handoff", "kw": "log journal 기록"},
+         "also": ["requests", "sdcp", "weekly"], "sub": "날짜별 작업 기록 · handoff · 주간 정리",
+         "kw": "log journal 기록"},
         {"url": "/notes", "label": "메모", "icon": "📝", "active": "notes", "nsub": True,
          "sub": "날짜별 메모 · 코멘트 · 형광펜", "kw": "notes memo 메모 코멘트"},
         {"url": "/requests", "label": "1저자 요청", "icon": "✉", "active": "requests", "nsub": True,
          "sub": "1저자가 보낸 요청·지침 원문", "kw": "requests 요청 지침"},
+        # 2026-09-14 — 주간보고를 쓸 때 "지난주 뭐 했나" 를 git log 471건에서 다시 캐고 있었다.
+        #   정리는 kb 문서(kb/reports/weekly_*.md)에 두고 화면은 읽기만 한다 (작업 기록 하위).
+        {"url": "/weekly", "label": "주간 정리", "icon": "📅", "active": "weekly", "nsub": True,
+         "sub": "일주일 단위 정리 · 주간보고 초안 (kb/reports/weekly_*.md)",
+         "kw": "weekly 주간 보고 주간보고 정리 report"},
     ]},
     # ── 값: 인용 전에 여기 ───────────────────────────────────────────────
     {"id": "nav-value", "label": "값 · 인용 전에 여기", "comps": True, "items": [

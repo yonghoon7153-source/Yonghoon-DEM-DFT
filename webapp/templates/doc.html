@@ -186,6 +186,9 @@
 .doc-toc a:hover{color:var(--navy);text-decoration:underline}
 .doc-toc a.h3{padding-left:8px;opacity:.75}
 .doc-toc:empty{display:none}
+/* 2026-09-14 — kb 문서의 그림(주간 정리 dpi300 PNG)이 열 폭을 꽉 채워 한 화면을 넘겼다.
+   높이를 화면에 묶는다 — 원본은 /api/file 로 그대로 받는다(축소 표시일 뿐). */
+#docbody img{max-width:100%;max-height:78vh;width:auto;height:auto;display:block;margin:10px auto}
 </style>
 <script>
 (function(){

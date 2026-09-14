@@ -106,6 +106,7 @@
       "id": "gen2_400ps_4window",
       "라벨_ko": "현행 잣대 (400 ps · 4창)",
       "라벨_en": "current standard — 400 ps, 4-window D_inc plateau",
+      "영문_각주": "Current standard (2026-08-30 onward): 400 ps production, MTO D on the 2-50 ps window with free intercept, 4-window D_inc plateau gate, framework census, pre-registered closure conditions. Ea is cell-conditioned (3x3x1; spatial convergence not established - not a bulk Ea); no cross-system comparison; no absolute sigma or D.",
       "시기": "2026-08-30 ~",
       "gates": {"G1_MTO": true, "G2_traj": true, "G3_4window": true, "G4_framework": true, "G5_prereg": true},
       "생산길이_ps": 400,

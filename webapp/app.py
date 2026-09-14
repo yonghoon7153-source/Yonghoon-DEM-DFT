@@ -1965,6 +1965,82 @@ def log():
                            handoffs=_handoffs())
 
 
+#: 주간 정리 문서가 사는 곳 — `kb/reports/weekly_YYYY_MM_DD.md`. 시험이 tmp 로 바꿔 끼운다.
+WEEKLY_DIR = D.KB / "reports"
+_WEEKLY_RE = re.compile(r"^weekly_(\d{4}_\d{2}_\d{2})\.md$")
+
+
+def _weekly_docs() -> list[dict]:
+    """→ [{key, label, path, title}] **최신순**. 규약(`weekly_YYYY_MM_DD.md`) 밖 파일은 목록에 안 든다.
+
+    ⚠ title 은 frontmatter 에서 읽고, 없으면 파일 stem 을 쓴다 — 지어내지 않는다.
+    """
+    out = []
+    if not WEEKLY_DIR.is_dir():
+        return out
+    for p in WEEKLY_DIR.glob("weekly_*.md"):
+        m = _WEEKLY_RE.match(p.name)
+        if not m or not p.is_file():
+            continue
+        meta, _ = split_frontmatter(p.read_text(encoding="utf-8", errors="ignore"))
+        out.append({"key": m.group(1), "label": m.group(1).replace("_", "-"),
+                    "path": p, "title": meta.get("title") or p.stem})
+    return sorted(out, key=lambda r: r["key"], reverse=True)
+
+
+@app.route("/weekly")
+def weekly():
+    """주간 정리 — 작업 기록(/log)의 **하위**. `?w=YYYY_MM_DD` 로 특정 주, 없으면 최신.
+
+    왜 생겼나 (2026-09-14): 주간보고를 쓸 때 "지난주 뭐 했나" 를 git log 471건에서 다시 캐고
+    있었다. 정리는 kb 문서(`kb/reports/weekly_*.md`)에 두고 화면은 그것을 **읽기만** 한다 —
+    `/todo`·`/kb` 와 같은 경로(md_html → doc.html)라 새 렌더러가 아니다.
+
+    ⛔ 이 라우트가 **못 하는 것**
+      · 문서를 만들지 않는다 — 없으면 "없다" 고 말한다(빈 화면이 아니라).
+      · 값을 판정하지 않는다 — 문서가 인용한 숫자의 지위는 `md_html` 의 결속이 붙인다
+        (같은 판정기 · 서버 한 곳). 문서에 없는 숫자를 화면이 만들어 붙이지 않는다.
+      · 파일명 규약 밖의 문서는 안 연다 — `?w=` 는 `YYYY_MM_DD` 만 받고 나머지는 404 다.
+    ⚠ 인자 없는 GET 이라 결속 스캔(`test_webapp._html_routes`)에 **자동으로** 든다. 표면별
+      음성시험은 `tests/test_weekly.py` 가 합성 문서(철회값)로 한다 — 실제 주간 문서에는
+      결속 대상 문자열이 없어서 `must` 목록 방식으로는 검사가 공허하다.
+    """
+    from flask import request
+    docs = _weekly_docs()
+    w = request.args.get("w", "").strip()
+    parent = {"url": "/log", "label": "✎ 작업 기록"}
+    if w:
+        if not re.fullmatch(r"\d{4}_\d{2}_\d{2}", w):
+            abort(404)
+        doc = next((d for d in docs if d["key"] == w), None)
+        if doc is None:
+            abort(404)
+    else:
+        doc = docs[0] if docs else None
+    if doc is None:
+        return render_template(
+            "doc.html", active="weekly", title="📅 주간 정리", parent=parent,
+            content=Markup('<div class="doc"><b>주간 정리 문서가 없다</b> — '
+                           '<code>kb/reports/weekly_YYYY_MM_DD.md</code> 를 만들면 여기 뜬다.</div>'),
+            subtitle="kb/reports/weekly_*.md · 문서 0건")
+    text = doc["path"].read_text(encoding="utf-8", errors="ignore")
+    meta, _ = split_frontmatter(text)
+    others = [d for d in docs if d["key"] != doc["key"]]
+    switch = ""
+    if others:
+        switch = ('<div class="doc" style="border-left:4px solid #7c3aed;padding:10px 16px;margin-bottom:14px">'
+                  '<b>다른 주</b> · ' + " · ".join(
+                      f'<a href="/weekly?w={escape(d["key"])}">{escape(d["label"])}</a>' for d in others)
+                  + "</div>")
+    return render_template(
+        "doc.html", active="weekly", parent=parent,
+        title="📅 " + (meta.get("title") or doc["title"]),
+        content=Markup(switch) + Markup(md_html(text, ("tables", "fenced_code", "toc"))),
+        docmeta=doc_badges(meta), toc=True,
+        subtitle=f"kb/reports/{doc['path'].name} · 원본은 이 파일이다 — 화면은 읽기용이다 · "
+                 "확정값의 지위는 원장이 정한다")
+
+
 @app.route("/api/log", methods=["POST"])
 def api_log():
     from flask import request
