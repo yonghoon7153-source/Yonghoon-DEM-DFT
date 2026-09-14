@@ -92,3 +92,60 @@ def test_forbidden_lines_actually_reach_the_page(client):
 def test_other_composition_page_has_no_card_section(client):
     html = client.get("/composition/comp1").data.decode()
     assert "해석</span>" not in html and "금지 서술" not in html
+
+
+# ── 숫자 표 ─────────────────────────────────────────────────────────────────
+def test_tables_render_with_their_source(client):
+    """양성: 표가 화면에 그려지고 **출처 파일**을 달고 나간다."""
+    import html as _h
+    page = _h.unescape(client.get(f"/composition/{ND}").data.decode())
+    tabs = V.interpretation_cards_for(ND)[0]["tables"]
+    assert tabs, "해석 카드에 표가 0개다"
+    for tb in tabs:
+        assert not tb["error"], f"표 모양이 어긋난다: {tb['title']} — {tb['error']}"
+        assert tb["title"][:12] in page, f"표 제목이 화면에 없다: {tb['title']}"
+        assert tb["source"] and tb["source"] in page, f"표에 출처가 안 붙었다: {tb['title']}"
+        for cell in tb["rows"][0]:
+            probe = cell.replace("**", "")[:10]
+            assert probe in page, f"표 첫 행이 화면에 안 나간다: {probe}"
+
+
+def test_table_numbers_still_match_the_raw_record():
+    """⛔음성 **표류 감시**: 카드의 표가 원자료와 어긋나면 잡는다.
+
+    카드는 손으로 쓴 문서다. 원자료(`pdos_band_edge_composition_*.json`)를 다시 계산하면
+    카드의 수는 자동으로 안 바뀐다 — 그 간극이 '화면이 낡은 수를 계속 보여주는' 경로다.
+    """
+    raw = json.loads((ROOT / "db/properties/pdos_band_edge_composition_2026_09_14.json")
+                     .read_text(encoding="utf-8"))
+    src = {r["label"]: r for r in raw}
+    tab = next(t for t in V.interpretation_cards_for(ND)[0]["tables"]
+               if "가장자리" in t["title"])
+    cells = " ".join(" ".join(r) for r in tab["rows"])
+    checked = 0
+    for label, edge in (("ndo_lpscl16_n5fu", "VBM"), ("ndo_lpscl16_n5fu", "CBM"),
+                        ("modelc_undoped", "VBM"), ("modelc_undoped", "CBM")):
+        comp = src[label][f"{edge}_composition_pct"]
+        for el, pct in comp.items():
+            if pct < 1.0:            # 1 % 미만은 표에서 생략될 수 있다 — 요구하지 않는다
+                continue
+            # ⚠ 카드는 사람이 읽는 요약이라 **소수 1자리**로 적는다 (선언된 반올림).
+            #   원문 그대로(77.34)든 1자리(77.3)든 하나는 있어야 한다 — 78.1 로 표류하면 둘 다 없다.
+            ok = (f"{el} {pct}" in cells) or (f"{el} {round(pct, 1)}" in cells)
+            assert ok, (f"표가 원자료와 어긋난다: {label} {edge} {el} 은 {pct} % "
+                        f"(1자리 {round(pct, 1)}) 인데 표에 없다")
+            checked += 1
+    assert checked >= 12, f"대조한 값이 {checked}개뿐이다 — 검사가 공허하다"
+
+
+def test_malformed_table_is_reported_not_hidden(tmp_path):
+    """⛔음성: 열 수와 칸 수가 다른 표를 **조용히 그리지 않는다**."""
+    d = tmp_path / "db" / "properties"
+    d.mkdir(parents=True)
+    (d / "t.json").write_text(json.dumps({
+        "schema": "interpretation_card/v1", "composition": "x",
+        "표": [{"제목": "깨진 표", "columns": ["a", "b"], "rows": [["1"], ["2", "3"]]}],
+    }, ensure_ascii=False), encoding="utf-8")
+    tb = V.interpretation_cards_for("x", root=tmp_path)[0]["tables"][0]
+    assert tb["error"] and "[0]" in tb["error"], f"어긋난 행을 안 잡았다: {tb}"
+

@@ -118,6 +118,26 @@ def closure_cards_for(cid: str, prefixes=None, root=None) -> list:
     return out
 
 
+def _tables(raw) -> list:
+    """해석 카드의 `표` → 화면용. **모양을 검사하고, 어긋나면 말한다.**
+
+    ⛔ 조용히 자르거나 버리지 않는다 — 표가 반쯤 그려지면 사람은 그걸 전부로 읽는다.
+    """
+    out = []
+    for t in raw:
+        if not isinstance(t, dict):
+            continue
+        cols = [str(c) for c in (t.get("columns") or [])]
+        rows = [[str(c) for c in r] for r in (t.get("rows") or []) if isinstance(r, (list, tuple))]
+        bad = [i for i, r in enumerate(rows) if len(r) != len(cols)]
+        out.append({"title": str(t.get("제목") or t.get("title") or ""),
+                    "columns": cols, "rows": rows,
+                    "note": str(t.get("note") or ""),
+                    "source": str(t.get("source") or ""),
+                    "error": (f"열 {len(cols)}개인데 칸 수가 다른 행 {bad}" if bad else "")})
+    return out
+
+
 def interpretation_cards_for(cid: str, root=None) -> list:
     """이 조성의 **해석 카드** (`schema: interpretation_card/v1`).
 
@@ -161,6 +181,9 @@ def interpretation_cards_for(cid: str, root=None) -> list:
             "forbidden": list(j.get("금지_서술") or []),
             "counter": list(j.get("3_반대_증거_숨기지_않는다") or []),
             "open": list(j.get("미결_이것이_있어야_주장이_선다") or []),
+            # 숫자 표 — 카드가 선언한 것만, **출처 파일을 달고** 온다.
+            #   ⚠ 모양이 어긋난 표(열 수 ≠ 칸 수)는 버리지 않고 `error` 를 달아 낸다.
+            "tables": _tables(j.get("표") or []),
         })
     out.sort(key=lambda r: r.get("date") or "", reverse=True)
     return out
