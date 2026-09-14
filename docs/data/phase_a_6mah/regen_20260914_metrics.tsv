@@ -1,0 +1,15 @@
+# Phase A 킷 STEP2 재생성 (2026-09-14, V100 Tesla V100-PCIE-32GB) — mpm_metrics.json 발췌
+# ⚠ 계기: V100 인스턴스 만료로 이전 런 디렉터리(W1·W4 원자료 + 72팔 캠페인)가 전부 소실됐다.
+#   같은 씨앗·같은 봉인 규약으로 재생성했고, 대조점은 **재생성 런을 보기 전에** 등록돼 있었다
+#   (docs/reviews/phase_a_6mah_order_prereg_20260907.md 의 §W1-정본대조 · §W4 채점표).
+# 공통 (5킷 전부 동일): am_load_frac 0.0 · descend_probe_quasistatic_n 0 · frames_budget 2500 ·
+#   n_grid 256 · platen_mach_VcP 0.03 · platen_mach_VcS 0.2142 · quasistatic_limit_VcP 0.01 ·
+#   quasistatic_ok False · quasistatic_violation True · readout wallP · seed 3 ·
+#   stop_mode legacy_moving · sub 40 · target_GPa 0.3
+# ⚠ quasistatic_violation=True 는 결함이 아니라 **등록된 등급 B 규약**이다 (Mach 0.03 > 한계 0.01).
+kit	dilate_z	porosity_at_target_pct	porosity_settled_pct	settled_over_target	thickness_um	seed_AM_frac_pct	seed_SE_frac_pct
+VGCF_PTFE_1_1	1.0214	13.848	13.848	0.4433	115.302	55.04	27.68
+VGCF_PTFE_2_1	1.0519	14.44	14.44	0.4759	118.725	53.53	27.17
+VGCF_PTFE_3_0.5	1.0795	15.525	15.525	0.6032	121.703	52.23	26.63
+VGCF_PTFE_3_1	1.0798	14.889	14.889	0.467	121.869	52.21	26.62
+VGCF_PTFE_4_1	1.1085	15.373	15.373	0.4581	125.099	50.93	26.05
