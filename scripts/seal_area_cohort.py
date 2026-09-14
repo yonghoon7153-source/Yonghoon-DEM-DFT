@@ -131,6 +131,18 @@ def seal_case(case_dir: Path, deck_dir: Path | None, design: dict | None = None)
         for d in sorted(q for q in case_dir.glob('post_*') if q.is_dir()):
             a = a or _PC._pick_latest(str(d), 'atom_*.liggghts')
         problems.append('RAW_MISSING_CONTACT' if a else 'RAW_MISSING_ATOM')
+        #  ★ 계약 §5-v4 D-8 (2026-09-14) — **있는 것은 적는다.**  옛 판은 contact 가 없으면
+        #    존재하는 atom 의 경로·지문까지 비웠다.  거짓 `RAW_OK` 는 아니었지만 **pending
+        #    입력의 이력이 사라져** 결손 행의 빈 칸을 *"atom 도 없다"* 로 읽게 만들었다
+        #    (실제로 `lhs00_029` 의 −150,000 을 쫓을 때 그 빈 칸이 길을 흐렸다).
+        #    ⚠ 상태는 그대로 `RAW_MISSING_CONTACT` 다 — 이 줄은 **기록만** 늘리고 판정은
+        #      한 글자도 안 바꾼다.  selftest ⑩ 이 상태와 기록을 **같이** 문다.
+        if a:
+            ap = Path(a)
+            row['atom_file'], row['atom_sha256'] = str(ap), sha256(ap)
+            _na, _ba = step_of(ap)
+            _sa = _ba if _ba is not None else _na
+            row['step_atom'] = '' if _sa is None else str(_sa)
     else:
         row['atom_file'], row['contact_file'] = str(hit[0]), str(hit[1])
         row['atom_sha256'], row['contact_sha256'] = sha256(hit[0]), sha256(hit[1])
@@ -246,6 +258,23 @@ def _selftest() -> int:
     chk('④ 결손은 거부가 아니라 상태다', by['lhs00_902']['status'] == 'RAW_MISSING_CONTACT'
         and by['lhs00_903']['status'] == 'DECK_MISSING' and by['lhs00_904']['status'] == 'RAW_MISSING_ATOM',
         str({k: by[k]['status'] for k in ('lhs00_902', 'lhs00_903', 'lhs00_904')}))
+    # ⑩ **결손 행도 있는 것은 적는다** (계약 §5-v4 D-8) — contact 가 없다고 해서 **존재하는
+    #    atom 의 경로·지문까지 비우지 않는다.  거짓 `RAW_OK` 는 아니었지만 pending 입력의
+    #    이력이 사라져, 결손 행의 빈 칸을 읽는 사람이 *"atom 도 없다"* 로 오독하게 된다.
+    #    ⚠ 상태는 그대로 `RAW_MISSING_CONTACT` 여야 한다 — 이 검사가 그것도 같이 문다.
+    _m = by['lhs00_902']
+    chk('★⑩ contact 결손이어도 **있는 atom** 의 경로·지문은 적는다 (D-8)',
+        _m['status'] == 'RAW_MISSING_CONTACT'
+        and _m['atom_file'].endswith('atom_100.liggghts') and len(_m['atom_sha256']) == 64
+        and _m['contact_file'] == '' and _m['contact_sha256'] == '',
+        f"atom={_m['atom_file'] or '(빈칸)'} · sha={len(_m['atom_sha256'])}자 · "
+        f"contact={_m['contact_file'] or '(빈칸)'}")
+    chk('⑩b 결손 행의 step 은 atom 쪽만 채워진다 (gap 은 없다)',
+        _m['step_atom'] == '100' and _m['step_contact'] == '' and _m['step_gap'] == '',
+        f"atom={_m['step_atom']!r} contact={_m['step_contact']!r} gap={_m['step_gap']!r}")
+    chk('⑩c atom 도 없는 행은 그대로 빈칸 (없는 것을 지어내지 않는다)',
+        by['lhs00_904']['atom_file'] == '' and by['lhs00_904']['atom_sha256'] == '')
+
     # ⑤ 판별력: 파일 한 바이트를 바꾸면 지문이 바뀐다
     p = t / 'lhs00_900' / 'post_lhs00_900' / 'atom_100.liggghts'
     before = by['lhs00_900']['atom_sha256']
