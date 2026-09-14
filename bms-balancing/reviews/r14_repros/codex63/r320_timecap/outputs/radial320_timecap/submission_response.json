@@ -1,0 +1,17 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"job_id\": \"18a00b03e38d4694b9ba30d88e7008f4\",\n  \"job_directory\": \"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\outputs\\\\comsol63\\\\.comsol-jobs\\\\18a00b03e38d4694b9ba30d88e7008f4\",\n  \"worker_pid\": 14664,\n  \"source_sha256\": \"8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3\",\n  \"state\": \"submitted\",\n  \"next\": \"Poll comsol_job_status; submission is not completion. Never resubmit an unknown job automatically.\"\n}"
+    }
+  ],
+  "structuredContent": {
+    "job_id": "18a00b03e38d4694b9ba30d88e7008f4",
+    "job_directory": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\comsol63\\.comsol-jobs\\18a00b03e38d4694b9ba30d88e7008f4",
+    "worker_pid": 14664,
+    "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "state": "submitted",
+    "next": "Poll comsol_job_status; submission is not completion. Never resubmit an unknown job automatically."
+  },
+  "isError": false
+}

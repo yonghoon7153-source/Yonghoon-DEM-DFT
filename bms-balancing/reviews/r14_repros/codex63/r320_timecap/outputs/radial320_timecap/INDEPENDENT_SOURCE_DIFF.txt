@@ -1,0 +1,22 @@
+--- outputs/comsol63/radial320/Caps300R320H0250.java
++++ outputs/comsol63/radial320_timecap/Caps300R320H0125.java
+@@ -13,3 +13,3 @@
+  */
+-public class Caps300R320H0250 {
++public class Caps300R320H0125 {
+     static final String LIBRARY = "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/inputs/battery_lib_63.mph";
+@@ -338,3 +338,3 @@
+         m.sol(sol).feature(time).set("maxstepbdf",0.1);
+-        m.sol(sol).feature(time).set("maxstepexpressionbdf","if(t<0.1[s],0.00025[s],0.1[s])");
++        m.sol(sol).feature(time).set("maxstepexpressionbdf","if(t<0.1[s],0.000125[s],0.1[s])");
+         m.sol(sol).feature(time).set("rtol",1e-6);
+@@ -354,3 +354,3 @@
+         System.out.println("PREFLIGHT_GUARD="+guard);
+-        System.out.println("PREFLIGHT_TIME=maxstep_expression=if(t<0.1[s],0.00025[s],0.1[s])|inactive_constant_slot_s=0.1|initialstep_s=1e-5|rtol=1e-6|strict|all accepted steps|eventout|consistency="+m.sol(sol).feature(time).getString("consistent"));
++        System.out.println("PREFLIGHT_TIME=maxstep_expression=if(t<0.1[s],0.000125[s],0.1[s])|inactive_constant_slot_s=0.1|initialstep_s=1e-5|rtol=1e-6|strict|all accepted steps|eventout|consistency="+m.sol(sol).feature(time).getString("consistent"));
+         System.out.println("PREFLIGHT_SOLVE_BEGIN=0..5 seconds; NO full protocol or sweep");
+@@ -503,3 +503,3 @@
+         Model m=ModelUtil.create("Model");
+-        m.label("Caps300R320H0250 - fresh common dense time grid, 5 seconds only");
++        m.label("Caps300R320H0125 - fresh common dense time grid, 5 seconds only");
+         String[][] params={

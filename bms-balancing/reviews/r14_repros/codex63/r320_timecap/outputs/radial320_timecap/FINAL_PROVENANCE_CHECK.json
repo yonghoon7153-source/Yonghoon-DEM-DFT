@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "recorded_at_utc": "2026-09-14T10:45:02.443207+00:00",
+  "prior_native_job_ids": 29,
+  "prior_native_files_rehashed_unchanged": 196,
+  "prior_status_files_unchanged": 29,
+  "new_native_job_ids": [
+    "18a00b03e38d4694b9ba30d88e7008f4"
+  ],
+  "new_execution_count": 1,
+  "reference_jobs_rerun": false,
+  "new_state": "completed",
+  "compile_returncode": 0,
+  "batch_returncode": 0,
+  "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+  "old_failed_job_state_preserved": true,
+  "scope": "Native-job uniqueness and preservation only. Full current967 preservation and physical/numerical validity are separate root/native audits.",
+  "COMSOL_calls_by_this_script": 0
+}

@@ -1,0 +1,25 @@
+{
+  "scope": "Exactly one new R320H0125 five-second early time-cap halving against existing R320H0250",
+  "jobs": [
+    {
+      "name": "Caps300R320H0250",
+      "job_id": "f0db6d080ad04045a2b43dc5a51d89b2",
+      "source_sha256": "837f8b03ff3381bb1aea6397935d0079b032f5e4aea007b32d1ebf7c40775b2e",
+      "early_cap_s": 0.00025,
+      "cores": 2,
+      "timeout_seconds": 1200,
+      "max_physical_time_s": 5,
+      "role": "existing_reference"
+    },
+    {
+      "name": "Caps300R320H0125",
+      "job_id": "18a00b03e38d4694b9ba30d88e7008f4",
+      "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+      "early_cap_s": 0.000125,
+      "cores": 2,
+      "timeout_seconds": 1200,
+      "max_physical_time_s": 5,
+      "role": "new_authorized_run"
+    }
+  ]
+}

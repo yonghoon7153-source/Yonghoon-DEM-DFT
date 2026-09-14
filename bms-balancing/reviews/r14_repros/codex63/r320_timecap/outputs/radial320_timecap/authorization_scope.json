@@ -1,0 +1,18 @@
+{
+  "authorization": "Explicit user request in current conversation for exactly one new Caps300R320H0125 5-second early cap halving; duplicate check first; baseline reuse only.",
+  "new_COMSOL_runs_authorized": 1,
+  "new_name": "Caps300R320H0125",
+  "physical_seconds": 5,
+  "baseline_name": "Caps300R320H0250",
+  "baseline_job_id": "f0db6d080ad04045a2b43dc5a51d89b2",
+  "baseline_source_sha256": "837f8b03ff3381bb1aea6397935d0079b032f5e4aea007b32d1ebf7c40775b2e",
+  "new_expression": "if(t<0.1[s],0.000125[s],0.1[s])",
+  "prohibited_auto_extensions": [
+    "additional time halving",
+    "mesh refinement",
+    "full protocol",
+    "12h rest",
+    "finite sigma",
+    "sweep"
+  ]
+}

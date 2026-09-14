@@ -1,0 +1,38 @@
+{
+  "prior_R160_TIMECAP_local_archive": {
+    "path": "outputs/COMSOL63_R160_TIMECAP_HANDOFF.zip",
+    "observed_bytes": 307305998,
+    "observed_sha256": "481ce9ebb1455de18ffcc35554d34b8a5fceb5c8cea3018938a200fadd920bdc",
+    "manifest_payload_count": 267,
+    "zip_member_count": 268,
+    "embedded_and_external_original_manifest_equal": true,
+    "fresh_outer_sha_and_manifest_identity_check": true,
+    "fresh_full_payload_CRC_and_SHA_check": false,
+    "historical_receipt_records_all267_payload_CRC_and_SHA_pass": true,
+    "original_receipt_path": "outputs/COMSOL63_R160_TIMECAP_HANDOFF_RECEIPT.json",
+    "original_receipt_unchanged": true
+  },
+  "recipient_confirmation": {
+    "evidence_type": "User report relayed by root in this turn",
+    "reported_bytes": 307305998,
+    "reported_sha256": "481ce9ebb1455de18ffcc35554d34b8a5fceb5c8cea3018938a200fadd920bdc",
+    "reported_267_payload_manifest_CRC_pass": true,
+    "reported_identity_matches_locally_observed_bytes": true,
+    "recipient_raw_archive_independently_opened_by_this_auditor": false
+  },
+  "local_current_preservation": {
+    "ledger_path": "outputs/radial320/preserved_before.json",
+    "ledger_sha256": "c1962e15656bf774a0e25a516fc1cd032564d7ab261fb5f28259da1b716c9445",
+    "entries": 867,
+    "evidence_type": "Local preservation inventory; full preservation checking is a separate root final audit.",
+    "recipient_verification_of_all_current867_files": false
+  },
+  "historical_failed_job": {
+    "job_id": "08e0fc5d41e147678f3940e98100ec12",
+    "state": "failed",
+    "classification": "INCOMPLETE_RANGE_STOP",
+    "status_sha256": "78f99a8ee35fe743c44f9cc6b41f94e699d7bb3c59174f28b510db27ce111aba",
+    "status_unchanged": true
+  },
+  "new_R320_delivery": "Not yet a received archive. Any later local packaging check must remain separate from recipient confirmation."
+}

@@ -1,0 +1,190 @@
+{
+  "scope": "One new R320H0125 result compared with existing R320H0250; no reruns by this script.",
+  "difference_convention": "R320H0125 minus R320H0250",
+  "temporal_interpolation": false,
+  "convergence_order_computed": false,
+  "time_counts_0_to_1_and_0_to_5": {
+    "requested_grid": [
+      107,
+      187
+    ],
+    "all_exact_common_stored": [
+      484,
+      565
+    ]
+  },
+  "voltage_peaks_recomputed_from_full_comparison_CSVs": {
+    "requested": {
+      "time_s_exact": "0.002",
+      "V_first_V": "2.2327181137621883",
+      "V_second_V": "2.232716843842165",
+      "difference_V_second_minus_first_V": "-0.0000012699200233",
+      "difference_delta_Eeq_V": "-0.0000012885552024",
+      "difference_delta_etaMid_V": "1.8959289025E-8",
+      "difference_delta_phiL_V": "-3.241101E-10",
+      "difference_decomposition_residual_V": "1.75E-16",
+      "prior_radial_same_time_available": "True",
+      "prior_radial_R320H0250_minus_R160H0250_V_V": "0.0006170341087208",
+      "prior_radial_R320H0250_minus_R160H0250_delta_Eeq_V": "0.0006265730874137",
+      "prior_radial_R320H0250_minus_R160H0250_delta_etaMid_V": "-0.000009686004647454",
+      "prior_radial_R320H0250_minus_R160H0250_delta_phiL_V": "1.470259547E-7",
+      "time_cap_abs_difference_divided_by_prior_radial_same_time_abs_difference": "0.002058103442502920824992537802"
+    },
+    "all_exact_common": {
+      "time_s_exact": "0.002",
+      "V_first_V": "2.2327181137621883",
+      "V_second_V": "2.232716843842165",
+      "difference_V_second_minus_first_V": "-0.0000012699200233",
+      "difference_delta_Eeq_V": "-0.0000012885552024",
+      "difference_delta_etaMid_V": "1.8959289025E-8",
+      "difference_delta_phiL_V": "-3.241101E-10",
+      "difference_decomposition_residual_V": "1.75E-16",
+      "prior_radial_same_time_available": "True",
+      "prior_radial_R320H0250_minus_R160H0250_V_V": "0.0006170341087208",
+      "prior_radial_R320H0250_minus_R160H0250_delta_Eeq_V": "0.0006265730874137",
+      "prior_radial_R320H0250_minus_R160H0250_delta_etaMid_V": "-0.000009686004647454",
+      "prior_radial_R320H0250_minus_R160H0250_delta_phiL_V": "1.470259547E-7",
+      "time_cap_abs_difference_divided_by_prior_radial_same_time_abs_difference": "0.002058103442502920824992537802"
+    }
+  },
+  "requested_and_exact_common_voltage_peak_identical": true,
+  "surface_maximum_exact_common": {
+    "electrode": "N",
+    "time_s_exact": "0.002",
+    "sample_index": 240,
+    "coordinate_first_m": 5.2e-05,
+    "coordinate_second_m": 5.2e-05,
+    "x_surface_first": 0.011756001419374324,
+    "x_surface_second": 0.011755980069889803,
+    "signed_difference_second_minus_first_x": -2.1349484521e-08,
+    "absolute_difference_x": 2.1349484521e-08
+  },
+  "surface_peak_confirmed_in_exported_profile": true,
+  "surface_axis_exponent": -8,
+  "same_time_0p002s_decomposition": {
+    "time_s_exact": "0.002",
+    "V_first_V": "2.2327181137621883",
+    "V_second_V": "2.232716843842165",
+    "difference_V_second_minus_first_V": "-0.0000012699200233",
+    "difference_delta_Eeq_V": "-0.0000012885552024",
+    "difference_delta_etaMid_V": "1.8959289025E-8",
+    "difference_delta_phiL_V": "-3.241101E-10",
+    "difference_decomposition_residual_V": "1.75E-16",
+    "prior_radial_same_time_available": "True",
+    "prior_radial_R320H0250_minus_R160H0250_V_V": "0.0006170341087208",
+    "prior_radial_R320H0250_minus_R160H0250_delta_Eeq_V": "0.0006265730874137",
+    "prior_radial_R320H0250_minus_R160H0250_delta_etaMid_V": "-0.000009686004647454",
+    "prior_radial_R320H0250_minus_R160H0250_delta_phiL_V": "1.470259547E-7",
+    "time_cap_abs_difference_divided_by_prior_radial_same_time_abs_difference": "0.002058103442502920824992537802"
+  },
+  "time_sensitivity_to_prior_radial_max_ratio_percent": 0.2058103442502921,
+  "prior_radial_max_abs_voltage_difference_V": 0.0006170341087208,
+  "ratio_interpretation": "Different-experiment maxima are magnitude context only; no mixed-cap radial comparison, convergence order, or error bound.",
+  "electrode_bounds_um_from_profile_coordinates": {
+    "N": [
+      0.0,
+      52.0
+    ],
+    "P": [
+      77.0,
+      121.0
+    ]
+  },
+  "separator_bounds_um_from_profile_coordinates": [
+    52.0,
+    77.0
+  ],
+  "native_steps": [
+    {
+      "label": "H0250 (existing)",
+      "accepted_steps": 592,
+      "early_accepted_steps": 414,
+      "arriving_at_0p1": {
+        "start_time_s_exact": "0.09975",
+        "end_time_s_exact": "0.1",
+        "actual_step_s_exact": "0.00025",
+        "interval_required_cap_s_exact": "0.00025",
+        "region": "arrives_at_0.1",
+        "within_cap_with_1e-12s_roundoff": "True",
+        "at_cap_with_1e-12s_roundoff": "True",
+        "step_to_cap_ratio": "1.0",
+        "step_index": "414",
+        "time_log_s": "0.1",
+        "step_log_s": "0.00025",
+        "raw_native_log_line": "414         0.1     0.00025 out  838  423  844     2     0      0  2.1e-11  3.9e-16"
+      },
+      "departing_from_0p1": {
+        "start_time_s_exact": "0.1",
+        "end_time_s_exact": "0.10025",
+        "actual_step_s_exact": "0.00025",
+        "interval_required_cap_s_exact": "0.1",
+        "region": "after_0.1",
+        "within_cap_with_1e-12s_roundoff": "True",
+        "at_cap_with_1e-12s_roundoff": "False",
+        "step_to_cap_ratio": "0.0025",
+        "step_index": "415",
+        "time_log_s": "0.10025",
+        "step_log_s": "0.00025",
+        "raw_native_log_line": "415     0.10025     0.00025 out  840  424  846     2     0      0  7.7e-13  2.8e-16"
+      },
+      "late_max_actual_step_s_exact": "0.05"
+    },
+    {
+      "label": "H0125 (new)",
+      "accepted_steps": 986,
+      "early_accepted_steps": 807,
+      "arriving_at_0p1": {
+        "start_time_s_exact": "0.099875",
+        "end_time_s_exact": "0.1",
+        "actual_step_s_exact": "0.000125",
+        "interval_required_cap_s_exact": "0.000125",
+        "region": "arrives_at_0.1",
+        "within_cap_with_1e-12s_roundoff": "True",
+        "at_cap_with_1e-12s_roundoff": "True",
+        "step_to_cap_ratio": "1.0",
+        "step_index": "807",
+        "time_log_s": "0.1",
+        "step_log_s": "0.000125",
+        "raw_native_log_line": "807         0.1    0.000125 out 1624  816 1630     2     0      0  6.4e-11  7.9e-16"
+      },
+      "departing_from_0p1": {
+        "start_time_s_exact": "0.1",
+        "end_time_s_exact": "0.100125",
+        "actual_step_s_exact": "0.000125",
+        "interval_required_cap_s_exact": "0.1",
+        "region": "after_0.1",
+        "within_cap_with_1e-12s_roundoff": "True",
+        "at_cap_with_1e-12s_roundoff": "False",
+        "step_to_cap_ratio": "0.00125",
+        "step_index": "808",
+        "time_log_s": "0.10013",
+        "step_log_s": "0.000125",
+        "raw_native_log_line": "808     0.10013    0.000125 out 1626  817 1632     2     0      0  1.5e-11  4.4e-16"
+      },
+      "late_max_actual_step_s_exact": "0.05"
+    }
+  ],
+  "input_sha256": {
+    "outputs/radial320_timecap/results/analysis.json": "ec5c62b04f013ee8c079cd5ed5d0a2a929b7aa8e6d2f43b80da925917d69ee61",
+    "outputs/radial320_timecap/results/Caps300R320H0250_vs_Caps300R320H0125_requested_grid_0_to_5s.csv": "7f4425d5c18af352d06d2baf9045df7c2b1971d3184837c9f86da11b9f2a6633",
+    "outputs/radial320_timecap/results/Caps300R320H0250_vs_Caps300R320H0125_all_exact_common_stored_0_to_5s.csv": "e933ded8c3df0e7308b9d0d928520dabc655129cb70191147336578353239cd8",
+    "outputs/radial320_timecap/results/Caps300R320H0250_vs_Caps300R320H0125_all_exact_common_stored_0_to_5s_profile_at_surface_peak.csv": "c0f437b66760aadd571a8bdcce59f9285bc3ac2817102215d98f7e6c09c6ff4c",
+    "outputs/radial320_timecap/native_steps_summary.json": "bf865898bda70577a996fe386d61d76e6a973a5ef4da821b81f1ccfcfe15436a",
+    "outputs/radial320/native_steps_summary.json": "6ced93a459915480831db32734fa67e61ece54bdeee0851d4871c1c0e4eff3d5",
+    "outputs/radial320/Caps300R320H0250_accepted_steps.csv": "86625ae76950f116c9f4fa1cc48fe55f103b1e5491afb4365df70cb888b0d143",
+    "outputs/radial320_timecap/Caps300R320H0125_accepted_steps.csv": "245b92722adb41da6ba5f45c240dd8dcbab819ca8f737a45be55b16eed67a852"
+  },
+  "all_tracked_inputs_unchanged_after_plot": true,
+  "artifacts": [
+    {
+      "path": "outputs/radial320_timecap/figures/timecap320_comparison.png",
+      "sha256": "c6449305e3bfa7c1590ca4707351fbf56de74dfc5be9a4a5d6dae07812e2de46",
+      "bytes": 482100
+    },
+    {
+      "path": "outputs/radial320_timecap/figures/timecap320_comparison.pdf",
+      "sha256": "50856ae6001936d09b20bb5eee0b2e0657ac87779e305cc005a046fd2e5e8b44",
+      "bytes": 48219
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "prior_R320_local_archive": {
+    "path": "outputs/COMSOL63_RADIAL320_HANDOFF.zip",
+    "observed_bytes": 429953577,
+    "observed_sha256": "89703ec4a1e47985ddefa9b0270cd317d0356cbe2ec7d4efe31f879703702aa0",
+    "embedded_and_external_original_manifest_equal": true,
+    "payload_entries": 147,
+    "ZIP_entries": 148,
+    "fresh_check_scope": "Outer file SHA256 and manifest identity/count only; historical receipt records full payload CRC/SHA pass.",
+    "original_archive_receipt_and_manifest_unchanged": true
+  },
+  "latest_user_recipient_confirmation": {
+    "evidence_type": "Latest user report relayed by root",
+    "payload147_and_manifest_CRC_confirmed": true,
+    "historical333_confirmed": true,
+    "raw_numerical_results_confirmed": true,
+    "recipient_raw_ZIP_bytes_or_SHA_restated": false,
+    "recipient_raw_ZIP_bytes": null,
+    "recipient_raw_ZIP_sha256": null,
+    "recipient_raw_archive_independently_opened_by_this_auditor": false,
+    "received_outer_archive_identity_matches_local_claim": "Not inferred from payload/CRC/numerical confirmation alone."
+  },
+  "current_local_preservation": {
+    "path": "outputs/radial320_timecap/preserved_before.json",
+    "sha256": "88aee5d33bb3a348c1516543fc2e7e844b5a394613a44b26606a2a295c608f2b",
+    "entries": 967,
+    "full_local_preservation_verification": "Separate root final check",
+    "external_recipient_verification_of_all967_current_files": false
+  },
+  "new_H0125_delivery": "Not yet a received archive. Any locally generated package identity remains separate from future recipient verification."
+}

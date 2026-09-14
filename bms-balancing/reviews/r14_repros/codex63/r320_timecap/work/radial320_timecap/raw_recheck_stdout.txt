@@ -1,0 +1,571 @@
+{
+  "status": "PASS",
+  "method": "Independent raw boundary arithmetic and exact (time, coordinate) profile join; analyzer not imported; no interpolation.",
+  "jobs": [
+    "f0db6d080ad04045a2b43dc5a51d89b2",
+    "18a00b03e38d4694b9ba30d88e7008f4"
+  ],
+  "windows": [
+    {
+      "time_basis": "requested_grid",
+      "end_s": 1,
+      "count": 107,
+      "voltage_peak_time_s_exact": "0.002",
+      "signed_voltage_difference_V_exact": "-0.0000012699200233",
+      "same_time_decomposition_V_exact": [
+        "-0.0000012885552024",
+        "1.8959289025E-8",
+        "-3.241101E-10"
+      ],
+      "decomposition_residual_V_exact": "1.75E-16",
+      "surface_peak": {
+        "time_s_exact": "0.002",
+        "electrode": "N",
+        "coordinate_m_exact": "0.000052",
+        "first_x_exact": "0.011756001419374324",
+        "second_x_exact": "0.011755980069889803",
+        "abs_difference_x_exact": "2.1349484521E-8"
+      },
+      "matched_profile_rows": 51574,
+      "same_time_scalar_and_component_checks": [
+        {
+          "time_s_exact": "0.002",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.2327181137621883",
+            "2.1674732469197485",
+            "0.06268034156801883",
+            "0.0025645252744209"
+          ],
+          "second_values_V_exact": [
+            "2.232716843842165",
+            "2.1674719583645461",
+            "0.062680360527307855",
+            "0.0025645249503108"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-0.0000012699200233",
+            "-0.0000012885552024",
+            "1.8959289025E-8",
+            "-3.241101E-10"
+          ],
+          "difference_identity_residual_V_exact": "1.75E-16"
+        },
+        {
+          "time_s_exact": "0.005",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.234201331269507",
+            "2.1689806577164658",
+            "0.062655331218364643",
+            "0.0025653423346769"
+          ],
+          "second_values_V_exact": [
+            "2.234200647145173",
+            "2.1689799632745597",
+            "0.062655341704375808",
+            "0.0025653421662374"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-6.84124334E-7",
+            "-6.944419061E-7",
+            "1.0486011165E-8",
+            "-1.684395E-10"
+          ],
+          "difference_identity_residual_V_exact": "4.35E-16"
+        },
+        {
+          "time_s_exact": "0.01",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.2357938476082118",
+            "2.1705999115247333",
+            "0.062627445855809375",
+            "0.0025664902276691"
+          ],
+          "second_values_V_exact": [
+            "2.2357935737159824",
+            "2.1705996334420672",
+            "0.062627450112473058",
+            "0.0025664901614422"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-2.738922294E-7",
+            "-2.780826661E-7",
+            "4.256663683E-9",
+            "-6.62269E-11"
+          ],
+          "difference_identity_residual_V_exact": "-8.3E-17"
+        },
+        {
+          "time_s_exact": "0.04",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.241136851216645",
+            "2.1760367376845240",
+            "0.06252774559510255",
+            "0.0025723679370188"
+          ],
+          "second_values_V_exact": [
+            "2.241136813615726",
+            "2.1760366995026078",
+            "0.062527746185078614",
+            "0.0025723679280392"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-3.7600919E-8",
+            "-3.81819162E-8",
+            "5.89976064E-10",
+            "-8.9796E-12"
+          ],
+          "difference_identity_residual_V_exact": "7.36E-16"
+        }
+      ],
+      "magnitude_ratio_to_prior_radial_maximum_exact": "0.002058103442502920824992537802"
+    },
+    {
+      "time_basis": "requested_grid",
+      "end_s": 5,
+      "count": 187,
+      "voltage_peak_time_s_exact": "0.002",
+      "signed_voltage_difference_V_exact": "-0.0000012699200233",
+      "same_time_decomposition_V_exact": [
+        "-0.0000012885552024",
+        "1.8959289025E-8",
+        "-3.241101E-10"
+      ],
+      "decomposition_residual_V_exact": "1.75E-16",
+      "surface_peak": {
+        "time_s_exact": "0.002",
+        "electrode": "N",
+        "coordinate_m_exact": "0.000052",
+        "first_x_exact": "0.011756001419374324",
+        "second_x_exact": "0.011755980069889803",
+        "abs_difference_x_exact": "2.1349484521E-8"
+      },
+      "matched_profile_rows": 90134,
+      "same_time_scalar_and_component_checks": [
+        {
+          "time_s_exact": "0.002",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.2327181137621883",
+            "2.1674732469197485",
+            "0.06268034156801883",
+            "0.0025645252744209"
+          ],
+          "second_values_V_exact": [
+            "2.232716843842165",
+            "2.1674719583645461",
+            "0.062680360527307855",
+            "0.0025645249503108"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-0.0000012699200233",
+            "-0.0000012885552024",
+            "1.8959289025E-8",
+            "-3.241101E-10"
+          ],
+          "difference_identity_residual_V_exact": "1.75E-16"
+        },
+        {
+          "time_s_exact": "0.005",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.234201331269507",
+            "2.1689806577164658",
+            "0.062655331218364643",
+            "0.0025653423346769"
+          ],
+          "second_values_V_exact": [
+            "2.234200647145173",
+            "2.1689799632745597",
+            "0.062655341704375808",
+            "0.0025653421662374"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-6.84124334E-7",
+            "-6.944419061E-7",
+            "1.0486011165E-8",
+            "-1.684395E-10"
+          ],
+          "difference_identity_residual_V_exact": "4.35E-16"
+        },
+        {
+          "time_s_exact": "0.01",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.2357938476082118",
+            "2.1705999115247333",
+            "0.062627445855809375",
+            "0.0025664902276691"
+          ],
+          "second_values_V_exact": [
+            "2.2357935737159824",
+            "2.1705996334420672",
+            "0.062627450112473058",
+            "0.0025664901614422"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-2.738922294E-7",
+            "-2.780826661E-7",
+            "4.256663683E-9",
+            "-6.62269E-11"
+          ],
+          "difference_identity_residual_V_exact": "-8.3E-17"
+        },
+        {
+          "time_s_exact": "0.04",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.241136851216645",
+            "2.1760367376845240",
+            "0.06252774559510255",
+            "0.0025723679370188"
+          ],
+          "second_values_V_exact": [
+            "2.241136813615726",
+            "2.1760366995026078",
+            "0.062527746185078614",
+            "0.0025723679280392"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-3.7600919E-8",
+            "-3.81819162E-8",
+            "5.89976064E-10",
+            "-8.9796E-12"
+          ],
+          "difference_identity_residual_V_exact": "7.36E-16"
+        }
+      ],
+      "magnitude_ratio_to_prior_radial_maximum_exact": "0.002058103442502920824992537802"
+    },
+    {
+      "time_basis": "all_exact_common_stored",
+      "end_s": 1,
+      "count": 484,
+      "voltage_peak_time_s_exact": "0.002",
+      "signed_voltage_difference_V_exact": "-0.0000012699200233",
+      "same_time_decomposition_V_exact": [
+        "-0.0000012885552024",
+        "1.8959289025E-8",
+        "-3.241101E-10"
+      ],
+      "decomposition_residual_V_exact": "1.75E-16",
+      "surface_peak": {
+        "time_s_exact": "0.002",
+        "electrode": "N",
+        "coordinate_m_exact": "0.000052",
+        "first_x_exact": "0.011756001419374324",
+        "second_x_exact": "0.011755980069889803",
+        "abs_difference_x_exact": "2.1349484521E-8"
+      },
+      "matched_profile_rows": 233288,
+      "same_time_scalar_and_component_checks": [
+        {
+          "time_s_exact": "0.002",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.2327181137621883",
+            "2.1674732469197485",
+            "0.06268034156801883",
+            "0.0025645252744209"
+          ],
+          "second_values_V_exact": [
+            "2.232716843842165",
+            "2.1674719583645461",
+            "0.062680360527307855",
+            "0.0025645249503108"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-0.0000012699200233",
+            "-0.0000012885552024",
+            "1.8959289025E-8",
+            "-3.241101E-10"
+          ],
+          "difference_identity_residual_V_exact": "1.75E-16"
+        },
+        {
+          "time_s_exact": "0.005",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.234201331269507",
+            "2.1689806577164658",
+            "0.062655331218364643",
+            "0.0025653423346769"
+          ],
+          "second_values_V_exact": [
+            "2.234200647145173",
+            "2.1689799632745597",
+            "0.062655341704375808",
+            "0.0025653421662374"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-6.84124334E-7",
+            "-6.944419061E-7",
+            "1.0486011165E-8",
+            "-1.684395E-10"
+          ],
+          "difference_identity_residual_V_exact": "4.35E-16"
+        },
+        {
+          "time_s_exact": "0.01",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.2357938476082118",
+            "2.1705999115247333",
+            "0.062627445855809375",
+            "0.0025664902276691"
+          ],
+          "second_values_V_exact": [
+            "2.2357935737159824",
+            "2.1705996334420672",
+            "0.062627450112473058",
+            "0.0025664901614422"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-2.738922294E-7",
+            "-2.780826661E-7",
+            "4.256663683E-9",
+            "-6.62269E-11"
+          ],
+          "difference_identity_residual_V_exact": "-8.3E-17"
+        },
+        {
+          "time_s_exact": "0.04",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.241136851216645",
+            "2.1760367376845240",
+            "0.06252774559510255",
+            "0.0025723679370188"
+          ],
+          "second_values_V_exact": [
+            "2.241136813615726",
+            "2.1760366995026078",
+            "0.062527746185078614",
+            "0.0025723679280392"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-3.7600919E-8",
+            "-3.81819162E-8",
+            "5.89976064E-10",
+            "-8.9796E-12"
+          ],
+          "difference_identity_residual_V_exact": "7.36E-16"
+        }
+      ],
+      "magnitude_ratio_to_prior_radial_maximum_exact": "0.002058103442502920824992537802"
+    },
+    {
+      "time_basis": "all_exact_common_stored",
+      "end_s": 5,
+      "count": 565,
+      "voltage_peak_time_s_exact": "0.002",
+      "signed_voltage_difference_V_exact": "-0.0000012699200233",
+      "same_time_decomposition_V_exact": [
+        "-0.0000012885552024",
+        "1.8959289025E-8",
+        "-3.241101E-10"
+      ],
+      "decomposition_residual_V_exact": "1.75E-16",
+      "surface_peak": {
+        "time_s_exact": "0.002",
+        "electrode": "N",
+        "coordinate_m_exact": "0.000052",
+        "first_x_exact": "0.011756001419374324",
+        "second_x_exact": "0.011755980069889803",
+        "abs_difference_x_exact": "2.1349484521E-8"
+      },
+      "matched_profile_rows": 272330,
+      "same_time_scalar_and_component_checks": [
+        {
+          "time_s_exact": "0.002",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.2327181137621883",
+            "2.1674732469197485",
+            "0.06268034156801883",
+            "0.0025645252744209"
+          ],
+          "second_values_V_exact": [
+            "2.232716843842165",
+            "2.1674719583645461",
+            "0.062680360527307855",
+            "0.0025645249503108"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-0.0000012699200233",
+            "-0.0000012885552024",
+            "1.8959289025E-8",
+            "-3.241101E-10"
+          ],
+          "difference_identity_residual_V_exact": "1.75E-16"
+        },
+        {
+          "time_s_exact": "0.005",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.234201331269507",
+            "2.1689806577164658",
+            "0.062655331218364643",
+            "0.0025653423346769"
+          ],
+          "second_values_V_exact": [
+            "2.234200647145173",
+            "2.1689799632745597",
+            "0.062655341704375808",
+            "0.0025653421662374"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-6.84124334E-7",
+            "-6.944419061E-7",
+            "1.0486011165E-8",
+            "-1.684395E-10"
+          ],
+          "difference_identity_residual_V_exact": "4.35E-16"
+        },
+        {
+          "time_s_exact": "0.01",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.2357938476082118",
+            "2.1705999115247333",
+            "0.062627445855809375",
+            "0.0025664902276691"
+          ],
+          "second_values_V_exact": [
+            "2.2357935737159824",
+            "2.1705996334420672",
+            "0.062627450112473058",
+            "0.0025664901614422"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-2.738922294E-7",
+            "-2.780826661E-7",
+            "4.256663683E-9",
+            "-6.62269E-11"
+          ],
+          "difference_identity_residual_V_exact": "-8.3E-17"
+        },
+        {
+          "time_s_exact": "0.04",
+          "quantity_order": [
+            "V",
+            "delta_Eeq",
+            "delta_etaMid",
+            "delta_phiL"
+          ],
+          "first_values_V_exact": [
+            "2.241136851216645",
+            "2.1760367376845240",
+            "0.06252774559510255",
+            "0.0025723679370188"
+          ],
+          "second_values_V_exact": [
+            "2.241136813615726",
+            "2.1760366995026078",
+            "0.062527746185078614",
+            "0.0025723679280392"
+          ],
+          "differences_second_minus_first_V_exact": [
+            "-3.7600919E-8",
+            "-3.81819162E-8",
+            "5.89976064E-10",
+            "-8.9796E-12"
+          ],
+          "difference_identity_residual_V_exact": "7.36E-16"
+        }
+      ],
+      "magnitude_ratio_to_prior_radial_maximum_exact": "0.002058103442502920824992537802"
+    }
+  ],
+  "component_values_csv_rows_checked": 8,
+  "component_times_s_exact": [
+    "0.002",
+    "0.005",
+    "0.01",
+    "0.04"
+  ],
+  "prior_radial_maximum_V_exact_recomputed": "0.0006170341087208",
+  "prior_radial_comparison_identity": {
+    "first_job_id": "15e5d7433a6a4956b820cf6952330735",
+    "second_job_id": "f0db6d080ad04045a2b43dc5a51d89b2",
+    "role": "magnitude ratio, not convergence order"
+  }
+}

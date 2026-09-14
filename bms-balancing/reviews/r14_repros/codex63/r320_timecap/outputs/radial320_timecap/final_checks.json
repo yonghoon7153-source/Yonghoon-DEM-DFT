@@ -1,0 +1,55 @@
+{
+  "new_name": "Caps300R320H0125",
+  "new_job_id": "18a00b03e38d4694b9ba30d88e7008f4",
+  "new_source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+  "new_MPH_sha256": "298fcdb46bca110abc9e3422197684fda4cd8108746b9cc42f23eadaa147d884",
+  "new_MPH_bytes": 1266675445,
+  "new_native_state": "completed",
+  "exactly_one_new_authorized_job": true,
+  "existing_reference_jobs_rerun": false,
+  "prior_job_count": 29,
+  "prior_native_files_rehashed_unchanged": 196,
+  "baseline_atomic_identity_verified": {
+    "name": "Caps300R320H0250",
+    "source_path": "outputs/comsol63/radial320/Caps300R320H0250.java",
+    "source_sha256": "837f8b03ff3381bb1aea6397935d0079b032f5e4aea007b32d1ebf7c40775b2e",
+    "job_id": "f0db6d080ad04045a2b43dc5a51d89b2"
+  },
+  "only_Time_and_Variables_difference_is_authorized_early_cap": true,
+  "property_count": 1143,
+  "property_differences": {
+    "sol1/t1/maxstepexpressionbdf": {
+      "baseline": [
+        "String",
+        "[if(t<0.1[s],0.00025[s],0.1[s])]"
+      ],
+      "new": [
+        "String",
+        "[if(t<0.1[s],0.000125[s],0.1[s])]"
+      ]
+    }
+  },
+  "native_step_cap_compliance": true,
+  "later_time_accuracy_established": false,
+  "true_error_or_overall_convergence_established": false,
+  "temporal_limit": "At most sampled initial cap sensitivity for R320. Same later cap does not test time accuracy after0.1s. No true error, global convergence or long-run GO. Magnitude ratio is not an order.",
+  "local_inventory_before_count": 967,
+  "unchanged_current_bytes_count": 966,
+  "authorized_changes_with_before_bytes_preserved": [
+    {
+      "path": "outputs/NEXT_RUN_PLAN.md",
+      "before_bytes": 2422,
+      "before_sha256": "d7a0b5ea71937199120418d6ac0472c447e287ccec5074b49a6e4cfb595ba732",
+      "after_bytes": 2029,
+      "after_sha256": "e0e2fc6ce8bf636a27ac3a328d59e18f16d9c63def38f374e86df96abbccb7f7",
+      "before_backup_path": "outputs/radial320_timecap/NEXT_RUN_PLAN_before_timecap320.md"
+    }
+  ],
+  "preservation_limit": "Current local evidence inventory, not external verification of all current local files. Prior recipient147payload/manifest/CRC/history333 confirmation is separate.",
+  "historical_range_job_state": "failed",
+  "historical_range_classification": "INCOMPLETE_RANGE_STOP preserved; other failures not reclassified",
+  "electrolyte_positive_check": "POSTPROCESSING_ONLY",
+  "execution_wall_clock_allowance_seconds": 1200,
+  "physical_time_seconds": 5,
+  "additional_runs": 0
+}
