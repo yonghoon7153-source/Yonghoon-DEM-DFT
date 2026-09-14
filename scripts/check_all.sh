@@ -145,6 +145,14 @@ run 'webapp: ledger_view'         python3 webapp/test_ledger_view.py
 #    옛 스니펫은 디렉터리 항목을 **현재** 파일 집합으로 펼쳐 감사 이후 생긴 파일까지 셌고
 #    `.lstrip('./')` 가 dotfile 경로를 망가뜨렸다.  selftest 가 두 반례를 고정한다.
 run 'audit_coverage      --selftest' python3 scripts/audit_coverage.py --selftest
+#  ★★ 2026-09-14 (§6 전수 감사) — `claimed_fixed_sha` 가 **그 수정의 커밋**인가.
+#    실재하는 SHA 를 요구하는 것만으로는 부족하다: `R5CX-08/10/11` 이 `672dedb1` 을 적었는데
+#    그 자리에 수정이 **없었다** (진짜는 `777cd6c08`).  기전은 구조적이다 — 수정과 등재를 같은
+#    커밋에 넣으면 그 커밋은 자기 SHA 를 못 적어 **부모**가 적힌다.
+#    ⚠ 부모를 적은 것 자체는 결함이 아니다 (수정이 바로 앞 커밋이면 옳다).  갈라 내는 것은
+#    *'등재 커밋이 그 ID 를 **실행되는 코드**에 새로 박았는가'* 다.  느슨하게 잡으면 거짓
+#    양성이 쏟아진다 — 초판은 22건을 냈고 세 겹(증거 공유 · 진행 문서 · 원고)을 걷어 1건이 됐다.
+run 'claimed_sha_provenance --selftest' python3 scripts/audit_claimed_sha_provenance.py --selftest
 #  ★ 2026-09-09 (Codex Q2-3 · 원장 AUD-07) — 감사 원시 finding 에 **판정 상태**를 붙인다.
 #    원본에는 status 가 한 건도 없어 `severity=P1` 만 골라 읽으면 후보와 확정이 합쳐진다.
 #    원본은 박제라 안 고치고(해시로 못박는다) 별도 판정 원장에만 상태를 단다.

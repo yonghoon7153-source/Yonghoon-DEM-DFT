@@ -181,6 +181,13 @@ jobs:
       - name: 감사 커버리지 도구 (스냅샷 고정 · dotfile)
         run: python scripts/audit_coverage.py --selftest
 
+      #  ★★ 2026-09-14 — `claimed_fixed_sha` 가 그 수정의 커밋인가 (R5CX-08/10/11 실측).
+      #    수정과 등재가 같은 커밋이면 자기 SHA 를 못 적어 **부모**가 적힌다.  판별자는
+      #    '등재 커밋이 그 ID 를 실행되는 코드에 새로 박았는가' 이고, 거짓 양성 세 겹
+      #    (증거 파일 공유 · 진행 문서 · 원고) 을 걷어내는 회귀가 selftest 에 상주한다.
+      - name: claimed_fixed_sha 출처 (수정이 그 자리에 있는가)
+        run: python scripts/audit_claimed_sha_provenance.py --selftest
+
       - name: 자기신고 감사의 자기일관 (L4-03 — 타입·conjunction·분모)
         run: python scripts/audit_validation_flags.py --selftest
 

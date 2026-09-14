@@ -1268,8 +1268,8 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "runner 가 `.rejected_*` 를 쓰지만 `collect()` 는 `p2_*.json` 만 읽는다.  정상 16팔 디렉터리에 receipt 를 넣기 전후가 **둘 다 `h0`**.  `chmod 444` 는 삭제 불가 append-only 기록이 아니다.\n종료조건: receipt 가 있는 tree 는 즉시 HOLD/격리.  필요하면 output tree **밖** append-only ledger 에 서명된 run identity 와 함께 기록.",
-   "claimed_fixed_sha": "672dedb1"
+   "note": "runner 가 `.rejected_*` 를 쓰지만 `collect()` 는 `p2_*.json` 만 읽는다.  정상 16팔 디렉터리에 receipt 를 넣기 전후가 **둘 다 `h0`**.  `chmod 444` 는 삭제 불가 append-only 기록이 아니다.\n종료조건: receipt 가 있는 tree 는 즉시 HOLD/격리.  필요하면 output tree **밖** append-only ledger 에 서명된 run identity 와 함께 기록.\n⛔ **SHA 정정 2026-09-14** — 적혀 있던 `672dedb1` 은 **이 수정을 담고 있지 않다**.  실측: `git show 672dedb18:scripts/sdcp_gain_verdict.py | grep -c rejected` = **0**, 같은 명령이 `777cd6c08` 에서 **7**.  진짜 커밋은 `777cd6c08` (*'R5 P2 셋 — blind 파생값 · 기각 receipt · bundle SHA 일치'*) 이고 그 diff 가 `sdcp_gain_verdict.py`·`mpm_webapp_payload.py`·`make_review_bundle.sh` 셋을 정확히 건드린다.\n★ **기전 (구조적, 이 항목만의 실수가 아니다)**: 수정과 원장 등재가 **같은 커밋**에 들어가면 그 커밋은 자기 SHA 를 자기 안에 적을 수 없다 ⇒ 적히는 것은 **부모**다.  이력 전수 검사에서 claimed_fixed 141건 중 **18건이 이 서명**을 보였다 (적힌 SHA == 등재 커밋의 부모).  ⇒ 결함은 **감사 가능성**이지 수정의 부재가 아니다 — 수정은 자식 커밋에 있고 HEAD 트리에는 들어 있다.  다만 *'적힌 SHA 를 읽어 수정을 확인하라'* 는 절차가 **그 자리에서 아무것도 못 찾는다**.",
+   "claimed_fixed_sha": "777cd6c08"
   },
   {
    "id": "R5CX-09",
@@ -1297,8 +1297,8 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "정확한 σ 와 `ideal_R0` 는 가렸는데 `Rbulk=L/σ_e` 에서 계산한 `≪ 계면 / 동급 / ≫ 계면` bucket 이 blind stdout 에 남아 있다 (`mpm_webapp_payload.py:1595,1674-1687`).  두께 출력과 합치면 결과 범위가 드러난다.\n종료조건: blind 에서 그 bucket 을 없애거나 데이터 무관 상수 문구로.  **직접값뿐 아니라 파생·범주화 변환도** 음성 대조.",
-   "claimed_fixed_sha": "672dedb1"
+   "note": "정확한 σ 와 `ideal_R0` 는 가렸는데 `Rbulk=L/σ_e` 에서 계산한 `≪ 계면 / 동급 / ≫ 계면` bucket 이 blind stdout 에 남아 있다 (`mpm_webapp_payload.py:1595,1674-1687`).  두께 출력과 합치면 결과 범위가 드러난다.\n종료조건: blind 에서 그 bucket 을 없애거나 데이터 무관 상수 문구로.  **직접값뿐 아니라 파생·범주화 변환도** 음성 대조.\n⛔ **SHA 정정 2026-09-14** — 적혀 있던 `672dedb1` 의 `mpm_webapp_payload.py` 에는 이 수정 표지가 **0회**, `777cd6c08` 에는 있다.  진짜 커밋은 `777cd6c08`.  기전은 `R5CX-08` 의 정정 노트 참조 (수정과 등재가 같은 커밋 ⇒ 적히는 것은 부모).",
+   "claimed_fixed_sha": "777cd6c08"
   },
   {
    "id": "R5CX-11",
@@ -1312,8 +1312,8 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "요청서는 bundle 생성을 주장했지만 리뷰어가 접근 가능한 자료에 `.bundle` 이 없었다 (공개 origin 을 따로 clone 해 감사).  ⇒ **네트워크 없이 단독 재현 가능한 전달**은 입증되지 않았다.\n또한 bundle smoke check 가 clone 에 어떤 HEAD 가 있다는 것만 보고 **intended SHA 와 같은지**는 안 본다.\n종료조건: 다음 패키지에 실제 full bundle 과 SHA-256 을 포함하고, 빈 repo clone HEAD 가 intended full SHA 와 **정확히 같은지** 검사.",
-   "claimed_fixed_sha": "672dedb1"
+   "note": "요청서는 bundle 생성을 주장했지만 리뷰어가 접근 가능한 자료에 `.bundle` 이 없었다 (공개 origin 을 따로 clone 해 감사).  ⇒ **네트워크 없이 단독 재현 가능한 전달**은 입증되지 않았다.\n또한 bundle smoke check 가 clone 에 어떤 HEAD 가 있다는 것만 보고 **intended SHA 와 같은지**는 안 본다.\n종료조건: 다음 패키지에 실제 full bundle 과 SHA-256 을 포함하고, 빈 repo clone HEAD 가 intended full SHA 와 **정확히 같은지** 검사.\n⛔ **SHA 정정 2026-09-14** — `make_review_bundle.sh` 의 intended-SHA 대조는 `672dedb1` 에 **없고** `777cd6c08` 에 있다.  진짜 커밋은 `777cd6c08`.  기전은 `R5CX-08` 의 정정 노트 참조.",
+   "claimed_fixed_sha": "777cd6c08"
   },
   {
    "id": "SELF-07",
