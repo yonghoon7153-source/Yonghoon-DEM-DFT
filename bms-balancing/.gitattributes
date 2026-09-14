@@ -22,3 +22,4 @@ reviews/*/codex/** -text
 #   `package_manifest.json` 이 항목별 sha256 을 갖고 있어 그것과 대조한다. preflight 사본은 이 규칙이 없어 CRLF→LF 로
 #   저장됐다 (`reviews/r14_repros/codex63/preflight/README.md` 가 그 차이를 적는다).
 reviews/r14_repros/codex63/mesh_axes/** -text
+reviews/r14_repros/codex63/time_caps/** -text
