@@ -133,7 +133,10 @@ print("held")
     for line in sorted(log, key=lambda s: int(s.split()[2])):
         active += 1 if line.startswith("in ") else -1
         peak = max(peak, active)
-    assert peak == 1, f"동시에 잡은 프로세스가 {peak} 개다 (62차 P0-2)"
+    # 증인 문구에 수를 넣지 않는다 — 변이 아래서 peak 는 7 이나 8 로 흔들려
+    # 접두 대조의 증인이 조각마다 달라진다 (12조각 2회차 실측).
+    print(f"peak concurrent holders = {peak}")
+    assert peak == 1, "동시에 잡은 프로세스가 둘 이상이다 (62차 P0-2)"
 
 
 # ── P1-1 ──────────────────────────────────────────────────────────────────

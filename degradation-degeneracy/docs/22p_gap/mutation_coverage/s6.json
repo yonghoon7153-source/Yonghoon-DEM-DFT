@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-14T19:05:36Z",
+  "at": "2026-09-14T20:04:04Z",
   "binding": {
     "execution": {
       "env": {
@@ -464,13 +464,13 @@
       }
     },
     "execution_digest": "d194be06fecb9ce90f8280861cdd74654edae1013f5ff3b38d9470bde8071ddd",
-    "expect_digest": "80a8b1461edb35a1a595cdf234b9205093aac3d6365248992cb957230234f833",
-    "head": "6c54429b140aaab1eb35f98b4087d22c11783fb6",
+    "expect_digest": "3883cfbbe07713271279fc7511546e42830f024e0ddd7c6d1ccfa972fa618fd0",
+    "head": "dbfbbf821afe6a6dffed21455590568f11392f8b",
     "registry_digest": "eb73be3be3e345c129325ab51c31127382bccab1a81d84079053adca4eeb2e03",
     "reports_dir": "s6",
-    "runner_digest": "88ff4ca52e17c359fbc6dd1a0b927efd4ead80246d29c38e2c4e30664d5e7ada",
-    "transcript_digest": "578ea43ceb5c67a90f7d6833f9a6dca8ee49b2fed7982bdd363ade4158ccbac7",
-    "tree_digest": "6e81973a4330ca781df1e57a2a95f4aea0acff9e20ff632cb9b80fd20bc470f2"
+    "runner_digest": "6d70518256bcb1a890d73b927f5e94853da30f715cdbe18e935a2a22151c17a5",
+    "transcript_digest": "4380339a607195edf1655cf4c49bd53a7b074a3c934c455e1f25ff5d23ea01a0",
+    "tree_digest": "6f4a80b1c33dee92d1886a2348f55915446e85e7deb2482a4367b1cae34fc837"
   },
   "scenarios": {
     "anchor-repair-holds-the-lifecycle-lock": {
@@ -478,7 +478,7 @@
       "class": "executable",
       "kexpr": "stale_anchor_repair_cannot_rewind_the_head",
       "ran": true,
-      "report_sha256": "049414c8fd0043ae40b6f7695653772a5405a6f56409299ca442a149d85d2ba8",
+      "report_sha256": "3d6b6872ff84c9af31943cd19d08c1e73dfdbdacbe7f8ece4a73599ac6df6446",
       "sites": 1
     },
     "canon-absorbs-the-pep701-empty-piece": {
@@ -486,7 +486,7 @@
       "class": "executable",
       "kexpr": "canonical_form_agrees_on_every_supported_interpreter",
       "ran": true,
-      "report_sha256": "60ae7cb29ef44cfc49b381a53ec83083c91b23c7305f5861bc779d144bd33f11",
+      "report_sha256": "bc85b105ebcb70a4df4a13d2f6863a7eb1a52a0d5572ac6a85da94c977bcbdca",
       "sites": 1
     },
     "claim-write-is-all-or-nothing": {
@@ -494,7 +494,7 @@
       "class": "executable",
       "kexpr": "short_write_does_not_leave_a_truncated_claim",
       "ran": true,
-      "report_sha256": "c82d14356af10bb5d52926a595850527eed57d55873fd17564ee88c41cade824",
+      "report_sha256": "b401908fa94714fa1cf9041888d30af28925ba763ed3170adbac063ce12d1581",
       "sites": 1
     },
     "comprehensions-are-their-own-scope-g61": {
@@ -502,7 +502,7 @@
       "class": "executable",
       "kexpr": "the_analyzer_does_not_shadow_the_enclosing_scope or the_target_is_still_shadowed_inside_the_comprehension or the_outermost_iterable_is_evaluated_in_the_enclosing_scope",
       "ran": true,
-      "report_sha256": "f82f5756b1d04a6247e451af91f4dbd7a07daa23f781aaabe599d4c377540ae3",
+      "report_sha256": "a2ec435b7c005b7be5737388c7f1eb1d2b4e127b4d3218f8eef613033d40b4fd",
       "sites": 2
     },
     "decorators-are-import-time-effects-g58": {
@@ -510,7 +510,7 @@
       "class": "executable",
       "kexpr": "a_name_only_decorator_changes_the_identity_when_its_body_changes",
       "ran": true,
-      "report_sha256": "8cfdb755d24de8aa04fc7db55cc7882843046cb46c0babaffc15340b8a1744fa",
+      "report_sha256": "6fe09ead421eee4e68becdcfcfef705e4cb60220f25d25a7e541b98ff75043b3",
       "sites": 1
     },
     "exec-class-record-is-read-back-g59": {
@@ -518,7 +518,7 @@
       "class": "executable",
       "kexpr": "a_short_write_never_publishes_a_partial_record",
       "ran": true,
-      "report_sha256": "37e18f2edbe62e74ba28344200aabba3be08f3bb905f50221686153072be1dac",
+      "report_sha256": "80b9aa7de6ada58e0a5b84522e71c2d2edd42aceb225babea585dd2383c0c107",
       "sites": 1
     },
     "fit-axis-seals-the-config-closure": {
@@ -526,7 +526,7 @@
       "class": "executable",
       "kexpr": "base_config_parent_is_inside_the_approval_digest",
       "ran": true,
-      "report_sha256": "b8d0bd2d38e7d63d91500e2e5e40ff5e369b0e5711c406757a95bede25cc8b22",
+      "report_sha256": "b04a6787c0affe6d30aa106debd407d6aefaabc91a11c67110334918fbaf40d0",
       "sites": 1
     },
     "freeze-holds-the-publish-lock": {
@@ -534,7 +534,7 @@
       "class": "executable",
       "kexpr": "publication_cannot_land_after_the_cohort_was_frozen",
       "ran": true,
-      "report_sha256": "e1979af54223b288a0c1a157c97dfd6eca2f893c142b741da571521c2fbf7ea7",
+      "report_sha256": "1dbbc1080420da4f8070190f0e243e19ab66628459a070f017867a495c6c3882",
       "sites": 1
     },
     "generation-namespace-guard": {
@@ -542,7 +542,7 @@
       "class": "executable",
       "kexpr": "current_generation_cannot_be_used_as_its_own_staging",
       "ran": true,
-      "report_sha256": "728e377a77e2cc3f6c9e37ec05a43368450d2f9eac2eaa8e9cb5523e8741d01a",
+      "report_sha256": "26c3c0ab71cad3279ad11a79e8ccbcd70c8bfce326f08f238ec2a6681f615407",
       "sites": 1
     },
     "idempotent-shares-the-validator": {
@@ -557,7 +557,7 @@
       "class": "executable",
       "kexpr": "same_ledger_argument_always_names_the_same_claims_root",
       "ran": true,
-      "report_sha256": "c4ed8955ff7a30e249267c50a4251100468049958d96a9509771230af2e04cae",
+      "report_sha256": "5aba1709967ff03d58d2f435301aca66aef7a6c6c6b137a2703efa066a146beb",
       "sites": 1
     },
     "missing-journal-with-a-live-anchor": {
@@ -565,7 +565,7 @@
       "class": "executable",
       "kexpr": "deleting_the_journal_does_not_erase_the_freeze",
       "ran": true,
-      "report_sha256": "59a979f361cb3f1cdbd3451fc9e11336429d3dc23e52f2f999cf9bc8e75e1f19",
+      "report_sha256": "e7a3ba4078391aaa0e13be299a63af8367be7c625915c36d1c8caedee6e1c7ab",
       "sites": 1
     },
     "mount-root-is-filesystem-relative": {
@@ -573,7 +573,7 @@
       "class": "executable",
       "kexpr": "bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph",
       "ran": true,
-      "report_sha256": "b55619297d6691bc4e88bd6e30269fec6506653bd229c711ae56bdf113e3d993",
+      "report_sha256": "417fad12630fab7d78a40c463d76e042440ad128abefba34a64f07d0ea416874",
       "sites": 2
     },
     "phase-input-binding-covers-the-package": {
@@ -581,7 +581,7 @@
       "class": "executable",
       "kexpr": "grid_receipt_binds_every_curve_input_not_just_the_parquet",
       "ran": true,
-      "report_sha256": "bc41ece96ee15a9f39d8213996a836b984f6eb023c694b72fbcf4458a464599d",
+      "report_sha256": "0213e61d87d0d4fc344fbd4eb003e2e417157d69d72be30bd7e9836a26396a53",
       "sites": 1
     },
     "planned-binds-the-execution-record": {
@@ -589,7 +589,7 @@
       "class": "executable",
       "kexpr": "planned_index_is_bound_to_the_real",
       "ran": true,
-      "report_sha256": "19830a3c823588f79762c00a572c17b745365f1303d1154873f8dea13e18ec58",
+      "report_sha256": "a7d96ec3c6310a2bd61e30145137b9e92c0ac3415cf1b4dc6072453f8bf28297",
       "sites": 1
     },
     "producer-canon-drops-empty-fields": {
@@ -597,7 +597,7 @@
       "class": "executable",
       "kexpr": "producer_digest_is_the_same_on_every_python_here",
       "ran": true,
-      "report_sha256": "764d46c8646c1e869c08b52dcdeb219fdb78221931683cf92c08539232c13a7c",
+      "report_sha256": "1378ccb5fcee60162587cb2f696937dd643a036f2cb4a87685ed01dc86144b7b",
       "sites": 1
     },
     "promotion-refuses-a-subset-seal-g62": {
@@ -605,7 +605,7 @@
       "class": "executable",
       "kexpr": "an_in_progress_fit_in_a_committed_grid_dir_is_not_promotable",
       "ran": true,
-      "report_sha256": "e36a4d290b75ab12ae3dc3c63916a52de0f6b629f1a9e7cef15fc8b5eb05ab2c",
+      "report_sha256": "1c22b492a247fa07864011b5808f3c4d378c72f5b283a7978895a9c416bcf6b5",
       "sites": 1
     },
     "records-keep-the-logical-input-g61": {
@@ -613,7 +613,7 @@
       "class": "executable",
       "kexpr": "the_sealed_input_path_exists_after_a_successful_fit",
       "ran": true,
-      "report_sha256": "da0e896bdfdc67d9a3b8c26071679f75c3b55eaf3f0db3394c10f25d838cb7df",
+      "report_sha256": "fe694af9bd82af0969b0a1b295ace72d9218e8d51561e1e5f46dd4e5c40403f8",
       "sites": 1
     },
     "rollback-only-on-certain-non-commit": {
@@ -621,7 +621,7 @@
       "class": "executable",
       "kexpr": "durability_error_after_the_ledger_commit_keeps_the_claim or uncertain_ledger_write_never_discards_the_claim or failure_while_leaving_the_ledger_lock_preserves_the_authority",
       "ran": true,
-      "report_sha256": "96b4a5bcd6c7307fe2e15138b64182b692da4043c0fecdab8e6e80838122c041",
+      "report_sha256": "b11ac02c283390d0c8f7122048e734630da624beaf88e78d1c211d7aebbbc3ab",
       "sites": 1
     },
     "sealed-records-need-their-seal-g62": {
@@ -629,7 +629,7 @@
       "class": "executable",
       "kexpr": "deleting_the_seal_does_not_reopen_the_prefix",
       "ran": true,
-      "report_sha256": "d4daf10def16fb53519fd29249cd57a2f31969b3cd189e6e2172f66b3ad27299",
+      "report_sha256": "576d684c2c0ba514a8478f8bc1870f851ba5405f56d03d93dc698b98f9e7528d",
       "sites": 1
     },
     "thaw-is-refused-before-the-first-write": {
@@ -637,7 +637,7 @@
       "class": "executable",
       "kexpr": "publisher_refuses_a_thawed_cohort_before_the_first_write",
       "ran": true,
-      "report_sha256": "5f35b4124534b9eded609d0d934883c304d918874f6445a564b8c4f1d3466055",
+      "report_sha256": "f2df2b9aee5b94dd69b765ded9ccf71894f2ea2aad5d409db547541c8c3a5989",
       "sites": 2
     },
     "unreadable-bytes-fail-the-section-g62": {
@@ -645,7 +645,7 @@
       "class": "executable",
       "kexpr": "an_unreadable_startup_byte_makes_the_section_failed",
       "ran": true,
-      "report_sha256": "b35fc91da61f2e224e7dd57fa0d5e31d0842457b1dd990cf0595980413d55670",
+      "report_sha256": "e045fe050b6f58309143db6d92b11a9717dbff57274be8f22e5f83f469df7c62",
       "sites": 1
     }
   },

@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-14T19:08:13Z",
+  "at": "2026-09-14T20:06:40Z",
   "binding": {
     "execution": {
       "env": {
@@ -464,13 +464,13 @@
       }
     },
     "execution_digest": "d194be06fecb9ce90f8280861cdd74654edae1013f5ff3b38d9470bde8071ddd",
-    "expect_digest": "80a8b1461edb35a1a595cdf234b9205093aac3d6365248992cb957230234f833",
-    "head": "6c54429b140aaab1eb35f98b4087d22c11783fb6",
+    "expect_digest": "3883cfbbe07713271279fc7511546e42830f024e0ddd7c6d1ccfa972fa618fd0",
+    "head": "dbfbbf821afe6a6dffed21455590568f11392f8b",
     "registry_digest": "eb73be3be3e345c129325ab51c31127382bccab1a81d84079053adca4eeb2e03",
     "reports_dir": "s7",
-    "runner_digest": "88ff4ca52e17c359fbc6dd1a0b927efd4ead80246d29c38e2c4e30664d5e7ada",
-    "transcript_digest": "ff154be0849aeaeb95e64f9dc56b564ae8aef69062326f0d4300ecb2c452e7dc",
-    "tree_digest": "6e81973a4330ca781df1e57a2a95f4aea0acff9e20ff632cb9b80fd20bc470f2"
+    "runner_digest": "6d70518256bcb1a890d73b927f5e94853da30f715cdbe18e935a2a22151c17a5",
+    "transcript_digest": "2be7f3b661fb89a57f8433d6e2fd6dee1cf57dd7cd4f92a59f7f6722e1b3d980",
+    "tree_digest": "6f4a80b1c33dee92d1886a2348f55915446e85e7deb2482a4367b1cae34fc837"
   },
   "scenarios": {
     "append-finishes-the-pending-anchor-first": {
@@ -478,7 +478,7 @@
       "class": "executable",
       "kexpr": "two_consecutive_partial_appends_are_still_recoverable",
       "ran": true,
-      "report_sha256": "d201f5bf6d93ce58647cbc6e3cfc9aae877e711266dcea1741976921bb30c8cd",
+      "report_sha256": "e690c5e9e22a4f9b23170983004a0466b713661af4a0e2f28cc01e9683a68013",
       "sites": 1
     },
     "canon-keeps-docstrings": {
@@ -486,7 +486,7 @@
       "class": "executable",
       "kexpr": "docstring_the_computation_reads_is_inside_the_identity",
       "ran": true,
-      "report_sha256": "4d580b9d93851f0406e51ee93b1e89240741d1f94068fb4e3ae512a4806d0a5a",
+      "report_sha256": "091ae8a168dd8702467969da2276f4f2abc02fd2e663434d771cbedbb5792cdd",
       "sites": 1
     },
     "claims-root-comes-from-the-ledger": {
@@ -494,7 +494,7 @@
       "class": "executable",
       "kexpr": "issuer_cannot_choose_where_its_claim_lives",
       "ran": true,
-      "report_sha256": "f7282d7e5b9fdfff0f655ecfb04b1226cac22fbd59094fe48a593718e8495a3c",
+      "report_sha256": "91bc416c9db28b0f07327034773903e38b5a78a9fc5dc85ec66d63295437b285",
       "sites": 1
     },
     "content-id-hashes-every-manifest-g58": {
@@ -502,7 +502,7 @@
       "class": "executable",
       "kexpr": "two_fits_sharing_curves_do_not_share_a_content_id",
       "ran": true,
-      "report_sha256": "79aa60fc6201bc99504314269d693818f412c3058043ab1515bc6f53a7fee876",
+      "report_sha256": "766a693df6ccab02f2c700ea643f9c5d71433806fef1e4cbfe661dc4edde25d6",
       "sites": 1
     },
     "definition-head-is-the-enclosing-scope-g62": {
@@ -510,7 +510,7 @@
       "class": "executable",
       "kexpr": "the_analyzer_does_not_shadow_the_default_with_the_parameter or a_parameter_does_not_exempt_a_capability_in_the_head",
       "ran": true,
-      "report_sha256": "aba0b6534bbf23fe34d02fb467d24b7d62cd38a0b05fa08082b1c363a6ff3c9b",
+      "report_sha256": "bccbf47ea74a722d4dacec5109d2fa75c48567e123fb9effc97e94ed56db13b7",
       "sites": 1
     },
     "exec-class-retry-reseals-durability-g59": {
@@ -518,7 +518,7 @@
       "class": "executable",
       "kexpr": "a_retry_after_a_failed_parent_fsync_redoes_the_durability_step",
       "ran": true,
-      "report_sha256": "fa3d072bbc60c92f4b4311d09de9f25710c3547dbf8e505f962b41e1f73defcc",
+      "report_sha256": "def4e29d82ec0f58119686d4545773443494b1a17996b4fada574e17992095fd",
       "sites": 1
     },
     "fit-axis-seals-the-input-content": {
@@ -526,7 +526,7 @@
       "class": "executable",
       "kexpr": "fit_axis_seals_the_input_content_axes",
       "ran": true,
-      "report_sha256": "f49b0973fed1cb1908df163427269717e872e8bf6b655277b3ecfc19ae5e25db",
+      "report_sha256": "a251dc866639701e0868b7e2607deba780f2a38a12354fbaf91247a6b34b8cfa",
       "sites": 1
     },
     "freeze-ledger-write-is-atomic": {
@@ -534,7 +534,7 @@
       "class": "executable",
       "kexpr": "partial_write_during_freeze_leaves_the_ledger_readable",
       "ran": true,
-      "report_sha256": "cb1f211c5fac75de728302eae4d314392fe16087f4819e00274caaf147b8a4a4",
+      "report_sha256": "130594aa04f9a06e126e8ba0b5738eb5240e5d156f96998cc69279c66171b8b5",
       "sites": 1
     },
     "generation-owns-its-bytes": {
@@ -549,7 +549,7 @@
       "class": "executable",
       "kexpr": "a_module_imported_after_startup_is_inside_the_receipt",
       "ran": true,
-      "report_sha256": "ed6f8f6f685098de5289e6c22206d975f76b386046681a7e14cd117d817f09a3",
+      "report_sha256": "aaa46234ee0d56b8de1c486f45592c77518b6a04e45b1e6b6a41fdbe61cc3248",
       "sites": 1
     },
     "ledger-seal-record": {
@@ -557,7 +557,7 @@
       "class": "executable",
       "kexpr": "same_roster_ledger_change",
       "ran": true,
-      "report_sha256": "8a085452eb577c4de5dda53cc7c3f44a8a95f4ad2e648fa8c69ea1d2269f7e8b",
+      "report_sha256": "eddf70d78ac4dae8c75db66bf8b4518cbabdee851078c307880f803dc24dd4ec",
       "sites": 2
     },
     "module-assert-runs-at-import-g59": {
@@ -565,7 +565,7 @@
       "class": "executable",
       "kexpr": "the_import_time_slice_contains_everything_that_runs",
       "ran": true,
-      "report_sha256": "dc6d9de44e54c0c245d73c90cbf86de6f443a8687ec7568672511ad8e1bf8024",
+      "report_sha256": "0e009de4b442dd8ed08edb921471b546312a20c41a67a8c8e661d8547c9560b7",
       "sites": 2
     },
     "mountinfo-octal-escape-is-decoded": {
@@ -573,7 +573,7 @@
       "class": "executable",
       "kexpr": "frozen_alias_whose_path_has_a_space_is_not_writable",
       "ran": true,
-      "report_sha256": "6dbf7092ed5daa6f8bf4905912effa7e34a20d4ebd31d8d8ab235c4a4002441b",
+      "report_sha256": "5967f59a6e5a7771d8b514a9e8673c010a2da578110ee9158ef6be4c96b5eafd",
       "sites": 2
     },
     "phase-input-binding-needs-a-receipt": {
@@ -581,7 +581,7 @@
       "class": "executable",
       "kexpr": "fit_refuses_when_its_grid_phase_is_missing",
       "ran": true,
-      "report_sha256": "5cf4f953a402bc507fa0ce7b5d1c745acb62b50af88ece0bfbf949ec20ae7c53",
+      "report_sha256": "d0527f514b7861e3a01c77be1a47bfce2e8c5df67e7214998b7c78b0e938968e",
       "sites": 1
     },
     "planned-status-is-not-standing": {
@@ -589,7 +589,7 @@
       "class": "executable",
       "kexpr": "standing_authorization",
       "ran": true,
-      "report_sha256": "88ffd22d5f8631c6533dbb0fcb557f248834203619bcd15271e38e2de361d7b3",
+      "report_sha256": "ebe8bba13f95533fabc12f5d5231496dc677c2df32f83d868277e6f90d464140",
       "sites": 1
     },
     "producer-crosses-into-scoring": {
@@ -597,7 +597,7 @@
       "class": "executable",
       "kexpr": "producer_digest_crosses_into_src_scoring",
       "ran": true,
-      "report_sha256": "d9d20fa0958170f886608f8b784bc3b3fb2d4384653f80a54fc7bebd48114f1f",
+      "report_sha256": "dd4d5e21ad4b661bd73bfd35d64d0c974d10ba86e8b0ef518a11e02e290e376e",
       "sites": 2
     },
     "proof-handoff-to-verify": {
@@ -605,7 +605,7 @@
       "class": "executable",
       "kexpr": "repaired_proof_is_handed or pre_journal_finalize or journal_seals_the_content",
       "ran": true,
-      "report_sha256": "335580a5aff24c1bf8eb46b0eecac912e8b2130f27db2a9874330338d96c7d45",
+      "report_sha256": "0aa193a553ad8141d59171a07d6d664702501ff8cbe5cc0fd36e4ad668651508",
       "sites": 1
     },
     "records-keep-the-logical-output-g61": {
@@ -613,7 +613,7 @@
       "class": "executable",
       "kexpr": "the_sealed_output_path_exists_after_a_successful_fit or no_durable_record_mentions_a_process_local_handle",
       "ran": true,
-      "report_sha256": "fe89fb3ef1d117ba28577aa52130a4a48a547d79862c7de02c96fff0dfce93b6",
+      "report_sha256": "f81ee0e5c5655fad7a192e5c1a040f57168bf0a0781ad61d936ec746ae1170a9",
       "sites": 1
     },
     "roster-is-a-set": {
@@ -621,7 +621,7 @@
       "class": "executable",
       "kexpr": "ledger_roster_is_a_set_not_a_multiset",
       "ran": true,
-      "report_sha256": "2ba5c3f7110ac4bd2bd927538625187af3abc45941cfdf5eb4383b86d263541a",
+      "report_sha256": "0fba5631fb447ba3b33d6555589c506f61d2da1cf7565ee5735d208e35e239e8",
       "sites": 1
     },
     "shadows-are-scoped-g60": {
@@ -636,7 +636,7 @@
       "class": "executable",
       "kexpr": "frozen_cohort_cannot_be_thawed_and_published",
       "ran": true,
-      "report_sha256": "49ac844e59bc915c99a12f0bf104efafb7e2394d83f715ac19ee46f64122a6b3",
+      "report_sha256": "820608f8ee17a36a5e5cec2e2b3055ecde9eb03230600eb1b0cd0048e9b9ea35",
       "sites": 1
     },
     "vararg-annotations-are-import-time-g60": {
@@ -644,7 +644,7 @@
       "class": "executable",
       "kexpr": "compound_heads_and_vararg_annotations_are_import_time",
       "ran": true,
-      "report_sha256": "1492430a487376938dcd83b264d47193c349357d545f0435606202f051309cc5",
+      "report_sha256": "30c0fb420214b820f9cdbbb630106a1c2d20c80c4c2325a30c13985f2832d104",
       "sites": 1
     }
   },

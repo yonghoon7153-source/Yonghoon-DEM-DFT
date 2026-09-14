@@ -4743,7 +4743,7 @@ EXPECT: dict = {
             "tests/test_run_lock_62.py::test_a_live_holder_in_another_process_is_refused_by_pid":
                 "Failed: DID NOT RAISE RuntimeError",
             "tests/test_run_lock_62.py::test_eight_processes_racing_for_one_lock_yield_exactly_one_holder":
-                "AssertionError: 동시에 잡은 프로세스가 8 개다 (62차 P0-2)",
+                "AssertionError: 동시에 잡은 프로세스가 둘 이상이다 (62차 P0-2)",
             "tests/test_run_lock_62.py::test_two_contenders_that_both_observe_absence_do_not_both_acquire":
                 "AssertionError: 두 contender 의 결과가 ['acquired', 'acquired'] — 정확히 하나만 잡아야 한다 (62차 P0-2)",
         }
