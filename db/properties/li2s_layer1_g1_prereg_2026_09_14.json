@@ -212,5 +212,36 @@
   "⚠_대필": "claude 가 받아 적었다. 자원 결정 주체는 1저자.",
   "⛔_무효_2026_09_14": "⛔ **이 무효 표시 자체를 철회한다 (같은 날)**. 'pw.x 가 CPU 빌드' 라는 전제가 내 오독이었다 — 런처는 GPU 빌드를 고르고 CPU 빌드면 거부한다. ⇒ **§6b 의 이탈 선언은 유효하다**: pw.x(GPU)와 modelc UMA 가 같은 RTX3090 을 공유한다. 아래 ⚠_이_이탈이_오염시키는_것 이 그대로 적용된다.",
   "★_지켜볼_것": "RTX3090 24.6 GB 중 modelc 가 **11.5 GB** 를 쓰고 있어 pw.x 몫은 ~13 GB 다. 400원자·전자 ~1920개·밴드 ~1150 이 거기 들어갈지가 이 파일럿의 첫 관문이다. OOM 이면 §6 `자원_재판단` 을 발동한다 — 억지로 밀지 않는다."
+ },
+ "6c_파일럿_1차_실측_2026_09_14": {
+  "무엇": "봉인된 파일럿 1점(t=20 ps, 표본 중 최악 조건)을 kgy GPU 빌드로 던졌다. **14초 만에 GPU OOM 으로 죽었다.**",
+  "오류": "`Accelerator Fatal Error: call to cuMemAlloc returned error 2 (CUDA_ERROR_OUT_OF_MEMORY)` · `PW/src/allocate_wfc.f90` `allocate_wfc_k:81` line 114 — **파동함수 배열 할당 중**.",
+  "pw_x_가_찍은_계_크기": {
+   "number_of_electrons": 1920.0,
+   "number_of_Kohn_Sham_states": 1152,
+   "PW_G_vecs": 499863,
+   "dense_G_vecs": 15818099,
+   "smooth_G_vecs": 4001561,
+   "alat_au": 42.9067,
+   "unit_cell_volume_au3": 78990.6264,
+   "gamma_point_algorithms": true,
+   "node_available_memory_MiB": 26341
+  },
+  "왜_안_들어갔나": {
+   "배열_하나": "npwx × nbnd × 16 B ≈ **4.6 GB** (파동함수 1벌)",
+   "Davidson": "대각화가 그런 배열을 **4벌 가량** 동시에 들고 있어 **~18 GB**",
+   "당시_여유": "RTX3090 24.6 GB 중 modelc UMA 가 11.5 GB 점유 → pw.x 몫 **~13 GB**",
+   "⚠_비어_있어도_빠듯하다": "24.6 GB 를 전부 써도 18 GB + 밀도·FFT 배열이라 여유가 크지 않다. **modelc 가 끝났다고 무조건 들어간다고 보지 않는다.**"
+  },
+  "★_1저자_결정": "**modelc(LPSCl1.6 3×3×1)가 끝난 뒤에 G1 을 돌린다.** modelc 를 죽이지 않는다 (8시간 47분 진행, 400 ps × 3온도).",
+  "★_재시도할_때_미리_정해두는_사다리": [
+   "① modelc 종료 확인 → GPU 단독으로 파일럿 1점 재시도. 성공하면 그대로 10점.",
+   "② 또 OOM 이면 `diago_david_ndim = 2` (기본 4). Davidson 작업공간이 절반으로 준다. **수렴값은 안 바뀌고 반복 수만 는다** — 물리 설정이 아니라 수치 해법 설정이다.",
+   "③ 그래도 안 되면 **CPU 빌드 + NP=8** (`ALLOW_CPU=1 PWX=~/apps/qe-7.4.1-cpu/bin/pw.x NP=8 OMP_NUM_THREADS=1`). MPI 가 평면파를 8랭크로 쪼개 랭크당 ~0.6 GB 로 떨어지고 노드 RAM 26 GB 에 들어간다. 느리지만 메모리는 해결된다.",
+   "④ 그래도 안 되면 §6 `자원_재판단` — KISTI neuron.",
+   "⛔ 사다리를 **지금** 적는 이유: 터진 뒤에 고르면 그게 사후 맞춤이다. ②·③ 중 무엇을 썼는지 결과 기록에 적는다."
+  ],
+  "⛔_판정에는_영향_없다": "이것은 자원 실측이지 §5 판정 기준의 변경이 아니다. 힘 ≤ 0.15 eV/Å · 에너지 ≤ 15 meV/atom 은 그대로다. ②의 `david_ndim` 도 같은 Hamiltonian 을 같은 `conv_thr 1e-8` 로 푸는 수치 경로일 뿐이다.",
+  "잔존물": "실패한 출력은 `li2sA_s1_t20ps/scf.out.oom_gpu` 로 남긴다 (지우지 않는다). `scf.in` 은 그대로라 재시도 시 같은 입력을 쓴다 — 설정 균일성 key `9e752bad`."
  }
 }
