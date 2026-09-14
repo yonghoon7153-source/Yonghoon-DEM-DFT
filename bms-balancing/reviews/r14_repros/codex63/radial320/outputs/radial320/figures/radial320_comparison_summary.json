@@ -1,0 +1,158 @@
+{
+  "scope": "One new R320H0250 result compared with existing R160H0250; no reruns by this script.",
+  "difference_convention": "R320 minus R160",
+  "temporal_interpolation": false,
+  "convergence_order_computed": false,
+  "time_counts_0_to_1_and_0_to_5": {
+    "requested_grid": [
+      107,
+      187
+    ],
+    "all_exact_common_stored": [
+      490,
+      571
+    ]
+  },
+  "voltage_peaks_recomputed_from_full_comparison_CSVs": {
+    "requested": {
+      "time_s_exact": "0.002",
+      "V_first_V": "2.2321010796534675",
+      "V_second_V": "2.2327181137621883",
+      "difference_V_second_minus_first_V": "0.0006170341087208",
+      "difference_delta_Eeq_V": "0.0006265730874137",
+      "difference_delta_etaMid_V": "-0.000009686004647454",
+      "difference_delta_phiL_V": "1.470259547E-7",
+      "difference_decomposition_residual_V": "-1.46E-16"
+    },
+    "all_exact_common": {
+      "time_s_exact": "0.002",
+      "V_first_V": "2.2321010796534675",
+      "V_second_V": "2.2327181137621883",
+      "difference_V_second_minus_first_V": "0.0006170341087208",
+      "difference_delta_Eeq_V": "0.0006265730874137",
+      "difference_delta_etaMid_V": "-0.000009686004647454",
+      "difference_delta_phiL_V": "1.470259547E-7",
+      "difference_decomposition_residual_V": "-1.46E-16"
+    }
+  },
+  "requested_and_exact_common_voltage_peak_identical": true,
+  "surface_maximum_exact_common": {
+    "electrode": "N",
+    "time_s_exact": "0.002",
+    "sample_index": 240,
+    "coordinate_first_m": 5.2e-05,
+    "coordinate_second_m": 5.2e-05,
+    "x_surface_first": 0.011745639440874757,
+    "x_surface_second": 0.011756001419374324,
+    "signed_difference_second_minus_first_x": 1.0361978499567e-05,
+    "absolute_difference_x": 1.0361978499567e-05
+  },
+  "surface_peak_confirmed_in_exported_profile": true,
+  "electrode_bounds_um_from_profile_coordinates": {
+    "N": [
+      0.0,
+      52.0
+    ],
+    "P": [
+      77.0,
+      121.0
+    ]
+  },
+  "separator_bounds_um_from_profile_coordinates": [
+    52.0,
+    77.0
+  ],
+  "native_steps": [
+    {
+      "label": "R160 (existing)",
+      "accepted_steps": 585,
+      "early_accepted_steps": 407,
+      "arriving_at_0p1": {
+        "start_time_s_exact": "0.09975",
+        "end_time_s_exact": "0.1",
+        "actual_step_s_exact": "0.00025",
+        "interval_required_cap_s_exact": "0.00025",
+        "region": "arrives_at_0.1",
+        "within_cap_with_1e-12s_roundoff": "True",
+        "at_cap_with_1e-12s_roundoff": "True",
+        "step_to_cap_ratio": "1.0",
+        "step_index": "407",
+        "time_log_s": "0.1",
+        "step_log_s": "0.00025",
+        "raw_native_log_line": "407         0.1     0.00025 out  824  416  830     2     0      0  5.5e-11  4.9e-16"
+      },
+      "departing_from_0p1": {
+        "start_time_s_exact": "0.1",
+        "end_time_s_exact": "0.10025",
+        "actual_step_s_exact": "0.00025",
+        "interval_required_cap_s_exact": "0.1",
+        "region": "after_0.1",
+        "within_cap_with_1e-12s_roundoff": "True",
+        "at_cap_with_1e-12s_roundoff": "False",
+        "step_to_cap_ratio": "0.0025",
+        "step_index": "408",
+        "time_log_s": "0.10025",
+        "step_log_s": "0.00025",
+        "raw_native_log_line": "408     0.10025     0.00025 out  826  417  832     2     0      0  2.4e-11  1.2e-15"
+      },
+      "late_max_actual_step_s_exact": "0.05"
+    },
+    {
+      "label": "R320 (new)",
+      "accepted_steps": 592,
+      "early_accepted_steps": 414,
+      "arriving_at_0p1": {
+        "start_time_s_exact": "0.09975",
+        "end_time_s_exact": "0.1",
+        "actual_step_s_exact": "0.00025",
+        "interval_required_cap_s_exact": "0.00025",
+        "region": "arrives_at_0.1",
+        "within_cap_with_1e-12s_roundoff": "True",
+        "at_cap_with_1e-12s_roundoff": "True",
+        "step_to_cap_ratio": "1.0",
+        "step_index": "414",
+        "time_log_s": "0.1",
+        "step_log_s": "0.00025",
+        "raw_native_log_line": "414         0.1     0.00025 out  838  423  844     2     0      0  2.1e-11  3.9e-16"
+      },
+      "departing_from_0p1": {
+        "start_time_s_exact": "0.1",
+        "end_time_s_exact": "0.10025",
+        "actual_step_s_exact": "0.00025",
+        "interval_required_cap_s_exact": "0.1",
+        "region": "after_0.1",
+        "within_cap_with_1e-12s_roundoff": "True",
+        "at_cap_with_1e-12s_roundoff": "False",
+        "step_to_cap_ratio": "0.0025",
+        "step_index": "415",
+        "time_log_s": "0.10025",
+        "step_log_s": "0.00025",
+        "raw_native_log_line": "415     0.10025     0.00025 out  840  424  846     2     0      0  7.7e-13  2.8e-16"
+      },
+      "late_max_actual_step_s_exact": "0.05"
+    }
+  ],
+  "input_sha256": {
+    "outputs/radial320/results/analysis.json": "9ec1593a611faa8302d761c749af3e8c40214fe4cafcf4194ec61a4b3102f78b",
+    "outputs/radial320/results/Caps300R160H0250_vs_Caps300R320H0250_requested_grid_0_to_5s.csv": "439ac00692193d87b3b2bd70b30bfe92d50e0015bbfc488dea077151e15b3a26",
+    "outputs/radial320/results/Caps300R160H0250_vs_Caps300R320H0250_all_exact_common_stored_0_to_5s.csv": "f743b803000abdb797a55a754364c54a511e2367158f26df3163809448818161",
+    "outputs/radial320/results/Caps300R160H0250_vs_Caps300R320H0250_all_exact_common_stored_0_to_5s_profile_at_surface_peak.csv": "5f87ec9f6068176db8a3a722191d5dd62331c83196adc8c7a52b76323ef34e2b",
+    "outputs/radial320/native_steps_summary.json": "6ced93a459915480831db32734fa67e61ece54bdeee0851d4871c1c0e4eff3d5",
+    "outputs/radial160_timecap/native_steps_summary.json": "d44196067ff72a7f1bda15264b59beb42506506139727bdf2869f78b2fe4839a",
+    "outputs/radial160_timecap/Caps300R160H0250_accepted_steps.csv": "2f88f9d61e80104e1e086daccd2be8e0f38c04e298d6f64cbdd21ed05a321d4c",
+    "outputs/radial320/Caps300R320H0250_accepted_steps.csv": "86625ae76950f116c9f4fa1cc48fe55f103b1e5491afb4365df70cb888b0d143"
+  },
+  "all_tracked_inputs_unchanged_after_plot": true,
+  "artifacts": [
+    {
+      "path": "outputs/radial320/figures/radial320_comparison.png",
+      "sha256": "c8d690b9ab2ac7a481f23a06d1bb29bdb0df068703b62bd340a912afeaf9de1e",
+      "bytes": 465604
+    },
+    {
+      "path": "outputs/radial320/figures/radial320_comparison.pdf",
+      "sha256": "4f9081ee9680ba52ff5d0619149828f1dc530259d4e2458bd9b9c72d5cd5013c",
+      "bytes": 48250
+    }
+  ]
+}

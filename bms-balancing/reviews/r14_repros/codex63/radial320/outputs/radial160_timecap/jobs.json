@@ -1,0 +1,25 @@
+{
+  "scope": "Exactly one new 300/160 5-second early-cap-halving run; old160H0500 reused",
+  "jobs": [
+    {
+      "name": "Caps300R160H0500",
+      "job_id": "450b46add79c439bbce5886454c4328a",
+      "source_sha256": "874e70a9d6531a2a83ebd05f439d514c324b3ca79875494b1cf304797cc90e26",
+      "early_cap_s": 0.0005,
+      "cores": 2,
+      "timeout_seconds": 600,
+      "max_physical_time_s": 5,
+      "role": "existing_reference"
+    },
+    {
+      "name": "Caps300R160H0250",
+      "job_id": "15e5d7433a6a4956b820cf6952330735",
+      "source_sha256": "4b4ff66bca7a161f6acffd5b125ddf695fee95fb82cdb4ded1e8b63391e1e5f0",
+      "early_cap_s": 0.00025,
+      "cores": 2,
+      "timeout_seconds": 600,
+      "max_physical_time_s": 5,
+      "role": "new_authorized_run"
+    }
+  ]
+}

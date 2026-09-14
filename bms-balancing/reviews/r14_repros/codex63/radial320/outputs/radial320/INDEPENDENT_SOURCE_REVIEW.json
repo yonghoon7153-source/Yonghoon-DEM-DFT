@@ -1,0 +1,56 @@
+{
+  "scope": "Complete source byte comparison and provenance only; actual native solve is covered by a separate audit.",
+  "status": "PASS",
+  "baseline_identity": {
+    "name": "Caps300R160H0250",
+    "source_path": "outputs/comsol63/radial160_timecap/Caps300R160H0250.java",
+    "source_sha256": "4b4ff66bca7a161f6acffd5b125ddf695fee95fb82cdb4ded1e8b63391e1e5f0",
+    "job_id": "15e5d7433a6a4956b820cf6952330735"
+  },
+  "new_identity": {
+    "name": "Caps300R320H0250",
+    "source_path": "outputs/comsol63/radial320/Caps300R320H0250.java",
+    "source_sha256": "837f8b03ff3381bb1aea6397935d0079b032f5e4aea007b32d1ebf7c40775b2e",
+    "job_id": "f0db6d080ad04045a2b43dc5a51d89b2"
+  },
+  "complete_source_bytes_equal_after_only_authorized_changes": true,
+  "changes": {
+    "class_and_label_name_occurrences": 2,
+    "particle_Nel_160_to_320_occurrences": 2
+  },
+  "unchanged": {
+    "all_material_table_literal_bytes": true,
+    "all_parameters_and_initial_inventory": true,
+    "current_C": 0.1,
+    "separator_conductivity_S_m": 1e-20,
+    "physical_elements_by_domain": [
+      120,
+      60,
+      120
+    ],
+    "requested_stored_times": 187,
+    "requested_stored_times_through_1s": 107,
+    "physical_end_time_s": 5,
+    "early_cap_s": 0.00025,
+    "cap_transition_s": 0.1,
+    "later_configured_cap_s": 0.1,
+    "all_Time_and_Variables_setting_code": true,
+    "OCP_entropy_extrap_none_functions": 4,
+    "surface_StopCondition_code": true,
+    "profiles_per_electrode": 241,
+    "temporal_interpolation": false
+  },
+  "worker_budget": {
+    "cores": 2,
+    "baseline_timeout_seconds": 600,
+    "new_timeout_seconds": 1200,
+    "meaning": "Wall-clock execution ceiling only; not a COMSOL time-step or physical-time change."
+  },
+  "limits": [
+    "The source contains one CDI plus one bounded transient runAll sequence. Native completion is not asserted by this source audit.",
+    "OCP/solid surface StopCondition is checked after solver steps; it does not certify every Newton trial state.",
+    "Electrolyte positivity is postprocessing only, not a real-time StopCondition.",
+    "No external file-read/network/process-execution call is present in the reviewed Java; fixed relative output save remains unchanged."
+  ],
+  "recorded_at_utc": "2026-09-14T08:08:42.053964+00:00"
+}

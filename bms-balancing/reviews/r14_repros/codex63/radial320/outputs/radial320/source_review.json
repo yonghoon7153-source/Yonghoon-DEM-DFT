@@ -1,0 +1,24 @@
+{
+  "new_name": "Caps300R320H0250",
+  "source_sha256": "837f8b03ff3381bb1aea6397935d0079b032f5e4aea007b32d1ebf7c40775b2e",
+  "baseline_identity": {
+    "name": "Caps300R160H0250",
+    "source_path": "outputs/comsol63/radial160_timecap/Caps300R160H0250.java",
+    "source_sha256": "4b4ff66bca7a161f6acffd5b125ddf695fee95fb82cdb4ded1e8b63391e1e5f0",
+    "job_id": "15e5d7433a6a4956b820cf6952330735"
+  },
+  "reverse_transform_exact_equal": true,
+  "only_changes": [
+    "Java class/model label identifier",
+    "two ParticleIntercalation Nel160to320"
+  ],
+  "runAll_calls": 1,
+  "physical_seconds": 5,
+  "external_runtime_inputs": [],
+  "all_parameters_OCP_inventory_radius_mesh300_solver_initialization_scales_times_profiles_guards_unchanged": true,
+  "execution_resources": {
+    "cores": 2,
+    "worker_timeout_seconds": 1200,
+    "note": "Wall-clock worker allowance only; physicalsimulation remains5s. No solverproperty is changed by this allowance."
+  }
+}

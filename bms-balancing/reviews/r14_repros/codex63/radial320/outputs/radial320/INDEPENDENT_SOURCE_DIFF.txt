@@ -1,0 +1,19 @@
+--- outputs/comsol63/radial160_timecap/Caps300R160H0250.java
++++ outputs/comsol63/radial320/Caps300R320H0250.java
+@@ -13,3 +13,3 @@
+  */
+-public class Caps300R160H0250 {
++public class Caps300R320H0250 {
+     static final String LIBRARY = "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/inputs/battery_lib_63.mph";
+@@ -503,3 +503,3 @@
+         Model m=ModelUtil.create("Model");
+-        m.label("Caps300R160H0250 - fresh common dense time grid, 5 seconds only");
++        m.label("Caps300R320H0250 - fresh common dense time grid, 5 seconds only");
+         String[][] params={
+@@ -578,4 +578,4 @@
+ 
+-        m.component("comp1").physics("liion").feature("pce1").feature("pin1").set("Nel","160");
+-        m.component("comp1").physics("liion").feature("pce2").feature("pin1").set("Nel","160");
++        m.component("comp1").physics("liion").feature("pce1").feature("pin1").set("Nel","320");
++        m.component("comp1").physics("liion").feature("pce2").feature("pin1").set("Nel","320");
+         for (int domain=1;domain<=3;domain++) {
