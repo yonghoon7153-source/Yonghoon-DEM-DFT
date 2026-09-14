@@ -36,6 +36,11 @@
         "pip": "scikit-image",
         "import": "skimage",
         "why": "복셀 morphology·watershed(A13)"
+      },
+      {
+        "pip": "pyflakes",
+        "import": "pyflakes",
+        "why": "팔 스크립트 미정의-이름 게이트 백엔드 — 없으면 최소-AST 폴백이 중첩함수 클로저 변수를 못 봐 런 경로 5파일에 오탐 114건 → 게이트 ABORT (팔 0). setup [4/7] 설치·[7/7] import 검증."
       }
     ],
     "mpm": [
@@ -288,6 +293,11 @@
     "kill_stuck": "pkill -9 -f 'run_mpm.sh|step4_only|mpm3d_compaction|mpm_webapp_payload|step4_dyn'"
   },
   "pitfalls": [
+    {
+      "symptom": "Phase A/SDCP 팔 0 (게이트 ABORT · 미정의-이름 오탐 114건)",
+      "cause": "pyflakes 미설치 → 미정의-이름 게이트가 최소-AST 폴백, 중첩함수 클로저 변수를 미정의로 오탐",
+      "fix": "pip install pyflakes — setup [4/7] 에 포함. ⚠ 옛 stoic-knuth 판 setup 스크립트엔 없어 sdcp 판 curl 을 써야 한다"
+    },
     {
       "symptom": "STEP1 즉사: ModuleNotFoundError: numpy",
       "cause": "venv 안 켠 셸에서 run — detached 자식이 시스템 python3 사용",

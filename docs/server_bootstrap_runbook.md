@@ -53,9 +53,14 @@ Host v100
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/claude/stoic-knuth-NObVQ/scripts/setup_gpu_server.sh | bash
+pip install pyflakes      # ⚠ 이 판 스크립트가 안 깐다 — 아래 이유
 ```
+⚠ **`pip install pyflakes` 를 빼먹지 말 것** — 이 stoic-knuth 판 setup 스크립트는 pyflakes 를 설치하지 않아,
+팔 스크립트의 미정의-이름 게이트가 최소-AST 폴백으로 떨어지며 오탐 114건 → **팔 0** 으로 죽는다 (2026-09-13 실사고).
+pyflakes 를 이미 넣은 setup 스크립트가 `sdcp-dem-manuscript-si-pqwtv8` 브랜치에 있으니, 그 판 URL 로 curl 하면 수동
+설치가 필요 없다 (어느 쪽이든 checkout 코드는 stoic-knuth 로 동일 — 스크립트 안 `BRANCH` 가 stoic-knuth 고정).
 자동으로: apt deps → repo clone/checkout → venv(또는 활성 conda env) → 파이썬 패키지 전부
-(numpy/scipy/pandas/networkx/scikit-image/**taichi**/**pyamg**/**pybamm**) → **cupy-cuda12x[ctk] +
+(numpy/scipy/pandas/networkx/scikit-image/**taichi**/**pyamg**/**pybamm**/**pyflakes**) → **cupy-cuda12x[ctk] +
 nvidia CUDA 라이브러리**(libcublasLt 포함) → **OCP 앵커 생성**(STEP4 SKIP 방지) → 7단계 검증
 (taichi CUDA·cupy sparse CG·selftest).  실패하면 **세팅 단계에서 원인 출력하고 STOP**
 (런 3시간 돌다 중간에 죽는 구조 아님).
@@ -101,6 +106,7 @@ DL="/mnt/c/Users/안용훈/Downloads"; cp <파일> "$DL/"                # 윈�
 | SSH 끊김 | 포그라운드 런 SIGHUP 사망 / 3일 낭비 | ServerAliveInterval + detached 런 + tmux 권장 |
 | 프로세스 확인 착오 | `kill <틀린PID>` / tail ^C를 런 종료로 오인 | `pgrep -af 'step4_dyn\|mpm3d'` 로 이름 검색, ^C는 tail만 멈춤 |
 | 실행 중 코드 교체 | git checkout 해도 옛 코드로 계속 돔 | 파이썬은 시작 시점 로드 — **kill 후 재시작** 필수 |
+| pyflakes 미설치 | Phase A/SDCP **팔 0** (미정의-이름 게이트 ABORT, 오탐 114건) | setup [4/7] pyflakes 설치·[7/7] import 검증 — ⚠ **sdcp 판 curl** 로만 (옛 stoic-knuth 판엔 없음) |
 
 ⚠ 이 런북과 setup 스크립트가 **정본**이다 — 새 지뢰를 밟으면 여기와 setup_gpu_server.sh 에
 같이 추가할 것 (둘이 어긋나면 setup 스크립트가 우선).
