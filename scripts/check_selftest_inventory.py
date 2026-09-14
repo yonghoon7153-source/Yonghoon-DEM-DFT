@@ -269,11 +269,16 @@ def _all_imports(src: str):
     return got
 
 
-def import_closure(root: str, starts):
+def import_closure(root: str, starts, top_starts=()):
     """리포 안 모듈을 따라가며 모은 **외부** 의존.
 
     진입점은 전체 AST 를, 거기서 도달한 모듈은 **최상위**만 본다 (모듈을 import 하면
     최상위는 반드시 돌지만 함수 안까지 돈다는 보장은 없다).
+
+    `top_starts` = **드라이버가 펴서 돌리는** 진입점 (`--run-fast`).  이들도 `python <파일>
+    --selftest` 로 실제로 도니까 폐포에 **들어와야 하지만**, 세는 범위는 최상위뿐이다 —
+    `--selftest` 경로가 함수 안의 GPU import 까지 탄다는 보장이 없기 때문이다
+    (전체 AST 로 세면 cupy·taichi·mph 까지 CI 에 요구하게 된다).
     """
     local = {}
     for base in ('scripts', 'webapp'):
@@ -284,7 +289,8 @@ def import_closure(root: str, starts):
                     local[f[:-3]] = os.path.join(base, f)
     std = set(getattr(sys, 'stdlib_module_names', ()))
     starts = list(starts)
-    seen, third, queue = set(), set(), [(r, True) for r in starts]
+    queue = [(r, True) for r in starts] + [(r, False) for r in top_starts]
+    seen, third = set(), set()
     while queue:
         rel, is_start = queue.pop()
         if rel in seen or not rel.endswith('.py'):
@@ -317,6 +323,23 @@ def ci_installed(root: str):
                 continue
             got.add(re.split(r'[=<>\[]', tok)[0].lower())
     return got
+
+
+def driver_expanded_starts(root: str, inv=None):
+    """드라이버(`--run-fast`)가 **펴서** 돌리는 진입점 파일들.
+
+    ★★ 2026-09-14 — 여기가 사각지대였다 (CLAUDE.md 규율 ⑤ *"후보를 고르는 코드가 곧
+    사각지대"*).  `ci_python_targets` 는 워크플로 **본문에 이름이 적힌** 스크립트만 찾는데,
+    워크플로는 드라이버 한 줄로 등재된 `fast` **116 파일**을 돌린다.  그 116개의 import 는
+    폐포 밖이었고, 그래서 `run_network_full_corrections.py` 의 최상위 `import pandas` 가
+    안 보였다 — 검사기는 *"CI 의존 폐포를 계산한다"* 고 적어 놓고 **초록**이었으며 CI 는
+    `ModuleNotFoundError: No module named 'pandas'` 로 **빨간불**이었다 (run 532~535).
+    드라이버가 CI 레인에 없으면 빈 목록을 준다 (그때는 실제로 안 도니까).
+    """
+    if driver_lane(root) not in ('ci', 'both'):
+        return []          # CI 레인에 없으면 실제로 안 돈다
+    inv = load_inventory(root) if inv is None else inv
+    return sorted({p for (p, _fl), r in inv.items() if r['klass'] == 'fast'})
 
 
 def ci_python_targets(root: str):
@@ -365,7 +388,7 @@ def run(root: str, verbose: bool = True):
 
     #  ── CI 의존 폐포 ──────────────────────────────────────────────────
     targets = ci_python_targets(root)
-    need = import_closure(root, targets)
+    need = import_closure(root, targets, driver_expanded_starts(root, inv))
     have = ci_installed(root)
     missing = sorted(m for m in need
                      if _PIP_NAME.get(m, m).lower() not in have
@@ -601,6 +624,39 @@ def _selftest():
     need = import_closure(root, ['scripts/a.py'])
     chk('④ 함수 안 지연 import 는 세지 않는다 (CI 가 그 경로를 안 탄다)',
         'flask' not in need, str(need))
+
+    #  ── ④b **드라이버가 펴는 것도 폐포 안** (2026-09-14, 실사고 재현) ────────────────
+    #    워크플로에 이름이 적힌 것은 드라이버 한 줄뿐인데, 그 한 줄이 등재된 `fast` 를
+    #    전부 돌린다.  옛 판은 `ci_python_targets` (= 워크플로 본문 정규식) 만 봐서 그
+    #    116개의 import 를 **한 번도 안 봤다** → `pandas` 누락이 CI 에서만 빨간불이었다
+    #    (run 532~535).  규율 ⑤: 후보를 고르는 코드가 곧 사각지대다.
+    w('scripts/d.py', 'import pandas\n')          # 드라이버만 돌리는 진입점
+    w(INVENTORY, 'scripts/d.py\t--selftest\tfast\tci\tclaude\t초록\n')
+    w(WORKFLOW, '  - run: python scripts/check_selftest_inventory.py --run-fast\n'
+                '  - run: python -m pip install --quiet numpy\n')
+    chk('★★④b 드라이버가 펴서 돌리는 진입점이 폐포에 들어온다 (옛 판은 못 봤다)',
+        driver_expanded_starts(root) == ['scripts/d.py'] and
+        'pandas' in import_closure(root, ci_python_targets(root),
+                                   driver_expanded_starts(root)),
+        f'확장={driver_expanded_starts(root)} · 타깃={ci_python_targets(root)}')
+    rc, errs = run(root, verbose=False)
+    chk('★★④b CI 가 안 까는 그 의존을 **실제로 잡는다**',
+        rc == 1 and any('pandas' in e for e in errs), str(errs))
+    #  ④c **판별력** — 옛 판(확장 없이)은 같은 픽스처에서 초록이다
+    chk('★④c 판별력: 확장을 빼면 그 의존이 안 보인다 (= 옛 판의 false-green)',
+        'pandas' not in import_closure(root, ci_python_targets(root)),
+        '확장 없이도 보였다 — 이 검사는 판별력이 없다')
+    #  ④d 드라이버가 CI 레인에 **없으면** 확장하지 않는다 (안 도는 것을 요구하지 않는다)
+    w(WORKFLOW, '  - run: python -m pip install --quiet numpy\n')
+    chk('④d 드라이버가 CI 에 없으면 확장하지 않는다', driver_expanded_starts(root) == [])
+    #  ④e 드라이버 확장은 **최상위만** 센다 — `--selftest` 가 함수 안 GPU import 까지
+    #     탄다는 보장이 없다.  전체 AST 로 세면 cupy·taichi 를 CI 에 요구하게 된다.
+    w('scripts/d.py', 'import pandas\n\n\ndef gpu():\n    import cupy\n    return cupy\n')
+    w(WORKFLOW, '  - run: python scripts/check_selftest_inventory.py --run-fast\n'
+                '  - run: python -m pip install --quiet numpy pandas\n')
+    _need = import_closure(root, ci_python_targets(root), driver_expanded_starts(root))
+    chk('★④e 확장 진입점은 최상위만 — 함수 안 cupy 를 CI 에 요구하지 않는다',
+        'pandas' in _need and 'cupy' not in _need, str(sorted(_need)))
 
     print(f'check_selftest_inventory selftest: {ok}/{ok + len(bad)} PASS')
     for b in bad:

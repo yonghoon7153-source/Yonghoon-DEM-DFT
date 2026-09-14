@@ -36,7 +36,12 @@ jobs:
         #    러너에서 5개가 전부 import 에서 죽는다 — 배선해 놓고 안 도는 상태였다
         #    (Codex R19 Q6 P2).  이제 `check_selftest_inventory` 가 의존 폐포를
         #    계산해 이 줄과 대조하므로, 빠지면 검사가 잡는다.
-        run: python -m pip install --quiet numpy scipy matplotlib flask requests networkx adjustText markdown
+        #  ★★ 2026-09-14 — `pandas` 가 빠져 있었고 **검사도 그것을 못 봤다** (run 532~535 가
+        #    `run_network_full_corrections.py` 의 최상위 `import pandas` 로 빨간불).  폐포가
+        #    워크플로 본문에 **이름이 적힌** 43개만 봤고, 드라이버 한 줄이 펴서 돌리는 116개는
+        #    밖이었다 = 규율 ⑤ 의 "후보를 고르는 코드가 곧 사각지대".  폐포를 고쳤고 그것이
+        #    이 줄의 누락을 잡는다.
+        run: python -m pip install --quiet numpy scipy matplotlib flask requests networkx adjustText markdown pandas
 
       - name: 실행 계약 단일 출처 (selftest)
         run: python scripts/run_contract.py --selftest
