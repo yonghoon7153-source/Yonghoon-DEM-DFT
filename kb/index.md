@@ -1,16 +1,17 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-14 · managed-files: 422
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-14 · managed-files: 423
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 221건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 222건)
 - 2026-09-14 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-14 · `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나 · 발송됨
 - 2026-09-14 · `kb/reviews/codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 회신 — G4 는 합격선이 아니라 경보. '셀 문제 배제' 는 받아들일 수 없다 · 회신됨
 - 2026-09-14 · `kb/reports/weekly_2026_09_14.md` — 주간 정리 2026-09-07 ~ 09-13 (주간보고 초안) · 완료 (2026-09-14 · 다음 주 문서는 새 파일)
+- 2026-09-14 · `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 다섯과 순서 · 완료
 - 2026-09-13 · `kb/methodology/silent_wrong_path_2026_09_13.md` — 조용히 틀린 경로 — 하루에 여섯 번 나온 한 부류 · 채택
 - 2026-09-13 · `kb/reviews/codex_BP_prompt_static_pair_result_2026_09_13.md` — 회신 BP 요청 — 정적대조 2 SCF 실행 결과 (BO 조건 1 이행) · 파일럿 보고량 재질의 · 발송대기
 - 2026-09-13 · `kb/reviews/codex_BP_reply_static_pair_result_2026_09_13.md` — 회신 BP 접수 — 조건 1 이행 인정 · 파일럿 조건부 GO (셀 정책 구현 불일치로 즉시 실행 승인은 아님) · 접수
@@ -26,7 +27,6 @@
 - 2026-09-13 · `kb/reviews/codex_BQ7_prompt_eprime_v52_2026_09_13.md` — 회신 BQ-7 프롬프트 — 카드 v5.2: ② 를 도구 실검사와 맞췄다 (aggregation_eligible) · 발송 대기
 - 2026-09-13 · `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적) · open
 - 2026-09-13 · `kb/questions/coating_lineage_sibling_conflicts_2026_09_13.md` — 코팅 계보 #6·#7·#8 digest 가 서로 다른 말을 하는 세 자리 — 우리 값이 문헌의 어느 양인가 · open [open]
-- 2026-09-13 · `kb/questions/esw_reduction_limit_field_2026_08_28.md` — `reduction_limit_V` 는 환원한계가 아닌 것 같다 — breakpoint 하나 아래를 가리킨다 · open [open]
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -406,9 +406,10 @@
 - `kb/syntheses/why_so3h_not_deprotonated_2026_08_29.md` — 왜 SO₃H 만 계산했나 — 원고에 그대로 쓸 근거 5  (2026-08-29 · 초안 — 1저자·공저자 확인 대기 (2026-08-29 all-sto…)
 - `kb/syntheses/xu2026_li_nd_rebuttal.md` — Xu 2026 의 "Li–Nd alloy SEI" 주장은 열역학·전자구조로 기각된다  (2026-08-13 · 방어 중 — Li₃Nd c→c NEB **완료·인용 가능** (0.2…)
 
-## platforms/ (2)
+## platforms/ (3)
 - `kb/platforms/literature_db_tools.md` — Literature DB 자동화 도구
 - `kb/platforms/ml_automation_platforms.md` — ML / Automation Platform Survey
+- `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 다섯과 순서  (2026-09-14 · 완료)
 
 ## descriptors/ (1)
 - `kb/descriptors/coating_descriptor_catalog.md` — 황화물 코팅 소재 Descriptor Catalog
