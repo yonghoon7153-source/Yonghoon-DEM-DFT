@@ -65,9 +65,9 @@ for k in range(n_max):
 
 | # | 교란 | 근거 |
 |---|---|---|
-| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:1396` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` |
+| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:1412` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` |
 | 2 | `--n-restarts` 는 실행 횟수가 아니라 **예산 상한** | adaptive 조기 종료. 2회 종료 행 223 → 238 |
-| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:1351`) |
+| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:1367`) |
 | 4 | **warm 은 slot 을 교체한다** (§0) | 투영 `restart_sources` |
 | 5 | **예산을 바꾸면 warm 후보 자체가 바뀐다** | 연쇄 구조 (`src/fitting.py:392-406`) — 33p 예산 ↑ → 33p 해 변화 → 34p 가 받는 warm 좌표 변화. 22차 발견 2 |
 
@@ -1074,7 +1074,9 @@ digest 를 담을 곳이 없다). 그래서 끝 digest 를 `.head` 에 따로 �
     적은 것이고, 51차 P0-I 가 그 뒤에 방향을 뒤집었다: "철자를 막는 것은 종결
     조건이 아니다 (alias 의 alias 로 이어진다) — **버리는 것을 없애면** 그 축
     자체가 사라진다." 그래서 지금 정규형은 function·class 의 docstring 을
-    보존하고(`row_projection.py` 의 `_canon_*`), 60차 P0-13 이 module 의 첫
+    보존하고(`row_projection.py` 의 `_keep_docstrings()` → `_ast_normal_node()`
+    → `_ast_canon()`; 62차 P2-2 가 없는 이름 `_canon_*` 을 이것으로 고쳤다),
+    60차 P0-13 이 module 의 첫
     문자열도 `__doc__` 라는 이름으로 묶는다(`_module_defs()`). 계산이 읽는
     문자열은 identity 안이다. 계약 문구가 코드와 **반대**였고, 그 상태로
     열한 라운드를 지났다 — 문서도 실측 대상이라는 뜻이다.

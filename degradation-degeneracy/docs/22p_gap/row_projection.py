@@ -440,14 +440,19 @@ def _ast_normal_node(node) -> str:
        `decorator_list` 는 그 **위**에 있다 — 그래서 `@lru_cache` 를 붙이거나
        떼도 digest 가 그대로였다. node 를 쓰면 decorator 가 정규형에 들어온다.
 
-    2. **`ast.unparse` 로 찍는다.** 47차의 `ast.dump` 는 node 필드 목록을 그대로
-       쓰므로 인터프리터 버전에 묶인다. 실측: 같은 바이트에 대해
+    2. **렌더링을 우리가 한다 (`_ast_canon`).** 47차의 `ast.dump` 는 node 필드
+       목록을 그대로 쓰므로 인터프리터 버전에 묶인다. 실측: 같은 바이트에 대해
        3.11 `908503e65162e7d9` · 3.12 `d4ae1c027b434e83` ·
        3.13 `aa1cf2cf045c41ea` — 세 값이었다. 인터프리터를 올리는 것만으로
        봉인이 깨지면, 그때 사람은 "코드는 그대로니 pin 을 갱신하자" 고 판단하게
-       되고 봉인의 뜻이 사라진다. `unparse` 는 **코드 자체**를 찍으므로 문법이
-       바뀌지 않는 한 버전을 타지 않는다 (회귀가 이 기계의 3.10~3.13 에서
+       되고 봉인의 뜻이 사라진다. 48차 첫 판은 `ast.unparse` 였는데 그것도 3.12
+       PEP 701 뒤 f-string 따옴표를 다르게 찍어 **버렸다** — 지금 규칙은
+       `_ast_canon` 의 docstring 에 있다 (회귀가 이 기계의 3.10~3.13 에서
        실제로 대조한다).
+
+    ★ 62차 P2-2 — 이 문단은 열네 라운드 동안 렌더러가 unparse 라고 적혀
+      있었고 코드는 그렇지 않았다. 문서도 실측 대상이다
+      (`tests/test_contract_citations_62.py`).
     """
     import copy
 
@@ -1488,45 +1493,117 @@ def _scoped_shadows(node, inherited: frozenset = frozenset()):
 
     here = frozenset(inherited | _own_shadows(node))
     yield node, here
-    yield from _walk_in_scope(node, here)
+    # ★ 62차 P0-6 — **definition head 는 바깥 scope 다.** default · decorator ·
+    #   annotation · class 의 bases 는 정의 시점에 **바깥에서** 평가된다 — 거기
+    #   `getattr` 은 매개변수가 아니라 builtin 이다. 61차판은 함수 node 의 모든
+    #   자식에 `here`(매개변수 포함)를 붙여 head 의 능력 load 를 면제했다
+    #   (리뷰어 실측: digest 같고 계산은 1→9).
+    head = _definition_head(node)
+    yield from _walk_nodes(head, inherited, inherited)
+    # ★ 62차 P0-6 — **class 본문의 결속은 method 에 안 내려간다.** Python 에서
+    #   class 본문의 이름은 그 본문에서만 보이고, 안에 정의된 함수는 class 를
+    #   건너뛰어 바깥 scope 를 본다. 그러므로 자식 scope 가 물려받는 것은
+    #   class 면 `inherited`, 함수면 `here` 다.
+    nested = inherited if isinstance(node, ast.ClassDef) else here
+    yield from _walk_nodes(_definition_body(node, head), here, nested)
 
 
-def _walk_in_scope(cur, here: frozenset):
+def _definition_head(node) -> list:
+    """정의 시점에 **바깥 scope 에서** 평가되는 부분 (62차 P0-6).
+
+    함수·lambda: default · kw_default · annotation · returns · decorator.
+    class: decorator · bases · keywords. 그 밖의 node 는 head 가 없다.
+    """
+    import ast
+
+    head: list = []
+    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+        a = node.args
+        head += list(a.defaults)
+        head += [d for d in a.kw_defaults if d is not None]
+        for arg in (list(a.posonlyargs) + list(a.args) + list(a.kwonlyargs)
+                    + [a.vararg, a.kwarg]):
+            if arg is not None and arg.annotation is not None:
+                head.append(arg.annotation)
+        if getattr(node, "returns", None) is not None:
+            head.append(node.returns)
+        head += list(getattr(node, "decorator_list", ()) or ())
+    elif isinstance(node, ast.ClassDef):
+        head += list(node.decorator_list) + list(node.bases)
+        head += [k.value for k in node.keywords]
+    return head
+
+
+def _definition_body(node, head: list) -> list:
+    """이 scope **안에서** 평가되는 자식들 — head 와 매개변수 이름 node 를 뺀 것."""
+    import ast
+
+    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+        return list(node.body)
+    if isinstance(node, ast.Lambda):
+        return [node.body]
+    skip = {id(h) for h in head}
+    return [sub for sub in ast.iter_child_nodes(node) if id(sub) not in skip]
+
+
+def _walk_in_scope(cur, here: frozenset, nested: frozenset | None = None):
     """`cur` 의 자손을 훑으며 **그 자리에서 유효한** shadow 집합을 붙인다.
 
     ★ 61차 P1-4 — comprehension 을 자식 scope 로 다룬다. 다만 Python 은
       **가장 바깥 iterable 만** 바깥 scope 에서 평가하므로 그 자리는 바깥
       집합으로 남긴다 — 규칙을 통째로 옮기면 그 자리가 반대로 틀린다.
+
+    ★ 62차 P0-6 — `nested` 는 **자식 scope 가 물려받는** 집합이다. 함수 안에서는
+      `here` 와 같지만 class 본문 안에서는 class 의 바깥 집합이다 (class 본문의
+      결속은 method 에도, comprehension 의 본문에도 안 보인다 — 첫 iterable 만
+      class 본문에서 평가된다).
     """
     import ast
 
-    for sub in ast.iter_child_nodes(cur):
+    yield from _walk_nodes(list(ast.iter_child_nodes(cur)), here, nested)
+
+
+def _walk_nodes(nodes, here: frozenset, nested: frozenset | None = None):
+    """`nodes` 각각을 (자기 자신 포함) 훑는다 — `_walk_in_scope` 의 본체.
+
+    자식 scope 가 **목록에 직접** 들어 있어도(예: class 본문의 method) 그 자리에서
+    `_scoped_shadows` 로 넘긴다. 62차 첫 판은 body 문장마다 `_walk_in_scope`
+    를 불러 그 문장 **자신**이 scope 인 경우를 놓쳤고, method 본문이 class 의
+    집합을 그대로 받았다 (RED 관측).
+    """
+    import ast
+
+    nested = here if nested is None else nested
+    for sub in nodes:
         if isinstance(sub, (ast.FunctionDef, ast.AsyncFunctionDef,
                             ast.Lambda, ast.ClassDef)):
-            yield from _scoped_shadows(sub, here)
+            yield from _scoped_shadows(sub, nested)
             continue
         if _is_comprehension(sub):
-            inner = frozenset(here | _comprehension_targets(sub))
+            inner = frozenset(nested | _comprehension_targets(sub))
             yield sub, inner
             gens = list(getattr(sub, "generators", ()) or ())
             for i, gen in enumerate(gens):
                 yield gen, inner
-                where = here if i == 0 else inner   # 첫 iterable 만 바깥이다
-                yield gen.iter, where
-                yield from _walk_in_scope(gen.iter, where)
+                if i == 0:                           # 첫 iterable 만 바깥이다
+                    yield gen.iter, here
+                    yield from _walk_in_scope(gen.iter, here, nested)
+                else:
+                    yield gen.iter, inner
+                    yield from _walk_in_scope(gen.iter, inner, inner)
                 yield gen.target, inner
-                yield from _walk_in_scope(gen.target, inner)
+                yield from _walk_in_scope(gen.target, inner, inner)
                 for cond in (gen.ifs or ()):
                     yield cond, inner
-                    yield from _walk_in_scope(cond, inner)
+                    yield from _walk_in_scope(cond, inner, inner)
             for part in (getattr(sub, "elt", None), getattr(sub, "key", None),
                          getattr(sub, "value", None)):
                 if part is not None:
                     yield part, inner
-                    yield from _walk_in_scope(part, inner)
+                    yield from _walk_in_scope(part, inner, inner)
             continue
         yield sub, here
-        yield from _walk_in_scope(sub, here)
+        yield from _walk_in_scope(sub, here, nested)
 
 
 def _imported_module_names(src: str) -> set:
@@ -1955,6 +2032,21 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
     # ★ 59차 M17 — 속성이 능력인지는 **뿌리가 import 한 module 인가** 로 가른다
     #   (`operator.attrgetter` 는 능력, `df.vars` 는 남의 속성이다).
     modnames = _imported_module_names(src)
+    # ★ 62차 P0-7 — **건너간 module 은 자기 symbol table 로 본다.** 위 여섯 집합은
+    #   전부 primary 소스에서 나온 것이고, 61차판은 `src.scoring` 의 node 도 그
+    #   집합으로 분석했다. scoring 이 자기 module 에 `GET = getattr` 이나 자기
+    #   이름 공간 별칭을 두면 primary 의 `caps`·`targets` 에는 없어 통과했다
+    #   (리뷰어 실측: digest 같고 계산은 1→9). module 마다 table 을 하나씩.
+    _s_tree = _ast.parse(scoring_src)
+    s_mods = _crossed_modules(scoring_src)
+    tables = {
+        "rp": (mods, reflect, consts, caps, targets, modnames),
+        "sc": (s_mods, _source_reflection_locals(_s_tree),
+               _module_string_consts(_s_tree),
+               _namespace_capabilities(scoring_src),
+               _namespace_targets(scoring_src, s_mods),
+               _imported_module_names(scoring_src)),
+    }
 
     missing = [x for x in _COMPUTE_NAMES if x not in defs]
     if missing:
@@ -1994,8 +2086,7 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
         #   **모든** 노드에 대해 동적 이름 풀이를 거부한다.
         # ★ 52차 P0-7 — 한 이름에 묶인 문이 여럿이면 **전부** 본다.
         for node in nodes:
-            _assert_no_dynamic_resolution(node, key, mods, reflect, consts,
-                                          caps, targets, modnames)
+            _assert_no_dynamic_resolution(node, key, *tables[kind])
         out[key] = "\n".join(_ast_normal_node(n) for n in nodes)
         for sub_node in [x for n in nodes for x in ast.walk(n)]:
             # ★ 49차 P0-2 — `sc.foo` (Import + Attribute). 48차는 이 문법을

@@ -124,6 +124,9 @@ _GATED_ENTRYPOINT_MODULES = frozenset({
     # ★ 61차 β — production `run_fit()` 을 **끝까지** 태워서 굳은 기록의
     #   경로를 보는 회귀다. gated 진입점을 지나므로 여기 적는다.
     "test_logical_paths_61", "tests.test_logical_paths_61",
+    # ★ 62차 β′·γ′ — lock 수명·capability 폐기·run_sig 를 production `run_fit()`
+    #   `run_grid()` 로 잰다. 같은 이유로 gated.
+    "test_lock_lifetime_62", "tests.test_lock_lifetime_62",
 })
 
 

@@ -63,3 +63,9 @@ docs/22p_gap/_exec_class/local/
 # 봉인은 **mount 로 이름을 가리는 공격**을 막는 추가 층이다. 그 공격은 그
 # 기계에서 일어나므로 그 기계의 봉인이 답한다.
 docs/22p_gap/_frozen_coords/
+
+# ★ 62차 P0-2 · 서브 브랜치 R6 F06 — 실행 lock 파일. `git clean -fd` 가 이것을
+#   지우면 다음 시도가 **새 inode** 를 잠가 배타가 사라진다. 추적하지도 지우지도
+#   않는다 (배타는 flock 이 정하고, release 는 inode 가 바뀌면 거부한다).
+.run.lock
+.fit.lock

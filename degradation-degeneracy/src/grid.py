@@ -658,73 +658,83 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
 
             release_leg_run(_claim.leg_id, token=_claim.token)
             log.info("dry-run 이라 실행권을 되돌렸다 — 계획은 planned 로 남는다")
+        # ★ 62차 P1-2 — 실행권만이 아니라 **실행 class 권한과 그 handle 도**
+        #   되돌린다. 리뷰어가 빈 dry-run 으로 쟀다: `new_live_capability_count 1
+        #   · new_open_directory_fd_count 1`. commit 에 못 가는 종료는 폐기다.
+        from tools.preserve import discard_capability_on_abort
+        discard_capability_on_abort(_exec_cap, log=log)
         return {"dry_run": True, "n_total": len(conditions), "n_todo": n,
                 "n_infeasible": len(infeasible), "est_min": est_min}
 
     # ── 동시 실행 방지 (청크 덮어쓰기·집계 오염 차단) ──
-    acquire_run_lock(out_dir)
-
-    # ── ★ F74/F82: 실행 서명 + 시작 기록 + resume 가드 ──
-    from src.baseline import _cache_path as _dsp
-    from src.io import file_digest as _fd
-    g_spec, g_sig = grid_run_spec(cfg, conditions, discharged=d_dict,
-                                  discharged_sha=_fd(_dsp(cfg, None), full=True))
-    start_rec = {"grid_run_sig": g_sig, "grid_run_spec": g_spec,
-                 "started_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
-                 "resume": bool(resume),
-                 **git_info(Path(__file__).resolve().parent.parent)}
-    import yaml as _yaml
-    (out_dir / "curves_manifest_start.yaml").write_text(
-        _yaml.safe_dump(start_rec, allow_unicode=True, sort_keys=False),
-        encoding="utf-8") if not (out_dir / "curves_manifest_start.yaml").exists()         else None
-    # 기존 청크가 있으면 서명이 같아야 한다 — 다른 config/코드의 resume 혼합이
-    # 8차 리뷰에서 실제로 재현됐다 (A 절반 + B resume → B 만 주장, ok=True)
-    for old in chunk_files(out_dir):
-        try:
-            sigs = set(pd.read_parquet(old, columns=["grid_run_sig"])["grid_run_sig"])
-        except Exception:  # noqa: BLE001 — 열 자체가 없는 옛 형식
-            sigs = {"<서명 없음(F74 이전)>"}
-        if sigs != {g_sig}:
-            raise RuntimeError(
-                f"기존 청크의 grid_run_sig {sorted(sigs)}가 이번 실행 {g_sig}와 "
-                f"다릅니다. 다른 config/코드의 결과가 섞입니다 (F74). "
-                f"{out_dir}/chunks 를 비우고 처음부터 다시 돌리세요.")
-
-    # ── manifest 초기화 ──
-    write_manifest(out_dir, base_manifest(config_hash(cfg), extra={
-        "run_type": "grid",
-        "protocol_unified": protocol_name,
-        "solver": solver_name(make_solver(cfg)),
-        "nproc": nproc,
-        "chunk_size": chunk_size,
-        "n_conditions": len(conditions),
-        "n_resume_skipped": len(done),
-        "discharged_state": d_dict,
-    }))
-
-    # failed.csv 중복 방지 — 이미 기록된 조건은 다시 쓰지 않는다
-    recorded_failed = load_failed(out_dir)
-
-    def _record_failure(cond_id: str, cond: dict, reason: str) -> None:
-        if cond_id not in recorded_failed:
-            append_failed(out_dir, cond_id, cond, reason)
-            recorded_failed.add(cond_id)
-
-    for c, reason in infeasible:
-        _record_failure(c.cond_id, asdict(c), f"infeasible: {reason}")
-        mark_completed(out_dir, c.cond_id)   # 재실행에서도 건너뛰도록
-
-    # ── chunk 단위 병렬 실행 ──
-    n_failed = len(infeasible)
-    n_ok = 0
-    t_start = time.perf_counter()
-    chunk_idx = _next_chunk_idx(out_dir)
-
-    # ★ 워커 풀을 청크 간에 재사용한다.
-    #   청크마다 Parallel을 새로 만들면 워커가 매번 pybamm import + composite DFN
-    #   빌드를 반복해 청크당 수십 초가 낭비된다 (V100 32코어 실측: 95조건에 71.6 s,
-    #   이론값 10 s). context manager로 묶으면 그 비용을 실행당 1회로 상각한다.
+    # ★ 62차 P0-3 — 임계구역은 merge · manifest · commit(`write_curves_manifest`
+    #   안) · phase receipt 까지 덮고 release 가 **마지막**이다. 옛 구조는 청크
+    #   루프만 잠갔고, 리뷰어는 그 뒤에서 둘째 실행이 같은 자리를 잡아 첫
+    #   capability 가 둘째 bytes 를 봉인하는 것을 쟀다. token(dirfd+inode) 이라
+    #   commit 이 handle 을 닫은 뒤에도 놓을 수 있다 (`src/io.py` `RunLock`).
+    tok = acquire_run_lock(out_dir)
     try:
+
+        # ── ★ F74/F82: 실행 서명 + 시작 기록 + resume 가드 ──
+        from src.baseline import _cache_path as _dsp
+        from src.io import file_digest as _fd
+        g_spec, g_sig = grid_run_spec(cfg, conditions, discharged=d_dict,
+                                      discharged_sha=_fd(_dsp(cfg, None), full=True))
+        start_rec = {"grid_run_sig": g_sig, "grid_run_spec": g_spec,
+                     "started_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                     "resume": bool(resume),
+                     **git_info(Path(__file__).resolve().parent.parent)}
+        import yaml as _yaml
+        (out_dir / "curves_manifest_start.yaml").write_text(
+            _yaml.safe_dump(start_rec, allow_unicode=True, sort_keys=False),
+            encoding="utf-8") if not (out_dir / "curves_manifest_start.yaml").exists()         else None
+        # 기존 청크가 있으면 서명이 같아야 한다 — 다른 config/코드의 resume 혼합이
+        # 8차 리뷰에서 실제로 재현됐다 (A 절반 + B resume → B 만 주장, ok=True)
+        for old in chunk_files(out_dir):
+            try:
+                sigs = set(pd.read_parquet(old, columns=["grid_run_sig"])["grid_run_sig"])
+            except Exception:  # noqa: BLE001 — 열 자체가 없는 옛 형식
+                sigs = {"<서명 없음(F74 이전)>"}
+            if sigs != {g_sig}:
+                raise RuntimeError(
+                    f"기존 청크의 grid_run_sig {sorted(sigs)}가 이번 실행 {g_sig}와 "
+                    f"다릅니다. 다른 config/코드의 결과가 섞입니다 (F74). "
+                    f"{out_dir}/chunks 를 비우고 처음부터 다시 돌리세요.")
+
+        # ── manifest 초기화 ──
+        write_manifest(out_dir, base_manifest(config_hash(cfg), extra={
+            "run_type": "grid",
+            "protocol_unified": protocol_name,
+            "solver": solver_name(make_solver(cfg)),
+            "nproc": nproc,
+            "chunk_size": chunk_size,
+            "n_conditions": len(conditions),
+            "n_resume_skipped": len(done),
+            "discharged_state": d_dict,
+        }))
+
+        # failed.csv 중복 방지 — 이미 기록된 조건은 다시 쓰지 않는다
+        recorded_failed = load_failed(out_dir)
+
+        def _record_failure(cond_id: str, cond: dict, reason: str) -> None:
+            if cond_id not in recorded_failed:
+                append_failed(out_dir, cond_id, cond, reason)
+                recorded_failed.add(cond_id)
+
+        for c, reason in infeasible:
+            _record_failure(c.cond_id, asdict(c), f"infeasible: {reason}")
+            mark_completed(out_dir, c.cond_id)   # 재실행에서도 건너뛰도록
+
+        # ── chunk 단위 병렬 실행 ──
+        n_failed = len(infeasible)
+        n_ok = 0
+        t_start = time.perf_counter()
+        chunk_idx = _next_chunk_idx(out_dir)
+
+        # ★ 워커 풀을 청크 간에 재사용한다.
+        #   청크마다 Parallel을 새로 만들면 워커가 매번 pybamm import + composite DFN
+        #   빌드를 반복해 청크당 수십 초가 낭비된다 (V100 32코어 실측: 95조건에 71.6 s,
+        #   이론값 10 s). context manager로 묶으면 그 비용을 실행당 1회로 상각한다.
         with tqdm(total=len(feasible), desc="grid", unit="cond") as bar, \
                 Parallel(n_jobs=nproc, backend="loky") as parallel:
             for start in range(0, len(feasible), chunk_size):
@@ -750,95 +760,126 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
                 for r in results:
                     mark_completed(out_dir, r["cond_id"])
                 bar.update(len(chunk))
+
+        merged = merge_chunks(out_dir, "curves.parquet")
+        elapsed = time.perf_counter() - t_start
+
+        # 누적 집계 (resume 시 이전 실행분 포함) — 파일 기준이 진실.
+        # 양쪽 모두 '고유 cond_id 수'로 세야 한다 (한쪽만 set이면 재실행 시 어긋남).
+        n_done_total = len(load_completed(out_dir))
+        n_failed_total = len(load_failed(out_dir))
+        # ★ 62차 P0-4 — durable locator 는 **이름**(`named_out`) 기준이다. 쓰기는
+        #   handle 경로 아래로 가지만, 기록에 그 경로를 적으면 fit 이 그것을
+        #   `manifest_grid.yaml` 로 보존해 identity member 로 봉인한다 (리뷰어
+        #   실측: `curves_parquet: /proc/self/fd/3/curves.parquet` ·
+        #   `path_exists_after_success: false`).
+        write_manifest(out_dir, _grid_manifest_payload(
+            named_out, merged, n_ok=n_ok, n_failed=n_failed,
+            n_done_total=n_done_total, n_failed_total=n_failed_total,
+            elapsed=elapsed))
+        # ★ F70/F74 — 곡선 producer 기록을 별도 파일로. fitting 이 이걸 봉인한다.
+        from src.io import source_digest as _sd
+        write_curves_manifest(named_out, cfg, conditions, capability=_exec_cap, extra={
+            "solver": solver_name(make_solver(cfg)),
+            "n_curves": n_done_total - n_failed_total,
+            "elapsed_s": round(elapsed, 1),
+            "grid_run_spec": g_spec,
+            "grid_run_sig": g_sig,
+            "source_digest_changed_during_run": bool(
+                g_spec["source_digest"] != _sd()),
+            # ★ F83/9차 발견 4 — 의도한 조건집합이 **관측 ⊎ 실패**로 정확히 나뉘는지
+            #   검증기가 판정할 수 있게 실패 목록의 서명도 남긴다. 예전에는
+            #   n_curves 만 맞으면 통과해, 어려운 조건이 통째로 빠져도 검출되지 않았다
+            #   (리뷰 실측: INTENDED 3 / OBSERVED 2 / VALIDATOR_OK=True).
+            "failed_ids_sha256": hashlib.sha256(
+                "\n".join(sorted(load_failed(out_dir))).encode()).hexdigest()[:16],
+            "n_failed_total": n_failed_total,
+            # ★ 10차 자체 확인 3 — CLI 축 override 시 grid_config(=config 파일 축)는
+            #   실제 축과 다를 수 있다. 실제 조건에서 유도한 축을 함께 기록한다.
+            #   (조건 집합 자체는 grid_run_spec.condition_ids_sha256 이 서명한다)
+            "effective_axes": {
+                "lli": sorted({float(c.lli) for c in conditions}),
+                "lam_pe": sorted({float(c.lam_pe) for c in conditions}),
+                "lam_ne": sorted({float(c.lam_ne) for c in conditions}),
+                "noise": sorted({float(c.noise) for c in conditions}),
+            },
+            "_grid_config_주의": ("grid_config 는 config 파일 원본이다 — CLI 축 "
+                                 "override 는 effective_axes 와 "
+                                 "condition_ids_sha256 에만 반영된다 (10차)."),
+        })
+        log.info("grid 완료: ok=%d failed=%d (누적 곡선 %d) elapsed=%.1fs",
+                 n_ok, n_failed, n_done_total - n_failed_total, elapsed)
+        summary = {"n_ok": n_ok, "n_failed": n_failed,
+                   "n_curves_total": n_done_total - n_failed_total,
+                   # ★ 62차 (61차 요청문 §0 신고 항목) — 콘솔 요약도 이름이다
+                   "elapsed_s": elapsed, "out_dir": str(named_out)}
+        # ★ 48차 P0-4 — 끝난 phase 를 **durable 하게 닫는다.** 47차는
+        #   `phase_done()`·`finalize_leg()` 을 만들어 놓고 production 에서 한 번도
+        #   부르지 않았다 — lifecycle 이 있는데 아무 것도 그 상태를 움직이지 않으면
+        #   그것은 lifecycle 이 아니라 죽은 코드다.
+        if _claim is not None:
+            # ★ 49차 P0-5 — receipt 가 **곡선의 내용 identity** 를 봉인한다. 다음
+            #   phase(fit)가 자기가 읽은 바이트를 이것과 맞춘다
+            #   (`assert_phase_input_binding()`). 48차에는 두 phase 를 잇는 내용
+            #   결속이 전혀 없어서, grid 가 무엇을 만들었든 fit 은 `--in` 이
+            #   가리키는 아무 것이나 읽었다.
+            import hashlib as _h49
+
+            # ★ 50차 P0 — fit 이 읽는 것은 parquet 하나가 아니다. producer 기록
+            #   (`curves_manifest*.yaml`)도 fit 이 봉인해 읽고 서명에 넣는다.
+            #   49차는 parquet 만 결속해 나머지를 갈아 끼울 수 있었다.
+            _bind = {}
+            for _key, _name in (("curves_sha256", "curves.parquet"),
+                                ("curves_manifest_sha256", "curves_manifest.yaml"),
+                                ("curves_manifest_start_sha256",
+                                 "curves_manifest_start.yaml")):
+                # ★ 60차 P0-4 — 여기는 commit **뒤**다. 권한은 소비되며 폐기됐고
+                #   handle 은 닫혔으므로, 결속 바이트는 **이름**으로 읽는다. 그
+                #   이름이 판정한 대상인지는 방금 commit 이 확인했다.
+                _f = Path(named_out) / _name
+                if not _f.is_file():
+                    raise SystemExit(
+                        f"✗ grid 가 끝났는데 {_f} 가 없다 — 다음 phase 가 결속할 "
+                        "입력이 없으므로 phase 를 닫지 않는다")
+                _bind[_key] = _h49.sha256(_f.read_bytes()).hexdigest()
+            _claim.phase_done("grid", dict(_bind, **{
+                "out": str(named_out),
+                "n_curves_total": summary["n_curves_total"],
+                "grid_run_sig": g_sig,
+                "finished_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}))
+    except BaseException:
+        # ★ 62차 P1-2 — commit 에 도달하지 못한 종료는 권한을 버린다. commit
+        #   뒤의 예외에서는 이미 소비돼 있고 폐기는 멱등이다.
+        from tools.preserve import discard_capability_on_abort
+        discard_capability_on_abort(_exec_cap, log=log)
+        raise
     finally:
-        release_run_lock(out_dir)
+        # ★ 61차 P1-1 · 62차 P1-1 — 오류를 삼키지 않는다. 내 lock 이 사라졌거나
+        #   다른 inode 로 바뀌었으면 여기서 올린다.
+        release_run_lock(tok)
+    return summary
 
-    merged = merge_chunks(out_dir, "curves.parquet")
-    elapsed = time.perf_counter() - t_start
 
-    # 누적 집계 (resume 시 이전 실행분 포함) — 파일 기준이 진실.
-    # 양쪽 모두 '고유 cond_id 수'로 세야 한다 (한쪽만 set이면 재실행 시 어긋남).
-    n_done_total = len(load_completed(out_dir))
-    n_failed_total = len(load_failed(out_dir))
-    write_manifest(out_dir, {
+def _grid_manifest_payload(named_out: Path, merged, *, n_ok: int, n_failed: int,
+                           n_done_total: int, n_failed_total: int,
+                           elapsed: float) -> dict:
+    """grid 의 `manifest.yaml` 본문 (62차 P0-4).
+
+    `merged` 는 실제로 쓰인 자리(handle 경로일 수 있다)이고, 기록에는 그
+    **이름만** 빌려 `named_out` 아래로 적는다. 이 dict 가 그대로 fit 의
+    `manifest_grid.yaml` 이 되어 identity member 로 봉인되므로, 실행이 끝나면
+    사라지는 경로가 여기 들어오면 안 된다.
+    """
+    return {
         "n_ok": n_ok, "n_failed": n_failed,               # 이번 호출분
         "n_completed_total": n_done_total,                 # 누적 (failed 포함)
         "n_failed_total": n_failed_total,
         "n_curves_total": n_done_total - n_failed_total,
         "elapsed_s": round(elapsed, 1),
-        "curves_parquet": str(merged) if merged else None,
+        "curves_parquet": (str(Path(named_out) / Path(merged).name)
+                           if merged else None),
         "finished": time.strftime("%Y-%m-%dT%H:%M:%S"),
-    })
-    # ★ F70/F74 — 곡선 producer 기록을 별도 파일로. fitting 이 이걸 봉인한다.
-    from src.io import source_digest as _sd
-    write_curves_manifest(named_out, cfg, conditions, capability=_exec_cap, extra={
-        "solver": solver_name(make_solver(cfg)),
-        "n_curves": n_done_total - n_failed_total,
-        "elapsed_s": round(elapsed, 1),
-        "grid_run_spec": g_spec,
-        "grid_run_sig": g_sig,
-        "source_digest_changed_during_run": bool(
-            g_spec["source_digest"] != _sd()),
-        # ★ F83/9차 발견 4 — 의도한 조건집합이 **관측 ⊎ 실패**로 정확히 나뉘는지
-        #   검증기가 판정할 수 있게 실패 목록의 서명도 남긴다. 예전에는
-        #   n_curves 만 맞으면 통과해, 어려운 조건이 통째로 빠져도 검출되지 않았다
-        #   (리뷰 실측: INTENDED 3 / OBSERVED 2 / VALIDATOR_OK=True).
-        "failed_ids_sha256": hashlib.sha256(
-            "\n".join(sorted(load_failed(out_dir))).encode()).hexdigest()[:16],
-        "n_failed_total": n_failed_total,
-        # ★ 10차 자체 확인 3 — CLI 축 override 시 grid_config(=config 파일 축)는
-        #   실제 축과 다를 수 있다. 실제 조건에서 유도한 축을 함께 기록한다.
-        #   (조건 집합 자체는 grid_run_spec.condition_ids_sha256 이 서명한다)
-        "effective_axes": {
-            "lli": sorted({float(c.lli) for c in conditions}),
-            "lam_pe": sorted({float(c.lam_pe) for c in conditions}),
-            "lam_ne": sorted({float(c.lam_ne) for c in conditions}),
-            "noise": sorted({float(c.noise) for c in conditions}),
-        },
-        "_grid_config_주의": ("grid_config 는 config 파일 원본이다 — CLI 축 "
-                             "override 는 effective_axes 와 "
-                             "condition_ids_sha256 에만 반영된다 (10차)."),
-    })
-    log.info("grid 완료: ok=%d failed=%d (누적 곡선 %d) elapsed=%.1fs",
-             n_ok, n_failed, n_done_total - n_failed_total, elapsed)
-    summary = {"n_ok": n_ok, "n_failed": n_failed,
-               "n_curves_total": n_done_total - n_failed_total,
-               "elapsed_s": elapsed, "out_dir": str(out_dir)}
-    # ★ 48차 P0-4 — 끝난 phase 를 **durable 하게 닫는다.** 47차는
-    #   `phase_done()`·`finalize_leg()` 을 만들어 놓고 production 에서 한 번도
-    #   부르지 않았다 — lifecycle 이 있는데 아무 것도 그 상태를 움직이지 않으면
-    #   그것은 lifecycle 이 아니라 죽은 코드다.
-    if _claim is not None:
-        # ★ 49차 P0-5 — receipt 가 **곡선의 내용 identity** 를 봉인한다. 다음
-        #   phase(fit)가 자기가 읽은 바이트를 이것과 맞춘다
-        #   (`assert_phase_input_binding()`). 48차에는 두 phase 를 잇는 내용
-        #   결속이 전혀 없어서, grid 가 무엇을 만들었든 fit 은 `--in` 이
-        #   가리키는 아무 것이나 읽었다.
-        import hashlib as _h49
-
-        # ★ 50차 P0 — fit 이 읽는 것은 parquet 하나가 아니다. producer 기록
-        #   (`curves_manifest*.yaml`)도 fit 이 봉인해 읽고 서명에 넣는다.
-        #   49차는 parquet 만 결속해 나머지를 갈아 끼울 수 있었다.
-        _bind = {}
-        for _key, _name in (("curves_sha256", "curves.parquet"),
-                            ("curves_manifest_sha256", "curves_manifest.yaml"),
-                            ("curves_manifest_start_sha256",
-                             "curves_manifest_start.yaml")):
-            # ★ 60차 P0-4 — 여기는 commit **뒤**다. 권한은 소비되며 폐기됐고
-            #   handle 은 닫혔으므로, 결속 바이트는 **이름**으로 읽는다. 그
-            #   이름이 판정한 대상인지는 방금 commit 이 확인했다.
-            _f = Path(named_out) / _name
-            if not _f.is_file():
-                raise SystemExit(
-                    f"✗ grid 가 끝났는데 {_f} 가 없다 — 다음 phase 가 결속할 "
-                    "입력이 없으므로 phase 를 닫지 않는다")
-            _bind[_key] = _h49.sha256(_f.read_bytes()).hexdigest()
-        _claim.phase_done("grid", dict(_bind, **{
-            "out": str(named_out),
-            "n_curves_total": summary["n_curves_total"],
-            "grid_run_sig": g_sig,
-            "finished_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}))
-    return summary
+    }
 
 
 def _next_chunk_idx(out_dir: Path) -> int:

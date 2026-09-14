@@ -101,35 +101,45 @@ def test_merge_orders_by_mtime_not_name(tmp_path):
     assert set(df.v_full) == {9.0}           # 나중에 만들어진 값이 이김
 
 
-def test_run_lock_blocks_concurrent_run(tmp_path, monkeypatch):
-    """살아있는 grid 실행이 있으면 두 번째 실행은 거부된다."""
+def test_run_lock_blocks_concurrent_run(tmp_path):
+    """살아있는 grid 실행이 있으면 두 번째 실행은 거부된다.
+
+    ★ 62차 P0-2 — 옛 판은 `_pid_alive` 를 patch 해 "살아 있는 PID 문자열" 을
+      흉내 냈다. 지금 배타는 커널 `flock` 이 정하므로 **실제 보유자**를 둔다
+      (같은 프로세스라도 open file description 이 다르면 flock 은 충돌한다).
+    """
     import pytest
 
     import src.io as io_mod
 
-    (tmp_path / ".run.lock").write_text("4242 2026-01-01T00:00:00\n")
-    monkeypatch.setattr(io_mod, "_pid_alive", lambda pid: pid == 4242)
-    with pytest.raises(RuntimeError, match="이미 실행 중"):
-        io_mod.acquire_run_lock(tmp_path)
+    tok = io_mod.acquire_run_lock(tmp_path)
+    try:
+        with pytest.raises(RuntimeError, match="이미 실행 중"):
+            io_mod.acquire_run_lock(tmp_path)
+    finally:
+        io_mod.release_run_lock(tok)
 
 
-def test_lock_ignores_unrelated_process(tmp_path, monkeypatch):
-    """PID는 살아있지만 grid가 아닌 프로세스(재사용된 PID)면 잠금을 회수한다."""
+def test_lock_ignores_unrelated_process(tmp_path):
+    """본문의 PID 가 살아 있어도 flock 을 안 들고 있으면(재사용된 PID) 회수한다.
+
+    PID 1 은 언제나 살아 있지만 이 파일을 잠근 적이 없다.
+    """
     import src.io as io_mod
 
-    (tmp_path / ".run.lock").write_text("4242 2026-01-01T00:00:00\n")
-    monkeypatch.setattr(io_mod, "_pid_alive", lambda pid: False)
-    io_mod.acquire_run_lock(tmp_path)        # 예외 없이 통과
-    io_mod.release_run_lock(tmp_path)
+    (tmp_path / ".run.lock").write_text("1 2026-01-01T00:00:00\n")
+    tok = io_mod.acquire_run_lock(tmp_path)  # 예외 없이 통과
+    io_mod.release_run_lock(tok)
 
 
 def test_stale_lock_is_reclaimed(tmp_path):
     """죽은 프로세스가 남긴 lock은 자동 정리된다."""
-    from src.io import acquire_run_lock
+    from src.io import acquire_run_lock, release_run_lock
 
     (tmp_path / ".run.lock").write_text("999999 2026-01-01T00:00:00\n")
-    acquire_run_lock(tmp_path)               # 예외 없이 통과해야 함
+    tok = acquire_run_lock(tmp_path)         # 예외 없이 통과해야 함
     assert (tmp_path / ".run.lock").exists()
+    release_run_lock(tok)
 
 
 # ---------------------------------------------------------------------------

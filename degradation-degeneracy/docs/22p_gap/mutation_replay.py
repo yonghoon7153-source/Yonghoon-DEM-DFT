@@ -29,6 +29,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from typing import NamedTuple
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 PRESERVE = ROOT / "tools" / "preserve.py"
@@ -39,6 +40,7 @@ FITTING = ROOT / "src" / "fitting.py"
 BASELINE = ROOT / "src" / "baseline.py"
 IO = ROOT / "src" / "io.py"
 MR = ROOT / "docs" / "22p_gap" / "mutation_replay.py"
+ARCHIVE = ROOT / "tools" / "archive_bundle.py"                     # 62차 ζ′
 
 #: ★ 46차 #9 조건 9 — 변이는 **작업 트리에 손대지 않는다.** 45차 runner 는
 #:   실제 저장소 파일을 고쳤다가 `finally` 로 되돌렸다. 그러면 (a) 중단되면
@@ -475,9 +477,9 @@ MUTANTS = [
      "unresolved_producer_module_reference_is_fail_closed"),
     ("closure-refuses-dynamic-resolution", RP,
      # ★ 59차 M11·M17 — 호출에 `targets`·`modnames` 가 붙어 원상이 낡았다.
+     # ★ 62차 P0-7 — table 이 module 별이 되면서 원상이 또 옮겨 갔다.
      "        for node in nodes:\n"
-     "            _assert_no_dynamic_resolution(node, key, mods, reflect, consts,\n"
-     "                                          caps, targets, modnames)",
+     "            _assert_no_dynamic_resolution(node, key, *tables[kind])",
      "        pass",
      "dynamic_name_resolution_inside_the_closure_is_fail_closed"),
     ("interpreter-set-is-pinned", RP,
@@ -1336,13 +1338,155 @@ MUTANTS = [
      "the_sealed_output_path_exists_after_a_successful_fit or "
      "no_durable_record_mentions_a_process_local_handle"),
     ("the-run-lock-is-released-g61", FITTING,                        # P1-1
-     '        release_run_lock(write_root, ".fit.lock")',
+     # ★ 62차 β′ — lock 이 token 이 되면서 원상이 옮겨 갔다 (경로 → token).
+     "        release_run_lock(tok)",
      "        pass",
      "the_run_lock_is_gone_after_a_successful_fit"),
     ("lock-release-failure-is-not-swallowed-g61", IO,                # P1-1
-     "    path.unlink()                   # 실패하면 그대로 올린다 (삼키지 않는다)",
-     "    try:\n        path.unlink()\n    except OSError:\n        pass",
+     # ★ 62차 β′ — 삭제가 `os.unlink(name, dir_fd=…)` 로 옮겨 갔다.
+     "        os.unlink(token.name, dir_fd=token.dir_fd)   # 실패하면 그대로 올린다",
+     "        try:\n            os.unlink(token.name, dir_fd=token.dir_fd)\n"
+     "        except OSError:\n            pass",
      "a_failed_lock_release_is_not_swallowed"),
+    # ══ 62차 β′·γ′ — 잠금 · 임계구역 · capability 폐기 · 논리 locator · run_sig ══
+    #   리뷰어 반례가 전부 정상 interleaving/정상 순서였으므로 축도 정상 순서를
+    #   되돌리는 형태로 짓는다 — "옛 코드로 되돌리면 증인이 빨갛다".
+    ("run-lock-exclusivity-is-a-kernel-op-g62", IO,                  # P0-2
+     "                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)",
+     "                    pass",
+     "two_contenders_that_both_observe_absence_do_not_both_acquire or "
+     "eight_processes_racing_for_one_lock_yield_exactly_one_holder or "
+     "a_live_holder_in_another_process_is_refused_by_pid or "
+     "run_lock_blocks_concurrent_run"),
+    ("release-consumes-a-token-not-a-path-g62", IO,                  # P1-1
+     "    if not isinstance(token, RunLock):\n        raise TypeError(",
+     "    if False:\n        raise TypeError(",
+     "the_path_based_release_is_gone"),
+    ("release-refuses-a-replaced-inode-g62", IO,                     # P1-1
+     "    if (st.st_dev, st.st_ino) != (token.dev, token.ino):\n"
+     "        _close_lock_token(token)",
+     "    if False:\n        _close_lock_token(token)",
+     "release_refuses_a_lock_whose_name_now_points_at_another_inode or "
+     "releasing_a_missing_or_foreign_lock_is_loud_but_never_deletes"),
+    ("release-refuses-a-vanished-lock-g62", IO,                      # P1-1
+     "    except FileNotFoundError:\n        _close_lock_token(token)\n"
+     "        raise RuntimeError(\n            f\"내 lock 이 사라졌다:",
+     "    except FileNotFoundError:\n        _close_lock_token(token)\n"
+     "        return\n        raise RuntimeError(\n            f\"내 lock 이 사라졌다:",
+     "release_refuses_when_its_own_lock_has_vanished"),
+    ("fit-commits-inside-the-lock-g62", FITTING,                     # P0-3
+     # 옛 61차 순서 그대로 — commit 동안 lock 이 비어 있다.
+     "        from tools.preserve import commit_run_outputs\n"
+     "        commit_run_outputs(_exec_cap, [logical_out])",
+     "        release_run_lock(tok)\n"
+     "        from tools.preserve import commit_run_outputs\n"
+     "        commit_run_outputs(_exec_cap, [logical_out])\n"
+     '        tok = acquire_run_lock(logical_out, ".fit.lock")',
+     "fit_releases_the_lock_only_after_commit_and_receipt"),
+    ("grid-merges-inside-the-lock-g62", GRID,                        # P0-3
+     '        merged = merge_chunks(out_dir, "curves.parquet")',
+     "        release_run_lock(tok)\n"
+     '        merged = merge_chunks(out_dir, "curves.parquet")',
+     "grid_source_releases_the_lock_after_merge_manifest_commit_and_receipt"),
+    ("fit-failure-discards-the-capability-g62", FITTING,             # P1-2
+     "        discard_capability_on_abort(_exec_cap, log=log)\n        raise",
+     "        raise",
+     "fit_failure_before_commit_discards_the_capability"),
+    ("grid-dry-run-discards-the-capability-g62", GRID,               # P1-2
+     "        discard_capability_on_abort(_exec_cap, log=log)\n"
+     '        return {"dry_run": True',
+     '        return {"dry_run": True',
+     "grid_dry_run_discards_the_capability"),
+    ("grid-manifest-locator-is-the-name-g62", GRID,                  # P0-4
+     '        "curves_parquet": (str(Path(named_out) / Path(merged).name)\n'
+     "                           if merged else None),",
+     '        "curves_parquet": str(merged) if merged else None,',
+     "grid_manifest_payload_records_the_logical_curves_path"),
+    ("run-sig-has-no-staging-pathname-g62", FITTING,                 # P0-5
+     '        "base_config": _ck(base_config or "configs/base.yaml"),',
+     '        "base_config": str(base_config),',
+     "the_same_logical_fit_resumed_keeps_one_run_signature or "
+     "the_run_spec_does_not_carry_a_staging_pathname"),
+    # ── α′ 승격 판정 (P0-1) ──
+    ("promotion-refuses-a-stale-seal-g62", PRESERVE,                 # P0-1
+     "    sealed = _sealed_manifest_parts(d, dir_fd)\n"
+     "    if sealed is None:\n"
+     "        raise PreserveError(",
+     "    sealed = _sealed_manifest_parts(d, dir_fd)\n"
+     "    if sealed is None:\n"
+     "        return run_content_id(d, dir_fd=dir_fd), False\n"
+     "    if False:\n"
+     "        raise PreserveError(",
+     "deleting_fit_members_after_a_fit_commit_is_not_promotable"),
+    ("promotion-refuses-a-subset-seal-g62", PRESERVE,                # P0-1
+     "    extra = sorted(present - covered)\n    if extra:",
+     "    extra = sorted(present - covered)\n    if False:",
+     "an_in_progress_fit_in_a_committed_grid_dir_is_not_promotable"),
+    ("sealed-records-need-their-seal-g62", PRESERVE,                 # P0-1
+     '    if for_promotion and not had_seal and rec.get("sealed"):',
+     "    if False:",
+     "deleting_the_seal_does_not_reopen_the_prefix"),
+    # ── ζ′ 승격 primitive (P0-8) ──
+    ("promotion-checks-derived-freshness-g62", ARCHIVE,              # P0-8
+     # 옛 코드 그대로 — smoke 판정만 하고 freshness 는 wrapper 에 맡긴다.
+     "        from tools.preserve import assert_promotable\n"
+     '        assert_promotable([a.run_dir], "보관 묶음", dest=a.out_dir)',
+     "        from tools.preserve import assert_not_smoke_provenance\n"
+     '        assert_not_smoke_provenance([a.run_dir], "보관 묶음", dest=a.out_dir)',
+     "direct_bundle_refuses_a_stale_derived_artifact or "
+     "the_promotion_primitive_is_one_function"),
+    # ── δ′ producer scope (P0-6 · P0-7) ──
+    ("definition-head-is-the-enclosing-scope-g62", RP,               # P0-6
+     "    yield from _walk_nodes(head, inherited, inherited)",
+     "    yield from _walk_nodes(head, here, here)",
+     "the_analyzer_does_not_shadow_the_default_with_the_parameter or "
+     "a_parameter_does_not_exempt_a_capability_in_the_head"),
+    ("class-locals-stay-in-the-class-body-g62", RP,                  # P0-6
+     "    nested = inherited if isinstance(node, ast.ClassDef) else here",
+     "    nested = here",
+     "the_analyzer_does_not_carry_class_locals_into_methods or "
+     "a_class_local_does_not_exempt_a_capability_in_a_method"),
+    ("crossed-module-uses-its-own-symbol-table-g62", RP,             # P0-7
+     '        "sc": (s_mods, _source_reflection_locals(_s_tree),\n'
+     "               _module_string_consts(_s_tree),\n"
+     "               _namespace_capabilities(scoring_src),\n"
+     "               _namespace_targets(scoring_src, s_mods),\n"
+     "               _imported_module_names(scoring_src)),",
+     '        "sc": (mods, reflect, consts, caps, targets, modnames),',
+     "a_capability_alias_inside_the_scoring_module_is_refused or "
+     "a_namespace_alias_inside_the_scoring_module_is_refused"),
+    # ── ε′ 증거 영수증 (P1-3 ~ P1-6 · P2-1) ──
+    #   ★ 이 파일이 자기 변이 대상이다 — 선언이 자기 preimage 로 세어지지 않게
+    #     철자를 escape 한다.
+    ("receipt-is-framed-g62", MR,                                    # P1-3
+     "        return _parse_framed_receip\u0074(r.stdout, frame)       # noqa: F821",
+     "        return json.loads(r.stdout.strip().splitlines()[-1])",
+     "an_atexit_forgery_in_sitecustomize_is_refused"),
+    ("unreadable-bytes-fail-the-section-g62", MR,                    # P1-4
+     '            raise _Unreadabl\u0065("%s (%s)" % (p, _exc))',
+     '            return "<unreadable>"',
+     "an_unreadable_startup_byte_makes_the_section_failed"),
+    ("zip-origins-are-hashed-g62", MR,                               # P1-4
+     '            _mods[_nm] = _hash_origi\u006e(_o, getattr(_sp_, "loader", None))',
+     "            _unfiled += 1",
+     "a_zip_imported_startup_module_is_hashed_not_unfiled"),
+    ("packages-keep-the-first-distribution-g62", MR,                 # P1-5
+     "                if nm in pkgs:\n"
+     "                    shadowed.append([nm, _i, ver])\n"
+     "                else:\n"
+     "                    pkgs[nm] = ver\n"
+     "                    pos[nm] = _i",
+     "                pkgs[nm] = ver\n"
+     "                pos[nm] = _i",
+     "duplicate_distributions_keep_the_first_and_record_the_rest"),
+    ("coverage-records-the-snapshot-it-was-given-g62", MR,           # P1-6
+     "    snap = snapshot if snapshot is not None else take_receipt_snapsho\u0074()",
+     "    snap = take_receipt_snapshot()",
+     "write_coverage_records_exactly_the_snapshot"),
+    ("receipt-schema-is-exact-g62", MR,                              # P2-1
+     '    mismatch = _schema_mismatc\u0068(receipt, _RECEIPT_SCHEMA, "receipt")',
+     "    mismatch = None",
+     "a_receipt_that_only_says_measured_is_still_refused"),
 
     # γ (61차 P1-2·P1-3) — 이번 라운드가 세운 층.
     #   선언 자신이 preimage 로 세어지지 않게 철자를 escape 한다.
@@ -1394,10 +1538,12 @@ MULTI = [
          "                continue",
          "            if isinstance(sub, ast.comprehension):\n"
          "                out |= set(_target_names(sub.target))"),
+        # ★ 62차 P0-6 — `here` → `nested` (class 본문의 comprehension 은 class
+        #   이름을 못 본다). 원상만 따라간다.
         ("        if _is_comprehension(sub):\n"
-         "            inner = frozenset(here | _comprehension_targets(sub))",
+         "            inner = frozenset(nested | _comprehension_targets(sub))",
          "        if False:\n"
-         "            inner = frozenset(here | _comprehension_targets(sub))"),
+         "            inner = frozenset(nested | _comprehension_targets(sub))"),
      ], "the_analyzer_does_not_shadow_the_enclosing_scope or "
         "the_target_is_still_shadowed_inside_the_comprehension or "
         "the_outermost_iterable_is_evaluated_in_the_enclosing_scope"),
@@ -1922,7 +2068,7 @@ def _marker_id(name: str) -> str:
     return "m" + hashlib.sha256(_scenario_binding(name)).hexdigest()[:16]
 
 
-def _write_marker(sandbox: pathlib.Path, name: str) -> str:
+def _write_marker(sandbox: pathlib.Path, name: str, tag: str | None = None) -> str:
     """sandbox 에 이 변이만의 시험 node 를 하나 놓는다 (54차 P1).
 
     ★ 58차 L12 — 환경 증언 node 도 같이 놓는다. 표식이 "누구의 report 인가" 를
@@ -1935,7 +2081,9 @@ def _write_marker(sandbox: pathlib.Path, name: str) -> str:
         f'"""변이 표식 — 이 실행에만 있는 node (54차 P1)."""\n\n\n'
         f"def test_mutant_{mid}():\n"
         f"    assert True\n", encoding="utf-8")
-    _write_env_attestation(sandbox, environment_tag())
+    # ★ 62차 P1-6 — tag 는 호출자가 든 **스냅샷**의 것이다. 안 주면 여기서 한 번
+    #   더 재게 되고, 그 값은 조각에 적힐 본문과 다른 측정이다.
+    _write_env_attestation(sandbox, tag if tag is not None else environment_tag())
     return mid
 
 
@@ -4399,7 +4547,21 @@ _ENV_PROBE_BODY = '''
 _STARTUP_MODULES = sorted(__import__("sys").modules)
 
 
+class _Unreadable(Exception):
+    """읽지 못한 바이트 — 그 섹션은 `measured` 가 아니다 (62차 P1-4)."""
+
+
 def _env_facts(NAMES):
+    # ★ 62차 P1-4 — 읽기 실패는 `"<unreadable>"` 이라는 **정상 문자열**이 아니라
+    #   섹션 전체의 `failed` 다. 예전 판은 그 문자열을 digest 자리에 넣었고,
+    #   reader 는 `status` 만 봤으므로 못 잰 환경이 "쟀다" 로 통과했다.
+    try:
+        return _env_facts_measured(NAMES)
+    except _Unreadable as _exc:
+        return {"status": "failed", "reason": "읽을 수 없는 바이트: %s" % _exc}
+
+
+def _env_facts_measured(NAMES):
     import hashlib, os, site, sys
 
     def _d(p):
@@ -4409,8 +4571,21 @@ def _env_facts(NAMES):
                 for c in iter(lambda: fh.read(1 << 16), b""):
                     h.update(c)
             return h.hexdigest()[:16]
-        except OSError:
-            return "<unreadable>"
+        except OSError as _exc:
+            raise _Unreadable("%s (%s)" % (p, _exc))
+
+    def _hash_origin(p, loader):
+        """origin 의 바이트 — 파일이면 읽고, 아니면(zip 등) loader 에게 묻는다
+        (62차 P1-4). 둘 다 안 되면 `_Unreadable` — `unfiled` 가 아니다."""
+        if os.path.isfile(p):
+            return _d(p)
+        _get = getattr(loader, "get_data", None)
+        if _get is None:
+            raise _Unreadable("%s (파일이 아니고 loader 가 바이트를 못 준다)" % p)
+        try:
+            return hashlib.sha256(_get(p)).hexdigest()[:16]
+        except Exception as _exc:                        # noqa: BLE001
+            raise _Unreadable("%s (loader: %r)" % (p, _exc))
 
     cust = {}
     for n in ("site", "sitecustomize", "usercustomize"):
@@ -4447,7 +4622,8 @@ def _env_facts(NAMES):
         m = sys.modules.get(nm)
         f = getattr(m, "__file__", None) if m is not None else None
         if f:
-            loaded[nm] = _d(f)
+            loaded[nm] = _hash_origin(
+                f, getattr(getattr(m, "__spec__", None), "loader", None))
     # ★ 60차 P1-3 — **상태가 아니라 이력을 잰다.** `sys.modules` 는 이 순간의
     #   상태이고, startup 이 올렸다 **지운** module 은 거기 없다 (리뷰어 실측:
     #   `sitecustomize` 가 payload 를 import 해 builtins 에 값을 남기고
@@ -4494,14 +4670,21 @@ def _env_facts(NAMES):
         for _nm in sorted(_names):
             try:
                 _sp_ = _u.find_spec(_nm)
-            except (ImportError, ValueError, AttributeError):
-                _unfiled += 1
-                continue
+            except (ImportError, ValueError, AttributeError) as _exc:
+                # ★ 62차 P1-4 — startup 에 올라온 이름을 지금 못 찾으면 그것은
+                #   "파일이 없는 정상" 이 아니라 **못 잰 것**이다.
+                return {"status": "failed",
+                        "reason": "startup module %s 의 spec 을 못 찾았다: %r"
+                                  % (_nm, _exc)}
             _o = getattr(_sp_, "origin", None) if _sp_ is not None else None
-            if _o and os.path.isfile(_o):
-                _mods[_nm] = _d(_o)
-            else:
+            if _sp_ is None or _o in (None, "built-in", "frozen"):
                 _unfiled += 1           # builtin·frozen·namespace — 정상이다
+                continue
+            # ★ 62차 P1-4 — origin 이 파일이 아니면(zip 등) 예전 판은 builtin 과
+            #   같은 `unfiled` 로 셌다 — zip 안의 바이트가 통째로 영수증 밖이었다.
+            #   `_hash_origin` 이 loader 에게 바이트를 묻고, 못 주면 `_Unreadable`
+            #   로 startup 섹션 전체가 `failed` 다.
+            _mods[_nm] = _hash_origin(_o, getattr(_sp_, "loader", None))
         if not _mods:
             return {"status": "failed",
                     "reason": "이름은 받았는데 해시한 파일이 하나도 없다"}
@@ -4540,7 +4723,8 @@ def _env_facts(NAMES):
                 reachable["%d/%s/__init__.py" % (_i, nm)] = _d(
                     os.path.join(f, "__init__.py"))
 
-    return {"executable_sha256": _d(sys.executable),
+    return {"status": "measured",                    # 62차 P1-4 — typed
+            "executable_sha256": _d(sys.executable),
             "customization": cust,
             "startup_modules": loaded,
             "startup_history": history,
@@ -4567,14 +4751,19 @@ def _receipt_facts(NAMES, GLOBS, ROOT):
                 for c in iter(lambda: fh.read(1 << 16), b""):
                     h.update(c)
             return h.hexdigest()[:16]
-        except OSError:
-            return "<unreadable>"
+        except OSError as _exc:
+            raise _Unreadable("입력 %s (%s)" % (p, _exc))
 
-    inputs = {}
-    for pat in GLOBS:
-        for f in sorted(_g.glob(os.path.join(ROOT, pat))):
-            if os.path.isfile(f):
-                inputs[os.path.relpath(f, ROOT).replace(os.sep, "/")] = _fd(f)
+    # ★ 62차 P1-4 — `inputs` 도 typed 다. 읽기 실패는 섹션의 `failed`.
+    try:
+        _files = {}
+        for pat in GLOBS:
+            for f in sorted(_g.glob(os.path.join(ROOT, pat))):
+                if os.path.isfile(f):
+                    _files[os.path.relpath(f, ROOT).replace(os.sep, "/")] = _fd(f)
+        inputs = {"status": "measured", "files": _files}
+    except _Unreadable as _exc:
+        inputs = {"status": "failed", "reason": "읽을 수 없는 입력: %s" % _exc}
     # ★ 61차 P1-3 — `startup_history` 와 **같은 형태**의 결함이 여기에도 있었다:
     #   실패를 `{"<unavailable>": ""}` 라는 정상 dict 로 바꾼다. 리뷰어는
     #   history 만 짚었지만 규칙이 한 자리에 있지 않으면 남은 중복이 곧 다음
@@ -4583,12 +4772,27 @@ def _receipt_facts(NAMES, GLOBS, ROOT):
     try:
         from importlib import metadata as _md
 
-        pkgs = {}
-        for dist in _md.distributions():
-            nm = (dist.metadata or {}).get("Name")
-            if nm:
-                pkgs[str(nm).lower()] = str(dist.version)
-        packages = {"status": "measured", "dists": dict(sorted(pkgs.items()))}
+        # ★ 62차 P1-5 — `sys.path` **순서대로** 훑고 같은 이름은 **처음 것**이
+        #   남는다 (Python 의 `importlib.metadata.version()` 이 고르는 것과
+        #   같다). 예전 판은 한 dict 에 덮어써서 뒤 root 가 이겼다 — 영수증이
+        #   실제로 import 될 것의 반대를 적었다 (61차 P1-2 와 같은 형태).
+        #   가려진 것은 `shadowed` 에 위치와 함께 남긴다 — 순서만 다른 두
+        #   환경이 같은 값을 내지 않게.
+        pkgs, pos, shadowed = {}, {}, []
+        for _i, _entry in enumerate(list(sys.path)):
+            for dist in _md.distributions(path=[_entry]):
+                nm = (dist.metadata or {}).get("Name")
+                if not nm:
+                    continue
+                nm, ver = str(nm).lower(), str(dist.version)
+                if nm in pkgs:
+                    shadowed.append([nm, _i, ver])
+                else:
+                    pkgs[nm] = ver
+                    pos[nm] = _i
+        packages = {"status": "measured", "dists": dict(sorted(pkgs.items())),
+                    "positions": dict(sorted(pos.items())),
+                    "shadowed": sorted(shadowed)}
     except Exception as _exc:                            # noqa: BLE001
         packages = {"status": "failed",
                     "reason": f"설치 목록을 못 읽었다: {_exc!r}"}
@@ -4605,6 +4809,70 @@ def _probe_names() -> tuple:
     return tuple(sorted(set(_PROCESS_ENV) | set(BOUND_ENV)))
 
 
+#: ★ 62차 P1-3 — 영수증은 **frame** 으로 감싸 찍는다.
+#:
+#:   리뷰어 반례: `sitecustomize` 가 `atexit` 에 영수증 모양의 JSON 을 등록하면
+#:   그것이 stdout 의 **마지막 줄**이 되고, reader 는 `splitlines()[-1]` 을
+#:   영수증으로 받았다. startup 코드가 자기 영수증을 쓸 수 있으면 영수증이
+#:   아니다.
+#:
+#:   frame 은 부모가 호출마다 새로 만드는 문자열이다. reader 는 stdout 이
+#:   **정확히 그 frame 하나**일 때만 받는다 — 앞이든 뒤든 다른 줄이 있으면,
+#:   frame 이 둘이면, 닫는 frame 이 없으면 거부. atexit 는 탐침의 print 뒤에
+#:   돌므로 그 출력은 언제나 "뒤에 더 있는 줄" 이다.
+#:
+#:   한계 (요청문에 적는다): startup 코드가 `sys.stdout` 자체를 바꿔 치우면 진짜
+#:   frame 을 삼키고 위조 frame 을 낼 수 있다. 그 환경은 영수증의
+#:   `customization.sitecustomize` 바이트에 남지만, 그 바이트를 재는 것도 같은
+#:   프로세스다 — 환경을 그 환경 안에서 재는 층의 한계이고, 여기서는 "stdout
+#:   에 덧붙이기" 를 닫는다.
+_FRAME_PREFIX = "DD-RECEIPT-"
+
+#: parser 의 **소스** — 부모와 심어 놓은 증언 node 가 같은 문자열을 쓴다 (규칙을
+#: 두 곳에 적으면 언젠가 어긋나고, 어긋나면 대조가 무의미해진다). 부모는 아래서
+#: `exec` 로 정의하고 node 는 파일에 그대로 박는다.
+_FRAMED_PARSER_SRC = '''
+def _parse_framed_receipt(stdout, frame):
+    """stdout 이 **정확히 한 frame** 일 때만 그 안의 JSON (62차 P1-3)."""
+    import json as _json
+    body = (stdout or "").strip()
+    if (body.count(frame) != 2 or not body.startswith(frame)
+            or not body.endswith(frame) or len(body) < 2 * len(frame)
+            or "\\n" in body):
+        raise ValueError(
+            "영수증 stdout 이 정확히 한 frame 이 아니다 — 탐침의 print 앞뒤에 "
+            "다른 출력이 있거나 frame 이 둘이다 (startup 코드의 stdout 위조를 "
+            "받지 않는다, 62차 P1-3): %r" % body[:200])
+    return _json.loads(body[len(frame):-len(frame)])
+'''
+exec(_FRAMED_PARSER_SRC)          # noqa: S102 — 위 문자열이 정본이다
+
+
+def _new_frame() -> str:
+    import secrets
+
+    return _FRAME_PREFIX + secrets.token_hex(8)
+
+
+def _run_probe(tail_expr: str, cwd, what: str) -> dict:
+    """탐침을 띄워 `tail_expr` 의 값을 **framed** 로 받는다 (62차 P1-3)."""
+    frame = _new_frame()
+    src = _ENV_PROBE_BODY + (
+        "\nimport json\n"
+        f"print({frame!r} + json.dumps({tail_expr}, sort_keys=True, "
+        f"ensure_ascii=False) + {frame!r})\n")
+    r = subprocess.run([sys.executable, "-c", src],
+                       cwd=cwd, env=replay_env(),
+                       capture_output=True, text=True, timeout=600)
+    if r.returncode != 0 or not r.stdout.strip():
+        raise _ReplayError(
+            f"{what} 탐침이 실패했다 (rc={r.returncode}): {r.stderr[-300:]}")
+    try:
+        return _parse_framed_receipt(r.stdout, frame)       # noqa: F821
+    except ValueError as exc:
+        raise _ReplayError(f"{what} 탐침의 출력을 받을 수 없다: {exc}") from None
+
+
 def _observed_environment() -> dict:
     """탐침을 **실제로 띄워서** 그 프로세스가 본 것을 받아 온다 (58차 L11).
 
@@ -4612,17 +4880,8 @@ def _observed_environment() -> dict:
     빈 값을 넣으면 "안 쟀다" 가 "같다" 로 번역되고, 그것이 이 라운드가 반복해
     거절한 형태다.)
     """
-    src = _ENV_PROBE_BODY + (
-        "\nimport json\n"
-        f"print(json.dumps(_env_facts({_probe_names()!r}), "
-        "sort_keys=True, ensure_ascii=False))\n")
-    r = subprocess.run([sys.executable, "-c", src],
-                       cwd=_sandboxed(ROOT), env=replay_env(),
-                       capture_output=True, text=True, timeout=600)
-    if r.returncode != 0 or not r.stdout.strip():
-        raise _ReplayError(
-            f"환경 탐침이 실패했다 (rc={r.returncode}): {r.stderr[-300:]}")
-    return json.loads(r.stdout.strip().splitlines()[-1])
+    return _run_probe(f"_env_facts({_probe_names()!r})", _sandboxed(ROOT),
+                      "환경")
 
 
 def _observed_receipt() -> dict:
@@ -4631,18 +4890,9 @@ def _observed_receipt() -> dict:
     실패하면 fail-closed — 환경을 못 재면 증거를 쓸 수 없다.
     """
     root = _sandboxed(ROOT)
-    src = _ENV_PROBE_BODY + (
-        "\nimport json\n"
-        f"print(json.dumps(_receipt_facts({_probe_names()!r}, "
-        f"{list(BOUND_INPUT_GLOBS)!r}, {str(root)!r}), "
-        "sort_keys=True, ensure_ascii=False))\n")
-    r = subprocess.run([sys.executable, "-c", src],
-                       cwd=root, env=replay_env(),
-                       capture_output=True, text=True, timeout=600)
-    if r.returncode != 0 or not r.stdout.strip():
-        raise _ReplayError(
-            f"영수증 탐침이 실패했다 (rc={r.returncode}): {r.stderr[-300:]}")
-    return json.loads(r.stdout.strip().splitlines()[-1])
+    return _run_probe(
+        f"_receipt_facts({_probe_names()!r}, {list(BOUND_INPUT_GLOBS)!r}, "
+        f"{str(root)!r})", root, "영수증")
 
 
 def environment_tag(execution: dict | None = None) -> str:
@@ -4689,6 +4939,9 @@ def _write_env_attestation(sandbox: pathlib.Path, tag: str) -> str:
     #   (b) 범위가 영수증 전체로 넓어졌으므로 `_receipt_facts()` 를 부른다.
     #       본문은 여전히 부모와 **같은 문자열**이다 (규칙을 두 곳에 적으면
     #       언젠가 어긋나고, 어긋나면 대조가 무의미해진다).
+    # ★ 62차 P1-3 — node 도 **framed** 로 받는다. parser 소스는 부모와 같은
+    #   문자열(`_FRAMED_PARSER_SRC`)이고 frame 은 이 node 만의 것이다.
+    frame = _new_frame()
     node = (
         '"""환경 증언 — 이 report 가 어떤 환경에서 나왔는지 스스로 말한다 '
         '(58차 L12 · 59차 M14·M15)."""\n'
@@ -4699,18 +4952,19 @@ def _write_env_attestation(sandbox: pathlib.Path, tag: str) -> str:
         f"_GLOBS = {list(BOUND_INPUT_GLOBS)!r}\n"
         f"_ROOT = {str(sandbox)!r}\n"
         f"_TAG = {tag!r}\n"
-        "\n"
+        f"_FRAME = {frame!r}\n"
+        f"{_FRAMED_PARSER_SRC}\n"
         "\n"
         f"def test_env_{tag}():\n"
         "    src = _BODY + (\n"
         "        \"\\nimport json\\n\"\n"
-        "        \"print(json.dumps(_receipt_facts(%r, %r, %r), \"\n"
-        "        \"sort_keys=True, ensure_ascii=False))\\n\"\n"
-        "        % (_NAMES, _GLOBS, _ROOT))\n"
+        "        \"print(%r + json.dumps(_receipt_facts(%r, %r, %r), \"\n"
+        "        \"sort_keys=True, ensure_ascii=False) + %r)\\n\"\n"
+        "        % (_FRAME, _NAMES, _GLOBS, _ROOT, _FRAME))\n"
         "    r = _sp.run([_sys.executable, '-c', src], cwd=_ROOT,\n"
         "                capture_output=True, text=True, timeout=600)\n"
         "    assert r.returncode == 0, r.stderr[-500:]\n"
-        "    facts = _j.loads(r.stdout.strip().splitlines()[-1])\n"
+        "    facts = _parse_framed_receipt(r.stdout, _FRAME)\n"
         "    body = _j.dumps(facts, sort_keys=True, ensure_ascii=False)\n"
         "    got = _h.sha256(body.encode('utf-8')).hexdigest()[:16]\n"
         "    assert got == _TAG, (\n"
@@ -4750,11 +5004,122 @@ def _execution_receipt() -> dict:
 #: 영수증 안에서 **측정 성패를 스스로 말하는** 자리 (61차 P1-3). 경로로 적는다 —
 #: 영수증은 중첩돼 있고, 위치를 틀리면 검사가 조용히 아무것도 안 본다.
 #: 하나 늘 때마다 여기 적는다.
-_TYPED_MEASUREMENTS = (("startup", "startup_history"), ("packages",))
+_TYPED_MEASUREMENTS = (("startup",), ("startup", "startup_history"),
+                       ("packages",), ("inputs",))
+
+
+#: ★ 62차 P2-1 — 영수증의 **재귀 exact schema.**
+#:
+#:   61차 reader 는 `_TYPED_MEASUREMENTS` 의 `status` 만 봤다. 그러면 본문이
+#:   무엇이든 — digest 자리에 `"<unreadable>"` 이든, `unfiled` 가 문자열이든,
+#:   모르는 키가 있든 — `measured` 라 적혀 있으면 받았다. discriminator 하나로는
+#:   "쟀다" 를 증명하지 못한다. 여기 것이 정본이고, 필드가 하나 늘면 여기도 는다
+#:   (`tests/receipt_fixture.py` 의 예시가 이 schema 를 그대로 만족한다).
+_HEX16 = re.compile(r"^[0-9a-f]{16}$")
+
+
+class _Map:
+    """`{str: T}` — 키는 아무 문자열, 값은 전부 `T`."""
+    def __init__(self, value):
+        self.value = value
+
+
+class _Seq:
+    """`[shape, shape, …]` — 원소마다 `shape`. `shape` 가 list 면 고정 길이 tuple."""
+    def __init__(self, shape):
+        self.shape = shape
+
+
+class _Or:
+    def __init__(self, *alts):
+        self.alts = alts
+
+
+_RECEIPT_SCHEMA = {
+    "interpreter": str,
+    "packages": {"status": "measured", "dists": _Map(str),
+                 "positions": _Map(int), "shadowed": _Seq([str, int, str])},
+    "env": _Map(str),
+    "inputs": {"status": "measured", "files": _Map(_HEX16)},
+    "startup": {
+        "status": "measured",
+        "executable_sha256": _HEX16,
+        "customization": _Map(_Or(_HEX16, "<absent>")),
+        "startup_modules": _Map(_HEX16),
+        "startup_history": {"status": "measured", "modules": _Map(_HEX16),
+                            "unfiled": int},
+        "importable_roots": _Map(_HEX16),
+        "pth": _Seq([str, _HEX16]),
+        "version": str,
+        "env": _Map(str),
+    },
+}
+
+
+def _schema_mismatch(value, schema, where: str) -> str | None:
+    """`value` 가 `schema` 에 정확히 맞으면 None, 아니면 첫 불일치의 설명."""
+    if isinstance(schema, str):
+        return None if value == schema else f"{where}: {value!r} ≠ {schema!r}"
+    if schema is int:
+        return None if (isinstance(value, int) and not isinstance(value, bool)) \
+            else f"{where}: int 가 아니다 ({type(value).__name__})"
+    if schema is str:
+        return None if isinstance(value, str) else \
+            f"{where}: str 가 아니다 ({type(value).__name__})"
+    if isinstance(schema, re.Pattern):
+        return None if (isinstance(value, str) and schema.match(value)) else \
+            f"{where}: {schema.pattern} 에 안 맞는다 ({value!r})"
+    if isinstance(schema, _Or):
+        errs = [_schema_mismatch(value, alt, where) for alt in schema.alts]
+        return None if any(e is None for e in errs) else " / ".join(errs)
+    if isinstance(schema, _Map):
+        if not isinstance(value, dict):
+            return f"{where}: dict 가 아니다 ({type(value).__name__})"
+        for k, v in value.items():
+            if not isinstance(k, str):
+                return f"{where}: 키 {k!r} 가 str 가 아니다"
+            e = _schema_mismatch(v, schema.value, f"{where}.{k}")
+            if e:
+                return e
+        return None
+    if isinstance(schema, _Seq):
+        if not isinstance(value, list):
+            return f"{where}: list 가 아니다 ({type(value).__name__})"
+        for i, item in enumerate(value):
+            if isinstance(schema.shape, list):
+                if not isinstance(item, list) or len(item) != len(schema.shape):
+                    return f"{where}[{i}]: 길이 {len(schema.shape)} 의 list 가 아니다"
+                for j, (x, sh) in enumerate(zip(item, schema.shape)):
+                    e = _schema_mismatch(x, sh, f"{where}[{i}][{j}]")
+                    if e:
+                        return e
+            else:
+                e = _schema_mismatch(item, schema.shape, f"{where}[{i}]")
+                if e:
+                    return e
+        return None
+    if isinstance(schema, dict):
+        if not isinstance(value, dict):
+            return f"{where}: dict 가 아니다 ({type(value).__name__})"
+        extra = sorted(set(value) - set(schema))
+        missing = sorted(set(schema) - set(value))
+        if extra or missing:
+            return f"{where}: 키 집합이 다르다 (모르는 키 {extra} · 없는 키 {missing})"
+        for k, sh in schema.items():
+            e = _schema_mismatch(value[k], sh, f"{where}.{k}")
+            if e:
+                return e
+        return None
+    return f"{where}: schema 항목을 모른다 ({schema!r})"          # pragma: no cover
 
 
 def _assert_receipt_is_complete(receipt: dict) -> None:
-    """측정이 끝난 영수증인가 — 아니면 거부한다 (61차 P1-3)."""
+    """측정이 끝난 영수증인가 — 아니면 거부한다 (61차 P1-3 · 62차 P2-1).
+
+    두 층이다: (1) typed 측정의 `status` 가 전부 `measured` 인가 — 실패 이유를
+    사람이 읽게 먼저 낸다. (2) 본문이 재귀 exact schema 에 맞는가 — `status`
+    만 맞춘 본문은 여기서 걸린다.
+    """
     bad = []
     for path in _TYPED_MEASUREMENTS:
         got = receipt
@@ -4769,12 +5134,50 @@ def _assert_receipt_is_complete(receipt: dict) -> None:
             "환경 영수증이 **불완전**하다 — 측정이 실패한 항목이 있다: "
             + " · ".join(bad)
             + " . 못 잰 환경으로 만든 증거는 '같은 환경' 을 주장할 수 없다.")
+    mismatch = _schema_mismatch(receipt, _RECEIPT_SCHEMA, "receipt")
+    if mismatch:
+        raise _ReplayError(
+            "환경 영수증이 **불완전**하다 — schema 에 안 맞는다: " + mismatch
+            + " . `status` 만 measured 인 본문은 측정이 아니다 (62차 P2-1)")
 
 
-def _execution_receipt_digest() -> str:
-    return hashlib.sha256(json.dumps(_execution_receipt(), sort_keys=True,
+def _execution_receipt_digest(body: dict | None = None) -> str:
+    """영수증 본문의 digest. `body` 를 주면 **그것**을 해시한다 — 안 주면 탐침을
+    띄운다 (옛 호출자 호환; 재생·checker 는 스냅샷을 쓴다, 62차 P1-6)."""
+    e = body if body is not None else _execution_receipt()
+    return hashlib.sha256(json.dumps(e, sort_keys=True,
                                      ensure_ascii=False).encode("utf-8")
                           ).hexdigest()
+
+
+class ReceiptSnapshot(NamedTuple):
+    """한 번 잰 영수증 — 본문(직렬화된 문자열) · digest · 증언 tag (62차 P1-6).
+
+    셋은 **같은 바이트**에서 나온다: `digest = sha256(json_body)`, `tag =
+    digest[:16]` (`environment_tag()` 와 같은 직렬화). 문자열이라 불변이고,
+    `body()` 는 매번 새 dict 를 준다.
+    """
+    json_body: str
+    digest: str
+    tag: str
+
+    def body(self) -> dict:
+        return json.loads(self.json_body)
+
+
+def take_receipt_snapshot() -> ReceiptSnapshot:
+    """영수증을 **한 번** 재서 스냅샷으로 (62차 P1-6).
+
+    리뷰어: 한 재생 안에서 표식/선택(`environment_tag()`) · 본문
+    (`_execution_receipt()`) · digest(`_execution_receipt_digest()`) 가 각각
+    탐침을 다시 띄웠다. 그 사이 환경이 바뀌면 report 의 증언 node 와 조각의
+    `binding.execution` 이 서로 다른 환경을 적고, checker 는 둘을 따로 보므로
+    어느 쪽도 거짓을 못 잡는다. 재생과 checker 는 이 스냅샷 하나만 든다.
+    """
+    got = _execution_receipt()
+    jb = json.dumps(got, sort_keys=True, ensure_ascii=False)
+    digest = hashlib.sha256(jb.encode("utf-8")).hexdigest()
+    return ReceiptSnapshot(jb, digest, digest[:16])
 
 
 def _tested_tree_digest() -> str:
@@ -4887,6 +5290,9 @@ def check_preimages(k: str = "") -> int:
 
 def _replay(plan, bad, observed_all, a, sel=None) -> int:
     items, multi, executed, declared = sel or _select(a.k)
+    # ★ 62차 P1-6 — 영수증은 이 재생에서 **한 번** 잰다. 표식 tag · 조각의
+    #   본문 · digest 가 전부 이 스냅샷에서 나온다.
+    snap = take_receipt_snapshot()
     receipts: dict = {}
     ran = 0
     bit: dict = {}
@@ -4915,9 +5321,9 @@ def _replay(plan, bad, observed_all, a, sel=None) -> int:
                 raise _ReplayError(f"`-k {kexpr}` 가 아무 시험도 안 고른다")
             # ★ 54차 P1 — 이 변이만의 표식 node 를 sandbox 에 놓는다.
             #   report 바이트가 스스로 어느 변이의 것인지 말하게 된다.
-            mid = _write_marker(_sandboxed(ROOT), name)
+            mid = _write_marker(_sandboxed(ROOT), name, snap.tag)
             # ★ 58차 L12 — 심은 증언의 tag 를 그대로 넘긴다 (아래 `_run` 주석).
-            etag = environment_tag()
+            etag = snap.tag
             before = _run(kexpr, mid, etag)
             path.write_bytes(mutated)
             after = _run(kexpr, mid, etag)
@@ -4967,7 +5373,7 @@ def _replay(plan, bad, observed_all, a, sel=None) -> int:
     #   그 자체로 참이어야 한다.
     if a.emit_coverage and not bad and ran == n_exec:
         _write_coverage(a.emit_coverage, a.k, items, multi, declared, bit,
-                        receipts)
+                        receipts, snapshot=snap)
 
     if bad:
         print("\n=== 문제 ===")
@@ -4999,7 +5405,8 @@ def _transcript_digest(scen: dict) -> str:
 
 
 def _write_coverage(path, selector, items, multi, declared, bit,
-                    receipts: dict | None = None) -> None:
+                    receipts: dict | None = None,
+                    snapshot: ReceiptSnapshot | None = None) -> None:
     """이 조각이 **무엇을 덮었는지** 기계 판독 가능하게 남긴다 (49차 P1).
 
     전수(64건)를 한 번에 돌리면 시간이 넘치므로 조각으로 나눠 돌린다. 그러면
@@ -5031,6 +5438,10 @@ def _write_coverage(path, selector, items, multi, declared, bit,
     #   것" 과 다른 종류의 주장이고, report 는 committed·diffable 이다.
     p = pathlib.Path(path)
     rep_dir = p.parent / "reports" / p.stem
+    # ★ 62차 P1-6 — 본문과 digest 는 **같은 스냅샷**에서 나온다. 예전 판은
+    #   `_execution_receipt()` 와 `_execution_receipt_digest()` 를 따로 불러
+    #   탐침을 두 번 띄웠다 — 둘이 다른 환경을 적을 수 있었다.
+    snap = snapshot if snapshot is not None else take_receipt_snapshot()
     if receipts is not None:
         import shutil as _sh
         _sh.rmtree(rep_dir, ignore_errors=True)
@@ -5050,8 +5461,8 @@ def _write_coverage(path, selector, items, multi, declared, bit,
                "runner_digest": _runner_digest(),
                "head": _head(),
                "tree_digest": _tested_tree_digest(),      # 55차 P1-2
-               "execution": _execution_receipt(),         # 56차 P1-2
-               "execution_digest": _execution_receipt_digest(),
+               "execution": snap.body(),                  # 56차 P1-2
+               "execution_digest": snap.digest,
                "reports_dir": rep_dir.name if receipts is not None else "",
                "transcript_digest": _transcript_digest(scen)},
            "scenarios": scen}
@@ -5271,8 +5682,9 @@ def _assert_execution_is_current(paths) -> int:
     셋을 본다: (1) 두 필드가 **있는가**, (2) 본문이 그 digest 로 해시되는가
     (본문만 고치고 digest 를 안 맞추는 것을 막는다), (3) 지금 환경과 같은가.
     """
-    now_body = _execution_receipt()
-    now = _execution_receipt_digest()
+    # ★ 62차 P1-6 — 지금 환경도 **한 스냅샷**으로 잰다.
+    _snap = take_receipt_snapshot()
+    now_body, now = _snap.body(), _snap.digest
     for pth in paths:
         try:
             rec = json.loads(pathlib.Path(pth).read_text(encoding="utf-8"))

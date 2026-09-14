@@ -180,39 +180,50 @@ def test_a_failed_lock_release_is_not_swallowed(tmp_path):
     실행 중" 으로 오인하게 만들고, **아무도 그 사실을 모른다**. 그것이 이번
     반례가 조용했던 이유다.
 
-    없는 lock·남의 lock 은 그대로 조용히 넘어간다 (그건 정상이다).
+    ★ 62차 P1-1 — lock 이 token(dirfd+inode) 이 되면서 삭제는 `os.unlink(name,
+      dir_fd=…)` 다. 그 자리를 막아 같은 성질을 잰다.
     """
+    import os
+
+    import src.io as io_mod
+
+    d = tmp_path / "run"
+    d.mkdir()
+    tok = io_mod.acquire_run_lock(d, ".x.lock")
+    real_unlink = os.unlink
+
+    def _unlink(name, *a, **k):
+        if str(name) == ".x.lock":
+            raise OSError(1, "시험이 만든 정리 실패")
+        return real_unlink(name, *a, **k)
+
+    monkeypatch_target = io_mod.os
+    saved = monkeypatch_target.unlink
+    monkeypatch_target.unlink = _unlink
+    try:
+        with pytest.raises(OSError, match="시험이 만든"):
+            io_mod.release_run_lock(tok)
+    finally:
+        monkeypatch_target.unlink = saved
+    assert (d / ".x.lock").exists()
+
+
+def test_releasing_a_missing_or_foreign_lock_is_loud_but_never_deletes(tmp_path):
+    """★ 62차 P1-1 이 61차의 "없는 lock·남의 lock 은 조용히" 를 **뒤집었다.**
+
+    리뷰어: own release 에서 missing/replaced 는 배타가 이미 깨졌다는 뜻이므로
+    fail-closed 여야 한다. 남는 성질은 하나 — **남의 lock 은 절대 지우지
+    않는다.** (경로만 받는 옛 release 는 `TypeError` — `test_run_lock_62.py`)
+    """
+    import os
+
     from src.io import acquire_run_lock, release_run_lock
 
     d = tmp_path / "run"
     d.mkdir()
-    acquire_run_lock(d, ".x.lock")
-    Path_unlink = Path.unlink
-
-    def _p_unlink(self, *a, **k):
-        if self.name == ".x.lock":
-            raise OSError(1, "시험이 만든 정리 실패")
-        return Path_unlink(self, *a, **k)
-
-    Path.unlink = _p_unlink
-    try:
-        with pytest.raises(OSError):
-            release_run_lock(d, ".x.lock")
-    finally:
-        Path.unlink = Path_unlink
-    assert (d / ".x.lock").exists()
-
-
-def test_releasing_a_missing_or_foreign_lock_stays_quiet(tmp_path):
-    """★ 반대 방향 — 없는 lock 과 남의 lock 은 여전히 조용하다.
-
-    거부가 넓어지면 정상 정리가 죽는다 (이 라운드에 두 번 겪은 형태다).
-    """
-    from src.io import release_run_lock
-
-    d = tmp_path / "run"
-    d.mkdir()
-    release_run_lock(d, ".none.lock")                    # 없는 lock
-    (d / ".other.lock").write_text("999999 x\n", encoding="utf-8")
-    release_run_lock(d, ".other.lock")                   # 남의 lock
+    tok = acquire_run_lock(d, ".other.lock")
+    os.unlink(d / ".other.lock")
+    (d / ".other.lock").write_text("999999 x\n", encoding="utf-8")   # 남의 것
+    with pytest.raises(RuntimeError, match="남의|inode"):
+        release_run_lock(tok)
     assert (d / ".other.lock").exists(), "남의 lock 을 지웠다"

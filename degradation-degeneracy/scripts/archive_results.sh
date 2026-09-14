@@ -124,6 +124,9 @@ PYEOF
   # ★ 18차 발견 6 — 바이트 무결성만으로는 파생 YAML 이 **최신 의미**를 담는지
   #   증명하지 못한다. v4 에서 실제로 경계 규약 수정 이전 값이 묶음에 들어갔다.
   #   봉인 fits 에서 재계산해 대조하고, 다르면 이 run 은 승격하지 않는다.
+  # ★ 62차 P0-8 — 같은 검사가 `tools.preserve.assert_promotable()` 안에도 있어
+  #   `archive_bundle bundle` 을 직접 불러도 지난다. 여기 것은 사람이 읽을
+  #   진단을 먼저 내기 위한 것이다 (경계는 primitive 쪽).
   if ! "$PY" -m tools.check_derived_fresh "$run"; then
     echo "  → 파생 산출물이 stale 이라 보관하지 않습니다 (기존 묶음 유지)"
     n_bad=$((n_bad+1))

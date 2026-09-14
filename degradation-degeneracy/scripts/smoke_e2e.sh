@@ -411,6 +411,55 @@ finally:
 PYEOF
 [[ $? -eq 0 ]] || bad "파생 변조 검출 실패"
 
+# ───────────────── 7b. 62차 — 정상 production 순서 **전체**: resume → 보고서 갱신
+# ★ 62차 P0-1·P0-3·P0-5 가 전부 이 순서 안에서 났다 (grid 굳힘 → fit → commit →
+#   report → **resume** → report 갱신 → 승격). 61차 P0-1 이 두 라운드 연속 같은
+#   축에서 난 이유가 조각 시험이다 — 여기서 production 진입점으로 끝까지 돈다.
+#   9단계의 보관(승격)이 이 resume 뒤의 봉인을 그대로 받는다.
+step "7b. 같은 논리 실행의 resume → 보고서 갱신 (62차 순서 e2e)"
+_j_before="$(ls "$GFIT"/fit_completed_*.jsonl 2>/dev/null | wc -l)"
+./run.sh --mode fit --in "$CURVES" --out "$GFIT" --reference grid \
+         --objective "$FIT_OBJ" --n-restarts 2 --nproc "$NPROC" --resume \
+         --log-level WARNING >/dev/null \
+  && ok "resume (production 진입점)" || bad "resume 실패"
+_j_after="$(ls "$GFIT"/fit_completed_*.jsonl 2>/dev/null | wc -l)"
+if [[ "$_j_before" == "1" && "$_j_after" == "1" ]]; then
+  ok "completed journal 이 하나 — run_sig 가 resume 에서 안 바뀜 (62차 P0-5)"
+else
+  bad "resume 가 journal 을 늘렸다: $_j_before → $_j_after (62차 P0-5)"
+fi
+[[ -e "$GFIT/.fit.lock" ]] \
+  && bad "resume 뒤 .fit.lock 이 남았다 (62차 P0-3)" \
+  || ok "resume 뒤 lock 정리 (62차 P0-3)"
+"$PY" - "$GFIT" <<'PYEOF'
+import json, os, sys
+from pathlib import Path
+from tools.preserve import RUN_SEAL_NAME, RUN_IDENTITY_MANIFESTS, resolve_execution_class
+d = Path(sys.argv[1])
+seal = json.loads((d / RUN_SEAL_NAME).read_text(encoding="utf-8"))
+sealed = {n for n, _ in seal["manifests"]}
+present = {n for n in RUN_IDENTITY_MANIFESTS if (d / n).is_file()}
+assert sealed == present, f"resume 뒤 봉인이 지금 있는 실행 manifest 와 다르다: {sorted(sealed ^ present)}"
+rec = resolve_execution_class(d, for_promotion=True)        # 62차 P0-1 승격 판정
+assert rec.get("sealed") is True, rec
+print(f"   ✅ resume 뒤 봉인이 {len(sealed)} member 를 정확히 담고 승격 판정을 지난다 (62차 P0-1)")
+sys.stdout.flush(); os._exit(0)
+PYEOF
+[[ $? -eq 0 ]] || bad "resume 뒤 봉인/승격 판정 실패 (62차 P0-1)"
+"$PY" - "$GFIT" "$BASE/RESULTS.md" <<'PYEOF'
+import os, re, sys
+from tools.make_results import build
+text = build(sys.argv[1], sys.argv[2]).read_text(encoding="utf-8")
+head = text[:2000]
+names = set(re.findall(r"`([^`]+)`", head.split("인용하지")[0])) if "인용 금지" in head else set()
+allowed = {"clean_worktree", "코드_identity"} if os.environ.get("SMOKE_DIRTY") == "1" else set()
+extra = {n for n in names if n not in allowed and not n.startswith("_")}
+print("   ✅ resume 뒤 보고서 갱신 — 배너 없음" if not extra
+      else f"   ❌ resume 뒤 보고서에 배너: {sorted(extra)}")
+sys.stdout.flush(); os._exit(1 if extra else 0)
+PYEOF
+[[ $? -eq 0 ]] || bad "resume 뒤 보고서 갱신 실패"
+
 # ─────────────────────────────── 8. Hessian: 분리배치 해석 + 채점 산출물 불변 (18차 C)
 step "8. Hessian — 분리배치 곡선 해석 · 채점 산출물 불변"
 
@@ -453,6 +502,46 @@ else
 fi
 
 # ───────────────────────────────────── 9. 보관 → 빈 격리 root 복원 → 검증 → 재채점
+# ─────────────────── 8b. 62차 γ′ — 굳은 기록에 프로세스 지역·임시 경로가 없는가
+# ★ 61차 P0-2 → 62차 P0-4·P0-5: `/proc/self/fd/N`(handle 경로) · `fit-stage-*`
+#   (staging 사본) 이 durable 기록에 들어가면 성공한 뒤 존재하지 않는 자리가
+#   provenance 가 된다. 모든 산출의 yaml/json/jsonl 을 훑는다 — 조각 시험이
+#   보는 파일이 아니라 **실행이 남긴 파일 전부**.
+step "8b. 굳은 기록 scan — handle 경로 · staging 경로 · 없는 임시 경로 (62차 γ′)"
+"$PY" - "$CURVES" "$GFIT" "$HFIT" "$BASE/paired" <<'PYEOF'
+import os, re, sys
+from pathlib import Path
+BAD = ("/proc/self/fd/", "fit-stage-")
+TMP = re.compile(r"(?<![\w])(/tmp/[\w.\-+/]+|/dev/shm/[\w.\-+/]+)")
+REL = re.compile(r"(?<![\w/])(results/_smoke/[\w.\-+/]+)")
+hits = []
+n = 0
+for root in sys.argv[1:]:
+    for p in Path(root).rglob("*"):
+        if p.suffix not in (".yaml", ".yml", ".json", ".jsonl") or not p.is_file():
+            continue
+        n += 1
+        text = p.read_text(encoding="utf-8", errors="replace")
+        for b in BAD:
+            if b in text:
+                hits.append(f"{p}: {b!r}")
+        for m in TMP.finditer(text):
+            if not os.path.exists(m.group(1)):
+                hits.append(f"{p}: 없는 임시 경로 {m.group(1)}")
+        for m in REL.finditer(text):
+            tok = m.group(1).rstrip("/")
+            if not os.path.exists(tok):
+                hits.append(f"{p}: 없는 논리 경로 {tok}")
+if hits:
+    print(f"   ❌ 굳은 기록 {n}개 중 문제 {len(hits)}건:")
+    for h in hits[:20]:
+        print("      - " + h)
+    sys.stdout.flush(); os._exit(1)
+print(f"   ✅ 굳은 기록 {n}개: handle 경로·staging 경로·없는 경로 없음 (62차 γ′)")
+sys.stdout.flush(); os._exit(0)
+PYEOF
+[[ $? -eq 0 ]] || bad "굳은 기록에 프로세스 지역/임시 경로가 있다 (62차 γ′)"
+
 step "9. 보관 → 격리 복원 → 검증 → 재채점"
 "$PY" -m tools.archive_bundle bundle "$HFIT" "$BASE/art" >/dev/null \
   && ok "bundle (halfcell)" || bad "bundle 실패"

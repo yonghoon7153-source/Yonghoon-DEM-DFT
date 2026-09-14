@@ -491,53 +491,167 @@ def _pid_alive(pid: int) -> bool:
 _RUN_ENTRYPOINTS = ("src.grid", "src.fitting", "src.weight_sweep")
 
 
-def acquire_run_lock(out_dir: str | Path, name: str = ".run.lock") -> Path:
-    """출력 디렉터리 실행 잠금. 이미 살아있는 실행이 있으면 RuntimeError.
+class RunLock:
+    """출력 디렉터리 잠금의 **소유권 token** (62차 P0-2 · P1-1).
 
-    같은 --out에 두 프로세스가 붙으면 청크가 서로 덮이고 집계가 어긋난다.
-    죽은 프로세스가 남긴 lock은 자동으로 정리한다.
+    잠금은 문자열이 아니라 커널이 판정한다. 이 객체는 `acquire_run_lock()` 만
+    만들고 `release_run_lock()` 만 소비한다 — 경로를 다시 열어 PID 문자열로
+    "내 것인가" 를 추정하는 경로는 없다.
+
+    들고 있는 것:
+      · `dir_fd`  — lock 이 사는 디렉터리의 fd. `/proc/self/fd/N` 같은 이름이
+        나중에 죽어도 이것으로 놓을 수 있다 (P0-3 의 전제).
+      · `fd`      — lock 파일의 fd. `flock` 이 여기 걸려 있다.
+      · `dev`·`ino` — 그 파일의 커널 identity. release 는 이름이 **아직 이
+        inode 를 가리킬 때만** unlink 한다.
+      · `nonce`   — 본문에 적는 식별자 (사람을 위한 정보다. 소유권이 아니다).
     """
-    path = Path(out_dir) / name
-    path.parent.mkdir(parents=True, exist_ok=True)
-    if path.exists():
-        try:
-            old_pid = int(path.read_text(encoding="utf-8").split()[0])
-        except (ValueError, IndexError):
-            old_pid = -1
-        if old_pid > 0 and old_pid != os.getpid() and _pid_alive(old_pid):
-            raise RuntimeError(
-                f"같은 출력 디렉터리에서 이미 실행 중입니다 (PID {old_pid}, {out_dir}). "
-                f"동시 실행은 청크를 서로 덮어씁니다. "
-                f"그 실행을 기다리거나 종료(kill {old_pid})한 뒤 다시 시도하세요.")
-        path.unlink(missing_ok=True)   # stale lock
-    path.write_text(f"{os.getpid()} {time.strftime('%Y-%m-%dT%H:%M:%S')}\n",
-                    encoding="utf-8")
-    return path
+
+    __slots__ = ("dir_fd", "name", "fd", "dev", "ino", "nonce", "pid",
+                 "where", "released")
+
+    def __init__(self, dir_fd, name, fd, dev, ino, nonce, pid, where):
+        self.dir_fd, self.name, self.fd = dir_fd, name, fd
+        self.dev, self.ino, self.nonce, self.pid = dev, ino, nonce, pid
+        self.where = where
+        self.released = False
+
+    def __repr__(self) -> str:                             # pragma: no cover
+        return (f"RunLock({self.where}/{self.name} ino={self.ino} "
+                f"pid={self.pid} nonce={self.nonce})")
 
 
-def release_run_lock(out_dir: str | Path, name: str = ".run.lock") -> None:
-    """자기 lock 을 지운다.
-
-    ★ 61차 P1-1 — **자기 lock 을 못 지웠으면 소리를 낸다.** 예전 판은
-      `OSError` 를 통째로 삼켰고, 그래서 "권한을 마지막 사용자보다 먼저 닫아
-      경로가 죽었다" 는 결함이 `.fit.lock` 만 남긴 채 **조용히** 지나갔다
-      (리뷰어 실측: `real_lock_left_after_release: true`). 남은 lock 은 다음
-      실행을 "이미 실행 중" 으로 오인하게 만든다.
-
-      순서를 고친 것이 첫째 층이고 이것이 둘째 층이다 — 한 층이 뚫려도 남는다.
-
-      **없는 lock 과 남의 lock 은 그대로 조용히 넘어간다.** 그건 정상이고,
-      거부를 그쪽까지 넓히면 정상 정리가 죽는다.
-    """
-    path = Path(out_dir) / name
+def _read_lock_holder(fd: int) -> str:
+    """lock 본문의 첫 토큰(PID) — 오류 문구용. 본문은 소유권이 아니다."""
     try:
-        mine = (path.exists()
-                and path.read_text(encoding="utf-8").split()[0] == str(os.getpid()))
-    except (OSError, IndexError):
-        return                      # 읽을 수 없으면 내 것이라 말할 수 없다
-    if not mine:
-        return
-    path.unlink()                   # 실패하면 그대로 올린다 (삼키지 않는다)
+        os.lseek(fd, 0, os.SEEK_SET)
+        head = os.read(fd, 128).decode("utf-8", "replace").split()
+        return head[0] if head else "?"
+    except OSError:                                          # pragma: no cover
+        return "?"
+
+
+def _close_lock_token(tok: "RunLock") -> None:
+    import fcntl
+    tok.released = True
+    for closer in ((lambda: fcntl.flock(tok.fd, fcntl.LOCK_UN)),
+                   (lambda: os.close(tok.fd)),
+                   (lambda: os.close(tok.dir_fd))):
+        try:
+            closer()
+        except OSError:                                      # pragma: no cover
+            pass
+
+
+def acquire_run_lock(out_dir: str | Path, name: str = ".run.lock") -> RunLock:
+    """출력 디렉터리 실행 잠금. 살아 있는 보유자가 있으면 RuntimeError.
+
+    같은 --out 에 두 프로세스가 붙으면 청크가 서로 덮이고 집계가 어긋난다.
+
+    ★ 62차 P0-2 — 예전 판은 `exists()` 를 본 뒤 `write_text()` 했다
+      (check-then-overwrite). 두 contender 가 둘 다 "없다" 를 관측한 직후 쓰면
+      **둘 다 성공**했다 (리뷰어 실측: `acquired_count 2`). 배타를 정하는 것은
+      한 번의 커널 연산이어야 한다 — 여기서는 `flock(LOCK_EX|LOCK_NB)`.
+
+      왜 `O_EXCL` 이 아니라 `flock` 인가: EXCL 은 "파일이 없을 때만 만든다" 다.
+      죽은 프로세스가 남긴 파일은 지우고 다시 만들어야 하고, 그 **지우고 만드는
+      사이**가 또 경쟁 구간이다. flock 은 프로세스가 죽으면 커널이 푼다 —
+      stale 회수라는 단계 자체가 없다. 본문의 PID 는 오류 문구를 위한 정보다.
+
+    ★ R6 F06 (서브 브랜치가 겪은 것) — `git clean -fd` 가 lock 파일을 지우면
+      다음 시도가 **새 inode** 를 잠가 배타가 사라진다. 그래서 (1) lock 이름은
+      `.gitignore` 에 있고, (2) 잠근 뒤 이름이 아직 이 inode 를 가리키는지 한 번
+      더 보고, (3) release 는 inode 가 바뀌었으면 거부한다.
+    """
+    import fcntl
+    import secrets
+
+    d = Path(out_dir)
+    d.mkdir(parents=True, exist_ok=True)
+    dir_fd = os.open(str(d), os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        for _attempt in range(8):
+            fd = os.open(name, os.O_CREAT | os.O_RDWR, 0o644, dir_fd=dir_fd)
+            try:
+                try:
+                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except (BlockingIOError, PermissionError):
+                    holder = _read_lock_holder(fd)
+                    raise RuntimeError(
+                        f"같은 출력 디렉터리에서 이미 실행 중입니다 (PID {holder}, "
+                        f"{out_dir}). 동시 실행은 청크를 서로 덮어씁니다. "
+                        f"그 실행을 기다리거나 종료(kill {holder})한 뒤 다시 "
+                        "시도하세요.") from None
+                st_fd = os.fstat(fd)
+                try:
+                    st_name = os.stat(name, dir_fd=dir_fd)
+                except FileNotFoundError:
+                    st_name = None
+                if (st_name is None
+                        or (st_name.st_dev, st_name.st_ino)
+                        != (st_fd.st_dev, st_fd.st_ino)):
+                    # 열고 잠그는 사이에 누군가 이름 아래를 바꿨다 — 이 fd 는
+                    # 더 이상 그 이름의 lock 이 아니다. 놓고 다시 시도한다.
+                    fcntl.flock(fd, fcntl.LOCK_UN)
+                    os.close(fd)
+                    continue
+                nonce = secrets.token_hex(8)
+                body = (f"{os.getpid()} {time.strftime('%Y-%m-%dT%H:%M:%S')} "
+                        f"{nonce}\n").encode("utf-8")
+                os.ftruncate(fd, 0)
+                os.lseek(fd, 0, os.SEEK_SET)
+                os.write(fd, body)
+                os.fsync(fd)
+                return RunLock(dir_fd, name, fd, st_fd.st_dev, st_fd.st_ino,
+                               nonce, os.getpid(), str(out_dir))
+            except BaseException:
+                os.close(fd)
+                raise
+        raise RuntimeError(
+            f"lock 이름 아래가 계속 바뀌어 잠그지 못했다: {out_dir}/{name} "
+            "(62차 P0-2)")
+    except BaseException:
+        os.close(dir_fd)
+        raise
+
+
+def release_run_lock(token: RunLock, *_legacy) -> None:
+    """자기 lock 을 놓는다 — **token** 으로만.
+
+    ★ 62차 P1-1 — 예전 판은 경로를 다시 열어 PID 문자열로 "내 것" 을 추정했고,
+      읽을 수 없거나 비었으면 조용히 돌아갔다. 리뷰어: 소유권을 재독으로
+      추정하지 말고 acquire 가 돌려준 inode-bound handle 을 소비하라. 그리고
+      명시적 foreign owner 이외의 missing/replaced/malformed 는 **fail-closed**.
+
+      · 이름이 아직 내 inode 를 가리킨다 → unlink. 본문이 비었든 깨졌든 상관없다
+        (소유권은 inode 다).
+      · 이름이 사라졌다 (`git clean`) → 배타가 이미 깨졌다. 올린다.
+      · 이름 아래 다른 inode → 남의 lock 이다. 지우지 않고 올린다.
+      · 경로만 주고 부르는 옛 형태 → TypeError. 조용한 우회로를 남기지 않는다.
+    """
+    if not isinstance(token, RunLock):
+        raise TypeError(
+            "release_run_lock 은 acquire_run_lock 이 돌려준 token 을 받는다 — "
+            "경로로 소유를 추정하는 경로는 없다 (62차 P1-1)")
+    if token.released:
+        raise RuntimeError(f"이미 놓은 lock 이다: {token!r} (62차 P1-1)")
+    try:
+        st = os.stat(token.name, dir_fd=token.dir_fd)
+    except FileNotFoundError:
+        _close_lock_token(token)
+        raise RuntimeError(
+            f"내 lock 이 사라졌다: {token.where}/{token.name} — 배타가 이미 "
+            "깨졌다 (git clean 등). 조용히 넘어가지 않는다 (62차 P1-1)") from None
+    if (st.st_dev, st.st_ino) != (token.dev, token.ino):
+        _close_lock_token(token)
+        raise RuntimeError(
+            f"내 이름 아래 다른 inode 가 있다: {token.where}/{token.name} "
+            f"(내 것 {token.ino}, 지금 {st.st_ino}) — 남의 lock 이다. 지우지 "
+            "않는다 (62차 P1-1)")
+    try:
+        os.unlink(token.name, dir_fd=token.dir_fd)   # 실패하면 그대로 올린다
+    finally:
+        _close_lock_token(token)
 
 
 def load_failed(out_dir: str | Path) -> set[str]:

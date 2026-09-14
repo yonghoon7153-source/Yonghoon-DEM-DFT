@@ -59,6 +59,7 @@ import datetime as dt
 import errno
 import hashlib
 import json
+import logging
 import os
 import re
 import secrets
@@ -4785,6 +4786,11 @@ def _record_execution_class(run_dir, cls: str, evidence: str,
         raise PreserveError("promote",
                             f"실행 class 는 {EXEC_CLASSES} 중 하나여야 한다: {cls!r}")
     cid = run_content_id(run_dir, dir_fd=dir_fd)
+    # ★ 62차 P0-1 — 레코드가 **봉인과 함께 등록됐는지** 스스로 말한다. commit 은
+    #   봉인 뒤에 등록하므로 True, legacy 분류는 봉인이 없으므로 False. 승격은
+    #   `sealed` 레코드를 봉인 없이 받지 않는다 (봉인 파일을 지워 "지금 있는
+    #   것" 으로 되돌아가는 길을 막는다).
+    sealed = _read_member(Path(run_dir), RUN_SEAL_NAME, dir_fd) is not None
     name = _exec_class_path(cid, ledger).name
     path = _exec_class_root_for_class(cls, ledger) / name
     # ★ 59차 M13 — 등록부 **층 자체**도 durable 해야 한다. 레코드 이름만 굳히고
@@ -4806,7 +4812,7 @@ def _record_execution_class(run_dir, cls: str, evidence: str,
     _mkdir_durable(_lk.parent, "execution-class-register")
     with _ledger_lock(_lk):
         return _record_execution_class_locked(cid, cls, evidence, name, path,
-                                              ledger)
+                                              ledger, sealed=sealed)
 
 
 def _seal_exec_class_record(rec_path: Path, cid: str, cls: str) -> Path:
@@ -4843,7 +4849,8 @@ def _seal_exec_class_record(rec_path: Path, cid: str, cls: str) -> Path:
 
 
 def _record_execution_class_locked(cid: str, cls: str, evidence, name: str,
-                                   path: Path, ledger) -> Path:
+                                   path: Path, ledger, sealed: bool = False
+                                   ) -> Path:
     """(내부) 내용별 lock 을 쥔 채 등록한다. 자리는 갈라도 불변식은 하나다."""
     # 두 자리를 **다** 본다 — 같은 내용이 한쪽엔 smoke, 다른 쪽엔 canonical 로
     # 적히면 읽는 쪽이 무엇을 믿을지 정할 수 없다.
@@ -4876,6 +4883,7 @@ def _record_execution_class_locked(cid: str, cls: str, evidence, name: str,
         "evidence": str(evidence),
         "recorded_at": dt.datetime.now(dt.timezone.utc)
                          .strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "sealed": bool(sealed),                      # 62차 P0-1
     }
     body = (json.dumps(rec, sort_keys=True, ensure_ascii=False,
                        separators=(",", ":")) + "\n").encode("utf-8")
@@ -5003,7 +5011,62 @@ def read_execution_class(content_id: str, ledger=None) -> dict | None:
     return seen.get("shared") or seen.get("local")
 
 
-def resolve_execution_class(run_dir, ledger=None) -> dict:
+def _promotion_content_id(d: Path, dir_fd=None) -> tuple:
+    """**승격**을 위한 내용 identity — 봉인이 온전할 때만 (62차 P0-1).
+
+    `run_content_id()` 의 두 관용은 **전이**를 위한 것이다: 낡은 봉인은 무시하고
+    지금 있는 것으로 identity 를 만들며(60차 — 다음 phase 의 gate 가 아직
+    아무것도 안 굳혔으므로), 봉인은 자기가 담은 이름만 검증한다(61차 — grid
+    가 굳힌 뒤 fit 이 같은 자리에 실행 manifest 를 더하므로). 둘 다 "commit 이
+    곧 다시 봉인한다" 를 전제로 한다.
+
+    승격에는 그 전제가 없다 — 승격은 **지금 이 상태**를 인용 자리로 옮기는
+    것이다. 리뷰어 실측 (62차 P0-1): grid 가 굳힌 자리에서 fit 이 진행 중이어도
+    봉인은 grid 목록만 검증해 통과하고 → grid 의 identity → canonical → 승격.
+    fit 이 굳힌 뒤 fit member 를 지우면 봉인이 낡아 무시되고 → 지금 있는 것
+    = grid 목록 → 같은 길. 즉 temporal seal 이 "등록된 실행의 고정 identity"
+    가 아니라 **우연히 남은, 과거에 등록된 prefix** 로 되돌아갔다.
+
+    그래서 승격의 규칙은 셋이다:
+      · 봉인이 있으면 **바이트가 맞아야** 한다 (낡음 → 거부).
+      · 봉인은 지금 있는 실행 manifest 를 **정확히 다** 담아야 한다 (모자람 →
+        거부: 굳힌 뒤 더 생긴 실행 manifest 는 아직 아무 commit 도 안 본 것이다).
+      · 봉인이 없으면 identity 는 지금 있는 것으로 만들되, 그 레코드가
+        `sealed` 면 거부한다 (봉인 파일을 지운 것이지 legacy 가 아니다 —
+        판정은 호출자 `resolve_execution_class(for_promotion=True)` 가 한다).
+
+    반환: `(content_id, had_seal)`.
+    """
+    body = _read_member(d, RUN_SEAL_NAME, dir_fd)
+    if body is None:
+        return run_content_id(d, dir_fd=dir_fd), False
+    sealed = _sealed_manifest_parts(d, dir_fd)
+    if sealed is None:
+        raise PreserveError(
+            "promote",
+            f"{d} 의 내용 봉인({RUN_SEAL_NAME})이 **낡았다** — 봉인이 담은 "
+            "member 가 사라졌거나 바이트가 달라졌다. 승격은 '지금 있는 것' 으로 "
+            "되돌아가지 않는다: 그 identity 는 과거에 등록된 다른 상태(예: fit "
+            "이 지워진 grid)의 것일 수 있다 (62차 P0-1). 다시 굳히거나(commit) "
+            "그 상태를 승격하지 마라")
+    present = {n for n, _ in _present_manifest_parts(d, dir_fd)}
+    covered = {n for n, _ in sealed}
+    extra = sorted(present - covered)
+    if extra:
+        raise PreserveError(
+            "promote",
+            f"{d} 의 내용 봉인이 지금 있는 실행 manifest 를 다 안 담는다 — "
+            f"봉인 밖: {extra}. 굳힌 뒤에 생긴 실행 manifest 는 아직 어느 "
+            "commit 도 보지 않은 상태(진행 중이거나 죽은 다음 phase)이고, 그 "
+            "상태는 봉인이 담은 identity 의 class 를 물려받지 않는다 (62차 P0-1)")
+    descriptor = json.dumps(
+        {"kind": _CONTENT_ID_KIND, "manifests": [tuple(x) for x in sealed]},
+        sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(descriptor.encode("utf-8")).hexdigest(), True
+
+
+def resolve_execution_class(run_dir, ledger=None, *,
+                            for_promotion: bool = False) -> dict:
     """이 산출이 무슨 class 인가. **경로를 보지 않는다.**
 
     등록부에 없으면 `PreserveError` 다 — fail-closed. 예전 산출(등록 이전에
@@ -5013,17 +5076,31 @@ def resolve_execution_class(run_dir, ledger=None) -> dict:
     `[해석]` 이것이 "migration 창" 을 **기간이 아니라 산출별 1회 행위**로 바꾼다.
     창을 열어 두면 그동안 경로 판정이 조용히 계속 살아 있지만, 이렇게 하면
     경로를 본 순간이 **영수증으로 남고** 그 뒤로는 다시 보지 않는다.
+
+    ★ 62차 P0-1 — `for_promotion=True` 면 identity 를 `_promotion_content_id()`
+      로 만든다 (낡은/모자란 봉인 거부 · `sealed` 레코드는 봉인 없이 거부).
+      전이 조회(기본값)는 60차·61차의 관용을 그대로 둔다.
     """
-    cid = run_content_id(run_dir)
+    d = Path(run_dir)
+    if for_promotion:
+        cid, had_seal = _promotion_content_id(d)
+    else:
+        cid, had_seal = run_content_id(d), None
     rec = read_execution_class(cid, ledger=ledger)
     if rec is None:
         raise PreserveError(
             "promote",
-            f"{Path(run_dir)} 의 실행 class 가 등록돼 있지 않다 (내용 "
+            f"{d} 의 실행 class 가 등록돼 있지 않다 (내용 "
             f"{cid[:16]}…). 이 산출이 정본 실행인지 smoke 인지 **바이트만 보고는 "
             "알 수 없으므로** 승격을 거부한다. 예전 산출이면 "
             "`classify_legacy_run()` 으로 한 번 분류하라 — 무엇을 보고 정했는지가 "
             "등록부에 남는다")
+    if for_promotion and not had_seal and rec.get("sealed"):
+        raise PreserveError(
+            "promote",
+            f"{d} 의 내용 {cid[:16]}… 은 **봉인과 함께** 등록됐는데 지금 봉인"
+            f"({RUN_SEAL_NAME})이 없다 — 봉인이 지워진 것이지 legacy 산출이 "
+            "아니다. 봉인 없는 승격은 legacy 레코드에만 허용된다 (62차 P0-1)")
     return rec
 
 
@@ -5339,6 +5416,27 @@ def discard_execution_capability(capability) -> None:
     _retire_capability(capability.nonce)
 
 
+def discard_capability_on_abort(capability, log=None) -> None:
+    """commit 에 **도달하지 못한** 종료(dry-run · 예외)에서 권한을 버린다 (62차 P1-2).
+
+    리뷰어 실측: production 에 `discard_execution_capability()` 호출자가 0 이라
+    grid dry-run 과 실패한 fit 이 capability 와 그 디렉터리 fd 를 프로세스가
+    죽을 때까지 들고 있었다 (`new_live_capability_count 1 ·
+    new_open_directory_fd_count 1`).
+
+    호출자의 원래 예외를 가리지 않는다 — 폐기 자체가 실패하면 로그에 남기고
+    돌아간다. `None`(권한이 없는 경로)은 할 일이 없다. commit 뒤에 불려도
+    `_retire_capability()` 가 멱등이라 안전하다.
+    """
+    if capability is None:
+        return
+    try:
+        discard_execution_capability(capability)
+    except Exception as e:                                   # noqa: BLE001
+        (log or logging.getLogger(__name__)).error(
+            "실행 class 권한 폐기 실패 (원래 예외가 우선한다): %r", e)
+
+
 def _assert_still_the_judged_dir(capability, path: Path) -> None:
     """지금 이 이름이 gate 가 판정한 **그 대상**인가 (59차 M5)."""
     # ★ 60차 P0-4 — `None` 은 더 이상 정상 상태가 아니다 (발행이 언제나 자리를
@@ -5484,7 +5582,8 @@ def assert_not_smoke_provenance(paths, sink: str, dest=None) -> None:
     for q in paths:
         if q is None:
             continue
-        rec = resolve_execution_class(q)          # 없으면 PreserveError
+        # ★ 62차 P0-1 — 승격은 봉인이 온전할 때만 identity 를 만든다.
+        rec = resolve_execution_class(q, for_promotion=True)   # 없으면 PreserveError
         if rec["execution_class"] == EXEC_CLASS_SMOKE:
             raise PreserveError(
                 "promote",
@@ -5492,6 +5591,49 @@ def assert_not_smoke_provenance(paths, sink: str, dest=None) -> None:
                 f"smoke 로 등록돼 있다 (내용 {rec['content_id'][:16]}…, 근거: "
                 f"{rec.get('evidence')}). 지금 경로가 namespace 밖이어도 "
                 "승격 대상이 아니다")
+
+
+#: 파생 산출의 존재 표지 — 이것이 없는 run(곡선 producer 등)은 freshness
+#: 게이트 대상이 아니다 (`tools/check_derived_fresh.py` 와 같은 규칙).
+DERIVED_FRESHNESS_MARKER = "objective_comparison.yaml"
+
+
+def assert_derived_fresh(run_dir, tol: float = 0.02) -> None:
+    """파생 산출이 봉인 fits 에서 재계산한 **최신 의미**인가 (18차 발견 6).
+
+    `payload_sha256.yaml` 은 stale bytes 도 충실히 해시한다 — 바이트 보존은
+    의미 동치를 증명하지 못한다. 파생이 없는 run 은 대상이 아니다.
+    """
+    d = Path(run_dir)
+    if not (d / DERIVED_FRESHNESS_MARKER).is_file():
+        return
+    from tools.compare_objectives import verify_derived_freshness
+    res = verify_derived_freshness(d, tol=tol)
+    if not res.get("ok"):
+        raise PreserveError(
+            "promote",
+            f"{d} 의 파생 산출이 stale 이다 (semantic freshness 실패): "
+            f"{res.get('fail')} — 봉인 fits 에서 score → compare 를 다시 돌린 "
+            "뒤 승격하라 (18차 발견 6 · 62차 P0-8)")
+
+
+def assert_promotable(paths, sink: str, dest=None, tol: float = 0.02) -> None:
+    """**승격 primitive** — 인용 자리로 나가는 모든 길이 지나는 한 문장 (62차 P0-8).
+
+    리뷰어: `python -m tools.archive_bundle bundle` 을 직접 부르면
+    `scripts/archive_results.sh` 의 `check_derived_fresh` 를 지나지 않았다.
+    검사가 wrapper 에만 있으면 wrapper 를 안 쓰는 호출이 우회로다 — 48차 P0-8
+    이 smoke 승격 금지에서 낸 결론과 같다 ("면제와 승격 금지는 같은 경계").
+
+    순서: smoke·등록·봉인 판정(`assert_not_smoke_provenance`) → 파생 freshness.
+    namespace 안에 머무는 이동은 승격이 아니므로 둘 다 건너뛴다 (49차).
+    """
+    if dest is not None and is_inside_namespace(dest, SMOKE_NAMESPACE):
+        return
+    assert_not_smoke_provenance(paths, sink, dest=dest)
+    for q in paths:
+        if q is not None:
+            assert_derived_fresh(q, tol=tol)
 
 
 def planned_index(ledger=None) -> dict:

@@ -203,11 +203,13 @@ def test_an_incomplete_receipt_is_refused_by_the_reader(tmp_path, monkeypatch):
 
 def test_a_complete_receipt_is_accepted(tmp_path, monkeypatch):
     """★ 반대 방향 — 잰 영수증은 그대로 통과한다."""
+    # ★ 62차 P2-1 — reader 가 재귀 exact schema 가 되면서 옛 최소 dict 는
+    #   더 이상 "완전한 영수증" 이 아니다 (fixture 가 진실을 가리고 있었다).
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from receipt_fixture import full_receipt
+
     mr = _mr()
-    ok = {"packages": {"status": "measured", "dists": {"x": "1"}},
-          "startup": {"startup_history": {"status": "measured",
-                                          "modules": {"os": "d"},
-                                          "unfiled": 0}}}
+    ok = full_receipt()
     monkeypatch.setattr(mr, "_observed_receipt", lambda: ok)
     assert mr._execution_receipt() == ok
 

@@ -6860,3 +6860,55 @@ pin 을 움직인 것은 δ 다 — analyzer 가 comprehension 을 자식 scope 
 `frozen_reason` 이 딸려 오자 "status 만 active 로 되돌린 해동이다" 로 거부 ·
 `evidence.cohorts` 양방향 대조가 g16 누락을 잡음 · 원장의
 `validator_identity.source_digest` 가 새 영수증과 어긋난다고 잡음.
+
+## §75 62차 판정 접수 — **NO-GO**. P0 8건 · P1 6건 · P2 2건 (2026-09-10)
+
+리뷰어 제목은 "61차 적대적 게이트 리뷰 — 묶음 5" 이나 이 원장 번호로는 62차다
+(`GATE61_REQUEST.md` 에 대한 답). 검토 head `6ed11a15` · 판정 대상 RUN_SCOPE
+`3a08f589` · `source_digest 4227b40871fa0c10` (리뷰어 실측 일치). 요청문 §0 의
+미착수·신고 항목(공유 등록부 오염 · grid 콘솔 요약)은 새 발견으로 세지 않았다.
+61차 전용 4파일 24 passed · `--check-preimages` rc 0 · wiki lint 0 errors 는
+리뷰어도 확인했고, 전체 회귀·smoke 는 리뷰어 환경 결손으로 미완주.
+
+### 판정의 세 문장
+
+1. temporal seal 이 "등록된 실행의 고정 identity" 가 아니라 **현재 디렉터리에
+   우연히 남은, 과거에 등록된 prefix** 로 되돌아간다.
+2. run lock 은 발급이 원자적이지 않고, 정상 fit/grid 는 **봉인·class 등록 전에**
+   lock 을 놓는다.
+3. producer scope 모델이 아직 Python 과 다르다 — class→method · definition
+   head · crossed scoring module 셋 다 **digest 같고 계산은 1→9**.
+
+### 발견 16건
+
+| ID | 무엇이 틀렸나 | 자리 (판정 시점) |
+|---|---|---|
+| P0-1 | stale/subset seal 이 과거 canonical prefix 로 fallback → 진행 중 fit · fit member 삭제 상태가 canonical 로 승격 | `tools/preserve.py:4433-4456` · `:4637-4643` · `:5484-5488` |
+| P0-2 | run lock 이 `exists()` → `write_text()` (check-then-overwrite) → 두 contender 동시 성공 (`acquired_count 2`) | `src/io.py:500-514` |
+| P0-3 | fit/grid 가 **봉인·commit 전에** lock 을 놓아 첫 실행이 둘째 bytes 를 봉인 (`first_commit_sealed_second_writer true`) | `src/fitting.py:1026-1050` · `src/grid.py:753-801` |
+| P0-4 | grid 의 durable `manifest.yaml` 이 `curves_parquet=/proc/self/fd/N/…` 을 적고 fit 이 그것을 `manifest_grid.yaml` 로 봉인 | `src/grid.py:587-591,756-770` · `src/io.py:593-599` |
+| P0-5 | random `fit-stage-*` 경로가 run_spec 에 들어가 run_sig 가 매번 바뀜 → 정상 resume 무효 | `src/fitting.py:705,757,1031,1465,1491-1495` |
+| P0-6 | class local 을 method 에, parameter 를 definition head(default) 에 적용 | `row_projection.py:1489-1509,1718-1724` |
+| P0-7 | crossed scoring module 을 primary 의 symbol table 로 분석 | `row_projection.py:1939-1998` |
+| P0-8 | direct `archive_bundle bundle` 이 derived freshness 를 우회 (검사가 shell wrapper 에만) | `tools/archive_bundle.py:531-545` · `scripts/archive_results.sh:124-138` |
+| P1-1 | own lock 의 malformed/unreadable 을 release 가 조용히 삼킴 | `src/io.py:532-540` |
+| P1-2 | grid dry-run · pre-commit 실패가 capability/fd 를 폐기 안 함 (`discard` 호출자 0) | `src/grid.py:579,630-661` · `src/fitting.py:1002-1049` |
+| P1-3 | startup 코드가 stdout 마지막 줄로 영수증 위조 (`sitecustomize` atexit) | `mutation_replay.py:4639-4645` |
+| P1-4 | zip/read 실패가 `measured` 로 세탁 (`<unreadable>` · zipimport→unfiled) | `mutation_replay.py:4405-4413,4493-4508` |
+| P1-5 | package receipt 가 duplicate distribution 을 뒤 root 로 덮음 (Python 은 앞) | `mutation_replay.py:4582-4591` |
+| P1-6 | 한 receipt 를 여러 번 측정 (marker/selection · body/digest 분리) | `mutation_replay.py:1933-1939,4918-4923,5053-5054,5274-5275` |
+| P2-1 | completeness validator 가 `status` discriminator 만 검사 | `mutation_replay.py:4753-4771` |
+| P2-2 | 계약이 없는 `_canon_*` 인용 · `_ast_normal_node` docstring 이 `ast.unparse` 라 적음 | `STAGE3_CONTRACT.md:1077` · `row_projection.py:443-454` |
+
+### 이번 판정이 앞 라운드와 이어지는 자리
+
+- P0-3 은 61차 P1-1 의 정정(commit 을 lock 해제 **뒤로**)이 만든 틈이다. 61차가
+  그렇게 한 이유는 lock 이 `staged_root(cap)=/proc/self/fd/N` 아래 있어 commit
+  이 fd 를 닫으면 release 가 죽었기 때문 — 즉 lock 이 **경로**여서 순서를 못
+  잡았다. 62차의 답은 순서를 되돌리는 것이 아니라 lock 을 경로에서 떼는 것이다.
+- P0-1 은 60차 P0-1(봉인) · 61차 P0-1(파생 manifest 분리)의 셋째 형태다. 앞 둘은
+  전이(다음 phase 의 gate)를 살리려고 낡은/모자란 봉인을 **관용**했고, 그 관용이
+  승격에도 그대로 적용됐다.
+- P0-6·P0-7 은 60차 P0-11 · 61차 P1-4 의 scope 축이다 — scope 의 **목록**은
+  맞췄지만 **규칙**(무엇이 어디서 평가되는가 · 어느 module 의 table 인가)이 아직
+  Python 보다 작았다.

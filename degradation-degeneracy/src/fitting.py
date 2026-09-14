@@ -1023,7 +1023,18 @@ def _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives, bounds,
     else:
         out_dir.mkdir(parents=True, exist_ok=True)
         write_root = out_dir
-    acquire_run_lock(write_root, ".fit.lock")
+    # ★ 62차 P0-3 — 임계구역은 **commit 과 receipt 까지** 덮는다. 61차 P1-1 은
+    #   commit 을 lock 해제 **뒤로** 옮겼다 — lock 이 `staged_root(cap)` 경로
+    #   아래 있어서 commit 이 fd 를 닫으면 release 가 죽었기 때문이다. 그러자
+    #   리뷰어가 그 틈을 그대로 쟀다: 첫 실행이 lock 을 놓은 뒤 둘째가 같은
+    #   자리를 잡아 `manifest.yaml` 을 바꾸고, 첫 capability 가 **둘째 bytes**
+    #   를 canonical 로 봉인했다 (`first_commit_sealed_second_writer: true`).
+    #
+    #   그래서 lock 이 경로가 아니라 **dirfd + inode token** 이 됐다
+    #   (`src/io.py` `RunLock`). commit 이 handle 을 닫아도 token 의 dirfd 는
+    #   따로 살아 있으므로 release 는 마지막에 온다:
+    #   compute → commit(seal·class) → receipt → release.
+    tok = acquire_run_lock(write_root, ".fit.lock")
     try:
         summary = _run_fit_locked(_staged["in_dir"], write_root, obj_cfg,
                                   objectives, bounds,
@@ -1034,25 +1045,30 @@ def _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives, bounds,
                                   halfcell_kw, stage_root=_staged["root"],
                                   logical_in=logical_in,
                                   logical_out=logical_out)
+        # ★ 59차 M1 — 굳히는 것은 **마지막 사용자 뒤**다. 대상은 **논리
+        #   경로**로 준다 — `staged_root` 를 주면 `_assert_still_the_judged_dir()`
+        #   이 자기 자신을 보고 일찍 돌아가서 "이름이 아직 그 실물인가" 를
+        #   아무도 안 묻게 된다.
+        from tools.preserve import commit_run_outputs
+        commit_run_outputs(_exec_cap, [logical_out])
+        # ★ 48차 P0-4 — 끝난 phase 를 **durable 하게 닫는다.** 47차는
+        #   `phase_done()`·`finalize_leg()` 을 만들어 놓고 production 에서 한
+        #   번도 부르지 않았다 — lifecycle 이 있는데 아무 것도 그 상태를
+        #   움직이지 않으면 그것은 lifecycle 이 아니라 죽은 코드다.
+        _record_phase(claim, "fit", summary, logical_out)
+    except BaseException:
+        # ★ 62차 P1-2 — commit 에 **도달하지 못한** 모든 종료는 권한을 버린다.
+        #   리뷰어 실측: production 에 `discard_execution_capability()` 호출자가
+        #   0 이라 실패한 fit 이 capability 와 그 디렉터리 fd 를 프로세스가 죽을
+        #   때까지 들고 있었다. commit 뒤의 예외(receipt 실패)에서는 권한이
+        #   이미 소비돼 있고 폐기는 멱등이므로 같은 줄로 덮는다.
+        from tools.preserve import discard_capability_on_abort
+        discard_capability_on_abort(_exec_cap, log=log)
+        raise
     finally:
-        # ★ 61차 P1-1 — lock 삭제는 handle 이 **살아 있는 동안** 해야 한다.
-        #   60차는 `commit_run_outputs()` 가 fd 를 닫은 뒤에 이 줄을 돌렸고,
-        #   `release_run_lock()` 이 `OSError` 를 삼켜 `.fit.lock` 이 실물에
-        #   남았다 (리뷰어 실측: `real_lock_left_after_release: true`).
-        release_run_lock(write_root, ".fit.lock")
-    # ★ 59차 M1 · 61차 P1-1 — 굳히는 것은 **마지막 사용자 뒤**다. 여기까지
-    #   오면 handle 아래의 쓰기도 lock 정리도 다 끝났으므로, 권한을 소비하며
-    #   fd 를 닫아도 "닫힌 handle 로 쓴다" 는 물음이 생기지 않는다.
-    #   대상은 **논리 경로**로 준다 — `staged_root` 를 주면
-    #   `_assert_still_the_judged_dir()` 이 자기 자신을 보고 일찍 돌아가서
-    #   "이름이 아직 그 실물인가" 를 아무도 안 묻게 된다.
-    from tools.preserve import commit_run_outputs
-    commit_run_outputs(_exec_cap, [logical_out])
-    # ★ 48차 P0-4 — 끝난 phase 를 **durable 하게 닫는다.** 47차는
-    #   `phase_done()`·`finalize_leg()` 을 만들어 놓고 production 에서 한
-    #   번도 부르지 않았다 — lifecycle 이 있는데 아무 것도 그 상태를
-    #   움직이지 않으면 그것은 lifecycle 이 아니라 죽은 코드다.
-    _record_phase(claim, "fit", summary, logical_out)
+        # ★ 61차 P1-1 — release 는 오류를 삼키지 않는다. 62차 P1-1 — 내 lock
+        #   이 사라졌거나 다른 inode 로 바뀌었으면 여기서 **올린다**.
+        release_run_lock(tok)
     return summary
 
 
@@ -1462,7 +1478,13 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         "bounds": bounds, "v_col": v_col, "warm_start": bool(warm_start),
         "n_restarts": n_restarts,
         "obj_cfg": obj_cfg,                      # resolved 전체
-        "base_config": str(base_config),
+        # ★ 62차 P0-5 — `base_config` 는 staging 사본(`/tmp/fit-stage-*/…`)을
+        #   가리킨다. 그 문자열을 그대로 넣으면 실행마다 run_sig 가 바뀌어
+        #   정상 resume 이 자기 completed journal 을 못 찾았다 (리뷰어 실측:
+        #   `same_logical_execution_has_same_signature false`). 서명에는
+        #   **논리 key**(staging 뿌리 기준 상대 경로 — `base_config_sha` 와
+        #   같은 key)와 그 내용 digest 만 들어간다.
+        "base_config": _ck(base_config or "configs/base.yaml"),
         "inventory": inv,                        # base config에서 유도된 상수
         "env": _env0,                            # F55: dependency fingerprint
         # ★ F56 — 시작 봉인 map을 그대로 쓴다 (재해시하지 않는다)
