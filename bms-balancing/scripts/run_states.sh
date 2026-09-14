@@ -190,7 +190,9 @@ run () {
   local rid; rid="$(python3 -c 'import uuid; print(uuid.uuid4().hex)')"
   LAST_RUN_ID="$rid"                                # write_meta 가 같은 id 를 확인·기록한다
   # R6 내부 F04: 명령 **전** 의 git 상태·시작 시각 — write_meta 가 계산 뒤 상태와 비교한다
-  LAST_PRE_PV="$(python3 scripts/provenance.py "$art" 2>/dev/null || echo '{}')"
+  # ⚠ U18-02: `$OUT` 을 같이 넘긴다 — 안 넘기면 CLI 기본값 `out` 만 산출 root 라서 `OUT=out_u18` 의 untracked
+  #   디렉터리가 '코드 변경' 이 되고, 끝 상태(write_meta 는 out_dir 을 안다)와 달라져 모든 산출이 '실행 중 변경' 이 된다.
+  LAST_PRE_PV="$(python3 scripts/provenance.py "$art" "${OUT:-out}" 2>/dev/null || echo '{}')"
   LAST_STARTED_UTC="$(python3 -c 'import datetime; print(datetime.datetime.now(datetime.timezone.utc).isoformat())')"
   if [ "$redir" = "-" ]; then
     BMS_RUN_ID="$rid" "$@" > "$log" 2>&1 || rc=1

@@ -57,7 +57,7 @@ bytecode 만 막았고(C08·C09), `rc 0` 인데 승격 불가인 상태를 런�
 | 트랙 | 판정 | 지금 상태 |
 |---|---|---|
 | ① mph 마이크로 쇼츠 | NO-GO ×2 (v1·v2) → **6.3 재구축 제한 검증 '뒷받침됨'** (Codex 독립 검토 2026-09-13, 원문 `reviews/r14_repros/codex63/`) | **문서 v3: M1 철회** (`cEeqref_mat = from_mat` — 값 칸의 사용자 식은 선택되지 않았다; `MPH_R1_RESPONSE.md` §6). 재구축은 §0-a 대로 — §5 검산값 `x_NCM 0.924064`·`x_Gr 0.0117207` 이 독립 산술로 재현됐고 초기 OCV 2.1653 V 는 MCMB 표 가파른 구간(오류 아님). **전체 프로토콜은 보류**: 4.25 V CV 가 양극 OCP 표 하한(x=0.2229 → 평형 4.1856 V)과 충돌 → OCP 범위 중단조건·phase 별 cutoff·시간간격·mesh 비교 (`docs/COMSOL_REBUILD_SPEC.md` §8). **현지 사전 진단 (§9, 2026-09-13 밤)**: 초기 Eeq 3.578387/1.413053 V (차 2.165333 V, 보정 안 함) · 표 내부 평형 OCV 상한 4.185562 V · 표면 조성 표 이탈을 실제 감지해 `INCOMPLETE_RANGE_STOP` 으로 보존 · 2.7 V cutoff 가 첫 충전 안 막음 · 축소 조건 CC→CV→휴지→방전 전이 확인(eventtol 1e-6, 2 s → 2.000002 s). **미완**: 메시 수렴(150/20→300/40 최대 2.041557 mV > 1 mV) · 저전류 CV 완료 · 전해질 양수 검사는 후처리뿐 · 원본/실험 OCP·물성 출처 대조 · 전체 프로토콜·유한 누설·sweep. **전체 운전 보류 유지 — GO 아님**. 원문 `PREFLIGHT_RESULTS_KO.md`·`NEXT_RUN_PLAN.md` 는 `reviews/r14_repros/codex63/preflight/` 에 보존 (둘 다 원문 — 후자는 sha 일치, 전자는 원본이 CRLF 라 LF 정규화 사본이고 CRLF 로 되돌리면 manifest sha 와 일치). **메시 축별 진단 (§10, 원문 대조 완료 2026-09-14)**: 반경축 300/40→300/80 최대 2.505 mV @0.04 s (1 mV 초과, 거의 전부 Eeq 항) · 물리축 300/40→600/40 1.1e-11 V (충족) · 두 실행의 내부 step 이 달라(0.005/0.002 s) 시간 효과와 미분리 → 다음은 제안 A(300/40·300/80 × 초기 최대 step 0.001·0.0005 s, 4 회; 600/80 보류). 보존 증거 미결 1 (이전 ZIP 포장본 식별 불일치 46,999,470 B/`3bc4e4e4…` vs 47,006,147 B/`097d4b65…`, 내부 330 개 명세는 일치 — 변조 단정도 전수 검증 완료도 아님). **전체 메시 수렴 미완 · 본 실행 보류**. 2026-09-14: 원문 묶음을 `reviews/r14_repros/codex63/mesh_axes/` 로 받음(사용자 커밋 `2fa058a`; ZIP sha `96321b94…` 일치 · 명세 139 항목 중 90 보존 sha 일치 · 49 제외 크기 일치) — 최대값·분해·시간표·native step 을 원시 CSV 에서 다시 계산해 같음 확인, §10 확정 (10-1~10-7). 남은 미결은 이전 ZIP 포장본 식별(10-5)과 제안 A 실행 여부 |
-| ② R13 하네스 | NO-GO (P1 4 · P2 5) | **P1-1~P2-5 · §5 Q6 전부 닫음** (262 passed). **U18 본 실행 끝남** (사용자 기계 2026-09-13 20:02–22:39, 13/13, STARTS=24, 소스 100·200·300_0009=GITT · 300_0147=step_005C). 드러난 것 **U18-01**: shape 가 `ne_shape_step_005C_Li.csv` 로 게시됨 — wrapper 의 `${SRC:-GITT}` 가 마지막 상태의 loop 변수를 새게 했다 (회귀 `test_g27`, 고침). 남은 것: shape 만 GITT 로 다시 (아래 2b) → 3 단계 대조 → 4 단계 승격 · 단일 회신 `reviews/R13_RESPONSE.md` 조건 7 갱신 |
+| ② R13 하네스 | NO-GO (P1 4 · P2 5) | **P1-1~P2-5 · §5 Q6 전부 닫음** (262 passed). **U18 본 실행 끝남** (사용자 기계 2026-09-13 20:02–22:39, 13/13, STARTS=24, 소스 100·200·300_0009=GITT · 300_0147=step_005C). **숫자는 하나도 안 움직였다** (`numbers 0`, 명부 13/13). 드러난 발견 셋 — **U18-01** shape 가 `ne_shape_step_005C_Li.csv` 로 게시됨 (wrapper 의 `${SRC:-GITT}` 가 마지막 상태의 loop 변수를 샜다; 회귀 `test_g27`, 고침, 사용자가 GITT 로 재생성해 닫음) · **U18-02** 13 중 11 이 `git_state_changed_during_run: true` — 시작 provenance 가 `$OUT` 을 몰라 `out_u18/` 을 '코드 변경' 으로 셌다 (`test_g28`, 고침) · **U18-03** 옛 정본에 `env` 가 없는 것을 계약 위반(rc 2)으로 등급했다 — 정본의 나이는 새 산출의 위반이 아니다 (`env_uncomparable` 버킷 신설, `test_g29`, 고침). **U18 산출은 승격 불가**: 고침은 다음 실행의 서명을 고칠 뿐이고 이미 적힌 sidecar 의 true 는 그대로다 — 게다가 `matrix_100` 은 실행 중 실제로 커밋이 바뀌었다(d07a77a→c9dd822, 사용자가 pull). → **U18b 재실행** (아래 2c) |
 | ③ BML α·β 난간 | NO-GO (B1~B5 전부 미증명/반박) | **주장 사슬 전부 철회** → 원인은 `rng(0)` 오염(§9) → **우리가 다시 뽑는다** (전권, `BML_R1_RESPONSE.md` §10): (a) `matlab/fit_cycles_driver.m` · (b) `scripts/fit_cycles.py` · 난간 `scripts/check_rails.py` (받은 xlsx 4 개에서 §6 재현). **닫힘 (§11)**: 같은 입력(HD_knee)에서 규진팀 표만 반복 패턴, 그들 파이프라인 rng 없이(a)·우리 포팅(b) 둘 다 경고 0 이고 서로 ~1e-3 (= scale 표본 크기) 안에서 일치 · 시작점 의존 1e-7. 원인 = `rng(0)` 오염 확정. 받은 L_* 표 4 개는 근거로 쓰지 않는다 |
 
 **세 라운드 공통 교훈**: 정정이 또 다른 단정이 됐다. "세 모드 붕괴" 를 고치며 "LLI 는 독립"
@@ -329,7 +329,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 275 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 277 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh
@@ -341,7 +341,7 @@ rm -rf out_u14_smoke
 #    정본(out/)을 먼저 덮으면 "숫자가 움직였나" 를 댈 대상이 사라진다. 네 상태 × 세 명령 = 12 회.
 OUT=out_u14 STATES='100 200 300_0009 300_0147' ./scripts/run_states.sh 2>&1 | tee out_u14.log
 
-# ── 2b. U18-01 뒷수습 (2026-09-13 본 실행에서 드러남) — shape 소스가 마지막 상태의 것으로 샜다 ────────────
+# ── 2b. U18-01 뒷수습 — **닫힘** (2026-09-13, 첫 판에서 했다; U18b 는 wrapper 가 GITT 로 걸어 필요 없다) ──────
 #    실측: 13 산출 중 shape 가 `ne_shape_step_005C_Li.csv` (정본은 `ne_shape_GITT_Li.csv`). 원인은 wrapper 의
 #    `--source "${SHAPE_SRC:-${SRC:-GITT}}"` — loop 변수 `SRC` 가 300_0147 의 step_005C 로 남아 있었다. 고침(SHAPE_SRC 아니면
 #    GITT, 요약 줄에 찍음; 회귀 `test_g27` 은 production 스크립트를 통째로 돌린다). shape 만 다시 만든다 — producer 가 자기
@@ -352,20 +352,35 @@ mkdir -p out_u18/wrong_source && mv out_u18/ne_shape_step_005C_Li.csv out_u18/ne
 python3 scripts/ne_shape.py --out-dir out_u18 --write out_u18 --source GITT --si-source Li 2>&1 | tee out_u18/ne_shape_GITT.log | tail -3
 python3 scripts/check_u14.py --new out_u18 --schema-only | tail -1      # 계약 위반 0 이어야 한다
 
+# ── 2c. U18b 재실행 (U18-02·03 을 고친 뒤) — 승격하려면 이것이 필요하다 ────────────────────────────
+#    왜 다시 도나: U18-02 의 고침은 **다음 실행의 서명**을 고친다. 이미 적힌 sidecar 의 `git_state_changed_during_run:
+#    true` 11 개는 그대로이고(승격은 값 자체를 요구한다 — R11 P1-9), `matrix_100` 은 그 위에 **실제로** 실행 중
+#    커밋이 바뀌었다 (d07a77a → c9dd822). 사면 규칙을 만들지 않는다 — 깨끗한 트리에서 다시 돈다 (~2 시간 40 분).
+#    ⚠ 첫 판은 버리지 말고 저장소 **밖으로** 옮긴다: 저장소 안에 남기면 그것이 새 실행의 '코드 변경' 이 된다.
+cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify && source .venv/bin/activate
+export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
+mv out_u18 ~/u18_run1 && mv out_u18.log ~/u18_run1.log 2>/dev/null
+git -C ~/dd status --short          # ★ 아무것도 안 나와야 한다 (나오면 그것이 '코드 변경' 으로 서명된다)
+python3 -m pytest tests/ -q         # 277 passed
+#    ⚠ 도는 동안 `~/dd` 에서 git 명령(pull·checkout·commit)을 **하지 않는다** — 그것이 첫 판 matrix_100 을 깬 것이다.
+OUT=out_u18b STATES='100 200 300_0009 300_0147' ./scripts/run_states.sh 2>&1 | tee ~/out_u18b.log
+#    shape 는 이제 wrapper 가 GITT 로 건다 (U18-01 고침) — `ne_shape_GITT_Li.csv` 가 나와야 한다. 끝나면 3 단계로.
+
 # ── 3. 대조 — 새 스키마 + 정본과 같은 숫자인가 ───────────────────────────────────────────────────
-python3 scripts/check_u14.py --new out_u18 --old out   # 0 = 승격 가능 · 1 = 숫자가 다름 · 2 = 계약 위반 · 3 = 부분 · 4 = 승격 불가
+python3 scripts/check_u14.py --new out_u18b --old out   # 0 = 승격 가능 · 1 = 숫자가 다름 · 2 = 계약 위반 · 3 = 부분 · 4 = 승격 불가
 #    ⚠ 자체 리뷰 C11: **rc 만 보고 승격하지 말 것.** 정본이 옛 스키마라 입력 identity 를 댈 수 없으면 계약은 안
 #      깨졌지만 승격 자격이 없다 (지금 `out/` 이 정확히 그 상태다 → 이번 U18 은 rc **4** 가 정상 결과다). 판정은
 #      마지막 줄의 `PROMOTION` JSON 이다 — 붙여 줄 것은 그 줄과 `■` 블록 전부:
-#         python3 scripts/check_u14.py --new out_u18 --old out | tail -1 \
+#         python3 scripts/check_u14.py --new out_u18b --old out | tail -1 \
 #           | sed 's/^PROMOTION //' | python3 -c "import json,sys;d=json.load(sys.stdin);print(d['promotion_eligible'], d['blocked_by'])"
 #    승격 조건 (이번 U18 한정 — 옛 정본에 receipt 가 없어 gate 가 true 를 낼 수 없으므로 **기록된 결정**으로 한다):
 #      numbers 0 · schema 0 · provenance_cols 0 · content 0 · unit 0 · controls 0 · env 0 · stale 0 ·
-#      provenance 0 (dirty 면 안 된다 — out_u18/ 자체는 산출 root 라 무관) · inputs 0 · inputs_uncomparable 만 > 0
+#      provenance 0 (dirty 면 안 된다 — 산출 root 자체는 무관하다; U18-02 뒤로 시작 provenance 도 $OUT 을 안다) · inputs 0 ·
+#      **inputs_uncomparable 과 env_uncomparable 만 > 0** (둘 다 옛 정본의 나이다 — U18 실측 17 · 1, 후자는 ne_shape 정본에 env 가 없다)
 #    out/ 을 이미 덮었으면 정본을 git 에서 읽는다 (손으로 `git show` 를 엮지 말 것 — `--name-only` 는 트리가 아니다):
 #      python3 scripts/check_u14.py --new out --old-rev <재실행 커밋>^
 #    ★ 1 이면 그것이 발견이다. 계산 경로는 안 고쳤으니 같아야 한다. 출력과 함께 이것도 붙여 줘:
-python3 -c "import json;print(json.load(open('out_u18/matrix_100.csv.meta.json'))['env'])"
+python3 -c "import json;print(json.load(open('out_u18b/matrix_100.csv.meta.json'))['env'])"
 
 # ── 3b. U14-01 뒷수습 (2026-09-12 실행에서 드러남) — 줄끝 때문에 서명이 깨진 산출을 다시 서명 ──────
 #    writer 가 CRLF 를 썼고 git 은 LF 로 저장한다 → fresh clone 에서 meta 의 sha256 이 안 맞고, reader(F07)가
@@ -378,8 +393,8 @@ python3 scripts/check_u14.py --new out --renormalize
 #      (도구 기본값 `out/` 은 그대로). 이 절차는 `promotion_eligible` 이 아니라 3 단계 출력을 붙인 커밋 메시지가 근거다.
 mkdir -p out/archive/legacy_r6_u14
 git mv out/*.csv out/*.json out/archive/legacy_r6_u14/          # 13 산출 + sidecar (meta.json 도 *.json 에 든다)
-mv out_u18/*.csv out_u18/*.json out/                            # 새 정본 (ne_shape_GITT_Li.csv + meta 포함 — run_states.sh 끝의 shape_step 이 만든 것)
-ls out_u18/                                                     # 로그만 남아야 한다; 남은 로그는 out_u18.log 와 함께 커밋하지 않는다
+mv out_u18b/*.csv out_u18b/*.json out/                            # 새 정본 (ne_shape_GITT_Li.csv + meta 포함 — run_states.sh 끝의 shape_step 이 만든 것)
+ls out_u18b/                                                    # 로그만 남아야 한다; 남은 로그는 out_u18.log 와 함께 커밋하지 않는다
 python3 scripts/check_u14.py --new out --schema-only            # ★ 계약 위반 0 이어야 한다 — degeneracy digest 4 도 shape 4 도 사라진다
 python3 scripts/check_u14.py --new out --old-rev HEAD           # 정본(git) 대 새 out/: 3 단계와 같은 판정이어야 한다
 python3 scripts/compare_states.py out                           # §1-10 표 재생 — '묶음 불일치' 경고가 없어야 한다

@@ -289,4 +289,10 @@ if __name__ == "__main__":
         ok, why = check_run_id(sys.argv[2], sys.argv[3]); print(why); sys.exit(0 if ok else 1)
     if len(sys.argv) >= 3 and sys.argv[1] == "--verify-unit":      # run_states.sh 가 쓴다 (R5-04 · R6 F05a: [run id])
         ok, why = verify_unit(sys.argv[2], sys.argv[3] if len(sys.argv) >= 4 else None); print(why); sys.exit(0 if ok else 1)
-    print(json.dumps(git_provenance(artifact=sys.argv[1] if len(sys.argv) > 1 else None)))
+    # ⚠ U18-02 (2026-09-13 실측): 전 판은 output_roots 를 못 받아 **기본값 ("out",)** 으로 답했다. `run_states.sh`
+    #   의 시작 provenance 가 이 CLI 이므로, `OUT=out_u18` 실행에서는 그 untracked 디렉터리가 "코드 변경" 으로
+    #   잡혀 13 산출 중 11 개가 `git_state_changed_during_run: true` 였다 (끝 상태는 `write_meta` 가
+    #   `output_roots=(out_dir, "out")` 로 물어 false). 플래그가 늘 켜지면 신호가 죽는다 — 이 파일 머리말의 그 고장이다.
+    #   둘째 인자부터가 산출 root 다 (없으면 `out` 만; write_meta 와 같이 `out` 은 늘 포함한다).
+    print(json.dumps(git_provenance(artifact=sys.argv[1] if len(sys.argv) > 1 else None,
+                                    output_roots=(*sys.argv[2:], "out"))))

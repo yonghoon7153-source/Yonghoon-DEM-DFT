@@ -302,7 +302,7 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
     """
     R: dict = {"seen": 0, "missing": [], "content": [], "diffs": [], "added": [], "paired": [], "stale": [],
                "broken": [], "controls": [], "env": [], "alias": [], "provenance": [], "inputs": [],
-               "inputs_uncomparable": [],
+               "inputs_uncomparable": [], "env_uncomparable": [],
                "roster_missing": [], "roster_extra": [], "stale_new": [], "n_old": 0, "n_new": 0}
     new_stale: list = []          # 후보 디렉터리의 `_vN` — C12 로 blocked_by 에 나간다
     # ⚠ `.meta.json` 은 산출이 아니다 — `degeneracy_*.json` glob 이 `degeneracy_100_Li.json.meta.json` 까지
@@ -417,7 +417,15 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
                     R["controls"].append((f"{f.name}.meta:{k}", ometa.get(k, "(없음)"), meta.get(k, "(없음)")))
                 elif _num_diff(ometa[k], meta[k]):
                     R["controls"].append((f"{f.name}.meta:{k}", ometa[k], meta[k]))
-            R["env"] += [f"{f.name}.meta:{x}" for x in S.env_problems(ometa.get("env"), meta.get("env"))]
+            # ⚠ U18-03 (2026-09-13 실측): 옛 정본은 `env` 를 안 적는다 (그 계약이 R10 P1-7 뒤에 생겼다). 그것을
+            #   "다른 기계다"(계약 위반, rc 2)로 세면 **정본의 나이**를 새 산출의 위반으로 청구하는 것이다 —
+            #   자체 리뷰 C16 이 입력 identity 축에서 닫은 바로 그 비대칭. 정본이 없으면 **대조 불가**(승격만
+            #   불가), 새 산출이 없으면 계약 위반이다 (후자는 위의 `env 가 비어 있다` 가 schema-only 에서도 잡는다).
+            if not (isinstance(ometa.get("env"), dict) and ometa["env"]):
+                R["env_uncomparable"].append(
+                    f"{f.name}.meta: env 를 **정본이** 안 적었다 — 같은 환경에서 돌았다고 말할 수 없다 (승격 불가)")
+            else:
+                R["env"] += [f"{f.name}.meta:{x}" for x in S.env_problems(ometa.get("env"), meta.get("env"))]
         # ⚠ Codex R11 P1-1: 각 receipt 가 **자기 안에서** 유효한 것과 두 실행이 **같은 입력**을 먹은 것은 다른 문제다.
         #   `ROW_SKIP` 이 identity 를 숫자 비교에서 빼기 때문에, 네 digest 가 전부 달라도 rc 0 · promotion true 였다.
         #   역할별 sha 를 정규화해 대조한다 — 다르면 숫자 비교 전에 막는다.
@@ -586,7 +594,7 @@ def main() -> int:
     added, paired, stale, broken = R["added"], R["paired"], R["stale"], R["broken"]
     controls, r_missing, r_extra, env_bad = R["controls"], R["roster_missing"], R["roster_extra"], R["env"]
     alias, prov_bad, inputs_bad = R["alias"], R["provenance"], R["inputs"]
-    inputs_unk, stale_new = R["inputs_uncomparable"], R["stale_new"]
+    inputs_unk, stale_new, env_unk = R["inputs_uncomparable"], R["stale_new"], R["env_uncomparable"]
     print(f"산출 {seen} 개 점검 ({new})")
     if old is None:
         print("  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, "
@@ -676,6 +684,11 @@ def main() -> int:
         _show(env_bad, a.max_show)
         for e in []:
             print(f"  - {e}")
+    if env_unk:
+        print(f"\n■ **환경(env) 대조 불가** {len(env_unk)} — **정본이** 환경을 안 적었다 (옛 스키마면 여기로 온다). "
+              f"새 산출의 계약 위반이 아니므로 rc 2 가 아니지만, 같은 환경의 재현이라고 말할 수 없다 → 승격 불가 "
+              f"(U18-03 · 자체 리뷰 C16 과 같은 비대칭)")
+        _show(env_unk, a.max_show)
     if controls:
         print(f"\n■ 실행 조건 불일치 {len(controls)} — 같은 실행의 재현이 아니다 (n_starts · seed · n_grid · n_samples · tol · "
               f"state · 소스; Codex R9-03). 숫자가 같아도 승격 대상이 아니다")
@@ -698,9 +711,11 @@ def main() -> int:
             print("  숫자: 대조 **미완** — 명부/묶음/스키마/내용/조건/환경 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)")
         elif a.subset and r_missing:
             print(f"  숫자: 대조한 {len(paired)}/{R['n_old']} 개는 정본과 같다 — **부분(subset)** 진술, 승격 아님")
-        elif inputs_unk:
-            # 숫자는 전부 같다. 다만 **같은 입력을 먹었다는 증명**이 없으므로 승격 근거는 아니다 (Codex R11 P1-1).
-            print(f"  숫자: 정본({old})과 전부 같다 — 그러나 입력 identity 를 댈 수 없어 **승격 대상은 아니다**")
+        elif inputs_unk or env_unk:
+            # 숫자는 전부 같다. 다만 **같은 입력·같은 환경에서 돌았다는 증명**이 없으므로 승격 근거는 아니다
+            # (Codex R11 P1-1 · U18-03).
+            why = " · ".join(x for x in ("입력 identity" if inputs_unk else "", "환경" if env_unk else "") if x)
+            print(f"  숫자: 정본({old})과 전부 같다 — 그러나 {why} 를 댈 수 없어 **승격 대상은 아니다**")
         else:
             print(f"  숫자: 정본({old})과 전부 같다 — 게시·서명만 바뀌었다")
     contract_broken = bool(missing or broken or content or controls or env_bad or r_extra
@@ -713,7 +728,7 @@ def main() -> int:
     #   ⚠ 단, `--schema-only` 는 **승격을 묻지 않은** 진단이다 (물어보지 않은 것에 "자격 없음" 코드를 주면 스키마
     #     점검 도구로서 못 쓴다). 그 모드의 비승격은 `promotion_eligible: false` + `baseline_absent` 가 이미
     #     구조적으로 말한다 (R11 P1-6). 4 는 **승격 대조를 물었는데 답을 못 내는** 경우만이다.
-    not_promotable = bool(inputs_unk)
+    not_promotable = bool(inputs_unk or env_unk)
     rc = 2 if contract_broken else (1 if diffs else (3 if (a.subset and r_missing) else
                                                      (4 if not_promotable else 0)))
     # ⚠ Codex R10 P2-1: "부분 · 승격 아님" 을 **글자로만** 말하면 자동 소비자는 full equality 와 구분할 수 없다.
@@ -733,7 +748,8 @@ def main() -> int:
                                 "content": len(content), "unit": len(broken),
                                 "controls": len(controls), "env": len(env_bad), "numbers": len(diffs),
                                 "alias": len(alias), "provenance": len(prov_bad), "inputs": len(inputs_bad),
-                                "inputs_uncomparable": len(inputs_unk), "stale": len(stale_new),
+                                "inputs_uncomparable": len(inputs_unk), "env_uncomparable": len(env_unk),
+                                "stale": len(stale_new),
                                 "baseline_absent": int(baseline_absent)},
                  "policy": policy, "new": str(new), "old": (str(old) if old is not None else None)}
     print("PROMOTION " + json.dumps(promotion, ensure_ascii=False))

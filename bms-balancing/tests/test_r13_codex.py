@@ -775,3 +775,73 @@ def test_g27_wrapper_shape_source_is_not_the_last_state_s_loop_variable(tmp_path
     assert "SHAPE_SRC=GITT" in text, text[-800:]                                # 요약 줄이 shape 소스를 찍는다
     src, text = run({"SHAPE_SRC": "step_005C"})                                  # 명시 override 는 그대로 따른다
     assert src == "step_005C" and "SHAPE_SRC=step_005C" in text, (src, text[-800:])
+
+
+def test_g28_wrapper_start_provenance_knows_the_output_directory(tmp_path):
+    """[U18-02, 2026-09-13 실측] `OUT=out_u18` 본 실행의 13 산출 중 **11 개**가
+    `git_state_changed_during_run = True` 로 나와 승격이 막혔다. 트리는 실제로 깨끗했다 —
+    `run` 의 시작 provenance 가 `python3 scripts/provenance.py "$art"` 라 CLI 기본값
+    `output_roots=("out",)` 을 쓰고, `out_u18/` 은 그 밖의 **untracked 디렉터리**라 '코드 변경' 으로 잡혔다.
+    끝 상태는 `write_meta` 가 `output_roots=(out_dir, "out")` 로 제대로 부르므로 False —
+    그래서 "실행 중에 상태가 바뀌었다" 가 된다. 산출 하나당 한 번씩, 첫 산출만 빼고 (그때는 디렉터리가 비어
+    있어 git 이 아무것도 보고하지 않는다 — 실측에서 `degeneracy_100` 만 clean 이었던 이유).
+
+    이것은 위조 방향이 아니라 **거짓 양성**이다. 그러나 `provenance.py` 머리말이 경고하는 바로 그 고장 —
+    "플래그가 늘 켜져 정보가 사라진다" — 을 wrapper 쪽에서 재현한 것이라 신호로서 죽는다.
+    """
+    import json as _json, os, subprocess
+    from test_review_findings import _fixture_repo, _shell_helpers
+    root = tmp_path / "repo"; _fixture_repo(root, outputs=("out/matrix_100.csv",))
+    env = dict(os.environ, STARTS="1", SI="Li", BMS_DATA_ROOT="synthetic", OUT="out_alt")
+    produce = ('python3 -c "import os,sys,pathlib; pathlib.Path(sys.argv[1]).write_text('
+               "'a,b,run_id\\n3,4,' + os.environ['BMS_RUN_ID'] + '\\n')\" \"$1\"")
+    body = ('mkdir -p "$OUT"\n'
+            f'run "one" "$1" - "$3" {produce} && write_meta "$1" 100 GITT || exit 1\n'
+            f'set -- "$2" "$1" "$3"\n'
+            f'run "two" "$1" - "$3" {produce} && write_meta "$1" 200 GITT || exit 1\n'
+            'echo BOTH_OK')
+    one, two = root / "out_alt" / "matrix_100.csv", root / "out_alt" / "matrix_200.csv"
+    r = subprocess.run(["bash", "-c", _shell_helpers() + "\n" + body, "g28", str(one), str(two),
+                        str(tmp_path / "run.log")],
+                       cwd=root, env=env, capture_output=True, text=True, encoding="utf-8")
+    assert r.returncode == 0 and "BOTH_OK" in r.stdout, (r.stdout[-1500:], r.stderr[-2500:])
+    for art, when in ((one, "첫 산출 (디렉터리가 비어 있었다)"), (two, "둘째 산출 (앞 산출·로그가 이미 있다)")):
+        m = _json.loads(art.with_name(art.name + ".meta.json").read_text(encoding="utf-8"))
+        assert m["git_modified_code"] == [] and m["git_dirty"] is False, (when, m["git_modified_code"])
+        assert m["git_dirty_at_start"] is False, (
+            f"{when}: 산출 디렉터리가 시작 provenance 에서 코드 변경으로 잡혔다 — "
+            f"{m.get('git_modified_code_at_start')}")
+        assert m["git_state_changed_during_run"] is False, (when, m)
+
+
+def test_g29_a_baseline_without_env_is_uncomparable_not_a_contract_violation(tmp_path):
+    """[U18-03, 2026-09-13 실측] U18 대조가 rc **2**(계약 위반)를 냈고 그 근거는 정본 `ne_shape_GITT_Li.csv.meta`
+    에 `env` 가 없다는 것 하나였다 — 옛 스키마로 만든 정본의 **나이**지 새 산출의 위반이 아니다. 자체 리뷰 C16 이
+    입력 identity 축에서 닫은 것과 같은 비대칭이다: 정본이 안 적었으면 '대조 불가'(승격만 불가), 새 산출이 안
+    적었으면 '계약 위반'. 새 산출 쪽의 존재는 `--schema-only` 에서도 도는 `env 가 비어 있다` 가 이미 요구한다.
+    """
+    import json as _json
+    from test_r12_selfreview import _publish_matrix
+    # ⚠ 열세 번째 fixture 감사: 3 행짜리 matrix 를 canonical 이름에 두면 R13 P1-1 이 막는다 (좁힌 실행은 정본이
+    #   아니다) — env 축을 재려던 fixture 가 먼저 content 로 걸렸다. 정본 자리에는 정본 모집단을 둔다.
+    rows = seal_combo(_canonical_combo_rows())
+    old, new = tmp_path / "old", tmp_path / "new"
+    _publish_matrix(old, rows, run_id="R-old"); _publish_matrix(new, rows, run_id="R-new")
+    mp = old / "matrix_100.csv.meta.json"
+    m = _json.loads(mp.read_text(encoding="utf-8")); m.pop("env")          # 옛 정본에는 키가 아예 없다
+    mp.write_text(_json.dumps(m, ensure_ascii=False), encoding="utf-8")
+
+    rc, out, promo = _u14(new, old)
+    b = promo["blocked_by"]
+    assert b["env"] == 0 and b.get("env_uncomparable") == 1, (b, out[-2500:])
+    assert all(b[k] == 0 for k in ("schema", "provenance_cols", "content", "unit", "controls", "numbers",
+                                   "alias", "inputs", "inputs_uncomparable", "provenance", "stale")), (b, out[-2500:])
+    assert rc == 4 and promo["promotion_eligible"] is False, (rc, out[-2500:])
+
+    # 대조군 — 새 산출이 env 를 안 적은 것은 그대로 계약 위반(rc 2)이다 (C16 의 비대칭)
+    new2 = tmp_path / "new2"; _publish_matrix(new2, rows, run_id="R-new2")
+    mp2 = new2 / "matrix_100.csv.meta.json"
+    m2 = _json.loads(mp2.read_text(encoding="utf-8")); m2.pop("env")
+    mp2.write_text(_json.dumps(m2, ensure_ascii=False), encoding="utf-8")
+    rc2, out2, promo2 = _u14(new2, old)
+    assert rc2 == 2 and promo2["blocked_by"]["schema"] >= 1, (rc2, promo2["blocked_by"], out2[-2000:])
