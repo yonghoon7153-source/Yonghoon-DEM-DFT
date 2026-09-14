@@ -3232,6 +3232,93 @@
     "docs/data/rho_lhs_20260913_rtol1e-8.csv"
    ],
    "note": "`network_conductivity.py:669-671` — `cg(L, b, tol=1e-8)` 가 scipy ≥ 1.12 에서 TypeError 를 내면 `cg(L, b, atol=1e-8)` 로\n재시도한다.  그런데 새 `cg` 의 정지 조건은 **`‖r‖ ≤ max(rtol·‖b‖, atol)`, 기본 `rtol=1e-5, atol=0`** 이다.  b 는 단위 전류\n주입(‖b‖ ~ 1)이라 `rtol·‖b‖ ≈ 1e-5 ≫ atol 1e-8` ⇒ **atol 은 한 번도 안 걸리고 기본 rtol 1e-5 가 판정한다**.  옛 scipy 의\n`tol=1e-8` 은 상대 1e-8 이었으므로 **수렴 기준이 1000배 느슨해졌다** — 코드는 그대로인데 라이브러리 판올림이 조용히 바꿨다.\n★ **실증 (scipy 1.17.1, 삼중대각 4000×4000, 단위 주입)**: atol 1e-8 / 1e-9 / 1e-12 → **전부 25회 반복 · 잔차 1.365e-5 · 해\n동일**; rtol 1e-6 → 30회 · 1.4e-6; rtol 1e-8 → 39회 · 1.1e-8 · **해 7번째 유효자리 변화** (0.62535779 → 0.62535797).\n★ **어떻게 드러났나**: ρ 실측(`rho_lhs_20260913.csv`)에서 반복해 22건의 σ_A·σ_B 가 atol 10배 조임에도 **비트 동일**했다 —\n안 걸리는 손잡이를 조인 **거짓 0** (규율 ⑤ false-green, Codex R2-01 이 \"tol 10배만으로 실행 규약이 확정되지 않는다\" 고\n경고한 바로 그 자리).  ⇒ ρ = 0.000000 % 는 **철회**, rtol 로 다시 잰다 (도구 수정 완료: rtol 주입, ②d 판별력 검사).\n★ **영향 범위**: CG 경로(n_nodes > 30,000)의 σ 전부 — LHS 30 중 이온 10 · 열 12 · 전자 0.  legacy 169 코퍼스가 어느 scipy\n에서 계산됐는지에 따라 **세대가 갈린다** (옛 scipy 면 상대 1e-8, 새 scipy 면 1e-5) — `case_master.csv` 의 CG 케이스는 계산\n환경이 기록돼 있지 않으면 재현 불가.  ⚠ 크기는 미측정 — rtol 사다리(1e-5 → 1e-6 → 1e-7 → 1e-8)로 σ 변화를 잰다.\n★ 처방 (코드): `cg(..., rtol=1e-8, atol=0)` 로 **명시**하고(양쪽 버전 호환 = `rtol` 없는 옛 scipy 는 `tol`), 매니페스트에 scipy\n버전·실제 rtol/atol 을 적는다.  ⛔ 값이 움직이므로 **세대 2** — S3 와 별개 축이고 먼저 크기를 잰다.\n⛔ ρ 도구 초판의 atol 조임은 **판별력 0** 이었다 — 같은 날 세 번째 false-green (2π · 라벨/cap · atol).\n\n★ **크기 단서** (ρ 재실측): rtol 1e-5 → 1e-6 한 자릿수 조임이 σ 를 이온 ≤5.92e-7 % · 열 ≤1.108e-5 % 움직였다.\n⇒ 의도값(상대 1e-8)까지 세 자릿수를 더 가도 σ 변화는 **매우 작을 가능성**이 크다 — 결함은 실재하나(기준이 1000배\n느슨하고 라이브러리 판에 따라 바뀐다) σ 에 대한 크기는 **작다**.  ⬜ 확정은 사다리(1e-6 → 1e-7 → 1e-8) 실측 후.\n처방(rtol 명시)은 그대로 세대 2 축.\n\n★ **사다리 도구 준비 (`measure_rho.py --tighten`)** — 조임 배수를 CLI 로 준다 (0.1 기본 · 0.01 · 0.001 = rtol 1e-6 · 1e-7 · **1e-8** = 옛 `tol=1e-8` 의 의도값).  selftest ⑤ 가 setter → 실제 solve 의 `rtol_B` 전달을, ⑤d 가 3000-노드 toy 에서 ×0.1 / ×0.001 의 해가 **다름**(max|Δx| 7.5e-7)을, ⑤b 가 (0,1) 밖 거부를 확인한다.  ×0.1 실측 산출은 `rho_lhs_20260913_rtol.*` (푸시 `a6bc092ee`).  ⬜ ×0.01 · ×0.001 실측 = `rho_lhs_20260913_rtol1e-7.*` · `rho_lhs_20260913_rtol1e-8.*` (사용자 WSL).\n⚠ 사다리의 ρ(×0.001) 가 곧 **SELF-31 의 σ 크기**다 — 생산(rtol 1e-5) 대 의도(1e-8).  이 값이 3 % 를 넘으면 세대 2 의 처방(rtol 명시)이 σ 를 실제로 옮긴다는 뜻이고, 넘지 않으면 결함은 실재하되 **σ 에는 무해**로 등재한다 (둘 다 런 전에 적는다).\n\n★★ **크기 확정 — 사다리 완주 (2026-09-13 밤, 사용자 WSL scipy 1.18.1, LHS 30)**.  런 전에 등록한 판정선은 3 % 였다.\n```\ntighten   실제 rtol     이온 ρ(반복해 max)      열 ρ(반복해 max)\n0.1       1e-6          5.921028751e-07 %       1.107819076e-05 %\n0.01      1e-7          5.985227898e-07 %       1.122655279e-05 %\n0.001     1e-8 (의도)   6.000686495e-07 %       1.122641757e-05 %\n```\n⇒ 생산(rtol 1e-5)에서 **의도값 1e-8 까지 세 자릿수를 다 조여도** σ 는 이온 6.0e-7 % · 열 1.12e-5 % 만 움직인다 —\n판정선 3 % 보다 **다섯 자릿수 아래**다.  게다가 **1e-7 에서 이미 포화**한다 (1e-7 → 1e-8 에서 열은 다섯째 자리가\n오히려 미세 감소 = 수치 바닥).  즉 σ 는 솔버 허용오차에 대해 **이미 수렴해 있다**.\n★ **판정**: 결함은 **실재**한다 (코드가 rtol 을 안 넘겨 기준이 라이브러리 판에 좌우되고, 의도보다 1000배 느슨하다).\n그러나 **σ 에는 무해**하다 — 어떤 보고값도 이 축으로는 안 움직인다.  ⇒ 등급 **P1 → P2** (근거: 이 실측).\n⚠ 처방은 유지한다 — `cg(..., rtol=1e-8, atol=0)` 명시 + 매니페스트에 scipy 버전·실제 rtol/atol 기록.  세대 2 위생 축이고,\n**값이 안 움직이므로 기존 결과를 다시 돌릴 이유는 없다** (이 점이 이번 측정으로 새로 확정됐다).\n⚠ 전자 채널은 직접해뿐이라 이 축 자체가 없다 (허용오차 없음).  이온은 OK 23 (`OLD_NONE` 7 제외).\n산출 `docs/data/rho_lhs_20260913_rtol1e-7.{csv,json}` · `_rtol1e-8.{csv,json}` (도구 HEAD `f8ad6d129`, 사용자 푸시 `d02ed257f`)."
+  },
+  {
+   "id": "R3-01",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round3_20260914.md",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round3_20260914.md",
+    "docs/area_contract_20260913.md"
+   ],
+   "title": "미정값을 \"전부 0 / 전부 10 %\" 로 채우는 규칙이 **완성 결과가 달라도 같은 라벨**을 내게 한다 — 선발행 근거 REFUTED",
+   "note": "계약 §5-v3 ② (`docs/area_contract_20260913.md:401`–409).  미정 abs(Δ) 를 **전부 0** 또는 **전부 10 %** 로\n채워 두 번 판정하고 같으면 발행한다는 규칙인데, **10 % 는 h1 의 중앙값 문턱이지 개별 관측치의 최악값이 아니다**.\n⇒ 같은 관측 집합이 100 % 로 채워지면 라벨이 뒤집힌다.  Codex 의 결정적 반례 (ρ=0 고정):\n```\n알려진 값                  미정  전부0%        전부10%       전부100%\n6% 15개 + 20% 8개           7    6%, BOTH     8%, BOTH     13%, h1\n6% 65개 + 20% 62개          3    6%, BOTH     8%, BOTH     13%, h1   ← 우리 형상과 같은 크기\n```\n⚠ 두 번째 줄이 **현재 130 ID · 미정 3 과 정확히 같은 크기**다.\n★ 계약 407-408행의 *\"OK 23 > 15 이므로 이온 판정을 미리 허용한다\"* 는 **REFUTED** — 알려진 23 을\n0 % 14 + 12 % 9 로 두고 미정 7 을 채우면 전부0 → h0 · 전부10 → h1 · 전부100 → h1 로 **갈린다**.\n⚠ 실제 미측정 S3 Δ 의 분포는 모르므로 *\"이번 이온 라벨이 반드시 뒤집힌다\"* 는 주장이 아니다 —\n**발행을 미리 허용할 수 없다**는 것이 반증된 내용이다.\n★ 더 근본적으로 `OLD_NONE` 은 σ_old 가 없어 **상대차 자체가 정의되지 않는다**.  값만 미정인 `REFUSED`\n와 섞을 수 없다.\n처방 (판정문 §8-A, 런 전에 반영): σ_old>0 인 채널별 유효 baseline 집합 `B_ch` 를 **S3 결과 열람 전에**\n고정 · `OLD_ZERO`/`OLD_NONE` 은 B_ch 밖 별도 estimand · B_ch 안의 `REFUSED` 는 하한 0 · **상한 +∞**\n의 중앙값 순서통계 경계로 두 라벨을 내고 **같을 때만** 발행(다르면 `UNDETERMINED_COHORT`) ·\n+∞ 는 **경계 계산용이지 관측값이 아니다** · 과반이라는 이유만으로 선발행하지 않는다.\n⛔ 이것을 닫기 전에는 S3 를 돌리지 않는다 (판정문 최종판정 = NO-GO 의 직접 사유)."
+  },
+  {
+   "id": "R3-02",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round3_20260914.md",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round3_20260914.md",
+    "docs/area_contract_20260913.md",
+    "scripts/network_conductivity.py"
+   ],
+   "title": "floor 를 동결한 S3 에서 cutoff 는 **0→0** 이다 — \"0→양수 복원이 σ 를 내릴 수 있다\" 는 설명은 이 전환에 적용 불가",
+   "note": "계약 §5-v3 (`docs/area_contract_20260913.md:437`–440), 실제 분기 `scripts/network_conductivity.py:407`–415.\n⚠ **Codex 가 2라운드의 자기 회신을 정정했다** — *\"cutoff 의 0→양수는 반대 방향을 낼 수 있다\"* 를\n전할 때 **floor 복원을 함께 하는 경우**라는 조건을 명시하지 않았다.  floor 동결이면 그 아래는 0→0 이다.\n```\na/r     ψ                       Rc_old               Rc_new\n0.997   1.6431676725155004e-4   3052.0592750761475   8.240560042705619e-5\n0.998   8.944271909999171e-5    0                    0\n1       0                       0                    0\n```\n★ 활성 분기에서 `Rc_new = ψ²·Rc_old ≤ Rc_old` 이므로, 나머지 저항·경계·망이 같고 total 이 양수이면\n**정확한 유효 전도도는 비감소**다 (실제 2노드 solve_network 대조: σ_ratio 2.369528891350171e-4 →\n3.1360727881391025e-4).  ⇒ **관측 하향이 보이면 전환 범위 위반·수치 오차·출력 상태 변경부터 조사**한다.\n⚠ 한정: 실패·폴백·출력 거부(`network_conductivity.py:835` 가 None)가 섞인 게시 숫자까지 단조라고\n인증하는 것은 아니다.\n★ **양성 대조가 없다** (판정문 §3.1).  등록된 음성 대조 둘(coverage 셀 불변 · hertzian Rc bitwise 불변)은\n**no-op 도 통과**한다 — 통과 자체가 결함은 아니지만 **전환을 안 해도 통과**하므로 전환을 잡지 못한다.\n실측 (같은 간선, r1=r2=1 µm · native 면적 π×0.1² · delta 0): Hertz 5.000000000000 (셋 다 동일) ·\nPhysics 원본 5.856069741053 → S3 4.269074841227 → no-op 5.856069741053.\n처방 (§8-C): 실제 `build_network` 의 활성 간선에서 **`Rc_new/Rc_old = ψ² = 0.7290000000000001`** 을\n요구하는 양성 fixture 를 추가하고 **no-op 변이는 반드시 실패**하게 한다 + floor 위·아래·clamp 경계를\n각각 핀한다.  ⛔ *\"전 코호트 σ 가 반드시 달라야 한다\"* 는 게이트는 만들지 않는다 (활성 간선이 없거나\n전류 기여가 없는 망에서는 무변화가 가능하다).\n★ 요청서 §7 의 *\"S3 가 유일한 σ 축\"* 도 **cap-only S2 ↔ ψ-only S3 비교 안**으로 한정된다 — 단위·재료계수·\nb·floor 복원 등 다른 전환이 σ 를 안 움직인다는 뜻이 아니다."
+  },
+  {
+   "id": "R3-03",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round3_20260914.md",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round3_20260914.md",
+    "scripts/measure_rho.py"
+   ],
+   "title": "`measure_rho` 의 키 우선순위 `tol→atol→rtol` — rtol 처방을 넣으면 **atol 만 조여져** false-zero 가 재발한다",
+   "note": "`scripts/measure_rho.py:81`–100.  rtol 과 atol 을 함께 넘기면 앞선 키가 이겨 **rtol 이 안 바뀐다**.\n실측 (3000×3000 SPD):\n```\n기본 호출  rtol=1e-8, atol=0\n×0.001    rtol=1e-8, atol=0     ← 상대 허용오차 불변\nA/B 해 bitwise 동일, max|Δx| = 0\n대조: 실제로 rtol=1e-11 로 조이면 max|Δx| = 4.567929932154752e-9\n```\n⚠ **저장된 30건은 유효하다** — 생산이 atol-only 호출이라 `--tighten` 이 실제로 rtol 을 조였다.\n이 finding 이 막는 것은 **SELF-31 처방(rtol 명시)을 도입한 뒤의 경로**다: 그때부터 ρ 도구가\n조인다고 보고하면서 아무것도 안 조이는 false-green 이 된다 (같은 축에서 네 번째).\n처방: 실제 사용한 **양쪽의 rtol·atol·maxiter·전처리기**를 산출에 기록하고, **조이려는 손잡이가\n실제로 바뀌었는지**를 검사한다 (해가 bitwise 동일하면 판별력 0 이므로 거부)."
+  },
+  {
+   "id": "R3-04",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round3_20260914.md",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round3_20260914.md",
+    "scripts/measure_rho.py"
+   ],
+   "title": "ρ 산출의 `OK` 가 **최종 채택 해**를 보증하지 않는다 — fallback 뒤에도 첫 해의 info 를 적고 NaN 도 OK 로 발행된다",
+   "note": "`scripts/measure_rho.py:125` · `:148` · `:180` · `:202`.  실측 (64노드 큐브, 첫 CG 만 maxiter=1 로 강제해\n**실제 fallback** 을 태움):\n```\nCG(info=1) → ILU-CG(info=0)\n최종 σ_A = 0.15976350010981333 · σ_B = 0.15976325932953783\n저장 info_A = 1   ← 채택되지 않은 첫 해의 상태\n저장 info_B = 없음\n```\n★ 또한 양의 유한 저항을 1e-308 로 두면 실제 생산 solve 가 overflow/singular 로 **NaN** 을 내는데\n`measure_case` 는 None 만 거르므로 **OK** 를 발행한다.  정상 Δ=0 행 뒤에 NaN 행을 넣으면 summarize 가\n`n_ok=2, rho_max_all=0.0` 을 낸다 (순서를 바꾸면 max=NaN — 즉 **집계가 순서 의존**이다).\n⚠ 이 극단 저항이 실제 LHS 범위라는 주장이 아니다 — 현재 270행에 NaN 은 없다.  반례가 짚는 것은\n**새 입력에 대한 계측기의 유효성 검사와 최종 상태 기록**이다.\n처방 (§8-B): 최종 **채택** 해의 수렴 상태·잔차를 기록 · finite 검사를 OK 의 전제로 · 집계를 순서\n무관하게 · **직접해는 반복 허용오차에 한해 `TOL_NOT_APPLICABLE`** 로 분리하고 finite·성공·보존 검사는\n유지한다.  ⛔ 직접해를 두 번 똑같이 풀어 나온 0 을 정확성 증거로 읽지 않는다."
+  },
+  {
+   "id": "R3-05",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round3_20260914.md",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round3_20260914.md",
+    "docs/area_contract_20260913.md",
+    "scripts/network_conductivity.py"
+   ],
+   "title": "AREA-11 — ψ₁≠ψ₂ 이면 min/직렬 계수비 `[1,2)` 가 **성립하지 않는다** (반례 0.855 < 1)",
+   "note": "계약 `docs/area_contract_20260913.md:503`–507 및 3라운드 요청서 §5.  제시한 비 `2σ₁σ₂/(σ_min(σ₁+σ₂))`\n는 **공통 ψ 가 약분될 때만** 성립하는데, b₁≠b₂ 까지 바꾸는 처방에서는 ψ₁≠ψ₂ 다.  기준해 모듈의 ψ 로\n두 후보식을 계산한 대수 반례:\n```\na=.3, b1=1, b2=2, σ1=σ2=1   (양쪽 a/b ≤ .3)\n공유 b_min / min 식 = 0.9761033642897547\n두 ψ 의 직렬 후보    = 1.1411027478697902\n비                  = 0.8554035700220194   < 1     (문서 예측 = 1)\n```\n⇒ **공통 b · 공통 양의 ψ 에서만** `[1,2)` 를 쓴다.  ψ=0 이면 0/0 비를 보고하지 않는다.\n★ 기준해 대조 (a=0.1, σ1:σ2=1:8, nr200/nz400/L3, 양쪽 b=1): 수치 기준해 2.532536059406427 ·\nψ×직렬 2.401354598190363 · ψ×min 4.2690748412273125 ⇒ 기준해/직렬 1.0546281091992498 ·\nmin/기준해 1.6856916312685766.  **직렬이 더 가까운 것은 CONFIRMED**, *\"직렬식이 이 기하의 참값\"* 은\n**REFUTED**, 실제 DEM 접촉의 참값이라는 일반화는 **UNVERIFIABLE** (b₁≠b₂ PDE 를 푼 것이 아니다).\n★ 영향 범위 판단은 유지 — 전자 AM_P 관련 간선 한정 (`network_conductivity.py:100`–114 의 반경 의존이\nAM_P 에만 있다).  실측 공통-ψ 계수비: AM_P–AM_S 1.7220737023733361 · AM_P–AM_P 1.511966128287415 ·\ngeneric AM–AM 1 · 이온 SE–SE 1.  정식 열 경로(`:1225`)는 k_weight 가 이미 조화평균이므로 **이중 보정 금지**.\n⚠ P3 호출 경계 하나: `:373` 의 AM-only targets 휴리스틱이 thermal 호출에도 발화할 수 있다 (현재 130건\n정식 열 경로가 오염됐다는 증거는 아니다).\n★ **S3 와 분리 = CONFIRMED.**  첫 재료 시험은 공통 b·ψ 를 고정해 계수만 바꾸고, b₁/b₂ 기하는 별도 축이다."
+  },
+  {
+   "id": "R3-06",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_round3_20260914.md",
+   "evidence_tests": [
+    "docs/reviews/codex_verdict_area_round3_20260914.md",
+    "docs/data/area_s2_cohort.tsv",
+    "scripts/seal_area_cohort.py"
+   ],
+   "title": "`lhs00_029` 의 atom/contact 파일명 step 차가 **−150,000** — 127쌍 중 유일, SELF-30 의 5,000-step 검사 범위 밖",
+   "note": "`docs/data/area_s2_cohort.tsv:36` · `scripts/seal_area_cohort.py:88`–91.\n```\nlhs00_029:  atom_2690000.liggghts / contact_2840000.liggghts   → 파일명 step 차 = -150000\n127쌍 분포: 같은 step 65 · atom 이 5,000 뒤 61 · 이 역방향 150,000 **1**\n```\n⇒ SELF-30 의 mono 30 · 5,000-step 대조를 **이 쌍의 인증으로 쓸 수 없다**.\n⚠ **실제 σ 오염을 주장하지 않는다** — raw 의 `ITEM: TIMESTEP` 본문을 읽지 못했으므로 파일명 오기인지\n서로 다른 상태인지는 UNVERIFIABLE.  ⚠ 이 쌍은 2026-09-14 에 ibb 실행 디렉터리에서 contact 전용으로\n따로 받아온 것이라 (봉인 당시 `~/lhs_stage` 가 완주 전 스냅샷이었다) **수신 경로가 나머지 126쌍과 다르다**.\n처방: S3 입력으로 쓰기 전에 **실제 헤더·완료 상태를 검증**하거나 사전 고정한 pair 선택 규칙으로 재봉인.\n해결되지 않으면 `REFUSED_INPUT` 으로 남긴다.\n★ 곁가지 (같은 도구, P2): `seal_area_cohort.py:107`–114 는 contact 가 없으면 **존재하는 atom 의 경로·지문도\n비운다** ⇒ 거짓 RAW_OK 는 아니지만 **pending 입력 이력이 사라진다**.  결손 3행이 지금 그 상태다."
   }
  ]
 }
