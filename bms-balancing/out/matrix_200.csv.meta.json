@@ -7,17 +7,61 @@
   "seed": 0,
   "w_dqdv_note": "명령별",
   "data_root": "/mnt/d/가형 관련/degradation mode",
-  "run_id": "551123db351f4e7ca56b7a28553a8af3",
-  "sha256": "cadd9de5706b8f15ab8d1a7fc272c90c81576dc2e7b6dd1b7bae92e3ed09ef07",
-  "git_commit": "61fcf4ba051bc0a1f5bc5f62e082916727edb462",
+  "run_id": "3f7aa78a8e0a4d2783b1f8698d5d5592",
+  "sha256": "6303ca2bf4d492c8804eec9e27c75a703df09dd0bd44fcbbbede60b1fda38dd9",
+  "argv": [
+    "env",
+    "PYTHONUNBUFFERED=1",
+    "python3",
+    "-m",
+    "bms_balancing.verify",
+    "matrix",
+    "--state",
+    "200",
+    "--starts",
+    "24",
+    "--seed",
+    "0",
+    "--out",
+    "out_u18b/matrix_200.csv"
+  ],
+  "roster": {
+    "kind": "matrix",
+    "rows": 32,
+    "half_cell": [
+      "GITT",
+      "step_005C"
+    ],
+    "si": [
+      "Baggetto",
+      "Friedrich",
+      "Jiang",
+      "Kunz",
+      "Li",
+      "Lu",
+      "Sethuraman",
+      "Wetjen"
+    ],
+    "w_dqdv": [
+      "0.0",
+      "1.0"
+    ],
+    "gamma_Si": [
+      0.0,
+      0.5,
+      32
+    ]
+  },
+  "si_source_note": "wrapper 의 SI 환경값 — 본문의 exact 명부는 roster (matrix 는 Si 전부를 돈다)",
+  "git_commit": "066866595ab71827ef2d98e7a6cf26136df21495",
   "git_dirty": false,
   "git_modified_outputs": [],
   "git_modified_code": [],
-  "git_commit_at_start": "61fcf4ba051bc0a1f5bc5f62e082916727edb462",
+  "git_commit_at_start": "066866595ab71827ef2d98e7a6cf26136df21495",
   "git_dirty_at_start": false,
   "git_modified_code_at_start": [],
   "git_state_changed_during_run": false,
-  "started_utc": "2026-09-11T21:56:59.930024+00:00",
+  "started_utc": "2026-09-14T02:28:11.390971+00:00",
   "env": {
     "python": "3.12.3",
     "numpy": "2.5.3",
@@ -25,11 +69,5 @@
     "pandas": "3.0.5",
     "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
   },
-  "created_utc": "2026-09-11T22:30:13.684103+00:00",
-  "bytes_renormalized": {
-    "what": "CRLF→LF",
-    "why": "U14-01 — writer 가 CRLF 를 썼고 git 은 LF 로 저장한다 (서명이 fresh clone 에서 깨진다)",
-    "verified": "기록된 sha256 이 지금 bytes 의 줄끝 변형과 맞는다 (내용은 같고 줄끝만 다르다)",
-    "utc": "2026-09-12T11:28:42.492737+00:00"
-  }
+  "created_utc": "2026-09-14T03:00:56.459737+00:00"
 }

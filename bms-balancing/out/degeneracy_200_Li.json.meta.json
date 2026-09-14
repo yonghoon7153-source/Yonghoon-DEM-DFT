@@ -7,17 +7,59 @@
   "seed": 0,
   "w_dqdv_note": "명령별",
   "data_root": "/mnt/d/가형 관련/degradation mode",
-  "run_id": "f0205d34ce16409986e7a465467b5725",
-  "sha256": "f5798948ec3adeaa27e9cdea2e2d033278d2c55090a64ca0f6ab080b1f2dd7b2",
-  "git_commit": "61fcf4ba051bc0a1f5bc5f62e082916727edb462",
+  "run_id": "1f01ad071e304a62abbe15162c60a7bc",
+  "sha256": "016e297aea10393c1dc270960c7c609fbd419ae0f5f1f71892801710e56e90a2",
+  "argv": [
+    "env",
+    "PYTHONUNBUFFERED=1",
+    "python3",
+    "-m",
+    "bms_balancing.verify",
+    "degeneracy",
+    "--state",
+    "200",
+    "--si-source",
+    "Li",
+    "--source",
+    "GITT",
+    "--w-dqdv",
+    "0",
+    "--tol",
+    "0.01",
+    "--starts",
+    "24",
+    "--seed",
+    "0",
+    "--grid",
+    "21",
+    "--samples",
+    "400",
+    "--out",
+    "out_u18b/degeneracy_200_Li.json"
+  ],
+  "roster": {
+    "kind": "degeneracy",
+    "state": "200",
+    "half_cell": [
+      "GITT"
+    ],
+    "si": [
+      "Li"
+    ],
+    "w_dqdv": [
+      0.0
+    ]
+  },
+  "si_source_note": "wrapper 의 SI 환경값 — 본문의 exact 명부는 roster (matrix 는 Si 전부를 돈다)",
+  "git_commit": "066866595ab71827ef2d98e7a6cf26136df21495",
   "git_dirty": false,
   "git_modified_outputs": [],
   "git_modified_code": [],
-  "git_commit_at_start": "61fcf4ba051bc0a1f5bc5f62e082916727edb462",
+  "git_commit_at_start": "066866595ab71827ef2d98e7a6cf26136df21495",
   "git_dirty_at_start": false,
   "git_modified_code_at_start": [],
   "git_state_changed_during_run": false,
-  "started_utc": "2026-09-11T21:53:15.128917+00:00",
+  "started_utc": "2026-09-14T02:24:25.278757+00:00",
   "env": {
     "python": "3.12.3",
     "numpy": "2.5.3",
@@ -25,5 +67,5 @@
     "pandas": "3.0.5",
     "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
   },
-  "created_utc": "2026-09-11T21:56:59.848264+00:00"
+  "created_utc": "2026-09-14T02:28:11.296598+00:00"
 }

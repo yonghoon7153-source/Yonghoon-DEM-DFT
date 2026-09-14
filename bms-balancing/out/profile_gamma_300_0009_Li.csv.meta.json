@@ -7,17 +7,54 @@
   "seed": 0,
   "w_dqdv_note": "명령별",
   "data_root": "/mnt/d/가형 관련/degradation mode",
-  "run_id": "a4744e9ed55544a6b3fd5c643ca711c3",
-  "sha256": "8b3bb5c9bfb40f585265aa55fabe872d570fdfe92a7b5579f802162dcf96ec94",
-  "git_commit": "61fcf4ba051bc0a1f5bc5f62e082916727edb462",
+  "run_id": "89458e098412453eaa01beb87e84c9d1",
+  "sha256": "75fbf4739caaa4b91a940c69bb42ff1b8341b0ffaad9537420f6fe9fc29686a8",
+  "argv": [
+    "env",
+    "PYTHONUNBUFFERED=1",
+    "python3",
+    "-m",
+    "bms_balancing.verify",
+    "profile",
+    "--state",
+    "300_0009",
+    "--si-source",
+    "Li",
+    "--source",
+    "GITT",
+    "--w-dqdv",
+    "0",
+    "--starts",
+    "24",
+    "--seed",
+    "0",
+    "--grid",
+    "21",
+    "--out",
+    "out_u18b/profile_gamma_300_0009_Li.csv"
+  ],
+  "roster": {
+    "kind": "profile",
+    "rows": 21,
+    "profile_scale": [
+      "global"
+    ],
+    "gamma_Si": [
+      0.0,
+      0.5,
+      21
+    ]
+  },
+  "si_source_note": "wrapper 의 SI 환경값 — 본문의 exact 명부는 roster (matrix 는 Si 전부를 돈다)",
+  "git_commit": "066866595ab71827ef2d98e7a6cf26136df21495",
   "git_dirty": false,
   "git_modified_outputs": [],
   "git_modified_code": [],
-  "git_commit_at_start": "61fcf4ba051bc0a1f5bc5f62e082916727edb462",
+  "git_commit_at_start": "066866595ab71827ef2d98e7a6cf26136df21495",
   "git_dirty_at_start": false,
   "git_modified_code_at_start": [],
   "git_state_changed_during_run": false,
-  "started_utc": "2026-09-11T23:09:57.341734+00:00",
+  "started_utc": "2026-09-14T03:41:06.190754+00:00",
   "env": {
     "python": "3.12.3",
     "numpy": "2.5.3",
@@ -25,11 +62,5 @@
     "pandas": "3.0.5",
     "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
   },
-  "created_utc": "2026-09-11T23:13:13.270665+00:00",
-  "bytes_renormalized": {
-    "what": "CRLF→LF",
-    "why": "U14-01 — writer 가 CRLF 를 썼고 git 은 LF 로 저장한다 (서명이 fresh clone 에서 깨진다)",
-    "verified": "기록된 sha256 이 지금 bytes 의 줄끝 변형과 맞는다 (내용은 같고 줄끝만 다르다)",
-    "utc": "2026-09-12T11:28:42.493552+00:00"
-  }
+  "created_utc": "2026-09-14T03:44:20.643421+00:00"
 }

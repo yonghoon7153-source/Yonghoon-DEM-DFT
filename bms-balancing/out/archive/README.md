@@ -7,6 +7,7 @@
 |---|---|---|
 | `matrix_300_0009_premultistart.csv` | `multistart` 가 **비정상 종료한 optimizer 결과를 성공으로 채택**하던 판의 `matrix_300_0009.csv` (커밋 `bfc4623^` 의 것) | `FINDINGS.md` §4-0 (수정이 답을 최대 5.9 %p 움직였다) · §3-3 각주 |
 | `degeneracy_300_0009_Li_v2.json` · `matrix_300_0009_v2.csv` | multistart 수정 **후** 첫 재실행 (2026-09-10, meta·run_id 없음). U14 재실행이 이 둘을 **비트 단위로 재현**해 정본은 unversioned `degeneracy_300_0009_Li.json`·`matrix_300_0009.csv` (meta·env·inputs_sha 포함) 로 넘어갔다 (Codex R6-04) | 역사 대조용. FINDINGS 의 인용은 unversioned 로 옮겼다 |
+| `legacy_r6_u14/` (26 파일) | **U18 승격 전의 정본** — 게시·서명 계약이 R13 이전이라 receipt·env·argv·roster 가 없다 (`check_u14 --new out --schema-only` 가 rc 2 로 말하던 그 묶음). U18b 재실행이 **같은 숫자**를 새 계약으로 다시 서명해 정본이 됐고, 이것은 조건 7 의 보존 요구("기존 provenance-incomplete out/ 는 보존")대로 얼려 둔다 | `R13_RESPONSE.md` §8 · `WORKING_STATE.md` U18 런북 |
 
 ## 왜 여기로 왔나 (U14-05, 2026-09-12)
 

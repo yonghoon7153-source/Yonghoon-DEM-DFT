@@ -1,0 +1,110 @@
+{
+  "artifact": "ne_shape_GITT_Li.csv",
+  "half_cell_source": "GITT",
+  "si_source": "Li",
+  "grid_n": 400,
+  "grid_range": [
+    0.02,
+    0.98
+  ],
+  "gamma_from": "out/matrix_<state>.csv 의 gamma_Si(대상)·ref_gamma_Si(기준)",
+  "note": "measured_shape_mV 는 정규화 뒤 값 — cap_delta_pct 와 함께 읽을 것",
+  "gamma_grid": [
+    0.0,
+    0.5,
+    501
+  ],
+  "headroom_note": "gamma_witness 는 (a) 이상의 진폭을 내는 합법 γ 의 존재 증인(격자)이지 모양 일치가 아니다; 빈 칸 = 격자에서 없음 (R3-03)",
+  "git_commit": "61fcf4ba051bc0a1f5bc5f62e082916727edb462",
+  "git_dirty": false,
+  "git_modified_outputs": [
+    "out/degeneracy_100_Li.json",
+    "out/degeneracy_200_Li.json",
+    "out/degeneracy_300_0009_Li.json",
+    "out/degeneracy_300_0147_Li.json",
+    "out/degeneracy_300_0147_Li.json.meta.json",
+    "out/matrix_100.csv",
+    "out/matrix_200.csv",
+    "out/matrix_300_0009.csv",
+    "out/matrix_300_0147.csv",
+    "out/matrix_300_0147.csv.meta.json",
+    "out/profile_gamma_100_Li.csv",
+    "out/profile_gamma_200_Li.csv",
+    "out/profile_gamma_300_0009_Li.csv",
+    "out/profile_gamma_300_0147_Li.csv",
+    "out/profile_gamma_300_0147_Li.csv.meta.json"
+  ],
+  "git_modified_code": [],
+  "consumed_inputs": {
+    "100": {
+      "matrix": {
+        "file": "out/matrix_100.csv",
+        "sha256": "8678f77e961ebaee5ec851f4f153497260ffe0e640fa7f4a0d05fc0b722e54a8",
+        "row": {
+          "index": 8,
+          "half_cell": "GITT",
+          "si": "Li",
+          "w_dqdv": "0.0",
+          "run_id": "3c062de6a02641828269ce6bc5ab0688"
+        }
+      },
+      "half_cell": {
+        "path": "/mnt/d/가형 관련/degradation mode/data/half_cell/GITT/100.xlsx",
+        "sha256": "5a397e691fe9d3ddf08548ba9975d73d907a6d4f2d8d80610c9d6b3487ce98e6"
+      }
+    },
+    "200": {
+      "matrix": {
+        "file": "out/matrix_200.csv",
+        "sha256": "dc62500f65502a4efb8753616cf2a592cdef41b324b8d3f6dcf2429786ab201f",
+        "row": {
+          "index": 8,
+          "half_cell": "GITT",
+          "si": "Li",
+          "w_dqdv": "0.0",
+          "run_id": "551123db351f4e7ca56b7a28553a8af3"
+        }
+      },
+      "half_cell": {
+        "path": "/mnt/d/가형 관련/degradation mode/data/half_cell/GITT/200.xlsx",
+        "sha256": "e81325a863f37c08fe8bc493e09b578c6af4462f1e09e35508e5c84f26fd91bb"
+      }
+    },
+    "300_0009": {
+      "matrix": {
+        "file": "out/matrix_300_0009_v2.csv",
+        "sha256": "5478e33f5dba8ccc7a7aa9d2aabb3d4d607b14bbd7d44922f6959e866a8fec07",
+        "row": {
+          "index": 8,
+          "half_cell": "GITT",
+          "si": "Li",
+          "w_dqdv": "0.0",
+          "run_id": null
+        }
+      },
+      "half_cell": {
+        "path": "/mnt/d/가형 관련/degradation mode/data/half_cell/GITT/300_0009.xlsx",
+        "sha256": "65570dc9e6d772eea95a3778e46c91bc8380cb0d6d00cdf3e7dbeb7dfe324887"
+      }
+    },
+    "pristine": {
+      "half_cell": {
+        "path": "/mnt/d/가형 관련/degradation mode/data/half_cell/GITT/pristine.xlsx",
+        "sha256": "2c4a5b692041ee86e59658adf43beedc25943c32bb54e1be779379d2282c9674"
+      }
+    },
+    "literature": {
+      "gr": {
+        "path": "/mnt/d/가형 관련/degradation mode/data/literature/Si_Gr_literature_OCP.xlsx",
+        "sha256": "f8b9d1d60b827547ee28a68e8aeac99d4c0b567835e28e28266f89bbd2cfc0d4"
+      },
+      "si": {
+        "path": "/mnt/d/가형 관련/degradation mode/data/literature/Si_OCP_sources/Li.csv",
+        "sha256": "ca8884e3517f8ceb6f61b09193b3ac42f172e8ee2fae0b6c0d45e997539d08fe"
+      }
+    }
+  },
+  "run_id": "17749f76588f4138a0e846318a1bdc39",
+  "created_utc": "2026-09-11T23:41:36.253738+00:00",
+  "sha256": "4430662a35c45ec2c7c4feec557ce42056c56e14e0905c4bb717b16cb119b859"
+}

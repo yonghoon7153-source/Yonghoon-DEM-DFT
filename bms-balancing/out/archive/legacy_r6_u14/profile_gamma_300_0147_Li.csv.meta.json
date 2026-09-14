@@ -1,0 +1,35 @@
+{
+  "artifact": "profile_gamma_300_0147_Li.csv",
+  "state": "300_0147",
+  "half_cell_source": "step_005C",
+  "si_source": "Li",
+  "starts": 24,
+  "seed": 0,
+  "w_dqdv_note": "명령별",
+  "data_root": "/mnt/d/가형 관련/degradation mode",
+  "run_id": "4f9729a20bec4216b6e3fa48c7ee0566",
+  "sha256": "19f24dbf4b97e7ed7223b25509613071cb650b04d53443fc468ef94880b52bf2",
+  "git_commit": "61fcf4ba051bc0a1f5bc5f62e082916727edb462",
+  "git_dirty": false,
+  "git_modified_outputs": [],
+  "git_modified_code": [],
+  "git_commit_at_start": "61fcf4ba051bc0a1f5bc5f62e082916727edb462",
+  "git_dirty_at_start": false,
+  "git_modified_code_at_start": [],
+  "git_state_changed_during_run": false,
+  "started_utc": "2026-09-11T23:36:56.042356+00:00",
+  "env": {
+    "python": "3.12.3",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pandas": "3.0.5",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+  },
+  "created_utc": "2026-09-11T23:41:35.075612+00:00",
+  "bytes_renormalized": {
+    "what": "CRLF→LF",
+    "why": "U14-01 — writer 가 CRLF 를 썼고 git 은 LF 로 저장한다 (서명이 fresh clone 에서 깨진다)",
+    "verified": "기록된 sha256 이 지금 bytes 의 줄끝 변형과 맞는다 (내용은 같고 줄끝만 다르다)",
+    "utc": "2026-09-12T11:28:42.493646+00:00"
+  }
+}

@@ -1,5 +1,49 @@
 {
   "artifact": "ne_shape_GITT_Li.csv",
+  "run_id": "b4b58d4bef68431d8c41d2b3dd4d5747",
+  "sha256": "c3f4c45611d655cab0edd057b6a0e422c780070511fff39e2d134c2289a2205c",
+  "roster": {
+    "kind": "shape",
+    "rows": 3,
+    "state": [
+      "100",
+      "200",
+      "300_0009"
+    ],
+    "paired": [
+      "100",
+      "200",
+      "300_0009"
+    ]
+  },
+  "git_commit": "419c1abaeec9fa981d7f5829d5803167288f7f1e",
+  "git_dirty": false,
+  "git_modified_outputs": [],
+  "git_modified_code": [],
+  "git_commit_at_start": "419c1abaeec9fa981d7f5829d5803167288f7f1e",
+  "git_dirty_at_start": false,
+  "git_modified_code_at_start": [],
+  "git_state_changed_during_run": false,
+  "started_utc": "2026-09-14T04:53:56.719885+00:00",
+  "env": {
+    "python": "3.12.3",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pandas": "3.0.5",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+  },
+  "argv": [
+    "scripts/ne_shape.py",
+    "--out-dir",
+    "out_u18b",
+    "--write",
+    "out_u18b",
+    "--source",
+    "GITT",
+    "--si-source",
+    "Li"
+  ],
+  "created_utc": "2026-09-14T04:53:56.900224+00:00",
   "half_cell_source": "GITT",
   "si_source": "Li",
   "grid_n": 400,
@@ -7,7 +51,7 @@
     0.02,
     0.98
   ],
-  "gamma_from": "out/matrix_<state>.csv 의 gamma_Si(대상)·ref_gamma_Si(기준)",
+  "gamma_from": "out_u18b/matrix_<state>.csv 의 gamma_Si(대상)·ref_gamma_Si(기준)",
   "note": "measured_shape_mV 는 정규화 뒤 값 — cap_delta_pct 와 함께 읽을 것",
   "gamma_grid": [
     0.0,
@@ -15,37 +59,17 @@
     501
   ],
   "headroom_note": "gamma_witness 는 (a) 이상의 진폭을 내는 합법 γ 의 존재 증인(격자)이지 모양 일치가 아니다; 빈 칸 = 격자에서 없음 (R3-03)",
-  "git_commit": "61fcf4ba051bc0a1f5bc5f62e082916727edb462",
-  "git_dirty": false,
-  "git_modified_outputs": [
-    "out/degeneracy_100_Li.json",
-    "out/degeneracy_200_Li.json",
-    "out/degeneracy_300_0009_Li.json",
-    "out/degeneracy_300_0147_Li.json",
-    "out/degeneracy_300_0147_Li.json.meta.json",
-    "out/matrix_100.csv",
-    "out/matrix_200.csv",
-    "out/matrix_300_0009.csv",
-    "out/matrix_300_0147.csv",
-    "out/matrix_300_0147.csv.meta.json",
-    "out/profile_gamma_100_Li.csv",
-    "out/profile_gamma_200_Li.csv",
-    "out/profile_gamma_300_0009_Li.csv",
-    "out/profile_gamma_300_0147_Li.csv",
-    "out/profile_gamma_300_0147_Li.csv.meta.json"
-  ],
-  "git_modified_code": [],
   "consumed_inputs": {
     "100": {
       "matrix": {
-        "file": "out/matrix_100.csv",
-        "sha256": "8678f77e961ebaee5ec851f4f153497260ffe0e640fa7f4a0d05fc0b722e54a8",
+        "file": "out_u18b/matrix_100.csv",
+        "sha256": "16c8849768d26893b346242f6b9dc2aa131bdf968cc530530bd90b478dafc979",
         "row": {
           "index": 8,
           "half_cell": "GITT",
           "si": "Li",
           "w_dqdv": "0.0",
-          "run_id": "3c062de6a02641828269ce6bc5ab0688"
+          "run_id": "942578bbfaa54c65ad209d69b5a85e7b"
         }
       },
       "half_cell": {
@@ -55,14 +79,14 @@
     },
     "200": {
       "matrix": {
-        "file": "out/matrix_200.csv",
-        "sha256": "dc62500f65502a4efb8753616cf2a592cdef41b324b8d3f6dcf2429786ab201f",
+        "file": "out_u18b/matrix_200.csv",
+        "sha256": "6303ca2bf4d492c8804eec9e27c75a703df09dd0bd44fcbbbede60b1fda38dd9",
         "row": {
           "index": 8,
           "half_cell": "GITT",
           "si": "Li",
           "w_dqdv": "0.0",
-          "run_id": "551123db351f4e7ca56b7a28553a8af3"
+          "run_id": "3f7aa78a8e0a4d2783b1f8698d5d5592"
         }
       },
       "half_cell": {
@@ -72,14 +96,14 @@
     },
     "300_0009": {
       "matrix": {
-        "file": "out/matrix_300_0009_v2.csv",
-        "sha256": "5478e33f5dba8ccc7a7aa9d2aabb3d4d607b14bbd7d44922f6959e866a8fec07",
+        "file": "out_u18b/matrix_300_0009.csv",
+        "sha256": "709504f6101d22ade0698e541e3b9fc3b753c27d6ca950b04d2629d5ddb61d94",
         "row": {
           "index": 8,
           "half_cell": "GITT",
           "si": "Li",
           "w_dqdv": "0.0",
-          "run_id": null
+          "run_id": "e647dccd08074588b1d5ccbc21a94f34"
         }
       },
       "half_cell": {
@@ -104,7 +128,32 @@
       }
     }
   },
-  "run_id": "17749f76588f4138a0e846318a1bdc39",
-  "created_utc": "2026-09-11T23:41:36.253738+00:00",
-  "sha256": "4430662a35c45ec2c7c4feec557ce42056c56e14e0905c4bb717b16cb119b859"
+  "pairing": {
+    "authority": [
+      "100",
+      "200",
+      "300_0009"
+    ],
+    "requested": [
+      "100",
+      "200",
+      "300_0009"
+    ],
+    "requested_from": "D.declared_states(GITT) — 선언 − 알려진 부재",
+    "available": [
+      "100",
+      "200",
+      "300_0009"
+    ],
+    "missing_input": [],
+    "paired": [
+      "100",
+      "200",
+      "300_0009"
+    ],
+    "missing": [],
+    "rejected_matrix": {},
+    "note": "measured_* 는 available(입력 있는 requested) 전부에서, gamma_*·ratio 는 paired 에서만 계산한 값이다; missing_input 은 측정조차 없다 (Codex R8-03 · R9-04); rejected_matrix 는 공용 validator 가 거부한 상태다 (자체 리뷰 C17)"
+  },
+  "status": "complete"
 }

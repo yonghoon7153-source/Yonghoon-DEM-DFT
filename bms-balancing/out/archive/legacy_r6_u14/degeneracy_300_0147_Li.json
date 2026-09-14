@@ -8,7 +8,7 @@
   "seed": 0,
   "n_grid": 21,
   "n_samples": 400,
-  "run_id": "4a562f40a20849018b17c1fba76ec9cd",
+  "run_id": "e6993e80bdee4d4e8888b04a9b3897d6",
   "env": {
     "python": "3.12.3",
     "numpy": "2.5.3",
@@ -26,13 +26,13 @@
       "sha256": "d6cb69d924df2239fedb4822ddc27e8d02628a08ba130151196e8ed2f25f4d50"
     },
     "literature": {
-      "gr": {
-        "path": "/mnt/d/가형 관련/degradation mode/data/literature/Si_Gr_literature_OCP.xlsx",
-        "sha256": "f8b9d1d60b827547ee28a68e8aeac99d4c0b567835e28e28266f89bbd2cfc0d4"
-      },
       "si": {
         "path": "/mnt/d/가형 관련/degradation mode/data/literature/Si_OCP_sources/Li.csv",
         "sha256": "ca8884e3517f8ceb6f61b09193b3ac42f172e8ee2fae0b6c0d45e997539d08fe"
+      },
+      "gr": {
+        "path": "/mnt/d/가형 관련/degradation mode/data/literature/Si_Gr_literature_OCP.xlsx",
+        "sha256": "f8b9d1d60b827547ee28a68e8aeac99d4c0b567835e28e28266f89bbd2cfc0d4"
       }
     }
   },
@@ -46,17 +46,17 @@
       "sha256": "d6cb69d924df2239fedb4822ddc27e8d02628a08ba130151196e8ed2f25f4d50"
     },
     "literature": {
-      "gr": {
-        "path": "/mnt/d/가형 관련/degradation mode/data/literature/Si_Gr_literature_OCP.xlsx",
-        "sha256": "f8b9d1d60b827547ee28a68e8aeac99d4c0b567835e28e28266f89bbd2cfc0d4"
-      },
       "si": {
         "path": "/mnt/d/가형 관련/degradation mode/data/literature/Si_OCP_sources/Li.csv",
         "sha256": "ca8884e3517f8ceb6f61b09193b3ac42f172e8ee2fae0b6c0d45e997539d08fe"
+      },
+      "gr": {
+        "path": "/mnt/d/가형 관련/degradation mode/data/literature/Si_Gr_literature_OCP.xlsx",
+        "sha256": "f8b9d1d60b827547ee28a68e8aeac99d4c0b567835e28e28266f89bbd2cfc0d4"
       }
     }
   },
-  "inputs_sha": "4581f9558b3e",
+  "inputs_sha": "9cebc0bf4cd5",
   "scale_audit": {
     "pocv": {
       "n": 50,
