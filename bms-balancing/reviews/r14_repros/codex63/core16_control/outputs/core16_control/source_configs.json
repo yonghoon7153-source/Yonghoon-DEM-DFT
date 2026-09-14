@@ -1,0 +1,100 @@
+[
+  {
+    "name": "Caps300R320H0125",
+    "physical_elements_total": 300,
+    "physical_elements_by_domain": [
+      120,
+      60,
+      120
+    ],
+    "particle_elements_each": 320,
+    "seconds": 5,
+    "early_cap_s": 0.000125,
+    "early_cap_s_exact": "0.000125",
+    "later_cap_s": 0.1,
+    "cap_transition_time_s": 0.1,
+    "maxstepexpressionbdf": "if(t<0.1[s],0.000125[s],0.1[s])",
+    "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "relative_path": "radial320_timecap/Caps300R320H0125.java",
+    "parameters_unchanged": true,
+    "ancestor_identity": {
+      "name": "Caps300R320H0250",
+      "source_path": "outputs/comsol63/radial320/Caps300R320H0250.java",
+      "source_sha256": "837f8b03ff3381bb1aea6397935d0079b032f5e4aea007b32d1ebf7c40775b2e",
+      "job_id": "f0db6d080ad04045a2b43dc5a51d89b2"
+    },
+    "execution_cores": 2
+  },
+  {
+    "name": "Caps300R320H0125C16",
+    "physical_elements_total": 300,
+    "physical_elements_by_domain": [
+      120,
+      60,
+      120
+    ],
+    "particle_elements_each": 320,
+    "seconds": 5,
+    "early_cap_s": 0.000125,
+    "early_cap_s_exact": "0.000125",
+    "later_cap_s": 0.1,
+    "cap_transition_time_s": 0.1,
+    "maxstepexpressionbdf": "if(t<0.1[s],0.000125[s],0.1[s])",
+    "source_sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e",
+    "relative_path": "core16_control/Caps300R320H0125C16.java",
+    "parameters_unchanged": true,
+    "baseline_identity": {
+      "name": "Caps300R320H0125",
+      "source_path": "outputs/comsol63/radial320_timecap/Caps300R320H0125.java",
+      "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+      "job_id": "18a00b03e38d4694b9ba30d88e7008f4",
+      "cores": 2
+    },
+    "baseline_source_path": "outputs/comsol63/radial320_timecap/Caps300R320H0125.java",
+    "baseline_source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "execution_cores": 16
+  },
+  {
+    "name": "Caps300R320LateCapA5s",
+    "physical_elements_total": 300,
+    "physical_elements_by_domain": [
+      120,
+      60,
+      120
+    ],
+    "particle_elements_each": 320,
+    "seconds": 5,
+    "early_cap_s": 0.000125,
+    "early_cap_s_exact": "0.000125",
+    "maxstepexpressionbdf": "if(t<0.1[s],0.000125[s],if(t<1[s],0.005[s],0.025[s]))",
+    "source_sha256": "a03abb905454de63b34b55e314ed09f3cb6414d58444e8b605962166a872531f",
+    "relative_path": "late_cap_a/Caps300R320LateCapA5s.java",
+    "parameters_unchanged": true,
+    "baseline_identity": {
+      "name": "Caps300R320H0125",
+      "source_path": "outputs/comsol63/radial320_timecap/Caps300R320H0125.java",
+      "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+      "job_id": "18a00b03e38d4694b9ba30d88e7008f4"
+    },
+    "baseline_source_path": "outputs/comsol63/radial320_timecap/Caps300R320H0125.java",
+    "baseline_source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "cap_schedule": [
+      {
+        "start_s": "0",
+        "end_s": "0.1",
+        "cap_s": "0.000125"
+      },
+      {
+        "start_s": "0.1",
+        "end_s": "1",
+        "cap_s": "0.005"
+      },
+      {
+        "start_s": "1",
+        "end_s": "5",
+        "cap_s": "0.025"
+      }
+    ],
+    "execution_cores": 16
+  }
+]

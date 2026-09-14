@@ -1,0 +1,68 @@
+{
+  "recorded_at_utc": "2026-09-14T11:10:48.359074+00:00",
+  "record_type": "User-reported receiving-side verification, appended after generation; original generated receipt not edited",
+  "received_archive": {
+    "name": "COMSOL63_R320_TIMECAP_HANDOFF.zip",
+    "bytes": 632054218,
+    "sha256": "e38968f13e3fae64948c2234fb020cad1d5f1119fc8535aa7fc8766e69274f67",
+    "payload_count": 160,
+    "manifest_additional_entries": 1,
+    "user_reported_all_payload_size_sha_crc_match": true,
+    "user_reported_historical333_match": true
+  },
+  "user_reported_numeric_check": {
+    "requested_times": 187,
+    "exact_common_stored_times": 565,
+    "windows_s": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        5
+      ]
+    ],
+    "max_abs_voltage_difference_mV": "0.0012699200233",
+    "max_pointwise_surface_x_difference": "2.1349484521e-8",
+    "voltage_peak_time_s": "0.002",
+    "surface_peak_time_s": "0.002",
+    "surface_peak_electrode": "N",
+    "surface_peak_coordinate_um": "52",
+    "magnitude_ratio_to_prior_radial_percent": "0.205810344250",
+    "ratio_is_order": false
+  },
+  "user_reported_source_native_confirmation": {
+    "readable_properties": 1143,
+    "only_property_change": "early cap expression",
+    "source_change_counts": {
+      "class_and_label": 2,
+      "actual_cap_and_printed_cap": 2
+    },
+    "accepted_intervals_before": 592,
+    "accepted_intervals_after": 986,
+    "boundary_0p1_s_confirmed": true
+  },
+  "external_preservation_scope": {
+    "historical_local_inventory_count": 967,
+    "direct_archive_members_from_inventory": 56,
+    "unchanged_direct_members": 55,
+    "changed_plan_before_copy_verified": 1,
+    "all967_externally_verified": false,
+    "limit": "Only 56 listed current member paths are directly represented: 55 unchanged and one changed NEXT_RUN_PLAN with matching historical before bytes in its backup. Historical333 archived-byte confirmation is separate, not additional current paths."
+  },
+  "local_checks_performed_now": {
+    "generated_archive_identity_matches_user_report": true,
+    "manifest_identity_matches_original": true,
+    "direct56_members_checked_against967_ledger": true,
+    "original_generation_receipt": {
+      "path": "outputs/COMSOL63_R320_TIMECAP_HANDOFF_RECEIPT.json",
+      "bytes": 1411,
+      "sha256": "584131590642a4c6169709538564cb8559bc211fc8a3a133e10c41de46c5f7c8"
+    },
+    "old_native_job_count": 30,
+    "new_COMSOL_runs": 0
+  },
+  "status": "Initial time-cap sampled sensitivity accepted only; overall convergence incomplete; all further simulation remains unapproved",
+  "unresolved_prior_TIME_CAPS_raw_zip_difference_cause": true
+}

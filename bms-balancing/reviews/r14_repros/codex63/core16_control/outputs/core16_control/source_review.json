@@ -1,0 +1,26 @@
+{
+  "new_name": "Caps300R320H0125C16",
+  "source_sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e",
+  "baseline_identity": {
+    "name": "Caps300R320H0125",
+    "source_path": "outputs/comsol63/radial320_timecap/Caps300R320H0125.java",
+    "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "job_id": "18a00b03e38d4694b9ba30d88e7008f4",
+    "cores": 2
+  },
+  "reverse_transform_exact_equal": true,
+  "only_source_changes": [
+    "Java class and model label identifiers, exactly2 occurrences"
+  ],
+  "cap_expression_unchanged": "if(t<0.1[s],0.000125[s],0.1[s])",
+  "runAll_calls": 1,
+  "external_runtime_inputs": [],
+  "all_numerical_and_physical_source_conditions_identical_to_H0125": true,
+  "execution_resources": {
+    "cores": 16,
+    "worker_timeout_seconds": 1800,
+    "physical_seconds": 5,
+    "start_from_t0_same_initialization": true,
+    "mid_state_restart": false
+  }
+}

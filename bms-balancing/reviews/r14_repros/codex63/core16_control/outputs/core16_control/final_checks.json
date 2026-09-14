@@ -1,0 +1,75 @@
+{
+  "checked_at_utc": "2026-09-14T12:48:09.211064+00:00",
+  "status": "MANDATORY_CHECKS_COMPLETE",
+  "new_name": "Caps300R320H0125C16",
+  "new_job_id": "5d1a87652ed54e6a945d4f2af4aeda70",
+  "new_source_sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e",
+  "new_MPH_sha256": "725f4b9a5f33176783aad88cc1d14d4b0215b233066415f89b93679115363de4",
+  "new_MPH_bytes": 1266675667,
+  "exactly_one_new_authorized_job": true,
+  "existing_reference_jobs_rerun": false,
+  "prior_job_count": 31,
+  "prior_native_files_rehashed_unchanged": 241,
+  "baseline_atomic_identity_verified": {
+    "name": "Caps300R320H0125",
+    "source_path": "outputs/comsol63/radial320_timecap/Caps300R320H0125.java",
+    "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "job_id": "18a00b03e38d4694b9ba30d88e7008f4",
+    "cores": 2
+  },
+  "property_count_each": 1143,
+  "core_pair_Time_Variables_differences": 0,
+  "same16_cap_pair_property_differences": {
+    "sol1/t1/maxstepexpressionbdf": {
+      "control16": [
+        "String",
+        "[if(t<0.1[s],0.000125[s],0.1[s])]"
+      ],
+      "A16": [
+        "String",
+        "[if(t<0.1[s],0.000125[s],if(t<1[s],0.005[s],0.025[s]))]"
+      ]
+    }
+  },
+  "all_three_native_step_caps_pass": true,
+  "comparison_results": [
+    {
+      "kind": "core_control_2_to_16",
+      "first": "Caps300R320H0125",
+      "second": "Caps300R320H0125C16",
+      "sampled_within_limits": true
+    },
+    {
+      "kind": "late_cap_at_16_cores",
+      "first": "Caps300R320H0125C16",
+      "second": "Caps300R320LateCapA5s",
+      "sampled_within_limits": true
+    }
+  ],
+  "three_case_common_times": 986,
+  "three_case_identity_is_arithmetic_only": true,
+  "general_core_by_cap_interaction_absence_proven": false,
+  "true_error_or_overall_convergence_established": false,
+  "local_inventory_before_count": 1247,
+  "unchanged_current_bytes_count": 1246,
+  "authorized_changes_with_before_bytes_preserved": [
+    {
+      "path": "outputs/NEXT_RUN_PLAN.md",
+      "before_bytes": 5386,
+      "before_sha256": "1e243f6952674657d6d0e551ae44e53037b4c3e8c3e9e9848d6cbbd96fd4b000",
+      "after_bytes": 6328,
+      "after_sha256": "7c42da19da239591f7a269efbdec30e413ec5b9255212bca7446c05a96d5fb04",
+      "before_backup_path": "outputs/core16_control/NEXT_RUN_PLAN_before_core16_control.md"
+    }
+  ],
+  "all_existing_H0125_and_A_bytes_and_receipts_preserved": true,
+  "prior_A_corrected_wording": "후기 시간상한·코어 수 변경을 포함한 두 실행의 지정 표본 차이가 기준 이내",
+  "preservation_limit": "Current named local inventory is not wholly receiver-verified. PriorA receiver verified direct57 of1099:56unchanged plus old-plan backup1; historical333 separate.",
+  "historical_range_job_state": "failed",
+  "historical_range_classification": "INCOMPLETE_RANGE_STOP preserved; unrelated failures not reclassified",
+  "electrolyte_positive_check": "POSTPROCESSING_ONLY",
+  "new_execution_cores": 16,
+  "new_wall_clock_allowance_seconds": 1800,
+  "physical_time_seconds": 5,
+  "additional_runs": 0
+}

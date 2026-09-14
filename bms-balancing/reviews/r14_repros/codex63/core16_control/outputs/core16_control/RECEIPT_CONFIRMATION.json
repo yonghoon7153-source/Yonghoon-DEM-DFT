@@ -1,0 +1,48 @@
+{
+  "recorded_at_utc": "2026-09-14T12:29:09.826891+00:00",
+  "type": "Appended user-reported receiving-side review; original generated receipt and original A files remain unchanged",
+  "recipient_reported_archive": {
+    "path": "C:/Users/Administrator/Documents/카카오톡 받은 파일/COMSOL63_LATE_CAP_A_HANDOFF.zip",
+    "bytes": 780744308,
+    "sha256": "63bdb39c2956e1865441e26ffff344017b6c884519a7e94cf7c8acbf717e60b7",
+    "payload_count": 201,
+    "total_entries": 202,
+    "manifest_sha256": "d7c19bb00a90fe42fa647d70adc5d5b98549b60750d4cfc0f2d7bc0c4de8ccc2",
+    "user_reported_size_sha_crc_all_match": true,
+    "user_reported_no_missing_extra_duplicate_entries": true,
+    "user_reported_historical333_actual_bytes_match": true
+  },
+  "remote_verification_scope": {
+    "historical_local_inventory_count": 1099,
+    "direct_members": 57,
+    "unchanged_direct_members": 56,
+    "changed_NEXT_before_copy_matches": 1,
+    "remaining_current_local_paths_not_verified": 1042,
+    "all1099_remote_verified": false,
+    "historical333_is_separate_and_not_added_to_current_count": true,
+    "shared_prior_R320_manifest_members": 38,
+    "shared_unchanged": 37,
+    "shared_changed_only": "NEXT_RUN_PLAN.md",
+    "prior_R320_standalone_zip_reopened_in_this_remote_review": false
+  },
+  "user_reported_numeric_review": {
+    "eight_windows_match": true,
+    "early_exact_common_times": 808,
+    "early_max_voltage_difference_mV": "5.8e-12",
+    "early_max_surface_x_difference": "2.4e-15",
+    "early_difference_is_not_a_bound_on_later_core_effect": true
+  },
+  "local_checks_now": {
+    "archive_identity_checked_by_fresh_preservation": {
+      "path": "outputs/COMSOL63_LATE_CAP_A_HANDOFF.zip",
+      "bytes": 780744308,
+      "sha256": "63bdb39c2956e1865441e26ffff344017b6c884519a7e94cf7c8acbf717e60b7"
+    },
+    "manifest_intersections_recalculated": true,
+    "57_direct_and_38_shared_counts_match": true,
+    "matching_before_plan_bytes_rehashed": true,
+    "old_range_failed_status_verified": true
+  },
+  "provenance_distinction": "Receiver directly checked delivered ZIP/CSV/Java/log bytes. Local authorization conversation, duplicate absence and20-core validation rejection are delivered local records, not independently observed remote execution events. This append is based on the user report, not remote machine access.",
+  "previous_TIME_CAPS_raw_zip_difference_cause": "UNRESOLVED"
+}

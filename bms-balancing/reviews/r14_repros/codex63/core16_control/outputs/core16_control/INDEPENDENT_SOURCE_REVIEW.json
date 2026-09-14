@@ -1,0 +1,71 @@
+{
+  "status": "PASS_SOURCE_AND_SUBMISSION_IDENTITY",
+  "recorded_at_utc": "2026-09-14T12:30:43.707465+00:00",
+  "baseline_identity": {
+    "name": "Caps300R320H0125",
+    "source_path": "outputs/comsol63/radial320_timecap/Caps300R320H0125.java",
+    "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "job_id": "18a00b03e38d4694b9ba30d88e7008f4",
+    "cores": 2
+  },
+  "new_identity": {
+    "name": "Caps300R320H0125C16",
+    "source_path": "outputs/comsol63/core16_control/Caps300R320H0125C16.java",
+    "source_sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e",
+    "job_id": "5d1a87652ed54e6a945d4f2af4aeda70",
+    "cores": 16
+  },
+  "existing_A_reference": {
+    "name": "Caps300R320LateCapA5s",
+    "source_path": "outputs/comsol63/late_cap_a/Caps300R320LateCapA5s.java",
+    "source_sha256": "a03abb905454de63b34b55e314ed09f3cb6414d58444e8b605962166a872531f",
+    "job_id": "c40c05d3cfb643a4b706345637b00f57",
+    "cores": 16
+  },
+  "source_bytes": 65233,
+  "source_lines": 607,
+  "full_byte_equality_after_only_class_label_identifier2_changes": true,
+  "cap_expression_unchanged": "if(t<0.1[s],0.000125[s],0.1[s])",
+  "all_other_physical_numerical_and_export_source_bytes_identical": true,
+  "single_runAll_from_initialization": true,
+  "expected_Time_Variables_difference_count_core_pair": 0,
+  "native_runtime_confirmation": "Separate completed-job audit; not inferred from source review",
+  "resources": {
+    "baseline_cores": 2,
+    "new_requested_cores": 16,
+    "baseline_worker_timeout_s": 1200,
+    "new_worker_timeout_s": 1800,
+    "physical_time_s": 5
+  },
+  "new_native_job_ids": [
+    "5d1a87652ed54e6a945d4f2af4aeda70"
+  ],
+  "old_native_ids": 31,
+  "old_native_files_snapshotted": 241,
+  "duplicate_check_precedes_submission": true,
+  "reference_jobs_reexecuted": false,
+  "interpretation": [
+    "Previous A versus two-core baseline changed both cap and execution cores. Its original evidence is preserved.",
+    "New control versus baseline samples the core-count change at fixed original cap; one control is not a repeated-noise or interaction study.",
+    "Existing A16 versus control16 samples cap change at fixed core count; later-window state carryover remains.",
+    "Three-case signed identity is evaluated only at the same exact time/coordinate; unrelated maxima must not be summed.",
+    "No full convergence, true-error bound, CandidateB approval, retry, or additional native solve is implied."
+  ],
+  "input_sha256": {
+    "outputs/comsol63/radial320_timecap/Caps300R320H0125.java": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "outputs/comsol63/core16_control/Caps300R320H0125C16.java": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e",
+    "outputs/core16_control/comparison_contract.json": "55ef6d9213a6d7cffbd949119f5758104c0d74f176b6978ca3956bc23d38dc5f",
+    "outputs/core16_control/source_configs.json": "08d172ecdf541705c6c8420934403ccb347305314635f84833bfd6e46dcb3126",
+    "outputs/core16_control/jobs.json": "71e16369d8414416038e6e95af79e3f5e4689f629cf5ded33674bc9e6a7347d6",
+    "outputs/comsol63/.comsol-jobs/18a00b03e38d4694b9ba30d88e7008f4/request.json": "ef801e47b0d587381f444ebc093fcf6232c598fed203aa1a108f5cfc33bdfcab",
+    "outputs/comsol63/.comsol-jobs/18a00b03e38d4694b9ba30d88e7008f4/Caps300R320H0125.java": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/request.json": "e0337bf138f0ce41611e0fa05b0cf81e545737162de2743ce629c0c002e4817d",
+    "outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/Caps300R320H0125C16.java": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e",
+    "outputs/comsol63/late_cap_a/Caps300R320LateCapA5s.java": "a03abb905454de63b34b55e314ed09f3cb6414d58444e8b605962166a872531f",
+    "outputs/comsol63/.comsol-jobs/c40c05d3cfb643a4b706345637b00f57/request.json": "dc58243ad6f798b5d34f8b562465442abf4e4db65e8040f926c577703c6ef90b",
+    "outputs/comsol63/.comsol-jobs/c40c05d3cfb643a4b706345637b00f57/Caps300R320LateCapA5s.java": "a03abb905454de63b34b55e314ed09f3cb6414d58444e8b605962166a872531f",
+    "outputs/core16_control/DUPLICATE_CHECK_BEFORE.json": "b030a7a2272e5b04cc2055b0f1fb6a41b2c5e98f26e3feac3ee743f39a9a17cd"
+  },
+  "COMSOL_calls": 0,
+  "old_file_mutations": 0
+}

@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "scope": "Native job identity/uniqueness and old native byte preservation only; not a numerical solve-success assertion.",
+  "recorded_at_utc": "2026-09-14T12:42:55.247375+00:00",
+  "prior_native_job_ids": 31,
+  "prior_native_files_rehashed_unchanged": 241,
+  "prior_status_files_unchanged": 31,
+  "new_job_ids": [
+    "5d1a87652ed54e6a945d4f2af4aeda70"
+  ],
+  "new_execution_count": 1,
+  "reference_jobs_rerun": false,
+  "new_state": "completed",
+  "native_completed": true,
+  "compile_returncode": 0,
+  "batch_returncode": 0,
+  "source_sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e",
+  "requested_cores": 16,
+  "worker_timeout_seconds": 1800,
+  "old_failed_job_state_preserved": true,
+  "full_workspace_preservation": "Separate root audit",
+  "COMSOL_calls": 0,
+  "old_file_mutations": 0,
+  "automatic_retry_or_additional_run": false
+}
