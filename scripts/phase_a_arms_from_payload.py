@@ -50,8 +50,17 @@ import sys
 SEAL = {'fibre_stamp': 'segment', 'ptfe_stamp': 'centerline', 'bridge_um': 0.24}
 
 #: payload 에서 찾는 수렴 표지 (하나라도 있으면 통과, 전무하면 거부)
+#  ⚠ 2026-09-12 (Codex PA12) — 러너가 실제로 쓰는 이름은 `cg_resid` 인데 이 목록에 없어서
+#    **잔차가 안 옮겨졌다**.  h015 32팔의 잔차가 그렇게 사라졌고, payload 4.6 GB 를 지운 뒤
+#    러너 로그에서 겨우 회수했다.  이름 변주를 넉넉히 받는다 — 빠뜨리면 조용히 사라진다.
 CONV_KEYS = ('cg_info', 'unconverged', 'converged', 'resid', 'residual',
+             'cg_resid', 'cg_residual', 'final_resid', 'max_resid',
              'n_iter', 'cg_iters', 'iters')
+
+#: 팔의 역할.  ⚠ **하드코딩하지 않는다** — 옛 판은 `'role': 'primary'` 를 박아 두고 파일명에도
+#  role 을 안 넣어서, QC 디렉터리를 같은 `--out` 으로 변환하면 **primary 팔을 그대로 덮었다**
+#  (Codex PA12-05).  role 은 CLI/receipt 에서 오고, 파일명에 실리고, 덮어쓰기는 거부된다.
+ROLES = ('primary', 'qc')
 
 #: 파일명에서 조성을 읽는 **교차확인 전용** 패턴
 FNAME_RE = re.compile(r'VGCF_PTFE_(\d+)_(\d+)')
@@ -110,7 +119,7 @@ def _origin_index(shift, origins, tol=1e-9):
     return None
 
 
-def arm_from_payload(d, receipt, fname):
+def arm_from_payload(d, receipt, fname, role='primary'):
     """payload 하나 → 평평한 팔 dict.  어긋나면 ValueError."""
     s = _get(d, 'mpm_metrics', 'step3')
     if not isinstance(s, dict):
@@ -161,7 +170,7 @@ def arm_from_payload(d, receipt, fname):
                          '모르는 것을 수렴으로 읽지 않는다.  step3 키: '
                          + ', '.join(sorted(s)[:30]))
 
-    arm = {'role': 'primary', 'vgcf_wt': wt, 'ptfe_wt': float(pt),
+    arm = {'role': role, 'vgcf_wt': wt, 'ptfe_wt': float(pt),
            'vox': float(vox), 'origin': oi, 'sigma_e': float(sig),
            'source_file': fname, 'origin_shift_um': [float(x) for x in shift],
            'sigma_vgcf_S_cm': man.get('sigma_vgcf_S_cm'),
@@ -171,9 +180,26 @@ def arm_from_payload(d, receipt, fname):
     return arm
 
 
-def build(d, out, receipt_path=None):
+def build(d, out, receipt_path=None, role='primary', force=False):
+    if role not in ROLES:
+        raise SystemExit(f'⛔ 알 수 없는 role {role!r} — {ROLES}')
     receipt_path = receipt_path or os.path.join(d, 'run_receipt.json')
     receipt = read_receipt(receipt_path)
+    r_role = receipt.get('role')
+    if r_role is not None and r_role != role:
+        raise SystemExit(f'⛔ receipt 의 role={r_role!r} 과 --role {role!r} 이 다르다 — '
+                         '어느 쪽이 맞는지 사람이 정한다 (조용히 한쪽을 고르지 않는다)')
+    #  ★ 한 출력 디렉터리에 역할을 섞지 않는다.  판정기는 `<out>/arms/*.json` 을 통째로
+    #    읽으므로 섞이면 QC 가 주 판정에 들어간다.
+    _sum = os.path.join(out, '_adapter_summary.json')
+    if os.path.exists(_sum):
+        try:
+            prev = json.load(open(_sum)).get('role', 'primary')
+        except Exception:
+            prev = None
+        if prev is not None and prev != role:
+            raise SystemExit(f'⛔ {out} 은 이미 role={prev!r} 의 팔을 담고 있다 (지금 {role!r}) — '
+                             '역할마다 --out 을 나눈다')
     files = sorted(p for p in glob.glob(os.path.join(d, 'p2_*.json')))
     if not files:
         raise SystemExit(f'⛔ {d} 에 p2_*.json 이 없다 — 빈 glob 로 진행하지 않는다')
@@ -182,7 +208,7 @@ def build(d, out, receipt_path=None):
         fn = os.path.basename(p)
         try:
             payload = json.load(open(p))
-            a = arm_from_payload(payload, receipt, fn)
+            a = arm_from_payload(payload, receipt, fn, role=role)
         except Exception as e:
             bad.append(f'{fn}: {e}')
             continue
@@ -201,12 +227,23 @@ def build(d, out, receipt_path=None):
     #   걸린다 (2026-09-12 실측).  그래서 `<out>/arms/` 에 팔을, `<out>/` 에 메타를 둔다.
     adir = os.path.join(out, 'arms')
     os.makedirs(adir, exist_ok=True)
+    #  ★ role 이 파일명에 실린다 (primary 는 기존 이름 유지 = 옛 32팔과 호환).
+    #    그리고 **이미 있으면 거부한다** — 이름 규칙만으로는 실수를 못 막는다 (PA12-05).
+    tgt = []
     for a in arms:
-        n = f"arm_w{a['vgcf_wt']:g}_v{a['vox']:g}_o{a['origin']}.json"
-        json.dump(a, open(os.path.join(adir, n), 'w'), ensure_ascii=False, indent=1)
+        tag = '' if a['role'] == 'primary' else f"{a['role']}_"
+        tgt.append((a, os.path.join(
+            adir, f"arm_{tag}w{a['vgcf_wt']:g}_v{a['vox']:g}_o{a['origin']}.json")))
+    exist = [os.path.basename(n) for _, n in tgt if os.path.exists(n)]
+    if exist and not force:
+        raise SystemExit('⛔ 이미 있는 팔을 덮어쓰려 한다 — 다른 --out 을 쓰거나 --force:\n  '
+                         + '\n  '.join(exist[:8])
+                         + (f'\n  … 총 {len(exist)}개' if len(exist) > 8 else ''))
+    for a, n in tgt:
+        json.dump(a, open(n, 'w'), ensure_ascii=False, indent=1)
     json.dump(receipt, open(os.path.join(out, 'run_receipt.json'), 'w'),
               ensure_ascii=False, indent=1)
-    summary = {'n_arms': len(arms), 'tool_sha': _tool_sha(),
+    summary = {'n_arms': len(arms), 'role': role, 'tool_sha': _tool_sha(),
                'receipt_digest': receipt.get('receipt_digest'),
                'receipt_code_sha': receipt.get('code_sha'),
                'seal': {k: receipt.get(k) for k in SEAL},
@@ -311,6 +348,43 @@ def _selftest():
                                  open(os.path.join(d2, 'run_receipt.json'), 'w')))
         neg('⑬ receipt 없음 → 거부',
             lambda d2: os.remove(os.path.join(d2, 'run_receipt.json')))
+        # ══ PA12-05 회귀 — QC 변환이 primary 를 덮으면 안 된다 ══
+        qsrc = os.path.join(td, 'qsrc')
+        os.makedirs(qsrc)
+        json.dump(rcpt, open(os.path.join(qsrc, 'run_receipt.json'), 'w'))
+        for k, wt in ((1, 1.0),):
+            for i, sh in enumerate(origins):
+                json.dump(_payload(wt=wt, shift=sh, sig=0.009),      # 다른 σ = 덮이면 티가 난다
+                          open(os.path.join(qsrc, f'p2_VGCF_PTFE_{k}_1_a{i}.json'), 'w'))
+        _pri = os.path.join(out, 'arms', 'arm_w1_v0.15_o0.json')
+        _sig_before = json.load(open(_pri))['sigma_e']
+        try:
+            build(qsrc, out, role='qc')
+            chk('⑯ QC 를 primary 디렉터리에 변환하면 거부된다', False)
+        except SystemExit as e:
+            chk('⑯ QC 를 primary 디렉터리에 변환하면 거부된다 (역할 혼합)',
+                'role' in str(e))
+        chk('⑰ ★ primary 팔의 σ 가 그대로다 (옛 판은 여기서 덮였다)',
+            json.load(open(_pri))['sigma_e'] == _sig_before)
+        qout = os.path.join(td, 'qout')
+        qarms, qsumm = build(qsrc, qout, role='qc')
+        chk('⑱ 별도 --out 이면 QC 가 만들어진다', len(qarms) == 3 and qsumm['role'] == 'qc')
+        chk('⑲ ★ QC 파일명에 role 이 실린다 (primary 이름과 충돌 불가)',
+            all(f.startswith('arm_qc_') for f in os.listdir(os.path.join(qout, 'arms'))))
+        chk('⑳ 팔의 role 이 하드코딩 primary 가 아니다',
+            all(a2['role'] == 'qc' for a2 in qarms))
+        try:
+            build(qsrc, qout, role='qc')
+            chk('㉑ 같은 디렉터리 재변환은 거부된다 (덮어쓰기 금지)', False)
+        except SystemExit as e:
+            chk('㉑ 같은 디렉터리 재변환은 거부된다 (덮어쓰기 금지)', '덮어쓰' in str(e))
+        chk('㉒ --force 면 통과한다 (의도적 재생성 경로는 남긴다)',
+            len(build(qsrc, qout, role='qc', force=True)[0]) == 3)
+        chk('㉓ ★ cg_resid 가 CONV_KEYS 에 있다 (h015 잔차가 이것 때문에 사라졌다)',
+            'cg_resid' in CONV_KEYS)
+        _r = arm_from_payload(_payload(man={'cg_resid': 9.9e-09}), rcpt,
+                              'p2_VGCF_PTFE_1_1_a0.json')
+        chk('㉔ cg_resid 가 팔로 실제로 옮겨진다', _r.get('cg_resid') == 9.9e-09)
         neg('⑭ 빈 glob → 거부',
             lambda d2: [os.remove(os.path.join(d2, f))
                         for f in os.listdir(d2) if f.startswith('p2_')])
@@ -325,13 +399,18 @@ def main(argv=None):
     ap.add_argument('--dir', help='payload 디렉터리 (p2_*.json + run_receipt.json)')
     ap.add_argument('--receipt', help='receipt 경로 (기본 <dir>/run_receipt.json)')
     ap.add_argument('--out', help='팔 JSON 을 쓸 디렉터리')
+    ap.add_argument('--role', default='primary', choices=list(ROLES),
+                    help='이 디렉터리의 팔 역할 (기본 primary).  QC 는 --role qc 로, '
+                         '주 판정 디렉터리와 다른 --out 에 쓴다')
+    ap.add_argument('--force', action='store_true',
+                    help='이미 있는 팔을 덮어쓴다 (기본 거부 — PA12-05 재발 방지)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return _selftest()
     if not a.dir or not a.out:
         raise SystemExit('--dir 와 --out 이 필요하다 (또는 --selftest)')
-    arms, summ = build(a.dir, a.out, a.receipt)
+    arms, summ = build(a.dir, a.out, a.receipt, role=a.role, force=a.force)
     print(f'✓ 팔 {len(arms)} 개 → {a.out}')
     for w in sorted({x['vgcf_wt'] for x in arms}):
         g = sorted(x['sigma_e'] for x in arms if x['vgcf_wt'] == w)
