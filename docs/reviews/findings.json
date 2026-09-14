@@ -3587,7 +3587,7 @@
   {
    "id": "SELF-37",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (갭 감사 2판 1차 — scripts/ 420 파일)",
    "opened_in": "docs/data/audit_20260914_gap_r2/wave1_summary.json",
@@ -3596,7 +3596,8 @@
     "docs/data/audit_20260914_gap_r2/wave1_summary.json"
    ],
    "title": "★★ 철회 스윕이 **`scripts/*.py` 470개를 아예 안 봤다** — 리포의 계산 기계 전부가 사정권 밖이었다",
-   "note": "`BAN_SCAN_GLOBS` 가 `scripts/*.sh` **38개**는 보면서 `scripts/*.py` **470개**는 하나도 안 봤다.\n⇒ 리포의 **계산 기계 전부**가 인용 금지 스윕 밖이었고, 그동안 `--ban-sweep` 은 *'누수 없음 ✓'* 를 냈다.\n★ **실측**: 글롭에 넣자마자 3파일에서 **15건**이 나왔다 —\n`build_methods_docx.py`(CL-33·CL-41 의 p1 hold 값 10건) · `step3_sigma.py`(CL-24 헤드라인 4건) ·\n`sr01_carbon_network.py`(CL-15 1건).  스윕 대상 **1,081 → 1,551 파일**.\n★ `webapp/*.py` 는 2026-09-09 감사에서 이미 같은 이유로 넣었다 — 그때 **여기를 같이 안 넣은 것**이 구멍이었다.\n\n★ **수리**: ⓐ `scripts/*.py` 를 `BAN_SCAN_GLOBS` 에 추가 ⓑ 검사기 자신을 `BAN_ALLOW_ALWAYS` 에\n추가 (selftest 픽스처가 **금지값 그 자체**이고 그것이 없으면 음성 대조가 성립하지 않는다 —\n등록부의 쌍둥이) ⓒ `step3_sigma.py`·`sr01_carbon_network.py` 에 줄-근처 철회 표지 (값 불변)\nⓓ `build_methods_docx.py` 는 손으로 적던 금지값 12개를 **등록부에서 읽도록** 바꿨다\n(규율 ①: 이 리포에 이미 `load_bans()` 가 있다) ⇒ 하드코딩이 사라져 표지 문제가 원리적으로\n없어지고, 등록부가 자라면 그 검사도 **자동으로** 함께 자란다.  등록부를 못 읽으면 통과시키지 않는다.\n⇒ 스윕 1,551 파일 **누수 0**.\n\n⚠ **이것으로 다 잡히지 않는다** — `SELF-38` 이 그 나머지다.  범위(glob)와 형태(literal)는\n**다른 구멍**이고, 둘째는 글롭으로 못 닫는다."
+   "note": "`BAN_SCAN_GLOBS` 가 `scripts/*.sh` **38개**는 보면서 `scripts/*.py` **470개**는 하나도 안 봤다.\n⇒ 리포의 **계산 기계 전부**가 인용 금지 스윕 밖이었고, 그동안 `--ban-sweep` 은 *'누수 없음 ✓'* 를 냈다.\n★ **실측**: 글롭에 넣자마자 3파일에서 **15건**이 나왔다 —\n`build_methods_docx.py`(CL-33·CL-41 의 p1 hold 값 10건) · `step3_sigma.py`(CL-24 헤드라인 4건) ·\n`sr01_carbon_network.py`(CL-15 1건).  스윕 대상 **1,081 → 1,551 파일**.\n★ `webapp/*.py` 는 2026-09-09 감사에서 이미 같은 이유로 넣었다 — 그때 **여기를 같이 안 넣은 것**이 구멍이었다.\n\n★ **수리**: ⓐ `scripts/*.py` 를 `BAN_SCAN_GLOBS` 에 추가 ⓑ 검사기 자신을 `BAN_ALLOW_ALWAYS` 에\n추가 (selftest 픽스처가 **금지값 그 자체**이고 그것이 없으면 음성 대조가 성립하지 않는다 —\n등록부의 쌍둥이) ⓒ `step3_sigma.py`·`sr01_carbon_network.py` 에 줄-근처 철회 표지 (값 불변)\nⓓ `build_methods_docx.py` 는 손으로 적던 금지값 12개를 **등록부에서 읽도록** 바꿨다\n(규율 ①: 이 리포에 이미 `load_bans()` 가 있다) ⇒ 하드코딩이 사라져 표지 문제가 원리적으로\n없어지고, 등록부가 자라면 그 검사도 **자동으로** 함께 자란다.  등록부를 못 읽으면 통과시키지 않는다.\n⇒ 스윕 1,551 파일 **누수 0**.\n\n⚠ **이것으로 다 잡히지 않는다** — `SELF-38` 이 그 나머지다.  범위(glob)와 형태(literal)는\n**다른 구멍**이고, 둘째는 글롭으로 못 닫는다.",
+   "claimed_fixed_sha": "5c0850a4b"
   },
   {
    "id": "SELF-38",
