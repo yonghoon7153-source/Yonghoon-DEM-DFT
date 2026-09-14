@@ -532,6 +532,107 @@ def build_plan(system, seed, sym, density, T_melt, T_final, melt_ps,
                          "G4_band_card": BAND_CARD, "읽는_곳": "melt_quench_uma.py --gate_check <run_dir>"}}
 
 
+# ───────────────────────── --mode_stress: 실행모드별 **응력** 대조 (회신 BR Q4) ─────────────────────────
+KAPPA_PER_GPA = 1.0 / 20.0      # BARO compressibility_au 8.0 Å³/eV ≈ 1/(20 GPa). 환산 규칙이지 문턱이 아니다.
+
+
+def read_frame_card(card):
+    """봉인된 프레임 표본을 카드에서 읽는다. 도구가 프레임을 **고르지 않는다**.
+
+    ⛔ 못 하는 것: 카드가 없거나 t_ps 목록이 없으면 죽는다 — 기본 표본을 지어내지 않는다."""
+    q = pathlib.Path(card)
+    if not q.exists():
+        q = pathlib.Path(__file__).resolve().parents[2] / card
+    d = json.loads(q.read_text(encoding="utf-8"))
+    try:
+        want = list(d["1_프레임_표본_봉인"]["t_ps"])
+    except (KeyError, TypeError):
+        raise KeyError(f"{q}: `1_프레임_표본_봉인.t_ps` 가 없다 — 표본을 도구가 지어내지 않는다")
+    if not want or len(set(want)) != len(want):
+        raise ValueError(f"{q}: t_ps 가 비었거나 중복이다 ({want})")
+    return [float(x) for x in want], str(q)
+
+
+def frame_index_map(traj_path, thermo_path):
+    """traj 프레임 수와 thermo 행 수가 같은지 확인하고 t_ps ↔ 색인 대응을 만든다.
+
+    ⛔ 다르면 **멈춘다**. '아마 같은 간격일 것' 으로 넘어가면 엉뚱한 프레임을 재게 된다."""
+    from ase.io import iread
+    n_traj = sum(1 for _ in iread(str(traj_path), index=":", format="extxyz"))
+    t = read_thermo(thermo_path)
+    n_thermo = len(t["t_ps"])
+    if n_traj != n_thermo:
+        raise ValueError(f"⛔ traj 프레임 {n_traj} ≠ thermo 행 {n_thermo} — 색인 대응을 만들 수 없다")
+    return {float(v): i for i, v in enumerate(t["t_ps"])}, n_traj
+
+
+def stress_report(atoms, calc):
+    """같은 **미완화** 셀·좌표에서 potential/virial 응력과 힘. (운동 항 없음 — 비교 규칙)"""
+    atoms = atoms.copy(); atoms.calc = calc
+    sig = np.asarray(atoms.get_stress(voigt=False))          # eV/Å³
+    F = np.asarray(atoms.get_forces())
+    return {"P_virial_GPa": float(-np.trace(sig) / 3.0 * EV_A3_TO_GPA),
+            "sigma_GPa": sig * EV_A3_TO_GPA, "F": F,
+            "sigma_rms_GPa": float(np.sqrt(((sig * EV_A3_TO_GPA) ** 2).mean())),
+            "F_rms_eVA": float(np.sqrt((F ** 2).mean()))}
+
+
+def mode_stress(run, card, device="cuda", log=print):
+    """봉인된 프레임에서 turbo − default 의 **응력·힘** 차이를 찍는다. 새 MD 0.
+
+    ⛔ 이 함수가 못 하는 것
+      · 합격/불합격을 정하지 않는다 — 카드 §3 이 '문턱을 정하지 않는다' 고 봉인했다.
+      · UMA 가 맞는지 모른다 — 그것은 G1(QE 참조)이다.
+      · 작은 차이를 **전체 담금질 경로의 승인**으로 읽지 않는다 (그 프레임들의 일치까지다).
+    """
+    run = pathlib.Path(run)
+    want, card_path = read_frame_card(card)
+    idx, n_traj = frame_index_map(run / "traj.xyz", run / "thermo.csv")
+    missing = [w for w in want if w not in idx]
+    if missing:
+        raise ValueError(f"⛔ 봉인된 프레임 중 traj 에 없는 것: {missing}")
+    from ase.io import iread
+    wanted_i = {idx[w]: w for w in want}
+    frames = {}
+    for i, at in enumerate(iread(str(run / "traj.xyz"), index=":", format="extxyz")):
+        if i in wanted_i:
+            frames[wanted_i[i]] = at
+        if len(frames) == len(want):
+            break
+    log(f"카드: {card_path}")
+    log(f"봉인된 프레임 {len(want)}개 · traj {n_traj} 프레임에서 색인 대조 통과")
+    cal_d = make_calc(device, turbo=False)
+    cal_t = make_calc(device, turbo=True)
+    if getattr(cal_t, "_mq_mode", "default") != "turbo":
+        log("⛔ turbo 를 못 켰다 — 두 모드가 같은 것이라 비교가 성립하지 않는다. 멈춘다.")
+        raise SystemExit(3)
+    rows = []
+    for w in want:
+        at = frames[w]
+        rd, rt = stress_report(at, cal_d), stress_report(at, cal_t)
+        dP = rt["P_virial_GPa"] - rd["P_virial_GPa"]
+        dsig = float(np.abs(rt["sigma_GPa"] - rd["sigma_GPa"]).max())
+        dF = float(np.abs(rt["F"] - rd["F"]).max())
+        rows.append({"t_ps": w, "P_default_GPa": rd["P_virial_GPa"], "P_turbo_GPa": rt["P_virial_GPa"],
+                     "dP_GPa": dP, "dV_over_V_pct": 100.0 * dP * KAPPA_PER_GPA,
+                     "max_dsigma_GPa": dsig, "sigma_rms_GPa": rd["sigma_rms_GPa"],
+                     "max_dF_eVA": dF, "F_rms_eVA": rd["F_rms_eVA"]})
+        log(f"  t={w:7.1f} ps  P_def {rd['P_virial_GPa']:+8.4f}  P_tur {rt['P_virial_GPa']:+8.4f}  "
+            f"ΔP {dP:+.4f} GPa (ΔV/V {100.0*dP*KAPPA_PER_GPA:+.3f} %)  "
+            f"max|Δσ| {dsig:.4f}  max|ΔF| {dF:.2e} (|F|rms {rd['F_rms_eVA']:.3f})")
+    res = {"card": card_path, "run": str(run), "n_frames": len(rows), "frames": rows,
+           "max_abs_dP_GPa": max(abs(r["dP_GPa"]) for r in rows),
+           "max_abs_dV_over_V_pct": max(abs(r["dV_over_V_pct"]) for r in rows),
+           "max_dsigma_GPa": max(r["max_dsigma_GPa"] for r in rows),
+           "max_dF_eVA": max(r["max_dF_eVA"] for r in rows),
+           "⛔_문턱": "카드 §3 — 이 잡은 문턱을 정하지 않는다. 앵커는 G1 의 default − QE 응력 차이다.",
+           "⛔_작은_차이의_뜻": "이 프레임들의 일치일 뿐 전체 담금질 경로의 승인이 아니다."}
+    log(f"\n  max|ΔP| {res['max_abs_dP_GPa']:.4f} GPa → ΔV/V {res['max_abs_dV_over_V_pct']:+.3f} % "
+        f"· max|Δσ| {res['max_dsigma_GPa']:.4f} GPa · max|ΔF| {res['max_dF_eVA']:.2e} eV/Å")
+    log("  ⛔ 문턱 없음 — 보고만 한다. 작은 차이는 이 프레임들의 일치이지 경로 전체의 승인이 아니다.")
+    return res
+
+
 # ───────────────────────── --gate_check: 기록이 게이트를 먹여주는가 ─────────────────────────
 def read_thermo(path):
     """thermo.csv → {열이름: np.array}. 열이 없으면 **죽는다** (없는 값을 0 으로 그리지 않는다)."""
@@ -967,6 +1068,50 @@ def _selftest():
         r5 = gate_check(noTset, win_ps=10.0, log=lambda *a: None)
         chk("⛔" in r5["hold_trend"] and "T_set_K" in r5["hold_trend"]["⛔"],
             "⛔음성: T_set_K 없는 thermo 에서 유지 구간을 **추측하지 않고** 없다고 말한다")
+    # ⑩ --mode_stress: 봉인된 프레임 표본 · 색인 대조 (2026-09-14, 회신 BR Q4)
+    from ase import Atoms as _A
+    from ase.io import write as _w
+    with tempfile.TemporaryDirectory() as td:
+        td = pathlib.Path(td)
+        want, cpath = read_frame_card("db/properties/li2s_layer1_g2_mode_stress_prereg_2026_09_14.json")
+        chk(want == [20.0, 50.0, 80.0, 200.0, 400.0, 700.0, 900.0, 1005.0, 1025.0, 1045.0],
+            f"프레임 표본을 **카드에서** 읽는다 ({len(want)}점, 도구가 고르지 않는다)")
+        badcard = td / "nocard.json"
+        badcard.write_text(json.dumps({"1_프레임_표본_봉인": {}}, ensure_ascii=False), encoding="utf-8")
+        try:
+            read_frame_card(badcard); hit = False
+        except KeyError:
+            hit = True
+        chk(hit, "⛔음성: t_ps 없는 카드에서 기본 표본을 지어내지 않고 죽는다")
+        dupcard = td / "dup.json"
+        dupcard.write_text(json.dumps({"1_프레임_표본_봉인": {"t_ps": [10, 10, 20]}}, ensure_ascii=False), encoding="utf-8")
+        try:
+            read_frame_card(dupcard); hit2 = False
+        except ValueError:
+            hit2 = True
+        chk(hit2, "⛔음성: 중복된 프레임 목록을 거부한다")
+        def _mk(n_traj, n_thermo, d):
+            d.mkdir(parents=True, exist_ok=True)
+            ats = [_A("Li2", positions=[[0, 0, 0], [1.5, 0, 0]], cell=np.eye(3) * 6, pbc=True)
+                   for _ in range(n_traj)]
+            (d / "traj.xyz").unlink(missing_ok=True)
+            for a_ in ats:
+                _w(str(d / "traj.xyz"), a_, format="extxyz", append=True)
+            with open(d / "thermo.csv", "w") as f:
+                f.write("t_ps,T_K,T_set_K,density_g_cm3,volume_A3,E_pot_eV,P_GPa,P_virial_GPa\n")
+                for i in range(n_thermo):
+                    f.write(f"{float(i):.3f},300.0,300.0,1.9,216.0,-1.0,0.0,0.0\n")
+            return d
+        good = _mk(6, 6, td / "ok")
+        m, n = frame_index_map(good / "traj.xyz", good / "thermo.csv")
+        chk(n == 6 and m[3.0] == 3 and m[0.0] == 0,
+            f"프레임 수와 thermo 행 수가 맞으면 t_ps ↔ 색인을 만든다 ({n} 프레임)")
+        mis = _mk(5, 6, td / "mismatch")
+        try:
+            frame_index_map(mis / "traj.xyz", mis / "thermo.csv"); hit3 = False
+        except ValueError:
+            hit3 = True
+        chk(hit3, "⛔음성: traj 프레임 수 ≠ thermo 행 수면 **멈춘다** (간격을 추측하지 않는다)")
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
 
@@ -1014,11 +1159,21 @@ def main():
                     help="plan.json 의 앙상블 선언 + thermo.csv 대조 + G4 밴드 (판정 아님, 기록 점검)")
     ap.add_argument("--band_card", default=BAND_CARD, help="--gate_check G4 밴드 출처 카드")
     ap.add_argument("--gate_win_ps", type=float, default=10.0, help="--gate_check 평균 창 [ps]")
+    ap.add_argument("--mode_stress", metavar="RUN_DIR",
+                    help="⭐봉인된 프레임에서 turbo − default 의 응력·힘 차이 (새 MD 0, 회신 BR Q4)")
+    ap.add_argument("--frame_card", default="db/properties/li2s_layer1_g2_mode_stress_prereg_2026_09_14.json",
+                    help="--mode_stress 프레임 표본 카드 (도구가 프레임을 고르지 않는다)")
     ap.add_argument("--hold_blocks", type=int, default=5,
                     help="--gate_check 유지 구간을 몇 블록으로 나눠 추세를 볼지 (회신 BR Q3: 제일 싼 첫 단계)")
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
+    if a.mode_stress:
+        r = mode_stress(a.mode_stress, a.frame_card, a.device)
+        out = pathlib.Path(a.mode_stress) / "mode_stress.json"
+        out.write_text(json.dumps({k: v for k, v in r.items()}, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"→ {out}")
+        return
     if a.gate_check:
         r = gate_check(a.gate_check, a.band_card, a.gate_win_ps, n_blocks=a.hold_blocks)
         (pathlib.Path(a.gate_check) / "gate_check.json").write_text(
