@@ -1858,15 +1858,16 @@
   {
    "id": "PA12-01",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_phase_a_adapter_20260912.md",
    "title": "수렴 계약이 fail-open 이다 — 실제 잔차 키 `cg_resid` 를 **버리고**, manifest 가 step3 를 덮는다",
-   "note": "생산자는 `mpm_webapp_payload.py:1766` 에서 잔차를 **`cg_resid`** 로 적는데 어댑터의 `CONV_KEYS` 에 그 키가 **없다** ⇒ 잔차를 읽지 않는다.  그리고 인정 키가 **하나라도** 있으면 통과시키고, manifest 의 같은 이름 필드로 step3 를 **덮어쓴다**.  Codex 재현: `n_iter=1` 만 · `converged=False` 만 · `resid=1e6` 만 · `cg_info=0.5/None/False` · `cg_resid=1.0/NaN` · step3 가 `cg_info=99, unconverged=True` 인데 manifest 가 `0,False` — **전부 수용되고 최종 `ORDER-ROBUST`**.\n★ `run_contract.py:593` 의 **`conv_ok(cg_info, unconverged, resid)` 가 이미 이 전부를 거부한다** — 새 문턱을 발명할 필요가 없었다 (규율 ① 위반).\n처방: 세 키를 손실 없이 전달하고 어댑터·판정기 **둘 다** `conv_ok` 를 부른다.  계층 간 증거 충돌은 덮지 말고 **거부**한다.\n⚠ 현재 32팔의 잔차는 flat·추출본 **둘 다에 없다** — 이것은 미수렴 증거가 아니라 **재검증 증거의 결손**이다.  0 으로 채우지 말고 `UNKNOWN` 으로 둔다.",
+   "note": "생산자는 `mpm_webapp_payload.py:1766` 에서 잔차를 **`cg_resid`** 로 적는데 어댑터의 `CONV_KEYS` 에 그 키가 **없다** ⇒ 잔차를 읽지 않는다.  그리고 인정 키가 **하나라도** 있으면 통과시키고, manifest 의 같은 이름 필드로 step3 를 **덮어쓴다**.  Codex 재현: `n_iter=1` 만 · `converged=False` 만 · `resid=1e6` 만 · `cg_info=0.5/None/False` · `cg_resid=1.0/NaN` · step3 가 `cg_info=99, unconverged=True` 인데 manifest 가 `0,False` — **전부 수용되고 최종 `ORDER-ROBUST`**.\n★ `run_contract.py:593` 의 **`conv_ok(cg_info, unconverged, resid)` 가 이미 이 전부를 거부한다** — 새 문턱을 발명할 필요가 없었다 (규율 ① 위반).\n처방: 세 키를 손실 없이 전달하고 어댑터·판정기 **둘 다** `conv_ok` 를 부른다.  계층 간 증거 충돌은 덮지 말고 **거부**한다.\n⚠ 현재 32팔의 잔차는 flat·추출본 **둘 다에 없다** — 이것은 미수렴 증거가 아니라 **재검증 증거의 결손**이다.  0 으로 채우지 말고 `UNKNOWN` 으로 둔다.\n\n★ **2026-09-14 부분 수정** — `CONV_KEYS` 에 `cg_resid`·`cg_residual`·`final_resid`·`max_resid` 를 추가해 러너가 실제로 쓰는 이름을 받는다.  selftest ㉓㉔ 가 키 존재와 **실제 전달**을 각각 문다.  ⚠ 이것은 *\"앞으로 안 잃는다\"* 이고, **이미 잃은 h015 32팔의 팔별 잔차는 복구되지 않는다** (batch-level 회수본 `resid_from_runner_log_20260912.tsv` 뿐, 팔 귀속 불가).",
    "evidence_tests": [
     "scripts/phase_a_arms_from_payload.py"
-   ]
+   ],
+   "claimed_fixed_sha": "1fc7bea22af69e347b27b3a6a7e25a0f93e45def"
   },
   {
    "id": "PA12-02",
@@ -1910,15 +1911,16 @@
   {
    "id": "PA12-05",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_phase_a_adapter_20260912.md",
    "title": "어댑터가 **QC 를 전달할 수 없다** — `role` 이 항상 `primary` 이고 같은 out 에서 primary 를 덮어쓴다",
-   "note": "`role='primary'` 가 하드코딩이고 CLI 에 역할 입력이 없다.  출력 파일명에도 역할 구분이 없다.  ⇒ QC payload 8개를 넣어도 전부 primary 가 되고, 같은 out 에 변환하면 `arm_w3_v0.15_o*.json` 을 **덮어쓴다**.  Codex 가 replay 값을 0.1 % 바꿔 넣으니 **실제 primary σ 가 replay 값으로 대체**됐다.  판정기는 QC 0개라 계속 HOLD.\n⛔ **QC 8팔을 지금 이 경로로 반입하면 안 된다** — 판정이 아니라 primary 훼손이 난다.\n처방: 값을 보지 않는 **등록된 batch-role/쌍둥이 대응**을 입력 계약에 넣고, 출력 ID·중복 키에 역할을 포함한다.",
+   "note": "`role='primary'` 가 하드코딩이고 CLI 에 역할 입력이 없다.  출력 파일명에도 역할 구분이 없다.  ⇒ QC payload 8개를 넣어도 전부 primary 가 되고, 같은 out 에 변환하면 `arm_w3_v0.15_o*.json` 을 **덮어쓴다**.  Codex 가 replay 값을 0.1 % 바꿔 넣으니 **실제 primary σ 가 replay 값으로 대체**됐다.  판정기는 QC 0개라 계속 HOLD.\n⛔ **QC 8팔을 지금 이 경로로 반입하면 안 된다** — 판정이 아니라 primary 훼손이 난다.\n처방: 값을 보지 않는 **등록된 batch-role/쌍둥이 대응**을 입력 계약에 넣고, 출력 ID·중복 키에 역할을 포함한다.\n\n★ **2026-09-14 수정.**  세 겹으로 막았다 — ⓐ `role` 을 하드코딩하지 않는다 (`--role {primary,qc}` + receipt 의 `role` 과 어긋나면 거부) ⓑ **파일명에 role 이 실린다** (`arm_qc_w1_v0.15_o0.json`; primary 는 기존 이름 유지 = 커밋된 h015 32팔과 호환) ⓒ **덮어쓰기 자체를 거부**한다(`--force` 없이는) + 한 `--out` 에 역할 혼합 금지.\n★ 규율 ② — 재현 검사를 먼저 심고 **옛 판에서 빨간불**임을 확인했다: `⑰ primary 팔의 σ 가 그대로다` 가 옛 코드에서 실제로 실패한다 (QC 변환이 σ 를 0.002 → 0.009 로 덮었다).  selftest ⑯~㉔ 상주.\n⚠ 이것은 **도구** 수정이다.  h020 32/32 · h025 17/32 · qc015 8/32 의 원자료는 V100 만료로 이미 소실됐고 재실행이 필요하다 — 그 손실은 이 항목이 닫지 않는다.",
    "evidence_tests": [
     "scripts/phase_a_arms_from_payload.py"
-   ]
+   ],
+   "claimed_fixed_sha": "1fc7bea22af69e347b27b3a6a7e25a0f93e45def"
   },
   {
    "id": "PA12-06",
