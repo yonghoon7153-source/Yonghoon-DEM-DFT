@@ -55,6 +55,7 @@
 from __future__ import annotations
 import argparse
 import math
+import os
 import sys
 
 import numpy as np
@@ -71,6 +72,34 @@ TWO_PI = 2.0 * math.pi
 def psi(s: float) -> float:
     """flux-tube 보정 ψ(s) = (1 − s)^1.5,  s = a/b."""
     return max(1.0 - s, 0.0) ** PSI_EXP
+
+
+def coef_ratio_min_over_series(sigma1, sigma2, a=None, b1=None, b2=None):
+    """`AREA-11` 계수비 = (min(σ) 식) / (직렬 후보).
+
+    **공통 b · 공통 ψ** 에서만 ψ 와 a 가 약분돼
+
+        ratio = 2σ₁σ₂ / (σ_min·(σ₁+σ₂))  ∈ **[1, 2)**
+
+    가 된다 (σ₁=σ₂ 면 정확히 1, σ₂/σ₁→∞ 에서 2 에 접근하되 **닿지 않는다**).
+    `b₁≠b₂` 면 ψ₁≠ψ₂ 라 약분이 일어나지 않고 **구간이 깨진다** (검사 ⑩b 의 반례 0.855 < 1).
+
+    `a`·`b1`·`b2` 를 주면 각자 ψ 를 써서 **약분 없이** 계산한다 (공유 b 는 `b_min`).
+    ⛔ 이 함수를 σ 나 ψ 가 0 일 때 부르지 않는다 — 0/0 비는 보고하지 않는다 (`R3-05`).
+    """
+    if not (sigma1 > 0 and sigma2 > 0):
+        raise ValueError('σ 는 양수여야 한다 — 0/0 비를 보고하지 않는다 (R3-05)')
+    if a is None:                                  # 공통 b · 공통 ψ: 약분된 닫힌 꼴
+        return 2.0 * sigma1 * sigma2 / (min(sigma1, sigma2) * (sigma1 + sigma2))
+    if not (b1 and b2 and a > 0):
+        raise ValueError('a·b1·b2 는 양수여야 한다')
+    psi1, psi2 = psi(a / b1), psi(a / b2)
+    psi_shared = psi(a / min(b1, b2))
+    if psi1 <= 0 or psi2 <= 0 or psi_shared <= 0:
+        raise ValueError('ψ = 0 에서는 비를 보고하지 않는다 (R3-05)')
+    r_min = psi_shared / (2.0 * min(sigma1, sigma2) * a)
+    r_ser = (psi1 / sigma1 + psi2 / sigma2) / (4.0 * a)
+    return r_min / r_ser
 
 
 def _assemble(kz, nr, nz, dr, dz, rp, rm, sig_z):
@@ -346,6 +375,45 @@ def _selftest() -> int:
     chk('⑨ 동종쌍(σ 1:1): 직렬식과 min(σ)식이 동일',
         abs(d['R_Holm'] - d['R_Holm_min']) < 1e-12,
         f'{d["R_Holm"]:.10f} vs {d["R_Holm_min"]:.10f}')
+
+    # ⑩ **`AREA-11` 계수비의 정의역** (`R3-05`) — `[1, 2)` 는 **공통 b · 공통 ψ** 에서만이다.
+    #    3라운드가 잡은 것: 계약 v3 는 `b₁≠b₂` 까지 바꾸는 처방에 그 구간을 그대로 적었는데,
+    #    ψ 가 약분되지 않으면 비가 **1 밑으로도 간다**.  문구에서만 한정하면 또 새어나가므로
+    #    (규율 ④) 반례를 여기서 못박는다.
+    import random as _rnd
+    _rnd.seed(20260914)
+    _in_band = []
+    for _ in range(200):
+        s1 = 10.0 ** _rnd.uniform(-3, 3)
+        s2 = 10.0 ** _rnd.uniform(-3, 3)
+        _in_band.append(1.0 - 1e-12 <= coef_ratio_min_over_series(s1, s2) < 2.0)
+    _eq = coef_ratio_min_over_series(7.0, 7.0)
+    _extreme = coef_ratio_min_over_series(1.0, 1e12)
+    chk('⑩ 공통 b·공통 ψ 면 계수비 ∈ [1,2) — 동종 = 정확히 1 · 극단쌍도 2 를 안 넘는다',
+        all(_in_band) and abs(_eq - 1.0) < 1e-12 and 1.99 < _extreme < 2.0,
+        f'무작위 200쌍 전부 구간 안 · 동종 {_eq!r} · 1:1e12 {_extreme:.12f}')
+    # ⑩b **반례** — b₁≠b₂ 면 ψ 가 약분되지 않아 비가 1 **밑**으로 간다 (판정문 §5.2)
+    _cx = coef_ratio_min_over_series(1.0, 1.0, a=0.3, b1=1.0, b2=2.0)
+    chk('⑩b 반례: a=.3 · b 1:2 · σ 1:1 → 비 0.8554… < 1 (구간이 깨진다)',
+        abs(_cx - 0.8554035700220194) < 1e-12 and _cx < 1.0, f'{_cx!r}')
+    # ⑩c ψ=0 · σ=0 에서는 비를 **보고하지 않는다** (0/0 을 숫자로 만들지 않는다)
+    _refused = 0
+    for _kw in ({'sigma1': 0.0, 'sigma2': 1.0},
+                {'sigma1': 1.0, 'sigma2': 1.0, 'a': 1.0, 'b1': 1.0, 'b2': 2.0}):
+        try:
+            coef_ratio_min_over_series(**_kw)
+        except ValueError:
+            _refused += 1
+    chk('⑩c σ=0 · ψ=0 (a=b) 은 거부한다 — 0/0 비를 보고하지 않는다', _refused == 2,
+        f'거부 {_refused}/2')
+    # ⑩d **계약이 그 한정을 실제로 담고 있다** — 문구만 문서에 두면 낡는다 (규율 ④).
+    _ct = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                       'docs', 'area_contract_20260913.md')
+    _txt = open(_ct, encoding='utf-8').read() if os.path.exists(_ct) else ''
+    _need = ['공통 b · 공통 ψ', '[1, 2)', '별도 기하 시험', '0.855']
+    _miss = [t for t in _need if t not in _txt]
+    chk('⑩d 계약 §5-v4 E 가 한정(공통 b·공통 ψ · 별도 기하 시험 · 반례 0.855)을 담는다',
+        not _miss, f'빠진 문구: {_miss}')
 
     # ⑦ 대조: 2π 를 일부러 빼면 ⓪ 이 **반드시** 빨간불이 된다 (판별력 증명)
     import types
