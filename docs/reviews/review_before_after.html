@@ -196,7 +196,7 @@ footer .m{color:var(--ink-2)}
 }
 </style><div class="wrap">
 <header>
-  <div class="eyebrow">Codex 적대 리뷰 · L1~L5 + 면적 계약 · 원장 findings.json @ 7083ac877</div>
+  <div class="eyebrow">Codex 적대 리뷰 · L1~L5 + 면적 계약 · 원장 findings.json @ 20855e3f3</div>
   <h1>DEM 스택 적대 리뷰</h1>
   <p class="sub">웹앱의 계산 스택을 다섯 층으로 나눠 독립 검토에 부쳤고, 그 대응이 다시 <em>면적 계약</em> 한 장을 낳았다. 아래는 우리가 믿고 있던 것과, 실제 함수·코퍼스·독립 기준해가 보여준 것이다 — 모든 숫자는 원장에 있고 이 페이지는 거기서 생성된다.</p>
   <div class="tally">
@@ -403,8 +403,8 @@ footer .m{color:var(--ink-2)}
         <div class="cell before"><div class="lbl">믿은 것</div><p><span class="m">RAW_OK</span> 면 세 채널 다 σ 가 나오고, 봉인이 정한 <span class="m">B_ch</span> 가 곧 코호트 크기다.</p></div>
         <div class="cell after"><div class="lbl">잰 것</div><p><b>이온만 25/127 (19.7 %) 이 관통하지 않는다</b> — 전자·열은 0건.  ⇒ <b>S3 이온 판정 정의역은 최대 102</b> 다.  그리고 이온 σ 가 <b>7,059배</b> 산포한다 (전자 27배 · 열 3.2배) — 이온만 퍼콜 경계를 가로지르기 때문이다.</p></div>
       </div>
-      <p class="note">★ <b>유한크기가 φ 보다 잘 가른다</b> — 두께/최대입자 &lt;3 에서 막힘률 <b>42.9 %</b>, 5~10 에서 8.3 %.  ⚠ ≥10 이 25 % 로 되오르는 건 n=12 라 잡음일 수 있고 φ 축과 <b>분리 안 됐다</b>.</p>
-      <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p>⚠ 이 σ 는 전부 <b>legacy 팔 = 생산 기본값</b>이고 <b>S3 결과가 아니다</b>.  ρ 리허설이 127 케이스 × 3 채널에 생산 솔버를 돌린 <b>부산물</b>로 코호트가 처음 보인 것이다.</p><p>⚠ 전자 채널 최소 <span class="m">n_nodes = 30</span> — 30 노드짜리 AM–AM 망이 관통 판정을 받았다 (미확인).</p><p>⬜ 봉인기가 이 25건을 <span class="m">OLD_NONE</span> 으로 분류해야 봉인과 ρ 가 <b>같은 데이터를 본 것</b>이다.  다르면 러너의 <span class="m">measured_by_channel</span> 검사가 09-17 에 막는다.</p></div></details>
+      <p class="note">★★ <b>기전 확정</b> — 24/25 는 SE 망이 <b>수백~수천 조각</b>으로 부서진 진짜 단절이다 (성분 29~2,324 · 고립 SE 입자 중앙 <b>20.2 %</b>).  경계 artifact 는 <b>1건</b>뿐이다 (LHS-04).</p>
+      <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p>⚠ 이 σ 는 전부 <b>legacy 팔 = 생산 기본값</b>이고 <b>S3 결과가 아니다</b>.  ρ 리허설이 127 케이스 × 3 채널에 생산 솔버를 돌린 <b>부산물</b>로 코호트가 처음 보인 것이다.</p><p>⚠ 전자 채널 최소 <span class="m">n_nodes = 30</span> — 30 노드짜리 AM–AM 망이 관통 판정을 받았다 (미확인).</p><p>★★★ <b>그리고 이것이 φc 서술을 정밀화한다 — 내 문장을 고친다.</b>  옛 표현 <i>"φ_SE 로 안 갈린다, 완전히 겹친다"</i> 에서 <b>그 겹침을 만든 유일한 케이스가 lhs00_009 이고 그것은 경계 artifact</b> 다.  빼면 <b>φ_SE ≥ 0.20 인 진짜 단절은 0건</b>.</p><p>⇒ 바른 문장: 동결 문턱 <span class="m">φc = 0.20</span> 은 <b>"위면 뚫린다" 쪽에서는 맞다</b>.  틀린 것은 <b>"아래면 안 뚫린다" 쪽뿐</b>이다 (φ_SE 0.1720 에서 17/17 뚫림) — <b>충분조건으로는 성립하고 필요조건으로는 성립하지 않는다</b>.</p><p>⬜ <b>새 관측</b> — 고립 SE 입자가 많다.  <span class="m">lhs00_093</span> 은 1,570개 중 <b>774개(49.3 %)가 접촉이 하나도 없다</b>.  φ_SE ≈ 0.09 라 그럴듯하지만 300 MPa 압밀 뒤 절반이 무접촉인 것이 정상인지는 <b>확인된 바 없다</b> — 접촉 검출 쪽 가능성도 배제 못 한다.</p><p>⬜ 봉인기가 이 25건을 <span class="m">OLD_NONE</span> 으로 분류해야 봉인과 ρ 가 <b>같은 데이터를 본 것</b>이다.</p></div></details>
     </div>
     <div class="row" id="LHS-01">
       <div class="rid"><span class="tag P2">LHS-01</span><span class="tag P2">열림</span><span class="ttl">설계의 <span class="m">se_percolation</span> 열이 퍼콜레이션 여부를 말해 준다</span></div>
@@ -431,7 +431,7 @@ footer .m{color:var(--ink-2)}
         <div class="cell after"><div class="lbl">잰 것</div><p><span class="m">lhs00_009</span> 는 φ_SE <b>0.3064</b> 로 문턱 한참 위이고, <b>같은 φ_SE 형제 20건이 전부 뚫리는데 혼자 막혔다</b>.  솔버가 노드 <b>59,616개</b>를 만들고도 관통 성분을 못 찾았다.</p></div>
       </div>
       <p class="note">★★ <b>진단 완료 — 물리가 아니라 경계 규칙이다.</b>  망은 <b>하나로 이어져 있고</b>(<span class="m">n_components=1 · 크기 59,612</span>), 상단 전극으로 뽑힌 <b>4개가 접촉이 하나도 없는 고립 입자</b>다.</p>
-      <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p><b>진단 인쇄</b> (저자 기계, 생산 경로):</p><p><span class="m">n_target_nodes=59616 · n_graph_nodes=59612 · n_edges=245707<br>bottom=2720 · top=4 (plate_z=0.0372)<br>n_components=1 · top-5 sizes=[59612]<br>components reaching bottom=1 · top=0</span></p><p><b>세 줄이 서로를 닫는다</b> — ① 성분이 <b>하나</b>고 침대 전체를 덮는다 (SE 가 끊긴 게 아니다) ② <span class="m">59616 − 59612 = 4</span> = <b>접촉 없는 고립 입자 정확히 4개</b> ③ <span class="m">top=4</span> 인데 <span class="m">reaching top=0</span> ⇒ <b>상단 전극 4개가 바로 그 고립 입자</b>다 (다른 해가 없다).</p><p><span class="m">bottom 2720</span> vs <span class="m">top 4</span> = <b>680배 비대칭</b>.  d_am_p 15 µm 인 침대에서 상단 띠가 큰 AM_P 에 점령돼 SE 가 거의 안 남고, 남은 넷은 압밀 위에 뜬 낱개다.</p><p>⇒ 열린 P1 <b>L2-04</b> 와 <b>같은 축의 반대쪽 면</b>이고 <b>실물 증거</b>다.  L2-04 는 경계가 <b>너무 느슨</b>한 쪽을, 이 케이스는 <b>너무 엄격</b>한 쪽을 보여 준다.  ⇒ 등급 P2 → <b>P1</b>.</p><p>⚠⚠ <b>나머지 24건도 같은 부류인지는 모른다</b> — 하나만 확인했다.  ⛔ 그 전에는 "이온 25건이 전부 경계 artifact" 라고 쓰지 않는다.</p><p>⛔ <b>이것이 S3 를 멈추지 않는다</b> — 봉인이 OLD_NONE 으로 분류하면 정의역 밖이고 봉인과 ρ 가 일관된 상태다.  경계 수정은 L2-04 의 일이고 <b>세대 2</b> 다.</p></div></details>
+      <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p><b>진단 인쇄</b> (저자 기계, 생산 경로):</p><p><span class="m">n_target_nodes=59616 · n_graph_nodes=59612 · n_edges=245707<br>bottom=2720 · top=4 (plate_z=0.0372)<br>n_components=1 · top-5 sizes=[59612]<br>components reaching bottom=1 · top=0</span></p><p><b>세 줄이 서로를 닫는다</b> — ① 성분이 <b>하나</b>고 침대 전체를 덮는다 (SE 가 끊긴 게 아니다) ② <span class="m">59616 − 59612 = 4</span> = <b>접촉 없는 고립 입자 정확히 4개</b> ③ <span class="m">top=4</span> 인데 <span class="m">reaching top=0</span> ⇒ <b>상단 전극 4개가 바로 그 고립 입자</b>다 (다른 해가 없다).</p><p><span class="m">bottom 2720</span> vs <span class="m">top 4</span> = <b>680배 비대칭</b>.  d_am_p 15 µm 인 침대에서 상단 띠가 큰 AM_P 에 점령돼 SE 가 거의 안 남고, 남은 넷은 압밀 위에 뜬 낱개다.</p><p>⇒ 열린 P1 <b>L2-04</b> 와 <b>같은 축의 반대쪽 면</b>이고 <b>실물 증거</b>다.  L2-04 는 경계가 <b>너무 느슨</b>한 쪽을, 이 케이스는 <b>너무 엄격</b>한 쪽을 보여 준다.  ⇒ 등급 P2 → <b>P1</b>.</p><p>★★★ <b>범위 확정 — 25건 중 이것 하나뿐이다.</b>  나머지 24건에 같은 진단을 전부 돌렸더니 <b>성분 29~2,324개</b>(중앙 629) · <b>고립 SE 입자 3.2~49.3 %</b>(중앙 20.2 %) 로 <b>진짜 단절</b>이었다.  lhs00_009 는 고립 비율이 단절군 최소의 <b>477분의 1</b>, 성분 수는 <b>29배 아래</b> — 모든 축에서 다른 동물이다.  ⇒ <b>내 걱정은 반증됐다</b>.  경계 규칙이 정의역에서 빼는 것은 <b>1/127</b> 이다.</p><p>⛔ <b>이것이 S3 를 멈추지 않는다</b> — 봉인이 OLD_NONE 으로 분류하면 정의역 밖이고 봉인과 ρ 가 일관된 상태다.  경계 수정은 L2-04 의 일이고 <b>세대 2</b> 다.</p></div></details>
     </div>
     <div class="row" id="LHS-02">
       <div class="rid"><span class="tag P2">LHS-02</span><span class="tag P2">열림</span><span class="ttl">설계 CSV 의 측정 열은 실측을 담고 있다</span></div>
@@ -488,5 +488,5 @@ footer .m{color:var(--ink-2)}
   </ol></div>
   <div class="caveat"><b>오늘 내가 세 번 틀린 자리.</b> 기준해에서 축대칭 면적의 2π 를 통째로 빠뜨렸는데 단조·수렴·극한 검사가 전부 초록이었다(일률 배수는 비를 안 바꾼다) · 회귀 핀을 재지 않고 추측해 적었다 · 감사가 "최종 결속 라벨" 과 "가장 작은 cap" 을 섞어 불가능한 결과를 냈다.  셋 다 <b>결과가 그럴듯해서</b> 넘어갈 뻔했고, 셋 다 배수·핀·단조성을 <b>실제로 재는</b> 검사 하나가 잡았다.</div>
 </section>
-<footer>이 페이지는 <span class="m">scripts/build_review_before_after.py</span> 가 <span class="m">docs/reviews/findings.json</span> 에서 생성한다 (HEAD <span class="m">7083ac877</span>).  집계·고친 목록·SHA 는 원장 값이고, 서술이 인용하는 숫자는 selftest 가 해당 항목의 note 에서 찾는다.  인용 금지값 스윕(<span class="m">check_review_findings.py --ban-sweep</span>)이 이 파일을 포함한다.</footer>
+<footer>이 페이지는 <span class="m">scripts/build_review_before_after.py</span> 가 <span class="m">docs/reviews/findings.json</span> 에서 생성한다 (HEAD <span class="m">20855e3f3</span>).  집계·고친 목록·SHA 는 원장 값이고, 서술이 인용하는 숫자는 selftest 가 해당 항목의 note 에서 찾는다.  인용 금지값 스윕(<span class="m">check_review_findings.py --ban-sweep</span>)이 이 파일을 포함한다.</footer>
 </div>
