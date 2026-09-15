@@ -64,6 +64,12 @@
    "state": "closed",
    "by": "agent",
    "note": "G1 자원 불가로 마감. ⚠ 1저자 비준 대기 — decisions.json 등록은 사람이 ratify 한다"
+  },
+  {
+   "at": "2026-09-15",
+   "state": "active",
+   "by": "1저자",
+   "note": "1저자 비준. 예약된 재시도(gabia 탄성 종료 후, b2o3 전)는 재개 조건 안에 그대로 있다."
   }
  ],
  "⛔_대각화기_교체도_안_닿는다_2026_09_15": {
@@ -86,5 +92,13 @@
   "단일_할당": "**23.03 GB** (23,033,733,120 B) — 배열 **하나**다.",
   "kgy_판정": "GPU 24.6 GB(기저 0.8 점유 → 가용 ~23.8). 23.03 GB 한 덩이 + 그 전에 이미 잡힌 device 배열들 ⇒ **못 담는다.** kgy 는 확정 불가.",
   "⚠_110_GB_와_23_GB_는_다른_축이다": "`Estimated max dynamical RAM per process` 는 **host + device 총 추정**이고, 실제로 터진 것은 **device 할당**이다. 에이전트가 *'gabia 48 GB < 110 GB 라 미달'* 이라고 적은 것은 **두 축을 섞은 것**이다 — 철회한다."
+ },
+ "status": "active",
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-15T23:55:00Z",
+  "무엇을_비준했나": "G1 **미실시 종결**과 그 재개 조건. 1저자 2026-09-15 \"일단 비준하고\". ⚠ 재개 조건(gabia GPU 재시도)은 그대로 살아 있다 — 닫은 것이지 지운 것이 아니다."
  }
 }
