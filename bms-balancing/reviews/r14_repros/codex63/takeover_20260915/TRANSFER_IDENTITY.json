@@ -1,0 +1,78 @@
+{
+ "outer": {
+  "name": "규진 transfer.zip",
+  "bytes": 534560344,
+  "sha256": "738c5cd30a2191737998ea06bdda13b28c02f5fa8a9060eaeb071f1be6693432"
+ },
+ "entries": [
+  {
+   "path": "# COMSOL 6.3 현재 상태 인계 — 2026-09-15.txt",
+   "bytes": 10003,
+   "sha256": "b637fdd897a806f7a8d3e2ca97a44cfc0ee4cd4e0bc809b42534a3353c5ad95d",
+   "preserved_as": "COMSOL_6.3_현재_상태_인계_—_2026-09-15.txt"
+  },
+  {
+   "path": "COMSOL63_CURRENT_TAKEOVER_20260915.zip",
+   "bytes": 548146724,
+   "sha256": "7232c02e08720e57c5d1d497078f71fd5acb828f1c568e90b80f51b643d4c758"
+  },
+  {
+   "path": "모델 A단계 준비.txt",
+   "bytes": 19913,
+   "sha256": "5fcec049e7e5dbcbcdfd05bb44013d597f65ecb9fa3dc47a17b949ce405fc019",
+   "preserved_as": "모델_A단계_준비.txt"
+  },
+  {
+   "path": "영수증.txt",
+   "bytes": 782,
+   "sha256": "f7872ab3a7cef088b2a89e521e1650988343bc573edd2433e2be04005b4e0a8e",
+   "preserved_as": "영수증.txt"
+  }
+ ],
+ "nested": {
+  "path": "COMSOL63_CURRENT_TAKEOVER_20260915.zip",
+  "entries": 201,
+  "top": [
+   "HISTORICAL_ARCHIVES_NOT_INCLUDED.json",
+   "README_KO.md",
+   "STATE.json",
+   "build_handoff.py",
+   "manifest.json",
+   "outputs",
+   "received_review",
+   "verify_package.py",
+   "work"
+  ],
+  "manifests": [
+   {
+    "path": "outputs/api_recovery_preparation_20260915/CODE_MANIFEST.json",
+    "sha256": "b5506a3a907adb8eef4195946d6e5c6abc9bad4100251c8b73d5bc9bec33cb01"
+   },
+   {
+    "path": "outputs/api_recovery_preparation_20260915/package_manifest.json",
+    "sha256": "ba28e4e95b6a301f097df0c52fc6263d6ddfc40366be5e65639ca92dfc9749fe"
+   },
+   {
+    "path": "outputs/electrolyte_desktop_postprocessing/session_001/manifest.json",
+    "sha256": "134ceb89ad0953b241d5b269ef0633033ef6cbc96196781f1263c8f3a5b6497f"
+   },
+   {
+    "path": "outputs/electrolyte_desktop_postprocessing/session_001/reused_evidence/outputs/physical600_b/package_manifest.json",
+    "sha256": "7945b6a7785ced88a32bbb269ba5a2110fb139fcf7203a77e5cbbf98cac3dfbf"
+   },
+   {
+    "path": "outputs/electrolyte_guard/results/normal_raw_csv_manifest.json",
+    "sha256": "d76ccc8e04eba8b30efcaaf031c567e98426c0e903156a033c5afe4b4060719a"
+   },
+   {
+    "path": "outputs/electrolyte_recovery/package_manifest.json",
+    "sha256": "d289a2d3874e9f4bc14b27f8e55b3f53d9666e9c81fc46c244e1664641fca13c"
+   },
+   {
+    "path": "manifest.json",
+    "sha256": "b705f2a8f2b83349ce34fc0cf99e22fbfd7003eaec89397990dbdbe907c132f8"
+   }
+  ],
+  "note": "548 MB — 저장소에 넣지 않는다. 지문과 구성만 남긴다"
+ }
+}

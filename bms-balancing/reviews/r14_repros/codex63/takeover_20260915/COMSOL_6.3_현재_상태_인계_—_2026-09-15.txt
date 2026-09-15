@@ -1,0 +1,87 @@
+# COMSOL 6.3 현재 상태 인계 — 2026-09-15
+
+**현재 작업은 사용자 요청으로 중지했습니다. 이 ZIP은 인계용 스냅샷이며 실행 승인이 아닙니다.** A단계 후속 검토·보완은 사용자가 돌아온 뒤 진행합니다. B단계 권한 변경·COMSOL 후처리 실행은 별도 승인 대상입니다.
+
+## 인수자가 먼저 읽을 것
+
+1. 이 README와 `STATE.json`: 최신 중지 상태와 승인 경계.
+2. `outputs/electrolyte_desktop_postprocessing/recipient_review_20260915/RECIPIENT_REVIEW_ORIGINAL.txt`: 수신 측이 수용한 부분 회수 범위.
+3. `outputs/electrolyte_desktop_postprocessing/session_001/DESKTOP_RECOVERY_REPORT.md`: Desktop 작업·출력·중단 경위.
+4. `outputs/api_recovery_preparation_20260915/README_KO.md`, `PREPARATION_RECEIPT.json`, `TEST_RESULTS.json`: 기존 A 준비 코드의 계약과 미검증 항목.
+5. 같은 폴더의 `B_EXECUTION_APPROVAL_DRAFT.md`: **미승인 제안**. 지금 실행하지 않습니다.
+
+`outputs/NEXT_RUN_PLAN.md`와 과거 승인 초안은 당시 기록으로 보존한 것입니다. 이후 Desktop 부분 회수와 A 준비를 반영하지 않은 문서가 있으므로 최신 상태는 이 README/STATE를 먼저 따르세요. 과거 문서의 “승인합니다” 문구는 새 담당자에게 자동 실행 권한을 부여하지 않습니다.
+
+## 목적과 지금까지의 결론
+
+목적은 provisional 모델의 기능 진단입니다. 원본 6.4 모델·실험 셀 정량 대응, 전체 수렴 및 장시간 운전을 완료한 상태가 아닙니다.
+
+| 항목 | 현재 상태 |
+|---|---|
+| 기준 해 | Caps300R320H0125C16, 300/320·16코어, 기존 5초 해/CSV 재사용 |
+| 원래 정상 시험 | job `56ef13bee5a448c5a029b02656ebf6bb`, worker failed 유지. 시간 계산 후 후처리 좌표 오류로 필수 검사 미완 |
+| API 복구 | job `28f40815e3a3410aab411ec93cd36fe1`, 첫 Java 입력 SHA 읽기에서 접근 거부. `ModelUtil.loadCopy` 미도달·미시험 |
+| Desktop 부분 회수 | 전해질 최소값·세 보호식·경계 1/4·전압 비교 회수, 수신 측 부분 결과 수용 |
+| 아직 필요한 수치 | 전극별 241좌표 표면 비교, Li 수지, 나머지 필수 출력 |
+| 정상 전체 gate | INCOMPLETE |
+| A 준비 | 이전 작업에서 Java/launcher/별도 분석기 및 합성 테스트를 작성한 파일이 존재. 현재 그대로 보관하며 후속 검토·보완 보류 |
+| B 실행 | 미승인·미실행 |
+| 전체 수렴 / 장시간 | INCOMPLETE / ON_HOLD |
+
+Desktop 부분 회수에서 실제 저장 시각은 987개, 0–5초입니다. 수신 측 독립 검토는 자동/명시 단위 전해질 수치 일치, 전체 최소 1194.4372136345671 mol/m³ @5초·domain 1, 전체 최소와 영역별 최소의 일치, threshold=0 및 세 보호식=0을 모든 저장 행에서 확인했습니다. 전압 8창 비교도 일치했으며 요청 187시각 전체 최대 차이는 3.7e-12 mV, 정확 공통 987시각 전체 최대 차이는 4.8e-12 mV였습니다. 이는 **기존 수신 검토 결과를 인계하는 것**이며 이번 포장 작업이 수치 재검증한 것은 아닙니다.
+
+GUI 공간 평가가 원래 API Interp와 동등한지 미확인이라 중지했습니다. GUI가 틀렸다거나 COMSOL 6.3에서 복구가 불가능하다는 결론은 아닙니다. `coorderr=on`은 모든 점이 기하 밖일 때의 오류 설정이므로 개별 좌표 누락 방지의 충분한 증거가 아닙니다.
+
+## 포함한 실제 입력과 비교 기준
+
+### 저장 해 입력 — 복사본 하나만 포함
+
+`outputs/comsol63/electrolyte_recovery/inputs/failed_normal_copy.mph`
+
+- 크기: 1,266,539,803 bytes
+- SHA-256: `7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658`
+- 출처: `outputs/electrolyte_recovery/INPUT.json`의 원래 정상 실패 job MPH와 동일 식별로 보관된 복사본.
+- 원래 job의 `result_Model.mph`는 중복 포함하지 않았습니다. 해당 경로를 참조하는 과거 기록은 그대로 보존했습니다.
+
+### 기준 — MPH를 추가로 열거나 재계산할 필요 없음
+
+- 기준 job: `5d1a87652ed54e6a945d4f2af4aeda70`
+- 기준 Java: `outputs/comsol63/core16_control/Caps300R320H0125C16.java`
+- **Java 소스** SHA-256: `4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e` (MPH 해시가 아님)
+- 기준 원시 CSV 14개, `dmodel.xml`, 파일 식별: `outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/`
+- 원래 241좌표 리터럴 출처: `outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/axes_generated.java`
+- 기준 CSV 계약: `outputs/electrolyte_desktop_postprocessing/session_001/BASELINE_CONTRACT.json`
+- 좌표 파일 및 출처: 같은 세션의 `coordinate_inputs/`, `analysis/profile_coordinate_provenance.json`.
+
+0바이트인 일부 equations Weak/Constraint CSV는 원래 빈 자료로 포함합니다. 포장 중 내용을 채우거나 성공 출력으로 바꾸지 않았습니다.
+
+## A 준비 코드의 정확한 위치와 한계
+
+`outputs/api_recovery_preparation_20260915/`에 코드와 계약, 호출 정적 검사, diff, 테스트 로그, 계획 명령, 승인 초안이 있습니다. 원래 작은 A ZIP과 생성·검증 기록도 보존했습니다.
+
+기존 기록상 오프라인 합성 테스트 38개가 통과했습니다. COMSOL compile/batch/load/Evaluate/Export/solve와 실제 Windows 프로세스 정리·정책 변경/원복은 시험하지 않았습니다. 합성 테스트 통과는 실제 API 호환성·저장 해 회수·권한 원복 성공의 증거가 아닙니다. 이번 인계 작업에서는 테스트나 준비 코드를 재실행하지 않았습니다.
+
+특히 실제 Java API 호환성, method executor의 실효 정책, Win32 Job 정리, launcher 중단 시 잔류 프로세스와 pending 처리, UI 원복은 아직 확인해야 합니다. Java finally는 강제 종료 후 보존 검사를 보장하지 않습니다.
+
+**다른 PC에서 기존 launcher를 그대로 실행하지 마세요.** 코드/계약에 BML PC의 절대 경로가 포함됩니다. 새 담당자는 우선 읽기 전용으로 검토하고, 사용자가 A 후속 작업을 승인하면 경로·환경·출력 계약을 맞춘 뒤 새 SHA와 테스트 결과를 제출해야 합니다. `APPROVAL_B_TEMPLATE.json`의 미승인 값을 이번 인계만으로 바꾸면 안 됩니다.
+
+## 이어서 할 일 — 사용자 복귀 후
+
+다음 한 건은 보관된 A 준비 코드의 검토·필요한 보완입니다. 새 담당자는 누락 출력 계약, 기존 Results 연결 보존, 모든 저장 시각의 해 digest, 241좌표/index/domain/finite/time 검증, 입력 SHA 유지, 프로세스 소유/종료 및 정책 원복 절차를 먼저 확인하세요. 같은 개괄적 진단을 처음부터 반복할 필요는 없습니다.
+
+그 결과로 확정된 코드·명령·SHA·중단 조건·자원 예산을 제시하고 **별도 B 승인 후에만** 실제 후처리 1건을 진행합니다. 현재 16코어·compile+batch 1800초, 적용 UI 900초·원복 UI 900초·정리/오프라인 분석 등의 수치는 A 폴더의 미승인 제안입니다. 예산을 이미 승인받았다고 취급하지 않습니다. 추론 수준도 작업 시작 전에 사용자에게 알리고 승인을 받는 기존 선호를 유지하세요.
+
+금지/보류: 해시 검사 삭제 재시도, 임의 파일 접근 완화, 새 solve·초기화·메시 재생성, 기준 해 재실행, 발동 1198, 후보 C, 추가 공간/시간 시험, 전체 프로토콜, 12시간 휴지, 유한 sigma, sweep. All files는 특정 MPH 한 파일의 읽기 허용이나 OS sandbox가 아닙니다. 기본 preferences와 설치 INI를 덮어쓰지 않습니다.
+
+OCP 외삽 금지, 기존 failed/INCOMPLETE_RANGE_STOP, 원본·ZIP·생성 영수증, TIME_CAPS raw ZIP 차이 원인 미확인을 유지합니다. 저장 시각·평가점의 양수 확인을 연속 시공간 양수성으로 확대하지 않습니다.
+
+## ZIP 구성과 검증
+
+- 작업 폴더의 상대 경로를 유지해 압축했습니다. `manifest.json`에 정확한 payload 경로·크기·SHA-256·출처 매핑이 있습니다.
+- 실물 MPH 1개, 기준 원시 자료, 두 실패 job의 소스/로그/상태, Desktop 부분 회수 세션/수신 확인, 정책·경로 검토, 기존 A 준비 소스/계약/테스트 기록을 포함합니다.
+- 전체 프로젝트 백업은 아닙니다. 과거 대형 민감도 ZIP, 기준 MPH, COMSOL 설치·라이선스·전체 preferences, 전체 역사적 333개 및 현지 전체 파일은 포함하지 않습니다. 제외된 대형 ZIP 목록은 `HISTORICAL_ARCHIVES_NOT_INCLUDED.json`에 이름·크기만 기록했습니다. 목록은 현재 바이트의 해시 검증이나 해당 내용 포함 증명이 아닙니다.
+- A의 재생성 가능한 합성 fixture 작업 폴더와 Python 캐시는 제외했습니다. 합성 테스트 소스·결과·로그는 포함합니다.
+- 기존 문서에는 수신 PC(`C:/Users/Administrator/...`)나 현지 BML PC의 절대 링크가 남아 있습니다. 모든 과거 링크가 이 ZIP 하나에서 열리는 것은 아닙니다. 실제 포함 여부는 manifest로 판단합니다.
+- 전송 후 외부 `HANDOFF_RECEIPT.json`의 ZIP 크기/SHA를 먼저 대조하세요. ZIP 안 `verify_package.py`는 Python 표준 라이브러리로 압축 파일의 경로·집합·CRC·크기·SHA를 검사하는 전용 도구입니다. COMSOL 또는 동봉 코드를 실행하지 않습니다. 사용 예: `python verify_package.py COMSOL63_CURRENT_TAKEOVER_20260915.zip`.
+
+이번 포장에서는 새 COMSOL 호출·모델 로드·수치 평가·설정 변경·A 구현을 하지 않았습니다. 기존 자료를 읽어 인계 파일을 만들고 무결성만 확인했습니다. 수신 확인 필드는 원래 기록 그대로 유지하며 새 수신 검증은 수신자가 별도 기록합니다.

@@ -1,0 +1,26 @@
+{
+  "archive": "COMSOL63_CURRENT_TAKEOVER_20260915.zip",
+  "bytes": 548146724,
+  "sha256": "7232c02e08720e57c5d1d497078f71fd5acb828f1c568e90b80f51b643d4c758",
+  "manifest_sha256": "b705f2a8f2b83349ce34fc0cf99e22fbfd7003eaec89397990dbdbe907c132f8",
+  "verification": {
+    "status": "PASS",
+    "payload_count": 200,
+    "entries": 201,
+    "checks": [
+      "exact_set",
+      "safe_paths",
+      "case_duplicates",
+      "size",
+      "sha256",
+      "crc"
+    ]
+  },
+  "input_sha_matches_expected": true,
+  "baseline_java_sha_matches_expected": true,
+  "input_preservation_scope": "Source read, ZIP payload matches pre-packaging input SHA; no COMSOL load",
+  "COMSOL_calls": 0,
+  "A_changes": 0,
+  "B_approved": false,
+  "recipient_verification": null
+}

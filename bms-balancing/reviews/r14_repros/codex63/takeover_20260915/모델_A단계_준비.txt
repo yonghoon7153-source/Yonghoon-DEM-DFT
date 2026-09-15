@@ -1,0 +1,138 @@
+A단계 구현 준비를 완료했습니다. 새 Java·launcher·분석기·출력 계약을 작성했고, 합성 오프라인 테스트 38개가 통과했습니다.
+- [검증된 준비본 ZIP](C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_preparation_20260915/COMSOL63_API_RECOVERY_PREPARATION_A.zip) — 31개 payload, 크기·SHA·CRC 확인
+- [구현·검증 보고서](C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_preparation_20260915/README_KO.md)
+- [수정한 B단계 승인안](C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_preparation_20260915/B_EXECUTION_APPROVAL_DRAFT.md)
+ZIP에 소스/SHA·diff·호출 목록·정확한 예정 인자·테스트 로그·종료 상태표를 포함했습니다.
+COMSOL 호출·실제 prefs 복사/변경은 모두 0회입니다. 실제 API 호환성·프로세스 정리·정책 원복은 미시험이며, 정상 전체 판정 미완·장시간 보류를 유지합니다. 여기서 멈추고 B단계 별도 승인을 기다립니다.
+
+# 저장 해 API 후처리 — A단계 구현 준비
+
+2026-09-15. **구현·오프라인 검사만 수행했다. B단계는 미승인이다.** 실행용 Java1개, 전용 launcher/Windows transport, 별도 분석기, 고정 계약, 합성 테스트와 호출 검사를 새 폴더에 준비했다. COMSOL 호출·compile·batch·load·Evaluate·Export·solve, 실제 preferences 복사/변경은0회다.
+
+최종 코드 식별은 CODE_MANIFEST.json 및 PREPARATION_RECEIPT.json, 시험 결과는 TEST_RESULTS.json을 기준으로 한다. 이전 문서의 “파일 로드만 유일한 미확인” 표현은 철회한다. **Java 타입/API 호환성, 실제 정책 전파·파일 읽기·loadCopy, native 결과 형식 및 Windows process containment 모두 실물 미시험**이다. A단계 통과는 이 항목들의 성공 증거가 아니다.
+
+## 구현한 변경
+
+| 수신 검토 조건 | 준비된 구현 |
+|---|---|
+| C1: 권한 변경 전에 코드 확정 | StoredSolutionRecoveryA.java 및 launcher/analyzer/의존 계약을 SHA로 고정. 기본 CLI는 계획 출력만 하며, 실제 동작은 CODE_MANIFEST SHA에 결속된 별도 B 승인 파일을 요구한다. source.diff 및 별도 Python diff 제공 |
+| C2: 원복 방법 | 적용 Desktop1세션+원복 전용1세션, 각각 모델로드0. 전용 prefs 한 파일만 B에서 복사하고 UI로 변경/원복한다. 원복 때 시작 시 관련 보안키 전체와 일치해야 한다. 기본 prefs는 덮어쓰지 않음 |
+| C3: finally/외부 정리 분리 | 로드 후 일반 예외의 after-U·속성·Java 이력·입력 검사·모델 해제를 각각 시도. 강제 종료는 finally 완료를 가정하지 않으며 외부 state.json에 pending 유지. compile 실패도 원복 대상 |
+| C4: 구성 비교 | 기존 dataset/plot/numerical/table/export의 선언된 속성과 선택, solution/component/mesh 연결, solver/변수·파라미터·coupling/OCP/메시 정보 read-back. 기존 집합은 전후 일치, 새 numerical9개만 허용. Java 이력에서 Results 전체를 제외하지 않음 |
+| C5: 새 소비 계약 | 옛 analyze/common을 import하거나 수정하지 않음. 고유 새 폴더만 읽고 baseline14CSV는 경로·SHA 고정 참조로만 사용. argmin 제외를 명시하며, 실제 Time/Variables 키/값 집합을 비교하고1143을 통과 숫자로 쓰지 않음 |
+
+## Java 데이터 경로
+
+시작은 loadPreferences → Enforce 조회 → 기존 방식 입력 해시 읽기/크기 검증이다. 이 앞에 새 출력 파일이나 permission-token 파일 읽기가 끼어들지 않도록 순서를 고쳤다. 시작 실패는 native 로그와 외부 보존 검사로 남기며 로드 전 after-U를 주장하지 않는다.
+
+그 다음 고유 출력 경로/실행 영수증 확인, 보안16키 조회, 승인된 UI에서 관측한 filepermission 토큰 대조, loadCopy 최대1회, 실제 daudit→sol1 및 geom1→mesh1 연결, 정확 저장 시각을 확인한다. before 속성/U/Java 이력 후에만 결과를 평가한다. 새 numerical은 `aprep_` 고정 매핑이며 기존 노드와 충돌하면 중지한다.
+
+좌표는 baseline native Java의 `profileN/P` coord 배열에서 **원래 리터럴을 그대로 추출**해 새 클래스에 넣었다. 새 계산식으로241개를 재생성하지 않았다. 설정은 domain1/3, ext0, recover off, timeinterp off, coorderr on, innerinput all이다. read-back 후8×T×241 형상, 각 좌표·domain·finite·정확 시간 등을 검사한다. coorderr는 개별 누락 검사로 대체하지 않는다.
+
+Java가 CSV를 새 파일로 직접 스트리밍한다. stdout Base64 전체 표 전달을 제거했다. CREATE_NEW로 기존 파일을 덮어쓰지 않고, profile은 한 전극의 getData 반환 배열만 처리한다. 부분 CSV·없는 끝부분·중복 시간/좌표는 분석기에서 완료가 되지 않는다. 수치 표 헤더는 기존 이름을 유지하고 단위는 대응 numerical read-back과 guard_units.csv로 연결한다.
+
+## 출력·판정 계약
+
+OUTPUT_CONTRACT.md에 파일별 형식과 필수/제외 상태를 정리했다. 정상 회수는 원래14열 global, 경계1/4 각13열, profileN/P 각8열, 전해질 coupling9열 자동/명시 단위, MinLine/MaxLine, pce 정보6표와2개 domain 선택 기록을 소비한다. 기존 정보표의 유효한 빈 파일과 미생성을 구분한다.
+
+요청187/정확 공통 저장×4창에서 전압1mV·표면x1e-4, 총Li 상대변화1e-6·초기Li 각항1e-9mol/m² 및 기존 구성식/범위 기준을 유지한다. 시각을 보간하거나 인접 값으로 바꾸지 않는다. 같은 시각의 전압 성분과0.1/1초 경계를 기록한다. 신규 Faraday/전류 수지 합격 임계값은 만들지 않았다.
+
+현재 고정 입력은 이미 Desktop에서 회수한987시각과 baseline 시간 목록이 같으므로 Java의 getPVals를 이 목록과 정확 대조한다. 해당 개수는 실제 반환값을 대신 쓰는 것이 아니다. 목록 불일치는 자동 보정 없이 중지한다.
+
+결과 축은 numeric_recovery / sampled_comparison / preservation / process_cleanup / policy_restore로 나뉜다. 한 축이라도 미완이면 작업 전체는 INCOMPLETE다. 숫자가 통과해도 정상 전체 gate는 독립 검토 전 INCOMPLETE로 유지한다. worker failed를 수정하지 않는다.
+
+## 프로세스 정리와 원복
+
+winjob.py는 새 root를 suspended로 생성하고 PID·creation FILETIME을 기록한 뒤 private Windows Job Object에 배정하고 ResumeThread를 호출하도록 준비했다. 일반 후손은 job에 속하며 breakaway 플래그는 사용하지 않는다. timeout 때 해당 job만 종료한다. process 이름 일괄 종료·권한 상승은 없다. [Microsoft Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)
+
+실제 Win32 transport는 A에서 실행하지 않았다. root 생성과 job 배정 사이의 짧은 구간에 launcher가 죽으면 suspended root가 남을 수 있다. 정상 예외는 보유 handle로 정리하지만 강제 종료/전원 상실까지 보장하지 않는다. 사전 pending 기록이 다음 신규 실행을 차단한다. 소유를 확인하지 못한 COMSOL 프로세스나 broker를 통해 job 밖에 생긴 프로세스는 자동 종료하지 않고 pending으로 남긴다. 부모 종료만으로 후손 종료를 선언하지 않는다.
+
+기존 job 상태/COMSOL 세션·자원을 B 시작 전에 확인한다. 시작 이후에는 job membership과 전체 COMSOL 이름 후보의 census를 결합하되 **census는 미귀속 프로세스 검출용이며 종료 권한 근거가 아니다.** 운영자가 다른 작업을 열면 보수적으로 중지될 수 있다.
+
+state.json은 변경 전에 먼저 쓰고 매 단계 예약을 보존한다. compile/batch/각 UI 시도는 시작 여부가 불명확해도 재시도하지 않는다. launcher 재시작은 신규 execute를 거부한다. `pending`은 읽기 전용이고, `cleanup`은 같은 B 승인 아래 아직 사용하지 않은 원복 세션만 허용한다. 원복 시도까지 소진됐거나 미귀속 프로세스가 남으면 별도 승인/현지 확인이 필요하다. 자동 복구 성공을 약속하지 않는다.
+
+## 제안 자원과 담당
+
+| 구간 | B에서 별도 승인받을 예산 | 담당/상한 |
+|---|---:|---|
+| 설정 적용 UI+확인 | 900초 | 현지 사용자 UI, launcher 관측 확인 대기 포함 |
+| compile+batch | 총1800초 |16코어, compile1·batch1·loadCopy≤1·solve0 |
+| 프로세스 종료 확인 | 실행 단계당 최대120초, 최대4단계 합480초 | private job 소유 범위만; 미확인 남으면 pending |
+| 원복 UI+확인 | 900초 | 현지 사용자, 모델로드0, 설정 한 항목 원복 |
+| 오프라인 분석 | 600초 | Python, COMSOL 호출 없음; budget 초과는 부분 기록 |
+
+UI는 대기까지 제한된 로컬 콘솔이 필요하다. 비대화형 pipe에서 무기한 input을 기다리거나 자동 승인하지 않는다. 다른 콘솔/관리자 계정으로 fallback하지 않는다. 위 값은 현재 실행 승인 예산이 아니다.
+
+기존 proposal의 가용RAM8GiB·디스크5GiB를 시작 조건으로 유지하되 충분함의 보증으로 쓰지 않는다. 원시 profile 반환 double 값만 계산하면 전극당8×987×241×8=15,223,488 bytes(약14.52MiB)다. Java 배열 객체·provider/model cache·MPH 로드·직렬화 메모리는 별도이며 이를 총 최대 메모리로 보고하지 않는다. U는 한 시각씩 해시하며 분석기도241점 한 시각씩 비교한다. 실제 heap/BLAS 설정은 바꾸지 않는다.
+
+## 검증 범위와 미확인
+
+합성 시험은 완전/부분/누락/중복/비유한 출력, 잘못된 좌표/domain/tag·시간, after-U 누락, 기존 dataset/설정/파일 변경, compile 실패, rc0 fatal, timeout/helper 잔류, pending/원복 실패, 숫자 통과+정리 미완을 포함한다. Windows 프로세스를 실제 생성·종료한 시험이 아니다. fixture의 Java/class/prefs 이름 파일은 합성 텍스트이며 실제 COMSOL 산출물/설정 복사본이 아니다.
+
+첫 시험은 OS 임시 폴더 ACL 때문에 실패했다. 같은 업무 폴더의 새 합성 전용 디렉터리로 바꾸었고 테스트 코드·로그를 보존했다. COMSOL 실패 또는 실제 정책 변경으로 세지 않는다. 최종 결과/실행 명령/소스 SHA는 TEST_RESULTS.json과 test_final.log에 기록한다.
+
+정적 검사는 Java 호출 위치·금지 receiver/메서드·간접 실행 경로와 Python AST를 확인한다. Java 타입검사/컴파일을 하지 않았으므로 이를 compile PASS라고 쓰지 않는다. 현재 contract의 명령 옵션은 공식 Windows 명령 문서와 대조했으나 설치 환경의 실제 수용은 B에서 한 번만 관측한다. [Windows Commands](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_running.38.31.html)
+
+ModelUtil.loadCopy/getPVals/getU/Results 평가와 solver 실행 호출을 분리했다. Java 이력2개는 완전 상태 snapshot이 아니며, 선언한 속성 집합과 real U 전후 digest를 보완 근거로 쓴다. UDot·숨은 cache·모든 메모리 상태는 이번 불변 증명에 포함하지 않는다. [ModelUtil](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_api_general.47.15.html), [Solution Data](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_api_solver.51.09.html)
+
+부분 Desktop 회수 수용, 기존 두 failed, 원본/ZIP/생성 영수증, OCP 외삽 금지, TIME_CAPS 차이 미확인, 전체 수렴 미완·장시간 보류를 유지한다.1198·후보C·추가 계산은 미승인이다. **A 결과 전달 후 정지한다.**
+# B단계 — 별도 실행 승인 요청문
+
+**초안·미승인. A단계 준비 완료는 아래 실행 승인이 아니다.** 사용자/수신 검토자는 README_KO.md, CODE_MANIFEST.json, TEST_RESULTS.json, STATIC_AUDIT.json, OUTPUT_CONTRACT.md와 예정 인자를 검토한 뒤 이 범위를 승인하거나 보완한다.
+
+## 승인할 경우의 정확한 범위
+
+Astra High로 고정 코드에 의한 저장 해 후처리1건을 수행한다. 파일 단위 정확 SHA는 CODE_MANIFEST.json, 그 manifest 자체 SHA는 PREPARATION_RECEIPT.json의 code_manifest_sha256에 있다. APPROVAL_B_TEMPLATE.json의 해당 식별은 봉인된 값이며 approved는 false로 두었다. 별도 사용자 승인 없이 true로 바꾸지 않는다.
+
+입력은 보존된 failed_normal_copy.mph1개, 1,266,539,803 bytes, SHA `7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658`. 기준 Caps300R320H0125C16/job `5d1a87652ed54e6a945d4f2af4aeda70`은 기존 CSV와 좌표 출처만 재사용한다. 기준 Java SHA `4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e`를 MPH SHA로 적지 않는다.
+
+허용 상한은 설정 적용 Desktop1세션, 원복 전용 Desktop1세션(각 모델로드0), compile1회, batch1회, loadCopy 최대1회, solve0회다. B에서 새로 코드나 계약을 고치지 않는다. source/의존 파일의 SHA가 다르면 시작하지 않는다. compiler가 생성하는 주 class 및 내부 Check class는 생성 뒤에 실제 SHA를 봉인한다. A단계에 class를 컴파일했다고 주장하지 않는다.
+
+## 권한 변경
+
+현재 사용자 계정·비상승 token을 확인하며 관리자 전환/권한 상승은 없다. 현재 comsol.prefs 한 파일을 고유 전용 prefs 폴더에만 로컬 복사한다. 실제 기본 파일/설치 INI·기존 MCP/worker는 편집하지 않는다. login.properties/라이선스/다른 설정 트리는 복사하지 않고 prefs 원문은 전달하지 않는다.
+
+적용 UI에서 Enforce를 유지하고 File system access를 All files로 바꾸는 한 항목만 허용한다. **All files는 OS 사용자가 접근할 수 있는 파일에 대한 넓은 접근이며 한 MPH 전용/읽기 전용 권한이 아니다.** 전용 prefs 디렉터리가 OS sandbox를 만들지 않는다. 현재16개 보안키의 다른 값은 그대로여야 한다. 영구정책 잠금, 추가 완화, 기본 설정 변경 요구는 중지다.
+
+현지 사용자가 모델을 열지 않고 적용/원복 UI를 조작하고, 제한된 시간 안에 관측을 확인한다. 설정 파일 값 비교와 사용자 UI 관측을 구분한다. 자동 최근 파일/캐시/로그 쓰기0을 주장하지 않는다. 원복은 같은 전용 prefs에서 원래 제한 항목으로 되돌리는1세션이며 기본 prefs를 덮어쓰지 않는다.
+
+## 고정 경로·인자와 실행 순서
+
+PLANNED_COMMANDS.json의 argv 배열만 사용한다. shell 문자열 조합·fallback 경로는 없다. 모든 runtime 하위 경로는 contract.json에 고정되어 있으며 b001이 이미 있으면 실행하지 않는다. 특히 data_apply/data_compile/data_batch/data_restore는 각각 새로운 빈 전용 디렉터리이며 입력/prefs/output/evidence/configuration과 겹치지 않는다.
+
+1. B 승인/코드 SHA·입력/기준/보호 파일·기존 job/프로세스·자원·pending 확인. 불명확하면 제출하지 않는다.
+2. durable pending 상태를 먼저 만든 후 전용 prefs 로컬 복사, 적용 UI1회, 기본 파일 및 보안키 비교.
+3. 고정 Java를 compile 폴더에 복사하고 SHA를 다시 확인. compile1회 후 class 집합·SHA를 봉인.
+4. classpath와 class 입력,16코어,-nosave를 명시한 batch1회. Java 안에서는 loadPreferences→기존 입력 SHA→로드전 기록/정책 조회→loadCopy→저장 해/시각 식별→before 속성/U/이력→필수 Results→after 검사 순서다.
+5. 프로세스 종료/잔류 확인, 외부 원본 식별 확인, 원복 UI1회, 원복값/기본 설정 재확인.
+6. 새 고유 결과만 별도 분석기에 전달해8창·Li/물리·보존/정리 상태를 대조하고 봉인한다. 분석에서 드러난 수치 위반은 사후 검출이라고 기록한다.
+
+`-nosave`를 임의 Java 실행 차단 장치로 설명하지 않는다. 금지 호출은 study/solver run·continue/recover, 초기화, 해 set/clear, 자동 sequence/메시/기하 생성, 물리·재료·파라미터/coupling/guard 수정, MPH save다. 기존 Results/dataset은 변경하지 않고 고정된 새 numerical9개만 추가한다. before/after Java 이력2개는 증거로 저장할 수 있으나 실행하지 않는다.
+
+## 수치·보존 기준
+
+OUTPUT_CONTRACT.md에 적힌 원래241좌표·domain1/3·8식/단위·ext0/recover off/시간 비보간·전체 실제 저장 시각을 유지한다. getPVals와 모든 반환 시각/형상·각 좌표/index/domain/finite를 확인한다. 없는 점을 보간/대체하지 않는다. 요청187/정확 공통 저장×4창에서 전압≤1mV·표면x≤1e-4, 총Li 상대변화≤1e-6·초기Li 각항≤1e-9mol/m² 및 원래 구성식 기준을 적용한다.
+
+전해질 coupling 최소와 영역별 최소 차≤1e-9mol/m³, threshold0, 세 guard0을 검사하되1198발동이나 연속 시공간 양수성 증명이 아니다. argmin은 제외 상태로 남기며 옛 gate를 수정해 통과시키지 않는다.
+
+원래 두 failed, 입력/원본/기준 CSV, ZIP/생성 영수증 recipient=null, Desktop 부분 회수, OCP 외삽 금지, TIME_CAPS 차이 미확인을 보존한다. 전후 Java 이력은 완전 snapshot이 아니며, 선언 속성 read-back과 시각별 real U digest를 함께 비교한다. after-U가 없으면 미완이다.
+
+## 실패와 정리
+
+보안/로드/식별/구조/단위/유한값 오류, 예산 초과, 기본 파일/데이터셋/보호 설정 변화, 새 적분 징후가 있으면 더 진행하지 않는다. 기본 설정을 덮어쓰거나 허용치를 고쳐 재시도하지 않는다.
+
+일반 예외에는 Java 내부 보존 검사를 각각 시도한다. 강제 종료/전원 상실은 finally를 보장하지 않는다. 외부 launcher는 예약/pending·원본·프로세스 상태·정책 원복을 담당한다. 종료 권한은 private job 및 직접 소유한 미재개 root handle에만 있다. 이름/PID 목록에 있다는 이유로 다른 작업을 종료하지 않는다.
+
+root 생성과 job 배정 사이 crash 또는 job 밖 helper는 자동 정리 보장 범위 밖이다. 그러면 pending으로 남기고 자동 재제출하지 않는다. `cleanup`은 아직 쓰지 않은 원복1세션만 수행할 수 있다. 원복 세션을 이미 소진했거나 프로세스 귀속이 불명확하면 정지·회신한다. 기본 prefs를 임의 복구하지 않는다.
+
+numeric_recovery / sampled_comparison / preservation / process_cleanup / policy_restore를 따로 보고한다. 숫자가 통과해도 보존·정리가 미완이면 전체 완료가 아니다. 정상 전체 gate 종결은 독립 검토 뒤 판단한다.
+
+## 이번에 별도 승인받을 자원 예산
+
+- 적용 UI+관측900초; 원복 UI+관측900초. 현지 사용자가 조작하며 모델로드 각각0.
+- compile+batch 총1800초,16코어, 동시1작업. 물리시간 재계산 예산이 아니다.
+- 각 실행 단계의 프로세스 종료 확인 최대120초, 최대4단계 총480초. 미해결이면 pending으로 종료.
+- 오프라인 분석600초. COMSOL 호출 없음. 시간 초과 시 부분/미완 기록.
+- 시작 때 가용RAM≥8GiB·디스크≥5GiB를 관측한다. 충분함의 보증은 아니며 heap/BLAS 설정은 변경하지 않는다.
+
+**결과와 검증된 새 전달 자료를 제공한 뒤 정지한다.**1198·후보C·추가 메시/시간 계산·전체 프로토콜·12시간 휴지·유한sigma·sweep은 승인하지 않는다. 전체 수렴 미완·장시간 보류를 유지한다.
