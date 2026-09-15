@@ -38,10 +38,10 @@
 *{box-sizing:border-box}
 body{
   margin:0; background:var(--ground); color:var(--ink);
-  font-family:var(--sans); font-weight:300; line-height:1.7;
-  font-size:16px; -webkit-font-smoothing:antialiased;
+  font-family:var(--sans); font-weight:350; line-height:1.72;
+  font-size:17px; -webkit-font-smoothing:antialiased;
 }
-.wrap{max-width:1080px; margin:0 auto; padding-inline:22px; padding-block:0}
+.wrap{max-width:1000px; margin:0 auto; padding-inline:24px; padding-block:0}
 h1,h2,h3{text-wrap:balance; margin:0}
 code,.m{font-family:var(--mono); font-variant-numeric:tabular-nums}
 
@@ -80,30 +80,67 @@ h2{font-family:var(--serif); font-size:26px; font-weight:600; letter-spacing:-.0
   margin-top:10px; color:var(--p1); text-transform:uppercase}
 
 /* ── before → after ── */
-.ba{margin-top:26px; border-top:1px solid var(--rule-2)}
-.row{border-bottom:1px solid var(--rule); padding-block:22px}
-.rid{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:12px}
-.rid .tag{font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.05em;
-  padding:2px 7px; border-radius:2px}
+.ba{margin-top:30px; display:grid; gap:20px}
+
+/* 묶음 머리 — 15행을 한 줄로 늘어놓지 않는다 */
+.grp{margin-top:38px; padding-top:14px; border-top:2px solid var(--rule-2)}
+.grp:first-child{margin-top:0}
+.grp h3{font-family:var(--mono); font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3); font-weight:600; margin:0}
+.grp .gsub{font-size:14.5px; color:var(--ink-3); margin-top:5px; max-width:64ch}
+
+/* 행 = 카드 */
+.row{border:1px solid var(--rule); border-radius:4px; background:var(--panel);
+  padding:20px 22px 18px}
+.row.p1{border-left:3px solid var(--p1)}
+.row.fixed{border-left:3px solid var(--fixed)}
+.rid{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-bottom:14px}
+.rid .tag{font-family:var(--mono); font-size:11.5px; font-weight:600; letter-spacing:.05em;
+  padding:3px 8px; border-radius:3px; flex:none}
 .tag.P1{background:var(--p1-soft); color:var(--p1)}
 .tag.P2{background:var(--p2-soft); color:var(--p2)}
 .tag.FIX{background:var(--fixed-soft); color:var(--fixed)}
-.rid .ttl{font-size:15.5px; font-weight:500; color:var(--ink)}
-.pair{display:grid; grid-template-columns:1fr 1fr; gap:2px}
-.cell{padding:14px 16px; border:1px solid var(--rule); background:var(--panel)}
-.cell.before{background:var(--sunk); border-color:var(--rule)}
-.cell.after{border-left:2px solid var(--accent)}
-.cell .lbl{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--ink-3); margin-bottom:8px}
-.cell.after .lbl{color:var(--accent)}
-.cell p{margin:0; font-size:14.5px; line-height:1.65; color:var(--ink-2)}
-.cell.after p{color:var(--ink)}
+.rid .ttl{font-family:var(--serif); font-size:19px; font-weight:600; color:var(--ink);
+  line-height:1.35; flex:1 1 100%; margin-top:2px}
+.pair{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.cell{padding:0}
+.cell .lbl{font-family:var(--mono); font-size:11px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-3); margin-bottom:7px;
+  padding-bottom:5px; border-bottom:1px solid var(--rule)}
+.cell.after .lbl{color:var(--accent); border-bottom-color:var(--accent)}
+.cell p{margin:0; font-size:15.5px; line-height:1.7; color:var(--ink-3)}
+.cell.after p{color:var(--ink); font-weight:350}
+.cell.after p b{font-weight:600}
 .num{font-family:var(--mono); font-size:15px; font-weight:500; color:var(--ink);
   display:block; margin-top:9px; line-height:1.75; word-break:break-word}
 .num s{color:var(--ink-3); text-decoration-thickness:1px}
 .arrow{color:var(--accent); padding:0 3px}
-.note{margin-top:11px; font-size:13px; color:var(--ink-3); line-height:1.6}
-.note b{color:var(--ink-2); font-weight:500}
+
+/* 한 줄 결론 — 카드마다 반드시 짧다 */
+.note{margin-top:15px; padding-top:12px; border-top:1px dashed var(--rule);
+  font-size:14.5px; color:var(--ink-2); line-height:1.65}
+.note b{color:var(--ink); font-weight:600}
+
+/* 긴 것은 접는다 */
+details.more{margin-top:10px}
+details.more>summary{font-family:var(--mono); font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--accent); cursor:pointer; list-style:none;
+  padding:5px 0; user-select:none}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:'▸ '; display:inline-block; width:1em}
+details.more[open]>summary::before{content:'▾ '}
+details.more>summary:hover{text-decoration:underline}
+details.more .body{font-size:14.5px; line-height:1.7; color:var(--ink-2);
+  padding:12px 14px; background:var(--sunk); border-radius:3px; margin-top:4px}
+details.more .body p{margin:0 0 9px}
+details.more .body p:last-child{margin-bottom:0}
+
+/* 좁은 화면 */
+@media (max-width:720px){
+  .pair{grid-template-columns:1fr; gap:16px}
+  .row{padding:16px 16px 14px}
+  .rid .ttl{font-size:17px}
+}
 
 /* ── 고친 것 ── */
 .fixed-list{margin-top:24px; display:grid; gap:2px}

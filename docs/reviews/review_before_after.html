@@ -39,10 +39,10 @@
 *{box-sizing:border-box}
 body{
   margin:0; background:var(--ground); color:var(--ink);
-  font-family:var(--sans); font-weight:300; line-height:1.7;
-  font-size:16px; -webkit-font-smoothing:antialiased;
+  font-family:var(--sans); font-weight:350; line-height:1.72;
+  font-size:17px; -webkit-font-smoothing:antialiased;
 }
-.wrap{max-width:1080px; margin:0 auto; padding-inline:22px; padding-block:0}
+.wrap{max-width:1000px; margin:0 auto; padding-inline:24px; padding-block:0}
 h1,h2,h3{text-wrap:balance; margin:0}
 code,.m{font-family:var(--mono); font-variant-numeric:tabular-nums}
 
@@ -81,30 +81,67 @@ h2{font-family:var(--serif); font-size:26px; font-weight:600; letter-spacing:-.0
   margin-top:10px; color:var(--p1); text-transform:uppercase}
 
 /* ── before → after ── */
-.ba{margin-top:26px; border-top:1px solid var(--rule-2)}
-.row{border-bottom:1px solid var(--rule); padding-block:22px}
-.rid{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:12px}
-.rid .tag{font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.05em;
-  padding:2px 7px; border-radius:2px}
+.ba{margin-top:30px; display:grid; gap:20px}
+
+/* 묶음 머리 — 15행을 한 줄로 늘어놓지 않는다 */
+.grp{margin-top:38px; padding-top:14px; border-top:2px solid var(--rule-2)}
+.grp:first-child{margin-top:0}
+.grp h3{font-family:var(--mono); font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3); font-weight:600; margin:0}
+.grp .gsub{font-size:14.5px; color:var(--ink-3); margin-top:5px; max-width:64ch}
+
+/* 행 = 카드 */
+.row{border:1px solid var(--rule); border-radius:4px; background:var(--panel);
+  padding:20px 22px 18px}
+.row.p1{border-left:3px solid var(--p1)}
+.row.fixed{border-left:3px solid var(--fixed)}
+.rid{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-bottom:14px}
+.rid .tag{font-family:var(--mono); font-size:11.5px; font-weight:600; letter-spacing:.05em;
+  padding:3px 8px; border-radius:3px; flex:none}
 .tag.P1{background:var(--p1-soft); color:var(--p1)}
 .tag.P2{background:var(--p2-soft); color:var(--p2)}
 .tag.FIX{background:var(--fixed-soft); color:var(--fixed)}
-.rid .ttl{font-size:15.5px; font-weight:500; color:var(--ink)}
-.pair{display:grid; grid-template-columns:1fr 1fr; gap:2px}
-.cell{padding:14px 16px; border:1px solid var(--rule); background:var(--panel)}
-.cell.before{background:var(--sunk); border-color:var(--rule)}
-.cell.after{border-left:2px solid var(--accent)}
-.cell .lbl{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--ink-3); margin-bottom:8px}
-.cell.after .lbl{color:var(--accent)}
-.cell p{margin:0; font-size:14.5px; line-height:1.65; color:var(--ink-2)}
-.cell.after p{color:var(--ink)}
+.rid .ttl{font-family:var(--serif); font-size:19px; font-weight:600; color:var(--ink);
+  line-height:1.35; flex:1 1 100%; margin-top:2px}
+.pair{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.cell{padding:0}
+.cell .lbl{font-family:var(--mono); font-size:11px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-3); margin-bottom:7px;
+  padding-bottom:5px; border-bottom:1px solid var(--rule)}
+.cell.after .lbl{color:var(--accent); border-bottom-color:var(--accent)}
+.cell p{margin:0; font-size:15.5px; line-height:1.7; color:var(--ink-3)}
+.cell.after p{color:var(--ink); font-weight:350}
+.cell.after p b{font-weight:600}
 .num{font-family:var(--mono); font-size:15px; font-weight:500; color:var(--ink);
   display:block; margin-top:9px; line-height:1.75; word-break:break-word}
 .num s{color:var(--ink-3); text-decoration-thickness:1px}
 .arrow{color:var(--accent); padding:0 3px}
-.note{margin-top:11px; font-size:13px; color:var(--ink-3); line-height:1.6}
-.note b{color:var(--ink-2); font-weight:500}
+
+/* 한 줄 결론 — 카드마다 반드시 짧다 */
+.note{margin-top:15px; padding-top:12px; border-top:1px dashed var(--rule);
+  font-size:14.5px; color:var(--ink-2); line-height:1.65}
+.note b{color:var(--ink); font-weight:600}
+
+/* 긴 것은 접는다 */
+details.more{margin-top:10px}
+details.more>summary{font-family:var(--mono); font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--accent); cursor:pointer; list-style:none;
+  padding:5px 0; user-select:none}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:'▸ '; display:inline-block; width:1em}
+details.more[open]>summary::before{content:'▾ '}
+details.more>summary:hover{text-decoration:underline}
+details.more .body{font-size:14.5px; line-height:1.7; color:var(--ink-2);
+  padding:12px 14px; background:var(--sunk); border-radius:3px; margin-top:4px}
+details.more .body p{margin:0 0 9px}
+details.more .body p:last-child{margin-bottom:0}
+
+/* 좁은 화면 */
+@media (max-width:720px){
+  .pair{grid-template-columns:1fr; gap:16px}
+  .row{padding:16px 16px 14px}
+  .rid .ttl{font-size:17px}
+}
 
 /* ── 고친 것 ── */
 .fixed-list{margin-top:24px; display:grid; gap:2px}
@@ -143,7 +180,7 @@ footer .m{color:var(--ink-2)}
 }
 </style><div class="wrap">
 <header>
-  <div class="eyebrow">Codex 적대 리뷰 · L1~L5 + 면적 계약 · 원장 findings.json @ 13fcaead5</div>
+  <div class="eyebrow">Codex 적대 리뷰 · L1~L5 + 면적 계약 · 원장 findings.json @ 9c5d6bfd8</div>
   <h1>DEM 스택 적대 리뷰</h1>
   <p class="sub">웹앱의 계산 스택을 다섯 층으로 나눠 독립 검토에 부쳤고, 그 대응이 다시 <em>면적 계약</em> 한 장을 낳았다. 아래는 우리가 믿고 있던 것과, 실제 함수·코퍼스·독립 기준해가 보여준 것이다 — 모든 숫자는 원장에 있고 이 페이지는 거기서 생성된다.</p>
   <div class="tally">
@@ -173,7 +210,9 @@ footer .m{color:var(--ink-2)}
   <h2>믿은 것 → 잰 것</h2>
   <p class="lede">왼쪽은 우리가 코드·문서·계약에 적어 둔 것이다. 오른쪽은 같은 함수에 실제 입력을 넣거나, 코퍼스를 세거나, 기준해를 풀어 나온 값이다.</p>
   <div class="ba">
-    <div class="row">
+  <div class="grp"><h3>L1~L5 스택</h3><div class="gsub">웹앱 계산 스택을 다섯 층으로 나눈 첫 라운드.</div></div>
+  <div class="ba">
+    <div class="row p1" id="L1-01">
       <div class="rid"><span class="tag P1">L1-01</span><span class="tag P2">열림</span><span class="ttl">체적·Tabor 상한이 비물리 면적을 차단한다</span></div>
       <div class="pair">
         <div class="cell before"><div class="lbl">믿은 것</div><p>세 cap 의 min 이 상한이고 Hertz/LIGGGHTS 가 하한이니, 면적은 언제나 물리적으로 가능한 구간 안에 있다.</p></div>
@@ -181,7 +220,7 @@ footer .m{color:var(--ink-2)}
       </div>
       <p class="note">값은 안 바꿨다 — 판정문의 최소 방어(기록하고 승격하지 않기) 중 <b>기록</b>만 했다.  하류가 아직 그 플래그를 안 읽는다.</p>
     </div>
-    <div class="row">
+    <div class="row p1" id="L1-02">
       <div class="rid"><span class="tag P1">L1-02</span><span class="tag P2">열림</span><span class="ttl">V_overlap 은 두 구의 겹침 부피다</span></div>
       <div class="pair">
         <div class="cell before"><div class="lbl">믿은 것</div><p>체적 보존 cap 이 실제 lens 부피로 면적을 제한한다.</p></div>
@@ -189,39 +228,16 @@ footer .m{color:var(--ink-2)}
       </div>
       <p class="note">항등인 이유가 물리가 아니다 — <b>DESC-03</b>(mm 를 m 로 읽음)이 A_volume 을 1000배 부풀려 volume cap 이 <b>원리적으로 결속 불가</b>.  "무해" 로 닫지 않았다.</p>
     </div>
-    <div class="row">
+    <div class="row p1" id="L2-01">
       <div class="rid"><span class="tag P1">L2-01</span><span class="tag P2">열림</span><span class="ttl">협착저항이 문헌식을 구현한다</span></div>
       <div class="pair">
         <div class="cell before"><div class="lbl">믿은 것</div><p>코드 주석 "Mikić 1974" — 보정계수 ψ 를 적용한 Holm 협착 저항.</p></div>
-        <div class="cell after"><div class="lbl">잰 것</div><p>문헌은 ψ 를 <b>곱하고</b> 코드는 <b>나눈다</b>.  독립 기준해(축대칭 flux tube 직접 풀이)가 <b>그 원통 모델 안에서</b> 곱셈 우위를 확정: 코드는 곱식의 (1−s)<sup>−3</sup> 배, s=0.9 에서 <b>1,620배</b>.  코드가 자기 주석과도 어긋난다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p>문헌은 ψ 를 <b>곱하고</b> 코드는 <b>나눈다</b>.  독립 기준해가 곱셈 우위를 확정했고, 코드는 곱식의 (1−s)<sup>−3</sup> 배 — s=0.9 에서 <b>1,620배</b>다.  코드가 <b>자기 주석과도</b> 어긋난다.</p></div>
       </div>
-      <p class="note">기하평균 |ln 비| (nr600, 바른 구간): s≤0.3 에서 곱함 <b>1.02491228</b> vs 나눔 1.69510941 · s&gt;0.3 에서 곱함 1.18902836 vs 나눔 <b>44.31250962</b>.  ⚠ Codex 2라운드: 첫 집계는 s=0.3 이 반올림으로 범위 밖에 들어간 3/7 이었다 — 출력에 경고가 찍혀 있었는데 못 봤다.  "참값" 이 아니라 모델 내 비.  σ <b>상향 가설</b> (cutoff 분기는 반대도 허용).<br>★★ <b>2026-09-15 — 전환을 생산 솔버에 배선했다 (런은 못 돈다).</b>  <span class="m">psi_placement</span> 깃발 신설, 기본값은 변경 전 코드와 <b>비트 동일</b>(모르는 값은 거부 — 조용히 legacy 로 떨어지면 S3 팔이 no-op 이 된다).  전환이 <b>감사 안의 소스 문자열 치환</b>으로만 있어서 코호트를 두 팔로 <b>돌릴 수가 없었다</b>.  생산 코드에서 재현: 같은 픽스처로 δ 를 키우면 legacy 는 저항이 <b>오르는 구간</b>을 갖고 floor 직전 <b>150.90474195844345</b> 에서 0 으로 떨어지는데(절벽), 곱셈은 단조 비증가이고 그 자리가 <b>0.0024068935279540635</b> 로 크게 낮다.  ⛔ 내가 여기 처음 적은 <b>"연속의 끝점"</b> 은 <b>과장이었다</b> — 아래 AREA5-07 참조.  계약이 등록한 <b>세 번째 핀(clamp 경계)</b>도 채웠다 — 거기서는 양쪽이 다 0 이라 S3 가 <b>항등</b>이고, 삭제분의 <b>99.436 %</b> 가 그 부류이므로 <b>S3 는 "협착이 삭제된 접촉" 의 거의 전부를 안 건드린다</b>.  ⬜ 판정은 <b>날짜에 묶여 있다</b> — baseline 봉인이 런 앞이고 그 봉인은 09-17 창 안에서만 허용된다.</p>
+      <p class="note"><b>σ 는 올라간다</b> (cutoff 분기는 반대도 허용).  전환은 2026-09-15 에 생산 솔버에 배선됐지만 <b>아직 못 돌린다</b> — baseline 봉인이 런 앞이고 그 봉인은 09-17 창 안에서만 된다.</p>
+      <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p><b>기준해 수치</b> — 기하평균 |ln 비| (nr600, 바른 구간): s≤0.3 에서 곱함 <b>1.02491228</b> vs 나눔 1.69510941 · s&gt;0.3 에서 곱함 1.18902836 vs 나눔 <b>44.31250962</b>.</p><p>⚠ Codex 2라운드: 첫 집계는 s=0.3 이 반올림으로 범위 밖에 들어간 3/7 이었다 — 출력에 경고가 찍혀 있었는데 못 봤다.  "참값" 이 아니라 <b>모델 내 비</b>다.</p><p><b>2026-09-15 배선</b> — <span class="m">psi_placement</span> 깃발 신설, 기본값은 변경 전 코드와 <b>비트 동일</b>(모르는 값은 거부).  전환이 <b>감사 안의 소스 문자열 치환</b>으로만 있어서 코호트를 두 팔로 돌릴 수가 없었다.</p><p><b>재현</b> — 같은 픽스처로 δ 를 키우면 legacy 는 저항이 <b>오르는 구간</b>을 갖고 floor 직전 <b>150.90474195844345</b> 에서 0 으로 떨어진다(절벽).  곱셈은 단조 비증가이고 그 자리가 <b>0.0024068935279540635</b> 로 크게 낮다.  ⛔ 내가 여기 처음 적은 "연속의 끝점" 은 <b>과장이었다</b> — AREA5-07 참조.</p><p><b>크기</b> — 계약이 등록한 세 번째 핀(clamp 경계)도 채웠다.  거기서는 양쪽이 다 0 이라 S3 가 <b>항등</b>이고, 삭제분의 <b>99.436 %</b> 가 그 부류이므로 <b>S3 는 "협착이 삭제된 접촉" 의 거의 전부를 안 건드린다</b>.</p></div></details>
     </div>
-    <div class="row">
-      <div class="rid"><span class="tag P1">AREA-12</span><span class="tag P2">열림</span><span class="ttl">면적을 둘로 쪼개면 삭제된 협착 항이 되살아난다</span></div>
-      <div class="pair">
-        <div class="cell before"><div class="lbl">믿은 것</div><p>피복용 A_surface(상한 2πR²)와 수송용 A_transport(상한 πR²)를 분리하면 σ 가 하향한다 — 계약의 전제.</p></div>
-        <div class="cell after"><div class="lbl">잰 것</div><p>솔버의 clamp <span class="m">a_eff = min(a, r_min)</span> 이 <b>이미 같은 상한</b>이다.  무작위 20,000 접촉에서 A 는 <b>15.56 %</b> 바뀌는데 a_eff 는 설명 안 되는 차이 <b>0</b>.</p></div>
-      </div>
-      <p class="note">S2 의 σ 변화는 <b>산술적으로 0</b>.  살아남는 건 타입 분리의 구조적 가치뿐이고, σ 를 움직이는 축은 S3(ψ 배치) 하나다.</p>
-    </div>
-    <div class="row">
-      <div class="rid"><span class="tag P2">AREA-11</span><span class="tag P2">열림</span><span class="ttl">min(σ₁,σ₂) 는 이종쌍의 보수적 협착 규약이다</span></div>
-      <div class="pair">
-        <div class="cell before"><div class="lbl">믿은 것</div><p>두 재료가 만나는 접촉에서 낮은 σ 를 쓰면 안전하다.</p></div>
-        <div class="cell after"><div class="lbl">잰 것</div><p>직렬 모델 ψ/(4a)(1/σ₁+1/σ₂) 대비 계수비 2·maxσ/(σ₁+σ₂) 만큼 크다.  실제 기준해(σ 1:8) 대비 min 식은 <b>1.6856916312690349</b>배.  생산 AM_P 6 µm–AM_S 2 µm 에서 <b>1.722074배</b>, AM_P 6–AM_P 2 µm 에서도 <b>1.511966128287415</b>배.</p></div>
-      </div>
-      <p class="note">⚠ Codex 2라운드: 내가 "16/9 와 일치" 라 적은 것은 수치해가 약분되는 <b>계수비</b>였다 — 독립 증거가 아니다.  직렬식도 모델이지 참값이 아니고, 열의 k_weight 는 이미 조화평균이라 이중 보정 금지.  간선 하나당 배수이지 σ_e 의 배수가 아니다.</p>
-    </div>
-    <div class="row">
-      <div class="rid"><span class="tag P1">SELF-28</span><span class="tag P2">열림</span><span class="ttl">geom cap 은 명목상이라 걸리는 값이 없다</span></div>
-      <div class="pair">
-        <div class="cell before"><div class="lbl">믿은 것</div><p>2πR_min² 상한은 실제로 도달하지 않는다.</p></div>
-        <div class="cell after"><div class="lbl">잰 것</div><p><b>반대였다</b> — 163/163 케이스에서 결속하고, 결속하면 ψ=0 으로 협착 항이 <b>삭제</b>된다.  S0 실측: 이온 <b>20.728 %</b> · 전자 <b>0.000 %</b> · 열 <b>26.850 %</b> 간선.</p></div>
-      </div>
-      <p class="note">★ 해석은 하향됐다 — <b>원통에서 a=b 면</b> 협착 몫 0 은 맞다.  ⚠ 그러나 생산의 clamp 0 은 a=b 의 독립 측정이 아니라 A_surface 를 원판으로 읽어 강제된 s=1 이라 "참값 0" 으로 면책하지 않는다 (Codex 2라운드).  tabor 결속 구간 대부분도 이미 clamp 로 s=1 — floor 만이 양수를 지우는 띠는 <b>0.102338~0.102633</b> µm 뿐.</p>
-    </div>
-    <div class="row">
+    <div class="row fixed" id="L3-08">
       <div class="rid"><span class="tag P2">L3-08</span><span class="tag FIX">고침</span><span class="ttl">적합 함수는 데이터가 없으면 멈춘다</span></div>
       <div class="pair">
         <div class="cell before"><div class="lbl">믿은 것</div><p>EXCL 로 다 걸러지면 적합이 실패하고 그 사실이 보인다.</p></div>
@@ -229,7 +245,7 @@ footer .m{color:var(--ink-2)}
       </div>
       <p class="note">행 수·LIVE 랭크·LOO 폴드 랭크에서 <b>fail-closed</b> 로 고쳤다 (None 반환, 호출자 4곳 처리).</p>
     </div>
-    <div class="row">
+    <div class="row fixed" id="L4-11">
       <div class="rid"><span class="tag P2">L4-11</span><span class="tag FIX">고침</span><span class="ttl">porosity 단위는 자명하다</span></div>
       <div class="pair">
         <div class="cell before"><div class="lbl">믿은 것</div><p>0~1 분율이든 % 든 함수가 알아서 읽는다.</p></div>
@@ -237,15 +253,49 @@ footer .m{color:var(--ink-2)}
       </div>
       <p class="note">명시적 단위 계약(<span class="m">porosity_to_fraction(unit=)</span>)으로 고쳤다.  수정 후 1 % = 4.805944467170544 로 판정문 값과 일치.</p>
     </div>
-    <div class="row">
+  </div>
+  <div class="grp"><h3>면적 계약</h3><div class="gsub">L2 판정이 낳은 계약 한 장 — 무엇을 면적이라 부르는가.</div></div>
+  <div class="ba">
+    <div class="row p1" id="AREA-12">
+      <div class="rid"><span class="tag P1">AREA-12</span><span class="tag P2">열림</span><span class="ttl">면적을 둘로 쪼개면 삭제된 협착 항이 되살아난다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>피복용 A_surface(상한 2πR²)와 수송용 A_transport(상한 πR²)를 분리하면 σ 가 하향한다 — 계약의 전제.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p>솔버의 clamp <span class="m">a_eff = min(a, r_min)</span> 이 <b>이미 같은 상한</b>이다.  무작위 20,000 접촉에서 A 는 <b>15.56 %</b> 바뀌는데 a_eff 는 설명 안 되는 차이 <b>0</b>.</p></div>
+      </div>
+      <p class="note">S2 의 σ 변화는 <b>산술적으로 0</b>.  살아남는 건 타입 분리의 구조적 가치뿐이고, σ 를 움직이는 축은 S3(ψ 배치) 하나다.</p>
+    </div>
+    <div class="row" id="AREA-11">
+      <div class="rid"><span class="tag P2">AREA-11</span><span class="tag P2">열림</span><span class="ttl">min(σ₁,σ₂) 는 이종쌍의 보수적 협착 규약이다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>두 재료가 만나는 접촉에서 낮은 σ 를 쓰면 안전하다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p>직렬 모델 ψ/(4a)(1/σ₁+1/σ₂) 대비 계수비 2·maxσ/(σ₁+σ₂) 만큼 크다.  실제 기준해(σ 1:8) 대비 min 식은 <b>1.6856916312690349</b>배.  생산 AM_P 6 µm–AM_S 2 µm 에서 <b>1.722074배</b>, AM_P 6–AM_P 2 µm 에서도 <b>1.511966128287415</b>배.</p></div>
+      </div>
+      <p class="note">⚠ Codex 2라운드: 내가 "16/9 와 일치" 라 적은 것은 수치해가 약분되는 <b>계수비</b>였다 — 독립 증거가 아니다.  직렬식도 모델이지 참값이 아니고, 열의 k_weight 는 이미 조화평균이라 이중 보정 금지.  간선 하나당 배수이지 σ_e 의 배수가 아니다.</p>
+    </div>
+  </div>
+  <div class="grp"><h3>SELF · 자기감사</h3><div class="gsub">리뷰가 아니라 우리가 스스로 찾은 것.</div></div>
+  <div class="ba">
+    <div class="row p1" id="SELF-28">
+      <div class="rid"><span class="tag P1">SELF-28</span><span class="tag P2">열림</span><span class="ttl">geom cap 은 명목상이라 걸리는 값이 없다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>2πR_min² 상한은 실제로 도달하지 않는다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p><b>반대였다</b> — 163/163 케이스에서 결속하고, 결속하면 ψ=0 으로 협착 항이 <b>삭제</b>된다.  S0 실측: 이온 <b>20.728 %</b> · 전자 <b>0.000 %</b> · 열 <b>26.850 %</b> 간선.</p></div>
+      </div>
+      <p class="note">★ 해석은 하향됐다 — <b>원통에서 a=b 면</b> 협착 몫 0 은 맞다.  ⚠ 그러나 생산의 clamp 0 은 a=b 의 독립 측정이 아니라 A_surface 를 원판으로 읽어 강제된 s=1 이라 "참값 0" 으로 면책하지 않는다 (Codex 2라운드).  tabor 결속 구간 대부분도 이미 clamp 로 s=1 — floor 만이 양수를 지우는 띠는 <b>0.102338~0.102633</b> µm 뿐.</p>
+    </div>
+  </div>
+  <div class="grp"><h3>R4 · R5 라운드</h3><div class="gsub">S3(ψ 배치)를 돌리기 위한 장치를 검토에 부친 결과.</div></div>
+  <div class="ba">
+    <div class="row fixed" id="R4-10">
       <div class="rid"><span class="tag P2">R4-10</span><span class="tag FIX">고침</span><span class="ttl">마감 전에는 S3 를 기계적으로 시작할 수 없다</span></div>
       <div class="pair">
         <div class="cell before"><div class="lbl">믿은 것</div><p>dry-run 이 봉인을 안 쓰므로 마감(09-17) 전에는 S3 가 시작될 수 없다.</p></div>
         <div class="cell after"><div class="lbl">잰 것</div><p><b>반증됐다</b> — 좁은 주장(dry-run 이 안 쓴다)만 맞고, <b>봉인을 요구하는 러너가 없어서</b> 기계적 차단이 <b>존재하지 않았다</b>.  게다가 날짜 selftest 는 <b>오늘만 초록</b>이라 허용일을 주입하면 도구가 <b>정작 일해야 하는 날에</b> 자기검사가 깨졌다.</p></div>
       </div>
-      <p class="note"><span class="m">--now</span> 로 날짜를 <b>고정 입력</b>으로 주입해 09-16·17·18 을 <b>매번 함께</b> 시험한다 — 창 안에서는 <b>날짜가 통과하고 내용이 막는다</b>.  ⛔ 파일 부재 검사를 지워서 초록으로 만든 것이 아니다.  그리고 <b>2026-09-15 에 러너를 만들어 차단을 실재하게 했다</b> (<span class="m">run_s3_psi.py</span>): 봉인이 없거나·창 <b>밖에서</b> 만들어졌거나·B_ch 가 비었거나·ρ 가 없으면 <b>rc=2 로 아무것도 안 한다</b>.</p>
+      <p class="note"><b>기계적 차단이 존재하지 않았다.</b>  2026-09-15 에 러너를 만들어 실재하게 했다.</p>
+      <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p><span class="m">--now</span> 로 날짜를 <b>고정 입력</b>으로 주입해 09-16·17·18 을 <b>매번 함께</b> 시험한다 — 창 안에서는 <b>날짜가 통과하고 내용이 막는다</b>.  ⛔ 파일 부재 검사를 지워서 초록으로 만든 것이 아니다.</p><p><span class="m">run_s3_psi.py</span>: 봉인이 없거나·창 <b>밖에서</b> 만들어졌거나·B_ch 가 비었거나·ρ 가 없으면 <b>rc=2 로 아무것도 안 한다</b>.</p></div></details>
     </div>
-    <div class="row">
+    <div class="row p1" id="AREA5-01">
       <div class="rid"><span class="tag P1">AREA5-01</span><span class="tag P2">열림</span><span class="ttl">S3 러너는 봉인된 코호트에 등록된 절차를 적용한다</span></div>
       <div class="pair">
         <div class="cell before"><div class="lbl">믿은 것</div><p>실패한 행은 <span class="m">ERROR</span> 게이트가 잡고, 미정값은 계약 A-4 의 0/+∞ 경계로 센다.</p></div>
@@ -253,7 +303,7 @@ footer .m{color:var(--ink-2)}
       </div>
       <p class="note">⚠ 이것은 Codex 5라운드가 낸 반례이고, <b>내가 내 러너로 직접 재현했다</b>.  내가 커밋 메시지에 적은 "ERROR 가 있으면 판정을 발행하지 않는다" 는 <b>솔버 내부 예외에는 거짓</b>이었다.</p>
     </div>
-    <div class="row">
+    <div class="row p1" id="AREA5-02">
       <div class="rid"><span class="tag P1">AREA5-02</span><span class="tag P2">열림</span><span class="ttl">--limit 는 진단 옵션이다</span></div>
       <div class="pair">
         <div class="cell before"><div class="lbl">믿은 것</div><p>봉인된 B_ch 가 판정 정의역이고, limit 는 몇 건만 돌려 보는 편의 기능이다.</p></div>
@@ -261,7 +311,7 @@ footer .m{color:var(--ink-2)}
       </div>
       <p class="note"><span class="m">n_in_domain</span> 도 봉인된 N 이 아니라 <b>처리한 수</b>를 보고하므로 요약만 읽으면 부분집합인 것을 모른다.</p>
     </div>
-    <div class="row">
+    <div class="row p1" id="AREA5-04">
       <div class="rid"><span class="tag P1">AREA5-04</span><span class="tag P2">열림</span><span class="ttl">"ρ 필수" 가 판정을 지킨다</span></div>
       <div class="pair">
         <div class="cell before"><div class="lbl">믿은 것</div><p>ρ 에 기본값을 안 두고 필수로 받으면 친절한 답이 공짜로 나오는 자리가 막힌다.</p></div>
@@ -269,7 +319,7 @@ footer .m{color:var(--ink-2)}
       </div>
       <p class="note">★ 그리고 내가 사용자에게 시킨 ρ 명령이 <b>두 번 틀렸다</b> — 사다리 파일은 09-13 자로 <b>이미 있고</b>, 그것들은 전부 <span class="m">lhs00_100</span>~129 = mono 30 이라 계약이 새 130 에 <b>대입을 금지</b>한 것이다.</p>
     </div>
-    <div class="row">
+    <div class="row" id="AREA5-05">
       <div class="rid"><span class="tag P2">AREA5-05</span><span class="tag P2">열림</span><span class="ttl">⑦f 가 기본값 비트 동일을 회귀로 지킨다</span></div>
       <div class="pair">
         <div class="cell before"><div class="lbl">믿은 것</div><p><span class="m">git show HEAD:</span> 와 대조하니 도입 전과 같음이 상주 검사로 고정된다.</p></div>
@@ -277,7 +327,7 @@ footer .m{color:var(--ink-2)}
       </div>
       <p class="note">★ 무너지지 않은 것: 검토자가 <b>실제 도입 전 SHA</b> 와 대조한 <b>1,926</b> 간선에서 차이 0 — 현재 기본값 보존은 CONFIRMED 다.  무너진 건 "앞으로도 보증한다" 뿐이다.</p>
     </div>
-    <div class="row">
+    <div class="row" id="AREA5-07">
       <div class="rid"><span class="tag P2">AREA5-07</span><span class="tag P2">열림</span><span class="ttl">곱셈 배치는 floor 자리가 연속이다</span></div>
       <div class="pair">
         <div class="cell before"><div class="lbl">믿은 것</div><p>legacy 의 절벽(150.9 → 0)이 곱셈에서는 연속의 끝점이 된다.</p></div>
@@ -285,13 +335,14 @@ footer .m{color:var(--ink-2)}
       </div>
       <p class="note">바른 문장: "곱셈 배치는 legacy 의 큰 저항 급락을 크게 줄이지만, 동결된 finite floor 때문에 작은 불연속은 남는다."  ⛔ floor 를 지금 바꾸라는 뜻이 아니다 — 검사의 이름과 서술만 고친다.</p>
     </div>
-    <div class="row">
+    <div class="row fixed" id="R4-08">
       <div class="rid"><span class="tag P2">R4-08</span><span class="tag FIX">고침</span><span class="ttl">양성 대조가 ψ 정정을 지킨다</span></div>
       <div class="pair">
         <div class="cell before"><div class="lbl">믿은 것</div><p>no-op 변이를 잡으니 대조가 유효하다.</p></div>
         <div class="cell after"><div class="lbl">잰 것</div><p><b>ψ 를 솔버에서 받아 기대식에도 써서</b> 잘못 바뀐 ψ 가 기대값을 <b>같이 움직였다</b> — <span class="m">floor 1e-4→0</span> 과 <span class="m">ψ 지수 1.5→1.0</span> 두 변이가 <b>13/13 초록</b>.  floor 대조 좌표도 실제로는 clamp 라 <b>floor-only 영역을 시험하지 않았다</b>.</p></div>
       </div>
-      <p class="note">ψ 를 <b>기하에서 독립 계산</b>하는 oracle 을 넣고(⑦i), 변이를 <b>실제로 돌려</b> 확인했다 — 둘 다 이제 <b>15/18 로 실패</b>한다.  floor-only 는 실측 띠 <b>0.102338~0.102633</b> 안의 좌표로 옮기고 clamp 경계는 따로 핀해 세 영역이 <b>독립</b> 핀이 됐다.  ⚠ clamp 제거 변이는 여전히 초록인데 그건 구멍이 아니라 <b>진짜 no-op</b> 이다 (max(1−s,0) 이 같은 일을 한다).</p>
+      <p class="note">ψ 를 <b>기하에서 독립 계산</b>하는 oracle 을 넣고, 변이를 <b>실제로 돌려</b> 확인했다.</p>
+      <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p>두 변이 모두 이제 <b>15/18 로 실패</b>한다.  floor-only 는 실측 띠 <b>0.102338~0.102633</b> 안의 좌표로 옮기고 clamp 경계는 따로 핀해 세 영역이 <b>독립</b> 핀이 됐다.</p><p>⚠ clamp 제거 변이는 여전히 초록인데 그건 구멍이 아니라 <b>진짜 no-op</b> 이다 — <span class="m">max(1−s,0)</span> 이 같은 일을 한다.  Codex 도 CONFIRMED 했다.</p></div></details>
     </div>
   </div>
 </section>
@@ -340,5 +391,5 @@ footer .m{color:var(--ink-2)}
   </ol></div>
   <div class="caveat"><b>오늘 내가 세 번 틀린 자리.</b> 기준해에서 축대칭 면적의 2π 를 통째로 빠뜨렸는데 단조·수렴·극한 검사가 전부 초록이었다(일률 배수는 비를 안 바꾼다) · 회귀 핀을 재지 않고 추측해 적었다 · 감사가 "최종 결속 라벨" 과 "가장 작은 cap" 을 섞어 불가능한 결과를 냈다.  셋 다 <b>결과가 그럴듯해서</b> 넘어갈 뻔했고, 셋 다 배수·핀·단조성을 <b>실제로 재는</b> 검사 하나가 잡았다.</div>
 </section>
-<footer>이 페이지는 <span class="m">scripts/build_review_before_after.py</span> 가 <span class="m">docs/reviews/findings.json</span> 에서 생성한다 (HEAD <span class="m">13fcaead5</span>).  집계·고친 목록·SHA 는 원장 값이고, 서술이 인용하는 숫자는 selftest 가 해당 항목의 note 에서 찾는다.  인용 금지값 스윕(<span class="m">check_review_findings.py --ban-sweep</span>)이 이 파일을 포함한다.</footer>
+<footer>이 페이지는 <span class="m">scripts/build_review_before_after.py</span> 가 <span class="m">docs/reviews/findings.json</span> 에서 생성한다 (HEAD <span class="m">9c5d6bfd8</span>).  집계·고친 목록·SHA 는 원장 값이고, 서술이 인용하는 숫자는 selftest 가 해당 항목의 note 에서 찾는다.  인용 금지값 스윕(<span class="m">check_review_findings.py --ban-sweep</span>)이 이 파일을 포함한다.</footer>
 </div>
