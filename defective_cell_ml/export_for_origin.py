@@ -258,7 +258,8 @@ def main(argv=None):
         write_json(output/'run.json',meta)
     if meta['status']=='failed':
         return 2
-    write_json(output/'artifact_hashes.json',{str(p.relative_to(output)):digest(p) for p in output.rglob('*') if p.is_file()})
+    # POSIX keys so a record written on Windows can be re-checked on Linux/macOS.
+    write_json(output/'artifact_hashes.json',{p.relative_to(output).as_posix():digest(p) for p in output.rglob('*') if p.is_file()})
     print(f'{meta["status"]}: {output} ({meta["n_cells"]} cells)')
     if meta.get('unavailable'):
         print('Some targets unavailable; see run_summary.md')

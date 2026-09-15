@@ -51,14 +51,11 @@ def eis_file(path,cfg):
 
 class TemporaryCase(unittest.TestCase):
     def setUp(self):
-        self.parent=Path.cwd().resolve()
-        self.tmp=TemporaryDirectory(prefix='ml_validation_',dir=self.parent)
+        # System temp, never the package tree: the package may sit on a read-only or synchronised share.
+        self.tmp=TemporaryDirectory(prefix='ml_validation_')
+        self.addCleanup(self.tmp.cleanup)
         self.folder=Path(self.tmp.name).resolve()
-        self.assertTrue(self.folder.is_relative_to(self.parent))
-
-    def tearDown(self):
-        self.assertTrue(Path(self.tmp.name).resolve().is_relative_to(self.parent))
-        self.tmp.cleanup()
+        self.assertTrue(self.folder.is_dir())
 
 class InputTests(TemporaryCase):
     def test_config_rejects_ambiguous_booleans_and_fractional_splits(self):
@@ -240,7 +237,9 @@ class EvaluationTests(unittest.TestCase):
 
     def test_nested_group_separation(self):
         cfg=small_config(outer_cv='leave_one_group_out'); df=make_demo(cfg,12); clean,features=validate_frame(df,cfg,[])
-        _,folds=nested_evaluate(clean[features],clean['cap'].to_numpy(),clean['cell_number'].to_numpy(),cfg,groups=clean['batch_id'].to_numpy())
+        # Interleaved batches: contiguous ones make a group-blind KFold produce the same split as GroupKFold.
+        groups=np.array([f'demo_batch_{i%3+1}' for i in range(len(clean))])
+        _,folds=nested_evaluate(clean[features],clean['cap'].to_numpy(),clean['cell_number'].to_numpy(),cfg,groups=groups)
         self.assertEqual(len(folds),3)
         for fold in folds:
             for inner in fold['inner_folds']:
@@ -299,16 +298,17 @@ class IntegrationTests(TemporaryCase):
         with contextlib.redirect_stderr(io.StringIO()):
             code=main(['--features',str(csv),'--config',str(config),'--output',str(out)])
         self.assertEqual(code,2)
-        self.assertEqual(json.loads((out/'run.json').read_text())['status'],'failed')
-        events=json.loads((out/'data_audit.json').read_text())
+        # The package writes UTF-8; read it as UTF-8 regardless of the platform code page.
+        self.assertEqual(json.loads((out/'run.json').read_text(encoding='utf-8'))['status'],'failed')
+        events=json.loads((out/'data_audit.json').read_text(encoding='utf-8'))
         self.assertTrue(any(e['status']=='unlabeled_invalid' for e in events))
 
     def test_output_overwrite_refused(self):
-        out=self.folder/'existing'; out.mkdir(); (out/'sentinel.txt').write_text('keep')
+        out=self.folder/'existing'; out.mkdir(); (out/'sentinel.txt').write_text('keep',encoding='utf-8')
         with contextlib.redirect_stderr(io.StringIO()),self.assertRaises(SystemExit) as e:
             main(['--demo','--output',str(out)])
         self.assertEqual(e.exception.code,2)
-        self.assertEqual((out/'sentinel.txt').read_text(),'keep')
+        self.assertEqual((out/'sentinel.txt').read_text(encoding='utf-8'),'keep')
 
     def test_imports_do_not_create_analysis_outputs(self):
         script=f'import sys; sys.path.insert(0,{str(PACKAGE)!r}); import extract_capacity, ridge_capacity, export_for_origin, feature_band_test, predict'
