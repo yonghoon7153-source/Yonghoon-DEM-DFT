@@ -1,0 +1,13 @@
+﻿cell_number,cycle_file,eis_file,batch_id,selection_reason
+41,cell41_synthetic_cycle.txt,cell41_synthetic_eis.mpt,demo_batch_1,one synthetic fixture per artificial cell
+42,cell42_synthetic_cycle.txt,cell42_synthetic_eis.mpt,demo_batch_1,one synthetic fixture per artificial cell
+43,cell43_synthetic_cycle.txt,cell43_synthetic_eis.mpt,demo_batch_1,one synthetic fixture per artificial cell
+44,cell44_synthetic_cycle.txt,cell44_synthetic_eis.mpt,demo_batch_1,one synthetic fixture per artificial cell
+45,cell45_synthetic_cycle.txt,cell45_synthetic_eis.mpt,demo_batch_2,one synthetic fixture per artificial cell
+46,cell46_synthetic_cycle.txt,cell46_synthetic_eis.mpt,demo_batch_2,one synthetic fixture per artificial cell
+47,cell47_synthetic_cycle.txt,cell47_synthetic_eis.mpt,demo_batch_2,one synthetic fixture per artificial cell
+48,cell48_synthetic_cycle.txt,cell48_synthetic_eis.mpt,demo_batch_2,one synthetic fixture per artificial cell
+49,cell49_synthetic_cycle.txt,cell49_synthetic_eis.mpt,demo_batch_3,one synthetic fixture per artificial cell
+50,cell50_synthetic_cycle.txt,cell50_synthetic_eis.mpt,demo_batch_3,one synthetic fixture per artificial cell
+51,cell51_synthetic_cycle.txt,cell51_synthetic_eis.mpt,demo_batch_3,one synthetic fixture per artificial cell
+52,cell52_synthetic_cycle.txt,cell52_synthetic_eis.mpt,demo_batch_3,one synthetic fixture per artificial cell

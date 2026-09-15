@@ -1,0 +1,40 @@
+
+test_logistic_uses_finite_log_loss_not_one_cell_auc (test_pipeline.EvaluationTests.test_logistic_uses_finite_log_loss_not_one_cell_auc) ... ok
+test_nested_group_separation (test_pipeline.EvaluationTests.test_nested_group_separation) ... ok
+test_no_group_breaking_fallback_for_unbalanced_groups (test_pipeline.EvaluationTests.test_no_group_breaking_fallback_for_unbalanced_groups) ... ok
+test_one_class_auc_is_unavailable (test_pipeline.EvaluationTests.test_one_class_auc_is_unavailable) ... ok
+test_outer_target_cannot_change_its_own_training_selection (test_pipeline.EvaluationTests.test_outer_target_cannot_change_its_own_training_selection) ... ok
+test_scaler_and_inner_folds_use_outer_training_only (test_pipeline.EvaluationTests.test_scaler_and_inner_folds_use_outer_training_only) ... ok
+test_cell_only_name_and_optional_pressure (test_pipeline.InputTests.test_cell_only_name_and_optional_pressure) ... ok
+test_complex_components_remain_consistent (test_pipeline.InputTests.test_complex_components_remain_consistent) ... ok
+test_config_rejects_ambiguous_booleans_and_fractional_splits (test_pipeline.InputTests.test_config_rejects_ambiguous_booleans_and_fractional_splits) ... ok
+test_decreasing_capacity_rejected (test_pipeline.InputTests.test_decreasing_capacity_rejected) ... ok
+test_duplicate_cell_rejected (test_pipeline.InputTests.test_duplicate_cell_rejected) ... ok
+test_duplicate_eis_requires_manifest (test_pipeline.InputTests.test_duplicate_eis_requires_manifest) ... ok
+test_duplicate_frequency_policy (test_pipeline.InputTests.test_duplicate_frequency_policy) ... ok
+test_empty_inputs_raise_clear_error (test_pipeline.InputTests.test_empty_inputs_raise_clear_error) ... ok
+test_excluded_cell_does_not_define_grid (test_pipeline.InputTests.test_excluded_cell_does_not_define_grid) ... ok
+test_failed_raw_input_keeps_file_provenance (test_pipeline.InputTests.test_failed_raw_input_keeps_file_provenance) ... ok
+test_inf_features_rejected (test_pipeline.InputTests.test_inf_features_rejected) ... ok
+test_invalid_optional_target_is_not_silently_dropped (test_pipeline.InputTests.test_invalid_optional_target_is_not_silently_dropped) ... ok
+test_malformed_feature_name_rejected (test_pipeline.InputTests.test_malformed_feature_name_rejected) ... ok
+test_missing_ocv_does_not_silently_shrink_cohort (test_pipeline.InputTests.test_missing_ocv_does_not_silently_shrink_cohort) ... ok
+test_missing_target_segment_rejected (test_pipeline.InputTests.test_missing_target_segment_rejected) ... ok
+test_mpt_imaginary_sign (test_pipeline.InputTests.test_mpt_imaginary_sign) ... ok
+test_nan_capacity_never_becomes_normal (test_pipeline.InputTests.test_nan_capacity_never_becomes_normal) ... ok
+test_no_implicit_extrapolation (test_pipeline.InputTests.test_no_implicit_extrapolation) ... ok
+test_target_raw_step_supported (test_pipeline.InputTests.test_target_raw_step_supported) ... ok
+test_time_reversal_rejected (test_pipeline.InputTests.test_time_reversal_rejected) ... ok
+test_units_row_and_no_units_keep_same_observations (test_pipeline.InputTests.test_units_row_and_no_units_keep_same_observations) ... ok
+test_wrong_current_sign_rejected (test_pipeline.InputTests.test_wrong_current_sign_rejected) ... ok
+test_zero_initial_current_rejected (test_pipeline.InputTests.test_zero_initial_current_rejected) ... ok
+test_cc_missing_rows_keep_cell_alignment_and_workbook (test_pipeline.IntegrationTests.test_cc_missing_rows_keep_cell_alignment_and_workbook) ... ok
+test_failed_run_writes_audit_and_nonzero_exit (test_pipeline.IntegrationTests.test_failed_run_writes_audit_and_nonzero_exit) ... ok
+test_imports_do_not_create_analysis_outputs (test_pipeline.IntegrationTests.test_imports_do_not_create_analysis_outputs) ... ok
+test_output_overwrite_refused (test_pipeline.IntegrationTests.test_output_overwrite_refused) ... ok
+test_prediction_uses_saved_fit_without_refitting (test_pipeline.IntegrationTests.test_prediction_uses_saved_fit_without_refitting) ... ok
+
+----------------------------------------------------------------------
+Ran 34 tests in 2.639s
+
+OK

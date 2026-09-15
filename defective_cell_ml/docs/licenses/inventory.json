@@ -1,0 +1,119 @@
+[
+  {
+    "name": "et_xmlfile",
+    "version": "2.0.0",
+    "license_expression": null,
+    "license_classifiers": [
+      "License :: OSI Approved :: MIT License"
+    ],
+    "license_text": "et_xmlfile-2.0.0.txt",
+    "license_sha256": "c18a673a77b01cc2e706919db34b1e93d892bf66eb8dbfba774644d0cf62368e"
+  },
+  {
+    "name": "joblib",
+    "version": "1.5.2",
+    "license_expression": null,
+    "license_classifiers": [
+      "License :: OSI Approved :: BSD License"
+    ],
+    "license_text": "joblib-1.5.2.txt",
+    "license_sha256": "6805a299f107e3f30dec97f2ade398288b30b0271ef7890a6d45d8f8f5c1f29c"
+  },
+  {
+    "name": "numpy",
+    "version": "2.3.5",
+    "license_expression": null,
+    "license_classifiers": [
+      "License :: OSI Approved :: BSD License"
+    ],
+    "license_text": "numpy-2.3.5.txt",
+    "license_sha256": "583bbc19a0dc3d1502867629b94082f08464ba9bd706efec4624c3bac8ded4f8"
+  },
+  {
+    "name": "openpyxl",
+    "version": "3.1.5",
+    "license_expression": null,
+    "license_classifiers": [
+      "License :: OSI Approved :: MIT License"
+    ],
+    "license_text": "openpyxl-3.1.5.txt",
+    "license_sha256": "e6570a95575fa7ba8e8f6b6b8c41f5f34fef5dfddeec79775c78c77f8108d339"
+  },
+  {
+    "name": "pandas",
+    "version": "2.3.3",
+    "license_expression": null,
+    "license_classifiers": [
+      "License :: OSI Approved :: BSD License"
+    ],
+    "license_text": "pandas-2.3.3.txt",
+    "license_sha256": "f174f55cb0331cecde79ef1318971aaa2ab91c67242b64b0b691a264c8ef528c"
+  },
+  {
+    "name": "python-dateutil",
+    "version": "2.9.0.post0",
+    "license_expression": null,
+    "license_classifiers": [
+      "License :: OSI Approved :: BSD License",
+      "License :: OSI Approved :: Apache Software License"
+    ],
+    "license_text": "python-dateutil-2.9.0.post0.txt",
+    "license_sha256": "16664aa8eb6cfe58335c187d4705b6432d612a4a7fe41184f09af7c4e5db159e"
+  },
+  {
+    "name": "pytz",
+    "version": "2026.3.post1",
+    "license_expression": null,
+    "license_classifiers": [
+      "License :: OSI Approved :: MIT License"
+    ],
+    "license_text": "pytz-2026.3.post1.txt",
+    "license_sha256": "44e0f47c741ac48d1eb07d879acb8ea367434570fb342f24644ad30b772b308d"
+  },
+  {
+    "name": "scikit-learn",
+    "version": "1.7.2",
+    "license_expression": "BSD-3-Clause",
+    "license_classifiers": [],
+    "license_text": "scikit-learn-1.7.2.txt",
+    "license_sha256": "3c156e7dbf598b3757a328f99f8a3b837c942afd3db1b8396e07113bd470d941"
+  },
+  {
+    "name": "scipy",
+    "version": "1.16.3",
+    "license_expression": null,
+    "license_classifiers": [
+      "License :: OSI Approved :: BSD License"
+    ],
+    "license_text": "scipy-1.16.3.txt",
+    "license_sha256": "cd199138c4559ba9e866de1ff80edbf5a3a01f68df6f65d6bc4b96f9024d95bc"
+  },
+  {
+    "name": "six",
+    "version": "1.17.0",
+    "license_expression": null,
+    "license_classifiers": [
+      "License :: OSI Approved :: MIT License"
+    ],
+    "license_text": "six-1.17.0.txt",
+    "license_sha256": "aee6129cc031022aeafbac166d091a7318538c787f80ae0e8fe91481d59aa1c5"
+  },
+  {
+    "name": "threadpoolctl",
+    "version": "3.6.0",
+    "license_expression": null,
+    "license_classifiers": [
+      "License :: OSI Approved :: BSD License"
+    ],
+    "license_text": "threadpoolctl-3.6.0.txt",
+    "license_sha256": "78daadbd472a0745870cb218686d01e350d07be39bcb18adc19be133d0fd9f43"
+  },
+  {
+    "name": "tzdata",
+    "version": "2026.4",
+    "license_expression": null,
+    "license_classifiers": [],
+    "license_text": "tzdata-2026.4.txt",
+    "license_sha256": "cbe1c8f06bf9aa2c19b0dbb41ae96602c585c35d9ae999aeceab34111569fdb7"
+  }
+]

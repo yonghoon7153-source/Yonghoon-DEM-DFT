@@ -1,0 +1,152 @@
+{
+  "started_utc": "2026-09-14T17:23:38.395871+00:00",
+  "status": "passed",
+  "data_kind": "synthetic_only",
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.16.3",
+    "joblib": "1.5.2",
+    "openpyxl": "3.1.5",
+    "threadpoolctl": "3.6.0"
+  },
+  "commands": [
+    {
+      "name": "01_unit_tests",
+      "arguments": [
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "returncode": 0,
+      "log": "01_unit_tests.log"
+    },
+    {
+      "name": "02_full_default_demo",
+      "arguments": [
+        "export_for_origin.py",
+        "--demo",
+        "--output",
+        "{validation_output}\\demo"
+      ],
+      "returncode": 0,
+      "log": "02_full_default_demo.log"
+    },
+    {
+      "name": "03_prepare_raw",
+      "arguments": [
+        "extract_capacity.py",
+        "--cycle-dir",
+        "examples/raw/cycle",
+        "--eis-dir",
+        "examples/raw/eis",
+        "--selection-manifest",
+        "examples/selection_manifest.csv",
+        "--config",
+        "examples/config_group.json",
+        "--output",
+        "{validation_output}\\prepared.csv"
+      ],
+      "returncode": 0,
+      "log": "03_prepare_raw.log"
+    },
+    {
+      "name": "04_train_raw_group",
+      "arguments": [
+        "export_for_origin.py",
+        "--cycle-dir",
+        "examples/raw/cycle",
+        "--eis-dir",
+        "examples/raw/eis",
+        "--selection-manifest",
+        "examples/selection_manifest.csv",
+        "--config",
+        "examples/config_group.json",
+        "--synthetic-data",
+        "--output",
+        "{validation_output}\\raw_group"
+      ],
+      "returncode": 0,
+      "log": "04_train_raw_group.log"
+    },
+    {
+      "name": "05_train_csv_group",
+      "arguments": [
+        "export_for_origin.py",
+        "--features",
+        "{validation_output}\\prepared.csv",
+        "--config",
+        "examples/config_group.json",
+        "--synthetic-data",
+        "--output",
+        "{validation_output}\\csv_group"
+      ],
+      "returncode": 0,
+      "log": "05_train_csv_group.log"
+    },
+    {
+      "name": "06_prepare_unlabeled_eis",
+      "arguments": [
+        "extract_capacity.py",
+        "--config",
+        "config.json",
+        "--eis-dir",
+        "examples/raw/new_eis",
+        "--output",
+        "{validation_output}\\new_features.csv"
+      ],
+      "returncode": 0,
+      "log": "06_prepare_unlabeled_eis.log"
+    },
+    {
+      "name": "07_predict_from_saved_models",
+      "arguments": [
+        "predict.py",
+        "--run",
+        "{validation_output}\\raw_group",
+        "--features",
+        "{validation_output}\\new_features.csv",
+        "--output",
+        "{validation_output}\\new_predictions.csv"
+      ],
+      "returncode": 0,
+      "log": "07_predict_from_saved_models.log"
+    }
+  ],
+  "checks": [
+    {
+      "name": "raw_and_prepared_csv_reproduce_same_OOF",
+      "status": "passed"
+    },
+    {
+      "name": "all_three_runs_complete_12_cells_11_sheets_finite_metrics_and_valid_hashes",
+      "status": "passed"
+    },
+    {
+      "name": "all_three_targets_keep_outer_and_inner_groups_separate",
+      "status": "passed"
+    },
+    {
+      "name": "saved_models_predict_12_unlabeled_new_identifiers",
+      "status": "passed"
+    }
+  ],
+  "code_sha256": {
+    "config.py": "8fa30efcb3cfbc002a9d7eb5eaa93f1867f334dd6f8754d8df009d2f2be0e90b",
+    "demo.py": "34319fa594a0c5048950d1f168e2b0bc73069e5c15cb17b1ae2c1f4b729911e4",
+    "examples\\generate_examples.py": "cfca781b92519b700827a7ea7b7ec53d02bee5b70d95a8c68542fce6c7844013",
+    "export_for_origin.py": "8790e2fc02fc78b09095dd1db1eeaee038683e234eaf5ef9320596c316db63d4",
+    "extract_capacity.py": "1a47ba0a778b075216e708b868a2d76890ced82459c04230ebc6dd1028fd9c98",
+    "feature_band_test.py": "ec17cfcf84074608f9b68ff68ca94b62b4a5fb328e9f1333f79123fe9b75329c",
+    "predict.py": "ccd252ccba64a5c12d0578a4852640d1882685a51c22cdc6321a1d8a3e8ec57a",
+    "ridge_capacity.py": "3179ec12fb42af7a1ec35a2820388feb8177af38877a00e0aacdd9d20de16bb1",
+    "tests\\test_pipeline.py": "8a4d1bf5f04e75f75c3340f7fc2b84ce78ff68158188fb0c52372e4aae459cc1",
+    "tests\\verify_release.py": "730a2b15d45b4c99cf1257b8978dbe80ce571202a6c027d0c5606b2f0596e002"
+  },
+  "finished_utc": "2026-09-14T17:24:12.008314+00:00"
+}

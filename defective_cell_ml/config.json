@@ -1,0 +1,60 @@
+{
+  "threshold_ah": 0.01802088,
+  "design_capacity_ah": 0.0200232,
+  "area_cm2": 3.24,
+  "cell_min": 34,
+  "cell_max": 98,
+  "exclude_cells": {},
+  "frequency_grid_hz": [
+    0.01,
+    0.1,
+    1.0,
+    10.0,
+    100.0,
+    1000.0,
+    10000.0,
+    100000.0,
+    1000000.0
+  ],
+  "boundary_policy": "error",
+  "max_boundary_fraction": 0.05,
+  "duplicate_frequency_policy": "error",
+  "target_cycle": 1,
+  "target_step_i": 1,
+  "target_raw_step": null,
+  "expected_current_sign": "positive",
+  "cv_relative_drop": 0.01,
+  "use_ocv": true,
+  "outer_cv": "leave_one_cell_out",
+  "group_column": "batch_id",
+  "inner_splits": 3,
+  "seed": 2026,
+  "ridge_alphas": [
+    0.001,
+    0.01,
+    0.1,
+    1.0,
+    10.0,
+    100.0,
+    1000.0
+  ],
+  "logistic_cs": [
+    0.001,
+    0.01,
+    0.1,
+    1.0,
+    10.0
+  ],
+  "logistic_class_weight": "balanced",
+  "decision_threshold": 0.5,
+  "feature_sets": [
+    "single_1e3",
+    "band_1e3_1e5",
+    "band_low",
+    "full"
+  ],
+  "encodings": [
+    "utf-8-sig",
+    "cp949"
+  ]
+}
