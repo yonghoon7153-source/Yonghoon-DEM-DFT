@@ -13,16 +13,37 @@ import pandas as pd
 from openpyxl import Workbook
 from openpyxl.styles import Font,PatternFill
 from sklearn.metrics import roc_curve
-from threadpoolctl import threadpool_limits
+from threadpoolctl import threadpool_info,threadpool_limits
 from config import VERSION,DataError,EvaluationError,config_dict,digest,load_config,write_json
 from demo import make_demo
 from extract_capacity import load_raw,validate_frame
-from ridge_capacity import (classification_metrics,describe,fixed_baselines,nested_evaluate,
-                            regression_metrics,select_model)
+from ridge_capacity import (classification_baselines,classification_metrics,describe,fixed_baselines,
+                            nested_evaluate,regression_metrics,select_model,selection_counts,
+                            selection_diagnostics,skipped_candidates,threshold_baselines,uses_eis)
+
+NOTES=['Pooled OOF AUC collects the outer out-of-fold predictions into one vector instead of averaging folds, '
+       'so its chance level is not exactly 0.5 and falls below it in small cohorts; read it against the '
+       'baseline_* rows, not against 0.5.',
+       'Under leave_one_cell_out the mean baseline has Q2 = 1-(n/(n-1))**2 (n=12: -0.190) and a threshold AUC '
+       'of 0 by construction; those values are the no-information reference, not an inverted signal.',
+       'log_loss/brier_score are reported next to log_loss_prior_baseline/brier_prior_baseline because '
+       'class-weighted training rescales probabilities away from the observed prior.']
 
 def versions():
+    """Interpreter, libraries, platform and BLAS: everything that moves the last digits between machines."""
     return {'python':platform.python_version(),**{p:importlib.metadata.version(p) for p in
-            ['numpy','pandas','scikit-learn','scipy','joblib','openpyxl','threadpoolctl']}}
+            ['numpy','pandas','scikit-learn','scipy','joblib','openpyxl','threadpoolctl']},
+            'platform':platform.platform(),'machine':platform.machine(),
+            'blas':[{k:info[k] for k in ['user_api','internal_api','prefix','version','num_threads'] if k in info}
+                    for info in threadpool_info()]}
+
+def markdown_table(rows,columns):
+    def cell(value):
+        if value is None or (isinstance(value,float) and not np.isfinite(value)):
+            return '—'
+        return f'{value:.4g}' if isinstance(value,float) else str(value)
+    return ['| '+' | '.join(columns)+' |','|'+'|'.join('---' for _ in columns)+'|',
+            *['| '+' | '.join(cell(row.get(c)) for c in columns)+' |' for row in rows]]
 
 def outcome(y,pred):
     return np.where((y==1)&(pred==1),'TP',np.where((y==1)&(pred==0),'FN',np.where((y==0)&(pred==1),'FP','TN')))
@@ -45,11 +66,14 @@ def write_workbook(path,tables):
                     v=v.item()
                 if isinstance(v,float) and not np.isfinite(v):
                     v=None
-                # Literal strings must not become spreadsheet formulas.
-                if isinstance(v,str) and v.startswith(('=','+','-','@')):
-                    v="'"+v
                 cleaned.append(v)
             sheet.append(cleaned)
+            for cell in sheet[sheet.max_row]:
+                # Literal strings must not become spreadsheet formulas; the stored value stays intact
+                # (Excel shows the quote prefix, it is not part of the text).
+                if isinstance(cell.value,str) and cell.value.startswith(('=','+','-','@')):
+                    cell.data_type='s'
+                    cell.quotePrefix=True
         sheet.freeze_panes='B2'
         sheet.auto_filter.ref=sheet.dimensions
         for cell in sheet[1]:
@@ -75,33 +99,42 @@ def run(frame,cfg,output,events,metadata):
                       'measured_cap_mAh_cm2':cap*1000/cfg.area_cm2,'true_label':ybin})
     if groups is not None:
         oof[cfg.group_column]=groups
-    reg_rows=[]; clf_rows=[]; folds={}; unavailable={}; coefficients=[]; deployment={}
+    reg_rows=[]; clf_rows=[]; folds={}; unavailable={}; coefficients=[]; deployment={}; diagnostics=[]
+    skipped=skipped_candidates(X,cfg)
     (output/'models').mkdir()
 
     def save_final(name,x,y,cell_ids,kind,local_groups):
-        model,trace=select_model(x,y,cell_ids,cfg,kind,local_groups)
+        """Deployment fit only; a failure here never discards an OOF evaluation that already succeeded."""
+        try:
+            model,trace=select_model(x,y,cell_ids,cfg,kind,local_groups)
+        except EvaluationError as exc:
+            unavailable[name+'_deployment_model']=('out-of-fold metrics were computed; the full-data '
+                                                   f'deployment fit is unavailable: {exc}')
+            return
         deployment[name]={'purpose':'Fit on all eligible data after OOF evaluation; not an independent performance estimate',**trace}
         bundle={'pipeline':model,'config':config_dict(cfg),'version':VERSION,'model_name':name,
-                'input_features':list(x.columns),'training_cells':list(map(int,cell_ids)),
+                'input_features':list(x.columns),'selected_features':list(trace['selected']['features']),
+                'training_cells':list(map(int,cell_ids)),
                 'training_min':x.min().to_dict(),'training_max':x.max().to_dict(),
-                'data_kind':metadata['data_kind']}
+                'data_kind':metadata['data_kind'],'versions':versions()}
         joblib.dump(bundle,output/'models'/f'{name}.joblib')
         est=model.named_steps['model']
         if hasattr(est,'coef_'):
             for feature,value in zip(model.named_steps['select'].columns,np.asarray(est.coef_).ravel()):
-                coefficients.append({'model':name,'feature':feature,'coefficient_standardized':float(value),
+                coefficients.append({'model':name,'model_kind':kind,'feature':feature,
+                                     'coefficient_standardized':float(value),
                                      'scope':'full-data final fit; not causal importance'})
 
     pred,trace=nested_evaluate(X,cap,ids,cfg,groups=groups)
     folds['capacity']=trace
     oof['pred_capacity_Ah']=pred
     oof['resid_capacity_Ah']=cap-pred
-    metrics=regression_metrics(cap,pred)
-    metrics.update(model='capacity_nested_selection',target='cap',RMSE_mAh_cm2=metrics['RMSE']*1000/cfg.area_cm2,
-                   MAE_mAh_cm2=metrics['MAE']*1000/cfg.area_cm2)
+    metrics={'model':'capacity_nested_selection','target':'cap',**regression_metrics(cap,pred)}
+    metrics.update(RMSE_mAh_cm2=metrics['RMSE']*1000/cfg.area_cm2,MAE_mAh_cm2=metrics['MAE']*1000/cfg.area_cm2)
     reg_rows.append(metrics)
     save_final('capacity',X,cap,ids,'regression',groups)
-    for name,base_pred,m in fixed_baselines(X,cap,ids,cfg,groups):
+    baselines=fixed_baselines(X,cap,ids,cfg,groups)
+    for name,base_pred,m in baselines:
         reg_rows.append({'model':'baseline_'+name,'target':'cap',**m})
         oof['baseline_'+name]=base_pred
     label=(pred<=cfg.threshold_ah).astype(int)
@@ -119,28 +152,47 @@ def run(frame,cfg,output,events,metadata):
         oof['score_logistic']=prob
         oof['pred_logistic']=label
         oof['outcome_logistic']=outcome(ybin,label)
-        clf_rows.append({'model':'logistic_nested_selection','score_unit':'model probability; calibration unverified',
+        clf_rows.append({'model':'logistic_nested_selection',
+                         'score_unit':'model probability; calibration unverified'
+                                      +('; class-weighted training, so log_loss/brier can exceed the prior baseline'
+                                        if cfg.logistic_class_weight else ''),
                          **classification_metrics(ybin,label,prob,probabilities=True)})
         scores['logistic']=prob
+        diagnostics.extend('logistic '+note for note in selection_diagnostics(prob,trace,cfg))
         save_final('logistic',X,ybin,ids,'classification',groups)
     except EvaluationError as exc:
         unavailable['logistic']=str(exc)
+    # Chance-level rows: the same threshold rule on the regression baselines and a prior-only classifier.
+    for name,base_score,base_label in threshold_baselines(baselines,cfg):
+        clf_rows.append({'model':f'baseline_{name}_threshold',
+                         'score_unit':'Ah below capacity threshold; chance-level reference',
+                         **classification_metrics(ybin,base_label,base_score)})
+        scores[f'baseline_{name}_threshold']=base_score
+    for name,base_prob,m in classification_baselines(X,ybin,ids,cfg,groups):
+        clf_rows.append({'model':f'baseline_{name}','score_unit':'training prior probability; chance-level reference',**m})
+        scores[f'baseline_{name}']=base_prob
     if 'cc_frac' in df:
         mask=df['cc_frac'].notna().to_numpy()
-        try:
-            x=X.loc[mask]; y=df.loc[mask,'cc_frac'].to_numpy(); cells=ids[mask]
-            local_groups=None if groups is None else groups[mask]
-            prediction,trace=nested_evaluate(x,y,cells,cfg,groups=local_groups)
-            folds['cc_fraction']=trace
-            # Align by cell ID even when some CC fractions are absent.
-            measured_map=dict(zip(cells,y)); pred_map=dict(zip(cells,prediction))
-            oof['measured_cc_frac']=oof['cell_number'].map(measured_map)
-            oof['pred_cc_frac']=oof['cell_number'].map(pred_map)
-            oof['resid_cc_frac']=oof['measured_cc_frac']-oof['pred_cc_frac']
-            reg_rows.append({'model':'ccfrac_nested_selection','target':'cc_frac',**regression_metrics(y,prediction)})
-            save_final('cc_fraction',x,y,cells,'regression',local_groups)
-        except EvaluationError as exc:
-            unavailable['cc_fraction']=str(exc)
+        present=int(mask.sum())
+        if present<4:
+            unavailable['cc_fraction']=('cc_frac column present but every value is missing' if not present else
+                                        f'only {present} of {len(df)} cells have cc_frac; '
+                                        'at least 4 are required (execution minimum, not evidence of adequacy)')
+        else:
+            try:
+                x=X.loc[mask]; y=df.loc[mask,'cc_frac'].to_numpy(); cells=ids[mask]
+                local_groups=None if groups is None else groups[mask]
+                prediction,trace=nested_evaluate(x,y,cells,cfg,groups=local_groups)
+                folds['cc_fraction']=trace
+                # Align by cell ID even when some CC fractions are absent.
+                measured_map=dict(zip(cells,y)); pred_map=dict(zip(cells,prediction))
+                oof['measured_cc_frac']=oof['cell_number'].map(measured_map)
+                oof['pred_cc_frac']=oof['cell_number'].map(pred_map)
+                oof['resid_cc_frac']=oof['measured_cc_frac']-oof['pred_cc_frac']
+                reg_rows.append({'model':'ccfrac_nested_selection','target':'cc_frac',**regression_metrics(y,prediction)})
+                save_final('cc_fraction',x,y,cells,'regression',local_groups)
+            except EvaluationError as exc:
+                unavailable['cc_fraction']=str(exc)
     else:
         unavailable['cc_fraction']='cc_frac column not provided'
 
@@ -149,19 +201,25 @@ def run(frame,cfg,output,events,metadata):
     pd.DataFrame(clf_rows).to_csv(output/'classification_metrics.csv',index=False,encoding='utf-8-sig')
     write_json(output/'folds.json',folds)
     write_json(output/'deployment_fit.json',deployment)
-    write_json(output/'metrics.json',{'regression':reg_rows,'classification':clf_rows,'unavailable':unavailable})
+    write_json(output/'metrics.json',{'regression':reg_rows,'classification':clf_rows,'unavailable':unavailable,
+                                      'skipped_candidates':skipped,'diagnostics':diagnostics,'notes':NOTES})
     roc_rows=[]
     if len(np.unique(ybin))==2:
         for name,s in scores.items():
             fpr,tpr,thresholds=roc_curve(ybin,s)
-            roc_rows.extend({'model':name,'FPR':float(a),'TPR':float(b),'score_threshold':float(c)} for a,b,c in zip(fpr,tpr,thresholds))
+            # roc_curve prepends an infinite threshold for the empty operating point; it has no value to report.
+            roc_rows.extend({'model':name,'FPR':float(a),'TPR':float(b),
+                             'score_threshold':float(c) if np.isfinite(c) else None} for a,b,c in zip(fpr,tpr,thresholds))
     summary=[{'item':k,'value':v} for k,v in {'threshold_Ah':cfg.threshold_ah,'area_cm2':cfg.area_cm2,
         'design_capacity_Ah':cfg.design_capacity_ah,'n_samples':len(df),'n_defective':int(ybin.sum()),
         'n_normal':int(len(ybin)-ybin.sum()),'outer_cv':cfg.outer_cv,
         'logistic_decision_threshold':cfg.decision_threshold,'data_kind':metadata['data_kind'],
         'primary_selection':'feature set and regularization selected within outer training partitions',
+        'chance_level_reference':'read every classification row against the baseline_* rows, not against 0.5',
         'external_validation_performed':False}.items()]
     summary.extend({'item':'unavailable_'+k,'value':v} for k,v in unavailable.items())
+    summary.extend({'item':'diagnostic','value':note} for note in diagnostics)
+    summary.extend({'item':'skipped_'+k,'value':', '.join(v)} for k,v in skipped.items() if v)
     cm=[]
     for r in clf_rows:
         cm.extend([{'model':r['model'],'actual':'defective','pred_defective':r['TP'],'pred_normal':r['FN']},
@@ -174,7 +232,7 @@ def run(frame,cfg,output,events,metadata):
         '02_reg_metrics':pd.DataFrame(reg_rows),
         '03_reg_coefs':pd.DataFrame([c for c in coefficients if c['feature']!='ocv']),
         '03b_reg_coefs_ocv':pd.DataFrame([c for c in coefficients if c['feature']=='ocv']),
-        '04_reg_residual':oof[[c for c in oof if c=='cell_number' or c.startswith(('measured_','pred_capacity_Ah','resid_'))]],
+        '04_reg_residual':oof[[c for c in oof if c=='cell_number' or c.startswith(('measured_','pred_capacity_Ah','pred_cc_frac','resid_'))]],
         '05_clf_roc':pd.DataFrame(roc_rows),
         '06_clf_metrics':pd.DataFrame(clf_rows),
         '07_clf_cellwise':oof[[c for c in oof if c in ['cell_number','measured_cap_Ah','true_label'] or c.startswith(('score_','pred_logistic','pred_capacity_threshold','outcome_'))]],
@@ -191,16 +249,56 @@ def run(frame,cfg,output,events,metadata):
           '- 기준선과 최종 선택 절차의 점수를 보고 다시 모델을 고르면 추가 독립 평가가 필요합니다.', '']
     if metadata['data_kind']=='synthetic_demo':
         text.append('**가상 데이터 실행 점수입니다. 실제 불량셀 성능으로 사용할 수 없습니다.**\n')
+    loo_q2=1-(len(df)/(len(df)-1))**2
+    text.extend(['## 지표 요약 (바깥 OOF)','',
+                 *markdown_table(reg_rows,['model','target','n_samples','Q2','RMSE','MAE']),'',
+                 *markdown_table(clf_rows,['model','n_samples','TP','FN','FP','TN','accuracy','MCC','AUC_pooled_OOF']),'',
+                 f'- 우연 수준은 0/0.5가 아니라 `baseline_*` 행입니다. leave_one_cell_out에서 평균 기준선의 Q2는 자료와 무관한 '
+                 f'상수 1-(n/(n-1))^2 (n={len(df)}: {loo_q2:.3f})이고 그 임계값 점수의 pooled AUC는 구조적으로 0입니다'
+                 +('.' if cfg.outer_cv=='leave_one_cell_out' else
+                   '; 지금 실행한 그룹 분할에서는 이 상수가 성립하지 않으므로 위 표의 baseline 행 값을 그대로 기준으로 쓰십시오.'),
+                 '- pooled OOF AUC는 fold별 평균이 아니라 바깥 OOF 예측을 한 벡터로 모아 계산하므로 우연 수준이 정확히 0.5가 아니고 '
+                 '소표본에서 0.5 아래로 치우칩니다. 0.5 부근 값 하나로 신호 유무를 판정하지 마십시오.',
+                 '- class_weight=balanced 학습은 확률을 재가중하므로 log_loss/brier가 사전확률 기준선(log_loss_prior_baseline, '
+                 'brier_prior_baseline)보다 나쁠 수 있습니다.','',
+                 '## fold별 선택과 최종 적합',''])
+    for target,traces in folds.items():
+        text.append(f'- {target}: '+'; '.join(f'{name} x{count}' for name,count in selection_counts(traces)))
+        chosen=deployment.get(target)
+        if chosen is None:
+            text.append('  - 전체 자료 배포 모델 없음 (계산하지 못한 항목 참조)')
+            continue
+        selected=chosen['selected']
+        penalty=selected['alpha'] if selected.get('alpha') is not None else selected.get('C')
+        text.append(f'  - 전체 자료 적합: {selected["estimator"]}, 특징 {len(selected["features"])}개'
+                    +('' if penalty is None else f', alpha/C={penalty:g}'))
+        if not uses_eis(selected['features']):
+            text.append(f'  - **이 {target} 모델은 EIS 특징을 전혀 사용하지 않습니다 '
+                        f'(선택된 특징: {", ".join(selected["features"])}). 03_reg_coefs에 EIS 계수 행이 없을 수 있습니다.**')
+    text.append('')
+    if diagnostics:
+        text.extend(['## 모델 진단','',*[f'- {note}' for note in diagnostics],''])
+    if skipped['feature_sets'] or skipped['baselines']:
+        text.extend(['## 제외된 후보·기준선','',
+                     f'- 열이 없어 제외된 feature_set: {", ".join(skipped["feature_sets"]) or "없음"}',
+                     f'- 열이 없어 제외된 기준선: {", ".join(skipped["baselines"]) or "없음"}',
+                     '- 제외는 실행 실패가 아니며 metrics.json의 `skipped_candidates`에도 기록됩니다.',''])
     if unavailable:
         text.append('## 계산하지 못한 항목\n')
-        text.extend(f'- {name}: {reason}' for name,reason in unavailable.items())
+        text.extend(f'- {name} ({"평가는 완료; 전체 자료 배포 모델만 적합 불가" if name.endswith("_deployment_model") else "지표 없음"}): {reason}'
+                    for name,reason in unavailable.items())
     text.extend(['','## 확인 파일','', '- `oof_predictions.csv`: 셀별 실측·예측·잔차·판정',
                  '- `folds.json`: 바깥/안쪽 셀·그룹, 선택 설정, 표준화 평균',
                  '- `data_audit.json`, `config.json`, `run.json`: 입력 처리·설정·실행 출처',
                  '- `results_for_origin.xlsx`: Origin용 11개 표. 기존 버전과 열 구조는 다릅니다.',
                  '- `models/`: 전체 자료 적합 모델. `predict.py`로 새 CSV에 적용'])
     (output/'run_summary.md').write_text('\n'.join(text)+'\n',encoding='utf-8')
-    return {'status':'partial' if unavailable else 'completed','n_cells':len(df),'unavailable':unavailable}
+    headline='; '.join([f"capacity Q2={'—' if reg_rows[0]['Q2'] is None else format(reg_rows[0]['Q2'],'.3f')}",
+                        f"RMSE={reg_rows[0]['RMSE']:.4g} Ah",
+                        *[f"{r['model']} AUC={r['AUC_pooled_OOF']:.3f}" for r in clf_rows
+                          if r['AUC_pooled_OOF'] is not None and not r['model'].startswith('baseline_')]])
+    return {'status':'partial' if unavailable else 'completed','n_cells':len(df),
+            'unavailable':unavailable,'headline':headline}
 
 def main(argv=None):
     parser=argparse.ArgumentParser(description='Validated defective-cell ML with nested evaluation')
@@ -231,7 +329,7 @@ def main(argv=None):
           'data_kind':'synthetic_demo' if args.demo or args.synthetic_data else 'user_data_protocol_not_independently_verified',
           'external_validation_performed':False,'versions':versions(),
           'config_path':str(Path(args.config).resolve()) if args.config else None,
-          'code_sha256':{p.name:digest(p) for p in Path(__file__).resolve().parent.glob('*.py')}}
+          'code_sha256':{p.name:digest(p) for p in sorted(Path(__file__).resolve().parent.glob('*.py'))}}
     write_json(output/'config.json',config_dict(cfg))
     write_json(output/'run.json',meta)
     try:
@@ -261,6 +359,8 @@ def main(argv=None):
     # POSIX keys so a record written on Windows can be re-checked on Linux/macOS.
     write_json(output/'artifact_hashes.json',{p.relative_to(output).as_posix():digest(p) for p in output.rglob('*') if p.is_file()})
     print(f'{meta["status"]}: {output} ({meta["n_cells"]} cells)')
+    if meta.get('headline'):
+        print(f'{meta["headline"]}; chance level is the baseline_* rows, not 0.5 (see run_summary.md)')
     if meta.get('unavailable'):
         print('Some targets unavailable; see run_summary.md')
     return 0

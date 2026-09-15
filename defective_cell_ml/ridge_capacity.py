@@ -3,7 +3,7 @@ import warnings
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin, clone
-from sklearn.dummy import DummyRegressor
+from sklearn.dummy import DummyClassifier,DummyRegressor
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.linear_model import LinearRegression, LogisticRegression, Ridge
 from sklearn.metrics import (confusion_matrix, f1_score, matthews_corrcoef, roc_auc_score,
@@ -28,7 +28,10 @@ class FeatureSelector(TransformerMixin,BaseEstimator):
     def transform(self,X):
         return X.loc[:,list(self.columns)]
 
-def band_columns(X,cfg):
+INNER_METRICS={'neg_mean_squared_error':'negative_MSE','neg_log_loss':'negative_log_loss'}
+
+def band_columns(X,cfg,skipped=None):
+    """Configured feature sets whose columns exist; names dropped for missing columns go to `skipped`."""
     z=[c for c in X.columns if FEATURE_RE.fullmatch(c)]
     def frequency(c):
         return float(FEATURE_RE.fullmatch(c).group(2))
@@ -43,6 +46,8 @@ def band_columns(X,cfg):
     for name in cfg.feature_sets:
         columns=available[name]
         if not columns:
+            if skipped is not None:
+                skipped.append(name)
             continue
         for ocv in [False,True] if cfg.use_ocv else [False]:
             selected=tuple(columns+(['ocv'] if ocv else []))
@@ -53,13 +58,22 @@ def band_columns(X,cfg):
         raise EvaluationError('No configured feature sets are available')
     return result
 
+def baseline_columns(cfg):
+    return ['mag@1000Hz']+(['ocv'] if cfg.use_ocv else [])
+
+def skipped_candidates(X,cfg):
+    """Feature sets and fixed baselines silently dropped because the frequency grid lacks their columns."""
+    skipped=[]
+    band_columns(X,cfg,skipped)
+    return {'feature_sets':skipped,'baselines':[c for c in baseline_columns(cfg) if c not in X]}
+
 def candidate_grid(X,cfg,kind):
     bands=band_columns(X,cfg)
     grid=[]
     if kind=='regression':
         # Baselines also compete only inside inner CV, not on outer results.
         grid.append({'select__columns':[(X.columns[0],)],'model':[DummyRegressor(strategy='mean')]})
-        for col in ['mag@1000Hz']+(['ocv'] if cfg.use_ocv else []):
+        for col in baseline_columns(cfg):
             if col in X:
                 grid.append({'select__columns':[(col,)],'model':[LinearRegression()]})
         for _,columns in bands:
@@ -115,14 +129,20 @@ def select_model(X,y,ids,cfg,kind,groups=None):
     with warnings.catch_warnings(record=True) as captured:
         warnings.simplefilter('always')
         warnings.filterwarnings('error',category=ConvergenceWarning)
-        search.fit(X,np.asarray(y))
+        try:
+            search.fit(X,np.asarray(y))
+        except ConvergenceWarning as exc:
+            # Promoted to an error so it is never ignored, but reported as an evaluation
+            # failure so only this target becomes unavailable.
+            raise EvaluationError(f'Inner fit did not converge: {exc}') from exc
     scores=np.asarray(search.cv_results_['mean_test_score'])
     if not np.isfinite(scores).all():
         raise EvaluationError('Nonfinite inner validation scores; selection rejected')
     selected=describe(search.best_estimator_)
     trace={'training_cells':list(map(int,ids)),'selected':selected,
-           'inner_metric':'negative_MSE' if kind=='regression' else 'negative_log_loss',
+           'inner_metric':INNER_METRICS[search.scoring],
            'best_inner_score':float(search.best_score_),'candidate_count':len(scores),
+           # ConvergenceWarning is promoted to EvaluationError above and never lands here.
            'warnings':[str(w.message) for w in captured],
            'inner_folds':[{'train_cells':list(map(int,np.asarray(ids)[a])),
                            'validation_cells':list(map(int,np.asarray(ids)[b])),
@@ -152,8 +172,13 @@ def classification_metrics(y,pred,score,probabilities=False):
             'MCC':float(matthews_corrcoef(y,pred)) if both else None,
             'AUC_pooled_OOF':float(roc_auc_score(y,score)) if both else None}
     if probabilities:
+        # Class-weighted training rescales probabilities, so log_loss/brier are only readable
+        # next to the constant prior of the same labels.
+        prior=np.full(len(y),float(np.mean(y)) if len(y) else 0.)
         result.update(log_loss=float(log_loss(y,score,labels=[0,1])),
-                      brier_score=float(brier_score_loss(y,score)))
+                      brier_score=float(brier_score_loss(y,score)),
+                      log_loss_prior_baseline=float(log_loss(y,prior,labels=[0,1])),
+                      brier_prior_baseline=float(brier_score_loss(y,prior)))
     return result
 
 def nested_evaluate(X,y,ids,cfg,kind='regression',groups=None):
@@ -182,7 +207,7 @@ def nested_evaluate(X,y,ids,cfg,kind='regression',groups=None):
 
 def fixed_baselines(X,y,ids,cfg,groups=None):
     candidates=[('mean',DummyRegressor(),[X.columns[0]])]
-    for col in ['mag@1000Hz']+(['ocv'] if cfg.use_ocv else []):
+    for col in baseline_columns(cfg):
         if col in X:
             candidates.append((col,LinearRegression(),[col]))
     results=[]
@@ -194,6 +219,58 @@ def fixed_baselines(X,y,ids,cfg,groups=None):
             predictions[test]=model.predict(X.iloc[test][columns])
         results.append((name,predictions,regression_metrics(y,predictions)))
     return results
+
+def classification_baselines(X,y,ids,cfg,groups=None):
+    """Chance-level classification reference on the same outer splits (prior probability, no features)."""
+    y=np.asarray(y,dtype=int)
+    results=[]
+    for name,estimator in [('prior',DummyClassifier(strategy='prior'))]:
+        probability=np.full(len(y),np.nan)
+        for train,test in outer_splits(X,y,cfg,groups):
+            model=clone(estimator).fit(X.iloc[train],y[train])
+            classes=list(model.classes_)
+            probability[test]=model.predict_proba(X.iloc[test])[:,classes.index(1)] if 1 in classes else 0.
+        label=(probability>=cfg.decision_threshold).astype(int)
+        results.append((name,probability,classification_metrics(y,label,probability,probabilities=True)))
+    return results
+
+def threshold_baselines(baselines,cfg):
+    """Apply the capacity threshold rule to the regression baselines so the table shows its chance level.
+
+    The leave-one-out mean predictor ranks cells against their own labels by construction, so its
+    pooled AUC is 0 and its Q2 is the data-independent constant 1-(n/(n-1))**2.
+    """
+    rows=[]
+    for name,prediction,_ in baselines:
+        score=cfg.threshold_ah-np.asarray(prediction)
+        rows.append((name,score,(score>=0).astype(int)))
+    return rows
+
+def selection_diagnostics(probability,traces,cfg):
+    """Report a classifier that is constant near the decision threshold or pinned to the C grid edge."""
+    notes=[]
+    probability=np.asarray(probability,dtype=float)
+    if len(probability) and float(np.ptp(probability))<=.04 and abs(float(np.mean(probability))-.5)<=.02:
+        notes.append('degenerate: out-of-fold probabilities are constant near 0.5; the selected model separates nothing')
+    edges={min(cfg.logistic_cs),max(cfg.logistic_cs)}
+    boundary=[t for t in traces if t['selected'].get('C') in edges]
+    if traces and len(boundary)*2>=len(traces):
+        notes.append(f'boundary: {len(boundary)} of {len(traces)} folds selected C at an edge of logistic_cs')
+    return notes
+
+def selection_counts(traces):
+    """How often each estimator/feature-count/penalty combination won its inner selection."""
+    counts={}
+    for trace in traces:
+        selected=trace['selected']
+        penalty=selected['alpha'] if selected.get('alpha') is not None else selected.get('C')
+        key=(f"{selected['estimator']}, n_features={len(selected['features'])}"
+             f"{'' if penalty is None else f', alpha/C={penalty:g}'}")
+        counts[key]=counts.get(key,0)+1
+    return sorted(counts.items(),key=lambda item:(-item[1],item[0]))
+
+def uses_eis(columns):
+    return any(FEATURE_RE.fullmatch(c) for c in columns)
 
 if __name__=='__main__':
     from export_for_origin import main
