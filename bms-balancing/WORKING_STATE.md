@@ -52,6 +52,12 @@ RED 관측: `tests/test_r15_open_items.py` 첫 실행 **12 failed · 2 passed** 
 (`…_push_to_a_retired_branch`)로 고정했다. 주석에도 옛 이름을 적지 않는다 — 이름을 옮겨
 적지 않는 것이 규칙이기 때문이다.
 
+**같은 안내문에서 하나 더.** 재대조 python 블록이 **저장소 루트 기준** 경로를 쓰는데 그 명령을
+찍는 자리는 `bms-balancing/` 안이라, 복사해 친 사람이 `FileNotFoundError` 를 봤다. 블록 앞에
+루트로 옮기는 줄을 넣고(그 위 git 세 줄은 이 디렉터리 기준이라 그대로 둔다) 회귀로 고정했다
+(`…_printed_recheck_block_says_where_to_stand`). **안내문은 사람이 그대로 붙여 넣는 코드다** —
+코드와 같은 규율로 본다.
+
 fail-closed 실측 — `PROMOTION_DECISIONS.json` 을 치우면 정본 `out/` 이 `rc 2 · bundle_commits 1`
 로 떨어지고 `066866595ab7 (9 개) · 419c1abaeec9 (4 개)` 를 이름으로 지목한다. 예외가 사라지면
 조용히 넘어가지 않는다.
@@ -373,7 +379,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 326 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 327 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

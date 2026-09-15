@@ -295,3 +295,26 @@ def test_no_script_tells_the_operator_to_push_to_a_retired_branch():
                     bad.append(f"{path.name}:{n}: {br}")
     assert not bad, (
         f"스크립트가 소유 브랜치(`{owner}`)가 아닌 이름을 찍는다:\n  " + "\n  ".join(bad))
+
+
+def test_the_printed_recheck_block_says_where_to_stand():
+    """★ 2026-09-15 실측 — 스크립트가 찍는 재대조 블록이 **저장소 루트 기준** 경로를
+    쓰는데, 그 명령을 찍는 자리는 `bms-balancing/` 안이다.
+
+    사용자가 그대로 복사해 쳤더니 `FileNotFoundError: 'bms-balancing/reviews/…'` 였다.
+    안내문은 사람이 **그대로 붙여 넣는** 것이므로, 어디에 서 있어야 하는지를 스스로
+    말해야 한다. 앞의 git 명령 셋은 이 디렉터리 기준이라 옳고, python 블록만 루트다 —
+    그래서 블록 **앞에** 루트로 옮기는 줄이 있어야 한다.
+
+    같은 함정이 브랜치 이름에서도 났다(위 시험). 안내문은 코드와 같은 규율로 본다.
+    """
+    src = (ROOT / "scripts" / "preserve_handoff.sh").read_text(encoding="utf-8")
+    assert "${PREFIX}${DEST}" in src, "재대조 블록의 루트 기준 경로가 사라졌다 — 시험을 고칠 것"
+    head = src.partition("${PREFIX}${DEST}")[0]
+    # 루트로 옮기는 줄은 `git push` 안내(이 디렉터리 기준)와 루트 기준 경로 **사이**에 있어야
+    # 한다 — 앞에 두면 그 위의 git 명령 셋이 깨진다.
+    assert "git rev-parse --show-toplevel" in head, (
+        "루트 기준 경로를 쓰는 블록인데 어디에 서야 하는지 말하지 않는다 — "
+        "복사해 치면 FileNotFoundError 다")
+    assert head.index("git rev-parse --show-toplevel") > head.rindex("git push -u origin"), (
+        "루트로 옮기는 줄이 git push 안내보다 앞이다 — 그러면 그 세 줄이 깨진다")

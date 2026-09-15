@@ -230,6 +230,9 @@ cat <<NEXT
   그 다음 커밋 안의 bytes 를 재대조한다 (줄끝 정규화가 안 먹었는지 — 이 스크립트의 존재 이유).
   ⚠ 두 가지를 틀리기 쉽다: 'git show HEAD:<경로>' 는 **저장소 루트** 기준이고,
     묶음에 이전 묶음의 manifest 가 딸려 오는 일이 있어 **이번 것을 명시**해야 한다.
+  ⚠ 아래 블록은 **저장소 루트**에서 돈다 (위 git 세 줄은 여기 기준이라 그대로 친다).
+    2026-09-15 실측: 이 줄이 없어서 복사해 친 사람이 FileNotFoundError 를 봤다.
+  cd "\$(git rev-parse --show-toplevel)"
   python3 - <<'CHECK'
 import hashlib, json, pathlib, subprocess
 dest = "${PREFIX}${DEST}"                     # 저장소 루트 기준
