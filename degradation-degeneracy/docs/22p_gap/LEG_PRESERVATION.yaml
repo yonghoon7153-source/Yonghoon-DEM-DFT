@@ -602,18 +602,19 @@ cohorts:
     가 그대로다.
 - cohort_id: g17_2026_09_14
   dir: docs/22p_gap/proj_g17
-  status: active
+  status: frozen
   legs:
   - paired_fixed5_v4
   prospective_legs: []
   cross_leg_comparison: not_applicable_single_leg
-  무엇이_달라졌나: 62차 게이트 리뷰가 새 P0 8건 · P1 6건 · P2 2건을 냈고 전부 코드에서 닫혔다 (원장 §75·§76). 판정의 세 문장 — ① temporal seal 이
-    "등록된 실행의 고정 identity" 가 아니라 우연히 남은 과거의 prefix 로 되돌아간다 (승격 판정과 전이 조회를 갈랐다) ② run lock 발급이 원자적이지
-    않고 봉인·class 등록 전에 lock 을 놓는다 (flock token, commit 까지 임계구역) ③ producer scope 모델이 Python 과 다르다. 이 cohort 의 pin 을
-    움직인 것은 ③ 이다 — definition head 는 바깥 scope, class 본문의 결속은 method 에 안 내려가고 함수·lambda 만 결속 shadow 를 주며, 건너간
-    module 은 자기 symbol table 로 분석하고 자기 이름 공간 접근(`import src.scoring as me`)을 따라간다 (P0-6·P0-7 + 자체 리뷰 sig-완전성 렌즈가
-    잡은 3건 — 전부 "digest 같고 출력 다름" 을 실물 module 로 재현했다). **계산식은 안 바뀌었다** — `src_scoring_py_sha256` 가 그대로이고, 아래
-    행 바이트가 그 사실을 말한다.
+  무엇이_달라졌나: 62차 게이트 리뷰가 새 P0 8건 · P1 6건 · P2 2건을 냈고 전부 코드에서 닫혔다 (원장 §75·§76). 판정의
+    세 문장 — ① temporal seal 이 "등록된 실행의 고정 identity" 가 아니라 우연히 남은 과거의 prefix 로 되돌아간다
+    (승격 판정과 전이 조회를 갈랐다) ② run lock 발급이 원자적이지 않고 봉인·class 등록 전에 lock 을 놓는다 (flock token,
+    commit 까지 임계구역) ③ producer scope 모델이 Python 과 다르다. 이 cohort 의 pin 을 움직인 것은 ③ 이다
+    — definition head 는 바깥 scope, class 본문의 결속은 method 에 안 내려가고 함수·lambda 만 결속 shadow
+    를 주며, 건너간 module 은 자기 symbol table 로 분석하고 자기 이름 공간 접근(`import src.scoring as me`)을
+    따라간다 (P0-6·P0-7 + 자체 리뷰 sig-완전성 렌즈가 잡은 3건 — 전부 "digest 같고 출력 다름" 을 실물 module 로
+    재현했다). **계산식은 안 바뀌었다** — `src_scoring_py_sha256` 가 그대로이고, 아래 행 바이트가 그 사실을 말한다.
   pin:
     schema_version: 3
     compute_sha256: 14ff767d5fbd0d9d
@@ -621,6 +622,37 @@ cohorts:
     src_scoring_py_sha256: 69e69cb046f4b4ae
     analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
     producer_semantic_sha256: 814278bfcb82fa2f
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  frozen_reason: 63차 게이트 리뷰(방어적 코드·회귀 검토)가 새 P1 3건·P2 1건과 증거 공백 둘을 냈고 전부 코드에서 닫혔다
+    (원장 §77·§78). producer analyzer 가 움직였다 — definition head 가 3.12 type_params 의
+    bound·default 를 열거한다 (E1). 활성 cohort 가 현행 트리를 안 따라가므로 다음 세대로 넘긴다. 계산식은 안 바뀌었다
+    — src_scoring_py_sha256 가 그대로다.
+- cohort_id: g18_2026_09_15
+  dir: docs/22p_gap/proj_g18
+  status: active
+  legs:
+  - paired_fixed5_v4
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: 63차 게이트 리뷰(방어적 코드·회귀 검토)가 새 P1 3건 · P2 1건과 증거 공백 둘을 냈고 전부 코드에서 닫혔다
+    (원장 §77·§78). 이 cohort 의 pin 을 움직인 것은 E1 이다 — producer analyzer 의 definition head 가 3.12 `type_params`
+    의 bound(3.12)·default(3.13) 를 열거한다. bound 는 별도 annotation scope 에서 지연 평가되고 함수 매개변수를 못 보므로
+    매개변수 shadow 를 안 적용하는 head 자리가 맞다. type parameter 이름 자체는 shadow 로 세지 않는다 (fail-closed 쪽).
+    첫 수정판이 `getattr(tp, attr)` 로 이름을 계산해서 건네다 분석기 자신의 규칙에 걸렸고 리터럴 이름 둘로 풀었다 —
+    규칙이 자기 자신에게도 걸린다는 것을 실측했다. **계산식은 안 바뀌었다** — `src_scoring_py_sha256` 가 그대로이고,
+    아래 행 바이트가 그 사실을 말한다.
+  pin:
+    schema_version: 3
+    compute_sha256: 150416386d3c0b93
+    row_projection_py_sha256: b8eae978b9525c3e
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: 1d6c0e76f18d63ed
   runtime:
     python: 3.11.15
     pandas: 3.0.5
@@ -718,12 +750,12 @@ legs:
     payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716
     member_rehash_by: tools.archive_bundle.check
     verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
-    verification_receipt_core_sha256: d6ae274f6e06d95a9028cebd6a7551f2d23e5fb74367576c57afab22b178ca7d
+    verification_receipt_core_sha256: 3714cbbf3687a2ebffd81413f617b71f63705e0962e4745c6dc036cd01b81c01
     verification_receipt_generator: docs/22p_gap/make_receipt.py
     empty_root_restore: true
     rescored_from_restored_fits: true
     validator_identity:
-      source_digest: fd7c90edbc56ff1f
+      source_digest: e9ee7475dea7de1d
       n_checks: 34
       ok: true
     leg_source_digest: d50295f980ccaa81
@@ -738,6 +770,7 @@ legs:
     - g15_2026_09_08
     - g16_2026_09_09
     - g17_2026_09_14
+    - g18_2026_09_15
     - g1_2026_08_20
     - g2_2026_08_25
     - g3_2026_08_28

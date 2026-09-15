@@ -77,3 +77,35 @@ E1 의 3.11 합성 AST 판, E2 의 실제 planned lifecycle 관측 + 탐침 대�
 path-finder 1 (F3) · fullmatch 1 (F4) · type-params 1 (E1). 재조준 2 (g62 archive).
 MR 자기 참조 preimage 5 건은 `\uXXXX` escape. `--check-preimages` rc 0
 ("모든 변이 지점이 정확히 한 번 나타난다").
+
+## E2 실측 (clean 커밋 `743f65b`)
+
+`tests/test_gate63_defensive.py -k kernel_lock` → **2 passed** (탐침 대조군 + 실제
+planned lifecycle). grid 가 진짜 solver 로 조건 1개를 돌려 phase 를 닫았고(2.6 s),
+fit 이 token 으로 같은 claim 을 이어받아 commit → `phase_done("fit")` → release.
+관측 열: `("phase_done","fit",True)` · `("phase_written",True)` ·
+`("release",True,True)` — 기록이 쓰이는 순간 커널이 `.fit.lock` 을 쥐고 있었고
+release 시점에 기록이 디스크에 있었다. `results/_unit63-*` 잔여 0.
+
+## 세대 전환 (g17 → g18)
+
+```
+g17_2026_09_14  active → frozen  (journal seq 16)
+g18_2026_09_15  새 active · docs/22p_gap/proj_g18
+
+pin  compute            14ff767d5fbd0d9d → 150416386d3c0b93
+     row_projection     f85fc2b39e15d3d0 → b8eae978b9525c3e
+     producer_semantic  814278bfcb82fa2f → 1d6c0e76f18d63ed
+     src_scoring        69e69cb046f4b4ae (변동 없음)
+     analysis_spec      43d74dd385b1f66d… (변동 없음)
+영수증 core             d6ae274f6e06d95a… → 3714cbbf3687a2eb…
+validator source_digest fd7c90edbc56ff1f → e9ee7475dea7de1d   (F1 이 tools/archive_bundle.py 를 고쳤다)
+행 바이트                ad598fe77e75afec — **열네 세대째 같다**
+```
+
+pin 을 움직인 것은 E1 하나다 (`_definition_head` 가 type_params 의 bound·default
+를 연다). 계산식은 안 바뀌었다. `row_projection.py paired_fixed5_v4 --cohort
+g18_2026_09_15` → 6138행 · restart 30690행 · 전체 True · by_obj True · fits삼중
+True · 봉인일치 True. `make_receipt.py paired_fixed5_v4` → 검사 34건 · 산출 2건.
+`test_docs_lint` 의 pin 검사 둘(`…digests_recompute_from_the_current_tree` ·
+`…exactly_one_cohort_is_active…`) 전환 뒤 2 passed.
