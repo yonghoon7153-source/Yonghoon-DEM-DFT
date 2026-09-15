@@ -1,0 +1,129 @@
+{
+ "scipy": "1.18.1",
+ "python": "3.12.3",
+ "tighten": 0.1,
+ "git_head": "e5fa1df11",
+ "date": "2026-09-15",
+ "channels": {
+  "ionic": {
+   "n_cases": 127,
+   "n_ok": 102,
+   "n_iterative": 32,
+   "n_direct": 70,
+   "n_no_network": 0,
+   "n_solve_none": 25,
+   "n_nonfinite": 0,
+   "n_old_zero": 0,
+   "n_tighten_noop": 0,
+   "n_fallback": 0,
+   "rho_pct_max_iterative": 9.501139834415279e-07,
+   "rho_pct_max_all": 9.501139834415279e-07,
+   "n_perm_ok": 102,
+   "n_perm_noop": 0,
+   "n_perm_bad": 0,
+   "rho_pct_max_permutation": 7.117172448780858e-06,
+   "n_registered": 102,
+   "rho_pct_channel": 7.117172448780858e-06,
+   "rho_sources": [
+    "permutation",
+    "tighten"
+   ],
+   "paths": [
+    "cg",
+    "spsolve"
+   ],
+   "kwargs": [
+    "atol"
+   ],
+   "binding": [
+    "rtol"
+   ],
+   "rtol_A": [
+    1e-05
+   ],
+   "rtol_B": [
+    1.0000000000000002e-06
+   ]
+  },
+  "electronic": {
+   "n_cases": 127,
+   "n_ok": 127,
+   "n_iterative": 13,
+   "n_direct": 114,
+   "n_no_network": 0,
+   "n_solve_none": 0,
+   "n_nonfinite": 0,
+   "n_old_zero": 0,
+   "n_tighten_noop": 0,
+   "n_fallback": 0,
+   "rho_pct_max_iterative": 1.4629494790028302e-05,
+   "rho_pct_max_all": 1.4629494790028302e-05,
+   "n_perm_ok": 127,
+   "n_perm_noop": 0,
+   "n_perm_bad": 0,
+   "rho_pct_max_permutation": 1.4034675472514279e-06,
+   "n_registered": 127,
+   "rho_pct_channel": 1.4629494790028302e-05,
+   "rho_sources": [
+    "permutation",
+    "tighten"
+   ],
+   "paths": [
+    "cg",
+    "spsolve"
+   ],
+   "kwargs": [
+    "atol"
+   ],
+   "binding": [
+    "rtol"
+   ],
+   "rtol_A": [
+    1e-05
+   ],
+   "rtol_B": [
+    1.0000000000000002e-06
+   ]
+  },
+  "thermal": {
+   "n_cases": 127,
+   "n_ok": 127,
+   "n_iterative": 53,
+   "n_direct": 74,
+   "n_no_network": 0,
+   "n_solve_none": 0,
+   "n_nonfinite": 0,
+   "n_old_zero": 0,
+   "n_tighten_noop": 0,
+   "n_fallback": 0,
+   "rho_pct_max_iterative": 1.385157665230787e-05,
+   "rho_pct_max_all": 1.385157665230787e-05,
+   "n_perm_ok": 127,
+   "n_perm_noop": 0,
+   "n_perm_bad": 0,
+   "rho_pct_max_permutation": 1.4278584028915945e-06,
+   "n_registered": 127,
+   "rho_pct_channel": 1.385157665230787e-05,
+   "rho_sources": [
+    "permutation",
+    "tighten"
+   ],
+   "paths": [
+    "cg",
+    "spsolve"
+   ],
+   "kwargs": [
+    "atol"
+   ],
+   "binding": [
+    "rtol"
+   ],
+   "rtol_A": [
+    1e-05
+   ],
+   "rtol_B": [
+    1.0000000000000002e-06
+   ]
+  }
+ }
+}
