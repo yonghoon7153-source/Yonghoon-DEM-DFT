@@ -30,7 +30,7 @@
   <div class="v3-onboard-grid">
     {% for c in ONBOARD.cards %}
     <a class="v3-stat{% if c.n is none %} v3-stat-err{% endif %}" href="{{ c.url }}"
-       title="출처: {{ c.src }}">
+       title="출처: {{ (c.src)|plain }}">
       <span class="v3-stat-n">{% if c.n is none %}읽을 수 없음{% else %}{{ c.n }}<span class="v3-stat-u">{{ c.unit }}</span>{% endif %}</span>
       <span class="v3-stat-l">{{ c.label }}</span>
       <span class="v3-stat-w">{{ c.why }}</span>

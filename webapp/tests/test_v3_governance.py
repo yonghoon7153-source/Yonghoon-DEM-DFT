@@ -11,6 +11,7 @@
 ⛔ 이 파일이 못 하는 것: 화면이 **예쁜지**·읽기 쉬운지는 못 본다. 그리고 원장 값이
   물리적으로 맞는지는 여기서도 안 본다 (이 화면의 설계 선언 그대로).
 """
+import html
 import os
 import re
 import sys
@@ -58,6 +59,76 @@ def test_old_decisions_are_folded_not_deleted(gov_html):
     assert m, "옛 결정 접힘 블록이 없다"
     for d in old:
         assert f'id="{d["id"]}"' in m.group(0), f"{d['id']} 가 접힘 밖에 있다"
+
+
+def _probe(s):
+    """이스케이프·`**`볼드 변환을 **안 타는** 안전한 조각(12자 이상)을 고른다.
+
+    화면은 `|bold` 를 거치므로 원문 그대로 비교하면 `**`·따옴표·`&` 에서 헛방이 난다.
+    그런 글자가 없는 구간만 골라 대조한다. 없으면 None (그 항목은 건너뛴다).
+    """
+    parts = [p.strip() for p in re.split(r"[*<>&'\"]+", str(s))]
+    parts = [p for p in parts if len(p) >= 12]
+    return parts[0] if parts else None
+
+
+def test_list_reopen_criteria_is_not_rendered_as_python_repr(gov_html):
+    """[음성] 배열로 적힌 재개 조건이 **파이썬 repr** 로 새면 안 된다.
+
+    ⛔ 2026-09-15 실측 — 원장 34건 중 **6건이 `reopen_criteria` 를 배열**로 적는데 화면이
+      `{{ d.reopen_criteria|bold }}` 로 그렸다. 필터가 `str(list)` 를 해서
+      `['다음 5–10 캠페인에서 escaped P0/P1 …']` 가 대괄호·따옴표째 화면에 나왔다.
+      **오류는 안 났다** — 1저자가 눈으로 보고 "깨져서 나온다" 고 알려 줘야 잡혔다.
+      같은 결함이 `/composition` 에도 있었다(`(… or "")[:240]` 가 리스트에서는
+      **원소 240개**를 자른다 — 240자가 아니다).
+
+    ⛔ 이 시험이 못 하는 것: 재개 조건이 **옳은지**는 안 본다. 모양만 본다.
+    """
+    rows = [d for d in C.decisions().values()
+            if isinstance(d.get("reopen_criteria"), list) and d["reopen_criteria"]]
+    assert rows, "전제: 배열로 적힌 재개 조건이 원장에 있다 (없으면 이 시험이 헛것을 잰다)"
+    # ⚠ **이스케이프를 푼 뒤** 본다. `|bold` 가 escape() 를 먼저 걸어서 repr 의 작은따옴표가
+    #   `&#39;` 로 나간다 — 날 HTML 에서 `['` 를 찾으면 **깨진 화면에서도 통과한다**.
+    #   (이 시험을 쓰고 대상을 일부러 되돌려 봤더니 초록이었다. 그래서 고쳤다.)
+    plain = html.unescape(gov_html)
+    bad = [m.start() for m in re.finditer(r"\['|\[\"", plain)]
+    assert not bad, ("파이썬 repr 이 화면에 샜다 — 목록을 문자열처럼 그린 자리가 있다: "
+                     + plain[max(0, bad[0] - 60):bad[0] + 90])
+    for d in rows:
+        for item in d["reopen_criteria"]:
+            p = _probe(item)
+            if p:
+                assert p in gov_html, \
+                    f"{d['id']} 의 재개 조건 항목이 화면에 없다: {p[:40]}"
+
+
+def test_old_ratifications_fold_keeps_unratified_rows_open(gov_html):
+    """오래된 **비준**만 접는다 — 미결(제안·비준 없음)은 나이와 무관하게 편다.
+
+    1저자 요청(2026-09-15): "오래된 비준은 토글로 닫아주고". 접는 것과 지우는 것은 다르다 —
+    접힌 행도 DOM 에 그대로 있고(`test_every_decision_row_has_an_anchor` 가 본다),
+    접힌 규칙은 **여전히 유효**하다.
+
+    [음성] 비준이 없는 행이 접힘 **안**으로 들어가면 실패한다. 미결을 접으면 잊힌다.
+    """
+    m = re.search(r"<details[^>]*>\s*<summary>🔒 오래된 비준.*?</details>", gov_html, re.S)
+    if not m:
+        pytest.skip("접을 만큼 오래된 비준이 아직 없다 (원장이 자라면 이 시험이 켜진다)")
+    fold = m.group(0)
+    unratified = [d for d in C.decisions().values()
+                  if (d.get("ratification") or {}).get("state") != "ratified"
+                  and C.decision_state(d) not in ("superseded", "retracted")]
+    assert unratified, "전제: 비준 없는 결정이 원장에 있다"
+    for d in unratified:
+        assert f'id="{d["id"]}"' not in fold, \
+            f"{d['id']} 는 비준이 없는데 접혔다 — 미결은 펴 둔다"
+    # 접힌 것은 전부 비준된 행이어야 한다
+    folded_ids = re.findall(r'<tr id="(D-[^"]+)"', fold)
+    assert folded_ids, "접힘이 비어 있다"
+    for i in folded_ids:
+        d = C.decisions().get(i) or {}
+        assert (d.get("ratification") or {}).get("state") == "ratified", \
+            f"{i} 는 비준 상태가 아닌데 '오래된 비준' 으로 접혔다"
 
 
 def test_kind_chips_are_derived_from_the_ledger(gov_html):

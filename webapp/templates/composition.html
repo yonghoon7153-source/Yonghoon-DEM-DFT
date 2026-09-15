@@ -32,13 +32,18 @@
     {% if d.kind %}<span class="badge b-fam">{{ d.kind }}</span>{% endif %}
     {{ d.title|bold }}
     {% if d.statement %}<div class="muted" style="font-weight:400;font-size:.78rem;line-height:1.6;margin-top:2px">{{ d.statement|bold|claimbind }}</div>{% endif %}
-    {% if d.reopen %}<div class="muted" style="font-weight:400;font-size:.75rem;margin-top:2px">재개 조건: {{ d.reopen|bold }}</div>{% endif %}
+    {# ⚠ `d.reopen` 은 **목록**이다 (원장이 배열로도 적는다 · decisions_view.reopen_items).
+       종전 판은 문자열로 다뤄 파이썬 repr `['…', '…']` 이 그대로 나왔다 — 2026-09-15 정정. #}
+    {% if d.reopen %}<div class="muted" style="font-weight:400;font-size:.75rem;margin-top:2px">재개 조건:
+      {%- if d.reopen|length == 1 %} {{ d.reopen[0]|bold }}
+      {%- else %}<ul style="margin:2px 0 0;padding-left:1.1em">
+        {% for x in d.reopen %}<li>{{ x|bold }}</li>{% endfor %}</ul>{% endif %}</div>{% endif %}
   </div>
   {% endfor %}
   {% if cards %}
   <div class="v3-band-v" style="margin-top:8px;font-weight:400">
     {% for c in cards %}<a class="btn sm" href="/files?q={{ c.file.rsplit('/',1)[-1] }}"
-      title="{{ c.title }}">📄 {{ c.kind }}{% if c.date %} · {{ c.date }}{% endif %}</a> {% endfor %}
+      title="{{ c.title|plain }}">📄 {{ c.kind }}{% if c.date %} · {{ c.date }}{% endif %}</a> {% endfor %}
   </div>
   {% endif %}
   {% if decisions.folded %}
@@ -166,7 +171,7 @@
       옆의 작은 배지뿐이었는데, 같은 페이지 Raw 탭은 폐기 항목에 취소선을 긋고 있었다
       (한 페이지 안에 규칙이 둘). 값 자체가 죽은 값으로 보여야 한다. -#}
   {%- set dead = st and st.status in ('retracted','superseded','non_citable') %}
-  <div class="metric"{% if _cl %} data-claim="{{ _cl }}"{% endif %} title="{{ canonical_meta[key] }}{% if prov %}&#10;⚠ {{ prov }}{% endif %}">
+  <div class="metric"{% if _cl %} data-claim="{{ _cl }}"{% endif %} title="{{ (canonical_meta[key])|plain }}{% if prov %}&#10;⚠ {{ (prov)|plain }}{% endif %}">
     <div class="mv"{% if dead %} style="text-decoration:line-through;color:var(--muted)"{% endif %}>{{ val }}<span style="font-size:.55em;color:var(--dim)"> {{ units[key] }}</span></div>
     {#- ★ 대체값은 **툴팁이 아니라 본문**에 — 복사·인쇄·텍스트추출에서 살아남아야 한다. -#}
     {%- if dead or nt.hold %}
@@ -180,26 +185,26 @@
         원천이므로 그쪽 우선, 없을 때만 PROV. -#}
     <div class="ml">{{ labels[key] }}
       {%- if st and st.status != 'canonical' %} <span class="badge" style="color:{{ st.fg }};background:{{ st.bg }}"
-        title="{{ st.why }}">{{ st.label }}</span>
-      {%- elif prov %} <span class="badge b-prov" title="{{ prov }}">잠정</span>{% endif %}
+        title="{{ st.why|plain }}">{{ st.label }}</span>
+      {%- elif prov %} <span class="badge b-prov" title="{{ prov|plain }}">잠정</span>{% endif %}
       {#- ★ 값은 맞다. 그 값을 만든 실행을 파일로 재현할 수 없다는 표식이다. -#}
       {%- set po = canonical_prov.get(key) %}
       {%- if po %} <span class="badge" style="color:#0369a1;background:#e0f2fe"
-        title="출처 미확보: {{ po.why }}">출처⚠</span>{% endif %}
+        title="출처 미확보: {{ (po.why)|plain }}">출처⚠</span>{% endif %}
       {#- ★ 잣대 세대 — status 배지와 **다른 축**이다. status 는 '지금 쓸 수 있는가',
           이건 '어느 시절 규칙으로 만들어졌는가'. gen0 이라고 틀린 값이 아니다. -#}
       {%- set gb = canonical_gen.get(key) %}
       {%- if gb %} <span class="badge" style="color:{{ gb.fg }};background:{{ gb.bg }}"
-        title="{{ gb.why }}">{{ gb.label }}</span>{% endif %}
+        title="{{ gb.why|plain }}">{{ gb.label }}</span>{% endif %}
       {#- ★ 보류는 status 와 또 다른 축이다 — 값은 등록됐고 status 도 안 내려갔는데
           **절대값만** 못 쓴다(기준 비대칭 δ_m·δ_LREAL). 원장 prohibitions 파생. -#}
       {%- if nt.hold %} <span class="badge" style="color:#b45309;background:#fef3c7"
-        title="조건부 보류 — {{ nt.hold_why }}">보류</span>{% endif %}</div>
+        title="조건부 보류 — {{ (nt.hold_why)|plain }}">보류</span>{% endif %}</div>
     {# 회신 BG ② — 방법·출처 주석은 **다른 계의 정본값을 자주 인용한다**(여기선 b2o3 0.199).
        그 값이 나중에 철회돼도 이 문장은 그대로 남으므로, 렌더할 때 결속을 붙인다. #}
     {#- ⚠ 빈 상자를 그리지 않는다 — CANONICAL_META 에 없는 축(SDCP_*)이 빈 회색 줄로 떴다. -#}
-    {%- if canonical_meta[key] %}<div class="mm" title="{{ canonical_meta[key] }}">{{ canonical_meta[key]|claimbind }}</div>{% endif %}
-    {%- if prov %}<div class="mm mm-prov" title="{{ prov }}">⚠ {{ prov|claimbind }}</div>{% endif %}
+    {%- if canonical_meta[key] %}<div class="mm" title="{{ canonical_meta[key]|plain }}">{{ canonical_meta[key]|claimbind }}</div>{% endif %}
+    {%- if prov %}<div class="mm mm-prov" title="{{ prov|plain }}">⚠ {{ prov|claimbind }}</div>{% endif %}
     {#- ★ **이 값이 어느 파일에서 왔나** — 종전엔 화면 어디에도 없었다. -#}
     {%- if nt.source_path %}
     <div class="mm mono" style="font-size:.62rem;opacity:.8"><a href="/files?q={{ nt.source_path.rsplit('/',1)[-1] }}"
@@ -209,7 +214,7 @@
   {% elif canonical_na.get(key) %}
   {# '하면 안 되거나 정의되지 않는' 축은 TODO 로 광고하면 안 된다 (예: li3n × UMA MD).
      ⚠ TODO(안 했다) 와 N/A(성립하지 않는다) 를 같은 회색 점선으로 뭉치지 않는다 — .metric.na #}
-  <div class="metric na" title="{{ canonical_na.get(key) }}">
+  <div class="metric na" title="{{ canonical_na.get(key)|plain }}">
     <div class="mv">N/A</div>
     <div class="ml">{{ labels[key] }}</div>
     <div class="mm">{{ canonical_na.get(key)|bold|claimbind }}</div>
@@ -298,7 +303,7 @@
       <span class="cb-s"><em>E (UMA)</em> {{ cr.E_GPa }} GPa</span>
       <span class="cb-s"><em>Pugh</em> {{ cr.pugh }}</span>
       {% if cr.group %}<span class="cb-s"><em>group</em> {{ cr.group }}</span>{% endif %}
-      <span class="cb-s cb-warn" title="{{ cascade_meta.caveat if cascade_meta else '' }}">⚠ UMA 상대값 — 절대값 인용 금지</span>
+      <span class="cb-s cb-warn" title="{{ (cascade_meta.caveat if cascade_meta else '')|plain }}">⚠ UMA 상대값 — 절대값 인용 금지</span>
     </div>
     <div class="cb-cav muted">{{ cascade_meta.caveat if cascade_meta else '' }}</div>
   </div>
@@ -339,9 +344,9 @@
         <span class="mono" style="display:inline-flex;gap:2px;align-items:center">
           <button class="btn sm {% if sv and it.view.name == sv.name %}primary{% endif %}"
                   onclick="loadStruct('{{ it.view.name }}','{{ it.view.fmt }}',this)"
-                  title="{{ it.view.name }}">{{ it.stem }}</button>
+                  title="{{ it.view.name|plain }}">{{ it.stem }}</button>
           {% for f in it.files %}<a class="btn sm" style="padding:2px 5px;font-size:.65rem"
-             href="/api/structure/{{ f.name|urlencode }}" download title="{{ f.name }} 내려받기">{{ f.ext }}</a>{% endfor %}
+             href="/api/structure/{{ f.name|urlencode }}" download title="{{ (f.name)|plain }} 내려받기">{{ f.ext }}</a>{% endfor %}
           {% for f in it.vesta %}<a class="btn sm" style="padding:2px 5px;font-size:.65rem"
              href="/api/structure/{{ f.name|urlencode }}" download
              title="VESTA 전용 — 3D 파서가 없어요">vesta</a>{% endfor %}
@@ -351,7 +356,7 @@
           <span class="btn sm" style="opacity:.6;cursor:default"
                 title="3D 파서 없음 — 다운로드해서 VESTA로 보세요">{{ it.stem }}</span>
           {% for f in it.files + it.vesta %}<a class="btn sm" style="padding:2px 5px;font-size:.65rem"
-             href="/api/structure/{{ f.name|urlencode }}" download title="{{ f.name }}">{{ f.ext }}</a>{% endfor %}
+             href="/api/structure/{{ f.name|urlencode }}" download title="{{ f.name|plain }}">{{ f.ext }}</a>{% endfor %}
         </span>
         {% endif %}
         {% endfor %}
@@ -391,7 +396,7 @@
     {#- ⚠ 칩 라벨을 kind 로만 쓰면 sdcp 15칩 중 11개가 전부 'data' 라 눌러 보기 전에는
         무엇인지 알 수 없다(실측). 파일 stem 축약을 앞에 두고 kind 는 배지로. -#}
     {% for d in datafiles %}<button class="chip {% if loop.first %}active{% endif %}"
-      title="db/{{ d.rel }}" onclick="plotCsv('{{ d.rel }}','{{ d.kind }}',this)">{{ d.short }}
+      title="db/{{ (d.rel)|plain }}" onclick="plotCsv('{{ d.rel }}','{{ d.kind }}',this)">{{ d.short }}
       <span class="badge b-fam" style="font-size:.6rem">{{ d.kind }}</span></button>{% endfor %}
   </div>
   <div class="card">
@@ -415,8 +420,8 @@
       <b>canonical 아님</b>. 페이지 상단 metric 카드가 정본이에요. 폐기값엔 <span class="badge b-todo">폐기</span> 배지가 붙어요.
     </div>
     <table class="data-table"><thead><tr><th>path</th><th>value</th></tr></thead><tbody>
-    {% for m in metrics %}<tr><td class="mono">{{ m.path }}{% if m.stale %} <span class="badge b-todo" title="{{ m.stale }}">폐기</span>{% endif %}</td>
-      <td class="num"{% if m.stale %} style="text-decoration:line-through;opacity:.65" title="{{ m.stale }}"{% endif %}>{{ m.value }}</td></tr>{% endfor %}
+    {% for m in metrics %}<tr><td class="mono">{{ m.path }}{% if m.stale %} <span class="badge b-todo" title="{{ m.stale|plain }}">폐기</span>{% endif %}</td>
+      <td class="num"{% if m.stale %} style="text-decoration:line-through;opacity:.65" title="{{ m.stale|plain }}"{% endif %}>{{ m.value }}</td></tr>{% endfor %}
     </tbody></table>
   </div>
   {% else %}<div class="card"><span class="muted">인덱스 메트릭 없음 <span class="badge b-todo">TODO</span></span></div>{% endif %}

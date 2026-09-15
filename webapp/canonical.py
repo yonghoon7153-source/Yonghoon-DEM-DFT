@@ -863,17 +863,42 @@ def instead_text(instead) -> str:
     return (instead or "").strip()
 
 
+#: `**강조**` 표기 (짝이 맞는 것만 — 홀로 선 `*` 는 건드리지 않는다).
+_UNBOLD_RE = re.compile(r"\*\*(.+?)\*\*", re.S)
+
+
+def plain_text(s) -> str:
+    """`**강조**` 의 **표식만 떼고** 글자는 그대로 둔다 — `title=` 속성용.
+
+    ⛔ 왜 필요한가: HTML **속성값에는 태그가 안 먹는다.** 툴팁에 `|bold` 를 걸면 `<b>` 가
+      글자로 뜨고, 아무것도 안 걸면 별표가 뜬다. 둘 다 깨진 화면이다. 실측 2026-09-15:
+      9개 화면에서 툴팁 **100개**가 별표를 달고 있었다.
+      원장 산문에 `**` 가 흔해서(citation_hazards 의 `binding_scope_why` 33건 중 14건)
+      이 자리를 한 곳으로 모은다 — 화면마다 `replace('**','')` 를 따로 쓰면 갈라진다.
+
+    ⛔ 못 하는 것: 마크다운을 렌더하지 않는다. `*기울임*`·백틱·링크는 글자 그대로 남는다.
+      이스케이프도 안 한다 — 부르는 쪽이 한다.
+    """
+    if s is None:
+        return ""
+    return _UNBOLD_RE.sub(r"\1", str(s))
+
+
 def _claim_flag(c: dict, text: str) -> str:
     from html import escape as _e
     _ins = instead_text(c.get("instead"))
+    # ⚠ 툴팁은 **속성값**이라 태그가 안 먹는다 — `**` 를 떼고 글자만 넣는다(plain_text).
+    #   2026-09-15 실측: 이 자리에서만 /requests 20개 · /todo 3개 툴팁이 별표를 달고 있었다.
     tip = " · ".join(x for x in (_STATE_MARK.get(c.get("state"), "⛔ 인용 위험"),
-                                 (c.get("why") or "").strip(),
-                                 ("대신: " + _ins) if _ins else "")
+                                 plain_text(c.get("why")).strip(),
+                                 ("대신: " + plain_text(_ins)) if _ins else "")
                      if x)
+    # 잘렸으면 **잘렸다고 말한다** — 인용 경고를 표식 없이 자르면 그게 전문으로 읽힌다.
+    tip = tip if len(tip) <= 300 else tip[:299] + "…"
     # ⚠ 표식은 **텍스트로도** 남아야 한다 — Codex BI Q3. ⛔ 를 CSS `::after` 로만 그리면
     #   복사·인쇄·텍스트추출·보조기기에서 경고가 사라지고 철회값만 따라간다.
     return (f'<span class="claim-flag" data-claim="{_e(str(c["id"]), True)}"'
-            f' title="{_e(tip[:300], True)}">{text}'
+            f' title="{_e(tip, True)}">{text}'
             f'<span class="claim-mark">[{_e(_claim_mark_text(c))}]</span></span>')
 
 

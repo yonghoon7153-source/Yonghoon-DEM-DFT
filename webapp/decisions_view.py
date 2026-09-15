@@ -32,6 +32,38 @@ ROOT = Path(__file__).resolve().parent.parent
 #: 개수만 세어 `/governance` 로 보낸다.
 _WILDCARD = "*"
 
+#: 조성 카드에서 재개 조건 한 항목이 차지하는 글자 상한. 넘으면 `…` 를 붙여 **잘렸음을
+#: 표시**한다 (표식 없이 자르면 사람이 그게 전문인 줄 안다).
+_REOPEN_CLIP = 240
+
+
+def reopen_items(d) -> list:
+    """결정의 재개 조건을 **문자열 목록**으로 정규화한다. 원장이 두 모양으로 적는다.
+
+    ⛔ 2026-09-15 — 원장 34건 중 **6건이 `reopen_criteria` 를 배열**로 적는데, 화면 두
+      곳이 그걸 문자열처럼 다뤘다. 둘 다 오류를 안 냈다 (조용히 틀린 경로):
+        · `/governance` : `{{ d.reopen_criteria|bold }}` → 필터가 `str(list)` 를 하는 바람에
+          **파이썬 repr** 이 그대로 화면에 나왔다 — `['다음 5–10 캠페인에서 …']`.
+          1저자 실측 보고: "뭔가 깨져서 나와 · 줄바꿈되어있고".
+        · `/composition`: `(… or "")[:240]` 가 리스트에서는 **원소 240개**를 자른다.
+          240자 제한이 한 글자도 걸리지 않았고, 역시 repr 로 샜다.
+      선언(재개 조건을 보인다)은 맞았고 실행 경로만 다른 일을 했다.
+
+    ⛔ 이 함수가 **못 하는 것**: 재개 조건이 옳은지·충족됐는지 판정하지 않는다. 모양만
+      고른다. 빈 항목은 버리지만 **개수는 줄이지 않는다** — 전부 낸다.
+    """
+    rc = d.get("reopen_criteria") if isinstance(d, dict) else d
+    if rc is None or rc == "" or rc == []:
+        return []
+    items = rc if isinstance(rc, (list, tuple)) else [rc]
+    return [str(x).strip() for x in items if str(x).strip()]
+
+
+def _clip(s: str, n: int = _REOPEN_CLIP) -> str:
+    s = str(s)
+    return s if len(s) <= n else s[:n].rstrip() + "…"
+
+
 #: 화면에 펼쳐 보이는 상태. 나머지(superseded·retracted·rejected)는 **접어서** 남긴다.
 LIVE_STATES = ("active", "proposed")
 
@@ -54,6 +86,7 @@ def decisions_for(cid: str, root=None) -> dict:
     """이 조성을 지배하는 판정 — `{"live": [...], "folded": [...], "n_global": int}`.
 
     각 항목: `{"id","title","state","kind","date","statement","reopen","card"}`
+    ⚠ `reopen` 은 **문자열 목록**이다 (원장이 배열로도 적는다 — `reopen_items` 참조).
     """
     # `canonical.decisions()` 는 **id → 판례** dict 다 (배열이 아니다).
     rows = list((C.decisions(root=root) or {}).values())
@@ -70,7 +103,8 @@ def decisions_for(cid: str, root=None) -> dict:
                "state": state, "kind": d.get("kind"),
                "date": _date_of(d.get("id")),
                "statement": (d.get("statement") or "")[:400],
-               "reopen": (d.get("reopen_criteria") or "")[:240],
+               # ⚠ 목록이다 (문자열 아님) — 원장이 배열로도 적는다. reopen_items 참조.
+               "reopen": [_clip(x) for x in reopen_items(d)],
                "card": d.get("card")}
         (live if state in LIVE_STATES else folded).append(rec)
     live.sort(key=lambda r: r["date"], reverse=True)
@@ -82,9 +116,18 @@ def decisions_for(cid: str, root=None) -> dict:
 _DATE = re.compile(r"(\d{4})[-_](\d{2})[-_](\d{2})")
 
 
-def _date_of(s) -> str:
+def date_of(s) -> str:
+    """결정 id·카드 파일명에서 날짜(`YYYY-MM-DD`)를 뽑는다. 못 찾으면 빈 문자열.
+
+    ⛔ 못 하는 것: 그 날짜가 **무슨** 날짜인지(결정일·비준일·마감일) 구분하지 않는다.
+      id 에 박힌 글자를 읽을 뿐이다 — 비준 시각은 `ratification.timestamp` 가 원본이다.
+    """
     m = _DATE.search(str(s or ""))
     return "-".join(m.groups()) if m else ""
+
+
+#: 옛 이름 (모듈 안에서만 쓰였다)
+_date_of = date_of
 
 
 #: 마감·사전등록·보고량 카드 파일명 표식. 파일명이 규약이라 이름으로 판다

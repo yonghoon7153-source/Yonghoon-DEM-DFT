@@ -1334,6 +1334,44 @@
    },
    "note": "⚠ 관측 후 개정(post-hoc) 뒤의 마감이다 — 개정안 §4 에 관측 의존 항목 표시. 62원자 정본 0.287 과 셀을 넘어 나란히 놓지 않는다 (t13: 셀이 D 를 1.79배 움직인다). STO Ea 열람 가능성은 C3 결과 파일 ③ 에 적혀 있다.",
    "updated": "2026-09-11"
+  },
+  {
+   "system": "modelc_box331_cell_conditioned",
+   "metric": "MD_Ea_eV",
+   "value": 0.1683,
+   "uncertainty": 0.0044,
+   "unit": "eV",
+   "source_path": "db/properties/modelc_box331_c3_result_2026_09_15.json",
+   "source_key": "/Ea3/eV",
+   "n_seed": "2·3·3 (600 K 는 s3 no_value 로 2시드 — 09-01 R1)",
+   "method_id": "uma-s-1p1-omat__modelc_relaxV0_3x3x1_558atoms__langevin-nvt-2fs-f0.02__prod400ps__mto-msd2-50ps-free-intercept__3pt-unweighted-lnD__seed-resample-2916__uma-turbo",
+   "comparison_group": "md-ea-modelc-box331-400ps-gen2-HOLD",
+   "protocol_generation": "gen2_400ps_4window",
+   "status": "provisional",
+   "citable": false,
+   "why_non_citable": "C3(아레니우스 양립)이 미판정이다. ΔEa = −0.0339 eV · CI95 [−0.0539, −0.0137] 이 사전등록 허용영역 ±0.050 eV 의 경계와 겹친다 ⇒ 카드 §6 봉인 문구대로 HOLD. ⛔ '양립하지 않는다' 가 아니라 '판정하지 못했다' 다. (초과분 3.9 meV — 점추정은 허용영역 안)",
+   "prohibitions": [
+    "absolute_sigma",
+    "RT_extrapolation",
+    "bulk_claim__cell_conditioned_only",
+    "cross_system_ranking__citable_no",
+    "pooling_with_200ps",
+    "cell_level_claims",
+    "confirmed_value_claim__HOLD_status",
+    "same_table_with_lpsocl_box331__different_gate_status",
+    "difference_with_lpsocl_as_O_effect__C3_unresolved"
+   ],
+   "allowed_sentence": "modelc(LPSCl1.6) 3×3×1, 400 ps, 9 runs: gates C1·C2·C2b·C4·C5·C6 passed; **C3 (Arrhenius compatibility) was not resolved** — the two-segment slope difference ΔEa = −0.034 eV with CI95 [−0.054, −0.014] overlaps the pre-registered ±0.050 eV boundary. The apparent three-point Ea is 0.168 eV (CI95 0.164–0.173) and is reported at **HOLD** status, not as a confirmed value.",
+   "uncertainty_kind": "Ea3 CI95 **반폭** (0.1726−0.1638)/2 = 0.0044 eV — 온도별 시드 복원추출 전수 2916. ⚠ lpsocl 의 ±0.0018 과 **같은 종류지만 두 배 이상 넓다**. n=2–3 이라 꼬리가 거칠고 장시간 극한 오차가 아니다.",
+   "closure": "db/properties/modelc_box331_closed_2026_09_15.json",
+   "gate_records": [
+    "db/properties/modelc_box331_c2_mto_2026_09_15.json",
+    "db/properties/modelc_box331_c2b_hops_2026_09_15.json",
+    "db/properties/modelc_box331_c3_result_2026_09_15.json",
+    "db/properties/modelc_box331_c6_census_2026_09_15.json"
+   ],
+   "blocking_gate": "C3_arrhenius_compatibility__inconclusive",
+   "⚠_실행모드": "lpsocl 9런은 기본 모드, 이 9런은 turbo. 근거 `uma_turbo_equivalence_2026_09_11.json` (turbo−default max|ΔF| 1.99e-3 eV/Å = 모델 오차 0.4417 의 0.45 %). 원고 문구는 '동일' 이 아니라 '같은 모델을 다른 실행모드로 불렀다' 로 쓴다."
   }
  ],
  "_provenance_audit": {

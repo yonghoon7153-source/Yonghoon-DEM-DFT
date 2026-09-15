@@ -26,7 +26,7 @@
       <span class="gplus" style="float:right;color:var(--muted);font-weight:400">＋</span></div>
     <div class="muted" style="font-size:.76rem;margin-top:2px">{{ g.full }}
       {% if g.id in concepts %}<span class="doc-chip">📄 상세</span>
-      {% elif g.doc %}<span class="doc-chip" title="{{ g.doc_sec }}">📄 상세 → {{ g.doc|upper }}</span>{% endif %}</div>
+      {% elif g.doc %}<span class="doc-chip" title="{{ g.doc_sec|plain }}">📄 상세 → {{ g.doc|upper }}</span>{% endif %}</div>
   </div>
   <div class="gdetail">
     <div class="gd"><span class="gd-l">무엇</span>{{ g.what|safe }}</div>
@@ -41,7 +41,7 @@
     {% set gp = gpapers.get(g.id, []) %}
     {% if gp %}
     <div class="gpapers"><span class="gd-l">이 기법을 쓴 논문 · {{ gp|length }}</span><br>
-      {% for p in gp[:8] %}<a class="gpaper-chip tb-{{ p.track }}" href="/literature?open={{ p.id }}" title="{{ p.title }}">{{ p.id.split('_')[0] }}</a>{% endfor %}
+      {% for p in gp[:8] %}<a class="gpaper-chip tb-{{ p.track }}" href="/literature?open={{ p.id }}" title="{{ p.title|plain }}">{{ p.id.split('_')[0] }}</a>{% endfor %}
     </div>
     {% endif %}
     {% if g.id in concepts %}

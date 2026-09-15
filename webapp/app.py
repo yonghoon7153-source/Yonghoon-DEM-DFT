@@ -452,6 +452,26 @@ def _bold(s):
     return Markup(_BOLD_RE.sub(r"<b>\1</b>", str(escape(str(s)))))
 
 
+@app.template_filter("plain")
+def _plain(s):
+    """db JSON 문자열의 `**강조**` 를 **표식만 떼고** 글자는 그대로 둔다.
+
+    ⛔ 어디에 쓰나: **`title=` 속성**. 속성값에는 HTML 태그가 안 먹으므로 `|bold` 를
+      걸면 `<b>` 가 글자 그대로 툴팁에 뜨고, 아무것도 안 걸면 별표가 뜬다. 둘 다 깨진
+      화면이다. 실측 2026-09-15: 9개 화면에서 툴팁 **100개**가 별표를 달고 있었다
+      (/governance 14 · /explorer 27 · /requests 20 · /literature 12 · 조성 25 …).
+      종전에는 한 자리만 `|replace('**','')` 로 땜질돼 있었다 — 이 필터가 그 자리를 대신한다.
+
+    ⛔ 이 필터가 **못 하는 것**
+      · 마크다운을 렌더하지 않는다. `*기울임*`·백틱·링크는 글자 그대로 남는다
+        (툴팁에서 그것들은 깨져 보이지 않으므로 건드릴 이유가 없다).
+      · 이스케이프를 대신하지 않는다 — Jinja 의 자동 이스케이프에 그대로 맡긴다.
+        여기서 Markup 을 돌려주면 속성값에 raw HTML 이 실린다.
+    """
+    import canonical as _C
+    return _C.plain_text(s)
+
+
 def _css_ver():
     """style.css + static/js/*.js 최신 mtime 기반 캐시버스팅 키 (요청마다 계산 → 수정 즉시 반영)."""
     try:
@@ -1045,6 +1065,7 @@ def governance_page():
         그 선언이 맞는지(정말 그 형태가 다 덮이는지)는 검사하지 않는다.
     """
     import canonical as _C
+    import decisions_view as _V
     # ⚠ 이 세 accessor 는 **id 로 키를 잡은 dict** 를 준다 (리스트가 아니다).
     #   처음에 .get("artifacts", []) 로 읽었더니 화면이 조용히 **빈 표**가 됐다 —
     #   "원장이 비어 있다" 와 "원장을 잘못 읽었다" 가 화면에서 구분이 안 됐다.
@@ -1082,6 +1103,12 @@ def governance_page():
         d["_ratified"] = rat_state
         rs = d.get("results_seen")
         d["_prereg"] = ("before" if rs is False else "after" if rs is True else "unstated")
+        # 재개 조건은 원장이 **문자열로도 배열로도** 적는다 (34건 중 6건이 배열).
+        #   ⛔ 2026-09-15 — 종전 판은 `{{ d.reopen_criteria|bold }}` 였고, 필터가
+        #     `str(list)` 를 하는 바람에 **파이썬 repr** `['다음 5–10 캠페인에서 …']` 이
+        #     그대로 화면에 나왔다 (1저자 실측: "깨져서 나와 · 줄바꿈되어있고").
+        #     오류는 안 났다 — 선언은 맞고 실행 경로만 다른 일을 한 자리다.
+        d["_reopen"] = _V.reopen_items(d)
         # 근거 문서 — 열 수 있는 것만 링크한다. 두 갈래(파일 서빙 / kb 마크다운 렌더)를
         #   **각자의 화이트리스트**로 판정한다. 하나로 합치면 /api/file 이 kb 전체를
         #   내려받게 된다 (2026-08-17 교훈과 같은 자리).
@@ -1114,6 +1141,32 @@ def governance_page():
     dec_now = [d for d in dec if d.get("_state") not in _OLD]
     dec_old = [d for d in dec if d.get("_state") in _OLD]
     dec_ids = [d.get("id") for d in dec if d.get("id")]
+    # ── 오래된 비준 접기 (2026-09-15, 1저자 요청) ─────────────────────────
+    #   살아 있는 결정 31건이 한 표에 펼쳐져 있어 **이번 주에 비준한 것**이 8월 판정에
+    #   묻혔다. 옛 결정 접기(위)와 같은 규율로 접는다 — DOM 에서 빼지 않는다.
+    #   ⚠ 나이는 **벽시계가 아니라 원장의 최신 결정일**에서 잰다. 벽시계로 재면 아무도
+    #     원장을 안 고쳐도 화면이 날짜 따라 조용히 바뀌고, 시험도 같이 흔들린다.
+    #   ⛔ **비준이 없는 것은 나이와 무관하게 편다** (proposed · 비준 취소 · 비준 없음).
+    #     그게 사람이 아직 처리해야 할 미결이다 — 접으면 그대로 잊힌다. 접는 대상은
+    #     "이미 비준돼서 지금 당장 할 일이 없는" 행뿐이다.
+    _RAT_WINDOW_DAYS = 14
+    _dates = [x for x in (_V.date_of(d.get("id")) for d in dec_now) if x]
+    _cut = ""
+    if _dates:
+        from datetime import timedelta as _td
+        try:
+            _cut = (_dt.strptime(max(_dates), "%Y-%m-%d")
+                    - _td(days=_RAT_WINDOW_DAYS)).strftime("%Y-%m-%d")
+        except ValueError:
+            _cut = ""          # 날짜를 못 읽으면 **접지 않는다** (모르면 다 보인다)
+
+    def _aged(d):
+        if d.get("_ratified") != "ratified":
+            return False
+        ds = _V.date_of(d.get("id"))
+        return bool(_cut and ds and ds < _cut)
+    dec_recent = [d for d in dec_now if not _aged(d)]
+    dec_aged = [d for d in dec_now if _aged(d)]
     # 실제 위험 카운터 — 초록 배너 옆에 나란히 둔다. 초록이 무엇을 보증했는지
     #   말하지 않으면 페이지 전체 건강 신호로 읽힌다 (조사 gov-green-banner-scope-unstated).
     #   ⚠ '비준 없는 active' 는 원장 _rules 위반이다(ratification 없이 active 가 될 수 없다).
@@ -1159,6 +1212,8 @@ def governance_page():
     return render_template("governance.html", active="governance",
                            decisions=dec, assessments=ass, artifacts=art,
                            dec_now=dec_now, dec_old=dec_old, dec_ids=dec_ids,
+                           dec_recent=dec_recent, dec_aged=dec_aged,
+                           dec_aged_cut=_cut, dec_aged_days=_RAT_WINDOW_DAYS,
                            dec_kinds=dec_kinds, dec_states=dec_states,
                            dec_active_unratified=dec_active_unratified,
                            single=single, lost=lost,

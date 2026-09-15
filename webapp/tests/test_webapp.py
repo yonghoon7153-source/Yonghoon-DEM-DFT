@@ -4049,6 +4049,33 @@ def test_pi_alias_does_not_match_inside_a_korean_word():
             "⛔ 실물 digest 에서 'jwlee' 오탐이 났다"
 
 
+#: 그림 크로핑을 **못 만드는** digest — 원본 PDF 가 `litdb/inbox/` 에 없다.
+#:   ⛔ 이것은 "안 해도 된다" 가 아니라 **"지금 못 한다 + 왜"** 를 적는 자리다. 조용히 건너뛰면
+#:     다음 사람이 그림이 없는 줄도 모른다. 아래 시험이 **면제가 아직 필요한지** 직접 확인한다 —
+#:     그림이 생기면 이 항목은 **실패로 바뀐다**(래칫: 목록은 줄어들기만 한다).
+_LITDB_FIGURES_BLOCKED = {
+    "he2026_dem_calendering_inhomogeneity_areal_density":
+        "다른 세션이 inbox 밖 경로의 PDF 로 digest 했다 — repo 에 원본이 없어 크로핑 불가. "
+        "PDF 를 litdb/inbox/ 에 넣고 `tools/litdb/extract_figures.py --inbox --run` 하면 풀린다.",
+}
+
+
+def test_litdb_figure_exemptions_are_still_needed():
+    """⛔음성 **면제의 면제**: 더 이상 필요 없는 면제가 남아 있으면 실패다.
+
+    면제 목록은 **줄어들기만 한다.** 그림이 생겼는데 면제가 남아 있으면, 다음에 진짜로
+    빠진 것을 이 목록이 덮어 준다 — 그게 래칫을 다시 채우는 방식의 완화다.
+    """
+    from pathlib import Path as _P
+    stale = []
+    for slug in _LITDB_FIGURES_BLOCKED:
+        d = _P(D.LITDB) / "figures" / slug
+        if d.exists() and list(d.glob("*.png")):
+            stale.append(slug)
+    assert not stale, ("면제가 낡았다 — 그림이 생겼으니 _LITDB_FIGURES_BLOCKED 에서 빼라: "
+                       + str(stale))
+
+
 def test_recent_digests_are_on_every_litdb_surface():
     """⛔음성: digest 파일만 만들고 **INDEX·비교표·그림을 안 채우면** 화면에서 반쪽이다.
 
@@ -4082,7 +4109,9 @@ def test_recent_digests_are_on_every_litdb_surface():
         if t not in cmp_:
             miss.append("comparison_vs_ours")
         if not fig.exists() or not list(fig.glob("*.png")):
-            miss.append("figures/*.png")
+            # 선언된 면제만 봐준다 (_LITDB_FIGURES_BLOCKED — 이유를 그 자리에 적는다).
+            if t not in _LITDB_FIGURES_BLOCKED:
+                miss.append("figures/*.png")
         elif not (fig / "figures.json").exists():
             miss.append("figures.json")
         if miss:

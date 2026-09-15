@@ -101,7 +101,7 @@
     {% if f.kind=='image' and not f.policy %}
     <div class="att-thumb"><img loading="lazy" src="/api/file/{{ f.rel }}" alt="{{ f.name }}"></div>
     {% elif f.policy %}
-    <div class="att-icon" title="{{ f.policy.reason }}">🔒</div>
+    <div class="att-icon" title="{{ f.policy.reason|plain }}">🔒</div>
     {% else %}
     <div class="att-icon">{{ '📊' if f.kind=='csv' else ('📕' if f.kind=='pdf' else '📦') }}</div>
     {% endif %}
@@ -110,13 +110,13 @@
          이 갤러리에 아무 표시 없이 있었다 (조사 files-hazard-unmarked). #}
       {% if f.hazard %}
       <div style="margin-bottom:3px">
-        <span class="hzb hz-{{ f.hazard.level }}" title="{{ f.hazard.why }}">{{
+        <span class="hzb hz-{{ f.hazard.level }}" title="{{ f.hazard.why|plain }}">{{
           '⛔' if f.hazard.level=='BLOCKED' else ('⏸' if f.hazard.level in ('HOLD','PREVIEW') else '⚠') }} {{ f.hazard.level }}</span>
         <span class="muted" style="font-size:.64rem">{{ f.hazard.what }}</span>
       </div>
       {% endif %}
       {% if f.policy %}
-      <div style="margin-bottom:3px"><span class="polb" title="{{ f.policy.reason }}">🔒 {{
+      <div style="margin-bottom:3px"><span class="polb" title="{{ f.policy.reason|plain }}">🔒 {{
         f.policy.scope or '원장 미등재' }}</span>
         {% if f.policy.needs %}<span class="muted" style="font-size:.64rem">?{{ f.policy.needs }} 필요</span>{% endif %}</div>
       {% endif %}
@@ -126,7 +126,7 @@
       {% if f.concepts %}
       <div class="con-row">
         {% for c in f.concepts %}
-        <a class="con-badge" href="/concept/{{ c.cid }}" title="{{ c.term }} 개념 문서로">📎 {{ c.term }}</a>
+        <a class="con-badge" href="/concept/{{ c.cid }}" title="{{ (c.term)|plain }} 개념 문서로">📎 {{ c.term }}</a>
         {% endfor %}
       </div>
       {% endif %}

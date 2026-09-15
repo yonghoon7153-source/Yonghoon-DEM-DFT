@@ -89,7 +89,7 @@
          여기로 떨어진다. #}
       <tr id="{{ d.id }}" data-kind="{{ d.kind or '' }}">
         <td class="mono" style="font-size:.7rem;white-space:nowrap">{{ d.id }}</td>
-        <td><span class="tbadge" title="원장 kind: {{ d.kind or '미기재' }}"
+        <td><span class="tbadge" title="원장 kind: {{ (d.kind or '미기재')|plain }}"
               style="background:{{ dk_color.get(d.kind, '#6b7280') }};color:#fff">{{ dk_label.get(d.kind, d.kind or '미기재') }}</span></td>
         <td>{% if d._state == 'active' %}<span style="color:#0d9488">✅ 유효</span>
             {%- elif d._state == 'proposed' %}<span style="color:#c05621">◻ 제안(비준 대기)</span>
@@ -109,7 +109,15 @@
              화면에서 걷게 한다. **원장에 있는 id 만** 링크한다(declink 필터). #}
           <div>{{ (d.title or d.statement)|bold|declink(dec_ids, d.id) }}</div>
           {% if d.title and d.statement %}<div class="muted" style="margin-top:3px">{{ d.statement|bold|declink(dec_ids, d.id) }}</div>{% endif %}
-          {% if d.reopen_criteria %}<div class="sub" style="margin-top:3px">↻ 재개조건: {{ d.reopen_criteria|bold|declink(dec_ids, d.id) }}</div>{% endif %}
+          {# ⚠ 재개 조건은 원장이 **문자열로도 배열로도** 적는다 (34건 중 6건이 배열).
+             ⛔ 2026-09-15 — 종전 판은 `{{ d.reopen_criteria|bold }}` 였고, 필터가 `str(list)`
+                를 하는 바람에 **파이썬 repr** `['다음 5–10 캠페인에서 …']` 이 그대로 화면에
+                나왔다. 오류는 안 났다 — 선언은 맞고 실행 경로만 다른 일을 한 자리다.
+                `_reopen` 은 라우트가 정규화한 **문자열 목록**이다. #}
+          {% if d._reopen %}<div class="sub" style="margin-top:3px">↻ 재개조건:
+            {%- if d._reopen|length == 1 %} {{ d._reopen[0]|bold|declink(dec_ids, d.id) }}
+            {%- else %}<ul style="margin:2px 0 0;padding-left:1.15em">
+              {% for x in d._reopen %}<li>{{ x|bold|declink(dec_ids, d.id) }}</li>{% endfor %}</ul>{% endif %}</div>{% endif %}
           {% if d._docs %}<div class="sub" style="margin-top:3px">
             {% for x in d._docs %}{{ x.role }}
               {#- 링크 **글자는 원장이 적은 ref 그대로**(조각 `#절` 포함). href 만 파일까지 자른다. -#}
@@ -178,10 +186,32 @@
     <thead><tr><th>ID</th><th>종류</th><th>상태</th><th>사전등록</th>
       <th>무엇을 정했나</th><th>비준</th></tr></thead>
     <tbody>
-    {% for d in dec_now %}{{ drow(d) }}{% endfor %}
+    {% for d in dec_recent %}{{ drow(d) }}{% endfor %}
     </tbody>
   </table>
   </div>
+
+  {# ── 오래된 비준 — 접되 **지우지 않는다** (2026-09-15, 1저자 요청) ───────
+     살아 있는 결정이 31건이라 **이번 주에 비준한 것**이 8월 판정에 묻혔다.
+     ⚠ 나이는 벽시계가 아니라 **원장의 최신 결정일**에서 잰다(라우트 `_cut`).
+     ⛔ 비준이 **없는** 것(제안·비준 취소·비준 없음)은 나이와 무관하게 위 표에 편다 —
+        그게 사람이 처리해야 할 미결이다. 여기 드는 건 이미 비준된 행뿐이다. #}
+  {% if dec_aged %}
+  <details class="v3-fold" style="margin-top:10px">
+    <summary>🔒 오래된 비준 {{ dec_aged|length }}건 (최신 결정일 −{{ dec_aged_days }}일{% if dec_aged_cut %} · {{ dec_aged_cut }} 이전{% endif %}) — 접어 둔다</summary>
+    <div style="overflow-x:auto;margin-top:6px">
+    <table class="data-table" style="font-size:.78rem">
+      <thead><tr><th>ID</th><th>종류</th><th>상태</th><th>사전등록</th>
+        <th>무엇을 정했나</th><th>비준</th></tr></thead>
+      <tbody>
+      {% for d in dec_aged %}{{ drow(d) }}{% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <p class="sub" style="margin-top:4px">⚠ 접힌 것은 <b>여전히 유효한 규칙</b>이다 —
+      오래됐다는 뜻이지 약해졌다는 뜻이 아니다. 대체·철회된 것은 아래 별도 칸에 있다.</p>
+  </details>
+  {% endif %}
 
   {# ── 옛 결정 — 접되 **지우지 않는다** ──────────────────────────────────
      ⚠ DOM 에서 빼면 전건 렌더 시험이 깨진다. 그보다 먼저: 철회·대체된 판정을 지우는 것이
@@ -266,17 +296,17 @@
       <td><span class="tbadge" style="background:{{ hz_color.get(h.level, '#6b7280') }};color:#fff">{{ h.level }}</span></td>
       <td style="white-space:nowrap">
         {%- if h._bind == 'claim' %}<span class="tbadge" style="background:#0d9488;color:#fff"
-             title="정본값 {{ h.claim }} 에 결속 — 그 수치를 쓰면 검사가 잡는다">🔗 결속됨 · 값</span>
+             title="정본값 {{ (h.claim)|plain }} 에 결속 — 그 수치를 쓰면 검사가 잡는다">🔗 결속됨 · 값</span>
         {%- elif h._bind == 'phrase' %}<span class="tbadge" style="background:#0d9488;color:#fff"
-             title="금지 문구 {{ h._n_phrase }}건에 결속 — 그 산문을 쓰면 검사가 잡는다">🔗 결속됨 · 문구 {{ h._n_phrase }}</span>
+             title="금지 문구 {{ (h._n_phrase)|plain }}건에 결속 — 그 산문을 쓰면 검사가 잡는다">🔗 결속됨 · 문구 {{ h._n_phrase }}</span>
         {%- elif h._bind == 'name' %}<span class="tbadge" style="background:#c05621;color:#fff"
              title="id 로 이름은 댈 수 있으나 걸리는 형태가 문자열로 열거돼 있지 않다">✎ 이름만(산문)</span>
         {%- elif h._bind == 'inactive' %}<span class="tbadge" style="background:#6b7280;color:#fff"
-             title="{{ h.level }} — 살아 있는 금지가 아니라 결속을 요구하지 않는다. 어휘에는 남는다">↩ 결속 해제</span>
+             title="{{ (h.level)|plain }} — 살아 있는 금지가 아니라 결속을 요구하지 않는다. 어휘에는 남는다">↩ 결속 해제</span>
         {%- else %}<span class="tbadge" style="background:#be123c;color:#fff"
              title="원장에 id 가 없어 어느 화면도 이 위험을 이름으로 댈 수 없다">⛔ id 없음</span>{% endif %}
         {%- if h.binding_scope %}<br><span class="sub mono" style="font-size:.66rem"
-          {% if h.binding_scope_why %}title="{{ h.binding_scope_why }}"{% endif %}>{{ h.binding_scope }}</span>{% endif %}
+          {% if h.binding_scope_why %}title="{{ h.binding_scope_why|plain }}"{% endif %}>{{ h.binding_scope }}</span>{% endif %}
         {%- if h._n_pending %}<br><span class="sub" style="font-size:.66rem;color:#c05621"
           title="실제로 걸리지만 아직 집행하지 않는 문구">보류 문구 {{ h._n_pending }}</span>{% endif %}
       </td>

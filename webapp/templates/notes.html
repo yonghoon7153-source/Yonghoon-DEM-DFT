@@ -47,7 +47,7 @@
     <a class="ncard {{ 'n-note' if c.anchor else 'n-cmt' }}" href="{{ c.deep }}"
        data-s="{{ (c.text ~ ' ' ~ c.anchor ~ ' ' ~ c.where ~ ' ' ~ c.rel)|lower }}"
        data-k="{{ '📝' if c.anchor else '💬' }}"
-       title="{{ c.rel }} — 눌러서 그 자리로">
+       title="{{ (c.rel)|plain }} — 눌러서 그 자리로">
       <div class="ncard-h">
         <span class="ntag">{{ '📝' if c.anchor else '💬' }}</span>
         <span class="nwhere">{{ c.kind }} · {{ c.where }}</span>

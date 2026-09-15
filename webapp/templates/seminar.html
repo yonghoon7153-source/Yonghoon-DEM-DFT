@@ -13,7 +13,7 @@
   <div class="sem-dl">
     {% for d in decks %}
     <a class="btn {{ 'primary' if d.primary else '' }} sm" href="/seminar/deck?v={{ d.key }}"
-       title="{{ d.name }}">📦 {{ '정본 덱' if d.primary else '다른 판' }}
+       title="{{ d.name|plain }}">📦 {{ '정본 덱' if d.primary else '다른 판' }}
        <span class="mono" style="opacity:.7">{{ d.kb }} KB</span></a>
     {% endfor %}
   </div>
@@ -158,7 +158,7 @@
 <div class="tabs" id="semtabs" style="margin-top:14px">
   {% for d in docs %}
   <button {% if loop.first %}class="active"{% endif %} data-tab="{{ d.key }}"
-          data-src="{{ d.rel }}" data-kb="{{ d.kb }}" title="{{ d.note }}">{{ d.label }}</button>
+          data-src="{{ d.rel }}" data-kb="{{ d.kb }}" title="{{ d.note|plain }}">{{ d.label }}</button>
   {% endfor %}
 </div>
 

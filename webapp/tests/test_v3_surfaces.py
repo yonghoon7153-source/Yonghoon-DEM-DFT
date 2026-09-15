@@ -243,3 +243,50 @@ def test_scanner_itself_is_not_blind(crawl):
     assert naked["unbound"], f"벌거벗은 철회값 {t} 을 못 잡는다 — 스캐너가 눈이 멀었다"
     tied = C.scan_claim_bindings(f'<p data-claim="{tgt["id"]}">MD Ea {t} eV</p>', claims=claims)
     assert not tied["unbound"] and tied["bound"], "선언을 달았는데 결속으로 안 센다"
+
+
+# ── ④ 툴팁(title=) — 화면이 마크다운 원문을 노출하지 않는가 ──────────────────
+_TITLE_ATTR = re.compile(r'title="([^"]*)"')
+
+
+def test_no_markdown_bold_markers_leak_into_tooltips(crawl):
+    """⛔음성: `title=` 속성에 `**강조**` 표기가 새면 안 된다 — 툴팁이 깨져 보인다.
+
+    왜 속성이 따로인가: **HTML 속성값에는 태그가 안 먹는다.** `|bold` 를 걸면 `<b>` 가
+    글자로 뜨고, 아무것도 안 걸면 별표가 뜬다. 둘 다 깨진 화면이라 `|plain`(표식만 제거)이
+    따로 있다. 원장 산문에 `**` 가 흔해서(citation_hazards `binding_scope_why` 33건 중 14건)
+    이 누출은 계속 재발한다.
+
+    실측 2026-09-15 (1저자 보고 "깨져서 나온다" 로 시작): 9개 화면 **툴팁 100개**가
+    별표를 달고 있었다 — /explorer 27 · /requests 20 · /literature 12 · /governance 14 ·
+    조성 25 · 기타. 한 자리만 `replace('**','')` 로 땜질돼 있었다.
+
+    ⛔ 이 시험이 못 하는 것: 툴팁 **내용**이 맞는지는 안 본다. 표기만 본다.
+      그리고 `*기울임*`·백틱은 일부러 안 본다 — 툴팁에서 깨져 보이지 않는다.
+    """
+    bad = []
+    for r in crawl["rows"]:
+        h = r.get("html")
+        if not h:
+            continue
+        for t in _TITLE_ATTR.findall(h):
+            if "**" in t:
+                bad.append((r["url"], t[:120]))
+    assert not bad, (
+        f"툴팁 {len(bad)}개가 마크다운 `**` 를 그대로 노출한다 — `|plain` 을 걸어라:\n"
+        + "\n".join(f"  {u} :: {t}" for u, t in bad[:12]))
+
+
+def test_plain_filter_actually_strips_and_keeps_text():
+    """양성+⛔음성: `|plain` 이 표식만 떼고 **글자는 안 지우는가**.
+
+    표식을 떼면서 내용까지 지우면 경고가 조용히 사라진다 — 별표가 보이는 것보다 나쁘다.
+    """
+    assert C.plain_text("a **b** c") == "a b c", "표식을 못 뗀다"
+    assert C.plain_text("**전부**") == "전부", "양끝 표식을 못 뗀다"
+    # ⛔음성 ① 홀로 선 `*` 는 건드리지 않는다 (곱셈·각주 표기가 죽는다)
+    assert C.plain_text("2 * 3 = 6") == "2 * 3 = 6", "짝 없는 별표를 건드렸다"
+    # ⛔음성 ② 글자를 지우면 안 된다
+    assert C.plain_text("**어느 것도** 인용 금지") == "어느 것도 인용 금지", "내용이 사라졌다"
+    # ⛔음성 ③ None 은 빈 문자열 — "None" 이라고 쓰면 안 된다
+    assert C.plain_text(None) == "", "None 이 글자로 샜다"

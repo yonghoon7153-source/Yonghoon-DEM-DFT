@@ -1292,8 +1292,11 @@ _STATUS_BADGE = {
     "retracted":        ("철회", "#b91c1c", "#fee2e2",
                          "⛔ 철회된 값이다 — 인용하지 않는다. 사유·대체값은 원장의 "
                          "`retracted` 절에 있다."),
+    # ⚠ 이 넷째 칸은 `title=` 속성으로 나간다 — **HTML 태그가 안 먹는다.**
+    #   마크다운 `**` 를 쓰면 별표가 기호로 노출되고 `|bold` 로도 못 고친다
+    #   (태그를 넣으면 title 안에 리터럴로 찍힌다). 그래서 **평문으로 쓴다** (2026-09-15).
     "non_citable":      ("인용불가", "#b91c1c", "#fee2e2",
-                         "⛔ 값은 있으나 **원자료가 인용을 금지**했다."),
+                         "⛔ 값은 있으나 원자료가 인용을 금지했다."),
 }
 
 # ── 잣대 세대 배지 (2026-09-07) ──────────────────────────────────────────
@@ -5421,6 +5424,42 @@ def _closure_and_prereg_cards() -> list:
                  + (f"⛔ 금지 서술 {len(ban)}건: {' · '.join(str(x) for x in ban[:3])}\n" if ban else "")
                  + "출처: db/properties/cascade_d_rel_estimand_2026_09_08.json · "
                    "결정 원장 D-2026-09-08-cascade-d-rel-estimand"})
+
+    # ③ modelc 3×3×1 400 ps — **HOLD 로 마감** (2026-09-15).
+    #   ⛔ 이 카드가 실어야 하는 것은 값이 아니라 **지위**다. 게이트 6축 중 5축이
+    #     통과하고 C3 하나가 미판정이라, 값을 그냥 띄우면 lpsocl 0.180 과 같은
+    #     등급으로 읽힌다 — 그게 이 캠페인이 막으려던 바로 그 자리다.
+    mcl = _load_json(DB / "properties" / "modelc_box331_closed_2026_09_15.json")
+    if mcl:
+        g = mcl.get("게이트_전건") or {}
+        val = mcl.get("값_HOLD_지위") or {}
+        ban = mcl.get("⛔_금지_서술") or []
+        reop = {k: v for k, v in (mcl.get("재개_조건_이것들만") or {}).items()
+                if not k.startswith("3_")}
+        _fail = [k for k, v in g.items() if str(v).startswith("🔴")]
+        _pass = [k for k, v in g.items() if str(v).startswith("✅")]
+        out.append({
+            "key": "modelc_box331_closed",
+            "d": mcl.get("date"),
+            "t": "🔴 modelc(LPSCl1.6) 3×3×1 400 ps — **HOLD 로 닫음**",
+            "v": ("Ea3 %.4f eV · CI95 [%.4f, %.4f] — ⚠ **HOLD 지위**"
+                  % (val.get("Ea3_eV", float("nan")),
+                     (val.get("CI95_eV") or [float("nan")] * 2)[0],
+                     (val.get("CI95_eV") or [float("nan")] * 2)[1])
+                  if val.get("Ea3_eV") is not None else "값이 파일에 없다"),
+            "n": "게이트 **%d축 통과 · %d축 미판정** — %s\n"
+                 % (len(_pass), len(_fail), ", ".join(_fail) or "없음")
+                 + "⛔ **'양립하지 않는다' 가 아니라 '판정하지 못했다'** 다. "
+                   "ΔEa 의 CI95 가 사전등록 허용영역 ±0.050 eV 의 **경계와 겹친다**.\n"
+                 + "· %s\n" % (g.get("C3_양립") or "")
+                 + (f"⛔ **금지 서술 {len(ban)}건** — 특히 lpsocl 0.180 과 같은 표에 "
+                    "같은 등급으로 올리는 것, 두 값 차로 O 효과를 말하는 것.\n" if ban else "")
+                 + (f"↻ **재개는 {len(reop)}건만** — 첫 수순은 s3/600K 의 `--scan` c 판별로 "
+                    "**계산 0**이다.\n" if reop else "")
+                 + "⚠ lpsocl 9런은 기본 모드, 이 9런은 **turbo** — 같은 표에 두려면 그 단서를 "
+                   "같은 칸에 적는다.\n"
+                 + "출처: db/properties/modelc_box331_closed_2026_09_15.json · "
+                   "레지스트리 `modelc_box331_cell_conditioned` (provisional · citable false)"})
     return out
 
 

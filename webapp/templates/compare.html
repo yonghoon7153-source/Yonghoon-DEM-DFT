@@ -300,7 +300,7 @@ upd();
 
   <div class="chip-bar" style="margin-top:10px">
     {% for x in bvse.tables %}<button class="chip {% if loop.first %}active{% endif %}"
-      onclick="plotBvse('{{ x.rel }}',this)" title="{{ x.note }}">{{ x.title }}</button>{% endfor %}
+      onclick="plotBvse('{{ x.rel }}',this)" title="{{ x.note|plain }}">{{ x.title }}</button>{% endfor %}
   </div>
   <div class="chart" id="bvse-chart" style="min-height:340px"></div>
   <div class="muted" id="bvse-note" style="font-size:.78rem;margin-top:6px"></div>

@@ -1,0 +1,672 @@
+{
+ "slug": "kim2026_moisture_surface_degradation_lpscl_dryroom",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-15",
+ "sources": [
+  "120. NatCommun_2026_Kim_Moisture_induced_surface_degradation_Li6PS5Cl_dryroom_MAIN.pdf",
+  "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Li6PS5Cl (LPSC) structures and theoretical S-O substitution energies (Esub) depending on the sulfur atomic site. a The initial bulk structure (green-Li, purple-P, yellow-S, cyanite-Cl). b The (001) surface slab structures viewed from",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    516.5,
+    428.5
+   ],
+   "w": 2012,
+   "h": 1608,
+   "dpi": 300,
+   "src": "120. NatCommun_2026_Kim_Moisture_induced_surface_degradation_Li6PS5Cl_dryroom_MAIN.pdf",
+   "blank": 0.778
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Theoretical results of the H2O adsorption on the LPSC surface. a Illustration for H2O adsorptions on two sulfur atomic sites, including the adsorption energy (Eads) and bond properties of P–S and H–S bonds (green-Li, purple-P, yellow-S, cyanite-Cl, red-O, pink-H). b Evolution of the H–S bonding on the non-bonding site after the H2O adsorption on the surface of the O-substituted",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    516.5,
+    396.8
+   ],
+   "w": 2012,
+   "h": 1476,
+   "dpi": 300,
+   "src": "120. NatCommun_2026_Kim_Moisture_induced_surface_degradation_Li6PS5Cl_dryroom_MAIN.pdf",
+   "blank": 0.58
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Computational simulations for the demonstration of oxygen- substitution mechanisms. Esub of a an atomic substitution from the 1st to the 3rd S atomic layer and b mechanisms including additional oxygen-substitution and penetration at each reaction order during sequential substitutions. Plots of the relative c-axis position of anions in the oxygen-substituted tetrahedron (PS4-xOx",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    468.4,
+    499.6
+   ],
+   "w": 1812,
+   "h": 1904,
+   "dpi": 300,
+   "src": "120. NatCommun_2026_Kim_Moisture_induced_surface_degradation_Li6PS5Cl_dryroom_MAIN.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Decomposition reaction pathway following the complete surface sub- stitution. a Esub of atomic substitution from the 3rd to the 5th S atomic layer in pristine LPSC structure. b ICOHP plot for P–S, P–O, Li–S, and broken P–S bonds related to the 3rd through 5th atomic layers of the structure, completely O-substituted at the ﬁrst three atomic layers (LPSCO123). c LPSCO123 structure after",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    516.5,
+    366.6
+   ],
+   "w": 2012,
+   "h": 1350,
+   "dpi": 300,
+   "src": "120. NatCommun_2026_Kim_Moisture_induced_surface_degradation_Li6PS5Cl_dryroom_MAIN.pdf",
+   "blank": 0.797
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | X-ray photoelectron spectroscopy (XPS) depth analysis of LPSC25d. The change in decomposition phase compositions of LPSC25d after 3 minutes etching with a l.0 kV beam in a S 2p spectra and b P 2p spectra. The difference of relative",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    468.4,
+    435.1
+   ],
+   "w": 1812,
+   "h": 1635,
+   "dpi": 300,
+   "src": "120. NatCommun_2026_Kim_Moisture_induced_surface_degradation_Li6PS5Cl_dryroom_MAIN.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Mechanistic illustration for the H2O-induced surface degradation processes and proposition of the material design principles for dry-room stable sulﬁdes grounded in the mechanism.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    53.5,
+    567.2,
+    382.4
+   ],
+   "w": 2224,
+   "h": 1372,
+   "dpi": 300,
+   "src": "120. NatCommun_2026_Kim_Moisture_induced_surface_degradation_Li6PS5Cl_dryroom_MAIN.pdf",
+   "blank": 0.789
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1 | Difference in ionic conductivity between the pristine and 3-day dry room exposed Li6PS5Cl (LPSC).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    385.5
+   ],
+   "w": 2012,
+   "h": 1332,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.846
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2 | Difference in the XRD pattern between the pristine and the 7-day dry room exposed LPSC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    94.1,
+    548.8,
+    381.4
+   ],
+   "w": 2012,
+   "h": 1198,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3 | X-ray photoelectron spectroscopy (XPS) analysis detection for initial surfaces. Phase distributions of initial surfaces depending on the dry room exposure time, non-exposure (LPSC), 5-day exposure (LPSC5d), and 25-day exposure (LPSC25d), in a S 2p spectra and b P 2p spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    278.7
+   ],
+   "w": 2012,
+   "h": 887,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4 | Comparative XPS analysis of the initial surfaces depending on exposure time. The a-c S 2p and d-f P 2p spectra correspond to LPSC (a, d), LPSC5d (b, e), and LPSC25d (c, f), respectively. While the P 2p spectra of LPSC and LPSC5d show well-defined fitted features, the LPSC25d spectrum contains broader and noisier high-binding-energy contributions from multiple degradation products. Thus, the 133.5–135.5 eV region in LPSC25d was interpreted based on the overall P 2p envelope evolution together with the corresponding S 2p spectrum, especially the sulfite- and sulfate-related components.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    338.6
+   ],
+   "w": 2012,
+   "h": 1136,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.761
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure 5 | Total spectral profile analysis in the P 2p spectra of LPSC, LPSC5d, and LPSC25d illustrating the variations in the binding energy difference between the 2p3/2 peak of PS43- and global maximum intensity, and spectral intensity changes in the 133.5–135.5 eV region as a function of exposure duration. The magnitude of this difference serves as an indicator of phase P2Sn/PS4-xOx’s contribution, since its binding energy is higher compared to the PS43- (133.1 vs. 132.2 eV). Consequently, a narrowing of this difference indicates a reduced fraction of P2Sn/PS4-xOx. Moreover, the spectral evolution in the 133.5–135.5 eV region tracks the relative proportion of PO43-. Specifically, a drop in this intensity signifies the depletion of PO43-. This interpretation is corroborated by concurrent trends of the corresponding oxide decomposition phases, sulfates and sulfites, in the",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    202.8
+   ],
+   "w": 2012,
+   "h": 570,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.825
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 13,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure 6 | Comparative analysis for H2O adsorption stability among (001), (110), and (111) surfaces (a-c) by employing the adsorption energy (Eads) (green-Li, purple-P, yellow-S, cyanite-Cl, red-O, pink-H).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.6,
+    66.0,
+    548.9,
+    417.7
+   ],
+   "w": 2018,
+   "h": 1466,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.813
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 14,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Figure 7 | Structural definition for atomic layers of the LPSC surface (purple-P, yellow-S).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    339.2
+   ],
+   "w": 2012,
+   "h": 1139,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.663
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 15,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Figure 8 | S-O substitution energy (Esub) values depending on the case of oxygen substitution. Esub values for a 1st layer-substituted and b 2nd layer-substituted LPSC structures (green-Li, purple-P, yellow-S, cyanite-Cl, red-O).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    225.8
+   ],
+   "w": 2012,
+   "h": 666,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.76
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 16,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Figure 9 | Comparative evaluation of Esub values at P-S bonding (16e) and non- bonding (4d) sites as a function of oxygen concentration (green-Li, purple-P, yellow-S, cyanite-Cl, red-O). Until the depletion of the sulfur in the 2nd layer, P–O bond formation is thermodynamically preferred compared to the substitution on a non-bonding site.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    339.1
+   ],
+   "w": 2012,
+   "h": 1138,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.791
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 17,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Figure 10 | Bond elongation after the 2nd layer-substitution (LPSCO) (green-Li, yellow-S).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    264.8
+   ],
+   "w": 2012,
+   "h": 829,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.798
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 18,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Figure 11 | Comparative evaluation of Esub values for additional substitution and penetration across the 2nd to 6th reaction orders (a-e) (green-Li, purple-P, yellow-S, cyanite-Cl, red- O, pink-H).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    80.0,
+    548.7,
+    604.3
+   ],
+   "w": 2012,
+   "h": 2185,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.76
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 19,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Figure 12 | Schematic representation for the rotation of the PS2O2 tetrahedron at the 1st and 2nd layer substituted structure (LPSCO12) during the simulation period (purple-P, yellow-S, red-O).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    378.7
+   ],
+   "w": 2012,
+   "h": 1304,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 20,
+   "file": "fig_S13.png",
+   "caption": "Supplementary Figure 13 | Schematic representation for the rotation of the PSO3 tetrahedron at the additionally substituted LPSCO12 structure involving the atomic substitution at the 3rd layer during the simulation period (purple-P, yellow-S, red-O).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.6,
+    66.0,
+    548.9,
+    270.6
+   ],
+   "w": 2018,
+   "h": 853,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.787
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 21,
+   "file": "fig_S14.png",
+   "caption": "Supplementary Figure 14 | Plot for representing stress redistribution of three axial stresses, σa, σb, and σc, after ab initio molecular dynamics (AIMD) simulations at 500 K for 150 ps at the LPSCO12 surface, including their standard deviation values at each simulation time.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    440.7
+   ],
+   "w": 2012,
+   "h": 1562,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 23,
+   "file": "fig_S15.png",
+   "caption": "Supplementary Figure 15 | Plot for representing stress alleviation of three axial stresses, σa, σb, and σc, after AIMD simulations at 500 K for 150 ps at the LPSCO12 surface with additional substitution at the 3rd layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    431.0
+   ],
+   "w": 2012,
+   "h": 1521,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.413
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 25,
+   "file": "fig_S16.png",
+   "caption": "Supplementary Figure 16 | Atomic definition for the oxygen and sulfur sites from the third to the fifth layers of the fully O-substituted LPSC at the first three layers (LPSCO123) (green-Li, purple-P, yellow-S, cyanite-Cl, red-O).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    226.4
+   ],
+   "w": 2012,
+   "h": 669,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.719
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 26,
+   "file": "fig_S17.png",
+   "caption": "Supplementary Figure 17 | Relative stability of the structures, where S-O exchange occurs between the oxygen at the third atomic layer and the sulfur at the non-bonding site or the broken P–S bonding site in the layers below, compared to the LPSCO123 (purple-P, yellow-S, red-O).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    399.0
+   ],
+   "w": 2012,
+   "h": 1388,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 27,
+   "file": "fig_S18.png",
+   "caption": "Supplementary Figure 18 | Plot for the atomic displacements of oxygen species relative to the phosphorus atoms in the PS4 tetrahedra below along the c-axis during the AIMD simulation at 500K for 250 ps. Oxygen atoms belonging to the upper PS4 tetrahedra are tracked by monitoring the central phosphorus atoms due to the retention of P–O bonds during the simulation (purple-P, yellow-S, red-O).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    302.2
+   ],
+   "w": 2012,
+   "h": 985,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 28,
+   "file": "fig_S19.png",
+   "caption": "Supplementary Figure 19 | Comparative analysis of Li–Cl bond energy dispersion by evaluating integrated crystal orbital Hamiltonian population (ICOHP) values (ICOHPLi–Cl) as a function of oxygen substitution depth, with the pristine LPSC serving as the baseline.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.7,
+    367.6
+   ],
+   "w": 2012,
+   "h": 1257,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 29,
+   "file": "fig_S20.png",
+   "caption": "Supplementary Figure 20 | H2O adsorption structures with their Eads values of LPSCO12 (a) and LPSCO123 (b) (green-Li, purple-P, yellow-S, cyanite-Cl, red-O, pink-H).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    273.5
+   ],
+   "w": 2012,
+   "h": 865,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.676
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 30,
+   "file": "fig_S21.png",
+   "caption": "Supplementary Figure 21 | Comparative analysis of stress variations induced by H2O adsorption among LPSC, LPSCO12, and LPSCO123 structures. Average stress is defined as the mean of three axial stresses along a-, b-, and c-axes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    371.4
+   ],
+   "w": 2012,
+   "h": 1273,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 31,
+   "file": "fig_S22.png",
+   "caption": "Supplementary Figure 22 | Observing detrimental impact of Li6PO5Cl-like surface on adjacent bonding environments. a Construction of a 1×2×1 supercell of the LPSC slab, with oxygen-substitution at half of the sulfur anions up to the 3rd atomic layer (green-Li, purple-P, yellow-S, cyanite-Cl, red-O). b Plot for comparing the sum of ICOHP values for Li–S bonds at Wyckoff 4d site between the LPSC supercell and its oxygen-substituted structure. c Plot for comparing the distribution in ICOHP values of Li–Cl bonds between the LPSC supercell and its oxygen-substituted structure.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    402.7
+   ],
+   "w": 2012,
+   "h": 1404,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.758
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 32,
+   "file": "fig_S23.png",
+   "caption": "Supplementary Figure 23 | Phase distribution of LPSC surface depending on the etching beam intensity. The distribution of decomposition products depending on the beam intensity in a S 2p spectra and b P 2p spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    281.2
+   ],
+   "w": 2012,
+   "h": 897,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.77
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 34,
+   "file": "fig_S24.png",
+   "caption": "Supplementary Figure 24 | XPS depth analysis of LPSC5d. The change in decomposition phase compositions of LPSC5d after 3 minutes of etching with the 0.5 kV beam in a S 2p spectra and b P 2p spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    263.5
+   ],
+   "w": 2012,
+   "h": 823,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 35,
+   "file": "fig_S25.png",
+   "caption": "Supplementary Figure 25 | XPS depth analysis of the 3-minute etched LPSC25d. The change in decomposition phase compositions of the 3-minute etched LPSC25d after an additional 40 minutes of etching with the 1.0 kV beam in a S 2p spectra and b P 2p spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    257.5
+   ],
+   "w": 2012,
+   "h": 799,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.833
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 36,
+   "file": "fig_S26.png",
+   "caption": "Supplementary Figure 26 | Total spectral profile analysis in the P 2p spectra of LPSC25d illustrating the variations in the binding energy difference between the 2p3/2 peak of PS43- and global maximum intensity, and spectral intensity changes in the 133.5–135.5 eV region as a function of etching time.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    200.8
+   ],
+   "w": 2012,
+   "h": 562,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.806
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 33,
+   "file": "tab_S6.png",
+   "caption": "Supplementary Table 6 | Bonding state distribution of phases derived from XPS analysis of etched LPSC surfaces depending on the etching beam intensity, incorporating spin-orbit doublets in each spectrum.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    68.0,
+    556.5,
+    461.0
+   ],
+   "w": 2088,
+   "h": 1638,
+   "dpi": 300,
+   "src": "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf",
+   "blank": 0.944
+  }
+ ]
+}

@@ -74,7 +74,7 @@
   </div>
   <label class="cc-chk" style="font-size:.82rem"><input type="checkbox" id="exp-hasval" checked onchange="expApply()"> 값 있는 조성만</label>
   {% if molprops %}
-  <label class="cc-chk" style="font-size:.82rem" title="SDCP_* {{ molprops|length }}열은 분자계(sdcp) 한 행에만 값이 있다. 지우지 않고 접어 둔다.">
+  <label class="cc-chk" style="font-size:.82rem" title="SDCP_* {{ (molprops|length)|plain }}열은 분자계(sdcp) 한 행에만 값이 있다. 지우지 않고 접어 둔다.">
     <input type="checkbox" id="exp-mol" onchange="expMol()"> 분자계 열 {{ molprops|length }}개 펼치기</label>
   {% endif %}
 </div>
@@ -94,14 +94,14 @@
       <th onclick="expSort(0)" class="sortable-h" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">조성</th>
       <th onclick="expSort(1)" class="sortable-h" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">family</th>
       {% for key,label,unit,cl in cols %}
-      <th onclick="expSort({{ loop.index+1 }})" class="sortable-h num {{ cl }}" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none" title="{{ canonical_meta.get(key,'') or key }}">
+      <th onclick="expSort({{ loop.index+1 }})" class="sortable-h num {{ cl }}" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none" title="{{ (canonical_meta.get(key,'') or key)|plain }}">
         {{ label }} <span class="th-unit">{{ unit }}</span>
         <span class="th-prov" aria-hidden="true">ⓘ</span>
       </th>
       {% endfor %}
       {% for key,label,unit in xprops %}
       <th onclick="expSort({{ cols|length + loop.index + 1 }})" class="sortable-h num xcol" tabindex="0"
-          role="button" onkeydown="_kbd(event)" aria-sort="none" title="{{ extra_meta.get(key,'') }}">
+          role="button" onkeydown="_kbd(event)" aria-sort="none" title="{{ extra_meta.get(key,'')|plain }}">
         {{ label }} <span class="th-unit">{{ unit }}</span>
         <span class="th-prov" aria-hidden="true">ⓘ</span>
       </th>
@@ -135,25 +135,25 @@
           {%- set _cl = claims.get((key, cid)) %}
           {%- if _cl %}
           <span class="cell-blocked" data-claim="{{ key }}@{{ cid }}"
-                title="{{ '⛔ 철회 — 인용 금지' if _cl.state == 'retracted' else '⛔ 비인용' }}&#10;{{ _cl.why }}{% if _cl.instead %}&#10;대신: {{ _cl.instead if _cl.instead is string else '대체값 없음 — 인용 가능한 수 0개 (' ~ _cl.instead.decision ~ ')' }}{% endif %}"
+                title="{{ ('⛔ 철회 — 인용 금지' if _cl.state == 'retracted' else '⛔ 비인용')|plain }}&#10;{{ (_cl.why)|plain }}{% if _cl.instead %}&#10;대신: {{ (_cl.instead if _cl.instead is string else '대체값 없음 — 인용 가능한 수 0개 (' ~ _cl.instead.decision ~ ')')|plain }}{% endif %}"
                 >{{ v }}<span class="claim-mark">[{{ '⛔철회·인용금지' if _cl.state == 'retracted' else '⛔비인용' }}]</span></span>
           {%- else %}
           <button class="cell-cite" data-claim="{{ key }}@{{ cid }}"
                   data-method="{{ canonical_meta.get(key,'') }}{% if prov %} · ⚠ {{ prov }}{% endif %}"
                   onclick="citeVal('{{ c.label }}','{{ label }}','{{ v }}','{{ unit }}',this.dataset.method)"
-                  title="클릭 → 인용 복사&#10;{{ canonical_meta.get(key,'') }}{% if prov %}&#10;⚠ {{ prov }}{% endif %}">{{ v }}</button>
+                  title="클릭 → 인용 복사&#10;{{ (canonical_meta.get(key,''))|plain }}{% if prov %}&#10;⚠ {{ (prov)|plain }}{% endif %}">{{ v }}</button>
           {%- endif %}
           {#- ★ 상태 배지는 **하나만** (2026-08-07 Codex 4라운드). 레지스트리 status 와
               옛 CANONICAL_PROVISIONAL 이 겹쳐 '잠정' 이 두 번 찍혔다. 레지스트리 우선. -#}
           {%- set st = canonical_status.get((key, cid)) %}
           {%- if st %} <span class="badge" style="color:{{ st.fg }};background:{{ st.bg }}"
-            title="{{ st.why }}">{{ st.label }}</span>
-          {%- elif prov %} <span class="badge b-prov" title="{{ prov }}">잠정</span>{% endif %}
+            title="{{ st.why|plain }}">{{ st.label }}</span>
+          {%- elif prov %} <span class="badge b-prov" title="{{ prov|plain }}">잠정</span>{% endif %}
           {#- ★ provenance_open 은 **값이 틀렸다는 뜻이 아니다** — 그 값을 만든 실행을 파일로
               재현할 수 없다는 뜻이다. status 를 안 내리므로 순위엔 남고, 표식만 붙인다. -#}
           {%- set po = canonical_prov.get((key, cid)) %}
           {%- if po %} <span class="badge" style="color:#0369a1;background:#e0f2fe"
-            title="출처 미확보: {{ po.why }}">출처⚠</span>{% endif %}
+            title="출처 미확보: {{ (po.why)|plain }}">출처⚠</span>{% endif %}
           {% else %}<span class="cell-todo">TODO</span>{% endif %}
         </td>
       {% endfor %}
@@ -163,7 +163,7 @@
           {% if xv is not none %}
           <button class="cell-cite" data-method="{{ extra_meta.get(key,'') }}"
                   onclick="citeVal('{{ c.label }}','{{ label }}','{{ xv }}','{{ unit }}',this.dataset.method)"
-                  title="클릭 → 인용 복사&#10;{{ extra_meta.get(key,'') }}">{{ xv }}</button>
+                  title="클릭 → 인용 복사&#10;{{ (extra_meta.get(key,''))|plain }}">{{ xv }}</button>
           {% else %}<span class="muted">—</span>{% endif %}
         </td>
       {% endfor %}
@@ -171,7 +171,7 @@
         {% set am = amatrix.get(cid, {}) %}
         {% if am %}<span class="achips">
           {% for tag, n in am|dictsort %}<span class="achip{% if tag=='BVSE' %} achip-warn{% endif %}"
-             title="{{ awhy.get(tag, tag) }}{% if n %} · CSV {{ n }}개{% endif %}">{{ tag }}{% if n %}<i>{{ n }}</i>{% endif %}</span>{% endfor %}
+             title="{{ (awhy.get(tag, tag))|plain }}{% if n %} · CSV {{ (n)|plain }}개{% endif %}">{{ tag }}{% if n %}<i>{{ n }}</i>{% endif %}</span>{% endfor %}
         </span>{% else %}<span class="muted">—</span>{% endif %}
       </td>
     </tr>

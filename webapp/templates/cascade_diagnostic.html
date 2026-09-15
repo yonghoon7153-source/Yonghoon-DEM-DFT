@@ -48,7 +48,7 @@
     다음 계산 대상 후보군이다. 통과 순서가 아니라 <b>어디서 멈췄는지</b>를 보는 목록이다.</div>
   <div style="display:flex;flex-wrap:wrap;gap:6px">
     {% for d in F2.endpoint %}{% set art = VM.artifacts.get(d) %}
-      <span class="badge {{ 'warn' if art else '' }}" title="{{ art or '' }}">{{ d }}{% if art %} ⚠{% endif %}</span>
+      <span class="badge {{ 'warn' if art else '' }}" title="{{ (art or '')|plain }}">{{ d }}{% if art %} ⚠{% endif %}</span>
     {% endfor %}
   </div>
   {% if VM.artifacts %}

@@ -434,6 +434,14 @@
    "DEM 논문/26. Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries.pdf"
   ]
  },
+ "hyun_han_argyrodite_moisture_degradation_design_principles": {
+  "figures": 22,
+  "generated": "2026-09-15",
+  "pdfs": [
+   "121. CellRepPhysSci_Hyun_Han_Argyrodite_moisture_degradation_design_principles_MAIN.pdf",
+   "121. Sup) CellRepPhysSci_Hyun_Han_Argyrodite_moisture_SI.pdf"
+  ]
+ },
  "imbalzano2021_committee_uq_md_thermodynamic_averages": {
   "figures": 9,
   "generated": "2026-09-09",
@@ -680,6 +688,14 @@
   "generated": "2026-08-05",
   "pdfs": [
    "이상욱 교수님/3. Deciphering Li₂S-like SEI Formation Mechanism at LiArgyrodite Anodic Interfaces via Large-Scale Machine-Learned Reactive Dynamics.pdf"
+  ]
+ },
+ "kim2026_moisture_surface_degradation_lpscl_dryroom": {
+  "figures": 33,
+  "generated": "2026-09-15",
+  "pdfs": [
+   "120. NatCommun_2026_Kim_Moisture_induced_surface_degradation_Li6PS5Cl_dryroom_MAIN.pdf",
+   "120. Sup) NatCommun_2026_Kim_Moisture_LPSC_SI.pdf"
   ]
  },
  "klar2016_dp_sand_animation": {
@@ -992,6 +1008,13 @@
   "pdfs": [
    "a21a6645-84._Accurate_Estimation_of_Diffusion_Coefficients_and_their_Uncertainties_from_Computer_Simulation.pdf",
    "2219d416-84._Sup_Accurate_Estimation_of_Diffusion_Coefficients_and_their_Uncertainties_from_Computer_Simulation.pdf"
+  ]
+ },
+ "meng2026_pvdf_li2zrf6_phase_ordering": {
+  "figures": 6,
+  "generated": "2026-09-15",
+  "pdfs": [
+   "119. JEnergyChem_2026_Meng_Phase_ordering_and_interfacial_stabilization_PVDF_Li2ZrF6_MAIN.pdf"
   ]
  },
  "mesarovicfleck2000_dissimilar_elastoplastic_indentation": {

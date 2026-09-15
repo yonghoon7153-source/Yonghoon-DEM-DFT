@@ -6,7 +6,7 @@
 {% macro sf(v, nd=3) %}{% if v is number %}{{ ('%.'~nd~'f')|format(v) }}{% else %}{{ v if v is not none else '' }}{% endif %}{% endmacro %}
 {# litdb digest 링크 — raw 는 'slug' 또는 'slug (역할메모)' 둘 다 허용. digest 없는 slug 는 링크를 죽인다. #}
 {% macro plink(raw, label=None) %}{% set s = (raw|string).split(' ')[0] %}{% set extra = (raw|string)[s|length:]|trim %}{%
-  if s in (lit_have or []) %}<a class="lit-chip" href="/literature?open={{ s }}" title="{{ s }}{{ ' ' ~ extra if extra }}" onclick="return openPaperM('{{ s }}',event)">📄 {{ label or s }}</a>{%
+  if s in (lit_have or []) %}<a class="lit-chip" href="/literature?open={{ s }}" title="{{ (s)|plain }}{{ (' ' ~ extra if extra)|plain }}" onclick="return openPaperM('{{ s }}',event)">📄 {{ label or s }}</a>{%
   else %}<span class="lit-chip off" title="litdb digest 없음">{{ label or s }}</span>{% endif %}{% endmacro %}
 {# `not_map` = {열이름: claim_id} — 그 **열의 칸에만** 부인을 건다.
    ⛔ Codex BI P0-2a/P0-3 (2026-09-08) — 종전에는 표 전체를 `data-claim-not` div 로
@@ -219,7 +219,7 @@
 {% else %}
 <div class="stat-tiles st-6">
   {% for key, val, label, note in T.tiles %}
-  <div class="st{% if val == 0 %} st-zero{% endif %}" title="{{ note }}">
+  <div class="st{% if val == 0 %} st-zero{% endif %}" title="{{ note|plain }}">
     <div class="st-v">{{ val }}</div><div class="st-l">{{ label }}</div>
     <div class="st-l" style="opacity:.8">{{ note }}</div>
   </div>
@@ -932,7 +932,7 @@
           {% if st.vacuous %}<span class="fn-badge b-vac" title="우리 풀이 이미 이 조건으로 큐레이션됨 — 우리가 걸러낸 게 아니다">💤 vacuous ({{ st.n_pass }}/{{ st.n_in }})</span>{% endif %}
           {% if g.arbitrariness_flag %}<span class="fn-badge b-arb" title="host 앵커가 없는 로스터 내부 상대 컷 — 유일하게 자의적인 게이트">🎲 자의적 컷</span>{% endif %}
           {% if la.papers %}{% for p in la.papers %}{{ plink(p) }}{% endfor %}
-          {% else %}<span class="fn-badge b-noan" title="{{ la.mapping|replace('**','') }}">📚 문헌 대응 없음 (우리 추가 축)</span>{% endif %}
+          {% else %}<span class="fn-badge b-noan" title="{{ la.mapping|plain }}">📚 문헌 대응 없음 (우리 추가 축)</span>{% endif %}
           <span class="fn-g-cnt">{{ st.n_in }} → <b>{{ st.n_pass }}</b>{% if st.n_fail %} <span class="fn-drop">−{{ st.n_fail }}</span>{% endif %}</span>
         </div>
         <div class="fn-g-body">

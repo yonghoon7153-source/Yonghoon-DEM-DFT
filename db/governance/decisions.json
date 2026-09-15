@@ -2105,6 +2105,39 @@
     ],
     "_note": "1저자 승인 2026-09-14. 지시 원문: **\"비준\"** — 회신 BR Q1 을 그대로 채택한 것이다. ⚠ **agent 대필**: 이 항목은 claude 가 받아 적었고, 승인 주체는 1저자다."
    }
+  },
+  {
+   "id": "D-2026-09-15-modelc-box331-seed-extension",
+   "kind": "estimand",
+   "decision_state": "proposed",
+   "results_seen": false,
+   "record_kind": "prereg",
+   "title": "modelc 3×3×1 시드 집합을 {2,3,4} → {2,3,4,5,6} 으로 넓힌다 (C3 판정 시도)",
+   "statement": "D-2026-09-11-modelc-box331-estimand 가 못 박은 시드 집합 {2,3,4} 를 **{2,3,4,5,6}** 으로 넓힌다. 구조·온도·창·프로토콜·실행모드(turbo)는 **하나도 바꾸지 않는다** — 바뀌는 것은 표본 수뿐이다. 근거는 modelc_box331_closed_2026_09_15.json 의 재개 조건 2(각 온도 +2 시드)이고, 목적은 C3(아레니우스 직선성)의 CI95 를 좁혀 판정을 내는 것이다. 판정 규칙 A/B/C 는 결과를 보기 전에 사전등록 카드 §3 에 박았다. ⛔ 새 시드도 개별로 C1·C2 를 통과해야 자격이 있다 — s3/600 과 같은 잣대다. ⛔ 예산은 6런이고 7번째 시드는 던지지 않는다. ⛔ lpsocl 은 이 결정에 포함되지 않는다 — lpsocl 마감(비준됨)의 재개 조건 R1–R4 에 시드 추가가 없어 별도 개정문과 재비준이 필요하다.",
+   "reopen_criteria": [
+    "결과 A(CI95 ⊂ ±0.050) → C3 통과 → HOLD 해제 심사 (승격은 별도 비준)",
+    "결과 B(여전히 경계) → HOLD 유지·종결, 추가 시드 없음",
+    "결과 C(점추정이 ±0.050 밖) → C3 실패, 3점 단일 Ea 보고 철회"
+   ],
+   "card": "db/properties/modelc_box331_seed_extension_prereg_2026_09_15.json",
+   "record": "db/properties/modelc_box331_closed_2026_09_15.json",
+   "supersedes": [],
+   "enforcement": "드라이버가 `run_meta.json`·`ensemble_results.json` 에 기록하는 `uma_inference_mode` 가 새 6런에서도 `turbo` 여야 한다. 아니면 그 런은 이 묶음에 못 들어간다. 창(2–50 ps)·문턱(10 %)·허용영역(±0.050)은 결과를 보고 고치지 않는다.",
+   "applies_to": {
+    "systems": [
+     "modelc"
+    ]
+   },
+   "slot": "modelc_box331_matched_estimand_seed_extension",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-09-15",
+     "state": "proposed",
+     "by": "agent",
+     "note": "1저자 지시(\"시드 더 하자\")로 등록. **실행 전**이고 결과를 보지 않았다. D-2026-09-11 이 시드 집합을 정의에 넣어 뒀으므로 그 확장을 원장에 남긴다."
+    }
+   ]
   }
  ]
 }

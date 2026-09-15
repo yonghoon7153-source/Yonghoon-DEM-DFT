@@ -68,7 +68,7 @@
   <tr data-q="{{ (r.title ~ ' ' ~ (r.material or '') ~ ' ' ~ (r.journal or '') ~ ' ' ~ (r.doi or ''))|lower }}">
     <td class="mono">{{ r.id }}</td>
     <td><span style="background:{{ lab[1] }}18;color:{{ lab[1] }};border-radius:99px;padding:1px 8px;font-size:.7rem;font-weight:600">{{ lab[0] }}</span>
-      {% if r._reclassified %}<span title="{{ r._reclassified }}" class="muted" style="font-size:.68rem">⚠</span>{% endif %}</td>
+      {% if r._reclassified %}<span title="{{ r._reclassified|plain }}" class="muted" style="font-size:.68rem">⚠</span>{% endif %}</td>
     <td class="mono">{{ r.year }}</td>
     <td style="font-size:.8rem;max-width:380px">{{ r.title }}
       <div class="muted mono" style="font-size:.68rem">{{ r.journal or '' }}{% if r.doi %} · {{ r.doi }}{% endif %}</div></td>

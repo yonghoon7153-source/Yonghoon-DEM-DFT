@@ -43,9 +43,22 @@ def test_nd_card_is_found_and_bound_to_its_composition():
 
 
 def test_card_does_not_leak_to_other_compositions():
-    """⛔음성: 소속은 **카드가 선언**한다. 파일명 접두어로 찾으면 남의 화면에 샌다."""
+    """⛔음성: 소속은 **카드가 선언**한다. 파일명 접두어로 찾으면 남의 화면에 샌다.
+
+    ⚠ 2026-09-15 수정 — 종전 판은 `assert not interpretation_cards_for(cid)`, 즉 **다른 조성에
+      카드가 하나도 없어야** 통과였다. 그건 Nd 카드가 유일할 때만 맞는 잣대라, modelc 에 정당한
+      해석 카드를 하나 올리자마자 "Nd 카드가 샜다" 는 **엉뚱한 메시지로** 빨간불이 났다
+      (시험이 재려던 것과 실제로 재던 것이 달랐다). 지금은 **그 Nd 카드가 있는지**만 본다.
+    """
+    nd_files = {r["file"] for r in V.interpretation_cards_for(ND)}
+    assert nd_files, "전제: Nd 조성에 해석 카드가 있다"
     for cid in ("comp1", "modelc", "lpsocl", "b2o3"):
-        assert not V.interpretation_cards_for(cid), f"{cid} 에 Nd 카드가 샜다"
+        leaked = nd_files & {r["file"] for r in V.interpretation_cards_for(cid)}
+        assert not leaked, f"{cid} 에 Nd 카드가 샜다: {sorted(leaked)}"
+        # 남의 카드가 아니라도, 거기 뜬 카드는 **자기 소속을 선언**하고 있어야 한다
+        for r in V.interpretation_cards_for(cid):
+            assert r.get("composition") == cid, \
+                f"{cid} 화면에 소속이 {r.get('composition')} 인 카드가 떴다: {r['file']}"
 
 
 def test_unreadable_card_is_reported_not_skipped(tmp_path, monkeypatch):

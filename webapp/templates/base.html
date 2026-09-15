@@ -52,7 +52,7 @@
     {%- for it in items %}
     {%- set _on = (it.active and (active == it.active or active in (it.also or [])))
                   or (cid_active is defined and it.url == '/composition/' ~ cid_active) %}
-    <li{% if it.nsub %} class="nav-sub"{% endif %}><a href="{{ it.url }}"{% if _on %} aria-current="page" class="active"{% endif %}{% if it.sub %} title="{{ it.sub }}"{% endif %}><span class="ic" aria-hidden="true">{{ it.icon }}</span>{{ it.label }}{% if it.badge %}<span class="nav-badge" title="{{ it.badge_title }}">{{ it.badge }}</span>{% endif %}</a></li>
+    <li{% if it.nsub %} class="nav-sub"{% endif %}><a href="{{ it.url }}"{% if _on %} aria-current="page" class="active"{% endif %}{% if it.sub %} title="{{ it.sub|plain }}"{% endif %}><span class="ic" aria-hidden="true">{{ it.icon }}</span>{{ it.label }}{% if it.badge %}<span class="nav-badge" title="{{ it.badge_title|plain }}">{{ it.badge }}</span>{% endif %}</a></li>
     {%- endfor %}
   {%- endmacro -%}
 
@@ -80,7 +80,7 @@
   <div class="nav-fam">{{ g.family }}</div>
   <ul class="nav-links compact" aria-label="{{ g.family }} 조성">
     {%- for r in g.links %}
-    <li><a href="/composition/{{ r.cid }}"{% if cid_active is defined and cid_active == r.cid %} aria-current="page" class="active"{% endif %} title="{{ r.formula }} · 자료 {{ r.n }}건"><span class="dot" style="background:{{ r.color }}" aria-hidden="true"></span>{{ r.label }}</a></li>
+    <li><a href="/composition/{{ r.cid }}"{% if cid_active is defined and cid_active == r.cid %} aria-current="page" class="active"{% endif %} title="{{ (r.formula)|plain }} · 자료 {{ (r.n)|plain }}건"><span class="dot" style="background:{{ r.color }}" aria-hidden="true"></span>{{ r.label }}</a></li>
     {%- endfor %}
   </ul>
     {%- endfor %}
@@ -90,7 +90,7 @@
     <summary class="nav-section">계획됨 · 자료 없음 {{ NAVCOMPS.planned|length }}</summary>
     <ul class="nav-links compact" aria-label="계획된 조성 (자료 없음)">
       {%- for r in NAVCOMPS.planned %}
-      <li><a href="/composition/{{ r.cid }}"{% if cid_active is defined and cid_active == r.cid %} aria-current="page" class="active"{% endif %} title="{{ r.formula }} · 아직 붙은 자료 {{ r.n }}건"><span class="dot" style="background:{{ r.color }}" aria-hidden="true"></span>{{ r.label }}</a></li>
+      <li><a href="/composition/{{ r.cid }}"{% if cid_active is defined and cid_active == r.cid %} aria-current="page" class="active"{% endif %} title="{{ (r.formula)|plain }} · 아직 붙은 자료 {{ (r.n)|plain }}건"><span class="dot" style="background:{{ r.color }}" aria-hidden="true"></span>{{ r.label }}</a></li>
       {%- endfor %}
     </ul>
     <p class="nav-note">계산 전이라 값이 없는 것이지 지운 게 아니다.</p>
