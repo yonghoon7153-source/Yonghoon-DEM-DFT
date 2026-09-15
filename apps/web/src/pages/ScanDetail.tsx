@@ -16,6 +16,7 @@ import { CopyBar } from '../components/CopyBar'
 import { ParamName } from '../components/ParamName'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Plot3D, type Series3D } from '../components/Plot3D'
+import { StackGapField, useStackGap } from '../components/StackGap'
 import { Alert, Card, Empty, Field, Metric, MetricBand, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { basisAxis, num, seriesColor } from '../lib/format'
@@ -26,10 +27,10 @@ import {
   Z_UNITS, Z_UNIT_KEY, type ZUnit, areaFor, hasStoredZUnit, validZUnit, zUnitLabel,
 } from '../lib/zunit'
 import { rememberedLambda } from '../lib/drtlambda'
-import { seriesWideTsv, stackedWideTsv } from '../lib/origin'
+import { seriesWideTsv } from '../lib/origin'
 import { paramMeaning } from '../lib/params'
 import { usePinnedColumns } from '../lib/pincols'
-import { stackOffsets, stackStep } from '../lib/stack'
+import { stackOffsets } from '../lib/stack'
 import {
   DRT_AXES, DRT_AXIS_KEY, type DrtAxis, decadeSplits, drtAxisLabel, drtAxisShort,
   drtAxisTick, drtAxisValue, validDrtAxis,
@@ -369,11 +370,15 @@ export function ScanDetail() {
   const shownOverlay = useMemo(
     () => flat.filter((one) => !one.hidden), [flat])
 
-  //: 이격 — 곡선마다 한 칸씩 올린 것 (`lib/stack.ts`).  올린 양은 **가운데
-  //  곡선의 높이**에서 나오므로 스캔마다 다르다.  그 수를 화면에도 클립보드
-  //  에도 적는다: 안 적으면 언젠가 이 그림에서 저항을 읽는 사람이 나온다.
-  const stackStepValue = useMemo(
-    () => (stacked ? stackStep(flat) : 0), [flat, stacked])
+  //: 이격 — 곡선마다 한 칸씩 올린 것 (`lib/stack.ts`).  올린 양은 **사람이
+  //  정한다** (`useStackGap`, 기본 20).  자동(중앙값)이던 것을 버린 이유는
+  //  `components/StackGap.tsx` 에 적어 뒀다 — 데이터가 정하면 스캔마다 달라져서
+  //  두 그림을 나란히 못 놓는다.
+  //
+  //  그 수를 화면에도 클립보드에도 적는다: 안 적으면 언젠가 이 그림에서
+  //  저항을 읽는 사람이 나온다.
+  const gap = useStackGap()
+  const stackStepValue = stacked ? gap.value : 0
   const stackedSeries = useMemo<PlotSeries[]>(() => {
     if (!stacked || !stackStepValue) return flat
     const lifts = stackOffsets(flat, stackStepValue)
@@ -384,13 +389,10 @@ export function ScanDetail() {
     })
   }, [flat, stacked, stackStepValue])
 
-  //: 이격 클립보드는 **본값과 화면값을 나란히** 낸다.  둘의 차가 그 곡선의
-  //  offset 이라 전체 정밀도로 복원된다 — 붙여 넣은 표가 혼자서도 설명된다.
+  //: 이격 클립보드가 내보내는 것 — **켜 둔 곡선의 올린 값**.  본값은 안 낸다
+  //  (이유는 CopyBar 쪽 주석에).
   const stackedForCopy = useMemo(
-    () => stackedSeries
-      .map((one, index) => ({ ...one, raw: flat[index]?.y ?? one.y }))
-      .filter((one) => !one.hidden),
-    [stackedSeries, flat])
+    () => stackedSeries.filter((one) => !one.hidden), [stackedSeries])
 
   //: 2D 로 그리는 것.  이격이면 올린 쪽을 그린다 (3D 는 `Plot3D` 가 따로 받는다).
   const series: PlotSeries[] = stacked ? stackedSeries : flat
@@ -507,6 +509,9 @@ export function ScanDetail() {
                       title="전위(V)를 깊이로 세운 축 셋짜리 그림 — 끌어서 돌립니다"
                       onClick={() => setView('solid')}>3D</button>
             </div>
+            {/* 간격은 **이격을 보고 있을 때만** 묻는다.  겹쳐 그리는 중에 서
+                있으면 무엇에 쓰는 칸인지 화면 어디에도 없다. */}
+            {stacked ? <StackGapField gap={gap} unit={zUnit} /> : null}
             {/* DRT 를 볼 때만 뜬다 — 나이퀴스트에는 τ 축이 없다. */}
             {mode === 'drt' ? (
               <div className="segmented" role="group" aria-label="가로축">
@@ -639,8 +644,8 @@ export function ScanDetail() {
                   </div>
                 ) : (
                   <div className="tiny warn">
-                    곡선의 높이가 없어 이격을 못 줬습니다 — 겹쳐 그린 것과
-                    같습니다.
+                    이격 간격이 비어 있습니다 — 겹쳐 그린 것과 같습니다.
+                    위의 <b>이격 간격</b> 칸에 0 보다 큰 수를 적어 주세요.
                   </div>
                 )
               ) : null}
@@ -719,18 +724,19 @@ export function ScanDetail() {
                 // 올린 수를 복사하면 붙여 넣은 표가 화면과 다른 것이 된다.
                 ...(stacked && stackStepValue ? [{
                   label: mode === 'drt' ? 'γ(τ) (이격)' : '나이퀴스트 (이격)',
-                  title: `화면 그대로 — 곡선마다 본값과 올린 값을 나란히 냅니다 (둘의 차가 그 곡선의 이격입니다)`,
+                  title: `화면 그대로 — 곡선마다 두 열 (${num(stackStepValue, 3)} ${zUnit} 씩 올린 값)`,
                   disabled: !stackedForCopy.length,
                   skipped: stackedSeries.length - stackedForCopy.length,
                   skippedNote: (n: number) => `꺼 둔 ${n}개는 빠졌습니다`,
-                  // **본값을 함께 낸다.**  올린 양은 켜 둔 곡선 집합에 달려
-                  // 있어서 스윕 하나를 껐다 켜면 달라진다 — 옮긴 수만 있는
-                  // 표는 나중에 되돌릴 근거가 없다.
-                  build: () => stackedWideTsv(stackedForCopy, mode === 'drt'
-                    ? { x: drtAxisLabel(drtAxis), rawY: `γ (${zUnit})`,
-                        y: `γ + 이격 (${zUnit})` }
-                    : { x: `Z′ (${zUnit})`, rawY: `−Z″ (${zUnit})`,
-                        y: `−Z″ + 이격 (${zUnit})` }),
+                  // **두 열이다 — 본값은 안 낸다.**  한동안 본값을 나란히 냈다:
+                  // 올린 양이 자동이라 켜 둔 곡선 집합에 따라 달라졌고, 옮긴 수만
+                  // 있는 표는 되돌릴 근거가 없었기 때문이다.  이제 간격은 사람이
+                  // 적은 하나이고 화면과 캡션에 그대로 적히므로, n 번째 곡선이
+                  // `n × 간격` 만큼 올라갔다는 것으로 언제든 되돌릴 수 있다.
+                  // 세 열은 그 근거가 사라진 뒤에도 남아 있던 것이다.
+                  build: () => seriesWideTsv(stackedForCopy, mode === 'drt'
+                    ? { x: drtAxisLabel(drtAxis), y: `γ + 이격 (${zUnit})` }
+                    : { x: `Z′ (${zUnit})`, y: `−Z″ + 이격 (${zUnit})` }),
                 }] : []),
               ]} />
               </div>

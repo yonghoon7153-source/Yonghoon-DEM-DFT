@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom'
 import { CopyBar } from '../components/CopyBar'
 import { useGroupChoice } from '../components/GroupFilter'
 import { PickGrid } from '../components/PickGrid'
+import { StackGapField, useStackGap } from '../components/StackGap'
 import { Plot, type PlotSeries } from '../components/Plot'
 import { Plot3D, type Series3D } from '../components/Plot3D'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
@@ -31,8 +32,8 @@ import {
 } from '../lib/zunit'
 import { rememberedLambda } from '../lib/drtlambda'
 import { inductiveCount, isScan, nyquistXy, sweepAt } from '../lib/eis'
-import { nyquistWideTsv, seriesWideTsv, stackedWideTsv } from '../lib/origin'
-import { stackOffsets, stackStep } from '../lib/stack'
+import { nyquistWideTsv, seriesWideTsv } from '../lib/origin'
+import { stackOffsets } from '../lib/stack'
 import type { EisKind, Spectrum, SpectrumFit, SpectrumPoints } from '../lib/types'
 
 /** 서버의 `/api/eis/points` 겹치기 상한과 같은 수. */
@@ -353,8 +354,10 @@ export function EisCompare() {
   //: 이격 — 곡선마다 한 칸씩 올린 것 (`lib/stack.ts`).  올린 양은 **가운데
   //  곡선의 높이**에서 나오므로 고른 것이 바뀌면 달라진다.  그 수를 화면에도
   //  클립보드에도 적는다: 안 적으면 언젠가 이 그림에서 저항을 읽는 사람이 나온다.
-  const stackStepValue = useMemo(
-    () => (stacked ? stackStep(series) : 0), [series, stacked])
+  //: 간격은 **사람이 정한다** (기본 20).  스캔 화면과 같은 열쇠를 써서, 한쪽에서
+  //  정한 간격이 다른 쪽에서 딴 수가 되지 않게 한다 (`useStackGap`).
+  const gap = useStackGap()
+  const stackStepValue = stacked ? gap.value : 0
   const stackedSeries = useMemo<PlotSeries[]>(() => {
     if (!stacked || !stackStepValue) return series
     const lifts = stackOffsets(series, stackStepValue)
@@ -368,10 +371,7 @@ export function EisCompare() {
   //: 이격 클립보드는 **본값과 화면값을 나란히** 낸다.  둘의 차가 그 곡선의
   //  offset 이라 전체 정밀도로 복원된다 — 붙여 넣은 표가 혼자서도 설명된다.
   const stackedForCopy = useMemo(
-    () => stackedSeries
-      .map((one, index) => ({ ...one, raw: series[index]?.y ?? one.y }))
-      .filter((one) => !one.hidden),
-    [stackedSeries, series])
+    () => stackedSeries.filter((one) => !one.hidden), [stackedSeries])
 
   //: 2D 로 그리는 것.  이격이면 올린 쪽을 그린다 (3D 는 `Plot3D` 가 따로 받는다).
   const plotSeries: PlotSeries[] = stacked ? stackedSeries : series
@@ -541,6 +541,7 @@ export function EisCompare() {
                         onClick={() => setView('solid')}>3D</button>
               </div>
             )}
+            {stacked ? <StackGapField gap={gap} unit={unitLabel} /> : null}
             {/* DRT 를 볼 때만 뜬다 — 나이퀴스트에는 τ 축이 없다. */}
             {mode === 'drt' ? (
               <div className="segmented" role="group" aria-label="가로축">
@@ -609,17 +610,15 @@ export function EisCompare() {
             // 복사하면 붙여 넣은 표가 화면과 다른 것이 된다.
             ...(stacked && stackStepValue ? [{
               label: mode === 'drt' ? 'γ(τ) (이격)' : '나이퀴스트 (이격)',
-              title: '화면 그대로 — 곡선마다 본값과 올린 값을 나란히 냅니다'
-                + ' (둘의 차가 그 곡선의 이격입니다)',
+              title: `화면 그대로 — 곡선마다 두 열 (${num(stackStepValue, 3)} ${unitLabel} 씩 올린 값)`,
               disabled: !stackedForCopy.length,
-              // **본값을 함께 낸다.**  올린 양은 고른 곡선 집합에 달려 있어서
-              // 하나를 껐다 켜면 달라진다 — 옮긴 수만 있는 표는 나중에 되돌릴
-              // 근거가 없다.
-              build: () => stackedWideTsv(stackedForCopy, mode === 'drt'
-                ? { x: drtAxisLabel(drtAxis), rawY: `γ (${unitLabel})`,
-                    y: `γ + 이격 (${unitLabel})` }
-                : { x: `Z′ (${unitLabel})`, rawY: `−Z″ (${unitLabel})`,
-                    y: `−Z″ + 이격 (${unitLabel})` }),
+              // **두 열이다 — 본값은 안 낸다.**  간격이 자동이던 시절에는 옮긴
+              // 수만으로 되돌릴 수가 없어 본값을 나란히 냈다.  이제 간격은
+              // 사람이 적은 하나이고 화면과 캡션에 그대로 적히므로, n 번째
+              // 곡선이 `n × 간격` 만큼 올라갔다는 것으로 되돌릴 수 있다.
+              build: () => seriesWideTsv(stackedForCopy, mode === 'drt'
+                ? { x: drtAxisLabel(drtAxis), y: `γ + 이격 (${unitLabel})` }
+                : { x: `Z′ (${unitLabel})`, y: `−Z″ + 이격 (${unitLabel})` }),
             }] : []),
           ]}
         />
@@ -721,8 +720,8 @@ export function EisCompare() {
                 </div>
               ) : (
                 <div className="tiny warn" style={{ padding: '6px 0 0' }}>
-                  올릴 양을 정하지 못했습니다 (곡선 높이를 못 읽었습니다) —
-                  겹쳐 그린 것과 같은 그림입니다.
+                  이격 간격이 비어 있습니다 — 겹쳐 그린 것과 같습니다.
+                  위의 <b>이격 간격</b> 칸에 0 보다 큰 수를 적어 주세요.
                 </div>
               )
             ) : null}

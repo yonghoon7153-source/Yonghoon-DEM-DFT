@@ -9,7 +9,7 @@
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.hoisted(() => {
   const media = (query: string) => ({
@@ -259,6 +259,10 @@ describe('EIS 비교 — SOC 스캔', () => {
  *  곡선 둘이라, 둘이 다른 만큼 올라가면 "안 맞는 맞춤" 으로 보인다).
  */
 describe('EIS 비교 — 이격', () => {
+  // 이격 간격은 `useStickyState` 라 시험 사이에 새어 나간다 — 앞 시험이 35 로
+  // 두고 끝나면 다음 시험의 "기본 20" 이 거짓이 된다.
+  beforeEach(() => { window.localStorage.clear() })
+
   const viewButton = (name: string) =>
     within(screen.getByRole('group', { name: '보기' })).getByRole('button', { name })
 
@@ -271,6 +275,42 @@ describe('EIS 비교 — 이격', () => {
     Object.defineProperty(window, 'isSecureContext', { value: true, configurable: true })
     return written
   }
+
+  //: 간격을 **사람이 정한다** — 자동(중앙값)이던 것을 버렸다.  기본 20 이
+  //  화면에 서 있어야, 처음 켠 사람이 무엇을 고칠 수 있는지 안다.
+  it('간격은 기본 20 이고, 화면이 그 수를 적는다', async () => {
+    installFetch()
+    await renderPicked()
+
+    await userEvent.click(viewButton('이격'))
+    expect(await screen.findByLabelText('이격 간격')).toHaveValue(20)
+    expect((await screen.findByText(/씩 올려/)).textContent).toContain('20')
+  })
+
+  it('쓰는 수를 바꾸면 그림도 적힌 수도 따라간다', async () => {
+    installFetch()
+    await renderPicked()
+
+    await userEvent.click(viewButton('이격'))
+    const box = await screen.findByLabelText('이격 간격')
+    await userEvent.clear(box)
+    await userEvent.type(box, '35')
+    await waitFor(() =>
+      expect(screen.getByText(/씩 올려/).textContent).toContain('35'))
+  })
+
+  //: 비우면 겹쳐 그린 것과 같아진다.  **그렇다고 말한다** — 말없이 0 으로
+  //  두면 "이격을 눌렀는데 아무 일도 안 일어난다" 가 된다 (§0.4).
+  it('간격을 비우면 겹쳐 그린 것과 같다고 말한다', async () => {
+    installFetch()
+    await renderPicked()
+
+    await userEvent.click(viewButton('이격'))
+    await userEvent.clear(await screen.findByLabelText('이격 간격'))
+    expect(await screen.findByText(/겹쳐 그린 것과 같습니다/)).toBeTruthy()
+    // 그때는 이격 클립보드 칸도 없다 — 낼 것이 본값과 같아진다.
+    expect(screen.queryByRole('button', { name: /이격\) 복사/ })).toBeNull()
+  })
 
   it('나이퀴스트에서 이격을 켜면 올린 양을 적는다', async () => {
     installFetch()
@@ -309,7 +349,11 @@ describe('EIS 비교 — 이격', () => {
     expect(await screen.findByText(/씩 올려/)).toBeTruthy()
   })
 
-  it('이격 클립보드는 본값과 올린 값을 나란히 낸다', async () => {
+  //: **두 열이다.**  한동안 본값을 함께 냈다 — 간격이 자동이라 옮긴 수만으로
+  //  되돌릴 수가 없었기 때문이다.  이제 간격은 사람이 적은 하나이고 화면과
+  //  캡션에 그대로 적히므로, n 번째 곡선이 `n × 간격` 만큼 올라갔다는 것으로
+  //  되돌릴 수 있다.  세 열은 그 근거가 사라진 뒤에도 남아 있던 것이다.
+  it('이격 클립보드는 곡선마다 두 열 — 본값은 안 낸다', async () => {
     const written = stubClipboard()
     installFetch()
     const bar = await renderPicked()
@@ -327,12 +371,12 @@ describe('EIS 비교 — 이격', () => {
     const [tsv] = written
     expect(tsv).toBeTruthy()
     const [head, , first] = tsv!.split('\n')
-    // 곡선마다 세 열: Z′ · 본값 · 올린 값.
-    expect(head!.split('\t')).toHaveLength(6)
+    // 곡선 둘 × 두 열 = 네 열.  본값 열이 있었으면 여섯이다.
+    expect(head!.split('\t')).toHaveLength(4)
     expect(head).toContain('−Z″ + 이격')
+    expect(head).not.toContain('\t−Z″ (')
+    // 첫 곡선은 안 올린다 (맨 아래).  둘째는 그만큼 위에 있다.
     const cells = first!.split('\t')
-    // 첫 곡선은 안 올린다 (맨 아래).  둘째는 올린 값이 본값보다 크다.
-    expect(Number(cells[2])).toBeCloseTo(Number(cells[1]), 9)
-    expect(Number(cells[5])).toBeGreaterThan(Number(cells[4]))
+    expect(Number(cells[3])).toBeGreaterThan(Number(cells[1]))
   })
 })

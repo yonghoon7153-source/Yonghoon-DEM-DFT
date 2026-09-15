@@ -10,42 +10,16 @@
  *  돌려주고, 화면과 클립보드가 그 수를 그대로 적는다.  적지 않으면 나중에
  *  누군가 이 그림에서 저항을 읽는다.
  *
- *  **올릴 양은 '가운데 곡선의 높이' 로 정한다** (최댓값이 아니라).  스캔 하나
- *  안에 유난히 큰 스윕이 하나 있는 것이 보통인데 (마지막 SOC 의 확산 꼬리),
- *  그 최댓값으로 간격을 잡으면 나머지 열 곡선이 서로 아주 멀리 떨어져 각자
- *  납작한 선이 된다.  중앙값이면 대부분의 곡선이 제 높이의 절반쯤 만큼
- *  떨어지고, 큰 곡선 하나만 이웃을 살짝 넘는다.
+ *  **올릴 양은 여기서 정하지 않는다.**  한동안 이 파일이 자동으로 골랐다
+ *  (보이는 곡선 높이의 중앙값 × 0.6).  데이터가 정하는 수라 스캔마다 달라졌고,
+ *  그래서 두 스캔을 나란히 놓으면 같은 그림이 다른 자로 그려졌다.  이제 사람이
+ *  적는다 — `components/StackGap.tsx`.  여기 남은 것은 "몇 번째 칸에 앉는가"
+ *  뿐이고, 그것은 데이터가 아니라 순서의 문제다.
  */
 
 export interface Stackable {
   y: number[]
   hidden?: boolean
-}
-
-/** 곡선 하나가 이웃보다 제 높이의 몇 배만큼 위에 앉을까. */
-export const STACK_GAP = 0.6
-
-/** 올릴 양 한 칸.  그릴 것이 없거나 전부 평평하면 0 (그러면 겹쳐 그린 것과
- *  같고, 그것이 맞다 — 없는 간격을 지어내지 않는다). */
-export function stackStep(series: Stackable[], gap = STACK_GAP): number {
-  const heights: number[] = []
-  for (const one of series) {
-    if (one.hidden) continue
-    let low = Infinity
-    let high = -Infinity
-    for (const value of one.y) {
-      if (!Number.isFinite(value)) continue
-      if (value < low) low = value
-      if (value > high) high = value
-    }
-    if (Number.isFinite(low) && high > low) heights.push(high - low)
-  }
-  if (!heights.length) return 0
-  heights.sort((a, b) => a - b)
-  const middle = heights.length % 2
-    ? heights[(heights.length - 1) / 2]!
-    : (heights[heights.length / 2 - 1]! + heights[heights.length / 2]!) / 2
-  return middle * gap
 }
 
 /** 몇 번째 칸에 앉는가 — **보이는 것들 사이에서의 차례**다.
