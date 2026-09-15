@@ -429,6 +429,176 @@ def _mat_oracle(mode, lbl1, lbl2, r1, r2):
     return k_w, srel(r1, lbl1), srel(r2, lbl2)
 
 
+#  ═══ `AREA5-06` **잔여** — 합성 격자가 아니라 **실제 침대** (2026-09-15) ══════════════
+#  옛 픽스처는 전부 내가 좌표를 적은 두 구다.  실침대에서만 나오는 것이 둘 있다:
+#    ① **반지름 쌍이 양쪽 순서로** 자연히 섞인다 (`r1<r2` 와 `r1>r2` 가 같이)
+#    ② **AM_P–AM_S 혼합 접촉**이 실재한다 — `min(σ)` 규약은 **혼합 접촉에서만** 뜻이 있고
+#       동종 접촉(P–P, S–S)에서는 `min` 을 `σ₁` 로 바꿔도 값이 같아 **변이가 안 걸린다**.
+#  ★ 침대 = `docs/data/real14_am_scaffold.csv` (input_real_14 의 300 MPa 압밀 AM 골격,
+#    457개 = AM_P 36 · AM_S 421).  실측: AM–AM 겹침 접촉 **587개** · 성분 66개 중
+#    **z 를 잇는 성분이 정확히 1개(369개, P 36 · S 333)** 다 ⇒ *"AM–AM 이 z 를 잇는 침대"* 가
+#    요구한 조건이 이 파일에서 **충족된다** (합성할 필요가 없었다 — 규율 ①).
+#  ⚠⚠ **AM 골격만으로는 축 하나가 빈다** (2026-09-15 실측).  그 파일에는 SE 입자가 없어
+#    `k_weight` 의 **AM–SE 조화평균 분기가 한 번도 안 탄다** ⇒ 실침대 oracle 이 그 변이를
+#    **0건** 으로 놓친다 (합성 격자는 64건 잡는다).  ⇒ 두 픽스처는 **상보적이지 대체재가
+#    아니다**.  구멍을 메우려면 같은 침대의 SE 좌표가 필요하고, 그것도 리포에 있다.
+#  ⚠ SE 는 32,832개라 O(n²) 쌍 순회가 불가능하다 ⇒ **셀 리스트**로 AM 근방만 본다.
+SE_SCAFFOLD = SCRIPTS.parent / 'docs' / 'data' / 'real14_se_scaffold.csv'
+AM_SCAFFOLD = SCRIPTS.parent / 'docs' / 'data' / 'real14_am_scaffold.csv'
+AM_SCAFFOLD_SHA256 = '281ad86e0465a13b6ed96dbcf30c76acf4f372ff9d7c4a7e36fe55ecd44413fd'
+SCAFFOLD_UM = 1e6          # 파일은 LIGGGHTS box 단위 (m); µm 로 올린다
+
+
+def _load_scaffold(path):
+    """실침대 골격 → `[(type, x, y, z, r)]`, µm 단위.  ⚠ 없으면 **실패**한다."""
+    out = []
+    with path.open(encoding='utf-8') as fh:
+        for ln in fh:
+            if ln.startswith('#') or not ln.strip():
+                continue
+            t, x, y, z, r = ln.split(',')[:5]
+            out.append((int(t), float(x) * SCAFFOLD_UM, float(y) * SCAFFOLD_UM,
+                        float(z) * SCAFFOLD_UM, float(r) * SCAFFOLD_UM))
+    return out
+
+
+def _load_am_scaffold():
+    return _load_scaffold(AM_SCAFFOLD)
+
+
+def _am_se_contacts(am, cap=240):
+    """실침대 **AM–SE** 접촉 표본 → `[(t_am, r_am, t_se, r_se, δ)]`.
+
+    ★ 왜 필요한가: AM 골격만 쓰면 `k_weight` 의 **AM–SE 조화평균 분기가 안 탄다**
+      (실측: 그 변이를 실침대 oracle 이 0건, 합성 격자가 64건 잡았다).
+    ⚠ SE 32,832개 × AM 457개를 전부 도는 대신 **셀 리스트**로 AM 근방만 본다.
+    ⚠ `cap` 은 감사 시간을 위한 **표본 상한**이다 — 전수 주장이 아니므로 보고에 개수를 적는다.
+    """
+    se = _load_scaffold(SE_SCAFFOLD)
+    if not se:
+        return []
+    cell = 2.0 * max(p[4] for p in am)                    # 가장 큰 AM 지름 정도
+    grid = {}
+    for p in se:
+        key = (int(p[1] // cell), int(p[2] // cell), int(p[3] // cell))
+        grid.setdefault(key, []).append(p)
+    out = []
+    for t_am, x, y, z, r_am in am:
+        cx, cy, cz = int(x // cell), int(y // cell), int(z // cell)
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                for dz in (-1, 0, 1):
+                    for t_se, sx, sy, sz, r_se in grid.get((cx + dx, cy + dy, cz + dz), ()):
+                        d = math.dist((x, y, z), (sx, sy, sz))
+                        if d <= r_am + r_se:
+                            out.append((t_am, r_am, t_se, r_se, r_am + r_se - d))
+        if len(out) >= cap:
+            return out[:cap]
+    return out[:cap]
+
+
+def _scaffold_contacts(parts):
+    """겹치는 AM–AM 쌍 → `(i, j, δ)`.  δ = `r1+r2−d` (겹침 깊이, µm)."""
+    out = []
+    for i in range(len(parts)):
+        _, x1, y1, z1, r1 = parts[i]
+        for j in range(i + 1, len(parts)):
+            _, x2, y2, z2, r2 = parts[j]
+            d = math.dist((x1, y1, z1), (x2, y2, z2))
+            if d <= r1 + r2:
+                out.append((i, j, r1 + r2 - d))
+    return out
+
+
+def _scaffold_spans_z(parts, contacts):
+    """★ 픽스처가 **공허하지 않다**는 증명 — z 를 잇는 AM–AM 성분이 실재하는가."""
+    zlo = min(p[3] - p[4] for p in parts)
+    zhi = max(p[3] + p[4] for p in parts)
+    band = (zhi - zlo) * 0.10
+    bot = {i for i, p in enumerate(parts) if p[3] - p[4] <= zlo + band}
+    top = {i for i, p in enumerate(parts) if p[3] + p[4] >= zhi - band}
+    adj = {}
+    for i, j, _ in contacts:
+        adj.setdefault(i, []).append(j)
+        adj.setdefault(j, []).append(i)
+    seen, best = set(), None
+    for s in range(len(parts)):
+        if s in seen:
+            continue
+        st, comp = [s], set()
+        while st:
+            u = st.pop()
+            if u in comp:
+                continue
+            comp.add(u)
+            seen.add(u)
+            st += adj.get(u, [])
+        if (comp & bot) and (comp & top) and (best is None or len(comp) > len(best)):
+            best = comp
+    return best, len(bot), len(top)
+
+
+def _real_bed_oracle(nc_mod, limit=None):
+    """★★ `AREA5-06` 잔여 — 실침대의 **실제 반지름 쌍·실제 겹침**으로 재료 oracle 을 건다.
+
+    ⚠ 접촉 기하를 내가 다시 계산해 솔버와 맞춰 보는 것이 **아니다** (그러면 내 코드로 내
+      코드를 재는 것이다).  침대에서 뽑는 것은 **`(type1, type2, r1, r2, δ)` 조합뿐**이고,
+      간선의 `A_contact · R_Maxwell · R_bulk` 는 전부 **솔버가 낸 값**을 쓴다.
+    ★ 전자 채널이 주 표적이다 — `σ_rel` 이 `AM_P` 에서만 1 이 아니므로 `min(σ₁,σ₂)` 규약은
+      **혼합 접촉에서만** 관측 가능하다.
+    """
+    parts = _load_am_scaffold()
+    contacts = _scaffold_contacts(parts)
+    comp, n_bot, n_top = _scaffold_spans_z(parts, contacts)
+    if comp is None:
+        return dict(n=0, bad_maxwell=-1, bad_bulk=-1, mixed=0, orders=(0, 0),
+                    span=0, n_bot=n_bot, n_top=n_top)
+    #  z 를 잇는 성분 **안의** 접촉만 본다 (전자 전류가 실제로 흐르는 자리)
+    inside = [(i, j, dl) for i, j, dl in contacts if i in comp and j in comp]
+    if limit:
+        inside = inside[:limit]
+    n = bad_max = bad_bulk = mixed = 0
+    o_lt = o_gt = 0
+    #  ⚠⚠ **양쪽 순서를 다 건다.**  물리 접촉에는 고유한 순서가 없다 — `(i, j)` 순서는
+    #    덤프를 읽은 방식의 산물이고, 그것이 바로 `r_min → r1` 류 변이가 파고드는 자유도다.
+    #    ★ 이 골격 파일은 AM_P(6 µm) 가 앞, AM_S(2 µm) 가 뒤로 정렬돼 있어 `i < j` 루프만
+    #      돌면 혼합 접촉에서 **항상 큰 쪽이 r1** 이 된다 (실측 r1<r2 **0건** / r1>r2 236건)
+    #      = `AREA5-06` 원 결함(*"항상 작은 쪽이 r1"*)의 **거울상**이다.  내 새 픽스처가 그
+    #      결함을 그대로 재생산했고 공허성 검사 ⑦m 이 그것을 잡았다.
+    pairs = [(i, j, dl) for i, j, dl in inside] + [(j, i, dl) for i, j, dl in inside]
+    #  ★ AM–SE 접촉을 같은 침대에서 붙인다 (양쪽 순서 다) — 조화평균 분기를 태우는 자리.
+    quads = [(parts[i][0], parts[i][4], parts[j][0], parts[j][4], dl) for i, j, dl in pairs]
+    n_amse = 0
+    for t_am, r_am, t_se, r_se, dl in _am_se_contacts(parts):
+        quads.append((t_am, r_am, t_se, r_se, dl))
+        quads.append((t_se, r_se, t_am, r_am, dl))
+        n_amse += 2
+    for t1, r1, t2, r2, dl in quads:
+        for mode in ('electronic', 'thermal', 'ionic'):
+            e = real_solver_edges(nc_mod, r1_um=r1, r2_um=r2, delta_um=dl,
+                                  t1=t1, t2=t2, mode=mode)[0]
+            a = math.sqrt(e['A_contact'] / math.pi) if e['A_contact'] > 0 else 0.0
+            if a <= 0:
+                continue
+            k_w, s1, s2 = _mat_oracle(mode, FIXTURE_TYPE_MAP[e['type1']],
+                                      FIXTURE_TYPE_MAP[e['type2']], e['r1'], e['r2'])
+            n += 1
+            if mode == 'electronic':
+                mixed += (t1 != t2)
+                o_lt += (r1 < r2)
+                o_gt += (r1 > r2)
+            want_rm = 1.0 / (min(s1, s2) * k_w * 2 * a)
+            if abs(e['R_Maxwell'] - want_rm) > 1e-12 * abs(want_rm):
+                bad_max += 1
+            want_rb = ((e['d_ij'] / 2) / (s1 * k_w * math.pi * e['r1'] ** 2)
+                       + (e['d_ij'] / 2) / (s2 * k_w * math.pi * e['r2'] ** 2))
+            if abs(e['R_bulk'] - want_rb) > 1e-12 * abs(want_rb):
+                bad_bulk += 1
+    return dict(n=n, bad_maxwell=bad_max, bad_bulk=bad_bulk, mixed=mixed,
+                orders=(o_lt, o_gt), span=len(comp), n_bot=n_bot, n_top=n_top,
+                n_contacts=len(contacts), n_inside=len(inside), n_amse=n_amse)
+
+
 def _material_oracle(nc_mod):
     """★★ `AREA5-06` — 재료계수 primitive 를 **동결 격자 전체**에서 못박는다.
 
@@ -776,6 +946,40 @@ def _selftest() -> int:
                   if getattr(_nc, k, None) != v}
     chk('⑦k oracle 이 못박은 재료 상수 = 솔버의 동결값 (K_AM·K_SE·r0·β)',
         not _const_bad, f'어긋남 {_const_bad or "없음"}')
+    #   ★★★ ⑦l–⑦n — `AREA5-06` **잔여**: 합성 격자가 아니라 **실제 침대** (2026-09-15).
+    #      옛 픽스처는 전부 내가 좌표를 적은 두 구다.  실침대에서만 나오는 것이 둘:
+    #        ① 반지름 쌍이 **양쪽 순서로** 자연히 섞인다  ② **AM_P–AM_S 혼합 접촉**이 실재한다.
+    #      `min(σ)` 규약은 **혼합 접촉에서만** 관측 가능하다 — 동종 접촉은 `min` 을 `σ₁` 로
+    #      바꿔도 값이 같아 변이가 안 걸린다.
+    chk(f'⑦l 실침대 골격 파일이 동결 지문과 같다 ({AM_SCAFFOLD.name})',
+        AM_SCAFFOLD.is_file()
+        and hashlib.sha256(AM_SCAFFOLD.read_bytes()).hexdigest() == AM_SCAFFOLD_SHA256,
+        hashlib.sha256(AM_SCAFFOLD.read_bytes()).hexdigest()[:16]
+        if AM_SCAFFOLD.is_file() else '(없다)')
+    _rb = _real_bed_oracle(_nc)
+    #   ⑦m ★ 픽스처가 **공허하지 않다** — AM–AM 이 실제로 z 를 잇고, 혼합·양방향이 다 있다.
+    chk('⑦m ★★ 실침대에서 AM–AM 이 **z 를 잇고** 그 성분 안에 혼합 접촉·양쪽 반지름 순서·'
+        'AM–SE 접촉이 모두 있다 (픽스처 공허성 대조)',
+        _rb['span'] > 0 and _rb['mixed'] > 0 and min(_rb['orders']) > 0
+        and _rb.get('n_amse', 0) > 0,
+        f"관통성분 {_rb['span']}개 입자 · 성분내 접촉 {_rb.get('n_inside', 0)} · "
+        f"혼합 {_rb['mixed']} · r1<r2 {_rb['orders'][0]} · r1>r2 {_rb['orders'][1]} · "
+        f"AM–SE 표본 {_rb.get('n_amse', 0)} · bottom {_rb['n_bot']} · top {_rb['n_top']}")
+    #   ⑦n 그 실제 쌍들에 재료 oracle 을 건다 (세 채널).
+    chk('⑦n ★★ 실침대의 **실제 반지름 쌍·실제 겹침**에서 R_Maxwell·R_bulk 가 oracle 과 일치',
+        _rb['n'] > 0 and _rb['bad_maxwell'] == 0 and _rb['bad_bulk'] == 0,
+        f"간선 {_rb['n']}건 · R_Maxwell 어긋남 {_rb['bad_maxwell']} · "
+        f"R_bulk 어긋남 {_rb['bad_bulk']}")
+    #   ⑦o ★ **판별력** — ⑦n 이 "언제나 0" 이라서 초록인 것이 아니다.  `AREA5-06` 이 이름 붙인
+    #      바로 그 규약(`min(σ)`)을 깨면 실침대가 잡는가.  ⚠ 표본을 줄여 시간을 아낀다
+    #      (전수가 아니라 **발화 여부**를 보는 검사다).
+    _nc_mut = _load_nc('_nc_real_mut', _load('_pc_real_mut'),
+                       [('sigma_rel_contact = min(sigma_rel_1, sigma_rel_2)',
+                         'sigma_rel_contact = sigma_rel_1')])
+    _rbm = _real_bed_oracle(_nc_mut, limit=60)
+    chk('⑦o ★★ 판별력: `min(σ)→σ₁` 변이를 실침대가 잡는다 (⑦n 이 공허하지 않다)',
+        _rbm['bad_maxwell'] > 0,
+        f"변이판 R_Maxwell 어긋남 {_rbm['bad_maxwell']} / 간선 {_rbm['n']}")
 
     # ⑥ ★ P2-R2-06 — **실제 솔버**로 대조한다 (감사의 ψ 재구현이 아니라 build_network 자신).
     #    cap 2π→π 를 plastic 에 물린 솔버와 원판 솔버가 같은 Rc·R_total 을 내야 한다.
