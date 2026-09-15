@@ -327,3 +327,44 @@ def test_cy_11_the_objective_weight_is_a_declared_control_not_unexplained_drift(
         verdict["blocked_by"])
     assert "w_dqdv" in g.stdout, "무엇이 달랐는지 이름이 출력에 있어야 한다"
     assert verdict["promotion_eligible"] is False, verdict
+
+
+def test_cy_12_gamma_prefit_scan_shape_separates_the_hypotheses(tmp_path):
+    """[§13-5 열린 항목, 2026-09-15] "γ 가 하한 0.02 에 붙는다 (RMSE 0.473923)" 의 원인을 가르는 관측은
+    **적합값 하나가 아니라 60 점 스캔의 모양**이다. 값만 보면 "국소 최소" 와 "자료가 그 방향을 원한다" 가
+    구별되지 않는다.
+
+    이 시험이 고정하는 것 둘:
+
+    ① `_shape` 가 세 모양(왼쪽 끝 · 안쪽 · 평평)을 제 이름으로 부른다.
+    ② **어떤 손상이 어떤 서명을 내는가** — 문헌 곡선의 방향이 뒤집히면 RMSE 가 **자릿수로** 튀고,
+       역할이 뒤바뀌면 **상**한에 붙는다. 실데이터 서명(하한 · RMSE 0.47)은 **그 어느 것도 아니다.**
+       즉 §13-5 의 세 의심 중 **방향 규약은 이 서명과 안 맞는다**. 이 사실이 흔들리면 진단 문서가
+       거짓이 되므로 시험으로 잡아 둔다.
+    """
+    import importlib.util                                    # noqa: PLC0415
+    import numpy as np                                       # noqa: PLC0415
+    from bms_balancing import model as M                     # noqa: PLC0415
+    spec = importlib.util.spec_from_file_location("_gpr", ROOT / "scripts/gamma_prefit_report.py")
+    gpr = importlib.util.module_from_spec(spec); spec.loader.exec_module(gpr)
+
+    g = np.linspace(0.02, 0.5, 60)
+    assert gpr._shape(g, np.linspace(1.0, 2.0, 60))[0] == "MONOTONE_AT_LB"
+    assert gpr._shape(g, np.linspace(2.0, 1.0, 60))[0] == "MONOTONE_AT_UB"
+    assert gpr._shape(g, (g - 0.25) ** 2 + 1.0)[0] == "INTERIOR"
+    assert gpr._shape(g, np.full(60, 1.0) + 1e-6 * g)[0] == "FLAT"
+
+    si_c, si_v, gr_c, gr_v = _lit_curves()
+    g_true = 0.224                                            # §12 의 pyDMA blend 값
+    q = g_true * si_c + (1 - g_true) * gr_c
+    q = (q - q.min()) / (q.max() - q.min())
+
+    ok = M.fit_gamma_si(q, si_v, si_c, si_v, gr_c, gr_v, use_dv=True)
+    assert abs(ok.gamma_Si_fit - g_true) < 0.02 and ok.rmse < 1e-3, (ok.gamma_Si_fit, ok.rmse)
+
+    flipped = M.fit_gamma_si(q, si_v, si_c[::-1], si_v, gr_c, gr_v, use_dv=True)
+    assert flipped.rmse > 100 * ok.rmse, ("방향이 뒤집히면 RMSE 가 자릿수로 튄다", flipped.rmse, ok.rmse)
+
+    swapped = M.fit_gamma_si(q, si_v, gr_c, gr_v, si_c, si_v, use_dv=True)
+    assert abs(swapped.gamma_Si_fit - 0.5) < 1e-3, ("역할 교환은 **상**한에 붙는다", swapped.gamma_Si_fit)
+    assert int(np.argmin(swapped.rmse_scan)) == len(swapped.rmse_scan) - 1, swapped.gamma_Si_fit

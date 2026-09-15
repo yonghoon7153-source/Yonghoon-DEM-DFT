@@ -514,3 +514,58 @@ def test_w18_width_report_refuses_artifacts_that_carry_no_width(tmp_path):
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader(); w.writerows(rows)
     r = _report(bare)
     assert r.returncode == 2 and "폭 열이 없다" in r.stderr, (r.returncode, r.stderr[-400:])
+
+
+# ══ W-19~W-21: 프로파일 격자를 cycles 경로에 붙였다 (§13-5 의 열린 항목) ════════════════
+
+def test_w19_width_method_name_says_which_method_measured_it():
+    """[W-19] 두 방법의 하한은 서로 다르다. **무엇으로 잰 폭인지**가 값과 같이 다녀야 하고,
+    그 이름이 다르면 `width_report` 가 비교를 거부해야 한다 (`COMPARED_SETTINGS` 에 `width_method` 가 있다)."""
+    from bms_balancing import cycles as C                    # noqa: PLC0415
+    assert C.width_method_name(False, 0) is None and C.width_method_name(False, 21) is None
+    assert C.width_method_name(True, 0) == "near_optimal_extrema"
+    assert C.width_method_name(True, 21) == "near_optimal_extrema+mode_profile_extrema"
+    assert C.width_method_name(True, None) == "near_optimal_extrema"
+
+
+def test_w20_the_union_is_never_narrower_than_the_constrained_extrema_alone():
+    """[W-20] 격자를 켜면 `mode_profile_extrema` 와 **합집합**을 취한다 — 둘 다 하한이므로 넓은 쪽이 더 나은
+    하한이다. 그러니 켠 쪽이 끈 쪽보다 **좁아질 수 없다.**
+
+    ⚠ 이 시험은 "켜면 넓어진다" 를 주장하지 **않는다.** 이득은 목적함수의 모양이 정하고, 굽은 골짜기
+    반례에서는 제약 극값이 이미 더 넓어 합집합이 0 을 더한다 (2026-09-15 실측: eps=1e-8 에서 제약
+    14.044 %p · 프로파일 7.558 %p · 합집합 14.044 %p). 주장할 수 있는 것은 **단조성**뿐이다.
+    """
+    from bms_balancing import cycles as C                    # noqa: PLC0415
+    obj = _flat_obj()
+    lb, ub = _narrow_box()
+    kw = dict(obj=obj, ref_p=REF_P, ref_c=REF_C, c_cell=C_CELL, best=BEST, best_val=1.0,
+              tol=1.0, starts=3, seed=0, lb5=lb, say=lambda *_a, **_k: None)
+    off = C._width_fields(True, grid=0, **kw)
+    on = C._width_fields(True, grid=9, **kw)
+    assert off["width_status"] == "measured" and on["width_status"] == "measured", (off, on)
+    for m in ("LAM_PE", "LAM_NE", "LLI"):
+        assert on[f"{m}_lo"] <= off[f"{m}_lo"] + 1e-12, (m, on[f"{m}_lo"], off[f"{m}_lo"])
+        assert on[f"{m}_hi"] >= off[f"{m}_hi"] - 1e-12, (m, on[f"{m}_hi"], off[f"{m}_hi"])
+    assert on["width_is_lower_bound"] is True, "합집합이어도 여전히 하한이다"
+
+
+def test_w21_width_report_refuses_two_runs_that_used_different_grids(tmp_path):
+    """[W-21] `width_method` 는 켬/끔만 가른다 — **격자 수가 다른 두 켠 실행**은 이름이 같다. 그 둘을 견주면
+    폭 차이의 일부가 격자 탓인데 눈에 안 보인다. `width_grid` 도 견주는 설정이어야 한다."""
+    import importlib.util                                    # noqa: PLC0415
+    spec = importlib.util.spec_from_file_location("_wr", ROOT / "scripts/width_report.py")
+    wr = importlib.util.module_from_spec(spec); spec.loader.exec_module(wr)
+    assert "width_grid" in wr.COMPARED_SETTINGS, wr.COMPARED_SETTINGS
+
+    a = _fake_widths_csv(tmp_path / "g9", "cycles_syn_Li.csv", w_dqdv=0, spans=(1.0, 20.0, 4.0))
+    b = _fake_widths_csv(tmp_path / "g21", "cycles_syn_Li.csv", w_dqdv=1, spans=(1.0, 10.0, 8.0))
+    import json as _j
+    for art, g in ((a, 9), (b, 21)):
+        mp = art.with_name(art.name + ".meta.json")
+        m = _j.loads(mp.read_text(encoding="utf-8"))
+        m["width_grid"] = g
+        m["width_method"] = "near_optimal_extrema+mode_profile_extrema"
+        mp.write_text(_j.dumps(m, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    r = _report(a, b, "--axis", "w_dqdv")
+    assert r.returncode == 2 and "width_grid" in r.stderr, (r.returncode, r.stderr[-500:])

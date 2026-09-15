@@ -18,7 +18,7 @@ import pandas as pd
 from . import data as D
 from .model import LB5, UB5, Blend, HalfCell, Objective, _extract, degradation_modes, fit_gamma_si
 from .schema import inputs_digest
-from .verify import active_bounds, multistart, near_optimal_extrema
+from .verify import active_bounds, mode_profile_extrema, multistart, near_optimal_extrema
 
 #: main_blend_final.m:45 — 원본은 γ 를 Track B 로 대체하고 나머지 넷을 시작점으로 쓴다. 여기서는 seed 시작점들에 이 점 하나를 더한다.
 INITIAL5 = (1.08, -0.04, 1.05, -0.03, 0.25)
@@ -57,11 +57,34 @@ _WIDTH_EMPTY = {"width_tol": "", "width_is_lower_bound": "",
                 "LAM_PE_lo": "", "LAM_PE_hi": "", "LAM_NE_lo": "", "LAM_NE_hi": "", "LLI_lo": "", "LLI_hi": ""}
 
 
-def _width_fields(widths, obj, ref_p, ref_c, c_cell, best, best_val, tol, starts, seed, lb5, say):
+#: 폭을 재는 두 방법 — 상태 경로(`cmd_degeneracy`)는 둘을 **합집합**으로 쓴다. 둘 다 하한이므로 넓은 쪽이
+#: 더 나은 하한이다. cycles 경로는 기본으로 첫째만 쓰고, `width_grid > 0` 일 때 둘째를 더한다 (§13-5 → §15).
+_W_EXT = "near_optimal_extrema"
+_W_UNION = "near_optimal_extrema+mode_profile_extrema"
+_MODES = ("LAM_PE", "LAM_NE", "LLI")
+
+
+def width_method_name(widths: bool, grid: int | None) -> str | None:
+    """sidecar 의 `width_method` — **무엇으로 잰 폭인지**가 값과 같이 다녀야 한다.
+
+    두 방법의 하한은 서로 다르므로, 이 이름이 다른 두 산출의 폭을 견주면 축이 섞인다.
+    `width_report.py` 의 `COMPARED_SETTINGS` 가 이 키(와 `width_grid`)를 보고 **비교를 거부**한다.
+    """
+    if not widths:
+        return None
+    return _W_UNION if (grid or 0) > 0 else _W_EXT
+
+
+def _width_fields(widths, obj, ref_p, ref_c, c_cell, best, best_val, tol, starts, seed, lb5, say, grid=0):
     """근최적 집합 위의 LAM/LLI 폭을 **이 적합이 쓴 상자에서** 잰다 (W-11 · W-12).
 
     단위: `near_optimal_extrema` 는 % 로 돌려주는데 행의 `LAM_*`/`LLI` 는 **분수**다 — 100 으로 나눈다.
     안 나누면 폭이 100 배가 되고, 점추정은 여전히 그 안에 들어가므로 범위 검사만으로는 안 걸린다.
+
+    `grid > 0` 이면 `mode_profile_extrema` 를 같이 돌려 **합집합**을 취한다 (W-20, §13-5 의 열린 항목).
+    상태 경로가 하던 것과 같은 순서다 — 제약 극값을 **먼저** 구해 그 범위를 프로파일 격자의 힌트로 준다.
+    이득은 목적함수의 모양이 정한다: 굽은 골짜기 반례에서는 제약 극값이 이미 더 넓어 합집합이 **0 을 더한다**
+    (실측). 그래서 기본은 꺼짐이고, 켜면 사이클마다 격자×시작점만큼 SLSQP 가 더 돈다.
 
     실패하면 **값을 지어내지 않고** `failed` 로 적는다. 적합 자체는 살아 있으므로 산출을 버리지도 않는다.
     """
@@ -71,11 +94,22 @@ def _width_fields(widths, obj, ref_p, ref_c, c_cell, best, best_val, tol, starts
         ext = near_optimal_extrema(obj, ref_p, ref_c, c_cell, best, best_val,
                                    tol=float(tol), seeds=[], n_starts=int(starts), seed=int(seed),
                                    lb=lb5, ub=UB5)
+        rng = {k: (float(ext[k]["min"]), float(ext[k]["max"])) for k in _MODES}
+        lower = [bool(ext[k].get("is_lower_bound")) for k in _MODES]
+        if (grid or 0) > 0:
+            prof = mode_profile_extrema(obj, ref_p, ref_c, c_cell, best, best_val,
+                                        tol=float(tol), n_grid=int(grid), n_starts=int(starts),
+                                        seed=int(seed), hint=rng, lb=lb5, ub=UB5)
+            rng = {k: (min(rng[k][0], float(prof[k]["min"])),
+                       max(rng[k][1], float(prof[k]["max"]))) for k in _MODES}
+            lower += [bool(prof[k].get("is_lower_bound")) for k in _MODES]
         out = {"width_status": "measured", "width_tol": float(tol),
-               "width_is_lower_bound": all(bool(ext[k].get("is_lower_bound")) for k in ("LAM_PE", "LAM_NE", "LLI"))}
-        for mode in ("LAM_PE", "LAM_NE", "LLI"):
-            out[f"{mode}_lo"] = float(ext[mode]["min"]) / 100.0
-            out[f"{mode}_hi"] = float(ext[mode]["max"]) / 100.0
+               # ⚠ 합집합이어도 **여전히 하한**이다 — 둘 다 국소 해법이다. `all` 이라 한 방법이라도
+               #   하한이 아니라고 말하면 그 사실이 내려간다 (지우는 방향으로 합치지 않는다).
+               "width_is_lower_bound": all(lower)}
+        for mode in _MODES:
+            out[f"{mode}_lo"] = rng[mode][0] / 100.0
+            out[f"{mode}_hi"] = rng[mode][1] / 100.0
         return out
     except Exception as e:                                   # noqa: BLE001
         say(f"  ! 폭 계산 실패 ({type(e).__name__}: {e}) — 이 행은 width_status=failed 로 적는다")
@@ -86,6 +120,7 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=
                n_starts: int = 20, seed: int = 0, scale_seed: int = 0, w_dqdv: float = 0.0, run_id: str = "",
                literature=None, gamma_prefit: bool = False, gamma_lb: float | None = None,
                widths: bool = False, width_tol: float = 0.01, width_starts: int = 4,
+               width_grid: int = 0,
                log=None) -> dict:
     """사이클마다 적합 → {"rows": [CYCLES_ROW dict …], "consumed": 공통 receipt, "settings": 기록된 optimizer 설정}.
 
@@ -143,7 +178,10 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=
                 # ⚠ 폭은 **기록되는 실행 조건**이다 — 허용(tol)을 안 밝힌 폭은 인용할 수 없다 (§12-3 과 같은 이유).
                 "widths": bool(widths), "width_tol": (float(width_tol) if widths else None),
                 "width_starts": (int(width_starts) if widths else None),
-                "width_method": ("near_optimal_extrema" if widths else None),
+                # ⚠ W-20: 격자를 켜면 `mode_profile_extrema` 합집합이다 — **어느 방법으로 잰 폭인지**가
+                #   값과 같이 다녀야 두 산출을 견줄 때 축이 안 섞인다.
+                "width_grid": (int(width_grid) if widths else None),
+                "width_method": width_method_name(bool(widths), width_grid),
                 "free": ["a_PE", "b_PE", "a_NE", "b_NE", "gamma_Si"], "n_multistart": int(n_starts),
                 "seed": int(seed), "scale_seed": int(scale_seed), "w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": float(w_dqdv),
                 "optimizer": "L-BFGS-B (scipy)"}
@@ -170,7 +208,8 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=
             "a_PE": p[0], "b_PE": p[1], "a_NE": p[2], "b_NE": p[3], "gamma_Si": p[4],
             "c_lit": o.c_cell * (p[0] + p[1] - p[3]),
             "LAM_PE": m["LAM_PE"], "LAM_NE": m["LAM_NE"], "LLI": m["LLI"],
-            **_width_fields(widths, o, p0, o0.c_cell, o.c_cell, p, val, width_tol, width_starts, seed, lb5, say),
+            **_width_fields(widths, o, p0, o0.c_cell, o.c_cell, p, val, width_tol, width_starts, seed, lb5, say,
+                           grid=width_grid),
             "obj": val, "rmse_pocv": o.rmse_pocv(p), "rmse_dvdq": o.rmse_dvdq(p), "rmse_dqdv": o.rmse_dqdv(p),
             "n_starts": int(n_starts), "n_accepted": int(st.get("accepted", 0)),
             # ⚠ scale 은 행이 스스로 말한다 (R5-07) — 두 seed 실행의 scale 열이 같아야 그 차이가 시작점의 것이다

@@ -60,6 +60,12 @@ def main(argv=None) -> int:
     ap.add_argument("--width-tol", type=float, default=0.01,
                     help="폭의 허용 — 최적 목적함수 대비 분수 (기본 0.01 = 1%%). 이 값을 안 밝힌 폭은 인용 불가")
     ap.add_argument("--width-starts", type=int, default=4, help="폭 계산의 시작점 수 (기본 4)")
+    # ⚠ W-20 (§15): 켜면 `mode_profile_extrema` 를 같이 돌려 **합집합**을 취한다 — 둘 다 하한이므로 넓은 쪽이
+    #   더 나은 하한이다. 기본 0(꺼짐)인 이유는 둘이다: ① 사이클마다 격자×시작점만큼 SLSQP 가 더 돈다
+    #   ② 이득이 목적함수 모양에 달렸다 (굽은 골짜기 반례에서는 제약 극값이 이미 더 넓어 합집합 이득 0 — 실측).
+    #   켜고 끈 두 산출은 `width_method` 가 달라 `width_report.py` 가 비교를 거부한다.
+    ap.add_argument("--width-grid", type=int, default=0,
+                    help="폭 격자 점 수 — 0 이면 제약 극값만, >0 이면 mode 프로파일과 합집합 (상태 경로 기본은 21)")
     ap.add_argument("--out", required=True, type=pathlib.Path, help="산출 디렉터리")
     ap.add_argument("--run-id", default=None)
     a = ap.parse_args(argv)
@@ -79,7 +85,7 @@ def main(argv=None) -> int:
         res = C.fit_cycles(root, a.half_cell, a.full_cell, a.si_source, cell=a.cell, cycles=cycles,
                            n_starts=a.starts, seed=a.seed, scale_seed=a.scale_seed, w_dqdv=a.w_dqdv, run_id=rid,
                            literature=a.literature, gamma_prefit=a.gamma_prefit, gamma_lb=a.gamma_lb,
-                           widths=a.widths, width_tol=a.width_tol, width_starts=a.width_starts,
+                           widths=a.widths, width_tol=a.width_tol, width_starts=a.width_starts, width_grid=a.width_grid,
                            log=lambda s: print(s, flush=True))
     except (ValueError, KeyError) as e:
         print(f"! {e} → 종료 코드 2"); return 2

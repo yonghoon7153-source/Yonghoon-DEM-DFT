@@ -27,7 +27,9 @@ MODES = ("LAM_PE", "LAM_NE", "LLI")
 #: (`--axis` 로 지정한 것 하나만 예외다. `run_states.sh` 의 "같은 설정이어야 비교가 성립한다" 와 같은 규율.)
 COMPARED_SETTINGS = ("lb", "ub", "initial", "gamma_prefit", "gamma_lb", "n_multistart", "seed",
                      "scale_seed", "w_pocv", "w_dvdq", "w_dqdv", "optimizer",
-                     "widths", "width_tol", "width_starts", "width_method",
+                     # ⚠ W-21: `width_method` 는 켬/끔만 가른다 — **격자 수가 다른 두 켠 실행**은 이름이 같아서
+                     #   그대로 견줘졌다. 폭 차이의 일부가 격자 탓인데 눈에 안 보인다.
+                     "widths", "width_tol", "width_starts", "width_method", "width_grid",
                      "cell", "si_source", "starts", "cycles")
 
 
