@@ -1562,3 +1562,205 @@ false 값을 기능 발동 검증으로 바꿔 쓰지 않는다.** Desktop 성�
 - **재계산이 덮는 범위는 §20-1~20-3 뿐이다.** §20-6 의 보존·실행 기록은 전달값이다.
 - 게이트 리뷰(63·64차) · BML 열화모드 정량화 · α·β fit rails 와 **무관**하다 — 합치지 않는다.
 - "모델 검증 완료" 도 "본 실행 GO" 도 여전히 없다.
+
+---
+
+## 21. 정상 guard 실행과 API 복구 — §20 의 **앞 이야기** (2026-09-15 보존·확인)
+
+> **보존 완료.** `COMSOL63_ELECTROLYTE_GUARD_HANDOFF.zip` (555,102,474 B · SHA-256 `8a72d6a7…`)
+> 과 `COMSOL63_ELECTROLYTE_RECOVERY_RECORDS.zip` (131,470 B · SHA-256 `10a7a5fc…`) 을 넣었다.
+> 명세 76/37 전수 일치 · 보존 41/21 · **커밋 안 bytes 재대조 41/41 · 21/21 불일치 0.**
+>
+> 순서상 이 절이 §20 보다 **먼저**다. guard 실행이 후처리에서 죽었고(21-1), API 복구가 파일
+> 읽기에서 막혔고(21-2), 그래서 Desktop 으로 일부만 회수한 것이 §20 이다.
+>
+> **COMSOL 호출 0 · solve 0 · 설정 변경 0.** 우리가 한 일은 읽기·세기·대조뿐이다.
+
+### 21-1. 정상 guard 실행 — **시간 적분은 끝났고 후처리가 죽었다**
+
+job `56ef13bee5a448c5a029b02656ebf6bb` · state **failed** · phase `running_batch`.
+
+**우리가 원시 로그에서 직접 센 것** (`results/normal_NATIVE_LOG_STEPS_ONLY.csv`):
+
+```
+로그 줄 987 · native_index 0 … 986  →  채택 간격 986
+시각 0 → 5 s · 비감소
+```
+
+즉 **시간 적분은 5 s 까지 갔다.** 죽은 것은 그 뒤 Global Evaluation 이다.
+
+```
+classification  INCOMPLETE_POSTPROCESSING_UNDEFINED_COORDINATE
+cause           comp1.minguard1(comp1.cl, comp1.x) 에서 comp1.x 가 정의되지 않은 변수
+responsibility  이번 guard 증거 구현이 넣은 것 — 기준 소스는 안 바뀌었다
+```
+
+**책임 소재가 중요하다.** 이것은 모델의 결함이 아니라 **argmin 좌표 증거를 뽑으려고 더한 식**이
+COMSOL 에서 성립하지 않은 것이다. 그래서 §20-7 이 argmin 을 "제외 상태로 기록" 하는 것이고,
+옛 gate 를 성공으로 덮어쓰지 않는다.
+
+**`batch rc 0` 이 성공이 아니다.** compile rc 0 · batch rc 0 인데 `batch.log:2316` 에
+`/*****Error********/` 가 있었고 worker 가 그것을 잡아 failed 로 적었다:
+
+> *"COMSOL reported a fatal error despite batch rc=0; any saved MPH is a partial, unvalidated result"*
+
+우리 하네스가 자체 리뷰 C11 에서 닫은 축과 **같은 모양**이다 — 종료 코드만 보고 승격하지 않는다.
+저쪽도 같은 자리를 스스로 막고 있다.
+
+**필수 CSV 는 나오지 않았다.** `results/normal_raw_csv_manifest.json` 에 적힌 파일은 **하나**
+(`axes_runtime_settings.csv`)뿐이다 — 새 boundary·profile CSV 가 없다는 것을 우리가 그 파일을
+세어 확인했다. 그래서 `normal_voltage_surface_comparison` 이
+`NOT_PERFORMED_MISSING_NEW_BOUNDARY_AND_PROFILE_CSV` 이고, guard 최소값과 단위도 미내보냄이다.
+
+`next_trigger_allowed: false` · `all_required_checks_complete: false`.
+
+### 21-2. API 복구 시도 — **파일 읽기에서 막혔다**
+
+job `28f40815e3a3410aab411ec93cd36fe1` · state **failed**.
+
+```
+classification                    BLOCKED_COMSOL_FILE_READ_SECURITY
+compile rc 0 · batch rc 0
+native_model_load_success_observed false
+numeric_evaluations_reached        false
+new_solve_calls 0 · new_CSV_count 0 · new_MPH_count 0
+security_settings_changed          false
+retry_performed                    false
+```
+
+막힌 자리가 **`loadCopy` 보다 앞**이다 — Java 가 자기 입력을 읽으려는 첫 단계(`hashInput` /
+`Files.newInputStream`)에서 COMSOL 의 File system access 가 거부했다. 원본 콘솔은 비어 있고,
+실행 순서로 그 지점을 짚었다.
+
+**그러므로 `loadCopy` 가 실패한다는 것은 확인되지 않았다.** 이것이 §22 의 API 경로 제안이
+성립하는 근거이고, 동시에 "Desktop 로드 성공을 batch 로드 성공으로 대신 판정하지 않는다" 는
+문장이 필요한 이유다.
+
+저장 시각 987 이라는 수는 수신 측이 **원본 MPH 의 XML 에서 읽은 것**이지 이 시도에서 COMSOL
+API 로 확인한 값이 **아니다** (`time_metadata_987` 이 그렇게 적는다).
+
+### 21-3. 묶음끼리 어긋나지 않는다 — 우리가 댄 것
+
+guard 묶음의 `FINAL_CHECKS.json` 이 "계획 갱신 전 불변" 으로 적은 파일 목록에
+`COMSOL63_PHYSICAL600_B_HANDOFF.zip` 이 있고, 그 크기·SHA 가 **우리가 §19 에서 보존한 값과
+같다** (1,078,568,990 B · `53b4b2bd…`). 서로 다른 묶음의 기록이 같은 바이트를 가리킨다.
+
+같은 방식으로 `COMSOL63_PHYSICAL600_B_REVIEW_RECORDS.zip` (23,910 B · `78f561d6…`) 도 일치한다
+— 우리가 따로 보존한 그 ZIP 이다.
+
+### 21-4. 이 절이 **말하지 않는** 것
+
+- 시간 적분이 끝났다는 것은 **로그 줄을 센 것**이다. 해의 정확도·수렴·물리 타당성이 아니다.
+- 저장된 부분 MPH 는 worker 자신이 "partial, unvalidated" 라고 적었다. §20 의 Desktop 회수는
+  **그 파일**에서 나온 것이고, 그래서 §20 도 부분 회수다.
+- 두 job 은 **failed 로 유지**한다. 뒤의 어떤 성공도 이것을 뒤집지 않는다.
+- 1198 발동 시험 · 241 좌표 표면 비교 · Li 수지는 **여전히 미완**이다.
+- 게이트 리뷰(63·64차) · BML · α·β 와 무관하다 — 합치지 않는다.
+
+---
+
+## 22. 저장 해 전용 API 후처리 경로 — 실행 **전** 검토 (2026-09-15)
+
+§21-2 가 막힌 자리를 우회하지 않고 **정면으로** 여는 제안이 왔고, 수신 측이 그것을 검토했다.
+
+> **판정 (수신 측): API 경로는 조건부 수용 가능. 현재 문안 그대로의 권한 변경 + 구현 + batch
+> 일괄 승인은 보류 권고.**
+
+새 모델 수치 결함을 찾았다는 뜻이 아니다. **아직 코드가 없다.** 보완할 것은 승인·구현 계약이다.
+
+⚠ 이 절은 **문서 검토의 기록**이다. 우리 쪽 재계산 대상이 없다 (실행도, 새 자료도 없다).
+  COMSOL 호출 0 · solve 0 · 설정 변경 0 · 실행용 Java 생성 0.
+
+### 22-1. 핵심 — **순서를 뒤집는다**
+
+원안은 전용 File system access 를 먼저 넓힌 뒤 코드를 만든다. 그러면 컴파일이나 정적 검토에서
+막혀도 **넓어진 권한만 남는다.** 원복한다 해도 불필요한 노출 기간이 생긴다.
+
+바꾼 순서:
+
+| 단계 | 무엇 | 승인 |
+|---|---|---|
+| **A** | 제한 유지 상태로 후처리 Java · launcher · 별도 분석기 · 출력 계약 · 오프라인 테스트 · SHA 제출 | 준비 범위 승인 |
+| A 검토 | C1–C5 와 호출·계약 일치 확인 | 결과를 받아 판단 |
+| **B** | 파일 접근 범위와 원복까지 명시해 후처리 **1회** | **별도** 실행 승인 |
+| 결과 검토 | 원시 수치 · 보존 · 정리 · 미완 확인 | 정상 전체 판정은 그 뒤 |
+
+**A 가 끝나도 B 는 자동으로 시작하지 않는다.**
+
+### 22-2. 닫아야 할 다섯
+
+| ID | 무엇 |
+|---|---|
+| C1 | 코드·분석기를 먼저 확정하고 권한은 나중에 — 실패해도 권한만 남는 창을 만들지 않는다 |
+| C2 | 원복 **방법·횟수·실패 중간상태**를 명시 — 적용 1 세션 + 정리 전용 1 세션(각 모델 로드 0) 권고. 기본 prefs 전체 복원은 금지. 정리 불명이면 `cleanup_pending` |
+| C3 | Java `finally` 와 **외부 종료 처리를 분리** — 강제 종료는 `finally` 를 보장하지 않는다 |
+| C4 | Java 이력과 Results 전체 제외만으로 **구성 불변을 판정하지 않는다** |
+| C5 | 새 산출물 계약을 **실제 소비 코드까지** 연결 — 옛 분석기를 억지로 통과시키지 않는다 |
+
+### 22-3. C3 과 C5 가 우리가 아는 축이다
+
+**C3 은 63차 F1 과 같은 모양이다.** 그때 우리가 닫은 셋이 정확히 이것이다 — 부분 취득에서
+첫 자원을 놓지 못하던 것, 정리 예외가 본문 오류를 덮던 것, 그래서 **최초 오류와 정리 오류를
+따로 남기게** 한 것. 여기에 하나가 더 있다: 강제 종료 뒤에는 `after-U` 검증이 **미완**이지
+실패가 아니다. 수치 회수 성공과 정책 원복 완료를 **다른 축**으로 센다.
+
+Windows 에서 부모 프로세스 종료가 자식 종료를 뜻하지 않는다는 것도 공식 문서에 있다. 이름
+일괄 종료나 PID 목록 한 번으로 충분하다고 쓰지 않는다.
+[Terminating a Process](https://learn.microsoft.com/en-us/windows/win32/procthread/terminating-a-process) ·
+[Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)
+
+**C5 는 fixture 가 진실을 가리는 축이다.** 옛 분석기가 고정하고 있는 것들:
+
+| 자리 | 고정된 것 | 이번 안과의 충돌 |
+|---|---|---|
+| `analyze.py:42` | 옛 worker 의 `completed` | 새 launcher 결과 체계와 연결 필요 |
+| `analyze.py:46` | 옛 완료 marker | 새 명시적 단계 결과와 대응 필요 |
+| `analyze.py:48` | 속성 개수 **1143** | 실제 집합 비교·미수집 처리 필요 |
+| `analyze.py:95` | argmin CSV **필수 읽기** | 이번 **제외** 계약과 정면 충돌 |
+| `common.py:191` | `profileN/P` 이름에서 좌표 추출 | 새 tag 면 명시적 매핑 필요 |
+
+이 저장소에서 fixture 가 먼저 깨져야 정상인 패턴을 **일곱 번** 겪었다. 옛 분석기를 억지로
+통과시키면 그 순간 게이트가 거짓말을 시작한다. 별도 버전의 소비 계약과 분석기를 준비하고,
+제외는 **별도 상태**로 남긴다.
+
+### 22-4. 용어를 흐리지 않는다 (공식 문서 기준)
+
+- **`All files`** 는 파일 하나의 읽기 허용도 OS sandbox 도 아니다. 그 사용자 권한이 허용하는
+  파일 접근 범위를 넓힌다. 전용 prefs 를 OS 접근 제한으로 설명하지 않는다.
+- **`-nosave`** 는 결과 모델 저장 억제 옵션이지 Java 코드의 모든 부작용을 막는 정책이 아니다.
+  명시적 save 경로를 요구하는 `loadCopy` 도 입력 파일의 OS 쓰기 권한을 없애지 않는다.
+- **`-data`** 는 시작할 때 내부 workspace 를 지운다. 증거·입력·출력·prefs·공유 작업 디렉터리와
+  **겹치면 안 되는 새 빈 전용 경로**여야 한다.
+- **무계산**은 새 시간 적분을 하지 않는다는 뜻이지 Results 수치 평가를 하지 않는다는 뜻이 아니다.
+- 권한 상승·관리자 전환은 **승인 범위 밖**이다. 기본 prefs·설치 INI 불변.
+
+[Security](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_running.38.10.html) ·
+[Windows Commands](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_running.38.31.html) ·
+[ModelUtil](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_api_general.47.15.html) ·
+[Saving COMSOL Files](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_environment.18.16.html)
+
+### 22-5. 우리 쪽 A 단계 검토 기준 — **코드가 오기 전에 적어 둔다**
+
+받은 뒤에 기준을 만들면 코드에 맞춰 기준이 움직인다. 먼저 적는다.
+
+1. **제출물의 identity 부터.** Java · launcher · 분석기 · 의존 파일의 경로와 SHA 목록이
+   있는가. 없으면 검토를 시작하지 않는다.
+2. **상태 축이 갈려 있는가.** `numeric_recovery` · `sampled_comparison` · `preservation` ·
+   `process_cleanup` · `policy_restore` 다섯이 **각각** 판정되는가. 하나라도 미완이면 전체
+   완료를 쓰지 않는가.
+3. **오프라인 테스트가 실패 경로를 덮는가.** 정상 · compile 실패 · rc 0 + fatal · timeout ·
+   잔류 helper · 원복 실패 — 여섯이 **가짜 프로세스 상태와 임시 결과**로 시험되는가.
+   COMSOL 없이 돌아야 한다.
+4. **`rc 0` 을 성공으로 읽는 자리가 없는가.** §21-1 이 실측으로 보여 준 축이다.
+5. **분석기가 옛 고정값을 들고 있지 않은가.** 1143 · argmin 필수 · 옛 marker · `profileN/P`
+   이름. 새 계약과 어긋나는 것이 **드러나야** 하고, 조용히 통과하면 안 된다.
+6. **증인이 문맥 의존이 아닌가.** 64차에서 우리가 세 번째로 겪은 축이다 — 오류 문구에 경로·
+   digest·개수가 들어가면 다른 기계·다른 호출 문맥에서 갈린다.
+
+### 22-6. 이 절이 **바꾸지 않는** 것
+
+- §20 부분 회수 수용 · **정상 전체 gate INCOMPLETE** · 241 좌표 표면/Li 미완 · 1198 미실행.
+- §21 의 두 failed job 보존. batch rc 0 은 실패를 뒤집지 않는다.
+- 전체 수렴 미완 · 장시간 보류 · OCP 외삽 금지 · TIME_CAPS raw ZIP 차이 원인 미확인.
+- **이 검토는 A 도 B 도 승인하지 않는다.** 권한 변경·COMSOL 재호출은 별도 승인이다.
+- 게이트 리뷰(63·64차) · BML · α·β 와 무관하다 — 합치지 않는다.

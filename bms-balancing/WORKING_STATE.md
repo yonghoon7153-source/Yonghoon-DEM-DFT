@@ -71,6 +71,10 @@ fail-closed 실측 — `PROMOTION_DECISIONS.json` 을 치우면 정본 `out/` �
 재계산이 표본 수·최대값·최대 시각·전극·위치까지 같다. 시간 이력(986 구간)도 재계산으로 확인했다.
 `docs/COMSOL_REBUILD_SPEC.md` §19 의 전달값 배너를 내렸다.
 
+`COMSOL_REBUILD_SPEC.md` 에 §20~§22 를 더했다 — §20 Desktop 부분 회수(우리 재계산) ·
+§21 그 앞 이야기(정상 guard 가 후처리에서 죽고 API 복구가 파일 읽기에서 막힌 것) ·
+§22 저장 해 API 경로의 실행 전 검토와 **우리 쪽 A 단계 검토 기준 여섯**.
+
 Desktop 부분 후처리(§20)는 보존이 한 번 멈췄고 **원인이 우리 스크립트였다.** 그 묶음의
 manifest 이름은 `manifest.json` 인데 `preserve_handoff.sh` 가 `package_manifest.json` 만
 찾았다. ZIP 의 크기·SHA 는 전달값과 정확히 일치했고 `manifest.json` 의 해시도 전달값 그대로였다 —
