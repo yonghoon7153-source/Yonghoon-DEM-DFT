@@ -341,7 +341,9 @@ class ReportingTests(TemporaryCase):
         self.assertIn('cc_fraction',metrics['unavailable'])
         summary=(out/'run_summary.md').read_text(encoding='utf-8')
         self.assertIn('## 계산하지 못한 항목',summary)
-        self.assertIn('- cc_fraction:',summary)
+        # The line names the target and says why; the parenthetical distinguishes a target with no
+        # metrics at all from one whose metrics exist but whose deployment model could not be fitted.
+        self.assertRegex(summary,r'- cc_fraction[^\n]*: cc_frac column not provided')
         labels=pd.read_excel(out/'results_for_origin.xlsx',sheet_name='08_label_summary')
         self.assertIn('unavailable_cc_fraction',labels['item'].tolist())
 
