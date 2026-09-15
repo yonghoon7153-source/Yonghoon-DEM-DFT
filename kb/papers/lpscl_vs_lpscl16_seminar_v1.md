@@ -3169,3 +3169,31 @@ Pipeline: cascade screen → DFT EOS → §8 → NCM interface → calendar AIMD
 - Bonds per-site: `db/properties/per_bond_json/{bonds_comp1_k444.json, bonds_modelc_k663.json}`
 - DOS / bands / ELF: `db/properties/electronic.json`
 - B0 BM3: `db/properties/eos.json`
+
+---
+
+## 부록 R — `rescue/lineage-2026-06-nd-pair01` 에서 회수한 Slide 18 보강 (2026-06-12 분 · 2026-09-15 회수)
+
+> ⚠ **2026-06-12 발표 당시 문장이다.** 문서 머리의 SUPERSEDED 수치 경고가 이 절에도 그대로 걸린다 —
+> 여기 나오는 R_int 8.9/13.2 Ω·h^0.5 · onset 2.14 V 는 **문헌(Zuo 2023)·당시 우리 축 판정의 소환값**이고
+> 지금 정본과 대조하지 않았다. 왜 붙이나: 병합 기하 조사(`docs/handoff_merge_from_lldvar_20260915.md` §4.3)에서
+> rescue 브랜치 커밋 `216faad02` 의 이 블록만 우리 판에 **없었다**. 나머지 48줄은 우리가 뒤에 고쳐 쓴 문장의
+> 옛 판이라 안 가져왔다. 살아 있는 것은 마지막 **Manuscript 지침** 한 문단 — 축 분리 서술 규율이다.
+
+### ★ Axis 3 보강 — delithiation-kinetics 메커니즘 (2026-06-12 추가)
+
+> 외부 검토 텍스트 (Zuo 2023 재독해) 채택. Slide 18 발표/Q&A에 추가할 인과 사슬:
+
+**핵심 한 줄**: 산화 분해 = delithiation 반응 → **σ를 올린 바로 그 설계 요인 (Li vacancy +
+4d-Cl AS, 빠른 Li⁺ 수송)이 분해 kinetics도 가속한다.**
+
+- 물질 레벨: Cl-rich가 동일 carbon 접촉에서 더 낮은 전위부터 더 많이 분해 (S⁰/polysulfide/SO₂ ↑, Zuo CV)
+- 단, onset·메커니즘 (S²⁻ → S⁰)은 두 조성 유사 — 우리 axis 1 (0-pressure onset 2.14 V 동일)과 정합
+- cell 레벨: 분해 산물이 더 mild (LiCl ↑) → R_int 더 낮음 (8.9 vs 13.2 Ω·h^0.5) → Zuo 결론은
+  "분해 ↑ but cell 성능 ↑" — axis 3 WINS의 실체
+- **slide 22 duality와 동일 구조**: 4d-Cl AS/vacancy가 σ·E를 주면서 thermal/moisture/분해 kinetics
+  비용도 동시에 만듦 → "공통 원인" 서사에 oxidation kinetics 합류
+
+**Manuscript 지침 (확정)**: 산화 안정성을 Cl-rich의 "장점"으로 절대 쓰지 않음. 표현은 항상
+"onset 동일 (axis 1 DRAW) · 기계적 구속 하 window 확대 (axis 2) · cell-level R_int 우위 (axis 3)
+· 분해 kinetics는 가속 (자재 레벨 비용) · thermal calendar 열위 (axis 4)" — 축 분리로만 서술.

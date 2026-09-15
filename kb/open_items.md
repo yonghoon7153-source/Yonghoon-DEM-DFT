@@ -3,13 +3,32 @@
 > 세션이 바뀌어도 유지되는 미결 사항 추적. 닫을 때 날짜+근거를 남기고 ✅로 옮긴다.
 > 등록: 2026-07-27 (MAX 감사 후속).
 
-## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-15 새벽 — ⏭-NOW-h 가 최신 (E′ 파일럿 V100 에서 실행 중)**)
+## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-15 낮 — ⏭-NOW-i 가 최신 (브랜치 병합 트랙 닫힘 · E′ 파일럿은 NOW-h 그대로)**)
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 >
 > ⚠ **이 절의 상태 문장은 실측으로만 쓴다.** 2026-09-07 까지 여기 머리가 "ORCA 8잡 실행 중"
 > 이었는데 같은 날 실측은 **프로세스 0개**였다 — 워처·기억이 아니라 `ps`·receipt·git log 로
 > 받친다(`kb/projects/restart_runbook_2026_09_07.md`). 세션을 닫을 때 이 절을 갱신한다.
+
+### ⏭-NOW-i. 2026-09-15 낮 — **브랜치 병합 트랙을 닫았다. 실행 중인 것은 NOW-h 그대로.**
+
+> 이 세션은 **원격 기계를 안 건드렸다** (계산 0 · V100·kgy·gabia 명령 0). 저장소 안의 일만 했다.
+> 원격 상태는 NOW-h 표가 최신이고, 그 뒤 실측은 사용자가 붙여 준 watch 출력이 있어야 갱신된다.
+
+| 닫은 것 | 결과 |
+|---|---|
+| 인계 §4.1 `windows-reinstall-backup-oducnh` | ✅ 병합 `47e080690`. ⚠ **"SDCP 파일 5개 없음" 은 이름 기준** — 08-23 판이고 우리 쪽에 09-08 Table S1·08-30 Methods v9 가 있었다. **9/16 마감 위협 아님.** 회수본 머리에 대체 표식 |
+| 인계 §4.3 `rescue/…nd-pair01` | ✅ 키 단위 대조 `fcfa1fc02` — 저쪽만 있던 34키(`dft_validation_2026_06_16`, pair01 v0·U=8.0) 회수, `⚠_계보`·citable 아님. 세미나 md 는 Axis-3 블록만 부록 R |
+| webapp 시험 | ✅ 09-13 부터 떨어져 있던 `/cascade` §4b `|bold` 6슬롯 회복(`5745dcca9`) — 인계 §7 사다리에 webapp 시험이 없어서 아무도 못 봤다 → 사다리에 추가. 현재 **459 passed / 2 skipped** |
+
+**남은 것 (이 트랙)**
+- ✅ **SDCP 본문 DFT(슬랩) 문단 확정 (2026-09-15, 1저자 "이걸로 확정")** — 원장 정합 점검 통과. 확정본과 변경 3건은
+  `kb/papers/self_doping_dft_paragraph_2026_09_08.md` §확정본. 제출 전 남은 손질 둘: **"The deprotonated." 두 단어 꼬리 삭제** ·
+  **Table S1 `Ref. 48/49` → 본문 번호 `[51,52]`** (`table_s1_build.js` 46–47행 → docx 재생성)
+- ⏳ **1저자 결정**: ① SDCP 원고 코드 표기 **QE**(원고·Table S1 09-08) vs 값을 낸 코드 **VASP**(methods_dft_v9 08-30) — wave1 값이 BLOCKED 인 지금은 안 보이지만 값 복구 시점에 맞춰야 한다 ② 개정문 사후판정 논리 정정(`lpscl_li2s_layer1_amendment_2026_09_12.json` → 회신 BR) 비준 여부
+- 인계 §6-2 `main` 병합 금지 범위 (ADR 0009 는 다른 브랜치 문서) — 1저자 판정 사항, 미판정
+- 다른 세션 메모 "체크포인트 로컬 overlay" — **안 했다**: 1.1 GB × 16 호출을 2일 라운드에 펴면 몇 분이고 GPU-h 예산을 안 먹는다(V100 카드 자체 논리). 라운드 사이에 심볼릭 링크 → 로컬 복사 + sha256 대조로 하면 된다
 
 ### ⏭-NOW-h. 2026-09-15 새벽 — **E′ 파일럿이 V100 에서 돈다.**
 
@@ -18,7 +37,7 @@
 | **E′ 파일럿** | 🟢 **실행 중** — V100 tmux `eprime`. out_root `$STORE/runs/eprime_2026_09_14`, 로그 `$STORE/runs/eprime_2026_09_14.log`. 준비 5 + MD 11 호출 = **30런**, 상한 10 / 120 GPU-h (비준). code_id `634da438b`. 감시는 `tools/doping/watch_eprime.py --out_root …` |
 | **G1 (Li₂S 1층)** | ⏸ kgy 의 modelc 끝나고. GPU OOM 이력 있음 — 사다리 ② `diago_david_ndim=2` → ③ CPU NP=8 → ④ KISTI (`db/properties/li2s_layer1_g1_prereg_2026_09_14.json` §6c) |
 | **회신 BR 후속** | ⏸ 300 K hold 연장(동역학 갇힘 진단 ②)은 G1 뒤. 나머지 4시드 보류 유지 |
-| **브랜치 병합** | 🆕 origin 토큰 열림 → 23개 브랜치 전수 조사 완료 (`docs/handoff_merge_from_lldvar_20260915.md`). **우리 계보의 포크 셋** 발견 — 그중 `claude/windows-reinstall-backup-oducnh` 12커밋에 **SDCP 원고 v5 DFT methodology·Table S1** 이 있고 우리에겐 파일 5개가 없다. 원고 마감 9/16 |
+| **브랜치 병합** | ✅ **§4.1 병합 완료 (2026-09-15 새벽, `47e080690`)** — `claude/windows-reinstall-backup-oducnh` 12커밋 3-way merge. 충돌은 `kb/index.md` 만(재생성). 검증 사다리 통과 — 단 **webapp 시험은 병합 전부터 3건 떨어져 있었다**(`/cascade` §4b 패널 `p4b.*` 6슬롯이 `|bold` 없이 db 문자열을 찍어 `**` 노출 · 09-13 `e6ad796e7` 부터 · 인계 문서 §7 사다리에 webapp 시험이 빠져 있어 아무도 못 봤다) → 이 커밋에서 고침. ⚠ **정정: "파일 5개가 없다" 는 이름 기준이었다 — 실체는 08-23 판이고 우리 쪽에 더 새 판이 있었다** (`Table_S1_DFT_parameters.docx` 09-08 · `methods_dft_v9` 08-30 · 문단 카드 09-08). **9/16 마감 위협 아님.** 회수본 머리에 대체 표식을 달았다(`docs/manuscripts/README.md` · 두 md 머리). 건진 것: `tools/sdcp/check_ldauu_provenance.py`(U 6.2 = MP 세트, 7/7) · 리비전 방어 카드 · VASP↔QE 변환표. ⏳ **1저자 결정 남음: 원고 코드 표기(QE) vs 값을 낸 코드(VASP)** — 값 복구 시 맞춘다. §4.2 는 §4.1 부분집합(안 함) · ✅ **§4.3 rescue 잔여 2건 키 대조 닫음** — `modelc_nd_doped.json` 에 저쪽만 있던 블록 34키(`dft_validation_2026_06_16`, pair01 v0 계보·U=8.0)를 `⚠_계보` 표식과 함께 회수, 세미나 md 는 Axis-3 보강 블록만 부록으로 · §6-2 main 병합 금지 범위 미판정 |
 
 **바로 볼 것 (순서)**
 1. **첫 prep 이 rc=0 인가.** `torch 2.14 + fairchem 2.22` 는 공식 조합이 아니고, 확인된 것은
@@ -1363,6 +1382,40 @@ Li 추출 격리 · 판정 바닥 max(30 meV, 쌍 편차) · 검열(못 잼)과 
 
 ### R. ✅ **litdb 인덱스 미편입 5편 + MLIP 3부작 비교표 — 닫음 (2026-08-19)** — 본문은 `## ✅ 닫힌 항목` 절. 앵커값 UMA 힘 MAE **30.0 meV/Å** (`db/properties/mlip_bench_li3ps4_uma.json`). ⚠ 구조적 원인(`--check` 를 세션 마감 절차에 넣기)은 **여전히 미결**이다.
 ---
+
+### S. ✅ **U(Ni 3d) = 6.2 eV 의 원전 — 닫음 (2026-08-23, 신설 당일)**
+
+- **무엇** — SDCP 원고 v5 SI Table S1 의 `Hubbard U (Ni 3d) = 6.2 eV` 만 Source 가 비어 있다.
+  `kb/methodology/terminology_register.md` §42 가 이미 *"⚠ 원전 미보유(Dudarev)"* 로 기록.
+- **왜 지금 문제인가** — 2026-08-23 지도교수 지시: *"영률 수치같은거 그런거는 뭘 참고해서
+  쓴 거면 있어야지."* 정량값에 출처를 요구하는 규칙에 이 한 값이 걸린다.
+- ✅ **닫힘 (2026-08-23)** — gabia 에서 `check_ldauu_provenance.py` 실행, **MATCH**:
+  ```
+  [API.MPRelaxSet.CONFIG]  Ni U = 6.2 (F/ · O/)
+  O-group 대조: {'Co': 3.32, 'Mn': 3.9, 'Ni': 6.2, 'Fe': 5.3}
+  ```
+  O-group 네 값이 **MP 파라미터 세트 그대로**라 우연 일치가 아니다.
+  ⇒ Table S1 의 Source 를 `Ref. S3, S4` 로 채웠다 (S4 = Jain 2011).
+  Wang–Maxisch–Ceder *PRB* **73**, 195107 (2006) 은 그 U 세트의 방법론 조상 —
+  심사에서 더 요구하면 그때 추가한다.
+- ⚠ **남는 것** — 이 확인은 "6.2 이 이 계에 옳다" 를 말하지 않는다. U 민감도(4 vs 6.2)는
+  여전히 미실시다.
+- **닫는 방법 (1분)** — 우리 6.2 가 Materials Project 기본값과 같은 값인지 확인:
+  ```bash
+  # gabia (SDCP 계산이 있는 곳) — repo 는 /data/work/repo, uma env
+  ssh root@121.78.116.27
+  cd /data/work/repo && git fetch origin
+  git show origin/claude/md-status-monitoring-q2xbu1:tools/sdcp/check_ldauu_provenance.py > /tmp/chk.py
+  python3 /tmp/chk.py          # rc 0 MATCH / 1 MISMATCH / 2 확인불가
+  ```
+  - **MATCH** → 인용 후보 Wang–Maxisch–Ceder *PRB* **73**, 195107 (2006) ·
+    Jain *et al.* *PRB* **84**, 045115 (2011). 생성기
+    `docs/manuscripts/sdcp_dft_methods_build.js` 의 `ROWS`·`REFS` 각 한 줄만 고치면 끝.
+  - **MISMATCH** → 출처가 MP 가 아니다. Source `-` 유지하고 **그 사실을 카드에 기록**.
+- ⚠ **이 확인은 "6.2 이 이 계에 옳다" 를 말하지 않는다.** U 민감도(4 vs 6.2)는 미실시 —
+  심사에서 물으면 별개 계산이다.
+- 관련: 항목 P (SDCP·PTFE 자리 선호) · `kb/syntheses/sdcp_eads_revision_defense_2026_08_23.md`
+- 도구: `tools/sdcp/check_ldauu_provenance.py` (`--selftest` 7/7, 음성 경로 포함)
 
 ## 📄 PDF 확보 대기 (원전 미보유 — 웹/재인용 딱지 상태)
 

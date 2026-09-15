@@ -241,6 +241,17 @@ diff <(git show origin/claude/friendly-meitner-lldvar:db/compositions/modelc_nd_
      <(git show origin/rescue/lineage-2026-06-nd-pair01:db/compositions/modelc_nd_doped.json | python3 -m json.tool --sort-keys)
 ```
 
+> ✅ **2026-09-15 키 단위 대조 결과 (닫음).** 리프 키 ours 447 / theirs 391.
+> **저쪽에만 있는 키 34개 — 전부 한 블록 `dft_validation_2026_06_16`** (k441=k661 수렴 PASS 4e-8 Ry/atom ·
+> 자화 abs 6.29 μB(2 Nd³⁺ 4f³ AFM) · 에너지 분해 · Nd 4f PDOS "in-gap 없음" · 힘/응력 노트 · KISTI 766470).
+> 우리에게만 있는 키 90개는 그 뒤(06-17~) 작업이고, 같은 키 다른 값은 status 문자열 1개뿐이다.
+> ⇒ "우리가 더 크니 상위집합" 은 **틀렸을 것이다** — 34키가 빠져 있었다. 그 블록을 **`⚠_계보` 표식과 함께**
+> 우리 파일에 넣었다: pair01 v0_champion 계보(120원자 · Nd 4f DFT+U U=8.0)라 2026-09 의 Rietveld 기반
+> ndo_lpscl16(frozen-4f)과 **다른 모델·다른 방법** — 한 표에 놓지 않는다 · citable 아님.
+> `kb/papers/lpscl_vs_lpscl16_seminar_v1.md` 쪽 49줄은 대부분 **우리가 뒤에 고쳐 쓴 문장의 옛 판**이고,
+> 새 내용은 Slide 18 **Axis-3 보강(2026-06-12)** 블록 하나 — 그 블록만 문서 끝에 부록으로 붙였다
+> (문서 머리의 SUPERSEDED 수치 경고가 그대로 덮는다). 병합·cherry-pick 은 하지 않았다.
+
 ---
 
 ## 5. 프로젝트 군집 — 무엇이 무엇인지
@@ -310,7 +321,14 @@ python3 tools/convention_check.py            # 물리 규약 복사본 갈라짐
 python3 tools/kb_wiki.py index && python3 tools/kb_wiki.py lint   # 0 errors
 python3 tools/doping/run_eprime_pilot.py --selftest                # 23/23
 python3 tools/doping/watch_eprime.py --selftest                    # 32/32
+python3 -m pytest webapp/tests/ -q                                 # ⚠ 2026-09-15 추가 — 아래 참조
 ```
+
+> ⚠ **2026-09-15 추가 (§4.1 병합 실행 중 발견).** 위 사다리 초판에 **webapp 시험이 빠져 있었다.**
+> 그래서 `/cascade` §4b 패널(09-13, `e6ad796e7`)이 `p4b.*` 6슬롯을 `|bold` 없이 찍어
+> `test_no_literal_markdown_asterisks` 3건이 **병합 전부터** 떨어져 있었는데 아무도 못 봤다
+> (`da12372c1` 에서 실측 3 failed). 병합 커밋 뒤 고쳤다. **사다리에 없는 검사는 안 돌아간 검사다** —
+> 시험 묶음이 여럿이면 전부 적는다.
 
 그리고 우리 `CLAUDE.md` 의 규율 중 **병합이 깨뜨리기 쉬운 것**:
 
