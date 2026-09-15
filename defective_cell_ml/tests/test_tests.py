@@ -284,7 +284,9 @@ class ReaderTests(TemporaryCase):
         cfg=small_config(cell_min=41,cell_max=43); events=[]
         self.assertEqual([included(c,cfg,events) for c in [40,41,42,43,44]],[False,True,True,True,False])
         self.assertEqual([e['cell_number'] for e in events],[40,44])
-        self.assertEqual({e['reason'] for e in events},{'outside configured cell range'})
+        # The reason names the configured range so a user can see which key excluded the cell.
+        self.assertTrue(all(e['reason'].startswith('outside configured cell range') for e in events))
+        self.assertTrue(all('41..43' in e['reason'] for e in events))
 
     def test_cycle_file_without_its_eis_partner_is_named(self):
         cfg=small_config(); cycle=self.folder/'cycle'; eis=self.folder/'eis'; cycle.mkdir(); eis.mkdir()
