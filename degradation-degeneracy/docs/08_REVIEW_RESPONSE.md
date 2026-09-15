@@ -7227,3 +7227,100 @@ docs_lint 9건 중 8건이 이 라운드로 닫혔고, 남은 1건이 그것이�
 `743f65bead671bf353ce38027c2e8e457738ec08` · `source_digest e9ee7475dea7de1d` ·
 `743f65b..HEAD` 의 RUN_SCOPE diff 는 빈 출력이다. **GO 가 나오기 전에는 본 실행을
 시작하지 않는다.**
+
+---
+
+## §79 64차 접수 — 방어적 검토 NO-GO (P1 2 · P2 1)
+
+2026-09-15 접수. 리뷰어 제목은 "63차 묶음 5 — 방어적 코드·회귀 검토" 이나 우리 원장
+번호로는 **64차**다 (`GATE63_REQUEST.md` 에 대한 답). 요청한 코드
+`743f65bead671bf353ce38027c2e8e457738ec08` · 검토 HEAD
+`6f8dcc22b7385233f7d215c4af5371f99317fbcb` · `source_digest e9ee7475dea7de1d`
+— 셋 다 우리 요청값과 일치했고, 코드 → HEAD 의 RUN_SCOPE log·diff 는 둘 다 빈
+출력이었다. 리뷰어는 RUN_SCOPE 밖의 `row_projection.py`·`mutation_replay.py` 도
+**그 HEAD 의 바이트로** 따로 해시해 검토했다 — `source_digest` 가 같다는 사실로
+그 두 파일의 동일성을 추정하지 않았다는 뜻이다.
+
+**받아들인 것.** F1(부분 취득·해제) · F2(실패한 선택적 import) · F4(hex16 후행 LF) ·
+E1(type parameter bound 순회) 은 닫힘. E2 의 실제 planned grid → fit 은 리뷰어
+환경에서 **skip 없이 통과**했다. 새 P0 는 확인되지 않았다 (그것을 "P0 가 없다" 로
+읽지 않는다고 리뷰어가 스스로 적었다).
+
+| ID | 등급 | 무엇이 틀렸나 |
+|---|---|---|
+| N1 | P1 | 부모가 `usercustomize` 를 **무조건** 찾는다. Python 은 `site.ENABLE_USER_SITE` 가 참일 때만 자동 import 한다 — user site 가 꺼진 정상 venv 에서 child 는 `<absent>` 인데 부모는 PYTHONPATH 의 정상 모듈 digest 를 내서 **정상 영수증이 거부된다** |
+| N2 | P1 | child 의 customization 해시만 `_d(f)` 다. 표준 zipimport 의 정상 `sitecustomize` package 를 OS 파일로 열려다 `[Errno 20] Not a directory` → 영수증 전체 `failed`. 바로 아래 `loaded` 루프는 이미 `_hash_origin` 이었다 |
+| E2-R | P2 | 원장 §78 이 "잡으면 True · 놓으면 False" 라고 적었는데 **커밋된 시험에는 True 만** 있다. 리뷰어가 자기 임시 파일로 helper 를 직접 불러 False 분기는 동작함을 확인했다 — 부족한 것은 커밋된 회귀가 그것을 강제한다는 증거다 |
+
+셋 다 **정상 입력에서 우리 층이 거부하거나 실패한 것**이고 위조 성공이 아니다.
+그래서 고칠 방향은 "덜 본다" 가 아니라 "같은 규칙으로 본다" 다.
+
+리뷰어가 스스로 좁힌 범위: 정적 소스 대조 · 무해한 정상/오류 적합성 시험 · 커밋된
+증거의 정적 검산. **전체 pytest · strict smoke · 변이 전수 재생 · 원자료 재계산은
+미실행**이고, 변이 조각은 "집합과 코드 좌표 대조" 이지 독립 replay 가 아니라고
+명시했다. `--check-preimages`·`--check-coverage` 도 안 돌렸다. 우리 쪽 전체
+1735/1/2 숫자를 독립 확정했다고 쓰지 않는다는 문장도 같이 적었다.
+
+리뷰어 후속 정리 제안(발견으로 세지 않음): §0 ⑦ 의 xfail 이 `raises=Exception`
+이라 다른 예외까지 그 축으로 분류한다.
+
+## §80 64차 대응 — 셋 다 재현 시험부터 닫았다
+
+RED 관측: `tests/test_gate64_defensive.py` 첫 실행 **6 failed · 4 passed**
+(통과한 넷은 "바뀌지 않는다" 를 재는 대조군).
+
+### N1 — 찾을 수 있는 모듈 ≠ startup 이 실행한 모듈
+
+`[고침]` 부모가 **재생이 실제로 띄우는 것과 같은 실행 파일·같은 env** 로 인터프리터를
+하나 띄워 `site.ENABLE_USER_SITE` 를 직접 잰다 (`_parent_user_site_enabled`).
+비활성이면 `usercustomize` 는 양쪽 다 `<absent>` 이고, 활성이면 지금까지처럼 바이트를
+댄다. **child 의 자기 증언은 쓰지 않는다** — 그것을 믿으면 세탁 통로가 된다. 조건을
+못 재면 fail-closed(`_ReplayError`)다: 조건을 모르면 대조 규칙을 정할 수 없다.
+
+부모 프로세스에서 읽지 않는 이유는 그것이 pytest 가 온갖 플래그로 띄운 프로세스라
+child 의 조건과 다를 수 있기 때문이다.
+
+대조군을 같이 고정했다 — user site 가 **켜진** 환경에서 실제로 올라간
+`usercustomize` 의 바이트를 바꾸면 여전히 거부된다. `usercustomize` 를 통째로
+무시하는 수정이면 그 시험이 통과하지 못한다.
+
+### N2 — 같은 origin 을 두 규칙으로 읽고 있었다
+
+`[고침]` customization 루프도 `_hash_origin(f, loader)` 를 부른다. 파일이면 읽고,
+아니면(zip 등) loader 의 `get_data` 에 묻는다 — 62차 P1-4 가 `loaded` 루프에
+넣어 둔 그 규칙 그대로다. 읽기 실패는 여전히 `_Unreadable` → 섹션 전체 `failed`
+이고, 예외를 `<absent>` 로 바꿔 정상으로 취급하지 않는다.
+
+**왜 기존 ZIP 회귀는 통과했나**: 62차 시험은 일반 디렉터리의 `sitecustomize` 가
+ZIP 안의 **다른** 모듈을 import 한다. 그 모듈은 `loaded` 루프를 타므로 통과했다.
+customization **자신**이 ZIP 안에 있는 축은 아무도 안 돌렸다. 리뷰어가 요구한
+대조군 셋(일반 파일 · ZIP customization · 일반 customization 이 가져오는 ZIP
+module)을 각각 별도 시험으로 두었다.
+
+### E2-R — 문구가 시험보다 강했다
+
+`[고침]` 커밋된 대조군에 음성 assertion 을 넣었다. `release_run_lock` 은 token 의
+`dir_fd` 를 닫고 lock 파일을 **지우므로**, 놓은 뒤의 관측은 token 으로도 지워진
+경로로도 열 수 없다 — 그 사실부터 `assert not p.exists()` 로 고정하고, 같은 자리를
+아무도 안 잡은 상태로 되살려 경로로 여는 탐침(`_kernel_lock_held_at`)이 False 를
+내는 것을 관측한다. 양성 쪽도 token 판과 경로 판 **둘 다**로 True 를 고정했다.
+
+관측 시점 문구도 좁힌다. 이 시험이 관측하는 것은 `real_phase_done` **호출 직전**의
+커널 상태, 반환 뒤의 claim 파일, release 직전의 커널 상태 셋이다. "영속 쓰기의 바로
+그 순간" 이라고 쓰지 않는다. 재독 성공은 power-loss durability 의 증거도 아니다.
+
+### 후속 정리 (발견 아님)
+
+§0 ⑦ 의 xfail 을 `raises=shutil.SameFileError` 로 좁혔다. 다른 예외가 나면 그것은
+이 신고가 아니라 **새 발견**이어야 한다.
+
+### 변이 축 (64차)
+
+새 축 3 (`-g64`): `usercustomize-follows-the-startup-activation-g64` (N1) ·
+`customization-reads-origins-like-the-rest-g64` (N2) ·
+`the-probe-control-asserts-both-directions-g64` (E2-R). 셋째는 `tests/` 를 겨냥한
+축이다 (`test_docs_lint.py` 에 이미 선례가 있다) — 커밋된 회귀에서 음성 assertion 을
+빼면 빨개진다. `-k g64` → **3/3 물었다**. `--check-preimages` rc 0.
+
+첫 관측의 증인 문구 둘이 tmp 경로와 기계별 digest 를 담고 있어 시험 문구에서
+걷어냈다 — 62차 ① · 63차 ① 회차가 같은 자리에서 조각 재생을 깨뜨렸던 교훈이다.

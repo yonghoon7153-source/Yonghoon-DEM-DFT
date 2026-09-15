@@ -42,6 +42,7 @@ BASELINE = ROOT / "src" / "baseline.py"
 IO = ROOT / "src" / "io.py"
 MR = ROOT / "docs" / "22p_gap" / "mutation_replay.py"
 ARCHIVE = ROOT / "tools" / "archive_bundle.py"                     # 62차 ζ′
+G63T = ROOT / "tests" / "test_gate63_defensive.py"                 # 64차 E2-R
 
 #: ★ 46차 #9 조건 9 — 변이는 **작업 트리에 손대지 않는다.** 45차 runner 는
 #:   실제 저장소 파일을 고쳤다가 `finally` 로 되돌렸다. 그러면 (a) 중단되면
@@ -1630,6 +1631,26 @@ MUTANTS = [
      '        for tp in ():',
      "scope_walk_covers_the_bound_of_an_ordinary_generic_function or "
      "a_type_parameter_bound_is_evaluated_outside_the_parameters"),
+
+    # ── 64차 (N1 · N2 · E2-R) ────────────────────────────────────────────
+    #   셋 다 **정상 입력**에서 우리 층이 거부하거나 실패한 축이다. 그래서 변이는
+    #   "옛 규칙으로 되돌리면 정상 사례가 다시 빨갛다" 모양이고, 증인도 정상
+    #   환경의 문구다. MR 자기 변이는 철자를 escape 한다.
+    ("usercustomize-follows-the-startup-activation-g64", MR,                 # N1
+     '        if n == "\u0075sercustomize" and not _user_site:',
+     '        if False:',
+     "a_child_with_user_site_disabled_matches_the_parent or "
+     "a_disabled_user_site_receipt_passes_the_parent_assertion"),
+    ("customization-reads-origins-like-the-rest-g64", MR,                    # N2
+     '        cust[n] = _\u0068ash_origin(\n'
+     '            f, getattr(getattr(m, "__spec__", None), "loader", None)\n'
+     '               or getattr(m, "__loader__", None)) if f else "<absent>"',
+     '        cust[n] = _d(f) if f else "<absent>"',
+     "a_zip_customization_is_measured_not_failed"),
+    ("the-probe-control-asserts-both-directions-g64", G63T,                  # E2-R
+     "    assert _kernel_lock_held_at(p) is False          # ★ 음성 대조군 (64차 E2-R)",
+     "    assert _kernel_lock_held_at(p) in (True, False)  # 음성 축을 지운다",
+     "the_committed_probe_control_asserts_both_directions"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
@@ -4933,6 +4954,40 @@ EXPECT: dict = {
                 "AssertionError: type parameter bound was omitted by the scoped traversal",
         }
     },
+
+    # ── 64차 (N1 · N2 · E2-R) ────────────────────────────────────────────
+    #   증인은 전부 **기계 독립**이다 — 첫 관측에서 tmp 경로와 기계별 digest 가
+    #   들어와 그 자리를 시험 문구에서 걷어냈다 (62차 ① · 63차 ① 회차와 같은 교훈).
+    "customization-reads-origins-like-the-rest-g64": {
+        "fail": [
+            "tests/test_gate64_defensive.py::test_a_zip_customization_is_measured_not_failed",
+        ],
+        "witness": {
+            "tests/test_gate64_defensive.py::test_a_zip_customization_is_measured_not_failed":
+                "AssertionError: ('정상 ZIP customization 이 영수증을 실패시킨다 (N2)', 'failed')",
+        }
+    },
+    "the-probe-control-asserts-both-directions-g64": {
+        "fail": [
+            "tests/test_gate64_defensive.py::test_the_committed_probe_control_asserts_both_directions",
+        ],
+        "witness": {
+            "tests/test_gate64_defensive.py::test_the_committed_probe_control_asserts_both_directions":
+                "AssertionError: ('커밋된 대조군이 한쪽만 고정한다 \u2014 원장 문구가 시험보다 강하다 (E2-R)', [True, True])",
+        }
+    },
+    "usercustomize-follows-the-startup-activation-g64": {
+        "fail": [
+            "tests/test_gate64_defensive.py::test_a_child_with_user_site_disabled_matches_the_parent",
+            "tests/test_gate64_defensive.py::test_a_disabled_user_site_receipt_passes_the_parent_assertion",
+        ],
+        "witness": {
+            "tests/test_gate64_defensive.py::test_a_child_with_user_site_disabled_matches_the_parent":
+                "AssertionError: \ubd80\ubaa8\uac00 startup \uc774 \uc2e4\ud589\ud558\uc9c0 \uc54a\ub294 \ubaa8\ub4c8\uc758 digest \ub97c \ub0b8\ub2e4 (N1)",
+            "tests/test_gate64_defensive.py::test_a_disabled_user_site_receipt_passes_the_parent_assertion":
+                "mutation_replay._ReplayError: 환경 영수증의 customization 이 부모가 본 것과 다르다: usercustomize: child='<absent>' parent='24d2bcde4f463c61' — startup 코드가 자기 파일을 세탁했거나 검색 순서가 어긋났다. 못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 ",
+        }
+    },
 }
 
 
@@ -5162,11 +5217,19 @@ def _env_facts_measured(NAMES):
         except Exception as _exc:                        # noqa: BLE001
             raise _Unreadable("%s (loader: %r)" % (p, _exc))
 
+    # ★ 64차 N2 — customization 도 **같은 origin 규칙**으로 읽는다. 전 판은 여기만
+    #   `_d(f)` 였고 바로 아래 `loaded` 루프는 `_hash_origin` 이었다 — 같은 origin 을
+    #   두 규칙으로 읽고 있었던 것이다. 그래서 ZIP 안의 정상 `sitecustomize` package
+    #   (표준 zipimport) 를 OS 파일로 열려다 `[Errno 20] Not a directory` 로 죽고
+    #   영수증 전체가 `failed` 였다. 읽기 실패는 여전히 `_Unreadable` → typed
+    #   `failed` 다 — 예외를 `<absent>` 로 바꿔 정상으로 취급하지 않는다.
     cust = {}
     for n in ("site", "sitecustomize", "usercustomize"):
         m = sys.modules.get(n)
         f = getattr(m, "__file__", None) if m is not None else None
-        cust[n] = _d(f) if f else "<absent>"
+        cust[n] = _hash_origin(
+            f, getattr(getattr(m, "__spec__", None), "loader", None)
+               or getattr(m, "__loader__", None)) if f else "<absent>"
 
     dirs = []
     for get in (getattr(site, "getsitepackages", None),
@@ -5524,6 +5587,39 @@ def _run_probe(tail_expr: str, cwd, what: str) -> dict:
         raise _ReplayError(f"{what} 탐침의 출력을 받을 수 없다: {exc}") from None
 
 
+def _parent_user_site_enabled() -> bool:
+    """재생 인터프리터의 startup 이 `usercustomize` 를 **실제로 자동 import 하는가**
+    (64차 N1).
+
+    Python 의 `site.main()` 은 `execusercustomize()` 를 `ENABLE_USER_SITE` 가 참일
+    때만 부른다. 그러므로 "resolver 가 이름을 찾는다" 와 "startup 이 그것을 실행한다"
+    는 다른 물음이고, 부모의 판정은 **뒤쪽**을 따라야 한다.
+
+    조건을 이 프로세스에서 읽지 않고 **재생이 실제로 띄우는 것과 같은 실행 파일·같은
+    env** 로 인터프리터를 하나 띄워 묻는다 — 부모 프로세스는 pytest 가 온갖 플래그로
+    띄운 것이라 child 의 조건과 다를 수 있다. 영수증 child 의 자기 증언은 쓰지 않는다
+    (그것을 믿으면 세탁 통로가 된다).
+
+    못 재면 fail-closed — 조건을 모르면 대조 규칙을 정할 수 없다.
+    """
+    frame = _new_frame()
+    src = ("import json, site\n"
+           f"print({frame!r} + json.dumps({{'enabled': bool(site.ENABLE_USER_SITE)}}) "
+           f"+ {frame!r})\n")
+    r = subprocess.run([sys.executable, "-c", src], cwd=ROOT, env=replay_env(),
+                       capture_output=True, text=True, timeout=300)
+    if r.returncode != 0 or not r.stdout.strip():
+        raise _ReplayError(
+            "재생 인터프리터의 user-site 활성 조건을 재지 못했다 "
+            f"(rc={r.returncode}): {r.stderr[-300:]} — 조건을 모르면 customization "
+            "대조 규칙을 정할 수 없다 (64차 N1)")
+    try:
+        return bool(_parse_framed_receipt(r.stdout, frame)["enabled"])
+    except (ValueError, KeyError, TypeError) as exc:
+        raise _ReplayError(
+            f"user-site 활성 조건의 출력을 받을 수 없다: {exc} (64차 N1)") from None
+
+
 def _parent_customization_view() -> dict:
     """부모가 **자기 프로세스에서** 잰 customization (62차 자체 리뷰 F1).
 
@@ -5559,8 +5655,22 @@ def _parent_customization_view() -> dict:
     dirs = [x for x in str(env.get("PYTHONPATH", "")).split(os.pathsep) if x]
     dirs += [p for p in sys.path if p and p not in dirs]
     importlib.invalidate_caches()             # 방금 생긴 디렉터리도 본다
+    # ★ 64차 N1 — **찾을 수 있는 모듈과 startup 이 실행한 모듈은 같은 집합이 아니다.**
+    #   Python 의 `site` 는 `ENABLE_USER_SITE` 가 참일 때만 `usercustomize` 를
+    #   자동 import 한다. 63차 F3 는 탐색 규칙(`.py` · package · root 순서)을 맞췄지만
+    #   **실행 조건**은 안 봤다 — 그래서 user site 가 꺼진 정상 venv 에서 child 는
+    #   `<absent>` 인데 부모는 PYTHONPATH 의 정상 모듈 digest 를 내고, 정상 영수증이
+    #   거부됐다 (리뷰어 실측: child `<absent>` · parent `09aa30aa88e05969`).
+    #
+    #   child 의 자기 증언을 믿지 않는다 — 부모가 **같은 실행 파일·같은 재생 env** 로
+    #   자기 인터프리터를 하나 띄워 조건을 직접 잰다. 활성이면 아래 바이트 대조가
+    #   그대로 산다 (`usercustomize` 를 통째로 무시하는 수정이 아니다).
+    _user_site = _parent_user_site_enabled()
     out = {"site": _d(_site.__file__)}
     for n in ("sitecustomize", "usercustomize"):
+        if n == "usercustomize" and not _user_site:
+            out[n] = "<absent>"               # startup 이 아예 부르지 않는다
+            continue
         spec = _PF.find_spec(n, dirs)
         origin = getattr(spec, "origin", None) if spec is not None else None
         if not origin:

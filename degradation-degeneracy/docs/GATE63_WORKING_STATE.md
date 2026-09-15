@@ -85,8 +85,12 @@ MR 자기 참조 preimage 5 건은 `\uXXXX` escape. `--check-preimages` rc 0
 planned lifecycle). grid 가 진짜 solver 로 조건 1개를 돌려 phase 를 닫았고(2.6 s),
 fit 이 token 으로 같은 claim 을 이어받아 commit → `phase_done("fit")` → release.
 관측 열: `("phase_done","fit",True)` · `("phase_written",True)` ·
-`("release",True,True)` — 기록이 쓰이는 순간 커널이 `.fit.lock` 을 쥐고 있었고
-release 시점에 기록이 디스크에 있었다. `results/_unit63-*` 잔여 0.
+`("release",True,True)`.
+
+*(64차 E2-R 로 문구를 좁힌다 — 이 시험이 관측하는 것은 `real_phase_done` **호출
+직전**의 커널 상태, 반환 뒤의 claim 파일, release 직전의 커널 상태 셋이다.
+"영속 쓰기의 바로 그 순간" 이라고 쓰지 않는다. 재독 성공은 power-loss durability
+의 증거도 아니다. 음성 대조군은 64차에 커밋됐다.)* `results/_unit63-*` 잔여 0.
 
 ## 세대 전환 (g17 → g18)
 

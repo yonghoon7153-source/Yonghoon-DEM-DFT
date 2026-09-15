@@ -23,6 +23,7 @@ import hashlib
 import importlib.machinery
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -313,17 +314,45 @@ def _kernel_lock_held(tok) -> bool:
         os.close(fd)
 
 
+def _kernel_lock_held_at(path) -> bool:
+    """같은 물음을 **경로로** 묻는다 — release 는 token 의 `dir_fd` 를 닫으므로
+    놓은 뒤의 음성 대조군은 token 으로 열 수 없다 (64차 E2-R). 여는 방식만
+    다르고 묻는 것은 같다: 커널이 배타를 쥐고 있는가."""
+    fd = os.open(str(path), os.O_RDWR)
+    try:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return True
+        fcntl.flock(fd, fcntl.LOCK_UN)
+        return False
+    finally:
+        os.close(fd)
+
+
 def test_the_kernel_lock_probe_itself_is_not_vacuous(tmp_path):
     """E2 탐침의 대조군 — 잡으면 True, 놓으면 False. 이것이 안 갈리면 아래
-    시험의 True 는 증거가 아니다."""
+    시험의 True 는 증거가 아니다.
+
+    ★ 64차 E2-R — 전 판은 `is True` 만 고정하고 finally 에서 놓기만 했다.
+      원장은 "잡으면 True · 놓으면 False" 라고 적었으니 **문구가 시험보다
+      강했다.** 음성 쪽을 여기서 실제로 관측한다 — 독립 open 둘 다로.
+    """
     import src.io as io
     d = tmp_path / "d"
     d.mkdir()
+    p = d / ".fit.lock"
     tok = io.acquire_run_lock(d, ".fit.lock")
     try:
         assert _kernel_lock_held(tok) is True
+        assert _kernel_lock_held_at(p) is True       # 같은 자리를 경로로 봐도 잡혀 있다
     finally:
         io.release_run_lock(tok)
+    # release 는 lock 파일을 **지운다** — 그것부터 관측으로 고정한다 (그래서 놓은 뒤의
+    # 음성 대조군은 token 으로도, 지워진 경로로도 열 수 없다).
+    assert not p.exists(), "release 뒤에도 lock 파일이 남아 있다"
+    p.touch()                                        # 같은 자리를 아무도 안 잡은 상태로
+    assert _kernel_lock_held_at(p) is False          # ★ 음성 대조군 (64차 E2-R)
 
 
 def _planned_root(monkeypatch) -> Path:
@@ -335,7 +364,11 @@ def _planned_root(monkeypatch) -> Path:
     return Path(tempfile.mkdtemp(prefix="_unit63-planned-", dir=base))
 
 
-@pytest.mark.xfail(strict=True, raises=Exception,
+# ★ 64차 (리뷰어 후속 정리 제안) — `raises=Exception` 은 **다른 이유로 죽어도** 이
+#   축으로 분류한다. §0 ⑦ 이 주장하는 오류는 하나다: staging 이 원본 자신 위에
+#   복사하려다 나는 `shutil.SameFileError`. 이름을 좁혀 축을 또렷하게 한다 —
+#   다른 예외가 나면 그것은 이 신고가 아니라 **새 발견**이어야 한다.
+@pytest.mark.xfail(strict=True, raises=shutil.SameFileError,
                    reason="§0 ⑦ (62차 신고 · 63차 재확인): 저장소 밖 절대 경로 "
                           "입력은 staging 이 자기 자신 위에 복사하려다 죽는다")
 def test_staging_an_input_outside_the_repo_is_still_unsupported(monkeypatch):
