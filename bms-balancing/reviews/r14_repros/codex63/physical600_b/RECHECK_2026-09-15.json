@@ -1,0 +1,334 @@
+{
+ "bundle": "reviews/r14_repros/codex63/physical600_b/outputs/physical600_b",
+ "what_this_is": "원시 scalar CSV 에서 phis 차로 전압을 다시 만들어 여덟 창을 다시 센 것. 묶음의 분석 산출은 대조 대상으로만 읽었다. 판정은 이 파일이 내리지 않는다.",
+ "runs": {
+  "first_300": "Caps300R320H0125C16_5d1a87652ed54e6a945d4f2af4aeda70",
+  "second_600": "Caps600R320H0125C16_56975e4d24054b23bcec87553875f729"
+ },
+ "stored_rows": {
+  "first": 987,
+  "second": 987
+ },
+ "stored_times": {
+  "first": 987,
+  "second": 987,
+  "exact_common": 987,
+  "first_min_s": "0.0",
+  "first_max_s": "5.0",
+  "monotonic_unique_first": true,
+  "monotonic_unique_second": true
+ },
+ "requested_times": {
+  "total": 187,
+  "in_exact_common": 187
+ },
+ "our_voltage_vs_bundle_V_column_max_abs_V": {
+  "first": "0",
+  "second": "0"
+ },
+ "identity_residual_max_abs_V": {
+  "first": {
+   "N": "1.7E-16",
+   "P": "6.33E-16"
+  },
+  "second": {
+   "N": "1.74E-16",
+   "P": "6.4E-16"
+  }
+ },
+ "windows_ours": {
+  "requested_grid_0p1_to_1": {
+   "sample_set": "지정 요청",
+   "window": "0.1–1 s",
+   "n_times": 91,
+   "max_abs_dV_mV": "1.2198000E-9",
+   "dV_signed_V": "1.2198E-12",
+   "at_time_s": "0.1"
+  },
+  "all_exact_common_stored_0p1_to_1": {
+   "sample_set": "정확 공통 저장",
+   "window": "0.1–1 s",
+   "n_times": 99,
+   "max_abs_dV_mV": "1.2198000E-9",
+   "dV_signed_V": "1.2198E-12",
+   "at_time_s": "0.1"
+  },
+  "requested_grid_1_to_5": {
+   "sample_set": "지정 요청",
+   "window": "1–5 s",
+   "n_times": 81,
+   "max_abs_dV_mV": "4.493000E-10",
+   "dV_signed_V": "4.493E-13",
+   "at_time_s": "1"
+  },
+  "all_exact_common_stored_1_to_5": {
+   "sample_set": "정확 공통 저장",
+   "window": "1–5 s",
+   "n_times": 82,
+   "max_abs_dV_mV": "4.493000E-10",
+   "dV_signed_V": "4.493E-13",
+   "at_time_s": "1.0"
+  },
+  "requested_grid_0_to_1": {
+   "sample_set": "지정 요청",
+   "window": "0–1 s",
+   "n_times": 107,
+   "max_abs_dV_mV": "1.06511000E-8",
+   "dV_signed_V": "1.06511E-11",
+   "at_time_s": "0.001"
+  },
+  "all_exact_common_stored_0_to_1": {
+   "sample_set": "정확 공통 저장",
+   "window": "0–1 s",
+   "n_times": 906,
+   "max_abs_dV_mV": "1.07714000E-8",
+   "dV_signed_V": "1.07714E-11",
+   "at_time_s": "0.0012500000000000002"
+  },
+  "requested_grid_0_to_5": {
+   "sample_set": "지정 요청",
+   "window": "0–5 s",
+   "n_times": 187,
+   "max_abs_dV_mV": "1.06511000E-8",
+   "dV_signed_V": "1.06511E-11",
+   "at_time_s": "0.001"
+  },
+  "all_exact_common_stored_0_to_5": {
+   "sample_set": "정확 공통 저장",
+   "window": "0–5 s",
+   "n_times": 987,
+   "max_abs_dV_mV": "1.07714000E-8",
+   "dV_signed_V": "1.07714E-11",
+   "at_time_s": "0.0012500000000000002"
+  }
+ },
+ "windows_bundle": {
+  "requested_grid_0p1_to_1": {
+   "n_times": 91,
+   "max_abs_dV_mV": "1.2198000E-9",
+   "at_time_s": "0.1",
+   "decomp_residual_V_recomputed": "0E-18",
+   "decomp_residual_V_column": "0E-18"
+  },
+  "all_exact_common_stored_0p1_to_1": {
+   "n_times": 99,
+   "max_abs_dV_mV": "1.2198000E-9",
+   "at_time_s": "0.1",
+   "decomp_residual_V_recomputed": "0E-18",
+   "decomp_residual_V_column": "0E-18"
+  },
+  "requested_grid_1_to_5": {
+   "n_times": 81,
+   "max_abs_dV_mV": "4.493000E-10",
+   "at_time_s": "1",
+   "decomp_residual_V_recomputed": "5.92E-16",
+   "decomp_residual_V_column": "5.92E-16"
+  },
+  "all_exact_common_stored_1_to_5": {
+   "n_times": 82,
+   "max_abs_dV_mV": "4.493000E-10",
+   "at_time_s": "1.0",
+   "decomp_residual_V_recomputed": "5.92E-16",
+   "decomp_residual_V_column": "5.92E-16"
+  },
+  "requested_grid_0_to_1": {
+   "n_times": 107,
+   "max_abs_dV_mV": "1.06511000E-8",
+   "at_time_s": "0.001",
+   "decomp_residual_V_recomputed": "3.35E-16",
+   "decomp_residual_V_column": "3.35E-16"
+  },
+  "all_exact_common_stored_0_to_1": {
+   "n_times": 906,
+   "max_abs_dV_mV": "1.07714000E-8",
+   "at_time_s": "0.0012500000000000002",
+   "decomp_residual_V_recomputed": "-1.81E-16",
+   "decomp_residual_V_column": "-1.81E-16"
+  },
+  "requested_grid_0_to_5": {
+   "n_times": 187,
+   "max_abs_dV_mV": "1.06511000E-8",
+   "at_time_s": "0.001",
+   "decomp_residual_V_recomputed": "3.35E-16",
+   "decomp_residual_V_column": "3.35E-16"
+  },
+  "all_exact_common_stored_0_to_5": {
+   "n_times": 987,
+   "max_abs_dV_mV": "1.07714000E-8",
+   "at_time_s": "0.0012500000000000002",
+   "decomp_residual_V_recomputed": "-1.81E-16",
+   "decomp_residual_V_column": "-1.81E-16"
+  }
+ },
+ "agreement_ours_vs_bundle": {
+  "all_exact_common_stored_0_to_1": {
+   "n_times": true,
+   "max_abs_dV_mV": true,
+   "at_time_s": true
+  },
+  "all_exact_common_stored_0_to_5": {
+   "n_times": true,
+   "max_abs_dV_mV": true,
+   "at_time_s": true
+  },
+  "all_exact_common_stored_0p1_to_1": {
+   "n_times": true,
+   "max_abs_dV_mV": true,
+   "at_time_s": true
+  },
+  "all_exact_common_stored_1_to_5": {
+   "n_times": true,
+   "max_abs_dV_mV": true,
+   "at_time_s": true
+  },
+  "requested_grid_0_to_1": {
+   "n_times": true,
+   "max_abs_dV_mV": true,
+   "at_time_s": true
+  },
+  "requested_grid_0_to_5": {
+   "n_times": true,
+   "max_abs_dV_mV": true,
+   "at_time_s": true
+  },
+  "requested_grid_0p1_to_1": {
+   "n_times": true,
+   "max_abs_dV_mV": true,
+   "at_time_s": true
+  },
+  "requested_grid_1_to_5": {
+   "n_times": true,
+   "max_abs_dV_mV": true,
+   "at_time_s": true
+  }
+ },
+ "surface_profiles": {
+  "requested_grid_0p1_to_1": {
+   "sample_set": "지정 요청",
+   "window": "0.1–1 s",
+   "profile_rows": 964,
+   "max_abs_dx_surface": "2.2118816E-9",
+   "dx_signed": "-2.2118816E-9",
+   "dx_time_s": "1",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.000121"
+  },
+  "all_exact_common_stored_0p1_to_1": {
+   "sample_set": "정확 공통 저장",
+   "window": "0.1–1 s",
+   "profile_rows": 964,
+   "max_abs_dx_surface": "2.2118816E-9",
+   "dx_signed": "-2.2118816E-9",
+   "dx_time_s": "1.0",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.000121"
+  },
+  "requested_grid_1_to_5": {
+   "sample_set": "지정 요청",
+   "window": "1–5 s",
+   "profile_rows": 964,
+   "max_abs_dx_surface": "5.2300400E-9",
+   "dx_signed": "-5.2300400E-9",
+   "dx_time_s": "5",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.000121"
+  },
+  "all_exact_common_stored_1_to_5": {
+   "sample_set": "정확 공통 저장",
+   "window": "1–5 s",
+   "profile_rows": 964,
+   "max_abs_dx_surface": "5.2300400E-9",
+   "dx_signed": "-5.2300400E-9",
+   "dx_time_s": "5.0",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.000121"
+  },
+  "requested_grid_0_to_1": {
+   "sample_set": "지정 요청",
+   "window": "0–1 s",
+   "profile_rows": 964,
+   "max_abs_dx_surface": "2.2118816E-9",
+   "dx_signed": "-2.2118816E-9",
+   "dx_time_s": "1",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.000121"
+  },
+  "all_exact_common_stored_0_to_1": {
+   "sample_set": "정확 공통 저장",
+   "window": "0–1 s",
+   "profile_rows": 964,
+   "max_abs_dx_surface": "2.2118816E-9",
+   "dx_signed": "-2.2118816E-9",
+   "dx_time_s": "1.0",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.000121"
+  },
+  "requested_grid_0_to_5": {
+   "sample_set": "지정 요청",
+   "window": "0–5 s",
+   "profile_rows": 964,
+   "max_abs_dx_surface": "5.2300400E-9",
+   "dx_signed": "-5.2300400E-9",
+   "dx_time_s": "5",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.000121"
+  },
+  "all_exact_common_stored_0_to_5": {
+   "sample_set": "정확 공통 저장",
+   "window": "0–5 s",
+   "profile_rows": 964,
+   "max_abs_dx_surface": "5.2300400E-9",
+   "dx_signed": "-5.2300400E-9",
+   "dx_time_s": "5.0",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.000121"
+  }
+ },
+ "intervals": {
+  "first_300": {
+   "accepted": 986,
+   "cap_violations_1e-12s": 0,
+   "crossing_0p1_or_1s": 0,
+   "by_region": {
+    "0.1_to_1": {
+     "count": 98,
+     "max_h_s": "0.01"
+    },
+    "0_to_0.1": {
+     "count": 807,
+     "max_h_s": "0.00012500000000001"
+    },
+    "1_to_5": {
+     "count": 81,
+     "max_h_s": "0.05"
+    }
+   }
+  },
+  "second_600": {
+   "accepted": 986,
+   "cap_violations_1e-12s": 0,
+   "crossing_0p1_or_1s": 0,
+   "by_region": {
+    "0.1_to_1": {
+     "count": 98,
+     "max_h_s": "0.01"
+    },
+    "0_to_0.1": {
+     "count": 807,
+     "max_h_s": "0.00012500000000001"
+    },
+    "1_to_5": {
+     "count": 81,
+     "max_h_s": "0.05"
+    }
+   }
+  },
+  "identical_intervals": 986,
+  "same_length": true
+ },
+ "surface_at_boundary_only": {
+  "note": "scalar CSV 의 경계 표면 조성 — 241 좌표 공간 비교가 아니다 (그것은 profile CSV 다)",
+  "max_abs_dx_N": "1.85389650E-10",
+  "max_abs_dx_P": "5.2300400E-9"
+ }
+}

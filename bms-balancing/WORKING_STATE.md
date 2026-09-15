@@ -66,6 +66,12 @@ fail-closed 실측 — `PROMOTION_DECISIONS.json` 을 치우면 정본 `out/` �
 서브 브랜치를 clone 하라고 적고 있던 것(2026-09-15 흡수 뒤 전수를 안 돌려서 안 드러났다)과,
 시험을 더해 낡은 기대 개수. 둘 다 고쳤다.
 
+**COMSOL (2026-09-15)**: 물리축 B(300→600) 원문이 저장소에 들어왔고 **우리가 원시 CSV 로 다시
+셌다** — `scripts/recheck_physical600_b.py`. 여덟 창 전부에서 묶음 보고값·수신 측 재계산·우리
+재계산이 표본 수·최대값·최대 시각·전극·위치까지 같다. 시간 이력(986 구간)도 재계산으로 확인했다.
+`docs/COMSOL_REBUILD_SPEC.md` §19 의 전달값 배너를 내렸다. Desktop 부분 후처리(§20)는 ZIP 의
+manifest 해시가 전달값과 안 맞아 보존이 멈춰 있다 — 진단 대기.
+
 **남은 열린 것**: 조건 6(동적 인증) · 조건 8(다섯 축) · `openpyxl` 이 `ENV_KEYS` 에 없음 ·
 r11 `publish:profile_partial_stdout` 대체 증거. 그리고 **실데이터 폭 측정**(`--w-dqdv 0 ↔ 1`)
 — 도구 `scripts/width_report.py` 는 준비됐고 원자료가 사용자 기계에 있어 여기서는 못 돈다.
