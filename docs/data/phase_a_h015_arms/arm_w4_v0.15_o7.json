@@ -1,0 +1,20 @@
+{
+ "role": "primary",
+ "vgcf_wt": 4.0,
+ "ptfe_wt": 1.0,
+ "vox": 0.15,
+ "origin": 7,
+ "sigma_e": 0.13061669469381054,
+ "source_file": "p2_VGCF_PTFE_4_1_a7.json",
+ "origin_shift_um": [
+  0.075,
+  0.075,
+  0.075
+ ],
+ "sigma_vgcf_S_cm": 78.5398,
+ "vgcf_n_objects": 110981,
+ "input_digest": "9f8dbcb2e0733d46",
+ "cg_info": 0,
+ "unconverged": false,
+ "source_sha256": "e611b137fa238b1f4c5771c27bc560b937a1090c4108b30e5d7939e7bb3d2a70"
+}
