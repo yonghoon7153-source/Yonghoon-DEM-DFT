@@ -1,0 +1,1098 @@
+<title>EIS 불량셀 판별 파이프라인</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+<style>
+:root{
+  --ink:#17242c; --ink-2:#4a5c68; --ink-3:#778b98;
+  --paper:#f7f9fa; --surface:#ffffff; --surface-2:#eef3f6;
+  --line:#dbe3e8; --line-strong:#c2ced6;
+  --accent:#25435b; --accent-2:#0d7490; --accent-soft:#e7f1f5;
+  --warn-ink:#8c2f3b; --warn-bg:#fdf3f4; --warn-line:#e6bec5;
+  --good-ink:#2c6b4f; --good-bg:#eff6f2; --good-line:#c3ddce;
+  --amber-ink:#7d5a12; --amber-bg:#fdf8ed; --amber-line:#e8d7ae;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --sans:"IBM Plex Sans KR","IBM Plex Sans",-apple-system,"Segoe UI",system-ui,sans-serif;
+  --nav-w:250px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ink:#e3ebf0; --ink-2:#a8bac6; --ink-3:#7c909e;
+    --paper:#0f171c; --surface:#16212a; --surface-2:#1d2a34;
+    --line:#2a3943; --line-strong:#3a4c58;
+    --accent:#8fb8d0; --accent-2:#5fc3dd; --accent-soft:#17303c;
+    --warn-ink:#f0a9b3; --warn-bg:#2a1a1e; --warn-line:#5a2f38;
+    --good-ink:#9bd4b6; --good-bg:#16261f; --good-line:#2f5443;
+    --amber-ink:#e2c383; --amber-bg:#26200f; --amber-line:#4e4225;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#e3ebf0; --ink-2:#a8bac6; --ink-3:#7c909e;
+  --paper:#0f171c; --surface:#16212a; --surface-2:#1d2a34;
+  --line:#2a3943; --line-strong:#3a4c58;
+  --accent:#8fb8d0; --accent-2:#5fc3dd; --accent-soft:#17303c;
+  --warn-ink:#f0a9b3; --warn-bg:#2a1a1e; --warn-line:#5a2f38;
+  --good-ink:#9bd4b6; --good-bg:#16261f; --good-line:#2f5443;
+  --amber-ink:#e2c383; --amber-bg:#26200f; --amber-line:#4e4225;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--sans); font-weight:400; font-size:15px; line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+  word-break:keep-all; overflow-wrap:break-word;
+}
+.shell{display:grid; grid-template-columns:var(--nav-w) minmax(0,1fr); gap:0; align-items:start}
+
+/* ---------- sidebar ---------- */
+.side{
+  position:sticky; top:env(safe-area-inset-top,0px); height:100vh; overflow-y:auto;
+  background:var(--surface); border-right:1px solid var(--line);
+  padding:26px 18px 40px; display:flex; flex-direction:column; gap:20px;
+}
+.brand{display:flex; flex-direction:column; gap:3px}
+.brand b{font-size:15px; font-weight:700; letter-spacing:-.01em}
+.brand span{font-size:11.5px; color:var(--ink-3); font-family:var(--mono)}
+.navgroup{display:flex; flex-direction:column; gap:2px}
+.navgroup h4{
+  margin:0 0 6px; font-size:10.5px; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-3);
+}
+.side a{
+  display:flex; gap:8px; align-items:baseline; text-decoration:none; color:var(--ink-2);
+  font-size:13px; line-height:1.45; padding:5px 8px; border-radius:4px; border-left:2px solid transparent;
+}
+.side a em{font-style:normal; font-family:var(--mono); font-size:11px; color:var(--ink-3); min-width:14px}
+.side a:hover{background:var(--surface-2); color:var(--ink)}
+.side a.on{background:var(--accent-soft); color:var(--accent); border-left-color:var(--accent-2); font-weight:500}
+.side a.on em{color:var(--accent-2)}
+.sidefoot{margin-top:auto; font-size:11.5px; color:var(--ink-3); line-height:1.6; border-top:1px solid var(--line); padding-top:14px}
+
+/* ---------- main ---------- */
+main{padding:46px 40px 120px; max-width:1020px}
+.eyebrow{
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent-2); margin:0 0 10px;
+}
+h1{font-size:34px; line-height:1.28; font-weight:700; letter-spacing:-.022em; margin:0 0 14px; text-wrap:balance; max-width:25ch}
+.lede{font-size:16.5px; line-height:1.74; color:var(--ink-2); margin:0 0 6px; max-width:68ch}
+.lede strong{color:var(--ink); font-weight:600}
+.meta{
+  display:flex; flex-wrap:wrap; gap:6px 16px; margin:22px 0 0; padding:14px 0 0;
+  border-top:1px solid var(--line); font-family:var(--mono); font-size:11.5px; color:var(--ink-3);
+}
+.meta b{color:var(--ink-2); font-weight:500}
+
+section{margin:54px 0 0; scroll-margin-top:24px}
+h2{
+  display:flex; gap:12px; align-items:center; margin:0 0 6px;
+  font-size:21px; font-weight:600; letter-spacing:-.015em; line-height:1.4; text-wrap:balance;
+}
+h2 i{
+  flex:0 0 auto; width:26px; height:26px; border-radius:50%; background:var(--accent); color:#fff;
+  display:grid; place-items:center; font-style:normal; font-family:var(--mono);
+  font-size:12px; font-weight:600;
+}
+:root[data-theme="dark"] h2 i, :root:not([data-theme="light"]) h2 i{color:#0f171c}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) h2 i{color:#fff}}
+.rule{height:1px; background:var(--line); margin:0 0 20px}
+h3{font-size:15.5px; font-weight:600; margin:30px 0 8px; letter-spacing:-.008em; color:var(--ink)}
+h4{font-size:13.5px; font-weight:600; margin:22px 0 6px; color:var(--ink-2)}
+p{margin:0 0 13px; max-width:70ch}
+ul,ol{margin:0 0 14px; padding-left:20px; max-width:70ch}
+li{margin:0 0 6px}
+a{color:var(--accent-2)}
+code{
+  font-family:var(--mono); font-size:.875em; background:var(--surface-2);
+  padding:.1em .38em; border-radius:3px; color:var(--ink); word-break:break-word;
+}
+strong{font-weight:600}
+
+/* ---------- blocks ---------- */
+.callout{
+  border:1px solid var(--line); border-left:3px solid var(--accent-2); background:var(--surface);
+  padding:15px 18px; border-radius:0 5px 5px 0; margin:18px 0; max-width:74ch;
+}
+.callout p:last-child{margin-bottom:0}
+.callout.warn{border-color:var(--warn-line); border-left-color:var(--warn-ink); background:var(--warn-bg)}
+.callout.warn .tag{color:var(--warn-ink)}
+.callout.good{border-color:var(--good-line); border-left-color:var(--good-ink); background:var(--good-bg)}
+.callout.good .tag{color:var(--good-ink)}
+.callout.amber{border-color:var(--amber-line); border-left-color:var(--amber-ink); background:var(--amber-bg)}
+.callout.amber .tag{color:var(--amber-ink)}
+.tag{
+  display:block; font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--accent-2); margin:0 0 6px; font-weight:600;
+}
+
+pre{
+  margin:16px 0; padding:14px 16px; background:var(--surface); border:1px solid var(--line);
+  border-radius:5px; overflow-x:auto; font-family:var(--mono); font-size:12.5px; line-height:1.68;
+  color:var(--ink); tab-size:2;
+}
+pre b{color:var(--accent-2); font-weight:500}
+pre i{color:var(--ink-3); font-style:normal}
+
+.tablewrap{overflow-x:auto; margin:16px 0; border:1px solid var(--line); border-radius:5px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:13px; font-variant-numeric:tabular-nums}
+th,td{padding:8px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{
+  font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3);
+  background:var(--surface-2); white-space:nowrap; position:sticky; top:0;
+}
+tbody tr:last-child td{border-bottom:none}
+td code{background:transparent; padding:0; font-size:12px; color:var(--accent-2)}
+td.num{text-align:right; font-family:var(--mono); font-size:12px}
+caption{caption-side:bottom; text-align:left; padding:9px 12px; font-size:12px; color:var(--ink-3); border-top:1px solid var(--line)}
+
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:5px; overflow:hidden; margin:20px 0}
+.stat{background:var(--surface); padding:16px 18px}
+.stat b{display:block; font-family:var(--mono); font-size:27px; font-weight:500; line-height:1.15; color:var(--accent-2); letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+.stat span{display:block; font-size:12px; color:var(--ink-2); margin-top:5px; line-height:1.5}
+.stat em{display:block; font-style:normal; font-size:11px; color:var(--ink-3); margin-top:2px; font-family:var(--mono)}
+
+figure{margin:24px 0; padding:0}
+figure svg{display:block; width:100%; max-width:100%; height:auto; color:var(--ink-2)}
+figcaption{font-size:12.5px; color:var(--ink-3); margin-top:10px; line-height:1.6; max-width:70ch}
+
+.kv{display:grid; grid-template-columns:auto 1fr; gap:4px 16px; margin:14px 0; font-size:13.5px; max-width:70ch}
+.kv dt{font-family:var(--mono); font-size:12.5px; color:var(--accent-2); white-space:nowrap}
+.kv dd{margin:0; color:var(--ink-2)}
+
+.pill{display:inline-block; font-family:var(--mono); font-size:10.5px; padding:2px 7px; border-radius:3px; border:1px solid var(--line-strong); color:var(--ink-2); background:var(--surface-2); white-space:nowrap}
+.pill.w{border-color:var(--warn-line); color:var(--warn-ink); background:var(--warn-bg)}
+.pill.g{border-color:var(--good-line); color:var(--good-ink); background:var(--good-bg)}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .side{position:static; height:auto; border-right:none; border-bottom:1px solid var(--line); padding:20px 18px}
+  .side a{padding:4px 8px}
+  .sidefoot{margin-top:14px}
+  main{padding:30px 18px 80px}
+  h1{font-size:27px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+:focus-visible{outline:2px solid var(--accent-2); outline-offset:2px; border-radius:3px}
+</style>
+
+<div class="shell">
+<nav class="side">
+  <div class="brand">
+    <b>불량셀 ML 상세</b>
+    <span>defective_cell_ml v2.1.0</span>
+  </div>
+  <div class="navgroup">
+    <h4>읽는 순서</h4>
+    <a href="#s1"><em>1</em>무엇을 계산하는가</a>
+    <a href="#s2"><em>2</em>전체 흐름과 세 명령</a>
+    <a href="#s3"><em>3</em>입력 계약</a>
+    <a href="#s4"><em>4</em>특징을 만드는 법</a>
+    <a href="#s5"><em>5</em>중첩 교차검증</a>
+    <a href="#s6"><em>6</em>점수를 읽는 법</a>
+    <a href="#s7"><em>7</em>출력 파일 전부</a>
+    <a href="#s8"><em>8</em>저장 모델로 예측</a>
+  </div>
+  <div class="navgroup">
+    <h4>붙여 쓰는 자료</h4>
+    <a href="#s9"><em>9</em>웹앱 연동 계약</a>
+    <a href="#s10"><em>10</em>설정 35개 필드</a>
+    <a href="#s11"><em>11</em>하지 않는 것</a>
+  </div>
+  <div class="sidefoot">
+    Python 3.12 · scikit-learn 1.7.2<br>
+    테스트 152개 · 배포 검사 7개<br>
+    파일 해시 102개
+  </div>
+</nav>
+
+<main>
+  <p class="eyebrow">기술 문서 · 대학원생 및 현직자용</p>
+  <h1>EIS 한 번으로 불량셀을 거르는 파이프라인</h1>
+  <p class="lede">
+    셀을 분해하지도, 수십 사이클을 돌리지도 않고 <strong>임피던스 측정 한 번</strong>으로 그 셀의 충전 용량을
+    예측하고 기준 미달 여부를 판정하는 Python 패키지다. 핵심은 모델이 아니라 <strong>채점 방식</strong>에 있다.
+    7~60셀 규모에서 점수를 부풀리지 않으려고 중첩 교차검증을 쓰고, 그 결과를 오해하지 않도록 우연 수준 기준선을
+    같은 표에 함께 찍는다.
+  </p>
+  <div class="meta">
+    <span><b>패키지</b> defective_cell_ml 2.1.0</span>
+    <span><b>진입점</b> 3개 CLI</span>
+    <span><b>모델</b> Ridge · Logistic</span>
+    <span><b>GUI</b> 없음</span>
+  </div>
+
+  <!-- ===================== 1 ===================== -->
+  <section id="s1">
+    <h2><i>1</i>무엇을 계산하는가</h2><div class="rule"></div>
+
+    <p>
+      데이터 한 줄이 셀 하나다. 그 줄에는 EIS 측정에서 뽑은 숫자들이 들어가고, 코드는 거기서 세 가지를 만든다.
+    </p>
+
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>타깃</th><th>종류</th><th>정의</th><th>단위</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>cap</code></td><td>회귀</td>
+          <td>지정한 사이클·구간의 충전 용량</td><td>Ah</td>
+        </tr>
+        <tr>
+          <td><code>cc_frac</code></td><td>회귀</td>
+          <td>전체 충전 용량 중 정전류(CC) 구간이 차지하는 비율</td><td>0–1</td>
+        </tr>
+        <tr>
+          <td><code>true_label</code></td><td>분류</td>
+          <td><code>cap &lt;= threshold_ah</code>이면 1(불량)</td><td>0 또는 1</td>
+        </tr>
+      </tbody>
+      <caption>기본 임계값은 0.01802088 Ah이고, 이는 설계 용량 0.0200232 Ah의 90%다. 면적 3.24 cm² 기준 약 6.18 mAh/cm².</caption>
+    </table>
+    </div>
+
+    <p>
+      분류는 두 가지 방식으로 따로 계산된다. 하나는 예측된 용량에 같은 임계값을 적용하는
+      <code>capacity_threshold</code> 규칙이고, 다른 하나는 라벨을 직접 학습하는
+      <code>logistic_nested_selection</code>이다. 둘은 작동점이 달라서 같은 표에 있어도 F1이나 MCC를 직접
+      비교하면 안 된다.
+    </p>
+
+    <div class="callout warn">
+      <span class="tag">라벨의 의미</span>
+      <p>
+        여기서 말하는 &ldquo;불량&rdquo;은 <strong>지정한 조건에서 용량이 기준에 미달했다</strong>는 뜻이다.
+        내부 단락, 안전 결함, 향후 수명 저하를 판별하는 라벨이 아니다. 기본 설정은 1주기
+        <em>충전</em> 용량을 쓰므로 첫 충전의 비가역 용량이 포함되며, 부반응이 큰 셀이 오히려 용량이 커 보일 수 있다.
+        가역 용량 기준이 필요하면 방전 구간을 지정해야 한다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== 2 ===================== -->
+  <section id="s2">
+    <h2><i>2</i>전체 흐름과 세 명령</h2><div class="rule"></div>
+
+    <p>
+      GUI는 없다. 명령줄 스크립트 세 개가 전부이고, 서로 폴더와 파일로만 연결된다.
+    </p>
+
+    <figure>
+      <svg viewBox="0 0 980 300" role="img" aria-label="원시 계측 파일에서 특징 표, 중첩 교차검증, 출력 폴더, 저장 모델, 새 셀 예측으로 이어지는 데이터 흐름">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0,1 10,5 0,9" fill="currentColor"/>
+          </marker>
+        </defs>
+        <g font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor">
+
+          <!-- inputs -->
+          <rect x="8" y="26" width="150" height="40" rx="4" fill="none" stroke="currentColor" stroke-width="1"/>
+          <text x="83" y="43" text-anchor="middle">cycler *.txt</text>
+          <text x="83" y="58" text-anchor="middle" font-size="10" opacity=".65">충방전 이력</text>
+
+          <rect x="8" y="80" width="150" height="40" rx="4" fill="none" stroke="currentColor" stroke-width="1"/>
+          <text x="83" y="97" text-anchor="middle">EC-Lab *.mpt</text>
+          <text x="83" y="112" text-anchor="middle" font-size="10" opacity=".65">EIS 스펙트럼</text>
+
+          <!-- extract -->
+          <rect x="216" y="44" width="152" height="58" rx="4" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <text x="292" y="66" text-anchor="middle" font-size="11">extract_capacity</text>
+          <text x="292" y="82" text-anchor="middle" font-size="10" opacity=".65">읽기 · 검증 · 보간</text>
+          <text x="292" y="95" text-anchor="middle" font-size="10" opacity=".65">학습 없음</text>
+
+          <line x1="160" y1="46" x2="212" y2="64" stroke="currentColor" marker-end="url(#ar)"/>
+          <line x1="160" y1="100" x2="212" y2="84" stroke="currentColor" marker-end="url(#ar)"/>
+
+          <!-- features -->
+          <rect x="424" y="50" width="136" height="46" rx="4" fill="none" stroke="currentColor" stroke-width="1"/>
+          <text x="492" y="69" text-anchor="middle">features.csv</text>
+          <text x="492" y="84" text-anchor="middle" font-size="10" opacity=".65">셀 1개 = 1행</text>
+          <line x1="370" y1="73" x2="420" y2="73" stroke="currentColor" marker-end="url(#ar)"/>
+
+          <!-- train -->
+          <rect x="616" y="38" width="160" height="70" rx="4" fill="none" stroke="#0d7490" stroke-width="1.8"/>
+          <text x="696" y="60" text-anchor="middle" font-size="11" fill="#0d7490">export_for_origin</text>
+          <text x="696" y="76" text-anchor="middle" font-size="10" fill="#0d7490" opacity=".8">중첩 교차검증</text>
+          <text x="696" y="90" text-anchor="middle" font-size="10" fill="#0d7490" opacity=".8">평가 · 내보내기</text>
+          <line x1="562" y1="73" x2="612" y2="73" stroke="currentColor" marker-end="url(#ar)"/>
+
+          <!-- outputs -->
+          <rect x="828" y="14" width="144" height="52" rx="4" fill="none" stroke="currentColor" stroke-width="1"/>
+          <text x="900" y="34" text-anchor="middle">결과 폴더</text>
+          <text x="900" y="49" text-anchor="middle" font-size="10" opacity=".65">지표 · xlsx · OOF</text>
+          <line x1="778" y1="60" x2="824" y2="44" stroke="currentColor" marker-end="url(#ar)"/>
+
+          <rect x="828" y="80" width="144" height="52" rx="4" fill="none" stroke="currentColor" stroke-width="1"/>
+          <text x="900" y="100" text-anchor="middle">models/*.joblib</text>
+          <text x="900" y="115" text-anchor="middle" font-size="10" opacity=".65">전체 자료 재적합</text>
+          <line x1="778" y1="88" x2="824" y2="102" stroke="currentColor" marker-end="url(#ar)"/>
+
+          <!-- predict row -->
+          <rect x="8" y="204" width="150" height="40" rx="4" fill="none" stroke="currentColor" stroke-width="1"/>
+          <text x="83" y="221" text-anchor="middle">새 셀 *.mpt</text>
+          <text x="83" y="236" text-anchor="middle" font-size="10" opacity=".65">용량 정답 없음</text>
+
+          <line x1="160" y1="224" x2="212" y2="224" stroke="currentColor" marker-end="url(#ar)"/>
+          <rect x="216" y="200" width="152" height="48" rx="4" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="292" y="222" text-anchor="middle" font-size="11">extract_capacity</text>
+          <text x="292" y="237" text-anchor="middle" font-size="10" opacity=".65">--cycle-dir 생략</text>
+
+          <line x1="370" y1="224" x2="612" y2="224" stroke="currentColor" marker-end="url(#ar)"/>
+          <text x="491" y="218" text-anchor="middle" font-size="10" opacity=".7">특징만 (라벨 없음)</text>
+
+          <rect x="616" y="200" width="160" height="48" rx="4" fill="none" stroke="#0d7490" stroke-width="1.6"/>
+          <text x="696" y="222" text-anchor="middle" font-size="11" fill="#0d7490">predict</text>
+          <text x="696" y="237" text-anchor="middle" font-size="10" fill="#0d7490" opacity=".8">재적합 절대 없음</text>
+
+          <line x1="900" y1="136" x2="900" y2="196" stroke="currentColor" stroke-dasharray="3 3" marker-end="url(#ar)"/>
+          <text x="912" y="170" font-size="10" opacity=".7">--run 으로 지정</text>
+          <line x1="824" y1="224" x2="780" y2="224" stroke="currentColor" marker-start="url(#ar)"/>
+          <rect x="828" y="200" width="144" height="48" rx="4" fill="none" stroke="currentColor" stroke-width="1"/>
+          <text x="900" y="221" text-anchor="middle">predictions.csv</text>
+          <text x="900" y="236" text-anchor="middle" font-size="10" opacity=".65">+ provenance.json</text>
+
+          <line x1="216" y1="160" x2="972" y2="160" stroke="currentColor" opacity=".22"/>
+          <text x="216" y="152" font-size="10" opacity=".55">학습 경로</text>
+          <text x="216" y="178" font-size="10" opacity=".55">예측 경로</text>
+        </g>
+      </svg>
+      <figcaption>
+        세 CLI는 독립 프로세스이고 오직 파일로만 연결된다. 학습 결과 폴더를 통째로 보관해야 예측이 가능하다.
+        <code>models/</code>만 복사하면 무결성 검사에서 거부된다.
+      </figcaption>
+    </figure>
+
+    <h3>첫 실행</h3>
+    <pre><i># 가상 12셀로 설치와 입출력을 먼저 확인한다</i>
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.lock.txt
+.\.venv\Scripts\python.exe -X utf8 <b>export_for_origin.py --demo --output results\demo</b></pre>
+
+    <p>
+      데모는 약 35초 걸린다. 끝나면 <code>results/demo/run_summary.md</code>를 먼저 연다. 여기에 지표 표와
+      fold별로 어떤 모델이 뽑혔는지가 한국어로 정리되어 있다.
+    </p>
+
+    <h3>실제 자료</h3>
+    <pre><i># 1) 원시 파일에서 학습까지 한 번에</i>
+python -X utf8 export_for_origin.py --config config.json \
+    --cycle-dir "D:\data\cycle" --eis-dir "D:\data\eis" --output results\run01
+
+<i># 2) 또는 특징 CSV를 먼저 만들고 확인한 뒤 학습</i>
+python -X utf8 extract_capacity.py --config config.json \
+    --cycle-dir "D:\data\cycle" --eis-dir "D:\data\eis" --output results\features.csv
+python -X utf8 export_for_origin.py --config config.json \
+    --features results\features.csv --output results\run01
+
+<i># 3) 저장된 모델로 용량을 모르는 새 셀 예측</i>
+python -X utf8 predict.py --run results\run01 \
+    --features results\new_features.csv --output results\new_pred.csv</pre>
+
+    <div class="callout">
+      <span class="tag">별칭 두 개</span>
+      <p>
+        <code>feature_band_test.py</code>와 <code>ridge_capacity.py</code>를 직접 실행하면 내부적으로
+        <code>export_for_origin.py</code>의 <code>main()</code>을 그대로 호출한다. 인자도 출력도 완전히 같다.
+        대역 선택이 중첩 검증 안으로 들어가면서 별도 스크립트가 필요 없어졌고, 예전 명령을 쓰던 사람을 위해 남겨 둔 것이다.
+        <code>demo.py</code>는 CLI가 아니라 가상 데이터 생성 함수다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== 3 ===================== -->
+  <section id="s3">
+    <h2><i>3</i>입력 계약</h2><div class="rule"></div>
+
+    <p>
+      입력은 두 갈래다. 장비 원시 파일을 주거나, 이미 숫자로 정리된 특징 CSV를 준다. 어느 쪽이든
+      <strong>셀 하나가 정확히 한 행</strong>이어야 한다. 같은 셀의 반복 측정을 여러 행으로 넣으면 안 된다.
+    </p>
+
+    <h3>원시 파일 규칙</h3>
+
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>항목</th><th>요구 사항</th><th>어기면</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>파일 이름</td>
+          <td>어딘가에 <code>cell</code> + 숫자. 정규식 첫 일치를 셀 번호로 쓴다</td>
+          <td><span class="pill w">중단</span> <code>missing cell&lt;number&gt; in filename</code></td>
+        </tr>
+        <tr>
+          <td>cycler 열 이름</td>
+          <td><code>Test Time(s)</code> <code>Step Time(s)</code> <code>Cycle No.</code> <code>Step No.</code> <code>|Q|(Ah)</code> <code>Voltage(V)</code> <code>Current(A)</code> 7개 정확히 일치</td>
+          <td><span class="pill w">중단</span> 헤더를 앞 300줄에서 못 찾음</td>
+        </tr>
+        <tr>
+          <td>구분자</td>
+          <td>탭. 헤더보다 필드가 많고 그 값이 비어 있지 않으면 거부</td>
+          <td><span class="pill w">중단</span> 열 매핑 점검 요구</td>
+        </tr>
+        <tr>
+          <td>단위행</td>
+          <td><code>Ah</code>와 <code>A</code>로 확인된 행만 제거. 임의의 첫 행을 지우지 않는다</td>
+          <td><span class="pill g">통과</span> 있어도 없어도 같은 결과</td>
+        </tr>
+        <tr>
+          <td>MPT 필수 열</td>
+          <td><code>freq/Hz</code> <code>Re(Z)/Ohm</code> <code>-Im(Z)/Ohm</code>, <code>use_ocv=true</code>면 <code>&lt;Ewe&gt;/V</code>도</td>
+          <td><span class="pill w">중단</span> 필수 헤더 없음</td>
+        </tr>
+        <tr>
+          <td>인코딩</td>
+          <td><code>utf-8-sig</code> → <code>cp949</code> → <code>cp1252</code> 순서로 시도</td>
+          <td><span class="pill w">중단</span> 해결책을 메시지에 포함</td>
+        </tr>
+        <tr>
+          <td>같은 셀 파일 중복</td>
+          <td>폴더 자동 스캔에서는 거부. <code>--selection-manifest</code>로 명시</td>
+          <td><span class="pill w">중단</span> manifest 요구</td>
+        </tr>
+      </tbody>
+      <caption>한 셀이라도 읽기에 실패하면 실행 전체가 멈춘다. 셀을 건너뛰는 경로는 없다. 이건 의도된 설계다.</caption>
+    </table>
+    </div>
+
+    <h3>특징 CSV 열</h3>
+
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>열</th><th>필수</th><th>의미와 제약</th></tr></thead>
+      <tbody>
+        <tr><td><code>cell_number</code></td><td>항상</td><td>고유한 유한 정수. 중복 금지</td></tr>
+        <tr><td><code>cap</code></td><td>학습</td><td>실측 용량 Ah. 유한한 양수</td></tr>
+        <tr><td><code>re@1000Hz</code> 등</td><td>학습·예측</td><td>주파수별 EIS 성분. <code>re</code> <code>im</code> <code>mag</code> <code>phase</code> 소문자</td></tr>
+        <tr><td><code>ocv</code></td><td><code>use_ocv=true</code>면</td><td>EIS 측정 중 전위의 중앙값 V</td></tr>
+        <tr><td><code>cc_frac</code></td><td>선택</td><td>0–1. 빈 값은 이 타깃에서만 제외</td></tr>
+        <tr><td><code>batch_id</code></td><td>그룹 평가</td><td>제조 배치 식별자. 행 순서로 대신하면 안 된다</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="callout amber">
+      <span class="tag">열 이름이 가장 자주 걸린다</span>
+      <p>
+        주파수 표기는 Python의 <code>:g</code> 형식이다. 1 MHz는 <code>1e+06Hz</code>이지
+        <code>1000000Hz</code>가 아니고, 1 kHz는 <code>1000Hz</code>이지 <code>1kHz</code>가 아니다.
+        대문자 <code>Re@1000Hz</code>는 거부되면서 올바른 이름을 알려 준다. Excel이 자동으로 대문자로 바꾸는 경우를
+        잡기 위한 것이다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== 4 ===================== -->
+  <section id="s4">
+    <h2><i>4</i>특징을 만드는 법</h2><div class="rule"></div>
+
+    <p>
+      장비가 실제로 측정한 주파수는 셀마다 조금씩 다르다. 모델은 모든 셀에서 같은 열을 봐야 하므로,
+      코드는 <strong>미리 정한 주파수 격자</strong> 위로 스펙트럼을 옮긴다.
+    </p>
+
+    <figure>
+      <svg viewBox="0 0 980 218" role="img" aria-label="0.01 Hz에서 1 MHz까지 decade당 1점인 9개 격자점과 네 개의 후보 대역이 각각 포함하는 주파수 범위">
+        <g font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor">
+          <line x1="60" y1="52" x2="930" y2="52" stroke="currentColor" stroke-width="1.2"/>
+          <g text-anchor="middle">
+            <circle cx="60"  cy="52" r="4" fill="currentColor"/><text x="60"  y="36">0.01</text>
+            <circle cx="169" cy="52" r="4" fill="currentColor"/><text x="169" y="36">0.1</text>
+            <circle cx="278" cy="52" r="4" fill="currentColor"/><text x="278" y="36">1</text>
+            <circle cx="387" cy="52" r="4" fill="currentColor"/><text x="387" y="36">10</text>
+            <circle cx="496" cy="52" r="4" fill="currentColor"/><text x="496" y="36">100</text>
+            <circle cx="605" cy="52" r="4" fill="currentColor"/><text x="605" y="36">1k</text>
+            <circle cx="714" cy="52" r="4" fill="currentColor"/><text x="714" y="36">10k</text>
+            <circle cx="823" cy="52" r="4" fill="currentColor"/><text x="823" y="36">100k</text>
+            <circle cx="930" cy="52" r="4" fill="currentColor"/><text x="930" y="36">1M</text>
+          </g>
+          <text x="60" y="70" font-size="10" opacity=".6">Hz — decade 당 1점, 모두 9점</text>
+
+          <!-- bands -->
+          <g stroke-width="2.4" fill="none">
+            <line x1="601" y1="104" x2="609" y2="104" stroke="#0d7490"/>
+            <circle cx="605" cy="104" r="5" fill="#0d7490" stroke="none"/>
+          </g>
+          <text x="640" y="108" fill="#0d7490">single_1e3</text>
+          <text x="790" y="108" font-size="10" opacity=".7">1 kHz 한 점 · 4열</text>
+
+          <line x1="169" y1="134" x2="387" y2="134" stroke="currentColor" stroke-width="2.4"/>
+          <circle cx="169" cy="134" r="4" fill="currentColor"/><circle cx="278" cy="134" r="4" fill="currentColor"/><circle cx="387" cy="134" r="4" fill="currentColor"/>
+          <text x="420" y="138">band_low</text>
+          <text x="790" y="138" font-size="10" opacity=".7">0.1–10 Hz · 12열</text>
+
+          <line x1="605" y1="164" x2="823" y2="164" stroke="currentColor" stroke-width="2.4"/>
+          <circle cx="605" cy="164" r="4" fill="currentColor"/><circle cx="714" cy="164" r="4" fill="currentColor"/><circle cx="823" cy="164" r="4" fill="currentColor"/>
+          <text x="856" y="168" text-anchor="end" opacity="0"></text>
+          <text x="420" y="168">band_1e3_1e5</text>
+          <text x="790" y="168" font-size="10" opacity=".7">1k–100k Hz · 12열</text>
+
+          <line x1="60" y1="194" x2="930" y2="194" stroke="currentColor" stroke-width="2.4" opacity=".55"/>
+          <text x="420" y="198">full</text>
+          <text x="790" y="198" font-size="10" opacity=".7">9점 전부 · 36열</text>
+        </g>
+      </svg>
+      <figcaption>
+        후보 대역 네 개가 각각 격자의 어느 점을 쓰는지. 열 개수는 격자점 수 × 4성분이고, <code>use_ocv=true</code>면
+        각 대역마다 <code>ocv</code>를 더한 변형이 후보에 추가되어 실제 대역 후보는 8개가 된다.
+      </figcaption>
+    </figure>
+
+    <h3>보간과 네 성분</h3>
+    <p>
+      실수부와 허수부만 <code>log10(주파수)</code> 축에서 선형 보간하고, 크기와 위상은 그 결과에서 계산한다.
+      네 성분을 각각 따로 보간하면 <code>mag² ≠ re² + im²</code>가 되어 복소 임피던스로서 앞뒤가 맞지 않게 되는데,
+      이 순서가 그걸 막는다.
+    </p>
+    <pre>re  = interp(log10 f)         <i># 측정값에서 직접 보간</i>
+im  = interp(log10 f)         <i># MPT의 -Im(Z)는 부호를 뒤집어 저장</i>
+mag = hypot(re, im)           <i># 보간 결과에서 유도</i>
+phase = degrees(atan2(im, re))</pre>
+
+    <div class="callout">
+      <span class="tag">자유도에 대한 주의</span>
+      <p>
+        주파수당 열이 4개지만 실제 독립 정보는 2개다. <code>mag</code>와 <code>phase</code>는
+        <code>re</code>·<code>im</code>의 함수다. 그래서 계수표(<code>03_reg_coefs</code>)의 값을 개별 특징의
+        기여도로 읽으면 안 된다. 중복 표현 사이에서 임의로 나뉜 값이다.
+      </p>
+    </div>
+
+    <h3>측정 범위를 벗어나면</h3>
+    <p>
+      격자점이 그 셀이 실제로 측정한 주파수 범위 밖이면 기본값 <code>boundary_policy="error"</code>가 실행을 막는다.
+      외삽을 조용히 하지 않겠다는 뜻이다. 오류 메시지가 어느 셀·어느 격자점·측정 구간·상대 이탈 크기를 모두 알려 주고,
+      이탈이 수치 표현 차이 수준이면 <code>clamp</code>와 그보다 조금 큰 <code>max_boundary_fraction</code>을 쓰라고 안내한다.
+    </p>
+
+    <h3>CC/CV 구간 판정</h3>
+    <p>
+      <code>cc_frac</code>을 구하려면 정전류가 끝나고 정전압이 시작되는 지점을 찾아야 한다. 기준 전류는 구간 첫 행
+      하나가 아니라 <strong>초반 5행의 중앙값</strong>이고, 전환은 그 기준보다 1% 넘게 떨어진 상태가
+      <strong>3행 연속</strong> 유지되는 첫 행이다. 단일 샘플 기준이면 첫 행의 오버슈트나 0.5% 전류 잡음만으로
+      <code>cc_frac</code>이 0.945에서 0.004로 무너진다.
+    </p>
+
+    <div class="callout warn">
+      <span class="tag">장비가 CC와 CV를 다른 Step으로 기록한다면</span>
+      <p>
+        한 구간만 읽으면 용량이 잘린다. 통제 시험에서 CC만 읽으면 0.017879 Ah로 <strong>불량</strong>,
+        CV까지 합치면 0.018978 Ah로 <strong>정상</strong>이었다. 같은 셀의 라벨이 기록 방식 하나로 뒤집힌다.
+        이 경우 <code>cc_cv_raw_steps: [CC스텝, CV스텝]</code>과 <code>capacity_counter</code>를 명시해야 한다.
+        용량 카운터가 스텝마다 0으로 돌아가면 <code>step_reset</code>, 사이클 전체로 누적되면
+        <code>cumulative</code>다. 기본값 <code>continuing_charge_policy="error"</code>가 다음 구간이 같은 전압에서
+        충전을 이어 가는 것을 감지하면 실행을 멈추고 이 설정을 요구한다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== 5 ===================== -->
+  <section id="s5">
+    <h2><i>5</i>중첩 교차검증</h2><div class="rule"></div>
+
+    <p>
+      이 패키지에서 가장 중요한 부분이다. 셀이 7~60개뿐인 상황에서 점수를 정직하게 내려는 장치다.
+    </p>
+
+    <figure>
+      <svg viewBox="0 0 980 250" role="img" aria-label="바깥 루프가 셀 하나를 평가용으로 빼고, 남은 셀 안에서만 안쪽 루프가 대역과 정규화 강도를 고르는 중첩 구조">
+        <g font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor">
+          <text x="8" y="18" font-size="11.5" opacity=".75">바깥 루프 — 셀 12개라면 12번 반복</text>
+
+          <!-- outer strip -->
+          <g>
+            <rect x="8" y="30" width="58" height="30" rx="3" fill="#0d7490" stroke="none"/>
+            <text x="37" y="50" text-anchor="middle" fill="#fff" font-size="10.5">평가</text>
+            <rect x="70" y="30" width="700" height="30" rx="3" fill="none" stroke="currentColor"/>
+            <text x="420" y="50" text-anchor="middle" font-size="11">학습에 쓰는 나머지 셀 — 여기서만 모든 선택이 일어난다</text>
+          </g>
+          <text x="784" y="50" font-size="10.5" opacity=".8">fold 1</text>
+
+          <g opacity=".45">
+            <rect x="8" y="68" width="58" height="22" rx="3" fill="none" stroke="currentColor"/>
+            <rect x="70" y="68" width="58" height="22" rx="3" fill="#0d7490" stroke="none"/>
+            <rect x="132" y="68" width="638" height="22" rx="3" fill="none" stroke="currentColor"/>
+            <text x="784" y="84" font-size="10.5">fold 2</text>
+          </g>
+          <g opacity=".3">
+            <rect x="8" y="96" width="120" height="22" rx="3" fill="none" stroke="currentColor"/>
+            <rect x="132" y="96" width="58" height="22" rx="3" fill="#0d7490" stroke="none"/>
+            <rect x="194" y="96" width="576" height="22" rx="3" fill="none" stroke="currentColor"/>
+            <text x="784" y="112" font-size="10.5">fold 3 …</text>
+          </g>
+
+          <!-- zoom bracket -->
+          <path d="M70 62 L70 140 M770 62 L770 140" stroke="currentColor" stroke-dasharray="3 3" opacity=".5"/>
+          <text x="420" y="136" text-anchor="middle" font-size="10.5" opacity=".7">이 안을 확대하면</text>
+
+          <!-- inner -->
+          <rect x="70" y="150" width="700" height="78" rx="4" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <text x="86" y="170" font-size="11" opacity=".8">안쪽 루프 — GridSearchCV</text>
+          <g font-size="10.5">
+            <rect x="86" y="180" width="150" height="34" rx="3" fill="none" stroke="currentColor" opacity=".8"/>
+            <text x="161" y="195" text-anchor="middle">어느 대역?</text>
+            <text x="161" y="208" text-anchor="middle" opacity=".7">4개 × ocv 유무</text>
+
+            <rect x="248" y="180" width="150" height="34" rx="3" fill="none" stroke="currentColor" opacity=".8"/>
+            <text x="323" y="195" text-anchor="middle">정규화 강도?</text>
+            <text x="323" y="208" text-anchor="middle" opacity=".7">alpha 7개 / C 5개</text>
+
+            <rect x="410" y="180" width="150" height="34" rx="3" fill="none" stroke="currentColor" opacity=".8"/>
+            <text x="485" y="195" text-anchor="middle">스케일러 적합</text>
+            <text x="485" y="208" text-anchor="middle" opacity=".7">파이프라인 내부</text>
+
+            <rect x="572" y="180" width="182" height="34" rx="3" fill="none" stroke="#0d7490" stroke-width="1.4"/>
+            <text x="663" y="195" text-anchor="middle" fill="#0d7490">회귀 59 · 분류 40 후보</text>
+            <text x="663" y="208" text-anchor="middle" fill="#0d7490" opacity=".8">평가 셀은 여기 없다</text>
+          </g>
+        </g>
+      </svg>
+      <figcaption>
+        바깥에서 뺀 셀은 안쪽 선택 과정 어디에도 등장하지 않는다. 대역·OCV 포함 여부·정규화 강도는 물론
+        <code>StandardScaler</code>의 평균과 표준편차까지 학습 분할 안에서만 계산된다.
+      </figcaption>
+    </figure>
+
+    <h3>후보는 무엇인가</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>타깃</th><th>후보 구성</th><th class="num">적합 수</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>회귀<br><span style="color:var(--ink-3);font-size:12px">cap, cc_frac</span></td>
+          <td>평균 예측기 1 + <code>mag@1000Hz</code> 단일 선형회귀 1 + <code>ocv</code> 단일 선형회귀 1
+              + 대역 8개 × Ridge alpha 7개</td>
+          <td class="num">59</td>
+        </tr>
+        <tr>
+          <td>분류<br><span style="color:var(--ink-3);font-size:12px">true_label</span></td>
+          <td>대역 8개 × Logistic C 5개</td>
+          <td class="num">40</td>
+        </tr>
+      </tbody>
+      <caption>기본 9점 격자 기준. <code>folds.json</code>의 <code>candidate_count</code>에서 실행별 실제 값을 확인할 수 있다.</caption>
+    </table>
+    </div>
+
+    <h3>바깥 분할 두 가지</h3>
+    <dl class="kv">
+      <dt>leave_one_cell_out</dt>
+      <dd>셀 하나씩 뺀다. 같은 배치의 새 셀을 맞히는 문제에 해당한다. 최소 4셀.</dd>
+      <dt>leave_one_group_out</dt>
+      <dd>배치 하나를 통째로 뺀다. 다음 제조 배치로의 일반화를 보려면 이쪽이다. 최소 3그룹이고 <code>batch_id</code> 필수.</dd>
+    </dl>
+
+    <div class="callout good">
+      <span class="tag">누수가 없다는 근거</span>
+      <p>
+        구조만 읽고 내린 판단이 아니다. 순수 잡음 특징 40셀로 12개 시드를 돌리면 pooled Q²가 평균 −0.214로
+        <strong>전부 음수</strong>였다. 누수가 있으면 반대 방향, 즉 낙관적으로 나와야 한다. 또 평가 셀까지 선택에
+        넘기는 진짜 누수 변이를 주입하면 기존 테스트 3개가 즉시 실패한다.
+      </p>
+    </div>
+
+    <h3>배포용 모델은 다른 물건이다</h3>
+    <p>
+      평가가 끝난 뒤 코드는 <strong>전체 적격 자료</strong>로 선택과 적합을 한 번 더 해서
+      <code>models/*.joblib</code>에 저장한다. 이게 <code>predict.py</code>가 쓰는 모델이다. 중첩 CV의 구조상
+      이 모델은 어느 바깥 fold에서 뽑힌 모델과도 다를 수 있고, 그 훈련 점수는 독립 성능 추정치가 아니다.
+      <code>deployment_fit.json</code>에 별도로 기록되는 이유다.
+    </p>
+  </section>
+
+  <!-- ===================== 6 ===================== -->
+  <section id="s6">
+    <h2><i>6</i>점수를 읽는 법</h2><div class="rule"></div>
+
+    <p>
+      이 표를 상식대로 읽으면 거의 반드시 틀린다. 소표본 교차검증에는 구조적인 함정이 있고, 코드는 그걸 숨기는 대신
+      같은 표에 기준선을 함께 찍어 드러낸다.
+    </p>
+
+    <h3>가상 12셀 데모에서 실제로 나온 값</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>모델</th><th class="num">Q²</th><th class="num">RMSE (Ah)</th><th>성격</th></tr></thead>
+      <tbody>
+        <tr><td><code>capacity_nested_selection</code></td><td class="num">0.967</td><td class="num">0.000584</td><td>중첩 선택 결과</td></tr>
+        <tr><td><code>baseline_mean</code></td><td class="num">−0.190</td><td class="num">0.003513</td><td><span class="pill">무정보 기준</span></td></tr>
+        <tr><td><code>baseline_mag@1000Hz</code></td><td class="num">0.967</td><td class="num">0.000586</td><td>사전 고정 단순 모델</td></tr>
+        <tr><td><code>baseline_ocv</code></td><td class="num">0.983</td><td class="num">0.000416</td><td>사전 고정 단순 모델</td></tr>
+      </tbody>
+      <caption>가상 데이터 점수다. 실제 셀 성능이 아니다.</caption>
+    </table>
+    </div>
+
+    <div class="callout warn">
+      <span class="tag">−0.190은 우연이 아니라 상수다</span>
+      <p>
+        leave-one-cell-out에서 평균 예측기는 자기 자신을 뺀 평균을 쓰므로 예측이
+        <code>(n·ȳ − y_i)/(n−1)</code>이 된다. 대수적으로 정리하면 타깃 분산이 양수일 때 Q²가 반드시
+        <code>1 − (n/(n−1))²</code>이다. n=12면 −0.19008264…이고 실제 저장된 값과 소수점 끝까지 같다.
+        같은 이유로 그 임계값 점수의 pooled AUC는 <strong>정확히 0</strong>이 된다.
+      </p>
+      <p>
+        그래서 &ldquo;Q²가 음수네, 모델이 나쁘구나&rdquo;는 틀린 독법이다. 비교 대상은 0이 아니라
+        <code>baseline_*</code> 행이다.
+      </p>
+    </div>
+
+    <h3>분류 표의 기준선 행</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>행</th><th class="num">TP</th><th class="num">FN</th><th class="num">FP</th><th class="num">TN</th><th class="num">AUC</th></tr></thead>
+      <tbody>
+        <tr><td><code>capacity_threshold</code></td><td class="num">6</td><td class="num">0</td><td class="num">0</td><td class="num">6</td><td class="num">1.000</td></tr>
+        <tr><td><code>logistic_nested_selection</code></td><td class="num">6</td><td class="num">0</td><td class="num">0</td><td class="num">6</td><td class="num">1.000</td></tr>
+        <tr><td><code>baseline_mean_threshold</code></td><td class="num">6</td><td class="num">0</td><td class="num">6</td><td class="num">0</td><td class="num">0.000</td></tr>
+        <tr><td><code>baseline_prior</code></td><td class="num">0</td><td class="num">6</td><td class="num">6</td><td class="num">0</td><td class="num">0.000</td></tr>
+      </tbody>
+      <caption>가상 데모라 완전 분리라서 AUC가 1이 나온다. 실제 자료에서 이런 값이 나오면 오히려 의심해야 한다.</caption>
+    </table>
+    </div>
+
+    <p>
+      <code>baseline_prior</code>는 특징을 하나도 쓰지 않고 학습 분할의 클래스 비율만 내놓는 모델이다.
+      <code>baseline_mean_threshold</code>는 평균 예측기에 같은 임계 규칙을 적용한 것이다. 이 두 행이 실제
+      실행에서 몇 점을 받는지가, 그 실행에서 &ldquo;아무 정보 없이 찍으면&rdquo; 어디쯤인지를 알려 준다.
+    </p>
+
+    <div class="callout">
+      <span class="tag">pooled AUC를 0.5와 비교할 때</span>
+      <p>
+        이 AUC는 fold별 평균이 아니라 바깥 fold 예측을 한 벡터로 모아 계산한 값이다. 서로 다른 모델이 낸 점수를
+        섞으므로 LOO에서는 학습 클래스 비율 변화에 따른 편향이 생길 수 있다. 다만 편향의 방향과 크기는 알고리즘과
+        분할에 의존하며, <strong>독립 무작위 순위의 기준값 0.5 자체가 바뀌는 것은 아니다.</strong>
+        판단은 같은 실행의 <code>baseline_*</code> 행과 함께 해야 한다.
+      </p>
+    </div>
+
+    <h3>진단 경고</h3>
+    <p>
+      <code>metrics.json</code>의 <code>diagnostics</code> 키에 다음이 들어온다.
+    </p>
+    <dl class="kv">
+      <dt>degenerate</dt>
+      <dd>바깥 fold 확률이 사실상 상수다. 동점과 판정 개수를 확인해야 한다.</dd>
+      <dt>small_margin</dt>
+      <dd>확률이 0.5 부근에 몰려 있다. 다만 폭이 좁다는 것만으로 순위 능력이 나쁘다고 단정할 수는 없다.</dd>
+      <dt>boundary</dt>
+      <dd>여러 fold가 <code>logistic_cs</code>의 경계값을 골랐다. 탐색 범위를 넓혀야 한다는 신호다.</dd>
+    </dl>
+    <p>
+      <code>skipped_candidates</code>에는 열이 없어 후보에서 빠진 대역과 기준선이 기록된다. 격자에 정확히
+      1000 Hz가 없으면 <code>single_1e3</code>과 <code>|Z|@1kHz</code> 기준선이 조용히 사라지는데, 그 사실이
+      여기 남는다.
+    </p>
+  </section>
+
+  <!-- ===================== 7 ===================== -->
+  <section id="s7">
+    <h2><i>7</i>출력 파일 전부</h2><div class="rule"></div>
+
+    <p>
+      학습 한 번이 폴더 하나를 만든다. 웹앱이 파싱할 대상이므로 성격별로 정리한다.
+    </p>
+
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>파일</th><th>형식</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td><code>run_summary.md</code></td><td>Markdown</td><td>사람이 읽는 요약. 지표 표, fold별 선택 빈도, EIS 미사용 경고, 계산하지 못한 항목</td></tr>
+        <tr><td><code>oof_predictions.csv</code></td><td>CSV · BOM</td><td>셀별 실측·독립 평가 예측·잔차·판정. 18열</td></tr>
+        <tr><td><code>regression_metrics.csv</code></td><td>CSV · BOM</td><td>Q²·RMSE·MAE·MAPE, 기준선 포함</td></tr>
+        <tr><td><code>classification_metrics.csv</code></td><td>CSV · BOM</td><td>혼동행렬·민감도·특이도·MCC·AUC, 기준선 포함</td></tr>
+        <tr><td><code>metrics.json</code></td><td>JSON</td><td>위 둘 + <code>unavailable</code> <code>skipped_candidates</code> <code>diagnostics</code> <code>notes</code></td></tr>
+        <tr><td><code>folds.json</code></td><td>JSON</td><td>바깥·안쪽 분할의 셀 번호, 선택된 추정기·특징·점수, 스케일러 평균</td></tr>
+        <tr><td><code>deployment_fit.json</code></td><td>JSON</td><td>전체 자료 재적합 이력. 독립 성능 추정치가 아니라는 표시 포함</td></tr>
+        <tr><td><code>models/*.joblib</code></td><td>joblib</td><td><code>capacity</code> <code>cc_fraction</code> <code>logistic</code> 최대 3개</td></tr>
+        <tr><td><code>results_for_origin.xlsx</code></td><td>xlsx</td><td>Origin용 11개 시트. 수식 없이 값만</td></tr>
+        <tr><td><code>input_features.csv</code></td><td>CSV · BOM</td><td>실제로 사용된 특징 행렬</td></tr>
+        <tr><td><code>data_audit.json</code></td><td>JSON <b>배열</b></td><td>입력 처리 이벤트. 파일 해시, 제외 사유, 경고</td></tr>
+        <tr><td><code>run.json</code></td><td>JSON</td><td>상태, 버전, 환경, 코드 해시, <code>headline</code> 요약</td></tr>
+        <tr><td><code>config.json</code></td><td>JSON</td><td>이 실행에 실제로 적용된 설정 전체</td></tr>
+        <tr><td><code>artifact_hashes.json</code></td><td>JSON</td><td>출력 파일 전부의 SHA-256. 예측 시 대조에 쓰인다</td></tr>
+      </tbody>
+      <caption>CSV는 모두 UTF-8 BOM(<code>utf-8-sig</code>)이고 JSON과 Markdown은 BOM이 없다. BOM을 무시하고 읽으면 첫 열 이름이 깨진다.</caption>
+    </table>
+    </div>
+
+    <h3>Origin용 11개 시트</h3>
+    <p>
+      시트 이름은 이전 버전과 같게 유지했지만 <strong>열 구조는 바뀌었다.</strong> 기존 그래프 템플릿을 쓰려면
+      열 매핑을 다시 지정해야 한다.
+    </p>
+    <pre>01_reg_scatter      실측 대 예측 산점도용
+02_reg_metrics      회귀 지표 (기준선 행 포함)
+03_reg_coefs        표준화 계수 — EIS 특징
+03b_reg_coefs_ocv   표준화 계수 — ocv
+04_reg_residual     잔차
+05_clf_roc          ROC 곡선 좌표
+06_clf_metrics      분류 지표 (기준선 행 포함)
+07_clf_cellwise     셀별 점수와 판정
+08_label_summary    실행 요약과 계산하지 못한 항목
+09_clf_scatter_grouped  면적 정규화 산점도
+10_confusion_matrix 혼동행렬</pre>
+
+    <div class="callout amber">
+      <span class="tag">03_reg_coefs가 비어 있을 수 있다</span>
+      <p>
+        최종 모델이 <code>ocv</code> 하나만 골랐다면 EIS 계수가 하나도 없다. 실제로 가상 데모에서 이런 일이
+        일어난다. 빈 시트가 버그가 아니라 &ldquo;이 모델은 EIS를 쓰지 않았다&rdquo;는 정보이고,
+        <code>run_summary.md</code>가 같은 내용을 굵은 글씨로 알려 준다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== 8 ===================== -->
+  <section id="s8">
+    <h2><i>8</i>저장 모델로 예측</h2><div class="rule"></div>
+
+    <p>
+      <code>predict.py</code>는 어떤 추정기도 다시 적합하지 않는다. 저장된 변환과 모델을 그대로 적용할 뿐이다.
+      모델을 읽기 전에 아래 순서로 검사하고, 하나라도 걸리면 종료 코드 2로 멈춘다.
+    </p>
+
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th class="num">#</th><th>검사</th><th>막는 상황</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>출력 경로와 사이드카가 없을 것</td><td>덮어쓰기</td></tr>
+        <tr><td class="num">2</td><td><code>run.json</code>이 있고 상태가 완료/부분일 것</td><td>실패한 학습 폴더, <code>models/</code>를 직접 지정</td></tr>
+        <tr><td class="num">3</td><td><code>artifact_hashes.json</code>의 목록과 실제 파일이 일치할 것</td><td>모델 추가·삭제·변조</td></tr>
+        <tr><td class="num">4</td><td>파일명이 정해진 세 개 중 하나일 것</td><td>임의 이름의 joblib</td></tr>
+        <tr><td class="num">5</td><td>번들 구조와 패키지 버전이 맞을 것</td><td>다른 버전으로 만든 모델</td></tr>
+        <tr><td class="num">6</td><td>scikit-learn 주·부 버전이 학습 때와 같을 것</td><td>환경 불일치</td></tr>
+        <tr><td class="num">7</td><td>저장 모델이 <strong>실제 고른 특징</strong>이 CSV에 있을 것</td><td>필요한 열 누락</td></tr>
+      </tbody>
+      <caption>6번은 <code>--allow-version-mismatch</code>로 넘길 수 있고, 그 경우 경고가 provenance에 기록된다.</caption>
+    </table>
+    </div>
+
+    <div class="callout good">
+      <span class="tag">v2.1.0에서 달라진 점</span>
+      <p>
+        예측 입력이 이제 학습 때의 전체 열 스키마가 아니라 <strong>저장 모델이 실제로 고른 특징</strong>만
+        요구한다. 용량 모델이 <code>ocv</code> 하나만 쓴다면 그 열만 있으면 된다. 직접 시험해 보니
+        선택 열 5개만 담은 CSV로 예측이 성공했고, 빠진 열이 있으면 어느 모델의 어느 열인지 이름으로 알려 준다.
+      </p>
+    </div>
+
+    <h3>결과 열 읽기</h3>
+    <dl class="kv">
+      <dt>predicted_capacity</dt><dd>예측 용량 Ah. <code>_mAh_cm2</code> 환산 열이 함께 나온다</dd>
+      <dt>capacity_predicted_defective</dt><dd>1차 판정. 예측 용량에 임계 규칙 적용</dd>
+      <dt>logistic_predicted_defective</dt><dd>보조 판정. 확률이 <code>decision_threshold</code> 이상</dd>
+      <dt>review_required</dt><dd>사람이 봐야 한다는 신호. <strong>불량 판정이 아니다</strong></dd>
+      <dt>review_reason</dt><dd>왜 그 신호가 켜졌는지 문자열</dd>
+      <dt>*_outside_features</dt><dd>학습 범위를 벗어난 특징 이름 목록</dd>
+      <dt>*_seen_in_training</dt><dd>같은 셀 번호가 학습에 있었는지. ID만 비교한다</dd>
+    </dl>
+
+    <div class="callout warn">
+      <span class="tag">두 가지를 섞지 말 것</span>
+      <p>
+        <code>review_required</code>는 검증된 OOD 탐지기가 아니다. 입력이 학습 범위를 벗어났거나 출력이
+        물리적으로 불가능하다는 별개의 신호다. 반대로 <code>review_required=0</code>이라고 해서 그 예측이
+        믿을 만하다고 확정되는 것도 아니다.
+      </p>
+      <p>
+        <code>seen_in_training=1</code>인 행은 학습에 쓰인 셀을 다시 예측한 것이라 in-sample 값이다.
+        독립 평가 점수로 인용하면 안 된다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== 9 ===================== -->
+  <section id="s9">
+    <h2><i>9</i>웹앱 연동 계약</h2><div class="rule"></div>
+
+    <p>
+      이 패키지를 감싸는 UI를 만든다면 아래가 지켜야 할 계약이다. 전부 실제로 실행해 확인한 값이다.
+    </p>
+
+    <h3>종료 코드와 stderr</h3>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>CLI</th><th>상황</th><th class="num">코드</th><th>stderr 첫 줄</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3"><code>export_for_origin</code></td><td>완료 또는 부분 완료</td><td class="num">0</td><td>없음</td></tr>
+        <tr><td>인자·설정 오류</td><td class="num">2</td><td><code>usage:</code> 블록 + <code>error:</code></td></tr>
+        <tr><td>실행 중 자료 오류</td><td class="num">2</td><td><code>Run failed: …</code></td></tr>
+        <tr><td rowspan="2"><code>extract_capacity</code></td><td>완료</td><td class="num">0</td><td>없음</td></tr>
+        <tr><td>입력·설정 오류</td><td class="num">2</td><td><code>Input error: …</code></td></tr>
+        <tr><td rowspan="2"><code>predict</code></td><td>완료</td><td class="num">0</td><td>없음</td></tr>
+        <tr><td>무결성·버전·열 오류</td><td class="num">2</td><td><code>Prediction error: …</code></td></tr>
+      </tbody>
+      <caption>접두가 CLI마다 다르다. 하나로 가정하고 파싱하면 실패한다.</caption>
+    </table>
+    </div>
+
+    <div class="callout warn">
+      <span class="tag">종료 코드 0을 성공으로만 읽으면 안 된다</span>
+      <p>
+        일부 타깃을 계산하지 못한 <code>partial</code>도 0이다. 반드시 <code>run.json</code>의
+        <code>status</code>와 <code>unavailable</code>을 함께 읽어야 한다.
+        <code>&lt;name&gt;_deployment_model</code> 키는 지표는 계산됐지만 배포 모델만 없다는 뜻이고,
+        그 경우 해당 joblib이 <code>models/</code>에 없다.
+      </p>
+    </div>
+
+    <h3>소요 시간</h3>
+    <div class="stats">
+      <div class="stat"><b>35s</b><span>데모 학습 12셀</span><em>leave_one_cell_out</em></div>
+      <div class="stat"><b>~2.7s</b><span>셀당 학습 시간</span><em>셀 수에 선형</em></div>
+      <div class="stat"><b>9s</b><span>배치 분할 12셀</span><em>leave_one_group_out</em></div>
+      <div class="stat"><b>1.2s</b><span>예측 12셀</span><em>재적합 없음</em></div>
+    </div>
+    <p>
+      50셀이면 2분, 100셀이면 4~5분대다. <strong>동기 HTTP 요청 안에서 돌리면 타임아웃된다.</strong>
+      비동기 작업 큐로 돌리고 진행 상태를 따로 보여 줘야 한다.
+    </p>
+
+    <h3>반드시 지켜야 할 규칙</h3>
+    <ul>
+      <li><strong>출력 경로는 매번 새로 만든다.</strong> 세 CLI 모두 기존 경로에 덮어쓰지 않는다. 사이드카 파일 하나만 남아 있어도 거부된다.</li>
+      <li><strong>경로는 절대경로로 넘긴다.</strong> 상대경로는 프로세스의 작업 디렉터리 기준으로 해석된다.</li>
+      <li><strong>결과 CSV는 <code>utf-8-sig</code>로 읽는다.</strong> 그냥 utf-8로 읽으면 첫 열 이름에 BOM이 붙는다.</li>
+      <li><strong>예측 결과의 열 집합은 실행마다 다르다.</strong> logistic이나 cc_fraction 모델이 없는 실행이면 그 열이 통째로 사라진다. 고정 스키마 파서는 깨진다.</li>
+      <li><strong>학습 폴더는 통째로 보관한다.</strong> <code>models/</code>만 옮기면 무결성 검사에서 거부된다.</li>
+      <li><strong>Windows에서는 <code>-X utf8</code>을 붙인다.</strong> 한글 경로와 cp949 콘솔 문제를 막는다.</li>
+      <li><strong><code>.xlsx</code>는 업로드 단계에서 막는다.</strong> <code>--features</code>에 넘기면 안내가 아니라 디코딩 오류가 그대로 노출된다.</li>
+    </ul>
+
+    <div class="callout warn">
+      <span class="tag">보안 경계</span>
+      <p>
+        joblib은 pickle 기반이라 파일을 읽는 순간 그 안의 코드가 실행된다. 해시 대조와 이름 화이트리스트는
+        무결성 확인이지 진위 인증이 아니며, 폴더 전체를 제어할 수 있으면 해시까지 함께 고칠 수 있다.
+        <strong>사용자가 업로드한 폴더를 <code>--run</code>에 그대로 넘기는 기능은 만들면 안 된다.</strong>
+        서버가 스스로 만든 학습 결과만 예측에 쓰게 해야 한다.
+      </p>
+    </div>
+
+    <h3>재현성</h3>
+    <p>
+      같은 입력·같은 설정이면 <code>oof_predictions.csv</code> <code>metrics.json</code>
+      <code>folds.json</code>은 바이트 단위로 같다. 반면 <code>results_for_origin.xlsx</code>
+      <code>run.json</code> <code>artifact_hashes.json</code>은 생성 시각이 들어가므로 매번 달라진다.
+      재현성 비교는 앞의 세 파일로 해야 한다.
+    </p>
+  </section>
+
+  <!-- ===================== 10 ===================== -->
+  <section id="s10">
+    <h2><i>10</i>설정 35개 필드</h2><div class="rule"></div>
+
+    <p>
+      <code>config.json</code>은 전체 설정 파일이지 부분 패치가 아니다. 생략한 항목은 기본값을 쓰고,
+      <strong>모르는 키는 거부한다.</strong> 오타를 조용히 넘기지 않으려는 설계다.
+    </p>
+
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>필드</th><th>기본값</th><th>뜻</th></tr></thead>
+      <tbody>
+        <tr><td colspan="3" style="background:var(--surface-2);font-weight:600;font-size:12px">용량 정의와 라벨</td></tr>
+        <tr><td><code>threshold_ah</code></td><td class="num">0.01802088</td><td>이 값 이하를 불량 1로 정의</td></tr>
+        <tr><td><code>design_capacity_ah</code></td><td class="num">0.0200232</td><td>설계 용량. 기본 임계값은 이 값의 90%</td></tr>
+        <tr><td><code>cap_plausibility_factor</code></td><td class="num">10.0</td><td>용량 중앙값이 설계의 이 배수를 넘으면 단위 오류로 거부</td></tr>
+        <tr><td><code>area_cm2</code></td><td class="num">3.24</td><td>표시용 mAh/cm² 환산</td></tr>
+
+        <tr><td colspan="3" style="background:var(--surface-2);font-weight:600;font-size:12px">셀 선택</td></tr>
+        <tr><td><code>cell_min</code> / <code>cell_max</code></td><td class="num">34 / 98</td><td>대상 셀 번호 범위. 원본 실험에서 승계한 값이니 새 실험에서 반드시 조정</td></tr>
+        <tr><td><code>exclude_cells</code></td><td><code>{}</code></td><td>셀 번호 → 사유 문자열. 사유가 비면 거부</td></tr>
+
+        <tr><td colspan="3" style="background:var(--surface-2);font-weight:600;font-size:12px">EIS 처리</td></tr>
+        <tr><td><code>frequency_grid_hz</code></td><td>9점</td><td>0.01–1e6 Hz, decade당 1점. 오름차순·중복 없음</td></tr>
+        <tr><td><code>boundary_policy</code></td><td><code>error</code></td><td>격자가 측정 범위 밖일 때. <code>clamp</code>면 끝값 고정</td></tr>
+        <tr><td><code>max_boundary_fraction</code></td><td class="num">0.05</td><td>clamp 허용 상대 이탈. 0–0.1</td></tr>
+        <tr><td><code>duplicate_frequency_policy</code></td><td><code>error</code></td><td>중복 주파수. <code>mean</code>이면 복소 성분 평균</td></tr>
+        <tr><td><code>mean_max_ewe_spread_v</code></td><td><code>null</code></td><td>평균 허용 시 전위 편차 한계. 넘으면 거부</td></tr>
+        <tr><td><code>eis_sweep</code></td><td><code>all</code></td><td>다중 sweep 파일에서 어느 것을 쓸지. <code>first</code>/<code>last</code>/정수</td></tr>
+
+        <tr><td colspan="3" style="background:var(--surface-2);font-weight:600;font-size:12px">용량 구간 선택</td></tr>
+        <tr><td><code>target_cycle</code></td><td class="num">1</td><td>대상 사이클 번호</td></tr>
+        <tr><td><code>target_step_i</code></td><td class="num">1</td><td>그 사이클 안의 연속 구간 순번. 0부터 시작</td></tr>
+        <tr><td><code>target_raw_step</code></td><td><code>null</code></td><td>원시 Step No.로 직접 지정. <code>step_i</code>를 대신한다</td></tr>
+        <tr><td><code>cc_cv_raw_steps</code></td><td><code>null</code></td><td><strong>[CC, CV]</strong> 두 Step No.. 연속·순서 검사함</td></tr>
+        <tr><td><code>capacity_counter</code></td><td><code>cumulative</code></td><td>용량이 스텝마다 0으로 돌아가면 <code>step_reset</code></td></tr>
+        <tr><td><code>continuing_charge_policy</code></td><td><code>error</code></td><td>다음 구간이 충전을 이어 가면 중단. <code>warn</code>도 가능</td></tr>
+        <tr><td><code>expected_current_sign</code></td><td><code>positive</code></td><td>충전이 음수인 장비는 <code>negative</code></td></tr>
+        <tr><td><code>cv_relative_drop</code></td><td class="num">0.01</td><td>CC 기준 전류 대비 이 비율 넘게 떨어지면 CV</td></tr>
+        <tr><td><code>cc_reference_rows</code></td><td class="num">5</td><td>기준 전류를 구할 초반 행 수의 중앙값</td></tr>
+        <tr><td><code>cc_sustained_rows</code></td><td class="num">3</td><td>이 행수만큼 연속 유지돼야 전환으로 인정</td></tr>
+        <tr><td><code>trim_zero_current_boundary_rows</code></td><td><code>false</code></td><td>구간 양 끝의 0 A 로그 행 제거</td></tr>
+
+        <tr><td colspan="3" style="background:var(--surface-2);font-weight:600;font-size:12px">평가와 모델</td></tr>
+        <tr><td><code>use_ocv</code></td><td><code>true</code></td><td>OCV 포함·미포함 후보를 같은 셀 집단에서 비교</td></tr>
+        <tr><td><code>outer_cv</code></td><td><code>leave_one_cell_out</code></td><td>또는 <code>leave_one_group_out</code></td></tr>
+        <tr><td><code>group_column</code></td><td><code>batch_id</code></td><td>그룹 평가에 쓸 열 이름</td></tr>
+        <tr><td><code>inner_splits</code></td><td class="num">3</td><td>안쪽 fold 수의 상한. 자료에 따라 줄어든다</td></tr>
+        <tr><td><code>seed</code></td><td class="num">2026</td><td>안쪽 KFold 셔플용. 그룹 분할에는 영향 없음</td></tr>
+        <tr><td><code>ridge_alphas</code></td><td>7개</td><td>0.001–1000</td></tr>
+        <tr><td><code>logistic_cs</code></td><td>5개</td><td>0.001–10</td></tr>
+        <tr><td><code>logistic_class_weight</code></td><td><code>balanced</code></td><td><code>null</code>로 바꾸지 말 것. 소표본 pooled AUC가 크게 나빠진다</td></tr>
+        <tr><td><code>decision_threshold</code></td><td class="num">0.5</td><td>Logistic 판정선. 평가 정답으로 최적화하지 않음</td></tr>
+        <tr><td><code>feature_sets</code></td><td>4개</td><td><code>single_1e3</code> <code>band_1e3_1e5</code> <code>band_low</code> <code>full</code></td></tr>
+        <tr><td><code>encodings</code></td><td>3개</td><td><code>utf-8-sig</code> <code>cp949</code> <code>cp1252</code> 순서로 시도</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <!-- ===================== 11 ===================== -->
+  <section id="s11">
+    <h2><i>11</i>하지 않는 것</h2><div class="rule"></div>
+
+    <p>
+      이 패키지를 정확히 쓰려면 무엇을 주장하지 않는지가 무엇을 하는지만큼 중요하다.
+    </p>
+
+    <ul>
+      <li><strong>실측 성능은 검증되지 않았다.</strong> 동봉된 예제는 전부 가상 데이터다. 점수를 실제 불량셀 판별 성능으로 인용하면 안 된다.</li>
+      <li><strong>최첨단 모델이 아니다.</strong> 회귀는 Ridge와 선형회귀, 분류는 Logistic이다. 정확도를 크게 올린 작업이 아니라 채점을 정직하게 만든 작업이다.</li>
+      <li><strong>확률 보정은 확인되지 않았다.</strong> Logistic 출력은 모델 점수이지 검증된 불량 확률이 아니다.</li>
+      <li><strong>불확실성 구간이 없다.</strong> 점추정치만 나온다. 논문에 인용하려면 순열 검정이나 부트스트랩을 따로 해야 한다.</li>
+      <li><strong>외부 배치 일반화는 미검증이다.</strong> 그룹 평가를 쓰려면 실제 제조 이력과 연결된 <code>batch_id</code>가 있어야 한다.</li>
+      <li><strong>결함 원인을 알려주지 않는다.</strong> 특정 주파수의 계수가 크다고 접촉 손실이나 전하 전달 중 하나로 확정할 수 없다.</li>
+      <li><strong>측정 프로토콜을 자동으로 알아내지 않는다.</strong> 용량 카운터의 원점, CC/CV 스텝, 전류 부호, EIS 시점과 SOC는 사람이 설정에 맞춰 줘야 한다.</li>
+    </ul>
+
+    <div class="callout">
+      <span class="tag">첫 실제 실행 전 체크리스트</span>
+      <ol style="margin-bottom:0">
+        <li><code>cell_min</code>·<code>cell_max</code>를 새 실험 번호대로 바꿨는가</li>
+        <li>한 셀의 원시 파일을 직접 열어 보고, 추출된 <code>cap</code>이 장비 화면의 값과 맞는가</li>
+        <li>CC와 CV가 같은 Step에 있는가, 다른 Step에 있는가</li>
+        <li><code>frequency_grid_hz</code>가 실제 측정 sweep 안에 들어오는가</li>
+        <li>EIS를 언제 측정했는가. 고정 용량 충전 후라면 OCV가 SOC 판독값이 되어 용량과 트리비얼하게 상관될 수 있다</li>
+        <li><code>batch_id</code>가 진짜 제조 배치인가, 아니면 행 순서를 나눈 것인가</li>
+      </ol>
+    </div>
+  </section>
+</main>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.side a[href^="#"]'));
+  var map = {};
+  links.forEach(function(a){ var el = document.getElementById(a.getAttribute('href').slice(1)); if(el) map[el.id] = a; });
+  var ids = Object.keys(map);
+  if(!ids.length || !('IntersectionObserver' in window)) return;
+  function setActive(id){ links.forEach(function(a){ a.classList.remove('on'); }); if(map[id]) map[id].classList.add('on'); }
+  setActive(ids[0]);
+  var seen = {};
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ seen[e.target.id] = e.isIntersecting ? e.boundingClientRect.top : null; });
+    var best = null, bestTop = Infinity;
+    ids.forEach(function(id){
+      var el = document.getElementById(id);
+      var top = el.getBoundingClientRect().top;
+      if(top <= 120 && top > -el.offsetHeight){ if(Math.abs(top) < bestTop){ bestTop = Math.abs(top); best = id; } }
+    });
+    if(best) setActive(best);
+  }, {rootMargin:'-100px 0px -60% 0px', threshold:[0,0.2,1]});
+  ids.forEach(function(id){ io.observe(document.getElementById(id)); });
+})();
+</script>
