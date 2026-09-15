@@ -196,7 +196,7 @@ footer .m{color:var(--ink-2)}
 }
 </style><div class="wrap">
 <header>
-  <div class="eyebrow">Codex 적대 리뷰 · L1~L5 + 면적 계약 · 원장 findings.json @ cd8ad81bc</div>
+  <div class="eyebrow">Codex 적대 리뷰 · L1~L5 + 면적 계약 · 원장 findings.json @ 8f641f0e9</div>
   <h1>DEM 스택 적대 리뷰</h1>
   <p class="sub">웹앱의 계산 스택을 다섯 층으로 나눠 독립 검토에 부쳤고, 그 대응이 다시 <em>면적 계약</em> 한 장을 낳았다. 아래는 우리가 믿고 있던 것과, 실제 함수·코퍼스·독립 기준해가 보여준 것이다 — 모든 숫자는 원장에 있고 이 페이지는 거기서 생성된다.</p>
   <div class="tally">
@@ -437,9 +437,19 @@ footer .m{color:var(--ink-2)}
       <div class="rid"><span class="tag P2">LHS-02</span><span class="tag P2">열림</span><span class="ttl">설계 CSV 의 측정 열은 실측을 담고 있다</span></div>
       <div class="pair">
         <div class="cell before"><div class="lbl">믿은 것</div><p><span class="m">phi_se</span> · <span class="m">tortuosity_dijkstra_SE</span> · <span class="m">coverage_AM_*</span> 열이 있으니 실측이 들어 있다.</p></div>
-        <div class="cell after"><div class="lbl">잰 것</div><p><b>130/130 전부 비어 있다</b> — <span class="m">_est</span> 추정치만 채워져 있고 측정 쪽은 <b>한 번도 안 채워졌다</b>.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p><b>7열 전부 0/130 이다</b> — <span class="m">_est</span> 추정치만 채워져 있고 측정 쪽은 <b>한 번도 안 채워졌다</b>.  ⚠ 내 옛 표기 <i>"측정 열 셋"</i> 은 <b>종류</b>를 센 것이고 <span class="m">phi_am</span> · <span class="m">porosity_sphere_pct_RECORD_ONLY</span> 가 빠져 있었다.</p></div>
       </div>
-      <p class="note">그 열을 읽는 코드가 있으면 <b>결측을 만나거나 0 으로 채운다</b> — <b>GAP2-05</b>(결측을 0 으로 채워 양의 주장으로 렌더)와 같은 자리다.  ⬜ 소비자 유무 미확인.</p>
+      <p class="note">그 열을 읽는 코드가 있으면 <b>결측을 만나거나 0 으로 채운다</b> — <b>GAP2-05</b>(결측을 0 으로 채워 양의 주장으로 렌더)와 같은 자리다.</p>
+      <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p>★ <b>⬜ "소비자 유무 미확인" 을 닫는다 — 지금 오염된 판정은 없다.</b>  설계 CSV 를 여는 코드 전수(<span class="m">dem_input_values · seal_s3_prerun · lhs_perc_fit · lhs_ext_design</span>)가 <b>설계 노브와 case_id 만</b> 읽고 측정 열은 <b>한 곳도 안 읽는다</b>.  ⇒ <b>잠복</b>이지 활성이 아니다.  ⛔ 그래서 더 위험하다 — 다음 사람이 <span class="m">float(x or 0)</span> <b>한 줄</b>이면 0 이 실측처럼 들어간다.</p><p>★ <b>수확기는 멀쩡하다 — 막힌 것은 데이터다.</b>  <span class="m">lhs_descriptor_harvest.py --selftest</span> 전부 통과(2026-09-15).  ⚠ 그 통과는 그 도구가 스스로 적은 대로 <i>"계약이 도구에 박혔다"</i> 는 뜻이지 130 배치가 깨끗하다는 뜻이 아니다.  <b>원 dump 가 이 기계에 없다</b> ⇒ 수확은 <b>저자 기계의 일</b>이다.</p><p>★★★ <b>그래서 한 것 = 결측을 기계가 보게 만드는 것</b> (열 삭제가 <b>아니다</b> — 수확기가 그 이름에 쓴다).  <span class="m">require_descriptors()</span> fail-closed 가드 · CLI <span class="m">--audit-descriptors</span> (결측이면 <b>rc=1</b>) · selftest ⑭–⑭d.  ⚠ <span class="m">0</span> 은 결측이 <b>아니다</b> (<b>DESC-05</b>: 없는 AM_P → N/A · 무접촉 → 0.0) — 둘을 같이 세면 검사기가 그 결함을 재생산한다.  ⑭d 가 <b>동결 CSV 의 채움 상태를 수치로 못박아</b> 누가 채우면 실패하며 알려 준다.</p><p>⚠ <b>열은 여전히 비어 있다</b> — 이 수리는 결측을 채운 것이 아니라 <b>결측이 0 으로 둔갑하는 길을 막은 것</b>이다.</p></div></details>
+    </div>
+    <div class="row" id="LHS-06">
+      <div class="rid"><span class="tag P2">LHS-06</span><span class="tag P2">열림</span><span class="ttl">단절은 SE 망이 조각난 것이다 — 입자 자체는 정상이다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>SE 가 부서져 성분이 수백~수천 개가 됐을 뿐, 입자는 압밀돼 서로 닿아 있다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p><b>접촉이 하나도 없는 낱개가 최대 49.3 %</b> 다 — <span class="m">lhs00_093</span> 은 SE 1,570개 중 <b>774개</b>가 무접촉.  단절 24건 전체로 <b>3.2 ~ 49.3 %</b>(중앙 20.2 %).</p></div>
+      </div>
+      <p class="note">⬜ <b>물리인지 접촉검출 artifact 인지 미확인</b> — 300 MPa 압밀 뒤에 SE 의 절반이 무접촉인 것이 정상인지 누구도 재 본 적이 없다.</p>
+      <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p>★ <b>물리적으로 그럴듯한 쪽</b>: 그 침대들은 <span class="m">φ_SE ≈ 0.09</span>(am_pct 95) = 코호트에서 SE 가 가장 적은 설계점이라 큰 AM 공극에 <b>낱개로 갇히는</b> 것이 자연스럽고, 성분 수 29~2,324 와도 정합적이다.</p><p>⚠ 배제 못 하는 대안 둘 — ① <b>접촉 검출 규약</b>(cutoff·δ)이 얕은 접촉을 떨어뜨림 ② <b>부분 삽입 게이트</b>가 이 코호트에 실제로 걸렸는지 이 판독에서 확인 안 함.</p><p>⛔ <b>S3 를 멈추지 않는다</b> — 그 24건은 이온 정의역 <b>밖</b>(OLD_NONE)이라 봉인과 ρ 가 일관된다.  ⚠⚠ <b>그러나 전자·열에서는 정의역 안이다</b> (127/127 관통).  전자는 AM 망이라 영향이 작아 보이나 <b>열은 SE 를 통해 흐른다</b> ⇒ ⬜ <b>열 채널 영향 미측정</b>.</p><p>⚠ <b>LHS-04 와 다른 현상</b>이다 — <span class="m">lhs00_009</span> 는 고립률 0.007 % 로 이 군 최소의 <b>477분의 1</b> 이고 성분이 <b>하나</b>다.  섞어 읽지 말 것.</p><p>★ 처방 후보 ①·② (cutoff 민감도 · 무접촉 SE 의 최근접 이웃 거리 분포)는 <b>원 dump 만 있으면 GPU 불요</b>다.</p></div></details>
     </div>
   </div>
 </section>
@@ -488,5 +498,5 @@ footer .m{color:var(--ink-2)}
   </ol></div>
   <div class="caveat"><b>오늘 내가 세 번 틀린 자리.</b> 기준해에서 축대칭 면적의 2π 를 통째로 빠뜨렸는데 단조·수렴·극한 검사가 전부 초록이었다(일률 배수는 비를 안 바꾼다) · 회귀 핀을 재지 않고 추측해 적었다 · 감사가 "최종 결속 라벨" 과 "가장 작은 cap" 을 섞어 불가능한 결과를 냈다.  셋 다 <b>결과가 그럴듯해서</b> 넘어갈 뻔했고, 셋 다 배수·핀·단조성을 <b>실제로 재는</b> 검사 하나가 잡았다.</div>
 </section>
-<footer>이 페이지는 <span class="m">scripts/build_review_before_after.py</span> 가 <span class="m">docs/reviews/findings.json</span> 에서 생성한다 (HEAD <span class="m">cd8ad81bc</span>).  집계·고친 목록·SHA 는 원장 값이고, 서술이 인용하는 숫자는 selftest 가 해당 항목의 note 에서 찾는다.  인용 금지값 스윕(<span class="m">check_review_findings.py --ban-sweep</span>)이 이 파일을 포함한다.</footer>
+<footer>이 페이지는 <span class="m">scripts/build_review_before_after.py</span> 가 <span class="m">docs/reviews/findings.json</span> 에서 생성한다 (HEAD <span class="m">8f641f0e9</span>).  집계·고친 목록·SHA 는 원장 값이고, 서술이 인용하는 숫자는 selftest 가 해당 항목의 note 에서 찾는다.  인용 금지값 스윕(<span class="m">check_review_findings.py --ban-sweep</span>)이 이 파일을 포함한다.</footer>
 </div>

@@ -3902,12 +3902,14 @@
    "found_by": "claude",
    "opened_in": "docs/lhs_corpus_readout_20260915.md",
    "evidence_tests": [
-    "docs/lhs_corpus_readout_20260915.md",
+    "docs/data/lhs_design_20260818.csv",
     "docs/data/rho_s3_trial_20260915.csv",
-    "docs/data/lhs_design_20260818.csv"
+    "docs/lhs_corpus_readout_20260915.md",
+    "scripts/lhs_descriptor_harvest.py",
+    "scripts/lhs_design_dataset.py"
    ],
    "title": "설계 CSV 의 **\"측정\" 열 셋이 130/130 전부 비어 있다** (`_est` 만 있다)",
-   "note": "`docs/data/lhs_design_20260818.csv` 는 추정 열과 측정 열을 **나란히** 갖고 있는데,\n측정 쪽이 한 번도 채워지지 않았다 (2026-09-15 전수 확인):\n\n```\nphi_se                    0 / 130 채움        phi_se_est   130 / 130 채움\ntortuosity_dijkstra_SE    0 / 130\ncoverage_AM_P_hertz_pct   0 / 130\ncoverage_AM_S_hertz_pct   0 / 130\ncoverage_AM_total_hertz_pct  0 / 130\n```\n\n⇒ 그 열을 읽는 코드가 있으면 **결측을 만나거나 0 으로 채운다** — 원장 `GAP2-05`(결측을 0\n또는 문헌 앵커로 채워 양의 주장으로 렌더)와 **같은 자리**다.\n⚠ 그리고 `LHS-01` 의 어긋남 중 얼마가 **추정 오차**인지 가를 수가 없다 — 실측 φ_SE 가 없다.\n\n⬜ **미확인**: 그 열을 실제로 읽는 소비자가 있는가.  없으면 열을 **지우거나** 이름에\n`_PLACEHOLDER` 를 박는다 (빈 열은 언젠가 0 으로 읽힌다).\n\n처방: ① 소비자 전수 조사 ② 채우거나 지운다 — **빈 채로 두지 않는다**.\n\n★★ **원인 확인 2026-09-15 — ⬜ 소비자 조사 닫음.**\n· `scripts/lhs_design_dataset.py:450-452` 가 그 열들을 **`fieldnames` 에 이름만** 넣는다.\n· **채우는 도구는 실재한다** — `scripts/lhs_descriptor_harvest.py` 가\n  `coverage_AM_P/S/total_hertz_pct` · `tortuosity_dijkstra_SE` 를 만들고 selftest 도 있다\n  (`:454-456`, `③ 직선 기둥이면 τ ≈ 1` 등).\n· ⛔ **그런데 그 산출물이 리포에 없다** — `docs/data/` 에 harvest CSV 가 **0개**.\n  ⇒ *\"도구는 있는데 돌려서 설계 CSV 에 합치는 단계가 없다.\"*\n· ✅ 다른 파일의 `coverage_AM_*_hertz_pct` 참조(`mpm_webapp_payload` · `viewer3d.js` ·\n  `rebuild_tables_from_metrics` · `ml_cycle_surrogate`)는 **다른 데이터원**(MPM payload)이라\n  이 CSV 와 무관하다 — 빈 열을 읽는 소비자는 **없다**.\n⇒ 처방 갱신: ① harvest 를 돌려 합치거나 ② 열을 지운다.  **빈 채로 두지 않는다** —\n  지금은 소비자가 없지만 빈 열은 언젠가 0 으로 읽힌다 (`GAP2-05` 가 그렇게 생겼다)."
+   "note": "`docs/data/lhs_design_20260818.csv` 는 추정 열과 측정 열을 **나란히** 갖고 있는데,\n측정 쪽이 한 번도 채워지지 않았다 (2026-09-15 전수 확인):\n\n```\nphi_se                    0 / 130 채움        phi_se_est   130 / 130 채움\ntortuosity_dijkstra_SE    0 / 130\ncoverage_AM_P_hertz_pct   0 / 130\ncoverage_AM_S_hertz_pct   0 / 130\ncoverage_AM_total_hertz_pct  0 / 130\n```\n\n⇒ 그 열을 읽는 코드가 있으면 **결측을 만나거나 0 으로 채운다** — 원장 `GAP2-05`(결측을 0\n또는 문헌 앵커로 채워 양의 주장으로 렌더)와 **같은 자리**다.\n⚠ 그리고 `LHS-01` 의 어긋남 중 얼마가 **추정 오차**인지 가를 수가 없다 — 실측 φ_SE 가 없다.\n\n⬜ **미확인**: 그 열을 실제로 읽는 소비자가 있는가.  없으면 열을 **지우거나** 이름에\n`_PLACEHOLDER` 를 박는다 (빈 열은 언젠가 0 으로 읽힌다).\n\n처방: ① 소비자 전수 조사 ② 채우거나 지운다 — **빈 채로 두지 않는다**.\n\n★★ **원인 확인 2026-09-15 — ⬜ 소비자 조사 닫음.**\n· `scripts/lhs_design_dataset.py:450-452` 가 그 열들을 **`fieldnames` 에 이름만** 넣는다.\n· **채우는 도구는 실재한다** — `scripts/lhs_descriptor_harvest.py` 가\n  `coverage_AM_P/S/total_hertz_pct` · `tortuosity_dijkstra_SE` 를 만들고 selftest 도 있다\n  (`:454-456`, `③ 직선 기둥이면 τ ≈ 1` 등).\n· ⛔ **그런데 그 산출물이 리포에 없다** — `docs/data/` 에 harvest CSV 가 **0개**.\n  ⇒ *\"도구는 있는데 돌려서 설계 CSV 에 합치는 단계가 없다.\"*\n· ✅ 다른 파일의 `coverage_AM_*_hertz_pct` 참조(`mpm_webapp_payload` · `viewer3d.js` ·\n  `rebuild_tables_from_metrics` · `ml_cycle_surrogate`)는 **다른 데이터원**(MPM payload)이라\n  이 CSV 와 무관하다 — 빈 열을 읽는 소비자는 **없다**.\n⇒ 처방 갱신: ① harvest 를 돌려 합치거나 ② 열을 지운다.  **빈 채로 두지 않는다** —\n  지금은 소비자가 없지만 빈 열은 언젠가 0 으로 읽힌다 (`GAP2-05` 가 그렇게 생겼다).\n\n★★★ **판정·수리 2026-09-15** — 상태 전환은 SELF-36 대로 후속 커밋에서.\n\n**① 정정: 비어 있는 것은 셋이 아니라 일곱이다.**  `--audit-descriptors` 를 동결 CSV 에\n돌리니 `DESCRIPTORS` **7열 전부** 0/130 이다.  옛 표기 *\"측정 열 셋\"* 은 **종류**를 센 것이고\n`phi_am` 과 `porosity_sphere_pct_RECORD_ONLY` 가 빠져 있었다.\n\n```\nphi_se · phi_am · coverage_AM_{P,S,total}_hertz_pct ·\ntortuosity_dijkstra_SE · porosity_sphere_pct_RECORD_ONLY      ← 7/7 이 0/130\n```\n\n**② ⬜ *\"소비자 유무 미확인\"* 을 닫는다 — 지금 오염된 판정은 없다.**  설계 CSV 를 여는 코드\n전수(`dem_input_values.py:224` · `seal_s3_prerun.py:212` · `lhs_perc_fit.py:482` ·\n`lhs_ext_design.py:691`)가 **설계 노브와 `case_id` 만** 읽고 측정 열은 **한 곳도 안 읽는다**.\n⇒ 이 결함은 **잠복**이지 활성이 아니다.  ⛔ 그래서 더 위험하다 — 다음 사람이 학습셋을 만들며\n`phi_se` 를 집으면 빈 문자열을 받고, `float(x or 0)` **한 줄**이면 0 이 실측처럼 들어간다.\n\n**③ 수확기는 멀쩡하다 — 막힌 것은 데이터다.**  `lhs_descriptor_harvest.py --selftest` 를\n돌려 **전부 통과**(2026-09-15, 계약 ①~⑥ · `DESC-05` 분모붕괴 · `PA12-09` 대조 포함)를 확인했다.\n⚠ 그 통과는 그 도구 자신이 적은 대로 *\"계약이 도구에 박혔다\"* 는 뜻이지 130 배치가 깨끗하다는\n뜻이 아니다.  ⇒ **원 dump 가 이 기계에 없다** (있는 것은 `/tmp` 의 합성 픽스처뿐) ⇒ 수확은\n**저자 기계의 일**이다.\n\n**④ 그래서 지금 한 것 = 결측을 기계가 보게 만드는 것** (열 삭제가 **아니다** — 수확기가 그\n이름에 쓴다):\n· `descriptor_fill(rows)` — 채움 수를 센다.  ⚠ **`0` 은 결측이 아니다** (`DESC-05`:\n  *\"없는 AM_P → N/A · 존재하는데 무접촉 → 0.0\"*).  둘을 같이 세면 검사기가 그 결함을 재생산한다.\n· `require_descriptors(rows, cols, path)` — 측정 열을 읽기 **전에** 부르는 fail-closed 가드.\n· CLI **`--audit-descriptors <CSV>`** — 결측이 있으면 **rc=1** 로 선다 (실측: 동결 CSV 에 대해 rc=1).\n· selftest ⑭–⑭d (25/25): ⑭ 0 ↔ ''·NaN 구분 · ⑭b 가드가 **실제로 거부** · ⑭c **통과도 시킨다**\n  (거부 과잉이 아님, 양방향) · ⑭d **동결 CSV 의 채움 상태를 수치로 못박음** — 누가 채우면\n  그 검사가 실패하며 알려 준다.\n⇒ *\"아무도 안 봤다\"* 가 **\"리포가 본다\"** 로 바뀌었다.  ⚠ **열은 여전히 비어 있다** — 이 수리는\n결측을 채운 것이 아니라 **결측이 0 으로 둔갑하는 길을 막은 것**이다.  실측 채우기는 그대로 열림."
   },
   {
    "id": "LHS-03",
@@ -3954,6 +3956,21 @@
    ],
    "title": "ρ 는 **코호트의 안정성이 아니라 가장 취약한 설계점**에서 나온다 (읽기 규약)",
    "note": "2026-09-15 전수 ρ 측정에서 **세 채널의 ρ 를 지배한 케이스가 전부 같은 설계점**이었다:\n\n```\nionic       ρ 7.117172448780858e-06 %  ← lhs00_020  (치환, 직접해)  σ_ratio 3.802e-11 ← 이온 최소\nelectronic  ρ 1.4629494790028302e-05 % ← lhs00_093  (조임, 반복해)\nthermal     ρ 1.385157665230787e-05 %  ← lhs00_023  (조임, 반복해)\n                          셋 다  φ_SE 0.0916 · am_pct 95\n```\n`φ_SE 0.0916 · am_pct 95` 는 **코호트에서 SE 가 가장 적은 설계점**이다.  우연이 아니다 —\n퍼콜 문턱 근처에서 망은 **가는 실 하나**가 되고, 그때 σ 가 행렬 순서·허용오차에 가장\n민감해진다.\n\n⇒ **채널 최대를 잡는 집계 규약이 의도대로 작동한다** (보수적).\n⛔ **읽기 규약**: ρ 를 *\"코호트가 그만큼 안정적\"* 으로 읽지 말 것.\n   바른 문장은 ***\"최악의 설계점에서도 그만큼\"*** 이다.\n⚠ 중앙값이나 분포를 보고 싶으면 그것은 **다른 양**이고 따로 등록해야 한다."
+  },
+  {
+   "id": "LHS-06",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude",
+   "opened_in": "docs/lhs_corpus_readout_20260915.md",
+   "evidence_tests": [
+    "docs/lhs_corpus_readout_20260915.md",
+    "docs/data/lhs_percolation_measured_20260915.csv",
+    "docs/data/rho_s3_trial_20260915.csv"
+   ],
+   "title": "단절 침대의 SE 입자 **최대 49.3 % 가 접촉이 하나도 없다** — 물리인지 접촉검출 artifact 인지 미확인",
+   "note": "`LHS-04` 의 범위 확정 과정에서 나온 **별건**이다.  이온 미퍼콜 25건 중 진짜 단절\n24건에 성분 진단을 전부 돌렸더니, SE 입자 중 **접촉이 하나도 없는 낱개**의 비율이 컸다\n(2026-09-15, 저자 기계 생산 경로):\n\n```\nlhs00_093   SE 1,570개 중 774개 = 49.3 %      lhs00_107  43.8 %\nlhs00_075   40.2 %      lhs00_079  39.3 %     lhs00_074  33.1 %\n단절 24건 전체          3.2 ~ 49.3 %  (중앙 20.2 %)\n```\n\n★ **물리적으로 그럴듯한 쪽**: 그 침대들은 `φ_SE ≈ 0.09` (am_pct 95) = 코호트에서 SE 가 가장\n적은 설계점이라 SE 가 큰 AM 공극에 **낱개로 갇히는** 것이 자연스럽다.  성분 수가 29~2,324개인\n것과도 정합적이다 (망이 수백~수천 조각).\n\n⚠ **그러나 확인된 바 없다.**  300 MPa 압밀 뒤에 SE 의 **절반이 무접촉**인 것이 정상인지\n누구도 재 본 적이 없다.  배제 못 하는 대안이 둘이다:\n① **접촉 검출 규약** — cutoff·δ 규약이 얕은 접촉을 떨어뜨리면 같은 그림이 나온다.\n② **삽입/압밀 미완** — 부분 삽입 런은 전량 폐기가 규약인데, 그 게이트가 이 코호트에 실제로\n   걸렸는지 이 판독에서 확인하지 않았다.\n\n⛔ **이것이 S3 를 멈추지 않는다** — 그 24건은 이온 채널 정의역 **밖**(`OLD_NONE`)이므로\n봉인과 ρ 가 일관된 상태다.  ⚠ 그러나 **전자·열 채널에서는 같은 침대가 정의역 안**이다\n(127/127 관통).  무접촉 SE 가 많다는 것은 그 침대의 **SE 기여가 거의 없다**는 뜻이고,\n전자 채널은 AM 망이므로 영향이 작을 것으로 보이나 **열 채널은 SE 를 통해 흐른다** ⇒\n⬜ **열 채널 영향 미측정**.\n\n⚠ `LHS-04`(`lhs00_009`)와 **다른 현상**이다 — 그쪽은 고립률 0.007 % 로 이 군 최소의\n**477분의 1** 이고 성분이 **하나**다.  섞어 읽지 말 것.\n\n처방 후보 (아직 고르지 않음): ① 같은 침대에서 접촉 cutoff 를 흔들어 무접촉률의 **민감도**를\n잰다 (규약 artifact 면 크게 움직인다) ② 무접촉 SE 의 **최근접 이웃 거리 분포**를 본다\n(압밀된 침대라면 접촉 문턱 바로 밖에 몰려야 한다) ③ 부분 삽입 게이트가 이 코호트에\n실제로 걸렸는지 receipt 로 확인한다.  ★ ①·② 는 **원 dump 만 있으면 GPU 불요**다."
   }
  ]
 }

@@ -487,6 +487,61 @@ DESCRIPTORS = ['phi_se', 'phi_am',                       # ← 회귀 타깃 (po
                'porosity_sphere_pct_RECORD_ONLY']
 
 
+#  ═══ `LHS-02` — 빈 측정 열을 **기계가 보게 한다** (2026-09-15) ═════════════════════
+#  결함: 설계 CSV 는 `phi_se_est`(추정)와 `phi_se`(측정)를 **나란히** 갖는데 측정 쪽이
+#    130/130 전부 비어 있다.  아무것도 그것을 검사하지 않았다.
+#  ★ **지금 당장 오염된 판정은 없다** — 설계 CSV 를 여는 코드 전수(`dem_input_values.py` ·
+#    `seal_s3_prerun.py` · `lhs_perc_fit.py` · `lhs_ext_design.py`)가 **설계 노브와 `case_id`
+#    만** 읽고 측정 열은 **한 곳도 안 읽는다**.  ⇒ 이 결함은 **잠복**이지 활성이 아니다.
+#  ⛔ 그래서 더 위험하다: 다음 사람이 학습셋을 만들며 `phi_se` 를 집으면 **빈 문자열**을 받고,
+#    `float(x or 0)` 한 줄이면 **0 이 실측처럼** 들어간다 = 원장 `GAP2-05` 와 정확히 같은 자리.
+#  ⇒ 처방은 열 삭제가 **아니다** (수확기 `lhs_descriptor_harvest.py` 가 그 이름에 쓴다).
+#    **읽기를 fail-closed 로** 만들고, 채움 상태를 **수치로 보고**한다.
+DESCRIPTOR_FILL_EXPECTED = {           # 2026-09-15 실측.  채워지면 이 숫자가 움직여 검사가 알려 준다.
+    'path': 'docs/data/lhs_design_20260818.csv', 'n_rows': 130,
+    'filled': {c: 0 for c in DESCRIPTORS},
+    'why_empty': 'DEM 배치가 아직 수확되지 않았다 — 원 dump 는 저자 기계에 있다',
+    'harvester': 'scripts/lhs_descriptor_harvest.py (selftest 전부 통과 2026-09-15)',
+}
+
+
+def descriptor_fill(rows):
+    """설계 행들의 측정 열 채움 수를 **센다**.  '' · None · NaN 은 전부 결측이다.
+
+    ⚠ `0` 은 결측이 **아니다** — 무접촉 AM 의 coverage 0.0 은 유효한 측정이다
+      (`DESC-05`: *"없는 AM_P → N/A, 존재하는데 무접촉 → 0.0"*).  둘을 같이 세면
+      바로 그 결함을 검사기가 재생산한다.
+    """
+    out = {}
+    for c in DESCRIPTORS:
+        n = 0
+        for r in rows:
+            v = r.get(c, '')
+            if v is None or (isinstance(v, str) and not v.strip()):
+                continue
+            if isinstance(v, float) and v != v:            # NaN
+                continue
+            n += 1
+        out[c] = n
+    return out
+
+
+def require_descriptors(rows, cols, path='<rows>'):
+    """측정 열을 읽기 **전에** 부른다.  결측이 하나라도 있으면 **거부**한다 (`LHS-02`).
+
+    ⛔ 호출자가 이것을 부르지 않고 `float(r[c] or 0)` 를 쓰면 결측이 **0 이라는 측정**이 된다.
+    """
+    fill = descriptor_fill(rows)
+    bad = {c: fill.get(c, 0) for c in cols if fill.get(c, 0) < len(rows)}
+    if bad:
+        raise ValueError(
+            f'{path}: 측정 열이 비어 있다 — ' +
+            ' · '.join(f'{c} {n}/{len(rows)}' for c, n in bad.items()) +
+            f'.  결측을 0 으로 채우지 말 것 (원장 LHS-02 · GAP2-05).  '
+            f'채우려면: {DESCRIPTOR_FILL_EXPECTED["harvester"]}')
+    return fill
+
+
 def diagnostics(rows):
     """설계행렬이 실제로 쓸 만한지 — 상관·1D 균일·최소거리."""
     A = np.array([[r[f] for f in FACTORS] for r in rows if r['block'] == 'bimodal'])
@@ -675,6 +730,41 @@ def _selftest():
             f'(n={len(_rows)} · {({k: v for k, v in _agg.items()})})', _hit)
     else:
         chk(f'⑬d 실측 원자료가 있다 ({LHS_PERC_MEASURED["source"]})', False)
+    #  ── ★★ `LHS-02` 회귀 (2026-09-15) ─────────────────────────────────────
+    #    ⑭ **0 을 결측으로 세지 않는다** — 그렇게 세면 검사기가 `DESC-05` 결함을 재생산한다
+    #      (*"없는 AM_P → N/A · 존재하는데 무접촉 → 0.0"*).  합성 3행으로 직접 가른다.
+    _probe = [{c: '' for c in DESCRIPTORS}, {c: 0.0 for c in DESCRIPTORS},
+              {c: float('nan') for c in DESCRIPTORS}]
+    _f3 = descriptor_fill(_probe)
+    chk(f'⑭ 채움 계수가 0.0 은 **측정으로**, ""·NaN 은 **결측으로** 센다 ({_f3["phi_se"]}/3 = 1)',
+        all(v == 1 for v in _f3.values()))
+    #  ⑭b **읽기 전 가드가 실제로 거부한다** — 있기만 하고 안 막으면 없는 것과 같다.
+    try:
+        require_descriptors(_probe, ['phi_se'], 'probe')
+        _refused = ''
+    except ValueError as e:
+        _refused = str(e)
+    chk(f'⑭b require_descriptors 가 결측을 **거부**한다 ({_refused[:48]}…)',
+        'phi_se 1/3' in _refused and '0 으로 채우지 말 것' in _refused)
+    #  ⑭c ★ 그리고 **완전한 행은 통과시킨다** (거부만 하면 그것도 결함이다 — 양방향 확인)
+    try:
+        require_descriptors([{c: 1.0 for c in DESCRIPTORS}], DESCRIPTORS, 'full')
+        _passed = True
+    except ValueError:
+        _passed = False
+    chk('⑭c 완전한 행은 통과시킨다 (거부 과잉이 아니다)', _passed)
+    #  ⑭d ★★ **동결 설계 CSV 의 채움 상태를 수치로 못박는다.**  누가 채우면 이 검사가
+    #      실패하면서 알려 준다 — "아무도 안 봤다" 를 "리포가 본다" 로 바꾸는 자리다.
+    _dp = pathlib.Path(__file__).resolve().parent.parent / DESCRIPTOR_FILL_EXPECTED['path']
+    if _dp.exists():
+        _dr = list(csv.DictReader(_dp.open(encoding='utf-8-sig')))
+        _df = descriptor_fill(_dr)
+        chk(f'⑭d 동결 설계 CSV 채움 상태가 등록값과 일치 '
+            f'({len(_dr)}행 · 채움 {sorted(set(_df.values()))})',
+            len(_dr) == DESCRIPTOR_FILL_EXPECTED['n_rows']
+            and _df == DESCRIPTOR_FILL_EXPECTED['filled'])
+    else:
+        chk(f'⑭d 동결 설계 CSV 가 있다 ({DESCRIPTOR_FILL_EXPECTED["path"]})', False)
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -691,10 +781,30 @@ if __name__ == '__main__':
     ap.add_argument('--as-radius', action='store_true',
                     help='지시 범위를 **반경**으로 해석 (기본은 직경 — docstring 근거)')
     ap.add_argument('--out', default='')
+    ap.add_argument('--audit-descriptors', default='', metavar='CSV',
+                    help='설계 CSV 의 **측정 열 채움 상태**를 보고한다 (`LHS-02`).  '
+                         '결측이 있으면 rc=1 — 파이프라인이 그것을 0 으로 읽기 전에 선다.')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
+    if a.audit_descriptors:
+        _p = pathlib.Path(a.audit_descriptors)
+        _rows = list(csv.DictReader(_p.open(encoding='utf-8-sig')))
+        _fill = descriptor_fill(_rows)
+        print(f'{_p}   {len(_rows)} 행')
+        for _c in DESCRIPTORS:
+            _n = _fill[_c]
+            print(f'  {"✓" if _n == len(_rows) else "⚠"} {_c:34s} {_n:>4} / {len(_rows)} 채움')
+        _miss = [c for c in DESCRIPTORS if _fill[c] < len(_rows)]
+        if _miss:
+            print(f'\n⛔ 측정 열 {len(_miss)}/{len(DESCRIPTORS)} 이 불완전하다 — '
+                  f'**결측을 0 으로 채우지 말 것** (원장 LHS-02 · GAP2-05).')
+            print(f'   채우려면: {DESCRIPTOR_FILL_EXPECTED["harvester"]}')
+            print(f'   ⚠ 원 dump 가 필요하다 — {DESCRIPTOR_FILL_EXPECTED["why_empty"]}')
+        else:
+            print('\n✓ 측정 열이 전부 찼다.')
+        raise SystemExit(1 if _miss else 0)
 
     rows = build(a.n, a.n_end, a.seed, a.restarts, grid=not a.continuous)
     if a.as_radius:                                   # 범위를 반경으로 읽으면 직경이 2배
