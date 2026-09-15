@@ -1,0 +1,140 @@
+{
+  "status": "PASS",
+  "independence": "Separate implementation reads raw CSV; does not import analyzer",
+  "windows_verified": 8,
+  "requested_time_count": 187,
+  "exact_common_stored_count": 987,
+  "common_surface_positions": 475734,
+  "component_rows_verified": 9,
+  "comparisons": [
+    {
+      "time_basis": "requested_grid",
+      "start_s": "0.1",
+      "end_s": "1",
+      "count": 91,
+      "voltage_peak_time_s": "0.1",
+      "signed_voltage_difference_V": "1.2198E-12",
+      "surface_peak": {
+        "time_s": "1.0",
+        "electrode": "P",
+        "coordinate_m": "0.000121",
+        "abs_difference_x": "2.2118816E-9",
+        "signed_difference_x": "-2.2118816E-9"
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "requested_grid",
+      "start_s": "1",
+      "end_s": "5",
+      "count": 81,
+      "voltage_peak_time_s": "1",
+      "signed_voltage_difference_V": "4.493E-13",
+      "surface_peak": {
+        "time_s": "5.0",
+        "electrode": "P",
+        "coordinate_m": "0.000121",
+        "abs_difference_x": "5.2300400E-9",
+        "signed_difference_x": "-5.2300400E-9"
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "requested_grid",
+      "start_s": "0",
+      "end_s": "1",
+      "count": 107,
+      "voltage_peak_time_s": "0.001",
+      "signed_voltage_difference_V": "1.06511E-11",
+      "surface_peak": {
+        "time_s": "1.0",
+        "electrode": "P",
+        "coordinate_m": "0.000121",
+        "abs_difference_x": "2.2118816E-9",
+        "signed_difference_x": "-2.2118816E-9"
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "requested_grid",
+      "start_s": "0",
+      "end_s": "5",
+      "count": 187,
+      "voltage_peak_time_s": "0.001",
+      "signed_voltage_difference_V": "1.06511E-11",
+      "surface_peak": {
+        "time_s": "5.0",
+        "electrode": "P",
+        "coordinate_m": "0.000121",
+        "abs_difference_x": "5.2300400E-9",
+        "signed_difference_x": "-5.2300400E-9"
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "all_exact_common_stored",
+      "start_s": "0.1",
+      "end_s": "1",
+      "count": 99,
+      "voltage_peak_time_s": "0.1",
+      "signed_voltage_difference_V": "1.2198E-12",
+      "surface_peak": {
+        "time_s": "1.0",
+        "electrode": "P",
+        "coordinate_m": "0.000121",
+        "abs_difference_x": "2.2118816E-9",
+        "signed_difference_x": "-2.2118816E-9"
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "all_exact_common_stored",
+      "start_s": "1",
+      "end_s": "5",
+      "count": 82,
+      "voltage_peak_time_s": "1.0",
+      "signed_voltage_difference_V": "4.493E-13",
+      "surface_peak": {
+        "time_s": "5.0",
+        "electrode": "P",
+        "coordinate_m": "0.000121",
+        "abs_difference_x": "5.2300400E-9",
+        "signed_difference_x": "-5.2300400E-9"
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "all_exact_common_stored",
+      "start_s": "0",
+      "end_s": "1",
+      "count": 906,
+      "voltage_peak_time_s": "0.0012500000000000002",
+      "signed_voltage_difference_V": "1.07714E-11",
+      "surface_peak": {
+        "time_s": "1.0",
+        "electrode": "P",
+        "coordinate_m": "0.000121",
+        "abs_difference_x": "2.2118816E-9",
+        "signed_difference_x": "-2.2118816E-9"
+      },
+      "within_limits": true
+    },
+    {
+      "time_basis": "all_exact_common_stored",
+      "start_s": "0",
+      "end_s": "5",
+      "count": 987,
+      "voltage_peak_time_s": "0.0012500000000000002",
+      "signed_voltage_difference_V": "1.07714E-11",
+      "surface_peak": {
+        "time_s": "5.0",
+        "electrode": "P",
+        "coordinate_m": "0.000121",
+        "abs_difference_x": "5.2300400E-9",
+        "signed_difference_x": "-5.2300400E-9"
+      },
+      "within_limits": true
+    }
+  ],
+  "no_interpolation_or_nearest_substitution": true
+}

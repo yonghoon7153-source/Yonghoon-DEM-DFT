@@ -1,0 +1,94 @@
+{
+  "status": "MANDATORY_CHECKS_COMPLETE",
+  "checked_at_utc": "2026-09-14T16:31:59.832098+00:00",
+  "new_job_id": "56975e4d24054b23bcec87553875f729",
+  "exactly_one_new_authorized_job": true,
+  "baseline_rerun": false,
+  "additional_runs": 0,
+  "new_source_sha256": "f230dcc0ccc2bb88c73b978ad9ebc564eb5e1c72cd328f24802d3f4435623906",
+  "actual_runs": [
+    {
+      "name": "Caps300R320H0125C16",
+      "job_id": "5d1a87652ed54e6a945d4f2af4aeda70",
+      "actual_cores_from_log": [
+        16,
+        16
+      ],
+      "requested_cores": 16,
+      "physical_by_domain": {
+        "mesh1": {
+          "1": 120,
+          "2": 60,
+          "3": 120
+        }
+      },
+      "mesh_counts": [
+        300,
+        320,
+        320
+      ],
+      "degrees_of_freedom_log": [
+        "Number of degrees of freedom solved for: 1202 (plus 12 internal DOFs).",
+        "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs)."
+      ],
+      "stored": 987,
+      "accepted": 986,
+      "MPH_sha256": "725f4b9a5f33176783aad88cc1d14d4b0215b233066415f89b93679115363de4"
+    },
+    {
+      "name": "Caps600R320H0125C16",
+      "job_id": "56975e4d24054b23bcec87553875f729",
+      "actual_cores_from_log": [
+        16,
+        16
+      ],
+      "requested_cores": 16,
+      "physical_by_domain": {
+        "mesh1": {
+          "1": 240,
+          "2": 120,
+          "3": 240
+        }
+      },
+      "mesh_counts": [
+        600,
+        320,
+        320
+      ],
+      "degrees_of_freedom_log": [
+        "Number of degrees of freedom solved for: 2402 (plus 12 internal DOFs).",
+        "Number of degrees of freedom solved for: 158325 (plus 12 internal DOFs)."
+      ],
+      "stored": 987,
+      "accepted": 986,
+      "MPH_sha256": "86f61cdfe2b9c621774889769b70a56ead68b1aacda4cffbcba7e2eeb2d810e9"
+    }
+  ],
+  "source_changes_only_identifiers2_and_physical_mesh1": true,
+  "Time_Variables_property_count_each": 1143,
+  "Time_Variables_differences": 0,
+  "all_caps_and_boundaries_pass": true,
+  "prior_job_count": 32,
+  "prior_native_files_rehashed_unchanged": 249,
+  "local_inventory_before_count": 1392,
+  "unchanged_current_bytes_count": 1391,
+  "authorized_changes_with_before_bytes_preserved": [
+    {
+      "path": "outputs/NEXT_RUN_PLAN.md",
+      "before_bytes": 6328,
+      "before_sha256": "7c42da19da239591f7a269efbdec30e413ec5b9255212bca7446c05a96d5fb04",
+      "after_bytes": 2893,
+      "after_sha256": "faa0f90be81185d215c811de65a680e1424dbf822a68389d487d91aceb186060",
+      "before_backup_path": "outputs/physical600_b/NEXT_RUN_PLAN_before_physical600_b.md"
+    }
+  ],
+  "bounded_sampled_comparison_pass": true,
+  "StopCondition_nodes": 1,
+  "active_stop_conditions": 2,
+  "OCP_entropy_final_extrapolation": "none",
+  "electrolyte_positive": "POSTPROCESSING_ONLY",
+  "overall_convergence": false,
+  "long_run_GO": false,
+  "old_failed_and_INCOMPLETE_RANGE_STOP_preserved": true,
+  "full_local_inventory_external_verification_claimed": false
+}

@@ -1,0 +1,24 @@
+{
+  "baseline_identity": {
+    "name": "Caps300R320H0125C16",
+    "source_path": "outputs/comsol63/core16_control/Caps300R320H0125C16.java",
+    "source_sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e",
+    "job_id": "5d1a87652ed54e6a945d4f2af4aeda70",
+    "cores": 16
+  },
+  "new_name": "Caps600R320H0125C16",
+  "source_sha256": "f230dcc0ccc2bb88c73b978ad9ebc564eb5e1c72cd328f24802d3f4435623906",
+  "reverse_transform_exact_equal": true,
+  "source_changes": [
+    "identifier occurrences2",
+    "physical mesh Distribution expression once:60/120 ->120/240"
+  ],
+  "numerical_change_only": "physical300(120/60/120) to600(240/120/240)",
+  "particle_elements_each": 320,
+  "cap_expression_unchanged": "if(t<0.1[s],0.000125[s],0.1[s])",
+  "external_runtime_inputs": [],
+  "runAll_calls": 1,
+  "extrap_none_count": 4,
+  "StopCondition_nodes": 1,
+  "active_conditions": 2
+}

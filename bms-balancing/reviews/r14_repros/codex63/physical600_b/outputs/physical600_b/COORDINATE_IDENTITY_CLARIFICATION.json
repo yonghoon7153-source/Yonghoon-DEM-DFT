@@ -1,0 +1,11 @@
+{
+  "recorded_at_utc": "2026-09-14T16:24:40.151335+00:00",
+  "kind": "Analysis coordinate-identity clarification before B numeric analysis",
+  "reason": "Prior physical300/600 exports show different last digits for FE-evaluated x despite fixed requested sites. Prove native input-grid equality, align original sample indices, and disclose raw x differences. This is not nearest matching, interpolation, or a change to a solve condition.",
+  "before_contract_sha256": "bc4c4bd362ba407a2c98ad78b0caffde4161d93863e4e3cafae3500e683afea0",
+  "after_contract_sha256": "232e41b11788d88b45eab1c6a85646e4dfd454ada3ebcc7c334508259ddc3359",
+  "COMSOL_source_changed": false,
+  "new_or_repeated_COMSOL_runs": 0,
+  "earlier_B_numeric_failures_rewritten": false,
+  "B_source_sha256": "f230dcc0ccc2bb88c73b978ad9ebc564eb5e1c72cd328f24802d3f4435623906"
+}

@@ -1,0 +1,285 @@
+{
+  "comparisons": [
+    {
+      "id": "physical_axis_300_to_600",
+      "first": "Caps300R320H0125C16",
+      "second": "Caps600R320H0125C16",
+      "scope": "Physical mesh refinement at fixed particle320 and original cap/16cores; accepted histories may differ",
+      "segments": [
+        {
+          "start_s": "0",
+          "end_s": "0.1",
+          "first": {
+            "count": 807,
+            "sum_h_s_exact": "0.10000000000000000000",
+            "min_h_s_exact": "0.00001000",
+            "median_h_s_exact": "0.00012500000000000",
+            "mean_h_s_decimal_40_digits": "0.0001239157372986369268897149938042131350682",
+            "max_h_s_exact": "0.00012500000000001",
+            "p10_nearest_rank_h_s_exact": "0.000125000000000000",
+            "p90_nearest_rank_h_s_exact": "0.000125",
+            "at_configured_cap_within_1e_12_s": 792,
+            "over_cap_beyond_1e_12_s": 0,
+            "nominal_1e_12_s_bins": [
+              {
+                "h_s": "0.000010000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.000010020000",
+                "count": 1
+              },
+              {
+                "h_s": "0.000020000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.000029990000",
+                "count": 2
+              },
+              {
+                "h_s": "0.000050000000",
+                "count": 2
+              },
+              {
+                "h_s": "0.000100000000",
+                "count": 8
+              },
+              {
+                "h_s": "0.000125000000",
+                "count": 792
+              }
+            ],
+            "start_s": "0",
+            "end_s": "0.1",
+            "cap_s": "0.000125"
+          },
+          "second": {
+            "count": 807,
+            "sum_h_s_exact": "0.10000000000000000000",
+            "min_h_s_exact": "0.00001000",
+            "median_h_s_exact": "0.00012500000000000",
+            "mean_h_s_decimal_40_digits": "0.0001239157372986369268897149938042131350682",
+            "max_h_s_exact": "0.00012500000000001",
+            "p10_nearest_rank_h_s_exact": "0.000125000000000000",
+            "p90_nearest_rank_h_s_exact": "0.000125",
+            "at_configured_cap_within_1e_12_s": 792,
+            "over_cap_beyond_1e_12_s": 0,
+            "nominal_1e_12_s_bins": [
+              {
+                "h_s": "0.000010000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.000010020000",
+                "count": 1
+              },
+              {
+                "h_s": "0.000020000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.000029990000",
+                "count": 2
+              },
+              {
+                "h_s": "0.000050000000",
+                "count": 2
+              },
+              {
+                "h_s": "0.000100000000",
+                "count": 8
+              },
+              {
+                "h_s": "0.000125000000",
+                "count": 792
+              }
+            ],
+            "start_s": "0",
+            "end_s": "0.1",
+            "cap_s": "0.000125"
+          },
+          "actual_max_reduced": false,
+          "mean_reduced": false
+        },
+        {
+          "start_s": "0.1",
+          "end_s": "1",
+          "first": {
+            "count": 98,
+            "sum_h_s_exact": "0.90000000000000000",
+            "min_h_s_exact": "0.000125",
+            "median_h_s_exact": "0.01",
+            "mean_h_s_decimal_40_digits": "0.009183673469387755102040816326530612244898",
+            "max_h_s_exact": "0.01",
+            "p10_nearest_rank_h_s_exact": "0.005",
+            "p90_nearest_rank_h_s_exact": "0.01",
+            "at_configured_cap_within_1e_12_s": 0,
+            "over_cap_beyond_1e_12_s": 0,
+            "nominal_1e_12_s_bins": [
+              {
+                "h_s": "0.000125000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.000250000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.000500000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.001000000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.002000000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.003062500000",
+                "count": 2
+              },
+              {
+                "h_s": "0.005000000000",
+                "count": 4
+              },
+              {
+                "h_s": "0.010000000000",
+                "count": 87
+              }
+            ],
+            "start_s": "0.1",
+            "end_s": "1",
+            "cap_s": "0.1"
+          },
+          "second": {
+            "count": 98,
+            "sum_h_s_exact": "0.90000000000000000",
+            "min_h_s_exact": "0.000125",
+            "median_h_s_exact": "0.01",
+            "mean_h_s_decimal_40_digits": "0.009183673469387755102040816326530612244898",
+            "max_h_s_exact": "0.01",
+            "p10_nearest_rank_h_s_exact": "0.005",
+            "p90_nearest_rank_h_s_exact": "0.01",
+            "at_configured_cap_within_1e_12_s": 0,
+            "over_cap_beyond_1e_12_s": 0,
+            "nominal_1e_12_s_bins": [
+              {
+                "h_s": "0.000125000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.000250000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.000500000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.001000000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.002000000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.003062500000",
+                "count": 2
+              },
+              {
+                "h_s": "0.005000000000",
+                "count": 4
+              },
+              {
+                "h_s": "0.010000000000",
+                "count": 87
+              }
+            ],
+            "start_s": "0.1",
+            "end_s": "1",
+            "cap_s": "0.1"
+          },
+          "actual_max_reduced": false,
+          "mean_reduced": false
+        },
+        {
+          "start_s": "1",
+          "end_s": "5",
+          "first": {
+            "count": 81,
+            "sum_h_s_exact": "4.00",
+            "min_h_s_exact": "0.02",
+            "median_h_s_exact": "0.05",
+            "mean_h_s_decimal_40_digits": "0.04938271604938271604938271604938271604938",
+            "max_h_s_exact": "0.05",
+            "p10_nearest_rank_h_s_exact": "0.05",
+            "p90_nearest_rank_h_s_exact": "0.05",
+            "at_configured_cap_within_1e_12_s": 0,
+            "over_cap_beyond_1e_12_s": 0,
+            "nominal_1e_12_s_bins": [
+              {
+                "h_s": "0.020000000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.030000000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.050000000000",
+                "count": 79
+              }
+            ],
+            "start_s": "1",
+            "end_s": "5",
+            "cap_s": "0.1"
+          },
+          "second": {
+            "count": 81,
+            "sum_h_s_exact": "4.00",
+            "min_h_s_exact": "0.02",
+            "median_h_s_exact": "0.05",
+            "mean_h_s_decimal_40_digits": "0.04938271604938271604938271604938271604938",
+            "max_h_s_exact": "0.05",
+            "p10_nearest_rank_h_s_exact": "0.05",
+            "p90_nearest_rank_h_s_exact": "0.05",
+            "at_configured_cap_within_1e_12_s": 0,
+            "over_cap_beyond_1e_12_s": 0,
+            "nominal_1e_12_s_bins": [
+              {
+                "h_s": "0.020000000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.030000000000",
+                "count": 1
+              },
+              {
+                "h_s": "0.050000000000",
+                "count": 79
+              }
+            ],
+            "start_s": "1",
+            "end_s": "5",
+            "cap_s": "0.1"
+          },
+          "actual_max_reduced": false,
+          "mean_reduced": false
+        }
+      ],
+      "all_caps_pass": true,
+      "accepted_time_histories_exactly_equal": true,
+      "both_later_actual_maxima_reduced": false
+    }
+  ],
+  "boundaries_s": [
+    "0.1",
+    "1"
+  ],
+  "all_two_caps_pass": true,
+  "limits": "Actual steps are distinct from configured caps and storage options. Only physical mesh changes at fixed original cap and16cores. Same cap need not give same accepted history. No overall convergence conclusion."
+}

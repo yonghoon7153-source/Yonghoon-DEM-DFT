@@ -1,0 +1,18 @@
+{
+  "user_approval": "가자, following explicit Astra High/16cores/5seconds/newB1run/1800s proposal",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "high",
+  "new_B_runs_authorized": 1,
+  "new_name": "Caps600R320H0125C16",
+  "cores": 16,
+  "worker_timeout_seconds": 1800,
+  "physical_seconds": 5,
+  "t0_initialization": true,
+  "baseline_rerun": false,
+  "automatic_retry": false,
+  "additional_runs": false,
+  "failure_rule": "Preserve and report before any retry or condition change; unrelated solver failures are not range stops",
+  "electrolyte_positive": "POSTPROCESSING_ONLY",
+  "overall_convergence_complete": false,
+  "long_run_GO": false
+}

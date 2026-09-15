@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Caps300R320H0125C16",
+    "job_id": "5d1a87652ed54e6a945d4f2af4aeda70",
+    "worker_started_at": "2026-09-14T12:26:14.097201+00:00",
+    "completed_metadata_updated_at": "2026-09-14T12:41:55.872858+00:00",
+    "observed_start_to_finished_seconds": 941.775657,
+    "requested_timeout_seconds": 1800,
+    "physical_seconds": 5,
+    "all_solution_time_log_lines": [
+      "Solution time: 0 s.",
+      "Solution time: 1 s.",
+      "Solution time: 1 s.",
+      "Solution time: 330 s. (5 minutes, 30 seconds)"
+    ],
+    "scope": "Observed one-job metadata duration includes compilation/solve/postprocessing/save. Solver time is separate. Not a controlled performance benchmark or change to worker timeout semantics."
+  },
+  {
+    "name": "Caps600R320H0125C16",
+    "job_id": "56975e4d24054b23bcec87553875f729",
+    "worker_started_at": "2026-09-14T16:02:34.478477+00:00",
+    "completed_metadata_updated_at": "2026-09-14T16:26:15.310258+00:00",
+    "observed_start_to_finished_seconds": 1420.831781,
+    "requested_timeout_seconds": 1800,
+    "physical_seconds": 5,
+    "all_solution_time_log_lines": [
+      "Solution time: 0 s.",
+      "Solution time: 1 s.",
+      "Solution time: 1 s.",
+      "Solution time: 538 s. (8 minutes, 58 seconds)"
+    ],
+    "scope": "Observed one-job metadata duration includes compilation/solve/postprocessing/save. Solver time is separate. Not a controlled performance benchmark or change to worker timeout semantics."
+  }
+]

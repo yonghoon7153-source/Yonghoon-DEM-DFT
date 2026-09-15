@@ -1,0 +1,23 @@
+{
+  "scope": "One physical-axis comparison300/R320 to600/R320, original H0125 cap, fixed16cores; new5second run only",
+  "jobs": [
+    {
+      "name": "Caps300R320H0125C16",
+      "job_id": "5d1a87652ed54e6a945d4f2af4aeda70",
+      "source_sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e",
+      "early_cap_s": 0.000125,
+      "cores": 16,
+      "timeout_seconds": 1800,
+      "max_physical_time_s": 5,
+      "role": "existing_reference"
+    },
+    {
+      "name": "Caps600R320H0125C16",
+      "job_id": "56975e4d24054b23bcec87553875f729",
+      "source_sha256": "f230dcc0ccc2bb88c73b978ad9ebc564eb5e1c72cd328f24802d3f4435623906",
+      "role": "new_authorized_run",
+      "cores": 16,
+      "timeout_seconds": 1800
+    }
+  ]
+}

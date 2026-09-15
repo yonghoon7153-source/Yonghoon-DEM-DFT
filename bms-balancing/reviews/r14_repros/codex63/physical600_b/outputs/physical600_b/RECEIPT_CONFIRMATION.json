@@ -1,0 +1,19 @@
+{
+  "evidence_type": "User-supplied receiver report; separate from original local generation receipt",
+  "source_attachment": "C:\\Users\\BML\\Desktop\\KakaoTalk_Longtxt_20260915_0051_37_774.txt",
+  "source_attachment_sha256": "d33b650a0a1ed080ceca6f8916d912646cf6067324393dc5eb0cd02e25ee66d0",
+  "received_archive_bytes": 707524803,
+  "received_archive_sha256": "5f5b197e4467c15c3150de2650c0e2c6c1e937710f005c24e5ea9ccc306143af",
+  "payload_count": 234,
+  "manifest_sha256": "ede957a5cdb7524ea3e1e5b51db7009a3329a9bc17b07f807d55922fa3679d84",
+  "reported_all_size_sha_crc_match": true,
+  "reported_historical333_match": true,
+  "local_inventory_count_at_prior_run": 1247,
+  "direct_members_receiver_verified": 93,
+  "unchanged_direct_members": 92,
+  "changed_plan_matching_before_copy": 1,
+  "other_current_bytes_not_receiver_verified": 1154,
+  "prior_TIME_CAPS_raw_difference_cause": "UNRESOLVED",
+  "original_generation_receipt_preserved": true,
+  "overall_convergence_complete": false
+}

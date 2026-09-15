@@ -1,0 +1,15 @@
+{
+  "recorded_at_utc": "2026-09-14T12:29:09.827892+00:00",
+  "prior_run": "Caps300R320LateCapA5s",
+  "prior_job_id": "c40c05d3cfb643a4b706345637b00f57",
+  "corrected_accepted_wording": "후기 시간상한·코어 수 변경을 포함한 두 실행의 지정 표본 차이가 기준 이내",
+  "scope_error_in_previous_shorthand": "후기 시간상한 민감도 기준 충족이라는 짧은 표현은 동일 코어 시간상한 단독 비교의 종결로 읽힐 수 있었다. 기존 원본의 수치와 신고된 코어 차이는 맞지만 수용 범위를 이 문구로 제한한다.",
+  "numeric_results_changed": false,
+  "old_reports_ZIP_receipts_changed": false,
+  "same_core_late_cap_effect_separated_by_old_A_pair": false,
+  "early_small_difference_proves_later_core_effect_zero": false,
+  "new_control_is_separately_authorized": true,
+  "overall_convergence_complete": false,
+  "long_run_GO": false,
+  "new_analysis_role": "Two separately scored comparisons after the newly authorized control, without rewriting old data or assuming absent core-by-cap interaction."
+}

@@ -1,0 +1,18 @@
+{
+  "local_named_inventory_count": 1392,
+  "locally_unchanged": 1391,
+  "matching_changed_plan_before_copy": 1,
+  "direct_package_members_from_current_inventory": 68,
+  "unchanged_direct_inventory_members": 67,
+  "all_current_inventory_externally_verified": false,
+  "prior_CORE16_receiver_report": {
+    "inventory": 1247,
+    "direct": 93,
+    "unchanged": 92,
+    "plan_before_copy": 1,
+    "not_directly_verified_current": 1154
+  },
+  "historical333_separate_scope": true,
+  "prior_TIME_CAPS_raw_difference_cause": "UNRESOLVED",
+  "new_receiver_identity_confirmed": false
+}

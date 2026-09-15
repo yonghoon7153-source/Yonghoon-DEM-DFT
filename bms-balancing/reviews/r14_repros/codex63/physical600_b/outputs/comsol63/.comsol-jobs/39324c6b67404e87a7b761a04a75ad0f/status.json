@@ -1,0 +1,12 @@
+{
+  "job_id": "39324c6b67404e87a7b761a04a75ad0f",
+  "state": "failed",
+  "phase": "running_batch",
+  "worker_started_at": "2026-09-13T10:32:04.646272+00:00",
+  "updated_epoch": 1789295552.3714893,
+  "updated_at": "2026-09-13T10:32:32.371489+00:00",
+  "child_pid": 27592,
+  "compile_returncode": 0,
+  "batch_returncode": 0,
+  "error": "RuntimeError: COMSOL reported a fatal error despite batch rc=0 (batch.log:16: /*****Error********/); any saved MPH is a partial, unvalidated result"
+}
