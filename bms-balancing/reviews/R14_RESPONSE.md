@@ -217,9 +217,33 @@ ZIP 안에 없다". **실제로는 있었다.** 그 묶음의 manifest 는 이�
 세 결함(브랜치 이름 · 작업 디렉터리 · manifest 이름) 다 **다른 사람이 실제로 쓰다가** 걸렸다.
 이 스크립트는 우리 기계에서만 돌려 본 적이 있고, 사용자 기계에서 처음 돈 것이 이번이다.
 
-### 8-7. 회귀
+### 8-7. 넷째 — manifest 의 **항목 목록 키**가 묶음마다 다르다
 
-`tests/test_r15_open_items.py` **17 passed**. 전체 **328 passed**.
+manifest 이름을 고친 뒤 desktop_postproc 은 통과했다 (명세 82 전수 일치 · 보존 50 · 커밋 안
+bytes 재대조 50/50). 그런데 **그 다음 세 묶음이 또 멈췄다** — 5 단계에서 `manifest 에 entries
+가 없다`. ZIP 크기·SHA·manifest 해시는 셋 다 전달값과 **정확히 일치**했다.
+
+다른 것은 자료가 아니라 **키 이름**이었다.
+
+| 묶음 | 목록 키 |
+|---|---|
+| `desktop_postproc` | `entries` |
+| `electrolyte_guard` · `physical600_b_review` | `files` |
+| `electrolyte_recovery` | `payload` |
+
+항목 모양은 셋 다 같다 (`path` · `bytes` · `sha256`). 판별을 `scripts/handoff_manifest.py`
+한 자리로 뺐다 — bash heredoc 안에 두면 시험할 수 없고, 시험할 수 없는 규칙은 다음에 또 갈린다.
+계약은 셋이다: 항목마다 `path`·`sha256` 이 **둘 다** 있을 것 · 쓸 만한 후보 키가 **둘 이상**이면
+고르지 않고 멈출 것 · 모르는 모양은 계속 멈출 것. 새 묶음이 또 다른 이름을 쓰면 `ENTRY_KEYS` 에
+**한 줄**을 늘리고 회귀를 같이 넣는다.
+
+**네 결함의 공통 원인은 하나다.** 이 스크립트는 우리 기계에서만 돌아 봤고, 사용자 기계에서 처음
+돈 것이 이번이다. 브랜치 이름 · 작업 디렉터리 · manifest 이름 · 목록 키 — 넷 다 "우리 환경에서는
+한 가지 모양만 봤다" 에서 나왔다.
+
+### 8-8. 회귀
+
+`tests/test_r15_open_items.py` **21 passed**. 전체 **332 passed**.
 
 전수 실행이 **이번 라운드와 무관한 빨강 둘**을 드러냈다. 둘 다 고쳤다.
 

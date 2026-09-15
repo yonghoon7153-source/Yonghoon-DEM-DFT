@@ -357,3 +357,59 @@ def test_the_manifest_search_finds_both_bundle_conventions(tmp_path):
         "두 묶음 규약 중 하나만 찾는다 — desktop_postproc 이 여기서 멈췄다", sorted(found))
     assert "normal_raw_csv_manifest.json" not in found, (
         "이름에 manifest 가 들어간 것을 전부 후보로 삼으면 골라야 할 것이 늘기만 한다", sorted(found))
+
+
+# ── manifest 의 항목 목록 키가 묶음마다 다르다 (2026-09-15 실측) ─────────────────────────────
+
+def _hm():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "handoff_manifest", ROOT / "scripts" / "handoff_manifest.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
+def test_the_entry_list_key_differs_between_bundles():
+    """★ 2026-09-15 실측 — 세 묶음이 5 단계에서 `manifest 에 entries 가 없다` 로 멈췄다.
+
+    ZIP 크기·SHA·manifest 해시는 셋 다 전달값과 **정확히 일치**했다. 다른 것은 자료가 아니라
+    **목록 키**다 — `desktop_postproc` 은 `entries`, guard 와 review 기록은 `files`,
+    복구 기록은 `payload` 다. 항목 모양은 셋 다 같다 (`path` · `bytes` · `sha256`).
+
+    멈춘 것 자체는 옳다. 고칠 것은 **아는 키를 늘리는 것**이고, 모르는 모양은 계속 멈춘다.
+    """
+    hm = _hm()
+    item = {"path": "a/b.json", "bytes": 3, "sha256": "0" * 64}
+    for key in ("entries", "files", "payload"):
+        assert hm.entry_list({key: [item]}) == [item], key
+
+
+def test_an_entry_list_without_a_path_or_sha_is_refused():
+    """대조할 수 없는 것을 보존하면 보존의 뜻이 사라진다 — 항목마다 경로와 sha256 을 **둘 다** 요구한다."""
+    hm = _hm()
+    for bad in ({"files": [{"path": "a"}]},                      # sha 없음
+                {"files": [{"sha256": "0" * 64}]},               # 경로 없음
+                {"files": ["a/b.json"]},                         # dict 가 아님
+                {"files": []},                                   # 비었음
+                {"manifest_version": 3},                         # 목록이 아예 없음
+                {"notes": "무엇도 아님"}):
+        with pytest.raises(ValueError):
+            hm.entry_list(bad)
+
+
+def test_two_plausible_entry_lists_are_an_ambiguity_not_a_guess():
+    """키가 둘 다 있으면 **고르지 않는다** — 무엇을 대조한 것인지 사람이 정해야 한다."""
+    hm = _hm()
+    item = {"path": "a", "sha256": "0" * 64}
+    with pytest.raises(ValueError, match="둘 이상|ambiguous|여럿"):
+        hm.entry_list({"entries": [item], "files": [item]})
+
+
+def test_the_preserve_script_uses_that_one_rule():
+    """규칙이 두 벌이면 언젠가 갈린다 — bash 안의 python 이 같은 함수를 부른다."""
+    src = (ROOT / "scripts" / "preserve_handoff.sh").read_text(encoding="utf-8")
+    assert "handoff_manifest" in src and "entry_list" in src, (
+        "보존 스크립트가 자기만의 목록 판별을 들고 있다")
+    assert 'm.get("entries")' not in src, "옛 판별이 남아 있다"

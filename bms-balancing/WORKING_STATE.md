@@ -76,6 +76,14 @@ manifest 이름은 `manifest.json` 인데 `preserve_handoff.sh` 가 `package_man
 찾았다. ZIP 의 크기·SHA 는 전달값과 정확히 일치했고 `manifest.json` 의 해시도 전달값 그대로였다 —
 스크립트가 찾은 것은 재사용 증거로 딸려 온 **이전 묶음의** package_manifest 하나뿐이었다.
 후보 집합만 넓혔다 (고르는 것은 여전히 `--expect-manifest-sha`, fail-closed 유지).
+보존은 그 뒤 통과했다 — 명세 82 전수 일치 · 보존 50 · 커밋 안 bytes 재대조 50/50.
+
+**그 다음 셋이 또 멈췄다 — 이번엔 목록 키였다.** guard·복구 기록·수신 검토 기록이 5 단계에서
+`manifest 에 entries 가 없다` 로 섰는데, ZIP 크기·SHA·manifest 해시는 셋 다 전달값과 정확히
+일치했다. 다른 것은 자료가 아니라 **키 이름**이다: `entries`(desktop) · `files`(guard·review) ·
+`payload`(recovery). 항목 모양은 셋 다 같다 (`path`·`bytes`·`sha256`). 판별을
+`scripts/handoff_manifest.py` 한 자리로 빼고(bash heredoc 안에 두면 시험할 수 없다) 아는 키만
+넓혔다. 모르는 모양·둘 이상 후보·`path`/`sha256` 누락은 **계속 멈춘다**.
 
 **남은 열린 것**: 조건 6(동적 인증) · 조건 8(다섯 축) · `openpyxl` 이 `ENV_KEYS` 에 없음 ·
 r11 `publish:profile_partial_stdout` 대체 증거. 그리고 **실데이터 폭 측정**(`--w-dqdv 0 ↔ 1`)
@@ -390,7 +398,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 328 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 332 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

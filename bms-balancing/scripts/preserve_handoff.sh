@@ -128,6 +128,7 @@ echo
 echo "══ 5. payload 전수 대조 + 보존 대상 복사 ═══════════════════════════"
 MAN_REL_OUT="$TMP/.man_rel"
 DEST="$DEST" TMP="$TMP" MAN="$MAN" KEEP_EXT="$KEEP_EXT" MAX_KEEP_BYTES="$MAX_KEEP_BYTES" MAN_REL_OUT="$MAN_REL_OUT" \
+SCRIPTS_DIR="$HERE/scripts" \
 python3 - <<'PY' || exit 1
 import hashlib, json, os, pathlib, shutil, sys
 dest = pathlib.Path(os.environ["DEST"]); tmp = pathlib.Path(os.environ["TMP"])
@@ -135,9 +136,14 @@ man  = pathlib.Path(os.environ["MAN"])
 keep_ext = {"." + e for e in os.environ["KEEP_EXT"].split()}
 cap = int(os.environ["MAX_KEEP_BYTES"])
 m = json.loads(man.read_text(encoding="utf-8"))
-entries = m.get("entries") or []
-if not entries:
-    print("! manifest 에 entries 가 없다", file=sys.stderr); sys.exit(1)
+# ⚠ 2026-09-15 — 목록 키가 묶음마다 다르다 (entries · files · payload 를 실측했다). 규칙을 여기
+#   적으면 시험할 수 없어서 `scripts/handoff_manifest.py` 한 자리로 뺐다. 모르는 모양은 계속 멈춘다.
+sys.path.insert(0, os.environ["SCRIPTS_DIR"])
+from handoff_manifest import entry_list                      # noqa: E402
+try:
+    entries = entry_list(m)
+except ValueError as exc:
+    print("! %s" % exc, file=sys.stderr); sys.exit(1)
 
 # ZIP 이 한 겹 더 감싸는 경우가 있다 — manifest 의 첫 경로로 뿌리를 찾는다
 probe = entries[0]["path"]
