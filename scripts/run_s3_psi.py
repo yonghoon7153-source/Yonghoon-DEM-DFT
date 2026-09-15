@@ -41,20 +41,17 @@ SCRIPTS = pathlib.Path(__file__).resolve().parent
 ROOT = SCRIPTS.parent
 sys.path.insert(0, str(SCRIPTS))
 
-#: 허용 창 — 봉인 도구와 **같은 상수를 쓴다** (두 곳에 적으면 갈라진다).
-try:
-    from seal_s3_prerun import KST, SEAL_DEADLINE, SEAL_NOT_BEFORE
-except ImportError:                                            # pragma: no cover
-    KST = _dt.timezone(_dt.timedelta(hours=9))
-    SEAL_DEADLINE = _dt.datetime(2026, 9, 17, 23, 59, 0, tzinfo=KST)
-    SEAL_NOT_BEFORE = _dt.date(2026, 9, 17)
+#: 허용 창·마감·판정 규칙 — 봉인 도구가 **정본**이고 여기서는 import 만 한다.
+#: ⛔ **사본을 만들지 않는다.**  import 가
+#:   실패하면 조용한 기본값으로 돌지 말고 **죽는다**: 규칙이 갈리면 봉인과 다른 판정이 나오고
+#:   그것이 사전등록을 무의미하게 만든다 (실제로 두 사본이 이미 갈라져 있었다).
+from seal_s3_prerun import KST, RHO_RULE, SEAL_DEADLINE, SEAL_NOT_BEFORE
 
 IN_DOMAIN = 'B_ch'
 REQUIRED_SEAL_KEYS = ('sealed_at_kst', 'seal_deadline', 'generation_git_sha', 'channels')
 
 #: 등록된 판정표 (계약 §B).  ⛔ 문턱 3 %/10 % 고정 — ρ 는 문턱을 못 움직이고 **상태만** 바꾼다.
-VERDICT_RULE = ('d ≥ 10 이고 d ≥ 2ρ → h1 · 그 외 ρ > 3 → UNRESOLVED_NUMERIC · '
-                '그 외 d < 3 → h0 · 나머지 BOTH_REJECTED  (d = median(|Δ|) %)')
+VERDICT_RULE = RHO_RULE
 
 
 def verdict(d: float, rho: float) -> str:
@@ -108,6 +105,14 @@ def load_seal(path: pathlib.Path) -> tuple[dict | None, str]:
              if not (d.get('ids') or {}).get(IN_DOMAIN)]
     if empty:
         return None, f'`B_ch` 가 0개인 채널 {sorted(empty)} — baseline 이 없다 (빈 봉인)'
+    #  ★★ 봉인이 **어떤 규칙으로** 만들어졌는지 확인한다.  봉인이 적은 규칙과 이 판정기가
+    #     구현한 규칙이 다르면 사전등록이 무의미하다 — 문구가 곧 문턱이기 때문이다.
+    #     ⚠ 이것은 가상의 위험이 아니다: 러너 초판이 규칙을 **따로 적었고** 꼬리가 갈라져
+    #       있었다 (2026-09-15 에 발견해 `RHO_RULE` 하나로 묶었다).
+    if seal.get('rho_rule') and seal['rho_rule'] != RHO_RULE:
+        return None, ('봉인이 적은 판정 규칙이 이 판정기의 규칙과 다르다 — 다른 규칙으로 만들어진 '
+                      f'봉인은 이 판정기가 쓸 수 없다.\n      봉인: {seal["rho_rule"]!r}'
+                      f'\n      판정기: {RHO_RULE!r}')
     return seal, ''
 
 
@@ -329,6 +334,24 @@ def _selftest() -> int:
         p = tdp / 'empty.json'
         p.write_text(json.dumps(d), encoding='utf-8')
         chk('③f ★ `B_ch` 가 빈 봉인은 거부 (baseline 이 없다)', load_seal(p)[0] is None)
+        #  ★★ 봉인이 **다른 규칙**으로 만들어졌으면 거부 (사본이 실제로 갈라져 있었다).
+        d = json.loads(json.dumps(good))
+        d['rho_rule'] = RHO_RULE
+        p = tdp / 'rule_ok.json'
+        p.write_text(json.dumps(d, ensure_ascii=False), encoding='utf-8')
+        chk('③g 같은 규칙이 적힌 봉인은 허가', load_seal(p)[0] is not None, load_seal(p)[1])
+        d['rho_rule'] = RHO_RULE.replace('d < 3', 'd < 5')      # 문턱 한 글자
+        p = tdp / 'rule_bad.json'
+        p.write_text(json.dumps(d, ensure_ascii=False), encoding='utf-8')
+        chk('③h ★★ 문턱 한 글자가 다른 규칙으로 만들어진 봉인은 **거부**한다',
+            load_seal(p)[0] is None)
+        #  ⚠ 꼬리 한 구절 차이도 잡는다 — 실제로 갈라졌던 자리가 정확히 그 꼬리였다.
+        d['rho_rule'] = RHO_RULE.replace('  (d = median(|Δ|) %, 둘 다 유한 비음수)',
+                                         '  (d = median(|Δ|) %)')
+        p = tdp / 'rule_tail.json'
+        p.write_text(json.dumps(d, ensure_ascii=False), encoding='utf-8')
+        chk('③i ★ 갈라졌던 그 꼬리 차이도 거부한다 (2026-09-15 실제 사례)',
+            load_seal(p)[0] is None)
 
     # ④ ★★ 양성 대조 — 합성 케이스 두 팔이 **실제로 다른 σ** 를 내고 비가 등록식과 맞는가.
     #    거부만 시험하면 아무것도 못 재는 러너도 초록이 된다 (R4-01 이 정확히 그 모양이었다).

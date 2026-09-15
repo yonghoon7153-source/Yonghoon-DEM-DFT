@@ -59,6 +59,15 @@ IN_DOMAIN = 'B_ch'
 LABELS = (IN_DOMAIN, 'OLD_ZERO', 'OLD_NONE', 'OLD_NONFINITE', 'NO_NETWORK',
           'PENDING_BASELINE', 'ERROR')
 
+#: ★★ 판정 규칙 — **계약 §B 의 문구를 여기 하나에만 둔다** (2026-09-15).
+#:   봉인 문서에 박히는 문자열이고, 러너(`run_s3_psi.py`)가 **이것을 import 해서** 쓴다.
+#:   ⚠ 두 곳에 적었더니 **이미 갈라져 있었다** — 러너의 사본에 꼬리 *"둘 다 유한 비음수"* 가
+#:     빠져 있었다.  봉인이 적은 규칙과 판정기가 구현한 규칙이 다르면 사전등록이 무의미하다.
+#:   ⇒ 러너는 `seal['rho_rule']` 이 이 값과 다르면 **거부**한다 (다른 규칙으로 만들어진 봉인).
+#:   ⛔ 이 문구를 바꾸는 것은 문턱을 바꾸는 것이다 — 계약을 **먼저** 고친다.
+RHO_RULE = ('d ≥ 10 이고 d ≥ 2ρ → h1 · 그 외 ρ > 3 → UNRESOLVED_NUMERIC · '
+            '그 외 d < 3 → h0 · 나머지 BOTH_REJECTED  (d = median(|Δ|) %, 둘 다 유한 비음수)')
+
 
 def _load(name: str, path: Path):
     spec = importlib.util.spec_from_file_location(name, path)
@@ -221,8 +230,7 @@ def build_seal(per_channel: dict, cohort: dict, env: dict, tsv: Path, design: Pa
         'design_csv': str(design), 'design_csv_sha256': sha256(design) if design.exists() else '',
         'n_cohort_ids': len(cohort),
         'solver_env': env,
-        'rho_rule': ('d ≥ 10 이고 d ≥ 2ρ → h1 · 그 외 ρ > 3 → UNRESOLVED_NUMERIC · '
-                     '그 외 d < 3 → h0 · 나머지 BOTH_REJECTED  (d = median(|Δ|) %, 둘 다 유한 비음수)'),
+        'rho_rule': RHO_RULE,
         'undetermined_rule': ('B_ch 안의 REFUSED 는 하한 0 · 상한 +∞ 의 중앙값 순서통계 경계로 '
                               '두 라벨을 내고 **같을 때만** 발행한다 (다르면 UNDETERMINED_COHORT). '
                               '+∞ 는 경계 계산용이지 관측값이 아니다.'),
