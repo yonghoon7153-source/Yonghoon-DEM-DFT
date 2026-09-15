@@ -1,0 +1,143 @@
+# COMSOL63 PHYSICAL600 B — 수신 측 독립 검토
+
+검토일: 2026-09-15. 승인 범위: 수신 파일 검증·원시 CSV 재계산·설정 및 해석 범위 검토. 새 COMSOL 실행/제출 0회, 제공받은 Java·분석 프로그램 실행 0회.
+
+## 판정
+
+**이번 5초 시험의 지정·정확 공통 저장 표본에서 물리축 300→600 세분 민감도 기준 충족을 수용한다. 전체 수렴 미완·장시간 운전 보류는 유지한다.**
+
+독립 계산한 8개 비교의 표본 수, 최대 전압 차, 최대 표면 조성 차, 발생 시각·전극·위치가 보고값과 일치했다. 검토한 범위에서 이 제한된 판정을 뒤집는 불일치는 찾지 못했다. 이는 모델 물성의 타당성, 참값 오차, 전체 운전·유한 누설의 정확도를 승인한 것이 아니다.
+
+## 1. 실제 수신 ZIP 확인
+
+대상: `C:\Users\Administrator\Downloads\COMSOL63_PHYSICAL600_B_HANDOFF.zip`
+
+| 항목 | 수신 측 실측 |
+|---|---|
+| ZIP 크기 | 1,078,568,990 bytes |
+| ZIP SHA-256 | `53b4b2bddd90e3c17af72d3351093511f21f80f93ec49fc6e1793572a033a260` |
+| payload manifest SHA-256 | `7945b6a7785ced88a32bbb269ba5a2110fb139fcf7203a77e5cbbf98cac3dfbf` |
+| ZIP 항목 | 164 = payload 163 + manifest 1 |
+| payload 검증 | manifest와 파일 집합·크기·SHA 일치, 전체 항목을 끝까지 읽어 CRC 확인 |
+| 경로 | 중복 이름·절대경로·상위 경로 이탈 없음 |
+| 역사적 보관 333개 | nested PREFLIGHT ZIP 안 330개 + 직접 포함 3개, 각각 크기·SHA 일치 |
+| 현지 목록 1,392개 | 직접 포함 68개만 대조: 67개 불변, 변경된 계획서는 변경 전 사본 일치 |
+| 이전 CORE16 자료 연결 | 이전 manifest SHA 일치. 공유 65개 중 계획서 외 64개 동일 |
+
+현지 1,392개 전체 또는 원격 PC를 직접 확인한 것은 아니다. 역사적 333개는 현재 목록의 외부 검증 개수에 더하지 않는다. 이전 TIME_CAPS 두 raw ZIP의 차이 원인은 이번에도 미확인이다.
+
+근거: [수신 무결성 결과](C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/physical600_integrity_results.json), [payload별 실제 크기·SHA](C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/physical600_payload_observed.json).
+
+## 2. 원시 값의 독립 재계산
+
+보내온 analysis.json이나 반올림된 합본을 계산 입력으로 사용하지 않았다. 원시 boundary CSV의 양극·음극 `phis_V` 차로 단자전압을 다시 만들고, 원시 profile CSV에서 두 전극의 표면 조성을 비교했다. Decimal 50자리 연산은 CSV 문자열의 차이를 보존하기 위한 것이며 COMSOL 해의 정확도가 50자리라는 뜻이 아니다.
+
+시간은 숫자값이 정확히 같은 저장 시각만 연결했다. 시간 보간·가까운 시각 대체를 하지 않았다. 공간 값은 COMSOL의 기존 FE 공간 평가 결과이며, 수신 측에서 새 공간 보간을 수행하지 않았다.
+
+| 표본 | 구간(s) | 시각 수 | 최대 ΔV(mV) | ΔV 시각(s) | 최대 Δx | Δx 시각(s) |
+|---|---:|---:|---:|---:|---:|---:|
+| 요청 | 0.1–1 | 91 | 1.2198000e−9 | 0.1 | 2.2118816e−9 | 1 |
+| 요청 | 1–5 | 81 | 4.493000e−10 | 1 | 5.2300400e−9 | 5 |
+| 요청 | 0–1 | 107 | 1.06511000e−8 | 0.001 | 2.2118816e−9 | 1 |
+| 요청 | 0–5 | 187 | 1.06511000e−8 | 0.001 | 5.2300400e−9 | 5 |
+| 정확 공통 저장 | 0.1–1 | 99 | 1.2198000e−9 | 0.1 | 2.2118816e−9 | 1 |
+| 정확 공통 저장 | 1–5 | 82 | 4.493000e−10 | 1 | 5.2300400e−9 | 5 |
+| 정확 공통 저장 | 0–1 | 906 | 1.07714000e−8 | 0.0012500000000000002 | 2.2118816e−9 | 1 |
+| 정확 공통 저장 | 0–5 | 987 | 1.07714000e−8 | 0.0012500000000000002 | 5.2300400e−9 | 5 |
+
+Δx의 최대 위치는 모두 **양극, 원래 요청 좌표 121 µm**이다. 기준은 ΔV ≤ 1 mV, pointwise Δx ≤ 1e−4이며 8개 모두 충족했다. 1초는 인접한 두 값 비교 창에 포함된다.
+
+근거: [독립 수치 결과](C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/physical600_numeric_results.json).
+
+### 좌표 끝자리 차이를 숨기지 않았는가
+
+두 generated Java의 전극별 Interp 입력 좌표 배열 241개가 순서까지 정확히 같음을 먼저 확인했다. 원본 제출 소스의 내보내기 루프는 각 저장 시각에서 그 좌표 순서로 241행을 기록한다. 모든 원시 행의 유한값·domain·요청 좌표와의 1e−15 m 이내 대응도 확인했다.
+
+따라서 **동일 요청 좌표의 원래 sample index**로 연결했다. 원시 `coordinate_m`을 강제로 덮어쓰거나 가까운 좌표끼리 매칭하지 않았다.
+
+- 음극 FE 평가 좌표: 28,623행 다름, 최대 차 1e−20 m.
+- 양극 FE 평가 좌표: 21,714행 다름, 최대 차 2e−20 m.
+
+원시 CSV의 `coordinate_m`은 요청 배열 자체가 아니라 평가 표현식 `x`의 값이다. 이번 연결은 그 문자열이 동일하다는 가정에 의존하지 않는다. 이 구분과 숫자가 보고서의 설명과 맞았다.
+
+근거: [실제 내보내기 소스](C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/physical600_evidence/outputs/comsol63/.comsol-jobs/56975e4d24054b23bcec87553875f729/Caps600R320H0125C16.java:455), [generated Java](C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/physical600_evidence/outputs/comsol63/.comsol-jobs/56975e4d24054b23bcec87553875f729/axes_generated.java:914).
+
+## 3. 실제 메시·설정·기준 해 연결
+
+| 항목 | 기준 | 새 B |
+|---|---|---|
+| 이름 | Caps300R320H0125C16 | Caps600R320H0125C16 |
+| job | 5d1a87652ed54e6a945d4f2af4aeda70 | 56975e4d24054b23bcec87553875f729 |
+| 물리 요소 | 300 = 120/60/120 | 600 = 240/120/240 |
+| 입자 요소 | 320/320 | 320/320 |
+| transient 자유도 | 79,485 + internal 12 | 158,325 + internal 12 |
+| native 코어 기록 | 16 | 16 |
+| 저장 시각 / accepted 구간 | 987 / 986 | 987 / 986 |
+
+제출 소스와 job 내 소스의 SHA를 확인했다. 새 소스에서 모델 식별 이름 두 곳과 물리 메시 설정 한 곳을 원상 치환하면 기준 소스와 바이트 단위로 같았다.
+
+- 기준 source SHA: `4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e`
+- 새 B source SHA: `f230dcc0ccc2bb88c73b978ad9ebc564eb5e1c72cd328f24802d3f4435623906`
+
+두 console의 Time/Variables 속성 1,143개를 직접 파싱하여 내보낸 속성 파일 및 서로 간의 동일성을 확인했다. cap은 양쪽 모두 원래 H0125 식이며 후기 A의 강화식을 섞지 않았다.
+
+`if(t<0.1[s],0.000125[s],0.1[s])`, 방식 `expr`.
+
+각 console에서 내보낸 CSV 14개를 base64 디코딩하여 ZIP의 원시 CSV와 바이트 단위로 대조했다. 빈 Weak/Constraint CSV도 빈 상태 그대로 확인했으며, 비어 있는 것을 추가 물리 증거로 세지 않았다.
+
+새 B MPH의 SHA는 `86f61cdfe2b9c621774889769b70a56ead68b1aacda4cffbcba7e2eeb2d810e9`, 크기는 2,516,986,836 bytes이다. MPH 내부 dmodel.xml과 별도 내보낸 dmodel.xml이 같았다. COMSOL에서 MPH를 열어 재평가하거나 재계산한 것은 아니다. 이번 ZIP에는 기준 MPH가 없고, 기준 CSV·소스·로그와 이전 CORE16 manifest 연결을 대조했다.
+
+근거: [native 독립 확인 결과](C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/physical600_native_results.json), [새 B batch 로그](C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/physical600_evidence/outputs/comsol63/.comsol-jobs/56975e4d24054b23bcec87553875f729/batch.log:140).
+
+### 저장 시각을 실제 시간간격으로 오인하지 않았는가
+
+두 해 모두 `tout=tsteps`, `tstepsstore=1`, `tstepsbdf=strict`를 확인했다. 정확한 저장 시각 차이를 별도로 계산하고, accepted CSV와 native batch 로그의 986개 행을 대조했다. 로그의 제한된 출력 자릿수는 별도로 허용했다.
+
+| 구간(s) | accepted 개수 | 최소 / 중앙 / 최대 간격(s) |
+|---|---:|---|
+| 0–0.1 | 807 | 1e−5 / 0.000125 / 약 0.000125 |
+| 0.1–1 | 98 | 0.000125 / 0.01 / 0.01 |
+| 1–5 | 81 | 0.02 / 0.05 / 0.05 |
+
+두 시간 이력은 실제로 같았다. 0.1·1초 경계 횡단과 1e−12초 허용을 넘는 cap 위반은 없었다. 이는 **이번 두 해의 관측 결과**이지 동일 cap이 언제나 동일 이력을 만든다는 규칙이 아니다.
+
+저장 제어와 최대 step 식은 별개 설정이라는 해석은 [COMSOL 6.3 Time API](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_api_solver.51.50.html)의 `tout/tstepsstore`와 `maxstepconstraintbdf/maxstepexpressionbdf` 구분에도 부합한다.
+
+## 4. 아주 작은 전압 차이를 해석할 때의 제한
+
+이번 작은 차이를 다른 해 복사로 의심할 만한지 점검했다. 원시 CSV 바이트는 실제로 다르고, 메시·자유도 증가 및 계산 로그도 확인됐다. 단자전압 성분의 **상쇄**도 원시 boundary 값에서 재현됐다.
+
+5초의 B−기준 차이(µV):
+
+- Eeq 차: +0.0144297863
+- 과전압 차: −0.01442942921
+- 전해질 전위차: −0.0000000342
+- 최종 단자전압 차: +0.0000003235
+
+전체 공통 시각 최대 전압 차에서도 성분 상쇄가 있다. 따라서 약 1e−11 V 수준의 두 해 차이를 각 성분의 오차 상한이나 실험 재현 정확도로 해석하지 않는다. 이것은 이번 계산 결과에서 도출한 해석이다.
+
+전압 분해식의 최대 잔차는 기준 6.53e−16 V, B 6.3e−16 V였다. Li 총량의 상대 변화는 각각 약 2.9210e−15, 6.3085e−15이고, 표본 전해질 최소 농도는 각각 1194.4372136345673, 1194.4372135369074 mol/m³로 양수다. 이 역시 수지·출력 일관성이지 장시간 물성 정확도 증명은 아니다.
+
+## 5. 보호·미완·다음 단계
+
+- 네 OCP/entropy 함수의 extrap=none과 StopCondition 한 노드의 두 활성 조건을 확인했다. 기존 failed 및 INCOMPLETE_RANGE_STOP 기록은 보존되어 있다.
+- 전해질 양수는 **후처리 검사**다. 전해질 음수를 실시간으로 막는 보호로 승격하지 않는다.
+- 새 600/320 해의 별도 시간상한 시험, 연속 공간·시간 전체 오차, 장시간 전이, 유한 sigma, 실험·원본 모델 대조는 이번 검토로 완료되지 않는다.
+- worker의 rc 0/완료 상태만 물리 PASS로 간주하지 않았다. worker 기록은 result_validation=not_performed이며, 위 판정은 별도 CSV·소스·native 기록 대조에 근거한다.
+- 원격 실행 횟수·승인 과정의 독립적인 실시간 관측은 하지 않았다. 묶음에 담긴 B job 한 건과 기준 자료 재사용의 일관성을 확인한 범위다.
+- **추가 계산 승인 0회.** 지금은 수신 확인을 별도 기록하고, 기존 시험별로 입증한 범위와 미완을 정리하는 계획 작성까지만 권한다. 추가 시험의 필요성·기준 해·바꿀 축·판정 범위·횟수·추론 수준을 제안한 다음 사용자 승인을 받아야 한다. 자동으로 600 메시 시간반감이나 장시간 프로토콜을 시작하지 않는다.
+
+Spreadsheets 스킬의 읽기 전용 검토 절차에 따라 원시 데이터와 단위를 보존하고 독립 재계산했다. 원본 ZIP·원시 CSV·기존 생성 영수증은 수정하지 않았다.
+
+## 재현
+
+[독립 검토 스크립트](C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/physical600_recipient_audit.py)를 bundled Python으로 실행:
+
+```powershell
+& 'C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' 'C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/physical600_recipient_audit.py' integrity
+& 'C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' 'C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/physical600_recipient_audit.py' numeric
+& 'C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' 'C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/physical600_recipient_audit.py' native
+```
+
+위 세 검사는 각각 rc 0으로 완료했다. integrity가 생성한 payload 관측 결과를 native가 MPH 해시 대조에 사용하므로 순서대로 실행한다. 이는 자료 검토용이며 COMSOL을 호출하지 않는다.
+

@@ -1,0 +1,45 @@
+{
+  "scope": "Record-only supplement; original B ZIP unchanged and not embedded",
+  "files": [
+    {
+      "path": "CHANGE_LOG_KO.md",
+      "bytes": 1190,
+      "sha256": "0b1f964797a432a47393da4ea191ad077b79b863543cb59f9238ddf5dcc0636a"
+    },
+    {
+      "path": "GENERATION_RECEIPT_UNCHANGED_COPY.json",
+      "bytes": 1367,
+      "sha256": "77139f1c39be93758565d5fb42634db2857f264a004d04ac305913ca8c489cfa"
+    },
+    {
+      "path": "LOCAL_PRESERVATION_CHECK.json",
+      "bytes": 19144,
+      "sha256": "ffa52e251a7ac4c71ddcfcc36f630011b5550d2b5b3514d0ba88a8452d34699e"
+    },
+    {
+      "path": "NEXT_RUN_PLAN_after_recipient_review.md",
+      "bytes": 11082,
+      "sha256": "b8dc00eeaee5453f271fcbf967ebdc658ce6f2503cf39d17009b26a503a2676f"
+    },
+    {
+      "path": "NEXT_RUN_PLAN_before_recipient_review.md",
+      "bytes": 2893,
+      "sha256": "faa0f90be81185d215c811de65a680e1424dbf822a68389d487d91aceb186060"
+    },
+    {
+      "path": "PHYSICAL600_B_RECIPIENT_REVIEW_AS_RECEIVED.txt",
+      "bytes": 12815,
+      "sha256": "1771cf913a0a6f9cd73337030e2e25a8f98794e7b3987b38a50601cf5f5475ef"
+    },
+    {
+      "path": "RECEIPT_CONFIRMATION.json",
+      "bytes": 2647,
+      "sha256": "8e18c9c73998f56f54706ab612c38d3b3872f9404778b28dbfe0f23eeb921744"
+    },
+    {
+      "path": "RECEIPT_CONFIRMATION_KO.md",
+      "bytes": 2966,
+      "sha256": "ff004a82e74e099638a0ca0972b7a071254e1f079e7526dc4f2618abd2629d0d"
+    }
+  ]
+}

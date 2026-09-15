@@ -1,0 +1,52 @@
+{
+  "recorded_at_utc": "2026-09-15T01:01:11.483911+00:00",
+  "review_date": "2026-09-15",
+  "evidence_type": "User-reported independent recipient review; not a new local reproduction of receiver audit",
+  "recipient_pc_path": "C:/Users/Administrator/Downloads/COMSOL63_PHYSICAL600_B_HANDOFF.zip",
+  "local_generated_archive": {
+    "path": "outputs/COMSOL63_PHYSICAL600_B_HANDOFF.zip",
+    "bytes": 1078568990,
+    "sha256": "53b4b2bddd90e3c17af72d3351093511f21f80f93ec49fc6e1793572a033a260"
+  },
+  "recipient_reported_archive_bytes": 1078568990,
+  "recipient_reported_archive_sha256": "53b4b2bddd90e3c17af72d3351093511f21f80f93ec49fc6e1793572a033a260",
+  "recipient_reported_manifest_sha256": "7945b6a7785ced88a32bbb269ba5a2110fb139fcf7203a77e5cbbf98cac3dfbf",
+  "recipient_reported_payload_count": 163,
+  "recipient_reported_total_zip_entries": 164,
+  "recipient_reported_checks": [
+    "exact member set",
+    "size",
+    "SHA-256",
+    "CRC",
+    "no duplicate or unsafe paths",
+    "8 independent Decimal comparisons",
+    "native mesh/core/1143 properties/accepted history",
+    "14 console CSVs per job match payload",
+    "B MPH internal XML matches export"
+  ],
+  "recipient_reported_historical_archived_files": 333,
+  "recipient_reported_named_local_inventory": 1392,
+  "recipient_reported_direct_inventory_members": 68,
+  "recipient_reported_direct_unchanged": 67,
+  "recipient_reported_matching_before_plan_copy": 1,
+  "remaining_inventory_members_not_directly_verified": 1324,
+  "entire_current_local_inventory_externally_verified": false,
+  "historical333_added_to_current_verified_count": false,
+  "previous_CORE16_shared_payloads": 65,
+  "previous_CORE16_unchanged_except_plan": 64,
+  "generation_receipt_modified": false,
+  "local_check_this_turn": "Local original ZIP size/SHA matched receiver-reported identity; original receipt and selected evidence hashed before/after. Original ZIP payload/CRC and numerical calculations were not rerun this turn.",
+  "accepted_scope": "Only sampled physical-axis 300 to 600 refinement sensitivity at R320, original H0125 cap, 16 cores.",
+  "overall_convergence": "INCOMPLETE",
+  "long_run": "ON_HOLD",
+  "recipient_remote_PC_directly_accessed": false,
+  "new_COMSOL_runs": 0,
+  "new_COMSOL_submissions": 0,
+  "executable_Java_generated": 0,
+  "prior_TIME_CAPS_raw_ZIP_difference_cause": "UNRESOLVED",
+  "source_attachment": {
+    "path": "C:\\Users\\BML\\.codex\\attachments\\b631cf73-dde5-4800-86cb-5fe701f71fc2\\pasted-text.txt",
+    "bytes": 12815,
+    "sha256": "1771cf913a0a6f9cd73337030e2e25a8f98794e7b3987b38a50601cf5f5475ef"
+  }
+}
