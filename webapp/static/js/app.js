@@ -514,3 +514,18 @@ if (location.hash) openToHash(location.hash);
   } catch (e) { return; }
   if (n > 0) { badge.textContent = String(n); badge.hidden = false; }
 })();
+
+/* ══ PDF 로 저장 ═══════════════════════════════════════════════════════
+   서버에서 PDF 를 만들지 않는다 — 브라우저 인쇄 대화상자를 열어 거기서
+   "PDF 로 저장" 을 고르게 한다. 새 의존성이 없고, 글꼴·다크모드·표 줄바꿈이
+   화면과 같은 엔진에서 처리된다. 인쇄용 규칙은 `style.css` 의 `@media print`.
+
+   ⚠ 이 핸들러가 여기 있는 이유. 처음 판은 `onclick="window.print()"` 였는데
+     이 앱의 CSP 가 `script-src 'self'` 라 **인라인 핸들러가 조용히 차단됐다**
+     — 버튼은 그려지고 눌러도 아무 일이 없다 (실측). CSP 를 푸는 쪽이 아니라
+     코드를 옮기는 쪽으로 고쳤다. */
+(function () {
+  var b = document.getElementById("pdfbtn");
+  if (!b) return;
+  b.addEventListener("click", function () { window.print(); });
+})();

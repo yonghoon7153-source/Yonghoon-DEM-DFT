@@ -114,7 +114,11 @@
    고르게 하는 버튼이다 — 새 의존성(weasyprint·wkhtmltopdf)을 안 들이고, 글꼴·
    다크모드·표 줄바꿈이 화면과 같은 엔진에서 처리된다. 인쇄용 CSS 는
    `@media print` 한 곳에 있다. 이 버튼 자신도 인쇄에서는 사라진다. #}
-<button class="pdfbtn" type="button" onclick="window.print()"
+{# ⚠ 인라인 `onclick` 을 쓰지 않는다. 이 앱의 CSP 는 `script-src 'self'` 라
+   인라인 핸들러가 **조용히 차단된다** — 버튼은 그려지고 눌러도 아무 일이 없다
+   (2026-09-15 실측). 핸들러는 `static/js/app.js` 에 있다. CSP 를 푸는 쪽이
+   아니라 코드를 옮기는 쪽으로 고친다. #}
+<button class="pdfbtn" type="button" id="pdfbtn"
         title="브라우저 인쇄 대화상자에서 &#39;PDF 로 저장&#39; 을 고른다">
   <svg class="ic" aria-hidden="true"><use href="#i-paper"></use></svg>
   <span>PDF 로 저장</span>
