@@ -7202,3 +7202,28 @@ XPASS 로 빨개져 신고를 내리게 만든다. 63차 요청문 §0 에 그�
 62차 요청문 머리의 "신고 5건" 은 본문 ①–⑦ 과 달랐다 — 63차 요청문은 **7건**.
 
 ### 마감 — 실측은 `GATE63_WORKING_STATE.md` 의 마감 절
+
+마감 실측은 `dcd4839` clean 트리에서 냈다.
+
+| 무엇 | 결과 |
+|---|---|
+| `python -m pytest tests/ -q` | 1 failed · 1735 passed · 2 xfailed (43분 22초) · **skipped 0** |
+| `tests/test_gate63_defensive.py` 단독 | 22 passed · 1 xfailed (41.28s) |
+| `./scripts/smoke_e2e.sh` | rc 0 — 9절 전부 초록 · 복원본 재채점 digest `b69dd52d1ec4` |
+| 12조각 전수 재생 (HEAD `104448e`) | 12/12 rc 0 · 합집합이 등록부 274 를 정확히 덮음 |
+| `wiki/tools/lint.py` | 0 errors · 0 warnings |
+
+유일한 회귀 실패는 `test_a_smoke_run_cannot_be_promoted_to_a_canonical_report`
+다 — 작업 트리에 `results/grid_fit_v4`(gitignored 실물)가 없어 승격이 거부됐다.
+환경 결손이고 동시에 fail-closed 가 도는 증거다. `743f65b` 트리에서 빨갰던
+docs_lint 9건 중 8건이 이 라운드로 닫혔고, 남은 1건이 그것이다.
+
+**skipped 0** 은 E2 의 planned lifecycle 시험이 이 실행에서 건너뛰지 않고 돌았다는
+뜻이다. 시험 도중 `docs/22p_gap/_exec_class/` 에 임시 레코드 129건이 생겼다가
+끝나며 전부 사라졌다 (실행 뒤 `git status --porcelain` 빈 출력) — §0 ⑥ 의 공유
+등록부 오염 신고가 이 시험에는 해당하지 않는다.
+
+요청문은 `docs/22p_gap/GATE63_REQUEST.md` (커밋 `4479f65`). 판정 대상 코드
+`743f65bead671bf353ce38027c2e8e457738ec08` · `source_digest e9ee7475dea7de1d` ·
+`743f65b..HEAD` 의 RUN_SCOPE diff 는 빈 출력이다. **GO 가 나오기 전에는 본 실행을
+시작하지 않는다.**

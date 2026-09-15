@@ -23,8 +23,9 @@
 
 상태 열: RED = 재현 시험이 실패하는 것을 봤다 · 코드 ✔ = 고치고 GREEN ·
 fixture ✔ = fixture 감사까지. RED 관측: `tests/test_gate63_defensive.py` 첫 실행
-**10 failed · 12 passed** (F1×3 · F3 · F4 · F2×2 · E1×2 · E2). GREEN: 21 passed ·
-1 xfailed(⑦) · E2 는 dirty 면 skip (clean 커밋에서 실측 — 마감 절).
+**10 failed · 12 passed** (F1×3 · F3 · F4 · F2×2 · E1×2 · E2). GREEN 최종
+(`dcd4839` clean 트리): **22 passed · 1 xfailed(⑦)** · E2 는 dirty 면 skip
+(clean 커밋에서 실측 — 마감 절).
 
 ## 묶음과 순서
 
@@ -115,6 +116,19 @@ True · 봉인일치 True. `make_receipt.py paired_fixed5_v4` → 검사 34건 �
 | 회차 | HEAD | 결과 | 원인 |
 |---|---|---|---|
 | ① | `526784a` | 조각 9 빨강 (1~8 rc 0, 10~12 는 중단) | 62차 축 `history-refuses-a-vanished-module-g62` 의 증인 문구가 **기계별 개수** `unfiled=22` 를 담고 있었다 — 63차 F2 의 `-v` 모델에서 이 기계는 26. 62차 ① 회차와 같은 형태의 결함이 62차 축에 하나 남아 있던 것이다. 시험 문구에서 개수를 빼고 EXPECT 를 재관측했다 |
+| ② | `104448e` | **12/12 rc 0** (2026-09-15 02:25Z → 03:54Z) | — |
+
+② 회차의 `--check-coverage docs/22p_gap/mutation_coverage/s*.json`:
+
+```
+모든 변이 지점이 정확히 한 번 나타난다
+등록부 scenario 274 (executable 263 · declared 11) · 조각 12개에서 관측 274
+조각 합집합이 등록부 전체를 정확히 덮었다
+```
+
+조각 산출물은 `dcd4839` 에 있다. 재생 중에는 커밋하지 않았다 — 조각 12개가
+전부 `104448e078208fb1cf288527f563a617f5bb3452` 에서 나왔다는 것이 한 HEAD
+규칙의 뜻이다.
 
 `test_docs_lint` 9건 빨강의 분류 (63차 ① 커밋 `743f65b` 트리에서 18분 실행):
 pin 검사 2 → 세대 전환(`0254027`)으로 초록 · `full_bundle_claims` 1 → 원장의 영수증
@@ -123,3 +137,36 @@ core/validator 갱신으로 초록 · `committed_gate_requests` 1 → **62차 �
 → 줄 추가 · coverage 3 + `recorded_head` 1 → 등록부가 274 로 늘어 커밋된 조각
 (266) 과 어긋난 것, 12조각 재생으로 닫힌다 · `smoke_run_cannot_be_promoted` 1 →
 환경(`results/grid_fit_v4` 없음).
+
+## 마감 실측 (`dcd4839` 트리 · 2026-09-15)
+
+| 무엇 | 결과 |
+|---|---|
+| `python -m pytest tests/ -q` | **1 failed · 1735 passed · 2 xfailed** (43분 22초) · skipped 0 |
+| `tests/test_gate63_defensive.py` 단독 | **22 passed · 1 xfailed** (41.28s) |
+| `./scripts/smoke_e2e.sh` | **rc 0** — 9절 전부 초록 · 복원본 재채점 digest `b69dd52d1ec4` |
+| `wiki/tools/lint.py` | 0 errors · 0 warnings |
+
+유일한 회귀 실패는 `test_a_smoke_run_cannot_be_promoted_to_a_canonical_report`
+다. 작업 트리에 `results/grid_fit_v4`(gitignored 실물)가 없어
+`PreserveError: [promote] … 에 manifest 가 없어 내용 identity 를 만들 수 없다 →
+승격 거부` 가 났다 — 환경 결손이고, 동시에 fail-closed 가 도는 증거다.
+62·63차 리뷰어 환경에서도 같은 이유로 빨갰다.
+
+**`743f65b` 의 docs_lint 9건 중 8건이 닫혔다** (위 분류의 예상대로). 남은 1건이
+위 환경 결손이다.
+
+**skipped 0 이 말하는 것**: E2 의 planned lifecycle 시험
+(`test_fit_phase_receipt_is_written_while_the_kernel_lock_is_held`)이 이 전체
+실행에서 **건너뛰지 않고 돌았다**. clean 커밋에서 돌렸기 때문이다. 시험 도중
+`docs/22p_gap/_exec_class/` 에 임시 레코드 129건이 생겼다가 실행이 끝나며
+전부 사라졌다 (실행 뒤 `git status --porcelain` 빈 출력, 추적본 16건 그대로) —
+§0 ⑥ 의 오염 신고가 이 시험에는 해당하지 않는다는 실측이다.
+
+## 요청문
+
+`docs/22p_gap/GATE63_REQUEST.md` (커밋 `4479f65`). 인용 좌표:
+판정 대상 코드 `743f65bead671bf353ce38027c2e8e457738ec08` ·
+`source_digest e9ee7475dea7de1d` · 영수증 core 의 대상 커밋
+`0254027bf58de1cedc148a998a87395bbe44448f` (core `3714cbbf3687a2eb…`, 대조 실측
+일치). `743f65b..HEAD` 의 RUN_SCOPE diff 는 빈 출력이다.
