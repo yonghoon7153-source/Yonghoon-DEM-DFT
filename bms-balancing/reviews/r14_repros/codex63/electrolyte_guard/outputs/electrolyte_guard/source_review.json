@@ -1,0 +1,29 @@
+{
+  "baseline_sha": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e",
+  "new_sources": [
+    {
+      "name": "ElectrolyteGuard300R320C16Normal",
+      "threshold_mol_m3": "0",
+      "relative_path": "electrolyte_guard/ElectrolyteGuard300R320C16Normal.java",
+      "source_sha256": "40063efedfc95fae00b1d5df22636b3a7acddf40420074df98985d2027e810ce",
+      "cores": 16,
+      "timeout_seconds": 1800,
+      "max_physical_time_s": 5
+    },
+    {
+      "name": "ElectrolyteGuard300R320C16Trigger",
+      "threshold_mol_m3": "1198",
+      "relative_path": "electrolyte_guard/ElectrolyteGuard300R320C16Trigger.java",
+      "source_sha256": "f183d5dcdba4e23bd8fbc3b0666d5f3f5d49f0805a7bc3c30567c2e3009a6e6b",
+      "cores": 16,
+      "timeout_seconds": 1800,
+      "max_physical_time_s": 5
+    }
+  ],
+  "normal_trigger_only_name_and_threshold_difference": true,
+  "unchanged": "material functions/tables, original50parameters, mesh, initialization, current, sigma, Time/Variables settings, requested times and241coordinates",
+  "added": "four solver Minimum operators(all and3domain), threshold parameter, third active guard, selection/units/readback and same-definition evidence",
+  "one_runAll_each": true,
+  "no_external_runtime_inputs": true,
+  "approved_scope": "User explicitly chose provisional function diagnosis and approved normal/trigger maximum2 runs at16cores/1800s, Astra High"
+}

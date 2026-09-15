@@ -1,0 +1,17 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"job_id\": \"56ef13bee5a448c5a029b02656ebf6bb\",\n  \"job_directory\": \"C:\\\\Users\\\\BML\\\\Documents\\\\Codex\\\\2026-09-13\\\\files-mentioned-by-the-user-comsol63\\\\outputs\\\\comsol63\\\\.comsol-jobs\\\\56ef13bee5a448c5a029b02656ebf6bb\",\n  \"worker_pid\": 34528,\n  \"source_sha256\": \"40063efedfc95fae00b1d5df22636b3a7acddf40420074df98985d2027e810ce\",\n  \"state\": \"submitted\",\n  \"next\": \"Poll comsol_job_status; submission is not completion. Never resubmit an unknown job automatically.\"\n}"
+    }
+  ],
+  "structuredContent": {
+    "job_id": "56ef13bee5a448c5a029b02656ebf6bb",
+    "job_directory": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\comsol63\\.comsol-jobs\\56ef13bee5a448c5a029b02656ebf6bb",
+    "worker_pid": 34528,
+    "source_sha256": "40063efedfc95fae00b1d5df22636b3a7acddf40420074df98985d2027e810ce",
+    "state": "submitted",
+    "next": "Poll comsol_job_status; submission is not completion. Never resubmit an unknown job automatically."
+  },
+  "isError": false
+}

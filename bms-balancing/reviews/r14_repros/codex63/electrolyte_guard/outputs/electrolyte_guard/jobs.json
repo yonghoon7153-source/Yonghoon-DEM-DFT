@@ -1,0 +1,21 @@
+{
+  "baseline": {
+    "name": "Caps300R320H0125C16",
+    "job_id": "5d1a87652ed54e6a945d4f2af4aeda70",
+    "source_path": "outputs/comsol63/core16_control/Caps300R320H0125C16.java",
+    "source_sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e"
+  },
+  "new_jobs": [
+    {
+      "name": "ElectrolyteGuard300R320C16Normal",
+      "threshold_mol_m3": "0",
+      "relative_path": "electrolyte_guard/ElectrolyteGuard300R320C16Normal.java",
+      "source_sha256": "40063efedfc95fae00b1d5df22636b3a7acddf40420074df98985d2027e810ce",
+      "cores": 16,
+      "timeout_seconds": 1800,
+      "max_physical_time_s": 5,
+      "job_id": "56ef13bee5a448c5a029b02656ebf6bb",
+      "role": "normal"
+    }
+  ]
+}

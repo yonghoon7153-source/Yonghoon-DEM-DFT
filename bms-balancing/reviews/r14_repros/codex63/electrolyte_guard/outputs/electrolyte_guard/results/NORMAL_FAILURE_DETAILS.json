@@ -1,0 +1,90 @@
+{
+  "classification": "INCOMPLETE_POSTPROCESSING_UNDEFINED_COORDINATE",
+  "worker_status": {
+    "job_id": "56ef13bee5a448c5a029b02656ebf6bb",
+    "state": "failed",
+    "phase": "running_batch",
+    "worker_started_at": "2026-09-15T01:44:54.860216+00:00",
+    "updated_epoch": 1789437099.7998152,
+    "updated_at": "2026-09-15T01:51:39.799815+00:00",
+    "child_pid": 29200,
+    "compile_returncode": 0,
+    "batch_returncode": 0,
+    "error": "RuntimeError: COMSOL reported a fatal error despite batch rc=0 (batch.log:2316: /*****Error********/); any saved MPH is a partial, unvalidated result"
+  },
+  "cause": "New optional domain argmin coordinate evidence uses comp1.x; COMSOL reports Undefined variable comp1.x in comp1.minguard1(comp1.cl,comp1.x), Global Evaluation after Time solver returned.",
+  "responsibility": "Introduced by this guard evidence implementation; original baseline source unchanged.",
+  "time_integration_completed_in_native_log": true,
+  "native_last_time_s": "5",
+  "native_accepted_interval_count": 986,
+  "stored_exact_times_not_exported": true,
+  "normal_voltage_surface_comparison": "NOT_PERFORMED_MISSING_NEW_BOUNDARY_AND_PROFILE_CSV",
+  "guard_min_values_and_inferred_units": "NOT_EXPORTED; full required gate incomplete",
+  "minimum_coupling_readback": [
+    "ELECTROLYTE_COUPLING=minguardall|dimension=1|entities=[1, 2, 3]|points=lagrange|lagrange=5",
+    "ELECTROLYTE_COUPLING=minguard1|dimension=1|entities=[1]|points=lagrange|lagrange=5",
+    "ELECTROLYTE_COUPLING=minguard2|dimension=1|entities=[2]|points=lagrange|lagrange=5",
+    "ELECTROLYTE_COUPLING=minguard3|dimension=1|entities=[3]|points=lagrange|lagrange=5"
+  ],
+  "threshold_readback": [
+    "ELECTROLYTE_THRESHOLD_EXPRESSION=0[mol/m^3]",
+    "ELECTROLYTE_THRESHOLD_SI=0.0"
+  ],
+  "solver_properties_read": 1143,
+  "solver_property_differences": {
+    "sol1/t1/stguard/stopcondterminateon": {
+      "old": {
+        "type": "StringArray",
+        "value_text": "[[true, true]]"
+      },
+      "new": {
+        "type": "StringArray",
+        "value_text": "[[true, true, true]]"
+      }
+    },
+    "sol1/t1/stguard/stopcondActive": {
+      "old": {
+        "type": "StringArray",
+        "value_text": "[[on, on]]"
+      },
+      "new": {
+        "type": "StringArray",
+        "value_text": "[[on, on, on]]"
+      }
+    },
+    "sol1/t1/stguard/stopconddesc": {
+      "old": {
+        "type": "StringArray",
+        "value_text": "[[OCP surface outside table, Invalid surface concentration]]"
+      },
+      "new": {
+        "type": "StringArray",
+        "value_text": "[[OCP surface outside table, Invalid surface concentration, Electrolyte minimum <= threshold]]"
+      }
+    },
+    "sol1/t1/stguard/stopcondarr": {
+      "old": {
+        "type": "StringArray",
+        "value_text": "[[(comp1.minsurf1(comp1.liion.socloc_surface)<0)||(comp1.maxsurf1(comp1.liion.socloc_surface)>0.98)||(comp1.minsurf3(comp1.liion.socloc_surface)<0.2228930343076256)||(comp1.maxsurf3(comp1.liion.socloc_surface)>0.983245033354389), (comp1.minsurf1(comp1.liion.socloc_surface)<=0)||(comp1.maxsurf1(comp1.liion.socloc_surface)>=1)||(comp1.minsurf3(comp1.liion.socloc_surface)<=0)||(comp1.maxsurf3(comp1.liion.socloc_surface)>=1)]]"
+      },
+      "new": {
+        "type": "StringArray",
+        "value_text": "[[(comp1.minsurf1(comp1.liion.socloc_surface)<0)||(comp1.maxsurf1(comp1.liion.socloc_surface)>0.98)||(comp1.minsurf3(comp1.liion.socloc_surface)<0.2228930343076256)||(comp1.maxsurf3(comp1.liion.socloc_surface)>0.983245033354389), (comp1.minsurf1(comp1.liion.socloc_surface)<=0)||(comp1.maxsurf1(comp1.liion.socloc_surface)>=1)||(comp1.minsurf3(comp1.liion.socloc_surface)<=0)||(comp1.maxsurf3(comp1.liion.socloc_surface)>=1), comp1.minguardall(comp1.cl)<=ce_stop_threshold]]"
+      }
+    }
+  },
+  "native_warning_electrolyte_stop_seen": false,
+  "guard_nontrigger_full_numeric_validation": "INCOMPLETE; no guard time-series evidence",
+  "new_raw_csv_names": [
+    "axes_runtime_settings.csv"
+  ],
+  "preserved_MPH": {
+    "bytes": 1266539803,
+    "sha256": "7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658",
+    "scope": "Failure artifact, not a validated completed model"
+  },
+  "trigger_submitted": false,
+  "automatic_retry": false,
+  "solver_or_physical_PASS": false,
+  "INCOMPLETE_RANGE_STOP_assigned": false
+}

@@ -1,0 +1,70 @@
+{
+  "baseline": {
+    "name": "Caps300R320H0125C16",
+    "job_id": "5d1a87652ed54e6a945d4f2af4aeda70",
+    "source_path": "outputs/comsol63/core16_control/Caps300R320H0125C16.java",
+    "source_sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e"
+  },
+  "normal": {
+    "name": "ElectrolyteGuard300R320C16Normal",
+    "threshold_mol_m3": "0",
+    "relative_path": "electrolyte_guard/ElectrolyteGuard300R320C16Normal.java",
+    "source_sha256": "40063efedfc95fae00b1d5df22636b3a7acddf40420074df98985d2027e810ce",
+    "cores": 16,
+    "timeout_seconds": 1800,
+    "max_physical_time_s": 5
+  },
+  "trigger": {
+    "name": "ElectrolyteGuard300R320C16Trigger",
+    "threshold_mol_m3": "1198",
+    "relative_path": "electrolyte_guard/ElectrolyteGuard300R320C16Trigger.java",
+    "source_sha256": "f183d5dcdba4e23bd8fbc3b0666d5f3f5d49f0805a7bc3c30567c2e3009a6e6b",
+    "cores": 16,
+    "timeout_seconds": 1800,
+    "max_physical_time_s": 5
+  },
+  "solver_guard": "comp1.minguardall(comp1.cl)<=ce_stop_threshold",
+  "stop_if": "true",
+  "minimum_domains": [
+    1,
+    2,
+    3
+  ],
+  "entity_dimension": 1,
+  "points": "lagrange",
+  "order": 5,
+  "same_definition_in_stop_and_evidence": true,
+  "save_stop": "stepbefore_stepafter",
+  "limits": {
+    "V_V": ".001",
+    "surface_x": ".0001"
+  },
+  "normal_windows_s": [
+    [
+      0.1,
+      1
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      5
+    ]
+  ],
+  "comparison_times": "187 exact requested and independently exact common stored intersection; no interpolation or nearest substitution",
+  "profile_coordinates_per_electrode": 241,
+  "trigger_requires_full187": false,
+  "trigger_classification": "TEST_TRIGGER_DETECTED only when all before/after/native/end-history checks pass",
+  "domain_tie_rule": "Keep every equal domain; no unique location claim when tied; report near-ties separately",
+  "max_new_solves": 2,
+  "normal_failure_stops_before_trigger": true,
+  "auto_retry": false,
+  "overall_convergence": "INCOMPLETE",
+  "long_run": "ON_HOLD"
+}

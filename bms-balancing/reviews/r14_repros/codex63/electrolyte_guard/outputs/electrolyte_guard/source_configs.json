@@ -1,0 +1,20 @@
+[
+  {
+    "name": "ElectrolyteGuard300R320C16Normal",
+    "threshold_mol_m3": "0",
+    "relative_path": "electrolyte_guard/ElectrolyteGuard300R320C16Normal.java",
+    "source_sha256": "40063efedfc95fae00b1d5df22636b3a7acddf40420074df98985d2027e810ce",
+    "cores": 16,
+    "timeout_seconds": 1800,
+    "max_physical_time_s": 5
+  },
+  {
+    "name": "ElectrolyteGuard300R320C16Trigger",
+    "threshold_mol_m3": "1198",
+    "relative_path": "electrolyte_guard/ElectrolyteGuard300R320C16Trigger.java",
+    "source_sha256": "f183d5dcdba4e23bd8fbc3b0666d5f3f5d49f0805a7bc3c30567c2e3009a6e6b",
+    "cores": 16,
+    "timeout_seconds": 1800,
+    "max_physical_time_s": 5
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "logical_cpus": 20,
+  "total_RAM_bytes": 24300146688,
+  "available_RAM_bytes": 9869160448,
+  "disk_free_bytes": 180518043648,
+  "cores": 16,
+  "budget_seconds": 1800,
+  "timeout_semantics": "Worker deadline shared by compilation and batch; checks every3s while waiting. Stops launcher on expiry, no process-tree termination guarantee. Not mere MCP wait timeout. No retry.",
+  "version_status_query": "-version timed out after20s; executable FileVersion=6,3,0,290 read separately. No solve submitted by status query.",
+  "WMI_queries": "Access denied; Get-Process and GlobalMemoryStatusEx read-only used instead",
+  "existing_COMSOL_process_observation": "comsol.exe PID12404, no comsolbatch/java process in Get-Process snapshot; no process killed",
+  "adapter_files": [
+    {
+      "path": "work/COMSOL63_LOCAL_HANDOFF/bridge.py",
+      "bytes": 16570,
+      "sha256": "eaac3a86b23e2611e1ab86ac34b663bcc996cbaf91be8c162d45ab6e88992c0f"
+    },
+    {
+      "path": "work/COMSOL63_LOCAL_HANDOFF/worker.py",
+      "bytes": 7145,
+      "sha256": "1c9a7b4edafffbbe2a19b1b3311a9422522af3f5254687f8ef28331e678a0a4a"
+    }
+  ]
+}
