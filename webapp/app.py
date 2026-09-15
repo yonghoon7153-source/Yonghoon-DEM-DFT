@@ -381,6 +381,30 @@ def alphabeta():
     return render_template("alphabeta.html", active="alphabeta")
 
 
+@app.route("/microshort")
+def microshort():
+    """마이크로 쇼츠 COMSOL 갈래 하나만 — **인계용** 화면. (2026-09-15)
+
+    `/bms` 는 세 갈래를 한 화면에 담아 각 갈래가 얕다. 이 갈래를 넘겨받는 사람은
+    COMSOL 쪽만 깊게 읽어야 하고, 지금 막혀 있는 곳이 **계산이 아니라 후처리**라는
+    구분이 제일 먼저 전달돼야 한다 — 그것을 못 읽으면 "계산이 안 된다" 로 오해하고
+    엉뚱한 곳을 판다.
+
+    `/alphabeta` 와 같은 뼈대다: §0 에서 용어를 정의하고, 절마다
+    `<div class="plain">` "쉬운 말로" 칸을 단다.
+
+    ⚠ 규율 (`/alphabeta`·`/trust`·`/bms` 와 같다)
+      · **숫자를 여기서 새로 만들지 않는다.** 전부 `COMSOL_REBUILD_SPEC.md` 와
+        보존된 묶음에 있는 값이고 인용 정본은 그쪽이다 (하드룰 4).
+      · **경고를 떼지 않는다.** "충족" 옆의 범위 한정을 같이 옮긴다 — 경고를 뗀
+        쉬운 말은 쉬운 말이 아니라 틀린 말이다.
+      · **비유를 쓰지 않는다.** 용어를 그 자리에서 정의하고 한 문장에 하나씩 담는다.
+      · **다른 갈래와 합치지 않는다.** 게이트 리뷰·BML 정량화·α·β 하네스는 각각
+        다른 트랙이고 서로 근거를 빌려 오지 않는다.
+    """
+    return render_template("microshort.html", active="microshort")
+
+
 @app.route("/trust")
 def trust():
     return render_template("trust.html", active="trust",
