@@ -184,6 +184,7 @@ p{max-width:64ch; margin:0 0 15px}
 ul,ol{max-width:64ch}
 h2{font-size:22px}
 h3{font-size:16.5px; margin:32px 0 9px}
+h4{font-size:15px; font-weight:600; margin:32px 0 9px; color:var(--ink)}
 .callout{max-width:66ch; padding:17px 20px}
 figcaption{font-size:13px; max-width:64ch}
 caption{font-size:12.5px}
@@ -458,6 +459,301 @@ table{font-size:13.5px}
         그래서 Ridge를 쓴다. 계수를 크게 만들면 벌점을 주는 방식이라 계수가 얌전한 범위에 머문다.
         벌점의 세기가 <code>alpha</code>이고, 코드는 <code>0.001</code>부터 <code>1000</code>까지
         일곱 값을 놓고 자료에 맞는 것을 스스로 고른다.
+      </p>
+    </div>
+
+    <h3>이 코드의 두 축 &mdash; Ridge와 Logistic</h3>
+
+    <p>
+      코드가 쓰는 학습 모델은 이 둘뿐이다. 신경망도 랜덤 포레스트도 없다. 셀이 수십 개뿐인 자료에서
+      복잡한 모델은 외우기만 하고 일반화가 안 되기 때문에, 일부러 가장 단순한 선형 모델 두 개로 제한했다.
+    </p>
+
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>모델</th><th>맡은 타깃</th><th>내놓는 값</th><th>벌점 세기</th><th>후보 값</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>Ridge</code></td>
+          <td><code>cap</code>, <code>cc_frac</code></td>
+          <td>연속값 (Ah, 0&ndash;1)</td>
+          <td><code>alpha</code></td>
+          <td class="num">0.001 &sim; 1000 (7개)</td>
+        </tr>
+        <tr>
+          <td><code>LogisticRegression</code></td>
+          <td><code>true_label</code></td>
+          <td>불량일 확률 (0&ndash;1)</td>
+          <td><code>C</code></td>
+          <td class="num">0.001 &sim; 10 (5개)</td>
+        </tr>
+      </tbody>
+      <caption>둘 다 <code>scikit-learn</code> 구현을 그대로 쓴다. 자체 구현한 학습 알고리즘은 없다.</caption>
+    </table>
+    </div>
+
+    <h4>Ridge &mdash; 용량을 숫자로 맞힌다</h4>
+
+    <p>
+      보통의 최소제곱은 목표가 하나다. 실측과 예측의 차이를 제곱해서 더한 값을 가장 작게 만드는 계수를
+      찾는다. Ridge는 거기에 항을 하나 더 붙인다.
+    </p>
+
+    <pre>최소제곱  &nbsp;&nbsp;&#931;(y &minus; &#375;)&sup2;                    &#8592; 이것만 최소로
+Ridge  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#931;(y &minus; &#375;)&sup2;  +  &#945;&middot;&#931;b&sup2;          &#8592; 둘의 합을 최소로
+<i>                          &#9492;&#9472; 계수가 커지면 붙는 벌점</i></pre>
+
+    <p>
+      더해진 항이 하는 일은 단순하다. 계수를 크게 쓰면 손해를 보게 만든다. 그래서 모델은
+      &ldquo;정말 필요한 만큼만&rdquo; 계수를 키운다. <code>alpha</code>가 그 손해의 크기다.
+    </p>
+
+    <dl class="kv">
+      <dt>alpha &rarr; 0</dt><dd>벌점이 사라져 보통의 최소제곱과 같아진다. 계수가 자유롭게 커진다.</dd>
+      <dt>alpha &rarr; &infin;</dt><dd>벌점이 압도해 모든 계수가 0에 눌린다. 결국 전체 평균만 내놓는 모델이 된다.</dd>
+    </dl>
+
+    <p>
+      실제로 어떻게 움직이는지는 데모 자료로 직접 그려 볼 수 있다. 아래는 가상 12셀 자료에
+      <code>alpha</code>만 바꿔 가며 Ridge를 맞춘 결과다.
+    </p>
+
+    <figure>
+      <svg viewBox="0 0 980 336" role="img" aria-label="알파가 커질수록 릿지 계수가 모두 0 쪽으로 수축하는 궤적, 후보 알파 일곱 값과 데모가 고른 알파 1이 표시된 그래프">
+        <g font-family="IBM Plex Sans KR, sans-serif" font-size="11.5" fill="currentColor">
+
+          <line x1="90" y1="187" x2="860" y2="187" stroke="currentColor" stroke-width="1" opacity=".5"/>
+          <line x1="90" y1="40"  x2="90"  y2="250" stroke="currentColor" stroke-width="1" opacity=".45"/>
+
+          <g font-family="IBM Plex Mono, monospace" font-size="10.5" opacity=".6">
+            <text x="82" y="65"  text-anchor="end">+0.003</text>
+            <text x="82" y="191" text-anchor="end">0</text>
+            <text x="82" y="233" text-anchor="end">&minus;0.001</text>
+          </g>
+          <text x="90" y="28" font-size="10.5" opacity=".7">표준화 계수</text>
+
+          <polyline points="90.0,50.4 115.7,57.5 141.3,66.7 167.0,78.1 192.7,91.5 218.3,105.9 244.0,120.3 269.7,133.6 295.3,145.1 321.0,154.4 346.7,161.5 372.3,166.8 398.0,170.7 423.7,173.5 449.3,175.8 475.0,177.5 500.7,179.0 526.3,180.2 552.0,181.1 577.7,181.8 603.3,182.4 629.0,182.8 654.7,183.1 680.3,183.3 706.0,183.6 731.7,183.9 757.3,184.2 783.0,184.6 808.7,185.1 834.3,185.5 860.0,185.9" fill="none" stroke="#0d7490" stroke-width="1.6" opacity="0.95"/>
+          <polyline points="90.0,50.5 115.7,57.7 141.3,66.8 167.0,78.2 192.7,91.5 218.3,106.0 244.0,120.4 269.7,133.7 295.3,145.2 321.0,154.4 346.7,161.6 372.3,166.8 398.0,170.7 423.7,173.6 449.3,175.8 475.0,177.5 500.7,179.0 526.3,180.2 552.0,181.1 577.7,181.8 603.3,182.4 629.0,182.8 654.7,183.1 680.3,183.3 706.0,183.6 731.7,183.9 757.3,184.2 783.0,184.6 808.7,185.1 834.3,185.5 860.0,185.9" fill="none" stroke="#0d7490" stroke-width="1.6" opacity="0.95"/>
+          <polyline points="90.0,61.4 115.7,67.9 141.3,76.3 167.0,86.8 192.7,99.0 218.3,112.2 244.0,125.5 269.7,137.7 295.3,148.3 321.0,156.8 346.7,163.4 372.3,168.2 398.0,171.7 423.7,174.4 449.3,176.4 475.0,178.0 500.7,179.4 526.3,180.4 552.0,181.3 577.7,181.9 603.3,182.4 629.0,182.8 654.7,183.1 680.3,183.4 706.0,183.6 731.7,183.9 757.3,184.2 783.0,184.6 808.7,185.1 834.3,185.5 860.0,185.9" fill="none" stroke="#0d7490" stroke-width="1.6" opacity="0.95"/>
+          <polyline points="90.0,112.1 115.7,112.8 141.3,115.2 167.0,119.5 192.7,125.8 218.3,133.9 244.0,143.4 269.7,153.3 295.3,162.8 321.0,170.9 346.7,177.2 372.3,182.0 398.0,185.3 423.7,187.6 449.3,189.1 475.0,190.1 500.7,190.7 526.3,191.1 552.0,191.2 577.7,191.2 603.3,191.0 629.0,190.9 654.7,190.7 680.3,190.5 706.0,190.3 731.7,190.0 757.3,189.7 783.0,189.3 808.7,188.9 834.3,188.5 860.0,188.1" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.45"/>
+          <polyline points="90.0,112.2 115.7,112.9 141.3,115.3 167.0,119.6 192.7,125.8 218.3,133.9 244.0,143.4 269.7,153.4 295.3,162.8 321.0,170.9 346.7,177.3 372.3,182.0 398.0,185.3 423.7,187.6 449.3,189.1 475.0,190.1 500.7,190.7 526.3,191.1 552.0,191.2 577.7,191.2 603.3,191.0 629.0,190.9 654.7,190.7 680.3,190.5 706.0,190.3 731.7,190.0 757.3,189.7 783.0,189.3 808.7,188.9 834.3,188.5 860.0,188.1" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.45"/>
+          <polyline points="90.0,119.2 115.7,119.6 141.3,121.7 167.0,125.6 192.7,131.2 218.3,138.6 244.0,147.3 269.7,156.4 295.3,165.1 321.0,172.5 346.7,178.4 372.3,182.7 398.0,185.8 423.7,187.9 449.3,189.3 475.0,190.2 500.7,190.8 526.3,191.1 552.0,191.2 577.7,191.2 603.3,191.0 629.0,190.9 654.7,190.7 680.3,190.5 706.0,190.3 731.7,190.0 757.3,189.7 783.0,189.3 808.7,188.9 834.3,188.5 860.0,188.1" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.45"/>
+          <polyline points="90.0,243.9 115.7,241.8 141.3,238.3 167.0,233.2 192.7,226.2 218.3,217.7 244.0,208.0 269.7,197.9 295.3,188.5 321.0,180.6 346.7,174.7 372.3,170.9 398.0,169.1 423.7,169.0 449.3,170.2 475.0,172.4 500.7,174.9 526.3,177.3 552.0,179.3 577.7,180.8 603.3,181.9 629.0,182.6 654.7,183.1 680.3,183.4 706.0,183.7 731.7,184.0 757.3,184.3 783.0,184.7 808.7,185.1 834.3,185.5 860.0,185.9" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.45"/>
+          <polyline points="90.0,233.5 115.7,223.5 141.3,217.0 167.0,212.4 192.7,208.9 218.3,205.7 244.0,202.6 269.7,199.6 295.3,196.8 321.0,194.4 346.7,192.5 372.3,191.1 398.0,190.1 423.7,189.2 449.3,188.6 475.0,187.9 500.7,187.3 526.3,186.7 552.0,186.1 577.7,185.5 603.3,185.0 629.0,184.7 654.7,184.4 680.3,184.2 706.0,184.2 731.7,184.3 757.3,184.5 783.0,184.8 808.7,185.2 834.3,185.6 860.0,185.9" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.45"/>
+
+          <g opacity=".45" font-family="IBM Plex Mono, monospace" font-size="10">
+            <line x1="90"  y1="250" x2="90"  y2="256" stroke="currentColor"/><text x="90"  y="270" text-anchor="middle">0.001</text>
+            <line x1="218" y1="250" x2="218" y2="256" stroke="currentColor"/><text x="218" y="270" text-anchor="middle">0.01</text>
+            <line x1="347" y1="250" x2="347" y2="256" stroke="currentColor"/><text x="347" y="270" text-anchor="middle">0.1</text>
+            <line x1="603" y1="250" x2="603" y2="256" stroke="currentColor"/><text x="603" y="270" text-anchor="middle">10</text>
+            <line x1="732" y1="250" x2="732" y2="256" stroke="currentColor"/><text x="732" y="270" text-anchor="middle">100</text>
+            <line x1="860" y1="250" x2="860" y2="256" stroke="currentColor"/><text x="860" y="270" text-anchor="middle">1000</text>
+          </g>
+
+          <line x1="475" y1="40" x2="475" y2="250" stroke="#0d7490" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <line x1="475" y1="250" x2="475" y2="256" stroke="#0d7490"/>
+          <text x="475" y="270" text-anchor="middle" font-size="10" fill="#0d7490" font-family="IBM Plex Mono, monospace">1</text>
+          <text x="475" y="288" text-anchor="middle" font-size="11" fill="#0d7490">데모 12개 분할 중 2개가 고른 값</text>
+
+          <text x="90" y="288" font-size="10.5" opacity=".65" font-family="IBM Plex Mono, monospace">alpha (로그 눈금) &mdash; 후보 7개</text>
+
+          <g font-size="11">
+            <line x1="90"  y1="316" x2="122" y2="316" stroke="#0d7490" stroke-width="1.6"/>
+            <text x="130" y="320">im@0.01Hz, im@0.1Hz, im@1Hz &mdash; 세 선이 거의 겹친다</text>
+            <line x1="540" y1="316" x2="572" y2="316" stroke="currentColor" stroke-width="1.2" opacity=".45"/>
+            <text x="580" y="320" opacity=".75">mag@10k&sim;1MHz (양수), phase@10&sim;100Hz (음수)</text>
+          </g>
+        </g>
+      </svg>
+      <figcaption>
+        선 하나가 계수 하나다. 왼쪽 끝에서 +0.003부터 &minus;0.001까지 벌어져 있던 계수들이
+        <code>alpha=1</code>을 지나면서 모두 0 근처로 모인다. 맨 위 세 선이 거의 겹쳐 보이는 것은
+        우연이 아니다. 0.01 Hz, 0.1 Hz, 1 Hz의 허수부는 서로 거의 같은 숫자여서 모델 입장에서 구별이
+        안 되고, 그래서 계수를 서로 밀고 당기며 아무렇게나 나눠 가질 수 있다. 벌점이 필요한 이유가 이것이다.
+      </figcaption>
+    </figure>
+
+    <div class="callout">
+      <span class="tag">표준화가 선택이 아니라 필수인 이유</span>
+      <p>
+        벌점이 <strong>계수의 크기</strong>에 걸리기 때문이다. 위상은 수십 단위, 임피던스는 0.0x 단위인데
+        그대로 두면 같은 물리적 기여를 내기 위해 임피던스 쪽 계수가 훨씬 커져야 하고, 그러면 벌점도
+        훨씬 많이 문다. 단위를 고른 것뿐인데 모델이 특정 열을 싫어하게 되는 셈이다. 그래서 모든 열을
+        평균 0, 표준편차 1로 맞춘 뒤에 벌점을 건다.
+      </p>
+      <p>
+        절편 <code>b&#8320;</code>에는 벌점이 걸리지 않는다. 절편까지 0으로 끌면 예측값 전체가 0 쪽으로
+        밀려 버리기 때문이다.
+      </p>
+    </div>
+
+    <h4>Logistic &mdash; 불량일 확률을 낸다</h4>
+
+    <p>
+      라벨은 0 아니면 1이다. 여기에 직선을 그으면 예측값이 <code>-0.3</code>이나 <code>1.4</code>처럼
+      확률일 수 없는 값으로 나간다. 그래서 직선의 결과를 한 번 더 통과시켜 0과 1 사이로 눌러 준다.
+      그 눌러 주는 함수가 로지스틱 함수다.
+    </p>
+
+    <pre>z = b&#8320; + b&#8321;x&#8321; + b&#8322;x&#8322; + &#8943;          <i>&#8592; 여기까지는 Ridge와 같은 1차식</i>
+p = 1 / (1 + e<sup>&minus;z</sup>)              <i>&#8592; 0~1 사이로 누른다</i>
+판정 = p &ge; 0.5 이면 1(불량), 아니면 0</pre>
+
+    <figure>
+      <svg viewBox="0 0 980 268" role="img" aria-label="로지스틱 함수가 1차식의 출력 z를 0과 1 사이 확률로 변환하고 0.5를 기준으로 불량 여부를 가르는 그래프">
+        <g font-family="IBM Plex Sans KR, sans-serif" font-size="11.5" fill="currentColor">
+
+          <line x1="110" y1="230" x2="880" y2="230" stroke="currentColor" stroke-width="1" opacity=".45"/>
+          <line x1="110" y1="52"  x2="110" y2="230" stroke="currentColor" stroke-width="1" opacity=".45"/>
+
+          <text x="106" y="64"  text-anchor="end" font-size="10.5" opacity=".6" font-family="IBM Plex Mono, monospace">1.0</text>
+          <text x="106" y="149" text-anchor="end" font-size="10.5" opacity=".6" font-family="IBM Plex Mono, monospace">0.5</text>
+          <text x="106" y="234" text-anchor="end" font-size="10.5" opacity=".6" font-family="IBM Plex Mono, monospace">0.0</text>
+          <text x="110" y="40"  font-size="10.5" opacity=".7">p &mdash; 불량일 확률</text>
+
+          <line x1="110" y1="145" x2="880" y2="145" stroke="currentColor" stroke-width="1" opacity=".3" stroke-dasharray="3 4"/>
+          <text x="884" y="149" font-size="10.5" opacity=".6">0.5</text>
+
+          <polyline points="110.0,229.6 125.6,229.5 141.2,229.3 156.9,229.1 172.5,228.9 188.1,228.5 203.8,228.1 219.4,227.6 235.0,226.9 250.6,226.1 266.2,225.0 281.9,223.7 297.5,221.9 313.1,219.8 328.8,217.1 344.4,213.8 360.0,209.7 375.6,204.8 391.2,199.0 406.9,192.1 422.5,184.3 438.1,175.5 453.8,165.8 469.4,155.6 485.0,145.0 500.6,134.4 516.2,124.2 531.9,114.5 547.5,105.7 563.1,97.9 578.8,91.0 594.4,85.2 610.0,80.3 625.6,76.2 641.2,72.9 656.9,70.2 672.5,68.1 688.1,66.3 703.8,65.0 719.4,63.9 735.0,63.1 750.6,62.4 766.2,61.9 781.9,61.5 797.5,61.1 813.1,60.9 828.8,60.7 844.4,60.5 860.0,60.4" fill="none" stroke="#0d7490" stroke-width="2"/>
+
+          <line x1="485" y1="52" x2="485" y2="230" stroke="currentColor" stroke-width="1" opacity=".3" stroke-dasharray="3 4"/>
+          <circle cx="485" cy="145" r="5" fill="#0d7490"/>
+
+          <text x="290" y="200" text-anchor="middle" font-size="12">p &lt; 0.5 &rarr; 정상 0</text>
+          <text x="690" y="96"  text-anchor="middle" font-size="12">p &ge; 0.5 &rarr; 불량 1</text>
+
+          <text x="485" y="252" text-anchor="middle" font-size="10.5" opacity=".65" font-family="IBM Plex Mono, monospace">z = b&#8320; + &#931;b&#7522;x&#7522;</text>
+          <text x="130" y="252" font-size="10.5" opacity=".6" font-family="IBM Plex Mono, monospace">z = &minus;6</text>
+          <text x="860" y="252" text-anchor="end" font-size="10.5" opacity=".6" font-family="IBM Plex Mono, monospace">z = +6</text>
+        </g>
+      </svg>
+      <figcaption>
+        곡선이 평평해지는 양 끝에서는 z가 더 커져도 확률이 거의 안 변한다. 그래서 로지스틱 모델의 확률은
+        &ldquo;얼마나 심한 불량인가&rdquo;가 아니라 &ldquo;불량 쪽인지 정상 쪽인지&rdquo;를 말할 뿐이다.
+        자르는 위치는 설정 <code>decision_threshold</code>로 바꿀 수 있고 기본이 0.5다.
+      </figcaption>
+    </figure>
+
+    <div class="callout warn">
+      <span class="tag">C는 alpha가 아니다. 뒤집혀 있다</span>
+      <p>
+        Ridge에서는 <code>alpha</code>가 클수록 벌점이 세다. Logistic에서는 <code>C</code>가
+        <strong>작을수록</strong> 벌점이 세다. <code>C</code>는 벌점의 세기가 아니라 그 <strong>역수</strong>이기 때문이다.
+      </p>
+      <pre>Ridge     &nbsp;&nbsp;&#931;(y &minus; &#375;)&sup2;       +  &#945;&middot;&#931;b&sup2;
+Logistic  &nbsp;&nbsp;&minus;&#931;log(맞힌 확률)  +  (1/C)&middot;&#931;b&sup2;
+<i>                                 &#9492;&#9472; 여기가 뒤집힌 지점</i></pre>
+      <p>
+        <code>C = 0.001</code>이 가장 강한 규제이고 <code>C = 10</code>이 가장 약한 규제다.
+        표에서 두 값을 나란히 읽을 때 방향을 반대로 잡기 쉬우니 주의한다.
+      </p>
+    </div>
+
+    <div class="callout">
+      <span class="tag">class_weight = &ldquo;balanced&rdquo;</span>
+      <p>
+        불량 셀이 정상 셀보다 훨씬 적으면, 모델은 전부 &ldquo;정상&rdquo;이라고 답하는 것만으로도 높은 정확도를
+        받는다. 그걸 막으려고 코드는 수가 적은 쪽 셀의 오답에 더 큰 벌점을 준다. 가중치는
+        <code>전체 셀 수 / (2 &times; 그 부류의 셀 수)</code>로 자동 계산되므로, 두 부류가 반반이면 가중치는
+        양쪽 다 1이 되어 아무 효과가 없다.
+      </p>
+    </div>
+
+    <h4>둘을 감싸는 3단 파이프라인</h4>
+
+    <p>
+      Ridge든 Logistic이든 혼자 돌지 않는다. 항상 아래 세 단계가 한 덩어리로 묶여 움직인다.
+    </p>
+
+    <pre>1. select  &nbsp;&nbsp;36개 중 이번 후보가 쓸 열만 골라낸다
+2. scale   &nbsp;&nbsp;고른 열을 평균 0, 표준편차 1로 맞춘다
+3. model   &nbsp;&nbsp;Ridge 또는 LogisticRegression을 맞춘다</pre>
+
+    <div class="callout warn">
+      <span class="tag">2단계가 왜 덩어리 안에 있어야 하나</span>
+      <p>
+        표준화를 하려면 평균과 표준편차가 필요하고, 그 값은 <strong>학습에 쓰는 셀만 보고</strong> 계산해야 한다.
+        전체 자료로 한 번 표준화해 놓고 시작하면, 가려 둔 셀의 값이 이미 평균 속에 섞여 들어간 것이라
+        채점이 오염된다. 티가 안 나지만 점수를 올려 주는 전형적인 누출이다.
+      </p>
+      <p>
+        세 단계를 한 덩어리로 묶어 두면 검증 분할이 바뀔 때마다 표준화도 자동으로 다시 계산된다.
+        각 분할에서 실제로 쓰인 평균은 <code>folds.json</code>의 <code>scaler_mean</code>에 남아 있어서
+        나중에 확인할 수 있다.
+      </p>
+    </div>
+
+    <h4>후보가 59개와 40개인 이유</h4>
+
+    <p>
+      코드는 모델 하나를 미리 정해 두지 않는다. 아래 조합을 전부 만들어 놓고 자료에 맞는 것을 고르게 한다.
+    </p>
+
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>구성</th><th>가짓수</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td>주파수 대역</td><td class="num">4</td><td>1 kHz 단독 &middot; 1 k&ndash;100 kHz &middot; 0.1&ndash;10 Hz &middot; 전체</td></tr>
+        <tr><td>개방전압 포함 여부</td><td class="num">&times; 2</td><td>대역만 / 대역 + <code>ocv</code></td></tr>
+        <tr><td>Ridge의 alpha</td><td class="num">&times; 7</td><td>0.001 &sim; 1000</td></tr>
+        <tr><td><b>Ridge 소계</b></td><td class="num"><b>56</b></td><td></td></tr>
+        <tr><td>기준선</td><td class="num">+ 3</td><td>평균만 내는 모델, <code>|Z|@1kHz</code> 단독, <code>ocv</code> 단독</td></tr>
+        <tr><td><b>회귀 후보 합계</b></td><td class="num"><b>59</b></td><td>안쪽 검증 점수는 음의 MSE</td></tr>
+        <tr><td>Logistic의 C</td><td class="num">4 &times; 2 &times; 5</td><td>0.001 &sim; 10</td></tr>
+        <tr><td><b>분류 후보 합계</b></td><td class="num"><b>40</b></td><td>안쪽 검증 점수는 음의 log loss</td></tr>
+      </tbody>
+      <caption>기준선도 후보로 함께 경쟁한다. 단순한 쪽이 이기면 단순한 쪽이 뽑힌다.</caption>
+    </table>
+    </div>
+
+    <h4>데모에서 실제로 무엇이 뽑혔나</h4>
+
+    <p>
+      가상 12셀 데모를 돌리면 바깥 분할 12번마다 후보 선택이 새로 일어난다. 그 결과가
+      <code>folds.json</code>에 그대로 남는데, 읽어 보면 이렇다.
+    </p>
+
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>타깃</th><th>뽑힌 모델</th><th>쓴 열</th><th class="num">12번 중</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3"><code>cap</code></td><td>LinearRegression</td><td><code>ocv</code> 하나</td><td class="num">10</td></tr>
+        <tr><td>Ridge (alpha 1.0)</td><td>1 kHz 4열 + <code>ocv</code></td><td class="num">1</td></tr>
+        <tr><td>Ridge (alpha 1.0)</td><td>전체 36열 + <code>ocv</code></td><td class="num">1</td></tr>
+        <tr><td><code>true_label</code></td><td>LogisticRegression (C 10.0)</td><td>대부분 전체 36열 + <code>ocv</code></td><td class="num">12</td></tr>
+      </tbody>
+      <caption>가상 자료의 결과다. 실제 셀에서 같은 선택이 나온다는 뜻이 아니다.</caption>
+    </table>
+    </div>
+
+    <div class="callout amber">
+      <span class="tag">이래서 계수 시트가 비어 있다</span>
+      <p>
+        회귀 쪽은 12번 중 10번이 <strong>EIS를 하나도 안 쓰고 개방전압 하나로</strong> 이겼다. 후보 59개를
+        놓고 경쟁시켰더니 가장 단순한 것이 이긴 것이다. 그래서 최종 모델에 EIS 계수가 없고,
+        <code>03_reg_coefs</code> 시트가 빈다. 버그가 아니라 결과다.
+      </p>
+      <p>
+        실제 자료에서도 이런 일이 일어나면 그건 나쁜 소식이 아니라 중요한 정보다.
+        <strong>EIS를 재는 수고가 값을 못 한다는 뜻</strong>이므로, 모델을 키우기 전에 측정 조건부터 봐야 한다.
+      </p>
+    </div>
+
+    <div class="callout warn">
+      <span class="tag">분류 쪽은 경고가 떠 있다</span>
+      <p>
+        분류는 12번 모두 <code>C = 10</code>을 골랐다. 그런데 10은 후보 다섯 개
+        <code>[0.001, 0.01, 0.1, 1, 10]</code>의 <strong>끝값</strong>이다. 끝값이 계속 뽑힌다는 것은
+        더 바깥에 더 좋은 값이 있는데 후보에 없어서 못 고르고 있다는 신호다.
+      </p>
+      <p>
+        코드가 이걸 스스로 잡아내서 <code>metrics.json</code>에 남긴다.
+        실제 데모 출력에 이렇게 찍혀 있다.
+      </p>
+      <pre>logistic boundary: 12 of 12 folds selected C at an edge of logistic_cs</pre>
+      <p>
+        이 경고를 보면 <code>config.json</code>의 <code>logistic_cs</code>에 <code>100</code>,
+        <code>1000</code>을 더 넣고 다시 돌려야 한다. 실측 자료에서 이 줄이 보이면 그냥 넘기지 않는다.
       </p>
     </div>
 
