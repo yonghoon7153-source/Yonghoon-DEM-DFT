@@ -1,0 +1,344 @@
+{
+ "bundle": "reviews/r14_repros/codex63/core16_control/outputs/core16_control",
+ "comparisons": {
+  "core_control_2_to_16_requested_grid_0p1_to_1s": {
+   "family": "control16 − old2 (코어 축 단독)",
+   "sample_set": "지정 요청",
+   "window": "0p1_to_1s",
+   "n_times": 91,
+   "max_abs_dV_mV": "4.000E-12",
+   "dV_signed_V": "4E-15",
+   "at_time_s": "0.34",
+   "decomp_residual_V_recomputed": "-8.9E-17",
+   "decomp_residual_V_column": "-8.9E-17",
+   "max_abs_dx_surface": "2.0E-15",
+   "dx_signed": "-2.0E-15",
+   "dx_time_s": "0.14",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.00011146666666666667"
+  },
+  "core_control_2_to_16_requested_grid_1_to_5s": {
+   "family": "control16 − old2 (코어 축 단독)",
+   "sample_set": "지정 요청",
+   "window": "1_to_5s",
+   "n_times": 81,
+   "max_abs_dV_mV": "4.0000E-12",
+   "dV_signed_V": "-4.0E-15",
+   "at_time_s": "1.35",
+   "decomp_residual_V_recomputed": "1.88E-16",
+   "decomp_residual_V_column": "1.88E-16",
+   "max_abs_dx_surface": "1.4E-15",
+   "dx_signed": "1.4E-15",
+   "dx_time_s": "1",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.00009056666666666665"
+  },
+  "core_control_2_to_16_requested_grid_0_to_1s": {
+   "family": "control16 − old2 (코어 축 단독)",
+   "sample_set": "지정 요청",
+   "window": "0_to_1s",
+   "n_times": 107,
+   "max_abs_dV_mV": "4.000E-12",
+   "dV_signed_V": "4E-15",
+   "at_time_s": "0.34",
+   "decomp_residual_V_recomputed": "-8.9E-17",
+   "decomp_residual_V_column": "-8.9E-17",
+   "max_abs_dx_surface": "2.0E-15",
+   "dx_signed": "-2.0E-15",
+   "dx_time_s": "0.08",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.0001144"
+  },
+  "core_control_2_to_16_requested_grid_0_to_5s": {
+   "family": "control16 − old2 (코어 축 단독)",
+   "sample_set": "지정 요청",
+   "window": "0_to_5s",
+   "n_times": 187,
+   "max_abs_dV_mV": "4.000E-12",
+   "dV_signed_V": "4E-15",
+   "at_time_s": "0.34",
+   "decomp_residual_V_recomputed": "-8.9E-17",
+   "decomp_residual_V_column": "-8.9E-17",
+   "max_abs_dx_surface": "2.0E-15",
+   "dx_signed": "-2.0E-15",
+   "dx_time_s": "0.08",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.0001144"
+  },
+  "core_control_2_to_16_all_exact_common_stored_0p1_to_1s": {
+   "family": "control16 − old2 (코어 축 단독)",
+   "sample_set": "정확 공통 저장",
+   "window": "0p1_to_1s",
+   "n_times": 99,
+   "max_abs_dV_mV": "4.000E-12",
+   "dV_signed_V": "4E-15",
+   "at_time_s": "0.34",
+   "decomp_residual_V_recomputed": "-8.9E-17",
+   "decomp_residual_V_column": "-8.9E-17",
+   "max_abs_dx_surface": "2.0E-15",
+   "dx_signed": "-2.0E-15",
+   "dx_time_s": "0.100375",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.00011146666666666667"
+  },
+  "core_control_2_to_16_all_exact_common_stored_1_to_5s": {
+   "family": "control16 − old2 (코어 축 단독)",
+   "sample_set": "정확 공통 저장",
+   "window": "1_to_5s",
+   "n_times": 82,
+   "max_abs_dV_mV": "4.0000E-12",
+   "dV_signed_V": "-4.0E-15",
+   "at_time_s": "1.35",
+   "decomp_residual_V_recomputed": "1.88E-16",
+   "decomp_residual_V_column": "1.88E-16",
+   "max_abs_dx_surface": "1.4E-15",
+   "dx_signed": "1.4E-15",
+   "dx_time_s": "1.0",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.00009056666666666665"
+  },
+  "core_control_2_to_16_all_exact_common_stored_0_to_1s": {
+   "family": "control16 − old2 (코어 축 단독)",
+   "sample_set": "정확 공통 저장",
+   "window": "0_to_1s",
+   "n_times": 906,
+   "max_abs_dV_mV": "4.8000E-12",
+   "dV_signed_V": "4.8E-15",
+   "at_time_s": "0.044625000000000005",
+   "decomp_residual_V_recomputed": "-1.87E-16",
+   "decomp_residual_V_column": "-1.87E-16",
+   "max_abs_dx_surface": "2.4E-15",
+   "dx_signed": "-2.4E-15",
+   "dx_time_s": "0.084875",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.0001144"
+  },
+  "core_control_2_to_16_all_exact_common_stored_0_to_5s": {
+   "family": "control16 − old2 (코어 축 단독)",
+   "sample_set": "정확 공통 저장",
+   "window": "0_to_5s",
+   "n_times": 987,
+   "max_abs_dV_mV": "4.8000E-12",
+   "dV_signed_V": "4.8E-15",
+   "at_time_s": "0.044625000000000005",
+   "decomp_residual_V_recomputed": "-1.87E-16",
+   "decomp_residual_V_column": "-1.87E-16",
+   "max_abs_dx_surface": "2.4E-15",
+   "dx_signed": "-2.4E-15",
+   "dx_time_s": "0.084875",
+   "dx_electrode": "P",
+   "dx_coordinate_m": "0.0001144"
+  },
+  "late_cap_at_16_cores_requested_grid_0p1_to_1s": {
+   "family": "A16 − control16 (cap 축 단독, 16 코어 고정)",
+   "sample_set": "지정 요청",
+   "window": "0p1_to_1s",
+   "n_times": 91,
+   "max_abs_dV_mV": "0.0020165373344000",
+   "dV_signed_V": "-0.0000020165373344",
+   "at_time_s": "0.22",
+   "decomp_residual_V_recomputed": "2.70E-16",
+   "decomp_residual_V_column": "2.70E-16",
+   "max_abs_dx_surface": "3.369033147E-8",
+   "dx_signed": "-3.369033147E-8",
+   "dx_time_s": "0.22",
+   "dx_electrode": "N",
+   "dx_coordinate_m": "0.000052"
+  },
+  "late_cap_at_16_cores_requested_grid_1_to_5s": {
+   "family": "A16 − control16 (cap 축 단독, 16 코어 고정)",
+   "sample_set": "지정 요청",
+   "window": "1_to_5s",
+   "n_times": 81,
+   "max_abs_dV_mV": "0.0023442301413000",
+   "dV_signed_V": "-0.0000023442301413",
+   "at_time_s": "1.7",
+   "decomp_residual_V_recomputed": "6.4E-17",
+   "decomp_residual_V_column": "6.4E-17",
+   "max_abs_dx_surface": "3.8702635005E-8",
+   "dx_signed": "-3.8702635005E-8",
+   "dx_time_s": "1.7",
+   "dx_electrode": "N",
+   "dx_coordinate_m": "0.000052"
+  },
+  "late_cap_at_16_cores_requested_grid_0_to_1s": {
+   "family": "A16 − control16 (cap 축 단독, 16 코어 고정)",
+   "sample_set": "지정 요청",
+   "window": "0_to_1s",
+   "n_times": 107,
+   "max_abs_dV_mV": "0.0020165373344000",
+   "dV_signed_V": "-0.0000020165373344",
+   "at_time_s": "0.22",
+   "decomp_residual_V_recomputed": "2.70E-16",
+   "decomp_residual_V_column": "2.70E-16",
+   "max_abs_dx_surface": "3.369033147E-8",
+   "dx_signed": "-3.369033147E-8",
+   "dx_time_s": "0.22",
+   "dx_electrode": "N",
+   "dx_coordinate_m": "0.000052"
+  },
+  "late_cap_at_16_cores_requested_grid_0_to_5s": {
+   "family": "A16 − control16 (cap 축 단독, 16 코어 고정)",
+   "sample_set": "지정 요청",
+   "window": "0_to_5s",
+   "n_times": 187,
+   "max_abs_dV_mV": "0.0023442301413000",
+   "dV_signed_V": "-0.0000023442301413",
+   "at_time_s": "1.7",
+   "decomp_residual_V_recomputed": "6.4E-17",
+   "decomp_residual_V_column": "6.4E-17",
+   "max_abs_dx_surface": "3.8702635005E-8",
+   "dx_signed": "-3.8702635005E-8",
+   "dx_time_s": "1.7",
+   "dx_electrode": "N",
+   "dx_coordinate_m": "0.000052"
+  },
+  "late_cap_at_16_cores_all_exact_common_stored_0p1_to_1s": {
+   "family": "A16 − control16 (cap 축 단독, 16 코어 고정)",
+   "sample_set": "정확 공통 저장",
+   "window": "0p1_to_1s",
+   "n_times": 99,
+   "max_abs_dV_mV": "0.0020165373344000",
+   "dV_signed_V": "-0.0000020165373344",
+   "at_time_s": "0.22",
+   "decomp_residual_V_recomputed": "2.70E-16",
+   "decomp_residual_V_column": "2.70E-16",
+   "max_abs_dx_surface": "3.369033147E-8",
+   "dx_signed": "-3.369033147E-8",
+   "dx_time_s": "0.22",
+   "dx_electrode": "N",
+   "dx_coordinate_m": "0.000052"
+  },
+  "late_cap_at_16_cores_all_exact_common_stored_1_to_5s": {
+   "family": "A16 − control16 (cap 축 단독, 16 코어 고정)",
+   "sample_set": "정확 공통 저장",
+   "window": "1_to_5s",
+   "n_times": 81,
+   "max_abs_dV_mV": "0.0023442301413000",
+   "dV_signed_V": "-0.0000023442301413",
+   "at_time_s": "1.7",
+   "decomp_residual_V_recomputed": "6.4E-17",
+   "decomp_residual_V_column": "6.4E-17",
+   "max_abs_dx_surface": "3.8702635005E-8",
+   "dx_signed": "-3.8702635005E-8",
+   "dx_time_s": "1.7",
+   "dx_electrode": "N",
+   "dx_coordinate_m": "0.000052"
+  },
+  "late_cap_at_16_cores_all_exact_common_stored_0_to_1s": {
+   "family": "A16 − control16 (cap 축 단독, 16 코어 고정)",
+   "sample_set": "정확 공통 저장",
+   "window": "0_to_1s",
+   "n_times": 906,
+   "max_abs_dV_mV": "0.0020165373344000",
+   "dV_signed_V": "-0.0000020165373344",
+   "at_time_s": "0.22",
+   "decomp_residual_V_recomputed": "2.70E-16",
+   "decomp_residual_V_column": "2.70E-16",
+   "max_abs_dx_surface": "3.369033147E-8",
+   "dx_signed": "-3.369033147E-8",
+   "dx_time_s": "0.22",
+   "dx_electrode": "N",
+   "dx_coordinate_m": "0.000052"
+  },
+  "late_cap_at_16_cores_all_exact_common_stored_0_to_5s": {
+   "family": "A16 − control16 (cap 축 단독, 16 코어 고정)",
+   "sample_set": "정확 공통 저장",
+   "window": "0_to_5s",
+   "n_times": 986,
+   "max_abs_dV_mV": "0.0023442301413000",
+   "dV_signed_V": "-0.0000023442301413",
+   "at_time_s": "1.7",
+   "decomp_residual_V_recomputed": "6.4E-17",
+   "decomp_residual_V_column": "6.4E-17",
+   "max_abs_dx_surface": "3.8702635005E-8",
+   "dx_signed": "-3.8702635005E-8",
+   "dx_time_s": "1.7",
+   "dx_electrode": "N",
+   "dx_coordinate_m": "0.000052"
+  }
+ },
+ "three_way": {
+  "stored_rows": {
+   "old2": 987,
+   "control16": 987,
+   "A16": 1155
+  },
+  "exact_common_all_three": 986,
+  "pairwise_common": {
+   "old2∩control16": 987,
+   "control16∩A16": 986,
+   "old2∩A16": 986
+  },
+  "requested_times_in_common": 187,
+  "requested_times_total": 187,
+  "voltage_identity_max_residual_V": "0E-16",
+  "surface_identity_file": {
+   "rows": 1972,
+   "times": 986,
+   "coordinate_sum": 475252,
+   "coordinates_per_row": [
+    241
+   ],
+   "max_abs_residual": "0",
+   "note": "전달 파일의 검산 — 전 시각 profile 원문은 미보존(8 MiB 초과)이라 원시 재계산 아님"
+  }
+ },
+ "intervals": {
+  "old2": {
+   "accepted": 986,
+   "cap_violations": 0,
+   "by_region": {
+    "0_to_0.1": {
+     "count": 807,
+     "max_h_s": "0.00012500000000001"
+    },
+    "0.1_to_1": {
+     "count": 98,
+     "max_h_s": "0.01"
+    },
+    "1_to_5": {
+     "count": 81,
+     "max_h_s": "0.05"
+    }
+   }
+  },
+  "control16": {
+   "accepted": 986,
+   "cap_violations": 0,
+   "by_region": {
+    "0_to_0.1": {
+     "count": 807,
+     "max_h_s": "0.00012500000000001"
+    },
+    "0.1_to_1": {
+     "count": 98,
+     "max_h_s": "0.01"
+    },
+    "1_to_5": {
+     "count": 81,
+     "max_h_s": "0.05"
+    }
+   }
+  },
+  "A16": {
+   "accepted": 1154,
+   "cap_violations": 0,
+   "by_region": {
+    "0_to_0.1": {
+     "count": 807,
+     "max_h_s": "0.00012500000000001"
+    },
+    "0.1_to_1": {
+     "count": 185,
+     "max_h_s": "0.00500000000000003"
+    },
+    "1_to_5": {
+     "count": 162,
+     "max_h_s": "0.025000000000001"
+    }
+   }
+  },
+  "old2_vs_control16_identical_intervals": 986
+ }
+}

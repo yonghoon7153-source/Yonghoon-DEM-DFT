@@ -179,11 +179,11 @@
 
 <!-- ══ 4 ══════════════════════════════════════════════════════════════ -->
 <section class="pipe-sec">
-  <h2 class="pipe-h"><span class="pipe-n">4</span> ① COMSOL — 여섯 축이 원문 대조까지 끝났다</h2>
+  <h2 class="pipe-h"><span class="pipe-n">4</span> ① COMSOL — 여덟 축이 원문 대조까지 끝났다</h2>
 
   <p class="pipe-p">이 갈래는 계산이 <b>다른 기계</b>에서 돌고 결과가 ZIP 으로
     건너온다. 그래서 규율이 하나 더 붙는다 — <b>받은 요약을 그대로 옮기지 않고</b>
-    원시 CSV 에서 이쪽 산술로 다시 계산해 같은지 본다. 여섯 축 전부 그 대조를
+    원시 CSV 에서 이쪽 산술로 다시 계산해 같은지 본다. 여덟 축 전부 그 대조를
     마쳤다.</p>
 
   <div class="pg-tablewrap">
@@ -196,6 +196,8 @@
         <tr><td>입자 반경</td><td>160 → 320</td><td>0.6170341087208 mV @0.002 s</td><td>충족</td></tr>
         <tr><td>초기 시간상한</td><td>160H0500 → 160H0250</td><td>0.002175461073 mV @0.005 s</td><td>충족</td></tr>
         <tr><td>초기 시간상한</td><td>320H0250 → 320H0125</td><td>0.0012699200233 mV @0.002 s</td><td>충족</td></tr>
+        <tr><td>코어 수 (시간식 고정)</td><td>2 → 16 코어</td><td>4.8e-12 mV @0.044625 s</td><td>충족</td></tr>
+        <tr><td>후기 시간상한 (16 코어 고정)</td><td>0.1 s cap → 0.005/0.025 s cap</td><td>0.0023442301413 mV @1.7 s</td><td>충족</td></tr>
       </tbody>
     </table>
   </div>
@@ -206,7 +208,14 @@
     위 값들은 서로 <b>다른 시각</b>의 최대값이라 <b>수열이 아니다</b> — 비를 내어
     수렴 차수로 읽지 않는다.</p>
 
-  <p class="pipe-p"><b>증거 보존.</b> 건너온 묶음 일곱 개를 <b>bytes 그대로</b>
+  <p class="pipe-p"><b>둘로 가른 것 하나 (§17 → §18).</b> 후기 시간상한을 강화한
+    실행은 코어 수까지 2 → 16 으로 같이 바뀌어 있었다. 그래서 원래 시간식을
+    16 코어로 돌린 <b>통제 해</b>를 하나 더 받아, 코어 축과 cap 축을 <b>따로</b>
+    쟀다 — 위 표의 마지막 두 줄이다. 코어 축은 1e−12 mV 급이고, 결합 차이의
+    사실상 전부가 cap 축이었다. 다만 해 셋만으로 <b>두 축의 상호작용이 없다고는
+    말하지 않는다.</b></p>
+
+  <p class="pipe-p"><b>증거 보존.</b> 건너온 묶음 여덟 개를 <b>bytes 그대로</b>
     저장하고 각 항목의 sha256 을 옆의 manifest 와 대조했다. 줄끝 정규화로 bytes 가
     갈리는 사고를 한 번 겪고(그리고 되돌리고) <code class="mono">.gitattributes</code>
     규칙을 묶음마다 <b>먼저</b> 넣는 순서로 바꿨다.</p>
@@ -271,7 +280,7 @@
       <tbody>
         <tr><td>세 갈래 현재 상태 · 재개 runbook</td><td><code class="mono">bms-balancing/WORKING_STATE.md</code></td></tr>
         <tr><td>③ 정량화 — 전 라운드 원장 (pyDMA 검증 포함)</td><td><code class="mono">bms-balancing/reviews/BML_R1_RESPONSE.md</code></td></tr>
-        <tr><td>① COMSOL 재구축 명세 · 진단 §8~§15</td><td><code class="mono">bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code></td></tr>
+        <tr><td>① COMSOL 재구축 명세 · 진단 §8~§18</td><td><code class="mono">bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code></td></tr>
         <tr><td>① 건너온 묶음 원문 (bytes 보존 + 대조 기록)</td><td><code class="mono">bms-balancing/reviews/r14_repros/codex63/</code></td></tr>
         <tr><td>② 게이트 리뷰 R13 · R14 요청·회신 원문</td><td><code class="mono">bms-balancing/reviews/</code></td></tr>
         <tr><td>산출 자체 (정본 수치)</td><td>산출 <code class="mono">.csv</code> + 나란한 <code class="mono">.meta.json</code></td></tr>

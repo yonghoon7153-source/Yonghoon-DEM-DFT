@@ -15,23 +15,24 @@
 
 ## 하드 룰
 
-1. **브랜치**: 이 저장소에서 지금 살아 있는 작업 브랜치는 **둘**이고, 각자
-   **자기 브랜치로만** push 한다. 세션 하네스가 다른 이름을 지정하면
-   **하네스가 우선**이고 이 줄을 같이 고친다.
+1. **브랜치**: 이 저장소에서 지금 살아 있는 작업 브랜치는 **하나** —
+   `claude/14-gate-code-review-9qkx05` (**본진**). 세션 하네스가 다른 이름을
+   지정하면 **하네스가 우선**이고 이 줄을 같이 고친다.
 
    | 브랜치 | 소유 경로 | 하는 일 |
    |---|---|---|
-   | `claude/14-gate-code-review-9qkx05` | `degradation-degeneracy/` · `webapp/` · `wiki/` · 루트 문서 | 게이트 리뷰 루프 (본체) |
-   | `claude/bms-alpha-beta-verify` | **`bms-balancing/` 만** | 규진팀 α·β 검증 하네스 (2026-09-10 분기) |
+   | `claude/14-gate-code-review-9qkx05` | `degradation-degeneracy/` · `bms-balancing/` · `webapp/` · `wiki/` · 루트 문서 | 게이트 리뷰 루프 + α·β 검증 하네스 + COMSOL 재구축 (전부 여기서) |
 
-   **경로가 안 겹치는 것이 충돌 방지의 전부다.** 서브 브랜치는
-   `bms-balancing/` 밖을 **읽기만** 하고 고치지 않는다. 본체가 `bms-balancing/`
-   을 고칠 일이 생기면 서브 브랜치에 넘긴다. 합칠 때는 본체가 서브를 merge 한다
-   (반대 방향 금지 — 본체 이력이 서브로 흘러가면 게이트 증거 사슬이 흐려진다).
-   **예외 하나 (2026-09-14, 유일)**: 서브가 사용자 지시로 `webapp/` 6 파일
-   (`/bms`·`/alphabeta` 화면과 그 배선)을 고쳤고 본체가 그대로 받았다
-   (merge `cf9bad4`). 앞으로 `webapp/` 은 다시 본체 소유다 — 서브가 화면에 올릴
-   것이 생기면 `bms-balancing/` 에 문서로 두고 배선은 본체에 넘긴다.
+   **2026-09-15 사용자 결정: 서브 브랜치 `claude/bms-alpha-beta-verify` 를
+   본진이 흡수했다.** 브랜치를 갈라 두지 않는다 — `bms-balancing/` 도 본진이
+   직접 고친다. 서브의 이력은 전부 본진에 들어와 있고(merge `cf9bad4`, 그 뒤
+   미병합 커밋 0) 서브 브랜치는 더 이상 push 대상이 아니다 (지우지는 않되
+   새 커밋을 얹지 않는다). `bms-balancing/` 은 RUN_SCOPE 밖이라(하드룰 3) 본진에서
+   고쳐도 게이트 판정 대상 코드 identity 는 안 움직인다 — 그것이 흡수가
+   안전한 이유다. 분기 경위(2026-09-10 분기 · 2026-09-14 `webapp/` 예외 · merge
+   뒤 인수인계 전수 확인)는 `BRANCHES.md`.
+   DEM/MPM 계열(`kit_*` `ps_zips` `se_curve` `run_mpm.sh`)은 여전히 **다른
+   브랜치 소유**이고 여기서 건드리지 않는다.
    브랜치 이름의 정본은 이 줄 하나다 — `wiki/` 와 `.claude/` 는 이름을 옮겨 적지
    말고 이 줄을 참조한다 (2026-08-20: 8곳이 이미 대체된 이름을 붙들고 있었다.
    위키 쪽은 `wiki/tools/lint.py` 의 `no-hardcoded-branch-name` 검사가

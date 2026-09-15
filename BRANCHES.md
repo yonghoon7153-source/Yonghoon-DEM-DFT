@@ -131,8 +131,10 @@ claude/zip-git-gpu-setup-vdqdtd  →  claude/14-gate-code-review-9qkx05
 
 ## 규칙
 
-1. 이 브랜치에서는 `degradation-degeneracy/` · `wiki/` · `.claude/` · 루트 문서만
-   건드린다. `kit_*` `ps_zips` `run_mpm.sh` 등 DEM/MPM 트리는 다른 브랜치 소유다.
+1. 이 브랜치에서는 `degradation-degeneracy/` · `bms-balancing/` · `webapp/` ·
+   `wiki/` · `.claude/` · 루트 문서만 건드린다 (2026-09-15 흡수 뒤의 소유 경로 —
+   정본은 루트 `CLAUDE.md` 하드룰 1). `kit_*` `ps_zips` `run_mpm.sh` 등 DEM/MPM
+   트리는 다른 브랜치 소유다.
 2. 다른 계열 브랜치를 이 브랜치로 merge 하지 않는다. 같은 경로를 다른 내용으로
    쓰고 있어 충돌만 남고, 연구 파이프라인의 `source_digest` 가 오염된다.
 3. 원격 브랜치 삭제는 **사람 승인 후에만**. 위 흡수 목록은 근거이지 실행 지시가
@@ -188,3 +190,25 @@ claude/zip-git-gpu-setup-vdqdtd  →  claude/14-gate-code-review-9qkx05
 MATLAB 의 chain rule 결함(dV/dQ 에 `1/α` 누락)이 **본체에는 없다.**
 `src/objective.py` · `src/curves.py` 가 합성된 곡선을 수치미분하므로 `1/α` 가
 자동으로 들어간다 (α=0.80 대조 실측: `1/α` 포함본과 6.4e-06, 누락본과 7.9e-01).
+
+### 2026-09-15 — 서브 브랜치를 본진이 흡수했다 (사용자 결정)
+
+사용자 지시: "브랜치로 나눠 하지 말고 전체를 흡수하라 · 여기가 본진, 저기는 서브".
+그래서 `claude/bms-alpha-beta-verify` 의 소유 경로 `bms-balancing/` 을 본진
+`claude/14-gate-code-review-9qkx05` 가 직접 고친다. 흡수 시점의 실측:
+
+| 항목 | 값 |
+|---|---|
+| 서브 HEAD | `698d226` (merge 브리프) |
+| 본진에 안 들어온 서브 커밋 | **0** (`git log origin/claude/bms-alpha-beta-verify ^HEAD` 빈 출력) |
+| 서브 하네스 테스트 (본진에서 실행) | 310 passed · 1 failed → 실패는 실행 중 커밋 간섭, HEAD 고정 재실행 1 passed |
+| 보존 묶음 bytes | 여덟 묶음 불일치 0 |
+
+흡수가 안전한 이유는 하나다 — `bms-balancing/` 은 RUN_SCOPE 밖이라 본진에서
+고쳐도 게이트 판정 대상 커밋의 `source_digest` 가 안 움직인다. 첫 흡수 작업은
+COMSOL 명세 §18 (16 코어 통제 해 재계산, `bms-balancing/docs/COMSOL_REBUILD_SPEC.md`).
+
+서브 브랜치는 지우지 않는다 (R13·R14 게이트 리뷰가 그 브랜치의 tree 를 인용한다).
+다만 새 커밋을 얹지 않는다 — 얹으면 다시 갈라진다. 서브가 남긴 인수인계 문서
+(`bms-balancing/HANDOFF_TO_GATE.md` · `MERGE_BRIEF_FOR_GATE.md`)는 역사 기록으로
+그대로 두고 머리에 흡수 사실만 한 줄 적었다.

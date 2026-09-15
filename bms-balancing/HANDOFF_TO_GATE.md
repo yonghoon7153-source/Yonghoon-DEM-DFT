@@ -1,5 +1,7 @@
 # 본체 브랜치로 넘기는 것 (2026-09-10)
 
+> **2026-09-15 갱신 — 역사 기록.** 사용자 결정으로 본진(`claude/14-gate-code-review-9qkx05`)이 서브 브랜치를 **흡수**했다. 이 문서가 "본체가 판단할 것" 으로 넘긴 항목의 처리 결과는 `BRANCHES.md` (2026-09-14 전수 확인 · 2026-09-15 흡수) 에 있다. 아래 본문의 "서브/본체" 구분은 그 이전의 기록이며 고치지 않는다.
+
 발신: `claude/bms-alpha-beta-verify` (소유: `bms-balancing/` 만)
 수신: `claude/14-gate-code-review-9qkx05` (소유: `degradation-degeneracy/` ·
 `webapp/` · `wiki/` · 루트 문서)
