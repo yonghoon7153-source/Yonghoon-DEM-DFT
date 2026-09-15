@@ -276,6 +276,21 @@
    "note": "Codex 지적: 자체리뷰가 인용한 수치의 raw vector·seed list·box/object count·하네스가 리포에 없다 → 증거등급 C.  교훈 = **자체리뷰 서브에이전트의 수치도 재현 가능한 형태로 커밋해야 한다** (RC6-Q8 '발견을 큐에서 잃지 않는다' 의 수치판).  P3 는 DROP 됐으므로 이 수치는 인용하지 않는다 — 항목은 프로세스 교훈으로 남긴다."
   },
   {
+   "id": "BR-01",
+   "severity": "P2",
+   "status": "open",
+   "owner": "user",
+   "found_by": "claude",
+   "opened_in": "docs/session_20260915_progress.md",
+   "evidence_tests": [
+    "docs/paper_brittle_caveat.md",
+    "scripts/section7_fracture_aware_analysis.py",
+    "docs/db/section7_10case_sweep.csv"
+   ],
+   "title": "`resistor-network-solver-LDjW6` 의 Section 7 은 **커밋 안 된 78-case 산출물**에서 나온 45개 수치를 담고 있다 (SR-02 와 같은 부류)",
+   "note": "브랜치 흡수 작업 중 **측정으로 확정**했다 (2026-09-15).\n\n**무엇이 있나**: `origin/claude/resistor-network-solver-LDjW6` 에 작업 브랜치로 안 들어온\n커밋이 **2개**이고, 둘 다 **`docs/paper_brittle_caveat.md` 한 파일만** 건드린다\n(+388 −89).  내용은 *\"Section 7 — Empirical 78-Case Sweep: 10-Case Anchor, Regression,\nand Pareto Winners\"* 다.\n\n**왜 충돌하나 — 두 Section 7 이 서로 다른 글이다** (공통 조상 `f1fcb09cc`, 1,544줄에서 분기):\n\n```\n작업 브랜치  §7  627줄  7.1 sweep 설계 · 7.2 결과 · 7.3 두 trajectory · 7.4 champion real_4\n                        7.5 Pareto Frontier · 7.6 design rule · 7.7 VGCF 단서   (기전 서술)\nLDjW6       §7  271줄  7.1 10-case anchor · 7.2 σ_e_loss_pct **회귀** (Stage C, 78 cases)\n                        7.3 Stage E composite **Pareto ranking** (78) · 7.4 r_SE band\n                        stratification (valid 54) · 7.5 design 함의            (통계 서술)\n```\n⇒ **상보적 내용이고 같은 절 번호에서 충돌한다.**  어느 쪽도 다른 쪽의 상위집합이 아니다.\n⚠ 내 초기 추정 *\"내 쪽은 10-case 뿐\"* 은 **틀렸다** — 작업 브랜치도 78-case 를 26회 언급한다.\n\n**⛔ 병합하지 않은 이유 (이것이 핵심)**:\n· LDjW6 §7 의 소수 토큰 49개 중 **45개가 작업 브랜치 문서 어디에도 없다** = 진짜 새 수치다.\n· 그런데 그 2커밋은 **`.md` 하나만** 건드린다 — **데이터를 한 줄도 안 가져온다.**\n· 리포에 있는 원자료는 **10-case anchor CSV** (`docs/db/section7_10case_sweep.csv`, 11행)\n  뿐이고, **78-case · valid 54 산출물은 어느 브랜치에도 커밋돼 있지 않다.**\n⇒ 그 45개를 원고에 넣으면 **재현 경로 없는 수치**가 된다 = 원장 `SR-02` 와 **같은 부류**.\n\n★ **그러나 SR-02 보다 낫다 — 하네스는 커밋돼 있다.**\n`scripts/section7_fracture_aware_analysis.py` (536줄) 와 `scripts/screening_electronic_sweep.py`\n(327줄) 가 **작업 브랜치에 이미 있다**.  둘 다 `webapp/{results,archive}/**/full_metrics.json`\n을 읽고 `docs/db/section7_fracture_aware_{summary,filtered}.csv` 를 쓴다.\n⇒ 입력은 **저자 기계의 케이스 코퍼스**이고, 수치는 **재생성 가능**하다.\n★ 하네스 건전성 확인: 빈 코퍼스에서 `Loaded 0 cases (raw). / no cases` 를 내고 **rc=1** 로\n  선다 (조용한 초록이 아니다).\n  ⚠ 내가 처음 *\"rc=0 이라 false-green\"* 이라 적었던 것은 **틀렸다** — `| head` 로 종료코드를\n  삼킨 내 실수였다 (CLAUDE.md 가 `check_all.sh` 에 대해 경고하는 바로 그 함정).\n\n**닫는 순서** (저자 기계):\n1. `python3 scripts/section7_fracture_aware_analysis.py`  → `docs/db/section7_fracture_aware_*.csv`\n2. 그 CSV 를 **커밋**한다 (= 재현 경로가 생긴다)\n3. 그 다음에 LDjW6 §7 산문을 병합한다 — 절 번호 충돌은 **편집 결정**이다\n   (§7 을 합치거나, 통계 서술을 별도 절로 두거나).\n⛔ **2 없이 3 을 하지 말 것.**\n\n**지금 상태**: 내용은 `origin/claude/resistor-network-solver-LDjW6` 에 **보존돼 있다**\n(잃어버릴 위험 없음).  ✅ 철회값 스윕을 그 파일에 걸어 **누수 0** 을 확인했다.\n⚠ 다만 그 브랜치의 base 는 2,792 커밋 뒤라, 병합 전에 그 사이 무효화된 규약이 있는지\n(특히 `CL-12` thermal `k_weight` · Stage E 수정) 확인이 필요하다 — **미확인**.\n\n★ **`claude/sdcp-dem-manuscript-si-pqwtv8` 은 원격 기준 0 커밋**이다 (전부 흡수됨).\n⚠ 세션 기록의 *\"24커밋 앞\"* 은 **저자 기계의 `~/dem-web` 워크트리** 얘기이고 클라우드\n컨테이너에서는 보이지 않는다 — 그 정리는 저자 기계의 일이다."
+  },
+  {
    "id": "SR-03",
    "severity": "P3",
    "title": "STEP3 CG 전처리기가 Jacobi 뿐 — 2.7M dof 전자 솔브가 CPU 에서 58분",
