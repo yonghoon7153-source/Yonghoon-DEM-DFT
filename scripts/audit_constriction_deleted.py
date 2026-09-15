@@ -284,7 +284,8 @@ def type_map_from_deck(deck_path):
 
 
 def case_networks(case_dir, contact_mode='physics',
-                  channels=('ionic', 'electronic', 'thermal'), deck_dir=None):
+                  channels=('ionic', 'electronic', 'thermal'), deck_dir=None,
+                  psi_placement=None):
     """★★ **한 케이스 → 채널별 net + 원자료 출처** (2026-09-15, `R4-01`·`R4-02`).
 
     `audit_case` 와 `seal_s3_prerun` 이 **같은 경로**로 망을 만들게 하려고 뽑아낸 것이다.
@@ -341,9 +342,12 @@ def case_networks(case_dir, contact_mode='physics',
         if not tt:
             raise ValueError(f'채널 {ch}: type_map 에서 고른 target_types 가 비었다.  '
                              f'type_map={prov["type_map"]} · 원자 type 분포={prov["type_hist"]}')
+        #  `psi_placement=None` = 솔버 기본값 (인자를 넘기지 않는다) — 기존 호출자는
+        #  바뀌는 것이 없다.  S3 러너만 두 팔을 명시로 지정한다 (`L2-01`).
+        _pk = {} if psi_placement is None else {'psi_placement': psi_placement}
         net = _NC.build_network(atoms, contacts, tt, scale, plate_z,
                                box_x=box, box_y=box, mode=mode, type_map=type_map,
-                               contact_mode=contact_mode)
+                               contact_mode=contact_mode, **_pk)
         if net is None:
             n_hit = sum(type_hist[t] for t in tt if t in type_hist)
             raise ValueError(f'채널 {ch}: build_network 가 None (해당 상의 입자가 없다).  '

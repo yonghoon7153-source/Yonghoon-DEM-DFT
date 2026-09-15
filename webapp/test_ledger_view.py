@@ -339,6 +339,41 @@ def main():
         LV._cache['stamp'] = None
     chk('25) 복구 후 다시 읽는다 (캐시가 실패를 붙들지 않는다)', LV.available())
 
+    # ── 비포/애프터 라우트 (2026-09-15, `L2-01` 작업에서 붙였다) ────────────────
+    #   ★ 핵심 계약은 *"커밋된 사본을 서빙하지 않는다"* 다.  원장이 움직인 뒤 낡은 페이지를
+    #     조용히 띄우는 것이 이 리포가 반복해 맞은 부류(규율 ④)이므로, 그 성질을 시험한다.
+    import importlib.util as _ilu
+    import pathlib as _pl
+    _rba_path = _pl.Path(__file__).resolve().parent.parent / 'scripts' / 'build_review_before_after.py'
+    _spec = _ilu.spec_from_file_location('_rba_t', _rba_path)
+    _rba = _ilu.module_from_spec(_spec)
+    _spec.loader.exec_module(_rba)
+    import app as _APP
+    _cli = _APP.app.test_client()
+    _r = _cli.get('/ledger/before-after')
+    chk(f'46) 비포/애프터 라우트가 200 을 낸다 (실제 {_r.status_code})', _r.status_code == 200)
+    _body = _r.data.decode('utf-8')
+    chk('46b) 그 본문이 생성기의 현재 렌더와 **정확히 같다** (요청 시 재렌더)',
+        _body == _rba.render())
+    #   ★ 판별력 — 커밋된 파일에 표시를 넣고 응답에 그것이 **없어야** 한다.
+    _out = _rba.OUT
+    _saved = _out.read_text(encoding='utf-8') if _out.is_file() else None
+    try:
+        _out.write_text('<!-- STALE-COPY-MARKER -->' + (_saved or ''), encoding='utf-8')
+        _b2 = _cli.get('/ledger/before-after').data.decode('utf-8')
+        chk('46c) ★ 판별력: 커밋된 사본에 표시를 넣어도 응답에 안 나온다 (파일을 안 읽는다)',
+            'STALE-COPY-MARKER' not in _b2)
+    finally:
+        if _saved is not None:
+            _out.write_text(_saved, encoding='utf-8')
+    #   ★ 원장에 닻을 내렸는지 — 새로 쓴 서술의 인용이 페이지에 실재하는가.
+    chk('46d) L2-01 의 재현 수치가 페이지에 실린다',
+        '150.90474195844345' in _body and '99.436 %' in _body)
+    #   ⚠ 이 페이지도 스윕 범위다 — 금지값이 새면 여기서 새는 것이다.
+    _ba_leak = _unmarked_bans(CRF, bans, _body, '/ledger/before-after')
+    chk('46e) ★★ 비포/애프터 본문에 표지 없는 금지값이 없다'
+        + (f'  ← 누수 {_ba_leak}' if _ba_leak else ''), not _ba_leak)
+
     print(f'\nledger_view: {_ok}/{_ok + len(_fail)} PASS')
     if _fail:
         for f in _fail:

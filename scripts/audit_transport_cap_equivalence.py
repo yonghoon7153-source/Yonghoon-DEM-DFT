@@ -34,6 +34,7 @@ from __future__ import annotations
 import argparse
 import math
 import pathlib
+import subprocess
 import sys
 import types
 
@@ -140,20 +141,160 @@ def _load_nc(name: str, pc_mod, nc_subs=()):
     return mod
 
 
-def real_solver_edges(nc_mod, r1_um=0.5, r2_um=6.0, delta_um=0.2, native_um2=0.04, scale=1000.0):
-    """실제 `build_network` 한 쌍 — Codex 대조 조건 (r .5/6 µm · δ .2 µm · native A .04 µm²)."""
+def real_solver_edges(nc_mod, r1_um=0.5, r2_um=6.0, delta_um=0.2, native_um2=0.04, scale=1000.0,
+                      psi_placement=None):
+    """실제 `build_network` 한 쌍 — Codex 대조 조건 (r .5/6 µm · δ .2 µm · native A .04 µm²).
+
+    `psi_placement=None` 이면 솔버의 **기본값**을 쓴다 (인자를 아예 넘기지 않는다 — 옛 판
+    소스로도 이 함수가 돌아야 하므로).
+    """
     atoms = {1: {'type': 1, 'radius': r1_um / scale, 'x': 0.0, 'y': 0.0, 'z': 0.0},
              2: {'type': 3, 'radius': r2_um / scale, 'x': (r1_um + r2_um - delta_um) / scale, 'y': 0.0, 'z': 0.0}}
     rows = [{'id1': 1, 'id2': 2, 'contact_area': native_um2 / scale ** 2, 'delta': delta_um / scale}]
     tm = {1: 'AM_P', 3: 'SE'}
+    kw = {} if psi_placement is None else {'psi_placement': psi_placement}
     n = nc_mod.build_network(atoms, rows, {1, 3}, scale, 10.0, box_x=1e3, box_y=1e3,
-                             mode='thermal', type_map=tm, contact_mode='physics')
+                             mode='thermal', type_map=tm, contact_mode='physics', **kw)
     return n['edges'] if isinstance(n, dict) else n[1]
 
 
 def _psi(a_eff, r_min):
     """`network_conductivity.py:396` 과 같은 식."""
     return max(1.0 - a_eff / r_min, 0.0) ** 1.5
+
+
+# ── S3 (`L2-01` ψ 배치) 보조 ────────────────────────────────────────────────────
+#   픽스처는 `real_solver_edges` 기본과 같은 쌍이다 (r 0.5 / 6.0 µm · native A 0.04 µm²).
+_FX_R1, _FX_R2, _FX_NATIVE = 0.5, 6.0, 0.04
+
+
+def _a_from_delta(pc_mod, delta_um):
+    """그 픽스처에서 `a_contact = √(A_physics/π)` (clamp **전**) — µm."""
+    R_star = _FX_R1 * _FX_R2 / (_FX_R1 + _FX_R2)
+    A, a_eff = a_eff_from(pc_mod, delta_um, R_star, R_min=min(_FX_R1, _FX_R2),
+                          ligg_area=_FX_NATIVE)
+    return math.sqrt(A / math.pi) if A > 0 else 0.0
+
+
+def _bitwise_vs_head(pc_mod):
+    """기본값(legacy)이 **git HEAD 의 솔버**와 비트 동일한지 — δ 를 전 구간에 뿌려 대조한다.
+
+    ⚠ 옛 판에는 `psi_placement` 인자가 **없다** ⇒ 현재 판도 인자를 **넘기지 않고** 부른다
+      (기본값 경로를 재는 것이 목적이다).
+    HEAD 를 못 읽으면(얕은 클론·git 밖) `(0, 0, 0.0)` 을 돌려주고 호출부가 `n_cmp` 문턱으로
+    **실패시킨다** — 조용히 초록이 되지 않는다.
+    """
+    try:
+        head_src = subprocess.run(['git', 'show', 'HEAD:scripts/network_conductivity.py'],
+                                  cwd=str(SCRIPTS.parent), capture_output=True, text=True,
+                                  check=True, timeout=120).stdout
+    except Exception:
+        return 0, 0, 0.0
+    if not head_src.strip():
+        return 0, 0, 0.0
+    mod = types.ModuleType('_nc_head')
+    mod.__file__ = str(NC_SRC)
+    sys.path.insert(0, str(SCRIPTS))
+    exec(compile(head_src, str(NC_SRC), 'exec'), mod.__dict__)
+    mod._film_area = pc_mod.film_area_from_overlap
+    cur = _load_nc('_nc_cur_bit', pc_mod)
+    #   ⚠ **전부 0 을 비교하면 공허하다** — `n_nonzero_rc` 를 따로 세어 호출부가 요구한다.
+    _FIELDS = ('R_constriction', 'R_bulk', 'R_total', 'R_Maxwell', 'R_film',
+               'A_contact', 'A_physics', 'A_hertzian', 'd_ij', 'regime')
+    n_cmp = n_bad = n_nonzero_rc = 0
+    worst = 0.0
+    for d in (0.002, 0.005, 0.01, 0.02, 0.05, 0.08, 0.1, 0.1025, 0.12, 0.2, 0.4, 0.8):
+        eo = real_solver_edges(mod, delta_um=d)[0]
+        en = real_solver_edges(cur, delta_um=d)[0]
+        if eo.get('R_constriction'):
+            n_nonzero_rc += 1
+        for k in _FIELDS:
+            if k not in eo and k not in en:
+                continue
+            va, vb = eo.get(k), en.get(k)
+            n_cmp += 1
+            if va is None and vb is None:
+                continue
+            if va != vb:
+                n_bad += 1
+                try:
+                    worst = max(worst, abs(float(va) - float(vb)))
+                except (TypeError, ValueError):
+                    worst = float('inf')
+    return n_cmp, n_bad, worst, n_nonzero_rc
+
+
+def _psi_sweep(nc_mod):
+    """δ 를 키우며 두 배치의 `R_constriction` 을 나란히 — `L2-01` 의 비단조·절벽 재현.
+
+    ⚠ *"접촉을 키운다"* 를 δ 로 대리한다 — 이 픽스처에서 `a_contact` 는 δ 에 단조 증가다
+      (`⑦g` 의 전제이므로 같은 함수가 그것도 확인한다).
+    """
+    ds = [0.002 * (1.06 ** i) for i in range(80)]          # 0.002 → ~0.2
+    div, mul, a_prev = [], [], -1.0
+    div_last_pos = mul_last_pos = 0.0
+    mono_a = True
+    for d in ds:
+        a = _a_from_delta(_PC_SWEEP[0], d)
+        if a < a_prev:
+            mono_a = False
+        a_prev = a
+        ro = real_solver_edges(nc_mod, delta_um=d, psi_placement=nc_mod.PSI_DIVIDE)[0]['R_constriction']
+        rn = real_solver_edges(nc_mod, delta_um=d, psi_placement=nc_mod.PSI_MULTIPLY)[0]['R_constriction']
+        div.append(ro)
+        mul.append(rn)
+        if ro > 0:
+            div_last_pos = ro
+        if rn > 0:
+            mul_last_pos = rn
+    return dict(div=div, mul=mul, div_last_pos=div_last_pos, mul_last_pos=mul_last_pos,
+                a_monotone=mono_a)
+
+
+#: `_psi_sweep` 이 쓰는 plastic 모듈 (호출부가 채운다 — 감사가 면적을 재구현하지 않게).
+_PC_SWEEP = [None]
+
+#: oracle 이 못박는 두 상수.  ⛔ 계약 §C·§⑥ 이 **동결**한 값이다 — 여기를 바꿔서 초록을
+#: 만들면 그 순간 이 검사가 무의미해진다 (`R4-08` 이 정확히 그 부류를 보고했다).
+PSI_EXPONENT_ORACLE = 1.5
+PSI_FLOOR_ORACLE = 1e-4
+
+
+def _psi_oracle(nc_mod, pc_mod):
+    """★★ `R4-08` — ψ 를 **기하에서 독립 계산**해 두 배치의 식을 각각 못박는다.
+
+    `R_Maxwell = 1/(σ·k·2·a_contact)` 는 솔버가 이미 돌려주므로 재료·채널 계수를 다시
+    구현할 필요가 없다.  활성 간선에서는 clamp 가 안 걸려 `a_eff == a_contact` 이므로
+        legacy : `Rc·ψ_oracle == R_Maxwell`
+        곱셈   : `Rc == R_Maxwell·ψ_oracle`
+    이고, 이 두 식은 **ψ 의 지수와 floor 를 같이 못박는다** — 솔버의 ψ 를 빌리지 않기 때문이다.
+    """
+    r_min = min(_FX_R1, _FX_R2)
+    n = bad_div = bad_mul = bad_floor = 0
+    for d in (0.002, 0.005, 0.01, 0.02, 0.04, 0.06, 0.08, 0.1, 0.1025, 0.12, 0.2):
+        a = _a_from_delta(pc_mod, d)
+        a_eff = min(a, r_min)
+        s = a_eff / r_min
+        psi_o = max(1.0 - s, 0.0) ** PSI_EXPONENT_ORACLE
+        eo = real_solver_edges(nc_mod, delta_um=d, psi_placement=nc_mod.PSI_DIVIDE)[0]
+        en = real_solver_edges(nc_mod, delta_um=d, psi_placement=nc_mod.PSI_MULTIPLY)[0]
+        rm = eo.get('R_Maxwell')
+        ro, rn = eo.get('R_constriction') or 0.0, en.get('R_constriction') or 0.0
+        active = psi_o > PSI_FLOOR_ORACLE
+        #  ⓐ floor 판정 자체 — oracle 이 "활성" 이라 한 곳에서만 솔버가 양수를 내야 한다.
+        if active != (ro > 0.0) or active != (rn > 0.0):
+            bad_floor += 1
+            continue
+        if not active:
+            continue
+        n += 1
+        #  ⓑ 두 식.  `a_eff == a_contact` 를 쓰므로 clamp 가 걸린 간선은 활성이 아니다.
+        if rm is None or rm <= 0 or abs(ro * psi_o - rm) > 1e-12 * max(1.0, rm):
+            bad_div += 1
+        if rm is None or rm <= 0 or abs(rn - rm * psi_o) > 1e-12 * max(1.0, rm * psi_o):
+            bad_mul += 1
+    return dict(n=n, bad_div=bad_div, bad_mul=bad_mul, bad_floor=bad_floor,
+                exponent=PSI_EXPONENT_ORACLE, floor=PSI_FLOOR_ORACLE)
 
 
 def classify(n, seed):
@@ -255,24 +396,35 @@ def _selftest() -> int:
     #   ⇒ 실제 build_network 의 활성 간선에서 Rc_new/Rc_old = ψ² 를 요구하는 **양성 대조**를
     #     두고, **no-op 변이는 반드시 실패**하게 한다.  ⛔ "전 코호트 σ 가 반드시 달라야 한다"
     #     는 게이트는 만들지 않는다 (활성 간선이 없는 망에서는 무변화가 정상이다).
-    S3_OLD = ('                R_constriction = 1.0 / '
-              '(sigma_rel_contact * k_weight * 2 * a_eff * psi)')
-    S3_NEW = ('                R_constriction = psi / '
+    #   ★★ **2026-09-15 — 전환이 소스 문자열 치환에서 `psi_placement` 깃발로 옮겨졌다.**
+    #      왜: 치환판으로는 **실제 런을 돌릴 수 없다** (감사 프로세스 안에서만 존재한다).
+    #      S3 는 코호트 130 × 3 채널을 두 팔로 돌려야 하므로 생산 솔버에 인자가 있어야 한다.
+    #      ⛔ 기본값은 `legacy_divide` 로 **비트 동일**이다 (아래 ⑦f 가 고정한다).
+    S3_MUL = ('                    R_constriction = psi / '
               '(sigma_rel_contact * k_weight * 2 * a_eff)')
+    S3_DIV = ('                    R_constriction = 1.0 / '
+              '(sigma_rel_contact * k_weight * 2 * a_eff * psi)')
     #   ⚠ 기본 픽스처(δ .2 µm)는 **floor 아래**라 Rc = 0 이다 — 양성 대조는 활성 분기가
     #     필요하므로 겹침을 줄여 ψ > 1e-4 인 쌍을 쓴다 (δ .02 µm, 실측으로 고른 값).
     _pc = _load('_pc_s3')
-    _D_ACT, _D_FLOOR = 0.02, 0.2
-    e_old = real_solver_edges(_load_nc('_nc_s3_old', _pc), delta_um=_D_ACT)[0]
-    e_s3 = real_solver_edges(_load_nc('_nc_s3_new', _pc, [(S3_OLD, S3_NEW)]), delta_um=_D_ACT)[0]
-    e_nop = real_solver_edges(_load_nc('_nc_s3_nop', _pc, [(S3_OLD, S3_OLD + '  # no-op')]),
-                              delta_um=_D_ACT)[0]
+    _PC_SWEEP[0] = _pc          # 스윕이 면적을 재구현하지 않고 이 모듈을 쓴다
+    #   세 좌표: 활성(ψ>1e-4) · floor_only(s<1 인데 ψ≤1e-4) · clamp_zero(s_raw≥1 ⇒ ψ=0).
+    #   ⚠ floor_only 띠는 **0.102338~0.102633 뿐**이다 (R2-08 실측) — 이 값을 넓히지 말 것.
+    _D_ACT, _D_FLOOR_ONLY, _D_CLAMP = 0.02, 0.1025, 0.2
+    _nc = _load_nc('_nc_s3_flag', _pc)
+    e_old = real_solver_edges(_nc, delta_um=_D_ACT, psi_placement=_nc.PSI_DIVIDE)[0]
+    e_s3 = real_solver_edges(_nc, delta_um=_D_ACT, psi_placement=_nc.PSI_MULTIPLY)[0]
+    #   no-op 변이 = 곱셈 가지를 **legacy 식으로 되돌린다** ⇒ 깃발을 켜도 아무 일이 없다.
+    #   음성 대조(coverage 셀 · hertzian bitwise)는 이것을 **통과시킨다** — 그래서 이 대조가 있다.
+    _nc_nop = _load_nc('_nc_s3_nop', _pc, [(S3_MUL, S3_DIV)])
+    e_nop = real_solver_edges(_nc_nop, delta_um=_D_ACT, psi_placement=_nc_nop.PSI_MULTIPLY)[0]
     #   ⚠ ψ 를 감사가 **다시 구현하면 안 된다** (이 파일 §_load_nc 의 교훈).  그렇다고 비의
     #     제곱근으로 읽으면 `ratio == sqrt(ratio)²` 라는 **항등식**이 되어 판별력이 0 이다.
     #     ⇒ 세 번째 변이로 **솔버가 ψ 를 직접 돌려주게** 해서 그 값과 비교한다.
-    S3_PSI = '                R_constriction = psi'
-    psi_probe = real_solver_edges(_load_nc('_nc_s3_psi', _pc, [(S3_OLD, S3_PSI)]),
-                                  delta_um=_D_ACT)[0]['R_constriction']
+    S3_PSI = '                    R_constriction = psi'
+    _nc_psi = _load_nc('_nc_s3_psi', _pc, [(S3_MUL, S3_PSI)])
+    psi_probe = real_solver_edges(_nc_psi, delta_um=_D_ACT,
+                                 psi_placement=_nc_psi.PSI_MULTIPLY)[0]['R_constriction']
     ratio = e_s3['R_constriction'] / e_old['R_constriction']
     chk('⑦ ★ S3 양성 대조: 실제 build_network 에서 Rc_new/Rc_old = ψ² (ψ 는 솔버가 돌려준 값)',
         e_old['R_constriction'] > 0 and 0.0 < psi_probe < 1.0
@@ -286,11 +438,54 @@ def _selftest() -> int:
         e_s3['R_total'] <= e_old['R_total'],
         f"R_total {e_old['R_total']!r} → {e_s3['R_total']!r}")
     #   floor 아래(ψ ≤ 1e-4)는 **0 → 0** 이다 — floor 복원은 이 시험이 아니다 (R3-02).
-    _fl_old = real_solver_edges(_load_nc('_nc_fl_old', _pc), delta_um=_D_FLOOR)[0]
-    _fl_s3 = real_solver_edges(_load_nc('_nc_fl_s3', _pc, [(S3_OLD, S3_NEW)]), delta_um=_D_FLOOR)[0]
-    chk('⑦d floor 아래는 전환해도 0 → 0 (복원은 별도 축)',
-        _fl_old['R_constriction'] == 0.0 and _fl_s3['R_constriction'] == 0.0,
-        f"{_fl_old['R_constriction']!r} / {_fl_s3['R_constriction']!r}")
+    _fo_old = real_solver_edges(_nc, delta_um=_D_FLOOR_ONLY, psi_placement=_nc.PSI_DIVIDE)[0]
+    _fo_s3 = real_solver_edges(_nc, delta_um=_D_FLOOR_ONLY, psi_placement=_nc.PSI_MULTIPLY)[0]
+    chk('⑦d floor 아래(floor_only, s<1)는 전환해도 0 → 0 (복원은 별도 축)',
+        _fo_old['R_constriction'] == 0.0 and _fo_s3['R_constriction'] == 0.0,
+        f"{_fo_old['R_constriction']!r} / {_fo_s3['R_constriction']!r}")
+    #   ★★ 계약 §C 가 등록한 **세 번째 핀 = clamp 경계** (2026-09-15 에 추가).  등록은
+    #      *"floor 위·아래·clamp 경계를 각각 핀한다"* 인데 위 둘만 있었다.
+    #      clamp 경계 = `a_contact ≥ r_min` ⇒ `a_eff = r_min` **정확히** ⇒ `ψ = 0`.
+    #      ⇒ **양쪽 배치 모두 0** 이고 S3 는 여기서 항등이다.
+    #      ★ 이것이 크기를 말한다 — 삭제 973,137 중 **99.436 %가 clamp_zero** (R2-08) 이므로
+    #        S3 는 "협착이 삭제된 접촉" 의 거의 전부를 **건드리지 않는다**.  그 접촉들의 참값은
+    #        `A` 의 정의(`AREA-03`/`AREA-09` STEP 2)가 정해져야 나온다.
+    _cz_old = real_solver_edges(_nc, delta_um=_D_CLAMP, psi_placement=_nc.PSI_DIVIDE)[0]
+    _cz_s3 = real_solver_edges(_nc, delta_um=_D_CLAMP, psi_placement=_nc.PSI_MULTIPLY)[0]
+    _a_eff_cz = min(_a_from_delta(_pc, _D_CLAMP), 0.5)
+    chk('⑦e ★ clamp 경계(clamp_zero, s_raw≥1 ⇒ ψ=0): 양쪽 다 0 — S3 는 삭제분의 99.436 % 를 안 건드린다',
+        _cz_old['R_constriction'] == 0.0 and _cz_s3['R_constriction'] == 0.0
+        and _a_eff_cz == 0.5,
+        f"Rc {_cz_old['R_constriction']!r} / {_cz_s3['R_constriction']!r} · a_eff = r_min = {_a_eff_cz!r}")
+    #   ★ ⑦f — **기본값이 옛 코드와 비트 동일**하다.  깃발을 넣은 것이 세대 1 의 σ 를
+    #     조용히 움직였다면 봉인 전에 이미 오염된 것이다.  옛 판을 git 에서 불러 대조한다.
+    _n_cmp, _n_bad_bit, _worst_bit, _n_nz = _bitwise_vs_head(_pc)
+    chk('⑦f ★ 기본값(legacy_divide)은 변경 전 코드와 비트 동일 — 깃발 도입이 세대 1 을 안 움직였다',
+        _n_bad_bit == 0 and _n_cmp >= 100 and _n_nz >= 5,
+        f'대조한 (δ, 필드) {_n_cmp} · 그 중 Rc>0 인 δ {_n_nz} · 다른 것 {_n_bad_bit} '
+        f'· 최대차 {_worst_bit!r}')
+    #   ★ ⑦g — `L2-01` 이 보고한 **비단조·절벽**을 생산 코드에서 재현하고, 곱셈 배치가
+    #     둘 다 없앤다는 것을 같은 스윕에서 보인다 (규율 ②: 재현 먼저, 그 다음 수리).
+    _sw = _psi_sweep(_nc)
+    _legacy_nonmono = any(_sw['div'][i + 1] > _sw['div'][i] > 0 for i in range(len(_sw['div']) - 1))
+    _mul_mono = all(_sw['mul'][i + 1] <= _sw['mul'][i] for i in range(len(_sw['mul']) - 1))
+    chk('⑦g ★ 재현: legacy 는 접촉을 키우는데 저항이 **오르는** 구간이 있고(비단조) 곱셈은 단조 비증가',
+        _legacy_nonmono and _mul_mono and _sw['a_monotone'],
+        f"legacy 최대 {max(_sw['div'])!r} (비단조 {_legacy_nonmono}) · 곱셈 단조 {_mul_mono} "
+        f"· 전제 a(δ) 단조 {_sw['a_monotone']}")
+    chk('⑦h ★ 절벽: legacy 는 floor 직전에 큰 양수에서 0 으로 떨어지고, 곱셈은 그 자리가 연속이다',
+        _sw['div_last_pos'] > 1e2 * _sw['mul_last_pos'] and _sw['mul_last_pos'] > 0.0,
+        f"floor 직전 Rc — legacy {_sw['div_last_pos']!r} vs 곱셈 {_sw['mul_last_pos']!r}")
+    #   ★★ ⑦i — **독립 oracle** (`R4-08` 이 요구한 것).  위 ⑦ 은 ψ 를 **솔버에서 받아**
+    #      기대식에도 쓰므로, ψ 가 잘못 바뀌면 기대값이 **같이 움직여** 통과한다 — 실제로
+    #      `floor 1e-4 → 0` 과 `ψ 지수 1.5 → 1.0` 두 변이가 13/13 초록이었다.
+    #      ⇒ 고정 기하에서 s 와 ψ 를 **독립 계산**해 두 배치의 식을 각각 못박는다.
+    #      ⚠ 면적은 재구현하지 않는다 (생산 `plastic_coverage` 에서 받는다) — ψ 만 oracle 이다.
+    _or = _psi_oracle(_nc, _pc)
+    chk('⑦i ★★ 독립 oracle: ψ 를 기하에서 따로 계산해 legacy = R_M/ψ · 곱셈 = R_M·ψ 를 각각 못박는다',
+        _or['n'] >= 3 and _or['bad_div'] == 0 and _or['bad_mul'] == 0 and _or['bad_floor'] == 0,
+        f"활성 {_or['n']}건 · legacy 어긋남 {_or['bad_div']} · 곱셈 어긋남 {_or['bad_mul']} "
+        f"· floor 판정 어긋남 {_or['bad_floor']} (ψ 지수 {_or['exponent']} · floor {_or['floor']})")
 
     # ⑥ ★ P2-R2-06 — **실제 솔버**로 대조한다 (감사의 ψ 재구현이 아니라 build_network 자신).
     #    cap 2π→π 를 plastic 에 물린 솔버와 원판 솔버가 같은 Rc·R_total 을 내야 한다.

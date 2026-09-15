@@ -10551,6 +10551,42 @@ def ledger_page():
         ledger_error=ledger_view.error())
 
 
+@app.route('/ledger/before-after')
+def ledger_before_after():
+    """리뷰 **비포/애프터** — *"무엇을 믿었고 무엇을 쟀나"* 를 항목마다 나란히.
+
+    ★ **요청마다 원장에서 다시 렌더한다** (`scripts/build_review_before_after.render()`).
+      커밋된 `docs/reviews/review_before_after.html` 을 그냥 보내면 원장이 움직인 뒤에
+      **낡은 페이지를 조용히 서빙**하게 되고, 그것이 이 리포가 반복해 맞은 부류다
+      (규율 ④ — 정본은 밖으로 강제되지 않으면 새어나간다).  생성기가 순수 함수라
+      디스크에 쓰지 않고 문자열만 받는다.
+    ⚠ 렌더가 실패하면 **낡은 파일로 조용히 되돌아가지 않는다** — 실패를 보여 준다.
+      (되돌아가면 "페이지는 떠 있는데 원장과 다르다" 가 되고, 그게 감사가 잡은 그 상태다.)
+    """
+    #  ⚠ 함수 안에서 import 한다 — 모듈 수준에 `html` 을 올리면 이 파일이 지역변수로
+    #    쓰는 `html` 들과 가려진다 (실제로 여러 곳에서 쓴다).
+    import html as _html
+    import importlib.util as _ilu
+    import pathlib as _pl
+    _p = _pl.Path(__file__).resolve().parent.parent / 'scripts' / 'build_review_before_after.py'
+    try:
+        _spec = _ilu.spec_from_file_location('_rba', _p)
+        _mod = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_mod)
+        html_out = _mod.render()
+    except Exception as e:                                      # noqa: BLE001
+        return (f'<!doctype html><meta charset="utf-8">'
+                f'<title>비포/애프터 — 렌더 실패</title>'
+                f'<body style="font:14px/1.6 system-ui;padding:2rem;max-width:44rem">'
+                f'<h1 style="font-size:1.3rem">비포/애프터를 원장에서 렌더하지 못했다</h1>'
+                f'<p><code>{_html.escape(type(e).__name__)}: {_html.escape(str(e))}</code></p>'
+                f'<p>⚠ 커밋된 낡은 사본으로 **되돌아가지 않는다** — 원장과 다른 페이지를 띄우는 것이 '
+                f'이 페이지가 막으려는 실패다.  생성기를 고친 뒤 새로고침할 것: '
+                f'<code>python3 scripts/build_review_before_after.py --selftest</code></p>'
+                f'<p><a href="/ledger">← 원장</a></p></body>'), 500
+    return Response(html_out, mimetype='text/html; charset=utf-8')
+
+
 @app.route('/audit')
 def audit():
     rows = []

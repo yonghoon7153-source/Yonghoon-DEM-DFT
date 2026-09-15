@@ -58,6 +58,20 @@ SIGMA_AM_ELECTRONIC = 0.05  # S/cm (50 mS/cm, NCM811 grain interior, discharged)
 #: build_network 가 **실제로** 받은 mode (코드리뷰 A2 재현·회귀용).  None = 아직 안 불림.
 LAST_BUILD_MODE = None
 
+# ── 협착저항의 ψ 배치 (`L2-01` · 계약 `docs/area_contract_20260913.md` §C·§⑥) ──────────
+#   `PSI_DIVIDE`   = 현행 `R_c = 1/(2σaψ)`   ← 기본값 (세대 1 = 지금까지의 모든 σ)
+#   `PSI_MULTIPLY` = S3   `R_c = ψ/(2σa)`    ← 독립 기준해가 고른 배치
+#   비 = `(1−s)^−3` (s = a_eff/r_min) 이고 `s=0.9` 에서 1,620배.
+#   ⛔ **기본값을 여기서 바꾸지 말 것** — 계약 §D-3 이 baseline 봉인을 S3 런 **앞**에 두고
+#     그 봉인은 2026-09-17 23:59 KST 창 안에서만 허용된다.  전환은 봉인·런·판정 뒤,
+#     그 순서를 `scripts/run_s3_psi.py` 가 기계적으로 강제한다 (봉인 없으면 거부).
+#   ⚠ 이것을 바꾸면 σ 가 움직인다 = `case_master.csv` 의 모든 σ 와 스케일링법칙 적합이
+#     같은 타깃 위에 있지 않게 된다.  세대 표기 없이 섞지 말 것.
+PSI_DIVIDE = 'legacy_divide'
+PSI_MULTIPLY = 'multiply'
+PSI_PLACEMENTS = (PSI_DIVIDE, PSI_MULTIPLY)
+PSI_PLACEMENT_DEFAULT = PSI_DIVIDE
+
 # ───────────────────────────────────────────────────────────────────────
 # Grain-boundary (crystallinity) correction for NCM σ_AM — "Trevisanello-spirit"
 # DIRECTION + corpus-fit (β, r0).  See A1 note in generate_comparison_plots.py.
@@ -164,7 +178,7 @@ def get_sigma_disk_factor(regime, t1, t2, sigma_model='uniform',
 def build_network(atoms_raw, contacts_raw, target_types, scale,
                   plate_z, box_x=0.05, box_y=0.05, boundary_factor=2.0,
                   mode='ionic', type_map=None, results_dir=None,
-                  contact_mode='hertzian'):
+                  contact_mode='hertzian', psi_placement=PSI_PLACEMENT_DEFAULT):
     # ⚠ `results_dir` 는 **읽히지 않는다** (2026-08-20 전수 감사 코드 하위 α).
     #   옛 docstring 은 "ionic 모드는 percolation_sets.json 으로 경계를 잡는다" 고 약속했지만
     #   본문 어디서도 그 파일을 열지 않는다 — 경계는 **항상 z-규칙**(아래 `boundary_factor`)
@@ -187,6 +201,10 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
     #    사실이 이 값 없이는 정적으로만 보이고 런타임으로 증명이 안 됐다.
     global LAST_BUILD_MODE
     LAST_BUILD_MODE = mode
+    #  ⛔ **fail-closed** — 모르는 값이 조용히 legacy 로 떨어지면 S3 팔이 no-op 이 되고
+    #    "돌렸다" 는 기록만 남는다 (규율 ⑤ 의 false-green).  거부한다.
+    if psi_placement not in PSI_PLACEMENTS:
+        raise ValueError(f'psi_placement 는 {PSI_PLACEMENTS} 중 하나여야 한다: {psi_placement!r}')
     if mode == 'thermal':
         target_ids = list(atoms_raw.keys())
     else:
@@ -407,9 +425,30 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
             a_eff = min(a_contact, r_min_real)
             psi = max(1.0 - a_eff / r_min_real, 0.0) ** 1.5
             if psi > 1e-4:
-                R_constriction = 1.0 / (sigma_rel_contact * k_weight * 2 * a_eff * psi)
+                if psi_placement == PSI_MULTIPLY:
+                    # ── S3 (계약 `docs/area_contract_20260913.md` §C · 원장 `L2-01`) ──
+                    #   `R_c = ψ(a/b)/(2σa)` — ψ 를 **곱한다**.
+                    #   자리: Yovanovich 1982 p.86 식 1-3 · 2005 리뷰(접촉 conductance 분모).
+                    #   ★ 문헌 인용이 아니라 **계산으로 갈랐다** — 축대칭 flux-tube 유한체적
+                    #     기준해 `scripts/constriction_reference.py` (`AREA-09` STEP 4):
+                    #     기하평균 |ln 비| 가 `s ≤ .3` 에서 곱 **1.02491228** vs 역수 1.69510941 ·
+                    #     `s > .3` 에서 곱 **1.18902836** vs 역수 **44.31250962** (R2-03 경계 정정판).
+                    #     곱셈 우위는 10점 **각각에서** 유지된다.
+                    #   ★ 이 줄 **위 :392 의 주석이 처음부터 곱셈식을 적고 있었다** — 코드가
+                    #     자기 주석과 어긋난 것이고, 비는 `(1−s)^−3`, `s=0.9` 에서 1,620배다.
+                    #   ⛔ **아직 기본값이 아니다** — 계약 §D-3 이 baseline 봉인을 S3 런 **앞**에
+                    #     두고 그 봉인은 2026-09-17 전에 금지다.  기본값 전환은 봉인·런·판정
+                    #     뒤에만 한다 (`scripts/run_s3_psi.py` 가 봉인 없으면 거부한다).
+                    R_constriction = psi / (sigma_rel_contact * k_weight * 2 * a_eff)
+                else:
+                    R_constriction = 1.0 / (sigma_rel_contact * k_weight * 2 * a_eff * psi)
             else:
                 # Full contact limit: spreading vanishes, R_bulk carries it.
+                #  ⚠ legacy 배치에서 이것은 극한이 아니라 **절벽**이다 (`L2-01`):
+                #    전환점 s* = 0.99784556531 에서 R 이 5010.76059484 → 0 으로 떨어진다.
+                #    곱셈 배치에서는 `ψ→0` 이라 이 분기가 연속의 끝점이 된다.
+                #    ⛔ floor 자체는 계약 §C 가 **동결**했다 — 곱셈판에서도 건드리지 않는다
+                #      (0 → 양수 복원은 **별도 축**이다).
                 R_constriction = 0.0
         else:
             R_constriction = R_Maxwell
@@ -448,6 +487,9 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         'box_y': box_y,
         'scale': scale,
         'contact_mode': contact_mode,
+        #  ★ 어떤 ψ 배치로 지은 망인지 **망 자신이 들고 다닌다** (`L2-01`/S3).  라벨 없이
+        #    두 세대의 σ 가 섞이면 사후에 복원할 방법이 없다 (계약 §4 "S2 와 S3 분리").
+        'psi_placement': psi_placement,
         # Thermal is the multi-phase superset network (all AM+SE contacts),
         # so σ_eff/σ_bulk_SE can exceed 1 — the single-phase sigma_ratio>1.5
         # guard in solve_network does NOT apply to it (see the guard there).
@@ -959,7 +1001,7 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
                       sigma_bulk=SIGMA_BULK_DEFAULT, results_dir=None,
                       type_map=None, contact_mode='hertzian',
                       dump_raw_dir=None, dump_tag=None, is_thermal=False, mode=None,
-                      boundary_factor=2.0):
+                      boundary_factor=2.0, psi_placement=PSI_PLACEMENT_DEFAULT):
     """
     Run full decomposition analysis:
     1. FULL (R_bulk + R_constriction): explicit-contact model estimate (물리 정본 아님, R20-06)
@@ -998,7 +1040,8 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
                         plate_z, box_x, box_y, boundary_factor,
                         mode=_mode,
                         results_dir=results_dir,
-                        type_map=type_map, contact_mode=contact_mode)
+                        type_map=type_map, contact_mode=contact_mode,
+                        psi_placement=psi_placement)
 
     if net is None:
         print("  No network found")
@@ -1081,6 +1124,8 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
         'contact_mode': contact_mode,
         'resistance_model': ('mikic' if contact_mode == 'physics'
                              else 'maxwell'),
+        #  ★ `L2-01`/S3 세대 표기.  `legacy_divide` = 지금까지의 모든 σ.
+        'psi_placement': psi_placement,
         'n_nodes': n_nodes,
         'n_edges': n_edges,
         'n_bottom': n_bottom,

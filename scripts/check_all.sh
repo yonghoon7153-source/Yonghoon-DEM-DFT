@@ -183,6 +183,9 @@ run 'measure_rho        --selftest' python3 scripts/measure_rho.py --selftest
 #  ★★ 2026-09-14 (계약 §5-v4 A·B·D-3) — S3 **런 전** 봉인.  라벨·순서자리·솔버 환경을
 #    결과를 보기 전에 못박고, 마감(2026-09-17) 전 쓰기를 **거부**한다 (selftest 가 단언).
 run 'seal_s3_prerun     --selftest' python3 scripts/seal_s3_prerun.py --selftest
+#  ★★ 2026-09-15 (계약 §A·B·C·D · 원장 `L2-01`·`R4-10`) — S3 **런**.  봉인 도구는 발행만
+#    막았고 런을 막는 것이 없어 마감 규칙이 산문이었다.  이 러너는 봉인 없이는 rc=2 다.
+run 'run_s3_psi         --selftest' python3 scripts/run_s3_psi.py --selftest
 run 'check_doc_refs          --selftest' python3 scripts/check_doc_refs.py --selftest
 run 'check_cohort_packages  (커밋된 패키지 ↔ 원장)' python3 scripts/check_cohort_packages.py
 run 'audit_adjudication   (원시 감사 ↔ 판정 원장)' python3 scripts/check_audit_adjudication.py

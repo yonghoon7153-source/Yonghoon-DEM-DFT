@@ -143,7 +143,7 @@ footer .m{color:var(--ink-2)}
 }
 </style><div class="wrap">
 <header>
-  <div class="eyebrow">Codex 적대 리뷰 · L1~L5 + 면적 계약 · 원장 findings.json @ 64ca04d14</div>
+  <div class="eyebrow">Codex 적대 리뷰 · L1~L5 + 면적 계약 · 원장 findings.json @ 2d9ce3e87</div>
   <h1>DEM 스택 적대 리뷰</h1>
   <p class="sub">웹앱의 계산 스택을 다섯 층으로 나눠 독립 검토에 부쳤고, 그 대응이 다시 <em>면적 계약</em> 한 장을 낳았다. 아래는 우리가 믿고 있던 것과, 실제 함수·코퍼스·독립 기준해가 보여준 것이다 — 모든 숫자는 원장에 있고 이 페이지는 거기서 생성된다.</p>
   <div class="tally">
@@ -195,7 +195,7 @@ footer .m{color:var(--ink-2)}
         <div class="cell before"><div class="lbl">믿은 것</div><p>코드 주석 "Mikić 1974" — 보정계수 ψ 를 적용한 Holm 협착 저항.</p></div>
         <div class="cell after"><div class="lbl">잰 것</div><p>문헌은 ψ 를 <b>곱하고</b> 코드는 <b>나눈다</b>.  독립 기준해(축대칭 flux tube 직접 풀이)가 <b>그 원통 모델 안에서</b> 곱셈 우위를 확정: 코드는 곱식의 (1−s)<sup>−3</sup> 배, s=0.9 에서 <b>1,620배</b>.  코드가 자기 주석과도 어긋난다.</p></div>
       </div>
-      <p class="note">기하평균 |ln 비| (nr600, 바른 구간): s≤0.3 에서 곱함 <b>1.02491228</b> vs 나눔 1.69510941 · s&gt;0.3 에서 곱함 1.18902836 vs 나눔 <b>44.31250962</b>.  ⚠ Codex 2라운드: 첫 집계는 s=0.3 이 반올림으로 범위 밖에 들어간 3/7 이었다 — 출력에 경고가 찍혀 있었는데 못 봤다.  "참값" 이 아니라 모델 내 비.  σ <b>상향 가설</b> (cutoff 분기는 반대도 허용).</p>
+      <p class="note">기하평균 |ln 비| (nr600, 바른 구간): s≤0.3 에서 곱함 <b>1.02491228</b> vs 나눔 1.69510941 · s&gt;0.3 에서 곱함 1.18902836 vs 나눔 <b>44.31250962</b>.  ⚠ Codex 2라운드: 첫 집계는 s=0.3 이 반올림으로 범위 밖에 들어간 3/7 이었다 — 출력에 경고가 찍혀 있었는데 못 봤다.  "참값" 이 아니라 모델 내 비.  σ <b>상향 가설</b> (cutoff 분기는 반대도 허용).<br>★★ <b>2026-09-15 — 전환을 생산 솔버에 배선했다 (런은 못 돈다).</b>  <span class="m">psi_placement</span> 깃발 신설, 기본값은 변경 전 코드와 <b>비트 동일</b>(모르는 값은 거부 — 조용히 legacy 로 떨어지면 S3 팔이 no-op 이 된다).  전환이 <b>감사 안의 소스 문자열 치환</b>으로만 있어서 코호트를 두 팔로 <b>돌릴 수가 없었다</b>.  생산 코드에서 재현: 같은 픽스처로 δ 를 키우면 legacy 는 저항이 <b>오르는 구간</b>을 갖고 floor 직전 <b>150.90474195844345</b> 에서 0 으로 떨어지는데(절벽), 곱셈은 단조 비증가이고 그 자리가 <b>0.0024068935279540635</b> = 연속의 끝점이다.  계약이 등록한 <b>세 번째 핀(clamp 경계)</b>도 채웠다 — 거기서는 양쪽이 다 0 이라 S3 가 <b>항등</b>이고, 삭제분의 <b>99.436 %</b> 가 그 부류이므로 <b>S3 는 "협착이 삭제된 접촉" 의 거의 전부를 안 건드린다</b>.  ⬜ 판정은 <b>날짜에 묶여 있다</b> — baseline 봉인이 런 앞이고 그 봉인은 09-17 창 안에서만 허용된다.</p>
     </div>
     <div class="row">
       <div class="rid"><span class="tag P1">AREA-12</span><span class="tag P2">열림</span><span class="ttl">면적을 둘로 쪼개면 삭제된 협착 항이 되살아난다</span></div>
@@ -236,6 +236,22 @@ footer .m{color:var(--ink-2)}
         <div class="cell after"><div class="lbl">잰 것</div><p>porosity <b>1</b> → R_ct <b>128462895.60746863</b> · <b>1.000001</b> → <b>4.805944515715439</b>.  1 에서 불연속 — 단위 계약이 없었다.</p></div>
       </div>
       <p class="note">명시적 단위 계약(<span class="m">porosity_to_fraction(unit=)</span>)으로 고쳤다.  수정 후 1 % = 4.805944467170544 로 판정문 값과 일치.</p>
+    </div>
+    <div class="row">
+      <div class="rid"><span class="tag P2">R4-10</span><span class="tag FIX">고침</span><span class="ttl">마감 전에는 S3 를 기계적으로 시작할 수 없다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>dry-run 이 봉인을 안 쓰므로 마감(09-17) 전에는 S3 가 시작될 수 없다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p><b>반증됐다</b> — 좁은 주장(dry-run 이 안 쓴다)만 맞고, <b>봉인을 요구하는 러너가 없어서</b> 기계적 차단이 <b>존재하지 않았다</b>.  게다가 날짜 selftest 는 <b>오늘만 초록</b>이라 허용일을 주입하면 도구가 <b>정작 일해야 하는 날에</b> 자기검사가 깨졌다.</p></div>
+      </div>
+      <p class="note"><span class="m">--now</span> 로 날짜를 <b>고정 입력</b>으로 주입해 09-16·17·18 을 <b>매번 함께</b> 시험한다 — 창 안에서는 <b>날짜가 통과하고 내용이 막는다</b>.  ⛔ 파일 부재 검사를 지워서 초록으로 만든 것이 아니다.  그리고 <b>2026-09-15 에 러너를 만들어 차단을 실재하게 했다</b> (<span class="m">run_s3_psi.py</span>): 봉인이 없거나·창 <b>밖에서</b> 만들어졌거나·B_ch 가 비었거나·ρ 가 없으면 <b>rc=2 로 아무것도 안 한다</b>.</p>
+    </div>
+    <div class="row">
+      <div class="rid"><span class="tag P2">R4-08</span><span class="tag FIX">고침</span><span class="ttl">양성 대조가 ψ 정정을 지킨다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>no-op 변이를 잡으니 대조가 유효하다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p><b>ψ 를 솔버에서 받아 기대식에도 써서</b> 잘못 바뀐 ψ 가 기대값을 <b>같이 움직였다</b> — <span class="m">floor 1e-4→0</span> 과 <span class="m">ψ 지수 1.5→1.0</span> 두 변이가 <b>13/13 초록</b>.  floor 대조 좌표도 실제로는 clamp 라 <b>floor-only 영역을 시험하지 않았다</b>.</p></div>
+      </div>
+      <p class="note">ψ 를 <b>기하에서 독립 계산</b>하는 oracle 을 넣고(⑦i), 변이를 <b>실제로 돌려</b> 확인했다 — 둘 다 이제 <b>15/18 로 실패</b>한다.  floor-only 는 실측 띠 <b>0.102338~0.102633</b> 안의 좌표로 옮기고 clamp 경계는 따로 핀해 세 영역이 <b>독립</b> 핀이 됐다.  ⚠ clamp 제거 변이는 여전히 초록인데 그건 구멍이 아니라 <b>진짜 no-op</b> 이다 (max(1−s,0) 이 같은 일을 한다).</p>
     </div>
   </div>
 </section>
@@ -284,5 +300,5 @@ footer .m{color:var(--ink-2)}
   </ol></div>
   <div class="caveat"><b>오늘 내가 세 번 틀린 자리.</b> 기준해에서 축대칭 면적의 2π 를 통째로 빠뜨렸는데 단조·수렴·극한 검사가 전부 초록이었다(일률 배수는 비를 안 바꾼다) · 회귀 핀을 재지 않고 추측해 적었다 · 감사가 "최종 결속 라벨" 과 "가장 작은 cap" 을 섞어 불가능한 결과를 냈다.  셋 다 <b>결과가 그럴듯해서</b> 넘어갈 뻔했고, 셋 다 배수·핀·단조성을 <b>실제로 재는</b> 검사 하나가 잡았다.</div>
 </section>
-<footer>이 페이지는 <span class="m">scripts/build_review_before_after.py</span> 가 <span class="m">docs/reviews/findings.json</span> 에서 생성한다 (HEAD <span class="m">64ca04d14</span>).  집계·고친 목록·SHA 는 원장 값이고, 서술이 인용하는 숫자는 selftest 가 해당 항목의 note 에서 찾는다.  인용 금지값 스윕(<span class="m">check_review_findings.py --ban-sweep</span>)이 이 파일을 포함한다.</footer>
+<footer>이 페이지는 <span class="m">scripts/build_review_before_after.py</span> 가 <span class="m">docs/reviews/findings.json</span> 에서 생성한다 (HEAD <span class="m">2d9ce3e87</span>).  집계·고친 목록·SHA 는 원장 값이고, 서술이 인용하는 숫자는 selftest 가 해당 항목의 note 에서 찾는다.  인용 금지값 스윕(<span class="m">check_review_findings.py --ban-sweep</span>)이 이 파일을 포함한다.</footer>
 </div>
