@@ -38,15 +38,16 @@
       <span class="ph-n">① COMSOL</span>
       <h3>마이크로쇼츠 6.3 재구축</h3>
       <p>원본 모델에 대해 우리가 세웠던 주장(M1)을 <b>철회</b>하고 명세를 다시
-        썼다. 여덟 축의 수렴 진단이 원문 대조·재계산까지 끝났고, 아홉째(물리
-        300→600)는 수신 측 검토까지 왔다. <b>전체 수렴은 미완이고 본 실행은
-        보류</b> — 모델 검증 완료가 아니다.</p>
+        썼다. 아홉 축의 수렴 진단이 <b>전부 우리 재계산까지</b> 끝났고, 그 뒤
+        후처리 회수가 어디서 막혔는지도 원시 자료로 확인했다. <b>전체 수렴은
+        미완이고 본 실행은 보류</b> — 모델 검증 완료가 아니다.</p>
     </div>
     <div class="ph">
       <span class="ph-n">② 하네스</span>
       <h3>α·β 산출 검증층</h3>
       <p>산출 다섯 종에 계약·서명·validator 를 붙였고 외부 적대적 게이트 리뷰
-        R13·R14 를 통과했다. <b>R14 GO 는 범위 한정</b>이다.</p>
+        R13·R14 를 통과했다. <b>R14 GO 는 범위 한정</b>이다. R14 가 열어 둔 셋을
+        닫았고, 보존 도구가 남의 기계에서 처음 돌며 드러낸 결함 넷도 닫았다.</p>
     </div>
     <div class="ph">
       <span class="ph-n">③ 정량화</span>
@@ -176,17 +177,32 @@
     한정</b>이다 — 전체 하네스 · BML 과학 타당성 · COMSOL · 장시간 실행 승인이
     아니다. 리뷰어는 전수 재실행을 하지 않았다고 스스로 밝혔고, 그 말을 그대로
     옮겨 둔다. 열린 조건도 남아 있다.</p>
+
+  <p class="pipe-p"><b>R14 가 “다음 라운드” 로 미뤄 둔 셋을 닫았다.</b> ① 승격
+    묶음의 산출들이 <b>서로 다른 커밋</b>에서 나올 수 있는데 게이트가 그것을 안 봤다
+    — 이제 혼재를 계약 위반으로 세고, 예외는 규칙이 아니라 <b>기록</b>이다(두 개의
+    전체 커밋과 코드 동등성 검토 범위를 적고, <b>정확히 그 집합</b>에만 걸린다).
+    ② 옛 정본과의 일회성 이관에 <b>별도 판정</b>을 준다 — 포괄 허용 플래그로 통과를
+    만들지 않고 <b>승격 자격은 여전히 false</b> 다. ③ 기록용 명령이 산출 위치를 말없이
+    가정하던 것을 오류로 바꿨다.</p>
+
+  <p class="pipe-p"><b>그리고 도구가 남의 기계에서 처음 돌며 네 번 걸렸다.</b>
+    이미 흡수된 브랜치로 push 하라는 안내, 어디에 서야 하는지 말하지 않던 블록,
+    묶음마다 다른 manifest 이름, 항목 목록 키의 갈림. 넷 다 재현 시험부터 닫았고,
+    그중 하나는 <b>내 첫 수정이 반만 고쳐</b> 한 번 더 걸렸다 — 시험이 철자 하나만
+    보고 있었기 때문이다. 지금은 접근 자리 전부를 센다.</p>
 </section>
 
 <!-- ══ 4 ══════════════════════════════════════════════════════════════ -->
 <section class="pipe-sec">
-  <h2 class="pipe-h"><span class="pipe-n">4</span> ① COMSOL — 여덟 축은 원문 대조까지, 아홉째는 수신 검토까지</h2>
+  <h2 class="pipe-h"><span class="pipe-n">4</span> ① COMSOL — 아홉 축 전부 우리 재계산까지</h2>
 
   <p class="pipe-p">이 갈래는 계산이 <b>다른 기계</b>에서 돌고 결과가 ZIP 으로
     건너온다. 그래서 규율이 하나 더 붙는다 — <b>받은 요약을 그대로 옮기지 않고</b>
-    원시 CSV 에서 이쪽 산술로 다시 계산해 같은지 본다. 여덟 축은 그 대조를
-    마쳤고, 아홉째(물리 300→600 @320·16 코어)는 수신 측 독립 검토까지 왔다 —
-    ZIP 이 저장소에 보존되면 우리 재계산으로 닫는다.</p>
+    원시 CSV 에서 이쪽 산술로 다시 계산해 같은지 본다. <b>아홉 축이 전부 그 대조를
+    마쳤다.</b> 마지막 축(물리 300→600 @320·16 코어)은 ZIP 이 저장소에 들어온 뒤
+    우리가 다시 셌고, 묶음 보고값·수신 측 재계산·우리 재계산이 표본 수·최대값·최대
+    시각·전극·위치까지 <b>전부 같았다.</b></p>
 
   <div class="pg-tablewrap">
     <table class="pg-table">
@@ -200,7 +216,7 @@
         <tr><td>초기 시간상한</td><td>320H0250 → 320H0125</td><td>0.0012699200233 mV @0.002 s</td><td>충족</td></tr>
         <tr><td>코어 수 (시간식 고정)</td><td>2 → 16 코어</td><td>4.8e-12 mV @0.044625 s</td><td>충족</td></tr>
         <tr><td>후기 시간상한 (16 코어 고정)</td><td>0.1 s cap → 0.005/0.025 s cap</td><td>0.0023442301413 mV @1.7 s</td><td>충족</td></tr>
-        <tr><td>물리 메시 (입자 320 · 16 코어)</td><td>300 → 600</td><td>1.07714e-8 mV @0.00125 s</td><td>충족 <b>(수신 측 검토값 — 원문 보존 전)</b></td></tr>
+        <tr><td>물리 메시 (입자 320 · 16 코어)</td><td>300 → 600</td><td>1.07714e-8 mV @0.00125 s</td><td>충족 <b>(우리 재계산)</b></td></tr>
       </tbody>
     </table>
   </div>
@@ -218,10 +234,33 @@
     사실상 전부가 cap 축이었다. 다만 해 셋만으로 <b>두 축의 상호작용이 없다고는
     말하지 않는다.</b></p>
 
-  <p class="pipe-p"><b>증거 보존.</b> 건너온 묶음 여덟 개를 <b>bytes 그대로</b>
+  <p class="pipe-p"><b>증거 보존.</b> 건너온 묶음 <b>열네 개</b>를 <b>bytes 그대로</b>
     저장하고 각 항목의 sha256 을 옆의 manifest 와 대조했다. 줄끝 정규화로 bytes 가
     갈리는 사고를 한 번 겪고(그리고 되돌리고) <code class="mono">.gitattributes</code>
-    규칙을 묶음마다 <b>먼저</b> 넣는 순서로 바꿨다.</p>
+    규칙을 묶음마다 <b>먼저</b> 넣는 순서로 바꿨다. 커밋한 <b>뒤에도</b> 바이트를 다시
+    대조한다 — 최근 다섯 묶음은 111·50·41·21·8 건 전부 불일치 0 이었다.</p>
+
+  <p class="pipe-p"><b>도구가 남의 기계에서 처음 돌자 네 번 걸렸다.</b> 지금까지 이
+    보존 스크립트는 우리 기계에서만 돌았다. 사용자 기계에서 처음 돌리자 흩어진 전제가
+    한꺼번에 드러났다 — 이미 흡수된 브랜치로 push 하라고 찍던 안내, 저장소 루트에서
+    돌아야 하는데 그 말을 안 하던 블록, 묶음마다 다른 manifest 이름, 그리고 항목
+    목록의 키가 <code class="mono">entries</code>·<code class="mono">files</code>·
+    <code class="mono">payload</code> 로 갈리는 것. 넷 다 재현 시험부터 닫았다.
+    <b>안내문은 사람이 그대로 붙여 넣는 코드다</b> — 코드와 같은 규율로 본다.</p>
+
+  <p class="pipe-p"><b>후처리가 어디서 막혔나 (§21).</b> 정상 guard 실행은 <b>시간
+    적분을 5 초까지 끝냈다</b> — 우리가 원시 로그를 세어 확인했다(줄 987 · 채택 간격
+    986). 죽은 것은 그 뒤 후처리이고, 원인은 좌표 증거가 쓴 변수 하나가 COMSOL 에서
+    정의되지 않은 것이다. <b>모델 결함이 아니라 증거 구현이 넣은 것</b>이고 기준
+    소스는 안 바뀌었다. 여기서 한 가지가 더 읽힌다 — <b>종료 코드 0 이 성공이 아니다.</b>
+    compile 과 batch 가 둘 다 0 을 냈는데 로그 안에 치명 오류가 있었고, 그쪽 worker 가
+    그것을 잡아 실패로 적었다. 우리 하네스가 자체 리뷰에서 닫은 축과 같은 모양이다.</p>
+
+  <p class="pipe-p">이어진 API 복구 시도는 모델을 <b>열기도 전에</b> 막혔다 — Java 가
+    자기 입력을 읽는 첫 단계에서 파일 접근이 거부됐다. 그래서 <b>모델 복사 로드가
+    실패한다는 것은 확인된 적이 없다.</b> 그것이 다음 제안(저장 해 전용 API 경로)이
+    성립하는 근거이고, 동시에 "Desktop 에서 열렸으니 batch 에서도 열린다" 고 쓰면 안
+    되는 이유다.</p>
 
   <p class="pipe-note"><b>이 갈래는 아직 "모델 검증 완료" 가 아니다.</b> 여섯 축의
     <b>이번 표본 민감도</b>가 기준을 만족했다는 것이고, 전체 수렴 · 0.1 s 이후 시간
@@ -283,9 +322,11 @@
       <tbody>
         <tr><td>세 갈래 현재 상태 · 재개 runbook</td><td><code class="mono">bms-balancing/WORKING_STATE.md</code></td></tr>
         <tr><td>③ 정량화 — 전 라운드 원장 (pyDMA 검증 포함)</td><td><code class="mono">bms-balancing/reviews/BML_R1_RESPONSE.md</code></td></tr>
-        <tr><td>① COMSOL 재구축 명세 · 진단 §8~§18</td><td><code class="mono">bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code></td></tr>
+        <tr><td>① COMSOL 재구축 명세 · 진단 §8~§22</td><td><code class="mono">bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code></td></tr>
         <tr><td>① 건너온 묶음 원문 (bytes 보존 + 대조 기록)</td><td><code class="mono">bms-balancing/reviews/r14_repros/codex63/</code></td></tr>
-        <tr><td>② 게이트 리뷰 R13 · R14 요청·회신 원문</td><td><code class="mono">bms-balancing/reviews/</code></td></tr>
+        <tr><td>② 게이트 리뷰 R13 · R14 요청·회신 원문 (R15 는 R14 회신 §8)</td><td><code class="mono">bms-balancing/reviews/</code></td></tr>
+        <tr><td>② 승격 예외·legacy 이관의 <b>기록된 결정</b></td><td><code class="mono">bms-balancing/reviews/PROMOTION_DECISIONS.json</code></td></tr>
+        <tr><td>① 우리 재계산 산출 (§18·§19·§20)</td><td><code class="mono">…/codex63/*/RECHECK_*.json</code></td></tr>
         <tr><td>산출 자체 (정본 수치)</td><td>산출 <code class="mono">.csv</code> + 나란한 <code class="mono">.meta.json</code></td></tr>
       </tbody>
     </table>
