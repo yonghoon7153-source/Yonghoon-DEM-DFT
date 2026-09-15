@@ -112,10 +112,19 @@ medium 14, low 32, note 32, 기각 2다. 즉 **v2는 v1 대비 실질적인 개�
   manifest/CSV 인코딩 헬퍼
 - `predict`: 범위 비교 허용오차와 `float_precision='round_trip'`, 선택 특징 기준 플래그와 이탈 특징 열,
   artifact 해시 대조, 의존성 버전 기록, provenance 확장
-- `tests`, `models`: 값 수준 oracle, 변이 저항 픽스처, 기준선 행, 진단 기록
+- `tests`: 값 수준 릴리스 oracle, 변이 저항 픽스처(다변량·무신호), GridSearchCV spy, 교차 배치 그룹 검사,
+  bare assert 제거
+- `models`: 우연 수준 기준선 행(`baseline_mean_threshold`, `baseline_prior` 등), 타깃 단위 실패 분리,
+  지표 표와 fold별 선택 빈도를 담은 `run_summary.md`, 제외된 후보 기록, 모델 진단 경고
+- 문서: README 설정표·원시 입력 형식 요건·지표 해석, `MANIFEST.sha256`과 `validation/` 기록 재생성
 
-**검증 결과: 단위 테스트 84개 통과, 배포 검증 11개 항목 전부 통과. `raw_group`의 OOF 예측은 수정 전과
-비트 단위로 동일하다(최대 상대차 0.0). 평가 의미론을 바꾸지 않았다는 뜻이다.** 예측 오탐은 3건에서 0건이 됐다.
+**검증 결과: 단위 테스트 131개 통과(원래 34개), 배포 검증 전 항목 통과(검사 4개 → 6개). `raw_group`의 OOF
+예측은 수정 전과 비트 단위로 동일하다(공유 수치 열 16개, 최대 상대차 0.0). 평가 의미론을 바꾸지 않았다는
+뜻이다.** 예측 오탐은 3건에서 0건이 됐고, 이전에 34개 테스트를 통과하던 변이 20개가 이제 전부 사망한다.
+
+특히 봐줬으면 하는 것 두 가지다. `run_summary.md`가 이제 최종 모델이 EIS 열을 하나도 쓰지 않으면
+**"이 capacity 모델은 EIS 특징을 전혀 사용하지 않습니다"**를 굵게 출력한다. 데모에서 실제로 출력된다.
+그리고 분류 표의 `baseline_mean_threshold` 행이 AUC 정확히 0으로 찍혀 LOO 인공물이 표 안에서 자명해진다.
 
 ## 6. 요청
 

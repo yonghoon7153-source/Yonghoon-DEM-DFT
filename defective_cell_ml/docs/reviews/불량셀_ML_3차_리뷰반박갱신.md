@@ -171,16 +171,28 @@ logistic 지표와 `unavailable['logistic']`이 동시에 남고 모델 파일�
 | `0cb6c19` | extract | 인코딩(cp1252 추가), CC/CV 판정 견고화, 다중 sweep 선택 설정, CLI 종료 규약 통일, cap 타당성 검사, manifest/CSV 인코딩 헬퍼, 대문자 특징명 거부 |
 | `4029d8a` | predict | 범위 비교 허용오차와 `float_precision='round_trip'`, 선택 특징 기준 플래그와 이탈 특징 열, artifact 해시 대조, 의존성 버전 기록, provenance 확장 |
 | `e2d986f` | tests | 값 수준 릴리스 oracle, 변이 저항 픽스처(다변량·무신호), GridSearchCV spy, 교차 배치 그룹 검사, bare assert 제거, 임시 폴더 위생 |
-| `287fc31` | tests | 모듈 간 계약 정렬 |
+| `4a3e62e` | models | 우연 수준 기준선 행, 타깃 단위 실패 분리, 읽을 수 있는 실행 요약, 제외된 후보 기록, 모델 진단 |
+| `287fc31`, `fa5be52` | tests | 모듈 간 계약 정렬 |
+
+models 모듈에서 특히 값어치가 큰 것들이다.
+
+- **F11**: `baseline_mean_threshold`, `baseline_prior` 등 우연 수준 행이 분류 표에 실제로 들어갔다. 데모 실행에서
+  `baseline_mean_threshold`의 AUC가 정확히 0으로 찍혀 LOO 인공물이 표 안에서 자명해진다.
+- **F17**: `run_summary.md`가 지표 표와 fold별 선택 빈도를 담고, 최종 모델이 EIS 열을 하나도 쓰지 않으면
+  **"이 capacity 모델은 EIS 특징을 전혀 사용하지 않습니다"**를 굵게 출력한다. 데모에서 실제로 출력된다.
+- **F07**: 배포 적합 실패가 `unavailable['<name>_deployment_model']`로 분리되어 지표 행과 공존하지 않는다.
+- **F24**: `metrics.json`에 `diagnostics` 키가 생겨 상수 확률 모델이나 C 격자 경계 선택을 경고한다.
+  데모 기본 격자에서 `boundary: 12 of 12 folds` 경고가 실제로 뜬다.
 
 ### 검증 결과
 
 | 항목 | 결과 |
 |---|---|
-| 단위 테스트 | 112개 통과 (원래 34개) |
-| 배포 검증 | 전 항목 통과 |
-| `raw_group` OOF 예측 | 수정 전과 **비트 단위로 동일** (최대 상대차 0.0) |
+| 단위 테스트 | **131개 통과** (원래 34개) |
+| 배포 검증 | 전 항목 통과 (검사 4개 → 6개) |
+| `raw_group` OOF 예측 | 수정 전과 **비트 단위로 동일** (공유 수치 열 16개, 최대 상대차 0.0) |
 | 예측 오탐 | 3건 → **0건** |
+| 분류 표 | 기준선 행 4개 추가 (`baseline_mean_threshold`, `baseline_mag@1000Hz_threshold`, `baseline_ocv_threshold`, `baseline_prior`) |
 
 OOF 예측이 비트 단위로 동일하다는 것은 **평가 의미론을 바꾸지 않았다**는 뜻이다. 견고성과 진단만 개선했다.
 
@@ -189,11 +201,11 @@ logistic 클래스 인덱스 반전, predict 부등호 반전, 점수 부호 반
 
 ## 6. 남은 일
 
-- **models 모듈** (F07, F11, F17, F24, F29, F31, F37, F45, F46, F64, F70, F74): 진행 중
-- **문서 24건**: README §4 설정표 누락 7개 키, `inner_splits` "최대 3" 오기, LOO 풀링 편향 설명,
-  원시 입력 형식 요건, `MANIFEST.sha256` 재생성. Codex가 쓰는 것이 맞다고 본다.
-- **`docs/reviews/머신러닝_문서별_정독기록.md` 234–235행**에 작성자 PC 절대경로
-  (`C:\Users\Administrator\Downloads\...`)가 남아 배포 ZIP에 실려 있다. 삭제 후 MANIFEST 재생성 필요.
+- **문서 24건**: README §4 설정표 누락 키, `inner_splits` "최대 3" 오기, LOO 풀링 편향 설명, 원시 입력 형식 요건,
+  `MANIFEST.sha256`과 `validation/` 기록 재생성. 이번 브랜치에서 함께 처리했다.
+- **Windows 실기 확인**: F30(한글 경로 인코딩)은 Linux에서 재현되지 않아 실제 Windows에서 한 번 더 확인해야 한다.
+- **실측 프로토콜 확인 후 재검토**: F32·F33·F06·F19의 수정은 조용한 실패를 시끄러운 실패로 바꾸는 방향으로
+  보수적으로 했다. 랩의 실제 cycler·EC-Lab 출력 형식을 알면 더 나은 선택이 있을 수 있다.
 
 ## 7. 한계
 
