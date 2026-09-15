@@ -103,6 +103,12 @@ if [ "${1:-}" = "--selftest" ]; then
   # ⛔음성: '완료' 를 '자격' 으로 읽히게 두지 않는다 (문구가 사라지면 실패)
   chk "$(echo "$OUT" | grep -q '자격 통과가 아니다' && echo 1 || echo 0)" \
       "⛔음성: '완료 ≠ 자격' 을 화면이 말한다"
+  # ⛔음성: 락 줄이 **오류처럼** 읽히면 안 된다 — 정상임을 글자로 말해야 한다
+  L9=/tmp/modelc_box331_seed_ext_selftest.lock; : > "$L9"
+  OUT9=$( (exec 9>"$L9"; flock 9; bash "$0" "$R" 2>&1) )
+  rm -f "$L9"
+  chk "$(echo "$OUT9" | grep -q '지금 돌고 있다' && echo 1 || echo 0)" \
+      "⛔음성: 잡힌 락을 '돌고 있다(정상)' 로 말한다 (오류처럼 보이지 않게)"
   rm -rf "$T"; echo "selftest: $ok 통과 / $bad 실패"
   [ "$bad" = 0 ] || exit 1; exit 0
 fi
@@ -120,13 +126,15 @@ fi
 #   ⚠ 락 파일이 **있는 것**과 **잡혀 있는 것**은 다르다. flock -n 으로 실제로 잡아 본다.
 _locks=$(ls /tmp/*_box331_seed_ext_*.lock 2>/dev/null)
 if [ -n "$_locks" ]; then
-  echo "  대기열 락:"
+  echo "  대기열 락  (🔒 = 돌고 있다 · 비어 있음 = 안 돌고 있다 — 둘 다 정상이다):"
   for L in $_locks; do
     if flock -n "$L" true 2>/dev/null; then
-      echo "    $(basename "$L")  — 비어 있음(그 유닛은 안 돌고 있다)"
+      echo "    $(basename "$L")  — 비어 있음 (안 돌고 있다 — 끝났거나 아직 차례가 아니다)"
     else
       _who=$(command -v fuser >/dev/null && fuser "$L" 2>/dev/null | tr -s ' ' || echo "")
-      echo "    $(basename "$L")  — 🔒 잡혀 있음${_who:+ (pid$_who)}"
+      # ⚠ 1저자가 이 줄을 **오류로 읽었다**(2026-09-15 "잡혀있다는데?"). 락이 잡힌 것은
+      #   정상 상태 — 그 유닛이 돌고 있다는 뜻이다. 문구가 그걸 말하게 한다.
+      echo "    $(basename "$L")  — 🔒 그 유닛이 **지금 돌고 있다** (정상)${_who:+ · pid$_who}"
     fi
   done
 fi
