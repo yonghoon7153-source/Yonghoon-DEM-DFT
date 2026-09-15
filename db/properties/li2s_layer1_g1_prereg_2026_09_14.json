@@ -243,5 +243,42 @@
   ],
   "⛔_판정에는_영향_없다": "이것은 자원 실측이지 §5 판정 기준의 변경이 아니다. 힘 ≤ 0.15 eV/Å · 에너지 ≤ 15 meV/atom 은 그대로다. ②의 `david_ndim` 도 같은 Hamiltonian 을 같은 `conv_thr 1e-8` 로 푸는 수치 경로일 뿐이다.",
   "잔존물": "실패한 출력은 `li2sA_s1_t20ps/scf.out.oom_gpu` 로 남긴다 (지우지 않는다). `scf.in` 은 그대로라 재시도 시 같은 입력을 쓴다 — 설정 균일성 key `9e752bad`."
+ },
+ "6d_파일럿_2차_실측_2026_09_15": {
+  "무엇": "modelc(LPSCl1.6 3×3×1) 9/9 종료로 kgy GPU 가 비었고(839 MiB), §6c 사다리 ①을 그대로 밟았다. **두 번 다 즉사했다.**",
+  "①_GPU_단독_재시도": "15초 · MPI abort. `iteration #` 한 줄도 안 찍혔다 — SCF 진입 전이다.",
+  "②_diago_david_ndim_2": "14초 · 같은 자리. 사다리 ②가 **아무것도 못 고쳤다.**",
+  "★_pw_x_가_말한_실제_메모리": "`Estimated max dynamical RAM per process >  110.15 GB`",
+  "계_크기_실측_2026_09_15": {
+   "number_of_electrons": 1920.0,
+   "number_of_Kohn_Sham_states": 1152,
+   "dense_grid_G": 7909050,
+   "dense_FFT": "320 × 320 × 320",
+   "smooth_grid_G": 2000781,
+   "smooth_FFT": "200 × 200 × 200",
+   "unit_cell_volume_au3": 78990.6264,
+   "⚠": "§6c 가 적은 dense 15818099 · smooth 4001561 은 **Γ 축약 전** 값이고, 이번 출력은 축약 후다. 같은 계다 — 세는 방식이 다르다."
+  },
+  "⛔_§6c_추정_정정": {
+   "맞았던_것": "'배열 하나 npwx × nbnd × 16 B ≈ 4.6 GB' — 맞다. npwx ≈ 25만(Γ 축약) × 1152 × 16 B = 4.6 GB.",
+   "틀렸던_것": "'Davidson 이 그런 배열을 **4벌** 가량 들고 있어 ~18 GB' — **틀렸다.** `diago_david_ndim=4` 는 `psi`·`hpsi`·`spsi` **세 배열을 각각 4×nbnd** 로 잡는다 ⇒ 밴드블록 **12개 ≈ 55 GB**. 거기에 USPP 투영자(vkb) · 밀도격자(320³) · 부분공간 행렬이 더해져 pw.x 실측 **110 GB**.",
+   "왜_이_오차가_비쌌나": "18 GB 라는 수 위에서 사다리 ②(→9 GB)·③(랭크당 ~2 GB)이 **둘 다 말이 되게** 보였다. 실측 110 GB 에서는 둘 다 처음부터 무의미했다. **추정으로 사다리를 세우고 그 사다리를 두 번 밟았다.**",
+   "교훈": "메모리는 추정하지 말고 pw.x 에게 묻는다 — `Estimated max dynamical RAM` 한 줄이면 된다. CLAUDE.md 의 kgy QE 규율(`ldd` 로 바이너리에게 묻는다)과 같은 종류다."
+  },
+  "⛔_사다리_②③_무효_판정": {
+   "②_diago_david_ndim_2": "12블록 → 6블록 = 110 → **약 65 GB**. GPU 24.6 GB 대비 여전히 2.6배 초과. **실측으로도 14초 만에 죽었다.**",
+   "③_CPU_NP_8": "MPI 는 메모리를 **분산**하지 **감축**하지 않는다. 랭크당 ~14 GB 여도 노드에 110 GB 가 있어야 하는데 §6c 실측 `node_available_memory_MiB` = 26341 (≈26 GB). **산술로 불가.**",
+   "⇒": "사다리 ②③ 을 이 계에서 **폐기**한다. 다음 사람이 다시 밟지 않게 여기 남긴다."
+  },
+  "★_경로_④_KISTI": {
+   "왜": "`amd_a100nv_8` = A100 **80 GB × 8장**. 110 GB 를 8장에 분산하면 장당 ≈ 14 GB — 여유롭게 들어간다. 2장(장당 55 GB)으로도 된다.",
+   "선례": "같은 계열 잡이 이미 돌았다 — Nd pair01 k수렴(job 766470, amd_a100nv_8) · phaseB(`sbatch_phaseB_v3_kisti.sh`, GPU 4장).",
+   "pseudo": "/scratch/x3430a02/kgy/manuscript_support/pseudo (CLAUDE.md)",
+   "⚠_QOS": "scancel 직후 재제출 금지 — 카운터 지연 (CLAUDE.md)",
+   "미정": "GPU 장수·walltime·큐 대기는 아직 안 쟀다. 던지기 전에 §6 `자원_재판단` 대로 사람이 정한다."
+  },
+  "⛔_판정_기준은_안_바뀐다": "힘 벡터 RMSE ≤ 0.15 eV/Å · 상대 에너지 MAE ≤ 15 meV/atom · 봉인 10점 전부. **이것은 자원 사실이지 G1 불통과가 아니다** — 아직 아무것도 재지 못했다.",
+  "잔존물": "`~/work/runs/g1_li2s_layer1/li2sA_s1_t20ps/` — `scf.in`(②적용본 · 원본은 `scf.in.bak_ndim`) · `scf.out`(2차 OOM) · `pilot_retry.log`. 지우지 않는다.",
+  "설정_균일성_key": "9e752bad — 카드 봉인값과 일치 확인 (DRY_RUN 2026-09-15). 입력은 안 바뀌었다. ⚠ ② 적용본은 이 key 밖이므로 KISTI 로 갈 때 `scf.in.bak_ndim` 로 되돌린다."
  }
 }
