@@ -1,0 +1,167 @@
+[
+  {
+    "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/batch.log",
+    "bytes": 148567,
+    "sha256": "22f624513569c09d39548fba4145f09ed11ca9ca9ae9762bd0fce7dc7a8b859d"
+  },
+  {
+    "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/compile.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/console.log",
+    "bytes": 82407,
+    "sha256": "ff34ae993d6989741dbca83c429d88f5ebbfac6121229450cb33f36ce84d70d9"
+  },
+  {
+    "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/ElectrolyteGuard300R320C16Normal.class",
+    "bytes": 67934,
+    "sha256": "fdde5c42f40c1b59e4d80ab94e0b7dfa7de44836600be8b0e2bcaaa7451c39d8"
+  },
+  {
+    "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/ElectrolyteGuard300R320C16Normal.java",
+    "bytes": 68215,
+    "sha256": "40063efedfc95fae00b1d5df22636b3a7acddf40420074df98985d2027e810ce"
+  },
+  {
+    "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/request.json",
+    "bytes": 410,
+    "sha256": "cbad7c36be0142e01193da35a6a67c7d18a62a64ff3d79c69d477034cb02514d"
+  },
+  {
+    "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/result.mph.status",
+    "bytes": 20,
+    "sha256": "a8f1d90ff530667addaf8a8aafd909ffb3e819d7d458b443ceebc7dc5bff54e6"
+  },
+  {
+    "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/result_Model.mph",
+    "bytes": 1266539803,
+    "sha256": "7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658"
+  },
+  {
+    "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/status.json",
+    "bytes": 488,
+    "sha256": "b6a782d46493c5af709f986d8f94afe73bcfdf005243913aea439dbd51598241"
+  },
+  {
+    "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/worker.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "outputs/COMSOL63_ELECTROLYTE_GUARD_HANDOFF.zip",
+    "bytes": 555102474,
+    "sha256": "8a72d6a7fe7649aae94fbb3f921c297b9cdf39bec24fb5537b64b585ea11ad14"
+  },
+  {
+    "path": "outputs/COMSOL63_ELECTROLYTE_GUARD_HANDOFF_RECEIPT.json",
+    "bytes": 1208,
+    "sha256": "38c28bb6c1a8f5db71dfde267c20ee86091324be66eec0188d0d27895010e4da"
+  },
+  {
+    "path": "outputs/electrolyte_guard/comparison_contract.json",
+    "bytes": 2132,
+    "sha256": "5ef9e7a469bb0c5707312726c4858e4422432e50ecade1293e76904666d03873"
+  },
+  {
+    "path": "outputs/electrolyte_guard/DUPLICATE_CHECK_BEFORE.json",
+    "bytes": 28395,
+    "sha256": "f4d7e4c9214142cc749c7b1291447f800413750eab0432956ddf277a98ed01f3"
+  },
+  {
+    "path": "outputs/electrolyte_guard/ELECTROLYTE_GUARD_RESULTS_KO.md",
+    "bytes": 6816,
+    "sha256": "2289d76e4f0035b3a682c0c8e359f877e1f951cb162cd68ddfc808ddf229a800"
+  },
+  {
+    "path": "outputs/electrolyte_guard/ElectrolyteGuard300R320C16Normal.diff",
+    "bytes": 8498,
+    "sha256": "20cc0e9d40211e384620bd2a3b4a47b7c096a073090230856ca9616e3098a0d5"
+  },
+  {
+    "path": "outputs/electrolyte_guard/ElectrolyteGuard300R320C16Trigger.diff",
+    "bytes": 8504,
+    "sha256": "9f4cb0e0edb1582897c5347fc58e58d7ee6f0e09c3db01c90dbc79c897eff2c6"
+  },
+  {
+    "path": "outputs/electrolyte_guard/FINAL_CHECKS.json",
+    "bytes": 10230,
+    "sha256": "f1e20118705ba44af84dd146bccf640527b2a2d5bbc071d3e175651a3d159c92"
+  },
+  {
+    "path": "outputs/electrolyte_guard/jobs.json",
+    "bytes": 741,
+    "sha256": "9ef2d369fd4a4aa7a3731f32436d8f740ffb1f3363b6f072e10ca5463561b013"
+  },
+  {
+    "path": "outputs/electrolyte_guard/NEXT_RUN_PLAN_after_guard.md",
+    "bytes": 2151,
+    "sha256": "329b53b6c6f110c290465484ef8bd5f17e6da58c79ff307e48c9bcaabfcab6e0"
+  },
+  {
+    "path": "outputs/electrolyte_guard/NEXT_RUN_PLAN_before_guard.md",
+    "bytes": 11082,
+    "sha256": "b8dc00eeaee5453f271fcbf967ebdc658ce6f2503cf39d17009b26a503a2676f"
+  },
+  {
+    "path": "outputs/electrolyte_guard/package_manifest.json",
+    "bytes": 15882,
+    "sha256": "e184914ea7114fd58c418b25e3dce718a2df261f68604a7a9cc60da43a64b4a7"
+  },
+  {
+    "path": "outputs/electrolyte_guard/preserved_before.json",
+    "bytes": 9774,
+    "sha256": "dcbd79068fada024277a8e4f105b528e07f7d205b0101a32163672a6ac1dd679"
+  },
+  {
+    "path": "outputs/electrolyte_guard/RESOURCE_AND_TIMEOUT.json",
+    "bytes": 1148,
+    "sha256": "0214aac82b8ff733b70334b9fd7fa5f6f5ffceabe7b1876ff9d26fdaa4ff424c"
+  },
+  {
+    "path": "outputs/electrolyte_guard/results/NORMAL_FAILURE_DETAILS.json",
+    "bytes": 4417,
+    "sha256": "6393b22e2fa483a1b729c6fdd1dfb2aed3bd2546efc9887585977535412389b0"
+  },
+  {
+    "path": "outputs/electrolyte_guard/results/normal_GATE.json",
+    "bytes": 430,
+    "sha256": "47615801280388c0c9891e96f3253b3681346d3f0d4eadfafb2c815a2bcbe04e"
+  },
+  {
+    "path": "outputs/electrolyte_guard/results/normal_NATIVE_LOG_STEPS_ONLY.csv",
+    "bytes": 103242,
+    "sha256": "e9838f17ff8c257a408e3d2786c039c9e32ea976a4be2e3c17f9a08672372725"
+  },
+  {
+    "path": "outputs/electrolyte_guard/results/normal_raw_csv_manifest.json",
+    "bytes": 160,
+    "sha256": "d76ccc8e04eba8b30efcaaf031c567e98426c0e903156a033c5afe4b4060719a"
+  },
+  {
+    "path": "outputs/electrolyte_guard/results/normal_solver_properties.json",
+    "bytes": 113985,
+    "sha256": "5bf4082faa3d83b482cb6bd61e24793a0d171c8bb72fcb84ca4a9565b6d16f92"
+  },
+  {
+    "path": "outputs/electrolyte_guard/source_configs.json",
+    "bytes": 688,
+    "sha256": "f0610722da08e65ea5fbaabbadef73840fb76a490463f64fc2a8a237edb80ed0"
+  },
+  {
+    "path": "outputs/electrolyte_guard/source_review.json",
+    "bytes": 1434,
+    "sha256": "ff18d02f8f402d4222677f5e7d3a1f16758aaf5f0f5876d8ee9afcc04bee353b"
+  },
+  {
+    "path": "outputs/electrolyte_guard/submission_normal.json",
+    "bytes": 1118,
+    "sha256": "d85ff26d614d31c3b7e8a01f10e6c13b26c56baf0dd2e2b318e9085f507eea09"
+  },
+  {
+    "path": "outputs/NEXT_RUN_PLAN.md",
+    "bytes": 2151,
+    "sha256": "329b53b6c6f110c290465484ef8bd5f17e6da58c79ff307e48c9bcaabfcab6e0"
+  }
+]

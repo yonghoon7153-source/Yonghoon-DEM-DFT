@@ -1,0 +1,12 @@
+{
+  "source": "User-attached recipient review, not a fresh remote verification performed here",
+  "ZIP_bytes": 555102474,
+  "ZIP_sha256": "8a72d6a7fe7649aae94fbb3f921c297b9cdf39bec24fb5537b64b585ea11ad14",
+  "payload_count": 76,
+  "manifest_sha256": "e184914ea7114fd58c418b25e3dce718a2df261f68604a7a9cc60da43a64b4a7",
+  "recipient_confirmed_size_SHA_CRC": true,
+  "recipient_original_MPH_time_metadata_count": 987,
+  "native_reopen_success_not_established": true,
+  "prior_generation_receipt_untouched": true,
+  "historical333_not_reverified_here": true
+}

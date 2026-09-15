@@ -1,0 +1,8 @@
+{
+  "status": "INCOMPLETE",
+  "classification": "INCOMPLETE_POSTPROCESSING_UNDEFINED_COORDINATE",
+  "job_id": "56ef13bee5a448c5a029b02656ebf6bb",
+  "all_required_checks_complete": false,
+  "next_trigger_allowed": false,
+  "error": "New optional domain argmin coordinate evidence uses comp1.x; COMSOL reports Undefined variable comp1.x in comp1.minguard1(comp1.cl,comp1.x), Global Evaluation after Time solver returned."
+}

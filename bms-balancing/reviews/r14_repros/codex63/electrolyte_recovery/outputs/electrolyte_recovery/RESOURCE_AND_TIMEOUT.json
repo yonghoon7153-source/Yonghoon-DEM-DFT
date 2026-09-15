@@ -1,0 +1,15 @@
+{
+  "cores": 16,
+  "worker_budget_seconds": 1800,
+  "budget_meaning": "One deadline shared by compile and batch. Launcher terminated on timeout; entire process-tree termination not guaranteed. Unknown state forbids resubmission.",
+  "memory_total_bytes": 24300146688,
+  "memory_available_bytes": 7364018176,
+  "disk_free_bytes": 180026302464,
+  "input_file_boundary": {
+    "path": "outputs/comsol63/electrolyte_recovery/inputs/failed_normal_copy.mph",
+    "bytes": 1266539803,
+    "sha256": "7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658"
+  },
+  "output_boundary": "New job directory only, console CSV and before/after Java; worker saves new result MPH. Original input/job/audit never written.",
+  "new_solve_calls": 0
+}

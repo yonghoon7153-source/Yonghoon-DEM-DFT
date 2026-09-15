@@ -1,0 +1,27 @@
+{
+  "generated_at_utc": "2026-09-15T01:56:14.897796+00:00",
+  "generated_zip": {
+    "path": "outputs/COMSOL63_ELECTROLYTE_GUARD_HANDOFF.zip",
+    "bytes": 555102474,
+    "sha256": "8a72d6a7fe7649aae94fbb3f921c297b9cdf39bec24fb5537b64b585ea11ad14"
+  },
+  "payload_count": 76,
+  "entries_with_manifest": 77,
+  "manifest_sha256": "e184914ea7114fd58c418b25e3dce718a2df261f68604a7a9cc60da43a64b4a7",
+  "size_SHA_CRC_verified": true,
+  "new_submissions": 1,
+  "worker_completed_jobs": 0,
+  "time_integration_completed_but_export_failed": true,
+  "normal_gate": {
+    "status": "INCOMPLETE",
+    "classification": "INCOMPLETE_POSTPROCESSING_UNDEFINED_COORDINATE",
+    "job_id": "56ef13bee5a448c5a029b02656ebf6bb",
+    "all_required_checks_complete": false,
+    "next_trigger_allowed": false,
+    "error": "New optional domain argmin coordinate evidence uses comp1.x; COMSOL reports Undefined variable comp1.x in comp1.minguard1(comp1.cl,comp1.x), Global Evaluation after Time solver returned."
+  },
+  "trigger_gate": null,
+  "remote_receipt_not_yet_verified": true,
+  "whole_current_inventory_remote_verified": false,
+  "historical333_not_repackaged_or_reverified_in_this_scope": true
+}

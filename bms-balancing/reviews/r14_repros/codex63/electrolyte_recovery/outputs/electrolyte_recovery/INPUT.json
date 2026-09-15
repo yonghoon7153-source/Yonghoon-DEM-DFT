@@ -1,0 +1,15 @@
+{
+  "original": {
+    "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/result_Model.mph",
+    "bytes": 1266539803,
+    "sha256": "7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658"
+  },
+  "copy": {
+    "path": "outputs/comsol63/electrolyte_recovery/inputs/failed_normal_copy.mph",
+    "bytes": 1266539803,
+    "sha256": "7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658"
+  },
+  "original_job_state": "failed",
+  "new_solve_limit": 0,
+  "trigger_authorized": false
+}

@@ -1,0 +1,110 @@
+수신 검증 완료입니다. 정상 시험은 미완으로 유지하되, 재계산보다 기존 MPH의 후처리 복구를 먼저 시도하는 게 맞습니다.
+- ZIP 크기·SHA와 76개 payload + manifest의 해시·CRC가 모두 일치했습니다.
+- 소스·로그에서 5초 적분 완료 → 좌표 출력 오류 순서를 확인했습니다.
+- 추가로 MPH 내부에 987개 저장 시각과 solution 데이터가 남아 있고, 시각 목록은 기준 모델 메타데이터와 동일합니다. 다만 실제 COMSOL 재개·수치 회수 성공은 아직 미확인입니다.
+복구 시 중요한 점은 두 가지입니다. 필수 수치와 보조 좌표 출력을 분리하고, 기존 분석기를 통과시키려고 failed를 completed로 바꾸지 말고 별도 복구 검증 기록을 만들어야 합니다.
+현지 Codex에 보낼 자료를 준비했습니다.
+1. [상세 검토 보고서](C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/COMSOL63_ELECTROLYTE_GUARD_RECIPIENT_REVIEW.md)
+2. [후처리 복구 승인용 회신 초안](C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/COMSOL63_ELECTROLYTE_RECOVERY_APPROVAL_DRAFT.md)
+승인하시면 두 파일을 함께 보내세요. 새 solve 0회·발동 시험 보류로 제한한 문구입니다. 이번 검토에서도 COMSOL 실행·모델 수정은 하지 않았습니다.
+
+# 전해질 guard 전달본 — 수신 검증·실패 원인·복구안 검토
+
+2026-09-15. 이번 작업은 ZIP·소스·로그·MPH 직렬화 메타데이터의 수동/독립 스크립트 검토다. 패키지의 Python/Java를 실행하지 않았고 COMSOL 호출·모델 수정·새 solve는 0회다.
+
+## 판정
+
+**수신 무결성 수용. 정상 시험 INCOMPLETE 유지, 발동 시험 보류. 다음 작업은 재계산보다 기존 실패 MPH 복사본의 후처리 전용 복구가 우선이다.** 실제 COMSOL reopen과 수치 내보내기는 아직 하지 않았으므로 복구 성공을 보장하거나 정상 PASS로 승격하지 않는다.
+
+실패 원인은 로그와 소스상 새 좌표 출력식에 있다. 그러나 그 밖의 수치 검사가 실행되지 않았으므로, “이 한 줄만 바꾸면 정상 PASS”라고 단정할 수는 없다.
+
+## 1. 수신 파일 직접 검증
+
+파일: C:/Users/Administrator/Downloads/COMSOL63_ELECTROLYTE_GUARD_HANDOFF.zip
+
+| 항목 | 수신 측 직접 관측 |
+|---|---|
+| ZIP 크기 | 555,102,474 bytes |
+| ZIP SHA-256 | 8a72d6a7fe7649aae94fbb3f921c297b9cdf39bec24fb5537b64b585ea11ad14 |
+| manifest SHA-256 | e184914ea7114fd58c418b25e3dce718a2df261f68604a7a9cc60da43a64b4a7 |
+| 집합·크기·SHA·CRC | 76 payload + manifest, 모두 일치 |
+| 경로/중복 | 절대경로·상위경로 이탈·중복·대소문자 접힘 충돌 없음 |
+| 실패 MPH | 1,266,539,803 bytes; SHA 7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658 |
+| MPH 내부 | 101개 ZIP 항목, 내부 CRC 전수 통과 |
+
+이전 B 수신 payload와 직접 겹치는 33개 중 32개 바이트가 동일하다. 달라진 것은 outputs/NEXT_RUN_PLAN.md다. 현지 선택 45개 전체의 전후 보존이나 원격 process 부재를 독립 검증한 것으로 확대하지 않는다. 역사적 333개 전체를 이번에 재검증하지 않았다.
+
+## 2. 실패의 원인과 영향 범위
+
+검토 소스: ElectrolyteGuard300R320C16Normal.java.
+
+- 332–341행: 전해질 최소값·guard·세 domain의 argmin 좌표를 하나의 EvalGlobal 배열에 묶었다. 333행에 `comp1.minguard1(comp1.cl,comp1.x)`가 있다.
+- 335행의 evaluate()는 내부에서 곧바로 getReal()을 호출한다. 좌표 한 항목이 실패하면 최소값 등 필수 증거도 반환·출력되지 않는다.
+- 391행 runAll() 뒤 394행에서 위 함수를 호출한다. 기존 전압·Li·표면 출력과 427행의 Java 설정 내보내기도 그 뒤여서 실행되지 않았다.
+- batch.log 2305–2306행: index 986, t=5 및 Time-stepping completed. 2320–2329행: comp1.x Undefined variable / Global Evaluation. 2333행: 실패 모델 저장. console에는 solver 반환 marker가 있다.
+
+따라서 이번 오류는 확인된 후처리 오류이며, OCP 범위 실패로 분류하지 않은 것은 맞다. batch rc 0과 worker failed를 별도로 보존한 것도 맞다.
+
+**보완할 구조:** 필수 최소값/단위/guard·전압·표면 출력과 보조 argmin 좌표 출력을 분리한다. 보조 좌표 실패 때문에 이미 확보 가능한 필수 자료까지 잃지 않게 한다. 다만 좌표 미완은 명시하고, 향후 발동 domain 판정 등 필수 조건을 조용히 제거해서는 안 된다.
+
+`comp1.x`를 `comp1.z`로 바꾸라는 근거는 없다. 기존 기준의 공간 프로파일은 지역 평가 문맥의 `x`를 사용했고 이번 XML의 좌표명 목록도 x/y/z다. 이것은 같은 Global Evaluation 문맥에서 `x`가 반드시 성공한다는 증명은 아니다. 실제 재개한 모델·dataset에서 좌표 문맥을 확인한 뒤 소량 평가로 검증해야 한다. COMSOL 문서의 min/max 두 번째 인자 용법은 연산자 사용 의미의 근거이지 해당 프로젝트 표현식의 성공 보장이 아니다. [Maximum and Minimum](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_definitions.21.098.html).
+
+## 3. 후처리 복구를 먼저 검토할 추가 근거
+
+실패 MPH 내부의 dmodel.xml을 독립 파싱했다.
+
+- dataset `daudit` → `sol1` → native `sol7` 연결이 있다.
+- `sol1/solutioninfo`는 parameter t, 단위 s, **0–5초의 987개 시간 값**을 담는다.
+- 그 시간 목록은 기준 B 패키지에 있던 300/320 C16 dmodel.xml의 목록과 **직렬화 문자열 및 Decimal 값 모두 동일**하다. 메타데이터 기준 단조 증가와 cap 조건도 확인했다.
+- native sol7이 참조하는 74개 저장 리소스가 모두 MPH 안에 있다. 모든 내부 CRC도 통과했다.
+
+이는 “반올림 native 로그만 남았다”보다 더 강한 **저장 시각 메타데이터 근거**다. 다만 이번에 정확한 새 CSV가 없다는 원 보고는 맞으며, 이 메타데이터를 농도·전압·표면 검증으로 대체하지 않는다. 바이너리 해가 native API로 모두 읽히는지, 해당 값이 유효한지는 재개 후 확인해야 한다.
+
+1143개 Time/Variables 속성은 독립적으로 로그에서 다시 파싱했고, 기존 대비 변경은 세 번째 guard를 추가하는 네 배열뿐이었다. 네 Minimum operator의 1D 선택 [1,2,3]/[1]/[2]/[3]과 Lagrange 5차 되읽기도 확인했다. 정상·발동 Java 차이도 이름 두 곳과 threshold 0/1198뿐이다. 이는 설정/소스 일치 근거이며 정상 수치 PASS는 아니다.
+
+## 4. 복구 경로에 필요한 별도 처리
+
+기존 work/electrolyte_guard/analyze.py 153행은 worker `state == completed`를 요구한다. 현 상태에서는 새 CSV를 만들어도 그 진입점이 거부한다. 17–31행의 extract()는 기존 audit 경로에 쓰고, 88행은 원래 실행에서 생성되지 않은 axes_generated.java를 읽는다.
+
+이 검사를 통과시키기 위해 status.json을 고치거나 원래 실패 job 폴더에 성공 로그를 넣어서는 안 된다. **별도 recovery 경로·검증 함수·영수증**을 마련하여 원래 실패 job와 새 후처리 작업을 연결해야 한다. 이는 아직 구현되지 않은 복구안의 요구사항이며 현재 분석기의 엄격한 completed 조건 자체를 새로운 실행 결함으로 세지 않는다.
+
+재계산 금지의 구체 경계:
+
+1. 지정 SHA의 실패 MPH 복사본을 읽는다. 입력 전후 SHA가 같아야 한다. 원래 ZIP·MPH·status·로그·실패 gate는 보존한다.
+2. `daudit`/`sol1`의 시간의존 해와 시간 값·해 크기·필요 필드를 native API로 확인한다. `sol2` 등의 초기화 저장해를 잘못 고르지 않는다.
+3. 계산된 모델의 결과 평가/내보내기만 수행한다. 기존 preflightAudit()/build()/main()을 재사용하지 않는다. 그 경로는 runAll() 또는 모델 재구축을 포함한다.
+4. study/solver 실행, 초기화 재수행, geometry/mesh 재빌드, clearSolution, physics/threshold/보호 변경은 금지한다. 모델 열기/결과 평가와 solve 횟수를 구분해서 기록한다.
+5. 기존 187개 요청 시각·241개 좌표, 정확 공통 저장 시각의 ΔV/Δx 기준을 유지한다. 최소값·추론/명시 단위·각 guard 상태·Li/OCP 유효성·기존 필수 출력까지 모두 복구한다.
+6. 새 CSV·설정 export는 별도 recovery 폴더에 저장한다. API로 얻은 값과 최초 로그/XML의 설정을 대조하고 결과만 바꿨다는 증거를 남긴다.
+7. 재개 불가·필드 누락·평가 실패 시 미완으로 정지한다. 정상 solve 재실행이나 발동1198 제출로 자동 전환하지 않는다.
+
+COMSOL에는 복사본을 불러오는 loadCopy와 저장된 solution 데이터를 조회하는 API가 있다. 이 API 존재는 복구 경로의 근거이며 이 파일의 성공 여부는 현지 시험이 필요하다. [ModelUtil](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_api_general.47.15.html), [Solution Data](https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_api_solver.51.09.html).
+
+## 최종 상태
+
+수신 확인: 수용. 원래 실행: INCOMPLETE_POSTPROCESSING_UNDEFINED_COORDINATE 유지. 정상 gate: 미완. 발동 시험: 보류. 권고: 별도 승인 후 후처리 전용 복구, 새 solve 0회. 복구 정상 판정 뒤에도 발동 시험은 이번 복구 범위에 자동 포함하지 않는다.
+
+기계 증거: electrolyte_guard_integrity_results.json, electrolyte_guard_static_results.json, electrolyte_guard_mph_entries.json, electrolyte_guard_independent_source.diff. 독립 검사 스크립트는 electrolyte_guard_recipient_audit.py와 electrolyte_guard_static_review.py이며 첨부 실행 코드는 사용하지 않았다.
+# 현지 Codex 회신 초안 — 사용자 전송 시 후처리 전용 작업 승인
+
+이 문서는 검토자가 작성한 초안이다. 작성 자체로 원격 실행을 승인하거나 제출하지 않는다. 사용자가 아래 문구를 승인하여 현지 Codex에 보내는 경우에만 적용한다.
+
+---
+
+수신 ZIP 검증 결과를 접수합니다. 555,102,474 bytes / SHA-256 8a72d6a7fe7649aae94fbb3f921c297b9cdf39bec24fb5537b64b585ea11ad14와 76 payload+manifest의 크기·SHA·CRC가 수신 측에서 확인됐습니다.
+
+기존 정상 시험 INCOMPLETE와 worker failed는 그대로 유지합니다. 첨부 COMSOL63_ELECTROLYTE_GUARD_RECIPIENT_REVIEW.md를 먼저 읽으세요.
+
+**다음 한 건: 기존 실패 MPH 복사본의 후처리 전용 복구를 승인합니다. 새 solve는 0회, 발동 시험 제출은 승인하지 않습니다.**
+
+입력은 job 56ef13bee5a448c5a029b02656ebf6bb의 result_Model.mph입니다. 크기 1,266,539,803 bytes, SHA-256 7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658을 전후 확인하고 원본·실패 기록을 보존하세요.
+
+1. 별도 복구용 코드·폴더에서 복사본을 여세요. 제한된 로드·조회·결과 평가·CSV/설정 내보내기를 허용합니다. 현재 도구가 이를 지원하지 않거나 source 입력 제한에 걸리면 설정을 우회하지 말고 보고하세요.
+2. study/solver 실행, 초기화 재수행, geometry/mesh 재빌드, 해 삭제, 물성/threshold/보호 변경은 금지합니다. 기존 build/main/preflightAudit 전체를 부르지 마세요. 실행 전 복구 코드의 호출 경로를 확인하세요.
+3. daudit→sol1의 기존 시간의존 해를 확인하세요. 수신 XML에는 0–5초 987개 시간과 sol7 저장 리소스가 있습니다. 이 숫자만 믿지 말고 실제 API의 해·시각·필드를 대조하세요. 다른 초기화 해로 대신하지 마세요.
+4. 필수 전해질 최소값·단위·guard와 전압·표면·Li/OCP 출력을 먼저 분리해 확보하세요. argmin 좌표는 별도 평가로 두고 좌표명/문맥을 실제로 확인하세요. comp1.x를 추측으로 z에 치환하지 마세요. 좌표 미완은 별도로 표시하며 필수 domain 판정을 제거하지 마세요.
+5. 기준 job 5d1a87652ed54e6a945d4f2af4aeda70을 재사용하여 기존 요청 시각/241좌표와 정확 공통 저장 시각 비교를 복구하세요. 최대 ΔV 1 mV·pointwise Δx 1e-4 및 기존 물리/보호 검사를 유지하세요.
+6. 기존 analyze.py는 completed 상태와 원 실행의 export를 전제합니다. status.json을 고치지 말고 원래 failed 실행과 복구 검증을 별도 기록으로 연결하세요. 기존 audit/gate/로그에 덮어쓰지 마세요.
+7. 이 승인은 후처리 복구 작업 1건입니다. COMSOL 후처리 호출 수와 새 solve 0회를 별도로 기록하세요. wall timeout·자원·입출력 경계를 제출 전에 확인하고, timeout이면 process 상태를 확인하기 전 재제출하지 마세요. 실패 시 자동 재시도·정상 재계산·발동 시험으로 전환하지 마세요.
+
+성공하더라도 원래 worker failed와 최초 미완 보고를 보존하고, 새 후처리 복구 결과 및 정상 필수 검사의 충족 여부를 별도로 회신하세요. 발동 시험은 결과 검토 후 별도 승인합니다. 전체 수렴 미완·장시간 운전 보류를 유지하고 결과 전달 후 정지하세요.

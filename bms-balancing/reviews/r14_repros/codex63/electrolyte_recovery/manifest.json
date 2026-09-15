@@ -1,0 +1,217 @@
+{
+  "purpose": "Blocked postprocessing recovery record; not recovered numerical results",
+  "payload": [
+    {
+      "path": "outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/batch.log",
+      "bytes": 788,
+      "sha256": "7b826fde931ab8ed001941630937d9dc12c468aedfb1bb278aab2ea5b4094392"
+    },
+    {
+      "path": "outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/console.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/ElectrolyteRecovery300R320C16.class",
+      "bytes": 25435,
+      "sha256": "49f3d2107ca297a2336b0c4523349ab4c3f744c69b7f5d21cddc9f31b77657f3"
+    },
+    {
+      "path": "outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/ElectrolyteRecovery300R320C16.java",
+      "bytes": 19610,
+      "sha256": "610b7d7ebea32fdd6fc2d36dc9b7142e265338f3f99eca25dae80de48dddfd51"
+    },
+    {
+      "path": "outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/request.json",
+      "bytes": 407,
+      "sha256": "15884faba29512611425fed88b8907a017d3a4a77283585a1f8436f6ca4d33f8"
+    },
+    {
+      "path": "outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/result.mph.status",
+      "bytes": 20,
+      "sha256": "ef61397e2e4ac40f6cf38759c351cbc4e9149822cb7c5f6795ee38ca461a6a9f"
+    },
+    {
+      "path": "outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/status.json",
+      "bytes": 485,
+      "sha256": "c7d4f8ff07ab7f6f977b82847a8e7c9953d70efe9566d49bbf09bde4dbd23821"
+    },
+    {
+      "path": "outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/worker.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/batch.log",
+      "bytes": 148567,
+      "sha256": "22f624513569c09d39548fba4145f09ed11ca9ca9ae9762bd0fce7dc7a8b859d"
+    },
+    {
+      "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/console.log",
+      "bytes": 82407,
+      "sha256": "ff34ae993d6989741dbca83c429d88f5ebbfac6121229450cb33f36ce84d70d9"
+    },
+    {
+      "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/ElectrolyteGuard300R320C16Normal.java",
+      "bytes": 68215,
+      "sha256": "40063efedfc95fae00b1d5df22636b3a7acddf40420074df98985d2027e810ce"
+    },
+    {
+      "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/request.json",
+      "bytes": 410,
+      "sha256": "cbad7c36be0142e01193da35a6a67c7d18a62a64ff3d79c69d477034cb02514d"
+    },
+    {
+      "path": "outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/status.json",
+      "bytes": 488,
+      "sha256": "b6a782d46493c5af709f986d8f94afe73bcfdf005243913aea439dbd51598241"
+    },
+    {
+      "path": "outputs/comsol63/electrolyte_recovery/ElectrolyteRecovery300R320C16.java",
+      "bytes": 19610,
+      "sha256": "610b7d7ebea32fdd6fc2d36dc9b7142e265338f3f99eca25dae80de48dddfd51"
+    },
+    {
+      "path": "outputs/COMSOL63_ELECTROLYTE_GUARD_HANDOFF_RECEIPT.json",
+      "bytes": 1208,
+      "sha256": "38c28bb6c1a8f5db71dfde267c20ee86091324be66eec0188d0d27895010e4da"
+    },
+    {
+      "path": "outputs/electrolyte_guard/results/normal_GATE.json",
+      "bytes": 430,
+      "sha256": "47615801280388c0c9891e96f3253b3681346d3f0d4eadfafb2c815a2bcbe04e"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/DUPLICATE_CHECK_BEFORE.json",
+      "bytes": 4755,
+      "sha256": "3f7b0998543f15efe33162dd7eead12dd3706b1c0359eaa84d3776d8f6ed3fd7"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/INPUT.json",
+      "bytes": 535,
+      "sha256": "8b5545898c7e5726daff6e4293cec8b9d9c734e771939cb5ac7735189c43e692"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/NEXT_RUN_PLAN_after_recovery.md",
+      "bytes": 2322,
+      "sha256": "c135b5fed68301038e4b5978626b66b7964a8f3bd0b5619153056d59c4e3a877"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/NEXT_RUN_PLAN_before_recovery.md",
+      "bytes": 2151,
+      "sha256": "329b53b6c6f110c290465484ef8bd5f17e6da58c79ff307e48c9bcaabfcab6e0"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/preserved_before.json",
+      "bytes": 6290,
+      "sha256": "e31af711084533aa8d8495156391904146c54af3f103624af10f8509088a0313"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/RECIPIENT_REVIEW_AND_APPROVED_SCOPE.txt",
+      "bytes": 13553,
+      "sha256": "dbd8852c54b56d3ba486466bd8e3078dfe60b39641a01a45e5f6220dca87f767"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/RECOVERY_RESULTS_KO.md",
+      "bytes": 6909,
+      "sha256": "c553c96208197b443800304e78fbd6b3e57d2f3f227d8d292729126882e540a7"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/RESOURCE_AND_TIMEOUT.json",
+      "bytes": 756,
+      "sha256": "84c4afe510e5b97131c01ee18b4e20045e6f58dba22c25e1d398f0d5ae791cc9"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/results/FINAL_CHECKS.json",
+      "bytes": 1650,
+      "sha256": "8c388b38af74d0b951b9c5219ee88d02df13f3c553f14074c8f8cf604cc69490"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/results/INPUT_AND_PRESERVATION_AFTER.json",
+      "bytes": 7484,
+      "sha256": "f83d199aedc1e7415fd0ce32f2a202966ebad9e73428758326244df997786f48"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/results/RECIPIENT_CONFIRMATION_SEPARATE.json",
+      "bytes": 568,
+      "sha256": "9c0f484fdf492e7c1b0b41a58c7fffe6e9acc4cbc26608391ef987052508e258"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/results/RECOVERY_GATE.json",
+      "bytes": 1191,
+      "sha256": "2b55af054e4b592a12b0d94c298163cd7be30186e1d3a8c67ae3049d8a4a7f6a"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/SOURCE_REVIEW.json",
+      "bytes": 1617,
+      "sha256": "394a92d262276c9041347a9ac54a45fb257e3c9cf6dcc16cc1423ea2a1c9cef5"
+    },
+    {
+      "path": "outputs/electrolyte_recovery/SUBMISSION_RESPONSE.json",
+      "bytes": 1118,
+      "sha256": "e894f049416974d7cfd830dcb6b1895650c7f2a9aa51fac33695c1e567aeeef2"
+    },
+    {
+      "path": "outputs/NEXT_RUN_PLAN.md",
+      "bytes": 2322,
+      "sha256": "c135b5fed68301038e4b5978626b66b7964a8f3bd0b5619153056d59c4e3a877"
+    },
+    {
+      "path": "work/electrolyte_recovery/analyze.py",
+      "bytes": 11619,
+      "sha256": "f803f1e9a1c043ecd38c79759db96669d0af957fe54bd40f8b1ee24a93faee74"
+    },
+    {
+      "path": "work/electrolyte_recovery/common.py",
+      "bytes": 20893,
+      "sha256": "1028ff68cbfc261d19734e26d8024e5c4c9c84a4346faf5a0d7cb5fb4506a1d2"
+    },
+    {
+      "path": "work/electrolyte_recovery/finalize_blocked.py",
+      "bytes": 15562,
+      "sha256": "6fb9c4863da832c5e0e910485ab932db152c7b89a715658a40bdf07bb7b43f89"
+    },
+    {
+      "path": "work/electrolyte_recovery/prepare.py",
+      "bytes": 12423,
+      "sha256": "8c26af14e58840bc11dd94d8f24814891df137e1aef4540ac8f32af7355d18dc"
+    },
+    {
+      "path": "work/electrolyte_recovery/prepare_analysis.py",
+      "bytes": 1016,
+      "sha256": "e88066fade485a3c5dda87cdc1672ead224daa3cbe004159714328d2e9619af0"
+    }
+  ],
+  "original_MPH_and_input_copy_not_included": "Already identified in prior guard handoff; unchanged SHA documented. No new MPH/CSV was produced.",
+  "new_solve_calls": 0,
+  "gate": {
+    "status": "INCOMPLETE_RECOVERY",
+    "classification": "BLOCKED_COMSOL_FILE_READ_SECURITY",
+    "original_job": "56ef13bee5a448c5a029b02656ebf6bb",
+    "original_worker_state": "failed",
+    "original_normal_gate": "INCOMPLETE_POSTPROCESSING_UNDEFINED_COORDINATE",
+    "recovery_job": "28f40815e3a3410aab411ec93cd36fe1",
+    "recovery_worker_state": "failed",
+    "compile_rc": 0,
+    "batch_rc": 0,
+    "postprocessing_submissions": 1,
+    "batch_Java_invocations": 1,
+    "native_model_load_success_observed": false,
+    "numeric_evaluations_reached": false,
+    "new_solve_calls": 0,
+    "new_CSV_count": 0,
+    "new_MPH_count": 0,
+    "normal_required_checks_complete": false,
+    "trigger_submitted": false,
+    "retry_performed": false,
+    "security_settings_changed": false,
+    "cause": "COMSOL application File system access denied Java input read before the first input SHA marker and before ModelUtil.loadCopy. Original console is empty; execution order identifies the attempted hashInput/Files.newInputStream path.",
+    "not_an_OpenAI_automatic_approval_rejection": true,
+    "time_metadata_987": "Reported by recipient from original MPH XML; not confirmed via COMSOL API in this attempt."
+  }
+}

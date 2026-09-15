@@ -1,0 +1,41 @@
+{
+  "source": {
+    "path": "outputs/comsol63/electrolyte_recovery/ElectrolyteRecovery300R320C16.java",
+    "bytes": 19610,
+    "sha256": "610b7d7ebea32fdd6fc2d36dc9b7142e265338f3f99eca25dae80de48dddfd51"
+  },
+  "entry": "main -> recover -> loadCopy/getPVals/getU, read settings, numerical evaluations, Java exports",
+  "helper_provenance": "Selected read/evaluate/export methods from original normal source, no model-build/preflightAudit/run method imported",
+  "new_solve_calls": 0,
+  "geometry_mesh_physics_solver_mutations": 0,
+  "result_mutations": "New numerical result nodes only. Existing daudit, sol1, guards unchanged.",
+  "input": {
+    "path": "outputs/comsol63/electrolyte_recovery/inputs/failed_normal_copy.mph",
+    "bytes": 1266539803,
+    "sha256": "7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658"
+  },
+  "cores": 16,
+  "timeout_seconds": 1800,
+  "coordinates": "Local x is first evaluated by unchanged profile method, then used as second argument of separate Minimum evaluation. No guessing z or retry.",
+  "failure_policy": "Preserve partial exports and original failed; no rerun/trigger/solve fallback.",
+  "static_review": {
+    "method_names_unique": [
+      "main",
+      "hashInput",
+      "inputCheck",
+      "vectorDigest",
+      "recover",
+      "quote",
+      "table",
+      "evaluate",
+      "numericTable",
+      "readSetting",
+      "dumpSettings",
+      "runtimeSettings",
+      "spatialProfiles",
+      "audit"
+    ],
+    "forbidden_execution_calls_absent": true,
+    "duplicate_helper_removed_before_submission": true
+  }
+}
