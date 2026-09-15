@@ -1,16 +1,41 @@
 {
-  "started_utc": "2026-09-14T17:23:38.395871+00:00",
+  "started_utc": "2026-09-15T08:49:37.883161+00:00",
   "status": "passed",
   "data_kind": "synthetic_only",
   "versions": {
-    "python": "3.12.14",
+    "python": "3.12.3",
     "numpy": "2.3.5",
     "pandas": "2.3.3",
     "scikit-learn": "1.7.2",
     "scipy": "1.16.3",
     "joblib": "1.5.2",
     "openpyxl": "3.1.5",
-    "threadpoolctl": "3.6.0"
+    "threadpoolctl": "3.6.0",
+    "platform": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "blas": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "prefix": "libscipy_openblas",
+        "version": "0.3.30",
+        "num_threads": 4
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "prefix": "libscipy_openblas",
+        "version": "0.3.29.dev",
+        "num_threads": 4
+      },
+      {
+        "user_api": "openmp",
+        "internal_api": "openmp",
+        "prefix": "libgomp",
+        "version": null,
+        "num_threads": 4
+      }
+    ]
   },
   "commands": [
     {
@@ -32,7 +57,7 @@
         "export_for_origin.py",
         "--demo",
         "--output",
-        "{validation_output}\\demo"
+        "{validation_output}/demo"
       ],
       "returncode": 0,
       "log": "02_full_default_demo.log"
@@ -50,7 +75,7 @@
         "--config",
         "examples/config_group.json",
         "--output",
-        "{validation_output}\\prepared.csv"
+        "{validation_output}/prepared.csv"
       ],
       "returncode": 0,
       "log": "03_prepare_raw.log"
@@ -69,7 +94,7 @@
         "examples/config_group.json",
         "--synthetic-data",
         "--output",
-        "{validation_output}\\raw_group"
+        "{validation_output}/raw_group"
       ],
       "returncode": 0,
       "log": "04_train_raw_group.log"
@@ -79,12 +104,12 @@
       "arguments": [
         "export_for_origin.py",
         "--features",
-        "{validation_output}\\prepared.csv",
+        "{validation_output}/prepared.csv",
         "--config",
         "examples/config_group.json",
         "--synthetic-data",
         "--output",
-        "{validation_output}\\csv_group"
+        "{validation_output}/csv_group"
       ],
       "returncode": 0,
       "log": "05_train_csv_group.log"
@@ -98,7 +123,7 @@
         "--eis-dir",
         "examples/raw/new_eis",
         "--output",
-        "{validation_output}\\new_features.csv"
+        "{validation_output}/new_features.csv"
       ],
       "returncode": 0,
       "log": "06_prepare_unlabeled_eis.log"
@@ -108,17 +133,21 @@
       "arguments": [
         "predict.py",
         "--run",
-        "{validation_output}\\raw_group",
+        "{validation_output}/raw_group",
         "--features",
-        "{validation_output}\\new_features.csv",
+        "{validation_output}/new_features.csv",
         "--output",
-        "{validation_output}\\new_predictions.csv"
+        "{validation_output}/new_predictions.csv"
       ],
       "returncode": 0,
       "log": "07_predict_from_saved_models.log"
     }
   ],
   "checks": [
+    {
+      "name": "raw_readers_restore_the_published_example_features",
+      "status": "passed"
+    },
     {
       "name": "raw_and_prepared_csv_reproduce_same_OOF",
       "status": "passed"
@@ -128,25 +157,37 @@
       "status": "passed"
     },
     {
+      "name": "all_three_runs_reproduce_the_fixture_labels_outcomes_and_score_direction",
+      "status": "passed"
+    },
+    {
       "name": "all_three_targets_keep_outer_and_inner_groups_separate",
       "status": "passed"
     },
     {
       "name": "saved_models_predict_12_unlabeled_new_identifiers",
       "status": "passed"
+    },
+    {
+      "name": "saved_models_reproduce_the_fixture_capacities_and_defect_decisions",
+      "status": "passed"
     }
   ],
   "code_sha256": {
-    "config.py": "8fa30efcb3cfbc002a9d7eb5eaa93f1867f334dd6f8754d8df009d2f2be0e90b",
+    "config.py": "0dfb7792c9f56bbba801ebaeb52dc29d2a2fb455a18f510876899f88fe5b132b",
     "demo.py": "34319fa594a0c5048950d1f168e2b0bc73069e5c15cb17b1ae2c1f4b729911e4",
-    "examples\\generate_examples.py": "cfca781b92519b700827a7ea7b7ec53d02bee5b70d95a8c68542fce6c7844013",
-    "export_for_origin.py": "8790e2fc02fc78b09095dd1db1eeaee038683e234eaf5ef9320596c316db63d4",
-    "extract_capacity.py": "1a47ba0a778b075216e708b868a2d76890ced82459c04230ebc6dd1028fd9c98",
+    "examples/generate_examples.py": "cfca781b92519b700827a7ea7b7ec53d02bee5b70d95a8c68542fce6c7844013",
+    "export_for_origin.py": "3c682ae78802db56380b15066e2b7385395cedeba4817dcf09eb401d09099b82",
+    "extract_capacity.py": "27a1039dac37ca9edc33a6a414428d2a05d56929c8725ef15764c1013b4c5acf",
     "feature_band_test.py": "ec17cfcf84074608f9b68ff68ca94b62b4a5fb328e9f1333f79123fe9b75329c",
-    "predict.py": "ccd252ccba64a5c12d0578a4852640d1882685a51c22cdc6321a1d8a3e8ec57a",
-    "ridge_capacity.py": "3179ec12fb42af7a1ec35a2820388feb8177af38877a00e0aacdd9d20de16bb1",
-    "tests\\test_pipeline.py": "8a4d1bf5f04e75f75c3340f7fc2b84ce78ff68158188fb0c52372e4aae459cc1",
-    "tests\\verify_release.py": "730a2b15d45b4c99cf1257b8978dbe80ce571202a6c027d0c5606b2f0596e002"
+    "predict.py": "a7a2babe1071e0e57ed5bd72314128ad21e852d68ce4a29982319f6890421ac7",
+    "ridge_capacity.py": "ccb73f1311ffaff4f556f570358f6fb1b383712f0589b43369574289740f02f5",
+    "tests/test_extract.py": "4613d6ceee5de221ce34f7daeca926991c1672c6ea669bcc6b6c8c2b09ff09c3",
+    "tests/test_models.py": "236b8acbe6e2c3967836b80f9c9723b4ff3f6e4addbbfdd5693a6baedc33cde7",
+    "tests/test_pipeline.py": "54d111dbe3f37afed61b0c34e609cff844ce8d514536a8f2cb5ca984cb4b65d2",
+    "tests/test_predict.py": "0de5fec93767d6d371be8bc492468ed3e7bf22dd5fda3f59068b36609e13f9ae",
+    "tests/test_tests.py": "6e48e8ed0f10bf9b206ff474cb405a7fad47bfadffca846331a5fd36c7ccb430",
+    "tests/verify_release.py": "6aef2ecaa9cd9749e0e3a68039b67ceab32bf6014cfb2e67c9fef02eefbb1caa"
   },
-  "finished_utc": "2026-09-14T17:24:12.008314+00:00"
+  "finished_utc": "2026-09-15T08:51:01.594442+00:00"
 }

@@ -1,2 +1,3 @@
-completed: {validation_output}\csv_group (12 cells)
+completed: {validation_output}/csv_group (12 cells)
+capacity Q2=0.978; RMSE=0.0004801 Ah; capacity_threshold AUC=1.000; logistic_nested_selection AUC=1.000; chance level is the baseline_* rows, not 0.5 (see run_summary.md)
 

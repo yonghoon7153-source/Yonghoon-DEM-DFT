@@ -1,2 +1,3 @@
-Predicted 12 cells: {validation_output}\new_predictions.csv
+Models were trained on synthetic demo data; these numbers are not measurements of real cells
+Predicted 12 cells: {validation_output}/new_predictions.csv
 
