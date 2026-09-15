@@ -18,6 +18,19 @@
 #   · 기존 s2·s3·s4 를 다시 돌리지 않는다(드라이버가 msd.json 있는 곳을 건너뛰지만, 여기서는
 #     애초에 새 디렉터리 s5·s6 만 쓴다).
 #
+# ── 동시 실행 (2026-09-15, 1저자 질문 "합쳐서 돌리면 안돼?") ─────────────────
+#   ✅ **물리적으로 안전하다.** 두 계는 서로 독립이고, 같은 GPU 를 나눠 써도 힘 계산은
+#      안 바뀐다 — 느려질 뿐이다. 게이트가 보는 것은 구조·온도·창·프로토콜·실행모드이지
+#      "GPU 를 혼자 썼나" 가 아니다.
+#   ⚠ **그런데 이득이 있는지는 재 봐야 안다.** 한 런이 GPU 를 이미 포화시키면 둘을 띄워도
+#      합계 처리량이 거의 안 늘고, 오히려 컨텍스트 전환으로 느려질 수 있다.
+#      ⛔ 추측하지 말고 `nvidia-smi` 로 **이용률(%)과 VRAM** 을 본다:
+#        · util 이 85 % 미만이고 VRAM 여유가 런 하나치 이상 → 하나 더 띄울 값어치가 있다
+#        · util 이 95 % 이상 → 직렬로 두는 편이 낫다
+#   락이 (계 × 시드집합) 단위라 아래 넷까지 따로 띄울 수 있다:
+#     SYS=modelc SEEDS=5 · SYS=modelc SEEDS=6 · SYS=lpsocl SEEDS=5 · SYS=lpsocl SEEDS=6
+#   ⚠ 넷을 한꺼번에 띄우기 전에 **하나 띄우고 재 보는 것**이 순서다.
+#
 # ⚠ **실행모드는 turbo 로 고정**한다. 기존 9런이 turbo 였고, 한 캠페인 안에서 모드를 섞으면
 #   그 묶음을 한 표에 못 쓴다(드라이버 주석 · uma_turbo_equivalence_2026_09_11.json).
 #   드라이버가 실제 모드를 ensemble_results.json 의 uma_inference_mode 에 적으므로 기계로 확인한다.
@@ -37,12 +50,34 @@ case "$SYS" in
 esac
 # ⚠ 실행모드가 계마다 **다르다** — modelc 9런은 turbo, lpsocl 9런은 기본 모드다.
 #   섞으면 그 묶음을 한 표에 못 쓴다. 그래서 계별로 고정하고, 아래 가드 ③ 이 기존 런과 대조한다.
-if [ "$SYS" = lpsocl ] && [ "${LPSOCL_RATIFIED:-0}" != "1" ]; then
-  echo "⛔ lpsocl 시드 확장은 **개정문 비준 전**이다 (R5, proposed)."
-  echo "   1저자가 비준했으면 LPSOCL_RATIFIED=1 로 다시 부른다."
-  echo "   카드: db/properties/lpsocl_box331_seed_extension_amendment_2026_09_15.json"
-  exit 1
-fi
+# ── 가드 0: **원장이 허락했나** (fail-closed) ────────────────────────────────
+#   ⛔ 2026-09-15 — 처음엔 `LPSOCL_RATIFIED=1` 이라는 **사람이 치는 플래그**로 막았다.
+#      그건 사람의 기억을 믿는 것이고, 비준이 취소돼도 플래그는 그대로 남는다.
+#      판정은 **원장이 한다** — decisions.json 을 직접 읽어 active + ratified 인지 본다.
+#   ⚠ 못 읽으면 **멈춘다**("못 읽음 ≠ 금지 없음"). 원장이 없는 기계에서는 안 돈다.
+_DEC_ID=$(case "$SYS" in
+  modelc) echo D-2026-09-15-modelc-box331-seed-extension ;;
+  lpsocl) echo D-2026-09-15-lpsocl-box331-seed-extension-r5 ;;
+esac)
+python3 - "$REPO/db/governance/decisions.json" "$_DEC_ID" <<'PY' || exit 1
+import json, sys
+path, did = sys.argv[1], sys.argv[2]
+try:
+    rows = json.load(open(path, encoding="utf-8"))["decisions"]
+except Exception as e:                                          # noqa: BLE001
+    print(f"⛔ 원장을 못 읽었다 ({type(e).__name__}) — 못 읽음은 '금지 없음' 이 아니다: {path}")
+    raise SystemExit(1)
+d = next((r for r in rows if r.get("id") == did), None)
+if d is None:
+    print(f"⛔ 원장에 {did} 가 없다 — 사전등록 없이 돌리는 것이다"); raise SystemExit(1)
+st = d.get("decision_state") or d.get("status")
+rat = (d.get("ratification") or {}).get("state")
+if st != "active" or rat != "ratified":
+    print(f"⛔ {did} 는 아직 실행 자격이 없다 (state={st} · ratification={rat}).")
+    print("   1저자 비준이 원장에 기록돼야 돈다. 카드:", d.get("card"))
+    raise SystemExit(1)
+print(f"  ✓ 원장 허가 {did} (active · ratified {(d.get('ratification') or {}).get('timestamp','')})")
+PY
 OUTROOT=${OUTROOT:-$HOME/work/runs/$_ROOT}
 SEEDS=${SEEDS:-"5 6"}
 V0XYZ=${V0XYZ:-$REPO/db/structures/$_XYZ}
@@ -50,7 +85,9 @@ DRIVER=$REPO/tools/modelc_v3/disorder_ensemble_diffusion.py
 LOG=${LOG:-$HOME/logs/${SYS}_box331_seed_extension.log}
 
 # ── 가드 1: 중복 실행 (flock — pgrep 은 tmux 래퍼까지 세서 자기 자신에 걸린다) ──
-LOCK=${LOCK:-/tmp/${SYS}_box331_seed_extension.lock}
+# ⚠ 락은 **(계 × 시드집합)** 단위다. 같은 계라도 `SEEDS=5` 와 `SEEDS=6` 을 따로 띄울 수 있게
+#   이름에 시드를 넣는다 — 계 단위로만 잠그면 병렬화를 스크립트가 막아 버린다.
+LOCK=${LOCK:-/tmp/${SYS}_box331_seed_ext_$(echo "$SEEDS" | tr -d " ").lock}
 exec 9>"$LOCK" || { echo "⛔ 락 파일을 못 연다: $LOCK"; exit 1; }
 command -v flock >/dev/null 2>&1 && { flock -n 9 || {
   echo "⛔ 이미 도는 것이 있다 (flock $LOCK) — 중복 실행 중단"; exit 0; }; }

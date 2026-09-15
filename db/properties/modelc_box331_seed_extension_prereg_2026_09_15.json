@@ -87,7 +87,7 @@
   "해설": "db/properties/modelc_arrhenius_temperature_set_2026_09_15.json",
   "lpsocl_대조": "db/properties/lpsocl_box331_c3_result_2026_09_11.json · lpsocl_box331_closed_2026_09_11.json"
  },
- "status": "proposed",
+ "status": "active",
  "status_history": [
   {
    "at": "2026-09-15",
@@ -106,6 +106,19 @@
    "state": "proposed",
    "by": "agent",
    "note": "⚠ 정정 — 9.5 h/런의 '기계' 귀속을 확정 아님으로 내린다. run_meta 를 들고 있는 호스트가 esp-Z590-AORUS-MASTER 로 확인됐고, 마감 카드가 적은 kgy RTX3090 과 같은 기계인지 미확인이다."
+  },
+  {
+   "at": "2026-09-15",
+   "state": "active",
+   "by": "1저자",
+   "note": "1저자 비준 — \"비준이니까 바로 가자\". 사전등록 비준. 판정 규칙 A/B/C 는 결과를 보기 전에 봉인됐다."
   }
- ]
+ ],
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-15T23:40:00Z",
+  "⚠_결과를_보기_전이다": "results_seen: false 그대로다. 비준은 **규칙**에 대한 것이지 결과에 대한 것이 아니다."
+ }
 }

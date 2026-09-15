@@ -2109,7 +2109,7 @@
   {
    "id": "D-2026-09-15-modelc-box331-seed-extension",
    "kind": "estimand",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "results_seen": false,
    "record_kind": "prereg",
    "title": "modelc 3×3×1 시드 집합을 {2,3,4} → {2,3,4,5,6} 으로 넓힌다 (C3 판정 시도)",
@@ -2129,20 +2129,34 @@
     ]
    },
    "slot": "modelc_box331_matched_estimand_seed_extension",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-09-15",
      "state": "proposed",
      "by": "agent",
      "note": "1저자 지시(\"시드 더 하자\")로 등록. **실행 전**이고 결과를 보지 않았다. D-2026-09-11 이 시드 집합을 정의에 넣어 뒀으므로 그 확장을 원장에 남긴다."
+    },
+    {
+     "at": "2026-09-15",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner) — 2026-09-15 \"비준이니까 바로 가자\". ⚠ 결과를 보기 **전**이다 (results_seen: false 그대로)."
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-15T23:40:00Z",
+    "commit": "aa1fcf2275417082693ae9663abfca1a91160b95",
+    "decision_digest": "sha256:55f607e7ee757ef97a2e74bf025d000e4288f0b000a09141b38edff472b995f1",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   },
   {
    "id": "D-2026-09-15-lpsocl-box331-seed-extension-r5",
    "kind": "closure",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "results_seen": false,
    "record_kind": "amendment",
    "title": "lpsocl 3×3×1 마감에 재개 조건 R5(짝 계 동일 확장)를 신설한다",
@@ -2162,15 +2176,29 @@
     ]
    },
    "slot": "lpsocl_box331_closure_seed_extension",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-09-15",
      "state": "proposed",
      "by": "agent",
      "note": "1저자 지시(\"다하자\")로 등록. 실행 전이고 결과를 보지 않았다. 비준된 마감을 여는 것이라 개정문 + 재비준이 필요하다."
+    },
+    {
+     "at": "2026-09-15",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner) — 2026-09-15 \"비준이니까 바로 가자\". ⚠ 결과를 보기 **전**이다 (results_seen: false 그대로)."
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-15T23:40:00Z",
+    "commit": "aa1fcf2275417082693ae9663abfca1a91160b95",
+    "decision_digest": "sha256:7f458c3e74a951bdad6a1464be7be65cf8dc7b270e2efbb416edcfda6dae6d64",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }
