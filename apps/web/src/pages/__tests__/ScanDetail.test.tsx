@@ -1,6 +1,6 @@
 /** SOC 스캔 상세 — 결정되지 않은 점을 어떻게 다루는지가 이 화면의 전부다. */
 
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -25,10 +25,11 @@ const UNITS: Record<string, string> = {
 }
 
 function point(index: number, values: Record<string, number>,
-               units?: Record<string, string>) {
+               units?: Record<string, string>, soc: number | null = null) {
   return {
     spectrum_id: index, sweep_index: index, name: `sweep ${index}`,
     capacity_mah: index * 0.5, potential_v: 3.5 + index * 0.1,
+    soc_percent: soc,
     fit_id: Object.keys(values).length ? index : null,
     circuit: 'R0-p(R1,CPE1)', chi_squared: 0.01,
     values, labels: { R1: 'SEI 저항' },
@@ -72,13 +73,18 @@ function drtOf(id: number) {
 function installFetch(scan: unknown, points: unknown[] = [
   sweepPoints(1), sweepPoints(2), sweepPoints(3),
 ]) {
-  vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+  const spy = vi.fn(async (url: string, init?: RequestInit) => {
     const path = String(url).split('?')[0] ?? ''
-    const body = path.endsWith('/points') ? points
+    const body = path.endsWith('/soc')
+      ? { sweeps: 3, filled: 3, cleared: 0 }
+      : path.endsWith('/points') ? points
       : path.includes('/drt') ? drtOf(Number(path.split('/')[4] ?? 1))
       : scan
+    void init
     return { ok: true, status: 200, statusText: 'OK', json: async () => body }
-  }))
+  })
+  vi.stubGlobal('fetch', spy)
+  return spy
 }
 
 function show() {
@@ -468,5 +474,94 @@ describe('ScanDetail', () => {
     expect(buttons[1]!.disabled).toBe(true)
     expect(buttons[2]!.disabled).toBe(true)
     expect(buttons[3]!.disabled).toBe(false)
+  })
+})
+
+/** SOC 는 사람이 적는다 (ADR 0038).
+ *
+ *  계측기가 모르는 값이라 검증할 근거가 파일 안에 없다.  그래서 화면이 지켜야
+ *  하는 것은 **수가 맞는가** 하나다 — 한 칸 밀린 SOC 축은 그림이 멀쩡해 보이는,
+ *  이 화면에서 제일 나쁜 실패다.
+ */
+describe('ScanDetail — SOC', () => {
+  const scanOf = (soc: (number | null)[]) => ({
+    sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+    cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+    sweeps: 3, fitted: 3, parameters: ['R0'],
+    points: [1, 2, 3].map(
+      (i) => point(i, { R0: 5 + i }, undefined, soc[i - 1] ?? null)),
+  })
+
+  it('적어 둔 SOC 가 칸에 그대로 서 있다', async () => {
+    installFetch(scanOf([0, 50, 100]))
+    show()
+    expect(await screen.findByLabelText('SOC')).toHaveValue('0, 50, 100')
+  })
+
+  it('안 적힌 스윕은 - 로 자리를 지킨다 — 빼면 차례가 어긋난다', async () => {
+    installFetch(scanOf([0, null, 100]))
+    show()
+    expect(await screen.findByLabelText('SOC')).toHaveValue('0, -, 100')
+  })
+
+  //: 여기가 핵심이다.  서버도 422 로 막지만, 눌러 보고 나서 아는 것과 적으면서
+  //  아는 것은 다르다.
+  it('수가 안 맞으면 누르기 전에 두 수를 말하고 저장을 막는다', async () => {
+    installFetch(scanOf([null, null, null]))
+    show()
+    const box = await screen.findByLabelText('SOC')
+    await userEvent.type(box, '0, 50')
+
+    const said = await screen.findByText(/스윕은 3개인데 2개를 적었습니다/)
+    expect(said).toBeTruthy()
+    expect(screen.getByRole('button', { name: '저장' })).toBeDisabled()
+  })
+
+  it('숫자로 못 읽은 것은 삼키지 않는다', async () => {
+    installFetch(scanOf([null, null, null]))
+    show()
+    await userEvent.type(await screen.findByLabelText('SOC'), '0, 열, 100')
+    expect(await screen.findByText(/숫자로 읽을 수 없는/)).toBeTruthy()
+    expect(screen.getByRole('button', { name: '저장' })).toBeDisabled()
+  })
+
+  it('수가 맞으면 스윕 차례대로 서버에 보낸다', async () => {
+    const spy = installFetch(scanOf([null, null, null]))
+    show()
+    await userEvent.type(await screen.findByLabelText('SOC'), '0, 50, 100')
+    await userEvent.click(screen.getByRole('button', { name: '저장' }))
+
+    await waitFor(() => {
+      const put = spy.mock.calls.find(
+        ([, init]) => (init as RequestInit | undefined)?.method === 'PUT')
+      expect(put).toBeTruthy()
+      expect(String(put![0])).toContain('/api/eis/scans/abc/soc')
+      expect(JSON.parse(String((put![1] as RequestInit).body)))
+        .toEqual({ soc_percent: [0, 50, 100] })
+    })
+  })
+
+  //: 3D 의 깊이축.  **둘 다 맞는 그림이고 보는 것이 다르다** — 지우지 않고
+  //  오가게 둔다.
+  it('SOC 가 다 적혀 있으면 깊이축을 SOC 로 세운다', async () => {
+    installFetch(scanOf([0, 50, 100]))
+    show()
+    await userEvent.click(await screen.findByRole('button', { name: '3D' }))
+    await userEvent.click(
+      within(screen.getByRole('group', { name: '깊이축' }))
+        .getByRole('button', { name: 'SOC' }))
+    expect(await screen.findByText(/깊이 간격을/)).toBeTruthy()
+  })
+
+  //: 단추는 SOC 로 눌려 있는데 그림은 전위로 서 있는 상태가 조용히 생기면,
+  //  사람은 SOC 축을 보고 있다고 믿는다.
+  it('SOC 가 빈 스윕이 있으면 전위로 세우고 그렇게 말한다', async () => {
+    installFetch(scanOf([0, null, 100]))
+    show()
+    await userEvent.click(await screen.findByRole('button', { name: '3D' }))
+    await userEvent.click(
+      within(screen.getByRole('group', { name: '깊이축' }))
+        .getByRole('button', { name: 'SOC' }))
+    expect(await screen.findByText(/SOC 가 안 적힌 스윕이 있어/)).toBeTruthy()
   })
 })

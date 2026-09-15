@@ -885,6 +885,27 @@ class SpectrumUpdate(BaseModel):
     clear: list[str] = Field(default_factory=list)
 
 
+class ScanSocIn(BaseModel):
+    """스캔 하나의 SOC 를 한 번에 — 스윕 차례대로.
+
+    한 줄 입력(`0, 10, 20 …`)을 화면이 숫자 목록으로 바꿔 보낸다.  **개수가
+    스윕 수와 달라도 앞에서부터 채우지 않는다** (ADR 0038): 어느 스윕이 빠진
+    것인지 알 방법이 없고, 한 칸 밀린 SOC 축은 그림이 멀쩡해 보이므로 제일
+    나쁜 실패다.  라우터가 두 수를 함께 적어 422 로 돌려준다.
+    """
+
+    #: 스윕 수와 **같은 길이**여야 한다.  `null` 은 "그 스윕은 모른다".
+    soc_percent: list[float | None]
+
+
+class ScanSocOut(BaseModel):
+    """적어 넣은 결과 — 몇 개를 채웠고 몇 개를 비웠나."""
+
+    sweeps: int
+    filled: int
+    cleared: int
+
+
 class ScanPointOut(BaseModel):
     """한 스윕과, 그 스윕에서 맞춘 값들."""
 
@@ -894,6 +915,9 @@ class ScanPointOut(BaseModel):
     #: SOC 축이 되는 두 값.  둘 다 없으면 이 점은 x 축에 놓을 자리가 없다.
     capacity_mah: float | None = None
     potential_v: float | None = None
+    #: 사람이 적어 둔 SOC (%).  계측기가 모르는 값이라 비어 있는 것이 정상이다
+    #: (ADR 0038).  3D 의 깊이축을 전위 대신 이것으로 세울 수 있다.
+    soc_percent: float | None = None
     #: 가장 잘 맞은 피팅 (수렴한 것 중 χ² 최소).  없으면 나머지가 전부 비어 있다.
     fit_id: int | None = None
     circuit: str = ""

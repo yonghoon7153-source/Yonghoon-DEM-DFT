@@ -1526,3 +1526,73 @@ def test_the_liquid_presets_carry_the_wiring_inductance(client):
     # 배선 없는 회로도 남긴다 — 유도성 꼬리가 아예 없는 파일이 있고, `auto` 는
     # χ² 로 고르므로 그때는 그쪽이 이긴다 (파라미터가 하나 적다).
     assert any(not c["circuit"].startswith("L1-") for c in half)
+
+
+# --- SOC 는 사람이 적는다 (ADR 0038) ----------------------------------------
+
+def upload_scan(client, sweeps: int) -> str:
+    """스윕 N 개짜리 스캔 하나를 올리고 그 sha256 을 돌려준다."""
+    out = client.post(
+        "/api/eis/spectra/upload", params={"kind": "liquid"},
+        files={"file": ("scan.mpr", scan_mpr(sweeps=sweeps),
+                        "application/octet-stream")}).json()
+    return out["sha256"]
+
+
+def test_soc_is_written_by_hand_and_comes_back_on_the_sweeps(client):
+    """계측기가 모르는 값이라 적는 길이 있어야 하고, 적으면 남아야 한다."""
+    sha = upload_scan(client, 4)
+    scan = client.get(f"/api/eis/scans/{sha}").json()
+    # 적기 전에는 비어 있다 — 모르는 것은 모른다고 (§0.4).
+    assert [p["soc_percent"] for p in scan["points"]] == [None] * 4
+
+    written = client.put(f"/api/eis/scans/{sha}/soc",
+                         json={"soc_percent": [0, 25, 50, 100]})
+    assert written.status_code == 200
+    assert written.json() == {"sweeps": 4, "filled": 4, "cleared": 0}
+
+    scan = client.get(f"/api/eis/scans/{sha}").json()
+    # 스윕 차례대로 짝지어야 한다 — 사람이 줄에 적는 순서가 그것이다.
+    assert [p["soc_percent"] for p in scan["points"]] == [0, 25, 50, 100]
+    assert [p["sweep_index"] for p in scan["points"]] == [1, 2, 3, 4]
+
+
+#: 이 시험이 ADR 0038 의 핵심이다.  앞에서부터 채우고 뒤를 비우면 그림은
+#: 멀쩡해 보이는데 SOC 축이 한 칸씩 밀린다 — 그것이 제일 나쁜 실패다.
+def test_a_different_count_is_refused_and_says_both_numbers(client):
+    sha = upload_scan(client, 4)
+    response = client.put(f"/api/eis/scans/{sha}/soc",
+                          json={"soc_percent": [0, 50, 100]})
+    assert response.status_code == 422
+    detail = response.json()["detail"]
+    assert "4" in detail and "3" in detail
+
+    # 거절했으면 **아무것도 안 써야** 한다.  셋만 채워 놓고 실패를 말하면
+    # 화면과 DB 가 갈린다.
+    scan = client.get(f"/api/eis/scans/{sha}").json()
+    assert [p["soc_percent"] for p in scan["points"]] == [None] * 4
+
+
+def test_soc_outside_the_range_is_refused(client):
+    sha = upload_scan(client, 3)
+    for bad in ([0, 50, 120], [-1, 50, 100]):
+        response = client.put(f"/api/eis/scans/{sha}/soc",
+                              json={"soc_percent": bad})
+        assert response.status_code == 422, bad
+
+
+def test_null_clears_one_sweep_without_clearing_the_rest(client):
+    """적었던 것을 지우는 길 — `null` 은 '그 스윕은 모른다' 다."""
+    sha = upload_scan(client, 3)
+    client.put(f"/api/eis/scans/{sha}/soc", json={"soc_percent": [0, 50, 100]})
+    out = client.put(f"/api/eis/scans/{sha}/soc",
+                     json={"soc_percent": [0, None, 100]})
+    assert out.json() == {"sweeps": 3, "filled": 2, "cleared": 1}
+    scan = client.get(f"/api/eis/scans/{sha}").json()
+    assert [p["soc_percent"] for p in scan["points"]] == [0, None, 100]
+
+
+def test_an_unknown_scan_says_so(client):
+    response = client.put("/api/eis/scans/nosuchsha/soc",
+                          json={"soc_percent": [0]})
+    assert response.status_code == 404

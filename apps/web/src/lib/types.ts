@@ -772,6 +772,9 @@ export interface ScanPoint {
   name: string
   capacity_mah: number | null
   potential_v: number | null
+  /** 사람이 적어 둔 SOC (%).  계측기가 모르는 값이라 비어 있는 것이 정상이다
+   *  (ADR 0038).  3D 의 깊이축을 전위 대신 이것으로 세울 수 있다. */
+  soc_percent: number | null
   fit_id: number | null
   circuit: string
   chi_squared: number | null

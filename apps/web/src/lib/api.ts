@@ -257,6 +257,16 @@ export const api = {
     request<Drt>(`/api/eis/spectra/${id}/drt${query(params)}`),
   spectrumDrtSweep: (id: number, params?: Params) =>
     request<DrtSweep>(`/api/eis/spectra/${id}/drt/sweep${query(params)}`),
+  /** 이 스캔의 SOC 를 스윕 차례대로 적는다 (ADR 0038).
+   *
+   *  **수가 스윕 수와 달라도 앞에서부터 채우지 않는다** — 서버가 422 로
+   *  거절하고 두 수를 함께 적어 준다.  한 칸 밀린 SOC 축은 그림이 멀쩡해
+   *  보이므로 제일 나쁜 실패다. */
+  writeScanSoc: (sha256: string, values: (number | null)[]) =>
+    request<{ sweeps: number; filled: number; cleared: number }>(
+      `/api/eis/scans/${sha256}/soc`,
+      { method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ soc_percent: values }) }),
   /** 한 SOC 스캔의 스윕 **전부**를 한 회로로.  상한은 스윕마다 따로 잡힌다
    *  (유도성 꼬리의 길이가 스윕마다 다르다) — 하한은 안 정한다. */
   fitScan: (sha256: string, params?: Params) =>

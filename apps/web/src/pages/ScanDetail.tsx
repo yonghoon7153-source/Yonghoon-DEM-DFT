@@ -30,6 +30,7 @@ import { rememberedLambda } from '../lib/drtlambda'
 import { seriesWideTsv } from '../lib/origin'
 import { paramMeaning } from '../lib/params'
 import { usePinnedColumns } from '../lib/pincols'
+import { parseSocList, socProblem } from '../lib/soc'
 import { stackOffsets } from '../lib/stack'
 import {
   DRT_AXES, DRT_AXIS_KEY, type DrtAxis, decadeSplits, drtAxisLabel, drtAxisShort,
@@ -194,6 +195,18 @@ export function ScanDetail() {
   const [view, setView] = useState<'flat' | 'stack' | 'solid'>('flat')
   const solid = view === 'solid'
   const stacked = view === 'stack'
+  //: 적어 넣는 SOC (ADR 0038).  계측기가 모르는 값이라 사람이 적고, 서버가
+  //  스윕마다 들고 있다.  화면의 한 줄은 **한 번에 여럿을 적는 편의**일 뿐이다.
+  const [socText, setSocText] = useState<string | null>(null)
+  const [socSaving, setSocSaving] = useState(false)
+  const [socSaid, setSocSaid] = useState('')
+
+  //: 3D 의 깊이축을 무엇으로 세울까 — 전위(V)인가 SOC(%)인가 (ADR 0038).
+  //
+  //  **둘 다 맞는 그림이고 보는 것이 다르다.**  전위축은 잰 그대로라 평탄부의
+  //  스윕들이 서로 붙어 서고, SOC 축은 고르게 벌려 놓아 모양을 견주기 좋다.
+  //  그래서 하나를 고르는 것이 아니라 오가게 둔다.
+  const [depthBy, setDepthBy] = useState<'volt' | 'soc'>('volt')
   //: DRT 가로축.  상세·비교 화면과 같은 열쇠 (`lib/tauaxis.ts`).
   const [storedAxis, setAxis] = useStickyState<DrtAxis>(DRT_AXIS_KEY, 'tau')
   const drtAxis = validDrtAxis(storedAxis)
@@ -339,29 +352,57 @@ export function ScanDetail() {
   //  `SOC 0/50/100 %` 자리에 실제 전위가 들어간다.  **켜 둔 것만 세운다**:
   //  꺼 둔 스윕이 자리를 차지하면 상자에 빈 칸이 생기고, 그 빈 칸이 "여기
   //  측정이 없다" 로 읽힌다.
+  //: 적어 둔 SOC 를 스윕마다 아는가.  하나라도 비면 SOC 축을 못 세운다 —
+  //  모르는 스윕을 어디에 놓아도 그 자리가 거짓이 된다 (§0.4).
+  const socKnown = points.length > 0
+    && points.every((point) => point.soc_percent !== null)
+  //: 고른 축을 실제로 쓸 수 있는가.  SOC 를 골라 놨는데 안 적혀 있으면 전위로
+  //  돌아간다 — 단추는 그대로 두고 왜인지를 그림 밑에 적는다.
+  const depthMode: 'volt' | 'soc' = depthBy === 'soc' && socKnown ? 'soc' : 'volt'
+
   const solidSeries = useMemo<Series3D[]>(() => {
-    const depth = new Map(points.map(
-      (point) => [`#${point.sweep_index}`, point.potential_v ?? null]))
-    return flat.filter((one) => !one.hidden).map((one, index) => ({
+    const depth = new Map(points.map((point) => [
+      `#${point.sweep_index}`,
+      depthMode === 'soc' ? point.soc_percent : point.potential_v,
+    ]))
+    // **SOC 는 고르게 벌린다** (요청).  SOC 10 % 마다 잰 스캔의 전위 간격은
+    // 고르지 않으므로 (평탄부에서 촘촘), 전위축은 곡선을 몰아 놓는다.  차례를
+    // 깊이로 쓰고 눈금 글자에 SOC 를 적으면 간격이 고르고 읽는 값은 SOC 다.
+    const order = flat.filter((one) => !one.hidden)
+    return order.map((one, index) => ({
       label: one.label,
       x: one.x,
       y: one.y,
       // 전위를 모르는 스윕이 섞여 있으면 **차례**로 세운다 — 아는 것만 세우면
       // 모르는 것들이 한 자리에 겹치고, 그 겹침이 물리로 읽힌다.
-      z: depth.get(one.label) ?? index,
+      z: depthMode === 'soc' ? index : depth.get(one.label) ?? index,
       color: one.color,
       points: one.points,
       // 2D 범례와 **같은 것**을 보여야 한다 — 3D 로 바꿨다고 SOC 가 사라지면,
       // 깊이 축만으로는 `#n` 과 용량의 대응을 되찾을 수 없다.
       note: one.note,
     }))
-  }, [flat, points])
+  }, [flat, points, depthMode])
 
   //: 깊이 눈금은 **스윕이 실제로 앉은 자리**다.  고르게 나눈 눈금을 쓰면 전위
-  //  간격이 고르지 않은 스캔에서 눈금과 곡선이 어긋난다.
+  //  간격이 고르지 않은 스캔에서 눈금과 곡선이 어긋난다.  SOC 축에서는 앉은
+  //  자리가 곧 차례라 눈금도 차례이고, 글자만 SOC 로 바꿔 단다.
   const depthTicks = useMemo(
     () => [...new Set(solidSeries.map((one) => one.z).filter(Number.isFinite))]
       .sort((a, b) => a - b), [solidSeries])
+
+  //: SOC 축의 눈금 글자 — 몇 번째 칸인가를 그 스윕의 SOC 로 읽어 준다.
+  const depthLabel = useMemo(() => {
+    if (depthMode !== 'soc') return undefined
+    const shown = flat.filter((one) => !one.hidden)
+    const soc = new Map(points.map(
+      (point) => [`#${point.sweep_index}`, point.soc_percent]))
+    return (value: number) => {
+      const one = shown[Math.round(value)]
+      const percent = one ? soc.get(one.label) : null
+      return percent === null || percent === undefined ? '' : `${num(percent, 3)}%`
+    }
+  }, [depthMode, flat, points])
 
   //: 전위를 다 아는가 — 모르면 깊이 축 이름이 `스윕 차례` 가 된다.
   const depthIsVolt = points.length > 0
@@ -470,6 +511,33 @@ export function ScanDetail() {
                 muted={head.fitted === 0} />
       </MetricBand>
 
+      {/* SOC 는 **사람이 적는다** (ADR 0038).  계측기는 모르고, 파일 어디에도
+          없고, 전위와의 대응은 셀마다 다르다.  질량·면적과 같은 종류의 칸이라
+          비어 있는 것이 정상이다. */}
+      <SocField
+        sweeps={head.sweeps}
+        points={points}
+        text={socText}
+        onText={setSocText}
+        saving={socSaving}
+        said={socSaid}
+        onSave={async (values) => {
+          setSocSaving(true)
+          setSocSaid('')
+          try {
+            const out = await api.writeScanSoc(sha256, values)
+            setSocSaid(`${out.filled}개를 적었습니다`
+              + (out.cleared ? ` (${out.cleared}개는 비웠습니다)` : ''))
+            setSocText(null)     // 서버가 준 것으로 돌아간다
+            scan.reload()
+          } catch (cause) {
+            setSocSaid(cause instanceof Error ? cause.message : String(cause))
+          } finally {
+            setSocSaving(false)
+          }
+        }}
+      />
+
       {head.fitted === 0 ? (
         <Alert kind="info">
           아직 맞춘 회로가 없습니다.{' '}
@@ -512,6 +580,19 @@ export function ScanDetail() {
             {/* 간격은 **이격을 보고 있을 때만** 묻는다.  겹쳐 그리는 중에 서
                 있으면 무엇에 쓰는 칸인지 화면 어디에도 없다. */}
             {stacked ? <StackGapField gap={gap} unit={zUnit} /> : null}
+            {/* 깊이축도 3D 를 보고 있을 때만.  둘 다 맞는 그림이고 보는 것이
+                다르다 (ADR 0038): 전위는 잰 그대로라 평탄부가 붙어 서고,
+                SOC 는 고르게 벌려 놓아 모양을 견주기 좋다. */}
+            {solid ? (
+              <div className="segmented" role="group" aria-label="깊이축">
+                <button type="button" className={depthBy === 'volt' ? 'on' : ''}
+                        title="잰 그대로의 전위로 세웁니다 — 간격이 고르지 않습니다"
+                        onClick={() => setDepthBy('volt')}>전위</button>
+                <button type="button" className={depthBy === 'soc' ? 'on' : ''}
+                        title="적어 둔 SOC 로 — 간격을 고르게 두고 눈금에 SOC 를 적습니다"
+                        onClick={() => setDepthBy('soc')}>SOC</button>
+              </div>
+            ) : null}
             {/* DRT 를 볼 때만 뜬다 — 나이퀴스트에는 τ 축이 없다. */}
             {mode === 'drt' ? (
               <div className="segmented" role="group" aria-label="가로축">
@@ -567,8 +648,10 @@ export function ScanDetail() {
                   series={solidSeries}
                   xLabel={mode === 'drt' ? drtAxisLabel(drtAxis) : `Z′ (${zUnit})`}
                   yLabel={mode === 'drt' ? `γ (${zUnit})` : `−Z″ (${zUnit})`}
-                  zLabel={depthIsVolt ? '전위 (V)' : '스윕 차례'}
+                  zLabel={depthMode === 'soc' ? 'SOC (%)'
+                    : depthIsVolt ? '전위 (V)' : '스윕 차례'}
                   zTicks={depthTicks}
+                  zTickLabel={depthLabel}
                   height={560}
                   pngName={`${head.name} ${mode === 'drt' ? 'DRT' : '나이퀴스트'} 3D`}
                   pngTitle={mode === 'drt' ? 'DRT — 스윕 전부 (3D)' : '나이퀴스트 — 스윕 전부 (3D)'}
@@ -619,7 +702,22 @@ export function ScanDetail() {
               {/* 그림 밑 네 줄을 한 자리에서 (`.plot-below`) — 각자 제
                   여백을 갖고 있어서 왼쪽 끝이 들쭉날쭉했다. */}
               <div className="plot-below">
-              {solid && !depthIsVolt ? (
+              {solid && depthBy === 'soc' && !socKnown ? (
+                // **말한다.**  단추는 SOC 로 눌려 있는데 그림은 전위로 서 있는
+                // 상태가 조용히 생기면, 사람은 SOC 축을 보고 있다고 믿는다.
+                <div className="tiny warn">
+                  SOC 가 안 적힌 스윕이 있어 <b>전위</b>로 세웠습니다 — 위의
+                  <b> SOC</b> 칸에 스윕 {head.sweeps}개를 모두 적어 주세요.
+                </div>
+              ) : null}
+              {solid && depthMode === 'soc' ? (
+                <div className="tiny faint">
+                  깊이 간격을 <b>고르게</b> 두고 눈금에 SOC 를 적었습니다.
+                  전위 간격은 고르지 않으므로(평탄부에서 촘촘) 전위축은 곡선을
+                  몰아 놓습니다 — 둘 다 맞는 그림이고, 보는 것이 다릅니다.
+                </div>
+              ) : null}
+              {solid && depthMode !== 'soc' && !depthIsVolt ? (
                 // 전위를 모르는 스윕이 섞여 있다.  **말한다** — 깊이 축이
                 // 물리가 아니라 차례라는 것이 축 이름에만 있으면 눈이 안 간다.
                 <div className="tiny warn">
@@ -991,5 +1089,78 @@ export function ScanDetail() {
         </div>
       </Card>
     </main>
+  )
+}
+
+/** 스캔 하나의 SOC 를 한 줄로 적는 칸 (ADR 0038).
+ *
+ *  **한 줄인 것은 편의**다: 저장은 스윕마다 하나씩 간다.  `SOC 0, 10, 20 …`
+ *  처럼 노트에 적는 모양 그대로 받는다 (`lib/soc.ts`).
+ *
+ *  **수가 안 맞으면 누르기 전에 말한다.**  서버도 422 로 막지만, 눌러 보고
+ *  나서야 아는 것과 적으면서 아는 것은 다르다.  그리고 앞에서부터 채우는 일은
+ *  양쪽 다 하지 않는다 — 한 칸 밀린 SOC 축은 그림이 멀쩡해 보인다.
+ */
+function SocField({
+  sweeps, points, text, onText, onSave, saving, said,
+}: {
+  sweeps: number
+  points: ScanPoint[]
+  /** 고치는 중인 글.  `null` 이면 서버가 준 것을 그대로 보여 준다. */
+  text: string | null
+  onText: (text: string | null) => void
+  onSave: (values: (number | null)[]) => void | Promise<void>
+  saving: boolean
+  said: string
+}) {
+  //: 안 고치고 있을 때 보이는 것 — 서버에 적힌 SOC.  빈 스윕은 `-` 로 두어야
+  //  자리가 남는다 (그냥 빼면 뒤엣것이 당겨져서 차례가 어긋난다).
+  const stored = points.map(
+    (point) => (point.soc_percent === null ? '-' : String(point.soc_percent)))
+  const filled = points.filter((point) => point.soc_percent !== null).length
+  const shown = text ?? (filled ? stored.join(', ') : '')
+  const list = parseSocList(shown)
+  const problem = socProblem(list, sweeps)
+  const dirty = text !== null && text !== (filled ? stored.join(', ') : '')
+
+  return (
+    <Card title="SOC" tight>
+      <div className="col" style={{ gap: 6, padding: '10px 16px 14px' }}>
+        <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
+          <input
+            type="text"
+            value={shown}
+            onChange={(event) => onText(event.target.value)}
+            placeholder={`스윕 ${sweeps}개 — 예: 0, 10, 20 …`}
+            aria-label="SOC"
+            style={{ flex: '1 1 320px', minWidth: 220,
+                     borderColor: problem ? 'var(--danger)' : undefined }}
+          />
+          <button
+            type="button"
+            className="sm"
+            disabled={saving || !dirty || !!problem}
+            onClick={() => onSave(list.values)}
+          >
+            {saving ? '적는 중…' : '저장'}
+          </button>
+          {dirty ? (
+            <button type="button" className="sm ghost" disabled={saving}
+                    onClick={() => onText(null)}>되돌리기</button>
+          ) : null}
+        </div>
+        {problem ? (
+          <div className="tiny warn">{problem}</div>
+        ) : (
+          <div className="tiny faint">
+            스윕 차례대로 적습니다 ({sweeps}개). 모르는 스윕은 <code>-</code> 로
+            비워 두세요. 계측기는 SOC 를 모르므로 (파일 어디에도 없습니다) 이
+            값은 적은 사람이 책임집니다 — 적어 두면 3D 의 깊이축을 SOC 로 세울
+            수 있습니다.
+          </div>
+        )}
+        {said ? <div className="tiny dim">{said}</div> : null}
+      </div>
+    </Card>
   )
 }

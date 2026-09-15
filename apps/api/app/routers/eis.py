@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
 from datetime import datetime, timezone
 
@@ -50,6 +51,8 @@ from ..schemas import (
     RefitAllOut,
     ScanOut,
     ScanPointOut,
+    ScanSocIn,
+    ScanSocOut,
     SpectrumDetailOut,
     SpectrumFitOut,
     SpectrumOut,
@@ -753,6 +756,7 @@ def _scan_point(session: Session, record: SpectrumRecord) -> ScanPointOut:
         name=record.name or record.original_name,
         capacity_mah=record.capacity_mah,
         potential_v=record.potential_v,
+        soc_percent=record.soc_percent,
         n_points=record.n_points,
         frequency_start_hz=record.frequency_start_hz,
         frequency_end_hz=record.frequency_end_hz,
@@ -995,6 +999,51 @@ def read_scan(sha256: str, session: Session = Depends(get_session)):
     if not records:
         raise HTTPException(404, f"스캔 {sha256[:12]} 을 찾을 수 없습니다")
     return _scan_out(session, records, with_points=True)
+
+
+@router.put("/scans/{sha256}/soc", response_model=ScanSocOut)
+def write_scan_soc(sha256: str, payload: ScanSocIn,
+                   session: Session = Depends(get_session)):
+    """이 스캔의 SOC 를 스윕 차례대로 적는다 (ADR 0038).
+
+    계측기가 모르는 값이라 검증할 근거가 파일 안에 없다.  그래서 여기서 보는
+    것은 둘뿐이다.
+
+    **개수.**  스윕 수와 다르면 저장하지 않고 두 수를 함께 적어 돌려준다.
+    앞에서부터 채우고 뒤를 비우는 것은 하지 않는다 — 어느 스윕이 빠진 것인지
+    알 방법이 없고, 한 칸 밀린 SOC 축은 그림이 멀쩡해 보이므로 제일 나쁜
+    실패다.
+
+    **범위.**  0~100 밖은 거절한다.  `null` 은 "그 스윕은 모른다" 라서 통과한다
+    — 적었던 것을 지우는 길이 있어야 한다 (§0.4).
+    """
+    records = _scan_records(session, sha256)
+    if not records:
+        raise HTTPException(404, f"스캔 {sha256[:12]} 을 찾을 수 없습니다")
+
+    values = payload.soc_percent
+    if len(values) != len(records):
+        raise HTTPException(
+            422,
+            f"스윕이 {len(records)}개인데 {len(values)}개를 받았습니다 — "
+            f"수가 같아야 어느 스윕의 SOC 인지 정해집니다")
+
+    for index, value in enumerate(values, start=1):
+        if value is None:
+            continue
+        if not math.isfinite(value) or not 0 <= value <= 100:
+            raise HTTPException(
+                422, f"{index}번째 값이 SOC 범위를 벗어납니다: {value}")
+
+    filled = 0
+    for record, value in zip(records, values, strict=True):
+        record.soc_percent = value
+        session.add(record)
+        if value is not None:
+            filled += 1
+    session.commit()
+    return ScanSocOut(sweeps=len(records), filled=filled,
+                      cleared=len(records) - filled)
 
 
 @router.get("/scans/{sha256}/points", response_model=list[SpectrumPointsOut])
