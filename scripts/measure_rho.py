@@ -411,7 +411,13 @@ def build_certificate(sm, rows, channels, cohort_ids):
         if c['rho_pct_channel'] is None:
             bad.append(f'{ch}: ρ 를 못 냈다')
             continue
-        by_ch[ch] = {'rho': c['rho_pct_channel'], 'n_cases': c['n_cases'], 'n_ok': n_need,
+        #  ★★ **그 채널에서 실제로 ρ 를 잰 케이스 ID** — 러너가 `B_ch` 를 채널별로 덮는지
+        #     확인하는 데 쓴다.  ⚠ 케이스 단위 `cohort_ids` 만으로는 부족하다:
+        #     같은 케이스라도 채널마다 `SOLVE_NONE` 이 갈린다 (실측: lhs00_001 은 이온만 해없음).
+        _mid = sorted(r['case'] for r in rows
+                      if r['channel'] == ch and r.get('rho_registered_pct') not in ('', None))
+        by_ch[ch] = {'rho': c['rho_pct_channel'], 'measured_ids': _mid,
+                     'n_cases': c['n_cases'], 'n_ok': n_need,
                      'n_iterative': c['n_iterative'], 'n_direct': c['n_direct'],
                      'sources': c['rho_sources'],
                      'rho_max_tighten': c['rho_pct_max_iterative'],
@@ -431,6 +437,8 @@ def build_certificate(sm, rows, channels, cohort_ids):
         #    h1 이 어려워진다.  판정기는 `rho_by_channel` 이 있으면 그쪽을 쓴다.
         'rho': max(v['rho'] for v in by_ch.values()),
         'rho_by_channel': {ch: v['rho'] for ch, v in by_ch.items()},
+        #  ⛔ 러너가 **채널별로** `B_ch ⊆ measured` 를 확인한다 (fail-closed).
+        'measured_by_channel': {ch: v['measured_ids'] for ch, v in by_ch.items()},
         'per_channel': by_ch,
         'scipy': sm.get('scipy'), 'python': sm.get('python'),
         'tighten': sm.get('tighten'), 'permutation_seed': PERM_SEED,

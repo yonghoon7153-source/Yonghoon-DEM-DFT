@@ -184,6 +184,23 @@ def load_rho_certificate(path, seal, channels_hint=None):
         missing = sorted(sealed - cert_ids)[:5]
         return None, (f'증서가 봉인된 B_ch 를 다 덮지 않는다 — 빠진 ID {len(sealed - cert_ids)}건 '
                       f'(예: {missing}).  ⛔ 다른 코호트의 ρ 를 대입하지 않는다.')
+    #  ★★ **채널별 덮기** (2026-09-15 실측으로 드러난 구멍).  케이스 단위 `cohort_ids` 만
+    #     보면 *"그 케이스가 코호트에 있었다"* 까지만 확인된다 — **그 채널에서 ρ 를 실제로
+    #     쟀는지**는 아니다.  실측 반례: `lhs00_001` 은 **이온만** `SOLVE_NONE` 이라 그 채널의
+    #     ρ 정의역 밖인데 다른 두 채널에는 들어 있다.  ⇒ 채널마다 `B_ch ⊆ measured` 를 본다.
+    #     ⛔ 목록이 없는 증서는 **거부**한다 (옛 측정기 산물이면 다시 내야 한다).
+    mbc = c.get('measured_by_channel')
+    if not isinstance(mbc, dict) or not mbc:
+        return None, ('증서에 `measured_by_channel` 이 없다 — 채널마다 ρ 를 실제로 쟀는지 '
+                      '복원할 수 없다.  현행 `measure_rho.py --emit-certificate` 로 다시 낼 것.')
+    for ch, d in seal['channels'].items():
+        b = set((d.get('ids') or {}).get(IN_DOMAIN, []))
+        m = set(mbc.get(ch) or [])
+        if not b <= m:
+            miss = sorted(b - m)[:5]
+            return None, (f'채널 {ch}: 증서가 잰 집합이 봉인된 B_ch 를 안 덮는다 — '
+                          f'빠진 ID {len(b - m)}건 (예: {miss}).  '
+                          '그 케이스들의 ρ 는 **재지 않은 것**이다.')
     if channels_hint and not set(channels_hint) <= set(c['channels']):
         return None, f"증서가 채널 {sorted(set(channels_hint) - set(c['channels']))} 를 안 덮는다"
     #  ★★ **채널별 ρ** — 판정은 채널마다 따로 나므로 ρ 도 그 채널 것을 쓰는 게 옳다.
@@ -827,7 +844,7 @@ def _selftest() -> int:
               'channels': {'ionic': {'ids': {IN_DOMAIN: ['c1', 'c2', 'c3']}}}}
     _cert = {'cohort_ids': ['c1', 'c2', 'c3'], 'channels': ['ionic'], 'generation': 'g1',
              'stop_criterion': 'rtol=1e-8, atol=0', 'aggregation': 'max |Δσ|/σ ×100',
-             'rho': 0.0}
+             'rho': 0.0, 'measured_by_channel': {'ionic': ['c1', 'c2', 'c3']}}
     with tempfile.TemporaryDirectory() as _td:
         _t = pathlib.Path(_td)
 
@@ -862,6 +879,16 @@ def _selftest() -> int:
             f"thermal(ρ=1) {verdict(12.0, 1.0)} vs ionic(ρ=7) {verdict(12.0, 7.0)}")
         chk('⑧i 채널별 ρ 가 비유한이면 거부',
             _cert_rho(dict(_cert, rho_by_channel={'ionic': 'nan'}))[0] is None)
+        #  ★★ **채널별 덮기** — 2026-09-15 실측이 드러낸 구멍.  케이스가 코호트에 있어도
+        #     **그 채널에서 ρ 를 쟀는지**는 다른 질문이다 (실측: `lhs00_001` 은 이온만 해없음).
+        chk('⑧j ★★ 케이스는 코호트에 있는데 **그 채널에서는 안 쟀으면** 거부',
+            _cert_rho(dict(_cert, measured_by_channel={'ionic': ['c1', 'c2']}))[0] is None,
+            str(_cert_rho(dict(_cert, measured_by_channel={'ionic': ['c1', 'c2']}))[1])[:90])
+        chk('⑧k ⛔ `measured_by_channel` 이 아예 없는 증서는 거부 (옛 측정기 산물)',
+            _cert_rho({k: v for k, v in _cert.items() if k != 'measured_by_channel'})[0] is None)
+        chk('⑧l 판별력: 다른 채널이 덜 재도 **봉인에 없는 채널**이면 상관없다',
+            (_cert_rho(dict(_cert, measured_by_channel={'ionic': ['c1', 'c2', 'c3'],
+                                                        'thermal': []}))[0] or {}).get('*') == 0.0)
         chk('⑧f 비유한 ρ 는 거부', _cert_rho(dict(_cert, rho='nan'))[0] is None)
 
     # ⑥ 러너 자신의 거부 — `main()` 을 인자로 불러 rc 를 본다.
