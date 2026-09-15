@@ -89,9 +89,13 @@
          여기로 떨어진다. #}
       <tr id="{{ d.id }}" data-kind="{{ d.kind or '' }}">
         <td class="mono" style="font-size:.7rem;white-space:nowrap">{{ d.id }}</td>
-        <td><span class="tbadge" title="원장 kind: {{ (d.kind or '미기재')|plain }}"
+        {# ⚠ 이 두 칸은 **`white-space:nowrap` 이 필수**다. 없으면 '무엇을 정했나' 칸이 폭을
+           다 가져가면서 한글 배지가 **한 글자씩 세로로** 쪼개진다 — `보/고/량`, `게/이/트`,
+           `◻ 제안(비/준/대/기)`. 1저자 실측 보고 2026-09-15 ("뭔가 줄바꿈되어있고 그래").
+           표는 이미 `overflow-x:auto` 안이라 넓어져도 가로 스크롤로 받는다. #}
+        <td style="white-space:nowrap"><span class="tbadge" title="원장 kind: {{ (d.kind or '미기재')|plain }}"
               style="background:{{ dk_color.get(d.kind, '#6b7280') }};color:#fff">{{ dk_label.get(d.kind, d.kind or '미기재') }}</span></td>
-        <td>{% if d._state == 'active' %}<span style="color:#0d9488">✅ 유효</span>
+        <td style="white-space:nowrap">{% if d._state == 'active' %}<span style="color:#0d9488">✅ 유효</span>
             {%- elif d._state == 'proposed' %}<span style="color:#c05621">◻ 제안(비준 대기)</span>
             {%- elif d._state == 'superseded' %}<span style="color:#6b7280">↩ 대체됨</span>
             {%- elif d._state == 'retracted' %}<span style="color:#6b7280">↩ 철회</span>
@@ -293,7 +297,7 @@
        두 가지를 함께 단다: `claim`(가리키는 정본값)과 `id`(위험 자체 = 비수치 금지주장). #}
     {% set _cids = [h.claim, h.id]|select|join(' ') %}
     <tr{% if _cids %} data-claim="{{ _cids }}"{% endif %}>
-      <td><span class="tbadge" style="background:{{ hz_color.get(h.level, '#6b7280') }};color:#fff">{{ h.level }}</span></td>
+      <td style="white-space:nowrap"><span class="tbadge" style="background:{{ hz_color.get(h.level, '#6b7280') }};color:#fff">{{ h.level }}</span></td>
       <td style="white-space:nowrap">
         {%- if h._bind == 'claim' %}<span class="tbadge" style="background:#0d9488;color:#fff"
              title="정본값 {{ (h.claim)|plain }} 에 결속 — 그 수치를 쓰면 검사가 잡는다">🔗 결속됨 · 값</span>
@@ -391,7 +395,7 @@
           {%- if a.binding %} <span class="sub" style="font-size:.66rem">· {{ a.binding }}</span>{% endif %}
           {%- if a.supersedes_assessment_id %}<br><span class="sub" style="font-size:.66rem">↩ 대체:
             <span class="mono">{{ a.supersedes_assessment_id }}</span></span>{% endif %}</td>
-        <td>{{ a.gate or a.slot or ('(정정 레코드)' if a.kind == 'correction' else '–') }}</td>
+        <td style="word-break:keep-all">{{ a.gate or a.slot or ('(정정 레코드)' if a.kind == 'correction' else '–') }}</td>
         <td>{% set o = a.result or a.gate_outcome or a.outcome %}
             {%- if o == 'pass' %}<span style="color:#0d9488">✅ 통과</span>
             {%- elif o == 'fail' %}<span style="color:#be123c">⛔ 실패</span>

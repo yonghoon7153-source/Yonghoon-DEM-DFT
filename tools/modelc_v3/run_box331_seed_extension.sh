@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# modelc(LPSCl1.6) 3×3×1 400 ps — **시드 확장** (기존 {2,3,4} → +{5,6})
+# box331 400 ps — **시드 확장** (기존 {2,3,4} → +{5,6}) · SYS=modelc | lpsocl
 #
 # 왜: C3(아레니우스 직선성)이 inconclusive 로 HOLD 다. ΔEa 점추정 −0.0339 eV 는 허용영역
 #   ±0.050 **안**인데 CI95 하단 −0.0539 만 경계를 0.0039 eV 넘는다. CI 를 20 % 좁히면
@@ -24,15 +24,33 @@
 # =============================================================================
 set -euo pipefail
 
+# SYS=modelc (기본) | lpsocl
+#   ⛔ **lpsocl 은 1저자 비준 전에 돌리지 않는다** — 비준된 마감을 여는 것이라 개정문이 필요하다
+#      (db/properties/lpsocl_box331_seed_extension_amendment_2026_09_15.json · R5 신설, proposed).
+#      아래 가드가 `LPSOCL_RATIFIED=1` 없이는 멈춘다.
+SYS=${SYS:-modelc}
 REPO=${REPO:-$HOME/work/Yonghoon-DEM-DFT}
-OUTROOT=${OUTROOT:-$HOME/work/runs/modelc_box331_400ps}
+case "$SYS" in
+  modelc) _XYZ=modelc_relaxV0_3x3x1.xyz; _NAT=558; _ROOT=modelc_box331_400ps; _TURBO=--turbo ;;
+  lpsocl) _XYZ=lpsocl_relaxV0_3x3x1.xyz; _NAT="";  _ROOT=lpsocl_box331_400ps; _TURBO=""      ;;
+  *) echo "⛔ SYS 는 modelc | lpsocl 이다 (받은 값: $SYS)"; exit 1 ;;
+esac
+# ⚠ 실행모드가 계마다 **다르다** — modelc 9런은 turbo, lpsocl 9런은 기본 모드다.
+#   섞으면 그 묶음을 한 표에 못 쓴다. 그래서 계별로 고정하고, 아래 가드 ③ 이 기존 런과 대조한다.
+if [ "$SYS" = lpsocl ] && [ "${LPSOCL_RATIFIED:-0}" != "1" ]; then
+  echo "⛔ lpsocl 시드 확장은 **개정문 비준 전**이다 (R5, proposed)."
+  echo "   1저자가 비준했으면 LPSOCL_RATIFIED=1 로 다시 부른다."
+  echo "   카드: db/properties/lpsocl_box331_seed_extension_amendment_2026_09_15.json"
+  exit 1
+fi
+OUTROOT=${OUTROOT:-$HOME/work/runs/$_ROOT}
 SEEDS=${SEEDS:-"5 6"}
-V0XYZ=${V0XYZ:-$REPO/db/structures/modelc_relaxV0_3x3x1.xyz}
+V0XYZ=${V0XYZ:-$REPO/db/structures/$_XYZ}
 DRIVER=$REPO/tools/modelc_v3/disorder_ensemble_diffusion.py
-LOG=${LOG:-$HOME/logs/modelc_box331_seed_extension.log}
+LOG=${LOG:-$HOME/logs/${SYS}_box331_seed_extension.log}
 
 # ── 가드 1: 중복 실행 (flock — pgrep 은 tmux 래퍼까지 세서 자기 자신에 걸린다) ──
-LOCK=${LOCK:-/tmp/modelc_box331_seed_extension.lock}
+LOCK=${LOCK:-/tmp/${SYS}_box331_seed_extension.lock}
 exec 9>"$LOCK" || { echo "⛔ 락 파일을 못 연다: $LOCK"; exit 1; }
 command -v flock >/dev/null 2>&1 && { flock -n 9 || {
   echo "⛔ 이미 도는 것이 있다 (flock $LOCK) — 중복 실행 중단"; exit 0; }; }
@@ -43,20 +61,25 @@ command -v flock >/dev/null 2>&1 && { flock -n 9 || {
 [ -f "$DRIVER" ] || { echo "⛔ 드라이버가 없다: $DRIVER  (REPO= 로 지정하라)"; exit 1; }
 [ -f "$V0XYZ" ]  || { echo "⛔ 구조가 없다: $V0XYZ"; exit 1; }
 NAT=$(head -1 "$V0XYZ" | tr -d '[:space:]')
-[ "$NAT" = "558" ] || { echo "⛔ 원자 수가 558 이 아니다($NAT) — 3×3×1 셀이 아니다"; exit 1; }
+if [ -n "$_NAT" ]; then
+  [ "$NAT" = "$_NAT" ] || { echo "⛔ 원자 수가 $_NAT 이 아니다($NAT) — 3×3×1 셀이 아니다"; exit 1; }
+else
+  echo "  ⚠ $SYS 의 기준 원자 수를 스크립트가 모른다($NAT 로 진행) — 가드 ③ 이 기존 런과 대조한다"
+fi
 
 # ── 가드 3: 기존 런과 **같은 조건인가** (verified-carry) ──────────────────────
 #   기존 s2 의 run_meta.json 을 읽어 구조·온도·길이·창·실행모드를 대조한다.
 #   못 읽으면 경고만 하고 계속 간다(첫 실행일 수 있다). 읽었는데 **다르면 멈춘다**.
 REF=$OUTROOT/s2/run_meta.json
 if [ -f "$REF" ]; then
-  python3 - "$REF" "$V0XYZ" <<'PY' || exit 1
+  python3 - "$REF" "$V0XYZ" "${_TURBO:+turbo}" <<'PY' || exit 1
 import json, sys, os
 ref, v0 = sys.argv[1], sys.argv[2]
+_mode = sys.argv[3] or "default"
 m = json.load(open(ref, encoding="utf-8"))
 want = {"temperatures": [600, 800, 1000], "prod_ps": 400.0, "equilib_ps": 5.0,
         "fit_window_ps": [2.0, 50.0], "save_traj": True,
-        "uma_model": "uma-s-1p1", "uma_inference_mode_requested": "turbo"}
+        "uma_model": "uma-s-1p1", "uma_inference_mode_requested": _mode}
 bad = []
 for k, v in want.items():
     got = m.get(k)
@@ -80,6 +103,7 @@ else
 fi
 
 mkdir -p "$(dirname "$LOG")"
+echo "SYS    = $SYS   (실행모드 ${_TURBO:-default})"
 echo "REPO   = $REPO"
 echo "V0     = $V0XYZ  ($NAT atoms)"
 echo "OUT    = $OUTROOT/s{$SEEDS}"
@@ -93,7 +117,7 @@ for S in $SEEDS; do
   if [ -f "$OUT/ensemble_results.json" ]; then
     echo "  ✓ s${S} 이미 끝나 있다 — 건너뜀 ($OUT)"; continue
   fi
-  echo "===================== modelc box331 seed ${S} ====================="
+  echo "===================== $SYS box331 seed ${S} ====================="
   python3 "$DRIVER" \
     --v0_xyz "$V0XYZ" --label modelc \
     --temperatures 600 800 1000 \
@@ -101,7 +125,7 @@ for S in $SEEDS; do
     --equilib_ps 5 --prod_ps 400 \
     --timestep_fs 2 --friction 0.02 \
     --save_fs 100 --fit_window_ps 2 50 \
-    --uma_model uma-s-1p1 --uma_task omat --save_traj --turbo \
+    --uma_model uma-s-1p1 --uma_task omat --save_traj $_TURBO \
     --seed "${S}" --out_root "$OUT"
 done
 

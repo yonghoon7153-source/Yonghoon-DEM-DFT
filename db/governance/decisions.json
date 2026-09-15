@@ -2138,6 +2138,39 @@
      "note": "1저자 지시(\"시드 더 하자\")로 등록. **실행 전**이고 결과를 보지 않았다. D-2026-09-11 이 시드 집합을 정의에 넣어 뒀으므로 그 확장을 원장에 남긴다."
     }
    ]
+  },
+  {
+   "id": "D-2026-09-15-lpsocl-box331-seed-extension-r5",
+   "kind": "closure",
+   "decision_state": "proposed",
+   "results_seen": false,
+   "record_kind": "amendment",
+   "title": "lpsocl 3×3×1 마감에 재개 조건 R5(짝 계 동일 확장)를 신설한다",
+   "statement": "D-2026-09-08-lpsocl-box331-closure-conditions 로 닫힌 lpsocl 3×3×1 마감의 재개 조건에 **R5** 를 더한다 — *\"짝 계(modelc 3×3×1)가 같은 프로토콜로 시드를 확장해 두 계의 표본 수가 어긋날 때, 비교 가능성을 유지하기 위한 동일 확장\"*. 범위는 시드 {2,3,4} → {2,3,4,5,6}, 온도 600/800/1000 전부이며 구조·창·길이·프로토콜은 바꾸지 않는다. ⛔ 확정값 0.1804 ± 0.0018 · 허용 서술 · 금지 서술 · C1–C6 판정은 이 개정이 건드리지 않는다 — **표본만 는다**. ⚠ R5 는 짝 계의 확장이 **실제로 일어난 경우에만** 열린다; '그냥 한 시드 더' 는 여전히 재개 사유가 아니다. ⛔ 결과 보기 전 규칙: C3 가 계속 통과하면 확정값을 새 표본으로 갱신하고, 경계로 이동하면 **그것을 보고하며 옛 표본으로 되돌아가지 않는다**. C3 가 실패하면 마감을 재검토한다 — 이 가능성을 열어 두지 않으면 확장이 '좋아질 때만 반영' 이 된다.",
+   "reopen_criteria": [
+    "A: C3 계속 통과 → 확정값을 새 표본으로 갱신, 마감 유지",
+    "B: C3 가 경계로 이동 → 보고한다. 옛 표본으로 되돌아가지 않는다",
+    "C: C3 실패 → lpsocl 마감 재검토(확정값 철회 심사)"
+   ],
+   "card": "db/properties/lpsocl_box331_seed_extension_amendment_2026_09_15.json",
+   "record": "db/properties/lpsocl_box331_closed_2026_09_11.json",
+   "supersedes": [],
+   "enforcement": "⛔ **비준 전에는 런을 시작하지 않는다.** 새 6런의 구조·온도·길이·창·실행모드가 기존 9런과 같아야 하고(드라이버 run_meta·ensemble_results 의 uma_inference_mode 로 기계 확인), 새 시드도 개별로 C1·C2 를 통과해야 자격이 있다. 문턱은 결과를 보고 고치지 않는다.",
+   "applies_to": {
+    "systems": [
+     "lpsocl"
+    ]
+   },
+   "slot": "lpsocl_box331_closure_seed_extension",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-09-15",
+     "state": "proposed",
+     "by": "agent",
+     "note": "1저자 지시(\"다하자\")로 등록. 실행 전이고 결과를 보지 않았다. 비준된 마감을 여는 것이라 개정문 + 재비준이 필요하다."
+    }
+   ]
   }
  ]
 }
