@@ -1,6 +1,7 @@
 {
   "threshold_ah": 0.01802088,
   "design_capacity_ah": 0.0200232,
+  "cap_plausibility_factor": 10.0,
   "area_cm2": 3.24,
   "cell_min": 34,
   "cell_max": 98,
@@ -19,11 +20,16 @@
   "boundary_policy": "error",
   "max_boundary_fraction": 0.05,
   "duplicate_frequency_policy": "error",
+  "mean_max_ewe_spread_v": null,
+  "eis_sweep": "all",
   "target_cycle": 1,
   "target_step_i": 1,
   "target_raw_step": null,
   "expected_current_sign": "positive",
   "cv_relative_drop": 0.01,
+  "cc_reference_rows": 5,
+  "cc_sustained_rows": 3,
+  "trim_zero_current_boundary_rows": false,
   "use_ocv": true,
   "outer_cv": "leave_one_cell_out",
   "group_column": "batch_id",
@@ -55,6 +61,7 @@
   ],
   "encodings": [
     "utf-8-sig",
-    "cp949"
+    "cp949",
+    "cp1252"
   ]
 }
