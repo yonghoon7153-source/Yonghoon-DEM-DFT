@@ -1,0 +1,30 @@
+{
+ "contract": {
+  "assigned": 231,
+  "returned": 231,
+  "missing": []
+ },
+ "counts": {
+  "live": 62,
+  "historical": 9,
+  "dead": 2,
+  "superseded": 21,
+  "duplicate": 39,
+  "data": 98
+ },
+ "n_inventory": 231,
+ "risk": {
+  "low": 52,
+  "high": 35,
+  "none": 144
+ },
+ "status": {
+  "live": 62,
+  "historical": 9,
+  "dead": 2,
+  "superseded": 21,
+  "duplicate": 39,
+  "data": 98
+ },
+ "note": "갭 감사 2판 2차 (wf_037c2003-63a).  ⚠ **부분 완료** — 에이전트 116 중 38 완료 · **78 이 세션 한도로 실패**(2026-09-15 02:20 UTC 리셋).  계약상 231 파일이 배정돼 231 이 돌아왔으나 `verify:` 단계 대부분이 실패했으므로 아래 항목은 **1차 분류이고 독립 검증을 받지 않았다**.  high 위험 항목은 재검증 대상이다."
+}

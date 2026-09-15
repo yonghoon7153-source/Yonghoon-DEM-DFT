@@ -1,0 +1,1619 @@
+[
+ {
+  "path": "scripts/plot_cycle_rint_decomp.py",
+  "status": "live",
+  "role": "cycle_rint_synthesis.py 의 rint_decomp.json 을 읽어 R_int(N) 을 기계(접촉 모델)/화학(측정 잔차) 두 몫으로 나눈 2패널 그림 + 원자료 CSV 를 낸다. docs/project_rint_fullcell_cycling.md 가 이 도구를 가리킨다.",
+  "risk": "low",
+  "risk_why": "plot_cycle_rint_decomp.py:56-59 — `(r.get('mech_share_ct_nom') or 0.0)*100` 으로 결측 필드를 0 % 로 바꾸고 :62 가 `100-m` 을 '화학 몫(측정 잔차)' 막대로 그리므로, 모델 값이 없는 팔이 '기계 0 % · 화학 100 %' 라는 양의 주장으로 렌더된다 (ⓒ)."
+ },
+ {
+  "path": "scripts/plot_dem3d_dip.py",
+  "status": "live",
+  "role": "docs/data/dem3d_dip_sweep.csv (평형 300 MPa, cap ON/OFF) 를 읽어 porosity vs AM wt% 곡선을 그리고 '평형시키면 Furnas dip 이 없다 · 복합체는 과-shielding' 판정을 figure 로 박는다. 출력 docs/figures/dem3d_dip_sweep.png 커밋돼 있음.",
+  "risk": "low",
+  "risk_why": "plot_dem3d_dip.py:36 — `d['plastic'].get(0, 9.0)` 가 am=0 행이 없을 때 Minnmann 문헌 앵커 9.0 을 대신 찍고 :37-39 가 그것을 'pure-SE 9%' 실측점으로 주석한다. 현 CSV 에는 행이 있어 잠복 상태이지만 결측→양수 치환 구조 그대로다 (ⓒ)."
+ },
+ {
+  "path": "scripts/plot_fade_trajectory.py",
+  "status": "live",
+  "role": "cycle_contact_ledger.py 의 fade JSON 을 받아 f_broken(N)·R_ct(N) 궤적과 '접촉-기계 몫 vs 실험 총 R_int' 분해 막대를 그린다. matplotlib 없으면 표로 대체 출력(narrow ImportError, fail-visible).",
+  "risk": "low",
+  "risk_why": "plot_fade_trajectory.py:24-26 — 실험 끝점 `SBE:6.1,DBE:3.8` 이 CLI 기본값으로 박혀 있고 :95-96 의 헤드라인 문장('접촉-기계 share ~X% of total')이 그 기본값으로 계산된다. 플래그를 안 주면 앵커 없이도 수치 결론이 출력된다 (ⓒ)."
+ },
+ {
+  "path": "scripts/plot_focusing_colorbar.py",
+  "status": "live",
+  "role": "케이스별 ⟨J⟩×focusing(p99.8) 로 @1V·@1C 두 프레임의 컬러바 상한을 max-across-cases 로 잡고 천장 케이스를 라벨해 PNG 로 낸다 (프레임별 천장 케이스가 바뀌어 잘림이 생기는 문제의 대응).",
+  "risk": "low",
+  "risk_why": "plot_focusing_colorbar.py:23-27 — `--json` 없이 돌리면 `_DEFAULT` 의 SDCP/baseline 쌍(docstring :23 'σ_e 3.0 / 1.98' = vox 0.4 세대)이 `_report` 로 현행 수치처럼 인쇄된다. 원장 quotation_ban 패턴에는 안 걸리지만 CLAUDE.md 가 HISTORICAL·인용 금지로 표시한 캠페인 값이고 파일에 철회 표지가 없다 (ⓐ)."
+ },
+ {
+  "path": "scripts/plot_mpm_compaction_summary.py",
+  "status": "historical",
+  "role": "MPM LPSCl 2D 압밀 3패널 요약(강체 dip 격자불변 / 소성 dip 감쇠·격자민감 / 소성만 실험 porosity 창에 도달). 커밋된 jam_320·jam_512·packing_dip CSV + 하드코딩 배열을 섞어 쓴다.",
+  "risk": "low",
+  "risk_why": "plot_mpm_compaction_summary.py:38-43 — 소성 champion 수치 52개가 리포 밖 머신('uma run 2026-06-08')에서 옮겨 적힌 하드코딩 배열이라 재산출·대조가 불가능한데 :66-83 이 그것을 커밋된 CSV 곡선과 같은 축에 그린다. 출력 PNG 도 부재 (ⓔ 성격의 출처 혼합)."
+ },
+ {
+  "path": "scripts/plot_mpm_dem_match.py",
+  "status": "dead",
+  "role": "mpm_dem_match 결과 CSV 를 읽어 DEM↔MPM parity 산점도 · AM% 별 median porosity(dip) · r_SE 밴드별 편향 막대 3장을 그린다. 입력 docs/data/mpm_dem_match.csv 가 부재하고 출력 3장도 리포에 없다.",
+  "risk": "high",
+  "risk_why": "plot_mpm_dem_match.py:96 이 'Furnas dip co-located: DEM vs independent plastic MPM' 을, :88 이 'force-chain region' 을 그림 제목/라벨로 박는다. CLAUDE.md 가 2026-06-10 CORRECTION 2 로 dip 공존을 '중앙값 교차의 오독, WRONG' 이라 철회하고 CORRECTION 1 로 force-chain 을 soft-bulk 아티팩트로 철회했는데 파일에 표지가 없다 — 재실행하면 철회 헤드라인이 그대로 재생산된다 (ⓐ). 부수: :34 `except (ValueError, KeyError): continue` 가 파싱 실패 행을 개수 보고 없이 버린다 (ⓑ)."
+ },
+ {
+  "path": "scripts/plot_porosity_4panel.py",
+  "status": "live",
+  "role": "all_dem_porosity.csv 전 케이스를 regime 4분할(후막 in/out-regime · 박막 · particulate)해 strict-physics 예측 vs 측정 parity 4패널을 그린다. README.md:68,85 와 docs/paper/README.md:57 이 논문 Fig 생성기로 등재.",
+  "risk": "high",
+  "risk_why": "plot_porosity_4panel.py:3·252-254 가 논문 그림 제목에 '82 cases / 82-case validation' 을 박는데 all_dem_porosity.csv 는 80행이다 (CLAUDE.md σ_ionic close-out 이 sibling-tail 2건을 디스크에서 삭제) — 그림이 그리지 않는 코퍼스 크기를 사실로 적고 코드가 검증하지 않는다 (ⓐ). 더해 :106-108 bare `except:` (ⓑ) 와 :124 `if not meas` 가 정상 ε=0 을 결측 취급해 조용히 탈락시킨다 (ⓒ). :81-103 `predict_full` 은 predict_porosity_strict_physics.predict_strict 를 λ 정의가 다르게 재구현한 사본이다 (ⓔ)."
+ },
+ {
+  "path": "scripts/plot_porosity_binned_mean.py",
+  "status": "superseded",
+  "role": "AM wt% 5 % 구간별 측정 ε 의 평균±σ 와 strict-physics 곡선을 겹쳐 '평균장 모델이 중심 추세를 잡는다' 를 보이는 2패널(구간평균 + 잔차) 그림.",
+  "risk": "high",
+  "risk_why": "plot_porosity_binned_mean.py — 같은 패널 안에서 곡선은 임포트한 생산 경로 `predict_strict`(:114, 고정 D=12/4 의 부피분율 가중 λ)로, 산점·구간평균·모든 잔차 통계는 파일-로컬 `predict_full`(:47-71, :94, n·d³ 가중 λ)로 계산한다 = 같은 ε 를 두 모델로 그려 놓고 하나의 적합처럼 읽힌다 (ⓔ). 부수: :74-76 bare `except:` (ⓑ), :92 `if not meas` 로 ε=0 탈락 (ⓒ)."
+ },
+ {
+  "path": "scripts/plot_porosity_confident_fit.py",
+  "status": "superseded",
+  "role": "bimodal·λ≥4·ε≥8 세 필터를 걸어 '모델 적용 가능 regime' 과 전체 코퍼스를 나란히 놓은 2패널 parity + 탈락 사유 목록 출력.",
+  "risk": "low",
+  "risk_why": "plot_porosity_confident_fit.py:200 이 'ALL 82 cases' 를 패널 제목에 박지만 CSV 는 80행이다 (ⓐ). :104-114 `linreg` 이 R² 는 적합선 기준, RMSE 는 1:1 선 기준으로 계산해 같은 제목 줄에 병기한다 — 두 기준이 표기 없이 섞인다 (ⓔ). :91 `if not meas` 로 ε=0 탈락 (ⓒ)."
+ },
+ {
+  "path": "scripts/plot_porosity_main_figure.py",
+  "status": "superseded",
+  "role": "후막(bulk) 검증 패널과 박막 1mAh 참조 패널을 나란히 놓은 메인-그림 후보. 같은 필터·같은 파라미터로 두 패널을 그린다.",
+  "risk": "low",
+  "risk_why": "plot_porosity_main_figure.py:37-38 이 `predict_strict`·`EPS_PURE_SE_EXP` 를 임포트하지만 어디에서도 쓰지 않고 :52-74 의 로컬 `predict_full` 사본만 쓴다 (생산 경로를 불러 놓고 안 쓰는 이중 경로, ⓔ). :77-79 bare `except:` (ⓑ), :95 `if not meas` 로 ε=0 탈락 (ⓒ). docstring :17 의 '박막 1mAh (24 cases)' 도 현 CSV 의 32건과 어긋난다."
+ },
+ {
+  "path": "scripts/plot_porosity_overlay.py",
+  "status": "superseded",
+  "role": "전 케이스를 P:S 3종 strict-physics 곡선 위에 겹쳐 그리고(마커 크기 ∝ λ) 오른쪽 패널에서 λ≥4 만 남겨 '적용 가능 regime' 을 보인다. 출력 porosity_overlay_82cases.png 커밋됨.",
+  "risk": "low",
+  "risk_why": "plot_porosity_overlay.py:120·161·169 이 '82 DEM cases' 를 제목·파일명에 박는데 실제 로드는 80건이다 (ⓐ). :173-180 에 '곡선 기준 잔차는 7:3 로 근사했다 / 제대로 하려면 validate 스크립트를 써라' 는 주석이 남아 있어 이 패널의 통계는 미완 상태임. `fnum` 은 (ValueError, TypeError) 만 잡아 blanket 아님."
+ },
+ {
+  "path": "scripts/plot_porosity_per_campaign.py",
+  "status": "superseded",
+  "role": "캠페인별 4패널에서 케이스마다 측정 ε(●)·예측 ε(×)을 세로 아령으로 잇고 P:S 로 색칠해 계통 편차의 가족을 드러낸다 + 캠페인별 잔차 요약 표.",
+  "risk": "low",
+  "risk_why": "plot_porosity_per_campaign.py:85-92 — `p_vol`/`s_vol` 이 결측이거나 합이 0 이면 그 케이스를 조용히 '0:10' 조성으로 **라벨하고 그 색으로 칠한다** (미상이 아니라 특정 조성으로 단정, ⓒ). 현 CSV 엔 해당 행이 0 건이라 잠복. 부수: :62-66 `except Exception` 광역 포획(ⓑ), :82 ε=0 탈락, `predict` 는 또 하나의 predict_full 사본 (ⓔ)."
+ },
+ {
+  "path": "scripts/plot_porosity_v4_journal.py",
+  "status": "live",
+  "role": "23-파라미터 v4 porosity 모델의 저널용 6패널 + 파라미터 표 S1 + 캡션 md 생성기 (부트스트랩 200회, GBR 5-fold CV 노이즈 바닥 비교). 출력 docs/figures/porosity_v4_paper_figure.png·_porosity_v4_bootstrap.npz·caption md 가 커밋돼 있다.",
+  "risk": "high",
+  "risk_why": "plot_porosity_v4_journal.py:207-228 의 'v4 5-fold CV' 는 각 폴드를 **전체 데이터 최적점 P4 에서 출발**해 maxiter=100 L-BFGS-B 로 미세조정할 뿐이라 테스트 폴드 정보가 시작점에 실려 있다 = 판별력 없는 CV (ⓓ). 그 값이 :334 패널 (b) 와 커밋된 캡션(docs/figures/porosity_v4_paper_figure_caption.md:15)에 'cross-validated RMSE' 로 실린다. 또 :345-366 패널 (c) 는 physics 잔차(23파라미터 **in-sample**)와 GBR 잔차(**5-fold CV**)를 같은 히스토그램에 겹쳐 'Physics ≈ ML → at noise floor' 라고 단정한다 — 같은 양을 서로 다른 방식으로 계산한 비교 (ⓔ). 코퍼스 크기도 :414·:487 이 '82-case' 로 박혀 있는데 실제 80 (ⓐ)."
+ },
+ {
+  "path": "scripts/plot_porosity_v4_paper.py",
+  "status": "superseded",
+  "role": "같은 v4 모델의 초기 4패널 논문 그림(2D heatmap · λ 슬라이스 · 항별 분해 · 잔차 진단). plot_porosity_v4_journal.py 가 부트스트랩·CV·캡션까지 붙여 대체했다.",
+  "risk": "high",
+  "risk_why": "plot_porosity_v4_paper.py:150 이 패널 제목에 'RMSE 2.27 %p (all 82) / 2.09 %p (trust 80)' 을 **문자열로 하드코딩**한다. :88 에서 `resid` 를 실제로 계산해 놓고 헤드라인에는 쓰지 않으므로, CSV 가 82→80 으로 바뀐 지금도 그림은 옛 수치를 현행 사실로 인쇄한다 (ⓐ + ⓔ). :273 suptitle 의 '82-case DEM corpus' 도 같다. :22-23 bare `except:` (ⓑ)."
+ },
+ {
+  "path": "scripts/plot_se_z_profile.py",
+  "status": "live",
+  "role": "케이스의 SE 네트워크 진단(cut node · bottleneck edge · dead-end cluster)을 전극 두께 z 축으로 히스토그램화해 '퍼콜레이션 취약성이 어느 높이에 사는가' 를 3패널 + CSV 로 낸다. viewer3d_data.compute_se_network_diagnostics 를 그대로 재사용.",
+  "risk": "low",
+  "risk_why": "plot_se_z_profile.py:135 `cut_frac = np.where(perc_hist>0, cut/perc, 0.0)` 로 percolating SE 가 **한 개도 없는 빈**을 취약도 0 으로 채우고, :138-139 가 그 배열 전체 평균을 'mean = …' 선으로 그림에 박는다 — 정보 없음이 '가장 건강함' 으로 계산돼 평균을 끌어내린다 (ⓒ)."
+ },
+ {
+  "path": "scripts/plot_section7_design_rules.py",
+  "status": "live",
+  "role": "docs/db/section7_10case_sweep.csv(10 케이스)를 P:S × r_SE 격자로 펴서 σ_ionic · σ_e · τ_Laplace · severe% 4패널 히트맵을 그리고 셀마다 porosity 를 겹쳐 적는다. docs/paper/README.md:56 이 논문 Fig 로 등재.",
+  "risk": "low",
+  "risk_why": "plot_section7_design_rules.py:20-22 — `def fnum(s): try: float(s) except: return None` 의 bare `except:` 가 파싱 실패를 전부 삼켜 None→NaN→**빈 셀**로 만든다. 논문 히트맵에서 '값 없음' 과 '읽기 실패' 가 구분되지 않고 경고도 없다 (ⓑ)."
+ },
+ {
+  "path": "scripts/plot_sigma_e_bars.py",
+  "status": "live",
+  "role": "ion8 팔 payload(p2_*.json)에서 σ_e 를 **다시 읽어** SBE/DBE 가로 막대(원고 Fig 4b 형식) + 팔별 원값 CSV + Origin wide CSV 를 낸다. scripts/check_all.sh:89 와 .github/workflows/discipline.yml:107 이 --selftest 를 CI 에서 돌린다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "scripts/plot_stress_z_distribution.py",
+  "status": "live",
+  "role": "contacts.csv 에서 입자별 최대 접촉압(MPa)을 재계산해 z 축 3패널(브래킷 누적 · 구간 통계 · 평균-p95 띠)과 CSV 를 낸다. webapp/app.py:8257,8306 과 scripts/plot_combined_z_distribution.py:41 이 compute_stress_zprofile/render_stress_figure 를 직접 임포트한다.",
+  "risk": "low",
+  "risk_why": "plot_stress_z_distribution.py:57-66 은 아무것도 안 하는 죽은 루프(`pass`)이고, :73-75·:85-86 의 광역 `except Exception: continue` 가 파싱 실패 접촉을 개수 보고 없이 버린다 (ⓑ). :152 `math.log10(max(1.0, sLo))` 과 :238 `np.maximum(..., 1.0)` 은 실제 1 MPa 미만 압력을 1 MPa 로 바닥 처리해 브래킷 스케일과 'median–p95 band' 를 위로 민다 (ⓒ)."
+ },
+ {
+  "path": "scripts/plot_tau_regime_si.py",
+  "status": "dead",
+  "role": "build_tau_regime_db.py 가 만든 /tmp/tau_regime_db.json 에서 SI 그림 4장(τ regime map · 문헌 대조 · 비 분포 · bottleneck showcase)을 /tmp 에 쓴다. 입력·출력이 모두 /tmp 라 현재 리포에 산출물이 없다.",
+  "risk": "high",
+  "risk_why": "plot_tau_regime_si.py:120-121 — 실제로 그리는 곡선은 `phi_range**(-2.36)` 인데 범례 문자열은 \"Wang 2023 fit (α=2.36): τ²=φ$^{-1.72}$\" 라 **그린 지수와 라벨한 지수가 다르다**; SI 문헌-대조 그림에서 독자는 라벨을 읽는다 (ⓔ). 더해 :43 `(r['constriction_frac'] or 0.75)` 와 :174 `(r.get('SE_SE_CN_mean') or 4.0)` 이 결측을 발명된 기본값으로 칠해 컬러바에 실측처럼 올린다 (ⓒ), :41-45·:98-100 의 truthiness 필터는 정상 0.0 을 결측처럼 떨군다."
+ },
+ {
+  "path": "scripts/porosity_close.py",
+  "status": "live",
+  "role": "regime-gate 된 porosity 타깃에 생산 폼을 적합하고, LOOCV 잔차 상위를 corner/재료-다름/SE-rich 로 분류해 '정당화되는' 이상치만 탐욕적으로 제거하며 LOOCV 가 평탄해질 때까지 반복 → 최종 폼 + 제외 원장을 인쇄. docs/porosity_regression_final.md 가 제외 원장의 출처로 인용.",
+  "risk": "high",
+  "risk_why": "porosity_close.py:68-83 — 보고할 지표(LOOCV)를 기준으로 케이스를 하나씩 지우고, 지워서 오르면 채택하는 래칫이다(`if r2t > r2c + 0.002`). 끝에서 :86 이 그 **선택된 최댓값**을 'CLOSED form LOOCV' 로 보고하는데 nested/held-out 보정이 없다 = 좋아지는 쪽으로만 움직이는 게이트 (ⓓ). 이 리포가 σ_ionic 절에서 금지한 재선별 편향과 같은 부류다. 부수: :21-26 `real_rAM()` 은 정의만 되고 어디서도 호출되지 않는 죽은 코드."
+ },
+ {
+  "path": "scripts/porosity_decompose.py",
+  "status": "live",
+  "role": "생산 porosity 폼을 같은 타깃으로 재적합해 각 계수×특징의 기여를 %p 로 분해하고 (P:S × AM_wt) 99행 per-term CSV(docs/data/porosity_decomposition.csv, 커밋됨)와 AM_wt=82 요약 표를 낸다.",
+  "risk": "low",
+  "risk_why": "porosity_decompose.py:17 이 학습 타깃을 정하는 regime gate 를 `g > 4` 리터럴로 다시 적는다 — 정본은 porosity_final_production.py:28 의 `GATE = 4.0` 이고 porosity_unified.py:44 에도 세 번째 사본이 있다. 임포트가 아니라 복제라 한 곳만 바뀌면 세 산출물의 타깃이 조용히 갈라진다 (ⓔ)."
+ },
+ {
+  "path": "scripts/porosity_final_production.py",
+  "status": "live",
+  "role": "gap>4 면 DEM, 아니면 MPM 을 쓰는 regime-gated 'best' porosity 를 타깃으로 문헌 기반 9항 폼을 적합하고, R²/LOOCV·regime 별 오차 밴드·생산 격자 99행(docs/data/porosity_production_final.csv, 커밋됨)을 낸다.",
+  "risk": "low",
+  "risk_why": "porosity_final_production.py:105-107 — 생산 격자 행의 regime/출처 라벨과 오차 밴드를 `P>=1.0 and amwt>=85` 같은 **별도 하드코딩 규칙**으로 붙이는데, 학습 타깃을 실제로 고른 것은 :32-36 의 `gap > GATE` 다. 두 판정이 어긋나면 MPM 이 지배한 적합 위에 'DEM' 라벨과 그 밴드가 붙는다 (ⓔ). 부수: :62-64 의 첫 `seq` 는 :65-66 이 즉시 덮어써 죽은 줄이다."
+ },
+ {
+  "path": "scripts/porosity_final_verify.py",
+  "status": "live",
+  "role": "9항 gated 폼에 대한 적대 재점검 — (A) 항별 ablation, (B) 9개 후보 전방 추가, (C) 타깃 3종 비교(gated/MPM/DEM), (D) full-R² vs LOOCV 격차 + Ridge α 스윕.",
+  "risk": "low",
+  "risk_why": "porosity_final_verify.py:96-97 — 마지막 VERDICT 줄이 계산된 격차 값과 무관하게 항상 '(small=not overfit)' 이라는 고정 문자열을 붙인다. 격차가 커져도 같은 초록 문장이 나오므로 그 자체로는 판별력이 없다 (ⓓ). 값은 함께 인쇄되므로 사람이 보면 확인 가능."
+ },
+ {
+  "path": "scripts/porosity_physics_regression.py",
+  "status": "live",
+  "role": "porosity_* 계열의 공유 라이브러리 — McGeary/Furnas bimodal dip · Bazzoun SE-fill · 두 결합항으로 이뤄진 9개 물리 특징 `features()`, 설계 행렬, 진짜 leave-one-out `loocv_r2()`, `se_of_solid()` 를 제공 (numpy 전용). 5개 형제 스크립트가 임포트.",
+  "risk": "low",
+  "risk_why": "porosity_physics_regression.py:60-63 은 porosity 파싱 실패 행을, :73-75 는 pmap 에 없는 P:S 라벨 행을 `continue` 로 **개수 보고 없이** 버린다 — n 이 조용히 줄어도 하류의 LOOCV/R² 는 그대로 초록으로 나온다 (ⓑ)."
+ },
+ {
+  "path": "scripts/porosity_plastic_vs_rigid.py",
+  "status": "live",
+  "role": "docs/data/case_3d_collection.csv 의 DEM↔MPM 쌍을 로드하는 `load_pairs()` (다른 5개 스크립트의 공통 입구) + rigid/plastic/densification 세 타깃에 같은 폼을 적합해 소성이 회귀에 무엇을 더하는지 비교.",
+  "risk": "high",
+  "risk_why": "porosity_plastic_vs_rigid.py:51-56 — 단 하나의 `exclude_particulate` 플래그가 particulate/S 제외뿐 아니라 **broken-sim `1mAh_100` 필터까지** 함께 끈다. docs/porosity_regression_final.md 는 그 시리즈를 'plate_z 메타버그 → 음수/이상 porosity, 필터 **영구**' 라고 못박았는데, 플래그를 False 로 주는 유일한 호출자(porosity_unified.py:42, 주석 'FULL corpus')가 10건을 그대로 되받는다 = 이름이 가리키지 않는 축을 끄는 fail-open (ⓑ/ⓔ). 부수: :24-34 `reconstruct()` 가 모든 케이스의 AM 반경을 6/2 µm 로 재구성해 실제 반경을 버린다."
+ },
+ {
+  "path": "scripts/porosity_regression_explore.py",
+  "status": "live",
+  "role": "porosity 회귀 R² 를 정직하게 올릴 레버 탐색 — (1) 같은 설계의 sibling seed 를 평균해 환원 불가 DEM 패킹 노이즈 바닥을 재고, (2) 9개 물리 교호항을 하나씩 LOOCV 로 선별한 뒤 탐욕 전방 추가.",
+  "risk": "low",
+  "risk_why": "porosity_regression_explore.py:84-98 — 보고 지표(LOOCV)로 항을 고르고 그 지표의 최댓값을 'FINAL augmented' 로 인쇄한다 (nested CV 없음). 탐색용 스크린이라 각 Δ 를 전부 보여주고 sibling-averaged 천장을 함께 찍긴 하지만, 끝 숫자는 선택 편향된 값이다 (ⓓ)."
+ },
+ {
+  "path": "scripts/porosity_unified.py",
+  "status": "live",
+  "role": "생산(bimodal) 폼과 particulate/S(mono-small) 를 조성-게이트된 λ-U 항 하나로 묶는 통합 폼을 전 코퍼스에 재적합해 base9 대비 LOOCV 와 regime 별 RMSE 를 비교. docs/porosity_regression_final.md 가 후속 통합 트랙으로 가리킨다.",
+  "risk": "high",
+  "risk_why": "porosity_unified.py:42 `load_pairs(exclude_particulate=False)` (주석 'FULL corpus') 가 particulate 만이 아니라 porosity_plastic_vs_rigid.py:55 의 broken-sim `1mAh_100` 필터까지 끈다 — 이 파일이 인쇄하는 통합 LOOCV·regime RMSE 는 정본 문서가 '무효 데이터, 필터 영구' 라고 적은 10건 위에서 적합된 값이다 (ⓑ/ⓒ). 부수: :33-37 이 tracking CSV 를 헤더 확인 없이 위치(`p[2]`)로 파싱해 열 순서가 바뀌면 조용히 틀린 반경을 집는다."
+ },
+ {
+  "path": "scripts/predict_porosity_curve.py",
+  "status": "historical",
+  "role": "Furnas-Westman 기하 RCP(비대칭 포물선 근사) + SFM 소성 기여의 선형 근사로 ε vs f_SE 곡선을 그리고 측정 3점과의 간극을 'force chain shadow' 로 주석한 초기 스케치. 출력 PNG 는 리포에 없다.",
+  "risk": "low",
+  "risk_why": "predict_porosity_curve.py:100-102 — 별 3개만 찍으면서 범례에 'Measured (our DEM, 165 cases)' 라고 적어, 그림에 없는 코퍼스 규모를 근거처럼 제시한다 (ⓐ). :17 은 Agg 백엔드 설정 없이 pyplot 을 임포트해 헤드리스에서 취약."
+ },
+ {
+  "path": "scripts/predict_porosity_final.py",
+  "status": "superseded",
+  "role": "Bouvard RCP + Sridhar SFM KC + 응력-담지 퍼콜레이션(F_PERC_STRESS=0.65) 3-파라미터 예측기와 2패널 그림·비교표. 실제 생산 경로는 predict_porosity_strict_physics.py(F_PERC=0.62)이고 plot_* 계열이 그쪽을 임포트한다.",
+  "risk": "low",
+  "risk_why": "predict_porosity_final.py:66 의 `F_PERC_STRESS = 0.65` 가 같은 '최종 물리 폼' 을 표방하는 predict_porosity_strict_physics.py 의 `F_PERC = 0.62` 와 다르다 — 두 파일 모두 자신을 FINAL/STRICT 로 부르고 문헌 근거도 동일하게 인용한다 (ⓔ). 검증 근거는 :140-144 의 하드코딩된 측정 3점뿐이다."
+ },
+ {
+  "path": "scripts/predict_porosity_honest.py",
+  "status": "superseded",
+  "role": "자유 파라미터를 3개(α_KC, f_perc, ε_pure_SE 앵커)로 줄인 최소 예측기 + f_perc 민감도 패널. webapp/templates/single.html:25 의 E_SE 배지 툴팁이 이 파일을 근거 문서로 가리킨다.",
+  "risk": "low",
+  "risk_why": "predict_porosity_honest.py:172-174 — 패널 제목이 'Geometric (0.30) gives wrong trend; stress-bearing (0.65) matches' 라는 **결론을 고정 문자열**로 박는다. 근거는 :102-106 의 하드코딩 측정 3점이고 어떤 적합도·기각 기준도 계산되지 않는다 (ⓓ). :36 F_PERC=0.65 역시 생산 경로 0.62 와 다르다 (ⓔ)."
+ },
+ {
+  "path": "scripts/predict_porosity_physics.py",
+  "status": "superseded",
+  "role": "Yu-Standish 삼모드 RCP 근사 + SFM KC(α=3) + elastic-floor 퍼콜레이션으로 ε 를 예측하는 초기 '포괄 물리' 판. 2패널 그림과 비교표를 낸다.",
+  "risk": "high",
+  "risk_why": "predict_porosity_physics.py:169-178 `heckel_compaction()` 은 정의만 되고 **호출되지 않으며**, :200 에서 계산한 `P_eff` 도 쓰이지 않는다. 실제 반환값(:206)은 선형 `delta_max*f_se*p_se/kc` 인데 docstring :16-20 은 '(4) Heckel-type 지수 densification' 을 모델의 구성 요소로 광고한다 — 파일이 설명하는 물리와 계산하는 물리가 다르다 (ⓔ/ⓐ). `E_SE`·`SIGMA_Y_SE` 도 선언만 되고 예측에 안 들어간다. 상수도 α=3.0 · f_perc=0.70 · elastic_floor=0.05 로 형제들(2.0 / 0.65~0.62 / 없음)과 어긋난다."
+ },
+ {
+  "path": "scripts/predict_porosity_real_physics.py",
+  "status": "duplicate",
+  "role": "실험 끝점(순수 LPSCl 10 % @300 MPa)에서 K_Heckel 을 역산해 σ_y_eff≈78 MPa 를 얻고, Bouvard RCP × SFM KC × 응력-담지 퍼콜레이션으로 ε 를 예측. predict_porosity_strict_physics.py 와 wt_to_vol·bouvard_rcp·sfm_constraint·K_HECKEL 역산·predict 구조가 사실상 동일한 사본이다.",
+  "risk": "low",
+  "risk_why": "predict_porosity_real_physics.py:58 `F_PERC_STRESS = 0.65` vs 생산 경로 predict_porosity_strict_physics.py 의 `F_PERC = 0.62` — 나머지 코드가 같은 사본인데 임계값만 달라, 어느 쪽을 임포트하느냐로 같은 ε 가 달라진다 (ⓔ). plot_* 계열은 strict 쪽만 임포트하므로 이 파일은 현재 소비자가 없다."
+ },
+ {
+  "path": "scripts/_review_page_css.html",
+  "status": "live",
+  "role": "생성기 build_review_before_after.py:118 이 출력 HTML 머리에 그대로 붙여 넣는 <title>+CSS 조각 — docs/reviews/review_before_after.html 의 테마 토큰(light/dark/prefers-color-scheme), 층-사슬·비포/애프터 2열·고침표·집계 타일 레이아웃과 640px 모바일 스택을 정의한다. 숫자·로직 없음.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "scripts/check_colorbar_fit.mjs",
+  "status": "live",
+  "role": "webapp/static/js/viewer3d.js 에서 fitTextLines 와 _focusTicks/FOCUS_MAX_TICKS 를 정규식으로 떼어 new Function 으로 실행해, 컬러바 PNG 내보내기의 제목·부제가 캔버스 폭 안에 들고 글자를 안 버리는지 + focus 눈금 라벨 개수가 상한에 묶였는지를 검사한다. 더해 export 제목이 SDCP 를 'Carbon' 으로 부르지 않는지, 맞춤 결과를 실제로 그리는지를 소스 정적 검사한다. check_all.sh:95 와 .github/workflows/discipline.yml:248 이 매번 돌린다.",
+  "risk": "high",
+  "risk_why": "scripts/check_colorbar_fit.mjs:99-101 — 영국식 철자 검사가 src.match(/cbarSpec = \\{[\\s\\S]{0,600}?\\};/)?.[0] || '' 로 후보를 고른다: 매치가 실패하면 빈 문자열을 검사해 무조건 초록(fail-open)이고, 파일의 cbarSpec 블록 5개 중 첫 하나만 보며, 패턴이 작은따옴표 리터럴만 잡는데 정작 그 첫 블록의 title 은 템플릿 리터럴이라 지금도 실질 커버가 0 이다 — 같은 파일 87-88 줄이 '작은따옴표만 보던 초판이 하나를 놓쳤다'고 적어 둔 바로 그 부류이고, 옆 검사(92줄)에는 있는 '검사가 헛돌지 않는다' 자기민감도 단언이 여기엔 없다. 파일의 나머지 단언(특히 140줄 옛 사다리 회귀)은 민감도가 실증돼 있다."
+ },
+ {
+  "path": "scripts/run",
+  "status": "live",
+  "role": "터미널이 *.py 경로를 마크다운 링크로 바꿔 버리는 것을 피하려고 만든 bash 디스패처 — sec7/stagec/staged/stagee/baseline/tabor/voxelize/fft/diagS7/diagPhys/audit-ui/sync-metrics/verify-cases/fig1/all-stagee 를 해당 python3 scripts/*.py 로 넘긴다. 14개 대상 전부 실재하고, verify_cases.py:55-59 · sync_csv_to_metrics.py:143 · STAGE_E_ASR_GUIDE.md:568-570 이 사용자에게 출력하는 복구 명령이 이 래퍼다.",
+  "risk": "low",
+  "risk_why": "scripts/run:61-65 — all-stagee 루프가 `python3 … || echo \"✗ failed for $c\"` 라 14줄의 set -e 가 무장 해제되고, 모든 케이스가 실패해도 스크립트가 exit 0 으로 끝난다. 사람 눈에는 ✗ 가 보이지만 종료코드를 믿는 호출자(sync_csv_to_metrics.py 가 인쇄하는 바로 그 명령을 스크립트로 감싸면)는 전멸을 성공으로 읽는다."
+ },
+ {
+  "path": "scripts/seminar_deck/build.js",
+  "status": "historical",
+  "role": "pptxgenjs 로 2026-08-06 세미나 덱(표지 + 본문 15장 + Appendix A/B/C)을 .pptx 로 재생성하는 생성기 — frame/bullets/table/takeaway/figbox 헬퍼로 BML 템플릿 스타일을 찍고 발표자 노트까지 넣는다. 13-19줄의 fail-closed 가드가 SEMINAR_DECK_HISTORICAL=1 없이는 exit 1 로 거부하며, check_review_findings.py:202-212 의 BAN_FROZEN_REPRODUCERS 에 sha256 으로 동결 등록돼 있다(현재 파일 해시가 핀과 일치 = 면제 유효, 거부 행동은 회귀 22k/22l 이 실측).",
+  "risk": "low",
+  "risk_why": "scripts/seminar_deck/build.js:4-12 의 배너가 명시적으로 철회 표기하는 것은 CL-24 계열 SDCP 삼종뿐인데, 덱 본문에는 그 뒤에 철회·하향된 다른 주장이 표지 없이 현행 서술로 남아 있다 — 261·266-282줄의 두-모델 일치/‘수렴된 구성모델 차이’ 프레이밍(CLAUDE.md 2026-08-12 관례 오프셋 정정 및 2026-09-09 CDX-16 으로 철회, 응력-정지 두께만 생존)과 627·637줄의 18× 연화 ‘독립 3경로’ 서술(같은 파일 633줄은 이미 정정된 K↔B0 표기라 한 슬라이드 안에서 어긋난다). 더해 frozen-reproducer 면제는 파일 내용을 스윕에서 통째로 빼므로, 동결 이후 새로 철회되는 값은 sha256 핀에 걸리지 않아 영원히 드러나지 않는다 — 원장 AUD-01 이 열어 둔 ‘배너 가진 파일 안의 표지 없는 철회값’ 범주와 같은 구조다. 실행 경로는 fail-closed 로 잠겨 있어 조용한 재생산은 없다."
+ },
+ {
+  "path": "scripts/network_ref_coords.json",
+  "status": "data",
+  "role": "손으로 추적한 2D 입자 좌표 원자료 87개 ({x, y, type∈{SE:69, AM:18}, r} 리스트, 추적 px/10 단위: x 0–56.5 · y 0–37.8 · r 1.1–2.9).  Figure 1(b) 네트워크-솔버 모식도의 유일한 기하 진원 — scripts/network_schematic_data.py:18,26 이 이 파일을 읽어 SCALE_DIV=5 로 재척도하고 거리 문턱((r_a+r_b)*1.8+0.6)으로 간선을 SE-SE / AM-SE / AM-AM 로 분류하며, make_network_schematic.py(PNG 미리보기)와 make_network_pptx.py(편집 가능 PPTX)가 그 모듈을 함께 import 해 두 산출물이 같은 그림이 되게 한다.  시뮬레이션 출력이 아니라 참조 그림에서 옮긴 도해용 좌표이고, 계산 파이프라인(σ 솔버·STEP1~5)은 이 파일을 읽지 않는다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "webapp/ledger_view.py",
+  "status": "live",
+  "role": "웹앱이 docs/reviews/claims.json·findings.json 을 읽는 유일한 읽기전용 창구 — (mtime,size) 캐시, quotation_ban 패턴을 화면 산문에서 ⟨인용금지·CL-xx⟩ 로 바꾸는 redact(), 클레임∪결함 최신일 기준 신선도 판정(freshness/newest_ledger_date)을 내주고, app.py:4036 의 /api/seminar/doc 철회 게이트도 이 redact() 가 구동한다.",
+  "risk": "low",
+  "risk_why": "webapp/ledger_view.py:106-153 — '이 텍스트에 금지값이 있나' 가 생산 게이트 쪽 손수 만든 정규식(_pattern_regex/redact)과 스윕 쪽 check_review_findings._ban_norm 부분문자열 두 갈래로 따로 계산되는데(ⓔ), 동치 요구는 주석(:108-110)에만 있고 이를 고정하는 검사가 없으며 :147-149 의 except re.error 는 패턴 하나가 안 컴파일되면 아무 신호 없이 리터럴 매치로 좁아진다 — 다만 현재 22 패턴 전부를 5가지 표기변형(꼬리0 절단·NBSP·공백제거 등)으로 실측한 결과 redact 가 스윕을 놓치는 경우는 0건이었다."
+ },
+ {
+  "path": "webapp/test_ledger_view.py",
+  "status": "live",
+  "role": "원장→화면 배선 45검사 회귀 (check_all.sh:143 · discipline.yml:176) — /ledger·/ 에 금지 패턴 0건, 원장 부재·결함원장 읽기실패·없는 의존 id 를 초록 대신 unknown 으로, 열린 결함이 초록 '검토됐다' 를 막는지, 세미나 문서 게이트의 판별력(?historical=1)·과잉차단 음성대조, '표지 없는 금지값' 검출기 자체의 합성 음성대조 4건을 고정한다.",
+  "risk": "low",
+  "risk_why": "webapp/test_ledger_view.py:201-217 — list_cases() 가 비면(이 트리·CI 실측 0건) single 이 pages 에서 빠져 27·28·24b 가 그 페이지를 한 번도 렌더하지 않는데 스위트는 45/45 초록을 찍는다(ⓓ, 실행으로 확인); /single 이 바로 2026-09-14 D-2 가 고친 false-green 의 자리이고 :203-204 의 blanket except Exception 도 같은 skip 으로 흘려보낸다 — SKIP 은 출력되고 docs/session_20260910_progress.md:143 에 기록돼 있어 은폐는 아니다."
+ },
+ {
+  "path": "webapp/test_worklog_page.py",
+  "status": "live",
+  "role": "/worklog 인덱스·렌더 21검사 회귀 (check_all.sh:136 · discipline.yml:164) — 항목 수집과 최신순 정렬·링크 렌더, markdown 유무에 따른 리치/폴백 두 경로, 리치 리포트의 <figure> 인라인 SVG 와 요약 blockquote, 같은 주차 출처 우선순위, 8자리 날짜 키만 허용하는 형식오류·경로탈출 404 거부.",
+  "risk": "low",
+  "risk_why": "webapp/test_worklog_page.py:78-81 — 출처 우선순위 계약(같은 주차면 '주간 리포트' 가 슬라이드 문구를 이긴다)이 두 디렉터리에 같은 키가 동시에 있을 때만 검사되고, 없으면 26b 같은 SKIP 표시도 없이 조용히 초록이 된다(ⓓ; 지금은 20260914 가 겹쳐 실제로 돌고, :68 의 'or not has_md' 탈출구도 CI 가 markdown 을 설치(discipline.yml:44)해 휴면 상태다)."
+ },
+ {
+  "path": "tools/comp1_v3/b2o3_all_bond_lengths.py",
+  "status": "live",
+  "role": "B2O3 도핑 구조 CIF 의 순수-numpy 최소이미지 결합거리 통계 (쌍별 mean/std/min/max, P 사면체 PS4/PS3O 분류, S 를 자유/B결합/P가교 로 분류, Cl 4a/4d 자리 분할 + Li-Cl) 를 내고, --traj 모드로 extxyz 첫/끝 프레임의 결합 수를 세어 P–O 끊김 + B–O 생성 = 분해 시작 을 판정한다. msd_diffusive_check.py 가 이 파일을 min_image_D · DECOMP_WINDOWS 라이브러리로 런타임 import 한다.",
+  "risk": "high",
+  "risk_why": "ⓔ — :67-69 DECOMP_WINDOWS (B–S 1.60~2.40 · P–S 1.85~2.60) 와 :309-317 cat_anion (B–S 1.5~2.2 · P–S 1.8~2.5) 및 :367-368 의 S 분류 (하한 없이 D<=2.2 / D<=2.5) 가 같은 결합 판정을 세 벌의 다른 규약으로 하는데, msd_diffusive_check.py:1065 classify_sulfur 는 DECOMP_WINDOWS 쪽만 빌려 쓰면서 :2399 에서 'b2o3_all_bond_lengths 와 동일 규약' 이라고 찍는다 (같은 일을 하는 CIF 모드 S 분류와는 창이 다르다). 부차: :238 와 :264-268 이 같은 기본 --json 경로에 CIF 통계와 traj 판정의 서로 다른 스키마를 말없이 덮어쓴다. 또 --selftest 8/8 은 traj 경로만 덮고 CIF 모드 전체는 미검증이다."
+ },
+ {
+  "path": "tools/ionic/msd_diffusive_check.py",
+  "status": "live",
+  "role": "AIMD/MLIP 의 MSD 가 진짜 확산영역인지 판정해 D·Ea 의 인용 가부를 내는 게이트 — 사전고정 창들의 D_inc plateau(절편 대수소거) + 이온당 홉 수로 no_value / HOLD / citable 3층 판정을 내고, 폐기된 β 0.80 문턱은 경보로만 남긴다. 부수 기능: 골격(비-Li) 용융 검사, 골격 COM 흐름 vs 자리재배열 분해, Haven 비 H_R=D*/D_σ 직접 측정, traj.xyz 에서 MTO·종별 MSD 재생성, 확산텐서/결정축 투영. litdb_cache 정본 카드 다수가 이 파일을 현행 게이트로 인용한다.",
+  "risk": "high",
+  "risk_why": "ⓑ — :731-732 (형제 모듈 부재) 와 :737-738 (blanket `except BaseException: return None`) 이 사유를 한 줄도 안 찍고 None 을 돌려준다. 이 컨테이너에서 실제 재현: `--selftest` 가 99 ok / 2 bad 로 떨어졌는데 MTO 끝단 검사는 이유 없이 실패했고 (원인은 tools/modelc_v3/ 부재), 호출자에게는 '궤적이 없어 복구 불가' 와 구분되지 않는다 — 같은 파일 :785-787 이 바로 이 패턴 때문에 --rebuild_mto 가 조용히 전부 실패했다고 적어 놓았고 형제 함수 :666-668 은 같은 상황에서 사유를 찍는다. 부차(ⓓ 의심): :192 가 D_inc<=0 인 창을 spread 계산 전에 버려 일부만 버려지면 산포가 통과 쪽으로 작아질 수 있다 (전부 0 인 경우만 :1711 에서 검증됨). ⓐ·ⓒ 해당 없음 — quotation_ban 패턴 0건이고 결측은 전부 fail-closed 다."
+ },
+ {
+  "path": "docs/data/area_s2_cohort.tsv",
+  "status": "live",
+  "role": "S3 코호트 봉인표 — 131행(RAW_OK 127 · RAW_MISSING_CONTACT 3 · DECK_MISSING+RAW_MISSING_ATOM 1)에 덱/atom/contact 경로와 sha256, 설계족(bimodal 100 · mono_AM_P 15 · mono_AM_S 15 · UNKNOWN 1)을 적는다. `scripts/seal_s3_prerun.py:163` 의 기본 `--cohort` 입력이고 솔버를 부르지 않고 파일 실재로만 포함/제외를 정한다.",
+  "risk": "low",
+  "risk_why": "ⓒ 인접 — `docs/data/area_s2_cohort.tsv` 의 lhs00_034·089·098 세 행은 contact 결손을 이유로 **존재하는 atom 의 경로·sha256 칸까지 비워져 있다**(Codex 판정문 §6.4, `scripts/seal_area_cohort.py:107-114`). 생성기는 `27bff9f8a`(09-14 12:20 UTC)에서 고쳐졌는데 이 파일의 마지막 봉인 `450128dc5` 는 **그보다 앞선 07:56 UTC** 라 수정 전 산출물이 그대로 남아 있다 ⇒ 세 행의 입력 이력이 '없다' 로 읽힌다."
+ },
+ {
+  "path": "docs/data/audit_20260909/audit1_followups.json",
+  "status": "historical",
+  "role": "1차 전수 감사(23 스코프)의 후속 목록 박제 — Codex 회부 대상 `needs_codex` 38건과 표면화 가치 `surface_worthy` 201건. 스크립트가 값을 읽지는 않고 `scripts/check_review_findings.py:177` 의 ban-sweep 파일 전체 면제 목록에만 이름이 올라 있다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/audit_20260909/audit1_scopes.json",
+  "status": "live",
+  "role": "1차 전수 감사 원출력(2.4 MB, 23 스코프 × inventory/findings/surface_worthy/surviving_p0p1). `scripts/audit_coverage.py:81` 이 각 스코프의 `inventory[].path` 를 읽어 커버리지 집합 차집합의 1차 반납분(엄격 519 · 디렉터리 전개 293)을 만든다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/audit_20260909/coverage.json",
+  "status": "data",
+  "role": "커버리지를 주장이 아니라 `git ls-files` 대비 집합 차집합으로 계산한 결과 스냅샷(추적 1900 · 엄격 반납 1131 = 59.5 % · 관대 1297 = 68.3 % · 미반납 603). 초판의 두 부풀림 결함(디렉터리 현재-집합 전개 · `lstrip` 문자 삭제)과 `_superseded` 옛 값, 그리고 '경로 반납률이지 열람률이 아니다' 한계를 파일 안에 함께 적는다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/audit_20260909/gap_partial_buckets.json",
+  "status": "live",
+  "role": "갭 감사 1판에서 완료한 8 버킷 96 파일의 인벤토리 + 판정 박제(나머지 83 버킷은 `GAP_AUDIT_HOLD.md` 로 보류). `scripts/audit_coverage.py:93` 이 이 파일의 `inventory[].path` 를 2차 반납분(96)으로 센다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/audit_20260909/residual.json",
+  "status": "data",
+  "role": "1·2차 glob 이 '덮는다' 고 주장했으나 실제로는 아무도 인벤토리에 반납하지 않은 **잔여 536 경로의 배정 목록**(3차 감사의 입력).",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/audit_20260909/residual_buckets.json",
+  "status": "live",
+  "role": "잔여 536 파일 감사의 21 버킷 출력 — 버킷별 verdict 산문, `assigned`/`inventoried`(각 536 합치), 파일 상태 집계(버킷별 status_counts 합이 assigned 와 정확히 일치, 총 536), finding 135건, 자기 적대패스 생존 3건. `scripts/check_audit_adjudication.py:40` 이 sha256 으로 못박고 읽는 판정 원장의 원본이다(원본은 한 바이트도 안 고치고 판정은 `docs/reviews/audit_adjudication_20260909.json` 사이드카에 붙인다).",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/audit_20260909/residual_followups.json",
+  "status": "historical",
+  "role": "잔여 감사의 후속 목록 — 철회값을 표지 없이 지고 있는 파일 2건(`sdcp318_sigma_sdcp_sweep/*`, 참조자까지 열거), Codex 회부 6건(선두는 Minnmann 10 % 앵커의 출처 부재 P0), 표면화 가치 81건.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/audit_20260909/residual_inventoried.json",
+  "status": "duplicate",
+  "role": "3차(잔여) 감사가 '돌려준' 536 경로 목록. `scripts/audit_coverage.py:95` 이 이것을 3차 반납분으로 세어 전체 커버리지의 약 47 %(536/1131)를 이 한 파일이 떠받친다.",
+  "risk": "low",
+  "risk_why": "ⓓ — `docs/data/audit_20260909/residual_inventoried.json` 은 배정 목록 `residual.json` 과 **집합이 완전히 같다**(536/536, 순서만 다르고 차집합 양쪽 0). 즉 이 반납분은 '배정 목록을 그대로 돌려준 것' 과 구별되지 않는다 — `coverage.json` 의 `method` 필드가 추상적으로 경고한 바로 그 구조다. (다만 `residual_buckets.json` 의 버킷별 status_counts 가 536 으로 맞아 파일별 판정 자체는 실재하므로 high 가 아니다.)"
+ },
+ {
+  "path": "docs/data/audit_20260909/uncovered.json",
+  "status": "data",
+  "role": "위 커버리지 계산의 미반납 603 경로 전체 목록(= `coverage.json` 의 `not_returned` 정수 603 의 본문). 2판 감사의 대상 선정 근거.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/constriction_deleted_lhs_20260913.csv",
+  "status": "superseded",
+  "role": "LHS 30 케이스의 협착저항 간선 '삭제' census 초판 — 채널별(ionic/electronic/thermal) 총 간선 수·삭제 수·삭제율과 접촉쌍 종류별(AM-AM/AM-SE/SE-SE/UNKNOWN) 분해. electronic 삭제 0.000 % 는 전자망이 AM-AM 간선만 갖는 구조적 0 이다. `_l1`→`_r2`→`_matched` 가 같은 30 케이스를 그대로 재현하며 열만 늘려 대체했다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/constriction_deleted_lhs_20260913_l1.csv",
+  "status": "superseded",
+  "role": "위 census 에 L1 계열 진단 7열(`l1_n_ladder`·`l1_n_cap_conflict`·`l1_n_vol_neg`·`l1_n_exact_avail`·`l1_n_A_final_changed`·`l1_n_a_eff_changed`·`l1_n_rc_branch_changed`)을 붙인 판. 초판과 30/30 일치를 커밋 메시지가 명시. `_r2`·`_matched` 가 rc0 분해 3열을 더해 대체했다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/constriction_deleted_lhs_20260913_matched.csv",
+  "status": "data",
+  "role": "같은 census 의 최신판(09-13 21:53) — `--match-steps` 로 atom/contact 덤프의 step 을 맞춘 뒤 다시 센 것이라 `atom_step`·`contact_step` 두 열이 추가돼 `_r2` 의 상위집합이다. R_c=0 간선 분해(`l1_n_rc0` / `_floor_only` / `_clamp_zero`)를 포함한다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/constriction_deleted_lhs_20260913_r2.csv",
+  "status": "data",
+  "role": "R2-08(삭제의 두 부류 — clamp_zero 대 floor_only) 판정에 인용된 census 판. `docs/reviews/codex_request_area_round3_20260914.md:35` 이 이 파일을 근거 경로로 지목한다. 열 구성은 `_matched` 에서 step 두 열만 뺀 것.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/constriction_reference_20260913_nr300.txt",
+  "status": "data",
+  "role": "AREA-09 STEP 4 — 축대칭 FD flux tube(nr=300, nz=600, aspect 4.0, SuperLU 직접해)로 협착저항 독립 기준해를 내고 `ψ 를 곱하는가 나누는가` 를 가른 표. s ≤ 0.3 통상 인용범위에서 ψ 곱함 1.0542 · ψ 나눔 1.3868 · 무보정 1.1494. 무엇에 답하지 않는지(우리 침대의 A 가 그 원판인가, 두 구 해, 격자 수렴)를 네 줄로 명시한다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/constriction_reference_20260913_nr600.txt",
+  "status": "data",
+  "role": "같은 기준해를 nr=600 으로 다시 푼 격자 수렴 확인판(nr300 이 스스로 요구한 검사 ④). s ≤ 0.3 에서 ψ 곱함 1.0296 으로 오히려 1.0 에 가까워져 nr300 의 결론(ψ 를 곱한다)을 강화한다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_6mah/regen_20260914_metrics.tsv",
+  "status": "data",
+  "role": "V100 인스턴스 만료로 원자료가 소실된 Phase A 킷 5종의 STEP2 를 같은 씨앗·같은 봉인 규약으로 재생성한 `mpm_metrics.json` 발췌(`porosity_at_target_pct`·`porosity_settled_pct`·`settled_over_target`·두께·씨앗 AM/SE 분율). 대조점이 재생성 런을 보기 전에 등록돼 있었음을 머리말이 밝힌다.",
+  "risk": "low",
+  "risk_why": "ⓐ 인접 — `docs/data/phase_a_6mah/regen_20260914_metrics.tsv` 의 `settled_over_target` 이 5행 모두 0.4433~0.6032 다. `scripts/mpm3d_compaction.py:3414` 자신이 *\"최종 정착 응력 / 목표 — 1 근처가 아니면 '목표 압력 상태' 라고 [부를 수 없다]\"* 고 적어 놨는데, 이 표의 머리말은 `quasistatic_violation` 과 `stop_mode legacy_moving` 만 밝히고 **정착 응력이 목표의 44~60 % 라는 사실은 표지하지 않는다** ⇒ porosity 13.8~15.5 % 가 0.3 GPa 상태의 값으로 읽힐 수 있다."
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/_adapter_summary.json",
+  "status": "data",
+  "role": "vox 0.15 Phase A 32팔의 σ_e 집계 — 셀 좌표(VGCF wt, vox, origin)와 키별 σ_e, 그리고 봉인(`fibre_stamp` segment · `ptfe_stamp` centerline · `bridge_um` 0.24)·`receipt_digest`. 32개 팔 JSON 과 σ_e 가 **비트 단위로 동일**해 재계산이 아니라 전사다(대조 확인함).",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w1_v0.15_o0.json",
+  "status": "data",
+  "role": "VGCF 1 wt% · origin 0 팔의 축소 payload — σ_e, origin_shift_um, σ_VGCF 78.5398 S/cm, vgcf_n_objects 26816, input_digest, cg_info 0 / unconverged false, 원본 sha256.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w1_v0.15_o1.json",
+  "status": "data",
+  "role": "VGCF 1 wt% · origin 1 (half-cell shift) 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w1_v0.15_o2.json",
+  "status": "data",
+  "role": "VGCF 1 wt% · origin 2 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w1_v0.15_o3.json",
+  "status": "data",
+  "role": "VGCF 1 wt% · origin 3 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w1_v0.15_o4.json",
+  "status": "data",
+  "role": "VGCF 1 wt% · origin 4 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w1_v0.15_o5.json",
+  "status": "data",
+  "role": "VGCF 1 wt% · origin 5 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w1_v0.15_o6.json",
+  "status": "data",
+  "role": "VGCF 1 wt% · origin 6 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w1_v0.15_o7.json",
+  "status": "data",
+  "role": "VGCF 1 wt% · origin 7 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태. w1 8팔은 input_digest 가 하나로 같다(같은 침대, origin 만 다름).",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w2_v0.15_o0.json",
+  "status": "data",
+  "role": "VGCF 2 wt% · origin 0 팔의 축소 payload — σ_e, vgcf_n_objects 54272, 봉인 스칼라, cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w2_v0.15_o1.json",
+  "status": "data",
+  "role": "VGCF 2 wt% · origin 1 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w2_v0.15_o2.json",
+  "status": "data",
+  "role": "VGCF 2 wt% · origin 2 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w2_v0.15_o3.json",
+  "status": "data",
+  "role": "VGCF 2 wt% · origin 3 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w2_v0.15_o4.json",
+  "status": "data",
+  "role": "VGCF 2 wt% · origin 4 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w2_v0.15_o5.json",
+  "status": "data",
+  "role": "VGCF 2 wt% · origin 5 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w2_v0.15_o6.json",
+  "status": "data",
+  "role": "VGCF 2 wt% · origin 6 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w2_v0.15_o7.json",
+  "status": "data",
+  "role": "VGCF 2 wt% · origin 7 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태. w2 8팔의 input_digest 는 하나로 같다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w3_v0.15_o0.json",
+  "status": "data",
+  "role": "VGCF 3 wt% · origin 0 팔의 축소 payload — σ_e, vgcf_n_objects 82322, 봉인 스칼라, cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w3_v0.15_o1.json",
+  "status": "data",
+  "role": "VGCF 3 wt% · origin 1 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w3_v0.15_o2.json",
+  "status": "data",
+  "role": "VGCF 3 wt% · origin 2 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w3_v0.15_o3.json",
+  "status": "data",
+  "role": "VGCF 3 wt% · origin 3 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w3_v0.15_o4.json",
+  "status": "data",
+  "role": "VGCF 3 wt% · origin 4 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w3_v0.15_o5.json",
+  "status": "data",
+  "role": "VGCF 3 wt% · origin 5 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w3_v0.15_o6.json",
+  "status": "data",
+  "role": "VGCF 3 wt% · origin 6 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w3_v0.15_o7.json",
+  "status": "data",
+  "role": "VGCF 3 wt% · origin 7 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태. w3 8팔의 input_digest 는 하나로 같다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w4_v0.15_o0.json",
+  "status": "data",
+  "role": "VGCF 4 wt% · origin 0 팔의 축소 payload — σ_e, vgcf_n_objects 110981, 봉인 스칼라, cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w4_v0.15_o1.json",
+  "status": "data",
+  "role": "VGCF 4 wt% · origin 1 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w4_v0.15_o2.json",
+  "status": "data",
+  "role": "VGCF 4 wt% · origin 2 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w4_v0.15_o3.json",
+  "status": "data",
+  "role": "VGCF 4 wt% · origin 3 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w4_v0.15_o4.json",
+  "status": "data",
+  "role": "VGCF 4 wt% · origin 4 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w4_v0.15_o5.json",
+  "status": "data",
+  "role": "VGCF 4 wt% · origin 5 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w4_v0.15_o6.json",
+  "status": "data",
+  "role": "VGCF 4 wt% · origin 6 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/arms/arm_w4_v0.15_o7.json",
+  "status": "data",
+  "role": "VGCF 4 wt% · origin 7 팔의 축소 payload — σ_e + 봉인 스칼라 + cg 수렴 상태. w4 8팔의 input_digest 는 하나로 같다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/phaseA_h015_manifests.json",
+  "status": "data",
+  "role": "32팔 STEP3 매니페스트 전문(팔당 61 키) — `plate_rule` 이 32/32 전부 `p2-occupied-surface-first`(= CL-33/CL-41 의 인용금지 p1 계열이 아님), `status: partial` 은 `--no-ion/--no-collector` 로 컴포넌트를 껐기 때문이고 `missing`·`failed` 는 32/32 빈 배열, 여기에 첨가제 부피·개수와 econn 요약이 붙는다.",
+  "risk": "low",
+  "risk_why": "ⓔ — `docs/data/phase_a_h015_arms/phaseA_h015_manifests.json` 의 각 팔 `econn_summary` 는 `vox_um: 0.3` 인데 같은 항목의 해는 `vox_um: 0.15` 다. 즉 `connected_pct: 100.0` 는 σ_e 를 푼 격자가 아니라 **두 배 거친 격자**에서 잰 퍼콜 진단인데 같은 레코드 안에 나란히 있어 0.15 해의 연결성으로 읽히기 쉽다."
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/resid_from_runner_log_20260912.tsv",
+  "status": "data",
+  "role": "32팔의 n_dof·cg 잔차·벽시계를 러너 로그 `STEP3 σ_e_eff = …` 줄에서 회수한 표 — 원본 payload 가 09-12 디스크 정리로 삭제돼 **잔차의 유일한 사본**이다. σ 가 로그에서 봉인돼 있어 팔 귀속이 불가함, dof 를 귀속축으로 쓰면 순환임, 그럼에도 잔차가 전부 [9.8e-09, 1.0e-08] 이라 어떤 귀속에서도 conv_ok 가 같음을 머리말이 스스로 밝힌다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/phase_a_h015_arms/run_receipt.json",
+  "status": "data",
+  "role": "이 팔 묶음의 런 영수증 — vox 0.15, origin 8칸 half-cell shift 좌표, 스탬프 규약(fibre segment · ptfe centerline · sdcp point, sphere_d 0.0 · yield_to_vgcf false), bridge 0.24 µm, periodic_xy false, code_sha, receipt_digest. `scripts/sdcp_gain_vox015_8arm.sh:539-547` 이 이 내용과 다르면 런을 ABORT 하고 `scripts/reduce_arm_payloads.py:242-248` 은 이것이 없으면 축소를 거부한다.",
+  "risk": "low",
+  "risk_why": "ⓓ — `docs/data/phase_a_h015_arms/run_receipt.json` 에는 침대(킷) 식별자가 없다(`scripts/check_cohort_packages.py:42` 가 이미 *\"패키지는 자기가 어느 침대인지 말하지 못한다 — run_receipt 에 침대가 없고\"* 라고 적어 놨다). 그래서 `arms: 8` 짜리 영수증 하나(digest 9fd74d421c84)가 **input_digest 가 서로 다른 네 침대의 32팔 전부**를 덮고 `_adapter_summary.json` 도 그 한 digest 만 적는다 ⇒ 영수증 대조 게이트가 침대 뒤바뀜을 원리적으로 못 잡는다."
+ },
+ {
+  "path": "docs/data/rho_lhs_20260913.csv",
+  "status": "superseded",
+  "role": "LHS 30 케이스 × 3 채널의 ρ(솔버 허용오차 민감도) 실측 원자료 초판 — 생산 `solve_network` 를 허용오차 ×0.1 로 두 번 돌려 σ 비교(90행: OK 83 · SOLVE_NONE 7, delta_pct 83행 전부 0.0). `scripts/measure_rho.py:21` 이 이 경로를 산출 예시로 적고 있다.",
+  "risk": "high",
+  "risk_why": "ⓐ — `docs/data/rho_lhs_20260913.csv` 의 `delta_pct` 83행 0.0(= ρ 0.000000 %)은 `docs/reviews/findings.json`(SELF-31 절)이 *\"안 걸리는 손잡이(atol)를 조인 **거짓 0**\"* 으로 **명시 철회**한 값이다(scipy ≥1.12 의 정지조건은 max(rtol·‖b‖, atol)이고 생산은 rtol 을 안 넘겨 기본 1e-5 가 판정한다). 파일 안에 주석 한 줄도 없고 `claims.json` `quotation_ban` 에 이 값의 패턴이 없어 ban-sweep 도 안 걸린다. 유효판은 같은 폴더의 `rho_lhs_20260913_rtol{,1e-7,1e-8}.csv` 인데 **접미사 없는 이 파일이 가장 자연스러운 이름**이라 잘못 집힐 자리다."
+ },
+ {
+  "path": "docs/data/rho_lhs_20260913.json",
+  "status": "superseded",
+  "role": "위 CSV 의 채널별 요약 — scipy 1.18.1 / python 3.12.3 / git_head 83c7041a8 / tighten 0.1 과 채널마다 n_ok·n_iterative·n_direct·n_solve_none·`rho_pct_max_iterative`·솔버 경로·조인 kwarg(`atol`)를 적는다.",
+  "risk": "high",
+  "risk_why": "ⓐ — `docs/data/rho_lhs_20260913.json` 의 `rho_pct_max_iterative: 0.0`(ionic·thermal)과 `rho_pct_max_all: 0.0`(3채널)이 SELF-31 이 철회한 바로 그 '거짓 0' 이다. `kwargs: [\"atol\"]` 로 조인 손잡이 이름만 남기고 **그 손잡이가 안 걸린다는 판정은 어디에도 없다** ⇒ 표지 없이 'ρ = 0 이라 §5-v3 의 ρ > 3 % 차단은 안 걸린다' 로 읽힌다. 유효판은 `rho_lhs_20260913_rtol.json`(이온 5.92e-7 % · 열 1.108e-5 %) 이후 사다리다."
+ },
+ {
+  "path": "이종기술/eis/extracted/260715_No1_only_sym_01_C01.csv",
+  "status": "data",
+  "role": "No.1 순수 소립 SC 대칭셀(SUS|cathode|SUS, 이온-blocking) PEIS run01 정리표 — 89점 7MHz→10mHz 로그격자, freq/ReZ/negImZ/absZ/phase/Ewe/I/cycle. eis_fit.py 가 R0-p(R1,CPE1) 로 읽어 R_e→σ_e 를 내는 살아있는 입력.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/extracted/260715_No1_only_sym_02_C01.csv",
+  "status": "data",
+  "role": "위 셀의 반복 run02 (재현성 쌍). 89점, HF절편 12.46 Ω — run01 11.89 과 5 % 이내로 일치해 σ_e 재현성의 근거가 된다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/extracted/260715_No2_only_sym_01_C01.csv",
+  "status": "data",
+  "role": "No.2 순수 소립 SC 대칭셀 run01 — σ_e 산출용 이온-blocking 아크. 89점, HF절편 10.31 Ω.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/extracted/260715_No2_only_sym_02_C01.csv",
+  "status": "data",
+  "role": "No.2 순수 대칭셀 반복 run02 — 89점, HF절편 9.74 Ω, run01 과 쌍을 이뤄 σ_e 산포를 준다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/extracted/260719_No1_55_70um_sym_01_C01.csv",
+  "status": "data",
+  "role": "No.1 의 5:5 poly:small 블렌드 대칭셀 run01 — 순수 대비 σ_e 변화(No1 은 감소 방향)를 재는 대조 팔. 89점.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/extracted/260719_No1_55_70um_sym_02_C01.csv",
+  "status": "data",
+  "role": "No.1 5:5 블렌드 대칭셀 반복 run02 — 89점, ReZmax 68.7 Ω 로 run01(66.7)과 정합.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/extracted/260719_No1_only_full_1cyc_01_C06_1.3V.csv",
+  "status": "data",
+  "role": "No.1 순수 풀셀(NCM‖Li-In) 1사이클 후 PEIS — Ewe 3.668 V = SOC100(파일명 1.3V 는 그 셀의 초기 OCV 표식). R_int 앵커용 A그룹 4셀 중 하나. ⚠ 이 아카이브에서 유일하게 저주파가 잘렸다: 80점, 0.0803 Hz 에서 종료(다른 14개는 0.01 Hz).",
+  "risk": "low",
+  "risk_why": "260719_No1_only_full_1cyc_01_C06_1.3V.csv:81 (마지막 행 f=0.0803 Hz, phase 여전히 −6.26°) — .mps 는 ff=10 mHz 를 지시했는데 스캔이 조기 종료돼 확산 꼬리 구간 자체가 미측정이고, 그 결과 Wo1 이 구속되지 않아 fits 의 R_w 가 0.0 으로 나와 A그룹 'R_w 0.0↔135.8' 범위에 들어간다 = 결측이 수치 0 으로 내려앉는 ⓒ 계열. 파일 안에는 절단 표지가 없고 eis/README.md 는 이 0.0 을 '적합 국소최소' 로만 귀속해 원인(주파수창 절단)을 적지 않는다."
+ },
+ {
+  "path": "이종기술/eis/extracted/260719_No1_only_full_1cyc_02_1_C01.csv",
+  "status": "data",
+  "role": "No.1 순수 풀셀 반복 run02 — Ewe 3.661 V(SOC100), 89점 완주(0.01 Hz 도달). 위 절단 런의 정상 대조군.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/extracted/260719_No2_55_70um_sym_01_C02.csv",
+  "status": "data",
+  "role": "No.2 의 5:5 블렌드 대칭셀 run01 — No.1 과 반대 방향(σ_e 증가)으로 나오는 팔이라 'poly 효과 방향 불일치' 판정의 원자료. 89점.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/extracted/260719_No2_55_70um_sym_02_C02.csv",
+  "status": "data",
+  "role": "No.2 5:5 블렌드 대칭셀 반복 run02 — 89점, HF절편 6.75 Ω 로 run01(6.86)과 1.6 % 일치.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/extracted/260719_No2_only_full_1cyc_01_C01.csv",
+  "status": "data",
+  "role": "No.2 순수 풀셀 run01 — Ewe 3.616 V(SOC100), 89점, ReZmax 49.0 Ω. R_int 앵커 A그룹.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/extracted/260719_No2_only_full_1cyc_02_C01.csv",
+  "status": "data",
+  "role": "같은 셀을 SOC100 에서 두 번째로 스캔한 run02 — Ewe 3.611 V, ReZmax 99.6 Ω 로 run01(49.0)의 2배. README 가 '측정오차가 아니라 스캔 사이 실제 계면 열화' 라 판정한 그 발산의 원자료이며, 데이터가 그 서술과 부합한다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/extracted/260723_Poly_only_sym_#01_C06.csv",
+  "status": "data",
+  "role": "순수 Poly(대입자 다결정) 대칭셀 n=1 — σ_e 가 SC 셀들보다 2.3배 높게 나와 리포에 고정된 σ_S(single)>σ_P(poly) 순서와 반대 방향을 가리키는 유일한 셀. 89점.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/extracted/260728_No2_55_70um_full_#01_C01.csv",
+  "status": "data",
+  "role": "5:5 블렌드 '풀셀' B그룹 #01 — HF절편 109 Ω(≈145 Ω·cm²)으로 A그룹보다 한 자릿수 크다. 이 두 셀이 들어오며 summary_means 의 대표 R_int 가 49.8→100.46 으로 뛴 원인 측정. 89점.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/extracted/260728_No2_55_70um_full_#02_C01.csv",
+  "status": "data",
+  "role": "B그룹 #02 — HF절편 72.8 Ω(≈96.7 Ω·cm²). #01 과 함께 R_int≈202 Ω·cm² 를 1.2 % 재현도로 주는 쌍. 89점.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260715_No1_only_sym_01.mps",
+  "status": "data",
+  "role": "EC-Lab v11.63 설정/테크닉 텍스트 파일 — PEIS 단일사인 7 MHz→10 mHz, 10 pts/dec, Va 5 mV, Na 2, VSP-300. 12개 .mps 는 Filename 줄을 빼면 서로 바이트 동일하며, 카탈로그가 의도적으로 무시하는 'Electrode surface area 0.001 cm2' 플레이스홀더의 출처를 증명한다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260715_No1_only_sym_01_C01.mpr",
+  "status": "data",
+  "role": "BioLogic 바이너리 원본 — 짝 CSV(260715_No1_only_sym_01_C01.csv)의 출처. galvani 파서가 있을 때만 eis_archive.py 가 재추출하고, 없으면 기존 CSV 로 카탈로그만 만든다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260715_No1_only_sym_02.mps",
+  "status": "data",
+  "role": "같은 PEIS 설정의 run02 기록 — 내용은 run01 .mps 와 Filename 줄만 다르다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260715_No1_only_sym_02_C01.mpr",
+  "status": "data",
+  "role": "No.1 순수 대칭셀 run02 바이너리 원본 (22,512 B, 89점 표준 길이).",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260715_No2_only_sym_01.mps",
+  "status": "data",
+  "role": "No.2 순수 대칭셀 run01 의 EC-Lab 설정 기록 — 공통 PEIS 프로토콜.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260715_No2_only_sym_01_C01.mpr",
+  "status": "data",
+  "role": "No.2 순수 대칭셀 run01 바이너리 원본.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260715_No2_only_sym_02.mps",
+  "status": "data",
+  "role": "No.2 순수 대칭셀 run02 의 설정 기록.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260715_No2_only_sym_02_C01.mpr",
+  "status": "data",
+  "role": "No.2 순수 대칭셀 run02 바이너리 원본.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No1_55_70um_sym_01.mps",
+  "status": "data",
+  "role": "No.1 5:5 블렌드 대칭셀 run01 설정 — 순수 셀들과 동일 프로토콜이라 σ_e 대조가 측정조건 차이로 오염되지 않았음을 보증한다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No1_55_70um_sym_01_C01.mpr",
+  "status": "data",
+  "role": "No.1 5:5 블렌드 대칭셀 run01 바이너리 원본.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No1_55_70um_sym_02.mps",
+  "status": "data",
+  "role": "No.1 5:5 블렌드 대칭셀 run02 설정 기록.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No1_55_70um_sym_02_C01.mpr",
+  "status": "data",
+  "role": "No.1 5:5 블렌드 대칭셀 run02 바이너리 원본.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No1_only_full_1cyc_01.mps",
+  "status": "data",
+  "role": "절단된 풀셀 런의 설정 기록 — ff=10 mHz 를 지시하고 있어, 짝 CSV 가 0.0803 Hz 에서 끝난 것이 프로토콜 변경이 아니라 스캔 조기종료임을 확정해 주는 증거 파일이다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No1_only_full_1cyc_01_C06_1.3V.mpr",
+  "status": "data",
+  "role": "No.1 순수 풀셀 run01 바이너리 원본 — 13,696 B 로 다른 .mpr(22,512 B)보다 짧고, 이것이 80점 저주파 절단의 원본 측 흔적이다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No1_only_full_1cyc_02_1.mps",
+  "status": "data",
+  "role": "No.1 순수 풀셀 run02 설정 기록 (완주 런).",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No1_only_full_1cyc_02_1_C01.mpr",
+  "status": "data",
+  "role": "No.1 순수 풀셀 run02 바이너리 원본 (22,512 B, 89점 완주).",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No2_55_70um_sym_01.mps",
+  "status": "data",
+  "role": "No.2 5:5 블렌드 대칭셀 run01 설정 기록.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No2_55_70um_sym_01_C02.mpr",
+  "status": "data",
+  "role": "No.2 5:5 블렌드 대칭셀 run01 바이너리 원본.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No2_55_70um_sym_02.mps",
+  "status": "data",
+  "role": "No.2 5:5 블렌드 대칭셀 run02 설정 기록.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No2_55_70um_sym_02_C02.mpr",
+  "status": "data",
+  "role": "No.2 5:5 블렌드 대칭셀 run02 바이너리 원본.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No2_only_full_1cyc_01.mps",
+  "status": "data",
+  "role": "No.2 순수 풀셀 run01 설정 기록.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No2_only_full_1cyc_01_C01.mpr",
+  "status": "data",
+  "role": "No.2 순수 풀셀 run01 바이너리 원본.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No2_only_full_1cyc_02.mps",
+  "status": "data",
+  "role": "No.2 순수 풀셀 run02(SOC100 열화 스캔) 설정 기록 — run01 과 동일 설정이라 2배 저항 차이가 설정 변경이 아님을 보증한다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260719_No2_only_full_1cyc_02_C01.mpr",
+  "status": "data",
+  "role": "No.2 순수 풀셀 run02 바이너리 원본.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260723_Poly_only_sym_#01_C06.mpr",
+  "status": "data",
+  "role": "순수 Poly 대칭셀 바이너리 원본. ⚠ 짝 .mps 가 아카이브에 없다 — 이 셀은 리포의 σ_P<σ_S 순서를 반증하는 유일한 셀인데 측정설정 기록이 빠져 있고, 동일 프로토콜이라는 근거는 CSV 의 주파수격자(89점 7 MHz→10 mHz)가 다른 셀과 같다는 간접증거뿐이다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260728_No2_55_70um_full_#01_C01.mpr",
+  "status": "data",
+  "role": "B그룹 5:5 블렌드 풀셀 #01 바이너리 원본. ⚠ 짝 .mps 없음 — R_int≈202 Ω·cm² 앵커의 측정설정 기록이 아카이브에 빠져 있다.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "이종기술/eis/raw/260728_No2_55_70um_full_#02_C01.mpr",
+  "status": "data",
+  "role": "B그룹 5:5 블렌드 풀셀 #02 바이너리 원본. ⚠ 짝 .mps 없음 (같은 provenance 공백).",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_0_10_g192_e1201.json",
+  "status": "duplicate",
+  "role": "mpm3d_compaction.py --save-metrics 1런 산출 (P:S 0:10 침대, n_grid 192, V/c_P 0.03, 착지 porosity 11.976 %) — d_h 접힘 적합의 φ 3점 중 중간점.  docs/data/se_curve_metrics/ 의 동명 파일과 바이트 동일",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_0_10_g192_e1531.json",
+  "status": "duplicate",
+  "role": "같은 0:10 침대 192 격자의 가장 느슨한 점 (porosity 15.302 %, 두께 109.508 µm) — φ 3점 중 저-φ 끝.  docs/data/se_curve_metrics/ 사본",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_0_10_g192_e761.json",
+  "status": "duplicate",
+  "role": "같은 0:10 침대 192 격자의 가장 조밀한 점 (porosity 7.585 %) — φ 3점 중 고-φ 끝.  docs/data/se_curve_metrics/ 사본",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_10_0_g192_e1181.json",
+  "status": "duplicate",
+  "role": "P:S 10:0 침대 (n_AM 175, 대입자 단일) 192 격자 중간점, porosity 11.791 % — 조성 스윕의 한 끝 침대.  docs/data/se_curve_metrics/ 사본",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_10_0_g192_e1506.json",
+  "status": "duplicate",
+  "role": "10:0 침대 192 격자 저-φ 점 (porosity 15.043 %).  docs/data/se_curve_metrics/ 사본",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_10_0_g192_e747.json",
+  "status": "duplicate",
+  "role": "10:0 침대 192 격자 고-φ 점 (porosity 7.447 %).  docs/data/se_curve_metrics/ 사본",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_3_7_g192_e1185.json",
+  "status": "duplicate",
+  "role": "P:S 3:7 침대 (n_AM 3262) 192 격자 중간점, porosity 11.808 %.  docs/data/se_curve_metrics/ 사본",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_3_7_g192_e1512.json",
+  "status": "duplicate",
+  "role": "3:7 침대 192 격자 저-φ 점 (porosity 15.103 %).  docs/data/se_curve_metrics/ 사본",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_3_7_g192_e750.json",
+  "status": "duplicate",
+  "role": "3:7 침대 192 격자 고-φ 점 (porosity 7.464 %).  docs/data/se_curve_metrics/ 사본",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_5_5_g192_e1189.json",
+  "status": "duplicate",
+  "role": "P:S 5:5 침대 (n_AM 2380) 192 격자 중간점, porosity 11.852 %.  docs/data/se_curve_metrics/ 사본",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_5_5_g192_e1516.json",
+  "status": "duplicate",
+  "role": "5:5 침대 192 격자 저-φ 점 (porosity 15.150 %).  docs/data/se_curve_metrics/ 사본",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_5_5_g192_e753.json",
+  "status": "duplicate",
+  "role": "5:5 침대 192 격자 고-φ 점 (porosity 7.503 %).  docs/data/se_curve_metrics/ 사본",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_7_3_g192_e1173.json",
+  "status": "duplicate",
+  "role": "P:S 7:3 침대 192 격자 중간점 (마하 0.03, seed 3, porosity 11.684 %) — 2026-08-11 V100 재대여로 얹은 0.03 런 3점 중 하나",
+  "risk": "low",
+  "risk_why": "se_curve/xfer_kitm03_g192_e1173.json 과 같은 (침대·격자·ε·마하) 인데 final_stress_GPa 0.4968 vs 0.4969 · settled_over_target 1.6562 vs 1.6564 로 다르다.  fit_dh_collapse.py:139 은 kit_ps_7_3 글롭을, analyze_se_curve_transfer.py:131 기본값은 kitm03 글롭을 읽어 **두 도구가 같은 점을 서로 다른 σ 로 본다** (ⓔ)"
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_7_3_g192_e1441.json",
+  "status": "superseded",
+  "role": "7:3 침대 192 격자 저-φ 점의 **옛 기하-규칙 런** (V/c_P 0.1048, porosity 14.388 %) — 마하 0.03 재측정본이 xfer_kitm03_g192_e1441.json 으로 따로 있다",
+  "risk": "low",
+  "risk_why": "fit_dh_collapse.py:139 의 글롭 xfer_*kit_ps_7_3_g192_e*.json 이 이 0.1048 런과 0.03 런 3점을 **한 세트로** 집는데 --mach 기본값이 None (fit_dh_collapse.py:246) 이라 기본 실행은 재하율을 섞는다.  섞인 채 select_at_phi 가 np.median 으로 마하를 내면(:198) 실존하지 않는 중앙값이 line 310 의 1.15배 게이트에 들어간다 (ⓔ·ⓓ)"
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_7_3_g192_e1497.json",
+  "status": "duplicate",
+  "role": "7:3 침대 192 격자 저-φ 점 (마하 0.03, seed 3, porosity 14.942 %) — kitm03 세트에 대응점이 없는 유일한 ε 태그.  docs/data/se_curve_metrics/ 사본",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_7_3_g192_e1856.json",
+  "status": "superseded",
+  "role": "7:3 침대 192 격자 **최저 φ** 옛 기하-규칙 런 (V/c_P 0.1048) — 플래튼이 끝내 응력을 못 세운 점 (final_stress_GPa 0.0, porosity 18.155 %)",
+  "risk": "low",
+  "risk_why": "final_stress_GPa 가 정확히 0.0 인데 두 소비 경로가 이 0 을 다르게 다룬다 — local_dlnsigma_dphi 는 b>0 으로 버리고(fit_dh_collapse.py:159) select_at_phi 의 np.interp 는 거르지 않아(:196) 그대로 보간에 들어간다.  게다가 xfer_kitm03_g192_e1856.json 과 porosity·두께가 바이트 동일한데 마하만 0.1048 vs 0.03 로 달라, 무하중 점이 '재하율 무관' 증거처럼 읽힌다 (ⓒ·ⓔ)"
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_7_3_g192_e527.json",
+  "status": "superseded",
+  "role": "7:3 침대 192 격자 **최고 φ** 옛 기하-규칙 런 (V/c_P 0.1048, porosity 5.052 %) — 마하 0.03 재측정본은 xfer_kitm03_g192_e527.json (porosity 5.246 %)",
+  "risk": "low",
+  "risk_why": "e1441 과 같은 이유 — fit_dh_collapse.py:139 의 단일 글롭 안에서 0.1048 런과 0.03 런이 섞이고 --mach 기본이 None (:246) 이다.  이 점은 재측정본과 porosity 가 0.19 %p·응력이 0.80 vs 1.01 GPa 로 실제로 벌어져 섞임이 결과를 움직인다 (ⓔ)"
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_7_3_g192_e742.json",
+  "status": "duplicate",
+  "role": "7:3 침대 192 격자 고-φ 점 (마하 0.03, seed 3, porosity 7.394 %) — 2026-08-11 재대여 0.03 런 3점 중 하나",
+  "risk": "low",
+  "risk_why": "se_curve/xfer_kitm03_g192_e742.json 과 같은 (침대·격자·ε·마하) 인데 final_stress_GPa 0.8177 vs 0.8175 로 다르다.  e1173 과 같은 구조 — 두 도구가 서로 다른 글롭을 기본값으로 써서 같은 점을 다른 σ 로 읽는다 (ⓔ)"
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_7_3_g288_e1173.json",
+  "status": "duplicate",
+  "role": "7:3 침대 **288 격자** 중간점 (마하 0.03, seed 3, porosity 11.721 %, n_pts 9.46e7) — 288 프로토콜 대등화 트랙의 측정점",
+  "risk": "low",
+  "risk_why": "se_curve/xfer_res_kit_ps_7_3_g288_e1173.json 이 이 파일의 사실상 사본이고 **둘 다** fit_dh_collapse.py:139 의 글롭 xfer_*kit_ps_7_3_g288_e*.json 에 걸린다 — 한 측정이 두 점으로 들어간다 (ⓔ).  두 파일 모두 남아 있어 어느 쪽을 지워야 하는지 리포가 말하지 않는다"
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_7_3_g288_e1497.json",
+  "status": "duplicate",
+  "role": "7:3 침대 288 격자 저-φ 점 (마하 0.03, seed 3, porosity 14.965 %, final_stress 0.2083 GPa).  docs/data/se_curve_metrics/ 사본",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_ps_7_3_g288_e742.json",
+  "status": "duplicate",
+  "role": "7:3 침대 288 격자 고-φ 점 (porosity 7.389 %) — 40개 중 **유일하게** quasistatic_violation/quasistatic_note/quasistatic_limit_VcP 3필드를 달고 있는 파일 (나머지 39개는 quasistatic_ok 만)",
+  "risk": "low",
+  "risk_why": "준정적 위반 도장이 이 1/40 에만 있다.  그 도장을 **읽는 소비자가 없고**(mpm3d_compaction.py:3401 이 쓰기만 하고, 나머지 언급은 전부 shell echo·주석) 나머지 39개에는 필드 자체가 없어, quasistatic_violation 을 조건으로 거는 검사를 새로 달아도 구조상 초록이 된다 (ⓓ)"
+ },
+ {
+  "path": "se_curve/xfer_kit_real14_g192_e1170.json",
+  "status": "duplicate",
+  "role": "real_14 기준 침대 (두께 ~28 µm, n_AM 457) 192 격자, V/c_P 0.0306, porosity 11.696 % — 재하율 대조쌍(analyze_se_curve_transfer.py:136)의 **base** 팔",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_real14_g192_e1521.json",
+  "status": "duplicate",
+  "role": "real_14 침대 192 격자 최저-φ 점 (porosity 15.155 %, final_stress 0.073 GPa) — REF 곡선 5점 중 하나",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_real14_g192_e420.json",
+  "status": "duplicate",
+  "role": "real_14 침대 192 격자 최고-φ 점 (porosity 4.108 %, final_stress 0.278 GPa) — REF 곡선 5점 중 하나",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_real14_g192_e594.json",
+  "status": "duplicate",
+  "role": "real_14 침대 192 격자 (porosity 5.825 %) — REF 곡선 5점 중 하나",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kit_real14_g192_e948.json",
+  "status": "duplicate",
+  "role": "real_14 침대 192 격자 (porosity 9.304 %) — REF 곡선 5점 중 하나",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kitm03_g192_e1173.json",
+  "status": "duplicate",
+  "role": "7:3 침대를 **마하 0.03 으로 통일해 다시 잰** 세트(kitm03)의 중간점 (porosity 11.684 %) — analyze_se_curve_transfer.py:131 이 기본 test-glob 으로 읽는 쪽",
+  "risk": "low",
+  "risk_why": "se_curve/xfer_kit_ps_7_3_g192_e1173.json 과 같은 측정인데 final_stress_GPa 0.4969 vs 0.4968 · settled_over_target 1.6564 vs 1.6562 로 어긋나고 seed 키가 없다.  전이 판정은 이 파일을, d_h 적합은 저쪽을 읽어 같은 점의 σ 가 도구마다 다르다 (ⓔ)"
+ },
+ {
+  "path": "se_curve/xfer_kitm03_g192_e1441.json",
+  "status": "duplicate",
+  "role": "kitm03 세트 저-φ 점 (마하 0.03, porosity 14.381 %, final_stress 0.4498 GPa) — 같은 ε 태그의 0.1048 런(xfer_kit_ps_7_3_g192_e1441.json, 0.3586 GPa)을 대체하는 재측정",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kitm03_g192_e1856.json",
+  "status": "duplicate",
+  "role": "kitm03 세트 최저-φ 점 — 플래튼이 응력을 못 세운 점 (final_stress_GPa 0.0, porosity 18.155 %)",
+  "risk": "low",
+  "risk_why": "σ=0 을 두 경로가 다르게 다룬다 — fit_dh_collapse.py:159 는 b>0 으로 버리고 :196 의 np.interp 는 그대로 쓴다.  또 이 파일은 마하 0.03 으로 적혀 있는데 porosity·두께·wall_z 가 0.1048 런(xfer_kit_ps_7_3_g192_e1856.json)과 바이트 동일해, 실제로는 '무하중이라 재하율이 무의미한 점' 인 것이 기록만 보면 구분되지 않는다 (ⓒ·ⓔ)"
+ },
+ {
+  "path": "se_curve/xfer_kitm03_g192_e527.json",
+  "status": "duplicate",
+  "role": "kitm03 세트 최고-φ 점 (마하 0.03, porosity 5.246 %, final_stress 1.012 GPa — 40개 중 최대 응력).  0.1048 런 대비 porosity +0.19 %p",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_kitm03_g192_e742.json",
+  "status": "duplicate",
+  "role": "kitm03 세트 고-φ 점 (porosity 7.394 %) — 전이 판정의 test 곡선 5점 중 하나",
+  "risk": "low",
+  "risk_why": "se_curve/xfer_kit_ps_7_3_g192_e742.json 과 같은 측정인데 final_stress_GPa 0.8175 vs 0.8177 로 다르고 seed 키가 없다.  e1173 과 같은 구조의 도구별 σ 불일치 (ⓔ)"
+ },
+ {
+  "path": "se_curve/xfer_rate_g192_e1170.json",
+  "status": "duplicate",
+  "role": "real_14 침대·같은 ε 를 **마하 0.01 로** 다시 잰 팔 (porosity 11.690 %, final_stress 0.1694 GPa) — 재하율 대조쌍의 slow 팔.  40개 중 **유일하게** quasistatic_ok=true",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_repro_g384_e1087.json",
+  "status": "duplicate",
+  "role": "real_14 침대를 **384 격자**로 다시 돌린 재현 대조 런 (porosity 10.847 %, 두께 28.244 µm) — analyze_se_curve_transfer.py:133 이 저장본 se_e1087.json 과 짝지어 '재현 Δ' 를 내는 새 팔",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_res_kit_ps_0_10_g128_e1201.json",
+  "status": "duplicate",
+  "role": "0:10 침대를 **ε 고정·격자만 128** 로 내려 잰 해상도 사다리 점 (porosity 11.993 %) — 격자 수렴 차수 판정용",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_res_kit_ps_0_10_g288_e1201.json",
+  "status": "duplicate",
+  "role": "0:10 침대 해상도 사다리의 288 점 (porosity 11.971 %, final_stress 0.8508 GPa) — 같은 ε 의 128/192/288 3점 중 최상단",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_res_kit_ps_10_0_g128_e1181.json",
+  "status": "duplicate",
+  "role": "10:0 침대 해상도 사다리의 128 점 (porosity 11.803 %) — 넓은-채널 침대 쪽 대조",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_res_kit_ps_10_0_g288_e1181.json",
+  "status": "duplicate",
+  "role": "10:0 침대 해상도 사다리의 288 점 (porosity 11.762 %, final_stress 0.4037 GPa)",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_res_kit_ps_3_7_g288_e1185.json",
+  "status": "duplicate",
+  "role": "3:7 침대의 288 단일점 (porosity 11.804 %) — 중간 3침대를 288 로 올려 5침대를 채운 런 중 하나",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_res_kit_ps_5_5_g288_e1189.json",
+  "status": "duplicate",
+  "role": "5:5 침대의 288 단일점 (porosity 11.890 %) — 중간 3침대 288 완주분",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "se_curve/xfer_res_kit_ps_7_3_g288_e1173.json",
+  "status": "duplicate",
+  "role": "7:3 침대 288 점 — 이름만 res_ 접두어가 붙었을 뿐 se_curve/xfer_kit_ps_7_3_g288_e1173.json 과 같은 측정 (porosity·두께·응력·n_pts 전부 동일, settled_over_target 1.7558 vs 1.7559 와 seed 키 유무만 다름)",
+  "risk": "high",
+  "risk_why": "fit_dh_collapse.py:139 의 글롭 xfer_*kit_ps_7_3_g288_e*.json 이 이 파일과 xfer_kit_ps_7_3_g288_e1173.json 을 **둘 다** 집어 한 측정이 두 점으로 들어간다 (ⓔ).  run_se_curve_batch.sh:36-38 이 '태그가 달라도 같은 점' 이라고 스스로 적어 두고도 적합기 쪽에는 중복 제거가 없다.  thickness_um 이 108.455 로 동일해 φ 가 정확히 같아지므로 local_dlnsigma_dphi 의 dx 가 0 이 되어 abs(dx)>1e-9 가 거짓 → 국소기울기 보정이 조용히 None 으로 꺼진다 (fit_dh_collapse.py:155-157)"
+ },
+ {
+  "path": "machine-learning/APPLICATION_TO_DEM_DFT.md",
+  "status": "live",
+  "role": "강의 ML 이론(L2~L17)을 리포의 production σ 삼중항(ionic/e/thermal) form·LOOCV·Ridge·bootstrap PI 규율에 1:1로 대응시키는 유일한 교량 서술 문서 — 코드가 import 하지는 않지만 코드 심볼(_stage_e_global_fit·_electronic_fit·_thermal_fit·_BOOTSTRAP_CACHE)과 스크립트 경로를 직접 지목하며 수치를 전사한다 (commit 08fce8fe7, 2026-06-24 작성 후 갱신 없음)",
+  "risk": "high",
+  "risk_why": "machine-learning/APPLICATION_TO_DEM_DFT.md:61,107 이 원장 CL-12 로 철회된 인과 서술('κ 는 multi-pathway 병렬이라 단일 backbone power-law 불가')을 표지 없이 현행 근거로 적고(프로덕션 타깃에는 그 가중이 들어간 적이 없다), :21/:68/:72 는 14-feature 생산식에 옛 Ridge α=0.1 을 붙여 적으며(생산값은 scripts/generate_comparison_plots.py:6829 _THERMAL_RIDGE_ALPHA = 0.05, 같은 파일 :6790-6792 의 L3-11 배너가 바로 그 전사를 금지한다), :30 의 'feature 표준화 후 Ridge' 는 _thermal_fit(:6924-6940)·_thermal_form_arrays(:6913) 어디에도 없다 — 셋 다 quotation_ban 패턴에 안 걸려 스윕은 초록이다."
+ },
+ {
+  "path": "machine-learning/README.md",
+  "status": "live",
+  "role": "machine-learning/ 디렉터리의 목차 — 14개 강의 노트 파일로 가는 링크 표(L2~L5 중간, L8~L17 기말 범위 표기)와 APPLICATION_TO_DEM_DFT.md 로 가는 포인터.  실제 파일 목록과 표가 일치한다(L6·L7 은 존재하지 않고 표에도 없다)",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture02-linear-algebra-probability.md",
+  "status": "live",
+  "role": "선형대수(전치·역행렬·norm·대칭/직교행렬·고유분해·SVD·Moore-Penrose pseudoinverse·trace)와 확률(PMF/PDF·주변/조건부·Bayes·기대값/분산/공분산·Gaussian 과 precision matrix·정보량/엔트로피) 복습 노트 — pseudoinverse 가 선형회귀의 (XᵀX)⁻¹Xᵀ 임을 명시한다.  리포 수치·코드 참조 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture03-linear-regression.md",
+  "status": "live",
+  "role": "ML 정의(Task/Performance/Experience)·데이터 3분할·일반화 오차와 대리지표·경험적 손실·0-1 대 ℓ₂ 손실·선형회귀 목적함수와 closed-form normal equation 유도·bias trick 을 정리한 노트.  리포 수치·코드 참조 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture04-classification-logistic-svm.md",
+  "status": "live",
+  "role": "MLE 로 ℓ₂ 손실을 정당화하는 논법부터 이미지 분류의 7가지 난점·parametric 대 non-parametric·k-NN·하이퍼파라미터 설정·차원의 저주·과적합/과소적합·perceptron·logistic regression·SVM margin 유도까지 묶은 노트.  리포 수치·코드 참조 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture05-svm-features-multiclass.md",
+  "status": "live",
+  "role": "SVM 후반부 — optimal separating hyperplane, slack ξ 와 γ 를 쓰는 soft-margin, soft-margin↔hinge loss 등가 변환, feature mapping φ 와 kernel trick(XOR 예), 그리고 1-vs-all·1-vs-1 다중분류 정리 노트.  리포 수치·코드 참조 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture08-multiclass-classification.md",
+  "status": "live",
+  "role": "다중분류 정식화 노트 — 이진분류기 조합(1-vs-all/1-vs-1)의 한계, 판별함수, sigmoid→softmax 확장, multiclass cross-entropy, 수치 안정 softmax-CE, binary↔multiclass 대응표.  리포 수치·코드 참조 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture09-optimization.md",
+  "status": "live",
+  "role": "최적화 1교시 노트 — random search 가 나쁜 이유, 해석해 대 수치해, gradient descent update rule 과 방향의 직관, learning rate 영향, BGD/SGD/mini-batch 비교, mini-batch 학습 알고리즘 의사코드.  리포 수치·코드 참조 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture10-optimization-ii.md",
+  "status": "live",
+  "role": "최적화 2교시 노트 — critical point 와 Hessian 판정, poor conditioning, EWMA 기반 momentum 과 Nesterov, AdaGrad·RMSProp·Adam 계보, learning-rate 스케줄링과 초기값 설정, Newton/quasi-Newton, 실전 optimizer 선택 조언.  리포 수치·코드 참조 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture11-feedforward-neural-networks.md",
+  "status": "live",
+  "role": "순방향 신경망 노트 — 선형분류의 한계와 feature map, features=모델의 일부라는 관점, MLP 층 구조와 task 별 출력층, 표현력·universal approximator, sigmoid/tanh/ReLU 와 변형(dying ReLU), 각 activation 의 미분식.  리포 수치·코드 참조 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture12-backpropagation.md",
+  "status": "live",
+  "role": "역전파 노트 — chain rule 흐름, logistic regression 과 2층 신경망의 forward/backward 손계산 전개, 임의 층 l 로의 일반화, 행렬 차원 정합 체크, 미니배치 벡터화, forward/backward 함수와 전체 학습 루프.  리포 수치·코드 참조 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture13-training-neural-networks.md",
+  "status": "live",
+  "role": "신경망 학습 실무(하이퍼파라미터 튜닝) 노트 — parameter 대 hyperparameter, coarse-to-fine 샘플링, random search 가 grid 보다 나은 이유, log-scale 샘플링 분포, 초기 loss 확인→소표본 과적합→LR 탐색→격자 정련의 7단계 레시피, 학습곡선 모니터링.  리포 수치·코드 참조 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture14-regularization.md",
+  "status": "live",
+  "role": "정규화 노트 — parameter norm penalty(L1 sparse 대 L2 shrinkage, bias 를 penalize 하지 않는 이유), early stopping, bagging/boosting 앙상블, dropout(학습/추론 weight scaling·inverted dropout·DropConnect), data augmentation(mixup/cutout/cutmix), parameter tying/sharing 과 multi-task, sparse representation.  APPLICATION 문서가 Ridge·bagging 근거로 가장 많이 인용하는 노트지만 그 자체에는 리포 수치 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture15-cnn.md",
+  "status": "live",
+  "role": "CNN 1교시 노트 — FC 를 안 쓰는 이유와 inductive bias, convolution/cross-correlation 정의, filter=feature detector, RGB 다채널, 4종 층, parameter sharing 과 sparse connectivity 의 파라미터 절감, stride/padding 출력크기 공식, pooling, equivariance 대 invariance.  리포 수치·코드 참조 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture16-batch-normalization.md",
+  "status": "live",
+  "role": "CNN 2교시 노트 — 입력 전처리(mean subtraction·normalization·decorrelation·whitening, 학습 통계를 val/test 에 그대로 적용), BatchNorm 수식과 running average(EWMA), 학습가능 affine γ·β, 정규화 차원이 다른 Group/Layer/Instance Norm 비교.  리포 수치·코드 참조 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "machine-learning/lectures/lecture17-cnn-architectures.md",
+  "status": "live",
+  "role": "CNN 3교시 노트 — LeNet-5→AlexNet→ZFNet→VGG(작은 필터·깊이)→GoogLeNet(Inception·1×1 bottleneck)→ResNet(residual block·매우 깊은 망)의 ImageNet 계보와 이후 발전을 문헌 top-5 오차와 함께 정리.  등장 수치는 전부 ImageNet 문헌값이고 리포 원장 수치는 0건",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/area_contract_20260913.md",
+  "status": "live",
+  "role": "S1~S4(면적 타입 분리 · A_transport cap · ψ 배치) 전환의 실행 계약 + 사전등록 v1→v2→v3→v4 누적판 — 판정 라벨·ρ 규칙·코호트 130 봉인 조건을 런 전에 고정하고 seal_s3_prerun.py·audit_constriction_deleted.py·constriction_reference.py·audit_transport_cap_equivalence.py 가 이 조항을 코드로 강제한다 (S2 는 AREA-12 로 항등 판정, S3 는 아직 미실행)",
+  "risk": "low",
+  "risk_why": "docs/area_contract_20260913.md:192 의 \"S0 는 이 컨테이너에서 못 돌린다 … 사용자 머신에서 한 번 돌리면 된다\" 는 여섯 줄 위(:185-186)의 \"★ S0 는 이미 돌았다\" 와 같은 문서 안에서 충돌하는 낡은 문장이다 (금지값 누수는 아니고, 실행 상태를 잘못 읽게 만드는 staleness)."
+ },
+ {
+  "path": "docs/data/audit_20260909/GAP_AUDIT_HOLD.md",
+  "status": "superseded",
+  "role": "2026-09-09 갭 감사(91 버킷·798 파일)를 사용자 판단으로 보류하며 남긴 인수 메모 — 끝낸 8 버킷 요약, 남은 버킷·파일 수, 다음 판 업그레이드 5개(버킷 확대·scripts 최우선 등), 커버리지 표.  보류는 해제됐고 2판이 docs/data/audit_20260914_gap_r2/ + SELF-37~39 로 이미 돌고 있다",
+  "risk": "high",
+  "risk_why": "docs/data/audit_20260909/GAP_AUDIT_HOLD.md:61-84 가 인용하는 커버리지 수치(합집합·백분율·남은 수·1차 감사 3분할·2차 84)는 같은 폴더 coverage.json 이 `_superseded.초판_값` 으로 내리고 두 결함(디렉터리 전개 시점 오염 · lstrip 문자 삭제)으로 부풀었다고 적은 초판 값인데 표지 없이 현행처럼 적혀 있고, :66·:84 의 \"never_opened 0 / 계산으로 증명했다\" 도 coverage.json 이 \"경로 반납률이지 열람률이 아니다(Codex Q2-2)\" 로 판별력을 부정한 지표를 증명으로 쓴다."
+ },
+ {
+  "path": "docs/data/audit_20260909/audit1_ground_truth.md",
+  "status": "superseded",
+  "role": "1차 전수 감사 산출을 외부 적대 리뷰어용 단일 브리핑으로 압축한 문서 — 금지 패턴 22행 표·철회/hold/rejected 목록·\"지금 참인 10가지\"·상시 규약·findings 통계.  check_review_findings.py:178 의 BAN_ALLOW_ALWAYS 에 등재돼 파일 전체가 ban-sweep 면제다",
+  "risk": "high",
+  "risk_why": "docs/data/audit_20260909/audit1_ground_truth.md:88 이 CL-81 의 \"kim2025 GB-only 3.75× 와 4.04 가 8 % 안에서 만난다\" 문헌 삼각측량을 \"지금 참인 것\" 으로 적는데 그 문장은 원장에서 철회됐고(finding SELF-24 `open`, CLAUDE.md CL-81 절 \"인용 금지\") 이 파일은 스윕 전체 면제라 아무 검사도 잡지 못한다; 같은 문서의 census(findings 123건·19 open, claims 104)도 현재 259건·101 open, 106 과 어긋난다."
+ },
+ {
+  "path": "docs/handoff_merge_to_stoic_knuth_20260915.md",
+  "status": "historical",
+  "role": "sdcp-dem-manuscript-si → stoic-knuth fast-forward 병합 인계서 — 브랜치 기하 실측(142/0), 142 커밋 여덟 줄기, PS-01 입자 0개 삽입의 두 원인(maxattempt 예산 · MPI z 분해)과 생성기 강제, 병합 전 5 검사, 리포 밖 ibb 실행분, 원장 상태.  병합은 이미 끝났다(984874f8d 가 HEAD 의 조상)",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/lhs130_harvest_contract_20260913.md",
+  "status": "live",
+  "role": "LHS 130 디스크립터 수확기(lhs_descriptor_harvest.py)의 계약 6개를 판정문 §7 에 맞춰 결과 열람 전에 코드·selftest 로 못박은 기록 — legacy dem_analysis_core 와 다른 축 대조표(τ 승격 없음·φ 직접합·플래튼 추정 금지), 일곱 열의 종속관계, 결측 5분류, 안 한 것 목록",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/seminar/weekly_20260914_slide_text.md",
+  "status": "live",
+  "role": "2026-09-14 주간 세미나 슬라이드 문구 초안(5절: Phase A·협착 감사·LHS130·원고·litdb) + 슬라이드에 쓰면 안 되는 것 절 + 예상질문 대응표 — 한정어(진행형·미수렴·HOLD)를 보존하도록 지시",
+  "risk": "low",
+  "risk_why": "docs/seminar/weekly_20260914_slide_text.md:66 이 \"미수렴이고 보고값은 그 축에서 하한이다\" 를 사실로 적지만 CL-72(live, 2026-09-07)가 초등 반례로 그 하한 주장을 철회했다 — 등록 패턴이 아니어서 ban-sweep 은 초록이고 CLAUDE.md 산문도 같은 낡은 문장을 아직 들고 있다."
+ },
+ {
+  "path": "docs/session_20260910_progress.md",
+  "status": "historical",
+  "role": "2026-09-10 세션 기록(압축 전 대피소) — probe015 정상종료 판정 근거, receipt code_sha 가 origin 에 없던 문제(SELF-17)와 내용 0 인 박제 브랜치 처리, Phase A h015 캠페인 착수·중단 2회의 원인이 조성이 아니라 GPU 카드 공유임을 실측으로 닫고 재개 문턱(MiB)까지 적은 것",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/session_20260911_progress.md",
+  "status": "historical",
+  "role": "2026-09-11~13 세션 기록 — litdb 계보 카드 5장, 압력축(MPa 전이 0개)·Heckel P_y 인용금지 판정, litdb 브랜치가 ban-sweep 사각이라는 SELF-18, Phase A vox0.15 32팔 측정치와 판정 REFUSED, 원고 v6/SI 대조 3지적, Codex L1~L5 HOLD 판정 요약",
+  "risk": "low",
+  "risk_why": "docs/session_20260911_progress.md:131 이 STEP3 σ_ion 절대값의 \"상대비교는 안전하다 — SBE·DBE 가 같은 골격을 쓰므로 결손이 양쪽에 같은 크기로 걸린다\" 를 결론으로 적는데, CL-81 은 그 배수가 코퍼스에서 2.3~13.6× 로 산포하므로 \"상대비교도 자동으로 안전하지 않다\"·\"근거 없는 공통모드 상쇄 금지\" 라고 못박았다 (같은 줄이 CL-81 을 인용하면서 그 금지를 위반한다)."
+ },
+ {
+  "path": "docs/session_20260913_progress.md",
+  "status": "historical",
+  "role": "2026-09-13 세션 기록 — L1~L5 판정 대응 13건의 재현 수치, SELF-28(협착 항이 clamp→ψ=0 으로 삭제되는 연쇄)의 코퍼스 실측, 면적 계약 (a) 결정, AREA-09/11/12 실측(ψ 는 곱한다 · S2 항등 · min(σ) 과대), ρ 측정과 SELF-29~31 자기사고 기록",
+  "risk": "high",
+  "risk_why": "docs/session_20260913_progress.md:104·106-107 이 A_surface 의 hemisphere cap 을 \"지금 검증됨 (16/49 % ↔ Hertz 18 / Tabor 52)\"·\"독립 기하 ground-truth 로 검증됐다\" 로 적는데 finding AREA-08 이 바로 그 주장을 기각했고 area_contract_20260913.md:52·119 는 같은 문장을 ⛔ 배너로 철회했다 — 이 파일에는 그 정정이 어디에도 없다 (덧붙여 :111 의 \"분해능 5 %\"·\"부호 예상 하향\" 도 AREA-10 으로 철회된 값이며 정정은 95줄 뒤 §6-6 에만 있다)."
+ },
+ {
+  "path": "docs/webapp_v3_design.md",
+  "status": "live",
+  "role": "웹앱 v3 정보구조 설계 근거 — 8 영역 감사가 \"기계는 최신, 라벨은 3~15개월 뒤\" 로 같았다는 진단과 다섯 결정(ledger_view 로 원장 렌더 · 화면 산문 redact · PAGE_FRESHNESS 자기신고 · 앞문 5문답 · .v3-old 접기), test_ledger_view.py 29 검사로 강제, 남은 라벨 수정 목록",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/worklog/weekly_20260914.md",
+  "status": "live",
+  "role": "2026-09-07~14 주간 정리 — 웹앱 /worklog/<key> 라우트(app.py:4204)가 마크다운째 렌더해 실제로 서비스하는 페이지.  Phase A 침대 봉인·32팔, 협착 감사(ψ 자리·삭제 간선 비율 SVG·ρ), LHS130 코호트, 원고 HOLD, 인프라 사고 2건, 금지 수치 절, 예상질문 대응",
+  "risk": "low",
+  "risk_why": "docs/worklog/weekly_20260914.md:149 가 슬라이드 문구와 같은 \"미수렴이고 보고값은 그 축에서 하한이다\" 를 사실로 적는데 CL-72 가 그 하한 읽기를 철회했고, 이 파일은 redact() 를 지나지 않고 /worklog 페이지로 그대로 렌더된다 (등록 패턴이 아니어서 스윕·페이지 검사 모두 초록)."
+ },
+ {
+  "path": "docs/data/rho_lhs_20260913_rtol.csv",
+  "status": "data",
+  "role": "ρ 사다리 1단(rtol 1e-5→1e-6) 원자료. LHS 30 케이스 × 3채널 = 90행. 생산 `solve_network` 를 그대로 한 번(A) + cg 허용오차를 ×0.1 조여 한 번(B) 돌려 delta_pct = 100·|σ_B−σ_A|/|σ_A| 를 기록하고, 실제 탄 경로·받아들여진 kwarg·수렴 info·그리고 **어느 손잡이가 정지 기준을 정했는지**(`binding_A`)를 남긴다. 생산자 `scripts/measure_rho.py --tighten 0.1`.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/rho_lhs_20260913_rtol.json",
+  "status": "data",
+  "role": "같은 런의 채널별 census + 내력(scipy 1.18.1 · python 3.12.3 · tighten 0.1 · git_head 7c553dff3 · 날짜). n_ok/n_iterative/n_direct/n_solve_none 와 ρ(반복해 max)·ρ(전체 max)·실제 rtol_A→rtol_B 를 담는다.",
+  "risk": "low",
+  "risk_why": "docs/data/rho_lhs_20260913_rtol.json:42 — 전자 채널은 직접해뿐(`n_iterative: 0`, `paths: [\"spsolve\"]`)이라 허용오차 축 자체가 없는데 `rho_pct_max_all` 이 `null` 이 아니라 **0.0** 으로 적혀, 이 갈래에서 이미 한 번 철회를 낸 거짓 0(SELF-31)과 같은 모양이다 — 옆 칸(`rho_pct_max_iterative: null`)과 원장 서술이 갈라 주고 자동 게이트가 이 키를 읽지 않으므로 잠재적."
+ },
+ {
+  "path": "docs/data/rho_lhs_20260913_rtol1e-7.csv",
+  "status": "data",
+  "role": "사다리 2단(rtol 1e-5→1e-7) 원자료. 1단과 같은 90행·같은 18열이고 `delta_pct`·`rtol_B`·`sigma_ratio_B` 세 열만 다르다(반복해 22행만 변화, 직접해 61 + 해없음 7 = 68행은 동일). 생산자 `measure_rho.py --tighten 0.01`.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/rho_lhs_20260913_rtol1e-7.json",
+  "status": "data",
+  "role": "2단 census + 내력(tighten 0.01 · git_head f8ad6d129). 이온·열 ρ 가 1단에서 미세 증가해 **포화**에 들어섰음을 보여주는 중간 쐐기.",
+  "risk": "low",
+  "risk_why": "docs/data/rho_lhs_20260913_rtol1e-7.json:42 — 1단 JSON 과 같은 자리: 허용오차가 없는 전자 채널의 `rho_pct_max_all` 이 `null` 대신 0.0 이다."
+ },
+ {
+  "path": "docs/data/rho_lhs_20260913_rtol1e-8.csv",
+  "status": "data",
+  "role": "사다리 3단(rtol 1e-5→1e-8 = 옛 `tol=1e-8` 의 의도값) 원자료 = SELF-31 의 σ 크기를 정하는 종점. 2단과 `delta_pct`·`rtol_B`·`sigma_ratio_B` 만 다르다. 생산자 `measure_rho.py --tighten 0.001`.",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "docs/data/rho_lhs_20260913_rtol1e-8.json",
+  "status": "data",
+  "role": "3단 census + 내력(tighten 0.001 · git_head f8ad6d129). 이 파일의 ρ 가 원장 SELF-31 등급을 P1→P2 로 내린 근거값이고, 열 채널이 2단보다 미세 감소해 수치 바닥임을 보인다.",
+  "risk": "low",
+  "risk_why": "docs/data/rho_lhs_20260913_rtol1e-8.json:42 — 같은 자리: 전자 채널(직접해 30건, 허용오차 없음)의 `rho_pct_max_all` 이 `null` 대신 0.0 이라 판정선(ρ > 3 %)을 구조적으로 통과한다."
+ },
+ {
+  "path": "dem_scripts/ps_sweep_6mah_20260914/in.ps_0_10_r45.liggghts",
+  "status": "live",
+  "role": "LIGGGHTS 생산 덱 — AM_S+SE 2상(P:S=0:10, 질량 81.6:18.4)을 z 0.005–0.30 에 질량분율로 삽입 → 중력 정착 200k → 실측 z_max 로 플래튼 STL 생성 → 안정화 200k → 0.01 m/s 압축(벽응력 0.30 = 300 MPa 스케일 도달까지 5k 스텝 루프) → 완화 100k, atom/contact/mesh 덤프. P:S 스윕 5점의 AM_P-없는 끝점(실행 대기).",
+  "risk": "high",
+  "risk_why": "in.ps_0_10_r45.liggghts:119-124 삽입 뒤 개수 검사가 전혀 없다(덱에 if/count 가 한 줄도 없음) — 부분 삽입이면(원장 PS-01 실측 np=4→119,679 · np=10→142,965 / 요청 163,349 계열) 경고만 남고 런은 완주해 조성이 다른 침대를 정상 산출물로 내며, 유일한 방어는 README:149 의 사람 grep 이다; 0개면 :138/:150-151 에서 빈 그룹 센티넬 −1e20 이 plate_z 로 흘러 40줄 뒤 mesh 에서 죽어 고장 자리와 죽는 자리가 어긋난다. 또 :104 가 r=6μm 을 표지 없이 적는데 실제 AM_P 는 :39 의 4.5e-3 이고(이 덱 세대의 유일한 변경점), 생성기 게이트 scripts/make_ps_sweep_decks.py:535 는 MICRO SIGN U+00B5 만 찾아 GREEK MU U+03BC 인 이 줄을 못 봐 초록이 된다. 이 파일 자체는 quotation_ban 패턴 0건."
+ },
+ {
+  "path": "dem_scripts/ps_sweep_6mah_20260914/in.ps_10_0_r45.liggghts",
+  "status": "live",
+  "role": "같은 파이프라인의 P:S=10:0 끝점(AM_P+SE 2상, pdd `2 pts1 0.816 pts3 0.184`) — 5점 중 유일하게 실배치 완료·검증된 덱(np=2, 삽입 159,167 · Less insertions 경고 없음, 원장 PS-01 / handoff:201-203).",
+  "risk": "high",
+  "risk_why": "in.ps_10_0_r45.liggghts:119-124 삽입 성공 여부를 덱이 스스로 검사하지 않는다 — 부분 삽입 런이 완주해 조성이 다른 침대를 정상 산출물로 내고(원장 PS-01 이 np=4·10 에서 실측), 0개면 :138/:150-151 의 −1e20 센티넬이 plate_z 로 전파돼 mesh 에서 뒤늦게 죽는다; 방어는 README:149 의 수동 grep 뿐이다. 또 :104 의 r=6μm 이 :39 의 실제 4.5e-3 과 모순인데 생성기 음성검사(make_ps_sweep_decks.py:535)가 코드포인트 불일치로 못 잡는다. quotation_ban 패턴 0건."
+ },
+ {
+  "path": "dem_scripts/ps_sweep_6mah_20260914/in.ps_3_7_r45.liggghts",
+  "status": "live",
+  "role": "같은 파이프라인의 P:S=3:7 점(AM_P+AM_S+SE 3상, pdd `3 pts1 0.2448 pts2 0.5712 pts3 0.184`, 예상 총수 162,095) — 정규화 후 5:5·7:3 덱과 바이트 동일, 실행 대기.",
+  "risk": "high",
+  "risk_why": "in.ps_3_7_r45.liggghts:119-124 에 삽입 개수 게이트가 없어 부분 삽입 침대가 완주 산출물로 남고(원장 PS-01), :138/:150-151 에서 빈 그룹 −1e20 이 plate_z 로 흘러 죽는 자리가 고장 자리와 다르다 — 검산은 README:149 의 사람 grep 에만 의존한다. :104 의 r=6μm 은 :39 의 4.5e-3 과 모순이며 생성기 게이트(make_ps_sweep_decks.py:535)가 μ 코드포인트 차이로 놓친다. quotation_ban 패턴 0건."
+ },
+ {
+  "path": "dem_scripts/ps_sweep_6mah_20260914/in.ps_5_5_r45.liggghts",
+  "status": "live",
+  "role": "같은 파이프라인의 P:S=5:5 점(3상, pdd `3 pts1 0.408 pts2 0.408 pts3 0.184`, 예상 총수 161,258) — 실행 대기.",
+  "risk": "high",
+  "risk_why": "in.ps_5_5_r45.liggghts:119-124 삽입 뒤 개수 단언이 없다 — 부분 삽입이 조용히 완주해 다른 조성의 침대를 내고(원장 PS-01 실측), 0개면 :138/:150-151 에서 −1e20 센티넬이 플래튼 높이로 쓰인다; 유일한 방어가 README:149 의 수동 grep 이다. :104 의 r=6μm 이 :39 의 4.5e-3 과 모순이고 생성기 음성검사(make_ps_sweep_decks.py:535)가 MICRO SIGN 만 보아 초록을 낸다. quotation_ban 패턴 0건."
+ },
+ {
+  "path": "dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts",
+  "status": "live",
+  "role": "같은 파이프라인의 P:S=7:3 점(3상, pdd `3 pts1 0.5712 pts2 0.2448 pts3 0.184`, 예상 총수 160,422) = 원본 real_4 조성에 AM_P 반지름만 6.0→4.5 µm 로 바꾼 기준 팔, 실행 대기.",
+  "risk": "high",
+  "risk_why": "in.ps_7_3_r45.liggghts:119-124 삽입 결과를 덱이 검사하지 않아 부분 삽입 침대가 정상 완주하고(원장 PS-01), 0개면 :138/:150-151 의 빈 그룹 −1e20 이 plate_z 에 들어가 mesh 에서 늦게 죽는다 — 검산이 README:149 의 사람 grep 에만 있다. 또 :104 가 r=6μm 을 현행처럼 적는데 이 세대의 유일한 변경점이 바로 그 값(:39 = 4.5e-3)이고, 그것을 막으려 만든 생성기 검사(make_ps_sweep_decks.py:534-535)는 U+00B5 를 찾아 U+03BC 인 이 줄을 통과시킨다. quotation_ban 패턴 0건."
+ },
+ {
+  "path": "heckel/input_SE_heckel_100.liggghts",
+  "status": "data",
+  "role": "LIGGGHTS 압축 덱 (생성기 scripts/make_heckel_inputs.py 산출물) — 순수 SE 단일타입 침대(r 0.5 µm, E_SE 연화 0.135e7, hooke/hysteresis, insert seed 78049 고정, RVE 50×50 µm ×1000 스케일)를 settling→stabilize→플래튼 하강 루프로 목표압까지 눌러 atom·mesh·contact 덤프를 내는 4압력 Heckel 시리즈의 100 MPa 점; 결과는 docs/data/heckel_pure_se_dem.csv",
+  "risk": "high",
+  "risk_why": "heckel/input_SE_heckel_100.liggghts:18 (`timestep ${{dt}}`) 외 12곳이 이중중괄호다 — 생성기 make_heckel_inputs.py 의 TEMPLATE 은 str.format 용 `{{` 이스케이프로 쓰였는데 main() 이 .format() 대신 .replace() 로만 치환해 이스케이프가 걷히지 않았다 (단일중괄호 {TAG}/{PMPA} 만 치환돼 파일이 완성돼 보인다). LAMMPS/LIGGGHTS `${…}` 치환은 첫 `}` 까지를 변수명으로 읽으므로 변수명이 `{dt` 가 되어 18행에서 즉사한다 = committed 상태로 실행 불가. 그런데 이 시리즈 결과에서 나온 Heckel 적합값이 CLAUDE.md:358 (frame[3]) · litdb/our_dem_baseline.md:23 에 현행 사실로 인용되고 litdb/comparison_vs_ours.md 에서 9회 재사용된다 ⇒ 기록된 덱 ≠ 실제 실행된 덱(재현 경로 단절, ⓔ 계열: 기록 경로와 실행 경로가 다른 물건). 리포 28개 .liggghts 중 이 4개만 이중중괄호이고(나머지 24개는 전부 정상 `${var}`), 어느 discipline 검사기도 .liggghts 를 실행·검증하지 않아 2026-06-06 이후 모든 감사가 초록이었다 (규율 ⑤ false-green 이 덱 층에서 재현)."
+ },
+ {
+  "path": "heckel/input_SE_heckel_200.liggghts",
+  "status": "data",
+  "role": "같은 덱의 200 MPa 점 — 100 MPa 판과 diff 상 차이는 target_press 0.200 과 TAG 문자열(출력 디렉터리·STL·덤프 경로)뿐이고 물성·seed·기하는 동일 (동일 seed 짝지음 스냅샷 설계)",
+  "risk": "high",
+  "risk_why": "heckel/input_SE_heckel_200.liggghts:18 외 12곳이 100 MPa 판과 동일한 `${{…}}` 미붕괴 이스케이프다 (생성기 make_heckel_inputs.py 가 .format 용 템플릿을 .replace 로 치환) ⇒ committed 상태로 LIGGGHTS 실행 불가이고, 이 점의 결과(docs/data/heckel_pure_se_dem.csv 200 MPa 행)가 들어간 Heckel 적합값은 CLAUDE.md:358 에 현행 인용 중이다 — 인용된 수치의 입력 기록이 실행 가능한 형태로 보존돼 있지 않다."
+ },
+ {
+  "path": "heckel/input_SE_heckel_300.liggghts",
+  "status": "data",
+  "role": "같은 덱의 300 MPa 점 — 생산 압력이자 Minnmann 순수-SE ~10 % 앵커와 대조되는 점 (CSV 주석이 이 행을 앵커 일치로 표시)",
+  "risk": "high",
+  "risk_why": "heckel/input_SE_heckel_300.liggghts:18 외 12곳 `${{…}}` 미붕괴로 committed 상태 실행 불가 (기전은 100 MPa 항목과 동일). 이 점은 CLAUDE.md frame[1]·[2] 가 반복 인용하는 Minnmann 300 MPa→~10 % 앵커의 DEM 쪽 대조점이라, 실행 가능한 입력 기록의 부재가 가장 많이 인용되는 앵커에 걸린다. 덱 자체에는 철회값 표기가 없다(ⓐ 해당 없음)."
+ },
+ {
+  "path": "heckel/input_SE_heckel_400.liggghts",
+  "status": "data",
+  "role": "같은 덱의 400 MPa 점 — 시리즈 최고압이고 CSV 상 D_union 이 1에 가장 가까운(0.9660) 점, 즉 ln(1/(1−D)) 적합에서 지렛대가 가장 큰 점",
+  "risk": "high",
+  "risk_why": "heckel/input_SE_heckel_400.liggghts:18 외 12곳 `${{…}}` 미붕괴로 committed 상태 실행 불가(100 MPa 항목과 동일 기전). ★ 이 점에는 두 번째 문제가 겹친다 — scripts/heckel_analysis.py:21-25 가 'D_union 이 1 에 가까운 고압점이 적합을 지배하므로 다압력 P_y 를 인용할 때는 leave-one-out 표를 함께 낼 것' 이라 규정하고 판정기도 n≥3 이면 그 표를 출력하는데(heckel_analysis.py:380-397), docs/data/heckel_pure_se_dem.csv 헤더에는 leave-one-out 표가 없고 CLAUDE.md:358 · litdb/our_dem_baseline.md:23 은 P_y 를 범위 없는 단일값으로 인용한다 (이 시리즈에서 D_union 0.9660 인 400 점이 바로 그 지렛대 후보다) ⇒ 리포 자신의 인용 규약 위반."
+ },
+ {
+  "path": "webapp/templates/_ledger.html",
+  "status": "live",
+  "role": "판정 원장(claims.json·findings.json)을 화면에 붙이는 Jinja 매크로 모음 — 상태 칩·신선도 배너·유효/인용금지/열린결함 패널·원장 미가용 고지; index·single·group·predictor·eis·mpm_lab·step5·ledger 8개 템플릿이 import 해 호출하며 금지값 자체는 찍지 않고 (상위 redact + 개수·클레임 id 만) 보여준다",
+  "risk": "low",
+  "risk_why": "webapp/templates/_ledger.html:22 — `{% if f %}` 라서 `ledger_view.context()` 가 freshness=None 을 주는 페이지(PAGE_FRESHNESS 에 `updated` 없음)에서는 신선도 배너가 흔적 없이 사라지고, :47 초록 분기는 findings 축이 빈 페이지(step5·mpm_lab: `findings: []`)에도 '선언된 결함이 모두 검증으로 닫혀 있다'를 찍는다 = 선언을 지우면 초록이 되는 구조(ⓓ)."
+ },
+ {
+  "path": "webapp/templates/ledger.html",
+  "status": "live",
+  "role": "/ledger 페이지 — 상태 카운트·인용금지 등록부 요약·클레임 전수표·열린 결함 표를 렌더하는 정본 상태 화면(이 앱의 모든 값 상태가 여기서 온다고 선언; 본문은 redact 통과분 첫 문장/절단만)",
+  "risk": "high",
+  "risk_why": "webapp/templates/ledger.html:59 — `all_findings|length` 만 찍고 `lv.findings_error` 를 이 페이지 어디서도 렌더하지 않아, findings.json 을 못 읽으면(`webapp/ledger_view.py:72` 가 그 경우를 f_err 로 분리해 두고 `available()` 은 claims 만 본다) '열린 결함 (0건)' + 빈 표가 되어 **읽기 실패가 '열린 결함 없음'** 으로 보인다(ⓒ/ⓓ) — 올바른 경고 분기인 `_ledger.html:90` findings_panel 을 이 페이지만 호출하지 않고, :14–17 은 claims 축 오류만 고지한다."
+ },
+ {
+  "path": "webapp/templates/worklog.html",
+  "status": "live",
+  "role": "/worklog 인덱스 — docs/worklog/weekly_*.md 와 docs/seminar/weekly_*_slide_text.md 를 주차 카드(날짜·종류·제목)로 모아 /worklog/<key> 링크를 내는 목록 화면",
+  "risk": "high",
+  "risk_why": "webapp/templates/worklog.html:23 이 독자에게 '인용 금지값 누수는 CI 의 --ban-sweep 가 막는다 — 이 창구는 통과분만 렌더한다' 고 보증하는데, 원장 findings.json `SELF-34`(P1)가 app.py:4124 의 같은 문장을 지목해 '배너 면제 파일은 금지값을 품은 채 스윕을 통과하므로 그 보증은 성립하지 않는다(그 주석은 아직 안 고쳤다)' 고 등재해 둔 상태다 = 판별력 없는 게이트를 화면에 현행 사실로 적는다(ⓓ)."
+ },
+ {
+  "path": "webapp/templates/worklog_view.html",
+  "status": "live",
+  "role": "/worklog/<key> 상세 — app.py 가 markdown→HTML 로 바꾼 주간 기록 본문을 카드 안에 그대로 렌더하고 날짜·종류 배지를 붙인다(파일 대부분은 그 본문용 CSS)",
+  "risk": "high",
+  "risk_why": "webapp/templates/worklog_view.html:70 `{{ body|safe }}` 가 원문을 redaction 없이 렌더한다 — 같은 산출물 집합(docs/seminar/weekly_*_slide_text.md)을 내보내는 `/api/seminar/doc/<key>` 는 `SELF-34` 수리로 내용 기반 redact 게이트가 걸렸는데 이 창구만 안 걸려 원장이 '⬜ 미조치' 로 적어 둔 자리다(ⓔ, ⓐ 경로 개방); 다만 지금 서빙되는 md 3개는 `ledger_view.redact()` 무변화로 현재 실누수는 없다."
+ },
+ {
+  "path": "skills/dem-analysis-bimodal.md",
+  "status": "superseded",
+  "role": "바이모달(AM_P+AM_S+SE, 6 접촉타입) LIGGGHTS 분석 실행 안내서 — parse → 접촉분류 → fig1~11 + FigS1 생성 커맨드와 그림 목록·스케일(1000x)·의존성을 나열한 산문. 실행 코드는 없고, 인용하는 6개 파이프라인 스크립트 중 5개(generate_figures_bimodal / advanced_analysis_bimodal / generate_advanced_figures_bimodal / bimodal_specific_analysis / generate_figS1_bimodal)가 리포 scripts/ 에 없다 — 그 정본은 설치된 플러그인 스킬 bimodal-dem-analysis/SKILL.md(+scripts/) 이고 이 파일은 frontmatter 없는 축약 사본이라 스킬로 로드되지도 않는다. 리포 안에서 이 파일을 참조하는 코드·설정은 없다(감사 JSON 뿐).",
+  "risk": "none",
+  "risk_why": ""
+ },
+ {
+  "path": "skills/dem-analysis-standard.md",
+  "status": "superseded",
+  "role": "표준모드(AM+SE, 3 접촉타입) LIGGGHTS 분석 안내서 — 파이프라인 커맨드 + 그림 17장 목록 + 판정 문턱표(이온전도/기계/후막) + 'DEM 유효성' 서술(무엇이 예측 가능/불가) + 요약 MD 필수 절 목록. 인용 스크립트 중 generate_figures/advanced_analysis/thick_electrode/deep_electrode 4종이 리포에 없고(정본은 설치 플러그인 liggghts-dem-analysis/SKILL.md, 15.9 KB 판), frontmatter 가 없어 스킬로 로드되지 않으며 리포 내 참조도 없다.",
+  "risk": "high",
+  "risk_why": "skills/dem-analysis-standard.md:94 은 SE percolation >70 % 를 'Good' 으로, :93 은 SE-SE CN >2.4 를 퍼콜 문턱으로 적지만 같은 양을 생산 경로 scripts/analyze_contacts.py(run_analyze_all.py 가 전 케이스 재실행)는 :471 <85 % = critical · :490 CN <3.5 = critical 로 판정하고, :125/:135/:142 의 'porosity ~35 % · SE ~0 % 퍼콜 · 이온전도도 Not Predictive' 는 같은 스크립트 :479 의 'porosity >25 % = 압밀 부족' 경고와 리포 생산 σ_ionic 법칙(퍼콜하는 SE 백본 전제)과 정면 충돌한다 = 같은 양을 생산·보조 경로가 다르게 재고 보조 쪽이 더 느슨한 ⓔ."
+ },
+ {
+  "path": "이종기술/README.md",
+  "status": "live",
+  "role": "이종기술 실험 라인(소립 SC NCM / 5:5 poly 블렌드, SUS 집전체)의 프로젝트 색인 — 조성·셀 스택·EIS 아카이브 구조를 적고, 대칭셀 EIS→STEP3 σ_e 검증 / 풀셀 EIS→STEP4 R_int 앵커로 배선하며 'SUS 집전체 R_int 규약'을 확정 선언한다 (그 규약이 docs/data/rint_eis_anchors.csv 의 lab_sus_pristine 행으로 프로덕션에 살아 있다).",
+  "risk": "high",
+  "risk_why": "이종기술/README.md:38-42 가 SUS R_int≈50 Ω·cm² 를 '정설'로, 출처를 eis/fits/summary_means.csv '(셀이 추가되면 자동 갱신)' 으로 적는데 — ① 그 파일은 .gitignore:32 로 추적 제외라 리포에서 검증 불가이고 ② 2026-08-07 커밋 f63aecca2('앵커로 쓰면 안 된다', 빌드별 앵커 2개로)와 08186c1a9(두 군은 pure SC vs 5:5 블렌드 = 다른 전극, 풀링 평균은 앵커 행 자신의 cathode=NCM811_SC 라벨과 충돌)이 그 평균의 앵커 사용을 기각했는데 README 는 2026-07-22(341fd37ee) 이후 한 글자도 안 바뀌어 표지 없이 현행 사실로 서 있다; claims.json quotation_ban 22개 패턴은 전부 SR-01/plate/platen 계열이라 --ban-sweep 이 이 누수를 원리적으로 못 잡는다 (규율 ④ false-green). 부수적으로 :48 의 아카이브 집계와 :33·:52-53 의 σ_e 밴드도 2026-08-07 신규 3셀(aff6ff415) 이전 값이다."
+ },
+ {
+  "path": "이종기술/eis/eis_overview.png",
+  "status": "data",
+  "role": "아카이브 Nyquist 개관 figure 2패널 — 좌: 대칭셀 4 트레이스(pure-small vs 5:5 bimodal, σ_e 용) · 우: 풀셀 4 트레이스(R_int 용), 둘 다 이미 면적 정규화(Ω·cm²)된 산출물. 수치 주석은 없다.",
+  "risk": "low",
+  "risk_why": "이종기술/eis/eis_overview.png (바이너리 = 줄 없음; 이종기술/README.md:14 가 아카이브 개관으로 광고) 은 9f62d9cf2(2026-07-22) 에 한 번 커밋된 뒤 갱신이 없고 이것을 다시 그리는 코드가 리포에 없어(eis_archive.py 에 plotting 0건, 어떤 savefig 경로도 이 파일명을 참조 안 함) extracted/ 15셀 중 8셀만 보인다 — 빠진 3건이 하필 2026-08-07 에 추가된 Poly_only_sym(프로젝트가 잠근 single>poly 방향과 반대)과 260728 풀셀 2건(풀링 R_int 평균을 움직인 빌드)이라, 보는 사람은 반증 증거가 빠진 개관을 아카이브 전체로 읽게 된다."
+ },
+ {
+  "path": "dem_scripts/ps_sweep_6mah_20260914/README.md",
+  "status": "live",
+  "role": "Runbook + incident record for the five 6 mAh/cm2 P:S LIGGGHTS decks in the same directory: states the single design delta vs the 4/21 generation (AM_P radius 6.0 -> 4.5 um), tabulates predicted particle counts per deck as the post-run acceptance target, gives the mpirun commands, lists the 25 per-case insertion seeds, and documents the two deviations from the original deck (maxattempt 15000 -> 400000, new `processors * * 1`) together with the np<=2 rank ceiling; it is the prose twin of ledger PS-01 (docs/reviews/findings.json:3515) and four of the five decks have not yet completed, so it is the operative doc for an in-flight run.",
+  "risk": "low",
+  "risk_why": "dem_scripts/ps_sweep_6mah_20260914/README.md:63-66 — the prescribed post-run count check cannot run: the `for f in post_ps_*_r45/atom_*.liggghts; do :; done` loop has a no-op body and `$f` is never referenced, while the awk reads a hardcoded `post_ps_7_3_r45/atom_0.liggghts`, yet the deck declares `dump dmp_atom` only at in.ps_7_3_r45.liggghts:192 after cumulative step 400,002, so no `atom_0.liggghts` is ever written and only 1 of the 5 cases would be inspected — this is the very check the README elevates to a stop-ship gate and that PS-01 blames the README for offloading to a human; rated low rather than high because it errors out loudly instead of reporting a false pass, and a working equivalent exists at line 149 (`grep -E \"inserted [0-9]+ particle|Less insertions\"`)."
+ },
+ {
+  "path": "pipeline/PIPELINE.md",
+  "status": "superseded",
+  "role": "2026-06-24 작성된 산문 로드맵 (스스로 \"Controlling roadmap\" 이라 선언) — 도전재(VGCF/SuperP/PTFE) MPM 시딩(Stage 1) → 복셀 σ-map(Stage 2) → SOC breathing 열화(Stage 3) → webapp 3D 뷰어(Stage 1b) 계획 + 재료 물성표 + 'Production recipes' wt%→vol%→섬유수 환산 + frame[4] 교차검증 표적 목록.  실행 코드는 이 파일을 읽지 않고(참조는 docs/phase_b_pipeline_provenance_20260807.md · docs/session_20260909_progress.md 두 문서뿐), 여기 적힌 3단계는 그 뒤 실제로 구현·개정됐다(--add-recipe = mpm3d_compaction.py:608, --save-phase = :466/:3640, 상별 σ 표 = step3_sigma.py:101 electronic_sigma_table, 열화 = cycle_contact_ledger.py) — 그런데 본문의 상태 표시는 여전히 전부 '⏳ Stage 1 / ⏳ / ⏳'.",
+  "risk": "high",
+  "risk_why": "pipeline/PIPELINE.md:126 과 :34 가 CL-81(2026-09-08, live, 원장)이 명시로 철회한 서술 — '복셀 σ_eff ↔ DEM 접촉망 σ_ion = frame[4] 교차검증 / Holm·Stage-E 검증' — 을 표지 없이 현행 목표로 적는다 (CL-81: 복셀 FV 는 접촉망의 CONTACT_FREE 가지 위에 있고 Holm 항이 정확히 0 ⇒ 원리적으로 Holm 을 검증할 수 없다, '두 σ_ion 의 일치를 교차검증으로 인용하지 말 것'); 더해 :46 의 ρ_SE=1.64 와 그것으로 계산한 :57-58 의 vol%·섬유수(재현 확인: 1.64 를 넣어야 그 숫자가 나오고 production 값 2.00 을 넣으면 AM/SE 가 46.9/51.5 → 51.7/46.6 로 바뀐다)가 'Production recipes' 라는 제목 아래 있는데 생산 상수는 scripts/additives.py:25 DENS SE=2.00 이고 :31 주석이 '(was 1.64, an out-of-band low value)' 로 2026-06-30 폐기를 적고 있다(같은 양의 두 계산 = ⓔ); 그리고 이 파일은 scripts/check_review_findings.py:105 BAN_SCAN_GLOBS 에 pipeline/ 가 없어 ban sweep 이 원리적으로 못 읽는 자리다(규율 ⑤ 매체·범위 구멍의 재현).  부차: :47 VGCF σ_e = 5·10⁵ mS/cm(=500 S/cm)은 생산 규약 σ_VGCF=100 S/cm(CL-47 라벨) 및 직경보존 재척도값 어느 쪽과도 다르다."
+ }
+]
