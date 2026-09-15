@@ -196,7 +196,7 @@ footer .m{color:var(--ink-2)}
 }
 </style><div class="wrap">
 <header>
-  <div class="eyebrow">Codex 적대 리뷰 · L1~L5 + 면적 계약 · 원장 findings.json @ 3d47cbe20</div>
+  <div class="eyebrow">Codex 적대 리뷰 · L1~L5 + 면적 계약 · 원장 findings.json @ ee7bf5f3f</div>
   <h1>DEM 스택 적대 리뷰</h1>
   <p class="sub">웹앱의 계산 스택을 다섯 층으로 나눠 독립 검토에 부쳤고, 그 대응이 다시 <em>면적 계약</em> 한 장을 낳았다. 아래는 우리가 믿고 있던 것과, 실제 함수·코퍼스·독립 기준해가 보여준 것이다 — 모든 숫자는 원장에 있고 이 페이지는 거기서 생성된다.</p>
   <div class="tally">
@@ -395,38 +395,85 @@ footer .m{color:var(--ink-2)}
       <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p>두 변이 모두 이제 <b>15/18 로 실패</b>한다.  floor-only 는 실측 띠 <b>0.102338~0.102633</b> 안의 좌표로 옮기고 clamp 경계는 따로 핀해 세 영역이 <b>독립</b> 핀이 됐다.</p><p>⚠ clamp 제거 변이는 여전히 초록인데 그건 구멍이 아니라 <b>진짜 no-op</b> 이다 — <span class="m">max(1−s,0)</span> 이 같은 일을 한다.  Codex 도 CONFIRMED 했다.</p></div></details>
     </div>
   </div>
+  <div class="grp"><h3>LHS 코호트 판독</h3><div class="gsub">ρ 런이 127 케이스 × 3 채널에 생산 솔버를 돌린 부산물 — 코호트 자체가 처음 보였다.</div></div>
+  <div class="ba">
+    <div class="row" id="LHS-03">
+      <div class="rid"><span class="tag P2">LHS-03</span><span class="tag P2">열림</span><span class="ttl">코호트 131 이 그대로 세 채널의 판정 대상이다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p><span class="m">RAW_OK</span> 면 세 채널 다 σ 가 나오고, 봉인이 정한 <span class="m">B_ch</span> 가 곧 코호트 크기다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p><b>이온만 25/127 (19.7 %) 이 관통하지 않는다</b> — 전자·열은 0건.  ⇒ <b>S3 이온 판정 정의역은 최대 102</b> 다.  그리고 이온 σ 가 <b>7,059배</b> 산포한다 (전자 27배 · 열 3.2배) — 이온만 퍼콜 경계를 가로지르기 때문이다.</p></div>
+      </div>
+      <p class="note">★ <b>유한크기가 φ 보다 잘 가른다</b> — 두께/최대입자 &lt;3 에서 막힘률 <b>42.9 %</b>, 5~10 에서 8.3 %.  ⚠ ≥10 이 25 % 로 되오르는 건 n=12 라 잡음일 수 있고 φ 축과 <b>분리 안 됐다</b>.</p>
+      <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p>⚠ 이 σ 는 전부 <b>legacy 팔 = 생산 기본값</b>이고 <b>S3 결과가 아니다</b>.  ρ 리허설이 127 케이스 × 3 채널에 생산 솔버를 돌린 <b>부산물</b>로 코호트가 처음 보인 것이다.</p><p>⚠ 전자 채널 최소 <span class="m">n_nodes = 30</span> — 30 노드짜리 AM–AM 망이 관통 판정을 받았다 (미확인).</p><p>⬜ 봉인기가 이 25건을 <span class="m">OLD_NONE</span> 으로 분류해야 봉인과 ρ 가 <b>같은 데이터를 본 것</b>이다.  다르면 러너의 <span class="m">measured_by_channel</span> 검사가 09-17 에 막는다.</p></div></details>
+    </div>
+    <div class="row" id="LHS-01">
+      <div class="rid"><span class="tag P2">LHS-01</span><span class="tag P2">열림</span><span class="ttl">설계의 <span class="m">se_percolation</span> 열이 퍼콜레이션 여부를 말해 준다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p><span class="m">phi_se_est</span> 를 문턱 0.20 에 대서 만든 라벨이니, 코호트를 거를 때 그것을 보면 된다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p><b>45 % 가 틀린다</b> — <span class="m">BELOW_phic</span> 44건 중 <b>20건이 실제로는 뚫린다</b>.  동전 던지기다.  φ_SE = 0.1720 인 <b>17건은 전부</b> 뚫린다 (문턱 아래인데).  두 집합은 φ_SE 로 <b>완전히 겹친다</b> — 해없음 최대 0.3064 vs 해있음 최소 0.0916.</p></div>
+      </div>
+      <p class="note">⛔ <b>그 열로 코호트를 거르면 실제로 뚫리는 20건을 잘못 버린다.</b></p>
+      <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p>⚠⚠ 이것은 σ_ionic 폼의 <span class="m">φc_P = 0.200 · φc_S = 0.195</span> 가 <b>틀렸다는 뜻이 아니다</b>.  그 값은 <b>σ 함수형에 들어가는 평균장 상수</b>로 코퍼스에 적합·동결된 것이고, <i>"이 침대가 벽에서 벽까지 뚫리는가"</i> 의 판정선이 아니다.  무너지는 것은 <b>그 둘을 같은 것으로 읽는 것</b>뿐이다.</p><p>⚠ 그리고 <span class="m">phi_se_est</span> 는 <b>설계 추정치</b>다 — 실측 φ_SE 열이 LHS-02 대로 비어 있어서, 어긋남 중 얼마가 추정 오차인지 <b>아직 못 가른다</b>.</p></div></details>
+    </div>
+    <div class="row" id="LHS-05">
+      <div class="rid"><span class="tag P3">LHS-05</span><span class="tag P2">열림</span><span class="ttl">ρ 가 작으니 코호트가 수치적으로 안정적이다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>ρ 가 3 % 차단의 20만~42만배 아래니 이 코퍼스의 σ 는 안정적이라고 읽는다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p><b>세 채널의 ρ 를 지배한 케이스가 전부 같은 설계점</b>이다 — φ_SE 0.0916 · am_pct 95 = 코호트에서 <b>SE 가 가장 적은 점</b>.  이온은 <span class="m">lhs00_020</span> 이고 그 σ 는 이온 채널 <b>전체 최소</b>다.</p></div>
+      </div>
+      <p class="note">⇒ 바른 문장은 <b>"최악의 설계점에서도 그만큼"</b> 이다.  퍼콜 문턱 근처에서 망은 <b>가는 실 하나</b>가 되고, 그때 σ 가 행렬 순서·허용오차에 가장 민감해진다.</p>
+      <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p>★ 채널 최대를 잡는 집계 규약이 <b>의도대로</b> 작동한 것이다 (보수적).  중앙값이나 분포를 보고 싶으면 그것은 <b>다른 양</b>이고 따로 등록해야 한다.</p></div></details>
+    </div>
+    <div class="row" id="LHS-04">
+      <div class="rid"><span class="tag P2">LHS-04</span><span class="tag P2">열림</span><span class="ttl">문턱 위면 관통한다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>φ_SE 가 평균장 문턱보다 충분히 크면 SE 망은 벽에서 벽까지 이어진다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p><span class="m">lhs00_009</span> 는 φ_SE <b>0.3064</b> 로 문턱 한참 위이고, <b>같은 φ_SE 형제 20건이 전부 뚫리는데 혼자 막혔다</b>.  솔버가 노드 <b>59,616개</b>를 만들고도 관통 성분을 못 찾았다.</p></div>
+      </div>
+      <p class="note">두께 방향으로 AM_P 가 <b>2.7개</b>, RVE 폭으로 3.3개뿐이다 — φ 가 아니라 <b>유한크기 corner</b> 이고 설계 자신이 <span class="m">thin+n_am_p_low</span> 로 표시해 뒀다.</p>
+      <details class="more"><summary>자세히 — 근거·한정·이력</summary><div class="body"><p>⬜ <b>물리인가 경계 규칙인가</b> — 원장의 열린 P1 <b>L2-04</b> 가 <i>"벽에 닿지 않는 입자 사슬을 관통으로 판정한다 (전극을 내부 15/85 % 로 옮김)"</i> 를 이미 결함으로 등재했다.  이 케이스는 그 축의 <b>반대쪽 면</b>(너무 엄격한 쪽)일 수 있다.</p><p>⛔ <b>아직 결함이라고 부르지 않는다</b> — 얇은 침대에서 관통이 없는 것은 정상일 수 있다.  확인 = 그 케이스에서 솔버의 진단 인쇄를 한 번 보는 것.</p></div></details>
+    </div>
+    <div class="row" id="LHS-02">
+      <div class="rid"><span class="tag P2">LHS-02</span><span class="tag P2">열림</span><span class="ttl">설계 CSV 의 측정 열은 실측을 담고 있다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p><span class="m">phi_se</span> · <span class="m">tortuosity_dijkstra_SE</span> · <span class="m">coverage_AM_*</span> 열이 있으니 실측이 들어 있다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p><b>130/130 전부 비어 있다</b> — <span class="m">_est</span> 추정치만 채워져 있고 측정 쪽은 <b>한 번도 안 채워졌다</b>.</p></div>
+      </div>
+      <p class="note">그 열을 읽는 코드가 있으면 <b>결측을 만나거나 0 으로 채운다</b> — <b>GAP2-05</b>(결측을 0 으로 채워 양의 주장으로 렌더)와 같은 자리다.  ⬜ 소비자 유무 미확인.</p>
+    </div>
+  </div>
 </section>
 <section>
   <h2>고친 것 — 원장이 claimed_fixed 로 적은 것</h2>
   <p class="lede">전부 <span class="m">claimed_fixed</span> 다 — "정말 고쳐졌는가" 는 회귀와 독립 검증자의 몫이고, <span class="m">verified</span> 는 구현자와 다른 검증자가 있어야 붙는다.  SHA 는 리포에 실재하는 커밋이다.</p>
   <div class="fixed-list">
-    <div class="fx-row"><div class="id">AREA-01</div><div class="wt">S0 가 **δ 부재/0 의 native 면적 fallback** 을 누락했다 (0 % ↔ 솔버 100 %)</div><div class="sha">b54ad28a7</div></div>
-    <div class="fx-row"><div class="id">AREA-02</div><div class="wt">S0 는 **raw 행**, 솔버는 **채택된 unique pair** 를 센다 (90 % ↔ 0 %)</div><div class="sha">b54ad28a7</div></div>
-    <div class="fx-row"><div class="id">AREA-03</div><div class="wt">계약의 **새 하한**과 *&quot;A_surface 완전 불변&quot;* 이 정상 탄성 접촉에서 충돌한다 (1.99995배)</div><div class="sha">052acbe4a</div></div>
-    <div class="fx-row"><div class="id">AREA-04</div><div class="wt">영향 표가 **이온 T1 타깃을 Hertz 우선으로 잘못 분류**했다 (실제는 Physics 우선)</div><div class="sha">467341fdf</div></div>
-    <div class="fx-row"><div class="id">AREA-05</div><div class="wt">S0 **selftest 에 판별력이 0** 이었다 — 솔버의 `Rc=0` 분기를 바꿔도 13/13 PASS</div><div class="sha">7fc29330b</div></div>
-    <div class="fx-row"><div class="id">AREA-06</div><div class="wt">계약의 **ψ=0 등가식이 두 문턱을 섞었다**</div><div class="sha">7fc29330b</div></div>
-    <div class="fx-row"><div class="id">AREA-07</div><div class="wt">SELF-28 의 **정수 접촉수는 확정할 수 없다** (저장이 소수 첫째 자리 반올림)</div><div class="sha">052acbe4a</div></div>
+    <div class="fx-row"><div class="id">AREA-01</div><div class="wt">S0 가 <b>δ 부재/0 의 native 면적 fallback</b> 을 누락했다 (0 % ↔ 솔버 100 %)</div><div class="sha">b54ad28a7</div></div>
+    <div class="fx-row"><div class="id">AREA-02</div><div class="wt">S0 는 <b>raw 행</b>, 솔버는 <b>채택된 unique pair</b> 를 센다 (90 % ↔ 0 %)</div><div class="sha">b54ad28a7</div></div>
+    <div class="fx-row"><div class="id">AREA-03</div><div class="wt">계약의 <b>새 하한</b>과 *&quot;A_surface 완전 불변&quot;* 이 정상 탄성 접촉에서 충돌한다 (1.99995배)</div><div class="sha">052acbe4a</div></div>
+    <div class="fx-row"><div class="id">AREA-04</div><div class="wt">영향 표가 <b>이온 T1 타깃을 Hertz 우선으로 잘못 분류</b>했다 (실제는 Physics 우선)</div><div class="sha">467341fdf</div></div>
+    <div class="fx-row"><div class="id">AREA-05</div><div class="wt">S0 <b>selftest 에 판별력이 0</b> 이었다 — 솔버의 <span class="m">Rc=0</span> 분기를 바꿔도 13/13 PASS</div><div class="sha">7fc29330b</div></div>
+    <div class="fx-row"><div class="id">AREA-06</div><div class="wt">계약의 <b>ψ=0 등가식이 두 문턱을 섞었다</b></div><div class="sha">7fc29330b</div></div>
+    <div class="fx-row"><div class="id">AREA-07</div><div class="wt">SELF-28 의 <b>정수 접촉수는 확정할 수 없다</b> (저장이 소수 첫째 자리 반올림)</div><div class="sha">052acbe4a</div></div>
     <div class="fx-row"><div class="id">AREA-08</div><div class="wt">*&quot;16/49 % 가 hemisphere cap 을 검증했다&quot;* 는 성립하지 않는다</div><div class="sha">052acbe4a</div></div>
-    <div class="fx-row"><div class="id">AREA-09</div><div class="wt">계약이 L2 §1 의 **2–4 단계에 답하지 않았다** · 원판 상한만으로 삭제가 안 닫힌다</div><div class="sha">052acbe4a</div></div>
-    <div class="fx-row"><div class="id">AREA-10</div><div class="wt">사전등록 §5 의 **판정 단위(통계량·모집단·미정 상태)가 열려 있다**</div><div class="sha">052acbe4a</div></div>
-    <div class="fx-row"><div class="id">L1-04</div><div class="wt">`contact_area` 는 **기하 교차면적**인데 `hertz` 채널로 읽힌다 (1.9875배)</div><div class="sha">62e67e020</div></div>
-    <div class="fx-row"><div class="id">L2-07</div><div class="wt">`CONTACT_FREE/FULL` 을 **Bruggeman 대 실측**으로 설명한다 (다른 비다)</div><div class="sha">62e67e020</div></div>
-    <div class="fx-row"><div class="id">L2-08</div><div class="wt">**&quot;협착이 전체 저항의 45 %&quot;** 는 전력 기여도가 아니다 (실제 8.1818 %)</div><div class="sha">62e67e020</div></div>
-    <div class="fx-row"><div class="id">L3-06</div><div class="wt">**EXCL 이 23 이 아니라 25개**다 (문서·report 가 낡음)</div><div class="sha">ea11cdaf7</div></div>
-    <div class="fx-row"><div class="id">L3-08</div><div class="wt">EXCL 후 **n_fit = 0 인데 유한 예측·R² = LOO = 0** 을 반환한다</div><div class="sha">63d17bd5f</div></div>
-    <div class="fx-row"><div class="id">L3-10</div><div class="wt">열 plot CLI 가 **PNG 를 만든 뒤 KeyError 로 rc=1** (desc ↔ description)</div><div class="sha">03a5ddecc</div></div>
-    <div class="fx-row"><div class="id">L3-11</div><div class="wt">**설명 세대가 셋**이다 — 그림·CSV·report 를 전사하면 다른 모델을 보고하게 된다</div><div class="sha">6b00e6e5c</div></div>
-    <div class="fx-row"><div class="id">L3-12</div><div class="wt">이온 bootstrap **캐시 키가 중간 y 를 안 본다** (동일 프로세스 한정)</div><div class="sha">63d17bd5f</div></div>
-    <div class="fx-row"><div class="id">L4-03</div><div class="wt">audit 가 **자기신고의 모순을 통과**시킨다 (3/3 trustworthy)</div><div class="sha">03a5ddecc</div></div>
-    <div class="fx-row"><div class="id">L4-04</div><div class="wt">τ 의 **분모·온도·라벨이 소비자마다 다르다** (grade 가 σ_grain 3.0 고정)</div><div class="sha">62e67e020</div></div>
-    <div class="fx-row"><div class="id">L4-06</div><div class="wt">진단 코퍼스 **중복제거가 바이트 수만 본다**</div><div class="sha">63d17bd5f</div></div>
-    <div class="fx-row"><div class="id">L4-07</div><div class="wt">`input_params` 가 있으면 **meta 의 명시적 상 지도를 무시**한다</div><div class="sha">63d17bd5f</div></div>
-    <div class="fx-row"><div class="id">L4-09</div><div class="wt">`Q_gravimetric` 의 **표시식이 실제 175 를 190 으로** 설명한다</div><div class="sha">62e67e020</div></div>
-    <div class="fx-row"><div class="id">L4-11</div><div class="wt">`porosity` 를 **값 크기로 %/fraction 추측**해 1 에서 불연속</div><div class="sha">63d17bd5f</div></div>
-    <div class="fx-row"><div class="id">L5-03</div><div class="wt">**금지 target `use_porosity_pct` 를 학습하고 추천에 쓴다**</div><div class="sha">335247212</div></div>
-    <div class="fx-row"><div class="id">L5-05</div><div class="wt">**대조 전용 `--derived-products` 산물이 일반 배포 모델로** 들어간다</div><div class="sha">335247212</div></div>
-    <div class="fx-row"><div class="id">L5-07</div><div class="wt">**비유한 입력이 정상 배포 표지**로 반환된다 (NaN 이 가드를 통과)</div><div class="sha">03a5ddecc</div></div>
+    <div class="fx-row"><div class="id">AREA-09</div><div class="wt">계약이 L2 §1 의 <b>2–4 단계에 답하지 않았다</b> · 원판 상한만으로 삭제가 안 닫힌다</div><div class="sha">052acbe4a</div></div>
+    <div class="fx-row"><div class="id">AREA-10</div><div class="wt">사전등록 §5 의 <b>판정 단위(통계량·모집단·미정 상태)가 열려 있다</b></div><div class="sha">052acbe4a</div></div>
+    <div class="fx-row"><div class="id">L1-04</div><div class="wt"><span class="m">contact_area</span> 는 <b>기하 교차면적</b>인데 <span class="m">hertz</span> 채널로 읽힌다 (1.9875배)</div><div class="sha">62e67e020</div></div>
+    <div class="fx-row"><div class="id">L2-07</div><div class="wt"><span class="m">CONTACT_FREE/FULL</span> 을 <b>Bruggeman 대 실측</b>으로 설명한다 (다른 비다)</div><div class="sha">62e67e020</div></div>
+    <div class="fx-row"><div class="id">L2-08</div><div class="wt"><b>&quot;협착이 전체 저항의 45 %&quot;</b> 는 전력 기여도가 아니다 (실제 8.1818 %)</div><div class="sha">62e67e020</div></div>
+    <div class="fx-row"><div class="id">L3-06</div><div class="wt"><b>EXCL 이 23 이 아니라 25개</b>다 (문서·report 가 낡음)</div><div class="sha">ea11cdaf7</div></div>
+    <div class="fx-row"><div class="id">L3-08</div><div class="wt">EXCL 후 <b>n_fit = 0 인데 유한 예측·R² = LOO = 0</b> 을 반환한다</div><div class="sha">63d17bd5f</div></div>
+    <div class="fx-row"><div class="id">L3-10</div><div class="wt">열 plot CLI 가 <b>PNG 를 만든 뒤 KeyError 로 rc=1</b> (desc ↔ description)</div><div class="sha">03a5ddecc</div></div>
+    <div class="fx-row"><div class="id">L3-11</div><div class="wt"><b>설명 세대가 셋</b>이다 — 그림·CSV·report 를 전사하면 다른 모델을 보고하게 된다</div><div class="sha">6b00e6e5c</div></div>
+    <div class="fx-row"><div class="id">L3-12</div><div class="wt">이온 bootstrap <b>캐시 키가 중간 y 를 안 본다</b> (동일 프로세스 한정)</div><div class="sha">63d17bd5f</div></div>
+    <div class="fx-row"><div class="id">L4-03</div><div class="wt">audit 가 <b>자기신고의 모순을 통과</b>시킨다 (3/3 trustworthy)</div><div class="sha">03a5ddecc</div></div>
+    <div class="fx-row"><div class="id">L4-04</div><div class="wt">τ 의 <b>분모·온도·라벨이 소비자마다 다르다</b> (grade 가 σ_grain 3.0 고정)</div><div class="sha">62e67e020</div></div>
+    <div class="fx-row"><div class="id">L4-06</div><div class="wt">진단 코퍼스 <b>중복제거가 바이트 수만 본다</b></div><div class="sha">63d17bd5f</div></div>
+    <div class="fx-row"><div class="id">L4-07</div><div class="wt"><span class="m">input_params</span> 가 있으면 <b>meta 의 명시적 상 지도를 무시</b>한다</div><div class="sha">63d17bd5f</div></div>
+    <div class="fx-row"><div class="id">L4-09</div><div class="wt"><span class="m">Q_gravimetric</span> 의 <b>표시식이 실제 175 를 190 으로</b> 설명한다</div><div class="sha">62e67e020</div></div>
+    <div class="fx-row"><div class="id">L4-11</div><div class="wt"><span class="m">porosity</span> 를 <b>값 크기로 %/fraction 추측</b>해 1 에서 불연속</div><div class="sha">63d17bd5f</div></div>
+    <div class="fx-row"><div class="id">L5-03</div><div class="wt"><b>금지 target <span class="m">use_porosity_pct</span> 를 학습하고 추천에 쓴다</b></div><div class="sha">335247212</div></div>
+    <div class="fx-row"><div class="id">L5-05</div><div class="wt"><b>대조 전용 <span class="m">--derived-products</span> 산물이 일반 배포 모델로</b> 들어간다</div><div class="sha">335247212</div></div>
+    <div class="fx-row"><div class="id">L5-07</div><div class="wt"><b>비유한 입력이 정상 배포 표지</b>로 반환된다 (NaN 이 가드를 통과)</div><div class="sha">03a5ddecc</div></div>
   </div>
 </section>
 <section>
@@ -441,5 +488,5 @@ footer .m{color:var(--ink-2)}
   </ol></div>
   <div class="caveat"><b>오늘 내가 세 번 틀린 자리.</b> 기준해에서 축대칭 면적의 2π 를 통째로 빠뜨렸는데 단조·수렴·극한 검사가 전부 초록이었다(일률 배수는 비를 안 바꾼다) · 회귀 핀을 재지 않고 추측해 적었다 · 감사가 "최종 결속 라벨" 과 "가장 작은 cap" 을 섞어 불가능한 결과를 냈다.  셋 다 <b>결과가 그럴듯해서</b> 넘어갈 뻔했고, 셋 다 배수·핀·단조성을 <b>실제로 재는</b> 검사 하나가 잡았다.</div>
 </section>
-<footer>이 페이지는 <span class="m">scripts/build_review_before_after.py</span> 가 <span class="m">docs/reviews/findings.json</span> 에서 생성한다 (HEAD <span class="m">3d47cbe20</span>).  집계·고친 목록·SHA 는 원장 값이고, 서술이 인용하는 숫자는 selftest 가 해당 항목의 note 에서 찾는다.  인용 금지값 스윕(<span class="m">check_review_findings.py --ban-sweep</span>)이 이 파일을 포함한다.</footer>
+<footer>이 페이지는 <span class="m">scripts/build_review_before_after.py</span> 가 <span class="m">docs/reviews/findings.json</span> 에서 생성한다 (HEAD <span class="m">ee7bf5f3f</span>).  집계·고친 목록·SHA 는 원장 값이고, 서술이 인용하는 숫자는 selftest 가 해당 항목의 note 에서 찾는다.  인용 금지값 스윕(<span class="m">check_review_findings.py --ban-sweep</span>)이 이 파일을 포함한다.</footer>
 </div>
