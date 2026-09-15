@@ -120,6 +120,20 @@ INCAR 주석에도 *"기하는 DFT 최소점이 아니다 — E_ads 를 인용�
 > C₁₀F₂₂ and self-doped SDCP systems, for which the change in adsorption energy was below
 > 10 meV. All systems share the same slab and cell, so the same mesh was used throughout.
 
+### ➕ 2026-09-15 추가 — 중성형만 계산한 이유를 물으면
+
+원고 확정본(9/16 제출)은 SDCP 를 *"a single repeat unit in its neutral, protonated form"* 으로만 적고,
+*"자가도핑형은 다루지 않았다"* 는 문장은 **넣지 않았다** (1저자 결정 · 8/23 단일점 각주와 같은 선례).
+물으면 이렇게 답한다 — 범위 선언이지 물리 주장이 아니다:
+
+> The adsorption calculations were restricted to the neutral, protonated repeat unit. The deprotonated
+> (self-doped) form was not included: its surface-adsorption energetics were not resolved within this
+> protocol and are left as a separate question, whereas its electronic structure is treated in the
+> molecular (oligomer) calculations of Supplementary Note 2.
+
+⛔ 여기서 *"표면 측쇄는 해리되지 않은 채 남는다"* 같은 **물리적 이유를 대지 않는다** — 재지 않았다.
+원고 초안에 그 문장이 한 번 들어갔다가 2026-09-15 같이 읽기에서 빠졌다.
+
 ## 곁가지 — Table S1 에서 같이 뺀 것 (2026-08-23)
 
 | 항목 | 뺀 이유 | 물으면 |

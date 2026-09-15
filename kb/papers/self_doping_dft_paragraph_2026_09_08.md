@@ -1,7 +1,7 @@
 ---
 title: "원고 자가도핑 DFT 문단 — 스핀 하나로 좁힌 5문단 (2·3·6 계열)"
 date: 2026-09-08
-updated: 2026-09-08
+updated: 2026-09-15
 tags: [manuscript, dft, sdcp, self-doping, spin, polaron]
 status: 1저자 승인 — 삽입 위치 대기
 kind: manuscript-draft
@@ -363,4 +363,45 @@ PTFE **고분자**로 확장 금지(조각 vs 조각) · 접착력·계면저항
 
 ⚠ 숫자와 구조는 **같은 런(C-12)에서 함께** 온다. 섞으면 안 된다 — 이번에 내가 에너지는 wave1,
 기하는 b00 로 섞어 쓴 사고가 있었다 (wave1 자세는 술포네이트가 표면에서 4.88–5.39 Å 떨어져 있다).
+
+## Methods · DFT(슬랩) 문단 — **확정본 2026-09-15** (1저자 "이걸로 확정" · 9/16 제출본)
+
+> 원장 정합 점검을 마친 판이다 — 값 0개 · 부등호 0개 · 기전 문장 0개 · "converged" 0회 ·
+> 자가도핑형 0회. 인용위험 셋(`HZ-sdcp-wave1-absolute-eads` · `HZ-sdcp-sulfonate-mechanism` · doped 마감)
+> 어디에도 안 걸린다. 기체상 기준 상자(box20/box24 패딩, `sdcp_wave1_results.json`
+> `molecule_reference_box`)와도 맞다.
+
+> **DFT calculations:** Adsorption at the cathode surface was treated with periodic, spin-polarized DFT in
+> Quantum ESPRESSO using the Perdew–Burke–Ernzerhof functional, Grimme D3 dispersion, and a Hubbard
+> correction of U = 6.2 eV on the Ni 3d states.[51,52] Wave functions and the charge density were expanded
+> to 60 and 480 Ry, respectively, with Gaussian smearing of 0.05 eV and a self-consistency threshold of
+> 1 × 10⁻⁶ Ry. The NCM811 surface was approximated by an antiferromagnetic LiNiO₂(104) slab (1 × 4, four
+> layers, 192 atoms, 18.27 × 11.51 Å in plane) with more than 15 Å of vacuum, sampled with a Γ-centered
+> 2 × 3 × 1 mesh and a dipole correction along the surface normal. SDCP was modeled as a single repeat unit
+> in its neutral, protonated form (C₁₁H₁₆O₆S₂), and PTFE as a C₁₀F₂₂ segment. Adsorption configurations
+> were pre-screened over seven surface sites and 48 molecular orientations with a machine-learned
+> interatomic potential, and the lowest-energy configuration found at a surface Li site and at a surface
+> Ni site was then evaluated by DFT. Gas-phase references were relaxed at the Γ point until residual forces
+> fell below 1 × 10⁻³ Ry bohr⁻¹, with the box padding increased from 20 to 24 Å to confirm convergence.
+> Adsorption energies were obtained as follows:
+>
+> E_ads = E_slab+binder − E_slab − E_binder (1)
+>
+> where E_slab+binder, E_slab, and E_binder are the total energies of the adsorbed complex, the clean slab,
+> and the isolated binder, respectively, all evaluated as single points at fixed geometries.
+
+**09-08 판에서 바뀐 것 (2026-09-15 같이 읽기)**
+
+| # | 무엇 | 왜 |
+|---|---|---|
+| ① | *"relaxed at the Γ point **in the same cell**"* → "in the same cell" **삭제** | 분자 기준은 슬랩 셀이 아니라 패딩 상자(20/24 Å)에서 돌았다 — 사실 오류. 뒤 구절 "box padding" 이 상자를 이미 말한다 |
+| ② | *"taken in its protonated form to represent the side chains that **remain undissociated** at the particle surface"* → *"in its neutral, protonated form"* | 재지 않은 물리를 이유로 댄 문장이었다. 범위 선언으로만 |
+| ③ | *"The deprotonated, self-doped form … was not considered"* 문장 — **넣지 않기로** (1저자) | "neutral, protonated form" 이 이미 범위다. 8/23 단일점 각주와 같은 선례 — **안 적고, 물으면 답한다**. 회신용 문장은 `kb/syntheses/sdcp_eads_revision_defense_2026_08_23.md` §회신용 |
+| ⚠ | 제출 전 확인: ③ 삭제 뒤 **"The deprotonated."** 두 단어 꼬리가 남아 있었다 | 확정 직전 붙여넣기에서 발견 — 지운다 |
+
+**이 문단 밖에 남은 것**
+- **Table S1 참고번호** — 표는 `Ref. 48, S1` / `Ref. S2, 49` (09-08 판), 본문은 `[51,52]`. 표를 51/52 로 맞춘다
+  (`docs/manuscripts/table_s1_build.js` 46–47행). MLIP(UMA) 본문 인용은 없음 — SI `Ref. S3` 만. 선택 사항.
+- **코드 표기** — 문단은 QE 문법(60/480 Ry · 1e-6 Ry · 1e-3 Ry/bohr), 원장 wave1 값은 VASP(520 eV · 1e-6 eV ·
+  −0.02 eV/Å). **값을 넣는 날** 둘 중 하나로 맞춘다 (QE 재계산 또는 방법 문단 VASP 화). 값 없는 제출본엔 안 걸린다.
 

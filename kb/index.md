@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-14 · managed-files: 425
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-15 · managed-files: 425
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 224건)
+- 2026-09-15 · `kb/papers/self_doping_dft_paragraph_2026_09_08.md` — 원고 자가도핑 DFT 문단 — 스핀 하나로 좁힌 5문단 (2·3·6 계열) · 1저자 승인 — 삽입 위치 대기
 - 2026-09-14 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-14 · `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나 · 발송됨
 - 2026-09-14 · `kb/reviews/codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 회신 — G4 는 합격선이 아니라 경보. '셀 문제 배제' 는 받아들일 수 없다 · 회신됨
@@ -26,7 +27,6 @@
 - 2026-09-13 · `kb/reviews/codex_BQ6_prompt_eprime_v51_2026_09_13.md` — 회신 BQ-6 프롬프트 — 카드 v5.1: 해제조건 ①②③ 이행 확인 · 회신됨-②미해제
 - 2026-09-13 · `kb/reviews/codex_BQ6_reply_eprime_v51_2026_09_13.md` — 회신 BQ-6 — ①③ 해제 · ② 미해제 (도구가 검사하는 것 ≠ 카드가 선언한 것) · 회신됨-②미해제
 - 2026-09-13 · `kb/reviews/codex_BQ7_prompt_eprime_v52_2026_09_13.md` — 회신 BQ-7 프롬프트 — 카드 v5.2: ② 를 도구 실검사와 맞췄다 (aggregation_eligible) · 발송 대기
-- 2026-09-13 · `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적) · open
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -434,7 +434,7 @@
 - `kb/papers/paper2_FINAL_briefing_2026_05_08.md` — Paper #2 — SE/NCM Adhesion: Final Comprehensive Briefing
 - `kb/papers/paper2_briefing_2026_05_08.md` — Paper #2 — SE/NCM Adhesion Mechanism: Briefing for First-Time Reader
 - `kb/papers/reviewer_qa_methods.md` — Reviewer Q&A Preparation — Computational Methods
-- `kb/papers/self_doping_dft_paragraph_2026_09_08.md` — 원고 자가도핑 DFT 문단 — 스핀 하나로 좁힌 5문단 (2·3·6 계열)  (2026-09-08 · 1저자 승인 — 삽입 위치 대기)
+- `kb/papers/self_doping_dft_paragraph_2026_09_08.md` — 원고 자가도핑 DFT 문단 — 스핀 하나로 좁힌 5문단 (2·3·6 계열)  (2026-09-15 · 1저자 승인 — 삽입 위치 대기)
 - `kb/papers/si_figures_plan.md` — SI Figures Plan — Choi 2025 Analogs
 - `kb/papers/verified_refs_2026_05.md` — Verified Literature References — Paper #1 (2026-05-05)
 - `kb/papers/vesta_adhesion_figure_settings.md` — VESTA Adhesion Figure Settings (Paper)
