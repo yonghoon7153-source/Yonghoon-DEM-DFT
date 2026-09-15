@@ -80,9 +80,27 @@ echo "[dem] 데이터 $DATA"
 #      ⓑ pull 실패 경고가 `echo` 한 줄이라 `--bg` 로 띄우면 스크롤에 묻힌다.
 #    ⇒ **무엇을 섬기는지 항상 말한다**: 기동 전 SHA 를 찍고, origin 과 다르면 배너를 띄운다.
 #      ⛔ 그래도 **멈추지는 않는다** (오프라인에서도 웹앱은 떠야 한다) — 다만 **조용하지 않다**.
+#    ⛔⛔ **그리고 그 둘 다 진짜 원인이 아니었다** (같은 날 저녁에 밝혀짐).  실제 원인은
+#      **워크트리가 다른 브랜치에 있었던 것**이다 — `~/dem-web` 이
+#      `claude/sdcp-dem-manuscript-si-pqwtv8` 에 있었고, 이 런처는 `git pull origin $BR` 로
+#      **체크아웃된 브랜치 이름**을 그대로 쓴다.  그래서 *"엉뚱한 브랜치를 성공적으로"*
+#      당겨 왔고, `@{upstream}` 대조도 그 브랜치 기준이라 **초록**이었다.
+#      ⇒ 위 두 수리 중 어느 것도 이것을 못 잡는다.  **작업 브랜치와 다르면 배너를 띄운다.**
+#      ⛔ 막지는 않는다 (다른 브랜치를 일부러 띄울 때가 있다) — 다만 조용하지 않다.
+EXPECT_BR="${DEM_WEB_BRANCH:-claude/stoic-knuth-NObVQ}"
 _SHA_BEFORE="$(git -C "$CODE" rev-parse --short=9 HEAD 2>/dev/null || echo '?')"
+_CUR_BR="$(git -C "$CODE" rev-parse --abbrev-ref HEAD 2>/dev/null || echo '')"
+if [ -n "$_CUR_BR" ] && [ "$_CUR_BR" != "HEAD" ] && [ "$_CUR_BR" != "$EXPECT_BR" ]; then
+  echo "[dem] ╔══════════════════════════════════════════════════════════════════"
+  echo "[dem] ║ ⚠⚠ 코드 워크트리가 **작업 브랜치가 아니다**"
+  echo "[dem] ║    지금: $_CUR_BR"
+  echo "[dem] ║    기대: $EXPECT_BR   (바꾸려면 DEM_WEB_BRANCH=…)"
+  echo "[dem] ║    ⇒ 아래 pull 은 **그 브랜치**를 당긴다 = 새 코드가 안 온다."
+  echo "[dem] ║       git -C \"$CODE\" switch $EXPECT_BR"
+  echo "[dem] ╚══════════════════════════════════════════════════════════════════"
+fi
 if [ "$PULL" = 1 ]; then
-  BR="$(git -C "$CODE" rev-parse --abbrev-ref HEAD 2>/dev/null || echo '')"
+  BR="$_CUR_BR"
   if [ -z "$BR" ]; then
     echo "[dem] ⚠ git 리포가 아니다 ($CODE) — 최신화를 건너뛴다"
   elif [ "$BR" = "HEAD" ]; then
