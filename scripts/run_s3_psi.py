@@ -248,7 +248,7 @@ def verify_code_bundle(seal: dict) -> str:
     ⚠ 봉인기·러너 자신은 대상이 아니다 (`AREA5-09` 의 Codex 정정: 결과를 보지 않은 상태의
       검사기 수리는 구별 가능하고, 그것까지 막으면 알려진 결함을 그대로 실행하게 된다).
     """
-    from seal_s3_prerun import NUMERIC_MODULES, code_bundle
+    from seal_s3_prerun import NUMERIC_MODULES, code_bundle, verify_bundle_against_tree
     want = seal.get('code_bundle')
     if not want:
         return ('봉인에 `code_bundle` 이 없다 — 어떤 코드가 baseline 을 냈는지 복원할 수 없다 '
@@ -260,10 +260,17 @@ def verify_code_bundle(seal: dict) -> str:
            if (want.get('modules') or {}).get(m) != got['modules'].get(m)]
     if got['numeric_modules_dirty']:
         bad.append(f"지금 작업트리가 수치 모듈을 고치고 있다: {got['numeric_modules_dirty']}")
-    if want.get('git_sha') and seal.get('generation_git_sha') and \
-            want['git_sha'] != seal['generation_git_sha']:
+    #  ⚠ 옛 판은 `want.get('git_sha') and …` 라 **빈 git_sha 면 대조를 통째로 건너뛰었다**
+    #    (git 이 죽으면 `git_sha()` 가 `''` 를 돌려준다) = fail-open.  이제 빈 것도 결함이다.
+    if not (want.get('git_sha') or '').strip():
+        bad.append('봉인의 `code_bundle.git_sha` 가 비었다 (옛 판은 이때 대조를 건너뛰었다)')
+    elif seal.get('generation_git_sha') and want['git_sha'] != seal['generation_git_sha']:
         bad.append(f"봉인 안에서 git_sha 가 갈린다: {want['git_sha'][:9]} vs "
                    f"{seal['generation_git_sha'][:9]}")
+    #  ★★ `AREA5-03` **잔여** — 위 검사들은 전부 *"봉인 ↔ **지금 작업트리**"* 다.  봉인이 적은
+    #    커밋에 **그 바이트가 실제로 있었는지**는 아무도 안 봤다 ⇒ 두 주장이 서로 자유로웠다.
+    if (tree := verify_bundle_against_tree(want)):
+        bad.append(f'커밋 트리 대조: {tree}')
     return '; '.join(bad)
 
 
@@ -896,7 +903,8 @@ def _selftest() -> int:
     #      가짜 봉인을 써서, `AREA5-03` 게이트를 넣자 *"ρ 가 없어서"* 가 아니라 *"코드 신원이
     #      없어서"* rc=2 가 났다 — **검사가 이름과 다른 것을 재고 있었다** (규율 ⑤).
     #      ⇒ 실제 `code_bundle()` 과 실제 등록부 지문을 넣어, 뒤 게이트가 진짜로 발화하게 한다.
-    from seal_s3_prerun import code_bundle as _cb, sha256 as _sha_seal
+    from seal_s3_prerun import (code_bundle as _cb, sha256 as _sha_seal,
+                                blob_sha256 as _blob_sha)
 
     def _consumable(tdp, **over):
         _tsv = ROOT / 'docs' / 'data' / 'area_s2_cohort.tsv'
@@ -944,6 +952,43 @@ def _selftest() -> int:
             sys.argv = ['run_s3_psi.py', '--seal', str(_p), '--rho', '1.0', '--diagnostic',
                         '--cases-root', td]
             chk('⑨c ★ 등록부(코호트 TSV) 지문이 다르면 거부', main() == 2)
+            #   ── ★★ `AREA5-03` **잔여** (2026-09-15) — 봉인의 두 주장을 서로 대조 ──
+            #     옛 판은 *"이 커밋에서 났다"* 와 *"이 바이트였다"* 를 따로 적고 **한 번도
+            #     맞춰 보지 않았다**.  ⇒ `git_sha` 만 옛 커밋으로 바꾼 봉인이 **통과**했다.
+            import subprocess as _sp
+            _m0 = 'network_conductivity.py'
+            _cur = _cb()
+            _hist = _sp.run(['git', '-C', str(ROOT), 'log', '--format=%H', '-30', '--',
+                             f'scripts/{_m0}'], capture_output=True, text=True).stdout.split()
+            _old = next((c for c in _hist
+                         if _blob_sha(c, f'scripts/{_m0}') not in (None, _cur['modules'][_m0])),
+                        '')
+            if _old:
+                _lie = json.loads(json.dumps(_cur))
+                _lie['git_sha'] = _old                       # 바이트는 그대로, 출처만 거짓
+                _p = _consumable(tdp, code_bundle=_lie, generation_git_sha=_old)
+                sys.argv = ['run_s3_psi.py', '--seal', str(_p), '--rho', '1.0', '--diagnostic',
+                            '--cases-root', td]
+                chk(f'⑨e ★★ `git_sha` 가 가리키는 커밋에 **그 바이트가 없으면** 거부 '
+                    f'({_old[:9]} 의 {_m0})', main() == 2)
+            else:
+                chk('⑨e 옛 커밋 픽스처를 찾았다 (이력이 얕으면 이 검사가 공허하다)', False)
+            #   ⑨f fail-open 회귀 — 빈 `git_sha` 는 옛 판에서 대조를 **통째로 건너뛰었다**
+            _blank = json.loads(json.dumps(_cur))
+            _blank['git_sha'] = ''
+            _p = _consumable(tdp, code_bundle=_blank)
+            sys.argv = ['run_s3_psi.py', '--seal', str(_p), '--rho', '1.0', '--diagnostic',
+                        '--cases-root', td]
+            chk('⑨f ★ 빈 `git_sha` 는 **통과가 아니라 거부** (git 실패 시 fail-open 이었다)',
+                main() == 2)
+            #   ⑨g 확인 **불가능**도 거부 — 이 리포에 없는 커밋 (UNVERIFIABLE ≠ 통과)
+            _ghost = json.loads(json.dumps(_cur))
+            _ghost['git_sha'] = 'd' * 40
+            _p = _consumable(tdp, code_bundle=_ghost, generation_git_sha='d' * 40)
+            sys.argv = ['run_s3_psi.py', '--seal', str(_p), '--rho', '1.0', '--diagnostic',
+                        '--cases-root', td]
+            chk('⑨g ★ 리포에 **없는 커밋**을 가리키면 거부 (UNVERIFIABLE 은 통과가 아니다)',
+                main() == 2)
             #   판별력 — 위 셋이 "언제나 rc=2" 라서 통과한 것이 아니다.
             _p = _consumable(tdp)
             sys.argv = ['run_s3_psi.py', '--seal', str(_p), '--rho', '1.0', '--diagnostic',

@@ -102,15 +102,78 @@ NUMERIC_MODULES = ('network_conductivity.py', 'plastic_coverage.py',
 
 def code_bundle() -> dict:
     """계산에 실제로 쓰인 코드의 신원 — git 상태 + 수치 모듈 지문 (`AREA5-03` ⓐ)."""
-    dirty = subprocess.run(['git', '-C', str(ROOT), 'status', '--porcelain', '--',
-                            *[f'scripts/{m}' for m in NUMERIC_MODULES]],
-                           capture_output=True, text=True).stdout.strip()
+    #  ⚠⚠ 옛 판은 `stdout.strip()` 을 먼저 해서 **첫 줄의 선행 공백**을 지웠다.
+    #    `git status --porcelain` 은 `XY PATH` (상태 2자 + 공백) 이므로 `ln[3:]` 이 맞는데,
+    #    공백이 지워진 첫 줄만 **경로 첫 글자를 먹었다** (`scripts/…` → `cripts/…`).
+    #    둘째 줄부터는 멀쩡해서 **목록 안에서 첫 항목만 틀리는** 형태였다.
+    #    ★ 재현: 두 모듈을 동시에 더럽히면 `['cripts/network_conductivity.py',
+    #      'scripts/plastic_coverage.py']`.  ⇒ `splitlines()` 로 줄만 나눈다.
+    _p = subprocess.run(['git', '-C', str(ROOT), 'status', '--porcelain', '--',
+                         *[f'scripts/{m}' for m in NUMERIC_MODULES]],
+                        capture_output=True, text=True)
+    #  ⚠ git 이 실패하면 stdout 이 비고 옛 판은 그것을 **"깨끗하다"** 로 읽었다 (fail-open).
+    #    확인 불가는 통과가 아니므로 표시를 남겨 `verify_bundle_against_tree` 가 거부하게 한다.
+    dirty = ([f'<git status 실패 rc={_p.returncode}: {(_p.stderr or "").strip()[:80]}>']
+             if _p.returncode != 0 else
+             [ln[3:] for ln in _p.stdout.splitlines() if ln.strip()])
     return {
         'git_sha': git_sha(),
-        'numeric_modules_dirty': [ln[3:] for ln in dirty.split('\n') if ln.strip()],
+        'numeric_modules_dirty': dirty,
         'modules': {m: sha256(SCRIPTS / m) for m in NUMERIC_MODULES if (SCRIPTS / m).is_file()},
         'python': sys.version.split()[0],
     }
+
+
+def blob_sha256(commit: str, relpath: str):
+    """git 이력 속 그 커밋의 **그 파일 바이트**를 해싱한다.  못 읽으면 `None` (건너뛰지 않는다)."""
+    if not commit:
+        return None
+    p = subprocess.run(['git', '-C', str(ROOT), 'show', f'{commit}:{relpath}'],
+                       capture_output=True)
+    return hashlib.sha256(p.stdout).hexdigest() if p.returncode == 0 else None
+
+
+def verify_bundle_against_tree(bundle: dict) -> str:
+    """`code_bundle` 의 **두 주장을 서로 대조**한다 (`AREA5-03` 잔여, 2026-09-15).
+
+    ⛔⛔ 옛 판은 *"이 커밋에서 났다"*(`git_sha`)와 *"이 바이트였다"*(`modules`)를 **따로**
+      적어 두고 **한 번도 맞춰 보지 않았다**.  둘은 서로 자유로워서, 봉인이 *어떤 커밋이든*
+      가리키면서 *다른 세대의 바이트*를 들고 다닐 수 있었다.
+    ★ **재현 (수정 전)**: 실제 `code_bundle()` 에서 `git_sha` 만 `b8faa52d2` 로 바꾸니
+      (바이트는 HEAD `04295ae48` 것 그대로) 러너의 `verify_code_bundle` 이 **빈 문자열 = 통과**
+      를 냈다.  그 커밋의 `network_conductivity.py` 는 `a2e73718bc0e` 인데 봉인이 든 것은
+      `f419df58e9df` 다 — **그 바이트는 그 커밋에 존재한 적이 없다.**
+
+    ⚠ **fail-closed** — 확인이 *불가능*한 것은 통과가 아니라 거부다:
+      · `git_sha` 가 비었다 (git 이 죽으면 `git_sha()` 가 `''` 를 돌려주고 옛 판은 `and` 로
+        대조를 **통째로 건너뛰었다**)
+      · 그 커밋을 이 리포에서 못 찾는다 (푸시 안 된 커밋 등) — 그러면 *"복원 가능"* 이 거짓이다
+      · 작업트리가 수치 모듈을 고치고 있었다 (dirty 봉인은 git 에서 재현이 안 된다)
+    """
+    if not isinstance(bundle, dict) or not bundle:
+        return '`code_bundle` 이 없다'
+    sha = (bundle.get('git_sha') or '').strip()
+    if not sha:
+        return ('`code_bundle.git_sha` 가 비었다 — git 이 실패했거나 손으로 지운 것이다.  '
+                '커밋 신원이 없으면 "이 코드에서 났다" 를 **복원할 수 없다** (fail-closed)')
+    dirty = bundle.get('numeric_modules_dirty') or []
+    if dirty:
+        return (f'봉인 시점 작업트리가 수치 모듈을 고치고 있었다: {dirty} — '
+                f'그 바이트는 git 에 없으므로 {sha[:9]} 로 재현할 수 없다')
+    mods = bundle.get('modules') or {}
+    if set(mods) != set(NUMERIC_MODULES):
+        return (f'`modules` 가 등록 집합과 다르다 — 봉인 {sorted(mods)} vs '
+                f'등록 {sorted(NUMERIC_MODULES)}')
+    bad = []
+    for m in NUMERIC_MODULES:
+        got = blob_sha256(sha, f'scripts/{m}')
+        if got is None:
+            bad.append(f'{m}: 커밋 {sha[:9]} 에서 읽을 수 없다 (커밋·경로 부재 — '
+                       f'UNVERIFIABLE 은 통과가 아니다)')
+        elif got != mods[m]:
+            bad.append(f'{m}: 봉인이 든 바이트 {mods[m][:12]} 가 커밋 {sha[:9]} 의 '
+                       f'{got[:12]} 와 다르다 — **그 바이트는 그 커밋에 존재한 적이 없다**')
+    return '; '.join(bad)
 
 
 def stamp_provenance_sha(prov: dict, root: Path) -> dict:
@@ -272,11 +335,17 @@ def build_seal(per_channel: dict, cohort: dict, env: dict, tsv: Path, design: Pa
       ⇒ 이것은 "만든 숫자" 가 아니라 **baseline 의 신원**이다.  §A 의 정의역 분류에 쓰인 바로
         그 값이고, 러너는 그것을 **재현해야** 한다.
     """
+    #  ★★ `AREA5-03` 잔여 — **낼 수 없는 봉인은 만들지 않는다** (2026-09-15).  옛 판은
+    #    `code_bundle()` 을 그냥 적었고, 소비 쪽도 그 두 주장을 서로 대조하지 않았다.
+    #    ⇒ 생산 지점에서 먼저 막는다: 여기서 거부되면 애초에 나쁜 봉인이 존재하지 않는다.
+    _cb = code_bundle()
+    if (_why := verify_bundle_against_tree(_cb)):
+        raise ValueError(f'봉인 거부 — 코드 신원을 git 에서 재현할 수 없다: {_why}')
     out = {
         'contract': 'docs/area_contract_20260913.md §5-v4 A·B',
         'sealed_utc': _dt.datetime.now(_dt.timezone.utc).isoformat(timespec='seconds'),
         'generation_git_sha': generation,
-        'code_bundle': code_bundle(),
+        'code_bundle': _cb,
         'cohort_tsv': str(tsv), 'cohort_tsv_sha256': sha256(tsv) if tsv.exists() else '',
         'design_csv': str(design), 'design_csv_sha256': sha256(design) if design.exists() else '',
         'n_cohort_ids': len(cohort),
@@ -558,8 +627,17 @@ def main(argv=None) -> int:
     env_seen = _env_from_recorder(calls_all)
     env_seen['scipy'] = scipy.__version__
     env_seen['python'] = sys.version.split()[0]
-    seal = build_seal(per_channel, cohort, env_seen, Path(a.cohort), Path(a.design_csv), git_sha(),
-                      sigma_old=sigma_old)
+    #  ★ `AREA5-03` 잔여 — 코드 신원이 git 에서 재현 안 되면 여기서 선다.  09-17 에 이것을
+    #    보게 될 사람에게 **무엇을 하면 되는지**까지 적는다 (traceback 은 지시가 아니다).
+    try:
+        seal = build_seal(per_channel, cohort, env_seen, Path(a.cohort), Path(a.design_csv),
+                          git_sha(), sigma_old=sigma_old)
+    except ValueError as e:
+        print(f'\n⛔ {e}')
+        print('   ⇒ 수치 모듈을 고쳤으면 **커밋하고** 다시 돌린다 (stash 도 된다).')
+        print('      봉인은 "이 커밋의 이 바이트로 냈다" 를 주장하므로, git 에 없는 바이트로는')
+        print('      그 주장을 **아무도 검증할 수 없다** — 그래서 통과가 아니라 거부다.')
+        return 2
     for ch, d in seal['channels'].items():
         print(f"  {ch}: B_ch {d['n_B_ch']} · OLD_ZERO {d['n_OLD_ZERO']} · OLD_NONE {d['n_OLD_NONE']}"
               f" · PENDING {d['n_PENDING_BASELINE']} · 순서자리 {d['median_order_positions_1based']}")
@@ -832,6 +910,40 @@ def _selftest() -> int:
     chk('⑫c ★ 수치 모듈의 지문 묶음이 봉인에 들어간다 — "HEAD = 기록 SHA" 만으로는 dirty 를 못 잡는다',
         set((_sl.get('code_bundle') or {}).get('modules', {})) == set(NUMERIC_MODULES),
         str(sorted((_sl.get('code_bundle') or {}).get('modules', {}))))
+    #  ── ★★ ⑫d–⑫g `AREA5-03` **잔여** (2026-09-15) — 두 주장을 서로 대조한다 ──
+    #    옛 판은 *"이 커밋에서 났다"*(`git_sha`)와 *"이 바이트였다"*(`modules`)를 따로 적고
+    #    **한 번도 맞춰 보지 않았다**.  ⇒ 봉인이 아무 커밋이나 가리키면서 다른 세대의
+    #    바이트를 들 수 있었고, 러너도 그것을 **통과**시켰다 (실측 재현).
+    chk('⑫d ★★ 실제로 발행된 봉인의 `code_bundle` 이 **자기 커밋의 트리와 일치**한다',
+        verify_bundle_against_tree(_sl.get('code_bundle') or {}) == '',
+        verify_bundle_against_tree(_sl.get('code_bundle') or {})[:90] or '(일치)')
+    #    판별력 셋 — 위 ⑫d 가 "무엇이든 통과" 라서 초록인 것이 아니다.
+    _good = json.loads(json.dumps(_sl.get('code_bundle') or {}))
+    _hist = subprocess.run(['git', '-C', str(ROOT), 'log', '--format=%H', '-30', '--',
+                            'scripts/network_conductivity.py'],
+                           capture_output=True, text=True).stdout.split()
+    _old = next((c for c in _hist
+                 if blob_sha256(c, 'scripts/network_conductivity.py')
+                 not in (None, _good.get('modules', {}).get('network_conductivity.py'))), '')
+    chk(f'⑫e ★★ `git_sha` 만 옛 커밋으로 바꾸면 **거부** — 바이트는 그대로다 ({_old[:9]})',
+        bool(_old) and '존재한 적이 없다' in verify_bundle_against_tree(dict(_good, git_sha=_old)))
+    chk('⑫f ★ 빈 `git_sha` 는 통과가 아니라 **거부** (git 이 죽으면 그렇게 된다)',
+        'fail-closed' in verify_bundle_against_tree(dict(_good, git_sha='')))
+    chk('⑫g ★ dirty 봉인은 **거부** — 그 바이트는 git 에 없어 재현할 수 없다',
+        '재현할 수 없다' in verify_bundle_against_tree(
+            dict(_good, numeric_modules_dirty=['scripts/network_conductivity.py'])))
+    #  ⑫h ★ dirty 경로 보고가 **첫 줄만 한 글자 먹던** 회귀 (2026-09-15 발견).
+    #    `git status --porcelain` 을 실제로 돌려 파싱만 대조한다 (파일을 더럽히지 않는다).
+    _pl = ' M scripts/network_conductivity.py\n M scripts/plastic_coverage.py\n'
+    _old_parse = [ln[3:] for ln in _pl.strip().split('\n') if ln.strip()]     # 옛 코드
+    _new_parse = [ln[3:] for ln in _pl.splitlines() if ln.strip()]            # 현행
+    chk(f'⑫h ★ porcelain 파싱이 **첫 줄 경로를 안 먹는다** (옛: {_old_parse[0]})',
+        _new_parse == ['scripts/network_conductivity.py', 'scripts/plastic_coverage.py']
+        and _old_parse[0] == 'cripts/network_conductivity.py')
+    #  ⑫i ★ git 실패는 **"깨끗하다"** 가 아니다 — 확인 불가는 거부다 (fail-open 회귀)
+    chk('⑫i ★ `git status` 실패 표시가 들어오면 봉인이 **거부**된다 (옛 판은 깨끗으로 읽었다)',
+        '재현할 수 없다' in verify_bundle_against_tree(
+            dict(_good, numeric_modules_dirty=['<git status 실패 rc=128: not a git repository>'])))
     #  ── ⑬ `AREA5-09` — 시험용 시각으로 만든 산물은 낙인이 찍혀 나간다 ──
     chk('⑬ ★★ `--now` 로 만든 봉인은 `test_only` 다 (러너가 생산 판정에서 거부한다)',
         _sl.get('test_only') is True and _sl.get('test_now_injected') == _INSIDE,
