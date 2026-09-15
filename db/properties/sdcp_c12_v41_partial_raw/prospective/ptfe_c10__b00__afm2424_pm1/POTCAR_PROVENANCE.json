@@ -1,0 +1,35 @@
+{
+ "schema": "potcar_provenance/v1",
+ "species_order": [
+  "Li",
+  "Ni",
+  "O",
+  "C",
+  "F"
+ ],
+ "expected_variants": [
+  "Li_sv",
+  "Ni_pv",
+  "O",
+  "C",
+  "F"
+ ],
+ "titel_lines": [
+  "TITEL  = PAW_PBE Li_sv 10Sep2004",
+  "TITEL  = PAW_PBE Ni_pv 06Sep2000",
+  "TITEL  = PAW_PBE O 08Apr2002",
+  "TITEL  = PAW_PBE C 08Apr2002",
+  "TITEL  = PAW_PBE F 08Apr2002"
+ ],
+ "source_sha256": {
+  "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+  "Ni_pv": "368cd815a19284a5fda64519f43fef792dad8376deb9e2da41aae78b997dc50e",
+  "O": "818f92134a0a090dccd8ba1447fa70422a3b330e708bb4f08108d8ae51209ddf",
+  "C": "253f7b50bb8d59471dbedb8285d89021f4a42ed1a2c5d38a03a736e69125dd95",
+  "F": "53c630871ac675939349fc2b976745ee17808dedc90b5bdde026bc81f0faf456"
+ },
+ "allowlist": "/home/kgy/projects/sdcp_c12_v41_2026_09_11/site_allow.txt",
+ "allowlist_sha256": "8d192587cf8b1b7cec52804d0aff311a99a5c25c471dae230f0b90b8ce13dc49",
+ "allowlist_waived": false,
+ "assembled_sha256": "c7979420bb62ffe4e91a80046635fe9b70f5b9545b32f73dfc26d7340f6a8343"
+}
