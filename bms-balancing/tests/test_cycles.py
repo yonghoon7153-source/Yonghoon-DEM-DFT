@@ -375,6 +375,16 @@ def test_cy_12_gamma_prefit_scan_shape_separates_the_hypotheses(tmp_path):
     flipped = M.fit_gamma_si(q, si_v, si_c[::-1], si_v, gr_c, gr_v, use_dv=True)
     assert flipped.rmse > 100 * ok.rmse, ("방향이 뒤집히면 RMSE 가 자릿수로 튄다", flipped.rmse, ok.rmse)
 
+    # 맞춤 정도 — RMSE 0.47 이 큰지 작은지는 **그것만 보면 모른다.** 측정 dV/dQ 자신의 RMS 가 자다
+    # ("아무것도 예측하지 않는" 모델의 RMSE). 비율이 1 에 가까우면 그 γ 는 잘 맞는 값이 아니라 덜 나쁜 값이다.
+    rms0 = gpr.measured_dvdq_rms(q, si_v, si_c, si_v, gr_c, gr_v)
+    assert rms0 > 0 and np.isfinite(rms0), rms0
+    assert min(ok.rmse_scan) / rms0 < 0.05, ("정답을 심은 자료에서는 잘 맞아야 한다", min(ok.rmse_scan), rms0)
+    # 문헌을 **뒤집어** 못 맞추게 만들면 같은 자가 1 에 가까워진다 — 자가 실제로 크기를 잰다는 증거
+    bad = M.fit_gamma_si(q, si_v, si_c[::-1], si_v, gr_c, gr_v, use_dv=True)
+    bad_rms0 = gpr.measured_dvdq_rms(q, si_v, si_c[::-1], si_v, gr_c, gr_v)
+    assert min(bad.rmse_scan) / bad_rms0 > 0.5, (min(bad.rmse_scan), bad_rms0)
+
     swapped = M.fit_gamma_si(q, si_v, gr_c, gr_v, si_c, si_v, use_dv=True)
     assert abs(swapped.gamma_Si_fit - 0.5) < 1e-3, ("역할 교환은 **상**한에 붙는다", swapped.gamma_Si_fit)
     assert int(np.argmin(swapped.rmse_scan)) == len(swapped.rmse_scan) - 1, swapped.gamma_Si_fit

@@ -47,6 +47,26 @@ from bms_balancing import data as D          # noqa: E402
 from bms_balancing import model as M         # noqa: E402
 
 
+def measured_dvdq_rms(ne_c, ne_v, si_c, si_v, gr_c, gr_v, window: int = 9, poly_order: int = 1) -> float:
+    """측정 dV/dQ **자신의** RMS — "아무것도 예측하지 않는" 모델의 RMSE 다.
+
+    왜 필요한가: RMSE 0.47 이 큰지 작은지는 **그것만 보면 모른다.** 합성 대조군은 6.5e-4 이고 실데이터는
+    0.47~0.50 이다 — 세 자릿수 차이인데, 자가 없으면 "하한에 붙었다" 만 보이고 "어디서도 안 맞는다" 는
+    안 보인다. 비율이 1 에 가까우면 그 γ 는 **잘 맞는 값이 아니라 덜 나쁜 값**이다.
+
+    ⚠ `fit_gamma_si` 의 전처리를 그대로 따라간다 (같은 공통 구간 · 같은 1000 점 · 같은 재정규화 ·
+      같은 `differential` 인자). 한쪽만 바뀌면 이 자가 조용히 틀려지므로 회귀가 둘을 같이 건다.
+    """
+    ne_v2, ne_c2 = M._unique_first(np.asarray(ne_v, float), np.asarray(ne_c, float))
+    si_v2, _ = M._unique_first(np.asarray(si_v, float), np.asarray(si_c, float))
+    gr_v2, _ = M._unique_first(np.asarray(gr_v, float), np.asarray(gr_c, float))
+    v_common = np.linspace(max(ne_v2.min(), si_v2.min(), gr_v2.min()),
+                           min(ne_v2.max(), si_v2.max(), gr_v2.max()), 1000)
+    q = M._pchip(ne_v2, ne_c2, v_common)
+    q = (q - q.min()) / (q.max() - q.min())
+    return float(np.sqrt(np.mean(M.differential(q, v_common, window, poly_order).dvdq ** 2)))
+
+
 def band(scan, rmse, tol: float) -> tuple[float, float, int]:
     """RMSE ≤ 최소·(1+tol) 인 γ 의 **바깥 범위**와 그 점 수 — 폭 작업의 `--width-tol` 과 같은 자다.
 
@@ -123,6 +143,13 @@ def main(argv=None) -> int:
     b_lo, b_hi, b_n = band(scan, rmse, a.band_tol)
     print(f"  식별 띠  RMSE ≤ 최소·(1+{a.band_tol:g}) 인 γ = [{b_lo:.4f}, {b_hi:.4f}]  "
           f"(폭 {b_hi - b_lo:.4f} · 격자 {b_n}/{len(scan)} 점)")
+    rms0 = measured_dvdq_rms(ne_c, ne_v, si_c, si_v, gr_c, gr_v) if not a.no_dv else float("nan")
+    if np.isfinite(rms0) and rms0 > 0:
+        ratio = float(np.min(rmse)) / rms0
+        print(f"  맞춤 정도  최소 RMSE {np.min(rmse):.6g} ÷ 측정 dV/dQ 자신의 RMS {rms0:.6g} = **{ratio:.3f}**")
+        if ratio > 0.5:
+            print("           → 1 에 가깝다. **어느 γ 에서도 안 맞는다** — 보고된 γ 는 잘 맞는 값이 아니라 "
+                  "덜 나쁜 값이다. 끝에 붙었든 안쪽이든 그 값을 자료가 정한 값처럼 쓰지 않는다.")
     if b_hi - b_lo > 0.05:
         print("           → 이 띠가 넓다 — γ 는 **약하게만 식별된다.** 적합값 한 개를 자료가 정한 값처럼 "
               "쓰지 않는다 (§12-5 와 같은 결).")
@@ -143,6 +170,8 @@ def main(argv=None) -> int:
         print("\nGAMMA_SCAN " + json.dumps(
             {"gamma_fit": r.gamma_Si_fit, "rmse": r.rmse, "verdict": verdict,
              "band_tol": a.band_tol, "band": [b_lo, b_hi], "band_n": b_n,
+             "measured_dvdq_rms": rms0, "misfit_ratio": (float(np.min(rmse)) / rms0
+                                                        if np.isfinite(rms0) and rms0 > 0 else None),
              "voltage_common": [lo, hi], "literature": lit_id,
              "scan": [[float(g), float(v)] for g, v in zip(scan, rmse)]}, ensure_ascii=False))
 
