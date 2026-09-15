@@ -253,3 +253,45 @@ def test_production_shares_one_explicit_output_root():
     for line in src.splitlines():
         if "scripts/provenance.py" in line and "--verify-unit" not in line and "--check-run-id" not in line:
             assert '"$OUT"' in line, ("기록용 호출이 명시 root 를 안 넘긴다", line.strip())
+
+
+# ── 브랜치 이름이 살아 있는 곳은 요청문만이 아니다 (2026-09-15 실측) ─────────────────────────
+
+def _owner_branch() -> str:
+    """루트 `CLAUDE.md` 의 브랜치 표가 정본이다 — 이름을 옮겨 적지 않는다."""
+    import re
+
+    claude_md = ROOT.parent / "CLAUDE.md"
+    if not claude_md.is_file():
+        pytest.skip("루트 CLAUDE.md 가 없다 — 정본을 읽을 수 없다")
+    for line in claude_md.read_text(encoding="utf-8").splitlines():
+        m = re.match(r"\s*\|\s*`(claude/[^`]+)`\s*\|([^|]*)\|", line)
+        if m and "bms-balancing/" in m.group(2):
+            return m.group(1)
+    pytest.fail("CLAUDE.md 브랜치 표에서 bms-balancing/ 소유 브랜치를 못 찾았다")
+
+
+def test_no_script_tells_the_operator_to_push_to_a_retired_branch():
+    """★ 2026-09-15 실측 — `preserve_handoff.sh` 가 마지막에 찍는 안내가
+    **흡수된 서브 브랜치**로 push 하라고 말하고 있었다.
+
+    사용자가 `physical600_b` 원문을 보존하고 그 안내를 그대로 따랐다면, 본진이
+    흡수해 새 커밋을 얹지 않기로 한 브랜치(루트 `CLAUDE.md` 하드룰 1)에 1 GB 짜리
+    묶음의 보존 커밋이 올라갔을 것이다. 요청문 쪽은
+    `test_review_request_clones_the_branch_that_owns_bms_balancing` 이 막고 있었고
+    **스크립트 쪽은 아무도 안 봤다** — 2026-08-20 에 여덟 곳이 대체된 이름을 붙들고
+    있던 것과 같은 형태다.
+
+    사람이 그대로 복사해 치는 줄이므로, 이름은 **정본 하나**에서만 온다.
+    """
+    import re
+
+    owner = _owner_branch()
+    bad = []
+    for path in sorted(ROOT.glob("scripts/*.sh")) + sorted(ROOT.glob("scripts/*.py")):
+        for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            for br in re.findall(r"claude/[A-Za-z0-9._/-]+", line):
+                if br != owner:
+                    bad.append(f"{path.name}:{n}: {br}")
+    assert not bad, (
+        f"스크립트가 소유 브랜치(`{owner}`)가 아닌 이름을 찍는다:\n  " + "\n  ".join(bad))

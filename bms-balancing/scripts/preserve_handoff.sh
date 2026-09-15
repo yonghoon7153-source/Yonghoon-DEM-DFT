@@ -211,10 +211,21 @@ echo
 echo "══ 7. 다음 (사람이 확인하고 친다) ══════════════════════════════════"
 MAN_REL="$(cat "$TMP/.man_rel" 2>/dev/null || echo '')"
 PREFIX="$(git rev-parse --show-prefix)"          # 저장소 루트에서 본 이 디렉터리
+# ⚠ 2026-09-15 — 이 안내가 **본진이 흡수한 서브 브랜치**로 push 하라고
+#   찍고 있었다. 사람이 그대로 복사해 치는 줄이라, 그대로 따랐으면 새 커밋을 얹지 않기로 한
+#   브랜치에 1 GB 짜리 보존 커밋이 올라갔을 것이다 (루트 `CLAUDE.md` 하드룰 1). 이름은 이제
+#   **정본 하나**(그 브랜치 표)에서 읽는다 — 옮겨 적지 않는다. 회귀는
+#   `tests/test_r15_open_items.py::test_no_script_tells_the_operator_to_push_to_a_retired_branch`.
+OWNER="$(sed -n 's/^\s*|\s*`\(claude\/[^`]*\)`\s*|.*bms-balancing\/.*$/\1/p' \
+           "$HERE/../CLAUDE.md" 2>/dev/null | head -1)"
+if [ -z "$OWNER" ]; then
+  OWNER="$(git rev-parse --abbrev-ref HEAD)"
+  echo "  ⚠ 루트 CLAUDE.md 의 브랜치 표를 못 읽었다 — 지금 브랜치($OWNER)로 적는다. 확인할 것."
+fi
 cat <<NEXT
   git add "$DEST"
   git commit -m "bms: ${NAME} 원문 보존 (md·json·csv·txt; mph·log·java·py·그림 제외)"
-  git push -u origin claude/bms-alpha-beta-verify
+  git push -u origin ${OWNER}
 
   그 다음 커밋 안의 bytes 를 재대조한다 (줄끝 정규화가 안 먹었는지 — 이 스크립트의 존재 이유).
   ⚠ 두 가지를 틀리기 쉽다: 'git show HEAD:<경로>' 는 **저장소 루트** 기준이고,
