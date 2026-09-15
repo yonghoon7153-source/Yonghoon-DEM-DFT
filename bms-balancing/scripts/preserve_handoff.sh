@@ -90,8 +90,14 @@ echo "══ 4. manifest 찾기·자체 해시 대조 ════════�
 # ⚠ 묶음에는 **이전 묶음의 manifest 가 같이 들어온다** (late_cap_a 에 radial320_timecap 것이 딸려 왔고,
 #   core16_control 에는 셋이 들어온다). `head -1` 로 아무거나 집으면 엉뚱한 것으로 보존한다.
 #   `--expect-manifest-sha` 를 주면 **그 해시를 가진 것**을 고른다 — 못 찾으면 멈춘다.
-ALL_MAN="$(find "$TMP" -name package_manifest.json -type f | sort)"
-[ -n "$ALL_MAN" ] || { echo "! package_manifest.json 을 못 찾았다" >&2; exit 1; }
+# ⚠ 2026-09-15 — 묶음마다 manifest 이름이 다르다. `desktop_postproc` 은 `manifest.json` 이고,
+#   그 해시가 정확히 전달값이었는데 이 줄이 `package_manifest.json` 만 찾아서 "ZIP 안에 없다" 로
+#   멈췄다 (실제로 찾은 것은 재사용 증거로 딸려 온 **이전 묶음의** package_manifest 하나뿐).
+#   멈춘 것 자체는 옳다 — 엉뚱한 manifest 로 보존하면 무엇을 대조한 것인지 알 수 없다.
+#   넓히는 것은 **후보 집합**뿐이고, 고르는 것은 여전히 `--expect-manifest-sha` 다 (fail-closed 유지).
+#   이름에 manifest 가 들어간 것을 전부 담지는 않는다 (`normal_raw_csv_manifest.json` 같은 것이 있다).
+ALL_MAN="$(find "$TMP" \( -name package_manifest.json -o -name manifest.json \) -type f | sort)"
+[ -n "$ALL_MAN" ] || { echo "! package_manifest.json / manifest.json 을 못 찾았다" >&2; exit 1; }
 N_MAN="$(printf '%s\n' "$ALL_MAN" | wc -l)"
 if [ "$N_MAN" -gt 1 ]; then
   echo "  ⚠ manifest 가 $N_MAN 개다 (이전 묶음 것이 같이 들어왔다):"

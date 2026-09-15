@@ -69,8 +69,13 @@ fail-closed 실측 — `PROMOTION_DECISIONS.json` 을 치우면 정본 `out/` �
 **COMSOL (2026-09-15)**: 물리축 B(300→600) 원문이 저장소에 들어왔고 **우리가 원시 CSV 로 다시
 셌다** — `scripts/recheck_physical600_b.py`. 여덟 창 전부에서 묶음 보고값·수신 측 재계산·우리
 재계산이 표본 수·최대값·최대 시각·전극·위치까지 같다. 시간 이력(986 구간)도 재계산으로 확인했다.
-`docs/COMSOL_REBUILD_SPEC.md` §19 의 전달값 배너를 내렸다. Desktop 부분 후처리(§20)는 ZIP 의
-manifest 해시가 전달값과 안 맞아 보존이 멈춰 있다 — 진단 대기.
+`docs/COMSOL_REBUILD_SPEC.md` §19 의 전달값 배너를 내렸다.
+
+Desktop 부분 후처리(§20)는 보존이 한 번 멈췄고 **원인이 우리 스크립트였다.** 그 묶음의
+manifest 이름은 `manifest.json` 인데 `preserve_handoff.sh` 가 `package_manifest.json` 만
+찾았다. ZIP 의 크기·SHA 는 전달값과 정확히 일치했고 `manifest.json` 의 해시도 전달값 그대로였다 —
+스크립트가 찾은 것은 재사용 증거로 딸려 온 **이전 묶음의** package_manifest 하나뿐이었다.
+후보 집합만 넓혔다 (고르는 것은 여전히 `--expect-manifest-sha`, fail-closed 유지).
 
 **남은 열린 것**: 조건 6(동적 인증) · 조건 8(다섯 축) · `openpyxl` 이 `ENV_KEYS` 에 없음 ·
 r11 `publish:profile_partial_stdout` 대체 증거. 그리고 **실데이터 폭 측정**(`--w-dqdv 0 ↔ 1`)
@@ -385,7 +390,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 327 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 328 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

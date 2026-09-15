@@ -318,3 +318,42 @@ def test_the_printed_recheck_block_says_where_to_stand():
         "복사해 치면 FileNotFoundError 다")
     assert head.index("git rev-parse --show-toplevel") > head.rindex("git push -u origin"), (
         "루트로 옮기는 줄이 git push 안내보다 앞이다 — 그러면 그 세 줄이 깨진다")
+
+
+def test_the_manifest_search_finds_both_bundle_conventions(tmp_path):
+    """★ 2026-09-15 실측 — `desktop_postproc` 묶음의 manifest 는 이름이 `manifest.json` 인데
+    스크립트는 `package_manifest.json` 만 찾았다.
+
+    ZIP 의 크기·SHA 는 전달값과 정확히 일치했는데도 4 단계에서 "전달값을 가진 manifest 가
+    ZIP 안에 없다" 로 멈췄다. 실제로는 있었다 — 그 ZIP 안의 `manifest.json` 해시가 바로
+    전달값 `134ceb89…` 이고, 스크립트가 찾은 것은 **재사용 증거로 딸려 온 이전 묶음의**
+    `package_manifest.json`(`7945b6a7…`) 하나뿐이었다.
+
+    멈춘 것 자체는 옳다 (엉뚱한 manifest 로 보존하면 무엇을 대조한 것인지 알 수 없다).
+    고칠 것은 **후보 집합**이다. `--expect-manifest-sha` 가 해시로 고르므로 이름을 넓혀도
+    fail-closed 는 그대로다.
+
+    스크립트의 `find` 표현식을 그대로 꺼내 임시 트리에서 돌린다 — 소스에 그 이름이
+    적혀 있는지가 아니라 **실제로 찾는지**를 잰다.
+    """
+    import re
+    import subprocess
+
+    src = (ROOT / "scripts" / "preserve_handoff.sh").read_text(encoding="utf-8")
+    m = re.search(r'ALL_MAN="\$\(find "\$TMP" (.+?) -type f \| sort\)"', src)
+    assert m, "manifest 후보를 찾는 줄의 모양이 바뀌었다 — 시험을 고칠 것"
+    expr = m.group(1)
+
+    (tmp_path / "outputs" / "desktop").mkdir(parents=True)
+    (tmp_path / "manifest.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "outputs" / "desktop" / "package_manifest.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "outputs" / "desktop" / "normal_raw_csv_manifest.json").write_text("{}", encoding="utf-8")
+
+    r = subprocess.run(["bash", "-c", f'find "$1" {expr} -type f | sort', "_", str(tmp_path)],
+                       capture_output=True, text=True, timeout=60)
+    assert r.returncode == 0, r.stderr[-400:]
+    found = {pathlib.Path(x).name for x in r.stdout.split()}
+    assert found >= {"manifest.json", "package_manifest.json"}, (
+        "두 묶음 규약 중 하나만 찾는다 — desktop_postproc 이 여기서 멈췄다", sorted(found))
+    assert "normal_raw_csv_manifest.json" not in found, (
+        "이름에 manifest 가 들어간 것을 전부 후보로 삼으면 골라야 할 것이 늘기만 한다", sorted(found))
