@@ -354,6 +354,16 @@ def test_cy_12_gamma_prefit_scan_shape_separates_the_hypotheses(tmp_path):
     assert gpr._shape(g, (g - 0.25) ** 2 + 1.0)[0] == "INTERIOR"
     assert gpr._shape(g, np.full(60, 1.0) + 1e-6 * g)[0] == "FLAT"
 
+    # 식별 띠 — 적합값 하나가 아니라 **그 둘레가 얼마나 평평한가**. 폭 작업의 `--width-tol` 과 같은 자다.
+    bowl = (g - 0.25) ** 2 + 1.0
+    lo, hi, n = gpr.band(g, bowl, 0.01)
+    assert lo < 0.25 < hi and n >= 2, (lo, hi, n)
+    assert all(bowl[i] <= bowl.min() * 1.01 for i, x in enumerate(g) if lo <= x <= hi), (lo, hi)
+    tight_lo, tight_hi, _ = gpr.band(g, bowl, 0.0001)
+    assert (tight_hi - tight_lo) <= (hi - lo), "허용을 좁히면 띠가 넓어질 수 없다"
+    flat_lo, flat_hi, flat_n = gpr.band(g, np.full(60, 1.0), 0.01)
+    assert flat_n == 60 and flat_lo == g[0] and flat_hi == g[-1], "완전 평평하면 띠가 스캔 전체다"
+
     si_c, si_v, gr_c, gr_v = _lit_curves()
     g_true = 0.224                                            # §12 의 pyDMA blend 값
     q = g_true * si_c + (1 - g_true) * gr_c

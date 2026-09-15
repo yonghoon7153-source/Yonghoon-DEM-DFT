@@ -47,6 +47,18 @@ from bms_balancing import data as D          # noqa: E402
 from bms_balancing import model as M         # noqa: E402
 
 
+def band(scan, rmse, tol: float) -> tuple[float, float, int]:
+    """RMSE ≤ 최소·(1+tol) 인 γ 의 **바깥 범위**와 그 점 수 — 폭 작업의 `--width-tol` 과 같은 자다.
+
+    왜 필요한가: 적합값 하나를 보면 "γ = 0.28" 이지만, 그 둘레가 평평하면 **그 값은 자료가 정한 것이
+    아니다.** 눈으로 스캔을 보고 "평평해 보인다" 고 말하면 그 판단은 문서에만 있는 주장이 된다 —
+    기계가 세게 한다. 격자 위의 값이므로 이 띠도 **하한**이다 (격자 사이는 안 본다).
+    """
+    lim = float(np.min(rmse)) * (1.0 + float(tol))
+    hits = np.asarray(scan, float)[np.asarray(rmse, float) <= lim]
+    return float(hits.min()), float(hits.max()), int(hits.size)
+
+
 def _shape(scan, rmse) -> tuple[str, str]:
     """스캔의 모양 → (판정, 한 줄 설명). **여기서 값을 고치지 않는다 — 읽기만 한다.**"""
     j = int(np.argmin(rmse))
@@ -72,6 +84,8 @@ def main(argv=None) -> int:
     ap.add_argument("--gamma-lb", type=float, default=0.02, help="스캔 하한 (기본 0.02 = Track C)")
     ap.add_argument("--gamma-ub", type=float, default=0.5, help="스캔 상한 (기본 0.5)")
     ap.add_argument("--no-dv", action="store_true", help="dV/dQ 대신 Q(U) 로 맞춘다 (원본 use_dv=false)")
+    ap.add_argument("--band-tol", type=float, default=0.01,
+                    help="식별 띠의 허용 — 최소 RMSE 대비 분수 (기본 0.01 = 1%%). 폭 작업의 --width-tol 과 같은 자")
     ap.add_argument("--json", action="store_true", help="스캔 60 점을 JSON 으로도 찍는다")
     a = ap.parse_args(argv)
 
@@ -106,6 +120,12 @@ def main(argv=None) -> int:
     print(f"  스캔    [{a.gamma_lb}, {a.gamma_ub}] 60 점 · 최소 γ = {scan[int(np.argmin(rmse))]:.6f} "
           f"· RMSE {rmse.min():.6g} ~ {rmse.max():.6g}")
     print(f"  판정    **{verdict}** — {why}")
+    b_lo, b_hi, b_n = band(scan, rmse, a.band_tol)
+    print(f"  식별 띠  RMSE ≤ 최소·(1+{a.band_tol:g}) 인 γ = [{b_lo:.4f}, {b_hi:.4f}]  "
+          f"(폭 {b_hi - b_lo:.4f} · 격자 {b_n}/{len(scan)} 점)")
+    if b_hi - b_lo > 0.05:
+        print("           → 이 띠가 넓다 — γ 는 **약하게만 식별된다.** 적합값 한 개를 자료가 정한 값처럼 "
+              "쓰지 않는다 (§12-5 와 같은 결).")
 
     # 전압 구간은 세 곡선의 **교집합**이다 — 여기가 좁으면 상한에 붙는 서명이 나온다 (머리말 표)
     lo = max(float(np.min(ne_v)), float(np.min(si_v)), float(np.min(gr_v)))
@@ -122,6 +142,7 @@ def main(argv=None) -> int:
     if a.json:
         print("\nGAMMA_SCAN " + json.dumps(
             {"gamma_fit": r.gamma_Si_fit, "rmse": r.rmse, "verdict": verdict,
+             "band_tol": a.band_tol, "band": [b_lo, b_hi], "band_n": b_n,
              "voltage_common": [lo, hi], "literature": lit_id,
              "scan": [[float(g), float(v)] for g, v in zip(scan, rmse)]}, ensure_ascii=False))
 
