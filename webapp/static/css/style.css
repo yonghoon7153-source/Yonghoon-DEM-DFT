@@ -1489,6 +1489,12 @@ mark.hl.is-focus, .rail-i.is-focus {
   word-break: keep-all;
 }
 .pipe-p b { color: var(--ink); }
+/* 한 절 안에서 이야기가 갈릴 때의 소제목 (예: /microshort 6-2) */
+.pipe-sub {
+  font-size: var(--fs-lg); font-weight: 660; margin: 26px 0 12px;
+  padding-left: 11px; border-left: 3px solid var(--accent);
+  word-break: keep-all;
+}
 .pipe-caveat { font-size: var(--fs-sm); color: var(--ink-3); }
 
 /* 읽기 A / 읽기 B — 이 문서 전체가 이 둘 중 어느 쪽이냐를 묻는다 */

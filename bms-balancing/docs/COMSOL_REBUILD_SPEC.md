@@ -1885,3 +1885,168 @@ MPH 로드·직렬화는 별도라고 적혀 있다.
   유한 sigma · sweep.
 - **이 절은 A 후속도 B 도 승인하지 않는다.**
 - 게이트 리뷰(63·64차) · BML 정량화 · α·β 하네스와 **무관**하다 — 합치지 않는다.
+
+## 24. A 준비본 **수신 검토** — B 실행 **NO-GO** (2026-09-15)
+
+> **추가 기록이다. §23 을 덮어쓰지 않는다.** §23 은 "A 단계는 끝나 있었다" 를 적었고 그것은
+> 여전히 맞다 — 코드·계약·시험이 **작성되어 있다**. 이 절은 그 준비본을 수신 측이 **독립으로
+> 검사한 결과**이고, 결론은 **지금 상태로는 B 를 시작할 수 없다**이다.
+>
+> **우리 쪽 COMSOL 호출 0 · 제출 코드 수정 0 · 승인 JSON 변경 0.** 이 절은 읽고 기록한 것뿐이다.
+
+검토자가 직접 적은 경계: **"저장 해 API 복구 경로를 폐기한 판정이 아니라, B 전에 해결 가능한
+A 구현 접점 문제를 분리한 판정"**. 물리 실패도 COMSOL 실패도 아니고 **producer/consumer 접점**이다.
+
+### 24-1. 수신 식별 — 내부 무결성이지 생성본 동일성이 아니다
+
+| 항목 | 수신 PC 관측값 |
+|---|---|
+| 대상 | `COMSOL63_API_RECOVERY_PREPARATION_A.zip` |
+| 크기 | 144,120 bytes |
+| ZIP SHA-256 | `a0fc89f9c89cd3db50bca880118a19ffc885fbbe5682ab52b3e05e5f52fd3573` |
+| `package_manifest` SHA-256 | `ba28e4e95b6a301f097df0c52fc6263d6ddfc40366be5e65639ca92dfc9749fe` |
+| `CODE_MANIFEST` SHA-256 | `b5506a3a907adb8eef4195946d6e5c6abc9bad4100251c8b73d5bc9bec33cb01` |
+| 구성 | **31 payload + manifest = 32 entries** |
+| 내부 검사 | 집합·중복/경로·크기/SHA·CRC·`CODE_MANIFEST` 대조 **통과** |
+
+검토자가 스스로 좁힌 문장: 사전 제시된 **생성 측 raw ZIP SHA 가 없었으므로** 위 값은 *수신본
+식별과 내부 무결성*이지 **생성본과 수신본이 같은 바이트라는 확인이 아니다.** 이 준비본에는
+MPH·기준 CSV 전체·실제 preferences·native class 가 **없다** — 현지 보호 파일/프로세스·정책 원복의
+실행 증거는 이 ZIP 으로 증명할 수 없다.
+
+### 24-2. 발견 셋 (P1) — 원장 번호와 섞지 않는다
+
+검토자가 **"기존 대규모 저장소 게이트의 P0 번호와 혼용하지 않는다"** 고 못박았다. 게이트
+리뷰(63·64차) 원장과 별개 번호다.
+
+| ID | 무엇이 틀렸나 | 자리 | 증상 |
+|---|---|---|---|
+| **P1-R1** | expected 1,143 속성 중 소비자가 **991 만** 고른다 (`sol1/v2` 의 152 제외) | `analyzer.py:83–87` · fixture `test_offline.py:29` · `StoredSolutionRecoveryA.java:207` | 값이 **전부 정확해도** `ValueError: Actual Time/Variables property set differs or unread` |
+| **P1-R2** | 새 Java `row()` 가 **플랫폼 줄바꿈**(`BufferedWriter.newLine()` → Windows CRLF), 계약이 SHA 로 고정한 기준 표는 **LF** | `StoredSolutionRecoveryA.java:49` · `analyzer.py:160` · fixture `:73` | parsed cell 동일인데 raw SHA 불일치 → `ValueError: Info table differs from baseline or truncated` |
+| **P1-R3** | scalar 단위 메타데이터를 **기록만 하고 판정에 소비하지 않는다** | `StoredSolutionRecoveryA.java:127` `evaluate()` · `analyzer.py:96` · fixture `:49` | `Li_N` 단위 한 항목만 `mol/m^2 → mmol/m^2` 로 바꿔도 overall `COMPLETE_WITHIN_DECLARED_RECOVERY_SCOPE` |
+
+**세 건 모두 "정상 입력을 거부한다"(R1·R2) 또는 "틀린 입력을 통과시킨다"(R3) 이고, 실제 COMSOL
+실행 실패의 재현이 아니다.** 실행 **전에** 고칠 수 있는 준비본 문제다.
+
+### 24-3. P1-R1 — 좌변과 우변이 다른 집합을 본다
+
+동봉 `expected_solver.json` 은 1,143 개 속성을 담는다. 분석기 우변은 그 전부를 쓰면서 좌변은
+`sol1/t1` 과 `sol1/v1` 아래만 고른다 → `sol1/v2` 의 **152 개가 빠져** 좌변은 991 이 된다. Java
+snapshot 은 solver feature 전체를 순회하므로 **read-back 에 v2 가 들어오는 것 자체가 비정상이
+아니다.**
+
+```text
+expected_count = 1143
+selected_count = 991
+excluded_groups = {"v2": 152}
+ValueError: Actual Time/Variables property set differs or unread
+```
+
+**원본 양성 fixture 는 expected 를 `sol1/t1/rtol` 하나로 줄여 이 접점을 아예 지나가지 않는다.**
+
+권고된 최소 수정: 비교 범위를 **계약에서 한 번** 정의해 producer read-back 과 소비자가 같은 범위를
+쓰고, 지정 노드 안의 **누락·추가·변경을 각각** 검사하며, 1,143 개 실제 모양의 양성 대조군을 넣어
+t1/v1/v2 각 축의 단일 누락·값 변경·예상 밖 추가가 **그 사유로** 실패하게 한다. **v2 를 근거 없이
+빼거나 expected 를 991 로 잘라 맞추지 않는다.**
+
+### 24-4. P1-R2 — 우리가 `U14-01` 에서 이미 산 값이다
+
+`BufferedWriter.newLine()` 은 `System.lineSeparator()` 를 쓰고 Windows 표준값은 CRLF 다. 계약이
+SHA 로 고정한 이전 B 의 실제 Expression 표 둘은 각각 **LF 33 개 · CRLF 0 개**다.
+
+| 표 | 기존 LF bytes | Windows 새 형식 bytes | parsed cells | raw SHA |
+|---|---:|---:|---|---|
+| `pce1/per1` Expression | 5,444 | 5,477 | 동일 | **다름** |
+| `pce2/per1` Expression | 5,446 | 5,479 | 동일 | **다름** |
+
+검토자가 좁힌 문장: 이것은 **Windows 표준 separator 를 적용한 오프라인 직렬화 재현**이지 현지
+COMSOL JVM 의 실효 `line.separator` 측정도, 새 API 표를 실제 export 한 결과도 아니다. 다만 **현재
+소스에 LF 를 고정하는 계약이 없다.** 원본 합성 시험은 새/기준 양쪽에 **같은 짧은 문자열**을 써서
+실제 serializer 접점을 거치지 않는다.
+
+> **이 저장소는 같은 축에 이미 값을 치렀다 — `U14-01`** (`reviews/R6_LEDGER.md:101`).
+> `atomic_write_csv` 가 CRLF 를 쓰는데 `.gitattributes` 가 csv 를 안 덮어 git 이 LF 로 저장 →
+> **디스크 bytes ≠ 커밋 bytes** → fresh clone 에서 sha256 이 안 맞았다. 우리 해법은 writer 를
+> LF 로 고정 + `*.csv`/`*.json text eol=lf` + "줄끝만 다르다" 를 짚는 `verify_unit` 이었고,
+> **해시 검사를 지우거나 기준 SHA 를 갈아끼우지 않았다.** 검토자의 권고도 같다 —
+> "단순 해시 검사 삭제나 기준 SHA 갈아끼우기는 해결이 아니다."
+
+### 24-5. P1-R3 — **신고된 위험은 값으로 소비한다**
+
+Java 의 일반 `evaluate()` 는 expr/data/innerinput 은 확인하지만 지정 unit 배열을 **다시 대조하지
+않는다.** 소비자는 profile 과 guard 단위만 따로 보고 일반 `nglobal`/point/MinLine/MaxLine 에는 같은
+계약 검사를 걸지 않는다.
+
+```text
+control overall = COMPLETE_WITHIN_DECLARED_RECOVERY_SCOPE
+Li_N unit metadata: mol/m^2 -> mmol/m^2
+CSV header: Li_N_mol_m2 (unchanged)
+changed  overall = COMPLETE_WITHIN_DECLARED_RECOVERY_SCOPE
+```
+
+**단위를 기록하는 것과 그 값을 승인 기준과 대조하는 것은 다른 일이다.** 현재 합성 양성 자료는 일부
+scalar tag 에 expr/unit 이 **아예 없어도** 통과한다 — 그래서 승인안의 "단위 불일치는 거부된다" 는
+주장이 아직 뒷받침되지 않는다. 검토자는 이것이 **실제 COMSOL 이 `set("unit")` 을 무시했다는 관측도,
+Li 수치가 틀렸다는 관측도 아니라고** 명시했다.
+
+> **우리 원장의 `R11 P1-9` 와 같은 문장이다** — "신고된 위험은 **값으로 소비한다** (있기만 하면
+> 되는 것이 아니다)" (`scripts/check_u14.py:471`). 우리 쪽 전 판은 `if k in meta` 라 **키를 지우면
+> 검사가 안 돌았고**, 정직하게 신고한 쪽만 rc 2 를 받고 입 다문 쪽은 rc 0 이었다 — 게이트가
+> 침묵에 보상했다. **부재는 안전값이 아니다.**
+
+### 24-6. 재실행 — 38 개는 통과했다, 그리고 그 뜻은 좁다
+
+| 실행 | 결과 | 해석 |
+|---|---|---|
+| 원본 합성 시험, **깊은** 검토 경로 | 38 중 failure 1 / error 3 | 합성 class 파일 생성이 **경로 관련 `FileNotFoundError`** 로 먼저 중단 |
+| 동일 payload, **짧은** `a_prep` 경로 | 38, **failure 0 / error 0**, 약 **5.687 초** | 제출된 합성 시험 통과를 독립 확인 |
+| 별도 계약 경계 검사 | rc 0 (R1/R2/R3 기록) | **rc 0 은 검사 스크립트 완주이지 대상 승인 PASS 가 아니다** |
+| 원본 payload 보존 | 긴/짧은 사본 모두 **31 개 SHA 일치** | 합성 산출물은 새 디렉터리에만 생성 |
+
+Python 3.12.14 · Windows. 최초 경로 문제는 짧은 경로의 **동일 코드**에서 사라져 **B 코드의 COMSOL
+실패로 세지 않았다** (§23-2 의 "실패의 원인을 바꿔 적지 않는다" 와 같은 규율이다). 다만 검토자가
+한 줄 더 붙였다 — **실패 시험은 최종 INCOMPLETE 뿐 아니라 의도한 batch 단계에 실제 도달했는지도
+검증해야 한다.** 최초 실행의 일부 시험은 앞선 파일 생성 실패 때문에 **목표 단계에 도달하지
+못했다.**
+
+**이 38 개는 mock/synthetic 이다.** 실제 API 호환성·private job 의 native 정리·적용/원복 UI 동작을
+검증한 것으로 확대하지 않는다.
+
+### 24-7. 셋 다 우리가 이미 아는 모양이다
+
+| 발견 | 이 저장소가 같은 값을 치른 자리 |
+|---|---|
+| P1-R2 | **`U14-01`** — 줄끝이 서명을 깬다 (`reviews/R6_LEDGER.md:101`). 해법은 **줄끝 고정**이지 검사 삭제가 아니다 |
+| P1-R3 | **`R11 P1-9`** — 신고된 위험은 **값으로 소비한다** (`scripts/check_u14.py:471`). 부재는 안전값이 아니다 |
+| P1-R1 | **`CLAUDE.md` 작업 규율 2** — "새 테스트가 **처음부터 통과**하면 그건 성공이 아니라 **fixture 가 진실을 가리고 있었다**는 신호다". 저쪽 fixture 는 expected 를 **키 하나로 줄여** 접점을 가렸다 |
+
+세 번째가 특히 같다. 우리 쪽에서 4 회 이상 실측된 패턴이 저쪽 준비본에서 **38/38 통과**라는 모양으로
+나타났다. **통과 개수는 덮인 축의 넓이를 말해 주지 않는다.**
+
+### 24-8. 다음 승인 조건 (검토자가 제시)
+
+1. **R1/R2/R3 수정 + 축별 회귀** — v2 를 잘라내거나 표 해시 검사를 삭제해서 숫자를 맞추지 않는다.
+2. **원본 38 개 재실행.**
+3. **실제 동봉 계약을 쓰는 통합 양성 fixture** — 실제 metadata·실제 serializer 가 소비자에 연결되는 것.
+4. 일반 numerical **9 개 모두**의 식/단위/선택 계약 일치.
+5. 수정된 코드·계약·manifest 의 **새 식별(SHA)** 로 **A 보완본** 제출. 이전 ZIP·영수증·실패 자료는 **보존**.
+6. 순서: **A 보완 → 재검토 → B 별도 승인.** 재검토 강도 권고 XHigh, 수정 후 고정 코드의 B 실행은 High, **그리고 사용자 승인을 다시 받는다.**
+
+부수 권고(독립 차단 발견으로 세지 **않은** 것): launcher 의 native fatal 분류가 phase 에 넘어온 **로그
+문자열에 의존**한다 — `batch.log` 와 별도로 저장하는 `batch_console.log` 의 진단 소비도 단계별
+시험으로 확인할 것. **이것만으로 전체 분석이 잘못 PASS 한 사례는 재현되지 않았다.**
+
+### 24-9. 이 절이 **바꾸지 않는** 것
+
+- **§23 을 철회하지 않는다.** A 단계 코드·계약·시험이 작성되어 있다는 사실은 그대로이고, 이 절은
+  그 위에 **"수신 검토 결과 B 는 아직 NO-GO"** 를 얹는다.
+- 두 failed job (`56ef13bee5a448c5a029b02656ebf6bb` 정상 · `28f40815e3a3410aab411ec93cd36fe1` 복구)
+  의 failed 유지. **§20 부분 회수 수용 · 241 좌표 표면 · Li 수지 · 정상 전체 gate INCOMPLETE** 유지.
+- 입력 MPH (`7fefc0cf…`) 는 **이번 검토에서 직접 검사하지 않았다.**
+- 241 좌표 literal 이 이전 기준 source 와 일치한다는 확인은 있으나, **실제 API·native 프로세스
+  정리·정책 적용/원복은 계속 미시험**이다. 전체 current inventory·원격 실행 부재·역사적 333 개를
+  이번 준비본으로 검증했다고 확대하지 않는다.
+- 금지·보류 그대로: **발동 1198** · 후보 C · 장시간 · 12 시간 휴지 · 유한 sigma · sweep ·
+  OCP 외삽 금지 · 기존 실패/원본 보존 · TIME_CAPS raw ZIP 차이 원인 미확인.
+- **이 절은 A 보완도 B 도 승인하지 않는다.** `APPROVAL_B_TEMPLATE.json` 의 `approved` 는 false 다.
+- 게이트 리뷰(63·64차) · BML 열화모드 정량화 · α·β 하네스와 **무관**하다 — 판정을 섞지 않는다.

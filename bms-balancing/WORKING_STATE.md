@@ -79,7 +79,23 @@ fail-closed 실측 — `PROMOTION_DECISIONS.json` 을 치우면 정본 `out/` �
 제일 중요하다 — **다른 PC 에서 기존 launcher 를 그대로 실행하지 말 것** (절대 경로가 박혀 있다).
 본체 ZIP 안의 manifest 지문 넷이 우리 보존 묶음과 일치한다.
 
-`COMSOL_REBUILD_SPEC.md` 에 §20~§23 을 더했다 — §20 Desktop 부분 회수(우리 재계산) ·
+**A 준비본 수신 검토 — B 는 NO-GO (2026-09-15, §24).** 그 준비본이 수신 측으로 건너가 독립
+검사를 받았고 **세 자리가 막혔다**. 포장은 깨끗했고(144,120 B · `a0fc89f9…` · 31 payload +
+manifest, 집합·CRC·크기·SHA 전부 통과) 합성 시험 38 개도 그 기계의 짧은 경로에서 다시 통과했다
+(failure 0 / error 0, 약 5.687 초 — 처음 깊은 경로의 failure 1/error 3 은 경로 관련
+`FileNotFoundError` 라 COMSOL 결함으로 세지 않았다). 막힌 셋: **P1-R1** 기대 속성 1,143 중
+소비자가 991 만 고른다(`sol1/v2` 152 제외) → 값이 전부 맞아도 거부 · **P1-R2** 새 Java `row()`
+가 플랫폼 줄바꿈(Windows CRLF)인데 계약이 SHA 로 고정한 기준 표는 LF (5,444→5,477 ·
+5,446→5,479 bytes, parsed cell 동일) → raw SHA 대조 실패 · **P1-R3** `Li_N` 단위 하나만
+`mol/m^2 → mmol/m^2` 로 바꿔도 overall `COMPLETE_WITHIN_DECLARED_RECOVERY_SCOPE`.
+**셋 다 우리가 이미 값을 치른 축이다** — R2 는 `U14-01`(줄끝이 서명을 깬다) · R3 는
+`R11 P1-9`(신고된 위험은 값으로 소비한다) · R1 은 CLAUDE.md 작업규율 2(fixture 가 진실을
+가린다 — 저쪽 양성 fixture 는 expected 를 `sol1/t1/rtol` **키 하나**로 줄여 접점을 지나가지
+않았다). 검토자가 경계를 직접 적었다 — **"복구 경로를 폐기한 판정이 아니라 B 전에 해결 가능한
+A 구현 접점 문제를 분리한 판정"**. 순서는 **A 보완 → 재검토 → B 별도 승인**이고 `approved` 는
+false 그대로다. 우리 쪽 COMSOL 호출 0 · 제출 코드 수정 0 · 승인 JSON 변경 0.
+
+`COMSOL_REBUILD_SPEC.md` 에 §20~§24 를 더했다 — §20 Desktop 부분 회수(우리 재계산) ·
 §21 그 앞 이야기(정상 guard 가 후처리에서 죽고 API 복구가 파일 읽기에서 막힌 것) ·
 §22 저장 해 API 경로의 실행 전 검토와 **우리 쪽 A 단계 검토 기준 여섯**.
 

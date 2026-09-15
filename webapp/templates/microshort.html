@@ -281,7 +281,7 @@
 
 <!-- ══ 6 ══════════════════════════════════════════════════════════════ -->
 <section class="pipe-sec">
-  <h2 class="pipe-h"><span class="pipe-n">6</span> 다음 단계 — 순서를 뒤집었고, <b>A 는 이미 끝났다</b></h2>
+  <h2 class="pipe-h"><span class="pipe-n">6</span> 다음 단계 — 순서를 뒤집었고, <b>A 는 썼지만 아직 통과하지 못했다</b></h2>
 
   <p class="pipe-p">막힌 자리를 우회하지 않고 정면으로 여는 제안이 나왔다. 저장된 해만
     읽는 전용 후처리 경로를 만드는 것이고, 그러려면 COMSOL 의 파일 접근 범위를 넓혀야
@@ -292,8 +292,9 @@
     <table class="pg-table">
       <thead><tr><th>단계</th><th>무엇을 하나</th><th>지금</th></tr></thead>
       <tbody>
-        <tr><td><b>A</b></td><td>설정을 <b>안 건드린 채</b> 코드·launcher·분석기·출력 계약·오프라인 시험·지문을 만든다</td><td><b>완료</b></td></tr>
-        <tr><td>검토</td><td>다섯 조건과 계약 일치 확인</td><td><b>보류</b> — 인수자가 할 일</td></tr>
+        <tr><td><b>A</b></td><td>설정을 <b>안 건드린 채</b> 코드·launcher·분석기·출력 계약·오프라인 시험·지문을 만든다</td><td><b>작성 완료</b></td></tr>
+        <tr><td>검토</td><td>다섯 조건과 계약 일치 확인</td><td><b>받았다 — 세 자리가 막혔다</b> (아래 6-2)</td></tr>
+        <tr><td><b>A 보완</b></td><td>막힌 세 자리를 고치고 <b>새 지문</b>으로 다시 제출</td><td><b>해야 할 일</b></td></tr>
         <tr><td><b>B</b></td><td>파일 접근 범위를 넓히고 후처리 <b>1 회</b> · 끝나면 원복</td><td><b>미승인·미실행</b></td></tr>
       </tbody>
     </table>
@@ -348,6 +349,51 @@
     준비 문서가 <b>그 실패를 COMSOL 실패나 정책 변경으로 세지 않는다</b>고 명시한다.
     실패의 원인을 바꿔 적지 않는 것이 이 갈래 전체의 규율이다.</p>
 
+  <h3 class="pipe-sub">6-2 그 준비본을 받아서 검사했다 — <b>B 는 아직 NO-GO</b></h3>
+
+  <p class="pipe-p">준비본이 수신 측으로 건너갔고, 거기서 <b>독립으로</b> 열어 봤다.
+    포장 자체는 깨끗했다 — 항목 32 개(payload 31 + 목록 1), 집합·중복·크기·지문·CRC 대조
+    모두 통과. 합성 시험 <b>38 개도 그 기계에서 다시 통과</b>했다 (약 5.7 초).
+    <b>그런데 실제 동봉 계약을 걸어 보니 세 자리가 막혔다.</b></p>
+
+  <div class="pg-tablewrap">
+    <table class="pg-table">
+      <thead><tr><th></th><th>무엇이 틀렸나</th><th>어떻게 드러나나</th></tr></thead>
+      <tbody>
+        <tr><td><b>R1</b></td><td>확인해야 할 속성이 <b>1,143 개</b>인데 검사하는 쪽은 <b>991 개</b>만 고른다 — 한 묶음(152 개)이 통째로 빠진다</td><td>자료가 <b>전부 정확해도 거부</b>된다</td></tr>
+        <tr><td><b>R2</b></td><td>새로 쓰는 표가 <b>Windows 줄바꿈</b>을 쓰는데, 기준으로 고정해 둔 표는 <b>다른 줄바꿈</b>이다</td><td>내용은 <b>글자 하나까지 같은데</b> 지문이 달라 거부된다</td></tr>
+        <tr><td><b>R3</b></td><td>단위를 <b>적어만 두고</b> 판정에 쓰지 않는다</td><td>Li 단위를 <b>1000 배 틀리게</b> 바꿔도 <b>통과</b>한다</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pipe-quote pipe-quote-bad">
+    <p><b>왜 38 개는 이걸 못 잡았나 — 이것이 핵심이다.</b> 시험용 가짜 자료가
+      <b>진짜 계약보다 훨씬 작았다.</b> R1 쪽 가짜 자료는 1,143 개 대신 <b>속성 딱 한 개</b>만
+      담았고, R2 쪽은 새 표와 기준 표 <b>양쪽에 똑같은 짧은 문자열</b>을 넣어 진짜 저장 코드를
+      아예 지나가지 않았다. <b>그래서 통과한 것이 아니라, 검사할 자리에 도달하지 못한 것이다.</b></p>
+    <p>이 저장소가 이미 네 번 넘게 겪은 모양과 같다 — <b>시험이 처음부터 통과하면 그건 성공이
+      아니라 가짜 자료가 진실을 가렸다는 신호다.</b> 그리고 R2 는 우리가
+      <code class="mono">U14-01</code> 에서, R3 는 <code class="mono">R11 P1-9</code>
+      (“신고된 위험은 값으로 소비한다”) 에서 이미 값을 치른 축이다.</p>
+  </div>
+
+  <p class="pipe-p"><b>이것은 무엇이 아닌가.</b> 물리 실패도, COMSOL 실패도, 복구 방식이
+    불가능하다는 결론도 <b>아니다.</b> 검토자가 직접 그렇게 적었다 — <b>“저장 해 API 복구
+    경로를 폐기한 판정이 아니라, B 전에 해결 가능한 A 구현 접점 문제를 분리한 판정”</b>.
+    셋 다 <b>COMSOL 을 부르기 전에</b> 고칠 수 있다.</p>
+
+  <p class="pipe-note"><b>고치는 방향에도 금지가 붙었다.</b> 빠진 152 개를 <b>기준에서
+    잘라내</b> 숫자를 맞추거나, <b>지문 검사를 지워서</b> 통과시키거나, 기준 지문을
+    <b>새것으로 갈아끼우는</b> 것은 해결이 아니다. 줄바꿈을 <b>고정</b>하고, 단위를 <b>실제로
+    대조</b>하고, <b>진짜 크기의 자료로 시험</b>해야 한다.</p>
+
+  <p class="pipe-p"><b>다음 순서.</b> A 보완 → 재검토 → <b>B 는 그 뒤에 따로 승인</b>.
+    재검토 때 필요한 것은 세 자리의 수정과 <b>축별 회귀 시험</b>, 원래 38 개 재실행,
+    <b>진짜 계약을 쓰는 통합 양성 시험</b>, 그리고 수정된 코드의 <b>새 지문</b>이다.
+    이번 검토에서도 COMSOL 호출·설정 변경은 <b>0 회</b>였고, 제출된 코드는 <b>수정하지
+    않았다.</b></p>
+
   <div class="plain">
     <p class="plain-t">쉬운 말로</p>
     <p>막힌 것을 뚫으려면 프로그램에 <b>파일을 읽을 권한</b>을 더 줘야 한다.
@@ -358,6 +404,10 @@
       부르거나 진짜 프로세스를 죽여 본 적은 없다.</p>
     <p>그러니 <b>“준비가 끝났다”와 “될 것이다”는 다른 말이다.</b> 준비 문서가 그 구분을
       스스로 적어 놓았다.</p>
+    <p>그리고 실제로 <b>다른 사람이 받아서 검사해 보니 세 군데가 막혔다.</b> 맞는 자료를
+      넣어도 거부하고, 내용이 같은데 지문이 달라 거부하고, 단위가 1000 배 틀려도 통과한다.
+      <b>가짜 시험 자료가 진짜보다 너무 작아서</b> 38 개 시험이 그 자리에 닿지도 못했던
+      것이다. 고칠 수 있는 문제이고, <b>고친 다음에 다시 검토받는다.</b></p>
   </div>
 </section>
 
@@ -409,14 +459,15 @@
       <tbody>
         <tr><td>격자 아홉 축 · 이번 표본 민감도</td><td>충족 (범위 한정)</td></tr>
         <tr><td>부분 회수한 표 다섯 개의 수치</td><td>우리 재계산으로 확인</td></tr>
-        <tr><td>A 준비 코드 · 합성 시험 38</td><td>작성·통과</td></tr>
-        <tr><td>A 준비 코드의 <b>후속 검토</b></td><td><b>보류</b> — 인수자가 할 일</td></tr>
+        <tr><td>A 준비 코드 · 합성 시험 38</td><td>작성·통과 (수신 PC 에서 재현)</td></tr>
+        <tr><td>A 준비 코드의 <b>수신 검토</b></td><td><b>완료 — 세 자리가 막혔다</b> (R1·R2·R3)</td></tr>
+        <tr><td><b>A 보완</b> (세 자리 수정 + 축별 회귀 + 새 지문)</td><td><b>해야 할 일</b></td></tr>
         <tr><td>실제 API 호환성 · 정책 전파 · 프로세스 격리</td><td><b>실물 미시험</b></td></tr>
         <tr><td>전극별 241 좌표 <b>공간 비교</b></td><td><b>미완</b></td></tr>
         <tr><td>Li 수지 · 나머지 필수 출력</td><td><b>미완</b></td></tr>
         <tr><td>보호식 전체 통과 판정</td><td><b>미완</b> (INCOMPLETE)</td></tr>
         <tr><td>보호식 <b>발동</b> 시험 (임계값 1198)</td><td><b>미실행·미승인</b></td></tr>
-        <tr><td>B 실행</td><td><b>미승인·미실행</b></td></tr>
+        <tr><td>B 실행</td><td><b>미승인·미실행</b> — 수신 검토가 <b>NO-GO</b> 로 못박았다</td></tr>
         <tr><td>전체 수렴 · 장시간 운전 · 유한 sigma · sweep</td><td><b>보류</b></td></tr>
       </tbody>
     </table>
@@ -481,7 +532,8 @@
       <thead><tr><th>무엇</th><th>어디</th></tr></thead>
       <tbody>
         <tr><td>인계 문서 셋 + 묶음 지문</td><td><code class="mono">…/codex63/takeover_20260915/</code></td></tr>
-        <tr><td>재구축 명세 · 진단 §8~§23</td><td><code class="mono">bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code></td></tr>
+        <tr><td>재구축 명세 · 진단 §8~§24</td><td><code class="mono">bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code></td></tr>
+        <tr><td>A 준비본 수신 검토 (R1·R2·R3)</td><td>같은 파일 <b>§24</b></td></tr>
         <tr><td>원본 모델 검토 (v3)</td><td><code class="mono">bms-balancing/docs/MICROSHORT_MPH_REVIEW.md</code></td></tr>
         <tr><td>건너온 묶음 원문 (bytes 보존)</td><td><code class="mono">bms-balancing/reviews/r14_repros/codex63/</code></td></tr>
         <tr><td>우리 재계산 산출 · 코드</td><td><code class="mono">…/RECHECK_*.json</code> · <code class="mono">scripts/recheck_*.py</code></td></tr>
