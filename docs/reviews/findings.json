@@ -3699,7 +3699,7 @@
     "scripts/run_s3_psi.py",
     "scripts/seal_s3_prerun.py"
    ],
-   "claimed_fixed_sha": "e175f1d98"
+   "claimed_fixed_sha": "b277be8d5"
   },
   {
    "id": "AREA5-04",
@@ -3752,7 +3752,7 @@
     "scripts/run_s3_psi.py",
     "scripts/seal_s3_prerun.py"
    ],
-   "claimed_fixed_sha": "e175f1d98"
+   "claimed_fixed_sha": "03516cd08"
   },
   {
    "id": "AREA5-07",
