@@ -292,6 +292,26 @@ def _selftest():
     chk("MC" in rb1["C3"]["resample"] and rb1["C3"]["CI95"] == rb2["C3"]["CI95"],
         "전수 상한 초과 → 고정 시드 MC, 두 번 돌려도 같은 CI")
 
+    # ── ⛔ 2026-09-15: **정본 입력 형식을 읽는가** ────────────────────────
+    #   db/properties/lpsocl_box331_c3_input_d_2026_09_11.json 은 `_출처`·`_단위` 를
+    #   달고 있는데 로더가 `int('_출처')` 로 죽었다. 도구가 자기 정본을 못 읽었다.
+    import tempfile as _tf, os as _os
+    _dd = {"_출처": "이 키 때문에 죽으면 안 된다", "_단위": "cm^2/s",
+           **{str(t): {f"s{i}": D[t] for i in (2, 3, 4)} for t in T}}
+    _fd, _p = _tf.mkstemp(suffix=".json"); _os.close(_fd)
+    pathlib.Path(_p).write_text(json.dumps(_dd, ensure_ascii=False), encoding="utf-8")
+    try:
+        _raw = json.loads(pathlib.Path(_p).read_text(encoding="utf-8"))
+        _raw = {int(k): dict(v) for k, v in _raw.items() if not str(k).startswith("_")}
+        chk(set(_raw) == set(T), "⛔음성: `_출처`·`_단위` 가 있어도 정본 d.json 을 읽는다 (메타키 건너뜀)")
+    except ValueError as _e:
+        chk(False, f"⛔음성 실패: 정본 형식에서 죽었다 — {_e}")
+    finally:
+        _os.unlink(_p)
+    _raw2 = {int(k): dict(v) for k, v in {"_x": {}, "600": {"s2": 1.0}}.items()
+             if not str(k).startswith("_")}
+    chk(600 in _raw2 and len(_raw2) == 1, "⛔음성: 메타키만 건너뛰고 온도키는 남긴다")
+
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
 
@@ -313,7 +333,11 @@ def main():
         ap.error("--d 가 필요하다 (--selftest 제외)")
 
     raw = json.loads(pathlib.Path(a.d).read_text(encoding="utf-8"))
-    raw = {int(k): dict(v) for k, v in raw.items()}
+    # ⛔ 2026-09-15 — `_` 로 시작하는 메타키(`_출처`·`_단위`)를 건너뛴다.
+    #   **정본 입력 파일이 바로 그 키를 갖고 있는데** 도구가 `int('_출처')` 로 죽었다
+    #   (`db/properties/lpsocl_box331_c3_input_d_2026_09_11.json`). 도구가 자기 정본
+    #   형식을 못 읽은 것이다 — 출처를 지우고 돌리라는 뜻이 되어 계보가 끊긴다.
+    raw = {int(k): dict(v) for k, v in raw.items() if not str(k).startswith("_")}
     table, temps, excluded = eligible_table(raw, a.min_per_T)
 
     if a.card:
