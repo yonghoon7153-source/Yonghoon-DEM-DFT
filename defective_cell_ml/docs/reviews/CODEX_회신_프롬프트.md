@@ -141,5 +141,5 @@ medium 15, low 41, note 22, 기각 2다. 즉 **v2는 v1 대비 실질적인 개�
 ## 7. 한 가지 덧붙이면
 
 `docs/reviews/머신러닝_문서별_정독기록.md` 234–235행에 작성자 PC의 절대경로
-(`C:\Users\Administrator\Downloads\...`)가 남아 배포 ZIP에 실려 있다. `MANIFEST.sha256`에도 포함되니 지우고
+(`<USER_HOME>\Downloads\...`)가 남아 배포 ZIP에 실려 있다. `MANIFEST.sha256`에도 포함되니 지우고
 재생성해라.

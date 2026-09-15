@@ -261,7 +261,7 @@ logistic 클래스 인덱스 반전, predict 부등호 반전, 점수 부호 반
 | F35 | 낮음 | low | 미검증 0/0 | 문서 | README.md, config.py | README §4 설정표에 Config 키 7개(group_column, seed, ridge_alphas, logistic_cs, logistic_class_weight,… |
 | F36 | 낮음 | low | 미검증 0/0 | 문서 | README.md, config.py | README 'inner_splits / 최대 3'은 코드와 다름 — 3은 상한이 아니라 기본값이며 validate는 2 이상만 검사하고 축소 기준도 타깃별로 다름 |
 | F38 | 낮음 | low | 미검증 0/0 | 코드 | config.py, extract_capacity.py | Config.validate가 zlib/base64/rot13 같은 비텍스트 codec과 비정수 exclude_cells 키를 DataError로 걸러내지 못해 미포착 Lo… |
-| F39 | 낮음 | low | 미검증 0/0 | 문서 | 머신러닝_문서별_정독기록.md, verify_release.py | docs/reviews 정독기록에 작성자 PC 절대경로(C:\Users\Administrator\…)가 남아 배포 ZIP(MANIFEST 포함)에 실리고, release_v… |
+| F39 | 낮음 | low | 미검증 0/0 | 문서 | 머신러닝_문서별_정독기록.md, verify_release.py | docs/reviews 정독기록에 작성자 PC 절대경로(<USER_HOME>\…)가 남아 배포 ZIP(MANIFEST 포함)에 실리고, release_v… |
 | F40 | 낮음 | low | 확인 2/2 | 코드 | extract_capacity.py | extract_capacity.py는 실패 시 .audit.json을 쓰지 않아 R6가 약속한 파일 해시·실패 사유 기록이 CLI에서 유실되고, 사이드카 파일 규칙이 REA… |
 | F41 | 낮음 | low | 확인 2/2 | 코드 | extract_capacity.py | manifest 경로에서 제외 셀의 'excluded' 감사 이벤트가 cycle·eis 디렉터리마다 중복 기록됨 |
 | F42 | 낮음 | low | 확인 2/2 | 코드 | predict.py | 결과 CSV를 provenance보다 먼저 써서 provenance 실패 시 CSV만 남고, 같은 경로 재실행은 'Output exists'로 막힘 |
