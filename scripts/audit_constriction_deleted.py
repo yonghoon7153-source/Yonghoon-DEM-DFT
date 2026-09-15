@@ -283,19 +283,25 @@ def type_map_from_deck(deck_path):
     return tm, src
 
 
-def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic', 'thermal'),
-               deck_dir=None):
-    """한 케이스 — **솔버가 만든 간선**에서 `R_constriction == 0` 을 센다.
+def case_networks(case_dir, contact_mode='physics',
+                  channels=('ionic', 'electronic', 'thermal'), deck_dir=None):
+    """★★ **한 케이스 → 채널별 net + 원자료 출처** (2026-09-15, `R4-01`·`R4-02`).
 
-    ⚠ 예외를 **비삭제로 만들지 않는다** — 실패는 `error` 로 올리고 `None` 을 돌려준다
-    (옛 판은 helper 예외를 삼켜 분모에는 남기고 삭제는 0 으로 셌다).
+    `audit_case` 와 `seal_s3_prerun` 이 **같은 경로**로 망을 만들게 하려고 뽑아낸 것이다.
+    ⚠ 봉인 도구가 이 일을 **따로 다시 쓰고 있었고**, 그 사본이 세 군데 어긋나 있었다:
+      ⓐ 채널 철자를 `ion`/`electron` 으로 써 `CHANNELS[ch]` 가 **KeyError**
+      ⓑ `type_map` 을 덱으로 안 채우고 `plate_z=None` 을 넘겨 **NoneType 산술 오류**
+      ⓒ 그 예외를 전부 `NO_NETWORK` 로 삼켜 **기술 오류가 '망이 없음' 으로 둔갑**하고
+         세 `B_ch` 가 0개인 채로 봉인이 `rc=0` 으로 나갔다
+    ⇒ 사본을 없앤다.  **예외는 올린다** — 부르는 쪽이 `ERROR` 로 남기고 허가를 발행하지 않는다.
+
+    → `(nets: {채널: net}, prov: dict)`.  `prov` 는 무엇을 **실제로 읽었는지** 적는다
+      (`R4-02`: 봉인이 인용한 지문과 읽은 파일이 달라질 수 있었던 자리).
     """
     atoms, type_map, scale, _meta, contacts, source = load_case_any(case_dir)
-    #  ★ 덱이 있으면 **그것이 정본**이다 — meta.json 의 손으로 적은 지도보다 우선한다
-    #    (케이스마다 type 구성이 다르다는 것을 실측으로 확인했다).
     deck_used = ''
     if source == 'raw' and not deck_dir:
-        raise ValueError(f'{case_dir.name}: 원본 덤프 경로에는 type_map 이 없다 — --deck-dir 필수')
+        raise ValueError(f'{case_dir.name}: 원본 덤프 경로에는 type_map 이 없다 — deck_dir 필수')
     if deck_dir:
         cands = [Path(deck_dir) / case_dir.name / f'input_{case_dir.name}.liggghts',
                  Path(deck_dir) / f'input_{case_dir.name}.liggghts']
@@ -304,46 +310,68 @@ def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic'
             raise ValueError(f'덱을 못 찾았다: {[str(p) for p in cands]}')
         type_map, _src = type_map_from_deck(dk)
         deck_used = str(dk)
+    if not type_map:
+        raise ValueError(f'{case_dir.name}: type_map 이 비었다 — 채널 필터가 사라진다')
     if not contacts:
         raise ValueError('접촉 행이 0개')
     plate_z = _SED.estimate_plate_z(atoms)
-    #  box: 최소영상이 절대 안 걸리게 넉넉히 (삭제 집계는 상자에 불변 — 헤더 참조)
+    if plate_z is None:
+        raise ValueError(f'{case_dir.name}: plate_z 를 추정할 수 없다 — '
+                         f'None 을 넘기면 build_network 가 NoneType 산술로 죽는다')
     span = max((max(a['x'] for a in atoms.values()) - min(a['x'] for a in atoms.values()),
                 max(a['y'] for a in atoms.values()) - min(a['y'] for a in atoms.values()),
                 1e-9))
     box = span * 1000.0
-
     from collections import Counter as _C
     type_hist = _C(a['type'] for a in atoms.values())
-    all_types = sorted(type_hist)
-    row = {'case': case_dir.name, 'contact_mode': contact_mode, 'source': source,
-           'atom_step': _step_of(_meta.get('atom_file', '')) if _meta.get('atom_file') else '',
-           'contact_step': _step_of(_meta.get('contact_file', '')) if _meta.get('contact_file') else '',
-           'n_contact_rows': len(contacts),
-           'type_hist': ';'.join(f'{t}:{type_hist[t]}' for t in all_types),
-           'type_map': ';'.join(f'{k}={v}' for k, v in sorted(type_map.items())),
-           'deck': deck_used}
+    prov = {'case': case_dir.name, 'source': source, 'deck': deck_used,
+            'atom_file': _meta.get('atom_file', ''), 'contact_file': _meta.get('contact_file', ''),
+            'atom_step': _step_of(_meta.get('atom_file', '')) if _meta.get('atom_file') else '',
+            'contact_step': _step_of(_meta.get('contact_file', '')) if _meta.get('contact_file') else '',
+            'n_contact_rows': len(contacts), 'plate_z': plate_z, 'scale': scale,
+            'type_hist': dict(sorted(type_hist.items())),
+            'type_map': dict(sorted(type_map.items()))}
+    nets = {}
     for ch in channels:
+        if ch not in CHANNELS:
+            raise ValueError(f'알 수 없는 채널 {ch!r} — 정본 키는 {sorted(CHANNELS)} 다.  '
+                             f'철자가 다르면 KeyError 가 `NO_NETWORK` 로 둔갑한다 (R4-01 ⓐ)')
         mode, pick = CHANNELS[ch]
         tt = pick(type_map)
-        #  ⚠ 빈 선택을 **전체로 대체하지 않는다** — 그러면 채널 필터가 조용히 사라진다.
         if not tt:
-            raise ValueError(
-                f'채널 {ch}: type_map 에서 고른 target_types 가 비었다.  '
-                f'type_map={dict(sorted(type_map.items()))} · '
-                f'원자 type 분포={dict(type_hist)}')
-        net = _NC.build_network(atoms, contacts, tt, scale,
-                                plate_z, box_x=box, box_y=box,
-                                mode=mode, type_map=type_map,
-                                contact_mode=contact_mode)
-        #  `build_network:196` 은 `target_ids` 가 비면 **None** 을 돌려준다.
+            raise ValueError(f'채널 {ch}: type_map 에서 고른 target_types 가 비었다.  '
+                             f'type_map={prov["type_map"]} · 원자 type 분포={prov["type_hist"]}')
+        net = _NC.build_network(atoms, contacts, tt, scale, plate_z,
+                               box_x=box, box_y=box, mode=mode, type_map=type_map,
+                               contact_mode=contact_mode)
         if net is None:
             n_hit = sum(type_hist[t] for t in tt if t in type_hist)
-            raise ValueError(
-                f'채널 {ch}: build_network 가 None (해당 상의 입자가 없다).  '
-                f'target_types={sorted(tt)} · 그 type 의 원자 {n_hit}개 · '
-                f'원자 type 분포={dict(type_hist)} · '
-                f'type_map={dict(sorted(type_map.items()))}')
+            raise ValueError(f'채널 {ch}: build_network 가 None (해당 상의 입자가 없다).  '
+                             f'target_types={sorted(tt)} · 그 type 의 원자 {n_hit}개')
+        nets[ch] = net
+    return nets, prov
+
+
+def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic', 'thermal'),
+               deck_dir=None):
+    """한 케이스 — **솔버가 만든 간선**에서 `R_constriction == 0` 을 센다.
+
+    ⚠ 예외를 **비삭제로 만들지 않는다** — 실패는 `error` 로 올리고 `None` 을 돌려준다
+    (옛 판은 helper 예외를 삼켜 분모에는 남기고 삭제는 0 으로 셌다).
+    """
+    #  ★★ 2026-09-15 (`R4-01`) — 로드·덱 사상·경계·망 생성은 **`case_networks` 하나**로 모았다.
+    #    봉인 도구가 이 일을 따로 다시 쓰고 있었고 그 사본이 세 군데 어긋나 있었다 (헤더 참조).
+    nets, prov = case_networks(case_dir, contact_mode=contact_mode,
+                               channels=tuple(channels), deck_dir=deck_dir)
+    type_map, type_hist = prov['type_map'], prov['type_hist']
+    row = {'case': prov['case'], 'contact_mode': contact_mode, 'source': prov['source'],
+           'atom_step': prov['atom_step'], 'contact_step': prov['contact_step'],
+           'n_contact_rows': prov['n_contact_rows'],
+           'type_hist': ';'.join(f'{t}:{type_hist[t]}' for t in sorted(type_hist)),
+           'type_map': ';'.join(f'{k}={v}' for k, v in sorted(type_map.items())),
+           'deck': prov['deck']}
+    for ch in channels:
+        net = nets[ch]
         edges = net['edges'] if isinstance(net, dict) else net[1]
         n = d = 0
         by_kind = {}
