@@ -109,6 +109,16 @@
 </nav>
 
 <main class="content" id="main" tabindex="-1">
+{# ── PDF 로 저장 ─────────────────────────────────────────────────────────
+   서버에서 PDF 를 만들지 않는다. 브라우저의 인쇄 대화상자에서 "PDF 로 저장" 을
+   고르게 하는 버튼이다 — 새 의존성(weasyprint·wkhtmltopdf)을 안 들이고, 글꼴·
+   다크모드·표 줄바꿈이 화면과 같은 엔진에서 처리된다. 인쇄용 CSS 는
+   `@media print` 한 곳에 있다. 이 버튼 자신도 인쇄에서는 사라진다. #}
+<button class="pdfbtn" type="button" onclick="window.print()"
+        title="브라우저 인쇄 대화상자에서 &#39;PDF 로 저장&#39; 을 고른다">
+  <svg class="ic" aria-hidden="true"><use href="#i-paper"></use></svg>
+  <span>PDF 로 저장</span>
+</button>
 {% block content %}{% endblock %}
 </main>
 
