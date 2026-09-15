@@ -1,0 +1,180 @@
+{
+ "bundle": "reviews/r14_repros/codex63/desktop_postproc",
+ "what_this_is": "보존된 원시 CSV 다섯 개에서 다시 센 것. 묶음의 분석 산출은 입력이 아니다. 판정은 이 파일이 내리지 않는다.",
+ "electrolyte": {
+  "times": {
+   "rows": 987,
+   "unique": 987,
+   "strictly_increasing": true,
+   "first_s": "0",
+   "last_s": "5",
+   "duplicate_time_column": true
+  },
+  "auto_vs_explicit": {
+   "same_column_names": true,
+   "same_decimal_values": true,
+   "note": "값이 같다는 확인이다 — 원본 바이트가 같다는 주장이 아니다 (머리말의 날짜·표 이름이 다르다)",
+   "auto_table": "Table 1 - Global Evaluation 1",
+   "explicit_table": "Table 2 - Global Evaluation 1"
+  },
+  "overall_min_equals_min_of_three_domains_every_row": true,
+  "all_finite": true,
+  "overall_min_mol_m3": "1194.4372136345671",
+  "overall_min_time_s": "5",
+  "overall_min_domain": [
+   1
+  ],
+  "threshold_nonzero_rows": 0,
+  "guard_condition_nonzero_rows": 0,
+  "columns": [
+   "Time (s)",
+   "Time (s)",
+   "Minimum (mol/m^3)",
+   "Minimum 1 (mol/m^3)",
+   "Minimum 2 (mol/m^3)",
+   "Minimum 3 (mol/m^3)",
+   "ce_stop_threshold (mol/m^3)",
+   "comp1.minguardall(comp1.cl)<=ce_stop_threshold"
+  ]
+ },
+ "ocp_surface_guards": {
+  "times": {
+   "rows": 987,
+   "unique": 987,
+   "strictly_increasing": true,
+   "first_s": "0",
+   "last_s": "5",
+   "duplicate_time_column": true
+  },
+  "condition_columns": 2,
+  "nonzero_rows_per_condition": {
+   "(comp1.minsurf1(comp1.liion.socloc_surface)<0)||(comp1.maxsu": 0,
+   "(comp1.minsurf1(comp1.liion.socloc_surface)<=0)||(comp1.maxs": 0
+  }
+ },
+ "boundary_1": {
+  "times": {
+   "rows": 987,
+   "unique": 987,
+   "strictly_increasing": true,
+   "first_s": "0",
+   "last_s": "5",
+   "duplicate_time_column": true
+  },
+  "point": "1 (음극)",
+  "columns": 14,
+  "identity_max_abs_residual_V": "1.9E-16"
+ },
+ "boundary_4": {
+  "times": {
+   "rows": 987,
+   "unique": 987,
+   "strictly_increasing": true,
+   "first_s": "0",
+   "last_s": "5",
+   "duplicate_time_column": true
+  },
+  "point": "4 (양극)",
+  "columns": 14,
+  "identity_max_abs_residual_V": "6.12E-16"
+ },
+ "terminal_voltage_from_phis": {
+  "exact_common_times": 987,
+  "windows": {
+   "0.1–1 s": {
+    "n_times": 99,
+    "min_V": "2.247325796818112",
+    "max_V": "2.284059345744815"
+   },
+   "1–5 s": {
+    "n_times": 82,
+    "min_V": "2.284059345744815",
+    "max_V": "2.352176319533886"
+   },
+   "0–1 s": {
+    "n_times": 906,
+    "min_V": "2.2306115890131673",
+    "max_V": "2.284059345744815"
+   },
+   "0–5 s": {
+    "n_times": 987,
+    "min_V": "2.2306115890131673",
+    "max_V": "2.352176319533886"
+   }
+  }
+ },
+ "eight_windows_vs_baseline": {
+  "baseline_stored_times": 987,
+  "new_stored_times": 987,
+  "exact_common": 987,
+  "requested_times_source": "reviews/r14_repros/codex63/physical600_b/outputs/physical600_b/comparison_contract.json",
+  "requested_total": 187,
+  "requested_in_common": 187,
+  "windows": {
+   "요청 187 0.1–1 s": {
+    "n_times": 91,
+    "max_abs_dV_mV": "3.7000E-12",
+    "dV_signed_V": "-3.7E-15",
+    "at_time_s": "0.14"
+   },
+   "정확 공통 저장 0.1–1 s": {
+    "n_times": 99,
+    "max_abs_dV_mV": "3.7000E-12",
+    "dV_signed_V": "-3.7E-15",
+    "at_time_s": "0.14"
+   },
+   "요청 187 1–5 s": {
+    "n_times": 81,
+    "max_abs_dV_mV": "3.6000E-12",
+    "dV_signed_V": "-3.6E-15",
+    "at_time_s": "3.9"
+   },
+   "정확 공통 저장 1–5 s": {
+    "n_times": 82,
+    "max_abs_dV_mV": "3.6000E-12",
+    "dV_signed_V": "-3.6E-15",
+    "at_time_s": "3.9"
+   },
+   "요청 187 0–1 s": {
+    "n_times": 107,
+    "max_abs_dV_mV": "3.7000E-12",
+    "dV_signed_V": "-3.7E-15",
+    "at_time_s": "0.14"
+   },
+   "정확 공통 저장 0–1 s": {
+    "n_times": 906,
+    "max_abs_dV_mV": "4.8000E-12",
+    "dV_signed_V": "-4.8E-15",
+    "at_time_s": "0.052750000000000005"
+   },
+   "요청 187 0–5 s": {
+    "n_times": 187,
+    "max_abs_dV_mV": "3.7000E-12",
+    "dV_signed_V": "-3.7E-15",
+    "at_time_s": "0.14"
+   },
+   "정확 공통 저장 0–5 s": {
+    "n_times": 987,
+    "max_abs_dV_mV": "4.8000E-12",
+    "dV_signed_V": "-4.8E-15",
+    "at_time_s": "0.052750000000000005"
+   }
+  }
+ },
+ "coordinate_inputs": {
+  "profile_N_coordinates_m.txt": {
+   "count": 241,
+   "unique": 241,
+   "min": "0",
+   "max": "0.000052",
+   "strictly_increasing": true
+  },
+  "profile_P_coordinates_m.txt": {
+   "count": 241,
+   "unique": 241,
+   "min": "0.000077",
+   "max": "0.000121",
+   "strictly_increasing": true
+  }
+ }
+}

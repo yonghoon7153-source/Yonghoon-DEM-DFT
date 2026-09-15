@@ -139,6 +139,58 @@ def voltage_windows(b1: dict, b4: dict) -> dict:
     return {"exact_common_times": len(common), "windows": out}
 
 
+#: 기준 해(300 · job 5d1a…)의 경계 CSV — 이 묶음 안에 재사용 증거로 들어와 있다.
+BASE = BUNDLE / "reused_evidence" / "outputs" / "model_audit" / "5d1a87652ed54e6a945d4f2af4aeda70"
+#: 요청 187 시각의 정본은 **physical600_b 묶음의** 비교 계약이다 (같은 기준 job).
+#: 이 묶음의 `BASELINE_CONTRACT.json` 은 개수(187)만 적고 값을 안 담는다 — 그래서 옆 묶음에서 읽고
+#: 그 사실을 산출에 적는다. 값을 손으로 옮겨 적지 않는다.
+REQ_SRC = (HERE / "reviews" / "r14_repros" / "codex63" / "physical600_b" / "outputs"
+           / "physical600_b" / "comparison_contract.json")
+
+
+def plain_csv(path: Path) -> list[dict]:
+    import csv
+
+    with open(path, encoding="utf-8-sig", newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def baseline_voltage() -> dict:
+    b1 = {dec(r["time_s"]): dec(r["phis_V"]) for r in plain_csv(BASE / "preflight_boundary1.csv")}
+    b4 = {dec(r["time_s"]): dec(r["phis_V"]) for r in plain_csv(BASE / "preflight_boundary4.csv")}
+    if set(b1) != set(b4):
+        raise SystemExit("! 기준 두 경계의 저장 시각이 다르다")
+    return {t: b4[t] - b1[t] for t in b1}
+
+
+def eight_windows(new_v: dict) -> dict:
+    """기준 해와 이번 Desktop 회수분의 여덟 창 최대 |δV| — 정확히 같은 저장 시각만 잇는다."""
+    base = baseline_voltage()
+    common = sorted(set(base) & set(new_v))
+    req_note, requested = "없음", []
+    if REQ_SRC.is_file():
+        requested = [dec(x) for x in json.loads(REQ_SRC.read_text(encoding="utf-8"))["requested_times_s"]]
+        req_note = str(REQ_SRC.relative_to(HERE))
+    out = {}
+    for ko, lo, hi in (("0.1–1 s", Decimal("0.1"), Decimal(1)), ("1–5 s", Decimal(1), Decimal(5)),
+                       ("0–1 s", Decimal(0), Decimal(1)), ("0–5 s", Decimal(0), Decimal(5))):
+        for label, pool in (("요청 187", [t for t in requested if t in base and t in new_v]),
+                            ("정확 공통 저장", common)):
+            ts = [t for t in pool if lo <= t <= hi]
+            if not ts:
+                out[f"{label} {ko}"] = {"n_times": 0}
+                continue
+            best = max(ts, key=lambda t: abs(new_v[t] - base[t]))
+            d = new_v[best] - base[best]
+            out[f"{label} {ko}"] = {"n_times": len(ts), "max_abs_dV_mV": str(abs(d) * 1000),
+                                    "dV_signed_V": str(d), "at_time_s": str(best)}
+    return {"baseline_stored_times": len(base), "new_stored_times": len(new_v),
+            "exact_common": len(common), "requested_times_source": req_note,
+            "requested_total": len(requested),
+            "requested_in_common": sum(1 for t in requested if t in base and t in new_v),
+            "windows": out}
+
+
 def coordinates() -> dict:
     d = BUNDLE / "coordinate_inputs"
     out = {}
@@ -164,6 +216,8 @@ def main() -> int:
     b1 = boundary("boundary1.csv", "1 (음극)")
     b4 = boundary("boundary4.csv", "4 (양극)")
     vw = voltage_windows(b1, b4)
+    new_v = {Decimal(k): Decimal(b4["phis_by_time"][k]) - Decimal(v)
+             for k, v in b1["phis_by_time"].items() if k in b4["phis_by_time"]}
     for b in (b1, b4):
         b.pop("phis_by_time")
     json.dump({
@@ -174,6 +228,7 @@ def main() -> int:
         "ocp_surface_guards": guards(),
         "boundary_1": b1, "boundary_4": b4,
         "terminal_voltage_from_phis": vw,
+        "eight_windows_vs_baseline": eight_windows(new_v),
         "coordinate_inputs": coordinates(),
     }, sys.stdout, ensure_ascii=False, indent=1)
     print()
