@@ -3642,7 +3642,7 @@
   {
    "id": "AREA5-01",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_area_round5_20260915.md",
@@ -3651,12 +3651,13 @@
    "evidence_tests": [
     "docs/reviews/codex_verdict_area_round5_20260915.md",
     "scripts/run_s3_psi.py"
-   ]
+   ],
+   "claimed_fixed_sha": "8cf77bb84"
   },
   {
    "id": "AREA5-02",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_area_round5_20260915.md",
@@ -3665,7 +3666,8 @@
    "evidence_tests": [
     "docs/reviews/codex_verdict_area_round5_20260915.md",
     "scripts/run_s3_psi.py"
-   ]
+   ],
+   "claimed_fixed_sha": "8cf77bb84"
   },
   {
    "id": "AREA5-03",
@@ -3685,7 +3687,7 @@
   {
    "id": "AREA5-04",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_area_round5_20260915.md",
@@ -3695,7 +3697,8 @@
     "docs/data/rho_lhs_20260913_rtol1e-8.csv",
     "docs/reviews/codex_verdict_area_round5_20260915.md",
     "scripts/run_s3_psi.py"
-   ]
+   ],
+   "claimed_fixed_sha": "8cf77bb84"
   },
   {
    "id": "AREA5-05",
