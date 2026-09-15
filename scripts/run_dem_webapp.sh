@@ -72,14 +72,42 @@ echo "[dem] 데이터 $DATA"
   echo "[dem] ⛔ $CODE/webapp/app.py 가 없다 — 리포 루트가 맞나?"; exit 1; }
 
 # ── ① 최신화 ────────────────────────────────────────────────────────────────────
+#  ★★ 2026-09-15 실사고 — **낡은 코드를 조용히 섬겼다.**  1저자가 새 페이지를 열었는데
+#    커밋 다섯 개 전 화면이 떴고, 머리말의 SHA(`@ 9c5d6bfd8`)만이 그 사실을 말하고 있었다.
+#    옛 판의 구멍 둘:
+#      ⓐ detached HEAD (`BR == "HEAD"`) 면 pull 을 **아무 말 없이 건너뛴다** — 출력이 0줄이라
+#         사용자는 최신인 줄 안다.
+#      ⓑ pull 실패 경고가 `echo` 한 줄이라 `--bg` 로 띄우면 스크롤에 묻힌다.
+#    ⇒ **무엇을 섬기는지 항상 말한다**: 기동 전 SHA 를 찍고, origin 과 다르면 배너를 띄운다.
+#      ⛔ 그래도 **멈추지는 않는다** (오프라인에서도 웹앱은 떠야 한다) — 다만 **조용하지 않다**.
+_SHA_BEFORE="$(git -C "$CODE" rev-parse --short=9 HEAD 2>/dev/null || echo '?')"
 if [ "$PULL" = 1 ]; then
   BR="$(git -C "$CODE" rev-parse --abbrev-ref HEAD 2>/dev/null || echo '')"
-  if [ -n "$BR" ] && [ "$BR" != "HEAD" ]; then
-    echo "[dem] git pull origin $BR"
+  if [ -z "$BR" ]; then
+    echo "[dem] ⚠ git 리포가 아니다 ($CODE) — 최신화를 건너뛴다"
+  elif [ "$BR" = "HEAD" ]; then
+    echo "[dem] ⚠⚠ detached HEAD ($_SHA_BEFORE) — **pull 을 건너뛴다**.  브랜치로 돌아가려면:"
+    echo "        git -C \"$CODE\" checkout claude/stoic-knuth-NObVQ && git -C \"$CODE\" pull"
+  else
+    echo "[dem] git pull origin $BR   (지금 $_SHA_BEFORE)"
     #  ⚠ 실패해도 **멈추지 않는다** — 오프라인이어도 웹앱은 떠야 한다 (있는 코드로).
-    git -C "$CODE" pull --ff-only origin "$BR" 2>&1 | tail -3 \
-      || echo "[dem] ⚠ pull 실패 — 현재 체크아웃으로 계속한다 (--no-pull 로 건너뛸 수 있다)"
+    if ! git -C "$CODE" pull --ff-only origin "$BR" 2>&1 | tail -3; then
+      echo "[dem] ⚠ pull 실패 — 현재 체크아웃으로 계속한다 (--no-pull 로 건너뛸 수 있다)"
+      git -C "$CODE" status --short | head -5 | sed 's/^/        /'
+    fi
   fi
+fi
+#  ── 무엇을 섬기는지 말한다.  ⛔ "초록" 만 찍고 낡은 것을 섬기지 않는다.
+_SHA_NOW="$(git -C "$CODE" rev-parse --short=9 HEAD 2>/dev/null || echo '?')"
+_SHA_REMOTE="$(git -C "$CODE" rev-parse --short=9 "@{upstream}" 2>/dev/null || echo '')"
+if [ -n "$_SHA_REMOTE" ] && [ "$_SHA_NOW" != "$_SHA_REMOTE" ]; then
+  _BEHIND="$(git -C "$CODE" rev-list --count "HEAD..@{upstream}" 2>/dev/null || echo '?')"
+  echo "[dem] ╔══════════════════════════════════════════════════════════════════"
+  echo "[dem] ║ ⚠⚠ 낡은 코드를 섬긴다 — HEAD $_SHA_NOW · upstream $_SHA_REMOTE (뒤처짐 $_BEHIND 커밋)"
+  echo "[dem] ║    페이지 머리말의 SHA 가 $_SHA_NOW 로 찍히면 그것이 이 이유다."
+  echo "[dem] ╚══════════════════════════════════════════════════════════════════"
+else
+  echo "[dem] 코드 $_SHA_NOW${_SHA_REMOTE:+ (upstream 과 같다)}"
 fi
 
 # ── ② 파이썬 환경 ───────────────────────────────────────────────────────────────
