@@ -91,7 +91,17 @@ def test_a_disabled_user_site_receipt_passes_the_parent_assertion(tmp_path, monk
     _pin_env(monkeypatch, {"PYTHONPATH": str(site), "PYTHONNOUSERSITE": "1"})
     mr = _mr()
     got = _receipt_in({"PYTHONPATH": str(site), "PYTHONNOUSERSITE": "1"}, tmp_path)
-    mr._assert_customization_matches_parent(got)          # 예외가 나면 그것이 발견이다
+    try:
+        mr._assert_customization_matches_parent(got)
+    except mr._ReplayError:
+        # ⚠ production 의 오류 문구를 그대로 증인으로 쓰면 **문맥 의존**이다 — 그 문구에는
+        #   부모가 resolver 로 찾은 파일의 digest 가 들어 있고, 그것은 pytest 를 어떻게 띄우느냐에
+        #   따라(어느 `usercustomize` 를 먼저 찾느냐에 따라) 달라진다. 실측: `--emit-expect` 로
+        #   관측한 문구와 `test_evidence_layer_58` 의 sandbox 재생에서 나온 문구가 갈렸다.
+        #   62차 ① 의 `unfiled=22`, 63차 ① 의 같은 자리와 **같은 형태의 결함**이다.
+        raise AssertionError(
+            "user site 가 꺼졌는데 부모가 usercustomize 를 기대해 정상 영수증이 거부됐다 (N1)"
+        ) from None
 
 
 def test_an_enabled_user_site_still_compares_the_bytes(tmp_path, monkeypatch):

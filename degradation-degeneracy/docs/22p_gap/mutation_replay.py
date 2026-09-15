@@ -4985,7 +4985,7 @@ EXPECT: dict = {
             "tests/test_gate64_defensive.py::test_a_child_with_user_site_disabled_matches_the_parent":
                 "AssertionError: \ubd80\ubaa8\uac00 startup \uc774 \uc2e4\ud589\ud558\uc9c0 \uc54a\ub294 \ubaa8\ub4c8\uc758 digest \ub97c \ub0b8\ub2e4 (N1)",
             "tests/test_gate64_defensive.py::test_a_disabled_user_site_receipt_passes_the_parent_assertion":
-                "mutation_replay._ReplayError: 환경 영수증의 customization 이 부모가 본 것과 다르다: usercustomize: child='<absent>' parent='24d2bcde4f463c61' — startup 코드가 자기 파일을 세탁했거나 검색 순서가 어긋났다. 못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 ",
+                "AssertionError: user site 가 꺼졌는데 부모가 usercustomize 를 기대해 정상 영수증이 거부됐다 (N1)",
         }
     },
 }

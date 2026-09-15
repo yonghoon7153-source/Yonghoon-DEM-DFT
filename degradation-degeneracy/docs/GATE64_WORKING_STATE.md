@@ -82,6 +82,26 @@ the-probe-control-asserts-both-directions-g64      G63T  E2-R
 첫 관측의 증인 둘이 tmp 경로와 기계별 digest 를 담고 있어 시험 문구에서 걷어냈다
 (62차 ① · 63차 ① 회차와 같은 교훈). 증인 문구는 **기계 독립**이어야 한다.
 
+## 같은 자리에서 한 번 더 — 증인이 **문맥 의존**이었다
+
+`-k g64` 3/3 과 방어 시험 단독 GREEN 을 보고 넘어갔는데, `tests/test_evidence_layer_58.py`
+셋이 빨갰다. N1 축의 증인으로 **production 의 `_ReplayError` 문구를 그대로** 썼던 것이
+원인이다 — 그 문구에는 부모가 resolver 로 찾은 파일의 digest 가 들어 있고, 그 값은 pytest 를
+어떻게 띄우느냐에 따라(어느 `usercustomize` 를 먼저 찾느냐에 따라) 달라진다. `--emit-expect`
+로 관측한 문구와 증거층 sandbox 재생에서 나온 문구가 갈렸다.
+
+62차 ① 의 `unfiled=22`, 63차 ① 의 같은 자리에 이어 **세 번째**다. 앞의 둘은 "개수를 빼라" 로
+끝났지만 이번 것은 **production 문구를 증인으로 쓰지 말라**는 더 넓은 교훈이다 — production
+메시지는 환경을 담도록 만들어져 있고, 증인은 담으면 안 된다. 시험이 자기 고정 문구로
+실패하게 바꿨다.
+
+처음 전수 실행이 무효였던 것도 같이 적는다: 회귀가 도는 **중에** HEAD 가 움직여
+(`d396f8a` → `f1ef8e2`) 9 건이 빨갰다. 그중 셋이 위 결함이고 여섯은 트리 이동이다.
+**회귀가 도는 동안 커밋하지 않는다** — 이 저장소에서 두 번째로 겪었다.
+
+재관측 뒤: `-k g64` **3/3 물었다** · `tests/test_gate64_defensive.py` **10 passed** ·
+`tests/test_evidence_layer_58.py` **8 passed**.
+
 ## 남는 것
 
 §0 의 독립 GO 전제(producer 결속 · trusted launcher · typed 보존 영수증 소비 ·
