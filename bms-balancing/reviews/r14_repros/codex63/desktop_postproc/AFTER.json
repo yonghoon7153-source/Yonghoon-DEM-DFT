@@ -1,0 +1,529 @@
+{
+  "checked_utc": "2026-09-15T07:45:01.117953+00:00",
+  "user_report": "User stated the Desktop was closed after instructions to close without saving",
+  "input_after": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/electrolyte_recovery/inputs/failed_normal_copy.mph",
+    "bytes": 1266539803,
+    "sha256": "7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658",
+    "mtime_utc": "2026-09-15T04:57:06.616681+00:00"
+  },
+  "input_bytes_sha_unchanged": true,
+  "preferences_after_identifier": {
+    "path": "C:/Users/BML/.comsol/v63/comsol.prefs",
+    "bytes": 22252,
+    "sha256": "1e03f913b1505663cdb8187afc42c60117075baa0394eee7a0f2a60abd2b2c42",
+    "mtime_utc": "2026-09-15T07:43:32.954123+00:00"
+  },
+  "preferences_bytes_sha_unchanged": false,
+  "security_values_after": {
+    "security.comsol.allowapplications": "on",
+    "security.comsol.allowbatch": "on",
+    "security.comsol.allowexternallibraries": "off",
+    "security.comsol.allowexternalmatlab": "off",
+    "security.comsol.allowexternalprocess": "off",
+    "security.comsol.allowforms": "on",
+    "security.comsol.allowmethods": "on",
+    "security.external.enable": "on",
+    "security.external.filepermission": "limited",
+    "security.external.modelmanagerdatabasepermission": "off",
+    "security.external.netpermission": "off",
+    "security.external.propertypermission": "off",
+    "security.external.reflectpermission": "off",
+    "security.external.runtimepermission": "off",
+    "security.external.securitypermission": "off",
+    "security.external.socketpermission": "off"
+  },
+  "security_key_values_equal": true,
+  "security_key_count_before": 16,
+  "security_key_count_after": 16,
+  "preserved_record_checks": [
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/NEXT_RUN_PLAN.md",
+        "bytes": 2322,
+        "sha256": "c135b5fed68301038e4b5978626b66b7964a8f3bd0b5619153056d59c4e3a877",
+        "mtime_utc": "2026-09-15T05:04:10.848872+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/NEXT_RUN_PLAN.md",
+        "bytes": 2322,
+        "sha256": "c135b5fed68301038e4b5978626b66b7964a8f3bd0b5619153056d59c4e3a877",
+        "mtime_utc": "2026-09-15T05:04:10.848872+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/electrolyte_recovery/results/RECOVERY_GATE.json",
+        "bytes": 1191,
+        "sha256": "2b55af054e4b592a12b0d94c298163cd7be30186e1d3a8c67ae3049d8a4a7f6a",
+        "mtime_utc": "2026-09-15T05:04:10.844873+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/electrolyte_recovery/results/RECOVERY_GATE.json",
+        "bytes": 1191,
+        "sha256": "2b55af054e4b592a12b0d94c298163cd7be30186e1d3a8c67ae3049d8a4a7f6a",
+        "mtime_utc": "2026-09-15T05:04:10.844873+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/electrolyte_guard/results/normal_GATE.json",
+        "bytes": 430,
+        "sha256": "47615801280388c0c9891e96f3253b3681346d3f0d4eadfafb2c815a2bcbe04e",
+        "mtime_utc": "2026-09-15T01:53:56.410357+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/electrolyte_guard/results/normal_GATE.json",
+        "bytes": 430,
+        "sha256": "47615801280388c0c9891e96f3253b3681346d3f0d4eadfafb2c815a2bcbe04e",
+        "mtime_utc": "2026-09-15T01:53:56.410357+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/COMSOL63_ELECTROLYTE_RECOVERY_RECORDS_RECEIPT.json",
+        "bytes": 653,
+        "sha256": "93556460f9f5db006fd3c1b1a6a5eed509067b60dc30cd86452cb7f9acf4c5cd",
+        "mtime_utc": "2026-09-15T05:04:11.030059+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/COMSOL63_ELECTROLYTE_RECOVERY_RECORDS_RECEIPT.json",
+        "bytes": 653,
+        "sha256": "93556460f9f5db006fd3c1b1a6a5eed509067b60dc30cd86452cb7f9acf4c5cd",
+        "mtime_utc": "2026-09-15T05:04:11.030059+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/core16_control/Caps300R320H0125C16.java",
+        "bytes": 65233,
+        "sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e",
+        "mtime_utc": "2026-09-14T12:24:31.984755+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/core16_control/Caps300R320H0125C16.java",
+        "bytes": 65233,
+        "sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e",
+        "mtime_utc": "2026-09-14T12:24:31.984755+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/physical600_b/package_manifest.json",
+        "bytes": 34122,
+        "sha256": "7945b6a7785ced88a32bbb269ba5a2110fb139fcf7203a77e5cbbf98cac3dfbf",
+        "mtime_utc": "2026-09-14T16:33:18.914394+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/physical600_b/package_manifest.json",
+        "bytes": 34122,
+        "sha256": "7945b6a7785ced88a32bbb269ba5a2110fb139fcf7203a77e5cbbf98cac3dfbf",
+        "mtime_utc": "2026-09-14T16:33:18.914394+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/status.json",
+        "bytes": 619,
+        "sha256": "10777de98d7396bf6623471abfbe05d62b004da85d6c9f5afe5bef113607f0b9",
+        "mtime_utc": "2026-09-14T12:41:55.872858+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/status.json",
+        "bytes": 619,
+        "sha256": "10777de98d7396bf6623471abfbe05d62b004da85d6c9f5afe5bef113607f0b9",
+        "mtime_utc": "2026-09-14T12:41:55.872858+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/request.json",
+        "bytes": 397,
+        "sha256": "e0337bf138f0ce41611e0fa05b0cf81e545737162de2743ce629c0c002e4817d",
+        "mtime_utc": "2026-09-14T12:26:13.896467+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/request.json",
+        "bytes": 397,
+        "sha256": "e0337bf138f0ce41611e0fa05b0cf81e545737162de2743ce629c0c002e4817d",
+        "mtime_utc": "2026-09-14T12:26:13.896467+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/batch.log",
+        "bytes": 138077,
+        "sha256": "99d60f65ad75434af4fc479f86ad80122247d1aadb54d094943d2c6fddba8ecb",
+        "mtime_utc": "2026-09-14T12:41:54.520267+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/batch.log",
+        "bytes": 138077,
+        "sha256": "99d60f65ad75434af4fc479f86ad80122247d1aadb54d094943d2c6fddba8ecb",
+        "mtime_utc": "2026-09-14T12:41:54.520267+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/status.json",
+        "bytes": 488,
+        "sha256": "b6a782d46493c5af709f986d8f94afe73bcfdf005243913aea439dbd51598241",
+        "mtime_utc": "2026-09-15T01:51:39.800817+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/status.json",
+        "bytes": 488,
+        "sha256": "b6a782d46493c5af709f986d8f94afe73bcfdf005243913aea439dbd51598241",
+        "mtime_utc": "2026-09-15T01:51:39.800817+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/request.json",
+        "bytes": 410,
+        "sha256": "cbad7c36be0142e01193da35a6a67c7d18a62a64ff3d79c69d477034cb02514d",
+        "mtime_utc": "2026-09-15T01:44:54.669654+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/request.json",
+        "bytes": 410,
+        "sha256": "cbad7c36be0142e01193da35a6a67c7d18a62a64ff3d79c69d477034cb02514d",
+        "mtime_utc": "2026-09-15T01:44:54.669654+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/batch.log",
+        "bytes": 148567,
+        "sha256": "22f624513569c09d39548fba4145f09ed11ca9ca9ae9762bd0fce7dc7a8b859d",
+        "mtime_utc": "2026-09-15T01:51:38.395035+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/batch.log",
+        "bytes": 148567,
+        "sha256": "22f624513569c09d39548fba4145f09ed11ca9ca9ae9762bd0fce7dc7a8b859d",
+        "mtime_utc": "2026-09-15T01:51:38.395035+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/status.json",
+        "bytes": 485,
+        "sha256": "c7d4f8ff07ab7f6f977b82847a8e7c9953d70efe9566d49bbf09bde4dbd23821",
+        "mtime_utc": "2026-09-15T04:58:58.448469+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/status.json",
+        "bytes": 485,
+        "sha256": "c7d4f8ff07ab7f6f977b82847a8e7c9953d70efe9566d49bbf09bde4dbd23821",
+        "mtime_utc": "2026-09-15T04:58:58.448469+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/request.json",
+        "bytes": 407,
+        "sha256": "15884faba29512611425fed88b8907a017d3a4a77283585a1f8436f6ca4d33f8",
+        "mtime_utc": "2026-09-15T04:58:25.330762+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/request.json",
+        "bytes": 407,
+        "sha256": "15884faba29512611425fed88b8907a017d3a4a77283585a1f8436f6ca4d33f8",
+        "mtime_utc": "2026-09-15T04:58:25.330762+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/batch.log",
+        "bytes": 788,
+        "sha256": "7b826fde931ab8ed001941630937d9dc12c468aedfb1bb278aab2ea5b4094392",
+        "mtime_utc": "2026-09-15T04:58:57.461985+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/batch.log",
+        "bytes": 788,
+        "sha256": "7b826fde931ab8ed001941630937d9dc12c468aedfb1bb278aab2ea5b4094392",
+        "mtime_utc": "2026-09-15T04:58:57.461985+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/axes_profile_N.csv",
+        "bytes": 36587737,
+        "sha256": "4af5bc5ddd80aa1f1f68091b769273036a5ffb2325d3be35d7bdd02ded7cfda8",
+        "mtime_utc": "2026-09-14T12:42:21.664140+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/axes_profile_N.csv",
+        "bytes": 36587737,
+        "sha256": "4af5bc5ddd80aa1f1f68091b769273036a5ffb2325d3be35d7bdd02ded7cfda8",
+        "mtime_utc": "2026-09-14T12:42:21.664140+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/axes_profile_P.csv",
+        "bytes": 35440022,
+        "sha256": "0bef4fc6f7cb44880bb890e3ec5fed97fd80623467a9546648f6254b49f14c9a",
+        "mtime_utc": "2026-09-14T12:42:21.985730+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/axes_profile_P.csv",
+        "bytes": 35440022,
+        "sha256": "0bef4fc6f7cb44880bb890e3ec5fed97fd80623467a9546648f6254b49f14c9a",
+        "mtime_utc": "2026-09-14T12:42:21.985730+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/axes_runtime_settings.csv",
+        "bytes": 1615,
+        "sha256": "7a6e8461e965c1d3643d5c1e027250526b9d6069337ae67cd0fcc5cb80634ddd",
+        "mtime_utc": "2026-09-14T12:42:21.420452+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/axes_runtime_settings.csv",
+        "bytes": 1615,
+        "sha256": "7a6e8461e965c1d3643d5c1e027250526b9d6069337ae67cd0fcc5cb80634ddd",
+        "mtime_utc": "2026-09-14T12:42:21.420452+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce1_per1_Constraint.csv",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mtime_utc": "2026-09-14T12:42:21.436456+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce1_per1_Constraint.csv",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mtime_utc": "2026-09-14T12:42:21.436456+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce1_per1_Expression.csv",
+        "bytes": 5444,
+        "sha256": "8fa9a0d0eaa8bc3ce84b006e9be50d6d6b11aa4637215868762f2e3df746203b",
+        "mtime_utc": "2026-09-14T12:42:21.434455+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce1_per1_Expression.csv",
+        "bytes": 5444,
+        "sha256": "8fa9a0d0eaa8bc3ce84b006e9be50d6d6b11aa4637215868762f2e3df746203b",
+        "mtime_utc": "2026-09-14T12:42:21.434455+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce1_per1_Weak.csv",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mtime_utc": "2026-09-14T12:42:21.435455+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce1_per1_Weak.csv",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mtime_utc": "2026-09-14T12:42:21.435455+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce2_per1_Constraint.csv",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mtime_utc": "2026-09-14T12:42:21.437963+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce2_per1_Constraint.csv",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mtime_utc": "2026-09-14T12:42:21.437963+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce2_per1_Expression.csv",
+        "bytes": 5446,
+        "sha256": "41581b938c4b59467d12d4ef57022f6bf13a789e7009364d4dd5c51956574c7c",
+        "mtime_utc": "2026-09-14T12:42:21.436456+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce2_per1_Expression.csv",
+        "bytes": 5446,
+        "sha256": "41581b938c4b59467d12d4ef57022f6bf13a789e7009364d4dd5c51956574c7c",
+        "mtime_utc": "2026-09-14T12:42:21.436456+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce2_per1_Weak.csv",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mtime_utc": "2026-09-14T12:42:21.437456+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce2_per1_Weak.csv",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mtime_utc": "2026-09-14T12:42:21.437456+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_boundary1.csv",
+        "bytes": 246278,
+        "sha256": "cb3838a9d24d3913d3ae104ceabdbf185e92b210a7b604eea7d1d44827123aa8",
+        "mtime_utc": "2026-09-14T12:42:21.427454+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_boundary1.csv",
+        "bytes": 246278,
+        "sha256": "cb3838a9d24d3913d3ae104ceabdbf185e92b210a7b604eea7d1d44827123aa8",
+        "mtime_utc": "2026-09-14T12:42:21.427454+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_boundary4.csv",
+        "bytes": 254926,
+        "sha256": "0af97bde74d968363522c9bcad81bd4e55e6b82e7d7c416c43c2e5127257ef1b",
+        "mtime_utc": "2026-09-14T12:42:21.430455+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_boundary4.csv",
+        "bytes": 254926,
+        "sha256": "0af97bde74d968363522c9bcad81bd4e55e6b82e7d7c416c43c2e5127257ef1b",
+        "mtime_utc": "2026-09-14T12:42:21.430455+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_global.csv",
+        "bytes": 281101,
+        "sha256": "9d0025575ea17de8deb8c667576d73193e975b9ea19e46ef08b1d5fd4de2010a",
+        "mtime_utc": "2026-09-14T12:42:21.423455+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_global.csv",
+        "bytes": 281101,
+        "sha256": "9d0025575ea17de8deb8c667576d73193e975b9ea19e46ef08b1d5fd4de2010a",
+        "mtime_utc": "2026-09-14T12:42:21.423455+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_MaxLine_ce.csv",
+        "bytes": 36018,
+        "sha256": "43d137869c4b56a1cc02c70db5b9c008d4597638c623ac09118d0fd8057eeedc",
+        "mtime_utc": "2026-09-14T12:42:21.433456+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_MaxLine_ce.csv",
+        "bytes": 36018,
+        "sha256": "43d137869c4b56a1cc02c70db5b9c008d4597638c623ac09118d0fd8057eeedc",
+        "mtime_utc": "2026-09-14T12:42:21.433456+00:00"
+      },
+      "bytes_and_sha_equal": true
+    },
+    {
+      "before": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_MinLine_ce.csv",
+        "bytes": 36031,
+        "sha256": "789198cf3836090ab77c8b7f8306e6611164339ae3ae6529b37321d02d8aad4f",
+        "mtime_utc": "2026-09-14T12:42:21.432456+00:00"
+      },
+      "after": {
+        "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_MinLine_ce.csv",
+        "bytes": 36031,
+        "sha256": "789198cf3836090ab77c8b7f8306e6611164339ae3ae6529b37321d02d8aad4f",
+        "mtime_utc": "2026-09-14T12:42:21.432456+00:00"
+      },
+      "bytes_and_sha_equal": true
+    }
+  ],
+  "all_selected_records_and_baseline_CSVs_unchanged": true,
+  "selected_original_record_count": 15,
+  "baseline_CSV_count": 14,
+  "job_ids_after": [
+    "08e0fc5d41e147678f3940e98100ec12",
+    "1513cf395c8d4067a59dd4cfce42fa55",
+    "15e5d7433a6a4956b820cf6952330735",
+    "176aef69e14646908f49f85c9821df2c",
+    "18a00b03e38d4694b9ba30d88e7008f4",
+    "1ac7243b02e7489fa6b83f63cf73865e",
+    "28f40815e3a3410aab411ec93cd36fe1",
+    "2f6b40e52a8e4ebf81e46933c0a30ce7",
+    "30aef4b10f3a4664a812a6048a034042",
+    "39324c6b67404e87a7b761a04a75ad0f",
+    "3bc366486dfe42f5a5c5310fc2dc15bf",
+    "450b46add79c439bbce5886454c4328a",
+    "53bd7509854641358ec8a346ed161b25",
+    "56975e4d24054b23bcec87553875f729",
+    "56ef13bee5a448c5a029b02656ebf6bb",
+    "5d1a87652ed54e6a945d4f2af4aeda70",
+    "63eb851abe9b4a3fa2964cf657fe9ce0",
+    "72c9c6b5210a4e0d96b74290e4392423",
+    "7384f9d4cb514546888e9357f38694bb",
+    "7e78bebd745e437da5bb8fe77a01ef84",
+    "8a953c9ef1c841cb8837d4b9629c9b8c",
+    "8ffe3cf123fd4c5cb1bc481f7a603a76",
+    "9c4e20d8cdc04435a2a822aa40efb5cc",
+    "a4d58eb7f97c48cc9109657d4a8f0ba3",
+    "b1bed498d08847a8abaa5fa1c6485cea",
+    "b50bb8513e624261ab289771a6908436",
+    "b6752f9caed845f88551386132051aa8",
+    "bdb15923fdc64698944786277706393b",
+    "c40c05d3cfb643a4b706345637b00f57",
+    "e27a3ed9ba9444cb9054e094d12ab75d",
+    "eb034a849f1b4f66bd6103dce95d6a28",
+    "f0db6d080ad04045a2b43dc5a51d89b2",
+    "f211901885774793ab39e89ebee0144f",
+    "fa3657582d2a480c9e7d36180e3c6a89",
+    "fa6954704ddd47baaa35d4960aa525b2"
+  ],
+  "job_ids_unchanged": true,
+  "process_query_names": [
+    "comsol",
+    "comsolbatch",
+    "comsolmethodexec"
+  ],
+  "process_query_result": [],
+  "limits": [
+    "OS process snapshot is not a complete process history",
+    "Input hash equality does not prove whole in-memory solution immutability",
+    "Preferences/cache/log automatic writes may occur; no arbitrary restoration performed",
+    "Selected local-file preservation is not whole-machine or historical333 revalidation"
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\electrolyte_desktop_postprocessing\\session_001\\raw_csv\\boundary1.csv",
+  "bytes": 231624,
+  "sha256": "c3d1e0c8c7dd92e5920659fb9cd6832dcb409e49e88c9b341b1c81ce46a52e8a",
+  "headers": [
+    [
+      "% Model",
+      "failed_normal_copy.mph"
+    ],
+    [
+      "% Version",
+      "COMSOL 6.3.0.290"
+    ],
+    [
+      "% Date",
+      "Sep 15 2026, 15:41"
+    ],
+    [
+      "% Table",
+      "Table 4 - Point Evaluation 1"
+    ],
+    [
+      "% Time (s)",
+      "t (s), Point: 1",
+      "phis (V), Point: 1",
+      "phil (V), Point: 1",
+      "liion.Eeq_per1 (V), Point: 1",
+      "liion.eta_per1 (V), Point: 1",
+      "liion.etamid_per1 (V), Point: 1",
+      "liion.socloc_surface (1), Point: 1",
+      "liion.cs_average/liion.csmax (1), Point: 1",
+      "liion.cs_surface (mol/m^3), Point: 1",
+      "liion.pce1.per1.minput_concentration (mol/m^3), Point: 1",
+      "liion.csmax (mol/m^3), Point: 1",
+      "mat35.def.Eeq(liion.socloc_surface)+mat35.def.dEeqdT(liion.socloc_surface)*(T_init-298[K]) (V), Point: 1",
+      "liion.Isx (A/m^2), Point: 1"
+    ]
+  ],
+  "rows": 987,
+  "first_time_s": "0",
+  "last_time_s": "5",
+  "checks": {
+    "expressions_units_and_point_id_match_contract": true,
+    "exact_time_sequence_matches_electrolyte": true,
+    "stored_time_equals_evaluated_t": true,
+    "voltage_identity_residual_le_1e_minus_8_V": true,
+    "Eeq_matches_direct_surface_function_le_1e_minus_8_V": true,
+    "reaction_input_matches_surface_le_1e_minus_10_normalized": true
+  },
+  "boundary_numeric_checks_pass": true,
+  "identity_max_abs_residual_V": "1.9E-16",
+  "direct_Eeq_max_abs_residual_V": "0E-16",
+  "reaction_input_max_abs_normalized_residual": "0E-14",
+  "baseline_exact_time_sequence_equal": true,
+  "max_abs_baseline_difference_by_original_column": {
+    "time_s": "0.0",
+    "phis_V": "0.0",
+    "phil_V": "2.0E-15",
+    "Eeq_V": "1E-15",
+    "eta_V": "2.664E-15",
+    "etamid_V": "2.664E-15",
+    "x_surface": "1.6E-17",
+    "x_particle_average": "5E-18",
+    "cs_surface_mol_m3": "5E-13",
+    "reaction_input_mol_m3": "5E-13",
+    "csmax_mol_m3": "0.0",
+    "direct_Eeq_surface_V": "1E-15",
+    "Isx_A_m2": "2.40E-14"
+  },
+  "selection_evidence": "Exported headers explicitly identify Point: 1; selection screenshot remains separate evidence",
+  "scope": "Single boundary only; not full-cell voltage or 241-coordinate profile comparison or full normal gate closure"
+}

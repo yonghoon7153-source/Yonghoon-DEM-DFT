@@ -1,0 +1,31 @@
+{
+  "status": "PARTIAL_NUMERIC_RECOVERY_CLOSED",
+  "opened_maximum": 1,
+  "opening_attempts_observed": 1,
+  "evaluations_observed": 5,
+  "exports_observed": 5,
+  "planned_stage_B_evaluations": 2,
+  "planned_stage_B": "All stored times; 7 mandatory expressions; first inferred units then explicit units in separate files; no argmin",
+  "new_solve": 0,
+  "MCP_batch_submissions": 0,
+  "new_Java": 0,
+  "model_saves": 0,
+  "security_changes_by_assistant": 0,
+  "source_evidence_categories": [
+    "Direct current GUI/CSV",
+    "Prior identified configuration",
+    "Unconfirmed",
+    "Excluded argmin"
+  ],
+  "normal_gate_final_closure": "Not authorized; independent review after numeric recovery",
+  "stop_on_first_mandatory_error": true,
+  "opening_evidence": "User screenshot 01_opened_derived_values_menu.png shows failed_normal_copy.mph open and Derived Values context menu; opening process and total attempts not independently observed.",
+  "profile_evaluations": 0,
+  "profile_exports": 0,
+  "lithium_recovery": "NOT_STARTED",
+  "profile_comparison": "INCOMPLETE_GUI_PROFILE_EQUIVALENCE",
+  "desktop_close_user_reported": true,
+  "post_close_process_snapshot": [],
+  "input_preservation_pass": true,
+  "observed_action_count_basis": "User reports plus five exported table CSVs and available screenshots; not a continuous UI audit"
+}

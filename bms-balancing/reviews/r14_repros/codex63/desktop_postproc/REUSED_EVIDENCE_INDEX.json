@@ -1,0 +1,104 @@
+[
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/core16_control/Caps300R320H0125C16.java",
+    "packaged_path": "reused_evidence/outputs/comsol63/core16_control/Caps300R320H0125C16.java",
+    "bytes": 65233,
+    "sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/physical600_b/package_manifest.json",
+    "packaged_path": "reused_evidence/outputs/physical600_b/package_manifest.json",
+    "bytes": 34122,
+    "sha256": "7945b6a7785ced88a32bbb269ba5a2110fb139fcf7203a77e5cbbf98cac3dfbf"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_boundary1.csv",
+    "packaged_path": "reused_evidence/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_boundary1.csv",
+    "bytes": 246278,
+    "sha256": "cb3838a9d24d3913d3ae104ceabdbf185e92b210a7b604eea7d1d44827123aa8"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_boundary4.csv",
+    "packaged_path": "reused_evidence/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_boundary4.csv",
+    "bytes": 254926,
+    "sha256": "0af97bde74d968363522c9bcad81bd4e55e6b82e7d7c416c43c2e5127257ef1b"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/electrolyte_guard/ElectrolyteGuard300R320C16Normal.java",
+    "packaged_path": "reused_evidence/outputs/comsol63/electrolyte_guard/ElectrolyteGuard300R320C16Normal.java",
+    "bytes": 68215,
+    "sha256": "40063efedfc95fae00b1d5df22636b3a7acddf40420074df98985d2027e810ce"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/axes_generated.java",
+    "packaged_path": "reused_evidence/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/axes_generated.java",
+    "bytes": 77893,
+    "sha256": "eab356119bdae3576b40a54c0dbb94173f6e297aaadf58f2cb8313c2515f195f"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/electrolyte_recovery/results/RECOVERY_GATE.json",
+    "packaged_path": "reused_evidence/outputs/electrolyte_recovery/results/RECOVERY_GATE.json",
+    "bytes": 1191,
+    "sha256": "2b55af054e4b592a12b0d94c298163cd7be30186e1d3a8c67ae3049d8a4a7f6a"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/electrolyte_guard/results/normal_GATE.json",
+    "packaged_path": "reused_evidence/outputs/electrolyte_guard/results/normal_GATE.json",
+    "bytes": 430,
+    "sha256": "47615801280388c0c9891e96f3253b3681346d3f0d4eadfafb2c815a2bcbe04e"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/status.json",
+    "packaged_path": "reused_evidence/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/status.json",
+    "bytes": 619,
+    "sha256": "10777de98d7396bf6623471abfbe05d62b004da85d6c9f5afe5bef113607f0b9"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/request.json",
+    "packaged_path": "reused_evidence/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/request.json",
+    "bytes": 397,
+    "sha256": "e0337bf138f0ce41611e0fa05b0cf81e545737162de2743ce629c0c002e4817d"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/batch.log",
+    "packaged_path": "reused_evidence/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/batch.log",
+    "bytes": 138077,
+    "sha256": "99d60f65ad75434af4fc479f86ad80122247d1aadb54d094943d2c6fddba8ecb"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/status.json",
+    "packaged_path": "reused_evidence/outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/status.json",
+    "bytes": 488,
+    "sha256": "b6a782d46493c5af709f986d8f94afe73bcfdf005243913aea439dbd51598241"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/request.json",
+    "packaged_path": "reused_evidence/outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/request.json",
+    "bytes": 410,
+    "sha256": "cbad7c36be0142e01193da35a6a67c7d18a62a64ff3d79c69d477034cb02514d"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/batch.log",
+    "packaged_path": "reused_evidence/outputs/comsol63/.comsol-jobs/56ef13bee5a448c5a029b02656ebf6bb/batch.log",
+    "bytes": 148567,
+    "sha256": "22f624513569c09d39548fba4145f09ed11ca9ca9ae9762bd0fce7dc7a8b859d"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/status.json",
+    "packaged_path": "reused_evidence/outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/status.json",
+    "bytes": 485,
+    "sha256": "c7d4f8ff07ab7f6f977b82847a8e7c9953d70efe9566d49bbf09bde4dbd23821"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/request.json",
+    "packaged_path": "reused_evidence/outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/request.json",
+    "bytes": 407,
+    "sha256": "15884faba29512611425fed88b8907a017d3a4a77283585a1f8436f6ca4d33f8"
+  },
+  {
+    "original_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/batch.log",
+    "packaged_path": "reused_evidence/outputs/comsol63/.comsol-jobs/28f40815e3a3410aab411ec93cd36fe1/batch.log",
+    "bytes": 788,
+    "sha256": "7b826fde931ab8ed001941630937d9dc12c468aedfb1bb278aab2ea5b4094392"
+  }
+]

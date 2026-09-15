@@ -1,0 +1,10 @@
+{
+  "screenshot": "05_first_evaluation_table.png",
+  "table_display": "Table 1",
+  "evaluation_result": "Table populated; entire stored-time coverage and numeric precision not yet verified",
+  "time_columns": 2,
+  "visible_initial_minima": "1200.0 mol/m^3 at displayed precision",
+  "visible_threshold": "0.0000 mol/m^3",
+  "visible_stop_boolean": "0.0000",
+  "full_precision_csv_received": false
+}

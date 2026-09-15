@@ -1,0 +1,31 @@
+{
+  "screenshot": "18_profile_n_evaluation_settings.png",
+  "evaluation_label": "GUI_profile_N",
+  "dataset_display": "Cut Point 1D 1",
+  "time_selection": "All",
+  "expressions": [
+    "t",
+    "x",
+    "liion.socloc_surface",
+    "liion.cs_average/liion.csmax",
+    "liion.Eeq_per1",
+    "liion.etamid_per1",
+    "phil",
+    "dom"
+  ],
+  "units": [
+    "s",
+    "m",
+    "1",
+    "1",
+    "V",
+    "V",
+    "V",
+    "1"
+  ],
+  "summation": "None",
+  "normalization": "None",
+  "transformation": "None",
+  "evaluation_observed": false,
+  "pending": "Domain selection propagation unchecked confirmation; remaining GUI evaluation equivalence assessment"
+}

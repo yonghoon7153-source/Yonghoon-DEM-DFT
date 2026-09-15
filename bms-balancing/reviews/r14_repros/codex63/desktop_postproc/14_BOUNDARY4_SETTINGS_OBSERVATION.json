@@ -1,0 +1,12 @@
+{
+  "screenshot": "14_boundary4_settings.png",
+  "evaluation_label": "Point Evaluation 1",
+  "dataset_display": "Study 1/Solution 1 (0) (sol1)",
+  "time_selection": "All",
+  "selected_points": [
+    4
+  ],
+  "expressions_and_units": "User pasted 13 rows matching BOUNDARY4_EVALUATION_CONTRACT.json after decoding chat Markdown escapes and tab entities",
+  "evaluation_observed": false,
+  "status": "READY_FOR_BOUNDARY4_EVALUATION"
+}

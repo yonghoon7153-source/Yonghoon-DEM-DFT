@@ -1,0 +1,39 @@
+{
+  "dataset_display": "Study 1/Solution 1 (0) (sol1)",
+  "time_selection": "All",
+  "selection": [
+    4
+  ],
+  "expressions": [
+    "t",
+    "phis",
+    "phil",
+    "liion.Eeq_per1",
+    "liion.eta_per1",
+    "liion.etamid_per1",
+    "liion.socloc_surface",
+    "liion.cs_average/liion.csmax",
+    "liion.cs_surface",
+    "liion.pce2.per1.minput_concentration",
+    "liion.csmax",
+    "mat54.def.Eeq(liion.socloc_surface)+mat54.def.dEeqdT(liion.socloc_surface)*(T_init-298[K])",
+    "liion.Isx"
+  ],
+  "units": [
+    "s",
+    "V",
+    "V",
+    "V",
+    "V",
+    "V",
+    "1",
+    "1",
+    "mol/m^3",
+    "mol/m^3",
+    "mol/m^3",
+    "V",
+    "A/m^2"
+  ],
+  "source": "outputs/comsol63/electrolyte_guard/ElectrolyteGuard300R320C16Normal.java; original boundary loop b=4",
+  "status": "Proposed Results settings; no evaluation yet"
+}

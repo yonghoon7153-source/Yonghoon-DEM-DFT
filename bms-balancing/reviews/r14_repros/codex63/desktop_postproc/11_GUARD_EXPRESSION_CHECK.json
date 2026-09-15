@@ -1,0 +1,21 @@
+{
+  "evidence": "User pasted both input expressions; prior screenshot confirms Dataset, All and units",
+  "user_chat_expressions": [
+    "(comp1.minsurf1(comp1.liion.socloc\\_surface)<0)||(comp1.maxsurf1(comp1.liion.socloc\\_surface)>0.98)||(comp1.minsurf3(comp1.liion.socloc\\_surface)<0.2228930343076256)||(comp1.maxsurf3(comp1.liion.socloc\\_surface)>0.983245033354389)",
+    "(comp1.minsurf1(comp1.liion.socloc\\_surface)<=0)||(comp1.maxsurf1(comp1.liion.socloc\\_surface)>=1)||(comp1.minsurf3(comp1.liion.socloc\\_surface)<=0)||(comp1.maxsurf3(comp1.liion.socloc\\_surface)>=1)"
+  ],
+  "expressions_after_markdown_unescape": [
+    "(comp1.minsurf1(comp1.liion.socloc_surface)<0)||(comp1.maxsurf1(comp1.liion.socloc_surface)>0.98)||(comp1.minsurf3(comp1.liion.socloc_surface)<0.2228930343076256)||(comp1.maxsurf3(comp1.liion.socloc_surface)>0.983245033354389)",
+    "(comp1.minsurf1(comp1.liion.socloc_surface)<=0)||(comp1.maxsurf1(comp1.liion.socloc_surface)>=1)||(comp1.minsurf3(comp1.liion.socloc_surface)<=0)||(comp1.maxsurf3(comp1.liion.socloc_surface)>=1)"
+  ],
+  "normalization": "Only Markdown backslash-underscore unescaped for comparison; no model input edited",
+  "comparison": "Matches original Java guard and concentrationGuard definitions read previously",
+  "dataset_display": "Study 1/Solution 1 (0) (sol1)",
+  "time_selection": "All",
+  "units": [
+    "s",
+    "1",
+    "1"
+  ],
+  "guard_evaluation_observed": false
+}

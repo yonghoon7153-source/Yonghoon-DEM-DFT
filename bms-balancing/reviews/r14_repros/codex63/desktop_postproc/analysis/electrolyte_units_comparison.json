@@ -1,0 +1,139 @@
+{
+  "automatic_export": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\electrolyte_desktop_postprocessing\\session_001\\raw_csv\\electrolyte_auto_units.csv",
+    "bytes": 106333,
+    "sha256": "8288a94a77278cd8150343280407611c9cd6a2273d97993fd2b75c9e72b95114",
+    "headers": [
+      [
+        "% Model",
+        "failed_normal_copy.mph"
+      ],
+      [
+        "% Version",
+        "COMSOL 6.3.0.290"
+      ],
+      [
+        "% Date",
+        "Sep 15 2026, 15:24"
+      ],
+      [
+        "% Table",
+        "Table 1 - Global Evaluation 1"
+      ],
+      [
+        "% Time (s)",
+        "Time (s)",
+        "Minimum (mol/m^3)",
+        "Minimum 1 (mol/m^3)",
+        "Minimum 2 (mol/m^3)",
+        "Minimum 3 (mol/m^3)",
+        "ce_stop_threshold (mol/m^3)",
+        "comp1.minguardall(comp1.cl)<=ce_stop_threshold"
+      ]
+    ],
+    "rows": 987,
+    "first_time_s": "0",
+    "last_time_s": "5",
+    "checks": {
+      "strictly_increasing_unique_times": true,
+      "stored_time_equals_evaluated_t": true,
+      "starts_at_0_ends_at_5": true,
+      "threshold_zero": true,
+      "all_sampled_minima_positive": true,
+      "reported_stop_false": true,
+      "reported_logic_consistent": true,
+      "all_domain_min_agreement_abs_1e_minus_9": true
+    },
+    "minimum_mol_m3": "1194.4372136345671",
+    "minimum_occurrences": [
+      {
+        "time_s": "5",
+        "tied_domains": [
+          1
+        ]
+      }
+    ],
+    "max_global_vs_domain_min_residual_mol_m3": "0E-13",
+    "numeric_checks_pass": true,
+    "scope": "Exported stored samples and defined coupling evaluation points only; unit crosscheck pending; not original normal gate PASS"
+  },
+  "explicit_export": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\electrolyte_desktop_postprocessing\\session_001\\raw_csv\\electrolyte_explicit_units.csv",
+    "bytes": 106333,
+    "sha256": "0da3fb0b28a6683e5c57a085613bc98a5df9f1ceea36d351f94708653430e0e2",
+    "headers": [
+      [
+        "% Model",
+        "failed_normal_copy.mph"
+      ],
+      [
+        "% Version",
+        "COMSOL 6.3.0.290"
+      ],
+      [
+        "% Date",
+        "Sep 15 2026, 15:30"
+      ],
+      [
+        "% Table",
+        "Table 2 - Global Evaluation 1"
+      ],
+      [
+        "% Time (s)",
+        "Time (s)",
+        "Minimum (mol/m^3)",
+        "Minimum 1 (mol/m^3)",
+        "Minimum 2 (mol/m^3)",
+        "Minimum 3 (mol/m^3)",
+        "ce_stop_threshold (mol/m^3)",
+        "comp1.minguardall(comp1.cl)<=ce_stop_threshold"
+      ]
+    ],
+    "rows": 987,
+    "first_time_s": "0",
+    "last_time_s": "5",
+    "checks": {
+      "strictly_increasing_unique_times": true,
+      "stored_time_equals_evaluated_t": true,
+      "starts_at_0_ends_at_5": true,
+      "threshold_zero": true,
+      "all_sampled_minima_positive": true,
+      "reported_stop_false": true,
+      "reported_logic_consistent": true,
+      "all_domain_min_agreement_abs_1e_minus_9": true
+    },
+    "minimum_mol_m3": "1194.4372136345671",
+    "minimum_occurrences": [
+      {
+        "time_s": "5",
+        "tied_domains": [
+          1
+        ]
+      }
+    ],
+    "max_global_vs_domain_min_residual_mol_m3": "0E-13",
+    "numeric_checks_pass": true,
+    "scope": "Exported stored samples and defined coupling evaluation points only; unit crosscheck pending; not original normal gate PASS"
+  },
+  "exact_time_sequences_equal": true,
+  "quantity_headers_equal": true,
+  "all_decimal_values_equal": true,
+  "max_abs_difference_by_column": [
+    "0",
+    "0",
+    "0E-13",
+    "0E-13",
+    "0E-13",
+    "0E-13",
+    "0",
+    "0"
+  ],
+  "stage_B_numeric_and_unit_crosscheck_pass": true,
+  "unit_evidence": "CSV headers plus screenshots of inferred and explicitly entered units; Boolean explicit unit 1 is visible in screenshot and omitted from CSV header by exporter",
+  "limitations": [
+    "No continuous spacetime positivity proof",
+    "No normal full gate closure",
+    "Original worker failed and API recovery incomplete remain unchanged",
+    "OCP guards, voltage, surface profiles and Li recovery remain pending"
+  ]
+}

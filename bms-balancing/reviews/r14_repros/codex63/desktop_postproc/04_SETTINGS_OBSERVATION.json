@@ -1,0 +1,28 @@
+{
+  "screenshot": "04_ready_first_evaluation.png",
+  "dataset_display": "Study 1/Solution 1 (0) (sol1)",
+  "dataset_tag": "UNCONFIRMED",
+  "time_selection": "All",
+  "expressions": [
+    "t",
+    "comp1.minguardall(comp1.cl)",
+    "comp1.minguard1(comp1.cl)",
+    "comp1.minguard2(comp1.cl)",
+    "comp1.minguard3(comp1.cl)",
+    "ce_stop_threshold",
+    "comp1.minguardall(comp1.cl)<=ce_stop_threshold"
+  ],
+  "units_visible": [
+    "s",
+    "mol/m^3",
+    "mol/m^3",
+    "mol/m^3",
+    "mol/m^3",
+    "mol/m^3",
+    "blank"
+  ],
+  "normalization": "None",
+  "transformation": "None",
+  "evaluation_observed": false,
+  "status": "READY_FOR_FIRST_INFERRED_UNIT_EVALUATION"
+}

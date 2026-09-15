@@ -1,0 +1,13 @@
+{
+  "screenshot": "06_auto_units_export_settings.png",
+  "source": "Table",
+  "table": "Table 1",
+  "target": "File",
+  "precision": "Full",
+  "include_header": true,
+  "notation": "From selected table",
+  "if_exists": "Overwrite",
+  "filename_visible_suffix": "session_001\\raw_csv\\electrolyte_auto_units.csv",
+  "full_filename_not_visible": true,
+  "export_observed": false
+}

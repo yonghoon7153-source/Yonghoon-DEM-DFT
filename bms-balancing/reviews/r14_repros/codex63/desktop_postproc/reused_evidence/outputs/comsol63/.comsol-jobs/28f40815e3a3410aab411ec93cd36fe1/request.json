@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "job_id": "28f40815e3a3410aab411ec93cd36fe1",
+  "kind": "reviewed_java",
+  "source_name": "ElectrolyteRecovery300R320C16.java",
+  "source_sha256": "610b7d7ebea32fdd6fc2d36dc9b7142e265338f3f99eca25dae80de48dddfd51",
+  "comsol_root": "C:\\Program Files\\COMSOL\\COMSOL63\\Multiphysics",
+  "cores": 16,
+  "timeout_seconds": 1800,
+  "created_at": "2026-09-15T04:58:25.328760+00:00"
+}

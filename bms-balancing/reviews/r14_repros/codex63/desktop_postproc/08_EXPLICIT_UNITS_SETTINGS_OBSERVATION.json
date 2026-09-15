@@ -1,0 +1,22 @@
+{
+  "screenshots": [
+    "07_explicit_units_settings.png",
+    "08_explicit_units_new_table_menu.png"
+  ],
+  "dataset_display": "Study 1/Solution 1 (0) (sol1)",
+  "time_selection": "All",
+  "units_visible": [
+    "s",
+    "mol/m^3",
+    "mol/m^3",
+    "mol/m^3",
+    "mol/m^3",
+    "mol/m^3",
+    "1"
+  ],
+  "expressions_visible": 7,
+  "normalization": "None",
+  "transformation": "None",
+  "evaluate_menu_new_table_visible": true,
+  "second_evaluation_observed": false
+}

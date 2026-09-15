@@ -1,0 +1,42 @@
+{
+  "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\electrolyte_desktop_postprocessing\\session_001\\raw_csv\\ocp_surface_guards.csv",
+  "bytes": 32596,
+  "sha256": "d65693f21385eb63090352f46fbc87785cf76d833a776363d22e473fefea0e82",
+  "headers": [
+    [
+      "% Model",
+      "failed_normal_copy.mph"
+    ],
+    [
+      "% Version",
+      "COMSOL 6.3.0.290"
+    ],
+    [
+      "% Date",
+      "Sep 15 2026, 15:36"
+    ],
+    [
+      "% Table",
+      "Table 3 - Global Evaluation 2"
+    ],
+    [
+      "% Time (s)",
+      "Time (s)",
+      "(comp1.minsurf1(comp1.liion.socloc_surface)<0)||(comp1.maxsurf1(comp1.liion.socloc_surface)>0.98)||(comp1.minsurf3(comp1.liion.socloc_surface)<0.2228930343076256)||(comp1.maxsurf3(comp1.liion.socloc_surface)>0.983245033354389)",
+      "(comp1.minsurf1(comp1.liion.socloc_surface)<=0)||(comp1.maxsurf1(comp1.liion.socloc_surface)>=1)||(comp1.minsurf3(comp1.liion.socloc_surface)<=0)||(comp1.maxsurf3(comp1.liion.socloc_surface)>=1)"
+    ]
+  ],
+  "rows": 987,
+  "first_time_s": "0",
+  "last_time_s": "5",
+  "checks": {
+    "exported_expressions_match_original_guards": true,
+    "exact_stored_time_sequence_matches_electrolyte": true,
+    "stored_time_equals_evaluated_t": true,
+    "ocp_guard_false_at_all_exported_times": true,
+    "surface_guard_false_at_all_exported_times": true
+  },
+  "guard_sample_checks_pass": true,
+  "evidence": "CSV Table 3; user reports export completed; export precision setting for this third export has not been independently captured in a screenshot",
+  "scope": "Saved-time guard expression values only. Does not newly verify StopCondition activation or solver trial states. Voltage, pointwise surface comparison and Li recovery remain pending."
+}

@@ -1,0 +1,31 @@
+{
+  "screenshot": "19_gui_n_domain1_propagation_off.png",
+  "domain_selection": [
+    1
+  ],
+  "propagate_to_lower_dimensions": false,
+  "confirmed_settings": [
+    "upstream sol1 dataset restricted to domain1",
+    "241 original coordinate literals prepared",
+    "Snapping None",
+    "All saved times",
+    "8 source-matched expressions and units",
+    "Summation/Normalization/Transformation None"
+  ],
+  "unconfirmed": [
+    "GUI behavior equivalent to original Interp ext=0",
+    "GUI behavior equivalent to original Interp recover=off",
+    "coordinate error handling equivalent to original coorderr=on",
+    "actual consumption of coordinate file"
+  ],
+  "classification": "INCOMPLETE_GUI_PROFILE_EQUIVALENCE",
+  "profile_evaluations": 0,
+  "profile_exports": 0,
+  "reason": "Authorized plan requires stopping when equivalent spatial evaluation settings cannot be confirmed in standard UI. Official Interp documentation states additional advanced properties are unavailable in cut points and EvalPoint. This is lack of demonstrated equivalence, not an observed numerical failure or proof of unequal results.",
+  "sources": [
+    "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_api_results.52.075.html",
+    "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_api_results.52.039.html",
+    "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_api_results.52.052.html"
+  ],
+  "next": "Close copy without saving and perform final OS preservation checks; no additional Evaluate or API call"
+}

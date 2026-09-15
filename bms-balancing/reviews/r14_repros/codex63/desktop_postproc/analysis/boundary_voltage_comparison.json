@@ -1,0 +1,184 @@
+{
+  "comparisons": [
+    {
+      "basis": "requested187",
+      "window_s": [
+        "0.1",
+        "1"
+      ],
+      "count": 91,
+      "max_abs_voltage_difference_mV": "3.7000E-12",
+      "voltage_1mV_criterion_met": true,
+      "all_peak_occurrences": [
+        {
+          "time_s": "0.14",
+          "signed_components_new_minus_baseline_V": {
+            "V": "-3.7E-15",
+            "Eeq": "-6E-16",
+            "etaMid": "-1.998E-15",
+            "phil": "-8E-16"
+          },
+          "component_sum_residual_V": "-3.02E-16"
+        }
+      ]
+    },
+    {
+      "basis": "requested187",
+      "window_s": [
+        "1",
+        "5"
+      ],
+      "count": 81,
+      "max_abs_voltage_difference_mV": "3.6000E-12",
+      "voltage_1mV_criterion_met": true,
+      "all_peak_occurrences": [
+        {
+          "time_s": "3.9",
+          "signed_components_new_minus_baseline_V": {
+            "V": "-3.6E-15",
+            "Eeq": "0E-16",
+            "etaMid": "-6.70E-16",
+            "phil": "-2.8E-15"
+          },
+          "component_sum_residual_V": "-1.30E-16"
+        }
+      ]
+    },
+    {
+      "basis": "requested187",
+      "window_s": [
+        "0",
+        "1"
+      ],
+      "count": 107,
+      "max_abs_voltage_difference_mV": "3.7000E-12",
+      "voltage_1mV_criterion_met": true,
+      "all_peak_occurrences": [
+        {
+          "time_s": "0.14",
+          "signed_components_new_minus_baseline_V": {
+            "V": "-3.7E-15",
+            "Eeq": "-6E-16",
+            "etaMid": "-1.998E-15",
+            "phil": "-8E-16"
+          },
+          "component_sum_residual_V": "-3.02E-16"
+        }
+      ]
+    },
+    {
+      "basis": "requested187",
+      "window_s": [
+        "0",
+        "5"
+      ],
+      "count": 187,
+      "max_abs_voltage_difference_mV": "3.7000E-12",
+      "voltage_1mV_criterion_met": true,
+      "all_peak_occurrences": [
+        {
+          "time_s": "0.14",
+          "signed_components_new_minus_baseline_V": {
+            "V": "-3.7E-15",
+            "Eeq": "-6E-16",
+            "etaMid": "-1.998E-15",
+            "phil": "-8E-16"
+          },
+          "component_sum_residual_V": "-3.02E-16"
+        }
+      ]
+    },
+    {
+      "basis": "exact_common_stored",
+      "window_s": [
+        "0.1",
+        "1"
+      ],
+      "count": 99,
+      "max_abs_voltage_difference_mV": "3.7000E-12",
+      "voltage_1mV_criterion_met": true,
+      "all_peak_occurrences": [
+        {
+          "time_s": "0.14",
+          "signed_components_new_minus_baseline_V": {
+            "V": "-3.7E-15",
+            "Eeq": "-6E-16",
+            "etaMid": "-1.998E-15",
+            "phil": "-8E-16"
+          },
+          "component_sum_residual_V": "-3.02E-16"
+        }
+      ]
+    },
+    {
+      "basis": "exact_common_stored",
+      "window_s": [
+        "1",
+        "5"
+      ],
+      "count": 82,
+      "max_abs_voltage_difference_mV": "3.6000E-12",
+      "voltage_1mV_criterion_met": true,
+      "all_peak_occurrences": [
+        {
+          "time_s": "3.9",
+          "signed_components_new_minus_baseline_V": {
+            "V": "-3.6E-15",
+            "Eeq": "0E-16",
+            "etaMid": "-6.70E-16",
+            "phil": "-2.8E-15"
+          },
+          "component_sum_residual_V": "-1.30E-16"
+        }
+      ]
+    },
+    {
+      "basis": "exact_common_stored",
+      "window_s": [
+        "0",
+        "1"
+      ],
+      "count": 906,
+      "max_abs_voltage_difference_mV": "4.8000E-12",
+      "voltage_1mV_criterion_met": true,
+      "all_peak_occurrences": [
+        {
+          "time_s": "0.052750000000000005",
+          "signed_components_new_minus_baseline_V": {
+            "V": "-4.8E-15",
+            "Eeq": "-1.1E-15",
+            "etaMid": "1.112E-15",
+            "phil": "-4.5E-15"
+          },
+          "component_sum_residual_V": "-3.12E-16"
+        }
+      ]
+    },
+    {
+      "basis": "exact_common_stored",
+      "window_s": [
+        "0",
+        "5"
+      ],
+      "count": 987,
+      "max_abs_voltage_difference_mV": "4.8000E-12",
+      "voltage_1mV_criterion_met": true,
+      "all_peak_occurrences": [
+        {
+          "time_s": "0.052750000000000005",
+          "signed_components_new_minus_baseline_V": {
+            "V": "-4.8E-15",
+            "Eeq": "-1.1E-15",
+            "etaMid": "1.112E-15",
+            "phil": "-4.5E-15"
+          },
+          "component_sum_residual_V": "-3.12E-16"
+        }
+      ]
+    }
+  ],
+  "exact_common_count": 987,
+  "requested_count": 187,
+  "sign": "new minus baseline; V=phis(point4)-phis(point1)",
+  "scope": "Voltage portion only; electrode 241-coordinate surface comparison and Li recovery pending; not full normal gate PASS"
+}

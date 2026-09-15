@@ -1,0 +1,140 @@
+{
+  "baseline_name": "Caps300R320H0125C16",
+  "baseline_job": "5d1a87652ed54e6a945d4f2af4aeda70",
+  "baseline_Java_source": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/core16_control/Caps300R320H0125C16.java",
+    "bytes": 65233,
+    "sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e",
+    "mtime_utc": "2026-09-14T12:24:31.984755+00:00"
+  },
+  "source_hash_is_not_MPH_hash": true,
+  "baseline_CSVs": [
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/axes_profile_N.csv",
+      "bytes": 36587737,
+      "sha256": "4af5bc5ddd80aa1f1f68091b769273036a5ffb2325d3be35d7bdd02ded7cfda8",
+      "mtime_utc": "2026-09-14T12:42:21.664140+00:00"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/axes_profile_P.csv",
+      "bytes": 35440022,
+      "sha256": "0bef4fc6f7cb44880bb890e3ec5fed97fd80623467a9546648f6254b49f14c9a",
+      "mtime_utc": "2026-09-14T12:42:21.985730+00:00"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/axes_runtime_settings.csv",
+      "bytes": 1615,
+      "sha256": "7a6e8461e965c1d3643d5c1e027250526b9d6069337ae67cd0fcc5cb80634ddd",
+      "mtime_utc": "2026-09-14T12:42:21.420452+00:00"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce1_per1_Constraint.csv",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtime_utc": "2026-09-14T12:42:21.436456+00:00"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce1_per1_Expression.csv",
+      "bytes": 5444,
+      "sha256": "8fa9a0d0eaa8bc3ce84b006e9be50d6d6b11aa4637215868762f2e3df746203b",
+      "mtime_utc": "2026-09-14T12:42:21.434455+00:00"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce1_per1_Weak.csv",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtime_utc": "2026-09-14T12:42:21.435455+00:00"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce2_per1_Constraint.csv",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtime_utc": "2026-09-14T12:42:21.437963+00:00"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce2_per1_Expression.csv",
+      "bytes": 5446,
+      "sha256": "41581b938c4b59467d12d4ef57022f6bf13a789e7009364d4dd5c51956574c7c",
+      "mtime_utc": "2026-09-14T12:42:21.436456+00:00"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce2_per1_Weak.csv",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mtime_utc": "2026-09-14T12:42:21.437456+00:00"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_boundary1.csv",
+      "bytes": 246278,
+      "sha256": "cb3838a9d24d3913d3ae104ceabdbf185e92b210a7b604eea7d1d44827123aa8",
+      "mtime_utc": "2026-09-14T12:42:21.427454+00:00"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_boundary4.csv",
+      "bytes": 254926,
+      "sha256": "0af97bde74d968363522c9bcad81bd4e55e6b82e7d7c416c43c2e5127257ef1b",
+      "mtime_utc": "2026-09-14T12:42:21.430455+00:00"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_global.csv",
+      "bytes": 281101,
+      "sha256": "9d0025575ea17de8deb8c667576d73193e975b9ea19e46ef08b1d5fd4de2010a",
+      "mtime_utc": "2026-09-14T12:42:21.423455+00:00"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_MaxLine_ce.csv",
+      "bytes": 36018,
+      "sha256": "43d137869c4b56a1cc02c70db5b9c008d4597638c623ac09118d0fd8057eeedc",
+      "mtime_utc": "2026-09-14T12:42:21.433456+00:00"
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_MinLine_ce.csv",
+      "bytes": 36031,
+      "sha256": "789198cf3836090ab77c8b7f8306e6611164339ae3ae6529b37321d02d8aad4f",
+      "mtime_utc": "2026-09-14T12:42:21.432456+00:00"
+    }
+  ],
+  "matches_prior_manifest": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/physical600_b/package_manifest.json",
+    "bytes": 34122,
+    "sha256": "7945b6a7785ced88a32bbb269ba5a2110fb139fcf7203a77e5cbbf98cac3dfbf",
+    "mtime_utc": "2026-09-14T16:33:18.914394+00:00"
+  },
+  "original_normal_job": "56ef13bee5a448c5a029b02656ebf6bb",
+  "input_copy": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/electrolyte_recovery/inputs/failed_normal_copy.mph",
+    "bytes": 1266539803,
+    "sha256": "7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658",
+    "mtime_utc": "2026-09-15T04:57:06.616681+00:00"
+  },
+  "requested_times_count": 187,
+  "coordinates_per_electrode": 241,
+  "windows_s": [
+    [
+      0.1,
+      1
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      5
+    ]
+  ],
+  "time_sets": [
+    "requested187",
+    "exact_common_stored"
+  ],
+  "interpolation_or_nearest_substitution": false,
+  "voltage_limit_V": "0.001",
+  "surface_x_limit": "0.0001",
+  "global_vs_domain_min_abs_tolerance_mol_m3": "1e-9",
+  "argmin_coordinates_excluded": true,
+  "original_normal_gate_not_superseded": true
+}

@@ -1,0 +1,7 @@
+t
+comp1.minguardall(comp1.cl)
+comp1.minguard1(comp1.cl)
+comp1.minguard2(comp1.cl)
+comp1.minguard3(comp1.cl)
+ce_stop_threshold
+comp1.minguardall(comp1.cl)<=ce_stop_threshold

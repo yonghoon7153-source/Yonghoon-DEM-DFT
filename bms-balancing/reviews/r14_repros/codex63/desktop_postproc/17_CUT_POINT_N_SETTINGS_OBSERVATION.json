@@ -1,0 +1,13 @@
+{
+  "screenshot": "17_cut_point_n_file_settings.png",
+  "dataset_label": "Cut Point 1D 1",
+  "upstream_display": "GUI_N_sol1 (sol1)",
+  "entry_method": "From file",
+  "filename_visible_suffix": "coordinate_inputs\\profile_N_coordinates_m.txt",
+  "full_path_visible": false,
+  "snapping": "None",
+  "point_number_variable": "cpt1n",
+  "coordinate_file_consumption_verified": false,
+  "domain_selection": "Domain 1 observed previously; propagation checkbox deactivation not yet observed",
+  "evaluation_observed": false
+}

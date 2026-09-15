@@ -1,0 +1,11 @@
+{
+  "screenshot": "13_boundary1_expressions_empty_selection.png",
+  "evaluation_label": "Point Evaluation 1",
+  "dataset_display": "Study 1/Solution 1 (0) (sol1)",
+  "time_selection": "All",
+  "selection_visible": "Empty",
+  "expressions_and_units": "User pasted 13 rows matching BOUNDARY1_EVALUATION_CONTRACT.json after decoding chat Markdown escapes and tab entities",
+  "full_expression_evidence": "User pasted text; screenshot shows lower subset",
+  "evaluation_observed": false,
+  "status": "WAITING_FOR_BOUNDARY_1_SELECTION"
+}

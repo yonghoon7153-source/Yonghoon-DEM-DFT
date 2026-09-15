@@ -1,0 +1,20 @@
+{
+  "screenshot": "03_expressions_all_before_dataset_correction.png",
+  "dataset_display": "Study 1/Solution 1 (1) (sol1)",
+  "time_selection": "All",
+  "expressions_visible": 7,
+  "units_visible": [
+    "s",
+    "mol/m^3",
+    "mol/m^3",
+    "mol/m^3",
+    "mol/m^3",
+    "mol/m^3",
+    "blank"
+  ],
+  "normalization": "None",
+  "transformation": "None",
+  "evaluation_observed": false,
+  "pending": "Select previously observed Study 1/Solution 1 (0) (sol1) and confirm before first evaluation",
+  "dataset_tag": "UNCONFIRMED"
+}

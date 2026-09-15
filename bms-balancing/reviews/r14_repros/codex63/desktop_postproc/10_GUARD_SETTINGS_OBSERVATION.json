@@ -1,0 +1,16 @@
+{
+  "screenshot": "10_guard_settings_truncated_expressions.png",
+  "evaluation_label": "Global Evaluation 2",
+  "dataset_display": "Study 1/Solution 1 (0) (sol1)",
+  "time_selection": "All",
+  "units_visible": [
+    "s",
+    "1",
+    "1"
+  ],
+  "normalization": "None",
+  "transformation": "None",
+  "full_guard_expressions_verified": false,
+  "reason": "Both expressions truncated in screenshot; selected lower expression field also truncated",
+  "evaluation_observed": false
+}
