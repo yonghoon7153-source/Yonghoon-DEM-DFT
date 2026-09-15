@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import pathlib
 import sys
 
 import numpy as np
@@ -396,8 +397,13 @@ def build(n_interior=60, n_end=10, seed=0, restarts=400, grid=True):
         fa, fs = phi_of(r['am_pct'])
         r['phi_am_est'], r['phi_se_est'] = fa, fs
         #  ★ SE 퍼콜 사전판정 (리뷰 BLOCKER-C).  φ_SE = 0.195 는 am_pct ≈ 88.8 wt% 다.
-        r['se_percolation'] = ('OK' if fs > 0.20 else
-                               ('marginal' if fs > PHI_C_SE else 'BELOW_phic'))
+        #  ⚠⚠ **이름에 규약을 박는다** (`LHS-01`, 2026-09-15).  옛 이름은 `se_percolation` 이라
+        #    **실측처럼 읽혔는데** 이 값은 `phi_se_est`(런 **전** 추정)를 동결 평균장 문턱에 댄
+        #    파생 라벨이다.  같은 파일 아래 HIGH-F 주석이 이미 *"타깃 이름에 규약을 박는다"* 를
+        #    규칙으로 세워 뒀는데 **이 열만 예외로 남아 있었다**.
+        #    운용 특성은 `LHS_PERC_MEASURED` 에 실측으로 동결돼 있다 — **선별기이지 필터가 아니다.**
+        r['se_percolation_est_meanfield'] = ('OK' if fs > 0.20 else
+                                             ('marginal' if fs > PHI_C_SE else 'BELOW_phic'))
         th = thickness_of(r['am_pct'], FIXED['loading_mAh_cm2'])
         r['thickness_est_um'] = th
         #  ★ 입자 수 (rve 50 기준) — coverage_AM_P 와 ps 실현 가능성의 직접 지표
@@ -431,10 +437,38 @@ def build(n_interior=60, n_end=10, seed=0, restarts=400, grid=True):
         #    실현되지 않는다 (입자 하나가 ps 의 30 % 를 차지하는 행이 실재).
         if _np_ == _np_ and _np_ < N_AM_P_MIN:
             f.append('n_am_p_low' if _np_ >= 10 else 'n_am_p_CRIT')
-        if r['se_percolation'] != 'OK':
-            f.append('se_' + r['se_percolation'])
         r['finite_size_flag'] = '+'.join(f)
+        #  ⚠⚠ **SE 퍼콜 추정을 유한크기 플래그에서 뺀다** (`LHS-01`, 2026-09-15).
+        #    옛 판은 `se_BELOW_phic` 를 `finite_size_flag` 에 **접합**해서 **기하 플래그가
+        #    물리 추정을 날랐다**.  설계 130 행 중 44 행이 그렇게 켜졌고 그 중 **22 행은
+        #    유한크기가 깨끗한데도** 플래그가 서 있었다 = 두 가지가 한 열에서 구별 불가.
+        #    ⇒ 자기 열로 분리한다.  둘을 **같이** 보고 싶으면 두 열을 읽으면 된다.
+        r['se_perc_est_flag'] = ('' if r['se_percolation_est_meanfield'] == 'OK'
+                                 else 'se_' + r['se_percolation_est_meanfield'])
     return rows
+
+
+#  ★★★ **실측 운용 특성** (`LHS-01` 닫음, 2026-09-15).  위 평균장 라벨을 코호트 127 케이스의
+#    **생산 솔버 이온 관통 여부**와 대조한 결과다 (원자료 `docs/data/lhs_percolation_measured_20260915.csv`,
+#    파생 `docs/lhs_corpus_readout_20260915.md`).  ⚠ 이 상수는 **읽는 법을 박아 두는 것**이지
+#    코드 분기에 쓰라는 값이 아니다.
+#
+#      se_percolation_est_meanfield = OK          n=83   실제 막힘  1  (= 1.2 %)
+#      se_percolation_est_meanfield = BELOW_phic  n=44   실제 막힘 24  (= 54.5 %)
+#
+#    ⇒ **선별기(screen)로는 훌륭하다** — 재현율 96.0 % (막힌 25건 중 24건을 잡는다).
+#      놓친 1건은 `lhs00_009` 이고 그것은 물리가 아니라 경계 규칙이다 (`LHS-04`).
+#    ⛔ **필터로 쓰면 안 된다** — 정밀도 54.5 % 라 `BELOW_phic` 를 버리면 **실제로 뚫리는
+#      20건을 같이 버린다**.  이것이 `LHS-01` 이 P2 로 등재된 이유다.
+#    ★ 그리고 이 값이 `thick_over_d_am_max` 보다 **잘 가른다**: 두 군 막힘률 비 **45.3배**
+#      vs 유한크기 구간 최대/최소 **5.1배**(게다가 단조도 아니다 — 42.9/13.7/8.3/25.0 %).
+#      ⚠ 판독문 ④ 의 옛 문장 *"유한크기가 φ 보다 잘 가른다"* 는 **이 측정으로 반증됐다**.
+LHS_PERC_MEASURED = {
+    'source': 'docs/data/lhs_percolation_measured_20260915.csv',
+    'n_measured': 127, 'channel': 'ionic', 'solver': 'production (legacy arm, 기본값)',
+    'OK': {'n': 83, 'blocked': 1}, 'BELOW_phic': {'n': 44, 'blocked': 24},
+    'recall_pct': 96.0, 'precision_pct': 54.5, 'use': 'screen_not_filter',
+}
 
 
 #  ★★ 타깃 이름에 **규약을 박는다** (리뷰 HIGH-F).  리포 실측 모호폭:
@@ -597,6 +631,50 @@ def _selftest():
     c = build(20, 4, 0, 40, grid=False)
     chk('⑪ --continuous 경로 보존 (눈금 밖 값이 나온다)',
         any(not onstep(r['d_am_p_um'], 1.0) for r in c if not np.isnan(r['d_am_p_um'])))
+    #  ── ★★ `LHS-01` 회귀 (2026-09-15) ─────────────────────────────────────
+    #    규율 ②: 결함을 재현하는 검사를 **먼저** 세우고 고친다.  옛 코드는 ⑬·⑬b 를
+    #    **둘 다** 실패했다 (열 이름이 `se_percolation` · 플래그에 `se_` 접합).
+    chk('⑬ SE 퍼콜 **추정** 열 이름이 규약을 담는다 (`_est_meanfield`)',
+        all('se_percolation_est_meanfield' in r and 'se_percolation' not in r for r in rows))
+    #  ⑬b **기하 플래그가 물리 추정을 나르지 않는다** — 두 종류를 한 열에 접합하면
+    #      "유한크기가 깨끗한데 플래그가 켜진 행" 과 구별이 불가능해진다.
+    chk('⑬b finite_size_flag 에 `se_` 조각이 하나도 없다 (기하 ↔ 물리추정 분리)',
+        not any(t.startswith('se_') for r in rows
+                for t in (r['finite_size_flag'].split('+') if r['finite_size_flag'] else [])))
+    #  ⑬c ★ 분리가 **정보를 잃지 않는다** — 두 열을 합치면 옛 열이 정확히 복원된다.
+    def _legacy(r):
+        return '+'.join([t for t in (r['finite_size_flag'].split('+')
+                                     if r['finite_size_flag'] else [])]
+                        + ([r['se_perc_est_flag']] if r['se_perc_est_flag'] else []))
+    chk('⑬c 두 열을 합치면 옛 `finite_size_flag` 가 정확히 복원된다 (무손실 분리)',
+        all(_legacy(r) == '+'.join(
+            [t for t in ([] if not r['finite_size_flag'] else r['finite_size_flag'].split('+'))]
+            + ([] if r['se_percolation_est_meanfield'] == 'OK'
+               else ['se_' + r['se_percolation_est_meanfield']])) for r in rows))
+    #  ⑬d ★★ **실측 상수가 자기 원자료와 일치한다** — 숫자를 주석에 손으로 적고 끝내면
+    #      원자료가 바뀌어도 아무도 모른다 (규율 ④: 정본은 밖으로 강제되지 않으면 샌다).
+    #      원자료가 없으면 **건너뛰지 않고 실패**한다 (fail-closed).
+    _mp = pathlib.Path(__file__).resolve().parent.parent / LHS_PERC_MEASURED['source']
+    if _mp.exists():
+        #  ⚠ 파일 머리에 `#` 출처 주석이 있다 — 그것을 헤더로 읽으면 **조용히 0행**이 되고
+        #    검사가 통과해 버린다 (규율 ⑤ false-green).  주석은 명시적으로 걷어낸다.
+        _rows = list(csv.DictReader(
+            [ln for ln in _mp.read_text(encoding='utf-8').splitlines()
+             if not ln.startswith('#')]))
+        _agg = {}
+        for _r in _rows:
+            _k = _r['se_percolation_est_meanfield']
+            _a = _agg.setdefault(_k, [0, 0])
+            _a[0] += 1
+            _a[1] += (_r['ionic_percolates'] == 'False')
+        _hit = (len(_rows) == LHS_PERC_MEASURED['n_measured']
+                and all(_agg.get(k, [0, 0]) == [v['n'], v['blocked']]
+                        for k, v in LHS_PERC_MEASURED.items()
+                        if isinstance(v, dict) and 'blocked' in v))
+        chk(f'⑬d LHS_PERC_MEASURED 가 원자료와 일치한다 '
+            f'(n={len(_rows)} · {({k: v for k, v in _agg.items()})})', _hit)
+    else:
+        chk(f'⑬d 실측 원자료가 있다 ({LHS_PERC_MEASURED["source"]})', False)
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -628,12 +706,13 @@ if __name__ == '__main__':
                 r[d] = r[d] * 2.0
     cols = (['case_id', 'block', 'd_am_p_um', 'd_am_s_um', 'ps_frac', 'ps_label', 'd_se_um',
              'am_pct', 'rve_um', 'loading_mAh_cm2', 'pressure_MPa', 'e_se_gpa',
-             'thickness_est_um', 'phi_am_est', 'phi_se_est', 'se_percolation',
+             'thickness_est_um', 'phi_am_est', 'phi_se_est', 'se_percolation_est_meanfield',
              'd_am_max_um', 'sv_inv_um', 'r_AM_P_um', 'r_AM_S_um', 'r_SE_um',
              'size_ratio_P_over_S', 'size_ratio_AM_over_SE',
              'n_am_p_est', 'n_am_s_est', 'n_se_est', 'n_total_est',
              'rve_min_um', 'rve_recommended_um',
-             'rve_over_d_am_max', 'thick_over_d_am_max', 'finite_size_flag'] + DESCRIPTORS)
+             'rve_over_d_am_max', 'thick_over_d_am_max', 'finite_size_flag',
+             'se_perc_est_flag'] + DESCRIPTORS)
     for r in rows:
         for d in DESCRIPTORS:
             r.setdefault(d, '')                       # DEM 이 채울 빈 칸
@@ -672,16 +751,29 @@ if __name__ == '__main__':
     import collections as _c
     cnt = _c.Counter(t for r in rows for t in (r['finite_size_flag'].split('+') if
                                                r['finite_size_flag'] else []))
-    print(f"\n  ⚠ 플래그 {len(fl)}/{len(rows)} 행 — 내역:")
+    print(f"\n  ⚠ 유한크기 플래그 {len(fl)}/{len(rows)} 행 — 내역:")
     _why = {'lateral': '측면 상자 < 3.3 입자',
             'thin': '두께 < 3 입자',
             'n_am_p_low': 'N_AM_P 10–30 (coverage_AM_P 표집오차 큼)',
-            'n_am_p_CRIT': '★ N_AM_P < 10 — coverage_AM_P·명목 ps 가 **실현 불가**',
-            'se_marginal': 'φ_SE 가 φc 바로 위 (0.195–0.20)',
-            'se_BELOW_phic': f'★ φ_SE < {PHI_C_SE} — **SE 퍼콜 실패 예상** '
-                             f'(am_pct > 88.8 wt%; τ 가 정의 안 될 수 있다)'}
+            'n_am_p_CRIT': '★ N_AM_P < 10 — coverage_AM_P·명목 ps 가 **실현 불가**'}
     for k, v in cnt.most_common():
         print(f"      {k:14s} {v:>3} 행   {_why.get(k, '')}")
+    #  ★ SE 퍼콜 추정은 **자기 열**에서 보고한다 (`LHS-01`) — 기하 플래그와 섞지 않는다.
+    sc = _c.Counter(r['se_perc_est_flag'] for r in rows if r['se_perc_est_flag'])
+    _m = LHS_PERC_MEASURED
+    print(f"\n  ⚠ SE 퍼콜 **추정** 플래그 (`se_perc_est_flag`, 기하와 분리) — "
+          f"{sum(sc.values())}/{len(rows)} 행:")
+    _swhy = {'se_marginal': f'φ_SE 가 φc 바로 위 ({PHI_C_SE}–0.20)',
+             'se_BELOW_phic': f'φ_SE < {PHI_C_SE} — 평균장 문턱 아래 (am_pct > 88.8 wt%)'}
+    for k, v in sc.most_common():
+        print(f"      {k:14s} {v:>3} 행   {_swhy.get(k, '')}")
+    print(f"      ★ 실측 운용특성 (n={_m['n_measured']}, {_m['channel']} 채널): "
+          f"OK {_m['OK']['n']}행 중 막힘 {_m['OK']['blocked']} · "
+          f"BELOW_phic {_m['BELOW_phic']['n']}행 중 막힘 {_m['BELOW_phic']['blocked']} "
+          f"⇒ 재현율 {_m['recall_pct']} % · 정밀도 {_m['precision_pct']} %")
+    print(f"      ⛔ **선별기이지 필터가 아니다** — `BELOW_phic` 를 버리면 실제로 뚫리는 "
+          f"{_m['BELOW_phic']['n'] - _m['BELOW_phic']['blocked']}건을 같이 버린다.  "
+          f"출처: {_m['source']}")
     _np = [r['n_am_p_est'] for r in rows if r['n_am_p_est'] == r['n_am_p_est']]
     print(f"  입자 수 추정: N_AM_P 최소 {min(_np):.1f} · 중앙 {sorted(_np)[len(_np)//2]:.0f} | "
           f"총 입자 최대 {max(r['n_total_est'] for r in rows):,.0f}")
@@ -696,5 +788,8 @@ if __name__ == '__main__':
     print("  ⚠ 플래그는 **거부가 아니라 라벨**이다.  학습 시 공변량으로 남기면 "
           "유한크기 효과를 흡수한다 — 단 `n_am_p_CRIT` 와 `se_BELOW_phic` 는 "
           "**타깃 자체가 안 나올 수 있는** 행이라 성격이 다르다.")
+    print("  ★ 그리고 그 둘은 **성격이 서로 다르다**: `n_am_p_CRIT` 는 기하로 확정이지만 "
+          f"`se_BELOW_phic` 는 추정이고 실측에서 {_m['BELOW_phic']['n']}건 중 "
+          f"{_m['BELOW_phic']['n'] - _m['BELOW_phic']['blocked']}건이 **실제로는 뚫렸다**.")
     print('\n⚠ 디스크립터 열은 **비어 있다** — DEM 이 채운다: ' + ', '.join(DESCRIPTORS))
     sys.stdout.flush()
