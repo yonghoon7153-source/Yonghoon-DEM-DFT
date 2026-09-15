@@ -64,6 +64,11 @@ from seal_s3_prerun import KST, RHO_RULE, SEAL_DEADLINE, SEAL_NOT_BEFORE
 IN_DOMAIN = 'B_ch'
 REQUIRED_SEAL_KEYS = ('sealed_at_kst', 'seal_deadline', 'generation_git_sha', 'channels')
 
+#: ρ 증서가 반드시 들고 있어야 하는 키.  ⛔ **`measure_rho.CERT_KEYS` 와 같아야 한다** —
+#: 사본이 갈라지면 측정기가 낸 증서를 판정기가 거부한다 (실제로 `rho_rule` 에서 한 번 갈렸다).
+#: 측정기 selftest ⑧f 가 두 목록을 대조한다.
+CERT_REQUIRED = ('cohort_ids', 'channels', 'generation', 'stop_criterion', 'aggregation', 'rho')
+
 #: 등록된 판정표 (계약 §B).  ⛔ 문턱 3 %/10 % 고정 — ρ 는 문턱을 못 움직이고 **상태만** 바꾼다.
 VERDICT_RULE = RHO_RULE
 
@@ -147,7 +152,7 @@ def load_rho_certificate(path, seal, channels_hint=None):
     금지했고, 2026-09-15 현재 리포의 사다리 셋이 정확히 그 mono 30 이다.
     ⚠ 현행 봉인기는 ρ 수치 필드를 **내지 않는다** — 증서는 아직 만들어야 하는 산출물이다.
     """
-    need = ('cohort_ids', 'channels', 'generation', 'stop_criterion', 'aggregation', 'rho')
+    need = CERT_REQUIRED
     if not path.is_file():
         return None, f'증서 파일이 없다: {path}'
     try:
@@ -181,7 +186,24 @@ def load_rho_certificate(path, seal, channels_hint=None):
                       f'(예: {missing}).  ⛔ 다른 코호트의 ρ 를 대입하지 않는다.')
     if channels_hint and not set(channels_hint) <= set(c['channels']):
         return None, f"증서가 채널 {sorted(set(channels_hint) - set(c['channels']))} 를 안 덮는다"
-    return rho, ''
+    #  ★★ **채널별 ρ** — 판정은 채널마다 따로 나므로 ρ 도 그 채널 것을 쓰는 게 옳다.
+    #     실측에서 이온과 열이 **20배** 갈린다 (mono 30: 6e-7 vs 1.1e-5 %).
+    #     ⚠ 증서가 채널별 값을 안 실으면 스칼라를 그대로 쓴다 (옛 증서 호환).
+    out = {'*': rho}
+    for ch, v in (c.get('rho_by_channel') or {}).items():
+        try:
+            f = float(v)
+        except (TypeError, ValueError):
+            return None, f'증서의 rho_by_channel[{ch!r}] 을 수로 읽을 수 없다: {v!r}'
+        if not (math.isfinite(f) and f >= 0):
+            return None, f'증서의 rho_by_channel[{ch!r}] 이 유한 비음수가 아니다: {f!r}'
+        out[ch] = f
+    return out, ''
+
+
+def rho_for(rho_map, ch) -> float:
+    """그 채널의 ρ — 증서가 채널별 값을 실으면 그것을, 아니면 스칼라를."""
+    return rho_map.get(ch, rho_map['*'])
 
 
 def _sha256(p) -> str:
@@ -479,6 +501,7 @@ def main() -> int:
             print(f'⛔ ρ 증서가 판정에 쓸 수 없다 — {why}')
             return 2
         rho_src = f'certificate:{a.rho_certificate}'
+        rho_map = rho
     elif a.rho is not None:
         if not a.diagnostic:
             print('⛔ 맨 `--rho` 는 **진단 전용**이다 (AREA5-04) — 공식 판정에는 '
@@ -490,11 +513,13 @@ def main() -> int:
             print(f'⛔ ρ 를 수로 읽을 수 없다: {a.rho!r}')
             return 2
         rho_src = 'cli(diagnostic)'
+        rho_map = {'*': rho}
     else:
         print('⛔ ρ 가 필요하다 — 기본값 0 을 쓰면 `d ≥ 10` 이 전부 h1 이 된다.')
         return 2
-    if not (math.isfinite(rho) and rho >= 0):
-        print(f'⛔ ρ 가 유한 비음수가 아니다: {rho!r}')
+    _bad_rho = {k: v for k, v in rho_map.items() if not (math.isfinite(v) and v >= 0)}
+    if _bad_rho:
+        print(f'⛔ ρ 가 유한 비음수가 아니다: {_bad_rho!r}')
         return 2
     #  ── limit (`AREA5-02`) ──  정의역을 자르는 것은 판정 집합을 고르는 것이다.
     if a.limit and not a.diagnostic:
@@ -519,7 +544,8 @@ def main() -> int:
     ids = sorted({i for ch in channels for i in seal['channels'][ch]['ids'][IN_DOMAIN]})
     if a.limit:
         ids = ids[:a.limit]
-    print(f'봉인 {a.seal} · 채널 {channels} · B_ch 합집합 {len(ids)} 케이스 · ρ = {rho}')
+    print(f'봉인 {a.seal} · 채널 {channels} · B_ch 합집합 {len(ids)} 케이스 · '
+          f'ρ = ' + ' · '.join(f'{ch} {rho_for(rho_map, ch):g}' for ch in channels))
     for cid in ids:
         cdir = root / cid
         try:
@@ -553,7 +579,9 @@ def main() -> int:
         n_contradicted += len(blocking)
         n_blocking += len(blocking)
         n_active_total += sum(r['n_active_old'] for _c, r in per_channel[ch])
-        bounds, verds, undet_label = bound_medians(deltas, n_domain, rho)
+        #  ★ **그 채널의 ρ** 를 쓴다 (증서가 채널별 값을 실으면).
+        rho_ch = rho_for(rho_map, ch)
+        bounds, verds, undet_label = bound_medians(deltas, n_domain, rho_ch)
         if a.diagnostic:
             v = 'DIAGNOSTIC_PARTIAL'
         elif blocking:
@@ -565,6 +593,7 @@ def main() -> int:
         else:
             v = 'NO_DATA'
         summary[ch] = {
+            'rho': rho_ch,
             'n_in_domain_sealed': n_domain,
             'n_processed': len(per_channel[ch]),
             'n_used': len(deltas),
@@ -582,7 +611,8 @@ def main() -> int:
     out = {'contract': 'docs/area_contract_20260913.md §A·§B·§C·§D',
            'seal_path': str(a.seal), 'seal_sealed_at_kst': seal['sealed_at_kst'],
            'seal_generation_git_sha': seal['generation_git_sha'],
-           'rho': rho, 'rho_source': rho_src, 'diagnostic': bool(a.diagnostic),
+           'rho': rho_map.get('*'), 'rho_by_channel': {ch: rho_for(rho_map, ch) for ch in channels},
+           'rho_source': rho_src, 'diagnostic': bool(a.diagnostic),
            'limit': a.limit, 'verdict_rule': VERDICT_RULE,
            'psi_arms': [nc.PSI_DIVIDE, nc.PSI_MULTIPLY],
            'seal_test_only': bool(seal.get('test_only')),
@@ -615,7 +645,7 @@ def main() -> int:
     for ch in channels:
         s = summary[ch]
         _hi = '+∞' if s['upper_is_infinite'] else s['median_abs_delta_pct_upper']
-        print(f"  {ch}: 봉인 정의역 {s['n_in_domain_sealed']} · 확정 {s['n_used']} · "
+        print(f"  {ch}: ρ {s['rho']:g} · 봉인 정의역 {s['n_in_domain_sealed']} · 확정 {s['n_used']} · "
               f"new 미정 {len(s['undetermined_new'])} · "
               f"median|Δ| [{s['median_abs_delta_pct_lower']}, {_hi}] % · "
               f"판정 {s['verdict']} ({s['verdict_lower']}/{s['verdict_upper']})")
@@ -806,18 +836,32 @@ def _selftest() -> int:
             _p.write_text(json.dumps(d, ensure_ascii=False), encoding='utf-8')
             return load_rho_certificate(_p, _seal3)
 
-        chk('⑧ 온전한 증서는 ρ 를 준다', _cert_rho(_cert)[0] == 0.0, _cert_rho(_cert)[1])
+        #  ⚠ 2026-09-15 부터 **채널별 ρ** 를 돌려준다 — 스칼라는 `'*'` 자리에 있다.
+        chk('⑧ 온전한 증서는 ρ 를 준다', (_cert_rho(_cert)[0] or {}).get('*') == 0.0,
+            _cert_rho(_cert)[1])
         #    ★★ 이것이 내가 방금 넣었다가 잡은 버그다 — `not c.get(k)` 로 보면 `rho: 0.0` 이
         #       "키 없음" 으로 읽힌다.  **0 은 결측이 아니다** (`GAP2-05` 의 거울).
         chk('⑧b ★★ ρ = 0.0 을 "키 없음" 으로 읽지 않는다 (0 은 결측이 아니다)',
-            _cert_rho(dict(_cert, rho=0.0))[0] == 0.0)
+            (_cert_rho(dict(_cert, rho=0.0))[0] or {}).get('*') == 0.0)
         for _k in ('cohort_ids', 'channels', 'generation', 'stop_criterion', 'aggregation', 'rho'):
             _d = {k: v for k, v in _cert.items() if k != _k}
             chk(f'⑧c 키 {_k} 가 없으면 거부', _cert_rho(_d)[0] is None)
         chk('⑧d ★ 봉인된 B_ch 를 다 안 덮는 증서는 거부 (mono 30 을 새 130 에 대입 금지)',
             _cert_rho(dict(_cert, cohort_ids=['zz1', 'zz2']))[0] is None)
         chk('⑧e 더 넓은 코호트는 받는다 (덮기만 하면 된다)',
-            _cert_rho(dict(_cert, cohort_ids=['c1', 'c2', 'c3', 'c4']))[0] == 0.0)
+            (_cert_rho(dict(_cert, cohort_ids=['c1', 'c2', 'c3', 'c4']))[0] or {}).get('*') == 0.0)
+        #  ★★ **채널별 ρ** — 판정은 채널마다 나므로 ρ 도 그 채널 것을 쓴다 (mono 30 실측에서
+        #     이온과 열이 20배 갈린다).  증서가 안 실으면 스칼라로 떨어진다.
+        _cb = _cert_rho(dict(_cert, rho=1.0, rho_by_channel={'ionic': 7.0}))[0]
+        chk('⑧g ★★ 채널별 ρ 를 실으면 그 채널은 그것을, 나머지는 스칼라를 쓴다',
+            _cb is not None and rho_for(_cb, 'ionic') == 7.0
+            and rho_for(_cb, 'thermal') == 1.0, str(_cb))
+        chk('⑧h ★ 판별력: 같은 d 라도 채널 ρ 가 다르면 라벨이 갈린다 (ρ 가 실제로 판정에 든다)',
+            verdict(12.0, rho_for(_cb, 'thermal')) == 'h1'
+            and verdict(12.0, rho_for(_cb, 'ionic')) == 'UNRESOLVED_NUMERIC',
+            f"thermal(ρ=1) {verdict(12.0, 1.0)} vs ionic(ρ=7) {verdict(12.0, 7.0)}")
+        chk('⑧i 채널별 ρ 가 비유한이면 거부',
+            _cert_rho(dict(_cert, rho_by_channel={'ionic': 'nan'}))[0] is None)
         chk('⑧f 비유한 ρ 는 거부', _cert_rho(dict(_cert, rho='nan'))[0] is None)
 
     # ⑥ 러너 자신의 거부 — `main()` 을 인자로 불러 rc 를 본다.
