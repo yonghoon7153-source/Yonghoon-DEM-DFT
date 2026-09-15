@@ -408,8 +408,23 @@ def test_two_plausible_entry_lists_are_an_ambiguity_not_a_guess():
 
 
 def test_the_preserve_script_uses_that_one_rule():
-    """규칙이 두 벌이면 언젠가 갈린다 — bash 안의 python 이 같은 함수를 부른다."""
+    """규칙이 두 벌이면 언젠가 갈린다 — 스크립트의 **모든** 소비 자리가 같은 함수를 부른다.
+
+    ★ 2026-09-15 — 첫 수정판은 5 단계만 고쳤다. 시험이 `m.get("entries")` 한 철자만 막아서
+      6 단계의 `m["entries"]` 와 안내문의 같은 줄을 놓쳤고, 사용자 기계에서 세 묶음이 전부
+      6 단계 `KeyError: 'entries'` 로 죽었다 (5 단계는 통과한 뒤였다).
+
+      **규칙이 두 벌이면 언젠가 갈린다** 는 문장을 시험이 한 벌만 보고 있었던 셈이다.
+      이제 철자가 아니라 **모든 접근 자리**를 센다.
+    """
+    import re
+
     src = (ROOT / "scripts" / "preserve_handoff.sh").read_text(encoding="utf-8")
     assert "handoff_manifest" in src and "entry_list" in src, (
         "보존 스크립트가 자기만의 목록 판별을 들고 있다")
-    assert 'm.get("entries")' not in src, "옛 판별이 남아 있다"
+    direct = re.findall(r'm(?:\w*)\s*(?:\.get\(\s*"entries"|\[\s*"entries"\s*\])', src)
+    assert not direct, ("manifest 의 목록을 직접 꺼내는 자리가 남아 있다 — 규칙이 두 벌이다", direct)
+    # 소비 자리는 셋이다: 5 단계 대조 · 6 단계 복사 뒤 재대조 · 사람이 치는 안내문
+    assert src.count("entry_list(") >= 3, (
+        "소비 자리 셋(5 단계 · 6 단계 · 안내문) 중 일부가 공유 규칙을 안 부른다",
+        src.count("entry_list("))

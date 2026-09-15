@@ -203,12 +203,16 @@ printf '%s  %s\n' "$SHA" "$ZIP" > "$DEST/ZIP_SHA256.txt"
 
 echo
 echo "══ 6. **복사한 뒤** 다시 대조 (디스크 bytes 가 manifest 와 같은가) ══"
-DEST="$DEST" MAN="$MAN" python3 - <<'PY' || exit 1
-import hashlib, json, os, pathlib
+DEST="$DEST" MAN="$MAN" SCRIPTS_DIR="$HERE/scripts" python3 - <<'PY' || exit 1
+import hashlib, json, os, pathlib, sys
 dest = pathlib.Path(os.environ["DEST"])
 m = json.loads(pathlib.Path(os.environ["MAN"]).read_text(encoding="utf-8"))
+# ⚠ 2026-09-15 — 이 자리도 목록 키를 직접 꺼내고 있었다. 5 단계만 고쳤더니 세 묶음이 전부 여기서
+#   `KeyError: 'entries'` 로 죽었다 (5 단계는 통과한 뒤였다). **소비 자리는 셋이다.**
+sys.path.insert(0, os.environ["SCRIPTS_DIR"])
+from handoff_manifest import entry_list                      # noqa: E402
 ok = bad = 0
-for e in m["entries"]:
+for e in entry_list(m):
     p = dest / e["path"]
     if not p.is_file():
         continue
@@ -246,13 +250,15 @@ cat <<NEXT
     2026-09-15 실측: 이 줄이 없어서 복사해 친 사람이 FileNotFoundError 를 봤다.
   cd "\$(git rev-parse --show-toplevel)"
   python3 - <<'CHECK'
-import hashlib, json, pathlib, subprocess
+import hashlib, json, pathlib, subprocess, sys
 dest = "${PREFIX}${DEST}"                     # 저장소 루트 기준
 man  = pathlib.Path(dest) / "${MAN_REL}"      # 이번 묶음의 manifest (rglob 쓰지 말 것)
+sys.path.insert(0, "${PREFIX}scripts")        # 목록 키 판별은 한 자리 (entries/files/payload)
+from handoff_manifest import entry_list
 m = json.loads(man.read_text(encoding="utf-8"))
 print("manifest self-SHA:", hashlib.sha256(man.read_bytes()).hexdigest())
 ok = bad = skip = 0
-for e in m["entries"]:
+for e in entry_list(m):
     rel = f"{dest}/{e['path']}"
     try: blob = subprocess.run(["git","show",f"HEAD:{rel}"],capture_output=True,check=True).stdout
     except subprocess.CalledProcessError: skip += 1; continue
