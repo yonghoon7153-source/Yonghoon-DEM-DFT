@@ -436,8 +436,13 @@ def main(argv=None) -> int:
     if not a.dry_run and now < open_at and not a.freeze_inventory:
         print(f'⛔ 봉인 거부 (너무 이르다) — 계약 §5-v4 D-3 의 최초 허용일은 {SEAL_NOT_BEFORE} '
               f'(KST 00:00) 이고 지금은 {now.astimezone(KST):%Y-%m-%d %H:%M %Z} 다.')
-        print('   lhs00_034·089·098 이 아직 돌고 있어 사흘을 준 것이다.  --dry-run 은 언제든 된다.')
-        print('   ⛔ 이 날짜를 결과가 아쉬워서 앞당기지 말 것.')
+        #  ⚠ 옛 문구는 *"셋이 아직 돌고 있어 사흘을 준 것"* 이었는데 그 **이유가 충족되지
+        #    않는 것이 확정**됐다 (완주 예상 09-19 12:41 = 마감 +1일 12.7시간).  도구가
+        #    반증된 전제를 계속 말하면 읽는 사람이 *"기다리면 들어온다"* 로 읽는다.
+        print('   ⚠ lhs00_034·089·098 은 마감 안에 **못 들어온다** (완주 예상 09-19 12:41 KST).')
+        print('      저자 결정 2026-09-15 (계약 §D-3-c) = **(a) 마감 유지 + §D-4 addendum** —')
+        print('      127 로 봉인해 실런하고, 셋은 09-19 에 돌려 **정의역 밖 addendum** 으로 붙인다.')
+        print('   --dry-run 은 언제든 된다.  ⛔ 이 날짜를 결과가 아쉬워서 앞당기지 말 것.')
         return 2
     if not a.dry_run and now > SEAL_DEADLINE and inv is None:
         print(f'⛔ 봉인 거부 (마감이 지났다) — 저자가 고정한 수신 종료는 '
