@@ -3,6 +3,11 @@
 2026-09-15. **이 문서는 명령서다.** 숫자는 하나도 없다 — 돌리면 나온다. 정본은 그때
 사용자 기계에 생기는 `cycles_HD_knee_Li.csv` + `.meta.json` 이다.
 
+> **파일럿은 돌았다 (2026-09-15, HD_knee `--cycles 0,1,2`).** 결과와 영수증은
+> `reviews/BML_R1_RESPONSE.md` **§14** 에 있다 — 한 줄로: **dQ/dV 항은 폭을 안 좁히고
+> LAM_NE 는 2.9 배가 됐으며, `w_dqdv 1` 의 cycle 1 에서 LAM_NE 부호 식별을 잃었다.**
+> 이 문서는 **전 사이클 실행**과 다음 사람을 위해 남긴다.
+
 ## 0. 왜 이걸 재나
 
 `BML_R1_RESPONSE.md` §12-5 가 **"이 데이터에서 LAM 분할은 점추정으로 보고할 수 없고 폭과
@@ -87,8 +92,20 @@ python3 $H/scripts/width_report.py \
 
 # ── 난간 (두 산출 다)
 python3 $H/scripts/check_rails.py ~/out_widths/w0/cycles_HD_knee_Li.csv ~/out_widths/w1/cycles_HD_knee_Li.csv
-python3 $H/scripts/check_u14.py --new ~/out_widths/w1 --old ~/out_widths/w0
+
+# ── 스키마 (각각 따로 — 서로 견주지 않는다)
+python3 $H/scripts/check_u14.py --new ~/out_widths/w0 --schema-only
+python3 $H/scripts/check_u14.py --new ~/out_widths/w1 --schema-only
 ```
+
+> ⚠ **`check_u14 --new w1 --old w0` 를 쓰지 않는다** (2026-09-15 정정 — 이 런북의 첫 판이 그렇게
+> 적었다). u14 는 **승격 게이트**이고 "계산 경로를 안 고쳤으니 같아야 한다" 를 묻는다. 우리는 축을
+> **일부러** 바꿨으므로 `numbers N` 은 결함이 아니라 의도한 차이다. 두 실행이 한 축만 달랐는지는
+> `width_report.py` 가 이미 판정한다 (`COMPARED_SETTINGS` 20 개, 어긋나면 rc 2).
+>
+> 그래도 굳이 걸어 보면 `blocked_by.controls` 에 **`w_dqdv` 가 이름과 함께** 뜬다 —
+> W-19 로 `CYCLES_META_CONTROLS` 에 더했다 (`BML_R1_RESPONSE.md` §14-6). 첫 실행 때는
+> `controls 0` 이라 **일부러 바꾼 축이 "설명 없는 숫자 변화" 로** 보고됐다.
 
 `--seed 0 --scale-seed 0` 은 **둘 다 같아야 한다.** 여기를 흘리면 §1-1 의 세 번째 가드가 문다.
 
@@ -139,7 +156,7 @@ python3 $H/scripts/width_report.py ~/out_widths/pilot_w0/cycles_HD_knee_Li.csv \
 
 1. `width_report.py` 의 **출력 전문** (세 표 전부 — 비교 표만 옮기면 허용·seed·starts 가 사라진다).
 2. 두 `.meta.json` 의 `run_id` · `inputs_sha` · `env` · `git` — 어느 코드·어느 입력이었는지.
-3. `check_rails.py` 의 RAILS 줄과 `check_u14.py` 의 PROMOTION 줄 (rc 포함).
+3. `check_rails.py` 의 RAILS 줄과 `check_u14.py --schema-only` 의 PROMOTION 줄 (rc 포함).
 4. 두 실행의 **벽시계 시간** (다음 사람이 예산을 세울 수 있게).
 
 그 넷이 오면 `BML_R1_RESPONSE.md` 에 §14 로 적고 **폭이 인용 가능한 형태**가 된다.

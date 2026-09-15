@@ -210,7 +210,14 @@ META_CONTROLS = ("state", "half_cell_source", "si_source", "starts", "seed")
 #: shape 의 실행 조건 — solver 가 없으니 starts/seed 가 아니고, 상태는 본문(roster)에 여럿이라 조건이 아니다 (Codex R13 §Q6)
 SHAPE_META_CONTROLS = ("half_cell_source", "si_source", "grid_n", "grid_range", "gamma_grid")
 #: cycles 의 실행 조건 — 셀 라벨 · Si 소스 · 시작점 수 · seed (상태는 없다; 사이클은 본문 roster 다)
-CYCLES_META_CONTROLS = ("cell", "si_source", "starts", "seed", "scale_seed")
+#: ⚠ W-19 (2026-09-15 실데이터 폭 측정, `docs/WIDTH_RUN.md`): `w_dqdv` 가 빠져 있었다. `--w-dqdv` **하나만**
+#:   바꾼 두 산출이 `controls 0 · numbers 58` 로 나왔다 — **일부러 바꾼 축이 "설명 없는 숫자 변화" 로 보고되고**
+#:   게이트는 env 부터 의심하라고 안내했다. `seed` 축(§10-5)은 여기 있어서 `controls 1` 로 잡혔는데 목적함수
+#:   가중은 아니었다. `width_report.py` 의 `COMPARED_SETTINGS` 는 같은 축을 이미 견주고 있었다 —
+#:   **두 자가 다른 것을 재고 있었던 것**이고, 자를 맞춘다.
+#: ⚠ 여기 더할 때 확인할 것: 값이 `None`·`""` 이면 `check_u14` 가 **schema-only 에서도** 부재로 센다
+#:   (`--gamma-lb` 는 기본 `null` 이라 넣으면 안 된다). `w_dqdv` 는 항상 float 로 실린다 (기본 0.0).
+CYCLES_META_CONTROLS = ("cell", "si_source", "starts", "seed", "scale_seed", "w_dqdv")
 
 
 def meta_controls(kind: str) -> tuple:

@@ -116,7 +116,33 @@ manifest 이름은 `manifest.json` 인데 `preserve_handoff.sh` 가 `package_man
 **남은 열린 것**: 조건 6(동적 인증) · 조건 8(다섯 축) · `openpyxl` 이 `ENV_KEYS` 에 없음 ·
 r11 `publish:profile_partial_stdout` 대체 증거.
 
-**실데이터 폭 측정(`--w-dqdv 0 ↔ 1`) — 런북이 나왔다 (2026-09-15, `docs/WIDTH_RUN.md`).**
+**실데이터 폭 측정(`--w-dqdv 0 ↔ 1`) — 파일럿이 돌았다 (2026-09-15, `BML_R1_RESPONSE.md` §14).**
+사용자 기계에서 HD_knee `--cycles 0,1,2` · `--starts 20 --seed 0 --scale-seed 0` ·
+`--widths --width-tol 0.01 --width-starts 4` 로 두 번, `--w-dqdv` **한 줄만** 다르게 돌았고
+`width_report --axis w_dqdv` 가 **rc 0** 을 냈다 (축 하나만 달랐다는 것을 기계가 확인 — 20 개
+설정·입력 sha·env·git `fe26daff` 전부 동일). **답은 "안 좁아진다"**: LAM_PE 3.137→3.388 %p
+(1.08배) · **LAM_NE 2.439→7.099 %p (2.91배)** · LLI 1.172→1.402 %p (1.20배). 가장 무거운 것은
+`w_dqdv 1` 의 cycle 1 에서 LAM_NE 가 **[−0.60, +6.50] %p 로 0 을 가로질러 부호 식별을 잃은 것**
+(`w_dqdv 0` 에서는 [6.59, 9.02]). 난간이 같은 자리를 독립으로 짚었다 — w1 에만 warning
+`a_NE: lb 접촉 1/3 · 최소 거리 0.000e+00`. **LLI 는 두 설정 모두에서 가장 좁다** — 축퇴 행렬(§3)·
+pyDMA(§12)에 이어 **세 번째 경로**로 같은 결론. `check_rails` 둘 다 rc 0 (error 0). 산출은
+커밋하지 않는다 — 정본은 사용자 기계의 `~/out_widths/pilot_w{0,1}/`.
+
+**그 자리에서 발견 하나 (W-19, 닫음).** 내가 런북에 `check_u14 --new w1 --old w0` 을 쓰라고 적은
+것이 잘못이었다 — u14 는 승격 게이트라 "안 고쳤으니 같아야 한다" 를 묻는데 우리는 축을 일부러
+바꿨다. 런북을 `--schema-only` 로 고쳤다. 다만 그 출력이 **`blocked_by.controls = 0`** 을 보여
+줬다: `w_dqdv` 가 `CYCLES_META_CONTROLS` 에 **없어서** 일부러 바꾼 축이 "설명 없는 숫자 변화
+58" 로 보고됐다 (`seed` 축은 목록에 있어 §10-5 에서 `controls 1` 로 잡혔다). **`width_report.py`
+는 같은 축을 이미 견주고 있었다 — 두 자가 다른 것을 재고 있었다.** RED
+(`tests/test_cycles.py::test_cy_11`, 실제 producer 두 번 + 실제 게이트 → `controls 0` 관측) →
+`w_dqdv` 를 control 로 추가 → GREEN. **fixture 가 여덟 번째로 깨졌다** (`test_cy_01` 이 5 개
+튜플을 박아 두고 있었다 → 개수가 아니라 키의 존재를 묻도록). `--gamma-lb` 는 기본 `null` 이라
+같은 목록에 넣지 않았다 (`None` 은 schema-only 에서 부재로 세어진다).
+
+**남은 것**: 전 사이클 실행 (이번은 파일럿) · `mode_profile_extrema` 는 cycles 경로에 아직 없다 ·
+γ 사전 적합이 하한 0.02 에 붙는 §13-5 열린 항목.
+
+**런북 (2026-09-15, `docs/WIDTH_RUN.md`).**
 원자료는 여전히 사용자 기계에 있지만 **배관은 여기서 끝에서 끝까지 돌렸다** — 합성 원자료
 (`matlab/tests/gen_synth_xlsx.py`) 3 사이클로 `fit_cycles --widths` 두 번(`--w-dqdv` 0/1,
 rc 0 · 37.2 s / 104.8 s) → `width_report --axis w_dqdv` rc 0 → `check_rails` rc 0(error 0) →
@@ -440,7 +466,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 332 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 333 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

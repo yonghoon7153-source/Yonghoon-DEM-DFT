@@ -40,7 +40,10 @@ def test_cy_01_cycles_is_a_registered_artifact_kind():
     assert {"cell", "cycle", "C_cell", "x_cell", "a_PE", "b_PE", "a_NE", "b_NE", "gamma_Si", "c_lit",
             "LAM_PE", "LAM_NE", "LLI", "run_id", "inputs_sha", "consumed_inputs"} <= set(S.CYCLES_ROW)
     assert S.row_key("cycles")({"cycle": "3"}) == 3 and S.row_key("cycles")({"cycle": 3.0}) == 3
-    assert S.meta_controls("cycles") == ("cell", "si_source", "starts", "seed", "scale_seed")
+    # W-19 (2026-09-15): `w_dqdv` 가 더해졌다 — 목적함수를 바꾸는 축이 control 이 아니면 그 차이가
+    # "설명 없는 숫자 변화" 로 나간다 (`test_cy_11`). 개수를 세지 않고 **그 키가 있는지**를 묻는다.
+    assert set(S.meta_controls("cycles")) >= {"cell", "si_source", "starts", "seed", "scale_seed"}
+    assert "w_dqdv" in S.meta_controls("cycles"), "목적함수 가중은 신고되는 축이어야 한다"
     assert S.receipt_roles("cycles") == S.REQUIRED_ROLES
 
 
@@ -283,3 +286,44 @@ def test_cy_10_gamma_prefit_and_lower_bound_are_recorded_controls(tmp_path):
     assert s["lb"][4] == 0.02 and s["ub"][4] == 0.5, s
     for r in on["rows"]:
         assert r["gamma_Si"] >= 0.02 - 1e-12, (r["cycle"], r["gamma_Si"])
+
+
+# ── 2026-09-15: 실데이터 폭 측정(`docs/WIDTH_RUN.md`)에서 나온 발견 ──────────────────────
+def test_cy_11_the_objective_weight_is_a_declared_control_not_unexplained_drift(tmp_path):
+    """[W-19] `--w-dqdv` **하나만** 바꾼 두 산출을 승격 게이트에 걸었더니 `controls 0 · numbers 58` 이었다
+    (사용자 기계 HD_knee 파일럿, 2026-09-15). **일부러 바꾼 축이 "설명 없는 숫자 변화" 로 보고된다.**
+
+    `seed` 를 바꾼 §10-5 실험은 `controls 1 (seed)` 로 잡혔다 — 그 키가 `CYCLES_META_CONTROLS` 에
+    있었기 때문이다. 목적함수 가중은 없어서, 게이트는 "무엇이 달라서 숫자가 달라졌는지" 를 말하지 못하고
+    env 부터 의심하라고 안내한다. `width_report.py` 는 같은 축을 `COMPARED_SETTINGS` 로 **이미** 견주는데
+    (그래서 비교가 성립했다) 승격 게이트만 못 본다 — **두 자가 다른 것을 재고 있었다.**
+
+    닫힘 조건: 그 차이가 `controls` 로 **이름과 함께** 보고된다. 숫자 차이를 없애는 것이 아니다 —
+    바뀐 축을 신고하게 만드는 것이다 (R11 P1-9 "신고된 위험은 값으로 소비한다" 의 같은 결).
+    """
+    src = _synth_root(tmp_path)
+    wb = _cycle_workbook(src, tmp_path / "cyc.xlsx", n_cycles=2)
+    hc = src / "data/half_cell/GITT/pristine.xlsx"
+    outs = {}
+    for w in (0, 1):
+        d = tmp_path / f"w{w}"
+        r = subprocess.run([sys.executable, str(ROOT / "scripts/fit_cycles.py"),
+                            "--data-root", str(src), "--half-cell", str(hc), "--full-cell", str(wb),
+                            "--cell", "L_syn", "--si-source", "Li", "--starts", "2",
+                            "--seed", "0", "--scale-seed", "0", "--w-dqdv", str(w),
+                            "--cycles", "0,1", "--out", str(d)],
+                           cwd=ROOT, capture_output=True, text=True, timeout=600)
+        assert r.returncode == 0, (r.returncode, r.stdout[-500:], r.stderr[-500:])
+        outs[w] = d
+
+    g = subprocess.run([sys.executable, str(ROOT / "scripts/check_u14.py"),
+                        "--new", str(outs[1]), "--old", str(outs[0])],
+                       cwd=ROOT, capture_output=True, text=True, timeout=600)
+    line = [l for l in g.stdout.splitlines() if l.startswith("PROMOTION ")][-1]
+    verdict = json.loads(line[len("PROMOTION "):])
+    assert verdict["blocked_by"]["numbers"] > 0, "축을 바꿨으니 숫자는 달라야 한다 (대조군)"
+    assert verdict["blocked_by"]["controls"] >= 1, (
+        "일부러 바꾼 축이 controls 로 안 잡힌다 — 게이트가 '설명 없는 숫자 변화' 로 읽는다",
+        verdict["blocked_by"])
+    assert "w_dqdv" in g.stdout, "무엇이 달랐는지 이름이 출력에 있어야 한다"
+    assert verdict["promotion_eligible"] is False, verdict
