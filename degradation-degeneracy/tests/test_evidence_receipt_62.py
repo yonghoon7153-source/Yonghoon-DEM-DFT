@@ -328,9 +328,9 @@ def test_a_startup_module_removed_after_import_is_a_failed_measurement(tmp_path)
         "os.remove(p)\n", encoding="utf-8")
     got = _receipt_in({"PYTHONPATH": str(site)}, tmp_path)
     hist = got["startup"]["startup_history"]
-    assert hist.get("status") == "failed", (
+    assert hist.get("status") == "failed", (   # 증인 문구에 기계별 개수를 싣지 않는다
         f"올렸다 지운 module 이 unfiled 로 세탁됐다: {hist.get('status')} "
-        f"unfiled={hist.get('unfiled')} (62차 자체 리뷰 F2)")
+        "(62차 자체 리뷰 F2)")
     assert "ghost62" in hist.get("reason", "")
 
 

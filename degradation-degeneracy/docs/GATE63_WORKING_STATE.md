@@ -109,3 +109,17 @@ g18_2026_09_15` → 6138행 · restart 30690행 · 전체 True · by_obj True ·
 True · 봉인일치 True. `make_receipt.py paired_fixed5_v4` → 검사 34건 · 산출 2건.
 `test_docs_lint` 의 pin 검사 둘(`…digests_recompute_from_the_current_tree` ·
 `…exactly_one_cohort_is_active…`) 전환 뒤 2 passed.
+
+## 12조각 전수 재생
+
+| 회차 | HEAD | 결과 | 원인 |
+|---|---|---|---|
+| ① | `526784a` | 조각 9 빨강 (1~8 rc 0, 10~12 는 중단) | 62차 축 `history-refuses-a-vanished-module-g62` 의 증인 문구가 **기계별 개수** `unfiled=22` 를 담고 있었다 — 63차 F2 의 `-v` 모델에서 이 기계는 26. 62차 ① 회차와 같은 형태의 결함이 62차 축에 하나 남아 있던 것이다. 시험 문구에서 개수를 빼고 EXPECT 를 재관측했다 |
+
+`test_docs_lint` 9건 빨강의 분류 (63차 ① 커밋 `743f65b` 트리에서 18분 실행):
+pin 검사 2 → 세대 전환(`0254027`)으로 초록 · `full_bundle_claims` 1 → 원장의 영수증
+core/validator 갱신으로 초록 · `committed_gate_requests` 1 → **62차 요청문이
+`대상 커밋:` 줄을 빠뜨렸던 것** (61차 요청문에는 있다; 영수증이 바뀌자 드러났다)
+→ 줄 추가 · coverage 3 + `recorded_head` 1 → 등록부가 274 로 늘어 커밋된 조각
+(266) 과 어긋난 것, 12조각 재생으로 닫힌다 · `smoke_run_cannot_be_promoted` 1 →
+환경(`results/grid_fit_v4` 없음).

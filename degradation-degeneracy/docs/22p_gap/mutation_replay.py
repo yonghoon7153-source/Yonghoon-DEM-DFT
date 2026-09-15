@@ -4635,7 +4635,7 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_evidence_receipt_62.py::test_a_startup_module_removed_after_import_is_a_failed_measurement":
-                "AssertionError: 올렸다 지운 module 이 unfiled 로 세탁됐다: measured unfiled=22 (62차 자체 리뷰 F2)",
+                "AssertionError: 올렸다 지운 module 이 unfiled 로 세탁됐다: measured (62차 자체 리뷰 F2)",
         }
     },
     "packages-keep-the-first-distribution-g62": {

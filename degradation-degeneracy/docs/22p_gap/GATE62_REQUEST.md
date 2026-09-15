@@ -198,6 +198,14 @@ validator                fd7c90edbc56ff1f (검사 34건)
 행 바이트                 ad598fe77e75afec — **열세 세대째 같다**
 ```
 
+대상 커밋: `d1457901d35a18747d8ab7cb085251135871e2ad`
+— 위 `core_sha256` 은 이 커밋의
+`docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml` 을 가리킨다 (세대를 넘긴
+커밋이고, 판정 대상 `0dcbc17` 까지 영수증은 안 바뀌었다). 요청문이 인용한 값은
+**그것이 이름한 커밋**에 대고 대조하는 것이 자기완결의 뜻이다. *(63차 마감에 추가 —
+62차 판은 이 줄이 빠져 `test_committed_gate_requests_are_self_contained` 가 63차
+세대 전환 뒤 빨개졌다.)*
+
 원자료는 이 컨테이너에 없어 `tools.archive_bundle restore artifacts/paired_fixed5_v4`
 로 복원한 뒤 돌렸다 (bundle `check` 가 member 를 재해시하므로 바이트는 같다).
 `row_projection.py paired_fixed5_v4 --cohort g17_2026_09_14` → 6138행 · restart
