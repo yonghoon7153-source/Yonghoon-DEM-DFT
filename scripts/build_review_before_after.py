@@ -123,7 +123,15 @@ def tally(grp):
     return c
 
 
-def render() -> str:
+def render(nav_home: str = '') -> str:
+    """비포/애프터 페이지 HTML.
+
+    `nav_home` 을 주면 **돌아가는 길**을 맨 위에 단다 — 웹앱이 이 페이지를 띄울 때 쓴다.
+    ⚠ 이 페이지는 `base.html` 을 상속하지 않는 **독립 HTML** 이라 항해가 없다.  링크를 안
+      달면 들어가서 못 나온다 (2026-09-15 에 실제로 그 상태로 붙였다가 잡혔다).
+    ⛔ 커밋되는 `docs/` 사본에는 **안 단다** (`nav_home=''`) — 파일로 열 때 `/ledger` 는
+      해석되지 않는 죽은 링크다.
+    """
     fs, by, L, A = load()
     tL, tA = tally(L), tally(A)
     head_sha = _sh('git', 'rev-parse', '--short=9', 'HEAD')
@@ -131,6 +139,13 @@ def render() -> str:
     o = []
     o.append('<title>DEM 스택 적대 리뷰</title>\n')
     o.append(pathlib.Path(__file__).with_name('_review_page_css.html').read_text(encoding='utf-8'))
+    if nav_home:
+        o.append('<div style="position:sticky;top:0;z-index:9;background:var(--panel);'
+                 'border-bottom:1px solid var(--rule);padding:.55rem 1rem;font-size:.85rem">'
+                 f'<a href="{E(nav_home)}" style="color:var(--accent);text-decoration:none">'
+                 '&#8592; 판정 원장</a>'
+                 '<span style="color:var(--ink-3);margin-left:.75rem">'
+                 '요청마다 원장에서 다시 렌더한다 — 낡은 사본이 아니다</span></div>\n')
     o.append('<div class="wrap">\n<header>\n')
     o.append(f'  <div class="eyebrow">Codex 적대 리뷰 · L1~L5 + 면적 계약 · 원장 {LEDGER.name} @ {head_sha}</div>\n')
     o.append('  <h1>DEM 스택 적대 리뷰</h1>\n')

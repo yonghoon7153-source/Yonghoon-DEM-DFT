@@ -10573,7 +10573,7 @@ def ledger_before_after():
         _spec = _ilu.spec_from_file_location('_rba', _p)
         _mod = _ilu.module_from_spec(_spec)
         _spec.loader.exec_module(_mod)
-        html_out = _mod.render()
+        html_out = _mod.render(nav_home='/ledger')
     except Exception as e:                                      # noqa: BLE001
         return (f'<!doctype html><meta charset="utf-8">'
                 f'<title>비포/애프터 — 렌더 실패</title>'

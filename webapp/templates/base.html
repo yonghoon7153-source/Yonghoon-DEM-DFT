@@ -53,6 +53,14 @@
              title="이 앱이 보여 주는 모든 값의 상태가 여기서 온다 — 충돌하면 원장이 이긴다">
         <span class="icon">&#x2696;&#xFE0F;</span> 판정 원장
       </a></li>
+      {# 2026-09-15: 비포/애프터도 항해에 올린다.  원장 페이지 **안에만** 링크를 두니
+         대시보드에서 안 보였다 — 위 주석이 v3 에서 고쳤다고 적은 것과 **같은 실수**를
+         바로 아래 줄에서 반복한 것이다. #}
+      <li><a href="/ledger/before-after"
+             class="{% if active == 'before_after' %}active{% endif %}"
+             title="항목마다 무엇을 믿었고 무엇을 쟀나 — 요청마다 원장에서 다시 렌더한다">
+        <span class="icon">&#x1F504;</span> 비포 / 애프터
+      </a></li>
     </ul>
     <div class="sidebar-footer">
       <small>Solid-State Battery DEM</small>

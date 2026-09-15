@@ -354,7 +354,13 @@ def main():
     chk(f'46) 비포/애프터 라우트가 200 을 낸다 (실제 {_r.status_code})', _r.status_code == 200)
     _body = _r.data.decode('utf-8')
     chk('46b) 그 본문이 생성기의 현재 렌더와 **정확히 같다** (요청 시 재렌더)',
-        _body == _rba.render())
+        _body == _rba.render(nav_home='/ledger'))
+    #   ★ 독립 HTML 이라 항해가 없다 — 돌아가는 길이 실제로 있는가 (없으면 갇힌다).
+    chk('46f) ★ 앱이 띄우는 판에는 원장으로 돌아가는 링크가 있다',
+        'href="/ledger"' in _body)
+    #   ⛔ 커밋되는 docs 사본에는 그 링크를 달지 않는다 (파일로 열면 죽은 링크다).
+    chk('46g) 커밋 사본에는 그 링크가 없다 (판별력: 두 판이 실제로 다르다)',
+        'href="/ledger"' not in _rba.render() and _rba.render() != _body)
     #   ★ 판별력 — 커밋된 파일에 표시를 넣고 응답에 그것이 **없어야** 한다.
     _out = _rba.OUT
     _saved = _out.read_text(encoding='utf-8') if _out.is_file() else None
