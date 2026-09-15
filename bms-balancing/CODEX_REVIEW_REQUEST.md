@@ -148,7 +148,7 @@ Schmitt 2022 가 자기 셀·자기 목적함수(DV 제곱합)에서 "good agree
 ## 5. 재현
 
 ```bash
-git clone -b claude/bms-alpha-beta-verify \
+git clone -b claude/14-gate-code-review-9qkx05 \
     https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT
 cd Yonghoon-DEM-DFT/bms-balancing
 export BMS_DATA_ROOT=/…/electrode_balancing_blend      # 원자료는 따로 받아야 한다

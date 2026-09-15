@@ -293,6 +293,97 @@ def _num_diff(a, b, path="", added=None):
     return out
 
 
+# ── 기록된 결정 (Codex R14 §7-2·§7-3) ────────────────────────────────────────────────────────
+#: 승격 판정이 읽는 **기록된 결정** 원장. 규칙이 아니라 기록이다 — 항목마다 40-hex full commit 과
+#: 산출 명부로 닫혀 있고, 짧은 sha·와일드카드·빈 목록은 아래 형식 검사에서 거부된다 (예외가 번지지
+#: 않게 하는 것이 요점이다). 파일이 없거나 깨졌으면 **예외가 하나도 없는 것**으로 본다 (fail-closed).
+DECISIONS_PATH = pathlib.Path(__file__).resolve().parents[1] / "reviews" / "PROMOTION_DECISIONS.json"
+_FULL_SHA = re.compile(r"[0-9a-f]{40}")
+#: 승인이 덮을 수 있는 유일한 축 — "옛 정본이 안 적었다" 뿐이다. 계약 위반은 절대 덮지 않는다.
+UNKNOWN_BLOCKERS = ("inputs_uncomparable", "env_uncomparable")
+
+
+def _valid_bundle_exception(e) -> bool:
+    if not isinstance(e, dict) or not set(e) >= {"id", "commits", "artifacts", "code_equivalence",
+                                                 "approved_utc", "approved_by", "scope"}:
+        return False
+    cs = e["commits"]
+    if not isinstance(cs, list) or len(cs) < 2 or len(set(cs)) != len(cs):
+        return False
+    if not all(isinstance(c, str) and _FULL_SHA.fullmatch(c) for c in cs):
+        return False
+    if not (isinstance(e["artifacts"], list) and e["artifacts"]):
+        return False
+    ce = e["code_equivalence"]
+    return isinstance(ce, dict) and bool(ce.get("command")) and "result" in ce
+
+
+def _valid_legacy_transition(e) -> bool:
+    if not isinstance(e, dict) or not set(e) >= {"id", "old", "new", "code_commits",
+                                                 "allowed_unknown", "checks", "approved_utc",
+                                                 "approved_by", "scope"}:
+        return False
+    if not (isinstance(e["new"], dict) and isinstance(e["new"].get("roster"), list) and e["new"]["roster"]):
+        return False
+    cc = e["code_commits"]
+    if not (isinstance(cc, list) and cc and all(isinstance(c, str) and _FULL_SHA.fullmatch(c) for c in cc)):
+        return False
+    au = e["allowed_unknown"]
+    if not (isinstance(au, list) and au and set(au) <= set(UNKNOWN_BLOCKERS)):
+        return False
+    rev = (e["old"] or {}).get("rev")
+    return isinstance(rev, str) and bool(_FULL_SHA.fullmatch(rev))
+
+
+def load_decisions(path: pathlib.Path | None = None) -> dict:
+    """기록된 결정을 읽는다. 읽기 실패·형식 위반은 **조용히 통과시키지 않고** 그 항목을 버린다."""
+    p = pathlib.Path(path) if path is not None else DECISIONS_PATH
+    try:
+        doc = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {"bundle_commit_exceptions": [], "legacy_transitions": []}
+    if not isinstance(doc, dict):
+        return {"bundle_commit_exceptions": [], "legacy_transitions": []}
+    return {"bundle_commit_exceptions": [e for e in doc.get("bundle_commit_exceptions", [])
+                                         if _valid_bundle_exception(e)],
+            "legacy_transitions": [e for e in doc.get("legacy_transitions", [])
+                                   if _valid_legacy_transition(e)]}
+
+
+def bundle_commit_exception(commits: set, artifacts: set, decisions: dict) -> str | None:
+    """관측한 커밋 집합을 덮는 기록이 있나 — **정확히 같은 집합**이어야 하고 산출도 명부 안이어야 한다."""
+    for e in decisions["bundle_commit_exceptions"]:
+        if set(e["commits"]) == commits and artifacts <= set(e["artifacts"]):
+            return e["id"]
+    return None
+
+
+def legacy_transition(new_roster: set, commits: set, old_rev_full: str | None,
+                      blocked_by: dict, decisions: dict) -> str | None:
+    """[Codex R14 §7-2] 옛 정본과의 일회성 이관에 **별도 판정**을 준다 — 승격을 주는 것이 아니다.
+
+    승인 조건: (a) 막는 것이 `UNKNOWN_BLOCKERS` 뿐이고 그중 하나 이상이 실제로 있으며,
+    (b) 새 묶음의 명부와 코드 커밋 집합이 기록과 같고, (c) 기록이 이름한 옛 리비전과 대조했을 때.
+    계약 위반이 하나라도 있으면 승인은 **없다** (부재는 안전값이 아니다 — 자체 리뷰 C03).
+    """
+    unknown = {k for k in UNKNOWN_BLOCKERS if blocked_by.get(k)}
+    hard = [k for k, v in blocked_by.items()
+            if v and k not in (*UNKNOWN_BLOCKERS, "baseline_absent")]
+    if hard or not unknown:
+        return None
+    for e in decisions["legacy_transitions"]:
+        if set(e["new"]["roster"]) != new_roster:
+            continue
+        if set(e["code_commits"]) != commits:
+            continue
+        if not unknown <= set(e["allowed_unknown"]):
+            continue
+        if old_rev_full and e["old"]["rev"] != old_rev_full:
+            continue
+        return e["id"]
+    return None
+
+
 def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy: str = "current") -> dict:
     """새 산출을 명부·스키마·내용·조건·숫자로 대조한다 → 결과 dict (main 이 찍고 종료 코드를 정한다).
 
@@ -303,7 +394,11 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
     R: dict = {"seen": 0, "missing": [], "content": [], "diffs": [], "added": [], "paired": [], "stale": [],
                "broken": [], "controls": [], "env": [], "alias": [], "provenance": [], "inputs": [],
                "inputs_uncomparable": [], "env_uncomparable": [],
-               "roster_missing": [], "roster_extra": [], "stale_new": [], "n_old": 0, "n_new": 0}
+               "roster_missing": [], "roster_extra": [], "stale_new": [], "n_old": 0, "n_new": 0,
+               # ⚠ U18-05 (Codex R14 §7-3): 묶음이 **한 코드 상태**에서 나왔는가. 전 판은 sidecar 마다
+               #   `git_commit_at_start` 가 40-hex 인지만 봤고, 13 산출이 두 커밋으로 나뉜 것은 아무도 안
+               #   봤다 (우리가 손으로 diff 를 떠서 무해함을 확인했을 뿐 — 게이트는 그것을 강제하지 않았다).
+               "commits": {}, "bundle_commits": [], "bundle_commit_exception": None}
     new_stale: list = []          # 후보 디렉터리의 `_vN` — C12 로 blocked_by 에 나간다
     # ⚠ `.meta.json` 은 산출이 아니다 — `degeneracy_*.json` glob 이 `degeneracy_100_Li.json.meta.json` 까지
     #   먹어서 meta 를 산출로 점검했다 (TOCTOU 렌즈 N02 가 소비자 glob 에서 확인한 것과 같은 종류).
@@ -395,6 +490,9 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
             start = str(meta.get("git_commit_at_start") or "")
             if start and not re.fullmatch(r"[0-9a-f]{40}", start):
                 R["provenance"].append(f"{f.name}.meta:git_commit_at_start 가 40-hex 커밋이 아니다 ({start!r})")
+            # ⚠ U18-05: 묶음의 코드 좌표를 모은다 — 끝 커밋은 `git_state_changed_during_run: false` 가 이미
+            #   시작과 같음을 요구하므로 시작 하나로 묶음을 대표한다 (없으면 끝을 쓴다).
+            R["commits"][f.name] = start or str(meta.get("git_commit") or "")
         if schema_only or old is None:
             continue
         o = baseline_for(f, old, policy, R["stale"])
@@ -472,6 +570,21 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
                 for c in sorted(set(A[k]) & set(B[k]) - ROW_SKIP):
                     R["diffs"] += [(f"{f.name}:{k}:{c}", x, y) for _, x, y in _num_diff(A[k][c], B[k][c])]
     R["added"] = sorted(set(R["added"])); R["stale"] = sorted(set(R["stale"]))
+    # ⚠ U18-05 (Codex R14 §7-3): 승격 묶음의 기본은 **단일 commit** 이다. 결과가 달라질 수 있는 `.m`·설정·
+    #   의존성을 `*.py`·`*.sh` diff 로 일반적으로 덮을 수 없다는 지적을 그대로 받는다 — 그래서 "우리가 손으로
+    #   diff 를 떠 봤다" 를 게이트의 답으로 쓰지 않고, 혼재 자체를 막고 **기록된 예외**만 통과시킨다.
+    seen = {c for c in R["commits"].values() if c}
+    if len(seen) > 1:
+        R["bundle_commit_exception"] = bundle_commit_exception(seen, set(R["commits"]), load_decisions())
+        if R["bundle_commit_exception"] is None:
+            by = {}
+            for name, c in R["commits"].items():
+                by.setdefault(c, []).append(name)
+            R["bundle_commits"].append(
+                "묶음이 한 코드 상태에서 나오지 않았다 — 서로 다른 커밋 "
+                f"{len(seen)} 개: " + " · ".join(f"{c[:12]} ({len(v)} 개: {', '.join(sorted(v)[:3])}"
+                                                 + (" …" if len(v) > 3 else "") + ")"
+                                                 for c, v in sorted(by.items())))
     return R
 
 
@@ -605,6 +718,7 @@ def main() -> int:
     controls, r_missing, r_extra, env_bad = R["controls"], R["roster_missing"], R["roster_extra"], R["env"]
     alias, prov_bad, inputs_bad = R["alias"], R["provenance"], R["inputs"]
     inputs_unk, stale_new, env_unk = R["inputs_uncomparable"], R["stale_new"], R["env_uncomparable"]
+    bundle_bad = R["bundle_commits"]
     print(f"산출 {seen} 개 점검 ({new})")
     if old is None:
         print("  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, "
@@ -728,8 +842,16 @@ def main() -> int:
             print(f"  숫자: 정본({old})과 전부 같다 — 그러나 {why} 를 댈 수 없어 **승격 대상은 아니다**")
         else:
             print(f"  숫자: 정본({old})과 전부 같다 — 게시·서명만 바뀌었다")
+    if bundle_bad:
+        print(f"\n■ **묶음 commit 혼재** {len(bundle_bad)} — 승격 묶음의 기본은 **단일 commit** 이다 (Codex R14 §7-3). "
+              f"결과가 달라질 수 있는 `.m`·설정·의존성을 `*.py`·`*.sh` diff 로 일반적으로 덮을 수 없다. "
+              f"예외가 필요하면 `{DECISIONS_PATH.name}` 에 두 full commit 과 코드 동등성 검토 범위를 적는다")
+        _show(bundle_bad, a.max_show)
+    elif R["bundle_commit_exception"]:
+        print(f"\n  묶음 commit: 혼재하지만 **기록된 예외**가 덮는다 — `{R['bundle_commit_exception']}` "
+              f"({DECISIONS_PATH.name}). 예외는 그 커밋 집합에만 걸린다 (하나라도 다르면 다시 거부)")
     contract_broken = bool(missing or broken or content or controls or env_bad or r_extra
-                           or alias or prov_bad or inputs_bad or stale_new
+                           or alias or prov_bad or inputs_bad or stale_new or bundle_bad
                            or (r_missing and not a.subset))
     # ⚠ 자체 리뷰 C11 (렌즈 3곳): 승격 불가인데 rc 0 인 경로가 둘 생겼고(`inputs_uncomparable`·`baseline_absent`),
     #   `WORKING_STATE.md` 의 U18 런북은 문자 그대로 "0 이었을 때만 정본 교체" 다 — 실제 `out/` 을 baseline 으로 한
@@ -760,8 +882,27 @@ def main() -> int:
                                 "alias": len(alias), "provenance": len(prov_bad), "inputs": len(inputs_bad),
                                 "inputs_uncomparable": len(inputs_unk), "env_uncomparable": len(env_unk),
                                 "stale": len(stale_new),
+                                "bundle_commits": len(bundle_bad),
                                 "baseline_absent": int(baseline_absent)},
+                 "bundle_commit_exception": R["bundle_commit_exception"],
                  "policy": policy, "new": str(new), "old": (str(old) if old is not None else None)}
+    # ⚠ Codex R14 §7-2: 일회성 legacy 이관과 일반 승격을 **가른다.** 포괄 `--accept-uncomparable` 로 rc 0 을
+    #   만들면 그 줄만 인용된다 — 대신 별도 판정을 남기고 `promotion_eligible: false` 와 rc 4 는 **그대로 둔다**.
+    #   승인이 덮는 것은 "옛 정본이 안 적었다" 뿐이고, 계약 위반이 하나라도 있으면 승인은 없다.
+    _decisions = load_decisions()
+    _old_full = None
+    if a.old_rev:
+        import subprocess as _sp
+        _r = _sp.run(["git", "rev-parse", f"{a.old_rev}^{{commit}}"],
+                     cwd=pathlib.Path(__file__).resolve().parents[1], capture_output=True, text=True)
+        _old_full = _r.stdout.strip() if _r.returncode == 0 else None
+    _lt = legacy_transition({n for n in R["commits"]}, {c for c in R["commits"].values() if c},
+                            _old_full, promotion["blocked_by"], _decisions) if rc == 4 else None
+    promotion["legacy_transition_approved"] = _lt is not None
+    promotion["legacy_transition"] = _lt
+    if _lt:
+        print(f"\n  **legacy 이관 승인** `{_lt}` ({DECISIONS_PATH.name}) — 옛 정본이 안 적은 축만 덮는 기록이다. "
+              f"승격 자격은 **여전히 false** 이고 rc 도 4 그대로다 (Codex R14 §7-2)")
     print("PROMOTION " + json.dumps(promotion, ensure_ascii=False))
     return rc
 

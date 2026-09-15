@@ -1,0 +1,104 @@
+{
+  "_README": [
+    "승격 판정에 쓰이는 **기록된 결정** 원장이다. `scripts/check_u14.py` 가 읽는다.",
+    "여기 적히는 것은 '앞으로도 이래도 된다' 는 규칙이 아니라 '이 자료에 대해 이런 검토를 하고 이렇게 결정했다' 는 기록이다.",
+    "그래서 모든 항목은 40-hex full commit 과 산출 명부로 **닫혀 있다** — 짧은 sha·와일드카드·'전부 허용' 은 형식에서 거부된다.",
+    "Codex R14 §7 의 답 2·3 이 요구한 모양이다. 새 항목을 더하려면 사용자 결정과 그 근거 명령·출력을 같이 적는다."
+  ],
+
+  "bundle_commit_exceptions": [
+    {
+      "id": "U18-05",
+      "approved_utc": "2026-09-15T00:00:00Z",
+      "approved_by": "사용자 결정 — Codex R14 §7-3 권고('일반 허용 규칙으로 승격하지 말고 이전 예외로 기록한다')를 그대로 따른 기록",
+      "why": "U18b 재실행 뒤 matrix_300_0147 계열만 다시 게시돼 정본 13 산출이 두 커밋으로 나뉘었다 (9 + 4).",
+      "commits": [
+        "066866595ab71827ef2d98e7a6cf26136df21495",
+        "419c1abaeec9fa981d7f5829d5803167288f7f1e"
+      ],
+      "commit_counts": {
+        "066866595ab71827ef2d98e7a6cf26136df21495": 9,
+        "419c1abaeec9fa981d7f5829d5803167288f7f1e": 4
+      },
+      "artifacts": [
+        "degeneracy_100_Li.json",
+        "degeneracy_200_Li.json",
+        "degeneracy_300_0009_Li.json",
+        "degeneracy_300_0147_Li.json",
+        "matrix_100.csv",
+        "matrix_200.csv",
+        "matrix_300_0009.csv",
+        "matrix_300_0147.csv",
+        "ne_shape_GITT_Li.csv",
+        "profile_gamma_100_Li.csv",
+        "profile_gamma_200_Li.csv",
+        "profile_gamma_300_0009_Li.csv",
+        "profile_gamma_300_0147_Li.csv"
+      ],
+      "code_equivalence": {
+        "command": "git diff --name-only 066866595ab71827ef2d98e7a6cf26136df21495 419c1abaeec9fa981d7f5829d5803167288f7f1e",
+        "result": 5,
+        "files": [
+          "bms-balancing/WORKING_STATE.md",
+          "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+          "bms-balancing/reviews/R13_RESPONSE.md",
+          "bms-balancing/reviews/r14_repros/codex63/time_caps/FULL_LISTING.tsv",
+          "bms-balancing/reviews/r14_repros/codex63/time_caps/ZIP_SHA256.txt"
+        ],
+        "note": "두 커밋 사이 diff 는 **전부 문서·증거 목록**이다. R14 요청문이 인용했던 `-- '*.py' '*.sh'` 필터판은 0 이었는데, 리뷰어가 '그 필터로는 .m·설정·의존성을 못 덮는다' 고 지적했다. 그래서 필터를 빼고 전체 diff 를 적는다 — 그 다섯 파일 중 계산에 쓰이는 것은 없다."
+      },
+      "scope": [
+        "이 예외는 위 두 커밋의 **정확한 집합**과 위 명부 안의 산출에만 걸린다.",
+        "커밋이 하나라도 다르면 `check_u14` 는 다시 거부한다 (`test_the_recorded_exception_covers_exactly_its_two_commits`).",
+        "앞으로의 승격 기본값은 **단일 commit** 이다. 이 기록은 그 기본값을 바꾸지 않는다."
+      ]
+    }
+  ],
+
+  "legacy_transitions": [
+    {
+      "id": "U18B-2026-09-14",
+      "approved_utc": "2026-09-14T00:00:00Z",
+      "approved_by": "사용자 결정 — Codex R14 §7-2 권고('포괄 --accept-uncomparable 대신 별도 legacy_transition_approved 판정')를 그대로 따른 기록",
+      "why": "옛 정본은 입력 identity 와 env 를 적는 계약보다 앞서 만들어졌다. 그 부재는 **옛 정본의 나이**이지 새 산출의 위반이 아니다 — 그러나 '같은 입력·같은 환경의 재현' 을 증명하지도 못한다.",
+      "old": {
+        "rev": "42314198e0beee59834d394cdba2757183503b59",
+        "note": "37a889b^ — 승격 직전 정본 (bms: 반경 300/160 단일 진단을 §12 로 기록)"
+      },
+      "new": {
+        "roster": [
+          "degeneracy_100_Li.json",
+          "degeneracy_200_Li.json",
+          "degeneracy_300_0009_Li.json",
+          "degeneracy_300_0147_Li.json",
+          "matrix_100.csv",
+          "matrix_200.csv",
+          "matrix_300_0009.csv",
+          "matrix_300_0147.csv",
+          "ne_shape_GITT_Li.csv",
+          "profile_gamma_100_Li.csv",
+          "profile_gamma_200_Li.csv",
+          "profile_gamma_300_0009_Li.csv",
+          "profile_gamma_300_0147_Li.csv"
+        ]
+      },
+      "code_commits": [
+        "066866595ab71827ef2d98e7a6cf26136df21495",
+        "419c1abaeec9fa981d7f5829d5803167288f7f1e"
+      ],
+      "allowed_unknown": ["inputs_uncomparable", "env_uncomparable"],
+      "checks": {
+        "command": "python3 scripts/check_u14.py --new out --old-rev 42314198",
+        "rc": 4,
+        "roster": {"old": 13, "new": 13, "compared": 13},
+        "numbers": 0,
+        "note": "공통 수치는 전부 같다. 막는 것은 옛 정본이 안 적은 두 축뿐이다 (입력 identity 17 · env 1)."
+      },
+      "scope": [
+        "이 승인은 **unknown 사유 둘**만 덮는다. 계약이 깨진 대조는 절대 승인되지 않는다 (`test_an_approval_never_covers_a_real_contract_violation`).",
+        "`promotion_eligible` 은 이 승인으로 true 가 되지 않는다 — rc 도 4 그대로다.",
+        "리뷰어 문장 그대로: '이는 데이터를 다시 계산하라는 요구가 아니다.'"
+      ]
+    }
+  ]
+}

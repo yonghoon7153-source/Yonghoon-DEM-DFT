@@ -192,7 +192,10 @@ run () {
   # R6 내부 F04: 명령 **전** 의 git 상태·시작 시각 — write_meta 가 계산 뒤 상태와 비교한다
   # ⚠ U18-02: `$OUT` 을 같이 넘긴다 — 안 넘기면 CLI 기본값 `out` 만 산출 root 라서 `OUT=out_u18` 의 untracked
   #   디렉터리가 '코드 변경' 이 되고, 끝 상태(write_meta 는 out_dir 을 안다)와 달라져 모든 산출이 '실행 중 변경' 이 된다.
-  LAST_PRE_PV="$(python3 scripts/provenance.py "$art" "${OUT:-out}" 2>/dev/null || echo '{}')"
+  # ⚠ Codex R14 §7-4: 시작·끝은 **같은 명시 설정**을 공유한다. `$OUT` 은 위에서 이미 확정됐으므로(28 줄)
+  #   여기서 `${OUT:-out}` 로 다시 기본값을 만들면 두 자리에 기본값이 생겨 어긋날 수 있다 — 그 어긋남이
+  #   U18-02 였다. 확정된 값 하나만 넘긴다 (CLI 쪽도 이제 생략을 오류로 돌려준다).
+  LAST_PRE_PV="$(python3 scripts/provenance.py "$art" "$OUT" 2>/dev/null || echo '{}')"
   LAST_STARTED_UTC="$(python3 -c 'import datetime; print(datetime.datetime.now(datetime.timezone.utc).isoformat())')"
   if [ "$redir" = "-" ]; then
     BMS_RUN_ID="$rid" "$@" > "$log" 2>&1 || rc=1

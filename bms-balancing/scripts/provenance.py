@@ -323,6 +323,27 @@ if __name__ == "__main__":
     #   의 시작 provenance 가 이 CLI 이므로, `OUT=out_u18` 실행에서는 그 untracked 디렉터리가 "코드 변경" 으로
     #   잡혀 13 산출 중 11 개가 `git_state_changed_during_run: true` 였다 (끝 상태는 `write_meta` 가
     #   `output_roots=(out_dir, "out")` 로 물어 false). 플래그가 늘 켜지면 신호가 죽는다 — 이 파일 머리말의 그 고장이다.
-    #   둘째 인자부터가 산출 root 다 (없으면 `out` 만; write_meta 와 같이 `out` 은 늘 포함한다).
-    print(json.dumps(git_provenance(artifact=sys.argv[1] if len(sys.argv) > 1 else None,
-                                    output_roots=(*sys.argv[2:], "out"))))
+    #
+    # ⚠ Codex R14 §7-4 (여기서 닫는다): 부르는 쪽은 그때 고쳤지만 **CLI 자신은 여전히 침묵으로 기본값을 썼다.**
+    #   "생산 기록용 시작/끝은 같은 명시 output-root 설정을 공유해야 한다. 기록용 CLI 에서 인자 생략을 오류로
+    #   만드는 방향이 명확하다. 호환성 때문에 기본 out 진단을 남긴다면 **별도 명시 모드**로 구분한다."
+    #   그래서 생략은 rc 2 이고, 옛 기본값은 `--default-out-diagnostic` 으로만 얻는다. 빈 문자열(미설정 `$OUT`)은
+    #   root 를 준 것이 아니다 — 그것이 U18-02 를 만든 바로 그 침묵이다.
+    _argv = sys.argv[1:]
+    _mode = "explicit"
+    if _argv and _argv[0] == "--default-out-diagnostic":
+        _mode, _argv = "default-out-diagnostic", _argv[1:]
+    if not _argv:
+        sys.stderr.write("! 기록용 CLI: 산출물 경로가 필요하다 — `provenance.py <artifact> <output root> [...]`\n")
+        sys.exit(2)
+    _art, _roots = _argv[0], [r for r in _argv[1:] if r]
+    if _mode == "explicit" and not _roots:
+        sys.stderr.write(
+            "! 기록용 CLI: 산출 root 를 **명시**해야 한다 — `provenance.py <artifact> \"$OUT\"`.\n"
+            "  생략하면 `out` 을 가정하게 되고, 그것이 U18-02 의 거짓 양성(13 중 11 개가 "
+            "`git_state_changed_during_run: true`)을 만들었다. 빈 문자열도 root 가 아니다.\n"
+            "  옛 기본값이 정말 필요하면 `--default-out-diagnostic` 으로 **명시**할 것.\n")
+        sys.exit(2)
+    _pv = dict(git_provenance(artifact=_art, output_roots=(*_roots, "out")))
+    _pv["output_roots_mode"] = _mode          # CLI 진단용 — sidecar 는 `pre.get(...)` 로 필요한 키만 읽는다
+    print(json.dumps(_pv))

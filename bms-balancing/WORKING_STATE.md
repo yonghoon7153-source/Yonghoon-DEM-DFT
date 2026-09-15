@@ -28,7 +28,35 @@
 
 ---
 
-## 지금 상태 — **자체 적대적 리뷰 35 건 닫음 (Codex 토큰 소진 → 내부 6 렌즈) · 현행 정본은 provenance-incomplete**
+## 지금 상태 — **R14 가 열어 둔 셋을 닫았다 (R15, 2026-09-15)**
+
+Codex R14 는 GO 였지만 §7 의 답 2·3·4 를 "다음 라운드" 로 남겼다. 그 셋을 구현으로 닫았다.
+서사와 실측은 `reviews/R14_RESPONSE.md` §8, 기록된 결정은 `reviews/PROMOTION_DECISIONS.json`.
+
+| 항목 | 무엇이 없었나 | 무엇이 생겼나 |
+|---|---|---|
+| U18-05 (§7-3) | sidecar 마다 커밋이 40-hex 인지만 봤다 — **묶음이 한 코드 상태에서 나왔는가**는 아무도 안 봤다 | `blocked_by.bundle_commits` (혼재 = rc 2) · 예외는 **정확한 full commit 집합**에만 걸리는 기록 |
+| `legacy_transition_approved` (§7-2) | 옛 정본과의 일회성 이관과 일반 승격을 가를 판정이 없었다 | 판정 둘(`legacy_transition_approved` · `legacy_transition`) — `promotion_eligible: false` 와 rc 4 는 **그대로** |
+| 기록용 CLI 인자 (§7-4) | 부르는 쪽만 고쳤고 CLI 는 침묵으로 `out` 을 가정했다 | 생략·빈 문자열은 rc 2 · 옛 기본값은 `--default-out-diagnostic` 으로만 |
+
+RED 관측: `tests/test_r15_open_items.py` 첫 실행 **12 failed · 2 passed** (통과한 둘은 "바뀌지
+않는다" 를 재는 대조군). GREEN **14 passed**, 전체 **325 passed**.
+
+fail-closed 실측 — `PROMOTION_DECISIONS.json` 을 치우면 정본 `out/` 이 `rc 2 · bundle_commits 1`
+로 떨어지고 `066866595ab7 (9 개) · 419c1abaeec9 (4 개)` 를 이름으로 지목한다. 예외가 사라지면
+조용히 넘어가지 않는다.
+
+전수 실행이 **이번 라운드와 무관한 빨강 둘**도 드러냈다: `CODEX_REVIEW_REQUEST.md` 가 흡수된
+서브 브랜치를 clone 하라고 적고 있던 것(2026-09-15 흡수 뒤 전수를 안 돌려서 안 드러났다)과,
+시험을 더해 낡은 기대 개수. 둘 다 고쳤다.
+
+**남은 열린 것**: 조건 6(동적 인증) · 조건 8(다섯 축) · `openpyxl` 이 `ENV_KEYS` 에 없음 ·
+r11 `publish:profile_partial_stdout` 대체 증거. 그리고 **실데이터 폭 측정**(`--w-dqdv 0 ↔ 1`)
+— 도구 `scripts/width_report.py` 는 준비됐고 원자료가 사용자 기계에 있어 여기서는 못 돈다.
+
+---
+
+## 직전 상태 — **자체 적대적 리뷰 35 건 닫음 (Codex 토큰 소진 → 내부 6 렌즈) · 현행 정본은 provenance-incomplete**
 
 2026-09-13 Codex 를 더 못 쓰게 되어 `/self-review` 로 6 렌즈를 병렬로 돌렸다 (sig-완전성 · validator-우회 ·
 순서-TOCTOU · 파생-보고서 · archive-이식성 · 공정성-의미). 원시 45 건 → 중복 합쳐 **35 건**, `결론이_바뀜` 14 건.
@@ -335,7 +363,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 311 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 325 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

@@ -61,9 +61,9 @@ $ python3 scripts/check_u14.py --new out/archive/legacy_r6_u14 --schema-only →
 
 | 항목 | 상태 |
 |---|---|
-| `legacy_transition_approved` 판정 (리뷰어 §7-2) | 열림 — 게이트 계약 변경. 이번 이관은 이미 기록된 일회성 예외로 두고, 설계는 다음 라운드 |
-| 기록용 CLI 의 output-root 인자 필수화 (리뷰어 §7-4) | 열림 — P2-1 은 닫혔으므로 급하지 않다. 호환성 판단 필요 |
-| **U18-05** — 승격 묶음의 `git_commit` 혼재 | 열림. 리뷰어 권고대로 **기본은 단일 commit**. 이번 자료는 `0668665…`(9 개) + `419c1ab…`(4 개) 혼재이고 그 사이 `*.py`·`*.sh` diff 가 0 인 범위 한정 예외로 기록한다 — `.m`·설정·의존성까지 일반적으로 덮지 못한다는 지적을 받아들인다 |
+| `legacy_transition_approved` 판정 (리뷰어 §7-2) | **닫음 (R15, 2026-09-15)** — §8 |
+| 기록용 CLI 의 output-root 인자 필수화 (리뷰어 §7-4) | **닫음 (R15, 2026-09-15)** — §8 |
+| **U18-05** — 승격 묶음의 `git_commit` 혼재 | **닫음 (R15, 2026-09-15)** — §8. 리뷰어 권고대로 **기본은 단일 commit**. 이번 자료는 `0668665…`(9 개) + `419c1ab…`(4 개) 혼재이고 그 사이 `*.py`·`*.sh` diff 가 0 인 범위 한정 예외로 기록한다 — `.m`·설정·의존성까지 일반적으로 덮지 못한다는 지적을 받아들인다 |
 | 조건 6(동적 인증) · 조건 8(다섯 축) | 열림 — 리뷰어도 새 발견으로 세지 않았다 |
 | `openpyxl` 이 `ENV_KEYS` 에 없음 | 열림 — 별도 라운드 (P2-2 와 분리하라는 지적 그대로) |
 | r11 `publish:profile_partial_stdout` 대체 증거 없음 | 열림 — `closed_with_substitutes: false` 로 그대로 |
@@ -93,5 +93,91 @@ full commit 기준 고정과 자기대조 rc 2 기록(P2-3).
 과학 값·산출 bytes 는 이번에도 건드리지 않았다. 리뷰 패키지 원문은 `reviews/r14_repros/codex/followup_f21cb648/`
 (zip sha256 `f1d39ff1d5fe1797b2d3de0932fb6febb62acc8b7b05bef38d4e08c66df0fef7`).
 
-열린 것은 §5 그대로다 (`legacy_transition_approved` · 기록용 CLI 인자 필수화 · U18-05 · 조건 6·8 · openpyxl ·
-r11 대체 증거). 리뷰어도 그것들을 이번 종결의 차단 사유로 세지 않았다.
+열린 것은 §5 그대로였다 (`legacy_transition_approved` · 기록용 CLI 인자 필수화 · U18-05 · 조건 6·8 ·
+openpyxl · r11 대체 증거). 리뷰어도 그것들을 이번 종결의 차단 사유로 세지 않았다.
+**그 셋을 2026-09-15 에 닫았다 — §8.** 남은 것은 조건 6·8 · openpyxl · r11 대체 증거 셋이다.
+
+---
+
+## 8. R15 — 리뷰어 §7 의 답 2·3·4 를 구현으로 닫는다 (2026-09-15)
+
+§5 가 "다음 라운드" 로 미뤄 둔 셋이다. 리뷰어가 종결의 차단 사유로 세지 않았으므로 급하지는
+않았지만, 미루면 다음 승격에서 같은 자리가 다시 열린다. **셋 다 재현 시험부터 닫았다** —
+`tests/test_r15_open_items.py` 첫 실행 **12 failed · 2 passed** (통과한 둘은 "바뀌지 않는다" 를
+재는 대조군이다).
+
+### 8-1. U18-05 — 묶음 commit 혼재 (리뷰어 §7-3)
+
+전 판은 sidecar 마다 `git_commit_at_start` 가 40-hex 인지만 봤다. **묶음 전체가 한 코드
+상태에서 나왔는가는 아무도 안 봤다.** 우리가 손으로 diff 를 떠서 무해함을 확인했을 뿐이고,
+리뷰어의 지적("`.m`·설정·의존성을 `*.py`·`*.sh` 만으로 일반적으로 덮을 수 없다")이 정확히
+그 확인 방식을 겨눈 것이다.
+
+`check_u14` 가 이제 후보 묶음의 커밋 집합을 모아 **혼재를 계약 위반(rc 2)으로** 센다.
+`blocked_by.bundle_commits` 가 그 수이고, 사람용 출력은 어느 커밋이 몇 개인지 이름으로 적는다.
+
+예외는 **일반 허용 규칙이 아니라 기록**이다 — `reviews/PROMOTION_DECISIONS.json` 에
+두 full commit·산출 명부·코드 동등성 검토 범위를 적고, `check_u14` 는 **정확히 같은 커밋
+집합**에만 그 기록을 건다. 짧은 sha·와일드카드·빈 목록은 형식 검사에서 거부된다.
+
+이번에 코드 동등성 근거를 **다시 쟀다**. R14 요청문은 `-- '*.py' '*.sh'` 필터판(0 개)을
+인용했는데, 리뷰어 지적을 받아 필터를 빼고 전체 diff 를 적는다:
+
+```
+git diff --name-only 066866595ab71827ef2d98e7a6cf26136df21495 419c1abaeec9fa981d7f5829d5803167288f7f1e
+→ 5 개, 전부 문서·증거 목록
+   bms-balancing/WORKING_STATE.md · docs/COMSOL_REBUILD_SPEC.md · reviews/R13_RESPONSE.md
+   reviews/r14_repros/codex63/time_caps/FULL_LISTING.tsv · …/ZIP_SHA256.txt
+```
+
+필터 없이도 계산에 쓰이는 파일은 하나도 없다. 그것이 이 예외를 기록으로 둘 수 있는 근거다.
+
+**fail-closed 실측**: 기록 파일을 치우고 정본을 다시 재면 `rc 2 · bundle_commits 1` 이고
+`066866595ab7 (9 개) · 419c1abaeec9 (4 개)` 를 지목한다. 예외가 사라지면 조용히 넘어가지
+않는다는 뜻이다.
+
+### 8-2. `legacy_transition_approved` (리뷰어 §7-2)
+
+포괄 `--accept-uncomparable` 로 rc 0 을 만들지 않았다 — 그런 플래그는 **만들지도 않았다.**
+대신 `PROMOTION` JSON 에 판정 둘을 더했다: `legacy_transition_approved` · `legacy_transition`.
+
+승인 조건은 넷이다. 막는 것이 `inputs_uncomparable`·`env_uncomparable` 뿐이고 그중 하나
+이상이 실제로 있을 것 · 새 묶음의 명부가 기록과 같을 것 · 코드 커밋 집합이 기록과 같을 것 ·
+기록이 이름한 옛 리비전과 대조했을 것. 계약 위반이 하나라도 있으면 승인은 **없다**.
+
+실측 (`python3 scripts/check_u14.py --new out --old-rev 42314198`):
+
+```
+rc 4 · promotion_eligible false · legacy_transition_approved true · legacy_transition U18B-2026-09-14
+blocked_by  inputs_uncomparable 17 · env_uncomparable 1 · 나머지 전부 0
+```
+
+리뷰어가 요구한 그대로다 — **`promotion_eligible: false` 를 지우지 않았고 rc 도 4 그대로다.**
+
+### 8-3. 기록용 CLI 의 산출 root 인자 (리뷰어 §7-4)
+
+U18-02 는 **부르는 쪽**을 고쳤고 CLI 자신은 여전히 침묵으로 `out` 을 가정했다. 이제:
+
+| 부름 | 결과 |
+|---|---|
+| `provenance.py <art>` | **rc 2** — 산출 root 를 명시하라고 말한다 |
+| `provenance.py <art> ""` | **rc 2** — 빈 문자열(미설정 `$OUT`)은 root 가 아니다 |
+| `provenance.py --default-out-diagnostic <art>` | rc 0 · `output_roots_mode: "default-out-diagnostic"` |
+| `provenance.py <art> "$OUT"` | rc 0 (production 경로) |
+
+`--verify-unit`·`--check-run-id` 는 기록 모드가 아니므로 계약을 안 바꿨다.
+`run_states.sh` 는 `"${OUT:-out}"` 를 **확정된 `"$OUT"`** 로 바꿨다 — 기본값이 두 자리에
+생기면 시작·끝이 어긋날 수 있고, 그 어긋남이 U18-02 였다.
+
+### 8-4. 회귀
+
+`tests/test_r15_open_items.py` **14 passed**. 전체 **325 passed**.
+
+전수 실행이 **이번 라운드와 무관한 빨강 둘**을 드러냈다. 둘 다 고쳤다.
+
+| 무엇 | 왜 | 고침 |
+|---|---|---|
+| `test_review_request_clones_the_branch_that_owns_bms_balancing` | `CODEX_REVIEW_REQUEST.md` 가 흡수된 서브 브랜치를 clone 하라고 적고 있었다 — 2026-09-15 흡수 뒤 아무도 전수를 안 돌려서 안 드러났다 | 본진 브랜치 이름으로 정정 (정본은 루트 `CLAUDE.md` 하드룰 1) |
+| `test_i6d_04_working_state_test_count_matches_the_collection` | 시험을 14 개 더해 `WORKING_STATE.md` 의 기대 개수가 낡았다 | 311 → 325 |
+
+과학 값·산출 bytes 는 이번에도 건드리지 않았다.
