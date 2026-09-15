@@ -16,11 +16,14 @@
   · 어느 채널이든 `B_ch` 가 0개다 (baseline 이 없다)
   · **ρ 증서가 없다/깨졌다/봉인된 `B_ch` 를 안 덮는다** (`AREA5-04`)
   · `--limit` 를 `--diagnostic` 없이 줬다, 또는 음수다 (`AREA5-02`)
+  · 봉인이 **시험용 시각 주입**으로 만들어졌다 (`test_only`) (`AREA5-09`)
+  · 봉인 당시의 **수치 코드**·**등록부 파일**과 지금이 다르다 (`AREA5-03`)
+  · 케이스의 원자료 지문·본문 step·덱 사상·기하가 봉인과 다르다 (`AREA5-03`)
 
 rc=3 (판정을 발행하지 않는다 — 결과를 쓰지 않는다):
   · `ERROR` 가 있다 · baseline 재현 실패 · 계약/범위 위반
-    (`BASELINE_REPRODUCTION_FAILED` · `BASELINE_STATE_CHANGED` · `SOLVER_ERROR` ·
-     `ACTIVE_SET_CHANGED` · `NEW_NEGATIVE`)
+    (`BASELINE_REPRODUCTION_FAILED` · `BASELINE_STATE_CHANGED` · **`BASELINE_VALUE_CHANGED`** ·
+     `SOLVER_ERROR` · `ACTIVE_SET_CHANGED` · **`FROZEN_AXIS_CHANGED`** · `NEW_NEGATIVE`)
   · 활성 간선이 0인데 **유효 관측도 아니다**
     ⚠ 활성 0 이어도 두 팔이 같은 유효 σ 를 냈으면 그것은 **정상 무변화**다 (`AREA5-08`) —
       no-op 배선 오류와 섞지 않는다.
@@ -41,6 +44,7 @@ rc=3 (판정을 발행하지 않는다 — 결과를 쓰지 않는다):
 from __future__ import annotations
 import argparse
 import datetime as _dt
+import hashlib
 import json
 import math
 import pathlib
@@ -92,7 +96,7 @@ def seal_window_ok(sealed_at_kst: str) -> tuple[bool, str]:
     return True, ''
 
 
-def load_seal(path: pathlib.Path) -> tuple[dict | None, str]:
+def load_seal(path: pathlib.Path, diagnostic: bool = False) -> tuple[dict | None, str]:
     """봉인을 읽고 **런을 허가할 수 있는지**까지 본다.  허가 못 하면 `(None, 이유)`."""
     if not path.is_file():
         return None, f'봉인 파일이 없다: {path}'
@@ -105,6 +109,14 @@ def load_seal(path: pathlib.Path) -> tuple[dict | None, str]:
     miss = [k for k in REQUIRED_SEAL_KEYS if not seal.get(k)]
     if miss:
         return None, f'봉인에 없는 키 {miss} — 무엇을 baseline 으로 삼는지 복원할 수 없다'
+    #  ★★ `AREA5-09` — **시험용 시각으로 만든 봉인은 생산 봉인이 아니다.**
+    #     Codex 가 실제 봉인기를 09-15 에 `--now 2026-09-17T12:00+09:00` 으로 돌려 정상 봉인을
+    #     썼고 옛 러너가 rc=0 으로 받았다 ⇒ **도구 자신이 발행하는 시험 산물이 생산물과
+    #     구별되지 않았다**.  이제 낙인이 찍혀 오고, 공식 판정에서는 거부한다.
+    if seal.get('test_only') and not diagnostic:
+        return None, ('이 봉인은 **시험용 시각 주입**으로 만들어졌다 (test_only) — 생산 판정에 '
+                      f"쓸 수 없다 (AREA5-09).  주입값: {seal.get('test_now_injected')!r}.  "
+                      '진단으로 보려면 `--diagnostic` 을 붙일 것.')
     ok, why = seal_window_ok(seal['sealed_at_kst'])
     if not ok:
         return None, f'있어서는 안 되는 봉인은 런을 허가하지 못한다 — {why}'
@@ -172,6 +184,131 @@ def load_rho_certificate(path, seal, channels_hint=None):
     return rho, ''
 
 
+def _sha256(p) -> str:
+    h = hashlib.sha256()
+    with open(p, 'rb') as f:
+        for b in iter(lambda: f.read(1 << 20), b''):
+            h.update(b)
+    return h.hexdigest()
+
+
+#: 소비 직전에 **봉인과 같아야 하는** provenance 항목 (`AREA5-03`).
+#:   ⚠ `source` 는 raw↔결과 폴더 갈래라, 갈리면 같은 이름의 다른 계산이다.
+PROV_PIN_KEYS = ('atom_file', 'contact_file', 'atom_step', 'contact_step',
+                 'n_contact_rows', 'plate_z', 'scale', 'deck', 'source',
+                 'type_hist', 'type_map')
+PROV_SHA_PAIRS = (('atom_file', 'atom_sha256'), ('contact_file', 'contact_sha256'),
+                  ('deck', 'deck_sha256'))
+
+
+def verify_code_bundle(seal: dict) -> str:
+    """봉인이 적은 **수치 코드의 신원**을 소비 직전에 다시 확인한다 (`AREA5-03` ⓐ).
+
+    ⛔ *"현재 HEAD = 기록 SHA"* 만으로는 dirty source 와 커밋 안 된 의존 변경을 못 잡는다 —
+      그래서 봉인기가 모듈 바이트를 해싱해 두고 여기서 **같은 바이트인지** 본다.
+    ⚠ 봉인기·러너 자신은 대상이 아니다 (`AREA5-09` 의 Codex 정정: 결과를 보지 않은 상태의
+      검사기 수리는 구별 가능하고, 그것까지 막으면 알려진 결함을 그대로 실행하게 된다).
+    """
+    from seal_s3_prerun import NUMERIC_MODULES, code_bundle
+    want = seal.get('code_bundle')
+    if not want:
+        return ('봉인에 `code_bundle` 이 없다 — 어떤 코드가 baseline 을 냈는지 복원할 수 없다 '
+                '(옛 판 봉인이면 다시 봉인해야 한다)')
+    got = code_bundle()
+    bad = [f'{m}: 봉인 {(want.get("modules") or {}).get(m, "—")[:12]} ≠ 지금 '
+           f'{(got["modules"].get(m) or "—")[:12]}'
+           for m in NUMERIC_MODULES
+           if (want.get('modules') or {}).get(m) != got['modules'].get(m)]
+    if got['numeric_modules_dirty']:
+        bad.append(f"지금 작업트리가 수치 모듈을 고치고 있다: {got['numeric_modules_dirty']}")
+    if want.get('git_sha') and seal.get('generation_git_sha') and \
+            want['git_sha'] != seal['generation_git_sha']:
+        bad.append(f"봉인 안에서 git_sha 가 갈린다: {want['git_sha'][:9]} vs "
+                   f"{seal['generation_git_sha'][:9]}")
+    return '; '.join(bad)
+
+
+def verify_registry(seal: dict) -> str:
+    """봉인이 인용한 **등록부 파일**(코호트 TSV · 설계 CSV)이 그대로인가 (`AREA5-03` ⓑ)."""
+    bad = []
+    for pkey, skey in (('cohort_tsv', 'cohort_tsv_sha256'), ('design_csv', 'design_csv_sha256')):
+        path, want = seal.get(pkey), seal.get(skey)
+        if not path or not want:
+            bad.append(f'{skey} 가 봉인에 없다 — 어떤 등록부였는지 복원할 수 없다')
+            continue
+        p = pathlib.Path(path)
+        if not p.is_absolute():
+            p = ROOT / p
+        if not p.is_file():
+            bad.append(f'{pkey} 를 못 찾는다: {p}')
+            continue
+        got = _sha256(p)
+        if got != want:
+            bad.append(f'{skey}: 봉인 {want[:12]} ≠ 지금 {got[:12]}')
+    return '; '.join(bad)
+
+
+def verify_case_provenance(cid: str, prov: dict, seal: dict, root: pathlib.Path) -> str:
+    """소비 **직전** 케이스 검증 (`AREA5-03`) — '' 이면 통과.
+
+    ★ Codex 실측: 봉인은 step 100 을 가리키는데 같은 폴더에 step 200 쌍을 넣으니 loader 가
+      step 200 을 읽고 **다른 σ 를 rc=0 으로 발행**했다.  봉인기는 지문을 대조했지만
+      **러너가 그 검증을 이어받지 않았다.**
+    """
+    sp = (seal.get('provenance') or {}).get(cid)
+    if not sp:
+        return f'봉인에 {cid} 의 provenance 가 없다 — 무엇을 읽었어야 하는지 모른다'
+    bad = [f'{k}: 봉인 {sp.get(k)!r} ≠ 지금 {prov.get(k)!r}'
+           for k in PROV_PIN_KEYS if sp.get(k) != prov.get(k)]
+    for fkey, skey in PROV_SHA_PAIRS:
+        want, raw = sp.get(skey), (prov.get(fkey) or '').strip()
+        if not raw:
+            if want:
+                bad.append(f'{fkey}: 봉인은 파일을 읽었는데 지금은 안 읽었다')
+            continue
+        if not want:
+            #  ⛔ **지문이 없으면 통과가 아니다** — 무엇을 읽었는지 확정할 수 없으면 거부다.
+            bad.append(f'{skey} 가 봉인에 없다 (읽은 것: {raw})')
+            continue
+        p = pathlib.Path(raw)
+        if not p.is_absolute():
+            p = root / p
+        if not p.is_file():
+            bad.append(f'{fkey}: 읽은 파일을 다시 못 찾는다 ({p})')
+            continue
+        got = _sha256(p)
+        if got != want:
+            bad.append(f'{skey}: 봉인 {want[:12]} ≠ 실제 {got[:12]}')
+    return '; '.join(bad)
+
+
+#: 양팔에서 **바뀌면 안 되는 축** (`AREA5-08` 잔여).  계약 §C 의 전환은 ψ 배치 **한 줄**이므로,
+#: 간선 ID 집합·면적·R_bulk·재료계수(R_Maxwell 에 σ_rel·k·a 가 다 들어 있다)·기하·regime 과
+#: **floor 지원집합**(Rc > 0 인 자리)이 전부 같아야 한다.
+#: ⛔ 옛 판은 **활성 개수만** 봤다 — 개수가 같아도 자리가 바뀌면 다른 실험이다.
+def _frozen_axes(net) -> dict:
+    out = {}
+    for e in net['edges']:
+        out[(e['id1'], e['id2'])] = (
+            e['A_contact'], e['A_physics'], e['A_hertzian'], e['R_bulk'], e['R_Maxwell'],
+            e['d_ij'], e['r1'], e['r2'], e['type1'], e['type2'], e['regime'],
+            (e.get('R_constriction') or 0.0) > 0.0)
+    return out
+
+
+def compare_frozen_axes(net_o, net_n) -> str:
+    """두 팔의 동결 축이 같은가 — '' 이면 같다."""
+    ao, an = _frozen_axes(net_o), _frozen_axes(net_n)
+    if set(ao) != set(an):
+        d = sorted(set(ao) ^ set(an))[:4]
+        return f'간선 ID 집합이 다르다 ({len(set(ao) ^ set(an))}개, 예: {d})'
+    diff = [k for k in ao if ao[k] != an[k]]
+    if diff:
+        k = diff[0]
+        return (f'동결 축이 달라진 간선 {len(diff)}개 (예 {k}: {ao[k]!r} → {an[k]!r})')
+    return ''
+
+
 def sigma_of(net, solve) -> tuple[float | None, int, str]:
     """한 망 → `(σ_eff/σ_bulk, 활성 간선 수, 실패 사유)`.
 
@@ -223,11 +360,13 @@ def bound_medians(values, n_domain, rho):
     return (lo, hi), (v_lo, v_hi), ('' if v_lo == v_hi else 'UNDETERMINED_COHORT')
 
 
-def run_case(case_dir, deck_dir, channels, case_networks, solve):
+def run_case(case_dir, deck_dir, channels, case_networks, solve, seal=None, root=None):
     """한 케이스 두 팔 → 채널별 기록.
 
     ★ 두 팔은 **같은 원자료**에서 나와야 한다 (`AREA5-03`) — 옛 판은 raw 를 각각 재발견하고
       두 번째 `prov` 를 **버렸다**.  이제 두 provenance 를 대조하고 다르면 올린다.
+    ★★ 그리고 **봉인과도** 대조한다 (`AREA5-03` 본체) — 봉인이 가리키는 파일의 실제 바이트
+      SHA · 본문 step · 덱 사상 · 기하/단위가 지금과 같은지, 소비 **직전에** 본다.
     """
     import network_conductivity as nc
     out = {}
@@ -241,17 +380,30 @@ def run_case(case_dir, deck_dir, channels, case_networks, solve):
     if _drift:
         raise ValueError(f'{case_dir.name}: 두 팔이 다른 원자료를 읽었다 (실행 중 파일이 바뀌었다) — '
                          f'{_drift}')
+    #  ★★ 봉인 대조 — 여기서 막지 않으면 *"봉인 뒤 바뀐 원자료로 정상 발행"* 이 그대로 난다.
+    if seal is not None:
+        _why = verify_case_provenance(case_dir.name, prov, seal, root or case_dir.parent)
+        if _why:
+            raise ValueError(f'{case_dir.name}: 봉인이 가리키는 원자료가 아니다 — {_why}')
     for ch in channels:
         s_old, n_act, why_o = sigma_of(nets_old[ch], solve)
         s_new, n_act2, why_n = sigma_of(nets_new[ch], solve)
         #  ⚠ 활성 간선 수는 **팔에 무관**해야 한다 — 곱셈이 양수를 0 으로 만들지 않기 때문이다.
         #    ⛔ 갈리면 §C 의 ψ-only 전환 범위 위반이므로 **거부**한다 (`AREA5-08`).
         #      옛 판은 `status=ok` 로 발행했다 — "기록했다" 가 검증을 대신하지 못한다.
+        _axes = compare_frozen_axes(nets_old[ch], nets_new[ch])
+        _sealed_old = ((seal or {}).get('channels', {}).get(ch, {}).get('sigma_old') or {}
+                       ).get(case_dir.name)
         rec = {'sigma_old': s_old, 'sigma_new': s_new,
                'n_active_old': n_act, 'n_active_new': n_act2,
                'n_edges': len(nets_old[ch]['edges']),
+               'sealed_sigma_old': _sealed_old,
                'why_old': why_o, 'why_new': why_n}
-        if n_act != n_act2:
+        if _axes:
+            #  ⛔ 개수만 같고 **자리·값**이 달라진 경우 — §C 의 ψ-only 범위 밖이다.
+            rec['status'], rec['delta_pct'] = 'FROZEN_AXIS_CHANGED', None
+            rec['why_axis'] = _axes
+        elif n_act != n_act2:
             rec['status'], rec['delta_pct'] = 'ACTIVE_SET_CHANGED', None
         elif why_o.startswith('EXC:') or why_n.startswith('EXC:'):
             #  계약/프로그래밍 오류는 **수치 미정이 아니다** — A-4 로 세탁하지 않는다.
@@ -263,6 +415,12 @@ def run_case(case_dir, deck_dir, channels, case_networks, solve):
             rec['status'] = ('BASELINE_REPRODUCTION_FAILED' if why_o == 'NUMERIC'
                              else 'BASELINE_STATE_CHANGED')
             rec['delta_pct'] = None
+        elif (_sealed_old is not None
+              and abs(s_old - _sealed_old) > 1e-9 * max(abs(_sealed_old), 1e-300)):
+            #  ★★ `AREA5-03` ⓓ — **positive 였던 old 가 다른 positive 가 된 경우.**
+            #     옛 판은 `≤0`·`None` 만 봤으므로 이것이 통과했다 (Codex 실측: 이온 old
+            #     1.306478217115371e-8 → step 200 의 1.2210783247843304e-8 를 rc=0 발행).
+            rec['status'], rec['delta_pct'] = 'BASELINE_VALUE_CHANGED', None
         elif s_new is None:
             #  old 는 살아 있고 new 만 미정 ⇒ **등록된 수치 미정** = A-4 경계 대상이다.
             rec['status'], rec['delta_pct'] = 'NEW_UNDETERMINED', None
@@ -300,10 +458,17 @@ def main() -> int:
     if not a.seal:
         print('⛔ `--seal` 이 필요하다 — 봉인 없이 S3 를 돌리지 않는다 (계약 §D-3 · R4-10).')
         return 2
-    seal, why = load_seal(pathlib.Path(a.seal))
+    seal, why = load_seal(pathlib.Path(a.seal), diagnostic=bool(a.diagnostic))
     if seal is None:
         print(f'⛔ 봉인이 런을 허가하지 않는다 — {why}')
         return 2
+    #  ── ★★ 소비 **직전** 재검증 (`AREA5-03`) ──  봉인기가 확인한 것을 러너가 이어받는다.
+    #     ⛔ 여기서 안 막으면 봉인 뒤 바뀐 원자료·코드로도 정상 발행이 난다.
+    for _label, _why in (('코드 bundle', verify_code_bundle(seal)),
+                         ('등록부 파일', verify_registry(seal))):
+        if _why:
+            print(f'⛔ 봉인 소비 거부 — {_label}이 봉인 당시와 다르다: {_why}')
+            return 2
     #  ── ρ (`AREA5-04`) ──  공식 판정의 ρ 는 **증서**에서만 온다.
     #    ⚠ 옛 판은 아무 CLI 수치나 받아 `--rho 7 → UNRESOLVED_NUMERIC` / `--rho 0 → h1` 로
     #      같은 데이터의 라벨이 뒤집혔다.  "필수" 는 "봉인됨" 이 아니다.
@@ -359,7 +524,7 @@ def main() -> int:
         cdir = root / cid
         try:
             res, prov = run_case(cdir, a.deck_dir or None, channels, case_networks,
-                                 nc.solve_network)
+                                 nc.solve_network, seal=seal, root=root)
         except Exception as e:                                 # noqa: BLE001
             errors.append({'case': cid, 'error': f'{type(e).__name__}: {e}'})
             print(f'  {cid}: ERROR {type(e).__name__}: {e}')
@@ -381,8 +546,8 @@ def main() -> int:
         deltas = [abs(r['delta_pct']) for _c, r in per_channel[ch] if r['delta_pct'] is not None]
         #  baseline 이 재현 안 된 것과 **계약/범위 위반**은 판정을 멈춘다 (A-4 대상 아님).
         blocking = sorted(c for c, r in per_channel[ch] if r['status'] in (
-            'BASELINE_REPRODUCTION_FAILED', 'BASELINE_STATE_CHANGED',
-            'SOLVER_ERROR', 'ACTIVE_SET_CHANGED', 'NEW_NEGATIVE'))
+            'BASELINE_REPRODUCTION_FAILED', 'BASELINE_STATE_CHANGED', 'BASELINE_VALUE_CHANGED',
+            'SOLVER_ERROR', 'ACTIVE_SET_CHANGED', 'FROZEN_AXIS_CHANGED', 'NEW_NEGATIVE'))
         #  old 는 살아 있고 new 만 미정 ⇒ A-4 의 0/+∞ 경계로 센다.
         undet = sorted(c for c, r in per_channel[ch] if r['status'] == 'NEW_UNDETERMINED')
         n_contradicted += len(blocking)
@@ -420,6 +585,9 @@ def main() -> int:
            'rho': rho, 'rho_source': rho_src, 'diagnostic': bool(a.diagnostic),
            'limit': a.limit, 'verdict_rule': VERDICT_RULE,
            'psi_arms': [nc.PSI_DIVIDE, nc.PSI_MULTIPLY],
+           'seal_test_only': bool(seal.get('test_only')),
+           'verified_at_consumption': ['code_bundle', 'registry_sha', 'per_case_provenance_sha',
+                                       'per_case_sealed_sigma_old', 'frozen_axes_both_arms'],
            'channels': summary, 'cases': rows, 'errors': errors}
 
     #  ── ⛔ **무결성 게이트를 판정 인쇄보다 앞에 둔다** (`AREA5-08` 처방).
@@ -430,8 +598,9 @@ def main() -> int:
         _stop = f'ERROR {len(errors)}건 — 기술 실패를 물리 상태로 두지 않는다'
     elif n_blocking:
         _stop = (f'baseline 재현 실패·계약 위반 {n_blocking}건 — 조용히 재분류하지 않는다 '
-                 '(BASELINE_REPRODUCTION_FAILED / BASELINE_STATE_CHANGED / SOLVER_ERROR / '
-                 'ACTIVE_SET_CHANGED / NEW_NEGATIVE)')
+                 '(BASELINE_REPRODUCTION_FAILED / BASELINE_STATE_CHANGED / '
+                 'BASELINE_VALUE_CHANGED / SOLVER_ERROR / ACTIVE_SET_CHANGED / '
+                 'FROZEN_AXIS_CHANGED / NEW_NEGATIVE)')
     if _stop:
         print(f'\n⛔ 판정을 발행하지 않는다 — {_stop}')
         for ch in channels:
@@ -652,6 +821,27 @@ def _selftest() -> int:
         chk('⑧f 비유한 ρ 는 거부', _cert_rho(dict(_cert, rho='nan'))[0] is None)
 
     # ⑥ 러너 자신의 거부 — `main()` 을 인자로 불러 rc 를 본다.
+    #    ⚠⚠ **봉인은 소비 가능한 것이어야 한다.**  옛 판의 ⑥c·⑥d 는 `code_bundle` 이 없는
+    #      가짜 봉인을 써서, `AREA5-03` 게이트를 넣자 *"ρ 가 없어서"* 가 아니라 *"코드 신원이
+    #      없어서"* rc=2 가 났다 — **검사가 이름과 다른 것을 재고 있었다** (규율 ⑤).
+    #      ⇒ 실제 `code_bundle()` 과 실제 등록부 지문을 넣어, 뒤 게이트가 진짜로 발화하게 한다.
+    from seal_s3_prerun import code_bundle as _cb, sha256 as _sha_seal
+
+    def _consumable(tdp, **over):
+        _tsv = ROOT / 'docs' / 'data' / 'area_s2_cohort.tsv'
+        _csv = ROOT / 'docs' / 'data' / 'lhs_design_20260818.csv'
+        d = {'sealed_at_kst': '2026-09-17T12:00:00+09:00',
+             'seal_deadline': SEAL_DEADLINE.isoformat(),
+             'generation_git_sha': _cb()['git_sha'] or 'x',
+             'code_bundle': _cb(),
+             'cohort_tsv': str(_tsv), 'cohort_tsv_sha256': _sha_seal(_tsv),
+             'design_csv': str(_csv), 'design_csv_sha256': _sha_seal(_csv),
+             'channels': {'ionic': {'ids': {IN_DOMAIN: ['a']}, 'sigma_old': {'a': 1.0}}}}
+        d.update(over)
+        p = tdp / f'seal_{abs(hash(json.dumps(over, sort_keys=True, default=str)))}.json'
+        p.write_text(json.dumps(d, ensure_ascii=False), encoding='utf-8')
+        return p
+
     _argv = sys.argv[:]
     try:
         sys.argv = ['run_s3_psi.py']
@@ -659,18 +849,120 @@ def _selftest() -> int:
         sys.argv = ['run_s3_psi.py', '--seal', '/nonexistent/seal.json', '--rho', '1.0']
         chk('⑥b 없는 봉인이면 rc=2', main() == 2)
         with tempfile.TemporaryDirectory() as td:
-            p = pathlib.Path(td) / 's.json'
-            p.write_text(json.dumps({'sealed_at_kst': '2026-09-17T12:00:00+09:00',
-                                     'seal_deadline': SEAL_DEADLINE.isoformat(),
-                                     'generation_git_sha': 'x',
-                                     'channels': {'ionic': {'ids': {IN_DOMAIN: ['a']}}}}),
-                          encoding='utf-8')
+            tdp = pathlib.Path(td)
+            p = _consumable(tdp)
             sys.argv = ['run_s3_psi.py', '--seal', str(p)]
             chk('⑥c ★ 봉인은 정상인데 ρ 가 없으면 rc=2 (기본값 0 을 쓰지 않는다)', main() == 2)
-            sys.argv = ['run_s3_psi.py', '--seal', str(p), '--rho', '1.0']
+            sys.argv = ['run_s3_psi.py', '--seal', str(p), '--rho', '1.0', '--diagnostic']
             chk('⑥d 코호트 루트가 없으면 rc=2', main() == 2)
+
+            # ── ⑨ `AREA5-03` 소비 직전 재검증 ──────────────────────────────────────
+            _p = _consumable(tdp, code_bundle=None)
+            sys.argv = ['run_s3_psi.py', '--seal', str(_p), '--rho', '1.0', '--diagnostic',
+                        '--cases-root', td]
+            chk('⑨ ★★ `code_bundle` 이 없는 봉인은 **소비 거부** — 어떤 코드가 baseline 을 '
+                '냈는지 복원할 수 없다', main() == 2)
+            _mut = json.loads(json.dumps(_cb()))
+            _mut['modules']['network_conductivity.py'] = '0' * 64
+            _p = _consumable(tdp, code_bundle=_mut)
+            sys.argv = ['run_s3_psi.py', '--seal', str(_p), '--rho', '1.0', '--diagnostic',
+                        '--cases-root', td]
+            chk('⑨b ★★ 수치 모듈 지문이 다르면 거부 — "HEAD = 기록 SHA" 만으로는 dirty 를 못 잡는다',
+                main() == 2)
+            _p = _consumable(tdp, cohort_tsv_sha256='f' * 64)
+            sys.argv = ['run_s3_psi.py', '--seal', str(_p), '--rho', '1.0', '--diagnostic',
+                        '--cases-root', td]
+            chk('⑨c ★ 등록부(코호트 TSV) 지문이 다르면 거부', main() == 2)
+            #   판별력 — 위 셋이 "언제나 rc=2" 라서 통과한 것이 아니다.
+            _p = _consumable(tdp)
+            sys.argv = ['run_s3_psi.py', '--seal', str(_p), '--rho', '1.0', '--diagnostic',
+                        '--cases-root', td]
+            chk('⑨d 판별력: 온전한 봉인이면 이 게이트들을 **지나** 케이스 단계까지 간다 '
+                '(rc=3 = 케이스를 못 읽음)', main() == 3)
+
+            # ── ⑩ `AREA5-09` 시험용 시각 봉인 ─────────────────────────────────────
+            _p = _consumable(tdp, test_only=True, test_now_injected='2026-09-17T12:00:00+09:00')
+            _s, _w = load_seal(_p)
+            chk('⑩ ★★ 시험용 시각(`--now`)으로 만든 봉인은 **생산 판정에 못 쓴다** (AREA5-09)',
+                _s is None and 'test_only' in _w, _w[:90])
+            chk('⑩b 같은 봉인도 `--diagnostic` 에서는 읽힌다 (막는 것은 *생산 판정*이다)',
+                load_seal(_p, diagnostic=True)[0] is not None)
     finally:
         sys.argv = _argv
+
+    # ── ⑪ `AREA5-03` 케이스 지문 · 봉인 σ_old · ⑫ `AREA5-08` 동결 축 ─────────────
+    with tempfile.TemporaryDirectory() as td:
+        tdp = pathlib.Path(td)
+        f = tdp / 'atom.txt'
+        f.write_text('dump', encoding='utf-8')
+        _real = _sha_seal(f)
+        _prov = {'case': 'a', 'source': 'raw', 'deck': '', 'atom_file': str(f),
+                 'contact_file': '', 'atom_step': '100', 'contact_step': '100',
+                 'n_contact_rows': 6, 'plate_z': 12.0, 'scale': 1000.0,
+                 'type_hist': {3: 7}, 'type_map': {3: 'SE'}}
+        _seal = {'provenance': {'a': dict(_prov, atom_sha256=_real, contact_sha256='',
+                                          deck_sha256='')}}
+        chk('⑪ 봉인과 같은 원자료면 통과', verify_case_provenance('a', dict(_prov), _seal, tdp) == '')
+        f.write_text('dump-다른내용', encoding='utf-8')
+        _w = verify_case_provenance('a', dict(_prov), _seal, tdp)
+        chk('⑪b ★★ 같은 경로라도 **바이트가 바뀌면** 거부 — 봉인 뒤 바뀐 원자료로 발행하지 않는다',
+            'atom_sha256' in _w, _w[:80])
+        f.write_text('dump', encoding='utf-8')
+        _w = verify_case_provenance('a', dict(_prov, atom_step='200'), _seal, tdp)
+        chk('⑪c ★ 본문 step 이 다르면 거부 (Codex 반례: 같은 폴더에 step 200 을 넣으니 '
+            '그것을 읽고 다른 σ 를 rc=0 발행)', 'atom_step' in _w, _w[:80])
+        _w = verify_case_provenance('a', dict(_prov), {'provenance': {}}, tdp)
+        chk('⑪d 봉인에 그 케이스의 provenance 가 없으면 거부', _w != '')
+        _seal_nosha = {'provenance': {'a': dict(_prov, atom_sha256='')}}
+        chk('⑪e ⛔ 지문이 **없으면 통과가 아니다** (무엇을 읽었는지 확정 못 하면 거부)',
+            verify_case_provenance('a', dict(_prov), _seal_nosha, tdp) != '')
+
+    atoms, rows_c, tm = _fixture()
+    _kw = dict(box_x=40.0, box_y=40.0, mode='ionic', type_map=tm, contact_mode='physics')
+    _no = nc.build_network(atoms, rows_c, {3}, 1000.0, 12.0, psi_placement=nc.PSI_DIVIDE, **_kw)
+    _nn = nc.build_network(atoms, rows_c, {3}, 1000.0, 12.0, psi_placement=nc.PSI_MULTIPLY, **_kw)
+    chk('⑫ ★★ 두 팔의 **동결 축**(간선 ID 집합·면적·R_bulk·재료계수·기하·floor 지원집합)이 같다',
+        compare_frozen_axes(_no, _nn) == '', compare_frozen_axes(_no, _nn)[:90])
+    import copy as _copy
+    _bad = _copy.deepcopy(_nn)
+    _bad['edges'][0]['R_bulk'] = _bad['edges'][0]['R_bulk'] * 1.000001
+    chk('⑫b ★ 판별력: 한 간선의 `R_bulk` 만 바꿔도 잡는다 (개수 일치만 보던 옛 판은 못 잡았다)',
+        'R_bulk' not in '' and compare_frozen_axes(_no, _bad) != '',
+        compare_frozen_axes(_no, _bad)[:90])
+    _bad = _copy.deepcopy(_nn)
+    _bad['edges'].pop()
+    chk('⑫c ★ 간선 **ID 집합**이 달라지면 잡는다', 'ID 집합' in compare_frozen_axes(_no, _bad))
+    _bad = _copy.deepcopy(_nn)
+    _bad['edges'][0]['R_constriction'] = 0.0
+    chk('⑫d ★ **floor 지원집합**(Rc>0 인 자리)이 달라지면 잡는다 — 개수가 같아도 자리가 다르면 '
+        '다른 실험이다', compare_frozen_axes(_no, _bad) != '')
+
+    #  ⑬ 봉인된 σ_old 를 재현하지 못하면 판정을 멈춘다 (`AREA5-03` ⓓ).
+    def _cn_stub(case_dir, contact_mode='physics', channels=(), deck_dir=None, psi_placement=None):
+        net = _no if psi_placement != nc.PSI_MULTIPLY else _nn
+        return {ch: net for ch in channels}, {'case': case_dir.name, 'atom_file': '',
+                                              'contact_file': '', 'deck': ''}
+
+    #   ⚠ 봉인을 넘길 때는 provenance 도 있어야 한다 (⑪ 게이트가 먼저 발화한다) — 그래서
+    #     stub 이 내는 prov 와 **같은** 항목을 넣는다.  여기서 재는 것은 σ_old 축 하나다.
+    _stub_prov = {'case': 'a', 'atom_file': '', 'contact_file': '', 'deck': '',
+                  'atom_sha256': '', 'contact_sha256': '', 'deck_sha256': ''}
+
+    def _mkseal(val):
+        return {'provenance': {'a': dict(_stub_prov)},
+                'channels': {'ionic': {'sigma_old': {'a': val}}}}
+
+    _s_true, _, _ = sigma_of(_no, nc.solve_network)
+    _res, _ = run_case(pathlib.Path('a'), None, ('ionic',), _cn_stub, nc.solve_network)
+    chk('⑬ 봉인 수치가 없으면 옛 동작 그대로 (ok)', _res['ionic']['status'] == 'ok')
+    _res, _ = run_case(pathlib.Path('a'), None, ('ionic',), _cn_stub, nc.solve_network,
+                       seal=_mkseal(_s_true))
+    chk('⑬b 봉인 수치를 재현하면 통과', _res['ionic']['status'] == 'ok', _res['ionic']['status'])
+    _res, _ = run_case(pathlib.Path('a'), None, ('ionic',), _cn_stub, nc.solve_network,
+                       seal=_mkseal(_s_true * 1.0645))
+    chk('⑬c ★★ **positive 였던 old 가 다른 positive** 가 되면 `BASELINE_VALUE_CHANGED` — '
+        '옛 판은 ≤0·None 만 봐서 이것을 rc=0 으로 발행했다',
+        _res['ionic']['status'] == 'BASELINE_VALUE_CHANGED', _res['ionic']['status'])
 
     print('S3 런 SELFTEST ' + ('FAIL' if fail else 'PASS'))
     return 1 if fail else 0

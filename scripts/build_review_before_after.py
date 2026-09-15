@@ -105,16 +105,53 @@ ROWS = [
      '<b>필수이기만 하고 봉인되지 않았다</b> — 같은 봉인·같은 <span class="m">d = 12.00000000000001</span> 에서 CLI 수치만 7→0 으로 바꾸면 <b>UNRESOLVED_NUMERIC → h1</b> 이다.  현행 봉인기는 ρ <b>수치 필드 자체를 내지 않는다</b>.',
      ['12.00000000000001'],
      '★ 그리고 내가 사용자에게 시킨 ρ 명령이 <b>두 번 틀렸다</b> — 사다리 파일은 09-13 자로 <b>이미 있고</b>, 그것들은 전부 <span class="m">lhs00_100</span>~129 = mono 30 이라 계약이 새 130 에 <b>대입을 금지</b>한 것이다.'),
+    ('AREA5-03', '봉인기가 지문을 대조하니 봉인 뒤 바뀐 원자료는 못 들어온다',
+     '봉인기가 <span class="m">atom·contact·deck</span> 의 SHA 와 본문 step 을 실제 바이트로 대조한다 (R4-02 수리).',
+     '<b>러너가 그 검증을 이어받지 않았다</b> — 봉인은 step 100 을 가리키는데 같은 폴더에 step 200 쌍을 넣으니 <b>step 200 을 읽고 다른 σ 를 rc=0 으로 발행</b>했다.  게다가 봉인이 케이스별 σ_old <b>수치를 보존하지 않아</b> "positive 가 다른 positive 로 바뀐 것" 을 잡을 장치가 아예 없었다.',
+     ['BASELINE_VALUE_CHANGED', '52 → 70', '50 → 59'],
+     '★ 이제 러너가 소비 직전에 <b>다섯 가지</b>를 다시 본다 — 코드 bundle · 등록부 SHA · 케이스 지문 · <b>봉인된 σ_old 의 재현</b> · 양팔 동결축.  회귀는 러너 <b>52 → 70</b> · 봉인기 <b>50 → 59</b>.',
+     '<p><b>봉인이 들고 나가는 것</b> — 읽은 파일의 실제 바이트 SHA 셋, <span class="m">B_ch</span> 케이스의 baseline σ 수치, 그리고 <b>수치 모듈 4개</b>의 지문 묶음.  "현재 HEAD = 기록 SHA" 만으로는 dirty working tree 도 커밋 안 된 의존 변경도 못 잡는다.</p>'
+     '<p><b>⛔ 내가 넣은 false-green 을 잡았다</b> — 옛 ⑥c·⑥d 가 <span class="m">code_bundle</span> 없는 <b>가짜 봉인</b>을 써서, 새 게이트가 생기자 "ρ 가 없어서" 가 아니라 "코드 신원이 없어서" rc=2 가 났다.  <b>검사가 이름과 다른 것을 재고 있었다</b> (규율 ⑤).  소비 가능한 봉인으로 고치고 <b>판별력 검사(⑨d)</b> 를 같이 세웠다.</p>'
+     '<p>⬜ 남은 것: <span class="m">generation_git_sha</span> 가 가리키는 커밋의 <b>트리</b>가 code_bundle 과 맞는지는 아직 안 본다.</p>'),
     ('AREA5-05', '⑦f 가 기본값 비트 동일을 회귀로 지킨다',
      '<span class="m">git show HEAD:</span> 와 대조하니 도입 전과 같음이 상주 검사로 고정된다.',
      '<b>커밋하면 기준이 같이 움직인다</b> — 커밋 후 working source 와 HEAD 가 같아져 검사가 <b>동어반복</b>이 된다.  열 조화평균을 1 로 바꾼 소스를 "새 HEAD 에도 커밋됨" 으로 모사하니 감사 <b>18/18</b> 인데 같은 픽스처의 old R_total 은 <b>5.812108579096786 → 9.8929507729307</b> 로 바뀐다.',
-     ['1,926', '9.8929507729307'],
-     '★ 무너지지 않은 것: 검토자가 <b>실제 도입 전 SHA</b> 와 대조한 <b>1,926</b> 간선에서 차이 0 — 현재 기본값 보존은 CONFIRMED 다.  무너진 건 "앞으로도 보증한다" 뿐이다.'),
+     ['1,926', '9.8929507729307', '2d9ce3e87', '7,680', '552'],
+     '★ 기준을 <b>도입 직전 커밋</b><span class="m">2d9ce3e87</span>(내용 SHA까지 핀)로 옮기고, 그 소스로 만든 <b>봉인된 기대값 파일</b>을 커밋했다.  기준을 못 읽으면 <b>실패</b>한다.',
+     '<p><b>동결 격자를 넓혔다</b> — 채널 3 × 상쌍 8(순서 뒤집은 쌍 포함) × 반지름 순서 4(큰 쪽이 먼저인 것 포함) × δ 8 = <b>768 픽스처 × 10 필드 = 7,680 대조</b>, 그 중 Rc&gt;0 픽스처 <b>552</b>.  실측 차이 <b>0</b>.</p>'
+     '<p><b>교차검증</b> — 고정 커밋을 읽을 수 있으면 거기서 기대값을 <b>재생성</b>해 봉인 파일과 비트 대조한다.  "봉인 파일만 고쳐 초록을 만드는 길" 을 막는다 (CI 는 <span class="m">fetch-depth: 0</span>).</p>'),
+    ('AREA5-06', 'oracle 이 ψ 축을 못박으면 그 계산이 지켜진다',
+     'ψ 를 기하에서 독립 계산하는 oracle 을 넣었으니 협착 계산이 고정된다 (R4-08 수리).',
+     '<b>반지름 순서와 전자 접촉계수가 자유로웠다</b> — 픽스처가 <span class="m">r1=0.5 &lt; r2=6</span> 하나뿐이라 <span class="m">r_min</span> 을 <span class="m">r1</span> 로 바꿔도 <b>우연히 일치</b>하고, 열 채널뿐이라 <span class="m">min(σ)</span> 를 <span class="m">σ₁</span> 로 바꿔도 둘 다 1.0 이다.',
+     ['864', '384'],
+     '⚠ <b>판정문보다 나빴다</b> — Codex 는 "변이를 새 HEAD 에도 커밋한 것으로 모사하면" 통과한다고 했는데, 내 재현에서는 <b>기준을 옮기지 않아도</b> 둘 다 초록이었다.',
+     '<p><b>수리</b> — 픽스처에 상 조합·채널 축을 신설하고 ψ oracle 을 격자 전체로 넓혔다(활성 <b>864</b>건).  그리고 <b>⑦j 재료계수 oracle</b> 을 신설해 <span class="m">R_Maxwell</span> 로 <span class="m">min(σ)</span> 규약을, <span class="m">R_bulk</span> 로 <b>면별 σ 배정</b>을 각각 못박는다(<b>384</b> 픽스처).  ⑦k 는 상수를 <b>import 하지 않고 대조</b>한다 — import 하면 상수 변이가 기대값과 같이 움직인다.</p>'
+     '<p><b>판별력 실측 — 변이 5종이 전부 빨간불</b>이고, 각각 <b>독립된 두 검사</b>에서 걸린다:</p>'
+     '<p><span class="m">r_min→r1</span> = ⑦f + ⑦i · <span class="m">min(σ)→σ₁</span> = ⑦f + ⑦j · <span class="m">열 조화평균→1</span> = ⑦f + ⑦j · <span class="m">ψ 지수 1.5→1.0</span> = ⑦d·⑦f·⑦h·⑦i · <span class="m">floor 1e-4→0</span> = ⑦d·⑦f·⑦h·⑦i.  감사 검사 18 → <b>21</b>.</p>'
+     '<p>⬜ 남은 것: <b>AM–AM 이 z 를 잇는 실제 침대</b>(전자 채널 코퍼스 픽스처)는 아직 없다.</p>'),
     ('AREA5-07', '곱셈 배치는 floor 자리가 연속이다',
      'legacy 의 절벽(150.9 → 0)이 곱셈에서는 연속의 끝점이 된다.',
      '<b>과장이었다</b> — floor 가 유한한 1e-4 로 동결돼 있어 곱셈판도 <b>불연속</b>이다.  cutoff 인접 float 에서 좌극한이 <b>0.00005010795431502282</b> 이고 그 다음이 0 이다.  ⑦h 가 실제로 검사한 것은 "이산 스윕의 마지막 양수가 legacy 보다 작다" 이지 연속성이 아니다.',
-     ['0.00005010795431502282'],
-     '바른 문장: "곱셈 배치는 legacy 의 큰 저항 급락을 크게 줄이지만, 동결된 finite floor 때문에 작은 불연속은 남는다."  ⛔ floor 를 지금 바꾸라는 뜻이 아니다 — 검사의 이름과 서술만 고친다.'),
+     ['0.00005010795431502282', '0.00010000000000000524', '2943.8423160074362',
+      '2.943842316007745e-05'],
+     '바른 문장: "곱셈 배치는 legacy 의 큰 저항 급락을 크게 줄이지만, 동결된 finite floor 때문에 작은 불연속은 남는다."  ⛔ floor 를 지금 바꾸라는 뜻이 아니다 — 검사의 이름과 서술만 고친다.',
+     '<p><b>단언을 실제 측정으로 바꿨다</b> — 절단면을 실제 솔버로 200회 이분해 좌극한을 재고, 그 값이 <span class="m">R_Maxwell·ψ*</span> 와 같은지, legacy 대비 비가 <span class="m">1/ψ*²</span> 인지, <b>그 다음 값이 둘 다 0</b> 인지를 본다.</p>'
+     '<p>실측(r1=r2=1 µm): ψ* = <b>0.00010000000000000524</b> · 좌극한 legacy <b>2943.8423160074362</b> vs 곱셈 <b>2.943842316007745e-05</b> (= R_M·ψ*) · 다음 값 0.0/0.0 · 비 <b>1e+08 = 1/ψ*²</b> 정확히.</p>'
+     '<p>⚠ 좌극한이 판정문의 값과 다른 것은 <b>픽스처 기하가 달라</b> R_Maxwell 이 다르기 때문이다.  ψ* 와 관계식은 같다.</p>'),
+    ('AREA5-08', '활성 간선 개수가 같으면 두 팔은 같은 망이다',
+     'ψ 만 바꾸는 전환이니 활성 개수가 같은지 세면 범위 위반을 잡을 수 있다.',
+     '<b>양방향으로 틀렸다</b> — 개수가 <span class="m">1 → 0</span> 이어도 <span class="m">status=ok · h1 · rc=0</span> 으로 발행했고(수용 과잉), 반대로 <b>유효한 전체 무변화</b>(두 팔이 같은 유효 σ, Δ=0)는 rc=3 으로 <b>버렸다</b>(거부 과잉).  개수가 같아도 <b>자리</b>가 바뀌면 다른 실험이다.',
+     ['FROZEN_AXIS_CHANGED', 'NO_ACTIVE_EDGES'],
+     '★ 이제 두 팔의 <b>간선 ID 집합</b>·면적·R_bulk·재료계수·기하·<b>floor 지원집합</b>이 전부 같아야 한다 — 다르면 <span class="m">FROZEN_AXIS_CHANGED</span>.  무변화는 <span class="m">NO_ACTIVE_EDGES</span> 한정을 달아 <b>보존</b>한다.',
+     '<p><b>회귀 4건</b>: 두 팔의 동결 축이 같다 · <b>한 간선의 R_bulk 만 바꿔도 잡는다</b>(개수만 보던 옛 판은 못 잡았다) · 간선 ID 집합이 달라지면 잡는다 · <b>floor 지원집합</b>이 달라지면 잡는다.</p>'),
+    ('AREA5-09', '봉인 창이 닫혀 있으니 발행 시점을 고를 수 없다',
+     '09-17 23:59 KST 고정 마감을 코드가 강제하니 "언제 멈출지" 의 여지가 사라진다.',
+     '<b>둘 다 틀렸다</b> — ① <span class="m">--now</span> 로 만든 <b>시험 봉인이 생산 봉인과 구별되지 않아</b> 09-15 에 만든 것을 러너가 rc=0 으로 받았다 (내 주장 "손으로 만든 봉인만 걸린다" 가 <b>REFUTED</b>).  ② <b>고정 cutoff ≠ 발행 창</b> — 저자가 정한 것은 <i>수신 종료</i> 인데 코드는 그날 <b>아무 때나</b> 발행을 허용했다.',
+     ['test_only', 'PENDING_BASELINE'],
+     '★ 이제 <span class="m">--now</span> 산물은 <span class="m">test_only</span> 로 낙인찍혀 생산 판정에서 거부되고, <b>수신 동결</b>과 <b>봉인 발행</b>이 두 단계로 갈렸다.',
+     '<p><span class="m">--freeze-inventory</span> 는 σ 를 <b>한 건도 풀지 않고</b> 원자료 지문만 cutoff 기준으로 못박는다(마감 전에만).  <span class="m">--inventory</span> 로 봉인하면 <b>그 inventory 가 정의역</b>이고 뒤에 온 것은 <span class="m">PENDING_BASELINE</span> 이며, 동결 뒤 원자료가 바뀌면 발행이 멈춘다.</p>'
+     '<p>★ 그리고 <b>마감 전에 동결해 뒀으면 계산이 마감 뒤에 끝나도 발행된다</b> — 판정문의 "cutoff 이후에 계산이 끝났다는 이유만으로 cutoff 이전에 확정된 원자료를 거부하지 않는다".  <b>판별력</b>: inventory 없이 마감 뒤면 여전히 거부다(창이 느슨해진 게 아니다).</p>'
+     '<p>★★ 내 프레이밍도 정정했다 — "봉인 뒤 검사기 수정은 무조건 결과를 보고 심판을 바꾼 것" 은 <b>과했다</b>.  결과를 보지 않은 상태의 수정은 구별할 수 있고, deadline 이 알려진 결함을 그대로 실행할 이유가 되어선 안 된다.</p>'),
     ('R4-08', '양성 대조가 ψ 정정을 지킨다',
      'no-op 변이를 잡으니 대조가 유효하다.',
      '<b>ψ 를 솔버에서 받아 기대식에도 써서</b> 잘못 바뀐 ψ 가 기대값을 <b>같이 움직였다</b> — <span class="m">floor 1e-4→0</span> 과 <span class="m">ψ 지수 1.5→1.0</span> 두 변이가 <b>13/13 초록</b>.  floor 대조 좌표도 실제로는 clamp 라 <b>floor-only 영역을 시험하지 않았다</b>.',
@@ -185,7 +222,10 @@ def render(nav_home: str = '') -> str:
       해석되지 않는 죽은 링크다.
     """
     fs, by, L, A = load()
-    tL, tA = tally(L), tally(A)
+    #  ⚠ R4·R5 라운드는 **집계에 없었다** — 페이지에 그 묶음이 통째로 있는데 머리 숫자가
+    #    세지 않아, 읽는 사람이 "고침 17 / 열림 31" 을 전체로 오해한다 (2026-09-15 에 잡음).
+    R = [x for x in fs if x['id'].startswith('R4-') or x['id'].startswith('AREA5-')]
+    tL, tA, tR = tally(L), tally(A), tally(R)
     head_sha = _sh('git', 'rev-parse', '--short=9', 'HEAD')
     E = html.escape
     o = []
@@ -203,15 +243,16 @@ def render(nav_home: str = '') -> str:
     o.append('  <h1>DEM 스택 적대 리뷰</h1>\n')
     o.append('  <p class="sub">웹앱의 계산 스택을 다섯 층으로 나눠 독립 검토에 부쳤고, 그 대응이 다시 <em>면적 계약</em> 한 장을 낳았다. '
              '아래는 우리가 믿고 있던 것과, 실제 함수·코퍼스·독립 기준해가 보여준 것이다 — 모든 숫자는 원장에 있고 이 페이지는 거기서 생성된다.</p>\n')
+    #  ★ 익명 숫자 8개를 한 줄로 늘어놓지 않는다 — **트랙 × 지표** 표로 읽는다.
     o.append('  <div class="tally">\n')
-    o.append(f'    <div><div class="n">{tL["total"]}</div><div class="k">L1~L5 등재</div></div>\n')
-    o.append(f'    <div class="p1"><div class="n">{tL["P1"]}</div><div class="k">P1</div></div>\n')
-    o.append(f'    <div><div class="n">{tL["P2"] + tL.get("P3", 0)}</div><div class="k">P2·P3</div></div>\n')
-    o.append(f'    <div class="fx"><div class="n">{tL["fixed"]}</div><div class="k">고침</div></div>\n')
-    o.append(f'    <div><div class="n">{tL["open"]}</div><div class="k">열림</div></div>\n')
-    o.append(f'    <div><div class="n">{tA["total"]}</div><div class="k">면적 계약(AREA)</div></div>\n')
-    o.append(f'    <div class="fx"><div class="n">{tA["fixed"]}</div><div class="k">고침</div></div>\n')
-    o.append(f'    <div><div class="n">{tA["open"]}</div><div class="k">열림</div></div>\n')
+    o.append('    <div class="th"></div><div class="th">등재</div><div class="th">P1</div>'
+             '<div class="th">고침</div><div class="th">열림</div>\n')
+    for _nm, _t in (('L1~L5 스택', tL), ('면적 계약 (AREA)', tA), ('R4 · R5 라운드', tR)):
+        o.append(f'    <div class="rw">{_nm}</div>'
+                 f'<div class="n">{_t["total"]}</div>'
+                 f'<div class="n p1">{_t["P1"]}</div>'
+                 f'<div class="n fx">{_t["fixed"]}</div>'
+                 f'<div class="n">{_t["open"]}</div>\n')
     o.append('  </div>\n</header>\n')
 
     # 사슬
@@ -317,11 +358,17 @@ def _selftest() -> int:
     chk('① 서술의 인용 숫자가 전부 해당 원장 항목에 실재', not missing, f'{missing}')
 
     # ② 집계가 원장과 같다 (HTML 안의 tally 숫자를 다시 파싱)
-    tL, tA = tally(L), tally(A)
-    nums = re.findall(r'<div class="n">(\d+)</div>', page)
-    want = [tL['total'], tL['P1'], tL['P2'] + tL.get('P3', 0), tL['fixed'], tL['open'],
-            tA['total'], tA['fixed'], tA['open']]
-    chk('② 머리 집계 8개가 원장 집계와 일치', [int(x) for x in nums[:8]] == want, f'{nums[:8]} vs {want}')
+    #    ⚠ 2026-09-15: 머리 집계가 **R4·R5 라운드를 아예 안 세고 있었다** — 페이지에 그 묶음이
+    #      통째로 있는데 숫자가 없어, 읽는 사람이 L1~L5 집계를 전체로 오해한다.
+    #      ⇒ 트랙 × 지표 표로 바꾸고 이 검사도 **세 트랙 12칸**을 본다.
+    R = [x for x in fs if x['id'].startswith('R4-') or x['id'].startswith('AREA5-')]
+    tL, tA, tR = tally(L), tally(A), tally(R)
+    nums = re.findall(r'<div class="n(?: [a-z0-9]+)?">(\d+)</div>', page)
+    want = [t[k] for t in (tL, tA, tR) for k in ('total', 'P1', 'fixed', 'open')]
+    chk('② 머리 집계 — 세 트랙 12칸이 원장 집계와 일치 (R4·R5 가 빠져 있었다)',
+        [int(x) for x in nums[:12]] == want, f'{nums[:12]} vs {want}')
+    chk('②b ★ 그 표가 실제로 R4·R5 트랙을 담는다 (빈 트랙을 성공으로 내지 않는다)',
+        tR['total'] > 0 and 'R4 · R5 라운드' in page, f"R4·R5 등재 {tR['total']}")
 
     # ③ 페이지의 SHA 가 전부 리포에 실재
     shas = re.findall(r'<div class="sha">([0-9a-f]{7,9})</div>', page)

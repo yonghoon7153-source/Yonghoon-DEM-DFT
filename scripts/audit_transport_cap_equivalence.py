@@ -32,6 +32,8 @@
 """
 from __future__ import annotations
 import argparse
+import hashlib
+import json
 import math
 import pathlib
 import subprocess
@@ -141,20 +143,30 @@ def _load_nc(name: str, pc_mod, nc_subs=()):
     return mod
 
 
+#: 픽스처가 쓰는 상 라벨.  ⚠ **정본 `input_params` 규약과 같은 이름**이어야 한다 —
+#: `sigma_AM_relative` 가 라벨 문자열로 분기하기 때문이다 (`AM_S` = 단결정 · `AM_P` = 다결정).
+FIXTURE_TYPE_MAP = {1: 'AM_P', 2: 'AM_S', 3: 'SE'}
+
+
 def real_solver_edges(nc_mod, r1_um=0.5, r2_um=6.0, delta_um=0.2, native_um2=0.04, scale=1000.0,
-                      psi_placement=None):
+                      psi_placement=None, t1=1, t2=3, mode='thermal'):
     """실제 `build_network` 한 쌍 — Codex 대조 조건 (r .5/6 µm · δ .2 µm · native A .04 µm²).
 
     `psi_placement=None` 이면 솔버의 **기본값**을 쓴다 (인자를 아예 넘기지 않는다 — 옛 판
     소스로도 이 함수가 돌아야 하므로).
+
+    ★★ `t1·t2·mode` 신설 2026-09-15 (`AREA5-06`).  옛 판은 **열 채널 · `AM_P`–`SE` ·
+      `r1 < r2`** 한 점뿐이라 두 축이 자유로웠다:
+        · `r_min_real = min(r1, r2)` 를 `r1` 로 바꿔도 `r1` 이 늘 작은 쪽이라 **우연히 일치**
+        · `sigma_rel_contact = min(σ₁, σ₂)` 를 `σ₁` 로 바꿔도 열 채널이라 둘 다 1.0
+      ⇒ Codex 의 유해 변이 둘이 18/18 초록이었다 (내 재현: **기준을 안 옮겨도** 초록).
     """
-    atoms = {1: {'type': 1, 'radius': r1_um / scale, 'x': 0.0, 'y': 0.0, 'z': 0.0},
-             2: {'type': 3, 'radius': r2_um / scale, 'x': (r1_um + r2_um - delta_um) / scale, 'y': 0.0, 'z': 0.0}}
+    atoms = {1: {'type': t1, 'radius': r1_um / scale, 'x': 0.0, 'y': 0.0, 'z': 0.0},
+             2: {'type': t2, 'radius': r2_um / scale, 'x': (r1_um + r2_um - delta_um) / scale, 'y': 0.0, 'z': 0.0}}
     rows = [{'id1': 1, 'id2': 2, 'contact_area': native_um2 / scale ** 2, 'delta': delta_um / scale}]
-    tm = {1: 'AM_P', 3: 'SE'}
     kw = {} if psi_placement is None else {'psi_placement': psi_placement}
-    n = nc_mod.build_network(atoms, rows, {1, 3}, scale, 10.0, box_x=1e3, box_y=1e3,
-                             mode='thermal', type_map=tm, contact_mode='physics', **kw)
+    n = nc_mod.build_network(atoms, rows, {t1, t2}, scale, 10.0, box_x=1e3, box_y=1e3,
+                             mode=mode, type_map=dict(FIXTURE_TYPE_MAP), contact_mode='physics', **kw)
     return n['edges'] if isinstance(n, dict) else n[1]
 
 
@@ -168,60 +180,182 @@ def _psi(a_eff, r_min):
 _FX_R1, _FX_R2, _FX_NATIVE = 0.5, 6.0, 0.04
 
 
-def _a_from_delta(pc_mod, delta_um):
-    """그 픽스처에서 `a_contact = √(A_physics/π)` (clamp **전**) — µm."""
-    R_star = _FX_R1 * _FX_R2 / (_FX_R1 + _FX_R2)
-    A, a_eff = a_eff_from(pc_mod, delta_um, R_star, R_min=min(_FX_R1, _FX_R2),
-                          ligg_area=_FX_NATIVE)
+def _a_from_delta(pc_mod, delta_um, r1=_FX_R1, r2=_FX_R2, native=_FX_NATIVE):
+    """그 픽스처에서 `a_contact = √(A_physics/π)` (clamp **전**) — µm.
+
+    ⚠ 기본 인자는 옛 픽스처 그대로다 (기존 호출부의 값이 바뀌지 않는다).
+    """
+    R_star = r1 * r2 / (r1 + r2)
+    A, a_eff = a_eff_from(pc_mod, delta_um, R_star, R_min=min(r1, r2), ligg_area=native)
     return math.sqrt(A / math.pi) if A > 0 else 0.0
 
 
-def _bitwise_vs_head(pc_mod):
-    """기본값(legacy)이 **git HEAD 의 솔버**와 비트 동일한지 — δ 를 전 구간에 뿌려 대조한다.
+# ══ 동결 격자 + 고정 기준 (`AREA5-05`) ═════════════════════════════════════════
+#   ⛔⛔ **기준을 `HEAD` 로 삼지 않는다.**  옛 ⑦f 는 working source 를
+#   `git show HEAD:scripts/network_conductivity.py` 와 댔는데 — **커밋하면 둘이 같아진다.**
+#   기준이 함께 이동하므로 커밋 뒤의 ⑦f 는 *"도입 전과 같다"* 를 고정하지 못한다.
+#   ⇒ 깃발 도입 **직전 커밋**을 못박고, 그 소스의 **내용 SHA256** 까지 확인한다
+#     (커밋 해시는 rebase 로 움직일 수 있지만 내용 해시는 안 움직인다).
+PREFLAG_NC_COMMIT = '2d9ce3e87'
+PREFLAG_NC_SHA256 = 'a2e73718bc0e6e9e659c30402ec49b35c196b3d1e701cb2155fee6713426c047'
+#: 그 소스로 만든 **봉인된 기대값**.  얕은 클론·git 밖에서도 기준이 있어야 하므로 커밋한다.
+BASELINE_PATH = SCRIPTS.parent / 'docs' / 'data' / 's3_preflag_baseline.json'
+#: 그 파일 자신의 지문 — ⛔ 파일을 고치면 **여기도 고쳐야** 하고 그것은 리뷰에 보인다.
+BASELINE_SHA256 = '495d65d0bb49b389b0bb1aa8c9d58961019b1b82afb1667fb7ba202796bad1e3'
 
-    ⚠ 옛 판에는 `psi_placement` 인자가 **없다** ⇒ 현재 판도 인자를 **넘기지 않고** 부른다
-      (기본값 경로를 재는 것이 목적이다).
-    HEAD 를 못 읽으면(얕은 클론·git 밖) `(0, 0, 0.0)` 을 돌려주고 호출부가 `n_cmp` 문턱으로
-    **실패시킨다** — 조용히 초록이 되지 않는다.
+#: 봉인·대조하는 필드.  ⚠ **전부 0 을 비교하면 공허하다** — 호출부가 `n_nonzero_rc` 를 요구한다.
+BASELINE_FIELDS = ('R_constriction', 'R_bulk', 'R_total', 'R_Maxwell', 'R_film',
+                   'A_contact', 'A_physics', 'A_hertzian', 'd_ij', 'regime')
+
+#: ★★ 동결해야 하는 축을 **전부** 건드리는 격자 (`AREA5-05` 처방: *"동결 재료·분기·상 조합을
+#:   포함한다"*).  채널 3 × 상쌍 8 × 반지름 순서 4 × δ 8 = 768 픽스처.
+#:   ⛔ `(3, 1)`·`(2, 1)` 처럼 **순서를 뒤집은 쌍**과 `(6.0, 0.5)` 처럼 **큰 쪽이 먼저**인
+#:     반지름이 들어 있는 것이 핵심이다 — 그것이 없으면 `min` 을 `첫째` 로 바꿔도 안 걸린다.
+FROZEN_MODES = ('ionic', 'electronic', 'thermal')
+FROZEN_PAIRS = ((1, 3), (3, 1), (2, 3), (3, 2), (1, 2), (2, 1), (3, 3), (1, 1))
+FROZEN_RADII = ((0.5, 6.0), (6.0, 0.5), (1.0, 1.0), (2.0, 0.5))
+FROZEN_DELTAS = (0.002, 0.01, 0.02, 0.05, 0.1, 0.1025, 0.2, 0.8)
+
+
+def _frozen_key(mode, t1, t2, r1, r2, d) -> str:
+    return f'{mode}|{t1}-{t2}|{r1!r}/{r2!r}|{d!r}'
+
+
+def _frozen_matrix(nc_mod):
+    """동결 격자 위의 **기본값 경로** 관측 → `{키: {필드: 값}}`.
+
+    ⚠ `psi_placement` 를 **넘기지 않는다** — 기본값(legacy) 경로를 재는 것이 목적이고,
+      깃발이 없던 옛 소스로도 같은 함수가 돌아야 한다.
     """
+    out = {}
+    for mode in FROZEN_MODES:
+        for (t1, t2) in FROZEN_PAIRS:
+            for (r1, r2) in FROZEN_RADII:
+                for d in FROZEN_DELTAS:
+                    e = real_solver_edges(nc_mod, r1_um=r1, r2_um=r2, delta_um=d,
+                                          t1=t1, t2=t2, mode=mode)[0]
+                    out[_frozen_key(mode, t1, t2, r1, r2, d)] = {
+                        k: e.get(k) for k in BASELINE_FIELDS}
+    return out
+
+
+def _preflag_source():
+    """도입 전 소스를 **고정 지문**으로 가져온다 → `(bytes, 출처)` 또는 `(None, 사유)`."""
     try:
-        head_src = subprocess.run(['git', 'show', 'HEAD:scripts/network_conductivity.py'],
-                                  cwd=str(SCRIPTS.parent), capture_output=True, text=True,
-                                  check=True, timeout=120).stdout
-    except Exception:
-        return 0, 0, 0.0
-    if not head_src.strip():
-        return 0, 0, 0.0
-    mod = types.ModuleType('_nc_head')
+        r = subprocess.run(['git', 'show', f'{PREFLAG_NC_COMMIT}:scripts/network_conductivity.py'],
+                           cwd=str(SCRIPTS.parent), capture_output=True, check=True, timeout=120)
+    except Exception as e:                                          # noqa: BLE001
+        return None, f'git 으로 {PREFLAG_NC_COMMIT} 를 못 읽었다 ({type(e).__name__})'
+    if not r.stdout.strip():
+        return None, f'{PREFLAG_NC_COMMIT} 의 소스가 비었다'
+    got = hashlib.sha256(r.stdout).hexdigest()
+    if got != PREFLAG_NC_SHA256:
+        return None, (f'도입 전 소스의 지문이 다르다 — 못박은 {PREFLAG_NC_SHA256[:12]} '
+                      f'≠ 실제 {got[:12]}')
+    return r.stdout, f'git:{PREFLAG_NC_COMMIT}'
+
+
+def _exec_nc(src_text: str, name: str, pc_mod):
+    mod = types.ModuleType(name)
     mod.__file__ = str(NC_SRC)
     sys.path.insert(0, str(SCRIPTS))
-    exec(compile(head_src, str(NC_SRC), 'exec'), mod.__dict__)
+    exec(compile(src_text, str(NC_SRC), 'exec'), mod.__dict__)
     mod._film_area = pc_mod.film_area_from_overlap
-    cur = _load_nc('_nc_cur_bit', pc_mod)
-    #   ⚠ **전부 0 을 비교하면 공허하다** — `n_nonzero_rc` 를 따로 세어 호출부가 요구한다.
-    _FIELDS = ('R_constriction', 'R_bulk', 'R_total', 'R_Maxwell', 'R_film',
-               'A_contact', 'A_physics', 'A_hertzian', 'd_ij', 'regime')
+    return mod
+
+
+def _load_baseline():
+    """봉인된 기대값 → `(matrix, 메타)` 또는 `(None, 사유)`.  ⛔ 못 읽으면 **실패**다."""
+    if not BASELINE_PATH.is_file():
+        return None, f'봉인 기준 파일이 없다: {BASELINE_PATH}'
+    raw = BASELINE_PATH.read_bytes()
+    got = hashlib.sha256(raw).hexdigest()
+    if got != BASELINE_SHA256:
+        return None, (f'봉인 기준 파일의 지문이 다르다 — 못박은 {BASELINE_SHA256[:12]} '
+                      f'≠ 실제 {got[:12]} (기준을 고쳤으면 소스의 핀도 같이 고쳐야 한다)')
+    try:
+        doc = json.loads(raw.decode('utf-8'))
+    except (UnicodeDecodeError, json.JSONDecodeError) as e:
+        return None, f'봉인 기준을 JSON 으로 못 읽는다: {e}'
+    if doc.get('preflag_commit') != PREFLAG_NC_COMMIT or \
+            doc.get('preflag_sha256') != PREFLAG_NC_SHA256:
+        return None, ('봉인 기준이 가리키는 도입 전 소스가 이 감사기의 핀과 다르다 — '
+                      f"파일 {doc.get('preflag_commit')}/{str(doc.get('preflag_sha256'))[:12]}")
+    return doc.get('matrix') or {}, doc
+
+
+def _bitwise_vs_baseline(pc_mod):
+    """기본값(legacy)이 **도입 전 소스**와 비트 동일한지 — 동결 격자 전체에서.
+
+    세 갈래로 답한다:
+      · `n_bad`      봉인된 기대값과 다른 (키, 필드) 수
+      · `n_cross`    고정 커밋에서 **재생성**한 값이 봉인과 다른 수 (기준 자체의 위조 검사)
+      · `cross_src`  그 교차검증이 실제로 돌았는지 (`''` 면 git 을 못 읽었다)
+    ⛔ 봉인 기준을 못 읽으면 `n_cmp = 0` 을 돌려주고 호출부가 **실패**시킨다.
+    """
+    exp, meta = _load_baseline()
+    if exp is None:
+        return dict(n_cmp=0, n_bad=0, worst=0.0, n_nonzero_rc=0, n_cross=0,
+                    cross_src='', why=meta)
+    cur = _frozen_matrix(_load_nc('_nc_cur_bit', pc_mod))
     n_cmp = n_bad = n_nonzero_rc = 0
     worst = 0.0
-    for d in (0.002, 0.005, 0.01, 0.02, 0.05, 0.08, 0.1, 0.1025, 0.12, 0.2, 0.4, 0.8):
-        eo = real_solver_edges(mod, delta_um=d)[0]
-        en = real_solver_edges(cur, delta_um=d)[0]
-        if eo.get('R_constriction'):
+    missing = sorted(set(exp) ^ set(cur))
+    for key, want in exp.items():
+        got = cur.get(key) or {}
+        if (want.get('R_constriction') or 0) > 0:
             n_nonzero_rc += 1
-        for k in _FIELDS:
-            if k not in eo and k not in en:
-                continue
-            va, vb = eo.get(k), en.get(k)
+        for k in BASELINE_FIELDS:
             n_cmp += 1
-            if va is None and vb is None:
+            va, vb = want.get(k), got.get(k)
+            if va == vb:
                 continue
-            if va != vb:
-                n_bad += 1
-                try:
-                    worst = max(worst, abs(float(va) - float(vb)))
-                except (TypeError, ValueError):
-                    worst = float('inf')
-    return n_cmp, n_bad, worst, n_nonzero_rc
+            n_bad += 1
+            try:
+                worst = max(worst, abs(float(va) - float(vb)))
+            except (TypeError, ValueError):
+                worst = float('inf')
+    #  ── 교차검증: 고정 커밋을 읽을 수 있으면 **거기서 재생성**해 봉인과 비트 대조한다.
+    #     이것이 "봉인 파일만 고쳐서 초록을 만드는" 길을 막는다 (CI 는 fetch-depth: 0).
+    src, why = _preflag_source()
+    n_cross, cross_src = 0, ''
+    if src is not None:
+        regen = _frozen_matrix(_exec_nc(src.decode('utf-8'), '_nc_preflag', pc_mod))
+        cross_src = why
+        for key, want in exp.items():
+            g = regen.get(key) or {}
+            n_cross += sum(1 for k in BASELINE_FIELDS if want.get(k) != g.get(k))
+        n_cross += len(set(exp) ^ set(regen))
+    return dict(n_cmp=n_cmp, n_bad=n_bad + len(missing), worst=worst,
+                n_nonzero_rc=n_nonzero_rc, n_cross=n_cross, cross_src=cross_src,
+                why=('' if src is not None else why))
+
+
+def emit_baseline() -> int:
+    """고정 커밋의 소스로 봉인 기준 파일을 만든다 (`--emit-baseline`).
+
+    ⛔ 생산 경로가 아니다 — 기준을 **다시 만드는** 유일한 길이고, 만들고 나면 출력된 지문을
+      `BASELINE_SHA256` 에 손으로 박아야 한다 (그 편집이 리뷰에 보인다).
+    """
+    src, why = _preflag_source()
+    if src is None:
+        print(f'⛔ 도입 전 소스를 확정할 수 없다 — {why}')
+        return 2
+    pc = _load('_pc_emit')
+    mod = _exec_nc(src.decode('utf-8'), '_nc_emit', pc)
+    doc = {'what': 'S3 ψ 배치 깃발 **도입 전** 솔버의 동결 격자 관측 (AREA5-05 기준)',
+           'preflag_commit': PREFLAG_NC_COMMIT, 'preflag_sha256': PREFLAG_NC_SHA256,
+           'fields': list(BASELINE_FIELDS),
+           'axes': {'modes': list(FROZEN_MODES), 'type_pairs': [list(p) for p in FROZEN_PAIRS],
+                    'radii_um': [list(r) for r in FROZEN_RADII], 'deltas_um': list(FROZEN_DELTAS),
+                    'type_map': {str(k): v for k, v in FIXTURE_TYPE_MAP.items()}},
+           'matrix': _frozen_matrix(mod)}
+    blob = json.dumps(doc, ensure_ascii=False, indent=1, sort_keys=True).encode('utf-8')
+    BASELINE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    BASELINE_PATH.write_bytes(blob)
+    print(f'→ {BASELINE_PATH}  ({len(doc["matrix"])} 픽스처 × {len(BASELINE_FIELDS)} 필드)')
+    print(f'   BASELINE_SHA256 = {hashlib.sha256(blob).hexdigest()!r}')
+    return 0
 
 
 def _psi_sweep(nc_mod):
@@ -260,6 +394,74 @@ PSI_EXPONENT_ORACLE = 1.5
 PSI_FLOOR_ORACLE = 1e-4
 
 
+#: ⛔⛔ **동결된 재료 상수** — 솔버에서 import 하지 **않는다**.  import 하면 상수 변이가
+#:   기대값과 **같이 움직여** 통과한다 (`R4-08` 이 ψ 축에서 보고한 바로 그 부류).
+#:   출처는 솔버 본문과 같다: `K_AM 4 W/m·K` (NCM) · `K_SE 0.7` (LPSCl, Ketter 2025) ·
+#:   `r0 = 2 µm` · GB 지수 `β = 1.5` (코퍼스 적합, Trevisanello 방향).
+MAT_ORACLE = {'NCM_AM_REF_R': 2.0, 'NCM_AM_GB_EXPONENT': 1.5,
+              'K_AM_THERMAL': 4.0e-2, 'K_SE_THERMAL': 0.7e-2}
+
+
+def _mat_oracle(mode, lbl1, lbl2, r1, r2):
+    """`(k_weight, σ_rel_1, σ_rel_2)` 를 **독립 계산** — `AREA5-06` 의 "계수 동결" 축.
+
+    ★ 왜 별도인가: Codex 가 열 AM–SE 조화평균을 `1` 로 바꿔도 ψ oracle 이
+      `bad_div = bad_mul = bad_floor = 0` 임을 보였다 ⇒ **ψ 배치가 맞는 것과 재료계수가
+      맞는 것은 다른 주장**이고, 전자를 못박아도 후자는 자유롭게 남는다.
+    ⚠ 전자 판정 게이트까지 그대로 옮긴다 — 솔버는 `mode == 'electronic'` **또는**
+      "타깃이 전부 AM 이고 SE 가 없다" 일 때 GB 보정을 건다 (`mode` 인자를 못 믿기 때문).
+    """
+    kr = MAT_ORACLE['K_AM_THERMAL'] / MAT_ORACLE['K_SE_THERMAL']
+    se1, se2 = lbl1 == 'SE', lbl2 == 'SE'
+    if mode == 'thermal':
+        k_w = kr if (not se1 and not se2) else (1.0 if (se1 and se2) else 2 * kr / (1 + kr))
+    else:
+        k_w = 1.0
+    targets = {lbl1, lbl2}
+    electronic = (mode == 'electronic') or (all('AM' in t for t in targets) and 'SE' not in targets)
+
+    def srel(r, lbl):
+        if not electronic or lbl != 'AM_P':
+            return 1.0
+        return 1.0 / (1.0 + (max(r, 0.1) / MAT_ORACLE['NCM_AM_REF_R'])
+                      ** MAT_ORACLE['NCM_AM_GB_EXPONENT'])
+
+    return k_w, srel(r1, lbl1), srel(r2, lbl2)
+
+
+def _material_oracle(nc_mod):
+    """★★ `AREA5-06` — 재료계수 primitive 를 **동결 격자 전체**에서 못박는다.
+
+    간선이 이미 돌려주는 `A_contact · d_ij · r1 · r2` 로부터
+        `R_Maxwell = 1/(min(σ₁,σ₂)·k·2·a_contact)`     ← `min` 규약 + `k_weight`
+        `R_bulk    = (d/2)/(σ₁·k·π r₁²) + (d/2)/(σ₂·k·π r₂²)`  ← **면별** σ 배정
+    을 각각 확인한다.  두 식이 `min(σ)→σ₁` 과 `조화평균→1` 을 동시에 잡는다.
+    ⚠ 면적은 재구현하지 않는다 (간선의 `A_contact` 를 쓴다) — 이 파일의 오래된 교훈이다.
+    """
+    n = bad_max = bad_bulk = 0
+    for mode in FROZEN_MODES:
+        for (t1, t2) in FROZEN_PAIRS:
+            for (r1, r2) in FROZEN_RADII:
+                for d in (0.002, 0.02, 0.1, 0.2):
+                    e = real_solver_edges(nc_mod, r1_um=r1, r2_um=r2, delta_um=d,
+                                          t1=t1, t2=t2, mode=mode)[0]
+                    lbl1 = FIXTURE_TYPE_MAP[e['type1']]
+                    lbl2 = FIXTURE_TYPE_MAP[e['type2']]
+                    k_w, s1, s2 = _mat_oracle(mode, lbl1, lbl2, e['r1'], e['r2'])
+                    a = math.sqrt(e['A_contact'] / math.pi) if e['A_contact'] > 0 else 0.0
+                    if a <= 0:
+                        continue
+                    n += 1
+                    want_rm = 1.0 / (min(s1, s2) * k_w * 2 * a)
+                    if abs(e['R_Maxwell'] - want_rm) > 1e-12 * abs(want_rm):
+                        bad_max += 1
+                    want_rb = ((e['d_ij'] / 2) / (s1 * k_w * math.pi * e['r1'] ** 2)
+                               + (e['d_ij'] / 2) / (s2 * k_w * math.pi * e['r2'] ** 2))
+                    if abs(e['R_bulk'] - want_rb) > 1e-12 * abs(want_rb):
+                        bad_bulk += 1
+    return dict(n=n, bad_maxwell=bad_max, bad_bulk=bad_bulk)
+
+
 def _psi_oracle(nc_mod, pc_mod):
     """★★ `R4-08` — ψ 를 **기하에서 독립 계산**해 두 배치의 식을 각각 못박는다.
 
@@ -268,33 +470,77 @@ def _psi_oracle(nc_mod, pc_mod):
         legacy : `Rc·ψ_oracle == R_Maxwell`
         곱셈   : `Rc == R_Maxwell·ψ_oracle`
     이고, 이 두 식은 **ψ 의 지수와 floor 를 같이 못박는다** — 솔버의 ψ 를 빌리지 않기 때문이다.
+
+    ★★ **2026-09-15 (`AREA5-06`) — 격자를 상·채널·반지름 순서로 넓혔다.**  옛 판은
+      `r1 = 0.5 < r2 = 6` 한 순서뿐이라 `r_min_real = min(r1, r2)` 를 `r1` 로 바꿔도
+      **우연히 일치**해 통과했다.  이제 `(6.0, 0.5)` 와 같은 반지름을 같이 돌린다.
     """
-    r_min = min(_FX_R1, _FX_R2)
     n = bad_div = bad_mul = bad_floor = 0
-    for d in (0.002, 0.005, 0.01, 0.02, 0.04, 0.06, 0.08, 0.1, 0.1025, 0.12, 0.2):
-        a = _a_from_delta(pc_mod, d)
-        a_eff = min(a, r_min)
-        s = a_eff / r_min
-        psi_o = max(1.0 - s, 0.0) ** PSI_EXPONENT_ORACLE
-        eo = real_solver_edges(nc_mod, delta_um=d, psi_placement=nc_mod.PSI_DIVIDE)[0]
-        en = real_solver_edges(nc_mod, delta_um=d, psi_placement=nc_mod.PSI_MULTIPLY)[0]
-        rm = eo.get('R_Maxwell')
-        ro, rn = eo.get('R_constriction') or 0.0, en.get('R_constriction') or 0.0
-        active = psi_o > PSI_FLOOR_ORACLE
-        #  ⓐ floor 판정 자체 — oracle 이 "활성" 이라 한 곳에서만 솔버가 양수를 내야 한다.
-        if active != (ro > 0.0) or active != (rn > 0.0):
-            bad_floor += 1
-            continue
-        if not active:
-            continue
-        n += 1
-        #  ⓑ 두 식.  `a_eff == a_contact` 를 쓰므로 clamp 가 걸린 간선은 활성이 아니다.
-        if rm is None or rm <= 0 or abs(ro * psi_o - rm) > 1e-12 * max(1.0, rm):
-            bad_div += 1
-        if rm is None or rm <= 0 or abs(rn - rm * psi_o) > 1e-12 * max(1.0, rm * psi_o):
-            bad_mul += 1
+    for mode in FROZEN_MODES:
+        for (t1, t2) in FROZEN_PAIRS:
+            for (r1, r2) in FROZEN_RADII:
+                r_min = min(r1, r2)
+                for d in (0.002, 0.005, 0.01, 0.02, 0.04, 0.06, 0.08, 0.1, 0.1025, 0.12, 0.2):
+                    a = _a_from_delta(pc_mod, d, r1=r1, r2=r2)
+                    a_eff = min(a, r_min)
+                    psi_o = max(1.0 - a_eff / r_min, 0.0) ** PSI_EXPONENT_ORACLE
+                    eo = real_solver_edges(nc_mod, r1_um=r1, r2_um=r2, delta_um=d, t1=t1, t2=t2,
+                                           mode=mode, psi_placement=nc_mod.PSI_DIVIDE)[0]
+                    en = real_solver_edges(nc_mod, r1_um=r1, r2_um=r2, delta_um=d, t1=t1, t2=t2,
+                                           mode=mode, psi_placement=nc_mod.PSI_MULTIPLY)[0]
+                    rm = eo.get('R_Maxwell')
+                    ro, rn = eo.get('R_constriction') or 0.0, en.get('R_constriction') or 0.0
+                    active = psi_o > PSI_FLOOR_ORACLE
+                    #  ⓐ floor 판정 자체 — oracle 이 "활성" 이라 한 곳에서만 솔버가 양수를 낸다.
+                    if active != (ro > 0.0) or active != (rn > 0.0):
+                        bad_floor += 1
+                        continue
+                    if not active:
+                        continue
+                    n += 1
+                    #  ⓑ 두 식.  `a_eff == a_contact` 를 쓰므로 clamp 간선은 활성이 아니다.
+                    if rm is None or rm <= 0 or abs(ro * psi_o - rm) > 1e-12 * max(1.0, rm):
+                        bad_div += 1
+                    if rm is None or rm <= 0 or abs(rn - rm * psi_o) > 1e-12 * max(1.0, rm * psi_o):
+                        bad_mul += 1
     return dict(n=n, bad_div=bad_div, bad_mul=bad_mul, bad_floor=bad_floor,
                 exponent=PSI_EXPONENT_ORACLE, floor=PSI_FLOOR_ORACLE)
+
+
+def _floor_cliff(nc_mod, pc_mod, r1=1.0, r2=1.0):
+    """floor 절단면을 **실제 솔버로 이분**해 양쪽 배치의 좌극한을 잰다 (`AREA5-07`).
+
+    ⛔⛔ **옛 ⑦h 의 이름이 거짓이었다.**  거기 적힌 *"곱셈은 그 자리가 연속이다"* 는 과장이다 —
+      계약 §C 가 floor 를 **유한한 `1e-4`** 로 동결했으므로 곱셈판의 좌극한은
+      `ψ_floor/(2·σ·k·a*) > 0` 이고 그 **다음 값이 0** 이다.  작은 불연속이 남는다.
+    ★ 바른 문장: *"곱셈 배치는 legacy 의 큰 급락을 크게 줄이지만, 동결된 finite floor 때문에
+      작은 불연속은 남는다.  floor 복원은 본 S3 와 분리한다."*
+    """
+    def rc(d, place):
+        return real_solver_edges(nc_mod, r1_um=r1, r2_um=r2, delta_um=d,
+                                 psi_placement=place)[0]['R_constriction']
+
+    lo, hi = 1e-4, 1.0                   # lo: Rc>0 (겹침 얕음) · hi: Rc==0 (floor 아래)
+    if not (rc(lo, nc_mod.PSI_MULTIPLY) > 0 and rc(hi, nc_mod.PSI_MULTIPLY) == 0):
+        return None
+    for _ in range(200):
+        mid = (lo + hi) / 2.0
+        if mid <= lo or mid >= hi:
+            break
+        if rc(mid, nc_mod.PSI_MULTIPLY) > 0:
+            lo = mid
+        else:
+            hi = mid
+    e_lo = real_solver_edges(nc_mod, r1_um=r1, r2_um=r2, delta_um=lo,
+                             psi_placement=nc_mod.PSI_MULTIPLY)[0]
+    d_lo = real_solver_edges(nc_mod, r1_um=r1, r2_um=r2, delta_um=lo,
+                             psi_placement=nc_mod.PSI_DIVIDE)[0]['R_constriction']
+    a = _a_from_delta(pc_mod, lo, r1=r1, r2=r2)
+    psi_star = max(1.0 - min(a, min(r1, r2)) / min(r1, r2), 0.0) ** PSI_EXPONENT_ORACLE
+    return dict(delta_last_pos=lo, delta_first_zero=hi, psi_star=psi_star,
+                mul_left=e_lo['R_constriction'], div_left=d_lo,
+                R_Maxwell=e_lo['R_Maxwell'],
+                mul_next=rc(hi, nc_mod.PSI_MULTIPLY), div_next=rc(hi, nc_mod.PSI_DIVIDE))
 
 
 def classify(n, seed):
@@ -457,13 +703,20 @@ def _selftest() -> int:
         _cz_old['R_constriction'] == 0.0 and _cz_s3['R_constriction'] == 0.0
         and _a_eff_cz == 0.5,
         f"Rc {_cz_old['R_constriction']!r} / {_cz_s3['R_constriction']!r} · a_eff = r_min = {_a_eff_cz!r}")
-    #   ★ ⑦f — **기본값이 옛 코드와 비트 동일**하다.  깃발을 넣은 것이 세대 1 의 σ 를
-    #     조용히 움직였다면 봉인 전에 이미 오염된 것이다.  옛 판을 git 에서 불러 대조한다.
-    _n_cmp, _n_bad_bit, _worst_bit, _n_nz = _bitwise_vs_head(_pc)
-    chk('⑦f ★ 기본값(legacy_divide)은 변경 전 코드와 비트 동일 — 깃발 도입이 세대 1 을 안 움직였다',
-        _n_bad_bit == 0 and _n_cmp >= 100 and _n_nz >= 5,
-        f'대조한 (δ, 필드) {_n_cmp} · 그 중 Rc>0 인 δ {_n_nz} · 다른 것 {_n_bad_bit} '
-        f'· 최대차 {_worst_bit!r}')
+    #   ★ ⑦f — **기본값이 도입 전 코드와 비트 동일**하다.  깃발을 넣은 것이 세대 1 의 σ 를
+    #     조용히 움직였다면 봉인 전에 이미 오염된 것이다.
+    #     ⛔⛔ **기준을 `HEAD` 에서 고정 커밋으로 옮겼다** (`AREA5-05`, 2026-09-15).  옛 판은
+    #       working 을 `git show HEAD:` 와 댔는데 **커밋하면 둘이 같아진다** = 기준이 함께
+    #       이동한다.  이제 깃발 도입 **직전 커밋**(내용 SHA256 까지 확인)과 그것으로 만든
+    #       **봉인된 기대값 파일**을 기준으로 삼고, 기준을 못 읽으면 **실패**한다.
+    _bl = _bitwise_vs_baseline(_pc)
+    chk('⑦f ★ 기본값(legacy_divide)은 **도입 전 고정 SHA** 와 비트 동일 — 기준이 HEAD 와 함께 '
+        '움직이지 않는다 (AREA5-05)',
+        _bl['n_bad'] == 0 and _bl['n_cmp'] >= 5000 and _bl['n_nonzero_rc'] >= 20
+        and _bl['n_cross'] == 0 and _bl['cross_src'] != '',
+        f"대조 (픽스처×필드) {_bl['n_cmp']} · Rc>0 픽스처 {_bl['n_nonzero_rc']} · 다른 것 "
+        f"{_bl['n_bad']} · 최대차 {_bl['worst']!r} · 고정커밋 재생성 대조 {_bl['cross_src'] or '못함'}"
+        f" (어긋남 {_bl['n_cross']}) {_bl['why']}")
     #   ★ ⑦g — `L2-01` 이 보고한 **비단조·절벽**을 생산 코드에서 재현하고, 곱셈 배치가
     #     둘 다 없앤다는 것을 같은 스윕에서 보인다 (규율 ②: 재현 먼저, 그 다음 수리).
     _sw = _psi_sweep(_nc)
@@ -473,7 +726,29 @@ def _selftest() -> int:
         _legacy_nonmono and _mul_mono and _sw['a_monotone'],
         f"legacy 최대 {max(_sw['div'])!r} (비단조 {_legacy_nonmono}) · 곱셈 단조 {_mul_mono} "
         f"· 전제 a(δ) 단조 {_sw['a_monotone']}")
-    chk('⑦h ★ 절벽: legacy 는 floor 직전에 큰 양수에서 0 으로 떨어지고, 곱셈은 그 자리가 연속이다',
+    #   ★★ ⑦h — **이름과 단언을 사실에 맞춘다** (`AREA5-07`, 2026-09-15).  옛 이름은
+    #      *"곱셈은 그 자리가 연속이다"* 였는데 **거짓**이다: 계약 §C 가 floor 를 유한한
+    #      `1e-4` 로 동결했으므로 곱셈판의 좌극한은 `ψ_floor·R_Maxwell > 0` 이고 다음이 0 이다.
+    #      ⇒ 이제 절단면을 **이분으로 찾아** 좌극한을 실제로 재고, 그 값이 이론값과 같은지와
+    #        legacy 대비 비가 `1/ψ*²` 인지를 단언한다.  ⛔ floor 를 바꾸라는 뜻이 아니다.
+    _cl = _floor_cliff(_nc, _pc)
+    _cl_ok = bool(_cl) and (
+        _cl['mul_left'] > 0.0 and _cl['div_left'] > 0.0
+        and _cl['mul_next'] == 0.0 and _cl['div_next'] == 0.0
+        and PSI_FLOOR_ORACLE < _cl['psi_star'] < 1.05 * PSI_FLOOR_ORACLE
+        and abs(_cl['mul_left'] - _cl['R_Maxwell'] * _cl['psi_star'])
+        <= 1e-9 * _cl['R_Maxwell'] * _cl['psi_star']
+        and abs(_cl['div_left'] / _cl['mul_left'] - 1.0 / _cl['psi_star'] ** 2)
+        <= 1e-6 / _cl['psi_star'] ** 2)
+    chk('⑦h ★ 절벽의 **크기**: legacy 는 floor 직전 큰 양수에서 0 으로 떨어지고, 곱셈은 같은 '
+        '자리에서 1/ψ*² 배 작은 불연속만 남긴다 (동결된 finite floor 라 0 이 아니다 — AREA5-07)',
+        _cl_ok,
+        (f"ψ* = {_cl['psi_star']!r} · 좌극한 legacy {_cl['div_left']!r} vs 곱셈 "
+         f"{_cl['mul_left']!r} (= R_M·ψ*) · 다음 값 {_cl['div_next']!r}/{_cl['mul_next']!r} · "
+         f"비 {_cl['div_left'] / _cl['mul_left']:.6g} vs 1/ψ*² "
+         f"{1.0 / _cl['psi_star'] ** 2:.6g}") if _cl else '절단면을 못 찾았다')
+    #   스윕 쪽 거친 지표도 남긴다 (같은 사실의 이산 관측).
+    chk('⑦h-b 스윕에서도 floor 직전 마지막 양수는 legacy 가 곱셈보다 100배 이상 크다',
         _sw['div_last_pos'] > 1e2 * _sw['mul_last_pos'] and _sw['mul_last_pos'] > 0.0,
         f"floor 직전 Rc — legacy {_sw['div_last_pos']!r} vs 곱셈 {_sw['mul_last_pos']!r}")
     #   ★★ ⑦i — **독립 oracle** (`R4-08` 이 요구한 것).  위 ⑦ 은 ψ 를 **솔버에서 받아**
@@ -482,10 +757,25 @@ def _selftest() -> int:
     #      ⇒ 고정 기하에서 s 와 ψ 를 **독립 계산**해 두 배치의 식을 각각 못박는다.
     #      ⚠ 면적은 재구현하지 않는다 (생산 `plastic_coverage` 에서 받는다) — ψ 만 oracle 이다.
     _or = _psi_oracle(_nc, _pc)
-    chk('⑦i ★★ 독립 oracle: ψ 를 기하에서 따로 계산해 legacy = R_M/ψ · 곱셈 = R_M·ψ 를 각각 못박는다',
-        _or['n'] >= 3 and _or['bad_div'] == 0 and _or['bad_mul'] == 0 and _or['bad_floor'] == 0,
+    chk('⑦i ★★ 독립 oracle: ψ 를 기하에서 따로 계산해 legacy = R_M/ψ · 곱셈 = R_M·ψ 를 각각 못박는다 '
+        '(채널 3 × 상쌍 8 × 반지름 순서 4 — 순서 대칭 포함)',
+        _or['n'] >= 100 and _or['bad_div'] == 0 and _or['bad_mul'] == 0 and _or['bad_floor'] == 0,
         f"활성 {_or['n']}건 · legacy 어긋남 {_or['bad_div']} · 곱셈 어긋남 {_or['bad_mul']} "
         f"· floor 판정 어긋남 {_or['bad_floor']} (ψ 지수 {_or['exponent']} · floor {_or['floor']})")
+    #   ★★ ⑦j — **재료계수는 따로 못박는다** (`AREA5-06`).  Codex: 열 AM–SE 조화평균을
+    #      1 로 바꿔도 ψ oracle 이 전부 초록이다 ⇒ *"ψ 배치가 맞다"* 와 *"계수가 맞다"* 는
+    #      **다른 주장**이다.  `min(σ)` 규약과 면별 σ 배정을 R_Maxwell·R_bulk 로 각각 확인한다.
+    _mo = _material_oracle(_nc)
+    chk('⑦j ★★ 재료계수 oracle: k_weight(열 조화평균)·σ_rel 의 min 규약·면별 배정을 '
+        'R_Maxwell 과 R_bulk 로 각각 못박는다',
+        _mo['n'] >= 200 and _mo['bad_maxwell'] == 0 and _mo['bad_bulk'] == 0,
+        f"픽스처 {_mo['n']}건 · R_Maxwell 어긋남 {_mo['bad_maxwell']} · R_bulk 어긋남 {_mo['bad_bulk']}")
+    #   ⑦k — oracle 이 쓰는 상수가 솔버의 동결값과 같은가.  ⛔ import 하지 않고 **대조**한다:
+    #      import 하면 상수 변이가 기대값과 같이 움직여 이 검사가 무의미해진다.
+    _const_bad = {k: (v, getattr(_nc, k, None)) for k, v in MAT_ORACLE.items()
+                  if getattr(_nc, k, None) != v}
+    chk('⑦k oracle 이 못박은 재료 상수 = 솔버의 동결값 (K_AM·K_SE·r0·β)',
+        not _const_bad, f'어긋남 {_const_bad or "없음"}')
 
     # ⑥ ★ P2-R2-06 — **실제 솔버**로 대조한다 (감사의 ψ 재구현이 아니라 build_network 자신).
     #    cap 2π→π 를 plastic 에 물린 솔버와 원판 솔버가 같은 Rc·R_total 을 내야 한다.
@@ -518,7 +808,12 @@ def main() -> int:
     ap.add_argument('-n', type=int, default=20000)
     ap.add_argument('--seed', type=int, default=0)
     ap.add_argument('--selftest', action='store_true')
+    ap.add_argument('--emit-baseline', action='store_true',
+                    help='⑦f 의 **봉인 기준**을 고정 커밋 소스로 다시 만든다 (AREA5-05).  '
+                         '⛔ 만든 뒤 출력된 지문을 BASELINE_SHA256 에 손으로 박아야 한다')
     a = ap.parse_args()
+    if a.emit_baseline:
+        return emit_baseline()
     if a.selftest:
         return _selftest()
     st = run(a.n, a.seed)

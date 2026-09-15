@@ -5,7 +5,7 @@
 <style>
 :root{
   --ground:#F5F6F3;  --panel:#FCFCFB;  --sunk:#ECEEE9;
-  --ink:#15191A;     --ink-2:#4A524F;  --ink-3:#79817D;
+  --ink:#0E1213;     --ink-2:#39413E;  --ink-3:#5E6663;
   --rule:#D9DDD6;    --rule-2:#C3C9BF;
   --accent:#2F5D50;  --accent-soft:#E3EDE8;
   --p1:#9E3225;      --p1-soft:#F6E5E2;
@@ -18,7 +18,7 @@
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --ground:#111513; --panel:#181D1A; --sunk:#1E2421;
-    --ink:#E7EAE6;    --ink-2:#AEB6B1; --ink-3:#7E8782;
+    --ink:#EDF0EC;    --ink-2:#C2C9C4; --ink-3:#9AA39E;
     --rule:#2A312D;   --rule-2:#3A433E;
     --accent:#86BCA8; --accent-soft:#1C2B26;
     --p1:#E08475;     --p1-soft:#2D1E1B;
@@ -28,7 +28,7 @@
 }
 :root[data-theme="dark"]{
   --ground:#111513; --panel:#181D1A; --sunk:#1E2421;
-  --ink:#E7EAE6;    --ink-2:#AEB6B1; --ink-3:#7E8782;
+  --ink:#EDF0EC;    --ink-2:#C2C9C4; --ink-3:#9AA39E;
   --rule:#2A312D;   --rule-2:#3A433E;
   --accent:#86BCA8; --accent-soft:#1C2B26;
   --p1:#E08475;     --p1-soft:#2D1E1B;
@@ -38,8 +38,9 @@
 *{box-sizing:border-box}
 body{
   margin:0; background:var(--ground); color:var(--ink);
-  font-family:var(--sans); font-weight:350; line-height:1.72;
-  font-size:17px; -webkit-font-smoothing:antialiased;
+  font-family:var(--sans); font-weight:400; line-height:1.75;
+  font-size:18px; -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility; letter-spacing:-.003em;
 }
 .wrap{max-width:1000px; margin:0 auto; padding-inline:24px; padding-block:0}
 h1,h2,h3{text-wrap:balance; margin:0}
@@ -47,37 +48,44 @@ code,.m{font-family:var(--mono); font-variant-numeric:tabular-nums}
 
 /* ── 머리 ── */
 header{padding-block:64px 40px; border-bottom:1px solid var(--rule-2)}
-.eyebrow{font-family:var(--mono); font-size:11.5px; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--ink-3); margin-bottom:18px}
+.eyebrow{font-family:var(--mono); font-size:12.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-2); margin-bottom:18px}
 h1{font-family:var(--serif); font-weight:600; font-size:clamp(34px,6vw,52px);
   line-height:1.1; letter-spacing:-.015em}
-.sub{margin-top:16px; max-width:62ch; color:var(--ink-2); font-size:17px}
+.sub{margin-top:18px; max-width:60ch; color:var(--ink-2); font-size:18.5px; line-height:1.72}
 .sub em{font-family:var(--serif); font-style:italic; color:var(--ink)}
 
-.tally{display:flex; flex-wrap:wrap; gap:0; margin-top:34px;
-  border:1px solid var(--rule-2); border-radius:2px; background:var(--panel); overflow:hidden}
-.tally div{flex:1 1 118px; padding:14px 16px; border-right:1px solid var(--rule)}
-.tally div:last-child{border-right:0}
-.tally .n{font-family:var(--mono); font-size:26px; font-weight:500; line-height:1.2}
-.tally .k{font-size:11.5px; color:var(--ink-3); letter-spacing:.04em; margin-top:2px}
-.tally .p1 .n{color:var(--p1)} .tally .fx .n{color:var(--fixed)}
+/*  트랙 × 지표 표.  ⚠ `.tally div` 처럼 **자손 선택자**로 쓰면 안쪽에도 패딩이 걸린다 —
+    옛 판이 그랬고 숫자와 라벨 사이가 60px 벌어져 있었다.  */
+.tally{display:grid; grid-template-columns:minmax(120px,1.6fr) repeat(4,1fr); gap:1px;
+  margin-top:34px; border:1px solid var(--rule-2); border-radius:3px;
+  background:var(--rule); overflow:hidden}
+.tally > div{padding:13px 16px; background:var(--panel); display:flex; align-items:center}
+.tally > .th{font-family:var(--mono); font-size:12.5px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-2); font-weight:600; background:var(--sunk);
+  justify-content:flex-end}
+.tally > .th:first-child{justify-content:flex-start}
+.tally > .rw{font-size:15.5px; color:var(--ink); font-weight:500; line-height:1.3}
+.tally > .n{font-family:var(--mono); font-size:26px; font-weight:600; line-height:1.1;
+  justify-content:flex-end; font-variant-numeric:tabular-nums}
+.tally > .n.p1{color:var(--p1)} .tally > .n.fx{color:var(--fixed)}
 
 /* ── 절 ── */
 section{padding-block:52px; border-bottom:1px solid var(--rule)}
 section:last-of-type{border-bottom:0}
-h2{font-family:var(--serif); font-size:26px; font-weight:600; letter-spacing:-.01em}
-.lede{margin-top:12px; max-width:64ch; color:var(--ink-2)}
+h2{font-family:var(--serif); font-size:29px; font-weight:600; letter-spacing:-.01em}
+.lede{margin-top:14px; max-width:62ch; color:var(--ink-2); font-size:17.5px}
 
 /* ── 층 사슬 ── */
 .chain{display:grid; gap:2px; margin-top:28px;
   grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
 .link{background:var(--panel); border:1px solid var(--rule);
-  padding:14px 15px 16px; position:relative}
-.link .lv{font-family:var(--mono); font-size:12px; font-weight:600;
-  color:var(--accent); letter-spacing:.06em}
-.link .nm{font-size:13.5px; margin-top:5px; color:var(--ink-2); line-height:1.5}
-.link .st{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em;
-  margin-top:10px; color:var(--p1); text-transform:uppercase}
+  padding:16px 17px 18px; position:relative}
+.link .lv{font-family:var(--mono); font-size:13px; font-weight:600;
+  color:var(--accent); letter-spacing:.04em}
+.link .nm{font-size:15px; margin-top:6px; color:var(--ink); line-height:1.55}
+.link .st{font-family:var(--mono); font-size:12px; letter-spacing:.05em;
+  margin-top:11px; color:var(--p1); text-transform:uppercase}
 
 /* ── before → after ── */
 .ba{margin-top:30px; display:grid; gap:20px}
@@ -85,87 +93,95 @@ h2{font-family:var(--serif); font-size:26px; font-weight:600; letter-spacing:-.0
 /* 묶음 머리 — 15행을 한 줄로 늘어놓지 않는다 */
 .grp{margin-top:38px; padding-top:14px; border-top:2px solid var(--rule-2)}
 .grp:first-child{margin-top:0}
-.grp h3{font-family:var(--mono); font-size:12px; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--ink-3); font-weight:600; margin:0}
-.grp .gsub{font-size:14.5px; color:var(--ink-3); margin-top:5px; max-width:64ch}
+.grp h3{font-family:var(--mono); font-size:13.5px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--accent); font-weight:600; margin:0}
+.grp .gsub{font-size:16px; color:var(--ink-2); margin-top:7px; max-width:62ch; line-height:1.6}
 
 /* 행 = 카드 */
-.row{border:1px solid var(--rule); border-radius:4px; background:var(--panel);
-  padding:20px 22px 18px}
+.row{border:1px solid var(--rule-2); border-radius:4px; background:var(--panel);
+  padding:22px 24px 20px}
 .row.p1{border-left:3px solid var(--p1)}
 .row.fixed{border-left:3px solid var(--fixed)}
 .rid{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-bottom:14px}
-.rid .tag{font-family:var(--mono); font-size:11.5px; font-weight:600; letter-spacing:.05em;
-  padding:3px 8px; border-radius:3px; flex:none}
+.rid .tag{font-family:var(--mono); font-size:12.5px; font-weight:600; letter-spacing:.03em;
+  padding:4px 9px; border-radius:3px; flex:none}
 .tag.P1{background:var(--p1-soft); color:var(--p1)}
 .tag.P2{background:var(--p2-soft); color:var(--p2)}
 .tag.FIX{background:var(--fixed-soft); color:var(--fixed)}
-.rid .ttl{font-family:var(--serif); font-size:19px; font-weight:600; color:var(--ink);
-  line-height:1.35; flex:1 1 100%; margin-top:2px}
+.rid .ttl{font-family:var(--serif); font-size:21.5px; font-weight:600; color:var(--ink);
+  line-height:1.38; flex:1 1 100%; margin-top:3px}
 .pair{display:grid; grid-template-columns:1fr 1fr; gap:14px}
 .cell{padding:0}
-.cell .lbl{font-family:var(--mono); font-size:11px; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--ink-3); margin-bottom:7px;
-  padding-bottom:5px; border-bottom:1px solid var(--rule)}
+.cell .lbl{font-family:var(--mono); font-size:12.5px; letter-spacing:.07em; font-weight:600;
+  text-transform:uppercase; color:var(--ink-2); margin-bottom:9px;
+  padding-bottom:6px; border-bottom:1px solid var(--rule-2)}
 .cell.after .lbl{color:var(--accent); border-bottom-color:var(--accent)}
-.cell p{margin:0; font-size:15.5px; line-height:1.7; color:var(--ink-3)}
-.cell.after p{color:var(--ink); font-weight:350}
+.cell p{margin:0; font-size:16.5px; line-height:1.72; color:var(--ink-2)}
+.cell.after p{color:var(--ink); font-weight:400}
 .cell.after p b{font-weight:600}
-.num{font-family:var(--mono); font-size:15px; font-weight:500; color:var(--ink);
-  display:block; margin-top:9px; line-height:1.75; word-break:break-word}
+.num{font-family:var(--mono); font-size:15.5px; font-weight:500; color:var(--ink);
+  display:block; margin-top:10px; line-height:1.8; word-break:break-word}
 .num s{color:var(--ink-3); text-decoration-thickness:1px}
 .arrow{color:var(--accent); padding:0 3px}
 
 /* 한 줄 결론 — 카드마다 반드시 짧다 */
-.note{margin-top:15px; padding-top:12px; border-top:1px dashed var(--rule);
-  font-size:14.5px; color:var(--ink-2); line-height:1.65}
+.note{margin-top:17px; padding-top:14px; border-top:1px dashed var(--rule-2);
+  font-size:16px; color:var(--ink-2); line-height:1.68}
 .note b{color:var(--ink); font-weight:600}
 
 /* 긴 것은 접는다 */
 details.more{margin-top:10px}
-details.more>summary{font-family:var(--mono); font-size:11.5px; letter-spacing:.1em;
+details.more>summary{font-family:var(--mono); font-size:12.5px; letter-spacing:.05em; font-weight:600;
   text-transform:uppercase; color:var(--accent); cursor:pointer; list-style:none;
   padding:5px 0; user-select:none}
 details.more>summary::-webkit-details-marker{display:none}
 details.more>summary::before{content:'▸ '; display:inline-block; width:1em}
 details.more[open]>summary::before{content:'▾ '}
 details.more>summary:hover{text-decoration:underline}
-details.more .body{font-size:14.5px; line-height:1.7; color:var(--ink-2);
-  padding:12px 14px; background:var(--sunk); border-radius:3px; margin-top:4px}
+details.more .body{font-size:15.5px; line-height:1.72; color:var(--ink-2);
+  padding:14px 16px; background:var(--sunk); border-radius:3px; margin-top:4px}
 details.more .body p{margin:0 0 9px}
 details.more .body p:last-child{margin-bottom:0}
 
 /* 좁은 화면 */
+@media (max-width:640px){
+  .tally{grid-template-columns:minmax(90px,1.4fr) repeat(4,1fr)}
+  .tally > div{padding:10px 9px}
+  .tally > .rw{font-size:13.5px}
+  .tally > .n{font-size:20px}
+  .tally > .th{font-size:11px; letter-spacing:.02em}
+}
 @media (max-width:720px){
   .pair{grid-template-columns:1fr; gap:16px}
   .row{padding:16px 16px 14px}
-  .rid .ttl{font-size:17px}
+  .rid .ttl{font-size:19px}
+  body{font-size:17px}
 }
 
 /* ── 고친 것 ── */
 .fixed-list{margin-top:24px; display:grid; gap:2px}
 .fx-row{display:grid; grid-template-columns:96px 1fr 108px; gap:0;
   border:1px solid var(--rule); background:var(--panel); align-items:start}
-.fx-row > *{padding:13px 15px}
-.fx-row .id{font-family:var(--mono); font-size:12.5px; font-weight:600;
+.fx-row > *{padding:15px 17px}
+.fx-row .id{font-family:var(--mono); font-size:13.5px; font-weight:600;
   color:var(--fixed); border-right:1px solid var(--rule)}
-.fx-row .wt{font-size:14px; color:var(--ink-2); line-height:1.6}
+.fx-row .wt{font-size:15.5px; color:var(--ink-2); line-height:1.62}
 .fx-row .wt b{color:var(--ink); font-weight:500}
-.fx-row .sha{font-family:var(--mono); font-size:12px; color:var(--ink-3);
+.fx-row .sha{font-family:var(--mono); font-size:13px; color:var(--ink-2);
   border-left:1px solid var(--rule); text-align:right}
 
 /* ── 남은 결정 ── */
 .decide{margin-top:24px; border:1px solid var(--rule-2); background:var(--panel)}
 .decide ol{margin:0; padding:8px 22px 20px 40px}
-.decide li{margin-top:12px; font-size:14.5px; color:var(--ink-2); line-height:1.65}
+.decide li{margin-top:14px; font-size:16px; color:var(--ink-2); line-height:1.68}
 .decide li b{color:var(--ink); font-weight:500}
-.decide .hd{padding:16px 22px 6px; font-family:var(--serif); font-weight:600;
-  font-size:17px; border-bottom:1px solid var(--rule); margin-bottom:6px}
+.decide .hd{padding:18px 22px 8px; font-family:var(--serif); font-weight:600;
+  font-size:19px; border-bottom:1px solid var(--rule-2); margin-bottom:6px}
 
-footer{padding-block:40px 64px; color:var(--ink-3); font-size:13px; line-height:1.7}
+footer{padding-block:40px 64px; color:var(--ink-2); font-size:14.5px; line-height:1.72}
 footer .m{color:var(--ink-2)}
-.caveat{margin-top:20px; padding:14px 16px; border-left:2px solid var(--p2);
-  background:var(--p2-soft); font-size:13.5px; color:var(--ink-2); line-height:1.65}
+.caveat{margin-top:20px; padding:16px 18px; border-left:3px solid var(--p2);
+  background:var(--p2-soft); font-size:15.5px; color:var(--ink-2); line-height:1.68}
 .caveat b{color:var(--ink); font-weight:500}
 
 @media (max-width:640px){

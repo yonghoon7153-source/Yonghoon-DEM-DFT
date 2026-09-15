@@ -90,6 +90,48 @@ def git_sha() -> str:
                           capture_output=True, text=True).stdout.strip()
 
 
+#: ★★ **수치를 만드는 모듈들** — 봉인과 소비가 같은 코드로 돌았는지 확인하는 대상 (`AREA5-03` ⓐ).
+#:   ⛔ `generation_git_sha` **존재만** 으로는 부족하다: dirty working tree 도, 커밋 안 된
+#:     의존 모듈 변경도 못 잡는다.  ⇒ 실제 파일 바이트를 해싱한다.
+#:   ⚠ 여기에 **봉인기·러너 자신은 넣지 않는다.**  Codex(`AREA5-09`)가 정정한 대로 *"결과를 보지
+#:     않은 상태의 수정"* 은 구별 가능하고, 검사기 수리가 봉인을 무효화하면 알려진 결함을 그대로
+#:     실행할 이유가 되어 버린다.  넣는 것은 **σ 를 바꿀 수 있는 것**뿐이다.
+NUMERIC_MODULES = ('network_conductivity.py', 'plastic_coverage.py',
+                   'audit_constriction_deleted.py', 'extract_se_network_diagnostics.py')
+
+
+def code_bundle() -> dict:
+    """계산에 실제로 쓰인 코드의 신원 — git 상태 + 수치 모듈 지문 (`AREA5-03` ⓐ)."""
+    dirty = subprocess.run(['git', '-C', str(ROOT), 'status', '--porcelain', '--',
+                            *[f'scripts/{m}' for m in NUMERIC_MODULES]],
+                           capture_output=True, text=True).stdout.strip()
+    return {
+        'git_sha': git_sha(),
+        'numeric_modules_dirty': [ln[3:] for ln in dirty.split('\n') if ln.strip()],
+        'modules': {m: sha256(SCRIPTS / m) for m in NUMERIC_MODULES if (SCRIPTS / m).is_file()},
+        'python': sys.version.split()[0],
+    }
+
+
+def stamp_provenance_sha(prov: dict, root: Path) -> dict:
+    """`prov` 에 **읽은 파일의 실제 SHA256** 을 박는다 (`AREA5-03` 소비 직전 재검증의 기준).
+
+    ⚠ 봉인이 지문을 안 들고 있으면 러너는 *"무엇을 읽었어야 하는가"* 를 복원할 수 없다 —
+      실제로 Codex 는 같은 폴더에 step 200 을 넣어 **다른 σ 를 rc=0 으로** 발행시켰다.
+    """
+    for fkey, skey in (('atom_file', 'atom_sha256'), ('contact_file', 'contact_sha256'),
+                       ('deck', 'deck_sha256')):
+        raw = (prov.get(fkey) or '').strip()
+        if not raw:
+            prov[skey] = ''
+            continue
+        cand = Path(raw)
+        if not cand.is_absolute():
+            cand = root / cand
+        prov[skey] = sha256(cand) if cand.is_file() else ''
+    return prov
+
+
 def classify(raw_ok: bool, net_ok: bool, sigma_old) -> str:
     """§5-v4 A 의 정의역 분류.  **순서가 곧 규칙이다.**
 
@@ -220,12 +262,21 @@ def verify_provenance(row: dict, prov: dict, root: Path):
 
 
 def build_seal(per_channel: dict, cohort: dict, env: dict, tsv: Path, design: Path,
-               generation: str) -> dict:
-    """분류 결과 → 봉인 문서.  **숫자를 만들지 않고 세기만 한다.**"""
+               generation: str, sigma_old: dict | None = None) -> dict:
+    """분류 결과 → 봉인 문서.  **숫자를 만들지 않고 세기만 한다.**
+
+    ★★ 예외 하나 — `sigma_old` (`AREA5-03` ⓓ).  분류 라벨만 적으면 *"positive 였던 old 가
+      **다른** positive 가 됐다"* 를 소비 쪽이 못 잡는다 (`SEAL_CONTRADICTED` 는 `≤0`·`None`
+      만 본다).  Codex 실측이 정확히 그 경우였다: 이온 old `1.306478217115371e-8` 을 봉인해
+      놓고 step 200 의 `1.2210783247843304e-8` 로 **rc=0 발행**.
+      ⇒ 이것은 "만든 숫자" 가 아니라 **baseline 의 신원**이다.  §A 의 정의역 분류에 쓰인 바로
+        그 값이고, 러너는 그것을 **재현해야** 한다.
+    """
     out = {
         'contract': 'docs/area_contract_20260913.md §5-v4 A·B',
         'sealed_utc': _dt.datetime.now(_dt.timezone.utc).isoformat(timespec='seconds'),
         'generation_git_sha': generation,
+        'code_bundle': code_bundle(),
         'cohort_tsv': str(tsv), 'cohort_tsv_sha256': sha256(tsv) if tsv.exists() else '',
         'design_csv': str(design), 'design_csv_sha256': sha256(design) if design.exists() else '',
         'n_cohort_ids': len(cohort),
@@ -244,7 +295,78 @@ def build_seal(per_channel: dict, cohort: dict, env: dict, tsv: Path, design: Pa
         }
         out['channels'][ch]['median_order_positions_1based'] = order_positions(n)
         out['channels'][ch]['ids'] = groups
+        #  `B_ch` 에 든 케이스의 **baseline σ 수치**.  ⛔ 다른 라벨의 값은 적지 않는다
+        #  (정의역 밖이라 재현 요구의 대상이 아니다).
+        out['channels'][ch]['sigma_old'] = {
+            c: (sigma_old or {}).get(ch, {}).get(c) for c in groups[IN_DOMAIN]}
     return out
+
+
+# ══ 수신 inventory 동결 (`AREA5-09`) ═══════════════════════════════════════════
+#   ⛔⛔ **고정 cutoff ≠ 발행 창.**  저자가 정한 것은 *수신 종료* 09-17 23:59 인데, 옛 코드는
+#     09-17 **아무 때나** 발행을 허용했다 ⇒ 정오에 봉인하고 18시에 마감 전 원자료가 도착하면
+#     **발행 시점으로 포함 집합을 고를 수 있다**.  두 일이 한 순간에 묶여 있던 것이 원인이다.
+#   ⇒ 단계를 가른다: ① `--freeze-inventory` 로 **무엇이 왔는가**를 cutoff 기준으로 못박고
+#     ② 그 다음 baseline 계산·봉인 발행.  ②는 ①이 있으면 **마감 뒤여도 된다** —
+#     *"cutoff 이후에 계산이 끝났다는 이유만으로 cutoff 이전에 확정된 원자료를 거부하지 않는다."*
+INVENTORY_KEYS = ('atom_file', 'atom_sha256', 'contact_file', 'contact_sha256',
+                  'deck', 'deck_sha256')
+
+
+def build_inventory(rows: dict, root: Path, tsv: Path, design: Path, now, test_only: bool) -> dict:
+    """`RAW_OK` 케이스의 **원자료 지문**을 지금 시각으로 동결한다.  σ 는 한 건도 안 푼다."""
+    cases, missing = {}, []
+    for case, row in sorted(rows.items()):
+        if (row.get('status') or '') != 'RAW_OK':
+            continue
+        rec = {k: (row.get(k) or '').strip() for k in INVENTORY_KEYS}
+        #  ★ TSV 가 적은 지문을 그대로 믿지 않고 **디스크의 실제 바이트**를 다시 잰다.
+        for fkey, skey in _PROV_PAIRS:
+            raw = rec.get(fkey) or ''
+            if not raw:
+                continue
+            cand = Path(raw)
+            if not cand.is_absolute():
+                cand = root / cand
+            actual = sha256(cand) if cand.is_file() else ''
+            rec[skey + '_ondisk'] = actual
+            if actual and rec.get(skey) and actual != rec[skey]:
+                missing.append(f'{case}: {skey} TSV {rec[skey][:12]} ≠ 디스크 {actual[:12]}')
+            elif not actual:
+                missing.append(f'{case}: {fkey} 를 디스크에서 못 찾았다 ({cand})')
+        cases[case] = rec
+    return {'what': '수신 inventory 동결 (계약 §D-3 · AREA5-09) — baseline 계산 **전** 단계',
+            'frozen_at_kst': now.astimezone(KST).isoformat(timespec='seconds'),
+            'cutoff_kst': SEAL_DEADLINE.isoformat(),
+            'cohort_tsv': str(tsv), 'cohort_tsv_sha256': sha256(tsv) if tsv.exists() else '',
+            'design_csv': str(design), 'design_csv_sha256': sha256(design) if design.exists() else '',
+            'test_only': bool(test_only),
+            'n_raw_ok': len(cases), 'mismatches': missing, 'cases': cases}
+
+
+def load_inventory(path: Path):
+    """→ `(inv, '')` 또는 `(None, 사유)`.  ⛔ 마감 뒤에 동결된 inventory 는 쓸 수 없다."""
+    if not path.is_file():
+        return None, f'inventory 파일이 없다: {path}'
+    try:
+        inv = json.loads(path.read_text(encoding='utf-8'))
+    except (OSError, json.JSONDecodeError) as e:
+        return None, f'inventory 를 JSON 으로 못 읽는다: {e}'
+    try:
+        frozen = _dt.datetime.fromisoformat(inv['frozen_at_kst'])
+    except (KeyError, TypeError, ValueError):
+        return None, 'inventory 에 frozen_at_kst 가 없거나 시각이 아니다'
+    if frozen.tzinfo is None:
+        return None, 'frozen_at_kst 에 시간대가 없다'
+    if frozen > SEAL_DEADLINE:
+        return None, (f'inventory 가 마감({SEAL_DEADLINE.isoformat()}) 뒤에 동결됐다: '
+                      f'{frozen.isoformat()} — 그것은 수신 종료를 옮긴 것이다')
+    if inv.get('mismatches'):
+        return None, (f"inventory 동결 때 지문이 어긋난 항목 {len(inv['mismatches'])}건이 있다 — "
+                      f"{inv['mismatches'][:3]}")
+    if not inv.get('cases'):
+        return None, 'inventory 에 케이스가 없다'
+    return inv, ''
 
 
 def _env_from_recorder(rec_calls: list) -> dict:
@@ -279,6 +401,13 @@ def main(argv=None) -> int:
     ap.add_argument('--now', default='',
                     help='ISO8601 시각 주입 (selftest·재현 전용).  예 2026-09-17T12:00+09:00')
     ap.add_argument('--selftest', action='store_true')
+    #  ── `AREA5-09` — 수신 동결과 봉인 발행을 **두 단계로** 가른다 ──
+    ap.add_argument('--freeze-inventory', default='',
+                    help='① 수신 inventory 를 cutoff 기준으로 동결해 이 경로에 쓴다 (σ 안 품).  '
+                         '⛔ 마감 전에만 된다')
+    ap.add_argument('--inventory', default='',
+                    help='② 동결된 inventory 를 써서 봉인한다.  마감 전에 동결됐으면 **계산이 '
+                         '마감 뒤에 끝나도** 발행할 수 있다 (AREA5-09 처방)')
     a = ap.parse_args(argv)
     if a.selftest:
         return _selftest()
@@ -287,21 +416,36 @@ def main(argv=None) -> int:
            else _dt.datetime.now(_dt.timezone.utc))
     if now.tzinfo is None:
         now = now.replace(tzinfo=KST)
+    #  ★★ **시험용 시각으로 만든 산물은 생산물이 아니다** (`AREA5-09`).  Codex 가 실제 봉인기를
+    #    09-15 에 `--now 2026-09-17T12:00+09:00` 으로 돌려 **정상 봉인**을 썼고 러너가 그것을
+    #    rc=0 으로 받았다 ⇒ 도구 자신이 발행하는 시험 봉인이 생산 봉인과 구별되지 않았다.
+    #    ⇒ 이제 주입 시각으로 만든 것은 `test_only` 로 낙인찍히고 생산 소비자가 거부한다.
+    test_only = bool(a.now)
+    inv, inv_why = (None, '')
+    if a.inventory:
+        inv, inv_why = load_inventory(Path(a.inventory))
+        if inv is None:
+            print(f'⛔ 동결 inventory 를 쓸 수 없다 — {inv_why}')
+            return 2
+        if inv.get('test_only') and not test_only:
+            print('⛔ 시험용 inventory(test_only)로 생산 봉인을 만들 수 없다 (AREA5-09).')
+            return 2
     #  ★★ **양쪽으로 닫힌 창** (`R4-07`, 저자 결정 2026-09-15).
     #    이르면 거부 · 지나면 거부.  "언제 멈출지" 의 선택 여지가 코드에서 사라진다.
     open_at = _dt.datetime.combine(SEAL_NOT_BEFORE, _dt.time(0, 0), tzinfo=KST)
-    if not a.dry_run and now < open_at:
+    if not a.dry_run and now < open_at and not a.freeze_inventory:
         print(f'⛔ 봉인 거부 (너무 이르다) — 계약 §5-v4 D-3 의 최초 허용일은 {SEAL_NOT_BEFORE} '
               f'(KST 00:00) 이고 지금은 {now.astimezone(KST):%Y-%m-%d %H:%M %Z} 다.')
         print('   lhs00_034·089·098 이 아직 돌고 있어 사흘을 준 것이다.  --dry-run 은 언제든 된다.')
         print('   ⛔ 이 날짜를 결과가 아쉬워서 앞당기지 말 것.')
         return 2
-    if not a.dry_run and now > SEAL_DEADLINE:
+    if not a.dry_run and now > SEAL_DEADLINE and inv is None:
         print(f'⛔ 봉인 거부 (마감이 지났다) — 저자가 고정한 수신 종료는 '
               f'{SEAL_DEADLINE:%Y-%m-%d %H:%M %Z} 이고 지금은 '
               f'{now.astimezone(KST):%Y-%m-%d %H:%M %Z} 다.')
         print('   ⛔ 마감 후 봉인은 "결과를 더 본 뒤 시점을 고르는 것" 이라 사전등록을 훼손한다.')
-        print('   ⇒ 옮기려면 저자가 원장에 먼저 적는다 (R4-07).')
+        print('   ⇒ 마감 **전에** `--freeze-inventory` 로 수신을 동결해 뒀다면 `--inventory` 로')
+        print('      계산을 마감 뒤에 끝내도 된다 (AREA5-09).  아니면 저자가 원장에 먼저 적는다.')
         return 2
     if not a.webapp:
         ap.error('--webapp 이 필요하다 (또는 --selftest)')
@@ -314,14 +458,43 @@ def main(argv=None) -> int:
     cohort, rogue = split_cohort(all_rows, Path(a.design_csv))
     if rogue:
         print(f'  ⓘ 등록 밖 {len(rogue)}개는 주 코호트에서 **제외**한다: {sorted(rogue)}')
+    #  ── ① 수신 동결 단계 — σ 를 한 건도 풀지 않고 **무엇이 왔는가**만 못박는다 ──
+    if a.freeze_inventory:
+        if now > SEAL_DEADLINE:
+            print(f'⛔ inventory 동결 거부 — 수신 종료({SEAL_DEADLINE:%Y-%m-%d %H:%M %Z})가 '
+                  f'지났다.  동결은 마감 **전에** 하는 일이다.')
+            return 2
+        doc = build_inventory(cohort, Path(a.webapp).expanduser(), Path(a.cohort),
+                              Path(a.design_csv), now, test_only)
+        print(f"  수신 동결: RAW_OK {doc['n_raw_ok']} / 코호트 {len(cohort)} · "
+              f"지문 어긋남 {len(doc['mismatches'])}" + ('  ⚠ test_only' if test_only else ''))
+        for m in doc['mismatches'][:8]:
+            print('   ⚠ ' + m)
+        if a.dry_run:
+            print('  (--dry-run — 아무것도 쓰지 않았다)')
+            return 0
+        Path(a.freeze_inventory).write_text(json.dumps(doc, ensure_ascii=False, indent=1),
+                                            encoding='utf-8')
+        print(f'→ {a.freeze_inventory}')
+        return 0 if not doc['mismatches'] else 3
+    #  ── ② 봉인 단계 — inventory 가 있으면 **그것이 정의역**이다 (뒤에 온 것은 안 들어간다) ──
+    if inv is not None:
+        late = sorted(set(cohort) - set(inv['cases']))
+        if late:
+            print(f'  ⓘ 동결 inventory 에 없는 {len(late)}개는 **수신 마감 뒤**다 → '
+                  f'PENDING_BASELINE: {late[:8]}')
     channels = [c.strip() for c in a.channels.split(',') if c.strip()]
     per_channel = {ch: {} for ch in channels}
+    sigma_old = {ch: {} for ch in channels}
     errors, prov_all = [], {}
     env_seen, calls_all = {}, []
     root = Path(a.webapp).expanduser()
     for case, row in sorted(cohort.items()):
         cdir = root / case
         raw_ok = row.get('status', '') == 'RAW_OK'
+        #  ★ 동결 inventory 가 있으면 **그것이 수신 사실**이다 — 뒤에 도착한 것은 정의역 밖이다.
+        if inv is not None and case not in inv['cases']:
+            raw_ok = False
         if not raw_ok or not cdir.is_dir():
             for ch in per_channel:
                 per_channel[ch][case] = 'PENDING_BASELINE'
@@ -349,20 +522,39 @@ def main(argv=None) -> int:
                 per_channel[ch][case] = 'ERROR'
             errors.append(f'{case}: 지문 불일치 — {why}')
             continue
-        prov_all[case] = prov
+        prov_all[case] = stamp_provenance_sha(prov, root)
+        #  ★ inventory 와 **실제로 읽은 바이트**가 같은가 — 동결 뒤에 파일이 바뀌면 여기서 멈춘다.
+        if inv is not None:
+            _iv = inv['cases'][case]
+            _drift = [f'{k}: 동결 {(_iv.get(k + "_ondisk") or _iv.get(k) or "")[:12]} ≠ '
+                      f'읽은 {(prov_all[case].get(k) or "")[:12]}'
+                      for k in ('atom_sha256', 'contact_sha256', 'deck_sha256')
+                      if (_iv.get(k + '_ondisk') or _iv.get(k) or '')
+                      and (_iv.get(k + '_ondisk') or _iv.get(k)) != prov_all[case].get(k)]
+            if _drift:
+                for ch in per_channel:
+                    per_channel[ch][case] = 'ERROR'
+                errors.append(f'{case}: 동결 inventory 와 원자료가 다르다 — {"; ".join(_drift)}')
+                continue
         for ch in channels:
             try:
                 with _RHO._Recorder(_S0._NC) as rec:
                     _g, sig = _S0._NC.solve_network(nets[ch], mode='full')
                 calls_all.extend(rec.calls)
                 per_channel[ch][case] = classify(True, True, sig)
+                #  ★ `AREA5-03` ⓓ — 분류에 쓴 **그 수치**를 남긴다 (러너가 재현 대상으로 쓴다).
+                try:
+                    sigma_old[ch][case] = float(sig)
+                except (TypeError, ValueError):
+                    sigma_old[ch][case] = None
             except Exception as e:
                 per_channel[ch][case] = 'ERROR'
                 errors.append(f'{case}/{ch}: solve {type(e).__name__} {e}')
     env_seen = _env_from_recorder(calls_all)
     env_seen['scipy'] = scipy.__version__
     env_seen['python'] = sys.version.split()[0]
-    seal = build_seal(per_channel, cohort, env_seen, Path(a.cohort), Path(a.design_csv), git_sha())
+    seal = build_seal(per_channel, cohort, env_seen, Path(a.cohort), Path(a.design_csv), git_sha(),
+                      sigma_old=sigma_old)
     for ch, d in seal['channels'].items():
         print(f"  {ch}: B_ch {d['n_B_ch']} · OLD_ZERO {d['n_OLD_ZERO']} · OLD_NONE {d['n_OLD_NONE']}"
               f" · PENDING {d['n_PENDING_BASELINE']} · 순서자리 {d['median_order_positions_1based']}")
@@ -391,10 +583,18 @@ def main(argv=None) -> int:
         if not prev.exists():
             prev.write_bytes(outp.read_bytes())
         print(f'  ⓘ 기존 봉인을 불변 사본으로 남겼다 → {prev.name}')
-    seal['provenance'] = prov_all            # 무엇을 실제로 읽었는지
+    seal['provenance'] = prov_all            # 무엇을 실제로 읽었는지 (+ 실제 바이트 SHA)
     seal['rogue_ids'] = sorted(rogue)        # 등록 밖 (주 집합에 안 들어간다)
     seal['seal_deadline'] = SEAL_DEADLINE.isoformat()
     seal['sealed_at_kst'] = now.astimezone(KST).isoformat(timespec='seconds')
+    #  ★★ `AREA5-09` — 주입 시각으로 만든 것은 **생산 봉인이 아니다**.  러너가 거부한다.
+    seal['test_only'] = test_only
+    if test_only:
+        seal['test_now_injected'] = a.now
+    if inv is not None:
+        seal['inventory_path'] = str(a.inventory)
+        seal['inventory_frozen_at_kst'] = inv['frozen_at_kst']
+        seal['inventory_n_raw_ok'] = inv['n_raw_ok']
     outp.write_text(json.dumps(seal, ensure_ascii=False, indent=1), encoding='utf-8')
     print(f'→ {a.out}')
     return 0
@@ -615,6 +815,56 @@ def _selftest() -> int:
                   '--out', str(_pout), '--now', _INSIDE])
     chk('⑪g ★ 재봉인은 기존 것을 **조용히 덮지 않고** 불변 사본을 남긴다',
         _rcp2 == 0 and any(p.name.startswith('pos_seal.json.') for p in td.iterdir()))
+    #  ── ⑫ `AREA5-03` — 봉인이 **소비 쪽이 재검증할 수 있는 것**을 들고 나가는가 ──
+    chk('⑫ ★★ 읽은 파일의 **실제 바이트 SHA** 가 봉인에 들어간다 (러너가 이걸로 재검증한다)',
+        _sl.get('provenance', {}).get('lhs00_777', {}).get('atom_sha256') == sha256(_af),
+        str(_sl.get('provenance', {}).get('lhs00_777', {}).get('atom_sha256'))[:16])
+    chk('⑫b ★★ `B_ch` 케이스의 **baseline σ 수치**가 봉인에 들어간다 — 라벨만 적으면 '
+        '"positive 가 다른 positive 로 바뀐 것"을 소비 쪽이 못 잡는다 (AREA5-03 ⓓ)',
+        isinstance(_sl.get('channels', {}).get('ionic', {}).get('sigma_old', {})
+                   .get('lhs00_777'), float),
+        str(_sl.get('channels', {}).get('ionic', {}).get('sigma_old')))
+    chk('⑫c ★ 수치 모듈의 지문 묶음이 봉인에 들어간다 — "HEAD = 기록 SHA" 만으로는 dirty 를 못 잡는다',
+        set((_sl.get('code_bundle') or {}).get('modules', {})) == set(NUMERIC_MODULES),
+        str(sorted((_sl.get('code_bundle') or {}).get('modules', {}))))
+    #  ── ⑬ `AREA5-09` — 시험용 시각으로 만든 산물은 낙인이 찍혀 나간다 ──
+    chk('⑬ ★★ `--now` 로 만든 봉인은 `test_only` 다 (러너가 생산 판정에서 거부한다)',
+        _sl.get('test_only') is True and _sl.get('test_now_injected') == _INSIDE,
+        f"test_only={_sl.get('test_only')}")
+    #  ── ⑭ `AREA5-09` — 수신 동결과 봉인 발행을 가른다 ──
+    _inv = td / 'inv.json'
+    _rci = main(['--webapp', str(_pr), '--cohort', str(_ptsv), '--design-csv', str(_pcsv),
+                 '--freeze-inventory', str(_inv), '--now', '2026-09-17T09:00:00+09:00'])
+    _ivd = json.loads(_inv.read_text(encoding='utf-8')) if _inv.exists() else {}
+    chk('⑭ ★★ 수신 inventory 를 **σ 를 풀지 않고** 동결한다 (cutoff 기준 단계 분리)',
+        _rci == 0 and _ivd.get('n_raw_ok') == 1 and 'lhs00_777' in (_ivd.get('cases') or {}),
+        f"rc={_rci} · n={_ivd.get('n_raw_ok')}")
+    _rcl = main(['--webapp', str(_pr), '--cohort', str(_ptsv), '--design-csv', str(_pcsv),
+                 '--freeze-inventory', str(td / 'late_inv.json'),
+                 '--now', '2026-09-18T09:00:00+09:00'])
+    chk('⑭b ★ 마감 뒤 동결은 거부 — 동결은 마감 **전에** 하는 일이다', _rcl == 2, f'rc={_rcl}')
+    #  ★★ 그리고 **마감 전에 동결해 뒀으면 계산이 마감 뒤에 끝나도 발행된다** (Codex 처방).
+    _late_out = td / 'late_seal.json'
+    _rcs = main(['--webapp', str(_pr), '--cohort', str(_ptsv), '--design-csv', str(_pcsv),
+                 '--out', str(_late_out), '--inventory', str(_inv),
+                 '--now', '2026-09-18T09:00:00+09:00'])
+    _lsl = json.loads(_late_out.read_text(encoding='utf-8')) if _late_out.exists() else {}
+    chk('⑭c ★★ 마감 **전에** 동결한 inventory 가 있으면 계산이 마감 뒤에 끝나도 발행된다 — '
+        '"cutoff 이후에 계산이 끝났다는 이유만으로 cutoff 이전 원자료를 거부하지 않는다"',
+        _rcs == 0 and _lsl.get('inventory_frozen_at_kst', '').startswith('2026-09-17T09:00'),
+        f'rc={_rcs}')
+    #  판별력 — inventory 없이 마감 뒤면 여전히 거부다 (④ 의 규칙이 느슨해진 게 아니다).
+    _rcn = main(['--webapp', str(_pr), '--cohort', str(_ptsv), '--design-csv', str(_pcsv),
+                 '--out', str(td / 'no_inv.json'), '--now', '2026-09-18T09:00:00+09:00'])
+    chk('⑭d ★ 판별력: inventory 없이 마감 뒤면 여전히 rc=2 (창이 느슨해진 것이 아니다)',
+        _rcn == 2 and not (td / 'no_inv.json').exists(), f'rc={_rcn}')
+    #  ★ 동결 뒤 원자료가 바뀌면 봉인이 안 나간다.
+    _af.write_text(_af.read_text(encoding='utf-8') + '\n', encoding='utf-8')
+    _rcm = main(['--webapp', str(_pr), '--cohort', str(_ptsv), '--design-csv', str(_pcsv),
+                 '--out', str(td / 'drift_seal.json'), '--inventory', str(_inv),
+                 '--now', '2026-09-17T20:00:00+09:00'])
+    chk('⑭e ★★ 동결 **뒤에** 원자료가 바뀌면 봉인이 안 나간다 (rc=3)',
+        _rcm == 3 and not (td / 'drift_seal.json').exists(), f'rc={_rcm}')
 
     # ④ 봉인 문서 — 세기만 하고 숫자를 만들지 않는다
     per = {'ion': {'a': IN_DOMAIN, 'b': 'OLD_NONE', 'c': 'PENDING_BASELINE', 'd': IN_DOMAIN}}
