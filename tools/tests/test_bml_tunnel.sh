@@ -126,7 +126,18 @@ if [ -n "$zombie" ]; then
   fi
   started=$SECONDS
   wait_until_alive "http://127.0.0.1:1" 45 "$zombie"
-  check "좀비를 보고 있으면 곧바로 접는다" "$((SECONDS - started))" "0"
+  elapsed=$((SECONDS - started))
+  # 이 시험이 지키는 성질은 **상한(45초)을 안 기다렸다** 이지 "정확히 0초" 가
+  # 아니다.  0 으로 못박아 뒀더니 기계가 바쁜 날 초 경계를 넘어 1 이 찍혔고,
+  # 성질은 지켜졌는데 빨갛게 됐다 (실측 2026-09-15: 단독으로 돌리면 3회 모두
+  # 333/333, `make check` 안에서 돌리면 여기 하나가 실패).  빨간 줄이 이런
+  # 이유로 뜨기 시작하면 다음부터는 아무도 안 본다.
+  #
+  # 실패했을 때 몇 초였는지는 남긴다 — 정말로 상한까지 기다린 날과 초 경계를
+  # 넘은 날이 화면에서 갈려야 한다.
+  check "좀비를 보고 있으면 곧바로 접는다" \
+        "$([ "$elapsed" -le 2 ] && printf '곧바로' || printf '%s초' "$elapsed")" \
+        "곧바로"
   kill "${parent_of_zombie:-0}" 2>/dev/null
   exec 4<&-
 else
