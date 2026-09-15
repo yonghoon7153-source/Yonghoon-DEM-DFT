@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-14T20:36:40Z",
+  "at": "2026-09-15T02:37:10Z",
   "binding": {
     "execution": {
       "env": {
@@ -428,6 +428,9 @@
           ]
         ],
         "startup_history": {
+          "attempted_not_loaded": [
+            "usercustomize"
+          ],
           "modules": {
             "_distutils_hack": "46849a60a7cc8518",
             "encodings": "78c4744d407690f3",
@@ -436,7 +439,7 @@
             "sitecustomize": "e3b0c44298fc1c14"
           },
           "status": "measured",
-          "unfiled": 21
+          "unfiled": 25
         },
         "startup_modules": {
           "_collections_abc": "ec646ef7e27aae26",
@@ -463,14 +466,14 @@
         "version": "3.11.15"
       }
     },
-    "execution_digest": "d194be06fecb9ce90f8280861cdd74654edae1013f5ff3b38d9470bde8071ddd",
-    "expect_digest": "729150dc9d89de22dc0aeb53f7b73121c5ddf319b246583989ca184c5028c67a",
-    "head": "1b4a837064a150ae7119dbb15bd42ada18f85cba",
-    "registry_digest": "eb73be3be3e345c129325ab51c31127382bccab1a81d84079053adca4eeb2e03",
+    "execution_digest": "ae28fefd2e78cc7dda8d9c2bea181995c80afa7cf6b3382f463025ff530a378a",
+    "expect_digest": "5aeae3c4e4f1830433fa900f0ed21ceb670b158ca9efaa54186f3dfc2d87e036",
+    "head": "104448e078208fb1cf288527f563a617f5bb3452",
+    "registry_digest": "666a5842dcff526ca5f425b0547e7f24f741daa1b66c5c70d8aed50e134e344f",
     "reports_dir": "s1",
-    "runner_digest": "c17436928b6f2a8301d8c32a02f0a64e9e0c70d782451e38222315040add948f",
-    "transcript_digest": "510b373cbc8d25eb7219dd116e3f781597e3032205dfdccff713cb8e83d387ce",
-    "tree_digest": "b572d41b13304f22eba281f04cea070519919bd7e41393cba2d415641d909cae"
+    "runner_digest": "d6b8c4bacb90ca79e48b0fbab2eb5ffbe59e9521041c1a4715a5bf50dcce2e79",
+    "transcript_digest": "f000b74e9f9f3e5b2fbac33e47512e05ee0d81e7782d409bbd37be178f761be2",
+    "tree_digest": "17f11c37fde0e77a3d3b0161541f4c099c560d8d369cba8770caa211bff040de"
   },
   "scenarios": {
     "a-caller-supplied-callee-is-refused-g60": {
@@ -478,184 +481,183 @@
       "class": "executable",
       "kexpr": "a_caller_supplied_binding_is_not_a_proof_of_non_namespace",
       "ran": true,
-      "report_sha256": "103b74891a743f69cb6e57acc18738bb8137dec67cecc92e122115e3ad1471ef",
+      "report_sha256": "1dda9ec8953062c53eae0c7a61dafcdd23f2276ceae903e45f20cd298c86a7bd",
       "sites": 1
     },
-    "both-pointers-checked": {
+    "attempted-only-names-are-not-loaded-modules-g63": {
       "bit": true,
       "class": "executable",
-      "kexpr": "pointer_moved_by_another",
+      "kexpr": "an_ordinary_failed_optional_import_keeps_startup_measured",
       "ran": true,
-      "report_sha256": "6f9347f56ce9c2f4b316d9390d79dfb7f46741be7ee6a317868427fbdb2f5554",
+      "report_sha256": "b2902bcadbfaad24c365e1fba1adce509ac1f1c2d5ddd70a7a366eaea3acbc2c",
       "sites": 1
     },
-    "claim-bytes-are-verified-on-disk": {
+    "capability-carries-the-judged-handle-g59": {
       "bit": true,
       "class": "executable",
-      "kexpr": "lying_write_is_caught_by_reading_the_bytes_back",
+      "kexpr": "the_capability_is_bound_to_the_directory_the_gate_judged",
       "ran": true,
-      "report_sha256": "69b3d7813b6975d8ec02d378c4bdf25487d4013efa533d31b4754e785cc0a362",
+      "report_sha256": "f6e0d1f8e0808b9f331f1183b48d55e51f132a5ef1c61abbf95d1028a9099b61",
       "sites": 1
     },
-    "closure-refuses-dynamic-resolution": {
+    "class-body-bindings-are-not-shadows-g62": {
       "bit": true,
       "class": "executable",
-      "kexpr": "dynamic_name_resolution_inside_the_closure_is_fail_closed",
+      "kexpr": "a_class_body_binding_does_not_shadow_a_load_before_it or a_module_compound_statement_binding_does_not_exempt_a_capability",
       "ran": true,
-      "report_sha256": "28bd7e8e4f586fe7af42a25935323319f1a2ccce6d43cc020b57a13e523e9262",
+      "report_sha256": "f16a567a46c92183c800a746be4ab8063e7257befc8a6e11d70b50fe23ac8381",
       "sites": 1
     },
-    "crash-recovery-is-idempotent": {
+    "coverage-checks-the-execution-receipt-g58": {
       "bit": true,
       "class": "executable",
-      "kexpr": "finalize_is_idempotent_after_a_crash_before_cleanup",
+      "kexpr": "the_top_level_checker_consumes_the_execution_receipt",
       "ran": true,
-      "report_sha256": "6e0b171c7aa42c8e0d6e3932edd62678d92f9181e604de3891524172cda8fee7",
+      "report_sha256": "6541114951345df43386ee5e1bcf4d5a269fd5af0c0e634d4423094ae6acaa74",
       "sites": 1
     },
-    "dunder-as-a-string-is-still-a-dunder": {
+    "destination-is-compared-in-filesystem-coordinates": {
       "bit": true,
       "class": "executable",
-      "kexpr": "dunder_named_by_a_string_literal_is_still_a_dunder",
+      "kexpr": "bind_mounted_alias_of_a_frozen_child_is_not_writable",
       "ran": true,
-      "report_sha256": "13d84e69b2366237fe6655287524b5f9b246e64893392c19f7de4299922bda99",
-      "sites": 1
-    },
-    "finalize-requires-the-consumed-binding-g59": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "finalize_refuses_a_later_phase_with_no_recorded_predecessor",
-      "ran": true,
-      "report_sha256": "b82666e4932dd222996ff66635f359be747e1226d21aa17a2ecd5929bf51b311",
-      "sites": 1
-    },
-    "flock-two-publisher": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "two_independent_publishers",
-      "ran": true,
-      "report_sha256": "95992b04ba679e9417dc304d604e3f330e6b1aa2c38aaf833262a50092d3e6bb",
-      "sites": 2
-    },
-    "frozen-destination-is-monotonic": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "later_active_record_cannot_thaw_a_frozen_destination",
-      "ran": true,
-      "report_sha256": "b0af08e7d81e26cf47ed144d8e000ad1653bb4ca5b10ceef556766d3387e65d8",
-      "sites": 2
-    },
-    "grid-merges-inside-the-lock-g62": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "grid_source_releases_the_lock_after_merge_manifest_commit_and_receipt",
-      "ran": true,
-      "report_sha256": "161dc3330f3eb0e3d3bd8709a40bea258ce7e145ca3e62ccd92496e0a1e6c04a",
-      "sites": 1
-    },
-    "issuance-fsync-is-strict-g58": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "issuance_fails_closed_when_a_directory_cannot_be_flushed",
-      "ran": true,
-      "report_sha256": "ad242f3ff0b518e43c21a9859a6d4fd7414b0749c6853b8a3b8f580be390ad8d",
-      "sites": 1
-    },
-    "lifecycle-owned-evidence-is-refused-g58": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "normal_finalize_cannot_forge_the_migration_provenance or lifecycle_owned_evidence_keys_are_refused_from_callers",
-      "ran": true,
-      "report_sha256": "de92616965501b8702896afb7ca14406f440b980eb981faec5b08d350935bcc1",
-      "sites": 1
-    },
-    "module-docstring-is-bound-g60": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "the_module_docstring_is_inside_the_identity",
-      "ran": true,
-      "report_sha256": "0f84f2b0015f057f3e40d94aad5dda1f793afb0537c19dde78411eb456d52245",
-      "sites": 1
-    },
-    "parent-package-import-is-refused-g62": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "importing_the_parent_package_is_refused",
-      "ran": true,
-      "report_sha256": "f9b833605a5a74b4642a3e47fb9315eedebc250ccdfde57f2a73ae68e760cb6a",
-      "sites": 1
-    },
-    "pin-is-publication-authority": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "producer_pin_is_part",
-      "ran": true,
-      "report_sha256": "a8bf1779630e8955de2f560505e474dd33c109d0b76973e60dc277e72166ccff",
-      "sites": 1
-    },
-    "prelock-digest-check": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "wrong_bytes_are_never_locked",
-      "ran": true,
-      "report_sha256": "08a764ef4b3433e3513ad44181efcd1ae37b0b1d656c68bb169e9af48f981c59",
-      "sites": 1
-    },
-    "producer-normalizes-the-node": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "producer_digest_sees_decorators",
-      "ran": true,
-      "report_sha256": "03696be8ed5166e9ad91b851dbad4cd9f9b3f16fcc5727588d3dbcd7dd0ca08b",
+      "report_sha256": "e1e68f5db8e8ff2101d6a0f3080a47f401fbb7316b5bd85eb598fb516fd1dbed",
       "sites": 3
     },
-    "receipt-is-bound-to-the-mutant": {
+    "execution-receipt-binds-the-startup-g58": {
       "bit": true,
       "class": "executable",
-      "kexpr": "receipt_is_bound_to_the_exact_mutant",
+      "kexpr": "the_execution_receipt_binds",
       "ran": true,
-      "report_sha256": "7cf6ad646da74a148e9bbfa2b0c02d8de7ad205ecd15b752c2931885dfbc3347",
+      "report_sha256": "7d98007148e41901cf4bdec4b756078ffc2c8fe94d62c0374d2c66d3ddd21b78",
       "sites": 1
     },
-    "release-returns-the-plan": {
+    "fit-axis-seals-the-smoothing-backend": {
       "bit": true,
       "class": "executable",
-      "kexpr": "released_run_returns_the_plan_to_planned",
+      "kexpr": "effective_smoothing_backend_is_inside_the_approval",
       "ran": true,
-      "report_sha256": "af097b224af58cc4b2ad94b8bbd912c7d1e8862c14f25d9b1f8962f80f4cc131",
+      "report_sha256": "24b9ed5139f810d4fd7ef65abfc032b2b9f830a0bd5e94d0d8da3f4623c11895",
       "sites": 1
     },
-    "run-sig-has-no-staging-pathname-g62": {
+    "freeze-refuses-a-live-execution": {
       "bit": true,
       "class": "executable",
-      "kexpr": "the_same_logical_fit_resumed_keeps_one_run_signature or the_run_spec_does_not_carry_a_staging_pathname",
+      "kexpr": "freeze_refuses_while_an_execution_holds_the_cohort",
       "ran": true,
-      "report_sha256": "77cbdc8b4ac4f33b15f20f1b51aada928a7cd7433392c0c771a4a7c5a35df4bc",
+      "report_sha256": "c69bcd172b0b86a37da4e4a4a7161f653ad7856b445b5a973057845dbe2be470",
       "sites": 1
     },
-    "source-reflection-covers-the-loader-protocol": {
+    "grid-axis-seals-the-discharged-cache": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_cannot_reach_its_own_bytes_through_the_module_loader",
+      "kexpr": "grid_axis_binds_the_discharged_state_cache",
       "ran": true,
-      "report_sha256": "fad8bf07a623bef84475245a5948963ddb0d7cc19c987e5a3ac7f6c853e50b1a",
+      "report_sha256": "168fc33c4a102b66416c8ad36d354a94c37a6184be8e04ed844a263a1aee53e2",
+      "sites": 1
+    },
+    "importable-roots-keep-the-search-order-g61": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "same_named_modules_in_two_roots_are_both_recorded or the_receipt_says_which_root_python_would_import_from",
+      "ran": true,
+      "report_sha256": "ff0526bbae018d269a826e86c2f3c75f014f15b259da5525175caa8edca0ae2b",
+      "sites": 1
+    },
+    "ledger-seals-the-attempt-verifier": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "crash_after_the_claim_unlink_can_still_be_finalized",
+      "ran": true,
+      "report_sha256": "e8ef6a18e5b22f85ba839835a63c93f3cb958a4a600750d3cfa8f157b2d96590",
+      "sites": 1
+    },
+    "module-defs-enter-compound-statements": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "producer_closure_sees_every_module_binding_form",
+      "ran": true,
+      "report_sha256": "0c5bfc593f5cf309a0b1983d3f1b1c29d2184935bcac453713c60788d2bb537a",
+      "sites": 1
+    },
+    "namespace-check-rejects-symlinks": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "symlinked_path_is_not_inside_the_smoke_namespace or namespace_check_is_fail_closed_on_a_symlinked_component",
+      "ran": true,
+      "report_sha256": "ea0ceb69f4cf83c301e396cb04ada24db29679926f0b58c4f8f88eb5aea77959",
+      "sites": 1
+    },
+    "phase-input-binding-needs-a-receipt": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "fit_refuses_when_its_grid_phase_is_missing",
+      "ran": true,
+      "report_sha256": "b04573637f16bb84903f6ea1d91e383017b3082399a01df46a2ea54b462df992",
+      "sites": 1
+    },
+    "planned-status-is-not-standing": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "standing_authorization",
+      "ran": true,
+      "report_sha256": "5ee33430972c7057905adb266d11c13ca980a88c63e5726c94a5df1043f140dd",
+      "sites": 1
+    },
+    "producer-crosses-into-scoring": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "producer_digest_crosses_into_src_scoring",
+      "ran": true,
+      "report_sha256": "b7e0aff6f4a663403b6f02baf72cfef63583ec1af66e0a843a6ca5783c605077",
       "sites": 2
     },
-    "token-path-alias-is-refused": {
+    "proof-handoff-to-verify": {
       "bit": true,
       "class": "executable",
-      "kexpr": "symlinked_token_path_cannot_split_the_attempt_lock",
+      "kexpr": "repaired_proof_is_handed or pre_journal_finalize or journal_seals_the_content",
       "ran": true,
-      "report_sha256": "fe4f9db64e4597c397b3b7593ae2987da39a5753e3c8c59678864cc287e5393c",
+      "report_sha256": "e7d2e6f9f92004aa46e6268241cad8a3470a43c6defae87a0e1cca6220ac1670",
       "sites": 1
     },
-    "wrapped-dunder-names-are-refused": {
+    "records-keep-the-logical-output-g61": {
       "bit": true,
       "class": "executable",
-      "kexpr": "dunder_named_indirectly_is_still_refused",
+      "kexpr": "the_sealed_output_path_exists_after_a_successful_fit or no_durable_record_mentions_a_process_local_handle",
       "ran": true,
-      "report_sha256": "7dc832b96eb3eb836bf20de3e0c707d891c0184b2d34d8a0fbe85d42e81d4c8b",
+      "report_sha256": "513eaba2cf86c7797cb5cd92b5bf4e4943d4eb048fd7c9c9b883a7f25f716790",
+      "sites": 1
+    },
+    "roster-is-a-set": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "ledger_roster_is_a_set_not_a_multiset",
+      "ran": true,
+      "report_sha256": "c3e04ca889f53bc0420ff96783e2e764d9dbbb0ad07334fbb841f5f139bd1075",
+      "sites": 1
+    },
+    "shadows-are-scoped-g60": {
+      "bit": null,
+      "class": "declared",
+      "kexpr": null,
+      "ran": false,
+      "sites": 1
+    },
+    "thaw-is-refused-before-the-first-write": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "publisher_refuses_a_thawed_cohort_before_the_first_write",
+      "ran": true,
+      "report_sha256": "8bb257dd09321ac829ffe503d91b213d3fbb51fdca3d3bf448b38eef5cc020af",
       "sites": 2
+    },
+    "type-params-bounds-are-definition-head-g63": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "scope_walk_covers_the_bound_of_an_ordinary_generic_function or a_type_parameter_bound_is_evaluated_outside_the_parameters",
+      "ran": true,
+      "report_sha256": "5a77ee33352ebfff337eff84711e421685786e07a1f82ca05dced917f1bd53ff",
+      "sites": 1
     }
   },
   "schema": "mutation-coverage/v3",
