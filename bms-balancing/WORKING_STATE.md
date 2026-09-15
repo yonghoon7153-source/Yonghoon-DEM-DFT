@@ -114,8 +114,22 @@ manifest 이름은 `manifest.json` 인데 `preserve_handoff.sh` 가 `package_man
 넓혔다. 모르는 모양·둘 이상 후보·`path`/`sha256` 누락은 **계속 멈춘다**.
 
 **남은 열린 것**: 조건 6(동적 인증) · 조건 8(다섯 축) · `openpyxl` 이 `ENV_KEYS` 에 없음 ·
-r11 `publish:profile_partial_stdout` 대체 증거. 그리고 **실데이터 폭 측정**(`--w-dqdv 0 ↔ 1`)
-— 도구 `scripts/width_report.py` 는 준비됐고 원자료가 사용자 기계에 있어 여기서는 못 돈다.
+r11 `publish:profile_partial_stdout` 대체 증거.
+
+**실데이터 폭 측정(`--w-dqdv 0 ↔ 1`) — 런북이 나왔다 (2026-09-15, `docs/WIDTH_RUN.md`).**
+원자료는 여전히 사용자 기계에 있지만 **배관은 여기서 끝에서 끝까지 돌렸다** — 합성 원자료
+(`matlab/tests/gen_synth_xlsx.py`) 3 사이클로 `fit_cycles --widths` 두 번(`--w-dqdv` 0/1,
+rc 0 · 37.2 s / 104.8 s) → `width_report --axis w_dqdv` rc 0 → `check_rails` rc 0(error 0) →
+`check_u14 --schema-only` rc 0, meta 의 비교 대상 설정 20 개 전부 기록. **가드 셋도 실제로
+물었다** — 같은 축(rc 2) · 엉뚱한 `--axis`(rc 2) · **축 말고 `seed` 도 다른 짝**(rc 2,
+`seed: 0 ↔ 1` 을 지목). 회귀는 이미 `tests/test_widths.py` W-16·W-17·W-18 이다.
+**이 숫자는 합성이라 인용 불가다** — 확인한 것은 배관뿐이고, 정본은 사용자 기계에 생길
+`cycles_HD_knee_Li.csv` + `.meta.json` 이다. 세트는 HD_knee, 두 실행은 `--w-dqdv` **한
+줄만** 다르고 `--seed 0 --scale-seed 0 --starts 20 --width-tol 0.01 --width-starts 4` 는
+양쪽 같다. 먼저 `--cycles 0,1,2` 파일럿으로 벽시계를 재고 본 실행을 정한다 (`cycles` 도
+비교 대상 설정이라 **양쪽에 똑같이** 줘야 한다). 산출은 커밋하지 않는다 — 돌아오는 것은
+`width_report` 출력 전문 · 두 meta 의 `run_id`/`inputs_sha`/`env`/`git` · RAILS·PROMOTION
+줄 · 벽시계 넷이고, 그것이 오면 `BML_R1_RESPONSE.md` §14 로 적는다.
 
 ---
 
