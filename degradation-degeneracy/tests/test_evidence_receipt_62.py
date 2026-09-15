@@ -419,4 +419,7 @@ def test_the_parent_cross_checks_the_customization_bytes(tmp_path, monkeypatch):
 def test_the_real_probe_agrees_with_the_parent_view(tmp_path):
     mr = _mr()
     got = _receipt_in({}, tmp_path)
-    assert got["startup"]["customization"] == mr._parent_customization_view()
+    child, parent = got["startup"]["customization"], mr._parent_customization_view()
+    diff = sorted(k for k in set(child) | set(parent) if child.get(k) != parent.get(k))
+    assert not diff, (   # 증인 문구에 기계별 digest 를 싣지 않는다 (63차 변이 재생)
+        f"child 와 부모의 customization 이 {diff} 에서 다르다 (62차 자체 리뷰 F1)")

@@ -7045,3 +7045,160 @@ wiki lint           0 errors
 이름·token repr·PID 로그·동시 보유자 수)이 들어가 조각마다 달라졌고, 새 층이
 옛 축의 실패 이유를 바꿨다. 61차의 교훈("증인은 접두 대조라 한 글자가 전부")
 에 한 줄이 는다: **증인 문구에는 실행마다 달라지는 값을 넣지 않는다.**
+
+## §77 63차 판정 접수 — **NO-GO**. P1 3건 · P2 1건 · 증거 공백 2건 (2026-09-15)
+
+리뷰어 제목은 "62차 묶음 5 — 방어적 코드·회귀 검토" 이나 이 원장 번호로는
+63차다 (`GATE62_REQUEST.md` 에 대한 답). 검토 head `22e240e` · 판정 대상
+RUN_SCOPE `0dcbc17` · `source_digest fd7c90edbc56ff1f` (리뷰어 실측 일치, 검토
+전후 동일). 리뷰어 환경 WSL Ubuntu · Python 3.12.3 · pytest 9.1.1.
+
+**리뷰어가 스스로 좁힌 범위**: 고정 소스의 방어적 정적 검토 + 선택 회귀 42건
+(41 passed · 1 failed) + 모의 자원 계약 시험 7건 (2 passed · 5 failed). 전체
+pytest · strict smoke · 변이 전수 재생은 **미실행**. 우회·위조·침투 재현물은
+안 만들었다. 새 P0 는 **입증되지 않았다**고 명시했고, AST 순회 공백(E1)과
+lock-lifetime 시험의 증명 범위(E2)는 P0 로 부풀리지 않았다.
+
+### 판정의 한 문장
+
+> 새 기능 결함 P1 3 · P2 1 과 증거 범위 공백 둘, 그리고 §0 의 독립 GO 전제가
+> 남은 상태에서 본 실행을 시작할 근거가 부족하다.
+
+### 발견
+
+| ID | 등급 | 무엇 | 자리 (판정 시점) |
+|---|---|---|---|
+| F1 | P1 | `archive_bundle bundle` 의 두 lock — 둘째 acquire 실패 시 첫 lock 미해제 · 첫 release 예외 시 둘째 미해제 (list comprehension 뒤 try · finally 의 단순 for) | `tools/archive_bundle.py:545,550` · token 의 raw fd `src/io.py:494` |
+| F2 | P1 | 정상 선택적 import 실패(`site` 의 `apport_python_hook` try/except)를 "올렸다 지운 module" 로 오분류 → 기본 Ubuntu 환경이 `startup_history.status == "failed"` (기존 시험 `test_the_importtime_header_line_is_not_a_module` 실패) | `mutation_replay.py:5100,5140` |
+| F3 | P1 | 부모의 customization 탐색이 `이름.py` 만 보고 **package**(`sitecustomize/__init__.py`)를 안 본다 → Python resolver 와 다른 digest → 정상 환경을 불일치로 거부 | `mutation_replay.py:5392,5407` |
+| F4 | P2 | `_HEX16` 검사가 `re.match` + `$` 라 후행 LF 가 붙은 17자를 통과 | `mutation_replay.py:5555,5610` |
+| E1 | 공백 | 3.12 generic 함수의 `type_params` bound 를 scoped walker 가 방문하지 않는다 (identity 불변·출력 변화는 **미입증**, production 에 별도 `ast.walk` 검사가 있어 P0 로 안 셈) | `row_projection.py:1539,1565` |
+| E2 | 공백 | lock-lifetime 시험의 `_lock_held` 가 경로 exists 만 보고, tmp_path 가 smoke namespace 라 claim=None → `_record_phase` 즉시 return → "receipt 까지 held" 가 실제 planned phase 기록 + 커널 배타 관측이 아니다 | `tests/test_lock_lifetime_62.py:87` · `tests/conftest.py:134` · `src/fitting.py:884,502` |
+
+### 접수 16개 조건의 리뷰어 상태
+
+제한 확인 6 (P0-4 · P0-5 · P1-2 · P1-5 · P1-6 · P2-2) · 부분 8 (P0-1 · P0-2 ·
+P0-3 · P0-6 · P0-7 · P0-8 · P1-1 · P1-3) · **안 닫힘 2** (P1-4 ← F2 · P2-1 ← F4).
+"부분" 은 코드 확인은 됐으나 전수 재현·전체 실행을 리뷰어가 안 한 것이고,
+"안 닫힘" 둘은 이번 F2·F4 가 같은 축을 다시 연 것이다.
+
+### 리뷰어가 새 발견으로 세지 않은 것
+
+- §0 의 독립 GO 전제(producer 결속 · trusted launcher 측정 · typed 보존 영수증
+  소비 · 독립 replay)는 그대로 남는다 — "신고했다고 종결되는 항목이 아니다".
+- coverage 등록부 정적 대조: MUTANTS 235 · MULTI 31 · EXPECT 256 ·
+  DECLARED_MASKED 11 · 12조각 합집합 266 (누락·중복 0). **재생 성공 증명은
+  아니다** (255 executable 의 `ran=true` 는 제출자 기록값).
+- 문서 정정: 요청문 머리의 "신고 5건" 과 본문 ①–⑦ 이 다르다 (7건이 맞다).
+  P2 로 세지 않았다 — 다음 요청문에서 고친다.
+- §4 pyDMA·BML 연구 주장 · COMSOL 결과 · 불량셀 ML 은 판정 범위 밖.
+
+### 재심 조건 (리뷰어 문장 그대로)
+
+1. F1: 부분 취득과 cleanup 예외에서도 모든 취득 자원 정리 · 원래 오류 보존.
+2. F2: 정상 선택적 import 실패와 확인 불가능한 로드 이력을 정확히 구분하는
+   측정 (`apport` 이름 하나 예외 추가로는 종결 안 함).
+3. F3: 부모·child 의 정상 모듈/패키지 탐색 일치.
+4. F4: digest scalar 전체 길이·문자 집합 강제.
+5. E1/E2: 지원 문법의 scope conformance 와 실제 planned phase/커널 잠금 증거
+   보강. 현재 관측을 넘어선 P0 단정은 하지 말 것.
+6. §0 독립 GO 전제를 구현·입증하고 고정 커밋에서 전 과정·환경별 회귀 완주.
+
+대응은 §78. 진행 상태의 정본은 `docs/GATE63_WORKING_STATE.md`.
+
+## §78 63차 대응 — **F1~F4 · E1 · E2 전부 닫음** (2026-09-15)
+
+대상 커밋은 마감 절에 적는다. 좌표·RED 관측·실측 수치의 정본은
+`docs/GATE63_WORKING_STATE.md`. 여기는 **왜 그렇게 고쳤는가**다. 리뷰어의 재현
+시험 7건은 `tests/test_gate63_defensive.py` 에 경로만 바꿔 **그대로** 고정했고,
+RED 를 먼저 봤다 (10 failed · 12 passed — 실패 10 이 곧 F1×3 · F3 · F4 · F2×2 ·
+E1×2 · E2 다).
+
+### θ (F1) — 자원은 취득 즉시 정리 대상이다 · `tools/archive_bundle.py`
+
+62차 ζ′ 는 두 lock 을 list comprehension 으로 **다 얻은 뒤에야** try 에 들어갔고,
+finally 의 단순 for 는 첫 release 예외에서 멈췄다. 리뷰어의 두 정상 오류 상태:
+둘째 acquire 가 "사용 중" 이면 첫 lock 이 안 풀리고(release 목록 빈 배열), 첫
+release 가 OSError 면 둘째가 안 풀린다. token 이 raw fd 를 들고 있으므로 객체가
+사라진다고 커널 lock 이 풀리지 않는다 — 프로세스가 살아 있는 한 다음 시도를 막는다.
+
+`[고침]` `_bundle_under_run_locks(run_dir, names, acquire, body)`: 하나씩 잡으며
+목록에 넣고, 본문 뒤 **전부** 놓는다. 부분 취득 실패 → 얻은 것을 놓고 그 오류를
+올린다. 정리 예외 → 나머지도 시도하고 **첫** 정리 오류를 올린다. 본문 예외 →
+정리를 시도하되 원래 오류를 올리고 정리 오류는 `add_note` 로 붙인다 (덮지
+않는다). 해제 순서는 취득 순서다 — 리뷰어 시험이 그 순서를 관측한다. ExitStack
+과 같은 모양이되 순서만 다르다.
+
+62차 축 둘(`promotion-checks-derived-freshness-g62` · `promotion-holds-the-run-locks-g62`)
+의 preimage 가 이 refactor 로 **죽었다** (`--check-preimages` 가 잡았다) → 새 코드
+자리로 재조준. 새 축 2 (`archive-releases-the-first-lock-when-the-second-fails-g63` ·
+`archive-cleanup-tries-every-lock-g63`).
+
+### ι (F2 · F3 · F4) — 증거 영수증 · `docs/22p_gap/mutation_replay.py`
+
+**F2.** `-X importtime` 은 **시도** 전부를 찍는다 — `site` 계열의
+`try: import apport_python_hook / except ImportError: pass` 처럼 실패한 선택적
+import 도 한 줄 남긴다. 62차 P1-4 는 그 이름을 "성공한 로드" 로 읽고, 지금
+`find_spec → None` 이면 "올렸다 지운 module" 로 단정했다. 그래서 기본 Ubuntu
+가 `startup_history: failed` 였다 (리뷰어 실측 `apport_loaded=false`). 리뷰어
+조건: 이름 하나를 예외에 넣는 수정으로 종결하지 말 것.
+
+`[고침]` 손자를 `-X importtime -v` 로 띄운다. `-v` 의 `import 'X' # <loader>`
+줄은 **성공한 로드만** 찍는다 — 이 저장소에서 실측했다 (실패한 선택적 import:
+importtime 줄 있음 · `-v` 줄 없음). 이름마다 셋 중 하나다: `-v` 가 로드 →
+지금 찾아 해시, 못 찾으면 **failed**(올렸다 지움 — 62차 자체 리뷰 F2 의 성질
+유지) · importtime 에만 → `attempted_not_loaded` 에 이름을 남기고 measured ·
+`-v` 는 로드인데 `customization` 은 `<absent>` → 어긋난 증거, failed. 목록은
+schema 의 필드라 digest 에 묶인다 (세탁이 아니라 기록이다). 대조군 셋:
+정상 선택적 import 실패 → measured · `sys.modules` 에서만 지운 module → 파일이
+남아 measured · 파일까지 지운 module → failed.
+
+**F3.** 부모의 customization 탐색이 각 root 의 `이름.py` 만 봤다. 앞 root 에
+정상 package `sitecustomize/__init__.py` 를 두면 Python 은 그것을 찾는데 부모는
+뒤 root 의 시스템 파일 digest 를 돌려줘 **정상 환경을 불일치로 거부**했다.
+`[고침]` 같은 순서의 path 목록을 `importlib.machinery.PathFinder.find_spec` 에
+준다 — `.py` · package · 앞/뒤 root 가 child 와 같은 규칙이다. namespace
+package(origin 없음)는 `<absent>`, 파일 아닌 origin 은 loader 에게 바이트를 묻고
+못 주면 **거부**. 대조군: 앞 root `.py` 와 뒤 root package → 앞 것.
+
+**F4.** `re.match` + `$` 는 마지막 개행 앞에도 맞는다 (Python `re` 의 명시 규칙).
+`[고침]` `fullmatch`. 후행 LF · CRLF · 공백 · 대문자 · 15/17자 전부 거부.
+
+### κ (E1 · E2) — 증거 공백
+
+**E1.** 3.12 `type_params` 의 bound 를 `_definition_head` 가 열거하지 않았다.
+`[고침]` bound(3.12) · default_value(3.13) 를 head 에 더한다. bound 는 별도
+annotation scope 에서 지연 평가되고 함수 매개변수를 **못 본다** — 매개변수 shadow
+를 안 적용하는 head 자리가 맞다. type parameter 이름 자체는 shadow 로 세지 않는다
+(안 세면 거부 쪽으로 기운다 — fail-closed). 3.11 컨테이너라 시험은 합성 AST
+(`type_params` 속성 + `ast.Name` bound)와 3.12 실제 파싱 두 경로를 둔다.
+**부수 발견**: 첫 수정판이 `getattr(tp, attr, None)` 로 이름을 **계산해서**
+건넸고, 분석기가 자기 producer 닫힘을 분석하다가 자기 규칙(계산된 이름 금지)에
+걸려 `test_scope_model_62` 6건이 빨개졌다 — 리터럴 이름 둘로 풀었다. 규칙이
+자기 자신에게도 걸린다는 것을 실측한 셈이다.
+
+**E2.** 62차 시험은 경로 exists 를 봤고, gated tmp_path 가 smoke namespace 라
+claim=None → `_record_phase` 즉시 return 이었다. `[고침]` smoke 밖·저장소 안
+(`results/_unit63-*`)에서 **production 과 같은 모양**의 planned lifecycle:
+계획 원장 → grid 가 `may_open` 으로 발급받아 **진짜 solver** 로 조건 1개(2.6 s)
+를 돌리고 phase 를 닫음 → fit 이 token 파일로 같은 claim 을 이어받아 compute →
+commit → `claim.phase_done("fit")` durable 기록 → release. 관측: phase 기록이
+쓰이는 순간 `.fit.lock` 을 **따로 열어 flock** 하면 BlockingIOError (커널의 답),
+기록 직후 claim 파일에 `phases.fit` 이 있고, release 시점에도 있다. 탐침의
+대조군(잡으면 True · 놓으면 False)을 별도 시험으로 뒀다. 진짜 producer 는 git
+상태를 적고 fit 의 producer 검증(F74/F85)이 dirty worktree 곡선을 거부하므로
+이 시험은 **dirty 면 skip** — smoke 와 같은 "clean 커밋에서만" 규칙이고 위조하지
+않는다.
+
+**부수 발견 (§0 ⑦ 재확인)**: E2 의 첫 판을 저장소 **밖** tempdir 에 뒀더니
+`_stage_fit_inputs` 가 `shutil.SameFileError` 로 죽었다 — `canonical_input_key`
+가 밖의 절대 경로를 그대로 돌려줘 `stage / 절대경로` 가 원본 자신이 된다.
+62차 §0 ⑦ 신고 그대로다. **고치지 않고** strict xfail 로 고정했다
+(`test_staging_an_input_outside_the_repo_is_still_unsupported`) — 고쳐지면
+XPASS 로 빨개져 신고를 내리게 만든다. 63차 요청문 §0 에 그대로 신고한다.
+
+### 문서 정정
+
+62차 요청문 머리의 "신고 5건" 은 본문 ①–⑦ 과 달랐다 — 63차 요청문은 **7건**.
+
+### 마감 — 실측은 `GATE63_WORKING_STATE.md` 의 마감 절

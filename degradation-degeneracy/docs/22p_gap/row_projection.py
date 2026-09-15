@@ -1541,6 +1541,15 @@ def _definition_head(node) -> list:
 
     함수·lambda: default · kw_default · annotation · returns · decorator.
     class: decorator · bases · keywords. 그 밖의 node 는 head 가 없다.
+
+    ★ 63차 E1 — 3.12 의 `type_params` (`def f[T: int]` · `class C[T: int]`) 가
+      갖는 **bound · default** 도 head 다. 리뷰어 실측: `TypeVar.bound` 의 `int`
+      node 를 scoped walker 가 방문하지 않았다. Python 은 bound 를 별도 annotation
+      scope 에서 **지연** 평가하고 그 scope 는 함수 매개변수를 못 본다 — 그러므로
+      매개변수 shadow 를 적용하지 않는 head 자리가 맞다. type parameter **이름**
+      자체(`T`)는 shadow 로 세지 않는다 — 세지 않으면 그 이름의 능력 load 를
+      builtin 으로 읽어 **거부 쪽**으로 기운다 (fail-closed). 3.11 이하에는 이
+      속성이 없어 `getattr(..., ())` 로 읽는다.
     """
     import ast
 
@@ -1559,6 +1568,16 @@ def _definition_head(node) -> list:
     elif isinstance(node, ast.ClassDef):
         head += list(node.decorator_list) + list(node.bases)
         head += [k.value for k in node.keywords]
+    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+        # 이름은 **리터럴**로 건넨다 — 이 파일은 자기 producer 닫힘의 일부라
+        # `getattr(x, name_var)` 는 자기 규칙(계산된 이름 금지)에 걸린다.
+        for tp in getattr(node, "type_params", ()) or ():
+            bound = getattr(tp, "bound", None)                # 3.12
+            if bound is not None:
+                head.append(bound)
+            default = getattr(tp, "default_value", None)      # 3.13
+            if default is not None:
+                head.append(default)
     return head
 
 

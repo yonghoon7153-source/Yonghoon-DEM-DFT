@@ -1434,11 +1434,12 @@ MUTANTS = [
     # ── ζ′ 승격 primitive (P0-8) ──
     ("promotion-checks-derived-freshness-g62", ARCHIVE,              # P0-8
      # 옛 코드 그대로 — smoke 판정만 하고 freshness 는 wrapper 에 맡긴다.
+     # (63차 F1 재조준: 본문이 `_body()` 안으로 들어갔다 — 판정 문장은 같다)
      '            assert_promotable([a.run_dir], "보관 묶음", dest=a.out_dir)\n'
-     "            res = bundle(a.run_dir, a.out_dir)",
+     "            return bundle(a.run_dir, a.out_dir)",
      "            from tools.preserve import assert_not_smoke_provenance\n"
      '            assert_not_smoke_provenance([a.run_dir], "보관 묶음", dest=a.out_dir)\n'
-     "            res = bundle(a.run_dir, a.out_dir)",
+     "            return bundle(a.run_dir, a.out_dir)",
      "direct_bundle_refuses_a_stale_derived_artifact or "
      "the_promotion_primitive_is_one_function"),
     # ── δ′ producer scope (P0-6 · P0-7) ──
@@ -1520,9 +1521,9 @@ MUTANTS = [
      "grid_failure_before_the_lock_discards_the_capability or "
      "grid_refused_by_a_live_lock_holder_discards_the_capability"),
     ("promotion-holds-the-run-locks-g62", ARCHIVE,                   # TOCTOU F2
-     "        toks = [acquire_run_lock(a.run_dir, name)\n"
-     '                for name in (".fit.lock", ".run.lock")]',
-     "        toks = []",
+     # (63차 F1 재조준: lock 이름 tuple 을 비우면 아무 lock 도 안 잡는다)
+     '        res = _bundle_under_run_locks(a.run_dir, (".fit.lock", ".run.lock"),',
+     "        res = _bundle_under_run_locks(a.run_dir, (),",
      "direct_bundle_holds_the_run_locks_while_copying"),
     ("class-body-bindings-are-not-shadows-g62", RP,                  # sig F3
      "    if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):\n"
@@ -1590,6 +1591,45 @@ MUTANTS = [
     ("importable-roots-are-measured-g60", MR,                        # P1-4
      '            \u0022importable_root\u0073\u0022: reachable,\n', "",
      "a_module_imported_after_startup_is_inside_the_receipt"),
+
+    # ══ 63차 θ·ι·κ — 자원 정리 · 증거 3분 모델 · PathFinder · fullmatch · type_params ══
+    #   리뷰어 반례가 전부 정상 오류 상태·정상 입력이므로 축도 "옛 규칙으로
+    #   되돌리면 증인이 빨갛다" 모양이다. MR 자기 변이는 철자를 escape 한다.
+    ("archive-releases-the-first-lock-when-the-second-fails-g63", ARCHIVE,   # F1
+     "    except BaseException as body_err:\n        try:\n            _release_all()",
+     "    except BaseException as body_err:\n        try:\n            pass",
+     "partial_archive_acquisition_releases_prior_mock_resource or "
+     "archive_body_error_survives_a_cleanup_error"),
+    ("archive-cleanup-tries-every-lock-g63", ARCHIVE,                        # F1
+     "                if first_err is None:\n                    first_err = exc",
+     "                raise",
+     "archive_cleanup_attempts_every_mock_release"),
+    ("startup-history-runs-verbose-imports-g63", MR,                         # F2
+     '            _r = _sp.run([_py, "-X", "importtime", "-\u0076", *_extra, "-c", "pass"],',
+     '            _r = _sp.run([_py, "-X", "importtime", *_extra, "-c", "pass"],',
+     "an_ordinary_failed_optional_import_keeps_startup_measured"),
+    ("attempted-only-names-are-not-loaded-modules-g63", MR,                  # F2
+     '            if _nm not in _\u006coaded:\n                _attempt_only.append(_nm)',
+     '            if False:\n                _attempt_only.append(_nm)',
+     "an_ordinary_failed_optional_import_keeps_startup_measured"),
+    ("attempted-list-is-inside-the-receipt-g63", MR,                         # F2
+     '                            "\u0075nfiled": int, "attempted_not_loaded": _Seq(str)},',
+     '                            "unfiled": int},',
+     "the_schema_carries_the_attempted_list or a_full_receipt_matches_the_schema"),
+    ("parent-customization-uses-the-path-finder-g63", MR,                    # F3
+     '        spec = _\u0050F.find_spec(n, dirs)',
+     '        spec = None',
+     "parent_customization_lookup_supports_a_normal_package or "
+     "the_real_probe_agrees_with_the_parent_view"),
+    ("hex16-is-a-fullmatch-g63", MR,                                         # F4
+     '        return None i\u0066 (isinstance(value, str) and schema.fullmatch(value)) else',
+     '        return None if (isinstance(value, str) and schema.match(value)) else',
+     "hex16_scalar_does_not_accept_a_trailing_newline"),
+    ("type-params-bounds-are-definition-head-g63", RP,                       # E1
+     '        for tp in getattr(node, "type_params", ()) or ():',
+     '        for tp in ():',
+     "scope_walk_covers_the_bound_of_an_ordinary_generic_function or "
+     "a_type_parameter_bound_is_evaluated_outside_the_parameters"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
@@ -4808,6 +4848,91 @@ EXPECT: dict = {
                 "AssertionError: {'reason': '이름은 받았는데 해시한 파일이 하나도 없다', 'status': 'failed'}",
         }
     },
+    # ══ 63차 θ·ι·κ — 전부 `--emit-expect` 관측값 (증인 문구는 기계 독립: 개수·repr·digest 없음) ══
+    "archive-cleanup-tries-every-lock-g63": {
+        "fail": [
+            "tests/test_gate63_defensive.py::test_archive_cleanup_attempts_every_mock_release",
+        ],
+        "witness": {
+            "tests/test_gate63_defensive.py::test_archive_cleanup_attempts_every_mock_release":
+                "AssertionError: a cleanup exception prevented release of the second resource",
+        }
+    },
+    "archive-releases-the-first-lock-when-the-second-fails-g63": {
+        "fail": [
+            "tests/test_gate63_defensive.py::test_archive_body_error_survives_a_cleanup_error",
+            "tests/test_gate63_defensive.py::test_partial_archive_acquisition_releases_prior_mock_resource",
+        ],
+        "witness": {
+            "tests/test_gate63_defensive.py::test_archive_body_error_survives_a_cleanup_error":
+                "AssertionError: 본문 오류 뒤 정리가 0개만 시도됐다 (기대 2) — 63차 F1",
+            "tests/test_gate63_defensive.py::test_partial_archive_acquisition_releases_prior_mock_resource":
+                "AssertionError: first acquired resource was not released after second acquisition failed",
+        }
+    },
+    "attempted-list-is-inside-the-receipt-g63": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_a_full_receipt_matches_the_schema",
+            "tests/test_gate63_defensive.py::test_the_schema_carries_the_attempted_list",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_a_full_receipt_matches_the_schema":
+                "mutation_replay._ReplayError: 환경 영수증이 **불완전**하다 — schema 에 안 맞는다: receipt.startup.startup_history: 키 집합이 다르다 (모르는 키 ['attempted_not_loaded'] · 없는 키 []) . `status` 만 measured 인 본문은 측정이 아니다 (62차 P2-1)",
+            "tests/test_gate63_defensive.py::test_the_schema_carries_the_attempted_list":
+                "mutation_replay._ReplayError: 환경 영수증이 **불완전**하다 — schema 에 안 맞는다: receipt.startup.startup_history: 키 집합이 다르다 (모르는 키 ['attempted_not_loaded'] · 없는 키 []) . `status` 만 measured 인 본문은 측정이 아니다 (62차 P2-1)",
+        }
+    },
+    "attempted-only-names-are-not-loaded-modules-g63": {
+        "fail": [
+            "tests/test_gate63_defensive.py::test_an_ordinary_failed_optional_import_keeps_startup_measured",
+        ],
+        "witness": {
+            "tests/test_gate63_defensive.py::test_an_ordinary_failed_optional_import_keeps_startup_measured":
+                "AssertionError: {'reason': 'startup 이 올린 module nope_optional_63 을 지금 찾을 수 없다 — 올렸다 지운 module 은 잴 수 없다', 'status': 'failed'}",
+        }
+    },
+    "hex16-is-a-fullmatch-g63": {
+        "fail": [
+            "tests/test_gate63_defensive.py::test_hex16_scalar_does_not_accept_a_trailing_newline",
+        ],
+        "witness": {
+            "tests/test_gate63_defensive.py::test_hex16_scalar_does_not_accept_a_trailing_newline":
+                "AssertionError: hex16 scalar validator accepted a 17-character string",
+        }
+    },
+    "parent-customization-uses-the-path-finder-g63": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_the_real_probe_agrees_with_the_parent_view",
+            "tests/test_gate63_defensive.py::test_parent_customization_lookup_supports_a_normal_package",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_the_real_probe_agrees_with_the_parent_view":
+                "AssertionError: child 와 부모의 customization 이 ['sitecustomize'] 에서 다르다 (62차 자체 리뷰 F1)",
+            "tests/test_gate63_defensive.py::test_parent_customization_lookup_supports_a_normal_package":
+                "AssertionError: parent lookup disagrees with Python on an ordinary package",
+        }
+    },
+    "startup-history-runs-verbose-imports-g63": {
+        "fail": [
+            "tests/test_gate63_defensive.py::test_an_ordinary_failed_optional_import_keeps_startup_measured",
+        ],
+        "witness": {
+            "tests/test_gate63_defensive.py::test_an_ordinary_failed_optional_import_keeps_startup_measured":
+                "AssertionError: {'reason': '손자 로그에서 module 이름을 해석하지 못했다 (importtime 줄 있음 · -v 줄 없음)', 'status': 'failed'}",
+        }
+    },
+    "type-params-bounds-are-definition-head-g63": {
+        "fail": [
+            "tests/test_gate63_defensive.py::test_a_type_parameter_bound_is_evaluated_outside_the_parameters",
+            "tests/test_gate63_defensive.py::test_scope_walk_covers_the_bound_of_an_ordinary_generic_function",
+        ],
+        "witness": {
+            "tests/test_gate63_defensive.py::test_a_type_parameter_bound_is_evaluated_outside_the_parameters":
+                "AssertionError: bound node 를 walker 가 방문하지 않았다 (63차 E1)",
+            "tests/test_gate63_defensive.py::test_scope_walk_covers_the_bound_of_an_ordinary_generic_function":
+                "AssertionError: type parameter bound was omitted by the scoped traversal",
+        }
+    },
 }
 
 
@@ -5090,6 +5215,25 @@ def _env_facts_measured(NAMES):
     #
     #   파일이 없는 builtin/frozen 은 **실패가 아니다.** 그것을 실패로 세면
     #   영수증이 언제나 실패가 되어 층이 마비된다. 따로 센다(`unfiled`).
+    # ★ 63차 F2 — **증거를 셋으로 가른다: 시도 · 성공 · 확인 불가.**
+    #   62차 판은 `-X importtime` 의 이름 목록을 "성공한 import" 로 읽었다. 그런데
+    #   importtime 은 **시도** 전부를 찍는다 — `site` 계열 코드의
+    #   `try: import apport_python_hook / except ImportError: pass` 처럼 실패한
+    #   선택적 import 도 한 줄 남긴다. 그 이름은 지금 `find_spec → None` 이므로
+    #   "올렸다 지운 module" 로 오분류돼 기본 Ubuntu 환경이 `failed` 였다 (리뷰어
+    #   실측: `apport_loaded=false` 인데 importtime 에 이름 존재). 이름 하나를
+    #   예외 목록에 넣는 수정은 안 한다 — 다음 선택적 import 가 또 밖이다.
+    #
+    #   그래서 손자를 `-X importtime -v` 로 띄운다. `-v` 의 `import 'X' # <loader>`
+    #   줄은 **성공한 로드만** 찍는다 (이 저장소 실측: 실패한 선택적 import 는
+    #   importtime 줄은 있고 `-v` 줄은 없다). 이름마다:
+    #     · `-v` 가 로드했다 → 지금 찾아 해시한다. 못 찾으면 **failed** (올렸다
+    #       지운 module — 62차 자체 리뷰 F2 의 성질 그대로).
+    #     · importtime 에만 있다 → **시도만 한 이름**. `attempted_not_loaded` 에
+    #       이름을 남기고 measured 를 유지한다 (목록은 영수증 안이라 digest 에
+    #       묶인다 — 세탁이 아니라 기록이다).
+    #     · `-v` 는 로드인데 `customization` 은 `<absent>` → 서로 어긋난 증거 →
+    #       failed.
     def _measure_history():
         try:
             import subprocess as _sp
@@ -5097,7 +5241,7 @@ def _env_facts_measured(NAMES):
             _py = os.environ.get("DD_HISTORY_PROBE_PYTHON") or sys.executable
             _extra = [x for x in
                       os.environ.get("DD_HISTORY_PROBE_ARGS", "").split() if x]
-            _r = _sp.run([_py, "-X", "importtime", *_extra, "-c", "pass"],
+            _r = _sp.run([_py, "-X", "importtime", "-v", *_extra, "-c", "pass"],
                          capture_output=True, text=True, timeout=120)
         except Exception as _exc:                        # noqa: BLE001
             return {"status": "failed", "reason": f"손자를 못 띄웠다: {_exc!r}"}
@@ -5105,29 +5249,42 @@ def _env_facts_measured(NAMES):
             return {"status": "failed",
                     "reason": f"손자가 rc={_r.returncode} 로 끝났다: "
                               f"{(_r.stderr or '')[-200:]}"}
-        _names = set()
+        import re as _re
+
+        _attempted, _loaded = set(), set()
+        _vline = _re.compile(r"^import '?([A-Za-z0-9_.]+)'? # ")
         for _ln in (_r.stderr or "").splitlines():
-            # ★ 62차 자체 리뷰 (영수증 F2) — 자료 줄만 받는다. 헤더 줄
-            #   `import time: self [us] | cumulative | imported package` 는
-            #   첫 칸이 숫자가 아니다. 예전 판은 `imported package` 를 module
-            #   이름으로 받아 `find_spec → None` 을 `unfiled` 로 셌고, 그 경로가
-            #   올렸다 **지운** module 도 같이 삼켰다.
-            if not _ln.startswith("import time:") or _ln.count("|") != 2:
+            # 자료 줄만 받는다 — 헤더 `import time: self [us] | cumulative |
+            #   imported package` 는 첫 칸이 숫자가 아니다 (62차 자체 리뷰 F2).
+            if _ln.startswith("import time:") and _ln.count("|") == 2:
+                _self, _cum, _nm_ = (x.strip() for x in
+                                     _ln[len("import time:"):].split("|"))
+                if _self.isdigit() and _cum.isdigit() and _nm_:
+                    _attempted.add(_nm_)
                 continue
-            _self, _cum, _nm_ = (x.strip() for x in _ln[len("import time:"):]
-                                 .split("|"))
-            if not (_self.isdigit() and _cum.isdigit()):
-                continue
-            _names.add(_nm_)
-        _names = {n for n in _names if n}
-        if not _names:
+            _m = _vline.match(_ln)
+            if _m:
+                _loaded.add(_m.group(1))
+        if not _attempted or not _loaded:
+            # 이유 문구에 개수를 싣지 않는다 — 기계마다 startup module 수가
+            # 달라 변이 재생의 증인 문구가 흔들린다 (63차 실측: 27).
             return {"status": "failed",
-                    "reason": "importtime 로그에서 module 이름을 하나도 "
-                              "해석하지 못했다"}
+                    "reason": "손자 로그에서 module 이름을 해석하지 못했다 "
+                              "(importtime 줄 %s · -v 줄 %s)"
+                              % ("있음" if _attempted else "없음",
+                                 "있음" if _loaded else "없음")}
         from importlib import util as _u
 
-        _mods, _unfiled = {}, 0
-        for _nm in sorted(_names):
+        _mods, _unfiled, _attempt_only = {}, 0, []
+        for _nm in sorted(_attempted | _loaded):
+            if _nm not in _loaded:
+                _attempt_only.append(_nm)          # 시도만 — 올라온 적이 없다
+                continue
+            if _nm in ("sitecustomize", "usercustomize") \
+                    and cust.get(_nm) == "<absent>":
+                return {"status": "failed",
+                        "reason": "손자는 %s 을 올렸다는데 customization 은 "
+                                  "<absent> 다 — 어긋난 증거" % _nm}
             try:
                 _sp_ = _u.find_spec(_nm)
             except (ImportError, ValueError, AttributeError) as _exc:
@@ -5138,15 +5295,10 @@ def _env_facts_measured(NAMES):
                                   % (_nm, _exc)}
             _o = getattr(_sp_, "origin", None) if _sp_ is not None else None
             if _sp_ is None:
-                # ★ 62차 자체 리뷰 (영수증 F2) — startup 이 올린 이름을 지금 못
-                #   찾으면 그것은 "파일 없는 정상" 이 아니라 **올렸다 지운**
-                #   module 이다 (리뷰 실측: 미측정 파일을 import 해 값을 남기고
-                #   sys.modules·파일을 지우면 digest 가 안 움직였다). 유일한
-                #   정상 사례는 `site` 가 시도만 하고 실패한 customize import 다.
-                if _nm in ("sitecustomize", "usercustomize") \
-                        and cust.get(_nm) == "<absent>":
-                    _unfiled += 1
-                    continue
+                # ★ 62차 자체 리뷰 (영수증 F2) — `-v` 가 로드를 증언한 이름을
+                #   지금 못 찾으면 **올렸다 지운** module 이다 (실측: 미측정
+                #   파일을 import 해 값을 남기고 sys.modules·파일을 지우면 digest
+                #   가 안 움직였다). 잴 수 없다.
                 return {"status": "failed",
                         "reason": "startup 이 올린 module %s 을 지금 찾을 수 "
                                   "없다 — 올렸다 지운 module 은 잴 수 없다" % _nm}
@@ -5161,7 +5313,8 @@ def _env_facts_measured(NAMES):
         if not _mods:
             return {"status": "failed",
                     "reason": "이름은 받았는데 해시한 파일이 하나도 없다"}
-        return {"status": "measured", "modules": _mods, "unfiled": _unfiled}
+        return {"status": "measured", "modules": _mods, "unfiled": _unfiled,
+                "attempted_not_loaded": _attempt_only}
 
     history = _measure_history()
 
@@ -5389,18 +5542,40 @@ def _parent_customization_view() -> dict:
                 h.update(c)
         return h.hexdigest()[:16]
 
+    # ★ 63차 F3 — 탐색은 **Python 의 resolver 로** 한다. 62차 판은 각 root 의
+    #   `이름.py` 만 봤고 package(`이름/__init__.py`)를 안 봤다 — 앞 root 에
+    #   정상 package 를 두면 `PathFinder` 는 그것을 찾는데 부모는 뒤 root 의
+    #   시스템 `sitecustomize.py` digest 를 돌려줘 정상 환경을 불일치로 거부했다
+    #   (리뷰어 실측: package `2f10edcf…` vs 부모 `43d81125…`). 같은 순서의
+    #   path 목록을 `PathFinder.find_spec` 에 주면 `.py` · package · 앞/뒤 root
+    #   전부 child 와 같은 규칙이다. namespace package(origin 없음)는 실행할
+    #   코드가 없으므로 child 의 `__file__ None` 과 같이 `<absent>` 다. 파일이
+    #   아닌 origin(zip) 은 loader 에게 바이트를 묻고, 못 주면 지원하지 않는
+    #   loader 로 **거부**한다 — 모르는 것을 `<absent>` 로 적지 않는다.
+    import importlib
+    from importlib.machinery import PathFinder as _PF
+
     env = replay_env()
     dirs = [x for x in str(env.get("PYTHONPATH", "")).split(os.pathsep) if x]
     dirs += [p for p in sys.path if p and p not in dirs]
+    importlib.invalidate_caches()             # 방금 생긴 디렉터리도 본다
     out = {"site": _d(_site.__file__)}
     for n in ("sitecustomize", "usercustomize"):
-        found = "<absent>"
-        for d in dirs:
-            f = os.path.join(d, n + ".py")
-            if os.path.isfile(f):
-                found = _d(f)
-                break
-        out[n] = found
+        spec = _PF.find_spec(n, dirs)
+        origin = getattr(spec, "origin", None) if spec is not None else None
+        if not origin:
+            out[n] = "<absent>"
+            continue
+        if os.path.isfile(origin):
+            out[n] = _d(origin)
+            continue
+        get_data = getattr(getattr(spec, "loader", None), "get_data", None)
+        if get_data is None:
+            raise _ReplayError(
+                f"부모가 {n} 의 origin {origin!r} 을 읽을 수 없다 — 파일이 아니고 "
+                "loader 가 바이트를 못 준다. 지원하지 않는 loader 로는 child 와 "
+                "대조할 수 없다 (63차 F3)")
+        out[n] = hashlib.sha256(get_data(origin)).hexdigest()[:16]
     return out
 
 
@@ -5587,8 +5762,9 @@ _RECEIPT_SCHEMA = {
                           "sitecustomize": _Or(_HEX16, "<absent>"),
                           "usercustomize": _Or(_HEX16, "<absent>")},
         "startup_modules": _Map(_HEX16),
+        # ★ 63차 F2 — 시도만 한 이름은 **영수증 안**이다 (digest 에 묶인다).
         "startup_history": {"status": "measured", "modules": _Map(_HEX16),
-                            "unfiled": int},
+                            "unfiled": int, "attempted_not_loaded": _Seq(str)},
         "importable_roots": _Map(_HEX16),
         "pth": _Seq([str, _HEX16]),
         "version": str,
@@ -5608,7 +5784,10 @@ def _schema_mismatch(value, schema, where: str) -> str | None:
         return None if isinstance(value, str) else \
             f"{where}: str 가 아니다 ({type(value).__name__})"
     if isinstance(schema, re.Pattern):
-        return None if (isinstance(value, str) and schema.match(value)) else \
+        # ★ 63차 F4 — `match` + `$` 는 **마지막 개행 바로 앞**에도 맞는다 (Python
+        #   `re` 의 명시된 규칙). `"0123456789abcdef\n"` 17자가 hex16 으로
+        #   통과했다 (리뷰어 실측). 전체 문자열 일치만 받는다.
+        return None if (isinstance(value, str) and schema.fullmatch(value)) else \
             f"{where}: {schema.pattern} 에 안 맞는다 ({value!r})"
     if isinstance(schema, _Or):
         errs = [_schema_mismatch(value, alt, where) for alt in schema.alts]

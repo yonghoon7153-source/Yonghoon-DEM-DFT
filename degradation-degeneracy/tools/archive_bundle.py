@@ -508,6 +508,50 @@ def restore(bundle_dir, run_dir=None, force: bool = False,
             "ok": not conflict}
 
 
+def _bundle_under_run_locks(run_dir, names, acquire, body):
+    """실행 lock 을 **하나씩** 잡으며 즉시 정리 대상에 넣고, 본문을 돌린 뒤
+    **전부** 놓는다 (63차 F1).
+
+    보장 셋 — 리뷰어의 정상 오류 상태 그대로다:
+      · 둘째 acquire 가 실패하면 첫 lock 을 놓은 뒤 그 오류를 올린다.
+      · 첫 release 가 실패해도 둘째 release 를 **시도**하고, 첫 오류를 올린다.
+      · 본문이 올린 오류는 정리 중 오류에 **덮이지 않는다** — 정리 오류는 원래
+        오류의 note 로 붙는다 (`BaseException.add_note`, 3.11+).
+
+    `contextlib.ExitStack` 과 같은 모양이되 해제 **순서는 취득 순서**다 — 두
+    lock 은 서로 독립인 flock 파일이고, 62차 판이 그 순서로 놓았으며 리뷰어의
+    재현 시험이 그 순서를 관측한다.
+    """
+    from src.io import release_run_lock
+
+    toks: list = []
+
+    def _release_all() -> None:
+        first_err = None
+        for tok in toks:
+            try:
+                release_run_lock(tok)
+            except BaseException as exc:                    # noqa: BLE001
+                if first_err is None:
+                    first_err = exc
+        if first_err is not None:
+            raise first_err
+
+    try:
+        for name in names:
+            toks.append(acquire(run_dir, name))
+        result = body()
+    except BaseException as body_err:
+        try:
+            _release_all()
+        except BaseException as rel_err:                    # noqa: BLE001
+            if hasattr(body_err, "add_note"):
+                body_err.add_note(f"lock 정리 중 추가 오류: {rel_err!r}")
+        raise
+    _release_all()
+    return result
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -540,16 +584,23 @@ def main(argv=None) -> int:
         #   같은 자리에서 시작하면 묶음이 진행 중 상태를 담는다. 실행 lock 둘을
         #   복사가 끝날 때까지 들어 writer 부재를 증명한다 (token 이라 commit
         #   과 무관하게 놓을 수 있고, 살아 있는 실행이 있으면 여기서 거부된다).
-        from src.io import acquire_run_lock, release_run_lock
+        # ★ 63차 F1 — 자원은 **취득 즉시** 정리 대상에 든다. 62차 판은 list
+        #   comprehension 으로 둘을 다 얻은 **뒤에야** try 에 들어갔고, finally
+        #   의 단순 for 는 첫 release 예외에서 멈췄다. 리뷰어 실측: 둘째 acquire
+        #   실패 → release 호출 목록이 빈 배열 · 첫 release OSError → 둘째 미해제.
+        #   token 이 raw fd 를 들고 있으므로 객체가 사라진다고 커널 lock 이 풀리지
+        #   않는다 — 프로세스가 살아 있는 한 다음 시도를 막는다.
+        #   `_bundle_under_run_locks` 가 부분 취득 · 정리 예외 · 본문 예외 셋을
+        #   전부 덮고 **원래 오류를 보존**한다.
+        from src.io import acquire_run_lock
         from tools.preserve import assert_promotable
-        toks = [acquire_run_lock(a.run_dir, name)
-                for name in (".fit.lock", ".run.lock")]
-        try:
+
+        def _body():
             assert_promotable([a.run_dir], "보관 묶음", dest=a.out_dir)
-            res = bundle(a.run_dir, a.out_dir)
-        finally:
-            for tok in toks:
-                release_run_lock(tok)
+            return bundle(a.run_dir, a.out_dir)
+
+        res = _bundle_under_run_locks(a.run_dir, (".fit.lock", ".run.lock"),
+                                      acquire_run_lock, _body)
         print(f"복사 {res['copied']}개"
               + (f", 하위 실행 {res['nested']}" if res["nested"] else ""))
         if res["external"]:
