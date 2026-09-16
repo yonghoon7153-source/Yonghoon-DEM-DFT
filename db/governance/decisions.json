@@ -2211,14 +2211,14 @@
    "reopen_criteria": [
     "G-B1(10 점 전부 SCF 수렴) 불통과 → 9 점으로 판정하지 않는다. 잡을 버리거나 설정을 다시 봉인하고 처음부터",
     "G-B2(겹침: 소셀 국소환경이 400 원자 같은 t_ps 프레임과 r ≤ 5 Å 에서 봉우리 0.05 Å · 배위수 0.3 · PS₄ 보존율 10 %p 이내) 불통과 → 'UMA 내부 진단' 으로 끝나고 1·2층 표지는 그대로",
-    "G-B3(F_RMSE ≤ 0.15 eV/Å **그리고** 상대 E MAE ≤ 15 meV/atom) 불통과 → UMA 가 이 조성에서 문턱을 못 넘는다는 실제 정보. 1·2층에 **불리한** 방향으로도 인용한다",
+    "G-B3(F_RMSE ≤ 0.15 eV/Å **그리고** 상대 E MAE ≤ 15 meV/atom) 불통과 → **'120 원자 소셀 조건에서 문턱 미달' 까지만** 말하고 1·2층 표지는 '미검증' 그대로 둔다. ⛔ 2026-09-16 정정: 초판의 *'1·2층에 불리한 방향으로도 인용한다'* 는 철회. cutoff 6.0 Å × 4 층 실측으로 **작은 셀이 자기이미지에 더 감긴다**(홉 2.36 vs 400 원자 3.52)는 것이 확인돼, 불통과가 UMA 탓인지 셀 탓인지 못 가른다. **전이는 통과 방향으로만 흐른다.**",
     "셋 전부 통과 → §5-b ① 조건부 완화: 표지를 'UMA 미검증 조성' → 'UMA 소셀 검증 조성(F_RMSE X · 120 원자 · 단일 시드 · 보고 프레임 자체는 미검증)' 으로 **바꾼다**. 떼지 않는다",
     "첫 프레임 탐침이 §3-c 의 9.9 GB 대를 크게 벗어나거나 수렴하지 않으면 **멈추고 다시 정한다** — 9 점을 밀어 넣지 않는다"
    ],
    "card": "db/properties/lpscl_smallcell_uma_qe_force_estimand_2026_09_16.json",
    "record": "db/properties/lpscl_li2s_layer1_closed_2026_09_15.json",
    "supersedes": [],
-   "enforcement": "① `mlip_committee.py info --engines uma` 가 찍는 cutoff 가 유리 프레임 최소이미지 7.07 Å 미만이어야 한다(하드 기준 L/2 > cutoff). 이상이면 n_fu 를 올린다. ② g2 seed1 궤적의 실행모드를 kgy 런 기록에서 **읽어** 같은 모드로 간다 — 못 읽으면 시작하지 않는다. ③ MD 는 kgy 에서만 만든다(생성 스택이 G-B2 의 교란변수다). ④ 프레임 10 개·문턱·겹침 기준은 결과를 보고 고치지 않는다. ⑤ modelc/lpsocl 시드 확장 큐가 끝난 뒤 던진다 — util 96 % 실측이라 VRAM 여유는 연산 여유가 아니다.",
+   "enforcement": "① `mlip_committee.py info --engines uma` — ✅ 실측 2026-09-16: cutoff **6.0 Å** · 메시지패싱 **4 층** · 유효 수용영역 24.0 Å. 하드 기준(L/2 > cutoff) 통과 — 유리 L/2 7.07 > 6.0. ⚠ 소프트(24 Å)는 120 원자도 400 원자도 못 넘으므로 문턱이 아니라 기록 항목이고, **정도 차이(홉 2.36 vs 3.52)** 때문에 전이는 **통과 방향으로만** 흐른다. ② g2 seed1 궤적 실행모드 — ✅ 실측: `plan.json/uma_inference_mode = turbo` ⇒ (B)도 `--turbo`. ③ MD 는 kgy 에서만 만든다(생성 스택이 G-B2 의 교란변수다). `~/lldvar` 와 `~/work/Yonghoon-DEM-DFT` 의 `melt_quench_uma.py` 는 동일함을 `cmp` 로 확인했다. ④ 프레임 10 개·문턱·겹침 기준은 결과를 보고 고치지 않는다. ⑤ **개정 2026-09-16**: 초판의 *'큐가 끝난 뒤 던진다'* 는 큐 잔여를 35 h 로 오독하고 쓴 조항이라 철회한다 (실측 4 유닛 ≈ 145 h). **MD 는 큐와 동시에** 돌린다 — C3 지연 ≈ 4 h 대 절약 6 일이고, G1 §6b 가 *'힘·에너지 값은 GPU 경합과 무관'* 을 이미 판정했다. ⛔ **QE 단일점(9.9 GB)은 동시 실행 대상이 아니다 — MD 만이다.**",
    "applies_to": {
     "systems": [
      "lpscl_amorphous",
@@ -2243,15 +2243,31 @@
      "at": "2026-09-16",
      "state": "active",
      "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
+    },
+    {
+     "at": "2026-09-16b",
+     "state": "active",
+     "by": "agent",
+     "note": "결과 보기 전 개정 둘. ① G-B3 불통과의 전이 방향 정정(수용영역 실측 24 Å → 작은 셀이 더 불리 → 불통과는 전이 안 됨). ② enforcement ⑤ 동시실행 허용(큐 잔여 35 h 오독 정정 → 실측 145 h). 게이트·문턱·프레임은 건드리지 않았다."
+    },
+    {
+     "at": "2026-09-16",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
+    },
+    {
+     "at": "2026-09-16",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
     }
    ],
    "ratification": {
     "state": "ratified",
     "role": "scientific_owner",
     "actor_id": "yonghoon7153@gmail.com",
-    "timestamp": "2026-09-16T04:39:26Z",
-    "commit": "76d6739fdf2af4a7ae315f31e4fe3318b60969ee",
-    "decision_digest": "sha256:b31a51e46f8a4cfafea74679c630a7da6c5d5c4e97e17077a87916801e0055c0",
+    "timestamp": "2026-09-16T04:53:41Z",
+    "commit": "952ef28419dd3ca86f377838eee8a874f5b8fcc0",
+    "decision_digest": "sha256:09cb2cb3e9ae4e4868c30b1bc60426f54c010dcdfede0ec62dc563867af7bdac",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
   }
