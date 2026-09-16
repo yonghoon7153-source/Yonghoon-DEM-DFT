@@ -47,20 +47,63 @@ def li_metal_mu(entries):
     return min(es)  # Li metal reference (eV/atom)
 
 
+#: 최소 kink 의 x 가 이 안쪽으로 끝점(0 또는 1)에 붙으면 **섞이지 않은 것**으로 본다.
+ENDPOINT_TOL = 1e-6
+
+
+def is_endpoint(x, tol=ENDPOINT_TOL):
+    """최소 kink 가 x=0/1 끝점인가 — **두 상이 안 섞였다**는 뜻이다.
+
+    ⛔⛔ **끝점의 뜻은 모드마다 다르다. 한 덩이로 읽으면 틀린다** (2026-09-16 실측).
+      · **닫힌계** (`min_rxn_closed`, `use_hull_energy=True`): 반응물을 hull 에너지로
+        재므로 끝점 값은 **구성상 정확히 0** 이다. 그래서 *끝점 = 섞어도 hull 밑으로
+        안 내려간다 = **상호반응 없음*** 이라는 **정상적이고 의미 있는 판정**이다.
+        찍히는 반응식은 그 끝점 상의 **자기 hull 분해**라 좌변에 상대가 없다 — 표시 부작용.
+      · **열린계** (`min_rxn_grand`, `include_no_mixing_energy=True`): 끝점 값이 0 이
+        아니다. 순수상의 **grand-potential 자체 분해 에너지**가 그 자리에 들어간다.
+        그래서 끝점이면 그 숫자는 **계면량이 아니다** — 상대를 한 번도 안 본 값이다.
+      실측: 산물 6 종(NdP₅O₁₄·Nd(PO₃)₃·Nd₂(SO₄)₃·NdCl₃·Li₃PO₄·LiPO₃)을 상대로 LPSCl1.6 을
+      3.5–4.3 V 열린계로 돌렸더니 **여섯 다 같은 숫자**(−0.6535 / −1.0392 / −1.2706)가 나왔고
+      반응식 좌변에 상대가 **없었다**. 전해질 혼자 분해되는 에너지를 여섯 번 다시 잰 것이다.
+      오류는 안 났고 값은 그럴듯했다 — 전형적인 조용히 틀린 경로.
+      (열린계에서 상대가 **이미 산화가 끝난 안정한 인산염**이면 어떤 혼합도 SE 자체 분해보다
+       덜 음수라 최소가 항상 끝점으로 간다. §B 처럼 상대가 **환원 가능한 양극**일 땐 안 그렇다.)
+    ⚠ 이 함수가 **안 하는 것**: ① 끝점이 c1 쪽인지 c2 쪽인지 구분하지 않는다 — 판정이 같다.
+      ② 모드를 모른다. 뜻풀이는 `endpoint_meaning()` 이 한다. ③ 값을 버리지 않는다 —
+      깃발만 단다 (조용히 버리면 "왜 안 나오지" 가 된다).
+    """
+    if x is None:
+        return False
+    return float(x) <= tol or float(x) >= 1.0 - tol
+
+
+def endpoint_meaning(closed):
+    """끝점 깃발의 **뜻풀이 문자열** — 기록에 같이 박아 다음 사람이 모드를 안 헷갈리게."""
+    if closed:
+        return ("끝점(x=0/1) — 닫힌계라 **상호반응 없음**이라는 정상 판정이다 "
+                "(use_hull_energy 로 끝점 값은 구성상 0). 반응식 좌변에 상대가 없는 것은 "
+                "그 상의 자기 hull 분해가 찍힌 표시 부작용이다.")
+    return ("⛔ 끝점(x=0/1) — 열린계에서는 이 숫자가 **계면량이 아니다**. 순수상의 "
+            "grand-potential 자체 분해 에너지이고, 상대는 계산에 들어가지 않았다. "
+            "호환성 판정에 쓰지 말 것. 산물 인구조사에서도 뺀다.")
+
+
 def min_rxn_grand(c1, c2, gpd, pd, want_kinks=False):
-    """최소 kink 의 (에너지, 반응식). `want_kinks` 면 **전 kink** 도 같이 준다.
+    """최소 kink 의 (에너지, 반응식, x). `want_kinks` 면 **전 kink** 도 같이 준다.
 
     ⛔ 2026-09-16 — 종전 판은 `get_kinks()` 를 돌면서 **최소만 남기고 나머지를 버렸다.**
       그래서 Richards/Ong 논문식 *"반응에너지 vs x"* 곡선(LiPOF Fig. 1b–f 형태)을
       그릴 수 없었다. 계산은 이미 다 해 놓고 결과만 버린 것이다.
     ⚠ 이 함수가 못 하는 것: kink 의 x 가 **원자분율**인지 몰분율인지 판정하지 않는다 —
       pymatgen 이 주는 값을 그대로 옮긴다 (`x_atomic_frac` 로 이름 붙인 v1 관례를 따른다).
+    ⚠ 반환하는 `min_x` 는 **호출부가 `is_endpoint()` 로 봐야** 의미가 생긴다. 이 값을 읽는
+      게이트는 `run_batch`(`endpoint_degenerate` 기록) 와 `product_census`(대상에서 제외)다.
     """
     from pymatgen.analysis.interface_reactions import GrandPotentialInterfacialReactivity
     gir = GrandPotentialInterfacialReactivity(
         c1, c2, gpd, pd_non_grand=pd,
         include_no_mixing_energy=True, use_hull_energy=True)
-    min_e, min_rxn, kinks = 1e9, None, []
+    min_e, min_rxn, min_x, kinks = 1e9, None, None, []
     for k in gir.get_kinks():
         e = float(k[2])
         if want_kinks:
@@ -68,8 +111,8 @@ def min_rxn_grand(c1, c2, gpd, pd, want_kinks=False):
                           "reaction_energy_eV_per_atom": round(e, 6),
                           "reaction": str(k[3])})
         if e < min_e:
-            min_e, min_rxn = e, str(k[3])
-    return (min_e, min_rxn, kinks) if want_kinks else (min_e, min_rxn)
+            min_e, min_rxn, min_x = e, str(k[3]), float(k[1])
+    return (min_e, min_rxn, min_x, kinks) if want_kinks else (min_e, min_rxn, min_x)
 
 
 # ── 캐스케이드 90종 일괄 (2026-08-19 신설) ───────────────────────────────────
@@ -90,15 +133,17 @@ def min_rxn_closed(c1, c2, pd):
       정의가 안 된다(정규화 분모 0). Li 음극 쪽은 이 닫힌계 쪽으로 재야 하고,
       그게 Sundar 2025 Fig.2 의 Li-anode 판과 **같은 계산**이다.
     ⚠ 대신 **전압축이 없다.** 두 모드의 숫자를 같은 표에 섞으면 안 된다.
+    ⚠ 세 번째 반환값 `min_x` 는 `is_endpoint()` 로 봐야 뜻이 생긴다 — 여기선 끝점이
+      **정상 판정**("상호반응 없음")이다. `endpoint_meaning(closed=True)` 참조.
     """
     from pymatgen.analysis.interface_reactions import InterfacialReactivity
     ir = InterfacialReactivity(c1, c2, pd, use_hull_energy=True)
-    min_e, min_rxn = 1e9, None
+    min_e, min_rxn, min_x = 1e9, None, None
     for k in ir.get_kinks():
         e = float(k[2])
         if e < min_e:
-            min_e, min_rxn = e, str(k[3])
-    return min_e, min_rxn
+            min_e, min_rxn, min_x = e, str(k[3]), float(k[1])
+    return min_e, min_rxn, min_x
 
 
 def why_skip(e_formula, c_formula, open_elements=("Li",), closed=False):
@@ -215,16 +260,25 @@ def run_batch(a):
                        "mode": "closed_0V" if a.closed else "grand_potential",
                        "mu_Li_metal_eV": round(mu0, 4)}
                 if a.closed:
-                    e, rxn = min_rxn_closed(Composition(forms[sp]), Composition(cstr), pd)
+                    e, rxn, x = min_rxn_closed(Composition(forms[sp]), Composition(cstr), pd)
                     rec["dE_eV_per_atom"] = round(e, 5)
                     rec["reaction"] = rxn
+                    rec["mixing_x"] = None if x is None else round(x, 6)
+                    rec["min_kink_at_endpoint"] = is_endpoint(x)
+                    if rec["min_kink_at_endpoint"]:
+                        rec["endpoint_meaning"] = endpoint_meaning(True)
                 else:
                     rec["by_voltage"] = {}
                     for V in a.voltages:
                         gpd = GrandPotentialPhaseDiagram(entries, {Element("Li"): mu0 - V})
-                        e, rxn = min_rxn_grand(Composition(forms[sp]), Composition(cstr), gpd, pd)
-                        rec["by_voltage"][f"{V:.2f}"] = {"dE_eV_per_atom": round(e, 5),
-                                                         "reaction": rxn}
+                        e, rxn, x = min_rxn_grand(Composition(forms[sp]), Composition(cstr),
+                                                  gpd, pd)
+                        cell = {"dE_eV_per_atom": round(e, 5), "reaction": rxn,
+                                "mixing_x": None if x is None else round(x, 6),
+                                "min_kink_at_endpoint": is_endpoint(x)}
+                        if cell["min_kink_at_endpoint"]:
+                            cell["endpoint_meaning"] = endpoint_meaning(False)
+                        rec["by_voltage"][f"{V:.2f}"] = cell
                 rec["seconds"] = round(time.time() - t0, 1)
             except Exception as ex:
                 rec = {"species": sp, "cathode": clab, "error": f"{type(ex).__name__}: {ex}",
@@ -234,9 +288,17 @@ def run_batch(a):
             if "error" in rec:
                 bad = "ERR " + rec["error"][:40]
             elif "dE_eV_per_atom" in rec:
-                bad = "%+.4f (0 V)" % rec["dE_eV_per_atom"]
+                # 닫힌계 끝점 = **상호반응 없음**이라는 정상 판정 → 조용한 표시
+                bad = "%+.4f (0 V)%s" % (rec["dE_eV_per_atom"],
+                                         "  [끝점 = 반응없음]"
+                                         if rec.get("min_kink_at_endpoint") else "")
             else:
                 bad = "%+.4f" % min(v["dE_eV_per_atom"] for v in rec["by_voltage"].values())
+                # 열린계 끝점 = **계면을 안 쟀다** → 시끄럽게
+                ne = sum(1 for v in rec["by_voltage"].values()
+                         if v.get("min_kink_at_endpoint"))
+                if ne:
+                    bad += f"  ⛔끝점 {ne}/{len(rec['by_voltage'])} — 계면량 아님(자체분해)"
             print(f"[{i}/{len(todo)}] {sp:10s} vs {clab:8s} {bad}  ({rec['seconds']:.0f}s)")
     print(f"\n→ {out}")
 
@@ -328,6 +390,29 @@ def _selftest():
     chk(_lc["counts"].get("SCl") == 1, "같은 반응의 진짜 산물은 센다")
     chk(product_census(_lr, open_elements=())["counts"].get("Li") == 1,
         "[음성] open_elements 를 비우면 Li 도 센다 (제외가 인자로 제어된다)")
+    # ── 끝점 퇴화 (2026-09-16 신설) ─────────────────────────────────────────
+    #   왜: dual-compat 실행에서 열린계 최소 kink 가 여섯 상대 **전부** x=0 에 걸려
+    #   전해질 자체분해 산물(PCl₅·P₂S₇·SCl)이 48 회씩 §C 후보로 올라왔다. 값은
+    #   그럴듯했고 오류도 안 났다 — 조용히 틀린 경로.
+    chk(is_endpoint(0.0) and is_endpoint(1.0), "끝점 판정: x=0·x=1 을 잡는다")
+    chk(not is_endpoint(0.5) and not is_endpoint(0.0001),
+        "[음성] 안쪽 x 는 끝점이 아니다 (0.0001 도 통과시키면 진짜 계면을 버린다)")
+    chk(not is_endpoint(None), "[음성] x 가 None 이면 깃발을 세우지 않는다 (모르는 것 ≠ 퇴화)")
+    chk("계면량이 아니다" in endpoint_meaning(False)
+        and "상호반응 없음" in endpoint_meaning(True),
+        "뜻풀이가 모드마다 다르다 — 닫힌계 끝점은 정상 판정, 열린계 끝점은 무효")
+    _dr = {"C": {"reactions": {"3.50": {"m": "x -> PCl5 + SCl", "c": "x -> LiCl"}},
+                 "endpoint_degenerate": {"3.50": {"m": True, "c": False}}}}
+    _dc = product_census(_dr)
+    chk("PCl5" not in _dc["counts"] and "SCl" not in _dc["counts"],
+        "[음성] 끝점 퇴화 칸의 산물은 **세지 않는다** (자체분해라 계면 산물이 아니다)")
+    chk(_dc["counts"].get("LiCl") == 1,
+        "같은 전압의 퇴화 아닌 칸은 그대로 센다 (통째로 버리지 않는다)")
+    chk(_dc["endpoint_degenerate_excluded"] == ["C@3.50V/m"],
+        "뺀 칸을 **이름으로 남긴다** — 조용히 버리면 '왜 안 나오지' 가 된다")
+    chk(product_census({"C": {"reactions": {"3.50": {"m": "x -> PCl5"}}}})
+        ["counts"].get("PCl5") == 1,
+        "[하위호환] endpoint_degenerate 필드가 없는 옛 JSON 은 전부 유효로 센다")
     chk("Li2S" in product_census({"C": {"reactions": {"0": {"m": "x -> Li2S"}}}})["counts"],
         "[음성] Li 화합물은 홑원소가 아니므로 남는다 (Li2S 를 Li 로 오인하지 않는다)")
 
@@ -369,14 +454,24 @@ def product_census(results: dict, open_elements=("Li",)) -> dict:
       그건 **상(phase)이 아니라 전기화학 장부**다. 첫 판이 이걸 세서 `Li` 가 96 회로
       1위였고, 갭 대상 목록이 그만큼 부풀었다. `reservoir` 에 따로 담아 **보이되
       대상에서 뺀다** — 조용히 버리면 "왜 안 나오지" 가 된다.
+    ⛔ **끝점 퇴화 칸은 센서스에서 뺀다** (2026-09-16 정정). 열린계 최소 kink 가 x=0/1 이면
+      그 반응식은 **전해질이 혼자 분해된 것**이고 상대는 계산에 들어가지도 않았다 — 계면
+      산물이 아니다. 첫 판이 이걸 세서 dual-compat 실행에서 PCl₅·P₂S₇·SCl 이 48 회씩,
+      `처음 나온 곳 Li3PO4@3.50V/LPSCl1.6` 이라는 **거짓 꼬리표**를 달고 §C 후보로 올라왔다.
+      `results[cathode]["endpoint_degenerate"][V][electrolyte]` 를 읽어 거른다 —
+      **이 필드를 읽는 게이트가 여기다** (없으면 전부 유효로 보는 하위호환).
     ⚠ 이 함수가 **안 하는 것**: 기체·홑원소(S·SO₂·PCl₅ 등)를 가려내지 않는다.
       그건 화학 판단이라 사람·카드 몫이다. 세어서 보여줄 뿐이다.
     """
     opens = {str(x) for x in (open_elements or ())}
-    cnt, where, reservoir = {}, {}, {}
+    cnt, where, reservoir, skipped = {}, {}, {}, []
     for clab, cd in (results or {}).items():
+        deg = cd.get("endpoint_degenerate") or {}
         for V, row in (cd.get("reactions") or {}).items():
             for elab, rxn in (row or {}).items():
+                if (deg.get(V) or {}).get(elab):        # 끝점 퇴화 — 계면 산물 아님
+                    skipped.append(f"{clab}@{V}V/{elab}")
+                    continue
                 for f in rhs_products(rxn):
                     if f in opens:                      # 저장소 회계 — 산물 아님
                         reservoir[f] = reservoir.get(f, 0) + 1
@@ -387,7 +482,10 @@ def product_census(results: dict, open_elements=("Li",)) -> dict:
             "counts": dict(sorted(cnt.items(), key=lambda kv: -kv[1])),
             "first_seen": {k: sorted(v)[0] for k, v in where.items()},
             "reservoir_excluded": reservoir,
+            "endpoint_degenerate_excluded": sorted(skipped),
             "⛔": "열린 원소의 홑원소는 저장소 회계라 대상에서 뺐다 (reservoir_excluded). "
+                 "끝점 퇴화 칸(상대가 계산에 안 들어간 자체분해)도 뺐다 "
+                 "(endpoint_degenerate_excluded). "
                  "기체·홑원소(S·SO₂ 등)는 **안 걸렀다** — 화학 판단은 카드·사람 몫이다."}
 
 
@@ -449,27 +547,33 @@ def main():
     for cat in a.cathodes:
         cstr, _, clab = cat.partition(":"); clab = clab or cstr
         cc = Composition(cstr)
-        results[clab] = {"composition": cstr, "by_voltage": {}, "reactions": {}, "kinks": {}}
+        results[clab] = {"composition": cstr, "by_voltage": {}, "reactions": {},
+                         "kinks": {}, "endpoint_degenerate": {}}
         print(f"\n######## cathode {clab} ({cstr}) ########")
         for V in a.voltages:
             mu = mu0 - V
             gpd = GrandPotentialPhaseDiagram(entries, {Element("Li"): mu})
-            row, rxn_row, kink_row = {}, {}, {}
+            row, rxn_row, kink_row, deg_row = {}, {}, {}, {}
             for spec in a.electrolytes:
                 estr, _, elab = spec.partition(":"); elab = elab or estr
                 try:
-                    e, rxn, kinks = min_rxn_grand(Composition(estr), cc, gpd, pd,
-                                                  want_kinks=True)
+                    e, rxn, x, kinks = min_rxn_grand(Composition(estr), cc, gpd, pd,
+                                                     want_kinks=True)
                     row[elab] = round(e, 5)
                     rxn_row[elab] = rxn          # ⭐ 2026-09-16: 버리지 않는다 (아래 주석)
                     kink_row[elab] = kinks       # ⭐ x-스캔 곡선용 전 kink
-                    print(f"  V={V:.2f}  {elab:9s}: {e:.4f} eV/atom   {rxn}")
+                    deg_row[elab] = is_endpoint(x)
+                    # ⛔ 끝점이면 상대가 계산에 안 들어간 값이다 — 조용히 넘기지 않는다.
+                    mark = "  ⛔끝점 x=%.3g — 계면량 아님(자체분해)" % x if deg_row[elab] else ""
+                    print(f"  V={V:.2f}  {elab:9s}: {e:.4f} eV/atom   {rxn}{mark}")
                 except Exception as ex:
                     row[elab] = None
                     rxn_row[elab] = None
                     kink_row[elab] = []
+                    deg_row[elab] = False
                     print(f"  V={V:.2f}  {elab}: ERR {type(ex).__name__}: {ex}")
             results[clab]["by_voltage"][f"{V:.2f}"] = row
+            results[clab]["endpoint_degenerate"][f"{V:.2f}"] = deg_row
             # ⛔ 2026-09-16 — 종전 판은 `min_rxn` 을 **계산해 놓고 버렸다.** 숫자만 남아서
             #   "어떤 상으로 분해되나" 를 JSON 에서 못 읽었고, 그게 갭 단계(§C)의 입력이다.
             #   화면에는 찍혔으니 '되는 것처럼' 보였다 — 조용히 틀린 경로.
@@ -482,6 +586,14 @@ def main():
         print(f"  {f:16s} {n:3d} 회   처음 나온 곳 {cen['first_seen'][f]}")
     if cen.get("reservoir_excluded"):
         print(f"  (저장소 회계로 제외: {cen['reservoir_excluded']} — 상이 아니라 전기화학 장부다)")
+    _deg = cen.get("endpoint_degenerate_excluded") or []
+    if _deg:
+        _tot = sum(len(r or {}) for cd in results.values()
+                   for r in (cd.get("reactions") or {}).values())
+        print(f"  ⛔ 끝점 퇴화로 제외: {len(_deg)}/{_tot} 칸 — 전해질 자체분해라 계면 산물이 아니다")
+        if len(_deg) == _tot:
+            print("  ⛔⛔ **전부 퇴화했다 — 이 실행은 계면을 한 번도 안 쟀다.** "
+                  "상대가 이미 산화가 끝난 상이면 열린계로는 못 잰다. 닫힌계(--closed --only)로 갈 것.")
     print("  ⛔ 이 목록은 **최소 kink 산물**만이다. 다른 kink 의 상은 여기 없다 (카드 G2).")
     print("  ⚠ 기체·홑원소(S·SO₂·PCl₅)는 **안 걸렀다** — 갭 대상인지는 카드·사람이 정한다.")
 
