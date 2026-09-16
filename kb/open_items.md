@@ -37,6 +37,11 @@
   **판별종 10 종(신규 9)**, `cathode_cei_gap_target_amendment_2026_09_16` ·
   결정 `D-2026-09-16-cathode-cei-gap-target`. 다음 한 수는 **NdPO₄ 파일럿**이고,
   gabia GPU 줄(탄성 → G1 파일럿 → Nd PP-swap vc-relax) 뒤다.
+  - 📄 **화면 보고서**: [CEI 계면 반응성 — Nd/O 분해와 Li 예산](https://claude.ai/artifact/JpXxNZwwXt3QgB7f3jMpwo)
+    (같은 URL 이 갱신된다 · v3 = §1 분해 · §2 산물 · §3 검증(가설 절반 철회) ·
+    §4 x-스캔 · §5 갭 대상 규칙 · 배경 지식 없이 읽는 설명 포함).
+    ⚠ `citable: false` — 1저자·리뷰 판정 전이다. 원자료는
+    `db/properties/cei_interface_V_2026_09_16.json` · `cei_formation_2026_09_16.json`.
 - ⛔ **이 항목은 Li₃Nd 의 과학적 판정을 바꾸지 않는다.** class=metal(measured) 도,
   hull +0.197 eV/atom 도, `cite_with` 조건절도 그대로다. 바뀐 것은 **우리가 무엇을
   다음에 할 것인가** 뿐이다.
