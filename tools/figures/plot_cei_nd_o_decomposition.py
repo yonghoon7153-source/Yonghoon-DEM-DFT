@@ -31,13 +31,13 @@ ND, OX, BOTH = "#6d28d9", ELEM.get("O", "#be123c"), INK
 fig, (a1, a2) = plt.subplots(1, 2, figsize=(10.2, 4.0), gridspec_kw={"width_ratios": [1.35, 1]})
 for s, col, lab, mk in ((dn, ND, "Nd only (Nd$^{3+}$$\\leftrightarrow$3Li$^+$)", "o"),
                         (do, OX, "O only (O 0.3, S$\\rightarrow$O)", "s"),
-                        (dt, BOTH, "Nd + O (measured)", "^")):
+                        (dt, BOTH, "LPSCl1.6@Nd$_2$O$_3$ (measured)", "^")):
     m = [st.mean(s[V]) for V in VS]
     lo = [min(s[V]) for V in VS]; hi = [max(s[V]) for V in VS]
     a1.fill_between(VS, lo, hi, color=col, alpha=0.13, lw=0)
     a1.plot(VS, m, marker=mk, color=col, lw=2.0, ms=6, label=lab)
 a1.plot(VS, [st.mean(dn[V]) + st.mean(do[V]) for V in VS], ls=":", lw=1.8,
-        color=MUT, label="Nd + O (sum of parts)")
+        color=MUT, label="Nd only $+$ O only (sum of parts)")
 apply_axes(a1, "Voltage (V vs Li/Li$^+$)",
            "$\\Delta$ reaction energy vs LPSCl1.6 (eV/atom)")
 a1.axhline(0, color=MUT, lw=0.8, ls="--")
@@ -87,19 +87,22 @@ fig, ax = plt.subplots(figsize=(7.0, 4.2))
 xs = list(range(len(VS)))
 w = 0.2
 for i, (e, S, col, lab, hatch) in enumerate((
-        ("modelc_nd", SINK, ND, "Nd$+$O : Nd-phosphate formed", None),
-        ("nd_only", SINK, "#a78bfa", "Nd only : Nd-phosphate formed", None),
+        ("modelc_nd", SINK, ND, "LPSCl1.6@Nd$_2$O$_3$ : Nd-phosphate", None),
+        ("nd_only", SINK, "#a78bfa", "Nd only : Nd-phosphate", None),
         ("modelc", BAD, "#c05621", "LPSCl1.6 : P$_2$S$_7$ formed", "//"),
-        ("modelc_nd", BAD, "#fbbf24", "Nd$+$O : P$_2$S$_7$ formed", "//"))):
+        ("modelc_nd", BAD, "#fbbf24", "LPSCl1.6@Nd$_2$O$_3$ : P$_2$S$_7$", "//"))):
     ax.bar([x + (i - 1.5) * w for x in xs], [count(e, V, S) for V in VS],
            width=w, color=col, label=lab, hatch=hatch, edgecolor="white", lw=0.6)
 apply_axes(ax, "Voltage (V vs Li/Li$^+$)", "Cathodes showing the phase (of 4)")
 ax.set_xticks(xs); ax.set_xticklabels([f"{v:g}" for v in VS])
 ax.set_yticks(range(5)); ax.set_ylim(0, 4.9)
 ax.legend(frameon=False, fontsize=8, ncol=2, loc="upper center")
-ax.annotate("Nd$+$O never forms P$_2$S$_7$\n(yellow bars are all zero)",
-            xy=(4.5, 0.45), xytext=(3.4, 1.45), fontsize=8.5, color="#92400e",
-            arrowprops=dict(arrowstyle="->", color="#92400e", lw=1.0))
+# 이름이 길어지면서 옛 자리(3.4, 1.45)가 4.3 V 막대를 덮었다. 화살표도 뺐다 —
+# 가리킬 대상이 **높이 0 인 막대**라 어디로 그어도 다른 막대를 가로지른다.
+# 범례에 노랑 항목이 있고 본문이 "전부 0" 이라 말하므로 화살표가 할 일이 없다.
+ax.text(1.55, 3.45, "LPSCl1.6@Nd$_2$O$_3$ never forms P$_2$S$_7$\n"
+                    "(the yellow bars are all zero)",
+        fontsize=8, color="#92400e", va="top")
 ax.set_title("P is captured as Nd-phosphate instead of P$_2$S$_7$",
              fontsize=10, color=INK, pad=8)
 fig.tight_layout(); fig.savefig(OUT / "cei_nd_phosphate_sink.png", dpi=300); plt.close(fig)
@@ -116,8 +119,12 @@ with open(OUT / "cei_nd_phosphate_sink.csv", "w", newline="") as f:
 fig, axs = plt.subplots(1, 4, figsize=(13.0, 3.5), sharey=True)
 COL = {"comp1": "#9ca3af", "modelc": "#6b7280", "lpsocl": "#be123c",
        "o_only_03": "#f472b6", "nd_only": "#a78bfa", "modelc_nd": ND}
-LAB = {"comp1": "LPSCl", "modelc": "LPSCl1.6", "lpsocl": "LPSOCl (O 0.2)",
-       "o_only_03": "O 0.3", "nd_only": "Nd only", "modelc_nd": "Nd + O"}
+#: ⚠ **표시명만** 여기서 바꾼다 — 키(comp1·modelc·modelc_nd)는 CSV·JSON 열 이름이고
+#:   기계 경로라 안 건드린다 (1저자 2026-09-16: "modelc 라 하지 말고 lpscl1.6 으로,
+#:   공치환은 lpscl1.6@nd2o3 로 — 같이 보는 문서니까").
+LAB = {"comp1": "LPSCl", "modelc": "LPSCl1.6", "lpsocl": "LPSOCl1.6",
+       "o_only_03": "O 0.3 only", "nd_only": "Nd only",
+       "modelc_nd": "LPSCl1.6@Nd$_2$O$_3$"}
 for ax, c in zip(axs, CATS):
     for e, col in COL.items():
         y = [D["results"][c]["by_voltage"][f"{V:.2f}"].get(e) for V in VS]
@@ -415,12 +422,36 @@ if FJ.exists() and LAD:
 
 <figure>
 <img src="cei_li_budget_ladder.png" alt="Left: exchange energy versus Li per P, crossing zero near 1.67. Right: formation energy per atom for fifteen phases grouped into Nd phosphates, Li phosphates, thiophosphates and Nd non-phosphates.">
-<figcaption><strong>Fig 4.</strong> 왼쪽 — Li/P 사다리. 영점은 <strong>인접 두 점 선형보간</strong>으로
-<strong>Li/P ≈ {cross:.2f}</strong> (전역 피팅 아님 — 3 점에 과하다). 빈 사각형
-LiNd(PO₃)₄ 는 Nd→Nd 치환이라 같은 축에 찍되 <strong>기울기 비교에서 뺐다</strong>.
-오른쪽 — 상별 생성에너지. P₂S₇ 가 표 전체에서 제일 얕다
-({_fmt(F["formation"]["P2S7"]["E_f_eV_per_atom"], 4, False)} eV/atom, 인산염의 1/5 수준).</figcaption>
+<figcaption><b>Fig. 4. Lithium cost of the phosphate sink.</b>
+(a) Energy of the Nd&#8592;Li exchange reaction, &#60;donor&#62; + &#189;&#8201;Nd<sub>2</sub>O<sub>3</sub>
+&#8594; NdPO<sub>4</sub> + Li<sub>2</sub>O, per phosphorus atom, plotted against the Li:P ratio of the
+donor phosphate. The zero crossing at Li/P &#8776; {cross:.2f} is obtained by linear interpolation
+between the two bracketing points, not by a global fit. LiNd(PO<sub>3</sub>)<sub>4</sub> (open square)
+already contains Nd and is therefore shown on the same axis but excluded from the slope.
+(b) MP2020-corrected formation energies of the fifteen phases considered, grouped by class;
+P<sub>2</sub>S<sub>7</sub> is the shallowest sink of the set at
+{_fmt(F["formation"]["P2S7"]["E_f_eV_per_atom"], 4, False)}&#8201;eV/atom.</figcaption>
 </figure>
+
+<div class="figexp">
+<div class="figexp-h">Fig. 4 를 읽는 법</div>
+<p><b>왼쪽 그림</b>의 가로축은 "P 하나를 붙잡는 데 Li 를 몇 개 쓰는 상인가" 이고,
+세로축은 "그 상에서 Nd 가 P 를 뺏어 가는 것이 이로운가" 다. <b>세로축이 0 보다 아래면
+Nd 가 이긴다.</b> 네 점이 <b>완전히 단조</b>라서, Li 를 적게 쓰는 상일수록 Nd 가 유리해진다는
+관계가 그대로 보인다.</p>
+<p>점선으로 표시한 <b>Li/P &#8776; {cross:.2f}</b> 가 부호가 뒤집히는 자리다. 이 값은
+전체 네 점에 직선을 맞춘 것이 <b>아니라</b>, 부호가 갈리는 <b>바로 옆 두 점(Li/P 1 과 2)만</b>
+이어서 얻었다 — 점이 셋뿐인데 전역 피팅을 하면 없는 정밀도를 만들어 낸다.</p>
+<p>빈 사각형 <b>LiNd(PO₃)₄</b> 는 같은 축에 찍혀 있지만 <b>기울기 계산에서 뺐다.</b>
+나머지 셋은 Li 자리를 Nd 가 대신하는 반응인데 이것만 이미 Nd 를 품고 있어 Nd&#8594;Nd 라,
+같은 기울기 위에 있다고 볼 근거가 없다.</p>
+<p><b>오른쪽 그림</b>은 맥락이다. 막대가 아래로 길수록 그 상이 안정하다.
+왼쪽 세 묶음(Nd 인산염 · Li 인산염 · 티오인산염)을 보면
+<b>P₂S₇ 만 유독 짧다</b> — 인산염들의 1/5 수준이다. "O 만 있으면 P 는 어느 쪽이든
+인산염으로 간다" 가 여기서 나온다.</p>
+<p>⚠ 오른쪽 그림의 <code>E_f/P</code> 열(표에만 있음)은 <b>반응에너지가 아니다.</b>
+O:P 비가 다른 상을 한 줄에 놓으면 P–O 결합 수 차이를 P 하나당으로 뭉갠다 — 순위 힌트로만 읽는다.</p>
+</div>
 
 <div class="card answer">
 <p style="margin:0"><strong>고쳐 쓴 기전</strong> — Nd 는 "더 좋은 인산염을 만드는" 게 아니라
@@ -509,11 +540,32 @@ if have_kinks:
 
 <figure>
 <img src="cei_x_scan_panels.png" alt="Six panels of interfacial reaction energy versus electrolyte mixing fraction, one per electrolyte, each with six voltage curves. The two Nd-containing panels are dense with markers showing Nd-phosphate-forming kinks; the four non-Nd panels have none.">
-<figcaption><strong>Fig 5.</strong> 양극 {CAT_X} 기준, 전해질별 패널 · 전압 6 곡선
-(밝은 노랑 2.5 V → 진한 적갈 4.5 V). ▽ = 최소점,
-<span class="nd">◦</span> = 그 kink 의 산물에 Nd 인산염이 있는 지점.
-⚠ 전압은 원소가 아니라 순차량이라 원소 팔레트를 쓰지 않았다 (명도 단조 램프).</figcaption>
+<figcaption><b>Fig. 5. Interfacial reaction energy across the full mixing range</b>
+(after Richards <i>et al.</i>, <i>Chem. Mater.</i> <b>28</b>, 266, 2016). Each panel is one
+electrolyte composition against the {CAT_X} cathode; the six curves are the applied voltages
+(light yellow 2.5&#8201;V to dark red 4.5&#8201;V). <i>x</i> is the atomic fraction of electrolyte in the
+mixture, so <i>x</i>&#8201;=&#8201;0 is pure cathode and <i>x</i>&#8201;=&#8201;1 pure electrolyte. Triangles mark the
+minimum of each curve; open circles mark kinks whose product set contains an Nd phosphate.
+Voltage is a sequential variable and is therefore mapped to a monotone lightness ramp rather
+than to the element palette used elsewhere.</figcaption>
 </figure>
+
+<div class="figexp">
+<div class="figexp-h">Fig. 5 를 읽는 법</div>
+<p><b>곡선 하나가 전압 하나</b>다. 밝은 노랑이 2.5 V, 진한 적갈이 4.5 V. 아래로 내려갈수록
+반응이 잘 일어난다는 뜻이라, <b>곡선이 얕을수록 좋은 전해질</b>이다.</p>
+<p>가로축 <i>x</i> 는 섞인 비율이다 — 왼쪽 끝은 양극만, 오른쪽 끝은 전해질만, 가운데가 반반.
+곡선이 <b>매끈한 곡선이 아니라 꺾은선</b>인 것이 핵심이다. 꺾이는 점마다 <b>생기는 물질 조합이
+통째로 바뀐다.</b> ▽ 는 그중 제일 깊은 자리, 즉 <b>제일 심하게 반응하는 비율</b>이다 —
+지금까지 우리가 인용해 온 값이 그 점 하나였다.</p>
+<p><b>보라색 빈 동그라미</b>가 이 그림에서 제일 할 말이 많은 표시다. 그 자리에서 나오는
+물질 중에 <b>Nd 인산염이 있다</b>는 뜻인데, 아래 줄 가운데·오른쪽(Nd 있는 계) 패널만
+빼곡하고 <b>나머지 넷은 하나도 없다.</b> 특정 비율에서만 잠깐 나오는 게 아니라
+<i>x</i> 축 거의 전체에 걸쳐 나온다.</p>
+<p>⚠ 곡선 아래 넓이를 "총 반응성" 으로 인용하지 않는다. <i>x</i> 는 섞인 비율일 뿐,
+실제 계면에서 어느 비율이 실현되는지는 이 계산이 말하지 않는다. 쓸 수 있는 것은
+<b>같은 격자 위에서의 순서</b>다.</p>
+</div>
 
 <div class="tblwrap">
 <table>
