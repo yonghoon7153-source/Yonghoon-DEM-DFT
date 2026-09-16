@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-15 · managed-files: 425
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-16 · managed-files: 426
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 224건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 225건)
+- 2026-09-16 · `kb/methodology/cei_model_transfer_to_cascade_2026_09_16.md` — CEI 모델을 캐스케이드로 옮기기 — 무엇이 이미 배선됐고 무엇이 안 됐나 · 진행
 - 2026-09-15 · `kb/papers/self_doping_dft_paragraph_2026_09_08.md` — 원고 자가도핑 DFT 문단 — 스핀 하나로 좁힌 5문단 (2·3·6 계열) · 1저자 승인 — 삽입 위치 대기
 - 2026-09-14 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-14 · `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나 · 발송됨
@@ -26,7 +27,6 @@
 - 2026-09-13 · `kb/reviews/codex_BQ5_reply_eprime_card_2026_09_13.md` — 회신 BQ-5 — E′ 방향 GO · 카드 확정·실행 NO-GO (집계식·MD 판정·비용 상한 세 묶음) · 회신됨-방향GO-카드NO-GO
 - 2026-09-13 · `kb/reviews/codex_BQ6_prompt_eprime_v51_2026_09_13.md` — 회신 BQ-6 프롬프트 — 카드 v5.1: 해제조건 ①②③ 이행 확인 · 회신됨-②미해제
 - 2026-09-13 · `kb/reviews/codex_BQ6_reply_eprime_v51_2026_09_13.md` — 회신 BQ-6 — ①③ 해제 · ② 미해제 (도구가 검사하는 것 ≠ 카드가 선언한 것) · 회신됨-②미해제
-- 2026-09-13 · `kb/reviews/codex_BQ7_prompt_eprime_v52_2026_09_13.md` — 회신 BQ-7 프롬프트 — 카드 v5.2: ② 를 도구 실검사와 맞췄다 (aggregation_eligible) · 발송 대기
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -53,7 +53,7 @@
 - `kb/physics/vacancy_effects.md` — Vacancy Effects in Argyrodite
 - `kb/physics/vacancy_mechanism_corrected_2026_05_08.md` — Vacancy + Halogen Distribution → Adhesion: Corrected Mechanism
 
-## methodology/ (56)
+## methodology/ (57)
 - `kb/methodology/PHASE1_QUICKSTART_doping.md` — Phase 1 Quickstart Guide
 - `kb/methodology/adhesion_calibration_decision_2026_05_17.md` — Adhesion Calibration Decision — 2026-05-17
 - `kb/methodology/adhesion_energy.md` — Adhesion Energy (Wad) Calculation
@@ -68,6 +68,7 @@
 - `kb/methodology/cascade_lessons_transfer_2026_09_08.md` — hold 동안 얻은 것을 cascade 로 옮기기 — 해제조건에 붙는 5건  (2026-09-08 · 진행)
 - `kb/methodology/cascade_pipeline_anatomy_2026_08_13.md` — cascade 273 캠페인 해부 — 왜 풀이 47인가 (코드 계보 실측)  (2026-08-19 · 확정 — 원인 특정됨 (ESW 배치 커버리지). 회수 경로 있음)
 - `kb/methodology/cascade_rerank_runbook_2026_08_25.md` — cascade 재랭킹 런북 ①~⑤ — li_mobility_score 복구 후 실행  (2026-08-25 · ①~⑤완료)
+- `kb/methodology/cei_model_transfer_to_cascade_2026_09_16.md` — CEI 모델을 캐스케이드로 옮기기 — 무엇이 이미 배선됐고 무엇이 안 됐나  (2026-09-16 · 진행)
 - `kb/methodology/coating_descriptor_catalog.md` — 황화물 코팅 소재 Descriptor Catalog
 - `kb/methodology/computational_methods_canonical.md` — 계산 방법 Canonical — 단일 기준 (2026-07-23 재정리 · **2026-08-20 축 4개 추가** · **2026-09-09 인용지위 정정**)
 - `kb/methodology/defect_cell_size_metric_2026_08_16.md` — 점결함 셀 크기의 정본 지표 — λ₁(최단 격자 병진), 면 높이 아님  (2026-08-16 · 확정 — Codex 리뷰 P0 로 지표 정정, 도구 6건 반영)
@@ -488,4 +489,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 269개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 274개 (정본 목록: litdb/INDEX.md)
