@@ -113,7 +113,23 @@ manifest 이름은 `manifest.json` 인데 `preserve_handoff.sh` 가 `package_man
 `scripts/handoff_manifest.py` 한 자리로 빼고(bash heredoc 안에 두면 시험할 수 없다) 아는 키만
 넓혔다. 모르는 모양·둘 이상 후보·`path`/`sha256` 누락은 **계속 멈춘다**.
 
-**남은 열린 것**: 조건 8 의 **축 둘** — ① export 공통 snapshot · ③ run receipt.
+**남은 열린 것**: 조건 8 의 **축 하나** — ① export 공통 snapshot.
+
+**R16 조건 8 축 ③ (run receipt) 닫음.** 조각(`expected_head`·`expected_tree`·`instrument`·
+`package_digest`·`materialized`)은 다 있었는데 **한 receipt 로 묶어 서명하고 소비자가 검증하는 부분이
+없었다** — 흩어져 있으면 증거 JSON 의 필드 하나를 고쳐도 아무도 모른다. `gate.run_receipt()` 가 묶고
+서명(`signature` 를 뺀 나머지 전부의 digest, 정규 직렬화)하며 러너가 그것을 낸다. 소비자는
+`scripts/verify_run_receipt.py` 이고 **넷**을 본다: 서명(사후 편집) · **ancestry**(이 저장소 역사에 없는
+커밋의 증거는 거부) · tree 짝 · instrument digest. **서명만으로는 부족한 이유**를 시험이 고정한다
+(`test_r16_64`): 서명은 "내용이 안 바뀌었다" 만 말하고 그 내용이 이 저장소와 관계있다는 것은 말하지
+않는다 — 잘 만든 거짓말은 서명도 잘 맞는다.
+
+**자기참조(R12 Q3)의 답: 검증기는 자기를 인증하지 않고 선언한다.** "나는 봉인돼 있다" 고 스스로
+말하면 순환이다(고친 검증기도 같은 말을 한다). 자기 경로·digest·기준 커밋을 출력에 **드러내기만** 하고,
+변조 여부는 이미 있는 `instrument_sealed` 가 **바깥에서** 본다 (`test_r16_66` 이 `self_sealed`/`trusted`
+같은 자기 인증 필드가 **없어야** 한다고 고정한다). 실측: 러너를 돌려 receipt 를 뽑고 검증기에 걸었더니
+서명 ok · ancestry ok · tree ok · **instrument 다름** 이 나왔다 — 그때 트리에 커밋 안 된 수정이 있었고,
+검사가 그것을 정확히 짚은 것이다.
 
 **R16 조건 8 축 ④ (partial 수명) 닫음.** 전 판은 `partial/<이름>` 하나라 **같은 이름의 다음 부분
 실행이 그 자리를 덮었다** — canonical 은 안 건드리므로 과학 값은 안전했지만 "언제 무엇을 시도해
@@ -604,7 +620,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 376 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 383 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

@@ -342,6 +342,12 @@ def main() -> int:
                              "kept": bool(a.keep_materialized)} if snapshot else None),
            "ran_in": "격리 snapshot" if snapshot else "working tree (--allow-dirty)",
            "package_digest_ok": digest_ok, "package_digest": digest,
+           # ⚠ R16 (조건 8 축 ③): 흩어진 조각을 **한 receipt 로 묶고 서명한다**. 소비자는
+           #   `scripts/verify_run_receipt.py` — 서명·ancestry·tree·instrument 를 댄다.
+           "run_receipt": gate.run_receipt(
+               head=exp, tree=tree, instrument=seal_detail, package_digest=str(digest),
+               materialized=({"mode": "sparse detached worktree"} if snapshot else None),
+               runtime={"python": sys.version.split()[0], "platform": sys.platform}),
            "설명": "R11 네 스크립트를 자식으로 그대로 돌리고 case 마다 **봉인한 술어**로 닫힘을 판정한다 — "
                  "술어가 표에 없으면 닫힘으로 세지 않는다 (Codex R11 P1-12)",
            "probes": {}}

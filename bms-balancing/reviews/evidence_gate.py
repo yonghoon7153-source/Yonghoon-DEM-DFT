@@ -14,7 +14,7 @@ R7·R9 닫힘 재생기가 같은 계약을 쓴다. 두 벌로 두면 한쪽만 
   worktree 는 그 commit 의 blob 만 풀고 자기 index 를 쓰므로 둘 다 닿지 않는다.
 """
 from __future__ import annotations
-import hashlib, os, pathlib, subprocess, sys, tempfile
+import hashlib, json, os, pathlib, subprocess, sys, tempfile
 
 
 class EvidenceError(RuntimeError):
@@ -233,6 +233,44 @@ def tree_of(target, head: str) -> str:
 
 
 EXCLUSION_KINDS = ("전제 변경", "환경상 불가", "우리 코드 밖", "미실행 (그룹 중단)")
+
+
+#: run receipt 의 판 — 묶는 규칙이 바뀌면 올린다 (옛 서명과 새 서명이 섞여 보이지 않게).
+RUN_RECEIPT_VERSION = "r16.1"
+
+
+def _canonical(obj) -> str:
+    """서명이 덮는 **정규 직렬화** — 키 순서·공백이 서명을 바꾸면 그 서명은 내용을 말하지 않는다."""
+    return json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str)
+
+
+def receipt_signature(receipt: dict) -> str:
+    """`signature` 를 뺀 **나머지 전부**의 digest. 필드 하나만 고쳐도 달라진다."""
+    body = {k: v for k, v in receipt.items() if k != "signature"}
+    return hashlib.sha256((RUN_RECEIPT_VERSION + "\n" + _canonical(body)).encode("utf-8")).hexdigest()
+
+
+def run_receipt(*, head: str, tree: str, instrument: dict, package_digest: str,
+                materialized=None, runtime=None) -> dict:
+    """조각들을 **한 객체**로 묶고 서명한다 (조건 8 축 ③).
+
+    왜 묶나 (R12 §5 답변 4): 조각이 흩어져 있으면 증거 JSON 의 필드 하나를 고쳐도 아무도 모른다.
+    묶어서 서명하면 사후 편집이 드러나고, 소비자가 `code.commit` 의 **ancestry** 를 대면 "이 저장소의
+    역사에 없는 커밋에서 나왔다는 증거" 를 거부할 수 있다.
+
+    ⚠ 서명은 **내용이 안 바뀌었다**만 말한다. 그 내용이 이 저장소와 관계있다는 것은 말하지 않는다 —
+      그래서 소비자가 ancestry 와 tree 짝을 따로 본다 (`scripts/verify_run_receipt.py`).
+    """
+    import datetime as _dt
+    r = {"receipt_version": RUN_RECEIPT_VERSION,
+         "code": {"commit": str(head), "tree": str(tree)},
+         "instrument": dict(instrument or {}),
+         "package": {"digest": str(package_digest)},
+         "materialized": materialized,
+         "runtime": dict(runtime or {}),
+         "produced_utc": _dt.datetime.now(_dt.timezone.utc).isoformat()}
+    r["signature"] = receipt_signature(r)
+    return r
 
 
 def summarize_verdicts(records: dict, requested, substitutes: dict | None = None) -> dict:
