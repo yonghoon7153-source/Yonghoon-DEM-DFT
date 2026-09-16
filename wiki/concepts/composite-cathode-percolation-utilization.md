@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-16
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md]
+sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -17,6 +17,10 @@ evidenceScope: multi-source-primary
 
 > `assb` 축의 첫 개념 페이지다. 닻은 [[assb-contact-loss-vs-lampe]].
 > 수치의 정본은 원문 PDF 이고, 이 페이지의 값은 **사본**이다 — 인용 근거로 쓰지 않는다.
+>
+> **2026-09-16 갱신 (`assb` 3호 Liu 2024)**: 3호의 "contact loss" 는 **이 `θ` 와 같은
+> 양이 아니고 변환도 안 된다** (§"3호는 이 `θ` 와 변환되지 않는다"). 대신 **`θ` 를
+> 떨어뜨릴 구동력**과 그것이 **(양극 × 전해질) 쌍의 함수**라는 것을 준다.
 >
 > **2026-09-16 갱신 (`assb` 2호 Clausnitzer 2023)**: ① 이 `θ` 와 **정확히 같은 양**이
 > 두 번째 논문에 다른 이름으로 있다 (§"두 논문의 좌표 대조"). ② 그러나 이 페이지가 세운
@@ -56,6 +60,39 @@ Bielefeld, Weber, Janek (2019) 의 **식 (6)**:
 
 `[해석]` `θ_AM` 이 **열역학적 용량**(얼마나 많은 AM 이 쓰이는가)에 대응한다면
 `A_spec,a` 는 **동역학**(얼마나 빨리)에 대응한다. 원문은 **둘 다 전압으로 번역하지 않는다.**
+
+## ★ 3호(Liu 2024)는 이 `θ` 와 **변환되지 않는다** (2026-09-16 추가)
+
+`assb` 3호(`raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md`)
+도 "contact loss" 를 말하지만 **다른 양을 잰다**. 변환이 안 되는 이유 셋:
+
+| | 1호·2호 | **3호 (Liu 2024)** |
+|---|---|---|
+| 길이척도 | **전극** (두께 20–140 / 50 µm, 수천 입자) | **이차입자 1 개**(2–12 µm)가 균질 전해질 블록에 박힘 (`[도표]` Fig. S1) |
+| 접촉 손실의 좌표 | `θ` / `Connectivity` — **무차원 분율** | **계면 최대주응력** — **GPa** |
+| 파괴·디본딩 | 없음 | **없음** (`[인쇄]` "does not explicitly account for mechanical fracture") |
+
+1. **분모가 없다.** `θ` 는 분율이라 "전체 활물질" 분모가 필요한데 3호의 RVE 는 입자
+   **1 개**이고 `[인쇄]` "assumed to be connected to the current collector **via the carbon
+   binder**" — 즉 **`θ_AM ≡ 1` 인 세계**다.
+2. **차원이 다르다.** 응력(Pa) → 분리 분율(무차원)에는 **파괴 판정 규칙**(임계 응력·
+   에너지 방출률·계면 인성)이 필요한데 3호에 없다. 논문 스스로 cohesive zone /
+   phase-field damage 를 **앞으로 넣을 것**으로 나열한다.
+3. **경계조건이 반대다.** 1·2호는 SE 를 **이온 전도 매질**로만 보고 역학이 없다.
+   3호는 SE 를 **역학 매질**로만 본다 — `[인쇄]` "Li-ion transport inside the solid
+   electrolyte is **not considered explicitly**". **두 모델은 서로의 영점에서 작동한다.**
+
+★ `[해석]` 그래서 3호의 기여는 `θ` 가 아니라 **`θ` 를 떨어뜨릴 구동력**과, 그 구동력이
+**무엇의 함수인가**다:
+
+> **`θ` 는 양극만의 성질이 아니다.** `[도표]` Fig. 4f·7c: 같은 양극·같은 운전조건에서
+> 전해질 Young 률을 **1 → 30 → 150 GPa** (폴리머 → 황화물 → 산화물)로 바꾸면 계면
+> 최대주응력이 **0.05 → 0.28 → 0.38 GPa (리튬화) / 0.55 GPa (탈리튬)**, 벌크 응력은
+> **+0.75 → −0.2 → −1.5 GPa** 로 부호까지 뒤집힌다. 율(0.25C–5C)에 따른 산포는 그에 비해
+> **작다** — `[인쇄]` "the reduction of the discharge rate is **not a solution**".
+
+→ 이 페이지의 닫힌 형태(식 8, `A_spec` 멱법칙)에는 **SE 물성이 하나도 없다.**
+`θ` 를 열화 축으로 쓰려면 **(양극 × 전해질) 쌍마다 다시 재야 한다.**
 
 ## 두 논문의 좌표 대조 (2026-09-16 추가)
 
@@ -171,6 +208,9 @@ Fig. 10 의 "상위 3 개"(0.94 / 0.93 / 0.89) 같은 순위는 **신뢰 근거�
   **방전 1 회**다. `assb` **2/2 편이 `θ` 의 시간축을 주지 않았다.**
   (다만 2호의 `ρ_S`(소결 밀도) 스윕이 **후보 대리 축**이다 — ⚠ 제조 공극과 사이클 균열은
   **공극의 분포**가 다를 수 있다.)
+  ⚠ **3호를 읽고도 비어 있다**: Liu 2024 는 방전 1 회(+ 충전 1 회)이고 사이클 축 그림이
+  **0 장**이며, 무엇보다 **파괴·디본딩 모형이 없다**. `assb` **3/3 편이 시간축을 주지
+  않았다** — 그리고 이제 **공통 원인**이 보인다 (§"3호는 이 `θ` 와 변환되지 않는다").
 - **`θ` 는 스칼라가 아니다** (2호가 추가): `[인쇄]` "The share of unconnected clusters
   **increases with increasing distance from the separator**." → forward model 에 넣을 때
   최소한 "평균 + 기울기" 두 수가 필요하다 ([[assb-apparent-capacity-decomposition]]).
@@ -182,9 +222,13 @@ Fig. 10 의 "상위 3 개"(0.94 / 0.93 / 0.89) 같은 순위는 **신뢰 근거�
   원문 저자들이 **8 편을 지목해** "공극률이 보고되지 않는다" 고 적었다. `assb` 축의
   "모두가 빠뜨린 필수 변수" 원장 — 현재 **공극률**(1호가 지목) +
   **LLZO 복합전극의 부분 전도도**(2호가 스스로 "문헌에 없다") +
-  **압력**(우리가 지목, `assb` **2/2 편이 0 회**) +
-  **구조 실현 산포**(1호는 쟀고 2호는 안 쟀다) +
-  **유일성·식별성**(`assb` **2/2 편이 안 쟀다** — 둘 다 forward 전용).
+  **압력**(우리가 지목, `assb` **3/3 편이 0 회** — 3호는 접촉 역학이 본체인데도) +
+  **구조 실현 산포**(1호는 쟀고 2·3호는 안 쟀다 — 3호는 `[인쇄]` "the **random
+  arrangement** … play a critical role" 라고 적고도 **실현 1 개**) +
+  **유일성·식별성**(`assb` **3/3 편이 안 쟀다** — 전부 forward 전용) +
+  **파괴·디본딩 모형**(3/3 편에 없다 — `θ(N)` 이 비어 있는 **진짜 이유**) +
+  **접근 가능한 코드**(3호: 공개된 것은 DAMASK v2.0.2, 실제로 쓴 것은 별 저장소 +
+  기관 허가 + CLA. 공개본에는 Li 화학도, 논문이 "developed" 라고 적은 FEM 솔버도 없다).
 
 ## 이 페이지가 주장하지 않는 것
 

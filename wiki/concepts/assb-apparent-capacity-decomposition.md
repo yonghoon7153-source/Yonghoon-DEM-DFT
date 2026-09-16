@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-16
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md]
+sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -18,6 +18,10 @@ evidenceScope: multi-source-primary
 > `assb` 축의 두 번째 개념 페이지다. 닻은 [[assb-contact-loss-vs-lampe]],
 > 첫 번째는 [[composite-cathode-percolation-utilization]].
 > 수치의 정본은 원문 PDF 이고, 이 페이지의 값은 **사본**이다 — 인용 근거로 쓰지 않는다.
+>
+> **2026-09-16 갱신 (`assb` 3호 Liu 2024)**: ① **율 극한이 독립 모델에서 확인됐다**
+> (§"율 극한이 …"). ② 그러나 **`Q_material` 도 율 의존**이라 분리 시험의 처방이
+> 좁아졌다 (§"그러나 처방이 …"). ③ `θ(N)` 은 **3/3 편이 안 줬다.**
 
 ## 정의
 
@@ -71,6 +75,46 @@ Clausnitzer 가 인쇄한 두 문장을 붙이면 분리 시험이 나온다:
 그러고도 남는 것이 `θ_AM · Q_material` 이고, **그 곱은 여전히 안 갈라진다** —
 [[composite-cathode-percolation-utilization]] 의 결론은 무효화되지 않고 **범위가 좁아진다.**
 
+### ✅ 율 극한이 독립 모델에서 확인됐다 (2026-09-16, `assb` 3호 Liu 2024)
+
+`assb` 3호(`raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md`)
+는 이 계보 최초로 **율 스윕 전압곡선**을 준다 (SI Fig. S4: 0.25C·0.5C·1C·2C·5C ×
+NMC811 이차입자 2/4/8/12 µm = 곡선 20 장, 3 V 컷오프). `[도표]` 정규화 용량 종점:
+
+| | 2 µm | 4 µm | 8 µm | 12 µm |
+|---|---|---|---|---|
+| **0.25C** | ≈0.99 | ≈0.98 | ≈0.98 | **≈0.95** |
+| 1C | ≈0.96 | ≈0.945 | ≈0.90 | ≈0.69 |
+| 5C | ≈0.95 | ≈0.86 | ≈0.60 | **≈0.35** |
+
+★ `[해석]` **`i → 0` 에서 모든 크기가 ≈1 로 수렴한다.** 그 모델에는 재료 손실도(첫
+방전에는) 기하 손실도 없다 — 입자 **1 개**가 균질 전해질에 박혀 있고 탄소 바인더로
+집전체에 연결됐다고 **가정**되므로 **`θ_AM ≡ 1`** 이다. 따라서 **관측된 용량 손실
+전부가 `η(i)` 한 항**이고, 그것이 율과 함께 사라지는 것을 **직접 볼 수 있다.**
+2호에서 두 문장으로 **추론**했던 것이 다른 모델·다른 길이척도에서 재현됐다.
+
+### ⚠ 그러나 처방이 좁아졌다 — `Q_material` 도 율 의존이다
+
+3호는 동시에 위 처방의 전제를 깬다. `[도표]` Fig. 5e (활물질 손실 = 소성전단 > 12 %
+영역의 부피분율):
+
+| 입자 지름 | 0.25C | 1C | 5C |
+|---|---|---|---|
+| 12 µm | 0.093 | 0.125 | **0.185** |
+| 8 µm | 0.088 | 0.115 | 0.163 |
+| 4 µm | 0.078 | 0.080 | 0.132 |
+| 2 µm | 0.078 | 0.075 | 0.088 |
+
+→ **고율 방전 자체가 진짜 재료 손실을 더 만든다** (12 µm 에서 2 배). 즉
+`Q_material = Q_material(i, N)` 이다. **같은 셀에 두 율을 걸어 차이를 읽으면 그 차이는
+동역학 성분의 하한이 아니라 (동역학 + 율유발 재료손실)의 합**이다.
+
+`[해석]` **살아남는 설계 둘**:
+(a) **저율 쌍만** 쓴다 (예: 0.1C vs 0.25C — 위 표에서 그 구간의 재료손실 증가분이 가장 작다),
+(b) **율을 올렸다가 기준 율로 돌아와** 이력(hysteresis)을 재고 비가역분을 뺀다. **(b) 가 안전하다.**
+⚠ 단 3호의 활물질 손실 축은 **적합된 문턱(12 %)** 위에 서 있고 오차 막대가 없다 —
+위 수치는 **방향의 근거이지 크기의 근거가 아니다.**
+
 이것은 액체셀 축의 [[thermo-kinetic-loss-partition]] (ΔE / η 분해)와 **형식이 같고 대상이
 다르다**: 거기서 `η` 는 **분극 전압**이었고 여기서 `η` 는 **겉보기 용량 인자**다.
 
@@ -114,7 +158,15 @@ Bielefeld 의 `θ_AM` 은 전극 전체에 대한 **스칼라 하나**였다. Cl
   돌았다. 율 의존은 논문의 두 문장에서 **추론한 것**이다.
 - **`η` 가 열화 축이라고 주장하지 않는다.** Clausnitzer 의 `R_GB` 는 **제조 변수**(소결
   공정)이지 사이클 변수가 아니다. 사이클 중 `R_GB` 나 `θ` 가 어떻게 변하는지는
-  **`assb` 2 편 모두 다루지 않았다** — 논문 스스로 `[인쇄]` "beyond the scope".
+  **`assb` 3 편 모두 다루지 않았다** — 2호는 `[인쇄]` "beyond the scope", 3호는 방전
+  1 회 + 충전 1 회에 **파괴·디본딩 모형 자체가 없다**.
+- **3호가 `θ_AM` 을 쟀다고 주장하지 않는다.** 3호의 RVE 에서 `θ_AM` 은 **가정으로 1** 이다
+  (입자 1 개 + "탄소 바인더로 집전체에 연결" 가정). 위 율 극한이 깨끗한 것은 **다른 두
+  항이 그 모델에서 0 이기 때문**이고, 실제 전극에서는 `θ_AM < 1` 이 남는다.
+- **`η` 의 지배 인자가 하나라고 주장하지 않는다.** 전극 척도(2호: 굴곡도·`R_GB`)와
+  입자 척도(3호: 입계 확산도 `D_GB`) **둘 다**다. `[도표]` 3호 Fig. 6h 에서 `D_GB` 를
+  `0.05 → 20 × D_bulk` 로 바꾸면 1C 정규화 용량이 **0.48 → 0.985** — 재료도 기하도 같은데
+  겉보기 용량이 두 배이고, **OCV 로는 안 보인다.**
 - 이 수치들은 **LCO/LLZO 소결 복합양극 · Li 금속 음극(이상 접촉) · 두께 50 µm ·
   방전 1 회 · 구조 실현 1 개**라는 한 모집단의 것이다.
 
@@ -124,4 +176,6 @@ Bielefeld 의 `θ_AM` 은 전극 전체에 대한 **스칼라 하나**였다. Cl
 - [[thermo-kinetic-loss-partition]] — 액체셀 축의 같은 형식(전류를 관측 축으로 쓰는 분해).
 - [[fitting-degeneracy]] — 이 3 항 중 앞의 두 항이 OCV 에 대해 만드는 null 방향.
 - [[near-optimal-set-width-measurement]] — 율을 하나 더 넣었을 때 폭이 얼마나 줄어드는지 잴 기계.
-- [[halfcell-ocp-shape-invariance]] — 아핀 창 모형이 깨지는 자리.
+- [[halfcell-ocp-shape-invariance]] — 아핀 창 모형이 깨지는 자리. 3호가 **두 번째 경로**를
+  연다: 식 (21) 의 `μ_mech = −(1/C_max) F_c S · ∂V_c/∂θ` 때문에 **OCV 자체가 응력 의존**이다
+  (⚠ 3호는 그 크기를 보고하지 않는다 — `μ_mech` 를 끈 대조군이 없다).
