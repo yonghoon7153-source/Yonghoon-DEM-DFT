@@ -174,18 +174,15 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 | 23 | Hlushkou 외, *JPS* 2018, 396, 363−370 | Bielefeld ref 16 — **FIB-SEM 실측 미시구조** (합성 기하와 대조) |
 | 24 | **Ren·Danner·Finsterbusch·Latz 외, *Adv. Energy Mater.* 2022, 2201939** | 02 ref 17. **`θ(N)` 시간축의 입구** — `assb` 2/2 편이 동역학을 안 줬다 |
 | 25 | **Neumann 외, *ACS Appl. Energy Mater.* 2021, 4, 4786** | 02 ref 38. **GB 저항 모형 원전** + **EIS 로 파라미터화된 measured 라벨**. Q2 |
+| 26 | **Stavola·Sun·Guida·Bruck 외, *ACS Energy Lett.* 2023** — Lithiation gradients and tortuosity factors in thick NMC111-argyrodite cathodes (**PMC 무료**) | 01 이 "두께 효과는 유한 크기 인공물" 이라 한 자리를 **실측**으로 친다. Q1·Q2 |
+| 27 | **Zhou·Lu·Mish·Chen·Feng·Kim 외, *ACS Energy Lett.* 2025** — Tailored cathode composite microstructure enables long cycle life at **low pressure** | Q1·Q6. **DEM 브랜치에 `tailored_cathode_low_pressure.csv` 앵커가 이미 있다** — 원문과 대조 가능 |
+| **28** | **역문제·식별성을 다루는 ASSB 논문 (미특정)** | ★ **구조적 공백.** `assb` 2/2 편이 **forward 전용**이라 **Q4 는 원리적으로 안 채워진다.** forward 논문만 모아서는 영원히 0 이고 **다른 종류의 논문**이 들어와야 닫힌다 |
+| **29** | **ASSB 의 pOCV / 저율 OCV 곡선이 실린 논문 (미특정)** | ★ **구조적 공백.** 02 가 전압축을 줬지만 전부 **1 mA/cm²(≈0.74 C) 부하 곡선**이고 **OCV 곡선은 0 편**이다. 우리 물음 전체가 OCV 적합인데 그 곡선이 없다. 수령분 `09 Huo`·`13 Maxwell` 이 채울 후보 — 돌려 보고 아니면 따로 찾는다 |
 
-### 6-3-a. 구조적 공백 둘 — 논문 번호가 아니라 **성질**로 적는다
+### 6-3-a. ⚠ 28·29 는 논문 번호가 아니라 **성질**이다
 
-지금까지 흡수한 `assb` 2 편이 **둘 다 forward 전용**이라 생긴 것. 개별 논문을 더 모아도
-안 닫히고, **다른 종류의 논문**이 들어와야 닫힌다.
-
-- **역문제·식별성을 다루는 편이 0 이다** → **Q4 는 원리적으로 안 채워진다.**
-- **OCV 곡선이 0 이다** → 02 가 전압축을 줬지만 전부 **1 mA/cm²(≈0.74 C) 부하 곡선**이다.
-  우리 물음 전체가 OCV 적합인데 그 곡선이 없다.
-
-수령분 `09 Huo`(결합 전기화학-노화 모델)·`13 Maxwell`(OCV 로 엔트로피 변화)이 둘째를
-채울 후보다. 돌려 보고 아니면 그때 따로 찾는다.
+둘 다 "그 논문 한 편" 이 아니라 **지금 목록에 없는 종류**를 가리킨다. 개별 논문을
+아무리 더 모아도 안 닫히므로, 채워지면 그때 실제 서지로 바꿔 적는다.
 
 ### 6-4. 권장 처리 순서
 
