@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-16
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md]
+sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -22,6 +22,12 @@ evidenceScope: multi-source-primary
 > **2026-09-16 갱신 (`assb` 3호 Liu 2024)**: ① **율 극한이 독립 모델에서 확인됐다**
 > (§"율 극한이 …"). ② 그러나 **`Q_material` 도 율 의존**이라 분리 시험의 처방이
 > 좁아졌다 (§"그러나 처방이 …"). ③ `θ(N)` 은 **3/3 편이 안 줬다.**
+>
+> **2026-09-16 갱신 (`assb` 4호 Shi 2020 — 첫 실험 논문)**: ★★ **두 번째 분리 연산자가
+> 들어왔다** — 율이 `η` 를 지우듯 **압력 재인가가 `θ_AM` 을 (부분적으로) 되돌린다**
+> ([[assb-pressure-reapplication-separation-test]]). 그리고 ★ **율 극한 논증이 실험에서
+> 간접 검증됐다** (§"저율 셀이 …"). ⚠ 동시에 **`θ` 를 곱셈 인자로 쓰는 것이 6 배
+> 어긋난다**는 실측 반례도 같이 왔다.
 
 ## 정의
 
@@ -118,6 +124,27 @@ NMC811 이차입자 2/4/8/12 µm = 곡선 20 장, 3 V 컷오프). `[도표]` 정
 이것은 액체셀 축의 [[thermo-kinetic-loss-partition]] (ΔE / η 분해)와 **형식이 같고 대상이
 다르다**: 거기서 `η` 는 **분극 전압**이었고 여기서 `η` 는 **겉보기 용량 인자**다.
 
+### ★★ 저율 셀이 실험에서 이 논증을 간접 검증했다 (2026-09-16, `assb` 4호 Shi 2020)
+
+`raw/papers/shi2020_mechanical-degradation-assb-cathode.md` (이 계보 **첫 실험 논문**).
+`[재현]` 그 셀의 율은 **≈C/15** (0.05 mA cm⁻², NMC ≈3 mg, 8 mm 펠릿) — 2호(≈0.74 C)·
+3호(0.25–5 C)보다 **한 자릿수 낮다.** 위 표와 3호 율 스윕을 그대로 적용하면
+**`η ≈ 1` 이어야 한다.** 그런데 `[도표]` 50 사이클에서 겉보기 용량이 129 → **≈2
+mAh g⁻¹** 다 (**≈98 % 손실**).
+
+★ `[해석]` **저율에서도 살아남았으므로 `η(i)` 로 설명되지 않는다.** 남는 것은
+`θ_AM` 과 `Q_material` 인데, **300 MPa 재가압으로 `[재현]` ≈60.5 %p 가 돌아왔다**
+(`[인쇄]` 2 → 80 mAh g⁻¹). → **그중 최소 60 %p 가 기하 쪽이다.**
+즉 위의 "율이 세 항 중 하나만 지운다" 가 **실험에서 처음으로 간접 확인됐다.**
+⚠ 단 4호는 **율 스윕을 하지 않았다** — 직접 증명이 아니라 우리 추론이다.
+
+### ⚠ 그리고 같은 논문이 `θ_AM` 의 **곱셈 형태**를 6 배로 배반한다
+
+`[인쇄]` 같은 시점의 접촉 손실 **면적** 분율은 **10.4 %** 다. 곱셈에 그대로 넣으면
+용량 손실 **10 %** 여야 하는데 압력 가역분이 **60 %p**. **≈6 배.**
+→ **`θ_AM` 자리에 면적 분율을 선형으로 넣을 수 없다** (문턱/분포 의존).
+자세히는 [[composite-cathode-percolation-utilization]] §"4호는 실측을 줬는데 …".
+
 ## 동역학 성분의 크기 — 이 계보 최초의 전압축 숫자
 
 Clausnitzer Fig. S5 `[도표]` (`SVF_LCO = 50 %`, 소결밀도 93.1 %, `d_CAM` 2.00 / `d_SE`
@@ -158,8 +185,15 @@ Bielefeld 의 `θ_AM` 은 전극 전체에 대한 **스칼라 하나**였다. Cl
   돌았다. 율 의존은 논문의 두 문장에서 **추론한 것**이다.
 - **`η` 가 열화 축이라고 주장하지 않는다.** Clausnitzer 의 `R_GB` 는 **제조 변수**(소결
   공정)이지 사이클 변수가 아니다. 사이클 중 `R_GB` 나 `θ` 가 어떻게 변하는지는
-  **`assb` 3 편 모두 다루지 않았다** — 2호는 `[인쇄]` "beyond the scope", 3호는 방전
+  **`assb` 1–3 호가 다루지 않았다** — 2호는 `[인쇄]` "beyond the scope", 3호는 방전
   1 회 + 충전 1 회에 **파괴·디본딩 모형 자체가 없다**.
+  → **4호가 실측으로 일부 채웠다**: `[도표]` void 부피분율이 사이클 0/10/50 에
+  **2.87 / 3.23 / 9.50 vol%**, `[도표]` EIS 저항이 사이클 1→50 에 전 대역 증가
+  (`R_MF` `[인쇄]` 954 → 3283 Ω). ⚠ 단 **3 점 · 각 점 다른 셀 · 반복 0** 이고,
+  `θ` 가 아니라 **void 부피/접촉 면적**이다.
+- **4호의 회복분(60 %p)이 양극 것이라고 주장하지 않는다.** `[도표]` 재가압 회복률은
+  음극 쪽 `R_LF` 에서 **≈65 %**, 양극 쪽 `R_MF` 에서 **≈23 %** 다. 4호 초록·결론은
+  양극으로 돌리지만 자기 그림이 다르게 말한다 (4호 digest D8).
 - **3호가 `θ_AM` 을 쟀다고 주장하지 않는다.** 3호의 RVE 에서 `θ_AM` 은 **가정으로 1** 이다
   (입자 1 개 + "탄소 바인더로 집전체에 연결" 가정). 위 율 극한이 깨끗한 것은 **다른 두
   항이 그 모델에서 0 이기 때문**이고, 실제 전극에서는 `θ_AM < 1` 이 남는다.
@@ -173,6 +207,8 @@ Bielefeld 의 `θ_AM` 은 전극 전체에 대한 **스칼라 하나**였다. Cl
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻 질문. 이 페이지가 그 미결 항목 1 의 **세 번째 항**을 추가한다.
 - [[composite-cathode-percolation-utilization]] — `θ_AM` 의 정의와 곱셈 축퇴. 이 페이지가 그 위에 `η` 를 얹는다.
+- [[assb-pressure-reapplication-separation-test]] — **두 번째 분리 연산자.** 율이 `η` 를
+  지우고, 압력이 `θ_AM` 을 되돌린다. 남는 것이 `Q_material` 이다.
 - [[thermo-kinetic-loss-partition]] — 액체셀 축의 같은 형식(전류를 관측 축으로 쓰는 분해).
 - [[fitting-degeneracy]] — 이 3 항 중 앞의 두 항이 OCV 에 대해 만드는 null 방향.
 - [[near-optimal-set-width-measurement]] — 율을 하나 더 넣었을 때 폭이 얼마나 줄어드는지 잴 기계.

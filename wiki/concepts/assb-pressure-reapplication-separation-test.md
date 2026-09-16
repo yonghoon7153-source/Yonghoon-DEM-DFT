@@ -1,0 +1,151 @@
+---
+title: 압력 재인가 분리 시험 — ASSB 겉보기 용량 손실의 가역/비가역 가르기
+description: "Pressure re-application as the second separation operator in ASSB: rate erases the kinetic term η(i), stack pressure (partially) restores the geometric term θ_AM, and what is left is true LAM_PE (Shi 2020 measured instance)"
+created: 2026-09-16
+updated: 2026-09-16
+type: concept
+tags: [assb, battery, degradation, research]
+sources: [raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md]
+confidence: low
+explored: false
+verificationStatus: unverified
+claimType: interpretive
+evidenceScope: multi-source-primary
+---
+
+# 압력 재인가 분리 시험 — ASSB 겉보기 용량 손실의 가역/비가역 가르기
+
+> `assb` 축의 **세 번째** 개념 페이지다. 닻은 [[assb-contact-loss-vs-lampe]],
+> 앞의 둘은 [[composite-cathode-percolation-utilization]] (`θ_AM`) 과
+> [[assb-apparent-capacity-decomposition]] (`Q_apparent = θ_AM · η(i) · Q_material`).
+> 수치의 정본은 원문 PDF 이고 이 페이지의 값은 **사본**이다 — 인용 근거로 쓰지 않는다.
+>
+> **`confidence: low` 인 이유**: 실측 사례가 **1 편 · 1 셀 · 압력 1 점**뿐이고,
+> 그 한 사례에서도 회복분의 귀속이 양극이 아닐 수 있다 (§"네 개의 경고" 2).
+
+## 정의
+
+[[assb-apparent-capacity-decomposition]] 의 3 항 분해에는 **각 항을 지우는 조작**이
+하나씩 필요하다. 율(rate)이 동역학 항을 지운다는 것은 이미 있었다. **압력이 기하
+항에 대해 같은 일을 한다**는 것이 이 페이지다.
+
+```
+Q_apparent(i, P)  =  θ_AM(P, N) · η(i) · Q_material(N)
+
+  i → 0   (저율)      ⇒  η(i) → 1                     … 2호 추론 · 3호 율 스윕이 확인
+  P ↑     (재가압)    ⇒  θ_AM → (부분적으로) 회복      … ★ 4호가 실측으로 준 것
+  둘 다 하고 남는 것  =  Q_material  =  진짜 LAM_PE
+```
+
+**연산자 정의** (우리 표기, 원문의 식이 아니다):
+
+```
+ΔQ_mech(N)  ≡  Q(i, P_high ; N)  −  Q(i, P_low ; N)
+```
+
+`[해석]` `ΔQ_mech` 는 **기하 접촉 손실의 용량 등가에 대한 상한**이다. 하한이 아니라
+상한인 이유: 재가압이 접촉을 **완전히** 되돌리지 못하기 때문(아래 경고 1).
+따라서 **진짜 재료 손실의 하한**이 따라 나온다:
+
+```
+LAM_PE(진짜)  ≥  Q(초기)  −  Q(i, P_high ; N)
+```
+
+## 실측 사례 하나 — Shi et al. 2020 (`assb` 4호)
+
+`raw/papers/shi2020_mechanical-degradation-assb-cathode.md`.
+NMC532(LZO 코팅) / 비정질 LPS / CNF 60:35:5 wt%, **In 금속 음극**, 8 mm 펠릿,
+사이클 스택 압력 **~2 MPa (스프링)**, `[재현]` 율 **≈C/15**, 1.4–3.7 V vs In.
+
+| | 값 | 층위 |
+|---|---:|---|
+| 첫 사이클 방전 용량 | **129 mAh g⁻¹** | `[인쇄]` |
+| 사이클 50 잔존 | `figure-read ≈` **2 mAh g⁻¹** (본문은 "less than 20") | `[도표]` |
+| **50 사이클 후 300 MPa 재가압** → 회복 | **80 mAh g⁻¹** | `[인쇄]` |
+| **`ΔQ_mech` (초기 대비)** | **≈60.5 %p** | `[재현]` |
+| 같은 시점 접촉 손실 **면적** 분율 | **10.4 %** | `[인쇄]` |
+
+★ **`assb` 계보에서 "접촉 손실만 되돌리는 조작" 의 첫 실측**이다.
+논리의 뼈대: **rock-salt 화·구조 붕괴 같은 진짜 재료 손실은 눌러도 안 돌아온다.
+닿지 않던 활물질은 돌아온다.**
+
+★★ **그리고 같은 사례가 곧바로 반례가 된다**: `θ_AM` 이 **곱셈 인자**이고 면적
+분율이 그 자리에 그대로 들어간다면 용량은 **10 %** 만 줄어야 하는데, 압력으로
+되돌아온 몫이 **60 %p** 다. **≈6 배 어긋난다.**
+→ **면적 분율을 `θ_AM` 자리에 선형으로 넣으면 안 된다.**
+(원문이 그 간극을 계산하지 않는다 — 4호 digest §13.2, D9.)
+
+## 왜 중요한가 — 닻 질문의 우회로
+
+[[assb-contact-loss-vs-lampe]] 는 **"OCV 적합이 `LAM_PE` 와 접촉 손실을 가를 수
+있는가"** 를 묻는다. [[composite-cathode-percolation-utilization]] 이 이미
+**곱셈이므로 OCV 는 곱만 본다**는 닫힌 형태 답을 줬다.
+
+`[해석]` 이 페이지가 여는 것은 **다른 문이다**: OCV **모양**으로는 못 갈라도,
+**압력이라는 외부 축을 하나 더 걸면 같은 셀 안에서 분해가 된다.**
+액체셀에는 없던 축이고 (닻의 미결 항목 4: "압력이 상태변수다"), 우리가 계속 찾던
+**독립 라벨**의 후보다 — DEM 이 줄 수 있는 것(접촉 수)보다 **직접적**이다.
+[[near-optimal-set-width-measurement]] 로 물어야 할 질문은 이제:
+
+> **압력 2 점(저압·재가압)에서 같은 파라미터를 적합하면 `a_PE` 의 근최적 폭이
+> 얼마나 줄어드는가?**
+
+## 네 개의 경고 (전부 4호 자신이 준다)
+
+1. **완전 회복이 아니다.** `[인쇄]` 재가압 후에도 `R_MF` 가 3283 → **2755 Ω**
+   (`[재현]` **22.7 %** 만 회복). `[인쇄]` "not all contact can be restored" ·
+   "chemical degradation … also play a role".
+   → **`ΔQ_mech` 는 상한이고, 등호가 아니다.**
+2. ★★ **양극 전용 조작이 아니다.** `[도표]` Fig. 1(c) 에서 회복률은
+   **`R_LF`(음극 쪽) ≈65 %** · `R_HF` ≈46 % · **`R_MF`(양극 쪽) ≈23 %** 다.
+   그리고 사이클 50 에서 `R_LF ≈110 kΩ` 가 전체 저항의 **≈93 %** 다.
+   → **용량 회복률(≈61 %p)과 가장 잘 맞는 것은 양극이 아니라 음극이다.**
+   `ΔQ_mech` 를 양극 접촉 손실로 읽으면 **과대**가 된다.
+   (원문 초록·결론은 양극으로 돌린다 — 4호 digest D8.)
+3. **비가역 부작용이 있다.** `[도표]` 재가압 후 5–6 사이클에 80 → **≈64 mAh g⁻¹**
+   (`[재현]` ≈3 mAh g⁻¹/cycle = 초기 감쇠율의 **3 배**). 원문은 언급하지 않는다.
+   → **연산자를 반복 적용하면 측정 대상이 바뀐다.**
+4. **압력–회복 곡선이 없다.** 사이클 압력 1 점(2 MPa), 재가압 1 점(300 MPa).
+   "얼마나 눌러야 얼마나 돌아오나" 를 모른다. 그리고 `[인쇄]` 저자들 스스로
+   "such a large stack pressure **may not be practical** for large format cells".
+
+## 율 연산자와의 짝 — 두 조작의 성질이 다르다
+
+| | **율 `i → 0`** | **압력 `P ↑`** |
+|---|---|---|
+| 지우는 항 | `η(i)` (동역학) | `θ_AM` (기하) |
+| 근거 | 2호 두 문장에서 추론 → 3호 율 스윕 20 곡선에서 확인 | **4호 실측 1 사례** |
+| **비파괴인가** | ✅ (율만 바꾼다) | ❌ **셀을 되돌릴 수 없게 바꾼다** (경고 3) |
+| 오염 | ⚠ `Q_material` 도 율 의존 (3호 Fig. 5e: 12 µm 활물질 손실 0.25C 0.093 → 5C 0.185) | ⚠ **음극 회복이 섞인다** (경고 2) |
+| 적용 순서 | 먼저 (싸고 가역) | 나중에 (한 번뿐) |
+
+`[해석]` **처방**: ① 저율 쌍으로 `η` 를 먼저 죽이고(또는 3호 권고대로 기준 율
+왕복으로 이력을 뺀 뒤), ② **마지막에 한 번** 재가압해 `ΔQ_mech` 를 읽는다.
+순서를 바꾸면 경고 3 때문에 ①의 기준선이 없어진다.
+
+⚠ 그리고 4호의 셀은 **율이 이미 ≈C/15 로 낮다** → `η ≈ 1` 이어야 하는데 겉보기
+용량이 98 % 날아갔다. `[해석]` **저율에서도 살아남는 손실**이므로 `η` 로는 설명되지
+않고, 압력으로 60 %p 가 돌아왔으므로 **그 대부분이 기하 쪽**이다.
+★ **2호의 율 스윕 분리 시험을 실험이 간접 검증한 첫 사례**다.
+⚠ 단 4호는 **율 스윕을 하지 않았다** — 직접 증명이 아니다.
+
+## 이 페이지가 주장하지 않는 것
+
+- **원문의 식이 아니다.** Shi 2020 은 `ΔQ_mech` 를 정의하지도, 10.4 % 와 60 %p 를
+  비교하지도 않는다. 위 연산자는 **우리 구성**이다.
+- **압력이 `θ_AM` 을 1 로 되돌린다고 주장하지 않는다.** 부분 회복이고(경고 1),
+  회복의 대부분이 음극일 수 있다(경고 2).
+- **이것이 OCV 축퇴를 해소한다고 주장하지 않는다.** 압력 축을 **추가로** 걸었을
+  때의 이야기다. OCV 모양만으로는 [[composite-cathode-percolation-utilization]] 의
+  결론이 그대로다.
+- **일반화 근거가 없다.** 실측 사례 **1 편 · 1 셀 · 오차 막대 0 · 반복 0**.
+  모집단은 NMC532+LZO / 비정질 LPS / In 음극 / ~2 MPa / ≈C/15 / 50 사이클이다.
+- **압력이 열화 축이라고 주장하지 않는다.** 4호에서 압력은 **진단 조작**이지
+  사이클 변수가 아니다. 압력 스윕 하에서의 `θ(N)` 은 `assb` **4/4 편이 안 줬다.**
+
+## 관련
+- [[assb-apparent-capacity-decomposition]] — 3 항 분해. 이 페이지가 그 **두 번째 분리 연산자**를 준다.
+- [[composite-cathode-percolation-utilization]] — `θ_AM` 의 정의. 이 연산자가 되돌리려는 양.
+- [[assb-contact-loss-vs-lampe]] — 닻 질문. 이 페이지는 그 질문의 **우회로**다 (OCV 밖의 축).
+- [[near-optimal-set-width-measurement]] — 압력 축을 하나 더 넣었을 때 폭이 얼마나 줄어드는지 잴 기계.
+- [[thermo-kinetic-loss-partition]] — 액체셀 축의 같은 형식(외부 변수를 관측 축으로 쓰는 분해).

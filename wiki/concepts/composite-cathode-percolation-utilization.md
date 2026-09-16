@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-16
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md]
+sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -26,6 +26,9 @@ evidenceScope: multi-source-primary
 > 두 번째 논문에 다른 이름으로 있다 (§"두 논문의 좌표 대조"). ② 그러나 이 페이지가 세운
 > 곱셈 `Q_apparent = θ_AM · Q_material` 은 **충분하지 않다** — 항이 하나 더 있고
 > 그것은 [[assb-apparent-capacity-decomposition]] 에 있다.
+>
+> **2026-09-16 갱신 (`assb` 4호 Shi 2020 — 첫 실험 논문)**: ★ **이 양의 실측 대응물이
+> 처음 들어왔다. 그리고 곱셈 형태를 6 배로 배반한다** (§"4호는 실측을 줬는데 …").
 
 ## 정의
 
@@ -93,6 +96,74 @@ Bielefeld, Weber, Janek (2019) 의 **식 (6)**:
 
 → 이 페이지의 닫힌 형태(식 8, `A_spec` 멱법칙)에는 **SE 물성이 하나도 없다.**
 `θ` 를 열화 축으로 쓰려면 **(양극 × 전해질) 쌍마다 다시 재야 한다.**
+
+## ★★ 4호(Shi 2020)는 실측을 줬는데, 그 실측이 이 곱셈을 배반한다 (2026-09-16 추가)
+
+`assb` 4호(`raw/papers/shi2020_mechanical-degradation-assb-cathode.md`)는 이 계보
+**첫 실험 논문**이다 (FIB-SEM 토모그래피, NMC532+LZO / 비정질 LPS / CNF / In 음극).
+접촉 손실을 **무차원 분율**로 준다 — 3호의 응력(GPa)과 달리 **차원은 맞다**.
+그러나 **같은 양은 아니고, 그 사상이 미정이다**:
+
+| | **1호·2호 (`θ` / Connectivity)** | **4호 (Shi 2020)** |
+|---|---|---|
+| 차원 | **부피** 분율 (클러스터 AM 부피 / AM 전체 부피) | **면적** 분율 (`A(NMC ∩ void) / A(NMC 전체)`) |
+| 판정 | **Hoshen–Kopelman 퍼콜레이션** — 집전체/분리막까지 **경로**가 잇는가 | **국소 인접만** — 이 픽셀이 void 에 닿았는가. `percolat*` **0 회** |
+| 분모 | AM 전체 부피 | NMC 전체 **표면적**. ⚠ **NMC–NMC 접촉도 "with contact"** 로 센다 (Li⁺ 경로가 아닌데) — 과소평가 방향 |
+| 출처 | 계산 (합성 미시구조) | **실측** (FIB-SEM 50 nm 슬라이스 + Weka ML 4상 분할) |
+| **시간축** | **없다** | **★ 있다 — 사이클 0 / 10 / 50** |
+
+`[인쇄]` 4호의 값: **접촉 손실 면적 10.4 %** (50 사이클) ·
+void 부피분율 **2.87 → 3.23 → 9.50 vol%** (0 / 10 / 50 사이클).
+
+### ★★ 6 배 간극 — 면적 분율을 `θ_AM` 자리에 선형으로 넣으면 안 된다
+
+4호는 같은 셀 계열에서 **300 MPa 재가압으로 용량을 되돌린다**:
+`[인쇄]` 129 → (50 사이클) `[도표]` ≈2 → (재가압) **80 mAh g⁻¹**.
+`[재현]` **되돌아온 몫 ≈60.5 %p**.
+
+> 곱셈 `Q_apparent = θ_AM · Q_material` 에 면적 분율을 그대로 넣으면
+> `θ_AM = 0.896` → 용량 손실 **10 %** 여야 한다. 실제 가역분은 **60 %p** 다.
+> **≈6 배.** (원문은 두 수를 나란히 놓고도 **한 번도 비교하지 않는다** — 4호 digest D9.)
+
+`[해석]` 가능한 설명 셋, **논문은 어느 것도 검증하지 않는다**:
+1. **면적 → 부피 사상이 비선형(문턱)이다.** 4호 자신이 근거를 준다 —
+   `[인쇄]` 접촉 손실이 입자 **한쪽에 몰리면** "all the Li ions … have a **much
+   larger distance to travel**", 균일 분산이었다면 "diffusion gradients … would
+   **rapidly fade out**". → **같은 면적이라도 분포에 따라 용량 영향이 다르다.**
+2. **라벨과 관측이 다른 셀에서 왔다** (4호 digest D10 — 토모그래피 3 셀의 용량이
+   **한 번도 보고되지 않는다**).
+3. **회복분이 양극이 아니다** — `[도표]` 회복은 음극 쪽 `R_LF` 에서 65 %,
+   양극 쪽 `R_MF` 에서 **23 %** 다 ([[assb-pressure-reapplication-separation-test]]).
+
+★ **이것은 DEM 라벨 계획에 직접 걸린다**: DEM 이 싸게 주는 것도 대개 **접촉 수·
+접촉 면적**이지 퍼콜레이션 부피분율이 아니다. **두 양 사이의 사상을 우리가 만들어야
+한다** — 그리고 4호가 그 사상이 **선형이 아님**을 실측으로 보여 줬다.
+
+### 그리고 이 실측 라벨에도 폭이 없다
+
+- `error bar` · `standard deviation` · `uncertain*` · `replicate` · `seed`
+  **전부 0 회** (본문+ESI). 조건당 **셀 1 개 · 구조 1 개**. → `assb` **4/4 편 연속.**
+- **분할 정확도 수치가 없다.** ESI 가 Fig. S3 을 "showing the accuracy" 라 부르지만
+  혼동행렬·검증셋·정확도 %가 없고, `[도표]` Fig. S2 에서 **CNF 와 LPS 회색도가 크게
+  겹친다.** ESI 스스로 `[인쇄]` 오분류가 "especially within the **boundaries**" 에서
+  난다고 적는다 — **접촉 손실은 정확히 그 경계에서 재는 양이다.**
+- **해상도 바닥이 미명시**(슬라이스 50 nm·"sub-100 nm" 만, 면내 화소 없음)이고
+  논문 스스로 `[인쇄]` "very small microfractures … **undetectable by the
+  tomography**" 라 적는다 → **10.4 %·9.50 % 는 바닥 없는 하한이다.**
+
+### ✅ 그래도 시간축이 처음 들어왔다 — 그런데 부드럽지 않다
+
+`[인쇄]` 4호 결론: "mechanical degradation **does not progress gradually** …
+the majority of the void formation and contact loss **likely occurs at later cycles
+and over a short period**." `[도표]` void 2.87 → 3.23(10 사이클, +0.36) →
+9.50(50 사이클, +6.27).
+
+`[해석]` → **`θ_AM(N)` 을 부드러운 감소 함수(지수·멱)로 매개화하면 원리적으로 못
+맞춘다. 문턱/계단이 필요하다.**
+⚠ 단 이 결론은 위 "해상도 바닥" 과 충돌한다 — 초기 미세균열이 **안 보인 것**이라면
+"후기에 몰린다" 는 **관측의 성질**일 수 있다 (4호 digest D12).
+**우리가 싸게 공급할 수 있는 자리**: 검출 한계를 넣은 전방 모형으로 계단이 실재인지
+아티팩트인지 가르기.
 
 ## 두 논문의 좌표 대조 (2026-09-16 추가)
 
@@ -203,11 +274,15 @@ Fig. 10 의 "상위 3 개"(0.94 / 0.93 / 0.89) 같은 순위는 **신뢰 근거�
 - [[assb-contact-loss-vs-lampe]] 의 미결 항목 1("접촉 손실을 모델에 어떤 형태로 넣나")에
   **형태**를 준다: 용량 축 스케일에 곱해지는 기하 인자. **동역학(`θ_AM` 의 사이클 의존)은
   여전히 비어 있다** — 원문은 pristine 정적 기하만 모델링한다.
-  ⚠ **2호를 읽고도 비어 있다**: Clausnitzer 2023 도 `[인쇄]` "pore formation during cycling …
+  ⚠ **2호를 읽고도 비어 있었다**: Clausnitzer 2023 도 `[인쇄]` "pore formation during cycling …
   **beyond the scope**" · "our current model **does not incorporate mechanics**" 이고
-  **방전 1 회**다. `assb` **2/2 편이 `θ` 의 시간축을 주지 않았다.**
+  **방전 1 회**다. 3호도 방전 1 회 + 충전 1 회. `assb` **3/3 편이 `θ` 의 시간축을 주지 않았다.**
   (다만 2호의 `ρ_S`(소결 밀도) 스윕이 **후보 대리 축**이다 — ⚠ 제조 공극과 사이클 균열은
   **공극의 분포**가 다를 수 있다.)
+  → ✅ **4호(Shi 2020)가 처음 줬다** — 사이클 **0/10/50** 의 void 부피분율
+  **2.87/3.23/9.50 vol%**. ⚠ 그러나 (a) 재는 양이 `θ` 가 아니라 **void 부피/접촉 면적**,
+  (b) 3 점 · 각 점 **다른 셀** · 반복 0, (c) 모양이 **계단**이고 그 계단이
+  **검출 한계의 산물일 수 있다**. (§"4호는 실측을 줬는데 …")
   ⚠ **3호를 읽고도 비어 있다**: Liu 2024 는 방전 1 회(+ 충전 1 회)이고 사이클 축 그림이
   **0 장**이며, 무엇보다 **파괴·디본딩 모형이 없다**. `assb` **3/3 편이 시간축을 주지
   않았다** — 그리고 이제 **공통 원인**이 보인다 (§"3호는 이 `θ` 와 변환되지 않는다").
@@ -222,11 +297,18 @@ Fig. 10 의 "상위 3 개"(0.94 / 0.93 / 0.89) 같은 순위는 **신뢰 근거�
   원문 저자들이 **8 편을 지목해** "공극률이 보고되지 않는다" 고 적었다. `assb` 축의
   "모두가 빠뜨린 필수 변수" 원장 — 현재 **공극률**(1호가 지목) +
   **LLZO 복합전극의 부분 전도도**(2호가 스스로 "문헌에 없다") +
-  **압력**(우리가 지목, `assb` **3/3 편이 0 회** — 3호는 접촉 역학이 본체인데도) +
-  **구조 실현 산포**(1호는 쟀고 2·3호는 안 쟀다 — 3호는 `[인쇄]` "the **random
-  arrangement** … play a critical role" 라고 적고도 **실현 1 개**) +
-  **유일성·식별성**(`assb` **3/3 편이 안 쟀다** — 전부 forward 전용) +
-  **파괴·디본딩 모형**(3/3 편에 없다 — `θ(N)` 이 비어 있는 **진짜 이유**) +
+  ~~**압력**~~ (`assb` 1–3 호가 0 회였고 **4호에서 해소** — 제작 100/300/100 MPa ·
+  사이클 **~2 MPa 스프링** · **재가압 300 MPa**; ⚠ 스윕은 여전히 없다) +
+  **구조·셀 실현 산포**(1호만 쟀다 — 2·3호는 `[인쇄]` "the **random arrangement** …
+  play a critical role" 라고 적고도 실현 1 개, **4호는 실험인데도 조건당 셀 1 개 ·
+  오차막대 0**. `assb` **4 편 중 3 편**) +
+  **유일성·식별성**(`assb` **4/4 편이 안 쟀다**. 1–3 호는 forward 전용이라 원리적으로
+  못 쟀고, ★ **4호는 역문제를 풀면서**(EIS 등가회로) `[인쇄]` 시간상수가 겹쳐 "not
+  possible to precisely assign" 이라 적고도 `R_MF` 를 점추정으로 서사의 기둥에 쓴다) +
+  **파괴·디본딩 모형**(1–3 호에 없다 — `θ(N)` 이 비어 있던 **진짜 이유**. 4호는 모형
+  대신 **실측**으로 그 자리를 채웠다) +
+  **접촉 면적 → 이용 가능 용량 사상**(★ **4호가 새로 연 공백** — 10.4 % ↔ 60 %p) +
+  **분할·검출 한계의 정량**(4호: 분할 정확도 0, 면내 화소 크기 0) +
   **접근 가능한 코드**(3호: 공개된 것은 DAMASK v2.0.2, 실제로 쓴 것은 별 저장소 +
   기관 허가 + CLA. 공개본에는 Li 화학도, 논문이 "developed" 라고 적은 FEM 솔버도 없다).
 
@@ -240,9 +322,16 @@ Fig. 10 의 "상위 3 개"(0.94 / 0.93 / 0.89) 같은 순위는 **신뢰 근거�
   그럼에도 초록이 그 결과를 말한다 (digest §10 불일치 1).
   (그 공백은 **2호가 채웠다** — Clausnitzer 2023 은 식 (5) 로 `σ_eff` 를 S/cm 로 계산해
   Fig. 3·S4 에 찍는다.)
+- **4호(Shi 2020)가 `θ_AM` 을 쟀다고 주장하지 않는다.** 4호는 **면적 분율**을 쟀고
+  **퍼콜레이션 판정을 하지 않았다** (`percolat*` 0 회). 그리고 그 면적 분율을 이 곱에
+  넣으면 자기 실험(압력 회복 60 %p)과 **6 배 어긋난다.**
+- **4호의 10.4 %·9.50 % 가 확정값이라고 주장하지 않는다** — 분할 정확도 수치가 없고
+  해상도 바닥이 미명시라 **하한**이다.
 
 ## 관련
 - [[assb-apparent-capacity-decomposition]] — 이 곱에 **셋째 항 `η(i)`** 를 더한다. 반례와 분리 시험.
+- [[assb-pressure-reapplication-separation-test]] — **이 `θ_AM` 을 (부분적으로) 되돌리는 조작.**
+  4호의 실측이 여기 있고, 위 6 배 간극의 다른 쪽 끝이다.
 - [[assb-contact-loss-vs-lampe]] — 닻 질문. 이 개념이 그 미결 항목 1 에 답한다.
 - [[fitting-degeneracy]] — 액체셀 축퇴. 여기서 재현될 자리를 이 페이지가 지목한다.
 - [[near-optimal-set-width-measurement]] — 화학 무관한 폭 측정기. 이 forward map 위에도 걸린다.
