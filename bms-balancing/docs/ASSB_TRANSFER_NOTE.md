@@ -159,48 +159,52 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 | 13 | Maxwell Protocol for Non-Destructive Health Diagnosis (Angew 2025) | Q3·Q4 · **OCV 경쟁 접근** |
 | 14 | Enhancing RUL in Solid-State Batteries: Smart BMS (2024) | Q3·Q4 |
 
-### 6-3. 추가 수령분 — **번호는 사용자 업로드 순서가 정본이다**
+### 6-3. 추가 수령분 15~24 — **번호는 사용자 업로드 순서가 정본이다**
 
 ⚠ 2026-09-16: 내가 붙여 둔 후보 번호(15=Strauss·16=Koerver…)와 **사용자 파일 번호가
-충돌**했다. 디스크의 PDF 가 사용자 번호를 달고 있으므로 **사용자 번호를 정본으로** 맞춘다.
-아래 6-3-b 의 미수령 후보에는 **번호를 붙이지 않는다** — 올라올 때 사용자가 정한다.
+충돌**했다. 디스크의 PDF 가 사용자 번호를 달고 있으므로 **사용자 번호를 정본으로** 맞췄다.
+아직 안 온 후보(6-3-b)에는 **번호를 붙이지 않는다** — 올라올 때 사용자가 정한다.
 
-| # | 논문 | 겨냥 | 상태 |
+| # | 논문 | 겨냥 | 쪽·sha256 (본문 / SI) |
 |---|---|---|---|
-| **Ramanayagam·Miß·Leier** — Elucidating the Influence of **Stack Pressure** on Anode and Cathode Impedance of ASSB via **Three-Electrode** Measurements (*Batteries & Supercaps*) · 본문 10p `5ce9a4259bdf46d0` · SI 6p `4b6180aacf267b3e` | **Q2+Q5+Q6 교차** | ⏸ 수령·대기 |
-| **Yanev·Heubner·Nikolowski 외** — Editors' Choice: Alleviating the Kinetic Limitations of the **Li-In Alloy Anode** in ASSB (*JES*, **OPEN ACCESS**) · 본문 8p `8fb10ec47e613614` · SI 2p `5e3fdd576b865b2d` | ★ **Q5** (지금 0 편) | ⏸ 수령·대기 |
+| **15** | **Ramanayagam·Miß·Leier** — Stack Pressure 가 ASSB 양·음극 임피던스에 미치는 영향, **3전극** 측정 (*Batteries & Supercaps*) | **Q2+Q5+Q6 교차** | 10p `5ce9a4259bdf46d0` / 6p `4b6180aacf267b3e` |
+| **16** | **Yanev·Heubner·Nikolowski 외** — Editors' Choice: **Li-In 합금 음극**의 동역학 한계 완화 (*JES*, **open access**) | ★ **Q5** | 8p `8fb10ec47e613614` / 2p `5e3fdd576b865b2d` |
+| **17** | **Fukunishi·Tabuchi·Ikezawa·Okajima 외** — **NCM523** 복합전극 3전극 AC 임피던스와 **열화** 거동 (*JPS* **564** (2023) 232864) | **Q2 + 양극 열화** | 10p `c0798ee510063429` / 6p `773e6fbca1d7b938` |
+| **18** | **Yoshida·Ikezawa·Okajima·Arai** — 전고체 **4전극** 셀 (*Electrochim. Acta* **497** (2024) 144523, open access) | **Q5** — *"상대극 전위 변화가 선형이 아니다"* | 9p `a991f5351cb61a20` / 9p `774a121241a8d2dc` |
+| **19** | **Chang·Choi·Kang·Park·Lim** — **매립 In 기준전극**으로 ASSB 제한 인자 규명 (*Ionics*, Short Comm.) | **Q5·Q2** — 전극별 전위 **동시 분리 측정** | 7p `b0c03e8eaeaa3521` / — |
+| **20** | **Sedlmeier 외** — ASSB 파우치셀용 **미세 기준전극**, 전극 분해 임피던스·전위, **In-Li 음극** 적용 (*JES*, **open access**) | **Q5·Q2** | 13p `fb40909f2bfc4a98` / — |
+| **21** | ★ **Strauss·Bartsch·de Biasi·Kim·Janek·Hartmann·Brezesinski** — **Impact of Cathode Material Particle Size on the Capacity of Bulk-Type ASSB** (*ACS Energy Lett.* 2018, 3, 992−996) | ★★ **Q2 의 measured 라벨** — 01 의 ref 13. **ex situ XRD 의 inactive AM 분율 = `1 − θ_AM`** | 5p `d3fa26699f0e158b` / 8p `5b23a700e4b26e29` |
+| **22** | ★ **Koerver·Aygün·Leichtweiß·Dietrich·Zhang·Binder·Hartmann·Zeier·Janek** — **Capacity Fade in Solid-State Batteries** (*Chem. Mater.* 2017, 29, 5574−5582) | ★★ **접촉 손실의 실험 원전 + 전압·용량축** — 01 의 ref 7 | 9p `5be652c4d8383b90` / 7p `96534ee472de4205` |
+| **23** | **Stavola·Sun·Guida·Bruck 외** — Thick NMC111-Argyrodite 양극의 **리튬화 구배·굴곡도** (*ACS Energy Lett.* 2023) | **Q1·Q2** — 01 이 "두께 효과는 유한 크기 인공물" 이라 한 자리를 **실측**으로 친다 | 8p `3b05d0e6a4f695e7` / **29p** `0e810a3fa2f097dc` |
+| **24** | **Zhou·Lu·Mish·Chen·Feng·Kim 외** — Tailored Cathode Composite Microstructure, **저압 장수명** (*ACS Energy Lett.* 2025) | **Q1·Q6** — DEM 브랜치에 `tailored_cathode_low_pressure.csv` 앵커가 이미 있다 | 9p `107089537e2fc03f` / **30p** `56af662bea394b9c` |
+
+**★ Q5 가 0 편 → 다섯(15·16·18·19·20)으로 바뀌었다.** Li-In 기준 전위가 움직이면
+`LLI` 숫자 전체가 의심스러워지는데, 그 축을 이제 실제로 잴 수 있다.
+**★ 21·22 는 01 이 자기 참고문헌으로 가리킨 둘**이다 — `1 − θ_AM` 의 measured 라벨과
+접촉 손실의 실험 원전(전압축 포함).
 
 ### 6-3-b. 아직 안 온 후보 (번호 없음 — 업로드 시 사용자가 정한다)
 
 | 논문 | 왜 · 누가 가리켰나 |
 |---|---|
-| **Strauss et al., ACS Energy Lett. 2018, 3, 992−996** | **최우선.** Bielefeld ref 13. **ex situ XRD 의 inactive AM 분율 = `1 − θ_AM` 의 measured 라벨.** 액체셀에서 우리를 막은 "라벨 없음" 이 여기서는 존재할 수 있다는 **유일한 실마리**. Bielefeld 는 정성 대조만 하고 스스로 무효화(`[인쇄]` "the porosity was not measured") |
-| **Koerver et al., Chem. Mater. 2017, 29, 5574−5582** | **최우선.** Bielefeld ref 7. 접촉 손실의 **실험 원전**이고 **용량·전압 축이 있다.** 01~04 네 편에 전압축이 하나도 없다 |
-| Fukunishi 외, *JPS* 2023 — AC impedance, NCM523 3전극, 열화 | Q2 + 양극 열화 (Bielefeld 가 "실험 0" 으로 못 준 자리) |
-| Yoshida 외, *Electrochim. Acta* 2024 — four-electrode cell | Q5 보강 — *"the potential change in the counter electrode is **not linear**"* |
-| Chang·Choi·Kang·Park·Lim, *Ionics* 2020 — embedded In reference electrode | Q5 — *"separately and simultaneously measured each electrode potential"* |
-| Sedlmeier 외, *JES* 2023 — micro-reference electrode, pouch | Q5·Q2 |
-| Hlushkou 외, *JPS* 2018, 396, 363−370 | Bielefeld ref 16 — **FIB-SEM 실측 미시구조** (합성 기하와 대조) |
+| Hlushkou 외, *JPS* 2018, 396, 363−370 | 01 ref 16 — **FIB-SEM 실측 미시구조** (합성 기하와 대조) |
 | **Ren·Danner·Finsterbusch·Latz 외, *Adv. Energy Mater.* 2022, 2201939** | 02 ref 17. **`θ(N)` 시간축의 입구** — `assb` 2/2 편이 동역학을 안 줬다 |
 | **Neumann 외, *ACS Appl. Energy Mater.* 2021, 4, 4786** | 02 ref 38. **GB 저항 모형 원전** + **EIS 로 파라미터화된 measured 라벨**. Q2 |
-| **Stavola·Sun·Guida·Bruck 외, *ACS Energy Lett.* 2023** — Lithiation gradients and tortuosity factors in thick NMC111-argyrodite cathodes (**PMC 무료**) | 01 이 "두께 효과는 유한 크기 인공물" 이라 한 자리를 **실측**으로 친다. Q1·Q2 |
-| **Zhou·Lu·Mish·Chen·Feng·Kim 외, *ACS Energy Lett.* 2025** — Tailored cathode composite microstructure enables long cycle life at **low pressure** | Q1·Q6. **DEM 브랜치에 `tailored_cathode_low_pressure.csv` 앵커가 이미 있다** — 원문과 대조 가능 |
-| **역문제·식별성을 다루는 ASSB 논문 (미특정)** | ★ **구조적 공백.** `assb` 2/2 편이 **forward 전용**이라 **Q4 는 원리적으로 안 채워진다.** forward 논문만 모아서는 영원히 0 이고 **다른 종류의 논문**이 들어와야 닫힌다 |
-| **ASSB 의 pOCV / 저율 OCV 곡선이 실린 논문 (미특정)** | ★ **구조적 공백.** 02 가 전압축을 줬지만 전부 **1 mA/cm²(≈0.74 C) 부하 곡선**이고 **OCV 곡선은 0 편**이다. 우리 물음 전체가 OCV 적합인데 그 곡선이 없다. 수령분 `09 Huo`·`13 Maxwell` 이 채울 후보 — 돌려 보고 아니면 따로 찾는다 |
+| **역문제·식별성을 다루는 ASSB 논문 (미특정)** | ★ **구조적 공백.** 흡수분이 전부 **forward 전용**이면 **Q4 는 원리적으로 안 채워진다** |
+| **ASSB 의 pOCV / 저율 OCV 곡선이 실린 논문 (미특정)** | ★ **구조적 공백.** 02 의 전압축은 전부 **1 mA/cm²(≈0.74 C) 부하 곡선**이고 **OCV 곡선은 0 편**이다 |
 
-### 6-3-a. ⚠ 28·29 는 논문 번호가 아니라 **성질**이다
-
-둘 다 "그 논문 한 편" 이 아니라 **지금 목록에 없는 종류**를 가리킨다. 개별 논문을
-아무리 더 모아도 안 닫히므로, 채워지면 그때 실제 서지로 바꿔 적는다.
+⚠ 위 둘(미특정)은 "그 논문 한 편" 이 아니라 **지금 목록에 없는 종류**를 가리킨다.
+채워지면 그때 실제 서지로 바꿔 적는다.
 
 ### 6-4. 처리 순서 — **먹인 순서 그대로** (2026-09-16 사용자 지시, 확정)
 
 ```
-03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12 → 13 → 14
+03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12
+   → 13 → 14 → 15 → 16 → 17 → 18 → 19 → 20 → 21 → 22 → 23 → 24
 ```
 
 **재배열하지 않는다.** 아래 6-4-a 는 내가 한때 권한 재배열인데 **채택되지 않았다** —
-근거로만 남긴다. 12 편 × ~20 분 ≈ **4 시간**이고 순차로만 돈다(lint 훅이 전체 위키를
+근거로만 남긴다. **22 편 × ~20 분 ≈ 7 시간**이고 순차로만 돈다(lint 훅이 전체 위키를
 보므로 병렬 불가). 한 편이 끝날 때마다 **lint 0 errors 확인 → 커밋 → 다음 편 착수**.
 
 ### 6-4-a. (채택 안 됨) 내가 권했던 재배열
