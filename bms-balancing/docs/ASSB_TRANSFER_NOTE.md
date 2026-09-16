@@ -124,6 +124,25 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 | 02 | Clausnitzer 외 2023 — Structure-Resolved Simulations (+SI) | Q1 | 🔄 **진행 중** (그림 25장 `f2120071`) |
 | 03 | Role of grain-level chemo-mechanics 2024 (+SI) — **DAMASK v2.0.2** | Q1 | ⏸ 수령·대기 |
 | 04 | Shi·Zhang·Tu 외 — Characterization of mechanical degradation (+SI) | Q1 | ⏸ 수령·대기 |
+| 05 | **Doux 2020** — Stack Pressure Considerations (Adv. Energy Mater., DOI `10.1002/aenm.201903253`) · 본문 6p `f1fc5062a6e259cd` · SI 8p `daa3b7a141c2f571` | **Q6** | ⏸ 수령·대기 |
+| 06 | **Lee 외 2020** — Ag–C 무음극 (**Samsung SAIT**, Nature Energy `10.1038/s41560-020-0575-z`) · 본문 10p `3452770465c31f45` · SI 18p `120d136d99668016` | **Q7** | ⏸ 수령·대기 |
+| 07 | **Spencer-Jolly 외** — Structural changes in the Ag–C composite anode interlayer (**Joule** vol. 7) · 본문 13p `a59c7405b40a1f42` · SI 6p `28eddf6139c1b529` | Q7 | ⏸ 수령·대기 |
+| 08 | From state estimation to active intelligence (**Frontiers in Chemistry**, `10.3389/fchem.2026.1960882`, Mini Review, 2026-09-15 게재) · 12p `a54b551671eea230` | Q3·Q4 | ⏸ 수령·대기 |
+| 09 | **Huo 외** — Characterization of cathode degradation + **결합 전기화학-노화 모델** (sulfide ASSB, *JPS*) · 11p `9f2496907f7e65a0` | **Q2 · 전압축** | ⏸ 수령·대기 · **권장 1순위** |
+
+| 10 | **Vadhva·Hu·Johnson·Stocker 외** — EIS for ASSB: Theory, Methods and Future Outlook · 18p `537a508716afd2b3` | **Q2 독립 관측** | ⏸ 수령·대기 |
+| 11 | Sadegh Kouhestani 외 — PHM of Solid-State Batteries (*Energies* 2022) · 26p `912b3d1df0233ba4` | Q3·Q4 | ⏸ 수령·대기 |
+| 12 | Zheng 외 — ASSB for the grid: A realistic appraisal · 10p `496f3b4580a81b9b` | Q3·Q4 | ⏸ 수령·대기 |
+| 13 | **Maxwell Protocol for Non-Destructive Health Diagnosis** (*Angew. Chem. Int. Ed.* 2025, 64, e202514910, **Hot Paper**) · 본문 9p `fa35a5cdd5d3fcec` · **SI(.docx)** `ce0b9a35c96ef99c` | Q3·Q4 · **OCV 경쟁 접근** | ⏸ 수령·대기 |
+| 14 | Enhancing RUL in Solid-State Batteries: Smart BMS (IISE Annual Conf. 2024) · 6p `0d99b00e6e8907a7` | Q3·Q4 | ⏸ 수령·대기 · **01 번을 인용한다** |
+
+> ⚠ **보충자료가 아닌 파일 둘**: `07 Sup1`(2p)과 `09 Sup`(.docx)은 **학술지 제출
+> 체크리스트/데이터 보고 양식**이지 내용이 아니다. 에이전트가 시간을 쓰지 않게 한다.
+> `07` 의 진짜 보충자료는 **Sup2**(6p, *"Joule, Volume 7 Supplemental information"*)다.
+> 반대로 **`13` 의 .docx 는 진짜 Supporting Information** 이다 (Wiley-VCH) — 읽어라.
+>
+> ⚠ **`.docx` 는 `pymupdf` 로 안 열린다.** `zipfile` 로 `word/document.xml` 을 풀어
+> 태그를 걷어내면 본문이 나온다 (이 절의 지문도 그렇게 확인했다).
 
 ### 6-2. 사용자가 수집해 둔 것 (업로드 대기)
 
