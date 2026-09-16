@@ -2419,6 +2419,11 @@ def _fixture_repo(root, outputs=("out/matrix_100.csv", "out/matrix_200.csv")):
     #   fixture repo 도 그 패키지를 갖고 있어야 production 과 같은 경로를 도는 것이다 (없으면 다른 코드를 시험한다).
     shutil.copytree(ROOT / "bms_balancing", root / "bms_balancing",
                     ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    # ⚠ R16 (조건 8 축 ②): `write_meta` 가 **모집단 선언**의 식별자를 적는다 — 그 선언이 없으면
+    #   `bms_balancing.data` 가 import 시점에 멈춘다 (빈 allowlist 로 넘어가지 않는다). 진짜 저장소에는
+    #   항상 있으므로 fixture repo 도 같이 갖춰야 production 과 같은 경로를 돈다.
+    (root / "datasets").mkdir(exist_ok=True)
+    shutil.copyfile(ROOT / "datasets" / "half_cell.manifest.json", root / "datasets" / "half_cell.manifest.json")
     (root / "code.py").write_text("value = 1\n", encoding="utf-8")
     # 실제 저장소와 같은 ignore 정책 — bytecode 캐시는 추적 대상이 아니다 (없으면 `--untracked-files=normal` 이
     # 실행 중 생긴 `__pycache__` 를 코드 변경으로 센다; production 은 루트 `.gitignore` 가 막는다)

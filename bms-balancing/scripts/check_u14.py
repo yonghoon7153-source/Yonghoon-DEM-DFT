@@ -615,6 +615,12 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
                     f"{f.name}.meta: env 를 **정본이** 안 적었다 — 같은 환경에서 돌았다고 말할 수 없다 (승격 불가)")
             else:
                 R["env"] += [f"{f.name}.meta:{x}" for x in S.env_problems(ometa.get("env"), meta.get("env"))]
+                # ⚠ R16 (조건 8 축 ②): **모집단 선언**이 다르면 그 대조는 같은 실행의 재현이 아니다.
+                #   양쪽에 있을 때만 댄다 — 한쪽에만 있는 것은 옛 정본의 나이이고, 그 상황은 이미
+                #   inputs/env uncomparable 이 같은 이유로 승격을 막는다 (새 blocker 를 만들지 않는다).
+                _dm_o, _dm_n = ometa.get("dataset_manifest"), meta.get("dataset_manifest")
+                if isinstance(_dm_o, dict) and isinstance(_dm_n, dict) and _dm_o != _dm_n:
+                    R["controls"].append((f"{f.name}.meta:dataset_manifest", _dm_o, _dm_n))
                 # ⚠ R16: 나중에 생긴 축이 **한쪽에만** 있으면 같은 환경이라고 말할 수 없다 — 승격만 막고
                 #   계약 위반으로 세지 않는다 (U18-03 과 같은 비대칭 처리).
                 R["env_uncomparable"] += [

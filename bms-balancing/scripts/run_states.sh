@@ -76,11 +76,27 @@ from provenance import git_provenance, check_run_id_bytes, env_signature   # R4-
 # ⚠ Codex R11: 명부 유도는 **한 자리**(`bms_balancing.schema.body_roster`) — 전 판은 같은 로직이 여기와 checker 에
 #   따로 있었고 둘이 갈리면 사이드카가 본문과 다른 명부를 봉인했다. provenance 모듈이 있는 곳의 부모가 저장소다.
 sys.path.insert(0, str(pathlib.Path(git_provenance.__globals__["__file__"]).resolve().parents[1]))
+# ⚠ R16 (조건 8 축 ②): **모집단 선언**의 식별자를 사이드카에 적는다 — 어느 dataset manifest 로 roster 를
+#   정했는가. 여기서 `bms_balancing.data` 를 import 하지 **않는다**: 이 기록기는 `-I -P` 로 격리 실행되고
+#   그 모듈은 pandas 를 끌고 온다 (2026-09-16 실측: `dateutil` 없음으로 meta 가 통째로 안 쓰였다).
+#   형식 검사는 producer 가 이미 했다 — 여기서는 **읽어서 식별자만** 만든다 (stdlib).
+#   ⚠ 계산이 두 자리에 있으므로 `test_r16_37` 이 둘이 같은 값을 내는지 댄다 (규칙이 두 벌이면 갈린다).
+def _dataset_manifest_identity():
+    import hashlib
+    try:
+        raw = pathlib.Path("datasets/half_cell.manifest.json").read_bytes()
+        doc = json.loads(raw.decode("utf-8"))
+        return {"version": doc["manifest_version"], "dataset_id": doc["dataset_id"],
+                "sha256": hashlib.sha256(raw).hexdigest()}
+    except Exception:                                 # noqa: BLE001 — 지어내지 않고 null 로 적는다
+        return None
+
 roster_err = None
 try:
     from bms_balancing.schema import body_roster as roster_of
 except ModuleNotFoundError as e:                     # 패키지가 없는 트리(합성 fixture) — 명부를 **지어내지 않는다**
     roster_of, roster_err = None, f"bms_balancing 를 못 찾았다: {e}"
+
     print(f"   경고: 명부를 유도할 수 없다 ({roster_err}) — meta 에 roster: null 로 적는다 (승격 gate 가 막는다)",
           file=sys.stderr)
 
@@ -117,6 +133,9 @@ with open(art + ".lock", "a+") as lock:
             or pre.get("git_modified_code") != pv["git_modified_code"]),
         "started_utc": started or None,
         "env": env_signature(),                                       # R6 내부 F3: 인터프리터·라이브러리·플랫폼
+        # ⚠ R16 (조건 8 축 ②): **모집단 선언**의 식별자. 어느 dataset manifest 로 roster 를 정했는지가
+        #   산출에 남아야 한다 — 파일로 옮기기만 하고 안 적으면 나중에 그 파일이 바뀌었을 때 말할 수 없다.
+        "dataset_manifest": _dataset_manifest_identity(),   # 못 읽으면 null — 승격 gate 가 막는다
         "created_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     }
     fd, tmp = tempfile.mkstemp(dir=os.path.dirname(os.path.abspath(art)), prefix=os.path.basename(art) + ".meta.", suffix=".part")

@@ -106,6 +106,8 @@ def main(argv=None) -> int:
             "width_starts": (int(a.width_starts) if a.widths else None),
             "scale_seed": int(a.scale_seed),
             "w_dqdv": float(a.w_dqdv), "cycles": res["cycles"], "status": "complete",
+            # ⚠ R16 (조건 8 축 ②): 모집단 선언의 식별자
+            "dataset_manifest": D.half_cell_manifest_identity(),
             "data_root": str(root), "half_cell_path": str(a.half_cell), "full_cell_path": str(a.full_cell),
             "consumed_inputs": res["consumed"], **res["settings"]})
         tmp = art.with_name(art.name + ".meta.part")

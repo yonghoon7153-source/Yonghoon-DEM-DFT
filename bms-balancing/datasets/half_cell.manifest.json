@@ -1,0 +1,35 @@
+{
+  "_README": [
+    "반쪽전지 데이터셋의 **모집단 선언**이다 — `bms_balancing/data.py` 가 읽는다 (조건 8 축 ②).",
+    "왜 코드 상수에서 옮겼나 (Codex R12 §5 답변 2): 이것은 **코드가 아니라 자료에 대한 사실**이다.",
+    "  코드 상수로 두면 모집단이 조용한 코드 편집 한 줄로 바뀌고, 그 변경이 언제·왜·무슨 근거로",
+    "  일어났는지가 어디에도 안 남는다. 모집단이 줄면 축소된 roster 가 complete 를 참칭한다.",
+    "그래서 (a) 버전을 달고 (b) 항목마다 **근거(실측 명령/산출)** 를 적고 (c) 소비자가 digest 를 산출에 남긴다.",
+    "읽기 실패·형식 위반은 **조용히 빈 목록이 되지 않는다** — `data.py` 가 예외로 멈춘다 (부재는 안전값이 아니다)."
+  ],
+  "manifest_version": 1,
+  "dataset_id": "regime-team/electrode_balancing_blend/half_cell",
+  "declared_sources": ["GITT", "step_005C"],
+  "declared_states": ["pristine", "100", "200", "300_0009", "300_0147"],
+  "absent": [
+    {
+      "source": "GITT",
+      "state": "300_0147",
+      "why": "그 소스로는 그 상태를 애초에 재지 않았다 — 파일이 없어진 것이 아니라 측정이 없다.",
+      "evidence": [
+        "out/matrix_300_0147.csv 는 step_005C 16 행뿐이고 GITT 행이 없다 (사용자 기계 U14 산출)",
+        "out/degeneracy_300_0147_Li.json 의 half_cell 은 step_005C 다",
+        "나머지 세 상태의 matrix 는 두 소스 32 행이다 — 300_0147 만 절반이다",
+        "scripts/run_states.sh 의 pick_src 주석: '300_0147 이 GITT 에만 없어서 degeneracy 가 죽었다' (2026-09-10 실측)"
+      ],
+      "recorded_utc": "2026-09-10T00:00:00Z",
+      "recorded_by": "Codex R10 P1-2 권고('알려진 부재는 source 별 명시적 allowlist 로 표현한다')를 따른 기록"
+    }
+  ],
+  "scope": [
+    "이 목록에 있으면 모집단에서 **빠지는 것이 맞다**. 없는데 파일이 없으면 그것은 `missing_input` 이다 —",
+    "둘을 구분하지 못하면 축소된 roster 가 complete 를 참칭한다 (Codex R9-04).",
+    "여기에 항목을 더하는 것은 **모집단을 줄이는 일**이다. 근거 없이 더하지 않는다.",
+    "파일 존재 여부로 이 목록을 만들지 않는다 — 존재 확인으로 모집단을 줄이면 없는 것이 애초에 요청되지 않은 것처럼 보인다."
+  ]
+}

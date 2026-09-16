@@ -27,13 +27,76 @@ HALF_FILE = {
     "step_005C": {s: f"{s}_005C.xlsx" for s in STATES},
 }
 
-#: **알려진 의도적 부재** — 그 소스로는 그 상태를 애초에 재지 않았다 (Codex R10 P1-2: "알려진 부재는 source 별
-#: 명시적 allowlist 로 표현한다"). 이 목록에 있으면 모집단에서 **빠지는 것이 맞고**, 없는데 파일이 없으면 그것은
-#: `missing_input` 이다 — 둘을 코드가 구분하지 못하면 축소된 roster 가 complete 를 참칭한다.
-#: 근거(실측, 사용자 기계 U14 산출): `out/matrix_300_0147.csv` 는 step_005C 16 행뿐이고 GITT 행이 없다 ·
-#: `out/degeneracy_300_0147_Li.json` 의 half_cell 은 step_005C · 나머지 세 상태의 matrix 는 두 소스 32 행이다 ·
-#: `run_states.sh` 의 `pick_src` 주석("300_0147 이 GITT 에만 없어서 degeneracy 가 죽었다", 2026-09-10 실측).
-HALF_CELL_ABSENT = frozenset({("GITT", "300_0147")})
+#: 반쪽전지 모집단 선언의 **정본** — 코드가 아니라 자료에 대한 사실이라 파일에 둔다 (조건 8 축 ②, R16).
+#: 코드 상수로 두면 모집단이 조용한 편집 한 줄로 바뀌고 그 변경의 근거가 어디에도 안 남는다.
+HALF_CELL_MANIFEST = Path(__file__).resolve().parent.parent / "datasets" / "half_cell.manifest.json"
+
+
+class ManifestError(RuntimeError):
+    """dataset manifest 를 **읽지 못했거나 형식이 틀렸다.**
+
+    전용 예외인 이유: 부르는 쪽이 `except Exception` 으로 삼키면 빈 allowlist 가 되고, 빈 allowlist 는
+    "알려진 부재가 없다" 는 **주장**이다 — 못 읽은 것과 같은 값이면 안 된다 (자체 리뷰 C03 · R11 P1-9).
+    """
+
+
+def load_half_cell_manifest(path=None) -> dict:
+    """모집단 선언을 읽고 **형식을 댄다** → 검증된 dict. 어긋나면 `ManifestError` 로 멈춘다.
+
+    요구: `manifest_version`(1 이상 정수) · `dataset_id` · `declared_sources`/`declared_states` 목록 ·
+    `absent` 목록. `absent` 항목마다 선언 안의 source/state 이고 **근거**(`why` + 비어 있지 않은
+    `evidence`)와 기록자(`recorded_utc`·`recorded_by`)가 있어야 한다 — 근거 없이 모집단을 줄이지 않는다.
+    """
+    import json as _json
+    p = Path(path) if path is not None else HALF_CELL_MANIFEST
+    try:
+        raw = p.read_bytes()
+    except OSError as e:
+        raise ManifestError(f"dataset manifest 를 못 읽었다 ({p}): {e} — 빈 allowlist 로 넘어가지 않는다") from None
+    try:
+        doc = _json.loads(raw.decode("utf-8"))
+    except (ValueError, UnicodeDecodeError) as e:
+        raise ManifestError(f"dataset manifest 가 JSON 이 아니다 ({p}): {e}") from None
+    if not isinstance(doc, dict):
+        raise ManifestError(f"dataset manifest 가 객체가 아니다 ({p})")
+    v = doc.get("manifest_version")
+    if not (isinstance(v, int) and not isinstance(v, bool) and v >= 1):
+        raise ManifestError(f"dataset manifest 에 manifest_version 이 없다/잘못됐다 ({v!r})")
+    if not doc.get("dataset_id"):
+        raise ManifestError("dataset manifest 에 dataset_id 가 없다 — 어느 데이터셋의 선언인지 말해야 한다")
+    srcs, sts = doc.get("declared_sources"), doc.get("declared_states")
+    if not (isinstance(srcs, list) and srcs and isinstance(sts, list) and sts):
+        raise ManifestError("dataset manifest 에 declared_sources/declared_states 선언이 없다")
+    absent = doc.get("absent")
+    if not isinstance(absent, list):
+        raise ManifestError("dataset manifest 에 absent 목록이 없다 — 빈 목록이면 `[]` 라고 **적어야** 한다")
+    for e in absent:
+        if not isinstance(e, dict) or e.get("source") not in srcs or e.get("state") not in sts:
+            raise ManifestError(f"absent 항목이 선언 밖의 source/state 를 가리킨다: {e!r}")
+        if not (e.get("why") and isinstance(e.get("evidence"), list) and e["evidence"]):
+            raise ManifestError(f"absent 항목에 근거가 없다 ({e.get('source')}/{e.get('state')}) — "
+                                f"근거 없이 모집단에서 빼지 않는다")
+        if not (e.get("recorded_utc") and e.get("recorded_by")):
+            raise ManifestError(f"absent 항목에 기록자/시각이 없다 ({e.get('source')}/{e.get('state')})")
+    doc["_bytes"] = raw
+    return doc
+
+
+def half_cell_manifest_identity(path=None) -> dict:
+    """산출에 적을 **모집단 선언의 식별자** — version · dataset_id · 그 파일 bytes 의 sha256.
+
+    파일로 옮기기만 하고 산출이 그것을 안 적으면, 나중에 그 파일이 바뀌었을 때 어느 산출이 어느 선언으로
+    만들어졌는지 말할 수 없다 (자체 리뷰 C18 의 "적고 안 대면 무엇을 고정하는지 말할 수 없다").
+    """
+    import hashlib as _h
+    doc = load_half_cell_manifest(path)
+    return {"version": doc["manifest_version"], "dataset_id": doc["dataset_id"],
+            "sha256": _h.sha256(doc["_bytes"]).hexdigest()}
+
+
+#: **알려진 의도적 부재** — 그 소스로는 그 상태를 애초에 재지 않았다 (Codex R10 P1-2). 정본은 위 manifest 다;
+#: 여기 값은 그것을 읽은 **결과**이고, 읽기 실패는 import 시점에 `ManifestError` 로 멈춘다 (빈 집합이 아니다).
+HALF_CELL_ABSENT = frozenset((e["source"], e["state"]) for e in load_half_cell_manifest()["absent"])
 
 SI_SOURCES = ["Baggetto", "Friedrich", "Jiang", "Kunz", "Li", "Lu",
               "Sethuraman", "Wetjen"]

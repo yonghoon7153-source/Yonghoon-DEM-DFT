@@ -113,8 +113,39 @@ manifest 이름은 `manifest.json` 인데 `preserve_handoff.sh` 가 `package_man
 `scripts/handoff_manifest.py` 한 자리로 빼고(bash heredoc 안에 두면 시험할 수 없다) 아는 키만
 넓혔다. 모르는 모양·둘 이상 후보·`path`/`sha256` 누락은 **계속 멈춘다**.
 
-**남은 열린 것**: 조건 6(동적 인증) · 조건 8(다섯 축) ·
-r11 `publish:profile_partial_stdout` 대체 증거. (**`openpyxl` 은 R16 에서 닫았다 — 아래.**)
+**남은 열린 것**: 조건 8 의 **축 셋** — export 공통 snapshot · run receipt · partial 수명 · locator 무결성
+중 ①③④⑤. (**`openpyxl` · 조건 6 · r11 대체 증거 · 조건 8 축 ② 는 R16 에서 닫았다 — 아래.**)
+
+**R16 조건 6 (동적 인증) 닫음.** 리뷰어 문장: "`test_g10` 은 AST 순서 검사이지 **우회 재현이 아니다**."
+재실행 블록이 import 보다 앞에 있는지만 봤으므로, 재실행이 실패하거나 `-P` 의 의미가 바뀌면 AST 는
+그대로인데 구멍은 열린다. `tests/test_r16_dynamic_bypass.py` 가 **실제로 심어서 돌린다** — 러너 넷의
+사본과 `evidence_gate.py` 를 tmp 에 놓고 `sys.path[0]` 에 가짜 `traceback.py` 를 심는다 (저장소 트리는
+안 건드린다). **R16-11 양성 대조군**(재실행 블록을 지운 사본 → 심은 모듈이 **실행된다**) ·
+**R16-12 본 시험**(손대지 않은 사본 → **실행되지 않는다**, 그리고 프로세스가 argparse usage 까지
+갔는지 먼저 확인한다 — import 앞에서 죽었으면 "표식 없음" 은 공허하다) · **R16-13**(두 검사가 같은 넷을
+본다). 양성 대조군이 없으면 본 시험은 "심은 것이 애초에 안 돌았다" 와 구별되지 않는다.
+
+**R16 r11 `publish:profile_partial_stdout` 닫음 — 대체 증거는 이미 있었다.** publication 그룹이 첫
+case 에서 중단돼 미실행으로 남았는데, 같은 반례의 회귀가 저장소에 있었다 — `test_e11_13` 이
+`out=None` 부분 실행에서 **rc 3** 을 직접 관측한다 (러너 술어 `rc != 0` 보다 강하다). `SUBSTITUTES` 에
+등록해 "있는데 안 세던" 상태를 닫았고, `test_r16_21` 이 **등록된 이름이 실재하는지** 댄다. 실측:
+HEAD `70094d54` 에서 러너를 돌려 **`closed_with_substitutes: true`** (rc 0 · `report_complete: true` ·
+반례 소멸 32/37 · 제외 5 전부 대체 이름 있음). `closed` 는 계속 false 다 — 그것은 반례 소멸만 센다.
+
+**R16 조건 8 축 ② (dataset manifest) 닫음.** 부재 allowlist 를 코드 상수에서
+`datasets/half_cell.manifest.json` 으로 옮겼다 — 이것은 **코드가 아니라 자료에 대한 사실**이고, 상수로
+두면 모집단이 조용한 편집 한 줄로 바뀌며 그 근거가 어디에도 안 남는다 (모집단이 줄면 축소된 roster 가
+complete 를 참칭한다, R9-04). 계약 넷: ① 정본은 파일 ② 읽기 실패·형식 위반은 **빈 allowlist 가 되지
+않고 `ManifestError` 로 멈춘다** ③ 항목마다 **근거**(why + evidence + 기록자)가 있어야 한다
+④ 산출이 그 선언의 **version·dataset_id·sha256** 을 적고, 양쪽에 있는데 다르면 **실행 조건 불일치**로
+잡힌다. **가짜 통과를 하나 잡았다**: `pytest.raises(Exception)` 이 *함수가 아직 없어서 난*
+`AttributeError` 로도 만족돼 구현 전에 8 개가 초록이었다 → 전용 예외 `ManifestError` 로 좁혔다.
+**격리 기록기 교훈**: `run_states.sh` 의 `write_meta` 는 `-I -P` 로 돌아 앱 패키지를 import 하면 안
+된다 — `bms_balancing.data` 가 pandas 를 끌고 와 `dateutil` 없음으로 **meta 가 통째로 안 쓰였다**
+(실측 12 건 빨감). stdlib 로만 읽게 했고 `test_r16_37` 이 두 자리가 같은 값을 내는지 댄다.
+축 ② 에서 **일부러 안 한 것**: 선언이 한쪽에만 있는 비대칭을 새 blocker 로 만들지 않았다 — 승인 기록에
+네 번째 축이 생겨 또 사용자 결정을 요구하는데, 그 상황은 이미 `inputs/env_uncomparable` 이 같은 이유로
+승격을 막아 실질 판정이 안 바뀐다. 정본을 다시 만들면 사라지는 비대칭이다.
 
 **R16 (2026-09-16) — `openpyxl` 을 env 축에 넣었다.** 리뷰어 정적 지적을 닫았다. 과학 입력이 전부
 `pd.read_excel` 로 읽히고 pandas 는 **openpyxl 로** xlsx 를 연다 — C18 이 pandas 를 넣은 것과 같은
@@ -545,7 +576,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 355 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 366 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

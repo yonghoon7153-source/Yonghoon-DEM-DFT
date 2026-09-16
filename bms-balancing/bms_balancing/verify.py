@@ -554,6 +554,8 @@ def cmd_degeneracy(args):
         "n_grid": args.grid, "n_samples": args.samples,  # R6 내부 F5: 인자 전부가 산출 안에
         "run_id": run_id_of(args),                     # R4-06: 이 시도의 식별자
         "env": _provenance().env_signature(),          # R6 내부 F3
+        # ⚠ R16 (조건 8 축 ②): 모집단 선언의 식별자 — 어느 dataset manifest 로 roster 를 정했는가
+        "dataset_manifest": D.half_cell_manifest_identity(),
         "consumed_inputs": getattr(obj, "consumed_inputs", None),          # R6 내부 F4 (대상 상태)
         "ref_consumed_inputs": getattr(ref_obj, "consumed_inputs", None),  # (기준 pristine)
         "inputs_sha": getattr(obj, "inputs_sha", None),
