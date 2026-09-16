@@ -26,6 +26,7 @@
  */
 
 import type {
+  ActivationEnergy, ConductivityRow,
   Cycle, DqdvSeries, DvdqSeries, FitParameter, ProfileSeries, SpectrumPoints,
 } from './types'
 
@@ -573,4 +574,51 @@ function stackedXy(pairs: [number[], number[]][]): string {
     }
   }
   return tsvColumns([left, right])
+}
+
+
+// --- 대칭셀 이온전도도 (ADR 0039) -------------------------------------------
+
+/** 슬라이드의 표 그대로, Origin 에 바로 붙는 다섯 열.
+ *
+ *  ``온도(°C) · 두께(mm) · 저항(Ω) · 이온전도도(mS cm⁻¹) · 활성화 에너지(eV)``
+ *
+ *  **여기는 머리글을 붙인다.**  쌓는 배치에 머리글을 안 붙이는 이유(모든 열이
+ *  같은 셀이라 잡음이다)가 여기서는 반대로 뒤집힌다 — 다섯 열이 저마다 다른
+ *  양이고, 워크시트에 앉은 뒤에는 어느 열이 저항이고 어느 열이 전도도인지
+ *  알 방법이 없다.  Origin 에서 Long Name 칸을 골라 붙이면 이름 줄로 앉는다.
+ *
+ *  **활성화에너지는 첫 줄에만** 적는다.  표 전체에서 하나 나오는 수라서,
+ *  아홉 줄에 같은 수를 아홉 번 적으면 온도마다 잰 값처럼 보인다 (슬라이드의
+ *  표도 그 칸을 병합해 두었다).
+ */
+export function conductivityTableTsv(rows: ConductivityRow[],
+                                     activation: ActivationEnergy): string {
+  const head = ['온도(°C)', '두께(mm)', '저항(Ohm)', '이온전도도(mS/cm)',
+                '활성화에너지(eV)'].join('\t')
+  const lines = rows.map((row, index) => [
+    cell(row.temperature_c),
+    cell(row.thickness_mm),
+    cell(row.resistance_ohm),
+    cell(row.sigma_ms_cm),
+    index === 0 ? cell(activation.activation_energy_ev) : MISSING,
+  ].join('\t'))
+  return [head, ...lines].join('\n')
+}
+
+/** Arrhenius 직선의 두 열 — ``1000/T (1/K)`` 과 ``ln σ``.
+ *
+ *  Origin 에서 직접 `Linear Fit` 을 눌러 보고 싶을 때 쓴다.  워크벤치가 이미
+ *  같은 보고서를 내지만, **그 두 수가 같은지 확인하는 길**이 있어야 한다 —
+ *  화면이 내는 기울기를 믿어야 할 이유가 "화면이 그렇게 말해서" 뿐이면 안 된다.
+ *
+ *  ``activation`` 이 이미 이 두 열을 들고 있다.  화면에서 다시 계산하지 않는
+ *  이유와 같다: 계산이 두 군데 있으면 언젠가 갈라진다.
+ */
+export function arrheniusTsv(activation: ActivationEnergy): string {
+  const head = ['1000/T(1/K)', `ln sigma${activation.basis === 'sigma_t' ? '*T' : ''}`]
+    .join('\t')
+  const lines = activation.inverse_temperature.map(
+    (x, index) => [cell(x), cell(activation.log_sigma[index])].join('\t'))
+  return [head, ...lines].join('\n')
 }

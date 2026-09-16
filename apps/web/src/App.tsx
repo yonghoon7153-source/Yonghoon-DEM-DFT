@@ -22,6 +22,8 @@ import { SampleDetail } from './pages/SampleDetail'
 import { ScanDetail } from './pages/ScanDetail'
 import { Scans } from './pages/Scans'
 import { SpectrumDetail } from './pages/SpectrumDetail'
+import { SymCellDetail } from './pages/SymCellDetail'
+import { SymCells } from './pages/SymCells'
 import { Upload } from './pages/Upload'
 
 /** 내비게이션은 **측정 종류**로 묶는다 (ADR 0019).
@@ -56,6 +58,16 @@ const SECTIONS: NavSection[] = [
       { to: '/eis', label: '대시보드' },
       { to: '/eis/library', label: '라이브러리' },
       { to: '/eis/compare', label: '비교' },
+      { to: '/eis/upload', label: '업로드' },
+    ],
+  },
+  {
+    // 대칭셀은 EIS 안의 한 자리가 아니라 자기 파트다 (ADR 0039).  스윕은 같은
+    // 나이퀴스트지만 **묻는 것이 다르다**: 축이 1000/T 이고, 분모가 두께·면적
+    // 이고, 마지막에 남는 것이 활성화에너지 하나다.
+    label: '대칭셀',
+    links: [
+      { to: '/sym', label: '이온전도도' },
       { to: '/eis/upload', label: '업로드' },
     ],
   },
@@ -109,6 +121,8 @@ export function App() {
         <Route path="/eis/spectra" element={<Eis />} />
         <Route path="/eis/:id" element={<SpectrumDetail />} />
         <Route path="/scans" element={<Scans />} />
+        <Route path="/sym" element={<SymCells />} />
+        <Route path="/sym/:sha256" element={<SymCellDetail />} />
         <Route path="/scans/:sha256" element={<ScanDetail />} />
         <Route path="/gitt" element={<GittDashboard />} />
         <Route path="/gitt/library" element={<GittLibrary />} />

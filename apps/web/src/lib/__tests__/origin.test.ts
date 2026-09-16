@@ -8,7 +8,10 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  MISSING,
+  arrheniusTsv,
   bodeTsv,
+  conductivityTableTsv,
   cycleAndEfficiencyTsv,
   onlyCycles,
   diffusionTsv,
@@ -31,7 +34,10 @@ import {
   skippedForCopy,
   stillRunning,
 } from '../origin'
-import type { Cycle, DqdvSeries, ProfileSeries, SpectrumPoints } from '../types'
+import type {
+  ActivationEnergy, ConductivityRow,
+  Cycle, DqdvSeries, ProfileSeries, SpectrumPoints,
+} from '../types'
 
 function series(overrides: Partial<ProfileSeries> = {}): ProfileSeries {
   return {
@@ -557,3 +563,60 @@ describe('넓은 배치의 머리글 — 열마다 어느 셀인지 (2026-08-27)
   })
 })
 
+
+// --- 대칭셀 이온전도도 (ADR 0039) -------------------------------------------
+
+const ROW = (over: Partial<ConductivityRow> = {}): ConductivityRow => ({
+  spectrum_id: 1, sweep_index: 1, name: 'B12', temperature_c: 60,
+  thickness_mm: 0.79, area_cm2: 0.8501, resistance_ohm: 9.69,
+  resistance_source: 'typed', crossing_ohm: 4.82, sigma_ms_cm: 9.59, ...over,
+})
+
+const ACTIVATION: ActivationEnergy = {
+  activation_energy_ev: 0.328, stderr_ev: 0.0103, basis: 'sigma',
+  points_used: 2, reason: '', fit: null,
+  inverse_temperature: [3.0017, 3.9502], log_sigma: [-4.6473, -8.0788],
+}
+
+describe('이온전도도 표 클립보드', () => {
+  it('슬라이드의 다섯 열을 머리글과 함께 낸다', () => {
+    const tsv = conductivityTableTsv(
+      [ROW(), ROW({ temperature_c: 50, resistance_ohm: 10.21, sigma_ms_cm: 9.1 })],
+      ACTIVATION)
+    const lines = tsv.split('\n')
+    expect(lines[0]).toBe('온도(°C)\t두께(mm)\t저항(Ohm)\t이온전도도(mS/cm)\t활성화에너지(eV)')
+    expect(lines[1]).toBe('60\t0.79\t9.69\t9.59\t0.328')
+  })
+
+  //: 표 전체에서 하나 나오는 수다.  아홉 줄에 아홉 번 적으면 온도마다 잰
+  //  값처럼 보인다.
+  it('활성화에너지는 첫 줄에만 적는다', () => {
+    const tsv = conductivityTableTsv([ROW(), ROW({ temperature_c: 50 })], ACTIVATION)
+    const lines = tsv.split('\n')
+    expect(lines[1]?.endsWith('\t0.328')).toBe(true)
+    expect(lines[2]?.endsWith(`\t${MISSING}`)).toBe(true)
+  })
+
+  it('아직 없는 칸은 빈칸이 아니라 Origin 의 결측값이다', () => {
+    const tsv = conductivityTableTsv(
+      [ROW({ temperature_c: null, resistance_ohm: null, sigma_ms_cm: null })],
+      { ...ACTIVATION, activation_energy_ev: null })
+    expect(tsv.split('\n')[1]).toBe(`${MISSING}\t0.79\t${MISSING}\t${MISSING}\t${MISSING}`)
+  })
+})
+
+describe('Arrhenius 직선 클립보드', () => {
+  it('1000/T 과 ln σ 두 열 — 서버가 준 것을 그대로', () => {
+    const tsv = arrheniusTsv(ACTIVATION)
+    expect(tsv.split('\n')).toEqual([
+      '1000/T(1/K)\tln sigma',
+      '3.0017\t-4.6473',
+      '3.9502\t-8.0788',
+    ])
+  })
+
+  it('기준이 σT 면 머리글도 그렇게 적는다', () => {
+    const tsv = arrheniusTsv({ ...ACTIVATION, basis: 'sigma_t' })
+    expect(tsv.split('\n')[0]).toBe('1000/T(1/K)\tln sigma*T')
+  })
+})

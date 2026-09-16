@@ -87,7 +87,7 @@ function calls(spy: ReturnType<typeof installFetch>) {
  *  찾으면 엉뚱한 칸을 본다.
  */
 async function scanRow() {
-  const link = await screen.findByText(/SOC 스캔 · 스윕/)
+  const link = await screen.findByText(/스캔 · 스윕/)
   const row = link.closest('tr')
   expect(row).not.toBeNull()
   const cells = within(row!).getAllByRole('cell')

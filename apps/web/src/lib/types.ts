@@ -775,6 +775,10 @@ export interface ScanPoint {
   /** 사람이 적어 둔 SOC (%).  계측기가 모르는 값이라 비어 있는 것이 정상이다
    *  (ADR 0038).  3D 의 깊이축을 전위 대신 이것으로 세울 수 있다. */
   soc_percent: number | null
+  /** 사람이 적어 둔 온도 (°C) 와 눈으로 읽은 저항 (Ω) — 이온전도도 스윕의
+   *  x 축과 분모다 (ADR 0039). */
+  temperature_c: number | null
+  resistance_ohm: number | null
   fit_id: number | null
   circuit: string
   chi_squared: number | null
@@ -795,6 +799,71 @@ export interface ScanPoint {
 }
 
 /** 파일 하나에서 나온 스윕들 — SOC 스캔 하나. */
+/** Origin 의 `Linear Fit` 이 내는 보고서 — 그 회색 표의 칸들 (ADR 0039).
+ *
+ *  `null` 은 "이 점들로는 말할 수 없다" 이지 0 이 아니다.  점 둘로 그은 직선의
+ *  표준오차를 0 으로 적으면 완벽한 맞춤처럼 보인다. */
+export interface LinearFitReport {
+  slope: number
+  intercept: number
+  slope_stderr: number | null
+  intercept_stderr: number | null
+  n_points: number
+  dof: number
+  rss: number
+  pearson_r: number | null
+  r_squared: number | null
+  adj_r_squared: number | null
+  slope_t: number | null
+  slope_p: number | null
+  intercept_t: number | null
+  intercept_p: number | null
+  f_value: number | null
+  f_p: number | null
+}
+
+/** Arrhenius 직선 하나와 거기서 읽은 활성화에너지. */
+export interface ActivationEnergy {
+  activation_energy_ev: number | null
+  stderr_ev: number | null
+  /** `sigma` = ln σ · `sigma_t` = ln(σT).  같은 점에서 다른 수가 나오므로
+   *  (실측 0.329 ↔ 0.354 eV) 어느 쪽인지 화면에 늘 적는다. */
+  basis: string
+  points_used: number
+  reason: string
+  fit: LinearFitReport | null
+  /** 직선을 그린 두 열 — x = 1000/T, y = ln σ.  화면이 다시 계산하지 않는다. */
+  inverse_temperature: number[]
+  log_sigma: number[]
+}
+
+/** 표의 한 줄 — 온도 하나에서 읽은 저항과 거기서 나온 이온전도도. */
+export interface ConductivityRow {
+  spectrum_id: number
+  sweep_index: number
+  name: string
+  temperature_c: number | null
+  thickness_mm: number | null
+  area_cm2: number | null
+  resistance_ohm: number | null
+  /** `typed` 사람이 적었다 · `fit` 맞춤의 총저항 · `` 아직 없다. */
+  resistance_source: string
+  /** `-Im` 이 0 을 지나는 자리 — **제안**이고 저절로 들어가지 않는다. */
+  crossing_ohm: number | null
+  sigma_ms_cm: number | null
+}
+
+/** 한 `.mpt` 의 온도별 이온전도도와 활성화에너지 (ADR 0039). */
+export interface ScanConductivity {
+  sha256: string
+  name: string
+  sweeps: number
+  rows: ConductivityRow[]
+  activation: ActivationEnergy
+  /** 아직 없는 것들 — `온도` `두께` `면적` `저항`. */
+  missing: string[]
+}
+
 export interface Scan {
   sha256: string
   name: string

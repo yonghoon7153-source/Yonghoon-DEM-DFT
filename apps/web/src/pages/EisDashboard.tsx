@@ -90,7 +90,7 @@ export function EisDashboard() {
                   <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th style={{ textAlign: 'left' }}>측정</th>
                   <th>스펙트럼</th>
-                  <th>SOC 스캔</th>
+                  <th>스캔</th>
                   <th>fitting</th>
                   <th style={{ textAlign: 'left' }}>회로</th>
                   <th>R₀ (Ω)</th>
@@ -155,7 +155,7 @@ export function EisDashboard() {
                               두면 "여기를 누르면 되겠구나" 를 시험해 보고
                               아무 일도 안 일어나는 것을 확인하게 된다. */}
                           <Link className="tiny" to={`/scans/${row.scan_sha256}`}>
-                            [SOC 스캔 · 스윕 {row.spectra}개]
+                            [스캔 · 스윕 {row.spectra}개]
                           </Link>
                         </>
                       ) : null}
@@ -253,6 +253,6 @@ const placeEisRow = (row: EisDashboardRow) => ({
 })
 
 /** 폴더 줄이 표 전체 폭을 덮으려면 열 수가 맞아야 한다.  틀리면 그 줄만
- *  가로로 밀려 표가 어긋난다 — 이름·관계셀·측정·스펙트럼·SOC 스캔·fitting·
+ *  가로로 밀려 표가 어긋난다 — 이름·관계셀·측정·스펙트럼·스캔·fitting·
  *  회로·R₀·총저항·목적·마지막·(지우기) = 12. */
 const COLUMN_COUNT = 12

@@ -13,7 +13,8 @@ import type {
   Diffusion, Drt, DrtSweep, DvdqResponse, CycleTable, DashboardRow, Facets,
   FeedbackKind, FeedbackNote,
   EisDashboard, GittDashboard, GittRun, Group, Measurements, Meta, Pocv,
-  ProfileResponse, Report, Run, Sample, Scan, Spectrum, SpectrumDetail,
+  ProfileResponse, Report, Run, Sample, Scan, ScanConductivity,
+  Spectrum, SpectrumDetail,
   SpectrumFit, SpectrumPoints,
 } from './types'
 
@@ -275,6 +276,26 @@ export const api = {
       `/api/eis/scans/${sha256}/soc`,
       { method: 'PUT', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ soc_percent: values }) }),
+  /** 이 스캔의 온도를 스윕 차례대로 적는다 (ADR 0039).
+   *
+   *  SOC 와 같은 규칙이다 — 수가 스윕 수와 다르면 서버가 422 로 거절하고
+   *  아무것도 쓰지 않는다.  한 칸 밀린 온도축은 Arrhenius 직선을 멀쩡하게
+   *  그리고 활성화에너지만 조용히 틀린다. */
+  writeScanTemperature: (sha256: string, values: (number | null)[]) =>
+    request<{ sweeps: number; filled: number; cleared: number }>(
+      `/api/eis/scans/${sha256}/temperature`,
+      { method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ temperature_c: values }) }),
+  /** 스윕마다 눈으로 읽은 전해질 저항 (Ω).  적으면 맞춤보다 이것이 이긴다. */
+  writeScanResistance: (sha256: string, values: (number | null)[]) =>
+    request<{ sweeps: number; filled: number; cleared: number }>(
+      `/api/eis/scans/${sha256}/resistance`,
+      { method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resistance_ohm: values }) }),
+  /** 온도별 이온전도도 표와 활성화에너지. */
+  scanConductivity: (sha256: string, params?: Params) =>
+    request<ScanConductivity>(
+      `/api/eis/scans/${sha256}/conductivity${query(params)}`),
   /** 한 SOC 스캔의 스윕 **전부**를 한 회로로.  상한은 스윕마다 따로 잡힌다
    *  (유도성 꼬리의 길이가 스윕마다 다르다) — 하한은 안 정한다. */
   fitScan: (sha256: string, params?: Params) =>

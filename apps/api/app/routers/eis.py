@@ -1636,12 +1636,20 @@ def update_spectrum(spectrum_id: int, payload: SpectrumUpdate,
 #: **왜 전부는 아닌가.**  `name` 은 스윕마다 `#3` 이 붙어 있어 그것이 곧
 #: 구별이다.  `at_cycle` 은 스캔이 사이클 하나에서 나오므로 같아도 되지만,
 #: 스윕을 골라 다른 사이클에 붙이는 일이 실제로 있어 남겨 둔다.
+#:
+#: **`temperature_c` 는 2026-09-16 에 빠졌다** (ADR 0039).  ADR 0027 이 이 칸을
+#: 만들 때 스캔은 한 온도에서 찍는 것이었고, 그래서 나눠 갖는 것이 편의였다.
+#: 이온전도도 스윕은 정반대다 — **스윕마다 온도가 다른 것이 그 측정의 전부**다.
+#: 나눠 가진 채로 두면 스윕 하나의 조건을 고치는 PATCH 한 번이 아홉 개의 온도를
+#: 모두 같은 값으로 덮고, 화면은 그 뒤에도 Arrhenius 직선을 그린다 (점 아홉 개가
+#: 한 자리에 겹쳐서 — 기울기가 없어 "온도가 모두 같다" 로 떨어진다).  여러 줄을
+#: 한 번에 적는 편의는 `PUT /scans/{sha}/temperature` 가 대신한다.
 SCAN_SHARED_FIELDS = {
     # 기하 — 이것을 고치면 모든 스윕의 Ω·cm² 가 함께 바뀐다.
     "thickness_um", "area_cm2", "diameter_mm",
     # 측정 자신의 조건 (ADR 0027) 과 붙은 셀.
     "sample_id", "group_id", "test_date", "cathode_type", "process",
-    "temperature_c", "kind", "cell_config", "purpose",
+    "kind", "cell_config", "purpose",
 }
 
 

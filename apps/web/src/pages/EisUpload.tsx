@@ -22,6 +22,7 @@ import { Alert, Card, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { useAsync } from '../lib/hooks'
 import type { CellConfig, EisKind, Spectrum } from '../lib/types'
+import { CONDUCTIVITY_PURPOSE } from '../lib/conductivity'
 
 const KINDS: { value: EisKind; label: string; hint: string }[] = [
   { value: 'liquid', label: '액체 전해질', hint: '두 아크가 SEI 와 전하이동' },
@@ -38,7 +39,10 @@ const CONFIGS: { value: CellConfig | ''; label: string }[] = [
 
 /** 자유 입력의 보기.  목록을 고정하지 않는 이유는 랩이 새 목적을 계속
  *  만들어서다 — 고정하면 그때마다 코드를 고쳐야 한다. */
-const PURPOSES = ['SOC별', '사이클별', '200 사이클', '구동 전', '온도별']
+const PURPOSES = ['SOC별', '사이클별', '200 사이클', '구동 전', '온도별',
+                  // 대칭셀 파트가 이 목적으로 스캔을 모은다 (ADR 0039).
+                  // 자유 입력은 그대로다 — 이것은 **보기**일 뿐이다.
+                  CONDUCTIVITY_PURPOSE]
 
 interface Result {
   file: string
@@ -277,7 +281,7 @@ function Result({ result }: { result: Result }) {
         ) : <span className="tiny dim">셀 안 붙임</span>}
       </div>
       <div className="tiny dim">
-        {sweeps > 1 ? `SOC 스캔 — 스윕 ${sweeps}개` : '단일 스펙트럼'}
+        {sweeps > 1 ? `스캔 — 스윕 ${sweeps}개` : '단일 스펙트럼'}
         {` · ${item.n_points}점`}
         {item.purpose ? ` · ${item.purpose}` : ''}
         {sweeps > 1 ? (

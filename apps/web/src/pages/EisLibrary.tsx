@@ -31,7 +31,7 @@ type Shape = 'all' | 'single' | 'scan'
 const SHAPES: [Shape, string][] = [
   ['all', '전체'],
   ['single', '단일 스펙트럼'],
-  ['scan', 'SOC 스캔'],
+  ['scan', '스캔'],
 ]
 
 const KINDS: [EisKind | '', string][] = [
@@ -157,7 +157,7 @@ export function EisLibrary() {
           <h1>EIS 라이브러리</h1>
           <div className="sub">
             잰 것이 한 줄씩 — 스윕이 여럿인 파일은 스윕마다 한 줄이고, 그 묶음이
-            SOC 스캔입니다
+            스캔입니다
           </div>
         </div>
       </div>
@@ -172,7 +172,7 @@ export function EisLibrary() {
       <Card title="거르기" tight>
         {/* **한 줄에 넣는다.**  `cols-4` 로 두면 일곱 칸이 두 줄이 되고, 두
             줄짜리 거르개는 그 밑의 목록을 화면 밖으로 민다.  칸마다 필요한
-            폭이 크게 달라서 균등 분할도 안 맞는다: `SOC 스캔` 은 단추 두 개라
+            폭이 크게 달라서 균등 분할도 안 맞는다: `스캔` 은 단추 두 개라
             좁아도 되고, `종류` 는 `단일 스펙트럼` 이 안 잘려야 하므로 넓어야
             한다.  그래서 폭을 손으로 나눈다. */}
         <div className="filter-row" style={{ padding: 12 }}>
@@ -180,8 +180,8 @@ export function EisLibrary() {
           {/* 스캔을 접을지.  기본은 접기 — 스윕 스무 줄이 같은 파일이면 그
               스무 줄은 서로 아무것도 구별해 주지 않는다.  펴는 길은 남긴다:
               스윕 하나를 지우거나 셀에 따로 붙이는 일이 있다. */}
-          <Field label="SOC 스캔" hint="스윕을 한 줄로 접습니다">
-            <div className="segmented" role="group" aria-label="SOC 스캔">
+          <Field label="스캔" hint="스윕을 한 줄로 접습니다">
+            <div className="segmented" role="group" aria-label="스캔">
               <button type="button" className={foldScans ? 'on' : ''}
                       onClick={() => setFoldScans(true)}>묶기</button>
               <button type="button" className={foldScans ? '' : 'on'}
@@ -336,7 +336,7 @@ export function EisLibrary() {
                           {' '}
                           <Link to={`/scans/${item.sha256}`} className="tiny">
                             {foldScans
-                              ? `[SOC 스캔 · 스윕 ${sweepsOf.get(item.sha256)?.length
+                              ? `[스캔 · 스윕 ${sweepsOf.get(item.sha256)?.length
                                   ?? item.sweep_count}개]`
                               : `[스캔 ${item.sweep_index}/${item.sweep_count}]`}
                           </Link>

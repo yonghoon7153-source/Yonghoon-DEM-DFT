@@ -1791,3 +1791,33 @@ def test_an_unknown_scan_says_so_for_every_conductivity_route(client):
                       json={"temperature_c": [20]}).status_code == 404
     assert client.put("/api/eis/scans/nosuch/resistance",
                       json={"resistance_ohm": [20]}).status_code == 404
+
+
+def test_one_sweeps_temperature_does_not_overwrite_the_others(client):
+    """온도는 스윕마다 다르다 — 그것이 이온전도도 스윕의 전부다 (ADR 0039).
+
+    ADR 0027 이 `temperature_c` 를 만들 때 스캔은 한 온도에서 찍는 것이었고,
+    그래서 스윕끼리 나눠 갖는 것이 편의였다.  이온전도도 스윕에서는 정반대라,
+    나눠 가진 채로 두면 PATCH 한 번이 아홉 개의 온도를 같은 값으로 덮고 화면은
+    그 뒤에도 직선을 그린다 (점 아홉 개가 한 자리에 겹친 채로).
+    """
+    sha = upload_mpt_scan(client, [9.69, 14.56, 34.66])
+    client.put(f"/api/eis/scans/{sha}/temperature",
+               json={"temperature_c": [60, 40, 20]})
+    first = client.get("/api/eis/spectra").json()[0]
+
+    client.patch(f"/api/eis/spectra/{first['id']}", json={"temperature_c": 25})
+    scan = client.get(f"/api/eis/scans/{sha}").json()
+    assert [p["temperature_c"] for p in scan["points"]] == [25, 40, 20]
+
+
+def test_geometry_still_spreads_because_one_file_is_one_pellet(client):
+    """두께·면적은 그대로 나눠 갖는다 — 아홉 번 적게 하면 아무도 안 적는다."""
+    sha = upload_mpt_scan(client, [9.69, 14.56, 34.66])
+    first = client.get("/api/eis/spectra").json()[0]
+    client.patch(f"/api/eis/spectra/{first['id']}",
+                 json={"thickness_um": 790.0, "area_cm2": 0.8501})
+
+    out = client.get(f"/api/eis/scans/{sha}/conductivity").json()
+    assert [row["thickness_mm"] for row in out["rows"]] == [0.79] * 3
+    assert [row["area_cm2"] for row in out["rows"]] == [0.8501] * 3
