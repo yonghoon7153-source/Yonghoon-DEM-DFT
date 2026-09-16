@@ -32,6 +32,59 @@ done
 R=${R:-/data/work/runs/li2s_layer1}
 [ -n "$CUT" ] && { case "$CUT" in ''|*[!0-9.]*) echo "⛔ --cutoff 는 수여야 한다: $CUT" >&2; exit 2 ;; esac; }
 
+# ── 명령줄에서 system·seed 를 뽑는다. ⛔ **인자 순서를 가정하지 않는다** ────────
+#    2026-09-16: 옛 판은 `--system X --seed N` 이 **붙어 있다고** 보고 한 패턴으로 잡았는데,
+#    (B) 는 `--system A --n_fu 12 --seed 1` 이라 중간에 --n_fu 가 껴서 **빈칸이 찍혔다.**
+#    오류도 안 났다 — 조용히 틀린 경로다.
+_runlabel() {
+  local c="$1" s d
+  s=$(printf '%s' "$c" | sed -nE 's/.*--system[= ]+([^ ]+).*/\1/p')
+  d=$(printf '%s' "$c" | sed -nE 's/.*--seed[= ]+([^ ]+).*/\1/p')
+  if [ -n "$s$d" ]; then echo "system ${s:-?} · seed ${d:-?}"; else echo "⚠ 인자를 못 읽음 (명령줄 형식이 바뀌었나)"; fi
+}
+
+# ── nvidia-smi 의 compute-apps 출력을 표로. ⛔ **못 읽음을 '경합 없음' 으로 두지 않는다** ──
+#    2026-09-16 실측: 권한이 막힌 호스트는 `Process-level GPU information is restricted.` 를
+#    **정상 출력처럼** 돌려준다. 옛 판은 그 문장을 PID 로 먹고 표를 그렸다.
+_compete() {
+  local apps="$1" any=0
+  if [ -n "$apps" ]; then
+    while IFS=, read -r pid mem; do
+      pid=$(printf '%s' "$pid" | tr -d ' ')
+      case "$pid" in ''|*[!0-9]*) continue ;; esac
+      any=1
+      local cmd tag; cmd=$(ps -p "$pid" -o args= 2>/dev/null | head -c 150); tag="다른 잡"
+      case "$cmd" in
+        *melt_quench_uma*)             tag="◀ 이 런 (B)" ;;
+        *disorder_ensemble_diffusion*) tag="시드 확장 큐" ;;
+        *pw.x*)                        tag="⛔ pw.x — MD 와 동시 금지 대상" ;;
+      esac
+      printf "  PID %-8s %-10s %-28s %s\n" "$pid" "$(printf '%s' "$mem" | tr -d ' ')" "$tag" "${cmd:-(cmdline 못 읽음)}"
+    done <<EOF_APPS
+$apps
+EOF_APPS
+  fi
+  if [ "$any" = 0 ]; then
+    echo "  ⚠ nvidia-smi 가 프로세스별 정보를 **안 준다** — 경합 없음이 아니라 **못 읽음**이다"
+    [ -n "$apps" ] && echo "     돌려준 것: $(printf '%s' "$apps" | head -1)"
+    echo "     → 대신 프로세스 목록으로 본다 (GPU 점유량은 모른다):"
+    pgrep -af "melt_quench_uma|disorder_ensemble_diffusion|pw\.x" 2>/dev/null \
+      | grep -v "watch_\|pgrep" | head -6 | sed 's/^/       /' \
+      || echo "       (해당 프로세스 없음)"
+  fi
+}
+
+# selftest 가 두 함수를 **따로** 부를 수 있게 하는 문. 인자는 env 로 받는다
+# (명령줄 문자열이 `--system …` 으로 시작해 플래그 파서에 걸리기 때문).
+if [ -n "${_WATCH_UNIT:-}" ]; then
+  case "$_WATCH_UNIT" in
+    runlabel) _runlabel "${_WATCH_UNIT_ARG:-}" ;;
+    compete)  _compete  "${_WATCH_UNIT_ARG:-}" ;;
+    *) echo "모르는 _WATCH_UNIT: $_WATCH_UNIT" >&2; exit 2 ;;
+  esac
+  exit 0
+fi
+
 if [ "$SELFTEST" = 1 ]; then
   # ── 자기이미지 가드의 양성·음성 경로를 **일부러 깨서** 확인한다 ──────────────
   T=$(mktemp -d); trap 'rm -rf "$T"' EXIT; n=0; bad=0
@@ -57,6 +110,30 @@ if [ "$SELFTEST" = 1 ]; then
   # ⑥ 음성(fail-closed): 못 읽었을 때 **조용히 넘어가지 않는다**. 줄이 사라지면 사람은 '통과' 로 읽는다.
   #    ⚠ 이 시험이 없던 동안 파괴 시험이 이 경로를 못 잡았다 (2026-09-16 실측).
   chk "⛔음성: 못 읽음을 '검사 못 했다' 로 찍는다 (침묵 금지)" "$(echo "$o" | grep -c '검사 못 했다')" "1"
+
+  # ── _runlabel: 인자 **순서**를 가정하지 않는다 (2026-09-16 실측 버그) ──────────
+  rl() { _WATCH_UNIT=runlabel _WATCH_UNIT_ARG="$1" bash "$0"; }
+  chk "양성: 붙어 있는 --system/--seed" \
+      "$(rl 'python x.py --system A --seed 1 --out o')" "system A · seed 1"
+  chk "⛔음성: 사이에 --n_fu 가 껴도 읽는다 (옛 판이 여기서 빈칸을 찍었다)" \
+      "$(rl 'python melt_quench_uma.py --system A --n_fu 12 --seed 1 --turbo')" "system A · seed 1"
+  chk "⛔음성: 순서가 뒤집혀도 읽는다" \
+      "$(rl 'python x.py --seed 7 --system control_li7ps6')" "system control_li7ps6 · seed 7"
+  chk "⛔음성: 인자가 없으면 '못 읽음' 이라고 말한다 (빈칸 금지)" \
+      "$(rl 'python x.py --dry_run' | grep -c '못 읽음')" "1"
+
+  # ── _compete: 못 읽음을 '경합 없음' 으로 두지 않는다 (2026-09-16 kgy 실측) ─────
+  cp2() { _WATCH_UNIT=compete _WATCH_UNIT_ARG="$1" bash "$0" 2>&1; }
+  chk "⛔음성: 권한 제한 문장을 PID 로 먹지 않는다" \
+      "$(cp2 'Process-level GPU information is restricted.' | grep -c 'PID Process')" "0"
+  # ⚠ 문구를 **특정**한다. 예전 판은 '못 읽음' 만 셌는데, 표 안의 `(cmdline 못 읽음)` 에
+  #   우연히 걸려서 가드를 뺀 뒤에도 초록이었다 (2026-09-16 파괴 시험에서 드러남).
+  chk "⛔음성: 권한 제한이면 '경합 없음이 아니라' 를 말한다" \
+      "$(cp2 'Process-level GPU information is restricted.' | grep -c '경합 없음이 아니라')" "1"
+  chk "⛔음성: 출력이 비어도 '경합 없음이 아니라' 를 말한다 (침묵 금지)" \
+      "$(cp2 '' | grep -c '경합 없음이 아니라')" "1"
+  chk "양성: 숫자 PID 행은 표로 그린다" \
+      "$(cp2 '1259139, 11544 MiB' | grep -c '^  PID 1259139')" "1"
   # ⑥ 음성: --cutoff 에 수가 아닌 값이면 시작하지 않는다
   bash "$0" "$T" --cutoff abc >/dev/null 2>&1; chk "⛔음성: 비수치 --cutoff 를 거부한다" "$?" "2"
   echo "── selftest $((n-bad))/$n 통과 ──"; [ "$bad" = 0 ] || exit 1; exit 0
@@ -65,7 +142,7 @@ fi
 echo "════════ $(date '+%m-%d %H:%M:%S')  melt-quench watch — $R ════════"
 G=$(nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader 2>/dev/null); echo "■ GPU ${G:-n/a}"
 P=$(pgrep -af "melt_quench_uma.py" | grep -v "pgrep\|watch_" | head -1)
-if [ -n "$P" ]; then echo "■ 실행: $(echo "$P" | grep -o -- '--system [^ ]* --seed [^ ]*')"; else echo "■ 실행 중인 melt_quench 없음"; fi
+if [ -n "$P" ]; then echo "■ 실행: $(_runlabel "$P")"; else echo "■ 실행 중인 melt_quench 없음"; fi
 python3 - "$R" "${CUT:-}" <<'PY'
 import sys, os, json, time, glob
 R = sys.argv[1]
@@ -215,22 +292,7 @@ PY
 # ── --compete: 같은 GPU 를 나눠 쓰는 다른 계산 ──────────────────────────────
 if [ "$COMPETE" = 1 ]; then
   echo "── 같은 GPU 경합 (동시실행 개정의 근거를 화면에 올린다) ──"
-  APPS=$(nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader 2>/dev/null)
-  if [ -z "$APPS" ]; then
-    echo "  ⚠ nvidia-smi 가 프로세스를 안 준다 — **경합 없음이 아니라 못 읽음**이다"
-  else
-    echo "$APPS" | while IFS=, read -r pid mem; do
-      pid=$(echo "$pid" | tr -d ' ')
-      cmd=$(ps -p "$pid" -o args= 2>/dev/null | head -c 150)
-      tag="다른 잡"
-      case "$cmd" in
-        *melt_quench_uma*)             tag="◀ 이 런 (B)" ;;
-        *disorder_ensemble_diffusion*) tag="시드 확장 큐" ;;
-        *pw.x*)                        tag="⛔ pw.x — MD 와 동시 금지 대상" ;;
-      esac
-      printf "  PID %-8s %-12s %-28s %s\n" "$pid" "$(echo "$mem" | tr -d ' ')" "$tag" "${cmd:-(cmdline 못 읽음)}"
-    done
-  fi
+  _compete "$(nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader 2>/dev/null)"
   echo "  ⛔ 경합 **여부**만 본다 — 느려짐의 원인인지는 판정하지 않는다."
   echo "     근거 조항: G1 §6b *\"힘·에너지 값 자체는 GPU 경합과 무관하다\"* ·"
   echo "     소셀 카드 §3-b ⚠_동시실행_개정 (MD 만 동시 · **QE 단일점은 제외**)"

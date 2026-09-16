@@ -2218,7 +2218,7 @@
    "card": "db/properties/lpscl_smallcell_uma_qe_force_estimand_2026_09_16.json",
    "record": "db/properties/lpscl_li2s_layer1_closed_2026_09_15.json",
    "supersedes": [],
-   "enforcement": "① `mlip_committee.py info --engines uma` — ✅ 실측 2026-09-16: cutoff **6.0 Å** · 메시지패싱 **4 층** · 유효 수용영역 24.0 Å. 하드 기준(L/2 > cutoff) 통과 — 유리 L/2 7.07 > 6.0. ⚠ 소프트(24 Å)는 120 원자도 400 원자도 못 넘으므로 문턱이 아니라 기록 항목이고, **정도 차이(홉 2.36 vs 3.52)** 때문에 전이는 **통과 방향으로만** 흐른다. ② g2 seed1 궤적 실행모드 — ✅ 실측: `plan.json/uma_inference_mode = turbo` ⇒ (B)도 `--turbo`. ③ MD 는 kgy 에서만 만든다(생성 스택이 G-B2 의 교란변수다). `~/lldvar` 와 `~/work/Yonghoon-DEM-DFT` 의 `melt_quench_uma.py` 는 동일함을 `cmp` 로 확인했다. ④ 프레임 10 개·문턱·겹침 기준은 결과를 보고 고치지 않는다. ⑤ **개정 2026-09-16**: 초판의 *'큐가 끝난 뒤 던진다'* 는 큐 잔여를 35 h 로 오독하고 쓴 조항이라 철회한다 (실측 4 유닛 ≈ 145 h). **MD 는 큐와 동시에** 돌린다 — C3 지연 ≈ 4 h 대 절약 6 일이고, G1 §6b 가 *'힘·에너지 값은 GPU 경합과 무관'* 을 이미 판정했다. ⛔ **QE 단일점(9.9 GB)은 동시 실행 대상이 아니다 — MD 만이다.**",
+   "enforcement": "① `mlip_committee.py info --engines uma` — ✅ 실측 2026-09-16: cutoff **6.0 Å** · 메시지패싱 **4 층** · 유효 수용영역 24.0 Å. 하드 기준(L/2 > cutoff) 통과 — 유리 L/2 7.07 > 6.0. ⚠ 소프트(24 Å)는 120 원자도 400 원자도 못 넘으므로 문턱이 아니라 기록 항목이고, **정도 차이(홉 2.36 vs 3.52)** 때문에 전이는 **통과 방향으로만** 흐른다. ② g2 seed1 궤적 실행모드 — ✅ 실측: `plan.json/uma_inference_mode = turbo` ⇒ (B)도 `--turbo`. ③ MD 는 kgy 에서만 만든다(생성 스택이 G-B2 의 교란변수다). `~/lldvar` 와 `~/work/Yonghoon-DEM-DFT` 의 `melt_quench_uma.py` 는 동일함을 `cmp` 로 확인했다. ④ 프레임 10 개·문턱·겹침 기준은 결과를 보고 고치지 않는다. ⑤ **개정 2026-09-16**: 초판의 *'큐가 끝난 뒤 던진다'* 는 큐 잔여를 35 h 로 오독하고 쓴 조항이라 철회한다 (실측 4 유닛 ≈ 145 h). **MD 는 큐와 동시에** 돌린다 — C3 지연 ≈ 4 h 대 절약 6 일이고, G1 §6b 가 *'힘·에너지 값은 GPU 경합과 무관'* 을 이미 판정했다. ⛔ **QE 단일점(9.9 GB)은 동시 실행 대상이 아니다 — MD 만이다.** ⑥ **지연 추정 정정 (실측 2026-09-16 14 시)**: ⑤ 에 적은 'C3 지연 ≈ 4 h' 를 철회한다. MD 실측 23.0 ps/h(공유) ⇒ 벽시계 45.6 h. 큐가 늦어지는 양은 MD 단독 벽시계와 45.6 h 사이이고 단독을 안 재봤으므로 **모른다** — 상한 45.6 h, 반반 가정 ≈23 h. **C3 지연 1–2 일**로 읽는다. 저울은 안 뒤집힌다(병렬 MD 종료 1.9 일 vs 직렬 7 일 ⇒ ≈5 일 절약)지만 '거의 공짜' 는 아니다.",
    "applies_to": {
     "systems": [
      "lpscl_amorphous",
@@ -2259,15 +2259,26 @@
      "at": "2026-09-16",
      "state": "active",
      "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
+    },
+    {
+     "at": "2026-09-16c",
+     "state": "active",
+     "by": "agent",
+     "note": "실행 개시·실측 기입. C3 지연 추정 4 h → 1–2 일로 정정(상한 45.6 h). 결정 자체는 불변 — 게이트·문턱·프레임 그대로."
+    },
+    {
+     "at": "2026-09-16",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
     }
    ],
    "ratification": {
     "state": "ratified",
     "role": "scientific_owner",
     "actor_id": "yonghoon7153@gmail.com",
-    "timestamp": "2026-09-16T04:53:41Z",
-    "commit": "952ef28419dd3ca86f377838eee8a874f5b8fcc0",
-    "decision_digest": "sha256:09cb2cb3e9ae4e4868c30b1bc60426f54c010dcdfede0ec62dc563867af7bdac",
+    "timestamp": "2026-09-16T05:05:49Z",
+    "commit": "9727a5b5348f3d79069969714a0ef668469d5334",
+    "decision_digest": "sha256:9192d9594b9a334e4d335d0258114d0cfeff2cb08aaa430807dec65acd2913e8",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
   }
