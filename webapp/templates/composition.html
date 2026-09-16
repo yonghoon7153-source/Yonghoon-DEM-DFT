@@ -122,6 +122,26 @@
       {% for c in it.counter %}<li>{{ c|mdlite }}</li>{% endfor %}</ul>
   </details>
   {% endif %}
+  {# 번호 절 — 카드가 쓴 산문 그대로. ⚠ 2026-09-16 신설: 그 전에는 뽑는 키가 고정이라
+     카드에 절을 더해도 **화면에 한 글자도 안 떴다**. 숫자의 출처는 절 안에 있다. #}
+  {% if it.sections %}
+  <details class="v3-fold" style="margin-top:8px">
+    <summary><b style="color:#5b21b6">본문 {{ it.sections|length }}절</b>
+      <span class="muted" style="font-weight:400">— 카드 원문</span></summary>
+    {% for sec in it.sections %}
+    <div style="margin-top:9px">
+      <div style="font-size:.79rem;font-weight:700;color:#5b21b6">{{ sec.title|mdlite }}</div>
+      <div style="font-size:.77rem;line-height:1.6">
+        {% for r in sec.body %}
+        <div style="margin-left:{{ r.indent * 14 }}px;margin-top:2px">
+          {% if r.label %}<span class="muted" style="font-weight:600">{{ r.label|mdlite }}</span>{% if r.text %} — {% endif %}{% endif %}{{ r.text|mdlite }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </details>
+  {% endif %}
   {% if it.allowed or it.forbidden %}
   <div class="grid grid-2" style="margin-top:10px;gap:10px">
     {% if it.allowed %}

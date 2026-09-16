@@ -181,6 +181,66 @@ def _tables(raw) -> list:
     return out
 
 
+#: 해석 카드에서 **이미 따로 렌더되는** 키. `card_sections` 가 두 번 싣지 않게 뺀다.
+_INTERP_RENDERED = {
+    "3_반대_증거_숨기지_않는다",      # counter
+    "미결_이것이_있어야_주장이_선다",  # open
+}
+
+
+def card_sections(j: dict) -> list:
+    """해석 카드의 **번호 절**을 화면용으로 펼친다. → [{key, title, body}]
+
+    왜 생겼나 (2026-09-16): `interpretation_cards_for` 가 정해진 키만 뽑았다. 그래서
+    카드에 `5_…` `6_…` 절을 추가해도 **화면에 한 글자도 안 떴다** — 파일은 자라는데
+    화면은 그대로라, 사람은 "그 내용이 없다" 고 읽는다. 조용히 틀린 경로다.
+
+    ⛔ 이 함수가 못 하는 것
+      · 내용을 판정하지 않는다. 카드가 쓴 대로 싣는다.
+      · 마크다운을 파싱하지 않는다 — 서버의 `mdlite` 필터가 템플릿에서 한 번만 한다
+        (CLAUDE.md §화면 규율: 브라우저에서 다시 파싱하지 않는다).
+      · 숫자의 출처를 만들어 주지 않는다 — 출처는 **카드가 절 안에 적어야** 한다.
+    """
+    out = []
+    if not isinstance(j, dict):
+        return out
+    for k, v in j.items():
+        if not isinstance(k, str) or k in _INTERP_RENDERED:
+            continue
+        # 번호 절(`1_…`)과 ★ 절만. `★_한_줄` 은 headline 이라 뺀다.
+        if not (k[:1].isdigit() or k.startswith("★")) or k == "★_한_줄":
+            continue
+        out.append({"key": k, "title": k.replace("_", " ").strip(),
+                    "body": _flatten(v)})
+    return out
+
+
+def _flatten(v, depth: int = 0) -> list:
+    """중첩 dict/list → [{indent, label, text}] 평면 목록. 깊이 3 에서 멈춘다.
+
+    ⛔ 잘라내지 않는다 — 카드 산문을 화면에서 줄이면 근거가 잘린다.
+    """
+    rows = []
+    if depth > 3:
+        return rows
+    if isinstance(v, dict):
+        for k, x in v.items():
+            if isinstance(x, (dict, list)):
+                rows.append({"indent": depth, "label": str(k), "text": ""})
+                rows.extend(_flatten(x, depth + 1))
+            else:
+                rows.append({"indent": depth, "label": str(k), "text": str(x)})
+    elif isinstance(v, (list, tuple)):
+        for x in v:
+            if isinstance(x, (dict, list)):
+                rows.extend(_flatten(x, depth + 1))
+            else:
+                rows.append({"indent": depth, "label": "", "text": str(x)})
+    else:
+        rows.append({"indent": depth, "label": "", "text": str(v)})
+    return rows
+
+
 def interpretation_cards_for(cid: str, root=None) -> list:
     """이 조성의 **해석 카드** (`schema: interpretation_card/v1`).
 
@@ -227,6 +287,8 @@ def interpretation_cards_for(cid: str, root=None) -> list:
             # 숫자 표 — 카드가 선언한 것만, **출처 파일을 달고** 온다.
             #   ⚠ 모양이 어긋난 표(열 수 ≠ 칸 수)는 버리지 않고 `error` 를 달아 낸다.
             "tables": _tables(j.get("표") or []),
+            # 번호 절 — 카드가 쓴 산문을 **그대로** 싣는다 (2026-09-16 신설).
+            "sections": card_sections(j),
         })
     out.sort(key=lambda r: r.get("date") or "", reverse=True)
     return out

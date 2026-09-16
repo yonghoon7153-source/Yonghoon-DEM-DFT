@@ -800,7 +800,13 @@ DYNAMIC_FIXTURES = {
     "/api/paper/<pid>":           ["deng2026_polysulfate_layer_moisture_oxidation_lpsc"],
     "/api/property/<name>":       ["electronic", "li_transport"],
     "/api/structure/<path:fn>":   ["sei_li3nd_mp-976264.vasp"],
-    "/composition/<cid>":         ["comp1", "modelc"],
+    # ⭐ 2026-09-16 — `modelc_nd_doped` 추가. 해석 카드의 **번호 절**을 화면에 싣기
+    #   시작했고(decisions_view.card_sections) 그 절에 ESW 값·갭·문헌 소환값이 들어간다.
+    #   ⚠ 정정: 이 목록은 **라우트 표본**이지 결속 목록이 아니다. 결속은 `_mdlite` 가
+    #   `md_html` 과 같은 판정기를 태워 **전 표면에서 자동**으로 붙는다(app.py ④, 2026-09-09).
+    #   실측 확인 2026-09-16: 이 페이지에 철회값 0.199 를 넣었더니 data-claim +
+    #   `.claim-mark` 텍스트 노드가 붙어 bound 1 / unbound 0 이었다.
+    "/composition/<cid>":         ["comp1", "modelc", "modelc_nd_doped"],
     "/concept/<cid>":             ["ordered_vs_disordered", "beta-gate"],
     # v3 묶음 I (2026-09-09) — /talk 과 대칭인 논문 정독 페이지. papers/ stem 과 1:1 이다.
     "/paper/<slug>":              ["deng2026_polysulfate_layer_moisture_oxidation_lpsc"],
@@ -3227,6 +3233,40 @@ def test_markdown_render_binds_claims_and_can_fail():
     # ⛔음성 ③: 다른 수의 일부는 감싸지 않는다
     frag, _ = C.annotate_claims(f"<p>1{t} · {t}9</p>")
     assert "claim-flag" not in frag, frag
+
+
+def test_interpretation_card_sections_render_and_can_fail():
+    """양성+⛔음성: 해석 카드의 **번호 절**이 실제로 화면에 실린다.
+
+    왜 있나 (2026-09-16): `interpretation_cards_for` 가 정해진 키만 뽑았다. 그래서
+    카드에 `5_…` `6_…` 절을 추가해도 **화면에 한 글자도 안 떴다** — 파일은 자라는데
+    화면은 그대로라 사람은 "그 내용이 없다" 고 읽는다. 배선을 뺐을 때 빨간불이
+    켜지는지까지 본다 (안 그러면 이 시험이 무엇도 보증하지 않는다).
+    """
+    j = {"schema": "interpretation_card/v1", "composition": "x",
+         "제목": "t", "★_한_줄": "h",
+         "1_첫_절": {"가": "나", "중첩": {"다": "라"}},
+         "3_반대_증거_숨기지_않는다": ["c"],          # 따로 렌더되므로 절에서 빠져야
+         "허용_서술_이대로만": ["a"]}
+    import decisions_view as V
+    secs = V.card_sections(j)
+    keys = [s["key"] for s in secs]
+    assert "1_첫_절" in keys, f"번호 절을 못 뽑았다: {keys}"
+    assert "3_반대_증거_숨기지_않는다" not in keys, "따로 렌더되는 절을 두 번 싣는다"
+    assert "★_한_줄" not in keys, "headline 을 절로도 싣는다 (중복)"
+    body = {(r["label"], r["text"]) for r in secs[0]["body"]}
+    assert ("가", "나") in body and ("다", "라") in body, f"중첩을 평면화 못 했다: {body}"
+    # ⛔음성 ①: 절이 없는 카드는 빈 목록 (없는 것을 만들지 않는다)
+    assert V.card_sections({"제목": "t"}) == []
+    # ⛔음성 ②: dict 가 아니면 죽지 않고 빈 목록
+    assert V.card_sections(None) == [] and V.card_sections([1, 2]) == []
+    # ⛔음성 ③: **실제 화면**에 뜨는가 — 함수만 맞고 템플릿이 안 부르면 여전히 안 보인다
+    h = A.app.test_client().get("/composition/modelc_nd_doped").get_data(as_text=True)
+    # ⚠ 절에만 있는 문자열을 쓴다. "lpsocl" 은 **사이드바 링크**에도 있어서
+    #   배선을 빼도 통과했다 (2026-09-16 파괴 시험에서 드러남) — 그때 이 시험은
+    #   화면이 아니라 네비게이션을 재고 있었다.
+    assert "단독O" in h, "해석 카드 §5 가 화면에 없다 — 템플릿이 sections 를 안 부른다"
+    assert "문헌 근거" in h, "해석 카드 §6(문헌)이 화면에 없다"
 
 
 def test_claim_binding_scanner_can_actually_fail():
