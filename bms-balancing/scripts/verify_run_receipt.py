@@ -102,7 +102,10 @@ def main(argv=None) -> int:
     else:
         detail = {}
         for rel, want in (r.get("instrument") or {}).items():
-            got = _git(a.target, "rev-parse", f"{commit}:{rel}")
+            # ⚠ R16 실측: 이 저장소는 모노레포라 `<commit>:<rel>` 은 **저장소 루트** 기준이다 —
+            #   `./` 를 붙여야 `-C target` 의 cwd 기준이 된다 (gate 의 `instrument_sealed` 가 쓰는 그 형식).
+            #   빠뜨렸더니 깨끗한 트리에서도 언제나 "다름" 이었다.
+            got = _git(a.target, "rev-parse", f"{commit}:./{rel}")
             detail[rel] = "ok" if (got.returncode == 0 and got.stdout.strip() == str(want)) else "다름"
         checks["instrument"] = bool(detail) and all(v == "ok" for v in detail.values())
         if not checks["instrument"]:

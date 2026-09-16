@@ -129,7 +129,15 @@ manifest 이름은 `manifest.json` 인데 `preserve_handoff.sh` 가 `package_man
 변조 여부는 이미 있는 `instrument_sealed` 가 **바깥에서** 본다 (`test_r16_66` 이 `self_sealed`/`trusted`
 같은 자기 인증 필드가 **없어야** 한다고 고정한다). 실측: 러너를 돌려 receipt 를 뽑고 검증기에 걸었더니
 서명 ok · ancestry ok · tree ok · **instrument 다름** 이 나왔다 — 그때 트리에 커밋 안 된 수정이 있었고,
-검사가 그것을 정확히 짚은 것이다.
+검사가 그것을 정확히 짚은 것이다. **깨끗한 트리에서 다시 돌리자 넷 다 ok · rc 0** 이다.
+
+그 과정에서 **내 결함 둘을 끝에서 끝까지 돌려서야 잡았다** (단위 시험 일곱은 내내 초록이었다 —
+fixture 가 값을 직접 넣었기 때문이다): ① receipt 에 `instrument_sealed` 의 **상태 문자열**(`ok`/`다름`)을
+실었다 — 소비자는 그것을 blob sha 와 대므로 **깨끗한 트리에서도 언제나 "다름"** 이었다. 상태는 사람용
+요약이고 receipt 는 **값**을 실어야 한다 (`gate.instrument_digests()` 를 더했다). ② 이 저장소는
+**모노레포**라 `<commit>:<rel>` 이 저장소 루트 기준인데 검증기가 `./` 를 빠뜨렸다 — gate 는 이미
+`HEAD:./{rel}` 을 쓰고 있었으니 **규칙이 두 벌이라 갈린** 것이다. 둘 다 회귀로 고정했다
+(`test_r16_68`·`test_r16_69`).
 
 **R16 조건 8 축 ④ (partial 수명) 닫음.** 전 판은 `partial/<이름>` 하나라 **같은 이름의 다음 부분
 실행이 그 자리를 덮었다** — canonical 은 안 건드리므로 과학 값은 안전했지만 "언제 무엇을 시도해
@@ -620,7 +628,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 383 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 385 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

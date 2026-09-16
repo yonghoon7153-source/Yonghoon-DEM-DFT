@@ -142,3 +142,31 @@ def test_r16_67_the_runner_emits_the_bound_receipt():
     """[R16-67] 러너가 실제로 그 receipt 를 낸다 — 함수만 있고 아무도 안 부르면 축이 안 닫힌다."""
     src = (ROOT / "reviews/r11_repros/replay_codex_r11.py").read_text(encoding="utf-8")
     assert "run_receipt" in src, "러너가 receipt 를 안 만든다"
+
+
+def test_r16_68_the_receipt_carries_digests_not_status_words():
+    """[R16-68] receipt 의 `instrument` 는 **digest** 다 — 상태 문자열(`ok`/`다름`)이 아니다.
+
+    2026-09-16 실측으로 잡힌 내 결함: 러너가 `instrument_sealed` 의 **상태 요약**을 receipt 에 실었다.
+    소비자는 그것을 blob sha 와 대 보므로 **깨끗한 트리에서도 언제나 "다름"** 이었다. 단위 시험 일곱은
+    전부 초록이었다 — fixture 가 digest 를 직접 넣었기 때문이다 (**끝에서 끝까지 돌려야 보인다**).
+    """
+    g = _gate()
+    got = g.instrument_digests(ROOT, ["reviews/evidence_gate.py"])
+    assert set(got) == {"reviews/evidence_gate.py"}, got
+    v = got["reviews/evidence_gate.py"]
+    assert len(v) == 40 and all(c in "0123456789abcdef" for c in v), ("blob sha 여야 한다", v)
+
+    src = (ROOT / "reviews/r11_repros/replay_codex_r11.py").read_text(encoding="utf-8")
+    assert "instrument=gate.instrument_digests(" in src, "러너가 상태 대신 digest 를 실어야 한다"
+    assert "instrument=seal_detail" not in src, "상태 요약을 receipt 에 싣지 않는다"
+
+
+def test_r16_69_the_verifier_resolves_paths_relative_to_the_target_not_the_repo_root():
+    """[R16-69] 이 저장소는 **모노레포**다 — `<commit>:<rel>` 은 저장소 루트 기준이라 `./` 없이는 못 찾는다.
+
+    같은 날 잡힌 두 번째 결함. gate 의 `instrument_sealed` 는 이미 `HEAD:./{rel}` 을 쓰고 있었는데
+    검증기가 그 `./` 를 빠뜨려, 깨끗한 트리에서도 instrument 가 "다름" 이었다 (규칙이 두 벌이면 갈린다).
+    """
+    src = (ROOT / "scripts/verify_run_receipt.py").read_text(encoding="utf-8")
+    assert '{commit}:./{rel}' in src, "target 기준(`./`)으로 풀어야 한다 — 모노레포에서 루트 기준은 못 찾는다"
