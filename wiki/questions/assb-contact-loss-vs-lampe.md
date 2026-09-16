@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-16
 type: research-question
 tags: [battery, degradation, research, assb]
-sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md]
+sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -71,9 +71,14 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
    유효 활물질 분율인가. **이것이 정해져야 구분 시험이 설계된다.**
    → **형태는 정해졌다** (1호: 용량 축에 곱해지는 기하 인자 `θ_AM`).
    → **항이 하나 더 있다** (2호: 율 의존 인자 `η(i)`, [[assb-apparent-capacity-decomposition]]).
-   → **남은 것은 시간축** (`θ(N)`) — `assb` **2/2 편이 안 줬다**.
+   → **남은 것은 시간축** (`θ(N)`) — `assb` **3/3 편이 안 줬다**.
    ⚠ 그리고 2호의 `C_norm` 이 `θ_AM` 을 포함하는지 아닌지 **원문에 안 적혀 있다**
    (2호 digest G1) — 3항 분해를 수치로 쓰기 전에 풀어야 할 좌표.
+   → **3호(Liu 2024)가 시간축 대신 준 것은 `θ` 를 떨어뜨릴 구동력**이다: 계면
+   **최대주응력**(GPa). ★ **그러나 좌표 변환이 안 된다** — 응력(Pa) → 분리 분율(무차원)
+   에는 파괴 판정 규칙이 필요한데 **3호에 파괴·디본딩 모형이 없다**
+   (`[인쇄]` "the current model does not explicitly account for mechanical fracture").
+   → **세 편의 공백은 같은 한 조각이다: cohesive zone / phase-field damage.**
 2. **Li-In 기준 전위가 얼마나 안정한가.** 평탄한 것은 두 상 공존 영역 안에서만이다.
    벗어나면 기준이 이동하고 그것은 전체 곡선의 **밀기** — **`LLI` 와 같은 모양**이다.
 3. **무음극의 dead Li 와 SEI Li** 는 OCV 에 똑같이 들어온다. 가르는 관측이 있나.
@@ -104,19 +109,22 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 |---|---|---|---|---|---|---|---|---|
 | Bielefeld 2019 (`assb` 1호) | **부분** (`θ`) | **없다** (실험 0) | computed-geometric | **없다** | 없다 | **없다** | 없다 | 부분 (밀도·입도만) |
 | Clausnitzer 2023 (`assb` 2호) | **부분** (`Connectivity` ≡ `θ` + `ρ_S` 소결밀도 + `R_GB`) | **부분** (Minnmann 2021 EIS 부분 전도도 — **타 재료계** NMC622/Li₆PS₅Cl, 자기 실험 0) | computed-geometric + computed-electrochemical, **오차막대 0 · 점당 구조 1 개** | **없다** (순수 forward) | **없다** (`indium` 0회; Li 금속·이상 접촉) | **없다** (`pressure` 0회) | **없다** (Li 금속 무열화 가정) | **★ 있다** — LCO + NMC811, `U₀ = 4.2 V` 함수형, `U_cut = 3.4 V`, `x ∈ [0.525, 1]` / `[0.231, 1]` |
+| **Liu 2024 (`assb` 3호)** | **없다** — 접촉 손실의 **양을 계산하지 않는다**. 대리로 계면 **최대주응력**(평균 378 MPa 방전 → 580 MPa 충전; SE Young 률 1→150 GPa 에서 0.05→0.55 GPa). **차원이 달라 `θ` 로 변환 불가** | **없다** (자기 실험 0 — 3/3 편 공통). ★ 단 **부정적 정보**: `[인쇄]` 실험의 활물질 손실은 rock-salt + **입계 파괴로 고립된 활물질**을 **둘 다 포함**한다 | **fitted 문턱** — 활물질 손실 라벨 = `소성전단 > 12 %`, 그 12 %는 **타 화학(Li-rich, ref 5) 실험 분포에 적합**. 오차막대 0 · 문턱 민감도 0 · **구조 실현 1 개** | **없다** (순수 forward, `identifiab*` 0회) | **없다** (`indium` 0회; **음극 자체를 모델링 안 한다**) | **없다** (`pressure` 0회 — 접촉 역학 논문인데) | **없다** (음극 없음) | **★★ 있다 — 이 계보 최초의 OCV 곡선.** NMC811 + Ta-LLZO, GITT OCV `1−θ` 0→1 에서 **≈3.0 → 4.4 V vs Li/Li⁺**, 전 구간 기울기 있음, 컷오프 3.0 V |
 
-**1호 단독 1.5 칸 → 2편 누적 합집합 ≈2.5 칸이다** (2호가 1호를 대부분 포함한다).
-2호가 **Q8 을 실질적으로 채웠고**(이 계보 최초의 전압축) **Q1·Q2 를 반 칸씩 넓혔다.**
-남은 5.5 칸 중:
+**1호 단독 1.5 → 2편 누적 ≈2.5 → 3편 누적 ≈3.0 칸이다.**
+3호가 **새로 채운 칸은 Q8 하나**(2호가 남긴 "OCV 곡선 0 편" 단서를 닫았다)이고,
+**Q3 에 새 층위("fitted 문턱")를 열었다.** 남은 5 칸 중:
 
-- **Q4(유일성)는 `assb` 2/2 편이 안 쟀다** — 둘 다 forward 전용이라 **원리적으로**
+- **Q4(유일성)는 `assb` 3/3 편이 안 쟀다** — 전부 forward 전용이라 **원리적으로**
   못 채운다. → **역문제를 다루는 논문이 이 축에 반드시 한 편 들어와야 한다.**
-- **Q5·Q6·Q7 은 여전히 0 편.** 특히 **Q6(압력)은 `assb` 2/2 편이 `pressure` 0 회**다.
-  (2호의 `sinter density`·FAST/SPS 는 **제조 압력의 간접 대리**일 뿐, 작동 중 스택
-  압력과는 다른 축이다.)
-- ⚠ **Q8 의 단서**: 2호에 전압축은 있으나 **OCV 곡선은 없다.** 있는 것은
-  `U₀`(함수형 파라미터)와 **1 mA/cm²(≈0.74 C) 부하 방전 곡선**이다.
-  **`assb` 섹션에 OCV 곡선은 여전히 0 편이다.**
+- **Q5·Q6·Q7 은 여전히 0 편.** 특히 **Q6(압력)은 `assb` 3/3 편이 `pressure` 0 회**다.
+  (2호의 `sinter density`·FAST/SPS 는 **제조 압력의 간접 대리**일 뿐이고, 3호는
+  **계면 접촉 역학을 정면으로 다루면서도** 스택 압력을 한 번도 쓰지 않는다 —
+  이 축의 공백이 3호에서 가장 두드러진다.)
+- **Q1 은 세 편이 세 개의 다른 양을 "접촉 손실" 이라 부른다**: 기하 분율(1호) ·
+  연결성(2호) · **계면 인장응력**(3호). **앞의 둘은 같은 양이고 셋째는 다른 차원**이다.
+- ✅ **Q8 의 단서가 닫혔다**: 3호 SI Fig. S2 가 **OCV 곡선**을 준다. ⚠ 단 그 OCV 는
+  **액체 반쪽전지 GITT 측정**(ref 18)에서 온 것이고 ASSB 셀의 것이 아니다.
 
 ## Evidence For / Against
 
@@ -140,6 +148,23 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
   **1.37 → 0.385 mAh/cm²** — **겉보기 `LAM_PE` 72 %.** 재료 손실은 0 이다.
 - **그리고 그 곡선은 아핀 스케일링이 아니다** (시작 전압 −175 mV, 기울기 다름).
   → `bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §1 의 3 파라미터 창 모형으로는 **못 맞춘다.**
+
+### For 보강 (2026-09-16, Liu 2024) — **문헌이 축퇴를 인쇄로 인정했다**
+
+- ★★ **이 질문의 축퇴가 논문 문장으로 확인된 첫 사례.** `[인쇄]` "the experimental
+  analysis of active cathode material loss generally involves the formation of **rock-salt
+  phase AND isolated cathode materials induced by intergranular fracture**. Since this
+  study does not explicitly consider crack formation, **only qualitative comparisons** are
+  made between predictions and experimental characterisations."
+  → **실험이 보고하는 "활물질 손실" 은 (진짜 재료 손실) + (기하적 고립 = 접촉 손실)의
+  합이고, 그 측정으로는 안 갈라진다.** 우리가 물어 온 것이 그대로 적혀 있다.
+  ⚠ 그런데 같은 논문이 **앞 항만 모델링하면서** 뒤 항까지 포함한 실험값과 Fig. 5e 에서
+  겹쳐 놓는다 — 체계적으로 과소예측해야 정상인데 겹친다.
+- ★ **진짜 `LAM_PE` 의 생성 기구가 처음 들어왔다.** 불균일 Li → 전위(소성전단) →
+  격자변형 → 산소공공 형성에너지 하락(`[인쇄]` 10 % 인장에서 1.06 → 0.24 eV) →
+  rock-salt. 즉 **`Q_material` 이 줄어드는 물리**. `[도표]` 12 µm 에서 활물질 손실이
+  0.25C 0.093 → 5C **0.185**.
+- ★ **그리고 그것이 율 의존이다** → 아래 "새 제약" 의 첫 항목.
 
 ### Against / 단서 — "독립 관측이 존재할 수 있다" 쪽
 
@@ -188,6 +213,33 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
   떨어지고, `[도표]` Fig. 8b 에서 `SVF 69.4 %`·밀도 70 % 는 **전극의 90 % 가 이용률 ≈0** 이다.
   → forward model 에 `θ` 를 스칼라로 넣으면 집전체 쪽 손실을 **과소평가**한다.
 
+### 새 제약 (2026-09-16, Liu 2024)
+
+- ★★ **율 스윕 분리 시험이 좁아졌다.** [[assb-apparent-capacity-decomposition]] 의 처방
+  ("두 율에서 적합 → `a_PE` 차이 = 동역학 성분의 하한")은 **`Q_material` 이 율에
+  무관하다**는 전제 위에 있었다. 3호가 그 전제를 깬다 — `[도표]` Fig. 5e: 12 µm 에서
+  활물질 손실이 **0.25C 0.093 → 5C 0.185 (2 배)**. **고율 방전 자체가 진짜 재료 손실을
+  더 만든다.** → 살아남는 설계는 (a) **저율 쌍만** 쓰거나 (b) **율을 바꾼 뒤 기준 율로
+  돌아와 이력을 재서** 비가역분을 빼는 것. 후자가 안전하다.
+- ★ **`θ` 는 양극만의 성질이 아니라 (양극 × 전해질) 쌍의 성질이다.** `[도표]` Fig. 4f·7c:
+  같은 양극·같은 운전조건에서 전해질 Young 률을 1 → 150 GPa 로 바꾸면 계면 응력이
+  **0.05 → 0.55 GPa (≈8 배)**, 벌크 응력은 +0.75 → −1.5 GPa 로 부호가 뒤집힌다.
+  → forward model 에 접촉 손실을 넣을 때 **전해질 탄성률·항복강도가 상태변수**다.
+- ★ **`η` 의 지배 인자가 두 척도에 걸쳐 있다.** 전극 척도의 입계 저항(2호 `R_GB`)과
+  **이차입자 내부 입계 확산도**(3호 `D_GB`) 둘 다. `[도표]` `D_GB` 를 0.05 ↔ 20 배로
+  바꾸면 1C 용량이 **0.48 ↔ 0.985** — 재료도 기하도 같은데 겉보기 용량이 두 배다.
+  그리고 **OCV 로는 안 보인다.**
+- ★ **산포 규율이 3/3 편에서 안 지켜졌다.** 1호만 실현 간 폭을 쟀다. 3호는 본문에
+  `[인쇄]` "the **random arrangement** of primary particles … play a critical role in
+  dislocation heterogeneity" 라고 적고도 **실현 1 개**다 (`seed`·`standard deviation`·
+  `error bar` 각 0 회). Fig. 3j·4e 의 분포는 **한 구조 안의 공간 분포**이지 실현 분포가
+  아니다. → 우리가 N 개 실현으로 싸게 검증할 수 있는 자리가 하나 더 늘었다.
+- **재현 가능성 원장에 새 표본**: 3호의 Code Availability 는 공개 DAMASK v2.0.2 를
+  가리키지만 **이 연구가 쓴 코드는 별 저장소의 `plasticity_chemo_mechanics` 브랜치이고
+  기관 허가 + CLA 승인이 있어야 접근된다**. 공개본(2018-05-22)에는 `lithium`·`intercalat`
+  이 0 건이고 논문이 "developed" 라고 적은 **독립 FEM 솔버도 없다**.
+  (상세는 3호 digest §6·§13 D16.)
+
 ## Status Log
 
 - **2026-09-16 (개설)** — 카드 생성. `assb` 섹션의 닻으로 지정. 보류 항목.
@@ -210,6 +262,33 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
   후속 후보 1 순위 = Ren/Danner/Finsterbusch/Latz et al. *Adv. Energy Mater.* 2022, 2201939
   (ref 17 — 이 논문이 열화·최적화 양쪽에서 가장 많이 인용, `θ(N)` 시간축의 입구),
   2 순위 = Neumann et al. *ACS AEM* 2021, 4, 4786 (ref 38 — GB 모형 원전 + EIS measured 라벨).
+- **2026-09-16 (ingest 3)** — `assb` 3호 논문 흡수:
+  `raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md`
+  (Liu, Roters, Raabe, *Nat. Commun.* 2024, 15, 7970; 본문 18쪽 + SI 10쪽, 둘 다 sha256 봉인).
+  컴파일: 새 개념 페이지 없음(SCHEMA Page Thresholds — 이 논문의 좌표는 `θ` 로 변환되지
+  않아 기존 두 개념에 **제약**으로 붙는 편이 정확하다), 대신
+  [[assb-apparent-capacity-decomposition]] 과 [[composite-cathode-percolation-utilization]]
+  양쪽 갱신.
+  **셋 중 하나만 들어왔다**: **OCV 곡선 ★있다**(SI Fig. S2, GITT, 3.0→4.4 V) ·
+  **율 스윕 ★있다**(SI Fig. S4, 0.25–5C × 4 크기 = 20 곡선 — `i→0` 에서 전 크기 ≈1 로
+  수렴, 3항 분해의 `η(i)→1` 이 독립 모델에서 확인됨) /
+  **`θ(N)` 시간축 없다**(방전 1 회 + 충전 1 회, 사이클 축 0 장, **파괴·디본딩 모형 없음**) /
+  **실험 없다**(자기 실험 0, 3/3 편 공통; 대조 자료는 **Si 음극·황화물 셀**(Fig. 4a)과
+  **액체셀**(Fig. 5e)에서 왔다) / **시드 산포 없다**(실현 1 개 — "무작위 배열이 결정적"
+  이라고 적고도).
+  최대 수확 둘: ① `[인쇄]` **"실험의 활물질 손실은 rock-salt + 파괴로 고립된 활물질을
+  둘 다 포함한다"** — 이 카드의 축퇴가 문헌 문장으로 확인됐다. ② **`Q_material` 이 율
+  의존**이라 우리 율 스윕 분리 시험이 좁아졌다.
+  어긋남 원장 **18 건**(1호 8 · 2호 14 · 3호 18), 그중 무거운 묶음은
+  **D3·D4·D5·D6**(초록의 접촉 손실 인과 주장 ↔ 모델에 파괴 없음 · Fig. 5 의 손실 기준이
+  자기 방전곡선과 화해 안 됨 · "kinetic capacity loss" 가 세 곳에서 다른 뜻 ·
+  Fig. 7 의 "≥90 % usable capacity" 라벨이 자기 Fig. 5d 와 모순) —
+  **결론을 떠받치는 문장이 자기 그림과 충돌하는** 2호와 같은 형태다.
+  Q1~Q8 채움표에 행 추가 (누적 ≈3.0/8).
+  후속 후보 1 순위 = **Koerver et al. *Chem. Mater.* 2017, 29, 5574** (3 편이 모두 인용;
+  접촉 손실의 실험 원전 + 용량축 + 사이클 — **`θ(N)` 은 실험 쪽에서만 나온다**),
+  2 순위 = **Shin et al. *Adv. Energy Mater.* 2023, 13, 2301220** (저압 조건 ASSB 열화 —
+  **Q6 을 채울 첫 후보**).
 
 ## 이 페이지가 주장하지 않는 것
 
