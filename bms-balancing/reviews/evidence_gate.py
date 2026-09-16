@@ -153,6 +153,27 @@ def instrument_sealed(target, rel_paths) -> tuple:
     return all(v == "ok" for v in detail.values()), detail
 
 
+def instrument_digests(target, rel_paths) -> dict:
+    """도구 파일의 **실제 bytes digest** — `{경로: sha}`. receipt 가 실어야 하는 것은 이것이다.
+
+    ⚠ R16 실측: 처음에 `instrument_sealed` 의 **상태 문자열**(`ok`/`다름`)을 receipt 에 실었다. 소비자는
+      그것을 blob sha 와 대 보므로 **언제나 "다름"** 이었다 — 깨끗한 트리에서 끝까지 돌려 보고서야
+      드러났다. 상태는 사람용 요약이고 receipt 는 **값**을 실어야 한다.
+
+    index·filter 를 안 거치는 `hash-object --no-filters` 다 (자체 리뷰 C07 과 같은 이유).
+    """
+    out = {}
+    for rel in rel_paths:
+        f = pathlib.Path(target) / rel
+        if not f.is_file():
+            continue
+        try:
+            out[rel] = _git(target, "hash-object", "--no-filters", "--", str(f)).strip()
+        except EvidenceError:
+            continue
+    return out
+
+
 def index_skip_flags(target) -> list:
     """`assume-unchanged`·`skip-worktree` 가 걸린 tracked 파일 — 봉인 전에 배제한다.
 

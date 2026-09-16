@@ -345,7 +345,8 @@ def main() -> int:
            # ⚠ R16 (조건 8 축 ③): 흩어진 조각을 **한 receipt 로 묶고 서명한다**. 소비자는
            #   `scripts/verify_run_receipt.py` — 서명·ancestry·tree·instrument 를 댄다.
            "run_receipt": gate.run_receipt(
-               head=exp, tree=tree, instrument=seal_detail, package_digest=str(digest),
+               head=exp, tree=tree, instrument=gate.instrument_digests(target, INSTRUMENT),
+               package_digest=str(digest),
                materialized=({"mode": "sparse detached worktree"} if snapshot else None),
                runtime={"python": sys.version.split()[0], "platform": sys.platform}),
            "설명": "R11 네 스크립트를 자식으로 그대로 돌리고 case 마다 **봉인한 술어**로 닫힘을 판정한다 — "
