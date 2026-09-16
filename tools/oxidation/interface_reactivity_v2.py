@@ -295,6 +295,15 @@ def _selftest():
         "[음성] 빈 입력에 죽지 않는다")
     chk(product_census({"C": {"by_voltage": {"4.30": {"m": -1.0}}}})["n_unique"] == 0,
         "[음성] `reactions` 가 없으면 0 — 숫자만 있는 옛 JSON 을 산물로 지어내지 않는다")
+    _lr = {"C": {"reactions": {"4.30": {"m": "x -> 6 Li + SCl"}}}}
+    _lc = product_census(_lr)
+    chk("Li" not in _lc["counts"] and _lc["reservoir_excluded"].get("Li") == 1,
+        "[음성] 열린 원소 홑원소(Li)를 산물로 세지 않는다 — 저장소 회계다")
+    chk(_lc["counts"].get("SCl") == 1, "같은 반응의 진짜 산물은 센다")
+    chk(product_census(_lr, open_elements=())["counts"].get("Li") == 1,
+        "[음성] open_elements 를 비우면 Li 도 센다 (제외가 인자로 제어된다)")
+    chk("Li2S" in product_census({"C": {"reactions": {"0": {"m": "x -> Li2S"}}}})["counts"],
+        "[음성] Li 화합물은 홑원소가 아니므로 남는다 (Li2S 를 Li 로 오인하지 않는다)")
 
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
@@ -323,22 +332,37 @@ def rhs_products(rxn: str) -> list:
     return [x for x in out if x]
 
 
-def product_census(results: dict) -> dict:
+def product_census(results: dict, open_elements=("Li",)) -> dict:
     """모든 (양극, 전압, 전해질) 의 **최소 kink 반응**에 나온 산물을 센다.
 
     이것이 갭 단계(§C)의 대상 목록이다 — 카드 G2 의 선별 규칙
     (*"각 조합의 최소 반응E kink 에 등장하는 산물만"*) 을 그대로 구현한다.
+
+    ⛔ **열린 원소(기본 Li)의 홑원소는 산물이 아니다** (2026-09-16 정정).
+      grand-potential 은 Li 를 저장소로 빼는 회계를 우변에 `6 Li` 처럼 쓴다.
+      그건 **상(phase)이 아니라 전기화학 장부**다. 첫 판이 이걸 세서 `Li` 가 96 회로
+      1위였고, 갭 대상 목록이 그만큼 부풀었다. `reservoir` 에 따로 담아 **보이되
+      대상에서 뺀다** — 조용히 버리면 "왜 안 나오지" 가 된다.
+    ⚠ 이 함수가 **안 하는 것**: 기체·홑원소(S·SO₂·PCl₅ 등)를 가려내지 않는다.
+      그건 화학 판단이라 사람·카드 몫이다. 세어서 보여줄 뿐이다.
     """
-    cnt, where = {}, {}
+    opens = {str(x) for x in (open_elements or ())}
+    cnt, where, reservoir = {}, {}, {}
     for clab, cd in (results or {}).items():
         for V, row in (cd.get("reactions") or {}).items():
             for elab, rxn in (row or {}).items():
                 for f in rhs_products(rxn):
+                    if f in opens:                      # 저장소 회계 — 산물 아님
+                        reservoir[f] = reservoir.get(f, 0) + 1
+                        continue
                     cnt[f] = cnt.get(f, 0) + 1
                     where.setdefault(f, set()).add(f"{clab}@{V}V/{elab}")
     return {"n_unique": len(cnt),
             "counts": dict(sorted(cnt.items(), key=lambda kv: -kv[1])),
-            "first_seen": {k: sorted(v)[0] for k, v in where.items()}}
+            "first_seen": {k: sorted(v)[0] for k, v in where.items()},
+            "reservoir_excluded": reservoir,
+            "⛔": "열린 원소의 홑원소는 저장소 회계라 대상에서 뺐다 (reservoir_excluded). "
+                 "기체·홑원소(S·SO₂ 등)는 **안 걸렀다** — 화학 판단은 카드·사람 몫이다."}
 
 
 def main():
@@ -414,7 +438,10 @@ def main():
     print(f"\n══ 산물 인구조사 — 갭(§C) 대상 후보 {cen['n_unique']} 종 ══")
     for f, n in cen["counts"].items():
         print(f"  {f:16s} {n:3d} 회   처음 나온 곳 {cen['first_seen'][f]}")
+    if cen.get("reservoir_excluded"):
+        print(f"  (저장소 회계로 제외: {cen['reservoir_excluded']} — 상이 아니라 전기화학 장부다)")
     print("  ⛔ 이 목록은 **최소 kink 산물**만이다. 다른 kink 의 상은 여기 없다 (카드 G2).")
+    print("  ⚠ 기체·홑원소(S·SO₂·PCl₅)는 **안 걸렀다** — 갭 대상인지는 카드·사람이 정한다.")
 
     Path(a.out).write_text(json.dumps({
         "product_census": cen,
