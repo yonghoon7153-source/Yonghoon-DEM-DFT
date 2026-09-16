@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-16
 type: research-question
 tags: [battery, degradation, research, assb]
-sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md]
+sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -69,6 +69,11 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 
 1. **접촉 손실을 모델에 어떤 형태로 넣나** — 용량 축 스케일인가, 별도 칸인가,
    유효 활물질 분율인가. **이것이 정해져야 구분 시험이 설계된다.**
+   → **형태는 정해졌다** (1호: 용량 축에 곱해지는 기하 인자 `θ_AM`).
+   → **항이 하나 더 있다** (2호: 율 의존 인자 `η(i)`, [[assb-apparent-capacity-decomposition]]).
+   → **남은 것은 시간축** (`θ(N)`) — `assb` **2/2 편이 안 줬다**.
+   ⚠ 그리고 2호의 `C_norm` 이 `θ_AM` 을 포함하는지 아닌지 **원문에 안 적혀 있다**
+   (2호 digest G1) — 3항 분해를 수치로 쓰기 전에 풀어야 할 좌표.
 2. **Li-In 기준 전위가 얼마나 안정한가.** 평탄한 것은 두 상 공존 영역 안에서만이다.
    벗어나면 기준이 이동하고 그것은 전체 곡선의 **밀기** — **`LLI` 와 같은 모양**이다.
 3. **무음극의 dead Li 와 SEI Li** 는 OCV 에 똑같이 들어온다. 가르는 관측이 있나.
@@ -98,10 +103,20 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 | 논문 | Q1 정량 | Q2 독립관측 | Q3 라벨층위 | Q4 유일성 | Q5 Li-In | Q6 압력 | Q7 dead Li | Q8 화학·OCP |
 |---|---|---|---|---|---|---|---|---|
 | Bielefeld 2019 (`assb` 1호) | **부분** (`θ`) | **없다** (실험 0) | computed-geometric | **없다** | 없다 | **없다** | 없다 | 부분 (밀도·입도만) |
+| Clausnitzer 2023 (`assb` 2호) | **부분** (`Connectivity` ≡ `θ` + `ρ_S` 소결밀도 + `R_GB`) | **부분** (Minnmann 2021 EIS 부분 전도도 — **타 재료계** NMC622/Li₆PS₅Cl, 자기 실험 0) | computed-geometric + computed-electrochemical, **오차막대 0 · 점당 구조 1 개** | **없다** (순수 forward) | **없다** (`indium` 0회; Li 금속·이상 접촉) | **없다** (`pressure` 0회) | **없다** (Li 금속 무열화 가정) | **★ 있다** — LCO + NMC811, `U₀ = 4.2 V` 함수형, `U_cut = 3.4 V`, `x ∈ [0.525, 1]` / `[0.231, 1]` |
 
-**8 칸 중 실질적으로 채워진 것은 1.5 칸이다.** 나머지 6.5 칸이 `assb` 섹션이 채워야 할
-빈칸으로 확정됐다. 특히 **Q6(압력)은 아직 0 편이 다뤘다** — 액체셀에 없던 상태변수인데
-미시구조 쪽 원류 논문에 `pressure` 가 **0 회**다.
+**1호 단독 1.5 칸 → 2편 누적 합집합 ≈2.5 칸이다** (2호가 1호를 대부분 포함한다).
+2호가 **Q8 을 실질적으로 채웠고**(이 계보 최초의 전압축) **Q1·Q2 를 반 칸씩 넓혔다.**
+남은 5.5 칸 중:
+
+- **Q4(유일성)는 `assb` 2/2 편이 안 쟀다** — 둘 다 forward 전용이라 **원리적으로**
+  못 채운다. → **역문제를 다루는 논문이 이 축에 반드시 한 편 들어와야 한다.**
+- **Q5·Q6·Q7 은 여전히 0 편.** 특히 **Q6(압력)은 `assb` 2/2 편이 `pressure` 0 회**다.
+  (2호의 `sinter density`·FAST/SPS 는 **제조 압력의 간접 대리**일 뿐, 작동 중 스택
+  압력과는 다른 축이다.)
+- ⚠ **Q8 의 단서**: 2호에 전압축은 있으나 **OCV 곡선은 없다.** 있는 것은
+  `U₀`(함수형 파라미터)와 **1 mA/cm²(≈0.74 C) 부하 방전 곡선**이다.
+  **`assb` 섹션에 OCV 곡선은 여전히 0 편이다.**
 
 ## Evidence For / Against
 
@@ -114,6 +129,18 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 - **`A_spec,a` 봉우리가 평탄하고 두께 곡선이 겹친다** — forward map 자체가 이미
   납작하다. [[fitting-degeneracy]] 가 화학 무관하게 재현될 자리.
 
+### For 보강 (2026-09-16, Clausnitzer 2023) — **혼동원이 하나 더 있다**
+
+- **곱셈 축퇴에 항이 하나 더 붙었다.** 같은 논문 안의 반례: `SVF_LCO = 69.4 %`,
+  소결 밀도 70 %, 입계 저항 무시 → `[도표]` **CAM 연결성 ≈100 %** 인데 **정규화 용량 ≈0.10**.
+  → `Q_apparent = θ_AM · **η(i)** · Q_material` ([[assb-apparent-capacity-decomposition]]).
+  OCV 적합이 상대해야 할 것이 **둘이 아니라 셋**이다.
+- **동역학 성분의 크기가 처음으로 숫자로 나왔다.** `[도표]` Fig. S5: 재료·기하가 전부
+  동일하고 **입계 저항만** 0 → 3.6 Ω cm² 로 바꾸면 방전 용량이
+  **1.37 → 0.385 mAh/cm²** — **겉보기 `LAM_PE` 72 %.** 재료 손실은 0 이다.
+- **그리고 그 곡선은 아핀 스케일링이 아니다** (시작 전압 −175 mV, 기울기 다름).
+  → `bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §1 의 3 파라미터 창 모형으로는 **못 맞춘다.**
+
 ### Against / 단서 — "독립 관측이 존재할 수 있다" 쪽
 
 - **ex situ XRD 의 inactive AM 분율** = 원리적으로 `1 − θ_AM` 의 **measured 라벨**
@@ -122,6 +149,20 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
   ⚠ 단 Bielefeld 는 그 대조를 **정성적으로만** 했고 스스로 무효화했다 —
   `[인쇄]` "the total packing density of AM used by Strauss et al. is not known,
   **as the porosity was not measured**".
+- ★ **율(rate)이 세 항 중 하나를 지운다** (2026-09-16, Clausnitzer 2023 에서 우리가 추론).
+  논문이 인쇄한 두 문장을 붙이면 분리 시험이 나온다 —
+  `[인쇄]` "At **lower current densities** … **reduced sensitivity to microstructural
+  variations**" + `[인쇄]` `R_GB,3` 에서 CAM 의 큰 부분이 방전 끝에도 **초기 Li 농도 그대로**
+  남는다 (Fig. 5 히스토그램: `x ≈ 0.52` 에 큰 봉우리).
+  → **진짜 `LAM_PE` 와 기하 접촉 손실은 `i→0` 에서 남고, 동역학 손실은 사라진다.**
+  **최소 2 개 율에서 같은 파라미터를 적합하고 `a_PE` 차이를 보고하면** 동역학 성분의
+  하한이 나온다. ⚠ **그러고도 `θ_AM · Q_material` 의 곱은 안 갈라진다** — 이 물음의 본체는
+  살아 있고 **범위만 좁아진다.** 자세히는 [[assb-apparent-capacity-decomposition]].
+- **제안된 독립 관측 하나가 늘었다**: **복합양극 EIS 의 이온·전자 부분 전도도**
+  (Minnmann et al. 2021, ref 22). Clausnitzer 가 결론에서 **자기 검증의 첫 단계**로
+  지목한다 — `[인쇄]` "impedance measurements for LCO/LLZO composite cathodes could be
+  conducted to determine the ionic and electronic partial conductivities".
+  ⚠ 단 **LLZO 계 측정은 문헌에 없다**고 같은 문단이 적는다.
 
 ### 우리 계획에 붙은 새 제약 (2026-09-16)
 
@@ -133,6 +174,19 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 - **DEM 도메인 크기 수렴 시험이 선행 조건**이다 — Bielefeld Fig. 10 의 유한 크기 효과가
   얇은 도메인에서 `θ` 를 낙관 방향으로 편향시킨다.
 - `θ_AM` 의 **시간 변화는 아직 아무도 안 줬다.** Bielefeld 는 pristine 정적 기하만 준다.
+  ⚠ **2호를 읽고도 그대로다** — Clausnitzer 도 `[인쇄]` "pore formation during cycling …
+  **beyond the scope**" · "our current model **does not incorporate mechanics**", 방전
+  **1 회**. **`assb` 2/2 편이 시간축을 주지 않았다.** 다만 2호의 **소결 밀도 `ρ_S` 스윕**
+  (60–93.1 %)이 **후보 대리 축**이다 (Fig. 8 이 그 지도). ⚠ 제조 공극과 사이클 균열은
+  **공극의 분포**가 다를 수 있다 (사이클 균열은 CAM/SE 계면에 우선).
+- ★ **산포 규율이 후속 논문에서 지켜지지 않았다.** Bielefeld 는 `θ` 의 실현 간 폭을
+  인쇄했는데, Clausnitzer 는 **오차 막대 0 개 · 점당 구조 1 개**이고 도메인이
+  `[재현]` **1/28.7 부피**로 더 작다. → **2호 Fig. 10 의 최적 순위(0.94/0.93/0.89)는
+  신뢰 근거가 그 논문 안에 없다.** 우리가 N 개 실현으로 **싸게 무효화/검증할 수 있는 자리.**
+- **`θ` 는 스칼라가 아니다** (2호가 추가): `[인쇄]` "The share of unconnected clusters
+  **increases with increasing distance from the separator**" — `θ_SE(z)` 가 집전체 쪽에서
+  떨어지고, `[도표]` Fig. 8b 에서 `SVF 69.4 %`·밀도 70 % 는 **전극의 90 % 가 이용률 ≈0** 이다.
+  → forward model 에 `θ` 를 스칼라로 넣으면 집전체 쪽 손실을 **과소평가**한다.
 
 ## Status Log
 
@@ -143,6 +197,19 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
   **미결 항목 1 의 "형태" 가 정해졌고 "동역학" 이 남았다.** Q1~Q8 채움표 개설 (1.5/8).
   후속 후보 1 순위 = Strauss et al. 2018 (ref 13, measured `1 − θ_AM`),
   2 순위 = Koerver et al. 2017 (ref 7, 접촉 손실의 실험 원전 + 용량축).
+- **2026-09-16 (ingest 2)** — `assb` 2호 논문 흡수:
+  `raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md`
+  (Clausnitzer et al., *Batteries & Supercaps* 2023, 6, e202300167; 본문 16쪽 + SI 10쪽,
+  둘 다 sha256 봉인). 컴파일: 새 개념 [[assb-apparent-capacity-decomposition]] +
+  [[composite-cathode-percolation-utilization]] 갱신(좌표 변환표 · 반례 · 산포 후퇴).
+  **셋 중 하나가 들어왔다**: **전압축 ★있다**(`U₀ 4.2 V`·`U_cut 3.4 V`·Fig. S5 `V`–`Q`·
+  `Wh/kg_cell`) / **동역학(시간축) 없다**(방전 1회, 사이클 0, 역학 0) /
+  **시드 산포 없다**(오차막대 0, 점당 구조 1개 — 1호보다 **후퇴**).
+  최대 수확은 **`θ` 만으로는 겉보기 용량을 설명 못 한다는 논문 내부 반례**와,
+  그로부터 나온 **율 스윕 분리 시험**. Q1~Q8 채움표에 행 추가 (누적 ≈2.5/8).
+  후속 후보 1 순위 = Ren/Danner/Finsterbusch/Latz et al. *Adv. Energy Mater.* 2022, 2201939
+  (ref 17 — 이 논문이 열화·최적화 양쪽에서 가장 많이 인용, `θ(N)` 시간축의 입구),
+  2 순위 = Neumann et al. *ACS AEM* 2021, 4, 4786 (ref 38 — GB 모형 원전 + EIS measured 라벨).
 
 ## 이 페이지가 주장하지 않는 것
 

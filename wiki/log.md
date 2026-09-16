@@ -1425,3 +1425,41 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   본문이 **유한 크기 인공물**이라 적은 것을 초록이 **"유리한 전극 특성"** 으로 뒤집는다
   (digest §10 불일치 1). 어긋남 원장 8건. Q1~Q8 중 실질 충족 1.5/8 — **Q6(압력) `pressure` 0회**.
 - lint 0 errors / 0 warnings.
+
+## [2026-09-16] ingest | Clausnitzer et al. 2023 — Optimizing the Composite Cathode Microstructure in ASSBs by Structure-Resolved Simulations (`assb` 섹션 2호)
+- raw: `raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md`
+  (*Batteries & Supercaps* 2023, 6, e202300167; 본문 16쪽 + **SI 10쪽**, 둘 다 sha256 봉인).
+  `assb` 태그, 닻은 [[assb-contact-loss-vs-lampe]]. 액체셀 계열 20편과 분리 유지.
+- 그림: `raw/figures/clausnitzer2023_.../` (fig 11 + SI fig 7 + tab 6 = **24장 크로핑**).
+  **직접 Read 로 본 것 15장** — Fig. 1–11 전부 + Fig. S1·S3·S4·S5·S7.
+  **안 본 것 3장** — Fig. S2(도메인 모식도)·S6(면적당 용량, 본문이 Fig. 4 와 같은 상관이라
+  명시)·표 6장은 PDF 텍스트로 읽음.
+- 컴파일: 새 개념 [[assb-apparent-capacity-decomposition]] (concept, `assb` 축 둘째) +
+  [[composite-cathode-percolation-utilization]] 갱신(좌표 변환표 · 반례 · 산포 후퇴 ·
+  evidenceScope → multi-source-primary). 닻 카드에 Q1~Q8 행 추가 + Evidence For/Against
+  보강 + Status Log, sources·updated 갱신.
+- **1호 대비 셋 중 하나만 들어왔다**:
+  **전압축 ★있다** (`U₀ = 4.2 V` 함수형 · `U_cut = 3.4 V` · Fig. S5 `V`–`Q` 방전 곡선 ·
+  `Wh/kg_cell` 식 (9)) — `assb` 계보 최초.
+  **동역학(시간축) 없다** (방전 1회, 사이클 0, 역학 0 — `[인쇄]` "beyond the scope").
+  **시드 산포 없다** (오차막대 0, 점당 구조 1개; 도메인이 1호의 `[재현]` 1/28.7 부피 —
+  **1호보다 후퇴**).
+- 핵심 수확: **1호의 곱셈 `Q_apparent = θ_AM·Q_material` 이 충분하지 않다는 논문 내부
+  반례** (CAM 연결성 ≈100 % 인데 정규화 용량 ≈0.10) → 3항 분해
+  `θ_AM · η(i) · Q_material`. 그리고 **율(rate)이 셋 중 동역학만 지운다**는 분리 시험
+  (논문의 두 인쇄 문장에서 추론 — 논문은 단일 율로만 돌았다).
+  `[도표]` 재료·기하 동일·입계 저항만 0 → 3.6 Ω cm²: 1.37 → 0.385 mAh/cm² =
+  **겉보기 `LAM_PE` 72 %**, 그 곡선은 **아핀 스케일링이 아니다**(시작 전압 −175 mV).
+- 좌표 확정: **`θ`(1호) ≡ `Connectivity`(2호)** — 변환 불필요. `ρ_S = 1 − φ`,
+  `SVF_CAM ≡ g^S_AM`, `1 m²/m³ = 10⁻² 1/cm`. ⚠ 1호의 닫힌 형태(식 7·8)는 **적용 불가**
+  (2호 구조는 다분산 육각판+구, Voronoi 소결).
+- 비판 기록: 어긋남 **14건**. 최악은 본문 "electronic conductivity … orders of magnitude
+  higher than ionic" 가 **자기 Fig. S4 에 반증**되는 것(`SVF ≤ 60 %`, `c_Li,max` 에서 전자가
+  더 낮다) — 그 문장이 "kinetic limitations are mainly due to ion conduction" 을 떠받친다.
+  그 밖: 격자 밖 결론("20 vol% for both" 의 CAM 쪽 · "`SVF=30 %` 최적" · "optimal … thickness"),
+  조판 오류 5건(식 (1)·(6)·Table S3·캡션 3건). 미해결 좌표 G1 — **`C_norm` 이 `θ_AM` 을
+  포함하는지 원문에 없다.**
+- Q1~Q8: 2호 단독 ≈2.5/8, 2편 누적 합집합도 ≈2.5/8. **Q4(유일성)·Q5(Li-In)·Q6(압력)·
+  Q7(dead Li) 은 여전히 0편** — Q6 은 `assb` **2/2 편이 `pressure` 0회**, Q4 는 두 편 모두
+  forward 전용이라 원리적으로 못 채운다.
+- lint 0 errors / 0 warnings.

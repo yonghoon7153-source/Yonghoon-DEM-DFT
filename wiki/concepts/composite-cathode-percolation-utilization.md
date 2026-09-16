@@ -5,18 +5,23 @@ created: 2026-09-16
 updated: 2026-09-16
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md]
+sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
 claimType: mixed
-evidenceScope: single-source
+evidenceScope: multi-source-primary
 ---
 
 # 복합양극 퍼콜레이션 이용률 (utilization level)
 
 > `assb` 축의 첫 개념 페이지다. 닻은 [[assb-contact-loss-vs-lampe]].
 > 수치의 정본은 원문 PDF 이고, 이 페이지의 값은 **사본**이다 — 인용 근거로 쓰지 않는다.
+>
+> **2026-09-16 갱신 (`assb` 2호 Clausnitzer 2023)**: ① 이 `θ` 와 **정확히 같은 양**이
+> 두 번째 논문에 다른 이름으로 있다 (§"두 논문의 좌표 대조"). ② 그러나 이 페이지가 세운
+> 곱셈 `Q_apparent = θ_AM · Q_material` 은 **충분하지 않다** — 항이 하나 더 있고
+> 그것은 [[assb-apparent-capacity-decomposition]] 에 있다.
 
 ## 정의
 
@@ -52,6 +57,33 @@ Bielefeld, Weber, Janek (2019) 의 **식 (6)**:
 `[해석]` `θ_AM` 이 **열역학적 용량**(얼마나 많은 AM 이 쓰이는가)에 대응한다면
 `A_spec,a` 는 **동역학**(얼마나 빨리)에 대응한다. 원문은 **둘 다 전압으로 번역하지 않는다.**
 
+## 두 논문의 좌표 대조 (2026-09-16 추가)
+
+Clausnitzer et al. 2023
+(`raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md`, §7)
+은 같은 양들을 **다른 이름과 다른 기준**으로 쓴다. 변환표:
+
+| 개념 | Bielefeld 2019 | Clausnitzer 2023 | 변환 |
+|---|---|---|---|
+| 조성 (고상 기준) | `g^S_AM` | **`SVF_CAM`** (식 3) | **동일** |
+| 조성 (전체 부피 기준) | `g^V_AM` | (안 씀) | `g^V = SVF × ρ_S` |
+| 공극 | `φ` (공극률) | **`ρ_S`** (density after sintering) | **`ρ_S = 1 − φ`** |
+| **이용률 / 연결성** | **`θ = V_c/V_ν`** (식 6) | **`Connectivity = 1 − n_iso/n_tot`** (식 4) | **동일** |
+| 활성 계면적 | `A_spec,a` [m²/m³] | `A_act/V_ca` [1/cm] | **`1 m²/m³ = 10⁻² 1/cm`** |
+| 굴곡도 | (없음) | `τ` (식 6) | — |
+| 유효 전도도 | **(한 번도 계산 안 함)** | `σ_eff` [S/cm] (식 5) | — |
+
+`θ ≡ Connectivity` 인 근거: 두 정의 모두 분모가 **그 상의 전체 부피**, 분자가
+**경계면에 연결된 부분**이고, 경계면이 서로 같다 — 전자는 **집전체**, 이온은 **분리막**
+(Clausnitzer `[인쇄]` "isolated SE clusters … not connected to the separator" ·
+"isolated active material particles are not connected to the cathode current collector").
+균일 복셀에서 복셀 수 비 = 부피 비다. → **두 논문의 숫자를 변환 없이 견줄 수 있다.**
+
+⚠ **그러나 닫힌 형태는 옮길 수 없다.** 아래 식 (8) 과 `A_spec` 멱법칙의 적용 조건
+("AM 구 · 균일 입도 · 겹침 없음 · SE 3 µm 고정")이 Clausnitzer 구조에서 **전부 깨진다**:
+CAM 은 육각판 3 종 + 구 2 종 혼합, SE 는 구 3 종(0.5/1.0/2.5 µm) 다분산, 결합은
+Voronoi 기하 소결이다 (2호 digest §4.2).
+
 ## 왜 중요한가 — 접촉 손실이 `LAM_PE` 와 섞이는 **곱셈 축퇴**
 
 [[assb-contact-loss-vs-lampe]] 가 묻는 접촉 손실("활물질이 SE 와 닿지 않게 됨 —
@@ -67,6 +99,14 @@ OCV 곡선은 **곱만** 본다. 이는 [[np-lip-ocv-reparametrization]] 의 "SO
 비(比)에만 의존" 과 같은 종류의 닫힌 형태 null 방향이되, `LAM_PE` 축 **안에서** 일어난다.
 따라서 물어야 할 것은 "OCV 가 가르는가"(답은 이미 정해져 있다)가 아니라
 **"독립 관측 하나를 넣으면 [[near-optimal-set-width-measurement]] 의 폭이 얼마나 줄어드는가"** 다.
+
+### ⚠ 이 곱은 **충분하지 않다** (2026-09-16, `assb` 2호가 준 반례)
+
+Clausnitzer 2023 이 같은 논문 안에서 반례를 준다: `SVF_LCO = 69.4 %`, 소결 밀도 70 %,
+입계 저항 무시 → `[도표]` **CAM 연결성 ≈100 %** 인데 **정규화 용량 ≈0.10**.
+모든 AM 이 집전체에 붙어 있는데도 90 % 가 안 쓰인다 (이온 쪽 굴곡도·격리와 전류 탓).
+→ **항이 하나 더 있다**: `Q_apparent = θ_AM · η(i) · Q_material`.
+셋째 항과 그것을 분리하는 시험(율 스윕·이완)은 [[assb-apparent-capacity-decomposition]].
 
 ## 인터페이스 사양 — 단위가 어긋나기 쉬운 자리
 
@@ -111,19 +151,40 @@ Fig. 4 (인쇄): 임계 바로 위(`p − p_c = 1 vol%`)에서 `A_spec` 표준�
 그리고 원문의 **유한 크기 효과**(얇은 전극에서 `A_spec,a` 가 부풀려진다 — 45 vol% 에서
 20 µm 가 140 µm 의 약 6 배)는 우리에게 **DEM 도메인 크기 수렴 시험이 선행 조건**임을 뜻한다.
 
+### ⚠ 그리고 이 규율이 후속 논문에서 **지켜지지 않았다** (2026-09-16)
+
+Clausnitzer 2023 은 이 계보의 후속인데도 **오차 막대가 단 한 그림에도 없다**
+(`standard deviation`·`error bar`·`seed` 각 **0 회**; `random` 1 회는 GB ID 배정).
+**파라미터 점당 구조 1 개**다. 게다가 도메인이 더 작다 —
+`[재현]` `25×25×50 / 80×80×140 = 31250/896000 ≈ **1/28.7**` 부피.
+→ `[해석]` **산포는 Bielefeld 보다 클 가능성이 높은데 보고되지 않았다.** 그 논문
+Fig. 10 의 "상위 3 개"(0.94 / 0.93 / 0.89) 같은 순위는 **신뢰 근거가 그 논문 안에 없다.**
+이것은 우리가 그 논문에 **싸게 공급할 수 있는 것**이기도 하다 (N 개 실현 → 폭).
+
 ## 이 위키에서의 적용
 
 - [[assb-contact-loss-vs-lampe]] 의 미결 항목 1("접촉 손실을 모델에 어떤 형태로 넣나")에
   **형태**를 준다: 용량 축 스케일에 곱해지는 기하 인자. **동역학(`θ_AM` 의 사이클 의존)은
   여전히 비어 있다** — 원문은 pristine 정적 기하만 모델링한다.
+  ⚠ **2호를 읽고도 비어 있다**: Clausnitzer 2023 도 `[인쇄]` "pore formation during cycling …
+  **beyond the scope**" · "our current model **does not incorporate mechanics**" 이고
+  **방전 1 회**다. `assb` **2/2 편이 `θ` 의 시간축을 주지 않았다.**
+  (다만 2호의 `ρ_S`(소결 밀도) 스윕이 **후보 대리 축**이다 — ⚠ 제조 공극과 사이클 균열은
+  **공극의 분포**가 다를 수 있다.)
+- **`θ` 는 스칼라가 아니다** (2호가 추가): `[인쇄]` "The share of unconnected clusters
+  **increases with increasing distance from the separator**." → forward model 에 넣을 때
+  최소한 "평균 + 기울기" 두 수가 필요하다 ([[assb-apparent-capacity-decomposition]]).
 - [[fitting-degeneracy]] 가 화학과 무관하게 재현될 자리 하나를 확인해 준다:
   `A_spec,a` 의 봉우리가 **평탄**하고(±3–4 vol% 구별 불가) 두께 20–140 µm 곡선이
   최적 근방에서 **겹친다** → 그 관측으로 미시구조를 역추정하면 flat valley 를 만난다.
   원문은 forward 전용이라 그 문제를 만나지 않았을 뿐이다.
 - [[mode-identifiability-unmeasured-lineage]] 와 같은 형식의 관측이 `assb` 축에서도 성립한다:
   원문 저자들이 **8 편을 지목해** "공극률이 보고되지 않는다" 고 적었다. `assb` 축의
-  "모두가 빠뜨린 필수 변수" 원장 — 현재 **공극률**(원문이 지목) + **압력**(우리가 지목,
-  원문에 0 회).
+  "모두가 빠뜨린 필수 변수" 원장 — 현재 **공극률**(1호가 지목) +
+  **LLZO 복합전극의 부분 전도도**(2호가 스스로 "문헌에 없다") +
+  **압력**(우리가 지목, `assb` **2/2 편이 0 회**) +
+  **구조 실현 산포**(1호는 쟀고 2호는 안 쟀다) +
+  **유일성·식별성**(`assb` **2/2 편이 안 쟀다** — 둘 다 forward 전용).
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -133,8 +194,11 @@ Fig. 4 (인쇄): 임계 바로 위(`p − p_c = 1 vol%`)에서 `A_spec` 표준�
   (전압축 자체가 논문에 없다).
 - 원문이 유효 전도도(S/cm)를 계산했다고 주장하지 않는다. **한 번도 계산하지 않았다** —
   그럼에도 초록이 그 결과를 말한다 (digest §10 불일치 1).
+  (그 공백은 **2호가 채웠다** — Clausnitzer 2023 은 식 (5) 로 `σ_eff` 를 S/cm 로 계산해
+  Fig. 3·S4 에 찍는다.)
 
 ## 관련
+- [[assb-apparent-capacity-decomposition]] — 이 곱에 **셋째 항 `η(i)`** 를 더한다. 반례와 분리 시험.
 - [[assb-contact-loss-vs-lampe]] — 닻 질문. 이 개념이 그 미결 항목 1 에 답한다.
 - [[fitting-degeneracy]] — 액체셀 축퇴. 여기서 재현될 자리를 이 페이지가 지목한다.
 - [[near-optimal-set-width-measurement]] — 화학 무관한 폭 측정기. 이 forward map 위에도 걸린다.
