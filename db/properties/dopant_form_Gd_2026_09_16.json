@@ -1,0 +1,109 @@
+{
+  "method": "grand-potential element profile via PhaseDiagram.get_element_profile (Mo/Ong/Ceder 2012); MP GGA_GGA+U corrected hull; **Li opened**.",
+  "open_element": "Li",
+  "elements": [
+    "Li",
+    "P",
+    "S",
+    "Cl",
+    "O",
+    "Gd"
+  ],
+  "landmarks": {},
+  "excluded_phases": [],
+  "mu_Li_ref_eV": -1.9089,
+  "axis_convention": "V = mu_Li(metal) - mu_Li; 0 V = Li metal",
+  "results": {},
+  "formation": {
+    "GdPO4": {
+      "reduced_formula": "GdPO4",
+      "n_atoms": 12.0,
+      "n_P": 2.0,
+      "E_f_eV_per_atom": -3.45751,
+      "E_f_eV_per_P": -20.74509,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaackudo-GGA",
+      "found": true
+    },
+    "Gd(PO3)3": {
+      "reduced_formula": "Gd(PO3)3",
+      "n_atoms": 104.0,
+      "n_P": 24.0,
+      "E_f_eV_per_atom": -2.99383,
+      "E_f_eV_per_P": -12.97327,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaabgysb-GGA",
+      "found": true
+    },
+    "GdP5O14": {
+      "reduced_formula": "GdP5O14",
+      "n_atoms": 80.0,
+      "n_P": 20.0,
+      "E_f_eV_per_atom": -2.81455,
+      "E_f_eV_per_P": -11.25821,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaabfueh-GGA",
+      "found": true
+    },
+    "Gd2O3": {
+      "reduced_formula": "Gd2O3",
+      "n_atoms": 40.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -3.89541,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaabcsws-GGA",
+      "found": true
+    },
+    "GdCl3": {
+      "reduced_formula": "GdCl3",
+      "n_atoms": 8.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -2.70096,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaabikv-GGA",
+      "found": true
+    },
+    "Gd2S3": {
+      "reduced_formula": "Gd2S3",
+      "n_atoms": 20.0,
+      "n_P": 0.0,
+      "E_f_eV_per_atom": -2.38147,
+      "E_f_eV_per_P": null,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaabipqg-GGA",
+      "found": true
+    },
+    "Li3PO4": {
+      "reduced_formula": "Li3PO4",
+      "n_atoms": 16.0,
+      "n_P": 2.0,
+      "E_f_eV_per_atom": -2.7535,
+      "E_f_eV_per_P": -22.02798,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaaaauhx-GGA",
+      "found": true
+    },
+    "P2S7": {
+      "reduced_formula": "P2S7",
+      "n_atoms": 36.0,
+      "n_P": 8.0,
+      "E_f_eV_per_atom": -0.51201,
+      "E_f_eV_per_P": -2.30406,
+      "e_above_hull_eV_per_atom": 0.0,
+      "e_above_hull_why_none": null,
+      "entry_id": "mp-aaacqhbm-GGA",
+      "found": true
+    }
+  },
+  "formation_per_element": "P",
+  "⛔_formation_caveat": "이 표는 **반응에너지가 아니다.** `E_f_per_P` 는 O:P 비가 다른 상들을 한 줄에 놓으면 P–O 결합 수 차이를 P 하나당으로 뭉갠다 — **순위 힌트**다. 판정은 균형반응(`reactions`)이 한다. 0 K · MP2020 보정 에너지이고 온도·엔트로피·pO₂ 를 안 본다. 여기 상들이 실제로 합성/석출된다는 뜻도 아니다."
+}
