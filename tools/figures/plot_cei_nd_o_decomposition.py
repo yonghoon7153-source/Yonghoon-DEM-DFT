@@ -465,6 +465,19 @@ Nd 가 이긴다.</b> 네 점이 <b>완전히 단조</b>라서, Li 를 적게 �
 O:P 비가 다른 상을 한 줄에 놓으면 P–O 결합 수 차이를 P 하나당으로 뭉갠다 — 순위 힌트로만 읽는다.</p>
 </div>
 
+<div class="card warn">
+<p style="margin:0"><b>⛔ 이 관계는 우리가 처음이 아니다 — Xiao 2019 (Joule) 이 이미 발표했다.</b>
+Ceder 그룹이 코팅 후보 10 만 종을 훑어 <b>산화한계가 Li 원자분율과 음의 상관</b>을 보였고(Fig. 7A),
+<b>ortho(PO₄³⁻) &lt; pyro(P₂O₇⁴⁻) &lt; meta(PO₃⁻)</b> 순으로 산화한계가 오른다는 것도 냈다
+(Fig. 6, 중앙값 <span class="mono">figure-read &#8776; 4.1 &#8594; 4.5 &#8594; 5.0 V</span>).
+<b>아래 사다리 Li₃PO₄ → Li₄P₂O₇ → LiPO₃ 는 정확히 그 세 계열, 같은 순서</b>다.</p>
+<p style="margin:10px 0 0"><b>⇒ 이 관계를 우리 발견으로 쓰지 않는다.</b> 우리 계산은 <b>독립 확인</b>이고,
+신규성은 <b>재는 양</b>(M³⁺←Li 교환에너지 · 교차점 Li/P &#8776; 1.67)과 <b>경로</b>(발라주는 코팅이 아니라
+전해질 도펀트가 계면에서 <b>제자리에</b> 만든다)에 있다.
+기록 <code>lit_xiao2019_li_budget_precedence_2026_09_16</code>.
+⚠ Xiao 논문은 <b>Fig. 6·7 만 실제로 봤다</b> — 나머지 그림·표는 digest 텍스트로만 안다.</p>
+</div>
+
 <div class="card answer">
 <p style="margin:0"><strong>고쳐 쓴 기전</strong> — Nd 는 "더 좋은 인산염을 만드는" 게 아니라
 <strong>Li 를 안 쓰고 인산염을 만드는 경로를 연다</strong>. Li₃PO₄ 는 P 하나당 Li 3 개를
