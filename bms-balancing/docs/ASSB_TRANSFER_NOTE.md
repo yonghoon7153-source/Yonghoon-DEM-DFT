@@ -121,7 +121,7 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 | # | 논문 | 축 | 상태 |
 |---|---|---|---|
 | 01 | Bielefeld·Weber·Janek 2019 — Microstructural Modeling | Q1 | ✅ **흡수 완료** (`81aa240`) |
-| 02 | Clausnitzer 외 2023 — Structure-Resolved Simulations (+SI) | Q1 | 🔄 **진행 중** (그림 25장 `f2120071`) |
+| 02 | Clausnitzer 외 2023 — Structure-Resolved Simulations (+SI) | Q1·**Q8** | ✅ **흡수 완료** (`2a2975ca`) |
 | 03 | Role of grain-level chemo-mechanics 2024 (+SI) — **DAMASK v2.0.2** | Q1 | ⏸ 수령·대기 |
 | 04 | Shi·Zhang·Tu 외 — Characterization of mechanical degradation (+SI) | Q1 | ⏸ 수령·대기 |
 | 05 | **Doux 2020** — Stack Pressure Considerations (Adv. Energy Mater., DOI `10.1002/aenm.201903253`) · 본문 6p `f1fc5062a6e259cd` · SI 8p `daa3b7a141c2f571` | **Q6** | ⏸ 수령·대기 |
@@ -172,6 +172,20 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 | 21 | Chang·Choi·Kang·Park·Lim, *Ionics* 2020 — embedded In reference electrode | Q5 — *"separately and simultaneously measured each electrode potential"* |
 | 22 | Sedlmeier 외, *JES* 2023 — micro-reference electrode, pouch | Q5·Q2 |
 | 23 | Hlushkou 외, *JPS* 2018, 396, 363−370 | Bielefeld ref 16 — **FIB-SEM 실측 미시구조** (합성 기하와 대조) |
+| 24 | **Ren·Danner·Finsterbusch·Latz 외, *Adv. Energy Mater.* 2022, 2201939** | 02 ref 17. **`θ(N)` 시간축의 입구** — `assb` 2/2 편이 동역학을 안 줬다 |
+| 25 | **Neumann 외, *ACS Appl. Energy Mater.* 2021, 4, 4786** | 02 ref 38. **GB 저항 모형 원전** + **EIS 로 파라미터화된 measured 라벨**. Q2 |
+
+### 6-3-a. 구조적 공백 둘 — 논문 번호가 아니라 **성질**로 적는다
+
+지금까지 흡수한 `assb` 2 편이 **둘 다 forward 전용**이라 생긴 것. 개별 논문을 더 모아도
+안 닫히고, **다른 종류의 논문**이 들어와야 닫힌다.
+
+- **역문제·식별성을 다루는 편이 0 이다** → **Q4 는 원리적으로 안 채워진다.**
+- **OCV 곡선이 0 이다** → 02 가 전압축을 줬지만 전부 **1 mA/cm²(≈0.74 C) 부하 곡선**이다.
+  우리 물음 전체가 OCV 적합인데 그 곡선이 없다.
+
+수령분 `09 Huo`(결합 전기화학-노화 모델)·`13 Maxwell`(OCV 로 엔트로피 변화)이 둘째를
+채울 후보다. 돌려 보고 아니면 그때 따로 찾는다.
 
 ### 6-4. 권장 처리 순서
 
