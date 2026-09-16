@@ -47,17 +47,29 @@ def li_metal_mu(entries):
     return min(es)  # Li metal reference (eV/atom)
 
 
-def min_rxn_grand(c1, c2, gpd, pd):
+def min_rxn_grand(c1, c2, gpd, pd, want_kinks=False):
+    """최소 kink 의 (에너지, 반응식). `want_kinks` 면 **전 kink** 도 같이 준다.
+
+    ⛔ 2026-09-16 — 종전 판은 `get_kinks()` 를 돌면서 **최소만 남기고 나머지를 버렸다.**
+      그래서 Richards/Ong 논문식 *"반응에너지 vs x"* 곡선(LiPOF Fig. 1b–f 형태)을
+      그릴 수 없었다. 계산은 이미 다 해 놓고 결과만 버린 것이다.
+    ⚠ 이 함수가 못 하는 것: kink 의 x 가 **원자분율**인지 몰분율인지 판정하지 않는다 —
+      pymatgen 이 주는 값을 그대로 옮긴다 (`x_atomic_frac` 로 이름 붙인 v1 관례를 따른다).
+    """
     from pymatgen.analysis.interface_reactions import GrandPotentialInterfacialReactivity
     gir = GrandPotentialInterfacialReactivity(
         c1, c2, gpd, pd_non_grand=pd,
         include_no_mixing_energy=True, use_hull_energy=True)
-    min_e, min_rxn = 1e9, None
+    min_e, min_rxn, kinks = 1e9, None, []
     for k in gir.get_kinks():
         e = float(k[2])
+        if want_kinks:
+            kinks.append({"x_atomic_frac": round(float(k[1]), 6),
+                          "reaction_energy_eV_per_atom": round(e, 6),
+                          "reaction": str(k[3])})
         if e < min_e:
             min_e, min_rxn = e, str(k[3])
-    return min_e, min_rxn
+    return (min_e, min_rxn, kinks) if want_kinks else (min_e, min_rxn)
 
 
 # ── 캐스케이드 90종 일괄 (2026-08-19 신설) ───────────────────────────────────
@@ -411,28 +423,32 @@ def main():
     for cat in a.cathodes:
         cstr, _, clab = cat.partition(":"); clab = clab or cstr
         cc = Composition(cstr)
-        results[clab] = {"composition": cstr, "by_voltage": {}, "reactions": {}}
+        results[clab] = {"composition": cstr, "by_voltage": {}, "reactions": {}, "kinks": {}}
         print(f"\n######## cathode {clab} ({cstr}) ########")
         for V in a.voltages:
             mu = mu0 - V
             gpd = GrandPotentialPhaseDiagram(entries, {Element("Li"): mu})
-            row, rxn_row = {}, {}
+            row, rxn_row, kink_row = {}, {}, {}
             for spec in a.electrolytes:
                 estr, _, elab = spec.partition(":"); elab = elab or estr
                 try:
-                    e, rxn = min_rxn_grand(Composition(estr), cc, gpd, pd)
+                    e, rxn, kinks = min_rxn_grand(Composition(estr), cc, gpd, pd,
+                                                  want_kinks=True)
                     row[elab] = round(e, 5)
                     rxn_row[elab] = rxn          # ⭐ 2026-09-16: 버리지 않는다 (아래 주석)
+                    kink_row[elab] = kinks       # ⭐ x-스캔 곡선용 전 kink
                     print(f"  V={V:.2f}  {elab:9s}: {e:.4f} eV/atom   {rxn}")
                 except Exception as ex:
                     row[elab] = None
                     rxn_row[elab] = None
+                    kink_row[elab] = []
                     print(f"  V={V:.2f}  {elab}: ERR {type(ex).__name__}: {ex}")
             results[clab]["by_voltage"][f"{V:.2f}"] = row
             # ⛔ 2026-09-16 — 종전 판은 `min_rxn` 을 **계산해 놓고 버렸다.** 숫자만 남아서
             #   "어떤 상으로 분해되나" 를 JSON 에서 못 읽었고, 그게 갭 단계(§C)의 입력이다.
             #   화면에는 찍혔으니 '되는 것처럼' 보였다 — 조용히 틀린 경로.
             results[clab]["reactions"][f"{V:.2f}"] = rxn_row
+            results[clab]["kinks"][f"{V:.2f}"] = kink_row
 
     cen = product_census(results)
     print(f"\n══ 산물 인구조사 — 갭(§C) 대상 후보 {cen['n_unique']} 종 ══")

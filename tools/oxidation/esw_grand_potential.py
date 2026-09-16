@@ -32,10 +32,29 @@ High V → low μ_Li (most oxidizing).
     (above it the composition is oxidized — S / P2S5 / Cl2 form).
   • ESW width = anodic − cathodic.
 
+생성에너지 표 · 균형반응 (2026-09-16 추가)
+------------------------------------------
+`--formation` 은 **이미 받아 놓은 같은 hull** 에서 상별 생성에너지를 뽑는다(MP 재조회
+없음). `--reaction` 은 사람이 고른 반응식을 `ComputedReaction` 으로 균형 잡아 ΔE 를 낸다.
+'Nd 인산염 싱크' 가설처럼 *"P 가 어디로 가는 게 더 이로운가"* 를 재려고 붙였다.
+
+⛔ 이 도구가 **못 하는 것**
+  · `--formation` 의 `E_f_per_P` 는 **반응에너지가 아니다** — 순위 힌트다.
+  · `--reaction` 의 반응물·생성물은 **사람이 고른 것**이다. hull 이 고르는 판정은
+    tools/oxidation/interface_reactivity_v2.py 쪽이다.
+  · 둘 다 0 K · MP2020 보정 에너지다 — 온도·엔트로피·pO₂ 를 안 본다.
+  · 반응이 **일어나는지**(운동학·핵생성·경로)는 아무것도 말하지 않는다.
+  · 실제 합성 가능성을 말하지 않는다.
+
 Usage (run where MP_API_KEY is set, e.g. gabia/kserver116-27):
     python3 esw_grand_potential.py \
         --target "Li6PS5Cl:comp1" "Li5.4P1S4.4Cl1.6:modelc" \
         --out esw_lpscl_results.json
+
+    # 생성에너지만 (인산염 싱크 정량화) — --target 없이도 돈다
+    python3 esw_grand_potential.py --elements Li P S Cl Nd O \
+        --formation --reaction "P2S7,Nd2O3 > NdPO4,S" \
+        --out cei_formation_2026_09_16.json
 """
 import argparse
 import json
@@ -161,6 +180,170 @@ def landmark_mu(entries, red_formula, ox_formula, open_symbol="O"):
     if abs(dn) < 1e-9:
         return None, f"{open_symbol} 개수가 안 변한다 — 산화반응이 아니다"
     return (E_ox - s * E_red) / dn, None
+
+
+# ── 생성에너지 표 · 균형반응 (2026-09-16 추가) ──────────────────────────────
+#: '인산염 싱크' 가설을 재려고 기본으로 훑는 상들. §B 산물 인구조사에서 실제로 나온
+#: 상 + 대조 앵커(Li₃PO₄·P₂S₇)다. 여기 없는 상을 보려면 `--formation` 에 직접 준다.
+DEFAULT_P_SINKS = (
+    # Nd 인산염 — 가설이 말하는 싱크
+    "NdPO4", "Nd(PO3)3", "NdP5O14", "LiNd(PO3)4",
+    # Li 인산염 — O 축 단독이 만드는 싱크 (문헌 앵커)
+    "Li3PO4", "LiPO3", "Li4P2O7", "P2O5",
+    # 티오인산염 — 싱크가 없을 때 P 가 가는 곳
+    "Li3PS4", "P2S7", "P2S5",
+    # Nd 의 비-인산염 경쟁상 — Nd 가 인산염을 **고르는지** 보려면 같이 있어야 한다
+    "Nd2O3", "NdCl3", "Nd2S3", "NdOCl",
+)
+
+
+def _ground_state(entries, reduced_formula):
+    """같은 조성의 엔트리 중 **최저 에너지** 하나. 없으면 None. (순수 함수)
+
+    ⛔ `min(..., key=lambda e: e.energy_per_atom or 9e9)` 로 쓰지 않는다 —
+       0.0 은 유효한 에너지고 `or` 가 그걸 '없음' 으로 둔갑시킨다
+       (`e_above_hull or 9e9` 가 81 일 살아남은 자리와 같은 함정).
+    """
+    cand = [e for e in entries
+            if getattr(e.composition, "reduced_formula", None) == reduced_formula]
+    if not cand:
+        return None
+    return min(cand, key=lambda e: e.energy_per_atom)
+
+
+def _formation_row(pd, entry, per_element="P"):
+    """엔트리 하나의 생성에너지 행. (순수 함수 — `pd` 는 `get_form_energy` 와
+    `get_e_above_hull` 만 있으면 된다.)
+
+    ⚠ `E_f_eV_per_<X>` 는 **X 원자 하나당으로 환산한 생성에너지**다. X 가 없으면
+      0 이 아니라 **None** 이다 (없는 값을 0 으로 그리지 않는다).
+    """
+    comp = entry.composition
+    n_at = float(comp.num_atoms)
+    ef_tot = float(pd.get_form_energy(entry))
+    n_x = float(comp[per_element]) if per_element else 0.0
+    try:
+        hull = float(pd.get_e_above_hull(entry))
+    except Exception as ex:                       # hull 밖 엔트리 등
+        hull, hull_why = None, f"{type(ex).__name__}: {ex}"
+    else:
+        hull_why = None
+    return {
+        "reduced_formula": getattr(comp, "reduced_formula", None),
+        "n_atoms": round(n_at, 4),
+        f"n_{per_element}": round(n_x, 4),
+        "E_f_eV_per_atom": round(ef_tot / n_at, 5) if n_at > 1e-9 else None,
+        f"E_f_eV_per_{per_element}": (round(ef_tot / n_x, 5) if n_x > 1e-9 else None),
+        "e_above_hull_eV_per_atom": (None if hull is None else round(hull, 5)),
+        "e_above_hull_why_none": hull_why,
+        "entry_id": str(getattr(entry, "entry_id", "") or ""),
+    }
+
+
+def formation_rows(pd, formulas, per_element="P"):
+    """요청한 화학식들의 **MP 생성에너지**를 §B 와 **같은 hull** 에서 뽑는다.
+
+    ⛔ 이 함수가 못 하는 것
+      · **반응에너지가 아니다.** `E_f_per_P` 는 O:P 비가 다른 상들을 한 줄에 놓으면
+        P–O 결합 수 차이를 P 하나당으로 뭉갠다 — **순위 힌트**지 판정이 아니다.
+        판정은 `--reaction` 의 균형반응이 한다.
+      · 온도·엔트로피·pO₂ 를 안 본다 (0 K · MP2020 보정 에너지).
+      · 그 조성이 실제로 합성되는지 말하지 않는다.
+      · hull 에 없는 화학식은 **지어내지 않고** `found: false` 로 남긴다.
+    """
+    from pymatgen.core import Composition
+    ents = list(pd.all_entries)
+    rows = {}
+    for f in formulas:
+        try:
+            want = Composition(f).reduced_formula
+        except Exception as ex:
+            rows[f] = {"found": False,
+                       "why": f"화학식을 못 읽는다: {f!r} ({type(ex).__name__})"}
+            continue
+        e = _ground_state(ents, want)
+        if e is None:
+            rows[f] = {"found": False, "reduced_formula": want,
+                       "why": "이 chemsys hull 에 없다 "
+                              "(--elements 를 넓히거나, MP 에 없는 상이다)"}
+            continue
+        row = _formation_row(pd, e, per_element=per_element)
+        row["found"] = True
+        rows[f] = row
+    return rows
+
+
+def parse_reaction_spec(spec):
+    """`"P2S7,Nd2O3 > NdPO4,S"` → (['P2S7','Nd2O3'], ['NdPO4','S']). (순수 함수)
+
+    ⛔ 계수를 받지 않는다 — 균형은 `ComputedReaction` 이 잡는다. 계수를 쓰면 조용히 무시되는
+       대신 여기서 **거절한다** (읽는 사람이 자기 계수가 반영된 줄 알면 안 된다).
+    """
+    if ">" not in spec:
+        return None, None, "형식이 아니다 — '반응물,… > 생성물,…' 로 준다"
+    lhs, _, rhs = spec.partition(">")
+    L = [t.strip() for t in lhs.split(",") if t.strip()]
+    R = [t.strip() for t in rhs.split(",") if t.strip()]
+    if not L or not R:
+        return None, None, "반응물 또는 생성물이 비었다"
+    for t in L + R:
+        head = t.split()[0]
+        if head.replace(".", "", 1).isdigit():
+            return None, None, (f"계수를 직접 주지 않는다 ({t!r}) — 균형은 도구가 잡는다")
+    return L, R, None
+
+
+def balanced_reaction(pd, lhs, rhs, per_element="P"):
+    """`ComputedReaction` 으로 균형을 잡고 반응에너지를 낸다.
+
+    내는 값: 식 그대로의 총 에너지(eV) · 반응물 원자당 · **반응물 쪽 X 하나당**.
+
+    ⛔ 못 하는 것
+      · 반응이 **일어나는지** 말하지 않는다 (운동학·경로 없음, 0 K).
+      · 균형이 안 잡히면 억지로 잡지 않고 사유를 낸다.
+      · 반응물/생성물 집합은 **사람이 고른 것**이다 — hull 이 고른 게 아니다.
+        hull 이 고르는 것은 `interface_reactivity_v2.py` 쪽이다.
+    """
+    from pymatgen.core import Composition, Element
+    from pymatgen.analysis.reaction_calculator import ComputedReaction
+    ents = list(pd.all_entries)
+    picked = {}
+    for side in (lhs, rhs):
+        for f in side:
+            if f in picked:
+                continue
+            try:
+                want = Composition(f).reduced_formula
+            except Exception as ex:
+                return {"ok": False, "why": f"화학식을 못 읽는다: {f!r} ({type(ex).__name__})"}
+            e = _ground_state(ents, want)
+            if e is None:
+                return {"ok": False, "why": f"hull 에 없다: {f} ({want})"}
+            picked[f] = e
+    try:
+        rxn = ComputedReaction([picked[f] for f in lhs], [picked[f] for f in rhs])
+        E = float(rxn.calculated_reaction_energy)
+    except Exception as ex:
+        return {"ok": False, "why": f"균형이 안 잡힌다: {type(ex).__name__}: {ex}"}
+
+    X = Element(per_element)
+    n_x = n_at = 0.0
+    for c in list(getattr(rxn, "reactants", []) or []):
+        try:
+            k = abs(float(rxn.get_coeff(c)))
+        except Exception:
+            k = 0.0
+        n_x += k * float(c[X])
+        n_at += k * float(c.num_atoms)
+    return {
+        "ok": True,
+        "reaction": str(rxn),
+        "E_eV_as_written": round(E, 5),
+        "E_eV_per_reactant_atom": round(E / n_at, 5) if n_at > 1e-9 else None,
+        f"E_eV_per_{per_element}": round(E / n_x, 5) if n_x > 1e-9 else None,
+        f"n_{per_element}_reactant_side": round(n_x, 4),
+        "entry_ids": {f: str(getattr(e, "entry_id", "") or "") for f, e in picked.items()},
+    }
 
 
 def steps_from_profile(profile, open_symbol, mu_ref, rxn=rxn_to_str):
@@ -305,14 +488,25 @@ def main():
                     help="Phases to drop from the hull, by reduced FORMULA or MP-id "
                          "(Gil-González 2022 set: LiS4 SCl3 Li5PS4Cl2). Formula match "
                          "is robust to MP re-ids.")
+    ap.add_argument("--formation", nargs="*", default=None, metavar="FORMULA",
+                    help="**생성에너지 표**를 같은 hull 에서 같이 낸다. 인자 없이 주면 "
+                         f"기본 목록({len(DEFAULT_P_SINKS)}종: Nd 인산염·Li 인산염·티오인산염·"
+                         "Nd 비-인산염 경쟁상). ⚠ 반응에너지가 아니라 **순위 힌트**다.")
+    ap.add_argument("--reaction", nargs="*", default=None, metavar="SPEC",
+                    help='균형반응 에너지. 형식 "반응물,… > 생성물,…" '
+                         '(예: "P2S7,Nd2O3 > NdPO4,S"). 계수는 도구가 잡는다.')
+    ap.add_argument("--per_element", default="P",
+                    help="생성에너지·반응에너지를 **이 원소 하나당**으로도 환산한다 (기본 P).")
     ap.add_argument("--selftest", action="store_true",
                     help="MP·pymatgen 없이 판정 논리만 시험 (음성 경로 포함)")
     args = ap.parse_args()
 
     if args.selftest:
         return selftest()
-    if not args.target:
-        ap.error("--target 이 필요하다 (--selftest 를 쓸 때만 생략 가능)")
+    # --formation/--reaction 만으로도 돌 수 있다 (열린 원소 프로파일은 건너뛴다)
+    if not args.target and args.formation is None and args.reaction is None:
+        ap.error("--target 이 필요하다 "
+                 "(--formation/--reaction/--selftest 를 쓸 때만 생략 가능)")
 
     # ⛔ 열 원소가 chemsys 에 없으면 hull 에 그 원소가 아예 없다 — 조용히 빈 프로파일이
     #   나오지 않게 여기서 멈춘다 (fail-closed).
@@ -364,7 +558,7 @@ def main():
         print()
 
     results = {}
-    for spec in args.target:
+    for spec in (args.target or []):
         comp_str, _, label = spec.partition(":")
         label = label or comp_str
         comp = Composition(comp_str)
@@ -374,6 +568,49 @@ def main():
         except Exception as e:
             print(f"  [error] {label}: {type(e).__name__}: {e}")
             results[label] = {"composition": comp_str, "error": str(e)}
+
+    # ── 생성에너지 표 (2026-09-16) ────────────────────────────────────────
+    formation = None
+    if args.formation is not None:
+        want = list(args.formation) or list(DEFAULT_P_SINKS)
+        X = args.per_element
+        formation = formation_rows(pd, want, per_element=X)
+        print(f"\n══ 생성에너지 (같은 hull · MP2020 보정) — {X} 하나당 환산 같이 ══")
+        print(f"  {'formula':<14s} {'E_f eV/at':>10s} {f'E_f eV/{X}':>11s} "
+              f"{'hull eV/at':>11s}  entry")
+        for f in want:
+            r = formation[f]
+            if not r.get("found"):
+                print(f"  {f:<14s} {'—':>10s} {'—':>11s} {'—':>11s}  "
+                      f"⛔ {r.get('why')}")
+                continue
+            px = r.get(f"E_f_eV_per_{X}")
+            print(f"  {f:<14s} {r['E_f_eV_per_atom']:>10.4f} "
+                  f"{('—' if px is None else f'{px:.4f}'):>11s} "
+                  f"{r['e_above_hull_eV_per_atom']:>11.4f}  {r['entry_id']}")
+        print("  ⚠ 이 표는 **반응에너지가 아니다** — O:P 비가 다른 상을 한 줄에 놓으면 "
+              "P–O 결합 수를 P 하나당으로 뭉갠다. 순위 힌트로만 읽는다.")
+
+    # ── 균형반응 (2026-09-16) ─────────────────────────────────────────────
+    reactions = None
+    if args.reaction is not None:
+        reactions = {}
+        X = args.per_element
+        print(f"\n══ 균형반응 (ComputedReaction · 같은 hull) ══")
+        for spec in args.reaction:
+            L, R, why = parse_reaction_spec(spec)
+            if why:
+                reactions[spec] = {"ok": False, "why": why}
+                print(f"  ⛔ {spec}: {why}"); continue
+            out = balanced_reaction(pd, L, R, per_element=X)
+            reactions[spec] = out
+            if not out.get("ok"):
+                print(f"  ⛔ {spec}: {out['why']}"); continue
+            px = out.get(f"E_eV_per_{X}")
+            print(f"  {out['reaction']}")
+            print(f"     ΔE = {out['E_eV_as_written']:+.4f} eV (식 그대로) · "
+                  f"{out['E_eV_per_reactant_atom']:+.4f} eV/반응물원자 · "
+                  + ("—" if px is None else f"{px:+.4f} eV/{X}"))
 
     payload = {
         "method": "grand-potential element profile via PhaseDiagram.get_element_profile "
@@ -389,6 +626,20 @@ def main():
                  f"⚠ 전압(V vs Li/Li+)이 **아니다.**"),
         "results": results,
     }
+    if formation is not None:
+        payload["formation"] = formation
+        payload["formation_per_element"] = args.per_element
+        payload["⛔_formation_caveat"] = (
+            "이 표는 **반응에너지가 아니다.** `E_f_per_P` 는 O:P 비가 다른 상들을 한 줄에 놓으면 "
+            "P–O 결합 수 차이를 P 하나당으로 뭉갠다 — **순위 힌트**다. 판정은 균형반응(`reactions`)이 "
+            "한다. 0 K · MP2020 보정 에너지이고 온도·엔트로피·pO₂ 를 안 본다. "
+            "여기 상들이 실제로 합성/석출된다는 뜻도 아니다.")
+    if reactions is not None:
+        payload["reactions"] = reactions
+        payload["⛔_reaction_caveat"] = (
+            "반응물·생성물 집합은 **사람이 고른 것**이다 — hull 이 고른 게 아니다. "
+            "hull 이 고르는 판정은 interface_reactivity_v2.py 쪽이다. "
+            "반응이 **일어나는지**(운동학·경로)는 말하지 않는다.")
     if args.open_element == "Li":
         payload["mu_Li_ref_eV"] = round(mu_ref, 4)     # 종전 키 유지
     if args.open_element == "O":
@@ -450,6 +701,79 @@ def selftest():
     # ── landmark (2026-09-07) — 축을 읽게 만드는 기준 반응 ───────────────────
     chk(len(DEFAULT_LANDMARKS) >= 3 and all("," in x for x in DEFAULT_LANDMARKS),
         "기본 기준 반응 목록이 '환원형,산화형' 형식이다")
+
+    # ── 생성에너지·균형반응 (2026-09-16) — pymatgen 없이 도는 순수 부분 ──────
+    class _C(dict):
+        """Composition 대역 — `reduced_formula`·`num_atoms`·`c['P']` 만 쓴다."""
+        def __init__(self, rf, d):
+            super().__init__(d); self.reduced_formula = rf
+        @property
+        def num_atoms(self):
+            return sum(self.values())
+        def __missing__(self, k):
+            return 0.0
+
+    class _E:
+        def __init__(self, rf, d, epa, eid=""):
+            self.composition = _C(rf, d); self.energy_per_atom = epa
+            self.entry_id = eid
+
+    class _PD:
+        """pd 대역 — form/hull 을 손으로 박아 **정규화만** 시험한다."""
+        def __init__(self, ents, form, hull):
+            self.all_entries = ents; self._f = form; self._h = hull
+        def get_form_energy(self, e):
+            return self._f[e.entry_id]
+        def get_e_above_hull(self, e):
+            v = self._h[e.entry_id]
+            if v is None:
+                raise ValueError("hull 밖")
+            return v
+
+    #: NdPO4 (6 원자 · P 1) · 같은 조성의 준안정 다형체 둘 · P 없는 Nd2O3
+    e_lo = _E("NdPO4", {"Nd": 1, "P": 1, "O": 4}, -7.0, "mp-lo")
+    e_hi = _E("NdPO4", {"Nd": 1, "P": 1, "O": 4}, -6.5, "mp-hi")
+    e_zero = _E("Nd", {"Nd": 1}, 0.0, "mp-zero")          # ⛔ `or` 함정 표적
+    e_nop = _E("Nd2O3", {"Nd": 2, "O": 3}, -8.0, "mp-nd2o3")
+    ents = [e_hi, e_lo, e_zero, e_nop]
+
+    chk(_ground_state(ents, "NdPO4") is e_lo,
+        "같은 조성이 여럿이면 **최저 에너지** 다형체를 고른다")
+    chk(_ground_state(ents, "NdPO4") is not e_hi,
+        "⛔음성: 목록 순서(먼저 나온 준안정상)를 고르지 않는다")
+    chk(_ground_state(ents, "Nd") is e_zero,
+        "⛔음성: `energy_per_atom == 0.0` 을 **없음으로 둔갑시키지 않는다** "
+        "(`x or 9e9` 함정)")
+    chk(_ground_state(ents, "LiNd(PO3)4") is None,
+        "⛔음성: 없는 조성에 **아무거나 돌려주지 않는다** (None)")
+
+    pdf = _PD(ents, form={"mp-lo": -36.0, "mp-nd2o3": -25.0, "mp-zero": 0.0},
+              hull={"mp-lo": 0.0, "mp-nd2o3": 0.0, "mp-zero": None})
+    r = _formation_row(pdf, e_lo, per_element="P")
+    chk(r["E_f_eV_per_atom"] == -6.0, f"E_f/atom = 총/원자수 (기대 −6.0 · 얻음 {r['E_f_eV_per_atom']})")
+    chk(r["E_f_eV_per_P"] == -36.0, f"E_f/P = 총/P수 (기대 −36.0 · 얻음 {r['E_f_eV_per_P']})")
+    chk(r["e_above_hull_eV_per_atom"] == 0.0 and r["e_above_hull_why_none"] is None,
+        "⛔음성: hull 0.0 을 **결측으로 읽지 않는다**")
+    r2 = _formation_row(pdf, e_nop, per_element="P")
+    chk(r2["E_f_eV_per_P"] is None,
+        "⛔음성: P 가 없는 상의 'P 하나당' 은 **0 이 아니라 None** 이다")
+    r3 = _formation_row(pdf, e_zero, per_element="P")
+    chk(r3["e_above_hull_eV_per_atom"] is None and r3["e_above_hull_why_none"],
+        "⛔음성: hull 을 못 내면 **0 으로 그리지 않고 사유를 남긴다**")
+
+    chk(len(DEFAULT_P_SINKS) >= 12 and "P2S7" in DEFAULT_P_SINKS
+        and "Nd2O3" in DEFAULT_P_SINKS,
+        "기본 목록에 **대조상**(티오인산염·Nd 비-인산염)이 같이 들어 있다")
+
+    L, R, why = parse_reaction_spec("P2S7,Nd2O3 > NdPO4,S")
+    chk(why is None and L == ["P2S7", "Nd2O3"] and R == ["NdPO4", "S"],
+        "반응식 파싱 — 양쪽을 쉼표로 가른다")
+    chk(parse_reaction_spec("P2S7 + Nd2O3")[2] is not None,
+        "⛔음성: '>' 없는 문자열을 **반응으로 받지 않는다**")
+    chk(parse_reaction_spec(" > NdPO4")[2] is not None,
+        "⛔음성: 반응물이 빈 식을 받지 않는다")
+    chk(parse_reaction_spec("2 P2S7 > NdPO4")[2] is not None,
+        "⛔음성: **계수를 직접 주면 거절한다** (조용히 무시하면 자기 계수가 반영된 줄 안다)")
 
     try:
         from pymatgen.core import Composition          # noqa: F401
