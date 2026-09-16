@@ -104,6 +104,60 @@
         "`promotion_eligible` 은 이 승인으로 true 가 되지 않는다 — rc 도 4 그대로다.",
         "리뷰어 문장 그대로: '이는 데이터를 다시 계산하라는 요구가 아니다.'"
       ]
+    },
+    {
+      "id": "U18B-R16-2026-09-16",
+      "approved_utc": "2026-09-16T00:00:00Z",
+      "approved_by": "사용자 결정 — 하네스 열린 항목을 '다 ㄱㄱ' 로 진행하라는 지시. R16 이 새 unknown 사유를 만들면서 U18B-2026-09-14 의 승인이 fail-closed 로 사라진 것을 보고, 그 축을 포함한 **새 기록**으로 다시 승인한다",
+      "why": "R16 이 `openpyxl` 을 env 축에 더하면서 새 unknown 사유 `env_contract_legacy` 가 생겼다. U18B-2026-09-14 기록은 스스로 '이 승인은 unknown 사유 **둘**만 덮는다' 고 적어 두었으므로 셋째를 그 기록에 끼워 넣지 않았다 — 기록된 결정을 고쳐 쓰는 일이기 때문이다. 대신 같은 이관에 대해 축 셋을 명시한 새 기록을 둔다. 덮는 사실은 하나 늘었을 뿐이고 **성격은 같다**: 옛 정본이 그 계약보다 **앞서** 만들어졌다는 것 (U18-03 의 '정본의 나이').",
+      "old": {
+        "rev": "42314198e0beee59834d394cdba2757183503b59",
+        "note": "37a889b^ — 승격 직전 정본 (bms: 반경 300/160 단일 진단을 §12 로 기록)"
+      },
+      "new": {
+        "roster": [
+          "degeneracy_100_Li.json",
+          "degeneracy_200_Li.json",
+          "degeneracy_300_0009_Li.json",
+          "degeneracy_300_0147_Li.json",
+          "matrix_100.csv",
+          "matrix_200.csv",
+          "matrix_300_0009.csv",
+          "matrix_300_0147.csv",
+          "ne_shape_GITT_Li.csv",
+          "profile_gamma_100_Li.csv",
+          "profile_gamma_200_Li.csv",
+          "profile_gamma_300_0009_Li.csv",
+          "profile_gamma_300_0147_Li.csv"
+        ]
+      },
+      "code_commits": [
+        "066866595ab71827ef2d98e7a6cf26136df21495",
+        "419c1abaeec9fa981d7f5829d5803167288f7f1e"
+      ],
+      "allowed_unknown": [
+        "inputs_uncomparable",
+        "env_uncomparable",
+        "env_contract_legacy"
+      ],
+      "checks": {
+        "command": "python3 scripts/check_u14.py --new out --old-rev 42314198",
+        "rc": 4,
+        "roster": {
+          "old": 13,
+          "new": 13,
+          "compared": 13
+        },
+        "numbers": 0,
+        "note": "공통 수치는 전부 같다. 막는 것은 옛 정본이 안 적은 두 축뿐이다 (입력 identity 17 · env 1)."
+      },
+      "scope": [
+        "이 승인은 **unknown 사유 셋**만 덮는다. 계약이 깨진 대조는 절대 승인되지 않는다 (`test_an_approval_never_covers_a_real_contract_violation`).",
+        "`promotion_eligible` 은 이 승인으로 true 가 되지 않는다 — rc 도 4 그대로다.",
+        "옛 기록 U18B-2026-09-14 는 **그대로 둔다** (지우거나 고치지 않는다). 그 기록이 무엇을 승인했는지는 그때의 사실이다.",
+        "리뷰어 문장 그대로: '이는 데이터를 다시 계산하라는 요구가 아니다.'"
+      ],
+      "supersedes": "U18B-2026-09-14"
     }
   ],
   "env_contract_legacy": [

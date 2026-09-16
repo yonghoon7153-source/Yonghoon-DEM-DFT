@@ -164,12 +164,12 @@ def test_a_legacy_transition_is_a_separate_verdict_that_does_not_promote():
     #   둘**만 덮는다" 고 적어 두었다. 셋째를 그 기록에 몰래 끼워 넣는 것은 **기록된 사용자 결정을 고쳐 쓰는
     #   일**이라 하지 않았다 — 승인은 fail-closed 로 사라진다.
     #
-    #   이 시험이 지키는 것은 그대로다: rc 4 · 승격 false · 계약 축 전부 0. 바뀐 것은 "그 기록이 이 대조를
-    #   덮는가" 하나이고, 덮으려면 **새 사용자 결정**이 필요하다 (`reviews/PROMOTION_DECISIONS.json`).
+    #   승인은 fail-closed 로 사라졌고, 사용자가 **새 기록**(`U18B-R16-2026-09-16`, 축 셋을 명시)을 승인해
+    #   되살렸다. 옛 기록은 **그대로 둔다** — 그것이 무엇을 승인했는지는 그때의 사실이다.
     assert b["env_contract_legacy"] > 0, ("정본은 openpyxl 이전 세대다 — 그 사실이 세어져야 한다", b)
-    assert v.get("legacy_transition_approved") is False, (
-        "기록이 선언한 unknown 집합 밖의 사유가 있는데 승인이 났다 — 부재는 안전값이 아니다", v)
-    assert v.get("legacy_transition") is None, v
+    assert v.get("legacy_transition_approved") is True, ("승인 기록이 소비되지 않았다", v, out[-1200:])
+    assert v.get("legacy_transition") == "U18B-R16-2026-09-16", (
+        "셋째 축까지 명시한 새 기록이 소비돼야 한다 — 옛 기록은 스스로 '둘만' 이라고 적었다", v)
 
 
 def test_an_unapproved_comparison_is_not_a_legacy_transition(tmp_path):

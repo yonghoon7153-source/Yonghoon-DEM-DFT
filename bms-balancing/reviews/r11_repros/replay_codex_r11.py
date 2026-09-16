@@ -192,6 +192,13 @@ SUBSTITUTES = {
     "publish:matrix_filtered_canonical": "data:matrix_subset",
     "publish:profile_grid1_canonical": "data:profile_grid",
     "root:profile_grid": "data:profile_grid (canonical_written False) + test_d10_03 (회귀)",
+    # ⚠ R16 (2026-09-16): 이 leaf 는 publication 그룹이 **첫 case 에서 중단**돼 미실행으로 남았고, 그동안
+    #   대체 증거가 없어 `closed_with_substitutes: false` 였다. 대체는 **이미 저장소에 있었다** —
+    #   `test_e11_13` 이 `out=None` 부분 실행에서 rc 3 을 직접 관측한다. 여기 적힌 술어(`rc != 0`)보다
+    #   **더 강한** 주장이다 (3 을 정확히 요구한다). 이름을 여기 등록해 "있는데 안 세던" 상태를 닫는다.
+    #   ⚠ 이름만 적고 끝내지 않는다 — `test_r16_21` 이 여기 적힌 test 이름이 **실재하는지** 댄다
+    #     (신고된 위험은 값으로 소비한다, R11 P1-9).
+    "publish:profile_partial_stdout": "test_e11_13 (회귀 — sink 없는 부분 실행이 rc 3)",
 }
 EXPECTED_LEAVES = ["root:schema_only", "root:input_bytes", "root:dirty_code", "root:invalid_numeric", "root:matrix_authority", "root:profile_grid", "data:receipt_identity", "data:receipt_shape", "data:allowlist", "data:matrix_subset", "data:profile_grid", "data:shape_reader", "data:shape_wrapper", "check:schema_only_no_baseline", "check:schema_only_skips_env_controls_argv", "check:full_compare_missing_argv_and_roster", "check:changed_git_state_promoted", "check:artifact_env_disagrees_with_meta_promoted", "check:per_file_alias_self_comparison", "check:matrix_inf_promoted", "check:degeneracy_infinity_promoted", "check:profile_gamma_roster_not_validated", "check:changed_valid_input_digests_promoted", "check:duplicate_receipt_direct", "check:changed_equivocal_receipt_promoted", "publish:matrix_filtered_canonical", "publish:profile_grid1_canonical", "publish:profile_partial_stdout", "publish:shape_step", "evidence:early-gate-pyc", "evidence:abbreviated-head", "evidence:skip-worktree", "evidence:materialize-smudge", "evidence:r10-assertion-alias", "evidence:r10-child-rc", "evidence:u18-dirty-meta", "evidence:untracked-sitecustomize"]
 
