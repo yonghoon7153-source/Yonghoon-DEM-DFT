@@ -178,6 +178,31 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 | **23** | **Stavola·Sun·Guida·Bruck 외** — Thick NMC111-Argyrodite 양극의 **리튬화 구배·굴곡도** (*ACS Energy Lett.* 2023) | **Q1·Q2** — 01 이 "두께 효과는 유한 크기 인공물" 이라 한 자리를 **실측**으로 친다 | 8p `3b05d0e6a4f695e7` / **29p** `0e810a3fa2f097dc` |
 | **24** | **Zhou·Lu·Mish·Chen·Feng·Kim 외** — Tailored Cathode Composite Microstructure, **저압 장수명** (*ACS Energy Lett.* 2025) | **Q1·Q6** — DEM 브랜치에 `tailored_cathode_low_pressure.csv` 앵커가 이미 있다 | 9p `107089537e2fc03f` / **30p** `56af662bea394b9c` |
 
+| **25** | **"Introducing a new model for solid-state batteries: Parameter estimation and sensitivity analysis on diffusion, concentration, and electrochemical kinetics"** (*Electrochim. Acta* 2024) | **Q4 확인용** | 18p `a7f04355b1eb13b5` |
+| **26** | **"Analysis of the Validity of P2D Models for Solid-State Batteries in a Large Parameter Range"** (*JES*, **open access**) | **Q4 확인용** | 14p `17507c15ac755444` |
+| **27** | **Bizeray·Kim·Duncan·Howey** — Identifiability and Parameter Estimation of the **Single Particle** Li-ion Battery Model (*IEEE TCST* **27**(5) 2019, 1862) | **방법론 원전 (액체셀)** | 16p `714992e6e46adbc4` |
+| **28** | **"Quantifying Resistive and Diffusive Kinetic Limitations of Thiophosphate Composite Cathodes in ASSB"** (*JES*, **open access**) | ★ **`η(i)` 항 그 자체 + OCV 곡선 최유력** | 11p `c0fc33c717c16634` |
+| **29** | **Park, B.-N.** — Unraveling Asymmetric Electrochemical Kinetics in **Low-Mass-Loading** NMC111 Li-Metal ASSB | Q8 보조 | 10p `9a213dfb1f39b963` |
+
+**★★ 25~29 의 단어 지문 — Q4 의 답이 거의 보인다** (digest 가 정본이고 이건 예비 지표다):
+
+| | `identifiab` | `uniqu` | `sensitiv` | `Sobol` | `GITT` | `OCV` |
+|---|---:|---:|---:|---:|---:|---:|
+| 25 (제목이 "parameter estimation and **sensitivity analysis**") | **0** | **0** | 3 | 0 | 1 | **0** |
+| 26 (**전역 민감도**를 제대로 한다) | **0** | **0** | 26 | **29** | 0 | **0** |
+| 27 (액체셀 방법론 원전) | **9** | 3 | 7 | 0 | — | — |
+| 28 | **0** | **0** | — | — | **20** | **0** |
+| 29 | **0** | 1 | — | — | 0 | **0** |
+
+- **26 은 Sobol 전역 민감도를 29 회 하면서 `identifiab` 은 0 회다.** 우리 위키
+  `constrained-crb-identifiability` 가 갈라 놓은 **"민감도 ≠ 식별성"** 의 교과서적 실례다.
+- **27 은 `identifiab` 9 회인데 `all-solid-state` 가 0 회다** — 도구는 액체셀에 있고
+  **ASSB 로 안 건너왔다**는 것이 지문으로 확인된다.
+- **★ 28 이 `GITT` 20 회** — ASSB 준평형 곡선의 최유력 후보. 단 `OCV` 0 · `open circuit` 1 이라
+  **GITT 로 재면서 "OCV 곡선" 이라 부르지 않을** 수 있다. digest 로 확인한다.
+- ⚠ **단어 수는 지표일 뿐이다.** 그림에 OCV 곡선이 있어도 본문 단어로는 안 잡힌다.
+  추출 품질은 확인했다 (쪽당 3,900~5,100 자, 정상).
+
 **★ Q5 가 0 편 → 다섯(15·16·18·19·20)으로 바뀌었다.** Li-In 기준 전위가 움직이면
 `LLI` 숫자 전체가 의심스러워지는데, 그 축을 이제 실제로 잴 수 있다.
 **★ 21·22 는 01 이 자기 참고문헌으로 가리킨 둘**이다 — `1 − θ_AM` 의 measured 라벨과
@@ -201,10 +226,11 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 ```
 03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12
    → 13 → 14 → 15 → 16 → 17 → 18 → 19 → 20 → 21 → 22 → 23 → 24
+   → 25 → 26 → 27 → 28 → 29
 ```
 
 **재배열하지 않는다.** 아래 6-4-a 는 내가 한때 권한 재배열인데 **채택되지 않았다** —
-근거로만 남긴다. **22 편 × ~20 분 ≈ 7 시간**이고 순차로만 돈다(lint 훅이 전체 위키를
+근거로만 남긴다. **27 편 × ~20 분 ≈ 9 시간**이고 순차로만 돈다(lint 훅이 전체 위키를
 보므로 병렬 불가). 한 편이 끝날 때마다 **lint 0 errors 확인 → 커밋 → 다음 편 착수**.
 
 ### 6-4-a. (채택 안 됨) 내가 권했던 재배열
