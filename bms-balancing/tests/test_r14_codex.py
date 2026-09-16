@@ -84,7 +84,14 @@ def test_h02_partial_env_in_a_new_sidecar_is_a_contract_violation(tmp_path, name
     d = tmp_path / "fix"; d.mkdir()
     data = src.read_bytes(); (d / name).write_bytes(data)
     meta = json.loads((src.with_name(name + ".meta.json")).read_text(encoding="utf-8"))
-    full = dict(meta)
+    # ⚠ R16 (2026-09-16): 정본은 `openpyxl` 이 생기기 **전** 세대라 그대로 쓰면 대조군이 이미 계약 위반이다.
+    #   그리고 그 bytes+env 조합은 `PROMOTION_DECISIONS.json` 의 면제가 지목한 것이라, 그대로 쓰면 이 시험이
+    #   **면제된 표본**을 재게 된다. 축을 전부 채워 **현행 세대·기록에 없는** 대조군을 만든다 — 그래야
+    #   "한 축씩 빼도 전부 걸려야 한다" 가 모든 축에서 뜻을 가진다. (축 이름을 여기 박지 않는다.)
+    #   값도 정본과 다르게 둔다 — 정본 값 그대로면 한 축을 뺀 순간 **기록된 env 와 똑같아져** 면제를
+    #   받는다 (2026-09-16 실측: openpyxl 을 뺐는데 rc 0 이었다). schema-only 는 값을 대조하지
+    #   않으므로 이 대체는 시험이 재는 것(축의 존재·비공백)을 바꾸지 않는다.
+    full = dict(meta, env={k: f"r16-{k}" for k in S.ENV_KEYS})
 
     def run(m):
         (d / (name + ".meta.json")).write_text(json.dumps(m, ensure_ascii=False), encoding="utf-8")

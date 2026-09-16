@@ -17,6 +17,7 @@ import sys
 import pytest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+from conftest import fixture_env as _fixture_env   # noqa: E402  (R16: env 축은 한 자리에서)
 from bms_balancing import data as D          # noqa: E402
 from bms_balancing import schema as S        # noqa: E402
 from test_review_findings import matrix_row, seal_combo   # noqa: E402
@@ -132,8 +133,7 @@ def _deg(**over):
     ci = _receipt()
     j = {"state": "100", "si_source": "Li", "half_cell": "GITT", "w_dqdv": 0.0,
          "tol_percent_of_best": 1.0, "n_starts": 24, "seed": 0, "n_grid": 21, "n_samples": 400,
-         "run_id": "rid", "env": {"python": "3.11.0", "numpy": "1.26.0", "scipy": "1.11.0",
-                                  "pandas": "2.0.0", "platform": "linux-x"},
+         "run_id": "rid", "env": _fixture_env(python="3.11.0", numpy="1.26.0", scipy="1.11.0", pandas="2.0.0", openpyxl="3.1.0", platform="linux-x"),
          "consumed_inputs": ci, "ref_consumed_inputs": _receipt("5", "6", "7", "8"),
          "inputs_sha": S.inputs_digest(ci), "n_accepted": 5,
          "best_obj": 1.5, "best_p": [1.0, 2.0, 3.0, 4.0, 5.0], "ref_p": [1.0, 2.0, 3.0, 4.0, 5.0],

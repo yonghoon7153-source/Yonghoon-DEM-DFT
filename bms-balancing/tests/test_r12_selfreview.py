@@ -15,6 +15,7 @@ import csv, hashlib, io, json, os, pathlib, shutil, subprocess, sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from conftest import fixture_env as _fixture_env   # noqa: E402  (R16: env 축은 한 자리에서)
 
 import pytest                                                             # noqa: E402
 from bms_balancing import schema as S                                     # noqa: E402
@@ -39,8 +40,7 @@ def _receipt(half="1", full="2", gr="3", si="4"):
 def _meta(art: pathlib.Path, **over):
     data = art.read_bytes()
     m = {"artifact": art.name, "run_id": "R", "sha256": hashlib.sha256(data).hexdigest(),
-         "env": {"python": "3.11.0", "numpy": "1.26.0", "scipy": "1.11.0", "pandas": "2.0.0",
-                 "platform": "linux-x"},
+         "env": _fixture_env(python="3.11.0", numpy="2.0", scipy="1.11.0", pandas="2.0.0", openpyxl="3.1.0", platform="linux-x"),
          "started_utc": "2026-09-13T00:00:00Z", "git_commit_at_start": "0" * 40,
          "git_state_changed_during_run": False, "git_dirty": False, "git_modified_code": [],
          "state": "100", "half_cell_source": "GITT", "si_source": "Li", "starts": 2, "seed": 0,
@@ -240,8 +240,7 @@ def _degeneracy(d: pathlib.Path, run_id="R", **over):
     ci, rci = _receipt(), _receipt(half="5")
     j = {"state": "100", "si_source": "Li", "half_cell": "GITT", "w_dqdv": 0.0,
          "tol_percent_of_best": 1.0, "n_starts": 2, "seed": 0, "n_grid": 21, "n_samples": 10,
-         "run_id": run_id, "env": {"python": "3.11.0", "numpy": "1.26.0", "scipy": "1.11.0",
-                                   "pandas": "2.0.0", "platform": "linux-x"},
+         "run_id": run_id, "env": _fixture_env(python="3.11.0", numpy="2.0", scipy="1.11.0", pandas="2.0.0", openpyxl="3.1.0", platform="linux-x"),
          "consumed_inputs": ci, "ref_consumed_inputs": rci, "inputs_sha": S.inputs_digest(ci),
          "n_accepted": 3, "best_obj": 1.0, "best_p": [1.0] * 5, "ref_p": [1.0] * 5,
          "best_modes_percent": {"LAM_PE": 1.0}, "LAM_PE_percent": 1.0, "LAM_NE_percent": 1.0,

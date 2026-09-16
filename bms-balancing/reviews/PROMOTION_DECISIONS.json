@@ -5,7 +5,6 @@
     "그래서 모든 항목은 40-hex full commit 과 산출 명부로 **닫혀 있다** — 짧은 sha·와일드카드·'전부 허용' 은 형식에서 거부된다.",
     "Codex R14 §7 의 답 2·3 이 요구한 모양이다. 새 항목을 더하려면 사용자 결정과 그 근거 명령·출력을 같이 적는다."
   ],
-
   "bundle_commit_exceptions": [
     {
       "id": "U18-05",
@@ -54,7 +53,6 @@
       ]
     }
   ],
-
   "legacy_transitions": [
     {
       "id": "U18B-2026-09-14",
@@ -86,11 +84,18 @@
         "066866595ab71827ef2d98e7a6cf26136df21495",
         "419c1abaeec9fa981d7f5829d5803167288f7f1e"
       ],
-      "allowed_unknown": ["inputs_uncomparable", "env_uncomparable"],
+      "allowed_unknown": [
+        "inputs_uncomparable",
+        "env_uncomparable"
+      ],
       "checks": {
         "command": "python3 scripts/check_u14.py --new out --old-rev 42314198",
         "rc": 4,
-        "roster": {"old": 13, "new": 13, "compared": 13},
+        "roster": {
+          "old": 13,
+          "new": 13,
+          "compared": 13
+        },
         "numbers": 0,
         "note": "공통 수치는 전부 같다. 막는 것은 옛 정본이 안 적은 두 축뿐이다 (입력 identity 17 · env 1)."
       },
@@ -99,6 +104,151 @@
         "`promotion_eligible` 은 이 승인으로 true 가 되지 않는다 — rc 도 4 그대로다.",
         "리뷰어 문장 그대로: '이는 데이터를 다시 계산하라는 요구가 아니다.'"
       ]
+    }
+  ],
+  "env_contract_legacy": [
+    {
+      "id": "R16-openpyxl",
+      "approved_utc": "2026-09-16T00:00:00Z",
+      "approved_by": "사용자 결정 — 하네스 열린 항목(R13 §7 · R14 §5)을 닫으라는 지시. 'openpyxl 을 env 축에 넣되 이미 승격한 정본을 무효로 만들지 않는다'",
+      "why": "`openpyxl` 을 ENV_KEYS 에 더했다 (pandas 가 그것으로 xlsx 를 연다 — C18 이 pandas 를 넣은 것과 같은 논거). 그러자 정본 13 개가 전부 계약 위반이 됐다 (실측: check_u14 --new out --schema-only 가 rc 0 → rc 2). 그 묶음은 사용자 기계의 실데이터 재실행으로 승격한 것(37a889b)이라 다시 만들 수 없다. 축의 **이름으로** 면제하면 누구든 그 축을 지워 통과하므로(계약이 영구히 약해진다), 여기 적힌 **sha256 과 정확히 같은 bytes** 에만 면제를 준다.",
+      "axes": [
+        "openpyxl"
+      ],
+      "added_in_commit": "f2f76ce30cb48d9474948a8bdfd540f348886540",
+      "artifacts": {
+        "degeneracy_100_Li.json": {
+          "sha256": "2b7e91efcc71c067747ef5796570d3fd836e7ea829127313a49b8858b23514de",
+          "env": {
+            "python": "3.12.3",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "pandas": "3.0.5",
+            "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+          }
+        },
+        "degeneracy_200_Li.json": {
+          "sha256": "016e297aea10393c1dc270960c7c609fbd419ae0f5f1f71892801710e56e90a2",
+          "env": {
+            "python": "3.12.3",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "pandas": "3.0.5",
+            "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+          }
+        },
+        "degeneracy_300_0009_Li.json": {
+          "sha256": "94d00721fe4def856da5d0b670129856eb83d71d9fceb5eaa5dfdecf91c35b8f",
+          "env": {
+            "python": "3.12.3",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "pandas": "3.0.5",
+            "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+          }
+        },
+        "degeneracy_300_0147_Li.json": {
+          "sha256": "f830c042d4c8c94f54515633cae6a9fda8043dad0e6ba9965b953e1cd54c0a4d",
+          "env": {
+            "python": "3.12.3",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "pandas": "3.0.5",
+            "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+          }
+        },
+        "matrix_100.csv": {
+          "sha256": "16c8849768d26893b346242f6b9dc2aa131bdf968cc530530bd90b478dafc979",
+          "env": {
+            "python": "3.12.3",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "pandas": "3.0.5",
+            "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+          }
+        },
+        "matrix_200.csv": {
+          "sha256": "6303ca2bf4d492c8804eec9e27c75a703df09dd0bd44fcbbbede60b1fda38dd9",
+          "env": {
+            "python": "3.12.3",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "pandas": "3.0.5",
+            "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+          }
+        },
+        "matrix_300_0009.csv": {
+          "sha256": "709504f6101d22ade0698e541e3b9fc3b753c27d6ca950b04d2629d5ddb61d94",
+          "env": {
+            "python": "3.12.3",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "pandas": "3.0.5",
+            "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+          }
+        },
+        "matrix_300_0147.csv": {
+          "sha256": "d19f9d74bc26f8ab089f3ed9e370499677ec87d3a8998a08deda21eee29b6a9d",
+          "env": {
+            "python": "3.12.3",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "pandas": "3.0.5",
+            "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+          }
+        },
+        "ne_shape_GITT_Li.csv": {
+          "sha256": "c3f4c45611d655cab0edd057b6a0e422c780070511fff39e2d134c2289a2205c",
+          "env": {
+            "python": "3.12.3",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "pandas": "3.0.5",
+            "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+          }
+        },
+        "profile_gamma_100_Li.csv": {
+          "sha256": "892ff0ac35f474e35415a958f7c2e514dfdcce3e79ee8e370ec439b136f5bdca",
+          "env": {
+            "python": "3.12.3",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "pandas": "3.0.5",
+            "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+          }
+        },
+        "profile_gamma_200_Li.csv": {
+          "sha256": "977c26015a8c635dfb16abfa448da37fc839a9bc87d60397df48bed777e510cd",
+          "env": {
+            "python": "3.12.3",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "pandas": "3.0.5",
+            "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+          }
+        },
+        "profile_gamma_300_0009_Li.csv": {
+          "sha256": "75fbf4739caaa4b91a940c69bb42ff1b8341b0ffaad9537420f6fe9fc29686a8",
+          "env": {
+            "python": "3.12.3",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "pandas": "3.0.5",
+            "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+          }
+        },
+        "profile_gamma_300_0147_Li.csv": {
+          "sha256": "203401b886b73252cdbaf88309fa0bb977399373df2a6b19ef7ea195326143c7",
+          "env": {
+            "python": "3.12.3",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "pandas": "3.0.5",
+            "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+          }
+        }
+      },
+      "scope": "이 sha256 **과 그때의 env 값 전부**에만 걸린다. 산출이 한 바이트라도 다르거나 사이드카의 env 가 기록과 다르면 다시 계약 위반이다 — 그래야 '축만 지운 조작본' 과 '진짜 그 세대' 가 갈린다. 면제는 '위반이 아니다' 일 뿐 **승격 자격이 아니다** (env_contract_legacy 는 UNKNOWN_BLOCKERS). 새로 만드는 산출은 이 면제를 받을 수 없다 — 현행 producer 가 그 축을 적는다."
     }
   ]
 }

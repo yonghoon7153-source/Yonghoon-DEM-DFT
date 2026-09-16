@@ -50,8 +50,11 @@ def env_signature() -> dict:
             return __import__(name).__version__
         except Exception:                                # noqa: BLE001
             return None
+    # ⚠ R16: openpyxl 은 직접 import 하지 않지만 pandas 가 **이것으로** xlsx 를 연다 — 같은 pandas 에서
+    #   openpyxl 만 바뀌어도 입력 파싱이 달라질 수 있다. 없으면 None 이고, 그것은 계약 위반으로 잡힌다
+    #   (우리 과학 입력은 전부 xlsx 라 openpyxl 없는 환경은 인증할 수 없는 환경이다).
     return {"python": platform.python_version(), "numpy": ver("numpy"), "scipy": ver("scipy"),
-            "pandas": ver("pandas"), "platform": platform.platform()}
+            "pandas": ver("pandas"), "openpyxl": ver("openpyxl"), "platform": platform.platform()}
 
 
 def _untracked_files(top, folded: str) -> list:

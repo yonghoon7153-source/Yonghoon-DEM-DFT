@@ -154,12 +154,22 @@ def test_a_legacy_transition_is_a_separate_verdict_that_does_not_promote():
     rc, v, out = _run_check("--new", "out", "--old-rev", "42314198")
     assert rc == 4, ("옛 baseline 대조는 rc 4 다", rc, out[-900:])
     assert v["promotion_eligible"] is False, ("승격 자격이 생겼다 — 판정을 지운 것이다", v)
-    assert v.get("legacy_transition_approved") is True, ("승인 기록이 소비되지 않았다", v, out[-1200:])
-    assert v.get("legacy_transition"), ("승인 id 를 안 적는다", v)
     b = v["blocked_by"]
     assert b["inputs_uncomparable"] > 0 and b["env_uncomparable"] > 0, b
     assert all(b[k] == 0 for k in ("schema", "content", "unit", "controls", "env", "numbers",
                                    "alias", "provenance", "inputs", "stale")), b
+
+    # ⚠ R16 (2026-09-16) — 이 승인은 **더 이상 소비되지 않는다.** `openpyxl` 을 env 축에 더하면서 새 unknown
+    #   사유(`env_contract_legacy`)가 생겼는데, `U18B-2026-09-14` 기록은 스스로 "이 승인은 **unknown 사유
+    #   둘**만 덮는다" 고 적어 두었다. 셋째를 그 기록에 몰래 끼워 넣는 것은 **기록된 사용자 결정을 고쳐 쓰는
+    #   일**이라 하지 않았다 — 승인은 fail-closed 로 사라진다.
+    #
+    #   이 시험이 지키는 것은 그대로다: rc 4 · 승격 false · 계약 축 전부 0. 바뀐 것은 "그 기록이 이 대조를
+    #   덮는가" 하나이고, 덮으려면 **새 사용자 결정**이 필요하다 (`reviews/PROMOTION_DECISIONS.json`).
+    assert b["env_contract_legacy"] > 0, ("정본은 openpyxl 이전 세대다 — 그 사실이 세어져야 한다", b)
+    assert v.get("legacy_transition_approved") is False, (
+        "기록이 선언한 unknown 집합 밖의 사유가 있는데 승인이 났다 — 부재는 안전값이 아니다", v)
+    assert v.get("legacy_transition") is None, v
 
 
 def test_an_unapproved_comparison_is_not_a_legacy_transition(tmp_path):

@@ -113,8 +113,40 @@ manifest 이름은 `manifest.json` 인데 `preserve_handoff.sh` 가 `package_man
 `scripts/handoff_manifest.py` 한 자리로 빼고(bash heredoc 안에 두면 시험할 수 없다) 아는 키만
 넓혔다. 모르는 모양·둘 이상 후보·`path`/`sha256` 누락은 **계속 멈춘다**.
 
-**남은 열린 것**: 조건 6(동적 인증) · 조건 8(다섯 축) · `openpyxl` 이 `ENV_KEYS` 에 없음 ·
-r11 `publish:profile_partial_stdout` 대체 증거.
+**남은 열린 것**: 조건 6(동적 인증) · 조건 8(다섯 축) ·
+r11 `publish:profile_partial_stdout` 대체 증거. (**`openpyxl` 은 R16 에서 닫았다 — 아래.**)
+
+**R16 (2026-09-16) — `openpyxl` 을 env 축에 넣었다.** 리뷰어 정적 지적을 닫았다. 과학 입력이 전부
+`pd.read_excel` 로 읽히고 pandas 는 **openpyxl 로** xlsx 를 연다 — C18 이 pandas 를 넣은 것과 같은
+논거다(`ENV_KEYS` 는 `env_signature()` 가 적는 것 **전부**여야 한다).
+
+**어려운 자리는 계약이 아니라 이미 게시된 정본이었다.** 축을 그냥 더하자
+`check_u14 --new out --schema-only` 가 **rc 0 → rc 2**, 정본 13 개가 전부 계약 위반이 됐다 (실측).
+그 묶음은 사용자 기계의 실데이터 재실행으로 승격한 것(`37a889b`)이라 다시 만들 수 없다.
+
+**처음 설계를 버렸다.** "openpyxl 이 없으면 나이" 로 **축의 이름으로** 면제하려 했는데, 그러면
+`test_h02` 가 재는 계약("한 축씩 빼도 전부 걸려야 한다")이 그 축에 대해 **영구히** 약해지고 누구든
+그 축을 지워 통과한다. 면제를 `reviews/PROMOTION_DECISIONS.json` 의 **기록된 결정**으로 옮겼다 —
+`env_contract_legacy` 항목이 산출 이름 · **sha256** · **그때의 env 값 전부**를 고정하고, 셋이 전부
+맞고 그 축이 **키째 없을 때만** 면제한다. 면제는 `UNKNOWN_BLOCKERS` 라 **승격은 계속 불가**다.
+
+**내가 연 구멍 셋을 시험이 잡았다** (전부 RED 로 고정): ① 면제가 산출 bytes 만 보고 사이드카 env 를 안
+봐서 **축만 `""` 로 비운 조작본이 통과**했다 (`test_r16_06`) → 기록이 env 값까지 고정. ② `env_legacy` 를
+`not_promotable` 에 그냥 넣자 `--schema-only` 가 rc 0 → **rc 4** 가 됐다 (코드가 명시적으로 금지한 것)
+→ "승격 대조를 물었을 때만" 으로 좁힘 (`test_r16_08`). ③ env 계약이 **사이드카와 degeneracy 본문 두
+자리**에서 강제되는데 한쪽만 면제해 같은 bytes 가 한 검사는 통과하고 다른 검사는 막혔다 →
+`check_degeneracy(env_exempt=…)` 로 같이 닿게 함.
+
+**fixture 가 아홉 번째로 깨졌다.** 축을 더하자 15 건이 빨갰고 원인은 전부 같았다 — 여러 fixture 가
+5 축짜리 env 를 **각자 박아** 쓰고 있었다. `tests/conftest.py` 의 `fixture_env()` **한 자리**로 모았고,
+축이 또 늘면 거기서 먼저 크게 깨진다 (R14 P2-2 의 "규칙이 두 벌" 과 같은 축). 오류 문구의
+"환경 축 **다섯**" 도 걷어냈다 — 개수를 박으면 축을 더할 때 문구가 거짓이 된다.
+
+**⚠ 사용자 결정이 필요한 것 하나.** `U18B-2026-09-14` legacy transition 기록이 스스로 **"이 승인은
+unknown 사유 **둘**만 덮는다"** 고 적어 두었는데 R16 이 셋째(`env_contract_legacy`)를 만들었다. 셋째를
+그 기록에 끼워 넣는 것은 **기록된 사용자 결정을 고쳐 쓰는 일**이라 하지 않았다 — 승인은 fail-closed 로
+사라진다 (rc 4 · 승격 false · 계약 축 0 은 그대로). 되살리려면 **새 기록**이 필요하다. U18B 는 이미
+끝난 이관이라 실무 영향은 없다.
 
 **실데이터 폭 측정(`--w-dqdv 0 ↔ 1`) — 파일럿이 돌았다 (2026-09-15, `BML_R1_RESPONSE.md` §14).**
 사용자 기계에서 HD_knee `--cycles 0,1,2` · `--starts 20 --seed 0 --scale-seed 0` ·
@@ -513,7 +545,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 337 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 345 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

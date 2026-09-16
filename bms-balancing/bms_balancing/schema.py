@@ -80,20 +80,50 @@ def receipt_roles(kind: str) -> tuple:
 #: 비교하는 실행 환경 축 — `provenance.env_signature()` 가 **적는 것 전부**여야 한다.
 #: ⚠ 자체 리뷰 C18: 전 판은 pandas 를 서명에는 적고 비교 축에서 뺐다. 과학 입력이 전부 `pd.read_excel` 로
 #:   읽히므로 pandas 는 입력 파싱을 바꿀 수 있는 축이다 — 적고 안 대면 그 서명은 무엇을 고정하는지 말할 수 없다.
-ENV_KEYS = ("python", "numpy", "scipy", "pandas", "platform")
+#: ⚠ R16 (2026-09-16): `openpyxl` 을 더했다. 과학 입력이 전부 `pd.read_excel` 로 읽히고 pandas 는 **openpyxl 로**
+#:   xlsx 를 연다 — 같은 pandas 에서 openpyxl 만 바뀌어도 입력 파싱이 달라질 수 있다. C18 이 pandas 를 넣은 것과
+#:   같은 논거다. 축을 더하면 **이미 게시된 정본이 그 축을 안 적은 세대**가 된다 — 그것은 U18-03 이 말한
+#:   "정본의 나이" 이지 위반이 아니다. 그러나 **축의 이름으로 면제하지 않는다**: 그러면 누구든 그 축을
+#:   지우기만 하면 통과하게 되어 계약이 영구히 약해진다 (`test_h02`: "한 축씩 빼도 전부 걸려야 한다").
+#:   면제는 `reviews/PROMOTION_DECISIONS.json` 이 **sha256 으로 지목한 산출에만** 걸린다.
+ENV_KEYS = ("python", "numpy", "scipy", "pandas", "openpyxl", "platform")
+#: v1 이후에 **더해진** 축 — 키 자체가 없으면 나이, 있는데 비었으면 위반이다. 새 축을 더할 때 여기에 적는다.
+ENV_KEYS_ADDED: tuple = ("openpyxl",)
+#: 처음부터 있던 축 — 이것이 하나라도 없으면 나이가 아니라 위반이다.
+ENV_KEYS_V1 = tuple(k for k in ENV_KEYS if k not in ENV_KEYS_ADDED)
+
+
+def _env_blank(v) -> bool:
+    """`str(... or "")` 은 None·빈값을 함께 흡수하고 `.strip()` 은 유니코드 공백(NBSP 포함)까지 깎는다."""
+    return not str(v or "").strip()
 
 
 def env_axes_missing(env) -> list:
-    """`env` 에서 **없거나 공백뿐인** 필수 축 목록 — 환경 기록의 "존재·비공백" 규칙은 이 함수 **하나**다.
+    """`env` 의 **계약 위반** 축 목록 — 환경 기록의 "존재·비공백" 규칙은 이 함수 **하나**다.
 
     ⚠ Codex R14 후속(`f21cb648`): 규칙이 두 벌이었다. degeneracy **본문** 검사는 `str(v or "").strip()` 로
       공백을 걸렀는데 sidecar 검사(`check_u14`)는 `in (None, "")` 이라 `"   "`·`"\t\n"` 이 통과했다.
       우리가 회신에 적은 "존재·비공백" 이 절반만 구현돼 있었던 것이다. 두 자리가 같은 함수를 부른다.
-      `str(... or "")` 은 None·빈값을 함께 흡수하고, `.strip()` 은 유니코드 공백(NBSP 포함)까지 깎는다.
+
+    ⚠ R16: `ENV_KEYS_ADDED` 의 축은 **키가 있는데 비었을 때만** 위반이다. 키 자체가 없는 것은 그 축이
+      존재하지 않던 시절에 쓰인 사이드카이고, 그것은 `env_axes_legacy` 가 따로 센다. **부재를 안전값으로
+      만드는 것이 아니다** — 비우는 쪽이 지우는 쪽보다 싸지면 게이트가 침묵에 보상한다 (자체 리뷰 C03,
+      R11 P1-9). 그래서 "없다" 와 "비었다" 를 반대로 판정한다.
     """
     if not isinstance(env, dict):
         return list(ENV_KEYS)
-    return [k for k in ENV_KEYS if not str(env.get(k) or "").strip()]
+    return [k for k in ENV_KEYS if _env_blank(env.get(k))]
+
+
+def env_axes_added_only(missing: list) -> bool:
+    """빠진 축이 **나중에 더해진 것뿐**인가 — 기록된 면제가 덮을 수 있는 모양인지 가른다.
+
+    ⚠ 이것은 면제가 **아니다.** 면제는 `reviews/PROMOTION_DECISIONS.json` 의 기록이 sha256 으로 지목한
+      산출에만 걸린다 (`check_u14.env_contract_legacy`). 여기서는 "그 모양인가" 만 본다 — 빠진 것이
+      v1 축이면 어떤 기록도 덮지 않는다.
+    """
+    m = set(missing)
+    return bool(m) and m <= set(ENV_KEYS_ADDED)
 
 #: ⚠ Codex R13 P2-1: 유한성 검사 **앞에** 타입·모양 계약이 없었다. `best_obj=true` 는 `float(True)==1.0`
 #: 이라 정상 scalar 1.0 인 정본과 "같다" 로 읽혔고, `best_p=[]`·`LLI_percent={}` 도 문제 0 이었다.
@@ -166,8 +196,12 @@ def _is_num(x) -> bool:
     return isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x)
 
 
-def check_degeneracy_shape(j: dict) -> list:
-    """degeneracy JSON 의 **타입·모양** 계약 (Codex R13 P2-1 · P2-4). 유한성보다 앞이다."""
+def check_degeneracy_shape(j: dict, env_exempt: tuple = ()) -> list:
+    """degeneracy JSON 의 **타입·모양** 계약 (Codex R13 P2-1 · P2-4). 유한성보다 앞이다.
+
+    ⚠ R16: `env_exempt` 는 기록된 결정이 이 산출의 sha256 을 지목했을 때만 소비자가 채운다. 기본은 빈
+      튜플이라 **부르는 쪽이 아무것도 안 하면 엄격한 그대로**다 (부재는 안전값이 아니다).
+    """
     p = []
     for k in DEGENERACY_NUMERIC:
         if k in j and not _is_num(j[k]):
@@ -200,7 +234,7 @@ def check_degeneracy_shape(j: dict) -> list:
         if not isinstance(e, dict):
             p.append(f"env 가 객체가 아니다 ({e!r})")
         else:
-            miss = env_axes_missing(e)
+            miss = [k for k in env_axes_missing(e) if k not in env_exempt]
             if miss:
                 p.append(f"env 에 필수 축이 없다 ({miss}) — 요구: {' · '.join(ENV_KEYS)}")
     return p
@@ -443,12 +477,24 @@ def env_problems(old: dict | None, new: dict | None, where: str = "env") -> list
     if not isinstance(old, dict) or not isinstance(new, dict):
         return [f"{where}: 환경 서명이 없다 (정본 {type(old).__name__} · 새 산출 {type(new).__name__})"]
     for k in ENV_KEYS:
+        # ⚠ R16: 나중에 생긴 축은 **양쪽에 키가 있을 때만** 댄다. 한쪽이라도 그 축이 없던 세대면 "비어 있다" 가
+        #   아니라 **댈 수 없는 것**이고, 그것은 `env_axes_uncomparable` 이 soft 로 따로 센다 (U18-03: 정본의
+        #   나이는 새 산출의 위반이 아니다). 양쪽에 키가 있는데 비었으면 그건 그대로 위반이다.
+        if k in ENV_KEYS_ADDED and not (k in old and k in new):
+            continue
         a, b = old.get(k), new.get(k)
-        if a in (None, "") or b in (None, ""):
+        if _env_blank(a) or _env_blank(b):
             p.append(f"{where}.{k}: 환경 축이 비어 있다 (정본 {a!r} · 새 산출 {b!r})")
         elif a != b:
             p.append(f"{where}.{k}: 환경이 다르다 — 정본 {a!r} → 새 {b!r}")
     return p
+
+
+def env_axes_uncomparable(old: dict | None, new: dict | None) -> list:
+    """나중에 생긴 축 중 **한쪽에만** 있는 것 — 두 실행이 같은 환경이었다고 말할 수 없다 (승격 불가, 위반 아님)."""
+    if not isinstance(old, dict) or not isinstance(new, dict):
+        return []
+    return [k for k in ENV_KEYS_ADDED if (k in old) != (k in new)]
 
 
 # ── 산출 종류 (kind) — 이름 → 종류는 **한 함수**가 정하고, 모르면 예외다 (Codex R13 §Q6) ─────────────────────
@@ -925,12 +971,17 @@ def _finite_problems(x, where: str, key=None) -> list:
     return []
 
 
-def check_degeneracy(j: dict) -> list:
+def check_degeneracy(j: dict, env_exempt: tuple = ()) -> list:
+    """⚠ R16: `env_exempt` 는 **기록된 결정이 이 산출의 sha256 을 지목했을 때만** 소비자가 채운다
+    (`check_u14.env_contract_exempt`). env 계약이 사이드카와 본문 **두 자리**에서 강제되므로, 면제도 두
+    자리에 같이 닿아야 한다 — 한쪽만 면제하면 같은 bytes 가 한 검사는 통과하고 다른 검사는 막는다.
+    기본값은 빈 튜플이라 **부르는 쪽이 아무것도 안 하면 엄격한 그대로**다 (부재는 안전값이 아니다).
+    """
     # ⚠ Codex R13 P1-2: 전 판은 `in (None, "")` 이라 **빈 컨테이너**(`{}`·`[]`)가 "있음" 으로 셌다 —
     #   `ref_consumed_inputs: {}` 가 필수 키 검사도, 아래 truthy 가지도 둘 다 빠져나갔다.
     p = [f"키 없음: {k}" for k in DEGENERACY_KEYS
          if j.get(k) is None or (isinstance(j.get(k), (str, dict, list, tuple)) and len(j[k]) == 0)]
-    p += check_degeneracy_shape(j)
+    p += check_degeneracy_shape(j, env_exempt)
     p += _finite_problems({k: v for k, v in j.items() if k not in ("env", "consumed_inputs", "ref_consumed_inputs")},
                           "degeneracy")
     if "consumed_inputs" in j:

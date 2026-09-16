@@ -12,6 +12,7 @@ import pytest
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from conftest import fixture_env as _fixture_env   # noqa: E402  (R16: env 축은 한 자리에서)
 from bms_balancing import verify                                      # noqa: E402
 from test_review_findings import _r2_base, _r2_csv, _r2_run, audit_json   # noqa: E402
 
@@ -663,7 +664,7 @@ def _u14_dirs(tmp_path, *, schema=True, bump=None):
              "LLI_percent": {"min": 1.0, "max": 2.0 + (bump or 0.0) * is_new, "is_lower_bound": True}}
         if is_new and schema:
             j |= {"run_id": "rid", "si_source": "Li", "half_cell": "GITT", "w_dqdv": 0.0, "tol_percent_of_best": 1.0,
-                  "n_starts": 24, "seed": 0, "n_grid": 21, "n_samples": 400, "env": {"python": "3.11.0", "numpy": "2.0", "scipy": "1.11.0", "pandas": "2.0.0", "platform": "linux-x"},
+                  "n_starts": 24, "seed": 0, "n_grid": 21, "n_samples": 400, "env": _fixture_env(python="3.11.0", numpy="2.0", scipy="1.11.0", pandas="2.0.0", openpyxl="3.1.0", platform="linux-x"),
                   "consumed_inputs": ci, "ref_consumed_inputs": rci, "inputs_sha": S.inputs_digest(ci),
                   "ref_p": [1.0, 2.0, 3.0, 4.0, 5.0], "best_modes_percent": {"LLI": 1.5},
                   "LAM_PE_percent": {"min": 0.0, "max": 1.0}, "LAM_NE_percent": {"min": 0.0, "max": 1.0}}
@@ -710,7 +711,7 @@ def _u14_sign(art, rid):
     (art.parent / (art.name + ".meta.json")).write_text(json.dumps(
         {"run_id": rid, "sha256": _prov().sha256_file(art), "artifact": art.name,
          # Codex R10 P1-7: 실제 `write_meta` 가 쓰는 실행 조건·환경을 그대로 — 없으면 승격 gate 가 **비교를 못 한다**
-         "env": {"python": "3.12.3", "numpy": "2.5.3", "scipy": "1.18.1", "pandas": "2.2.0", "platform": "test-fixture"},
+         "env": _fixture_env(),
          "state": "100", "half_cell_source": "GITT", "si_source": "Li", "starts": 24, "seed": 0,
          "started_utc": "2026-09-12T00:00:00Z", "git_commit_at_start": "0" * 40,
          "git_state_changed_during_run": False, "git_dirty": False, "git_modified_code": [],
@@ -873,7 +874,7 @@ def test_i6w_03_check_u14_uses_the_versioned_baseline_and_separates_new_fields(t
           "literature": {"gr": {"path": "g.xlsx", "sha256": "3" * 64}, "si": {"path": "s.csv", "sha256": "4" * 64}}}
     (new / "degeneracy_300_0009_Li.json").write_text(json.dumps(      # 재실행 = v2 재현 + 새 필드 (producer 스키마 전부)
         base | {"run_id": "r", "si_source": "Li", "half_cell": "GITT", "w_dqdv": 0.0, "tol_percent_of_best": 1.0,
-                "n_starts": 24, "seed": 0, "n_grid": 21, "n_samples": 400, "env": {"python": "3.11.0", "numpy": "2.0", "scipy": "1.11.0", "pandas": "2.0.0", "platform": "linux-x"},
+                "n_starts": 24, "seed": 0, "n_grid": 21, "n_samples": 400, "env": _fixture_env(python="3.11.0", numpy="2.0", scipy="1.11.0", pandas="2.0.0", openpyxl="3.1.0", platform="linux-x"),
                 "consumed_inputs": ci, "ref_consumed_inputs": ci,
                 "inputs_sha": __import__("bms_balancing.schema", fromlist=["x"]).inputs_digest(ci),
                 "best_p": [1.0] * 5, "ref_p": [1.0] * 5, "best_modes_percent": {"LLI": 1.5},

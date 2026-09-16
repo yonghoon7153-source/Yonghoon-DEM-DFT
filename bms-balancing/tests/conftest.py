@@ -79,3 +79,26 @@ def _no_leaked_global_patches():
         "안 되돌리면 알파벳 순으로 뒤에 오는 테스트가 가짜를 뒤집어쓰고, 그쪽은 "
         "**단독 실행에서는 통과**하기 때문에 원인을 찾기가 아주 어렵다 (W-07 실측)."
     )
+
+
+# ── R16 (2026-09-16): fixture 의 env 를 **한 자리**에서 만든다 ────────────────────────────────
+#
+# 실측으로 나온 이유: `openpyxl` 을 `ENV_KEYS` 에 더하자 열 개 가까운 시험이 빨개졌다. 원인은 전부
+# 같았다 — 여러 fixture 가 5 축짜리 env dict 를 **각자 박아 쓰고** 있었다. 축이 늘 때마다 그 자리를 전부
+# 찾아 고쳐야 하고, 하나를 놓치면 그 시험은 조용히 "옛 세대" 를 재게 된다 (fixture 가 진실을 가린다).
+#
+# R14 P2-2 가 닫은 "규칙이 두 벌이라 절반만 구현됐다" 와 같은 축이다. 여기 하나만 두고, 축이 늘면
+# **여기서 먼저** 크게 깨지게 한다 (아래 assert).
+def fixture_env(**over) -> dict:
+    """현행 계약을 **전부** 갖춘 시험용 환경 서명. 값을 바꾸려면 키워드로 덮는다 (`platform="alien"`).
+
+    ⚠ 축이 늘었는데 여기를 안 고치면 이 함수가 바로 AssertionError 를 낸다 — 시험 열 개가 각자 다른
+      이유로 빨개지는 것보다 **한 자리에서 한 번** 깨지는 편이 낫다.
+    """
+    from bms_balancing import schema as _S
+    base = {"python": "3.12.3", "numpy": "2.5.3", "scipy": "1.18.1", "pandas": "2.2.0",
+            "openpyxl": "3.1.5", "platform": "test-fixture"}
+    assert set(base) == set(_S.ENV_KEYS), (
+        "ENV_KEYS 가 바뀌었는데 fixture 의 env 가 안 따라왔다 — 여기를 고친다", sorted(base), sorted(_S.ENV_KEYS))
+    base.update(over)
+    return base

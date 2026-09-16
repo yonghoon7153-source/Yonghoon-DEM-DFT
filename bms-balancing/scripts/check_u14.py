@@ -299,8 +299,12 @@ def _num_diff(a, b, path="", added=None):
 #: 않게 하는 것이 요점이다). 파일이 없거나 깨졌으면 **예외가 하나도 없는 것**으로 본다 (fail-closed).
 DECISIONS_PATH = pathlib.Path(__file__).resolve().parents[1] / "reviews" / "PROMOTION_DECISIONS.json"
 _FULL_SHA = re.compile(r"[0-9a-f]{40}")
+#: ⚠ R16: 산출 digest 는 64-hex 다 — 짧은 sha 로 면제를 적으면 충돌을 만들 수 있다 (C25 와 같은 축).
+_SHA256 = re.compile(r"[0-9a-f]{64}")
 #: 승인이 덮을 수 있는 유일한 축 — "옛 정본이 안 적었다" 뿐이다. 계약 위반은 절대 덮지 않는다.
-UNKNOWN_BLOCKERS = ("inputs_uncomparable", "env_uncomparable")
+#: ⚠ R16: `env_contract_legacy` 를 더했다 — 나중에 생긴 env 축을 옛 사이드카가 안 적은 것은
+#:   **위반이 아니라 나이**다 (U18-03). 승격은 계속 막되 계약 위반으로 세지 않는다.
+UNKNOWN_BLOCKERS = ("inputs_uncomparable", "env_uncomparable", "env_contract_legacy")
 
 
 def _valid_bundle_exception(e) -> bool:
@@ -335,19 +339,74 @@ def _valid_legacy_transition(e) -> bool:
     return isinstance(rev, str) and bool(_FULL_SHA.fullmatch(rev))
 
 
+def _valid_env_legacy(e) -> bool:
+    """[R16] env 계약 면제 기록의 형식. **sha256 으로 닫혀 있지 않으면 버린다** — 이름·와일드카드는 거부.
+
+    면제할 수 있는 축은 `ENV_KEYS_ADDED` 안에서만이다. v1 축을 면제하는 기록은 형식에서 떨어진다 —
+    그것은 "나이" 가 아니라 깨진 사이드카다.
+    """
+    if not isinstance(e, dict) or not set(e) >= {"id", "axes", "artifacts", "added_in_commit",
+                                                 "approved_utc", "approved_by", "why", "scope"}:
+        return False
+    ax = e["axes"]
+    if not (isinstance(ax, list) and ax and set(ax) <= set(S.ENV_KEYS_ADDED)):
+        return False
+    if not (isinstance(e["added_in_commit"], str) and _FULL_SHA.fullmatch(e["added_in_commit"])):
+        return False
+    a = e["artifacts"]
+    # 값은 {"sha256": 64-hex, "env": {그때의 축 전부}} — env 까지 고정해야 "축만 지운 조작본" 과 갈린다
+    return (isinstance(a, dict) and bool(a)
+            and all(isinstance(k, str) and k and isinstance(v, dict)
+                    and isinstance(v.get("sha256"), str) and _SHA256.fullmatch(v["sha256"])
+                    and isinstance(v.get("env"), dict) and v["env"]
+                    for k, v in a.items()))
+
+
+def env_contract_exempt(decisions: dict, artifact: str, sha256: str | None, missing: list,
+                        env: dict | None = None) -> str | None:
+    """이 산출의 빠진 env 축을 **기록된 결정**이 덮는가 → 덮으면 기록 id, 아니면 None.
+
+    조건 **넷**이 전부 맞아야 한다:
+      (a) 빠진 것이 나중에 더해진 축뿐이고 (v1 축이 섞이면 어떤 기록도 못 덮는다),
+      (b) 그 축이 env 에 **키째 없어야** 한다 — 있는데 비운 것은 나이가 아니라 위반이다,
+      (c) 그 축이 기록이 면제한 축 안에 있고,
+      (d) 이 산출의 이름과 **sha256 이 기록과 정확히 같다.**
+
+    ⚠ (b) 가 없으면 이 면제가 통로가 된다 (2026-09-16 실측, `test_r16_06`): 원장은 **산출 bytes** 를
+      지목하는데 env 는 **사이드카**에 있으므로, 산출을 그대로 두고 사이드카의 축만 `""` 로 비우면
+      sha256 이 그대로라 면제가 걸렸다. 비우는 쪽이 지우는 쪽보다 싸지면 게이트가 침묵에 보상한다
+      (자체 리뷰 C03 · R11 P1-9).
+    """
+    if not sha256 or not S.env_axes_added_only(missing):
+        return None
+    if not isinstance(env, dict) or any(k in env for k in missing):
+        return None
+    for e in decisions.get("env_contract_legacy", []):
+        rec = e["artifacts"].get(artifact)
+        if not (isinstance(rec, dict) and set(missing) <= set(e["axes"])):
+            continue
+        # ⚠ sha256 **과** env 가 둘 다 기록과 같아야 한다. env 를 안 대면 같은 bytes 에 대해 축만 지운
+        #   사이드카가 면제를 받는다 (`test_h02` 가 재는 계약이 그 한 축에서 무너진다).
+        if rec["sha256"] == sha256 and rec["env"] == env:
+            return e["id"]
+    return None
+
+
 def load_decisions(path: pathlib.Path | None = None) -> dict:
     """기록된 결정을 읽는다. 읽기 실패·형식 위반은 **조용히 통과시키지 않고** 그 항목을 버린다."""
     p = pathlib.Path(path) if path is not None else DECISIONS_PATH
     try:
         doc = json.loads(p.read_text(encoding="utf-8"))
     except (OSError, ValueError):
-        return {"bundle_commit_exceptions": [], "legacy_transitions": []}
+        return {"bundle_commit_exceptions": [], "legacy_transitions": [], "env_contract_legacy": []}
     if not isinstance(doc, dict):
-        return {"bundle_commit_exceptions": [], "legacy_transitions": []}
+        return {"bundle_commit_exceptions": [], "legacy_transitions": [], "env_contract_legacy": []}
     return {"bundle_commit_exceptions": [e for e in doc.get("bundle_commit_exceptions", [])
                                          if _valid_bundle_exception(e)],
             "legacy_transitions": [e for e in doc.get("legacy_transitions", [])
-                                   if _valid_legacy_transition(e)]}
+                                   if _valid_legacy_transition(e)],
+            "env_contract_legacy": [e for e in doc.get("env_contract_legacy", [])
+                                    if _valid_env_legacy(e)]}
 
 
 def bundle_commit_exception(commits: set, artifacts: set, decisions: dict) -> str | None:
@@ -384,16 +443,19 @@ def legacy_transition(new_roster: set, commits: set, old_rev_full: str | None,
     return None
 
 
-def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy: str = "current") -> dict:
+def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy: str = "current",
+          decisions: dict | None = None) -> dict:
     """새 산출을 명부·스키마·내용·조건·숫자로 대조한다 → 결과 dict (main 이 찍고 종료 코드를 정한다).
 
     키: seen · missing(열/키 이름 누락) · content(값이 스키마가 아님 — 빈 셀·숫자 아님·receipt·중복 key) · diffs(숫자) ·
     added(정본에 없던 필드) · paired · stale · broken(묶음 불일치/미완) · controls(실행 조건 불일치) ·
     roster_missing(정본에 있는데 새 산출에 없음) · roster_extra(새 산출에만) · n_old · n_new.
     """
+    # 직접 부르는 소비자(시험 포함)도 기록을 보게 한다 — 안 주면 여기서 읽는다.
+    decisions = load_decisions() if decisions is None else decisions
     R: dict = {"seen": 0, "missing": [], "content": [], "diffs": [], "added": [], "paired": [], "stale": [],
                "broken": [], "controls": [], "env": [], "alias": [], "provenance": [], "inputs": [],
-               "inputs_uncomparable": [], "env_uncomparable": [],
+               "inputs_uncomparable": [], "env_uncomparable": [], "env_contract_legacy": [],
                "roster_missing": [], "roster_extra": [], "stale_new": [], "n_old": 0, "n_new": 0,
                # ⚠ U18-05 (Codex R14 §7-3): 묶음이 **한 코드 상태**에서 나왔는가. 전 판은 sidecar 마다
                #   `git_commit_at_start` 가 40-hex 인지만 봤고, 13 산출이 두 커밋으로 나뉜 것은 아무도 안
@@ -441,7 +503,12 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
                                     f"— 스키마 오류다 (Codex R13 P2-3)")
                 continue
             R["missing"] += [f"{f.name}: {k}" for k in JSON_KEYS if j.get(k) in (None, "")]
-            R["content"] += [f"{f.name}: {p}" for p in S.check_degeneracy(j) if not p.startswith("키 없음")]
+            # ⚠ R16: 본문의 env 계약도 사이드카와 **같은 면제**를 받는다 — 원장이 이 bytes 를 지목했을 때만.
+            _body_exempt = tuple(k for k in S.ENV_KEYS_ADDED
+                                 if env_contract_exempt(decisions, f.name, (meta or {}).get("sha256"), [k],
+                                                        j.get("env") if isinstance(j, dict) else None))
+            R["content"] += [f"{f.name}: {p}" for p in S.check_degeneracy(j, env_exempt=_body_exempt)
+                             if not p.startswith("키 없음")]
         else:
             rows, hdr = _csv_rows(data)
             R["missing"] += [f"{f.name}: {c}" for c in S.required_columns(kind) if c not in hdr]
@@ -466,8 +533,22 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
             else:
                 # ⚠ R14 후속(f21cb648): 전 판은 `in (None, "")` 이라 공백뿐인 값(`"   "`·`"\t\n"`)이 통과했다.
                 #   판정은 `S.env_axes_missing` **한 자리**다 — degeneracy 본문 검사와 같은 함수를 쓴다.
-                R["missing"] += [f"{f.name}.meta: env.{k} 가 비어 있다 (환경 축 다섯을 다 적어야 한다 — 공백은 값이 아니다)"
-                                 for k in S.env_axes_missing(meta["env"])]
+                # ⚠ R16: 개수를 문구에 박지 않는다 (`ENV_KEYS` 에서 읽는다) — 축을 더하면 문구가 거짓이 된다.
+                env_miss = S.env_axes_missing(meta["env"])
+                # ⚠ R16: 축을 더하면 **이미 게시된 정본**이 그 축을 안 적은 세대가 된다. 그것은 U18-03 이 말한
+                #   "정본의 나이" 이지만, **축의 이름으로 면제하지 않는다** — 그러면 누구든 그 축을 지워 통과하고
+                #   계약이 영구히 약해진다 (`test_h02`: 한 축씩 빼도 전부 걸려야 한다). 면제는 기록된 결정이
+                #   **sha256 으로 지목한 산출에만** 걸리고, 그래도 승격은 못 한다 (`UNKNOWN_BLOCKERS`).
+                _exempt = (env_contract_exempt(decisions, f.name, meta.get("sha256"), env_miss, meta["env"])
+                           if env_miss else None)
+                if _exempt:
+                    R["env_contract_legacy"].append(
+                        f"{f.name}.meta: env.{' · '.join(env_miss)} 가 없다 — 그 축이 생기기 **전에** 게시된 "
+                        f"산출이고 `{_exempt}` 가 이 bytes 를 지목한다 (나이이지 위반이 아니다; 승격은 불가)")
+                else:
+                    R["missing"] += [f"{f.name}.meta: env.{k} 가 비어 있다 "
+                                     f"(요구 축 {len(S.ENV_KEYS)}: {' · '.join(S.ENV_KEYS)} — 공백은 값이 아니다)"
+                                     for k in env_miss]
             # ⚠ Codex R11 P1-9: 신고된 위험은 값으로 소비한다 (있기만 하면 되는 것이 아니다).
             # ⚠ 자체 리뷰 C03 (렌즈 2곳): 전 판은 `if k in meta` 라 **키를 지우면 검사가 안 돌았다** — 같은 dirty
             #   트리에서 돈 두 실행 중 정직하게 신고한 쪽만 rc 2 이고 입 다문 쪽은 rc 0 이었다 (게이트가 침묵에
@@ -534,6 +615,11 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
                     f"{f.name}.meta: env 를 **정본이** 안 적었다 — 같은 환경에서 돌았다고 말할 수 없다 (승격 불가)")
             else:
                 R["env"] += [f"{f.name}.meta:{x}" for x in S.env_problems(ometa.get("env"), meta.get("env"))]
+                # ⚠ R16: 나중에 생긴 축이 **한쪽에만** 있으면 같은 환경이라고 말할 수 없다 — 승격만 막고
+                #   계약 위반으로 세지 않는다 (U18-03 과 같은 비대칭 처리).
+                R["env_uncomparable"] += [
+                    f"{f.name}.meta: env.{k} 를 한쪽만 적었다 — 세대가 다르다 (같은 환경이라고 말할 수 없다; 승격 불가)"
+                    for k in S.env_axes_uncomparable(ometa.get("env"), meta.get("env"))]
         # ⚠ Codex R11 P1-1: 각 receipt 가 **자기 안에서** 유효한 것과 두 실행이 **같은 입력**을 먹은 것은 다른 문제다.
         #   `ROW_SKIP` 이 identity 를 숫자 비교에서 빼기 때문에, 네 digest 가 전부 달라도 rc 0 · promotion true 였다.
         #   역할별 sha 를 정규화해 대조한다 — 다르면 숫자 비교 전에 막는다.
@@ -575,7 +661,7 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
     #   diff 를 떠 봤다" 를 게이트의 답으로 쓰지 않고, 혼재 자체를 막고 **기록된 예외**만 통과시킨다.
     seen = {c for c in R["commits"].values() if c}
     if len(seen) > 1:
-        R["bundle_commit_exception"] = bundle_commit_exception(seen, set(R["commits"]), load_decisions())
+        R["bundle_commit_exception"] = bundle_commit_exception(seen, set(R["commits"]), decisions)
         if R["bundle_commit_exception"] is None:
             by = {}
             for name, c in R["commits"].items():
@@ -712,12 +798,15 @@ def main() -> int:
               f"않는다 (자기대조). 재실행은 별도 destination 으로 받고 정본은 그대로 두거나 `--old-rev` 로 커밋에서 "
               f"읽을 것 (Codex R10 P1-8)"); return 2
     policy = a.baseline_policy if a.baseline_policy != "auto" else ("historical" if a.old_rev else "current")
-    R = check(new, old, a.schema_only, policy)
+    # ⚠ R16: 원장을 **한 번** 읽어 검사와 판정이 같은 기록을 본다 (두 번 읽으면 그 사이에 바뀔 수 있다).
+    _decisions = load_decisions()
+    R = check(new, old, a.schema_only, policy, _decisions)
     seen, missing, content, diffs = R["seen"], R["missing"], R["content"], R["diffs"]
     added, paired, stale, broken = R["added"], R["paired"], R["stale"], R["broken"]
     controls, r_missing, r_extra, env_bad = R["controls"], R["roster_missing"], R["roster_extra"], R["env"]
     alias, prov_bad, inputs_bad = R["alias"], R["provenance"], R["inputs"]
     inputs_unk, stale_new, env_unk = R["inputs_uncomparable"], R["stale_new"], R["env_uncomparable"]
+    env_legacy = R["env_contract_legacy"]
     bundle_bad = R["bundle_commits"]
     print(f"산출 {seen} 개 점검 ({new})")
     if old is None:
@@ -808,6 +897,11 @@ def main() -> int:
         _show(env_bad, a.max_show)
         for e in []:
             print(f"  - {e}")
+    if env_legacy:
+        print(f"\n■ **환경 계약의 나이** {len(env_legacy)} — 나중에 생긴 env 축을 안 적은 세대의 사이드카다. "
+              f"계약 위반이 아니라 **나이**이고(U18-03), 그래서 rc 2 를 주지 않는다. 다만 그 축을 댈 수 없으므로 "
+              f"**승격은 불가**다 (`env_contract_legacy`). 현행 요구 축: {' · '.join(S.ENV_KEYS)}")
+        _show(env_legacy, a.max_show)
     if env_unk:
         print(f"\n■ **환경(env) 대조 불가** {len(env_unk)} — **정본이** 환경을 안 적었다 (옛 스키마면 여기로 온다). "
               f"새 산출의 계약 위반이 아니므로 rc 2 가 아니지만, 같은 환경의 재현이라고 말할 수 없다 → 승격 불가 "
@@ -860,7 +954,11 @@ def main() -> int:
     #   ⚠ 단, `--schema-only` 는 **승격을 묻지 않은** 진단이다 (물어보지 않은 것에 "자격 없음" 코드를 주면 스키마
     #     점검 도구로서 못 쓴다). 그 모드의 비승격은 `promotion_eligible: false` + `baseline_absent` 가 이미
     #     구조적으로 말한다 (R11 P1-6). 4 는 **승격 대조를 물었는데 답을 못 내는** 경우만이다.
-    not_promotable = bool(inputs_unk or env_unk)
+    # ⚠ R16: `env_contract_legacy` 도 승격 불가다 — 나이를 봐주는 것과 승격을 주는 것은 다르다
+    #   (자체 리뷰 C11: 승격 불가는 rc 0 이 아니다).
+    #   ⚠ `env_legacy` 는 schema-only 에서도 채워진다 (파일별 검사) — 그런데 그 모드에 4 를 주면 위 규칙을
+    #     어긴다. **승격 대조를 물었을 때만** 4 로 센다.
+    not_promotable = bool(inputs_unk or env_unk or (env_legacy and old is not None))
     rc = 2 if contract_broken else (1 if diffs else (3 if (a.subset and r_missing) else
                                                      (4 if not_promotable else 0)))
     # ⚠ Codex R10 P2-1: "부분 · 승격 아님" 을 **글자로만** 말하면 자동 소비자는 full equality 와 구분할 수 없다.
@@ -881,6 +979,7 @@ def main() -> int:
                                 "controls": len(controls), "env": len(env_bad), "numbers": len(diffs),
                                 "alias": len(alias), "provenance": len(prov_bad), "inputs": len(inputs_bad),
                                 "inputs_uncomparable": len(inputs_unk), "env_uncomparable": len(env_unk),
+                                "env_contract_legacy": len(env_legacy),
                                 "stale": len(stale_new),
                                 "bundle_commits": len(bundle_bad),
                                 "baseline_absent": int(baseline_absent)},
@@ -889,7 +988,6 @@ def main() -> int:
     # ⚠ Codex R14 §7-2: 일회성 legacy 이관과 일반 승격을 **가른다.** 포괄 `--accept-uncomparable` 로 rc 0 을
     #   만들면 그 줄만 인용된다 — 대신 별도 판정을 남기고 `promotion_eligible: false` 와 rc 4 는 **그대로 둔다**.
     #   승인이 덮는 것은 "옛 정본이 안 적었다" 뿐이고, 계약 위반이 하나라도 있으면 승인은 없다.
-    _decisions = load_decisions()
     _old_full = None
     if a.old_rev:
         import subprocess as _sp

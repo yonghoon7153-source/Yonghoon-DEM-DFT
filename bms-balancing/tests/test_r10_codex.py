@@ -13,6 +13,7 @@ from types import SimpleNamespace
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from conftest import fixture_env as _fixture_env   # noqa: E402  (R16: env 축은 한 자리에서)
 
 import numpy as np                                                        # noqa: E402
 import pytest                                                             # noqa: E402
@@ -326,7 +327,7 @@ def test_d10_07_promotion_requires_the_same_environment_and_present_controls(tmp
         m.write_text(json.dumps(meta), encoding="utf-8")
         return _cli("check_u14.py", "--new", new, "--old", old)
 
-    rc, out, _ = pair("env", lambda m: m.update(env={"python": "9.9", "numpy": "999", "scipy": "999", "pandas": "9.9", "platform": "alien"}))
+    rc, out, _ = pair("env", lambda m: m.update(env=_fixture_env(python="9.9", numpy="999", scipy="999", pandas="9.9", openpyxl="9.9", platform="alien")))
     assert rc == 2 and "전부 같다" not in out, (rc, out[-500:])
     assert "env" in out and ("환경" in out or "numpy" in out), out[-700:]
     rc, out, _ = pair("controls", lambda m: [m.pop("state", None), m.pop("starts", None)])

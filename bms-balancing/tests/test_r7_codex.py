@@ -13,6 +13,7 @@ from types import SimpleNamespace
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from conftest import fixture_env as _fixture_env   # noqa: E402  (R16: env 축은 한 자리에서)
 
 import pytest                                                             # noqa: E402
 from bms_balancing import verify                                          # noqa: E402
@@ -60,7 +61,7 @@ def _deg(state, rid, spans, schema=False):
         ci = {"half_cell": {"path": "h.xlsx", "sha256": "1" * 64}, "full_cell": {"path": "f.xlsx", "sha256": "2" * 64},
               "literature": {"gr": {"path": "g.xlsx", "sha256": "3" * 64}, "si": {"path": "s.csv", "sha256": "4" * 64}}}
         rci = {"half_cell": {"path": "p.xlsx", "sha256": "5" * 64}, "full_cell": ci["full_cell"], "literature": ci["literature"]}
-        obj |= {"w_dqdv": 0.0, "tol_percent_of_best": 1.0, "seed": 0, "n_grid": 21, "n_samples": 400, "env": {"python": "3.11.0", "numpy": "2.0", "scipy": "1.11.0", "pandas": "2.0.0", "platform": "linux-x"},
+        obj |= {"w_dqdv": 0.0, "tol_percent_of_best": 1.0, "seed": 0, "n_grid": 21, "n_samples": 400, "env": _fixture_env(python="3.11.0", numpy="2.0", scipy="1.11.0", pandas="2.0.0", openpyxl="3.1.0", platform="linux-x"),
                 "consumed_inputs": ci, "ref_consumed_inputs": rci, "inputs_sha": S.inputs_digest(ci),
                 "n_accepted": 5, "best_obj": 1.5, "best_p": [1.0, 0.0, 1.0, 0.0, 0.2], "ref_p": [1.0, 0.0, 1.0, 0.0, 0.2]}
     return obj
@@ -71,7 +72,7 @@ def _sign(art, rid, state, full=False):
     meta = {"artifact": art.name, "state": state, "run_id": rid, "sha256": prov.sha256_file(art), "starts": 24}
     if full:        # check_u14 의 META_KEYS + 실행 조건 + argv·roster (Codex R11 P1-6: 실제 `write_meta` 가 쓰는 전부)
         from bms_balancing import schema as _S
-        meta |= {"env": {"python": "3.12.3", "numpy": "2.5.3", "scipy": "1.18.1", "pandas": "2.2.0", "platform": "test-fixture"},
+        meta |= {"env": _fixture_env(),
                  "started_utc": "2026-09-12T00:00:00Z", "half_cell_source": "GITT", "si_source": "Li", "seed": 0,
                  "git_commit_at_start": "0" * 40, "git_state_changed_during_run": False, "git_dirty": False,
                  "git_modified_code": [], "argv": ["python3", "-m", "bms_balancing.verify", "fixture"],
