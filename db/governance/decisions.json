@@ -2281,6 +2281,58 @@
     "decision_digest": "sha256:9192d9594b9a334e4d335d0258114d0cfeff2cb08aaa430807dec65acd2913e8",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-16-cathode-cei-decomposition",
+   "kind": "estimand",
+   "decision_state": "active",
+   "results_seen": false,
+   "record_kind": "estimand_card",
+   "title": "양극 CEI — 전압별 분해 산물 집합과 전자 부동태화 (LPSCl(-Nd,-O) × NCM)",
+   "statement": "LPSCl 계(comp1·modelc·lpsocl·modelc_nd)가 NCM 양극과 맞닿아 충전될 때 전압 V 마다 ① 어떤 상으로 분해되는가(grand-potential ESW) ② 계면 반응 구동력과 산물(Richards/Ong 2016) ③ 그 산물이 전자를 막는가(fixed-occ nscf 갭 → sei_electronic_class 3분류)를 묻는다. ⭐ §A·§B 는 **우리 SCF 0건**(MP 조회 + convex hull)이라 gabia 탄성 GPU 와 경합하지 않는다. §C(갭)만 우리 DFT다. 눈금·규약은 전부 승계한다(esw_lpscl_profile 의 Li 개방·전압 규약 · interface_reactivity_results · sei_electronic_class). ⛔ 새 조성을 만들지 않는다 — 넷은 repo 기록에서 승계한다. ⛔ 전이금속 함유 산물의 갭 값은 이 카드가 만들지 않는다(`undetermined` 유지). ⛔ Li 개방 전압축과 O 개방 μ_O 축을 같은 그림에 놓지 않는다.",
+   "reopen_criteria": [
+    "G1(MP DB version·pymatgen 버전·correction scheme 기록) 불통과 → 그 실행은 버린다. 기록 없는 hull 은 값이 아니다",
+    "G2 선별 규칙(최소 반응E kink 산물만 + 이미 잰 12건 재사용) 밖의 산물에 갭을 재면 무효",
+    "G3: 전이금속 함유 산물은 `undetermined` — 갭 단계를 막는다. '금속 선언' 이 아니라 '모른다'",
+    "전압 격자 6점(2.5/3.0/3.5/4.0/4.3/4.5)을 결과를 보고 늘리거나 줄이면 무효",
+    "§C(갭) 예산은 §A·§B 의 산물 수를 본 뒤 1저자가 정한다 — 그 전에 갭 큐를 던지지 않는다"
+   ],
+   "card": "db/properties/cathode_cei_decomposition_estimand_2026_09_16.json",
+   "record": "db/properties/nd_doped_lpscl_esw.json",
+   "supersedes": [],
+   "enforcement": "① 실행 로그에 MP database version·pymatgen 버전·correction scheme·Nd 포함 엔트리 수/목록을 남긴다. ② §A 는 6원소(Li P S Cl Nd O), §B 는 거기에 전이금속 **하나**를 더해 최대 7원소 — Ni·Mn·Co 를 한 hull 에 다 넣지 않는다. ③ 6월 실행(2026-06-24, 321 엔트리)의 대조를 재현한다 — modelc 를 같은 6원소 hull 에서 돌려 4원소 결과와 맞는지. ④ `LiNiO₂/LiMnO₂/LiCoO₂` 각각과 `NMC811` 고용체를 같은 표에 섞지 않는다. ⑤ hull 이 보는 Nd redox 는 5d/6s 채널뿐이다(MP 도 `Nd_3` frozen-4f) — 4f 관여 redox 는 모형에 없다는 단서를 보고에 단다. ⑥ 갭이 크다는 것만으로 '부동태화된다' 고 쓰지 않는다 — 연속성·두께가 빠져 있다.",
+   "applies_to": {
+    "systems": [
+     "comp1",
+     "modelc",
+     "lpsocl",
+     "modelc_nd_doped"
+    ]
+   },
+   "slot": "cathode_cei_decomposition_estimand",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-16",
+     "state": "proposed",
+     "by": "agent",
+     "note": "1저자 지시(\"이거 전체적으로 해보자\" · \"잘 파이프라인 짜고 진행해보자\")로 등록. 실행 전."
+    },
+    {
+     "at": "2026-09-16",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-16T07:21:32Z",
+    "commit": "e339d1ed3c12a437ffe6f0a094f9c065c6d6c8d9",
+    "decision_digest": "sha256:e1429e1fdd0e003fadd8caf3bc21fa0e9183dca9cc81878270eca5474e90afba",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }
