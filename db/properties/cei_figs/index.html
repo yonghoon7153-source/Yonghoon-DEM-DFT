@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nd Phosphate Sink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Serif:wght@600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    --bg:#fbfaff; --card:#ffffff; --ink:#1f2937; --mut:#6b7280; --line:#e6e2f2;
+    --nd:#6d28d9; --nd-soft:#ede9fe; --ox:#be123c; --ox-soft:#ffe4e6;
+    --warn:#92400e; --warn-soft:#fef9c3; --ok:#0d9488;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#141220; --card:#1c1930; --ink:#ece9f5; --mut:#a09ab8; --line:#302a48;
+      --nd:#a78bfa; --nd-soft:#2a2145; --ox:#fb7185; --ox-soft:#3a1b25;
+      --warn:#fcd34d; --warn-soft:#3a3113; --ok:#2dd4bf;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#141220; --card:#1c1930; --ink:#ece9f5; --mut:#a09ab8; --line:#302a48;
+    --nd:#a78bfa; --nd-soft:#2a2145; --ox:#fb7185; --ox-soft:#3a1b25;
+    --warn:#fcd34d; --warn-soft:#3a3113; --ok:#2dd4bf;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:400 16px/1.7 "IBM Plex Sans",system-ui,-apple-system,sans-serif;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:900px;margin:0 auto;padding:44px 16px 80px}
+  h1{font:700 2.05rem/1.2 "IBM Plex Serif",Georgia,serif;margin:0 0 6px;
+     text-wrap:balance;letter-spacing:-.01em}
+  .sub{color:var(--mut);font-size:.95rem;margin:0 0 4px}
+  .meta{color:var(--mut);font:400 .78rem/1.6 "IBM Plex Mono",ui-monospace,monospace;
+        margin:0 0 30px}
+  h2{font:600 1.18rem/1.35 "IBM Plex Serif",Georgia,serif;margin:38px 0 10px;
+     padding-top:18px;border-top:1px solid var(--line)}
+  h3{font:600 .95rem/1.4 "IBM Plex Sans",sans-serif;margin:22px 0 6px;color:var(--nd)}
+  p{margin:0 0 12px}
+  .lead{font-size:1.05rem}
+  strong{font-weight:600}
+  code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.84em}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;
+        padding:16px 18px;margin:16px 0}
+  .answer{border-left:4px solid var(--nd);background:var(--nd-soft)}
+  .warn{border-left:4px solid var(--warn);background:var(--warn-soft)}
+  figure{margin:20px 0;background:var(--card);border:1px solid var(--line);
+         border-radius:10px;padding:14px;overflow:hidden}
+  figure img{width:100%;height:auto;display:block;border-radius:5px;background:#fff}
+  figcaption{color:var(--mut);font-size:.82rem;line-height:1.6;margin-top:10px}
+  .tblwrap{overflow-x:auto;margin:14px 0}
+  table{border-collapse:collapse;width:100%;font-size:.86rem;
+        font-variant-numeric:tabular-nums}
+  th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);
+        white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  thead th{color:var(--mut);font-weight:600;font-size:.78rem;
+           text-transform:uppercase;letter-spacing:.05em}
+  tbody tr:last-child td{border-bottom:none}
+  .nd{color:var(--nd);font-weight:600}
+  .ox{color:var(--ox);font-weight:600}
+  .rx{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.76rem;
+      line-height:1.9;color:var(--ink);overflow-x:auto;white-space:pre;
+      background:var(--card);border:1px solid var(--line);border-radius:8px;
+      padding:12px 14px;margin:10px 0}
+  ul{margin:8px 0 12px;padding-left:20px}
+  li{margin:5px 0}
+  .no{color:var(--ox)}
+  .files{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .files span{font-family:"IBM Plex Mono",monospace;font-size:.75rem;
+              background:var(--card);border:1px solid var(--line);
+              border-radius:999px;padding:4px 11px;color:var(--mut)}
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);
+         color:var(--mut);font-size:.78rem;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Nd 는 인산염 싱크다</h1>
+<p class="sub">고전압에서 Nd 가 하는 일 — CEI 계면 반응성의 Nd/O 분해</p>
+<p class="meta">2026-09-16 · grand-potential interfacial reactivity (Richards/Ong 2016) ·
+MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes × 6 voltages)</p>
+
+<div class="card answer">
+<p class="lead" style="margin:0"><strong>질문</strong> — 이 효과가 Nd 특화인가, 아니면 O 효과인가?</p>
+<p style="margin:10px 0 0"><strong>답</strong> — <strong>둘 다이고, 서로 독립이고, 전압에 따라 주역이 바뀐다.</strong>
+저전압에선 <span class="ox">O</span> 가 더 이롭고, 고전압에선 <span class="nd">Nd</span> 가 압도적이다.
+둘을 같이 넣으면 <strong>정확히 합만큼</strong> 좋아진다 — 시너지도 상쇄도 없다.</p>
+</div>
+
+<h2>1. 분해 — 대조 조성 둘을 추가해서 갈랐다</h2>
+
+<p>기존 <code>modelc_nd</code> 는 Nd 치환과 O 치환이 <strong>같이</strong> 바뀌어서 둘을 못 갈랐다.
+전하중성을 맞춘 대조 조성 둘을 추가해 축을 분리했다.</p>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>이름</th><th>조성</th><th>Nd</th><th>O</th><th>전하</th></tr></thead>
+<tbody>
+<tr><td>modelc (기준)</td><td class="mono">Li5.4 P S4.4 Cl1.6</td><td>0</td><td>0</td><td>0 ✓</td></tr>
+<tr><td>lpsocl</td><td class="mono">Li5.4 P S4.2 O0.2 Cl1.6</td><td>0</td><td>0.2</td><td>0 ✓</td></tr>
+<tr><td><span class="nd">nd_only</span> <em>(신규)</em></td><td class="mono">Li4.8 Nd0.2 P S4.4 Cl1.6</td><td>0.2</td><td>0</td><td>0 ✓</td></tr>
+<tr><td><span class="ox">o_only_03</span> <em>(신규)</em></td><td class="mono">Li5.4 P S4.1 O0.3 Cl1.6</td><td>0</td><td>0.3</td><td>0 ✓</td></tr>
+<tr><td>modelc_nd</td><td class="mono">Li4.8 Nd0.2 P S4.1 O0.3 Cl1.6</td><td>0.2</td><td>0.3</td><td>0 ✓</td></tr>
+</tbody></table>
+</div>
+
+<figure>
+<img src="cei_nd_o_decomposition.png" alt="Left: delta reaction energy versus voltage for Nd only, O only, and both, with the sum of parts overlaid. Right: additivity residual against the pre-registered plus-minus 0.010 band.">
+<figcaption><strong>Fig 1.</strong> 왼쪽 — modelc 기준 Δ 반응에너지. 위로 갈수록 덜 반응성.
+<span class="ox">O</span> 는 전압에 평평하고 <span class="nd">Nd</span> 는 급상승한다. 점선 = 두 효과의 단순 합,
+검정 = 실제 둘 다 넣은 값 — <strong>겹친다</strong>. 음영 = 4 양극의 범위.
+오른쪽 — 가법성 잔차. 노란 띠는 <strong>결과를 보기 전에 봉인한</strong> ±0.010 eV/atom 문턱.</figcaption>
+</figure>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>V vs Li/Li⁺</th><th>Δ Nd only</th><th>Δ O only</th><th>합</th><th>실측 (둘 다)</th><th>잔차</th></tr></thead>
+<tbody>
+<tr><td>2.5</td><td class="nd">+0.0147</td><td class="ox">+0.0213</td><td>+0.0361</td><td>+0.0363</td><td>−0.0002</td></tr>
+<tr><td>3</td><td class="nd">+0.0162</td><td class="ox">+0.0226</td><td>+0.0388</td><td>+0.0392</td><td>−0.0004</td></tr>
+<tr><td>3.5</td><td class="nd">+0.0240</td><td class="ox">+0.0216</td><td>+0.0456</td><td>+0.0441</td><td>+0.0016</td></tr>
+<tr><td>4</td><td class="nd">+0.0515</td><td class="ox">+0.0212</td><td>+0.0728</td><td>+0.0729</td><td>−0.0001</td></tr>
+<tr><td>4.3</td><td class="nd">+0.0754</td><td class="ox">+0.0226</td><td>+0.0981</td><td>+0.0970</td><td>+0.0011</td></tr>
+<tr><td>4.5</td><td class="nd"><strong>+0.0970</strong></td><td class="ox">+0.0220</td><td>+0.1190</td><td>+0.1183</td><td>+0.0008</td></tr>
+</tbody></table>
+</div>
+
+<p><strong>세 판정 모두 통과</strong> (문턱은 실행 전에 봉인):</p>
+<ul>
+<li><strong>R1 가법성</strong> — 평균 잔차 <strong>+0.0005</strong>, 문턱 0.010 의 1/20. 범위 −0.0033 ~ +0.0081.</li>
+<li><strong>R3 O 선형성</strong> — O 0.2 에서 0.3 으로 선형외삽 +0.0218 vs 실측 <strong>+0.0219</strong>. 차이 0.0001.</li>
+<li><strong>R4 전압 의존</strong> — O 는 3 % 변화, Nd 는 <strong>6.6 배</strong>. 교차점 약 <strong>3 V</strong>.</li>
+</ul>
+
+<h2>2. 왜 고전압에서 Nd 인가 — 산물이 말한다</h2>
+
+<p>hull 은 <em>무엇이</em> 생기는지를 말하지 <em>왜</em> 를 말하지 않는다. 그런데 산물 목록에 뚜렷한 패턴이 있다.</p>
+
+<figure>
+<img src="cei_nd_phosphate_sink.png" alt="Bar chart of how many of four cathodes show Nd-phosphate or P2S7 at each voltage. Nd-containing electrolytes form Nd-phosphates and never form P2S7; the undoped electrolyte forms P2S7 above 4.3 V.">
+<figcaption><strong>Fig 2.</strong> 4.3 V 이상에서 <strong>무도핑 LPSCl1.6 은 P₂S₇ 를 만들고</strong>
+(주황 빗금), <strong>Nd 계는 한 번도 만들지 않는다</strong>. 대신 Nd 인산염을 만든다.
+3.5–4.0 V 에서 Nd 인산염 출현이 잠시 줄어드는 것은 그 구간에서
+전이금속 인산염(Mn₂P₂O₇ · Ni(PO₃)₂)이 대신 P 를 가져가기 때문이다.</figcaption>
+</figure>
+
+<p>4.5 V · LiCoO₂ 에서 반응식을 나란히 놓으면 차이가 한눈에 보인다.</p>
+
+<div class="rx">LPSCl      Li₆PS₅Cl → 6 Li + SCl + 0.5 <span style="color:#c05621;font-weight:600">P₂S₇</span> + 0.5 S        (자기분해 — 양극이 반응식에 없다)
+LPSCl1.6   Li₅.₄PS₄.₄Cl₁.₆ → 5.4 Li + 1.19 SCl + 0.46 <span style="color:#c05621;font-weight:600">P₂S₇</span> + 0.08 PCl₅
+Nd+O       0.074 Li₄₈Nd₂P₁₀S₄₁Cl₁₆O₃ + 0.926 LiCoO₂
+           → 4.48 Li + 0.148 <span style="color:#6d28d9;font-weight:600">NdP₅O₁₄</span> + 1.19 SCl + 0.926 CoS₂</div>
+
+<div class="card">
+<h3 style="margin-top:0">가설 — Nd³⁺ 는 강한 인산염 형성체다</h3>
+<ol style="margin:6px 0 0;padding-left:20px">
+<li>저전압에선 P 가 아직 <strong>PS₄ 골격에 붙어 있다</strong>. Nd 가 할 일이 없다.</li>
+<li>전압이 오르면 S 가 산화되고 <strong>P–S 가 끊어진다</strong>. 풀려난 P 가 갈 곳이 필요하다.</li>
+<li>Nd 가 없으면 → <strong>P₂S₇</strong> (P–S, 덜 안정).<br>
+    Nd 가 있으면 → <strong>NdPO₄ · Nd(PO₃)₃ · NdP₅O₁₄ · LiNd(PO₃)₄</strong>.
+    희토류 인산염은 극히 안정한 상이다 (모나자이트가 천연 광물로 존재할 정도).</li>
+<li>풀려나는 P 의 양이 전압과 함께 늘어나므로 <strong>Nd 의 이득도 전압과 함께 커진다</strong>.</li>
+</ol>
+<p style="margin:12px 0 0"><strong>가법성도 이걸로 설명된다</strong> — O 는 격자 안에서
+<em>이미 붙어 있는</em> P 를 미리 인산염화하고(그래서 전압 무관한 상수 오프셋),
+Nd 는 <em>풀려난</em> P 를 사후에 잡는다. <strong>다른 P 풀에 작용</strong>하니 서로 간섭하지 않는다.</p>
+<p style="margin:10px 0 0;color:var(--mut);font-size:.87rem">
+이 논리는 Xiao 2020 리뷰의 <strong>Li₃PO₄ 싱크</strong>(생성E −2.767 eV/atom)와 같은 구조다.
+다만 싱크가 Li₃PO₄ 가 아니라 희토류 인산염이다.</p>
+</div>
+
+<div class="card warn">
+<p style="margin:0"><strong>⚠ 이건 가설이다.</strong> hull 은 <em>무엇이</em> 생기는지만 말한다.
+검증하려면 MP 에서 Nd 인산염들의 <strong>생성에너지</strong>를 뽑아 Li₃PO₄(−2.767)·P₂S₇ 와
+같은 표에 놓아 싱크 강도를 정량화해야 한다. gabia 에서 몇 초다.</p>
+</div>
+
+<h2>3. 양극별 원자료</h2>
+
+<figure>
+<img src="cei_reaction_energy_by_cathode.png" alt="Reaction energy versus voltage for six electrolytes against four cathodes: LiCoO2, LiNiO2, LiMnO2 and NMC811.">
+<figcaption><strong>Fig 3.</strong> 여섯 전해질 × 네 양극의 절대 반응에너지.
+순서가 네 양극에서 모두 같다. ⚠ 4.0 V 이상 일부 점은 <strong>계면 반응이 아니라
+자기분해</strong>다 (LPSCl 6/24 · LPSCl1.6 1/24 · Nd·O 계는 0/24) — 그 구간에서
+곡선을 "계면 반응성" 으로 읽으면 안 된다.</figcaption>
+</figure>
+
+<h2>4. 말하면 안 되는 것</h2>
+<ul>
+<li><span class="no">⛔</span> 반응에너지 <strong>절대값</strong>을 다른 논문 값과 나란히 놓기 —
+MP 보정 눈금이 산화물(+U)·황화물(GGA) <strong>혼합</strong>이다.</li>
+<li><span class="no">⛔</span> "Nd 효과" 를 <strong>Nd 원자 단독</strong>의 효과라 쓰기 —
+Nd³⁺↔3Li⁺ 라 <strong>Li 공공 2개/Nd</strong> 가 묶여 있고, 전하중성 때문에 이 설계로는 못 뗀다.</li>
+<li><span class="no">⛔</span> <code>nd_only</code>·<code>o_only_03</code> 을 <strong>실재하는 조성</strong>으로 말하기 —
+만들거나 이완한 적 없는 hull 위의 조성점이다.</li>
+<li><span class="no">⛔</span> 이 이득을 <strong>부동태화</strong>로 읽기 — 이건 계면 반응 <strong>구동력</strong>이지
+산물의 전자 성질이 아니다. 갭 단계가 따로 답한다.</li>
+<li><span class="no">⛔</span> Nd 의 <strong>산화수 변화</strong>를 주장하기 — MP 도 우리도 frozen-4f (<code>Nd_3</code>) 라
+4f 관여 redox 가 모형에 아예 없다.</li>
+</ul>
+
+<h2>파일</h2>
+<div class="files">
+<span>cei_nd_o_decomposition.png / .csv</span>
+<span>cei_nd_phosphate_sink.png / .csv</span>
+<span>cei_reaction_energy_by_cathode.png / .csv</span>
+</div>
+<p style="color:var(--mut);font-size:.87rem">CSV 는 Origin 바로 넣을 수 있게 열 이름을 명시했다.
+그림은 house style (INK #1f2937 · MUT #6b7280 · dpi 300 · top/right spine 제거).
+⚠ Nd 는 CLAUDE.md 원소 팔레트에 없어 여기서 보라(#6d28d9)로 고정했다 —
+house <code>ELEM["Nd"]</code>(#db2777)는 O(#be123c)와 같은 붉은 계열이라 한 그림에서 안 갈린다.</p>
+
+<footer>
+카드 <code>cathode_cei_decomposition_estimand_2026_09_16</code> (ratified) ·
+개정문 <code>cathode_cei_dopant_decomposition_amendment_2026_09_16</code> (ratified, 결과 보기 전 봉인) ·
+결과 <code>cei_dopant_decomposition_result_2026_09_16</code><br>
+원자료 <code>db/properties/cei_interface_V_2026_09_16.json</code> ·
+<code>cei_esw_Li_2026_09_16.json</code> · <code>cei_esw_O_2026_09_16.json</code><br>
+citable: false — 1저자·리뷰 판정 전이다.
+</footer>
+
+</div>
+</body>
+</html>
