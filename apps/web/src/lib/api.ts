@@ -15,7 +15,7 @@ import type {
   EisDashboard, GittDashboard, GittRun, Group, Measurements, Meta, Pocv,
   ProfileResponse, Report, Run, Sample, Scan, ScanConductivity,
   Spectrum, SpectrumDetail,
-  SpectrumFit, SpectrumPoints,
+  SpectrumFit, SpectrumPoints, SymDashboard,
 } from './types'
 
 export class ApiError extends Error {
@@ -292,6 +292,12 @@ export const api = {
       `/api/eis/scans/${sha256}/resistance`,
       { method: 'PUT', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ resistance_ohm: values }) }),
+  /** 대칭셀 대시보드 — 전해질 한 파일이 한 줄, 활성화에너지까지 한 번에.
+   *
+   *  파일마다 `/conductivity` 를 부르면 스캔 스무 개에 스무 번이고, 그동안
+   *  표는 부분적으로 채워지며 "아직 없음" 과 "정말 없음" 이 구분되지 않는다. */
+  symDashboard: (params?: Params) =>
+    request<SymDashboard>(`/api/eis/sym/dashboard${query(params)}`),
   /** 온도별 이온전도도 표와 활성화에너지. */
   scanConductivity: (sha256: string, params?: Params) =>
     request<ScanConductivity>(

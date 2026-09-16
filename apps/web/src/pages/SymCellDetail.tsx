@@ -5,9 +5,14 @@
  *  지금까지 ZView·엑셀·Origin 을 오가며 만들던 것이다.
  *
  *  **기계가 저항을 고르지 않는다.**  블로킹 대칭셀의 나이퀴스트에는 "전해질
- *  저항" 이라고 적힌 점이 없고, 어디서 읽느냐가 활성화에너지를 바꾼다 — 실측
- *  파일에서 실수축 교점으로 읽으면 0.290 eV, 랩이 ZView 에서 읽으면 0.328 eV
- *  였다 (13 %).  교점은 표에 제안으로 띄우고, 누르는 것은 사람이다.
+ *  저항" 이라고 적힌 점이 없다 — 고주파는 배선 인덕턴스로 실수축 아래에 있고,
+ *  아크가 닫히기 전에 블로킹 꼬리가 올라온다.  읽을 수 있는 두 수(실수축 교점,
+ *  맞춤의 총저항)를 **나란히 제안으로** 띄우고, 누르는 것은 사람이다.
+ *
+ *  나란히 놓는 이유는 둘이 크게 어긋날 수 있어서다: 회로에 블로킹 꼬리를 담을
+ *  요소가 없으면 맞춤은 `p(R1,CPE1)` 로 꼬리를 흉내내고, 실측 파일에서 그
+ *  총저항이 교점의 4710~8193배로 나왔다 (60 °C 에서 4.82 Ω 대 22687 Ω).
+ *  나란히 놓으면 그 어긋남이 눈에 보인다.
  */
 
 import { useEffect, useMemo, useState } from 'react'
@@ -84,7 +89,7 @@ export function SymCellDetail() {
         <div style={{ minWidth: 0 }}>
           <h1>{head.name}</h1>
           <div className="sub">
-            <Link to="/sym">대칭셀</Link>
+            <Link to="/sym/library">대칭셀</Link>
             {' · '}
             <Link to={`/scans/${sha256}`}>나이퀴스트로 보기</Link>
             {head.purpose ? ` · ${head.purpose}` : ''}
@@ -102,7 +107,7 @@ export function SymCellDetail() {
           onError={setPageError}
           onDelete={async () => {
             await api.deleteScan(sha256)
-            navigate('/sym')
+            navigate('/sym/library')
           }}
         />
       </div>
@@ -151,14 +156,16 @@ export function SymCellDetail() {
 
       <ValueRow
         title="전해질 저항"
-        hint="ZView 에서 읽은 값을 스윕 차례대로. 비우면 fitting 의 총저항을 씁니다."
-        example="예: 9.69, 10.21, 14.56 …  ·  (제안) 아래 표의 교점을 눌러 채울 수 있습니다"
+        hint="ZView 에서 읽은 값을 스윕 차례대로. 비어 있으면 이온전도도도 비어 있습니다."
+        example="예: 9.69, 10.21, 14.56 …  ·  아래 단추로 읽은 값을 채울 수 있습니다 (제안일 뿐입니다)"
         unit="Ω"
         what="저항"
         sweeps={data.sweeps}
         current={data.rows.map((row) => row.resistance_ohm)}
-        suggestion={data.rows.map((row) => row.crossing_ohm)}
-        suggestionLabel="실수축 교점으로 채우기"
+        suggestions={[
+          { label: '실수축 교점으로', values: data.rows.map((row) => row.crossing_ohm) },
+          { label: 'fitting 총저항으로', values: data.rows.map((row) => row.fit_ohm) },
+        ]}
         onSave={(values) => api.writeScanResistance(sha256, values)}
         onSaved={() => cond.reload()}
       />
@@ -213,12 +220,11 @@ export function SymCellDetail() {
                   </td>
                   {/* 어디서 온 저항인지 — 한 열에 섞인 채로 슬라이드에 붙으면
                       그 구분은 영영 사라진다. */}
-                  <td className="text dim tiny">
-                    {sourceLabel(row.resistance_source) || '—'}
-                    {row.crossing_ohm !== null && row.resistance_source !== 'typed'
-                      ? ` · 교점 ${num(row.crossing_ohm, 3)} Ω`
-                      : ''}
-                  </td>
+                  {/* 읽을 수 있는 두 수를 나란히 — 어긋나면 눈에 보인다.
+                      실측에서 맞춤 총저항이 교점의 4710배였던 적이 있다.
+                      한 문자열로 만든다: 조각으로 나누면 화면에서는 같아
+                      보여도 골라 복사할 때 끊긴다. */}
+                  <td className="text dim tiny">{readings(row)}</td>
                   <td className={row.sigma_ms_cm === null ? 'dim' : ''}>
                     {row.sigma_ms_cm === null ? '—' : num(row.sigma_ms_cm, 3)}
                   </td>
@@ -358,6 +364,16 @@ function FitReport({ data }: { data: ScanConductivity }) {
   )
 }
 
+/** 이 줄의 저항이 어디서 왔는지, 그리고 아직이라면 읽을 수 있는 수들. */
+function readings(row: ConductivityRow): string {
+  const source = sourceLabel(row.resistance_source)
+  if (source) return source
+  const offered: string[] = []
+  if (row.crossing_ohm !== null) offered.push(`교점 ${num(row.crossing_ohm, 3)}`)
+  if (row.fit_ohm !== null) offered.push(`fitting ${num(row.fit_ohm, 3)}`)
+  return offered.length ? offered.join(' · ') : '—'
+}
+
 function pm(value: number, stderr: number | null): string {
   if (stderr === null) return sig(value)
   return `${sig(value)} ± ${sig(stderr)}`
@@ -447,7 +463,7 @@ function Geometry({ rows, onSaved }: {
  */
 function ValueRow({
   title, hint, example, unit, what, sweeps, current,
-  suggestion, suggestionLabel, onSave, onSaved,
+  suggestions = [], onSave, onSaved,
 }: {
   title: string
   hint: string
@@ -456,8 +472,8 @@ function ValueRow({
   what: string
   sweeps: number
   current: (number | null)[]
-  suggestion?: (number | null)[]
-  suggestionLabel?: string
+  /** 눌러야 들어가는 읽기들.  값이 하나도 없는 것은 단추가 안 선다. */
+  suggestions?: { label: string; values: (number | null)[] }[]
   onSave: (values: (number | null)[]) => Promise<unknown>
   onSaved: () => void
 }) {
@@ -480,7 +496,8 @@ function ValueRow({
   const list = useMemo(() => parseValueList(text), [text])
   const problem = listProblem(list, sweeps, what)
 
-  const filled = suggestion?.filter((one) => one !== null).length ?? 0
+  const offered = suggestions.filter(
+    (one) => one.values.some((value) => value !== null))
 
   return (
     <Card title={title} tight>
@@ -513,19 +530,21 @@ function ValueRow({
           >
             적용
           </button>
-          {suggestion && suggestionLabel && filled ? (
+          {offered.map((one) => (
             <button
+              key={one.label}
               type="button"
               className="ghost tiny"
               disabled={busy}
               title="제안입니다 — 눌러야 들어갑니다"
-              onClick={() => setText(suggestion
-                .map((one) => (one === null ? '-' : String(Number(one.toPrecision(4)))))
+              onClick={() => setText(one.values
+                .map((value) => (value === null
+                  ? '-' : String(Number(value.toPrecision(4)))))
                 .join(', '))}
             >
-              {suggestionLabel}
+              {one.label} 채우기
             </button>
-          ) : null}
+          ))}
           {said && !problem ? <span className="tiny dim">{said}</span> : null}
         </div>
         {/* 회색 예시 — 형식을 외우게 하지 않는다. */}

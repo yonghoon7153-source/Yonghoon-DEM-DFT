@@ -1693,13 +1693,25 @@ def test_absolute_zero_and_silly_temperatures_are_refused(client):
                           json={"temperature_c": bad}).status_code == 422, bad
 
 
-def test_a_typed_resistance_beats_the_fit(client):
-    """랩은 ZView 에서 절편을 눈으로 읽는다.  그 판단이 이겨야 한다."""
+def test_a_fit_never_fills_the_resistance_by_itself(client):
+    """맞춤이 있어도 저항 칸은 비어 있다 (2026-09-16 고침).
+
+    블로킹 대칭셀의 나이퀴스트는 반원이 아니라 올라가는 꼬리라, 회로에 그
+    꼬리를 담을 요소가 없으면 맞춤은 `p(R1,CPE1)` 로 꼬리를 흉내낸다.  실측
+    `B12_activationE_C02.mpt` 를 `R0-p(R1,CPE1)` 로 맞추면 총저항이 교점의
+    **4710~8193배**로 나왔고 (60 °C 에서 4.82 Ω 대 22687 Ω), 그대로 σ 에
+    들어가면 19.3 mS/cm 가 0.0041 mS/cm 가 된다 -- 표는 아홉 줄이 다 채워진
+    채로 멀쩡해 보이면서.
+    """
     sha = upload_mpt_scan(client, [9.69, 14.56, 34.66])
     client.post(f"/api/eis/scans/{sha}/fit", params={"circuit": "R0-p(R1,CPE1)"})
 
     before = client.get(f"/api/eis/scans/{sha}/conductivity").json()
-    assert [row["resistance_source"] for row in before["rows"]] == ["fit"] * 3
+    assert [row["resistance_source"] for row in before["rows"]] == [""] * 3
+    assert [row["resistance_ohm"] for row in before["rows"]] == [None] * 3
+    assert [row["sigma_ms_cm"] for row in before["rows"]] == [None] * 3
+    # 맞춤이 읽은 수는 **제안으로** 나온다 — 보이되 들어가지는 않는다.
+    assert all(row["fit_ohm"] is not None for row in before["rows"])
 
     client.put(f"/api/eis/scans/{sha}/resistance",
                json={"resistance_ohm": [9.69, 14.56, 34.66]})
@@ -1707,11 +1719,13 @@ def test_a_typed_resistance_beats_the_fit(client):
     assert [row["resistance_source"] for row in after["rows"]] == ["typed"] * 3
     assert [row["resistance_ohm"] for row in after["rows"]] == [9.69, 14.56, 34.66]
 
-    # 비우면 맞춤으로 돌아간다 — 손으로 적은 것을 무르는 길이 있어야 한다.
+    # 비우면 도로 빈칸이다 — 손으로 적은 것을 무르는 길이 있어야 하고,
+    # 무른 자리를 기계가 채우지 않는다.
     client.put(f"/api/eis/scans/{sha}/resistance",
                json={"resistance_ohm": [None, None, None]})
     back = client.get(f"/api/eis/scans/{sha}/conductivity").json()
-    assert [row["resistance_source"] for row in back["rows"]] == ["fit"] * 3
+    assert [row["resistance_source"] for row in back["rows"]] == [""] * 3
+    assert [row["sigma_ms_cm"] for row in back["rows"]] == [None] * 3
 
 
 def test_a_resistance_that_is_not_a_resistance_is_refused(client):
@@ -1766,11 +1780,7 @@ def test_what_is_still_missing_is_named_rather_than_guessed(client):
 
 
 def test_the_crossing_is_offered_but_never_filled_in(client):
-    """제안은 보이되 저항 칸을 채우지 않는다 (ADR 0039).
-
-    실측에서 교점으로 읽으면 0.290 eV, 랩이 읽으면 0.328 eV 였다.  어디서
-    읽을지가 답을 바꾸므로 기계가 고르지 않는다.
-    """
+    """제안은 보이되 저항 칸을 채우지 않는다 (ADR 0039)."""
     sha = upload_mpt_scan(client, [9.69, 14.56, 34.66])
     out = client.get(f"/api/eis/scans/{sha}/conductivity").json()
     for row in out["rows"]:
@@ -1821,3 +1831,84 @@ def test_geometry_still_spreads_because_one_file_is_one_pellet(client):
     out = client.get(f"/api/eis/scans/{sha}/conductivity").json()
     assert [row["thickness_mm"] for row in out["rows"]] == [0.79] * 3
     assert [row["area_cm2"] for row in out["rows"]] == [0.8501] * 3
+
+
+# --- 대칭셀 대시보드 ---------------------------------------------------------
+
+def test_the_sym_dashboard_is_one_row_per_file_with_its_activation_energy(client):
+    """전해질 한 파일이 한 줄이고, 그 줄에 두 수가 있다."""
+    resistances = [9.69, 10.21, 14.56, 22.0, 34.66, 55.88, 94.3, 171.0, 300.0]
+    sha = upload_mpt_scan(client, resistances)
+    client.put(f"/api/eis/scans/{sha}/temperature",
+               json={"temperature_c": [60, 50, 40, 30, 20, 10, 0, -10, -20]})
+    client.put(f"/api/eis/scans/{sha}/resistance",
+               json={"resistance_ohm": resistances})
+    first = client.get("/api/eis/spectra").json()[0]
+    client.patch(f"/api/eis/spectra/{first['id']}",
+                 json={"thickness_um": 790.0, "area_cm2": 0.8501})
+
+    out = client.get("/api/eis/sym/dashboard").json()
+    assert len(out["rows"]) == 1
+    row = out["rows"][0]
+    assert row["sweeps"] == 9
+    assert row["temperatures_written"] == 9
+    assert row["temperature_high_c"] == 60 and row["temperature_low_c"] == -20
+    assert row["resistances_written"] == 9
+    assert row["thickness_mm"] == pytest.approx(0.79)
+    # 가장 **높은** 온도의 σ — 슬라이드 표의 첫 줄에 오는 수다.
+    assert row["sigma_top_ms_cm"] == pytest.approx(9.59, abs=0.01)
+    assert row["activation_energy_ev"] == pytest.approx(0.328, abs=2e-3)
+    assert row["r_squared"] == pytest.approx(0.993, abs=1e-3)
+    assert row["reason"] == ""
+    # 스윕 번호는 파일 이름이 아니다.
+    assert not row["name"].endswith("#1")
+
+
+def test_the_sym_dashboard_says_what_is_missing_instead_of_guessing(client):
+    sha = upload_mpt_scan(client, [9.69, 14.56, 34.66])
+    out = client.get("/api/eis/sym/dashboard").json()
+    row = out["rows"][0]
+    assert row["temperatures_written"] == 0
+    assert row["temperature_high_c"] is None
+    assert row["sigma_top_ms_cm"] is None
+    assert row["activation_energy_ev"] is None
+    assert "둘 이상" in row["reason"]
+    assert sha
+
+
+def test_the_top_sigma_follows_the_temperature_not_the_sweep_order(client):
+    """스윕 차례의 첫 번째가 가장 높은 온도라는 보장은 없다.
+
+    보장 없는 수를 표의 그 칸에 놓으면 전해질끼리 견줄 수 없는 것을 견주게
+    된다 -- 어떤 파일은 60 °C 의 σ 가, 어떤 파일은 -20 °C 의 σ 가 그 자리에
+    선다.
+    """
+    sha = upload_mpt_scan(client, [30.0, 10.0, 60.0])
+    # 올라가는 순서로 잰 파일 — 첫 스윕이 가장 **낮은** 온도다.
+    client.put(f"/api/eis/scans/{sha}/temperature",
+               json={"temperature_c": [-20, 20, 60]})
+    client.put(f"/api/eis/scans/{sha}/resistance",
+               json={"resistance_ohm": [30.0, 10.0, 5.0]})
+    first = client.get("/api/eis/spectra").json()[0]
+    client.patch(f"/api/eis/spectra/{first['id']}",
+                 json={"thickness_um": 1000.0, "area_cm2": 1.0})
+
+    row = client.get("/api/eis/sym/dashboard").json()["rows"][0]
+    # 60 °C 의 저항 5 Ω → σ = 0.1/(5·1)·1000 = 20 mS/cm.
+    assert row["sigma_top_ms_cm"] == pytest.approx(20.0, rel=1e-9)
+
+
+def test_a_scan_that_is_not_symmetric_is_counted_not_silently_dropped(client):
+    """"왜 내 파일이 없지" 에 답할 수 있어야 한다."""
+    client.post("/api/eis/spectra/upload",
+                params={"kind": "liquid", "cell_config": "half", "purpose": "SOC별"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=4),
+                                "application/octet-stream")})
+    out = client.get("/api/eis/sym/dashboard").json()
+    assert out["rows"] == []
+    assert out["other_scans"] == 1
+
+
+def test_the_sym_dashboard_refuses_an_unknown_basis(client):
+    assert client.get("/api/eis/sym/dashboard",
+                      params={"basis": "nope"}).status_code == 422

@@ -846,11 +846,54 @@ export interface ConductivityRow {
   thickness_mm: number | null
   area_cm2: number | null
   resistance_ohm: number | null
-  /** `typed` 사람이 적었다 · `fit` 맞춤의 총저항 · `` 아직 없다. */
+  /** `typed` 사람이 적었다 · `` 아직 없다.  σ 는 적힌 저항에서만 나온다. */
   resistance_source: string
-  /** `-Im` 이 0 을 지나는 자리 — **제안**이고 저절로 들어가지 않는다. */
+  /** 읽을 수 있는 두 수 — **제안**이고 저절로 들어가지 않는다.  나란히 두는
+   *  이유는 크게 어긋날 수 있어서다 (실측에서 4710배). */
   crossing_ohm: number | null
+  fit_ohm: number | null
   sigma_ms_cm: number | null
+}
+
+/** 대칭셀 대시보드의 한 줄 — 전해질 한 파일과, 거기서 나온 두 수.
+ *
+ *  EIS 대시보드는 **셀**이 한 줄이지만 여기는 **파일**이 한 줄이다: 묻는 것이
+ *  "이 전해질의 활성화에너지" 라 파일이 곧 답의 단위다. */
+export interface SymDashboardRow {
+  sha256: string
+  name: string
+  original_name: string
+  sample_id: number | null
+  sample_name: string
+  group_id: number | null
+  group_name: string
+  group_parent_name: string
+  owner: string
+  purpose: string
+  cell_config: string
+  sweeps: number
+  fitted: number
+  temperatures_written: number
+  temperature_high_c: number | null
+  temperature_low_c: number | null
+  resistances_written: number
+  thickness_mm: number | null
+  area_cm2: number | null
+  /** 가장 **높은** 온도의 이온전도도 — 표의 첫 줄에 오는 수다. */
+  sigma_top_ms_cm: number | null
+  activation_energy_ev: number | null
+  activation_stderr_ev: number | null
+  r_squared: number | null
+  points_used: number
+  /** 활성화에너지가 없으면 왜인지.  빈 문자열이면 있다. */
+  reason: string
+  uploaded_at: string | null
+}
+
+export interface SymDashboard {
+  rows: SymDashboardRow[]
+  /** 대칭셀로 안 보여 빠진 스캔 수 — "왜 내 파일이 없지" 에 답하려고. */
+  other_scans: number
 }
 
 /** 한 `.mpt` 의 온도별 이온전도도와 활성화에너지 (ADR 0039). */

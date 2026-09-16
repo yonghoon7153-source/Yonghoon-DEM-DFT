@@ -14,12 +14,12 @@ export const CONDUCTIVITY_PURPOSE = '이온전도도 스윕'
 
 /** 저항이 어디서 왔는지, 사람이 읽을 말로.
  *
- *  표에 늘 적는다.  손으로 읽은 저항과 맞춘 저항이 한 열에 섞인 채 슬라이드에
- *  붙으면 그 구분은 영영 사라지고, 실측에서 그 차이는 활성화에너지 13 % 였다.
+ *  지금은 `typed` 하나뿐이다 — σ 는 **사람이 적은 저항에서만** 나온다.  칸이
+ *  남아 있는 이유는 표에 그 사실이 적혀 있어야 해서다: 적힌 값과 제안이 한
+ *  열에 섞인 채로 슬라이드에 붙으면 그 구분은 영영 사라진다.
  */
 export function sourceLabel(source: string): string {
   if (source === 'typed') return '적음'
-  if (source === 'fit') return 'fitting'
   return ''
 }
 

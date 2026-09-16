@@ -24,6 +24,7 @@ import { Scans } from './pages/Scans'
 import { SpectrumDetail } from './pages/SpectrumDetail'
 import { SymCellDetail } from './pages/SymCellDetail'
 import { SymCells } from './pages/SymCells'
+import { SymDashboard } from './pages/SymDashboard'
 import { Upload } from './pages/Upload'
 
 /** 내비게이션은 **측정 종류**로 묶는다 (ADR 0019).
@@ -67,7 +68,10 @@ const SECTIONS: NavSection[] = [
     // 이고, 마지막에 남는 것이 활성화에너지 하나다.
     label: '대칭셀',
     links: [
-      { to: '/sym', label: '이온전도도' },
+      { to: '/sym', label: '대시보드' },
+      { to: '/sym/library', label: '라이브러리' },
+      // 업로드는 EIS 와 같은 화면이다.  `.mpt` 든 `.mpr` 이든 올리는 일은
+      // 하나이고, 화면을 하나 더 만들면 같은 폼이 두 군데가 된다.
       { to: '/eis/upload', label: '업로드' },
     ],
   },
@@ -121,8 +125,12 @@ export function App() {
         <Route path="/eis/spectra" element={<Eis />} />
         <Route path="/eis/:id" element={<SpectrumDetail />} />
         <Route path="/scans" element={<Scans />} />
-        <Route path="/sym" element={<SymCells />} />
-        <Route path="/sym/:sha256" element={<SymCellDetail />} />
+        <Route path="/sym" element={<SymDashboard />} />
+        <Route path="/sym/library" element={<SymCells />} />
+        {/* `/sym/library` 와 갈리도록 한 칸을 더 둔다.  정적 조각이 먼저
+            맞는 규칙에 기대면, 나중에 `/sym/<무엇>` 을 하나 더 만들 때
+            조용히 스캔 주소로 빨려 들어간다. */}
+        <Route path="/sym/scan/:sha256" element={<SymCellDetail />} />
         <Route path="/scans/:sha256" element={<ScanDetail />} />
         <Route path="/gitt" element={<GittDashboard />} />
         <Route path="/gitt/library" element={<GittLibrary />} />

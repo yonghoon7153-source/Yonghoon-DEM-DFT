@@ -1,8 +1,10 @@
 /** 대칭셀 화면 — 기계가 저항을 고르지 않는다 (ADR 0039).
  *
- *  실측에서 실수축 교점으로 읽으면 0.290 eV, 랩이 ZView 에서 읽으면 0.328 eV
- *  였고 두 읽기의 비도 일정하지 않았다 (2.01 → 3.03).  그래서 교점은 **보이되
- *  저절로 들어가지 않는다**.  이 시험이 그 자리를 잡아 둔다.
+ *  σ 는 **사람이 적은 저항에서만** 나온다.  읽을 수 있는 두 수(실수축 교점,
+ *  맞춤의 총저항)는 나란히 제안으로 서고, 눌러야 들어간다.  실측 파일에서 그
+ *  둘이 4710~8193배 어긋난 적이 있다 (60 °C 에서 4.82 Ω 대 22687 Ω) — 조용히
+ *  하나를 고르면 σ 가 19.3 mS/cm 대신 0.0041 mS/cm 로 나오고, 표는 아홉 줄이
+ *  다 채워진 채로 멀쩡해 보인다.  이 시험이 그 자리를 잡아 둔다.
  */
 
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
@@ -28,7 +30,9 @@ function row(index: number, over: Partial<ConductivityRow> = {}): ConductivityRo
     spectrum_id: index, sweep_index: index, name: `B12 #${index}`,
     temperature_c: null, thickness_mm: 0.79, area_cm2: 0.8501,
     resistance_ohm: null, resistance_source: '', crossing_ohm: 4.817 + index,
-    sigma_ms_cm: null, ...over,
+    // 맞춤 총저항은 여기서 교점의 4710배다 — 실측에서 나온 배수 그대로다.
+    // 두 제안이 나란히 서면 이만큼 어긋난 것이 눈에 보여야 한다.
+    fit_ohm: (4.817 + index) * 4710, sigma_ms_cm: null, ...over,
   }
 }
 
@@ -95,11 +99,20 @@ describe('대칭셀 상세', () => {
   it('실수축 교점은 보이되 저항 칸에 저절로 들어가지 않는다', async () => {
     draw()
     await screen.findByText('B12_activationE')
-    // 표에 제안이 적혀 있고
-    expect(await screen.findByText(/교점 5\.82 Ω/)).toBeInTheDocument()
+    // 표에 두 제안이 나란히 적혀 있고 — 어긋남이 눈에 보여야 한다.
+    const cell = await screen.findByText(/교점 5\.82 · fitting 27398/)
+    expect(cell).toBeInTheDocument()
     // 저항 칸은 비어 있다.
     const box = screen.getByLabelText('전해질 저항 목록') as HTMLInputElement
     expect(box.value).toBe('')
+  })
+
+  it('맞춤 총저항도 제안일 뿐이다 — 단추가 따로 있다', async () => {
+    draw()
+    await screen.findByText('B12_activationE')
+    fireEvent.click(screen.getByRole('button', { name: 'fitting 총저항으로 채우기' }))
+    const box = screen.getByLabelText('전해질 저항 목록') as HTMLInputElement
+    expect(box.value).toBe('27400, 32110, 36820')
   })
 
   it('제안을 누르면 그때 칸에 들어간다', async () => {

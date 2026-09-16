@@ -906,6 +906,55 @@ class ScanSocOut(BaseModel):
     cleared: int
 
 
+class SymDashboardRow(BaseModel):
+    """대칭셀 대시보드의 한 줄 — 전해질 한 파일과, 거기서 나온 두 수.
+
+    EIS 대시보드는 **셀**이 한 줄이지만 여기는 **파일**이 한 줄이다.  대칭셀
+    측정은 셀 하나에 파일 하나이고, 묻는 것이 "이 전해질의 활성화에너지" 라
+    파일이 곧 답의 단위다.
+    """
+
+    sha256: str
+    name: str
+    original_name: str = ""
+    sample_id: int | None = None
+    sample_name: str = ""
+    group_id: int | None = None
+    group_name: str = ""
+    group_parent_name: str = ""
+    owner: str = ""
+    purpose: str = ""
+    cell_config: str = ""
+    sweeps: int = 0
+    fitted: int = 0
+    #: 온도가 적힌 스윕 수와 그 범위.  안 적혔으면 ``None`` 이고, 그것이 다음에
+    #: 할 일이다 (§0.4).
+    temperatures_written: int = 0
+    temperature_high_c: float | None = None
+    temperature_low_c: float | None = None
+    #: 저항이 적힌 스윕 수 — σ 는 여기서만 나온다.
+    resistances_written: int = 0
+    thickness_mm: float | None = None
+    area_cm2: float | None = None
+    #: 가장 높은 온도의 이온전도도.  표의 첫 줄에 오는 수이고, 전해질끼리
+    #: 견주는 자리에서 제일 먼저 보는 값이다.
+    sigma_top_ms_cm: float | None = None
+    activation_energy_ev: float | None = None
+    activation_stderr_ev: float | None = None
+    r_squared: float | None = None
+    points_used: int = 0
+    #: 활성화에너지가 없으면 왜인지.  빈 문자열이면 있다.
+    reason: str = ""
+    uploaded_at: datetime | None = None
+
+
+class SymDashboardOut(BaseModel):
+    rows: list[SymDashboardRow] = []
+    #: 대칭셀로 보이지 않아 빠진 스캔 수 — 화면이 "왜 내 파일이 없지" 에
+    #: 답할 수 있게.
+    other_scans: int = 0
+
+
 class ScanTemperatureIn(BaseModel):
     """이 스캔의 온도를 스윕 차례대로 (ADR 0039).
 
@@ -987,17 +1036,20 @@ class ConductivityRowOut(BaseModel):
     thickness_mm: float | None = None
     area_cm2: float | None = None
     resistance_ohm: float | None = None
-    #: ``typed`` 사람이 적었다 · ``fit`` 맞춤의 총저항 · ``""`` 아직 없다.
-    #: 표에 함께 적는다 -- 손으로 읽은 저항과 맞춘 저항이 한 열에 섞이면,
-    #: 나중에 그 표를 보는 사람은 어느 쪽인지 알 방법이 없다.
+    #: ``typed`` 사람이 적었다 · ``""`` 아직 없다.  표에 함께 적는다 -- 적힌
+    #: 저항과 제안이 한 열에 섞이면, 나중에 그 표를 보는 사람은 어느 쪽인지
+    #: 알 방법이 없다.
     resistance_source: str = ""
-    #: ``-Im`` 이 아래에서 위로 0 을 지나는 자리의 ``Re`` — **제안**이다.
+    #: 읽을 수 있는 두 수 — **제안이고, 저절로 들어가지 않는다** (ADR 0039).
     #:
-    #: 자동으로 채우지 않는다.  실측 파일에서 이 교점으로 읽으면 0.290 eV,
-    #: 랩이 ZView 에서 읽으면 0.328 eV 가 나왔고 두 읽기의 비는 일정하지도
-    #: 않았다 (60 °C 2.01배, -20 °C 3.03배).  어디서 읽을지가 답을 바꾸므로
-    #: 그 판단은 사람이 한다 (ADR 0039).
+    #: ``crossing_ohm`` 은 ``-Im`` 이 아래에서 위로 0 을 지나는 자리의 ``Re``,
+    #: ``fit_ohm`` 은 가장 잘 맞은 맞춤의 총저항이다.  나란히 내보내는 이유는
+    #: **둘이 크게 어긋날 수 있어서**다: 회로에 블로킹 꼬리를 담을 요소가
+    #: 없으면 맞춤은 `p(R1,CPE1)` 로 꼬리를 흉내내고, 그 총저항은 실측 파일에서
+    #: 교점의 4710~8193배로 나왔다 (60 °C 에서 4.82 Ω 대 22687 Ω).  나란히
+    #: 놓으면 그 어긋남이 눈에 보인다.
     crossing_ohm: float | None = None
+    fit_ohm: float | None = None
     sigma_ms_cm: float | None = None
 
 

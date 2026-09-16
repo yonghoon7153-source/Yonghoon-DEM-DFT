@@ -569,7 +569,8 @@ describe('넓은 배치의 머리글 — 열마다 어느 셀인지 (2026-08-27)
 const ROW = (over: Partial<ConductivityRow> = {}): ConductivityRow => ({
   spectrum_id: 1, sweep_index: 1, name: 'B12', temperature_c: 60,
   thickness_mm: 0.79, area_cm2: 0.8501, resistance_ohm: 9.69,
-  resistance_source: 'typed', crossing_ohm: 4.82, sigma_ms_cm: 9.59, ...over,
+  resistance_source: 'typed', crossing_ohm: 4.82, fit_ohm: null,
+  sigma_ms_cm: 9.59, ...over,
 })
 
 const ACTIVATION: ActivationEnergy = {

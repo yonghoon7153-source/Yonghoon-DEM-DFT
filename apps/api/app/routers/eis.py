@@ -72,6 +72,8 @@ from ..schemas import (
     SpectrumOut,
     SpectrumPointsOut,
     SpectrumUpdate,
+    SymDashboardOut,
+    SymDashboardRow,
 )
 from ..settings import settings
 
@@ -1092,6 +1094,131 @@ def write_scan_soc(sha256: str, payload: ScanSocIn,
                       cleared=len(records) - filled)
 
 
+#: 대칭셀 파트가 스캔을 모으는 목적 이름.  **자유 입력이므로 고정 목록이
+#: 아니다** — 이 문자열이 들어 있거나 셀 구성이 대칭셀이면 이 파트의 것으로
+#: 본다.  넉넉하게 잡는 쪽이 맞다: 여기 안 보이는 파일은 사람이 찾을 자리가
+#: 없고, 잘못 들어온 파일은 눈에 띄면 그만이다.
+CONDUCTIVITY_PURPOSE = "이온전도도"
+
+
+def _is_symmetric(record: SpectrumRecord) -> bool:
+    return CONDUCTIVITY_PURPOSE in (record.purpose or "") or record.cell_config == SYMMETRIC
+
+
+@router.get("/sym/dashboard", response_model=SymDashboardOut)
+def sym_dashboard(session: Session = Depends(get_session),
+                  basis: str = Query("sigma")):
+    """대칭셀 대시보드 — 전해질 한 파일이 한 줄, 활성화에너지까지.
+
+    **한 번에 낸다.**  화면이 파일마다 `/conductivity` 를 부르면 스캔 스무 개에
+    스무 번이고, 그동안 표는 부분적으로 채워지며 "아직 없음" 과 "정말 없음" 이
+    구분되지 않는다.
+
+    σ 는 **가장 높은 온도의 것**을 낸다.  슬라이드의 표에서 첫 줄에 오는 수이고,
+    전해질끼리 견줄 때 제일 먼저 보는 값이라서다.  온도를 안 적었으면 `None`
+    이다 — 스윕 차례의 첫 번째를 대신 쓰지 않는다 (그것은 가장 높은 온도라는
+    보장이 없고, 보장 없는 수를 표의 그 칸에 놓으면 견줄 수 없는 것을 견주게
+    된다).
+    """
+    if basis not in ACTIVATION_BASES:
+        raise HTTPException(
+            422, f"기준은 {' 또는 '.join(ACTIVATION_BASES)} 여야 합니다: {basis}")
+
+    grouped: dict[str, list[SpectrumRecord]] = {}
+    for record in session.exec(select(SpectrumRecord)).all():
+        grouped.setdefault(record.sha256, []).append(record)
+
+    rows: list[SymDashboardRow] = []
+    others = 0
+    for records in grouped.values():
+        if len(records) < MIN_SCAN_SWEEPS:
+            continue
+        records = sorted(records, key=lambda one: one.sweep_index)
+        head = records[0]
+        if not _is_symmetric(head):
+            others += 1
+            continue
+        rows.append(_sym_row(session, records, basis))
+
+    rows.sort(key=lambda one: (one.uploaded_at is None, one.uploaded_at), reverse=True)
+    return SymDashboardOut(rows=rows, other_scans=others)
+
+
+def _sym_row(session: Session, records: list[SpectrumRecord],
+             basis: str) -> SymDashboardRow:
+    head = records[0]
+    sample = session.get(Sample, head.sample_id) if head.sample_id else None
+    group = session.get(ExperimentGroup, head.group_id) if head.group_id else None
+    parent = (session.get(ExperimentGroup, group.parent_id)
+              if group is not None and group.parent_id else None)
+
+    temperatures: list[float | None] = []
+    sigmas: list[float | None] = []
+    resistances = 0
+    thickness_mm = area_cm2 = None
+    fitted = 0
+    for record in records:
+        thickness_cm, area = _geometry(session, record)
+        millimetres = thickness_cm * 10.0 if thickness_cm else None
+        if thickness_mm is None:
+            thickness_mm = millimetres
+        if area_cm2 is None:
+            area_cm2 = area
+        resistance, source = _sweep_resistance(record)
+        if source == "typed":
+            resistances += 1
+        temperatures.append(record.temperature_c)
+        sigmas.append(conductivity_ms_cm(resistance, thickness_mm=millimetres,
+                                         area_cm2=area))
+        if _best_fit(session, record.id or 0) is not None:
+            fitted += 1
+
+    written = [one for one in temperatures if one is not None]
+    # 가장 높은 온도의 σ.  둘 다 있는 줄에서만 고른다 -- 온도만 있는 줄을
+    # 골라 놓고 σ 가 없다고 적으면 그 칸은 아무것도 말하지 않는다.
+    top = None
+    pairs = [(t, s) for t, s in zip(temperatures, sigmas, strict=True)
+             if t is not None and s is not None]
+    if pairs:
+        top = max(pairs, key=lambda pair: pair[0])[1]
+
+    result = activation_energy(temperatures, sigmas, basis=basis)
+    return SymDashboardRow(
+        sha256=head.sha256,
+        name=_scan_display_name(head),
+        original_name=head.original_name,
+        sample_id=head.sample_id,
+        sample_name=sample.name if sample else "",
+        group_id=head.group_id,
+        group_name=group.name if group else "",
+        group_parent_name=parent.name if parent else "",
+        owner=head.created_by,
+        purpose=head.purpose,
+        cell_config=head.cell_config,
+        sweeps=len(records),
+        fitted=fitted,
+        temperatures_written=len(written),
+        temperature_high_c=max(written) if written else None,
+        temperature_low_c=min(written) if written else None,
+        resistances_written=resistances,
+        thickness_mm=thickness_mm,
+        area_cm2=area_cm2,
+        sigma_top_ms_cm=top,
+        activation_energy_ev=result.activation_energy_ev,
+        activation_stderr_ev=result.stderr_ev,
+        r_squared=result.fit.r_squared if result.fit else None,
+        points_used=result.points_used,
+        reason=result.reason,
+        uploaded_at=head.uploaded_at,
+    )
+
+
+def _scan_display_name(record: SpectrumRecord) -> str:
+    """스윕 번호를 뗀 이름.  목록의 한 줄이 파일이므로 `#1` 은 뜻이 없다."""
+    name = record.name or record.original_name
+    return re.sub(r"\s*#\d+$", "", name)
+
+
 @router.put("/scans/{sha256}/temperature", response_model=ScanValuesOut)
 def write_scan_temperature(sha256: str, payload: ScanTemperatureIn,
                            session: Session = Depends(get_session)):
@@ -1171,10 +1298,11 @@ def scan_conductivity(sha256: str, basis: str = Query("sigma"),
                       session: Session = Depends(get_session)):
     """온도별 이온전도도 표와, 그 점들이 그리는 활성화에너지 (ADR 0039).
 
-    저항은 두 곳에서 올 수 있고 **사람이 적은 것이 이긴다**: 블로킹 대칭셀의
-    반원은 닫히기 전에 꼬리가 올라오는 일이 잦아, 랩은 ZView 에서 절편을 눈으로
-    읽는다.  어느 쪽에서 온 수인지 줄마다 함께 낸다 (`resistance_source`) --
-    한 열에 섞인 채로 표가 슬라이드에 붙으면 그 구분은 영영 사라진다.
+    **저항은 사람이 적은 것만 쓴다** (`_sweep_resistance`).  읽을 수 있는 두
+    수 -- 실수축 교점(`crossing_ohm`)과 맞춤의 총저항(`fit_ohm`) -- 은 제안으로
+    나란히 내보내고, 어느 것을 쓸지는 화면에서 사람이 누른다.  둘을 저절로
+    쓰지 않는 이유는 `_sweep_resistance` 에 적혀 있다 (총저항이 4710배 크게
+    나온 실측이 있다).
 
     두께·면적은 스윕 자신의 것을 쓰고, 비어 있으면 붙은 셀의 것을 쓴다
     (`_geometry` 의 규칙 그대로).  EC-Lab 이 `.mpt` 머리말에 적어 둔
@@ -1192,7 +1320,9 @@ def scan_conductivity(sha256: str, basis: str = Query("sigma"),
     for record in records:
         thickness_cm, area_cm2 = _geometry(session, record)
         thickness_mm = thickness_cm * 10.0 if thickness_cm else None
-        resistance, source = _sweep_resistance(session, record)
+        resistance, source = _sweep_resistance(record)
+        point = _scan_point(session, record)
+        fit_ohm = point.total_resistance_ohm
         rows.append(ConductivityRowOut(
             spectrum_id=record.id or 0,
             sweep_index=record.sweep_index,
@@ -1203,6 +1333,7 @@ def scan_conductivity(sha256: str, basis: str = Query("sigma"),
             resistance_ohm=resistance,
             resistance_source=source,
             crossing_ohm=_crossing_of(record),
+            fit_ohm=fit_ohm if fit_ohm and fit_ohm > 0 else None,
             sigma_ms_cm=conductivity_ms_cm(resistance, thickness_mm=thickness_mm,
                                            area_cm2=area_cm2),
         ))
@@ -1237,18 +1368,24 @@ def _crossing_of(record: SpectrumRecord) -> float | None:
     return real_axis_crossing(spectrum.frequency_hz, spectrum.z_re, spectrum.z_im)
 
 
-def _sweep_resistance(session: Session,
-                      record: SpectrumRecord) -> tuple[float | None, str]:
-    """이 스윕의 전해질 저항과 그것이 어디서 왔는지.
+def _sweep_resistance(record: SpectrumRecord) -> tuple[float | None, str]:
+    """이 스윕의 전해질 저항 — **사람이 적은 것만** (2026-09-16 고침).
 
-    적어 넣은 값이 이긴다.  없으면 가장 잘 맞은 맞춤의 **총저항** -- 직렬
-    저항만 쓰면 배선과 접촉만 세게 되고, 전해질의 벌크·입계가 통째로 빠진다.
+    처음에는 적힌 값이 없으면 맞춤의 총저항으로 채웠다.  그것이 틀렸다.
+    블로킹 대칭셀의 나이퀴스트는 반원이 아니라 올라가는 꼬리라, 회로에 그
+    꼬리를 담을 요소가 없으면 맞춤은 `p(R1,CPE1)` 로 꼬리를 흉내낸다 -- 그때
+    `R1` 은 아크가 아니라 꼬리의 높이이고, 총저항은 전해질 저항이 아니다.
+
+    실측 `B12_activationE_C02.mpt` 를 `R0-p(R1,CPE1)` 로 맞추면 총저항이 온도
+    아홉 점에서 **4710~8193배** 크게 나온다 (60 °C 에서 교점 4.82 Ω, 총저항
+    22687 Ω).  그대로 σ 에 넣으면 19.3 mS/cm 가 0.0041 mS/cm 가 되는데, 표는
+    아홉 줄이 다 채워진 채로 멀쩡해 보이고 `fitting` 이라고만 적혀 있었다.
+
+    그래서 자동으로 채우지 않는다.  읽을 수 있는 두 수(실수축 교점과 맞춤의
+    총저항)는 **제안으로 나란히** 내보내고, 어느 것을 쓸지는 사람이 누른다.
     """
     if record.resistance_ohm is not None and record.resistance_ohm > 0:
         return record.resistance_ohm, "typed"
-    point = _scan_point(session, record)
-    if point.total_resistance_ohm is not None and point.total_resistance_ohm > 0:
-        return point.total_resistance_ohm, "fit"
     return None, ""
 
 

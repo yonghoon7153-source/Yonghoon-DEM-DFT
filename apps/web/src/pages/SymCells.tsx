@@ -1,90 +1,198 @@
-/** 대칭셀 — 전해질만 보는 측정의 목록 (ADR 0039).
+/** 대칭셀 라이브러리 — 전해질만 보는 측정이 한 줄씩 (ADR 0039).
  *
- *  블로킹 대칭셀(SS|전해질|SS)을 챔버에 넣고 온도를 내리며 PEIS 를 거는 측정
- *  이다.  한 `.mpt` 안에 스윕이 아홉 개 들어 있고, 나오는 것은 온도별
- *  이온전도도와 활성화에너지 하나다.
+ *  EIS 라이브러리와 **같은 모양**이다: 같은 거르개(그룹·소그룹·묶기·검색),
+ *  같은 폴더 줄, 같은 행 꼬리표(그룹·작성자), 같은 관계셀 드롭다운, 같은
+ *  지우기.  두 화면이 같은 종류의 목록이라 어휘가 갈리면 안 된다 — 한쪽에서
+ *  익힌 손이 다른 쪽에서 헤매는 것이 이 저장소에서 제일 흔한 불편이었다.
  *
- *  EIS 라이브러리에도 여전히 보인다 — 같은 측정이고 나이퀴스트는 나이퀴스트다.
- *  여기 따로 두는 것은 **묻는 것이 달라서**다.
+ *  다른 것은 **무엇을 세느냐** 뿐이다.  여기서 한 줄은 늘 파일 하나이고(스윕을
+ *  펴 놓지 않는다), 열에는 주파수·점 대신 **온도**와 **이온전도도로 가는 길**이
+ *  선다.
  */
 
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { DeleteMeasurementButton } from '../components/RelatedCell'
+import { FolderRow, useFolders } from '../components/FolderTree'
+import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
+import {
+  BucketRow, GroupByControl, type GroupKey, bucketize, validGroupKey,
+} from '../components/LibraryGroups'
+import { DeleteMeasurementButton, RelatedCellSelect } from '../components/RelatedCell'
+import { GroupTag, OwnerTag, leafOf } from '../components/RowTags'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
-import { CONDUCTIVITY_PURPOSE, isConductivityScan } from '../lib/conductivity'
+import { CONDUCTIVITY_PURPOSE } from '../lib/conductivity'
+import { isScan, scanFit } from '../lib/eis'
+import { dateTime } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
+import type { Spectrum } from '../lib/types'
+
+/** 이 측정이 대칭셀 파트의 것인가.
+ *
+ *  둘 중 하나면 된다: 목적에 `이온전도도` 가 적혀 있거나, 셀 구성이 대칭셀
+ *  이거나.  **숨기지 않는 쪽으로 넉넉하게 잡는다** — 여기 안 보이는 파일은
+ *  사람이 찾을 자리가 없고, 잘못 들어온 파일은 눈에 띄면 그만이다.
+ */
+function isSymMeasurement(item: Spectrum): boolean {
+  return (item.purpose ?? '').includes('이온전도도') || item.cell_config === 'sym'
+}
 
 export function SymCells() {
-  const [search, setSearch] = useState('')
-  const [rowError, setRowError] = useState<string | null>(null)
-  //: 기본은 대칭셀만이다.  전부 보기를 눌러 두면 다음에 와도 그대로다 —
-  //  목적을 안 적고 올린 파일을 찾으러 오는 자리가 여기라서.
   const [onlySym, setOnlySym] = useStickyState('bml.symOnly', true)
-  const scans = useAsync(() => api.listScans(), [], { live: true })
+  const [purpose, setPurpose] = useState('')
+  const [search, setSearch] = useState('')
+  const [reloadKey, bumpReload] = useState(false)
+  // 표 바깥에 한 번만.  행 안에 끼우면 열이 밀린다 (EIS 라이브러리와 같은 규칙).
+  const [rowError, setRowError] = useState<string | null>(null)
 
-  const rows = useMemo(() => {
-    const all = (scans.data ?? []).filter(
-      (scan) => !onlySym || isConductivityScan(scan))
-    if (!search) return all
-    const needle = search.toLowerCase()
-    return all.filter((scan) =>
-      scan.name.toLowerCase().includes(needle)
-      || scan.original_name.toLowerCase().includes(needle)
-      || (scan.sample_name ?? '').toLowerCase().includes(needle))
-  }, [scans.data, search, onlySym])
+  const spectra = useAsync(() => api.listSpectra(), [reloadKey], { live: true })
+  const group = useGroupChoice()
+  const samples = useAsync(() => api.listSamples(), [], { live: true })
 
-  const hidden = (scans.data ?? []).length - (scans.data ?? []).filter(
-    isConductivityScan).length
+  const attach = useCallback(async (id: number, sampleId: number | null) => {
+    setRowError(null)
+    try {
+      await api.updateSpectrum(id, sampleId
+        ? { sample_id: sampleId }
+        : { clear: ['sample_id'] })
+      bumpReload((value) => !value)
+    } catch (cause) {
+      setRowError(cause instanceof Error ? cause.message : String(cause))
+    }
+  }, [])
+
+  const purposes = useMemo(() => {
+    const seen = new Set<string>()
+    for (const item of spectra.data ?? []) if (item.purpose) seen.add(item.purpose)
+    return [...seen].sort((a, b) => a.localeCompare(b, 'ko'))
+  }, [spectra.data])
+
+  const inGroup = group.includes
+  const matched = useMemo(() => {
+    const needle = search.trim().toLowerCase()
+    return (spectra.data ?? []).filter((item) => {
+      // 스윕이 하나뿐인 파일은 온도 스윕이 아니다 — 여기 세울 표가 없다.
+      if (!isScan(item)) return false
+      if (onlySym && !isSymMeasurement(item)) return false
+      if (purpose && item.purpose !== purpose) return false
+      if (!inGroup(item.group_id_effective ?? null)) return false
+      if (needle && !(item.name.toLowerCase().includes(needle)
+        || item.original_name.toLowerCase().includes(needle)
+        || (item.sample_name ?? '').toLowerCase().includes(needle))) return false
+      return true
+    })
+  }, [spectra.data, onlySym, purpose, search, inGroup])
+
+  //: 여기서 한 줄은 **늘 파일 하나**다.  EIS 라이브러리는 펴는 길을 남기지만
+  //  (스윕 하나를 지우거나 따로 붙이는 일이 있다) 이 화면이 묻는 것은 "이
+  //  전해질의 활성화에너지" 라, 스윕 아홉 줄은 그 질문에 아무 답도 안 한다.
+  const shown = useMemo(() => {
+    const seen = new Set<string>()
+    return matched.filter((item) => {
+      if (seen.has(item.sha256)) return false
+      seen.add(item.sha256)
+      return true
+    })
+  }, [matched])
+
+  //: 접힌 줄이 대표하는 스윕들 — fitting 칸과 온도 칸이 이것으로 선다.
+  //  첫 스윕만 보면 하나만 맞춘 파일이 맞춘 파일로 보인다 (`scanFit`).
+  const sweepsOf = useMemo(() => {
+    const rows = new Map<string, Spectrum[]>()
+    for (const item of matched) {
+      const seen = rows.get(item.sha256)
+      if (seen) seen.push(item)
+      else rows.set(item.sha256, [item])
+    }
+    return rows
+  }, [matched])
+
+  const hidden = useMemo(() => {
+    const files = new Set<string>()
+    for (const item of spectra.data ?? []) {
+      if (isScan(item) && !isSymMeasurement(item)) files.add(item.sha256)
+    }
+    return files.size
+  }, [spectra.data])
+
+  const [groupBy, setGroupBy] = useStickyState<GroupKey>('bml.symGroupBy', 'group')
+  const groupKey = validGroupKey(groupBy)
+  const folders = useFolders('sym-library', shown, placeSpectrum)
+  const buckets = useMemo(
+    () => bucketize(shown, groupKey, bucketOf), [shown, groupKey])
 
   return (
     <main className="page">
       <div className="page-head">
         <div style={{ minWidth: 0 }}>
-          <h1>대칭셀 · 이온전도도</h1>
+          <h1>대칭셀 라이브러리</h1>
           <div className="sub">
-            온도를 바꿔 가며 건 PEIS 한 파일에서 온도별 이온전도도와
-            활성화에너지를 냅니다. 스캔을 열고 <b>온도</b>와 <b>두께·면적</b>을
-            적으면 표가 섭니다.
+            온도를 바꿔 가며 건 PEIS 한 파일이 한 줄씩 — 열면 온도별
+            이온전도도와 활성화에너지가 섭니다
           </div>
         </div>
       </div>
 
+      <div className="row" style={{ marginBottom: 10, gap: 8 }}>
+        <Link className="link-btn" to="/eis/spectra">여러 개 한꺼번에 맞추기</Link>
+        <Link className="link-btn" to="/eis/upload">업로드</Link>
+      </div>
+
       <Card title="거르기" tight>
-        <div className="row" style={{ padding: 14, gap: 14, flexWrap: 'wrap' }}>
-          <Field label="보기">
-            <div className="seg">
+        <div className="filter-row" style={{ padding: 12 }}>
+          <GroupFilterFields pick={group} hint="셀에 붙은 것만 남습니다" />
+          <Field label="보기" hint="대칭셀이 아닌 스캔도 볼 수 있습니다">
+            <div className="segmented" role="group" aria-label="보기">
               <button type="button" className={onlySym ? 'on' : ''}
                       onClick={() => setOnlySym(true)}>대칭셀</button>
               <button type="button" className={onlySym ? '' : 'on'}
-                      onClick={() => setOnlySym(false)}>전체 스캔</button>
+                      onClick={() => setOnlySym(false)}>스캔 전부</button>
             </div>
           </Field>
-          <Field label="검색">
-            <input value={search} onChange={(event) => setSearch(event.target.value)}
-                   placeholder="이름 · 파일 · 셀" />
+          <Field label="목적" hint="올릴 때 적어 둔 것">
+            <select
+              aria-label="목적"
+              value={purpose}
+              onChange={(event) => setPurpose(event.target.value)}
+            >
+              <option value="">전체</option>
+              {purposes.map((one) => (
+                <option key={one} value={one}>{one}</option>
+              ))}
+            </select>
           </Field>
-          {/* 무엇이 안 보이는지 적는다.  "왜 내 파일이 없지" 가 이 화면에서
-              제일 먼저 나오는 질문이고, 답은 목적이나 셀 구성이다. */}
-          {onlySym && hidden > 0 ? (
-            <div className="tiny dim" style={{ alignSelf: 'flex-end', paddingBottom: 6 }}>
-              대칭셀이 아닌 스캔 {hidden}개는 숨겨져 있습니다 — 목적을{' '}
-              <code>{CONDUCTIVITY_PURPOSE}</code> 로 적거나 셀 구성을 대칭셀로
-              두면 여기 나옵니다.
-            </div>
-          ) : null}
+          <Field label="검색" hint="이름 · 파일 · 셀">
+            <input
+              aria-label="검색"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="이름 · 파일 · 셀"
+            />
+          </Field>
         </div>
+        {/* 무엇이 안 보이는지 적는다.  "왜 내 파일이 없지" 가 이 화면에서 제일
+            먼저 나오는 질문이고, 답은 목적이거나 셀 구성이다. */}
+        {onlySym && hidden > 0 ? (
+          <div className="tiny dim" style={{ padding: '0 12px 12px' }}>
+            대칭셀이 아닌 스캔 {hidden}개는 숨겨져 있습니다 — 목적을{' '}
+            <code>{CONDUCTIVITY_PURPOSE}</code> 로 적거나 셀 구성을 대칭셀로 두면
+            여기 나옵니다.
+          </div>
+        ) : null}
       </Card>
 
-      <Card title={`스캔 ${rows.length}개`} tight>
+      <Card
+        title={`스캔 ${shown.length}개`}
+        tight
+        actions={<GroupByControl value={groupKey} onChange={setGroupBy} />}
+      >
         {rowError ? <Alert kind="error">{rowError}</Alert> : null}
-        {scans.error ? (
-          <Alert kind="error">{scans.error}</Alert>
-        ) : scans.loading && !scans.data ? (
+        {spectra.error ? (
+          <Alert kind="error">{spectra.error}</Alert>
+        ) : spectra.loading && !spectra.data ? (
           <div style={{ padding: 20 }}><Spinner /></div>
-        ) : rows.length ? (
+        ) : shown.length ? (
           <div className="table-wrap">
             <table>
               <thead>
@@ -93,37 +201,28 @@ export function SymCells() {
                   <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th style={{ textAlign: 'left' }}>목적</th>
                   <th>스윕</th>
-                  <th>fitting</th>
+                  <th style={{ textAlign: 'left' }}>온도</th>
+                  <th style={{ textAlign: 'left' }}>fitting</th>
+                  <th>올린 때</th>
                 </tr>
               </thead>
-              <tbody>
-                {rows.map((scan) => (
-                  <tr key={scan.sha256}>
-                    <td className="text">
-                      <DeleteMeasurementButton
-                        name={scan.name}
-                        note={`스윕 ${scan.sweeps}개 전부`}
-                        onError={setRowError}
-                        onDelete={async () => {
-                          await api.deleteScan(scan.sha256)
-                          scans.reload()
-                        }}
-                      />
-                      <Link to={`/sym/${scan.sha256}`}>{scan.name}</Link>
-                    </td>
-                    <td className="text dim">
-                      {scan.sample_id
-                        ? <Link to={`/samples/${scan.sample_id}`}>{scan.sample_name}</Link>
-                        : '—'}
-                    </td>
-                    <td className="text dim">{scan.purpose || '—'}</td>
-                    <td>{scan.sweeps}</td>
-                    <td className={scan.fitted ? '' : 'dim'}>
-                      {scan.fitted} / {scan.sweeps}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+              {groupKey === 'group' ? (
+                folders.folders.filter(folders.isVisible).map((folder) => (
+                  <tbody key={folder.key}>
+                    <FolderRow folder={folder} view={folders} columns={COLUMN_COUNT} />
+                    {folders.isFolded(folder.key) ? null : folder.items.map(row)}
+                  </tbody>
+                ))
+              ) : buckets ? (
+                buckets.map(([label, items]) => (
+                  <tbody key={label || '(none)'}>
+                    <BucketRow label={label} count={items.length} columns={COLUMN_COUNT} />
+                    {items.map(row)}
+                  </tbody>
+                ))
+              ) : (
+                <tbody>{shown.map(row)}</tbody>
+              )}
             </table>
           </div>
         ) : (
@@ -136,4 +235,112 @@ export function SymCells() {
       </Card>
     </main>
   )
+
+  function row(item: Spectrum) {
+    const sweeps = sweepsOf.get(item.sha256) ?? [item]
+    const scan = scanFit(sweeps, item.sweep_count ?? sweeps.length)
+    return (
+      <tr key={item.sha256}>
+        <td className="text">
+          {/* 지우기를 이름 앞에 — EIS 라이브러리와 같은 자리다.  한 줄이 곧
+              파일 하나이므로 지우는 것도 그 파일 전부다. */}
+          <DeleteMeasurementButton
+            name={item.name}
+            note={`스윕 ${item.sweep_count ?? sweeps.length}개 전부`}
+            onError={setRowError}
+            onDelete={async () => {
+              await api.deleteScan(item.sha256)
+              bumpReload((value) => !value)
+            }}
+          />
+          <GroupTag name={leafOf(item.group_label)} path={item.group_label} />
+          <OwnerTag owner={item.created_by} />
+          <Link to={`/sym/scan/${item.sha256}`}>{scanName(item)}</Link>
+          {' '}
+          {/* 나이퀴스트로 가는 길 — 같은 파일의 다른 보기다. */}
+          <Link to={`/scans/${item.sha256}`} className="tiny">[나이퀴스트]</Link>
+        </td>
+        <td className="text dim">
+          <div className="col" style={{ gap: 3, minWidth: 0, width: 200 }}>
+            <RelatedCellSelect
+              value={item.sample_id}
+              samples={samples.data ?? []}
+              label={`${item.name} 관계셀`}
+              onPick={(sampleId) => void attach(item.id, sampleId)}
+            />
+            {item.sample_id ? (
+              <Link className="tiny truncate" to={`/samples/${item.sample_id}`}>
+                셀 화면 →
+              </Link>
+            ) : null}
+          </div>
+        </td>
+        <td className="text dim">{item.purpose || '—'}</td>
+        <td>{item.sweep_count ?? sweeps.length}</td>
+        {/* 온도는 **사람이 적는다** (ADR 0039).  안 적혔으면 그렇게 적는다 —
+            비어 있는 것이 정상이고, 그것이 다음에 할 일이다. */}
+        <td className="text dim tiny">
+          {temperatureSpan(sweeps, item.sweep_count ?? sweeps.length)}
+        </td>
+        <td className="text dim tiny">
+          {scan ? (
+            <>
+              {scan.label}
+              {scan.detail ? <div className="faint">{scan.detail}</div> : null}
+            </>
+          ) : '—'}
+        </td>
+        <td className="dim">{dateTime(item.uploaded_at)}</td>
+      </tr>
+    )
+  }
 }
+
+/** 스윕 번호를 뗀 이름.  목록의 한 줄이 파일이므로 `#1` 은 뜻이 없다. */
+function scanName(item: Spectrum): string {
+  return item.name.replace(/\s*#\d+$/, '')
+}
+
+/** 이 파일이 걸친 온도 — `60 ~ -20 °C`.  하나도 안 적혔으면 그렇게 말한다.
+ *
+ *  걸러져 안 보이는 스윕이 있을 수 있으므로 **파일이 말하는 스윕 수**와 견준다.
+ *  걸러진 수로 "3/3 적음" 이라고 적으면 아홉 중 셋만 적힌 파일이 다 적힌
+ *  파일로 보인다.
+ */
+function temperatureSpan(sweeps: Spectrum[], total: number): string {
+  const written = sweeps
+    .map((one) => one.temperature_c)
+    .filter((one): one is number => one !== null && one !== undefined)
+  if (!written.length) return '아직 없음'
+  const high = Math.max(...written)
+  const low = Math.min(...written)
+  const span = high === low ? `${high} °C` : `${high} ~ ${low} °C`
+  return written.length === total ? span : `${span} (${written.length}/${total})`
+}
+
+/** 이 측정을 폴더 자리로 (ADR 0035) — EIS 라이브러리와 같은 규칙. */
+const placeSpectrum = (item: Spectrum) => ({
+  id: item.id,
+  groupId: item.group_id_effective ?? null,
+  groupName: item.group_name_effective ?? '',
+  groupParentName: item.group_parent_name_effective ?? '',
+})
+
+function bucketOf(item: Spectrum, key: GroupKey): string {
+  switch (key) {
+    case 'owner': return item.created_by ?? ''
+    case 'cathode': return item.cathode_type_effective || ''
+    case 'process': return item.process_effective || ''
+    // 이 화면에서 `온도` 묶기는 뜻이 얕다 — 스윕마다 온도가 다르고 이 줄은
+    // 1번 스윕을 대표로 세우기 때문이다.  그래도 남겨 둔다: 챔버를 한 온도로
+    // 두고 잰 다른 스캔이 섞여 있을 수 있다.
+    case 'temperature':
+      return item.temperature_c_effective === null
+        || item.temperature_c_effective === undefined
+        ? '' : `${item.temperature_c_effective}°C`
+    default: return ''
+  }
+}
+
+/** 이름·관계셀·목적·스윕·온도·fitting·올린 때 = 7. */
+const COLUMN_COUNT = 7
