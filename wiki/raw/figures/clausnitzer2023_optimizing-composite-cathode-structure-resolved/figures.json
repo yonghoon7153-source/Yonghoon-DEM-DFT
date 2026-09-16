@@ -1,0 +1,492 @@
+{
+ "slug": "clausnitzer2023_optimizing-composite-cathode-structure-resolved",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-16",
+ "sources": [
+  "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+  "71121952-02._Sup_Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Overview of the workflow to determine the influence of the geometrical properties on the electrochemical cell performance of the composite cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    41.8,
+    595.3,
+    165.4
+   ],
+   "w": 2481,
+   "h": 516,
+   "dpi": 300,
+   "src": "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.775
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Influence of the solid volume fraction of LCO on connectivity and tortuosity of the electrolyte network. Note that the inverse of tortuosity is shown. The density after sintering and mean initial particle diameters are constant at 1S=93.1%, dCAM=2.00 μm and and dSE=1.41 μm. The discharge simulations were conducted at a current density of 1 mA/cm2. The inset shows the SE phase for SVFLCO=33.3% and SVFLCO=80.0%.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    26.0,
+    595.3,
+    221.9
+   ],
+   "w": 2481,
+   "h": 817,
+   "dpi": 300,
+   "src": "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Influence of the cathode composition on the partial effective conductivities of the composite cathode and comparison to the experimen- tal data from Minnmann et al.[22] Effective conductivity is normalized with bulk conductivity of SE and CAM, respectively. The density after sintering and mean initial particle diameters are constant at 1S=93.1%, dCAM=2.00 μm and dSE=1.41 μm. (a) Effective ionic conductivity. (b) Effective electronic conductivity.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    41.8,
+    595.3,
+    337.4
+   ],
+   "w": 2481,
+   "h": 1232,
+   "dpi": 300,
+   "src": "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Influence of the grain boundary resistance on the (a) effective ionic conductivity and normalized capacity and (b) energy density. RGB,1=3.6·10\u0000 2 Ωcm2, RGB,2=3.6·10\u0000 1 Ωcm2, RGB,3=3.6 Ωcm2. The density after sintering and mean initial particle diameters were constant at 1S=93.1%, dCAM=2.00 μm and dSE=1.41 μm. The discharge simulations were conducted at a current density of 1 mA/cm2.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.7,
+    423.1,
+    553.6,
+    688.4
+   ],
+   "w": 1063,
+   "h": 1107,
+   "dpi": 300,
+   "src": "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Influence of the GB resistance on the CAM utilization for a structure with LCO solid volume fraction of 50%, a density after sintering of 93.1% and mean initial particle diameters of dCAM=2.00 μm and dSE=1.41 μm. RGB,1=3.6·10\u0000 2 Ωcm2, RGB,2=3.6·10\u0000 1 Ωcm2, RGB,3=3.6 Ωcm2. (a) Li content of the CAM voxels after the discharge at 1 mA/cm2. The inset shows the mean normalized capacity across the cathode length. (b) The Li content of the CAM in the 3D- structure after the discharge at 1 mA/cm2.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    537.3,
+    544.2,
+    706.4
+   ],
+   "w": 2099,
+   "h": 706,
+   "dpi": 300,
+   "src": "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Influence of the density after sintering on the connectivity in the (a) SE phase and (b) CAM phase for SVFLCO=33.3, 50.0 and 69.4%. (c) The influence of the density after sintering on the connectivity in the SE phase for the 3D composite cathode structure with SVFLCO=69.4%. The mean initial particle diameters were constant at dCAM=2.00 μm and dSE=1.41 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    26.0,
+    595.3,
+    231.6
+   ],
+   "w": 2481,
+   "h": 858,
+   "dpi": 300,
+   "src": "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.814
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Influence of the density after sintering on the tortuosity in the SE phase and the active interface area between SE and CAM for SVFLCO=33.3, 50.0 and 69.4%. Isolated material clusters were removed from the structures before computing the active area. The mean initial particle diameters were constant at 1S=93.1%, dCAM=2.00 μm and dSE=1.41 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.7,
+    531.7,
+    553.1,
+    697.4
+   ],
+   "w": 1061,
+   "h": 691,
+   "dpi": 300,
+   "src": "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Figure 8. (a) Influence of the density after sintering on the simulated gravimetric capacity for different CAM fractions and the simulation cases with neglible GB resistance (w/o GBs) and high GB resistance (w/ GBs) of RGB,3=3.6 Ωcm2. (b) Mean CAM utilization over the cathode length for different densities after sintering and the simulation case w/o GBs. (c) Influence of the density after sintering on the simulated energy density for different CAM fractions for the simulation cases w/o GBs and w/ GBs. The mean initial particle diameters were constant at dCAM=2.00 μm and dSE=1.41 μm. The discharge simulations were conducted at 1 mA/cm2.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    328.9,
+    547.8,
+    697.4
+   ],
+   "w": 2114,
+   "h": 1536,
+   "dpi": 300,
+   "src": "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 11,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Influence of the particle size of LCO and LLZO on the geometric properties of the cathode structure: (a) Active area between LCO and LLZO. (b) Tortuosity in the SE phase. Solid volume fraction and density after sintering were constant at SVFLCO=50% and 1S=93.1%. Arrows indicate the optimal particle diameter for achieving maximum active area and tortuosity, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    26.0,
+    595.3,
+    348.4
+   ],
+   "w": 2481,
+   "h": 1344,
+   "dpi": 300,
+   "src": "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 12,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Influence of the grain boundary resistance on the gravimetric capacity for different LCO and LLZO particle sizes. RGB,1=3.6·10\u0000 2 Ωcm2, RGB,2=3.6·10\u0000 1 Ωcm2, RGB,3=3.6 Ωcm2. For each simulation case the three highest capacities are highlighted with red circles. Solid volume fraction and density after sintering were constant at SVFLCO=50% and 1S=93.1%. The discharge simulations were conducted at 1 mA/cm2.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    41.8,
+    595.3,
+    214.9
+   ],
+   "w": 2481,
+   "h": 722,
+   "dpi": 300,
+   "src": "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 13,
+   "file": "fig_11.png",
+   "caption": "Figure 11. (a) Influence of the CAM parameters on the normalized and gravimetric capacity. The density after sintering and mean initial particle diameters were constant at 1S=93.1%, dCAM=2.00 μm and dSE=1.41 μm. The discharge simulations were conducted at 1 mA/cm2. (b) Influence of the grain boundary resistance on the gravimetric capacity for different NMC and LLZO particle sizes. RGB,1=3.6·10\u0000 2 Ωcm2, RGB,2=3.6·10\u0000 1 Ωcm2. For each simulation case the three highest capacities are highlighted with red circles. The solid volume fraction and density after sintering were constant at SVFNMC=50% and 1S=93.1%.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    429.3,
+    549.6,
+    706.4
+   ],
+   "w": 2121,
+   "h": 1156,
+   "dpi": 300,
+   "src": "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Example illustration of structure generation: a) after piling, b) after distributing, c) after cropping, d) after sintering. The solid volume fraction of LCO was 50%, the mean initial diameters 2.00 µm for LCO and 1.41 for LLZO, and the density after sintering 80%.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.1,
+    259.6
+   ],
+   "w": 2001,
+   "h": 808,
+   "dpi": 300,
+   "src": "71121952-02._Sup_Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.551
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Overview of the simulation domain consisting of anode, separator, composite cathode and current collectors at both sides of the cell. In the composite cathode, the solid electrolyte phase is segmented and assigned to 8 different material IDs. However, for clarity in the figure, the solid electrolyte phase is depicted as a homogeneous phase.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    347.8,
+    546.1,
+    557.8
+   ],
+   "w": 2001,
+   "h": 876,
+   "dpi": 300,
+   "src": "71121952-02._Sup_Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.694
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Particle size distribution of the SE phase resulting from the segmentation step. The particle diameters were calculated from the particle volumes assuming spherical par- ticles. All structures have an initial LCO particle size of dInit LCO = 2.00 µm, a solid volume fraction of SV FLCO = 50%, and a density after sintering of ρS = 93.1%. (a) dInit LLZO = 0.70 µm (b) dInit LLZO = 1.41 µm (c) dInit LLZO = 3.00 µm (d) dInit LLZO = 3.50 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    279.0,
+    546.0,
+    631.3
+   ],
+   "w": 2001,
+   "h": 1469,
+   "dpi": 300,
+   "src": "71121952-02._Sup_Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Influence of the solid volume fraction of LCO on the effective ionic and electrical conductivity. The electrical bulk conductivity is calculated as a concentration-dependent functional parameter and varies between the values for cLi,min and cLi,max. The density after sintering and mean initial particle diameters were constant at ρS = 93.1%, dCAM = 2.00 µm and dSE = 1.41 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.7,
+    546.0,
+    339.0
+   ],
+   "w": 2001,
+   "h": 1135,
+   "dpi": 300,
+   "src": "71121952-02._Sup_Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Influence of the GB resistance on the discharge curve for a structure with an SV FLCO = 50%, a density after sintering of 93.1% and mean initial particle diameters of dCAM = 2.00 µm and dSE = 1.41 µm. RGB,1 = 3.6 · 10−2 Ωcm2, RGB,2 = 3.6 · 10−1 Ωcm2, RGB,3 = 3.6 Ωcm2. The discharge simulations were conducted at 1 mA/cm2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    102.4,
+    546.0,
+    327.5
+   ],
+   "w": 2001,
+   "h": 939,
+   "dpi": 300,
+   "src": "71121952-02._Sup_Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.965
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Influence of the grain boundary resistance on the area specific capacity. RGB,1 = 3.6·10−2 Ωcm2, RGB,2 = 3.6·10−1 Ωcm2, RGB,3 = 3.6 Ωcm2. The density after sintering and mean initial particle diameters were constant at ρS = 93.1%, dCAM = 2.00 µm and dSE = 1.41 µm. The discharge simulations were conducted at a current density of 1 mA/cm2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    400.4,
+    546.0,
+    628.4
+   ],
+   "w": 2001,
+   "h": 951,
+   "dpi": 300,
+   "src": "71121952-02._Sup_Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Functional active material parameters for LCO and NMC. The Li occupation fraction is defined as x in LixCoO2 and x in LixNi0.8Mn0.1Co0.1O2 for LCO and NMC811, respectively. (a) Electrical conductivity of the CAM. (b) Chemical Li-diffusion coefficient of the CAM. (c) Influence of SVFCAM on the effective electrical conductivity for LCO and NMC. The electrical bulk conductivity is calculated as a concentration-dependent functional parameter and varies between the values for cLi,min and cLi,max. The density after sintering and mean initial particle diameters were constant at ρS = 93.1%, dCAM = 2.00 µm and dSE = 1.41 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.7,
+    546.1,
+    426.0
+   ],
+   "w": 2001,
+   "h": 1497,
+   "dpi": 300,
+   "src": "71121952-02._Sup_Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. Parameters of the electrochemical simulations. Functional parameters are indicated by * and are given at initial conditions. Symbol Value Unit Short description Ref. Li-metal UAN 0 0 V Open circuit potential – sAN Li 1 S/cm Electronic conductivity – iLi 0 2.59×10\u0000 2 A/cm2 Exchange current density [38] aLi 0.5 – Symmetry factor –",
+   "rotated_deg": 0,
+   "bbox": [
+    28.9,
+    14.0,
+    589.2,
+    830.1
+   ],
+   "w": 2055,
+   "h": 2993,
+   "dpi": 264,
+   "src": "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 13,
+   "file": "tab_2.png",
+   "caption": "Table 2. CAM parameter set for the electrochemical simulations with NMC. Functional parameters are indicated by * and given at initial conditions. Symbol Value Unit Ref. NMC UNMC 0 * 4.2 V [36] Li 0.01131 mol cm3 Calc. cNMC;0 Li 0.04903 mol cm3 Calc. cNMC;max Li * 8.83×10\u0000 3 S cm [52] sNMC Li * 8.71×10\u0000 13 cm2 DNMC s [53] 00 0.0116 Acm2:5 iNMC mol1:5 Calc. from [54]",
+   "rotated_deg": 0,
+   "bbox": [
+    41.8,
+    14.0,
+    589.2,
+    830.1
+   ],
+   "w": 2008,
+   "h": 2993,
+   "dpi": 264,
+   "src": "1da337a7-02._Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Shapes, default volume fractions and default sizes of the materials used for creation of the mixed cathode in the piling step. * outer diameter of the hexagon or sphere.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    86.0,
+    545.1,
+    757.5
+   ],
+   "w": 1993,
+   "h": 2799,
+   "dpi": 300,
+   "src": "71121952-02._Sup_Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 5,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Parameters for the segmentation of the electrolyte phase for the relevant structures from Figure 10. All structures have a solid volume fraction of SV FLCO = 50% and a density after sintering of ρS = 93.1%. σ was constant at 0.35. LLZO / µm R dseg dInit LCO / µm dInit LLZO / µm 2.00 0.70 2 1.09 0.80 1.41 4 1.55 2.00 1.41 4 1.76 3.00 1.41 4 1.75 3.50 1.41 4 1.75 8.00 1.41 2 4.56 2.00 3.00 8 3.13 2.00 3.50 8 3.18",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.8,
+    545.0,
+    630.3
+   ],
+   "w": 1993,
+   "h": 2345,
+   "dpi": 300,
+   "src": "71121952-02._Sup_Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 6,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Governing equations used in BEST.4,5",
+   "rotated_deg": 0,
+   "bbox": [
+    108.6,
+    100.2,
+    496.9,
+    525.5
+   ],
+   "w": 1619,
+   "h": 1773,
+   "dpi": 300,
+   "src": "71121952-02._Sup_Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 6,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Parameters used for the calculation of gravimetric capacity and energy density.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.6,
+    100.8,
+    540.5,
+    525.5
+   ],
+   "w": 1955,
+   "h": 1771,
+   "dpi": 300,
+   "src": "71121952-02._Sup_Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf",
+   "blank": 0.937
+  }
+ ]
+}
