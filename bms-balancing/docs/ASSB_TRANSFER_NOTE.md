@@ -183,6 +183,7 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 | **27** | **Bizeray·Kim·Duncan·Howey** — Identifiability and Parameter Estimation of the **Single Particle** Li-ion Battery Model (*IEEE TCST* **27**(5) 2019, 1862) | **방법론 원전 (액체셀)** | 16p `714992e6e46adbc4` |
 | **28** | **"Quantifying Resistive and Diffusive Kinetic Limitations of Thiophosphate Composite Cathodes in ASSB"** (*JES*, **open access**) | ★ **`η(i)` 항 그 자체 + OCV 곡선 최유력** | 11p `c0fc33c717c16634` |
 | **29** | **Park, B.-N.** — Unraveling Asymmetric Electrochemical Kinetics in **Low-Mass-Loading** NMC111 Li-Metal ASSB | Q8 보조 | 10p `9a213dfb1f39b963` |
+| **30** | **"Rapid determination of solid-state diffusion coefficients in Li-based batteries via intermittent current interruption (ICI) method"** (*Nat. Commun.* 2023, `s41467-023-37989-6`, **OA**) · ⚠ **보충 데이터 ZIP 이 사용자 기계에 따로 있다** | ★ **"이 곡선이 얼마나 평형인가"** — `GITT` 94 · `ICI` 100 · `open circuit` 5 · `equilibrium` 4 | 9p `6763cb6487a62a02` / SI 26p `d5033997fdaba3a7` |
 
 **★★ 25~29 의 단어 지문 — Q4 의 답이 거의 보인다** (digest 가 정본이고 이건 예비 지표다):
 
@@ -226,11 +227,11 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 ```
 03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12
    → 13 → 14 → 15 → 16 → 17 → 18 → 19 → 20 → 21 → 22 → 23 → 24
-   → 25 → 26 → 27 → 28 → 29
+   → 25 → 26 → 27 → 28 → 29 → 30
 ```
 
 **재배열하지 않는다.** 아래 6-4-a 는 내가 한때 권한 재배열인데 **채택되지 않았다** —
-근거로만 남긴다. **27 편 × ~20 분 ≈ 9 시간**이고 순차로만 돈다(lint 훅이 전체 위키를
+근거로만 남긴다. **28 편 × ~20 분 ≈ 9.5 시간**이고 순차로만 돈다(lint 훅이 전체 위키를
 보므로 병렬 불가). 한 편이 끝날 때마다 **lint 0 errors 확인 → 커밋 → 다음 편 착수**.
 
 ### 6-4-a. (채택 안 됨) 내가 권했던 재배열
