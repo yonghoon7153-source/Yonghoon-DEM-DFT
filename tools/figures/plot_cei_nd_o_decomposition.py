@@ -31,7 +31,7 @@ ND, OX, BOTH = "#6d28d9", ELEM.get("O", "#be123c"), INK
 fig, (a1, a2) = plt.subplots(1, 2, figsize=(10.2, 4.0), gridspec_kw={"width_ratios": [1.35, 1]})
 for s, col, lab, mk in ((dn, ND, "Nd only (Nd$^{3+}$$\\leftrightarrow$3Li$^+$)", "o"),
                         (do, OX, "O only (O 0.3, S$\\rightarrow$O)", "s"),
-                        (dt, BOTH, "LPSCl1.6@Nd$_2$O$_3$ (measured)", "^")):
+                        (dt, BOTH, "LPSCl$_{1.6}$@Nd$_2$O$_3$ (measured)", "^")):
     m = [st.mean(s[V]) for V in VS]
     lo = [min(s[V]) for V in VS]; hi = [max(s[V]) for V in VS]
     a1.fill_between(VS, lo, hi, color=col, alpha=0.13, lw=0)
@@ -39,7 +39,7 @@ for s, col, lab, mk in ((dn, ND, "Nd only (Nd$^{3+}$$\\leftrightarrow$3Li$^+$)",
 a1.plot(VS, [st.mean(dn[V]) + st.mean(do[V]) for V in VS], ls=":", lw=1.8,
         color=MUT, label="Nd only $+$ O only (sum of parts)")
 apply_axes(a1, "Voltage (V vs Li/Li$^+$)",
-           "$\\Delta$ reaction energy vs LPSCl1.6 (eV/atom)")
+           "$\\Delta$ reaction energy vs LPSCl$_{1.6}$ (eV/atom)")
 a1.axhline(0, color=MUT, lw=0.8, ls="--")
 a1.legend(frameon=False, fontsize=8.5, loc="upper left")
 a1.text(0.03, 0.62, "higher = less reactive", transform=a1.transAxes,
@@ -87,10 +87,10 @@ fig, ax = plt.subplots(figsize=(7.0, 4.2))
 xs = list(range(len(VS)))
 w = 0.2
 for i, (e, S, col, lab, hatch) in enumerate((
-        ("modelc_nd", SINK, ND, "LPSCl1.6@Nd$_2$O$_3$ : Nd-phosphate", None),
+        ("modelc_nd", SINK, ND, "LPSCl$_{1.6}$@Nd$_2$O$_3$ : Nd-phosphate", None),
         ("nd_only", SINK, "#a78bfa", "Nd only : Nd-phosphate", None),
-        ("modelc", BAD, "#c05621", "LPSCl1.6 : P$_2$S$_7$ formed", "//"),
-        ("modelc_nd", BAD, "#fbbf24", "LPSCl1.6@Nd$_2$O$_3$ : P$_2$S$_7$", "//"))):
+        ("modelc", BAD, "#c05621", "LPSCl$_{1.6}$ : P$_2$S$_7$ formed", "//"),
+        ("modelc_nd", BAD, "#fbbf24", "LPSCl$_{1.6}$@Nd$_2$O$_3$ : P$_2$S$_7$", "//"))):
     ax.bar([x + (i - 1.5) * w for x in xs], [count(e, V, S) for V in VS],
            width=w, color=col, label=lab, hatch=hatch, edgecolor="white", lw=0.6)
 apply_axes(ax, "Voltage (V vs Li/Li$^+$)", "Cathodes showing the phase (of 4)")
@@ -100,7 +100,7 @@ ax.legend(frameon=False, fontsize=8, ncol=2, loc="upper center")
 # 이름이 길어지면서 옛 자리(3.4, 1.45)가 4.3 V 막대를 덮었다. 화살표도 뺐다 —
 # 가리킬 대상이 **높이 0 인 막대**라 어디로 그어도 다른 막대를 가로지른다.
 # 범례에 노랑 항목이 있고 본문이 "전부 0" 이라 말하므로 화살표가 할 일이 없다.
-ax.text(1.55, 3.45, "LPSCl1.6@Nd$_2$O$_3$ never forms P$_2$S$_7$\n"
+ax.text(1.55, 3.45, "LPSCl$_{1.6}$@Nd$_2$O$_3$ never forms P$_2$S$_7$\n"
                     "(the yellow bars are all zero)",
         fontsize=8, color="#92400e", va="top")
 ax.set_title("P is captured as Nd-phosphate instead of P$_2$S$_7$",
@@ -122,9 +122,9 @@ COL = {"comp1": "#9ca3af", "modelc": "#6b7280", "lpsocl": "#be123c",
 #: ⚠ **표시명만** 여기서 바꾼다 — 키(comp1·modelc·modelc_nd)는 CSV·JSON 열 이름이고
 #:   기계 경로라 안 건드린다 (1저자 2026-09-16: "modelc 라 하지 말고 lpscl1.6 으로,
 #:   공치환은 lpscl1.6@nd2o3 로 — 같이 보는 문서니까").
-LAB = {"comp1": "LPSCl", "modelc": "LPSCl1.6", "lpsocl": "LPSOCl1.6",
+LAB = {"comp1": "LPSCl", "modelc": "LPSCl$_{1.6}$", "lpsocl": "LPSOCl$_{1.6}$",
        "o_only_03": "O 0.3 only", "nd_only": "Nd only",
-       "modelc_nd": "LPSCl1.6@Nd$_2$O$_3$"}
+       "modelc_nd": "LPSCl$_{1.6}$@Nd$_2$O$_3$"}
 for ax, c in zip(axs, CATS):
     for e, col in COL.items():
         y = [D["results"][c]["by_voltage"][f"{V:.2f}"].get(e) for V in VS]

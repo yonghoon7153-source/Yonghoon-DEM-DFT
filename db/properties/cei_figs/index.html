@@ -132,25 +132,25 @@ Li 0 개, Li₃PO₄ 는 3 개). 고전압이 Li 를 빼가면서 그 경로의 
 "Li 를 이만큼 뺐을 때 무엇으로 무너지나" 를 여섯 번 물어본 것이고,
 값이 <b>위로 갈수록 덜 무너진다</b>는 뜻이다.</p>
 
-<p>기존 <code>LPSCl1.6@Nd₂O₃</code> 는 Nd 치환과 O 치환이 <strong>같이</strong> 바뀌어서 둘을 못 갈랐다.
+<p>기존 <b>LPSCl<sub>1.6</sub>@Nd₂O₃</b> 는 Nd 치환과 O 치환이 <strong>같이</strong> 바뀌어서 둘을 못 갈랐다.
 전하중성을 맞춘 대조 조성 둘을 추가해 축을 분리했다.</p>
 
 <div class="tblwrap">
 <table>
 <thead><tr><th>이름</th><th>조성</th><th>Nd</th><th>O</th><th>전하</th></tr></thead>
 <tbody>
-<tr><td>LPSCl1.6 <span class="muted">(기준)</span></td><td class="mono">Li5.4 P S4.4 Cl1.6</td><td>0</td><td>0</td><td>0 ✓</td></tr>
-<tr><td>LPSOCl1.6</td><td class="mono">Li5.4 P S4.2 O0.2 Cl1.6</td><td>0</td><td>0.2</td><td>0 ✓</td></tr>
+<tr><td>LPSCl<sub>1.6</sub> <span class="muted">(기준)</span></td><td class="mono">Li5.4 P S4.4 Cl1.6</td><td>0</td><td>0</td><td>0 ✓</td></tr>
+<tr><td>LPSOCl<sub>1.6</sub></td><td class="mono">Li5.4 P S4.2 O0.2 Cl1.6</td><td>0</td><td>0.2</td><td>0 ✓</td></tr>
 <tr><td><span class="nd">Nd only</span> <em>(신규)</em></td><td class="mono">Li4.8 Nd0.2 P S4.4 Cl1.6</td><td>0.2</td><td>0</td><td>0 ✓</td></tr>
 <tr><td><span class="ox">O 0.3 only</span> <em>(신규)</em></td><td class="mono">Li5.4 P S4.1 O0.3 Cl1.6</td><td>0</td><td>0.3</td><td>0 ✓</td></tr>
-<tr><td>LPSCl1.6@Nd₂O₃</td><td class="mono">Li4.8 Nd0.2 P S4.1 O0.3 Cl1.6</td><td>0.2</td><td>0.3</td><td>0 ✓</td></tr>
+<tr><td>LPSCl<sub>1.6</sub>@Nd₂O₃</td><td class="mono">Li4.8 Nd0.2 P S4.1 O0.3 Cl1.6</td><td>0.2</td><td>0.3</td><td>0 ✓</td></tr>
 </tbody></table>
 </div>
 
 <p style="color:var(--mut);font-size:.82rem;margin:6px 0 4px">
 ⚠ 원자료(JSON·CSV)의 열 이름은 <b>내부 코드명</b> 그대로다 —
-<code>comp1</code>=LPSCl · <code>modelc</code>=LPSCl1.6 · <code>lpsocl</code>=LPSOCl1.6 ·
-<code>modelc_nd</code>=LPSCl1.6@Nd₂O₃ · <code>nd_only</code> · <code>o_only_03</code>.
+<code>comp1</code>=LPSCl · <code>modelc</code>=LPSCl<sub>1.6</sub> · <code>lpsocl</code>=LPSOCl<sub>1.6</sub> ·
+<code>modelc_nd</code>=LPSCl<sub>1.6</sub>@Nd₂O₃ · <code>nd_only</code> · <code>o_only_03</code>.
 기계 경로라 바꾸지 않는다(바꾸면 원장·게이트가 끊긴다). <b>사람이 읽는 이름만</b> 이 문서에서 바꿨다.</p>
 
 <figure>
@@ -238,7 +238,7 @@ Fig. 5 고, 거기서는 비율이 훨씬 높게 나온다(69–75 %).</p>
 <p>4.5 V · LiCoO₂ 에서 반응식을 나란히 놓으면 차이가 한눈에 보인다.</p>
 
 <div class="rx">LPSCl      Li₆PS₅Cl → 6 Li + SCl + 0.5 <span style="color:#c05621;font-weight:600">P₂S₇</span> + 0.5 S        (자기분해 — 양극이 반응식에 없다)
-LPSCl1.6   Li₅.₄PS₄.₄Cl₁.₆ → 5.4 Li + 1.19 SCl + 0.46 <span style="color:#c05621;font-weight:600">P₂S₇</span> + 0.08 PCl₅
+LPSCl<sub>1.6</sub>   Li₅.₄PS₄.₄Cl₁.₆ → 5.4 Li + 1.19 SCl + 0.46 <span style="color:#c05621;font-weight:600">P₂S₇</span> + 0.08 PCl₅
 Nd+O       0.074 Li₄₈Nd₂P₁₀S₄₁Cl₁₆O₃ + 0.926 LiCoO₂
            → 4.48 Li + 0.148 <span style="color:#6d28d9;font-weight:600">NdP₅O₁₄</span> + 1.19 SCl + 0.926 CoS₂</div>
 
@@ -431,17 +431,17 @@ than to the element palette used elsewhere.</figcaption>
 <thead><tr><th>전해질</th><th>최소 깊이 (4.5 V)</th><th>∫E dx (4.5 V)</th><th>Nd 인산염 kink (전 조건)</th></tr></thead>
 <tbody>
 <tr><td>LPSCl</td><td>-1.7214</td><td>-1.4160</td><td class="">0/440 = 0%</td></tr>
-<tr><td>LPSCl1.6</td><td>-1.4979</td><td>-1.2850</td><td class="">0/447 = 0%</td></tr>
-<tr><td>LPSOCl1.6</td><td>-1.4833</td><td>-1.2717</td><td class="">0/469 = 0%</td></tr>
+<tr><td>LPSCl$_{1.6}$</td><td>-1.4979</td><td>-1.2850</td><td class="">0/447 = 0%</td></tr>
+<tr><td>LPSOCl$_{1.6}$</td><td>-1.4833</td><td>-1.2717</td><td class="">0/469 = 0%</td></tr>
 <tr><td>O 0.3 only</td><td>-1.4759</td><td>-1.2649</td><td class="">0/466 = 0%</td></tr>
 <tr><td>Nd only</td><td>-1.4009</td><td>-1.2181</td><td class="nd">357/516 = 69%</td></tr>
-<tr><td>LPSCl1.6@Nd$_2$O$_3$</td><td>-1.3796</td><td>-1.1989</td><td class="nd">384/515 = 75%</td></tr>
+<tr><td>LPSCl$_{1.6}$@Nd$_2$O$_3$</td><td>-1.3796</td><td>-1.1989</td><td class="nd">384/515 = 75%</td></tr>
 </tbody></table>
 </div>
 
 <p>양극 4 종 평균이다. <strong>세 지표가 같은 순서</strong>를 준다 —
 최소 깊이·곡선 아래 넓이·(앞 절의) 최소 kink 값. 제일 얕은 것이
-<strong>LPSCl1.6@Nd$_2$O$_3$</strong> (-1.3796 eV/atom).</p>
+<strong>LPSCl$_{1.6}$@Nd$_2$O$_3$</strong> (-1.3796 eV/atom).</p>
 
 <div class="card answer">
 <p style="margin:0"><strong>가장 깨끗한 신호</strong> — Nd 인산염이 나오는 kink 비율이
@@ -519,7 +519,7 @@ Nd 인산염은 특정 혼합비에서만 나오는 게 아니라 <strong>x 축 
 <h3>결과 보기 전에 박은 문턱</h3>
 <ul>
 <li><strong>G1</strong> — 차이라고 부를 최소폭 <strong>0.30 eV</strong>. 근거는 관측된 재현 폭 둘:
-LPSCl 2.066 vs 재계산 2.0656 (같은 방법) · Nd₂O₃ 우리 3.9479 vs MP 3.8118 (다른 방법, Δ0.136).
+comp1 2.066 vs 재계산 2.0656 (같은 방법) · Nd₂O₃ 우리 3.9479 vs MP 3.8118 (다른 방법, Δ0.136).
 큰 쪽의 약 2 배. ⚠ 이 계의 잡음에서 유도한 값이 <strong>아니다</strong>.</li>
 <li><strong>G2</strong> — Nd 판별종의 <strong>최소 갭</strong> vs P₂O₅ 갭. 0.30 eV 이상 작으면
 "Nd 는 더 새는 층을 추가한다", 반대면 "Nd 층도 절연", 그 미만이면
@@ -545,7 +545,7 @@ LPSCl 2.066 vs 재계산 2.0656 (같은 방법) · Nd₂O₃ 우리 3.9479 vs MP
 <figcaption><b>Fig. 3. Absolute interfacial reaction energies.</b> Six electrolyte
 compositions against four cathodes, as a function of applied voltage. The ordering of
 compositions is preserved across all four cathodes. Some points above 4.0&#8201;V correspond to
-electrolyte self-decomposition rather than an interfacial reaction (LPSCl 6/24, LPSCl1.6 1/24,
+electrolyte self-decomposition rather than an interfacial reaction (LPSCl 6/24, LPSCl<sub>1.6</sub> 1/24,
 Nd- and O-containing compositions 0/24) and must not be read as interfacial reactivity
 in that range.</figcaption>
 </figure>
