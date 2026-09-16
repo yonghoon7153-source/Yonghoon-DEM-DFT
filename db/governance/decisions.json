@@ -2333,6 +2333,58 @@
     "decision_digest": "sha256:e1429e1fdd0e003fadd8caf3bc21fa0e9183dca9cc81878270eca5474e90afba",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-16-cei-dopant-decomposition-amendment",
+   "kind": "estimand",
+   "decision_state": "active",
+   "results_seen": false,
+   "record_kind": "amendment",
+   "title": "CEI 카드 개정 — 대조 조성 둘(nd_only · o_only_03)로 Nd 효과와 O 효과를 가른다",
+   "statement": "본 카드 §3-b 의 *\"⛔ 새 조성을 만들지 않는다 — 결과를 보고 조성을 더하면 §6 무효\"* 를 **이 두 조성에 한해** 연다. `nd_only = Li4.8Nd0.2PS4.4Cl1.6`(O 없이 Nd만, 전하 0 검산) · `o_only_03 = Li5.4PS4.1O0.3Cl1.6`(modelc_nd 와 같은 O 함량, 전하 0 검산). ⇒ 가법성 검사 `Δ_nd_only + Δ_o_only_03 vs Δ_modelc_nd` 로 두 효과를 가른다. ⛔ 둘이 끝이다 — 결과를 보고 셋째를 더하면 이 개정문도 무효. ⛔ Nd 효과와 그에 딸린 Li 결손은 **이 설계로도 못 뗀다**(`Li4.8PS4.4Cl1.6` 은 전하 −0.6). 묶음으로 보고한다. ⛔ 기존 4조성 결과·전압 격자·§C 예산은 건드리지 않는다.",
+   "reopen_criteria": [
+    "R1 |잔차| ≤ 0.010 eV/atom (24조건 평균) → 두 효과 독립으로 보고",
+    "R2 0.010 초과 → 상호작용 있음. 잔차 부호까지 보고 (양수=상쇄 · 음수=상승)",
+    "R3 O 선형성: |Δ_o_only_03 − Δ_lpsocl/0.2×0.3| > 0.005 → 기존 '+0.0218 외삽' 을 철회하고 실측으로 교체",
+    "R4 잔차의 전압 기울기(3.5→4.5 V)를 같이 보고 — Nd 잔차가 전압에 4–7배 커지는 것이 상호작용 탓인지 가른다",
+    "⛔ R1/R2 를 결과를 보고 고르지 않는다. 문턱은 0.010 하나다"
+   ],
+   "card": "db/properties/cathode_cei_dopant_decomposition_amendment_2026_09_16.json",
+   "record": "db/properties/cei_interface_V_2026_09_16.json",
+   "supersedes": [],
+   "enforcement": "① 두 조성을 기존 넷과 **한 실행 안에** 넣는다 — 따로 돌리면 MP 스냅샷이 달라져 뺄셈이 안 선다. ② 새 조성에도 **자기분해/계면반응 검사**를 같이 돌린다 (기존 판정: comp1 6/24 · modelc 1/24 자기분해). ③ 문턱 0.010 의 근거는 'Δ(O만) 실측 +0.0145 의 70 %' 이고, 이 계의 잡음에서 유도한 값이 아니다 — 바꾸려면 카드에 사유를 적는다. ④ 두 조성은 **hull 위의 조성점**이고 합성 가능성을 말하지 않는다.",
+   "applies_to": {
+    "systems": [
+     "comp1",
+     "modelc",
+     "lpsocl",
+     "modelc_nd_doped"
+    ]
+   },
+   "slot": "cei_dopant_decomposition_amendment",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-16",
+     "state": "proposed",
+     "by": "agent",
+     "note": "1저자 질문(\"Nd 특화인가 O 효과인가\")에서 나온 대조군. 결과 보기 전이고 R1–R4 를 먼저 박았다."
+    },
+    {
+     "at": "2026-09-16",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-16T08:46:45Z",
+    "commit": "734855adb16a0dd1cb8fe10b719a3c5798d2e328",
+    "decision_digest": "sha256:965b96422b1254b7780b67d8423689445fad368a0ab0c31d98d34fdcfa1a157d",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }
