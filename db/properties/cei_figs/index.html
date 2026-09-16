@@ -575,27 +575,37 @@ in that range.</figcaption>
 
 <div class="tblwrap">
 <table>
-<thead><tr><th>M</th><th>B 인산염 교환 (eV/P)</th><th>MPO₄ 깊이 (eV/P)</th><th>계면 Δ @4.5 V (eV/atom)</th><th>M-인산염 kink (%)</th><th>반경 |Δ vs Li⁺| (Å)</th></tr></thead>
+<thead><tr><th>M</th><th>B 인산염 교환 (eV/P)</th><th>MPO₄ 깊이 (eV/P)</th><th>계면 Δ @4.5 V (eV/atom)</th><th>M-인산염 kink (%)</th><th>반경 |Δ vs Li⁺| (Å)</th><th>닫힌계 0 V (eV/atom)</th></tr></thead>
 <tbody>
-<tr><td>Al</td><td class="nd">-1.6551</td><td>-18.72</td><td>+0.0789</td><td>59.4</td><td>0.225</td></tr>
-<tr><td>Sc</td><td>-0.6073</td><td>-20.13</td><td class="nd">+0.0830</td><td>42.0</td><td class="nd">0.015</td></tr>
-<tr><td>Y</td><td>-0.7244</td><td>-20.91</td><td>+0.0779</td><td>62.2</td><td>0.140</td></tr>
-<tr><td>La</td><td>-0.3460</td><td class="nd">-21.02</td><td>+0.0748</td><td>37.8</td><td>0.272</td></tr>
-<tr><td>Ce</td><td>-0.3973</td><td>-20.43</td><td>+0.0752</td><td>40.6</td><td>0.250</td></tr>
-<tr><td>Gd</td><td>-0.7348</td><td>-20.75</td><td>+0.0810</td><td class="nd">86.3</td><td>0.175</td></tr>
-<tr style="font-weight:600"><td>Nd ★</td><td>-0.5029</td><td>-20.70</td><td>+0.0747</td><td>79.5</td><td>0.223</td></tr>
+<tr><td>Al</td><td class="nd">-1.6551</td><td>-18.72</td><td>+0.0789</td><td>59.4</td><td>0.225</td><td>-0.3535</td></tr>
+<tr><td>Sc</td><td>-0.6073</td><td>-20.13</td><td class="nd">+0.0830</td><td>42.0</td><td class="nd">0.015</td><td>-0.3450</td></tr>
+<tr><td>Y</td><td>-0.7244</td><td>-20.91</td><td>+0.0779</td><td>62.2</td><td>0.140</td><td>-0.3414</td></tr>
+<tr><td>La</td><td>-0.3460</td><td class="nd">-21.02</td><td>+0.0748</td><td>37.8</td><td>0.272</td><td class="nd">-0.3408</td></tr>
+<tr><td>Ce</td><td>-0.3973</td><td>-20.43</td><td>+0.0752</td><td>40.6</td><td>0.250</td><td>-0.3477</td></tr>
+<tr><td>Gd</td><td>-0.7348</td><td>-20.75</td><td>+0.0810</td><td class="nd">86.3</td><td>0.175</td><td>-0.3413</td></tr>
+<tr style="font-weight:600"><td>Nd ★</td><td>-0.5029</td><td>-20.70</td><td>+0.0747</td><td>79.5</td><td>0.223</td><td>-0.3414</td></tr>
 </tbody></table>
 </div>
 
 <div class="card answer">
-<p style="margin:0"><b>다섯 축이 네 개의 서로 다른 1등을 냈다</b> — Al · La · Sc · Gd.
-축끼리의 순위상관(스피어만)이 <span class="mono">-0.43
-~ +0.64</span> 로 흩어지고,
-<b>MPO₄ 깊이 ↔ kink 비율은 +0.00</b> 다 —
-<b>LaPO₄ 가 제일 깊은데 La 의 kink 비율이 꼴등</b>이다.</p>
-<p style="margin:10px 0 0"><b>Nd 는 어느 축에서도 1등이 아니고 어느 축에서도 꼴등이 아니다.</b>
+<p style="margin:0"><b>여섯 축이 네 개의 서로 다른 1등을 냈다</b> — Al · La · Sc · Gd.
+<b>Nd 는 어느 축에서도 1등이 아니고 어느 축에서도 꼴등이 아니다.</b>
 반면 Al 은 1등과 7등을, La 도 1등과 7등을 동시에 갖는다.
 ⇒ <em>"특출난 원소" 자체가 이 자료에 없다.</em></p>
+<p style="margin:10px 0 0"><b>같은 두 물질인데 Li 저장고를 여느냐가 순서를 바꾼다.</b>
+La 는 <b>닫힌계 1등이고 열린계 6등</b>, Al 은 <b>닫힌계 7등이고 열린계 3등</b>이다.</p>
+</div>
+
+<div class="card warn">
+<p style="margin:0"><b>⛔ 정정 — 축 간 상관을 근거로 쓰지 않는다.</b>
+앞선 판에서 <em>"축 간 상관이 −0.43 ~ +0.64 로 흩어진다"</em> 고 적었는데 <b>과대해석</b>이었다.
+n = 7 의 전 순열 5,040 개로 정확 임계값을 구하면 <b>|ρ| ≥ 0.750</b>(양측 α = 0.05)이어야
+0 과 구분된다 — 인용했던 값들은 <b>전부 0 과 구분되지 않는다.</b>
+15 쌍 중 넘는 것은 <b>하나뿐</b>(닫힌계 ↔ MPO₄ 깊이 +0.86)이고, 그마저도
+<b>닫힌계 산물에 MPO₄ 가 안 나와</b>(Li₃PO₄ + M 산화물이 나온다) 기전을 못 대므로
+<b>해석하지 않는다.</b></p>
+<p style="margin:10px 0 0"><b>결론의 근거는 상관이 아니다.</b>
+<b>여섯 축이 네 개의 다른 1등을 낸다는 직접 관찰</b>이고, 그건 검정이 필요 없는 사실이다.</p>
 </div>
 
 <h3>⛔ 오늘 철회한 것 둘</h3>
