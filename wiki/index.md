@@ -47,6 +47,7 @@
 
 - [[22p-physics-or-degeneracy]] — 핵심 연구 질문 카드 (status: active): 22p 분해는 물리인가 flat-valley 결합의 산물인가.
 - [[pvs-sev-lli-lampe-separability]] — 질문 카드 (status: open): PVS·SEV 두 feature 가 LLI 와 LAM_PE 를 실제로 가르는가, 아니면 같은 대비 하나를 재는가.
+- [[assb-contact-loss-vs-lampe]] — 질문 카드 (status: open) · **`assb` 섹션의 닻**: 전고체(Li-In·Li·무음극)에서 OCV 적합이 LAM_PE 와 접촉 손실을 가르는가. 보류 항목이고 지금은 자료를 모으는 단계다.
 
 ## Syntheses (종합)
 

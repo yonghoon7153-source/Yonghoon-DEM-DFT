@@ -97,6 +97,10 @@ sha256: <hex digest of body after frontmatter, leading blank lines stripped>
 - provenance: 재현성·서명·검증 설계
 - gate-review: 적대적 게이트 리뷰 프로세스
 - dem-mpm: DEM/MPM 계열 시뮬레이션 (타 브랜치 satellite)
+- assb: 전고체전지 (Li-In·Li 금속·무음극, 복합양극) — 액체셀과 **음극 축이 다르다**.
+  2026-09-16 시드로 선언: 이 주제의 논문을 따로 모으기로 했고 (사용자 결정) 닻은
+  `questions/assb-contact-loss-vs-lampe.md`. **액체셀 계열 페이지에 이 태그를 붙이지
+  않는다** — 섞이면 "무엇이 ASSB 근거인가" 를 다시 못 가른다.
 
 ## Page Thresholds
 - Create a page when a concept is central to a source or recurs across sources.

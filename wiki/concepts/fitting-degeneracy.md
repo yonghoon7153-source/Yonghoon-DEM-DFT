@@ -234,6 +234,15 @@ flat 방향의 비율이 "LAM_PE ≈ LAM_NE 는 수학" 가설의 직접 증거 
 - 수치는 위키에 복사하지 않는다 — 정본은 artifact 와
   `degradation-degeneracy/docs/RESULTS*.md` ([[provenance-fail-closed-verification]]).
 
+## 전고체에서는 같은 축퇴가 아니다 (2026-09-16)
+
+여기 적힌 축퇴는 **액체셀 5-파라미터**(`a_PE b_PE a_NE b_NE γ_Si`)의 것이다.
+전고체는 음극(Li-In·Li 금속·무음극)의 OCP 가 평탄해서 `a_NE`·`b_NE`·`γ_Si` 셋의
+민감도가 **정확히 0** 이 된다 — 축퇴가 심해지는 게 아니라 **파라미터가 3 개로 줄고
+이 페이지의 최악 축퇴가 사라진다.** 대신 `LAM_PE ↔ 접촉 손실`이 그 자리를 차지한다.
+물음과 수집 지침은 [[assb-contact-loss-vs-lampe]], 실측은
+`bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §1.
+
 ## 이 개념이 속한 논지
 
 [[mode-identifiability-unmeasured-lineage]] — 이 계보가 축퇴를 세 번 인쇄하고도
