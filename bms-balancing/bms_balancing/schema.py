@@ -455,6 +455,44 @@ def receipt_paths(consumed) -> dict:
             for role, leaf in receipt_leaves(receipt_text(consumed))}
 
 
+#: 확장자 → **실제로 그것을 읽는 함수**. 해석을 바꾸는 locator 는 이것이다 (조건 8 축 ⑤).
+#: 모르는 확장자는 `unknown` 이다 — 추측하지 않는다 (부재는 안전값이 아니다).
+READER_BY_EXT = {".csv": "pandas.read_csv", ".xlsx": "pandas.read_excel", ".xls": "pandas.read_excel"}
+
+
+def receipt_locators(consumed) -> dict:
+    """`{역할: {path, ext, reader}}` — 경로만이 아니라 **어떻게 읽혔는지**를 드러낸다 (조건 8 축 ⑤ · C34).
+
+    ⚠ 이것은 **identity 가 아니다.** 경로는 여전히 `inputs_digest` 밖이다 (R6 F1/F4 의 의도된 결정:
+      같은 bytes 면 같은 실행). 소비자는 경로 변화를 **정보**로, 파서 변화를 **실행 조건 불일치**로 가른다
+      — 같은 bytes 라도 다른 함수가 읽으면 그것은 같은 실행의 재현이 아니다 (R13 Q5 답).
+    """
+    out = {}
+    for role, path in receipt_paths(consumed).items():
+        ext = ("." + str(path).rsplit(".", 1)[-1].lower()) if "." in str(path).rsplit("/", 1)[-1] else ""
+        out[role] = {"path": str(path), "ext": ext, "reader": READER_BY_EXT.get(ext, "unknown")}
+    return out
+
+
+def locator_problems(old, new) -> tuple:
+    """두 receipt 의 locator 를 견준다 → (정보 줄, 실행 조건 불일치 줄).
+
+    가르는 기준 하나: **해석이 바뀌었는가.** 경로만 다르면 정보, 파서(reader/ext)가 다르면 조건 불일치다.
+    """
+    lo, ln = receipt_locators(old), receipt_locators(new)
+    info, bad = [], []
+    for role in sorted(set(lo) | set(ln)):
+        a, b = lo.get(role), ln.get(role)
+        if not a or not b:
+            continue                                   # 역할 자체의 유무는 receipt 검사가 이미 본다
+        if a["reader"] != b["reader"] or a["ext"] != b["ext"]:
+            bad.append((role, f"{a['reader']}({a['ext'] or '확장자 없음'})",
+                        f"{b['reader']}({b['ext'] or '확장자 없음'})"))
+        elif a["path"] != b["path"]:
+            info.append((role, a["path"], b["path"]))
+    return info, bad
+
+
 def inputs_digest(consumed: dict) -> str:
     """소비한 입력의 **역할별** identity 를 묶은 digest 앞 12 자리.
 

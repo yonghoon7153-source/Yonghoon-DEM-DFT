@@ -215,6 +215,44 @@ def _receipts_of(kind: str, data: bytes) -> dict:
     return out
 
 
+def _raw_receipts(kind: str, data: bytes, col: str) -> dict:
+    """`{행 key: 원본 consumed dict}` — locator 는 **경로**를 봐야 하므로 정규화 전 dict 가 필요하다."""
+    if kind == "degeneracy":
+        j = S.json_bytes(data)
+        v = j.get("consumed_inputs" if col == "consumed_inputs" else "ref_consumed_inputs")
+        return {None: v} if isinstance(v, dict) else {}
+    rows, _ = _csv_rows(data)
+    key = S.row_key(kind)
+    out: dict = {}
+    for r in rows:
+        try:
+            k = key(r)
+        except (TypeError, ValueError):
+            continue
+        raw = r.get(col)
+        if raw:
+            try:
+                v = json.loads(raw)
+            except (TypeError, ValueError):
+                continue
+            if isinstance(v, dict):
+                out[k] = v
+    return out
+
+
+def _receipt_pairs(kind: str, odata: bytes, data: bytes, col: str):
+    """두 산출의 **같은 행 key** 에 달린 원본 receipt 쌍 → (key 표시, 정본, 새 산출).
+
+    행마다 입력이 다르므로 key 로 맞춘다 (자체 리뷰 C01 이 닫은 축 — 한 벌로 뭉치면 마지막 행만 비교된다).
+    """
+    try:
+        a, b = _raw_receipts(kind, odata, col), _raw_receipts(kind, data, col)
+    except (ValueError, KeyError):
+        return
+    for k in sorted(set(a) & set(b), key=lambda x: (x is not None, x)):
+        yield ("" if k is None else f":{k}"), a[k], b[k]
+
+
 def _input_identity_problems(name: str, kind: str, odata: bytes, data: bytes) -> list:
     """두 실행이 **같은 입력 bytes** 를 먹었는가. 다르면 그것은 재현이 아니라 다른 계산이다 (Codex R11 P1-1)."""
     try:
@@ -456,6 +494,7 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
     R: dict = {"seen": 0, "missing": [], "content": [], "diffs": [], "added": [], "paired": [], "stale": [],
                "broken": [], "controls": [], "env": [], "alias": [], "provenance": [], "inputs": [],
                "inputs_uncomparable": [], "env_uncomparable": [], "env_contract_legacy": [],
+               "locator_info": [],
                "roster_missing": [], "roster_extra": [], "stale_new": [], "n_old": 0, "n_new": 0,
                # ⚠ U18-05 (Codex R14 §7-3): 묶음이 **한 코드 상태**에서 나왔는가. 전 판은 sidecar 마다
                #   `git_commit_at_start` 가 40-hex 인지만 봤고, 13 산출이 두 커밋으로 나뉜 것은 아무도 안
@@ -632,6 +671,15 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
         _mismatch, _uncomparable = _input_identity_problems(f.name, kind, odata, data)
         R["inputs"] += _mismatch
         R["inputs_uncomparable"] += _uncomparable
+        # ⚠ R16 (조건 8 축 ⑤ · C34): `receipt_paths` 에 **소비자**를 붙인다. 드러내기만 하고 아무도 안 읽으면
+        #   그 필드는 장식이다 (C34 가 그대로 지적한 것). 가르는 기준 하나 — **해석이 바뀌었는가**:
+        #     경로만 다르다      → 정보 줄. rc 도 blocker 도 안 바꾼다 (경로는 digest 밖이다, R6 F1/F4 · R13 Q5)
+        #     파서(reader/ext)   → 실행 조건 불일치. 같은 bytes 라도 다른 함수가 읽으면 같은 실행이 아니다
+        for _side, _col in (("target", "consumed_inputs"), ("ref", "ref_consumed_inputs")):
+            for _key, _oc, _nc in _receipt_pairs(kind, odata, data, _col):
+                _info, _bad = S.locator_problems(_oc, _nc)
+                R["locator_info"] += [f"{f.name}{_key}:{r}: {a} → {b}" for r, a, b in _info]
+                R["controls"] += [(f"{f.name}{_key}:{_col}.{r} 의 파서", a, b) for r, a, b in _bad]
         if kind == "degeneracy":
             a = S.json_bytes(odata)
             for k in S.DEGENERACY_CONTROLS:
@@ -813,6 +861,7 @@ def main() -> int:
     alias, prov_bad, inputs_bad = R["alias"], R["provenance"], R["inputs"]
     inputs_unk, stale_new, env_unk = R["inputs_uncomparable"], R["stale_new"], R["env_uncomparable"]
     env_legacy = R["env_contract_legacy"]
+    locator_info = R["locator_info"]
     bundle_bad = R["bundle_commits"]
     print(f"산출 {seen} 개 점검 ({new})")
     if old is None:
@@ -903,6 +952,12 @@ def main() -> int:
         _show(env_bad, a.max_show)
         for e in []:
             print(f"  - {e}")
+    if locator_info:
+        # ⚠ **정보다 — blocker 가 아니다.** 경로는 일부러 identity 밖이고(같은 bytes 면 같은 실행),
+        #   그래도 "어디서 읽었는지가 바뀌었다" 는 사람이 알아야 한다 (C34 의 소비자).
+        print(f"\n  locator 변화 {len(locator_info)} (정보) — 같은 bytes·같은 파서인데 **경로가 바뀌었다**. "
+              f"identity 는 bytes 이므로 승격 판정은 바뀌지 않는다 (R6 F1/F4 · R13 Q5)")
+        _show(locator_info, a.max_show)
     if env_legacy:
         print(f"\n■ **환경 계약의 나이** {len(env_legacy)} — 나중에 생긴 env 축을 안 적은 세대의 사이드카다. "
               f"계약 위반이 아니라 **나이**이고(U18-03), 그래서 rc 2 를 주지 않는다. 다만 그 축을 댈 수 없으므로 "

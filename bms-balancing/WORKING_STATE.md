@@ -113,8 +113,21 @@ manifest 이름은 `manifest.json` 인데 `preserve_handoff.sh` 가 `package_man
 `scripts/handoff_manifest.py` 한 자리로 빼고(bash heredoc 안에 두면 시험할 수 없다) 아는 키만
 넓혔다. 모르는 모양·둘 이상 후보·`path`/`sha256` 누락은 **계속 멈춘다**.
 
-**남은 열린 것**: 조건 8 의 **축 셋** — export 공통 snapshot · run receipt · partial 수명 · locator 무결성
-중 ①③④⑤. (**`openpyxl` · 조건 6 · r11 대체 증거 · 조건 8 축 ② 는 R16 에서 닫았다 — 아래.**)
+**남은 열린 것**: 조건 8 의 **축 셋** — ① export 공통 snapshot · ③ run receipt · ④ partial 수명.
+(**`openpyxl` · 조건 6 · r11 대체 증거 · 조건 8 축 ②·⑤ 와 C34 는 R16 에서 닫았다 — 아래.**)
+
+**R16 조건 8 축 ⑤ + C34 닫음 — `receipt_paths` 에 소비자를 붙였다.** 두 줄이 같은 일이었다: C34 는
+"드러내기만 하고 production 소비자가 **0**" 이고, 축 ⑤ 는 "**해석을 바꾸는** locator(확장자·파서 선택)를
+별도 필드로 묶지 않았다" 였다. 경계는 리뷰어가 정해 줬다 (R12 Q2 → R13 Q5 답: **충돌 안 함, 정보로
+표시**) — 경로를 digest 에 넣는 것은 R6 F1/F4 의 **의도된** 결정을 뒤집는 일이라 하지 않는다
+(같은 bytes 면 같은 실행; 넣으면 byte 가 같은 재-export 가 다른 실행이 된다).
+
+그래서 **둘을 가른다**: 경로만 다르다(같은 bytes·같은 파서) → **정보 줄**, rc 도 blocker 도 안 바꾼다 ·
+파서가 다르다(`.csv` ↔ `.xlsx` 는 우리 로더에서 **다른 함수**가 읽는다) → **실행 조건 불일치**, 같은
+digest 라도 같은 실행의 재현이 아니다. `schema.receipt_locators`(역할 → path·ext·reader, 모르는
+확장자는 **추측하지 않고** `unknown`)와 `locator_problems` 가 판정을 한 자리에 두고, `check_u14` 가
+행 key 로 맞춰 소비한다 (자체 리뷰 C01 이 닫은 축 — 한 벌로 뭉치면 마지막 행만 비교된다).
+`test_r16_42` 가 **이 라운드가 깨면 안 되는 것**을 고정한다: 경로가 바뀌어도 `inputs_digest` 는 같다.
 
 **R16 조건 6 (동적 인증) 닫음.** 리뷰어 문장: "`test_g10` 은 AST 순서 검사이지 **우회 재현이 아니다**."
 재실행 블록이 import 보다 앞에 있는지만 봤으므로, 재실행이 실패하거나 `-P` 의 의미가 바뀌면 AST 는
@@ -576,7 +589,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 366 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 370 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh
