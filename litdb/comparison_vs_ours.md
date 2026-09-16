@@ -19,6 +19,7 @@
 | **[Liu24SbO]** | **Chong Liu**/**Tianran Zhang\***/R.Wang/B.Chen/**Dewen Wang**/T.Wang/Z.Yang/T.Liu/Q.Mao/T.Li/J.Zhang/X.Ma/**Xiangfeng Liu\*** 2024 ***Adv. Funct. Mater.* 2025, 35, 2412144** (中国科学院大学 **UCAS** + 中国原子能科学研究院 CIAE; DOI 10.1002/adfm.202412144, 접수 2024-07-09/온라인 2024-10-10) — "**Regulating p-Band Center of Sulfur in Li-Argyrodite to Stabilize Dual Solid–Solid Interface for Robust ASSLSB**". **레버 = Sb₂O₃ 공도핑** `Li₆P₁₋ₓSbₓS₅₋₂.₅ₓO₂.₅ₓCl` x=0.05 (Sb@P_4b + O@S_16e) ⇒ **S-p 밴드중심 ε_p −2.06 → −2.57 eV**. σ 2.6→**5.3 mS/cm** · 대칭셀 225 h→**4000 h** · CCD 0.6→**1.8 mA cm⁻²** · Li/S 풀셀 **932.6 mAh g⁻¹ 150 cyc 83.7 %**. ⚠ **ε_p 0.51 eV 정량 인용 금지** (`Fig. 5a` 의 LPSC PDOS 에 갭이 없어 **E_F 참조가 오염** — VBM 기준이면 figure-read ≈0.2 eV). **🔴 이 항목이 §I 에 걸린 이유**: 본문의 **「Li₂S 0.22 eV · LiF 0.67 eV」 는 자기 계산이 아니라 ref [30b] 소환값**이고, 그 [30b] 가 **[Lai20]** 이다 | ✅ `papers/liu2024_pband_center_sbo_dual_interface.md` | exp(NPD·XANES·TOF-SIMS·DRT) + **DFT 보조**(PDOS/p-band center·CI-NEB 1건·CDD) + CP2K AIMD 10 ps, 외부 |
 | **[Lai20]** | **Chen Lai**/C.Shu/W.Li/L.Wang/X.Wang/T.Zhang/X.Yin/I.Ahmad/M.Li/X.Tian/P.Yang/**Wei Tang\***/**Naihua Miao\***(北航 — 계산 담당)/**G. W. Zheng\*** 2020 ***Nano Lett.* 20(11), 8273−8281** (西安交通大 + NUS + 北京航空航天大 + 上海空间电源 + IMRE A\*STAR; DOI 10.1021/acs.nanolett.0c03395, 원고ID `nl0c03395`, 접수 2020-08-20/게재 2020-10-27) — "**Stabilizing a Lithium Metal Battery by an In Situ Li₂S-modified Interfacial Layer via Amorphous-Sulfide Composite Solid Electrolyte**", 본문 9 pp + SI 22 pp. **🔴 이 항목의 존재 이유 = [Liu24SbO] ref [30b] 의 원출처** — 「Li₂S 0.22 eV · LiF 0.67 eV」 의 최종 귀속지. **✅ NEB 실재 확인**(SI `DFT calculation methods` 절 + `Fig. 3e/3f` MEP 실물 + `Fig. S11` "Present work") — VASP·PAW·GGA-PBE·520 eV·k-density 4/Å·진공 20 Å·**CI-NEB**(Henkelman 2000)·NEB 힘 0.05 eV/Å·`E_m = max(E_h−E_i), h>i`. ⛔ **슈퍼셀·원자수·이미지수·전하규약·슬랩두께 전부 미기재** ⇒ 우리 `v2/li2s` 와 **값 대 값 비교 금지**(§I·§E) | ✅ `papers/lai2020_li2s_interfacial_layer_amorphous_sulfide_cse.md` | exp(XPS·EIS·SEM·CV·풀셀) + **DFT 보조(CI-NEB·표면/계면 형성에너지)**, 외부 |
 | **[Wang26IF]** | **Kangli Wang**/**W. G. Zeier**/**J. Janek**/**D. Mollenhauer\*** 2026 *Angew. Chem. Int. Ed.* **65**, e19663 (JLU Giessen + HIPOLE/HZB/FSU Jena + Münster; BMBF FestBatt 03XP0431; **OA**) — "**Interface Stability and Kinetics of Sulfide Electrolytes in all-Solid-State Batteries**": VASP-PBE/GGA+U + pymatgen **pseudo-binary(식 1–3) + grand-potential(식 4–5)** 로 계면 **6종** × (SE 7 · 양극 20 · 중간층/코팅 ~70 · a-Li_xSi 6) 전수 + **AIMD**(300 eV·Γ·NVT-Nosé·**80 ps**·dt 1 fs·500–1200 K) 로 **a-Li_xSi/Li₆PS₅Cl** 한 계의 계면 kinetics. **⚠ 실험 0건**(Janek·Zeier 공저인데도). **`zhu2015` 와 같은 기계의 2026년 대규모판.** ⛔ **수치표 0개**(결과가 전부 히트맵 색) · **산물 전자전도성 판정 0** · **W_ad·표면E·계면저항·두께 0** | ✅ `papers/wang2026_interface_stability_kinetics_sulfide_assb.md` | DFT 열역학 스크리닝 + AIMD (계산 100 %) |
+| **[Zeng26Gar]** ⛔⛔ **산화물 가넷 — 물성 4축 진입 금지** · 🧭 흡착 보고량 *선언 공백* 의 표본 | **Ye Zeng**/**Yaqiong Zhu**(공동1)/Z.Hou/X.Gong/**Yanan Yang\***/**Tao Zhang\*** (**中国科学院 上海硅酸盐研究所 SICCAS** + UCAS) 2026 ***Energy Storage Mater.* (in press)** DOI `10.1016/j.ensm.2026.105526` · PII `S2405-8297(26)00658-6` · 접수 2026-06-15/수리 2026-09-11 · ⚠**Journal Pre-proof(VoR 아님)** — "**Unlocking the Naturally Chemical Stable Garnet Electrolytes via Lithium Site-Specific Decoupling Substitution**". **GaCl₃ 진공 기상 이온교환(15:100 질량비·10⁻³ Pa·250 °C 4 h)으로 가넷 LLZTO 의 *팔면체(96h/48e) Li 만* Ga³⁺ 로 치환** → `Li₆.₄La₃Zr₁.₄Ta₀.₆O₁₂ + 0.46 GaCl₃ → Li₅.₀₂Ga₀.₄₆La₃Zr₁.₄Ta₀.₆O₁₂ + 1.38 LiCl`. 소환값: σ_RT **4.95**(모체 4.62)×10⁻⁴ S/cm · Ea **0.34/0.35 eV** · 대기 **120일 Li₂CO₃ 무검출**(모체 48 h 에 σ −62 %) · **E_ads(NMP/La/(100)) −2.44 → −1.63 eV**. 계산 = **DMol³/MS 2019 · PBE · DNP(3.5) · ECP · 실공간절단 5.0 Å · DFT-D(버전 미기재)** 뿐 — **슬랩·진공·k-점·스핀·정의식 전부 미기재**. ⇒ **§J-7 `[Zeng26Gar]` 블록에만** 있다 (A–D 4축 금지) | **EXTERNAL / 가넷 / 방법 반면교사** |
 | **[Tu27ML]** | **Junye Tu**/Chen/Xu/Qiu/Yang/Xue/**Ningbo Liao\*** 2027 *J. Mater. Sci. Technol.* **280**, 18–26 (温州大 Wenzhou Univ. 기전공학원 **단일기관**; NSFC 51675384·51202164; DOI 10.1016/j.jmst.2026.05.071, 온라인 **2026-06-12**) — "**A diffusion descriptor integrated machine learning approach toward the discovery of solid-state electrolytes for lithium metal batteries**": **CASTEP-PBE/ultrasoft 380 eV·3×3×1·진공 20 Å** 로 SSE 6종 × 도펀트 28종 = **174 Li/SSE 계면**의 γf·W_ad·E_ads·**CI-NEB E_B** 를 라벨화하고, **전해질 층을 얼린 '동결 모델'**(full 의 1/10 시간)에서 같은 양을 미리 계산해 기술자로 넣어 **GBRT/RF** 로 예측(γf **R² 0.99**·E_B **R² 0.93**) → 876 조합에서 21 후보 → **4종 DFT 재검증**. ⚠ **실험 0건 · 데이터/코드 공개 0 · AIMD 조건 전무.** ★ **우리 cascade ML 과 같은 영역이라 CV 규약 판정의 기준 사례**(J-8) | ✅ `papers/tu2026_diffusion_descriptor_ml_li_sse_interface.md` | DFT(계면 슬랩)+NEB+AIMD+고전 ML 회귀 (계산 100 %) |
 | **[Famprikis19]** | **Famprikis**/Canepa/Dawson/**M. S. Islam\***/**C. Masquelier\*** 2019 *Nature Materials* **18**, 1278–1291 (Amiens LRCS·RS2E + Bath) — "**Fundamentals of inorganic solid-state electrolytes for batteries**", 11 pp 튜토리얼 리뷰. **자체 계산·실험 0 → 전 수치가 소환값(2차 인용)**, 대부분 "≈" 반올림·오차 삭제. 4기둥 = **다중스케일 수송**(`Fig. 2` Å→cm 사다리) · **전기화학 안정성**(`Fig. 4`·`Fig. 5`·`Table 1`) · **역학**(`Fig. 6`·Box 1) · **공정**(`Fig. 7`). 우리 digest **5편을 직접 인용하는 허브**([Deng16]=ref110 · [Bucci17]=ref109 · [Bielefeld19]=ref68 · [Sakuda13]=ref58 · [Richards16]=ref65 · [Kraft]=ref29) | ✅ `papers/famprikis2019_fundamentals_inorganic_sse.md` | **review · 소환값 전용 — 절대값을 우리 표와 같은 칸에 넣지 않는다.** 축 정의·기전 근거로만 인용 |
 | **[Mulks24]** | **Mulks** 2024 *Chem* **10**, 2724–2744 (단독 저자, RWTH Aachen) — "**Hard and soft electrons and holes**": HSAB 를 **전자/홀의 hard–soft** 로 확장한 개념화학(HSEH). **EHR** `f^(2,±)(r)` / **EHI** `f_k^(2,±)` = 전자수에 대한 밀도(또는 원자전하)의 **2차 유한차분**, 고정 기하 단일점 3회로 계산(ORCA·DSD-BLYP-D3BJ/def2-QZVPP//PBEh-3c·기체상·Hirshfeld). **양=hard·음=soft**. ⚠ **분자 유기·유기금속 전용 — 무기 고체/황화물 적용 선례 0건, 정량 예측 모델 아님**(저자 명시). `fan2026` 리뷰 §3.1 ref [80] 의 원전 | ✅ `papers/mulks2024_hard_soft_electrons_holes.md` | **[EXTERNAL] theory framework only — 물성 4축 수치 비교 제외** |
@@ -2354,6 +2355,71 @@ energy" 를 잘못 부른 것**). ⇒ **2026년 계면 전문 종설이 슬랩 �
 보고량이 된다.** (리뷰가 이 말을 하지는 않는다.)
 
 <sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_liang2026_interface_bottleneck_solid_state_batteries.md` ## ④ .</sub>
+
+**[Zeng26Gar] `zeng2026_ga_llzto_site_specific_substitution` — ⛔⛔ 산화물 가넷 · 물성 4축 진입 금지 · **흡착 보고량 "선언 공백" 의 표본**** (2026-09-16 신설)
+
+> ⛔ **Li₆.₄La₃Zr₁.₄Ta₀.₆O₁₂(LLZTO) 가넷이다.** 골격(O²⁻)·열화기전(Li⁺/H⁺ 교환 + Li₂CO₃)·전압눈금이
+> 우리 황화물 아지로다이트와 다르다. **σ 4.95×10⁻⁴ S/cm · Ea 0.34 eV · E_ads −1.63/−2.44 eV 전부 4축 진입 금지.**
+> 여기 두는 이유는 §J-7 의 (ii) 사유다 — *값은 있는데 계가 달라 같은 표에 놓으면 단서가 안 따라간다.*
+
+**(1) 이 편의 실제 소득 — `estimand_card §3` 여섯 물음의 외부 대조표**
+
+우리는 SDCP 흡착에서 **여덟 번** 반려됐고, 받은 지적은 전부 *"맞는 양을 재고 있나"* 였다.
+이 논문은 **그 여섯 칸을 하나도 선언하지 않고 E_ads 두 개를 보고하고 통과했다.** 차이는 실력이 아니라 **계의 위험도**다.
+
+| `estimand_card §3` 물음 | [Zeng26Gar] | 우리 SDCP | 판정 |
+|---|---|---|---|
+| SCF 해가 하나인가 | ⛔ 선언 없음 | ⛔ 여럿 (basin 다수) | 이 논문은 **닫힌 껍질이라 운이 좋았다** |
+| 열린 껍질(홀전자) | ⛔ 선언 없음 — 단 La³⁺(4f⁰)·Zr⁴⁺(4d⁰)·Ta⁵⁺(5d⁰)·Ga³⁺(3d¹⁰)·O²⁻·NMP 전부 무자성 | 🔴 **doublet (홀전자 O)** | **여기가 갈린 지점** |
+| 기판 자성 | ⛔ 선언 없음 (무자성 개연) | 🔴 **AFM 슬랩** | " |
+| 산화환원 활성 | ⛔ 선언 없음. ⚠ E_ads −2.44 eV 는 화학흡착 영역인데 **흡착 전후 전하이동 미보고** | 🔴 **LiNiO₂ 활성** | 이 논문도 **여기는 위험지대**였다 |
+| 참조가 같은 전자상태인가 | ⛔ **분자 참조 박스 조건 0건** | 🔴 실측 사고: 기준 `NUPDOWN=1` 강제 ↔ 복합체 `NUPDOWN=−1` 자유 (2026-08-28) | **둘 다 못 했다** |
+| 흡착 전후 보존 가정 | ⛔ 선언 없음 | 카드에 명시 중 | 우리가 앞선다 |
+| **집계 규칙** | ⛔ **미정의** — 본문은 "La **sites**"(복수)라 쓰고 값은 **계당 하나**. 최저인지·대표인지·유일 시도인지 없음 | 선언 필요 | 🔴 **이 축에서는 이 논문의 보고량이 정의되지 않았다** |
+
+**(2) 슬랩 규약 — 본문 41 pp + SI(.docx 전문 XML) 전수 스캔 결과**
+
+계산 서술은 **본문 §2.5 한 문단(≈10줄)이 전부**고 **SI 는 계산 문장 0건**이다
+(`slab`·`adsorption`·`DFT`·`Dmol`·`k-point`·`spin`·`vacuum`(계산 맥락) **전부 0 hit**).
+
+| 항목 | [Zeng26Gar] | 비고 |
+|---|---|---|
+| 있는 것 | **DMol³ / Materials Studio 2019 · GGA-PBE · DNP(3.5 basis file) · ECP · 실공간 궤도절단 5.0 Å · DFT-D(버전 미기재) · 수렴 E 10⁻⁵ Ha / F 0.002 Ha·Å⁻¹ / x 0.005 Å / SCF 10⁻⁵ Ha** | ⚠ **평면파 cutoff 가 아니다** — 원자중심 수치기저 코드 |
+| 표면 | ✅ **(100)**, 흡착종 **NMP**, 자리 **La** | 선택 근거·표면에너지 비교 **없음** |
+| 슬랩 두께 · 진공 · 셀크기 · 원자수 | ⛔ **0건** | `Fig. 5e/5f` 는 **하단이 패널 경계에서 잘려** 층을 셀 수 없다 |
+| 구속층 · 쌍극자 보정 | ⛔ **0건** | ⚠ NMP 는 쌍극자가 큰 분자 + 한쪽면 흡착 = 비대칭 슬랩인데 보정 선언 없음 |
+| E_ads 정의식 · 분자 참조 박스 | ⛔ **0건** | 부호 규약도 암묵 |
+| 자세 탐색 수 · 집계 규칙 | ⛔ **0건** | 위 (1) |
+| k-점 · U · 전하보상 · 무질서 처리 | ⛔ **0건** | 가넷 Li 부분점유(96h 0.35 / 24d 0.56)를 어떻게 정수로 내렸는지 없음 |
+| 모형 조성 | ⛔ 불명 — `Fig. 5e/5f` 범례에 **Ta 도 Ga 도 없다**(Li·La·Zr·O·C·H·N 뿐) | LLZTO 인지 Ta-free LLZO 인지 **논문으로 확정 불가** |
+
+⇒ **이 편을 슬랩 규약 원전으로 쓸 수 없다.** 그 자리는 여전히 **[Wang26IF]**(§J-7 첫 블록) 다.
+**[Liang26IF](슬랩 규약 0건) 에 이은 네 번째 음성 결과** — *"슬랩 구성 규약을 적는 관행이 분야에 없다"* 의 증거가 하나 더 늘었다.
+
+**(3) 반대로 이 편이 우리에게 주는 것 2개**
+
+- ⭕⭕ **T1 — 계산 한 숫자를 "이진 공정 관측"에 붙였다.** `E_ads(NMP) −2.44 → −1.63 eV` 를
+  **"PVDF–NMP 슬러리가 겔이 되는가"**(`Fig. S20`·`Fig. S27`)라는 눈에 보이는 관측에 대응시켰다.
+  ⇒ 우리 SDCP 는 **조건은 완벽했는데 대응 관측이 없었다.** 카드 §1 에 *"이 값이 맞히면 무엇이 달라지나"* 를
+  관측 가능한 형태로 적는다. **(이 축에서는 이 논문이 우리보다 낫다.)**
+- ⭕ **T1 — "성능과 열화가 같은 결정학적 자리에 묶이면 조성 튜닝으로 못 푼다"** 는 진단틀.
+  우리 계로 옮기면 *"S²⁻ 자리(ESW **S-limited** 2.256 V)와 수분 가수분해 표적이 같은 자리인가?"* 가 된다 —
+  **아직 우리가 안 물어본 질문**이다 (`kb/questions/` 카드 후보).
+
+**(4) ⛔ 이 편에서 우리 축으로 이식 금지 (digest §10 에 근거 전문)**
+
+| 금지 | 사유 (내가 검산) |
+|---|---|
+| "공공 분율 8.70 → 35.66 %" (`Fig. 3c`) | 증가분 **26.96 %p = `Table S2` 의 Ga 점유율 0.2696 과 정확히 일치** ⇒ **Ga 가 앉은 자리를 빈자리로 센 것**. 새 Li 공공은 이 셈에서 0 이고 Eq. 1(Ga 0.46당 공공 0.92)과도 어긋난다. ⚠ 우리 tier2 `dopant_blocking_fraction` 계열이 같은 함정을 안 밟았는지 확인할 것 |
+| 계산 이동장벽 (`Fig. 3d`) | figure-read **1.67–1.92 eV = 자기 실험 Ea(0.34/0.35 eV)의 약 5배** · 두 곡선 **종점이 0.9 eV 다름**(같은 상태로 안 끝남) · **방법명(NEB/LST-QST) 미기재** · `Fig. S9/S10` 은 **단일 이온 궤적**인데 본문은 "collective migration mode 유지" 주장 |
+| "Bader charge" 0.52 → 0.72 (`Fig. 5g`) | **DMol³ 는 Bader 를 기본 제공하지 않는다**(Mulliken·Hirshfeld). 산화물 La 의 Bader 는 보통 **+2.0~+2.2 |e|** 인데 값이 0.5–0.8 ⇒ **Hirshfeld 의심**. ⛔ 우리 Bader/ICOHP 축과 **같은 표 금지** |
+| La PDOS "하향 이동" (`Fig. 5h`) | 두 패널의 **에너지 기준정렬 미기재**. 그림대로면 Ga-LLZTO 의 **La 5d 전도띠가 E=0 을 가로지른다(=금속)** — 가넷 절연체에서 불가. 심준위 La 5s/5p 가 2–4 eV 이동하는 것도 화학효과로 보기엔 크다 |
+| ICP wt% (`Table S1`) | LLZTO 행 합 **103.4 wt%** · Zr **42.99 wt%** (화학식 이론값 ≈14.4) ⇒ 오기. 인용 가능한 것은 **Ga 0 → 10.20 wt%** 와 Li 감소의 *방향*뿐 |
+| 본문 pH "12.32" | `Fig. 4e` 로 인용돼 있으나 그 그림은 **13.06 → 13.30**(픽셀 교정, 같은 방법으로 읽은 Ga-LLZTO 9.81/10.63 이 본문 9.83/10.64 와 ±0.02 일치). **12.32 의 실제 출처는 `Fig. S13`**(분말 fresh, figure-read 12.35) |
+
+<sub>> 📎 2026-09-16 신설 — `litdb/papers/zeng2026_ga_llzto_site_specific_substitution.md` §5·§8·§11 요약.</sub>
+
+
 
 
 #### 🔧 방법 원전 — 시드 · 독립궤적 · MSD 오차 추정
