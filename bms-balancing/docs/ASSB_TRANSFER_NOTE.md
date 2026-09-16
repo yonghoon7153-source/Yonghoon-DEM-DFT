@@ -104,3 +104,77 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 - 우리 DEM 산출이 **어떤 접촉량을 어떤 단위로** 주는지 확인하지 않았다 (다른 브랜치).
 - `chain rule` 결함(`dv_cell` 에 `1/a` 없음)은 **여기에도 그대로 따라온다.**
   이식할 때 같이 정리하지 않으면 새 프로젝트가 그 편향을 물려받는다.
+
+---
+
+## 6. 논문 수집 큐 (2026-09-16 개설 — 이 절이 큐의 정본이다)
+
+사용자가 PDF 를 모아 **하나씩** 먹인다. 대화는 휘발성이므로 여기를 본다.
+위키 쪽 정본은 `wiki/questions/assb-contact-loss-vs-lampe.md` 의 **Q1~Q8 채움표**이고,
+이 절은 **아직 안 들어온 것**의 목록이다.
+
+> ⚠ **순차로만 돌린다.** `wiki/tools/hooks/lint-on-edit.sh` 가 **전체 위키**를 lint 하므로
+> 두 에이전트를 동시에 띄우면 서로의 미완성 페이지 때문에 빨개진다. 한 편에 ~18 분.
+
+### 6-1. 처리 상태
+
+| # | 논문 | 축 | 상태 |
+|---|---|---|---|
+| 01 | Bielefeld·Weber·Janek 2019 — Microstructural Modeling | Q1 | ✅ **흡수 완료** (`81aa240`) |
+| 02 | Clausnitzer 외 2023 — Structure-Resolved Simulations (+SI) | Q1 | 🔄 **진행 중** (그림 25장 `f2120071`) |
+| 03 | Role of grain-level chemo-mechanics 2024 (+SI) — **DAMASK v2.0.2** | Q1 | ⏸ 수령·대기 |
+| 04 | Shi·Zhang·Tu 외 — Characterization of mechanical degradation (+SI) | Q1 | ⏸ 수령·대기 |
+
+### 6-2. 사용자가 수집해 둔 것 (업로드 대기)
+
+| # | 논문 | 겨냥하는 축 |
+|---|---|---|
+| 05 | **Doux 2020** — Stack Pressure Considerations (+SI) | **Q6 압력** |
+| 06 | **Lee 2020** — High-energy long-cycling ASSB, Ag–C 복합 음극 (+SI) | **Q7 무음극** |
+| 07 | Structural changes in the Ag–C composite anode (+SI ×2) | Q7 열화 경로 |
+| 08 | From state estimation to active intelligence (Frontiers 2026) | Q3·Q4 "빈 자리" |
+| 09 | **Huo 외 2025** — Characterization of cathode degradation + **결합 전기화학-노화 모델** (+SI) | **Q2 · 전압축** |
+| 10 | **Vadhva 외 2021** — EIS for ASSB: theory, methods, outlook | **Q2 독립 관측** |
+| 11 | PHM of Solid-State Batteries (Energies 2022) | Q3·Q4 |
+| 12 | ASSB for the grid: A realistic appraisal (Energy 2026) | Q3·Q4 |
+| 13 | Maxwell Protocol for Non-Destructive Health Diagnosis (Angew 2025) | Q3·Q4 · **OCV 경쟁 접근** |
+| 14 | Enhancing RUL in Solid-State Batteries: Smart BMS (2024) | Q3·Q4 |
+
+### 6-3. 새로 필요해진 것 — digest 가 돌면서 생긴 것
+
+| # | 논문 | 왜 · 누가 가리켰나 |
+|---|---|---|
+| 15 | **Strauss et al., ACS Energy Lett. 2018, 3, 992−996** | **최우선.** Bielefeld ref 13. **ex situ XRD 의 inactive AM 분율 = `1 − θ_AM` 의 measured 라벨.** 액체셀에서 우리를 막은 "라벨 없음" 이 여기서는 존재할 수 있다는 **유일한 실마리**. Bielefeld 는 정성 대조만 하고 스스로 무효화(`[인쇄]` "the porosity was not measured") |
+| 16 | **Koerver et al., Chem. Mater. 2017, 29, 5574−5582** | **최우선.** Bielefeld ref 7. 접촉 손실의 **실험 원전**이고 **용량·전압 축이 있다.** 01~04 네 편에 전압축이 하나도 없다 |
+| 17 | **Yanev·Heubner·Nikolowski, *JES* 2024** — Alleviating kinetic limitations of the Li-In alloy anode | **Q5 가 0 편인 것이 지금 제일 큰 구멍.** 스니펫에 **"a potential shift of roughly 0.2 V"** — Li-In 기준이 그만큼 움직이면 **LLI 를 통째로 덮는다** |
+| 18 | **Ramanayagam·Miß·Leier, *Batteries & Supercaps* 2026** — Stack Pressure × 3-Electrode | **Q2+Q5+Q6 교차점.** *"separate the impedance contributions of an LTO WE and of an InLi CE"* |
+| 19 | Fukunishi 외, *JPS* 2023 — AC impedance, NCM523 3전극, 열화 | Q2 + 양극 열화 (Bielefeld 가 "실험 0" 으로 못 준 자리) |
+| 20 | Yoshida 외, *Electrochim. Acta* 2024 — four-electrode cell | Q5 보강 — *"the potential change in the counter electrode is **not linear**"* |
+| 21 | Chang·Choi·Kang·Park·Lim, *Ionics* 2020 — embedded In reference electrode | Q5 — *"separately and simultaneously measured each electrode potential"* |
+| 22 | Sedlmeier 외, *JES* 2023 — micro-reference electrode, pouch | Q5·Q2 |
+| 23 | Hlushkou 외, *JPS* 2018, 396, 363−370 | Bielefeld ref 16 — **FIB-SEM 실측 미시구조** (합성 기하와 대조) |
+
+### 6-4. 권장 처리 순서
+
+`03 → 04` (이미 손에 있음) → **`09 Huo`** → `05 Doux` → `06 Ag-C` → `17 Yanev` →
+`15 Strauss` → `16 Koerver` → `10 Vadhva` → 나머지.
+
+**`09 Huo` 를 앞으로 당기는 이유**: 지금 가진 것 중 **유일하게 전기화학(전압·용량축)과
+양극 열화를 같이 가진** 논문이고, 01 이 세운 **곱셈 축퇴**가 실제 셀에서 어떻게
+보이는지를 말해 줄 가능성이 가장 높다.
+
+### 6-5. ⚠ DEM 브랜치에 이미 있는 것과 겹친다 (2026-09-16 조사)
+
+`claude/stoic-knuth-NObVQ` 의 `docs/data/` **169 항목**을 훑었다(읽기만 — 하드룰 1).
+우리 Q 축에 직접 걸리는 것이 **이미 디지타이즈돼 있다**:
+
+- **Q6**: `doux2020_stack_pressure` · `cronau2021_stack_pressure_ionic` ·
+  `varkey2026_ionic_vs_pressure` · `schneider2023_sigma_size_pressure` · `lee2024_dem_fem_pressure`
+- **Q2**: **`minnmann2021_sigma_tau_porosity`** (*"NCM-622 + Li6PS5Cl (= our system). EIS +
+  T-type TLM"* — 조성·공극률·압력 × σ_ion/σ_el/tortuosity) · `reisacher2023_percolation`
+  (EIS+DC **실험** 퍼콜레이션) · `rint_eis_anchors` (R_ct, 3전극)
+- **Q1**: `bielefeld2019_percolation` (01 번의 디지타이즈) · `chen2011_percolation_micromodel`
+
+**앵커 ≠ digest 다.** 그쪽은 그림에서 점을 따 DEM 보정에 쓰는 데이터고, 우리는
+**식별 가능성 축(Q1~Q8)으로 절별 독해**한다. 겹치는 것이 아니라 보완이므로
+**PDF 는 여전히 필요하다.** 다만 **우선순위는 내려간다** (05 Doux · 10 Vadhva 등).
