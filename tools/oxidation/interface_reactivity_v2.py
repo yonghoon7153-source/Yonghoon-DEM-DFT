@@ -273,8 +273,22 @@ def _selftest():
             "[음성] 10원소 NCM811 조합은 막는다 (MPRestError 예방)")
         chk(why_skip("Cl4Li21P4S17Al1Br3", "LiNiO2") is None,
             "[양성] 같은 종도 단일 전이금속 상대면 통과")
+
     except ImportError:
         print("  ⚠ pymatgen 없음 — why_skip 시험 건너뜀 (여기선 정상)")
+    # ⛔음성 (2026-09-16 실측 사고) — `--closed --electrolytes` 는 **조용히 무시됐다.**
+    #   오류도 경고도 없이 열린계를 돌리고 전압 쓸이가 찍힌 출력을 냈다. 7 종을 그렇게
+    #   돌려 놓고 전압줄을 보고서야 알아챘다. 이제 **시작을 막는다.**
+    import subprocess as _sp
+    import sys as _sys
+    _r = _sp.run([_sys.executable, __file__, "--closed",
+                  "--electrolytes", "Li6PS5Cl:x", "--cathodes", "LiCoO2"],
+                 capture_output=True, text=True)
+    chk(_r.returncode != 0 and "구현돼" in (_r.stderr + _r.stdout),
+        "[음성] `--closed --electrolytes` 는 **조용히 돌지 않고 거절한다** "
+        f"(rc={_r.returncode})")
+    chk("--only" in (_r.stderr + _r.stdout),
+        "[음성] 거절하면서 **대안 경로(--only)를 알려 준다** — 막기만 하면 사람이 헤맨다")
     with tempfile.TemporaryDirectory() as d:
         p = _os.path.join(d, "empty.csv")
         open(p, "w").write("dopant,rank_combined\nMgO,2\n")
@@ -404,6 +418,18 @@ def main():
         return run_batch(a)
     if not a.electrolytes:
         ap.error("--electrolytes 또는 --batch_from 중 하나는 있어야 한다")
+    # ⛔ 2026-09-16 실측 — `--closed` 는 `run_batch` 안에서만 읽힌다(`a.closed` 는
+    #   199·215·217·218 행에만 있다). 아래 경로는 그 플래그를 **한 번도 안 본다.**
+    #   그래서 `--closed --electrolytes ...` 는 오류 없이 **열린계를 돌려 놓고**
+    #   전압 쓸이가 찍힌 출력을 낸다 — 닫힌계 0 V 인 척하는 그럴듯한 결과다.
+    #   (2026-09-16 에 7 종을 그렇게 돌렸고, 전압줄을 보고서야 알아챘다.)
+    #   조용히 무시하지 않고 **시작을 막는다** — kb/methodology/silent_wrong_path_2026_09_13.md
+    if a.closed:
+        ap.error("⛔ --closed 는 이 경로(--electrolytes)에서 **구현돼 있지 않다** — "
+                 "지금까지 조용히 무시됐다. 닫힌계는 배치 경로에만 있으니 "
+                 "`--only \"라벨:조성\"` (또는 --batch_from) 으로 돌릴 것. 예: "
+                 "--closed --only \"Nd:Li4.8Nd0.2P1S4.4Cl1.6\" --cathodes LiCoO2 "
+                 "--out db/properties/x.jsonl")
 
     from pymatgen.core import Composition, Element
     from pymatgen.analysis.phase_diagram import PhaseDiagram, GrandPotentialPhaseDiagram
