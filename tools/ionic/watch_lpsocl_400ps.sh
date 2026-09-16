@@ -109,6 +109,20 @@ if [ "${1:-}" = "--selftest" ]; then
   rm -f "$L9"
   chk "$(echo "$OUT9" | grep -q '지금 돌고 있다' && echo 1 || echo 0)" \
       "⛔음성: 잡힌 락을 '돌고 있다(정상)' 로 말한다 (오류처럼 보이지 않게)"
+  # ⛔음성 (2026-09-16): 실행모드를 **못 읽은 것**을 '동일' 로 보고하면 안 된다
+  RM="$T/rm"; mkdir -p "$RM/s2/d0.00_cfg0/T600"
+  echo '{"a":1}' > "$RM/s2/d0.00_cfg0/T600/msd.json"
+  echo '{"label":"x","seed":2}' > "$RM/s2/run_meta.json"     # 모드 필드가 없다
+  OUTM=$(SEEDS=2 TEMPS=600 bash "$0" "$RM" 2>&1)
+  chk "$(echo "$OUTM" | grep -q '기록 없음' && echo 1 || echo 0)" \
+      "⛔음성: 모드 필드가 없으면 '기록 없음' 이라고 말한다"
+  chk "$(echo "$OUTM" | grep -q '전 시드 동일' && echo 0 || echo 1)" \
+      "⛔음성: 못 읽은 것을 '전 시드 동일' 로 찍지 않는다"
+  # 양성: 실제로 읽히고 하나면 '확인' 이라고 말한다
+  echo '{"uma_inference_mode":"turbo"}' > "$RM/s2/run_meta.json"
+  OUTM2=$(SEEDS=2 TEMPS=600 bash "$0" "$RM" 2>&1)
+  chk "$(echo "$OUTM2" | grep -q 'turbo (전 시드 동일 · run_meta 로 확인)' && echo 1 || echo 0)" \
+      "양성: 전건 읽히면 '확인' 이라고 말한다"
   rm -rf "$T"; echo "selftest: $ok 통과 / $bad 실패"
   [ "$bad" = 0 ] || exit 1; exit 0
 fi
@@ -235,11 +249,19 @@ _modes=$(for d in "$R"/s*/run_meta.json; do
   [ -f "$d" ] || continue
   python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print(d.get('uma_inference_mode') or d.get('uma_inference_mode_requested') or '?')" "$d" 2>/dev/null
 done | sort -u | tr '\n' ' ')
-if [ -n "${_modes// /}" ]; then
-  if [ "$(echo $_modes | wc -w)" -gt 1 ]; then
-    echo "  ⛔ UMA 실행모드가 시드마다 다르다 [$_modes] — 한 묶음으로 못 쓴다 (카드 §8 무효조건)"
-  else
-    echo "  UMA 실행모드 ${_modes% } (전 시드 동일)"
-  fi
+# ⛔ 2026-09-16 — **`?`(못 읽음)를 모드 하나로 세고 "전 시드 동일" 이라고 찍었다.**
+#   lpsocl 트리에서 실제로 `UMA 실행모드 ? (전 시드 동일)` 이 나왔다 — 확인한 적이 없는데
+#   화면이 확인했다고 말한 것이다. 못 읽음과 읽어서 같은 것을 **가른다**.
+_known=$(echo "$_modes" | tr ' ' '\n' | grep -v '^?$' | grep -v '^$' | sort -u | tr '\n' ' ')
+_unk=$(echo "$_modes" | tr ' ' '\n' | grep -c '^?$')
+if [ "$(echo $_known | wc -w)" -gt 1 ]; then
+  echo "  ⛔ UMA 실행모드가 시드마다 다르다 [$_known] — 한 묶음으로 못 쓴다 (카드 §8 무효조건)"
+elif [ -n "${_known// /}" ] && [ "$_unk" = 0 ]; then
+  echo "  UMA 실행모드 ${_known% } (전 시드 동일 · run_meta 로 확인)"
+elif [ -n "${_known// /}" ]; then
+  echo "  ⚠ UMA 실행모드 ${_known% } 로 읽혔으나 **${_unk}개 시드는 기록이 없다** — 전건 확인이 아니다"
+elif [ "$_unk" -gt 0 ]; then
+  echo "  ⚠ UMA 실행모드 **기록 없음** (${_unk}개 시드) — run_meta 에 그 필드가 없다."
+  echo "     ⛔ '같다' 는 뜻이 아니다. 모드가 기록되기 전에 돈 트리이거나 필드가 빠진 것이다."
 fi
 done
