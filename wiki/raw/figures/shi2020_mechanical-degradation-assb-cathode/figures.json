@@ -1,0 +1,132 @@
+{
+ "slug": "shi2020_mechanical-degradation-assb-cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-16",
+ "sources": [
+  "shi2020_main.pdf",
+  "shi2020_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Electrochemical tests of SSB before and after re-pressing. (a) Discharge capacity of the cell. Pressure of 300 MPa was applied after 50 cycles. (b) and (d) EIS measurement after 1, 20, 50, and 51 cycles. (c) Summary of cell resistances determined through EIS measurements. The equivalent circuit is shown in the inset.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    448.1,
+    298.0,
+    676.7
+   ],
+   "w": 1090,
+   "h": 954,
+   "dpi": 300,
+   "src": "shi2020_main.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Workﬂow for FIB-SEM tomography. (a) Schematic illustration of data acquisition set-up in FIB-SEM. (b) Ion-beam milling and BSE electron beam imaging were performed iteratively during serial sectioning. (c) 2D image stack obtained after image processing. (d) Corresponding four- phase segmentation results and (e) reconstructed 3D volume of the cathode composite (the ﬁnal 3D volumes were slightly diﬀerent for the three samples but were all \u000360 \u0005 40 \u0005 30 mm3).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    494.3,
+    558.8,
+    686.8
+   ],
+   "w": 2177,
+   "h": 803,
+   "dpi": 300,
+   "src": "shi2020_main.pdf",
+   "blank": 0.731
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Reconstructed 3D structures of cathode composite. The ﬁgures correspond to the samples before cycling (top), after 10 cycles (middle), and after 50 cycles (bottom). The left column shows all the components (blue: NMC; yellow: LPS; red: void; black: carbon). The middle column shows only the NMC particles, and the right column shows only the voids. The overall volume and void volume percent are labeled below the ﬁgures.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    333.9
+   ],
+   "w": 2177,
+   "h": 1207,
+   "dpi": 300,
+   "src": "shi2020_main.pdf",
+   "blank": 0.761
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Cross-sectional SEM images of composite cathode (a) before cycling, (b) after 10 cycles, and (c) after 50 cycles. Scale bar: 10 mm (d) NMC surfaces (blue) with void/NMC interfaces highlighted in red and (e) their 3D reconstruction. (f) Part of the 3D reconstruction of the after-50-cycles sample showing an isolated NMC particle (grey) with surrounding voids (red). Other components (LPS and carbon) are not shown. Box sizes for (e) and (f) are 64 \u0005 38 \u0005 36 mm3 and 18 \u0005 20 \u0005 18 mm3, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    338.4
+   ],
+   "w": 1090,
+   "h": 1225,
+   "dpi": 300,
+   "src": "shi2020_main.pdf",
+   "blank": 0.503
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Electrochemical cycling results of SSB full cells. (a) Cycling performance (b) and",
+   "rotated_deg": 0,
+   "bbox": [
+    35.9,
+    39.0,
+    549.0,
+    499.2
+   ],
+   "w": 2139,
+   "h": 1919,
+   "dpi": 300,
+   "src": "shi2020_SI.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. (a) Grayscale histogram of a backscattered electron image of the composite cathode,",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    550.3,
+    266.0
+   ],
+   "w": 2018,
+   "h": 834,
+   "dpi": 300,
+   "src": "shi2020_SI.pdf",
+   "blank": 0.866
+  }
+ ]
+}

@@ -131,6 +131,14 @@
    "55a6f97e-Determination_of_degradation_modes_of_lithiumion_batteries_considering_aginginduced_changes_in_the_halfcell_opencircuit_potential_curve_of_silicon_graphite.pdf"
   ]
  },
+ "shi2020_mechanical-degradation-assb-cathode": {
+  "figures": 6,
+  "generated": "2026-09-16",
+  "pdfs": [
+   "shi2020_main.pdf",
+   "shi2020_SI.pdf"
+  ]
+ },
  "su2024_drt-soh-health-features": {
   "figures": 15,
   "generated": "2026-09-03",

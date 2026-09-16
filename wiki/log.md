@@ -1463,3 +1463,63 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   Q7(dead Li) 은 여전히 0편** — Q6 은 `assb` **2/2 편이 `pressure` 0회**, Q4 는 두 편 모두
   forward 전용이라 원리적으로 못 채운다.
 - lint 0 errors / 0 warnings.
+
+## [2026-09-16] ingest | Liu · Roters · Raabe 2024 — Role of grain-level chemo-mechanics in composite cathode degradation of solid-state lithium batteries (Nat. Commun. 15, 7970) — `assb` 3호
+
+- raw: `raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md`
+  (절별 해체분석 · 본문 18쪽 sha256 `0835168b…` + SI 10쪽 sha256 `46b8d56f…` **둘 다 봉인**).
+  그림: `raw/figures/liu2024_…/` — 자동 크롭 6장(Fig. 1·2·3·5·6 + Table S1) + **캡션
+  검출이 놓친 Fig. 4·7 과 SI 전체(`Fig. S.1` 처럼 번호에 점)를 쪽 렌더로 보강**.
+  **실제로 본 것: Fig. 3(전문+3c 확대) · 4(전문+4a 확대) · 5(전문+5d–f 확대) ·
+  6(쪽 렌더+6h 확대) · 7 · S1 · S2 · S3 · S4 · S5 · S8.**
+  안 본 것: Fig. 1·2(개념도) · Fig. S6·S7(4d,4e 의 3D 판). Table S1 은 PDF 텍스트로.
+- 컴파일: **새 개념 페이지 없음** (SCHEMA Page Thresholds 판단 — 이 논문의 좌표는 `θ` 로
+  변환되지 않아 기존 두 개념에 **제약**으로 붙는 편이 정확하다). 대신
+  [[assb-apparent-capacity-decomposition]] 갱신(율 극한 확인 + `Q_material` 율 의존 +
+  주장하지 않는 것 3항) · [[composite-cathode-percolation-utilization]] 갱신(§"3호는 이
+  `θ` 와 변환되지 않는다" 신설 + 원장 확장) · 닻 [[assb-contact-loss-vs-lampe]]
+  (Q1~Q8 행 추가 · Evidence For 보강 · 새 제약 5항 · Status Log) · index.md 3줄.
+- **물은 세 가지에 대한 답**:
+  **`θ(N)` 시간축 — 없다.** 방전 1회(+ 충전 1회), 사이클 축 그림 0장. 결정적으로
+  **파괴·디본딩 모형이 없다** (`[인쇄]` "does not explicitly account for mechanical
+  fracture"). 있는 것은 **계면 최대주응력**(GPa)뿐 — **`θ` 로 변환 불가**.
+  `assb` **3/3 편이 시간축을 안 줬고, 이제 공통 원인이 보인다**(cohesive zone /
+  phase-field damage 가 3편 모두에 없다).
+  **실험 — 없다.** 자기 실험 0 (3/3 편 공통). 대조 자료는 전부 인용이고 **모집단이
+  어긋난다**: Fig. 4a 방전곡선은 **Si 음극 + 황화물 SE** 셀(ref 62), Fig. 5e 활물질
+  손실 실측은 **전부 액체 전해질 Li-ion 셀**(refs 67–71), Fig. 5c 산소결핍은
+  **Li-rich** 산화물(ref 5).
+  **시드 산포 — 없다.** 구조 실현 **1개**. 본문은 `[인쇄]` "the **random arrangement**
+  of primary particles … play a critical role" 라고 적고도 실현을 안 늘렸다.
+  Fig. 3j·4e 의 "statistical variability" 는 **한 구조 안의 공간 분포**다.
+- **새로 들어온 것 둘 (`assb` 계보 최초)**: ★ **OCV 곡선** (SI Fig. S2, GITT, `1−θ` 0→1
+  에서 ≈3.0 → 4.4 V vs Li/Li⁺, 전 구간 기울기) — 2호가 남긴 "OCV 0편" 단서를 닫았다.
+  ★ **율 스윕** (SI Fig. S4, 0.25–5C × 4 크기 = 20 곡선): `i→0` 에서 전 크기가 ≈1 로
+  수렴 → 3항 분해의 **`η(i)→1` 이 독립 모델에서 확인**됐다 (그 모델은 `θ_AM ≡ 1`).
+- **가장 무거운 수확 둘**: ① `[인쇄]` **"실험의 활물질 손실은 rock-salt 형성 + 입계
+  파괴로 고립된 활물질을 둘 다 포함한다"** — 닻 질문의 축퇴가 **문헌 문장으로 확인**된
+  첫 사례. ② **`Q_material` 이 율 의존**(12 µm: 0.25C 0.093 → 5C 0.185) → 우리 율 스윕
+  분리 시험이 좁아졌다 (저율 쌍 또는 **왕복 이력**으로).
+- 비판 기록: 어긋남 **18건** (1호 8 · 2호 14 · 3호 18). 무거운 묶음 **D3·D4·D5·D6** —
+  초록이 "contact loss **is caused by**" 라고 단정하는데 모델에 접촉 손실 변수가 없고(D3),
+  Fig. 5 의 손실 기준이 자기 방전곡선과 화해되지 않으며(D4, 12 µm·1C: 0.235 vs 0.31),
+  "kinetically induced capacity loss" 가 **세 곳에서 다른 뜻**이고(D5),
+  Fig. 7 의 "Operating window, ≥90 % usable capacity" 라벨이 **자기 Fig. 5d 와 모순**(D6,
+  두 손실이 가법인데 패널마다 한 성분만 10 %로 자른다). **2호와 같은 형태** — 결론을
+  떠받치는 문장이 자기 그림과 충돌한다.
+  그 밖: **Fig. 3c 범례 색이 Table S1 과 뒤바뀜**(D1, 5쌍 중 4쌍; Fig. 6a 로 독립 확인),
+  출처 없는 초록 수치 `393 Wh kg⁻¹`(D2), 본문 "+20 % 용량" vs 도표 +25 %p(D7),
+  서론 "7.8 % 부피변화" vs 자기 Fig. 3b `[재현]` 6.3 %(D8), 단위 오식 2건(D13).
+- **재현 가능성 원장 신규 항목**(D16): Code Availability 가 가리키는 공개 DAMASK v2.0.2 는
+  **이 연구가 쓴 코드가 아니다** — 실제 코드는 `git.damask-multiphysics.org` 의
+  `plasticity_chemo_mechanics` 브랜치(커밋 `a987e05f…`)이고 **MPIE 허가 + CLA 승인**이
+  필요하다. 인계받은 확인: 공개본(2018-05-22, 71파일·50,208줄 Fortran)에 `lithium`·
+  `intercalat` **0건**, 논문이 "developed" 라고 적은 **독립 FEM 솔버도 없다**(spectral +
+  Marc/Abaqus 인터페이스뿐), 라이선스 GPL.
+- Q1~Q8: 3호가 새로 채운 칸은 **Q8 하나**, **Q3 에 새 층위**(fitted 문턱 12 %, 타 화학에
+  적합). **3편 누적 ≈3.0/8.** Q4(유일성)·Q5(Li-In)·Q6(압력)·Q7(dead Li) 은 **3/3 편 0** —
+  특히 Q6 은 **접촉 역학이 본체인 논문이 `pressure` 0회**다.
+- 후속 후보: 1순위 **Koerver 2017** (`Chem. Mater.` 29, 5574 — 3편이 모두 인용, 접촉
+  손실의 실험 원전 + 용량축 + 사이클; **`θ(N)` 은 실험 쪽에서만 나온다**),
+  2순위 **Shin 2023** (`Adv. Energy Mater.` 13, 2301220 — 저압 조건, **Q6 첫 후보**).
+- lint 0 errors / 0 warnings.
