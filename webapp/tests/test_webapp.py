@@ -4001,6 +4001,42 @@ def test_note_bold_is_lenient_about_one_sided_space():
     assert "suggests <strong>low x</strong>" in h, f"공백이 사라져 낱말이 붙었다: {h!r}"
 
 
+def test_mdlite_links_and_rejects_bad_schemes():
+    """`[글](https://…)` 이 **진짜 앵커**가 되는가 — 그리고 안 되어야 할 것들.
+
+    왜 생겼나 (2026-09-16): 카드에 아티팩트 링크를 넣었는데 mdlite 가 링크를 몰라
+      대괄호와 URL 이 **글자 그대로** 화면에 나왔다. 카드를 고치는 게 아니라
+      **서버 필터 한 곳**을 고치는 자리다 (CLAUDE.md §화면 규율).
+    """
+    U = "https://claude.ai/artifact/JpXxNZwwXt3QgB7f3jMpwo"
+    h = str(A._mdlite(f"근거는 [CEI 계면 반응성]({U}) 이다"))
+    assert f'<a href="{U}" target="_blank" rel="noopener noreferrer">CEI 계면 반응성</a>' in h, h
+    assert "[CEI" not in h and "](" not in h, f"대괄호가 남았다: {h!r}"
+
+    # 링크 글자 안의 볼드는 **살아야** 한다 (태그만 격리하는 이유)
+    h = str(A._mdlite(f"[**굵은 링크**]({U})"))
+    assert "<strong>굵은 링크</strong></a>" in h, h
+
+    for text, why in (
+        ("[x](javascript:alert(1))", "⛔음성: javascript: 스킴은 링크가 아니다"),
+        ("[x](data:text/html,<b>)", "⛔음성: data: 스킴은 링크가 아니다"),
+        ("[x](http://insecure.example)", "⛔음성: 평문 http 는 받지 않는다"),
+        ("[x](/etc/passwd)", "⛔음성: 상대·절대 파일경로는 링크가 아니다"),
+        (f"`[x]({U})`", "⛔음성: 코드 스팬 안은 **데이터**다 — 링크로 만들지 않는다"),
+    ):
+        h = str(A._mdlite(text))
+        assert "<a href" not in h, f"{why}: {text!r} → {h!r}"
+
+    # 결속(철회값 표식)이 앵커를 깨지 않는지 — 링크 글자에도, href 안에도 숫자를 둔다.
+    # ⚠ 이건 **회귀 방지**지 "복원 순서" 시험이 아니다. 2026-09-16 에 순서를 뒤집어 재 봤더니
+    #   양쪽 다 통과했다 — `_bind_claims` 가 속성 안까지 안 들어간다. 순서를 시험으로
+    #   보증한다고 쓰면 그게 헛것을 재는 것이다.
+    h = str(A._mdlite(f"[Nd/O 0.199 결과](https://ex.example/a/0.199/b) 를 본다"))
+    assert h.count('<a href="') == 1, f"앵커 개수가 이상하다: {h!r}"
+    assert 'href="https://ex.example/a/0.199/b"' in h, f"href 가 깨졌다: {h!r}"
+    assert "claim-flag" in h or "claim-mark" in h, f"링크 글자의 철회값 결속이 사라졌다: {h!r}"
+
+
 def test_digest_date_marker_is_actually_parsed():
     """⛔음성 (2026-09-13 실측): 파일에 `digested <날짜>` 가 있는데 목록이 **못 읽으면**
     그 논문은 최신순 정렬에서 **조용히 맨 뒤로 가라앉는다**.

@@ -120,6 +120,13 @@ def _mdl_bold_sub(m):
         return m.group(0)                      # 양쪽 다 띔 → 문장 통째 굵어짐 방지
     return "%s<strong>%s</strong>%s" % (lead, body, tail)
 _MDL_CODE = re.compile(r"`([^`]+)`")
+#: 링크 (2026-09-16) — 카드가 `[글](https://…)` 을 쓰는데 mdlite 가 링크를 몰라서
+#:   **대괄호와 URL 이 글자 그대로 화면에 나왔다**. 판정은 여기 **서버 한 곳**에서 한다
+#:   (CLAUDE.md §화면 규율: 브라우저에서 다시 파싱하지 않는다).
+#: ⛔ **https 만** 받는다 — `javascript:`·`data:` 를 링크로 만들지 않는다. escape() 가
+#:   이미 지나가서 URL 안의 따옴표는 `&#34;` 라 속성을 깨고 나올 수 없지만, 스킴 제한이
+#:   진짜 방어선이다. 공백·따옴표·꺾쇠·파이프는 URL 에서 제외한다(표 빌더가 `|` 로 쪼갠다).
+_MDL_LINK = re.compile(r"\[([^\]\n]{1,200})\]\((https://[^\s()<>\"'|]{1,500})\)")
 #: Obsidian 식 하이라이트 — 1저자 메모가 실제로 쓴다 (2026-09-08). 표준 md 는 아니다.
 _MDL_MARK = re.compile(r"==(?!\s)(.{1,%d}?)(?<!\s)==" % _MDL_MAXB, re.S)
 #: 취소선 — 철회 표기에 실제로 쓴다(`<s>0.199</s> ⛔ 철회`). 볼드와 **같은 가드**를 쓴다.
@@ -143,6 +150,17 @@ def _mdlite(text: str) -> Markup:
         return "\x00%d\x00" % (len(spans) - 1)
 
     s = _MDL_CODE.sub(_stash, s)
+    # 링크는 **여는/닫는 태그만** 따로 격리한다 — 태그를 통째로 숨기면 링크 글자에
+    # 볼드·이탤릭이 안 먹고, 안 숨기면 URL 속 `_`·`*` 가 이탤릭 규칙에 먹힌다.
+    raw = []
+
+    def _raw(html):
+        raw.append(html)
+        return "\x01%d\x01" % (len(raw) - 1)
+
+    s = _MDL_LINK.sub(
+        lambda m: (_raw('<a href="%s" target="_blank" rel="noopener noreferrer">'
+                        % m.group(2)) + m.group(1) + _raw("</a>")), s)
     s = _MDL_BOLD.sub(_mdl_bold_sub, s)
     s = _MDL_MARK.sub(r"<mark>\1</mark>", s)
     # ⚠ 취소선·이탤릭은 **코드 스팬 격리 뒤·복원 앞**이다. `` `~~x~~` `` 안의 물결과
@@ -186,7 +204,13 @@ def _mdlite(text: str) -> Markup:
     #   템플릿 8개 73곳이 이 경로인데, 그때 unbound 가 0 이었던 건 그 73곳에 결속 대상
     #   문자열이 **없어서**였다. 즉 검사가 초록인 이유가 "지켜서" 가 아니라 "안 마주쳐서"
     #   였다는 뜻이라 다음 카드 한 장이면 조용히 뚫린다. `md_html` 과 **같은 판정기**를 태운다.
-    return Markup(_bind_claims(s))
+    # 링크 태그 복원은 결속 **뒤**다 — href 안의 숫자를 결속이 건드리지 못하게.
+    # ⚠ 정직하게: **이 순서를 시험으로 보증하지 못한다.** 2026-09-16 에 순서를 뒤집어
+    #   `https://…/a/0.199/b`(철회값이 든 URL)로 재 봤더니 **양쪽 다 href 가 멀쩡했다** —
+    #   `_bind_claims` 가 속성 안까지 들어가지 않는다. 그래서 이건 **싼 방어**지 실측으로
+    #   막힌 경로가 아니다. 결속기가 나중에 더 공격적으로 바뀌면 그때 이 순서가 값을 한다.
+    s = _bind_claims(s)
+    return Markup(re.sub(r"\x01(\d+)\x01", lambda m: raw[int(m.group(1))], s))
 
 
 app.jinja_env.filters['mdlite'] = _mdlite
