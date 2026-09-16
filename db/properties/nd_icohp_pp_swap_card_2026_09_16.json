@@ -43,7 +43,21 @@
   "어디": "**gabia** (A6000) — 9월 LOBSTER 런이 거기서 돌았고 도구·pseudo 가 거기 있다.",
   "⚠_탄성과_경합한다": "이건 **GPU pw.x** 라 gabia 탄성과 **경합한다**. 소셀 MD(kgy)와 달리 끼워 넣을 수 없다. ⇒ **탄성 종료 후**, 그리고 예약된 G1 파일럿과 순서를 1저자가 정한다.",
   "도구": "`tools/comp1_v3/build_lobster_paw_inputs.py` — ⭐ **수정 불필요**. `PAW_PSEUDOS` 에 `Nd: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF`(frozen-4f)와 `O` 가 **이미 들어 있다**. (⚠ 2026-09-16 agent 오독 정정: docstring 은 Li/P/S/Cl 만 나열하지만 코드에는 Nd·O·Br·B 가 있다. **docstring 이 아니라 코드를 봐야 한다.**)",
-  "⚠_생성기_시점": "그 딕셔너리의 Br 주석이 `2026-07-22`, B 가 `2026-09-10` 이다 ⇒ **6월 런은 이 생성기보다 앞선다.** 6월이 다른 Nd PP 를 썼을 개연성의 방증이다."
+  "⚠_생성기_시점": "그 딕셔너리의 Br 주석이 `2026-07-22`, B 가 `2026-09-10` 이다 ⇒ **6월 런은 이 생성기보다 앞선다.** 6월이 다른 Nd PP 를 썼을 개연성의 방증이다.",
+  "✅_입력_생성_검증_2026_09_16": {
+   "생성": "gabia `/data/work/runs/nd_ppswap_2026_09_16/lc_nd_doped_DFTrela/01_vcrelax.in` (생성 1개)",
+   "검증_3종_통과": "① ATOMIC_SPECIES 의 Nd = `Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF` ② `nspin`·`HUBBARD U Nd-4f`·`starting_magnetization` **전부 없음** ③ `calculation = 'vc-relax'`.",
+   "pseudo_실물확인": "`nd_frozen4f.py --inventory` → `/data/work/pseudo/Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF` **z = 11.0 · frozen-4f**. 파일이 말한 값이다.",
+   "도구_자기진단": "*\"★ Nd frozen-4f PP 다 (z≈11, 4f 가 core) — 스핀분극·U 가 필요 없다\"*",
+   "셀": "120 원자 · 전자 592 → nbnd 407 (점유 296 + 빈 111) · 생성기 k scf [4,4,1]",
+   "⚠_잡힌_함정_3건": [
+    "`--pattern \"...DFTrelax.*\"` 가 `.cif`·`.xyz` 를 **둘 다** 먹어 같은 폴더에 2개를 썼다 → `.xyz` 하나로 좁혀 재생성(1개 확인).",
+    "폴더명이 `modelc_nd_doped_DFTrelax` → **`lc_nd_doped_DFTrela`** 로 뭉개진다 (도구가 `sei_` 접두를 가정해 앞 4자를 자르고 20자 절단). 계산은 정상이나 계보가 안 읽혀 `PROVENANCE.txt` 를 같이 남겼다.",
+    "🔴 **k-점**: 생성기는 scf [4,4,1] 을 골랐는데 6월 ICOHP 는 **k661** 이다. **LOBSTER SCF/NSCF 는 반드시 `6 6 1`** 로 간다 — 아니면 PP 와 k 가 같이 바뀌어 '바꾸는 것 하나' 가 깨진다. vc-relax 단계의 [4,4,1] 은 이완용이라 허용하되 여기 선언해 둔다."
+   ],
+   "ℹ_03_갭_미생성은_정상": "레지스트리 미등록이라 금속/절연체를 추측하지 않고 갭 단계를 건너뛴 것 — **가드가 제대로 작동**했다. 이 측정의 목적은 ICOHP 라 필요 없다."
+  },
+  "⛔_실측_2026_09_16_16시_지금_못_던진다": "gabia GPU **41156 / 49140 MiB · util 100 %** · `pw.x -in strain_23_p.in`(탄성) 점유 중. 남은 VRAM 8 GB. ⇒ 카드 §4 의 '탄성과 경합한다' 가 실측으로 확인됐다. **탄성 종료 후** 던진다. (참고: 6월 li3nd rattle 은 108 원자에 37.7 GB 를 썼다 — 우리 건 스핀·U 가 없어 그보다 적겠으나 8 GB 는 무리다.)"
  },
  "5_이_측정이_하지_않는_것": [
   "**Li 무질서를 다시 annealing 하지 않는다.** 6월 champion 배치를 그대로 쓴다. ⇒ 결과는 **그 배치 조건부**다. ⚠ 그 배치는 `eos.json` note 가 *\"f-electron, **UMA LOW-confidence**\"* 로 표시한 MLIP annealing 에서 왔다 — 이 한계는 이 측정으로 **해소되지 않는다**.",
@@ -82,6 +96,12 @@
    "state": "proposed",
    "by": "agent",
    "note": "1저자가 시작구조 해석 (i) 를 명시 확정 — \"6월 정해진 cif 에 그것만 바꿔 pseudo 랑, vc-relax 로\". 모호성 해소."
+  },
+  {
+   "at": "2026-09-16d",
+   "state": "proposed",
+   "by": "agent",
+   "note": "입력 생성·검증 3종 통과(frozen-4f PP · nspin/U 없음 · vc-relax). 함정 3건 기록(중복 생성·폴더명 뭉갬·k661 불일치). GPU 실측으로 착수는 탄성 종료 후로 확정."
   }
  ],
  "ratification": {
