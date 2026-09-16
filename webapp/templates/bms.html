@@ -160,6 +160,16 @@
       해가 상자 벽까지 미끄러졌다.</b></p>
   </div>
 
+  <p class="pipe-note"><b>⚠ 이 비교에 붙는 단서 (2026-09-16 에 추가).</b>
+    <code class="mono">w_dqdv 1</code> 은 24 시작 중 <b>8~9</b> 가 비정상 종료하고
+    <code class="mono">w_dqdv 0</code> 은 <b>5</b> 다 — <b>유효 후보가 16~21 % 적은
+    상태에서 고른 것</b>이다(원장 §4-5 에 전부터 있던 관측인데 이 표에 안 붙어
+    있었다). 그러면 넓어짐의 일부가 <b>축퇴가 아니라 탐색 실패</b>일 수 있다.
+    가르는 시험은 <b>유효 시작점 수를 맞춰 다시 재는 것</b>이고 <b>아직 안 돌렸다</b> —
+    그 전에는 <b>×2.91 을 축퇴만의 크기로 인용하지 않는다.</b>
+    다만 <code class="mono">a_NE</code> 가 하한에 <b>정확히</b> 붙은 것은 이 단서에
+    덮이지 않는다 (탐색이 실패한 게 아니라 <b>해가 경계까지 간 것</b>이다).</p>
+
   <p class="pipe-p"><b>LLI 는 두 설정 모두에서 가장 좁다</b> (1.17 / 1.40 %p, LAM
     두 축의 3.1~7.1 %p 대비). 합성 진실의 축퇴 행렬 · pyDMA 검증에 이어
     <b>세 번째 경로</b>로 같은 순서에 닿았다. 이번 것은 문헌 곡선을 고정한 채
@@ -236,9 +246,8 @@
     답이 시원하다는 말은 다르다. 물었던 것은 "α·β 열화 정량화를 어디까지 믿을 수
     있나" 이고, 거기에 <b>측정으로 답했다</b> — 믿을 수 있는 범위가 축마다 다르고
     LAM 에서는 그 범위가 넓다는 것이 답이다. <b>부정적 결론도 결론이다.</b>
-    남은 것은 이 결론의 미결 부분이 아니라 <b>다음 일</b>이다 — 새 모델 설계
-    요구서, <b>게이트 리뷰 요청문 둘</b>(갈래마다 하나씩 — 아래 §3), 그리고
-    ① COMSOL 의 A 보완.</p>
+    남은 것은 이 결론의 미결 부분이 아니라 <b>다음 일</b>이고, 그것은
+    <b>아래 §4·5 에 파이프라인으로</b> 적어 뒀다 (새 모델 설계 요구서는 <b>썼다</b>).</p>
 </section>
 
 <!-- ══ 3 ══════════════════════════════════════════════════════════════ -->
@@ -569,6 +578,74 @@
     실시간 중단은 미구현이다.</p>
 </section>
 
+<!-- ══ 4.5 ═══════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">4·5</span> 다음 무엇을 하나 — 파이프라인</h2>
+
+  <p class="pipe-p">세 갈래가 각자 어디까지 왔는지는 위에 있다. 이 절은 <b>그래서
+    다음에 무엇을 하는가</b>다. 핵심은 하나 — <b>남은 일이 codex 를 기다리는 것뿐이
+    아니다.</b> 기다려야 하는 것과 지금 되는 것을 갈라 적는다.</p>
+
+  <h3 class="tw-h3">방금 닫은 것</h3>
+
+  <p class="pipe-p"><b>새 모델 설계 요구서를 썼다</b>
+    (<code class="mono">docs/NEW_MODEL_REQUIREMENTS.md</code>). 저장소의 최종 순서가
+    <span class="mono">R2 원장 닫기 → R3 리뷰 → <b>새 모델 설계 요구서</b></span> 였고
+    그 마지막 항목이다. <b>코드가 아니라 설계서</b>이고, 형식은
+    <b>관측 → 후보 원인 → 구분 시험 → 채택 기준 → 남는 한계</b>.</p>
+
+  <p class="pipe-p"><b>먼저 쓰는 이유가 있다.</b> 이 계보 논문 17 편 중 <b>유일성을 잰
+    논문이 0 편</b>이다. 바로 코드부터 짜면 "더 잘 맞는 모델" 을 만들고 <b>그게 더 잘
+    식별되는지는 또 안 재게 된다</b> — 우리가 남을 비판한 그 자리로 간다. 그래서
+    <b>채택 기준을 만들기 전에 못 박는다.</b> 핵심 기준은
+    <b>"LAM<sub>NE</sub> 폭이 줄어야 한다"</b> 이고 <b>잔차 감소는 기준에서 뺐다</b> —
+    칸을 늘리면 잔차는 거의 항상 주니까.</p>
+
+  <h3 class="tw-h3">남은 일 — 세 줄로 나뉜다</h3>
+
+  <div class="pg-tablewrap">
+    <table class="pg-table">
+      <thead><tr><th>줄</th><th>무엇</th><th>무엇이 막나</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="2"><b>지금 되는 것</b><br>(합성·문서)</td>
+            <td><b>도금 칸이 어디로 새는가</b> — 도금을 넣은 합성 truth 를 4-창으로 적합해 오차가 <b>잔차로 남는지</b> <code class="mono">a_NE</code> 를 <b>오염시키는지</b> 본다</td>
+            <td><b>아무것도.</b> 합성이라 실셀도 남의 기계도 필요 없다</td></tr>
+        <tr><td><b>요청문 둘</b> 작성 (하네스 · degradation-degeneracy)</td>
+            <td><b>쓰는 것은 안 막힌다</b> — 막히는 건 <b>보내는</b> 순간뿐</td></tr>
+        <tr><td rowspan="2"><b>실데이터 기계</b></td>
+            <td><b>폭이 넓어진 게 축퇴인가 탐색 실패인가</b> — 유효 시작점 수를 맞춰 다시 잰다</td>
+            <td>원자료가 있는 기계. <b>짧다</b></td></tr>
+        <tr><td><b>U2 닫기</b> — pOCV 가 원자료인지 필터본인지 (워크북 간격 균일성)</td>
+            <td>같은 기계. <b>몇 분</b></td></tr>
+        <tr><td rowspan="2"><b>밖을 기다리는 것</b></td>
+            <td>게이트 리뷰 <b>둘</b> 송부 (§3·5 의 두 갈래)</td>
+            <td>외부 리뷰 예산</td></tr>
+        <tr><td>① COMSOL <b>A 보완 → 재검토 → B 별도 승인</b></td>
+            <td>다른 손이 맡았다. 승인 값은 <b>false 그대로</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pipe-quote pipe-quote-bad">
+    <p><b>순서에서 하나가 앞으로 당겨졌다.</b> "폭이 넓어진 게 축퇴인가 탐색 실패인가"
+      는 원래 목록에 없었다 — <b>이 화면을 설명하다가 §2 의 표에 단서가 안 붙어
+      있다는 것을 발견해서 생겼다.</b> 새 실험이 아니라 <b>이미 내놓은 숫자(×2.91)에
+      걸리는 것</b>이라, 새로운 것을 더하기 전에 닫는다.</p>
+  </div>
+
+  <p class="pipe-p"><b>두 줄은 서로 막지 않는다.</b> 합성 실험과 실데이터 재측정은
+    다른 기계에서 동시에 돌 수 있고, 요청문 작성은 둘 중 무엇도 기다리지 않는다.
+    <b>직렬로 보이는 것은 ① COMSOL 뿐이다</b> (A 가 보완돼야 재검토가 있고, 재검토가
+    있어야 B 승인 얘기가 나온다).</p>
+
+  <p class="pipe-note"><b>그 뒤의 긴 꼬리.</b> 요구서가 미실행 실험을 일곱 적어 뒀다 —
+    조건수 측정(이 계보에 없는 수치) · γ 직접 적합이 표현력 문제인지 축퇴인지 ·
+    <code class="mono">w_dqdv 0</code> 이 <b>옳다</b>는 근거(지금은 "켜면 나빠진다"만
+    보였다) · held-out 예측 등. <b>held-out 은 자료가 없어 지금은 불가</b>다 —
+    다른 셀의 <b>독립</b> 반쪽전지가 있어야 한다. 정본은
+    <code class="mono">docs/NEW_MODEL_REQUIREMENTS.md</code> §9.</p>
+</section>
+
 <!-- ══ 5 ══════════════════════════════════════════════════════════════ -->
 <section class="pipe-sec">
   <h2 class="pipe-h"><span class="pipe-n">5</span> 아직 아닌 것 — 경고를 떼지 않는다</h2>
@@ -625,6 +702,8 @@
       <tbody>
         <tr><td>세 갈래 현재 상태 · 재개 runbook</td><td><code class="mono">bms-balancing/WORKING_STATE.md</code></td></tr>
         <tr><td>③ 정량화 — 전 라운드 원장 (판정 §11 · pyDMA §12 · <b>실데이터 폭 §14</b> · <b>열린 둘 §15</b>)</td><td><code class="mono">bms-balancing/reviews/BML_R1_RESPONSE.md</code></td></tr>
+        <tr><td>③ <b>새 모델 설계 요구서</b> (§4·5 의 정본 — 관측·칸·구분 시험·채택 기준·한계·미실행 일곱)</td><td><code class="mono">bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md</code></td></tr>
+        <tr><td>③ 요구서의 문헌 입력 (논문 19·20)</td><td><code class="mono">bms-balancing/docs/LIT_19_20_FOR_NEW_MODEL.md</code></td></tr>
         <tr><td>③ 폭 측정 runbook (두 번 돌리는 절차와 <b>쓰면 안 되는 도구</b>)</td><td><code class="mono">bms-balancing/docs/WIDTH_RUN.md</code></td></tr>
         <tr><td>① COMSOL 재구축 명세 · 진단 §8~§24 (<b>§24 = A 준비본 검토 · B NO-GO</b>)</td><td><code class="mono">bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code></td></tr>
         <tr><td>① 건너온 묶음 원문 (bytes 보존 + 대조 기록)</td><td><code class="mono">bms-balancing/reviews/r14_repros/codex63/</code></td></tr>
