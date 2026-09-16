@@ -1408,3 +1408,20 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   실측으로 확인** (수치미분 경로라 `1/α` 가 자동으로 들어간다; α=0.80 대조에서
   오차 6.4e-06 vs 7.9e-01). 닫힌 신고.
 - lint 0 errors / 0 warnings.
+
+## [2026-09-16] ingest | Bielefeld, Weber, Janek 2019 — Microstructural Modeling of Composite Cathodes for ASSBs (`assb` 섹션 1호)
+- raw: `raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md`
+  (J. Phys. Chem. C 2019, 123, 1626−1634, 9쪽, sha256 봉인). **액체셀 계열 20편과 분리**
+  — `assb` 태그, 닻은 [[assb-contact-loss-vs-lampe]].
+- 그림: `raw/figures/bielefeld2019_.../` (fig 10 + tab 1). **본문 그림 10장 전부 Read 로 직접 봤다**
+  (Fig. 1–10). SI 없음. 표 1장은 PDF 텍스트로.
+- 컴파일: [[composite-cathode-percolation-utilization]] (concept, `assb` 축 첫 개념).
+  닻 카드에 Q1~Q8 채움표 + Evidence For/Against + Status Log 추가, sources·updated 갱신.
+- 핵심 수확: 접촉 손실의 **형태**가 정해졌다 — 이용률 `θ = V_c/V_ν` 가 용량 축 스케일에
+  **곱**으로 들어간다. 그리고 **라벨 자체가 폭을 갖는다**(무작위 충전만으로 `θ_AM`
+  ≈30 % ↔ ≈70 % 이봉; 임계 바로 위 `A_spec` σ ≈ ±32 %) → DEM 독립 라벨 계획의 선행 조건
+  두 개(폭 보고 · 도메인 크기 수렴)가 여기서 나왔다.
+- 비판 기록: **유효 전도도(S/cm)가 한 번도 계산되지 않았는데 초록이 그 결과를 주장**하고,
+  본문이 **유한 크기 인공물**이라 적은 것을 초록이 **"유리한 전극 특성"** 으로 뒤집는다
+  (digest §10 불일치 1). 어긋남 원장 8건. Q1~Q8 중 실질 충족 1.5/8 — **Q6(압력) `pressure` 0회**.
+- lint 0 errors / 0 warnings.

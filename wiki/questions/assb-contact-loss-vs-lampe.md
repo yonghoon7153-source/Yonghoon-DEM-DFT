@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-16
 type: research-question
 tags: [battery, degradation, research, assb]
-sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md]
+sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -92,6 +92,57 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 | Q6 | **압력**을 통제·보고했나 | 위 "모르는 것 4" |
 | Q7 | **무음극이면** dead Li 와 SEI Li 를 갈랐나, 무엇으로 | 위 "모르는 것 3" |
 | Q8 | 양극 화학 (NMC / LFP / 기타) 과 **OCP 기울기** | 위 "모르는 것 5" |
+
+### 수집 현황 — Q1~Q8 채움표
+
+| 논문 | Q1 정량 | Q2 독립관측 | Q3 라벨층위 | Q4 유일성 | Q5 Li-In | Q6 압력 | Q7 dead Li | Q8 화학·OCP |
+|---|---|---|---|---|---|---|---|---|
+| Bielefeld 2019 (`assb` 1호) | **부분** (`θ`) | **없다** (실험 0) | computed-geometric | **없다** | 없다 | **없다** | 없다 | 부분 (밀도·입도만) |
+
+**8 칸 중 실질적으로 채워진 것은 1.5 칸이다.** 나머지 6.5 칸이 `assb` 섹션이 채워야 할
+빈칸으로 확정됐다. 특히 **Q6(압력)은 아직 0 편이 다뤘다** — 액체셀에 없던 상태변수인데
+미시구조 쪽 원류 논문에 `pressure` 가 **0 회**다.
+
+## Evidence For / Against
+
+### For — "OCV 만으로는 못 가른다" 쪽 (2026-09-16, Bielefeld 2019)
+
+- **접촉 손실이 `LAM_PE` 와 섞이는 방식이 확정됐다: 곱셈.**
+  [[composite-cathode-percolation-utilization]] 의 `θ_AM` 은 재료량을 건드리지 않고
+  **용량 축 스케일에 곱해진다** (`Q_apparent = θ_AM · Q_material`, 우리 해석).
+  OCV 곡선은 **곱만** 본다 → 위 "모르는 것 1" 의 **형태**가 정해졌다.
+- **`A_spec,a` 봉우리가 평탄하고 두께 곡선이 겹친다** — forward map 자체가 이미
+  납작하다. [[fitting-degeneracy]] 가 화학 무관하게 재현될 자리.
+
+### Against / 단서 — "독립 관측이 존재할 수 있다" 쪽
+
+- **ex situ XRD 의 inactive AM 분율** = 원리적으로 `1 − θ_AM` 의 **measured 라벨**
+  (Strauss et al., ACS Energy Lett. 2018, 3, 992−996; Bielefeld 2019 ref 13).
+  액체셀에서 우리를 막았던 "measured 라벨 없음" 이 여기서는 **존재할 수 있다.**
+  ⚠ 단 Bielefeld 는 그 대조를 **정성적으로만** 했고 스스로 무효화했다 —
+  `[인쇄]` "the total packing density of AM used by Strauss et al. is not known,
+  **as the porosity was not measured**".
+
+### 우리 계획에 붙은 새 제약 (2026-09-16)
+
+- ★ **DEM 라벨 자체가 폭을 갖는다.** Bielefeld 가 인쇄한 실측: 거시 파라미터를 전부
+  고정해도 무작위 충전 배열만 바꾸면 임계 근방에서 `θ_AM` 이 **≈30 % ↔ ≈70 %** 로
+  이봉으로 갈린다. → **DEM 산출을 라벨로 쓰려면 반드시 폭을 붙인다**
+  (`bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md` §5 의 규율을 우리 자신에게).
+  그리고 **임계에서 멀리**(`p − p_c ≳ 5 vol%`) 작업해야 한다.
+- **DEM 도메인 크기 수렴 시험이 선행 조건**이다 — Bielefeld Fig. 10 의 유한 크기 효과가
+  얇은 도메인에서 `θ` 를 낙관 방향으로 편향시킨다.
+- `θ_AM` 의 **시간 변화는 아직 아무도 안 줬다.** Bielefeld 는 pristine 정적 기하만 준다.
+
+## Status Log
+
+- **2026-09-16 (개설)** — 카드 생성. `assb` 섹션의 닻으로 지정. 보류 항목.
+- **2026-09-16 (ingest 1)** — `assb` 1호 논문 흡수:
+  `raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md`.
+  컴파일: [[composite-cathode-percolation-utilization]].
+  **미결 항목 1 의 "형태" 가 정해졌고 "동역학" 이 남았다.** Q1~Q8 채움표 개설 (1.5/8).
+  후속 후보 1 순위 = Strauss et al. 2018 (ref 13, measured `1 − θ_AM`),
+  2 순위 = Koerver et al. 2017 (ref 7, 접촉 손실의 실험 원전 + 용량축).
 
 ## 이 페이지가 주장하지 않는 것
 
