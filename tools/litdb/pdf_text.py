@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""PDF → 텍스트. pdfminer 우선, 실패하면 stdlib 스캐너로 폴백.
+"""PDF → 텍스트. pdfminer → **pymupdf** → stdlib 스캐너 순으로 시도한다.
 
 왜 있나 (2026-09-03):
     이 컨테이너의 `cryptography` 가 깨져 있어(`pyo3_runtime.PanicException`)
@@ -14,8 +14,14 @@
     pdfminer **39,482자(본문 전체)** 였다. 기본 백엔드는 pdfminer 다.
 
 백엔드:
-    pdfminer (기본) — 폰트 인코딩·좌표 기반 줄바꿈까지 제대로. 느리다(논문 1편 ~10-60 s).
-    stdlib          — 의존성 0. 콘텐츠 스트림을 정규식으로 훑는다. pdfminer 가 실패할 때만.
+    pdfminer (1순위) — 폰트 인코딩·좌표 기반 줄바꿈까지 제대로. 느리다(논문 1편 ~10-60 s).
+    pymupdf  (2순위) — 2026-09-16 추가. 빠르고 출판사 PDF 를 제대로 읽는다.
+                       ⚠ 왜 필요했나: 이 컨테이너엔 pdfminer 가 **아예 없어서**(ModuleNotFound)
+                       auto 가 곧장 stdlib 로 떨어졌고, Elsevier 프리프루프에서 2207 줄을
+                       뱉었는데 `slab`·`adsorption` 이 **0 건**이었다. 출력이 있으니 성공처럼
+                       보였지만 본문이 아니었다 — 조용히 틀린 경로다.
+    stdlib   (최후)  — 의존성 0. 콘텐츠 스트림을 정규식으로 훑는다. 앞의 둘이 다 실패할 때만.
+                       ⛔ 여기로 떨어지면 **경고를 찍는다**. 빈 결과를 '논문에 없다' 로 읽지 마라.
 
 동작:
     xref 를 파싱하지 않는다. 파일 전체를 정규식으로 훑어 `stream…endstream` 블록을 찾고,
@@ -178,21 +184,51 @@ def extract_pdfminer(path: str) -> list[str]:
     return [extract_text(path, page_numbers=[i]) or "" for i in range(n)]
 
 
+def extract_pymupdf(path: str) -> list[str]:
+    """PyMuPDF(fitz) 백엔드. 페이지별 텍스트 리스트.
+
+    왜 추가했나 (2026-09-16): 이 컨테이너에는 **pdfminer 가 아예 없다**(`No module named
+    'pdfminer'`). 그래서 `auto` 가 곧장 stdlib 로 떨어졌고, Elsevier 프리프루프
+    (Zeng 2026 ENSM, 41 쪽)에서 2207 줄을 뱉었는데 `slab`·`adsorption` 이 **한 건도**
+    안 잡혔다 — 출력이 있으니 성공처럼 보였지만 본문이 아니었다. PyMuPDF 는 같은 PDF 를
+    정상으로 읽는다(p1 1599 자, 제목·저자·DOI 그대로).
+    ⇒ pdfminer 가 없을 때 stdlib 로 내려가기 **전에** 여기를 들른다.
+    """
+    import pymupdf
+    with pymupdf.open(path) as d:
+        return [p.get_text() or "" for p in d]
+
+
+#: 백엔드 우선순위. ⛔ pdfminer 를 앞에 둔 것은 **기존 digest 와 같은 출력을 유지**하기
+#   위해서다 (있는 환경에서는 동작이 안 바뀐다). pymupdf 는 stdlib 앞에 끼워 넣는다.
+_CHAIN = (("pdfminer", lambda p: extract_pdfminer(p)),
+          ("pymupdf",  lambda p: extract_pymupdf(p)))
+
+
 def extract(path: str, backend: str = "auto") -> tuple[list[str], str]:
-    """(페이지 리스트, 실제 사용한 백엔드)."""
-    if backend in ("auto", "pdfminer"):
+    """(페이지 리스트, 실제 사용한 백엔드).
+
+    ⛔ stdlib 로 떨어지는 것은 **성공이 아니라 마지막 수단**이다. 그렇게 끝나면 경고를
+       찍는다 — 조용히 떨어지면 사람이 빈 결과를 '이 논문엔 그 말이 없다' 로 읽는다.
+    """
+    for name, fn in _CHAIN:
+        if backend not in ("auto", name):
+            continue
         try:
-            pages = extract_pdfminer(path)
-            if any(p.strip() for p in pages):
-                return pages, "pdfminer"
-            if backend == "pdfminer":
-                return pages, "pdfminer"
+            pages = fn(path)
+            if any(p.strip() for p in pages) or backend == name:
+                return pages, name
         except Exception as e:
-            if backend == "pdfminer":
+            if backend == name:
                 raise
-            print("  (pdfminer 실패 → stdlib 폴백: %s)" % e, file=sys.stderr)
+            print("  (%s 실패 → 다음 백엔드: %s)" % (name, e), file=sys.stderr)
     with open(path, "rb") as fh:
-        return extract_pages(fh.read()), "stdlib"
+        pages = extract_pages(fh.read())
+    if backend == "auto":
+        print("⚠ stdlib 백엔드로 떨어졌다 — 출판사 본문(Wiley/Elsevier)은 **못 읽었을 수 있다**. "
+              "결과가 비거나 이상하면 '그 논문에 없다' 가 아니라 **못 읽은 것**이다 (한계 §1-8).",
+              file=sys.stderr)
+    return pages, "stdlib"
 
 
 def ascii_ratio(s: str) -> float:
@@ -279,7 +315,40 @@ def selftest() -> int:
            if False else raises(lambda: extract("/nonexistent-xyz.pdf", "stdlib"), OSError),
            "N: 없는 파일 → 예외")
     except ImportError:
-        ok(False, "pdfminer 사용 불가 — stdlib 로만 동작 (Wiley 본문 못 읽음)")
+        # pdfminer 가 없어도 pymupdf 가 있으면 출판사 본문을 읽는다 (2026-09-16).
+        # ⛔ 둘 다 없을 때만 실패로 본다 — 그때는 정말 stdlib 뿐이고 Wiley/Elsevier 본문을 못 읽는다.
+        try:
+            import pymupdf  # noqa: F401
+            ok(True, "pdfminer 없음 → pymupdf 로 대체 가능")
+        except ImportError:
+            ok(False, "pdfminer·pymupdf 둘 다 없다 — stdlib 뿐 (Wiley/Elsevier 본문 못 읽음)")
+        ok(raises(lambda: extract("/nonexistent-xyz.pdf", "stdlib"), OSError),
+           "N: 없는 파일 → 예외")
+
+    # ── pymupdf 백엔드가 **실제로 선택되는지** (2026-09-16) ────────────────────
+    try:
+        import pymupdf
+        import tempfile
+        # ⛔ `_fixture()` 를 쓰지 않는다. 그건 xref·페이지트리가 없는 **손으로 만든 최소 PDF** 라
+        #    PyMuPDF 가 못 연다 → auto 가 stdlib 로 떨어지고, 시험은 사슬이 아니라 **픽스처를 잰다**.
+        #    2026-09-16 실측: 사슬에서 pymupdf 를 빼도 결과가 같았다(빨간불이 안 움직였다).
+        #    그래서 PyMuPDF 로 **진짜 PDF 를 만들어** 쓴다.
+        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as fh:
+            fp = fh.name
+        _d = pymupdf.open()
+        _d.new_page().insert_text((72, 72), "SELFTEST XRD 110")
+        _d.save(fp); _d.close()
+        try:
+            ok(extract(fp, "pymupdf")[1] == "pymupdf", "pymupdf 백엔드를 이름으로 고를 수 있다")
+            # ⛔음성: auto 가 stdlib 로 **조용히** 떨어지지 않는다 (pdfminer 가 없어도)
+            ok(extract(fp, "auto")[1] != "stdlib",
+               "N: auto 가 풍부한 백엔드를 두고 stdlib 로 떨어지지 않는다")
+            # ⛔음성: 이름으로 고르면 그 백엔드를 쓴다 (auto 사슬이 가로채지 않는다)
+            ok(extract(fp, "stdlib")[1] == "stdlib", "N: --backend stdlib 는 강제된다")
+        finally:
+            os.unlink(fp)
+    except ImportError:
+        ok(True, "pymupdf 없음 — 백엔드 선택 시험 건너뜀 (환경 사실)")
 
     print("selftest: %d/%d 통과" % (P - len(f), P))
     for n in f:
@@ -296,7 +365,7 @@ def main() -> int:
     ap.add_argument("--min-ascii", type=float, default=0.0,
                     help="ASCII 비율이 이 값 미만인 장은 버린다 (폰트 깨진 장 거르기)")
     ap.add_argument("--sep", default="\n===PAGE===\n")
-    ap.add_argument("--backend", choices=("auto", "pdfminer", "stdlib"), default="auto")
+    ap.add_argument("--backend", choices=("auto", "pdfminer", "pymupdf", "stdlib"), default="auto")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
