@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-16
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md]
+sources: [raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -106,6 +106,40 @@ LLI_cum(N)  =  Σ_{i≤N} ( Q_ch,i − Q_dis,i )        ← 누적 결손
 `LLI` 도 가린다**는 뜻이다 — 3 항 분해가 상대해야 할 것이 하나 더 늘었다.
 액체셀 축의 같은 좌표는 [[np-lip-ocv-reparametrization]] 의 `N/P` · `Li/P` 다.
 
+## ★★★ 세 번째 추정자 — operando 상 동정 + 전하 수지 (2026-09-16, 7호)
+
+`raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md`
+(Spencer-Jolly et al., *Joule* 7, 503–514, Bruce 그룹/Oxford).
+⚠ **모집단이 다르다**: **흑연**(카본블랙 아님) · **반쪽전지**(상대극 Li 금속) ·
+**상온 30 µA cm⁻² ≈ C/68** · **1 사이클** · 통과 전하가 층 용량의 **≈4 배**.
+**6호의 완전지 수치와 직접 비교하지 않는다.**
+
+이 논문은 `Coulombic`·`efficiency`·`dead`·`isolated` 를 **본문+SI 전수 0 회** 쓴다.
+**그런데 자기 Fig. 1(충전)·Fig. 3(방전)의 시간축이 수지를 닫을 재료를 준다.**
+
+| `[재현]` | 값 | 근거 |
+|---|---:|---|
+| 충전 통과 | **2.03 mAh cm⁻²** | `[도표]` 67.6 h × 30 µA cm⁻² (`[인쇄]` "2 mA h cm⁻²" 와 일치) |
+| 방전 회수 | **1.05** | `[도표]` 35.0 h × 30 µA cm⁻² |
+| 계면상(SEI) 구간 | **0.19** | `[도표]` Fig. 1 분홍 배경 0 → 6.5 h |
+| **첫 사이클 효율** | **≈52 %** | 1.05 / 2.03 |
+| ★ **설명되지 않는 비가역분** | **≈0.79 mAh cm⁻² = 통과 전하의 39 %** | 2.03 − 1.05 − 0.19 |
+
+**왜 dead Li 후보인가**: 방전 종료 회절에 `[인쇄]` "only **graphite and Ag** are
+observed" → 층 **안에** 저장된 Li(LiC_x + Li_xAg)는 **전부 돌아왔다**. 남는 통로는
+**추가 SEI** 와 **전기적으로 고립된 Li 금속** 둘뿐이다.
+⚠ **그 둘은 여전히 안 갈린다** — 이 계정의 본래 한계가 그대로다.
+⚠ 그리고 이 계산은 **Fig. 1 과 Fig. 3 이 같은 셀**이라는 가정 위에 선다
+(논문이 적지 않는다). 상세·오차·대안 해석은 7호 digest §7.
+
+> ★★★ **`assb` 7 편 중 처음으로 "안 돌아온 Li" 가 숫자로 떨어진다.**
+> 5호 = "수단이 없다" · 6호 = "기구로 지목하고 안 잰다" · **7호 = 재지 않았지만
+> 잴 재료를 인쇄했다.** 그리고 그 값이 크다.
+> ⚠ **사이클 축이 없으므로 `LLI(N)` 로 옮길 수 없다.** 한 점이다.
+
+★ 같은 논문의 **상(相) 경로**(무엇이 어느 그릇에 들어갔다 나오는가)는
+[[ag-c-interlayer-lithium-phase-path]] 로 분리했다 — 이 페이지는 **총량**을 맡는다.
+
 ## 네 개의 채널 — 그리고 무엇이 안 갈리나
 
 | # | 채널 | 무엇을 보나 | 정량 | 한계 |
@@ -114,6 +148,7 @@ LLI_cum(N)  =  Σ_{i≤N} ( Q_ch,i − Q_dis,i )        ← 누적 결손
 | ② | ★ **EELS Li 맵** | Ag–C 층 **내부** Li, nm 척도 | ✗ | `[도표]` **방전 후·100 사이클 후에도 Li 망이 남는다** (pristine 에는 없다). dead Li / LiC_x / SEI / 합금 잔여를 **못 가른다** |
 | ③ | ★★ **XRD 의 Li₉Ag₄** | **합금에 담긴 Li** — 상으로 동정 | ✗ | 가역적(방전 후 소멸) → **dead Li 가 아니라 "돌아오는 Li" 의 그릇**. Rietveld 없음 |
 | ④ | **CE + 용량유지율** | 총 결손 | ○ | **전극·화학종 귀속 0**, 그리고 둘이 안 맞는다 |
+| ⑤ | ★★ **operando PXRD 상 순서 + 전하 수지** (7호) | Li 를 담은 **모든 상**을 시간축 위에서 (LiC_x 5 종 · Li–Ag 5 종 · Li 금속) + 그 나머지 | **△** (총량만 `[재현]`, 상 분율 ✗) | **Rietveld 0** → 상별로 못 나눈다. **SEI ↔ dead Li 안 갈림**. 1 사이클 · 반쪽전지 |
 
 ★★ **5호(Doux 2020)와 합치면 이렇게 된다**:
 
@@ -158,10 +193,15 @@ Li 는 **셀 용량의 0.89 % 이하**다 (Ag 8–16 mg Ah⁻¹, 2.25 Li/Ag).
   입력을 주지 않는다.
 - **이 숫자들을 다른 무음극 계로 옮기지 않는다.** Ag–C / 60 °C / 0.5 C /
   6.8 mAh cm⁻² 한 모집단이고 **셀 수가 밝혀져 있지 않다.**
+- **7호의 `[재현]` 0.79 mAh cm⁻² 가 전부 dead Li 라고 주장하지 않는다.** 계속되는
+  SEI 성장이 같은 뺄셈에 들어간다. 주장하는 것은 **① 크기가 이 정도이고 ② 논문이
+  그 뺄셈을 하지 않았다**는 것뿐이다. 그리고 그것은 **반쪽전지 한 점**이다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻 질문. 이 페이지가 그 미결 항목 3(무음극의
-  dead Li ↔ SEI Li)에 **채널 넷과 그 한계**를 넣는다.
+  dead Li ↔ SEI Li)에 **채널 다섯과 그 한계**를 넣는다.
+- [[ag-c-interlayer-lithium-phase-path]] — 같은 Ag–C 계의 **상(相) 경로**. 이 페이지가
+  **총량**, 저 페이지가 **그릇**을 맡는다.
 - [[assb-apparent-capacity-decomposition]] — 3 항 분해. 이 페이지가 **음극 인벤토리
   항**을 요구하고, `η` 가 `LLI` 도 가린다는 것을 더한다.
 - [[assb-stack-pressure-operating-window]] — 같은 논문이 압력 축도 쪼갠다 (제작 ↔ 운전).

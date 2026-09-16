@@ -1689,3 +1689,68 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   3 순위 **Genovese/Dahn 2018**(`JES` 165, A3321 — **무음극 CE 측정법 그 자체**),
   4 순위 **Zhang 2017**(`JMCA` 5, 9929 — 운전 중 압력 변화 실측).
 - lint 0 errors / 0 warnings.
+
+## [2026-09-16] ingest | assb 7호 — Spencer-Jolly 2023, Ag–흑연 무음극 중간층의 operando 구조 변화 (Joule 7, 503–514)
+
+- `raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md` 신설.
+  Spencer-Jolly, Agarwal, Doerrer, Hu, Zhang, Melvin, Gao, Gao, Adamson, Magdysyuk,
+  Grant, House, **Bruce** — *Joule* **7** (2023) 503–514,
+  doi `10.1016/j.joule.2023.02.001`, **University of Oxford + Diamond Light Source**.
+  본문 13 쪽 + SI 6 쪽, **둘 다 sha256 봉인**(업로드 파일을 직접 해시).
+  ✅ 파일명이 내용과 맞다(쪽수·1 쪽 텍스트로 확인). ⚠ 같은 업로드의 `Sup1_`(2 쪽,
+  *Standardized data reporting for batteries* **제출 양식**)은 사용자 지시대로
+  **읽지 않았고 근거에 없다.**
+- 컴파일: **새 개념 1** — [[ag-c-interlayer-lithium-phase-path]] (`assb` 축 여섯째).
+  갱신 — [[anode-free-li-inventory-accounting]] · [[assb-apparent-capacity-decomposition]] ·
+  [[assb-stack-pressure-operating-window]] · [[halfcell-ocp-shape-invariance]] ·
+  닻 [[assb-contact-loss-vs-lampe]].
+  ⚠ [[composite-cathode-percolation-utilization]] 은 **일부러 안 건드렸다**(339 줄,
+  그리고 이 논문은 양극에 아무것도 주지 않는다).
+- ★★ **계보에서 처음인 것 셋**: **operando 회절**(실험실 Cu Kα + 싱크로트론 56 keV) ·
+  **6호(삼성)의 외부 검증** · **원자료 공개**(Oxford Research Archive,
+  DOI 10.5287/bodleian:kKBPZ282m).
+- 최대 수확 넷:
+  ① ★★★ **dead Li 가 처음으로 숫자가 될 수 있게 됐다** — `[도표]` 충전 67.6 h ·
+  방전 35.0 h(둘 다 30 µA cm⁻²) ⇒ `[재현]` **2.03 ↔ 1.05 mAh cm⁻², 첫 사이클 효율
+  ≈52 %**, SEI 구간 0.19 를 빼면 **≈0.79 mAh cm⁻² = 통과 전하의 39 %** 가 설명되지
+  않는다(방전 종료 회절에 `[인쇄]` "only graphite and Ag" 만 남는다).
+  ⚠ **논문은 이 뺄셈을 하지 않는다** (`Coulombic`·`efficiency`·`dead`·`isolated`
+  본문+SI **전수 0 회**). ⚠ **SEI ↔ dead Li 는 여전히 안 갈린다.**
+  ② ★★★ **음극 OCP 가 충전과 방전에서 다른 곡선이다** — 충전 경로에 없는 상
+  (**LiAg 의 UPb 다형**)이 방전에 나타나고 논문이 **열역학적 안정성**으로 설명한다.
+  율 ≈**C/68** · 상온 → **`i→0` 으로 지울 수 없는 이력**.
+  ③ ★★ **6호의 "Ag 는 돌아오지 않는다" 에 대한 답** — 충전에 Ag 가 층 밖으로 나가
+  집전체 계면의 **균일막**, 방전에 **다시 층 안 불연속 군집**. **모순이 아니라
+  시간척도가 다르다**(1 사이클 ↔ 100 사이클). **사이클당 잔류는 아무도 안 쟀다.**
+  ④ ★★ **Ag 는 임계전류를 못 올린다** — 흑연 단독과 **같은 failure point**
+  (2.0 안정 / **2.5 mA cm⁻² 단락**). ⚠ **흑연 계의 판정**이다.
+- Q1~Q8 **7편 누적 ≈7.0/8 — 칸은 안 늘었다.** 남은 0: **Q1(양극 접촉 손실 정량) ·
+  Q4(유일성)**. **Q6 은 6호 대비 후퇴**(스윕 0 · 계측 0 · 무압 대조 0).
+  ★ **모집단 경계 넷**(탄소 카본블랙↔흑연 · 완전지↔반쪽전지 · 1000↔1 사이클 ·
+  등방 490 MPa↔일축 400 MPa)을 digest §15 에 표로 박았다.
+- 어긋남 원장 **13 건**(1호 8 · 2호 14 · 3호 18 · 4호 18 · 5호 20 · 6호 14 · **7호 13**).
+  ★ **이 계보 최소다** — 1 사이클·반쪽전지라 주장 표면적이 작고 **초록이 자기 결과보다
+  세게 말하지 않는다**(2–5 호의 지배 패턴이 없다). 억지로 늘리지 않았다.
+  무거운 넷: **D2**(`[인쇄]` Ag 합금 예산 **0.60 mAh cm⁻²** ↔ `[재현]` 자기 조성 +
+  Li₁₀Ag₃ 화학량론으로 **0.25**, ≈2.4 배 — Ag 당 Li 8.3 개가 필요한데 상평형 최대가
+  3.33 이다) · **D3**(첫 사이클 효율을 한 번도 안 적는다) · **D4**(비가역분 39 % 의
+  행방을 계산하지 않으면서 결론에서는 "Li 가 남는다" 고 적는다) · **D8**(Fig. 6
+  (0.1 mA cm⁻²·60 °C)의 Ag 를 Fig. 1(30 µA cm⁻²·상온)의 상으로 귀속 — 같은 논문이
+  "율이 오르면 Li–Ag 반응이 뒤처진다" 를 보였는데도; Fig. 6 의 조건은 **Methods
+  두 범주 어디에도 없다**).
+- 산포: `n =`·`N =`·`error bar`·`standard deviation`·`replicate`·`uncertain*` 가
+  **본문 13 쪽 + SI 6 쪽 전수 0 회** — **7/7 편 연속**.
+  ★ 단 **원자료가 공개돼 있다** — 우리가 산포·검출한계를 직접 잴 수 있는 첫 자리.
+- 그림: 크로핑 **11 장 전부 열람**(본문 6 + SI 5). ✅ **6호의 "크로퍼가 핵심 그림
+  제외" 사고 없음** — 제외 0 장.
+  ★ Fig. 1·3 의 상 막대/시간축과 Fig. 4 의 전압축은 **400 dpi 재렌더 + 화소 좌표
+  판독**, 시간축 교정을 **인쇄값(2 mA h cm⁻²)으로 검증**했다.
+  ⚠ **Methods 는 260 dpi 로 직접 렌더해 읽었다** — 본문 PDF 폰트가 **µ 를 전부
+  떨어뜨려**(`30 µA cm⁻²`→`30 mA cm⁻²`, `5 µm`→`5 mm`) 텍스트 추출값을 그대로 쓰면
+  **단위를 세 자리 틀린다.** 이 digest 의 모든 µ/m 는 렌더 이미지 또는 SI 로 교차 확인.
+- 후속 후보: 1 순위 **Koerver 2017**(`Chem. Mater.` 29, 5574 — 일곱 편이 모두 안 준
+  Q1 의 실험 원전), 2 순위 **Gao/…/Bruce 2022**(`Joule` 6, 636 — 7호 ref 44,
+  **같은 그룹의 "저압에서 작동하는 복합양극"**; Q1 과 Q6 을 동시에 칠 수 있다),
+  3 순위 **inbox 15번**(3전극 + 압력 — 전극 귀속 공백), 4 순위 **Kasemchainan 2019**
+  (`Nat. Mater.` 18, 1105 — 7호 ref 49, 상대극 void; §7 전하 수지의 상대극 쪽 오차원).
+- lint 0 errors / 0 warnings.

@@ -2,7 +2,7 @@
 title: 반쪽전지 OCP 형상 불변 가정과 그 파괴 (blend 전극)
 description: "The α·β affine-rescaling premise behind every electrode-balancing diagnostic, where it breaks for Si/graphite blends, and the directional bias it leaves in LLI/LAM"
 created: 2026-09-10
-updated: 2026-09-14
+updated: 2026-09-16
 type: concept
 tags: [battery, degradation, research]
 sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md]
@@ -148,8 +148,27 @@ Schmitt 2022 는 본문에서 `γ_Si` 와 `α_an` 이 **같은 서명을 남긴�
   (물리적 불가) 까지 내려간다 → 추정 잡음이 주장하는 효과 크기(1–3 pp)와 **같은
   자릿수**다. 따라서 위 편향 표의 숫자는 **방향은 신뢰, 크기는 유보**로 읽는다.
 
+## ⚠ ASSB 축에서 온 두 번째 반례 (2026-09-16) — **모집단이 다르다**
+
+> 아래는 **전고체 무음극 중간층**의 관측이다. 이 페이지 본문(액체셀 Si/graphite
+> blend)과 **모집단이 다르므로 섞지 않는다.** `assb` 축의 정본은
+> [[assb-contact-loss-vs-lampe]] 이고 상세는 [[ag-c-interlayer-lithium-phase-path]].
+
+이 페이지의 파괴 사례(Schmitt 2022)는 **사이클에 따라 형상이 바뀐다**는 것이었다.
+Spencer-Jolly 2023 (`assb` 7호)은 **한 사이클 안에서** 같은 가정을 깬다:
+
+- `[인쇄]` "The structural changes on discharge are **not simply the reverse** of those
+  on charge." **충전 경로에 존재하지 않는 상(LiAg 의 UPb 다형)이 방전 경로에 나타난다.**
+- 논문은 그것을 **열역학적 안정성**으로 설명한다(`[인쇄]` "more stable … when it is
+  Li deficient"), **동역학이 아니다.** 그리고 율은 **≈C/68**(30 µA cm⁻², 상온)다.
+- `[해석]` → **`i → 0` 으로 지울 수 있는 이력이 아니다.** 한 전극에 **충전용 OCP 와
+  방전용 OCP 가 따로** 있어야 한다는 뜻이고, 이는 α·β 아핀 재척도 전제의
+  **형상 고정**보다 앞단에서 깨진다.
+⚠ 정량은 없다 (상 분율·Rietveld 0) — **방향만** 읽고 크기는 읽지 않는다.
+
 ## 관련
 - [[fitting-degeneracy]] — 같은 증상(적합도 불변, 파라미터 이동)의 다른 원인
+- [[ag-c-interlayer-lithium-phase-path]] — ASSB 음극 중간층의 상 이력 (위 반례, 모집단 다름)
 - [[halfcell-window-parametrization-lineage]] — 자유 파라미터 개수·제약의 계보표
 - [[np-lip-ocv-reparametrization]] — 전극 OCP 함수 고정 시의 2 자유도 정리
 - [[dubarry-mechanistic-mode-synthesis]] · [[birkl-ocv-degradation-diagnostic]] — 이 가정을 깔고 있는 원전들

@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-16
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md]
+sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -213,6 +213,25 @@ Q_apparent = θ_AM(N) · η(i, P, T) · Q_material
 → **3 항 분해의 `η` 는 `(i, P, T)` 의 함수이고, 세 축이 서로 직교하지 않는다**
 (5호가 `i ↔ P` 비직교를 이미 보였다).
 
+## ★★ 2026-09-16 (`assb` 7호 Spencer-Jolly 2023) — **음극 쪽 `Q_material` 도 율 의존이고, `η(i)` 가 급격히 비선형이다**
+
+3호(Liu 2024)가 **양극**에서 보인 것("고율 방전 자체가 진짜 재료 손실을 더 만든다")
+의 **음극 판**이 왔다. `raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md`.
+
+- ★ **율이 상(相) 조성을 바꾼다.** 저율(30 µA cm⁻², 상온)에서는 흑연과 Ag 가 함께
+  리튬화되는데, 고율(2·4 mA cm⁻², 60 °C)에서는 `[인쇄]` "**No change is evident in
+  the Ag peaks** … the rapid insertion of Li into graphite … is significantly **faster
+  than the reaction of lithiated graphite with the Ag**" 이고 4 mA cm⁻² 에서는
+  `[인쇄]` "**clear evidence of Ag persisting throughout charging**".
+  → **같은 전하를 통과시켜도 율에 따라 Li 가 들어간 그릇이 다르다.**
+  `Q_material`(음극)이 율의 함수다. 상세는 [[ag-c-interlayer-lithium-phase-path]].
+- ★★ **`η(i)` 의 비선형성이 숫자로**: `[재현]` 2 mA cm⁻² 에서 과전압이 **≈−0.09 V 로
+  3 h 내내 평평** ↔ 4 mA cm⁻² 에서 **−0.16 → −1.15 V 로 자라다 ≈0.72 h 에 단락**.
+  **전류 2 배에 과전압 ≈12 배.** → 율 스윕 분리 시험에서 **"두 율" 을 어디에 놓느냐가
+  결과를 지배한다** — 문턱 근처에서는 `η` 가 사실상 발산한다.
+- ⚠ **모집단**: Ag–흑연 무음극 중간층 / 반쪽전지 / 1 사이클 / 셀 수 미상.
+  양극 축으로 옮기지 않는다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **3항 분해가 논문의 식이라고 주장하지 않는다.** 우리 해석이고, 위 G1 때문에 `C_norm` 이
@@ -249,6 +268,7 @@ Q_apparent = θ_AM(N) · η(i, P, T) · Q_material
   본체. 그리고 `η` 가 `LLI` 를 가린다는 것의 수치.
 - [[assb-stack-pressure-operating-window]] — `η(P)` 의 축. 6호가 **제작 ↔ 운전**으로 쪼갰다.
 - [[thermo-kinetic-loss-partition]] — 액체셀 축의 같은 형식(전류를 관측 축으로 쓰는 분해).
+- [[ag-c-interlayer-lithium-phase-path]] — 음극 쪽 `Q_material` 이 율 의존이라는 것의 출처(7호).
 - [[fitting-degeneracy]] — 이 3 항 중 앞의 두 항이 OCV 에 대해 만드는 null 방향.
 - [[near-optimal-set-width-measurement]] — 율을 하나 더 넣었을 때 폭이 얼마나 줄어드는지 잴 기계.
 - [[halfcell-ocp-shape-invariance]] — 아핀 창 모형이 깨지는 자리. 3호가 **두 번째 경로**를
