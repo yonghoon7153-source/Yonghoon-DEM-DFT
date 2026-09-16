@@ -1640,3 +1640,52 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   정조준), 3 순위 **inbox 24번**(*… Long Cycle Life at **Low Pressure*** — 창의 아래 벽),
   4 순위 **Kasemchainan 2019**(`Nat. Mater.` 18, 1105 — 5호가 반박한 탈리 void 원전).
 - lint 0 errors / 0 warnings.
+
+## [2026-09-16] ingest | Lee 2020 — High-energy long-cycling all-solid-state lithium metal batteries enabled by silver–carbon composite anodes (`assb` 6호)
+
+- `raw/papers/lee2020_ag-c-anode-free-assb.md` (*Nature Energy* **5** (2020) 299–308,
+  doi `10.1038/s41560-020-0575-z`, **SAIT + Samsung R&D Japan**, 저자 16 명 전원 삼성).
+  본문 10 쪽 + SI 18 쪽, **둘 다 sha256 봉인**. ✅ 파일명 ↔ 내용 일치 (4호의 뒤바뀜
+  재발 없음 — 쪽수와 첫 쪽 텍스트로 확인).
+- ★★ **계보에서 처음인 것 셋**: **무음극(anode-free)** · **산업체 논문** ·
+  **Ah 급 파우치 셀**.
+- 컴파일: **새 개념 1** — `concepts/anode-free-li-inventory-accounting.md`
+  (무음극 `LLI` 의 계정) + `concepts/assb-stack-pressure-operating-window.md` ·
+  `concepts/assb-apparent-capacity-decomposition.md` ·
+  `concepts/assb-pressure-reapplication-separation-test.md` 갱신 +
+  닻 `questions/assb-contact-loss-vs-lampe.md` Q1~Q8 행 추가.
+  ⚠ `composite-cathode-percolation-utilization.md` 는 **일부러 건드리지 않았다**
+  (이미 320 줄; 그리고 이 논문은 양극 `θ` 에 대해 아무것도 주지 않는다).
+- 최대 수확 넷:
+  ① ★★★ **`LLI` 추정자의 분해능이 새 전선** — 같은 논문 안에서 20 mAh 셀은
+  CE(99.97 %)↔유지율(92.5 %@300)이 맞고 **0.6 Ah 셀은 10 배 어긋난다**
+  (CE `[도표]` 99.89 % ⇒ 누적 결손 `[재현]` **161 mAh g⁻¹** ↔ 실측 손실 **16**,
+  양극 재고 **215**). **CE 축 눈금조차 다르다**(95–101 vs 99.4–100.0). 논문은
+  두 셀을 **한 번도 비교하지 않는다.**
+  ② ★★★ **압력이 두 축으로 갈렸다** — **제작 490 MPa 등방(WIP, 비가역: Table S2)**
+  vs **운전 2 MPa**, 그리고 **무압 0.1 C 가 2 MPa 와 구별 안 된다.** 5호와 모순이
+  아니라 **제작 압력 이력이 다르다**. ⚠ 운전 상한 ">4 MPa 단락" 은 **데이터 0**.
+  ③ ★★ **Q7 채널 둘 추가, 정량 0** — **EELS Li 맵**(방전 후·100 사이클 후에도 Li 망
+  잔존)과 **XRD 의 Li₉Ag₄**(Li 저장 상 동정). **dead Li 만 여전히 수단 없음.**
+  ④ ★★ **"무음극은 OCP 평탄" 이 앞 10–17 % 구간에서 거짓** (Fig. 4a + SI Fig. 4c).
+- Q1~Q8 **6편 누적 ≈7.0/8**. **남은 0: Q1(양극 접촉 손실 정량) · Q4(유일성).**
+- 어긋남 원장 **14 건**(1호 8 · 2호 14 · 3호 18 · 4호 18 · 5호 20 · **6호 14**).
+  ⚠ **2–5 호보다 적고 가볍다** — *Nature Energy* 의 편집 품질이 보이고, 5호의 변종
+  (인용조차 안 된 SI 가 본문을 반증)은 **여기 없다**. 무거운 넷: **D2**(CE↔유지율
+  10 배) · **D1**(">99.8 % CE" ↔ `[도표]` 900–1000 사이클 중앙값 **99.21 %**·최저
+  **97.42 %**, 언급 0) · **D3**(">4 MPa 단락" 데이터 0) · **D6**("no residual Li
+  deposits" ↔ EELS Li 망 잔존).
+- 산포: `n =`·`N =`·`error bar`·`standard deviation`·`replicate`·`uncertain*` 이
+  **본문+SI 전수 0 회**. ★ 유일한 예외 **Table S2 ±2.2–2.9 µm**(정의·n 없음) —
+  5호 Table S2 에 이어 **두 번째이고 둘 다 기하다.** **파우치 스케일업 논문인데
+  통계가 오지 않았다.**
+- 그림: 크로핑 **26 장** 중 **그림 12 장 열람**, 표 3 장은 PDF 텍스트로.
+  ⚠ **Fig. 6 은 크로퍼가 제외**해 `pymupdf` 로 8 쪽 직접 렌더, **Fig. S10 은 제외된
+  채 열지 않았다**(Q1 판정은 Table S2 + 본문 서술에만 근거).
+  ★ Fig. 6g·SI Fig. 16 은 **PDF 축 눈금 좌표로 교정 후 화소 판독**, 교정을
+  인쇄값(600 사이클 95 % · 1000 사이클 89 %)으로 검증.
+- 후속 후보: 1 순위 **Koerver 2017**(`Chem. Mater.` 29, 5574 — 여섯 편이 모두 인용하고
+  여섯 편이 모두 안 준 Q1 의 실험 원전), 2 순위 **inbox 15번**(3전극 + 압력),
+  3 순위 **Genovese/Dahn 2018**(`JES` 165, A3321 — **무음극 CE 측정법 그 자체**),
+  4 순위 **Zhang 2017**(`JMCA` 5, 9929 — 운전 중 압력 변화 실측).
+- lint 0 errors / 0 warnings.

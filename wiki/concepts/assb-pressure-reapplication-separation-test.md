@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-16
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md]
+sources: [raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -137,6 +137,28 @@ NMC532(LZO 코팅) / 비정질 LPS / CNF 60:35:5 wt%, **In 금속 음극**, 8 mm
    압력 함수**다 (5 MPa 7.0 mV ↔ 25 MPa 4.5 mV, 같은 전류밀도) → `η = η(i, P)`.
    **`i→0` 처방은 압력을 고정한 채로만 성립한다.**
 
+## ★★ 6호(Lee 2020)가 붙인 것 — **이 셀에는 연산자를 쓸 수 없다**
+
+`raw/papers/lee2020_ag-c-anode-free-assb.md` (무음극 Ag–C / Li₆PS₅Cl / Ah 급 파우치).
+
+1. ★★★ **상한이 또 한 자릿수 내려왔다.** `[인쇄]` "the probability of short-circuiting
+   increased upon application of high pressures **exceeding 4 MPa**."
+   → **4호가 쓴 300 MPa 는 이 셀 운전 상한의 75 배**이고, 5호의 Li 금속 75 MPa 의
+   **1/19** 이다. `P_short` 가 **음극 재료 + 셀 형상**의 함수임이 세 번째 표본으로 확인된다
+   (In 펠릿 ≫ Li 금속 펠릿 ≫ **무음극 Ah 급 파우치 적층**).
+   ⚠⚠ **단 6호의 4 MPa 는 주장이지 측정이 아니다** — 4 MPa 초과 실험이 본문·SI
+   어디에도 없다 (6호 digest D3).
+2. ★★★ **그리고 이 셀에서는 `ΔQ_mech` 자체가 거의 0 이다.** `[도표]` 운전 압력
+   2 → 4 MPa 에서 율특성이 **94.0 → 95.5 %** (폭 1.5 %p) 이고, **무압 0.1 C 곡선이
+   2 MPa 와 구별되지 않는다** (SI Fig. 12). `[해석]` **제작 때 490 MPa 등방압(WIP)
+   으로 이미 눌러 놓았기 때문에 운전 압력이 되돌릴 `θ` 가 남아 있지 않다.**
+   → **이 연산자는 "제작 압력이 낮은 셀" 에서만 신호를 준다.**
+   창의 아래 벽이 `f(제작 압력 이력)` 이라는 것 → [[assb-stack-pressure-operating-window]].
+3. ★ **경고 3(비가역)이 기하 채널에서 확인됐다.** `[인쇄]` Table S2: WIP 전후 셀 두께
+   644.5 ± 2.9 → **609.0 ± 2.4 µm** (`[재현]` **−5.51 %**), **7 일 무압 방치 후
+   609.8 ± 2.6** — 복원 **+0.8 µm** 로 산포 안이다. `[인쇄]` "the microstructural
+   relaxation **did not occur**". → **압축은 상태에 영구히 남는다.**
+
 ## 율 연산자와의 짝 — 두 조작의 성질이 다르다
 
 | | **율 `i → 0`** | **압력 `P ↑`** |
@@ -177,4 +199,5 @@ NMC532(LZO 코팅) / 비정질 LPS / CNF 60:35:5 wt%, **In 금속 음극**, 8 mm
 - [[composite-cathode-percolation-utilization]] — `θ_AM` 의 정의. 이 연산자가 되돌리려는 양.
 - [[assb-contact-loss-vs-lampe]] — 닻 질문. 이 페이지는 그 질문의 **우회로**다 (OCV 밖의 축).
 - [[near-optimal-set-width-measurement]] — 압력 축을 하나 더 넣었을 때 폭이 얼마나 줄어드는지 잴 기계.
+- [[anode-free-li-inventory-accounting]] — 같은 논문(6호)의 음극 축. **연산자를 못 쓰는 셀에서 무엇이 남는가.**
 - [[thermo-kinetic-loss-partition]] — 액체셀 축의 같은 형식(외부 변수를 관측 축으로 쓰는 분해).

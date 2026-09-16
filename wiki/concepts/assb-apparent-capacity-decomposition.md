@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-16
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md]
+sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -177,6 +177,42 @@ Bielefeld 의 `θ_AM` 은 전극 전체에 대한 **스칼라 하나**였다. Cl
 `[해석]` → DEM 산출을 forward model 에 주입할 때 `θ` 를 스칼라로 넣으면 **집전체 쪽
 손실을 과소평가**한다. 최소한 "평균 + 기울기" 두 수가 필요하다.
 
+## ★★ 2026-09-16 (`assb` 6호 Lee 2020) — 분해에 **음극 두 항**이 붙고, `η` 가 **온도 축**으로 열린다
+
+`raw/papers/lee2020_ag-c-anode-free-assb.md` (SAIT/Samsung, *Nature Energy* 2020).
+**무음극(Ag–C) / Li₆PS₅Cl / LZO-NMC(Ni 90) 6.8 mAh cm⁻² / 60 °C / 0.6 Ah 파우치.**
+
+```
+현재:  Q_apparent = θ_AM · η(i, P) · Q_material            ← 양극 중심, 음극 무해 전제
+
+6호가 요구하는 확장:
+
+Q_apparent = θ_AM(N) · η(i, P, T) · Q_material
+           −  L_anode(N)                     ← 음극이 삼키는 Li (비가역)   ★ 새 항
+           +  Q_anode,rev(Li₉Ag₄, LiC_x)     ← 음극이 되돌려 주는 Li       ★ 새 항
+```
+
+| 칸 | 6호가 주는 것 | 값 |
+|---|---|---|
+| `η(i)` | 율 스윕 5 점 (0.2–2.0 C) | `[인쇄]` Q₁.₀C/Q₀.₂C **93 %**, 2.0 C 이용률 >80 %. `[재현]` **0.5 C 에서 146/215 = 0.68** |
+| **`η(T)`** ★ 새 축 | **온도 스윕 6 점** (60 → −10 °C, 충전은 60 °C 고정) | `[인쇄]` 45 °C **99.5 %** · 25 °C **90.7 %** · −10 °C **>40 %**. 계면 저항 `[인쇄]` 60 °C **5** ↔ 25 °C **50 Ω cm²** |
+| `η(P)` | 운전 압력 3 점 + 무압 | `[도표]` 2/3/4 MPa → 94.0/95.1/95.5 %; **무압 0.1 C 는 2 MPa 와 구별 안 됨** |
+| `θ_AM` | **없다** — 공정(WIP 490 MPa)으로 처리하고 재지 않는다 | Table S2 의 **−5.51 % 치밀화**가 유일한 대리량 |
+| `Q_material` | **없다** — 양극 사후 분석 0 | — |
+| **`L_anode`** | 첫 사이클 비가역 + CE 결손 | `[재현]` **19 mAh g⁻¹ (8.2 %)**, 그중 Ag–C 귀속 **≤3 mAh g⁻¹** (유/무 차분) |
+| **`Q_anode,rev`** | Li₉Ag₄ (XRD 로 동정, 가역) + LiC_x | `[재현]` Ag 몫 **≤0.89 %** of 셀 (Ag 8–16 mg Ah⁻¹ × 559 mAh g⁻¹) |
+
+★★★ **가장 중요한 한 줄**: `[재현]` **0.5 C 에서 `η ≈ 0.68` 이다.**
+**양극 재고의 32 % 가 운전 창 밖에 있고**, 그만큼 Li 손실이 용량 손실로 즉시
+나타나지 않는다. → **`η` 가 `LAM_PE` 뿐 아니라 `LLI` 도 가린다.**
+`[해석]` **겉보기 용량유지율은 `LLI` 의 하한이다.**
+자세히는 [[anode-free-li-inventory-accounting]].
+
+★ `η(T)` 가 새로 열린 것도 같은 구조다 — `[인쇄]` −10 °C 에서 용량의 절반이
+사라지는데 **재료는 그대로**다. 계면 저항이 10 배로 오른 결과다.
+→ **3 항 분해의 `η` 는 `(i, P, T)` 의 함수이고, 세 축이 서로 직교하지 않는다**
+(5호가 `i ↔ P` 비직교를 이미 보였다).
+
 ## 이 페이지가 주장하지 않는 것
 
 - **3항 분해가 논문의 식이라고 주장하지 않는다.** 우리 해석이고, 위 G1 때문에 `C_norm` 이
@@ -209,6 +245,9 @@ Bielefeld 의 `θ_AM` 은 전극 전체에 대한 **스칼라 하나**였다. Cl
 - [[composite-cathode-percolation-utilization]] — `θ_AM` 의 정의와 곱셈 축퇴. 이 페이지가 그 위에 `η` 를 얹는다.
 - [[assb-pressure-reapplication-separation-test]] — **두 번째 분리 연산자.** 율이 `η` 를
   지우고, 압력이 `θ_AM` 을 되돌린다. 남는 것이 `Q_material` 이다.
+- [[anode-free-li-inventory-accounting]] — **음극 두 항**(`L_anode`, `Q_anode,rev`)의
+  본체. 그리고 `η` 가 `LLI` 를 가린다는 것의 수치.
+- [[assb-stack-pressure-operating-window]] — `η(P)` 의 축. 6호가 **제작 ↔ 운전**으로 쪼갰다.
 - [[thermo-kinetic-loss-partition]] — 액체셀 축의 같은 형식(전류를 관측 축으로 쓰는 분해).
 - [[fitting-degeneracy]] — 이 3 항 중 앞의 두 항이 OCV 에 대해 만드는 null 방향.
 - [[near-optimal-set-width-measurement]] — 율을 하나 더 넣었을 때 폭이 얼마나 줄어드는지 잴 기계.
