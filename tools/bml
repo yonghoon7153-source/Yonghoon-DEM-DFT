@@ -29,6 +29,8 @@
 #   bml pull       실행 없이 최신으로만 맞춘다
 #   bml logs       실행 로그 보기
 #   bml mirrored   WSL 을 mirrored 로 (다른 기계가 이 서버를 보게, WSL 에서 실행)
+#   bml ssh        노트북에서 이 기계로 ssh 가 닿게 한다 (bmlin 과 같은 랩 안 주소)
+#   bml ssh off    그 문을 닫는다
 #   bml doctor     환경 점검 (WSL 포함) — 안 되면 여기부터
 #   bml repair     파이썬 환경을 새로 만든다 (의존성이 꼬였을 때)
 #   bml repair web node_modules 와 빌드를 새로 만든다
@@ -2268,6 +2270,243 @@ nat_hint() {
 #:   1. 어디를 고칠 것인지 **먼저 화면에 적고** 고친다.
 #:   2. 고치기 전 파일을 `.bml-bak` 로 남긴다.
 #:   3. 경로가 확실하지 않으면 아무것도 안 하고 PowerShell 한 줄을 준다 (§0.4).
+# --- 랜으로 이 기계에 ssh (bml ssh) ------------------------------------------
+#
+# `bmlin` 이 쓰는 그 주소(192.168.x.x)로 **노트북에서 이 WSL 에 들어오는** 길이다.
+# 워크벤치를 여는 것과 같은 망, 같은 주소, 다른 포트일 뿐이다.
+#
+# 22 번을 안 쓴다.  Windows 10/11 에는 OpenSSH **서버**가 선택 기능으로 들어
+# 있고 켜 두면 22 번을 잡는다.  mirrored 네트워크에서는 WSL 이 Windows 의 망을
+# 그대로 쓰므로 그 둘이 같은 포트를 놓고 다투고, 더 나쁜 것은 **접속이 되긴
+# 된다**는 것이다 -- 다만 들어간 곳이 Windows 이고, 거기에는 저장소도 venv 도
+# 없다.  포트를 나눠 두면 어느 기계에 들어왔는지가 포트 번호로 정해진다.
+BML_SSH_PORT_DEFAULT=2222
+
+#: 이 기계가 열어 둔 ssh 포트.  `.bml/env` 의 값이 있으면 그것이다.
+ssh_port() {
+  local port="${WORKBENCH_SSH_PORT:-$BML_SSH_PORT_DEFAULT}"
+  case "$port" in
+    ''|*[!0-9]*) printf '%s' "$BML_SSH_PORT_DEFAULT" ;;
+    *) printf '%s' "$port" ;;
+  esac
+}
+
+#: 우리가 쓴 sshd 설정 조각.  **`/etc/ssh/sshd_config` 은 건드리지 않는다** --
+#: 남이 고쳐 둔 줄이 있을 수 있고, 되돌릴 때 무엇이 우리 것인지 알 수 없다.
+#: 드롭인은 통째로 지우면 원래대로 돌아간다.
+BML_SSHD_DROPIN=/etc/ssh/sshd_config.d/bml.conf
+
+#: sshd 가 드롭인을 읽는가.  우분투 22.04 부터는 기본으로 읽지만, 옛 설정
+#: 파일에는 그 `Include` 줄이 없다 -- 그때 드롭인을 써 봐야 아무 일도 안 난다.
+sshd_reads_dropins() {
+  grep -qE '^[[:space:]]*Include[[:space:]]+/etc/ssh/sshd_config\.d/' \
+    /etc/ssh/sshd_config 2>/dev/null
+}
+
+#: systemd 로 도는 WSL 인가 (`/etc/wsl.conf` 의 `[boot] systemd=true`).
+#: 아니면 `service` 로 켜야 하고, 그때는 **WSL 이 다시 뜨면 꺼져 있다**.
+wsl_has_systemd() {
+  [ -d /run/systemd/system ]
+}
+
+ssh_service() {
+  if wsl_has_systemd; then sudo systemctl "$1" ssh 2>&1
+  else sudo service ssh "$1" 2>&1
+  fi
+}
+
+#: 지금 그 포트를 듣고 있는가.
+ssh_listening() {
+  local port="$1"
+  if command -v ss >/dev/null 2>&1; then
+    ss -ltn 2>/dev/null | grep -qE "[:.]${port}[[:space:]]"
+  else
+    netstat -ltn 2>/dev/null | grep -qE "[:.]${port}[[:space:]]"
+  fi
+}
+
+#: NAT 네트워크에서 Windows 가 넘겨줘야 할 이 WSL 의 주소.
+wsl_own_ip() {
+  local ip
+  ip="$(ip -4 -o addr show scope global 2>/dev/null \
+        | awk '{print $4}' | cut -d/ -f1 | head -1)"
+  printf '%s' "$ip"
+}
+
+cmd_ssh() {
+  local action="${1:-}"
+  case "$action" in
+    on|"")     ssh_turn_on ;;
+    off|stop)  ssh_turn_off ;;
+    status|st) ssh_report ;;
+    *) die "모르는 ssh 대상: $action   (on | off | status | 없음)" ;;
+  esac
+}
+
+ssh_report() {
+  local port; port="$(ssh_port)"
+  step "랜으로 이 기계에 ssh"
+  local lan; lan="$(windows_lan_address 2>/dev/null)"
+  if [ -n "$lan" ]; then
+    say "주소        ${B}${lan}${OFF}  ${DIM}(bmlin 이 쓰는 그 주소)${OFF}"
+  else
+    say "주소        ${DIM}읽지 못했습니다 —${OFF} ${GREEN}bml doctor${OFF}"
+  fi
+  say "포트        ${B}${port}${OFF}  ${DIM}(22 는 Windows 의 OpenSSH 서버 몫으로 비워 둡니다)${OFF}"
+  if command -v sshd >/dev/null 2>&1 || [ -x /usr/sbin/sshd ]; then
+    say "sshd        ${B}설치됨${OFF}"
+  else
+    say "sshd        ${DIM}없음${OFF}  ${DIM}—${OFF} ${GREEN}bml ssh on${OFF} ${DIM}이 설치합니다${OFF}"
+  fi
+  if ssh_listening "$port"; then
+    ok "지금 ${port} 번을 듣고 있습니다."
+  else
+    say "상태        ${DIM}안 듣고 있습니다${OFF}"
+  fi
+  say "설정 조각   ${DIM}${BML_SSHD_DROPIN}${OFF}"
+  if [ -r "$BML_SSHD_DROPIN" ]; then
+    while IFS= read -r l; do file_line "$l"; done < "$BML_SSHD_DROPIN"
+  fi
+}
+
+ssh_turn_on() {
+  step "랜으로 이 기계에 ssh — 켜기"
+  is_wsl || warn "여기는 WSL 이 아닙니다 — 아래 Windows 쪽 안내는 건너뛰어도 됩니다."
+
+  local port; port="$(ssh_port)"
+
+  # 1) sshd 가 있어야 한다.
+  if ! command -v sshd >/dev/null 2>&1 && [ ! -x /usr/sbin/sshd ]; then
+    say "  ${DIM}openssh-server 를 설치합니다 (sudo 암호를 물을 수 있습니다).${OFF}"
+    if ! sudo apt-get install -y openssh-server >/dev/null 2>&1; then
+      warn "설치하지 못했습니다."
+      say "  ${DIM}직접 한 번 돌려 보세요 — 무엇이 막는지 그때 보입니다:${OFF}"
+      say "    ${GREEN}sudo apt-get update && sudo apt-get install -y openssh-server${OFF}"
+      return 1
+    fi
+    ok "openssh-server 설치."
+  fi
+
+  # 2) 호스트 키.  없으면 sshd 가 뜨지 않는다.
+  if ! ls /etc/ssh/ssh_host_*_key >/dev/null 2>&1; then
+    sudo ssh-keygen -A >/dev/null 2>&1 && ok "호스트 키를 만들었습니다."
+  fi
+
+  # 3) 우리 몫의 설정만 드롭인으로.  `sshd_config` 은 건드리지 않는다.
+  if ! sshd_reads_dropins; then
+    warn "이 기계의 sshd_config 에 드롭인을 읽는 줄이 없습니다."
+    say "  ${DIM}이 한 줄을 ${BML_SSHD_DROPIN} 대신 sshd_config 맨 끝에 넣어 주세요:${OFF}"
+    file_line "Include /etc/ssh/sshd_config.d/*.conf"
+    say "  ${DIM}(그 줄이 없으면 아래 설정은 읽히지 않습니다 — 조용히 안 먹습니다.)${OFF}"
+    return 1
+  fi
+  sudo mkdir -p /etc/ssh/sshd_config.d 2>/dev/null
+  # **암호 로그인은 켜지 않는다.**  WSL 계정은 암호가 없거나 약한 것이 보통이고,
+  # 랜에 열어 두는 문이라 한 번 뚫리면 저장소와 데이터가 그대로 딸려 간다.
+  if ! printf '%s\n' \
+      "# bml 이 쓴 파일입니다. 지우면 원래대로 돌아갑니다." \
+      "Port ${port}" \
+      "PasswordAuthentication no" \
+      "PubkeyAuthentication yes" \
+      | sudo tee "$BML_SSHD_DROPIN" >/dev/null; then
+    warn "설정을 쓰지 못했습니다: $BML_SSHD_DROPIN"
+    return 1
+  fi
+  ok "설정: ${BML_SSHD_DROPIN}  ${DIM}(포트 ${port} · 열쇠로만)${OFF}"
+
+  # 4) 켠다.
+  local out
+  out="$(ssh_service restart)" || out="$(ssh_service start)"
+  if ssh_listening "$port"; then
+    ok "sshd 가 ${port} 번을 듣습니다."
+  else
+    warn "켰는데 ${port} 번이 안 열렸습니다."
+    [ -n "$out" ] && say "  ${DIM}${out}${OFF}"
+    say "  ${DIM}설정이 맞는지 보기:${OFF} ${GREEN}sudo sshd -t${OFF}"
+    return 1
+  fi
+
+  ssh_next_steps "$port"
+}
+
+#: 켠 **뒤에** 남는 일들.  전부 Windows 쪽이고 관리자 권한이 필요해서, 우리는
+#: 명령을 **채워서 보여만 준다** (`bml mirrored` 와 같은 규칙: 짐작으로 남의
+#: 설정을 고치지 않는다).
+ssh_next_steps() {
+  local port="$1"
+  local lan; lan="$(windows_lan_address 2>/dev/null)"
+  local user; user="$(id -un)"
+
+  say ""
+  say "  ${B}Windows 쪽 — 관리자 PowerShell 에서 한 번${OFF}"
+  say "    ${GREEN}New-NetFirewallRule -DisplayName 'WSL ssh ${port}' -Direction Inbound -Protocol TCP -LocalPort ${port} -Action Allow -Profile Private${OFF}"
+  say "     ${DIM}Private 로만 엽니다 — 카페 와이파이에서까지 열리면 안 됩니다.${OFF}"
+
+  # mirrored 면 여기서 끝이고, NAT 면 포워딩이 하나 더 필요하다.
+  local wslconf mirrored=0 home
+  home="$(windows_home_verified 2>/dev/null)"
+  [ -n "$home" ] && wslconf="$home/.wslconfig"
+  if [ -n "${wslconf:-}" ] && wslconfig_is_mirrored "$wslconf" 2>/dev/null; then
+    mirrored=1
+  fi
+
+  if [ "$mirrored" = 1 ]; then
+    say ""
+    ok "네트워크가 mirrored 입니다 — 포워딩은 필요 없습니다."
+  else
+    local own; own="$(wsl_own_ip)"
+    say ""
+    say "  ${B}그리고 — 네트워크가 mirrored 가 아닙니다${OFF}"
+    say "    ${GREEN}netsh interface portproxy add v4tov4 listenport=${port} listenaddress=0.0.0.0 connectport=${port} connectaddress=${own:-<이 WSL 의 주소>}${OFF}"
+    say "     ${DIM}NAT 에서는 이 WSL 주소가 **다시 뜰 때마다 바뀝니다** — 바뀌면 위 줄을 다시 넣어야 합니다.${OFF}"
+    say "     ${DIM}그것이 싫으면 한 번만:${OFF} ${GREEN}bml mirrored${OFF} ${DIM}(그 뒤로는 포워딩이 아예 없습니다)${OFF}"
+  fi
+
+  say ""
+  say "  ${B}노트북에서 — 열쇠를 한 번 넣고${OFF}"
+  say "    ${GREEN}ssh-keygen -t ed25519${OFF}   ${DIM}(이미 있으면 건너뜁니다)${OFF}"
+  say "    ${GREEN}ssh-copy-id -p ${port} ${user}@${lan:-<랩 안 주소>}${OFF}"
+  say "     ${DIM}암호 로그인을 꺼 두었으므로, 이 한 번은 이 기계 앞에서 하거나${OFF}"
+  say "     ${DIM}노트북의 공개키를 ~/.ssh/authorized_keys 에 직접 붙여 넣습니다.${OFF}"
+  say ""
+  say "  ${B}그 뒤로는${OFF}"
+  say "    ${GREEN}ssh -p ${port} ${user}@${lan:-<랩 안 주소>}${OFF}"
+
+  # **제일 자주 걸리는 자리**라 마지막에 둔다.  나머지를 다 해 놓고도 이것
+  # 때문에 "어제는 됐는데 오늘은 안 된다" 가 된다.
+  say ""
+  warn "WSL 이 떠 있어야 닿습니다."
+  say "  ${DIM}창을 다 닫으면 WSL 은 잠시 뒤 스스로 내려가고, 그러면 ssh 도 같이 사라집니다.${OFF}"
+  say "  ${DIM}워크벤치를 띄워 두면 (${OFF}${GREEN}bml${OFF}${DIM}) 그 프로세스가 WSL 을 붙잡아 둡니다.${OFF}"
+  if ! wsl_has_systemd; then
+    say "  ${DIM}그리고 이 WSL 은 systemd 가 아니라, 다시 뜨면 sshd 는 꺼져 있습니다 —${OFF}"
+    say "  ${DIM}그때마다${OFF} ${GREEN}bml ssh${OFF}${DIM}, 또는 /etc/wsl.conf 에 이 두 줄을 넣고 다시 띄우면 계속 켜집니다:${OFF}"
+    file_line "[boot]"
+    file_line "systemd=true"
+  fi
+}
+
+ssh_turn_off() {
+  step "랜으로 이 기계에 ssh — 내리기"
+  local port; port="$(ssh_port)"
+  # 우리 드롭인만 지운다.  sshd 를 우리가 켠 것이 아닐 수도 있으므로 **서비스를
+  # 멈추는 것과 설정을 되돌리는 것을 나눠** 말한다.
+  if [ -e "$BML_SSHD_DROPIN" ]; then
+    sudo rm -f "$BML_SSHD_DROPIN" && ok "설정 조각을 지웠습니다: $BML_SSHD_DROPIN"
+  else
+    say "  ${DIM}우리가 쓴 설정 조각이 없습니다 — 지울 것이 없습니다.${OFF}"
+  fi
+  ssh_service stop >/dev/null 2>&1
+  if ssh_listening "$port"; then
+    warn "${port} 번이 아직 열려 있습니다 — 우리가 켠 sshd 가 아닐 수 있습니다."
+    say "  ${DIM}누가 잡고 있는지:${OFF} ${GREEN}ss -ltnp | grep ${port}${OFF}"
+  else
+    ok "${port} 번이 닫혔습니다."
+  fi
+  say "  ${DIM}Windows 쪽 방화벽 규칙은 그대로 둡니다 — 관리자 PowerShell 에서:${OFF}"
+  say "    ${GREEN}Remove-NetFirewallRule -DisplayName 'WSL ssh ${port}'${OFF}"
+}
+
 cmd_mirrored() {
   step "WSL 네트워크를 mirrored 로"
   is_wsl || die "여기는 WSL 이 아닙니다 — mirrored 는 Windows 의 WSL 설정입니다."
@@ -6154,6 +6393,7 @@ main() {
       ;;
     status|st)         cmd_status ;;
     mirrored|mirror)   cmd_mirrored ;;
+    ssh)               shift; cmd_ssh "${1:-}" ;;
     check|test)        cmd_check ;;
     feed|worklog)      shift; cmd_feed "${1:-}" ;;
     logs|log)          tail -f "$LOG" ;;
