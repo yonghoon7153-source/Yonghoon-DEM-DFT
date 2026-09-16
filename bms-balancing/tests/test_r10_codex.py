@@ -201,7 +201,9 @@ def test_d10_03_profile_seals_its_gamma_roster_and_partial_never_reaches_canonic
         rc = verify.cmd_profile(_prof_args(tmp_path, art))
     assert rc == 3, (rc, buf.getvalue()[-500:])
     assert art.read_bytes() == old, "부분 실행이 완전 canonical 을 덮었다"
-    part = art.parent / "partial" / art.name
+    # ⚠ R16 (조건 8 축 ④): 부분은 `partial/<종류>/<attempt-id>/` 로 간다 — 평면 자리는 더 이상 없다.
+    #   index 에서 찾는다 (그것이 index 가 있는 이유다).
+    part = verify.latest_partial(art) or (art.parent / "partial" / art.name)
     assert part.is_file(), sorted(p.name for p in art.parent.rglob("*"))
     rows = list(csv.DictReader(io.StringIO(part.read_text(encoding="utf-8"))))
     n = S.CANONICAL_GAMMA_GRID_N
@@ -242,7 +244,9 @@ def test_d10_04_matrix_failures_do_not_destroy_canonical_and_are_not_process_suc
         rc = verify.cmd_matrix(args)
     assert rc == 1, (rc, buf.getvalue()[-500:])                            # 짝 0 = none (부분이 아니다)
     assert art.read_bytes() == old, "전부 실패한 실행이 canonical 을 파괴했다"
-    part = art.parent / "partial" / art.name
+    # ⚠ R16 (조건 8 축 ④): 부분은 `partial/<종류>/<attempt-id>/` 로 간다 — 평면 자리는 더 이상 없다.
+    #   index 에서 찾는다 (그것이 index 가 있는 이유다).
+    part = verify.latest_partial(art) or (art.parent / "partial" / art.name)
     assert part.is_file(), sorted(p.name for p in art.parent.rglob("*"))
     rows = list(csv.DictReader(io.StringIO(part.read_text(encoding="utf-8"))))
     assert rows and all(r.get("error") for r in rows), rows[:1]

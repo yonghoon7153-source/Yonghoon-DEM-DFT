@@ -132,7 +132,9 @@ def test_e11_02_matrix_diagnostic_axes_cannot_claim_complete(tmp_path, monkeypat
     text = buf.getvalue()
     assert rc == 3, (rc, text[-500:])
     assert art.read_bytes() == full_bytes, "축소한 진단 실행이 complete canonical 을 덮었다"
-    part = art.parent / "partial" / art.name
+    # ⚠ R16 (조건 8 축 ④): 부분은 `partial/<종류>/<attempt-id>/` 로 간다 — 평면 자리는 더 이상 없다.
+    #   index 에서 찾는다 (그것이 index 가 있는 이유다).
+    part = verify.latest_partial(art) or (art.parent / "partial" / art.name)
     assert part.is_file() and "subset" in text, text[-500:]
     rows = list(csv.DictReader(io.StringIO(part.read_text(encoding="utf-8"))))
     assert len(rows) == 8 < 32
@@ -163,7 +165,9 @@ def test_e11_03_profile_grid_must_match_the_canonical_gamma_grid(tmp_path, monke
         rc = verify.cmd_profile(_profile_args(tmp_path, art, grid=1))
     text = buf.getvalue()
     assert rc == 3 and not art.is_file(), (rc, text[-500:])
-    part = art.parent / "partial" / art.name
+    # ⚠ R16 (조건 8 축 ④): 부분은 `partial/<종류>/<attempt-id>/` 로 간다 — 평면 자리는 더 이상 없다.
+    #   index 에서 찾는다 (그것이 index 가 있는 이유다).
+    part = verify.latest_partial(art) or (art.parent / "partial" / art.name)
     assert part.is_file() and "subset" in text, text[-500:]
     rows = list(csv.DictReader(io.StringIO(part.read_text(encoding="utf-8"))))
     roster = json.loads(rows[0]["gamma_roster"])

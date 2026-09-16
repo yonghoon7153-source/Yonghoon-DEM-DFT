@@ -2903,7 +2903,7 @@ def test_r5_07_matrix_rows_carry_scales_and_audits_for_target_and_reference(tmp_
     monkeypatch.setattr(verify.D, "half_cell_path", lambda *a, **k: stub)
     monkeypatch.setattr(verify, "build", build)
     monkeypatch.setattr(verify, "multistart", fit)
-    out = tmp_path / "matrix.csv"
+    out = tmp_path / "matrix_100.csv"
     args = SimpleNamespace(data_root=str(tmp_path), source="GITT", state="100", seed=0, starts=1, w_dqdv=1.0,
                            only_source=True, only_wdqdv=True, out=str(out), run_id="r5-07")
     buf = io.StringIO()
@@ -2912,7 +2912,10 @@ def test_r5_07_matrix_rows_carry_scales_and_audits_for_target_and_reference(tmp_
     # ⚠ Codex R11 P1-2: `--only-source`·`--only-wdqdv` 는 권위 명부를 **좁힌다** — 그 산출은 canonical 이 아니라
     #   subset(rc 3, `partial/`) 이다. 이 시험의 주제는 scale/감사 열이므로 좁힌 실행 그대로 두고 자리만 맞춘다.
     assert rc == 3, (rc, buf.getvalue()[-400:])
-    published = verify.publish_target(out, "subset")
+    # ⚠ R16 (조건 8 축 ④): 부분은 시도별 자리로 가므로 index 에서 찾는다 (`publish_target` 은 이제
+    #   자리를 **잡는** 함수라 같은 시도로 두 번 부르면 FileExistsError 다).
+    published = verify.latest_partial(out)
+    assert published is not None, "부분 산출을 index 에서 못 찾았다"
     rows = list(csv.DictReader(published.open(encoding="utf-8")))
     assert len(rows) == 1, rows
     r = rows[0]

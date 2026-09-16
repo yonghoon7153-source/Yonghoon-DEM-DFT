@@ -113,7 +113,22 @@ manifest 이름은 `manifest.json` 인데 `preserve_handoff.sh` 가 `package_man
 `scripts/handoff_manifest.py` 한 자리로 빼고(bash heredoc 안에 두면 시험할 수 없다) 아는 키만
 넓혔다. 모르는 모양·둘 이상 후보·`path`/`sha256` 누락은 **계속 멈춘다**.
 
-**남은 열린 것**: 조건 8 의 **축 셋** — ① export 공통 snapshot · ③ run receipt · ④ partial 수명.
+**남은 열린 것**: 조건 8 의 **축 둘** — ① export 공통 snapshot · ③ run receipt.
+
+**R16 조건 8 축 ④ (partial 수명) 닫음.** 전 판은 `partial/<이름>` 하나라 **같은 이름의 다음 부분
+실행이 그 자리를 덮었다** — canonical 은 안 건드리므로 과학 값은 안전했지만 "언제 무엇을 시도해
+무엇이 나왔나" 가 사라졌다. 부분의 기록 자체가 증거다. 이제 `partial/<종류>/<attempt-id>/<이름>` 이고,
+같은 시도 자리에 두 번 쓰면 `FileExistsError` 다 (immutable 이라는 말이 무엇도 안 막으면 이름뿐이다).
+**attempt-id(`run_id`) 를 정본으로 골랐다** — R12 Q4 는 답이 안 왔으므로 우리가 정하고 근거를 적었다:
+이 저장소의 provenance 는 산출을 **시도**에 묶고(행마다 `run_id`, 자체 리뷰 C02), content-id 로 하면
+같은 bytes 를 낸 **두 시도가 한 자리로 합쳐지는데** 그 사실이야말로 이 축이 남기려는 것이다. 대신
+index 가 digest 를 적어 중복을 **드러낸다**. `partial/index.json` 이 시도마다 한 줄이고 소비자는
+`verify.latest_partial()` 로 읽는다 — wildcard 로 훑으면 stale 을 고른다 (R11 P2-2 의 `ls | head -1`).
+보관 정책은 `scripts/gc_partial.py`: **기본 dry-run**(지우는 도구의 기본이 "지운다" 면 사고를 되돌릴
+수 없다) · canonical 절대 불가침 · **index 에 없는 디렉터리를 만나면 rc 2 로 멈춘다**(모르는 것을
+지우고 나서 "몰랐다" 는 되돌릴 수 없다). **fixture 가 열세 번째로 깨졌다** — 미등록 이름
+(`A.csv`·`matrix.csv`)이 `publish_target` 의 `kind_of` 에서 멈췄다 (R13 Q6 이 "이름은 등록된 종류여야
+한다" 로 닫은 그 자리), 그리고 네 시험이 옛 평면 경로를 박아 두고 있었다.
 (**`openpyxl` · 조건 6 · r11 대체 증거 · 조건 8 축 ②·⑤ 와 C34 는 R16 에서 닫았다 — 아래.**)
 
 **R16 조건 8 축 ⑤ + C34 닫음 — `receipt_paths` 에 소비자를 붙였다.** 두 줄이 같은 일이었다: C34 는
@@ -589,7 +604,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 370 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 376 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

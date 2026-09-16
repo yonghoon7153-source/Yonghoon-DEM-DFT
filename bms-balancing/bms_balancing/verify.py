@@ -1190,12 +1190,86 @@ def cmd_eval(args):
 PRODUCER_EXIT = {"complete": 0, "none": 1, "partial": 3, "subset": 3}
 
 
-def publish_target(out, status):
-    """complete 만 canonical 자리로. 나머지는 형제 `partial/` namespace 로 (Codex R10 P1-3·P1-4)."""
+#: 부분 산출의 index — 소비자가 **wildcard 로 훑지 않도록** 시도마다 한 줄 (Codex R10 P2-2 가 없앤 그 소비).
+PARTIAL_INDEX = "index.json"
+
+
+def publish_target(out, status, run_id: str | None = None):
+    """complete 만 canonical 자리로. 나머지는 `partial/<종류>/<attempt-id>/<이름>` 으로 (조건 8 축 ④).
+
+    ⚠ R16: 전 판은 `partial/<이름>` 하나였다 — **같은 이름의 다음 부분 실행이 그 자리를 덮었다.**
+      canonical 은 안 건드리므로 과학 값은 안전했지만, "언제 무엇을 시도해 무엇이 나왔나" 가 사라졌다.
+      부분의 기록 자체가 증거다.
+
+    **attempt-id(`run_id`) 가 정본이다** (R12 Q4 는 답이 안 왔으므로 우리가 정하고 근거를 적는다):
+    이 저장소의 provenance 는 산출을 **시도**에 묶고(행마다 `run_id`, 자체 리뷰 C02), content-id 로 하면
+    같은 bytes 를 낸 **두 시도가 한 자리로 합쳐진다** — 그 사실이야말로 이 축이 남기려는 것이다.
+    "같은 bytes 가 여러 번 쌓인다" 는 받아들이고, index 가 digest 를 적어 **드러낸다**.
+
+    같은 시도 자리에 두 번 쓰는 것은 버그이므로 `FileExistsError` 다 (immutable 이라는 말이 무엇도
+    막지 않으면 이름뿐이다). `run_id` 가 없으면 자리를 정할 수 없으므로 거부한다 — 부재는 안전값이 아니다.
+    """
     out = Path(out)
-    dest = out if status == "complete" else out.parent / "partial" / out.name
+    if status == "complete":
+        out.parent.mkdir(parents=True, exist_ok=True)
+        return out
+    if not run_id:
+        raise ValueError("부분 산출은 attempt-id(run_id) 없이 자리를 정할 수 없다 (조건 8 축 ④)")
+    dest = out.parent / "partial" / S.kind_of(out.name) / str(run_id) / out.name
+    if dest.exists():
+        raise FileExistsError(f"같은 시도 자리에 두 번 쓴다: {dest} — 부분 단위는 immutable 이다")
     dest.parent.mkdir(parents=True, exist_ok=True)
     return dest
+
+
+def read_partial_index(out) -> dict:
+    """`partial/index.json` 을 읽는다 (없으면 빈 index) — **소비자는 디렉터리를 훑지 않는다** (R10 P2-2)."""
+    p = Path(out).parent / "partial" / PARTIAL_INDEX
+    try:
+        doc = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {"index_version": 1, "attempts": []}
+    return doc if isinstance(doc, dict) and isinstance(doc.get("attempts"), list) else {"index_version": 1, "attempts": []}
+
+
+def latest_partial(out) -> Path | None:
+    """그 산출의 **가장 최근 시도** 경로 (index 기준). 없으면 None.
+
+    index 의 소비자다 — 부분 단위가 `partial/<종류>/<attempt-id>/` 로 흩어졌으므로 이름만으로는 못 찾고,
+    그래서 index 가 있다. wildcard 로 훑으면 stale 을 고를 수 있다 (R11 P2-2 가 `ls | head -1` 에서 본 것).
+    """
+    out = Path(out)
+    root = out.parent / "partial"
+    rows = [e for e in read_partial_index(out)["attempts"] if e.get("artifact") == out.name]
+    if not rows:
+        return None
+    return root / rows[-1]["path"]
+
+
+def record_partial(out, dest, *, status: str, run_id: str) -> dict:
+    """게시한 부분 단위를 `partial/index.json` 에 **한 줄** 더한다 → 그 줄.
+
+    index 가 있어야 소비자가 디렉터리를 훑지 않는다. digest 를 같이 적는 이유는 attempt-id 를 정본으로
+    골랐기 때문이다 — 같은 bytes 의 중복을 **숨기지 않고 보이게** 하는 것이 그 선택의 조건이다.
+    """
+    import datetime as _dt
+    out, dest = Path(out), Path(dest)
+    root = out.parent / "partial"
+    root.mkdir(parents=True, exist_ok=True)
+    idx_path = root / PARTIAL_INDEX
+    try:
+        idx = json.loads(idx_path.read_text(encoding="utf-8"))
+        if not isinstance(idx, dict) or not isinstance(idx.get("attempts"), list):
+            raise ValueError
+    except (OSError, ValueError):
+        idx = {"index_version": 1, "attempts": []}
+    row = {"attempt": str(run_id), "kind": S.kind_of(out.name), "artifact": out.name,
+           "status": status, "path": str(dest.relative_to(root)),
+           "sha256": _provenance().sha256_file(dest),
+           "recorded_utc": _dt.datetime.now(_dt.timezone.utc).isoformat()}
+    idx["attempts"].append(row)
+    atomic_write_json(idx_path, idx)
+    return row
 
 
 def same_object(a, b) -> bool:
@@ -1664,8 +1738,12 @@ def cmd_matrix(args):
         # ⚠ 완전성 판정이 **게시보다 먼저**다 (Codex R10 P1-4). complete 만 canonical 을 원자 교체하고, error 행이
         #   하나라도 있거나 입력이 빠진 조합이 있으면 `partial/` 로 간다 — 기존 canonical 은 건드리지 않는다.
         keys = sorted({k for r in rows for k in r})
-        dest = publish_target(args.out, status)
+        # ⚠ R16 (조건 8 축 ④): 부분은 `partial/<종류>/<attempt-id>/` 로 가고 index 에 한 줄 남는다 —
+        #   전 판은 같은 이름의 다음 부분 실행이 그 자리를 덮어 시도의 역사가 사라졌다.
+        dest = publish_target(args.out, status, run_id=run_id_of(args))
         atomic_write_csv(dest, rows, keys)               # R4-06: 시도별 임시 파일 → 한 번에 게시
+        if status != "complete":
+            record_partial(args.out, dest, status=status, run_id=run_id_of(args))
         print(f"wrote {dest}" + ("" if status == "complete" else
                                  f"  [{status} — canonical {args.out} 은 건드리지 않았다 (Codex R10 P1-4)]"))
     if status != "complete":
@@ -1819,8 +1897,11 @@ def cmd_profile(args):
         # ⚠ Codex R4-06: 고정 이름 `.part` 는 같은 목적지를 쓰는 두 시도가 서로의 행을 게시했다 —
         #   시도별 고유 임시 파일 + 행마다 run_id 로 계산과 게시 bytes 를 묶는다.
         # ⚠ Codex R10 P1-3: complete 만 canonical. 부분은 `partial/` 로 — 완전성 판정이 게시보다 먼저다.
-        dest = publish_target(args.out, status)
+        # ⚠ R16 (조건 8 축 ④): 위와 같다 — 시도마다 자기 자리, index 에 한 줄.
+        dest = publish_target(args.out, status, run_id=run_id_of(args))
         atomic_write_csv(dest, rows, list(rows[0]))
+        if status != "complete":
+            record_partial(args.out, dest, status=status, run_id=run_id_of(args))
         print(f"wrote {dest} [status {status}] (run_id {run_id_of(args)})"
               + ("" if status == "complete" else f"  — canonical {args.out} 은 건드리지 않았다"))
     if rows and status != "complete":

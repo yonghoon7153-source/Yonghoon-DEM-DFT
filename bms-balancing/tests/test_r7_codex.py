@@ -168,8 +168,11 @@ def _matrix_rows(path, root, state="200", **kw):
     """
     with contextlib.redirect_stdout(io.StringIO()):
         rc = verify.cmd_matrix(_args(root, path, state=state, **kw))
-    return list(csv.DictReader(verify.publish_target(path, "complete" if rc == 0 else "subset")
-                               .open(encoding="utf-8-sig")))
+    # ⚠ R16 (조건 8 축 ④): 부분은 `partial/<종류>/<attempt-id>/` 로 가므로 이름만으로 못 찾는다 —
+    #   그래서 index 가 있다. 소비자는 그것을 읽는다 (wildcard 로 훑으면 stale 을 고른다, R11 P2-2).
+    src = path if rc == 0 else verify.latest_partial(path)
+    assert src is not None, f"부분 산출을 index 에서 못 찾았다 ({path})"
+    return list(csv.DictReader(src.open(encoding="utf-8-sig")))
 
 
 def test_d7_03_matrix_and_profile_rows_carry_the_reference_input_signature(tmp_path):
@@ -180,11 +183,14 @@ def test_d7_03_matrix_and_profile_rows_carry_the_reference_input_signature(tmp_p
 
     닫힘 조건(Codex): target/ref 각각의 실제 소비 snapshot identity 를 행에 남긴다."""
     root = _synth_root(tmp_path); out = tmp_path / "out"; out.mkdir()
-    a = _matrix_rows(out / "A.csv", root)[0]
+    # ⚠ R16 (열세 번째 fixture 감사): `publish_target` 이 부분 자리를 정할 때 `kind_of` 를 부른다 —
+    #   미등록 이름(`A.csv`)은 이제 거기서 멈춘다. R13 Q6 이 "이름은 등록된 종류여야 한다" 로
+    #   닫은 자리와 같다. 두 실행을 가르는 것은 이름이 아니라 **기준 입력**이므로 state 로 가른다.
+    a = _matrix_rows(out / "matrix_100.csv", root)[0]
     assert a.get("ref_inputs_sha"), f"기준 입력 서명 열이 없다: {sorted(a)}"
     assert a.get("ref_consumed_inputs"), sorted(a)
     _bump_xlsx(root / "data/half_cell/GITT/pristine.xlsx", delta=0.02, header=0)   # 기준 전용 입력만 바꾼다
-    b = _matrix_rows(out / "B.csv", root)[0]
+    b = _matrix_rows(out / "matrix_200.csv", root)[0]
     assert a["inputs_sha"] == b["inputs_sha"], "대상 입력은 그대로여야 한다 (fixture)"
     assert a["ref_inputs_sha"] != b["ref_inputs_sha"], (a["ref_inputs_sha"], b["ref_inputs_sha"])
     assert float(a["LAM_NE_pct"]) != float(b["LAM_NE_pct"]), "fixture 가 숫자를 안 움직였다"
