@@ -26,7 +26,7 @@ Run on gabia/kserver116-27 (MP_API_KEY set, MP reachable, pymatgen+mp_api):
     --voltages 2.5 3.0 3.5 4.0 4.3 \
     --out interface_reactivity_v2.json
 """
-import argparse, json, os
+import argparse, json, os, re
 from pathlib import Path
 
 
@@ -272,8 +272,73 @@ def _selftest():
         open(p2, "w").write("dopant,rank_combined\nMgO,1\n")
         chk(champion_formulas(p2) == {},
             "[음성] composition_* 열이 없으면 빈 dict")
+    # ── 산물 파서·인구조사 (2026-09-16 신설) ────────────────────────────────
+    #   왜: 종전 판이 `min_rxn` 을 계산해 놓고 **버렸다**. 숫자만 남아 갭 단계(§C)의
+    #   입력을 JSON 에서 못 읽었는데, 화면에는 찍혀서 '되는 것처럼' 보였다.
+    def chk(c, n):
+        nonlocal ok
+        print(("  ✓ " if c else "  ✗ ") + n)
+        ok = ok and bool(c)
+
+    chk(rhs_products("0.74 A + 0.26 B -> 0.08247 Co9S8 + 0.1134 Li2SO4 + LiCl")
+        == ["Co9S8", "Li2SO4", "LiCl"], "산물 파서: 계수를 떼고 산물만")
+    chk(rhs_products("A -> 1.5e-2 P2S7") == ["P2S7"], "산물 파서: 지수 계수")
+    chk(rhs_products("A -> LiCl + 2 Li2S") == ["LiCl", "Li2S"], "산물 파서: 계수 없는 항")
+    chk(rhs_products("LiCoO2 + Li6PS5Cl") == [], "[음성] `->` 가 없으면 빈 목록 (왼쪽을 산물로 삼지 않는다)")
+    chk(rhs_products(None) == [] and rhs_products(123) == [], "[음성] 문자열이 아니면 죽지 않고 빈 목록")
+    chk(rhs_products("A ->") == [], "[음성] 오른쪽이 비면 빈 목록")
+    _r = {"C": {"reactions": {"4.30": {"m": "x -> 0.1 Co9S8 + LiCl", "c": "x -> LiCl"}}}}
+    _c = product_census(_r)
+    chk(_c["n_unique"] == 2 and _c["counts"]["LiCl"] == 2, "인구조사: 중복을 센다")
+    chk(_c["first_seen"]["Co9S8"] == "C@4.30V/m", "인구조사: 처음 나온 곳을 기록한다")
+    chk(product_census({})["n_unique"] == 0 and product_census(None)["n_unique"] == 0,
+        "[음성] 빈 입력에 죽지 않는다")
+    chk(product_census({"C": {"by_voltage": {"4.30": {"m": -1.0}}}})["n_unique"] == 0,
+        "[음성] `reactions` 가 없으면 0 — 숫자만 있는 옛 JSON 을 산물로 지어내지 않는다")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
+
+
+
+def rhs_products(rxn: str) -> list:
+    """반응식 문자열 → **오른쪽(산물) 화학식 목록**. 계수는 버린다.
+
+    예: `0.74 LiCoO2 + 0.26 Li6PS5Cl -> 0.08 Co9S8 + 0.11 Li2SO4` → ['Co9S8','Li2SO4']
+
+    ⛔ 이 함수가 못 하는 것
+      · 화학식이 유효한지 확인하지 않는다 (pymatgen 에 안 물어본다). 문자열을 자를 뿐이다.
+      · `->` 가 없으면 **빈 목록**을 준다 — 추측해서 왼쪽을 산물로 삼지 않는다.
+    """
+    if not isinstance(rxn, str) or "->" not in rxn:
+        return []
+    out = []
+    for term in rxn.split("->", 1)[1].split("+"):
+        t = term.strip()
+        if not t:
+            continue
+        # 앞에 붙은 계수(숫자/소수/지수)를 떼어 낸다. 없으면 그대로.
+        m = re.match(r"^[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?\s+(.+)$", t)
+        out.append((m.group(1) if m else t).strip())
+    return [x for x in out if x]
+
+
+def product_census(results: dict) -> dict:
+    """모든 (양극, 전압, 전해질) 의 **최소 kink 반응**에 나온 산물을 센다.
+
+    이것이 갭 단계(§C)의 대상 목록이다 — 카드 G2 의 선별 규칙
+    (*"각 조합의 최소 반응E kink 에 등장하는 산물만"*) 을 그대로 구현한다.
+    """
+    cnt, where = {}, {}
+    for clab, cd in (results or {}).items():
+        for V, row in (cd.get("reactions") or {}).items():
+            for elab, rxn in (row or {}).items():
+                for f in rhs_products(rxn):
+                    cnt[f] = cnt.get(f, 0) + 1
+                    where.setdefault(f, set()).add(f"{clab}@{V}V/{elab}")
+    return {"n_unique": len(cnt),
+            "counts": dict(sorted(cnt.items(), key=lambda kv: -kv[1])),
+            "first_seen": {k: sorted(v)[0] for k, v in where.items()}}
 
 
 def main():
@@ -322,24 +387,37 @@ def main():
     for cat in a.cathodes:
         cstr, _, clab = cat.partition(":"); clab = clab or cstr
         cc = Composition(cstr)
-        results[clab] = {"composition": cstr, "by_voltage": {}}
+        results[clab] = {"composition": cstr, "by_voltage": {}, "reactions": {}}
         print(f"\n######## cathode {clab} ({cstr}) ########")
         for V in a.voltages:
             mu = mu0 - V
             gpd = GrandPotentialPhaseDiagram(entries, {Element("Li"): mu})
-            row = {}
+            row, rxn_row = {}, {}
             for spec in a.electrolytes:
                 estr, _, elab = spec.partition(":"); elab = elab or estr
                 try:
                     e, rxn = min_rxn_grand(Composition(estr), cc, gpd, pd)
                     row[elab] = round(e, 5)
-                    print(f"  V={V:.2f}  {elab:9s}: {e:.4f} eV/atom")
+                    rxn_row[elab] = rxn          # ⭐ 2026-09-16: 버리지 않는다 (아래 주석)
+                    print(f"  V={V:.2f}  {elab:9s}: {e:.4f} eV/atom   {rxn}")
                 except Exception as ex:
                     row[elab] = None
+                    rxn_row[elab] = None
                     print(f"  V={V:.2f}  {elab}: ERR {type(ex).__name__}: {ex}")
             results[clab]["by_voltage"][f"{V:.2f}"] = row
+            # ⛔ 2026-09-16 — 종전 판은 `min_rxn` 을 **계산해 놓고 버렸다.** 숫자만 남아서
+            #   "어떤 상으로 분해되나" 를 JSON 에서 못 읽었고, 그게 갭 단계(§C)의 입력이다.
+            #   화면에는 찍혔으니 '되는 것처럼' 보였다 — 조용히 틀린 경로.
+            results[clab]["reactions"][f"{V:.2f}"] = rxn_row
+
+    cen = product_census(results)
+    print(f"\n══ 산물 인구조사 — 갭(§C) 대상 후보 {cen['n_unique']} 종 ══")
+    for f, n in cen["counts"].items():
+        print(f"  {f:16s} {n:3d} 회   처음 나온 곳 {cen['first_seen'][f]}")
+    print("  ⛔ 이 목록은 **최소 kink 산물**만이다. 다른 kink 의 상은 여기 없다 (카드 G2).")
 
     Path(a.out).write_text(json.dumps({
+        "product_census": cen,
         "method": "GrandPotentialInterfacialReactivity (Richards/Ong 2016), "
                   "open to Li reservoir; mu_Li = mu_Li(metal) - V; "
                   "use_hull_energy=True; MP GGA_GGA+U. More negative = more "
