@@ -74,13 +74,30 @@
               border-radius:999px;padding:4px 11px;color:var(--mut)}
   footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);
          color:var(--mut);font-size:.78rem;line-height:1.7}
+  .eyebrow{color:var(--mut);font:600 .72rem/1.5 "IBM Plex Mono",monospace;
+           letter-spacing:.09em;text-transform:uppercase;margin:0 0 10px}
+  .lede{font-size:1.02rem;line-height:1.75;color:var(--ink);max-width:66ch;
+        margin:0 0 6px}
+  /* 익숙한 것에 빗대는 자리. 본문과 섞이지 않게 왼쪽 선으로만 구분한다 —
+     카드로 만들면 "따로 읽어도 되는 것" 처럼 보이는데, 이건 본문의 일부다. */
+  .plain{font-size:.94rem;line-height:1.75;color:var(--mut);
+         border-left:2px solid var(--line);padding:3px 0 3px 16px;
+         margin:15px 0;max-width:64ch}
+  .plain b,.plain strong{color:var(--ink);font-weight:600}
 </style>
 </head>
 <body>
 <div class="wrap">
 
+<p class="eyebrow">배경 지식 없이 읽는 설명을 같이 담았다</p>
 <h1>Nd 는 인산염 싱크다</h1>
 <p class="sub">고전압에서 Nd 가 하는 일 — CEI 계면 반응성의 Nd/O 분해</p>
+
+<p class="lede">고체 전해질을 양극에 붙여 높은 전압까지 충전하면 둘이 닿은 면에서
+반응이 일어나 <strong>새로운 층</strong>이 생긴다. 그 층이 잘 생기면 더 이상의 반응을 막아 주고,
+잘못 생기면 전지가 계속 갉힌다. 이 페이지는 <strong>전해질에 Nd 와 O 를 넣으면 그 층이
+어떻게 달라지는가</strong>를 계산으로 따진 기록이다. 실험은 하나도 없고, 전부
+<strong>어떤 상이 생기는 것이 에너지상 이로운가</strong>를 데이터베이스 위에서 푼 것이다.</p>
 <p class="meta">2026-09-16 · grand-potential interfacial reactivity (Richards/Ong 2016) ·
 MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes × 6 voltages)</p>
 
@@ -95,6 +112,13 @@ Li 0 개, Li₃PO₄ 는 3 개). 고전압이 Li 를 빼가면서 그 경로의 
 </div>
 
 <h2>1. 분해 — 대조 조성 둘을 추가해서 갈랐다</h2>
+
+<p class="plain">익숙한 것에 빗대면 <b>적정(titration)</b>이다. 전압을 올린다는 것은
+이 계산에서 <b>Li 를 조금씩 빼내는 것</b>과 같다 — 실제로 충전하면 Li 가 양극으로 넘어가니까.
+적정에서 시약을 계속 넣다 보면 어느 지점에서 갑자기 다른 생성물로 넘어가듯이,
+전압을 올리다 보면 <b>분해 산물 조합이 계단처럼 바뀐다</b>. 아래 값들은 각 전압에서
+"이 조합으로 가는 것이 얼마나 이로운가" 를 재 놓은 것이고, <b>덜 이로울수록(위로 갈수록)
+덜 반응한다</b>는 뜻이다.</p>
 
 <p>기존 <code>modelc_nd</code> 는 Nd 치환과 O 치환이 <strong>같이</strong> 바뀌어서 둘을 못 갈랐다.
 전하중성을 맞춘 대조 조성 둘을 추가해 축을 분리했다.</p>
@@ -197,6 +221,12 @@ Nd 는 <em>풀려난</em> P 를 사후에 잡는다. <strong>다른 P 풀에 작
 
 <h3>그런데 Li 예산을 낮추면 부호가 뒤집힌다</h3>
 
+<p class="plain">익숙한 것에 빗대면 <b>예산 문제</b>다. 같은 P 한 개를 붙잡는 데
+Li₃PO₄ 는 <b>Li 를 3 개</b> 쓰고 NdPO₄ 는 <b>0 개</b> 쓴다. Li 가 넉넉할 때는 비싼 쪽이
+더 튼튼해서 그쪽으로 간다. 그런데 <b>고전압이란 Li 가 양극으로 빠져나간 상태</b>라
+Li 가 희소해지고, 그때는 "3 개짜리" 를 살 수 없다. 그래서 Nd 는 <b>더 좋은 인산염을
+만드는 것이 아니라, Li 를 안 쓰는 선택지를 하나 더 열어 주는 것</b>이다.</p>
+
 <p>같은 형식(<span class="mono">&lt;공여상&gt; + ½Nd₂O₃ → NdPO₄ + Li₂O</span>)에서
 <strong>P 하나당 Li 개수만</strong> 바꾸면 완전 단조다.</p>
 
@@ -285,6 +315,13 @@ hull 이 고르는 판정은 §4 쪽이다.</p>
 
 <h2>4. 전 혼합범위 스캔 — 최소점 하나가 아니라 곡선 전체</h2>
 
+<p class="plain">익숙한 것에 빗대면 <b>확산쌍(diffusion couple)</b>이다. 두 덩어리를
+맞붙여 놓으면 접합면을 가로질러 조성이 한쪽에서 다른 쪽으로 <b>서서히</b> 변하고, 깊이마다
+다른 중간상이 층으로 앉는다. 여기 <b>x 축이 바로 그 깊이</b>다 — x=0 은 순수 양극 쪽,
+x=1 은 순수 전해질 쪽. 곡선이 꺾이는 점(<b>kink</b>)마다 생기는 상 조합이 바뀐다.
+지금까지 우리가 인용한 값은 그중 <b>가장 깊은 꺾임 하나</b>뿐이었고, 나머지 층들은
+계산해 놓고 버리고 있었다.</p>
+
 <p>지금까지 쓴 값은 <strong>가장 깊은 kink 하나</strong>였다. 도구가 나머지를 계산해 놓고
 버리고 있었다 — 이제 전 kink 를 남긴다(조건당 16–18 개). 그러면 Richards/Ong 식
 <em>반응에너지 vs 혼합비 x</em> 곡선이 통째로 그려진다.</p>
@@ -349,6 +386,11 @@ Nd 인산염은 특정 혼합비에서만 나오는 게 아니라 <strong>x 축 
 <strong>답을 못 한다</strong> — 양쪽 표에 같은 숫자가 두 번 적힐 뿐이다.</p>
 </div>
 
+<p class="plain">익숙한 것에 빗대면 <b>XRD 패턴 두 장을 겹쳐 보는 일</b>이다.
+도핑한 시료와 안 한 시료의 패턴에서 <b>공통 피크는 차이를 말해 주지 않는다</b> —
+아무리 정밀하게 재도 양쪽에 똑같이 있으니까. 말해 주는 것은 <b>한쪽에만 있는 피크</b>다.
+여기서도 똑같다. 그래서 다음 단계(밴드갭)는 <b>한쪽 계에만 나오는 상</b>만 잰다.</p>
+
 <h3>그래서 대상 = 판별종 ∧ 전이금속 비포함 = 10 종</h3>
 
 <div class="tblwrap">
@@ -385,6 +427,12 @@ Nd 인산염은 특정 혼합비에서만 나오는 게 아니라 <strong>x 축 
 이 문제를 다시 마주친다.</li>
 </ul>
 </div>
+
+<p class="plain">익숙한 것에 빗대면 <b>코팅의 핀홀</b>이다. 갭이 크다는 것은
+그 층이 <b>전자를 안 흘린다</b>는 뜻이고, 전자가 계면을 못 건너가면 반응이 거기서 멈춘다 —
+그게 부동태다. 다만 층이 아무리 절연이어도 <b>구멍이 하나 뚫려 이어져 있으면</b> 거기로
+샌다. 갭 계산은 <b>재료가 막을 성질을 갖는지</b>만 말하고 <b>실제로 구멍 없이 덮였는지</b>는
+말하지 않는다 — 그래서 아래 G5 가 "갭으로 부동태 결론을 내지 않는다" 를 못 박는다.</p>
 
 <h3>결과 보기 전에 박은 문턱</h3>
 <ul>
