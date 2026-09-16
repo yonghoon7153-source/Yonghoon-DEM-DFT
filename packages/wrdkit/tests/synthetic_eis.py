@@ -215,3 +215,66 @@ def _scan_row(t: float, ewe: float, freq: float, magnitude: float,
     row += struct.pack("<fff", freq, magnitude, phase_deg)
     row += b"\x00" * sum(width for _, width in SCAN_TAIL)
     return row
+
+
+# --- 온도 스윕 .mpt (대칭셀 이온전도도) --------------------------------------
+#
+# 실측 `B12_activationE_C02.mpt` 의 모양: 한 파일 안에 Rest 와 PEIS 가 번갈아
+# 들어 있고, PEIS 는 7 MHz 에서 10 Hz 로 **내려간다**.  온도는 어느 열에도
+# 없다 -- 챔버를 돌린 것은 사람이라 계측기가 모른다.
+
+def build_mpt_temperature_scan(*, resistances: list[float] | None = None,
+                               points: int = 12, rest_rows: int = 4,
+                               with_rest_rows: bool = True,
+                               inductance_h: float = 2e-6) -> str:
+    """온도마다 PEIS 를 한 번씩 건 `.mpt`.
+
+    ``resistances`` 는 온도마다의 전해질 저항(Ω)이다 -- 첫 항목이 첫 스윕.
+    나이퀴스트는 ``Rs`` 를 0 으로 둔 반원 하나라, 저주파 실수축 절편이 곧 그
+    저항이 된다.
+
+    ``with_rest_rows`` 가 거짓이면 PEIS 행만 이어 붙인다.  EC-Lab 은 내보내기
+    설정에 따라 둘 중 하나를 내는데, **스윕을 가르는 근거가 둘 다 달라서**
+    (주파수 0 인 행이냐, 주파수가 되짚는 자리냐) 두 모양을 다 시험해야 한다.
+
+    ``inductance_h`` 는 배선 인덕턴스다.  실측 파일의 7 MHz 에서 ``-Im`` 이
+    -82.9 Ω 인 것이 이것이고, 넣지 않으면 나이퀴스트가 실수축을 **지나지 않아**
+    교점을 찾는 코드가 시험되지 않는다.  2 µH 가 7 MHz 에서 88 Ω 이라 실측과
+    같은 자리에 온다.
+    """
+    resistances = resistances or [9.69, 14.56, 34.66, 94.30, 300.0]
+    frequency = np.logspace(np.log10(7e6), 1.0, points)   # 7 MHz → 10 Hz
+    columns: dict[str, list[float]] = {
+        "freq/Hz": [], "Re(Z)/Ohm": [], "-Im(Z)/Ohm": [], "|Z|/Ohm": [],
+        "Phase(Z)/deg": [], "time/s": [], "Ewe/V": [], "Ns": [],
+    }
+    clock = 0.0
+    sequence = 0
+    for resistance in resistances:
+        if with_rest_rows:
+            for _ in range(rest_rows):         # 온도 평형을 잡는 휴지 구간
+                _mpt_row(columns, clock, 0.0, 0.0 + 0.0j, sequence)
+                clock += 3600.0
+            sequence += 1
+        for f in frequency:
+            omega = 2 * np.pi * f
+            z = resistance / (1.0 + 1j * omega * 1e-6) + 1j * omega * inductance_h
+            _mpt_row(columns, clock, f, z, sequence)
+            clock += 1.0
+        sequence += 1
+    return build_mpt({name: np.array(values, dtype=float)
+                      for name, values in columns.items()},
+                     technique="Potentio Electrochemical Impedance Spectroscopy")
+
+
+def _mpt_row(columns: dict[str, list[float]], t: float, freq: float,
+             z: complex, sequence: int) -> None:
+    columns["freq/Hz"].append(freq)
+    columns["Re(Z)/Ohm"].append(z.real)
+    # 파일이 담는 것은 -Im(Z) 다 (물리 규약의 Im(Z) 가 아니다).
+    columns["-Im(Z)/Ohm"].append(-z.imag)
+    columns["|Z|/Ohm"].append(abs(z))
+    columns["Phase(Z)/deg"].append(np.degrees(np.angle(z)) if z != 0 else 0.0)
+    columns["time/s"].append(t)
+    columns["Ewe/V"].append(0.0)
+    columns["Ns"].append(float(sequence))

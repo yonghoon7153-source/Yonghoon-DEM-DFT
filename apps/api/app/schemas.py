@@ -906,6 +906,114 @@ class ScanSocOut(BaseModel):
     cleared: int
 
 
+class ScanTemperatureIn(BaseModel):
+    """이 스캔의 온도를 스윕 차례대로 (ADR 0039).
+
+    SOC 와 같은 모양인 이유는 같은 종류의 값이라서다: 계측기가 모르고, 파일
+    어디에도 없고, 사람이 챔버를 돌린 기억에만 있다.
+    """
+
+    temperature_c: list[float | None]
+
+
+class ScanResistanceIn(BaseModel):
+    """스윕마다 눈으로 읽은 전해질 저항 (Ω).
+
+    맞춤이 있으면 총저항이 저절로 나오지만, 블로킹 대칭셀의 반원은 닫히기 전에
+    꼬리가 올라오는 일이 잦아 랩은 ZView 에서 절편을 눈으로 읽는다.  적어
+    넣으면 그 값이 이긴다.
+    """
+
+    resistance_ohm: list[float | None]
+
+
+class ScanValuesOut(BaseModel):
+    """스윕 차례대로 적어 넣은 결과 — 몇 개를 채웠고 몇 개를 비웠나."""
+
+    sweeps: int
+    filled: int
+    cleared: int
+
+
+class LinearFitOut(BaseModel):
+    """Origin 의 ``Linear Fit`` 보고서와 같은 칸들.
+
+    기울기만 내면 사람은 그 표를 만들려고 Origin 을 다시 연다.  ``None`` 인
+    칸은 "이 점들로는 말할 수 없다" 이지 0 이 아니다.
+    """
+
+    slope: float
+    intercept: float
+    slope_stderr: float | None = None
+    intercept_stderr: float | None = None
+    n_points: int
+    dof: int
+    rss: float
+    pearson_r: float | None = None
+    r_squared: float | None = None
+    adj_r_squared: float | None = None
+    slope_t: float | None = None
+    slope_p: float | None = None
+    intercept_t: float | None = None
+    intercept_p: float | None = None
+    f_value: float | None = None
+    f_p: float | None = None
+
+
+class ActivationEnergyOut(BaseModel):
+    """Arrhenius 직선 하나와 거기서 읽은 활성화에너지."""
+
+    activation_energy_ev: float | None = None
+    stderr_ev: float | None = None
+    #: ``sigma`` | ``sigma_t`` — 무엇의 로그를 세로축에 놓았는가.  0.33 과 0.35
+    #: 는 표에 나란히 놓이면 다른 물질처럼 보이므로 늘 함께 낸다.
+    basis: str = "sigma"
+    points_used: int = 0
+    reason: str = ""
+    fit: LinearFitOut | None = None
+    #: 직선을 그리는 데 쓴 두 열 — x = 1000/T, y = ln σ.  화면이 다시 계산하지
+    #: 않게 그대로 보낸다 (계산이 두 군데 있으면 언젠가 갈라진다).
+    inverse_temperature: list[float] = []
+    log_sigma: list[float] = []
+
+
+class ConductivityRowOut(BaseModel):
+    """표의 한 줄 — 온도 하나에서 읽은 저항과 거기서 나온 이온전도도."""
+
+    spectrum_id: int
+    sweep_index: int
+    name: str = ""
+    temperature_c: float | None = None
+    thickness_mm: float | None = None
+    area_cm2: float | None = None
+    resistance_ohm: float | None = None
+    #: ``typed`` 사람이 적었다 · ``fit`` 맞춤의 총저항 · ``""`` 아직 없다.
+    #: 표에 함께 적는다 -- 손으로 읽은 저항과 맞춘 저항이 한 열에 섞이면,
+    #: 나중에 그 표를 보는 사람은 어느 쪽인지 알 방법이 없다.
+    resistance_source: str = ""
+    #: ``-Im`` 이 아래에서 위로 0 을 지나는 자리의 ``Re`` — **제안**이다.
+    #:
+    #: 자동으로 채우지 않는다.  실측 파일에서 이 교점으로 읽으면 0.290 eV,
+    #: 랩이 ZView 에서 읽으면 0.328 eV 가 나왔고 두 읽기의 비는 일정하지도
+    #: 않았다 (60 °C 2.01배, -20 °C 3.03배).  어디서 읽을지가 답을 바꾸므로
+    #: 그 판단은 사람이 한다 (ADR 0039).
+    crossing_ohm: float | None = None
+    sigma_ms_cm: float | None = None
+
+
+class ScanConductivityOut(BaseModel):
+    """한 `.mpt` 의 온도별 이온전도도와, 그 아홉 점이 그리는 활성화에너지."""
+
+    sha256: str
+    name: str
+    sweeps: int
+    rows: list[ConductivityRowOut] = []
+    activation: ActivationEnergyOut
+    #: 아직 없는 것들 — ``온도`` ``두께`` ``면적`` ``저항``.  화면이 "무엇을 더
+    #: 적어야 표가 서는가" 를 그대로 말할 수 있게 (§0.4).
+    missing: list[str] = []
+
+
 class ScanDeleteOut(BaseModel):
     """스캔 하나를 통째로 지운 결과 — 스윕 몇 개와 맞춤 몇 개가 사라졌나.
 
@@ -930,6 +1038,10 @@ class ScanPointOut(BaseModel):
     #: 사람이 적어 둔 SOC (%).  계측기가 모르는 값이라 비어 있는 것이 정상이다
     #: (ADR 0038).  3D 의 깊이축을 전위 대신 이것으로 세울 수 있다.
     soc_percent: float | None = None
+    #: 사람이 적어 둔 온도 (°C) 와 눈으로 읽은 저항 (Ω).  이온전도도 스윕의
+    #: x 축과 분모다 (ADR 0039).  SOC 와 같은 이유로 비어 있는 것이 정상이다.
+    temperature_c: float | None = None
+    resistance_ohm: float | None = None
     #: 가장 잘 맞은 피팅 (수렴한 것 중 χ² 최소).  없으면 나머지가 전부 비어 있다.
     fit_id: int | None = None
     circuit: str = ""

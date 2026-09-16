@@ -13,6 +13,14 @@ install rather than an ImportError from three frames down.
 from . import drt
 from .biologic import UnknownColumn, read_mpr_bytes, read_mps_text, read_mpt_text
 from .circuit import Circuit, CircuitError, parse_circuit
+from .conductivity import (
+    ACTIVATION_BASES,
+    BOLTZMANN_EV_PER_K,
+    ActivationEnergy,
+    ConductivityPoint,
+    activation_energy,
+    conductivity_ms_cm,
+)
 from .derive import (
     CONFIGS,
     FULL,
@@ -30,10 +38,13 @@ from .fit import EdgeMisfit, FitResult, Parameter, edge_misfit, fit_circuit
 from .guess import Arc, find_arcs, inductive_mask, initial_guess
 from .spectrum import Spectrum
 
-__all__ = ["Arc", "CONFIGS", "Circuit", "CircuitError", "DrtPeak", "DrtResult",
+__all__ = ["ACTIVATION_BASES", "Arc", "ActivationEnergy",
+           "BOLTZMANN_EV_PER_K", "CONFIGS", "Circuit", "CircuitError",
+           "ConductivityPoint", "DrtPeak", "DrtResult",
            "EdgeMisfit", "FULL", "FitResult", "HALF", "LIQUID", "Parameter",
            "SOLID",
-           "SYMMETRIC", "Spectrum", "UnknownColumn", "conductivity", "drt",
+           "SYMMETRIC", "Spectrum", "UnknownColumn", "activation_energy",
+           "conductivity", "conductivity_ms_cm", "drt",
            "edge_misfit", "find_arcs", "fit_circuit", "inductive_mask",
            "initial_guess",
            "ionic_conductivity", "label_arcs", "lcurve_corner", "parse_circuit",

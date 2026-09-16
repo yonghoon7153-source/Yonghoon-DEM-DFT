@@ -1645,3 +1645,149 @@ def test_deleting_one_sweep_still_leaves_the_rest(client):
 
 def test_deleting_an_unknown_scan_says_so(client):
     assert client.delete("/api/eis/scans/nosuchsha").status_code == 404
+
+
+# --- 이온전도도 스윕: 온도는 사람이 적고, 저항은 사람이 이긴다 (ADR 0039) ---
+
+def upload_mpt_scan(client, resistances=None) -> str:
+    text = S.build_mpt_temperature_scan(resistances=resistances)
+    out = client.post(
+        "/api/eis/spectra/upload",
+        params={"kind": "solid", "cell_config": "sym", "purpose": "이온전도도"},
+        files={"file": ("B12_activationE.mpt", text.encode("utf-8"),
+                        "text/plain")}).json()
+    return out["sha256"]
+
+
+def test_temperature_is_written_by_hand_and_comes_back_on_the_sweeps(client):
+    """파일에 온도 열이 없으므로 적는 길이 있어야 한다."""
+    sha = upload_mpt_scan(client, [9.69, 14.56, 34.66])
+    scan = client.get(f"/api/eis/scans/{sha}").json()
+    assert [p["temperature_c"] for p in scan["points"]] == [None] * 3
+
+    written = client.put(f"/api/eis/scans/{sha}/temperature",
+                         json={"temperature_c": [60, 40, 20]})
+    assert written.status_code == 200
+    assert written.json() == {"sweeps": 3, "filled": 3, "cleared": 0}
+
+    scan = client.get(f"/api/eis/scans/{sha}").json()
+    assert [p["temperature_c"] for p in scan["points"]] == [60, 40, 20]
+
+
+def test_a_different_temperature_count_is_refused_and_writes_nothing(client):
+    """한 칸 밀린 온도축은 Arrhenius 직선을 멀쩡하게 그리고 답만 틀린다."""
+    sha = upload_mpt_scan(client, [9.69, 14.56, 34.66])
+    response = client.put(f"/api/eis/scans/{sha}/temperature",
+                          json={"temperature_c": [60, 40]})
+    assert response.status_code == 422
+    detail = response.json()["detail"]
+    assert "3" in detail and "2" in detail
+    scan = client.get(f"/api/eis/scans/{sha}").json()
+    assert [p["temperature_c"] for p in scan["points"]] == [None] * 3
+
+
+def test_absolute_zero_and_silly_temperatures_are_refused(client):
+    sha = upload_mpt_scan(client, [9.69, 14.56, 34.66])
+    for bad in ([-300, 40, 20], [60, 40, 5000]):
+        assert client.put(f"/api/eis/scans/{sha}/temperature",
+                          json={"temperature_c": bad}).status_code == 422, bad
+
+
+def test_a_typed_resistance_beats_the_fit(client):
+    """랩은 ZView 에서 절편을 눈으로 읽는다.  그 판단이 이겨야 한다."""
+    sha = upload_mpt_scan(client, [9.69, 14.56, 34.66])
+    client.post(f"/api/eis/scans/{sha}/fit", params={"circuit": "R0-p(R1,CPE1)"})
+
+    before = client.get(f"/api/eis/scans/{sha}/conductivity").json()
+    assert [row["resistance_source"] for row in before["rows"]] == ["fit"] * 3
+
+    client.put(f"/api/eis/scans/{sha}/resistance",
+               json={"resistance_ohm": [9.69, 14.56, 34.66]})
+    after = client.get(f"/api/eis/scans/{sha}/conductivity").json()
+    assert [row["resistance_source"] for row in after["rows"]] == ["typed"] * 3
+    assert [row["resistance_ohm"] for row in after["rows"]] == [9.69, 14.56, 34.66]
+
+    # 비우면 맞춤으로 돌아간다 — 손으로 적은 것을 무르는 길이 있어야 한다.
+    client.put(f"/api/eis/scans/{sha}/resistance",
+               json={"resistance_ohm": [None, None, None]})
+    back = client.get(f"/api/eis/scans/{sha}/conductivity").json()
+    assert [row["resistance_source"] for row in back["rows"]] == ["fit"] * 3
+
+
+def test_a_resistance_that_is_not_a_resistance_is_refused(client):
+    sha = upload_mpt_scan(client, [9.69, 14.56, 34.66])
+    for bad in ([0, 1, 2], [-5, 1, 2]):
+        assert client.put(f"/api/eis/scans/{sha}/resistance",
+                          json={"resistance_ohm": bad}).status_code == 422, bad
+
+
+def test_the_whole_table_and_the_activation_energy_come_back(client):
+    """슬라이드의 표 하나를 통째로 -- 이 기능이 있는 이유다."""
+    resistances = [9.69, 10.21, 14.56, 22.0, 34.66, 55.88, 94.3, 171.0, 300.0]
+    sha = upload_mpt_scan(client, resistances)
+    client.put(f"/api/eis/scans/{sha}/temperature",
+               json={"temperature_c": [60, 50, 40, 30, 20, 10, 0, -10, -20]})
+    client.put(f"/api/eis/scans/{sha}/resistance",
+               json={"resistance_ohm": resistances})
+    # 두께·면적은 스윕 자신의 것 — 1번에 적으면 나머지로 퍼진다.
+    for row in client.get("/api/eis/spectra").json():
+        client.patch(f"/api/eis/spectra/{row['id']}",
+                     json={"thickness_um": 790.0, "area_cm2": 0.8501})
+
+    out = client.get(f"/api/eis/scans/{sha}/conductivity").json()
+    assert out["sweeps"] == 9
+    assert out["missing"] == []
+    # 슬라이드의 이온전도도 열.  면적(0.8501 cm²)은 그 표의 세 열에서 되짚은
+    # 값이라 마지막 자리에서 어긋난다 -- 그 정도는 반올림이고, 0.01 을 넘으면
+    # 식이 다른 것이다.
+    assert [row["sigma_ms_cm"] for row in out["rows"]] == pytest.approx(
+        [9.59, 9.10, 6.38, 4.22, 2.68, 1.66, 0.98, 0.54, 0.31], abs=0.01)
+
+    activation = out["activation"]
+    assert activation["basis"] == "sigma"
+    assert activation["points_used"] == 9
+    # 슬라이드의 0.328 eV.  우리 σ 는 되짚은 면적에서 나온 수라 마지막 자리가
+    # 다르고, 그 차이가 0.001 eV 다.
+    assert activation["activation_energy_ev"] == pytest.approx(0.328, abs=2e-3)
+    # Origin 의 보고서가 그대로 따라와야 한다 — 그 표를 만들려고 Origin 을
+    # 다시 열지 않아도 되는 것이 요점이다.
+    assert activation["fit"]["r_squared"] == pytest.approx(0.99318, abs=1e-4)
+    assert activation["fit"]["dof"] == 7
+    assert len(activation["inverse_temperature"]) == 9
+
+
+def test_what_is_still_missing_is_named_rather_than_guessed(client):
+    sha = upload_mpt_scan(client, [9.69, 14.56, 34.66])
+    out = client.get(f"/api/eis/scans/{sha}/conductivity").json()
+    assert "온도" in out["missing"]
+    assert "두께" in out["missing"]
+    assert out["activation"]["activation_energy_ev"] is None
+    assert "둘 이상" in out["activation"]["reason"]
+
+
+def test_the_crossing_is_offered_but_never_filled_in(client):
+    """제안은 보이되 저항 칸을 채우지 않는다 (ADR 0039).
+
+    실측에서 교점으로 읽으면 0.290 eV, 랩이 읽으면 0.328 eV 였다.  어디서
+    읽을지가 답을 바꾸므로 기계가 고르지 않는다.
+    """
+    sha = upload_mpt_scan(client, [9.69, 14.56, 34.66])
+    out = client.get(f"/api/eis/scans/{sha}/conductivity").json()
+    for row in out["rows"]:
+        assert row["crossing_ohm"] is not None
+        assert row["resistance_ohm"] is None
+        assert row["resistance_source"] == ""
+
+
+def test_an_unknown_basis_is_refused(client):
+    sha = upload_mpt_scan(client, [9.69, 14.56])
+    assert client.get(f"/api/eis/scans/{sha}/conductivity",
+                      params={"basis": "whatever"}).status_code == 422
+
+
+def test_an_unknown_scan_says_so_for_every_conductivity_route(client):
+    assert client.get("/api/eis/scans/nosuch/conductivity").status_code == 404
+    assert client.put("/api/eis/scans/nosuch/temperature",
+                      json={"temperature_c": [20]}).status_code == 404
+    assert client.put("/api/eis/scans/nosuch/resistance",
+                      json={"resistance_ohm": [20]}).status_code == 404

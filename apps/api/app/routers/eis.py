@@ -36,6 +36,12 @@ from wrdkit.eis import (
 )
 from wrdkit.eis.biologic import read_mpr_sweeps, read_mpt_sweeps
 from wrdkit.eis.circuit import CircuitError, parse_circuit
+from wrdkit.eis.conductivity import (
+    ACTIVATION_BASES,
+    activation_energy,
+    conductivity_ms_cm,
+    real_axis_crossing,
+)
 from wrdkit.eis.derive import CONFIGS, FULL, HALF, SYMMETRIC
 
 from .. import storage
@@ -43,17 +49,24 @@ from ..db import get_session
 from ..deps import circle_cm2, order_by_date_anchor, resolve_conditions
 from ..models import ExperimentGroup, Sample, SpectrumFit, SpectrumRecord
 from ..schemas import (
+    ActivationEnergyOut,
+    ConductivityRowOut,
     DrtOut,
     DrtPeakOut,
     DrtSweepOut,
     EisDashboardOut,
     EisDashboardRow,
+    LinearFitOut,
     RefitAllOut,
+    ScanConductivityOut,
     ScanDeleteOut,
     ScanOut,
     ScanPointOut,
+    ScanResistanceIn,
     ScanSocIn,
     ScanSocOut,
+    ScanTemperatureIn,
+    ScanValuesOut,
     SpectrumDetailOut,
     SpectrumFitOut,
     SpectrumOut,
@@ -758,6 +771,8 @@ def _scan_point(session: Session, record: SpectrumRecord) -> ScanPointOut:
         capacity_mah=record.capacity_mah,
         potential_v=record.potential_v,
         soc_percent=record.soc_percent,
+        temperature_c=record.temperature_c,
+        resistance_ohm=record.resistance_ohm,
         n_points=record.n_points,
         frequency_start_hz=record.frequency_start_hz,
         frequency_end_hz=record.frequency_end_hz,
@@ -1075,6 +1090,196 @@ def write_scan_soc(sha256: str, payload: ScanSocIn,
     session.commit()
     return ScanSocOut(sweeps=len(records), filled=filled,
                       cleared=len(records) - filled)
+
+
+@router.put("/scans/{sha256}/temperature", response_model=ScanValuesOut)
+def write_scan_temperature(sha256: str, payload: ScanTemperatureIn,
+                           session: Session = Depends(get_session)):
+    """이 스캔의 온도를 스윕 차례대로 적는다 (ADR 0039).
+
+    SOC 와 같은 규칙이다 (`write_scan_soc` 를 보라): **개수가 스윕 수와 다르면
+    아무것도 쓰지 않는다.**  앞에서부터 채우면 한 칸 밀린 온도축이 생기는데,
+    Arrhenius 직선은 그래도 그럴듯하게 그려지고 활성화에너지만 조용히 틀린다.
+
+    범위는 액체질소(-196 °C)부터 1000 °C 까지만 본다.  이 칸에 들어올 수 있는
+    잘못은 대부분 단위 착각(켈빈을 그대로 적는 것)인데, 298 을 °C 로 읽으면
+    1000 을 넘지 않아 이 문턱으로는 못 잡는다 -- 그래서 **화면이 되읽어 주는
+    것**이 진짜 방어선이고, 여기 문턱은 오타를 막는 정도다.
+    """
+    records = _scan_records(session, sha256)
+    if not records:
+        raise HTTPException(404, f"스캔 {sha256[:12]} 을 찾을 수 없습니다")
+
+    values = payload.temperature_c
+    if len(values) != len(records):
+        raise HTTPException(
+            422,
+            f"스윕이 {len(records)}개인데 {len(values)}개를 받았습니다 — "
+            f"수가 같아야 어느 스윕의 온도인지 정해집니다")
+    for index, value in enumerate(values, start=1):
+        if value is None:
+            continue
+        if not math.isfinite(value) or not -273.15 < value <= 1000:
+            raise HTTPException(
+                422, f"{index}번째 값이 온도로 읽히지 않습니다: {value}")
+    return _write_scan_column(session, records, "temperature_c", values)
+
+
+@router.put("/scans/{sha256}/resistance", response_model=ScanValuesOut)
+def write_scan_resistance(sha256: str, payload: ScanResistanceIn,
+                          session: Session = Depends(get_session)):
+    """스윕마다 눈으로 읽은 전해질 저항 (Ω).  적으면 맞춤보다 이것이 이긴다.
+
+    0 이나 음수는 저항이 아니다.  `null` 로 비우면 맞춤의 총저항으로 돌아간다
+    -- 손으로 적은 것을 무르는 길이 있어야 한다 (§0.4).
+    """
+    records = _scan_records(session, sha256)
+    if not records:
+        raise HTTPException(404, f"스캔 {sha256[:12]} 을 찾을 수 없습니다")
+
+    values = payload.resistance_ohm
+    if len(values) != len(records):
+        raise HTTPException(
+            422,
+            f"스윕이 {len(records)}개인데 {len(values)}개를 받았습니다 — "
+            f"수가 같아야 어느 스윕의 저항인지 정해집니다")
+    for index, value in enumerate(values, start=1):
+        if value is None:
+            continue
+        if not math.isfinite(value) or value <= 0:
+            raise HTTPException(
+                422, f"{index}번째 값이 저항이 아닙니다: {value}")
+    return _write_scan_column(session, records, "resistance_ohm", values)
+
+
+def _write_scan_column(session: Session, records: list[SpectrumRecord],
+                       field: str, values: list[float | None]) -> ScanValuesOut:
+    """검사를 마친 값들을 스윕 차례대로 쓴다.  거절은 여기 오기 전에 끝난다."""
+    filled = 0
+    for record, value in zip(records, values, strict=True):
+        setattr(record, field, value)
+        session.add(record)
+        if value is not None:
+            filled += 1
+    session.commit()
+    return ScanValuesOut(sweeps=len(records), filled=filled,
+                         cleared=len(records) - filled)
+
+
+@router.get("/scans/{sha256}/conductivity", response_model=ScanConductivityOut)
+def scan_conductivity(sha256: str, basis: str = Query("sigma"),
+                      session: Session = Depends(get_session)):
+    """온도별 이온전도도 표와, 그 점들이 그리는 활성화에너지 (ADR 0039).
+
+    저항은 두 곳에서 올 수 있고 **사람이 적은 것이 이긴다**: 블로킹 대칭셀의
+    반원은 닫히기 전에 꼬리가 올라오는 일이 잦아, 랩은 ZView 에서 절편을 눈으로
+    읽는다.  어느 쪽에서 온 수인지 줄마다 함께 낸다 (`resistance_source`) --
+    한 열에 섞인 채로 표가 슬라이드에 붙으면 그 구분은 영영 사라진다.
+
+    두께·면적은 스윕 자신의 것을 쓰고, 비어 있으면 붙은 셀의 것을 쓴다
+    (`_geometry` 의 규칙 그대로).  EC-Lab 이 `.mpt` 머리말에 적어 둔
+    ``Electrode surface area`` 는 **쓰지 않는다**: 아무도 안 고친 기본값
+    0.001 cm² 이고, 그 면적으로 계산된 전도도 열이 파일 안에 이미 들어 있다.
+    """
+    if basis not in ACTIVATION_BASES:
+        raise HTTPException(
+            422, f"기준은 {' 또는 '.join(ACTIVATION_BASES)} 여야 합니다: {basis}")
+    records = _scan_records(session, sha256)
+    if not records:
+        raise HTTPException(404, f"스캔 {sha256[:12]} 을 찾을 수 없습니다")
+
+    rows: list[ConductivityRowOut] = []
+    for record in records:
+        thickness_cm, area_cm2 = _geometry(session, record)
+        thickness_mm = thickness_cm * 10.0 if thickness_cm else None
+        resistance, source = _sweep_resistance(session, record)
+        rows.append(ConductivityRowOut(
+            spectrum_id=record.id or 0,
+            sweep_index=record.sweep_index,
+            name=record.name or record.original_name,
+            temperature_c=record.temperature_c,
+            thickness_mm=thickness_mm,
+            area_cm2=area_cm2,
+            resistance_ohm=resistance,
+            resistance_source=source,
+            crossing_ohm=_crossing_of(record),
+            sigma_ms_cm=conductivity_ms_cm(resistance, thickness_mm=thickness_mm,
+                                           area_cm2=area_cm2),
+        ))
+
+    result = activation_energy([row.temperature_c for row in rows],
+                               [row.sigma_ms_cm for row in rows], basis=basis)
+    missing = [name for name, absent in (
+        ("온도", all(row.temperature_c is None for row in rows)),
+        ("두께", all(row.thickness_mm is None for row in rows)),
+        ("면적", all(row.area_cm2 is None for row in rows)),
+        ("저항", all(row.resistance_ohm is None for row in rows)),
+    ) if absent]
+
+    head = records[0]
+    return ScanConductivityOut(
+        sha256=sha256, name=head.name or head.original_name,
+        sweeps=len(records), rows=rows, missing=missing,
+        activation=_activation_out(result),
+    )
+
+
+def _crossing_of(record: SpectrumRecord) -> float | None:
+    """이 스윕의 실수축 교점 — **제안**이다 (`real_axis_crossing` 의 설명).
+
+    점을 못 읽는 것은 여기서 화면을 멈출 이유가 아니다: 교점은 곁들임이고,
+    없으면 칸이 비는 것으로 충분하다.
+    """
+    try:
+        spectrum = _load_points(record)
+    except HTTPException:
+        return None
+    return real_axis_crossing(spectrum.frequency_hz, spectrum.z_re, spectrum.z_im)
+
+
+def _sweep_resistance(session: Session,
+                      record: SpectrumRecord) -> tuple[float | None, str]:
+    """이 스윕의 전해질 저항과 그것이 어디서 왔는지.
+
+    적어 넣은 값이 이긴다.  없으면 가장 잘 맞은 맞춤의 **총저항** -- 직렬
+    저항만 쓰면 배선과 접촉만 세게 되고, 전해질의 벌크·입계가 통째로 빠진다.
+    """
+    if record.resistance_ohm is not None and record.resistance_ohm > 0:
+        return record.resistance_ohm, "typed"
+    point = _scan_point(session, record)
+    if point.total_resistance_ohm is not None and point.total_resistance_ohm > 0:
+        return point.total_resistance_ohm, "fit"
+    return None, ""
+
+
+def _activation_out(result) -> ActivationEnergyOut:
+    """`wrdkit` 의 결과를 화면이 쓰는 모양으로.
+
+    직선을 그리는 두 열까지 함께 보낸다.  화면이 ln 과 1000/T 를 다시 계산하면
+    계산이 두 군데가 되고, 두 군데가 있으면 언젠가 갈라진다.
+    """
+    fit = None
+    inverse: list[float] = []
+    logs: list[float] = []
+    if result.fit is not None:
+        source = result.fit
+        fit = LinearFitOut(
+            slope=source.slope, intercept=source.intercept,
+            slope_stderr=source.slope_stderr,
+            intercept_stderr=source.intercept_stderr,
+            n_points=source.n_points, dof=source.dof, rss=source.rss,
+            pearson_r=source.pearson_r, r_squared=source.r_squared,
+            adj_r_squared=source.adj_r_squared,
+            slope_t=source.slope_t, slope_p=source.slope_p,
+            intercept_t=source.intercept_t, intercept_p=source.intercept_p,
+            f_value=source.f_value, f_p=source.f_p)
+        inverse = [float(x) for x in result.x]
+        logs = [float(y) for y in result.y]
+    return ActivationEnergyOut(
+        activation_energy_ev=result.activation_energy_ev,
+        stderr_ev=result.stderr_ev, basis=result.basis,
+        points_used=result.points_used, reason=result.reason,
+        fit=fit, inverse_temperature=inverse, log_sigma=logs)
 
 
 @router.get("/scans/{sha256}/points", response_model=list[SpectrumPointsOut])

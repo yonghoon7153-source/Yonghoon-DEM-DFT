@@ -11,7 +11,7 @@ import pytest
 import synthetic_eis as S
 
 from wrdkit.eis import UnknownColumn, read_mpr_bytes, read_mps_text, read_mpt_text
-from wrdkit.eis.biologic import read_mpr_sweeps
+from wrdkit.eis.biologic import read_mpr_sweeps, read_mpt_sweeps
 
 
 @pytest.fixture
@@ -394,3 +394,57 @@ def test_a_real_scan_walks_its_capacity_axis(sample_mpr_scan):
     assert max(capacities) - min(capacities) > 0.1
     potentials = [sw.potential_v for sw in sample_mpr_scan]
     assert all(p is not None and np.isfinite(p) for p in potentials)
+
+
+# --- 온도 스윕 .mpt (대칭셀 이온전도도) --------------------------------------
+
+def test_a_temperature_scan_mpt_splits_into_one_sweep_per_temperature():
+    """온도를 아홉 번 바꾼 `.mpt` 는 스윕 아홉 개여야 한다.
+
+    SOC 스캔과 같은 모양이라 읽는 쪽은 그대로 쓴다 (ADR 0022) -- 다른 것은
+    스윕을 무엇으로 부르느냐뿐이고, 그것은 파일이 아니라 사람이 정한다.
+    """
+    resistances = [9.69, 10.21, 14.56, 22.0, 34.66, 55.88, 94.3, 171.0, 300.0]
+    text = S.build_mpt_temperature_scan(resistances=resistances)
+    sweeps = read_mpt_sweeps(text)
+
+    assert len(sweeps) == len(resistances)
+    for sweep, resistance in zip(sweeps, resistances, strict=True):
+        spectrum = sweep.spectrum
+        # 7 MHz 에서 10 Hz 로 **내려간다** -- 실측 파일의 PEIS 설정이다.
+        assert spectrum.frequency_hz[0] > spectrum.frequency_hz[-1]
+        assert spectrum.frequency_hz[0] == pytest.approx(7e6, rel=1e-9)
+        # 반원이 닫힌 저주파 끝이 곧 전해질 저항이다.
+        assert spectrum.z_re[-1] == pytest.approx(resistance, rel=1e-3)
+
+
+def test_both_export_shapes_give_the_same_sweeps():
+    """휴지 행을 함께 내보낸 파일과 PEIS 행만 낸 파일이 같아야 한다.
+
+    EC-Lab 은 내보내기 설정에 따라 둘 중 하나를 낸다.  스윕을 가르는 근거가
+    서로 다른데(주파수 0 인 행 / 주파수가 되짚는 자리) 결과가 갈리면, 같은
+    측정이 내보내기 설정에 따라 다른 활성화에너지를 내게 된다.
+    """
+    resistances = [9.69, 14.56, 34.66, 94.3]
+    with_rests = read_mpt_sweeps(
+        S.build_mpt_temperature_scan(resistances=resistances))
+    without = read_mpt_sweeps(
+        S.build_mpt_temperature_scan(resistances=resistances,
+                                     with_rest_rows=False))
+    assert len(with_rests) == len(without) == len(resistances)
+    for left, right in zip(with_rests, without, strict=True):
+        assert left.spectrum.z_re == pytest.approx(right.spectrum.z_re)
+        assert left.spectrum.frequency_hz == pytest.approx(right.spectrum.frequency_hz)
+
+
+def test_the_file_says_nothing_about_temperature():
+    """이 시험이 ADR 의 근거다 -- 온도가 파일 안에 있으면 사람이 안 적어도 된다.
+
+    실측 `.mpt` 의 열 이름 어디에도 온도가 없다.  머리말의 `Electrode surface
+    area : 0.001 cm2` 처럼 **있지만 못 믿을** 값도 아니고, 아예 없다.
+    """
+    text = S.build_mpt_temperature_scan()
+    sweeps = read_mpt_sweeps(text)
+    for sweep in sweeps:
+        names = " ".join(sweep.spectrum.columns).lower()
+        assert "temp" not in names and "°c" not in names
