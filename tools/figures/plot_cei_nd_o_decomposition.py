@@ -735,3 +735,81 @@ comp1 2.066 vs 재계산 2.0656 (같은 방법) · Nd₂O₃ 우리 3.9479 vs MP
 """)
 (OUT / "sections_new.html").write_text("\n".join(sec), encoding="utf-8")
 print("  sections_new.html (§5 포함)", (OUT / "sections_new.html").stat().st_size, "B")
+
+# ══ Fig 6 — 3가 도펀트 7종 x-스캔 (2026-09-16) ═══════════════════════════════
+#   ⚠ 이 그림의 요점은 **곡선이 아니라 표식**이다. 곡선끼리는 M 간 폭이 0.008 eV/atom
+#     (사전 봉인 ±0.010 미만)이라 눈으로 구분되지 않는다. 갈리는 것은 **어느 kink 에서
+#     M-인산염이 나오느냐**다. 곡선을 겹쳐 그려 "차이가 없다" 를 보이고, 표식으로
+#     "그런데 산물은 다르다" 를 보인다.
+import glob as _glob, os as _os
+_DF = sorted(_glob.glob("db/properties/dopant_iface_*_2026_09_16.json"))
+if _DF:
+    _MS = [_os.path.basename(f).split("_")[2] for f in _DF]
+    _D = {m: json.load(open(f))["results"] for m, f in zip(_MS, _DF)}
+    _ORDER = [m for m in ("Al", "Sc", "Y", "La", "Ce", "Gd", "Nd") if m in _D]
+    _CAT = "NMC811" if "NMC811" in _D[_ORDER[0]] else list(_D[_ORDER[0]])[0]
+    _VS = ["2.50", "3.50", "4.30", "4.50"]
+    _RAMP = ["#fcd34d", "#f59e0b", "#c2410c", "#7f1d1d"]
+
+    def _els(f):
+        return set(re.findall(r"[A-Z][a-z]?", f))
+
+    def _plist(r):
+        return [re.sub(r"^[0-9.eE+-]+\s+", "", t.strip())
+                for t in r.split("->", 1)[1].split("+") if t.strip()]
+
+    fig, axs = plt.subplots(2, 4, figsize=(15.0, 7.2), sharex=True, sharey=True)
+    for ax, m in zip(axs.ravel(), _ORDER + ["base"]):
+        key = m
+        for V, col in zip(_VS, _RAMP):
+            row = _D[_ORDER[0] if m == "base" else m][_CAT]["kinks"][V]
+            ks = sorted(row.get(key) or [], key=lambda k: k["x_atomic_frac"])
+            if not ks:
+                continue
+            x = [k["x_atomic_frac"] for k in ks]
+            y = [k["reaction_energy_eV_per_atom"] for k in ks]
+            ax.plot(x, y, lw=1.6, color=col, label=f"{float(V):g} V", zorder=2)
+            if m != "base":
+                sx = [k["x_atomic_frac"] for k in ks
+                      if any({m, "P", "O"} <= _els(p) for p in _plist(k["reaction"]))]
+                sy = [k["reaction_energy_eV_per_atom"] for k in ks
+                      if any({m, "P", "O"} <= _els(p) for p in _plist(k["reaction"]))]
+                if sx:
+                    ax.plot(sx, sy, ls="none", marker="o", ms=3.4, mfc="none",
+                            mec=ND, mew=1.1, zorder=4)
+        apply_axes(ax, None, None)
+        ax.axhline(0, color=MUT, lw=0.8, ls="--")
+        ax.set_title("undoped (base)" if m == "base" else f"{m} only",
+                     fontsize=10, color=(MUT if m == "base" else INK))
+    for ax in axs[1]:
+        ax.set_xlabel("$x$  (atomic fraction of electrolyte)", fontsize=10, color=INK)
+    for ax in axs[:, 0]:
+        ax.set_ylabel("Reaction energy (eV/atom)", fontsize=10, color=INK)
+    axs[0, 0].legend(frameon=False, fontsize=8, ncol=2, title="vs Li/Li$^+$",
+                     title_fontsize=8, loc="lower left")
+    # 표식 범례는 **표식이 하나도 없는 패널**(undoped)에 둔다 — 거기가 비어 있기도 하고,
+    # "0 개인 패널" 옆에 범례가 있는 편이 대비가 읽힌다.
+    _h, = axs[1, 3].plot([], [], ls="none", marker="o", ms=4, mfc="none", mec=ND,
+                         mew=1.1, label="kink forms an M-phosphate")
+    axs[1, 3].legend(handles=[_h], frameon=False, fontsize=8, loc="upper right")
+    fig.suptitle(f"Trivalent dopants across the mixing range  (cathode {_CAT}) — "
+                 f"the curves overlap; the products do not",
+                 fontsize=11, color=INK, y=0.995)
+    fig.tight_layout()
+    fig.savefig(OUT / "cei_dopant_x_scan.png", dpi=300)
+    plt.close(fig)
+
+    with open(OUT / "cei_dopant_x_scan.csv", "w", newline="") as f:
+        w7 = csv.writer(f)
+        w7.writerow(["cathode", "dopant", "voltage_V", "x_atomic_frac",
+                     "reaction_energy_eV_per_atom", "forms_M_phosphate", "reaction"])
+        for m in _ORDER:
+            for c in _D[m]:
+                for V in _VS:
+                    for k in sorted(_D[m][c]["kinks"][V].get(m) or [],
+                                    key=lambda k: k["x_atomic_frac"]):
+                        hit = any({m, "P", "O"} <= _els(p) for p in _plist(k["reaction"]))
+                        w7.writerow([c, m, V, k["x_atomic_frac"],
+                                     k["reaction_energy_eV_per_atom"], int(hit),
+                                     k["reaction"]])
+    print("  cei_dopant_x_scan.png / .csv")

@@ -620,6 +620,44 @@ n = 7 의 전 순열 5,040 개로 정확 임계값을 구하면 <b>|ρ| ≥ 0.75
 개정문 <code>trivalent_dopant_screen_amendment_C_gate_2026_09_16</code> (proposed).</p>
 </div>
 
+<figure>
+<img src="cei_dopant_x_scan.png" alt="Eight panels of interfacial reaction energy versus electrolyte mixing fraction for seven trivalent dopants and the undoped baseline. The curves overlap almost exactly across dopants, while the density of markers indicating M-phosphate-forming kinks differs strongly.">
+<figcaption><b>Fig. 6. Trivalent dopants across the full mixing range</b> (cathode
+LiNi<sub>0.8</sub>Co<sub>0.1</sub>Mn<sub>0.1</sub>O<sub>2</sub>). One panel per substituted
+composition Li<sub>4.8</sub>M<sub>0.2</sub>PS<sub>4.4</sub>Cl<sub>1.6</sub>, plus the undoped
+baseline; the four curves in each panel are the applied voltages (light yellow 2.5&#8201;V to dark
+red 4.5&#8201;V). Open circles mark kinks whose product set contains an M-phosphate. The curves are
+indistinguishable between dopants — the spread at any (x, V) is below the pre-registered
+&#177;0.010&#8201;eV/atom band — whereas the fraction of M-phosphate-forming kinks ranges from
+37.8&#8201;% (La) to 86.3&#8201;% (Gd).</figcaption>
+</figure>
+
+<div class="figexp">
+<div class="figexp-h">Fig. 6 을 읽는 법</div>
+<p><b>곡선을 비교하지 말라.</b> 여덟 패널의 곡선이 겹쳐 보이는 것은 그림이 거칠어서가 아니라
+<b>실제로 같아서</b>다 — 도펀트를 바꿔도 반응에너지가 0.008 eV/atom 안에서만 움직인다.
+이 그림에서 곡선은 <b>배경</b>이다.</p>
+<p><b>봐야 할 것은 보라색 동그라미의 밀도</b>다. 같은 자리에서 <b>어떤 물질이 나오느냐</b>가
+도펀트마다 다르다. 오른쪽 아래 <b>무도핑 패널에는 동그라미가 하나도 없다</b> —
+M 이 없으니 M-인산염도 없다. 그 대비가 이 그림의 전부다.</p>
+<div class="tblwrap"><table>
+<thead><tr><th>M</th><th>M-인산염 kink</th></tr></thead>
+<tbody>
+<tr><td>Gd</td><td>176/204 = 86.3 %</td></tr>
+<tr style="font-weight:600"><td>Nd ★</td><td>159/200 = 79.5 %</td></tr>
+<tr><td>Y</td><td>130/209 = 62.2 %</td></tr>
+<tr><td>Al</td><td>136/229 = 59.4 %</td></tr>
+<tr><td>Sc</td><td>86/205 = 42.0 %</td></tr>
+<tr><td>Ce</td><td>84/207 = 40.6 %</td></tr>
+<tr><td>La</td><td>73/193 = 37.8 %</td></tr>
+<tr style="color:var(--mut)"><td>무도핑</td><td>0 %</td></tr>
+</tbody></table></div>
+<p>⚠ <b>분모가 M 마다 다르다</b>(193–229). M 이 바뀌면 hull 이 바뀌어 kink 개수도 바뀐다.
+같은 규약으로 센 것이라 비교는 서지만, <b>절대 개수는 뜻이 없다.</b></p>
+<p>⚠ <b>이 비율은 사전등록된 지표가 아니다.</b> 결과를 보고 정의했다 —
+판정이 아니라 <b>관찰</b>로만 쓴다.</p>
+</div>
+
 <div class="figexp">
 <div class="figexp-h">이 표를 어떻게 읽나 — 그리고 어떻게 읽으면 안 되나</div>
 <p><b>계면 Δ 열의 순위는 무시하라.</b> M 간 전체 폭이 0.008 eV/atom 인데, 이 캠페인이
@@ -669,6 +707,7 @@ O:P 비가 다른 상을 뭉개는 <strong>순위 힌트</strong>다.</li>
 <span>cei_li_budget_ladder.png / .csv</span>
 <span>cei_formation_energies.csv</span>
 <span>cei_x_scan_panels.png / .csv</span>
+<span>cei_dopant_x_scan.png / .csv</span>
 </div>
 <p style="color:var(--mut);font-size:.87rem">CSV 는 Origin 바로 넣을 수 있게 열 이름을 명시했다.
 그림은 house style (INK #1f2937 · MUT #6b7280 · dpi 300 · top/right spine 제거).
