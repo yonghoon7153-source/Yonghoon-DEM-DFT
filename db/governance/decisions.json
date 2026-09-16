@@ -2385,6 +2385,63 @@
     "decision_digest": "sha256:965b96422b1254b7780b67d8423689445fad368a0ab0c31d98d34fdcfa1a157d",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-16-cathode-cei-gap-target",
+   "kind": "estimand",
+   "decision_state": "active",
+   "results_seen": false,
+   "record_kind": "amendment",
+   "title": "§C(분해산물 갭) 대상 규칙 — 판별종 10 종(신규 9), 전이금속 상 제외",
+   "statement": "전 kink 재실행으로 §B 산물 집합이 36 → 97 종이 됐다. §C 대상을 **판별종 ∧ 전이금속 비포함 = 10 종**으로 정한다. 판별종 = 한쪽 계(Nd 계 {nd_only, modelc_nd} 또는 무Nd 계 {comp1, modelc, lpsocl, o_only_03})에서만 나오는 상. ⛔ 79 종 제외 근거는 **예산이 아니라 판별력**이다 — 도핑 여부와 무관하게 양쪽에 나와 이 질문에 기여하지 않는다. ⛔ 전이금속 판별종 8 종 제외 근거는 ① PBE 가 모트 절연체 갭을 못 낸다 ② 자기 배열이 여럿인데 선택·집계 규칙이 없어 **스칼라 보고량이 정의되지 않는다**(본 카드 §3 판정 기준). 이건 해결이 아니라 회피이고 그렇게 적었다. 보고량은 **상별 갭 표**다 — 'CEI 갭' 같은 스칼라 하나로 뭉치지 않는다. fixed-occ nscf VBM/CBM 만 정본, Nd 는 frozen-4f. ⛔ 갭으로 부동태 결론을 내지 않는다(연속성·두께·Li+ 전도가 이 계산에 없다).",
+   "reopen_criteria": [
+    "§B 의 hull 이 바뀌면(MP 엔트리 수가 321 에서 달라지면) 판별종 목록을 다시 센다",
+    "전해질 조성이 추가되면 판별 기준이 달라지므로 다시 센다",
+    "'CEI 전체의 절연성' 을 주장하려면 전이금속 보고량 카드가 먼저다",
+    "⛔ '상을 하나 더 봤다' 는 재개 사유가 아니다 — 결과를 보고 종을 추가하면 개정문 무효",
+    "G1 문턱 0.30 eV 를 결과를 보고 바꾸면 무효 · G2 통계량(최소 갭)을 사후에 바꾸면 무효"
+   ],
+   "card": "db/properties/cathode_cei_gap_target_amendment_2026_09_16.json",
+   "amends": "D-2026-09-16-cathode-cei-decomposition",
+   "ratified_at": "2026-09-16",
+   "ratified_by": "1저자",
+   "note": "1저자 \"판별종 10 종으로 가자\" — 결과 보기 전 비준. Nd2O3 는 2026-08-12 에 이미 3.9479 eV 로 마감돼 신규는 9 종.",
+   "record": "db/properties/cei_interface_V_2026_09_16.json",
+   "supersedes": [],
+   "enforcement": "① §C 큐에 **판별종 10 종 밖의 상**을 넣으면 무효다 (결과를 보고 종을 추가하는 경로를 닫는다). ② 전이금속 함유 상은 이 개정문으로도 **여전히 막혀 있다** — +U 로 되살리려면 U 선택 근거가 먼저고 별도 결정이다. ③ 갭은 **fixed-occ nscf VBM/CBM 만** 정본이고 DOS-threshold 판독은 금지다. Nd 는 frozen-4f 로만 판정한다. ④ 산출물은 **상별 표**다 — 'CEI 갭' 같은 스칼라를 만들면 무효다. ⑤ 비용은 **NdPO4 파일럿 1 종 완주 뒤**에만 말한다 (벽시계 추정을 여러 번 크게 틀린 이력). ⑥ mp-id 미확정 3 건(Nd2(SO4)3 · Nd3PO7 · NdPS4)은 구조를 받는 즉시 카드에 mp-id 를 박는다 — 구조 출처 없는 갭은 재현이 안 된다.",
+   "applies_to": {
+    "systems": [
+     "comp1",
+     "modelc",
+     "lpsocl",
+     "modelc_nd_doped"
+    ]
+   },
+   "slot": "cathode_cei_gap_target",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-16",
+     "state": "proposed",
+     "by": "agent",
+     "note": "전 kink 재실행으로 산물 집합이 36→97 이 됐다. 36 도 97 도 선언된 적 없는 선택이라 갭을 한 줄도 돌리기 전에 대상 규칙을 박는다. 문턱 G1–G5 를 결과 보기 전에 정했다."
+    },
+    {
+     "at": "2026-09-16",
+     "state": "active",
+     "note": "1저자 비준 — \"판별종 10 종으로 가자\". 결과 보기 전."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-16T11:05:00Z",
+    "commit": "58da24595f10e4405b5e00932b0762d98fa4f3c1",
+    "card_content_digest": "c1c31b989b62abbbb0b44dea878713545d244fe81eb43837d351cfee01a0ab61",
+    "⛔_무엇에_대한_비준인가": "카드 지문(ratification 제외 sha256)이 앵커다. 카드가 바뀌면 지문이 달라지고 재승인을 요구한다.",
+    "decision_digest": "sha256:cf8c945514b541bac74437f74a5f96eaa1b97b92f44c7233b740318de39b231d"
+   }
   }
  ]
 }

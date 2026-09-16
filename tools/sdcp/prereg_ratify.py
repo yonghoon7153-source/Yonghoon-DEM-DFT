@@ -50,6 +50,15 @@ def content_digest(doc: dict) -> str:
 
 
 def decision_digest(d: dict) -> str:
+    """⚠ **접두 `sha256:` 를 안 붙인다** — 게이트가 읽는 형식과 다르다.
+
+    `webapp/canonical.py::decision_digest` 는 같은 본문을 재고 **`"sha256:" + hex`** 를
+    낸다. `validate_canonical.py` 가 결속을 검사할 때 쓰는 건 그쪽이다. 여기 호출부
+    (아래 `"sha256:" + decision_digest(tgt)`)가 손으로 접두를 붙여 맞추고 있어서
+    지금은 안 깨지지만, **접두를 안 붙이고 이 함수를 쓰면 게이트가 "승인 이후에
+    내용이 바뀌었다" 로 거절한다** (2026-09-16 실측 — 새 결정을 등록하다 걸렸다).
+    새 호출부는 그냥 `webapp/canonical.py` 쪽을 쓰는 게 안전하다.
+    """
     c = {k: v for k, v in d.items() if k != "ratification"}
     return hashlib.sha256(json.dumps(c, sort_keys=True, ensure_ascii=False)
                           .encode("utf-8")).hexdigest()

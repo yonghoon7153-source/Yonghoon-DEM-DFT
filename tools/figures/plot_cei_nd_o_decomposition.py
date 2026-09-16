@@ -544,3 +544,142 @@ Nd 인산염은 특정 혼합비에서만 나오는 게 아니라 <strong>x 축 
 if sec:
     (OUT / "sections_new.html").write_text("\n".join(sec), encoding="utf-8")
     print("  sections_new.html", (OUT / "sections_new.html").stat().st_size, "B")
+
+# ── §5 (갭 대상 규칙) 절 생성 — 2026-09-16 개정문 비준 후 ────────────────────
+#   ⛔ 종수·전압커버리지를 손으로 치지 않는다. 판별 규칙을 여기서 **다시 계산**해서
+#     카드와 화면이 같은 자료를 보게 한다 (둘이 갈라지면 화면이 이긴다 — 사람은 화면을
+#     인용하니까. CLAUDE.md §화면·claim 결속 규율).
+TM = ("Co", "Ni", "Mn")
+ND_E, NON_E = {"nd_only", "modelc_nd"}, {"comp1", "modelc", "lpsocl", "o_only_03"}
+
+
+def _has_tm(f):
+    return any(el in re.findall(r"[A-Z][a-z]?", f) for el in TM)
+
+
+_seen = {}
+for _c in CATS:
+    for _V, _row in D["results"][_c]["kinks"].items():
+        for _e, _ks in _row.items():
+            for _k in _ks:
+                for _p in prods(_k["reaction"]):
+                    if _p == "Li":
+                        continue
+                    r = _seen.setdefault(_p, {"e": set(), "V": set()})
+                    r["e"].add(_e); r["V"].add(_V)
+
+#: 최소 kink 산물만 셌을 때의 집합 — "36 → 97" 의 앞 숫자를 **여기서 다시 센다**
+#:   (앞 숫자를 손으로 치면 kinks 판이 바뀔 때 화면만 옛 숫자를 계속 말한다).
+_minset = set()
+for _c in CATS:
+    for _V, _row in D["results"][_c]["reactions"].items():
+        for _e, _rx in _row.items():
+            if _rx:
+                _minset |= {p for p in prods(_rx) if p != "Li"}
+
+_all = set(_seen)
+_ndonly = {p for p in _all if _seen[p]["e"] <= ND_E}
+_nononly = {p for p in _all if _seen[p]["e"] <= NON_E}
+_both = _all - _ndonly - _nononly
+_disc = _ndonly | _nononly
+_target = sorted([p for p in _disc if not _has_tm(p)],
+                 key=lambda p: (-len(_seen[p]["V"]), p))
+#: 이미 측정된 상 (sei_electronic.json 의 frozen-4f 정본). 화면이 자체 보관하지 않고 읽는다.
+_ELEC = {}
+try:
+    _ej = json.load(open("db/properties/sei_electronic.json"))["results"]
+    for _k, _v in _ej.items():
+        if _k.endswith("_frozen4f") and (_v or {}).get("gap") is not None:
+            _ELEC[_k.split("_mp-")[0]] = _v["gap"]
+except (OSError, ValueError, KeyError):
+    pass
+
+
+def _norm(s):
+    return re.sub(r"[^a-z0-9]", "", str(s).lower())
+
+
+trows = "\n".join(
+    '<tr><td class="mono">{f}</td><td>{side}</td><td>{v}/6</td><td>{tm}</td></tr>'.format(
+        f=p, side=("Nd 계에만" if p in _ndonly else "무Nd 계에만"),
+        v=len(_seen[p]["V"]),
+        tm=(f'<span class="nd">{_ELEC[_norm(p)]:.4f} eV</span>'
+            if _norm(p) in _ELEC else "—"))
+    for p in _target)
+_done = [p for p in _target if _norm(p) in _ELEC]
+
+sec.append(f"""
+<h2>5. 갭 단계(§C)는 무엇을 재나 — 목록을 먼저 박았다</h2>
+
+<p>§4 가 kink 를 전부 남기면서 <strong>산물 집합이 {len(_minset)} → {len(_all)} 종</strong>이 됐다.
+즉 갭 단계의 대상 목록이 <strong>어제와 다른 자료 위에 서 있다</strong>. 어느 쪽을 쓸지는
+<strong>갭을 한 줄도 돌리기 전에</strong> 정해야 한다.</p>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>구분</th><th>종수</th><th>그중 전이금속</th></tr></thead>
+<tbody>
+<tr><td><strong>양쪽 다 나옴</strong> (도핑 무관)</td><td><strong>{len(_both)}</strong></td><td>{sum(_has_tm(p) for p in _both)}</td></tr>
+<tr><td>Nd 계에만</td><td>{len(_ndonly)}</td><td>{sum(_has_tm(p) for p in _ndonly)}</td></tr>
+<tr><td>무Nd 계에만</td><td>{len(_nononly)}</td><td>{sum(_has_tm(p) for p in _nononly)}</td></tr>
+</tbody></table>
+</div>
+
+<div class="card answer">
+<p style="margin:0"><strong>{len(_all)} 종 중 {len(_both)} 종이 도핑 여부와 무관하게 똑같이 나온다.</strong>
+그 {len(_both)} 종의 갭은 아무리 정확히 재도 <em>"Nd/O 도핑이 부동태에 도움이 되나"</em> 에
+<strong>답을 못 한다</strong> — 양쪽 표에 같은 숫자가 두 번 적힐 뿐이다.</p>
+</div>
+
+<h3>그래서 대상 = 판별종 ∧ 전이금속 비포함 = {len(_target)} 종</h3>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>상</th><th>어느 쪽에만</th><th>전압 커버리지</th><th>이미 측정된 갭</th></tr></thead>
+<tbody>
+{trows}
+</tbody></table>
+</div>
+
+<p>{len(_done)} 종은 이미 있다 (<span class="mono">{', '.join(_done)}</span>, frozen-4f,
+2026-08-12 마감). ⇒ <strong>신규는 {len(_target) - len(_done)} 종</strong>.
+전압 6 구간 전부에 나오는 것은 <strong>{_target[0]}</strong> 하나뿐이라, 그것을
+<strong>파일럿</strong>으로 먼저 완주하고 실측 벽시계로 나머지를 추정한다.</p>
+
+<div class="card warn">
+<p style="margin:0"><strong>⛔ 무엇을 왜 뺐는지는 예산이 아니라 논증이다.</strong></p>
+<ul style="margin:8px 0 0">
+<li><strong>{len(_both)} 종</strong> — <strong>판별력이 없어서</strong> 뺀다. 공짜로 줘도 이 질문엔 못 쓴다.</li>
+<li><strong>전이금속 판별종 {len(_disc) - len(_target)} 종</strong> — ① PBE 가 모트 절연체 갭을 크게
+과소평가한다 (문헌 상식, 우리 측정 아님) ② 자기 배열마다 갭이 달라
+<strong>스칼라 보고량이 정의되지 않는다</strong>. 카드 판정 기준 그대로다 —
+<em>"admissible state 가 여럿인데 선택·집계 규칙이 없으면 스칼라 보고량은 정의되지 않는다."</em></li>
+<li>⚠ 이건 <strong>해결이 아니라 회피</strong>다. 나중에 "CEI 전체가 절연이다" 를 말하고 싶어지면
+이 문제를 다시 마주친다.</li>
+</ul>
+</div>
+
+<h3>결과 보기 전에 박은 문턱</h3>
+<ul>
+<li><strong>G1</strong> — 차이라고 부를 최소폭 <strong>0.30 eV</strong>. 근거는 관측된 재현 폭 둘:
+comp1 2.066 vs 재계산 2.0656 (같은 방법) · Nd₂O₃ 우리 3.9479 vs MP 3.8118 (다른 방법, Δ0.136).
+큰 쪽의 약 2 배. ⚠ 이 계의 잡음에서 유도한 값이 <strong>아니다</strong>.</li>
+<li><strong>G2</strong> — Nd 판별종의 <strong>최소 갭</strong> vs P₂O₅ 갭. 0.30 eV 이상 작으면
+"Nd 는 더 새는 층을 추가한다", 반대면 "Nd 층도 절연", 그 미만이면
+<strong>"구분되지 않는다"</strong> (0 이라고 하지 않는다).</li>
+<li><strong>G3</strong> — 이것이 Nd/O 부동태 카드 §5-c 의 <em>"Nd 가 O 의 이득을 상쇄한다"</em>
+가설에 대한 <strong>갭 축 직접 판정</strong>이다. 구동력 축에서는 §1 이 이미 가법성으로 기각했다.</li>
+<li><strong>G4</strong> — frozen-4f 로 갭이 0 근처면 <strong>metal 로 선언하지 않는다</strong>.
+`undetermined` 로 두고 blocker 를 적는다.</li>
+<li><strong>G5 ⛔</strong> — 갭으로 <strong>부동태 결론을 내지 않는다</strong>. 연속성·두께·Li⁺ 전도가
+이 계산에 없다. §C 는 "이 층이 전자를 막을 성질을 갖는가" 까지만 답한다.</li>
+</ul>
+
+<p style="color:var(--mut);font-size:.87rem">개정문
+<code>cathode_cei_gap_target_amendment_2026_09_16</code> (ratified, 결과 보기 전 봉인) ·
+결정 <code>D-2026-09-16-cathode-cei-gap-target</code> (active).
+위 종수·전압 커버리지는 이 화면이 <strong>원자료에서 다시 계산</strong>한 것이다 —
+카드와 화면이 같은 JSON 을 본다.</p>
+""")
+(OUT / "sections_new.html").write_text("\n".join(sec), encoding="utf-8")
+print("  sections_new.html (§5 포함)", (OUT / "sections_new.html").stat().st_size, "B")
