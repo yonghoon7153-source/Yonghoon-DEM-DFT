@@ -1,0 +1,132 @@
+{
+ "slug": "liu2024_grain-level-chemo-mechanics-composite-cathode-degradation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-16",
+ "sources": [
+  "c0a527c0-03._Role_of_grain-level_chemo-mechanics_in_composite_cathode_degradation_of_solid-state_lithium_batteries.pdf",
+  "43eb361e-03._Sup_Role_of_grain-level_chemo-mechanics_in_composite_cathode_degradation_of_solid-state_lithium_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Schematic view of electrochemical reaction, Li intercalation, structural degradation, and lattice defect types in composite cathodes of solid-state battery cells: point defects (zero-dimensional (0D) defects), dislocations (one- dimensional (1D) defects) and interfaces (two-dimensional (2D) defects). Key to solving the challenges of the cathode/electrolyte interface, crystal defect forma- tion, and structural degradation in cathodes is a clear understanding of the chemo- mechanics of the composite cathodes across battery-relevant length scales. Non-",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    59.7,
+    516.5,
+    255.6
+   ],
+   "w": 2013,
+   "h": 817,
+   "dpi": 300,
+   "src": "c0a527c0-03._Role_of_grain-level_chemo-mechanics_in_composite_cathode_degradation_of_solid-state_lithium_batteries.pdf",
+   "blank": 0.304
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Workﬂow of the reaction-diffusion-micromechanics and dislocation- induced structural degradation model for composite cathode materials, informed by nanoscale experimental and theoretical ﬁndings. a Concept of a bipolar-stacked Li solid-state battery cell. b Schematic of a unit cell featuring composite cathode materials. c Representative volume element describing the microstructure of composite cathodes. d Application of a Cahn-Hilliard diffusion-",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    60.7,
+    546.3,
+    422.1
+   ],
+   "w": 2137,
+   "h": 1507,
+   "dpi": 300,
+   "src": "c0a527c0-03._Role_of_grain-level_chemo-mechanics_in_composite_cathode_degradation_of_solid-state_lithium_batteries.pdf",
+   "blank": 0.594
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Effect of anisotropic and concentration-dependent electrochemical and mechanical properties of NMC cathodes in Li-ion dynamics, dislocation for- mation, interface mechanics, and electrochemical performance. a Li concentration-dependent diffusivity on the basal plane18. b Anisotropic and Li concentration-dependent lattice dimension changes18,57. c Elastic stiffness para- meters at fully lithiated and delithiated states58–60. d–g Distribution of Li con- centration, dislocation-induced shear, and maximum principle stress at 1 C, within a",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    72.2,
+    546.5,
+    556.8
+   ],
+   "w": 2138,
+   "h": 2019,
+   "dpi": 300,
+   "src": "c0a527c0-03._Role_of_grain-level_chemo-mechanics_in_composite_cathode_degradation_of_solid-state_lithium_batteries.pdf",
+   "blank": 0.324
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Dislocation-induced structural degradation and capacity loss. a Schematic of dislocation-induced irreversible oxygen release and structural degradation. Dislocations induce large lattice strain can dramatically modify the local oxygen environment, which can markedly impact the structural stability of the layered phase and trigger oxygen loss and TM migration. b Distribution of dislocation-induced plastic shear and oxygen-deﬁcient phase. c Comparison of the",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    61.5,
+    546.7,
+    515.8
+   ],
+   "w": 2138,
+   "h": 1894,
+   "dpi": 300,
+   "src": "c0a527c0-03._Role_of_grain-level_chemo-mechanics_in_composite_cathode_degradation_of_solid-state_lithium_batteries.pdf",
+   "blank": 0.484
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Effect of material properties on the chemo-mechanical behaviour of composite cathodes. a Elastic modulus of NMC cathodes58–60; distribution of plastic shear and maximum principal stress, using the elastic modulus at the fully delithiated state. b Frequency plots showing the effect of elastic modulus on the shear in cathodes and interfacial maximum principal stress. c, e Distribution of Li concentration, plastic shear, and maximum principal stress, considering the plastic deformation in oxide (c) and sulﬁde (e) electrolytes. d, f Effect of plastic",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    326.8,
+    363.3,
+    547.9
+   ],
+   "w": 1374,
+   "h": 922,
+   "dpi": 300,
+   "src": "c0a527c0-03._Role_of_grain-level_chemo-mechanics_in_composite_cathode_degradation_of_solid-state_lithium_batteries.pdf",
+   "blank": 0.123
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 8,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Material parameters for the chemo-mechanical models. Chemical free energy [1, 3] kB(Jmol−1K−1) T (K) F(sAmol−1) E1(Jmol−1) E11(Jmol−1) 8.314 298 96485.3 −4.15 × 105 3.8 × 104 Cmax(mol m−3) 49200 Diffusivity [1, 3] Dref(m−2s−1) D0 D1 D2 D3 1 × 10−8 -17.94 202.3 -782.6 1483 D4 D5 -1362 473.6 Lattice dimension change [1, 4, 5] νa,b 0 νa,b 1 νa,b 2 νa,b 3 νa,b 4 −6.56 × 10−6 3.143 × 10−3 −4.885 × 10−2 0.2774 -0.3405 νa, b 5 0.1302 νc 0 νc 1 νc 2 νc 3 νc 4 −5.157 × 10−2 0.6483 -1.569 1.512 -0.5208 Crystal plasticity model ˙γ0(s−1) n g0 (MPa) g∞(MPa) a Basal dislocation [6] 1 × 10−3 20 39 86 2.25 h0 (MPa) hαβ (MPa) 75 1 Elastic constants NMC811 cathode (lithiated) [7–9] C11(Pa) C33(Pa) C44(Pa) C12(Pa) C13(Pa) 1.95 × 1011 1.77 × 1011 7.41 × 1010 1.34 × 1011 1.19 × 1010 NMC811 cathode (delithiated) [8, 9] C11(Pa) C33(Pa) C44(Pa) C12(Pa) C13(Pa) 2.8 × 1011 1.8 × 1010 1.5 × 1010 7.5 × 101",
+   "rotated_deg": 0,
+   "bbox": [
+    119.6,
+    128.7,
+    589.9,
+    659.9
+   ],
+   "w": 1960,
+   "h": 2214,
+   "dpi": 300,
+   "src": "43eb361e-03._Sup_Role_of_grain-level_chemo-mechanics_in_composite_cathode_degradation_of_solid-state_lithium_batteries.pdf",
+   "blank": 0.933
+  }
+ ]
+}
