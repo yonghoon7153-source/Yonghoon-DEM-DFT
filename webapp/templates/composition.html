@@ -98,6 +98,19 @@
   </div>
   {% if it.status %}<div class="muted" style="font-size:.74rem;margin-top:2px">{{ it.status|mdlite }}</div>{% endif %}
   {% if it.headline %}<div style="margin-top:8px;font-size:.86rem;line-height:1.6">{{ it.headline|mdlite }}</div>{% endif %}
+  {# 외부 링크 — ⚠ **접힘 밖**이다. 2026-09-16 실측: 카드 §7 에 아티팩트 URL 을 넣었는데
+     그 절이 `<details>`(본문 N절) 안이라 접혀 있었고, 1저자가 "여기에 url 이 어디 있어"
+     라고 물었다. 접힌 링크는 붙인 것이 아니다. #}
+  {% if it.links %}
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+    {% for lk in it.links %}
+    <a href="{{ lk.url }}" target="_blank" rel="noopener noreferrer"
+       style="display:inline-flex;align-items:center;gap:5px;font-size:.76rem;
+              text-decoration:none;border:1px solid #ddd6fe;background:#f5f3ff;
+              color:#5b21b6;border-radius:999px;padding:3px 11px">📄 {{ lk.label }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
   {# 숫자 표 — 원본은 각 표의 source 파일이다. 화면이 값을 보관하지 않는다. #}
   {% for tb in it.tables %}
   <div style="margin-top:12px">

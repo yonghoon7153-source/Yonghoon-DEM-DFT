@@ -4001,6 +4001,40 @@ def test_note_bold_is_lenient_about_one_sided_space():
     assert "suggests <strong>low x</strong>" in h, f"공백이 사라져 낱말이 붙었다: {h!r}"
 
 
+def test_card_links_render_outside_the_fold():
+    """카드가 가리키는 URL 이 **접힘 밖**에서 진짜 앵커로 보이는가.
+
+    왜 생겼나 (2026-09-16 실측): 카드 §7 에 아티팩트 URL 을 넣었고 `_mdlite` 도
+      링크를 만들었는데, 그 절이 `<details>`(본문 N절) **안**이라 접혀 있었다.
+      1저자가 화면을 보고 *"여기에 url 이 어디 있어"* 라고 물었다 —
+      **접힌 링크는 붙인 것이 아니다.**
+    ⛔ 이 시험이 못 하는 것: 링크가 살아 있는지 안 본다(네트워크 안 탐).
+    """
+    import decisions_view as DV
+    U = "https://claude.ai/artifact/JpXxNZwwXt3QgB7f3jMpwo"
+
+    # ── 추출기 (순수) ───────────────────────────────────────────────
+    lk = DV.card_links({"a": f"보고서: [CEI 계면 반응성]({U}) 를 본다"})
+    assert lk == [{"url": U, "label": "CEI 계면 반응성"}], lk
+    # 같은 URL 이 두 번 나와도 한 번만
+    assert len(DV.card_links({"a": f"[x]({U})", "b": f"또 {U}"})) == 1
+    # 라벨 없는 맨 URL 도 줍는다
+    assert DV.card_links({"a": f"원문 {U}"})[0]["url"] == U
+    # ⛔음성: https 가 아닌 것은 안 줍는다 (앵커로 나가는 값이다)
+    for bad in ("http://x.example", "javascript:alert(1)", "/db/properties/x.json",
+                "ftp://x.example"):
+        assert DV.card_links({"a": f"보라 {bad}"}) == [], bad
+    # ⛔음성: dict 가 아니면 죽지 않고 빈 목록
+    assert DV.card_links(None) == [] and DV.card_links(["x"]) == []
+
+    # ── 실제 렌더 — 접힘 **밖**이어야 한다 ──────────────────────────
+    h = A.app.test_client().get("/composition/modelc_nd_doped").get_data(as_text=True)
+    assert f'href="{U}"' in h, "카드 링크가 화면에 없다"
+    before = h[:h.index(f'href="{U}"')]
+    depth = before.count("<details") - before.count("</details>")
+    assert depth == 0, f"⛔ 링크가 접힘 {depth}겹 안에 있다 — 접힌 링크는 붙인 게 아니다"
+
+
 def test_mdlite_links_and_rejects_bad_schemes():
     """`[글](https://…)` 이 **진짜 앵커**가 되는가 — 그리고 안 되어야 할 것들.
 

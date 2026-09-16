@@ -215,6 +215,44 @@ def card_sections(j: dict) -> list:
     return out
 
 
+#: 카드 본문 어디에 있든 **밖으로 꺼내는** 링크. `[글](https://…)` 을 먼저 보고,
+#: 라벨 없는 맨 URL 도 줍는다.
+_CARD_LINK = re.compile(r"\[([^\]\n]{1,120})\]\((https://[^\s()<>\"'|]{1,500})\)")
+_BARE_URL = re.compile(r"(?<![(\w])(https://[^\s()<>\"'|]{1,500})")
+
+
+def card_links(j: dict) -> list:
+    """카드가 가리키는 **외부 링크**를 접힘 밖으로 꺼낸다. → [{url, label}]
+
+    왜 생겼나 (2026-09-16 실측): 카드 §7 에 아티팩트 URL 을 넣었는데 그 절이
+      `<details>`(본문 N절) **안**이라 접혀 있었다. 1저자가 화면을 보고
+      *"여기에 url 이 어디 있어"* 라고 물었다 — **접힌 링크는 붙인 것이 아니다.**
+      CLAUDE.md §화면 규율과 같은 논리다: 화면에 안 실리면 없는 것이다.
+
+    ⛔ 이 함수가 못 하는 것
+      · 링크가 살아 있는지 확인하지 않는다 (네트워크를 안 탄다).
+      · https 가 아닌 것은 안 줍는다 — 화면에 앵커로 나가는 값이다.
+      · 카드가 그 링크를 **어떤 뜻으로** 달았는지 판정하지 않는다. 경고·조건은
+        절 본문에 있고, 여기서 요약하지 않는다.
+    """
+    out, seen = [], set()
+    if not isinstance(j, dict):
+        return out
+    blob = json.dumps(j, ensure_ascii=False)
+    for label, url in _CARD_LINK.findall(blob):
+        if url in seen:
+            continue
+        seen.add(url)
+        out.append({"url": url, "label": label.replace("\\n", " ").strip()})
+    for url in _BARE_URL.findall(blob):
+        url = url.rstrip('\\"')
+        if url in seen:
+            continue
+        seen.add(url)
+        out.append({"url": url, "label": url})
+    return out
+
+
 def _flatten(v, depth: int = 0) -> list:
     """중첩 dict/list → [{indent, label, text}] 평면 목록. 깊이 3 에서 멈춘다.
 
@@ -289,6 +327,8 @@ def interpretation_cards_for(cid: str, root=None) -> list:
             "tables": _tables(j.get("표") or []),
             # 번호 절 — 카드가 쓴 산문을 **그대로** 싣는다 (2026-09-16 신설).
             "sections": card_sections(j),
+            # 외부 링크 — **접힘 밖**으로 꺼낸다 (2026-09-16: 접힌 링크는 붙인 게 아니다)
+            "links": card_links(j),
         })
     out.sort(key=lambda r: r.get("date") or "", reverse=True)
     return out
