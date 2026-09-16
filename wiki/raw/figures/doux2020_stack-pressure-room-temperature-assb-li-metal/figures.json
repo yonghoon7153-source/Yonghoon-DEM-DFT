@@ -1,0 +1,272 @@
+{
+ "slug": "doux2020_stack-pressure-room-temperature-assb-li-metal",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-16",
+ "sources": [
+  "fee2ebde-05._Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+  "77b3f3f8-05._Sup_Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. First two cycles of an all-solid-state battery using a Li–In alloy anode (blue) showing typical voltage profiles, and first charge cycle using a Li metal anode (red), showing characteristic shorting behavior. Both cells were prepared in the same conditions and cycled at a stack pressure of 25 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    443.9,
+    297.2,
+    668.8
+   ],
+   "w": 1064,
+   "h": 938,
+   "dpi": 300,
+   "src": "fee2ebde-05._Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Design of the solid-state Li symmetric cell used, allowing control and monitoring of pressure during cycling. b) Normalized voltage of Li symmetric cells as a function of time during plating and stripping at different stack pressures. At 75 MPa, the cell already mechanically shorts before cycling begins. At 5 MPa, no short was observed for over 1000 h. c) Voltage profile of a full cell using Li metal anode: the first cycle was done at a stack pressure of 5 MPa. The stack pressure was subsequently increased on the same cell to 25 MPa before the second cycle, during which the cell shorts. short circuit. A specific capacity of 150 mAh g−1 and the first cycle Coulombic efficiency of 69% were attained, similar to the cell constructed with Li–In. In order to verify that a high stack pressure was the cause of the short circuit in Figure 1, the pres- sure was increased to 25 MPa bef",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    64.9,
+    555.3,
+    369.2
+   ],
+   "w": 2127,
+   "h": 1269,
+   "dpi": 300,
+   "src": "fee2ebde-05._Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "blank": 0.815
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Voltage profile of the first, second, fifth, and tenth cycles and b) cycle life of a Li metal | Li6PS5Cl | LNO-coated NCA ASSB cycled at C/10 and at a stack pressure of 5 MPa. No shorting behavior was observed. Average Coulombic efficiency over 229 cycles is 98.86%, and the cell shows a capacity retention of 80.9% over 100 cycles. The active material loading is 3.55 mg cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    531.0,
+    555.1,
+    686.6
+   ],
+   "w": 2126,
+   "h": 649,
+   "dpi": 300,
+   "src": "fee2ebde-05._Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Schematic of the effect of the stack pressure on the shorting behavior of Li metal solid-state batteries. a) During cell fabrication, the contact between the electrolyte and Li metal is poor before pressing the Li metal on the electrolyte pellet. b) Pressing the Li metal at 25 MPa allows for proper wetting of the electrolyte and c) induces a large drop in the symmetric cell impedance, even when the pressure is later released to 5 MPa. d) Plating and stripping at a stack pressure of 5 MPa: no creeping of Li inside the SSE pellet is observed and therefore the cell cycles for more than 1000 h. e) At a stack pressure of 25 MPa, Li slowly creeps between the grains of the SSE and plating occurs on these dendrites, eventually shorting the cell after 48 h. f) When the stack pressure is too high, Li creeps through the electrolyte and forms dendrites that mechanically short the cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    64.9,
+    552.3,
+    312.8
+   ],
+   "w": 2127,
+   "h": 1034,
+   "dpi": 300,
+   "src": "fee2ebde-05._Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "blank": 0.731
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Schematic of the cell used for X-ray tomography and X-ray diffraction, profile matching of the X-ray diffraction patterns, and X-ray tomography of a Li | Li6PS5Cl | Li symmetric cell cycled under a stack pressure of 25 MPa a) before plating and stripping and b) after shorting. Before plating and strip- ping, only Li6PS5Cl is detected in the electrolyte, and Li metal is present on both sides. The tomography pictures confirm that no lithium is present in the electrolyte. After shorting, several additional phases are detected inside the electrolyte, mainly Li2S, LiCl, P4, and Li3P7, all being components of the SEI formed when Li is in contact with Li6PS5Cl. Tomography pictures show that a large quantity of low-density dendrites has been formed in the electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    476.9,
+    555.1,
+    668.8
+   ],
+   "w": 2127,
+   "h": 800,
+   "dpi": 300,
+   "src": "fee2ebde-05._Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "blank": 0.69
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Pictures of a Li metal | Li6PS5Cl | Li metal symmetric cell before (top) and after (bottom) pressing at a pressure of 25 MPa. The contact improvement between the Li metal and the electrolyte pellet can be seen by the disappearance of voids at the interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.3,
+    549.1,
+    222.3
+   ],
+   "w": 2013,
+   "h": 651,
+   "dpi": 300,
+   "src": "77b3f3f8-05._Sup_Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "blank": 0.644
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Nyquist diagram of a Li symmetric cell before and after plating and stripping for 10 and 20 hours, at a stack pressure of 25 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.6,
+    298.2,
+    548.7,
+    491.4
+   ],
+   "w": 2018,
+   "h": 806,
+   "dpi": 300,
+   "src": "77b3f3f8-05._Sup_Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Potential of a Li symmetric cell during plating and stripping at a stack pressure of 2 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.6,
+    66.0,
+    548.9,
+    295.1
+   ],
+   "w": 2019,
+   "h": 955,
+   "dpi": 300,
+   "src": "77b3f3f8-05._Sup_Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Voltage profiles of the Li symmetric cells during plating and stripping at different stack pressures.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    355.2,
+    548.8,
+    619.0
+   ],
+   "w": 2012,
+   "h": 1100,
+   "dpi": 300,
+   "src": "77b3f3f8-05._Sup_Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: X-ray tomography of a Li symmetric cell before (a) and after (b) 92 hours of plating and stripping at a stack pressure of 5 MPa. c) Voltage profile during the plating and stripping at 5 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.1,
+    202.5
+   ],
+   "w": 2013,
+   "h": 569,
+   "dpi": 300,
+   "src": "77b3f3f8-05._Sup_Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "blank": 0.323
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: X-ray tomography of a Li symmetric cell mechanically shorted after pressing Li metal at 75 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    282.4,
+    549.1,
+    528.4
+   ],
+   "w": 2013,
+   "h": 1026,
+   "dpi": 300,
+   "src": "77b3f3f8-05._Sup_Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "blank": 0.45
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 8,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Summary of the reported Li metal cycling in ASSBs in the literature.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.2,
+    586.7,
+    699.2
+   ],
+   "w": 2166,
+   "h": 2634,
+   "dpi": 300,
+   "src": "77b3f3f8-05._Sup_Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 8,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Relative density calculation based on physical measurements of four Li6PS5Cl electrolyte pellets, using a theoretical density value of 1.860 g.cm-3.[4] Mass Diameter Thickness Exp. Density Relative Density (g.cm-3) (mg) (mm) (mm) (%) 200.0 13 1.01 1.492 80.2 201.2 13 0.96 1.579 84.9 200.3 13 1.01 1.494 80.3 200.3 13 0.99 1.524 83.0 Average 1.522 82.1",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.3,
+    586.7,
+    699.2
+   ],
+   "w": 2166,
+   "h": 2630,
+   "dpi": 300,
+   "src": "77b3f3f8-05._Sup_Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "blank": 0.946
+  }
+ ]
+}

@@ -1594,3 +1594,49 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   모형에 꽂는 다리), 4 순위 **Zhang/Scott/Ceder 2020** (`AEM` 1903778 — LZO 코팅
   불안정성, 4호가 정량 없이 남긴 화학 열화 몫).
 - lint 0 errors / 0 warnings.
+
+## [2026-09-16] ingest | Doux et al. 2020 — Stack Pressure Considerations for Room-Temperature All-Solid-State Lithium Metal Batteries (Adv. Energy Mater. 10, 1903253) — `assb` 5호
+
+- raw: `raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md`
+  (본문 6 쪽 + SI 8 쪽, **둘 다 sha256 봉인**; doi `10.1002/aenm.201903253`, UCSD /
+  Y. S. Meng). ✅ 업로드 파일명이 **내용과 일치**한다 — 4호의 본문/SI 뒤바뀜 사고
+  재발 없음 (쪽수 + 1 쪽 첫 줄로 확인).
+- 그림: 크로핑 13 장(그림 11 + 표 2) 중 **그림 11 장 전부 열람**. 표 2 장은 도구
+  권고대로 PDF 텍스트로 읽었다 (`raw/figures/doux2020_stack-pressure-room-temperature-assb-li-metal/`).
+- 컴파일: **새 개념 1** — `concepts/assb-stack-pressure-operating-window.md`
+  (압력의 2 측 구속: 아래는 접촉 손실, 위는 Li 크리프 단락).
+  갱신 — `concepts/assb-pressure-reapplication-separation-test.md`(경고 4 부분 해소 +
+  상한·전극 귀속·이력·비직교성 5 항 추가), `questions/assb-contact-loss-vs-lampe.md`
+  (Q1~Q8 행 추가, 미결 3·4 갱신, Evidence 반례 + 새 제약 + status log).
+  ⚠ `concepts/composite-cathode-percolation-utilization.md` 는 **일부러 안 건드렸다**
+  — 이 논문은 음극 축이고 그 페이지는 이미 **320 줄**(SCHEMA 200 줄 권고 초과).
+  **분할 제안은 사용자 판단 대기.**
+- ★★ 이 편이 한 일: 4호가 **점**으로 준 압력을 **곡선**으로 바꿨다 —
+  **P→임피던스 6 점**(1 MPa >500 Ω → 25 MPa 32 Ω, +이력 1 점) ·
+  **P→단락시간 6 점**(75 MPa 0 h · 25 MPa 48 h · 20 MPa 190 h · 15 MPa 272 h ·
+  10 MPa 474 h · 5 MPa >1000 h) · **P→과전압 5 점**(+본문에 없는 2 MPa 1 점).
+  압력을 **로드셀로 실계측**한 첫 편(0–220 MPa, Instron 교정).
+- 최대 수확 넷: ① **상한**(4호의 300 MPa 는 이 상한의 4 배 — 단 모집단이 In 음극 ↔
+  Li 금속으로 다르다) ② **전극 귀속**(양극 없는 대칭셀에서 압력이 임피던스를
+  >15 배 움직인다 → `ΔQ_mech` 를 양극으로 읽으면 과대) ③ **이력**(계면 과잉의
+  77 % 영구 제거 → `θ(P)` 는 경로 의존 상태) ④ **Q7 절반 해소**(SEI 는 상으로 검출,
+  dead Li 는 검출 수단 없음). Q1~Q8 **5편 누적 ≈6.5/8**, 남은 0 은 **Q4 하나**.
+- 어긋남 원장 **20 건**(1호 8 · 2호 14 · 3호 18 · 4호 18 · 5호 20). 무거운 묶음
+  **D1–D6**: "과전압이 전 과정 일정했다 → 계면 안정" 이 **자기 SI Fig. S4 다섯 패널
+  전부에서 8–28 % 증가**로 반증(D1) · 본문이 **Fig. S5 를 "1000 h" 근거로 인용하는데
+  Fig. S5 는 92 h**(D2) · **Fig. S2·S3·S4 를 본문이 한 번도 인용하지 않음**(D3) ·
+  그중 **S3 은 Methods 에도 없는 2 MPa 조건**이라 "optimal 5 MPa" 에 하한 탐색이
+  없다(D4) · **S2 는 단락 28 h 전 임피던스 −16 % 전조**인데 해석 0(D5) ·
+  **"덴드라이트" 동정에 독립 근거 없음**(D6 — Li 는 XRD 로 안 보이고 같은 저밀도
+  대비를 Fig. S6 에서는 "severe cracking" 이라 부른다).
+  → **새 변종: 인용조차 되지 않은 SI 가 본문을 반증한다.**
+- 산포: `error bar`·`standard deviation`·`uncertain*`·`replicate`·`seed` 전부 0 회,
+  조건당 셀 1 개. ★ **단 하나의 예외** — Table S2 가 펠릿 **4 개**의 상대밀도를
+  인쇄한다(80.2/84.9/80.3/83.0 %, `[재현]` s ≈2.3 %p → 공극률 15.1–19.8 %):
+  **`assb` 5 편 중 첫 반복 측정**이고, 그 폭이 단락 기구(기공 퍼콜레이션)의 입력이다.
+- 후속 후보: 1 순위 **Koerver 2017**(`Chem. Mater.` 29, 5574), 2 순위 **inbox 15번**
+  (*Elucidating the Influence of Stack Pressure on Anode and Cathode Impedance …
+  via Three-Electrode Measurements* — 이 ingest 가 남긴 **전극 분해 + 압력** 공백
+  정조준), 3 순위 **inbox 24번**(*… Long Cycle Life at **Low Pressure*** — 창의 아래 벽),
+  4 순위 **Kasemchainan 2019**(`Nat. Mater.` 18, 1105 — 5호가 반박한 탈리 void 원전).
+- lint 0 errors / 0 warnings.

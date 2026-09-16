@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-16
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md]
+sources: [raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -108,6 +108,34 @@ NMC532(LZO 코팅) / 비정질 LPS / CNF 60:35:5 wt%, **In 금속 음극**, 8 mm
 4. **압력–회복 곡선이 없다.** 사이클 압력 1 점(2 MPa), 재가압 1 점(300 MPa).
    "얼마나 눌러야 얼마나 돌아오나" 를 모른다. 그리고 `[인쇄]` 저자들 스스로
    "such a large stack pressure **may not be practical** for large format cells".
+   → **2026-09-16 부분 해소 + 새 경고**: 5호(Doux 2020)가 **저항 축에서는** 곡선을
+   줬다 (P→임피던스 6 점, P→단락시간 6 점, P→과전압 5 점). **용량 축의 곡선은
+   여전히 `assb` 5/5 편이 0 이다.** 아래 §"5호가 붙인 것" 참조.
+
+## ★ 5호(Doux 2020)가 이 연산자에 붙인 것 — 상한과 전극 귀속
+
+`raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md`.
+자세히는 [[assb-stack-pressure-operating-window]].
+
+1. ★★★ **연산자에 상한이 생겼다.** Li 금속 / Li₆PS₅Cl(상대밀도 ≈82 %) / 75 µA cm⁻²
+   에서 `[인쇄]` **75 MPa 는 도금 전에 이미 기계적으로 단락**하고, **25 MPa 는 48 h**
+   만에 죽는다. **4호가 쓴 300 MPa 는 이 상한의 4 배다.**
+   → 처방을 `P_low < P_high < P_short(음극 재료, 전해질 공극률, 전류밀도)` 로 고친다.
+   ⚠ 모집단 차이: 4호는 **In 음극**(크리프 문턱이 Li 보다 훨씬 높다), 5호는 **Li 금속**.
+   **상한은 보편 상수가 아니라 음극 재료의 함수다.**
+2. ★★ **경고 2(양극 전용이 아니다)가 강하게 보강됐다.** 5호의 Fig. 4c 셀은
+   **Li | SE | Li 대칭셀 — 양극이 아예 없다.** 그런데 압력 1 → 25 MPa 에서 임피던스가
+   `[인쇄]` **>500 → 32 Ω (>15 배)** 움직인다. → **압력이 음극 계면에 작용한다는 것이
+   독립 논문에서 확인된다.** `ΔQ_mech` 를 통째로 양극 `θ_AM` 회복으로 읽으면 **과대**다.
+3. ★★ **경고 3(비가역 부작용)의 형제 — 이력이 정량됐다.** 처녀 5 MPa **110 Ω** ↔
+   25 MPa 를 찍고 내려온 5 MPa **≈50 Ω**. `[재현]` 계면 과잉의 **77 % 가 영구 제거**.
+   → **`θ(P)` 는 함수가 아니라 경로 의존 상태다.**
+4. ★ **연산자의 정보량이 저압에 몰려 있다.** `[재현]` 계면 과잉이 15 MPa 에서 8 Ω,
+   20 MPa 에서 3 Ω → **20 MPa 위는 벌크가 전부**. 압력 2 점을 고른다면
+   **(5, 25) 가 아니라 (1–2, 10–15)**.
+5. ⚠ **율 연산자와 직교하지 않는다.** 5호의 `[도표]` Fig. S4 에서 **과전압 자체가
+   압력 함수**다 (5 MPa 7.0 mV ↔ 25 MPa 4.5 mV, 같은 전류밀도) → `η = η(i, P)`.
+   **`i→0` 처방은 압력을 고정한 채로만 성립한다.**
 
 ## 율 연산자와의 짝 — 두 조작의 성질이 다르다
 
@@ -144,6 +172,7 @@ NMC532(LZO 코팅) / 비정질 LPS / CNF 60:35:5 wt%, **In 금속 음극**, 8 mm
   사이클 변수가 아니다. 압력 스윕 하에서의 `θ(N)` 은 `assb` **4/4 편이 안 줬다.**
 
 ## 관련
+- [[assb-stack-pressure-operating-window]] — **이 연산자의 사용 조건**: 압력의 2 측 구속과 상한(5호 Doux 2020).
 - [[assb-apparent-capacity-decomposition]] — 3 항 분해. 이 페이지가 그 **두 번째 분리 연산자**를 준다.
 - [[composite-cathode-percolation-utilization]] — `θ_AM` 의 정의. 이 연산자가 되돌리려는 양.
 - [[assb-contact-loss-vs-lampe]] — 닻 질문. 이 페이지는 그 질문의 **우회로**다 (OCV 밖의 축).

@@ -43,6 +43,14 @@
    "20_direct_diagnosis_degradation_modes_lfp.pdf"
   ]
  },
+ "doux2020_stack-pressure-room-temperature-assb-li-metal": {
+  "figures": 13,
+  "generated": "2026-09-16",
+  "pdfs": [
+   "fee2ebde-05._Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf",
+   "77b3f3f8-05._Sup_Stack_Pressure_Considerations_for_Room-Temperature_All-Solid-State_Lithium_Metal_Batteries.pdf"
+  ]
+ },
  "dubarry2012_synthesize-degradation-modes": {
   "figures": 15,
   "generated": "2026-09-03",
