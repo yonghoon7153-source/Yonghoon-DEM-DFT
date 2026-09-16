@@ -143,9 +143,66 @@ def _publish_or_keep(tmp_name, out):
                                f"({tmp_name}); flock 을 지원하는 파일시스템에서 손으로 게시할 것") from e
 
 
+class SharedSnapshot:
+    """한 명령이 공유하는 입력의 **immutable snapshot** — full-cell workbook + 문헌 gr/si (조건 8 축 ①).
+
+    왜 필요한가 (R12 §5 답변 3): 전에는 기준(pristine)과 대상이 **같은 workbook 을 각자 읽었다.** 그 사이에
+    재-export 가 있으면 두 행이 다른 bytes 로 계산되는데 우리는 그것을 나중에 **적기만** 했다
+    (`shared_full_cell_mismatch_accepted: true`). 적는 것과 막는 것은 다르다.
+
+    리뷰어가 자리까지 제안했다 (R6_LEDGER "열어 둔 것"): **command/build 경계에서 한 번 읽은 typed
+    snapshot 을 양쪽에 전달.** 여기가 그것이다 — 한 번 읽고, 받은 쪽은 다시 읽지 않는다.
+
+    ⚠ **읽기는 지연한다** (처음 쓸 때 읽고 그 뒤로는 그 bytes 다). 명령 시작에서 미리 읽으면 입력이 없는
+      경우의 실패 시점이 앞당겨져, `build` 가 내던 친절한 진단("이 소스에 있는 상태는 …")보다 먼저
+      죽는다 — 2026-09-16 실측으로 11 건이 그렇게 깨졌다. 지연해도 "한 명령 안에서 한 번" 은 그대로다.
+    """
+
+    def __init__(self, root: Path, si_source: str):
+        self.root = Path(root)
+        self.si_source = si_source
+        self._full_cell = None
+        self._lit_id: dict | None = None
+        self._lit = None
+
+    @property
+    def full_cell(self):
+        if self._full_cell is None:
+            self._full_cell = D.read_input(D.full_cell_workbook(self.root))
+        return self._full_cell
+
+    def _literature_once(self):
+        if self._lit is None:
+            self._lit_id = {}
+            self._lit = D.load_literature(self.root, self.si_source, identity=self._lit_id)
+        return self._lit, self._lit_id
+
+    def identity(self) -> dict:
+        _, lit_id = self._literature_once()
+        return {"full_cell": dict(self.full_cell.identity()), "literature": json.loads(json.dumps(lit_id))}
+
+    def literature(self, si_source: str):
+        """이 snapshot 이 읽은 **그 소스**의 문헌. 다른 소스를 물으면 멈춘다 — 조용히 틀린 영수증을 만들지 않는다."""
+        if si_source != self.si_source:
+            raise ValueError(f"이 snapshot 은 si_source={self.si_source!r} 로 읽었다 — {si_source!r} 로 쓸 수 없다 "
+                             f"(receipt 는 새 소스를 적는데 bytes 는 옛 소스가 된다)")
+        lit, lit_id = self._literature_once()
+        return lit, dict(lit_id)
+
+    def full_cell_columns(self, state: str):
+        ident: dict = {}
+        c, v = D.load_full_cell_from(self.full_cell, state, identity=ident)
+        return c, v, ident
+
+
+def shared_snapshot(root: Path, si_source: str) -> SharedSnapshot:
+    """명령 경계에서 **한 번** 부른다 — 그 뒤 모든 `build` 에 같은 것을 넘긴다 (조건 8 축 ①)."""
+    return SharedSnapshot(root, si_source)
+
+
 def build(root: Path, source: str, state: str, si_source: str,
           w_dqdv: float = 0.0, use_peak_weight: bool = True,
-          scale_seed: int = 0) -> Objective:
+          scale_seed: int = 0, shared: "SharedSnapshot | None" = None) -> Objective:
     # ⚠ 입력이 없으면 **적합을 시작하기 전에** 죽는다. 2026-09-10 실측:
     #   `degeneracy --state 300_0147 --source GITT` 가 기준(pristine) 적합
     #   24 회를 다 돌린 **뒤에** 대상 파일이 없다는 걸 알았다 (23 초 낭비, 그리고
@@ -165,12 +222,17 @@ def build(root: Path, source: str, state: str, si_source: str,
     #   경로를 다시 열어 해시했다 — 그 사이 같은 이름으로 재-export 된 B 가 있으면 A 로 계산하고 B 의 서명을 적었다.
     hb = D.read_input(hc)
     half = HalfCell(hb.stream(), window=11, poly_order=3)
-    lit_id: dict = {}
-    si_c, si_v, gr_c, gr_v = D.load_literature(root, si_source, identity=lit_id)
+    # ⚠ R16 (조건 8 축 ①): `shared` 를 받으면 **다시 읽지 않는다** — 한 명령 안의 모든 행이 같은 bytes 를
+    #   본다. 안 받으면 전처럼 각자 읽는다 (단일 build 를 부르는 소비자·시험용). 명령은 항상 넘긴다.
+    if shared is not None:
+        (si_c, si_v, gr_c, gr_v), lit_id = shared.literature(si_source)
+        c, v, fc_id = shared.full_cell_columns(state)
+    else:
+        lit_id = {}
+        si_c, si_v, gr_c, gr_v = D.load_literature(root, si_source, identity=lit_id)
+        fc_id = {}
+        c, v = D.load_full_cell(root, state, workbook=D.full_cell_workbook(root), identity=fc_id)
     blend = Blend(si_c, si_v, gr_c, gr_v, window=11, poly_order=3)
-    wb = D.full_cell_workbook(root)
-    fc_id: dict = {}
-    c, v = D.load_full_cell(root, state, workbook=wb, identity=fc_id)
     obj = Objective(half, blend, c, v, window=11, poly_order=3,
                     w_pocv=1.0, w_dvdq=1.0, w_dqdv=w_dqdv,
                     use_peak_weight=use_peak_weight, scale_seed=scale_seed)
@@ -519,11 +581,14 @@ def mode_profile_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
 
 def cmd_degeneracy(args):
     root = D.data_root(args.data_root)
-    ref_obj = build(root, args.source, "pristine", args.si_source,
+    # ⚠ R16 (조건 8 축 ①): 공유 입력(full-cell workbook · 문헌)을 **명령 경계에서 한 번** 읽어
+    #   아래로 넘긴다 — 기준과 대상이 각자 읽으면 그 사이의 재-export 가 두 행을 갈라놓는다.
+    shared = shared_snapshot(root, args.si_source)
+    ref_obj = build(root, args.source, "pristine", args.si_source, shared=shared,
                     w_dqdv=args.w_dqdv, scale_seed=args.seed)
     ref_best, _, _ = multistart(ref_obj, n_starts=args.starts, seed=args.seed)
 
-    obj = build(root, args.source, args.state, args.si_source,
+    obj = build(root, args.source, args.state, args.si_source, shared=shared,
                 w_dqdv=args.w_dqdv, scale_seed=args.seed)
     best, best_val, sols = multistart(obj, n_starts=args.starts, seed=args.seed)
 
@@ -1763,10 +1828,13 @@ def cmd_profile(args):
     데이터가 아니라 **γ 를 준 사람**이 정한 값이다.
     """
     root = D.data_root(args.data_root)
-    ref = build(root, args.source, "pristine", args.si_source,
+    # ⚠ R16 (조건 8 축 ①): 공유 입력(full-cell workbook · 문헌)을 **명령 경계에서 한 번** 읽어
+    #   아래로 넘긴다 — 기준과 대상이 각자 읽으면 그 사이의 재-export 가 두 행을 갈라놓는다.
+    shared = shared_snapshot(root, args.si_source)
+    ref = build(root, args.source, "pristine", args.si_source, shared=shared,
                 w_dqdv=args.w_dqdv, scale_seed=args.seed)
     ref_p, _, _ = multistart(ref, n_starts=args.starts, seed=args.seed)
-    obj = build(root, args.source, args.state, args.si_source,
+    obj = build(root, args.source, args.state, args.si_source, shared=shared,
                 w_dqdv=args.w_dqdv, scale_seed=args.seed)
     best, best_val, _ = multistart(obj, n_starts=args.starts, seed=args.seed)
 

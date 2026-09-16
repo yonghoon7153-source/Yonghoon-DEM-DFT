@@ -169,6 +169,15 @@ def load_full_cell(root: Path, state: str, workbook: Path | None = None, identit
     `workbook` 을 주면 그 파일을 읽는다 (R6 내부 F4). `identity` dict 를 주면 **실제로 파싱한 bytes** 의 경로·sha256 을
     채운다 (Codex R6-03)."""
     src = read_input(workbook or full_cell_workbook(root))
+    return load_full_cell_from(src, state, identity=identity)
+
+
+def load_full_cell_from(src, state: str, identity: dict | None = None):
+    """**이미 읽은 bytes** 에서 그 상태의 (capacity, voltage) — 공통 snapshot 이 부르는 길 (조건 8 축 ①).
+
+    경로를 다시 열지 않는다. 한 명령 안의 여러 행이 같은 workbook 을 각자 읽으면 그 사이의 재-export 가
+    행을 갈라놓는데, 우리는 그것을 **적기만** 했다 (`shared_full_cell_mismatch_accepted: true`).
+    """
     if identity is not None:
         identity.update(src.identity())
     df = pd.read_excel(src.stream(), header=None, skiprows=2)

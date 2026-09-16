@@ -113,7 +113,21 @@ manifest 이름은 `manifest.json` 인데 `preserve_handoff.sh` 가 `package_man
 `scripts/handoff_manifest.py` 한 자리로 빼고(bash heredoc 안에 두면 시험할 수 없다) 아는 키만
 넓혔다. 모르는 모양·둘 이상 후보·`path`/`sha256` 누락은 **계속 멈춘다**.
 
-**남은 열린 것**: 조건 8 의 **축 하나** — ① export 공통 snapshot.
+**남은 열린 것**: **없다** — R13 §7 · R14 §5 가 열어 둔 하네스 항목을 R16 에서 전부 닫았다
+(`openpyxl` · 조건 6 · r11 대체 증거 · 조건 8 다섯 축 ①~⑤ · C34). 아래가 그 기록이다.
+
+**R16 조건 8 축 ① (export 공통 snapshot) 닫음.** 리뷰어 표현이 정확했다 — "identity 를 **대는**
+쪽(P1-1)만 넣었고 **주입하는** 쪽은 안 넣었다". 한 명령 안에서 기준(pristine)과 대상이 **같은 workbook 을
+각자 읽어서**, 그 사이의 재-export 가 두 행을 다른 bytes 로 갈라놓아도 우리는 **적기만** 했다
+(`shared_full_cell_mismatch_accepted: true`). 적는 것과 막는 것은 다르다. 리뷰어가 자리까지 제안해
+뒀고(R6_LEDGER "열어 둔 것": **command/build 경계에서 한 번 읽은 typed snapshot 을 양쪽에 전달**) 그대로
+넣었다 — `verify.SharedSnapshot`/`shared_snapshot()` 을 명령 경계에서 만들어 `build(shared=…)` 로 넘긴다.
+받은 쪽은 **다시 읽지 않는다**. 다른 소스의 snapshot 을 넘기면 **거부한다** (receipt 는 새 소스를 적는데
+bytes 는 옛 소스가 되는 조용한 거짓 영수증을 막는다). **읽기는 지연한다** — 명령 시작에서 미리 읽으면
+입력이 없을 때의 실패 시점이 앞당겨져 `build` 의 친절한 진단보다 먼저 죽는다 (실측 11 건). 지연해도
+"한 명령 안에서 한 번" 은 그대로다. **양성 대조군(`test_r16_73`)이 구멍이 진짜임을 보인다**: snapshot
+없이 각자 읽으면 실제로 갈린다. 그 대조군이 **내 fixture 도 잡았다** — 처음 쓴 재-export 흉내가 pandas
+왕복이라 **같은 bytes** 를 냈다 (openpyxl 이 결정적으로 쓴다). 문서 속성만 건드리도록 고쳤다.
 
 **R16 조건 8 축 ③ (run receipt) 닫음.** 조각(`expected_head`·`expected_tree`·`instrument`·
 `package_digest`·`materialized`)은 다 있었는데 **한 receipt 로 묶어 서명하고 소비자가 검증하는 부분이
@@ -628,7 +642,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 385 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 390 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh
