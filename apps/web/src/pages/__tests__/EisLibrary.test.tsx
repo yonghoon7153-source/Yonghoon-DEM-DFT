@@ -5,7 +5,7 @@
  *  전부 맞췄을 때만 '완료' 이고, 일부면 몇 개인지 적는다.
  */
 
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -64,13 +64,21 @@ function sweep(index: number, fits: number, chi: number | null): Spectrum {
 }
 
 function installFetch(spectra: Spectrum[]) {
-  const spy = vi.fn(async (url: string) => {
+  const spy = vi.fn(async (url: string, _init?: RequestInit) => {
     const path = String(url).split('?')[0] ?? ''
     const body = path.startsWith('/api/eis/spectra') ? spectra : []
     return { ok: true, status: 200, statusText: 'OK', json: async () => body }
   })
   vi.stubGlobal('fetch', spy)
   return spy
+}
+
+/** 어느 주소로 어떤 방법을 썼는지 — 지우기가 무엇을 불렀는지 보려고. */
+function calls(spy: ReturnType<typeof installFetch>) {
+  return spy.mock.calls.map(([url, init]) => ({
+    url: String(url).split('?')[0] ?? '',
+    method: init?.method ?? 'GET',
+  }))
 }
 
 /** 그 파일 줄 하나 — 접혀 있으므로 표에 스캔 줄은 하나뿐이다.
@@ -121,5 +129,35 @@ describe('EIS 라이브러리 — 접힌 스캔의 fitting 칸', () => {
     draw([sweep(1, 0, null), sweep(2, 0, null), sweep(3, 0, null)])
     const { fitting } = await scanRow()
     await waitFor(() => expect(fitting.textContent).toBe('—'))
+  })
+})
+
+
+//: 스캔 줄의 휴지통은 **파일 전부**를 지운다.  스윕마다 지우게 두면 스물한
+//  번을 눌러야 하고, 한 번 빠뜨리면 스윕 한 개짜리 스캔이 목록에 남는다.
+describe('EIS 라이브러리 — 접힌 스캔 줄의 지우기', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+  })
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
+  it('스윕 하나가 아니라 그 파일을 통째로 부른다', async () => {
+    const spy = installFetch([sweep(1, 0, null), sweep(2, 0, null), sweep(3, 0, null)])
+    render(<MemoryRouter><EisLibrary /></MemoryRouter>)
+    const { row } = await scanRow()
+
+    fireEvent.click(row.getByRole('button', { name: /지우기$/ }))
+    // 누르기 전에 무엇이 사라지는지 적혀 있어야 한다.
+    expect(row.getByText('스윕 3개 전부')).toBeInTheDocument()
+
+    fireEvent.click(row.getByRole('button', { name: '지웁니다' }))
+    await waitFor(() => expect(calls(spy)).toContainEqual(
+      { url: '/api/eis/scans/scan-a', method: 'DELETE' }))
+    // 스윕 낱개를 부르지 않는다 — 그 길로 갔다면 셋 중 둘이 남는다.
+    expect(calls(spy).some((call) => call.url.startsWith('/api/eis/spectra/')
+                                     && call.method === 'DELETE')).toBe(false)
   })
 })

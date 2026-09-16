@@ -300,11 +300,23 @@ export function EisLibrary() {
                           표가 한 칸 좁아지고, 그만큼 가로 스크롤이 줄어든다 —
                           값을 보려고 옆으로 미는 것이 이 표들의 가장 큰
                           불편이었다. */}
+                      {/* 스캔 줄의 휴지통은 **그 파일 전부**를 지운다.
+                          스윕 스물한 개를 스물한 번 눌러 지우게 두면 한둘이
+                          남고, 남은 것은 스윕 한 개짜리 스캔이 되어 목록에서
+                          정체를 잃는다.  무엇이 사라지는지는 옆에 적는다. */}
                       <DeleteMeasurementButton
                         name={item.name}
+                        note={
+                          // 여기만은 `sweepsOf` 가 아니라 파일이 말하는
+                          // `sweep_count` 를 센다.  검색어가 스윕 셋만 남겨
+                          // 놓아도 지워지는 것은 스물하나이므로, 걸러진 수를
+                          // 적으면 사라지는 양을 적게 말하게 된다.
+                          isScan(item) ? `스윕 ${item.sweep_count}개 전부` : undefined
+                        }
                         onError={setRowError}
                         onDelete={async () => {
-                          await api.deleteSpectrum(item.id)
+                          if (isScan(item)) await api.deleteScan(item.sha256)
+                          else await api.deleteSpectrum(item.id)
                           bumpReload((value) => !value)
                         }}
                       />

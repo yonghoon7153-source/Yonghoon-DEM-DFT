@@ -1596,3 +1596,52 @@ def test_an_unknown_scan_says_so(client):
     response = client.put("/api/eis/scans/nosuchsha/soc",
                           json={"soc_percent": [0]})
     assert response.status_code == 404
+
+
+# --- 스캔은 파일 단위로 무른다 --------------------------------------------
+
+def test_deleting_a_scan_takes_every_sweep_at_once(client):
+    """올린 것이 파일 하나면 무르는 것도 파일 하나다.
+
+    스윕마다 지우게 두면 스물한 번을 눌러야 하고, 한 번 빠뜨리면 스윕 한
+    개짜리 스캔이 목록에 남는다 — 되돌리기가 원래 동작보다 어려우면 사람은
+    되돌리지 않는다.
+    """
+    sha = upload_scan(client, 4)
+    assert len(client.get("/api/eis/spectra").json()) == 4
+
+    out = client.delete(f"/api/eis/scans/{sha}")
+    assert out.status_code == 200
+    assert out.json() == {"sweeps": 4, "fits": 0}
+
+    assert client.get("/api/eis/spectra").json() == []
+    assert client.get(f"/api/eis/scans/{sha}").status_code == 404
+
+
+def test_deleting_a_scan_takes_its_fits_with_it(client):
+    """맞춤은 스펙트럼에 붙어 사는 값이라 혼자 남으면 가리킬 곳이 없다."""
+    sha = upload_scan(client, 3)
+    fitted = client.post(f"/api/eis/scans/{sha}/fit",
+                         params={"circuit": "R0-p(R1,CPE1)"}).json()
+    assert fitted["fitted"], "맞춘 것이 없으면 이 시험은 아무것도 안 본다"
+
+    out = client.delete(f"/api/eis/scans/{sha}").json()
+    assert out["sweeps"] == 3
+    assert out["fits"] >= 1
+
+    for one in fitted["fitted"]:
+        gone = client.get(f"/api/eis/spectra/{one['spectrum_id']}")
+        assert gone.status_code == 404
+
+
+def test_deleting_one_sweep_still_leaves_the_rest(client):
+    """스윕 하나만 지우는 길도 그대로 있어야 한다 — 잘못 잰 스윕 한 장이 있다."""
+    sha = upload_scan(client, 4)
+    one = client.get("/api/eis/spectra").json()[0]
+    assert client.delete(f"/api/eis/spectra/{one['id']}").status_code == 204
+    assert len(client.get("/api/eis/spectra").json()) == 3
+    assert client.get(f"/api/eis/scans/{sha}").status_code == 200
+
+
+def test_deleting_an_unknown_scan_says_so(client):
+    assert client.delete("/api/eis/scans/nosuchsha").status_code == 404

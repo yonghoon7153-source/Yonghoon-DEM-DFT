@@ -906,6 +906,18 @@ class ScanSocOut(BaseModel):
     cleared: int
 
 
+class ScanDeleteOut(BaseModel):
+    """스캔 하나를 통째로 지운 결과 — 스윕 몇 개와 맞춤 몇 개가 사라졌나.
+
+    수를 돌려주는 이유는 화면이 "몇 개를 지웠다" 를 말할 수 있어야 해서다.
+    한 번 누른 것이 스무 줄을 없앴는데 화면이 조용하면, 되돌릴 수 없는 일을
+    했는지조차 모른다.
+    """
+
+    sweeps: int
+    fits: int
+
+
 class ScanPointOut(BaseModel):
     """한 스윕과, 그 스윕에서 맞춘 값들."""
 

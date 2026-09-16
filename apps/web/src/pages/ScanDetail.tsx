@@ -10,10 +10,11 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import { CopyBar } from '../components/CopyBar'
 import { ParamName } from '../components/ParamName'
+import { DeleteMeasurementButton } from '../components/RelatedCell'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Plot3D, type Series3D } from '../components/Plot3D'
 import { StackGapField, useStackGap } from '../components/StackGap'
@@ -162,6 +163,8 @@ function xOf(key: ScanX, point: ScanPoint, area: number | null): number | null {
 
 export function ScanDetail() {
   const { sha256 = '' } = useParams()
+  const navigate = useNavigate()
+  const [deleteError, setDeleteError] = useState<string | null>(null)
   const scan = useAsync(() => api.getScan(sha256), [sha256])
   const [parameter, setParameter] = useState('')
 
@@ -501,7 +504,24 @@ export function ScanDetail() {
             ) : null}
           </div>
         </div>
+        {/* 스캔을 통째로 무르는 자리.  올린 것이 파일 하나이므로 무르는
+            단위도 파일 하나다 — 스윕마다 돌아다니며 스물한 번 지우게 하면
+            한둘이 남고, 남은 조각이 목록에서 정체를 잃는다.
+            원본 `.mpr`/`.mpt` 는 그대로 남는다 (§0.2). */}
+        <div className="row" style={{ gap: 8, alignItems: 'center' }}>
+          <DeleteMeasurementButton
+            name={head.name}
+            note={`스윕 ${head.sweeps}개 전부`}
+            onError={setDeleteError}
+            onDelete={async () => {
+              await api.deleteScan(head.sha256)
+              navigate('/scans')
+            }}
+          />
+        </div>
       </div>
+
+      {deleteError ? <Alert kind="error">{deleteError}</Alert> : null}
 
       <MetricBand>
         <Metric label="스윕" value={head.sweeps} />

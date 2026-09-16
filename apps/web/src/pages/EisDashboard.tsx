@@ -216,9 +216,17 @@ export function EisDashboard() {
                       ) : row.spectrum_id ? (
                         <DeleteMeasurementButton
                           name={row.name}
+                          note={
+                            // 이 줄이 스캔의 한 스윕을 가리키면 그 파일이
+                            // 통째로 간다.  수는 안 적는다 — 한 줄이 파일
+                            // 여럿을 모으고 있을 수 있어서, 여기서 세면 그
+                            // 수가 다른 파일의 것일 수 있다.
+                            row.scan_sha256 ? '이 스캔 통째로' : undefined
+                          }
                           onError={setDeleteError}
                           onDelete={async () => {
-                            await api.deleteSpectrum(row.spectrum_id as number)
+                            if (row.scan_sha256) await api.deleteScan(row.scan_sha256)
+                            else await api.deleteSpectrum(row.spectrum_id as number)
                             board.reload()
                           }}
                         />

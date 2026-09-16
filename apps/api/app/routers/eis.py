@@ -18,7 +18,7 @@ from datetime import datetime, timezone
 
 import numpy as np
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
-from sqlmodel import Session, select
+from sqlmodel import Session, col, select
 
 from wrdkit.eis import (
     LIQUID,
@@ -49,6 +49,7 @@ from ..schemas import (
     EisDashboardOut,
     EisDashboardRow,
     RefitAllOut,
+    ScanDeleteOut,
     ScanOut,
     ScanPointOut,
     ScanSocIn,
@@ -999,6 +1000,36 @@ def read_scan(sha256: str, session: Session = Depends(get_session)):
     if not records:
         raise HTTPException(404, f"스캔 {sha256[:12]} 을 찾을 수 없습니다")
     return _scan_out(session, records, with_points=True)
+
+
+@router.delete("/scans/{sha256}", response_model=ScanDeleteOut)
+def delete_scan(sha256: str, session: Session = Depends(get_session)):
+    """한 파일에서 나온 스윕 **전부**를 기록에서 지운다.  원본은 남는다 (§0.2).
+
+    스윕 하나씩 지우는 길(`DELETE /spectra/{id}`)이 따로 있는데도 이것이
+    필요한 이유는 **세는 단위가 다르기** 때문이다.  올린 것은 파일 하나고,
+    거기서 스윕 스물한 개가 나온다.  올린 것을 무르려면 스물한 번을 눌러야
+    했고, 한 번이라도 빠뜨리면 스윕 한 개짜리 스캔이 목록에 남아 "이게 뭐지"
+    가 된다 -- 되돌리기가 원래 동작보다 어려우면 사람은 되돌리지 않는다.
+
+    맞춤도 함께 간다.  맞춤은 스펙트럼에 붙어 사는 값이라 스펙트럼이 없으면
+    가리킬 곳이 없다.
+    """
+    records = _scan_records(session, sha256)
+    if not records:
+        raise HTTPException(404, f"스캔 {sha256[:12]} 을 찾을 수 없습니다")
+
+    ids = [record.id for record in records if record.id is not None]
+    fits = session.exec(
+        select(SpectrumFit).where(col(SpectrumFit.spectrum_id).in_(ids))).all()
+    for fit in fits:
+        session.delete(fit)
+    for record in records:
+        if record.id is not None:
+            storage.drop_spectrum_cache(record.id)
+        session.delete(record)
+    session.commit()
+    return ScanDeleteOut(sweeps=len(records), fits=len(fits))
 
 
 @router.put("/scans/{sha256}/soc", response_model=ScanSocOut)

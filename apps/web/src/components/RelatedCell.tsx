@@ -52,10 +52,17 @@ export function RelatedCellSelect({
  */
 export function DeleteMeasurementButton({
   name,
+  note,
   onDelete,
   onError,
 }: {
   name: string
+  /** 이 버튼이 **무엇을** 지우는지, 한 줄이 필요할 때.
+   *
+   *  한 파일이 스윕 스물한 개를 담고 있으면 줄 하나를 지우는 일과 파일 하나를
+   *  지우는 일이 같은 휴지통 그림으로 보인다.  되돌릴 수 없는 쪽이 더 크므로,
+   *  누르기 전에 그 수가 보여야 한다. */
+  note?: string
   onDelete: () => Promise<void>
   onError: (message: string | null) => void
 }) {
@@ -68,7 +75,9 @@ export function DeleteMeasurementButton({
         type="button"
         className="ghost icon"
         aria-label={`${name} 지우기`}
-        title="이 측정을 기록에서 지웁니다 (원본 파일은 남습니다). 셀에 붙어 있어도 지울 수 있습니다."
+        title={note
+          ? `${note} — 기록에서 지웁니다 (원본 파일은 남습니다).`
+          : '이 측정을 기록에서 지웁니다 (원본 파일은 남습니다). 셀에 붙어 있어도 지울 수 있습니다.'}
         onClick={() => {
           onError(null)
           setConfirming(true)
@@ -80,6 +89,7 @@ export function DeleteMeasurementButton({
   }
   return (
     <>
+      {note ? <span className="tiny dim" style={{ marginRight: 4 }}>{note}</span> : null}
       <button
         type="button"
         className="danger tiny"

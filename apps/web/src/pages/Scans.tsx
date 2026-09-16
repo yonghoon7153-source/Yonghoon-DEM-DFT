@@ -9,6 +9,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { DeleteMeasurementButton } from '../components/RelatedCell'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { useAsync } from '../lib/hooks'
@@ -19,6 +20,7 @@ const CONFIG_LABEL: Record<string, string> = {
 
 export function Scans() {
   const [search, setSearch] = useState('')
+  const [rowError, setRowError] = useState<string | null>(null)
   const scans = useAsync(() => api.listScans(), [], { live: true })
 
   const rows = useMemo(() => {
@@ -57,6 +59,7 @@ export function Scans() {
         }
         tight
       >
+        {rowError ? <Alert kind="error">{rowError}</Alert> : null}
         {scans.error ? (
           <Alert kind="error">{scans.error}</Alert>
         ) : scans.loading && !scans.data ? (
@@ -78,6 +81,18 @@ export function Scans() {
                 {rows.map((scan) => (
                   <tr key={scan.sha256}>
                     <td className="text">
+                      {/* 이 화면의 한 줄이 곧 파일 하나다.  그래서 여기서
+                          지우는 것은 스윕 하나가 아니라 그 파일 전부이고,
+                          그것이 이 목록에서 유일하게 말이 되는 단위다. */}
+                      <DeleteMeasurementButton
+                        name={scan.name}
+                        note={`스윕 ${scan.sweeps}개 전부`}
+                        onError={setRowError}
+                        onDelete={async () => {
+                          await api.deleteScan(scan.sha256)
+                          scans.reload()
+                        }}
+                      />
                       <Link to={`/scans/${scan.sha256}`}>{scan.name}</Link>
                     </td>
                     <td className="text dim">

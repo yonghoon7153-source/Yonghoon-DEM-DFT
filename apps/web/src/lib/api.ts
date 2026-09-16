@@ -257,6 +257,14 @@ export const api = {
     request<Drt>(`/api/eis/spectra/${id}/drt${query(params)}`),
   spectrumDrtSweep: (id: number, params?: Params) =>
     request<DrtSweep>(`/api/eis/spectra/${id}/drt/sweep${query(params)}`),
+  /** 한 파일에서 나온 스윕 **전부**를 기록에서 지운다.  원본은 남는다.
+   *
+   *  `deleteSpectrum` 과 나란히 두는 이유는 세는 단위가 달라서다: 올린 것은
+   *  파일 하나고 거기서 스윕 스물한 개가 나온다.  무르는 일이 올리는 일보다
+   *  스물한 배 어려우면 아무도 무르지 않는다. */
+  deleteScan: (sha256: string) =>
+    request<{ sweeps: number; fits: number }>(
+      `/api/eis/scans/${sha256}`, { method: 'DELETE' }),
   /** 이 스캔의 SOC 를 스윕 차례대로 적는다 (ADR 0038).
    *
    *  **수가 스윕 수와 달라도 앞에서부터 채우지 않는다** — 서버가 422 로
