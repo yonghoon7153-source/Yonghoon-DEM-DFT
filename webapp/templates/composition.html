@@ -11,6 +11,13 @@
     <div class="sub"><span class="mono">{{ comp.formula }}</span> · {{ comp.cell }} · <span class="badge b-fam">{{ comp.family }}</span></div>
   </div>
   <div class="page-actions">
+    {# 해석 카드가 가리키는 화면 보고서 — **머리에 올린다**. 2026-09-16: 카드 절 안에만
+       있던 링크를 1저자가 못 찾았다("여기에 url이 어디있어"). 카드마다 따로 세지 않고
+       이 조성의 카드 링크를 전부 모아 중복 없이 낸다. #}
+    {% for lk in interps|map(attribute='links')|select|sum(start=[])|unique(attribute='url') %}
+    <a class="btn sm" href="{{ lk.url }}" target="_blank" rel="noopener noreferrer"
+       title="{{ lk.label }}">📄 보고서</a>
+    {% endfor %}
     <button class="btn sm" onclick="copyComp()">📋 값 복사</button>
     <a class="btn" href="/compare">⇄ 비교</a>
   </div>

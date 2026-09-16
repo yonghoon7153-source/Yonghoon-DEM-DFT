@@ -4028,11 +4028,20 @@ def test_card_links_render_outside_the_fold():
     assert DV.card_links(None) == [] and DV.card_links(["x"]) == []
 
     # ── 실제 렌더 — 접힘 **밖**이어야 한다 ──────────────────────────
-    h = A.app.test_client().get("/composition/modelc_nd_doped").get_data(as_text=True)
+    cl = A.app.test_client()
+    h = cl.get("/composition/modelc_nd_doped").get_data(as_text=True)
     assert f'href="{U}"' in h, "카드 링크가 화면에 없다"
     before = h[:h.index(f'href="{U}"')]
     depth = before.count("<details") - before.count("</details>")
     assert depth == 0, f"⛔ 링크가 접힘 {depth}겹 안에 있다 — 접힌 링크는 붙인 게 아니다"
+
+    # ── 머리 버튼 줄에도 있어야 한다 (1저자가 여기서 찾았다) ─────────
+    head = h[h.index('class="page-actions"'):h.index("</div>", h.index("⇄ 비교"))]
+    assert U in head and "📄" in head, f"⛔ 머리 버튼 줄에 보고서가 없다: {head[:200]!r}"
+    # ⛔음성: 카드 링크가 없는 조성에는 버튼을 **지어내지 않는다**
+    h2 = cl.get("/composition/comp1").get_data(as_text=True)
+    head2 = h2[h2.index('class="page-actions"'):h2.index("</div>", h2.index("⇄ 비교"))]
+    assert "📄" not in head2, f"⛔ 링크 없는 조성에 버튼이 떴다: {head2[:200]!r}"
 
 
 def test_mdlite_links_and_rejects_bad_schemes():
