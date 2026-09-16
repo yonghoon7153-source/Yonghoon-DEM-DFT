@@ -89,6 +89,9 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes ×
 <p style="margin:10px 0 0"><strong>답</strong> — <strong>둘 다이고, 서로 독립이고, 전압에 따라 주역이 바뀐다.</strong>
 저전압에선 <span class="ox">O</span> 가 더 이롭고, 고전압에선 <span class="nd">Nd</span> 가 압도적이다.
 둘을 같이 넣으면 <strong>정확히 합만큼</strong> 좋아진다 — 시너지도 상쇄도 없다.</p>
+<p style="margin:10px 0 0"><strong>기전</strong> — <span class="nd">Nd</span> 는 <em>더 좋은</em>
+인산염을 만드는 게 아니라 <strong>Li 를 안 쓰는</strong> 인산염 경로를 연다 (NdPO₄ 는 P 하나당
+Li 0 개, Li₃PO₄ 는 3 개). 고전압이 Li 를 빼가면서 그 경로의 값어치가 커진다 — §3.</p>
 </div>
 
 <h2>1. 분해 — 대조 조성 둘을 추가해서 갈랐다</h2>
@@ -161,10 +164,14 @@ Nd+O       0.074 Li₄₈Nd₂P₁₀S₄₁Cl₁₆O₃ + 0.926 LiCoO₂
 <li>저전압에선 P 가 아직 <strong>PS₄ 골격에 붙어 있다</strong>. Nd 가 할 일이 없다.</li>
 <li>전압이 오르면 S 가 산화되고 <strong>P–S 가 끊어진다</strong>. 풀려난 P 가 갈 곳이 필요하다.</li>
 <li>Nd 가 없으면 → <strong>P₂S₇</strong> (P–S, 덜 안정).<br>
-    Nd 가 있으면 → <strong>NdPO₄ · Nd(PO₃)₃ · NdP₅O₁₄ · LiNd(PO₃)₄</strong>.
-    희토류 인산염은 극히 안정한 상이다 (모나자이트가 천연 광물로 존재할 정도).</li>
+    Nd 가 있으면 → <strong>NdPO₄ · Nd(PO₃)₃ · NdP₅O₁₄ · LiNd(PO₃)₄</strong>.</li>
 <li>풀려나는 P 의 양이 전압과 함께 늘어나므로 <strong>Nd 의 이득도 전압과 함께 커진다</strong>.</li>
 </ol>
+<p style="margin:12px 0 0;padding:9px 12px;border-left:3px solid var(--warn);
+   background:var(--warn-soft);font-size:.9rem"><strong>⛔ 이 가설의 3 번은 아래 §3 에서
+반쯤 반증됐다.</strong> "희토류 인산염이 더 안정하다" 는 <strong>Li₃PO₄ 기준으로는 틀렸다</strong>.
+살아남은 것은 "P₂S₇ 보다 훨씬 안정하다" 쪽이고, Nd 가 이기는 진짜 이유는 따로 있다 —
+<strong>Li 를 안 쓴다</strong>. 이 카드를 여기 그대로 둔 것은 <strong>어디서 틀렸는지 보이게 하려는 것</strong>이다.</p>
 <p style="margin:12px 0 0"><strong>가법성도 이걸로 설명된다</strong> — O 는 격자 안에서
 <em>이미 붙어 있는</em> P 를 미리 인산염화하고(그래서 전압 무관한 상수 오프셋),
 Nd 는 <em>풀려난</em> P 를 사후에 잡는다. <strong>다른 P 풀에 작용</strong>하니 서로 간섭하지 않는다.</p>
@@ -173,13 +180,154 @@ Nd 는 <em>풀려난</em> P 를 사후에 잡는다. <strong>다른 P 풀에 작
 다만 싱크가 Li₃PO₄ 가 아니라 희토류 인산염이다.</p>
 </div>
 
+
+
+<h2>3. 검증 — 그리고 가설의 절반이 틀렸다</h2>
+
+<p>§2 의 가설을 재려고 같은 hull 에서 <strong>균형반응 10 개</strong>를 돌렸다
+(<code>ComputedReaction</code>, 계수는 도구가 잡는다). 검산 고리 둘이 닫힌다 —
+<span class="mono">③−④ = ⑤−⑥ = ① = +1.5035</span>, 소수 4 자리까지.</p>
+
 <div class="card warn">
-<p style="margin:0"><strong>⚠ 이건 가설이다.</strong> hull 은 <em>무엇이</em> 생기는지만 말한다.
-검증하려면 MP 에서 Nd 인산염들의 <strong>생성에너지</strong>를 뽑아 Li₃PO₄(−2.767)·P₂S₇ 와
-같은 표에 놓아 싱크 강도를 정량화해야 한다. gabia 에서 몇 초다.</p>
+<p style="margin:0"><strong>⛔ 철회</strong> — "NdPO₄ 가 Li₃PO₄ 보다 깊은 P 싱크다" 는
+<strong>틀렸다</strong>. <span class="mono">Li₃PO₄ + ½Nd₂O₃ → NdPO₄ + 1.5 Li₂O</span> 가
+<strong>+1.5035 eV/P</strong> 로 <strong>양수</strong>다.
+생성에너지 표도 같은 말을 한다 — P 하나당 Li₃PO₄ 가 더 깊다.</p>
 </div>
 
-<h2>3. 양극별 원자료</h2>
+<h3>그런데 Li 예산을 낮추면 부호가 뒤집힌다</h3>
+
+<p>같은 형식(<span class="mono">&lt;공여상&gt; + ½Nd₂O₃ → NdPO₄ + Li₂O</span>)에서
+<strong>P 하나당 Li 개수만</strong> 바꾸면 완전 단조다.</p>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>P 공여상</th><th>Li/P</th><th>ΔE (eV/P)</th><th>균형반응</th><th>치환</th></tr></thead>
+<tbody>
+<tr><td class="mono">LiNd(PO3)4</td><td>0.25</td><td class="nd">-1.2156</td><td class="mono" style="text-align:left;font-size:.74rem">0.25 LiNd(PO3)4 + 0.375 Nd2O3 -> NdPO4 + 0.125 Li2O</td><td>Nd→Nd</td></tr>
+<tr><td class="mono">LiPO3</td><td>1</td><td class="nd">-0.8239</td><td class="mono" style="text-align:left;font-size:.74rem">LiPO3 + 0.5 Nd2O3 -> NdPO4 + 0.5 Li2O</td><td>Li→Nd</td></tr>
+<tr><td class="mono">Li4P2O7</td><td>2</td><td class="">+0.4030</td><td class="mono" style="text-align:left;font-size:.74rem">0.5 Li4P2O7 + 0.5 Nd2O3 -> NdPO4 + Li2O</td><td>Li→Nd</td></tr>
+<tr><td class="mono">Li3PO4</td><td>3</td><td class="">+1.5035</td><td class="mono" style="text-align:left;font-size:.74rem">Li3PO4 + 0.5 Nd2O3 -> NdPO4 + 1.5 Li2O</td><td>Li→Nd</td></tr>
+</tbody></table>
+</div>
+
+<figure>
+<img src="cei_li_budget_ladder.png" alt="Left: exchange energy versus Li per P, crossing zero near 1.67. Right: formation energy per atom for fifteen phases grouped into Nd phosphates, Li phosphates, thiophosphates and Nd non-phosphates.">
+<figcaption><strong>Fig 4.</strong> 왼쪽 — Li/P 사다리. 영점은 <strong>인접 두 점 선형보간</strong>으로
+<strong>Li/P ≈ 1.67</strong> (전역 피팅 아님 — 3 점에 과하다). 빈 사각형
+LiNd(PO₃)₄ 는 Nd→Nd 치환이라 같은 축에 찍되 <strong>기울기 비교에서 뺐다</strong>.
+오른쪽 — 상별 생성에너지. P₂S₇ 가 표 전체에서 제일 얕다
+(-0.5120 eV/atom, 인산염의 1/5 수준).</figcaption>
+</figure>
+
+<div class="card answer">
+<p style="margin:0"><strong>고쳐 쓴 기전</strong> — Nd 는 "더 좋은 인산염을 만드는" 게 아니라
+<strong>Li 를 안 쓰고 인산염을 만드는 경로를 연다</strong>. Li₃PO₄ 는 P 하나당 Li 3 개를
+먹고 NdPO₄ 는 <strong>0 개</strong>다. 고전압에서 Li 가 양극으로 빠져나가면 Li 가 희소해지고,
+그때 경쟁은 Li₃PO₄ 대 NdPO₄ 가 아니라 <strong>LiPO₃ 대 NdPO₄</strong> 가 된다 —
+거기선 Nd 가 -0.8239 eV/P 로 이긴다.</p>
+<p style="margin:10px 0 0">O 효과가 전압에 평평하고(인산염을 <em>가능</em>하게만 함)
+Nd 효과가 6.6 배 커지는 것(Li 가 희소해질수록 값어치가 커짐)이 이 그림에 그대로 맞는다.</p>
+</div>
+
+<h3>버려지는 Li 가 어디로 가느냐도 부호를 바꾼다</h3>
+
+<p>P 쪽이 똑같고 <strong>밀려난 Li 3 개의 행선지만</strong> 다른 두 반응:</p>
+
+<div class="rx">Li₂O 로   Li3PO4 + 0.5 Nd2O3 -> NdPO4 + 1.5 Li2O
+          ΔE = +1.5035 eV/P   <span style="color:#6b7280">(Nd 진다)</span>
+LiCl 로   NdCl3 + Li3PO4 -> NdPO4 + 3 LiCl
+          ΔE = -0.5029 eV/P   <span style="color:#6d28d9;font-weight:600">(Nd 이긴다)</span></div>
+
+<p>2.01 eV/P 차이가 통째로 Li₂O 대 LiCl 이다.
+아지로다이트에는 f.u. 당 Cl 이 1.6 개 있고, §B 의 hull 이 고른 산물에 실제로
+<span class="mono">NdPO₄ + 0.77 LiCl</span> 이 같이 나온다 — <strong>작동하는 채널은 LiCl 쪽</strong>이다.</p>
+
+<h3>살아남은 절반 — P₂S₇ 는 형편없는 P 싱크다</h3>
+
+<div class="rx">P₂S₇ → Nd 인산염   0.5 P2S7 + 0.5 Nd2O3 + 2.5 Li2O -> NdPO4 + 2.5 Li2S + S
+                   ΔE = -4.7595 eV/P
+P₂S₇ → Li 인산염   0.5 P2S7 + 4 Li2O -> Li3PO4 + 2.5 Li2S + S
+                   ΔE = -6.2630 eV/P</div>
+
+<p>둘 다 −5 eV/P 안팎으로 압도적이다. <strong>O 만 있으면 P 는 어느 쪽이든 인산염으로 간다</strong> —
+이것이 O 효과가 전압에 평평한 이유고, §2 가설에서 <strong>살아남은 부분</strong>이다.</p>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>상</th><th>묶음</th><th>E_f (eV/atom)</th><th>E_f (eV/P)</th><th>hull 거리</th></tr></thead>
+<tbody>
+<tr><td class="mono">NdPO4</td><td>Nd phosphate</td><td>-3.4502</td><td>-20.70</td><td>0.0000</td></tr>
+<tr><td class="mono">Nd(PO3)3</td><td>Nd phosphate</td><td>-2.9879</td><td>-12.95</td><td>0.0000</td></tr>
+<tr><td class="mono">NdP5O14</td><td>Nd phosphate</td><td>-2.8238</td><td>-11.30</td><td>0.0000</td></tr>
+<tr><td class="mono">LiNd(PO3)4</td><td>Nd phosphate</td><td>-2.9263</td><td>-13.17</td><td>0.0000</td></tr>
+<tr><td class="mono">Li3PO4</td><td>Li phosphate</td><td>-2.7535</td><td>-22.03</td><td>0.0000</td></tr>
+<tr><td class="mono">Li4P2O7</td><td>Li phosphate</td><td>-2.7439</td><td>-17.84</td><td>0.0000</td></tr>
+<tr><td class="mono">LiPO3</td><td>Li phosphate</td><td>-2.7032</td><td>-13.52</td><td>0.0000</td></tr>
+<tr><td class="mono">P2O5</td><td>Li phosphate</td><td>-2.4389</td><td>-8.54</td><td>0.0000</td></tr>
+<tr><td class="mono">Li3PS4</td><td>thiophosphate</td><td>-1.1825</td><td>-9.46</td><td>0.0000</td></tr>
+<tr><td class="mono">P2S7</td><td>thiophosphate</td><td>-0.5120</td><td>-2.30</td><td>0.0000</td></tr>
+<tr><td class="mono">P2S5</td><td>thiophosphate</td><td>-0.5193</td><td>-1.82</td><td>0.0000</td></tr>
+<tr><td class="mono">Nd2O3</td><td>Nd non-phosphate</td><td>-3.7816</td><td>—</td><td>0.0000</td></tr>
+<tr><td class="mono">NdCl3</td><td>Nd non-phosphate</td><td>-2.7479</td><td>—</td><td>0.0000</td></tr>
+<tr><td class="mono">Nd2S3</td><td>Nd non-phosphate</td><td>-2.3611</td><td>—</td><td>0.0000</td></tr>
+<tr><td class="mono">NdOCl</td><td>Nd non-phosphate</td><td>-3.2665</td><td>—</td><td>0.0556</td></tr>
+</tbody></table>
+</div>
+
+<div class="card warn">
+<p style="margin:0"><strong>⚠ E_f/P 열은 반응에너지가 아니다.</strong> O:P 비가 다른 상을
+한 줄에 놓으면 P–O 결합 수 차이를 P 하나당으로 뭉갠다 — <strong>순위 힌트</strong>다.
+판정은 위 균형반응이 한다. 반응물·생성물 집합도 <strong>사람이 고른 것</strong>이고,
+hull 이 고르는 판정은 §4 쪽이다.</p>
+</div>
+
+
+<h2>4. 전 혼합범위 스캔 — 최소점 하나가 아니라 곡선 전체</h2>
+
+<p>지금까지 쓴 값은 <strong>가장 깊은 kink 하나</strong>였다. 도구가 나머지를 계산해 놓고
+버리고 있었다 — 이제 전 kink 를 남긴다(조건당 16–18 개). 그러면 Richards/Ong 식
+<em>반응에너지 vs 혼합비 x</em> 곡선이 통째로 그려진다.</p>
+
+<figure>
+<img src="cei_x_scan_panels.png" alt="Six panels of interfacial reaction energy versus electrolyte mixing fraction, one per electrolyte, each with six voltage curves. The two Nd-containing panels are dense with markers showing Nd-phosphate-forming kinks; the four non-Nd panels have none.">
+<figcaption><strong>Fig 5.</strong> 양극 NMC811 기준, 전해질별 패널 · 전압 6 곡선
+(밝은 노랑 2.5 V → 진한 적갈 4.5 V). ▽ = 최소점,
+<span class="nd">◦</span> = 그 kink 의 산물에 Nd 인산염이 있는 지점.
+⚠ 전압은 원소가 아니라 순차량이라 원소 팔레트를 쓰지 않았다 (명도 단조 램프).</figcaption>
+</figure>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>전해질</th><th>최소 깊이 (4.5 V)</th><th>∫E dx (4.5 V)</th><th>Nd 인산염 kink (전 조건)</th></tr></thead>
+<tbody>
+<tr><td>LPSCl</td><td>-1.7214</td><td>-1.4160</td><td class="">0/440 = 0%</td></tr>
+<tr><td>LPSCl1.6</td><td>-1.4979</td><td>-1.2850</td><td class="">0/447 = 0%</td></tr>
+<tr><td>LPSOCl (O 0.2)</td><td>-1.4833</td><td>-1.2717</td><td class="">0/469 = 0%</td></tr>
+<tr><td>O 0.3</td><td>-1.4759</td><td>-1.2649</td><td class="">0/466 = 0%</td></tr>
+<tr><td>Nd only</td><td>-1.4009</td><td>-1.2181</td><td class="nd">357/516 = 69%</td></tr>
+<tr><td>Nd + O</td><td>-1.3796</td><td>-1.1989</td><td class="nd">384/515 = 75%</td></tr>
+</tbody></table>
+</div>
+
+<p>양극 4 종 평균이다. <strong>세 지표가 같은 순서</strong>를 준다 —
+최소 깊이·곡선 아래 넓이·(앞 절의) 최소 kink 값. 제일 얕은 것이
+<strong>Nd + O</strong> (-1.3796 eV/atom).</p>
+
+<div class="card answer">
+<p style="margin:0"><strong>가장 깨끗한 신호</strong> — Nd 인산염이 나오는 kink 비율이
+<strong>이분법</strong>이다. Nd 없는 넷은 <strong>0 %</strong>(전 조건 1,822 kink 중 <strong>0 개</strong>),
+Nd 있는 둘은 <strong>69–75 %</strong>. 최소점 하나만 보면 안 보이던 것이다 —
+Nd 인산염은 특정 혼합비에서만 나오는 게 아니라 <strong>x 축 거의 전체에 걸쳐</strong> 나온다.</p>
+</div>
+
+<div class="card warn">
+<p style="margin:0"><strong>⚠ ∫E dx 를 '총 반응성' 으로 인용하지 않는다.</strong> x 는
+혼합비일 뿐 실제 계면에서 어느 x 가 실현되는지는 이 계산이 말하지 않는다. 여기서
+쓸 수 있는 것은 <strong>같은 격자 위에서의 순서</strong>다.</p>
+</div>
+
+<h2>5. 양극별 원자료</h2>
 
 <figure>
 <img src="cei_reaction_energy_by_cathode.png" alt="Reaction energy versus voltage for six electrolytes against four cathodes: LiCoO2, LiNiO2, LiMnO2 and NMC811.">
@@ -189,7 +337,7 @@ Nd 는 <em>풀려난</em> P 를 사후에 잡는다. <strong>다른 P 풀에 작
 곡선을 "계면 반응성" 으로 읽으면 안 된다.</figcaption>
 </figure>
 
-<h2>4. 말하면 안 되는 것</h2>
+<h2>6. 말하면 안 되는 것</h2>
 <ul>
 <li><span class="no">⛔</span> 반응에너지 <strong>절대값</strong>을 다른 논문 값과 나란히 놓기 —
 MP 보정 눈금이 산화물(+U)·황화물(GGA) <strong>혼합</strong>이다.</li>
@@ -199,6 +347,14 @@ Nd³⁺↔3Li⁺ 라 <strong>Li 공공 2개/Nd</strong> 가 묶여 있고, 전�
 만들거나 이완한 적 없는 hull 위의 조성점이다.</li>
 <li><span class="no">⛔</span> 이 이득을 <strong>부동태화</strong>로 읽기 — 이건 계면 반응 <strong>구동력</strong>이지
 산물의 전자 성질이 아니다. 갭 단계가 따로 답한다.</li>
+<li><span class="no">⛔</span> <strong>"NdPO₄ 가 Li₃PO₄ 보다 깊은 P 싱크다"</strong> —
+<strong>철회됨</strong> (§3). 균형반응이 <span class="mono">+1.5035 eV/P</span> 로 양수다.
+Nd 가 이기는 것은 <strong>Li 예산이 P 하나당 ~1.7 개 밑</strong>일 때이거나,
+밀려난 Li 가 <strong>LiCl 로 갈 때</strong>다 — 조건을 빼고 쓰면 안 된다.</li>
+<li><span class="no">⛔</span> <code>E_f/P</code> 열을 <strong>반응에너지처럼</strong> 쓰기 —
+O:P 비가 다른 상을 뭉개는 <strong>순위 힌트</strong>다.</li>
+<li><span class="no">⛔</span> x-스캔의 <strong>∫E dx</strong> 를 '총 반응성' 으로 인용하기 —
+실제 계면에서 어느 x 가 실현되는지 이 계산은 말하지 않는다. 쓸 수 있는 건 <strong>순서</strong>다.</li>
 <li><span class="no">⛔</span> Nd 의 <strong>산화수 변화</strong>를 주장하기 — MP 도 우리도 frozen-4f (<code>Nd_3</code>) 라
 4f 관여 redox 가 모형에 아예 없다.</li>
 </ul>
@@ -208,6 +364,9 @@ Nd³⁺↔3Li⁺ 라 <strong>Li 공공 2개/Nd</strong> 가 묶여 있고, 전�
 <span>cei_nd_o_decomposition.png / .csv</span>
 <span>cei_nd_phosphate_sink.png / .csv</span>
 <span>cei_reaction_energy_by_cathode.png / .csv</span>
+<span>cei_li_budget_ladder.png / .csv</span>
+<span>cei_formation_energies.csv</span>
+<span>cei_x_scan_panels.png / .csv</span>
 </div>
 <p style="color:var(--mut);font-size:.87rem">CSV 는 Origin 바로 넣을 수 있게 열 이름을 명시했다.
 그림은 house style (INK #1f2937 · MUT #6b7280 · dpi 300 · top/right spine 제거).
@@ -219,6 +378,7 @@ house <code>ELEM["Nd"]</code>(#db2777)는 O(#be123c)와 같은 붉은 계열이�
 개정문 <code>cathode_cei_dopant_decomposition_amendment_2026_09_16</code> (ratified, 결과 보기 전 봉인) ·
 결과 <code>cei_dopant_decomposition_result_2026_09_16</code><br>
 원자료 <code>db/properties/cei_interface_V_2026_09_16.json</code> ·
+<code>cei_formation_2026_09_16.json</code> ·
 <code>cei_esw_Li_2026_09_16.json</code> · <code>cei_esw_O_2026_09_16.json</code><br>
 citable: false — 1저자·리뷰 판정 전이다.
 </footer>
