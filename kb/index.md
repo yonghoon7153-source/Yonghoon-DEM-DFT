@@ -1,13 +1,14 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-16 · managed-files: 426
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-16 · managed-files: 427
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 225건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 226건)
 - 2026-09-16 · `kb/methodology/cei_model_transfer_to_cascade_2026_09_16.md` — CEI 모델을 캐스케이드로 옮기기 — 무엇이 이미 배선됐고 무엇이 안 됐나 · 진행
+- 2026-09-16 · `kb/projects/handoff_2026_09_16_cathode_cei.md` — 인수인계 — 2026-09-16 세션 (양극 CEI §A–§E · 도펀트 스크리닝 · dual compatibility) · 진행
 - 2026-09-15 · `kb/papers/self_doping_dft_paragraph_2026_09_08.md` — 원고 자가도핑 DFT 문단 — 스핀 하나로 좁힌 5문단 (2·3·6 계열) · 1저자 승인 — 삽입 위치 대기
 - 2026-09-14 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-14 · `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나 · 발송됨
@@ -26,7 +27,6 @@
 - 2026-09-13 · `kb/reviews/codex_BQ5_prompt_eprime_card_2026_09_13.md` — 회신 BQ-5 프롬프트 — 보고량 카드 v5 (공통 총부피 E′) §1–3 심사 · 회신됨-방향GO-카드NO-GO
 - 2026-09-13 · `kb/reviews/codex_BQ5_reply_eprime_card_2026_09_13.md` — 회신 BQ-5 — E′ 방향 GO · 카드 확정·실행 NO-GO (집계식·MD 판정·비용 상한 세 묶음) · 회신됨-방향GO-카드NO-GO
 - 2026-09-13 · `kb/reviews/codex_BQ6_prompt_eprime_v51_2026_09_13.md` — 회신 BQ-6 프롬프트 — 카드 v5.1: 해제조건 ①②③ 이행 확인 · 회신됨-②미해제
-- 2026-09-13 · `kb/reviews/codex_BQ6_reply_eprime_v51_2026_09_13.md` — 회신 BQ-6 — ①③ 해제 · ② 미해제 (도구가 검사하는 것 ≠ 카드가 선언한 것) · 회신됨-②미해제
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -358,7 +358,7 @@
 - `kb/reports/sdcp_review_action_plan_2026_08_03.md` — SDCP 파이프라인 — 리뷰 2건 통합 실행계획 (2026-08-03)
 - `kb/reports/weekly_2026_09_14.md` — 주간 정리 2026-09-07 ~ 09-13 (주간보고 초안)  (2026-09-14 · 완료 (2026-09-14 · 다음 주 문서는 새 파일))
 
-## projects/ (25)
+## projects/ (26)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -372,6 +372,7 @@
 - `kb/projects/digital_twin_v2_roadmap.md` — Argyrodite Digital Twin Network — Long-term Vision (v2 roadmap)
 - `kb/projects/external_review_prompt_digital_twin_2026_05_18.md` — External Review Prompt — Digital Twin Platform Readiness (2026-05-18)
 - `kb/projects/handoff_2026_09_03_zn_nd.md` — 인수인계 — 2026-09-03 세션 (Zn ALZIB 협업 · Nd 교수님 지침 · 도구 2개)  (2026-09-03 · 활성)
+- `kb/projects/handoff_2026_09_16_cathode_cei.md` — 인수인계 — 2026-09-16 세션 (양극 CEI §A–§E · 도펀트 스크리닝 · dual compatibility)  (2026-09-16 · 진행)
 - `kb/projects/li_neb_anode_free.md` — Li Adatom Diffusion on Anode-Free SSB Interphases  (2026-06-01 · setup)
 - `kb/projects/ml_opportunities_from_lab_ppt_2026_07.md` — 랩 ML 파이프라인(TabPFN)과 우리 캠페인의 접점 — 2026-07-28
 - `kb/projects/mlip_next_campaigns_2026_07.md` — MLIP(UMA) 차기 캠페인 후보 제안서 — cascade 확장 7건  (2026-07-27 · proposal)
