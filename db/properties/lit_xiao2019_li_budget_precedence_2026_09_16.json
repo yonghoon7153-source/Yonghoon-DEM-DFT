@@ -4,7 +4,7 @@
  "date": "2026-09-16",
  "citable": false,
  "system": "cathode_cei",
- "제목": "🔴 Li 예산 축은 **우리가 처음이 아니다** — Xiao 2019 (Joule) 이 이미 발표했다",
+ "제목": "🔴 문헌 대조 — Li 예산 축은 선행이 있고, 우리 논리틀은 **방법 원전이 이미 세운 것**이다",
  "★_한_줄": "2026-09-16 에 독립적으로 찾은 *\"Li 를 적게 쓰는 인산염이 고전압에 유리하다\"* 는 **Ceder 그룹이 2019 년 Joule 에 발표한 것**이다. 우리 계산은 **재발견이자 독립 확인**이고, **신규성은 그 관계가 아니라 다른 데 있다.**",
  "0_어떻게_찾았나": "1저자 질문 *\"할 수 있는 게 더 있긴 해?\"* (2026-09-16). 하루 종일 hull 기반 계면 스크리닝을 하면서 **litdb 274 편을 한 번도 안 봤다**는 것을 그때 알았다. ⛔ 이게 이 기록의 진짜 교훈이다 — **계산을 시작하기 전에 문헌을 봤어야 했다.**",
  "1_무엇이_겹치나": {
@@ -30,6 +30,23 @@
   "banik2022_substitutions_oxidative_stability_argyrodite": "**Yifei Mo**(우리가 쓰는 grand-potential 방법의 원저자) + **Zeier**. 결론: *\"양·음이온 치환은 아지로다이트 산화 안정성을 거의 못 바꾼다 — VBM 이 S 에 고정되기 때문. **양극 코팅이나 다른 물질군이 필요하다.**\"* ⇒ 우리 §5 의 *\"에너지 축에서 도펀트 일곱이 구분되지 않는다\"* 와 **같은 방향**이다. 우리 결과가 이상한 게 아니라 **예상되는 것**이었다. ⚠ 다만 치환 자리가 다르다 — 저들은 골격(P→Si/Ge · Cl→I), 우리는 Li 자리(M³⁺↔3Li⁺). ⚠ digest 텍스트만 봤고 **그림은 안 봤다.**",
   "aykol2014_cathode_coating_thermodynamics": "digest 가 이미 경계를 그어 뒀다 — 🟢 *\"코팅은 **반응 산물이 안정한 고체일 때만** 보호한다\"* 는 가져올 수 있고, 🔴 *\"Al₂O₃·MgO·Sc₂O₃ 추천 목록\"* 은 **액체계 HF 축**이라 가져오면 안 된다. ⛔ **우리 §5 에서 Al·Sc 가 일부 축 1등으로 나온 것을 Aykol 의 Al₂O₃·Sc₂O₃ 추천과 같은 편으로 읽으면 안 된다** — 완전히 다른 축이다. ⚠ 그림 안 봤다."
  },
- "5_아직_안_본_것": "litdb 274 편 중 **3 편만** 봤다(xiao2019 그림 2장 · banik2022 digest · aykol2014 digest). `aykol2016` · `anderson2024_llzo_comprehensive_dopant_screening` · `adeli2019_halide_substitution` · `cha2024_dualcompatible_halide_ncm_lpscl_interface` · `104. Optimizing Ionic Conductivity … Dopant Engineering` 등이 남아 있다. **이 기록은 완결이 아니라 시작이다.**",
- "status": "recorded"
+ "5_아직_안_본_것": "litdb 274 편 중 **6 편** 봤다 (xiao2019 그림 2장 + digest · banik2022 · aykol2014 · zhu2015 · kang2025 · 토큰 순위로 본 목록). `aykol2016` · `anderson2024`(LLZO 도펀트) · `cha2024_dualcompatible_halide_ncm_lpscl_interface` · `yun2023_deciphering_degradation_halide_vs_sulfide` · `lu2024_lowtemp_assb_li2zro3_interface` · `kim2021_review_oxide_sulfide_se_interfaces` · `104. Dopant Engineering` 이 남았다. **여전히 시작이다.**",
+ "status": "recorded",
+ "6_추가_대조_2026_09_16": {
+  "⚠_본_것": "아래 셋은 **digest 텍스트만** 봤다 — 그림은 안 봤다. (xiao2019 만 Fig 6·7 을 실제로 봤다.)",
+  "zhu2015_esw_grand_potential_origin": {
+   "누구": "Zhu · He · **Mo** (UMD) — **우리가 쓰는 grand-potential ESW 의 원전**.",
+   "한_줄": "황화물 intrinsic 창 **~1.6–2.3 V**. 실험의 '0–5 V 안정' 은 intrinsic 이 아니라 ① 분해 kinetics 과전압 ② **전자절연 분해산물 interphase 의 passivation** 에서 온다. **산물이 전자전도성이면 passivation 실패(연속 분해).** 코팅은 같은 원리의 인공 SEI 로 anodic limit 을 ~2–2.3 → ~4 V 로 확장.",
+   "⭐_우리와의_관계": "**우리 캠페인 전체가 이 틀 안에 있다.** ① 우리 무도핑 창 1.24–2.14 V 가 그들이 말한 1.6–2.3 V 대역에 있다 ② **§C(판별종 갭)가 정확히 그들이 말한 판정**이다 — *산물이 전자를 막나* ③ Nd/O 카드 §3 의 반대 증거(**Nd₂S₃ 갭 0.770 eV — 전자적으로 샌다**)가 그들이 지목한 **실패 조건 그 자체**다.",
+   "⇒_쓰는_법": "§C 의 **중요성**은 우리가 주장할 것이 아니라 **인용할 것**이다. 우리 기여는 *'그 판정을 도펀트가 바꾸는가'* 쪽이다."
+  },
+  "kang2025_highvoltage_parasitic_reaction_benefit_sulfide_assb": {
+   "누구": "Kang · Lee · Bae · **Jong-Won Lee** (한양대) · *Chem. Commun.* **2025**, 61, 16850 · **[우리 그룹]** · 실험 전용(계산 0).",
+   "계": "**NCM811 + Li₆PS₅Cl, 4.25 V 충전** — 우리 §B 격자 안이다. 음극 Li–In(0.62 V).",
+   "한_줄": "기생반응(SE 산화분해 → NCM chemical lithiation)은 **불가피**하다. LPSCl 을 NCM 에 dry-coating 하면 그 반응이 **균일**해져 SOC 가 고르게 내려가고 layered→rock-salt 전이가 표면에 국한된다 → 200 사이클 유지율 **15.0 %p** 우위. 결론: ***\"기생반응을 없애지 못하면 균일하게 만들어라.\"***",
+   "⭐_우리_기여의_자리": "그들은 레버가 **균일성**이라고 했다. 우리는 **두 번째 레버**를 댄다 — ***\"무엇이 만들어지는지를 바꾼다.\"*** 같은 기생반응이라도 산물이 P₂S₇ 냐 Nd 인산염이냐가 다르고, 그게 §2·§5 의 실측이다. **경쟁이 아니라 직교**다.",
+   "⭐_외부_확인": "그들이 LPSCl 창을 *\"<2.5 V vs Li/Li⁺\"* 로 적었다 — 우리 계산 **2.14 V** 와 같은 자리."
+  },
+  "★_세_편이_그리는_그림": "**Zhu2015**(틀: 산물이 전자를 막아야 산다) → **Xiao2019**(그 산물을 고르는 법: Li 적은 인산염) → **Kang2025, 우리 그룹**(현실: 기생반응은 못 막고 균일화가 레버) — **우리 일은 그 셋 사이의 빈 칸**이다: *전해질 도펀트가 계면에서 **산물 자체를 바꾼다.*** ⚠ 이 서사는 **주장이지 결과가 아니다.** 원고에서 쓰려면 세 편을 다 인용한 위에 세운다."
+ }
 }

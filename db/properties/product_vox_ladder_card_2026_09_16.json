@@ -30,13 +30,28 @@
   "**Li 전도도**를 안 본다.",
   "**Li 없는 상**에는 정의되지 않는다(§2)."
  ],
- "status": "proposed",
+ "status": "ratified",
  "status_history": [
   {
    "at": "2026-09-16",
    "state": "proposed",
    "by": "agent",
    "note": "1저자 '바로 하자'. 결과 보기 전에 R1–R4 와 '7번째 축 아님' 을 박았다. 4.5 V 게이트는 Xiao 가 쓴 선을 그대로 빌린다."
+  },
+  {
+   "at": "2026-09-16",
+   "state": "ratified",
+   "note": "결과 보기 전 비준 의도로 작성 → 실행 → R1 단조 통과, R2 는 갈렸다(LiPO3·LiNd(PO3)4 통과 · Li3PO4·Li4P2O7 미달). 문턱·대상 안 바꿨다."
   }
- ]
+ ],
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "at": "2026-09-16",
+  "by": "1저자",
+  "content_digest": "f02ed2789368b05857ab57271a5e1885c43d5ee9e60c5d57d4a54dd05e5b9f8b",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-16T15:30:00Z",
+  "commit": "f7ef1bba92ded77420e515d58ded1c6e87340f95"
+ }
 }
