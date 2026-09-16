@@ -120,7 +120,7 @@
 <p class="meta">2026-09-16 · grand-potential interfacial reactivity (Richards/Ong 2016) ·
 MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes × 6 voltages)</p>
 
-<ul class="toc"><li><a href="#s1"><b>1</b> 분해</a></li><li><a href="#s2"><b>2</b> 산물이 말한다</a></li><li><a href="#s3"><b>3</b> 검증 — 절반 철회</a></li><li><a href="#s4"><b>4</b> 전 혼합범위 스캔</a></li><li><a href="#s5"><b>5</b> 다른 3가 도펀트</a></li><li><a href="#s6"><b>6</b> 갭 단계 계획</a></li><li><a href="#s7"><b>7</b> 양극별 원자료</a></li><li><a href="#s8"><b>8</b> 말하면 안 되는 것</a></li></ul>
+<ul class="toc"><li><a href="#s1"><b>1</b> 분해</a></li><li><a href="#s2"><b>2</b> 산물이 말한다</a></li><li><a href="#s3"><b>3</b> 검증 — 절반 철회</a></li><li><a href="#s4"><b>4</b> 전 혼합범위 스캔</a></li><li><a href="#s5"><b>5</b> 다른 3가 도펀트</a></li><li><a href="#s6"><b>6</b> 갭 단계 계획</a></li><li><a href="#s7"><b>7</b> 반대쪽 접촉(전해질)</a></li><li><a href="#s8"><b>8</b> 양극별 원자료</a></li><li><a href="#s9"><b>9</b> 말하면 안 되는 것</a></li></ul>
 
 <div class="card answer">
 <p class="lead" style="margin:0"><strong>질문 둘</strong> — ① 이 효과가 Nd 특화인가 O 효과인가?
@@ -468,17 +468,17 @@ than to the element palette used elsewhere.</figcaption>
 <thead><tr><th>전해질</th><th>최소 깊이 (4.5 V)</th><th>∫E dx (4.5 V)</th><th>Nd 인산염 kink (전 조건)</th></tr></thead>
 <tbody>
 <tr><td>LPSCl</td><td>-1.7214</td><td>-1.4160</td><td class="">0/440 = 0%</td></tr>
-<tr><td>LPSCl$_{1.6}$</td><td>-1.4979</td><td>-1.2850</td><td class="">0/447 = 0%</td></tr>
-<tr><td>LPSOCl$_{1.6}$</td><td>-1.4833</td><td>-1.2717</td><td class="">0/469 = 0%</td></tr>
+<tr><td>LPSCl<sub>1.6</sub></td><td>-1.4979</td><td>-1.2850</td><td class="">0/447 = 0%</td></tr>
+<tr><td>LPSOCl<sub>1.6</sub></td><td>-1.4833</td><td>-1.2717</td><td class="">0/469 = 0%</td></tr>
 <tr><td>O 0.3 only</td><td>-1.4759</td><td>-1.2649</td><td class="">0/466 = 0%</td></tr>
 <tr><td>Nd only</td><td>-1.4009</td><td>-1.2181</td><td class="nd">357/516 = 69%</td></tr>
-<tr><td>LPSCl$_{1.6}$@Nd$_2$O$_3$</td><td>-1.3796</td><td>-1.1989</td><td class="nd">384/515 = 75%</td></tr>
+<tr><td>LPSCl<sub>1.6</sub>@Nd<sub>2</sub>O<sub>3</sub></td><td>-1.3796</td><td>-1.1989</td><td class="nd">384/515 = 75%</td></tr>
 </tbody></table>
 </div>
 
 <p>양극 4 종 평균이다. <strong>세 지표가 같은 순서</strong>를 준다 —
 최소 깊이·곡선 아래 넓이·(앞 절의) 최소 kink 값. 제일 얕은 것이
-<strong>LPSCl$_{1.6}$@Nd$_2$O$_3$</strong> (-1.3796 eV/atom).</p>
+<strong>LPSCl<sub>1.6</sub>@Nd<sub>2</sub>O<sub>3</sub></strong> (-1.3796 eV/atom).</p>
 
 <div class="card answer">
 <p style="margin:0"><strong>가장 깨끗한 신호</strong> — Nd 인산염이 나오는 kink 비율이
@@ -739,7 +739,130 @@ comp1 2.066 vs 재계산 2.0656 (같은 방법) · Nd₂O₃ 우리 3.9479 vs MP
 위 종수·전압 커버리지는 이 화면이 <strong>원자료에서 다시 계산</strong>한 것이다 —
 카드와 화면이 같은 JSON 을 본다.</p>
 
-<h2 id="s7">7. 양극별 원자료</h2>
+<h2 id="s7">7. 반대쪽 접촉 — 이 층은 전해질과도 지내야 한다</h2>
+
+<p>§1&#8211;§6 은 전부 <strong>양극 쪽</strong>을 봤다. 그런데 CEI 는 양극과 전해질
+<strong>사이</strong>에 끼어 있다 &#8212; 한쪽만 검사한 셈이다. 그래서 §2 의 산물을
+<strong>전해질(LPSCl<sub>1.6</sub>)에 직접 붙여</strong> 닫힌계 0&#8201;V 로 10 종을 다시 쟀다.
+대조군으로 <strong>무도핑 경로의 산물(Li<sub>3</sub>PO<sub>4</sub>&#183;LiPO<sub>3</sub>)</strong>을 같이 넣었다 &#8212;
+없으면 <em>"우리 산물이 전해질과 싸운다"</em> 를 해석할 수 없다.</p>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>상</th><th>분류</th><th>O/P</th><th>전해질과의 &Delta;E (eV/atom)</th><th>V<sub>ox</sub> (V)</th></tr></thead>
+<tbody>
+<tr><td class="mono">Li<sub>3</sub>PO<sub>4</sub></td><td>ortho</td><td>4.0</td><td class="mono">+0.0000</td><td class="mono">4.193</td></tr>
+<tr><td class="mono">Li<sub>4</sub>P<sub>2</sub>O<sub>7</sub></td><td>pyro</td><td>3.5</td><td class="mono">-0.0167</td><td class="mono">4.319</td></tr>
+<tr><td class="mono">NdPO<sub>4</sub></td><td>ortho</td><td>4.0</td><td class="mono">-0.0192</td><td class="mono">&#8212;</td></tr>
+<tr><td class="mono">LiPO<sub>3</sub></td><td>meta</td><td>3.0</td><td class="mono">-0.0388</td><td class="mono">4.980</td></tr>
+<tr><td class="mono">LiNd(PO<sub>3</sub>)<sub>4</sub></td><td>meta</td><td>3.0</td><td class="mono">-0.0434</td><td class="mono">5.013</td></tr>
+<tr><td class="mono">Nd(PO<sub>3</sub>)<sub>3</sub></td><td>meta</td><td>3.0</td><td class="mono">-0.0570</td><td class="mono">&#8212;</td></tr>
+<tr><td class="mono">NdCl<sub>3</sub></td><td>halide</td><td>&#8212;</td><td class="mono">-0.0584</td><td class="mono">&#8212;</td></tr>
+<tr><td class="mono">NdP<sub>5</sub>O<sub>14</sub></td><td>ultra</td><td>2.8</td><td class="mono">-0.0790</td><td class="mono">&#8212;</td></tr>
+<tr><td class="mono">Li<sub>2</sub>SO<sub>4</sub></td><td>sulfate</td><td>&#8212;</td><td class="mono">-0.0940</td><td class="mono">&#8212;</td></tr>
+<tr><td class="mono">Nd<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub></td><td>sulfate</td><td>&#8212;</td><td class="mono">-0.1470</td><td class="mono">&#8212;</td></tr>
+</tbody></table>
+</div>
+
+<figure>
+<img src="cei_dual_compat.png" alt="Left: reaction energy with the electrolyte plotted against oxidation limit for four lithium phosphates, falling monotonically. Right: horizontal bars ranking ten phases by reaction energy with the electrolyte, with the two sulfates at the bottom.">
+<figcaption><b>Fig. 7. Dual compatibility of the interphase products.</b>
+(a) Reaction energy of each product with the electrolyte LPSCl<sub>1.6</sub>
+(Li<sub>5.4</sub>PS<sub>4.4</sub>Cl<sub>1.6</sub>), evaluated in a closed system at 0&#8201;V with
+<i>use_hull_energy</i>&#8201;=&#8201;true, plotted against the oxidation limit V<sub>ox</sub> of the same
+phase taken from the lithium-budget ladder. Only the four phases for which both quantities are
+defined are shown; V<sub>ox</sub> is undefined for the lithium-free phases. The four points fall
+monotonically (Spearman &rho;&#8201;=&#8201;-1); with the direction registered in advance,
+the exact one-sided permutation probability is 1/24&#8201;=&#8201;0.042.
+The dotted line marks the 4.5&#8201;V design gate.
+(b) All 10 products ranked by the same quantity and coloured by class. Zero means the two
+phases coexist with no driving force to react; more negative means a stronger mutual reaction.
+Both sulfates lie below every phosphate.</figcaption>
+</figure>
+
+<div class="figexp">
+<div class="figexp-h">Fig. 7 을 읽는 법</div>
+<p><b>왼쪽 그림</b>의 가로축은 <b>"이 상이 몇 볼트까지 버티나"</b>(양극 쪽 요구),
+세로축은 <b>"이 상이 전해질과 얼마나 싸우나"</b>(전해질 쪽 요구)다. 세로축이
+<b>0 이면 안 싸우는 것</b>이고 아래로 내려갈수록 더 싸운다. 네 점이
+<b>오른쪽 아래로 완전히 단조</b>다 &#8212; <b>전압에 강해질수록 전해질과 더 싸운다.</b>
+두 요구가 같은 방향이면 좋은 상을 하나 고르면 되는데, <b>반대 방향이라 고를 수가 없다.</b></p>
+<p>점선이 4.5&#8201;V 설계 문턱이다. 그 선 <b>왼쪽</b>에 있는
+Li<sub>3</sub>PO<sub>4</sub> 는 전해질과 제일 잘 지내지만(&Delta;E&#8201;=&#8201;+0.0000)
+<b>전압을 못 버틴다</b>(4.193&#8201;V). 오른쪽 끝의 LiNd(PO<sub>3</sub>)<sub>4</sub> 는
+전압은 제일 잘 버티는데(5.013&#8201;V) 전해질과 제일 많이 싸운다
+(-0.0434). <b>그 둘이 같은 그림의 양 끝</b>이라는 게 이 절의 요지다.</p>
+<p><b>오른쪽 그림</b>은 10 종 전체 순위다. 색이 분류인데, 인산염은
+<b>응축될수록</b>(ortho&#8594;meta&#8594;ultra) 아래로 내려간다. 그런데 <b>황산염 둘이
+모든 인산염보다 더 아래</b>에 있다 &#8212; 응축도 축으로 설명되지 않는 <b>별도 위험</b>이다.</p>
+<p>⚠ 왼쪽 네 점은 <b>독립 표본이 아니라 한 화학 계열 위의 네 점</b>이다.
+0.042 은 <b>순서에 대한 순열 확률</b>이지 "일반적으로 성립한다" 는 뜻이 아니다.
+게다가 넷 다 <b>Li 를 품은 인산염</b>이라 응축도와 Li 함량이 이 계열에서는 분리되지 않는다 &#8212;
+기전 문장은 "인산염 일반" 이 아니라 <b>"Li-인산염 응축 계열"</b> 로 좁혀 써야 한다.</p>
+</div>
+
+<p class="plain">익숙한 것에 빗대면 <b>양면 테이프</b>다. 한쪽 면은 양극에, 다른 쪽 면은
+전해질에 붙어야 하는데, <b>한쪽에 잘 붙는 배합일수록 다른 쪽에는 잘 안 붙는</b> 상황이다.
+한 면만 시험해 보고 "좋은 테이프" 라고 하면 안 되는 이유가 이것이고,
+지금까지 우리가 본 것이 <b>딱 한 면</b>이었다.</p>
+
+<div class="card warn" data-claim="dualcompat.sulfate.risk">
+<p style="margin:0"><strong>🔴 우리한테 불리한 발견도 같이 나왔다.</strong>
+<span class="claim-mark">[불리]</span></p>
+<p style="margin:8px 0 0">Li<sub>2</sub>SO<sub>4</sub> 는 <strong>&Delta;E&#8201;=&#8201;-0.0940</strong> 로
+전체 10 종 중 아래에서 두 번째다. 그런데 이 상은 §2 산물 인구조사에서
+<strong>가장 많이 나온 상(65 회)</strong>이다 &#8212; <strong>우리가 제일 많이 만든다고 예측하는 상이
+전해질 쪽에서는 거의 최악</strong>이다. 제일 나쁜 Nd<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>
+(-0.1470) 도 황산염이다. 유리한 쪽만 싣는 화면은 원장이 아니라 광고다.</p>
+</div>
+
+<div class="card" data-claim="dualcompat.doping.defensive">
+<p style="margin:0"><strong>도핑이 이 접촉을 <em>새로</em> 망가뜨리지는 않는다 &#8212; 그러나 우위 논거는 아니다.</strong></p>
+<p style="margin:8px 0 0">무도핑 경로가 3.5&#8201;V 에서 실제로 만드는
+LiPO<sub>3</sub> 가 <strong>-0.0388</strong>, 도핑 경로의
+LiNd(PO<sub>3</sub>)<sub>4</sub> 가 <strong>-0.0434</strong> 다.
+차이 0.0047&#8201;eV/atom 은 이 계산의 해상도 안쪽이고,
+우리는 이 양에 대한 문턱을 <strong>사전에 정해 둔 적이 없다</strong>.
+⇒ <strong>"둘은 구분되지 않는다"</strong> 라고만 쓴다. <em>"도핑이 더 낫다"</em> 도
+<em>"더 나쁘다"</em> 도 쓰지 않는다.</p>
+</div>
+
+<div class="card warn">
+<p style="margin:0"><strong>⛔ 이 절에서 철회된 것 하나</strong></p>
+<p style="margin:8px 0 0">처음 8 종만 봤을 때 <em>"O/P 응축도 <strong>하나로</strong>
+&Delta;E 가 단조 정렬된다"</em> 고 적었다. 그 뒤 <strong>결과를 보기 전에 등록한 예측</strong>대로
+Li<sub>4</sub>P<sub>2</sub>O<sub>7</sub> 을 넣었더니 <strong>-0.0167</strong> 로,
+O/P 가 더 큰 NdPO<sub>4</sub>(-0.0192) 보다 <strong>덜</strong> 반응했다 &#8212;
+단일 축이면 불가능한 순서다. <strong>철회한다.</strong> 대신 계열을 나누면
+(Li 계열 / Nd 계열) 각각 단조이고 같은 O/P 에서 Nd 쪽이 더 음수인데,
+이건 <strong>데이터를 보고 만든 가설(post-hoc)</strong>이라 검정이 아니다.
+같은 실행에서 등록했던 <strong>다른</strong> 예측(Li<sub>2</sub>SO<sub>4</sub> &lt; &#8722;0.05)은 통과했고,
+등록했던 <strong>검정</strong>(위 Fig. 7a)도 통과했다.</p>
+</div>
+
+<div class="card warn">
+<p style="margin:0"><strong>⛔ 같은 명령의 열린계 실행은 무효다 &#8212; 그 산물 목록을 §6 대상으로 쓰지 않는다</strong></p>
+<p style="margin:8px 0 0">같은 8 상대를 3.5/4.0/4.3&#8201;V <strong>열린계</strong>로도 돌렸는데,
+<strong>여섯 상대에서 숫자가 글자 그대로 같았고</strong> 반응식 좌변에 상대가 <strong>없었다</strong>.
+최소 kink 가 x&#8201;=&#8201;0 끝점에 걸려 <strong>전해질 혼자 분해되는 에너지</strong>를 여섯 번
+다시 잰 것이다 &#8212; 상대는 계산에 한 번도 안 들어갔다. 오류도 안 났고 값도 그럴듯했다.
+그 실행의 인구조사가 PCl<sub>5</sub>&#183;P<sub>2</sub>S<sub>7</sub>&#183;SCl 을 48 회씩
+<strong>거짓 꼬리표</strong>를 달고 §6 후보로 올렸다.
+파일명에 <span class="mono">_INVALID_endpoint_degenerate</span> 를 박았고, 도구는
+끝점을 기록에 남기고 인구조사에서 빼도록 고쳤다.
+⚠ 다만 <strong>닫힌계의 끝점은 무효가 아니라 정상 판정</strong>이다
+(&ldquo;섞을 구동력 없음&rdquo;) &#8212; 위 표의 Li<sub>3</sub>PO<sub>4</sub> +0.0000 가 그 경우이고,
+x 는 <b>아직 실측 안 했다</b> (그 쌍은 <code>mixing_x</code> 필드를 넣기 전 실행이다) &#8212; 끝점이라는 것은 반응식 좌변에 상대가 없는 데서 <b>추론</b>한 것이다. 한 깃발로 읽으면 멀쩡한 판정을 버린다.</p>
+</div>
+
+<p style="color:var(--mut);font-size:.87rem">원자료
+<code>db/properties/dual_compat_closed_2026_09_16.jsonl</code> (10 쌍 &times; 전해질 2) ·
+결과 <code>dual_compat_result_2026_09_16.json</code> · 판정
+<code>dual_compat_amendment_2026_09_16.json</code> · 그림 자료
+<code>cei_dual_compat.csv</code>. 위 &rho;&#183;p 와 모든 수치는 이 화면이
+<strong>원자료에서 다시 계산</strong>한 것이다. <code>citable: false</code> &#8212; 1저자&#183;리뷰 판정 전이다.</p>
+
+<h2 id="s8">8. 양극별 원자료</h2>
 
 <figure>
 <img src="cei_reaction_energy_by_cathode.png" alt="Reaction energy versus voltage for six electrolytes against four cathodes: LiCoO2, LiNiO2, LiMnO2 and NMC811.">
@@ -764,7 +887,7 @@ in that range.</figcaption>
 "계면 반응성" 이 아니다. 캡션의 6/24 · 1/24 가 그 개수다.</p>
 </div>
 
-<h2 id="s8">8. 말하면 안 되는 것</h2>
+<h2 id="s9">9. 말하면 안 되는 것</h2>
 <ul>
 <li><span class="no">⛔</span> 반응에너지 <strong>절대값</strong>을 다른 논문 값과 나란히 놓기 —
 MP 보정 눈금이 산화물(+U)·황화물(GGA) <strong>혼합</strong>이다.</li>
@@ -790,6 +913,18 @@ O:P 비가 다른 상을 뭉개는 <strong>순위 힌트</strong>다.</li>
 Al 의 B 우위는 <strong>AlCl₃ 불안정성</strong>에서 오고 <strong>AlPO₄ 는 일곱 중 제일 얕다</strong>.</li>
 <li><span class="no">⛔</span> <strong>"Nd 가 최적의 3가 도펀트다"</strong> — §5 가 부정한다. 어느 축에서도 1등이 아니다. 쓸 수 있는 것은 <strong>"동급군 안에 있다"</strong> 까지다.</li>
 <li><span class="no">⛔</span> §5 의 여섯 축을 <strong>하나의 점수로 합치기</strong> — 축끼리 상관이 없어서 가중합은 자료가 아니라 가중치 선택이 된다.</li>
+<li><span class="no">⛔</span> <strong>"O/P 응축도 하나로 전해질 반응성이 정렬된다"</strong> —
+§7 에서 <strong>철회</strong>됐다. Li₄P₂O₇(−0.0167)가 O/P 가 더 큰 NdPO₄(−0.0192)보다 덜 반응한다.
+대체안(응축도 × 양이온 2 인자)은 <strong>post-hoc 가설</strong>이라 검정된 것처럼 쓰지 않는다.</li>
+<li><span class="no">⛔</span> §7 의 <strong>p = 0.042 를 "일반적으로 성립"</strong> 으로 옮겨 쓰기 —
+한 화학 계열 위 <strong>네 점의 순열 확률</strong>이고, 넷 다 Li 를 품은 인산염이라
+응축도와 Li 함량이 분리되지 않는다.</li>
+<li><span class="no">⛔</span> <strong>열린계 dual-compat 실행의 산물 목록</strong>
+(PCl₅·P₂S₇·SCl, 각 48 회) 을 §6 대상으로 쓰기 — 전해질 <strong>자체분해</strong> 산물이고
+상대는 계산에 들어가지도 않았다. 파일명에 <code>_INVALID_endpoint_degenerate</code> 가 박혀 있다.</li>
+<li><span class="no">⛔</span> <strong>"도핑이 전해질 접촉을 개선한다"</strong> — §7 에서
+LiPO₃(−0.0388)와 LiNd(PO₃)₄(−0.0434)는 <strong>구분되지 않는다</strong>.
+쓸 수 있는 것은 <strong>"새로 망가뜨리지는 않는다"</strong> 까지다.</li>
 <li><span class="no">⛔</span> Nd 의 <strong>산화수 변화</strong>를 주장하기 — MP 도 우리도 frozen-4f (<code>Nd_3</code>) 라
 4f 관여 redox 가 모형에 아예 없다.</li>
 </ul>
@@ -803,6 +938,7 @@ Al 의 B 우위는 <strong>AlCl₃ 불안정성</strong>에서 오고 <strong>Al
 <span>cei_formation_energies.csv</span>
 <span>cei_x_scan_panels.png / .csv</span>
 <span>cei_dopant_x_scan.png / .csv</span>
+<span>cei_dual_compat.png / .csv</span>
 </div>
 <p style="color:var(--mut);font-size:.87rem">CSV 는 Origin 바로 넣을 수 있게 열 이름을 명시했다.
 그림은 house style (INK #1f2937 · MUT #6b7280 · dpi 300 · top/right spine 제거).
@@ -813,10 +949,13 @@ house <code>ELEM["Nd"]</code>(#db2777)는 O(#be123c)와 같은 붉은 계열이�
 카드 <code>cathode_cei_decomposition_estimand_2026_09_16</code> (ratified) ·
 개정문 <code>cathode_cei_dopant_decomposition_amendment_2026_09_16</code> (ratified, 결과 보기 전 봉인) ·
 개정문 <code>cathode_cei_gap_target_amendment_2026_09_16</code> (ratified, 결과 보기 전 봉인) ·
-결과 <code>cei_dopant_decomposition_result_2026_09_16</code><br>
+결과 <code>cei_dopant_decomposition_result_2026_09_16</code> ·
+<code>dual_compat_result_2026_09_16</code> · 판정
+<code>dual_compat_amendment_2026_09_16</code><br>
 원자료 <code>db/properties/cei_interface_V_2026_09_16.json</code> ·
 <code>cei_formation_2026_09_16.json</code> ·
-<code>cei_esw_Li_2026_09_16.json</code> · <code>cei_esw_O_2026_09_16.json</code><br>
+<code>cei_esw_Li_2026_09_16.json</code> · <code>cei_esw_O_2026_09_16.json</code> ·
+<code>dual_compat_closed_2026_09_16.jsonl</code><br>
 citable: false — 1저자·리뷰 판정 전이다.
 </footer>
 

@@ -131,6 +131,12 @@ COL = {"comp1": "#9ca3af", "modelc": "#6b7280", "lpsocl": "#be123c",
 LAB = {"comp1": "LPSCl", "modelc": "LPSCl$_{1.6}$", "lpsocl": "LPSOCl$_{1.6}$",
        "o_only_03": "O 0.3 only", "nd_only": "Nd only",
        "modelc_nd": "LPSCl$_{1.6}$@Nd$_2$O$_3$"}
+#: ⛔ LAB 은 **matplotlib mathtext** 다. HTML 에 그대로 쓰면 `LPSCl$_{1.6}$` 가 날것으로
+#:   찍힌다 — 2026-09-16 에 §4 표·본문이 그렇게 나갔다(오류 없음·화면만 깨짐).
+#:   렌더러가 둘이면 문자열도 둘이라야 한다. 파일 끝 assert 가 HTML 로 새는 `$` 를 잡는다.
+LAB_HTML = {k: (v.replace("$_{1.6}$", "<sub>1.6</sub>").replace("$_2$", "<sub>2</sub>")
+                 .replace("$_3$", "<sub>3</sub>")) for k, v in LAB.items()}
+assert not any("$" in v for v in LAB_HTML.values()), f"LAB_HTML 에 mathtext 가 남았다: {LAB_HTML}"
 for ax, c in zip(axs, CATS):
     for e, col in COL.items():
         y = [D["results"][c]["by_voltage"][f"{V:.2f}"].get(e) for V in VS]
@@ -552,7 +558,7 @@ if have_kinks:
                 for i in range(len(ks) - 1)))
         srow.append((e, _st.mean(mins), _st.mean(areas), nsink, ntot))
     trs = "\n".join(
-        f'<tr><td>{LAB.get(e, e)}</td><td>{m:+.4f}</td><td>{a:+.4f}</td>'
+        f'<tr><td>{LAB_HTML.get(e, e)}</td><td>{m:+.4f}</td><td>{a:+.4f}</td>'
         f'<td class="{"nd" if ns else ""}">{ns}/{nt} = {100*ns/nt:.0f}%</td></tr>'
         for e, m, a, ns, nt in srow)
     best = min(srow, key=lambda r: -r[1])
@@ -607,7 +613,7 @@ than to the element palette used elsewhere.</figcaption>
 
 <p>양극 4 종 평균이다. <strong>세 지표가 같은 순서</strong>를 준다 —
 최소 깊이·곡선 아래 넓이·(앞 절의) 최소 kink 값. 제일 얕은 것이
-<strong>{LAB.get(best[0], best[0])}</strong> ({best[1]:+.4f} eV/atom).</p>
+<strong>{LAB_HTML.get(best[0], best[0])}</strong> ({best[1]:+.4f} eV/atom).</p>
 
 <div class="card answer">
 <p style="margin:0"><strong>가장 깨끗한 신호</strong> — Nd 인산염이 나오는 kink 비율이
@@ -854,3 +860,305 @@ if _DF:
                                      k["reaction_energy_eV_per_atom"], int(hit),
                                      k["reaction"]])
     print("  cei_dopant_x_scan.png / .csv")
+
+
+# ══ §6 + Fig 7 — dual compatibility (2026-09-16) ═════════════════════════════
+#   출처: cha2024 (Li₂ZrCl₆ 이 NCM·LPSCl **양쪽**과 호환) 을 읽고 찾은 "우리가 안 한 검사".
+#   §B 는 전해질 vs 양극만 봤다. 사이에 생기는 CEI 상이 **전해질 쪽과도** 괜찮은지는 미검사였다.
+#   ⛔ 숫자를 손으로 치지 않는다 — JSONL·사다리 JSON 에서 읽고, ρ·p 도 여기서 **다시 센다**.
+DC_JL = "db/properties/dual_compat_closed_2026_09_16.jsonl"
+VOX_J = "db/properties/product_vox_ladder_result_2026_09_16.json"
+
+#: 무도핑 전해질 기준 (도핑 쪽은 hull 기준선 이동과 분리 안 돼 화면에 안 올린다 — 카드 §6)
+_DCE = "LPSCl1.6"
+_dc, _dcx = {}, {}
+for _ln in open(DC_JL, encoding="utf-8"):
+    _r = json.loads(_ln)
+    if _r.get("species") != _DCE or "dE_eV_per_atom" not in _r:
+        continue
+    _dc[_r["cathode"]] = _r["dE_eV_per_atom"]
+    _dcx[_r["cathode"]] = _r.get("mixing_x")
+assert len(_dc) == 10, f"§6: 무도핑 쌍이 10 이어야 하는데 {len(_dc)} — JSONL 이 바뀌었다"
+
+#: x-재검사 파일이 있으면 `mixing_x` 를 그쪽으로 덮는다. 본 JSONL 의 16 쌍은
+#: `mixing_x` 필드를 넣기 **전** 실행이라 x 가 None 이다 — 없는 값을 숫자로 그리지 않는다.
+_XJL = Path("db/properties/dual_compat_li3po4_xcheck_2026_09_16.jsonl")
+if _XJL.exists():
+    for _ln in _XJL.read_text(encoding="utf-8").splitlines():
+        _r = json.loads(_ln)
+        if _r.get("species") == _DCE and _r.get("mixing_x") is not None:
+            _dcx[_r["cathode"]] = _r["mixing_x"]
+
+#: V_ox 는 사다리 기록에서. R2 목록("LiPO3 4.980")이 **화학식과 값을 같이** 들고 있는
+#: 유일한 자리라 거기서 읽고, 실측_V 의 전정밀 값으로 승격하면서 **1:1 대응을 검사**한다.
+#: (대응이 깨지면 그림을 그리지 않고 죽는다 — 축이 조용히 틀리는 게 최악이다.)
+_vl = json.load(open(VOX_J, encoding="utf-8"))
+_vox = {}
+for _k in ("통과", "미달"):
+    for _s in _vl["R2_4.5V_게이트"][_k]:
+        _f, _v = _s.rsplit(" ", 1)
+        _vox[_f] = float(_v)
+_full = [e["V_ox"] for e in _vl["실측_V"].values() if e.get("V_ox") is not None]
+for _f in list(_vox):
+    _m = [x for x in _full if round(x, 3) == round(_vox[_f], 3)]
+    assert len(_m) == 1, f"§6: {_f} 의 V_ox {_vox[_f]} 가 실측_V 에 1:1 로 없다 ({_m})"
+    _vox[_f] = _m[0]
+assert len(_vox) >= 5, f"§6: V_ox 가 {len(_vox)} 개뿐 — 사다리 기록이 바뀌었다"
+
+#: 두 축을 다 가진 상 = 트레이드오프 점. Li₃PS₄ 는 전해질 자신이라 §6 대상이 아니다
+#: (dual-compat 실행에 안 넣었으므로 교집합에서 자동으로 빠진다).
+_pts = sorted((f for f in _dc if f in _vox), key=lambda f: _vox[f])
+assert len(_pts) == 4, f"§6: 트레이드오프 점이 4 여야 하는데 {len(_pts)} — {_pts}"
+
+
+def _op(f):
+    """O/P 응축도. Li₃PO₄ 4.0 · Li₄P₂O₇ 3.5 · LiPO₃ 3.0 · NdP₅O₁₄ 2.8."""
+    c = _counts(f)
+    return (c.get("O", 0.0) / c["P"]) if c.get("P") else None
+
+
+def _lip(f):
+    c = _counts(f)
+    return (c.get("Li", 0.0) / c["P"]) if c.get("P") else None
+
+
+def _klass(f):
+    c = _counts(f)
+    if c.get("S") and c.get("O"):
+        return "sulfate"
+    if not c.get("P"):
+        return "halide"
+    o = _op(f)
+    return ("ortho" if o >= 3.9 else "pyro" if o >= 3.4 else
+            "meta" if o >= 2.95 else "ultra")
+
+
+#: ρ 와 정확순열 p 를 **여기서 다시 센다** — 카드에 적힌 값을 옮겨 적지 않는다.
+from itertools import permutations as _perm
+_ey = [_dc[f] for f in _pts]                       # V_ox 오름차순으로 정렬된 ΔE
+_n = len(_ey)
+_rx = sorted(range(_n), key=lambda i: _vox[_pts[i]])
+_ry = sorted(range(_n), key=lambda i: _ey[i])
+_d2 = sum((_rx.index(i) - _ry.index(i)) ** 2 for i in range(_n))
+_rho = 1 - 6 * _d2 / (_n * (_n * _n - 1))
+_mono = sum(1 for p in _perm(_ey) if all(p[i] > p[i + 1] for i in range(_n - 1)))
+_ptot = 1
+for _i in range(1, _n + 1):
+    _ptot *= _i
+_pval = _mono / _ptot
+assert abs(_rho + 1.0) < 1e-9, f"§6: ρ 가 −1 이 아니다 ({_rho}) — 단조가 깨졌으면 §6 문구를 다시 써야 한다"
+
+# ── Fig 7 ────────────────────────────────────────────────────────────────────
+_KC = {"ortho": ELEM.get("O", "#be123c"), "pyro": "#ea580c", "meta": ELEM.get("P", "#7c3aed"),
+       "ultra": "#1d4ed8", "halide": ELEM.get("Cl", "#65a30d"), "sulfate": ELEM.get("S", "#c05621")}
+_TEX = {"Li3PO4": "Li$_3$PO$_4$", "Li4P2O7": "Li$_4$P$_2$O$_7$", "LiPO3": "LiPO$_3$",
+        "LiNd(PO3)4": "LiNd(PO$_3$)$_4$", "NdPO4": "NdPO$_4$", "Nd(PO3)3": "Nd(PO$_3$)$_3$",
+        "NdP5O14": "NdP$_5$O$_{14}$", "NdCl3": "NdCl$_3$", "Li2SO4": "Li$_2$SO$_4$",
+        "Nd2(SO4)3": "Nd$_2$(SO$_4$)$_3$"}
+
+_fig, (_a, _b) = plt.subplots(1, 2, figsize=(11.2, 4.4))
+
+_a.plot([_vox[f] for f in _pts], _ey, color=MUT, lw=1.0, ls="--", zorder=1)
+for _f in _pts:
+    _a.scatter([_vox[_f]], [_dc[_f]], s=78, color=_KC[_klass(_f)], zorder=3,
+               edgecolor="white", linewidth=1.0)
+    # 오른쪽 끝 점은 라벨을 **왼쪽**으로 붙인다 — 안 그러면 축 밖으로 잘린다(실측).
+    _far = _f == _pts[-1]
+    _a.annotate(_TEX[_f], (_vox[_f], _dc[_f]), textcoords="offset points",
+                xytext=((-9, -13) if _far else (8, -13)), fontsize=9, color=INK,
+                ha=("right" if _far else "left"))
+_a.margins(x=0.10, y=0.14)
+_a.axvline(4.5, color=MUT, lw=0.8, ls=":")
+_a.text(4.5, _a.get_ylim()[1], " 4.5 V gate", fontsize=8, color=MUT,
+        va="top", ha="left")
+_a.set_title(f"(a) Higher oxidation limit, worse toward the electrolyte\n"
+             f"$\\rho$ = {_rho:.0f},  exact one-sided $p$ = {_mono}/{_ptot} = {_pval:.3f}",
+             fontsize=10, color=INK, pad=8)
+apply_axes(_a, "Oxidation limit $V_{ox}$ (V vs Li/Li$^+$)",
+           "Reaction energy with SE (eV/atom)", fontsize=10)
+
+_ord = sorted(_dc, key=lambda f: -_dc[f])
+_b.barh(range(len(_ord)), [_dc[f] for f in _ord],
+        color=[_KC[_klass(f)] for f in _ord], height=0.66)
+_b.set_yticks(range(len(_ord)))
+_b.set_yticklabels([_TEX[f] for f in _ord], fontsize=9, color=INK)
+_b.invert_yaxis()
+_b.axvline(0, color=MUT, lw=0.8)
+for _i, _f in enumerate(_ord):
+    _b.text(_dc[_f] - 0.003, _i, f"{_dc[_f]:.4f}", va="center", ha="right",
+            fontsize=8, color=MUT)
+_b.set_xlim(min(_dc.values()) * 1.35, 0.012)
+_b.set_title("(b) Sulfates are worse than every phosphate", fontsize=10, color=INK, pad=8)
+apply_axes(_b, "Reaction energy with SE (eV/atom)", None, fontsize=10)
+_hs = [plt.Line2D([], [], marker="s", ls="none", color=_KC[k], label=k)
+       for k in ("ortho", "pyro", "meta", "ultra", "halide", "sulfate")]
+# 왼쪽 **위**가 비어 있다 (0 에서 왼쪽으로 자라는 막대라 위쪽 짧은 막대 옆이 빈다).
+# lower left 에 두면 최하단 Nd2(SO4)3 의 값 라벨을 덮는다 — 실측 확인.
+_b.legend(handles=_hs, frameon=False, fontsize=8, loc="upper left", ncol=2)
+
+_fig.suptitle("Dual compatibility of CEI products with LPSCl$_{1.6}$ "
+              "(closed system, 0 V, hull-referenced reactants)",
+              fontsize=11, color=INK, y=0.995)
+_fig.tight_layout()
+_fig.savefig(OUT / "cei_dual_compat.png", dpi=300)
+plt.close(_fig)
+
+with open(OUT / "cei_dual_compat.csv", "w", newline="", encoding="utf-8") as _f:
+    _w = csv.writer(_f)
+    _w.writerow(["phase", "electrolyte", "dE_eV_per_atom", "mixing_x", "O_per_P",
+                 "Li_per_P", "class", "V_ox_V"])
+    for _p in _ord:
+        _w.writerow([_p, _DCE, _dc[_p], _dcx.get(_p), _op(_p), _lip(_p), _klass(_p),
+                     _vox.get(_p, "")])
+print("  cei_dual_compat.png / .csv")
+
+
+def _h(f):
+    """화학식 → 아래첨자 HTML. 이 목록의 화학식엔 첨자 아닌 숫자가 없어서 전부 <sub> 다.
+
+    ⛔ 못 하는 것: 계수(앞자리 숫자)·수화물 점표기·전하. 반응식에는 쓰면 안 된다.
+    """
+    return re.sub(r"([0-9]+(?:\.[0-9]+)?)", r"<sub>\1</sub>", f)
+
+
+assert _h("LiNd(PO3)4") == "LiNd(PO<sub>3</sub>)<sub>4</sub>", "§6: _h 가 괄호 화학식을 망가뜨린다"
+assert _h("Nd2(SO4)3") == "Nd<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>", "§6: _h 검산 실패"
+assert _h("NdCl3") == "NdCl<sub>3</sub>", "§6: _h 검산 실패"
+
+
+# ── §6 절 ────────────────────────────────────────────────────────────────────
+_r6 = "\n".join(
+    '<tr><td class="mono">{f}</td><td>{k}</td><td>{o}</td><td class="mono">{e:+.4f}</td>'
+    '<td class="mono">{v}</td></tr>'.format(
+        f=_h(_p), k=_klass(_p), o=("&#8212;" if _op(_p) is None else f"{_op(_p):.1f}"),
+        e=_dc[_p], v=(f"{_vox[_p]:.3f}" if _p in _vox else "&#8212;"))
+    for _p in _ord)
+_pmin, _pmax = _pts[0], _pts[-1]
+#: x 를 실측했으면 값을, 아니면 "미측정" 이라고 **말한다** — 0 이나 빈칸으로 그리지 않는다.
+_x3 = ("x&#8201;=&#8201;%.1f 로 실측했다" % _dcx["Li3PO4"]) if _dcx.get("Li3PO4") is not None \
+    else ("x 는 <b>아직 실측 안 했다</b> (그 쌍은 <code>mixing_x</code> 필드를 넣기 전 실행이다) &#8212; "
+          "끝점이라는 것은 반응식 좌변에 상대가 없는 데서 <b>추론</b>한 것이다")
+
+sec.append(f"""
+<h2 id="s7">7. 반대쪽 접촉 — 이 층은 전해질과도 지내야 한다</h2>
+
+<p>§1&#8211;§6 은 전부 <strong>양극 쪽</strong>을 봤다. 그런데 CEI 는 양극과 전해질
+<strong>사이</strong>에 끼어 있다 &#8212; 한쪽만 검사한 셈이다. 그래서 §2 의 산물을
+<strong>전해질(LPSCl<sub>1.6</sub>)에 직접 붙여</strong> 닫힌계 0&#8201;V 로 {len(_dc)} 종을 다시 쟀다.
+대조군으로 <strong>무도핑 경로의 산물(Li<sub>3</sub>PO<sub>4</sub>&#183;LiPO<sub>3</sub>)</strong>을 같이 넣었다 &#8212;
+없으면 <em>"우리 산물이 전해질과 싸운다"</em> 를 해석할 수 없다.</p>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>상</th><th>분류</th><th>O/P</th><th>전해질과의 &Delta;E (eV/atom)</th><th>V<sub>ox</sub> (V)</th></tr></thead>
+<tbody>
+{_r6}
+</tbody></table>
+</div>
+
+<figure>
+<img src="cei_dual_compat.png" alt="Left: reaction energy with the electrolyte plotted against oxidation limit for four lithium phosphates, falling monotonically. Right: horizontal bars ranking ten phases by reaction energy with the electrolyte, with the two sulfates at the bottom.">
+<figcaption><b>Fig. 7. Dual compatibility of the interphase products.</b>
+(a) Reaction energy of each product with the electrolyte LPSCl<sub>1.6</sub>
+(Li<sub>5.4</sub>PS<sub>4.4</sub>Cl<sub>1.6</sub>), evaluated in a closed system at 0&#8201;V with
+<i>use_hull_energy</i>&#8201;=&#8201;true, plotted against the oxidation limit V<sub>ox</sub> of the same
+phase taken from the lithium-budget ladder. Only the four phases for which both quantities are
+defined are shown; V<sub>ox</sub> is undefined for the lithium-free phases. The four points fall
+monotonically (Spearman &rho;&#8201;=&#8201;{_rho:.0f}); with the direction registered in advance,
+the exact one-sided permutation probability is {_mono}/{_ptot}&#8201;=&#8201;{_pval:.3f}.
+The dotted line marks the 4.5&#8201;V design gate.
+(b) All {len(_dc)} products ranked by the same quantity and coloured by class. Zero means the two
+phases coexist with no driving force to react; more negative means a stronger mutual reaction.
+Both sulfates lie below every phosphate.</figcaption>
+</figure>
+
+<div class="figexp">
+<div class="figexp-h">Fig. 7 을 읽는 법</div>
+<p><b>왼쪽 그림</b>의 가로축은 <b>"이 상이 몇 볼트까지 버티나"</b>(양극 쪽 요구),
+세로축은 <b>"이 상이 전해질과 얼마나 싸우나"</b>(전해질 쪽 요구)다. 세로축이
+<b>0 이면 안 싸우는 것</b>이고 아래로 내려갈수록 더 싸운다. 네 점이
+<b>오른쪽 아래로 완전히 단조</b>다 &#8212; <b>전압에 강해질수록 전해질과 더 싸운다.</b>
+두 요구가 같은 방향이면 좋은 상을 하나 고르면 되는데, <b>반대 방향이라 고를 수가 없다.</b></p>
+<p>점선이 4.5&#8201;V 설계 문턱이다. 그 선 <b>왼쪽</b>에 있는
+{_h(_pmin)} 는 전해질과 제일 잘 지내지만(&Delta;E&#8201;=&#8201;{_dc[_pmin]:+.4f})
+<b>전압을 못 버틴다</b>({_vox[_pmin]:.3f}&#8201;V). 오른쪽 끝의 {_h(_pmax)} 는
+전압은 제일 잘 버티는데({_vox[_pmax]:.3f}&#8201;V) 전해질과 제일 많이 싸운다
+({_dc[_pmax]:+.4f}). <b>그 둘이 같은 그림의 양 끝</b>이라는 게 이 절의 요지다.</p>
+<p><b>오른쪽 그림</b>은 {len(_dc)} 종 전체 순위다. 색이 분류인데, 인산염은
+<b>응축될수록</b>(ortho&#8594;meta&#8594;ultra) 아래로 내려간다. 그런데 <b>황산염 둘이
+모든 인산염보다 더 아래</b>에 있다 &#8212; 응축도 축으로 설명되지 않는 <b>별도 위험</b>이다.</p>
+<p>⚠ 왼쪽 네 점은 <b>독립 표본이 아니라 한 화학 계열 위의 네 점</b>이다.
+{_pval:.3f} 은 <b>순서에 대한 순열 확률</b>이지 "일반적으로 성립한다" 는 뜻이 아니다.
+게다가 넷 다 <b>Li 를 품은 인산염</b>이라 응축도와 Li 함량이 이 계열에서는 분리되지 않는다 &#8212;
+기전 문장은 "인산염 일반" 이 아니라 <b>"Li-인산염 응축 계열"</b> 로 좁혀 써야 한다.</p>
+</div>
+
+<p class="plain">익숙한 것에 빗대면 <b>양면 테이프</b>다. 한쪽 면은 양극에, 다른 쪽 면은
+전해질에 붙어야 하는데, <b>한쪽에 잘 붙는 배합일수록 다른 쪽에는 잘 안 붙는</b> 상황이다.
+한 면만 시험해 보고 "좋은 테이프" 라고 하면 안 되는 이유가 이것이고,
+지금까지 우리가 본 것이 <b>딱 한 면</b>이었다.</p>
+
+<div class="card warn" data-claim="dualcompat.sulfate.risk">
+<p style="margin:0"><strong>🔴 우리한테 불리한 발견도 같이 나왔다.</strong>
+<span class="claim-mark">[불리]</span></p>
+<p style="margin:8px 0 0">Li<sub>2</sub>SO<sub>4</sub> 는 <strong>&Delta;E&#8201;=&#8201;{_dc["Li2SO4"]:+.4f}</strong> 로
+전체 {len(_dc)} 종 중 아래에서 두 번째다. 그런데 이 상은 §2 산물 인구조사에서
+<strong>가장 많이 나온 상(65 회)</strong>이다 &#8212; <strong>우리가 제일 많이 만든다고 예측하는 상이
+전해질 쪽에서는 거의 최악</strong>이다. 제일 나쁜 Nd<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>
+({_dc["Nd2(SO4)3"]:+.4f}) 도 황산염이다. 유리한 쪽만 싣는 화면은 원장이 아니라 광고다.</p>
+</div>
+
+<div class="card" data-claim="dualcompat.doping.defensive">
+<p style="margin:0"><strong>도핑이 이 접촉을 <em>새로</em> 망가뜨리지는 않는다 &#8212; 그러나 우위 논거는 아니다.</strong></p>
+<p style="margin:8px 0 0">무도핑 경로가 3.5&#8201;V 에서 실제로 만드는
+LiPO<sub>3</sub> 가 <strong>{_dc["LiPO3"]:+.4f}</strong>, 도핑 경로의
+LiNd(PO<sub>3</sub>)<sub>4</sub> 가 <strong>{_dc["LiNd(PO3)4"]:+.4f}</strong> 다.
+차이 {abs(_dc["LiPO3"] - _dc["LiNd(PO3)4"]):.4f}&#8201;eV/atom 은 이 계산의 해상도 안쪽이고,
+우리는 이 양에 대한 문턱을 <strong>사전에 정해 둔 적이 없다</strong>.
+⇒ <strong>"둘은 구분되지 않는다"</strong> 라고만 쓴다. <em>"도핑이 더 낫다"</em> 도
+<em>"더 나쁘다"</em> 도 쓰지 않는다.</p>
+</div>
+
+<div class="card warn">
+<p style="margin:0"><strong>⛔ 이 절에서 철회된 것 하나</strong></p>
+<p style="margin:8px 0 0">처음 {len(_dc) - 2} 종만 봤을 때 <em>"O/P 응축도 <strong>하나로</strong>
+&Delta;E 가 단조 정렬된다"</em> 고 적었다. 그 뒤 <strong>결과를 보기 전에 등록한 예측</strong>대로
+Li<sub>4</sub>P<sub>2</sub>O<sub>7</sub> 을 넣었더니 <strong>{_dc["Li4P2O7"]:+.4f}</strong> 로,
+O/P 가 더 큰 NdPO<sub>4</sub>({_dc["NdPO4"]:+.4f}) 보다 <strong>덜</strong> 반응했다 &#8212;
+단일 축이면 불가능한 순서다. <strong>철회한다.</strong> 대신 계열을 나누면
+(Li 계열 / Nd 계열) 각각 단조이고 같은 O/P 에서 Nd 쪽이 더 음수인데,
+이건 <strong>데이터를 보고 만든 가설(post-hoc)</strong>이라 검정이 아니다.
+같은 실행에서 등록했던 <strong>다른</strong> 예측(Li<sub>2</sub>SO<sub>4</sub> &lt; &#8722;0.05)은 통과했고,
+등록했던 <strong>검정</strong>(위 Fig. 7a)도 통과했다.</p>
+</div>
+
+<div class="card warn">
+<p style="margin:0"><strong>⛔ 같은 명령의 열린계 실행은 무효다 &#8212; 그 산물 목록을 §6 대상으로 쓰지 않는다</strong></p>
+<p style="margin:8px 0 0">같은 8 상대를 3.5/4.0/4.3&#8201;V <strong>열린계</strong>로도 돌렸는데,
+<strong>여섯 상대에서 숫자가 글자 그대로 같았고</strong> 반응식 좌변에 상대가 <strong>없었다</strong>.
+최소 kink 가 x&#8201;=&#8201;0 끝점에 걸려 <strong>전해질 혼자 분해되는 에너지</strong>를 여섯 번
+다시 잰 것이다 &#8212; 상대는 계산에 한 번도 안 들어갔다. 오류도 안 났고 값도 그럴듯했다.
+그 실행의 인구조사가 PCl<sub>5</sub>&#183;P<sub>2</sub>S<sub>7</sub>&#183;SCl 을 48 회씩
+<strong>거짓 꼬리표</strong>를 달고 §6 후보로 올렸다.
+파일명에 <span class="mono">_INVALID_endpoint_degenerate</span> 를 박았고, 도구는
+끝점을 기록에 남기고 인구조사에서 빼도록 고쳤다.
+⚠ 다만 <strong>닫힌계의 끝점은 무효가 아니라 정상 판정</strong>이다
+(&ldquo;섞을 구동력 없음&rdquo;) &#8212; 위 표의 Li<sub>3</sub>PO<sub>4</sub> {_dc["Li3PO4"]:+.4f} 가 그 경우이고,
+{_x3}. 한 깃발로 읽으면 멀쩡한 판정을 버린다.</p>
+</div>
+
+<p style="color:var(--mut);font-size:.87rem">원자료
+<code>db/properties/dual_compat_closed_2026_09_16.jsonl</code> ({len(_dc)} 쌍 &times; 전해질 2) ·
+결과 <code>dual_compat_result_2026_09_16.json</code> · 판정
+<code>dual_compat_amendment_2026_09_16.json</code> · 그림 자료
+<code>cei_dual_compat.csv</code>. 위 &rho;&#183;p 와 모든 수치는 이 화면이
+<strong>원자료에서 다시 계산</strong>한 것이다. <code>citable: false</code> &#8212; 1저자&#183;리뷰 판정 전이다.</p>
+""")
+_out6 = "\n".join(sec)
+#: 렌더러가 둘(matplotlib · HTML)인 데서 오는 조용한 깨짐을 여기서 막는다 —
+#: 2026-09-16 에 §4 표가 `LPSCl$_{1.6}$` 를 날것으로 내보냈다(오류 없음·화면만 깨짐).
+#: 쓰기 **전에** 죽는다.
+_leak = re.findall(r"\$[_^][^$\n]{0,20}\$", _out6)
+assert not _leak, f"생성 HTML 에 matplotlib mathtext 가 샜다: {_leak[:5]}"
+(OUT / "sections_new.html").write_text(_out6, encoding="utf-8")
+print("  sections_new.html (§6 포함)", (OUT / "sections_new.html").stat().st_size, "B")

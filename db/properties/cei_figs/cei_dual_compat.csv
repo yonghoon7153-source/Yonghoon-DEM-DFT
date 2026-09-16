@@ -1,0 +1,11 @@
+phase,electrolyte,dE_eV_per_atom,mixing_x,O_per_P,Li_per_P,class,V_ox_V
+Li3PO4,LPSCl1.6,0.0,,4.0,3.0,ortho,4.1929
+Li4P2O7,LPSCl1.6,-0.01665,0.704545,3.5,2.0,pyro,4.3193
+NdPO4,LPSCl1.6,-0.01919,,4.0,0.0,ortho,
+LiPO3,LPSCl1.6,-0.03877,,3.0,1.0,meta,4.9798
+LiNd(PO3)4,LPSCl1.6,-0.04344,,3.0,0.25,meta,5.0131
+Nd(PO3)3,LPSCl1.6,-0.057,,3.0,0.0,meta,
+NdCl3,LPSCl1.6,-0.05844,,,,halide,
+NdP5O14,LPSCl1.6,-0.07899,,2.8,0.0,ultra,
+Li2SO4,LPSCl1.6,-0.09402,0.639175,,,sulfate,
+Nd2(SO4)3,LPSCl1.6,-0.14701,,,,sulfate,
