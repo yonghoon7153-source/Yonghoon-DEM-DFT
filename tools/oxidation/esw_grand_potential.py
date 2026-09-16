@@ -197,6 +197,26 @@ DEFAULT_P_SINKS = (
 )
 
 
+def _entry_id_str(e):
+    """엔트리 id 를 사람이 읽는 문자열로. (순수 함수)
+
+    ⚠ 2026-09-16 실측 — mp_api 의 `entry_id` 가 **dict 로 찍혔다**
+      (`{'identifier': 'mp-…', 'suffix': 'GGA', 'separator': '-'}`). `str()` 하나로
+      끝날 줄 알았는데 그 dict 가 그대로 표·JSON 에 실렸다. 버전마다 dict/객체/문자열이
+      다 나오므로 **셋 다** 받는다.
+    """
+    v = getattr(e, "entry_id", None)
+    if v is None or v == "":
+        v = (getattr(e, "data", {}) or {}).get("material_id")
+    if isinstance(v, dict):
+        ident, suf = v.get("identifier"), v.get("suffix")
+        return f"{ident}-{suf}" if (ident and suf) else str(ident or "")
+    if hasattr(v, "identifier"):
+        ident, suf = v.identifier, getattr(v, "suffix", "")
+        return f"{ident}-{suf}" if suf else str(ident)
+    return "" if v is None else str(v)
+
+
 def _ground_state(entries, reduced_formula):
     """같은 조성의 엔트리 중 **최저 에너지** 하나. 없으면 None. (순수 함수)
 
@@ -236,7 +256,7 @@ def _formation_row(pd, entry, per_element="P"):
         f"E_f_eV_per_{per_element}": (round(ef_tot / n_x, 5) if n_x > 1e-9 else None),
         "e_above_hull_eV_per_atom": (None if hull is None else round(hull, 5)),
         "e_above_hull_why_none": hull_why,
-        "entry_id": str(getattr(entry, "entry_id", "") or ""),
+        "entry_id": _entry_id_str(entry),
     }
 
 
@@ -342,7 +362,7 @@ def balanced_reaction(pd, lhs, rhs, per_element="P"):
         "E_eV_per_reactant_atom": round(E / n_at, 5) if n_at > 1e-9 else None,
         f"E_eV_per_{per_element}": round(E / n_x, 5) if n_x > 1e-9 else None,
         f"n_{per_element}_reactant_side": round(n_x, 4),
-        "entry_ids": {f: str(getattr(e, "entry_id", "") or "") for f, e in picked.items()},
+        "entry_ids": {f: _entry_id_str(e) for f, e in picked.items()},
     }
 
 
@@ -764,6 +784,19 @@ def selftest():
     chk(len(DEFAULT_P_SINKS) >= 12 and "P2S7" in DEFAULT_P_SINKS
         and "Nd2O3" in DEFAULT_P_SINKS,
         "기본 목록에 **대조상**(티오인산염·Nd 비-인산염)이 같이 들어 있다")
+
+    # entry_id — 2026-09-16 실측 사고: mp_api 가 dict 를 줘서 표·JSON 에 dict 가 찍혔다
+    class _Obj:
+        def __init__(self, **kw): self.__dict__.update(kw)
+    chk(_entry_id_str(_Obj(entry_id={"identifier": "mp-1", "suffix": "GGA",
+                                     "separator": "-"})) == "mp-1-GGA",
+        "⛔음성: entry_id 가 **dict 로 와도** dict 를 그대로 찍지 않는다 (실측 사고)")
+    chk(_entry_id_str(_Obj(entry_id=_Obj(identifier="mp-2", suffix="GGA"))) == "mp-2-GGA",
+        "객체형 entry_id 도 읽는다")
+    chk(_entry_id_str(_Obj(entry_id="mp-3")) == "mp-3", "문자열 entry_id 는 그대로")
+    chk(_entry_id_str(_Obj(entry_id=None, data={"material_id": "mp-4"})) == "mp-4",
+        "entry_id 가 없으면 data['material_id'] 로 물러난다")
+    chk(_entry_id_str(_Obj()) == "", "⛔음성: 아무것도 없으면 **지어내지 않고** 빈 문자열")
 
     L, R, why = parse_reaction_spec("P2S7,Nd2O3 > NdPO4,S")
     chk(why is None and L == ["P2S7", "Nd2O3"] and R == ["NdPO4", "S"],
