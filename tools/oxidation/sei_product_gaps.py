@@ -109,6 +109,92 @@ def reactions_in(path):
     return out
 
 
+# ── 다형 맞추기 (2026-09-17 신설) ────────────────────────────────────────────
+#: 왜 — **바닥상이 우리 구조와 다를 수 있다.** 실측 두 건이 같은 날 나왔다:
+#:   · Nd₂O₃ — MP 바닥상 Ia-3 3.708 / 우리 옛 실측은 P-3m1 (다른 상, 3.9479)
+#:   · P₂O₅ — MP 바닥상 Pnma 4.85 / §C 표적은 **Fdd2** (다형 12개)
+#:   조성만 맞춰 갭을 가져오면 "우리 계산이 MP 를 재현했나" 의 기준이 딴 상이 된다.
+def match_spacegroup(gaps, targets):
+    """{조성: MP row} × {이름: 표적} → 표적 공간군과 **같은 다형**을 골라 준다.
+
+    ⛔ 못 찾으면 **바닥상으로 대체하지 않는다.** "못 찾음"과 "없음"을 구분해
+      `matched: null` + `why` 로 남긴다 (조용히 딴 상을 기준으로 삼는 것이
+      정확히 우리가 막으려는 사고다).
+    ⛔ 이 함수가 못 하는 것: 공간군 기호가 같으면 같은 구조로 **본다**. 셀 크기·
+      원자수는 확인하지 않는다 (호출부가 n_atoms 를 같이 보고해야 한다).
+    """
+    out = {}
+    for name, t in targets.items():
+        f = t.get("formula", name)
+        row = gaps.get(f)
+        if not isinstance(row, dict) or "band_gap_MP_eV" not in row:
+            out[name] = {"matched": None, "why": f"MP 조회에 {f} 가 없다"}
+            continue
+        want = str(t.get("spacegroup", "")).strip()
+        polys = row.get("polymorphs") or [row]
+        hit = [r for r in polys if str(r.get("spacegroup_symbol", "")).strip() == want]
+        gs = row  # 바닥상 (lowest e_above_hull)
+        rec = {"formula": f, "our_spacegroup": want, "our_mp_id": t.get("mp_id"),
+               "our_n_atoms": t.get("n_atoms"),
+               "mp_ground_state": {"spacegroup": gs.get("spacegroup_symbol"),
+                                   "material_id": gs.get("material_id"),
+                                   "band_gap_MP_eV": gs.get("band_gap_MP_eV")},
+               "n_polymorphs_in_MP": row.get("n_polymorphs_in_MP")}
+        if not hit:
+            rec.update({"matched": None,
+                        "why": f"MP 다형 {len(polys)}개 중 공간군 '{want}' 가 없다 — "
+                               "바닥상으로 대체하지 않는다. 표적 구조를 다시 확인할 것"})
+        else:
+            m = min(hit, key=lambda r: _hull_key(r.get("e_above_hull")))
+            rec.update({"matched": m,
+                        "band_gap_MP_eV": m.get("band_gap_MP_eV"),
+                        "is_mp_ground_state":
+                            m.get("material_id") == gs.get("material_id")})
+            if len(hit) > 1:
+                rec["⚠"] = f"같은 공간군 다형이 {len(hit)}개 — E_hull 최소를 골랐다"
+            if not rec["is_mp_ground_state"]:
+                rec["⚠_바닥상_아님"] = (
+                    f"MP 바닥상은 {gs.get('spacegroup_symbol')} "
+                    f"({gs.get('band_gap_MP_eV')} eV) 다. 우리 표적과 **다른 상**이므로 "
+                    "재현 판정은 여기 matched 값으로만 한다.")
+        out[name] = rec
+    return out
+
+
+def _emit_match(gaps, targets_path, out_path, src_path=None):
+    """맞추기 결과를 화면 표 + JSON 으로 낸다. 화면이 정본이 아니라 JSON 이 정본이다."""
+    import hashlib
+    t = json.loads(Path(targets_path).read_text(encoding="utf-8"))
+    targets = t.get("targets") or t
+    m = match_spacegroup(gaps, targets)
+    print(f"\n── 공간군 맞추기 ({targets_path}) ──")
+    print(f"  {'상':11s} {'우리 공간군':11s} {'갭[eV]':>7s}  {'MP 바닥상':11s} 비고")
+    for name, r in sorted(m.items()):
+        g = r.get("band_gap_MP_eV")
+        gs = (r.get("mp_ground_state") or {}).get("spacegroup") or "?"
+        note = ("⛔ " + r["why"]) if r.get("matched") is None else (
+            "" if r.get("is_mp_ground_state") else "⚠ 바닥상 아님")
+        print(f"  {name:11s} {str(r.get('our_spacegroup','?')):11s} "
+              f"{(f'{g:.3f}' if isinstance(g,(int,float)) else '—'):>7s}  {gs:11s} {note}")
+    rec = {"property": "cei_gap_targets_mp_reference",
+           "purpose": "§C 판별종의 **우리 표적 다형과 같은 공간군** MP 참조갭. "
+                      "우리 fixed-occ nscf 의 검증 표적이다.",
+           "⛔": "MP PBE 값이다 — 우리 db 갭 표에 넣지 않는다 (문헌·db 분리 규율). "
+                 "재현 판정은 '같은 자릿수·같은 순위' 로만 한다.",
+           "targets_file": str(targets_path), "source_file": str(src_path or ""),
+           "matched": m}
+    if src_path and Path(src_path).is_file():
+        rec["source_sha256"] = hashlib.sha256(Path(src_path).read_bytes()).hexdigest()
+    Path(out_path).write_text(json.dumps(rec, ensure_ascii=False, indent=1) + "\n",
+                              encoding="utf-8")
+    print(f"\n-> {out_path}")
+    bad = [k for k, v in m.items() if v.get("matched") is None]
+    if bad:
+        print(f"⛔ 공간군을 못 찾은 상 {len(bad)}개: {', '.join(bad)} — "
+              "바닥상으로 대체하지 않았다. 표적 구조를 확인할 것")
+    return 1 if bad else 0
+
+
 def _selftest():
     ok = True
 
@@ -149,6 +235,40 @@ def _selftest():
     _c2 = min([("A", None), ("B", 0.5)], key=lambda x: _hull_key(x[1]))[0] == "B"
     print(("  ✓ " if _c2 else "  ⛔ ") + "⛔음성: E_hull 이 None 인 항목만 뒤로 간다 (0.0 과 구분)")
     ok = ok and _c2
+    # ── 다형 맞추기 (2026-09-17) ──────────────────────────────────────────
+    _gaps = {"P2O5": {"band_gap_MP_eV": 4.85, "spacegroup_symbol": "Pnma",
+                      "material_id": "mp-gs", "e_above_hull": 0.0,
+                      "n_polymorphs_in_MP": 3,
+                      "polymorphs": [
+                          {"spacegroup_symbol": "Pnma", "material_id": "mp-gs",
+                           "band_gap_MP_eV": 4.85, "e_above_hull": 0.0},
+                          {"spacegroup_symbol": "Fdd2", "material_id": "mp-fdd2",
+                           "band_gap_MP_eV": 5.11, "e_above_hull": 0.012},
+                          {"spacegroup_symbol": "Fdd2", "material_id": "mp-fdd2b",
+                           "band_gap_MP_eV": 5.40, "e_above_hull": 0.031}]},
+             "NdCl3": {"band_gap_MP_eV": 4.2998, "spacegroup_symbol": "P6_3/m",
+                       "material_id": "mp-a", "e_above_hull": 0.0}}
+    _m = match_spacegroup(_gaps, {
+        "P2O5": {"formula": "P2O5", "spacegroup": "Fdd2", "mp_id": "x", "n_atoms": 14},
+        "NdCl3": {"formula": "NdCl3", "spacegroup": "P6_3/m"},
+        "NdPS4": {"formula": "NdPS4", "spacegroup": "I4_1/acd"},
+        "Bogus": {"formula": "P2O5", "spacegroup": "Pm-3m"}})
+    chk(_m["P2O5"]["band_gap_MP_eV"] == 5.11,
+        f"양성: 조성이 아니라 **공간군**으로 고른다 (Fdd2 5.11, 바닥상 Pnma 4.85 아님) "
+        f"— 고른 값 {_m['P2O5'].get('band_gap_MP_eV')}")
+    chk(_m["P2O5"].get("is_mp_ground_state") is False and "⚠_바닥상_아님" in _m["P2O5"],
+        "양성: 바닥상이 아니면 그렇다고 **표시한다** (재현 판정 기준이 갈리므로)")
+    chk("⚠" in _m["P2O5"], "양성: 같은 공간군 다형이 둘이면 E_hull 최소를 고르고 알린다")
+    chk(_m["NdCl3"]["band_gap_MP_eV"] == 4.2998 and _m["NdCl3"]["is_mp_ground_state"],
+        "양성: polymorphs 가 없으면 행 자체를 다형 하나로 본다")
+    chk(_m["NdPS4"]["matched"] is None and "MP 조회에" in _m["NdPS4"]["why"],
+        "⛔음성: MP 조회에 없는 상은 **없다고 적는다** (0 이나 바닥상으로 때우지 않는다)")
+    chk(_m["Bogus"]["matched"] is None and "Pm-3m" in _m["Bogus"]["why"],
+        "⛔음성: 공간군이 다형 목록에 없으면 **바닥상으로 대체하지 않는다** "
+        "(Nd₂O₃·P₂O₅ 사고의 형태)")
+    chk(_m["Bogus"].get("band_gap_MP_eV") is None,
+        "⛔음성: 못 찾았는데 갭 값이 달려 나오지 않는다")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -161,6 +281,11 @@ def main():
     ap.add_argument("--all_polymorphs", action="store_true",
                     help="조성마다 **모든 다형**을 같이 기록한다 (α/β 처럼 갭이 갈리는 계에 필요)")
     ap.add_argument("--out", default="sei_product_gaps.json")
+    ap.add_argument("--match_spacegroup",
+                    help="표적 구조 JSON(targets:{이름:{formula,spacegroup,mp_id,n_atoms}}) — "
+                         "조성이 아니라 **공간군까지** 맞는 다형을 골라 따로 낸다")
+    ap.add_argument("--match_from",
+                    help="MP 를 다시 조회하지 않고 기존 --out JSON 을 읽어 맞추기만 한다")
     if "--selftest" in __import__("sys").argv:
         raise SystemExit(_selftest())
     args = ap.parse_args()
@@ -178,6 +303,14 @@ def main():
                     seen.add(f); forms.append(f)
         args.formulas = forms
         print(f"고유 산물 조성 {len(forms)}개 → MP 조회")
+
+    # --match_from: MP 를 다시 조회하지 않는다 (키도 필요 없다). 맞추기만 한다.
+    if args.match_from:
+        if not args.match_spacegroup:
+            raise SystemExit("⛔ --match_from 은 --match_spacegroup 과 같이 쓴다")
+        src = json.loads(Path(args.match_from).read_text(encoding="utf-8"))
+        return _emit_match(src.get("gaps") or src, args.match_spacegroup,
+                           args.out, src_path=args.match_from)
 
     key = os.environ.get("MP_API_KEY") or os.environ.get("PMG_MAPI_KEY")
     if not key:
@@ -254,7 +387,13 @@ def main():
         print(f"\n반응 {len(per_rxn)}개 · 금속 산물을 포함하는 반응 **{leak}개** "
               f"({100 * leak / len(per_rxn):.0f} %)")
     print(f"\n-> {args.out}")
+    if args.match_spacegroup:
+        return _emit_match(rows, args.match_spacegroup,
+                           str(args.out).replace(".json", "_matched.json"),
+                           src_path=args.out)
 
 
 if __name__ == "__main__":
-    main()
+    # ⚠ main() 의 반환값을 버리면 "공간군 못 찾음" 이 exit 0 으로 나간다 —
+    #   러너·CI 가 성공으로 읽는다 (2026-09-17).
+    raise SystemExit(main() or 0)
