@@ -584,7 +584,8 @@ def test_old_fig2_bar_count_does_not_come_back(client):
     gen = (REPORT.parents[3] / "tools/figures/plot_cei_nd_o_decomposition.py").read_text("utf-8")
     assert "nd_phosphate_sink" not in gen, "생성기가 옛 그림을 다시 만든다"
     # 번호는 사다리 그림이 가져갔다
-    assert "Fig. 2. Where the phosphorus goes" in h, "Fig. 2 번호 승계가 안 돼 있다"
+    assert "Fig. 2. Voltage changes who neodymium competes against" in h, \
+        "Fig. 2 번호 승계가 안 돼 있다"
 
 
 # ── Fig. 2 = P 수용상 사다리 (2026-09-17 교체) ─────────────────────────────────────────────────────
@@ -600,33 +601,57 @@ def test_fig2_ladder_image_is_served(client):
         f"그림이 안 나온다 ({r.status_code}, {len(r.data)} B)"
 
 
-def test_fig2_ladder_quoted_share_matches_the_csv(client):
-    """⛔음성 — 막대 높이를 **눈으로 읽어** 적으면 잡는다.
-
-    실제로 첫 판에 "7–13 %" 라고 적었고 CSV 는 10.5 / 14.3 이었다.
-    화면이 인용한 범위는 CSV 의 P–S(무도핑) 값을 감싸야 한다.
-    """
-    import csv as _csv
-    vals = [float(r[4]) for r in _csv.reader(FIG2_CSV.open(encoding="utf-8"))
-            if len(r) == 5 and r[0] == "b" and r[2] == "no_Nd" and r[3].startswith("P–S")]
-    assert vals, "CSV 에서 P–S 비율을 못 읽었다 — 시험이 헛것을 재고 있다"
+def test_fig2_exchange_values_match_the_record(client):
+    """⛔음성 — 화면이 인용한 교환에너지가 레코드와 갈라지면 잡는다 (값으로 본다)."""
+    import json as _json
+    rec = _json.loads((REPORT.parents[3] / "db/properties/cei_tm_exchange_2026_09_17.json")
+                      .read_text(encoding="utf-8"))
+    vals = {k.split(",")[0]: v["E_eV_per_P"] for k, v in rec["reactions"].items() if v.get("ok")}
+    assert vals, "교환 레코드를 못 읽었다 — 시험이 헛것을 재고 있다"
+    assert abs(vals["Li3PO4"] - 1.5035) < 5e-4, \
+        f"대조 잡이 §3 값을 재현하지 않는다: {vals['Li3PO4']}"
+    tm = [v for k, v in vals.items() if k != "Li3PO4"]
+    assert all(v < 0 for v in tm), "전이금속 교환이 전부 음수가 아니다"
     h = _report_html(client)
-    m = re.search(r"주황은 4\.3–4\.5 V 에 <b>([0-9.]+)–([0-9.]+) %</b>", h)
-    assert m, "화면이 P–S 비율을 인용하지 않는다"
+    m = re.search(r"<b>−([0-9.]+) ~ −([0-9.]+)</b>", h)
+    assert m, "화면이 전이금속 교환 범위를 인용하지 않는다"
     lo, hi = float(m.group(1)), float(m.group(2))
-    assert lo <= min(vals) and hi >= max(vals), \
-        f"화면 {lo}–{hi} % 가 실측 {min(vals):.1f}–{max(vals):.1f} % 를 못 감싼다"
-    assert hi - lo <= 6, f"범위를 {hi-lo:g} %p 로 넓혀 아무 값이나 통과시킨다"
-    assert lo - min(vals) < 0.6 and max(vals) - hi > -0.6, \
-        f"반올림으로 범위를 부풀렸다: 화면 {lo}–{hi} vs 실측 {min(vals):.1f}–{max(vals):.1f}"
+    assert abs(lo - abs(max(tm))) < 5e-3 and abs(hi - abs(min(tm))) < 5e-3, \
+        f"화면 −{lo}~−{hi} vs 레코드 {max(tm):.4f}~{min(tm):.4f}"
+
+
+def test_fig2_refuses_to_rank_within_the_tie_width(client):
+    """⛔음성 — 0.30 eV/P 안의 차이를 순위로 쓰면 잡는다.
+
+    NiP4O11 −2.1511 과 CoP4O11 −2.1646 은 0.0135 차다. 순위를 주장하면 없는 해상도를
+    쓰는 것이고, 화면은 그걸 명시적으로 거절해야 한다.
+    """
+    h = _report_html(client)
+    assert "0.30" in h and "구분 못 하는 폭" in h, "구분되지 않는 폭이 화면에 없다"
+    assert "순위는 못 쓴다" in h, "순위를 쓰지 않는다는 선언이 없다"
+    assert "not ranked against each other" in h, "캡션(영문)에 같은 한정이 없다"
+
+
+def test_fig2_separates_onset_from_growth(client):
+    """⛔음성 — "교환 부호가 이득 전부" 로 읽히면 틀린다.
+
+    ΔE 중앙값은 4.0 V 에서 포화(−1.751)하는데 Fig. 1 의 Δ 는 1.9 배 더 커진다.
+    그 구분이 빠지면 가설 4 번(공급)을 부당하게 닫은 것이 된다.
+    """
+    h = _report_html(client)
+    assert "포화" in h, "교환에너지가 포화한다는 사실이 화면에 없다"
+    assert "성장은 설명 못 한다" in h, "시작/성장 구분이 없다"
+    assert "다시 살아 있다" in h, "가설 4 번이 되살아났다는 자기정정이 없다"
+    assert "고전압이 아니다" in h, "부호 전환 자리가 고전압이 아니라는 한정이 없다"
 
 
 def test_fig2_ladder_caption_says_price_not_amount(client):
     """⛔음성 — 세로축을 '풀려난 P 의 양' 으로 읽으면 이 그림이 안 한 말을 하게 된다."""
     h = _report_html(client)
-    i = h.find("Fig. 2. Where the phosphorus goes")
+    i = h.find("Fig. 2. Voltage changes who")
     assert i > 0, "Fig. 2 캡션을 못 찾았다"
     cap = h[i:h.index("</figcaption>", i)]
-    assert "not an amount" in cap, "세로축이 양이 아니라는 한정이 캡션에 없다"
-    assert "coefficients are not read" in cap, "계수를 안 본다는 근거가 없다"
-    assert "Endpoint-degenerate" in cap, "끝점 제외를 안 밝힌다"
+    assert "not an amount of P" in cap, "세로축이 양이 아니라는 한정이 캡션에 없다"
+    assert "chosen, not selected by the hull" in cap, \
+        "반응물·생성물을 사람이 골랐다는 고지가 없다"
+    assert "mix functionals" in cap, "GGA/GGA+U 혼합 눈금 고지가 없다"

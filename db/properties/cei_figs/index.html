@@ -528,40 +528,59 @@ for k in gir.get_kinks():
      ⛔ 번호는 2 를 그대로 승계한다 — 되번호하면 §3 이하가 밀리고 그 절들은 생성기 소유다. -->
 <figure style="margin:14px 0">
 <img src="cei_p_host_ladder.png" alt="Left: Li-to-P ratio of the phase that accepts phosphorus against voltage, one dot per condition, with a bold step line for the maximum and a dashed step for the median, both descending from three to zero. Right: hundred-percent stacked bars of the P-accepting phase classes at each voltage, no-Nd bar beside with-Nd bar, showing transition-metal phosphates dominating the Nd-free route.">
-<figcaption><b>Fig. 2. Where the phosphorus goes, and what it costs in lithium.</b>
-(a) Li:P ratio of every phase that accepts P in the minimum-energy interfacial reaction,
-against applied voltage. One dot is one (condition, accepting phase); 6 electrolytes
-&#215; 4 cathodes. Bold step: the largest Li:P still present, i.e. the most Li-expensive host
-still on the hull. Dashed step: the median. Dotted line: the Li:P at which the
-Nd&#8592;Li phosphate exchange changes sign (&#167;3, Fig. 4a).
-(b) The same phases grouped by host class and normalised to 100&#8201;% at each voltage,
-with the Nd-free electrolytes (comp1, LPSCl<sub>1.6</sub>, LPSOCl<sub>1.6</sub>, O-only)
-beside the Nd-bearing ones (Nd-only, LPSCl<sub>1.6</sub>@Nd<sub>2</sub>O<sub>3</sub>).
-Class is assigned by first match in the order P&#8211;S, Nd-bearing, Li:P&#8201;&#8805;&#8201;1,
-transition-metal, P&#8211;Cl &#8212; so LiMnPO<sub>4</sub> counts as a Li phosphate.
-Endpoint-degenerate conditions (<i>x</i>&#8201;=&#8201;0 or 1, self-decomposition) are excluded.
-<span style="color:var(--mut)">⚠ The vertical axis is a lithium price, not an amount:
-coefficients are not read, so this does not measure how much P is released.</span></figcaption>
+<figcaption><b>Fig. 2. Voltage changes who neodymium competes against.</b>
+(a) For every phase that accepts P in the minimum-energy interfacial reaction, the energy of the
+closed-system exchange <span class="mono">&lt;host&gt; + &#189;&#8201;Nd<sub>2</sub>O<sub>3</sub>
+&#8594; NdPO<sub>4</sub> + &lt;oxide&gt;</span>, per phosphorus, against applied voltage.
+Negative means Nd takes the P from that host. One dot is one (condition, host);
+149 of 198 hosts have a measured exchange (see the excluded list below).
+(b) The same energies against the Li:P of the host &#8212; the &#167;3 ladder (Fig. 4a)
+extended to the transition-metal phosphates. The dotted line is the Li:P at which the
+Li-phosphate branch changes sign.
+The grey band is &#177;0.30&#8201;eV/P, the width inside which this method does not resolve
+a difference, so only the <b>sign</b> is read and the six transition-metal values are
+<b>not ranked against each other</b>.
+<span style="color:var(--mut)">⚠ The energies mix functionals: the Li phosphates are all GGA,
+the transition-metal phosphates and oxides are GGA+U. The +U species appear on both sides of
+each reaction, but the MP2020 corrections do not cancel exactly.
+⚠ Reactants and products are chosen, not selected by the hull; and the vertical axis is an
+energy per P, not an amount of P.</span></figcaption>
 </figure>
 
 <div class="figexp" style="margin:0 0 12px">
 <div class="figexp-h">Fig. 2 를 읽는 법</div>
-<p><b>(a) 점 하나가 "이 조건에서 P 를 받은 상 하나"</b> 다. 세로축은 그 상이 P 하나를
-붙잡는 데 <b>Li 를 몇 개 쓰는가</b> — 값이지 양이 아니다. 2.5 V 에서 점들이 3 에 몰려 있고
-(Li₃PO₄), 전압이 오르면 <b>아래로 쓸려 내려가</b> 4.0 V 위에서는 전부 0 에 붙는다.</p>
-<p><b>굵은 계단</b>이 "아직 살아 있는 가장 비싼 방", <b>점선 계단</b>이 중앙값이다.
-굵은 선이 3.0 V 에서 안 내려가는 것은 <b>한 조건(Nd 계 LiNiO₂)이 아직 Li₃PO₄ 를 붙들고
-있어서</b>고, 중앙값은 그 사이 1.5 로 내려가 있다. 둘을 같이 그린 이유다.</p>
-<p><b>주황 점선(Li/P ≈ 1.67)</b>이 §3 의 부호 반전선이다. 점 구름이 그 선을 <b>3.0 → 3.5 V
-사이에서 통과</b>한다 — 두 절이 서로 다른 계산인데 <b>같은 자리</b>를 가리킨다.</p>
-<p><b>(b) 전압마다 왼쪽이 Nd 없음, 오른쪽이 Nd 있음</b>이다. 여기서 보이는 것이
-가설 3 번의 정정이다 &#8212; 고전압에서 Nd 가 없을 때 P 가 가는 곳은 <b>P₂S₇(주황)가 아니라
-전이금속 인산염(파랑)</b>이고, 주황은 4.3–4.5 V 에 <b>10.5–14.3 %</b> 뿐이다.
-<b>무도핑 계도 Li 안 쓰는 방을 찾아내되 그 방은 양극의 금속으로 짓는다.</b>
-Nd 가 있으면 그 자리를 <b>보라(Nd 인산염)</b>가 가져간다.</p>
-<p>⚠ <b>이 그림이 못 하는 것</b> — 최소 꺾임 하나만 본다. 계수를 안 보므로 "P 가 몇 mol
-갔나" 를 말하지 않는다. 속도·수송은 없다(0 K 열역학).
-원자료 <span class="mono">cei_p_host_ladder_fig.csv</span>.</p>
+<p><b>0 선이 전부다.</b> 위에 있으면 Nd 가 그 상에게서 P 를 못 뺏고, 아래면 뺏는다.
+<b>(a) 에서 2.5 V 는 점이 전부 위에 있고 3.5 V 부터는 전부 아래에 있다</b> —
+100 % 가 뒤집힌다. Nd 가 세지는 것이 아니라 <b>상대가 바뀌는 것</b>이다.</p>
+<p><b>(b) 가 그 상대를 보여준다.</b> 오른쪽 위 Li₃PO₄ 는 <b>+1.50</b> — Li 가 넉넉할 때
+P 가 앉는 자리이고 Nd 가 진다. 왼쪽 아래 전이금속 인산염 여섯은 <b>−1.00 ~ −2.16</b> —
+Li 가 없을 때 P 가 앉는 자리이고 Nd 가 이긴다. 이것이 §3 의 Li 예산 사다리(Fig. 4a)에
+<b>양극 금속 칸을 붙인 것</b>이고, 점선이 그 사다리의 부호 반전 자리다.</p>
+<p><b>회색 띠(±0.30 eV/P)는 이 방법이 구분 못 하는 폭</b>이다. 여섯 전이금속 값이 전부
+띠 밖이라 <b>부호는 믿는다</b>. 그런데 서로는 0.01~0.26 밖에 안 떨어져 있어
+<b>"Co 에서 제일 크게 이긴다" 같은 순위는 못 쓴다.</b></p>
+<div style="margin:10px 0 0;padding:10px 12px;border-left:3px solid var(--warn);
+     background:var(--warn-soft);border-radius:0 7px 7px 0">
+<p style="margin:0 0 6px"><b>⛔ 이 그림이 설명하는 것과 못 하는 것을 나눠야 한다</b></p>
+<p style="margin:0 0 6px"><b>설명한다 — 시작.</b> 부호가 뒤집히는 자리는 <b>3.0–3.5 V</b> 다
+(교환 ΔE 중앙값 +0.40 → −1.22). <span style="color:var(--mut)">⚠ 그런데 그 자리는
+<b>고전압이 아니다</b> — LiCoO₂ 는 보통 3.0–4.2 V 로 돈다. "고전압에서만 켜지는 기전" 이라고
+쓰면 틀린다.</span></p>
+<p style="margin:0 0 6px"><b>설명하지 못한다 — 성장.</b> 교환 ΔE 중앙값은 4.0 V 에서
+<b>−1.751 로 포화</b>하고 4.3·4.5 V 도 같은 값이다. 그런데 Fig. 1 의 Δ(Nd only)는 그 구간에서
+<b>0.0515 → 0.0970 으로 1.9 배</b> 커진다. <b>부호는 시작을 설명하고 성장은 설명 못 한다.</b>
+남은 후보는 <b>양</b>이다 &#8212; 얼마나 많은 P 가 그 경로를 타느냐.
+그것이 §2 가설 <b>4 번</b>이고, 이 계산은 계수를 안 보므로 <b>재지 못한다</b>.</p>
+<p style="margin:0"><b>그리고 교환이 이득의 전부가 아니다.</b> 2.5 V 에서는 음수가
+<b>하나도 없는데</b>(Nd 가 진다) Fig. 1 의 Δ 는 이미 <b>+0.0147</b> 로 이롭다.</p>
+</div>
+<p style="margin:10px 0 0">⚠ <b>교환에너지가 없는 상 9 개</b>는 (a) 에서 빠졌다 —
+Nd 인산염 셋(NdPO₄·Nd(PO₃)₃·NdP₅O₁₄, <b>교환 상대가 자기 자신</b>이라 정의되지 않는다),
+Li+전이금속 혼합 인산염 넷(LiMnPO₄ 등, 아직 안 쟀다), P₂S₇·PCl₅(이 chemsys 밖).
+Nd 계에서 P 의 일부가 Nd 인산염으로 가므로 <b>(a) 의 점은 "Nd 가 아직 안 가져간 P"</b> 쪽에
+치우쳐 있다.
+원자료 <span class="mono">cei_tm_exchange_2026_09_17.json</span> ·
+<span class="mono">cei_p_host_ladder_fig.csv</span>.</p>
 </div>
 
 
@@ -635,9 +654,15 @@ LPSCl<sub>1.6</sub> · 상 이름 뒤 숫자가 <b>Li/P</b> ·
 <p class="plain" style="margin:0 0 8px"><b>그래서 4 번은 이렇게 고쳐 읽는다.</b>
 전압이 하는 일은 P 를 <b>더 풀어놓는 것</b>이 아니라 P 가 갈 수 있는 방을
 <b>비싼 것부터 차례로 잠그는 것</b>이다. 4 V 위에서는 <span class="mono">Li/P = 0</span> 인
-방만 남고, Nd 는 그런 방을 여러 개 가지고 있다. <b>공급 이야기가 아니라 선택지 이야기다.</b>
+방만 남고, Nd 는 그런 방을 여러 개 가지고 있다. <b>3.0–3.5 V 의 전환은 선택지로 설명된다.</b>
 <span style="color:var(--mut)">결론("Nd 이득이 전압과 함께 커진다")은 Fig. 1 에서 측정된 것이라
 그대로다 — 바뀐 것은 <b>이유</b>다.</span></p>
+<p class="plain" style="margin:0 0 8px;padding:9px 11px;border-left:3px solid var(--warn);
+   background:var(--warn-soft)"><b>⚠ 2026-09-17 자기정정 — "공급이 아니라 선택지다" 는
+과했다.</b> 교환에너지를 재 보니(Fig. 2) 선택지는 <b>3.0–3.5 V 의 전환만</b> 설명한다.
+교환 ΔE 중앙값은 4.0 V 에서 <b>−1.751 로 포화</b>하는데 Fig. 1 의 Δ 는 4.0→4.5 V 에서
+<b>1.9 배 더 커진다</b>. 그 성장은 선택지로 설명되지 않고, 남은 후보는 <b>양</b>이다 —
+즉 <b>가설 4 번이 그 구간에서는 다시 살아 있다</b>. 계수를 재기 전에는 어느 쪽도 못 정한다.</p>
 
 <p class="plain" style="margin:0 0 8px"><b>3 번의 범위</b> — P₂S₇ 수용상은
 <b>LiMnO₂ 에서만</b>, <b>4.3 V 이상에서만</b> 나온다. 나머지 무도핑 조건은

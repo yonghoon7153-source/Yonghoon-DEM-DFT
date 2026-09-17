@@ -2613,6 +2613,74 @@
     }
    ],
    "_note": "⛔ **사후 관찰이다** (results_seen=true, exploratory=true). 2026-09-14 비준된 post-hoc 문턱 원칙에 따라 이것은 사전등록된 판정이 될 수 없다 — 1저자 비준 전까지 proposed 로 둔다. ⛔ **따로 발견된 결함**: Fig. 2 의 P2S7 집계(plot_cei_nd_o_decomposition.py 의 count())는 **끝점 퇴화 칸을 거르지 않는다**. modelc@4.5V/LiMnO2 는 x = 1.0 (자체분해, 양극이 반응식에 없다)인데 Fig. 2 는 그 칸을 P2S7 1 건으로 센다. 같은 도구의 product_census() 는 2026-09-16 에 이미 이 필터를 넣었다 — Fig. 2 만 안 들어갔다. 그림 재생성은 이 커밋에서 하지 않았다 (별건이라 ⏭ 에 남긴다)."
+  },
+  {
+   "id": "D-2026-09-17-cei-tm-phosphate-exchange",
+   "schema_version": 2,
+   "kind": "metric",
+   "scope": "cei.phosphate_sink",
+   "slot": "nd_vs_tm_phosphate_exchange",
+   "applies_to": {
+    "systems": [
+     "*"
+    ],
+    "tasks": [
+     "closed_system_exchange"
+    ],
+    "methods": [
+     "MP GGA_GGA+U · ComputedReaction"
+    ],
+    "use_cases": [
+     "mechanism_reading"
+    ]
+   },
+   "title": "Nd←M 인산염 교환 — Nd 는 Li 인산염에 지고 전이금속 인산염을 이긴다",
+   "statement": "같은 형식 <공여 인산염> + ½Nd2O3 → NdPO4 + <산화물> 을 전이금속 인산염까지 넓혔다. 부호가 **두 덩이로 갈린다**: Li3PO4 는 +1.5035 eV/P (Nd 가 진다), 전이금속 인산염 여섯은 전부 음수 −1.0046 ~ −2.1646 eV/P (Nd 가 이긴다). 사이에 걸치는 상이 없다. 이것이 §2 의 남은 물음에 대한 답이다 — 전압이 오르면 P 가 앉을 수 있는 상이 Li 인산염에서 전이금속 인산염으로 바뀌고, **Nd 는 상대가 바뀌면서 이기는 쪽이 된다**. Nd 자체가 세지는 것이 아니다. ⚠ **판정 범위**: 구분되지 않는 폭 0.30 eV/P (D-2026-09-16-trivalent-dopant-phosphate-screen 에 등록된 값) 기준으로 **부호만** 판정한다. 여섯 사이의 순위는 못 가른다 (NiP4O11 −2.1511 vs CoP4O11 −2.1646 은 0.0135 차). ⚠ **눈금이 섞였다**: 대조 잡(Li3PO4)은 네 상이 전부 GGA 인데 TM 교환은 인산염·산화물이 GGA+U 다. +U 종이 양변에 있어 U 항은 상당 부분 상쇄되나 TM 당 O 개수가 달라 MP2020 보정은 정확히 상쇄되지 않는다. 대조 잡은 **도구**를 검증하지 눈금 섞임을 검증하지 않는다.",
+   "decision_state": "proposed",
+   "results_seen": true,
+   "exploratory": true,
+   "evidence": [
+    {
+     "kind": "exchange_eV_per_P",
+     "value": {
+      "CoP4O11": -2.1646,
+      "NiP4O11": -2.1511,
+      "MnP4O11": -2.0127,
+      "Ni(PO3)2": -1.7512,
+      "Mn(PO3)2": -1.5453,
+      "Mn2P2O7": -1.0046,
+      "Li3PO4": 1.5035
+     }
+    },
+    {
+     "kind": "control_reproduces_s3",
+     "value": {
+      "Li3PO4": 1.50352,
+      "expected": 1.5035
+     }
+    },
+    {
+     "kind": "indistinguishable_width_eV_per_P",
+     "value": 0.3
+    }
+   ],
+   "method_ref": "tools/oxidation/esw_grand_potential.py --reaction --per_element P",
+   "record": "db/properties/cei_tm_exchange_2026_09_17.json",
+   "surface": "db/properties/cei_figs/index.html#s2",
+   "reopen_criteria": [
+    "TM 산화물 선택(NiO·MnO·CoO)은 인산염의 산화수를 따른 것이다 — 다른 산화물(Mn2O3·Co3O4)로 바꾸면 다시 연다",
+    "⛔ 순위를 주장하려면 0.30 eV/P 보다 좁은 폭을 **근거와 함께** 새로 정해야 한다",
+    "GGA/GGA+U 혼합 영향을 재려면 같은 functional 로 다시 계산한다 — 그때 다시 연다",
+    "MP 항목이 바뀌면 무효 (entry_id 가 레코드에 있다)"
+   ],
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-09-17"
+    }
+   ],
+   "_note": "⛔ 사후 관찰이다 (results_seen · exploratory). 1저자 비준 전까지 proposed. ⚠ 이 계산은 반응물·생성물을 **사람이 골랐다** — hull 이 고른 것이 아니다. hull 판정은 interface_reactivity_v2.py 쪽이고, 둘은 서로 다른 물음이다. ⚠ ②(tm_fate)의 LiMnO2 반례(Nd 가 인산염 몫을 33→37 % 로 늘림)는 이 부호로 설명되지 않는다 — Mn(PO3)2 도 −1.5453 으로 Nd 가 유리한데 실제로는 반대다. 열린 채로 둔다."
   }
  ]
 }

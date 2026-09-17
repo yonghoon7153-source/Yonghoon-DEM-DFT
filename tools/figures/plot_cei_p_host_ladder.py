@@ -43,6 +43,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "figures"))
 
 REC = ROOT / "db/properties/cei_p_host_ladder_2026_09_17.json"
+EXCH = ROOT / "db/properties/cei_tm_exchange_2026_09_17.json"
+LADDER_CSV = ROOT / "db/properties/cei_figs/cei_li_budget_ladder.csv"
+TIE = 0.30      # 구분되지 않는 폭 (eV/P) — D-2026-09-16-trivalent-dopant-phosphate-screen
 OUT = ROOT / "db/properties/cei_figs"
 VS = [2.5, 3.0, 3.5, 4.0, 4.3, 4.5]
 ND_BEARING = {"nd_only", "modelc_nd"}
@@ -79,6 +82,54 @@ def classify(formula, li_per_P, anion):
     return CLASSES[4][0]        # 현재 레코드에서는 PCl5 뿐이다
 
 
+LI_PER_P = {"Li3PO4": 3.0, "Li4P2O7": 2.0, "LiPO3": 1.0, "LiNd(PO3)4": 0.25,
+            "Ni(PO3)2": 0.0, "NiP4O11": 0.0, "Mn(PO3)2": 0.0, "Mn2P2O7": 0.0,
+            "MnP4O11": 0.0, "CoP4O11": 0.0}
+
+
+def _tex(f):
+    """Li3PO4 -> Li$_3$PO$_4$ (그림 라벨용. 영문·기호만 — 한글 안 쓴다)."""
+    out, i = [], 0
+    while i < len(f):
+        if f[i].isdigit():
+            j = i
+            while j < len(f) and f[j].isdigit():
+                j += 1
+            out.append("$_{" + f[i:j] + "}$"); i = j
+        else:
+            out.append(f[i]); i += 1
+    return "".join(out)
+
+
+def exchange_map(exch_path=EXCH, ladder_csv=LADDER_CSV):
+    """공여 인산염 → Nd←M 교환에너지 (eV/P). 두 레코드를 합친다.
+
+    같은 형식 `<공여> + ½Nd2O3 -> NdPO4 + <산화물>` 이라 한 축에 놓을 수 있다.
+    Li 쪽은 §3 의 사다리 CSV, 전이금속 쪽은 2026-09-17 의 교환 레코드다.
+
+    ⛔ 못 하는 것
+      · Nd 인산염(NdPO4·Nd(PO3)3·NdP5O14)은 **교환 상대가 자기 자신**이라 값이 없다.
+        0 으로 채우지 않는다 — 키가 아예 없다.
+      · Li+전이금속 혼합 인산염(LiMnPO4 등)과 P2S7·PCl5 는 아직 안 쟀다.
+      · 눈금이 섞였다: Li 쪽은 전부 GGA, 전이금속 쪽은 인산염·산화물이 GGA+U 다.
+        **부호만** 판정하고 순위는 TIE(0.30 eV/P) 안에서 안 가른다.
+    """
+    import csv as _csv
+    out, src = {}, {}
+    d = json.loads(Path(exch_path).read_text(encoding="utf-8"))
+    for spec, r in d["reactions"].items():
+        if r.get("ok"):
+            out[spec.split(",")[0]] = r["E_eV_per_P"]; src[spec.split(",")[0]] = "tm_exchange"
+    with open(ladder_csv, encoding="utf-8") as fh:
+        for row in _csv.reader(fh):
+            if len(row) >= 5 and row[0] and row[0] != "donor_phosphate":
+                f, v = row[0], float(row[3])
+                if f in out and abs(out[f] - v) > 1e-4:     # 두 레코드가 겹치면 대조가 된다
+                    raise ValueError(f"{f}: 두 레코드가 어긋난다 {out[f]} vs {v}")
+                out.setdefault(f, v); src.setdefault(f, "li_ladder")
+    return out, src
+
+
 def load(rec_path=REC):
     d = json.loads(Path(rec_path).read_text(encoding="utf-8"))
     pts = []
@@ -89,6 +140,9 @@ def load(rec_path=REC):
                         "li_per_P": h["li_per_P"],
                         "nd_side": r["electrolyte"] in ND_BEARING,
                         "klass": classify(h["formula"], h["li_per_P"], h["anion"])})
+    dE, _ = exchange_map()
+    for q in pts:
+        q["dE_exchange"] = dE.get(q["formula"])     # 없으면 None — 0 으로 안 채운다
     return d, pts
 
 
@@ -169,97 +223,99 @@ def main():
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from matplotlib.patches import Patch
-    from house_style import INK, MUT, apply_axes  # noqa: F401
+    from house_style import INK, MUT, apply_axes
 
     d, pts = load()
-    fig, (axL, axR) = plt.subplots(1, 2, figsize=(12.2, 4.4),
-                                   gridspec_kw={"width_ratios": [1.15, 1]})
-    xs = list(range(len(VS)))          # 범주형 — 4.3/4.5 가 실좌표면 겹친다
-    cmap = dict(CLASSES)
+    dE, src = exchange_map()
+    have = [q for q in pts if q["dE_exchange"] is not None]
+    miss = sorted({q["formula"] for q in pts if q["dE_exchange"] is None})
 
-    # ── (a) 사다리 ────────────────────────────────────────────────────────
-    rng = __import__("random").Random(0)          # 지터는 고정 시드 (판마다 안 흔들리게)
-    for p in pts:
-        x = xs[VS.index(p["voltage_V"])] + rng.uniform(-0.26, 0.26)
-        axL.scatter(x, p["li_per_P"] + rng.uniform(-0.035, 0.035), s=26,
-                    color=cmap[p["klass"]], alpha=.75, lw=.5, edgecolor="white", zorder=3)
-    ru = [rung(pts, V) for V in VS]
-    axL.step(xs, ru, where="mid", color=INK, lw=2.2, zorder=4)
-    axL.scatter(xs, ru, s=44, color=INK, zorder=5)
-    # ⚠ max 만 그리면 3.0 V 가 안 내려간 것처럼 보인다 (한 조건의 Li3PO4 가 칸을 붙든다).
-    #   같은 점들의 중앙값을 얇게 같이 그린다 — 둘 다 정의된 통계다.
-    md = [median(pts, V) for V in VS]
-    axL.step(xs, md, where="mid", color=MUT, lw=1.4, ls="--", zorder=4)
-    # ⚠ 인라인 라벨을 두 번 옮겼는데 "median" 이 1.67 점선 위에 얹혔다.
-    #   선 범례로 바꾼다 — 점 구름이 어디에 있든 안 겹친다.
-    axL.plot([], [], color=INK, lw=2.2, label="max over all conditions")
-    axL.plot([], [], color=MUT, lw=1.4, ls="--", label="median")
-    axL.legend(frameon=False, fontsize=8.2, loc="upper right",
-               bbox_to_anchor=(1.0, 1.02), handlelength=1.8)
-    axL.axhline(CROSSOVER, color="#92400e", ls=":", lw=1.4, zorder=2)
-    axL.text(-0.45, CROSSOVER + .10,
-             f"sign flip of the Nd$\\leftarrow$Li exchange  (Li/P $\\approx$ {CROSSOVER})",
-             fontsize=8, color="#92400e", ha="left")
-    apply_axes(axL, "Voltage (V vs Li/Li$^+$)", "Li : P of the P-accepting phase")
+    fig, (axL, axR) = plt.subplots(1, 2, figsize=(12.4, 4.6),
+                                   gridspec_kw={"width_ratios": [1.1, 1]})
+    xs = list(range(len(VS)))
+    rng = __import__("random").Random(0)
+    C_LI, C_TM, C_ND = "#0d9488", "#0284c7", "#6d28d9"
+
+    def col(f):
+        return C_ND if "Nd" in f else (C_TM if any(t in f for t in TM) else C_LI)
+
+    # ── (a) 전압이 고르는 상대 ────────────────────────────────────────────
+    for q in have:
+        axL.scatter(xs[VS.index(q["voltage_V"])] + rng.uniform(-.26, .26),
+                    q["dE_exchange"] + rng.uniform(-.03, .03), s=28,
+                    color=col(q["formula"]), alpha=.75, lw=.5,
+                    edgecolor="white", zorder=3)
+    axL.axhspan(-TIE, TIE, color="#e5e7eb", zorder=1)
+    axL.axhline(0, color=INK, lw=1.6, zorder=2)
+    axL.text(-0.48, 2.02, "Nd LOSES the exchange", fontsize=8.6,
+             color="#b91c1c", fontweight="bold")
+    axL.text(-0.48, -2.60, "Nd WINS the exchange", fontsize=8.6,
+             color=C_TM, fontweight="bold")
+    axL.text(len(VS) - .55, TIE + .07, f"$\\pm${TIE:g} eV/P: not resolved",
+             fontsize=7.4, color=MUT, ha="right")
+    apply_axes(axL, "Voltage (V vs Li/Li$^+$)",
+               "Nd$\\leftarrow$M exchange of the host  (eV per P)")
     axL.set_xticks(xs); axL.set_xticklabels([f"{v:g}" for v in VS])
-    axL.set_xlim(-0.55, len(VS) - 0.45); axL.set_ylim(-0.25, 3.35)
-    axL.set_title("(a)  Voltage locks the Li-paying rooms, one rung at a time",
+    axL.set_xlim(-.55, len(VS) - .45); axL.set_ylim(-2.85, 2.30)
+    axL.set_title("(a)  Voltage changes who Nd is competing against",
                   fontsize=10, color=INK, pad=8, loc="left")
 
-    # ── (b) 행선지 100 % 스택 ─────────────────────────────────────────────
-    w = 0.38
-    for j, (nd, off, lab) in enumerate(((False, -w / 2 - .02, "no Nd"),
-                                        (True, w / 2 + .02, "with Nd"))):
-        for i, V in enumerate(VS):
-            bot = 0.0
-            for k, col in CLASSES:
-                frac = stack(pts, V, nd).get(k, 0.0)
-                if frac <= 0:
-                    continue
-                axR.bar(i + off, frac * 100, width=w, bottom=bot * 100, color=col,
-                        edgecolor="white", lw=.6, zorder=3)
-                bot += frac
-        _ = lab   # 막대 위 라벨은 폭이 좁아 겹친다 — 아래 한 줄 설명으로 대신한다
-    apply_axes(axR, "Voltage (V vs Li/Li$^+$)", "Share of P-accepting phases (%)")
-    axR.set_xticks(xs); axR.set_xticklabels([f"{v:g}" for v in VS])
-    axR.set_ylim(0, 112); axR.set_yticks([0, 25, 50, 75, 100])
-    axR.text(-0.55, 106, "at each voltage:  left bar = no Nd   ·   right bar = with Nd",
-             fontsize=8, color=MUT, ha="left")
-    axR.set_title("(b)  The Nd-free route is the cathode's own metal, not P$_2$S$_7$",
+    # ── (b) 교환 사다리 (§3 Fig. 4a 를 전이금속까지 넓힌 것) ─────────────
+    # ⚠ Li/P = 0 에 여섯이 몰려서 라벨이 겹친다 — 세로로 벌려 지시선으로 잇는다.
+    _slots, _used = sorted(dE.items(), key=lambda kv: -kv[1]), []
+    for f, v in _slots:
+        lp = LI_PER_P.get(f)
+        if lp is None:
+            continue
+        axR.scatter(lp, v, s=74, color=col(f), lw=.6, edgecolor="white", zorder=4)
+        ty = v
+        while any(abs(ty - u) < 0.28 for u in _used):     # 겹치면 아래로 민다
+            ty -= 0.28
+        _used.append(ty)
+        axR.annotate(_tex(f), (lp, v), (lp + 0.16, ty), textcoords="data",
+                     fontsize=7.6, color=INK, va="center",
+                     arrowprops=dict(arrowstyle="-", lw=.6, color=MUT,
+                                     shrinkA=3, shrinkB=1)
+                     if abs(ty - v) > 0.01 else None)
+    axR.axhspan(-TIE, TIE, color="#e5e7eb", zorder=1)
+    axR.axhline(0, color=INK, lw=1.6, zorder=2)
+    axR.axvline(CROSSOVER, color="#92400e", ls=":", lw=1.3, zorder=2)
+    axR.text(CROSSOVER + .06, 2.02, f"Li/P $\\approx$ {CROSSOVER}",
+             fontsize=7.8, color="#92400e")
+    apply_axes(axR, "Li : P of the donor phosphate", "Exchange energy (eV per P)")
+    axR.set_xlim(-.45, 3.45); axR.set_ylim(-2.85, 2.30)
+    axR.set_title("(b)  The same ladder, extended to the cathode's metals",
                   fontsize=10, color=INK, pad=8, loc="left")
-    axR.legend(handles=[Patch(facecolor=c, label=k) for k, c in CLASSES],
-               frameon=False, fontsize=7.6, ncol=2, loc="lower left",
-               bbox_to_anchor=(0.0, -0.40))
+    axR.legend(handles=[Patch(facecolor=C_LI, label="Li phosphate"),
+                        Patch(facecolor=C_TM, label="transition-metal phosphate"),
+                        Patch(facecolor=C_ND, label="already contains Nd")],
+               frameon=False, fontsize=7.6, loc="lower right")
 
     fig.tight_layout()
-    fig.subplots_adjust(bottom=0.28)
     png = OUT / "cei_p_host_ladder.png"
     fig.savefig(png, dpi=300); plt.close(fig)
 
-    # Origin-ready CSV — 열 이름을 명시한다
     csv_path = OUT / "cei_p_host_ladder_fig.csv"
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
-        w2 = csv.writer(f)
-        w2.writerow(["panel", "voltage_V", "electrolyte", "cathode",
-                     "p_host_formula", "li_per_P", "host_class", "nd_side"])
-        for p in pts:
-            w2.writerow(["a", p["voltage_V"], p["electrolyte"], p["cathode"],
-                         p["formula"], p["li_per_P"], p["klass"],
-                         "with_Nd" if p["nd_side"] else "no_Nd"])
-        w2.writerow([])
-        w2.writerow(["panel", "voltage_V", "rung_max_li_per_P"])
-        for V in VS:
-            w2.writerow(["a_rung", V, rung(pts, V)])
-        w2.writerow([])
-        w2.writerow(["panel", "voltage_V", "nd_side", "host_class", "share_percent"])
-        for V in VS:
-            for nd in (False, True):
-                for k, _ in CLASSES:
-                    fr = stack(pts, V, nd).get(k, 0.0)
-                    if fr > 0:
-                        w2.writerow(["b", V, "with_Nd" if nd else "no_Nd",
-                                     k, round(fr * 100, 4)])
-    print(f"{len(pts)} 수용상 · 사다리 {[rung(pts, V) for V in VS]}")
+        w = csv.writer(f)
+        w.writerow(["panel", "voltage_V", "electrolyte", "cathode", "p_host_formula",
+                    "li_per_P", "host_class", "nd_side", "exchange_eV_per_P"])
+        for q in pts:
+            w.writerow(["a", q["voltage_V"], q["electrolyte"], q["cathode"], q["formula"],
+                        q["li_per_P"], q["klass"],
+                        "with_Nd" if q["nd_side"] else "no_Nd",
+                        "" if q["dE_exchange"] is None else q["dE_exchange"]])
+        w.writerow([])
+        w.writerow(["panel", "donor_phosphate", "li_per_P", "exchange_eV_per_P", "source"])
+        for fo, v in sorted(dE.items(), key=lambda kv: -kv[1]):
+            w.writerow(["b", fo, LI_PER_P.get(fo, ""), v, src[fo]])
+    n_neg = {V: sum(1 for q in have if q["voltage_V"] == V and q["dE_exchange"] < 0)
+             for V in VS}
+    print(f"{len(have)}/{len(pts)} 점에 교환에너지 있음 ({len(have)/len(pts):.0%}) · "
+          f"미측정 상 {len(miss)}: {', '.join(miss)}")
+    print("전압별 '음수(Nd 이김)' 비율: " +
+          "  ".join(f"{V:g}V {n_neg[V]}/{sum(1 for q in have if q['voltage_V']==V)}"
+                    for V in VS))
     print(f"→ {png}\n→ {csv_path}")
     return 0
 

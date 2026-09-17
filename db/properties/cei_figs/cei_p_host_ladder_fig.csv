@@ -1,234 +1,211 @@
-panel,voltage_V,electrolyte,cathode,p_host_formula,li_per_P,host_class,nd_side
-a,2.5,comp1,LiCoO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,comp1,LiMnO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,comp1,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,comp1,NMC811,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,comp1,LiCoO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,comp1,LiMnO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,comp1,LiNiO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,comp1,NMC811,Li2MnP2O7,1.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,comp1,NMC811,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.5,comp1,LiCoO2,LiPO3,1.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.5,comp1,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,3.5,comp1,LiNiO2,LiNi(PO3)3,0.3333,TM phosphate (Li/P = 0),no_Nd
-a,3.5,comp1,NMC811,LiMn(PO3)3,0.3333,TM phosphate (Li/P = 0),no_Nd
-a,3.5,comp1,NMC811,LiPO3,1.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,4.0,comp1,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,comp1,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,comp1,NMC811,MnP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,comp1,NMC811,NiP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,comp1,LiNiO2,NiP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,comp1,NMC811,NiP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,comp1,NMC811,MnP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,comp1,LiNiO2,NiP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,2.5,lpsocl,LiCoO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,lpsocl,LiMnO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,lpsocl,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,lpsocl,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,lpsocl,NMC811,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,lpsocl,LiCoO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,lpsocl,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),no_Nd
-a,3.0,lpsocl,LiNiO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,lpsocl,NMC811,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,lpsocl,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.5,lpsocl,LiCoO2,LiPO3,1.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.5,lpsocl,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),no_Nd
-a,3.5,lpsocl,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,3.5,lpsocl,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,lpsocl,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,lpsocl,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,lpsocl,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,lpsocl,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,lpsocl,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,lpsocl,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,lpsocl,LiMnO2,P2S7,0.0,P–S (thiophosphate),no_Nd
-a,4.3,lpsocl,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,lpsocl,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,lpsocl,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,lpsocl,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,lpsocl,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,lpsocl,LiMnO2,P2S7,0.0,P–S (thiophosphate),no_Nd
-a,4.5,lpsocl,LiMnO2,PCl5,0.0,P–Cl escape (PCl$_5$),no_Nd
-a,4.5,lpsocl,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,lpsocl,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,lpsocl,NMC811,MnP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,lpsocl,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,2.5,modelc,LiCoO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,modelc,LiMnO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,modelc,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,modelc,NMC811,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,modelc,LiCoO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,modelc,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),no_Nd
-a,3.0,modelc,LiNiO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,modelc,NMC811,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,modelc,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.5,modelc,LiCoO2,LiPO3,1.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.5,modelc,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,3.5,modelc,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,3.5,modelc,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,3.5,modelc,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,modelc,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,modelc,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,modelc,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,modelc,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,modelc,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,modelc,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,modelc,LiMnO2,P2S7,0.0,P–S (thiophosphate),no_Nd
-a,4.3,modelc,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,modelc,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,modelc,NMC811,MnP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,modelc,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,modelc,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,modelc,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,modelc,NMC811,NiP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,modelc,NMC811,MnP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,2.5,modelc_nd,LiCoO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,2.5,modelc_nd,LiCoO2,NdPO4,0.0,Nd phosphate,with_Nd
-a,2.5,modelc_nd,LiMnO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,2.5,modelc_nd,LiMnO2,NdPO4,0.0,Nd phosphate,with_Nd
-a,2.5,modelc_nd,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,2.5,modelc_nd,LiNiO2,NdPO4,0.0,Nd phosphate,with_Nd
-a,2.5,modelc_nd,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,2.5,modelc_nd,NMC811,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,2.5,modelc_nd,NMC811,NdPO4,0.0,Nd phosphate,with_Nd
-a,3.0,modelc_nd,LiCoO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,3.0,modelc_nd,LiCoO2,NdPO4,0.0,Nd phosphate,with_Nd
-a,3.0,modelc_nd,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),with_Nd
-a,3.0,modelc_nd,LiMnO2,NdPO4,0.0,Nd phosphate,with_Nd
-a,3.0,modelc_nd,LiNiO2,NdPO4,0.0,Nd phosphate,with_Nd
-a,3.0,modelc_nd,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,3.0,modelc_nd,NMC811,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,3.0,modelc_nd,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,3.0,modelc_nd,NMC811,NdPO4,0.0,Nd phosphate,with_Nd
-a,3.5,modelc_nd,LiCoO2,LiNd(PO3)4,0.25,Nd phosphate,with_Nd
-a,3.5,modelc_nd,LiCoO2,LiPO3,1.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,3.5,modelc_nd,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),with_Nd
-a,3.5,modelc_nd,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,3.5,modelc_nd,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,3.5,modelc_nd,NMC811,LiNd(PO3)4,0.25,Nd phosphate,with_Nd
-a,4.0,modelc_nd,LiCoO2,NdP5O14,0.0,Nd phosphate,with_Nd
-a,4.0,modelc_nd,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.0,modelc_nd,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.0,modelc_nd,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.3,modelc_nd,LiCoO2,NdP5O14,0.0,Nd phosphate,with_Nd
-a,4.3,modelc_nd,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.3,modelc_nd,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.3,modelc_nd,NMC811,Nd(PO3)3,0.0,Nd phosphate,with_Nd
-a,4.3,modelc_nd,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.5,modelc_nd,LiCoO2,NdP5O14,0.0,Nd phosphate,with_Nd
-a,4.5,modelc_nd,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.5,modelc_nd,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.5,modelc_nd,LiNiO2,Nd(PO3)3,0.0,Nd phosphate,with_Nd
-a,4.5,modelc_nd,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.5,modelc_nd,NMC811,Nd(PO3)3,0.0,Nd phosphate,with_Nd
-a,4.5,modelc_nd,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,2.5,nd_only,LiCoO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,2.5,nd_only,LiCoO2,NdPO4,0.0,Nd phosphate,with_Nd
-a,2.5,nd_only,LiMnO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,2.5,nd_only,LiMnO2,NdPO4,0.0,Nd phosphate,with_Nd
-a,2.5,nd_only,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,2.5,nd_only,LiNiO2,NdPO4,0.0,Nd phosphate,with_Nd
-a,2.5,nd_only,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,2.5,nd_only,NMC811,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,2.5,nd_only,NMC811,NdPO4,0.0,Nd phosphate,with_Nd
-a,3.0,nd_only,LiCoO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,3.0,nd_only,LiCoO2,NdPO4,0.0,Nd phosphate,with_Nd
-a,3.0,nd_only,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),with_Nd
-a,3.0,nd_only,LiMnO2,NdPO4,0.0,Nd phosphate,with_Nd
-a,3.0,nd_only,LiNiO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,3.0,nd_only,LiNiO2,NdPO4,0.0,Nd phosphate,with_Nd
-a,3.0,nd_only,NMC811,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,3.0,nd_only,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,3.0,nd_only,NMC811,NdPO4,0.0,Nd phosphate,with_Nd
-a,3.5,nd_only,LiCoO2,LiNd(PO3)4,0.25,Nd phosphate,with_Nd
-a,3.5,nd_only,LiCoO2,LiPO3,1.0,Li phosphate (Li/P ≥ 1),with_Nd
-a,3.5,nd_only,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),with_Nd
-a,3.5,nd_only,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,3.5,nd_only,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,3.5,nd_only,NMC811,LiNd(PO3)4,0.25,Nd phosphate,with_Nd
-a,4.0,nd_only,LiCoO2,NdP5O14,0.0,Nd phosphate,with_Nd
-a,4.0,nd_only,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.0,nd_only,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.0,nd_only,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.0,nd_only,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.3,nd_only,LiCoO2,NdP5O14,0.0,Nd phosphate,with_Nd
-a,4.3,nd_only,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.3,nd_only,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.3,nd_only,LiNiO2,Nd(PO3)3,0.0,Nd phosphate,with_Nd
-a,4.3,nd_only,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.3,nd_only,NMC811,Nd(PO3)3,0.0,Nd phosphate,with_Nd
-a,4.3,nd_only,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.5,nd_only,LiCoO2,NdP5O14,0.0,Nd phosphate,with_Nd
-a,4.5,nd_only,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.5,nd_only,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,4.5,nd_only,LiNiO2,Nd(PO3)3,0.0,Nd phosphate,with_Nd
-a,4.5,nd_only,NMC811,NdP5O14,0.0,Nd phosphate,with_Nd
-a,4.5,nd_only,NMC811,Nd(PO3)3,0.0,Nd phosphate,with_Nd
-a,4.5,nd_only,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd
-a,2.5,o_only_03,LiCoO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,o_only_03,LiMnO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,o_only_03,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,o_only_03,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,2.5,o_only_03,NMC811,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,o_only_03,LiCoO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,o_only_03,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),no_Nd
-a,3.0,o_only_03,LiNiO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,o_only_03,NMC811,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.0,o_only_03,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.5,o_only_03,LiCoO2,LiPO3,1.0,Li phosphate (Li/P ≥ 1),no_Nd
-a,3.5,o_only_03,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),no_Nd
-a,3.5,o_only_03,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,3.5,o_only_03,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,o_only_03,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,o_only_03,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,o_only_03,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,o_only_03,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.0,o_only_03,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,o_only_03,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,o_only_03,LiMnO2,P2S7,0.0,P–S (thiophosphate),no_Nd
-a,4.3,o_only_03,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,o_only_03,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,o_only_03,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.3,o_only_03,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,o_only_03,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,o_only_03,LiMnO2,P2S7,0.0,P–S (thiophosphate),no_Nd
-a,4.5,o_only_03,LiMnO2,PCl5,0.0,P–Cl escape (PCl$_5$),no_Nd
-a,4.5,o_only_03,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,o_only_03,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,o_only_03,NMC811,MnP4O11,0.0,TM phosphate (Li/P = 0),no_Nd
-a,4.5,o_only_03,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd
+panel,voltage_V,electrolyte,cathode,p_host_formula,li_per_P,host_class,nd_side,exchange_eV_per_P
+a,2.5,comp1,LiCoO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,2.5,comp1,LiMnO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,2.5,comp1,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,2.5,comp1,NMC811,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,3.0,comp1,LiCoO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd,0.40301
+a,3.0,comp1,LiMnO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd,0.40301
+a,3.0,comp1,LiNiO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd,0.40301
+a,3.0,comp1,NMC811,Li2MnP2O7,1.0,Li phosphate (Li/P ≥ 1),no_Nd,
+a,3.0,comp1,NMC811,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd,0.40301
+a,3.5,comp1,LiCoO2,LiPO3,1.0,Li phosphate (Li/P ≥ 1),no_Nd,-0.82386
+a,3.5,comp1,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,3.5,comp1,LiNiO2,LiNi(PO3)3,0.3333,TM phosphate (Li/P = 0),no_Nd,
+a,3.5,comp1,NMC811,LiMn(PO3)3,0.3333,TM phosphate (Li/P = 0),no_Nd,
+a,3.5,comp1,NMC811,LiPO3,1.0,Li phosphate (Li/P ≥ 1),no_Nd,-0.82386
+a,4.0,comp1,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.16463
+a,4.0,comp1,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.0,comp1,NMC811,MnP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.01274
+a,4.0,comp1,NMC811,NiP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.15111
+a,4.3,comp1,LiNiO2,NiP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.15111
+a,4.3,comp1,NMC811,NiP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.15111
+a,4.3,comp1,NMC811,MnP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.01274
+a,4.5,comp1,LiNiO2,NiP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.15111
+a,2.5,lpsocl,LiCoO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,2.5,lpsocl,LiMnO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,2.5,lpsocl,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,2.5,lpsocl,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),no_Nd,
+a,2.5,lpsocl,NMC811,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,3.0,lpsocl,LiCoO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd,0.40301
+a,3.0,lpsocl,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),no_Nd,-1.00463
+a,3.0,lpsocl,LiNiO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd,0.40301
+a,3.0,lpsocl,NMC811,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd,0.40301
+a,3.0,lpsocl,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),no_Nd,
+a,3.5,lpsocl,LiCoO2,LiPO3,1.0,Li phosphate (Li/P ≥ 1),no_Nd,-0.82386
+a,3.5,lpsocl,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),no_Nd,-1.00463
+a,3.5,lpsocl,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,3.5,lpsocl,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.0,lpsocl,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.16463
+a,4.0,lpsocl,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.0,lpsocl,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.0,lpsocl,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.0,lpsocl,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.3,lpsocl,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.16463
+a,4.3,lpsocl,LiMnO2,P2S7,0.0,P–S (thiophosphate),no_Nd,
+a,4.3,lpsocl,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.3,lpsocl,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.3,lpsocl,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.3,lpsocl,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.5,lpsocl,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.16463
+a,4.5,lpsocl,LiMnO2,P2S7,0.0,P–S (thiophosphate),no_Nd,
+a,4.5,lpsocl,LiMnO2,PCl5,0.0,P–Cl escape (PCl$_5$),no_Nd,
+a,4.5,lpsocl,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.5,lpsocl,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.5,lpsocl,NMC811,MnP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.01274
+a,4.5,lpsocl,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,2.5,modelc,LiCoO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,2.5,modelc,LiMnO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,2.5,modelc,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,2.5,modelc,NMC811,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,3.0,modelc,LiCoO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd,0.40301
+a,3.0,modelc,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),no_Nd,-1.00463
+a,3.0,modelc,LiNiO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd,0.40301
+a,3.0,modelc,NMC811,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd,0.40301
+a,3.0,modelc,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),no_Nd,
+a,3.5,modelc,LiCoO2,LiPO3,1.0,Li phosphate (Li/P ≥ 1),no_Nd,-0.82386
+a,3.5,modelc,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,3.5,modelc,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,3.5,modelc,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,3.5,modelc,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.0,modelc,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.16463
+a,4.0,modelc,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.0,modelc,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.0,modelc,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.0,modelc,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.3,modelc,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.16463
+a,4.3,modelc,LiMnO2,P2S7,0.0,P–S (thiophosphate),no_Nd,
+a,4.3,modelc,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.3,modelc,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.3,modelc,NMC811,MnP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.01274
+a,4.3,modelc,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.5,modelc,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.16463
+a,4.5,modelc,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.5,modelc,NMC811,NiP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.15111
+a,4.5,modelc,NMC811,MnP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.01274
+a,2.5,modelc_nd,LiCoO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd,1.50352
+a,2.5,modelc_nd,LiCoO2,NdPO4,0.0,Nd phosphate,with_Nd,
+a,2.5,modelc_nd,LiMnO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd,1.50352
+a,2.5,modelc_nd,LiMnO2,NdPO4,0.0,Nd phosphate,with_Nd,
+a,2.5,modelc_nd,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd,1.50352
+a,2.5,modelc_nd,LiNiO2,NdPO4,0.0,Nd phosphate,with_Nd,
+a,2.5,modelc_nd,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),with_Nd,
+a,2.5,modelc_nd,NMC811,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd,1.50352
+a,2.5,modelc_nd,NMC811,NdPO4,0.0,Nd phosphate,with_Nd,
+a,3.0,modelc_nd,LiCoO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),with_Nd,0.40301
+a,3.0,modelc_nd,LiCoO2,NdPO4,0.0,Nd phosphate,with_Nd,
+a,3.0,modelc_nd,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),with_Nd,-1.00463
+a,3.0,modelc_nd,LiMnO2,NdPO4,0.0,Nd phosphate,with_Nd,
+a,3.0,modelc_nd,LiNiO2,NdPO4,0.0,Nd phosphate,with_Nd,
+a,3.0,modelc_nd,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd,1.50352
+a,3.0,modelc_nd,NMC811,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),with_Nd,0.40301
+a,3.0,modelc_nd,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),with_Nd,
+a,3.0,modelc_nd,NMC811,NdPO4,0.0,Nd phosphate,with_Nd,
+a,3.5,modelc_nd,LiCoO2,LiNd(PO3)4,0.25,Nd phosphate,with_Nd,-1.21561
+a,3.5,modelc_nd,LiCoO2,LiPO3,1.0,Li phosphate (Li/P ≥ 1),with_Nd,-0.82386
+a,3.5,modelc_nd,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),with_Nd,-1.00463
+a,3.5,modelc_nd,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,3.5,modelc_nd,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,3.5,modelc_nd,NMC811,LiNd(PO3)4,0.25,Nd phosphate,with_Nd,-1.21561
+a,4.0,modelc_nd,LiCoO2,NdP5O14,0.0,Nd phosphate,with_Nd,
+a,4.0,modelc_nd,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.54529
+a,4.0,modelc_nd,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,4.0,modelc_nd,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,4.3,modelc_nd,LiCoO2,NdP5O14,0.0,Nd phosphate,with_Nd,
+a,4.3,modelc_nd,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.54529
+a,4.3,modelc_nd,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,4.3,modelc_nd,NMC811,Nd(PO3)3,0.0,Nd phosphate,with_Nd,
+a,4.3,modelc_nd,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.54529
+a,4.5,modelc_nd,LiCoO2,NdP5O14,0.0,Nd phosphate,with_Nd,
+a,4.5,modelc_nd,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.54529
+a,4.5,modelc_nd,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,4.5,modelc_nd,LiNiO2,Nd(PO3)3,0.0,Nd phosphate,with_Nd,
+a,4.5,modelc_nd,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,4.5,modelc_nd,NMC811,Nd(PO3)3,0.0,Nd phosphate,with_Nd,
+a,4.5,modelc_nd,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.54529
+a,2.5,nd_only,LiCoO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd,1.50352
+a,2.5,nd_only,LiCoO2,NdPO4,0.0,Nd phosphate,with_Nd,
+a,2.5,nd_only,LiMnO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd,1.50352
+a,2.5,nd_only,LiMnO2,NdPO4,0.0,Nd phosphate,with_Nd,
+a,2.5,nd_only,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd,1.50352
+a,2.5,nd_only,LiNiO2,NdPO4,0.0,Nd phosphate,with_Nd,
+a,2.5,nd_only,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),with_Nd,
+a,2.5,nd_only,NMC811,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),with_Nd,1.50352
+a,2.5,nd_only,NMC811,NdPO4,0.0,Nd phosphate,with_Nd,
+a,3.0,nd_only,LiCoO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),with_Nd,0.40301
+a,3.0,nd_only,LiCoO2,NdPO4,0.0,Nd phosphate,with_Nd,
+a,3.0,nd_only,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),with_Nd,-1.00463
+a,3.0,nd_only,LiMnO2,NdPO4,0.0,Nd phosphate,with_Nd,
+a,3.0,nd_only,LiNiO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),with_Nd,0.40301
+a,3.0,nd_only,LiNiO2,NdPO4,0.0,Nd phosphate,with_Nd,
+a,3.0,nd_only,NMC811,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),with_Nd,0.40301
+a,3.0,nd_only,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),with_Nd,
+a,3.0,nd_only,NMC811,NdPO4,0.0,Nd phosphate,with_Nd,
+a,3.5,nd_only,LiCoO2,LiNd(PO3)4,0.25,Nd phosphate,with_Nd,-1.21561
+a,3.5,nd_only,LiCoO2,LiPO3,1.0,Li phosphate (Li/P ≥ 1),with_Nd,-0.82386
+a,3.5,nd_only,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),with_Nd,-1.00463
+a,3.5,nd_only,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,3.5,nd_only,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,3.5,nd_only,NMC811,LiNd(PO3)4,0.25,Nd phosphate,with_Nd,-1.21561
+a,4.0,nd_only,LiCoO2,NdP5O14,0.0,Nd phosphate,with_Nd,
+a,4.0,nd_only,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.54529
+a,4.0,nd_only,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,4.0,nd_only,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,4.0,nd_only,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.54529
+a,4.3,nd_only,LiCoO2,NdP5O14,0.0,Nd phosphate,with_Nd,
+a,4.3,nd_only,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.54529
+a,4.3,nd_only,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,4.3,nd_only,LiNiO2,Nd(PO3)3,0.0,Nd phosphate,with_Nd,
+a,4.3,nd_only,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,4.3,nd_only,NMC811,Nd(PO3)3,0.0,Nd phosphate,with_Nd,
+a,4.3,nd_only,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.54529
+a,4.5,nd_only,LiCoO2,NdP5O14,0.0,Nd phosphate,with_Nd,
+a,4.5,nd_only,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.54529
+a,4.5,nd_only,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.75124
+a,4.5,nd_only,LiNiO2,Nd(PO3)3,0.0,Nd phosphate,with_Nd,
+a,4.5,nd_only,NMC811,NdP5O14,0.0,Nd phosphate,with_Nd,
+a,4.5,nd_only,NMC811,Nd(PO3)3,0.0,Nd phosphate,with_Nd,
+a,4.5,nd_only,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),with_Nd,-1.54529
+a,2.5,o_only_03,LiCoO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,2.5,o_only_03,LiMnO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,2.5,o_only_03,LiNiO2,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,2.5,o_only_03,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),no_Nd,
+a,2.5,o_only_03,NMC811,Li3PO4,3.0,Li phosphate (Li/P ≥ 1),no_Nd,1.50352
+a,3.0,o_only_03,LiCoO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd,0.40301
+a,3.0,o_only_03,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),no_Nd,-1.00463
+a,3.0,o_only_03,LiNiO2,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd,0.40301
+a,3.0,o_only_03,NMC811,Li4P2O7,2.0,Li phosphate (Li/P ≥ 1),no_Nd,0.40301
+a,3.0,o_only_03,NMC811,LiMnPO4,1.0,Li phosphate (Li/P ≥ 1),no_Nd,
+a,3.5,o_only_03,LiCoO2,LiPO3,1.0,Li phosphate (Li/P ≥ 1),no_Nd,-0.82386
+a,3.5,o_only_03,LiMnO2,Mn2P2O7,0.0,TM phosphate (Li/P = 0),no_Nd,-1.00463
+a,3.5,o_only_03,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,3.5,o_only_03,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.0,o_only_03,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.16463
+a,4.0,o_only_03,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.0,o_only_03,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.0,o_only_03,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.0,o_only_03,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.3,o_only_03,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.16463
+a,4.3,o_only_03,LiMnO2,P2S7,0.0,P–S (thiophosphate),no_Nd,
+a,4.3,o_only_03,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.3,o_only_03,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.3,o_only_03,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.3,o_only_03,NMC811,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.5,o_only_03,LiCoO2,CoP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.16463
+a,4.5,o_only_03,LiMnO2,P2S7,0.0,P–S (thiophosphate),no_Nd,
+a,4.5,o_only_03,LiMnO2,PCl5,0.0,P–Cl escape (PCl$_5$),no_Nd,
+a,4.5,o_only_03,LiMnO2,Mn(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.54529
+a,4.5,o_only_03,LiNiO2,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
+a,4.5,o_only_03,NMC811,MnP4O11,0.0,TM phosphate (Li/P = 0),no_Nd,-2.01274
+a,4.5,o_only_03,NMC811,Ni(PO3)2,0.0,TM phosphate (Li/P = 0),no_Nd,-1.75124
 
-panel,voltage_V,rung_max_li_per_P
-a_rung,2.5,3.0
-a_rung,3.0,3.0
-a_rung,3.5,1.0
-a_rung,4.0,0.0
-a_rung,4.3,0.0
-a_rung,4.5,0.0
-
-panel,voltage_V,nd_side,host_class,share_percent
-b,2.5,no_Nd,Li phosphate (Li/P ≥ 1),100.0
-b,2.5,with_Nd,Nd phosphate,44.4444
-b,2.5,with_Nd,Li phosphate (Li/P ≥ 1),55.5556
-b,3.0,no_Nd,Li phosphate (Li/P ≥ 1),85.0
-b,3.0,no_Nd,TM phosphate (Li/P = 0),15.0
-b,3.0,with_Nd,Nd phosphate,44.4444
-b,3.0,with_Nd,Li phosphate (Li/P ≥ 1),44.4444
-b,3.0,with_Nd,TM phosphate (Li/P = 0),11.1111
-b,3.5,no_Nd,Li phosphate (Li/P ≥ 1),27.7778
-b,3.5,no_Nd,TM phosphate (Li/P = 0),72.2222
-b,3.5,with_Nd,Nd phosphate,33.3333
-b,3.5,with_Nd,Li phosphate (Li/P ≥ 1),16.6667
-b,3.5,with_Nd,TM phosphate (Li/P = 0),50.0
-b,4.0,no_Nd,TM phosphate (Li/P = 0),100.0
-b,4.0,with_Nd,Nd phosphate,22.2222
-b,4.0,with_Nd,TM phosphate (Li/P = 0),77.7778
-b,4.3,no_Nd,P–S (thiophosphate),14.2857
-b,4.3,no_Nd,TM phosphate (Li/P = 0),85.7143
-b,4.3,with_Nd,Nd phosphate,41.6667
-b,4.3,with_Nd,TM phosphate (Li/P = 0),58.3333
-b,4.5,no_Nd,P–S (thiophosphate),10.5263
-b,4.5,no_Nd,TM phosphate (Li/P = 0),78.9474
-b,4.5,no_Nd,P–Cl escape (PCl$_5$),10.5263
-b,4.5,with_Nd,Nd phosphate,50.0
-b,4.5,with_Nd,TM phosphate (Li/P = 0),50.0
+panel,donor_phosphate,li_per_P,exchange_eV_per_P,source
+b,Li3PO4,3.0,1.50352,tm_exchange
+b,Li4P2O7,2.0,0.40301,li_ladder
+b,LiPO3,1.0,-0.82386,li_ladder
+b,Mn2P2O7,0.0,-1.00463,tm_exchange
+b,LiNd(PO3)4,0.25,-1.21561,li_ladder
+b,Mn(PO3)2,0.0,-1.54529,tm_exchange
+b,Ni(PO3)2,0.0,-1.75124,tm_exchange
+b,MnP4O11,0.0,-2.01274,tm_exchange
+b,NiP4O11,0.0,-2.15111,tm_exchange
+b,CoP4O11,0.0,-2.16463,tm_exchange
