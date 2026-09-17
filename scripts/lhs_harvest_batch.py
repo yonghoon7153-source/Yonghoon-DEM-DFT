@@ -7,8 +7,14 @@
 --mesh/--plate-z --n-types`).  130 개를 한 번에 도는 배치가 없어서 측정 7열이
 `0/130` 으로 비어 있었고, 그것이 경향 분석 전체의 병목이었다.
 
-★ **원자료가 있는 127 건은 지금 수확할 수 있다** — 남은 2 건(`lhs00_089` ·
-  `lhs00_098`)을 기다릴 필요가 없다.  끝나는 대로 같은 명령으로 채워 넣으면 된다.
+★ **원자료가 있는 127 건은 지금 수확할 수 있다** — 나머지를 기다릴 필요가 없다.
+
+⚠ 코호트 131 행 = RAW_OK 127 + `RAW_MISSING_CONTACT` **3** (`lhs00_034` · `lhs00_089` ·
+  `lhs00_098`) + 케이스가 아닌 행 1 (`perc`).  ⛔ 옛 표기 *"남은 2 건"* 은 **틀렸다**
+  (034 가 빠져 있었다, 2026-09-17).  사유도 "아직 도는 중" 이 아니라 **contact 덤프 결손**이다:
+  089·098 은 봉인(2026-09-14) 시점에 진행 중이었으니 끝나면 채워지지만, **034 는 사유가
+  같은지 확인되지 않았다** — 그냥 기다리면 오지 않을 수 있다.
+  ⇒ 나중에 채울 때는 `--case lhs00_034` 처럼 **한 건씩** 돌려 실제로 열리는지 본다.
 
 ⛔ **짝짓기 규칙을 여기서 새로 만들지 않는다** (규율 ①).
    atom↔contact 짝은 `docs/data/area_s2_cohort.tsv` 에 **이미 봉인돼 있다**
@@ -48,6 +54,26 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 COHORT = ROOT / 'docs' / 'data' / 'area_s2_cohort.tsv'
 HARVEST = ROOT / 'scripts' / 'lhs_descriptor_harvest.py'
+
+
+def require_harvest(path: Path) -> None:
+    """수확기가 **실제로 있는지** 먼저 본다 — dry-run 에서도 선다.
+
+    ⚠ 이 검사가 없어서 실사고가 났다 (2026-09-17).  `ROOT` 는 이 스크립트의
+      `parent.parent` 라, 리포 밖(`/tmp/lhsh/`)에 복사해 돌리면 `ROOT=/tmp` 가 되고
+      `HARVEST=/tmp/scripts/lhs_descriptor_harvest.py` 라는 **없는 경로**가 된다.
+      그런데 dry-run 은 수확기를 부르지 않으므로 `127/127 DRY_RUN` 으로 **초록**이
+      나온다 — 실행하면 127 건이 전부 `HARVEST_FAILED` 로 죽는다.
+      = CLAUDE.md 규율 ⑤ 의 false-green 이 **경로 층**에서 재현된 것이다.
+      ⇒ 리허설이 본번과 **같은 전제**를 밟게 만든다.
+    """
+    if not path.is_file():
+        sys.exit(
+            f'⛔ 수확기가 없다 — {path}\n'
+            f'   이 스크립트의 ROOT 는 자기 위치에서 정해진다 (parent.parent = {ROOT}).\n'
+            f'   리포 밖에 복사해 돌리면 수확기를 못 찾는다.\n'
+            f'   ⇒ **리포 체크아웃 안에서** 돌릴 것:\n'
+            f'        cd ~/Yonghoon-DEM-DFT && python3 scripts/lhs_harvest_batch.py ...')
 
 RE_STEP = re.compile(r'_(\d+)\.liggghts$')
 RE_MESH = re.compile(r'mesh_(\d+)\.stl$', re.I)
@@ -216,6 +242,9 @@ def main(argv=None):
                  '봉인 대조를 했는지가 산출물에 남아야 하므로 기본값을 두지 않는다')
     a.verify_sha = bool(a.verify_sha)
 
+    #  ⛔ dry-run 이든 본번이든 **똑같이** 여기서 선다 (리허설이 본번과 같은 전제를 밟도록).
+    require_harvest(HARVEST)
+
     rows = read_cohort(Path(a.cohort))
     if not rows:
         sys.exit(f'⛔ 코호트가 0 행이다 — {a.cohort} (주석 줄만 읽은 것은 아닌지 확인)')
@@ -330,8 +359,45 @@ def _selftest():
         chk('★★ sha 대조를 **안 했다는 사실**이 기록에 남는다', rec.get('sha_verified') is False)
         chk('★ 고른 mesh 의 근거가 기록에 남는다', rec.get('mesh_pick') in ('exact', 'latest_le'))
 
+        #  ── ★★ 실사고 재현: 리포 밖에서 돌리면 수확기를 못 찾는다 ──
+        #     dry-run 이 `127/127` 초록을 내고 본번이 127건 전부 죽은 사고 (2026-09-17).
+        missing = t / 'nope' / 'lhs_descriptor_harvest.py'
+        try:
+            require_harvest(missing)
+            hit = False
+        except SystemExit as e:
+            hit = '수확기가 없다' in str(e)
+        chk('★★ 수확기가 없으면 **선다** — 없는 경로로 돌지 않는다', hit)
+
+        real = t / 'lhs_descriptor_harvest.py'
+        real.write_text('#')
+        try:
+            require_harvest(real)
+            ok = True
+        except SystemExit:
+            ok = False
+        chk('수확기가 있으면 통과한다', ok)
+
+        #  ⛔ 핵심 — **dry-run 에서도** 선다.  리허설이 본번과 같은 전제를 밟아야
+        #     "127/127 DRY_RUN" 이 실행 가능성을 뜻하게 된다.
+        #  ⚠ `import lhs_harvest_batch` 는 __main__ 으로 돌 때 **두 번째 사본**을 만든다 —
+        #    그 사본의 전역을 바꿔도 지금 도는 코드에는 영향이 없다 (이 검사가 그걸 잡았다).
+        #    지금 **도는** 모듈을 잡아야 한다.
+        _self = sys.modules[__name__]
+        _keep = _self.HARVEST
+        _self.HARVEST = missing
+        try:
+            rc = main(['--skip-sha', '--dry-run', '--cohort', str(tsv),
+                       '--out-dir', str(t / 'o')])
+            stopped = False
+        except SystemExit as e:
+            stopped = '수확기가 없다' in str(e)
+        finally:
+            _self.HARVEST = _keep
+        chk('★★★ **dry-run 도** 같은 전제에서 선다 (리허설 false-green 차단)', stopped)
+
     print('\nlhs_harvest_batch SELFTEST %d PASS %s'
-          % (13 - len(fail), 'ALL GREEN' if not fail else f'FAIL {fail}'))
+          % (16 - len(fail), 'ALL GREEN' if not fail else f'FAIL {fail}'))
     return 1 if fail else 0
 
 
