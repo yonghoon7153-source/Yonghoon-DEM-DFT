@@ -1,0 +1,76 @@
+{
+  "목적": "§C 판별종 10종 구조 회수 — D-2026-09-16-cathode-cei-gap-target enforcement ⑥",
+  "⛔": "이 표 밖의 상을 §C 큐에 넣으면 개정문 무효다",
+  "targets": {
+    "NdPO4": {
+      "mp_id": "mp-aaaaafhw",
+      "n_atoms": 24,
+      "formula": "NdPO4",
+      "spacegroup": "P2_1/c",
+      "cif": "db/structures/cei_gap_targets/NdPO4_mp-aaaaafhw.cif"
+    },
+    "NdCl3": {
+      "mp_id": "mp-aaaabihr",
+      "n_atoms": 8,
+      "formula": "NdCl3",
+      "spacegroup": "P6_3/m",
+      "cif": "db/structures/cei_gap_targets/NdCl3_mp-aaaabihr.cif"
+    },
+    "Nd2(SO4)3": {
+      "mp_id": "mp-aaaabrhp",
+      "n_atoms": 34,
+      "formula": "Nd2(SO4)3",
+      "spacegroup": "C2/c",
+      "cif": "db/structures/cei_gap_targets/Nd2SO43_mp-aaaabrhp.cif"
+    },
+    "Nd(PO3)3": {
+      "mp_id": "mp-aaaaaktk",
+      "n_atoms": 26,
+      "formula": "Nd(PO3)3",
+      "spacegroup": "C222_1",
+      "cif": "db/structures/cei_gap_targets/NdPO33_mp-aaaaaktk.cif"
+    },
+    "Nd3PO7": {
+      "mp_id": "mp-aaacqmbf",
+      "n_atoms": 66,
+      "formula": "Nd3PO7",
+      "spacegroup": "Cm",
+      "cif": "db/structures/cei_gap_targets/Nd3PO7_mp-aaacqmbf.cif"
+    },
+    "NdP5O14": {
+      "mp_id": "mp-aaabfxkr",
+      "n_atoms": 80,
+      "formula": "NdP5O14",
+      "spacegroup": "Pmna",
+      "cif": "db/structures/cei_gap_targets/NdP5O14_mp-aaabfxkr.cif"
+    },
+    "LiNd(PO3)4": {
+      "mp_id": "mp-aaaabbrr",
+      "n_atoms": 36,
+      "formula": "LiNd(PO3)4",
+      "spacegroup": "C2/c",
+      "cif": "db/structures/cei_gap_targets/LiNdPO34_mp-aaaabbrr.cif"
+    },
+    "Nd2O3": {
+      "mp_id": "mp-aaaaabof",
+      "n_atoms": 40,
+      "formula": "Nd2O3",
+      "spacegroup": "Ia-3",
+      "cif": "db/structures/cei_gap_targets/Nd2O3_mp-aaaaabof.cif"
+    },
+    "NdPS4": {
+      "mp_id": "mp-aaaaafmc",
+      "n_atoms": 48,
+      "formula": "NdPS4",
+      "spacegroup": "I4_1/acd",
+      "cif": "db/structures/cei_gap_targets/NdPS4_mp-aaaaafmc.cif"
+    },
+    "P2O5": {
+      "mp_id": "mp-aaaaadqi",
+      "n_atoms": 14,
+      "formula": "P2O5",
+      "spacegroup": "Fdd2",
+      "cif": "db/structures/cei_gap_targets/P2O5_mp-aaaaadqi.cif"
+    }
+  }
+}
