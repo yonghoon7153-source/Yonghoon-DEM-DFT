@@ -2496,6 +2496,123 @@
     "card_content_digest": "c4a1f83d3894dc49efab289c1f06b00866c4e24ea4313ef8ae81d0f5fb64ff00",
     "decision_digest": "sha256:be1614ef78271f4b96266c9e040822da04c2fc93646a6abc7652fc14b828affe"
    }
+  },
+  {
+   "id": "D-2026-09-17-cei-p-host-li-ladder",
+   "schema_version": 2,
+   "kind": "metric",
+   "scope": "cei.interface_products",
+   "slot": "p_host_li_per_P_vs_voltage",
+   "applies_to": {
+    "systems": [
+     "comp1",
+     "modelc",
+     "lpsocl",
+     "nd_only",
+     "o_only_03",
+     "modelc_nd"
+    ],
+    "tasks": [
+     "grand_potential_interface_reactivity"
+    ],
+    "methods": [
+     "MP GGA_GGA+U hull (Richards/Ong 2016)"
+    ],
+    "use_cases": [
+     "mechanism_reading"
+    ]
+   },
+   "title": "계면 산물의 P 수용상 Li:P 사다리 — §2 가설 1·2·4 번의 사후 검사",
+   "statement": "최소 kink 반응의 우변에서 P 를 받은 상의 Li:P 는 전압과 함께 **3 → 2 → 1 → 0** 으로 단조 하강한다 (Li3PO4 → Li4P2O7 → LiPO3 → CoP4O11·Ni(PO3)2·Mn(PO3)2·NdP5O14). 전해질 6 종 전부 같은 방향이고 4.0 V 이상에서는 전부 Li/P = 0 이다. **2.5 V 에서 이미 P 가 인산염(Li3PO4)이다** — 따라서 §2 가설 1·2 번의 '저전압엔 P 가 PS4 골격에 갇혀 있다가 전압이 오르며 풀려난다' 는 최소 꺾임에서 관찰되지 않는다. ⚠ 4 번('풀려나는 P 의 양이 전압과 함께 늘어난다')은 이 자료로 **반증되지 않고 뒷받침되지도 않는다** — 이 도구는 계수를 안 보므로 *공급량*을 재지 못한다. 자료가 실제로 보여 주는 전압 의존은 공급이 아니라 **선택지**다: 전압이 Li 를 쓰는 수용상을 값이 큰 것부터 차례로 잠근다. 이는 §3 의 Li 예산 사다리(교환반응으로 따로 계산)와 같은 방향이며, 계면 산물 쪽에서 나온 독립 관측이다. ⚠ 3 번('Nd 가 없으면 P2S7')의 범위: P2S7 수용상은 **LiMnO2 에서만**, **4.3 V 이상에서만** 나온다. 나머지 무도핑 조건은 전이금속 인산염으로 가고 그것들도 Li/P = 0 이다 — 즉 무도핑 계도 고전압에서 Li 없는 방을 찾아내되 **양극의 전이금속을 쓴다**.",
+   "decision_state": "proposed",
+   "results_seen": true,
+   "exploratory": true,
+   "evidence": [
+    {
+     "kind": "rung_by_electrolyte_voltage",
+     "value": {
+      "comp1@2.5": 3.0,
+      "comp1@3": 2.0,
+      "comp1@3.5": 1.0,
+      "comp1@4": 0.0,
+      "comp1@4.3": 0.0,
+      "comp1@4.5": 0.0,
+      "lpsocl@2.5": 3.0,
+      "lpsocl@3": 2.0,
+      "lpsocl@3.5": 1.0,
+      "lpsocl@4": 0.0,
+      "lpsocl@4.3": 0.0,
+      "lpsocl@4.5": 0.0,
+      "modelc@2.5": 3.0,
+      "modelc@3": 2.0,
+      "modelc@3.5": 1.0,
+      "modelc@4": 0.0,
+      "modelc@4.3": 0.0,
+      "modelc@4.5": 0.0,
+      "modelc_nd@2.5": 3.0,
+      "modelc_nd@3": 3.0,
+      "modelc_nd@3.5": 1.0,
+      "modelc_nd@4": 0.0,
+      "modelc_nd@4.3": 0.0,
+      "modelc_nd@4.5": 0.0,
+      "nd_only@2.5": 3.0,
+      "nd_only@3": 2.0,
+      "nd_only@3.5": 1.0,
+      "nd_only@4": 0.0,
+      "nd_only@4.3": 0.0,
+      "nd_only@4.5": 0.0,
+      "o_only_03@2.5": 3.0,
+      "o_only_03@3": 2.0,
+      "o_only_03@3.5": 1.0,
+      "o_only_03@4": 0.0,
+      "o_only_03@4.3": 0.0,
+      "o_only_03@4.5": 0.0
+     }
+    },
+    {
+     "kind": "P_S_host_cells",
+     "value": [
+      "lpsocl@4.3",
+      "lpsocl@4.5",
+      "modelc@4.3",
+      "o_only_03@4.3",
+      "o_only_03@4.5"
+     ]
+    },
+    {
+     "kind": "n_conditions",
+     "value": 137
+    },
+    {
+     "kind": "endpoint_excluded",
+     "value": [
+      "comp1@4.0V/LiMnO2",
+      "comp1@4.3V/LiCoO2",
+      "comp1@4.3V/LiMnO2",
+      "comp1@4.5V/LiCoO2",
+      "comp1@4.5V/LiMnO2",
+      "comp1@4.5V/NMC811",
+      "modelc@4.5V/LiMnO2"
+     ]
+    }
+   ],
+   "method_ref": "tools/oxidation/interface_reactivity_v2.py --p_host_ladder",
+   "record": "db/properties/cei_p_host_ladder_2026_09_17.json",
+   "surface": "db/properties/cei_figs/index.html#s2",
+   "reopen_criteria": [
+    "최소 꺾임 말고 **모든 꺾임**을 보면 사다리가 달라질 수 있다 — 그때 다시 연다",
+    "계수(몇 mol 의 P 가 갔나)를 재면 4 번의 공급량 가설을 직접 판정할 수 있다 — 그것은 이 카드 밖이다",
+    "MP 항목이 바뀌어 hull 이 달라지면 무효",
+    "⛔ '한 조건 더 봤다' 는 재개 사유가 아니다"
+   ],
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-09-17"
+    }
+   ],
+   "_note": "⛔ **사후 관찰이다** (results_seen=true, exploratory=true). 2026-09-14 비준된 post-hoc 문턱 원칙에 따라 이것은 사전등록된 판정이 될 수 없다 — 1저자 비준 전까지 proposed 로 둔다. ⛔ **따로 발견된 결함**: Fig. 2 의 P2S7 집계(plot_cei_nd_o_decomposition.py 의 count())는 **끝점 퇴화 칸을 거르지 않는다**. modelc@4.5V/LiMnO2 는 x = 1.0 (자체분해, 양극이 반응식에 없다)인데 Fig. 2 는 그 칸을 P2S7 1 건으로 센다. 같은 도구의 product_census() 는 2026-09-16 에 이미 이 필터를 넣었다 — Fig. 2 만 안 들어갔다. 그림 재생성은 이 커밋에서 하지 않았다 (별건이라 ⏭ 에 남긴다)."
   }
  ]
 }

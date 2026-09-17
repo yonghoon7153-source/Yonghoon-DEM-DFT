@@ -1,0 +1,2708 @@
+{
+  "generated_by": "tools/oxidation/interface_reactivity_v2.py --p_host_ladder",
+  "generated_at": "2026-09-17",
+  "method": "최소 kink 반응식의 우변에서 P 를 포함한 상을 뽑고 그 상의 Li:P 를 센다. rung = 그 조건에서 가장 큰 Li/P (아직 살아 있는 가장 비싼 방). MP·pymatgen 을 안 쓴다 — 이미 기록된 반응식 문자열만 읽는 후처리다.",
+  "source_csv": "db/properties/cei_figs/cei_x_scan_panels.csv",
+  "n_conditions": 137,
+  "endpoint_excluded": [
+    "comp1@4.0V/LiMnO2",
+    "comp1@4.3V/LiCoO2",
+    "comp1@4.3V/LiMnO2",
+    "comp1@4.5V/LiCoO2",
+    "comp1@4.5V/LiMnO2",
+    "comp1@4.5V/NMC811",
+    "modelc@4.5V/LiMnO2"
+  ],
+  "rows": [
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.575221,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.575221,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.498258,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.507187,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.580357,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 2.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.580357,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 2.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.503521,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 2.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.484649,
+      "p_hosts": [
+        {
+          "formula": "Li2MnP2O7",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 1.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.631068,
+      "p_hosts": [
+        {
+          "formula": "LiPO3",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 1.0,
+      "rung_min_li_per_P": 1.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.684211,
+      "p_hosts": [
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.522788,
+      "p_hosts": [
+        {
+          "formula": "LiNi(PO3)3",
+          "li_per_P": 0.3333,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.3333,
+      "rung_min_li_per_P": 0.3333,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.525483,
+      "p_hosts": [
+        {
+          "formula": "LiMn(PO3)3",
+          "li_per_P": 0.3333,
+          "anion": "P-O"
+        },
+        {
+          "formula": "LiPO3",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 1.0,
+      "rung_min_li_per_P": 0.3333,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.702703,
+      "p_hosts": [
+        {
+          "formula": "CoP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.6,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.702703,
+      "p_hosts": [
+        {
+          "formula": "MnP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NiP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.702703,
+      "p_hosts": [
+        {
+          "formula": "NiP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.702703,
+      "p_hosts": [
+        {
+          "formula": "NiP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "MnP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.702703,
+      "p_hosts": [
+        {
+          "formula": "NiP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.600775,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.600775,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.524615,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.505758,
+      "p_hosts": [
+        {
+          "formula": "LiMnPO4",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 1.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.606654,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 2.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.524535,
+      "p_hosts": [
+        {
+          "formula": "Mn2P2O7",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.530739,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 2.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.510055,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "LiMnPO4",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 1.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.612648,
+      "p_hosts": [
+        {
+          "formula": "LiPO3",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 1.0,
+      "rung_min_li_per_P": 1.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.551929,
+      "p_hosts": [
+        {
+          "formula": "Mn2P2O7",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.508197,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.487355,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.680073,
+      "p_hosts": [
+        {
+          "formula": "CoP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.688889,
+      "p_hosts": [
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.531429,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.531429,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.708571,
+      "p_hosts": [
+        {
+          "formula": "CoP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.939394,
+      "p_hosts": [
+        {
+          "formula": "P2S7",
+          "li_per_P": 0.0,
+          "anion": "P-S"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": true
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.65035,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.65035,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.708571,
+      "p_hosts": [
+        {
+          "formula": "CoP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.984127,
+      "p_hosts": [
+        {
+          "formula": "P2S7",
+          "li_per_P": 0.0,
+          "anion": "P-S"
+        },
+        {
+          "formula": "PCl5",
+          "li_per_P": 0.0,
+          "anion": "P-Cl"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": true
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.65035,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "NMC811",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.668325,
+      "p_hosts": [
+        {
+          "formula": "MnP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.589354,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.589354,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.512782,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.521701,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.59501,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 2.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.515807,
+      "p_hosts": [
+        {
+          "formula": "Mn2P2O7",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.518631,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 2.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.497918,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "LiMnPO4",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 1.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.600775,
+      "p_hosts": [
+        {
+          "formula": "LiPO3",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 1.0,
+      "rung_min_li_per_P": 1.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.673913,
+      "p_hosts": [
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.5,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.5,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.665474,
+      "p_hosts": [
+        {
+          "formula": "CoP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.673913,
+      "p_hosts": [
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.522472,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.636986,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.692737,
+      "p_hosts": [
+        {
+          "formula": "CoP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.941989,
+      "p_hosts": [
+        {
+          "formula": "P2S7",
+          "li_per_P": 0.0,
+          "anion": "P-S"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": true
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.636986,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.655285,
+      "p_hosts": [
+        {
+          "formula": "MnP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.692737,
+      "p_hosts": [
+        {
+          "formula": "CoP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.636986,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "NMC811",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.665474,
+      "p_hosts": [
+        {
+          "formula": "NiP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "MnP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.598802,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.598802,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.522565,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.503704,
+      "p_hosts": [
+        {
+          "formula": "LiMnPO4",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.603622,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.534759,
+      "p_hosts": [
+        {
+          "formula": "Mn2P2O7",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.522565,
+      "p_hosts": [
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.506884,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "LiMnPO4",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.610998,
+      "p_hosts": [
+        {
+          "formula": "LiNd(PO3)4",
+          "li_per_P": 0.25,
+          "anion": "P-O"
+        },
+        {
+          "formula": "LiPO3",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 1.0,
+      "rung_min_li_per_P": 0.25,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.416667,
+      "p_hosts": [
+        {
+          "formula": "Mn2P2O7",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.401914,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.48932,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "LiNd(PO3)4",
+          "li_per_P": 0.25,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.25,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.705882,
+      "p_hosts": [
+        {
+          "formula": "NdP5O14",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.689655,
+      "p_hosts": [
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.453401,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.492401,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.705882,
+      "p_hosts": [
+        {
+          "formula": "NdP5O14",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.689655,
+      "p_hosts": [
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.518732,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.541806,
+      "p_hosts": [
+        {
+          "formula": "Nd(PO3)3",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.705882,
+      "p_hosts": [
+        {
+          "formula": "NdP5O14",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.689655,
+      "p_hosts": [
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.547112,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Nd(PO3)3",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.679245,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Nd(PO3)3",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.581395,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.581395,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.504587,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.485714,
+      "p_hosts": [
+        {
+          "formula": "LiMnPO4",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.585938,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.520833,
+      "p_hosts": [
+        {
+          "formula": "Mn2P2O7",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.509259,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.48854,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "LiMnPO4",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "NdPO4",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.592885,
+      "p_hosts": [
+        {
+          "formula": "LiNd(PO3)4",
+          "li_per_P": 0.25,
+          "anion": "P-O"
+        },
+        {
+          "formula": "LiPO3",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 1.0,
+      "rung_min_li_per_P": 0.25,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.408163,
+      "p_hosts": [
+        {
+          "formula": "Mn2P2O7",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.491803,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.498195,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "LiNd(PO3)4",
+          "li_per_P": 0.25,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.25,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.681818,
+      "p_hosts": [
+        {
+          "formula": "NdP5O14",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.666667,
+      "p_hosts": [
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.505618,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.505618,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.681818,
+      "p_hosts": [
+        {
+          "formula": "NdP5O14",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.666667,
+      "p_hosts": [
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.532544,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Nd(PO3)3",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.656934,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Nd(PO3)3",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.681818,
+      "p_hosts": [
+        {
+          "formula": "NdP5O14",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.666667,
+      "p_hosts": [
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.656934,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Nd(PO3)3",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.662651,
+      "p_hosts": [
+        {
+          "formula": "NdP5O14",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Nd(PO3)3",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.606654,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.606654,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.530739,
+      "p_hosts": [
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 3.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "x_atomic_frac": 0.511899,
+      "p_hosts": [
+        {
+          "formula": "LiMnPO4",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Li3PO4",
+          "li_per_P": 3.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 3.0,
+      "rung_min_li_per_P": 1.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.612648,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 2.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.52901,
+      "p_hosts": [
+        {
+          "formula": "Mn2P2O7",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.537008,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 2.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "x_atomic_frac": 0.516348,
+      "p_hosts": [
+        {
+          "formula": "Li4P2O7",
+          "li_per_P": 2.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "LiMnPO4",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 2.0,
+      "rung_min_li_per_P": 1.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.618762,
+      "p_hosts": [
+        {
+          "formula": "LiPO3",
+          "li_per_P": 1.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 1.0,
+      "rung_min_li_per_P": 1.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.402597,
+      "p_hosts": [
+        {
+          "formula": "Mn2P2O7",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.512397,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "x_atomic_frac": 0.491555,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.687616,
+      "p_hosts": [
+        {
+          "formula": "CoP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.696629,
+      "p_hosts": [
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.536023,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "x_atomic_frac": 0.536023,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.716763,
+      "p_hosts": [
+        {
+          "formula": "CoP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.938102,
+      "p_hosts": [
+        {
+          "formula": "P2S7",
+          "li_per_P": 0.0,
+          "anion": "P-S"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": true
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.657244,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "x_atomic_frac": 0.657244,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.716763,
+      "p_hosts": [
+        {
+          "formula": "CoP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.976378,
+      "p_hosts": [
+        {
+          "formula": "P2S7",
+          "li_per_P": 0.0,
+          "anion": "P-S"
+        },
+        {
+          "formula": "PCl5",
+          "li_per_P": 0.0,
+          "anion": "P-Cl"
+        },
+        {
+          "formula": "Mn(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": true
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.657244,
+      "p_hosts": [
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "NMC811",
+      "voltage_V": 4.5,
+      "x_atomic_frac": 0.675042,
+      "p_hosts": [
+        {
+          "formula": "MnP4O11",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        },
+        {
+          "formula": "Ni(PO3)2",
+          "li_per_P": 0.0,
+          "anion": "P-O"
+        }
+      ],
+      "rung_max_li_per_P": 0.0,
+      "rung_min_li_per_P": 0.0,
+      "has_P_S_host": false
+    }
+  ],
+  "by_electrolyte_voltage": {
+    "comp1@2.5": {
+      "n_cathodes": 4,
+      "rung_max": 3.0,
+      "cathodes_with_P_S_host": []
+    },
+    "comp1@3": {
+      "n_cathodes": 4,
+      "rung_max": 2.0,
+      "cathodes_with_P_S_host": []
+    },
+    "comp1@3.5": {
+      "n_cathodes": 4,
+      "rung_max": 1.0,
+      "cathodes_with_P_S_host": []
+    },
+    "comp1@4": {
+      "n_cathodes": 3,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": []
+    },
+    "comp1@4.3": {
+      "n_cathodes": 2,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": []
+    },
+    "comp1@4.5": {
+      "n_cathodes": 1,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": []
+    },
+    "lpsocl@2.5": {
+      "n_cathodes": 4,
+      "rung_max": 3.0,
+      "cathodes_with_P_S_host": []
+    },
+    "lpsocl@3": {
+      "n_cathodes": 4,
+      "rung_max": 2.0,
+      "cathodes_with_P_S_host": []
+    },
+    "lpsocl@3.5": {
+      "n_cathodes": 4,
+      "rung_max": 1.0,
+      "cathodes_with_P_S_host": []
+    },
+    "lpsocl@4": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": []
+    },
+    "lpsocl@4.3": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": [
+        "LiMnO2"
+      ]
+    },
+    "lpsocl@4.5": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": [
+        "LiMnO2"
+      ]
+    },
+    "modelc@2.5": {
+      "n_cathodes": 4,
+      "rung_max": 3.0,
+      "cathodes_with_P_S_host": []
+    },
+    "modelc@3": {
+      "n_cathodes": 4,
+      "rung_max": 2.0,
+      "cathodes_with_P_S_host": []
+    },
+    "modelc@3.5": {
+      "n_cathodes": 4,
+      "rung_max": 1.0,
+      "cathodes_with_P_S_host": []
+    },
+    "modelc@4": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": []
+    },
+    "modelc@4.3": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": [
+        "LiMnO2"
+      ]
+    },
+    "modelc@4.5": {
+      "n_cathodes": 3,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": []
+    },
+    "modelc_nd@2.5": {
+      "n_cathodes": 4,
+      "rung_max": 3.0,
+      "cathodes_with_P_S_host": []
+    },
+    "modelc_nd@3": {
+      "n_cathodes": 4,
+      "rung_max": 3.0,
+      "cathodes_with_P_S_host": []
+    },
+    "modelc_nd@3.5": {
+      "n_cathodes": 4,
+      "rung_max": 1.0,
+      "cathodes_with_P_S_host": []
+    },
+    "modelc_nd@4": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": []
+    },
+    "modelc_nd@4.3": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": []
+    },
+    "modelc_nd@4.5": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": []
+    },
+    "nd_only@2.5": {
+      "n_cathodes": 4,
+      "rung_max": 3.0,
+      "cathodes_with_P_S_host": []
+    },
+    "nd_only@3": {
+      "n_cathodes": 4,
+      "rung_max": 2.0,
+      "cathodes_with_P_S_host": []
+    },
+    "nd_only@3.5": {
+      "n_cathodes": 4,
+      "rung_max": 1.0,
+      "cathodes_with_P_S_host": []
+    },
+    "nd_only@4": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": []
+    },
+    "nd_only@4.3": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": []
+    },
+    "nd_only@4.5": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": []
+    },
+    "o_only_03@2.5": {
+      "n_cathodes": 4,
+      "rung_max": 3.0,
+      "cathodes_with_P_S_host": []
+    },
+    "o_only_03@3": {
+      "n_cathodes": 4,
+      "rung_max": 2.0,
+      "cathodes_with_P_S_host": []
+    },
+    "o_only_03@3.5": {
+      "n_cathodes": 4,
+      "rung_max": 1.0,
+      "cathodes_with_P_S_host": []
+    },
+    "o_only_03@4": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": []
+    },
+    "o_only_03@4.3": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": [
+        "LiMnO2"
+      ]
+    },
+    "o_only_03@4.5": {
+      "n_cathodes": 4,
+      "rung_max": 0.0,
+      "cathodes_with_P_S_host": [
+        "LiMnO2"
+      ]
+    }
+  },
+  "⛔": "최소 꺾임 하나만 본다 (Fig. 2 와 같은 한정). 계수를 안 보므로 '풀려난 P 의 양' 이 아니라 '어느 상이 P 를 받았나' 를 잰다. 끝점 행은 endpoint_excluded 로 뺐다."
+}

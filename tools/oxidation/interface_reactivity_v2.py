@@ -416,6 +416,45 @@ def _selftest():
     chk("Li2S" in product_census({"C": {"reactions": {"0": {"m": "x -> Li2S"}}}})["counts"],
         "[음성] Li 화합물은 홑원소가 아니므로 남는다 (Li2S 를 Li 로 오인하지 않는다)")
 
+    # ── parse_formula / p_host_ladder (2026-09-17) ──────────────────────────
+    chk(parse_formula("Li3PO4") == {"Li": 3.0, "P": 1.0, "O": 4.0},
+        "간단한 식을 센다")
+    chk(parse_formula("LiNd(PO3)4")["P"] == 4.0
+        and parse_formula("LiNd(PO3)4")["O"] == 12.0,
+        "[음성] 괄호를 편다 — LiNd(PO3)4 는 P 4·O 12 다 (안 펴면 P 1 로 보인다)")
+    chk(parse_formula("LiNd(PO3)4")["Li"] / parse_formula("LiNd(PO3)4")["P"] == 0.25,
+        "[음성] 그래서 Li/P 가 1 이 아니라 0.25 다 (2026-09-17 실제 오독)")
+    chk(parse_formula("Ni(PO3)2")["P"] == 2.0,
+        "괄호 곱수가 안쪽 원소 전부에 걸린다 (Ni(PO3)2 → P 2)")
+    chk("Li" not in parse_formula("Ni(PO3)2"),
+        "[음성] 없는 원소를 0 으로 만들어 넣지 않는다 (키 자체가 없다)")
+    chk(parse_formula("Co9S8") == {"Co": 9.0, "S": 8.0},
+        "두 자리 원소기호를 한 글자로 쪼개지 않는다")
+
+    import tempfile as _tf, os as _os
+    _hdr = "cathode,electrolyte,voltage_V,x_atomic_frac,is_minimum,reaction\n"
+    _body = ("LiCoO2,m,2.5,0.5,1,a -> 0.3 Li3PO4 + 0.7 CoS2\n"
+             "LiCoO2,m,4.5,0.5,1,a -> 0.1 CoP4O11 + 0.5 P2S7\n"
+             "LiCoO2,m,4.5,1.0,1,a -> 0.5 PCl5\n"            # 끝점 — 빠져야 한다
+             "LiCoO2,m,3.0,0.5,0,a -> 9 Li3PO4\n")           # 최소 아님 — 빠져야 한다
+    _fd, _pth = _tf.mkstemp(suffix=".csv"); _os.close(_fd)
+    Path(_pth).write_text(_hdr + _body, encoding="utf-8")
+    _L = p_host_ladder(_pth)
+    _os.unlink(_pth)
+    chk(_L["n_conditions"] == 2,
+        "[음성] is_minimum 이 거짓인 행과 끝점 행은 세지 않는다")
+    chk(_L["endpoint_excluded"] == ["m@4.5V/LiCoO2"],
+        "[음성] 뺀 끝점을 이름으로 남긴다 (조용히 버리지 않는다)")
+    chk(_L["by_electrolyte_voltage"]["m@2.5"]["rung_max"] == 3.0
+        and _L["by_electrolyte_voltage"]["m@4.5"]["rung_max"] == 0.0,
+        "사다리 칸(max Li/P) 이 전압과 함께 내려간다")
+    chk(_L["by_electrolyte_voltage"]["m@4.5"]["cathodes_with_P_S_host"] == ["LiCoO2"]
+        and _L["by_electrolyte_voltage"]["m@2.5"]["cathodes_with_P_S_host"] == [],
+        "[음성] P-S 수용상(P2S7)이 있는 칸만 표시한다 — 인산염만 있는 칸은 비운다")
+    chk(all(h["anion"] == "P-O" for d in _L["rows"] for h in d["p_hosts"]
+            if h["formula"] in ("Li3PO4", "CoP4O11")),
+        "P-O / P-S 구분이 실제로 붙는다")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -489,6 +528,124 @@ def product_census(results: dict, open_elements=("Li",)) -> dict:
                  "기체·홑원소(S·SO₂ 등)는 **안 걸렀다** — 화학 판단은 카드·사람 몫이다."}
 
 
+def parse_formula(f: str) -> dict:
+    """화학식 → {원소: 개수}. **괄호를 편다** (`LiNd(PO3)4` → P 4, O 12).
+
+    ⛔ 이 함수가 못 하는 것
+      · 화학식이 실재하는지 모른다 — 문자열을 셀 뿐이다.
+      · 수화물 점표기(`CaSO4.2H2O`)·전하(`SO4^2-`)·동위원소는 안 읽는다.
+      · 닫는 괄호가 모자라면 **거기서 끝난 것으로 본다** (예외를 안 낸다).
+    ⚠ 괄호를 안 펴면 `LiNd(PO3)4` 가 P 1·Li/P 1 로 보인다(참값 P 4·Li/P 0.25).
+      2026-09-17 에 이 버그로 Li 예산 사다리를 한 칸 틀리게 찍었다.
+    """
+    def blk(s, i):
+        c = {}
+        def add(el, n):
+            c[el] = c.get(el, 0.0) + n
+        while i < len(s):
+            ch = s[i]
+            if ch == "(":
+                sub, i = blk(s, i + 1)
+                n = re.match(r"[0-9]*\.?[0-9]*", s[i:]).group(0)
+                i += len(n)
+                k = float(n) if n else 1.0
+                for el, v in sub.items():
+                    add(el, v * k)
+            elif ch == ")":
+                return c, i + 1
+            elif ch.isupper():
+                el = re.match(r"[A-Z][a-z]?", s[i:]).group(0)
+                i += len(el)
+                n = re.match(r"[0-9]*\.?[0-9]*", s[i:]).group(0)
+                i += len(n)
+                add(el, float(n) if n else 1.0)
+            else:
+                i += 1
+        return c, i
+    return blk(f or "", 0)[0]
+
+
+def p_host_ladder(csv_path, p_element="P", ladder_element="Li"):
+    """최소 kink 반응의 **P 를 받은 상**과 그 Li:P 를 (전해질, 전압, 양극) 별로 뽑는다.
+
+    §2 가설 카드의 1·2·4 번(*"저전압엔 P 가 PS4 에 갇혀 있다가 전압이 오르며 풀려나고,
+    풀려난 양이 늘어 Nd 이득이 커진다"*)을 **산물로 직접 검사**하는 자리다.
+    공급(풀려난 P 의 양)이 느는지, 아니면 **받아 줄 방의 Li 값이 내려가는지**를 가른다.
+
+    입력은 `cei_x_scan_panels.csv` 꼴 — cathode·electrolyte·voltage_V·x_atomic_frac·
+    is_minimum·reaction 열. `is_minimum` 이 참인 행만 본다.
+
+    rung = 그 조건에서 **P 를 받은 상 중 Li/P 가 가장 큰 값** = 아직 살아 있는
+    가장 비싼 방. 여러 상이 P 를 나눠 가질 수 있으므로 min·max 를 둘 다 남긴다.
+
+    ⛔ 이 함수가 못 하는 것
+      · **최소 꺾임 하나만** 본다. 나머지 꺾임은 안 본다 (Fig. 2 와 같은 한정).
+      · 계수를 안 본다 — "P 가 몇 mol 갔나" 가 아니라 "어느 상으로 갔나" 다.
+        그래서 *공급량*을 직접 재지 못한다. 방의 Li 값만 잰다.
+      · 끝점(x=0/1) 행은 **세지 않고 이름으로 남긴다** (자체분해라 계면 산물이 아니다).
+      · 어느 상이 실제로 생기는지는 hull 이 정한다 — 이 함수는 읽기만 한다.
+    """
+    import csv as _csv
+    rows, skipped = [], []
+    with open(csv_path, encoding="utf-8") as fh:
+        for r in _csv.DictReader(fh):
+            if str(r.get("is_minimum", "")).strip() not in ("1", "True", "true"):
+                continue
+            try:
+                x = float(r.get("x_atomic_frac", "nan"))
+            except ValueError:
+                x = None
+            tag = f'{r["electrolyte"]}@{r["voltage_V"]}V/{r["cathode"]}'
+            if is_endpoint(x):
+                skipped.append(tag)
+                continue
+            hosts = []
+            for f in rhs_products(r.get("reaction", "")):
+                c = parse_formula(f)
+                nP = c.get(p_element, 0.0)
+                if nP <= 0:
+                    continue
+                hosts.append({
+                    "formula": f,
+                    "li_per_P": round(c.get(ladder_element, 0.0) / nP, 4),
+                    "anion": ("P-O" if c.get("O", 0) > 0 else
+                              "P-S" if c.get("S", 0) > 0 else
+                              "P-Cl" if c.get("Cl", 0) > 0 else "P-only"),
+                })
+            rows.append({
+                "electrolyte": r["electrolyte"], "cathode": r["cathode"],
+                "voltage_V": float(r["voltage_V"]), "x_atomic_frac": x,
+                "p_hosts": hosts,
+                "rung_max_li_per_P": max((h["li_per_P"] for h in hosts), default=None),
+                "rung_min_li_per_P": min((h["li_per_P"] for h in hosts), default=None),
+                "has_P_S_host": any(h["anion"] == "P-S" for h in hosts),
+            })
+    rows.sort(key=lambda d: (d["electrolyte"], d["voltage_V"], d["cathode"]))
+    by_ev = {}
+    for d in rows:
+        k = f'{d["electrolyte"]}@{d["voltage_V"]:g}'
+        b = by_ev.setdefault(k, {"n_cathodes": 0, "rung_max": None,
+                                 "cathodes_with_P_S_host": []})
+        b["n_cathodes"] += 1
+        if d["rung_max_li_per_P"] is not None:
+            b["rung_max"] = (d["rung_max_li_per_P"] if b["rung_max"] is None
+                             else max(b["rung_max"], d["rung_max_li_per_P"]))
+        if d["has_P_S_host"]:
+            b["cathodes_with_P_S_host"].append(d["cathode"])
+    import datetime as _dt
+    return {"generated_by": "tools/oxidation/interface_reactivity_v2.py --p_host_ladder",
+            "generated_at": _dt.date.today().isoformat(),
+            "method": ("최소 kink 반응식의 우변에서 P 를 포함한 상을 뽑고 그 상의 Li:P 를 센다. "
+                       "rung = 그 조건에서 가장 큰 Li/P (아직 살아 있는 가장 비싼 방). "
+                       "MP·pymatgen 을 안 쓴다 — 이미 기록된 반응식 문자열만 읽는 후처리다."),
+            "source_csv": str(csv_path), "n_conditions": len(rows),
+            "endpoint_excluded": sorted(skipped), "rows": rows,
+            "by_electrolyte_voltage": by_ev,
+            "⛔": "최소 꺾임 하나만 본다 (Fig. 2 와 같은 한정). 계수를 안 보므로 "
+                 "'풀려난 P 의 양' 이 아니라 '어느 상이 P 를 받았나' 를 잰다. "
+                 "끝점 행은 endpoint_excluded 로 뺐다."}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--electrolytes", nargs="+",
@@ -507,9 +664,32 @@ def main():
     ap.add_argument("--voltages", nargs="+", type=float,
                     default=[2.5, 3.0, 3.5, 4.0, 4.3])
     ap.add_argument("--out", default="interface_reactivity_v2.json")
+    ap.add_argument("--p_host_ladder", metavar="PANELS_CSV",
+                    help="x-scan 패널 CSV 를 읽어 최소 꺾임의 P 수용상·Li:P 사다리를 뽑는다 "
+                         "(MP·pymatgen 불필요 — 이미 나온 반응식만 읽는다)")
     if "--selftest" in __import__("sys").argv:
         raise SystemExit(_selftest())
     a = ap.parse_args()
+    if a.p_host_ladder:
+        # 순수 후처리다 — MP 도 pymatgen 도 안 쓴다. 그래서 여기서 바로 끝낸다.
+        out = p_host_ladder(a.p_host_ladder)
+        Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2),
+                               encoding="utf-8")
+        csv_out = Path(a.out).with_suffix(".csv")
+        with open(csv_out, "w", encoding="utf-8", newline="") as fh:
+            w = __import__("csv").writer(fh)
+            w.writerow(["electrolyte", "cathode", "voltage_V", "p_host_formula",
+                        "li_per_P", "anion"])
+            for d in out["rows"]:
+                for h in d["p_hosts"]:
+                    w.writerow([d["electrolyte"], d["cathode"], d["voltage_V"],
+                                h["formula"], h["li_per_P"], h["anion"]])
+        print(f'{out["n_conditions"]} 조건 · 끝점 제외 {len(out["endpoint_excluded"])} '
+              f'→ {a.out} · {csv_out}')
+        for k, b in sorted(out["by_electrolyte_voltage"].items()):
+            ps = f' · P-S 수용상: {",".join(b["cathodes_with_P_S_host"])}' if b["cathodes_with_P_S_host"] else ""
+            print(f'  {k:>18}  rung(max Li/P) = {b["rung_max"]}{ps}')
+        return 0
     if a.batch_from or a.only:
         if a.only and not a.batch_from:
             a.batch_from = True

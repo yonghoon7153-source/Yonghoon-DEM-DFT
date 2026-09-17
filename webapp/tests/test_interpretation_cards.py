@@ -492,3 +492,91 @@ def test_threshold_table_is_actually_mu_plus_V(client):
         want = round(1.9089 + float(v), 2)
         assert abs(want - float(thr)) < 5e-3, \
             f"V={v}: 화면 {thr} vs 1.9089+V = {want:.2f}"
+
+
+# ── §2 가설 카드의 사후 정정 (2026-09-17) ────────────────────────────────────
+#   화면이 원장과 갈라지는 두 길을 막는다:
+#     ① 표의 수가 레코드와 달라지는 것 (손편집·재생성 어긋남)
+#     ② 한정("반증 아님"·"최소 꺾임만"·"proposed")이 지워져 관찰이 판정으로 격상되는 것
+
+LADDER_JSON = REPORT.parents[3] / "db/properties/cei_p_host_ladder_2026_09_17.json"
+DECISIONS = REPORT.parents[3] / "db/governance/decisions.json"
+_LADDER_ID = "D-2026-09-17-cei-p-host-li-ladder"
+
+
+def _s2_card(h):
+    """§2 의 '1·2·4 번도 산물이 뒷받침하지 않는다' 상자만 잘라 준다.
+
+    ⚠ 앞판은 표 뒤 첫 </div> 에서 잘라서 **표만** 들어왔다 — 한정 문장은 표 뒤에 있는데
+      그걸 못 보고 "한정이 없다" 고 빨개졌다. 상자 끝(다음 절 제목)까지 잡는다.
+    """
+    i = h.find("⛔ 1·2·4 번도 산물이 뒷받침하지 않는다")
+    assert i > 0, "§2 정정 상자를 못 찾았다 — 시험이 헛것을 재고 있다"
+    j = h.find("<strong>가법성 설명</strong>", i)
+    assert j > i, "상자 끝(가법성 설명)을 못 찾았다 — 시험이 헛것을 재고 있다"
+    return h[i:j]
+
+
+def test_s2_ladder_table_matches_the_record(client):
+    """⛔음성 — 화면 표의 Li/P 가 레코드와 갈라지면 잡는다.
+
+    문자열이 아니라 **값**으로 본다. 화면은 무도핑(modelc) 6 전압 x 4 양극을 싣는다.
+    """
+    import json as _json
+    rec = _json.loads(LADDER_JSON.read_text(encoding="utf-8"))
+    want = {}
+    for r in rec["rows"]:
+        if r["electrolyte"] != "modelc":
+            continue
+        for hst in r["p_hosts"]:
+            want.setdefault(hst["formula"], set()).add(hst["li_per_P"])
+    assert want, "레코드에서 modelc 행을 못 읽었다 — 시험이 헛것을 재고 있다"
+
+    card = _s2_card(_report_html(client))
+    seen = re.findall(r'<span class="mono"[^>]*>(.*?)</span>\s*<b>([0-9.]+)</b>', card)
+    assert len(seen) >= 24, f"화면 표에서 상을 {len(seen)} 개만 읽었다 — 시험이 헛것을 재고 있다"
+    for raw, val in seen:
+        f = re.sub(r"</?sub>", "", raw)
+        assert f in want, f"화면에 레코드에 없는 상이 있다: {f}"
+        assert float(val) in want[f], \
+            f"{f}: 화면 Li/P {val} vs 레코드 {sorted(want[f])}"
+
+
+def test_s2_correction_keeps_its_epistemic_limits(client):
+    """⛔음성 — 한정이 지워지면 사후 관찰이 판정으로 격상된다.
+
+    셋 다 필요하다: 반증이 아니라는 것 · 최소 꺾임만 봤다는 것 · 아직 proposed 라는 것.
+    """
+    card = _s2_card(_report_html(client))
+    assert "반증한 것이 아니라" in card, "'반증이 아니다' 한정이 없다 — 관찰이 반증으로 읽힌다"
+    assert "최소 꺾임 하나만" in card, "최소 꺾임 한정이 없다"
+    assert "proposed" in card, "아직 비준 전이라는 표시가 없다"
+    assert "결과를 본 뒤의 관찰" in card, "사후 관찰이라는 표시가 없다"
+
+
+def test_s2_ladder_decision_is_registered_and_not_silently_active():
+    """⛔음성 — 사후 관찰을 active 로 올리면 잡는다 (사람 비준 없이 판정이 되면 안 된다)."""
+    import json as _json
+    ds = _json.loads(DECISIONS.read_text(encoding="utf-8"))["decisions"]
+    row = [d for d in ds if d["id"] == _LADDER_ID]
+    assert row, f"{_LADDER_ID} 가 원장에 없다 — 화면이 없는 결정을 가리킨다"
+    d = row[0]
+    assert d["decision_state"] == "proposed", \
+        f"사후 관찰인데 decision_state 가 {d['decision_state']} 다 — 비준 없이 격상됐다"
+    assert d.get("results_seen") is True and d.get("exploratory") is True, \
+        "results_seen / exploratory 가 안 서 있다"
+    assert Path(d["record"]).name == LADDER_JSON.name, "record 가 실제 레코드를 안 가리킨다"
+
+
+def test_fig2_endpoint_defect_is_disclosed(client):
+    """⛔음성 — Fig. 2 가 끝점 퇴화 칸을 센다는 사실이 화면에서 빠지면 잡는다.
+
+    빠지면 독자는 4.5 V 주황 막대를 계면 반응으로 읽는다 (실제로는 x=1 자체분해다).
+    """
+    h = _report_html(client)
+    i = h.find("Fig. 2 를 읽는 법")
+    assert i > 0, "Fig. 2 설명 상자를 못 찾았다"
+    blk = h[i:h.index("<h3", i)]
+    assert "끝점 퇴화 칸을 거르지 않는다" in blk, "Fig. 2 의 끝점 결함이 화면에 없다"
+    assert "x = 1.0" in blk, "어느 칸이 끝점인지 안 밝힌다"
+    assert "4.3 V 한 칸만" in blk, "그래서 몇 칸이 유효한지 안 말한다"
