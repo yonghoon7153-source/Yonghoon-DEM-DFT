@@ -412,3 +412,24 @@ def test_collapsed_details_are_expanded_for_print(client):
         "훅이 details 를 펼치지 않는다"
     assert "afterprint" in js and re.search(r"\.open\s*=\s*false", js), \
         "인쇄 뒤 원래 접힘 상태로 안 되돌린다 — 화면이 바뀐 채로 남는다"
+
+
+def test_section1_order_is_figure_then_howto_then_definition(client):
+    """⛔음성 — §1 의 읽는 순서를 고정한다 (1저자 지정, 2026-09-17).
+
+    그림 → "Fig. 1 을 읽는 법" → "세로축의 reaction energy 는 무엇인가".
+    정의 상자가 앞으로 올라오면 독자가 그림에 닿기 전에 벽을 만난다.
+    셋 다 §1 안에 있어야 한다 — §2 로 밀려나면 그것도 잡는다.
+    """
+    h = _report_html(client)
+    marks = {
+        "figure":     h.find('<img src="cei_nd_o_decomposition.png"'),
+        "howto":      h.find("Fig. 1 을 읽는 법"),
+        "definition": h.find("세로축의 <span"),
+        "s2":         h.find('<h2 id="s2"'),
+    }
+    missing = [k for k, v in marks.items() if v < 0]
+    assert not missing, f"§1 에서 못 찾은 표식: {missing} — 시험이 헛것을 재고 있다"
+    order = sorted(marks, key=marks.get)
+    assert order == ["figure", "howto", "definition", "s2"], \
+        f"§1 순서가 바뀌었다: {' → '.join(order)}"
