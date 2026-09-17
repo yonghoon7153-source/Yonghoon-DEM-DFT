@@ -96,9 +96,28 @@ chk('부제도 맞춤 결과로 그린다', !/cx\.fillText\(String\(sp\.sub\),/.
       exportTitles.filter(t => /carbon/i.test(t)).join(' | '));
   chk('export 제목이 conductive-additive 로 부른다',
       exportTitles.every(t => /conductive-additive/i.test(t)));
-  chk('영국식 철자가 export 문구에 없다',
-      !/'[^']*\b(centre|colour|behaviour)\b[^']*'/i.test(
-        src.match(/cbarSpec = \{[\s\S]{0,600}?\};/)?.[0] || ''));
+  //  ⛔⛔ 초판은 **한 글자도 검사하지 않았다** (원장 `GAP3-15`, 2026-09-17).  두 겹이다:
+  //    ① `src.match(…)` 가 **non-global** 이라 `cbarSpec` 블록 5 개 중 **첫 하나만** 봤다.
+  //    ② 정규식이 **작은따옴표 문자열만** 봤는데, 하필 그 유일하게 검사되던 블록 1 의
+  //       `title:` 이 **템플릿 리터럴(백틱)** 이라 사정권 밖이었다.
+  //    ⇒ 5 블록 중 **0 개**가 실제로 검사됐다 = 완전한 false-green.
+  //    ★ 바로 위 (:87-90) 은 이미 백틱을 보게 고쳐졌는데 **이 줄만 그 수정을 못 받았다**
+  //      = 한 파일 안의 비일관.
+  //  ⚠ 원 주장 *"600자 절단"* 은 **반증**됐다 — 실측 블록 길이 216/491/141/173/209 로
+  //    최장이 491 < 600 이다.  그래도 길이 상한 자체가 잠복 함정이라 **없앴다**.
+  const cbarBlocks = [...src.matchAll(/cbarSpec = \{[\s\S]*?\};/g)].map(m => m[0]);
+  const cbarDeclared = (src.match(/cbarSpec = \{/g) || []).length;
+  chk('★★ cbarSpec 블록을 **전부** 집었다 (하나만 보던 것이 GAP3-15 였다)',
+      cbarBlocks.length === cbarDeclared && cbarDeclared >= 5,
+      `집음 ${cbarBlocks.length} / 선언 ${cbarDeclared}`);
+  //  작은따옴표 **와** 백틱 둘 다 — 검사 대상 문자열을 실제로 뽑아 센다.
+  const cbarStrings = cbarBlocks.flatMap(b =>
+      [...b.matchAll(/'([^']*)'|`([^`]*)`/g)].map(m => m[1] ?? m[2]));
+  chk('★★ 백틱 문자열이 사정권에 있다 (블록1 의 title 이 템플릿 리터럴이다)',
+      cbarBlocks.some(b => /`/.test(b)) && cbarStrings.length > 0,
+      `문자열 ${cbarStrings.length} 개`);
+  const brit = cbarStrings.filter(t => /\b(centre|colour|behaviour)\b/i.test(t));
+  chk('영국식 철자가 export 문구에 없다', brit.length === 0, brit.join(' | '));
 }
 
 //  ══ 눈금 라벨 — 개수가 묶여 있는가 (2026-09-02) ═══════════════════════
