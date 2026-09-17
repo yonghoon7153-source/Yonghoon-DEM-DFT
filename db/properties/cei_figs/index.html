@@ -204,9 +204,9 @@ Li 0 개, Li₃PO₄ 는 3 개). 고전압이 Li 를 빼가면서 그 경로의 
 기계 경로라 바꾸지 않는다(바꾸면 원장·게이트가 끊긴다). <b>사람이 읽는 이름만</b> 이 문서에서 바꿨다.</p>
 
 <figure>
-<img src="cei_nd_o_decomposition.png" alt="Left: delta reaction energy versus voltage for Nd only, O only, and both, with the sum of parts overlaid. Right: additivity residual against the pre-registered plus-minus 0.010 band.">
+<img src="cei_nd_o_decomposition.png" alt="Four panels. (a) Delta reaction energy versus voltage for Nd only, O only and both, with the sum of parts overlaid; the Nd curve overtakes the flat O curve at 3.5 V and rises steeply. (b) Additivity residual inside the pre-registered plus-minus 0.010 band at every voltage. (c) The same quantities normalised to their 2.5 V value: delta Nd only rises 6.58 times while the amount of Nd-bearing product rises only 1.42 times and delta O only stays at 1.03. (d) Dot matrix of which phase the Nd ends up in at each voltage, rows ordered by phosphorus per Nd, showing NdPO4 at low voltage giving way to the condensed phosphates Nd(PO3)3 and NdP5O14 at high voltage.">
 <figcaption><b>Fig. 1. Decomposition of the Nd/O co-substitution effect on interfacial
-reactivity.</b> (a) Change in grand-potential interfacial reaction energy relative to the
+reactivity, and where the voltage dependence comes from.</b> (a) Change in grand-potential interfacial reaction energy relative to the
 undoped Li<sub>5.4</sub>PS<sub>4.4</sub>Cl<sub>1.6</sub> reference, against applied voltage,
 for the Nd-only (Li<sub>4.8</sub>Nd<sub>0.2</sub>PS<sub>4.4</sub>Cl<sub>1.6</sub>), O-only
 (Li<sub>5.4</sub>PS<sub>4.1</sub>O<sub>0.3</sub>Cl<sub>1.6</sub>) and co-substituted
@@ -214,12 +214,34 @@ for the Nd-only (Li<sub>4.8</sub>Nd<sub>0.2</sub>PS<sub>4.4</sub>Cl<sub>1.6</sub
 compositions. Higher values indicate lower reactivity. Dotted line: arithmetic sum of the two
 single-substitution effects. Shaded bands span the four cathodes. (b) Additivity residual,
 &#916;(Nd) + &#916;(O) &#8722; &#916;(Nd+O). The yellow band is the &#177;0.010&#8201;eV/atom threshold
-registered before the calculations were run.</figcaption>
+registered before the calculations were run; the residual stays inside it at every voltage, so
+(a) may be read as two independent channels. (c) The three quantities of (a) normalised to their
+own 2.5&#8201;V value. From 2.5 to 4.5&#8201;V the Nd channel grows &#215;6.58 while the O channel
+is flat (&#215;1.03), so the entire voltage dependence of (a) is neodymium. Over the same range the
+<i>amount</i> of Nd-bearing product the hull forms grows only &#215;1.42 &#8212; the growth is
+therefore not &#8220;more Nd product&#8221;. (d) The phase the Nd ends up in at the minimum-energy
+reaction, one row per phase ordered by phosphorus per Nd, the number in each dot being how many of
+the four cathodes give that phase. NdPO<sub>4</sub> at 2.5&#8211;3.0&#8201;V gives way to the
+condensed phosphates Nd(PO<sub>3</sub>)<sub>3</sub> and NdP<sub>5</sub>O<sub>14</sub> at
+4.3&#8211;4.5&#8201;V. This tracks the system-wide P-host ladder of &#167;3, in which the Li:P of
+whatever phase accepts phosphorus descends 3&#8594;2&#8594;1&#8594;0 with voltage in <i>all six</i>
+electrolytes, Nd-free ones included: voltage strips Li from phosphate, and the Nd phosphate
+condenses with it.
+&#9888; (c) and (d) close two explanations and open none &#8212; the remaining growth is not
+accounted for by the amount of product, nor by the pairwise exchange energy of Fig.&#8201;2a,
+which is flat above 4.0&#8201;V. &#9888; The ratio &#916;/amount is arithmetic, not a separately
+measured quantity; this is a partition, not a mechanism.
+&#9888; (c) and (d) use the <code>nd_only</code> branch only, matching the &#916;(Nd&#8201;only)
+curve of (a); mixing in the co-substituted branch gives &#215;1.80 instead of &#215;1.42 and a
+different conclusion.</figcaption>
 </figure>
 
 <div class="figexp">
 <div class="figexp-h">Fig. 1 을 읽는 법</div>
-<p><b>왼쪽 그림에서 선이 위에 있을수록 좋은 전해질</b>이다. 세로축은 무도핑 기준으로 얼마나
+<p class="plain" style="margin:0 0 10px">네 패널이 <b>한 논지 사슬</b>이다 —
+(a) 결과 · (b) 그 결과를 두 채널로 읽어도 되는가 · (c) 성장이 <b>양</b> 때문인가 ·
+(d) 그럼 무엇이 바뀌는가.</p>
+<p><b>왼쪽 위(a) 에서 선이 위에 있을수록 좋은 전해질</b>이다. 세로축은 무도핑 기준으로 얼마나
 덜 반응하느냐라서, 0 이 무도핑이고 위로 갈수록 덜 반응한다.</p>
 <p>빨강(<b>O 만</b>)은 전압이 올라가도 <b>거의 평평하다</b> — 2.5 V 에서든 4.5 V 에서든 이득이
 같다. 보라(<b>Nd 만</b>)는 3.5 V 까지는 빨강보다 아래인데 그 뒤로 <b>급격히 올라가</b>
@@ -228,12 +250,31 @@ registered before the calculations were run.</figcaption>
 <p>가장 중요한 것은 <b>점선과 검은 선이 겹친다</b>는 점이다. 점선은 "Nd 효과와 O 효과를
 그냥 더한 값", 검은 선은 "둘을 실제로 같이 넣고 계산한 값" 이다. 둘이 겹친다는 건
 <b>서로 방해하지도 도와주지도 않는다</b>는 뜻이다.</p>
-<p><b>오른쪽 그림</b>이 그 겹침을 확대한 것이다. 세로축은 (Nd 효과 + O 효과) − (둘 다) 이고,
+<p><b>(b)</b> 가 그 겹침을 확대한 것이다. 세로축은 (Nd 효과 + O 효과) − (둘 다) 이고,
 0 이면 완전 가법적이다. <b>노란 띠는 결과를 보기 전에 정해 놓은 합격선</b>(±0.010)이고,
 측정된 잔차는 그 띠의 1/20 수준이다. 문턱을 나중에 정했다면 이 그림은 아무 말도 못 한다 —
 먼저 박았기 때문에 판정이 된다.</p>
 <p>음영은 양극 4 종(LiCoO₂·LiNiO₂·LiMnO₂·NMC811)의 <b>흩어진 범위</b>다.
 선은 그 넷의 평균이다.</p>
+
+<p><b>(c) 는 (a) 의 성장이 어디서 오는지</b> 를 묻는다. 세 선을 각자의 2.5 V 값으로 나눴다
+(맨 왼쪽 점 기준 — 결과를 보고 고른 자리가 아니다). 2.5 → 4.5 V 에서
+<b>Nd 채널은 ×6.58</b>, <b>O 채널은 ×1.03</b> 이다. Fig. 1 이 벌어지는 건
+<b>전부 Nd 때문</b>이라는 말이 여기서 나온다.</p>
+<p>그 위에 회색 파선이 <b>hull 이 만드는 Nd 산물의 양</b>이다. 같은 구간에서 <b>×1.42</b>
+밖에 안 커진다. 그래서 <b>"Nd 산물이 더 많이 생겨서"</b> 라는 제일 쉬운 설명이
+<b>닫힌다</b> — 보라와 회색 사이의 벌어진 면적이 그 설명으로 못 메우는 몫이다.</p>
+<p><b>(d) 가 그럼 무엇이 바뀌는지</b> 를 보여준다. 가로는 전압, 세로는 <b>Nd 가 결국
+가는 상</b>이고 <b>P/Nd(축합도) 순서로</b> 쌓았다. 점 안 숫자는 양극 4 종 중 몇 개가
+그 상을 주는지다. 2.5·3.0 V 에서는 넷 다 <b>NdPO₄</b> 인데, 4.3·4.5 V 에서는
+<b>Nd(PO₃)₃ · NdP₅O₁₄</b> 로 올라간다 — <b>인산염이 축합된다</b>.</p>
+<p>이게 Nd 의 특이성이 아니라는 게 중요하다. §3 의 <b>P-host 사다리</b>가
+<b>여섯 전해질 전부</b>(무Nd 포함)에서 P 를 받는 상의 Li:P 가 3→2→1→0 으로 내려간다고
+말한다. <b>전압이 인산염에서 Li 를 벗기는 것</b>이 계 전체의 사실이고, (d) 는 그 사실이
+Nd 쪽에서 드러난 모습이다.</p>
+<p>⚠ <b>(c)(d) 는 설명 두 개를 닫을 뿐 새 설명을 열지 않는다.</b> 남은 성장은 산물 양으로도,
+Fig. 2(a) 의 쌍별 교환에너지로도 안 채워진다(그건 4.0 V 위에서 평평하다).
+그리고 Δ/양 은 내가 나눈 값이지 따로 잰 양이 아니다 — <b>분해지 기전이 아니다</b>.</p>
 </div>
 
 <!-- 방법 박스 — "reaction energy 가 뭔가" (2026-09-17 신설).
@@ -1226,6 +1267,50 @@ Ga(−0.0757)는 <b>0.6591 로 구분된다.</b> 이어 붙이면 구분되는 �
 그게 부동태다. 다만 층이 아무리 절연이어도 <b>구멍이 하나 뚫려 이어져 있으면</b> 거기로
 샌다. 갭 계산은 <b>재료가 막을 성질을 갖는지</b>만 말하고 <b>실제로 구멍 없이 덮였는지</b>는
 말하지 않는다.</p>
+
+<h3>참조갭 — 우리 계산이 재현해야 할 표적</h3>
+
+<p>10 종의 MP 참조갭을 <strong>공간군까지 맞춰</strong> 받아 뒀다. 조성만 맞추면 딴 상이
+기준이 된다 — 실제로 2 종이 걸렸다: <strong>P₂O₅</strong> 는 MP 바닥상이 Pnma(4.853)인데
+우리 표적은 <strong>Fdd2</strong>(5.202)이고, <strong>Nd₂O₃</strong> 는 우리 옛 실측
+3.9479 가 <strong>P-3m1</strong>(5원자)인데 §C 표적은 <strong>Ia-3</strong>(40원자)다.</p>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>상</th><th>우리 공간군</th><th>MP 참조 [eV]</th><th>우리 fixed-occ [eV]</th><th>차</th><th></th></tr></thead>
+<tbody>
+<tr><td>NdPS4</td><td class='mono'>I4_1/acd</td><td class='mono'>2.252</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>Nd2O3</td><td class='mono'>Ia-3</td><td class='mono'>3.708</td><td class='mono'>-6.460</td><td class='mono'>-10.168 (-274.2%)</td><td></td></tr><tr><td>Nd3PO7</td><td class='mono'>Cm</td><td class='mono'>4.284</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>NdCl3</td><td class='mono'>P6_3/m</td><td class='mono'>4.300</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>P2O5</td><td class='mono'>Fdd2</td><td class='mono'>5.202</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td> <span class="mono" style="color:#92400e">⚠ 바닥상 아님</span></td></tr><tr><td>Nd2(SO4)3</td><td class='mono'>C2/c</td><td class='mono'>5.433</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>Nd(PO3)3</td><td class='mono'>C222_1</td><td class='mono'>5.487</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>NdPO4</td><td class='mono'>P2_1/c</td><td class='mono'>5.679</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>LiNd(PO3)4</td><td class='mono'>C2/c</td><td class='mono'>5.979</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>NdP5O14</td><td class='mono'>Pmna</td><td class='mono'>6.336</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr>
+</tbody></table>
+</div>
+
+<p style="color:var(--mut);font-size:.87rem">⛔ MP 값은 <strong>PBE 소환값</strong>이고 우리 db
+갭 표에 안 들어간다 (문헌·db 분리). Nd 함유 상은 4f 배치 때문에 <strong>하한</strong>이다.
+재현 판정은 "같은 자릿수·같은 순위" 로만 한다.</p>
+
+<h3>hull 이 Nd 를 보내는 상의 갭 바닥</h3>
+
+<p>§4 의 hull 이 전압마다 Nd 에 배정하는 상은 <strong>6 종</strong>이고, 그 6 종이
+<strong>위 10 종 안에 전부 있다</strong>. 그 상들의 참조갭 중 최소가 아래다.</p>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>전압</th><th>최소 갭 [eV]</th><th>병목상</th><th>배정된 상 (참조갭)</th></tr></thead>
+<tbody>
+<tr><td class='mono'>2.5 V</td><td class='mono'>5.679</td><td class='mono'>NdPO4</td><td style='font-size:.86rem'>NdPO4 5.679</td></tr><tr><td class='mono'>3.0 V</td><td class='mono'>5.679</td><td class='mono'>NdPO4</td><td style='font-size:.86rem'>NdPO4 5.679</td></tr><tr><td class='mono'>3.5 V</td><td class='mono'>4.300</td><td class='mono'>NdCl3</td><td style='font-size:.86rem'>LiNd(PO3)4 5.979 · NdCl3 4.3 · Nd2(SO4)3 5.433</td></tr><tr><td class='mono'>4.0 V</td><td class='mono'>4.300</td><td class='mono'>NdCl3</td><td style='font-size:.86rem'>Nd2(SO4)3 5.433 · NdP5O14 6.336 · NdCl3 4.3</td></tr><tr><td class='mono'>4.3 V</td><td class='mono'>4.300</td><td class='mono'>NdCl3</td><td style='font-size:.86rem'>Nd(PO3)3 5.487 · NdP5O14 6.336 · NdCl3 4.3 · Nd2(SO4)3 5.433</td></tr><tr><td class='mono'>4.5 V</td><td class='mono'>4.300</td><td class='mono'>NdCl3</td><td style='font-size:.86rem'>Nd(PO3)3 5.487 · NdP5O14 6.336 · NdCl3 4.3</td></tr>
+</tbody></table>
+</div>
+
+<div class="card warn">
+<p style="margin:0"><strong>⛔ 이 표는 "CEI 가 절연이다" 가 아니다.</strong>
+전자 누설의 병목은 <strong>산물 전체 중 최소 갭</strong>이고, 이 표는
+<strong>Nd 함유 상만</strong> 본다. Li₃PO₄ · 전이금속 인산염 · S 는 안 들어가 있다.
+전이금속 상은 위 카드 그대로 <strong>여전히 막혀 있다</strong>.</p>
+</div>
+
+<p class="plain">읽히는 것 하나: 2.5→4.5 V 어디서도 제일 좁은 것이 <b>NdCl₃ 4.30 eV</b> 이고,
+황화물 채널(<b>NdPS₄ 2.25</b>)은 <b>여섯 전압 어디서도 안 나온다</b>. NdPS₄ 를 10 종에
+넣어 둔 것이 그래서 판별용이다 — 좁은 갭 결말이 <b>가능했는데</b> hull 이 거길 안 갔다는
+것을 말할 수 있어야 하니까.</p>
 
 <h3>결과 보기 전에 박은 문턱</h3>
 <ul>

@@ -261,29 +261,48 @@ def main():
                   fontsize=10, color=INK, pad=8, loc="left")
 
     # ── (b) 교환 사다리 (§3 Fig. 4a 를 전이금속까지 넓힌 것) ─────────────
-    # ⚠ Li/P = 0 에 여섯이 몰려서 라벨이 겹친다 — 세로로 벌려 지시선으로 잇는다.
-    _slots, _used = sorted(dE.items(), key=lambda kv: -kv[1]), []
-    for f, v in _slots:
+    # ⛔⛔ 2026-09-17 — **라벨이 축 밖으로 나가 x축 눈금을 덮었다.** 옛 코드는 겹칠
+    #   때마다 0.28 씩 **아래로만** 밀었는데, Li/P = 0 에 여섯이 몰려 있어 마지막 둘이
+    #   ty = −2.87 · −3.15 로 ylim(−2.85) 밖으로 나갔다. 게다가 Mn2P2O7 라벨(−1.00)이
+    #   LiNd(PO3)4 점(0.25, −1.22) 옆에 떨어져 **그 점을 가리키는 것처럼 보였다**.
+    #   ⇒ 미는 게 아니라 **축 안의 슬롯에 고르게 배치**하고 지시선으로 잇는다.
+    #     슬롯도 점도 같은 순서(에너지 내림차순)라 지시선이 서로 교차하지 않는다.
+    #   ⚠ 1차 시도는 슬롯을 **오른쪽**(x=0.66)에 뒀더니 글자가 LiPO3(x=1.0)를 덮었다.
+    #     → 왼쪽 여백을 넓혀 거기 오른쪽정렬로 세운다. 그쪽은 비어 있다.
+    _ylo, _yhi = -2.85, 2.30
+    _far = {f: v for f, v in dE.items() if (LI_PER_P.get(f) or 0) >= 0.5}
+    _near = {f: v for f, v in dE.items()
+             if LI_PER_P.get(f) is not None and (LI_PER_P.get(f) or 0) < 0.5}
+    # 몰린 쪽은 한 칸에 정렬 — 위/아래로 0.35 여백을 두고 고르게 나눈다
+    _ns = sorted(_near.items(), key=lambda kv: -kv[1])
+    _top, _bot = -0.62, _ylo + 0.42
+    _slot = {f: (_top if len(_ns) < 2 else
+                 _top + (_bot - _top) * i / (len(_ns) - 1))
+             for i, (f, _) in enumerate(_ns)}
+    for f, v in sorted(dE.items(), key=lambda kv: -kv[1]):
         lp = LI_PER_P.get(f)
         if lp is None:
             continue
         axR.scatter(lp, v, s=74, color=col(f), lw=.6, edgecolor="white", zorder=4)
-        ty = v
-        while any(abs(ty - u) < 0.28 for u in _used):     # 겹치면 아래로 민다
-            ty -= 0.28
-        _used.append(ty)
-        axR.annotate(_tex(f), (lp, v), (lp + 0.16, ty), textcoords="data",
+        if f in _slot:
+            tx, ty = -0.22, _slot[f]
+        else:
+            tx, ty = lp + 0.14, v
+        axR.annotate(_tex(f), (lp, v), (tx, ty), textcoords="data",
                      fontsize=7.6, color=INK, va="center",
+                     ha="right" if f in _slot else "left",
                      arrowprops=dict(arrowstyle="-", lw=.6, color=MUT,
-                                     shrinkA=3, shrinkB=1)
-                     if abs(ty - v) > 0.01 else None)
+                                     shrinkA=4, shrinkB=2)
+                     if (abs(ty - v) > 0.02 or abs(tx - lp) > 0.1) else None)
     axR.axhspan(-TIE, TIE, color="#e5e7eb", zorder=1)
     axR.axhline(0, color=INK, lw=1.6, zorder=2)
     axR.axvline(CROSSOVER, color="#92400e", ls=":", lw=1.3, zorder=2)
     axR.text(CROSSOVER + .06, 2.02, f"Li/P $\\approx$ {CROSSOVER}",
              fontsize=7.8, color="#92400e")
     apply_axes(axR, "Li : P of the donor phosphate", "Exchange energy (eV per P)")
-    axR.set_xlim(-.45, 3.45); axR.set_ylim(-2.85, 2.30)
+    axR.set_xlim(-1.95, 3.55); axR.set_ylim(_ylo, _yhi)
+    # 왼쪽 여백은 **라벨 자리**다 — 음수 Li/P 는 없는 값이므로 눈금을 안 찍는다
+    axR.set_xticks([0, .5, 1, 1.5, 2, 2.5, 3, 3.5])
     axR.set_title("(b)  The same ladder, extended to the cathode's metals",
                   fontsize=10, color=INK, pad=8, loc="left")
     axR.legend(handles=[Patch(facecolor=C_LI, label="Li phosphate"),

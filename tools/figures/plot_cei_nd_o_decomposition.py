@@ -52,8 +52,47 @@ res = {V: [a + b - t for a, b, t in zip(dn[V], do[V], dt[V])] for V in VS}
 #   Nd 는 CLAUDE.md 원소 팔레트에 없으므로 여기서 **보라**로 고정한다 (P #7c3aed 는 이 그림에 없다).
 ND, OX, BOTH = "#6d28d9", ELEM.get("O", "#be123c"), INK
 
+# ── (c)(d) 용 — hull 이 Nd 를 **어디로 얼마나** 보내나 (2026-09-17 신설) ──
+#   왜 Fig 1 안인가: 1저자 *"figure 1이면 왜 figure1인지에 대한 설명이 들어가야지"*.
+#   (a) 는 Δ 가 전압과 함께 커지는 것을 보여주지만 **왜** 커지는지는 말하지 않는다.
+#   (b) 가 "두 채널로 읽어도 되는가" 를, (c) 가 "산물이 더 많이 생겨서인가" 를,
+#   (d) 가 "그럼 무엇이 바뀌는가" 를 받는다. 네 패널이 한 논지 사슬이다.
+#   ⛔ 짝을 맞춘다: (a) 의 Δ 는 `nd_only` 가지다. 산물도 **nd_only 만** 쓴다 —
+#     modelc_nd 를 섞으면 다른 계의 양을 다른 계의 Δ 에 붙인다
+#     (2026-09-17 실측: 섞으면 ×1.80, 짝을 맞추면 ×1.42. 결론이 갈린다).
+_FATE = Path("db/properties/cei_nd_fate_2026_09_17.json")
+if not _FATE.is_file():
+    raise SystemExit(f"⛔ {_FATE} 가 없다 — interface_reactivity_v2.py --dopant_fate 먼저")
+_fj = json.load(open(_FATE, encoding="utf-8"))
+namt = {V: [] for V in VS}
+nphase = {V: {} for V in VS}
+for _r in _fj["rows"]:
+    if _r["electrolyte"] != "nd_only" or _r["voltage_V"] not in namt:
+        continue
+    namt[_r["voltage_V"]].append(sum(p.get("n_dopant", 0) or 0 for p in _r["phases"]))
+    for _p in _r["phases"]:
+        nphase[_r["voltage_V"]][_p["formula"]] = \
+            nphase[_r["voltage_V"]].get(_p["formula"], 0) + 1
+_bad = [V for V in VS if not namt[V]]
+if _bad:
+    raise SystemExit(f"⛔ nd_only 산물이 없는 전압 {_bad} — (c)(d) 를 그리지 않는다")
+
+#: (d) 세로축 순서 = **P per Nd** (축합도). 비인산염을 아래, 축합될수록 위.
+#:   ⛔ 결과를 보고 고른 순서가 아니다 — 조성에서 바로 나오는 값이다.
+P_PER_ND = {"NdCl3": 0.0, "Nd2(SO4)3": 0.0, "NdPO4": 1.0,
+            "Nd(PO3)3": 3.0, "LiNd(PO3)4": 4.0, "NdP5O14": 5.0}
+#: 라벨은 영문·수식만 (CLAUDE.md 그림 규율). 아래첨자는 mathtext 로 쓴다.
+_TEX_D = {"NdCl3": "NdCl$_3$", "Nd2(SO4)3": "Nd$_2$(SO$_4$)$_3$",
+          "NdPO4": "NdPO$_4$", "Nd(PO3)3": "Nd(PO$_3$)$_3$",
+          "LiNd(PO3)4": "LiNd(PO$_3$)$_4$", "NdP5O14": "NdP$_5$O$_{14}$"}
+_seen = {f for v in nphase.values() for f in v}
+_miss = _seen - set(P_PER_ND)
+if _miss:
+    raise SystemExit(f"⛔ (d) P/Nd 를 모르는 상 {sorted(_miss)} — 표에 넣고 다시 그린다")
+
 # ── Fig 1: 분해 (주 그림) ────────────────────────────────────────────────
-fig, (a1, a2) = plt.subplots(1, 2, figsize=(10.2, 4.0), gridspec_kw={"width_ratios": [1.35, 1]})
+fig, _axs = plt.subplots(2, 2, figsize=(11.6, 8.4))
+(a1, a2), (a3, a4) = _axs
 for s, col, lab, mk in ((dn, ND, "Nd only (Nd$^{3+}$$\\leftrightarrow$3Li$^+$)", "o"),
                         (do, OX, "O only (O 0.3, S$\\rightarrow$O)", "s"),
                         (dt, BOTH, "LPSCl$_{1.6}$@Nd$_2$O$_3$ (measured)", "^")):
@@ -80,6 +119,55 @@ apply_axes(a2, "Voltage (V vs Li/Li$^+$)", "Additivity residual (eV/atom)")
 a2.text(0.04, 0.90, "pre-registered band  $\\pm$0.010", transform=a2.transAxes,
         fontsize=8.5, color="#92400e")
 a2.set_ylim(-0.014, 0.014)
+
+# ── (c) 성장이 **양** 때문인가 — 아니다 ───────────────────────────────────
+_n = [st.mean(namt[V]) for V in VS]
+_d = [st.mean(dn[V]) for V in VS]
+_o = [st.mean(do[V]) for V in VS]
+_rel = lambda y: [v / y[0] for v in y]        # 2.5 V = 1 (맨 왼쪽 점. 사후선택 아님)
+a3.fill_between(VS, _rel(_n), _rel(_d), color=ND, alpha=0.10, lw=0)
+a3.plot(VS, _rel(_d), marker="o", color=ND, lw=2.0, ms=6, label="$\\Delta$ Nd only")
+a3.plot(VS, _rel(_n), marker="v", color=MUT, lw=1.8, ms=5.5, ls="--",
+        label="amount of Nd-bearing product")
+a3.plot(VS, _rel(_o), marker="s", color=OX, lw=1.6, ms=5, label="$\\Delta$ O only")
+a3.axhline(1.0, color=MUT, lw=0.8, ls=":")
+for _y, _c, _dy in ((_rel(_d)[-1], ND, .30), (_rel(_n)[-1], MUT, .34),
+                    (_rel(_o)[-1], OX, -.55)):
+    a3.annotate(f"$\\times${_y:.2f}", (VS[-1], _y), (VS[-1] - .03, _y + _dy),
+                fontsize=9.5, color=_c, ha="right", fontweight="bold")
+apply_axes(a3, "Voltage (V vs Li/Li$^+$)", "Relative to 2.5 V")
+a3.legend(frameon=False, fontsize=8.2, loc="upper left")
+a3.set_ylim(0.0, 7.8)
+
+# ── (d) 그럼 무엇이 바뀌나 — Nd 가 **가는 상**이 축합된다 ──────────────────
+_ORD = sorted(P_PER_ND, key=lambda f: (P_PER_ND[f], f))
+_ypos = {f: i for i, f in enumerate(_ORD)}
+for _i, V in enumerate(VS):
+    for _f, _k in nphase[V].items():
+        a4.scatter(_i, _ypos[_f], s=34 + 48 * _k,
+                   color=ND if P_PER_ND[_f] > 0 else MUT,
+                   alpha=.85, lw=.6, edgecolor="white", zorder=3)
+        a4.annotate(str(_k), (_i, _ypos[_f]), fontsize=7.2, color="white",
+                    ha="center", va="center", zorder=4, fontweight="bold")
+a4.set_xticks(range(len(VS))); a4.set_xticklabels([f"{v:g}" for v in VS])
+a4.set_yticks(range(len(_ORD)))
+a4.set_yticklabels([f"{_TEX_D.get(f, f)}" for f in _ORD], fontsize=8.6)
+a4.set_ylim(-0.7, len(_ORD) - 0.3); a4.set_xlim(-0.6, len(VS) - 0.4)
+a4.grid(axis="y", color="#f1f5f9", lw=1.0, zorder=0)
+apply_axes(a4, "Voltage (V vs Li/Li$^+$)", "")
+a4.set_ylabel("Phase the Nd ends up in\n(ordered by P per Nd)", fontsize=9.2,
+              color=INK)
+a4.annotate("", xy=(-0.52, len(_ORD) - .6), xytext=(-0.52, .4),
+            arrowprops=dict(arrowstyle="->", lw=1.2, color=MUT))
+a4.text(-0.44, len(_ORD) - 1.5, "more condensed", fontsize=8, color=MUT,
+        rotation=90, va="center")
+
+for _ax, _t in ((a1, "(a)  Doping helps more as voltage rises"),
+                (a2, "(b)  Nd and O act independently"),
+                (a3, "(c)  Not because more Nd product forms"),
+                (a4, "(d)  The phase the Nd goes to changes")):
+    _ax.set_title(_t, fontsize=10, color=INK, pad=8, loc="left")
+
 fig.tight_layout(); fig.savefig(OUT / "cei_nd_o_decomposition.png", dpi=300); plt.close(fig)
 
 with open(OUT / "cei_nd_o_decomposition.csv", "w", newline="") as f:
@@ -87,12 +175,22 @@ with open(OUT / "cei_nd_o_decomposition.csv", "w", newline="") as f:
     w.writerow(["voltage_V", "delta_nd_only_mean_eV_per_atom", "delta_nd_only_min", "delta_nd_only_max",
                 "delta_o_only_mean_eV_per_atom", "delta_o_only_min", "delta_o_only_max",
                 "delta_both_measured_mean_eV_per_atom", "delta_sum_of_parts_mean_eV_per_atom",
-                "additivity_residual_mean_eV_per_atom", "residual_min", "residual_max", "n_cathodes"])
+                "additivity_residual_mean_eV_per_atom", "residual_min", "residual_max", "n_cathodes",
+                # (c)(d) 2026-09-17 — 짝은 **nd_only** 다 (섞으면 다른 계의 양이 붙는다)
+                "nd_product_amount_mean_nd_only", "rel_delta_nd_only_2p5V",
+                "rel_nd_product_amount_2p5V", "rel_delta_o_only_2p5V",
+                "nd_product_phases_nd_only"])
     for V in VS:
         w.writerow([V, round(st.mean(dn[V]), 5), round(min(dn[V]), 5), round(max(dn[V]), 5),
                     round(st.mean(do[V]), 5), round(min(do[V]), 5), round(max(do[V]), 5),
                     round(st.mean(dt[V]), 5), round(st.mean(dn[V]) + st.mean(do[V]), 5),
-                    round(st.mean(res[V]), 5), round(min(res[V]), 5), round(max(res[V]), 5), len(dn[V])])
+                    round(st.mean(res[V]), 5), round(min(res[V]), 5), round(max(res[V]), 5), len(dn[V]),
+                    round(st.mean(namt[V]), 5),
+                    round(st.mean(dn[V]) / st.mean(dn[VS[0]]), 4),
+                    round(st.mean(namt[V]) / st.mean(namt[VS[0]]), 4),
+                    round(st.mean(do[V]) / st.mean(do[VS[0]]), 4),
+                    " | ".join(f"{f}:{k}" for f, k in
+                               sorted(nphase[V].items(), key=lambda kv: -kv[1]))])
 
 # ── 산물 판정에 쓰는 집합·파서 (Fig 4b·5·8 과 §5 센서스가 같이 쓴다) ─────────
 #   ⛔ 옛 Fig 2 (양극 4 종 중 몇 개에서 Nd 인산염/P2S7 이 나오나, 막대 집계) 를
@@ -771,6 +869,59 @@ trows = "\n".join(
     for p in _target)
 _done = [p for p in _target if _norm(p) in _ELEC]
 
+
+# ── §6 보강 (2026-09-17): 참조갭 · 갭 바닥 · 실측 진행 ──────────────────────
+#   ⛔ 화면이 숫자를 **자체 보관하지 않는다** — 세 원장에서 읽어 온다.
+#     없으면 그 줄을 "아직 없다" 로 적는다 (0 으로 그리지 않는다).
+def _load(rel):
+    f = Path(rel)
+    return json.load(open(f, encoding="utf-8")) if f.is_file() else None
+
+_MATCH = _load("db/properties/cei_gap_targets_matched_2026_09_17.json")
+_FLOOR = _load("db/properties/cei_nd_gap_floor_2026_09_17.json")
+_MEAS = (_load("db/properties/sei_electronic.json") or {})
+
+def _measured(tag):
+    """우리 fixed-occ nscf 값이 이미 있나. 없으면 None — 추정하지 않는다."""
+    for k, v in (_MEAS.get("results") or _MEAS).items():
+        if not isinstance(v, dict):
+            continue
+        if str(k).lower().startswith(str(tag).lower()):
+            g = v.get("gap_eV", v.get("gap"))
+            if isinstance(g, (int, float)):
+                return float(g)
+    return None
+
+_ref_rows = ""
+if _MATCH:
+    for _nm, _r in sorted((_MATCH.get("matched") or {}).items(),
+                          key=lambda kv: (kv[1].get("band_gap_MP_eV") is None,
+                                          kv[1].get("band_gap_MP_eV") or 0)):
+        _g = _r.get("band_gap_MP_eV")
+        _ours = _measured(_nm.replace("(", "").replace(")", ""))
+        _flag = ("" if _r.get("is_mp_ground_state", True)
+                 else ' <span class="mono" style="color:#92400e">⚠ 바닥상 아님</span>')
+        _d = ("—" if (_ours is None or _g is None)
+              else f"{_ours - _g:+.3f} ({100*(_ours-_g)/_g:+.1f}%)")
+        _ref_rows += (
+            f"<tr><td>{_nm}</td><td class='mono'>{_r.get('our_spacegroup','?')}</td>"
+            f"<td class='mono'>{'—' if _g is None else f'{_g:.3f}'}</td>"
+            f"<td class='mono'>{'아직 없다' if _ours is None else f'{_ours:.3f}'}</td>"
+            f"<td class='mono'>{_d}</td><td>{_flag}</td></tr>")
+
+_floor_rows = ""
+if _FLOOR:
+    for _v, _r in (_FLOOR.get("by_voltage") or {}).items():
+        _mg = _r.get("min_gap_ref_eV")
+        _ph = " · ".join(f"{x['formula']} {x['gap_ref_eV']}"
+                         for x in _r.get("phases", []))
+        _floor_rows += (
+            f"<tr><td class='mono'>{_v} V</td>"
+            f"<td class='mono'>{'—' if _mg is None else f'{_mg:.3f}'}</td>"
+            f"<td class='mono'>{_r.get('min_gap_phase') or '—'}</td>"
+            f"<td style='font-size:.86rem'>{_ph}</td></tr>")
+
+
 sec.append(f"""
 <h2 id="s6">6. 갭 단계(§C)는 무엇을 재나 — 목록을 먼저 박았다</h2>
 
@@ -832,6 +983,50 @@ sec.append(f"""
 그게 부동태다. 다만 층이 아무리 절연이어도 <b>구멍이 하나 뚫려 이어져 있으면</b> 거기로
 샌다. 갭 계산은 <b>재료가 막을 성질을 갖는지</b>만 말하고 <b>실제로 구멍 없이 덮였는지</b>는
 말하지 않는다.</p>
+
+<h3>참조갭 — 우리 계산이 재현해야 할 표적</h3>
+
+<p>10 종의 MP 참조갭을 <strong>공간군까지 맞춰</strong> 받아 뒀다. 조성만 맞추면 딴 상이
+기준이 된다 — 실제로 2 종이 걸렸다: <strong>P₂O₅</strong> 는 MP 바닥상이 Pnma(4.853)인데
+우리 표적은 <strong>Fdd2</strong>(5.202)이고, <strong>Nd₂O₃</strong> 는 우리 옛 실측
+3.9479 가 <strong>P-3m1</strong>(5원자)인데 §C 표적은 <strong>Ia-3</strong>(40원자)다.</p>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>상</th><th>우리 공간군</th><th>MP 참조 [eV]</th><th>우리 fixed-occ [eV]</th><th>차</th><th></th></tr></thead>
+<tbody>
+{_ref_rows or '<tr><td colspan="6">참조갭 기록이 아직 없다</td></tr>'}
+</tbody></table>
+</div>
+
+<p style="color:var(--mut);font-size:.87rem">⛔ MP 값은 <strong>PBE 소환값</strong>이고 우리 db
+갭 표에 안 들어간다 (문헌·db 분리). Nd 함유 상은 4f 배치 때문에 <strong>하한</strong>이다.
+재현 판정은 "같은 자릿수·같은 순위" 로만 한다.</p>
+
+<h3>hull 이 Nd 를 보내는 상의 갭 바닥</h3>
+
+<p>§4 의 hull 이 전압마다 Nd 에 배정하는 상은 <strong>6 종</strong>이고, 그 6 종이
+<strong>위 10 종 안에 전부 있다</strong>. 그 상들의 참조갭 중 최소가 아래다.</p>
+
+<div class="tblwrap">
+<table>
+<thead><tr><th>전압</th><th>최소 갭 [eV]</th><th>병목상</th><th>배정된 상 (참조갭)</th></tr></thead>
+<tbody>
+{_floor_rows or '<tr><td colspan="4">갭 바닥 기록이 아직 없다</td></tr>'}
+</tbody></table>
+</div>
+
+<div class="card warn">
+<p style="margin:0"><strong>⛔ 이 표는 "CEI 가 절연이다" 가 아니다.</strong>
+전자 누설의 병목은 <strong>산물 전체 중 최소 갭</strong>이고, 이 표는
+<strong>Nd 함유 상만</strong> 본다. Li₃PO₄ · 전이금속 인산염 · S 는 안 들어가 있다.
+전이금속 상은 위 카드 그대로 <strong>여전히 막혀 있다</strong>.</p>
+</div>
+
+<p class="plain">읽히는 것 하나: 2.5→4.5 V 어디서도 제일 좁은 것이 <b>NdCl₃ 4.30 eV</b> 이고,
+황화물 채널(<b>NdPS₄ 2.25</b>)은 <b>여섯 전압 어디서도 안 나온다</b>. NdPS₄ 를 10 종에
+넣어 둔 것이 그래서 판별용이다 — 좁은 갭 결말이 <b>가능했는데</b> hull 이 거길 안 갔다는
+것을 말할 수 있어야 하니까.</p>
 
 <h3>결과 보기 전에 박은 문턱</h3>
 <ul>
