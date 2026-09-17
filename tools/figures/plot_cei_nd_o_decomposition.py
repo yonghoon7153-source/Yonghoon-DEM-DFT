@@ -1,9 +1,28 @@
-"""CEI 그림 + Origin-ready CSV + **화면 절(§3·§4·§5) 생성**. house_style 준수 · 라벨 영문만.
+"""CEI 그림 + Origin-ready CSV + **화면 절(§3·§4·§6·§7) 생성**. house_style 준수 · 라벨 영문만.
 
-⛔ §3·§4·§5 는 **이 파일이 유일한 소스**다. `db/properties/cei_figs/index.html` 의 그 절들을
-  손으로 고치면 **다음 재생성에 지워진다** — 2026-09-16 에 실제로 그렇게 비유 박스 4 개를
-  잃었다(§3 예산 · §4 물감 · §5 XRD · §5 핀홀). 그 절을 고칠 일이 있으면 **여기서** 고친다.
-  나머지 절(§1·§2·§6·§7·§8)은 index.html 이 소스다.
+⛔ **소관 지도 — 발행본(`db/properties/cei_figs/index.html`) 번호 기준**
+
+  | 절 | 소스 |
+  |---|---|
+  | §1 분해 · §2 왜 고전압에서 Nd | index.html |
+  | **§3 검증** | **이 파일** (아래 `<h2 id="s3">`) |
+  | **§4 전 혼합범위 스캔** | **이 파일** |
+  | §5 다른 3가 도펀트 | **본문은 index.html · 그림(Fig 6)만 이 파일** |
+  | **§6 갭 단계(§C)** | **이 파일** |
+  | **§7 반대쪽 접촉(dual compat)** | **이 파일** |
+  | §8 양극별 원자료 · §9 말하면 안 되는 것 | index.html |
+
+  이 파일이 소스인 절을 index.html 에서 손으로 고치면 **다음 재생성에 지워진다** —
+  2026-09-16 에 실제로 비유 박스 4 개를 잃었다(§3 예산 · §4 물감 · §5 XRD · §5 핀홀).
+
+⛔ **2026-09-17 정정** — 위 표는 실측이고, 종전 docstring 은 **네 군데가 틀렸다**:
+  §5 를 "이 파일" 이라 했으나 본문은 index.html 이고, §6·§7 을 "index.html" 이라 해서
+  **다음 사람이 안심하고 손대게 유인**했으며, §9 는 목록에 아예 없었다.
+  선언(docstring)과 실행(코드)이 갈라져 있었고 **재생성 전에는 안 터지는** 모양이다.
+  이제 파일 끝 `_SECTIONS_EXPECTED` assert 가 쓰기 전에 대조한다.
+
+⚠ 이 파일 안의 주석은 dual-compat 절을 역사적으로 "§6" 이라 부른다 — **발행본에서는 §7** 이다.
+  주석의 그 번호는 고치지 않았다(이력이 끊긴다). 기준은 언제나 `<h2 id="sN">` 이다.
 """
 import json, re, sys, csv, statistics as st
 from pathlib import Path
@@ -406,7 +425,7 @@ if FJ.exists() and LAD:
         for g, fs, _ in GRP for fm in fs
         if F.get("formation", {}).get(fm, {}).get("found"))
     sec.append(f"""
-<h2>3. 검증 — 그리고 가설의 절반이 틀렸다</h2>
+<h2 id="s3">3. 검증 — 그리고 가설의 절반이 틀렸다</h2>
 
 <p>§2 의 가설을 재려고 같은 hull 에서 <strong>균형반응 10 개</strong>를 돌렸다
 (<code>ComputedReaction</code>, 계수는 도구가 잡는다). 검산 고리 둘이 닫힌다 —
@@ -563,7 +582,7 @@ if have_kinks:
         for e, m, a, ns, nt in srow)
     best = min(srow, key=lambda r: -r[1])
     sec.append(f"""
-<h2>4. 전 혼합범위 스캔 — 최소점 하나가 아니라 곡선 전체</h2>
+<h2 id="s4">4. 전 혼합범위 스캔 — 최소점 하나가 아니라 곡선 전체</h2>
 
 <p class="plain">익숙한 것에 빗대면 <b>물감 두 색을 맞대고 문지른 자리</b>다.
 경계가 칼로 자른 듯 한 줄이 아니라, <b>섞인 띠</b>가 생기고 그 띠 안에서 자리마다
@@ -697,7 +716,7 @@ trows = "\n".join(
 _done = [p for p in _target if _norm(p) in _ELEC]
 
 sec.append(f"""
-<h2>5. 갭 단계(§C)는 무엇을 재나 — 목록을 먼저 박았다</h2>
+<h2 id="s6">6. 갭 단계(§C)는 무엇을 재나 — 목록을 먼저 박았다</h2>
 
 <p>§4 가 kink 를 전부 남기면서 <strong>산물 집합이 {len(_minset)} → {len(_all)} 종</strong>이 됐다.
 즉 갭 단계의 대상 목록이 <strong>어제와 다른 자료 위에 서 있다</strong>. 어느 쪽을 쓸지는
@@ -1160,5 +1179,19 @@ _out6 = "\n".join(sec)
 #: 쓰기 **전에** 죽는다.
 _leak = re.findall(r"\$[_^][^$\n]{0,20}\$", _out6)
 assert not _leak, f"생성 HTML 에 matplotlib mathtext 가 샜다: {_leak[:5]}"
+
+#: ⛔ 절 번호·앵커 무결성 (2026-09-17 신설) — 재생성 전에는 안 터지던 것 셋을 여기서 죽인다:
+#:   ① 갭 단계를 `5.` 로 찍는데 발행본은 `6.` — 문서를 손으로 재번호 매기고 생성기를 안 고쳤다.
+#:      재생성하면 §5 가 둘이 되거나 §6 이 잘못 붙는다.
+#:   ② §3·§4·§6 이 `id` 없이 나가서 index.html 목차의 `#s3`·`#s4`·`#s6` **셋이 죽는다**
+#:      (목차는 #s1~#s9 아홉을 다 쓴다 — 실측).
+#:   ③ docstring 의 소관 지도가 실행과 달랐다 (위 정정).
+#: 발행본이 바뀌면 여기 기대값도 같이 바꾼다 — 그게 이 assert 의 일이다.
+_SECTIONS_EXPECTED = [(3, "s3"), (4, "s4"), (6, "s6"), (7, "s7")]
+_got = [(int(_n), _i) for _i, _n in
+        re.findall(r'<h2(?:\s+id="([^"]*)")?\s*>\s*(\d+)\.', _out6)]
+assert _got == _SECTIONS_EXPECTED, (
+    f"생성 절의 번호·앵커가 발행본과 다르다:\n  나온 것   {_got}\n  기대값    {_SECTIONS_EXPECTED}\n"
+    f"  index.html 의 <h2 id=\"sN\">N. 과 1:1 이어야 목차 링크가 산다.")
 (OUT / "sections_new.html").write_text(_out6, encoding="utf-8")
 print("  sections_new.html (§6 포함)", (OUT / "sections_new.html").stat().st_size, "B")
