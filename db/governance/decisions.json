@@ -2681,6 +2681,71 @@
     }
    ],
    "_note": "⛔ 사후 관찰이다 (results_seen · exploratory). 1저자 비준 전까지 proposed. ⚠ 이 계산은 반응물·생성물을 **사람이 골랐다** — hull 이 고른 것이 아니다. hull 판정은 interface_reactivity_v2.py 쪽이고, 둘은 서로 다른 물음이다. ⚠ ②(tm_fate)의 LiMnO2 반례(Nd 가 인산염 몫을 33→37 % 로 늘림)는 이 부호로 설명되지 않는다 — Mn(PO3)2 도 −1.5453 으로 Nd 가 유리한데 실제로는 반대다. 열린 채로 둔다."
+  },
+  {
+   "id": "D-2026-09-17-nd-channel-preference",
+   "schema_version": 2,
+   "kind": "metric",
+   "scope": "cei.phosphate_sink",
+   "slot": "nd_destination_channel_preference",
+   "applies_to": {
+    "systems": [
+     "*"
+    ],
+    "tasks": [
+     "closed_system_exchange"
+    ],
+    "methods": [
+     "MP GGA_GGA+U · ComputedReaction · Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries"
+    ],
+    "use_cases": [
+     "mechanism_reading"
+    ]
+   },
+   "title": "Nd 는 Cl·SO4 를 버리고 P 로 간다 — 그런데 hull 산물은 그렇지 않을 수 있다",
+   "statement": "D-2026-09-17-cei-tm-phosphate-exchange 의 사각지대를 메운다. 그 계산의 chemsys 에는 Cl·S 가 없어 NdCl3·Nd2(SO4)3 채널을 볼 수 없었다. Cl·S 를 넣고 다시 재니 **Nd 의 인산염 선호가 확인된다**: NdCl3 + Li3PO4 → NdPO4 + 3 LiCl = **−0.5029 eV/P**, ½Nd2(SO4)3 + Li3PO4 → NdPO4 + 1.5 Li2SO4 = **−0.6686 eV/P**. 둘 다 음수다. 대조 잡(Li3PO4 + ½Nd2O3 → NdPO4 + 1.5 Li2O)은 +1.5035 eV/P 로 재현됐다. ⛔ **그러므로 '고전압 LiMnO2 에서 Cl 이 Nd 를 먼저 잡는다' 는 설명은 틀렸다** (2026-09-17 세션에서 내가 그렇게 말했고 철회한다). 에너지는 정반대를 말한다. 실제 hull 산물이 NdCl3 인 것은 **경쟁이 Nd 쪽이 아니라 P 쪽에서 결판나기 때문**으로 보인다 — 그 계에서는 P 가 이미 Mn(PO3)2 로 가고 Nd 에게 Cl 만 남는다. 즉 Nd 가 Cl 을 **고른** 것이 아니라 P 를 **놓친** 것이다. ⚠ 이 마지막 문장은 반응식 판독에서 나온 **해석**이지 계산된 판정이 아니다.",
+   "decision_state": "proposed",
+   "results_seen": true,
+   "exploratory": true,
+   "evidence": [
+    {
+     "kind": "exchange_eV_per_P",
+     "value": {
+      "NdCl3→NdPO4": -0.5029,
+      "Nd2(SO4)3→NdPO4": -0.6686,
+      "control_Li3PO4": 1.50352
+     }
+    },
+    {
+     "kind": "balance_failed",
+     "value": [
+      "NdCl3,Li4P2O7 > NdPO4,LiCl",
+      "NdCl3,LiPO3 > NdPO4,LiCl",
+      "NdCl3,Mn(PO3)2 > NdPO4,MnCl2",
+      "NdCl3,Ni(PO3)2 > NdPO4,NiCl2"
+     ],
+     "why": "Cl·Li 수지가 안 맞는다 (예: Li4P2O7 는 Li:P=2 라 3 LiCl 을 못 만든다). 화학이지 도구 문제가 아니다"
+    },
+    {
+     "kind": "chemsys",
+     "value": "Cl-Co-Li-Mn-Nd-Ni-O-P-S · 5061 entries"
+    }
+   ],
+   "method_ref": "tools/oxidation/esw_grand_potential.py --reaction --per_element P",
+   "record": "db/properties/cei_nd_channel_2026_09_17.json",
+   "reopen_criteria": [
+    "'P 쪽에서 결판난다' 를 주장으로 쓰려면 **P 의 행선지 경쟁을 직접 재야** 한다 — 이 카드 밖이다",
+    "TM 산화물·염화물 선택이 달라지면 다시 연다",
+    "MP 엔트리가 바뀌면 무효 (entry_id 가 레코드에 있다)"
+   ],
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-09-17"
+    }
+   ],
+   "_note": "⛔ 사후 관찰 (results_seen · exploratory) — 1저자 비준 전까지 proposed. ⭐ 이 카드의 값은 **앞 카드의 한계를 닫는 것**이다: 교환에너지가 'Nd 가 가용하다면' 의 조건부 값이라는 우려는, Nd 가 Cl·S 보다 P 를 선호하므로 **가용성 쪽 문제가 아니다**로 좁혀진다."
   }
  ]
 }
