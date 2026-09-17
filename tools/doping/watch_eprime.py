@@ -168,16 +168,41 @@ def budget_row(out_root) -> dict:
             "n_done": sum(1 for s in steps if "rc" in s),
             "n_stopped": sum(1 for s in steps if "stopped" in s),
             "stopped_why": [s["stopped"] for s in steps if "stopped" in s],
-            # ⛔ 2026-09-17 — 과거 중단 기록을 **현재형으로 찍고 있었다.** 이어받아
-            #   돌고 있는데 화면은 "⛔ 중단" 이라고 말했다 (실측: PID 살아 있고
-            #   md/P2_Al2S3_A__s1 진행 중인데 옛 게이트 중단문이 그대로).
-            #   판정 기준: 중단이 **마지막 항목**일 때만 현재다. 그 뒤로 뭔가 돌았으면
-            #   그건 지나간 일이다.
-            "stopped_is_current": bool(steps) and "stopped" in steps[-1],
+            # ⛔ 2026-09-17 — 과거 중단 기록을 **현재형으로 찍고 있었다.**
+            #   1차 수정: "중단이 **마지막 항목**이면 현재" 로 봤다. **여전히 틀렸다** —
+            #   이어받아 도는 스텝은 **끝나야** budget.json 에 들어가므로, 도는 동안은
+            #   마지막 항목이 그 중단 그대로다 (실측: PID 살아 있고 6.4/205 ps 진행
+            #   중인데 화면은 "⛔ 중단").
+            #   ⇒ 이 플래그는 **기록만** 말한다. "지금 멈춰 있나" 는 마스터 생사와
+            #     **같이** 봐야 하고, 그 판정은 pid 를 아는 render 가 한다.
+            "stopped_is_last_record": bool(steps) and "stopped" in steps[-1],
             "steps_raw": steps}
 
 
 # ── ③ 준비 ──────────────────────────────────────────────────────────────────
+def stop_lines(stopped_why, is_last_record, master_alive):
+    """중단 기록들 → (표지, 사유, 꼬리말) 목록. **현재형인지 여기서 정한다.**
+
+    ⚠ 이 판정을 render 안에 두 줄로 적어 놨더니 시험이 못 쳤다 — 그래서 함수로 뺀다
+      (2026-09-13 카드: 시험이 자기 사본을 재면 아무것도 보증 못 한다).
+
+    현재형(⛔)은 **둘 다** 성립할 때만이다:
+      ① 중단이 budget.json 의 **마지막 기록**이고
+      ② 마스터가 **안 돌고** 있다.
+    ②가 필요한 이유: 이어받아 도는 스텝은 **끝나야** 기록되므로, 도는 동안에도
+      마지막 기록은 그 중단 그대로다 (2026-09-17 실측: 6.4/205 ps 진행 중인데 "⛔ 중단").
+    """
+    out = []
+    for i, w in enumerate(stopped_why):
+        last = (i == len(stopped_why) - 1) and bool(is_last_record)
+        now = last and not master_alive
+        tail = ("" if now else
+                ("  ← 마스터가 돌고 있다 (이어받은 뒤 아직 안 끝난 스텝이 있다)"
+                 if last else "  ← 그 뒤로 더 돌았다 (지금 상태 아님)"))
+        out.append(("⛔ 중단" if now else "· 지난 중단", w, tail))
+    return out
+
+
 def spend_rate(budget_steps, plan):
     """끝난 MD 스텝에서 **실측 h/런**과 남은 런 수를 센다.
 
@@ -358,11 +383,9 @@ def render(out_root, log=None, n_gpu=6) -> int:
                   f"{fmt(po, '{:.1f}')} / {cap:.0f}"
                   + ("  ⚠ 상한 초과 예상 — ④가 잡는다"
                      if isinstance(po, float) and po > cap else ""))
-        _sw = b.get("stopped_why", [])
-        for i, w in enumerate(_sw):
-            last = (i == len(_sw) - 1) and b.get("stopped_is_current")
-            print(f"   {'⛔ 중단' if last else '· 지난 중단'}: {w}"
-                  + ("" if last else "  ← 그 뒤로 더 돌았다 (지금 상태 아님)"))
+        for mark, w, tail in stop_lines(b.get("stopped_why", []),
+                                        b.get("stopped_is_last_record"), pid):
+            print(f"   {mark}: {w}{tail}")
 
     # ③ 준비
     print("\n── 준비 (고정셀 FIRE, fmax 목표 "
@@ -602,17 +625,35 @@ def _selftest() -> int:
             return budget_row(_d3)
         _cur = _bud([{"key": "md/a", "rc": 0, "gpu_h": 1.0},
                      {"key": "md/b", "stopped": "⛔ 투영 …"}])
-        chk(_cur["stopped_is_current"] is True,
-            "양성: 중단이 **마지막 항목**이면 지금 멈춘 것이다")
+        chk(_cur["stopped_is_last_record"] is True,
+            "양성: 중단이 마지막 **기록**이면 플래그가 선다 (현재형 판정은 아직 아니다)")
+        chk("stopped_is_current" not in _cur,
+            "⛔음성: 옛 이름(stopped_is_current)을 안 남긴다 — 마스터 생사를 안 보는 "
+            "판정이라 이름이 사실보다 셌다 (2026-09-17 실측: 도는데 '중단' 으로 찍음)")
         _past = _bud([{"key": "md/b", "stopped": "⛔ 투영 …"},
                       {"key": "md/c", "rc": 0, "gpu_h": 2.0}])
-        chk(_past["stopped_is_current"] is False and _past["stopped_why"],
+        chk(_past["stopped_is_last_record"] is False and _past["stopped_why"],
             "⛔음성: 중단 뒤에 돌아간 스텝이 있으면 **지금 상태가 아니다** "
             "(기록은 지우지 않고 현재형만 뗀다)")
-        chk(_bud([{"key": "md/a", "rc": 0, "gpu_h": 1.0}])["stopped_is_current"] is False,
+        chk(_bud([{"key": "md/a", "rc": 0, "gpu_h": 1.0}])["stopped_is_last_record"] is False,
             "양성: 중단 기록이 없으면 당연히 False")
-        chk(_bud([])["stopped_is_current"] is False,
+        chk(_bud([])["stopped_is_last_record"] is False,
             "⛔음성: steps 가 비면 False (빈 리스트에 [-1] 로 죽지 않는다)")
+
+    # stop_lines — 현재형 판정은 마스터 생사와 **같이** 본다
+    _W = ["stop-A", "stop-B"]
+    chk(stop_lines(_W, True, None)[1][0] == "⛔ 중단",
+        "양성: 마지막 기록이 중단 + 마스터 없음 → **현재형**")
+    chk(stop_lines(_W, True, 12345)[1][0] == "· 지난 중단"
+        and "마스터가 돌고" in stop_lines(_W, True, 12345)[1][2],
+        "⛔음성: 마스터가 **돌고 있으면** 현재형이 아니다 — 이어받은 스텝은 끝나야 "
+        "기록되므로 마지막 기록은 그대로다 (2026-09-17 실측 사고)")
+    chk(stop_lines(_W, False, None)[1][0] == "· 지난 중단"
+        and "그 뒤로 더 돌았다" in stop_lines(_W, False, None)[1][2],
+        "⛔음성: 중단 뒤에 기록이 더 있으면 현재형이 아니다")
+    chk(all(x[0] == "· 지난 중단" for x in stop_lines(_W, True, None)[:-1]),
+        "⛔음성: 마지막이 아닌 중단은 마스터가 죽었어도 **지난 것**이다")
+    chk(stop_lines([], True, None) == [], "양성: 중단 기록이 없으면 빈 목록")
 
     # ── spend_rate: 실측 h/런 (2026-09-17) ────────────────────────────────
     _plan = EP.build_plan("/tmp/_w")
