@@ -3990,6 +3990,194 @@
    ],
    "title": "단절 침대의 SE 입자 **최대 49.3 % 가 접촉이 하나도 없다** — 물리인지 접촉검출 artifact 인지 미확인",
    "note": "`LHS-04` 의 범위 확정 과정에서 나온 **별건**이다.  이온 미퍼콜 25건 중 진짜 단절\n24건에 성분 진단을 전부 돌렸더니, SE 입자 중 **접촉이 하나도 없는 낱개**의 비율이 컸다\n(2026-09-15, 저자 기계 생산 경로):\n\n```\nlhs00_093   SE 1,570개 중 774개 = 49.3 %      lhs00_107  43.8 %\nlhs00_075   40.2 %      lhs00_079  39.3 %     lhs00_074  33.1 %\n단절 24건 전체          3.2 ~ 49.3 %  (중앙 20.2 %)\n```\n\n★ **물리적으로 그럴듯한 쪽**: 그 침대들은 `φ_SE ≈ 0.09` (am_pct 95) = 코호트에서 SE 가 가장\n적은 설계점이라 SE 가 큰 AM 공극에 **낱개로 갇히는** 것이 자연스럽다.  성분 수가 29~2,324개인\n것과도 정합적이다 (망이 수백~수천 조각).\n\n⚠ **그러나 확인된 바 없다.**  300 MPa 압밀 뒤에 SE 의 **절반이 무접촉**인 것이 정상인지\n누구도 재 본 적이 없다.  배제 못 하는 대안이 둘이다:\n① **접촉 검출 규약** — cutoff·δ 규약이 얕은 접촉을 떨어뜨리면 같은 그림이 나온다.\n② **삽입/압밀 미완** — 부분 삽입 런은 전량 폐기가 규약인데, 그 게이트가 이 코호트에 실제로\n   걸렸는지 이 판독에서 확인하지 않았다.\n\n⛔ **이것이 S3 를 멈추지 않는다** — 그 24건은 이온 채널 정의역 **밖**(`OLD_NONE`)이므로\n봉인과 ρ 가 일관된 상태다.  ⚠ 그러나 **전자·열 채널에서는 같은 침대가 정의역 안**이다\n(127/127 관통).  무접촉 SE 가 많다는 것은 그 침대의 **SE 기여가 거의 없다**는 뜻이고,\n전자 채널은 AM 망이므로 영향이 작을 것으로 보이나 **열 채널은 SE 를 통해 흐른다** ⇒\n⬜ **열 채널 영향 미측정**.\n\n⚠ `LHS-04`(`lhs00_009`)와 **다른 현상**이다 — 그쪽은 고립률 0.007 % 로 이 군 최소의\n**477분의 1** 이고 성분이 **하나**다.  섞어 읽지 말 것.\n\n처방 후보 (아직 고르지 않음): ① 같은 침대에서 접촉 cutoff 를 흔들어 무접촉률의 **민감도**를\n잰다 (규약 artifact 면 크게 움직인다) ② 무접촉 SE 의 **최근접 이웃 거리 분포**를 본다\n(압밀된 침대라면 접촉 문턱 바로 밖에 몰려야 한다) ③ 부분 삽입 게이트가 이 코호트에\n실제로 걸렸는지 receipt 로 확인한다.  ★ ①·② 는 **원 dump 만 있으면 GPU 불요**다."
+  },
+  {
+   "id": "GAP3-18",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
+   "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
+   "evidence_tests": [
+    "scripts/porosity_close.py::68-83",
+    "docs/porosity_regression_final.md::19,219-220"
+   ],
+   "title": "`porosity_close.py` 가 **보고 지표(LOOCV)가 오를 때만** 케이스를 지우는 사후 래칫이다",
+   "note": "`:79 if r2t > r2c + 0.002` — 제거 **채택** 조건이 보고 지표 자체다 (물성·무효 기준이 아니다).\n실측: `n=129 LOOCV 0.583 → n=128 0.603` (+0.020), 지워진 것은 `input_1mAh_9_S1` (코너).\n사전등록 없음 — `docs/reviews/` 에 porosity prereg 가 없고 원장에도 등재가 없었다.\n★ 완화: 정본 `docs/porosity_regression_final.md` 의 CLOSED 헤드라인은 **트림 전** 값이고,\n  `0.603/n=128` 을 인용하는 문서가 리포에 **없다** ⇒ 현재 발표 수치는 오염되지 않았다.\n⛔ 그러나 정본 :19 가 이 스크립트를 *\"물성 기준 제외기\"* 로, :219-220 이 *\"코너는 제외 안 함\"*\n  이라 못박는데 **코드는 코너를 지표조건부로 지운다** ⇒ 정본 서술과 코드가 정면 충돌."
+  },
+  {
+   "id": "GAP3-19",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
+   "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
+   "evidence_tests": [
+    "scripts/porosity_plastic_vs_rigid.py::36,51,55",
+    "scripts/porosity_close.py::28-29"
+   ],
+   "title": "`exclude_particulate` 플래그 **하나가 세 필터**를 제어한다 (레짐 둘 + 무효 데이터 하나)",
+   "note": "`porosity_plastic_vs_rigid.py:36,51,55` — 같은 스위치가 ⓐ particulate ⓑ `input_S_` ⓒ **`1mAh_100`\nbroken-sim(plate_z 버그 = 무효 데이터)** 을 함께 끈다.  ⓐⓑ 는 \"다른 레짐\", ⓒ 는 \"잘못된 데이터\" 라\n축이 다르다.  정본 `porosity_regression_final.md:26-27` 은 ⓒ 를 **\"필터 영구\"** 라 쓰는데 코드는 같이 꺼진다.\n★ 호출부에서 부작용이 **안 보인다**는 직접 증거: `porosity_close.py:28-29` 가 이미 걸러진 `1mAh_100` 을\n  **중복 제거**한다 = 작성자도 숨은 세 번째 필터를 인지하지 못했다 (무해한 중복)."
+  },
+  {
+   "id": "GAP3-20",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
+   "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
+   "evidence_tests": [
+    "scripts/porosity_unified.py::42,55",
+    "docs/data/case_3d_collection.csv"
+   ],
+   "title": "`porosity_unified.py:42` 의 `FULL corpus` 에 **무효 9건**이 섞여 보고 수치가 전부 틀렸다",
+   "note": "`load_pairs(exclude_particulate=False)  # FULL corpus` 가 GAP3-19 의 부작용으로 broken-sim 9건\n(`input_1mAh_100_{1,2,3,4,6,7,8,9,10}`)을 함께 들인다.  dem/mpm 이 전부 양수라 기존 게이트에 안 걸린다.\n전수 실측: production 129 + particulate/S 16 + broken 9 = 154 (겹침 0).\nread-only 재계산 (9건 제외 시):\n  gated λ-U LOOCV  0.472 → **0.502** (+0.030)  ← 이 스크립트의 헤드라인 주장\n  production RMSE  3.01 → **2.71 %p** (−0.30)\n  n 라벨           138  → **129**\n⇒ 헤드라인 이득이 **과소** 보고되고 RMSE 는 부풀려져 있으며 n 이 9 틀렸다.\n⚠ 방향이 보수적이라 결론 자체는 안 뒤집힌다 — 그러나 숫자와 n 은 전부 틀린 값이다."
+  },
+  {
+   "id": "GAP3-34",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
+   "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
+   "evidence_tests": [
+    "scripts/predict_porosity_physics.py::169-178,201,256-258"
+   ],
+   "title": "`predict_porosity_physics.py` — `heckel_compaction()` 호출 0회 · `P_eff` 죽은 대입 · **import 0**",
+   "note": "AST 호출그래프: `heckel_compaction(def@169)` → **NEVER**.  리포 전수 grep 상 등장은 정의 1줄과\n감사 인벤토리뿐.  `:201 P_eff` 는 대입 후 한 번도 안 읽히고(AST dead-local), 반환 경로에 **지수함수가\n하나도 없다** — 순수 선형 감산이다.  이 모듈을 import 하는 곳이 **0** (형제 플롯 7개는 전부\n`predict_porosity_strict_physics` 를 쓴다).\n⇒ **값 영향 0**.  영향은 서술뿐 — 독스트링 :16-23 과 플롯 제목 :256-258 이\n  \"Heckel 소성(지수) · σ_y · P=300 MPa\" 를 광고하는데 곡선은 그것들과 무관하다."
+  },
+  {
+   "id": "GAP3-30",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
+   "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
+   "evidence_tests": [
+    "docs/data/rho_lhs_20260913.json",
+    "docs/data/rho_lhs_20260913.csv",
+    "scripts/measure_rho.py::356-357"
+   ],
+   "title": "`rho_lhs_20260913.*` 의 `0.0` — 이온·열은 **철회된 거짓 0**, 전자는 **결측→0**",
+   "note": "두 갈래다.\n① 이온·열 `rho_pct_max_iterative: 0.0` 은 **실제로 계산된 max** 다 (빈 집합이면 생산자가 `None` 을 낸다;\n   CSV 에서 실패는 0 이 아니라 **공란** 7행).  그러나 원장 `SELF-31` 이 *\"안 걸리는 손잡이(atol)를 조인\n   **거짓 0**\"* 으로 이미 철회했다 (scipy ≥1.12 는 rtol 이 판정).  83행 전부 `sigma_ratio_A == B` 비트 동일.\n② **전자 채널 `rho_pct_max_all: 0.0` 만이 진짜 결측→0** 이다 — `n_iterative 0`, 직접해(spsolve)뿐이라\n   허용오차 축 자체가 없다 (`AREA5-04` 가 *\"결измеn을 0 으로 채우는 것\"* 이라 명시).\n   ⚠ 이 결함은 **유효판 `_rtol`·1e-7·1e-8 세 파일에도 그대로 남아 있다**.\n⛔ `claims.json` `quotation_ban` 에 ρ=0 패턴이 **0건** ⇒ `--ban-sweep` 이 못 잡는다.\n   접미사 없는 이 이름이 가장 자연스러워 표지 없이 집히면 계약 §5-v3 ① 의 `ρ > 3 %` 차단을\n   **구조적으로 통과**시킨다 (규율 ⑤ 의 데이터 층 재현)."
+  },
+  {
+   "id": "GAP3-01",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
+   "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
+   "evidence_tests": [
+    "heckel/input_SE_heckel_100.liggghts::18",
+    "scripts/make_heckel_inputs.py::164-169",
+    "scripts/gen_dem_oat_sweep.py::137-141",
+    "docs/data/heckel_pure_se_dem.csv"
+   ],
+   "title": "커밋된 heckel 덱 4개가 **실행 불가**이고, `P_y=138` 사슬의 입력이 리포에 없다",
+   "note": "`heckel/input_SE_heckel_{100,200,300,400}.liggghts` — 파일당 **13줄 · 17회 · 변수 8종**이 `${{var}}` 로\n미붕괴다.  그대로 돌리면 :18 에서 `Substitution for illegal variable` (input.cpp:505) 로 즉시 중단된다.\n원인은 f-string 이 아니라 **규약 불일치**: 템플릿은 `r\"\"\"…\"\"\"` 이고 렌더는 `.format()` 이 아니라\n`str.replace()` 연쇄(`make_heckel_inputs.py:164-169`)라 `{{` 가 절대 안 풀린다.  설계 파라미터는\n단일 `{TAG}` 라 정상 치환돼 **혼합 상태**가 나온다.\n★ 재발 확정 — 생성기를 다시 돌리면 커밋본과 **바이트 동일**.\n⇒ 리포가 내보이는 `R²=0.965 · P_y=137.8 MPa · σ_y≈46 MPa` 사슬(litdb 약 15편이 앵커로 인용)의\n  원자료가 외장 매체에 있고 **그것을 만든 입력 파일이 리포에 없다** = 제3자 재현 경로 단절.\n★★ 완화: **P300 은 빌드 대조로 자릿수까지 재현**됐다 (`0.00823721 / 10.0756 / −2.3398`).\n  ⇒ **수치는 건전하고 망가진 것은 커밋된 덱 텍스트뿐**이다.  ⚠ 100/200/400 은 독립 재현이 없다.\n⚠ 이 사실은 `scripts/gen_dem_oat_sweep.py:137-141` 에 2026-08-25 자로 **이미 실측·기록돼 있었으나**\n  원장에는 등재된 적이 없다 (소스 주석으로만 살아 있었다)."
+  },
+  {
+   "id": "GAP3-15",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
+   "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
+   "evidence_tests": [
+    "scripts/check_colorbar_fit.mjs::99-101,85-90",
+    ".github/workflows/discipline.yml::255"
+   ],
+   "title": "`check_colorbar_fit.mjs` — *\"600자 절단\"* 은 **반증**, 그러나 더 큰 사각지대가 확정",
+   "note": "⛔ 원 주장 반증: `cbarSpec` 블록 5개의 최장이 **491자** < 600 ⇒ 절단은 현재 발생하지 않는다.\n★ 그런데 같은 3줄에 두 결함이 확정됐다:\n  ① `src.match(…)` 가 **non-global** 이라 **첫 블록 하나만** 검사한다 (5개 중 4개 미검사).\n  ② 정규식이 **작은따옴표 문자열만** 본다 — 그 유일한 블록의 `title:` 은 **템플릿 리터럴(백틱)** 이라\n     사정권 밖이다.\n돌연변이 시험 4건 중 **3건 MISSED** (백틱 title · #3 블록 · #4 블록).\n★ 같은 파일 :87-90 은 **이미 백틱을 보게 고쳐졌다** — :100 만 그 수정을 못 받았다 = 내부 비일관.\n⚠ 이 파일 :85 가 스스로 *\"그림 속 글자는 ban-sweep 도 pptx 스윕도 못 읽는다 — **여기가 유일한\n  방어선**\"* 이라 적는다.  CI 에서 무조건 도는데 지금 초록이다.\n★ 현재 실제 누수는 **없다** (잠복) — 검사 안 되는 구간에 영국식 철자가 없다."
+  },
+  {
+   "id": "GAP3-21",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
+   "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
+   "evidence_tests": [
+    "tools/comp1_v3/b2o3_all_bond_lengths.py::67-69,309-317,366-367",
+    "tools/ionic/msd_diffusive_check.py::1076,2399"
+   ],
+   "title": "같은 결합 판정이 한 파일에 **세 벌** — 꼬리에서 bonded/free 가 통째로 반전한다",
+   "note": "`b2o3_all_bond_lengths.py` 안에 `DECOMP_WINDOWS(:67-69)` · `cat_anion(:309-317)` ·\n`:366-367`(하한 없는 컷오프) 셋이 공존한다.  산식은 비트 동일하고 **창 숫자만 다르다**.\n평형 거리에서는 일치하나(픽스처 B-S 3/3 · P-O 1/1 · P-S 1/1) **꼬리에서 완전히 갈린다**:\n열적으로 늘린 프레임에서 DECOMP `{B-S 3, P-O 1, P-S 2}` vs cat_anion `{0,0,0}` — 6결합 전부 반전.\n★ 교차 도구 실측: 동일 좌표 5개 S 에 대해 `classify_sulfur` → bonded 5/free 0,\n  `S_classification(:366-367)` → bonded 0/**free 5** — 범주가 5/5 통째로 뒤집힌다.\n⚠ `msd_diffusive_check.py:1076` 이 traj 창만 빌려 쓰면서 :2399 에서 화면에\n  *\"b2o3_all_bond_lengths 와 동일 규약\"* 이라 찍는다 — 독자는 간행된 결합표(cat_anion) 규약으로 읽는다.\n⚠ 세 docstring 이 약속한 `convention_check` 는 **리포 어디에도 구현돼 있지 않다**.\n⚠ traj/CIF 두 분기가 **같은 기본 `--json` 경로**에 써서 나중 실행이 앞 산출물을 덮는다."
+  },
+  {
+   "id": "GAP3-22",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
+   "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
+   "evidence_tests": [
+    "tools/ionic/msd_diffusive_check.py::725-738,930-931,2088-2090,785-787"
+   ],
+   "title": "`mto_from_traj` 의 세 실패 경로가 **전부 무음** — 오진단이 \"틀린 처방\"으로 보고된다",
+   "note": "`msd_diffusive_check.py:725-726,731-732,737-738` 세 곳 모두 사유를 한 줄도 안 찍고 `return None`.\n형제 `elem_msd_from_traj(:658-681)` 는 같은 세 경로에서 전부 출력한다 = 비대칭.\n파일 전체 `except BaseException` 11곳 중 **완전 무음은 정확히 둘**(:737-738 · :930-931).\n실행 확인: `KeyboardInterrupt` 도 삼켜 **\"MTO 없음\"** 으로 둔갑한다 (`as e` 바인딩조차 없다).\n⛔ 호출부에서 구분 불가 — `_curve` 가 module-missing 과 no-data 양쪽에 `(None, None)` 을 돌려주고,\n  판정 루프 :2088-2090 이 사유를 **JSON 내용만 보고 역추정**해\n  *\"`--mto` 를 빼면 지금 바로 잴 수 있다\"* 는 **행동 가능하지만 틀린 처방**을 낸다.\n★ 이 브랜치에서 **실제 발화 중**이다 — `tools/modelc_v3/` 가 없어 :731-732 가 100 % 탄다.\n  `--selftest` 가 `99 ok, 2 bad` 로 독립 재현한다 (Haven 쪽은 사유가 찍히고 MTO 쪽만 무음).\n⚠ 전례가 같은 파일 :785-787 에 이미 적혀 있다 — 2026-09-07 에 근인은 고쳤으나 **넓은 핸들러는 남았다**."
+  },
+  {
+   "id": "GAP3-FIG",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
+   "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
+   "evidence_tests": [
+    "scripts/plot_mpm_dem_match.py::96",
+    "scripts/plot_tau_regime_si.py::120-121",
+    "scripts/plot_porosity_4panel.py::252-254",
+    "scripts/plot_porosity_v4_paper.py::150"
+   ],
+   "title": "논문 그림 생성기 4개가 **철회된 헤드라인·틀린 n·하드코딩 지표**를 그림에 박는다",
+   "note": "⑤ `plot_mpm_dem_match.py:96` — 제목 `'Furnas dip co-located: DEM vs independent plastic MPM'`.\n   `CLAUDE.md` CORRECTION 2 가 *\"the FURNAS DIP is NOT reproduced … earlier headline was WRONG\"*\n   라고 **명시 철회**한 표현이다.  ★ 그림은 미커밋이고 `.gitignore:20` 이 그 경로를 무시한다.\n⑥ `plot_tau_regime_si.py:120-121` — 그리는 것은 `phi_range**(-2.36)` 인데 범례는 `τ²=φ^{-1.72}`.\n   산출물은 전부 `/tmp` 라 리포 밖이다.\n⑯ `plot_porosity_4panel.py:2,18,252-254` — 제목 `82 cases` 인데 `load()` 를 직접 호출해 세니 **80**\n   (패널 14+15+32+19=80).  **그림이 커밋돼 있고**(`porosity_4panel.png`) 커밋 메시지에도 \"82\" 가 박혔다.\n㉝ `plot_porosity_v4_paper.py:150` — `RMSE 2.27 %p (all 82) / 2.09 %p (trust 80)` 이 **순수 리터럴**이다\n   (파일에 `rmse` 문자열 1건뿐, `out_mask`·\"trust\" 계산 코드 **0건**).  현재 코퍼스로 재현하면\n   N=80 · trust 74 · **RMSE_all 2.292 · RMSE_trust 1.717** — trust 쪽이 22 % 어긋난다.\n   ⚠ 그 캡션이 박힌 그림은 자매 스크립트의 나중 커밋(`1adda925f`)이 같은 경로를 덮어써 **현재 없다**."
+  },
+  {
+   "id": "GAP3-17",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
+   "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
+   "evidence_tests": [
+    "scripts/plot_porosity_v4_journal.py::88-94,206-231"
+   ],
+   "title": "`plot_porosity_v4_journal.py` 의 5-fold CV 가 **전체 최적점 warm-start** 라 판별력이 제한된다",
+   "note": ":222 `minimize(lf, P4, method='L-BFGS-B', options={'maxiter': 100, ...})` — 매 폴드의 시작점 `P4` 가\n**전체 데이터 differential_evolution 최적해**(:88-94 하드코딩)다.  폴드별 refit 은 그 지점에서\n`maxiter=100` 국소 경사법으로만 움직이므로 훈련셋을 바꿔도 P4 에서 크게 벗어나기 어렵다.\n⚠ 이 스크립트의 6-패널 그림이 `docs/figures/porosity_v4_paper_figure.png` 로 **현재 커밋돼 있다**."
+  },
+  {
+   "id": "GAP3-32",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
+   "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
+   "evidence_tests": [
+    "scripts/plot_porosity_binned_mean.py::30-33,47-71,106-107,113-114,188,198"
+   ],
+   "title": "`plot_porosity_binned_mean.py` 가 한 패널에 **두 독립 코드 경로**를 섞는다",
+   "note": "곡선은 import 한 `predict_strict`(고정 `D_AM_P=12/D_AM_S=4/D_SE=1 µm`)를 쓰는데,\n케이스 **선택**(:106-107 `main_regime` 필터)과 **잔차**(:188,198)는 이 파일이 로컬로 재구현한\n`predict_full`(:47-71, 케이스별 **실측 반경**)에서 나온다.  두 함수의 `sfm`·`stress_perc` 는\n수학적으로 같지만 **λ 계산 기반이 다르다**(고정 지름 ↔ 실측 반경).\n⇒ 독자는 하나의 적합으로 읽는다.  그림은 커밋돼 있다 (`porosity_binned_mean.png`)."
+  },
+  {
+   "id": "GAP3-DOC",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
+   "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
+   "evidence_tests": [
+    "docs/session_20260913_progress.md::104",
+    "webapp/templates/worklog.html::23",
+    "webapp/templates/worklog_view.html::70",
+    "이종기술/README.md::38-42",
+    "docs/data/audit_20260909/audit1_ground_truth.md::88",
+    "pipeline/PIPELINE.md::34,126",
+    "skills/dem-analysis-standard.md::93-94"
+   ],
+   "title": "문서·웹앱 7건 — 철회된 서술·거짓 안전 약속·전거 없는 문턱",
+   "note": "⑧ `session_20260913_progress.md:104` 가 hemisphere cap 을 **\"검증됨\"** 이라 적는데, 그 정본\n   `area_contract_20260913.md:52` 가 **같은 날 안에** `AREA-08` 로 철회했다\n   (*\"그 `geometric_coverage` 는 cap 을 바꿔도 출력이 그대로다 ⇒ 식별하는 시험이 아니다\"*).\n㉔ `worklog.html:23`(+`app.py:4191-4192`) 이 독자에게 *\"CI 의 `--ban-sweep` 가 막는다\"* 고 약속하는데,\n   ⛔ `.github/workflows/discipline.yml` 259줄에 **`--ban-sweep` 이 한 번도 없다**.  CI 는\n   `--selftest` 와 무인자 실행만 돌고, 무인자는 원장 자기일관성만 본다.  리포 전체를 훑는 것은\n   `--selftest` 내부 21번 검사뿐이고 그것은 그 이름의 경로가 아니다.\n   ★ `test_worklog_page.py:7` 스스로 *\"여기 검사 아님\"* 이라 적는다.\n㉕ `worklog_view.html:70 {{ body|safe }}` — 출처(`docs/worklog/*.md`·`docs/seminar/*.md`)에서\n   렌더까지 redaction 이 **전혀 없다**.  `/ledger` 는 이미 render-time 검사를 붙였는데 `/worklog` 만 없다.\n㉖ `이종기술/README.md:38-42` — `R_int ≈ 50 Ω·cm²` 의 출처 `eis/fits/summary_means.csv` 가\n   **리포에 없다** (`b22bdb3c2` 가 의도적으로 추적 해제 + `.gitignore:32`).\n   ⚠ 그 값이 README 의 4개 값 평균이라면, 같은 README 캐비어트 #4 가 그중 24 vs 66 을\n   *\"측정오차가 아니라 진짜 계면 열화\"* 라 경고한다 — 서로 다른 물리 상태를 섞은 평균이다.\n   ★ 웹앱 `/hetero` 는 이 값을 **싣지 않도록** 이미 조치했다 (`6c13f19c8`).\n㉘ `audit1_ground_truth.md:88` — `CL-81` 문헌 삼각측량이 `SELF-24`·`L2-07` 로 철회됐는데 표지가 없다.\n   ⚠ 이 파일은 `BAN_ALLOW_ALWAYS` 에 **영구 등재**돼 자동 검사로는 **절대** 안 걸린다.\n㉛ `pipeline/PIPELINE.md:34,126` — 복셀 FEM ↔ DEM 접촉망 비교를 *\"validates Holm/Stage-E\"* 라 적는데,\n   `CL-81` 이 복셀 FV 는 harmonic-mean 이라 **협착 항이 정확히 0**(CONTACT_FREE 가지)임을 확정했다.\n   그 파일에 \"CL-81\"·\"CONTACT_FREE\"·\"협착\" 문자열 **0건**.\n㉟ `skills/dem-analysis-standard.md:93-94` — `SE-SE CN > 2.4` · `SE percolation > 70 %` 에 **출처가 없고**\n   리포 정본과 충돌한다: `CLAUDE.md` 는 `CN=2.7` 을 *\"below typical percolation threshold\"* 로 보고,\n   `literature_coverage/README.md:673-693` 의 세 앵커(0.13 · 0.36 · 0.65) 중 어느 것도 70 % 가 아니다.\n   ⚠ 이 문서가 참조하는 스크립트 7개 중 **5개가 리포에 없다** = 구버전 템플릿일 가능성."
   }
  ]
 }
