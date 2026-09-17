@@ -1,0 +1,20 @@
+# pure-SE Heckel 원자료 **외부 보관** 매니페스트 (2026-09-17, 원장 `GAP3-01`)
+#   원자료는 리포에 두지 않는다 — 저자 보관처에 있고 이 표가 **위치와 지문**을 등록한다.
+#   같은 규약을 `docs/data/area_s2_cohort.tsv` 가 LHS 에 이미 쓴다.
+#   ⚠ 보관 경로는 **저자 기계 로컬**이라 제3자가 따라갈 수 없다 — 이 표가 닫는 것은
+#     *내부* 보관 사슬이지 제3자 재현이 아니다.  재현 절차는 RESULT.md 와
+#     verify_heckel.py 에 있고, 파일을 받은 사람은 아래 sha256 으로 **동일성**을 확인한다.
+#   ⚠ 보관 위치(archive_path)는 저자가 확정하면 이 파일에 채운다 — 지금은 비워 둔다.
+P_MPa,kind,filename,step,bytes,sha256,archive_path
+100,atom,atom_1230000.liggghts,1230000,5410731,7e75c40b861b6b51c144f6d906f0bf8082aa9ed7e21fd205c33e9d77f0b05d92,
+100,deck,input_SE_heckel_100.liggghts,,5785,d876ded6ffcf8994aaedf077de3d4cda6546ffbfc5d279548881f0497c6906fa,
+100,mesh,mesh_1230000.stl,1230000,355,d16f8448c44aa9a15b89fff9e0fd0a0ef8bba38c90a7bdefedb4b260deb146b0,
+200,atom,atom_1450000.liggghts,1450000,5414991,489b0308e2c9360c81bccdee221a40d76e2c82d792e68e4cda56ebbf83bcf462,
+200,deck,input_SE_heckel_200.liggghts,,5785,0df5a66a0c06cd858a1d828f41e3fd9c1366483c02b0f30841cabb157aa58db2,
+200,mesh,mesh_1450000.stl,1450000,361,86bcfaa865fbf612485fcd2633603beeed788070420588c662d4397f82408a55,
+300,atom,atom_1600000.liggghts,1600000,5422904,c076a52597979e9a7001613d836e3cdb2be55f5e1dd716dbed3d694e20cd7f3a,
+300,deck,input_SE_heckel_300.liggghts,,5785,9b922addbe3883fd4c7774b6a72632d8de8a882dfbc88598fe974375b629cdaf,
+300,mesh,mesh_1600000.stl,1600000,361,ed4e8b84a52eb5f5d9591da6ca1364d95234aaaebabf9b7def56c6a78c9e8beb,
+400,atom,atom_1710000.liggghts,1710000,5414236,2eba11fd5db0e7583091be690e72cc392635627070ef1627710ee9e84142d499,
+400,deck,input_SE_heckel_400.liggghts,,5785,0d188e0ff4740aef31921584166a020ecaad6e16dc79ca346c73402d3f26a334,
+400,mesh,mesh_1710000.stl,1710000,361,333ddecdb9aee13120dc04aca09ddeb7c01a6e26ba89fe5324616dd7892c4b69,
