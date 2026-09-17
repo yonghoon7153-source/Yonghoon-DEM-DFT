@@ -1,0 +1,290 @@
+{
+  "source_csv": "db/properties/cei_figs/cei_x_scan_panels.csv",
+  "base_electrolyte": "modelc",
+  "rows": [
+    {
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "n_atoms": 6.6586,
+      "P_to_phosphate": 0.3165,
+      "P_per_atom": 0.047533,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.0,
+      "hosts": [
+        "Li3PO4"
+      ]
+    },
+    {
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "n_atoms": 6.6586,
+      "P_to_phosphate": 0.3165,
+      "P_per_atom": 0.047533,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.0,
+      "hosts": [
+        "Li3PO4"
+      ]
+    },
+    {
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "n_atoms": 6.1294,
+      "P_to_phosphate": 0.2535,
+      "P_per_atom": 0.041358,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.0,
+      "hosts": [
+        "Li3PO4"
+      ]
+    },
+    {
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "n_atoms": 6.1865,
+      "P_to_phosphate": 0.2603,
+      "P_per_atom": 0.042075,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.0,
+      "hosts": [
+        "Li3PO4"
+      ]
+    },
+    {
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "n_atoms": 6.7006,
+      "P_to_phosphate": 0.3216,
+      "P_per_atom": 0.047996,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.0,
+      "hosts": [
+        "Li4P2O7"
+      ]
+    },
+    {
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "n_atoms": 6.1487,
+      "P_to_phosphate": 0.2558,
+      "P_per_atom": 0.041602,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.041795,
+      "hosts": [
+        "Mn2P2O7"
+      ]
+    },
+    {
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "n_atoms": 6.1664,
+      "P_to_phosphate": 0.258,
+      "P_per_atom": 0.04184,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.0,
+      "hosts": [
+        "Li4P2O7"
+      ]
+    },
+    {
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "n_atoms": 6.0362,
+      "P_to_phosphate": 0.24236,
+      "P_per_atom": 0.040151,
+      "covered_P_frac": 0.6874,
+      "predicted_dE_per_atom": 0.0,
+      "hosts": [
+        "Li4P2O7",
+        "LiMnPO4"
+      ]
+    },
+    {
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "n_atoms": 6.7451,
+      "P_to_phosphate": 0.3268,
+      "P_per_atom": 0.04845,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.039916,
+      "hosts": [
+        "LiPO3"
+      ]
+    },
+    {
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "n_atoms": 7.36,
+      "P_to_phosphate": 0.4,
+      "P_per_atom": 0.054348,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.083983,
+      "hosts": [
+        "Mn(PO3)2"
+      ]
+    },
+    {
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "n_atoms": 6.0488,
+      "P_to_phosphate": 0.244,
+      "P_per_atom": 0.040339,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.070643,
+      "hosts": [
+        "Ni(PO3)2"
+      ]
+    },
+    {
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "n_atoms": 6.0488,
+      "P_to_phosphate": 0.2439,
+      "P_per_atom": 0.040322,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.065465,
+      "hosts": [
+        "Ni(PO3)2",
+        "Mn(PO3)2"
+      ]
+    },
+    {
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "n_atoms": 7.2836,
+      "P_to_phosphate": 0.39088,
+      "P_per_atom": 0.053666,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.116167,
+      "hosts": [
+        "CoP4O11"
+      ]
+    },
+    {
+      "cathode": "LiMnO2",
+      "voltage_V": 4.0,
+      "n_atoms": 7.36,
+      "P_to_phosphate": 0.4,
+      "P_per_atom": 0.054348,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.083983,
+      "hosts": [
+        "Mn(PO3)2"
+      ]
+    },
+    {
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "n_atoms": 6.1916,
+      "P_to_phosphate": 0.2608,
+      "P_per_atom": 0.042122,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.073765,
+      "hosts": [
+        "Ni(PO3)2"
+      ]
+    },
+    {
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "n_atoms": 7.0358,
+      "P_to_phosphate": 0.36152,
+      "P_per_atom": 0.051383,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.086246,
+      "hosts": [
+        "Ni(PO3)2",
+        "Mn(PO3)2"
+      ]
+    },
+    {
+      "cathode": "LiCoO2",
+      "voltage_V": 4.3,
+      "n_atoms": 7.5372,
+      "P_to_phosphate": 0.4212,
+      "P_per_atom": 0.055883,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.120965,
+      "hosts": [
+        "CoP4O11"
+      ]
+    },
+    {
+      "cathode": "LiMnO2",
+      "voltage_V": 4.3,
+      "n_atoms": 11.0535,
+      "P_to_phosphate": 0.10688,
+      "P_per_atom": 0.009669,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.014942,
+      "hosts": [
+        "Mn(PO3)2"
+      ]
+    },
+    {
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "n_atoms": 7.0358,
+      "P_to_phosphate": 0.3614,
+      "P_per_atom": 0.051366,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.089954,
+      "hosts": [
+        "Ni(PO3)2"
+      ]
+    },
+    {
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "n_atoms": 7.1928,
+      "P_to_phosphate": 0.38012,
+      "P_per_atom": 0.052847,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.101563,
+      "hosts": [
+        "MnP4O11",
+        "Ni(PO3)2"
+      ]
+    },
+    {
+      "cathode": "LiCoO2",
+      "voltage_V": 4.5,
+      "n_atoms": 7.5372,
+      "P_to_phosphate": 0.4212,
+      "P_per_atom": 0.055883,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.120965,
+      "hosts": [
+        "CoP4O11"
+      ]
+    },
+    {
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "n_atoms": 7.0358,
+      "P_to_phosphate": 0.3614,
+      "P_per_atom": 0.051366,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.089954,
+      "hosts": [
+        "Ni(PO3)2"
+      ]
+    },
+    {
+      "cathode": "NMC811",
+      "voltage_V": 4.5,
+      "n_atoms": 7.2836,
+      "P_to_phosphate": 0.39088,
+      "P_per_atom": 0.053666,
+      "covered_P_frac": 1.0,
+      "predicted_dE_per_atom": 0.110813,
+      "hosts": [
+        "NiP4O11",
+        "MnP4O11"
+      ]
+    }
+  ],
+  "⛔": "모형 예측이다 (Nd 가 그 P 를 전부 가져간다고 가정 — 상한). 교환값 없는 상은 빼지 않고 covered_P_frac 으로 보고한다. 최소 꺾임만.",
+  "exchange_record": "db/properties/cei_tm_exchange_2026_09_17.json",
+  "n_exchange_phases": 10
+}

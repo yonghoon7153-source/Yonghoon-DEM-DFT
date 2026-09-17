@@ -481,6 +481,33 @@ def _selftest():
         "[음성] 수지가 안 맞으면(우변 TM 이 더 많으면) accounted 로 **그대로 보고**한다 "
         "— 조용히 1 로 정규화해 숨기지 않는다")
 
+    _f4, _p4 = _tf.mkstemp(suffix=".csv"); _os.close(_f4)
+    Path(_p4).write_text(
+        "cathode,electrolyte,voltage_V,x_atomic_frac,is_minimum,reaction\n"
+        "C,modelc,4.5,0.5,1,0.5 LiCoO2 + 0.5 P1 -> 0.2 Li3PO4 + 0.3 Ni(PO3)2\n"
+        "C,modelc,4.5,1.0,1,X -> 0.2 Li3PO4\n", encoding="utf-8")   # 끝점 — 빠진다
+    _X = {"Li3PO4": +1.5035, "Ni(PO3)2": -1.7512}
+    _P = p_flux(_p4, _X); _os.unlink(_p4)
+    chk(len(_P["rows"]) == 1, "[음성] 끝점 행은 예측에서 빠진다")
+    _r4 = _P["rows"][0]
+    chk(abs(_r4["P_to_phosphate"] - 0.8) < 1e-9,
+        "인산염으로 간 P = 0.2*1 + 0.3*2 = 0.8 (괄호 곱수가 걸린다)")
+    chk(abs(_r4["predicted_dE_per_atom"] - (0.6 * 1.7512) / _r4["n_atoms"]) < 1e-6,
+        "[음성] **음수 교환만** 이득으로 센다 — Li3PO4(+1.50)는 0 으로 기여한다")
+    chk(_r4["covered_P_frac"] == 1.0, "교환값이 다 있으면 covered = 1")
+    _f5, _p5 = _tf.mkstemp(suffix=".csv"); _os.close(_f5)
+    Path(_p5).write_text(
+        "cathode,electrolyte,voltage_V,x_atomic_frac,is_minimum,reaction\n"
+        "C,modelc,4.5,0.5,1,0.5 LiCoO2 + 0.5 P1 -> 0.5 P2S7 + 0.3 Ni(PO3)2\n",
+        encoding="utf-8")
+    _P5 = p_flux(_p5, _X)
+    _P6 = p_flux(_p5, {})          # ⚠ 지우기 전에 두 번 읽는다 (앞판은 지우고 또 읽었다)
+    _os.unlink(_p5)
+    chk(abs(_P5["rows"][0]["P_to_phosphate"] - 0.6) < 1e-9,
+        "[음성] P2S7 은 인산염이 아니다 — P 흐름에 안 센다 (O 가 없다)")
+    chk(_P6["rows"][0]["covered_P_frac"] == 0.0,
+        "[음성] 교환값이 없으면 covered 0 으로 **보고**한다 (조용히 빼지 않는다)")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -743,6 +770,76 @@ def tm_fate(csv_path, tms=TM_DEFAULT):
                  "소모 행선지를 읽는다. 황화물도 양극 소모다. 최소 꺾임 하나만 본다."}
 
 
+def p_flux(csv_path, exchange, base="modelc", n_p_per_fu=None):
+    """Fig. 1 의 Δ 를 **예측**해 본다 — 양 x 이득 / 원자수.
+
+    가설: Nd 의 이득은 *"인산염 경로로 간 P 하나당 교환 이득"* x *"그런 P 가 몇 개냐"* 다.
+    교환 이득(`exchange`)은 이미 쟀고 4.0 V 위에서 포화한다. 그러면 Δ 가 계속 커지는 것은
+    **양**이 커져야 설명된다. 그 양을 여기서 센다.
+
+        predicted_dE_per_atom = sum_over(P-수용상) n_P x |ΔE_exchange| / n_atoms(반응식)
+
+    · 무도핑 반응식의 P 수용상을 쓴다 — Nd 가 **대신 가져갔을** P 다.
+    · n_atoms 는 그 반응식 좌변의 총 원자수다 (Fig. 1 의 eV/atom 과 같은 분모).
+    · 교환값이 없는 상은 **빼지 않고 세어 보고한다** (covered_P_frac) — 조용히 0 으로
+      치면 예측이 낮게 나오고 그게 "안 맞는다" 로 읽힌다.
+
+    ⛔ 이 함수가 못 하는 것
+      · 이것은 **모형 예측**이지 hull 계산이 아니다. 맞으면 기전이 그럴듯하다는 뜻이고,
+        틀리면 기전이 빠진 게 있다는 뜻이다. 어느 쪽도 hull 값을 대체하지 않는다.
+      · Nd 가 실제로 그 P 를 전부 가져간다고 **가정**한다 (상한이다).
+      · 최소 꺾임 하나만 본다.
+    """
+    import csv as _csv
+    rows = []
+    with open(csv_path, encoding="utf-8") as fh:
+        for r in _csv.DictReader(fh):
+            if (str(r.get("is_minimum", "")).strip() not in ("1", "True", "true")
+                    or r["electrolyte"] != base or "->" not in r.get("reaction", "")):
+                continue
+            try:
+                x = float(r.get("x_atomic_frac", "nan"))
+            except ValueError:
+                x = None
+            if is_endpoint(x):
+                continue
+            rxn = r["reaction"]
+            n_atoms = 0.0
+            for t in rxn.split("->", 1)[0].split("+"):
+                m = re.match(r"^\s*([0-9]*\.?[0-9]+)?\s*([A-Za-z0-9().]+)\s*$", t)
+                if not m:
+                    continue
+                n = float(m.group(1)) if m.group(1) else 1.0
+                n_atoms += n * sum(parse_formula(m.group(2)).values())
+            gain, p_tot, p_cov, hosts = 0.0, 0.0, 0.0, []
+            for t in rxn.split("->", 1)[1].split("+"):
+                m = re.match(r"^\s*([0-9]*\.?[0-9]+)?\s*([A-Za-z0-9().]+)\s*$", t)
+                if not m:
+                    continue
+                n = float(m.group(1)) if m.group(1) else 1.0
+                f = m.group(2)
+                c = parse_formula(f)
+                nP = n * c.get("P", 0.0)
+                if nP <= 0 or c.get("O", 0) <= 0:      # 인산염만 (P–S·P–Cl 은 다른 경로다)
+                    continue
+                p_tot += nP
+                hosts.append(f)
+                if f in exchange:
+                    p_cov += nP
+                    gain += nP * max(0.0, -exchange[f])   # 음수(Nd 이김)만 이득이다
+            rows.append({"cathode": r["cathode"], "voltage_V": float(r["voltage_V"]),
+                         "n_atoms": round(n_atoms, 4),
+                         "P_to_phosphate": round(p_tot, 6),
+                         "P_per_atom": round(p_tot / n_atoms, 6) if n_atoms else None,
+                         "covered_P_frac": round(p_cov / p_tot, 4) if p_tot else None,
+                         "predicted_dE_per_atom": round(gain / n_atoms, 6) if n_atoms else None,
+                         "hosts": hosts})
+    rows.sort(key=lambda d: (d["voltage_V"], d["cathode"]))
+    return {"source_csv": str(csv_path), "base_electrolyte": base, "rows": rows,
+            "⛔": "모형 예측이다 (Nd 가 그 P 를 전부 가져간다고 가정 — 상한). "
+                 "교환값 없는 상은 빼지 않고 covered_P_frac 으로 보고한다. 최소 꺾임만."}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--electrolytes", nargs="+",
@@ -761,6 +858,15 @@ def main():
     ap.add_argument("--voltages", nargs="+", type=float,
                     default=[2.5, 3.0, 3.5, 4.0, 4.3])
     ap.add_argument("--out", default="interface_reactivity_v2.json")
+    ap.add_argument("--p_flux", metavar="PANELS_CSV",
+                    help="Fig. 1 의 Δ 를 '양 x P당 교환이득 / 원자수' 로 예측해 본다 "
+                         "(--exchange 로 교환 레코드를 준다)")
+    ap.add_argument("--exchange", metavar="JSON",
+                    default="db/properties/cei_tm_exchange_2026_09_17.json",
+                    help="--p_flux 가 쓸 교환에너지 레코드")
+    ap.add_argument("--ladder_csv", metavar="CSV",
+                    default="db/properties/cei_figs/cei_li_budget_ladder.csv",
+                    help="Li 쪽 교환에너지 (§3 사다리) — --exchange 와 합친다")
     ap.add_argument("--tm_fate", metavar="PANELS_CSV",
                     help="양극 전이금속이 인산염/황화물 중 어디로 갔는지 (좌변 TM 으로 정규화)")
     ap.add_argument("--p_host_ladder", metavar="PANELS_CSV",
@@ -769,6 +875,29 @@ def main():
     if "--selftest" in __import__("sys").argv:
         raise SystemExit(_selftest())
     a = ap.parse_args()
+    if a.p_flux:
+        import csv as _c
+        E = json.loads(Path(a.exchange).read_text(encoding="utf-8"))
+        dE = {k.split(",")[0]: v["E_eV_per_P"]
+              for k, v in E["reactions"].items() if v.get("ok")}
+        with open(a.ladder_csv, encoding="utf-8") as fh:
+            for row in _c.reader(fh):
+                if len(row) >= 5 and row[0] and row[0] != "donor_phosphate":
+                    dE.setdefault(row[0], float(row[3]))
+        out = p_flux(a.p_flux, dE)
+        out["exchange_record"] = a.exchange
+        out["n_exchange_phases"] = len(dE)
+        Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+        import statistics as _st
+        print(f'{len(out["rows"])} 조건 · 교환값 {len(dE)} 상 → {a.out}')
+        print(f'{"V":>5} | {"P/atom":>8} | {"covered":>8} | {"예측 Δ (상한)":>13}')
+        for V in sorted({r["voltage_V"] for r in out["rows"]}):
+            rs = [r for r in out["rows"] if r["voltage_V"] == V]
+            cv = [r["covered_P_frac"] for r in rs if r["covered_P_frac"] is not None]
+            print(f'{V:5.1f} | {_st.mean(r["P_per_atom"] for r in rs):8.4f} | '
+                  f'{(_st.mean(cv) if cv else 0):8.0%} | '
+                  f'{_st.mean(r["predicted_dE_per_atom"] for r in rs):13.4f}')
+        return 0
     if a.tm_fate:
         out = tm_fate(a.tm_fate)
         Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
