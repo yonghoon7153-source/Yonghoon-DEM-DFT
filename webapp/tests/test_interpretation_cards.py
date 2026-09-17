@@ -568,41 +568,46 @@ def test_s2_ladder_decision_is_registered_and_not_silently_active():
     assert Path(d["record"]).name == LADDER_JSON.name, "record 가 실제 레코드를 안 가리킨다"
 
 
-def test_fig2_endpoint_defect_is_disclosed(client):
-    """⛔음성 — Fig. 2 가 끝점 퇴화 칸을 센다는 사실이 화면에서 빠지면 잡는다.
+def test_old_fig2_bar_count_does_not_come_back(client):
+    """⛔음성 — 지운 옛 Fig. 2 (양극 개수 막대 집계) 가 되돌아오면 잡는다.
 
-    빠지면 독자는 4.5 V 주황 막대를 계면 반응으로 읽는다 (실제로는 x=1 자체분해다).
+    그 그림은 **끝점 퇴화 칸을 세는 결함**을 가진 채로 발행돼 있었다
+    (modelc@4.5V/LiMnO2 는 x=1.0 자체분해인데 P2S7 1 건으로 세어졌다).
+    2026-09-17 에 지우고 사다리 그림이 Fig. 2 번호를 승계했다. 되돌아오면
+    그 결함도 같이 돌아온다.
     """
     h = _report_html(client)
-    i = h.find("Fig. 2 를 읽는 법")
-    assert i > 0, "Fig. 2 설명 상자를 못 찾았다"
-    blk = h[i:h.index("<h3", i)]
-    assert "끝점 퇴화 칸을 거르지 않는다" in blk, "Fig. 2 의 끝점 결함이 화면에 없다"
-    assert "x = 1.0" in blk, "어느 칸이 끝점인지 안 밝힌다"
-    assert "4.3 V 한 칸만" in blk, "그래서 몇 칸이 유효한지 안 말한다"
+    assert "cei_nd_phosphate_sink" not in h, \
+        "지운 옛 Fig. 2 가 화면에 다시 들어왔다 (끝점 결함째로)"
+    assert not (REPORT.parent / "cei_nd_phosphate_sink.png").exists(), \
+        "옛 그림 파일이 되살아났다"
+    gen = (REPORT.parents[3] / "tools/figures/plot_cei_nd_o_decomposition.py").read_text("utf-8")
+    assert "nd_phosphate_sink" not in gen, "생성기가 옛 그림을 다시 만든다"
+    # 번호는 사다리 그림이 가져갔다
+    assert "Fig. 2. Where the phosphorus goes" in h, "Fig. 2 번호 승계가 안 돼 있다"
 
 
-# ── Fig. 2b (2026-09-17) ─────────────────────────────────────────────────────
-FIG2B_CSV = REPORT.parent / "cei_p_host_ladder_fig.csv"
+# ── Fig. 2 = P 수용상 사다리 (2026-09-17 교체) ─────────────────────────────────────────────────────
+FIG2_CSV = REPORT.parent / "cei_p_host_ladder_fig.csv"
 
 
-def test_fig2b_image_is_served(client):
+def test_fig2_ladder_image_is_served(client):
     """양성 — 그림이 참조돼 있고 실제로 200 으로 나온다."""
     h = _report_html(client)
-    assert 'src="cei_p_host_ladder.png"' in h, "Fig. 2b 가 화면에 없다"
+    assert 'src="cei_p_host_ladder.png"' in h, "Fig. 2 (사다리) 가 화면에 없다"
     r = client.get(LOCAL_REPORT.rsplit("/", 1)[0] + "/cei_p_host_ladder.png")
     assert r.status_code == 200 and len(r.data) > 20000, \
         f"그림이 안 나온다 ({r.status_code}, {len(r.data)} B)"
 
 
-def test_fig2b_quoted_share_matches_the_csv(client):
+def test_fig2_ladder_quoted_share_matches_the_csv(client):
     """⛔음성 — 막대 높이를 **눈으로 읽어** 적으면 잡는다.
 
     실제로 첫 판에 "7–13 %" 라고 적었고 CSV 는 10.5 / 14.3 이었다.
     화면이 인용한 범위는 CSV 의 P–S(무도핑) 값을 감싸야 한다.
     """
     import csv as _csv
-    vals = [float(r[4]) for r in _csv.reader(FIG2B_CSV.open(encoding="utf-8"))
+    vals = [float(r[4]) for r in _csv.reader(FIG2_CSV.open(encoding="utf-8"))
             if len(r) == 5 and r[0] == "b" and r[2] == "no_Nd" and r[3].startswith("P–S")]
     assert vals, "CSV 에서 P–S 비율을 못 읽었다 — 시험이 헛것을 재고 있다"
     h = _report_html(client)
@@ -616,11 +621,11 @@ def test_fig2b_quoted_share_matches_the_csv(client):
         f"반올림으로 범위를 부풀렸다: 화면 {lo}–{hi} vs 실측 {min(vals):.1f}–{max(vals):.1f}"
 
 
-def test_fig2b_caption_says_price_not_amount(client):
+def test_fig2_ladder_caption_says_price_not_amount(client):
     """⛔음성 — 세로축을 '풀려난 P 의 양' 으로 읽으면 이 그림이 안 한 말을 하게 된다."""
     h = _report_html(client)
-    i = h.find("Fig. 2b. Where the phosphorus goes")
-    assert i > 0, "Fig. 2b 캡션을 못 찾았다"
+    i = h.find("Fig. 2. Where the phosphorus goes")
+    assert i > 0, "Fig. 2 캡션을 못 찾았다"
     cap = h[i:h.index("</figcaption>", i)]
     assert "not an amount" in cap, "세로축이 양이 아니라는 한정이 캡션에 없다"
     assert "coefficients are not read" in cap, "계수를 안 본다는 근거가 없다"

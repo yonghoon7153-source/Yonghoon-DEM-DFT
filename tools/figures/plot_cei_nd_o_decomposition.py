@@ -4,7 +4,7 @@
 
   | 절 | 소스 |
   |---|---|
-  | §1 분해 · §2 왜 고전압에서 Nd | index.html |
+  | §1 분해 · §2 왜 고전압에서 Nd | index.html (§2 의 Fig. 2 는 plot_cei_p_host_ladder.py) |
   | **§3 검증** | **이 파일** (아래 `<h2 id="s3">`) |
   | **§4 전 혼합범위 스캔** | **이 파일** |
   | §5 다른 3가 도펀트 | **본문은 index.html · 그림(Fig 6)만 이 파일** |
@@ -94,51 +94,23 @@ with open(OUT / "cei_nd_o_decomposition.csv", "w", newline="") as f:
                     round(st.mean(dt[V]), 5), round(st.mean(dn[V]) + st.mean(do[V]), 5),
                     round(st.mean(res[V]), 5), round(min(res[V]), 5), round(max(res[V]), 5), len(dn[V])])
 
-# ── Fig 2: 기전 — Nd phosphate sink vs P2S7 ─────────────────────────────
+# ── 산물 판정에 쓰는 집합·파서 (Fig 4b·5·8 과 §5 센서스가 같이 쓴다) ─────────
+#   ⛔ 옛 Fig 2 (양극 4 종 중 몇 개에서 Nd 인산염/P2S7 이 나오나, 막대 집계) 를
+#     2026-09-17 에 **삭제했다** (1저자 지시 "교체한것만 남겨줘").
+#     지운 이유 넷 — ① 세로축이 4 단계 카운트라 해상도가 없고 3.5–4.0 V 하락이
+#     "Nd 가 쉰다" 로 오독됐다 ② 두 갈래만 세어 실제 주 행선지인 **전이금속 인산염**이
+#     그림에서 빠졌다 ③ 노란 막대(Nd 계 P2S7)가 전 구간 0 인데 범례 한 칸을 썼다
+#     ④ **끝점 퇴화 칸을 안 걸렀다** — modelc@4.5V/LiMnO2 는 x=1.0 자체분해인데
+#     P2S7 1 건으로 세어졌다 (같은 계열의 product_census() 는 2026-09-16 에 이미
+#     그 필터를 넣었고 이 그림만 빠져 있었다).
+#     대체: Fig. 2 = tools/figures/plot_cei_p_host_ladder.py (P 수용상 Li/P 사다리 +
+#     행선지 100 % 스택). 번호는 2 를 승계했다.
+#   ⚠ 여기서 BAD 와 count() 도 같이 지웠다 — 그 둘은 옛 Fig 2 에서만 쓰였다.
+#     SINK 와 prods() 는 아래 그림들이 계속 쓰므로 남긴다.
 SINK = {"NdPO4", "Nd(PO3)3", "NdP5O14", "LiNd(PO3)4"}
-BAD = {"P2S7"}
 def prods(r):
     return {re.sub(r"^[0-9.eE+-]+\s+", "", t.strip())
             for t in r.split("->", 1)[1].split("+") if t.strip()}
-def count(e, V, S):
-    n = 0
-    for c in CATS:
-        rx = D["results"][c]["reactions"][f"{V:.2f}"].get(e)
-        if rx and (prods(rx) & S): n += 1
-    return n
-
-fig, ax = plt.subplots(figsize=(7.0, 4.2))
-# ⚠ 전압을 실좌표로 쓰면 4.30/4.50 이 0.2 밖에 안 떨어져 막대가 겹친다 → **범주형 위치**
-xs = list(range(len(VS)))
-w = 0.2
-for i, (e, S, col, lab, hatch) in enumerate((
-        ("modelc_nd", SINK, ND, "LPSCl$_{1.6}$@Nd$_2$O$_3$ : Nd-phosphate", None),
-        ("nd_only", SINK, "#a78bfa", "Nd only : Nd-phosphate", None),
-        ("modelc", BAD, "#c05621", "LPSCl$_{1.6}$ : P$_2$S$_7$ formed", "//"),
-        ("modelc_nd", BAD, "#fbbf24", "LPSCl$_{1.6}$@Nd$_2$O$_3$ : P$_2$S$_7$", "//"))):
-    ax.bar([x + (i - 1.5) * w for x in xs], [count(e, V, S) for V in VS],
-           width=w, color=col, label=lab, hatch=hatch, edgecolor="white", lw=0.6)
-apply_axes(ax, "Voltage (V vs Li/Li$^+$)", "Cathodes showing the phase (of 4)")
-ax.set_xticks(xs); ax.set_xticklabels([f"{v:g}" for v in VS])
-ax.set_yticks(range(5)); ax.set_ylim(0, 4.9)
-ax.legend(frameon=False, fontsize=8, ncol=2, loc="upper center")
-# 이름이 길어지면서 옛 자리(3.4, 1.45)가 4.3 V 막대를 덮었다. 화살표도 뺐다 —
-# 가리킬 대상이 **높이 0 인 막대**라 어디로 그어도 다른 막대를 가로지른다.
-# 범례에 노랑 항목이 있고 본문이 "전부 0" 이라 말하므로 화살표가 할 일이 없다.
-ax.text(1.55, 3.45, "LPSCl$_{1.6}$@Nd$_2$O$_3$ never forms P$_2$S$_7$\n"
-                    "(the yellow bars are all zero)",
-        fontsize=8, color="#92400e", va="top")
-ax.set_title("P is captured as Nd-phosphate instead of P$_2$S$_7$",
-             fontsize=10, color=INK, pad=8)
-fig.tight_layout(); fig.savefig(OUT / "cei_nd_phosphate_sink.png", dpi=300); plt.close(fig)
-
-with open(OUT / "cei_nd_phosphate_sink.csv", "w", newline="") as f:
-    w2 = csv.writer(f)
-    w2.writerow(["voltage_V", "electrolyte", "n_cathodes_with_Nd_phosphate",
-                 "n_cathodes_with_P2S7", "n_cathodes_total"])
-    for V in VS:
-        for e in ("modelc", "lpsocl", "nd_only", "modelc_nd"):
-            w2.writerow([V, e, count(e, V, SINK), count(e, V, BAD), len(CATS)])
 
 # ── Fig 3: 양극별 절대 반응E ─────────────────────────────────────────────
 fig, axs = plt.subplots(1, 4, figsize=(13.0, 3.5), sharey=True)
