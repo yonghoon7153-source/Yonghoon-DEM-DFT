@@ -11,7 +11,7 @@
 #     없으면 LIGGGHTS 가 z 를 쪼개고, 삽입 영역이 한 proc 에만 걸려
 #     **입자가 0 개** 들어간다 (원장 `PS-01` 둘째 원인).
 #     ⛔ 랭크는 **2 이하**만 검증됐다 — 4·10 은 부분 삽입이 난다.
-#   ⚠ 예외 하나 — `maxattempt` 15,000 → 400,000 (원본과 다르다).
+#   ⚠ 예외 하나 — `maxattempt` 15,000 → 10,000 (원본과 다르다).
 #     원본 값으로는 이 빌드에서 **입자가 0 개 삽입**된다 (원장 `PS-01`).
 #     예산은 입자당이 아니라 삽입 **전체**라 예상 입자수 162,095 에 비례해야 한다.
 #   이종기술 6 mAh/cm² 재런 (2026-09-14 랩 사양표) — 4/21 세대 대비 AM_P 반지름 6.0 → 4.5 µm 만 변경.
@@ -117,12 +117,20 @@ region reg_mix block 0.0 0.05 0.0 0.05 0.005 0.30 units box
 
 print "====== INSERTING PARTICLES (PS_3_7_R45: P:S=3:7, 81.6:18.4, 6mAh) ====="
 fix ins_mix all insert/pack seed 46200043 distributiontemplate pdd_mix &
-    maxattempt 400000 insert_every once overlapcheck yes all_in no &
+    maxattempt 10000 insert_every once overlapcheck yes all_in no &
     vel constant 0.0 0.0 -0.5 &
     region reg_mix &
     volumefraction_region 0.321
 run 1
 unfix ins_mix
+
+# ── 삽입 자기검사 (원장 `PS-01` · 감사 GAP high) ──
+#   부분 삽입 침대는 조성이 달라 **다른 물건**이다 — 완주시키지 않는다.
+variable n_ins equal count(all)
+print "====== INSERTED ${n_ins} / 162095 (floor 160474 = 99%) ======"
+if "${n_ins} < 160474" then &
+    "print 'FATAL: partial insertion - bed composition differs (PS-01). aborting.'" &
+    "quit 1"
 
 # --- 8. Output ---
 shell mkdir post_ps_3_7_r45

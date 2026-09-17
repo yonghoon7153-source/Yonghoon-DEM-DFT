@@ -54,6 +54,7 @@ RE_DENS = re.compile(r'density\s+constant\s+([0-9.eE+-]+)')
 RE_RAD = re.compile(r'radius\s+constant\s+\$\{(\w+)\}')
 RE_MAXATT = re.compile(r'(maxattempt\s+)(\d+)')
 RE_REGBOX = re.compile(r'^region\s+reg_box\s+block\b', re.M)
+RE_UNFIX_INS = re.compile(r'^unfix\s+ins_mix\s*$', re.M)
 
 #: ★★ 2026-09-15 (`PS-01` 둘째 원인) — **MPI 분해 축**.  박스가 0.05 × 0.05 × **1.01 m** 로
 #   z 로 극단적으로 길어서 LIGGGHTS 가 z 를 쪼갠다 (`1 by 1 by P`).  삽입 영역은 z 0.005–0.30
@@ -77,24 +78,28 @@ PROC_GRID = 'processors * * 1'
 #   ⛔ 부분 삽입(10 % 빠진 침대)은 조성이 달라 **다른 물건**이다 — 폐기 대상.
 MPI_VERIFIED_MAX = 2
 
-#: ★★ 2026-09-15 (`PS-01`) — `maxattempt` 는 **입자당이 아니라 삽입 전체의 시도 예산**이다.
-#   원본 덱의 15,000 으로 159,167 개를 넣으라고 하면 입자당 0.094 회 — 한 번씩 시도해 볼
-#   수조차 없어서 LIGGGHTS 가 배치를 통째로 포기하고 **0 개**를 넣는다.  그러면 뒤에서
-#   `compute reduce max z` 가 빈 그룹에 `-1e20` 을 돌려주고 플래튼이 거기 생겨 죽는다.
-#   실측 (ibb, LIGGGHTS-PUBLIC 3.8.0 / 2026-03-26 빌드, `ps_10_0_r45`):
-#       maxattempt  15,000 · 요청 159,167 →        0 개  ⛔
-#       maxattempt  15,000 · 요청     100 →      100 개  ✓   (기계는 멀쩡하다)
-#       maxattempt 200,000 · 요청 159,167 →  159,167 개  ✓
-#   ⇒ 예상 입자수에 **비례**해 잡는다.  아래 둘이 규약이다.
-#   ⚠ **참 문턱은 모른다.**  아는 것은 두 점뿐이다 —
-#       0.094배 (15,000 / 159,167)  → 실패
-#       1.2566배 (200,000 / 159,167) → 성공
-#     금지선은 **통과가 확인된 비보다 낮게** 둔다 (알려진-정상을 거부하지 않기 위해).
-#     실제로 방출하는 값은 기본 3배라 여유가 따로 있다.  ⛔ 1.2 를 *"충분 조건"* 으로
-#     읽지 말 것 — 그 아래가 확실히 실패라는 뜻이지, 그 위가 확실히 성공이라는 뜻이 아니다.
-MAXATT_MIN_FACTOR = 1.2      # 방출 금지선 — 이 배수 미만이면 **거부**한다 (증거 기반 하한)
-MAXATT_DEFAULT_FACTOR = 3.0  # 지정 안 했을 때 쓰는 배수 (10만 단위로 올림)
-MAXATT_FLOOR = 200_000       # 실측으로 통과가 확인된 절대값보다 낮게 내려가지 않는다
+#: ★★★ **정정 2026-09-16 (`PS-01` 최종)** — 정본 `docs/session_20260915_progress.md` ⑫⑬.
+#   ⛔ **옛 규약은 방향부터 틀렸다.**  나는 `maxattempt` 를 *"삽입 전체의 시도 예산"* 으로 읽고
+#   **하한**(≥ 1.2 × 예상 입자수 · 바닥 200,000)을 강제했다.  외부 전문가가 LIGGGHTS-PUBLIC
+#   소스(`fix_insert_pack.cpp` L403-407)를 읽어 실제 동작을 확정했다:
+#       int FixInsertPack::calc_maxtry(int ninsert_this_local)
+#       { return ninsert_this_local * maxattempt; }          // ← **int 곱셈**
+#   `ninsert_this_local × maxattempt` 가 int32 를 넘으면 **랩되어 음수**가 되고, 그러면
+#   `while(ntry < maxtry && …)` 가 첫 판정에서 거짓이라 **루프가 한 번도 안 돈다**
+#   (서명: **0.05초에 0개**).  ⇒ 참 제약은 **상한**이고, 내 하한은 오버플로를 향해 **미는** 규칙이었다.
+#   ⇒ `maxattempt` 는 수치 예산이 아니라 **proc 누적 탐색 배수**다 (LIGGGHTS 기본값 **50**).
+#     40만·2천만은 설계 범위를 한참 벗어난 값이고 **늘릴수록 악화**된다.
+#   ★ 실측 (ibb, `maxattempt 10000`): **5/5 · 100 % · `Less insertions` 경고 0**.
+#   ⚠ 전문가 검산도 **4행 중 1행만** 맞았다 (n_local 추정이 부정확 — `distribute_ninsert_this`
+#     의 나머지 분배에 난수가 들어간다).  **실측 n_local 은 아직 없다.**
+#   ⚠ 안전 조건은 **1 proc 최악**(`ninsert_this_local = 전체`)으로 잡는다 — `-np` 가 바뀐다.
+MAXATT_DEFAULT = 10_000
+INT32_MAX = 2 ** 31 - 1
+
+#: 2패스 삽입은 `insertion_ratio > 0` 이라 `maxtry` 가 `/(1-ratio)` 로 **커진다** ⇒ 여유가 필요하다.
+#: ⚠ 이 1.3 은 **유도된 값이 아니라 고른 값**이다 (정본이 *"여유를 더 둘 것"* 이라고만 적었다).
+#:   162,095 × 10,000 × 1.3 = 2.107e9 < 2^31 로 실측 통과값이 **아슬하게** 지난다.
+MAXATT_INT32_MARGIN = 1.3
 
 #: 시드 = 8자리 소수.  LAMMPS/LIGGGHTS RNG(RanPark)가 9자리(9e8) 위를 거부하는 판이 있어
 #: 원본 덱과 같은 자릿수 대역(1e7~1e8)에 둔다.  ⚠ 아래 세 상수를 바꾸면 시드가 전부 바뀐다
@@ -203,6 +208,27 @@ def _sub_line(text: str, fn):
                      for ln in text.split('\n'))
 
 
+#: 삽입 자기검사 바닥 — 성공은 예측치 ±1, 실패는 ≤90 % 였다 (실측).  99 % 가 둘을 가른다.
+INSERT_GATE_FLOOR_FRAC = 0.99
+
+
+def insert_gate(n_tot):
+    """덱이 **스스로** 삽입 개수를 세고 모자라면 런을 세우는 블록.
+
+    ★ 함수로 빼 둔 이유 — selftest 의 줄-수 회귀가 **몇 줄이 의도적으로 늘었는지**를
+      하드코딩하지 않고 여기서 세게 하기 위해서다 (하드코딩하면 다음 변경마다 거짓 실패).
+    """
+    floor = int(INSERT_GATE_FLOOR_FRAC * n_tot)
+    return (f'\n# ── 삽입 자기검사 (원장 `PS-01` · 감사 GAP high) ──\n'
+            f'#   부분 삽입 침대는 조성이 달라 **다른 물건**이다 — 완주시키지 않는다.\n'
+            f'variable n_ins equal count(all)\n'
+            f'print "====== INSERTED ${{n_ins}} / {n_tot} (floor {floor} = 99%) ======"\n'
+            f'if "${{n_ins}} < {floor}" then &\n'
+            f'    "print \'FATAL: partial insertion - bed composition differs (PS-01). '
+            f'aborting.\'" &\n'
+            f'    "quit 1"\n')
+
+
 def make_deck(text, tag_old, tag_new, p, s, seeds, r_am_p='', am_mass=0.816, note='',
               maxattempt=None):
     tpl, ent = read_deck(text)
@@ -279,17 +305,32 @@ def make_deck(text, tag_old, tag_new, p, s, seeds, r_am_p='', am_mass=0.816, not
 
     m_old = RE_MAXATT.search(out)
     att_old = int(m_old.group(2)) if m_old else 0
-    att = int(maxattempt) if maxattempt else max(
-        MAXATT_FLOOR, -(-int(MAXATT_DEFAULT_FACTOR * n_tot) // 100_000) * 100_000)
+    att = int(maxattempt) if maxattempt else MAXATT_DEFAULT
     if m_old:
         out = RE_MAXATT.sub(lambda m: f'{m.group(1)}{att}', out, count=1)
-    if n_tot and att < MAXATT_MIN_FACTOR * n_tot:
-        sys.exit(f'⛔ maxattempt {att:,} 가 예상 입자수 {n_tot:,} 의 '
-                 f'{MAXATT_MIN_FACTOR:g}배({int(MAXATT_MIN_FACTOR * n_tot):,}) 미만이다 — '
-                 f'덱을 내보내지 않는다.\n'
-                 f'   `maxattempt` 는 입자당이 아니라 **삽입 전체의 시도 예산**이라, '
-                 f'모자라면 LIGGGHTS 가 배치를 통째로 포기하고 0 개를 넣는다 (PS-01).\n'
-                 f'   → --maxattempt 로 올리거나 조성을 줄일 것.')
+    if n_tot and n_tot * att * MAXATT_INT32_MARGIN >= INT32_MAX:
+        safe = int(INT32_MAX / (n_tot * MAXATT_INT32_MARGIN))
+        sys.exit(f'⛔ maxattempt {att:,} 는 int32 를 넘긴다 — 예상 입자수 {n_tot:,} × {att:,} '
+                 f'× 여유 {MAXATT_INT32_MARGIN:g} = {n_tot * att * MAXATT_INT32_MARGIN:.3g} '
+                 f'≥ 2^31 ({INT32_MAX:,}).\n'
+                 f'   `calc_maxtry` 의 `ninsert_this_local * maxattempt` 가 **int 곱셈**이라 '
+                 f'랩되면 음수가 되고, `while` 이 첫 판정에서 거짓이라 **0개**가 들어간다 '
+                 f'(0.05초에 0개 — 원장 PS-01).\n'
+                 f'   ⇒ --maxattempt 를 {safe:,} 이하로 내릴 것 (실측 통과값 {MAXATT_DEFAULT:,}).')
+
+    #  ★★ **덱 자기검사** — 부분 삽입이 조용히 완주하지 못하게 한다 (감사 GAP `high` 9~13).
+    #    지적 원문: *"삽입 뒤 개수 검사가 전혀 없다 — 부분 삽입이면 조성이 다른 침대를
+    #    정상 산출물로 낸다"*.  실측 실패 스펙트럼 0 · 16,202(10 %) · 119,679(74 %) ·
+    #    142,965(90 %) 이고 성공은 예측치 **±1** 이었다 ⇒ 바닥 **99 %** 가 둘을 깨끗이 가른다.
+    #    ⚠ 0 개면 뒤의 `compute reduce max z` 가 `-1e20` 을 돌려 플래튼이 도메인 밖에 생긴다 —
+    #    거기서 죽으면 **죽는 자리와 고장난 자리가 달라** 진단이 어긋난다 (원장 PS-01).
+    if n_tot:
+        gate = insert_gate(n_tot)
+        m_un = RE_UNFIX_INS.search(out)
+        if not m_un:
+            sys.exit('⛔ `unfix ins_mix` 를 못 찾아 삽입 자기검사를 넣을 자리가 없다 — '
+                     '덱 구조가 바뀌었다 (PS-01).')
+        out = out[:m_un.end()] + gate + out[m_un.end():]
     rline = ' · '.join(f'{want[tpl[n]["atype"]]} r={radii.get(tpl[n]["rvar"], 0) * 1e3:g}µm'
                        for n, _ in ent)
     head = [f'# ===== P:S 스윕 생성본 (make_ps_sweep_decks.py) =====',
@@ -335,9 +376,8 @@ def main(argv=None):
     ap.add_argument('--note', default='', help='헤더에 한 줄 덧붙인다')
     ap.add_argument('--out', default='psweep', help='덱을 쓸 디렉터리')
     ap.add_argument('--maxattempt', type=int, default=0,
-                    help='삽입 시도 예산 (기본 = 예상 입자수 × %g, 하한 %d).  '
-                         '예상 입자수의 %g배 미만이면 거부한다 — PS-01'
-                         % (MAXATT_DEFAULT_FACTOR, MAXATT_FLOOR, MAXATT_MIN_FACTOR))
+                    help='proc 누적 탐색 **배수** (기본 %d).  n_tot × 이 값이 int32 를 넘으면 '
+                         '거부한다 — 랩되면 0개가 들어간다 (PS-01)' % MAXATT_DEFAULT)
     ap.add_argument('--mpi', type=int, default=MPI_VERIFIED_MAX,
                     help='실행 명령에 찍을 MPI 랭크 수 (검증된 상한 %d — PS-01)'
                          % MPI_VERIFIED_MAX)
@@ -461,8 +501,12 @@ def _selftest():
         #  ★ 실덱과 같은 모양 — `maxattempt` 가 여기 있어야 게이트가 실물을 문다 (`PS-01`)
         '    maxattempt 15000 insert_every once overlapcheck yes all_in no &\n'
         '    volumefraction_region 0.321\n'
+        #  ★ 실덱과 같은 모양 — 삽입 자기검사가 여기 뒤에 들어간다 (`PS-01` · 감사 GAP high)
+        'run 1\n'
+        'unfix ins_mix\n'
         'shell mkdir post_real_4\n'
         'restart 50000 restart_real_4/restart_settling_*.bin\n'
+        'run 200000\n'
         'print "====== INSERTING (REAL_4: P:S=7:3) ====="\n')
 
     tpl, ent = read_deck(deck)
@@ -494,7 +538,10 @@ def _selftest():
     #    (`PS-01` 로 maxattempt 정정 3줄이 붙자 실제로 그랬다).  검사의 뜻은 **본문** 보존이다.
     _hdr = d73.split('\n').index(deck.split('\n')[0])
     #  의도한 삽입(`processors`)은 세어서 빼 준다 — 검사의 뜻은 **삼킴 없음**이지 줄 수 동결이 아니다
-    _added = 1 if (PROC_GRID in d73 and PROC_GRID not in deck) else 0
+    _n73 = sum(predict_counts(d73, *read_deck(d73),
+                              {'r_AM_P': 6.0e-3, 'r_AM_S': 2.0e-3, 'r_SE': 0.5e-3}).values())
+    _added = (1 if (PROC_GRID in d73 and PROC_GRID not in deck) else 0) \
+        + (insert_gate(_n73).count(chr(10)) if 'count(all)' in d73 else 0)
     chk('★ 본문 줄 수 보존 (생성기가 빈 줄을 삼키지 않는다)',
         len(d73.split('\n')) - _hdr == len(deck.split('\n')) + _added)
     chk('★ 분포 줄 뒤의 빈 줄이 살아 있다',
@@ -547,28 +594,42 @@ def _selftest():
     chk('★ 반지름 6→4.5 이면 AM_P 개수가 (6/4.5)³ = 2.37배',
         abs(c45['pts1'] / c6['pts1'] - (6.0 / 4.5) ** 3) < 0.03)
 
-    # ── ★★ `maxattempt` 게이트 (`PS-01`, 2026-09-15) ──────────────────────────
-    #    실사고: 원본의 15,000 으로 159,167 개를 요청해 **0 개**가 들어갔고, 그 결과
-    #    `compute reduce max z` 가 `-1e20` 을 돌려줘 플래튼이 도메인 밖에 생겨 죽었다.
-    #    ⇒ 예산은 **입자당이 아니라 삽입 전체**다.  생성기가 그걸 강제한다.
+    # ── ★★★ `maxattempt` **상한** 게이트 (`PS-01` 최종, 2026-09-16) ────────────
+    #    ⛔ 옛 판은 **하한**(≥1.2×·바닥 200,000)을 강제했고 **방향부터 틀렸다**.
+    #    `calc_maxtry` 의 `ninsert_this_local * maxattempt` 가 int 곱셈이라, 넘치면 랩되어
+    #    음수가 되고 `while` 이 한 번도 안 돈다 (0.05초에 0개).  ⇒ 참 제약은 **상한**이다.
+    #    ★ 실측: `maxattempt 10000` 에서 5/5 · 100 % · 경고 0.
     n_tot = sum(c45.values())
-    chk('★★ maxattempt 가 예상 입자수의 2배 미만이면 **덱을 안 내보낸다** (옛 15,000 이 여기서 죽는다)',
-        _rejects(deck, maxattempt=15_000))
-    chk('★ 거부 메시지가 원인을 말한다 (입자당이 아니라 전체 예산)',
-        '전체의 시도 예산' in _reject_msg(deck, maxattempt=15_000))
-    chk('★ 기본값은 예상 입자수에 **비례**한다 (하한 200,000 · 금지선의 2배 이상)',
-        int(RE_MAXATT.search(dr).group(2)) >= MAXATT_MIN_FACTOR * n_tot
-        and int(RE_MAXATT.search(dr).group(2)) >= MAXATT_FLOOR)
-    d400 = make_deck(deck, 'real_4', 'ps_7_3_r45', 7, 3, seeds_for(1),
-                     r_am_p='4.5e-3', maxattempt=400_000)
-    chk('★ 명시한 값이 금지선을 넘으면 그대로 쓰인다 (400,000)',
-        'maxattempt 400000' in d400 and 'maxattempt 15000' not in d400)
+    chk('★★ 옛 규약이 쓰던 400,000 이 이제 **거부**된다 (int32 초과 — 하한 규약의 역전)',
+        _rejects(deck, maxattempt=400_000))
+    chk('★★ 옛 규약의 바닥 200,000 도 거부된다 (그때는 "통과 확인값" 이라 불렀다)',
+        _rejects(deck, maxattempt=200_000))
+    chk('★ 거부 메시지가 **int32** 와 0개를 말한다 (원인을 짚는다)',
+        'int32' in _reject_msg(deck, maxattempt=400_000)
+        and '0개' in _reject_msg(deck, maxattempt=400_000))
+    chk('★★ 실측 통과값 10,000 은 **거부되지 않는다** (게이트가 과조임이면 여기서 죽는다)',
+        not _rejects(deck, maxattempt=MAXATT_DEFAULT))
+    chk('★ 기본값이 곧 실측 통과값 10,000 이다',
+        int(RE_MAXATT.search(dr).group(2)) == MAXATT_DEFAULT)
+    chk('★ 상한이 실제로 n_tot 에 반응한다 (공허하지 않다)',
+        n_tot * MAXATT_DEFAULT * MAXATT_INT32_MARGIN < INT32_MAX
+        and n_tot * 20_000 * MAXATT_INT32_MARGIN >= INT32_MAX)
+    d10 = make_deck(deck, 'real_4', 'ps_7_3_r45', 7, 3, seeds_for(1),
+                    r_am_p='4.5e-3', maxattempt=MAXATT_DEFAULT)
     chk('★★ 헤더가 **원본과 다르다는 것**을 적는다 (거짓 "전부 불변" 금지)',
-        'maxattempt' in d400.split('# ======')[0] or '`maxattempt`' in d400[:2000])
-    chk('★★ 음성 대조 — **실측으로 통과한** 200,000 은 거부되지 않는다 (금지선이 과조임이면 여기서 죽는다)',
-        not _rejects(deck, maxattempt=200_000))
-    chk('★ 금지선 바로 아래(150,000 ≈ 0.94배)는 거부된다 — 게이트가 공허하지 않다',
-        _rejects(deck, maxattempt=150_000))
+        'maxattempt' in d10[:d10.index(deck.split(chr(10))[0])])
+
+    # ── ★★ 덱 **자기검사** — 부분 삽입이 조용히 완주하지 못하게 (감사 GAP high 9~13) ──
+    #    감사 지적: 덱에 `if`/`count` 가 한 줄도 없어 부분 삽입 침대가 정상 산출물로 나간다.
+    #    실측 실패 스펙트럼: 0 · 16,202(10 %) · 119,679(74 %) · 142,965(90 %);
+    #    성공은 예측치 ±1 이었다 ⇒ 바닥 99 % 가 둘을 깨끗이 가른다.
+    chk('★★ 덱이 삽입 개수를 스스로 센다 (`count(all)`)', 'count(all)' in d10)
+    chk('★★ 모자라면 **런을 세운다** (`quit`)', 'quit 1' in d10)
+    chk('★ 바닥이 예상 입자수의 99 % 다', f'{int(0.99 * n_tot)}' in d10)
+    chk('★ 게이트가 `unfix ins_mix` **뒤**에 있다 (삽입 전에 세면 0 이라 항상 죽는다)',
+        d10.index('count(all)') > d10.index('unfix ins_mix'))
+    chk('★ 게이트가 정착(`run 200000`) **앞**에 있다 (죽은 뒤 세면 늦다)',
+        d10.index('count(all)') < d10.index('run 200000'))
 
     # ── ★★ MPI 분해 축 (`PS-01` 둘째 원인) ───────────────────────────────────
     #    z 로 쪼개지면 삽입 영역이 한 proc 에만 걸려 0 개가 들어간다.  실측:
