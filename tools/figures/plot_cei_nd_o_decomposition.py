@@ -446,6 +446,90 @@ Li₃PO₄ 는 <b>Li 를 3 개</b> 쓰고 NdPO₄ 는 <b>0 개</b> 쓴다. Li �
 Li 가 희소해지고, 그때는 "3 개짜리" 를 살 수 없다. 그래서 Nd 는 <b>더 좋은 인산염을
 만드는 것이 아니라, Li 를 안 쓰는 선택지를 하나 더 열어 주는 것</b>이다.</p>
 
+<!-- 모식도 — 기전 한 장 (2026-09-17 신설).
+     왜 그렸나: 1저자가 §3 을 "Nd 가 있으면 Li 가 더 잘 빠진다" 로 읽었다. 주어(계면에서
+     새 상을 만드는 Li ≠ 양극에서 빼는 Li)와 인과(고전압이 원인, 경로 선택이 결과)가
+     둘 다 뒤집힌 읽기다. 산문만으로는 그 오독이 반복된다.
+     ⛔ 숫자는 전부 위 표·생성에너지에서 가져온다 — 여기에 손으로 적지 않는다. -->
+<figure style="margin:20px 0">
+<div style="border:1px solid var(--line);border-radius:12px;background:var(--card);padding:16px 14px">
+
+  <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;font-size:.93rem;line-height:1.55">
+    <span style="flex:0 0 auto;background:var(--nd-soft);color:var(--nd);border-radius:999px;
+                 padding:2px 10px;font-weight:600;font-size:.82rem">① 충전하면</span>
+    <span style="flex:1 1 260px">전압 ↑ &nbsp;→&nbsp; <b>양극에서 Li 가 빠진다</b> &nbsp;→&nbsp;
+      <span class="mono">μ<sub>Li</sub></span> 가 낮아진다 =
+      <b style="color:var(--nd)">Li 가 비싸진다</b></span>
+  </div>
+
+  <div style="text-align:center;color:var(--mut);margin:8px 0 6px;font-size:1.1rem">&#8595;</div>
+
+  <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;font-size:.93rem;line-height:1.55">
+    <span style="flex:0 0 auto;background:var(--nd-soft);color:var(--nd);border-radius:999px;
+                 padding:2px 10px;font-weight:600;font-size:.82rem">② 계면에서</span>
+    <span style="flex:1 1 260px">전해질이 분해되고, <b>풀려난 P 가 갈 곳을 찾는다</b>.
+      아래 셋 중 하나다.</span>
+  </div>
+
+  <div style="text-align:center;color:var(--mut);margin:8px 0 10px;font-size:1.1rem">&#8595;</div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+
+    <div style="flex:1 1 200px;border:1px solid var(--line);border-radius:10px;padding:11px 12px">
+      <div class="mono" style="font-weight:600;color:var(--ink)">Li₃PO₄</div>
+      <div style="font-size:.84rem;color:var(--mut);margin:2px 0 7px">Li/P = <b>3</b></div>
+      <div style="font-size:.86rem;line-height:1.5">
+        <span style="color:var(--ok);letter-spacing:2px">&#9679;&#9679;&#9679;</span>
+        &nbsp;P 하나당 <b>Li 3 개를 내야</b> 한다<br>
+        <span style="color:var(--mut)">가장 깊은 싱크인데, 그 값을 치러야 들어간다</span></div>
+      <div style="margin-top:8px;font-size:.84rem;color:var(--warn);font-weight:600">
+        ✗ 고전압에선 못 산다</div>
+    </div>
+
+    <div style="flex:1 1 200px;border:1.5px solid var(--nd);border-radius:10px;padding:11px 12px;
+                background:var(--nd-soft)">
+      <div class="mono" style="font-weight:600;color:var(--nd)">NdPO₄</div>
+      <div style="font-size:.84rem;color:var(--mut);margin:2px 0 7px">Li/P = <b>0</b></div>
+      <div style="font-size:.86rem;line-height:1.5">
+        <span style="color:var(--mut)">(Li 안 씀)</span>
+        &nbsp;<b>Li 를 한 개도 안 쓴다</b><br>
+        <span style="color:var(--mut)">Li₃PO₄ 보다 얕지만 값이 안 오른다</span></div>
+      <div style="margin-top:8px;font-size:.84rem;color:var(--nd);font-weight:600">
+        ✓ <b>Nd 가 있을 때만 열리는 방</b></div>
+    </div>
+
+    <div style="flex:1 1 200px;border:1px solid var(--line);border-radius:10px;padding:11px 12px">
+      <div class="mono" style="font-weight:600;color:var(--ox)">P₂S₇</div>
+      <div style="font-size:.84rem;color:var(--mut);margin:2px 0 7px">Li/P = <b>0</b></div>
+      <div style="font-size:.86rem;line-height:1.5">
+        <span style="color:var(--mut)">(Li 안 씀)</span>
+        &nbsp;이 집합에서 <b>제일 얕다</b><br>
+        <span class="mono" style="color:var(--mut)">{_fmt(F["formation"]["P2S7"]["E_f_eV_per_atom"], 4, False)} eV/atom</span></div>
+      <div style="margin-top:8px;font-size:.84rem;color:var(--ox);font-weight:600">
+        ⛔ 여기로 가면 나쁘다</div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:12px;padding-top:11px;border-top:1px dashed var(--line);
+              font-size:.89rem;line-height:1.6">
+    <b>Nd 가 없으면</b> — 고전압에서 Li₃PO₄ 가 비싸지는데 대안이 P₂S₇ 뿐이다 →
+    <b style="color:var(--ox)">4.3 V 부터 P₂S₇ 가 올라온다</b> (§2).<br>
+    <b>Nd 가 있으면</b> — NdPO₄ 라는 <b>Li 안 드는 방</b>이 있다 →
+    <b style="color:var(--nd)">전 구간에서 P₂S₇ 가 0 이다</b> (§2).
+  </div>
+
+</div>
+<figcaption><b>모식도.</b> Nd 는 <b>더 좋은 인산염을 만드는 것이 아니라</b>, Li 가 이미 빠져서
+비싸진 상황에서 P 가 갈 수 있는 <b>Li 안 드는 방</b>을 하나 열어 준다.
+부호가 뒤집히는 지점이 <b>Li/P &#8776; {cross:.2f}</b> 다 (아래 표·Fig. 4a).
+&#8203;
+<span style="color:var(--mut)">⚠ 오독 주의 둘 — (1) 여기서 쓰는 Li 는 <b>계면에서 새 상을
+만드는 데 드는 Li</b> 이지 <b>양극에서 빼는 Li 가 아니다</b>. (2) 인과는
+<b>고전압 → Li 희소 → 경로 선택</b> 순이다. 이 그림은 <b>Nd 가 탈리튬화를 돕는다는 말이
+아니다</b> — 속도·수송은 이 계산에 없다(전부 0 K 열역학).</span></figcaption>
+</figure>
+
 <p>같은 형식(<span class="mono">&lt;공여상&gt; + ½Nd₂O₃ → NdPO₄ + Li₂O</span>)에서
 <strong>P 하나당 Li 개수만</strong> 바꾸면 완전 단조다.</p>
 
