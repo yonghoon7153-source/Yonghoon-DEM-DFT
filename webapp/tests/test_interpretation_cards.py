@@ -322,3 +322,93 @@ def test_long_table_is_not_glued_into_one_page(client):
     assert "table-header-group" in blk, "여러 쪽 표의 머리를 반복하지 않는다"
     assert not re.search(r"(^|[\s,]) *table\s*(,[^{]*)?\{[^}]*break-inside\s*:\s*avoid", blk), \
         "table 전체에 break-inside:avoid 가 걸렸다 — 긴 표가 잘린다"
+
+
+# ── §1 방법 박스의 μ_Li 산수 접이식 (2026-09-17) ──────────────────────────────
+#   왜 시험하나: 이 절은 **서술**이고, 틀린 서술이 제일 비싸다. 특히 마지막 경고
+#   ("§3 교환 표에는 μ_Li 가 안 들어간다")가 빠지면 두 축이 섞여서 표가 한 적 없는
+#   말을 하게 된다. 그리고 숫자는 사다리 CSV 와 **같아야** 한다 — 손으로 적은 수가
+#   원장과 갈라지는 것이 여기서 일어날 수 있는 조용히 틀린 경로다.
+
+LADDER_CSV = REPORT.parent / "cei_li_budget_ladder.csv"
+
+
+def _mu_details(h):
+    """μ_Li 산수 접이식 하나만 잘라 준다 (§3 본문의 같은 수에 속지 않으려고)."""
+    m = re.search(r"<details[^>]*>\s*<summary[^>]*>\s*왜 &quot;손해&quot;|"
+                  r"<details[^>]*>\s*<summary[^>]*>\s*왜 \"손해\"", h)
+    assert m, "μ_Li 산수 접이식을 못 찾았다 — 시험이 헛것을 재고 있다"
+    end = h.index("</details>", m.start())
+    return h[m.start():end]
+
+
+def test_mu_li_arithmetic_block_is_on_the_report(client):
+    """양성 — Φ 대입과 dΦ/dV 두 줄이 실제로 화면에 실린다."""
+    d = _mu_details(_report_html(client))
+    assert "E + (1.9089 + V)" in d, "Φ 를 풀어 쓴 줄이 없다 — '손해'가 다시 한 줄 주장이 된다"
+    assert re.search(r"d&#934;/dV\s*=\s*\+N_Li|dΦ/dV\s*=\s*\+N_Li", d), \
+        "전압 기울기 = Li 개수 줄이 없다"
+    assert "기회비용" in d, "기회비용 읽기가 빠졌다"
+
+
+def test_mu_li_block_numbers_match_the_ladder_csv(client):
+    """⛔음성 — 박스에 손으로 적은 수가 사다리 CSV 와 갈라지면 잡는다.
+
+    문자열이 아니라 **값**으로 본다 (1.5035 ≡ 1.50352 반올림, 1.67 ≡ 1.6715).
+    """
+    rows, cross = [], None
+    for ln in LADDER_CSV.read_text(encoding="utf-8").splitlines():
+        f = ln.split(",")
+        if f and f[0] == "Li3PO4":
+            rows.append(float(f[3]))
+        if f and f[0].startswith("crossover_li_per_P"):
+            cross = float(f[1])
+    assert rows and cross is not None, "사다리 CSV 를 못 읽었다 — 시험이 헛것을 재고 있다"
+
+    d = _mu_details(_report_html(client))
+    quoted = re.search(r"\+([0-9]+\.[0-9]+)\s*eV/P", d)
+    assert quoted, "박스가 교환에너지를 인용하지 않는다"
+    assert round(rows[0], 4) == float(quoted.group(1)), \
+        f"박스 {quoted.group(1)} vs CSV {rows[0]} — 두 판정이 갈렸다"
+
+    qc = re.search(r"Li/P\s*(?:&#8776;|≈)\s*([0-9]+\.[0-9]+)", d)
+    assert qc, "박스가 교차점을 인용하지 않는다"
+    assert round(cross, 2) == float(qc.group(1)), \
+        f"박스 교차점 {qc.group(1)} vs CSV {cross}"
+
+    # Φ/P 상승 표는 Li/P × 4.5 V 산수다 — 그 관계가 깨지면 잡는다.
+    for li_per_p, rise in ((3, 13.5), (2, 9.0), (1, 4.5)):
+        assert abs(li_per_p * 4.5 - rise) < 1e-9
+        assert f"+{rise:g}" in d, f"Li/P={li_per_p} 행({rise:+g})이 표에 없다"
+
+
+def test_mu_li_box_states_the_closed_system_boundary(client):
+    """⛔음성 — 이 경고가 빠지면 화면이 §3 표가 한 적 없는 말을 하게 된다.
+
+    §3 의 교환 반응은 양변 Li 가 같아서 μ_Li 가 **안 들어간다**. 그 사실이 화면에
+    없으면 독자는 +1.5035 eV/P 를 전압 의존량으로 읽는다.
+    """
+    d = _mu_details(_report_html(client))
+    assert "&#916;N_Li = 0" in d or "ΔN_Li = 0" in d, \
+        "Li 수지가 0 이라는 근거가 없다"
+    assert "안 변한다" in d, "전압을 바꿔도 값이 안 변한다는 말이 없다"
+    assert "해석의 다리" in d, "Li 예산이 해석의 다리라는 한정이 빠졌다"
+
+
+def test_collapsed_details_are_expanded_for_print(client):
+    """⛔음성 — 접힌 details 는 PDF 에 **안 실린다**.
+
+    방법 박스의 μ_Li 산수·MP 코드가 그 안에 있으므로, 펼침 처리가 없으면
+    PDF 만 받아 본 사람에게는 그 절이 통째로 없는 문서가 된다.
+    CSS 로는 못 하므로(open 은 속성이다) beforeprint 훅이 있어야 한다.
+    """
+    h = _report_html(client)
+    assert "<details" in h, "접이식이 하나도 없다 — 시험이 헛것을 재고 있다"
+    assert "beforeprint" in h, "인쇄 전에 details 를 펼치는 훅이 없다"
+    hook = re.search(r"<script>(.*?)</script>", h, re.S)
+    assert hook, "스크립트가 없다"
+    js = hook.group(1)
+    assert "details" in js and re.search(r"\.open\s*=\s*true", js), \
+        "훅이 details 를 펼치지 않는다"
+    assert "afterprint" in js and re.search(r"\.open\s*=\s*false", js), \
+        "인쇄 뒤 원래 접힘 상태로 안 되돌린다 — 화면이 바뀐 채로 남는다"

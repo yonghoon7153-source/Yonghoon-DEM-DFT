@@ -247,6 +247,87 @@ Li 를 많이 가진 상은 hull 에서 밀려나고, 양극은 <b>저절로 탈
 &#9733; <b>이 그림의 가로축이 그것이다</b> — 전압 여섯 점은 "Li 를 이만큼 뺐을 때" 를
 여섯 번 따로 물어본 것이다. <span style="color:var(--mut)">시간축이 아니다.</span></p>
 
+<!-- μ_Li 산수 접이식 (2026-09-17 신설).
+     왜 접었나: 위 "뜻" 한 줄로 충분한 독자가 대부분이다. 그런데 1저자가 그 한 줄을
+     물었고, 풀면 Fig. 1 의 전압 의존이 왜 Li 개수인지가 바로 나온다.
+     ⛔ 표의 수는 계산 결과가 아니라 Li/P x 4.5 V 산수다 — 그렇게 적는다.
+     ⛔ 교환에너지 +1.5035 / 교차점 1.67 은 §3·Fig. 4a 와 같은 수다(cei_li_budget_ladder.csv).
+        여기에 손으로 다른 수를 적으면 두 판정이 갈린다. -->
+<details style="margin:0 0 12px">
+<summary style="cursor:pointer;font-size:.9rem;font-weight:600">왜 "손해" 인가 &#8212; 산수 두 줄로</summary>
+
+<div style="margin:10px 0 0;padding:12px 13px;background:var(--bg);
+     border:1px solid var(--line);border-radius:8px">
+
+<p class="plain" style="margin:0 0 6px"><b>&#9312; &#934; 정의에 &#956; 를 그대로 대입한다</b></p>
+<p class="mono" style="margin:0 0 8px;padding:9px 11px;background:var(--card);
+   border:1px solid var(--line);border-radius:8px;font-size:.82rem;line-height:1.65;
+   overflow-x:auto;white-space:pre">&#934; = E &#8722; &#956;_Li&#183;N_Li
+  = E &#8722; (&#8722;1.9089 &#8722; V)&#183;N_Li
+  = E + (1.9089 + V)&#183;N_Li        &#8592; 부호가 플러스로 뒤집힌다</p>
+<p class="plain" style="margin:0 0 12px">Li 한 개를 품고 있을 때마다 &#934; 에
+<b>(1.9089 + V) eV 가 더해진다</b>. 그 상이 실제로 에너지를 더 쓰는 것이 아니라,
+저장고와 견줄 때 <b>Li 한 개당 벌금</b>이 붙는 것이다. 이것이 "손해" 의 정체다.</p>
+
+<p class="plain" style="margin:0 0 6px"><b>&#9313; 그래서 전압에 대한 기울기가 곧 Li 개수다</b></p>
+<p class="mono" style="margin:0 0 8px;padding:9px 11px;background:var(--card);
+   border:1px solid var(--line);border-radius:8px;font-size:.82rem;line-height:1.65;
+   overflow-x:auto;white-space:pre">d&#934;/dV = +N_Li</p>
+<p class="plain" style="margin:0 0 4px">전압을 1 V 올릴 때마다 그 상은
+<b>품고 있는 Li 개수만큼 eV 씩</b> 비싸진다. P 하나당으로 환산하면
+(아래는 계산 결과가 아니라 <span class="mono">Li/P &#215; &#916;V</span> 산수다):</p>
+
+<div class="tblwrap" style="margin:8px 0 12px">
+<table>
+<thead><tr><th>상</th><th>Li/P</th><th>0 &#8594; 4.5 V 에서 &#934;/P 상승</th></tr></thead>
+<tbody>
+<tr><td class="mono">Li3PO4</td><td>3</td><td><strong>+13.5 eV</strong></td></tr>
+<tr><td class="mono">Li4P2O7</td><td>2</td><td>+9.0</td></tr>
+<tr><td class="mono">LiPO3</td><td>1</td><td>+4.5</td></tr>
+<tr><td class="mono nd">NdPO4</td><td class="nd">0</td><td class="nd"><strong>0 &#8212; 안 움직인다</strong></td></tr>
+</tbody></table>
+</div>
+
+<p class="plain" style="margin:0 0 12px">전압축 위에서 <b>NdPO<sub>4</sub> 만 제자리</b>고
+나머지는 전부 위로 밀려 올라간다. 위 Fig. 1 에서 <span class="nd">Nd</span> 곡선만
+전압에 가파르고 <span class="ox">O</span> 곡선이 평평한 것이 여기서 온다 &#8212;
+O 효과는 Li 개수를 건드리지 않는다.</p>
+
+<p class="plain" style="margin:0 0 6px"><b>&#9314; 물리로 읽으면 기회비용이다</b></p>
+<p class="plain" style="margin:0 0 8px">4.5 V 에서 Li 한 개가 Li<sub>3</sub>PO<sub>4</sub> 안에
+앉아 있다는 것은 <b>그 Li 가 음극에 안 갔다 = 회로에 4.5 eV 일을 안 시켰다</b>는 뜻이다.
+포기한 일이 곧 값이다. 그래서 어떤 상이 Li 를 계속 붙들 수 있는 조건은 이것 하나다:</p>
+<p class="mono" style="margin:0 0 8px;padding:9px 11px;background:var(--card);
+   border:1px solid var(--line);border-radius:8px;font-size:.82rem;line-height:1.65;
+   overflow-x:auto;white-space:pre">그 상에서 Li 한 개를 떼는 데 드는 에너지  &gt;  1.9089 + V</p>
+<p class="plain" style="margin:0 0 12px">넘으면 그 상이 살고, 못 넘으면 hull 에서 밀려난다
+= <b>저절로 탈리튬화</b>. V = 0 에서 문턱이 1.9089 인 이유는, 그것이
+<b>"Li 금속으로 만드는 것보다 이득이냐"</b> 라는 질문이기 때문이다 &#8212;
+0 V 가 Li 금속과 평형이라는 뜻이고, 전압은 그 문턱을 V 만큼 올린다.</p>
+
+<div class="card warn" style="margin:0;padding:11px 13px">
+<p class="plain" style="margin:0 0 8px"><b>&#9888; &#167;3 의 교환 표에는 &#956;<sub>Li</sub> 가
+들어가지 않는다 &#8212; 축이 둘이다</b></p>
+<p class="plain" style="margin:0 0 8px"><span class="mono">Li3PO4 + &#189; Nd2O3 &#8594;
+NdPO4 + 1.5 Li2O</span> 는 <b>양변 Li 가 3 개로 같다</b>. Li 가 저장고로 오가지 않으니
+<span class="mono">&#956;_Li&#183;&#916;N_Li = 0</span> 이고, <b>V 를 바꿔도
++1.5035 eV/P 는 한 자리도 안 변한다</b>. 그 표가 재는 것은 "Nd 가 Li 보다 P 를 더 잘
+붙잡나" 하나뿐이고, 답은 <b>아니다</b>.</p>
+<p class="plain" style="margin:0 0 8px">전압이 하는 일은 그 값을 바꾸는 것이 아니라
+<b>Li<sub>3</sub>PO<sub>4</sub> 를 만들 Li 예산 자체를 없애는 것</b>이다:</p>
+<p class="mono" style="margin:0 0 8px;padding:8px 10px;background:var(--card);
+   border:1px solid var(--line);border-radius:8px;font-size:.78rem;line-height:1.6;
+   overflow-x:auto;white-space:pre">전압 &#8593; &#8594; &#956;_Li &#8595; &#8594; 계면에서 쓸 Li 예산 &#8595;
+        &#8594; 사다리 아래 칸 &#8594; Li/P &#8776; 1.67 밑에서 부호 반전</p>
+<p class="plain" style="margin:0">Li 예산은 이 두 축을 잇는 <b>해석의 다리</b>이지
+&#167;3 표가 직접 재는 양이 아니다. 둘을 섞어 "Nd 가 고전압에서 Li<sub>3</sub>PO<sub>4</sub>
+보다 안정하다" 라는 한 문장으로 말하면 안 된다 &#8212; 그 표는 그런 말을 한 적이 없다.
+사다리 전체는 <a href="#s3">&#167;3</a> 과 Fig. 4a 에 있다.</p>
+</div>
+
+</div>
+</details>
+
 <details style="margin:0 0 4px">
 <summary style="cursor:pointer;font-size:.9rem;font-weight:600">MP 에서 직접 뽑는 법 (최소판)</summary>
 <p class="mono" style="margin:8px 0 0;padding:10px 11px;background:var(--bg);
@@ -1180,5 +1261,35 @@ citable: false — 1저자·리뷰 판정 전이다.
 </footer>
 
 </div>
+
+<!-- 인쇄(PDF) 때 접힌 details 를 펼친다 (2026-09-17).
+     왜 필요한가: `<details>` 가 접힌 채로 인쇄되면 안의 내용이 PDF 에 **안 실린다**.
+     방법 박스의 μ_Li 산수·MP 코드가 그 안에 있으므로, PDF 만 받아 본 사람에게는
+     그 절이 통째로 없는 문서가 된다.
+     ⛔ CSS 로는 못 한다 — `open` 은 속성이지 스타일이 아니다.
+     인쇄가 끝나면 원래 접힘 상태로 되돌린다(화면은 그대로여야 한다). -->
+<script>
+(function () {
+  var opened = [];
+  function expand() {
+    restore();
+    var ds = document.querySelectorAll("details:not([open])");
+    for (var i = 0; i < ds.length; i++) { opened.push(ds[i]); ds[i].open = true; }
+  }
+  function restore() {
+    for (var i = 0; i < opened.length; i++) { opened[i].open = false; }
+    opened = [];
+  }
+  window.addEventListener("beforeprint", expand);
+  window.addEventListener("afterprint", restore);
+  // Safari 는 beforeprint 를 안 쏜다 — matchMedia("print") 로 한 번 더 건다.
+  if (window.matchMedia) {
+    var mq = window.matchMedia("print");
+    var onmq = function (e) { if (e.matches) { expand(); } else { restore(); } };
+    if (mq.addEventListener) { mq.addEventListener("change", onmq); }
+    else if (mq.addListener) { mq.addListener(onmq); }
+  }
+})();
+</script>
 </body>
 </html>
