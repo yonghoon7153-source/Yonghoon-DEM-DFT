@@ -655,3 +655,19 @@ def test_fig2_ladder_caption_says_price_not_amount(client):
     assert "chosen, not selected by the hull" in cap, \
         "반응물·생성물을 사람이 골랐다는 고지가 없다"
     assert "mix functionals" in cap, "GGA/GGA+U 혼합 눈금 고지가 없다"
+
+
+def test_fig2_refuses_to_predict_hull_products(client):
+    """⛔음성 — 2상 교환 부호로 hull 산물을 설명한다고 읽히면 틀린다.
+
+    2026-09-17 에 세 번 어긋났다 (Cl·S 사각지대 · Nd 는 P 선호인데 산물은 NdCl3 ·
+    Mn/Ni 방향은 맞지만 0.30 띠 안). 그 경계가 화면에서 빠지면 다음 사람이
+    네 번째로 같은 벽에 닿는다.
+    """
+    h = _report_html(client)
+    i = h.find("Fig. 2 를 읽는 법")
+    assert i > 0, "Fig. 2 설명 상자를 못 찾았다 — 시험이 헛것을 재고 있다"
+    d = h[i:h.index("<h3", i)]          # ⚠ 앞판은 §1 의 μ_Li 접이식을 봤다 (다른 절)
+    assert "hull 이 고른 상" in d, "hull 산물 예측 금지가 화면에 없다"
+    assert "방향 힌트" in d, "교환이 방향 힌트라는 한정이 없다"
+    assert "부호가 어긋났다" in d, "실제로 어긋난 사례가 없다"

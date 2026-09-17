@@ -2746,6 +2746,81 @@
     }
    ],
    "_note": "⛔ 사후 관찰 (results_seen · exploratory) — 1저자 비준 전까지 proposed. ⭐ 이 카드의 값은 **앞 카드의 한계를 닫는 것**이다: 교환에너지가 'Nd 가 가용하다면' 의 조건부 값이라는 우려는, Nd 가 Cl·S 보다 P 를 선호하므로 **가용성 쪽 문제가 아니다**로 좁혀진다."
+  },
+  {
+   "id": "D-2026-09-17-pairwise-exchange-resolution-limit",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "cei.phosphate_sink",
+   "slot": "pairwise_exchange_claim_ceiling",
+   "applies_to": {
+    "systems": [
+     "*"
+    ],
+    "tasks": [
+     "closed_system_exchange"
+    ],
+    "methods": [
+     "MP GGA_GGA+U · ComputedReaction"
+    ],
+    "use_cases": [
+     "mechanism_reading"
+    ]
+   },
+   "title": "2상 교환반응으로 hull 의 상 선택을 예측하지 않는다 — 허용 서술 범위",
+   "statement": "2026-09-17 에 세 번 같은 벽에 닿았다. **개별 2상 교환반응(A + B → C + D)의 부호로 hull 이 고른 상을 설명·예측하지 않는다.** hull 은 모든 상을 동시에 풀고 교환반응은 둘만 겨루므로, 둘이 어긋나는 것은 오류가 아니라 **서로 다른 물음**이다. 실측 셋: ① 첫 계산의 chemsys 에 Cl·S 가 없어 NdCl3·Nd2(SO4)3 채널을 못 봤다 (D-2026-09-17-cei-tm-phosphate-exchange). ② Cl·S 를 넣으니 Nd 는 P 를 선호(−0.50 / −0.67 eV/P)하는데 hull 산물은 NdCl3 였다 (D-2026-09-17-nd-channel-preference — 내 'Cl 이 먼저 잡는다' 설명을 철회). ③ Mn/Ni 로 갈라 재니 방향은 관측과 맞았지만(Mn +0.1549 못 뺏음 · Ni −0.1246 뺏음, LiMnO2→NdCl3 · LiNiO2→Nd(PO3)3 와 일치) **크기가 구분폭 0.30 eV/P 안**이라 판정 불가다. 같은 판에서 Li2SO4 쌍(+0.3314)은 hull 산물(Nd2(SO4)3 형성)과 **부호가 어긋났고** Li2S 쌍(−1.9312)은 크게 유리한데 Nd2S3 가 산물에 없다. ⇒ **허용 서술**: 교환에너지는 *'어느 쪽이 그 상을 더 원하는가'* 의 **방향 힌트**다. ⛔ **금지 서술**: 교환 부호로 hull 산물을 설명했다고 쓰는 것 · 0.30 eV/P 안의 차이를 순위나 판정으로 쓰는 것 · 'Cl 이 Nd 를 잡는다' 류의 인과 서술.",
+   "decision_state": "proposed",
+   "results_seen": true,
+   "exploratory": true,
+   "evidence": [
+    {
+     "kind": "mn_ni_split_eV_per_P",
+     "value": {
+      "NdCl3+Mn(PO3)2→Nd(PO3)3+MnCl2": 0.1549,
+      "NdCl3+Ni(PO3)2→Nd(PO3)3+NiCl2": -0.1246,
+      "tie_width": 0.3,
+      "판정": "둘 다 띠 안 — 못 가른다"
+     }
+    },
+    {
+     "kind": "reverse_check_eV",
+     "value": {
+      "Nd2O3+1.5MnCl2→NdCl3+1.5MnO": -0.7479,
+      "읽기": "Mn–Cl 이 약해 Cl 이 Nd 쪽으로 간다 — 위와 방향 일관"
+     }
+    },
+    {
+     "kind": "hull_과_어긋난_쌍",
+     "value": {
+      "2NdCl3+3Li2SO4→Nd2(SO4)3+6LiCl": 0.3314,
+      "2NdCl3+3Li2S→Nd2S3+6LiCl": -1.9312,
+      "왜": "전자는 양수인데 hull 은 Nd2(SO4)3 를 냈고, 후자는 크게 음수인데 Nd2S3 가 산물에 없다"
+     }
+    },
+    {
+     "kind": "control",
+     "value": {
+      "Li3PO4,Nd2O3>NdPO4,Li2O": 1.50352,
+      "기대": 1.5035
+     }
+    }
+   ],
+   "method_ref": "tools/oxidation/esw_grand_potential.py --reaction --per_element P",
+   "record": "db/properties/cei_nd_vs_tm_halide_2026_09_17.json",
+   "surface": "db/properties/cei_figs/index.html#s2",
+   "reopen_criteria": [
+    "hull 산물을 예측하려면 **hull 을 다시 푸는 것**이 답이다 (interface_reactivity_v2) — 교환반응이 아니다",
+    "0.30 eV/P 보다 좁은 구분폭을 쓰려면 **같은 functional 재계산**이 먼저다",
+    "⛔ '한 쌍 더 재 봤다' 는 재개 사유가 아니다"
+   ],
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-09-17"
+    }
+   ],
+   "_note": "⛔ 사후 관찰 (results_seen · exploratory) — 1저자 비준 전까지 proposed. ⭐ 이 카드는 값이 아니라 **허용 서술 범위**를 정한다. 같은 날 세 번 같은 벽에 닿았으므로 그 경계를 원장에 박는다 — 다음 사람이 네 번째로 닿지 않게."
   }
  ]
 }
