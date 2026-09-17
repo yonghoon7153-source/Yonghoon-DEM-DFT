@@ -73,6 +73,7 @@ scripts/holm_exponent_from_field.py	--selftest	fast	none	claude	초록 0.6s (실
 scripts/ion_r_verdict.py	--selftest	fast	check_all	claude	초록 0.2s (실측)
 scripts/lhs_design_dataset.py	--selftest	fast	none	claude	초록 1.5s (실측)
 scripts/lhs_descriptor_harvest.py	--selftest	fast	both	claude	초록 0.7s (실측) — 계약 6개 + P1 반례 + 변이대조
+scripts/lhs_harvest_batch.py	--selftest	fast	none	claude	초록 0.0s (실측) — 봉인 TSV 짝 사용 · mesh 근거 기록 · 누락은 사유와 함께 선다 (LHS-02)
 scripts/lhs_ext_design.py	--selftest	fast	both	claude	초록 0.7s (실측)
 scripts/lhs_ext_materialize.py	--selftest	fast	both	claude	초록 0.1s (실측)
 scripts/lhs_ext_submit_gate.py	--selftest	fast	both	claude	초록 0.1s (실측)
