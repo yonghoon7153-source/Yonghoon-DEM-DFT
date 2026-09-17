@@ -40,11 +40,20 @@ el_state() {   # $1 = .out 경로 → "상태|비고"
         echo "☠ 오류|$(grep -a -A1 'Error in routine' "$f" | tail -1 | cut -c1-46)"; return
     fi
     if grep -aq "JOB DONE" "$f"; then
-        # ⛔ relax 는 최대 스텝에 걸려도 JOB DONE 을 찍는다. BFGS 종료를 따로 본다.
-        if grep -aqE "End of BFGS Geometry Optimization|Begin final coordinates" "$f"; then
+        # ⛔⛔ 2026-09-17 정정 — 앞판은 `End of BFGS Geometry Optimization` 을 완료 표지로
+        #   썼는데 **QE 는 nstep 소진에도 그 줄을 찍는다**. 그래서 strain_23_p 가
+        #   `✓ 완료` 로 보고됐다 (실제: 50 스텝 소진, max|f| 0.001107 > 0.001,
+        #   ΔE 4.4e-5 > 1e-5). 선언은 "BFGS 종료를 따로 본다" 였는데 실행이 안 그랬다.
+        #   ⛔ 그리고 당시 음성 시험의 fixture 는 `End of BFGS` 가 **없는** 파일이라
+        #     실제 실패 모드를 한 번도 안 쟀다. 아래에 진짜 fixture 를 넣었다.
+        #   판정은 **`bfgs converged` 선언 하나**로 한다 — 그것만이 두 기준
+        #   (ΔE < etot_conv_thr **그리고** max|f| < forc_conv_thr)을 다 통과했다는 뜻이다.
+        if grep -aq "bfgs converged" "$f"; then
             echo "✓ 완료|$(grep -a 'number of scf cycles' "$f" | tail -1 | tr -s ' ' | cut -c1-40)"
+        elif grep -aqi "maximum number of steps has been reached" "$f"; then
+            echo "⛔ 스텝소진|nstep 에 걸렸다 — 수렴 아님. 이 점의 응력을 Cij 에 쓰면 안 된다"
         else
-            echo "⚠ 완료(BFGS 미완)|JOB DONE 은 있는데 BFGS 종료가 없다 — 힘이 안 내려갔다"
+            echo "⚠ 완료(BFGS 미완)|JOB DONE 은 있는데 수렴 선언이 없다 — 힘이 안 내려갔다"
         fi
         return
     fi
@@ -59,8 +68,10 @@ if [ "${1:-}" = "--selftest" ]; then
     chk "없는 파일은 대기" "$(el_state "$t/nope" | cut -d'|' -f1)" "대기"
     printf 'starting\n' > "$t/a";            chk "갓 시작은 초기화"      "$(el_state "$t/a" | cut -d'|' -f1)" "… 초기화"
     printf '     iteration #  3\n' > "$t/b"; chk "반복이 있으면 진행"    "$(el_state "$t/b" | cut -d'|' -f1)" "… 진행"
-    printf 'End of BFGS Geometry Optimization\n     number of scf cycles = 7\nJOB DONE.\n' > "$t/c"
-    chk "BFGS 종료 + JOB DONE 이면 완료" "$(el_state "$t/c" | cut -d'|' -f1)" "✓ 완료"
+    # ⚠ 앞판 fixture 는 `End of BFGS` 만 있고 `bfgs converged` 가 없었다 — QE 가 그렇게
+    #   찍는 경우는 **수렴이 아니라 스텝소진**이다. 실제 수렴 출력으로 고친다.
+    printf '     bfgs converged in 31 scf cycles and 7 bfgs steps\n     number of scf cycles = 31\n     End of BFGS Geometry Optimization\nJOB DONE.\n' > "$t/c"
+    chk "수렴 선언 + JOB DONE 이면 완료" "$(el_state "$t/c" | cut -d'|' -f1)" "✓ 완료"
     # ⛔음성 — 이 한 줄이 이 도구의 존재 이유다
     printf '     iteration #  99\nJOB DONE.\n' > "$t/d"
     chk "[음성] JOB DONE 만으로 완료 아님 (BFGS 미완)" "$(el_state "$t/d" | cut -d'|' -f1)" "⚠ 완료(BFGS 미완)"
@@ -70,6 +81,34 @@ if [ "${1:-}" = "--selftest" ]; then
     chk "[음성] BFGS 만 있고 JOB DONE 이 없으면 완료 아님" "$(el_state "$t/f" | cut -d'|' -f1)" "… 초기화"
     printf 'JOB DONE.\0\0garbage\n' > "$t/g"
     chk "[음성] NUL 오염 출력도 읽는다" "$(el_state "$t/g" | cut -d'|' -f1)" "⚠ 완료(BFGS 미완)"
+    # ⛔⛔ 2026-09-17 — **진짜 실패 모드**. QE 는 nstep 소진에도 End of BFGS 를 찍는다.
+    #   앞판 fixture(/d)는 그 줄이 없어서 이 경우를 한 번도 안 쟀고, 그래서 시험이
+    #   초록인 채로 strain_23_p 가 `✓ 완료` 로 보고됐다.
+    printf '     number of bfgs steps    =  49\n     The maximum number of steps has been reached.\n\n     End of BFGS Geometry Optimization\nJOB DONE.\n' > "$t/h"
+    chk "[음성] nstep 소진은 완료가 아니다 (End of BFGS 가 찍혀도)" \
+        "$(el_state "$t/h" | cut -d'|' -f1)" "⛔ 스텝소진"
+    printf '     number of bfgs steps    =  11\n     bfgs converged in 42 scf cycles and 11 bfgs steps\n     number of scf cycles = 42\n     End of BFGS Geometry Optimization\nJOB DONE.\n' > "$t/i"
+    chk "진짜 수렴만 완료다 (bfgs converged 선언)" "$(el_state "$t/i" | cut -d'|' -f1)" "✓ 완료"
+    # ── 집계 배선 (el_state 만 시험하면 case 문의 구멍을 못 본다) ──────────────
+    #   ⛔ 2026-09-17: `⛔ 스텝소진` 을 case 에 안 넣었더니 `*)` 로 떨어져 **진행 중**
+    #     으로 잡혔다. el_state 시험은 10/0 초록이었다 — 시험이 집계를 안 쟀다.
+    R=$t/tree; mkdir -p "$R/elastic_zz"
+    CONV='     bfgs converged in 31 scf cycles and 7 bfgs steps\n     number of scf cycles = 31\n     End of BFGS Geometry Optimization\nJOB DONE.\n'
+    MAXS='     number of bfgs steps    =  49\n     The maximum number of steps has been reached.\n\n     End of BFGS Geometry Optimization\nJOB DONE.\n'
+    printf "$CONV" > "$R/elastic_zz/V0_relax.out"
+    for tag in strain_11_p strain_11_m strain_22_p strain_22_m strain_33_p strain_33_m; do
+        printf "$CONV" > "$R/elastic_zz/$tag.out"
+    done
+    printf "$MAXS" > "$R/elastic_zz/strain_23_p.out"      # ← 거짓 초록이 났던 그 경우
+    SUM=$(ROOT=$R bash "$0" 2>/dev/null | grep -a "strain .*완료")
+    case "$SUM" in
+        *"6/12 완료"*"문제 1"*) echo "  ⭕ [음성] 집계: 스텝소진은 완료가 아니라 **문제**로 센다"; ok=$((ok+1)) ;;
+        *) echo "  ⛔ [음성] 집계가 스텝소진을 잘못 센다 — 얻음 '$SUM'"; bad=$((bad+1)) ;;
+    esac
+    case "$SUM" in
+        *"진행 strain_23_p"*) echo "  ⛔ [음성] 스텝소진을 '진행 중' 으로 읽는다 (case 구멍)"; bad=$((bad+1)) ;;
+        *) echo "  ⭕ [음성] 끝난 점을 '진행 중' 으로 읽지 않는다"; ok=$((ok+1)) ;;
+    esac
     rm -rf "$t"; echo "  selftest: ⭕ $ok · ⛔ $bad"; [ "$bad" = 0 ] || exit 1; exit 0
 fi
 
@@ -102,7 +141,7 @@ for D in $DIRS; do
         IFS='|' read -r st note <<< "$(el_state "$D/$t.out")"
         case "$st" in
             "✓ 완료")            NOK=$((NOK+1)) ;;
-            "⚠ 완료(BFGS 미완)"|"☠ 오류") NBAD=$((NBAD+1)) ;;
+            "⚠ 완료(BFGS 미완)"|"⛔ 스텝소진"|"☠ 오류") NBAD=$((NBAD+1)) ;;
             "대기")              NPEND=$((NPEND+1)) ;;
             *)                   CUR=$t ;;
         esac
