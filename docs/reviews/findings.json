@@ -4008,30 +4008,36 @@
   {
    "id": "GAP3-19",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
    "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
    "evidence_tests": [
-    "scripts/porosity_plastic_vs_rigid.py::36,51,55",
-    "scripts/porosity_close.py::28-29"
+    "scripts/porosity_filter_axes_check.py::1,120",
+    "scripts/porosity_plastic_vs_rigid.py::36,55"
    ],
    "title": "`exclude_particulate` 플래그 **하나가 세 필터**를 제어한다 (레짐 둘 + 무효 데이터 하나)",
-   "note": "`porosity_plastic_vs_rigid.py:36,51,55` — 같은 스위치가 ⓐ particulate ⓑ `input_S_` ⓒ **`1mAh_100`\nbroken-sim(plate_z 버그 = 무효 데이터)** 을 함께 끈다.  ⓐⓑ 는 \"다른 레짐\", ⓒ 는 \"잘못된 데이터\" 라\n축이 다르다.  정본 `porosity_regression_final.md:26-27` 은 ⓒ 를 **\"필터 영구\"** 라 쓰는데 코드는 같이 꺼진다.\n★ 호출부에서 부작용이 **안 보인다**는 직접 증거: `porosity_close.py:28-29` 가 이미 걸러진 `1mAh_100` 을\n  **중복 제거**한다 = 작성자도 숨은 세 번째 필터를 인지하지 못했다 (무해한 중복)."
+   "note": "`porosity_plastic_vs_rigid.py:36,51,55` — 같은 스위치가 ⓐ particulate ⓑ `input_S_` ⓒ **`1mAh_100`\nbroken-sim(plate_z 버그 = 무효 데이터)** 을 함께 끈다.  ⓐⓑ 는 \"다른 레짐\", ⓒ 는 \"잘못된 데이터\" 라\n축이 다르다.  정본 `porosity_regression_final.md:26-27` 은 ⓒ 를 **\"필터 영구\"** 라 쓰는데 코드는 같이 꺼진다.\n★ 호출부에서 부작용이 **안 보인다**는 직접 증거: `porosity_close.py:28-29` 가 이미 걸러진 `1mAh_100` 을\n  **중복 제거**한다 = 작성자도 숨은 세 번째 필터를 인지하지 못했다 (무해한 중복).",
+   "claimed_fixed_sha": "eb3746781",
+   "verification_note": "`exclude_broken` 을 독립 플래그로 분리했다 (`porosity_plastic_vs_rigid.py:36,55`).\n호출부 7 곳 중 `exclude_particulate=False` 를 주는 곳은 `porosity_unified.py:42`\n하나뿐이라 피해는 거기로 국한됐다 — 나머지 6 곳은 stdout **바이트 동일**이고,\nCSV 를 쓰는 두 곳도 `\\r` 제거 후 sha256 동일임을 실측했다.\n회귀 `porosity_filter_axes_check.py` 가 check_all + CI 에 상주한다.\n⚠ 그 검사의 **2×2 분리성** 세 항목은 재결합을 못 잡는다 (결합 시 broken 축이 0 이\n  되어 항등식이 그대로 성립) — 판별하는 것은 누수 검사와 \"축이 살아 있는지\" 다.\n  결함 복원 시 9 → 6 PASS, rc=1 로 확인했다.",
+   "fixed_in": "docs/reviews/gap_audit_r3_repair_20260917.md"
   },
   {
    "id": "GAP3-20",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
    "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
    "evidence_tests": [
-    "scripts/porosity_unified.py::42,55",
-    "docs/data/case_3d_collection.csv"
+    "scripts/porosity_filter_axes_check.py::1,120",
+    "scripts/porosity_unified.py::42,45"
    ],
    "title": "`porosity_unified.py:42` 의 `FULL corpus` 에 **무효 9건**이 섞여 보고 수치가 전부 틀렸다",
-   "note": "`load_pairs(exclude_particulate=False)  # FULL corpus` 가 GAP3-19 의 부작용으로 broken-sim 9건\n(`input_1mAh_100_{1,2,3,4,6,7,8,9,10}`)을 함께 들인다.  dem/mpm 이 전부 양수라 기존 게이트에 안 걸린다.\n전수 실측: production 129 + particulate/S 16 + broken 9 = 154 (겹침 0).\nread-only 재계산 (9건 제외 시):\n  gated λ-U LOOCV  0.472 → **0.502** (+0.030)  ← 이 스크립트의 헤드라인 주장\n  production RMSE  3.01 → **2.71 %p** (−0.30)\n  n 라벨           138  → **129**\n⇒ 헤드라인 이득이 **과소** 보고되고 RMSE 는 부풀려져 있으며 n 이 9 틀렸다.\n⚠ 방향이 보수적이라 결론 자체는 안 뒤집힌다 — 그러나 숫자와 n 은 전부 틀린 값이다."
+   "note": "`load_pairs(exclude_particulate=False)  # FULL corpus` 가 GAP3-19 의 부작용으로 broken-sim 9건\n(`input_1mAh_100_{1,2,3,4,6,7,8,9,10}`)을 함께 들인다.  dem/mpm 이 전부 양수라 기존 게이트에 안 걸린다.\n전수 실측: production 129 + particulate/S 16 + broken 9 = 154 (겹침 0).\nread-only 재계산 (9건 제외 시):\n  gated λ-U LOOCV  0.472 → **0.502** (+0.030)  ← 이 스크립트의 헤드라인 주장\n  production RMSE  3.01 → **2.71 %p** (−0.30)\n  n 라벨           138  → **129**\n⇒ 헤드라인 이득이 **과소** 보고되고 RMSE 는 부풀려져 있으며 n 이 9 틀렸다.\n⚠ 방향이 보수적이라 결론 자체는 안 뒤집힌다 — 그러나 숫자와 n 은 전부 틀린 값이다.",
+   "claimed_fixed_sha": "eb3746781",
+   "verification_note": "`porosity_unified.py:42` 가 `exclude_broken=True` 를 명시한다.  실측 (원장 예고와 일치):\n  full corpus n 154 (production 138) → 145 (production **129**)\n  base 9-term LOOCV 0.344 → 0.345 · gated λ-U LOOCV 0.472 → **0.502**\n  production RMSE 3.01 → **2.71 %p** · particulate/S 2.49 → 2.41 %p\n★ 원장에 없던 것: 계수 `sefill_x_bim` 이 +7.54 → **+18.08 (2.4배)**.\n⚠ 방향이 보수적이라 결론은 안 뒤집혔다 — 숫자와 n 만 틀린 값이었다.",
+   "fixed_in": "docs/reviews/gap_audit_r3_repair_20260917.md"
   },
   {
    "id": "GAP3-34",
@@ -4122,7 +4128,7 @@
   {
    "id": "GAP3-FIG",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "갭 감사 2판 재검증 (2026-09-17, 에이전트 6버킷)",
    "opened_in": "docs/reviews/gap_audit_r3_verdicts_20260917.md",
@@ -4133,7 +4139,10 @@
     "scripts/plot_porosity_v4_paper.py::150"
    ],
    "title": "논문 그림 생성기 4개가 **철회된 헤드라인·틀린 n·하드코딩 지표**를 그림에 박는다",
-   "note": "⑤ `plot_mpm_dem_match.py:96` — 제목 `'Furnas dip co-located: DEM vs independent plastic MPM'`.\n   `CLAUDE.md` CORRECTION 2 가 *\"the FURNAS DIP is NOT reproduced … earlier headline was WRONG\"*\n   라고 **명시 철회**한 표현이다.  ★ 그림은 미커밋이고 `.gitignore:20` 이 그 경로를 무시한다.\n⑥ `plot_tau_regime_si.py:120-121` — 그리는 것은 `phi_range**(-2.36)` 인데 범례는 `τ²=φ^{-1.72}`.\n   산출물은 전부 `/tmp` 라 리포 밖이다.\n⑯ `plot_porosity_4panel.py:2,18,252-254` — 제목 `82 cases` 인데 `load()` 를 직접 호출해 세니 **80**\n   (패널 14+15+32+19=80).  **그림이 커밋돼 있고**(`porosity_4panel.png`) 커밋 메시지에도 \"82\" 가 박혔다.\n㉝ `plot_porosity_v4_paper.py:150` — `RMSE 2.27 %p (all 82) / 2.09 %p (trust 80)` 이 **순수 리터럴**이다\n   (파일에 `rmse` 문자열 1건뿐, `out_mask`·\"trust\" 계산 코드 **0건**).  현재 코퍼스로 재현하면\n   N=80 · trust 74 · **RMSE_all 2.292 · RMSE_trust 1.717** — trust 쪽이 22 % 어긋난다.\n   ⚠ 그 캡션이 박힌 그림은 자매 스크립트의 나중 커밋(`1adda925f`)이 같은 경로를 덮어써 **현재 없다**."
+   "note": "⑤ `plot_mpm_dem_match.py:96` — 제목 `'Furnas dip co-located: DEM vs independent plastic MPM'`.\n   `CLAUDE.md` CORRECTION 2 가 *\"the FURNAS DIP is NOT reproduced … earlier headline was WRONG\"*\n   라고 **명시 철회**한 표현이다.  ★ 그림은 미커밋이고 `.gitignore:20` 이 그 경로를 무시한다.\n⑥ `plot_tau_regime_si.py:120-121` — 그리는 것은 `phi_range**(-2.36)` 인데 범례는 `τ²=φ^{-1.72}`.\n   산출물은 전부 `/tmp` 라 리포 밖이다.\n⑯ `plot_porosity_4panel.py:2,18,252-254` — 제목 `82 cases` 인데 `load()` 를 직접 호출해 세니 **80**\n   (패널 14+15+32+19=80).  **그림이 커밋돼 있고**(`porosity_4panel.png`) 커밋 메시지에도 \"82\" 가 박혔다.\n㉝ `plot_porosity_v4_paper.py:150` — `RMSE 2.27 %p (all 82) / 2.09 %p (trust 80)` 이 **순수 리터럴**이다\n   (파일에 `rmse` 문자열 1건뿐, `out_mask`·\"trust\" 계산 코드 **0건**).  현재 코퍼스로 재현하면\n   N=80 · trust 74 · **RMSE_all 2.292 · RMSE_trust 1.717** — trust 쪽이 22 % 어긋난다.\n   ⚠ 그 캡션이 박힌 그림은 자매 스크립트의 나중 커밋(`1adda925f`)이 같은 경로를 덮어써 **현재 없다**.",
+   "claimed_fixed_sha": "eb3746781",
+   "verification_note": "네 건 모두 그림이 스스로 세거나 계산하게 했다.\n⑤ 철회된 *\"Furnas dip co-located\"* → *\"DEM dips; plastic MPM is monotonic — the curves merely CROSS\"*\n⑥ 라벨을 **그리는 지수에서 생성** ⇒ 곡선↔글자가 다시 갈릴 수 없다\n   ⚠ 지수 **값** 자체는 출처가 없어 고치지 않았다 → `GAP3-37` 로 분리\n⑯ `82` → 네 패널에서 센다.  실측 14+15+32+19 = **80**.  커밋된 PNG 재생성\n   ⚠ 제목만 바뀐 것이 아니다 — 커밋본이 2026-05-13 것이라 코퍼스·matplotlib\n     변화가 함께 반영된다 (444 → 522 KB)\n㉝ RMSE 리터럴 → `out_mask` 로 계산 (정의는 자매 `plot_porosity_v4_journal.py:130-134`\n   그대로 — 새로 만들지 않았다).  실측 `N_all=80 · N_trust=74 · 2.292 · 1.717`\n   ⇒ 리터럴 2.09 대비 trust 쪽 **22 % 어긋남** (원장 예고와 일치)",
+   "fixed_in": "docs/reviews/gap_audit_r3_repair_20260917.md"
   },
   {
    "id": "GAP3-17",
@@ -4183,7 +4192,7 @@
   {
    "id": "GAP3-35",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "GAP3-FIG 수리 중 실측 (2026-09-17)",
    "opened_in": "docs/reviews/gap_audit_r3_repair_20260917.md",
@@ -4192,7 +4201,9 @@
     "scripts/plot_porosity_v4_journal.py::502"
    ],
    "title": "그림 생성기 **둘이 같은 파일에 쓴다** — 나중에 돈 쪽이 상대를 조용히 지운다",
-   "note": "`plot_porosity_v4_paper.py:292` 와 `plot_porosity_v4_journal.py:502` 가 둘 다\n`docs/figures/porosity_v4_paper_figure.png` 에 쓴다.  커밋된 것은 journal 의 6-패널이고\n(`1adda925f` 가 `41a7f78ea` 를 덮었다), 이 수리 중 paper 를 돌리자 **그 그림이 실제로\n사라졌다** (git 으로 되돌렸다).\n⇒ journal 이 원래 이름을 갖고(caption `.md` 를 같은 접두사로 낸다), paper 는\n   `porosity_v4_paper_4panel.png` 로 분리했다.\n⚠ 두 그림은 **다른 그림**이다 (4-패널 vs 6-패널) — 덮어쓰기가 무해한 중복이 아니었다."
+   "note": "`plot_porosity_v4_paper.py:292` 와 `plot_porosity_v4_journal.py:502` 가 둘 다\n`docs/figures/porosity_v4_paper_figure.png` 에 쓴다.  커밋된 것은 journal 의 6-패널이고\n(`1adda925f` 가 `41a7f78ea` 를 덮었다), 이 수리 중 paper 를 돌리자 **그 그림이 실제로\n사라졌다** (git 으로 되돌렸다).\n⇒ journal 이 원래 이름을 갖고(caption `.md` 를 같은 접두사로 낸다), paper 는\n   `porosity_v4_paper_4panel.png` 로 분리했다.\n⚠ 두 그림은 **다른 그림**이다 (4-패널 vs 6-패널) — 덮어쓰기가 무해한 중복이 아니었다.",
+   "claimed_fixed_sha": "eb3746781",
+   "verification_note": "journal 이 원래 이름을 갖고(caption `.md` 를 같은 접두사로 낸다), paper 는\n`docs/figures/porosity_v4_paper_4panel.png` 로 분리했다.  덮어써 사라졌던\njournal 그림은 git 으로 되돌렸다."
   },
   {
    "id": "GAP3-36",
