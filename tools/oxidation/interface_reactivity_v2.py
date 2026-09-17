@@ -530,6 +530,47 @@ def _selftest():
     chk(all("Nd" in g["formula"] for r in _D["rows"] for g in r["phases"]),
         "[음성] phases 에 든 상은 전부 도펀트를 가진다")
 
+    # ── dopant_gap_floor (2026-09-17) ─────────────────────────────────────
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as _d:
+        _f = Path(_d) / "fate.json"; _g = Path(_d) / "gap.json"
+        _f.write_text(json.dumps({"rows": [
+            {"voltage_V": 2.5, "phases": [{"formula": "NdPO4", "channel": "phosphate"}]},
+            {"voltage_V": 4.5, "phases": [{"formula": "NdCl3", "channel": "halide"},
+                                          {"formula": "Nd(PO3)3", "channel": "phosphate"}]},
+            {"voltage_V": 9.9, "phases": [{"formula": "NdCl3", "channel": "halide"},
+                                          {"formula": "NdWhoKnows", "channel": "?"}]}]}),
+            encoding="utf-8")
+        _g.write_text(json.dumps({"matched": {
+            "NdPO4": {"matched": {"x": 1}, "band_gap_MP_eV": 5.679},
+            "NdCl3": {"matched": {"x": 1}, "band_gap_MP_eV": 4.300},
+            "Nd(PO3)3": {"matched": {"x": 1}, "band_gap_MP_eV": 5.487},
+            "P2O5": {"matched": None, "why": "공간군 못 찾음"}}}), encoding="utf-8")
+        _r = dopant_gap_floor(str(_f), str(_g))["by_voltage"]
+        chk(_r["2.5"]["min_gap_ref_eV"] == 5.679 and _r["2.5"]["min_gap_phase"] == "NdPO4",
+            "[양성] 상이 하나면 그 갭이 최소다")
+        chk(_r["4.5"]["min_gap_ref_eV"] == 4.3 and _r["4.5"]["min_gap_phase"] == "NdCl3",
+            f'[양성] 여럿이면 **최소**를 고른다 (4.3 NdCl3, 5.487 아님) — {_r["4.5"]["min_gap_phase"]}')
+        chk(_r["9.9"]["min_gap_ref_eV"] is None
+            and _r["9.9"]["GAP_UNKNOWN_phases"] == ["NdWhoKnows"],
+            "⛔음성: 갭 모르는 상이 하나라도 있으면 **최솟값을 내지 않는다** "
+            "(모르는 상이 더 좁을 수 있다 — '아는 것 중 최소' 는 바닥이 아니다)")
+        chk(_r["9.9"]["min_gap_phase"] is None,
+            "⛔음성: 최솟값을 안 낼 때 병목상 이름도 안 낸다 (반쪽 답을 주지 않는다)")
+        _full = dopant_gap_floor(str(_f), str(_g))
+        chk(_full["GAP_REF_missing"] == ["NdWhoKnows"],
+            "⛔음성: 참조에 없는 상을 **조용히 버리지 않고** 이름으로 보고한다")
+        chk("CEI 전체" in _full["NOT_A_CLAIM_ABOUT"],
+            "[양성] 기록 자체가 '이건 CEI 전체 절연성이 아니다' 를 달고 다닌다")
+        # matched:null 인 상은 갭이 있는 척하면 안 된다
+        _g2 = Path(_d) / "g2.json"
+        _g2.write_text(json.dumps({"matched": {
+            "NdPO4": {"matched": None, "band_gap_MP_eV": 5.679}}}), encoding="utf-8")
+        _r2 = dopant_gap_floor(str(_f), str(_g2))["by_voltage"]
+        chk(_r2["2.5"]["min_gap_ref_eV"] is None,
+            "⛔음성: matched=null 이면 band_gap 필드가 남아 있어도 **안 쓴다** "
+            "(공간군을 못 맞춘 값은 다른 상의 값이다)")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -862,6 +903,63 @@ def p_flux(csv_path, exchange, base="modelc", n_p_per_fu=None):
                  "교환값 없는 상은 빼지 않고 covered_P_frac 으로 보고한다. 최소 꺾임만."}
 
 
+def dopant_gap_floor(fate_json, gap_json, dopant="Nd"):
+    """전압마다 **hull 이 도펀트에 배정한 상**들의 참조갭을 붙이고 최솟값을 낸다.
+
+    왜 (2026-09-17): Fig 2 는 *"전압이 오르면 Nd 가 경쟁하는 상대가 바뀐다"* 까지만
+      말할 수 있다 (pairwise 해상도 한계, D-2026-09-17-pairwise-exchange-resolution-limit).
+      그 다음 질문 — *"바뀐 상대가 전자를 막느냐"* — 는 교환에너지가 아니라
+      **hull 이 실제로 고른 상의 갭**으로 답한다. 이 함수가 그 둘을 잇는다.
+
+    ⛔⛔ 이 함수가 **못 하는 것 — 여기가 제일 중요하다**:
+      · **"CEI 가 절연이다" 를 말하지 않는다.** 전자 누설의 병목은 *산물 전체* 중
+        최소 갭이고, 이건 **도펀트 함유 상만** 본다. Li3PO4·전이금속 인산염·S 등
+        나머지 산물은 여기 안 들어간다. 섞어 읽으면 과대주장이다.
+      · 갭은 **MP PBE 참조값**이다 — 우리 계산이 아니다 (§C 가 그걸 잰다).
+        Nd 함유 상은 4f 배치 때문에 **하한**이고, PBE 자체가 30-50% 과소다.
+      · 상이 여럿일 때 최솟값을 내지만 **부피분율은 모른다** — 미량상이 병목처럼
+        보일 수 있다.
+    """
+    fate = json.load(open(fate_json, encoding="utf-8"))
+    gj = json.load(open(gap_json, encoding="utf-8"))
+    gaps = {k: v.get("band_gap_MP_eV") for k, v in (gj.get("matched") or {}).items()
+            if v.get("matched") is not None}
+    by_v, unknown = {}, set()
+    for r in fate.get("rows", []):
+        v = r.get("voltage_V")
+        d = by_v.setdefault(v, {"phases": {}, "n_conditions": 0})
+        d["n_conditions"] += 1
+        for ph in r.get("phases", []):
+            f = ph.get("formula")
+            g = gaps.get(f)
+            if g is None:
+                unknown.add(f)
+            e = d["phases"].setdefault(f, {"formula": f, "n": 0,
+                                           "channel": ph.get("channel"),
+                                           "gap_ref_eV": g})
+            e["n"] += 1
+    out = {}
+    for v in sorted(by_v, key=lambda x: (x is None, x)):
+        ph = by_v[v]["phases"]
+        known = [e["gap_ref_eV"] for e in ph.values() if e["gap_ref_eV"] is not None]
+        miss = sorted(f for f, e in ph.items() if e["gap_ref_eV"] is None)
+        out[str(v)] = {
+            "n_conditions": by_v[v]["n_conditions"],
+            "phases": sorted(ph.values(), key=lambda e: -e["n"]),
+            # ⛔ 결측이 하나라도 있으면 최솟값을 **내지 않는다** — 모르는 상이 더
+            #   좁을 수 있으므로 "아는 것 중 최소" 는 바닥이 아니다.
+            "min_gap_ref_eV": (min(known) if known and not miss else None),
+            "min_gap_phase": (min(ph.values(), key=lambda e: e["gap_ref_eV"])["formula"]
+                              if known and not miss else None),
+            "GAP_UNKNOWN_phases": miss or None}
+    return {"dopant": dopant, "fate_source": fate_json, "gap_source": gap_json,
+            "by_voltage": out,
+            "GAP_REF_missing": sorted(unknown) or None,
+            "NOT_A_CLAIM_ABOUT":
+                "CEI 전체의 전자 절연성. 병목은 **산물 전체 중 최소 갭**이고 이 표는 "
+                "도펀트 함유 상만 본다. 갭은 MP PBE 참조값(Nd 상은 하한)이다."}
+
+
 def dopant_fate(csv_path, dopant="Nd"):
     """도펀트가 최소 꺾임에서 **어느 상으로 가는가** — 인산염 / 황산염 / 염화물 / 그 밖.
 
@@ -944,6 +1042,11 @@ def main():
     ap.add_argument("--dopant_fate", metavar="PANELS_CSV",
                     help="도펀트가 최소 꺾임에서 인산염/황산염/염화물 중 어디로 갔나")
     ap.add_argument("--dopant", default="Nd", help="--dopant_fate 가 추적할 원소")
+    ap.add_argument("--dopant_gap_floor", metavar="FATE_JSON",
+                    help="hull 이 도펀트에 배정한 상의 **참조갭**을 전압별로 붙인다 "
+                         "(--gap_ref 필요). ⛔ CEI 전체 절연성 주장 아님")
+    ap.add_argument("--gap_ref", metavar="MATCHED_JSON",
+                    help="공간군 맞춘 MP 참조갭 (sei_product_gaps --match_spacegroup 산출)")
     ap.add_argument("--p_flux", metavar="PANELS_CSV",
                     help="Fig. 1 의 Δ 를 '양 x P당 교환이득 / 원자수' 로 예측해 본다 "
                          "(--exchange 로 교환 레코드를 준다)")
@@ -961,6 +1064,24 @@ def main():
     if "--selftest" in __import__("sys").argv:
         raise SystemExit(_selftest())
     a = ap.parse_args()
+    if a.dopant_gap_floor:
+        if not a.gap_ref:
+            sys.exit("⛔ --dopant_gap_floor 는 --gap_ref 가 있어야 한다 — "
+                     "갭 참조 없이 '넓다/좁다' 를 말하지 않는다")
+        out = dopant_gap_floor(a.dopant_gap_floor, a.gap_ref, a.dopant)
+        Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f'{a.dopant} 함유 상의 참조갭 — 전압별 (⛔ CEI 전체 절연성 아님)')
+        print(f'  {"V":>5} {"조건":>4} {"최소갭":>8}  {"병목상":14s} 배정된 상')
+        for v, r in out["by_voltage"].items():
+            mg = r["min_gap_ref_eV"]
+            ps = " · ".join(f'{x["formula"]}({x["gap_ref_eV"]})' for x in r["phases"])
+            print(f'  {v:>5} {r["n_conditions"]:>4} '
+                  f'{(f"{mg:.3f}" if mg is not None else "—"):>8}  '
+                  f'{str(r["min_gap_phase"]):14s} {ps}')
+            if r["GAP_UNKNOWN_phases"]:
+                print(f'        ⛔ 갭 모르는 상 {r["GAP_UNKNOWN_phases"]} — 최솟값 안 냄')
+        print(f'→ {a.out}')
+        return 0
     if a.dopant_fate:
         out = dopant_fate(a.dopant_fate, a.dopant)
         Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")

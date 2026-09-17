@@ -1,0 +1,147 @@
+{
+  "dopant": "Nd",
+  "fate_source": "db/properties/cei_nd_fate_2026_09_17.json",
+  "gap_source": "db/properties/cei_gap_targets_matched_2026_09_17.json",
+  "by_voltage": {
+    "2.5": {
+      "n_conditions": 8,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "n": 8,
+          "channel": "phosphate",
+          "gap_ref_eV": 5.679
+        }
+      ],
+      "min_gap_ref_eV": 5.679,
+      "min_gap_phase": "NdPO4",
+      "GAP_UNKNOWN_phases": null
+    },
+    "3.0": {
+      "n_conditions": 8,
+      "phases": [
+        {
+          "formula": "NdPO4",
+          "n": 8,
+          "channel": "phosphate",
+          "gap_ref_eV": 5.679
+        }
+      ],
+      "min_gap_ref_eV": 5.679,
+      "min_gap_phase": "NdPO4",
+      "GAP_UNKNOWN_phases": null
+    },
+    "3.5": {
+      "n_conditions": 8,
+      "phases": [
+        {
+          "formula": "LiNd(PO3)4",
+          "n": 4,
+          "channel": "phosphate",
+          "gap_ref_eV": 5.979
+        },
+        {
+          "formula": "NdCl3",
+          "n": 2,
+          "channel": "chloride",
+          "gap_ref_eV": 4.3
+        },
+        {
+          "formula": "Nd2(SO4)3",
+          "n": 2,
+          "channel": "sulfate",
+          "gap_ref_eV": 5.433
+        }
+      ],
+      "min_gap_ref_eV": 4.3,
+      "min_gap_phase": "NdCl3",
+      "GAP_UNKNOWN_phases": null
+    },
+    "4.0": {
+      "n_conditions": 8,
+      "phases": [
+        {
+          "formula": "Nd2(SO4)3",
+          "n": 4,
+          "channel": "sulfate",
+          "gap_ref_eV": 5.433
+        },
+        {
+          "formula": "NdP5O14",
+          "n": 2,
+          "channel": "phosphate",
+          "gap_ref_eV": 6.336
+        },
+        {
+          "formula": "NdCl3",
+          "n": 2,
+          "channel": "chloride",
+          "gap_ref_eV": 4.3
+        }
+      ],
+      "min_gap_ref_eV": 4.3,
+      "min_gap_phase": "NdCl3",
+      "GAP_UNKNOWN_phases": null
+    },
+    "4.3": {
+      "n_conditions": 8,
+      "phases": [
+        {
+          "formula": "Nd(PO3)3",
+          "n": 3,
+          "channel": "phosphate",
+          "gap_ref_eV": 5.487
+        },
+        {
+          "formula": "NdP5O14",
+          "n": 2,
+          "channel": "phosphate",
+          "gap_ref_eV": 6.336
+        },
+        {
+          "formula": "NdCl3",
+          "n": 2,
+          "channel": "chloride",
+          "gap_ref_eV": 4.3
+        },
+        {
+          "formula": "Nd2(SO4)3",
+          "n": 2,
+          "channel": "sulfate",
+          "gap_ref_eV": 5.433
+        }
+      ],
+      "min_gap_ref_eV": 4.3,
+      "min_gap_phase": "NdCl3",
+      "GAP_UNKNOWN_phases": null
+    },
+    "4.5": {
+      "n_conditions": 8,
+      "phases": [
+        {
+          "formula": "Nd(PO3)3",
+          "n": 4,
+          "channel": "phosphate",
+          "gap_ref_eV": 5.487
+        },
+        {
+          "formula": "NdP5O14",
+          "n": 3,
+          "channel": "phosphate",
+          "gap_ref_eV": 6.336
+        },
+        {
+          "formula": "NdCl3",
+          "n": 2,
+          "channel": "chloride",
+          "gap_ref_eV": 4.3
+        }
+      ],
+      "min_gap_ref_eV": 4.3,
+      "min_gap_phase": "NdCl3",
+      "GAP_UNKNOWN_phases": null
+    }
+  },
+  "GAP_REF_missing": null,
+  "NOT_A_CLAIM_ABOUT": "CEI 전체의 전자 절연성. 병목은 **산물 전체 중 최소 갭**이고 이 표는 도펀트 함유 상만 본다. 갭은 MP PBE 참조값(Nd 상은 하한)이다."
+}
