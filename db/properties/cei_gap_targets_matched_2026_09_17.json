@@ -1,0 +1,242 @@
+{
+ "property": "cei_gap_targets_mp_reference",
+ "purpose": "§C 판별종의 **우리 표적 다형과 같은 공간군** MP 참조갭. 우리 fixed-occ nscf 의 검증 표적이다.",
+ "⛔": "MP PBE 값이다 — 우리 db 갭 표에 넣지 않는다 (문헌·db 분리 규율). 재현 판정은 '같은 자릿수·같은 순위' 로만 한다.",
+ "targets_file": "db/properties/cei_gap_structures_2026_09_17.json",
+ "source_file": "db/properties/cei_gap_targets_mp_reference_2026_09_17.json",
+ "matched": {
+  "NdPO4": {
+   "formula": "NdPO4",
+   "our_spacegroup": "P2_1/c",
+   "our_mp_id": "mp-aaaaafhw",
+   "our_n_atoms": 24,
+   "mp_ground_state": {
+    "spacegroup": "P2_1/c",
+    "material_id": "mp-3584",
+    "band_gap_MP_eV": 5.679
+   },
+   "n_polymorphs_in_MP": 3,
+   "matched": {
+    "band_gap_MP_eV": 5.679,
+    "e_above_hull": 0.0,
+    "formula": "NdPO4",
+    "is_stable": true,
+    "material_id": "mp-3584",
+    "spacegroup_number": 14,
+    "spacegroup_symbol": "P2_1/c"
+   },
+   "band_gap_MP_eV": 5.679,
+   "is_mp_ground_state": true
+  },
+  "NdCl3": {
+   "formula": "NdCl3",
+   "our_spacegroup": "P6_3/m",
+   "our_mp_id": "mp-aaaabihr",
+   "our_n_atoms": 8,
+   "mp_ground_state": {
+    "spacegroup": "P6_3/m",
+    "material_id": "mp-23183",
+    "band_gap_MP_eV": 4.3
+   },
+   "n_polymorphs_in_MP": 1,
+   "matched": {
+    "band_gap_MP_eV": 4.3,
+    "e_above_hull": 0.0,
+    "formula": "NdCl3",
+    "is_stable": true,
+    "material_id": "mp-23183",
+    "spacegroup_number": 176,
+    "spacegroup_symbol": "P6_3/m"
+   },
+   "band_gap_MP_eV": 4.3,
+   "is_mp_ground_state": true
+  },
+  "Nd2(SO4)3": {
+   "formula": "Nd2(SO4)3",
+   "our_spacegroup": "C2/c",
+   "our_mp_id": "mp-aaaabrhp",
+   "our_n_atoms": 34,
+   "mp_ground_state": {
+    "spacegroup": "C2/c",
+    "material_id": "mp-29265",
+    "band_gap_MP_eV": 5.433
+   },
+   "n_polymorphs_in_MP": 1,
+   "matched": {
+    "band_gap_MP_eV": 5.433,
+    "e_above_hull": 0.0,
+    "formula": "Nd2(SO4)3",
+    "is_stable": true,
+    "material_id": "mp-29265",
+    "spacegroup_number": 15,
+    "spacegroup_symbol": "C2/c"
+   },
+   "band_gap_MP_eV": 5.433,
+   "is_mp_ground_state": true
+  },
+  "Nd(PO3)3": {
+   "formula": "Nd(PO3)3",
+   "our_spacegroup": "C222_1",
+   "our_mp_id": "mp-aaaaaktk",
+   "our_n_atoms": 26,
+   "mp_ground_state": {
+    "spacegroup": "C222_1",
+    "material_id": "mp-7264",
+    "band_gap_MP_eV": 5.487
+   },
+   "n_polymorphs_in_MP": 1,
+   "matched": {
+    "band_gap_MP_eV": 5.487,
+    "e_above_hull": 0.0,
+    "formula": "Nd(PO3)3",
+    "is_stable": true,
+    "material_id": "mp-7264",
+    "spacegroup_number": 20,
+    "spacegroup_symbol": "C222_1"
+   },
+   "band_gap_MP_eV": 5.487,
+   "is_mp_ground_state": true
+  },
+  "Nd3PO7": {
+   "formula": "Nd3PO7",
+   "our_spacegroup": "Cm",
+   "our_mp_id": "mp-aaacqmbf",
+   "our_n_atoms": 66,
+   "mp_ground_state": {
+    "spacegroup": "Cm",
+    "material_id": "mp-1203311",
+    "band_gap_MP_eV": 4.284
+   },
+   "n_polymorphs_in_MP": 2,
+   "matched": {
+    "band_gap_MP_eV": 4.284,
+    "e_above_hull": 0.0,
+    "formula": "Nd3PO7",
+    "is_stable": true,
+    "material_id": "mp-1203311",
+    "spacegroup_number": 8,
+    "spacegroup_symbol": "Cm"
+   },
+   "band_gap_MP_eV": 4.284,
+   "is_mp_ground_state": true
+  },
+  "NdP5O14": {
+   "formula": "NdP5O14",
+   "our_spacegroup": "Pmna",
+   "our_mp_id": "mp-aaabfxkr",
+   "our_n_atoms": 80,
+   "mp_ground_state": {
+    "spacegroup": "Pmna",
+    "material_id": "mp-560681",
+    "band_gap_MP_eV": 6.336
+   },
+   "n_polymorphs_in_MP": 2,
+   "matched": {
+    "band_gap_MP_eV": 6.336,
+    "e_above_hull": 0.0,
+    "formula": "NdP5O14",
+    "is_stable": true,
+    "material_id": "mp-560681",
+    "spacegroup_number": 53,
+    "spacegroup_symbol": "Pmna"
+   },
+   "band_gap_MP_eV": 6.336,
+   "is_mp_ground_state": true
+  },
+  "LiNd(PO3)4": {
+   "formula": "LiNd(PO3)4",
+   "our_spacegroup": "C2/c",
+   "our_mp_id": "mp-aaaabbrr",
+   "our_n_atoms": 36,
+   "mp_ground_state": {
+    "spacegroup": "C2/c",
+    "material_id": "mp-18711",
+    "band_gap_MP_eV": 5.979
+   },
+   "n_polymorphs_in_MP": 2,
+   "matched": {
+    "band_gap_MP_eV": 5.979,
+    "e_above_hull": 0.0,
+    "formula": "LiNd(PO3)4",
+    "is_stable": true,
+    "material_id": "mp-18711",
+    "spacegroup_number": 15,
+    "spacegroup_symbol": "C2/c"
+   },
+   "band_gap_MP_eV": 5.979,
+   "is_mp_ground_state": true,
+   "⚠": "같은 공간군 다형이 2개 — E_hull 최소를 골랐다"
+  },
+  "Nd2O3": {
+   "formula": "Nd2O3",
+   "our_spacegroup": "Ia-3",
+   "our_mp_id": "mp-aaaaabof",
+   "our_n_atoms": 40,
+   "mp_ground_state": {
+    "spacegroup": "Ia-3",
+    "material_id": "mp-1045",
+    "band_gap_MP_eV": 3.708
+   },
+   "n_polymorphs_in_MP": 6,
+   "matched": {
+    "band_gap_MP_eV": 3.708,
+    "e_above_hull": 0.0,
+    "formula": "Nd2O3",
+    "is_stable": true,
+    "material_id": "mp-1045",
+    "spacegroup_number": 206,
+    "spacegroup_symbol": "Ia-3"
+   },
+   "band_gap_MP_eV": 3.708,
+   "is_mp_ground_state": true
+  },
+  "NdPS4": {
+   "formula": "NdPS4",
+   "our_spacegroup": "I4_1/acd",
+   "our_mp_id": "mp-aaaaafmc",
+   "our_n_atoms": 48,
+   "mp_ground_state": {
+    "spacegroup": "I4_1/acd",
+    "material_id": "mp-3694",
+    "band_gap_MP_eV": 2.252
+   },
+   "n_polymorphs_in_MP": 1,
+   "matched": {
+    "band_gap_MP_eV": 2.252,
+    "e_above_hull": 0.0,
+    "formula": "NdPS4",
+    "is_stable": true,
+    "material_id": "mp-3694",
+    "spacegroup_number": 142,
+    "spacegroup_symbol": "I4_1/acd"
+   },
+   "band_gap_MP_eV": 2.252,
+   "is_mp_ground_state": true
+  },
+  "P2O5": {
+   "formula": "P2O5",
+   "our_spacegroup": "Fdd2",
+   "our_mp_id": "mp-aaaaadqi",
+   "our_n_atoms": 14,
+   "mp_ground_state": {
+    "spacegroup": "Pnma",
+    "material_id": "mp-2173",
+    "band_gap_MP_eV": 4.853
+   },
+   "n_polymorphs_in_MP": 12,
+   "matched": {
+    "band_gap_MP_eV": 5.202,
+    "e_above_hull": 0.0108,
+    "formula": "P2O5",
+    "is_stable": false,
+    "material_id": "mp-2452",
+    "spacegroup_number": 43,
+    "spacegroup_symbol": "Fdd2"
+   },
+   "band_gap_MP_eV": 5.202,
+   "is_mp_ground_state": false,
+   "⚠_바닥상_아님": "MP 바닥상은 Pnma (4.853 eV) 다. 우리 표적과 **다른 상**이므로 재현 판정은 여기 matched 값으로만 한다."
+  }
+ },
+ "source_sha256": "c8903de6759356b7b5d8480ead766fa79202e80fd02993c190498105aa7c46c1"
+}

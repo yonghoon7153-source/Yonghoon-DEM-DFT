@@ -109,7 +109,15 @@
    "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. 같은 4f 문제 (실측 −6.46 eV 는 ↑/↓ 점유수 불일치까지 겹친 값이라 더 무의미하다).",
    "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
    "measured_2026_08_11_robustness": "nbnd 21(여유 0밴드) → 35(여유 15밴드) 재실행에서 **동일값 3.948 eV** — 여유-0밴드 우려 해소, 값 확정.",
-   "polymorph_warning_2026_09_17": "⛔ 위 measured 3.9479 eV 는 **P-3m1 (5원자, mp-2763)** 값이다. §C 표적은 **Ia-3 (40원자, mp-aaaaabof ≈ mp-1045, E_hull 0.0)** 로 **다른 다형**이다. 레지스트리 키가 조성뿐이라 두 구조가 같은 칸을 쓴다 — 갭 게이트에는 문제가 없지만 값을 인용할 때 헷갈린다. §C 는 바닥상(Ia-3)으로 다시 돌리고, 나오면 두 다형을 나눠 적을 것 (MP 쪽 참조: P-3m1 3.812 / Ia-3 3.708 eV)."
+   "polymorph_warning_2026_09_17": "⛔ 위 measured 3.9479 eV 는 **P-3m1 (5원자, mp-2763)** 값이다. §C 표적은 **Ia-3 (40원자, mp-aaaaabof ≈ mp-1045, E_hull 0.0)** 로 **다른 다형**이다. 레지스트리 키가 조성뿐이라 두 구조가 같은 칸을 쓴다 — 갭 게이트에는 문제가 없지만 값을 인용할 때 헷갈린다. §C 는 바닥상(Ia-3)으로 다시 돌리고, 나오면 두 다형을 나눠 적을 것 (MP 쪽 참조: P-3m1 3.812 / Ia-3 3.708 eV).",
+   "sectionC_target_2026_09_17": {
+    "⚠": "이 칸의 measured 3.9479 는 **P-3m1(5원자)** 값이다 — §C 표적이 아니다.",
+    "our_target": "Ia-3 (40원자, mp-aaaaabof)",
+    "mp_reference_eV": 3.708,
+    "mp_reference": "mp-1045 Ia-3 (E_hull 0.0)",
+    "source": "db/properties/cei_gap_targets_matched_2026_09_17.json",
+    "할_일": "Ia-3 로 우리 nscf 를 돌려 두 다형을 나눠 적는다."
+   }
   },
   "nd2s3": {
    "class": "insulator",
@@ -178,9 +186,9 @@
     "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
     "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
     "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
-    "mp_reference_eV": 5.6788,
-    "mp_reference_source": "db/properties/nd_gap_reference_mp.json:NdPO4 (mp-3584, P2_1/c)",
-    "mp_reference_note": "⚠ MP id 표기가 다르다(옛 mp-3584/mp-23183 ↔ 새 mp-aaaaafhw) — 공간군·원자수가 같아 동일 상으로 본다. 값 자체는 MP PBE 이고 **우리 db 갭 표에 넣지 않는다**."
+    "mp_reference_eV": 5.679,
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json",
+    "mp_reference": "mp-3584 P2_1/c (E_hull 0.0) — 우리 표적 공간군과 일치"
    },
    "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
   },
@@ -197,9 +205,9 @@
     "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
     "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
     "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
-    "mp_reference_eV": 4.2998,
-    "mp_reference_source": "db/properties/nd_gap_reference_mp.json:NdCl3 (mp-23183, P6_3/m)",
-    "mp_reference_note": "⚠ MP id 표기가 다르다(옛 mp-3584/mp-23183 ↔ 새 mp-aaaabihr) — 공간군·원자수가 같아 동일 상으로 본다. 값 자체는 MP PBE 이고 **우리 db 갭 표에 넣지 않는다**."
+    "mp_reference_eV": 4.3,
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json",
+    "mp_reference": "mp-23183 P6_3/m (E_hull 0.0) — 우리 표적 공간군과 일치"
    },
    "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
   },
@@ -215,9 +223,11 @@
     "structure": "db/structures/cei_gap_targets/Nd2SO43_mp-aaaabrhp.cif",
     "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
     "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
-    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수"
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 5.433,
+    "mp_reference": "mp-29265 C2/c (E_hull 0.0) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json"
    },
-   "must_confirm": "⚠ MP 참조갭을 아직 조회 안 했다 — `python3 tools/oxidation/sei_product_gaps.py --formulas Nd2(SO4)3 …` 로 채운다. 조회 전에는 **비교 기준이 없다**: 우리 계산이 나와도 '재현됐다/안 됐다' 를 말할 수 없다.",
    "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
   },
   "ndpo33": {
@@ -232,9 +242,11 @@
     "structure": "db/structures/cei_gap_targets/NdPO33_mp-aaaaaktk.cif",
     "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
     "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
-    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수"
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 5.487,
+    "mp_reference": "mp-7264 C222_1 (E_hull 0.0) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json"
    },
-   "must_confirm": "⚠ MP 참조갭을 아직 조회 안 했다 — `python3 tools/oxidation/sei_product_gaps.py --formulas Nd(PO3)3 …` 로 채운다. 조회 전에는 **비교 기준이 없다**: 우리 계산이 나와도 '재현됐다/안 됐다' 를 말할 수 없다.",
    "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
   },
   "nd3po7": {
@@ -249,9 +261,11 @@
     "structure": "db/structures/cei_gap_targets/Nd3PO7_mp-aaacqmbf.cif",
     "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
     "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
-    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수"
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 4.284,
+    "mp_reference": "mp-1203311 Cm (E_hull 0.0) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json"
    },
-   "must_confirm": "⚠ MP 참조갭을 아직 조회 안 했다 — `python3 tools/oxidation/sei_product_gaps.py --formulas Nd3PO7 …` 로 채운다. 조회 전에는 **비교 기준이 없다**: 우리 계산이 나와도 '재현됐다/안 됐다' 를 말할 수 없다.",
    "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
   },
   "ndp5o14": {
@@ -266,9 +280,11 @@
     "structure": "db/structures/cei_gap_targets/NdP5O14_mp-aaabfxkr.cif",
     "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
     "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
-    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수"
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 6.336,
+    "mp_reference": "mp-560681 Pmna (E_hull 0.0) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json"
    },
-   "must_confirm": "⚠ MP 참조갭을 아직 조회 안 했다 — `python3 tools/oxidation/sei_product_gaps.py --formulas NdP5O14 …` 로 채운다. 조회 전에는 **비교 기준이 없다**: 우리 계산이 나와도 '재현됐다/안 됐다' 를 말할 수 없다.",
    "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
   },
   "lindpo34": {
@@ -283,9 +299,12 @@
     "structure": "db/structures/cei_gap_targets/LiNdPO34_mp-aaaabbrr.cif",
     "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
     "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
-    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수"
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 5.979,
+    "mp_reference": "mp-18711 C2/c (E_hull 0.0) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json",
+    "⚠_다형_선택": "같은 공간군 다형이 2개 — E_hull 최소를 골랐다"
    },
-   "must_confirm": "⚠ MP 참조갭을 아직 조회 안 했다 — `python3 tools/oxidation/sei_product_gaps.py --formulas LiNd(PO3)4 …` 로 채운다. 조회 전에는 **비교 기준이 없다**: 우리 계산이 나와도 '재현됐다/안 됐다' 를 말할 수 없다.",
    "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
   },
   "ndps4": {
@@ -300,9 +319,11 @@
     "structure": "db/structures/cei_gap_targets/NdPS4_mp-aaaaafmc.cif",
     "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
     "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
-    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수"
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 2.252,
+    "mp_reference": "mp-3694 I4_1/acd (E_hull 0.0) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json"
    },
-   "must_confirm": "⚠ MP 참조갭을 아직 조회 안 했다 — `python3 tools/oxidation/sei_product_gaps.py --formulas NdPS4 …` 로 채운다. 조회 전에는 **비교 기준이 없다**: 우리 계산이 나와도 '재현됐다/안 됐다' 를 말할 수 없다.",
    "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
   },
   "p2o5": {
@@ -317,9 +338,12 @@
     "structure": "db/structures/cei_gap_targets/P2O5_mp-aaaaadqi.cif",
     "why_declared_not_measured": "우리 fixed-occ nscf 를 **아직 안 돌렸다**. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
     "scope": "§C 판별종 (D-2026-09-16-cathode-cei-gap-target). 이 선언이 여는 것은 **03(fixed-occ 갭) 입력 생성**뿐이다 — 갭 값 자체를 선언하는 게 아니다.",
-    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수"
+    "pp": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (frozen-4f, z=11) — `--nd_u 0 --no_nd_spin` 필수",
+    "mp_reference_eV": 5.202,
+    "mp_reference": "mp-2452 Fdd2 (E_hull 0.0108) — 우리 표적 공간군과 일치",
+    "mp_reference_source": "db/properties/cei_gap_targets_matched_2026_09_17.json",
+    "⚠_MP_바닥상_아님": "우리 표적 Fdd2 는 MP 바닥상이 아니다 (바닥상 Pnma 4.853 eV, 우리 쪽 E_hull +0.0108 eV/atom = 11 meV/atom). 차가 작아 MP 만으로 어느 쪽이 진짜 바닥상인지 못 가른다 — 재현 판정은 **같은 공간군 값**으로만 한다."
    },
-   "must_confirm": "⚠ MP 참조갭을 아직 조회 안 했다 — `python3 tools/oxidation/sei_product_gaps.py --formulas P2O5 …` 로 채운다. 조회 전에는 **비교 기준이 없다**: 우리 계산이 나와도 '재현됐다/안 됐다' 를 말할 수 없다.",
    "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
   }
  },
@@ -338,6 +362,7 @@
  },
  "_history": {
   "2026-09-01": "li_metal / li_metal_bcc 를 declared → **measured** 로 승격. E_F 0.9437 eV 에서 DOS 0.48–1.06 states/eV (0 이 아님). 이 규칙(‘DOS 로 E_F 상태를 확인하기 전엔 NEB 을 안 건다’)은 Li3Nd 함정에서 나온 것이라 Li 금속처럼 자명해 보여도 예외를 두지 않았고, 실측 1잡으로 닫았다.",
-  "2026-09-17": "§C 판별종 9상 등록 (insulator/declared) + nd2o3 다형 경고. 선언의 범위는 **03 갭 입력 생성 게이트**이지 갭 값이 아니다 — 미등록이면 build_dft_inputs 가 03 을 아예 안 만들어 캠페인이 조용히 비어 버린다. evidence=declared 를 고른 이유: 우리 nscf 를 아직 안 돌렸다. 7상은 MP 참조갭조차 없어 must_confirm 으로 남겼다."
+  "2026-09-17": "§C 판별종 9상 등록 (insulator/declared) + nd2o3 다형 경고. 선언의 범위는 **03 갭 입력 생성 게이트**이지 갭 값이 아니다 — 미등록이면 build_dft_inputs 가 03 을 아예 안 만들어 캠페인이 조용히 비어 버린다. evidence=declared 를 고른 이유: 우리 nscf 를 아직 안 돌렸다. 7상은 MP 참조갭조차 없어 must_confirm 으로 남겼다.",
+  "2026-09-17-b": "§C 9상의 must_confirm 해소 — MP 참조갭을 **공간군까지 맞춰** 채웠다 (db/properties/cei_gap_targets_matched_2026_09_17.json). ⚠ 조성만 맞추면 안 된다: P₂O₅ 는 MP 바닥상이 Pnma(4.853)인데 우리 표적은 Fdd2(5.202) 다. Nd₂O₃ 도 같은 형태(P-3m1 실측 vs Ia-3 표적). 이 값들은 MP PBE 이고 **우리 db 갭 표에 안 들어간다** — 검증 표적이다."
  }
 }
