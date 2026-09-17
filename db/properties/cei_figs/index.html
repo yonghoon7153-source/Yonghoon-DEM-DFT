@@ -614,6 +614,49 @@ LPSCl<sub>1.6</sub> · 상 이름 뒤 숫자가 <b>Li/P</b> ·
 <span class="nd">보라</span> = Li 를 안 쓰는 방 · <span class="ox">주황</span> = P–S 수용상 ·
 "끝점" = x = 1 자체분해라 계면 반응이 아니다(뺐다).</p>
 
+<!-- Fig. 2b — 2026-09-17 신설. tools/figures/plot_cei_p_host_ladder.py 가 유일한 소스다.
+     왜 Fig. 2 를 안 고치고 새로 그렸나: Fig. 2 의 생성기를 돌리면 §3·§4 본문이 통째로
+     다시 쓰인다(끝점 필터 결함과 함께 고치기로 ⏭-NOW-l 에 미뤄 뒀다).
+     ⛔ 번호를 2b 로 둔 것은 **되번호를 피하려는 것**이다 — Fig. 3 으로 올리면 §3·§4·§5…
+       가 전부 밀리고 그 절들은 생성기 소유라 손으로 못 고친다. -->
+<figure style="margin:14px 0">
+<img src="cei_p_host_ladder.png" alt="Left: Li-to-P ratio of the phase that accepts phosphorus against voltage, one dot per condition, with a bold step line for the maximum and a dashed step for the median, both descending from three to zero. Right: hundred-percent stacked bars of the P-accepting phase classes at each voltage, no-Nd bar beside with-Nd bar, showing transition-metal phosphates dominating the Nd-free route.">
+<figcaption><b>Fig. 2b. Where the phosphorus goes, and what it costs in lithium.</b>
+(a) Li:P ratio of every phase that accepts P in the minimum-energy interfacial reaction,
+against applied voltage. One dot is one (condition, accepting phase); 6 electrolytes
+&#215; 4 cathodes. Bold step: the largest Li:P still present, i.e. the most Li-expensive host
+still on the hull. Dashed step: the median. Dotted line: the Li:P at which the
+Nd&#8592;Li phosphate exchange changes sign (&#167;3, Fig. 4a).
+(b) The same phases grouped by host class and normalised to 100&#8201;% at each voltage,
+with the Nd-free electrolytes (comp1, LPSCl<sub>1.6</sub>, LPSOCl<sub>1.6</sub>, O-only)
+beside the Nd-bearing ones (Nd-only, LPSCl<sub>1.6</sub>@Nd<sub>2</sub>O<sub>3</sub>).
+Class is assigned by first match in the order P&#8211;S, Nd-bearing, Li:P&#8201;&#8805;&#8201;1,
+transition-metal, P&#8211;Cl &#8212; so LiMnPO<sub>4</sub> counts as a Li phosphate.
+Endpoint-degenerate conditions (<i>x</i>&#8201;=&#8201;0 or 1, self-decomposition) are excluded.
+<span style="color:var(--mut)">⚠ The vertical axis is a lithium price, not an amount:
+coefficients are not read, so this does not measure how much P is released.</span></figcaption>
+</figure>
+
+<div class="figexp" style="margin:0 0 12px">
+<div class="figexp-h">Fig. 2b 를 읽는 법</div>
+<p><b>(a) 점 하나가 "이 조건에서 P 를 받은 상 하나"</b> 다. 세로축은 그 상이 P 하나를
+붙잡는 데 <b>Li 를 몇 개 쓰는가</b> — 값이지 양이 아니다. 2.5 V 에서 점들이 3 에 몰려 있고
+(Li₃PO₄), 전압이 오르면 <b>아래로 쓸려 내려가</b> 4.0 V 위에서는 전부 0 에 붙는다.</p>
+<p><b>굵은 계단</b>이 "아직 살아 있는 가장 비싼 방", <b>점선 계단</b>이 중앙값이다.
+굵은 선이 3.0 V 에서 안 내려가는 것은 <b>한 조건(Nd 계 LiNiO₂)이 아직 Li₃PO₄ 를 붙들고
+있어서</b>고, 중앙값은 그 사이 1.5 로 내려가 있다. 둘을 같이 그린 이유다.</p>
+<p><b>주황 점선(Li/P ≈ 1.67)</b>이 §3 의 부호 반전선이다. 점 구름이 그 선을 <b>3.0 → 3.5 V
+사이에서 통과</b>한다 — 두 절이 서로 다른 계산인데 <b>같은 자리</b>를 가리킨다.</p>
+<p><b>(b) 전압마다 왼쪽이 Nd 없음, 오른쪽이 Nd 있음</b>이다. 여기서 보이는 것이
+가설 3 번의 정정이다 &#8212; 고전압에서 Nd 가 없을 때 P 가 가는 곳은 <b>P₂S₇(주황)가 아니라
+전이금속 인산염(파랑)</b>이고, 주황은 4.3–4.5 V 에 <b>10.5–14.3 %</b> 뿐이다.
+<b>무도핑 계도 Li 안 쓰는 방을 찾아내되 그 방은 양극의 금속으로 짓는다.</b>
+Nd 가 있으면 그 자리를 <b>보라(Nd 인산염)</b>가 가져간다.</p>
+<p>⚠ <b>이 그림이 못 하는 것</b> — 최소 꺾임 하나만 본다. 계수를 안 보므로 "P 가 몇 mol
+갔나" 를 말하지 않는다. 속도·수송은 없다(0 K 열역학).
+원자료 <span class="mono">cei_p_host_ladder_fig.csv</span>.</p>
+</div>
+
 <p class="plain" style="margin:0 0 8px"><b>Li/P 가 3 → 2 → 1 → 0 으로 내려간다.</b>
 전해질 <b>6 종 전부</b> 같은 방향이고 4.0 V 이상은 전부 0 이다. 이것이
 <a href="#s3">§3</a> 의 <b>Li 예산 사다리</b>와 같은 것인데, 거기는 교환반응으로 따로 계산했고

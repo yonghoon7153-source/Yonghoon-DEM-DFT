@@ -580,3 +580,48 @@ def test_fig2_endpoint_defect_is_disclosed(client):
     assert "끝점 퇴화 칸을 거르지 않는다" in blk, "Fig. 2 의 끝점 결함이 화면에 없다"
     assert "x = 1.0" in blk, "어느 칸이 끝점인지 안 밝힌다"
     assert "4.3 V 한 칸만" in blk, "그래서 몇 칸이 유효한지 안 말한다"
+
+
+# ── Fig. 2b (2026-09-17) ─────────────────────────────────────────────────────
+FIG2B_CSV = REPORT.parent / "cei_p_host_ladder_fig.csv"
+
+
+def test_fig2b_image_is_served(client):
+    """양성 — 그림이 참조돼 있고 실제로 200 으로 나온다."""
+    h = _report_html(client)
+    assert 'src="cei_p_host_ladder.png"' in h, "Fig. 2b 가 화면에 없다"
+    r = client.get(LOCAL_REPORT.rsplit("/", 1)[0] + "/cei_p_host_ladder.png")
+    assert r.status_code == 200 and len(r.data) > 20000, \
+        f"그림이 안 나온다 ({r.status_code}, {len(r.data)} B)"
+
+
+def test_fig2b_quoted_share_matches_the_csv(client):
+    """⛔음성 — 막대 높이를 **눈으로 읽어** 적으면 잡는다.
+
+    실제로 첫 판에 "7–13 %" 라고 적었고 CSV 는 10.5 / 14.3 이었다.
+    화면이 인용한 범위는 CSV 의 P–S(무도핑) 값을 감싸야 한다.
+    """
+    import csv as _csv
+    vals = [float(r[4]) for r in _csv.reader(FIG2B_CSV.open(encoding="utf-8"))
+            if len(r) == 5 and r[0] == "b" and r[2] == "no_Nd" and r[3].startswith("P–S")]
+    assert vals, "CSV 에서 P–S 비율을 못 읽었다 — 시험이 헛것을 재고 있다"
+    h = _report_html(client)
+    m = re.search(r"주황은 4\.3–4\.5 V 에 <b>([0-9.]+)–([0-9.]+) %</b>", h)
+    assert m, "화면이 P–S 비율을 인용하지 않는다"
+    lo, hi = float(m.group(1)), float(m.group(2))
+    assert lo <= min(vals) and hi >= max(vals), \
+        f"화면 {lo}–{hi} % 가 실측 {min(vals):.1f}–{max(vals):.1f} % 를 못 감싼다"
+    assert hi - lo <= 6, f"범위를 {hi-lo:g} %p 로 넓혀 아무 값이나 통과시킨다"
+    assert lo - min(vals) < 0.6 and max(vals) - hi > -0.6, \
+        f"반올림으로 범위를 부풀렸다: 화면 {lo}–{hi} vs 실측 {min(vals):.1f}–{max(vals):.1f}"
+
+
+def test_fig2b_caption_says_price_not_amount(client):
+    """⛔음성 — 세로축을 '풀려난 P 의 양' 으로 읽으면 이 그림이 안 한 말을 하게 된다."""
+    h = _report_html(client)
+    i = h.find("Fig. 2b. Where the phosphorus goes")
+    assert i > 0, "Fig. 2b 캡션을 못 찾았다"
+    cap = h[i:h.index("</figcaption>", i)]
+    assert "not an amount" in cap, "세로축이 양이 아니라는 한정이 캡션에 없다"
+    assert "coefficients are not read" in cap, "계수를 안 본다는 근거가 없다"
+    assert "Endpoint-degenerate" in cap, "끝점 제외를 안 밝힌다"
