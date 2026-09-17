@@ -455,6 +455,32 @@ def _selftest():
             if h["formula"] in ("Li3PO4", "CoP4O11")),
         "P-O / P-S 구분이 실제로 붙는다")
 
+    # ── tm_fate (2026-09-17) ────────────────────────────────────────────────
+    _h2 = "cathode,electrolyte,voltage_V,x_atomic_frac,is_minimum,reaction\n"
+    _b2 = ("LiCoO2,m,4.5,0.5,1,0.5 LiCoO2 + 0.5 X -> 0.1 CoP4O11 + 0.4 CoS2\n"
+           "LiCoO2,n,4.5,0.5,1,0.5 LiCoO2 + 0.5 X -> 0.5 CoS2\n"
+           "LiCoO2,m,2.5,0.5,1,Li5.4P1S4.4Cl1.6 -> 0.5 P2S7\n")   # 자체분해 — 분모 0
+    _f2, _p2 = _tf.mkstemp(suffix=".csv"); _os.close(_f2)
+    Path(_p2).write_text(_h2 + _b2, encoding="utf-8")
+    _T = tm_fate(_p2); _os.unlink(_p2)
+    chk(_T["n_conditions"] == 2 and _T["self_decomposition_excluded"] == ["m@2.5V/LiCoO2"],
+        "[음성] 좌변에 양극이 없는 행은 분모가 0 이라 세지 않고 이름으로 남긴다")
+    _r = {r["electrolyte"]: r for r in _T["rows"]}
+    chk(abs(_r["m"]["share"]["phosphate"] - 0.2) < 1e-9,
+        "인산염 몫 = Co 0.1 / 좌변 Co 0.5 = 0.2 — **TM 개수**로 세지 P 개수로 세지 않는다")
+    chk(abs(_r["m"]["share"]["sulfide"] - 0.8) < 1e-9,
+        "[음성] CoP4O11 의 P4 를 Co 4 개로 오인하지 않는다 (이 시험이 2026-09-17 에 그 오산을 잡았다)")
+    chk(_r["n"]["share"]["phosphate"] == 0.0 and _r["n"]["share"]["sulfide"] == 1.0,
+        "[음성] 인산염이 없으면 0 이고 황화물이 전부다")
+    chk(abs(_r["m"]["accounted"] - 1.0) < 1e-9, "TM 수지가 닫히면 accounted = 1")
+    _f3, _p3 = _tf.mkstemp(suffix=".csv"); _os.close(_f3)
+    Path(_p3).write_text(_h2 + "LiCoO2,q,4.5,0.5,1,0.5 LiCoO2 + 0.5 X -> 0.6 CoS2\n",
+                         encoding="utf-8")
+    _T3 = tm_fate(_p3); _os.unlink(_p3)
+    chk(abs(_T3["rows"][0]["accounted"] - 1.2) < 1e-9,
+        "[음성] 수지가 안 맞으면(우변 TM 이 더 많으면) accounted 로 **그대로 보고**한다 "
+        "— 조용히 1 로 정규화해 숨기지 않는다")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -646,6 +672,77 @@ def p_host_ladder(csv_path, p_element="P", ladder_element="Li"):
                  "끝점 행은 endpoint_excluded 로 뺐다."}
 
 
+TM_DEFAULT = ("Co", "Ni", "Mn")
+
+
+def tm_fate(csv_path, tms=TM_DEFAULT):
+    """양극의 전이금속이 **어디로 가는가** — 인산염 / 황화물 / 그 밖.
+
+    §2 의 남은 물음에 답하려는 것이다: *"Nd 가 없으면 양극 금속이 인산염으로
+    끌려 들어가는가"*. 계면 반응식은 조건마다 혼합비 x 가 달라서 계수를 가로로
+    비교하면 안 되므로, **좌변 양극이 가진 TM 을 분모로 정규화**한다:
+
+        share = (산물 중 그 갈래에 들어간 TM) / (좌변 양극이 내놓은 TM 전량)
+
+    0~1 이고 x 에 무관하다. 좌변 양극 항이 없으면(자체분해) 그 행은 분모가 0 이라
+    **세지 않고 이름으로 남긴다**.
+
+    ⛔ 이 함수가 못 하는 것
+      · 구조 불안정(균열·비정질화·변형)을 재지 않는다. **무엇이 소모되는지**만 읽는다.
+      · 최소 꺾임 하나만 본다.
+      · 황화물로 가는 것도 양극 소모다 — '인산염만 나쁘다' 는 뜻이 아니다.
+      · 어느 쪽이 에너지상 유리한지는 말하지 않는다. 그건 교환에너지 계산이다.
+    """
+    import csv as _csv
+    out, skipped = [], []
+    with open(csv_path, encoding="utf-8") as fh:
+        for r in _csv.DictReader(fh):
+            if str(r.get("is_minimum", "")).strip() not in ("1", "True", "true"):
+                continue
+            rxn = r.get("reaction", "")
+            if "->" not in rxn:
+                continue
+            tag = f'{r["electrolyte"]}@{r["voltage_V"]}V/{r["cathode"]}'
+            lhs_tm = 0.0
+            for t in rxn.split("->", 1)[0].split("+"):
+                m = re.match(r"^\s*([0-9]*\.?[0-9]+)?\s*([A-Za-z0-9().]+)\s*$", t)
+                if not m:
+                    continue
+                n = float(m.group(1)) if m.group(1) else 1.0
+                c = parse_formula(m.group(2))
+                lhs_tm += n * sum(c.get(x, 0.0) for x in tms)
+            if lhs_tm <= 0:                      # 자체분해 — 분모가 없다
+                skipped.append(tag)
+                continue
+            bins = {"phosphate": 0.0, "sulfide": 0.0, "other": 0.0}
+            where = {"phosphate": [], "sulfide": [], "other": []}
+            for t in rxn.split("->", 1)[1].split("+"):
+                m = re.match(r"^\s*([0-9]*\.?[0-9]+)?\s*([A-Za-z0-9().]+)\s*$", t)
+                if not m:
+                    continue
+                n = float(m.group(1)) if m.group(1) else 1.0
+                f = m.group(2)
+                c = parse_formula(f)
+                tm = sum(c.get(x, 0.0) for x in tms)
+                if tm <= 0:
+                    continue
+                k = ("phosphate" if c.get("P", 0) > 0 else
+                     "sulfide" if c.get("S", 0) > 0 else "other")
+                bins[k] += n * tm
+                where[k].append(f)
+            out.append({"electrolyte": r["electrolyte"], "cathode": r["cathode"],
+                        "voltage_V": float(r["voltage_V"]),
+                        "cathode_TM_total": round(lhs_tm, 6),
+                        "share": {k: round(v / lhs_tm, 6) for k, v in bins.items()},
+                        "phases": where,
+                        "accounted": round(sum(bins.values()) / lhs_tm, 6)})
+    out.sort(key=lambda d: (d["electrolyte"], d["voltage_V"], d["cathode"]))
+    return {"source_csv": str(csv_path), "n_conditions": len(out),
+            "self_decomposition_excluded": sorted(skipped), "rows": out,
+            "⛔": "분모는 좌변 양극이 내놓은 TM 전량이다 (x 무관). 구조 불안정이 아니라 "
+                 "소모 행선지를 읽는다. 황화물도 양극 소모다. 최소 꺾임 하나만 본다."}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--electrolytes", nargs="+",
@@ -664,12 +761,20 @@ def main():
     ap.add_argument("--voltages", nargs="+", type=float,
                     default=[2.5, 3.0, 3.5, 4.0, 4.3])
     ap.add_argument("--out", default="interface_reactivity_v2.json")
+    ap.add_argument("--tm_fate", metavar="PANELS_CSV",
+                    help="양극 전이금속이 인산염/황화물 중 어디로 갔는지 (좌변 TM 으로 정규화)")
     ap.add_argument("--p_host_ladder", metavar="PANELS_CSV",
                     help="x-scan 패널 CSV 를 읽어 최소 꺾임의 P 수용상·Li:P 사다리를 뽑는다 "
                          "(MP·pymatgen 불필요 — 이미 나온 반응식만 읽는다)")
     if "--selftest" in __import__("sys").argv:
         raise SystemExit(_selftest())
     a = ap.parse_args()
+    if a.tm_fate:
+        out = tm_fate(a.tm_fate)
+        Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f'{out["n_conditions"]} 조건 · 자체분해 제외 '
+              f'{len(out["self_decomposition_excluded"])} → {a.out}')
+        return 0
     if a.p_host_ladder:
         # 순수 후처리다 — MP 도 pymatgen 도 안 쓴다. 그래서 여기서 바로 끝낸다.
         out = p_host_ladder(a.p_host_ladder)

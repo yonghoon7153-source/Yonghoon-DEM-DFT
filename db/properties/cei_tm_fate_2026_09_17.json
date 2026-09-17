@@ -1,0 +1,2918 @@
+{
+  "source_csv": "db/properties/cei_figs/cei_x_scan_panels.csv",
+  "n_conditions": 137,
+  "self_decomposition_excluded": [
+    "comp1@4.0V/LiMnO2",
+    "comp1@4.3V/LiCoO2",
+    "comp1@4.3V/LiMnO2",
+    "comp1@4.5V/LiCoO2",
+    "comp1@4.5V/LiMnO2",
+    "comp1@4.5V/NMC811",
+    "modelc@4.5V/LiMnO2"
+  ],
+  "rows": [
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.7059,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.7059,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.766,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 0.999869,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 0.999869
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.7595,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Co(NiS2)2",
+          "Ni3S4",
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.7015,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.7015,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.7622,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.000131,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 1.000131
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.7756,
+      "share": {
+        "phosphate": 0.1,
+        "sulfide": 0.899923,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Li2MnP2O7"
+        ],
+        "sulfide": [
+          "Co(NiS2)2",
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 0.999923
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.6552,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.6,
+      "share": {
+        "phosphate": 0.333333,
+        "sulfide": 0.666667,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.7479,
+      "share": {
+        "phosphate": 0.112355,
+        "sulfide": 0.71908,
+        "other": 0.168605
+      },
+      "phases": {
+        "phosphate": [
+          "LiNi(PO3)3"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.00004
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.7459,
+      "share": {
+        "phosphate": 0.1,
+        "sulfide": 0.729575,
+        "other": 0.170398
+      },
+      "phases": {
+        "phosphate": [
+          "LiMn(PO3)3"
+        ],
+        "sulfide": [
+          "NiS2",
+          "CoS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 0.999973
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.5789,
+      "share": {
+        "phosphate": 0.181897,
+        "sulfide": 0.818276,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "CoP4O11"
+        ],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000173
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.6842,
+      "share": {
+        "phosphate": 0.23078,
+        "sulfide": 0.76922,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.5789,
+      "share": {
+        "phosphate": 0.181828,
+        "sulfide": 0.818259,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "MnP4O11",
+          "NiP4O11"
+        ],
+        "sulfide": [
+          "NiS2",
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000086
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.5789,
+      "share": {
+        "phosphate": 0.181897,
+        "sulfide": 0.818276,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "NiP4O11"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000173
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.5789,
+      "share": {
+        "phosphate": 0.181828,
+        "sulfide": 0.818259,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "NiP4O11",
+          "MnP4O11"
+        ],
+        "sulfide": [
+          "NiS2",
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000086
+    },
+    {
+      "electrolyte": "comp1",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.5789,
+      "share": {
+        "phosphate": 0.181897,
+        "sulfide": 0.818276,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "NiP4O11"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000173
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.9115,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.9115,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.9335,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.000107,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 1.000107
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.9381,
+      "share": {
+        "phosphate": 0.1,
+        "sulfide": 0.899936,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "LiMnPO4"
+        ],
+        "sulfide": [
+          "Co(NiS2)2",
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 0.999936
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.9095,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.9336,
+      "share": {
+        "phosphate": 0.355827,
+        "sulfide": 0.644066,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn2P2O7"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 0.999893
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.932,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.000107,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 1.000107
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.9371,
+      "share": {
+        "phosphate": 0.1,
+        "sulfide": 0.899936,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "LiMnPO4"
+        ],
+        "sulfide": [
+          "Co(NiS2)2",
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 0.999936
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.9074,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.9264,
+      "share": {
+        "phosphate": 0.397237,
+        "sulfide": 0.602655,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn2P2O7"
+        ],
+        "sulfide": [
+          "MnS2",
+          "MnSO4"
+        ],
+        "other": []
+      },
+      "accounted": 0.999892
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.9375,
+      "share": {
+        "phosphate": 0.16672,
+        "sulfide": 0.56672,
+        "other": 0.266667
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.000107
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.9422,
+      "share": {
+        "phosphate": 0.153364,
+        "sulfide": 0.601295,
+        "other": 0.245383
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "Li2Mn(SO4)2",
+          "NiS2",
+          "CoS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.000042
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.8794,
+      "share": {
+        "phosphate": 0.171481,
+        "sulfide": 0.828519,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "CoP4O11"
+        ],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.875,
+      "share": {
+        "phosphate": 0.357143,
+        "sulfide": 0.642857,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.9318,
+      "share": {
+        "phosphate": 0.182979,
+        "sulfide": 0.524361,
+        "other": 0.292659
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.9318,
+      "share": {
+        "phosphate": 0.182926,
+        "sulfide": 0.524447,
+        "other": 0.292659
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2",
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2",
+          "CoS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.000032
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.8644,
+      "share": {
+        "phosphate": 0.19609,
+        "sulfide": 0.80391,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "CoP4O11"
+        ],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.5,
+      "share": {
+        "phosphate": 0.5,
+        "sulfide": 0.0,
+        "other": 0.5
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [],
+        "other": [
+          "MnCl2"
+        ]
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.8929,
+      "share": {
+        "phosphate": 0.300034,
+        "sulfide": 0.699966,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.8929,
+      "share": {
+        "phosphate": 0.300022,
+        "sulfide": 0.699955,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2",
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2",
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 0.999978
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.8644,
+      "share": {
+        "phosphate": 0.19609,
+        "sulfide": 0.80391,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "CoP4O11"
+        ],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.2,
+      "share": {
+        "phosphate": 1.0,
+        "sulfide": 0.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.8929,
+      "share": {
+        "phosphate": 0.300034,
+        "sulfide": 0.699966,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "lpsocl",
+      "cathode": "NMC811",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.885,
+      "share": {
+        "phosphate": 0.224972,
+        "sulfide": 0.774915,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "MnP4O11",
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "CoS2",
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 0.999887
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.6835,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.6835,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.7465,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 0.999866,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 0.999866
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.7397,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 0.999838,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Co(NiS2)2",
+          "Ni3S4",
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 0.999838
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.6785,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.7442,
+      "share": {
+        "phosphate": 0.343725,
+        "sulfide": 0.65641,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn2P2O7"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000134
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.7421,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.000135,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 1.000135
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.7576,
+      "share": {
+        "phosphate": 0.1,
+        "sulfide": 0.899921,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "LiMnPO4"
+        ],
+        "sulfide": [
+          "Co(NiS2)2",
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 0.999921
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.6732,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.6,
+      "share": {
+        "phosphate": 0.333333,
+        "sulfide": 0.666667,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.7561,
+      "share": {
+        "phosphate": 0.161354,
+        "sulfide": 0.580611,
+        "other": 0.258035
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.7561,
+      "share": {
+        "phosphate": 0.161288,
+        "sulfide": 0.580624,
+        "other": 0.258035
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2",
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2",
+          "CoS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 0.999947
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.6091,
+      "share": {
+        "phosphate": 0.160433,
+        "sulfide": 0.839599,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "CoP4O11"
+        ],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000033
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.6,
+      "share": {
+        "phosphate": 0.333333,
+        "sulfide": 0.666667,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.7391,
+      "share": {
+        "phosphate": 0.176431,
+        "sulfide": 0.541199,
+        "other": 0.28237
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.6386,
+      "share": {
+        "phosphate": 0.283057,
+        "sulfide": 0.716975,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2",
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2",
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000031
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.5789,
+      "share": {
+        "phosphate": 0.181897,
+        "sulfide": 0.818276,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "CoP4O11"
+        ],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000173
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.1603,
+      "share": {
+        "phosphate": 0.333375,
+        "sulfide": 0.0,
+        "other": 0.666875
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [],
+        "other": [
+          "MnCl2"
+        ]
+      },
+      "accounted": 1.00025
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.6386,
+      "share": {
+        "phosphate": 0.282963,
+        "sulfide": 0.716881,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 0.999843
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.6199,
+      "share": {
+        "phosphate": 0.206598,
+        "sulfide": 0.793338,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "MnP4O11",
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2",
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 0.999935
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.5789,
+      "share": {
+        "phosphate": 0.181897,
+        "sulfide": 0.818276,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "CoP4O11"
+        ],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000173
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.6386,
+      "share": {
+        "phosphate": 0.282963,
+        "sulfide": 0.716881,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 0.999843
+    },
+    {
+      "electrolyte": "modelc",
+      "cathode": "NMC811",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.6091,
+      "share": {
+        "phosphate": 0.160433,
+        "sulfide": 0.839616,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "NiP4O11",
+          "MnP4O11"
+        ],
+        "sulfide": [
+          "CoS2",
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000049
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.9526,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.9526,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.9648,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.9673,
+      "share": {
+        "phosphate": 0.1,
+        "sulfide": 0.900124,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "LiMnPO4"
+        ],
+        "sulfide": [
+          "Co(NiS2)2",
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 1.000124
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.9517,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.9631,
+      "share": {
+        "phosphate": 0.30651,
+        "sulfide": 0.69349,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn2P2O7"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.9648,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.9669,
+      "share": {
+        "phosphate": 0.1,
+        "sulfide": 0.900062,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "LiMnPO4"
+        ],
+        "sulfide": [
+          "Co(NiS2)2",
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 1.000062
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.9502,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.9767,
+      "share": {
+        "phosphate": 0.238149,
+        "sulfide": 0.642879,
+        "other": 0.119074
+      },
+      "phases": {
+        "phosphate": [
+          "Mn2P2O7"
+        ],
+        "sulfide": [
+          "MnS2",
+          "MnSO4"
+        ],
+        "other": [
+          "MnCl2"
+        ]
+      },
+      "accounted": 1.000102
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.9781,
+      "share": {
+        "phosphate": 0.111952,
+        "sulfide": 0.708823,
+        "other": 0.179225
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiSO4",
+          "Ni3S4"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.969,
+      "share": {
+        "phosphate": 0.03194,
+        "sulfide": 0.71259,
+        "other": 0.255521
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "Li2Mn(SO4)2",
+          "NiS2",
+          "Co(NiS2)2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.000052
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.9259,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.931,
+      "share": {
+        "phosphate": 0.370354,
+        "sulfide": 0.629646,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.9731,
+      "share": {
+        "phosphate": 0.138218,
+        "sulfide": 0.64053,
+        "other": 0.221149
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiSO4",
+          "NiS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 0.999897
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.9687,
+      "share": {
+        "phosphate": 0.16166,
+        "sulfide": 0.579581,
+        "other": 0.258697
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "MnSO4",
+          "NiS2",
+          "CoS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 0.999938
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.9259,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.931,
+      "share": {
+        "phosphate": 0.370354,
+        "sulfide": 0.629646,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.9653,
+      "share": {
+        "phosphate": 0.179633,
+        "sulfide": 0.532995,
+        "other": 0.287475
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.000104
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.9621,
+      "share": {
+        "phosphate": 0.1,
+        "sulfide": 0.584669,
+        "other": 0.315352
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2",
+          "CoS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.000021
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.9259,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.931,
+      "share": {
+        "phosphate": 0.370354,
+        "sulfide": 0.629646,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.9613,
+      "share": {
+        "phosphate": 0.080537,
+        "sulfide": 0.597316,
+        "other": 0.322168
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.000021
+    },
+    {
+      "electrolyte": "modelc_nd",
+      "cathode": "NMC811",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.9341,
+      "share": {
+        "phosphate": 0.141173,
+        "sulfide": 0.858805,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2",
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "CoS2",
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 0.999979
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.6835,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.6835,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.7465,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 0.999866,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 0.999866
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.7606,
+      "share": {
+        "phosphate": 0.1,
+        "sulfide": 0.899921,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "LiMnPO4"
+        ],
+        "sulfide": [
+          "Co(NiS2)2",
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 0.999921
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.6795,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.734,
+      "share": {
+        "phosphate": 0.289918,
+        "sulfide": 0.710218,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn2P2O7"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000136
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.743,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.000135,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 1.000135
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.7585,
+      "share": {
+        "phosphate": 0.1,
+        "sulfide": 0.9,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "LiMnPO4"
+        ],
+        "sulfide": [
+          "Co(NiS2)2",
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.6732,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.8131,
+      "share": {
+        "phosphate": 0.229886,
+        "sulfide": 0.655147,
+        "other": 0.114943
+      },
+      "phases": {
+        "phosphate": [
+          "Mn2P2O7"
+        ],
+        "sulfide": [
+          "MnS2",
+          "MnSO4"
+        ],
+        "other": [
+          "MnCl2"
+        ]
+      },
+      "accounted": 0.999975
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.7561,
+      "share": {
+        "phosphate": 0.161354,
+        "sulfide": 0.580611,
+        "other": 0.258035
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.7514,
+      "share": {
+        "phosphate": 0.033085,
+        "sulfide": 0.702129,
+        "other": 0.264706
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "Li2Mn(SO4)2",
+          "NiS2",
+          "CoS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 0.99992
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.5833,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.6,
+      "share": {
+        "phosphate": 0.333333,
+        "sulfide": 0.666667,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.7458,
+      "share": {
+        "phosphate": 0.170421,
+        "sulfide": 0.556852,
+        "other": 0.272727
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.7458,
+      "share": {
+        "phosphate": 0.170448,
+        "sulfide": 0.556825,
+        "other": 0.272727
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2",
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2",
+          "CoS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.5833,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.6,
+      "share": {
+        "phosphate": 0.333333,
+        "sulfide": 0.666667,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.7248,
+      "share": {
+        "phosphate": 0.075952,
+        "sulfide": 0.620171,
+        "other": 0.303808
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 0.999931
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.6104,
+      "share": {
+        "phosphate": 0.127654,
+        "sulfide": 0.87228,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2",
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2",
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 0.999934
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.5833,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.6,
+      "share": {
+        "phosphate": 0.333333,
+        "sulfide": 0.666667,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.6104,
+      "share": {
+        "phosphate": 0.127654,
+        "sulfide": 0.872379,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000033
+    },
+    {
+      "electrolyte": "nd_only",
+      "cathode": "NMC811",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.6043,
+      "share": {
+        "phosphate": 0.1,
+        "sulfide": 0.900099,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "CoS2",
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000099
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiCoO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.6678,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiMnO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.6678,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiNiO2",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.7327,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 0.999864,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 0.999864
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "NMC811",
+      "voltage_V": 2.5,
+      "cathode_TM_total": 0.7472,
+      "share": {
+        "phosphate": 0.1,
+        "sulfide": 0.899839,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "LiMnPO4"
+        ],
+        "sulfide": [
+          "Co(NiS2)2",
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 0.999839
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.6622,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.734,
+      "share": {
+        "phosphate": 0.362398,
+        "sulfide": 0.637738,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn2P2O7"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000136
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.7277,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.000137,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 1.000137
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "NMC811",
+      "voltage_V": 3.0,
+      "cathode_TM_total": 0.7438,
+      "share": {
+        "phosphate": 0.1,
+        "sulfide": 0.900161,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "LiMnPO4"
+        ],
+        "sulfide": [
+          "Co(NiS2)2",
+          "Ni3S4"
+        ],
+        "other": []
+      },
+      "accounted": 1.000161
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiCoO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.6564,
+      "share": {
+        "phosphate": 0.0,
+        "sulfide": 1.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiMnO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.8214,
+      "share": {
+        "phosphate": 0.217409,
+        "sulfide": 0.608717,
+        "other": 0.173971
+      },
+      "phases": {
+        "phosphate": [
+          "Mn2P2O7"
+        ],
+        "sulfide": [
+          "MnS2",
+          "MnSO4"
+        ],
+        "other": [
+          "MnCl2"
+        ]
+      },
+      "accounted": 1.000097
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiNiO2",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.7468,
+      "share": {
+        "phosphate": 0.169523,
+        "sulfide": 0.55932,
+        "other": 0.271157
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "NMC811",
+      "voltage_V": 3.5,
+      "cathode_TM_total": 0.7623,
+      "share": {
+        "phosphate": 0.155975,
+        "sulfide": 0.594595,
+        "other": 0.249508
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "Li2Mn(SO4)2",
+          "NiS2",
+          "CoS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.000079
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.5848,
+      "share": {
+        "phosphate": 0.177497,
+        "sulfide": 0.822503,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "CoP4O11"
+        ],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.5745,
+      "share": {
+        "phosphate": 0.370409,
+        "sulfide": 0.629591,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "MnS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.7285,
+      "share": {
+        "phosphate": 0.186273,
+        "sulfide": 0.51558,
+        "other": 0.298147
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "NMC811",
+      "voltage_V": 4.0,
+      "cathode_TM_total": 0.7285,
+      "share": {
+        "phosphate": 0.186342,
+        "sulfide": 0.515511,
+        "other": 0.298147
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2",
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2",
+          "CoS2"
+        ],
+        "other": [
+          "NiCl2"
+        ]
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.5506,
+      "share": {
+        "phosphate": 0.204141,
+        "sulfide": 0.795859,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "CoP4O11"
+        ],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.1698,
+      "share": {
+        "phosphate": 0.577797,
+        "sulfide": 0.0,
+        "other": 0.422261
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [],
+        "other": [
+          "MnCl2"
+        ]
+      },
+      "accounted": 1.000059
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.6178,
+      "share": {
+        "phosphate": 0.309323,
+        "sulfide": 0.690838,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000162
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "NMC811",
+      "voltage_V": 4.3,
+      "cathode_TM_total": 0.6178,
+      "share": {
+        "phosphate": 0.309291,
+        "sulfide": 0.690806,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2",
+          "Mn(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2",
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000097
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiCoO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.5506,
+      "share": {
+        "phosphate": 0.204141,
+        "sulfide": 0.795859,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "CoP4O11"
+        ],
+        "sulfide": [
+          "CoS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiMnO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.06977,
+      "share": {
+        "phosphate": 1.0,
+        "sulfide": 0.0,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Mn(PO3)2"
+        ],
+        "sulfide": [],
+        "other": []
+      },
+      "accounted": 1.0
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "LiNiO2",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.6178,
+      "share": {
+        "phosphate": 0.309323,
+        "sulfide": 0.690838,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 1.000162
+    },
+    {
+      "electrolyte": "o_only_03",
+      "cathode": "NMC811",
+      "voltage_V": 4.5,
+      "cathode_TM_total": 0.5988,
+      "share": {
+        "phosphate": 0.235037,
+        "sulfide": 0.76483,
+        "other": 0.0
+      },
+      "phases": {
+        "phosphate": [
+          "MnP4O11",
+          "Ni(PO3)2"
+        ],
+        "sulfide": [
+          "CoS2",
+          "NiS2"
+        ],
+        "other": []
+      },
+      "accounted": 0.999866
+    }
+  ],
+  "⛔": "분모는 좌변 양극이 내놓은 TM 전량이다 (x 무관). 구조 불안정이 아니라 소모 행선지를 읽는다. 황화물도 양극 소모다. 최소 꺾임 하나만 본다."
+}
