@@ -190,6 +190,16 @@ def build_plan(out_root, python="python3", device="cuda") -> list[dict]:
     return plan
 
 
+def runs_remaining_from(plan, i) -> int:
+    """`plan[i]` 부터 끝까지 남은 **런** 수. 게이트의 투영이 곱하는 값이다.
+
+    ⚠ 이 함수가 따로 있는 이유: 2026-09-17 에 시험을 쓰면서 같은 식을 시험 쪽에
+      **베껴 놓았더니**, 루프를 옛 코드(전체−1)로 되돌려도 시험이 초록이었다.
+      시험이 대상이 아니라 자기 사본을 재고 있었다. 계산은 한 곳에만 둔다.
+    """
+    return sum(int(st.get("n_runs") or 0) for st in plan[i:])
+
+
 def plan_run_count(plan) -> int:
     return sum(int(st.get("n_runs") or 0) for st in plan)
 
@@ -350,7 +360,47 @@ def write_manifest(out_root, plan, rows) -> None:
     }, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 
 
-def run_round(out_root, python, device, dry_run=False) -> int:
+def frozen_now() -> dict:
+    """지금 코드가 얼어붙였다고 주장하는 물리 규약. write_manifest 와 **같은 값**이다."""
+    return {"V_common_A3": V_COMMON_A3, "cell_diag": list(CELL_DIAG),
+            "prep_fmax": PREP_FMAX, "prep_steps": PREP_STEPS,
+            "temps": list(TEMPS), "seeds": list(SEEDS),
+            "equilib_ps": EQUILIB_PS, "prod_ps": PROD_PS, "dt_fs": DT_FS,
+            "friction": FRICTION, "save_fs": SAVE_FS,
+            "fit_window_ps": list(FIT_WINDOW_PS),
+            "uma": {"model": UMA_MODEL, "task": UMA_TASK},
+            "perf_subcap_gpu_h": PERF_SUBCAP_GPU_H,
+            "total_cap_gpu_h": TOTAL_CAP_GPU_H}
+
+
+def resume_check(out_root) -> tuple[dict, set, list]:
+    """이어받기 전제 확인 → (기존 budget, 이미 시도한 key 집합, 실패 key 목록).
+
+    ⛔ **code_id 가 아니라 `frozen` 을 본다.** git sha 는 게이트 산수만 고쳐도 바뀌는데,
+      이어받기가 위험한 경우는 **물리 규약이 바뀐 것**이다 (부피·온도·창·UMA 모델 …).
+      sha 로 막으면 안전한 이어받기까지 막히고, 사람은 결국 우회한다.
+    ⛔ 이 함수가 못 하는 것: MD 드라이버 쪽 산출물이 온전한지 **검사하지 않는다**.
+      rc==0 을 믿는다 — budget.json 이 그 라운드의 사실 기록이다.
+    """
+    mani = Path(out_root) / "manifest.json"
+    if not mani.is_file():
+        raise SystemExit(f"⛔ --resume 인데 {mani} 가 없다 — 이어받을 라운드가 아니다")
+    m = json.loads(mani.read_text(encoding="utf-8"))
+    old, new = m.get("frozen") or {}, frozen_now()
+    diff = [k for k in set(old) | set(new) if old.get(k) != new.get(k)]
+    if diff:
+        raise SystemExit(
+            "⛔ --resume 거부: 물리 규약(frozen)이 달라졌다 — "
+            + ", ".join(f"{k}: {old.get(k)!r} → {new.get(k)!r}" for k in sorted(diff))
+            + "\n   이어받으면 한 라운드 안에 두 규약이 섞인다. 새 out_root 로 새 라운드를 돌려라.")
+    b = budget_load(out_root)
+    tried = {st["key"] for st in b.get("steps", []) if "rc" in st}
+    failed = [st["key"] for st in b.get("steps", []) if st.get("rc") not in (0, None)]
+    return b, tried, failed
+
+
+def run_round(out_root, python, device, dry_run=False, resume=False,
+              retry_failed=False) -> int:
     rows, bad = check_inputs()
     if bad:
         print("⛔ 입력 게이트 불통과 — 시작하지 않는다:")
@@ -368,13 +418,49 @@ def run_round(out_root, python, device, dry_run=False) -> int:
             print("      " + " ".join(s["cmd"]))
         return 0
 
-    refuse_existing(out_root)
-    Path(out_root).mkdir(parents=True, exist_ok=True)
-    write_manifest(out_root, plan, rows)
-    budget = budget_load(out_root)
-    perf_gpu_h, projection = None, None
+    tried, failed = set(), []
+    if resume:
+        # ⛔ 2026-09-17 — 이어받기가 **없었다.** 게이트가 중단(return 3)하면 남은 길은
+        #   빈 폴더로 새 라운드뿐이고, 그러면 이미 쓴 60 GPU-h 를 다시 쓴다. 상한
+        #   규율이 오히려 낭비를 강제하는 모양이었다. 누적은 **그대로 이어간다** —
+        #   이어받기는 예산을 리셋하지 않는다(그게 상한을 우회하는 길이 된다).
+        budget, tried, failed = resume_check(out_root)
+        if failed and not retry_failed:
+            tried |= set(failed)
+        print(f"↻ 이어받기: 이미 끝낸 스텝 {len(tried)}개 건너뜀 · 누적 "
+              f"{float(budget.get('used_gpu_h') or 0.0):.2f} GPU-h 승계")
+        if failed:
+            print(f"   ⚠ 실패로 기록된 스텝 {len(failed)}개: {', '.join(failed)}")
+            print("   → " + ("이번에 다시 돌린다 (--resume_retry_failed)" if retry_failed
+                             else "그냥 건너뛴다. 다시 돌리려면 --resume_retry_failed"))
+    else:
+        refuse_existing(out_root)
+        Path(out_root).mkdir(parents=True, exist_ok=True)
+        write_manifest(out_root, plan, rows)
+        budget = budget_load(out_root)
+    perf_gpu_h = None
+    if resume:
+        # 속도 시험을 이미 끝냈으면 그 실측을 되살린다 — 없으면 투영도 없다(게이트는
+        # 누적 상한 ④ 만으로 간다). **추정치를 지어내지 않는다.**
+        pk = f"md/{PERF_RUN['structure']}__T{PERF_RUN['temp']}__s{PERF_RUN['seed']}"
+        perf_gpu_h = next((st.get("gpu_h") for st in budget.get("steps", [])
+                           if st.get("key") == pk and st.get("rc") == 0), None)
+        print(f"   속도시험 실측 {perf_gpu_h if perf_gpu_h is not None else '없음 — 투영 없이 ④만'}")
 
-    for step in plan:
+    for i, step in enumerate(plan):
+        # ⛔⛔ 2026-09-17 — **투영이 낡은 채로 굳어 있었다.** projection 은 속도 시험
+        #   직후 `perf × (전체런 − 1)` 로 **한 번만** 계산되고 그대로 남았다. 그래서
+        #   게이트는 런이 끝나도 늘 "남은 29런" 을 더해 봤고, 누적이 120 − 67.82 =
+        #   52.18 을 넘는 순간 **남은 런 수와 무관하게** 멈췄다.
+        #   실측(eprime_2026_09_14): 18/30 런을 마치고 누적 60.67 에서 중단.
+        #   정직한 투영은 2.34 × 남은 12런 = 28.1 → 88.8 GPU-h 로 상한 안이다.
+        #   카드 §6 ③ 문구는 *"남은 배치를 투영해"* 다 — 코드가 자기 규격과 달랐다.
+        #   ⚠ 상한(120)도 속도시험 기준(perf)도 안 바꾼다. 바꾸는 것은 **남은 런 수**뿐이다.
+        runs_from_here = runs_remaining_from(plan, i)
+        projection = (project_remaining(perf_gpu_h, runs_from_here)
+                      if perf_gpu_h is not None else None)
+        if step["key"] in tried:
+            continue
         if step["stage"] == "md" and not prepared_ok(out_root, step["structure"]):
             print(f"— 건너뜀 {step['key']}: {step['structure']} 준비 미확보 (그 쌍만 미판정)")
             budget["steps"].append({"key": step["key"], "skipped": "준비 미확보"})
@@ -403,10 +489,12 @@ def run_round(out_root, python, device, dry_run=False) -> int:
                 budget_save(out_root, budget)
                 return 4
             perf_gpu_h = gpu_h
-            remaining = plan_run_count(plan) - 1
-            projection = project_remaining(perf_gpu_h, remaining)
-            print(f"  투영: 남은 {remaining}런 ≈ {projection:.1f} GPU-h "
-                  f"(누적 예상 {budget['used_gpu_h'] + projection:.1f} / {TOTAL_CAP_GPU_H:.0f})")
+            # ⚠ 여기 계산은 **표시용**이다. 게이트가 쓰는 값은 루프 머리에서 매 스텝
+            #   다시 센다 (위 2026-09-17 주석). 두 곳에서 따로 굳지 않게 이름도 나눈다.
+            remaining = runs_remaining_from(plan, i + 1)
+            shown = project_remaining(perf_gpu_h, remaining)
+            print(f"  투영: 남은 {remaining}런 ≈ {shown:.1f} GPU-h "
+                  f"(누적 예상 {budget['used_gpu_h'] + shown:.1f} / {TOTAL_CAP_GPU_H:.0f})")
         if rc != 0:
             print(f"⛔ {step['key']} 가 rc={rc} 로 끝났다 — 이 스텝은 실패로 기록하고 다음으로 간다")
     budget_save(out_root, budget)
@@ -508,6 +596,61 @@ def _selftest() -> int:
     chk(project_remaining(0.0, 29) == 0.0 and project_remaining(2.0, 0) == 0.0,
         "⛔음성: 실측이 0 이거나 남은 런이 0 이면 투영은 0 이다 (0 을 상한으로 착각하지 않게)")
 
+    # ⛔⛔ 2026-09-17 실측 사고 — **투영이 안 줄어들었다.** 게이트가 보는 값은
+    #   `plan[i:]` 의 n_runs 합이어야 한다. 옛 코드는 속도시험 직후 값(전체−1)에 굳었다.
+    _plan = build_plan("/tmp/_st", python="python3", device="cpu")
+    _md = [j for j, st in enumerate(_plan) if st["stage"].startswith("md")]
+    _rf = lambda j: runs_remaining_from(_plan, j)   # ← 대상 함수를 직접 부른다
+    chk(_rf(0) == 30, f"양성: 처음엔 남은 런 30 (계획 전체) — 실제 {_rf(0)}")
+    chk(_rf(_md[0]) == 30, f"양성: 속도시험 스텝에서도 30 (자기 자신 포함) — 실제 {_rf(_md[0])}")
+    chk(_rf(_md[1]) == 29, f"양성: 속도시험 직후 29 — 실제 {_rf(_md[1])}")
+    _last = _md[-1]
+    chk(_rf(_last) == int(_plan[_last].get("n_runs") or 0),
+        f"양성: 마지막 md 스텝의 남은 런 = 그 스텝 자신뿐 ({_rf(_last)})")
+    chk(_rf(_md[1]) > _rf(_md[-1]),
+        "⛔음성: 투영 대상 런 수가 **단조 감소**한다 (굳어 있으면 여기서 잡힌다)")
+    # 실측 재현: 18/30 을 마친 시점(=7번째 md 호출 앞)에서 남은 런은 12여야 한다.
+    _done, _idx = 0, None
+    for j in _md:
+        if _done >= 18:
+            _idx = j; break
+        _done += int(_plan[j].get("n_runs") or 0)
+    chk(_idx is not None and _rf(_idx) == 12,
+        f"⛔음성: 18런을 마친 시점의 남은 런 = 12 (옛 코드는 29로 굳었다) — 실제 {_rf(_idx) if _idx else None}")
+    _b18 = {"used_gpu_h": 60.67, "total_cap_gpu_h": TOTAL_CAP_GPU_H}
+    _ok_new, _ = gate_before({"stage": "md"}, _b18, project_remaining(2.34, 12))
+    _ok_old, _ = gate_before({"stage": "md"}, _b18, project_remaining(2.34, 29))
+    chk(_ok_new and not _ok_old,
+        "⛔음성: 같은 누적 60.67 에서 **정직한 투영은 통과 · 굳은 투영은 중단** "
+        "(2026-09-14 라운드가 여기서 멈췄다)")
+
+    # ── --resume: frozen 이 다르면 거부한다 ────────────────────────────────
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as _td:
+        _m = Path(_td) / "manifest.json"
+        _m.write_text(json.dumps({"frozen": frozen_now()}, ensure_ascii=False), encoding="utf-8")
+        (Path(_td) / "budget.json").write_text(json.dumps(
+            {"used_gpu_h": 60.67, "total_cap_gpu_h": TOTAL_CAP_GPU_H,
+             "steps": [{"key": "prep/H0_host", "rc": 0, "gpu_h": 0.13},
+                       {"key": "md/bad", "rc": 1, "gpu_h": 0.01}]}), encoding="utf-8")
+        _bb, _tried, _failed = resume_check(_td)
+        chk(_tried == {"prep/H0_host", "md/bad"} and _failed == ["md/bad"],
+            "양성: 이미 시도한 key 를 집어내고 실패 key 를 따로 보고한다")
+        chk(abs(float(_bb["used_gpu_h"]) - 60.67) < 1e-9,
+            "양성: 이어받기는 누적 예산을 **승계한다** (리셋하면 상한 우회다)")
+        _bad = dict(frozen_now()); _bad["prod_ps"] = 50.0
+        _m.write_text(json.dumps({"frozen": _bad}, ensure_ascii=False), encoding="utf-8")
+        try:
+            resume_check(_td); _refused = False
+        except SystemExit as e:
+            _refused = "prod_ps" in str(e)
+        chk(_refused, "⛔음성: 물리 규약(prod_ps)이 달라지면 이어받기를 **거부**한다")
+    try:
+        resume_check(_td + "/nonexistent"); _nm = False
+    except SystemExit:
+        _nm = True
+    chk(_nm, "⛔음성: manifest 가 없으면 이어받지 않는다")
+
     print(f"selftest {n[1]}/{n[0]} · {'PASS' if n[1] == n[0] else 'FAIL'}")
     return 0 if n[1] == n[0] else 1
 
@@ -518,6 +661,10 @@ def main() -> int:
     ap.add_argument("--python", default=sys.executable or "python3")
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--dry_run", action="store_true")
+    ap.add_argument("--resume", action="store_true",
+                    help="기존 out_root 를 이어받는다 (frozen 일치 필수 · 누적 예산 승계)")
+    ap.add_argument("--resume_retry_failed", action="store_true",
+                    help="--resume 시 rc≠0 으로 끝난 스텝도 다시 돌린다")
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--_prep_one", action="store_true", help=argparse.SUPPRESS)
     ap.add_argument("--_struct", help=argparse.SUPPRESS)
@@ -528,7 +675,8 @@ def main() -> int:
         prep_one(a._struct, a.out_root, device=a.device)
         return 0
     os.chdir(REPO)
-    return run_round(a.out_root, a.python, a.device, dry_run=a.dry_run)
+    return run_round(a.out_root, a.python, a.device, dry_run=a.dry_run,
+                     resume=a.resume, retry_failed=a.resume_retry_failed)
 
 
 if __name__ == "__main__":
