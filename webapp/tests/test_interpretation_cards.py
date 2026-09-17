@@ -433,3 +433,62 @@ def test_section1_order_is_figure_then_howto_then_definition(client):
     order = sorted(marks, key=marks.get)
     assert order == ["figure", "howto", "definition", "s2"], \
         f"§1 순서가 바뀌었다: {' → '.join(order)}"
+
+
+# ── ③ 기회비용 절의 정직 한정 (2026-09-17 확장) ──────────────────────────────
+#   이 절은 **설명**이라 조용히 틀리면 화면이 물리를 잘못 가르친다.
+#   특히 둘: 1.9089 를 응집에너지로 읽는 것, 그리고 저울 부등식을 우리가 **잰 양**
+#   으로 읽는 것. 둘 다 원장에 없는 말이므로 화면이 스스로 막아야 한다.
+
+def test_opportunity_cost_explains_why_one_Li_is_exactly_V_eV(client):
+    """양성 — 환율 1:1 의 근거(Li 하나가 전자 하나를 데려간다)가 화면에 있다.
+
+    이게 빠지면 "Li 한 개 = V eV" 가 근거 없는 단정으로 되돌아간다.
+    """
+    d = _mu_details(_report_html(client))
+    assert "전하 &#215; 전압" in d or "전하 × 전압" in d, "일 = 전하×전압 이라는 근거가 없다"
+    assert "1가" in d, "Li⁺ 가 전자를 하나만 데려간다는 근거가 없다"
+    assert "환율" in d, "1:1 환율이라는 말이 없다"
+
+
+def test_opportunity_cost_denies_the_cohesive_energy_reading(client):
+    """⛔음성 — 1.9089 를 '응집에너지' 로 읽으면 틀린다. 그 부인이 화면에 있어야 한다.
+
+    1.9089 는 MP 총에너지 눈금 위의 Li 금속 원자당 에너지이지, Li 금속에서 Li 하나를
+    떼는 에너지가 아니다. 이 한 줄이 빠지면 화면이 틀린 물리를 가르친다.
+    """
+    d = _mu_details(_report_html(client))
+    i = d.find("응집에너지")
+    assert i > 0, "응집에너지가 아니라는 부인이 없다"
+    near = d[i:i + 200]
+    assert "아니다" in near, "'응집에너지' 를 언급만 하고 부인하지 않는다"
+
+
+def test_opportunity_cost_says_the_balance_is_a_picture_not_a_measurement(client):
+    """⛔음성 — 저울 부등식을 우리가 **잰 양**으로 읽으면 조용히 틀린 경로다.
+
+    상별 'Li 하나 떼는 비용' 은 잰 적이 없다. 실제 게이트는 hull 이 모든 분해 경로를
+    동시에 비교한 것이다. 이 한정이 빠지면 독자는 없는 측정을 인용하게 된다.
+    """
+    d = _mu_details(_report_html(client))
+    assert "잰 적이 없다" in d, "재지 않았다는 사실이 화면에 없다"
+    assert "모든 분해 경로를 동시에" in d, "실제 게이트가 hull 이라는 말이 없다"
+    assert "0 K 열역학" in d, "'저절로'가 속도가 아니라는 한정이 없다"
+
+
+def test_threshold_table_is_actually_mu_plus_V(client):
+    """⛔음성 — 문턱 표의 수가 1.9089 + V 와 어긋나면 잡는다 (오타·복붙 사고).
+
+    문자열이 아니라 **값**으로 본다.
+    """
+    d = _mu_details(_report_html(client))
+    head = d.find("문턱 = 1.9089 + V")
+    assert head > 0, "문턱 표를 못 찾았다 — 시험이 헛것을 재고 있다"
+    body = d[head:d.index("</table>", head)]
+    rows = re.findall(r"<tr><td>(?:<strong>)?([0-9.]+)(?:</strong>)?</td>"
+                      r"<td>(?:<strong>)?([0-9.]+)(?:</strong>)?</td></tr>", body)
+    assert len(rows) >= 4, f"문턱 표 행을 {len(rows)} 개만 읽었다 — 시험이 헛것을 재고 있다"
+    for v, thr in rows:
+        want = round(1.9089 + float(v), 2)
+        assert abs(want - float(thr)) < 5e-3, \
+            f"V={v}: 화면 {thr} vs 1.9089+V = {want:.2f}"
