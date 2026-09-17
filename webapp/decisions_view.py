@@ -219,6 +219,13 @@ def card_sections(j: dict) -> list:
 #: 라벨 없는 맨 URL 도 줍는다.
 _CARD_LINK = re.compile(r"\[([^\]\n]{1,120})\]\((https://[^\s()<>\"'|]{1,500})\)")
 _BARE_URL = re.compile(r"(?<![(\w])(https://[^\s()<>\"'|]{1,500})")
+#: 이 화면 **자신이 서빙하는** 보고서. 2026-09-17 신설.
+#:   왜: Nd/O 카드의 보고서 버튼이 외부 아티팩트 URL 하나만 가리키고 있었는데, 그 URL 은
+#:   **만든 세션 밖에서는 갱신이 안 된다**(원본을 못 받아 publish 가 거부된다 — 실측).
+#:   그래서 repo 가 최신인데 버튼은 낡은 화면을 열었다. 정본을 webapp 이 직접 서빙한다.
+#:   ⛔ **마크다운 형식만** 줍는다 — 맨 경로는 안 줍는다. 산문에 `/api/...` 가 우연히
+#:     들어가도 버튼이 생기면 안 된다 (링크는 선언이지 발견이 아니다).
+_CARD_LOCAL = re.compile(r"\[([^\]\n]{1,120})\]\((/(?:api/file|files|kb)/[^\s()<>\"'|]{1,300})\)")
 
 
 def card_links(j: dict) -> list:
@@ -234,11 +241,19 @@ def card_links(j: dict) -> list:
       · https 가 아닌 것은 안 줍는다 — 화면에 앵커로 나가는 값이다.
       · 카드가 그 링크를 **어떤 뜻으로** 달았는지 판정하지 않는다. 경고·조건은
         절 본문에 있고, 여기서 요약하지 않는다.
+      · 내부 링크(`local: True`)가 **실제로 서빙되는지** 확인하지 않는다 —
+        경로가 맞는지는 `/api/file` 의 `safe_repo_path` 가 요청 시에 본다.
     """
     out, seen = [], set()
     if not isinstance(j, dict):
         return out
     blob = json.dumps(j, ensure_ascii=False)
+    # 내부 정본을 **먼저** 낸다 — 외부 거울보다 앞에 서야 사람이 그걸 누른다.
+    for label, url in _CARD_LOCAL.findall(blob):
+        if url in seen:
+            continue
+        seen.add(url)
+        out.append({"url": url, "label": label.replace("\\n", " ").strip(), "local": True})
     for label, url in _CARD_LINK.findall(blob):
         if url in seen:
             continue

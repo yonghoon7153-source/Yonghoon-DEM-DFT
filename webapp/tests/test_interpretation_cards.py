@@ -199,3 +199,61 @@ def test_card_markdown_actually_becomes_bold(client):
         assert (want_b in h) or (want_s in h), \
             f"표 제목이 렌더된 형태로 안 나온다: {want_s[:70]}"
 
+
+
+# ── 보고서 버튼이 **정본**을 가리키는가 (2026-09-17) ─────────────────────────
+#   왜 생겼나 (실측): Nd/O 카드의 보고서 버튼이 외부 아티팩트 URL 하나만 가리켰는데,
+#   그 URL 은 만든 세션 밖에서 갱신이 안 된다(publish 거부 — 원본을 못 받는다).
+#   그래서 repo 를 고쳐도 버튼은 낡은 화면을 열었다. 이제 webapp 이 정본을 직접 서빙한다.
+LOCAL_REPORT = "/api/file/db/properties/cei_figs/index.html"
+
+
+def test_nd_card_report_button_points_at_the_repo_copy():
+    """양성 — Nd/O 카드의 보고서 버튼이 **이 화면이 서빙하는 정본**이다."""
+    cards = V.interpretation_cards_for(ND)
+    urls = [l["url"] for c in cards for l in c["links"]]
+    assert LOCAL_REPORT in urls, f"정본 링크가 버튼에 없다: {urls}"
+    local = [l for c in cards for l in c["links"] if l.get("local")]
+    assert local and local[0]["url"] == LOCAL_REPORT, "정본이 첫 버튼이어야 한다"
+
+
+def test_local_report_is_actually_served(client):
+    """양성 — 그 경로가 **진짜로 열린다**. 링크만 걸고 404 면 붙인 게 아니다."""
+    r = client.get(LOCAL_REPORT)
+    assert r.status_code == 200, f"정본이 안 열린다 ({r.status_code})"
+    body = r.get_data(as_text=True)
+    assert "<h2 id=\"s1\">" in body, "보고서 본문이 아니다"
+    # 이번 세션이 고친 그 문장이 실제로 화면에 온다 (원장↔화면 결속)
+    assert "24 조건이 개별로도" in body, "§1 보강 문장이 화면에 없다"
+
+
+def test_report_images_are_served_relative_to_it(client):
+    """양성 — 그림도 같은 경로에서 온다 (상대 src 가 풀린다)."""
+    r = client.get("/api/file/db/properties/cei_figs/cei_nd_o_decomposition.png")
+    assert r.status_code == 200 and r.data[:4] == b"\x89PNG", "Fig 1 PNG 가 안 온다"
+
+
+def test_bare_internal_path_in_prose_does_not_become_a_button():
+    """⛔음성 — 산문에 경로가 우연히 들어가도 버튼이 **안** 생긴다.
+
+    링크는 **선언**이지 발견이 아니다. 맨 경로까지 주우면 설명문에 쓴 예시가
+    화면에서 버튼이 되고, 그건 카드가 가리킨 적 없는 곳이다.
+    """
+    j = {"note": "자세한 것은 /api/file/db/properties/anything.html 를 보라"}
+    assert V.card_links(j) == [], f"맨 경로를 주웠다: {V.card_links(j)}"
+
+
+def test_internal_link_outside_allowlist_is_not_a_button():
+    """⛔음성 — 허용 접두(/api/file·/files·/kb) 밖은 버튼이 안 된다."""
+    j = {"note": "[비밀](/etc/passwd) · [설정](/admin/settings)"}
+    assert V.card_links(j) == [], f"허용 밖 경로를 주웠다: {V.card_links(j)}"
+
+
+def test_https_links_still_work_alongside_local():
+    """양성 — 외부 링크 기능이 죽지 않았다. 다만 정본이 **앞**에 선다."""
+    j = {"a": "[정본](/api/file/db/properties/x.html)",
+         "b": "[거울](https://example.com/mirror)"}
+    got = V.card_links(j)
+    assert [l["url"] for l in got] == ["/api/file/db/properties/x.html",
+                                       "https://example.com/mirror"], got
+    assert got[0].get("local") is True and "local" not in got[1]

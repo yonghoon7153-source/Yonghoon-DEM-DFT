@@ -35,7 +35,15 @@ python3 tools/kb_wiki.py lint | tail -2               # 0 errors
 python3 tools/db/validate_canonical.py | tail -2      # 그래프 무결성 ✅
 python3 tools/convention_check.py | tail -2           # 0 위반
 python3 -c "import sys;sys.path.insert(0,'.');from webapp.canonical import validate_hazards;print(len(validate_hazards()),'건')"   # 0 건
+python3 -m pytest webapp/tests/ -q | tail -2                        # ⭐ 2026-09-17 추가
 ```
+
+⛔ **2026-09-17 정정 — 검사가 넷이 아니라 다섯이다.** 위 `pytest` 줄이 빠져 있어서
+`test_no_literal_markdown_asterisks_on_the_card` 가 **빨간불인 채로 인계됐다**
+(`ndo_passivation_argument` 카드가 강조 별표를 백틱 안에 넣어 화면에 `**` 가 그대로
+나갔다 — 함정 3(LAB mathtext)과 **같은 모양**이다: 오류 없음·값 멀쩡·화면만 깨짐).
+검사 넷만 돌리면 이 부류는 통째로 안 잡힌다.
+⚠ `webapp/tests/` 전체는 ~3분 걸린다. 짧게 보려면 `test_interpretation_cards.py`(5초).
 
 세션 끝 커밋 **`7d122db6b`**. 오늘 커밋 60 개. 트리 깨끗.
 
@@ -44,7 +52,7 @@ python3 -c "import sys;sys.path.insert(0,'.');from webapp.canonical import valid
 | 묻는 것 | 어디 |
 |---|---|
 | **지금 뭘 이어서 하나** | `kb/open_items.md` **⏭-NOW-k** (양극 CEI 가 논문 축) |
-| **CEI 결과 한 장** | 아티팩트 **[보고서 v12](https://claude.ai/artifact/JpXxNZwwXt3QgB7f3jMpwo)** — §1~§9, 배경 없이 읽는 설명 포함 |
+| **CEI 결과 한 장** | **정본은 repo 다** — `db/properties/cei_figs/index.html`, 화면에서는 `/composition/modelc_nd_doped` 의 **📄 보고서** 버튼 (webapp 이 `/api/file/...` 로 직접 서빙). 아티팩트 [v12](https://claude.ai/artifact/JpXxNZwwXt3QgB7f3jMpwo) 는 **공유용 거울이고 뒤처져 있다** |
 | **인용해도 되나** | `db/properties/citation_hazards.json` — 이번 세션 3 건 추가(`HZ-dualcompat-*`) |
 | **어떤 판정이 섰나** | `db/governance/decisions.json` (`decision_state: active` 만) |
 
@@ -93,6 +101,25 @@ CEI 는 양쪽에 닿아 있다. 닫힌계 0 V 20 쌍.
 그 밖에 화면(§9 "말하면 안 되는 것")에도 실려 있다:
 "6 종 동급군"(동급은 추이적이 아니다) · "Al 이 최고의 인산염 형성체"(AlCl₃ 아티팩트) ·
 "Nd 가 최적의 3가 도펀트" · 축 간 상관 −0.43~+0.64 인용(n=7 임계 0.750).
+
+## 3b. ⛔ 2026-09-17 정정 — 아티팩트 URL 은 **갱신되지 않는다**
+
+이 카드가 *"이 URL 을 갱신해서 쓴다 · 새로 만들지 말 것"* 이라고 적었는데 **다음 세션에서
+안 됐다.** 실측:
+
+- `read` 하면 *"created **outside your organization**"* 으로 원문(raw HTML)이 아니라
+  **요약**만 온다.
+- 그 상태로 publish 하면 거부된다 — *"You haven't viewed the latest version …
+  the content host did not return it."* **원본을 못 받으니 덮어쓸 수 없다.**
+
+즉 그 URL 은 **만든 세션 안에서만** 갱신된다. 다음 사람이 이 카드를 믿고 시도하면 똑같이 막힌다.
+
+**그래서 바꾼 것**: 화면 보고서의 **정본을 repo 로 옮겼다.** `ndo_passivation_argument`
+카드 §7 이 이제 `/api/file/db/properties/cei_figs/index.html` 을 가리키고, `card_links` 가
+내부 링크도 줍는다(마크다운 형식만 — 맨 경로는 안 줍는다). 그래서 **repo 를 고치면
+버튼이 곧바로 최신**이다. 아티팩트는 공유용 거울로만 남긴다.
+
+⚠ 현재 거울과의 차이: §1 R1 항목 한 문장(정본에만 *"24 조건이 개별로도 전부 문턱 안"*).
 
 ## 4. ⭐ 이 세션에서 **배운 함정** (다음 사람이 다시 밟지 말 것)
 
