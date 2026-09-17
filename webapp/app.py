@@ -4003,6 +4003,46 @@ def seminar_page():
     return render_template('seminar.html', active='seminar')
 
 
+#: ★★ 이종기술 — **실험 라인**이다 (DEM/MPM 과 분리, 2026-09-17 사용자 지시).
+#:   `/eis` 는 **모델** 화면(물리 EIS/DRT)이고 이종기술 데이터를 오버레이로만 쓴다.
+#:   이 화면은 그 공백 — **프로젝트 자체**의 읽기 전용 면이다.
+#:   ⚠ `eis/fits/` · `eis_catalog.csv` 는 커밋 `b22bdb3c2` 가 **추적을 뗀 재생성 산출물**이라
+#:   리포에 없을 수 있다.  `/eis` 가 이미 그 부재를 우아하게 처리하므로(eis.html) 같은 규약을 쓴다:
+#:   **있으면 읽고, 없으면 "로컬 재생성 산출물 — 리포에 없음" 으로 표기한다.**
+#:   ⛔ 부재를 숨기고 숫자를 박지 않는다 (원장 감사 `이종기술/README.md:38-42` 지적).
+HETERO_ROOT = Path(__file__).resolve().parent.parent / '이종기술'
+
+
+def _hetero_inventory():
+    """아카이브의 **실제** 상태를 센다 — README 산문이 아니라 디스크를 본다.
+
+    ⚠ README 는 `raw 24 · tidy 12 · fits + catalog` 라고 적는데 2026-09-17 실측은
+      `raw 27 · tidy 15 · fits 없음 · catalog 없음` 이다.  산문과 디스크가 어긋나므로
+      화면은 **디스크를 정본으로** 쓰고 어긋남 자체를 표시한다.
+    """
+    eis = HETERO_ROOT / 'eis'
+    raw = sorted(pp.name for pp in (eis / 'raw').glob('*')) if (eis / 'raw').is_dir() else []
+    ext = sorted(pp.name for pp in (eis / 'extracted').glob('*.csv')) if (eis / 'extracted').is_dir() else []
+    fits_dir = eis / 'fits'
+    means = fits_dir / 'summary_means.csv'
+    return {
+        'root_exists': HETERO_ROOT.is_dir(),
+        'n_raw': len(raw), 'n_tidy': len(ext), 'tidy': ext,
+        'has_fits': fits_dir.is_dir(),
+        'has_means': means.is_file(),
+        'has_catalog': (eis / 'eis_catalog.csv').is_file(),
+        # README 가 주장하는 값 — 디스크와 대조해 보이기 위해 같이 넘긴다
+        'readme_raw': 24, 'readme_tidy': 12,
+    }
+
+
+@app.route('/hetero')
+def hetero_page():
+    """이종기술 — 소립 SC-NCM 실험 라인의 프로젝트 면 (읽기 전용)."""
+    return render_template('hetero.html', active='hetero',
+                           inv=_hetero_inventory(), lv=_page_lv('hetero'))
+
+
 @app.route('/api/seminar/doc/<key>')
 def api_seminar_doc(key):
     """대본/용어집/가이드 원문 (markdown 그대로 — 프런트에서 렌더)."""

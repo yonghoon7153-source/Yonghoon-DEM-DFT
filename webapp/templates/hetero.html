@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% block title %}이종기술{% endblock %}
+
+{% block content %}
+<style>
+  /* 앱 테마(style.css --bg/--card/--accent/--dim)를 그대로 쓴다.
+     ★ 흰 카드를 하드코딩하면 앱의 밝은 글자색이 상속돼 회색-on-흰색이 된다 (seminar.html 의 교훈). */
+  .ht-head { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:4px; }
+  .ht-head h1 { margin:0; }
+  .ht-sub { color:var(--dim); font-size:.88rem; }
+  .ht-lede { color:var(--dim); max-width:70ch; margin:10px 0 22px; line-height:1.7; }
+
+  .ht-sec { margin:30px 0 0; }
+  .ht-sec > h2 {
+    font-size:.78rem; letter-spacing:.11em; text-transform:uppercase;
+    color:var(--dim); margin:0 0 12px; padding-bottom:7px;
+    border-bottom:1px solid var(--line, #2a2f3a);
+  }
+
+  .ht-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; }
+  .ht-card {
+    background:var(--card); border:1px solid var(--line, #2a2f3a);
+    padding:13px 15px; border-radius:4px;
+  }
+  .ht-card .k { font-size:.7rem; letter-spacing:.09em; text-transform:uppercase; color:var(--dim); }
+  .ht-card .v { font-size:1.02rem; margin-top:5px; line-height:1.45; }
+  .ht-card .v small { color:var(--dim); font-size:.78rem; }
+
+  table.ht { border-collapse:collapse; width:100%; font-size:.86rem; margin:4px 0 10px; }
+  table.ht th, table.ht td {
+    padding:7px 11px; text-align:left; border-bottom:1px solid var(--line, #2a2f3a);
+    vertical-align:top;
+  }
+  table.ht thead th {
+    font-size:.68rem; letter-spacing:.07em; text-transform:uppercase; color:var(--dim);
+    font-weight:600;
+  }
+  table.ht td.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .ht-scroll { overflow-x:auto; }
+
+  .ht-warn {
+    border:1px solid var(--line, #2a2f3a); border-left:3px solid var(--yellow, #d89440);
+    background:var(--card); padding:12px 15px; margin:10px 0; border-radius:3px;
+    font-size:.86rem; line-height:1.65;
+  }
+  .ht-warn b { color:var(--yellow, #d89440); }
+  .ht-warn.stop { border-left-color:var(--red, #d8756d); }
+  .ht-warn.stop b { color:var(--red, #d8756d); }
+
+  .tag {
+    display:inline-block; font-size:.66rem; letter-spacing:.05em; padding:1px 7px;
+    border:1px solid var(--line, #2a2f3a); border-radius:2px; color:var(--dim); margin-left:6px;
+  }
+  .tag.ok { color:var(--green, #4fb08c); border-color:var(--green, #4fb08c); }
+  .tag.no { color:var(--red, #d8756d); border-color:var(--red, #d8756d); }
+
+  .ht-files { columns:2; column-gap:22px; font-size:.78rem; color:var(--dim); line-height:1.75; }
+  .ht-files div { break-inside:avoid; }
+  @media (max-width:640px){ .ht-files { columns:1; } }
+</style>
+
+<div class="ht-head">
+  <h1>&#x1F9EA; 이종기술</h1>
+  <span class="ht-sub">소립 SC-NCM 양극 · 실험 라인</span>
+</div>
+
+<p class="ht-lede">
+  SDCP 와 <b>분리된 실험 프로그램</b>이다. 소립(4&nbsp;µm 단결정) NCM 시료 <b>No.1 / No.2</b> 와
+  그 <b>poly : small = 5:5 바이모달</b> 블렌드를 SUS 집전체 위에서 측정한다.
+  이 화면은 프로젝트의 <b>읽기 전용 면</b>이고, 모델 화면인
+  <a href="/eis">/eis</a>&nbsp;(물리 EIS/DRT)는 여기 데이터를 오버레이로만 쓴다.
+</p>
+
+<!-- ── 1. 프로젝트 정체 ─────────────────────────────────────── -->
+<div class="ht-sec">
+  <h2>1 · 프로젝트 정체</h2>
+  <div class="ht-grid">
+    <div class="ht-card"><div class="k">조성 (wt%)</div>
+      <div class="v">AM : SE : VGCF : PTFE<br><b>80 : 18 : 1 : 1</b></div></div>
+    <div class="ht-card"><div class="k">활물질</div>
+      <div class="v">소립 4&nbsp;µm 단결정 <b>No.1 / No.2</b><br>
+        <small>Poly = 대입자 다결정 · 5:5 = poly:small wt%</small></div></div>
+    <div class="ht-card"><div class="k">집전체</div>
+      <div class="v"><b>SUS</b><br><small>대칭셀 = 이온 차단 → σ_e · 풀셀 → R_int</small></div></div>
+    <div class="ht-card"><div class="k">면용량 목표</div>
+      <div class="v"><b>3 mAh·cm⁻²</b><br><small>Li-In 음극 · 60 °C · 0.1C 2cyc → 0.2C</small></div></div>
+    <div class="ht-card"><div class="k">셀 치수</div>
+      <div class="v">대칭 ⌀10&nbsp;mm <small>(0.785 cm²)</small><br>
+        율특·수명 ⌀13&nbsp;mm <small>(1.327 cm²)</small></div></div>
+    <div class="ht-card"><div class="k">측정</div>
+      <div class="v">BioLogic <b>VSP-300</b><br><small>Hanyang · 이종원 그룹</small></div></div>
+  </div>
+</div>
+
+<!-- ── 2. 핵심 비교 ─────────────────────────────────────────── -->
+<div class="ht-sec">
+  <h2>2 · 핵심 비교 — 바이모달 σ_e</h2>
+  <p class="ht-lede" style="margin:0 0 12px">
+    대칭셀(SUS ∣ 복합양극 ∣ SUS)은 이온을 차단하므로 <b>전자 전도</b>를 낸다.
+    프로젝트의 핵심 대조는 <b>순수 소립 vs 5:5 바이모달</b>이다.
+  </p>
+  <div class="ht-scroll">
+    <table class="ht">
+      <thead><tr><th>시료</th><th>순수 소립</th><th>5:5 바이모달</th><th>방향</th></tr></thead>
+      <tbody>
+        <tr><td>No.1</td><td class="num">0.14</td><td class="num">0.093</td><td>감소 ↓</td></tr>
+        <tr><td>No.2</td><td class="num">0.115</td><td class="num">0.152</td><td>증가 ↑</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:.78rem;color:var(--dim);margin:0 0 10px">단위 mS·cm⁻¹ · 출처 = <code>이종기술/README.md</code></p>
+
+  <div class="ht-warn stop">
+    <b>⚠ n = 2 이고 방향이 불일치한다.</b>
+    No.1 은 바이모달에서 σ_e 가 내려가고 No.2 는 올라간다.
+    <b>해석을 붙이지 않는다</b> — 두 값을 그대로 둔다.
+    바이모달이 전자 전도에 유리하다/불리하다는 결론을 이 두 점에서 끌어내지 말 것.
+  </div>
+</div>
+
+<!-- ── 3. 아카이브 ─────────────────────────────────────────── -->
+<div class="ht-sec">
+  <h2>3 · EIS 아카이브 <span class="tag">디스크 실측</span></h2>
+  {% if not inv.root_exists %}
+    <div class="ht-warn stop"><b>⛔ <code>이종기술/</code> 이 없다.</b>
+      이 배포본에는 아카이브가 포함되지 않았다.</div>
+  {% else %}
+  <div class="ht-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+    <div class="ht-card"><div class="k">raw (.mpr 등)</div>
+      <div class="v"><b>{{ inv.n_raw }}</b>
+        {% if inv.n_raw != inv.readme_raw %}<small><br>README 는 {{ inv.readme_raw }} 라고 적는다</small>{% endif %}</div></div>
+    <div class="ht-card"><div class="k">tidy CSV</div>
+      <div class="v"><b>{{ inv.n_tidy }}</b>
+        {% if inv.n_tidy != inv.readme_tidy %}<small><br>README 는 {{ inv.readme_tidy }} 라고 적는다</small>{% endif %}</div></div>
+    <div class="ht-card"><div class="k">eis_catalog.csv</div>
+      <div class="v">{% if inv.has_catalog %}<span class="tag ok">있음</span>{% else %}<span class="tag no">리포에 없음</span>{% endif %}</div></div>
+    <div class="ht-card"><div class="k">fits/</div>
+      <div class="v">{% if inv.has_fits %}<span class="tag ok">있음</span>{% else %}<span class="tag no">리포에 없음</span>{% endif %}</div></div>
+  </div>
+
+  {% if inv.n_raw != inv.readme_raw or inv.n_tidy != inv.readme_tidy or not inv.has_fits or not inv.has_catalog %}
+  <div class="ht-warn">
+    <b>⚠ README 산문과 디스크가 어긋난다.</b>
+    이 화면은 <b>디스크를 정본</b>으로 쓴다.
+    <code>fits/</code> 와 <code>eis_catalog.csv</code> 는 커밋 <code>b22bdb3c2</code> 가
+    <b>추적을 뗀 재생성 산출물</b>이라 (WSL git pull 만성 실패 대응) 리포에 없는 것이 정상이다.
+    저자 기계에서 재생성하면 아래 R_int 항목이 자동으로 채워진다.
+  </div>
+  {% endif %}
+
+  {% if inv.tidy %}
+  <details style="margin-top:6px">
+    <summary style="cursor:pointer;color:var(--dim);font-size:.82rem">tidy CSV {{ inv.n_tidy }}건 목록</summary>
+    <div class="ht-files" style="margin-top:10px">
+      {% for f in inv.tidy %}<div>{{ f }}</div>{% endfor %}
+    </div>
+  </details>
+  {% endif %}
+  {% endif %}
+</div>
+
+<!-- ── 4. R_int 규약 ───────────────────────────────────────── -->
+<div class="ht-sec">
+  <h2>4 · R_int 집전체 규약</h2>
+  <p class="ht-lede" style="margin:0 0 12px">
+    <b>bare-Al 은 SDCP 전용</b>이다 — 이종기술에 쓰지 않는다.
+    이종기술은 <b>SUS(프라이머) 집전체</b>를 쓰고, R_int 는 풀셀 EIS(SOC100)에서 얻는다.
+  </p>
+  {% if inv.has_means %}
+    <p style="font-size:.86rem">값 출처: <code>이종기술/eis/fits/summary_means.csv</code>
+      <span class="tag ok">리포에 있음</span></p>
+  {% else %}
+  <div class="ht-warn stop">
+    <b>⛔ 인용 출처가 리포에 없다.</b>
+    README 는 SUS <code>R_int ≈ 50 Ω·cm²</code> 를 <b>"정설"</b> 이라 적고 출처로
+    <code>eis/fits/summary_means.csv</code> 를 다는데, <b>그 파일이 리포에 없다</b>
+    (위 3절 — 추적이 떼인 재생성 산출물).
+    ⇒ <b>이 화면은 그 수치를 싣지 않는다.</b> 재생성 후 이 칸이 채워진다.
+  </div>
+  <p style="font-size:.82rem;color:var(--dim);margin:0">
+    ⚠ 층 주의 — 그 값은 <b>풀셀</b> R_int(반응 + 집전체, SOC100)이지 분리된 집전체 접촉저항이 아니다.
+    STEP4 가 BV η<sub>kin</sub> 을 따로 계산하면 반응 계면이 일부 중복된다.
+  </p>
+  {% endif %}
+</div>
+
+<!-- ── 5. 모델 연결 ───────────────────────────────────────── -->
+<div class="ht-sec">
+  <h2>5 · 모델과의 연결</h2>
+  <div class="ht-scroll">
+    <table class="ht">
+      <thead><tr><th>측정</th><th>무엇을 주는가</th><th>어디로 들어가는가</th></tr></thead>
+      <tbody>
+        <tr><td>풀셀 EIS</td><td>R_int (반응 + 프라이머-SUS 집전체)</td>
+            <td>STEP4 단자전압 <code>V = V₀ − I·R_int</code></td></tr>
+        <tr><td>대칭셀 EIS<br><small>SUS ∣ 양극 ∣ SUS</small></td><td>복합체 σ_e (이온 차단)</td>
+            <td>STEP3 σ_e 망 검증</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:.82rem;color:var(--dim);margin:0">
+    이 R_int 는 프로젝트가 <b>자체 측정</b>한 값이며 SDCP 원고의 SBE/DBE 패널 값과 다른 계열이다.
+  </p>
+</div>
+
+<!-- ── 6. 열린 항목 ───────────────────────────────────────── -->
+<div class="ht-sec">
+  <h2>6 · 열린 항목</h2>
+  <div class="ht-scroll">
+    <table class="ht">
+      <thead><tr><th>항목</th><th>상태</th></tr></thead>
+      <tbody>
+        <tr><td>바이모달 σ_e 방향 불일치 (No.1 ↓ / No.2 ↑)</td>
+            <td><span class="tag no">미해결</span> n=2 — 시료 추가 필요</td></tr>
+        <tr><td>README 산문 ↔ 디스크 수량 불일치</td>
+            <td><span class="tag no">미수정</span> README 갱신 대상</td></tr>
+        <tr><td><code>fits/</code>·<code>catalog</code> 재생성</td>
+            <td>저자 기계에서 수행 — 리포에는 비추적</td></tr>
+        <tr><td>C_dl 앵커</td>
+            <td><span class="tag no">철회됨</span> Brug C 가 이 CPE 지수에서 정의역 밖 —
+                <code>eis/README.md</code> 결론 = 값 없음, TLM 재적합이 해법</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if lv %}{% include "_ledger.html" %}{% endif %}
+{% endblock %}
