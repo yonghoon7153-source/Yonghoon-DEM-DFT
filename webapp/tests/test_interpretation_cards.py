@@ -11,6 +11,7 @@
   화면이 그대로 옮기는지만 본다.
 """
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -257,3 +258,67 @@ def test_https_links_still_work_alongside_local():
     assert [l["url"] for l in got] == ["/api/file/db/properties/x.html",
                                        "https://example.com/mirror"], got
     assert got[0].get("local") is True and "local" not in got[1]
+
+
+# ── 보고서 PDF 저장(인쇄) 표면 (2026-09-17) ─────────────────────────────────
+REPORT = Path(__file__).resolve().parents[2] / "db/properties/cei_figs/index.html"
+
+
+def _report_html(client):
+    r = client.get(LOCAL_REPORT)
+    assert r.status_code == 200
+    return r.get_data(as_text=True)
+
+
+def test_pdf_button_is_on_the_report(client):
+    """양성 — PDF 저장 버튼이 화면에 있고, 인쇄할 때는 자기가 사라진다."""
+    h = _report_html(client)
+    assert "window.print()" in h, "PDF 저장 버튼이 없다"
+    assert 'class="noprint"' in h, "버튼이 noprint 로 안 감싸져 있다"
+    assert re.search(r"@media print\b", h), "인쇄 규칙이 없다"
+    assert re.search(r"\.noprint\s*\{[^}]*display\s*:\s*none", h), \
+        "인쇄에서 버튼을 숨기지 않는다 — 종이에 버튼이 찍힌다"
+
+
+def test_print_keeps_background_colours(client):
+    """⛔음성 — 배경색을 버리면 §3 모식도의 보라 칸이 흰 칸이 된다.
+
+    그 칸 색이 "Nd 가 여는 방" 이라는 **뜻을 나르는** 유일한 표식이라,
+    색이 빠지면 그림이 말을 안 한다.
+    """
+    h = _report_html(client)
+    blk = re.search(r"@media print\s*\{.*?\n  \}", h, re.S)
+    assert blk, "인쇄 블록을 못 찾았다"
+    assert "print-color-adjust" in blk.group(0), "print-color-adjust 가 없다"
+
+
+def test_print_forces_light_palette_for_every_dark_selector(client):
+    """⛔음성 — 다크 선택자를 늘리고 인쇄 블록을 안 고치면 **까맣게 인쇄된다**.
+
+    다크 팔레트를 세우는 선택자를 전부 찾아, 인쇄 블록이 그 **전부**를 덮는지 본다.
+    새 선택자가 생기면 이 시험이 먼저 빨개진다.
+    """
+    h = REPORT.read_text(encoding="utf-8")
+    dark_bg = "--bg:#141220"
+    # 다크 팔레트 직전의 선택자들
+    darks = set()
+    for m in re.finditer(r"([^{};]+)\{[^{}]*" + re.escape(dark_bg), h):
+        darks.add(m.group(1).strip().rstrip("{").strip())
+    assert darks, "다크 팔레트 블록을 못 찾았다 — 시험이 헛것을 재고 있다"
+    pm = re.search(r"@media print\s*\{(.*?)\n  \}", h, re.S)
+    assert pm, "인쇄 블록이 없다"
+    printed = pm.group(1)
+    missing = [d for d in darks if d not in printed]
+    assert not missing, f"인쇄 블록이 안 덮는 다크 선택자: {missing}"
+
+
+def test_long_table_is_not_glued_into_one_page(client):
+    """⛔음성 — §8 원자료 표에 break-inside:avoid 를 걸면 한 쪽을 넘겨 **잘린다**.
+
+    대신 머리 반복(thead)과 행 단위 보호만 건다. 이 구분이 사라지면 잡는다.
+    """
+    h = _report_html(client)
+    blk = re.search(r"@media print\s*\{.*?\n  \}", h, re.S).group(0)
+    assert "table-header-group" in blk, "여러 쪽 표의 머리를 반복하지 않는다"
+    assert not re.search(r"(^|[\s,]) *table\s*(,[^{]*)?\{[^}]*break-inside\s*:\s*avoid", blk), \
+        "table 전체에 break-inside:avoid 가 걸렸다 — 긴 표가 잘린다"
