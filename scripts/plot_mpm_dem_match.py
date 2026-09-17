@@ -93,7 +93,13 @@ imin = int(np.nanargmin(dM))
 ax.annotate('dip minimum\nAM72-78', xy=(xc[imin], dM[imin]), xytext=(xc[imin] - 2, dM[imin] - 5),
             fontsize=9, ha='center', arrowprops=dict(arrowstyle='->', color='#2c3e50'))
 ax.set_xlabel('AM content (wt%)'); ax.set_ylabel('median porosity (%)')
-ax.set_title('Furnas dip co-located: DEM vs independent plastic MPM (rSE<=0.5)')
+#  ⛔ 옛 제목 'Furnas dip co-located: DEM vs independent plastic MPM' 은 **철회된 표현**이다
+#     (CLAUDE.md CORRECTION 2, 2026-06-10): *"the FURNAS DIP is NOT reproduced by the plastic
+#     MPM — earlier 'DIP CO-LOCATES' headline was WRONG, a median-CROSSING misread as a
+#     shared dip"*.  champion MPM 곡선은 **단조**라 국소 최소가 **없고**, 두 곡선은 AM~75
+#     근처에서 **교차할 뿐**이다.  ⇒ 그림이 스스로 그 사실을 말하게 한다 (원장 `GAP3-FIG` ⑤).
+ax.set_title('DEM dips (AM~72-78); plastic MPM is monotonic — the curves merely CROSS '
+             '(rSE<=0.5)')
 ax.legend(fontsize=8.5); ax.grid(alpha=0.25); plt.tight_layout()
 plt.savefig(f'{OUT}/mpm_dem_dip.png', dpi=140); print('saved mpm_dem_dip.png')
 plt.close()

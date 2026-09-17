@@ -53,6 +53,11 @@ run 'check_review_findings   --selftest' python3 scripts/check_review_findings.p
 run 'check_method_discipline --selftest' python3 scripts/check_method_discipline.py --selftest
 run 'sdcp_gain_verdict       --selftest' python3 scripts/sdcp_gain_verdict.py --selftest
 run 'sdcp_phase_ledger_match --selftest' python3 scripts/sdcp_phase_ledger_match.py --selftest
+#  ★ 2026-09-17 (GAP3-19/20) — porosity 코퍼스의 **무효-데이터 필터**가 레짐 플래그에
+#    다시 붙는 것을 막는다.  한 스위치가 둘을 함께 껐을 때 `porosity_unified` 의
+#    헤드라인이 전부 틀린 값으로 나왔고(n 138↔129 · LOOCV 0.472↔0.502), dem·mpm 이
+#    양수라 **기존 게이트에 안 걸렸다**.
+run 'porosity_filter_axes    --selftest' python3 scripts/porosity_filter_axes_check.py --selftest
 #  ★★ 2026-08-25 (CDXR3-8/⑩) — **셋이 여기서 안 돌고 있었다.**  Codex: "테스트 파일이
 #    존재하고 수동 실행이 녹색인 것만으로는 자동 규율이 아니다."  실제로 이 세 selftest 가
 #    S1 봉인의 핵심(팔 검사기·PTFE 규약·솔버 규약)인데 check_all 도 CI 도 부르지 않았다.

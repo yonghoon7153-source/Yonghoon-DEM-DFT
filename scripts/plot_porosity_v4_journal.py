@@ -287,8 +287,11 @@ ax.set_xticks([2, 3, 5, 7, 10, 15, 20])
 ax.set_xticklabels(['2', '3', '5', '7', '10', '15', '20'])
 ax.set_xlabel(r'Size ratio $\lambda_{\mathrm{eff}} = r_{\mathrm{AM,eff}}/r_{\mathrm{SE}}$')
 ax.set_ylabel('AM weight fraction (%)')
+#  ⛔ 케이스 수를 **손으로 적지 않는다** (원장 `GAP3-FIG` 확장, 2026-09-17).  `82` 는
+#     리터럴이었고 실제 코퍼스는 **80** 이다 (자매 `plot_porosity_v4_paper.py` 와 로더가
+#     공백 말고는 동일하고, 거기서 실측 N_all=80 · N_trust=74).
 ax.set_title(r'(a)  $\varepsilon(f_{\mathrm{AM}}, \lambda_{\mathrm{eff}})$ surface  +  '
-              f'82 DEM cases', loc='left')
+             f'{len(CID)} DEM cases', loc='left')
 ax.legend(loc='lower right', fontsize=7.5, ncol=1)
 ax.set_xlim(1.3, 25); ax.set_ylim(50, 99)
 
@@ -496,7 +499,7 @@ ax.set_ylim(-10, 9)
 
 fig.suptitle(
     r'2D porosity surface  $\varepsilon(f_{\mathrm{AM}}, \lambda_{\mathrm{eff}})$  '
-    r'— v4 physics model on 82-case DEM corpus',
+    f'— v4 physics model on {len(CID)}-case DEM corpus',
     fontsize=13, fontweight='bold', y=0.985)
 
 out_png = 'docs/figures/porosity_v4_paper_figure.png'
@@ -553,16 +556,16 @@ print(f'Table → {out_table}')
 # ── Caption file ─────────────────────────────────────────────────────────
 caption = f"""# Figure caption — porosity_v4_paper_figure.png
 
-**2D porosity surface ε(f_AM, λ_eff) for the 82-case DEM corpus, fitted with
+**2D porosity surface ε(f_AM, λ_eff) for the {len(CID)}-case DEM corpus, fitted with
 the v4 physics model.**
 (a) Predicted porosity surface as a function of AM weight fraction f_AM and
 effective AM-to-SE size ratio λ_eff = r_AM,eff / r_SE.  Colour: model
-prediction; markers: 82 DEM-measured porosities (same colour scale); white
+prediction; markers: {len(CID)} DEM-measured porosities (same colour scale); white
 dashed line: AM-percolation onset f_perc(λ) separating the matrix-dominant
 regime (low λ, AM forms a load-bearing skeleton with SE bridging gaps) from
 the Furnas regime (high λ, small SE particles fill voids between large AM
 particles).  Six outlier groups (A1, A2, B, C, D, E) are circled in red — see
-(f).  (b) Predicted vs measured porosity for all 82 cases with 95 % bootstrap
+(f).  (b) Predicted vs measured porosity for all {len(CID)} cases with 95 % bootstrap
 prediction bands (gray error bars).  Outliers are excluded from the trust
 RMSE.  R² = {R2_all:.3f}, RMSE = {RMSE_all:.2f} %p (trust = {RMSE_trust:.2f}), and
 5-fold cross-validated RMSE = {V4_CV_RMSE_all:.2f} %p.  (c) Residual histogram of

@@ -114,11 +114,24 @@ def fig_literature_match(records):
                    linewidth=1, zorder=5, label=name)
 
     # Bruggeman reference
+    #  ⛔ 범례를 **손으로 적지 않는다** (원장 `GAP3-FIG` ⑥).  전에는 그리는 것이
+    #     `phi**(-2.36)` 인데 범례가 `τ²=φ^{-1.72}` 라 **곡선과 글자가 갈려** 있었다.
+    #     ⇒ 지수를 상수로 한 번 두고 **거기서 라벨을 만든다** — 다시 갈릴 수 없다.
+    #
+    #  ⚠⚠ **지수 값 자체는 앵커가 없다** (§F1).  두 줄이 서로 다른 규약을 함축한다:
+    #        Bruggeman 줄  α=1.5  → −1.0   ⇒ τ² = φ^(2−2α)
+    #        Wang 줄       α=2.36 → −2.36  ⇒ τ² = φ^(−α)
+    #     둘 다 맞을 수는 없다.  첫 줄의 규약을 따르면 α=2.36 은 **−2.72** 여야 한다.
+    #     리포에 "Wang 2023" 은 **DEM overlap 규약** 문맥으로만 있고 tortuosity 지수 출처가
+    #     **없다** ⇒ 값을 고르지 않고 그리던 것을 그대로 두되 **미앵커라고 적는다**.
+    #     ⇒ 원 문헌을 확인하기 전까지 이 점선을 정량 근거로 인용하지 말 것.
+    BRUG_EXP = -1.0          # α=1.5, τ² = φ^(2−2α)
+    WANG_EXP = -2.36         # ⚠ 출처 미확인 — 규약이 Bruggeman 줄과 어긋난다
     phi_range = np.linspace(0.15, 0.7, 50)
-    ax.plot(phi_range, phi_range**(-1.0), 'k--', alpha=0.5,
-            label='Bruggeman (α=1.5): τ²=φ$^{-1}$')
-    ax.plot(phi_range, phi_range**(-2.36), 'k:', alpha=0.5,
-            label="Wang 2023 fit (α=2.36): τ²=φ$^{-1.72}$")
+    ax.plot(phi_range, phi_range**BRUG_EXP, 'k--', alpha=0.5,
+            label=f'Bruggeman (α=1.5): τ²=φ$^{{{BRUG_EXP:g}}}$')
+    ax.plot(phi_range, phi_range**WANG_EXP, 'k:', alpha=0.5,
+            label=f'Wang 2023 fit: τ²=φ$^{{{WANG_EXP:g}}}$  (출처 미확인)')
 
     ax.set_xlabel(r'$\varphi_\mathrm{SE}$', fontsize=11)
     ax.set_ylabel(r'$\tau^2_{Lap,\,eff}$', fontsize=11)

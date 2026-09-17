@@ -87,6 +87,22 @@ pred = np.array([model_v4(np.array([F_AM[i]]), np.array([LAM[i]]),
                  for i in range(len(DATA))])
 resid = pred - EPS
 
+#  ⛔ 캡션의 지표를 **손으로 적지 않는다** (원장 `GAP3-FIG` ㉝).  전에는 제목이
+#     `RMSE 2.27 %p (all 82) / 2.09 %p (trust 80)` 라는 **순수 리터럴**이었다 — 이 파일에는
+#     `out_mask` 도 "trust" 계산도 **한 줄도 없었다**.  현재 코퍼스로 재현하면 값이 다르고
+#     (특히 trust 쪽이 22 % 어긋났다) n 도 82 가 아니라 80 이다.
+#     ⇒ `OUTLIERS` (아래에서 그림에 표시하는 바로 그 집합) 로 **세어서** 쓴다.
+#     ⚠ 정의는 자매 스크립트 `plot_porosity_v4_journal.py:130-134` 와 같다 — 새로 만들지 않았다.
+_OUTLIERS_METRIC = {'input_1mAh_100_15', 'input_1mAh_100_10', 'input_1mAh_5_AMP',
+                    'input_8mAh_1', 'input_particulate_9_E05', 'input_1mAh_100_3'}
+out_mask = np.array([cid in _OUTLIERS_METRIC for cid in CID])
+RMSE_all = float(np.sqrt(np.mean(resid ** 2)))
+RMSE_trust = float(np.sqrt(np.mean(resid[~out_mask] ** 2)))
+N_ALL = len(CID)
+N_TRUST = int((~out_mask).sum())
+print(f'v4_paper: N_all={N_ALL} N_trust={N_TRUST} '
+      f'RMSE_all={RMSE_all:.3f} RMSE_trust={RMSE_trust:.3f} %p')
+
 # ── 4-panel figure ────────────────────────────────────────────────
 fig = plt.figure(figsize=(20, 14))
 gs = fig.add_gridspec(2, 2, hspace=0.35, wspace=0.28)
@@ -147,8 +163,9 @@ ax.set_xticks([2,3,5,7,10,15,20]); ax.set_xticklabels(['2','3','5','7','10','15'
 ax.set_xlabel('λ_eff = r_AM_eff / r_SE', fontsize=12)
 ax.set_ylabel('AM weight fraction (%)', fontsize=12)
 ax.set_title('(a)  2D porosity surface ε(AM_wt, λ_eff) — v4 fit\n'
-              '            RMSE 2.27 %p (all 82) / 2.09 %p (trust 80)',
-              fontsize=12, loc='left')
+             f'            RMSE {RMSE_all:.2f} %p (all {N_ALL}) / '
+             f'{RMSE_trust:.2f} %p (trust {N_TRUST})',
+             fontsize=12, loc='left')
 ax.legend(loc='lower right', framealpha=0.9, fontsize=9)
 ax.set_xlim(1.3, 25); ax.set_ylim(50, 99)
 
@@ -270,8 +287,14 @@ ax.set_title('(d)  Residual diagnostic — outliers self-cluster\n'
 ax.legend(loc='lower left', fontsize=9)
 ax.grid(alpha=0.3); ax.set_ylim(-10, 9)
 
-plt.suptitle('2D porosity surface ε(AM_wt, λ_eff) — v4 physics fit (82-case DEM corpus)',
+plt.suptitle(f'2D porosity surface ε(AM_wt, λ_eff) — v4 physics fit ({N_ALL}-case DEM corpus)',
               fontsize=14, fontweight='bold', y=0.995)
-plt.savefig('docs/figures/porosity_v4_paper_figure.png', dpi=150,
+#  ⛔ **경로 충돌** (2026-09-17 실측).  전에는 이 스크립트와 자매
+#     `plot_porosity_v4_journal.py:502` 가 **같은 파일**(`porosity_v4_paper_figure.png`) 에
+#     썼다 — 나중에 돈 쪽이 상대를 조용히 덮는다.  실제로 커밋된 것은 journal 의 6-패널이고
+#     (`1adda925f` 가 `41a7f78ea` 를 덮었다), 이 스크립트를 돌리면 그것이 **사라졌다**.
+#     ⇒ 각자 자기 파일에 쓴다.  journal 은 caption `.md` 까지 같은 접두사로 내므로
+#        그쪽이 원래 이름을 갖고, 이 4-패널이 이름을 바꾼다.
+plt.savefig('docs/figures/porosity_v4_paper_4panel.png', dpi=150,
              bbox_inches='tight')
-print('Figure saved: docs/figures/porosity_v4_paper_figure.png')
+print('Figure saved: docs/figures/porosity_v4_paper_4panel.png')

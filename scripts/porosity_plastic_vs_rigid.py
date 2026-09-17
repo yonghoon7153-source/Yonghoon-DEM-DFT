@@ -33,7 +33,23 @@ def reconstruct(d):
     return dict(P=P, amwt=float(d["am_wt"]), rAMP=rAMP, rAMS=rAMS, rSE=rSE,
                 por=np.nan, ps=ps)
 
-def load_pairs(exclude_particulate=True):
+def load_pairs(exclude_particulate=True, exclude_broken=True):
+    """짝지어진 (DEM, MPM) porosity 를 읽는다.
+
+    ⚠ **축이 둘이고 섞으면 안 된다** (원장 `GAP3-19` → `GAP3-20`, 2026-09-17).
+      · `exclude_particulate` = **레짐 선택**.  particulate/`input_S_` 는 다른 레짐
+        (mono-AM_S, separator 류, SE-rich) 이라 production 폼에서 뺀다.  넣고 빼는 것이
+        **정당한 선택**이다.
+      · `exclude_broken`      = **무효 데이터 제외**.  `1mAh_100_*` 는 plate_z 메타데이터
+        버그로 porosity 가 틀렸다 (CLAUDE.md).  이건 선택이 아니라 **영구 필터**다.
+
+    ⛔ 전에는 이 둘을 **한 스위치**가 함께 껐다.  그래서 "particulate 레짐을 넣자" 는
+      뜻으로 `exclude_particulate=False` 를 주면 broken-sim 9 건이 **조용히 따라 들어왔고**,
+      dem·mpm 이 전부 양수라 기존 게이트에 안 걸렸다 (`porosity_unified.py` 의
+      `FULL corpus` = 유일한 피해자).  실측 영향: n 138 → **129** · gated λ-U LOOCV
+      0.472 → **0.502** · production RMSE 3.01 → **2.71 %p**.
+      ⇒ 방향이 보수적이라 결론은 안 뒤집혔지만 **숫자와 n 은 전부 틀린 값이었다**.
+    """
     rows = []
     with open(SRC) as f:
         for d in csv.DictReader(f):
@@ -51,8 +67,9 @@ def load_pairs(exclude_particulate=True):
             if exclude_particulate and ("particulate" in d["case"] or d["case"].startswith("input_S_")):
                 continue
             # broken-sim series (CLAUDE.md: input_1mAh_100_* plate_z metadata bug ->
-            # bad/negative porosity).  Excluded from the closed production form.
-            if exclude_particulate and "1mAh_100" in d["case"]:
+            # bad/negative porosity).  INVALID DATA, not a regime -- so it hangs off its
+            # OWN flag (GAP3-19).  Do NOT re-couple this to exclude_particulate.
+            if exclude_broken and "1mAh_100" in d["case"]:
                 continue
             r = reconstruct(d)
             r["dem"] = dem; r["mpm"] = mpm; r["case"] = d["case"]

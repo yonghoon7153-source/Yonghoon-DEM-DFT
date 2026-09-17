@@ -39,7 +39,10 @@ def real_rAMS():
 
 def build():
     track = real_rAMS()
-    rows = load_pairs(exclude_particulate=False)          # FULL corpus
+    #  ⚠ `exclude_broken` 은 **끄지 않는다** — `1mAh_100_*` 는 레짐이 아니라 무효 데이터다
+    #    (plate_z 메타데이터 버그).  전에는 이 한 줄이 그것까지 함께 들여서 9 건이 조용히
+    #    섞였고, 헤드라인 LOOCV·RMSE·n 이 전부 틀렸다 (원장 `GAP3-19` → `GAP3-20`).
+    rows = load_pairs(exclude_particulate=False, exclude_broken=True)   # FULL corpus (레짐만 확장)
     for r in rows:
         g = r["dem"] - r["mpm"]; r["best"] = r["dem"] if g > 4 else r["mpm"]
         r["ses"] = se_of_solid(r["amwt"])

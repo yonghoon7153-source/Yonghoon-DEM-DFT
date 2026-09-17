@@ -249,7 +249,12 @@ def main():
           '④ particulate — mono-AM reference',
           'AM is monomodal (P-only or S-only) — no Furnas-binary benefit')
 
-    plt.suptitle('Strict physics-first model — comprehensive 82-case '
+    #  ⛔ 제목의 케이스 수를 **손으로 적지 않는다** (원장 `GAP3-FIG` ⑯).  전에는 `82-case`
+    #     라는 리터럴이었는데 실제 패널 합은 **80** 이었고, 그 틀린 수가 박힌 그림
+    #     (`porosity_4panel.png`) 이 **커밋돼** 있었다 — 커밋 메시지에도 82 가 들어갔다.
+    #     ⇒ 네 패널에서 **세어** 쓴다.  코퍼스가 자라면 제목이 같이 자란다.
+    n_panels = len(p1) + len(p2) + len(p3) + len(p4)
+    plt.suptitle(f'Strict physics-first model — comprehensive {n_panels}-case '
                  'validation by regime',
                  fontsize=13, fontweight='bold', y=1.00)
     plt.tight_layout()

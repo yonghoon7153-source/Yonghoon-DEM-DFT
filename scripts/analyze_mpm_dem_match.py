@@ -7,7 +7,10 @@ Reads the matcher CSV (no re-run) and prints, as paste-able text tables:
     continuum bears the wall load through rigid-AM force chains at high porosity
     while DEM rearranges (the quantified continuum limit, frame [4]),
   • rSE≤0.5 parity with those outliers removed (does the bulk tighten?),
-  • Furnas dip   — porosity vs AM_wt, DEM | MPM medians (does the dip co-locate?),
+  • Furnas dip   — porosity vs AM_wt, DEM | MPM medians (does the dip co-locate?)
+                   ⛔ 답은 **아니오**다 (CLAUDE.md CORRECTION 2, 2026-06-10): champion MPM
+                   곡선은 단조이고 국소 최소가 없다 — 두 곡선이 AM~75 에서 **교차할 뿐**이다.
+                   옛 'DIP CO-LOCATES' 헤드라인은 그 교차를 공유 dip 으로 오독한 것이다,
   • size-crossover — porosity vs r_SE at fixed composition (does the ordering match?).
 
 Frame [4]: agreement = cross-validation evidence; divergence = quantified

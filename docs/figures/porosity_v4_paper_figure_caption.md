@@ -1,5 +1,19 @@
 # Figure caption — porosity_v4_paper_figure.png
 
+> ⛔⛔ **이 캡션의 케이스 수 `82` 는 틀렸다 — 실제 코퍼스는 `80` 이다** (2026-09-17, 원장
+> `GAP3-FIG` 확장).  생성기 `plot_porosity_v4_journal.py` 가 그 수를 **리터럴로 적고**
+> 있었다 (`:291` · `:502` · 이 캡션 템플릿 3곳).  실측: 자매 `plot_porosity_v4_paper.py`
+> 와 로더가 **공백 말고는 동일**하고 거기서 `N_all=80 · N_trust=74` 가 나온다.
+>
+> ⚠ **소스는 고쳤지만 이 파일과 그림은 아직 재생성되지 않았다.**  생성기가 `sklearn` 을
+> 요구하는데 클라우드 컨테이너에 없다 (CLAUDE.md).  ⇒ **WSL 에서 한 번 돌려야 한다**:
+> `python3 scripts/plot_porosity_v4_journal.py`  (그림 `porosity_v4_paper_figure.png` +
+> 이 캡션이 함께 갱신되고, 이 표지는 그때 지운다.)
+>
+> ⚠ 아래 본문의 **RMSE·R² 는 생성기가 계산한 값**이라 리터럴이 아니다 — 다만 그때의
+> 코퍼스 값이므로 재생성 후 바뀔 수 있다.  `82` 만이 확정된 오류다.
+
+
 **2D porosity surface ε(f_AM, λ_eff) for the 82-case DEM corpus, fitted with
 the v4 physics model.**
 (a) Predicted porosity surface as a function of AM weight fraction f_AM and

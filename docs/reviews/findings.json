@@ -4179,6 +4179,47 @@
    ],
    "title": "문서·웹앱 7건 — 철회된 서술·거짓 안전 약속·전거 없는 문턱",
    "note": "⑧ `session_20260913_progress.md:104` 가 hemisphere cap 을 **\"검증됨\"** 이라 적는데, 그 정본\n   `area_contract_20260913.md:52` 가 **같은 날 안에** `AREA-08` 로 철회했다\n   (*\"그 `geometric_coverage` 는 cap 을 바꿔도 출력이 그대로다 ⇒ 식별하는 시험이 아니다\"*).\n㉔ `worklog.html:23`(+`app.py:4191-4192`) 이 독자에게 *\"CI 의 `--ban-sweep` 가 막는다\"* 고 약속하는데,\n   ⛔ `.github/workflows/discipline.yml` 259줄에 **`--ban-sweep` 이 한 번도 없다**.  CI 는\n   `--selftest` 와 무인자 실행만 돌고, 무인자는 원장 자기일관성만 본다.  리포 전체를 훑는 것은\n   `--selftest` 내부 21번 검사뿐이고 그것은 그 이름의 경로가 아니다.\n   ★ `test_worklog_page.py:7` 스스로 *\"여기 검사 아님\"* 이라 적는다.\n㉕ `worklog_view.html:70 {{ body|safe }}` — 출처(`docs/worklog/*.md`·`docs/seminar/*.md`)에서\n   렌더까지 redaction 이 **전혀 없다**.  `/ledger` 는 이미 render-time 검사를 붙였는데 `/worklog` 만 없다.\n㉖ `이종기술/README.md:38-42` — `R_int ≈ 50 Ω·cm²` 의 출처 `eis/fits/summary_means.csv` 가\n   **리포에 없다** (`b22bdb3c2` 가 의도적으로 추적 해제 + `.gitignore:32`).\n   ⚠ 그 값이 README 의 4개 값 평균이라면, 같은 README 캐비어트 #4 가 그중 24 vs 66 을\n   *\"측정오차가 아니라 진짜 계면 열화\"* 라 경고한다 — 서로 다른 물리 상태를 섞은 평균이다.\n   ★ 웹앱 `/hetero` 는 이 값을 **싣지 않도록** 이미 조치했다 (`6c13f19c8`).\n㉘ `audit1_ground_truth.md:88` — `CL-81` 문헌 삼각측량이 `SELF-24`·`L2-07` 로 철회됐는데 표지가 없다.\n   ⚠ 이 파일은 `BAN_ALLOW_ALWAYS` 에 **영구 등재**돼 자동 검사로는 **절대** 안 걸린다.\n㉛ `pipeline/PIPELINE.md:34,126` — 복셀 FEM ↔ DEM 접촉망 비교를 *\"validates Holm/Stage-E\"* 라 적는데,\n   `CL-81` 이 복셀 FV 는 harmonic-mean 이라 **협착 항이 정확히 0**(CONTACT_FREE 가지)임을 확정했다.\n   그 파일에 \"CL-81\"·\"CONTACT_FREE\"·\"협착\" 문자열 **0건**.\n㉟ `skills/dem-analysis-standard.md:93-94` — `SE-SE CN > 2.4` · `SE percolation > 70 %` 에 **출처가 없고**\n   리포 정본과 충돌한다: `CLAUDE.md` 는 `CN=2.7` 을 *\"below typical percolation threshold\"* 로 보고,\n   `literature_coverage/README.md:673-693` 의 세 앵커(0.13 · 0.36 · 0.65) 중 어느 것도 70 % 가 아니다.\n   ⚠ 이 문서가 참조하는 스크립트 7개 중 **5개가 리포에 없다** = 구버전 템플릿일 가능성."
+  },
+  {
+   "id": "GAP3-35",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "GAP3-FIG 수리 중 실측 (2026-09-17)",
+   "opened_in": "docs/reviews/gap_audit_r3_repair_20260917.md",
+   "evidence_tests": [
+    "scripts/plot_porosity_v4_paper.py::292",
+    "scripts/plot_porosity_v4_journal.py::502"
+   ],
+   "title": "그림 생성기 **둘이 같은 파일에 쓴다** — 나중에 돈 쪽이 상대를 조용히 지운다",
+   "note": "`plot_porosity_v4_paper.py:292` 와 `plot_porosity_v4_journal.py:502` 가 둘 다\n`docs/figures/porosity_v4_paper_figure.png` 에 쓴다.  커밋된 것은 journal 의 6-패널이고\n(`1adda925f` 가 `41a7f78ea` 를 덮었다), 이 수리 중 paper 를 돌리자 **그 그림이 실제로\n사라졌다** (git 으로 되돌렸다).\n⇒ journal 이 원래 이름을 갖고(caption `.md` 를 같은 접두사로 낸다), paper 는\n   `porosity_v4_paper_4panel.png` 로 분리했다.\n⚠ 두 그림은 **다른 그림**이다 (4-패널 vs 6-패널) — 덮어쓰기가 무해한 중복이 아니었다."
+  },
+  {
+   "id": "GAP3-36",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "GAP3-FIG 수리 중 실측 (2026-09-17)",
+   "opened_in": "docs/reviews/gap_audit_r3_repair_20260917.md",
+   "evidence_tests": [
+    "scripts/plot_porosity_v4_journal.py::291,502",
+    "docs/figures/porosity_v4_paper_figure_caption.md::3"
+   ],
+   "title": "journal 생성기와 **커밋된 caption** 도 `82` 를 리터럴로 적는다 (실제 80)",
+   "note": "원장 `GAP3-FIG` 는 4 개 파일만 지목했는데 `plot_porosity_v4_journal.py` 도 같은 결함이다\n(`:291` · `:502` + caption 템플릿 3 곳).  지표(RMSE·R²)는 제대로 **계산**하면서\n**케이스 수만** 손으로 적고 있었다.\n★ 실측 근거: 이 스크립트와 `plot_porosity_v4_paper.py` 의 로더 블록이 **공백 말고는\n  동일**하다 (diff 확인) ⇒ journal 코퍼스도 **80** 이다 (N_all=80 · N_trust=74).\n⚠ **소스는 고쳤으나 산출물은 재생성 못 했다** — 생성기가 `sklearn` 을 요구하는데\n  클라우드 컨테이너에 없다 (CLAUDE.md).  커밋된 caption 에 표지를 달았다.\n⇒ 남은 일: WSL 에서 `python3 scripts/plot_porosity_v4_journal.py` 1 회 → 그림·캡션\n  갱신 후 표지 제거."
+  },
+  {
+   "id": "GAP3-37",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "GAP3-FIG ⑥ 수리 중 (2026-09-17)",
+   "opened_in": "docs/reviews/gap_audit_r3_repair_20260917.md",
+   "evidence_tests": [
+    "scripts/plot_tau_regime_si.py::120,121"
+   ],
+   "title": "τ SI 그림의 두 참조선이 **서로 다른 규약**을 함축한다 — α=2.36 은 출처가 없다",
+   "note": "`GAP3-FIG` ⑥ (그리는 것 `φ^-2.36` ↔ 범례 `φ^-1.72`) 의 **불일치는 고쳤다**\n(라벨을 그리는 지수에서 생성 ⇒ 다시 갈릴 수 없다).  그러나 **값 자체**가 남는다:\n  · Bruggeman 줄  α=1.5  → −1.0   ⇒ τ² = φ^(2−2α)\n  · Wang 줄       α=2.36 → −2.36  ⇒ τ² = φ^(−α)\n둘 다 맞을 수는 없다.  첫 줄 규약을 따르면 α=2.36 은 **−2.72** 여야 한다.\n⛔ 리포의 \"Wang 2023\" 인용은 전부 **DEM overlap 규약** 문맥이고 tortuosity 지수\n  출처가 **없다** ⇒ 값을 고르지 않고 코드에 **미앵커(§F1)** 로 표시했다.\n⚠ 원 문헌 확인 전까지 이 점선을 **정량 근거로 인용하지 말 것**.\n★ 완화: 이 그림의 산출물은 `/tmp` 라 리포 밖이고 인용처가 없다."
   }
  ]
 }
