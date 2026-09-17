@@ -68,6 +68,25 @@ def zval(path):
 PP_PIN = {"Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF"}
 
 
+def tag_of(path):
+    """구조 파일 경로 → 태그. `sei_` 접두는 **있으면** 벗기고, 확장자는 **무엇이든** 벗긴다.
+
+    ⛔⛔ 2026-09-17 — 옛 코드는 `basename[len("sei_"):-len(".vasp")]` 로 **길이로 잘랐다.**
+      접두/확장자가 그 형태일 때만 맞고, 아니면 앞 4글자·뒤 5글자를 그냥 먹는다:
+        `NdPO4_mp-aaaaafhw.cif` → `O4_mp-aaaaaf`   ← 오류 없이 조용히 틀린 태그
+      그 태그가 prefix·outdir·electronic_class 조회에 전부 쓰이므로, 갭 게이트가
+      `unregistered` 로 빠지고 산출물 폴더 이름도 쓰레기가 된다. 길이가 아니라
+      **모양으로** 자른다.
+
+    ⛔ 이 함수가 못 하는 것: 태그가 레지스트리 키와 맞는지 **확인하지 않는다**
+      (그건 electronic_class.normalize 몫이다 — `_mp-...` 는 거기서 떨어진다).
+    """
+    b = os.path.basename(path)
+    if b.startswith("sei_"):
+        b = b[len("sei_"):]
+    return os.path.splitext(b)[0]
+
+
 def find_pseudos(pdir):
     """pseudo 디렉터리에서 원소 → 파일명. ⚠ 없는 원소는 그대로 보고한다.
 
@@ -135,7 +154,7 @@ def make_control_structures(a, files):
     os.makedirs(ctl, exist_ok=True)
     out = []
     for f in files:
-        base = os.path.basename(f)[len("sei_"):-len(".vasp")]
+        base = tag_of(f)
         prim = read(f)
         for s in range(0, a.rattle_seeds + 1):
             at = prim * tuple(sc)
@@ -148,6 +167,50 @@ def make_control_structures(a, files):
             print(f"  control 구조 {os.path.basename(p)} — {len(at)}원자 · "
                   f"rattle {a.rattle if s else 0.0:.3f} Å (seed {s})")
     return out
+
+
+def selftest():
+    """태그 유도 · pseudo 핀 · 갭 게이트를 확인한다. **음성 경로 포함.**
+
+    ⚠ 양성만 있는 selftest 는 통과해도 아무것도 보증하지 않는다 (CLAUDE.md 코드 규율).
+      그래서 각 항목마다 "옛 동작이었다면 무엇이 틀렸을까" 를 같이 넣는다.
+    """
+    import electronic_class as _EC
+    bad = []
+
+    def eq(got, want, what):
+        if got != want:
+            bad.append(f"{what}: {got!r} ≠ {want!r}")
+
+    # ① 태그 유도 — 접두 있음/없음 × 확장자 vasp/cif
+    eq(tag_of("db/structures/sei_li2o_mp-1960.vasp"), "li2o_mp-1960", "sei_+vasp")
+    eq(tag_of("db/structures/cei_gap_targets/NdPO4_mp-aaaaafhw.cif"),
+       "NdPO4_mp-aaaaafhw", "접두없음+cif")
+    eq(tag_of("LiNdPO34_mp-aaaabbrr.cif"), "LiNdPO34_mp-aaaabbrr", "접두없음+cif(Li)")
+    eq(tag_of("/tmp/P2O5.cif"), "P2O5", "mp-id 없음")
+    eq(tag_of("sei_x_p333_r1.vasp"), "x_p333_r1", "control 파생본")
+    # ② 음성 — 옛 길이 슬라이싱이 내던 값이 **지금은 안 나와야** 한다
+    old = lambda f: __import__("os").path.basename(f)[len("sei_"):-len(".vasp")]
+    if old("NdPO4_mp-aaaaafhw.cif") == tag_of("NdPO4_mp-aaaaafhw.cif"):
+        bad.append("음성① 옛 길이슬라이싱과 결과가 같다 — 수정이 안 걸렸다")
+    #   ⚠ 이 고정값은 내가 손으로 센 것을 selftest 가 **틀렸다고 잡아준 것**이다
+    #     (2026-09-17: "O4_mp-aaaaaf" 로 적었는데 실제는 [4:-5] = "4_mp-aaaaafh").
+    eq(old("NdPO4_mp-aaaaafhw.cif"), "4_mp-aaaaafh", "음성① 옛 동작 재현(고정값)")
+    # ③ 태그가 electronic_class 키로 정규화되는지 — 갭 게이트가 여기에 달렸다
+    eq(_EC.normalize(tag_of("NdPO4_mp-aaaaafhw.cif")), "ndpo4", "정규화 → 레지스트리 키")
+    eq(_EC.normalize(old("NdPO4_mp-aaaaafhw.cif")), "4",
+       "음성② 옛 태그는 엉뚱한 키('4')로 정규화된다")
+    if _EC.get(_EC.normalize(old("NdPO4_mp-aaaaafhw.cif"))).get("class") != "unregistered":
+        bad.append("음성② 엉뚱한 키가 등록돼 있다 — 시험이 무의미해졌다")
+    # ④ 갭 게이트 — 미등록/금속은 03 을 만들면 안 된다는 판정이 살아 있는가
+    for t, want in (("li3nd", "metal"), ("ndpo4_없는태그", "unregistered")):
+        eq(_EC.get(t).get("class"), want, f"게이트 {t}")
+    # ⑤ PP 핀 — frozen-4f 가 아니면 이 캠페인 입력은 성립하지 않는다
+    eq(PP_PIN.get("Nd"), "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF", "Nd PP 핀")
+
+    print("\n".join("⛔ " + b for b in bad) if bad
+          else "✓ selftest 통과 (태그 유도 5 · 음성 3 · 게이트 2 · PP 핀 1)")
+    return 1 if bad else 0
 
 
 def main():
@@ -189,7 +252,11 @@ def main():
     ap.add_argument("--diagnose_undetermined", action="store_true",
                     help="⚠ electronic_class=undetermined 상도 갭 단계를 만든다 (진단 전용). "
                          "그 숫자는 갭이 아니다 — db 에 넣지 말 것")
+    ap.add_argument("--selftest", action="store_true",
+                    help="태그 유도·게이트 자체시험 (음성 경로 포함)")
     a = ap.parse_args()
+    if a.selftest:
+        return selftest()
 
     from ase.io import read
 
@@ -218,7 +285,7 @@ def main():
 
     made, skipped = [], []
     for f in files:
-        tag = os.path.basename(f)[len("sei_"):-len(".vasp")]
+        tag = tag_of(f)
         at = read(f)
         els = sorted(set(at.get_chemical_symbols()))
         if any(e in missing for e in els):
