@@ -508,6 +508,28 @@ def _selftest():
     chk(_P6["rows"][0]["covered_P_frac"] == 0.0,
         "[음성] 교환값이 없으면 covered 0 으로 **보고**한다 (조용히 빼지 않는다)")
 
+    _f6, _p6 = _tf.mkstemp(suffix=".csv"); _os.close(_f6)
+    Path(_p6).write_text(
+        "cathode,electrolyte,voltage_V,x_atomic_frac,is_minimum,reaction\n"
+        "C,nd,4.5,0.5,1,X -> 0.08 NdCl3 + 0.2 Mn(PO3)2\n"
+        "C,nd,2.5,0.5,1,X -> 0.1 NdPO4\n"
+        "C,nd,3.5,0.5,1,X -> 0.1 Nd2(SO4)3\n"
+        "C,plain,4.5,0.5,1,X -> 0.2 Mn(PO3)2\n", encoding="utf-8")
+    _D = dopant_fate(_p6); _os.unlink(_p6)
+    chk(len(_D["rows"]) == 3,
+        "[음성] 도펀트가 없는 전해질 행은 이 물음의 대상이 아니라 빠진다")
+    _ch = {r["voltage_V"]: r["channels"][0] for r in _D["rows"]}
+    chk(_ch[4.5] == "chloride" and _ch[2.5] == "phosphate" and _ch[3.5] == "sulfate",
+        "염화물·인산염·황산염을 가른다")
+    chk(abs(_D["takes_P_fraction"] - 1/3) < 1e-4,   # 레코드는 4자리로 반올림된다
+        "[음성] NdCl3·Nd2(SO4)3 를 인산염으로 세지 않는다 (takes_P = 1/3)")
+    chk(not any(_dopant_free in g["formula"] for r in _D["rows"] for g in r["phases"]
+                for _dopant_free in ("Mn(PO3)2",)),
+        "[음성] Mn(PO3)2 는 Nd 가 없으므로 phases 에 **아예 안 들어간다** "
+        "(앞판 시험은 Cl 든 화학식만 봐서 이걸 못 쟀다)")
+    chk(all("Nd" in g["formula"] for r in _D["rows"] for g in r["phases"]),
+        "[음성] phases 에 든 상은 전부 도펀트를 가진다")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -840,6 +862,67 @@ def p_flux(csv_path, exchange, base="modelc", n_p_per_fu=None):
                  "교환값 없는 상은 빼지 않고 covered_P_frac 으로 보고한다. 최소 꺾임만."}
 
 
+def dopant_fate(csv_path, dopant="Nd"):
+    """도펀트가 최소 꺾임에서 **어느 상으로 가는가** — 인산염 / 황산염 / 염화물 / 그 밖.
+
+    왜 필요한가 (2026-09-17): 교환에너지(`cei_tm_exchange_*.json`)는 *"Nd 가 P 를
+    잡으러 간다면 얼마나 이로운가"* 를 잰다. 그런데 **Nd 가 애초에 P 로 안 갈 수도**
+    있다 — LiMnO2 계에서는 3.5 V 위 전 구간에서 **NdCl3** 로 간다. 그 조건에서는
+    교환이 일어나지 않으므로 교환에너지가 적용되지 않는다.
+    ⛔ 그 교환 계산의 chemsys 는 Co-Li-Mn-Nd-Ni-O-P 로 **Cl·S 가 빠져 있었다** —
+      NdCl3·Nd2(SO4)3 채널을 구조적으로 볼 수 없었다. 이 함수가 그 사각지대를 메운다.
+
+    ⛔ 못 하는 것: 최소 꺾임 하나만 본다. 왜 그 채널이 이기는지는 말하지 않는다
+      (그건 Cl·S 를 넣은 hull 을 다시 풀어야 한다).
+    """
+    import csv as _csv
+    rows, skipped = [], []
+    with open(csv_path, encoding="utf-8") as fh:
+        for r in _csv.DictReader(fh):
+            if (str(r.get("is_minimum", "")).strip() not in ("1", "True", "true")
+                    or "->" not in r.get("reaction", "")):
+                continue
+            try:
+                x = float(r.get("x_atomic_frac", "nan"))
+            except ValueError:
+                x = None
+            tag = f'{r["electrolyte"]}@{r["voltage_V"]}V/{r["cathode"]}'
+            if is_endpoint(x):
+                skipped.append(tag)
+                continue
+            got = []
+            for t in r["reaction"].split("->", 1)[1].split("+"):
+                m = re.match(r"^\s*([0-9]*\.?[0-9]+)?\s*([A-Za-z0-9().]+)\s*$", t)
+                if not m:
+                    continue
+                f = m.group(2)
+                c = parse_formula(f)
+                if c.get(dopant, 0) <= 0:
+                    continue
+                ch = ("phosphate" if c.get("P", 0) > 0 and c.get("O", 0) > 0 else
+                      "sulfate" if c.get("S", 0) > 0 and c.get("O", 0) > 0 else
+                      "chloride" if c.get("Cl", 0) > 0 else
+                      "oxide" if c.get("O", 0) > 0 else
+                      "sulfide" if c.get("S", 0) > 0 else "other")
+                got.append({"formula": f, "channel": ch,
+                            "n_dopant": round(
+                                (float(m.group(1)) if m.group(1) else 1.0) * c[dopant], 6)})
+            if not got:                 # 도펀트가 없는 전해질 — 물음의 대상이 아니다
+                continue
+            rows.append({"electrolyte": r["electrolyte"], "cathode": r["cathode"],
+                         "voltage_V": float(r["voltage_V"]), "phases": got,
+                         "channels": sorted({g["channel"] for g in got}),
+                         "takes_P": any(g["channel"] == "phosphate" for g in got)})
+    rows.sort(key=lambda d: (d["electrolyte"], d["voltage_V"], d["cathode"]))
+    n = len(rows)
+    return {"source_csv": str(csv_path), "dopant": dopant, "n_conditions": n,
+            "takes_P_fraction": round(sum(r["takes_P"] for r in rows) / n, 4) if n else None,
+            "endpoint_excluded": sorted(skipped), "rows": rows,
+            "⛔": ("최소 꺾임 하나만. 도펀트가 인산염으로 안 가는 조건에서는 "
+                  "교환에너지(cei_tm_exchange)가 적용되지 않는다 — 그 레코드의 chemsys 에는 "
+                  "Cl·S 가 없어 이 채널들을 볼 수 없었다.")}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--electrolytes", nargs="+",
@@ -858,6 +941,9 @@ def main():
     ap.add_argument("--voltages", nargs="+", type=float,
                     default=[2.5, 3.0, 3.5, 4.0, 4.3])
     ap.add_argument("--out", default="interface_reactivity_v2.json")
+    ap.add_argument("--dopant_fate", metavar="PANELS_CSV",
+                    help="도펀트가 최소 꺾임에서 인산염/황산염/염화물 중 어디로 갔나")
+    ap.add_argument("--dopant", default="Nd", help="--dopant_fate 가 추적할 원소")
     ap.add_argument("--p_flux", metavar="PANELS_CSV",
                     help="Fig. 1 의 Δ 를 '양 x P당 교환이득 / 원자수' 로 예측해 본다 "
                          "(--exchange 로 교환 레코드를 준다)")
@@ -875,6 +961,17 @@ def main():
     if "--selftest" in __import__("sys").argv:
         raise SystemExit(_selftest())
     a = ap.parse_args()
+    if a.dopant_fate:
+        out = dopant_fate(a.dopant_fate, a.dopant)
+        Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f'{out["n_conditions"]} 조건 · {a.dopant} 가 인산염으로 간 비율 '
+              f'{out["takes_P_fraction"]:.0%} → {a.out}')
+        for e in sorted({r["electrolyte"] for r in out["rows"]}):
+            for c in sorted({r["cathode"] for r in out["rows"]}):
+                seq = [",".join(r["channels"]) for r in out["rows"]
+                       if r["electrolyte"] == e and r["cathode"] == c]
+                print(f'  {e:10s} {c:8s} ' + " → ".join(seq))
+        return 0
     if a.p_flux:
         import csv as _c
         E = json.loads(Path(a.exchange).read_text(encoding="utf-8"))
