@@ -167,10 +167,35 @@ def budget_row(out_root) -> dict:
             "perf": perf,
             "n_done": sum(1 for s in steps if "rc" in s),
             "n_stopped": sum(1 for s in steps if "stopped" in s),
-            "stopped_why": [s["stopped"] for s in steps if "stopped" in s]}
+            "stopped_why": [s["stopped"] for s in steps if "stopped" in s],
+            "steps_raw": steps}
 
 
 # ── ③ 준비 ──────────────────────────────────────────────────────────────────
+def spend_rate(budget_steps, plan):
+    """끝난 MD 스텝에서 **실측 h/런**과 남은 런 수를 센다.
+
+    왜 있나 (2026-09-17): 게이트 ③ 이 곱하는 값은 카드가 정한 **속도 시험 실측**이다.
+      그런데 실제 런이 그보다 비싸면 투영이 낙관적이 된다 — 실측: 속도시험 2.3385 vs
+      3런짜리 호출 11.83 GPU-h(= 3.94 h/런, **1.69배**). 게이트는 안 바꾸되
+      **화면에는 둘 다 보인다.** 원장에만 있고 화면에 없으면 사람은 화면을 인용한다.
+
+    ⛔ 이 함수가 못 하는 것: 집행하지 않는다 (watch 전체 규율). 남은 런이 **더 비싼
+      계인지**도 모른다 — 지금까지의 평균일 뿐이다.
+    """
+    nruns = {st["key"]: int(st.get("n_runs") or 0) for st in plan}
+    gh = runs = 0.0
+    for st in budget_steps:
+        if st.get("rc") != 0 or not str(st.get("key", "")).startswith("md/"):
+            continue
+        n = nruns.get(st["key"], 0)
+        if n and isinstance(st.get("gpu_h"), (int, float)):
+            gh += float(st["gpu_h"]); runs += n
+    total = sum(nruns.values())
+    return {"h_per_run": (gh / runs) if runs else None,
+            "runs_done": int(runs), "runs_left": total - int(runs)}
+
+
 def prep_rows(out_root) -> list[dict]:
     rows = []
     for s in EP.STRUCTURES:
@@ -301,6 +326,9 @@ def render(out_root, log=None, n_gpu=6) -> int:
     if log:
         print(f"로그    : {log}  ({age_str(log)})")
 
+    # 계획은 여기서 한 번만 만든다 — 예산 줄이 남은 런 수를 쓰고, ④ 가 같은 걸 쓴다.
+    plan = EP.build_plan(out_root)
+
     # ② 예산
     b = budget_row(out_root)
     if b["상태"] != "ok":
@@ -310,6 +338,20 @@ def render(out_root, log=None, n_gpu=6) -> int:
         print(f"\n── 예산 ── 누적 {fmt(b['used'], '{:.2f}')} / {b['cap']:.0f} GPU-h"
               f" · 완료 스텝 {b['n_done']}/{len(EP.STRUCTURES) + 11}"
               f" · 속도시험 {fmt(b['perf'], '{:.2f}')} / {EP.PERF_SUBCAP_GPU_H:.0f}")
+        # 투영 두 줄 — 게이트가 쓰는 값과 **실측**을 나란히. 판정은 안 한다.
+        sr = spend_rate(b.get("steps_raw") or [], plan)
+        if sr["runs_left"] > 0 and isinstance(b["used"], (int, float)):
+            perf, cap, used = b["perf"], b["cap"], b["used"]
+            def proj(rate):
+                return None if not rate else used + rate * sr["runs_left"]
+            pg, po = proj(perf), proj(sr["h_per_run"])
+            print(f"   남은 {sr['runs_left']}런 (끝난 {sr['runs_done']})")
+            print(f"     · 게이트 기준 (속도시험 {fmt(perf, '{:.3f}')} h/런): "
+                  f"{fmt(pg, '{:.1f}')} / {cap:.0f}")
+            print(f"     · 실측 기준   (지금까지 {fmt(sr['h_per_run'], '{:.2f}')} h/런): "
+                  f"{fmt(po, '{:.1f}')} / {cap:.0f}"
+                  + ("  ⚠ 상한 초과 예상 — ④가 잡는다"
+                     if isinstance(po, float) and po > cap else ""))
         for w in b.get("stopped_why", []):
             print(f"   ⛔ 중단: {w}")
 
@@ -340,7 +382,6 @@ def render(out_root, log=None, n_gpu=6) -> int:
               f" · {r['steps']}/{r.get('max_steps')} 스텝 · {fmt(r['min'], '{:.1f}')} 분")
 
     # ④ MD
-    plan = EP.build_plan(out_root)
     rows = md_rows(out_root, plan)
     done = sum(1 for r in rows if r["D"] is not None)
     print(f"\n── MD {done}/{len(rows)} 런 끝 (런당 {TOTAL_PS:.0f} ps = equilib "
@@ -542,6 +583,35 @@ def _selftest() -> int:
         # ── 계획을 베끼지 않았다는 증거: 러너의 상수와 같은 것을 쓴다 ──
         chk(TOTAL_PS == EP.EQUILIB_PS + EP.PROD_PS == 205.0,
             "양성: 런 길이를 러너 상수에서 가져온다 (여기 숫자를 따로 안 적는다)")
+
+    # ── spend_rate: 실측 h/런 (2026-09-17) ────────────────────────────────
+    _plan = EP.build_plan("/tmp/_w")
+    _md = [st for st in _plan if str(st["key"]).startswith("md/")]
+    _steps = [{"key": "prep/H0_host", "rc": 0, "gpu_h": 99.0},          # prep 은 제외
+              {"key": _md[0]["key"], "rc": 0, "gpu_h": 2.0},            # 1런
+              {"key": _md[1]["key"], "rc": 0, "gpu_h": 12.0},           # 3런
+              {"key": _md[2]["key"], "rc": 1, "gpu_h": 5.0},            # 실패 → 제외
+              {"key": _md[3]["key"], "rc": 0}]                          # gpu_h 없음 → 제외
+    _sr = spend_rate(_steps, _plan)
+    _want_runs = 1 + int(_md[1].get("n_runs") or 0)
+    chk(_sr["runs_done"] == _want_runs,
+        f"양성: 끝난 런만 센다 (prep·실패·시간없음 제외) — {_sr['runs_done']} = {_want_runs}")
+    chk(abs(_sr["h_per_run"] - 14.0 / _want_runs) < 1e-9,
+        f"양성: h/런 = 성공한 MD 시간 합 / 그 런 수 ({_sr['h_per_run']})")
+    chk(_sr["runs_left"] == 30 - _want_runs,
+        f"양성: 남은 런 = 전체 30 − 끝난 {_want_runs} ({_sr['runs_left']})")
+    chk(spend_rate([{"key": "prep/H0_host", "rc": 0, "gpu_h": 9.0}], _plan)["h_per_run"] is None,
+        "⛔음성: MD 가 하나도 안 끝났으면 h/런 은 **None** 이다 — 0.0 으로 그리지 않는다")
+    chk(spend_rate([], _plan)["runs_left"] == 30,
+        "⛔음성: 기록이 비면 남은 런은 전체 30 이다 (0 이 아니다)")
+    _all = [{"key": st["key"], "rc": 0, "gpu_h": 1.0} for st in _md]
+    chk(spend_rate(_all, _plan)["runs_left"] == 0,
+        "양성: 전부 끝나면 남은 런 0 (투영 줄이 사라진다)")
+    _sr2 = spend_rate([{"key": _md[1]["key"], "rc": 0, "gpu_h": 11.83}], _plan)
+    chk(abs(_sr2["h_per_run"] - 11.83 / int(_md[1]["n_runs"])) < 1e-9
+        and _sr2["h_per_run"] > 2.3385,
+        f"⛔음성: 실측(11.83 GPU-h / {_md[1]['n_runs']}런 = {_sr2['h_per_run']:.2f}) 이 "
+        "속도시험 2.3385 보다 **크다** — 게이트 투영이 낙관적이라는 그 사실이 화면에 산다")
 
     print(f"selftest {_n[0] - len(bad)}/{_n[0]} · "
           + ("FAIL: " + "; ".join(bad) if bad else "PASS"))
