@@ -431,11 +431,19 @@ def _selftest():
              'press_speed', 'current_press')))
     chk('㉛ ★ 빌드 대조도 de-escape 됐다 (안 그러면 그것만 죽는다)',
         '${{' not in o and '${dt}' in o)
-    #  ⚠ 원본을 건드리지 않았나 (1-type · 미렌더 템플릿 그대로)
+    #  ⚠ 원본을 건드리지 않았나
+    #  ⛔⛔ **표지 교체 2026-09-17 (`GAP3-01`)** — 옛 판은 원본에 `${{dt}}` 가 **남아 있는 것**을
+    #    "안 건드렸다" 의 표지로 썼다.  그런데 그 `${{` 자체가 결함이었고 (커밋된 덱이 실행
+    #    불가였다), `make_heckel_inputs.py` 에 de-escape 를 넣어 고치자 **이 검사가 빨간불**이
+    #    됐다.  검사의 **뜻**은 *"이 생성기가 원본을 쓰지 않았다"* 이지 *"원본이 깨져 있다"* 가
+    #    아니다.  ⇒ 표지를 결함이 아니라 **불변 속성**(1-type pure-SE)으로 바꾼다.
+    #    ★ 교훈: 결함을 불변량으로 박으면 그 결함을 고칠 때 검사가 막는다.
     with open(BASE, encoding='utf-8') as f:
         _orig = f.read()
-    chk('⑱ ★ 원본 파일은 **읽기만** 했다 (1-type · `${{` 그대로)',
-        'create_box      1 reg_box' in _orig and '${{dt}}' in _orig)
+    chk('⑱ ★ 원본 파일은 **읽기만** 했다 (1-type pure-SE 가 그대로)',
+        'create_box      1 reg_box' in _orig and 'pts1 1.0' in _orig)
+    chk('⑱b ★★ 원본이 이제 **실행 가능**하다 (`${{` 0개 — GAP3-01 수리 확인)',
+        '${{' not in _orig and '${dt}' in _orig)
 
     print(f'\ngen_dem_oat_sweep selftest: {n[0]}/{n[1]} PASS')
     return 0 if n[0] == n[1] else 1

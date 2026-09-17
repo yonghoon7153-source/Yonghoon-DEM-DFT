@@ -17,6 +17,7 @@ Then run each on WSL (LIGGGHTS), upload final atom_*+mesh_*+contact_* per P,
 and analyse with scripts/heckel_analysis.py.
 """
 import os
+import re
 
 PRESSURES_MPA = [100, 200, 300, 400]
 SEED = 78049                      # SAME across all P → paired snapshots
@@ -167,6 +168,20 @@ def main():
                 .replace('{PSCALED}', f'{p/1000.0:.3f}')
                 .replace('{ESE}', E_SE_SCALED)
                 .replace('{SEED}', str(SEED)))
+        #  ★★ **de-escape** (2026-09-17, 원장 `GAP3-01`) — 이 한 줄이 없어서 커밋된 덱 4개가
+        #    2026-06-06 부터 **실행 불가**였다.  템플릿은 LIGGGHTS 변수를 `${{var}}` 로 적어
+        #    `.format()` 식 이스케이프를 해 뒀는데, 실제 렌더는 `.format()` 이 아니라 위의
+        #    `str.replace()` 연쇄다 — `str.replace()` 는 `{{` 를 **절대 풀지 않는다**.
+        #    그래서 설계 파라미터(`{TAG}` 단일 중괄호)는 치환되고 `${{ }}` 만 살아남는
+        #    **혼합 상태**가 나왔고, LIGGGHTS 가 :18 에서
+        #    `Substitution for illegal variable` (input.cpp:505) 로 즉시 죽었다.
+        #    ⚠ 옛 기록을 만든 것은 커밋된 덱이 아니라 **렌더된 사본**이었다 — 그 사본을
+        #    2026-09-17 에 저자가 올려 줘 커밋본을 de-escape 하면 **바이트 동일**함을 확인했고,
+        #    원자료 4압력의 `D_sphere`·`D_union` 도 소수 넷째 자리까지 재현했다.
+        body = re.sub(r'\$\{\{(\w+)\}\}', r'${\1}', body)
+        #  fail-closed — 하나라도 남으면 내보내지 않는다 (조용히 깨진 덱을 커밋하지 않는다)
+        if '${{' in body:
+            raise SystemExit(f'⛔ {tag} MPa: `${{{{` 가 남았다 — de-escape 규칙을 확인할 것 (GAP3-01)')
         path = f'heckel/input_SE_heckel_{tag}.liggghts'
         with open(path, 'w') as f:
             f.write(body)
