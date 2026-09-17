@@ -83,6 +83,20 @@ STAGES = [("01_vcrelax", "vc-rlx"), ("02_scf", "scf"), ("03_nscf_gap", "gap"),
           ("04_nscf_dos", "dos-k"), ("05_dos", "dos"), ("06_projwfc", "pdos")]
 BAR = "─" * 76
 FULL = "--full" in sys.argv        # 완주한 상까지 전부 펼친다 (기본은 접음)
+
+# ⛔⛔ 2026-09-17 — 이 도구는 argparse 를 안 써서 **모르는 플래그를 조용히 무시했다.**
+#   `--sei_roots /data/work/runs/cei_gap` 을 줬는데 오류도 안 나고 **기본 루트(옛
+#   캠페인)** 를 그대로 보여줬다. 사람은 새 캠페인을 보고 있다고 믿는다.
+#   루트는 플래그가 아니라 환경변수 SEI / NEBW 로 준다 — 그렇게 말해 준다.
+_KNOWN_FLAGS = {"--full", "--selftest", "--relax", "--legacy"}
+_unknown = [a for a in sys.argv[1:]
+            if a.startswith("--") and a not in _KNOWN_FLAGS]
+if _unknown:
+    sys.exit(f"⛔ 모르는 플래그: {' '.join(_unknown)}\n"
+             f"   이 도구가 받는 것: {' '.join(sorted(_KNOWN_FLAGS))}\n"
+             "   작업 루트는 플래그가 아니라 **환경변수**로 준다:\n"
+             "     SEI=/data/work/runs/cei_gap NEBW= python3 tools/sei/watch_gabia.py\n"
+             "   (조용히 기본 루트를 보여주면 사람은 새 캠페인을 보고 있다고 믿는다)")
 RY_EV = 13.605693122994
 #: 대칭 동등 끝점이 이보다 벌어지면 둘 중 하나가 미수렴이다 (실측: 미수렴 시 57 meV).
 #: etot_conv_thr 1e-4 Ry(=1.4 meV)·forc 여유를 감안한 값.
@@ -785,6 +799,18 @@ def selftest():
     chk(len(_h2) == 5 and _rises == 2,
         f"relax 이력: 마지막 3스텝 중 되올라감 {_rises}회를 센다 "
         f"(3스텝 비만 보면 '5스텝 남음' 으로 오독한다 — li3nd r1 실측)")
+
+    # ── 모르는 플래그를 **조용히 무시하지 않는다** (2026-09-17) ────────────
+    #   가드가 모듈 최상단(import 시점)에 있어서 여기서 직접 못 부른다 → 부프로세스로.
+    import subprocess as _sp
+    _me = os.path.abspath(__file__)
+    _r = _sp.run([sys.executable, _me, "--sei_roots", "/tmp/x"],
+                 capture_output=True, text=True, timeout=60)
+    chk(_r.returncode != 0 and "모르는 플래그" in (_r.stdout + _r.stderr),
+        f"⛔음성: 없는 플래그(--sei_roots)를 주면 **멈춘다** (rc={_r.returncode}) — "
+        "조용히 기본 루트를 보여주면 사람은 새 캠페인을 보고 있다고 믿는다")
+    chk("SEI=" in (_r.stdout + _r.stderr),
+        "양성: 거부하면서 **올바른 방법(SEI= 환경변수)** 을 같이 알려준다")
 
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1

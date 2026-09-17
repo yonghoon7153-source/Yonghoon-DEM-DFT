@@ -168,6 +168,12 @@ def budget_row(out_root) -> dict:
             "n_done": sum(1 for s in steps if "rc" in s),
             "n_stopped": sum(1 for s in steps if "stopped" in s),
             "stopped_why": [s["stopped"] for s in steps if "stopped" in s],
+            # ⛔ 2026-09-17 — 과거 중단 기록을 **현재형으로 찍고 있었다.** 이어받아
+            #   돌고 있는데 화면은 "⛔ 중단" 이라고 말했다 (실측: PID 살아 있고
+            #   md/P2_Al2S3_A__s1 진행 중인데 옛 게이트 중단문이 그대로).
+            #   판정 기준: 중단이 **마지막 항목**일 때만 현재다. 그 뒤로 뭔가 돌았으면
+            #   그건 지나간 일이다.
+            "stopped_is_current": bool(steps) and "stopped" in steps[-1],
             "steps_raw": steps}
 
 
@@ -352,8 +358,11 @@ def render(out_root, log=None, n_gpu=6) -> int:
                   f"{fmt(po, '{:.1f}')} / {cap:.0f}"
                   + ("  ⚠ 상한 초과 예상 — ④가 잡는다"
                      if isinstance(po, float) and po > cap else ""))
-        for w in b.get("stopped_why", []):
-            print(f"   ⛔ 중단: {w}")
+        _sw = b.get("stopped_why", [])
+        for i, w in enumerate(_sw):
+            last = (i == len(_sw) - 1) and b.get("stopped_is_current")
+            print(f"   {'⛔ 중단' if last else '· 지난 중단'}: {w}"
+                  + ("" if last else "  ← 그 뒤로 더 돌았다 (지금 상태 아님)"))
 
     # ③ 준비
     print("\n── 준비 (고정셀 FIRE, fmax 목표 "
@@ -583,6 +592,27 @@ def _selftest() -> int:
         # ── 계획을 베끼지 않았다는 증거: 러너의 상수와 같은 것을 쓴다 ──
         chk(TOTAL_PS == EP.EQUILIB_PS + EP.PROD_PS == 205.0,
             "양성: 런 길이를 러너 상수에서 가져온다 (여기 숫자를 따로 안 적는다)")
+
+    # ── 과거 중단 기록을 현재형으로 찍지 않는다 (2026-09-17) ───────────────
+    import tempfile as _tf3
+    with _tf3.TemporaryDirectory() as _d3:
+        def _bud(steps):
+            (Path(_d3) / "budget.json").write_text(json.dumps(
+                {"total_cap_gpu_h": 120.0, "used_gpu_h": 60.67, "steps": steps}))
+            return budget_row(_d3)
+        _cur = _bud([{"key": "md/a", "rc": 0, "gpu_h": 1.0},
+                     {"key": "md/b", "stopped": "⛔ 투영 …"}])
+        chk(_cur["stopped_is_current"] is True,
+            "양성: 중단이 **마지막 항목**이면 지금 멈춘 것이다")
+        _past = _bud([{"key": "md/b", "stopped": "⛔ 투영 …"},
+                      {"key": "md/c", "rc": 0, "gpu_h": 2.0}])
+        chk(_past["stopped_is_current"] is False and _past["stopped_why"],
+            "⛔음성: 중단 뒤에 돌아간 스텝이 있으면 **지금 상태가 아니다** "
+            "(기록은 지우지 않고 현재형만 뗀다)")
+        chk(_bud([{"key": "md/a", "rc": 0, "gpu_h": 1.0}])["stopped_is_current"] is False,
+            "양성: 중단 기록이 없으면 당연히 False")
+        chk(_bud([])["stopped_is_current"] is False,
+            "⛔음성: steps 가 비면 False (빈 리스트에 [-1] 로 죽지 않는다)")
 
     # ── spend_rate: 실측 h/런 (2026-09-17) ────────────────────────────────
     _plan = EP.build_plan("/tmp/_w")
