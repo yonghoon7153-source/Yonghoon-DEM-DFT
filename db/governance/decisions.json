@@ -3042,7 +3042,16 @@
           "by": "1저자 (yonghoon)",
           "note": "AskUserQuestion 로 비준. 고른 것: '2 2 1 — 9월과 맞춘다'. ⇒ 카드 §4 의 '반드시 6 6 1' 은 이 결정으로 대체된다. 6월↔우리 k 일치는 **미상**으로 선언하고 ICOHP 판정문에 한계로 적는다."
         }
-      ]
+      ],
+      "ratification": {
+        "state": "ratified",
+        "role": "scientific_owner",
+        "actor_id": "yonghoon7153@gmail.com",
+        "timestamp": "2026-09-18T13:10:32Z",
+        "commit": "db64c96e4ffc41f27c2976aacfc05806b85f87b6",
+        "decision_digest": "sha256:560be368d9626e284d670f31519516e1cc98467cbd6b04ca90f4a11dd25f6355",
+        "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+      }
     }
   ]
 }
