@@ -147,11 +147,79 @@ lobster_spill() {    # $1 = lobsterout → spilling 줄 + 5% 판정
         else if (NR>0) print "        ✅ 5 % 미만 — 기저 적합" }'
 }
 
-icohp_pairs() {      # $1 = ICOHPLIST.lobster → 원소쌍별 쌍수·ΣICOHP
-    awk 'NR>1 && NF>=5 {a=$2;b=$3;gsub(/[0-9]/,"",a);gsub(/[0-9]/,"",b);
-              if(a>b){t=a;a=b;b=t}; k=a"-"b; n[k]++; s[k]+=$(NF)}
+# ⛔ 2026-09-18 교정 — 아래 둘은 **조용히** 틀렸었다. 6월 실물
+#   (db/raw/nd_lobster/ICOHPLIST.lobster) 로 재보고 잡았다.
+#   ① 헤더가 **두 줄**이다 (`COHP# atomMU …` + `for spin 1  for spin 2`).
+#      `NR>1` 은 한 줄만 건너뛰어 둘째 줄이 데이터로 들어가고
+#      `-spin 1쌍 Σ 2.000` 이라는 없는 원소쌍이 생겼다.
+#   ② 스핀분극 파일은 ICOHP 열이 **둘**(spin1·spin2)이고 총 ICOHP 는 그 **합**이다.
+#      `$(NF)` 는 spin 2 만 집어 전부 **약 절반**으로 나왔다
+#      (Nd–S −0.218 vs 원장 −0.436 · P–S −2.836 vs −5.672).
+#      우리 frozen-4f 런은 **비분극**이라 열이 하나 → `$(NF)` 가 맞는다.
+#      ⇒ 고치지 않으면 6월(반값)과 9월/우리(온값)를 **2배 어긋난 채** 나란히 놓게 된다.
+#      바로 이 비교가 이 캠페인의 전부다.
+#   ⚠ 스핀 유무는 **헤더에서 읽는다**. `$(NF)+$(NF-1)` 은 비분극 파일에서
+#      transZ(=0)를 더해 우연히 맞을 뿐이고, 우연히 맞는 것은 규칙이 아니다.
+icohp_spin_cols() {  # $1 = ICOHPLIST → ICOHP 열 수 (1 또는 2). 못 읽으면 0.
+    head -3 "$1" 2>/dev/null | grep -aqi 'for spin 2' && { echo 2; return; }
+    head -3 "$1" 2>/dev/null | grep -aqi 'ICOHP'      && { echo 1; return; }
+    echo 0
+}
+
+icohp_pairs() {      # $1 = ICOHPLIST.lobster → 원소쌍별 쌍수·ΣICOHP(총합)
+    local nsp; nsp=$(icohp_spin_cols "$1")
+    [ "$nsp" = 0 ] && { echo "        ⚠ ICOHPLIST 헤더를 못 읽었다 — 집계하지 않는다"; return; }
+    echo "        (ICOHP 열 ${nsp}개 → $([ "$nsp" = 2 ] && echo '스핀 둘을 **합**해서' || echo '비분극, 그대로') 집계)"
+    awk -v nsp="$nsp" '$1+0>0 && NF>=5 {
+              a=$2;b=$3;gsub(/[0-9]/,"",a);gsub(/[0-9]/,"",b);
+              if(a>b){t=a;a=b;b=t}; k=a"-"b; n[k]++;
+              s[k] += (nsp==2 ? $(NF)+$(NF-1) : $(NF))}
          END{for(k in n) printf "        %-8s %3d쌍  ΣICOHP %8.3f eV (평균 %6.3f)\n", k, n[k], s[k], s[k]/n[k]}' \
         "$1" 2>/dev/null | sort
+}
+
+# ★ 카드 §2 의 게이트는 **원자 하나**(`Nd79`)에 걸려 있지 원소쌍 평균이 아니다.
+#   6월에 Nd2(=NdO₂S₃Cl)가 평균을 끌어내린 게 밝혀졌기 때문이다 — 평균으로 판정하면
+#   그 교훈이 지워진다. 그래서 자리별로 쪼갠다.
+icohp_nd_sites() {   # $1 = ICOHPLIST → Nd 자리별 Nd–S 평균
+    local nsp; nsp=$(icohp_spin_cols "$1"); [ "$nsp" = 0 ] && return
+    awk -v nsp="$nsp" '$1+0>0 && NF>=5 {
+              a=$2;b=$3; A=a;B=b; gsub(/[0-9]/,"",A); gsub(/[0-9]/,"",B);
+              v = (nsp==2 ? $(NF)+$(NF-1) : $(NF));
+              if(A=="Nd"&&B=="S"){n[a]++; s[a]+=v} else if(B=="Nd"&&A=="S"){n[b]++; s[b]+=v}}
+         END{for(k in n) printf "        %-6s Nd–S %d쌍  평균 %7.3f eV\n", k, n[k], s[k]/n[k]}' \
+        "$1" 2>/dev/null | sort
+}
+
+# 카드의 C1/C2/C3 판정. ⛔ 문턱을 **여기 박지 않는다** — 카드에서 읽는다.
+#   못 읽으면 판정을 **생략한다**. 확인 안 된 문턱으로 판정을 찍지 않는다.
+CARD_ICOHP=${CARD_ICOHP:-/data/work/repo/db/properties/nd_icohp_pp_swap_card_2026_09_16.json}
+icohp_nd79_verdict() {   # $1 = ICOHPLIST, $2 = 자리 이름(기본 Nd79)
+    local site=${2:-Nd79} nsp val th
+    nsp=$(icohp_spin_cols "$1"); [ "$nsp" = 0 ] && return
+    val=$(awk -v nsp="$nsp" -v site="$site" '$1+0>0 && NF>=5 {
+              a=$2;b=$3; A=a;B=b; gsub(/[0-9]/,"",A); gsub(/[0-9]/,"",B);
+              v = (nsp==2 ? $(NF)+$(NF-1) : $(NF));
+              if((a==site&&B=="S")||(b==site&&A=="S")){n++; s+=v}}
+         END{if(n>0) printf "%.4f %d", s/n, n}' "$1" 2>/dev/null)
+    [ -n "$val" ] || { echo "        ★ $site 의 Nd–S 쌍이 없다 — 판정 불가 (자리 이름이 바뀌었나)"; return; }
+    th=$(python3 -c "
+import json,re,sys
+d=json.load(open('$CARD_ICOHP'))['2_결과_보기_전에_고정하는_판정']
+c1=re.search(r'([0-9.]+)', d['C1_PP_가_원인이다'].split('−')[1]).group(1)
+c2=re.search(r'([0-9.]+)', d['C2_PP_가_원인이_아니다'].split('−')[1]).group(1)
+print(c1, c2)" 2>/dev/null)
+    if [ -z "$th" ]; then
+        echo "        ★ $site Nd–S 평균 $(echo $val|awk '{print $1}') eV ($(echo $val|awk '{print $2}')쌍)"
+        echo "        ⚠ 카드에서 문턱을 **못 읽었다**($CARD_ICOHP) — C1/C2/C3 판정을 생략한다"
+        return
+    fi
+    echo "$val $th" | awk '{v=$1; n=$2; c1=$3; c2=$4; a=(v<0?-v:v);
+        printf "        ★ %s Nd–S 평균 %.3f eV (%d쌍)  · 문턱 C1 |ICOHP|>%.1f · C2 <%.1f\n", "'"$site"'", v, n, c1, c2;
+        if (a > c1) print "           ⇒ **C1** PP 가 원인. 6월 Nd–S(−0.436·−0.481) 영구 비인용 확정";
+        else if (a < c2) print "           ⇒ **C2** PP 가 원인 아님. 9월 −4.080 쪽을 의심 (그 값도 비인용으로)";
+        else print "           ⇒ **C3 미판정.** 어느 쪽도 선언하지 않는다 (⛔ 5%만 넘었다고 C1 로 읽지 않는다)"}'
+    echo "        ⚠ 한계: 6월↔우리 k 일치는 **미상**이다 (D-2026-09-18-nd-icohp-kmesh)"
 }
 
 icohp_has_pair() {   # $1 = ICOHPLIST, $2/$3 = 원소 → 그 쌍이 있으면 0
@@ -299,10 +367,55 @@ EOF
     echo "$O" | awk '/Nd-S/{exit ($4+2.354<0.001 && $4+2.354>-0.001)?0:1}' \
         && say "✓" "ΣICOHP 합산 (Nd-S −2.354 eV)" || say "✗" "ΣICOHP 합산 실패: $O"
     # ⛔ 헤더를 데이터로 세면 **없는 원소쌍 하나**(atomMU-atomNU)가 더 생긴다.
-    #   (출력 줄 자체에 'ΣICOHP' 가 들어 있어 'COHP' 로 찾으면 자기 출력에 걸린다)
-    NK=$(echo "$O" | grep -c .)
+    #   ⚠ 2026-09-18: 이 시험이 **출력 줄 수**를 세고 있었다 — 쌍이 아니라 줄이다.
+    #     집계 줄을 하나 추가하자마자 빨간불이 났다. 세야 하는 건 `ΣICOHP` 를 가진 줄이다.
+    NK=$(echo "$O" | grep -c 'ΣICOHP')
     [ "$NK" = 3 ] && say "✓" "[음성] 헤더 줄을 쌍으로 세지 않는다 (원소쌍 3종)" \
         || say "✗" "[음성] 원소쌍이 3종이 아니다 (${NK}종) — 헤더가 섞였나: $O"
+
+    # ── 스핀분극 ICOHPLIST (6월 실물 형태) — 여기가 비어 있어서 2배 오차가 살아남았다 ──
+    #   헤더 **두 줄** + ICOHP 열 **둘**. 값은 db/raw/nd_lobster/ICOHPLIST.lobster 에서 땄다.
+    cat > "$T/ic_spin" <<'EOF'
+  COHP#    atomMU    atomNU   distance   translation   ICOHP (at) eF    ICOHP (at) eF
+                                                          for spin 1       for spin 2
+      1       P25       S40    2.06950     0   0   0        -3.07238         -3.07509
+    443      Nd2       O35    2.60866     0   0   0        -0.23638         -0.24008
+    445      Nd2       S45    3.17786     0   0   0        -0.10074         -0.10246
+    446      Nd2       S46    2.97362    -1   0   0        -0.23627         -0.23921
+    500     Nd79       S60    2.70000     0   0   0        -0.24000         -0.24100
+EOF
+    [ "$(icohp_spin_cols "$T/ic_spin")" = 2 ] && say "✓" "스핀분극 파일의 ICOHP 열을 2로 읽는다" \
+        || say "✗" "스핀 열 수 오독: $(icohp_spin_cols "$T/ic_spin")"
+    [ "$(icohp_spin_cols "$T/ic_noNdP")" = 1 ] && say "✓" "비분극 파일은 1로 읽는다" \
+        || say "✗" "비분극 열 수 오독: $(icohp_spin_cols "$T/ic_noNdP")"
+    OS=$(icohp_pairs "$T/ic_spin")
+    # ⛔음성 — 헤더 **둘째 줄**('for spin 1 …')이 쌍으로 세어지면 안 된다
+    echo "$OS" | grep -q -- '-spin' && say "✗" "[음성] 헤더 둘째 줄을 원소쌍으로 셌다: $OS" \
+        || say "✓" "[음성] 헤더가 **두 줄**이어도 쌍으로 세지 않는다"
+    # ⛔음성 — spin 2 만 집으면 P–S 가 −3.075. 합이면 −6.147.
+    echo "$OS" | awk '/P-S/{d=$4+6.147; exit (d<0.01 && d>-0.01)?0:1}' \
+        && say "✓" "스핀 둘을 **합**한다 (P–S Σ −6.147, spin2 만이면 −3.075)" \
+        || say "✗" "스핀 합산 실패: $(echo "$OS" | grep P-S)"
+    # 자리별 — Nd2 와 Nd79 가 **갈라져야** 한다 (평균으로 뭉치면 카드 게이트가 무의미)
+    ON=$(icohp_nd_sites "$T/ic_spin")
+    echo "$ON" | grep -q 'Nd2 .*2쌍' && echo "$ON" | grep -q 'Nd79 .*1쌍' \
+        && say "✓" "Nd 자리별로 갈라 센다 (Nd2 2쌍 · Nd79 1쌍)" \
+        || say "✗" "자리별 분리 실패: $ON"
+    # ⛔음성 — Nd–O 는 Nd–S 집계에 섞이면 안 된다 (Nd2 는 O35 도 있다)
+    # 섞였으면 3쌍이 되고 평균이 −0.305 로 끌려온다. 안 섞이면 2쌍 −0.339.
+    echo "$ON" | awk '/Nd2 /{d=$5+0.339; exit (d<0.005&&d>-0.005)?0:1}' \
+        && say "✓" "[음성] Nd–O 를 Nd–S 에 섞지 않는다 (Nd2 2쌍 평균 −0.339)" \
+        || say "✗" "[음성] Nd–O 가 섞였다: $(echo "$ON" | grep Nd2)"
+    # ⛔음성 — 카드를 못 읽으면 **판정을 찍지 않는다**
+    OV=$(CARD_ICOHP=/nonexistent/card.json icohp_nd79_verdict "$T/ic_spin" Nd79)
+    # ⚠ 문구('C1/C2/C3 판정을 생략한다')에 C1 이 들어 있다 — **판정 줄**만 봐야 한다.
+    echo "$OV" | grep -q '판정을 생략한다' && ! echo "$OV" | grep -qE '⇒ \*\*C[12]\*\*|⇒ \*\*C3 미판정' \
+        && say "✓" "[음성] 카드를 못 읽으면 C1/C2/C3 를 **찍지 않는다**" \
+        || say "✗" "[음성] 문턱 없이 판정을 찍었다: $OV"
+    # ⛔음성 — 없는 자리를 물으면 판정 불가라고 한다
+    echo "$(icohp_nd79_verdict "$T/ic_spin" Nd999)" | grep -q '판정 불가' \
+        && say "✓" "[음성] 없는 Nd 자리는 **판정 불가**라고 한다" \
+        || say "✗" "[음성] 없는 자리에 판정을 찍었다"
 
     rm -rf "$T"
     [ "$ok" = 1 ] && { echo "selftest PASS"; exit 0; } || { echo "selftest FAIL"; exit 1; }
@@ -611,6 +724,8 @@ for S in $SYSLIST; do
             if [ -s "$IC" ]; then
                 echo "        ICOHPLIST $(( $(wc -l < "$IC") - 1 )) 쌍"
                 icohp_pairs "$IC"
+                icohp_nd_sites "$IC"
+                icohp_nd79_verdict "$IC" "${ND_SITE:-Nd79}"
                 # ★ 이 계의 물음: Nd 가 P 자리에 있는데 **Nd–P 결합이 있나**.
                 #   lobsterin 에 Nd–P 생성자를 일부러 넣었다 — 비어 있으면 그게 답이다.
                 if icohp_has_pair "$IC" Nd P; then
