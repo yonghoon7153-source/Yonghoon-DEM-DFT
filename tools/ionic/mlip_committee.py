@@ -360,7 +360,7 @@ def cmd_bench(a):
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     calc = get_calc(a.engine, a.device)
 
-    rows, FR, FP = [], [], []
+    rows, FR, FP, SYM = [], [], [], []
     print(f"  {a.xyz} · stride {a.stride}" + (f" · 최대 {a.limit} 프레임" if a.limit else ""))
     for k, (idx, at) in enumerate(stream_labeled(a.xyz, a.stride, a.limit)):
         try:
@@ -378,7 +378,7 @@ def cmd_bench(a):
                      "dE_meV_per_atom": (e_p - e_ref) / nat * 1000,
                      "F_mae_eVA": float(np.abs(f_p - f_ref).mean()),
                      "F_rms_ref_eVA": float(np.sqrt((f_ref ** 2).mean()))})
-        FR.append(f_ref); FP.append(f_p)
+        FR.append(f_ref); FP.append(f_p); SYM.append(np.asarray(at.get_chemical_symbols()))
         if (k + 1) % 20 == 0:
             print(f"    {k+1} 프레임")
     if not rows:
@@ -391,8 +391,23 @@ def cmd_bench(a):
     bias, scat = float(dE.mean()), float(dE.std())
     same_sign = int((np.sign(dE) == np.sign(bias)).sum())
 
+    #: ⭐ 2026-09-18 — **원소별 분해.** 소셀 보고량 카드 §2 가 *"원소별 분해와 각자의
+    #  |F| RMSE, softening 기울기도 같이 낸다"* 로 요구하는데 이 도구가 안 만들고 있었다.
+    #  선언은 카드에 있고 산출 경로가 없던 자리다 — 게이트 문턱(§4)은 전체 F_RMSE 라
+    #  **판정은 바뀌지 않는다**. 바뀌는 것은 보고의 완결성이다.
+    #  ⛔ 이 분해는 **문턱이 아니다.** 원소 하나가 나쁘다고 게이트를 떨어뜨리지 않는다.
+    fs_el = {}
+    if SYM:
+        sym_all = np.concatenate(SYM)
+        for el in sorted(set(sym_all.tolist())):
+            m = sym_all == el
+            if not m.any():
+                continue
+            fs_el[el] = force_stats(FR[m], FP[m])
+            fs_el[el]["n_atoms"] = int(m.sum())
     summ = {"xyz": str(a.xyz), "engine": a.engine, "n_frames": len(rows),
-            "stride": a.stride, "force": fs,
+            "stride": a.stride, "force": fs, "force_by_element": fs_el,
+            "⛔_원소별은_문턱이_아니다": "카드 §2 의 **보고** 항목이다. 게이트(§4)는 전체 F_RMSE 로만 판정한다.",
             "energy_per_atom_meV": {
                 "bias": bias, "scatter_sd": scat,
                 "mae_raw": float(np.abs(dE).mean()),
@@ -415,6 +430,15 @@ def cmd_bench(a):
               f"— 1 보다 작으면 예측힘이 참조보다 작다(=PES 가 무르다). r 로는 안 보인다")
     print(f"  에너지  편향 {bias:+.2f} ± 산포 {scat:.2f} meV/atom  "
           f"(같은 부호 {same_sign}/{len(dE)} · 편향 제거 후 MAE {np.abs(dE-bias).mean():.2f})")
+    if fs_el:
+        print("  ── 원소별 (카드 §2 보고 항목 · **문턱이 아니다**) ──")
+        print(f"     {'원소':<5}{'원자수':>7}{'MAE':>9}{'RMSE':>9}{'참조RMS':>9}{'상대%':>8}{'softening':>11}")
+        for el, g in sorted(fs_el.items(), key=lambda kv: -kv[1]["rmse_eVA"]):
+            _s = g.get("softening_slope")
+            print(f"     {el:<5}{g['n_atoms']:>7}{g['mae_eVA']:>9.4f}{g['rmse_eVA']:>9.4f}"
+                  f"{g['rms_ref_eVA']:>9.3f}{g['rel_mae_pct']:>8.2f}"
+                  + (f"{_s:>11.4f}" if _s is not None else f"{'—':>11}"))
+        print("     ⛔ 원소 하나가 나빠도 게이트는 안 떨어진다 — 판정은 전체 F_RMSE 다 (§4).")
     # ── 구간 분할 — melt/quench 처럼 **프레임 번호로 영역이 갈리는** 데이터셋용 ──
     #   합산값만 보면 두 영역이 섞여, "고에너지에서 더 무른가" 를 **원리적으로 못 본다**.
     if a.split_at:
@@ -839,6 +863,35 @@ def cmd_selftest(a=None):
 
     # ⛔ 2026-09-11 — 종전엔 `8+3+8+3+6` 으로 **손으로 센 수**를 찍었다. 검사를 늘려도 28 로 고정돼
     #   실제 33개가 돌았는데 화면은 28 이라고 했다. 실행된 것을 센다.
+    # ── 원소별 분해 (2026-09-18 · 카드 §2 가 요구하는데 산출 경로가 없었다) ──────
+    #   엔진 없이 force_stats 를 **원소 마스크로 직접** 불러 검증한다.
+    _sym = np.array(["Li", "Li", "S", "P"])
+    _ref = np.array([[1.0, 0, 0], [2.0, 0, 0], [3.0, 0, 0], [4.0, 0, 0]])
+    _pred = _ref.copy()
+    _pred[2, 0] += 1.0                    # S 원자의 **x 성분 하나만** 1.0 eV/Å 틀린다
+    #  ⚠ `_pred[2] += 1.0` 으로 쓰면 세 성분 전부에 더해져 MAE 가 1.0 이 된다 —
+    #    처음에 그렇게 써 놓고 기대값을 1/3 로 적어 시험이 빨갛게 떴다. **시험이 틀렸었다.**
+    _el = {e: force_stats(_ref[_sym == e], _pred[_sym == e]) for e in sorted(set(_sym))}
+    chk(abs(_el["S"]["mae_eVA"] - 1.0 / 3) < 1e-9,
+        f"[양성] 틀린 원소(S)에만 오차가 잡힌다 — MAE {_el['S']['mae_eVA']:.4f} (성분 3개 중 1개)")
+    chk(_el["Li"]["mae_eVA"] == 0.0 and _el["P"]["mae_eVA"] == 0.0,
+        "⛔음성: 멀쩡한 원소(Li·P)에 오차가 **새지 않는다**")
+    chk(_el["Li"]["n_components"] == 6 and _el["P"]["n_components"] == 3,
+        f"원소별 성분 수가 원자 수 × 3 이다 (Li 6 · P 3) — 얻음 "
+        f"{_el['Li']['n_components']}·{_el['P']['n_components']}")
+    # ⛔음성 — 마스크를 안 쓰고 전체로 재면 S 의 오차가 **희석된다**. 그게 분해하는 이유다.
+    _all = force_stats(_ref, _pred)
+    chk(_all["mae_eVA"] < _el["S"]["mae_eVA"],
+        f"⛔음성: 전체 평균은 원소 오차를 **희석한다** (전체 {_all['mae_eVA']:.4f} < S {_el['S']['mae_eVA']:.4f})")
+    # ⛔음성 — 한 원소만 softening 이어도 원소별로는 보이고 전체로는 덜 보인다
+    _p2 = _ref * 1.0; _p2[_sym == "S"] *= 0.5
+    _e2 = {e: force_stats(_ref[_sym == e], _p2[_sym == e]) for e in sorted(set(_sym))}
+    chk(abs(_e2["S"]["softening_slope"] - 0.5) < 1e-9 and abs(_e2["Li"]["softening_slope"] - 1.0) < 1e-9,
+        f"원소별 softening 이 원소마다 따로 나온다 (S {_e2['S']['softening_slope']:.3f} · "
+        f"Li {_e2['Li']['softening_slope']:.3f})")
+    chk(force_stats(_ref, _p2)["softening_slope"] > _e2["S"]["softening_slope"],
+        "⛔음성: 전체 softening 은 한 원소의 무름을 **가린다** — 그래서 원소별이 필요하다")
+
     print(f"selftest {'PASS' if not bad else 'FAIL'} — {n_run[0] - len(bad)} ok, {len(bad)} bad")
     return 1 if bad else 0
 
