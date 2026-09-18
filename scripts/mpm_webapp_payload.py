@@ -267,6 +267,74 @@ def geometric_coverage(am_csv, se_csv, n_samp=2000, bands_um=(0.13, 0.26)):
     return out
 
 
+def _selftest_contract():
+    """PASL-04 게이트 — 계약 런이 봉인 축을 **말했는지**.
+
+    ★ ①은 Phase A 96 팔의 **실제 선언**을 픽스처로 박는다 (docs/reviews/
+      phase_a_seal_breach_20260918.md §1).  이 시험이 초록이면 그 사고는 재발하지 않는다.
+    """
+    ok = fail = 0
+
+    def chk(name, cond, extra=''):
+        nonlocal ok, fail
+        if cond:
+            ok += 1
+        else:
+            fail += 1
+            print(f'  ✗ {name}   {extra}')
+
+    def died(**kw):
+        """게이트가 죽였나 → (죽었나, 메시지)"""
+        base = dict(expect_physics='', physics_expect={},
+                    ptfe_legacy=False, ptfe_applied='centerline')
+        base.update(kw)
+        try:
+            assert_contract_seal(**base)
+            return False, ''
+        except SystemExit as e:
+            return True, str(e)
+
+    #  ★① 96 팔의 실제 상태 — 선언 7 축(ptfe 없음) + `--ptfe-stamp` 미명시
+    XP96 = ('vox_um=0.20,bridge_um=0.24,sigma_vgcf_S_cm=44.1786,fibre_stamp=segment,'
+            'sdcp_stamp=point,sdcp_yield_to_vgcf=False,periodic_xy=False')
+    d96 = dict(kv.split('=', 1) for kv in XP96.split(','))
+    hit, msg = died(expect_physics=XP96, physics_expect=d96,
+                    ptfe_legacy=True, ptfe_applied='off')
+    chk('★① Phase A 96 팔의 실제 선언을 **거부**한다', hit and 'PASL-04' in msg, msg[:90])
+    chk('★① 이유가 "명시하지 않았다" 로 나온다', hit and '명시하지 않았다' in msg, msg[:90])
+
+    #  ★② 명시했지만 선언에서 빠진 경우 (러너 조건부 조립의 잔재)
+    hit2, msg2 = died(expect_physics=XP96, physics_expect=d96,
+                      ptfe_legacy=False, ptfe_applied='centerline')
+    chk('★② 명시했어도 **선언에 없으면** 거부한다', hit2 and 'ptfe_stamp' in msg2, msg2[:90])
+
+    #  ③ 완전한 선언은 통과한다
+    full = dict(d96, ptfe_stamp='centerline')
+    hit3, _ = died(expect_physics='x', physics_expect=full,
+                   ptfe_legacy=False, ptfe_applied='centerline')
+    chk('③ 봉인 축이 다 선언되면 통과', not hit3)
+
+    #  ★④ 음성대조 — 계약을 선언하지 않은 런은 **건드리지 않는다** (진단이 계속 돌아야 한다)
+    hit4, _ = died(expect_physics='', physics_expect={}, ptfe_legacy=True, ptfe_applied='off')
+    chk('★④ 계약 선언이 없으면 유도든 아니든 통과 (진단 런 보호)', not hit4)
+
+    #  ⑤ 봉인 축이 하나만 빠져도 잡는다 (전수)
+    for k in CONTRACT_SEALED_AXES:
+        part = {x: 'v' for x in CONTRACT_SEALED_AXES if x != k}
+        h, m = died(expect_physics='x', physics_expect=part)
+        chk(f'⑤ `{k}` 하나만 빠져도 잡는다', h and k in m, m[:70])
+
+    #  ⑥ 봉인 목록이 사전등록 §5 와 맞는가 (손목록이 낡는 것을 여기서 막는다)
+    chk('⑥ 봉인 목록 = vox·bridge·fibre·ptfe',
+        CONTRACT_SEALED_AXES == ('vox_um', 'bridge_um', 'fibre_stamp', 'ptfe_stamp'),
+        str(CONTRACT_SEALED_AXES))
+    chk('⑥ 봉인 축이 전부 PROTOCOL_FIELDS 에 있다',
+        all(k in PROTOCOL_FIELDS for k in CONTRACT_SEALED_AXES))
+
+    print(f'mpm_webapp_payload contract selftest: {ok}/{ok + fail} PASS')
+    return 1 if fail else 0
+
+
 def _selftest_provenance():
     """`--selftest-provenance` — `_code_sha` 가 **느린 git 때문에 출처를 버리지 않는가**.
 
@@ -687,6 +755,46 @@ PTFE_STAMP_NEEDS_DIA = ('capsule',)
 #    다른데 stored id 만 같은 팔 · `physics_protocol_id="garbage"` 인 팔.
 #    **문자열 일치는 규약 일치가 아니다.**  ⇒ 정의도 계산도 `run_contract` 하나만 쓴다.
 PROTOCOL_FIELDS = _RC.PROTOCOL_FIELDS
+
+#: ★★ 계약 런이 **반드시 선언해야 하는** 봉인 축 (PASL-04, 2026-09-18).
+#   근거 = Phase A 사전등록 §5 "STEP3 규약 — 봉인 최소 집합"
+#   (`docs/reviews/phase_a_6mah_order_prereg_20260907.md`):
+#       fibre_stamp = segment · ptfe_stamp = centerline · sigma_ptfe = 0 · bridge = 0.24 µm
+#   ⚠ 값은 여기서 강제하지 않는다 — 캠페인마다 다르다.  강제하는 것은 **선언의 존재**다.
+#     (값 대조는 사전등록별 어댑터·판정기 소관이다.)
+#   ⚠ 여기에 축을 더할 때는 **모든 러너의 조립 줄이 무조건인지** 먼저 확인할 것 —
+#     조건부로 남아 있으면 그 러너의 정상 런이 전부 죽는다.
+CONTRACT_SEALED_AXES = ('vox_um', 'bridge_um', 'fibre_stamp', 'ptfe_stamp')
+
+
+def assert_contract_seal(expect_physics, physics_expect, ptfe_legacy, ptfe_applied):
+    """계약 런이 봉인 축을 **말했는지** 검사한다 (PASL-04).  아니면 SystemExit.
+
+    ★ 계약을 선언하지 않은 런(`expect_physics` 가 비었다)은 **건드리지 않는다** —
+      진단·탐침은 계속 돌아야 한다.  게이트는 *"계약이라고 말한 런"* 에만 걸린다.
+    """
+    if not expect_physics:
+        return
+    if ptfe_legacy:
+        raise SystemExit(
+            'ABORT (PASL-04) — `--expect-physics` 로 **계약 런**이라고 선언했는데 '
+            '`--ptfe-stamp` 을 명시하지 않았다.\n'
+            f'  그래서 규약이 σ_PTFE 에서 **유도**됐다 → `{ptfe_applied}` '
+            '(매니페스트 `legacy-unversioned`).\n'
+            '  ⛔ 이것이 Phase A 96 팔이 봉인을 이탈한 기전이다 — 유도된 기본값은 '
+            '아무도 말한 적이 없으므로 대조할 근거가 없다.\n'
+            '  ⇒ `--ptfe-stamp centerline` (본문 규약, 원장 CL-60) 또는 '
+            '`--ptfe-stamp off` 를 **명시**할 것.  진단 런이면 `--expect-physics` 를 빼라.')
+    _miss = [k for k in CONTRACT_SEALED_AXES if k not in physics_expect]
+    if _miss:
+        raise SystemExit(
+            f'ABORT (PASL-04) — `--expect-physics` 선언에 **봉인 축**이 없다: '
+            f'{", ".join(_miss)}\n'
+            f'  선언된 것: {", ".join(sorted(physics_expect)) or "(없음)"}\n'
+            '  ⛔ 선언 안 한 축은 검사도 안 된다 — 러너가 그 축을 조용히 기본값으로 '
+            '두어도 계약 검사기가 볼 키가 없다.\n'
+            '  ⇒ 러너의 `--expect-physics` 조립을 **무조건**으로 바꿀 것 '
+            '(조건부 `[ -n "$FLAG" ] &&` 가 이 사고의 기전이다).')
 physics_protocol_id = _RC.physics_protocol_id
 
 #: PTFE 스탬프 규약 이름들.  '' = 옛 규약 유도 (매니페스트에 legacy-unversioned).
@@ -1065,6 +1173,8 @@ def main():
     #    일곱이 그것에 일치해 전부 통과한다 (팔간 일치는 옳음이 아니다).
     #    ⇒ 러너가 **자기가 설정한 값**을 그대로 선언하고, payload 가 **적용값**과 필드별로
     #      대조한다.  해시가 아니라 필드라서 어느 축이 갈렸는지도 말해 준다.
+    ap.add_argument('--selftest-contract', action='store_true',
+                    help='PASL-04 계약 봉인 게이트 자기검사')
     ap.add_argument('--expect-physics', default='',
                     help='러너가 설정한 물리 인자 선언 `KEY=VAL,KEY=VAL…` (KEY 는 '
                          'PROTOCOL_FIELDS).  적용값과 다르면 **중단**한다 (exit 4).  '
@@ -1199,6 +1309,26 @@ def main():
             raise SystemExit(f'--expect-physics 의 `{_k}` 는 PROTOCOL_FIELDS 가 아니다 '
                              f'(가능: {", ".join(PROTOCOL_FIELDS)})')
         a._physics_expect[_k] = _v.strip()
+    #  ══════════════════════════════════════════════════════════════════
+    #  ★★★ PASL-04 (2026-09-18) — **선언 안 한 축은 검사도 안 된다.**
+    #    Phase A 96 팔이 나흘을 태우고 봉인을 이탈한 기전이 정확히 이것이다:
+    #    러너의 `--expect-physics` 조립이 `[ -n "$PS_FLAG" ] && XP="$XP,ptfe_stamp=…"`
+    #    처럼 **조건부**라, 셸에 `PTFE_STAMP` 이 없으면 플래그도 안 붙고 **선언에서도
+    #    빠진다** ⇒ 계약 검사기가 볼 키 자체가 없어 조용히 통과한다.
+    #  ⇒ 여기가 **길목**이다 — 모든 팔이 이 함수를 지난다.  러너마다 고치면 다음 러너가
+    #    또 빠뜨린다 (이 리포가 손목록으로 세 번 졌다: SBRG_FLAG·RQG_FLAG·AS_FLAG).
+    #
+    #  ⓐ **명시 강제** — `_ptfe_stamp_legacy` 는 *"이 값은 말한 것이 아니라 유도한 것"* 을
+    #    뜻한다 (`resolve_ptfe_stamp`: 요청이 비면 σ 로 유도하고 True).  96 팔은 정확히
+    #    `('off', True)` 였다.  ⚠⚠ **그 플래그는 그때 이미 있었고 아무도 읽지 않았다**
+    #    (대입만 되고 소비처 0) — 나흘을 막을 정보가 죽은 변수로 있었다.
+    #  ⓑ **선언 완전성** — 봉인 축이 선언에 **있어야** 하류(어댑터·판정기)가 대조할 칸을
+    #    갖는다.  키가 없으면 "해당 없음" 과 구분되지 않는다.
+    #  ⚠ 계약을 선언하지 않은 런(`--expect-physics` 없음)은 **안 건드린다** — 진단·탐침은
+    #    계속 돌아야 한다.  게이트는 *"계약이라고 말한 런"* 에만 걸린다.
+    assert_contract_seal(a.expect_physics, a._physics_expect,
+                        a._ptfe_stamp_legacy, a._ptfe_stamp)
+
     if a._ptfe_stamp in PTFE_STAMPS_RESERVED:
         #  ⚠ 예약값이다 — centerline 으로 별칭하거나 매니페스트에 'capsule applied' 라고
         #    적으면 **안 된다** (Codex Q3).  구현될 때까지 명시적으로 죽는다.
@@ -1225,6 +1355,8 @@ def main():
             f'`ptfe_stamp={a._ptfe_stamp}` 로 적힌다 = 요청과 실행이 다른데 성공으로 끝난다.\n'
             f'  ⇒ `--step3-fibre-stamp segment` 를 (--fibre npy 와 함께) 주거나, '
             f'`--ptfe-stamp off` 로 명시할 것.')
+    if a.selftest_contract:
+        _sys.exit(_selftest_contract())
     if a.selftest_provenance:
         _sys.exit(_selftest_provenance())
     if a.selftest_temperature:

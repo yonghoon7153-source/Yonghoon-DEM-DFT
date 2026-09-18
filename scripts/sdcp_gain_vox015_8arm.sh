@@ -685,8 +685,18 @@ PY
   XP="$XP,sdcp_yield_to_vgcf=$([ -n "$YV_FLAG" ] && echo True || echo False)"
   #  ★ R4-CX-03 — `periodic_xy` 가 선언 목록에 **없었다** (규약 축인데).
   XP="$XP,periodic_xy=$([ "$PERIODIC_ON" = 1 ] && echo True || echo False)"
-  [ -n "$PS_FLAG" ] && XP="$XP,ptfe_stamp=$PTFE_STAMP"
-  [ -n "$PT_FLAG" ] && XP="$XP,sigma_ptfe_S_cm=$SIGMA_PTFE"
+  #  ★★★ PASL-04 (2026-09-18) — **무조건 선언한다.**  옛 두 줄은 조건부였다:
+  #      [ -n "$PS_FLAG" ] && XP="$XP,ptfe_stamp=$PTFE_STAMP"
+  #    그래서 셸에 `PTFE_STAMP` 이 없으면 플래그도 안 붙고 **선언에서도 빠졌다**
+  #    ⇒ 계약 검사기가 볼 키 자체가 없어 조용히 통과했다.  Phase A 96 팔이 나흘을
+  #    태우고 봉인을 이탈한 기전이 정확히 이것이다 (원장 `PASL-01`·`PASL-04`).
+  #  ★ 선언이 축과 함께 침묵하면 안 된다 — **빠진 축이야말로 선언돼야 한다.**
+  #  ⚠ 여기서 기본값을 고르지는 않는다.  `PTFE_STAMP` 이 없으면 `PS_FLAG` 도 비어
+  #    payload 가 σ 에서 **유도**하고, 그 유도를 payload 의 PASL-04 게이트가
+  #    `legacy` 로 잡아 **중단**시킨다 (명시 강제).  여기서 막지 않는 이유는
+  #    `check_method_discipline` 의 러너 설정 탐침이 payload 를 안 거치기 때문이다.
+  XP="$XP,ptfe_stamp=${PTFE_STAMP:-off}"
+  XP="$XP,sigma_ptfe_S_cm=${SIGMA_PTFE:-0}"
   local XP_FLAG=" --expect-physics $XP"
   local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \

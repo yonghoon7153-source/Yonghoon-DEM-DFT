@@ -175,6 +175,7 @@ CLI_ACCOUNTING = {
     '--out': ('mode', None), '--step3-rasterize-only': ('mode', None),
     '--fibre-max': ('mode', None), '--selftest-temperature': ('mode', None),
     '--selftest-provenance': ('mode', None),
+    '--selftest-contract': ('mode', None),
     '--show-results': ('mode', None), '--allow-partial-step3': ('mode', None),
     '--expect-protocol': ('mode', None), '--expect-physics': ('mode', None),
     '--void-max': ('mode', None), '--tri-step': ('mode', None),

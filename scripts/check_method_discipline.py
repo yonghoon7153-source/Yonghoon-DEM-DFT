@@ -1178,8 +1178,18 @@ def check_runner_integration(verbose=True, runner=None):
     #  ⓑ′ ★★ **러너 자기 설정 선언** (조건 4).  첫 팔의 id 를 베끼는 것과 다르다 —
     #     그것은 첫 팔이 진리가 되므로, 첫 팔이 조용히 틀리면 나머지가 그것에 일치해
     #     전부 통과한다.  러너가 자기가 넘긴 축을 선언하고 payload 가 적용값과 맞춘다.
+    #  ★★★ PASL-04 (2026-09-18) — 이 목록에 **`ptfe_stamp` 이 없었다.**
+    #    그래서 러너가 그 축을 조건부로 선언해도(= 안 주면 선언에서 빠짐) 규칙 L 은
+    #    초록이었고, Phase A 96 팔이 나흘을 태우고 봉인을 이탈했다.
+    #  ⚠ 규율 ⑤ 가 **계약 선언 층**에서 재현된 것이다 — *'후보를 고르는 코드가 곧
+    #    사각지대'*.  검사할 축을 손으로 고르면, 고르지 않은 축은 영원히 안 보인다.
+    #  ⇒ 봉인 축은 **키 존재**로 요구한다 (값은 캠페인마다 다르므로 `키=` 로 끝낸다).
+    #    값 대조는 payload 의 계약 검사기와 사전등록별 어댑터 소관이다.
+    #  ★ 길목 방어는 `mpm_webapp_payload.CONTRACT_SEALED_AXES` 에 있다 — 이 목록이
+    #    또 낡아도 payload 가 죽는다 (러너마다 고치는 방식이 세 번 졌기 때문).
     _xp_need = ('vox_um=0.15', 'bridge_um=0.48', 'sigma_vgcf_S_cm=SIG',
-                'fibre_stamp=segment', 'sdcp_stamp=point', 'sdcp_yield_to_vgcf=False')
+                'fibre_stamp=segment', 'sdcp_stamp=point', 'sdcp_yield_to_vgcf=False',
+                'ptfe_stamp=', 'sigma_ptfe_S_cm=')
     if '--expect-physics' not in _off:
         problems.append(f'L_EXPECTPHYS| 러너가 `--expect-physics` 를 넘기지 않는다 '
                         f'(`{_off[:200]}`) — 기대값을 자기 설정에서 만들지 않으면 '
