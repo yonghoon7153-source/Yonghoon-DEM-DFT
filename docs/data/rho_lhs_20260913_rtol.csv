@@ -1,3 +1,6 @@
+# ⚠ **유효판** — 조임이 실제로 `rtol` 에 들어갔다 (`rtol_A` 1e-5 → `rtol_B` 1e-6, `binding_A = rtol`).  접미사 없는 `rho_lhs_20260913.json` 은 **폐기**다 (거짓 0).
+# ⛔ 단, `electronic` 의 `rho_pct_max_all` 은 여기서도 `0.0` 인데 **그것은 측정이 아니다** — 이 채널은 30/30 이 `spsolve` 라 조일 허용오차가 **아예 없어** delta 가 구조적으로 0 이다.  `measure_rho.py` 는 2026-09-18 부로 이런 채널에 **`None`** 을 낸다 (원장 `GAP3-30`).
+#   ⚠ 이 산출물은 **치환 프로브(`rho_pct_max_permutation`)와 증서 값(`rho_pct_channel`)이 추가되기 전** 코드로 돌았다 — 두 값이 모두 `None` 이다.  ⇒ 계약 §5-v3 ① 이 요구하는 **채널 ρ 증서를 이 파일로 발행할 수 없다**.  원장 `GAP3-30`.
 case,channel,status,rho_kind,n_nodes,path_A,path_B,kwarg,tol_A,tol_B,cg_info_A,rtol_A,rtol_B,atol_A,binding_A,sigma_ratio_A,sigma_ratio_B,delta_pct
 lhs00_100,ionic,OK,iterative,30315,cg,cg,atol,1e-08,1e-08,0,1e-05,1.0000000000000002e-06,1e-08,rtol,2.2207325455265538e-07,2.2207325398860852e-07,2.539913525423764e-07
 lhs00_100,electronic,OK,direct,796,spsolve,spsolve,,,,,,,,,7.942927856309311e-08,7.942927856309311e-08,0.0

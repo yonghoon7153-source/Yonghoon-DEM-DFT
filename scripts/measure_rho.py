@@ -354,7 +354,17 @@ def summarize(rows, channels):
             'n_tighten_noop': sum(1 for r in sub if r['status'] == 'TIGHTEN_NOOP'),
             'n_fallback': sum(1 for r in sub if r.get('fallback_A') or r.get('fallback_B')),
             'rho_pct_max_iterative': (max(r['delta_pct'] for r in it) if it else None),
-            'rho_pct_max_all': (max(r['delta_pct'] for r in ok) if ok else None),
+            #  ⛔ **허용오차 축이 없으면 `None` 이다 — 0.0 이 아니다** (원장 `GAP3-30`, 2026-09-18).
+            #    `ok` 는 반복해(`it`) + 직접해(`dr`) 를 합친 것인데, 직접해는 조일 허용오차가
+            #    **아예 없어** `delta_pct` 가 **구조적으로 0** 이다 (같은 해를 자기와 비교한다).
+            #    옛 판은 그 0 들 위에서 `max` 를 잡아, 반복해가 **한 건도 없는** 채널
+            #    (실측: electronic 30/30 이 `spsolve`) 에서도 `rho_pct_max_all = 0.0` 을 냈다.
+            #    ⇒ 그것은 *"허용오차 민감도가 0 이다"* 가 아니라 **측정이 없다**는 뜻인데,
+            #      숫자로 적히면 계약 §5-v3 ① 의 `ρ > 3 %` 차단을 **구조적으로 통과**시킨다.
+            #  ★ `it` 가 비지 않으면 값은 안 바뀐다 — delta 는 음수가 아니고 직접해는 0 이라
+            #    `max(over ok) == max(over it)` 다 (실측: rtol 판 세 개에서 두 값이 동일).
+            #    ⇒ 이 수정은 **반복해가 0 건인 채널에서만** 결과를 바꾼다.
+            'rho_pct_max_all': (max(r['delta_pct'] for r in ok) if (ok and it) else None),
             #  ── 치환 프로브 (직접해판 ρ) ──
             'n_perm_ok': len(_pm), 'n_perm_noop': sum(1 for r in sub if r.get('perm_status') == 'PERM_NOOP'),
             'n_perm_bad': sum(1 for r in sub if r.get('perm_status', 'skipped')
@@ -683,6 +693,30 @@ def _selftest() -> int:
         f"{s1['rho_pct_max_all']} vs {s2['rho_pct_max_all']}")
     chk('⑩ 새 상태가 요약에 세어진다 (OLD_ZERO · TIGHTEN_NOOP · fallback)',
         all(k in s1 for k in ('n_old_zero', 'n_tighten_noop', 'n_fallback')))
+
+    #  ══ ⑪ GAP3-30 — 허용오차 축이 없으면 `rho_pct_max_all` 은 **None** 이다 (0.0 이 아니다) ══
+    #     실사고: 전자 채널 30/30 이 `spsolve` 인데 `rho_pct_max_all = 0.0` 이 나왔다.
+    #     직접해는 조일 허용오차가 없어 delta 가 **구조적으로 0** 이라, 그 위의 max 는
+    #     *"민감도가 0"* 이 아니라 **측정이 없다**는 뜻이다.  그런데 숫자로 적히면 계약
+    #     §5-v3 ① 의 `ρ > 3 %` 차단을 구조적으로 통과시킨다.
+    def _drow(d, kind='direct'):
+        return {'channel': 'el', 'status': 'OK', 'rho_kind': kind, 'delta_pct': d,
+                'path_A': 'spsolve' if kind == 'direct' else 'cg', 'path_B': 'spsolve',
+                'kwarg': '', 'n_nodes': 100, 'fallback_A': False, 'fallback_B': False}
+    _d_only = summarize([_drow(0.0), _drow(0.0)], ['el'])['channels']['el']
+    chk('⑬ ★★ 직접해뿐인 채널: `rho_pct_max_all` 이 **None** — 항등식 0 을 측정으로 적지 않는다',
+        _d_only['rho_pct_max_all'] is None and _d_only['n_iterative'] == 0
+        and _d_only['n_direct'] == 2,
+        f"max_all={_d_only['rho_pct_max_all']} n_it={_d_only['n_iterative']}")
+    chk('⑬b `rho_pct_max_iterative` 는 원래도 None 이었다 (그쪽은 옳았다)',
+        _d_only['rho_pct_max_iterative'] is None)
+    #  ★ 판별력 — 반복해가 **하나라도** 있으면 값이 살아 있어야 한다 (과잉 억제 방지).
+    _mixed = summarize([_drow(0.0), _drow(1.5, 'iterative')], ['el'])['channels']['el']
+    chk('⑬c ★ 반복해가 하나라도 있으면 값이 산다 (직접해 0 이 최대를 끌어내리지 않는다)',
+        _mixed['rho_pct_max_all'] == 1.5 and _mixed['rho_pct_max_iterative'] == 1.5,
+        f"all={_mixed['rho_pct_max_all']} it={_mixed['rho_pct_max_iterative']}")
+    chk('⑬d ★ 그때 두 값이 같다 — 직접해는 0 이고 delta 는 음수가 아니므로 max 가 같다',
+        _mixed['rho_pct_max_all'] == _mixed['rho_pct_max_iterative'])
 
     print('ρ 측정 SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1

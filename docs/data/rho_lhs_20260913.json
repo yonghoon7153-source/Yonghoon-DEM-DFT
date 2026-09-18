@@ -53,5 +53,11 @@
     "atol"
    ]
   }
- }
+ },
+ "_marker_20260918": "⛔⛔ **폐기 (superseded) — 이 파일의 `rho_pct_max_*` 를 인용하지 말 것** (2026-09-18, 원장 `GAP3-30`).\n이 실행은 **`atol` 을 조였다** (`kwarg=atol`, 1e-08 → 1e-09).  그런데 scipy 1.18.1 의 cg 정지 기준은 `max(rtol·‖b‖, atol)` 이고 생산은 rtol 을 안 넘겨 **기본 rtol=1e-5 가 지배**한다 (원장 `SELF-31`) ⇒ 조인 손잡이가 **안 걸린다**.  그래서 CG 22 행이 전부 정확히 `0.0` 이다 = **거짓 0**.\n★ 판별 증거: 같은 22 행이 `_rtol` 판(rtol 1e-5 → 1e-6)에서는 **전부 0 이 아니다** (~2e-07 ~ 1e-05 %).\n⛔ 게다가 이 CSV 는 **열이 14 개뿐**이라 `rtol_A`·`rtol_B`·`binding_A` 가 **없다** — 무엇이 조여졌는지 기록할 칸조차 없다 (원장 `R4-05` 와 같은 뿌리).\n⇒ 대신 `rho_lhs_20260913_rtol*.json` 을 볼 것.  ⚠ 이 산출물은 **치환 프로브(`rho_pct_max_permutation`)와 증서 값(`rho_pct_channel`)이 추가되기 전** 코드로 돌았다 — 두 값이 모두 `None` 이다.  ⇒ 계약 §5-v3 ① 이 요구하는 **채널 ρ 증서를 이 파일로 발행할 수 없다**.  원장 `GAP3-30`.",
+ "superseded_by": [
+  "rho_lhs_20260913_rtol.json",
+  "rho_lhs_20260913_rtol1e-7.json",
+  "rho_lhs_20260913_rtol1e-8.json"
+ ]
 }
