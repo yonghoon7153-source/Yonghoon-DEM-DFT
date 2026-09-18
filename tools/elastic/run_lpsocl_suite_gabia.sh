@@ -171,7 +171,8 @@ if [ "$STAGE" = all ] || [ "$STAGE" = elastic ]; then
     if [ ! -f elastic/strain_11_p.in ]; then
         python3 "$REPO/tools/comp1_v3/build_elastic_strain_inputs.py" \
             --relaxed_ion --src_in "$WORK/01_relax_v0.in" --src_out "$WORK/01_relax_v0.out" \
-            --strain 0.005 --workdir "$WORK/elastic" --prefix_base strain
+            --strain 0.005 --workdir "$WORK/elastic" --prefix_base strain \
+            --kpoints "2 2 1 0 0 0"   # ← 전에는 도구 기본값이 조용히 주던 값. 같은 값 = 거동 불변
     fi
     cd "$WORK/elastic"
     TAGS="strain_11_p strain_11_m strain_22_p strain_22_m strain_33_p strain_33_m \

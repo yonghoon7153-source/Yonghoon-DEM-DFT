@@ -76,7 +76,8 @@ wait_gpu() {   # MD 뒤끝/타 프로세스 대비
 if [ ! -f strains/strain_11_p.in ]; then
     python3 "$REPO/tools/comp1_v3/build_elastic_strain_inputs.py" \
         --relaxed_ion --src_in "$W/relax_v0.in" --src_out "$W/relax_v0.out" \
-        --strain "$STRAIN" --workdir "$W/strains" --prefix_base strain
+        --strain "$STRAIN" --workdir "$W/strains" --prefix_base strain \
+        --kpoints "2 2 1 0 0 0"   # ← 전에는 도구 기본값이 조용히 주던 값. 같은 값 = 거동 불변
 fi
 cd "$W/strains"
 TAGS="strain_11_p strain_11_m strain_22_p strain_22_m strain_33_p strain_33_m \

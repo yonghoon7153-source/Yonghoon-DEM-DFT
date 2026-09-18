@@ -20,7 +20,8 @@ mkdir -p "$WORK/logs"
 # 1) 12 CLAMPED strain SCFs (no --relaxed_ion -> calculation='scf', atoms fixed)
 python3 "$REPO/tools/comp1_v3/build_elastic_strain_inputs.py" \
   --src_in "$BASE/relax_v0.in" --src_out "$BASE/relax_v0.out" \
-  --strain "$STRAIN" --workdir "$WORK" --prefix_base strain
+  --strain "$STRAIN" --workdir "$WORK" --prefix_base strain \
+  --kpoints "2 2 1 0 0 0"   # ← 전에는 도구 기본값이 조용히 주던 값. 같은 값 = 거동 불변
 
 # 2) unique outdir/prefix per strain + shared pseudo symlink (parallel-safe)
 [ -e "$WORK/pseudo" ] || ln -sf "$BASE/pseudo" "$WORK/pseudo" 2>/dev/null || true

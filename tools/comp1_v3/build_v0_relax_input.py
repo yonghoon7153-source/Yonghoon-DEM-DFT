@@ -81,8 +81,14 @@ def main():
                     help="target V0 in Å³ (default from comp1_v3 BM-EOS)")
     ap.add_argument("--prefix", default="comp1_v3_V0")
     ap.add_argument("--out", default="comp1_v3_V0_relax.in")
-    ap.add_argument("--kpoints", default="2 2 1 0 0 0")
+    # ⛔ 기본값 없음 (2026-09-18). k-메시는 셀마다 다르고 카드가 핀으로 박는 양이다.
+    # 형제 도구 build_lobster_paw_inputs.py 에서 default="2 2 1 0 0 0" 이
+    # 카드의 `6 6 1` 을 조용히 이길 뻔했다 (K_POINTS 를 따로 grep 해서 잡았다).
+    ap.add_argument("--kpoints", required=True,
+                    help="K_POINTS automatic 한 줄 (예: \"3 3 1 0 0 0\"). "
+                         "기본값을 두지 않는다 — 셀마다 다르다")
     args = ap.parse_args()
+    print(f"K_POINTS automatic  {args.kpoints}   ← 카드·이전 런과 대조할 것")
 
     in_text = Path(args.src_in).read_text()
     out_text = Path(args.src_out).read_text()
