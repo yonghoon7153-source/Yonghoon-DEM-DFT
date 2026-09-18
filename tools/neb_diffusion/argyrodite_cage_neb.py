@@ -1227,11 +1227,12 @@ def selftest():
                                                 "ci_ran": bc, "steps_band": 1, "steps_ci": 1}
         return _f
 
-    def _one(prof, bc=True, cc=True):
+    def _one(prof, bc=True, cc=True, n_images=3):
         globals()["run_neb"] = _fake(prof, bc, cc)
         globals()["load_calc"] = lambda device="cuda": _LJ(epsilon=0.02, sigma=2.6)
         try:
-            return neb_from_endpoints(str(_ev), str(_td / "x.json"), n_images=3, steps=5,
+            return neb_from_endpoints(str(_ev), str(_td / "x.json"),
+                                      n_images=n_images, steps=5,
                                       log=lambda *a, **k: None)["rows"][0]
         finally:
             globals()["run_neb"] = _real_neb
@@ -1255,6 +1256,38 @@ def selftest():
     _w = _one([0.0, 0.2, 0.9, 0.3, 0.1], bc=False, cc=False)  # 둘 다 미수렴
     chk(_w["status"] == "excluded" and _w["Eb_eV"] is None,
         "⛔음성: 밴드 미수렴이면 Eb 를 내지 않는다")
+
+    # ── G-B6 (band_health 배선, 2026-09-19) ─────────────────────────────────
+    #   ⛔ 이 게이트가 없던 동안 lpscl 소셀 9 건이 전부 G-B4 하나로만 기각됐고,
+     #  "끝점이 국소 최소가 아니다" 라는 **진짜 원인**이 기록에 남지 않았다.
+    _w = _one([0.0, 0.2, 0.9, 0.3, 0.1])
+    chk(_w["status"] == "ok" and _w["band_problems"] == [],
+        f"[양성] 성한 밴드는 G-B6 를 통과하고 problems 가 비어 있다 "
+        f"({_w['band_problems']})")
+    #: 최대는 내부(image 2)인데 **중간이 끝점보다 낮다** — G-B4 는 통과, G-B6 만 잡아야 한다
+    _w = _one([0.0, -0.20, 0.30, -0.15, 0.05])
+    chk(_w["status"] == "excluded" and _w["Eb_eV"] is None
+        and any("G-B6" in x and "낮은 쪽" in x for x in _w["excluded_because"])
+        and not any("G-B4" in x for x in _w["excluded_because"]),
+        f"⛔음성: 내부 안장이 있어도 **끝점이 최소가 아니면** G-B6 로 기각 "
+        f"({_w['excluded_because']})")
+    #: 이미지 하나만 솟은 터진 밴드 — 불연속 가지만 잡아야 한다(중간은 끝점보다 높다)
+    _w = _one([0.0, 0.1, 2.5, 0.1, 0.05])
+    chk(_w["status"] == "excluded"
+        and any("G-B6" in x and "불연속" in x for x in _w["excluded_because"])
+        and not any("낮은 쪽" in x for x in _w["excluded_because"]),
+        f"⛔음성: 이미지가 2.5 eV 솟으면 G-B6 불연속으로 기각 ({_w['excluded_because']})")
+    #: ★ 실측 회귀 — lpscl 소셀 ev01 의 실제 프로파일(meV 반올림, 모양만 쓴다).
+    #  G-B4 와 G-B6 가 **둘 다** 떠야 한다. G-B4 만 뜨면 원인이 다시 숨는다.
+    _EV01 = [0.0, -0.156, -0.203, -0.160, -0.093, 0.005, 0.117, 0.123, 0.157]
+    _w = _one(_EV01, n_images=7)
+    chk(any("G-B4" in x for x in _w["excluded_because"])
+        and any("G-B6" in x and "낮은 쪽" in x for x in _w["excluded_because"]),
+        f"⛔음성(실측 ev01): 증상(G-B4)과 원인(G-B6)이 **둘 다** 기록된다 "
+        f"({_w['excluded_because']})")
+    chk(_w["band_health"]["min_interior_rel_eV"] < -0.2,
+        f"실측 ev01 의 내부 최소가 시작점보다 200 meV 넘게 낮다 "
+        f"({_w['band_health']['min_interior_rel_eV']} eV)")
     _sp, _sys  # noqa
 
     print("selftest PASS" if ok else "selftest FAIL")
@@ -1266,7 +1299,8 @@ BARRIER_CARD = "db/properties/lpscl_smallcell_neb_barrier_estimand_2026_09_18.js
 
 
 def neb_from_endpoints(events_dir, out_json, card=BARRIER_CARD, n_images=N_IMAGES,
-                       steps=STEPS_NEB, spring_k=SPRING_K, device="cuda", log=print):
+                       steps=STEPS_NEB, spring_k=SPRING_K, device="cuda",
+                       deep_endpoints=False, log=print):
     """events.json + relaxed/ 의 이완된 끝점 9 쌍 → CI-NEB.
 
     ⛔ 이 함수가 하지 않는 것
@@ -1275,6 +1309,16 @@ def neb_from_endpoints(events_dir, out_json, card=BARRIER_CARD, n_images=N_IMAGE
       · 셀을 이완하지 않는다 (이 파일의 ⭐ 규율 그대로).
       · **Eb 를 보고 가능한 값으로 만들지 않는다.** ⓐ(G-N1/G-N2) 통과가 조건이다 —
         산출 JSON 이 `⛔_ⓐ_미통과_보고금지` 로 그 사실을 들고 다닌다.
+      · `deep_endpoints=False` 면 **끝점을 다시 이완하지 않는다** — 받은 그대로 쓴다.
+
+    ⛔ 2026-09-19 배선. 이 함수는 같은 파일의 `band_health()` 를 **부르지 않고 있었다.**
+      lpscl 소셀 9 건이 전부 "최대가 끝점 자체" 로 기각됐는데, 진짜 원인은 끝점이
+      국소 최소가 아니라는 것이었다 — 끝점은 fmax 0.05(끝점 게이트, FINAL_RELAX 승계)
+      로, 밴드는 CI 단계에서 FMAX_CI=0.03 으로 이완돼 **눈금이 달랐다**. 6 개 성한
+      밴드가 자기 끝점보다 45–249 meV 낮았고, `band_health` 는 그 병(−0.05 eV 문턱)을
+      2026-08-19 에 이미 잡을 수 있었다. 선언은 있는데 호출이 없었다 →  **G-B6** 로 배선한다.
+      심화 이완(`relax_endpoint_deep`)도 단일홉 경로엔 기본이고 여기엔 없었다 →
+      `deep_endpoints=True` 로 열되 **기본은 끈다**(봉인된 라운드의 동작을 바꾸지 않는다).
     """
     import json as _json
     from ase.io import read as _read
@@ -1295,6 +1339,13 @@ def neb_from_endpoints(events_dir, out_json, card=BARRIER_CARD, n_images=N_IMAGE
             log(f"  {tag:14s} ⛔ 이완된 끝점 파일이 없다 — 건너뛴다 (**없음이 아니라 미회수**)")
             continue
         ini, fin = _read(str(fi)), _read(str(ff))
+        ep_deep = None
+        if deep_endpoints:
+            #: track_idx=ai — 더 낮은 분지로 내려가되 **같은 홉**이어야 한다
+            #  (2026-08-19: 추적 없이 내려갔더니 홉 거리가 3.50 → 4.36 Å 로 바뀌었다)
+            ini, _di = relax_endpoint_deep(ini, calc, track_idx=ai, seed=0)
+            fin, _df = relax_endpoint_deep(fin, calc, track_idx=ai, seed=1)
+            ep_deep = {"i": _di, "f": _df}
         images, E, info = run_neb(ini, fin, calc, n_images=n_images, steps=steps,
                                   log=out_dir / f"{tag}_neb.log", spring_k=spring_k)
         E = np.asarray(E, float)
@@ -1310,6 +1361,9 @@ def neb_from_endpoints(events_dir, out_json, card=BARRIER_CARD, n_images=N_IMAGE
         #   그때 E 는 밴드 값이라 최대가 안장이 아니다. 둘 다 통과해야 ok 다.
         cb, cc = bool(info["band_converged"]), bool(info["ci_converged"])
         conv = cb and cc
+        #: ⛔ G-B6 (2026-09-19 배선) — 프로파일이 물리적인가. 같은 파일의 band_health.
+        #  끝점이 국소 최소가 아니면 G-B4 의 "최대가 끝점" 은 **증상이지 원인이 아니다**.
+        probs, health = band_health(E)
         why = []
         if not conv:
             why.append(f"G-B5: NEB 미수렴 (밴드 {cb} · CI {cc}) — 제외하고 **센다**")
@@ -1317,7 +1371,9 @@ def neb_from_endpoints(events_dir, out_json, card=BARRIER_CARD, n_images=N_IMAGE
             why.append("G-B4: 최대가 끝점 자체다 — 안장이 아니다")
         elif not inner_ok:
             why.append(f"G-B4: 최대가 끝점 **바로 옆**(image {k_max}) — 내부 안장 없음")
-        ok = conv and inner_ok
+        for _q in probs:
+            why.append(f"G-B6: {_q}")
+        ok = conv and inner_ok and not probs
         E_s = float(E[k_max])
         row = {"tag": tag, "atom_index": ai, "status": "ok" if ok else "excluded",
                "excluded_because": why,
@@ -1326,6 +1382,8 @@ def neb_from_endpoints(events_dir, out_json, card=BARRIER_CARD, n_images=N_IMAGE
                "E_i_eV": round(E_i, 6), "E_f_eV": round(E_f, 6),
                "E_saddle_eV": round(E_s, 6),
                "dE_f_minus_i_eV": round(E_f - E_i, 6),
+               "band_problems": probs, "band_health": health,
+               "endpoint_deep": ep_deep,
                "Eb_forward_eV": round(E_s - E_i, 6),
                "Eb_reverse_eV": round(E_s - E_f, 6),
                # ★ 카드 §2 의 스칼라 보고량. 방향은 사람이 안 고른다.
@@ -1358,10 +1416,17 @@ def neb_from_endpoints(events_dir, out_json, card=BARRIER_CARD, n_images=N_IMAGE
            "⛔_허용서술_한정_넷": "가역 나들이 · 골격 이완 섞임 · 소셀 영구 단서 · N=9 한 시드 "
                                   "(카드 §5-②). 이 넷 없이 인용하면 그 인용은 무효다.",
            "settings": {"n_images_interior": n_images, "spring_k": spring_k,
-                        "fmax": FMAX_NEB, "max_steps": steps, "cell": "fixed",
+                        "fmax": FMAX_NEB, "fmax_ci": FMAX_CI,
+                        "fmax_endpoint_note": "끝점은 이 도구가 이완하지 않는다 — "
+                                              "endpoint_gate 의 눈금(FINAL_RELAX fmax 0.05)"
+                                              "을 그대로 받는다. CI 가 0.03 이면 **눈금이 "
+                                              "다르다** (2026-09-19).",
+                        "deep_endpoints": bool(deep_endpoints),
+                        "max_steps": steps, "cell": "fixed",
                         "uma": "uma-s-1p1 omat default"},
            "n_events": len(rows), "n_ok": len(okr),
            "n_excluded": len(rows) - len(okr),
+           "n_band_unhealthy": sum(1 for r in rows if r.get("band_problems")),
            "rows": rows}
     # 집계는 §0b-③ — N<3 이면 분포를 말하지 않는다
     if len(okr) >= 3:
@@ -1428,13 +1493,18 @@ def main():
                     help="events.json + relaxed/ 의 이완된 끝점에서 CI-NEB. "
                          "⛔ 짝을 고르지 않는다 — §0b-② 가 이미 골랐다")
     ap.add_argument("--endpoints_out", help="--endpoints_dir 결과 JSON 경로")
+    ap.add_argument("--deep_endpoints", action="store_true",
+                    help="--endpoints_dir 에서 받은 끝점을 relax_endpoint_deep 으로 "
+                         "다시 내린다(이동 Li 추적 가드 포함). ⛔ 봉인된 라운드의 "
+                         "눈금을 바꾸는 것이므로 **새 카드**가 있어야 쓴다")
     if "--selftest" in sys.argv:
         raise SystemExit(selftest())
     a = ap.parse_args()
     if a.endpoints_dir:
         _o = a.endpoints_out or str(Path(a.endpoints_dir).parent / "neb_barrier_uma.json")
         r = neb_from_endpoints(a.endpoints_dir, _o, n_images=a.n_images,
-                               steps=a.neb_steps, spring_k=a.spring_k, device=a.device)
+                               steps=a.neb_steps, spring_k=a.spring_k, device=a.device,
+                               deep_endpoints=a.deep_endpoints)
         raise SystemExit(0 if r["n_ok"] else 3)
     rec = one_run(a)
     p = Path(a.out)
