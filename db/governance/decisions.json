@@ -3067,6 +3067,59 @@
         "decision_digest": "sha256:560be368d9626e284d670f31519516e1cc98467cbd6b04ca90f4a11dd25f6355",
         "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
       }
+    },
+    {
+      "id": "D-2026-09-18-lpscl-smallcell-neb-barrier",
+      "kind": "estimand",
+      "decision_state": "active",
+      "results_seen": false,
+      "record_kind": "estimand_card",
+      "title": "ⓑ 소셀 유리 Li 이동 장벽 — 가역 나들이 9 건의 분포. UMA-NEB 전에 봉인",
+      "statement": "보고량은 *'이 유리의 Li 이동 장벽'* 이 **아니다** — 비정질에 그런 스칼라는 없다. **사전등록된 9 사건 위의 Eb 분포**이고, 사건은 §0b-② 가 기계적으로 골랐다(문턱이 N 을 골랐고 `truncated=false`). 사건 하나의 스칼라는 **Eb = E_saddle − min(E_i, E_f)** 로 정의한다 — 가역이라 방향에 따라 장벽이 다른데 min 규칙이면 사람이 방향을 안 고른다. 원시량(정/역/ΔE)은 전부 같이 적어 스칼라로 줄이면서 버리지 않는다. 집계는 §0b-③ 승계(중앙값+Q1/Q3 · 최저값 금지 · N<3 이면 나열). 허용 서술에는 한정 넷이 항상 붙는다: **가역 나들이**(순수송 율속 장벽 아님) · **골격 이완이 섞여 있음**(끝점 간 비-Li RMSD 0.158–0.274 Å) · 소셀 영구 단서 · N=9 한 시드·한 창.",
+      "reopen_criteria": [
+        "ⓐ 불통과 → Eb 를 **하나도 보고하지 않는다**. '안장 부근에서 UMA 힘이 문턱 미달' 까지만 말하고 다른 셀·조성으로 옮기지 않는다.",
+        "N(생존) < 3 → 분포를 말하지 않고 개별 값을 나열한다.",
+        "이미지 수·fmax·문턱을 **결과를 보고** 바꾸면 이 카드는 무효이고 새 카드가 필요하다.",
+        "⛔ 표본을 늘리러 가지 않는다 — 창을 늘리는 것은 프로토콜 변경이고 새 선언이 필요하다(§0b-②-5)."
+      ],
+      "card": "db/properties/lpscl_smallcell_neb_barrier_estimand_2026_09_18.json",
+      "record": "db/properties/lpscl_smallcell_endpoint_gate_2026_09_18.json",
+      "supersedes": [],
+      "enforcement": "① 이 비준은 **규칙 봉인**이지 Eb 보고 허가가 아니다 — 보고는 ⓐ(G-N1·G-N2) 통과가 조건이다. ② 안장 부근 = CI + 양옆 1 장씩(사건당 3, 총 27 QE 단일점). 결과를 보고 넓히지 않는다. ③ G-B4: CI 가 끝점 바로 옆이면 '내부 안장 없음' 으로 기록하고 Eb 를 내지 않는다. ④ G-B5: NEB 미수렴은 제외하고 **센다** — 조용히 빼지 않는다. ⑤ 허용 서술 §5 의 한정 넷 없이 Eb 를 인용하면 그 인용은 무효다. ⑥ 도구 사다리: run_neb_qe.py · argyrodite_cage_neb.py · build_neb_inputs.py 를 먼저 보고 **결정계 전제가 비정질에 되는지 확인**한 뒤에 새 파일을 만든다.",
+      "applies_to": {
+        "systems": [
+          "lpscl_amorphous"
+        ],
+        "methods": [
+          "ci_neb_uma",
+          "qe_single_point"
+        ]
+      },
+      "slot": "lpscl_smallcell_neb_barrier",
+      "status": "active",
+      "status_history": [
+        {
+          "date": "2026-09-18",
+          "state": "proposed",
+          "by": "agent",
+          "note": "부모 카드의 순서 구멍(ⓐ 가 UMA-NEB 산물을 필요로 함)을 발견해, 카드보다 엄격하게 UMA-NEB 전에 작성."
+        },
+        {
+          "date": "2026-09-18",
+          "state": "active",
+          "by": "1저자 (yonghoon)",
+          "note": "비준. results_seen=false · NEB 이미지 0 장 상태에서 봉인됐다."
+        }
+      ],
+      "ratification": {
+        "state": "ratified",
+        "role": "scientific_owner",
+        "actor_id": "yonghoon7153@gmail.com",
+        "timestamp": "2026-09-18T14:39:11Z",
+        "commit": "1d878d65d9c735681f93aa49347cfbee32d86bd5",
+        "decision_digest": "sha256:0ae792dd52734b8170dc02de1baa16ba157d525eb309414c029a0be9098cd3a0",
+        "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+      }
     }
   ]
 }
