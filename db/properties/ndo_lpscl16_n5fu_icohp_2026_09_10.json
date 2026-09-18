@@ -1,76 +1,163 @@
 {
-  "schema": "bonding_result/v1",
-  "record_kind": "result",
-  "date": "2026-09-10",
-  "제목": "ndo_lpscl16_n5fu_O-distributed — LOBSTER ICOHP (Rietveld 유래 대조군 셀)",
-  "계": "ndo_lpscl16_n5fu_O-distributed (Rietveld 유래 · G5 셀선택으로 채택, db/properties/ndo_lpscl16_o_motif_estimand_2026_09_09.json)",
-  "기계": "gabia A6000 · /data/work/runs/icohp_n5fu · LOBSTER 5.1.1",
-  "소요": "SCF 18분 → NSCF 31분 → LOBSTER 32분 33초",
-
-  "★_기저_게이트_통과": {
-    "abs_charge_spilling_pct": 1.75,
-    "문턱": "< 5 % (tools/comp1_v3/build_lobster_paw_inputs.py docstring)",
-    "왜_중요한가": "Nd 의 LOBSTER 기저를 UPF valence_configuration 에서 읽은 `5s 6s 5p 6p 5d`(**4f-in-core**)로 썼는데, 그 기저가 평면파를 받아내는지 **검증된 적이 없었다**. 1.75 % 면 comp1/modelc 계열과 같은 급이다 ⇒ 아래 ICOHP 를 정량으로 읽어도 된다.",
-    "⚠_4f": "frozen-4f 유사포텐셜이라 4f 투영이 원리적으로 없다. **4f 관련 주장은 이 계산으로 할 수 없다** (그건 결함이 아니라 이 셋업의 정의다 — main track 은 4f-in-valence 로 따로 있다)."
+ "schema": "bonding_result/v1",
+ "record_kind": "result",
+ "date": "2026-09-10",
+ "제목": "ndo_lpscl16_n5fu_O-distributed — LOBSTER ICOHP (Rietveld 유래 대조군 셀)",
+ "계": "ndo_lpscl16_n5fu_O-distributed (Rietveld 유래 · G5 셀선택으로 채택, db/properties/ndo_lpscl16_o_motif_estimand_2026_09_09.json)",
+ "기계": "gabia A6000 · /data/work/runs/icohp_n5fu · LOBSTER 5.1.1",
+ "소요": "SCF 18분 → NSCF 31분 → LOBSTER 32분 33초",
+ "★_기저_게이트_통과": {
+  "abs_charge_spilling_pct": 1.75,
+  "문턱": "< 5 % (tools/comp1_v3/build_lobster_paw_inputs.py docstring)",
+  "왜_중요한가": "Nd 의 LOBSTER 기저를 UPF valence_configuration 에서 읽은 `5s 6s 5p 6p 5d`(**4f-in-core**)로 썼는데, 그 기저가 평면파를 받아내는지 **검증된 적이 없었다**. 1.75 % 면 comp1/modelc 계열과 같은 급이다 ⇒ 아래 ICOHP 를 정량으로 읽어도 된다.",
+  "⚠_4f": "frozen-4f 유사포텐셜이라 4f 투영이 원리적으로 없다. **4f 관련 주장은 이 계산으로 할 수 없다** (그건 결함이 아니라 이 셋업의 정의다 — main track 은 4f-in-valence 로 따로 있다)."
+ },
+ "ICOHPLIST_원소쌍별": {
+  "총_쌍수": 241,
+  "단위": "eV (음수가 결합성)",
+  "O-P": {
+   "n": 3,
+   "sum": -25.247,
+   "mean": -8.416
   },
-
-  "ICOHPLIST_원소쌍별": {
-    "총_쌍수": 241,
-    "단위": "eV (음수가 결합성)",
-    "O-P":   {"n": 3,   "sum": -25.247,  "mean": -8.416},
-    "P-S":   {"n": 9,   "sum": -56.595,  "mean": -6.288},
-    "Nd-S":  {"n": 10,  "sum": -40.803,  "mean": -4.080},
-    "Cl-Nd": {"n": 2,   "sum": -4.378,   "mean": -2.189},
-    "Cl-Li": {"n": 47,  "sum": -84.839,  "mean": -1.805},
-    "Li-S":  {"n": 113, "sum": -197.882, "mean": -1.751},
-    "Li-O":  {"n": 18,  "sum": -20.308,  "mean": -1.128},
-    "S-S":   {"n": 39,  "sum": -4.617,   "mean": -0.118},
-    "Nd-P":  "**없음** — lobsterin 에 생성자를 명시적으로 넣었는데 목록에 나오지 않았다"
+  "P-S": {
+   "n": 9,
+   "sum": -56.595,
+   "mean": -6.288
   },
-
-  "★_배위수가_조성을_재구성한다": {
-    "P": "O–P 3쌍 + P–S 9쌍 = 12 = **3 P × 4배위** ⇒ P 3개가 전부 PS₃O (사면체 온전)",
-    "Nd": "Nd–S 10쌍 + Cl–Nd 2쌍 = 12 = **2 Nd × 6배위** ⇒ Nd 2개가 전부 NdS₅Cl",
-    "설계와_일치": "5 f.u. = P 자리 5개 → 2개를 Nd 가 차지하고 3개가 P 로 남는다. Nd₂O₃ 도핑(Nd 2 · O 3) 그대로다.",
-    "기하와_독립_일치": "2026-09-10 구조 분석의 '6배위 S₅Cl, 2.68–2.89 Å (Nd³⁺+S²⁻ 이온반경합 2.82 Å)' 와 결합 목록이 정확히 같은 그림을 준다. 두 판독이 서로를 확인한다."
+  "Nd-S": {
+   "n": 10,
+   "sum": -40.803,
+   "mean": -4.08
   },
-
-  "★_결론_Nd_는_P_자리에_들어가_있지_않다": {
-    "세_층위가_독립적으로_같은_말을_한다": {
-      "기하": "Nd 가 P 자리에서 6배위 S₅Cl 로 내려앉는다 (2.68–2.89 Å)",
-      "전자": "CBM 에서 Nd 기여 **0.1 %**, host(S+P+Li) 89.9 % — Γ 딥은 host PS₄ 밴드다 (2026-09-10 PDOS)",
-      "결합": "**ICOHPLIST 에 Nd–P 가 없다** — 생성자를 넣었는데도"
-    },
-    "무엇을_뜻하나": "Nd 는 P 자리 **라벨만** 달고 있고 실제로는 자기 배위환경(NdS₅Cl)을 새로 만들었다. 'Nd 가 P 를 치환했다' 는 서술은 이 셀에서 성립하지 않는다.",
-    "⛔_과잉해석_금지": "이것은 **PS₄ 골격이 무너졌다는 뜻이 아니다.** 아래 참조."
+  "Cl-Nd": {
+   "n": 2,
+   "sum": -4.378,
+   "mean": -2.189
   },
-
-  "★_PS4_O_골격은_유지된다": {
-    "근거": "P 3개가 전부 온전한 4배위 PS₃O 다 (P–S 9 + P–O 3 = 12).",
-    "P-O_교차확인": "우리 −8.416 eV vs **lpsocl(Li27P5S21OCl8, 62원자, 독립 셀·독립 계산) −8.41 eV** — 사실상 동일. O 는 lpsocl 에서 이미 확인된 포스페이트 모티프(PS₄ 안의 S 를 O 가 치환)를 그대로 만들었다. (참고: b2o3 champion 의 P–O 는 −8.551 로 1.6 % 차 — 같은 계열, 다른 계)",
-    "따라서_정확한_서술": "**PS₄(O) 골격은 아지로다이트다. 아지로다이트가 아닌 것은 Nd 자리다.** 무너진 것은 구조 전체가 아니라 'Nd 가 P 를 대체했다' 는 주장 하나다."
+  "Cl-Li": {
+   "n": 47,
+   "sum": -84.839,
+   "mean": -1.805
   },
-
-  "Nd_배위의_성격": {
-    "관측": "Nd–S 평균 −4.080 eV = Li–S(−1.751)의 **2.3배**.",
-    "읽는_법": "단순 이온 접촉이 아니라 상당한 궤도 혼성이 있다. PDOS 에서 Nd 5d 가 CBM+1.4 eV(+3.0 eV 에서 44.5 % Nd)에 있던 것과 맞물린다 — Nd 가 P 자리를 못 채운 대신 자기 배위권을 단단히 잡았다.",
-    "⛔": "ICOHP 크기는 관여 전자수·궤도중첩에 비례하므로, Nd 5d/6s 가 기저에 있는 것만으로도 Li 보다 큰 population 이 나온다. '결합이 더 세다' 를 열역학적 의미로 읽지 않는다."
+  "Li-S": {
+   "n": 113,
+   "sum": -197.882,
+   "mean": -1.751
   },
-
-  "sanity": "S–S 평균 −0.118 eV ≈ 0 (비결합 접촉). 도구가 헛된 강한 결합을 만들지 않는다는 확인.",
-
-  "⛔_인용_제한": {
-    "P-S_를_원장과_나란히_쓰지_않는다": "우리 −6.288 eV 는 원장의 ICOHP_PS (comp1 −5.938 · comp2 −5.913 · modelc −5.9997 · b2o3 −6.023 · lpsocl −6.04) 보다 강한데, **방법 대조를 하지 않았다** (우리 런은 PAW kjpaw + LOBSTER 확장기저). comparison_group 규율상 방법이 다르면 한 표에 놓지 않는다. 'PS₃O 라 남은 P–S 가 강해졌다' 는 가설은 같은 방법으로 대조해야 말할 수 있다.",
-    "단일_구성": "무질서 배치 하나다. 셀 간 산포를 모른다.",
-    "셀_계보": "이 셀은 **Rietveld 유래 대조군**이다 (우리 MLIP 스크리닝 챔피언 cfg141 이 아니다). 여기서 나온 값을 main track(Nd@Li, cfg141)의 값으로 옮겨 쓰지 않는다.",
-    "4f": "frozen-4f 라 4f 관련 결합 주장 불가."
+  "Li-O": {
+   "n": 18,
+   "sum": -20.308,
+   "mean": -1.128
   },
-
-  "설정_확인_필요": {
-    "왜": "이 기록은 실행 결과(spilling · ICOHP · 에너지)를 실측으로 담았지만, 입력 설정은 아직 실물에서 확인하지 않았다. 추측으로 적지 않는다.",
-    "확인할_것": "gabia:/data/work/runs/icohp_n5fu/{lobster_scf.in, lobster_nscf.in, lobsterin} 의 ecutwfc·ecutrho·nbnd·K_POINTS·pseudo 이름·LOBSTER basis 줄",
-    "알려진_것": "lobster_scf 총에너지 E = −3657.37817909 Ry (수렴) · nscf irr k-point 4 (2×2×1 전 격자, 대칭 축약 없음) · Nd 기저는 Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF 의 valence 에서 읽은 5s 6s 5p 6p 5d"
+  "S-S": {
+   "n": 39,
+   "sum": -4.617,
+   "mean": -0.118
   },
-
-  "산출물": "gabia:/data/work/runs/icohp_n5fu/{ICOHPLIST.lobster, COHPCAR.lobster, lobsterout, run.log}"
+  "Nd-P": "**없음** — lobsterin 에 생성자를 명시적으로 넣었는데 목록에 나오지 않았다"
+ },
+ "★_배위수가_조성을_재구성한다": {
+  "P": "O–P 3쌍 + P–S 9쌍 = 12 = **3 P × 4배위** ⇒ P 3개가 전부 PS₃O (사면체 온전)",
+  "Nd": "Nd–S 10쌍 + Cl–Nd 2쌍 = 12 = **2 Nd × 6배위** ⇒ Nd 2개가 전부 NdS₅Cl",
+  "설계와_일치": "5 f.u. = P 자리 5개 → 2개를 Nd 가 차지하고 3개가 P 로 남는다. Nd₂O₃ 도핑(Nd 2 · O 3) 그대로다.",
+  "기하와_독립_일치": "2026-09-10 구조 분석의 '6배위 S₅Cl, 2.68–2.89 Å (Nd³⁺+S²⁻ 이온반경합 2.82 Å)' 와 결합 목록이 정확히 같은 그림을 준다. 두 판독이 서로를 확인한다."
+ },
+ "★_결론_Nd_는_P_자리에_들어가_있지_않다": {
+  "세_층위가_독립적으로_같은_말을_한다": {
+   "기하": "Nd 가 P 자리에서 6배위 S₅Cl 로 내려앉는다 (2.68–2.89 Å)",
+   "전자": "CBM 에서 Nd 기여 **0.1 %**, host(S+P+Li) 89.9 % — Γ 딥은 host PS₄ 밴드다 (2026-09-10 PDOS)",
+   "결합": "**ICOHPLIST 에 Nd–P 가 없다** — 생성자를 넣었는데도"
+  },
+  "무엇을_뜻하나": "Nd 는 P 자리 **라벨만** 달고 있고 실제로는 자기 배위환경(NdS₅Cl)을 새로 만들었다. 'Nd 가 P 를 치환했다' 는 서술은 이 셀에서 성립하지 않는다.",
+  "⛔_과잉해석_금지": "이것은 **PS₄ 골격이 무너졌다는 뜻이 아니다.** 아래 참조."
+ },
+ "★_PS4_O_골격은_유지된다": {
+  "근거": "P 3개가 전부 온전한 4배위 PS₃O 다 (P–S 9 + P–O 3 = 12).",
+  "P-O_교차확인": "우리 −8.416 eV vs **lpsocl(Li27P5S21OCl8, 62원자, 독립 셀·독립 계산) −8.41 eV** — 사실상 동일. O 는 lpsocl 에서 이미 확인된 포스페이트 모티프(PS₄ 안의 S 를 O 가 치환)를 그대로 만들었다. (참고: b2o3 champion 의 P–O 는 −8.551 로 1.6 % 차 — 같은 계열, 다른 계)",
+  "따라서_정확한_서술": "**PS₄(O) 골격은 아지로다이트다. 아지로다이트가 아닌 것은 Nd 자리다.** 무너진 것은 구조 전체가 아니라 'Nd 가 P 를 대체했다' 는 주장 하나다."
+ },
+ "Nd_배위의_성격": {
+  "관측": "Nd–S 평균 −4.080 eV = Li–S(−1.751)의 **2.3배**.",
+  "읽는_법": "단순 이온 접촉이 아니라 상당한 궤도 혼성이 있다. PDOS 에서 Nd 5d 가 CBM+1.4 eV(+3.0 eV 에서 44.5 % Nd)에 있던 것과 맞물린다 — Nd 가 P 자리를 못 채운 대신 자기 배위권을 단단히 잡았다.",
+  "⛔": "ICOHP 크기는 관여 전자수·궤도중첩에 비례하므로, Nd 5d/6s 가 기저에 있는 것만으로도 Li 보다 큰 population 이 나온다. '결합이 더 세다' 를 열역학적 의미로 읽지 않는다."
+ },
+ "sanity": "S–S 평균 −0.118 eV ≈ 0 (비결합 접촉). 도구가 헛된 강한 결합을 만들지 않는다는 확인.",
+ "⛔_인용_제한": {
+  "P-S_를_원장과_나란히_쓰지_않는다": "우리 −6.288 eV 는 원장의 ICOHP_PS (comp1 −5.938 · comp2 −5.913 · modelc −5.9997 · b2o3 −6.023 · lpsocl −6.04) 보다 강한데, **방법 대조를 하지 않았다** (우리 런은 PAW kjpaw + LOBSTER 확장기저). comparison_group 규율상 방법이 다르면 한 표에 놓지 않는다. 'PS₃O 라 남은 P–S 가 강해졌다' 는 가설은 같은 방법으로 대조해야 말할 수 있다.",
+  "단일_구성": "무질서 배치 하나다. 셀 간 산포를 모른다.",
+  "셀_계보": "이 셀은 **Rietveld 유래 대조군**이다 (우리 MLIP 스크리닝 챔피언 cfg141 이 아니다). 여기서 나온 값을 main track(Nd@Li, cfg141)의 값으로 옮겨 쓰지 않는다.",
+  "4f": "frozen-4f 라 4f 관련 결합 주장 불가."
+ },
+ "설정_확인_필요": {
+  "왜": "이 기록은 실행 결과(spilling · ICOHP · 에너지)를 실측으로 담았지만, 입력 설정은 아직 실물에서 확인하지 않았다. 추측으로 적지 않는다.",
+  "확인할_것": "gabia:/data/work/runs/icohp_n5fu/{lobster_scf.in, lobster_nscf.in, lobsterin} 의 ecutwfc·ecutrho·nbnd·K_POINTS·pseudo 이름·LOBSTER basis 줄",
+  "알려진_것": "lobster_scf 총에너지 E = −3657.37817909 Ry (수렴) · nscf irr k-point 4 (2×2×1 전 격자, 대칭 축약 없음) · Nd 기저는 Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF 의 valence 에서 읽은 5s 6s 5p 6p 5d"
+ },
+ "산출물": "gabia:/data/work/runs/icohp_n5fu/{ICOHPLIST.lobster, COHPCAR.lobster, lobsterout, run.log}",
+ "✅_설정_확인_완료_2026_09_18": {
+  "무엇": "`설정_확인_필요` 가 요구한 항목을 gabia `/data/work/runs/icohp_n5fu/` 실물에서 **읽었다**. 추측 없음 — 아래는 파일에 있는 그대로다.",
+  "lobster_scf.in": {
+   "nat": 66,
+   "ntyp": 6,
+   "ecutwfc": 70.0,
+   "ecutrho": 560.0,
+   "occupations": "smearing",
+   "smearing": "mv",
+   "degauss": 0.01,
+   "nosym": ".true.",
+   "conv_thr": "1.0d-9",
+   "K_POINTS": "automatic",
+   "pseudo": "전부 PAW kjpaw — P.pbe-n · O.pbe-n(0.1) · S.pbe-nl · Cl.pbe-nl · Nd.pbe-spdn · Li.pbe-sl (모두 psl.1.0.0 · O 만 0.1)"
+  },
+  "lobster_nscf.in": {
+   "wf_collect": ".true.",
+   "ecutwfc": 70.0,
+   "ecutrho": 560.0,
+   "occupations": "smearing",
+   "nosym": ".true.",
+   "nbnd": 480,
+   "K_POINTS": "automatic 2 2 1 0 0 0 → **k점 4** (대칭 축약 없음 — nosym 이 먹었다는 실측)"
+  },
+  "lobsterin": {
+   "basisSet": "pbeVaspFit2015",
+   "gaussianSmearingWidth": 0.02,
+   "COHP_window_eV": [
+    -15,
+    8
+   ],
+   "basisfunctions": {
+    "P": "3s 3p 3d",
+    "O": "2s 2p",
+    "S": "3s 3p 3d",
+    "Cl": "3s 3p 3d",
+    "Nd": "5s 6s 5p 6p 5d",
+    "Li": "1s 2s 2p"
+   },
+   "cohpGenerator": "0.5–4.0 Å · 10 쌍 (Li–S/Cl/O · P–S/O · S–S · Nd–S/Cl/O/P)"
+  },
+  "실측_대조": {
+   "전자": 318,
+   "SCF_KS_states": 191,
+   "NSCF_KS_states": 480,
+   "k점": 4,
+   "smearing": "Marzari-Vanderbilt width 0.0100 Ry"
+  },
+  "★_이_확인이_주는_것": "이제 이 런이 **어떤 눈금**이었는지 말할 수 있다. ecut 70/560 · nosym · PAW kjpaw 전종 · 확장기저 · k 2×2×1. PP-swap 런을 **같은 눈금으로** 맞출 수 있고, 카드 §2 **C2**(PP 가 원인이 아님)가 나올 때 '9월 쪽을 의심한다' 의 대상이 이제 **구체적**이다.",
+  "⚠_그래도_안_풀린_것": "이 확인은 **설정이 무엇이었나**를 닫는다. *그 설정이 옳았나* 는 안 닫는다 — 특히 `smearing='mv'`(cold)는 **CLAUDE.md 가 뜨거운 황화물 스냅샷에서 금지**한 것이다(음의 점유 → 발산). ⚠ 다만 이 런은 **이완된 정적 구조**라 그 금칙의 대상이 아닐 수 있다 — **판정하지 않고 적어만 둔다**."
+ },
+ "★_PP_swap_런이_맞춰야_할_눈금_2026_09_18": {
+  "왜": "8.5배가 PP 탓인지 가르려면 **PP 말고는 같아야** 한다 (카드 §1 '바꾸는 것 하나').",
+  "맞출_것": "ecut **70/560** · `nosym=.true.` · PAW kjpaw 전종 · basisSet pbeVaspFit2015 · 확장기저(Li 1s2s2p · P/S/Cl 3s3p3d · O 2s2p · Nd 5s6s5p6p5d) · COHP 창 −15..8 eV · cohpGenerator 0.5–4.0 Å",
+  "★_nbnd_은_다시_계산해야_한다": {
+   "왜": "셀이 다르다. 9월 66 원자/318 전자 ↔ PP-swap **120 원자/592 전자**.",
+   "기저_함수_수": "**881** = Li 48×5 + P 10×9 + S 41×9 + Cl 16×9 + O 3×4 + Nd 2×13. ⇒ nbnd 의 **하한**이다.",
+   "배율_추정": "9월은 점유(159)의 **3.02배**(480)로 spilling 1.75 % 를 냈다. 같은 배율이면 296×3.02 ≈ **893**.",
+   "권고": "둘 중 큰 쪽 + 여유 ⇒ **nbnd = 920**.",
+   "★_전자수_검산": "ZVAL(Li 3 · P 5 · S 6 · Cl 7 · O 6 · Nd 11)로 계산한 592 가 `02_scf.out` 실측 **592 와 정확히 일치**한다 ⇒ 조성·valence·기저 표가 맞다.",
+   "⛔_게이트는_spilling_이다": "nbnd 가 충분한지는 **charge spilling < 5 %** 로 판정한다 (빌더 docstring). 숫자를 맞췄다고 되는 게 아니라 **결과가 말한다**."
+  },
+  "⚠_이완_ecut_이_다르다": "PP-swap vc-relax 는 **60/480** 으로 돌았는데 LOBSTER 단계는 70/560 이다. 기하는 낮은 컷오프에서, 단일점은 높은 컷오프에서 — 흔한 관행이지만 **어긋남이므로 적어 둔다**. 카드 §3 P1 이 예상한 것도 70/560 이었다.",
+  "⛔_LOBSTER_는_조용히_틀린다": "basis 가 pseudo 의 valence 와 어긋나면 **에러를 안 내고** 나쁜 결과를 낸다 (빌더 주석 · Po/P 사고). 그래서 빌더가 basis 를 **UPF 에서 읽고**, 판정은 spilling 으로 한다."
+ }
 }
