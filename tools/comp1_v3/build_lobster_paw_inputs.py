@@ -245,7 +245,8 @@ def _selftest():
         Path(d, "s.out").write_text(mk_out(final=final, unit=unit))
         r = subprocess.run([_sys.executable, __file__, "--src_in", f"{d}/s.in",
                             "--src_out", f"{d}/s.out", "--workdir", f"{d}/w",
-                            "--pseudo_dir", d, "--nbnd", "8"],
+                            "--pseudo_dir", d, "--nbnd", "8",
+                            "--kpoints", "3 3 1 0 0 0"],
                            capture_output=True, text=True, timeout=60)
         return r
 
@@ -269,6 +270,33 @@ def _selftest():
     chk(r4.returncode != 0 and "단위를 모른다" in (r4.stdout + r4.stderr),
         "⛔음성: 모르는 좌표 단위(bohr)를 거부한다")
 
+    # ── k-메시: 조용한 기본값이 카드를 이기면 안 된다 (2026-09-18 실측) ──────
+    #   Nd PP-swap 카드 §4 는 `6 6 1` 을 못박았는데 default="2 2 1 0 0 0" 이
+    #   아무 말 없이 나갔다. 요약에도 안 찍혀 diff 를 따로 안 쳤으면 그대로 돌 뻔했다.
+    d5 = tempfile.mkdtemp()
+    Path(d5, "s.in").write_text(
+        f"&CONTROL\n  calculation='relax'\n/\n&SYSTEM\n  ibrav=0\n  nat=2\n  ntyp=2\n/\n"
+        f"ATOMIC_SPECIES\n Li 6.94 x.UPF\n S 32.06 y.UPF\n"
+        f"CELL_PARAMETERS angstrom\n{IN_CELL}ATOMIC_POSITIONS (angstrom)\n{POS}")
+    Path(d5, "s.out").write_text(mk_out())
+    base5 = [_sys.executable, __file__, "--src_in", f"{d5}/s.in", "--src_out", f"{d5}/s.out",
+             "--pseudo_dir", d5, "--nbnd", "8"]
+    r5 = subprocess.run(base5 + ["--workdir", f"{d5}/w5"], capture_output=True, text=True, timeout=60)
+    chk(r5.returncode != 0 and "kpoints" in (r5.stdout + r5.stderr).lower(),
+        f"⛔음성: --kpoints 를 안 주면 **시작하지 않는다** (rc={r5.returncode}) — 조용한 기본값 없음")
+    chk(not Path(d5, "w5", "lobster_scf.in").exists(),
+        "⛔음성: 그때 입력 파일을 **만들지도 않는다** (반쯤 만든 폴더를 남기지 않는다)")
+    r6 = subprocess.run(base5 + ["--workdir", f"{d5}/w6", "--kpoints", "6 6 1 0 0 0"],
+                        capture_output=True, text=True, timeout=60)
+    scf6 = Path(d5, "w6", "lobster_scf.in").read_text() if r6.returncode == 0 else ""
+    nscf6 = Path(d5, "w6", "lobster_nscf.in").read_text() if r6.returncode == 0 else ""
+    chk("6 6 1 0 0 0" in scf6 and "6 6 1 0 0 0" in nscf6,
+        "[양성] 준 k-메시가 **scf·nscf 둘 다**에 들어간다 (한쪽만 바뀌면 두 계산이 갈린다)")
+    chk("2 2 1" not in scf6 and "2 2 1" not in nscf6,
+        "⛔음성: 옛 기본값 `2 2 1` 이 어디에도 **남아 있지 않다**")
+    chk("6 6 1 0 0 0" in r6.stdout,
+        "⛔음성: k-메시가 **요약에 찍힌다** — 안 찍히면 사람이 diff 를 따로 쳐야 잡는다")
+
     print(f"selftest {'PASS' if n[1] == n[0] else 'FAIL'} — {n[1]}/{n[0]}")
     return 0 if n[1] == n[0] else 1
 
@@ -285,7 +313,13 @@ def main():
     ap.add_argument("--pseudo_dir", default="/home/ubuntu/pseudo/")
     ap.add_argument("--nbnd", type=int, default=450,
                     help="nbnd for NSCF (≥ extended-basis LCAO function count)")
-    ap.add_argument("--kpoints", default="2 2 1 0 0 0")
+    # ⛔ 기본값 없음 (2026-09-18). k-메시는 **셀마다 다르고** 카드가 핀으로 박는 양이다.
+    #   전에는 default="2 2 1 0 0 0" 이었고, Nd PP-swap 은 카드 §4 가 `6 6 1` 을 못박았는데
+    #   아무도 --kpoints 를 안 줘서 **조용히 2 2 1** 이 나갔다. 요약에도 안 찍혀서 안 보였다.
+    #   그래서 fail-closed: 안 주면 시작하지 않는다.
+    ap.add_argument("--kpoints", required=True,
+                    help="K_POINTS automatic 한 줄 (예: \"6 6 1 0 0 0\"). "
+                         "기본값을 두지 않는다 — 셀·카드마다 다르다")
     ap.add_argument("--prefix_base", default="V0_lobster")
     ap.add_argument("--ecutwfc", type=float, default=70.0,
                     help="raised from 52 for PAW (kjpaw needs higher cutoff)")
@@ -354,6 +388,7 @@ def main():
     print(f"Source: V={V:.4f} Å³, species={species}")
     print(f"Target: PAW kjpaw, extended basis (Li 1s2s2p, X 3s3p3d)")
     print(f"        nbnd={args.nbnd}, ecutwfc={args.ecutwfc}/ecutrho={args.ecutrho}")
+    print(f"        K_POINTS automatic  {args.kpoints}   ← 카드가 박은 값과 대조할 것")
 
     # Build new SYSTEM with bumped ecut (PAW kjpaw needs higher cutoffs)
     nat = sum(1 for line in pos_block.strip().splitlines() if line.split())

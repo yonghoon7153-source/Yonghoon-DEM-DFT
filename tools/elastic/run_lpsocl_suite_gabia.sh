@@ -140,7 +140,8 @@ if [ "$STAGE" = all ] || [ "$STAGE" = lobster ]; then
     if [ ! -f lobster_ext/lobster_scf.in ]; then
         python3 "$REPO/tools/comp1_v3/build_lobster_paw_inputs.py" \
             --src_in "$WORK/01_relax_v0.in" --src_out "$WORK/01_relax_v0.out" \
-            --workdir "$WORK/lobster_ext" --pseudo_dir "$WORK/pseudo" --nbnd 500
+            --workdir "$WORK/lobster_ext" --pseudo_dir "$WORK/pseudo" --nbnd 500 \
+            --kpoints "2 2 1 0 0 0"
     fi
     cd "$WORK/lobster_ext"
     run_pw lobster_scf.in lobster_scf.out 8000 || { cd "$WORK"; exit 1; }
