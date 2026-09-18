@@ -149,6 +149,39 @@ def slice_window(pos, cells, dt_ps, t_from_ps, t_to_ps):
     return pos[lo:hi], cells[lo:hi], lo, hi
 
 
+def write_xyz(path, sym, pos, cell, comment=""):
+    """extxyz 한 프레임. numpy-only 규약을 지킨다 (이 파일은 ase 를 안 쓴다)."""
+    lat = " ".join(f"{x:.8f}" for x in np.asarray(cell, float).ravel())
+    with open(path, "w") as fh:
+        fh.write(f"{len(sym)}\n")
+        fh.write(f'Lattice="{lat}" Properties=species:S:1:pos:R:3 pbc="T T T" {comment}\n')
+        for a, r in zip(sym, np.asarray(pos, float)):
+            fh.write(f"{a} {r[0]:.8f} {r[1]:.8f} {r[2]:.8f}\n")
+
+
+def hop_endpoints(sym, pos, cells, Li, ev, dt_ps):
+    """사건 하나 → (시작 구조, 끝 구조). **움직인 Li 를 최소이미지로 맞춰** 끝을 쓴다.
+
+    왜 최소이미지인가: 끝 프레임을 원본 그대로 쓰면 그 Li 가 셀 경계를 넘었을 때
+    **반대 방향으로 긴 경로**가 만들어진다 (NEB 보간이 셀을 가로지른다). 시작 위치를
+    기준으로 가장 가까운 이미지로 옮겨 놓으면 보간이 짧은 쪽으로 간다.
+
+    ⛔ 못 하는 것
+      · 끝 구조가 **진짜 최소인지 모른다** — 이완은 부르는 쪽이 따로 한다.
+      · 움직인 Li 하나만 이미지 보정한다. 다른 원자가 같이 넘어갔으면 그건 안 고친다
+        (그런 사건이면 애초에 이 사건 정의가 안 맞는 것이다).
+    """
+    i0 = int(round(ev["t_start_ps"] / dt_ps))
+    i1 = int(round(ev["t_end_ps"] / dt_ps))
+    a = int(Li[ev["li_rank"]])
+    cell = np.asarray(cells[i0], float)
+    p0, p1 = np.array(pos[i0], float), np.array(pos[i1], float)
+    inv = np.linalg.inv(cell)
+    f = (p1[a] - p0[a]) @ inv
+    p1[a] = p0[a] + (f - np.round(f)) @ cell      # 최소이미지로 당긴다
+    return a, p0, p1, cell, float(np.linalg.norm(p1[a] - p0[a]))
+
+
 def hop_census(uw_Li, dt_ps, lag_ps, min_dist):
     """**케이지 없이** 홉을 센다 — unwrap 변위가 문턱을 넘은 Li 의 수.
 
@@ -175,7 +208,17 @@ def hop_census(uw_Li, dt_ps, lag_ps, min_dist):
     d = np.linalg.norm(uw_Li[nlag:] - uw_Li[:-nlag], axis=-1)
     per_ion_max = d.max(axis=0)
     moved = per_ion_max >= min_dist
-    return {"lag_ps": float(nlag * dt_ps), "min_dist_A": float(min_dist),
+    #: ⭐ 2026-09-18 — **어느 이온이 언제** 였는지를 같이 낸다. NEB 후보 경로를 이 표에서
+    #   기계적으로 뽑기 위해서다 (사람이 고르면 사후 선택이다).
+    #   각 이온의 **최대 변위를 낸 창** (t_start, t_end) 을 그 이온의 대표 사건으로 삼는다.
+    #   ⛔ 이온당 **하나만** 낸다 — 여러 번 뛰어도 제일 큰 것 하나다(하한인 이유).
+    ev = []
+    for j in np.where(moved)[0]:
+        i0 = int(np.argmax(d[:, j]))
+        ev.append({"li_rank": int(j), "t_start_ps": float(i0 * dt_ps),
+                   "t_end_ps": float((i0 + nlag) * dt_ps), "disp_A": float(d[i0, j])})
+    ev.sort(key=lambda e: -e["disp_A"])
+    return {"lag_ps": float(nlag * dt_ps), "min_dist_A": float(min_dist), "events": ev,
             "n_Li": int(d.shape[1]), "n_moved": int(moved.sum()),
             "frac_moved": float(moved.mean()),
             "per_ion_max_A": {"max": float(per_ion_max.max()),
@@ -600,6 +643,38 @@ def _selftest():
     chk(hop_census(back, dtp, 10.0, 1.0)["n_moved"] == 1,
         "[양성] 같은 왕복이 **lag 10 프레임에서는 잡힌다** — lag 이 질문을 바꾼다")
 
+    # ── 사건 목록 (2026-09-18) — NEB 후보를 **기계적으로** 뽑는 근거 ──────────
+    ev_full = hop_census(uw, dtp, 0, 2.0)["events"]
+    chk(len(ev_full) == 1 and ev_full[0]["li_rank"] == 0,
+        f"[양성] 사건 목록에 **이동체만** 들어간다 (얻음 {[e['li_rank'] for e in ev_full]})")
+    chk(ev_full[0]["t_start_ps"] == 0.0 and ev_full[0]["t_end_ps"] == 50.0,
+        f"사건의 창이 최대 변위를 낸 구간이다 ({ev_full[0]['t_start_ps']}–{ev_full[0]['t_end_ps']} ps)")
+    #: 왕복 궤적 — lag 10 에서 **오르막 구간**이 사건으로 잡혀야 한다 (내리막이 아니라)
+    ev_b = hop_census(back, dtp, 10.0, 1.0)["events"]
+    chk(len(ev_b) == 1 and ev_b[0]["t_end_ps"] <= 26.0,
+        f"[양성] 왕복에서 **오르막 창**이 잡힌다 (t_end {ev_b[0]['t_end_ps']} ≤ 26)")
+    # ⛔음성 — 문턱 밑 이온은 목록에 없다 (n_moved 와 목록 길이가 **같아야** 한다)
+    _hc = hop_census(uw, dtp, 1.0, 0.05)
+    chk(_hc["n_moved"] == len(_hc["events"]) == 2,
+        f"⛔음성: 목록 길이 = n_moved (얻음 {len(_hc['events'])} vs {_hc['n_moved']})")
+    chk([e["disp_A"] for e in _hc["events"]] == sorted((e["disp_A"] for e in _hc["events"]), reverse=True),
+        "사건이 변위 **내림차순**이다 (상위 N 을 자를 수 있게)")
+    chk(hop_census(still, dtp, 0, 2.0)["events"] == [],
+        "⛔음성: 홉이 없으면 목록도 **빈다** (없는 사건을 만들지 않는다)")
+    # ⭐⛔음성 — **늦게** 뛰는 이온. 앞 fixture 는 첫 창이 곧 최대 창이라
+    #   `argmax` 를 `0` 으로 바꿔도 시험이 안 잡혔다 (2026-09-18 깨보기 실측).
+    #   30 프레임 가만히 있다가 뛰는 이온을 넣어야 창 선택이 검사된다.
+    late = np.zeros((T, 1, 3))
+    late[30:41, 0, 0] = np.linspace(0, 3.0, 11)
+    late[41:, 0, 0] = 3.0
+    lc = hop_census(late, dtp, 5.0, 1.0)
+    chk(len(lc["events"]) == 1 and lc["events"][0]["t_start_ps"] > 0,
+        f"⛔음성: 늦게 뛰면 **늦은 창**이 사건이다 (t_start {lc['events'][0]['t_start_ps']} > 0)")
+    chk(abs(lc["events"][0]["disp_A"] - lc["per_ion_max_A"]["max"]) < 1e-9,
+        f"사건의 변위 = 그 이온의 **최대** 변위 ({lc['events'][0]['disp_A']:.3f} "
+        f"vs {lc['per_ion_max_A']['max']:.3f}) — 첫 창을 쓰면 어긋난다")
+
+
     print("selftest " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
 
@@ -619,6 +694,8 @@ def _build_parser():
     ap.add_argument("--t_from_ps", type=float, default=None,
                     help="이 시각부터 (포함) — 융체·담금질을 빼고 유리만 보려면 쓴다")
     ap.add_argument("--t_to_ps", type=float, default=None, help="이 시각까지 (포함)")
+    ap.add_argument("--hop_events_top", type=int, default=None,
+                    help="홉 사건 상위 N 개의 시작·끝 구조를 뽑는다 (NEB 후보 · 계산 0)")
     ap.add_argument("--hop_census_lag_ps", type=float, default=None,
                     help="케이지 없이 변위로 홉을 센다 — 이 lag 로 (0 = 창 전체)")
     ap.add_argument("--hop_min_dist", type=float, default=2.5,
@@ -702,6 +779,30 @@ def main():
         print("  ⛔ 이 수는 **하한**이다 — 되돌아온 홉이 한 번으로 보인다.")
         (out / f"{args.label}_hop_census.json").write_text(
             json.dumps(hopc, ensure_ascii=False, indent=1), encoding="utf-8")
+
+        #: ⭐ NEB 후보 뽑기 — **기계적**이다. 변위 내림차순 상위 N, 사람이 안 고른다.
+        if args.hop_events_top:
+            evd = out / "events"; evd.mkdir(exist_ok=True)
+            man = []
+            for k, ev in enumerate(hopc["events"][:args.hop_events_top], 1):
+                a, p0, p1, cell, d_mic = hop_endpoints(sym, pos, cells, Li, ev, dt_ps)
+                tag = f"ev{k:02d}_atom{a}"
+                write_xyz(evd / f"{tag}_i.xyz", sym, p0, cell, f"t_ps={ev['t_start_ps']}")
+                write_xyz(evd / f"{tag}_f.xyz", sym, p1, cell, f"t_ps={ev['t_end_ps']}")
+                man.append({**ev, "atom_index": a, "tag": tag,
+                            "disp_minimum_image_A": d_mic,
+                            "⚠_이미지보정": abs(d_mic - ev["disp_A"]) > 1e-6})
+                print(f"    {tag}: {ev['t_start_ps']:.0f}→{ev['t_end_ps']:.0f} ps · "
+                      f"변위 {ev['disp_A']:.2f} Å" +
+                      (f" (최소이미지 보정 후 {d_mic:.2f})" if abs(d_mic - ev['disp_A']) > 1e-6 else ""))
+            (evd / "events.json").write_text(
+                json.dumps({"rule": "변위 내림차순 상위 N · 이온당 사건 1개 · 사람이 고르지 않는다",
+                            "lag_ps": hopc["lag_ps"], "min_dist_A": hopc["min_dist_A"],
+                            "n_total_events": len(hopc["events"]), "taken": len(man),
+                            "⛔_끝이_최소인지는_모른다": "이완은 다음 단계다. 되돌아오는 나들이면 "
+                                                      "끝이 시작으로 무너질 수 있다.",
+                            "events": man}, ensure_ascii=False, indent=1), encoding="utf-8")
+            print(f"  → {evd}/  ({len(man)} 쌍 · events.json)")
 
     # ---- Van Hove self Gs(r, dt) ----
     rc, cols, hdr, skipped, vhinfo = van_hove(Li_uw, dt_ps, args.lags_ps,
