@@ -66,6 +66,12 @@
       <span class="wl-badge">DEM simulation · 이종기술융합</span>
     </div>
   </div>
+  {% if redacted %}
+  <div class="card" style="border-left:4px solid #d9822b;padding:10px 14px;margin-bottom:10px">
+    ⚠ 이 문서에 <b>인용 금지 등록부</b>의 값이 있어 <code>⟨인용금지·CL-nn⟩</code> 으로
+    자리만 남겼습니다.  값이 필요하면 원장 파일 안에서만 보십시오.
+  </div>
+  {% endif %}
   <article class="card wl-doc">
 {{ body|safe }}
   </article>

@@ -103,6 +103,14 @@ binding='geom' ⇒ A = 2π·r_min² ⇒ a = √(A/π) = √2·r_min   (network_c
 | 소비자 | coverage · 반응면적 · B3 | `network_conductivity` 협착 항 |
 | 지금 | **검증됨** (16/49 % ↔ Hertz 18 / Tabor 52) | **없다** — surface 를 빌려 쓰는 중 |
 
+> ⛔⛔ **위 표의 `검증됨` 과 아래 문단은 철회됐다** — 정본 `docs/area_contract_20260913.md:52`
+> 가 **같은 날 안에** `AREA-08` 로 뒤집었다: *"그 `geometric_coverage` 함수는 **구 중심·반경과
+> band 만** 읽는다 — `A_physics`·cap·힘·막 부피를 읽지 않아 **cap 을 바꿔도 출력이 그대로다**
+> ⇒ 특정 cap 의 타당성을 **식별하는 시험이 아니다**."*  정본 `:119` 는 같은 칸을
+> **`⛔ 검증 아님 (AREA-08)`** 으로 적는다.
+> ⇒ 이 파일은 **압축 전 대피소**(규율 ③)라 그때의 기록으로 남기되, 표의 `검증됨` 을
+> 인용하지 말 것.  (표지 추가 2026-09-18, 원장 `GAP3-DOC` ⑧)
+
 **cap 은 결함이 아니다** — 코드가 *"Hemisphere cap prevents wraparound"* 라 적었고 그 목적에서
 독립 기하 ground-truth 로 검증됐다.  결함은 **한 변수가 두 공간을 산다**는 것 (coverage 는
 `4πr²` 로 나누고 솔버는 `√(A/π)` 로 읽는다).

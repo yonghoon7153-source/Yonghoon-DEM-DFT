@@ -4253,6 +4253,24 @@ def worklog_view(key):
     path, kind = hit
     with open(path, encoding='utf-8') as f:
         md_text = f.read()
+
+    #  ⛔ **이 창구에는 redaction 이 없었다** (원장 `GAP3-DOC` ㉕, 2026-09-18).
+    #    디스크 → markdown → `{{ body|safe }}` 까지 관문이 **0 개**였다.  같은 웹앱에
+    #    이미 두 처방이 있는데(`/ledger` 는 `ledger_view.redact`, `/api/seminar/doc` 는
+    #    내용 기반 fail-closed 게이트) `/worklog` 만 둘 다 없었다.
+    #  ⚠ 실측 누수는 **0 건**이었다 (등록 22 패턴 × 서빙 3 파일) — 이것은 **예방**이지
+    #    사고 수습이 아니다.  그러나 구멍은 실재했다: 서빙 후보 중 하나
+    #    (`docs/seminar/weekly_20260914_slide_text.md`) 는 머리 배너로 **스윕에서 파일째
+    #    면제**인데 이 창구는 배너를 보지 않는다.  앞선 출처가 이겨서 지금 안 보일 뿐,
+    #    그 리포트가 사라지면 면제 파일이 그대로 렌더된다
+    #    (= `app.py` 의 seminar 게이트 주석이 적은 A-1/A-2 함정의 미차단 재현).
+    #  ★ `/ledger` 쪽 처방을 고른다 — worklog 는 **읽는 면**이지 재발표 대상이 아니므로
+    #    문서를 거절하기보다 **자리를 남기고 보여 주는** 것이 맞다.
+    #  ⚠ markdown **변환 전**에 건다 — 변환 후 HTML 에 걸면 태그 안을 때릴 수 있다.
+    _raw = md_text
+    md_text = ledger_view.redact(md_text)
+    redacted = (md_text != _raw)
+
     try:
         import markdown
         body = markdown.markdown(md_text, extensions=['tables', 'fenced_code'])
@@ -4264,7 +4282,7 @@ def worklog_view(key):
             title = line[2:].strip()
             break
     return render_template('worklog_view.html', active='worklog', body=body,
-                           title=title or f'주간 기록 {key}', kind=kind,
+                           title=title or f'주간 기록 {key}', kind=kind, redacted=redacted,
                            date=f'{key[:4]}-{key[4:6]}-{key[6:8]}', key=key)
 
 

@@ -49,8 +49,19 @@ jobs:
       - name: 원장 자기일관성 + 철회값 스윕 (selftest)
         run: python scripts/check_review_findings.py --selftest
 
-      - name: 원장 자기일관성 + 철회값 스윕 (리포 실물)
+      - name: 원장 자기일관성 (리포 실물)
         run: python scripts/check_review_findings.py
+
+      #  ⛔ 이 스텝이 **없었다** (원장 `GAP3-DOC` ㉔, 2026-09-18).  웹앱 `worklog.html:23` 과
+      #    `app.py:4191-4192` 가 독자에게 *"CI 의 `--ban-sweep` 가 막는다"* 고 약속하는데
+      #    이 파일에 그 플래그가 **0 회**였다.
+      #    ⚠ 다만 *"보호가 없었다"* 는 **아니다** — 똑같은 전수 스윕이 위 `--selftest` 의
+      #      21 번 검사(`ban_sweep(here, _claims)`)로 이미 매 push 마다 돌고 있었다.
+      #      틀린 것은 **이름**이었다.  ⇒ 이름이 실재하게 만들어 네 문장을 동시에 참으로 둔다.
+      #    ★ 무인자 실행은 원장 자기일관성만 본다 (`main()` 이 `ban_sweep` 을 부르지 않는다)
+      #      — 그래서 위 스텝 이름에서 "+ 철회값 스윕" 을 뺐다.  라벨이 하던 일을 넘겨준다.
+      - name: 철회값 전수 스윕 (리포 실물 — 등록부 × 전 파일)
+        run: python scripts/check_review_findings.py --ban-sweep
 
       - name: 방법 규율 A~M (selftest — 음성 대조 포함)
         run: python scripts/check_method_discipline.py --selftest

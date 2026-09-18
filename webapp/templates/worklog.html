@@ -20,7 +20,10 @@
 <p style="color:var(--dim,#8a94a6);max-width:900px;margin:-4px 0 2px">
   주 단위 진행을 정리해 한 곳에서 본다.  원본은 <code>docs/worklog/weekly_*.md</code>(주간 리포트)와
   <code>docs/seminar/weekly_*_slide_text.md</code>(발표용 슬라이드 문구)이고, 같은 주차면 리포트를 보여 준다.
-  인용 금지값 누수는 CI 의 <code>--ban-sweep</code> 가 막는다 — 이 창구는 통과분만 렌더한다.
+  인용 금지값은 <b>이 창구가 렌더 직전에</b> <code>⟨인용금지·CL-nn⟩</code> 으로 가린다
+  (<code>ledger_view.redact</code>).  리포 전체 누수는 CI 의 <code>--ban-sweep</code> 가 따로 훑는다.
+  ⚠ 스윕은 머리 배너가 달린 파일을 <b>통째로 면제</b>하므로 "스윕 통과" 가 "금지값 없음" 을
+  뜻하지는 않는다 — 그래서 창구에 따로 건다.
 </p>
 
 {% if entries %}

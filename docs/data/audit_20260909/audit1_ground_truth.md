@@ -86,6 +86,17 @@ Ledger census: **104 claims — 74 live, 20 rejected, 6 hold, 4 retired.** Rule 
 2. **Reached pressure and bed state are decoupled: raising stress 9.6× on the same bed made it 0.2 µm *thicker*, so `settled_over_target` is not a measure of the bed and scaffold-run porosity must never be read as evidence of successful compaction (CL-82 ①, CL-80).**
 3. **The platen stops kinematically, not at target stress — every Phase A run lands short of 300 MPa, and this is the repo's standing convention (Grade B: relative ordering at matched Mach), not a new blocker (CL-80, canon `docs/mpm_platen_kinematic_stop_defect.md`).**
 4. **The voxel STEP3 solver sits on the branch this repo already named `CONTACT_FREE` — SE–SE faces get a harmonic mean and the Holm/Maxwell constriction term `R = 1/(2σa)` is exactly zero — and the gap size was already stored: `R_brug_over_full` median 4.04× (Hertz) / 6.69× (Physics) over n=157, triangulating with kim2025's GB-only 3.75× to within 8 % (CL-81).**
+   > ⛔⛔ **이 항목의 마지막 절(문헌 삼각측량)은 철회됐다** — `SELF-24` · `L2-07`
+   > (2026-09-13).  `R_brug_over_full` 은 **CONTACT_FREE/FULL** 이고 CF 는 **같은
+   > 접촉망의 bulk-only 가지**이므로 그 배수는 **그 접촉 모델·그래프 내부의 민감도**이지
+   > 실험 대비 오차가 아니다.  Codex 반례: 같은 4구에서 CF/FULL 3.6477 인데
+   > Bruggeman/FULL 0.2771 — 하나는 1보다 크고 하나는 작다.
+   > ⇒ **`3.75×` 삼각측량 문장을 인용하지 말 것.**  배수 4.04/6.69 자체도 재계산되지 않았다.
+   > ★ **무너지지 않은 것**: 복셀 FV 가 CF 가지 위에 있고 Holm 항이 정확히 0 이라는
+   >   **구조적 결론**은 그대로다 — L2 판정이 CF = bulk-only 임을 오히려 확인했다.
+   > ⚠ 이 파일은 `check_review_findings.py:178` 의 `BAN_ALLOW_ALWAYS` 에 **영구 등재**돼
+   >   자동 스윕이 **파일째 건너뛴다** ⇒ 이 표지는 **사람만 유지할 수 있다**.
+   >   (표지 추가 2026-09-18, 원장 `GAP3-DOC` ㉘)
 5. **That gap has two components with different prescriptions: geometric constriction improves with refinement, but the intrinsic interfacial resistance term does not exist at all and stays zero as h→0 — and the multiplier scatters 6× across the corpus (2.3–13.6×), so relative σ_ion comparisons are *not* automatically common-mode safe (CL-81).**
 6. **The prereg's `bridge = 0` would have tied bridge geometry to the grid (0.300/0.240/0.180 µm across the three compared grids), reproducing CL-22; amended to a physical `BRIDGE_UM = 0.24 µm` common to all grids, above the √3/2·vox geometric floor where the miss rate is 0 % — amended with zero Phase A STEP3 results in hand (CL-87).**
 7. **The closure joint sweep is DIRECTION-ROBUST: `R̄ − 3·SD > 1.01` at all nine grid points (minimum 1.0522), and σ_SDCP is asymmetric — ×100 changes the gain by only +3.5 % (saturated) while ÷100 removes 78 % yet still leaves R > 1, so the SDCP defense now rests on sensitivity, not on literature (CL-70).**

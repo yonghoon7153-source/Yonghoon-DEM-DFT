@@ -31,7 +31,7 @@ sub-grid → they enter HOMOGENISED (a fibre = a chain of points; carbon black =
 | file | role | status |
 |------|------|--------|
 | `scripts/additives.py` | recipe wt% → VGCF/SuperP/PTFE counts (flexible) + seeding (fibres = point-chains, SuperP = blobs) | ✅ done, tested |
-| `scripts/voxel_conductivity.py` | image-based effective σ on the MPM voxel grid (FEM cross-check for the DEM network); ionic/electronic/thermal | ✅ done, self-test exact |
+| `scripts/voxel_conductivity.py` | image-based effective σ on the MPM voxel grid; ionic/electronic/thermal.  ⚠ **NOT an independent cross-check of the DEM network** — see `CL-81` below | ✅ done, self-test exact |
 | `scripts/mpm3d_compaction.py` | **+ `--add-recipe`** : seed additives as extra phases after SE | ⏳ Stage 1 |
 | (Stage-E σ-map builder) | per-voxel σ with Cronau/Trevisanello/Wang/fracture → apples-to-apples vs network solver | ⏳ Stage 2 |
 | (SOC breathing) | AM eigenstrain(SOC) → cyclic stress → Auerbach fracture → σ loss | ⏳ Stage 3 |
@@ -123,6 +123,16 @@ AFTER Stage 1 GPU run succeeds and the payload format is set.  Three pieces, one
 ---
 
 ## Cross-validation targets (frame [4])
-- σ_eff(FEM voxel)  vs  σ_ionic(DEM network/Kirchhoff)  — validates Holm/Stage-E (cf. Bazzoun RNM↔FEM)
+- ⛔ ~~σ_eff(FEM voxel) vs σ_ionic(DEM network/Kirchhoff) — validates Holm/Stage-E~~
+  **철회 (`CL-81`, 2026-09-08 · 표지 2026-09-18, 원장 `GAP3-DOC` ㉛).**  이 대조는 **원리적으로
+  Holm 을 검증할 수 없다**: 복셀 FV 는 면을 harmonic mean 으로만 이어 **Holm 협착 항
+  `R = 1/(2σa)` 이 정확히 0** 이고, 그래서 접촉망이 스스로 **`CONTACT_FREE — upper bound,
+  ideal contact limit`** 이라 부르는 **가지 위에 있다**.  협착 항이 제거된 것과 비교하는 것이므로
+  "validates Holm" 이 성립하지 않는다.  정본 `docs/voxel_contact_free_gap.md` · `CLAUDE.md` CL-81 절.
+  ⚠ 대조 자체는 여전히 **하고 싶은 일**이지만 **공짜가 아니다** — 두 이산화가 **같은 침대·같은
+  첨가제 상태**로 있는 쌍이 리포에 **없다** (복셀 σ_ion 은 첨가제 팔뿐, 접촉망 DEM 침대는 첨가제
+  이전).  PTFE·SDCP 가 이온 절연이라 섞으면 협착 결손과 **교란**된다.  ⇒ 첨가제 없는 STEP3
+  σ_ion **1 솔브**가 선행 조건이다 (CL-81 "⬜ 미실행 1순위").
+  ★ 그때 이 대조가 재는 것은 *"Holm 이 맞나"* 가 아니라 **"협착 결손이 얼마나 큰가"** 다.
 - σ_e with carbon   vs  the "도전재 권장 / dead-AM" warning — turns the flag into a quantitative optimum
 - breathing fracture vs  the press-only Auerbach fracture — adds the chemo-mechanical stress source

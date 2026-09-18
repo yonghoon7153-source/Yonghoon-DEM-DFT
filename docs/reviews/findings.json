@@ -4184,7 +4184,7 @@
     "이종기술/README.md::38-42",
     "docs/data/audit_20260909/audit1_ground_truth.md::88",
     "pipeline/PIPELINE.md::34,126",
-    "skills/dem-analysis-standard.md::93-94"
+    "docs/archive/skills_20260424/dem-analysis-standard.md::93,101"
    ],
    "title": "문서·웹앱 7건 — 철회된 서술·거짓 안전 약속·전거 없는 문턱",
    "note": "⑧ `session_20260913_progress.md:104` 가 hemisphere cap 을 **\"검증됨\"** 이라 적는데, 그 정본\n   `area_contract_20260913.md:52` 가 **같은 날 안에** `AREA-08` 로 철회했다\n   (*\"그 `geometric_coverage` 는 cap 을 바꿔도 출력이 그대로다 ⇒ 식별하는 시험이 아니다\"*).\n㉔ `worklog.html:23`(+`app.py:4191-4192`) 이 독자에게 *\"CI 의 `--ban-sweep` 가 막는다\"* 고 약속하는데,\n   ⛔ `.github/workflows/discipline.yml` 259줄에 **`--ban-sweep` 이 한 번도 없다**.  CI 는\n   `--selftest` 와 무인자 실행만 돌고, 무인자는 원장 자기일관성만 본다.  리포 전체를 훑는 것은\n   `--selftest` 내부 21번 검사뿐이고 그것은 그 이름의 경로가 아니다.\n   ★ `test_worklog_page.py:7` 스스로 *\"여기 검사 아님\"* 이라 적는다.\n㉕ `worklog_view.html:70 {{ body|safe }}` — 출처(`docs/worklog/*.md`·`docs/seminar/*.md`)에서\n   렌더까지 redaction 이 **전혀 없다**.  `/ledger` 는 이미 render-time 검사를 붙였는데 `/worklog` 만 없다.\n㉖ `이종기술/README.md:38-42` — `R_int ≈ 50 Ω·cm²` 의 출처 `eis/fits/summary_means.csv` 가\n   **리포에 없다** (`b22bdb3c2` 가 의도적으로 추적 해제 + `.gitignore:32`).\n   ⚠ 그 값이 README 의 4개 값 평균이라면, 같은 README 캐비어트 #4 가 그중 24 vs 66 을\n   *\"측정오차가 아니라 진짜 계면 열화\"* 라 경고한다 — 서로 다른 물리 상태를 섞은 평균이다.\n   ★ 웹앱 `/hetero` 는 이 값을 **싣지 않도록** 이미 조치했다 (`6c13f19c8`).\n㉘ `audit1_ground_truth.md:88` — `CL-81` 문헌 삼각측량이 `SELF-24`·`L2-07` 로 철회됐는데 표지가 없다.\n   ⚠ 이 파일은 `BAN_ALLOW_ALWAYS` 에 **영구 등재**돼 자동 검사로는 **절대** 안 걸린다.\n㉛ `pipeline/PIPELINE.md:34,126` — 복셀 FEM ↔ DEM 접촉망 비교를 *\"validates Holm/Stage-E\"* 라 적는데,\n   `CL-81` 이 복셀 FV 는 harmonic-mean 이라 **협착 항이 정확히 0**(CONTACT_FREE 가지)임을 확정했다.\n   그 파일에 \"CL-81\"·\"CONTACT_FREE\"·\"협착\" 문자열 **0건**.\n㉟ `skills/dem-analysis-standard.md:93-94` — `SE-SE CN > 2.4` · `SE percolation > 70 %` 에 **출처가 없고**\n   리포 정본과 충돌한다: `CLAUDE.md` 는 `CN=2.7` 을 *\"below typical percolation threshold\"* 로 보고,\n   `literature_coverage/README.md:673-693` 의 세 앵커(0.13 · 0.36 · 0.65) 중 어느 것도 70 % 가 아니다.\n   ⚠ 이 문서가 참조하는 스크립트 7개 중 **5개가 리포에 없다** = 구버전 템플릿일 가능성."
@@ -4266,6 +4266,20 @@
    "note": "`ERROR: /tmp/tau_regime_db.json not found. Run build_tau_regime_db.py first.` 를\n**찍고 성공으로 끝난다**.  파이프라인에 넣으면 그림이 안 나왔는데도 초록이다.\n⚠ **내 편집 이전부터** 그렇다 (HEAD 원본 rc=0 재현).\n= CLAUDE.md 규율 ⑤ 의 false-green 이 **종료코드 층**에서 재현된 것이다.\n⇒ 한 줄 수리(에러 경로에서 non-zero 반환)로 닫히지만, 사용자 비준 대기 중이라\n  이 커밋에서는 손대지 않았다.",
    "claimed_fixed_sha": "91c7a76bb",
    "verification_note": "에러 경로에서 `return 1`, `main()` 의 반환을 `SystemExit` 로 흘린다.\n실측: 입력 없음 → **rc=1** · 정상 경로 → **rc=0** (그림 4 장 생성 확인).\n★ 오늘 같은 fail-open 을 **셋** 만났다 — 이것 · `GAP3-38` · 사용자 WSL 에서 빈 CSV 로도\n  `Loaded 0 cases` 를 찍고 진행하던 `plot_porosity_v4_journal.py`."
+  },
+  {
+   "id": "GAP3-40",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "GAP3-DOC ㉟ 처리 중 (2026-09-18)",
+   "opened_in": "docs/reviews/gap_audit_r3_repair_20260917.md",
+   "evidence_tests": [
+    "scripts/analyze_contacts.py::471,474,490",
+    "docs/archive/skills_20260424/README.md::1"
+   ],
+   "title": "`analyze_contacts.py` 가 **전거 없는 문턱**으로 사용자에게 `critical` 을 띄운다",
+   "note": "`GAP3-DOC` ㉟ 를 스킬 아카이브로 닫으면서 **진짜 문제가 남았다**: 스킬 쪽 문턱만 무출처가\n아니라 **생산 쪽도 무출처**다.  그리고 이쪽은 **실제로 돈다**.\n  `:471`  `percolation_pct < 85`  → severity **critical** — \"SE network severely fragmented\"\n  `:474`  `percolation_pct < 95`  → severity warning  — \"connectivity marginal\"\n  `:490`  `cn.mean < 3.5`         → severity **critical** — \"near percolation threshold\"\n⛔ 세 수 모두 **주석뿐이고 전거가 없다** (파일 내 인용·DOI·문헌 참조 0 건).\n\n★ 왜 P1 인가 — 이 경고는 **화면에 뜨고 판단을 바꾼다**.  아카이브한 스킬은 아무도 안 읽지만\n  이것은 사용자가 보는 진단이다.  무출처 문턱으로 침대를 `critical` 이라 부르면 멀쩡한 설계를\n  버리거나 반대로 안심하게 된다.\n⚠ **어느 쪽이 옳은지 리포 안에서 결정이 안 난다** — 아카이브된 스킬은 `CN > 2.4` 를 퍼콜\n  문턱이라 하고 이쪽은 `CN < 3.5` 를 critical 이라 한다.  둘 다 전거가 없으므로 *\"생산에\n  맞추면 된다\"* 가 자동 정답이 **아니다**.\n★ 리포 안의 대조점 하나: `CLAUDE.md:1878` 이 `CN=2.7` 을 *\"below typical percolation\n  threshold\"* 라 부른다 (그 `CN` 이 SE-SE CN 임은 `generate_comparison_plots.py:4599` 에서\n  확인).  이는 **3.5 쪽 손을 들어 주지만** 그 자체도 전거가 아니라 서술이다.\n\n⇒ 남은 일 (셋 중 하나):\n  ⓐ 문헌 전거를 붙인다 — 3D 구형 퍼콜 문턱은 `z_c ≈ 1.5` (Scher-Zallen 계열) 부터\n     접촉망 기준까지 여러 규약이 있으니 **어느 규약인지**부터 정해야 한다.\n  ⓑ 전거를 못 붙이면 `critical` → `info` 로 낮추고 *\"이 문턱은 관례이며 전거가 없다\"* 를\n     메시지에 **적는다** (지금은 단정한다).\n  ⓒ 우리 코퍼스로 **경험 문턱**을 세운다 (퍼콜 실패 케이스의 실제 분포에서).\n⚠ 셋 다 **판단이 필요**하므로 사용자 비준 전까지 코드를 건드리지 않았다."
   }
  ]
 }

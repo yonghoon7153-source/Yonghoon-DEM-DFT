@@ -1,5 +1,11 @@
 # LIGGGHTS DEM Analysis Skill (Standard Mode)
 
+> ⛔⛔ **아카이브됨 (2026-09-18) — 이 문서의 문턱을 인용하거나 따르지 말 것.**
+> 배선 0 (`.claude/skills/` 없음) · 워크플로가 부르는 스크립트 다수 결측 · 2026-04 이후 무갱신 ·
+> 문턱에 **전거 없음**, 그리고 이 문서가 직접 실행하라고 시키는 `scripts/analyze_contacts.py` 와
+> **정면 충돌**한다 (SE-SE CN `>2.4` OK ↔ `<3.5` critical · 퍼콜 `>70 %` Good ↔ `<85 %` critical).
+> 사유 전문: 같은 폴더 `README.md` · 원장 `GAP3-DOC` ㉟ · `GAP3-40`.
+
 ## Overview
 
 Comprehensive DEM simulation analysis toolkit for LIGGGHTS output files. Designed for solid-state battery composite cathode research with **AM (Active Material) + SE (Solid Electrolyte)** systems.
