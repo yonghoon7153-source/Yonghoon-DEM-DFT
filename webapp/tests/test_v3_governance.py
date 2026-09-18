@@ -94,11 +94,17 @@ def test_list_reopen_criteria_is_not_rendered_as_python_repr(gov_html):
     bad = [m.start() for m in re.finditer(r"\['|\[\"", plain)]
     assert not bad, ("파이썬 repr 이 화면에 샜다 — 목록을 문자열처럼 그린 자리가 있다: "
                      + plain[max(0, bad[0] - 60):bad[0] + 90])
+    # ⚠ **태그를 벗긴 뒤** 항목 존재를 본다 (2026-09-18 추가).
+    #   `declink` 가 본문에 적힌 **결정 id 를 링크로** 바꾼다 — 그건 맞는 동작이고
+    #   권장되는 상호참조다. 그런데 날 HTML 에서 원문을 찾으면 그 자리에서 문자열이
+    #   끊겨 **화면이 멀쩡한데도 빨간불**이 난다 (D-2026-09-18-…-neb-estimand 실측).
+    #   ⛔ 위 repr 검사는 `plain`(태그 살아있음) 그대로 둔다 — 그건 다른 결함을 본다.
+    stripped = re.sub(r"<[^>]+>", "", plain)
     for d in rows:
         for item in d["reopen_criteria"]:
             p = _probe(item)
             if p:
-                assert p in gov_html, \
+                assert p in stripped, \
                     f"{d['id']} 의 재개 조건 항목이 화면에 없다: {p[:40]}"
 
 

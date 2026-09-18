@@ -2,7 +2,7 @@
  "schema": "campaign_closure/v1",
  "record_kind": "closure",
  "date": "2026-09-18",
- "status": "proposed",
+ "status": "ratified",
  "citable": false,
  "results_seen": true,
  "system": "lpscl_amorphous",
@@ -115,6 +115,23 @@
    "state": "proposed",
    "by": "agent",
    "note": "세 게이트(G-B1 통과 · G-B2 탈락 · G-B3 통과)가 모두 나와 마감안을 쓴다. 게이트·허용 서술은 사전등록 집행이고, 재개 조건은 사후 작성임을 §⚠ 에 밝혔다. 1저자 비준 전에는 효력 없음."
+  },
+  {
+   "at": "2026-09-18",
+   "state": "ratified",
+   "note": "1저자 비준 2026-09-18 — \"ㄴ 하자\". 세 게이트 완료로 마감. ⚠ §1 의 '인용정책 적용 범위'(F_RMSE 는 방법 검증량이라 절대값 금지 대상이 아니다)는 agent 해석인데 1저자가 따로 이의를 달지 않아 **그대로 비준된 것으로 받아 적는다** — 다르면 정정한다."
   }
- ]
+ ],
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "at": "2026-09-18",
+  "by": "1저자",
+  "content_digest": "81fa438fd448420b5201883a134c081cd9624e15c808bffe58b95cfcadfcdfef",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-18T08:11:47Z",
+  "commit": "6253c35bd6fdf172ac4d71309f8b4f886e2dde69",
+  "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다 — 비준을 받아 놓고 내용을 고치는 경로를 닫는다.",
+  "⚠_base_commit_이_아니다": "`commit` 은 기록일 뿐 앵커가 아니다. 앵커는 위 digest 다."
+ }
 }

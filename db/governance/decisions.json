@@ -2921,7 +2921,7 @@
   {
    "id": "D-2026-09-18-lpscl-smallcell-closure",
    "kind": "closure",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "results_seen": true,
    "record_kind": "closure",
    "title": "a-Li₄PS₄Cl 120 원자 소셀 UMA↔QE 힘 대조 — 마감 (세 게이트 완료)",
@@ -2943,13 +2943,61 @@
     ]
    },
    "slot": "lpscl_smallcell_closure",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-09-18",
      "state": "proposed",
      "by": "agent",
      "note": "세 게이트 완료로 마감안 작성. 재개 조건이 사후 작성임을 명시. 비준 전 효력 없음."
+    },
+    {
+     "at": "2026-09-18",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-18T08:11:47Z",
+    "commit": "6253c35bd6fdf172ac4d71309f8b4f886e2dde69",
+    "decision_digest": "sha256:091a800ee0b16a70b1a93f7b650ae0eb8f05385f1ffecfb0a564dc6634ab4fd4",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
+  },
+  {
+   "id": "D-2026-09-18-lpscl-smallcell-neb-estimand",
+   "kind": "estimand",
+   "decision_state": "proposed",
+   "results_seen": false,
+   "record_kind": "estimand_card",
+   "title": "소셀 Li 이동 — ⓐ 안장점까지 검증 영역 확장, ⓑ 장벽은 그 뒤 별도 카드",
+   "statement": "NEB 로 바로 가지 않는다. 오늘 통과한 G-B3 는 **열적 스냅샷 10 장**에서만 쟀고 안장점은 PES 의 다른 영역이라, ⓑ(장벽)를 먼저 하면 **검증이 닿지 않는 곳에 값을 세우는 것**이 된다. 그래서 ⓐ 를 먼저 한다 — UMA 가 고른 안장 부근 이미지에 QE 단일점을 더해 F_RMSE 를 재고 (문턱 0.15 eV/Å · G1 §5 승계), UMA 안장에서의 |F_QE| 잔차를 **앵커로만** 보고한다(문턱 없음). ⛔ 이 카드는 **아직 계산을 허가하지 않는다**: 비정질에서 '그 장벽' 은 분포이고 선택·집계 규칙이 없으면 스칼라 보고량이 정의되지 않는다(회신 N). §0 의 셋 — 공공 생성 방식 · 경로 선택 규칙 · 집계 규칙 — 이 1저자 결정 사항이다.",
+   "reopen_criteria": [
+    "ⓐ 불통과 → ⓑ 를 하지 않는다. '120 원자 소셀의 안장 부근에서 문턱 미달' 까지만 말하고 다른 셀·조성으로 옮기지 않는다.",
+    "ⓐ 통과 → ⓑ 는 **별도 카드**다. §0 의 셋을 채워 새로 비준받는다. 이 카드로 ⓑ 를 돌리지 않는다.",
+    "⛔ ⓐ·ⓑ 어느 결과든 σ·D·Ea 로 번역하지 않는다 (마감 카드 D-2026-09-18-lpscl-smallcell-closure 금지 서술 2항).",
+    "⛔ 장벽 분포에서 **최저값을 대표로** 쓰지 않는다 — N 이 커질수록 내려가는 편향 통계다."
+   ],
+   "card": "db/properties/lpscl_smallcell_neb_estimand_2026_09_18.json",
+   "record": "db/properties/lpscl_smallcell_gb3_result_2026_09_18.json",
+   "supersedes": [],
+   "enforcement": "① §0 의 셋이 정해지기 전에는 **한 점도 던지지 않는다** (§6 무효 조건 1항). ② QE·UMA 설정은 G1 §3 승계 — 새 눈금을 만들지 않는다. ③ 도구 사다리: run_neb_qe.py · argyrodite_cage_neb.py · build_neb_inputs.py 를 먼저 보고, **결정계 전제가 비정질에 되는지 확인**한 뒤에 새 파일을 만든다. ④ 메모리 전망은 V² 가 아니라 **V^1.6** 으로 한다 (탐침 실측).",
+   "applies_to": {
+    "systems": [
+     "lpscl_amorphous"
+    ]
+   },
+   "slot": "lpscl_smallcell_neb_estimand",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-09-18",
+     "state": "proposed",
+     "by": "agent",
+     "note": "1저자 지시(\"ㄱ 하자\")로 작성. 계산 허가는 §0 의 셋이 정해진 뒤다. 결과 미관측."
     }
    ]
   }
