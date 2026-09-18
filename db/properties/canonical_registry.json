@@ -1338,40 +1338,52 @@
   {
    "system": "modelc_box331_cell_conditioned",
    "metric": "MD_Ea_eV",
-   "value": 0.1683,
-   "uncertainty": 0.0044,
+   "value": 0.169,
+   "uncertainty": 0.003,
    "unit": "eV",
-   "source_path": "db/properties/modelc_box331_c3_result_2026_09_15.json",
+   "source_path": "db/properties/modelc_box331_c3_result_5seed_2026_09_18.json",
    "source_key": "/Ea3/eV",
-   "n_seed": "2·3·3 (600 K 는 s3 no_value 로 2시드 — 09-01 R1)",
-   "method_id": "uma-s-1p1-omat__modelc_relaxV0_3x3x1_558atoms__langevin-nvt-2fs-f0.02__prod400ps__mto-msd2-50ps-free-intercept__3pt-unweighted-lnD__seed-resample-2916__uma-turbo",
-   "comparison_group": "md-ea-modelc-box331-400ps-gen2-HOLD",
+   "n_seed": "3·5·5 (600 K 는 s3·s5 no_value 로 3시드 — 사전등록 §3 상대산포 10 % 규칙)",
+   "method_id": "uma-s-1p1-omat__modelc_relaxV0_3x3x1_558atoms__langevin-nvt-2fs-f0.02__prod400ps__mto-msd2-50ps-free-intercept__3pt-unweighted-lnD__seed-resample-mc20000__uma-turbo",
+   "comparison_group": "md-ea-modelc-box331-400ps-gen2",
    "protocol_generation": "gen2_400ps_4window",
-   "status": "provisional",
-   "citable": false,
-   "why_non_citable": "C3(아레니우스 양립)이 미판정이다. ΔEa = −0.0339 eV · CI95 [−0.0539, −0.0137] 이 사전등록 허용영역 ±0.050 eV 의 경계와 겹친다 ⇒ 카드 §6 봉인 문구대로 HOLD. ⛔ '양립하지 않는다' 가 아니라 '판정하지 못했다' 다. (초과분 3.9 meV — 점추정은 허용영역 안)",
+   "status": "canonical",
+   "citable": true,
    "prohibitions": [
     "absolute_sigma",
     "RT_extrapolation",
     "bulk_claim__cell_conditioned_only",
-    "cross_system_ranking__citable_no",
     "pooling_with_200ps",
     "cell_level_claims",
-    "confirmed_value_claim__HOLD_status",
-    "same_table_with_lpsocl_box331__different_gate_status",
-    "difference_with_lpsocl_as_O_effect__C3_unresolved"
+    "same_table_with_lpsocl_box331__seed_count_differs",
+    "difference_with_lpsocl_as_O_effect"
    ],
-   "allowed_sentence": "modelc(LPSCl1.6) 3×3×1, 400 ps, 9 runs: gates C1·C2·C2b·C4·C5·C6 passed; **C3 (Arrhenius compatibility) was not resolved** — the two-segment slope difference ΔEa = −0.034 eV with CI95 [−0.054, −0.014] overlaps the pre-registered ±0.050 eV boundary. The apparent three-point Ea is 0.168 eV (CI95 0.164–0.173) and is reported at **HOLD** status, not as a confirmed value.",
-   "uncertainty_kind": "Ea3 CI95 **반폭** (0.1726−0.1638)/2 = 0.0044 eV — 온도별 시드 복원추출 전수 2916. ⚠ lpsocl 의 ±0.0018 과 **같은 종류지만 두 배 이상 넓다**. n=2–3 이라 꼬리가 거칠고 장시간 극한 오차가 아니다.",
+   "allowed_sentence": "modelc(LPSCl1.6) 3×3×1, 400 ps, 15 runs (5 seeds x 3 T; two 600 K seeds excluded by the pre-registered 10 % window-scatter rule): gates C1·C2·C2b·C3·C4·C5·C6 passed. The two-segment slope difference is dEa = -0.030 eV, CI95 [-0.043, -0.018], inside the pre-registered +/-0.050 eV band, so the three-point Ea is admissible: **0.169 eV (CI95 0.166-0.172)**, cell-conditioned. Report as a relative difference between systems, not as an absolute transport number.",
+   "uncertainty_kind": "Ea3 CI95 **반폭** (0.1718−0.1658)/2 = 0.0030 eV — 온도별 시드 복원추출 고정시드 MC 20000 (전수 263,671,875 개는 상한 초과). ⚠ lpsocl 의 ±0.0018 과 같은 종류지만 더 넓다. 장시간 극한 오차가 아니다.",
    "closure": "db/properties/modelc_box331_closed_2026_09_15.json",
    "gate_records": [
-    "db/properties/modelc_box331_c2_mto_2026_09_15.json",
+    "db/properties/modelc_box331_c2_mto_5seed_2026_09_18.json",
+    "db/properties/modelc_box331_c3_result_5seed_2026_09_18.json",
     "db/properties/modelc_box331_c2b_hops_2026_09_15.json",
-    "db/properties/modelc_box331_c3_result_2026_09_15.json",
-    "db/properties/modelc_box331_c6_census_2026_09_15.json"
+    "db/properties/modelc_box331_c6_census_2026_09_15.json",
+    "db/properties/modelc_box331_c3_result_2026_09_15.json (3시드 · 이력)"
    ],
-   "blocking_gate": "C3_arrhenius_compatibility__inconclusive",
-   "⚠_실행모드": "lpsocl 9런은 기본 모드, 이 9런은 turbo. 근거 `uma_turbo_equivalence_2026_09_11.json` (turbo−default max|ΔF| 1.99e-3 eV/Å = 모델 오차 0.4417 의 0.45 %). 원고 문구는 '동일' 이 아니라 '같은 모델을 다른 실행모드로 불렀다' 로 쓴다."
+   "⚠_실행모드": "lpsocl 9런은 기본 모드, 이 9런은 turbo. 근거 `uma_turbo_equivalence_2026_09_11.json` (turbo−default max|ΔF| 1.99e-3 eV/Å = 모델 오차 0.4417 의 0.45 %). 원고 문구는 '동일' 이 아니라 '같은 모델을 다른 실행모드로 불렀다' 로 쓴다.",
+   "hold_released": {
+    "when": "2026-09-18",
+    "by": "1저자",
+    "근거": "재개 조건 2(각 온도 +2 시드) 완주 → C3 **compatible**. 사전등록 `D-2026-09-15-modelc-box331-seed-extension` 규칙 A 발동 (규칙은 결과 보기 전 비준).",
+    "전_값": {
+     "value": 0.1683,
+     "uncertainty": 0.0044,
+     "source_path": "db/properties/modelc_box331_c3_result_2026_09_15.json",
+     "n_seed": "2·3·3 (600 K 는 s3 no_value 로 2시드 — 09-01 R1)",
+     "why_non_citable": "C3(아레니우스 양립)이 미판정이다. ΔEa = −0.0339 eV · CI95 [−0.0539, −0.0137] 이 사전등록 허용영역 ±0.050 eV 의 경계와 겹친다 ⇒ 카드 §6 봉인 문구대로 HOLD. ⛔ '양립하지 않는다' 가 아니라 '판정하지 못했다' 다. (초과분 3.9 meV — 점추정은 허용영역 안)"
+    },
+    "⛔_소급하지_않는다": "3시드 기록(09-15)은 덮지 않고 나란히 둔다. 그때의 HOLD 는 그때 자료에서 옳은 판정이었다."
+   },
+   "⭐_1저자_인용정책_2026_09_18": "*\"절대값은 안 쓰고 그냥 QE simulation 에서 나온 값의 상대값 차이가 난다 이 정도로만 사용할거야\"* ⇒ σ·D 절대값 인용 금지는 그대로이고, Ea 도 **계 간 상대차**로만 쓴다. 이 항목이 canonical 이 된 것은 '값이 확정' 이라는 뜻이지 '절대값을 인용해도 된다' 는 뜻이 아니다.",
+   "⚠_lpsocl_비대칭": "lpsocl_box331 은 **3시드**다. 개정문 `lpsocl_box331_seed_extension_amendment_2026_09_15.json` 이 있으나 아직 안 돌았다. n 이 다른 채로 한 표에 놓지 않는다 — 놓으려면 CI 를 같이 적고 n 을 명시한다."
   }
  ],
  "_provenance_audit": {

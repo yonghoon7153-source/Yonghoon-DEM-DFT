@@ -32,14 +32,20 @@
 - **Band gap**: fixed-occupations nscf의 VBM/CBM 고유값만 인정. DOS-threshold 판독 금지 (~0.3 eV 과소).
   Canonical: comp1 2.066 / modelc(LPSCl1.6) 2.099 / +B2O3 1.9671 / LPSOCl(+O) 2.2309 eV
   (계별 `source_path` 는 `db/properties/canonical_registry.json` — lpsocl 만 `lpsocl_dos_gap.json` 이다).
-  ⚠ **네 값을 한 표에 놓을 때**: comp1 은 2026-08-24 재계산으로 해소됐고(2.0656 재현),
-  **modelc 는 실행본이 영구 미해소**다(레지스트리 `method_integrity_flag` = *"⛔ 방법 불일치 의심"*).
-  그 단서를 밝히고 쓴다 — 네 값이 같은 등급인 것처럼 나란히 쓰지 않는다.
+  ✅ **네 값 다 방법일치 해소됨** — comp1 2026-08-24(2.0656 재현) · **modelc 2026-09-11**
+  (fixed-occ nscf 재계산). 레지스트리 `method_integrity_flag.severity` 가 둘 다 *"해소됨"* 이다.
+  ⛔ 2026-09-18 정정: 이 줄은 *"modelc 는 실행본이 **영구** 미해소"* 라고 적혀 있었고 **7일 낡았었다**.
+  원장이 이미 해소로 바뀐 뒤에도 여기가 안 바뀌어서, 다음 사람이 멀쩡한 값을 의심하게 만든다
+  (실제로 그랬다). **원장을 고쳤으면 이 파일도 같이 본다.**
 - **BVSE** (tools/comp1_v3/): softBV Li–X R0 = S 2.105 / Cl 2.249 / O 1.466, b=0.37; BVSE=(BVS−1)²;
   ~0.25 Å voxel; 채널% = above-min ≤ iso. **정량·순위는 원본 주기셀 값만** 인용(큐빅 박스는 표시용, ±1.3%p 표본 편차).
 - **MLIP-MD** (tools/modelc_v3/, tools/ionic/): UMA-s-1p1(omat), Langevin NVT, dt 2 fs, friction 0.02,
   equilib 5 ps / prod 200 ps, **MSD 창 2–50 ps 고정**, 아레니우스는 600/800/1000 K 3점(400/500 K 제외 판정),
   σ는 Nernst–Einstein(Haven=1) — **절대값 인용 금지, 비율도 멀티시드 판정만**(단일시드 1.33× 철회 사례, SEMIFINAL 2026-07-09); Ea 오차막대는 600 K 3-시드.
+  ⭐ **1저자 인용정책 2026-09-18**: *"절대값은 안 쓰고, QE 시뮬레이션에서 나온 값의 **상대 차이**가
+  난다 이 정도로만 쓴다."* ⇒ σ·D 뿐 아니라 **Ea 도 계 간 상대차로만** 쓴다. 레지스트리에서
+  `canonical · citable` 로 올라간 값도 이 정책 아래 있다 — canonical 은 *값이 확정*이라는 뜻이지
+  *절대값을 인용해도 된다*는 뜻이 아니다.
 - **UMA는 Li₃N에 사용 금지** (2026-06 결정론적 편향 판정). LPSCl 계열 MD에는 UMA가 검증된 표준.
 - 평균류 지표(site mean-3p 등)는 **그림 표시 창과 동일한 창**(-8..0 eV)으로 계산·인용.
 - 슬랩 계산은 기하 승계(verified-carry: 마지막 ATOMIC_POSITIONS 스플라이스 + 검증) + local-TF/저β 믹싱.

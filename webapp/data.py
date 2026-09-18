@@ -5429,8 +5429,42 @@ def _closure_and_prereg_cards() -> list:
     #   ⛔ 이 카드가 실어야 하는 것은 값이 아니라 **지위**다. 게이트 6축 중 5축이
     #     통과하고 C3 하나가 미판정이라, 값을 그냥 띄우면 lpsocl 0.180 과 같은
     #     등급으로 읽힌다 — 그게 이 캠페인이 막으려던 바로 그 자리다.
+    # ⭐ 2026-09-18 — **HOLD 가 풀렸다.** 재개 조건 2(각 온도 +2 시드) 를 밟아 C3 통과.
+    #   ⛔ 마감카드 **파일**은 덮지 않는다. 화면에서는 해제 카드가 HOLD 카드를 **대체**하되,
+    #     그 안에 "C3 inconclusive → compatible · ΔEa 전/후 · 경로" 를 실어 이력을 들고 간다.
+    #     ⚠ 카드 두 장을 나란히 띄우지는 않는다 — 같은 값이 두 지위로 보이면 그게 더 위험하다.
+    #   ⛔ 해제 기록이 **없으면** 예전처럼 🔴 HOLD 로 그린다 (없는 것을 풀린 것으로 그리지 않는다).
+    _rel = _load_json(DB / "properties" / "modelc_box331_hold_released_2026_09_18.json")
     mcl = _load_json(DB / "properties" / "modelc_box331_closed_2026_09_15.json")
-    if mcl:
+    if mcl and _rel:
+        _a = (_rel.get("값") or {}).get("후") or {}
+        _b = (_rel.get("값") or {}).get("전") or {}
+        _reg = _rel.get("레지스트리") or {}
+        _no = _rel.get("⛔_이_해제가_말하지_않는_것") or []
+        out.append({
+            "key": "modelc_box331_hold_released",
+            "d": _rel.get("date"),
+            "t": "✅ modelc(LPSCl1.6) 3×3×1 400 ps — **HOLD 해제** (C3 통과)",
+            "v": ("Ea3 **%.4f eV** · CI95 [%.4f, %.4f] · 시드 %s"
+                  % (_a.get("Ea3_eV", float("nan")),
+                     (_a.get("CI95_eV") or [float("nan")] * 2)[0],
+                     (_a.get("CI95_eV") or [float("nan")] * 2)[1],
+                     _a.get("n_seed", "?"))),
+            "n": ("C3 **%s → %s** · ΔEa %.4f → %.4f eV · CI 폭 %s\n"
+                  % (_b.get("C3", "?"), _a.get("C3", "?"),
+                     _b.get("ΔEa_eV", float("nan")), _a.get("ΔEa_eV", float("nan")),
+                     (_rel.get("값") or {}).get("CI_폭", "?"))
+                  + "경로: 마감카드의 **재개 조건 2** → 사전등록(결과 보기 전 비준) → 규칙 **A**. "
+                    "문턱·창·추정기 아무것도 결과를 보고 바꾸지 않았다.\n"
+                  + "레지스트리 %s · citable %s\n" % (_reg.get("status", "?"), _reg.get("citable", "?"))
+                  + "⛔ **여전히 금지**: " + " · ".join(_reg.get("⛔_남은_금지") or []) + "\n"
+                  + "⭐ 1저자 인용정책(09-18): 절대값 금지 — **계 간 상대차**로만 쓴다. "
+                    "canonical 은 *값이 확정*이지 *절대값 인용 허가*가 아니다.\n"
+                  + "".join("⛔ %s\n" % x for x in _no[:2])
+                  + "출처: db/properties/modelc_box331_hold_released_2026_09_18.json · "
+                    "게이트 `…c3_result_5seed_2026_09_18.json` · "
+                    "마감카드(09-15)는 **이력으로 그대로 둔다**")})
+    if mcl and not _rel:
         g = mcl.get("게이트_전건") or {}
         val = mcl.get("값_HOLD_지위") or {}
         ban = mcl.get("⛔_금지_서술") or []
@@ -5459,7 +5493,7 @@ def _closure_and_prereg_cards() -> list:
                  + "⚠ lpsocl 9런은 기본 모드, 이 9런은 **turbo** — 같은 표에 두려면 그 단서를 "
                    "같은 칸에 적는다.\n"
                  + "출처: db/properties/modelc_box331_closed_2026_09_15.json · "
-                   "레지스트리 `modelc_box331_cell_conditioned` (provisional · citable false)"})
+                   "레지스트리 `modelc_box331_cell_conditioned` (그때 provisional · citable false)"})
     return out
 
 

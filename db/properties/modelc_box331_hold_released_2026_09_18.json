@@ -1,0 +1,73 @@
+{
+ "schema": "hold_release/v1",
+ "record_kind": "hold_release",
+ "date": "2026-09-18",
+ "system": "modelc_box331_cell_conditioned",
+ "제목": "modelc(LPSCl1.6) 3×3×1 400 ps — **HOLD 해제** (재개 조건 2 완주)",
+ "⛔_마감카드를_덮지_않는다": "db/properties/modelc_box331_closed_2026_09_15.json 은 그대로 둔다. 그때의 HOLD 는 **그때 자료에서 옳은 판정**이었다. 이 파일은 그 위에 얹는 기록이지 소급 삭제가 아니다 — 리뷰 BM: *'새 기준으로 구판 실패를 소급 삭제하지 않는다.'*",
+ "경로": {
+  "발동": "마감카드 `재개_조건_이것들만` 2 — 각 온도 +2 시드",
+  "사전등록": "db/properties/modelc_box331_seed_extension_prereg_2026_09_15.json (D-2026-09-15-modelc-box331-seed-extension · **비준 2026-09-15, 결과 보기 전**)",
+  "실행": "kgy(esp-Z590-AORUS-MASTER) s5·s6 × 600/800/1000 K · 6런 · 프로토콜 동일(turbo 포함)",
+  "판정": "사전등록 규칙 **A** — CI95 전체가 ±0.050 안 → C3 통과"
+ },
+ "값": {
+  "전": {
+   "Ea3_eV": 0.1683,
+   "CI95_eV": [
+    0.1638,
+    0.1726
+   ],
+   "n_seed": "2·3·3",
+   "ΔEa_eV": -0.0339,
+   "ΔEa_CI95_eV": [
+    -0.0539,
+    -0.0137
+   ],
+   "C3": "inconclusive"
+  },
+  "후": {
+   "Ea3_eV": 0.169,
+   "CI95_eV": [
+    0.1658,
+    0.1718
+   ],
+   "n_seed": "3·5·5",
+   "ΔEa_eV": -0.0299,
+   "ΔEa_CI95_eV": [
+    -0.0434,
+    -0.0175
+   ],
+   "C3": "compatible"
+  },
+  "CI_폭": "0.0402 → 0.0259 (−36 %) · 사전등록 전망 20 % 보다 많이 좁아졌다",
+  "여유": "CI 하단 −0.0434 가 경계 −0.050 에서 **6.6 meV** — 경계 접촉이 아니다"
+ },
+ "레지스트리": {
+  "status": "provisional → canonical",
+  "citable": "false → true",
+  "comparison_group": "md-ea-modelc-box331-400ps-gen2-HOLD → …gen2",
+  "⛔_남은_금지": [
+   "absolute_sigma",
+   "RT_extrapolation",
+   "bulk_claim__cell_conditioned_only",
+   "pooling_with_200ps",
+   "cell_level_claims",
+   "same_table_with_lpsocl_box331__seed_count_differs",
+   "difference_with_lpsocl_as_O_effect"
+  ]
+ },
+ "⭐_1저자_인용정책_2026_09_18": "*\"절대값은 안 쓰고 QE 시뮬레이션 값의 **상대 차이**가 난다 이 정도로만 쓴다\"* ⇒ canonical 이 된 것은 **값이 확정**이라는 뜻이고 **절대값 인용 허가가 아니다**.",
+ "⛔_이_해제가_말하지_않는_것": [
+  "Ea 가 물리적으로 맞다는 뜻이 아니다 — 두 온도구간 기울기가 **양립 가능**하다는 것뿐이다.",
+  "lpsocl 과의 차 0.0114 eV 를 **O 효과**로 말해도 된다는 뜻이 아니다. lpsocl 은 아직 3시드이고, 두 계는 O 말고도 다르다. 금지 목록에 그대로 있다.",
+  "s3/600 · s5/600 이 **왜** 창을 따라 움직이는지는 미규명이다. 뺀 것은 사전등록 규칙이지 원인 규명이 아니다 — `--scan` c 판별이 아직 안 돌았다.",
+  "셀 효과(3×3×1 vs 62원자)를 해소하지 않는다 — cell_conditioned 표지는 그대로다."
+ ],
+ "게이트기록": [
+  "db/properties/modelc_box331_c2_mto_5seed_2026_09_18.json",
+  "db/properties/modelc_box331_c3_result_5seed_2026_09_18.json"
+ ],
+ "마감카드": "db/properties/modelc_box331_closed_2026_09_15.json",
+ "by": "1저자 (2026-09-18)"
+}
