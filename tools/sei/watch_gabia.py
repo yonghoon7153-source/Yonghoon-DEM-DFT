@@ -22,6 +22,7 @@ import json
 import os
 import re
 import subprocess
+import time
 import sys
 from datetime import datetime
 
@@ -120,8 +121,33 @@ def sh(c):
         return ""
 
 
-def done(d, stem):
-    """단계 완료 판정. pw.x/dos.x/projwfc.x 다 'JOB DONE' 을 찍는다."""
+#: 이 분(minute) 안에 .out 이 갱신됐으면 **도는 중**으로 본다.
+#: ⚠ 문턱이지 진실이 아니다 — 아주 느린 SCF 는 이보다 오래 조용할 수 있다.
+#:   그래서 화면이 '조용한 지 얼마나 됐나' 를 같이 찍는다 (숫자를 보고 사람이 판단한다).
+FRESH_MIN = int(os.environ.get("FRESH_MIN", "20"))
+
+
+def done(d, stem, fresh_min=None):
+    """단계 판정. ✓완료 ▶도는중 ▸끊김 ✗오류 ' '미착수 · '?'못읽음.
+
+    ⛔⛔ 2026-09-18 — 종전엔 'JOB DONE' 이 없으면 **무조건 `▸`** 였다. 그래서
+      **도는 잡과 죽은 잡이 화면에서 같은 글자**였다. 게다가 범례(§① 머리줄)는
+      `▸ 중단` 이라고 적어 놓아서, 읽는 사람이 **멀쩡히 도는 잡을 죽은 것으로 읽었다**
+      (실측: Nd2SO43 vc-relax 가 4.3 h 째 정상 진행 중인데 화면만 보고 "죽었으니
+      다시 던지자" 는 진단이 나왔다). 오류는 안 났다 — 화면이 조용히 틀린 말을 했다.
+
+      같은 글자가 이 파일 안에서 **두 뜻**으로도 쓰였다: 여기서는 '끊김',
+      `relax_end()` 의 docstring 에서는 '진행'. 범례는 그중 하나만 적었다.
+
+      고친 방법: **.out 의 mtime 신선도**로 가른다. 내용만으로는 원리적으로 못 가른다.
+
+    ⛔ 이 함수가 못 하는 것
+      · 프로세스를 확인하지 않는다. mtime 이 신선해도 방금 죽었을 수 있다 —
+        확정하려면 `ps`/`nvidia-smi` 다. 이건 **화면용 힌트**다.
+      · 느린 잡을 끊긴 것으로 잘못 볼 수 있다 (FRESH_MIN 문턱 탓). 그래서 조용한
+        시간을 같이 낸다.
+    """
+    fresh_min = FRESH_MIN if fresh_min is None else fresh_min
     o = os.path.join(d, stem + ".out")
     if not os.path.isfile(o):
         return " "
@@ -133,7 +159,11 @@ def done(d, stem):
         return "✓"
     if "Error in routine" in tx or "%%%%" in tx or "MPI_ABORT" in tx:
         return "✗"
-    return "▸"          # 시작은 했는데 안 끝났다 (재부팅으로 끊긴 것)
+    try:
+        quiet_min = (time.time() - os.path.getmtime(o)) / 60.0
+    except OSError:
+        return "▸"
+    return "▶" if quiet_min <= fresh_min else "▸"
 
 
 def relax_end(p):
@@ -812,6 +842,61 @@ def selftest():
     chk("SEI=" in (_r.stdout + _r.stderr),
         "양성: 거부하면서 **올바른 방법(SEI= 환경변수)** 을 같이 알려준다")
 
+    # ── done(): 도는 잡 ↔ 끊긴 잡 (2026-09-18 · 화면이 조용히 틀린 말을 한 자리) ──
+
+    import tempfile as _tf
+
+    with _tf.TemporaryDirectory() as _td:
+
+        def _mk(stem, body, age_min=0.0):
+
+            f = os.path.join(_td, stem + ".out")
+
+            open(f, "w").write(body)
+
+            t = time.time() - age_min * 60
+
+            os.utime(f, (t, t))
+
+            return f
+
+        _mk("run_fresh", "iteration #  9\n")
+
+        chk(done(_td, "run_fresh") == "▶",
+
+            "[양성] 방금 갱신된 .out 은 **▶ 도는중** (옛 판은 ▸ 로 죽은 것처럼 보였다)")
+
+        _mk("run_stale", "iteration #  9\n", age_min=120)
+
+        chk(done(_td, "run_stale") == "▸",
+
+            "⛔음성: 2시간 조용한 .out 은 **▸ 조용함** — 도는 것과 **다른 글자**여야 한다")
+
+        chk(done(_td, "run_fresh") != done(_td, "run_stale"),
+
+            "⛔음성: 도는 잡과 조용한 잡이 **같은 글자면 안 된다** (이게 오독의 원인이었다)")
+
+        _mk("ok", "JOB DONE.\n", age_min=999)
+
+        chk(done(_td, "ok") == "✓", "완료는 나이와 무관하게 ✓")
+
+        _mk("bad", "Error in routine something\n")
+
+        chk(done(_td, "bad") == "✗", "오류는 나이와 무관하게 ✗")
+
+        chk(done(_td, "nope") == " ", "파일이 없으면 미착수(공백)")
+
+        #: ⛔음성 — 범례가 실제로 내는 글자를 **전부** 담아야 한다
+
+        _emit = {done(_td, x) for x in ("run_fresh", "run_stale", "ok", "bad")} | {" "}
+
+        _legend = set("✓▶▸✗ ")
+
+        chk(_emit <= _legend,
+
+            f"⛔음성: 범례에 없는 글자를 내지 않는다 (낸 것 {_emit - _legend or '없음'})")
+
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -855,7 +940,10 @@ multi = len(sei_roots) > 1
 if not pairs:
     print(f"⛔ {sei_roots or SEI} 에 작업 폴더가 없다 — build_dft_inputs.py 부터.")
 else:
-    print(f"① SEI DFT — {len(pairs)}종 × 6단계   (✓ 완료 · ▸ 중단 · ✗ 오류 · 공백 미착수)")
+    #: ⚠ 범례는 `done()` 이 실제로 내는 글자와 **같아야 한다**. 2026-09-18 이전에는
+    #:   여기가 `▸ 중단` 이었는데 함수는 도는 잡에도 ▸ 를 줬다 — 범례가 거짓말을 했다.
+    print(f"① SEI DFT — {len(pairs)}종 × 6단계   "
+          f"(✓ 완료 · ▶ 도는중({FRESH_MIN}분 내 갱신) · ▸ 조용함 · ✗ 오류 · 공백 미착수)")
     print("   " + " " * 26 + "  ".join(f"{s:>6s}" for _, s in STAGES))
     # ⚠ 화면은 **감시용**이다. 완주하고 건강한 것은 한 줄로 접고, 손볼 게 있는 것만
     #   펼친다 (2026-08-12: 13종 × 6단계를 다 찍으니 ④ NEB 가 화면 밖으로 밀렸다).
