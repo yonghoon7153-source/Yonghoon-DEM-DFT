@@ -174,6 +174,7 @@ CLI_ACCOUNTING = {
     # ── mode (산출물 형태만.  σ 해에 영향 없음) ────────────────────────────
     '--out': ('mode', None), '--step3-rasterize-only': ('mode', None),
     '--fibre-max': ('mode', None), '--selftest-temperature': ('mode', None),
+    '--selftest-provenance': ('mode', None),
     '--show-results': ('mode', None), '--allow-partial-step3': ('mode', None),
     '--expect-protocol': ('mode', None), '--expect-physics': ('mode', None),
     '--void-max': ('mode', None), '--tri-step': ('mode', None),

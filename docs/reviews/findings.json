@@ -4284,7 +4284,7 @@
   {
    "id": "GAP3-41",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "GAP3 마무리 라운드 게이트 (2026-09-18)",
    "opened_in": "docs/reviews/gap_audit_r3_repair_20260917.md",
@@ -4293,7 +4293,8 @@
     "scripts/check_all.sh::52"
    ],
    "title": "`check_review_findings --selftest` 이 **깜빡인다** (게이트 51/52 ↔ 단독 52/52)",
-   "note": "2026-09-18 게이트에서 `51/52 PASS`(rc=1) 가 나왔는데 같은 트리에서 단독 실행은 **4회 연속\n52/52 PASS**(rc=0) 였다.  트리는 그 사이 한 글자도 바뀌지 않았다.\n⇒ 이 검사기는 **비결정적**이다.\n\n⛔⛔ **어느 검사가 실패했는지 확인할 수 없었다** — `check_all.sh` 가 하위 검사 출력을\n  **꼬리만 남기고 자른다**.  게이트 로그에 남은 것은 21) · 22b~22q · 23a~23f 뿐이고\n  **검사 1~20 이 통째로 잘려** FAIL 줄 자체가 로그에 없다.  51/52 라는 **개수만**이 단서다.\n  ★ 이것이 더 큰 결함이다 — **빨간불이 났는데 원인을 못 본다.**\n\n★ 의심 자리 (확정 아님): `:851-862` 가 `git rev-parse HEAD^{tree}` → `git commit-tree` →\n  `git rev-parse --short=8` 로 **`.git` 에 객체를 쓴다**.  git 인덱스/객체 잠금이나 짧은 해시\n  충돌은 실행마다 달라질 수 있다.  ⚠ 재현하지 못했으므로 **원인으로 단정하지 않는다**.\n⚠ 전례가 있다 — 같은 세션 앞부분에서 `litdb_promote --selftest` 의 `git fetch` 가 두 번\n  빨간불을 냈고 재실행으로 통과했다.  **git 을 부르는 검사들이 공통 취약점일 수 있다.**\n\n★★ 왜 P2 가 아니라 더 급할 수 있나 — 리포 자신이 적는다: *\"이대로 푸시하면 러너의\n  fail-closed 게이트가 **사용자의 GPU 런을 막는다**\"*.  깜빡이는 게이트는 ⓐ 멀쩡한 커밋을\n  막거나 ⓑ 사람이 *\"또 flake겠지\"* 하고 **진짜 빨간불을 밀어붙이게** 만든다.\n  ⚠ 원장 `SELF-29` 가 내가 과거에 **빨간 게이트를 두 번 밀어붙인 것**을 기록하고 있다.\n\n⇒ 남은 일 (순서대로):\n  ① **`check_all.sh` 가 실패한 하위 검사의 출력을 자르지 않게** 한다 — 원인을 볼 수 없으면\n     아래 ②③ 을 시작할 수도 없다.  (초록일 때만 꼬리로 줄이면 된다.)\n  ② 재현 — 루프로 N 회 돌려 실패율과 실패 검사 번호를 확정한다.\n  ③ 원인이 git 호출이면 잠금 재시도 또는 임시 리포 분리.\n⚠ 이번 라운드는 재실행 초록으로 커밋했다 (세션 앞부분 litdb flake 와 같은 처분).\n  **밀어붙인 것이 아니라 재실행해서 초록을 받은 것**이지만, 원인 미상인 채로 통과시킨 것은\n  사실이므로 여기 적는다."
+   "note": "2026-09-18 게이트에서 `51/52 PASS`(rc=1) 가 나왔는데 같은 트리에서 단독 실행은 **4회 연속\n52/52 PASS**(rc=0) 였다.  트리는 그 사이 한 글자도 바뀌지 않았다.\n⇒ 이 검사기는 **비결정적**이다.\n\n⛔⛔ **어느 검사가 실패했는지 확인할 수 없었다** — `check_all.sh` 가 하위 검사 출력을\n  **꼬리만 남기고 자른다**.  게이트 로그에 남은 것은 21) · 22b~22q · 23a~23f 뿐이고\n  **검사 1~20 이 통째로 잘려** FAIL 줄 자체가 로그에 없다.  51/52 라는 **개수만**이 단서다.\n  ★ 이것이 더 큰 결함이다 — **빨간불이 났는데 원인을 못 본다.**\n\n★ 의심 자리 (확정 아님): `:851-862` 가 `git rev-parse HEAD^{tree}` → `git commit-tree` →\n  `git rev-parse --short=8` 로 **`.git` 에 객체를 쓴다**.  git 인덱스/객체 잠금이나 짧은 해시\n  충돌은 실행마다 달라질 수 있다.  ⚠ 재현하지 못했으므로 **원인으로 단정하지 않는다**.\n⚠ 전례가 있다 — 같은 세션 앞부분에서 `litdb_promote --selftest` 의 `git fetch` 가 두 번\n  빨간불을 냈고 재실행으로 통과했다.  **git 을 부르는 검사들이 공통 취약점일 수 있다.**\n\n★★ 왜 P2 가 아니라 더 급할 수 있나 — 리포 자신이 적는다: *\"이대로 푸시하면 러너의\n  fail-closed 게이트가 **사용자의 GPU 런을 막는다**\"*.  깜빡이는 게이트는 ⓐ 멀쩡한 커밋을\n  막거나 ⓑ 사람이 *\"또 flake겠지\"* 하고 **진짜 빨간불을 밀어붙이게** 만든다.\n  ⚠ 원장 `SELF-29` 가 내가 과거에 **빨간 게이트를 두 번 밀어붙인 것**을 기록하고 있다.\n\n⇒ 남은 일 (순서대로):\n  ① **`check_all.sh` 가 실패한 하위 검사의 출력을 자르지 않게** 한다 — 원인을 볼 수 없으면\n     아래 ②③ 을 시작할 수도 없다.  (초록일 때만 꼬리로 줄이면 된다.)\n  ② 재현 — 루프로 N 회 돌려 실패율과 실패 검사 번호를 확정한다.\n  ③ 원인이 git 호출이면 잠금 재시도 또는 임시 리포 분리.\n⚠ 이번 라운드는 재실행 초록으로 커밋했다 (세션 앞부분 litdb flake 와 같은 처분).\n  **밀어붙인 것이 아니라 재실행해서 초록을 받은 것**이지만, 원인 미상인 채로 통과시킨 것은\n  사실이므로 여기 적는다.\n\n── 수리 a55e565eb ──\n게이트 51/52 깜빡임의 정체 = `_commit_exists` 가 git 타임아웃을 \"조상이다\" 로 읽음.  셋(True/False/None)으로 가르고 타임아웃 10→60·재시도 1회.  selftest 52→54 (19c·19d 신설), 변이 시 19c FAIL·53/54.  ⚠ 같은 fail-open 이 실제 원장 항목의 조상 검사에도 걸렸다 — 19b 는 카나리아였다.",
+   "claimed_fixed_sha": "a55e565eb"
   },
   {
    "id": "GAP3-42",
@@ -4369,15 +4370,16 @@
   {
    "id": "PASL-05",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude",
    "opened_in": "docs/reviews/phase_a_seal_breach_20260918.md",
    "title": "`_code_sha` 가 **dirty 탐침이 느리면 SHA 까지 버렸다** — `PASL-03` 의 원인",
-   "note": "실측(2026-09-18, 사용자 GPU 박스): `git status --porcelain --untracked-files=no` 가 **23.1 s** 인데 `timeout=20` 이었다.  세 git 호출이 한 `try` 안이라 `TimeoutExpired` → `except Exception: return None` 으로 **SHA 까지 같이 버려졌다**.  ⇒ Phase A 96팔이 전부 `code_sha=null` 이 되어 CL-75·사전등록 §5 기준 **인용 금지**가 됐다.  ★ 설계가 거꾸로였다: SHA 가 본체이고 dirty 는 한정어인데, 한정어를 못 재서 본체를 버렸다.  수리: SHA 를 먼저 확정하고 dirty 실패 시 **`+dirty-unknown`** 으로 드러낸다 (`+dirty` 를 포함하므로 소비자에게 보수적으로 읽힌다).  타임아웃 20 → 180.  ⚠⚠ **같은 날 `check_review_findings._commit_exists` 에서 같은 패턴(GAP3-41)을 고쳤다** — 서로 다른 파일, 같은 결함: git 서브프로세스 타임아웃을 넓은 `except` 로 삼켜 **느린 파일시스템이 봉인을 지운다**.  ⇒ 이 패턴을 가진 다른 자리를 훑어야 한다.  검증: `--selftest-provenance` 5/5, 변이(옛 거동 복원) 시 **3/5 FAIL**.",
+   "note": "실측(2026-09-18, 사용자 GPU 박스): `git status --porcelain --untracked-files=no` 가 **23.1 s** 인데 `timeout=20` 이었다.  세 git 호출이 한 `try` 안이라 `TimeoutExpired` → `except Exception: return None` 으로 **SHA 까지 같이 버려졌다**.  ⇒ Phase A 96팔이 전부 `code_sha=null` 이 되어 CL-75·사전등록 §5 기준 **인용 금지**가 됐다.  ★ 설계가 거꾸로였다: SHA 가 본체이고 dirty 는 한정어인데, 한정어를 못 재서 본체를 버렸다.  수리: SHA 를 먼저 확정하고 dirty 실패 시 **`+dirty-unknown`** 으로 드러낸다 (`+dirty` 를 포함하므로 소비자에게 보수적으로 읽힌다).  타임아웃 20 → 180.  ⚠⚠ **같은 날 `check_review_findings._commit_exists` 에서 같은 패턴(GAP3-41)을 고쳤다** — 서로 다른 파일, 같은 결함: git 서브프로세스 타임아웃을 넓은 `except` 로 삼켜 **느린 파일시스템이 봉인을 지운다**.  ⇒ 이 패턴을 가진 다른 자리를 훑어야 한다.  검증: `--selftest-provenance` 5/5, 변이(옛 거동 복원) 시 **3/5 FAIL**.\n\n── 수리 c503d79fd ──\n`git status` 23.1s vs `timeout=20` → SHA 까지 버려짐.  SHA 우선 확정 + dirty 실패 시 `+dirty-unknown`, 타임아웃 180.  `--selftest-provenance` 5/5, 변이 시 3/5 FAIL.",
    "evidence_tests": [
     "scripts/mpm_webapp_payload.py"
-   ]
+   ],
+   "claimed_fixed_sha": "c503d79fd"
   }
  ]
 }
