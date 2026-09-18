@@ -86,6 +86,7 @@ scripts/make_pressure_sweep_decks.py	--selftest	fast	none	claude	초록 0.1s (�
 scripts/make_ps_sweep_decks.py	--selftest	fast	none	claude	초록 0.1s (실측)
 scripts/ml_design_structure.py	--selftest	fast	none	claude	초록 7.8s (실측)
 scripts/mpm3d_compaction.py	--selftest	fast	none	claude	초록 0.3s (실측)
+scripts/mpm_webapp_payload.py	--selftest-provenance	fast	none	claude	초록 <1s — git 을 가로채 재현, 외부 데이터 불요 (PASL-05)
 scripts/mpm_webapp_payload.py	--selftest-temperature	fast	both	claude	초록 0.9s (실측)
 scripts/network_conductivity.py	--selftest	fast	none	claude	초록 0.8s (실측)
 scripts/network_conductivity.py	--selftest-status	fast	none	claude	초록 1.0s (실측)

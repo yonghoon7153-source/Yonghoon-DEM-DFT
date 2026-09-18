@@ -4365,6 +4365,19 @@
     "scripts/sdcp_gain_vox015_8arm.sh",
     "scripts/run_contract.py"
    ]
+  },
+  {
+   "id": "PASL-05",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude",
+   "opened_in": "docs/reviews/phase_a_seal_breach_20260918.md",
+   "title": "`_code_sha` 가 **dirty 탐침이 느리면 SHA 까지 버렸다** — `PASL-03` 의 원인",
+   "note": "실측(2026-09-18, 사용자 GPU 박스): `git status --porcelain --untracked-files=no` 가 **23.1 s** 인데 `timeout=20` 이었다.  세 git 호출이 한 `try` 안이라 `TimeoutExpired` → `except Exception: return None` 으로 **SHA 까지 같이 버려졌다**.  ⇒ Phase A 96팔이 전부 `code_sha=null` 이 되어 CL-75·사전등록 §5 기준 **인용 금지**가 됐다.  ★ 설계가 거꾸로였다: SHA 가 본체이고 dirty 는 한정어인데, 한정어를 못 재서 본체를 버렸다.  수리: SHA 를 먼저 확정하고 dirty 실패 시 **`+dirty-unknown`** 으로 드러낸다 (`+dirty` 를 포함하므로 소비자에게 보수적으로 읽힌다).  타임아웃 20 → 180.  ⚠⚠ **같은 날 `check_review_findings._commit_exists` 에서 같은 패턴(GAP3-41)을 고쳤다** — 서로 다른 파일, 같은 결함: git 서브프로세스 타임아웃을 넓은 `except` 로 삼켜 **느린 파일시스템이 봉인을 지운다**.  ⇒ 이 패턴을 가진 다른 자리를 훑어야 한다.  검증: `--selftest-provenance` 5/5, 변이(옛 거동 복원) 시 **3/5 FAIL**.",
+   "evidence_tests": [
+    "scripts/mpm_webapp_payload.py"
+   ]
   }
  ]
 }

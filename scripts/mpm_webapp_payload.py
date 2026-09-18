@@ -267,6 +267,61 @@ def geometric_coverage(am_csv, se_csv, n_samp=2000, bands_um=(0.13, 0.26)):
     return out
 
 
+def _selftest_provenance():
+    """`--selftest-provenance` — `_code_sha` 가 **느린 git 때문에 출처를 버리지 않는가**.
+
+    ⛔ 실사고 (PASL-05, 2026-09-18): Phase A 96팔이 전부 `code_sha=null` 이었다.  원인은
+      `git status --porcelain` 이 **23.1 s** 로 `timeout=20` 을 넘긴 것이고, 세 호출이 한
+      `try` 안에 있어 **SHA 까지 같이 버려졌다**.  산출물이 CL-75 기준 인용 금지가 됐다.
+    ⇒ 이 검사가 그 경로를 **직접** 밟는다.  없으면 수리가 장식이다.
+    """
+    import subprocess as _sp
+    ok = [0, 0]
+
+    def chk(name, cond):
+        ok[1] += 1
+        ok[0] += bool(cond)
+        print(f"  {'✓' if cond else '✗'} {name}")
+
+    _real = _sp.run
+    _here = _os.path.dirname(_os.path.abspath(__file__))
+
+    def _slow(cmd, *a, **kw):
+        """`status`·`ls-files` 만 타임아웃시킨다 — `rev-parse` 는 통과."""
+        if isinstance(cmd, (list, tuple)) and ('status' in cmd or 'ls-files' in cmd):
+            raise _sp.TimeoutExpired(cmd, kw.get('timeout', 0))
+        return _real(cmd, *a, **kw)
+
+    def _norev(cmd, *a, **kw):
+        if isinstance(cmd, (list, tuple)) and 'rev-parse' in cmd:
+            raise _sp.TimeoutExpired(cmd, kw.get('timeout', 0))
+        return _real(cmd, *a, **kw)
+
+    try:
+        _sp.run = _slow
+        v = _code_sha(_here)
+    finally:
+        _sp.run = _real
+    chk('① dirty 판정이 타임아웃해도 **SHA 는 살린다** (PASL-05 — 옛 판은 None 을 냈다)',
+        v is not None and v.endswith('+dirty-unknown'))
+    chk('② 못 쟀다는 것을 이름에 **적는다** (조용히 clean 이라 하지 않는다)',
+        v is not None and '+dirty' in v)
+
+    try:
+        _sp.run = _norev
+        v2 = _code_sha(_here)
+    finally:
+        _sp.run = _real
+    chk('③ git 을 **아예 못 쓰면** 종전대로 None (출처가 없다는 뜻이 맞다)', v2 is None)
+    chk('④ 정상 경로는 SHA 를 낸다 (과잉차단 음성 대조)',
+        (_code_sha(_here) or '').split('+')[0] != '')
+    chk('⑤ dirty 타임아웃 값이 실측(23.1s)보다 넉넉하다', GIT_DIRTY_TIMEOUT_S >= 120)
+
+    print(f"\nmpm_webapp_payload provenance selftest: {ok[0]}/{ok[1]} "
+          f"{'PASS' if ok[0] == ok[1] else 'FAIL'}")
+    return 0 if ok[0] == ok[1] else 1
+
+
 def _selftest_temperature():
     """T1-e (혼합-온도 이온상) + T1-a (npz 온도 계약) 회귀 테스트.
 
@@ -505,6 +560,11 @@ def _exec_env(script_dir):
     return out
 
 
+#: dirty 판정 타임아웃 [s].  옛 값 20 은 실측 23.1 s 를 3초 차로 넘겨 출처를 통째로
+#  날렸다 (PASL-05).  큰 작업트리·느린 파일시스템에서 `git status` 는 수십 초가 걸린다.
+GIT_DIRTY_TIMEOUT_S = 180
+
+
 def _code_sha(script_dir):
     """이 코드가 어느 커밋인가 (+ dirty 여부).  git 이 없으면 None.
 
@@ -533,23 +593,41 @@ def _code_sha(script_dir):
       남기고, repo 전역의 untracked code-like 파일(`.py/.so/.pyd/.pth/.zip/.sh`)을 봐야 한다.
     """
     import subprocess as _sp
+    #  ⛔⛔ **PASL-05 수리 (2026-09-18)** — 옛 판은 세 호출을 한 `try` 로 묶고
+    #    `except Exception: return None` 했다.  그래서 **dirty 를 재는 보조 검사가 느리면
+    #    출처 전체가 날아갔다**.  실측: Phase A 96팔이 전부 `code_sha=null` 로 나왔고,
+    #    원인은 `git status --porcelain` 이 **23.1 s** 로 `timeout=20` 을 3초 넘긴 것이다
+    #    (측정: 사용자 GPU 박스, 2026-09-18).  ⇒ 산출물이 CL-75·사전등록 §5 기준으로
+    #    **인용 금지**가 됐다 — 보조 한정어를 못 쟀다는 이유로.
+    #  ★ 설계가 거꾸로였다: **SHA 가 본체**이고 dirty 는 한정어다.
+    #    ⇒ SHA 를 먼저 확정하고, dirty 판정이 실패하면 **`+dirty-unknown`** 으로 **드러낸다**.
+    #      (`'+dirty' in sha` 로 보는 소비자에게는 보수적으로 dirty 로 읽힌다.)
+    #  ⚠ 같은 날 `check_review_findings._commit_exists` 에서 **같은 패턴**(git 서브프로세스
+    #    타임아웃을 `except` 로 삼켜 조용히 실패)을 GAP3-41 로 고쳤다.  서로 다른 파일,
+    #    같은 결함.  git 호출에 `except Exception` 을 넓게 두면 **느린 파일시스템이
+    #    봉인을 지운다**.
     try:
         sha = _sp.run(['git', '-C', script_dir, 'rev-parse', '--short', 'HEAD'],
-                      capture_output=True, text=True, timeout=10)
-        if sha.returncode != 0:
-            return None
+                      capture_output=True, text=True, timeout=30)
+        if sha.returncode != 0 or not sha.stdout.strip():
+            return None                                        # git 을 못 쓴다 = 출처 없음
+        _sha = sha.stdout.strip()
+    except Exception:                                          # noqa: BLE001
+        return None
+    #  ── 여기부터는 SHA 를 확보한 상태다.  dirty 판정이 실패해도 SHA 는 버리지 않는다.
+    try:
         st = _sp.run(['git', '-C', script_dir, 'status', '--porcelain',
                       '--untracked-files=no'],
-                     capture_output=True, text=True, timeout=20)
+                     capture_output=True, text=True, timeout=GIT_DIRTY_TIMEOUT_S)
         dirty = bool((st.stdout or '').strip())
         if not dirty:
             un = _sp.run(['git', '-C', script_dir, 'ls-files', '--others',
                           '--exclude-standard', '--', script_dir],
-                         capture_output=True, text=True, timeout=20)
+                         capture_output=True, text=True, timeout=GIT_DIRTY_TIMEOUT_S)
             dirty = bool((un.stdout or '').strip())            # scripts/ 안 untracked = shadowing 위험
-        return sha.stdout.strip() + ('+dirty' if dirty else '')
+        return _sha + ('+dirty' if dirty else '')
     except Exception:                                          # noqa: BLE001
-        return None
+        return _sha + '+dirty-unknown'     # 못 쟀다는 것을 **적는다** (조용히 clean 이라 하지 않는다)
 
 
 def _mflt(v):
@@ -1099,6 +1177,8 @@ def main():
                          '폴리머라 LPSCl Eₐ 를 이식할 앵커가 없고(§F1) 그대로 두면 σ_SDCP/σ_SE 비율이 '
                          'T-인자만큼 왜곡된다.  허용 시 provenance 에 mixed_ionic_temperature='
                          'DISTORTED 가 기록된다.')
+    ap.add_argument('--selftest-provenance', action='store_true',
+                    help='`_code_sha` 가 느린 git 에 출처를 버리지 않는지 (PASL-05)')
     ap.add_argument('--selftest-temperature', action='store_true',
                     help='T1-e/T1-a 온도 계약 회귀 테스트만 실행하고 종료 (입력 파일 불필요)')
     a = ap.parse_args()
@@ -1145,6 +1225,8 @@ def main():
             f'`ptfe_stamp={a._ptfe_stamp}` 로 적힌다 = 요청과 실행이 다른데 성공으로 끝난다.\n'
             f'  ⇒ `--step3-fibre-stamp segment` 를 (--fibre npy 와 함께) 주거나, '
             f'`--ptfe-stamp off` 로 명시할 것.')
+    if a.selftest_provenance:
+        _sys.exit(_selftest_provenance())
     if a.selftest_temperature:
         _sys.exit(_selftest_temperature())
     # ── σ_ion(T) ────────────────────────────────────────────────────────────────

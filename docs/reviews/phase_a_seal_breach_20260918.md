@@ -70,7 +70,28 @@ n_arms = 32 · receipt_code_sha = 70b9e37a
 - ⇒ 재실행 = **STEP3 96 솔브뿐**.  예산 46~63 h 에서 LEAN=2 로 절감
   (실측 앵커 vox 0.4: electronic 333 s vs 부수 성분 합 ≈ 111 s).
 
-## 5. ⚠ 아직 설명되지 않은 것
+## 5. ✅ `code_sha = null` — 원인 확정 (2026-09-18 저녁, `PASL-05`)
+
+**`git status --porcelain --untracked-files=no` 가 23.1 s 인데 `_code_sha` 의 `timeout` 이 20 이었다.**
+세 git 호출이 한 `try` 안이라 `TimeoutExpired` → `except Exception: return None` 으로
+**SHA 까지 같이 버려졌다**.  git 도 리포도 멀쩡했다 — `git -C <scripts> rev-parse --short HEAD`
+는 0.4 s 로 `be0ae9568` 을 낸다.
+
+★ 설계가 거꾸로였다: **SHA 가 본체**이고 dirty 는 한정어인데, 한정어를 못 재서 본체를 버렸다.
+⇒ 수리: SHA 를 먼저 확정하고, dirty 판정이 실패하면 **`+dirty-unknown`** 으로 **드러낸다**.
+  타임아웃 20 → 180.  `--selftest-provenance` 5/5 · 변이 시 3/5 FAIL.
+
+⚠⚠ **같은 날 같은 패턴을 두 번 만났다** — `check_review_findings._commit_exists`(GAP3-41)도
+`mpm_webapp_payload._code_sha`(PASL-05)도 **git 서브프로세스 타임아웃을 넓은 `except` 로 삼켜
+조용히 실패**했다.  서로 다른 파일, 같은 결함.  ⇒ **느린 파일시스템이 봉인을 지운다.**
+이 패턴을 가진 다른 자리를 훑어야 한다 (미착수).
+
+⚠ **이 수리는 진행 중인 96팔 재실행에 적용하지 않는다.**  박스에 보내면 그 런이
+`be0ae9568+dirty` 가 되고 CL-75 는 dirty 를 명시적으로 인용 금지한다.  ⇒ 박스는 그대로 두고
+코드 세대를 **밖에서 봉인**한다: `be0ae9568` · 생산 파일 5개 HEAD 와 바이트 동일(§2).
+수리는 **다음 캠페인**부터 적용된다.
+
+## 5-1. ⚠ 아직 설명되지 않은 것
 
 **`code_sha = null` 의 원인.**  `measure_provenance.py` 는 박스와 HEAD 가 바이트 동일이고,
 박스에서 `git rev-parse HEAD` 는 **지금 정상 동작**한다 (`be0ae9568` 반환).  런 시점에만
