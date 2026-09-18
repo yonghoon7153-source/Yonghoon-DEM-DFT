@@ -1,0 +1,108 @@
+{
+ "case": "lhs00_027",
+ "timestep": 3310000,
+ "n_types": 3,
+ "type_map": {
+  "1": "AM_P",
+  "2": "AM_S",
+  "3": "SE"
+ },
+ "phase_counts": {
+  "AM_P": 83,
+  "AM_S": 39758,
+  "SE": 12788
+ },
+ "boundary": "경계 플래그 ('pp', 'pp', 'ff') = 규약",
+ "plate_z_sim": 0.0664086,
+ "plate_z_source": "mesh_stl",
+ "phi_se": 0.28042000056961325,
+ "phi_am": 0.27483100716601755,
+ "porosity_sphere_pct_RECORD_ONLY": 44.474899226436925,
+ "closure_residual": 0.0,
+ "coverage_AM_P_hertz_pct": 28.01727327591879,
+ "coverage_AM_S_hertz_pct": 27.546832339179126,
+ "coverage_AM_total_hertz_pct": 27.547812399864085,
+ "coverage_AM_only_hertz_pct": null,
+ "tortuosity_dijkstra_SE": 1.4080649036922568,
+ "status": {
+  "phi": "OK",
+  "porosity": "OK",
+  "coverage_AM_P": "OK",
+  "coverage_AM_S": "OK",
+  "coverage_AM_total": "OK",
+  "tortuosity": "OK"
+ },
+ "tau_detail": {
+  "tau_mean": 1.4080649036922568,
+  "tau_median": 1.4096485630552933,
+  "tau_mean_untruncated": 1.4080649036922568,
+  "n_sampled": 200,
+  "n_valid": 200,
+  "n_truncated": 0,
+  "status": "OK",
+  "tau_convention": "harvest_v1/solid_zrange/rSEmax/no_fallback/same_component"
+ },
+ "coverage_detail": {
+  "n_capped": 0,
+  "n_free_surface_invalid": 0,
+  "counts": {
+   "AM_P": {
+    "n_particles": 83,
+    "n_valid": 83
+   },
+   "AM_S": {
+    "n_particles": 39758,
+    "n_valid": 39758
+   },
+   "AM": {
+    "n_particles": 0,
+    "n_valid": 0
+   }
+  },
+  "contact_headers": [
+   "c_cpl[1]",
+   "c_cpl[2]",
+   "c_cpl[3]",
+   "c_cpl[4]",
+   "c_cpl[5]",
+   "c_cpl[6]",
+   "c_cpl[7]",
+   "c_cpl[8]",
+   "c_cpl[9]",
+   "c_cpl[10]",
+   "c_cpl[11]",
+   "c_cpl[12]",
+   "c_cpl[13]",
+   "c_cpl[14]",
+   "c_cpl[15]",
+   "c_cpl[16]",
+   "c_cpl[17]",
+   "c_cpl[18]",
+   "c_cpl[19]",
+   "c_cpl[20]",
+   "c_cpl[21]",
+   "c_cpl[22]",
+   "c_cpl[23]",
+   "c_cpl[24]",
+   "c_cpl[25]",
+   "c_cpl[26]"
+  ]
+ },
+ "V_box_sim": 0.00019102150000000002,
+ "raw": {
+  "atom": {
+   "path": "atom_3310000.liggghts",
+   "sha256": "89470a6275db8420bbc23c7abfac52dbab91f105e5f4c210cf2668a799948fb4"
+  },
+  "contact": {
+   "path": "contact_3310000.liggghts",
+   "sha256": "74d7755f48bf78ce8b9029bf554bf9061365dd7df6266298642daf68d3aab2a0"
+  },
+  "mesh": {
+   "path": "mesh_995000.stl",
+   "sha256": "69f7f4c64701f8d6100a405ca08708e79d0f1b85c769585216ee62288b01bffc"
+  }
+ },
+ "area_channel": "dem_geometric_c_cpl22 — LIGGGHTS 기하 교차 원판 pi(r d - d^2/4); Hertz 탄성 pi R* d 가 **아니다** (동일 반경 비 = 2 - d/(2r))",
+ "contract": "codex_verdict_lhs_descriptors_20260913 §7 (1~6)"
+}
