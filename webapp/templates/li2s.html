@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}LPSCl@Li₂S 계면상 — 파이프라인{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h1>🔋 LPSCl@Li₂S 계면상 — 파이프라인</h1>
+    <div class="sub">0층 열역학 → 1층 비정질 400 원자 → <b>자원 마감</b> → 120 원자 소셀 재설계.
+      숫자는 전부 <span class="mono">db/properties/</span> 기록에서 읽는다 — 이 화면은 자체 보관하지 않는다.</div></div>
+</div>
+
+{% if p.missing %}
+<div class="callout cal-danger">
+  <b>⛔ 기록을 못 읽은 단계가 있다</b> — 화면이 비어 보이는 것과 자료가 없는 것은 다르다:
+  <span class="mono">{{ p.missing|join(', ') }}</span>
+</div>
+{% endif %}
+
+<div class="callout cal-warn">
+  <b>⚠ 이 캠페인은 한 번 닫혔고, 다른 질문으로 다시 열렸다.</b>
+  400 원자 1층 결과는 <b>‘UMA 미검증 조성’ 표지가 그대로 붙어 있고 인용할 수 없다</b> —
+  G1(400 원자 QE 검증)이 <b>불통과가 아니라 미실시</b>이기 때문이다. 아래 소셀 결과가 아무리 좋아도
+  그 표지는 <b>안 떨어진다</b>(G-B2 탈락 → 전이 통로 닫힘).
+</div>
+
+<!-- ── 단계 ─────────────────────────────────────────────── -->
+<h2 style="margin-top:28px;font-size:1rem">단계별 진행</h2>
+{% for s in p.stages %}
+<div class="card" style="padding:14px 18px;margin-top:10px;
+     border-left:3px solid {{ '#dc2626' if s.missing else ('#16a34a' if s.verdict and '통과' in s.verdict|string
+     else ('#dc2626' if s.verdict and ('탈락' in s.verdict|string or '미실시' in s.verdict|string) else '#6b7280')) }}">
+  <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <div style="font-weight:600">{{ loop.index }}. {{ s.title }}</div>
+    <div class="muted mono" style="font-size:.72rem">{{ s.machine }}{% if s.date %} · {{ s.date }}{% endif %}</div>
+  </div>
+  <div class="muted" style="font-size:.78rem;margin-top:3px">{{ s.one_line }}</div>
+
+  {% if s.missing %}
+    <div class="callout cal-danger" style="margin-top:8px">기록 파일을 못 읽었다 — 판정을 여기서 지어내지 않는다.</div>
+  {% else %}
+    {% if s.verdict %}
+    <div style="margin-top:8px;font-size:.82rem"><b>판정</b> · {{ s.verdict|bold }}</div>
+    {% endif %}
+    {% if s.facts %}
+    <table style="margin-top:8px;font-size:.78rem;width:100%">
+      <tbody>
+      {% for f in s.facts %}
+      <tr>
+        <td style="width:210px;color:#6b7280">{{ f.label }}</td>
+        <td class="mono">{% if f.unread %}<span style="color:#dc2626">— ⚠ 기록에서 못 읽음</span>
+            {% else %}{{ f.value }}{% endif %}</td>
+        <td class="muted" style="font-size:.72rem">{{ f.note|bold }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+    <div class="muted mono" style="font-size:.7rem;margin-top:8px">
+      <a href="/api/file/db/properties/{{ s.record }}">db/properties/{{ s.record }}</a>
+      {% if s.citable is not none %} · citable: {{ s.citable }}{% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endfor %}
+
+<!-- ── 원소별 힘 분해 ────────────────────────────────────── -->
+{% if fe.ok %}
+<h2 style="margin-top:30px;font-size:1rem">G-B3 원소별 힘 오차 — 무른 곳이 어디인가</h2>
+<div class="callout cal-warn" style="margin-top:8px">{{ fe.not_a_gate|bold }}</div>
+<table style="margin-top:10px;font-size:.8rem">
+  <thead><tr><th>원소</th><th>원자수</th><th>MAE (eV/Å)</th><th>RMSE (eV/Å)</th>
+    <th>참조 RMS</th><th>상대 %</th><th>softening</th></tr></thead>
+  <tbody>
+  {% for el, g in fe.rows.items() %}
+  <tr>
+    <td><b>{{ el }}</b></td>
+    <td class="mono">{{ g.n_atoms }}</td>
+    <td class="mono">{{ '%.4f'|format(g.mae_eVA) }}</td>
+    <td class="mono">{{ '%.4f'|format(g.rmse_eVA) }}</td>
+    <td class="mono">{{ '%.3f'|format(g.rms_ref_eVA) }}</td>
+    <td class="mono">{{ '%.2f'|format(g.rel_mae_pct) }}</td>
+    <td class="mono" style="color:{{ '#c05621' if g.softening_slope < 1 else '#0284c7' }}">
+      {{ '%.4f'|format(g.softening_slope) }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% for r in fe.reads %}<div class="muted" style="font-size:.78rem;margin-top:6px">{{ r|bold }}</div>{% endfor %}
+{% if fe.interpretation %}
+<div class="callout cal-warn" style="margin-top:10px"><b>해석(측정 아님)</b> · {{ fe.interpretation|bold }}</div>
+{% endif %}
+{% if fe.ceiling %}
+<div class="callout cal-danger" style="margin-top:8px">{{ fe.ceiling|bold }}</div>
+{% endif %}
+<div class="muted mono" style="font-size:.7rem;margin-top:6px">
+  <a href="/api/file/{{ fe.record }}">{{ fe.record }}</a></div>
+{% endif %}
+
+<!-- ── 허용 서술 범위 ────────────────────────────────────── -->
+<h2 style="margin-top:30px;font-size:1rem">허용 서술 범위 — 소셀로 무엇을 말할 수 있나</h2>
+<div class="muted" style="font-size:.76rem;margin-top:4px">
+  생산 셀 선언 <span class="mono">D-2026-09-18-lpscl-smallcell-production-scope</span>
+  ({{ p.scope.status }}) 에서 읽는다.</div>
+
+{% if p.scope.rider %}
+<div class="callout cal-danger" style="margin-top:10px">
+  <b>모든 소셀 수치에 영구히 붙는 단서</b><div style="margin-top:4px">{{ p.scope.rider|bold }}</div>
+</div>
+{% endif %}
+
+<div class="grid grid-2" style="margin-top:12px">
+  <div class="card" style="padding:14px 18px;border-left:3px solid #16a34a">
+    <div style="font-weight:600;color:#16a34a">✅ 답할 수 있는 것</div>
+    <ul style="margin:8px 0 0;padding-left:18px;font-size:.8rem">
+      {% for x in p.scope.can %}<li style="margin-top:4px">{{ x|bold }}</li>{% endfor %}
+    </ul>
+  </div>
+  <div class="card" style="padding:14px 18px;border-left:3px solid #dc2626">
+    <div style="font-weight:600;color:#dc2626">⛔ 답할 수 없는 것</div>
+    <ul style="margin:8px 0 0;padding-left:18px;font-size:.8rem">
+      {% for k, v in p.scope.cannot.items() %}
+      <li style="margin-top:6px"><b>{{ k.replace('_',' ') }}</b> — {{ v|bold }}</li>{% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

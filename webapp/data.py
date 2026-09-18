@@ -7223,3 +7223,168 @@ def seminar_runsheet(md: str) -> list[dict]:
         p["minutes"] = round(tot / 60.0, 1)
         p["span"] = (f"{p['slides'][0]['id']}–{p['slides'][-1]['id']}" if p["slides"] else "")
     return parts
+
+
+# ─────────────────────────────────────────────────────────────
+# Li₂S 계면상 파이프라인 (/li2s) — 2026-09-18
+#
+# 왜 별도 화면인가: 이 캠페인은 **0층 → 1층 → 마감 → 소셀 재설계** 로 네 번 모양이
+#   바뀌었고, 기록이 db/properties 에 12개로 흩어져 있다. "지금 어디까지 왔고 무엇을
+#   말할 수 있나" 를 한 화면에서 못 보면 사람은 가장 최근 숫자만 집어 간다.
+#
+# ⛔ 이 함수가 **못 하는 것** (화면 규율)
+#   · 숫자를 자체 보관하지 않는다. 전부 db/properties 의 기록에서 **읽는다**.
+#     읽을 수 없으면 `None` 이고 화면은 그것을 `—` 로 그린다 (0 으로 그리지 않는다).
+#   · 판정하지 않는다. 각 기록이 스스로 적은 판정 문자열을 옮긴다.
+#   · 기록이 없으면 그 단계를 **빼지 않고** `missing=True` 로 남긴다 — 조용히 사라지면
+#     "안 한 것" 과 "기록이 없는 것" 이 화면에서 같아진다.
+# ─────────────────────────────────────────────────────────────
+def _dig(d, path, default=None):
+    """중첩 dict 를 판다. 없으면 default (**0 이 아니다**).
+
+    `path` 는 점표기 문자열 **또는** 키의 리스트/튜플이다.
+    ⛔ **키 안에 점이 있으면 문자열 경로를 쓰면 안 된다.** 2026-09-18 실측:
+      `"관측.x=0.25"` 가 `["관측","x=0","25"]` 로 쪼개져 조용히 못 읽었다.
+      그런 키는 `["2_...", "관측", "x=0.25"]` 처럼 **리스트로** 준다.
+    """
+    cur = d
+    for k in (path.split(".") if isinstance(path, str) else path):
+        if not isinstance(cur, dict) or k not in cur:
+            return default
+        cur = cur[k]
+    return cur
+
+
+#: 단계 선언 — (키, 제목, 파일, 판정경로, 기계, 한 줄 설명)
+#: ⚠ 순서가 곧 화면 순서다. 시간순이지 중요도순이 아니다.
+LI2S_STAGES = [
+    ("layer0", "0층 — 열역학 tie-line",
+     "lpscl_li2s_hull_layer0_2026_09_11.json", "1_게이트_판정_먼저.⇒",
+     "repo (MP hull)", "LPSCl + Li₂S 가 섞이면 무엇이 되나 — 반응 에너지의 부호"),
+    ("layer1", "1층 — 비정질 계면상 (melt-quench, 400 원자)",
+     "lpscl_li2s_layer1_g2_seed1_2026_09_14.json", "8_현재_결론_회신_BR",
+     "kgy (UMA MD)", "1200 K 융체 → 10¹² K/s 담금질 → 300 K 유리 후보 한 구조"),
+    ("g1", "G1 — 400 원자를 QE 로 검증하려 했다",
+     "li2s_layer1_g1_prereg_2026_09_14.json", "status",
+     "kgy → 전 기계", "UMA 가 이 조성에서 맞는지 재려는 게이트"),
+    ("closed", "마감 — G1 이 자원상 불가라 닫았다",
+     "lpscl_li2s_layer1_closed_2026_09_15.json", "왜_닫나",
+     "—", "데이터 판정이 아니라 자원 사실로 닫은 캠페인"),
+    ("smallcell", "소셀 재설계 — 120 원자로 질문을 바꿨다",
+     "lpscl_smallcell_uma_qe_force_estimand_2026_09_16.json", "⛔_이것은_G1_재개가_아니다.⇒",
+     "kgy", "마감 카드 재개조건 ②(보고량 재설계)로 들어간 **새 질문**"),
+    ("gb2", "G-B2 — 소셀이 400 원자의 축소판인가",
+     "lpscl_smallcell_gb2_result_2026_09_18.json", "★_판정",
+     "repo (계산 0)", "같은 t_ps 프레임끼리 국소환경이 겹치는지"),
+    ("probe", "G-B3 탐침 — 메모리가 정말 들어가나",
+     "lpscl_smallcell_gb3_probe_2026_09_18.json", "★_9점_예산_재산정.판단",
+     "kgy (QE)", "첫 한 점으로 메모리·벽시계를 실측하고 예산을 다시 정한다"),
+    ("gb3", "G-B1·G-B3 — UMA 힘이 QE 와 맞나",
+     "lpscl_smallcell_gb3_result_2026_09_18.json", "★_G_B3_힘·에너지.판정",
+     "kgy (QE + UMA)", "봉인된 10 프레임에서 힘 RMSE · 상대 에너지 MAE"),
+    ("scope", "생산 셀 선언 — 이제 120 원자급이 정본이다",
+     "lpscl_smallcell_production_scope_2026_09_18.json", "status",
+     "—", "1저자 결정 · 허용 서술 범위와 영구 단서를 먼저 박는다"),
+]
+
+
+def li2s_pipeline() -> dict:
+    """/li2s 화면이 읽는 전부. 숫자는 **기록에서만** 온다."""
+    P = DB / "properties"
+    stages, missing = [], []
+    for key, title, fn, verdict_path, machine, one_line in LI2S_STAGES:
+        d = _load_json(P / fn)
+        if d is None:
+            missing.append(fn)
+            stages.append({"key": key, "title": title, "machine": machine,
+                           "one_line": one_line, "record": fn, "missing": True,
+                           "verdict": None, "facts": []})
+            continue
+        stages.append({
+            "key": key, "title": title, "machine": machine, "one_line": one_line,
+            "record": fn, "missing": False,
+            "date": d.get("date"), "citable": d.get("citable"),
+            "verdict": _dig(d, verdict_path),
+            "headline": d.get("제목"),
+            "facts": _li2s_facts(key, d),
+        })
+    scope = _load_json(P / "lpscl_smallcell_production_scope_2026_09_18.json") or {}
+    return {
+        "ok": not missing,
+        "stages": stages,
+        "missing": missing,
+        "scope": {
+            "can": scope.get("2_★_답할_수_있는_것") or [],
+            "cannot": scope.get("3_⛔_답할_수_없는_것") or {},
+            "rider": scope.get("4_★_모든_소셀_결과에_영구히_붙는_단서"),
+            "status": scope.get("status"),
+        },
+    }
+
+
+def _li2s_facts(key: str, d: dict) -> list:
+    """단계별로 **검증된 경로에서만** 수치를 뽑는다. 없으면 그 줄을 안 만든다."""
+    #: ⛔ 못 읽은 값을 **행째로 지우지 않는다.** 경로 오타면 행이 조용히 사라져
+    #   화면이 "그 사실이 없다" 처럼 보인다 — 실제로 2026-09-18 작성 중 그렇게 됐다
+    #   (`요약.peak_LiCl.max` 가 기록에 없는 경로였는데 화면엔 아무 흔적이 없었다).
+    #   값이 없으면 **행을 남기고 `value=None`** 으로 둔다 → 화면이 `—` 와 경고를 그린다.
+    def row(label, val, note=""):
+        return {"label": label, "value": val, "note": note,
+                "unread": val is None}
+
+    got = {
+        "layer0": lambda: [
+            row("Li₆PS₅Cl E_above_hull", _dig(d, "1_게이트_판정_먼저.③_Li₆PS₅Cl"),
+                "대조 잡 — 문턱 25 meV/atom"),
+            row("ΔE_rxn (x=0.25)",
+                _dig(d, ["2_그러나_산술은_별개로_말한다", "관측", "x=0.25"]),
+                "meV/atom · ⚠ 끝점 희석의 산술일 뿐 판정이 아니다"),
+        ],
+        "layer1": lambda: [
+            row("최종 밀도", _dig(d, "3_최종_구조_지표.density_g_cm3"), "g/cm³ (UMA 단독 · 대조 없음)"),
+            row("PS₄ 보존율", _dig(d, "3_최종_구조_지표.PS4_fraction"), "P 주변 2.6 Å 안 S 가 정확히 4개"),
+            row("결정 부피가법 대비", _dig(d, "4_G4_대조.dev_pct_vs_center"),
+                "% · G4 **적정성 경보**이지 합격선이 아니다"),
+        ],
+        "closed": lambda: [
+            row("필요 메모리 (실측)", _dig(d, "자원_사실_2026_09_15.필요"), ""),
+            row("확정값", _dig(d, "확정값.없음"), ""),
+        ],
+        "smallcell": lambda: [
+            row("셀", _dig(d, "1b_설계_선언.실제_조성_농도"), ""),
+        ],
+        "gb2": lambda: [
+            row("Li–Cl 첫 봉우리 차", _dig(d, "실패항목.peak_LiCl"), "Å · 문턱 0.05 → **초과**"),
+            row("PS₄ 보존율 차", _dig(d, "통과항목.PS4_pp"), "문턱 10 %p → **통과**"),
+            row("배위수 축은 뺐다", _dig(d, "⛔_철회한_설명_2026_09_18.⇒"), ""),
+            row("남는 사실", _dig(d, "★_무엇이_진짜_차이인가.★_남는_사실"), ""),
+        ],
+        "probe": lambda: [
+            row("pw.x 추정", _dig(d, "★_탐침_실측.Estimated_max_dynamical_RAM_GB"), "GB"),
+            row("실측 점유", _dig(d, "★_탐침_실측.실측_device_점유_GB"), "GB"),
+            row("V² 가 틀렸다", _dig(d, "★_V²_가_틀렸다_정정.틀린_것"), ""),
+        ],
+        "gb3": lambda: [
+            row("힘 RMSE", _dig(d, "★_G_B3_힘·에너지.F_RMSE_eVA"),
+                "eV/Å · 문턱 %s" % _dig(d, "★_G_B3_힘·에너지.F_RMSE_문턱")),
+            row("상대 에너지 MAE", _dig(d, "★_G_B3_힘·에너지.상대_E_MAE_meV_atom"),
+                "meV/atom · 문턱 %s" % _dig(d, "★_G_B3_힘·에너지.E_문턱")),
+            row("SCF 수렴", _dig(d, "★_G_B1_수렴.판정"), ""),
+        ],
+    }.get(key, lambda: [])
+    return got()
+
+
+def li2s_force_by_element() -> dict:
+    """G-B3 원소별 분해 표. ⛔ **문턱이 아니다** — 카드 §2 의 보고 항목이다."""
+    d = _load_json(DB / "properties" / "lpscl_smallcell_gb3_result_2026_09_18.json")
+    if not d:
+        return {"ok": False, "why": "gb3 기록을 못 읽었다"}
+    blk = d.get("★_원소별_분해_카드_§2_보고항목") or {}
+    return {"ok": True,
+            "rows": blk.get("표") or {},
+            "reads": [v for k, v in blk.items() if k.startswith("★_읽기")],
+            "not_a_gate": blk.get("⛔_문턱이_아니다"),
+            "interpretation": blk.get("해석(측정_아님)"),
+            "ceiling": blk.get("⇒_허용_서술에_주는_것"),
+            "record": "db/properties/lpscl_smallcell_gb3_result_2026_09_18.json"}

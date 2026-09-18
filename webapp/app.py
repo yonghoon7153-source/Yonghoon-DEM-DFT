@@ -1426,6 +1426,25 @@ def nd_survey_page():
     return render_template("nd_survey.html", active="nd", d=d, LAB=D.SYSCLASS_LABEL)
 
 
+@app.route("/li2s")
+def li2s_pipeline_page():
+    """LPSCl@Li₂S 계면상 — 0층부터 소셀까지 **한 화면에**.
+
+    왜 필요한가: 이 캠페인은 네 번 모양이 바뀌었고(0층 → 1층 400원자 → 자원 마감 →
+      120원자 소셀) 기록이 db/properties 에 아홉 개로 흩어져 있다. 한 화면이 없으면
+      사람은 **가장 최근 숫자만** 집어 가고, 400 원자가 아직 'UMA 미검증' 이라는 것을
+      못 본다.
+
+    ⛔ 이 페이지가 **하지 않는 것**
+      · 판정하지 않는다 — 각 기록이 스스로 적은 판정 문자열을 옮긴다.
+      · 숫자를 자체 보관하지 않는다. 못 읽은 값은 **`—` 와 경고**로 그린다(0 이 아니다).
+      · 소셀 결과로 400 원자를 서술하지 않는다 (G-B2 탈락 · 소셀 카드 §6 무효 조건).
+    """
+    p = D.li2s_pipeline()
+    return render_template("li2s.html", active="li2s", p=p,
+                           fe=D.li2s_force_by_element())
+
+
 @app.route("/benchmarks")
 def benchmarks():
     """외부 재현 표적 + 덱 정정 원장. 우리 값과 **섞이지 않게** 별도 페이지로 분리한다."""
