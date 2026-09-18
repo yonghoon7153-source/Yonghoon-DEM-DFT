@@ -51,7 +51,7 @@ def li_metal_mu(entries):
 ENDPOINT_TOL = 1e-6
 
 
-def is_endpoint(x, tol=ENDPOINT_TOL):
+def is_endpoint(x, rxn=None, tol=ENDPOINT_TOL):
     """최소 kink 가 x=0/1 끝점인가 — **두 상이 안 섞였다**는 뜻이다.
 
     ⛔⛔ **끝점의 뜻은 모드마다 다르다. 한 덩이로 읽으면 틀린다** (2026-09-16 실측).
@@ -72,9 +72,48 @@ def is_endpoint(x, tol=ENDPOINT_TOL):
       ② 모드를 모른다. 뜻풀이는 `endpoint_meaning()` 이 한다. ③ 값을 버리지 않는다 —
       깃발만 단다 (조용히 버리면 "왜 안 나오지" 가 된다).
     """
-    if x is None:
-        return False
-    return float(x) <= tol or float(x) >= 1.0 - tol
+    flag, _ = endpoint_verdict(x, rxn, tol)
+    return bool(flag)
+
+
+def lhs_species_count(rxn):
+    """반응식 **좌변의 화학종 수**. 못 읽으면 None.
+
+    1 이면 상대가 계산에 안 들어간 것이다 — x 를 몰라도 내릴 수 있는 판정이다.
+    ⛔ 이 함수가 못 하는 것: 계수를 검산하지 않고, 남은 한 종이 c1 인지 c2 인지도
+      모른다 (`is_endpoint` docstring '안 하는 것' ① 과 같은 한계).
+    """
+    if not rxn or "->" not in str(rxn):
+        return None
+    n = len([u for u in str(rxn).split("->", 1)[0].split("+") if u.strip()])
+    return n or None
+
+
+def endpoint_verdict(x, rxn=None, tol=ENDPOINT_TOL):
+    """(flag, 근거) — **`None`(모름)을 `False`(아니다)로 뭉개지 않는다.**
+
+    ⛔⛔ 2026-09-18 실측. CEI 9 조성 배치(46 칸)의 기록에 `mixing_x` 키가 **아예 없었고**
+      (gabia 체크아웃이 게이트 도입 전), 읽는 쪽은 `.get("min_kink_at_endpoint")` 가 준
+      `None` 을 **"봤고 괜찮다"** 로 읽었다. 실제로는 `pDef020` 이 4.30·4.50 V 에서
+      좌변에 양극 없이 혼자 분해하고 있었다 — 그 값으로 도펀트 효과를 분해했으니
+      두 칸이 통째로 틀린 수였다. 오류는 안 났다. 전형적인 조용히 틀린 경로.
+    ⇒ 세 단계: ① x 가 실수면 x 로 판정 ② 아니면 **반응식 좌변 종 수**로 판정
+      ③ 둘 다 못 읽으면 `None` 을 돌려준다. `None` 을 받은 호출부는 *"못 봤다"* 로
+      기록해야 하고, **`False` 로 적으면 안 된다**.
+    ⚠ `float('nan')` 도 '모름' 이다 — CSV 경로가 `float(r.get(k,"nan"))` 로 읽어
+      오랫동안 nan 이 통과했다 (`x == x` 로 거른다).
+    """
+    if x is not None and x == x:
+        try:
+            xf = float(x)
+        except (TypeError, ValueError):
+            xf = None
+        if xf is not None:
+            return (xf <= tol or xf >= 1.0 - tol), "mixing_x=%.6f" % xf
+    n = lhs_species_count(rxn)
+    if n is None:
+        return None, "x 도 반응식도 못 읽었다 — **모름**(false 아님)"
+    return (n <= 1), f"x 없음 → 반응식 좌변 {n} 종"
 
 
 def endpoint_meaning(closed):
@@ -264,7 +303,9 @@ def run_batch(a):
                     rec["dE_eV_per_atom"] = round(e, 5)
                     rec["reaction"] = rxn
                     rec["mixing_x"] = None if x is None else round(x, 6)
-                    rec["min_kink_at_endpoint"] = is_endpoint(x)
+                    _fl, _why = endpoint_verdict(x, rxn)
+                    rec["min_kink_at_endpoint"] = _fl      # ⚠ None = **못 봤다**
+                    rec["endpoint_basis"] = _why
                     if rec["min_kink_at_endpoint"]:
                         rec["endpoint_meaning"] = endpoint_meaning(True)
                 else:
@@ -273,9 +314,11 @@ def run_batch(a):
                         gpd = GrandPotentialPhaseDiagram(entries, {Element("Li"): mu0 - V})
                         e, rxn, x = min_rxn_grand(Composition(forms[sp]), Composition(cstr),
                                                   gpd, pd)
+                        _fl, _why = endpoint_verdict(x, rxn)
                         cell = {"dE_eV_per_atom": round(e, 5), "reaction": rxn,
                                 "mixing_x": None if x is None else round(x, 6),
-                                "min_kink_at_endpoint": is_endpoint(x)}
+                                "min_kink_at_endpoint": _fl,   # ⚠ None = **못 봤다**
+                                "endpoint_basis": _why}
                         if cell["min_kink_at_endpoint"]:
                             cell["endpoint_meaning"] = endpoint_meaning(False)
                         rec["by_voltage"][f"{V:.2f}"] = cell
@@ -397,7 +440,31 @@ def _selftest():
     chk(is_endpoint(0.0) and is_endpoint(1.0), "끝점 판정: x=0·x=1 을 잡는다")
     chk(not is_endpoint(0.5) and not is_endpoint(0.0001),
         "[음성] 안쪽 x 는 끝점이 아니다 (0.0001 도 통과시키면 진짜 계면을 버린다)")
-    chk(not is_endpoint(None), "[음성] x 가 None 이면 깃발을 세우지 않는다 (모르는 것 ≠ 퇴화)")
+    # ── x 가 없을 때 (2026-09-18 실측 재현) ──────────────────────────────
+    #   CEI 46 칸에 `mixing_x` 키가 아예 없었다. 옛 판은 `is_endpoint(None) → False` 라
+    #   기록에 `min_kink_at_endpoint: false` 가 박혔고, 읽는 사람은 "봤고 괜찮다" 로 읽었다.
+    #   실제로는 pDef020 이 4.30·4.50 V 에서 좌변에 양극 없이 혼자 분해하고 있었다.
+    _PDEF020 = ("Li6.4P0.8S4.1Cl1.6O0.3 -> 6.4 Li + 0.34 P2S7 + 0.12 S "
+                "+ 0.06 P2O5 + 1.6 SCl")
+    _MIXED = ("0.5 Li5.8Nd0.2P0.8S4.1Cl1.6O0.3 + 0.5 LiCoO2 -> 3.4 Li + 0.8 SCl "
+              "+ 0.05 NdP5O14 + 0.05 Nd(PO3)3 + 0.5 CoS2 + 0.25 S")
+    chk(is_endpoint(None, _PDEF020),
+        "[회귀] x 가 없어도 **좌변 1 종**이면 끝점이다 — 실제로 놓쳤던 pDef020 반응식")
+    chk(not is_endpoint(None, _MIXED),
+        "[음성] x 가 없어도 좌변 2 종이면 끝점이 **아니다** — 멀쩡한 칸을 버리면 안 된다")
+    chk(endpoint_verdict(None, None)[0] is None,
+        "[음성] x 도 반응식도 없으면 **None(모름)** — False 로 뭉개면 '봤고 괜찮다' 가 된다")
+    chk(is_endpoint(float("nan"), _PDEF020),
+        "[음성] nan 도 '모름' 이다 — CSV 경로의 float(...,'nan') 가 통과하던 구멍")
+    chk(lhs_species_count(_PDEF020) == 1 and lhs_species_count(_MIXED) == 2,
+        "좌변 종 수: 1 vs 2 를 센다")
+    chk(lhs_species_count("반응식아님") is None and lhs_species_count("") is None,
+        "[음성] '->' 가 없으면 0 이 아니라 None — 못 읽은 것을 1 종으로 세면 전부 끝점이 된다")
+    chk(endpoint_verdict(0.5, _PDEF020)[0] is False,
+        "[음성] x 가 있으면 x 가 이긴다 — 반응식 표기가 x 를 덮어쓰지 않는다")
+    chk("mixing_x" in endpoint_verdict(0.5, None)[1]
+        and "좌변" in endpoint_verdict(None, _MIXED)[1],
+        "근거 문자열이 **어느 경로로 판정했는지** 말한다 (기록에 박힌다)")
     chk("계면량이 아니다" in endpoint_meaning(False)
         and "상호반응 없음" in endpoint_meaning(True),
         "뜻풀이가 모드마다 다르다 — 닫힌계 끝점은 정상 판정, 열린계 끝점은 무효")
@@ -712,7 +779,7 @@ def p_host_ladder(csv_path, p_element="P", ladder_element="Li"):
             except ValueError:
                 x = None
             tag = f'{r["electrolyte"]}@{r["voltage_V"]}V/{r["cathode"]}'
-            if is_endpoint(x):
+            if is_endpoint(x, r.get("reaction", "")):
                 skipped.append(tag)
                 continue
             hosts = []
@@ -864,7 +931,7 @@ def p_flux(csv_path, exchange, base="modelc", n_p_per_fu=None):
                 x = float(r.get("x_atomic_frac", "nan"))
             except ValueError:
                 x = None
-            if is_endpoint(x):
+            if is_endpoint(x, r.get("reaction", "")):
                 continue
             rxn = r["reaction"]
             n_atoms = 0.0
@@ -985,7 +1052,7 @@ def dopant_fate(csv_path, dopant="Nd"):
             except ValueError:
                 x = None
             tag = f'{r["electrolyte"]}@{r["voltage_V"]}V/{r["cathode"]}'
-            if is_endpoint(x):
+            if is_endpoint(x, r.get("reaction", "")):
                 skipped.append(tag)
                 continue
             got = []
@@ -1194,9 +1261,12 @@ def main():
                     row[elab] = round(e, 5)
                     rxn_row[elab] = rxn          # ⭐ 2026-09-16: 버리지 않는다 (아래 주석)
                     kink_row[elab] = kinks       # ⭐ x-스캔 곡선용 전 kink
-                    deg_row[elab] = is_endpoint(x)
+                    deg_row[elab], _why = endpoint_verdict(x, rxn)
                     # ⛔ 끝점이면 상대가 계산에 안 들어간 값이다 — 조용히 넘기지 않는다.
-                    mark = "  ⛔끝점 x=%.3g — 계면량 아님(자체분해)" % x if deg_row[elab] else ""
+                    #   ⚠ x 가 None 이어도 반응식으로 설 수 있다 → %.3g 를 쓰면 안 된다.
+                    mark = (f"  ⛔끝점 ({_why}) — 계면량 아님(자체분해)" if deg_row[elab]
+                            else ("  ⚠끝점 **판정 불가** — " + _why
+                                  if deg_row[elab] is None else ""))
                     print(f"  V={V:.2f}  {elab:9s}: {e:.4f} eV/atom   {rxn}{mark}")
                 except Exception as ex:
                     row[elab] = None
