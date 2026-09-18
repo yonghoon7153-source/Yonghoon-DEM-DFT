@@ -871,6 +871,136 @@ def _gb2_frames(run, want, log=print):
     return out
 
 
+# ═══ NEB 끝점 게이트 (카드 §0b-②-4) ══════════════════════════════════════
+NEB_CARD = "db/properties/lpscl_smallcell_neb_estimand_2026_09_18.json"
+NEB_PATS = {
+    "gate_A_li_min_A":  r"두 위치 차\(MIC\)\s*≥\s*\*{0,2}([0-9.]+)\s*Å",
+    "gate_B_rmsd_max_A": r"RMSD\(두 끝점 사이, MIC\)\s*≤\s*\*{0,2}([0-9.]+)\s*Å",
+}
+
+
+def read_neb_gate_thresholds(card=NEB_CARD):
+    """게이트 A/B 문턱을 **봉인된 산문에서 직접** 판다 (read_gb2_thresholds 와 같은 규약).
+
+    사본을 만들지 않는다 — 두 벌이 되면 갈라지고, 원장이 이기는데 도구는 사본을 본다.
+    둘 중 하나라도 못 찾으면 **죽는다**: 기본값을 지어내지 않는다.
+    """
+    q = pathlib.Path(card)
+    if not q.exists():
+        q = pathlib.Path(__file__).resolve().parents[2] / card
+    d = json.loads(q.read_text(encoding="utf-8"))
+    try:
+        g = d["0b_경로선택·집계_규칙_제안_2026_09_18"]["②_경로_선택_규칙"][
+            "4_★_끝점_게이트_두_개_다_통과해야_후보다"]
+        src = g["게이트_A_서로_다른_최소"] + "\n" + g["게이트_B_골격이_안_바뀜"]
+    except (KeyError, TypeError):
+        raise KeyError(f"{q}: §0b-②-4 끝점 게이트 절이 없다 — 도구가 문턱을 지어내지 않는다")
+    th = {}
+    for k, pat in NEB_PATS.items():
+        m = re.search(pat, src)
+        if not m:
+            raise ValueError(f"⛔ {q}: 게이트 문턱 '{k}' 를 산문에서 못 찾았다 — "
+                             f"카드 문구가 바뀌었으면 **도구를 고치고 시험을 다시 친다**.")
+        th[k] = float(m.group(1))
+    return th
+
+
+def mic_dist(a, b, cell):
+    """두 점 사이 최소상 거리 [Å]."""
+    f = (np.asarray(b) - np.asarray(a)) @ np.linalg.inv(cell)
+    f -= np.round(f)
+    return float(np.linalg.norm(f @ cell))
+
+
+def non_li_rmsd(at0, at1):
+    """비-Li 원자의 MIC RMSD [Å]. 골격이 재배열했는지 본다.
+
+    ⛔ 못 하는 것: 전체 병진을 빼지 않는다. 셀 고정 이완이라 병진 자유도가 없다
+      (있었다면 이 값이 병진으로 부풀었을 것이고, 그건 다른 시험이 필요하다).
+    """
+    sym = np.array(at0.get_chemical_symbols())
+    m = sym != "Li"
+    cell = np.array(at0.get_cell())
+    p0, p1 = at0.get_positions()[m], at1.get_positions()[m]
+    d = np.array([mic_dist(x, y, cell) for x, y in zip(p0, p1)])
+    return float(np.sqrt((d ** 2).mean())), int(m.sum()), float(d.max())
+
+
+def endpoint_gate(events_dir, out_json=None, card=NEB_CARD, device="cuda",
+                  turbo=False, fmax=None, steps=2000, log=print):
+    """§0b-②-4 끝점 게이트 — **UMA 탐침**.
+
+    ⛔ 이 함수가 하지 않는 것
+      · 비준된 게이트를 **집행하지 않는다**. §0b 는 이완을 QE(G1 §3)로 적었다.
+        여기 결과는 `gate_engine: "UMA(탐침)"` 로 표시되고, 판정도 `provisional_*` 이다.
+      · 장벽을 계산하지 않는다.
+      · 사건을 고르지 않는다 — events.json 에 있는 것을 전부 본다.
+    """
+    from ase.io import read as ase_read
+    from ase.optimize import FIRE
+    ev_dir = pathlib.Path(events_dir)
+    meta = json.loads((ev_dir / "events.json").read_text(encoding="utf-8"))
+    th = read_neb_gate_thresholds(card)
+    # 이완 설정은 이 궤적을 만든 것과 **같은 것**을 쓴다 (새 눈금을 만들지 않는다)
+    fm = float(FINAL_RELAX["fmax_eV_A"]) if fmax is None else float(fmax)
+    log(f"[endpoint_gate] 사건 {len(meta['events'])} 건 · 문턱 A ≥ {th['gate_A_li_min_A']} Å · "
+        f"B ≤ {th['gate_B_rmsd_max_A']} Å · FIRE fmax {fm} (셀 고정, FINAL_RELAX 승계)")
+    calc = make_calc(turbo=turbo, device=device)
+    rows, n_a, n_b = [], 0, 0
+    for e in meta["events"]:
+        tag, ai = e["tag"], int(e["atom_index"])
+        got = {}
+        for side in ("i", "f"):
+            at = ase_read(ev_dir / f"{tag}_{side}.xyz")
+            at.calc = calc
+            opt = FIRE(at, logfile=None)
+            opt.run(fmax=fm, steps=steps)
+            got[side] = (at, opt.get_number_of_steps(), bool(opt.converged()))
+        (a0, s0, c0), (a1, s1, c1) = got["i"], got["f"]
+        cell = np.array(a0.get_cell())
+        dLi = mic_dist(a0.get_positions()[ai], a1.get_positions()[ai], cell)
+        rmsd, n_fw, dmax = non_li_rmsd(a0, a1)
+        okA, okB = dLi >= th["gate_A_li_min_A"], rmsd <= th["gate_B_rmsd_max_A"]
+        n_a += okA; n_b += okB
+        why = [] if (okA and okB) else (
+            (["A: 이완 후 같은 최소로 모였다"] if not okA else []) +
+            (["B: 골격이 재배열했다 — 같은 계가 아니다"] if not okB else []))
+        rows.append({"tag": tag, "atom_index": ai, "disp_md_A": e["disp_A"],
+                     "li_sep_after_relax_A": round(dLi, 4),
+                     "non_li_rmsd_A": round(rmsd, 4), "non_li_max_A": round(dmax, 4),
+                     "n_framework_atoms": n_fw,
+                     "gate_A_pass": bool(okA), "gate_B_pass": bool(okB),
+                     "survives": bool(okA and okB), "rejected_because": why,
+                     "relax_steps": [s0, s1], "relax_converged": [c0, c1]})
+        log(f"  {tag:14s} MD {e['disp_A']:.2f} Å → 이완 후 Li {dLi:.2f} Å "
+            f"({'A✓' if okA else 'A✗'}) · 골격 RMSD {rmsd:.3f} Å "
+            f"({'B✓' if okB else 'B✗'}) · {'생존' if okA and okB else '기각'}")
+    surv = [r for r in rows if r["survives"]]
+    res = {
+        "date": _today(), "kind": "endpoint_gate_probe",
+        "⛔_gate_engine": "UMA(탐침) — **비준된 §0b 는 이완을 QE(G1 §3)로 적었다.** "
+                          "이 결과는 기각률을 먼저 알아 QE 예산을 정하기 위한 것이고, "
+                          "게이트를 **집행하지 않는다**. 판정은 provisional 이다.",
+        "card": card, "thresholds": th,
+        "relax": {"kind": "FIRE", "fmax_eV_A": fm, "cell": "fixed",
+                  "uma_mode": getattr(calc, "_mq_mode", "?"), "승계": "FINAL_RELAX"},
+        "n_events": len(rows), "provisional_n_survive": len(surv),
+        "provisional_reject_rate": round(1 - len(surv) / len(rows), 4) if rows else None,
+        "gate_A_pass": int(n_a), "gate_B_pass": int(n_b),
+        "rows": rows,
+        "⇒_§0b_②_5": ("**전부 기각** — §0b-②-5 에 따라 장벽 분포를 내지 않는다. "
+                       "⚠ 단 이 판정은 UMA 이완 기준이다. QE 로 확정하려면 1저자 결정이 필요하다."
+                       if not surv else
+                       f"생존 {len(surv)} 건 — 이들에 대해서만 QE 예산을 잡는다."),
+    }
+    if out_json:
+        pathlib.Path(out_json).write_text(json.dumps(res, ensure_ascii=False, indent=1),
+                                          encoding="utf-8")
+        log(f"  → {out_json}")
+    log(f"  ⇒ 생존 {len(surv)}/{len(rows)} (A 통과 {n_a} · B 통과 {n_b}) — {res['⇒_§0b_②_5']}")
+    return res
+
+
 def gb2_compare(run_small, run_big, card=GB2_CARD, frame_card=None, log=print):
     """G-B2 — 소셀과 400 원자의 **같은 t_ps 프레임**에서 국소환경이 겹치는가. 새 계산 0.
 
@@ -1443,6 +1573,54 @@ def _selftest():
         chk(r_ok["판정_규칙"].startswith("같은 t_ps 짝의"),
             "판정 규칙(짝지어 최댓값)을 결과 파일에 **적어서** 내보낸다")
 
+    # ── NEB 끝점 게이트 (§0b-②-4) — UMA 없이 되는 부분만 ──────────────────
+    #   ⛔ 이완 자체는 UMA 가 있어야 돌므로 여기서 안 친다. 대신 **판정 산수**와
+    #     **문턱 판독**을 친다 — 조용히 틀릴 수 있는 곳이 거기다.
+    th = read_neb_gate_thresholds("db/properties/lpscl_smallcell_neb_estimand_2026_09_18.json")
+    chk(th == {"gate_A_li_min_A": 1.0, "gate_B_rmsd_max_A": 0.5},
+        f"끝점 게이트 문턱을 **카드 산문에서** 읽는다 {th}")
+    # ⛔음성 — 절이 없으면 **죽는다**. 기본값을 지어내지 않는다.
+    import tempfile as _tf
+    _bad = pathlib.Path(_tf.mkdtemp()) / "nocard.json"
+    _bad.write_text('{"제목": "문턱 절이 없는 카드"}', encoding="utf-8")
+    try:
+        read_neb_gate_thresholds(str(_bad)); _died = False
+    except KeyError:
+        _died = True
+    chk(_died, "⛔음성: 게이트 절이 없는 카드면 **죽는다** (기본값을 지어내지 않는다)")
+    # ⛔음성 — 문구는 있는데 숫자가 없으면 죽는다
+    _bad2 = pathlib.Path(_tf.mkdtemp()) / "nonum.json"
+    _bad2.write_text(json.dumps({"0b_경로선택·집계_규칙_제안_2026_09_18": {"②_경로_선택_규칙": {
+        "4_★_끝점_게이트_두_개_다_통과해야_후보다": {
+            "게이트_A_서로_다른_최소": "두 위치 차가 충분히 크면 통과",
+            "게이트_B_골격이_안_바뀜": "골격이 그대로면 통과"}}}}, ensure_ascii=False),
+        encoding="utf-8")
+    try:
+        read_neb_gate_thresholds(str(_bad2)); _died2 = False
+    except ValueError:
+        _died2 = True
+    chk(_died2, "⛔음성: 산문에 숫자가 없으면 **죽는다** (문구만 보고 통과시키지 않는다)")
+
+    # mic_dist — 셀 경계를 넘는 짝
+    _c = np.eye(3) * 10.0
+    chk(abs(mic_dist([0.5, 0, 0], [9.5, 0, 0], _c) - 1.0) < 1e-9,
+        "mic_dist: 경계를 넘는 짝을 **1.0 Å** 로 본다 (9.0 이 아니다)")
+
+    # non_li_rmsd — Li 를 **빼고** 잰다
+    from ase import Atoms as _A
+    _s = ["Li", "Li", "P", "S"]
+    _p0 = np.array([[0, 0, 0], [1, 0, 0], [2, 0, 0], [3, 0, 0]], float)
+    _p1 = _p0.copy(); _p1[0, 0] += 5.0                       # Li 만 크게 움직인다
+    r, n, dm = non_li_rmsd(_A(_s, positions=_p0, cell=_c, pbc=True),
+                           _A(_s, positions=_p1, cell=_c, pbc=True))
+    chk(abs(r) < 1e-9 and n == 2,
+        f"⛔음성: Li 가 5 Å 움직여도 골격 RMSD 는 **0** 이다 (n_framework={n}, rmsd={r:.4f})")
+    _p2 = _p0.copy(); _p2[3, 0] += 1.0                       # S 가 움직인다
+    r2, _, _ = non_li_rmsd(_A(_s, positions=_p0, cell=_c, pbc=True),
+                           _A(_s, positions=_p2, cell=_c, pbc=True))
+    chk(abs(r2 - (1.0 / np.sqrt(2))) < 1e-9,
+        f"골격 원자 하나가 1 Å 움직이면 RMSD = 1/√2 = {r2:.4f} (2 원자 중 하나)")
+
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
 
@@ -1499,11 +1677,23 @@ def main():
     ap.add_argument("--gb2_card", default=GB2_CARD,
                     help="--gb2 문턱 출처 카드 (도구가 문턱을 자체 보관하지 않는다)")
     ap.add_argument("--gb2_out", help="--gb2 결과 JSON 경로 (기본 <RUN_SMALL>/gb2_overlap.json)")
+    ap.add_argument("--endpoint_gate", metavar="EVENTS_DIR",
+                    help="NEB 끝점 게이트 A/B **UMA 탐침** (카드 §0b-②-4). "
+                         "⛔ 비준된 게이트(QE)를 집행하지 않는다 — 기각률을 먼저 본다")
+    ap.add_argument("--endpoint_gate_out", help="--endpoint_gate 결과 JSON 경로")
+    ap.add_argument("--neb_card", default=NEB_CARD,
+                    help="--endpoint_gate 문턱 출처 카드 (도구가 문턱을 자체 보관하지 않는다)")
     ap.add_argument("--hold_blocks", type=int, default=5,
                     help="--gate_check 유지 구간을 몇 블록으로 나눠 추세를 볼지 (회신 BR Q3: 제일 싼 첫 단계)")
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
+    if a.endpoint_gate:
+        r = endpoint_gate(a.endpoint_gate,
+                          out_json=a.endpoint_gate_out or
+                          str(pathlib.Path(a.endpoint_gate).parent / "endpoint_gate_uma.json"),
+                          card=a.neb_card, device=a.device, turbo=a.turbo)
+        raise SystemExit(0 if r["n_events"] else 3)
     if a.gb2:
         r = gb2_compare(a.gb2[0], a.gb2[1], a.gb2_card, a.frame_card)
         out = pathlib.Path(a.gb2_out) if a.gb2_out else pathlib.Path(a.gb2[0]) / "gb2_overlap.json"
