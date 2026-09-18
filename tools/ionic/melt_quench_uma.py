@@ -38,7 +38,7 @@
   python3 tools/ionic/melt_quench_uma.py --selftest
 """
 from __future__ import annotations
-import argparse, json, math, os, pathlib, sys, time
+import argparse, json, math, os, pathlib, re, sys, time
 import numpy as np
 
 MASS = {"Li": 6.94, "P": 30.974, "S": 32.06, "Cl": 35.45}
@@ -770,6 +770,217 @@ def gate_check(run, band_card=BAND_CARD, win_ps=10.0, p_tol=P_TOL_GPA, n_blocks=
     return res
 
 
+# ───────────────────────── --gb2: G-B2 겹침 (소셀 ↔ 400 원자) ─────────────────────────
+#: 판정량은 카드 §4 G-B2 가 정한다 — 도구가 쌍을 고르지 않는다.
+GB2_CARD = "db/properties/lpscl_smallcell_uma_qe_force_estimand_2026_09_16.json"
+GB2_PAIRS = (("P", "S"), ("Li", "S"), ("Li", "Cl"), ("S", "S"))
+GR_FLOOR = 1.0          # 첫 봉우리 탐색 바닥 — g > 1 (무상관 밀도 위). 잡음 스파이크 배제용.
+
+#: 문턱 산문에서 숫자를 캐는 패턴. **사본을 만들지 않는다** (아래 docstring).
+GB2_PATS = {
+    "gr_first_peak_A": r"첫 봉우리 위치가\s*\*{0,2}([0-9.]+)\s*Å\s*이내",
+    "coord_mean":      r"배위수 평균이\s*\*{0,2}([0-9.]+)\s*이내",
+    "ps4_pp":          r"PS₄ 보존율 차이가\s*\*{0,2}([0-9.]+)\s*%p\s*이내",
+    "r_window_A":      r"r\s*≤\s*\*{0,2}([0-9.]+)\s*Å",
+}
+
+
+def read_gb2_thresholds(card=GB2_CARD):
+    """G-B2 문턱 넷을 **봉인된 산문에서 직접** 판다.
+
+    왜 옮겨 적지 않나: 카드의 문턱은 산문 한 줄이다. 기계용으로 전사하면 **두 벌**이 되고
+    둘이 갈라진다 — 원장이 이기는데 도구는 사본을 본다. 그래서 사본을 만들지 않고 원문을 판다.
+    넷 중 하나라도 못 찾으면 **죽는다**: 기본값을 지어내지 않는다.
+    """
+    q = pathlib.Path(card)
+    if not q.exists():
+        q = pathlib.Path(__file__).resolve().parents[2] / card
+    d = json.loads(q.read_text(encoding="utf-8"))
+    try:
+        prose = d["4_검증_게이트_결과_보기_전에_정한다"]["G-B2_겹침_🔴_이_카드의_핵심"]["문턱"]
+        why_r = d["4_검증_게이트_결과_보기_전에_정한다"]["G-B2_겹침_🔴_이_카드의_핵심"]["왜_r_≤_5_Å"]
+    except (KeyError, TypeError):
+        raise KeyError(f"{q}: G-B2 `문턱` 절이 없다 — 도구가 문턱을 지어내지 않는다")
+    src = f"{prose}\n{why_r}"
+    th = {}
+    for k, pat in GB2_PATS.items():
+        m = re.search(pat, src)
+        if not m:
+            raise ValueError(f"⛔ {q}: G-B2 문턱 '{k}' 를 산문에서 못 찾았다 — "
+                             f"카드 문구가 바뀌었으면 **도구를 고치고 시험을 다시 친다**. "
+                             f"기본값으로 넘어가지 않는다.\n  판 문장: {src[:200]}")
+        th[k] = float(m.group(1))
+    return th, str(q)
+
+
+def first_peak_A(r, g, rmax, floor=GR_FLOOR):
+    """r ≤ rmax 안에서 **첫 국소최대**의 위치 [Å]. 최대봉우리 위치도 같이 준다.
+
+    ⛔ '첫 봉우리' 와 '최대 봉우리' 가 다르면 그 사실을 **올린다** — 조용히 하나를 고르지 않는다.
+       (이 계의 P–S·Li–S 는 보통 같지만, S–S 는 다를 수 있다.)
+    ⛔ 봉우리가 아예 없으면 None — 0.0 으로 그리지 않는다."""
+    r = np.asarray(r, float); g = np.asarray(g, float)
+    m = r <= rmax
+    r, g = r[m], g[m]
+    if len(r) < 3 or not np.isfinite(g).any():
+        return None
+    g = np.nan_to_num(g, nan=0.0, posinf=0.0, neginf=0.0)
+    gi = int(np.argmax(g))
+    if g[gi] < floor:
+        return None                      # 전부 무상관 — 봉우리가 **없다** ("못 찾음" 과 구분)
+    fi = None
+    for i in range(1, len(g) - 1):
+        if g[i] >= floor and g[i] >= g[i - 1] and g[i] > g[i + 1]:
+            fi = i
+            break
+    fallback = fi is None
+    if fallback:
+        fi = gi                          # 국소최대가 없다(단조 상승) → 최대점을 쓰고 **표시한다**
+    return {"first_A": float(r[fi]), "global_A": float(r[gi]),
+            "g_first": float(g[fi]), "g_global": float(g[gi]),
+            "first_is_global": bool(fi == gi), "no_local_max": bool(fallback)}
+
+
+def _coord_mean(hist):
+    """배위수 히스토그램 {배위수: 개수} → 평균. 비면 None (0.0 으로 그리지 않는다)."""
+    if not hist:
+        return None
+    n = sum(hist.values())
+    return (sum(int(k) * v for k, v in hist.items()) / n) if n else None
+
+
+def _gb2_frames(run, want, log=print):
+    """봉인된 t_ps 프레임만 뽑는다. 색인 대응은 frame_index_map 이 검증한다."""
+    run = pathlib.Path(run)
+    idx, n_traj = frame_index_map(run / "traj.xyz", run / "thermo.csv")
+    missing = [w for w in want if w not in idx]
+    if missing:
+        raise ValueError(f"⛔ {run}: 봉인된 프레임 중 traj 에 없는 것 {missing} — "
+                         f"다른 프레임으로 **대체하지 않는다** (카드 §6 무효 조건)")
+    from ase.io import iread
+    wanted = {idx[w]: w for w in want}
+    out = {}
+    for i, at in enumerate(iread(str(run / "traj.xyz"), index=":", format="extxyz")):
+        if i in wanted:
+            out[wanted[i]] = (list(at.get_chemical_symbols()),
+                              np.asarray(at.get_positions(), float),
+                              np.asarray(at.get_cell(), float))
+        if len(out) == len(want):
+            break
+    log(f"  {run.name}: traj {n_traj} 프레임 → 봉인 {len(out)} 프레임 회수")
+    return out
+
+
+def gb2_compare(run_small, run_big, card=GB2_CARD, frame_card=None, log=print):
+    """G-B2 — 소셀과 400 원자의 **같은 t_ps 프레임**에서 국소환경이 겹치는가. 새 계산 0.
+
+    판정 규칙 (결과 보기 전에 선언 · 2026-09-18)
+      · 같은 t_ps 끼리 **짝지어** 재고, 10 짝의 **최댓값**으로 판정한다.
+        담금질 속도가 같아 같은 t_ps 는 같은 온도다 — 융체는 융체와, 유리는 유리와 비교한다.
+        (프레임을 뭉쳐 평균내면 융체와 유리가 섞여 봉우리가 뭉개진다.)
+      · 평균차·풀링 g(r) 도 **같이 찍지만 판정에 쓰지 않는다** — 최댓값 이탈이 통계잡음인지
+        사람이 보라고 내는 정보다.
+
+    ⛔ 이 도구가 **못 하는 것**
+      · 단일 프레임 g(r) 의 **통계잡음을 문턱과 분리하지 못한다.** 120 원자에서 Li–Cl 은
+        48×12 쌍뿐이라 첫 봉우리가 dr 한두 칸 흔들릴 수 있다. 그래서 풀링 값을 같이 낸다.
+      · 힘이 같다고 말하지 않는다 — 구조가 겹쳐도 힘이 같다는 보증은 없다 (카드 §4).
+      · 전이를 승인하지 않는다. 통과는 **전이의 근거**이고, 판단은 사람이 한다.
+      · 밀도를 판정하지 않는다 — 카드가 "밀도는 문턱이 아니다" 로 봉인했다. **보고만** 한다.
+    """
+    th, card_path = read_gb2_thresholds(card)
+    want, fcard = read_frame_card(frame_card or
+                                  "db/properties/li2s_layer1_g2_mode_stress_prereg_2026_09_14.json")
+    log(f"문턱 카드: {card_path}")
+    log(f"  첫봉우리 ≤ {th['gr_first_peak_A']} Å · 배위수평균 ≤ {th['coord_mean']} · "
+        f"PS₄ ≤ {th['ps4_pp']} %p · 창 r ≤ {th['r_window_A']} Å")
+    log(f"프레임 카드: {fcard} — 봉인 {len(want)} 점 (도구가 고르지 않는다)")
+    S = _gb2_frames(run_small, want, log)
+    B = _gb2_frames(run_big, want, log)
+
+    rows, acc = [], {}
+    for w in want:
+        ss, sp, sc = S[w]; bs, bp, bc = B[w]
+        i_s, i_b = indicators(ss, sp, sc), indicators(bs, bp, bc)
+        g_s = partial_gr(ss, sp, sc, pairs=GB2_PAIRS)
+        g_b = partial_gr(bs, bp, bc, pairs=GB2_PAIRS)
+        row = {"t_ps": w, "n_small": i_s["n_atoms"], "n_big": i_b["n_atoms"],
+               "rho_small": i_s["density_g_cm3"], "rho_big": i_b["density_g_cm3"]}
+        # ① 부분 g(r) 첫 봉우리
+        row["peaks"] = {}
+        for a, b in GB2_PAIRS:
+            key = f"g_{a}{b}"
+            if key not in g_s or key not in g_b:
+                row["peaks"][f"{a}{b}"] = {"d_A": None, "왜": "그 쌍이 한쪽에 없다"}
+                continue
+            ps = first_peak_A(g_s["r_A"], g_s[key], th["r_window_A"])
+            pb = first_peak_A(g_b["r_A"], g_b[key], th["r_window_A"])
+            if ps is None or pb is None:
+                row["peaks"][f"{a}{b}"] = {"d_A": None, "왜": "봉우리 없음 (무상관)"}
+                continue
+            d = abs(ps["first_A"] - pb["first_A"])
+            row["peaks"][f"{a}{b}"] = {
+                "small_A": ps["first_A"], "big_A": pb["first_A"], "d_A": d,
+                "⚠_첫봉우리≠최대봉우리": (not ps["first_is_global"]) or (not pb["first_is_global"]),
+                "⚠_국소최대없음": ps["no_local_max"] or pb["no_local_max"]}
+            acc.setdefault(f"peak_{a}{b}", []).append(d)
+        # ② 배위수 평균 (Cl–Li · S–Li)
+        row["coord"] = {}
+        for name, hk in (("Cl_Li", "Cl_Li_coord_hist"), ("S_Li", "S_Li_coord_hist")):
+            ms, mb = _coord_mean(i_s.get(hk)), _coord_mean(i_b.get(hk))
+            if ms is None or mb is None:
+                row["coord"][name] = {"d": None, "왜": "히스토그램이 비었다"}
+                continue
+            row["coord"][name] = {"small": ms, "big": mb, "d": abs(ms - mb)}
+            acc.setdefault(f"coord_{name}", []).append(abs(ms - mb))
+        # ③ PS₄ 보존율
+        fs, fb = i_s.get("PS4_fraction"), i_b.get("PS4_fraction")
+        if fs is None or fb is None:
+            row["PS4"] = {"d_pp": None, "왜": "P 또는 S 가 없다"}
+        else:
+            row["PS4"] = {"small": fs, "big": fb, "d_pp": abs(fs - fb) * 100.0}
+            acc.setdefault("PS4_pp", []).append(abs(fs - fb) * 100.0)
+        rows.append(row)
+        log(f"  t={w:7.1f} ps  PS₄ Δ{row['PS4'].get('d_pp', float('nan')):5.1f} %p  " +
+            "  ".join(f"{k} Δ{(v['d_A'] if v.get('d_A') is not None else float('nan')):.3f}"
+                      for k, v in row["peaks"].items()))
+
+    def _worst(keys, lim):
+        bad = []
+        for k in keys:
+            v = acc.get(k)
+            if not v:
+                bad.append((k, None, "잰 프레임이 없다"))
+                continue
+            mx = max(v)
+            if mx > lim:
+                bad.append((k, mx, f"> {lim}"))
+        return bad
+
+    peak_keys = [f"peak_{a}{b}" for a, b in GB2_PAIRS]
+    fails = (_worst(peak_keys, th["gr_first_peak_A"])
+             + _worst(["coord_Cl_Li", "coord_S_Li"], th["coord_mean"])
+             + _worst(["PS4_pp"], th["ps4_pp"]))
+    #: ⛔ 잰 프레임이 아예 없는 항목은 **통과가 아니다** — 미판정이다.
+    unmeasured = [k for k, mx, _ in fails if mx is None]
+    verdict = ("미판정" if unmeasured else ("탈락" if fails else "통과"))
+    res = {"card": card_path, "frame_card": fcard, "thresholds": th,
+           "run_small": str(run_small), "run_big": str(run_big),
+           "판정_규칙": "같은 t_ps 짝의 **최댓값**으로 판정 (2026-09-18 선언 · 결과 보기 전)",
+           "요약": {k: {"max": max(v), "mean": float(np.mean(v)), "n": len(v)} for k, v in acc.items()},
+           "frames": rows, "판정": verdict,
+           "실패항목": [{"항목": k, "max": mx, "왜": why} for k, mx, why in fails],
+           "⛔_밀도는_문턱이_아니다": "카드 §4 — 국소환경을 요구하고 밀도는 보고만 한다.",
+           "⛔_통과가_뜻하지_않는_것": "구조가 겹쳐도 힘이 같다는 보증은 아니다. 전이는 G-B3 통과와 "
+                                    "함께, 그리고 **통과 방향으로만** 흐른다 (카드 §5-b)."}
+    log(f"\n  판정: **{verdict}**")
+    for k, mx, why in fails:
+        log(f"    ⛔ {k}: {mx if mx is not None else '미측정'} {why}")
+    if verdict == "통과":
+        log("  ⛔ 통과는 **전이의 근거**이지 승인이 아니다 — 판단은 사람이 한다 (카드 §5-b).")
+    return res
+
+
 # ───────────────────────── selftest ─────────────────────────
 def _selftest():
     ok = bad = 0
@@ -1112,6 +1323,126 @@ def _selftest():
         except ValueError:
             hit3 = True
         chk(hit3, "⛔음성: traj 프레임 수 ≠ thermo 행 수면 **멈춘다** (간격을 추측하지 않는다)")
+    # ⑪ --gb2: G-B2 겹침 (2026-09-18) — **음성 경로가 본체다**
+    with tempfile.TemporaryDirectory() as td:
+        td = pathlib.Path(td)
+
+        # ⓐ 진짜 카드가 파싱되는가 — 사본을 안 만들기로 했으니 이게 배선의 전부다
+        th, cpath = read_gb2_thresholds()
+        chk(th == {"gr_first_peak_A": 0.05, "coord_mean": 0.3, "ps4_pp": 10.0, "r_window_A": 5.0},
+            f"봉인된 카드 산문에서 G-B2 문턱 넷을 판다 {th}")
+
+        raw = json.loads(pathlib.Path(cpath).read_text(encoding="utf-8"))
+        g = raw["4_검증_게이트_결과_보기_전에_정한다"]["G-B2_겹침_🔴_이_카드의_핵심"]
+        mang = td / "mangled.json"
+        mang.write_text(json.dumps({"4_검증_게이트_결과_보기_전에_정한다": {
+            "G-B2_겹침_🔴_이_카드의_핵심": {
+                "문턱": g["문턱"].replace("PS₄ 보존율 차이가 **10 %p 이내**", "PS₄ 는 적당히"),
+                "왜_r_≤_5_Å": g["왜_r_≤_5_Å"]}}}, ensure_ascii=False), encoding="utf-8")
+        try:
+            read_gb2_thresholds(mang); hitA = False
+        except ValueError:
+            hitA = True
+        chk(hitA, "⛔음성: 문턱 하나가 산문에서 사라지면 **죽는다** (기본값을 지어내지 않는다)")
+
+        noseg = td / "noseg.json"
+        noseg.write_text(json.dumps({"4_검증_게이트_결과_보기_전에_정한다": {}}, ensure_ascii=False), encoding="utf-8")
+        try:
+            read_gb2_thresholds(noseg); hitB = False
+        except KeyError:
+            hitB = True
+        chk(hitB, "⛔음성: G-B2 절이 없는 카드를 통과시키지 않는다")
+
+        # ⓑ first_peak_A — 없는 것을 0 으로 그리지 않는다
+        rr = np.arange(0.025, 8.0, 0.05)
+        chk(first_peak_A(rr, np.zeros_like(rr), 5.0) is None,
+            "⛔음성: 봉우리가 없으면 None — **0.0 으로 그리지 않는다**")
+        gg = np.zeros_like(rr)
+        gg[(rr > 2.0) & (rr < 2.1)] = 2.0          # 첫 봉우리 2.05 (낮음)
+        gg[(rr > 4.0) & (rr < 4.1)] = 9.0          # 최대 봉우리 4.05
+        pk = first_peak_A(rr, gg, 5.0)
+        chk(pk is not None and abs(pk["first_A"] - 2.025) < 0.06 and abs(pk["global_A"] - 4.025) < 0.06
+            and not pk["first_is_global"],
+            "첫 봉우리 ≠ 최대 봉우리를 **구분해서 올린다** (조용히 하나를 고르지 않는다)")
+
+        # ⓒ 합성 궤적 — 지표를 내가 정한 값으로 만든다
+        _TET = np.array([[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]], float)
+        _TET = _TET / np.linalg.norm(_TET[0])
+
+        def _fix(scale=1.0, drop_S=False, li_on_cl=3):
+            L = 14.0 * scale
+            sym, pos = [], []
+            for k, c in enumerate([(3.0, 3.0, 3.0), (3.0, 10.0, 10.0), (10.0, 3.0, 10.0)]):
+                c = np.array(c, float) * scale
+                sym.append("P"); pos.append(c)
+                for j, v in enumerate(_TET):
+                    r = 4.5 if (drop_S and k == 0 and j == 0) else 2.05
+                    sym.append("S"); pos.append(c + v * r * scale)
+            for m, cc in enumerate([(10.0, 10.0, 3.0), (7.0, 7.0, 12.0)]):
+                cc = np.array(cc, float) * scale
+                sym.append("Cl"); pos.append(cc)
+                for q in range(li_on_cl):           # Cl 둘레 Li — 배위수를 손으로 정한다
+                    ang = 2 * math.pi * q / max(li_on_cl, 1)
+                    sym.append("Li")
+                    pos.append(cc + np.array([math.cos(ang), math.sin(ang), 0.3]) * 2.5 * scale)
+            return sym, np.array(pos, float), np.eye(3) * L
+
+        FRAMES = [10.0, 20.0, 30.0]
+        fcard = td / "frames.json"
+        fcard.write_text(json.dumps({"1_프레임_표본_봉인": {"t_ps": FRAMES}}, ensure_ascii=False), encoding="utf-8")
+
+        def _run(d, **kw):
+            d = pathlib.Path(d); d.mkdir(parents=True, exist_ok=True)
+            sym, pos, cell = _fix(**kw)
+            (d / "traj.xyz").unlink(missing_ok=True)
+            for _ in FRAMES:
+                _w(str(d / "traj.xyz"), _A(sym, positions=pos, cell=cell, pbc=True),
+                   format="extxyz", append=True)
+            with open(d / "thermo.csv", "w") as f:
+                f.write("t_ps,T_K,density_g_cm3,volume_A3,E_pot_eV,P_GPa,P_virial_GPa\n")
+                for t in FRAMES:
+                    f.write(f"{t:.3f},300.0,1.9,{abs(np.linalg.det(cell)):.1f},-1.0,0.0,0.0\n")
+            return d
+
+        _q = lambda *a, **k: None
+        base = _run(td / "base")
+        same = _run(td / "same")
+        r_ok = gb2_compare(base, same, card=cpath, frame_card=fcard, log=_q)
+        chk(r_ok["판정"] == "통과" and r_ok["요약"]["PS4_pp"]["max"] == 0.0,
+            "[양성] 같은 구조 두 벌 → **통과** · 모든 차이 0")
+
+        r_ps4 = gb2_compare(base, _run(td / "dropS", drop_S=True), card=cpath, frame_card=fcard, log=_q)
+        chk(r_ps4["판정"] == "탈락" and r_ps4["요약"]["PS4_pp"]["max"] > 10.0,
+            f"⛔음성: PS₄ 보존율이 {r_ps4['요약']['PS4_pp']['max']:.0f} %p 벌어지면 막는다")
+
+        r_gr = gb2_compare(base, _run(td / "scaled", scale=1.06), card=cpath, frame_card=fcard, log=_q)
+        chk(r_gr["판정"] == "탈락" and r_gr["요약"]["peak_PS"]["max"] > 0.05,
+            f"⛔음성: g(r) 첫 봉우리가 {r_gr['요약']['peak_PS']['max']:.3f} Å 밀리면 막는다")
+
+        r_cn = gb2_compare(base, _run(td / "moreLi", li_on_cl=6), card=cpath, frame_card=fcard, log=_q)
+        chk(r_cn["판정"] == "탈락" and r_cn["요약"]["coord_Cl_Li"]["max"] > 0.3,
+            f"⛔음성: Cl–Li 배위수 평균이 {r_cn['요약']['coord_Cl_Li']['max']:.2f} 벌어지면 막는다")
+
+        badf = td / "badframes.json"
+        badf.write_text(json.dumps({"1_프레임_표본_봉인": {"t_ps": [10.0, 999.0]}}, ensure_ascii=False),
+                        encoding="utf-8")
+        # ⚠ 다른 예외(KeyError 등)를 **통과로도, 죽음으로도** 두지 않는다 — 빨간줄로 만든다.
+        #   깨보기 실측 2026-09-18: 가드를 빼면 뒤늦게 KeyError 가 나 selftest 전체가 죽었다.
+        #   시험이 죽으면 그 뒤 시험이 안 돌아 — "빨간불 확인" 이 성립하지 않는다.
+        hitC = None
+        try:
+            gb2_compare(base, same, card=cpath, frame_card=badf, log=_q); hitC = "통과시켰다"
+        except ValueError:
+            hitC = True
+        except Exception as e:
+            hitC = f"엉뚱한 예외 {type(e).__name__} — 가드가 아니라 뒤늦은 붕괴다"
+        chk(hitC is True,
+            "⛔음성: 봉인된 프레임이 traj 에 없으면 **대체하지 않고 ValueError 로 죽는다** (카드 §6)"
+            + ("" if hitC is True else f"  ← {hitC}"))
+
+        chk(r_ok["판정_규칙"].startswith("같은 t_ps 짝의"),
+            "판정 규칙(짝지어 최댓값)을 결과 파일에 **적어서** 내보낸다")
+
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
 
@@ -1163,11 +1494,23 @@ def main():
                     help="⭐봉인된 프레임에서 turbo − default 의 응력·힘 차이 (새 MD 0, 회신 BR Q4)")
     ap.add_argument("--frame_card", default="db/properties/li2s_layer1_g2_mode_stress_prereg_2026_09_14.json",
                     help="--mode_stress 프레임 표본 카드 (도구가 프레임을 고르지 않는다)")
+    ap.add_argument("--gb2", nargs=2, metavar=("RUN_SMALL", "RUN_BIG"),
+                    help="G-B2 겹침 — 소셀 런디렉터리와 400 원자 런디렉터리. 새 계산 0")
+    ap.add_argument("--gb2_card", default=GB2_CARD,
+                    help="--gb2 문턱 출처 카드 (도구가 문턱을 자체 보관하지 않는다)")
+    ap.add_argument("--gb2_out", help="--gb2 결과 JSON 경로 (기본 <RUN_SMALL>/gb2_overlap.json)")
     ap.add_argument("--hold_blocks", type=int, default=5,
                     help="--gate_check 유지 구간을 몇 블록으로 나눠 추세를 볼지 (회신 BR Q3: 제일 싼 첫 단계)")
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
+    if a.gb2:
+        r = gb2_compare(a.gb2[0], a.gb2[1], a.gb2_card, a.frame_card)
+        out = pathlib.Path(a.gb2_out) if a.gb2_out else pathlib.Path(a.gb2[0]) / "gb2_overlap.json"
+        out.write_text(json.dumps(r, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"→ {out}")
+        #: 통과 0 · 탈락 2 · 미판정 3 — **미판정을 통과로 내보내지 않는다**
+        raise SystemExit({"통과": 0, "탈락": 2}.get(r["판정"], 3))
     if a.mode_stress:
         r = mode_stress(a.mode_stress, a.frame_card, a.device)
         out = pathlib.Path(a.mode_stress) / "mode_stress.json"
