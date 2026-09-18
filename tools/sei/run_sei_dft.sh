@@ -4,8 +4,16 @@
 #   ① vc-relax → ② scf → ③ nscf(fixed, 갭) → ④ nscf(dos) → ⑤ dos.x → ⑥ projwfc.x
 #
 # ⚠ 갭은 ③의 **고유값**으로만 낸다. DOS 문턱 판독 금지(~0.3 eV 과소, CLAUDE.md 규율).
-# ⚠ 계가 3–32 원자라 SDCP 슬랩과 달리 메모리 문제가 없다. GPU 하나로 순차면 충분하다.
+# ⛔ 2026-09-18 정정 — 위 줄은 원래 "계가 3–32 원자라 메모리 문제가 없다" 였고 **거짓이 됐다.**
+#   §C 판별종 10 종에 NdP5O14 **80 원자** · Nd3PO7 66 · NdPS4 48 · Nd2O3 40 이 들어오면서
+#   전제가 깨졌는데 주석은 안 바뀌었다. 그날 gabia 는 LOBSTER(27 GB) + Nd3PO7 + pw.x 6 개가
+#   붙어 호스트 MemAvailable 이 **2.2 GB** 였다. 주석만 믿고 던졌으면 OOM 이었다.
+# ⇒ 아래 _mem_preflight 가 **원자수를 입력에서 읽고** MemAvailable 문턱을 강제한다.
+# ⛔ 이 도구가 **못 하는 것**: 필요 메모리를 예측하지 않는다. 바닥선만 지킨다 —
+#   실제 소요는 QE 가 출력에 찍는 "Estimated max dynamical RAM" 을 봐야 안다.
+#   SEI_MIN_AVAIL_GB 로 바닥선 조정, SEI_SKIP_MEM_CHECK=1 로 우회(사유를 남길 것).
 #
+#   bash tools/sei/run_sei_dft.sh --selftest  # 시험 (음성 경로 포함)
 #   bash tools/sei/run_sei_dft.sh            # 전부
 #   bash tools/sei/run_sei_dft.sh li2o_mp-1960   # 하나만
 # =============================================================================
@@ -44,12 +52,74 @@ _take_lock() {
   flock -n 9 || { ts "⛔ $1 은 이미 돈다 (다른 상은 영향 없다)"; return 1; }
 }
 
+# ── 메모리 프리플라이트 (2026-09-18 신설) ────────────────────────────────
+#  fail-closed: 못 읽으면 **통과시키지 않는다** (run_force_check_scf.sh 와 같은 규율).
+_nat_of() {   # $1 = 대상 폴더 → QE 입력의 nat. 못 읽으면 빈 문자열
+  grep -ahoiE '^[[:space:]]*nat[[:space:]]*=[[:space:]]*[0-9]+' "$1"/*.in 2>/dev/null \
+    | head -1 | grep -oE '[0-9]+'
+}
+_mem_preflight() {  # $1 = 대상 이름, $2 = 대상 폴더
+  [ "${SEI_SKIP_MEM_CHECK:-0}" = "1" ] && { ts "  ⚠ 메모리 검사 우회됨 (SEI_SKIP_MEM_CHECK=1)"; return 0; }
+  local floor=${SEI_MIN_AVAIL_GB:-8} avail nat
+  avail=$(awk '/^MemAvailable:/{print int($2/1048576)}' "${SEI_MEMINFO:-/proc/meminfo}" 2>/dev/null)
+  if [ -z "$avail" ]; then
+    ts "  ⛔ MemAvailable 을 못 읽었다 — **모르는 것을 통과로 읽지 않는다.** 건너뛴다."
+    ts "     우회하려면 SEI_SKIP_MEM_CHECK=1 (사유를 기록에 남길 것)"
+    return 1
+  fi
+  nat=$(_nat_of "$2")
+  if [ -n "$nat" ] && [ "$nat" -gt 32 ]; then
+    ts "  ⚠ $1 은 **${nat} 원자** — 이 스크립트가 오래 전제하던 3–32 원자 범위 **밖**이다"
+  fi
+  if [ "$avail" -lt "$floor" ]; then
+    ts "  ⛔ 호스트 여유 ${avail} GB < 문턱 ${floor} GB — $1 을 **시작하지 않는다**"
+    ts "     (nvidia-smi 의 VRAM 이 아니라 호스트 RAM 이다. 다른 잡이 끝나면 다시 돌려라)"
+    return 1
+  fi
+  ts "  ✓ 메모리 프리플라이트: 여유 ${avail} GB ≥ ${floor} GB${nat:+ · ${nat} 원자}"
+  return 0
+}
+
+# ── --selftest (2026-09-18) — **음성 경로 포함**. 양성만 있는 시험은 아무것도 보증 못 한다.
+if [ "${1:-}" = "--selftest" ]; then
+  _T=$(mktemp -d); trap 'rm -rf "$_T"' EXIT
+  _ok=0; _fail=0
+  _chk(){ if [ "$1" = "$2" ]; then echo "  ✓ $3"; _ok=$((_ok+1));
+          else echo "  ✗ $3  (기대 $2, 얻은 $1)"; _fail=$((_fail+1)); fi; }
+  mkdir -p "$_T/big" "$_T/small" "$_T/noin"
+  printf '&SYSTEM\n  nat = 80\n  ntyp=3\n/\n' > "$_T/big/01_vcrelax.in"
+  printf '&SYSTEM\n  nat=12\n/\n'             > "$_T/small/01_vcrelax.in"
+  printf 'MemTotal: 100000000 kB\nMemAvailable: 52428800 kB\n' > "$_T/mem50"
+  printf 'MemTotal: 100000000 kB\nMemAvailable:  2097152 kB\n' > "$_T/mem2"
+  printf 'MemTotal: 100000000 kB\n'                            > "$_T/memnone"
+  _chk "$(_nat_of "$_T/big")"   "80" "nat 을 입력에서 읽는다 (공백 있는 표기)"
+  _chk "$(_nat_of "$_T/small")" "12" "nat 을 읽는다 (공백 없는 표기)"
+  _chk "$(_nat_of "$_T/noin")"  ""   "[음성] 입력이 없으면 빈 값 — 0 으로 지어내지 않는다"
+  SEI_MEMINFO=$_T/mem50 SEI_MIN_AVAIL_GB=8 _mem_preflight big "$_T/big" >/dev/null 2>&1
+  _chk "$?" "0" "여유 50 GB ≥ 8 → 통과"
+  SEI_MEMINFO=$_T/mem2 SEI_MIN_AVAIL_GB=8 _mem_preflight big "$_T/big" >/dev/null 2>&1
+  _chk "$?" "1" "[음성] 여유 2 GB < 8 → 거부 (2026-09-18 gabia 실측 상황)"
+  SEI_MEMINFO=$_T/memnone SEI_MIN_AVAIL_GB=8 _mem_preflight big "$_T/big" >/dev/null 2>&1
+  _chk "$?" "1" "[음성] MemAvailable 을 못 읽으면 거부 — 모르는 것을 통과로 읽지 않는다"
+  SEI_SKIP_MEM_CHECK=1 SEI_MEMINFO=$_T/mem2 _mem_preflight big "$_T/big" >/dev/null 2>&1
+  _chk "$?" "0" "우회 플래그는 실제로 우회한다"
+  case "$(SEI_MEMINFO=$_T/mem50 _mem_preflight big "$_T/big" 2>&1)" in
+    *"80 원자"*) _chk 1 1 "80 원자가 3–32 범위 밖이라고 말한다";;
+    *)           _chk 0 1 "80 원자 경고";; esac
+  case "$(SEI_MEMINFO=$_T/mem50 _mem_preflight small "$_T/small" 2>&1)" in
+    *"밖**이다"*) _chk 0 1 "[음성] 12 원자엔 경고를 안 낸다";;
+    *)            _chk 1 1 "[음성] 12 원자엔 경고를 안 낸다";; esac
+  echo "selftest $([ "$_fail" = 0 ] && echo PASS || echo FAIL)  ($_ok/$((_ok+_fail)))"
+  [ "$_fail" = 0 ]; exit $?
+fi
+
 TARGETS=("$@"); [ ${#TARGETS[@]} -eq 0 ] && TARGETS=($(ls "$WORK"))
 
 for t in "${TARGETS[@]}"; do
   d="$WORK/$t"; [ -d "$d" ] || { ts "⛔ 없음: $d"; continue; }
   _take_lock "$t" || continue          # 이 상만 건너뛴다 (2026-09-02)
   ts "═══ $t ═══"
+  _mem_preflight "$t" "$d" || continue
   cd "$d" || continue
 
   # ⛔⛔ 2026-08-12 사고 — Nd PP 를 frozen-4f 로 바꿔 입력을 새로 만들었는데, 옛 .out 이
