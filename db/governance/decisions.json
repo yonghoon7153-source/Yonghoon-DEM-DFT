@@ -2917,6 +2917,41 @@
     "decision_digest": "sha256:525ac95d0bd69ad460bd1cf7c3db10dfa8b7fc7153c2f176a22bc2ea0d485e70",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-18-lpscl-smallcell-closure",
+   "kind": "closure",
+   "decision_state": "proposed",
+   "results_seen": true,
+   "record_kind": "closure",
+   "title": "a-Li₄PS₄Cl 120 원자 소셀 UMA↔QE 힘 대조 — 마감 (세 게이트 완료)",
+   "statement": "G-B1 통과(10/10 수렴) · G-B2 **탈락**(300 K 유리 Li–Cl 첫 봉우리 0.150 Å · 밀도 +3.0~3.3 %) · G-B3 **통과**(F_RMSE 0.0390 eV/Å ≤ 0.15 · 상대 E MAE 0.55 meV/atom ≤ 15). 확정값은 **UMA 의 힘 오차**이지 물성이 아니다. G-B2 탈락으로 400 원자로의 전이 통로가 닫혔으므로 1·2층의 'UMA 미검증 조성' 표지는 **그대로 선다**. ⚠ 게이트·허용 서술은 보고량 카드 §4·§5 의 **사전등록 집행**이고, **재개 조건은 사후 작성**이다 — 소셀 카드에 재개 조건 절이 없었다. 그 구분을 마감 카드 머리에 밝혔다.",
+   "reopen_criteria": [
+    "R1 클러스터 — 110 GB 를 여러 노드에 나눠 쓸 수 있는 기계. 파일럿 1 점이 SCF 에 진입(`iteration #  2` 이상)한 것을 보고 연다. 그러면 G1 이 되살아나고 이 우회로가 불필요해진다.",
+    "R2 산포가 필요해질 때 — 오차막대와 함께 인용해야 하는 주장이 생겼을 때. 단일 시드라 산포가 '작은' 것이 아니라 **없다**. ⛔ '한 시드 더 보고 싶다' 는 사유가 아니다.",
+    "R3 모델 교체 — 이 F_RMSE 는 UMA 한정이다.",
+    "R4 설정 변경 — 값이 '지정 참조 대비' 라 QE 설정이 바뀌면 재개가 아니라 **재측정**이다.",
+    "⛔ 위 넷 말고 다른 이유로 열지 않는다."
+   ],
+   "card": "db/properties/lpscl_smallcell_closed_2026_09_18.json",
+   "record": "db/properties/lpscl_smallcell_gb3_result_2026_09_18.json",
+   "supersedes": [],
+   "enforcement": "① 허용 서술 5항을 벗어난 문장으로 이 값을 쓰지 않는다 — 특히 영구 단서(120 원자 · L ≈ 14 Å · 감김 홉 2.33 · 10¹² K/s · 단일 시드)를 빼지 않는다. ② 금지 서술 9항 중 첫 항이 제일 세다: **400 원자에 대한 어떤 것도**. ③ 화면 `/li2s` 가 이 카드를 읽어 허용·금지·재개를 띄운다 (webapp/tests/test_li2s.py 가 회귀). ④ ⚠ §1 의 '인용정책 적용 범위'(F_RMSE 가 절대값 금지 대상인가)는 **agent 해석**이라 1저자 확인이 필요하다.",
+   "applies_to": {
+    "systems": [
+     "lpscl_amorphous"
+    ]
+   },
+   "slot": "lpscl_smallcell_closure",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-09-18",
+     "state": "proposed",
+     "by": "agent",
+     "note": "세 게이트 완료로 마감안 작성. 재개 조건이 사후 작성임을 명시. 비준 전 효력 없음."
+    }
+   ]
   }
  ]
 }

@@ -86,7 +86,9 @@ def test_numbers_follow_the_record_not_the_template(client):
     with patch.object(D, "_load_json", side_effect=fake):
         h = _html(client)
     assert "0.4242" in h, "기록을 바꿨는데 화면이 안 바뀐다 — 화면이 숫자를 자체 보관한다"
-    assert "0.039" not in h, "옛 값이 화면에 남아 있다 (두 곳에서 온다)"
+    # ⚠ "옛 값이 아예 없어야 한다" 로는 못 쓴다 — **마감 카드가 정당한 두 번째 출처**다
+    #   (마감 규율이 확정값을 카드에 적으라고 한다). 둘이 갈라지지 않는지는
+    #   `test_closure_value_matches_its_source` 가 따로 본다.
 
 
 # ── ② 못 읽은 것을 조용히 지우지 않는다 ────────────────────────────────
@@ -103,7 +105,6 @@ def test_missing_record_is_announced_not_hidden(client):
         h = r.get_data(as_text=True)
     assert GB3 in h, "없는 기록의 파일명을 화면이 대지 않는다"
     assert "못 읽" in h, "못 읽었다는 말이 화면에 없다 — 빈 화면과 구분이 안 된다"
-    assert "0.039" not in h, "기록이 없는데 옛 숫자가 남아 있다"
 
 
 def test_missing_stage_stays_in_the_list(client):
@@ -162,3 +163,76 @@ def test_nav_has_li2s_and_it_is_live(client):
     urls = {i["url"] for i in N._items()}
     assert "/li2s" in urls, "nav 에 /li2s 가 없다 — 색인 밖 화면은 없는 화면이다"
     assert client.get("/li2s").status_code == 200
+
+
+# ── 마감 카드 ──────────────────────────────────────────────────────────
+CLOSED = "lpscl_smallcell_closed_2026_09_18.json"
+
+
+def test_closure_card_shows_allowed_forbidden_reopen(client):
+    """마감의 **세 목록이 화면에 실물로** 나온다 (파일명만 대면 아무도 안 읽는다)."""
+    h = _html(client)
+    assert "허용 서술" in h and "금지 서술" in h and "재개 조건" in h
+    assert "400 원자에 대한 어떤 것도" in h, "제일 센 금지 서술이 화면에 없다"
+    assert "감김 홉 2.33" in h, "허용 서술의 영구 단서가 화면에 없다"
+
+
+def test_closure_card_admits_reopen_was_written_after(client):
+    """⛔음성: **재개 조건이 사후 작성**이라는 고백이 화면에 남아야 한다.
+
+    마감 규율은 '조건을 먼저 정하고 그게 채워졌으므로 닫는다' 다. 게이트는 사전등록이었지만
+    재개 조건은 아니었다 — 그 구분이 화면에서 사라지면 다음 사람이 전부 사전등록으로 읽는다.
+    """
+    h = _html(client)
+    assert "사후에 쓰는 것" in h, "재개 조건이 사후 작성이라는 고백이 화면에서 사라졌다"
+    assert "사전등록이었던 것" in h, "무엇이 사전등록이었는지가 화면에 없다"
+    assert "지금 새로 쓰는 것" in h, "무엇이 사후 작성인지 라벨이 화면에 없다"
+
+
+def test_closure_values_come_from_the_card(client):
+    """⛔음성: 확정값도 카드에서 온다 — 바꾸면 화면이 따라간다."""
+    real = D._load_json
+
+    def fake(p):
+        d = real(p)
+        if d and Path(p).name == CLOSED:
+            d = dict(d)
+            fx = dict(d["1_확정값"]); fx["힘_RMSE_eVA"] = 0.777
+            d["1_확정값"] = fx
+        return d
+
+    with patch.object(D, "_load_json", side_effect=fake):
+        h = _html(client)
+    assert "0.777" in h, "마감 카드를 바꿨는데 화면이 안 바뀐다"
+
+
+def test_closure_card_missing_is_announced(client):
+    """⛔음성: 마감 카드가 없으면 **빈 카드로 흉내내지 않는다**."""
+    real = D._load_json
+
+    def fake(p):
+        return None if Path(p).name == CLOSED else real(p)
+
+    with patch.object(D, "_load_json", side_effect=fake):
+        r = client.get("/li2s")
+        assert r.status_code == 200
+        h = r.get_data(as_text=True)
+    assert "마감 카드를 못 읽었다" in h, "카드가 없는데 화면이 조용하다"
+    assert "허용 서술 — 이대로만" not in h, "카드가 없는데 허용 서술 칸이 그려졌다"
+
+
+def test_closure_value_matches_its_source():
+    """⛔음성: 마감 카드의 확정값이 **원본 게이트 기록과 갈라지면** 잡는다.
+
+    마감 카드는 값을 **옮겨 적는다**(마감 규율이 확정값을 요구한다). 그래서 같은 숫자가
+    원장에 두 벌 생긴다 — 원본이 고쳐지면 조용히 갈라질 수 있는 자리다. 여기서 묶는다.
+    """
+    closed = D._load_json(D.DB / "properties" / CLOSED)
+    gate = D._load_json(D.DB / "properties" / GB3)
+    assert closed and gate, "기록을 못 읽었다"
+    a = closed["1_확정값"]["힘_RMSE_eVA"]
+    b = gate["★_G_B3_힘·에너지"]["F_RMSE_eVA"]
+    assert a == b, f"마감 카드 {a} ≠ 게이트 기록 {b} — 두 벌이 갈라졌다"
+    a2 = closed["1_확정값"]["상대_에너지_MAE_meV_atom"]
+    b2 = gate["★_G_B3_힘·에너지"]["상대_E_MAE_meV_atom"]
+    assert a2 == b2, f"마감 카드 {a2} ≠ 게이트 기록 {b2} — 두 벌이 갈라졌다"

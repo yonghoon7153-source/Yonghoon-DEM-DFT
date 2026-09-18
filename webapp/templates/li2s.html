@@ -21,6 +21,62 @@
   그 표지는 <b>안 떨어진다</b>(G-B2 탈락 → 전이 통로 닫힘).
 </div>
 
+{% if cc.ok %}
+<div class="card" style="padding:16px 20px;margin-top:14px;border-left:4px solid #7c3aed">
+  <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <div style="font-weight:600">🔒 마감 카드 — {{ cc.title|bold }}</div>
+    <div class="mono muted" style="font-size:.72rem">{{ cc.state }} · {{ cc.state_at }}</div>
+  </div>
+
+  <div class="callout cal-warn" style="margin-top:10px">
+    <b>순서를 먼저 밝힌다</b>
+    {# ⚠ 키를 라벨로 같이 낸다 — "무엇이 사전등록이었고 무엇이 사후 작성인가" 가 이 블록의
+       요점인데, 값만 이어 붙이면 네 문장이 구분 없이 흐른다 (2026-09-18 실측). #}
+    {% for k, v in cc.order.items() %}
+    <div style="margin-top:6px"><b>{{ k.replace('_',' ') }}</b> — {{ v|bold }}</div>{% endfor %}
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+    <div class="card" style="padding:10px 14px;min-width:190px;border-left:3px solid #16a34a">
+      <div class="muted" style="font-size:.72rem">힘 RMSE</div>
+      <div class="mono" style="font-size:1.1rem">{{ cc.value_force }} eV/Å</div></div>
+    <div class="card" style="padding:10px 14px;min-width:190px;border-left:3px solid #16a34a">
+      <div class="muted" style="font-size:.72rem">상대 에너지 MAE</div>
+      <div class="mono" style="font-size:1.1rem">{{ cc.value_energy }} meV/atom</div></div>
+  </div>
+  <div class="muted" style="font-size:.76rem;margin-top:6px">{{ cc.value_cond|bold }}</div>
+  {% if cc.policy_note %}
+  <div class="callout cal-danger" style="margin-top:8px">{{ cc.policy_note|bold }}</div>{% endif %}
+
+  <div class="grid grid-2" style="margin-top:14px">
+    <div>
+      <div style="font-weight:600;color:#16a34a;font-size:.86rem">✅ 허용 서술 — 이대로만</div>
+      <ol style="margin:6px 0 0;padding-left:20px;font-size:.78rem">
+        {% for k, v in cc.allowed.items() %}<li style="margin-top:5px">{{ v|bold }}</li>{% endfor %}
+      </ol>
+    </div>
+    <div>
+      <div style="font-weight:600;color:#dc2626;font-size:.86rem">⛔ 금지 서술</div>
+      <ol style="margin:6px 0 0;padding-left:20px;font-size:.78rem">
+        {% for v in cc.forbidden %}<li style="margin-top:5px">{{ v|bold }}</li>{% endfor %}
+      </ol>
+    </div>
+  </div>
+
+  <div style="font-weight:600;font-size:.86rem;margin-top:14px">↻ 재개 조건 — 이것들만</div>
+  {% if cc.reopen_warn %}<div class="muted" style="font-size:.74rem;margin-top:3px">{{ cc.reopen_warn|bold }}</div>{% endif %}
+  <ul style="margin:6px 0 0;padding-left:20px;font-size:.78rem">
+    {% for k, v in cc.reopen.items() %}<li style="margin-top:5px"><b>{{ k.replace('_',' ') }}</b> — {{ v|bold }}</li>{% endfor %}
+  </ul>
+  {% if cc.reopen_only %}<div class="callout cal-danger" style="margin-top:8px">{{ cc.reopen_only|bold }}</div>{% endif %}
+
+  <div class="muted mono" style="font-size:.7rem;margin-top:10px">
+    <a href="/api/file/{{ cc.record }}">{{ cc.record }}</a></div>
+</div>
+{% else %}
+<div class="callout cal-danger" style="margin-top:12px">⛔ 마감 카드를 못 읽었다 — {{ cc.why }}</div>
+{% endif %}
+
 <!-- ── 단계 ─────────────────────────────────────────────── -->
 <h2 style="margin-top:28px;font-size:1rem">단계별 진행</h2>
 {% for s in p.stages %}

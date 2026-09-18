@@ -7388,3 +7388,44 @@ def li2s_force_by_element() -> dict:
             "interpretation": blk.get("해석(측정_아님)"),
             "ceiling": blk.get("⇒_허용_서술에_주는_것"),
             "record": "db/properties/lpscl_smallcell_gb3_result_2026_09_18.json"}
+
+
+LI2S_CLOSED_JSON = "lpscl_smallcell_closed_2026_09_18.json"
+
+
+def li2s_closure_card() -> dict:
+    """/li2s 최상단 **마감 카드** — 확정값 · 허용/금지 서술 · 재개 조건.
+
+    ⛔ 못 하는 것
+      · 문구를 요약하지 않는다. 원장 문자열을 **그대로** 옮긴다.
+      · 마감이 옳은지 판정하지 않는다 — status_history 의 마지막 상태를 옮긴다.
+      · 파일이 없으면 카드를 만들지 않는다(`ok=False`) — 빈 카드로 흉내내지 않는다.
+      · ⚠ **확정값을 헤드라인 숫자로 띄우되 조건 문자열을 같이 낸다.** 조건 없이 뜬
+        숫자는 복사될 때 단서를 잃는다 (화면 규율).
+    """
+    d = _load_json(DB / "properties" / LI2S_CLOSED_JSON)
+    if not d:
+        return {"ok": False, "why": f"db/properties/{LI2S_CLOSED_JSON} 을 못 읽었다"}
+    hist = d.get("status_history") or []
+    last = hist[-1] if hist else {}
+    reopen = dict(d.get("4_재개_조건_이것들만_사후작성") or {})
+    only = reopen.pop("⛔", "")
+    warn = reopen.pop("⚠", "")
+    fixed = d.get("1_확정값") or {}
+    return {
+        "ok": True,
+        "title": d.get("제목") or "",
+        "state": last.get("state") or d.get("status"),
+        "state_at": last.get("at") or d.get("date"),
+        "state_note": last.get("note") or "",
+        "order": d.get("⚠_순서를_먼저_밝힌다") or {},
+        "value_force": fixed.get("힘_RMSE_eVA"),
+        "value_energy": fixed.get("상대_에너지_MAE_meV_atom"),
+        "value_cond": fixed.get("조건"),
+        "policy_note": fixed.get("⚠_인용정책_적용_범위"),
+        "allowed": d.get("2_허용_서술_이대로만") or {},
+        "forbidden": d.get("3_⛔_금지_서술") or [],
+        "reopen": reopen, "reopen_only": only, "reopen_warn": warn,
+        "keeps": d.get("5_⚠_이_마감이_취소하지_않는_것") or [],
+        "record": f"db/properties/{LI2S_CLOSED_JSON}",
+    }
