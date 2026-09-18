@@ -2,7 +2,7 @@
  "schema": "campaign_scope/v1",
  "record_kind": "scope_declaration",
  "date": "2026-09-18",
- "status": "proposed",
+ "status": "ratified",
  "citable": false,
  "results_seen": true,
  "system": "lpscl_amorphous",
@@ -56,6 +56,23 @@
    "state": "proposed",
    "by": "agent",
    "note": "1저자 결정(\"소셀로 쭉\")을 받아 범위를 선언한다. G-B2 탈락 실측이 §1-② 의 근거다. 비준 전에는 효력 없음 — 지금은 소셀 수치를 어디에도 인용하지 않는다."
+  },
+  {
+   "at": "2026-09-18",
+   "state": "ratified",
+   "note": "1저자 비준 2026-09-18 — \"비준\". 120 원자급을 생산 셀로. 허용/금지 서술과 영구 단서 문구가 비준 대상이다."
   }
- ]
+ ],
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "at": "2026-09-18",
+  "by": "1저자",
+  "content_digest": "fc887bafc2ae8e6cf9b0e9192226db7c1387cc5877495fb0de000b81351cb95b",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-18T01:44:25Z",
+  "commit": "82080f12153bdc08267508655eecd3ef65c4b105",
+  "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다 — 비준을 받아 놓고 내용을 고치는 경로를 닫는다.",
+  "⚠_base_commit_이_아니다": "`commit` 은 기록일 뿐 앵커가 아니다. 앵커는 위 digest 다."
+ }
 }

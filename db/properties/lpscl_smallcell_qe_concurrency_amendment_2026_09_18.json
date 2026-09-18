@@ -2,7 +2,7 @@
  "schema": "campaign_prereg_amendment/v1",
  "record_kind": "amendment",
  "date": "2026-09-18",
- "status": "proposed",
+ "status": "ratified",
  "citable": false,
  "results_seen": false,
  "⚠_무엇을_봤고_무엇을_안_봤나": "G-B2 **결과는 봤다** (탈락, `lpscl_smallcell_gb2_result_2026_09_18.json`). G-B3(힘·에너지) 결과는 **한 점도 안 봤다.** 이 개정은 G-B3 의 **일정**만 건드리고 문턱·프레임·판정은 **하나도** 건드리지 않는다.",
@@ -50,6 +50,23 @@
    "state": "proposed",
    "by": "agent",
    "note": "1저자 지시(\"oom 뜨면 나중에 하면 되지\")로 작성. VRAM 근거 변경이 실측이고, G-B3 결과는 한 점도 보지 않았다. 비준 전에는 효력 없음."
+  },
+  {
+   "at": "2026-09-18",
+   "state": "ratified",
+   "note": "1저자 비준 2026-09-18 — \"비준\". VRAM 근거 변경(13.5 → 4.1 GB 점유)으로 QE 동시실행 허용. 게이트·문턱·프레임은 불변."
   }
- ]
+ ],
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "at": "2026-09-18",
+  "by": "1저자",
+  "content_digest": "662ac6c8b8a7673915a775425cdffe1e7a6167bf5c2f24296f523ee787bc00e7",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-18T01:44:17Z",
+  "commit": "82080f12153bdc08267508655eecd3ef65c4b105",
+  "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다 — 비준을 받아 놓고 내용을 고치는 경로를 닫는다.",
+  "⚠_base_commit_이_아니다": "`commit` 은 기록일 뿐 앵커가 아니다. 앵커는 위 digest 다."
+ }
 }
