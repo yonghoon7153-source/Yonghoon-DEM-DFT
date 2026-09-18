@@ -219,10 +219,15 @@ def main():
     print('-' * 98)
     anchors = [
         ('Minnmann 2021 42% CAM', 42, 0.44, 4.3),
-        ('Wang 2023 70% CAM',     70, 0.26, 7.78),
-        ('Wang 2023 80% CAM',     80, 0.16, 17.24),
-        ('Dewald 2021 25% NCM',   25, 0.65, 2.4),
     ]
+        #  ⛔ 뺀 앵커 셋 (2026-09-18, 원장 `GAP3-37`) — 값은 보존한다:
+        #    ('Wang 2023 70% CAM', 0.26, 7.78) · ('Wang 2023 80% CAM', 0.16, 17.24)
+        #       출처가 리포 전체에 **0 건** (litdb 정본 274 편에 `wang2023*` 없음).
+        #       두 점이 porosity 를 **정확히 4.0 %** 로 함의하고(Minnmann 규약),
+        #       두 점 적합 γ=0.855 가 정본 밴드 γ∈[0.32,0.67] **밖**이다.
+        #    ('Dewald 2021 25% NCM', 0.65, 2.4)
+        #       **Minnmann 과 같은 논문**이다 (DOI `10.1149/1945-7111/abf8d7` 동일) ⇒ 이중계상.
+        #  ⚠ 출처 없는 수를 "LITERATURE VALIDATION" 기준으로 쓰지 않는다.
     for name, cam, phi_ref, tau2_ref in anchors:
         with_tau2 = [(r, abs(r['phi_SE'] - phi_ref)) for r in dedup_records]
         if not with_tau2:

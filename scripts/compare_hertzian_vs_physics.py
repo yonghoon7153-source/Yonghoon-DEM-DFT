@@ -79,6 +79,21 @@ def main():
     with_both = [c for c in cases if c['sigma_P'] is not None]
     print(f"Total cases: {len(cases)}   with physics σ: {len(with_both)}\n")
 
+    #  ⛔ 데이터가 없으면 **여기서 뜻이 통하게 선다** (원장 `GAP3-38`, 2026-09-18).
+    #     전에는 `Total cases: 0` 을 찍고 그냥 진행하다 한참 아래 `:111` 에서
+    #     `ValueError: min() arg is an empty sequence` 로 죽었다 — 읽는 사람에게
+    #     *"데이터가 없다"* 가 아니라 *"코드가 깨졌다"* 로 보인다.
+    #  ⚠ 이 스크립트는 **로컬 전용**이다: 케이스는 `webapp/{uploads,results,archive}/`
+    #     에 있고 그 셋은 전부 `.gitignore` 에 있다 (`.gitignore:5-7`) ⇒ 리포만 받은
+    #     기계에서는 **언제나 0 건**이다.  그것은 결함이 아니라 이 스크립트의 전제다.
+    if not with_both:
+        print('⛔ physics σ 를 가진 케이스가 0 건이다 — 비교할 것이 없다.\n'
+              '   이 스크립트는 로컬 webapp 데이터를 읽는다 '
+              '(`webapp/{uploads,results,archive}/<cid>/full_metrics.json`).\n'
+              '   그 폴더들은 `.gitignore:5-7` 에 있어 리포에 딸려오지 않는다.\n'
+              '   ⇒ 데이터가 있는 기계에서 돌리거나, WEBAPP_*_FOLDER 를 연결할 것.')
+        return 2
+
     # σ ratio summary
     ratios = [c['sigma_ratio_PH'] for c in with_both if c['sigma_ratio_PH']]
     if ratios:
@@ -94,9 +109,14 @@ def main():
     print(f"\n=== LITERATURE VALIDATION — Hertzian vs Physics ===\n")
     anchors = [
         ('Minnmann 2021 42% CAM',  0.44, 4.30),
-        ('Wang 2023 70% CAM',      0.26, 7.78),
-        ('Wang 2023 80% CAM',      0.16, 17.24),
     ]
+    #  ⛔ 뺀 앵커 셋 (2026-09-18, 원장 `GAP3-37`) — 값은 보존한다:
+    #    ('Wang 2023 70% CAM', 0.26, 7.78) · ('Wang 2023 80% CAM', 0.16, 17.24)
+    #       출처가 리포 전체에 **0 건** (litdb 정본 274 편에 `wang2023*` 없음).
+    #       두 점이 porosity 를 **정확히 4.0 %** 로 함의하고(Minnmann 규약),
+    #       두 점 적합 γ=0.855 가 정본 밴드 γ∈[0.32,0.67] **밖**이다.
+    #    ('Dewald 2021 25% NCM', 0.65, 2.4)
+    #       **Minnmann 과 같은 논문**이다 (DOI `10.1149/1945-7111/abf8d7` 동일) ⇒ 이중계상.
 
     # Dedup by (name, round(phi, 2))
     seen = {}
@@ -139,7 +159,10 @@ def main():
     for c in diff_cases:
         print(f"  {c['name'][:34]:35s} {c['phi_SE']:>7.3f} "
               f"{c['sigma_H']:>8.4f} {c['sigma_P']:>8.4f} {c['sigma_ratio_PH']:>6.2f}")
+    return 0
 
 
 if __name__ == '__main__':
-    main()
+    #  ⛔ `main()` 의 반환을 **종료코드로 흘린다** (`GAP3-38`/`GAP3-39` 같은 패턴).
+    #     전에는 반환을 버려서 어떤 실패도 rc=0 이 됐다.
+    raise SystemExit(main())

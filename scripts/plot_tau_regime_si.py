@@ -102,36 +102,65 @@ def fig_literature_match(records):
     ax.scatter(xs, ys, s=45, c='steelblue', edgecolor='k', linewidth=0.5,
                alpha=0.7, label=f'This work DEM (n={len(xs)})')
 
-    # Literature anchors
+    #  ── 문헌 앵커 — **하나만 남았다** (2026-09-18, 원장 `GAP3-37`) ────────────────
+    #  ⛔ 뺀 것 셋.  지우지 않고 **추적 결과와 함께 보존**한다 (원문이 나오면 복원 가능).
+    #
+    #    ('Dewald 2021 (25% NCM)', 0.65, 2.4)   ← **Minnmann 과 같은 논문**이다.
+    #        `docs/rint_anchor_db_research.md:58` 이 그것을 "Bielefeld/**Dewald**/Janek,
+    #        Charge Transport Bottlenecks" 로 적고 DOI 가 `10.1149/1945-7111/abf8d7` 인데
+    #        `docs/lit_minnmann2021_…:3` 의 DOI 와 **동일**하다.  값 2.4 도 Minnmann 카드의
+    #        Fig 2b 표(`:168`)에 있다 ⇒ 한 논문이 **독립 앵커 2 개로 이중계상**돼 있었다.
+    #        ⚠ φ 도 어긋난다 — Minnmann 가정 porosity 14 % 로는 1−0.25−0.14 = 0.61 인데
+    #        0.65 를 썼다.
+    #
+    #    ('Wang 2023 (70% CAM)', 0.26, 7.78)  ·  ('Wang 2023 (80% CAM)', 0.16, 17.24)
+    #        ⛔ **출처가 리포 전체에 0 건**이다 — litdb 정본 274 편에 `wang2023*` 카드가
+    #        없고, 리포에서 "Wang 2023" 을 서지로 식별하는 유일한 줄
+    #        (`build_literature_reference.py:18`) 은 **DEM overlap 규약**(δ/R 0.05–0.15)
+    #        문맥이다.  tortuosity 와 무관하다.
+    #        ★ 게다가 세 가지가 더 어긋난다 (전부 산술·측정):
+    #          ① 두 점이 porosity 를 **정확히 4.0 %** 로 함의한다 (Minnmann 규약
+    #             `φ = 1 − CAM_vol − porosity` 적용).  Minnmann 14 % 의 1/3.5 이고
+    #             두 점이 **같은 수**로 떨어진다 = 측정이 아니라 구성된 수라는 신호.
+    #          ② 두 점을 지나는 적합 `τ² = 0.855·φ^(−1.639)` 의 γ 가 정본
+    #             `litdb/papers/bielefeld2020_…:224` 의 실측 밴드 γ∈[0.32, 0.67] **밖**이다
+    #             (α=1.639 는 밴드 [1.21, 2.02] 안).
+    #          ③ 그림이 그리던 `φ^(−2.36)` 점선은 이 두 별을 **3.09× · 4.38× 벗어난다**
+    #             ⇒ 이름표("Wang 2023 fit")와 달리 **그 점들에 대한 적합이 아니었다**.
+    #        ⚠ 다만 `τ² = φ^(−1.5)` 가 두 값을 3 %·9 % 안에서 재현한다 — 어딘가 실재하는
+    #          수를 옮겨 적었을 가능성은 남는다.  그래서 값을 **여기 보존**한다.
+    #
+    #  ⚠ 앵커가 하나뿐이라는 사실이 그림에 **드러나야 한다** — 숨기지 않는다.
     anchors = [
         ('Minnmann 2021 (42% CAM)', 0.44, 4.3,  'tab:red'),
-        ('Wang 2023 (70% CAM)',      0.26, 7.78, 'tab:orange'),
-        ('Wang 2023 (80% CAM)',      0.16, 17.24, 'tab:orange'),
-        ('Dewald 2021 (25% NCM)',    0.65, 2.4,  'tab:purple'),
     ]
     for name, phi, tau2, col in anchors:
         ax.scatter(phi, tau2, marker='*', s=300, c=col, edgecolor='k',
                    linewidth=1, zorder=5, label=name)
 
-    # Bruggeman reference
-    #  ⛔ 범례를 **손으로 적지 않는다** (원장 `GAP3-FIG` ⑥).  전에는 그리는 것이
-    #     `phi**(-2.36)` 인데 범례가 `τ²=φ^{-1.72}` 라 **곡선과 글자가 갈려** 있었다.
-    #     ⇒ 지수를 상수로 한 번 두고 **거기서 라벨을 만든다** — 다시 갈릴 수 없다.
+    #  ── Bruggeman 기준선 ───────────────────────────────────────────────────────
+    #  ⛔⛔ **옛 주석이 규약을 지어냈다 — 철회한다** (2026-09-18, 원장 `GAP3-37`).
+    #     그 주석은 *"Bruggeman 줄 α=1.5 → −1.0 ⇒ τ² = φ^(2−2α)"* 라고 적었는데,
+    #     이것은 **그려진 −1.0 을 맞다고 전제하고 거꾸로 맞춘 식**이고 `τ² = φ^(2−2α)` 는
+    #     **리포 어디에도 정의돼 있지 않다**.  그 −1.0 자체가 오류였다.
     #
-    #  ⚠⚠ **지수 값 자체는 앵커가 없다** (§F1).  두 줄이 서로 다른 규약을 함축한다:
-    #        Bruggeman 줄  α=1.5  → −1.0   ⇒ τ² = φ^(2−2α)
-    #        Wang 줄       α=2.36 → −2.36  ⇒ τ² = φ^(−α)
-    #     둘 다 맞을 수는 없다.  첫 줄의 규약을 따르면 α=2.36 은 **−2.72** 여야 한다.
-    #     리포에 "Wang 2023" 은 **DEM overlap 규약** 문맥으로만 있고 tortuosity 지수 출처가
-    #     **없다** ⇒ 값을 고르지 않고 그리던 것을 그대로 두되 **미앵커라고 적는다**.
-    #     ⇒ 원 문헌을 확인하기 전까지 이 점선을 정량 근거로 인용하지 말 것.
-    BRUG_EXP = -1.0          # α=1.5, τ² = φ^(2−2α)
-    WANG_EXP = -2.36         # ⚠ 출처 미확인 — 규약이 Bruggeman 줄과 어긋난다
+    #  ★ 리포의 진짜 규약은 **코드에 있다** (유도 가능, 문헌 불요):
+    #        `scripts/build_tau_regime_db.py:43-48`  τ = √(φ_SE · σ_grain / σ)   ⇒ τ² = φ·σ₀/σ_eff
+    #        `scripts/network_conductivity.py:1098`  Bruggeman EMT: σ_eff/σ₀ = φ^1.5
+    #     둘을 합치면  **τ² = φ^(1−α)**  ⇒ α = 1.5 → **−0.5**  (α = 2.36 이었다면 −1.36).
+    #     독립 확인: `docs/lit_minnmann2021_…:150` (같은 τ 정의) ·
+    #     정본 `litdb/papers/bielefeld2020_…:222` — *"**표준 Bruggeman: τ²(ε) = ε^(−1/2)**"*.
+    #
+    #  ⛔ "Wang 2023 fit" 점선(`φ^(−2.36)`)은 **지웠다** — 출처 0 건인 데다 자기 이름표가
+    #     붙은 두 앵커를 3.09×·4.38× 벗어났다 (위 anchors 주석 참조).  적합이 아닌 선에
+    #     "fit" 이라 적는 것이 앵커 없음보다 나쁘다.
+    #
+    #  ⚠ 범례는 **그리는 지수에서 생성**한다 (원장 `GAP3-FIG` ⑥) — 곡선↔글자가 갈릴 수 없다.
+    BRUG_ALPHA = 1.5                 # σ_eff/σ₀ = φ^α  (구형 입자 EMT)
+    BRUG_EXP = 1.0 - BRUG_ALPHA      # τ² = φ^(1−α)  ⇒ −0.5.  ★ 손으로 적지 않는다
     phi_range = np.linspace(0.15, 0.7, 50)
     ax.plot(phi_range, phi_range**BRUG_EXP, 'k--', alpha=0.5,
-            label=f'Bruggeman (α=1.5): τ²=φ$^{{{BRUG_EXP:g}}}$')
-    ax.plot(phi_range, phi_range**WANG_EXP, 'k:', alpha=0.5,
-            label=f'Wang 2023 fit: τ²=φ$^{{{WANG_EXP:g}}}$  (출처 미확인)')
+            label=f'Bruggeman (α={BRUG_ALPHA:g}): τ²=φ$^{{{BRUG_EXP:g}}}$')
 
     ax.set_xlabel(r'$\varphi_\mathrm{SE}$', fontsize=11)
     ax.set_ylabel(r'$\tau^2_{Lap,\,eff}$', fontsize=11)
@@ -223,8 +252,12 @@ def fig_bottleneck_showcase(records):
 
 def main():
     if not os.path.exists(DB_PATH):
+        #  ⛔ **fail-open 이었다** (원장 `GAP3-39`, 2026-09-18).  여기서 그냥 `return` 하면
+        #     함수가 `None` 을 돌려주고 `main()` 이 성공(rc=0)으로 끝난다 — 그림이 한 장도
+        #     안 나왔는데 파이프라인에는 **초록**으로 보인다.
+        #     = CLAUDE.md 규율 ⑤ 의 false-green 이 **종료코드 층**에서 재현된 것.
         print(f"ERROR: {DB_PATH} not found. Run build_tau_regime_db.py first.")
-        return
+        return 1
     records = load_db()
     print(f"Loaded {len(records)} records from {DB_PATH}\n")
 
@@ -241,7 +274,10 @@ def main():
     print(f"  [4/4] Bottleneck showcase → {out4} (+png)")
 
     print(f"\n✓ All SI figures generated in {OUT_DIR}/")
+    return 0
 
 
 if __name__ == '__main__':
-    main()
+    #  ⛔ `main()` 의 반환을 **종료코드로 흘린다** (`GAP3-39`).  전에는 `main()` 만 부르고
+    #     버려서 어떤 실패도 rc=0 이 됐다.
+    raise SystemExit(main())
