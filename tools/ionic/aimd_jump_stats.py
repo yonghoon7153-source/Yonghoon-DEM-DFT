@@ -24,6 +24,7 @@ Usage:
 """
 import argparse, json, re, sys
 from pathlib import Path
+import pathlib
 import numpy as np
 
 PS_BOND = 2.30
@@ -675,6 +676,76 @@ def _selftest():
         f"vs {lc['per_ion_max_A']['max']:.3f}) — 첫 창을 쓰면 어긋난다")
 
 
+    # ── CLI 경로 (--hop_events_all / --hop_events_top) ────────────────────
+    #   ⛔ 위 시험들은 전부 **함수를 직접** 부른다. 이 파일은 그래서 한 번 물렸다
+    #     (rmax 를 함수에서만 고치고 배선을 안 고쳤는데 selftest 가 통과했다).
+    #     --hop_events_all 은 **배선이 전부**라 CLI 를 타야 한다.
+    import subprocess
+    import sys as _sys
+    import tempfile
+    td = tempfile.mkdtemp()
+    # 이온 3개가 서로 다른 크기로 뛰는 합성 궤적 (문턱 1.0 Å 을 셋 다 넘는다)
+    nT, nA, dtp2 = 60, 4, 1.0
+    L = 20.0
+    P = np.zeros((nT, nA, 3))
+    #: ⚠ 점프를 **lag 안에** 끝내야 한다. 처음엔 10 ps 램프로 썼는데 lag 5 ps 는
+    #   절반(1.5/1.2/0.9 Å)만 보고 셋 중 둘만 넘겼다 — 내 산수가 틀렸던 자리다.
+    for a, amp in enumerate([3.0, 2.4, 1.8, 0.2]):          # 마지막은 진동 = 문턱 아래
+        P[:, a, 0] = a * 4.0
+        P[20:23, a, 0] += np.linspace(0, amp, 3)            # 2 ps 안에 끝난다
+        P[23:, a, 0] += amp
+    syms = ["Li"] * nA
+    with open(f"{td}/t.xyz", "w") as fh:
+        for t in range(nT):
+            fh.write(f"{nA}\n")
+            fh.write(f'Lattice="{L} 0 0 0 {L} 0 0 0 {L}" Properties=species:S:1:pos:R:3 '
+                     f'pbc="T T T" time={t * dtp2}\n')
+            for a in range(nA):
+                fh.write(f"{syms[a]} {P[t, a, 0]:.6f} {P[t, a, 1]:.6f} {P[t, a, 2]:.6f}\n")
+
+    def cli(*extra):
+        return subprocess.run(
+            [_sys.executable, __file__, "--traj", f"{td}/t.xyz", "--label", "x",
+             "--out_dir", f"{td}/o_{abs(hash(extra)) % 99999}",
+             "--save_fs", "1000",          # dt 1.0 ps — aimd_results.json 이 없는 합성 궤적
+             "--hop_census_lag_ps", "5.0", "--hop_min_dist", "1.0", *extra],
+            capture_output=True, text=True, timeout=180)
+
+    r_all = cli("--hop_events_all")
+    chk("전부" in r_all.stdout,
+        f"[CLI·양성] --hop_events_all 이 '전부' 를 찍는다 (rc={r_all.returncode})")
+    # ⛔음성 — 이 fixture 는 Li 만 있다(자유 음이온 0). 예전엔 여기서
+    #   `argmin of an empty sequence` 로 **처리 안 된 채 죽었다** — 사람은 "도구가 깨졌다"
+    #   로 읽지만 사실은 "이 계엔 케이지가 없다" 는 결과다.
+    chk("케이지 중심) 이 **0 개**" in r_all.stdout or "케이지 중심)이 **0 개**" in r_all.stdout
+        or "0 개** — 케이지 기반" in r_all.stdout,
+        "⛔음성: 케이지 중심 0 개면 **건너뛴다고 말한다** (죽지 않는다)")
+    chk("argmin" not in (r_all.stdout + r_all.stderr),
+        "⛔음성: 처리 안 된 numpy 오류가 사람에게 보이지 않는다")
+    n_ev = r_all.stdout.count("ev0") + r_all.stdout.count("ev1")
+    chk(n_ev == 3, f"[CLI] 문턱(1.0 Å)을 넘긴 3 개를 다 뽑는다 (뽑힌 수 {n_ev}) — "
+                   f"진동 이온 1 개는 안 뽑힌다")
+    # ⛔음성 — 상위 N 으로 **자르면 화면이 말해야** 한다
+    r_top = cli("--hop_events_top", "2")
+    chk("**2 개만**" in r_top.stdout and "위반" in r_top.stdout,
+        f"⛔음성: 상위 N 으로 자르면 **화면에** 경고한다 — 조용히 자르지 않는다")
+    # ⛔음성 — 둘을 같이 주면 시작하지 않는다
+    r_both = cli("--hop_events_all", "--hop_events_top", "2")
+    chk(r_both.returncode != 0 and "같이 줬다" in (r_both.stdout + r_both.stderr),
+        f"⛔음성: --hop_events_all 과 --hop_events_top 을 같이 주면 **거부**한다 "
+        f"(rc={r_both.returncode})")
+    # ⛔음성 — 기록에 규칙과 잘림 여부가 남는다
+    import glob as _glob
+    ejs = _glob.glob(f"{td}/o_*/events/events.json")
+    if ejs:
+        import json as _json
+        ej = _json.loads(pathlib.Path(sorted(ejs)[0]).read_text(encoding="utf-8"))
+        chk("truncated" in ej and "rule" in ej,
+            "⛔음성: events.json 에 rule 과 truncated 가 남는다")
+    else:
+        chk(False, "⛔음성: events.json 이 안 만들어졌다")
+    shutil.rmtree(td, ignore_errors=True)
+
     print("selftest " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
 
@@ -695,7 +766,14 @@ def _build_parser():
                     help="이 시각부터 (포함) — 융체·담금질을 빼고 유리만 보려면 쓴다")
     ap.add_argument("--t_to_ps", type=float, default=None, help="이 시각까지 (포함)")
     ap.add_argument("--hop_events_top", type=int, default=None,
-                    help="홉 사건 상위 N 개의 시작·끝 구조를 뽑는다 (NEB 후보 · 계산 0)")
+                    help="홉 사건 상위 N 개의 시작·끝 구조를 뽑는다 (NEB 후보 · 계산 0). "
+                         "⚠ N 을 사람이 고르는 것이라 사전등록 규칙과 어긋날 수 있다 — "
+                         "소셀 NEB 는 --hop_events_all 을 쓴다")
+    # ⭐ 2026-09-18 — NEB 카드 §0b-②-1 비준: *"문턱을 넘긴 것 **전부**. N 을 사람이
+    #   고르지 않는다 — **문턱이 고른다**."* 상위 N 은 그 규칙을 어길 수 있는 손잡이다.
+    ap.add_argument("--hop_events_all", action="store_true",
+                    help="문턱을 넘긴 사건을 **전부** 뽑는다 (사전등록 규칙용). "
+                         "--hop_events_top 과 같이 주면 거부한다")
     ap.add_argument("--hop_census_lag_ps", type=float, default=None,
                     help="케이지 없이 변위로 홉을 센다 — 이 lag 로 (0 = 창 전체)")
     ap.add_argument("--hop_min_dist", type=float, default=2.5,
@@ -781,10 +859,20 @@ def main():
             json.dumps(hopc, ensure_ascii=False, indent=1), encoding="utf-8")
 
         #: ⭐ NEB 후보 뽑기 — **기계적**이다. 변위 내림차순 상위 N, 사람이 안 고른다.
-        if args.hop_events_top:
+        if args.hop_events_all and args.hop_events_top:
+            raise SystemExit("⛔ --hop_events_all 과 --hop_events_top 을 같이 줬다. "
+                             "어느 규칙인지 알 수 없으므로 시작하지 않는다.")
+        n_take = len(hopc["events"]) if args.hop_events_all else args.hop_events_top
+        if n_take:
             evd = out / "events"; evd.mkdir(exist_ok=True)
             man = []
-            for k, ev in enumerate(hopc["events"][:args.hop_events_top], 1):
+            #: ⛔ 자르면 **화면에** 말한다. events.json 안에만 적으면 아무도 안 본다.
+            if n_take < len(hopc["events"]):
+                print(f"    ⚠ 문턱을 넘긴 사건 {len(hopc['events'])} 개 중 **{n_take} 개만** "
+                      f"뽑는다 — 사전등록 규칙이 '전부' 면 이건 위반이다 (--hop_events_all)")
+            else:
+                print(f"    ✓ 문턱을 넘긴 사건 **전부** {n_take} 개 (N 을 문턱이 골랐다)")
+            for k, ev in enumerate(hopc["events"][:n_take], 1):
                 a, p0, p1, cell, d_mic = hop_endpoints(sym, pos, cells, Li, ev, dt_ps)
                 tag = f"ev{k:02d}_atom{a}"
                 write_xyz(evd / f"{tag}_i.xyz", sym, p0, cell, f"t_ps={ev['t_start_ps']}")
@@ -796,7 +884,11 @@ def main():
                       f"변위 {ev['disp_A']:.2f} Å" +
                       (f" (최소이미지 보정 후 {d_mic:.2f})" if abs(d_mic - ev['disp_A']) > 1e-6 else ""))
             (evd / "events.json").write_text(
-                json.dumps({"rule": "변위 내림차순 상위 N · 이온당 사건 1개 · 사람이 고르지 않는다",
+                json.dumps({"rule": ("변위 내림차순 · 이온당 사건 1개 · " +
+                                     ("**문턱을 넘긴 전부**(--hop_events_all, NEB 카드 §0b-②-1)"
+                                      if args.hop_events_all else
+                                      "상위 N(--hop_events_top) ⚠ 사람이 N 을 골랐다")),
+                            "truncated": n_take < len(hopc["events"]),
                             "lag_ps": hopc["lag_ps"], "min_dist_A": hopc["min_dist_A"],
                             "n_total_events": len(hopc["events"]), "taken": len(man),
                             "⛔_끝이_최소인지는_모른다": "이완은 다음 단계다. 되돌아오는 나들이면 "
@@ -927,9 +1019,19 @@ def main():
     #       displacement across the transition window exceeds --hop_min_dist (a
     #       real cage-to-cage move, not a ~1 A rattle).
     cart = pos[:, :, :]
-    assign = np.empty((T, len(Li)), int)
-    for ti in range(T):
-        assign[ti] = np.argmin(mic(cart[ti, Li], cart[ti, cen], cells[ti]), axis=1)
+    # ⛔ 2026-09-18 — 케이지 중심이 **하나도 없는** 궤적(자유 음이온 0)에서
+    #   argmin 이 빈 축을 받아 `ValueError: argmin of an empty sequence` 로 죽었다.
+    #   처리 안 된 numpy 오류라 사람은 "도구가 깨졌다" 로 읽는다 — 사실은
+    #   **이 계에 케이지가 없다**는 결과다. '못 함' 과 '없음' 을 가른다.
+    if len(cen) == 0:
+        print("    ⚠ 자유 음이온(케이지 중심)이 **0 개** — 케이지 기반 홉 집계를 건너뛴다. "
+              "변위 기반 집계(--hop_census_lag_ps)는 그대로 유효하다.")
+        cage_skipped = True
+    else:
+        cage_skipped = False
+        assign = np.empty((T, len(Li)), int)
+        for ti in range(T):
+            assign[ti] = np.argmin(mic(cart[ti, Li], cart[ti, cen], cells[ti]), axis=1)
 
     sw = max(3, int(round(args.hop_smooth_ps / dt_ps)))      # rolling-mode window
     h = sw // 2
@@ -943,7 +1045,7 @@ def main():
 
     inter_hops, flick = 0, 0
     hop_dists = []
-    for k in range(len(Li)):
+    for k in (range(len(Li)) if not cage_skipped else []):
         a = assign[:, k]
         flick += int((np.diff(a) != 0).sum())
         sm = rolling_mode(a)
@@ -971,10 +1073,12 @@ def main():
         "D_single_origin_diagnostic_cm2_s": D,
         "⛔_D_규약": ("정본은 MSD 창 2–50 ps · 자유절편이다(CLAUDE.md). 이 값은 "
                      "single-origin 20–90 % 적합이라 **정본 D 로 인용 금지** — 진단용이다."),
-        "inter_cage_hops": inter_hops,
-        "inter_cage_hop_rate_per_Li_per_ns": round(rate, 4),
+        # ⛔ 케이지가 없어 건너뛴 것과 **0 건**은 다르다 — 0 으로 그리지 않는다.
+        "cage_analysis_skipped": cage_skipped,
+        "inter_cage_hops": None if cage_skipped else inter_hops,
+        "inter_cage_hop_rate_per_Li_per_ns": None if cage_skipped else round(rate, 4),
         "inter_cage_hop_dist_mean_A": round(float(hop_dists.mean()), 3) if len(hop_dists) else None,
-        "transient_cage_flickers": flick,
+        "transient_cage_flickers": None if cage_skipped else flick,
         "hop_smooth_frames": sw,
         "hop_min_dist_A": args.hop_min_dist,
         "van_hove": vh_verdict, "van_hove_info": vhinfo,
