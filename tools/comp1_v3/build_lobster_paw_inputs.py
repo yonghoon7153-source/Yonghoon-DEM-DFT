@@ -115,6 +115,38 @@ def parse_cell_from_in(text):
     return np.array(rows), unit
 
 
+def parse_final_cell(out_text):
+    """vc-relax 출력의 **최종** CELL_PARAMETERS. 없으면 (None, None).
+
+    ⛔⛔ 2026-09-18 — 이 함수가 없어서 빌더가 셀을 **입력**에서 읽고 좌표는 **출력**에서
+      읽었다. `relax`(셀 고정)면 둘이 같으니 맞지만, **`vc-relax` 면 셀이 바뀐다** —
+      옛 셀 + 새 좌표 = **다른 구조**이고 **오류가 안 난다**. 실측: SEI 파이프라인이
+      만든 vc-relax 출력을 먹였더니 단위 검사(`Need crystal-coord`)에만 걸렸다.
+      그 검사만 풀었으면 조용히 틀린 구조로 LOBSTER 를 돌렸을 것이다.
+
+    QE 는 vc-relax 가 힘·응력 기준을 만족했을 때만 `Begin final coordinates` 블록을
+    찍고, 그 안에 CELL_PARAMETERS 와 ATOMIC_POSITIONS 가 **짝으로** 들어 있다.
+    그 짝을 쓴다 — 둘을 다른 데서 가져오지 않는다.
+
+    ⛔ 못 하는 것: 블록이 없으면 None 을 준다. 중간 BFGS 스텝의 셀을 대신 쓰지 않는다
+      (그건 수렴하지 않은 기하다).
+    """
+    i = out_text.rfind("Begin final coordinates")
+    if i < 0:
+        return None, None
+    tail = out_text[i:]
+    j = tail.find("End final coordinates")
+    if j > 0:
+        tail = tail[:j]
+    m = re.search(r"CELL_PARAMETERS\s*\(?\s*(angstrom|bohr|alat)\s*\)?\s*\n"
+                  r"((?:[-+\d.eE\s]+\n){3})", tail, re.IGNORECASE)
+    if not m:
+        return None, None
+    rows = [[float(x) for x in line.split()[:3]]
+            for line in m.group(2).strip().splitlines()[:3]]
+    return np.array(rows), m.group(1).lower()
+
+
 def parse_final_positions(out_text):
     matches = list(re.finditer(
         r"ATOMIC_POSITIONS\s*\(([^)]+)\)\n((?:[A-Za-z]\w*\s+[-+\d.eE\s]+\n)+)",
@@ -158,6 +190,87 @@ def control_block(prefix, outdir, calculation, extra=""):
   verbosity='high'
 {extra}/
 """
+
+
+def _selftest():
+    """⛔ 음성 중심. 이 도구의 제일 비싼 결함은 **조용히 다른 구조**를 만드는 것이다.
+
+    2026-09-18 실측: 셀을 `src_in` 에서, 좌표를 `src_out` 에서 읽고 있었다.
+    `relax`(셀 고정)면 맞지만 **`vc-relax` 면 옛 셀 + 새 좌표 = 다른 구조**이고
+    **오류가 안 난다**. 그 자리를 여기서 잡는다.
+    """
+    import subprocess
+    import sys as _sys
+    import tempfile
+    n = [0, 0]
+
+    def chk(c, m):
+        n[0] += 1; n[1] += bool(c)
+        print(("  ✓ " if c else "  ✗ ") + m)
+
+    IN_CELL = "  10.0000 0 0\n  0 10.0000 0\n  0 0 10.0000\n"
+    OUT_CELL = "  11.0000 0 0\n  0 11.0000 0\n  0 0 11.0000\n"
+    MID_CELL = "  10.5000 0 0\n  0 10.5000 0\n  0 0 10.5000\n"
+    POS = "Li  0.0 0.0 0.0\nS   1.0 1.0 1.0\n"
+
+    def mk_out(final=True, mid=True, unit="angstrom"):
+        t = ""
+        if mid:                                   # 중간 BFGS 스텝 (수렴 전)
+            t += f"CELL_PARAMETERS (angstrom)\n{MID_CELL}ATOMIC_POSITIONS ({unit})\n{POS}\n"
+        if final:
+            t += ("Begin final coordinates\n     new unit-cell volume = 1331.0\n"
+                  f"CELL_PARAMETERS (angstrom)\n{OUT_CELL}"
+                  f"ATOMIC_POSITIONS ({unit})\n{POS}End final coordinates\n")
+        t += "JOB DONE.\n"
+        return t
+
+    # ── parse_final_cell: 최종 블록만 본다 ────────────────────────────────
+    c, u = parse_final_cell(mk_out())
+    chk(c is not None and abs(c[0][0] - 11.0) < 1e-9 and u == "angstrom",
+        f"[양성] 최종 블록의 셀을 읽는다 (a={c[0][0] if c is not None else None})")
+    # ⛔음성 — 중간 BFGS 스텝의 셀을 집으면 10.5 가 나온다. 그러면 안 된다.
+    chk(c is not None and abs(c[0][0] - 10.5) > 1e-9,
+        "⛔음성: **중간 스텝의 셀**(10.5)을 집지 않는다 — 수렴 안 한 기하다")
+    chk(parse_final_cell(mk_out(final=False)) == (None, None),
+        "⛔음성: 최종 블록이 없으면 **None** (중간 셀로 대신하지 않는다)")
+
+    # ── main 의 셀 선택 (subprocess — 실제 실행 경로) ─────────────────────
+    def run(calc, final, unit="angstrom"):
+        d = tempfile.mkdtemp()
+        src_in = (f"&CONTROL\n  calculation='{calc}'\n/\n&SYSTEM\n  ibrav=0\n  nat=2\n  ntyp=2\n/\n"
+                  f"ATOMIC_SPECIES\n Li 6.94 x.UPF\n S 32.06 y.UPF\n"
+                  f"CELL_PARAMETERS angstrom\n{IN_CELL}"
+                  f"ATOMIC_POSITIONS (angstrom)\n{POS}")
+        Path(d, "s.in").write_text(src_in)
+        Path(d, "s.out").write_text(mk_out(final=final, unit=unit))
+        r = subprocess.run([_sys.executable, __file__, "--src_in", f"{d}/s.in",
+                            "--src_out", f"{d}/s.out", "--workdir", f"{d}/w",
+                            "--pseudo_dir", d, "--nbnd", "8"],
+                           capture_output=True, text=True, timeout=60)
+        return r
+
+    r = run("vc-relax", final=True)
+    chk("src_out" in r.stdout, f"[양성] vc-relax → 셀을 **src_out** 에서 (찍힌 말: "
+        f"{[l for l in r.stdout.splitlines() if l.startswith('Cell')] or '없음'})")
+    chk("+33.10 %" in r.stdout or "33.1" in r.stdout,
+        "부피 변화를 **찍는다** (10³ → 11³ = +33.1 %) — 사람이 셀이 바뀐 걸 본다")
+    # ⛔음성 — vc-relax 인데 최종 블록이 없으면 **죽어야** 한다 (입력 셀로 안 떨어진다)
+    r2 = run("vc-relax", final=False)
+    chk(r2.returncode != 0 and "Begin final coordinates" in (r2.stdout + r2.stderr),
+        f"⛔음성: vc-relax + 최종블록 없음 → **죽는다** (rc={r2.returncode})")
+    chk("src_in" not in r2.stdout,
+        "⛔음성: 그때 입력 셀로 **조용히 떨어지지 않는다**")
+    # 양성 — relax(셀 고정)면 입력 셀 폴백이 정상
+    r3 = run("relax", final=False)
+    chk("src_in" in r3.stdout,
+        f"[양성] relax + 최종블록 없음 → 입력 셀 폴백 (rc={r3.returncode})")
+    # ⛔음성 — 모르는 단위는 거부
+    r4 = run("vc-relax", final=True, unit="bohr")
+    chk(r4.returncode != 0 and "단위를 모른다" in (r4.stdout + r4.stderr),
+        "⛔음성: 모르는 좌표 단위(bohr)를 거부한다")
+
+    print(f"selftest {'PASS' if n[1] == n[0] else 'FAIL'} — {n[1]}/{n[0]}")
+    return 0 if n[1] == n[0] else 1
 
 
 def main():
@@ -205,14 +318,36 @@ def main():
         in_text = Path(args.src_in).read_text()
         out_text = Path(args.src_out).read_text()
         nls, cards = parse_namelists_and_cards(in_text)
-        cell, cell_unit = parse_cell_from_in(in_text)
-        if cell is None or cell_unit != "angstrom":
-            raise SystemExit("Expected CELL_PARAMETERS angstrom in src_in")
+        #: ⭐ 2026-09-18 — 셀은 **출력의 최종 블록**을 먼저 본다 (vc-relax 대응).
+        #   입력 셀로 떨어지는 것은 relax(셀 고정)일 때뿐이고, 어느 쪽을 썼는지 **찍는다**.
+        cell, cell_unit = parse_final_cell(out_text)
+        cell_src = "src_out (Begin final coordinates)"
+        if cell is None:
+            cell, cell_unit = parse_cell_from_in(in_text)
+            cell_src = "src_in (출력에 최종 블록이 없다 — relax 로 본다)"
+        if cell is None:
+            raise SystemExit("CELL_PARAMETERS 를 src_out 에서도 src_in 에서도 못 읽었다")
+        if cell_unit != "angstrom":
+            raise SystemExit(f"CELL_PARAMETERS 단위가 angstrom 이 아니다: {cell_unit}")
+        #: ⛔ vc-relax 인데 입력 셀로 떨어지면 **다른 구조**가 된다 — 조용히 넘어가지 않는다.
+        if "vc-relax" in in_text and cell_src.startswith("src_in"):
+            raise SystemExit("⛔ 입력이 vc-relax 인데 출력에 `Begin final coordinates` 가 없다. "
+                             "이완이 안 끝났거나 수렴하지 않았다 — 입력 셀을 대신 쓰지 않는다.")
         pos_unit, pos_block = parse_final_positions(out_text)
         if pos_block is None:
             raise SystemExit("Could not parse final ATOMIC_POSITIONS from src_out")
-        if not pos_unit.lower().startswith("crystal"):
-            raise SystemExit(f"Need crystal-coord ATOMIC_POSITIONS; got {pos_unit}")
+        #: ⭐ angstrom 도 받는다. QE 가 `ATOMIC_POSITIONS (angstrom)` 를 그대로 먹고,
+        #   아래에서 단위를 **그대로 넘긴다**. 종전엔 crystal 만 받아 SEI 파이프라인
+        #   출력을 거부했다 — 그 거부 자체는 옳았다(위 셀 문제를 막았다).
+        if not pos_unit.lower().startswith(("crystal", "angstrom")):
+            raise SystemExit(f"좌표 단위를 모른다: {pos_unit} (crystal · angstrom 만 받는다)")
+        print(f"Cell   : {cell_src} · {cell_unit}")
+        print(f"Coords : {pos_unit} (그대로 전달)")
+        _cin, _ = parse_cell_from_in(in_text)
+        if _cin is not None and cell is not None:
+            _dv = abs(np.linalg.det(cell)) / abs(np.linalg.det(_cin)) - 1.0
+            print(f"         입력 셀 대비 부피 {100*_dv:+.2f} %"
+                  + ("  ← vc-relax 로 셀이 바뀌었다" if abs(_dv) > 1e-6 else ""))
 
     V = abs(np.linalg.det(cell))
     species = species_in_block(pos_block)
@@ -418,4 +553,7 @@ echo "    --lobster_dir . --out_png V0_COHP_4panel_ext.png"
 
 
 if __name__ == "__main__":
+    import sys as _s0
+    if "--selftest" in _s0.argv:
+        raise SystemExit(_selftest())
     main()
