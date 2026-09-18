@@ -543,6 +543,12 @@ VSTYLE = {
     # 옅은 연두라 **흰 배경에서 사라진다**(Ni 절반이 안 보였던 그 실측과 같은 함정) —
     # 진한 청록으로 둔다. S(노랑)·O(빨강)·Li(초록)·Ni(파랑/보라)와 안 겹친다.
     "F":  (0.32,   0, 160, 180,   0, 160, 180),
+    # LPSCl 계 (2026-09-18). P·Cl 이 없어 **회색 기본값**으로 떨어지고 있었다 —
+    # PS4 중심과 자유 Cl 이 같은 회색이라 그림에서 구분이 안 된다.
+    # 색은 CLAUDE.md 하우스 팔레트에서 가져와 matplotlib 그림과 맞춘다.
+    # ⚠ S(노랑)·O(빨강)·Li(초록)은 **안 바꾼다** — 기존 .vesta 들과 색이 갈리면 안 된다.
+    "P":  (0.35, 124,  58, 237, 124,  58, 237),   # house #7c3aed
+    "Cl": (0.50, 101, 163,  13, 101, 163,  13),   # house #65a30d
 }
 # ⚠ **반지름은 셀 크기에 맞춰 키워야 한다 (2026-08-03 실측).** 위 값은 ~10 A 분자용이라
 #   11.5 x 18.3 x 28.8 A 결정 셀에 그대로 쓰면 화면의 1% 짜리 **점**이 된다. 비율은
@@ -559,7 +565,17 @@ VBONDS = [("Ni", "O", 2.40, 1),   # NiO6 팔면체 + 분자 O 와의 흡착결�
           ("Li", "O", 2.60, 0),
           ("C", "C", 1.70, 0), ("C", "H", 1.15, 0), ("C", "O", 1.65, 0),
           ("C", "S", 1.95, 0), ("S", "O", 1.80, 0), ("O", "H", 1.10, 0),
-          ("C", "F", 1.60, 0)]      # PTFE 조각 — C-F 는 1.33~1.36 A
+          ("C", "F", 1.60, 0),      # PTFE 조각 — C-F 는 1.33~1.36 A
+          # LPSCl 계 (2026-09-18). 이 목록이 SDCP 전용이라 P-S 가 없었고, 그래서
+          # 소셀 유리의 .vesta 에 **결합이 하나도 안 그려졌다** — PS4 사면체가 안 보인다.
+          # 컷오프는 repo 규약에서 가져온다: framework_site_census.py 가 P 결합 S 를
+          # 2.6 A 로, per_site_bond_analysis.py 가 P:S 를 2.3 A 로 쓴다. 실측 P-S 는
+          # 2.037~2.098 A 라 **2.40** 이면 PS4 만 그리고 다음 이웃은 안 삼킨다.
+          ("P", "S", 2.40, 1),
+          ("P", "O", 1.80, 1)]     # 산소치환 PS(4-x)Ox (실측 P-O 1.55~1.60 A)
+# ⛔ Li-S · Li-Cl 은 **일부러 안 넣었다**. Li 48 개짜리 유리에서 3 A 대 컷오프로 그리면
+#   결합이 수백 개라 화면이 실뭉치가 되고 골격이 안 보인다. 배위를 보고 싶으면
+#   VESTA 의 Bonds 대화상자에서 그때 추가한다 (파일을 바꾸는 것보다 되돌리기 쉽다).
 
 
 def viewing_supercell(cell, elems, labels, pos, sel_mol, mult):
@@ -793,10 +809,16 @@ def default_tag(path):
 
 
 def emit_struct(path, out, tag=None, scale=RAD_SCALE_DEFAULT, quiet=False, recenter=True,
-                box_pad=None, bond_max=None, vesta_super=None):
+                box_pad=None, bond_max=None, vesta_super=None, bulk=False):
     """한 계산 → xyz + .vasp + .vesta + 거리 세 층 감사. → meta(dict)
 
     box_pad 를 주면 셀 없는 분자 xyz 를 **보기용 상자**에 담아 읽는다 (read_mol_xyz).
+
+    bulk=True 면 **슬랩+분자 가정을 통째로 끈다** (2026-09-18).
+      · split_molecule / recenter / unwrap 안 한다 — 좌표를 셀 안으로 **접는다**
+      · 슬랩 감사(흡착·진공·피복) 대신 **최단거리 감사**를 한다
+      · .vesta 제목에서 NiO6·AFM 문구를 뺀다
+      ⛔ 이 모드가 없던 동안 벌크 유리를 넣으면 조용히 흩뿌려진 .vesta 가 나왔다.
     """
     tag = tag or default_tag(path)
     meta = {}
@@ -827,7 +849,18 @@ def emit_struct(path, out, tag=None, scale=RAD_SCALE_DEFAULT, quiet=False, recen
 
     # ── 분자를 셀 가운데로 (뷰어에서 안 잘리게). 물리적으로 동일한 평행이동이다.
     rec_note = ""
-    if recenter:
+    if bulk:
+        # 벌크는 **접는다**. 유리·결정은 주기셀 안에서 보는 것이 맞고, 펴면
+        # VESTA 가 한 셀짜리 계를 여러 셀에 흩뿌린다 (실측 BOUND −4.7~7.0).
+        _f = pos @ np.linalg.inv(cell)
+        _out = int(((_f < 0) | (_f >= 1)).any(axis=1).sum())
+        pos = (_f - np.floor(_f)) @ cell
+        rec_note = (f" | BULK mode: coordinates wrapped into the cell "
+                    f"({_out} of {len(pos)} atoms were outside 0-1); no molecule/slab "
+                    f"split, no unwrapping")
+        if _out and not quiet:
+            print(f"  [bulk] 셀 밖에 있던 원자 {_out}/{len(pos)} 개를 셀 안으로 접었다")
+    elif recenter:
         mol0 = split_molecule(cell, elems, pos)
         if mol0.any() and (~mol0).any():
             pos2, d = recenter_on_fragment(cell, pos, mol0)
@@ -878,6 +911,9 @@ def emit_struct(path, out, tag=None, scale=RAD_SCALE_DEFAULT, quiet=False, recen
     if box_pad is not None:
         vt = (f"{tag} (nat {len(elems)}) - non-periodic molecule in a VIEWING BOX "
               f"(pad {box_pad:.2f} A) - the box is NOT a calculation cell")
+    elif bulk:
+        vt = (f"{tag} (nat {len(elems)}) - periodic bulk cell, coordinates wrapped into "
+              f"0-1; set Boundary to -0.5..1.5 in VESTA to see the periodic tiling")
     else:
         vt = (f"{tag} (nat {len(elems)}) - as-run geometry, NiO6 polyhedra + "
               f"AFM sublattice colors (NiA blue / NiB purple)")
@@ -886,6 +922,9 @@ def emit_struct(path, out, tag=None, scale=RAD_SCALE_DEFAULT, quiet=False, recen
     # ── 표시용 슈퍼셀 (그림 전용). xyz·vasp 는 **원래 셀 그대로** 두고 .vesta 만 바꾼다 —
     #   구조 파일이 계산 셀을 잃으면 나중에 그걸로 계산을 돌린다.
     v_cell, v_el, v_lab, v_pos = cell, elems, labels, pos
+    if vesta_super and tuple(int(x) for x in vesta_super) != (1, 1, 1) and bulk:
+        raise SystemExit("⛔ --vesta_super 는 슬랩+분자 전용이다 (분자를 하나만 남긴다). "
+                         "벌크는 VESTA 의 Boundary 로 타일링한다 — 파일을 늘리지 않는다.")
     if vesta_super and tuple(int(x) for x in vesta_super) != (1, 1, 1):
         _mol = split_molecule(cell, elems, pos)
         v_cell, v_el, v_lab, v_pos = viewing_supercell(cell, list(elems), list(labels),
@@ -899,8 +938,47 @@ def emit_struct(path, out, tag=None, scale=RAD_SCALE_DEFAULT, quiet=False, recen
                 bond_max=bond_max)
     meta.update({"tag": tag, "nat": len(elems), "out": out})
     if not quiet:
-        _audit(cell, labels, elems, pos, order, counts, tag, out, c_len, span)
+        if bulk:
+            _audit_bulk(cell, labels, elems, pos, order, counts, tag, out)
+        else:
+            _audit(cell, labels, elems, pos, order, counts, tag, out, c_len, span)
     return meta
+
+
+def _audit_bulk(cell, labels, elems, pos, order, counts, tag, out):
+    """벌크 감사 — 슬랩 가정 없이 **최단거리**만 본다.
+
+    ⛔ 이 감사가 하지 않는 것
+      · 흡착·진공·피복을 보지 않는다 (벌크에 그런 층이 없다).
+      · 결합 위상을 보지 않는다 — 그건 per_site_bond_analysis.py 몫이다.
+      · 구조가 옳은지 판정하지 않는다. **겹친 원자가 있는지**만 본다.
+    """
+    print(f"\n══ {tag}  (nat {len(elems)}) ══  [bulk]")
+    a, b, c = (np.linalg.norm(v) for v in cell)
+    print(f"  cell  a {a:.3f}  b {b:.3f}  c {c:.3f} A   V {abs(np.linalg.det(cell)):.2f} A^3")
+    print(f"  조성 {'+'.join(f'{e}{n}' for e, n in zip(order, counts))} "
+          f"— xyz 와 vasp 는 같은 원자 순서·같은 좌표")
+    f = pos @ np.linalg.inv(cell)
+    print(f"  분율 범위 [{f.min():.4f}, {f.max():.4f}] — 0-1 안이면 VESTA 가 접을 게 없다")
+    # 최소상 최단거리 (3x3x3 이미지)
+    sh = np.array([[i, j, k] for i in (-1, 0, 1) for j in (-1, 0, 1) for k in (-1, 0, 1)])
+    best, bp = np.inf, None
+    for s_ in sh:
+        d = pos[:, None, :] - (pos + s_ @ cell)[None, :, :]
+        dd = np.linalg.norm(d, axis=-1)
+        if not s_.any():
+            np.fill_diagonal(dd, np.inf)
+        i0 = np.unravel_index(np.argmin(dd), dd.shape)
+        if dd[i0] < best:
+            best, bp = float(dd[i0]), (labels[i0[0]], labels[i0[1]], tuple(int(x) for x in s_))
+    print(f"  최단 원자간 거리 {best:.3f} A  ({bp[0]}-{bp[1]}, shift {bp[2]})")
+    if best < 0.8:
+        print("     ⛔ 0.8 A 미만 — 원자가 겹쳤다. 이 구조는 쓰면 안 된다.")
+    elif best < 1.4:
+        print("     ⚠ 1.4 A 미만 — 결합치고도 짧다. 확인할 것.")
+    else:
+        print("     ✓ 겹침 없음 (결합거리 이상)")
+    print(f"  → {out}/{tag}.xyz + .vasp + .vesta")
 
 
 def _audit(cell, labels, elems, pos, order, counts, tag, out, c_len, span):
@@ -1577,6 +1655,9 @@ def main():
                     help="표시용 슈퍼셀 배수 — **.vesta 에만** 적용한다 (xyz·vasp 는 원래 셀). "
                          "셀보다 긴 분자는 VESTA 가 접어서 조각내므로 상자를 키운다. "
                          "⚠ 슬랩만 타일링하고 분자는 하나만 남긴다 — 피복률로 읽으면 안 된다")
+    ap.add_argument("--bulk", action="store_true",
+                    help="주기 **벌크** 셀 (유리·결정). 슬랩+분자 가정을 끈다 — "
+                         "좌표를 셀 안으로 접고, 흡착 감사 대신 최단거리 감사를 한다")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -1591,6 +1672,9 @@ def main():
         ap.error("--energy_csv 는 --refs 가 있어야 한다 (기준 없이 E_ads 를 만들지 않는다)")
 
     bmax = parse_bond_max(a.bond_max)
+    if a.bulk and a.mol_xyz:
+        raise SystemExit("⛔ --bulk 는 주기 셀 전용이고 --mol_xyz 는 비주기 분자다. "
+                         "둘을 같이 주면 어느 쪽인지 알 수 없으므로 시작하지 않는다.")
     metas = []
     for path in list(a.mol_xyz):
         metas.append(emit_struct(path, a.out, tag=a.tag, scale=a.vesta_scale,
@@ -1600,7 +1684,7 @@ def main():
         if a.out:
             metas.append(emit_struct(path, a.out, tag=a.tag, scale=a.vesta_scale,
                                      recenter=not a.no_recenter, bond_max=bmax,
-                                     vesta_super=a.vesta_super))
+                                     vesta_super=a.vesta_super, bulk=a.bulk))
         else:
             cell, labels, pos, meta = read_outcar(path)
             meta.update(tag=default_tag(path), nat=len(pos))

@@ -977,7 +977,7 @@ def endpoint_gate(events_dir, out_json=None, card=NEB_CARD, device="cuda",
             f"({'B✓' if okB else 'B✗'}) · {'생존' if okA and okB else '기각'}")
     surv = [r for r in rows if r["survives"]]
     res = {
-        "date": _today(), "kind": "endpoint_gate_probe",
+        "date": time.strftime("%Y-%m-%d"), "kind": "endpoint_gate_probe",
         "⛔_gate_engine": "UMA(탐침) — **비준된 §0b 는 이완을 QE(G1 §3)로 적었다.** "
                           "이 결과는 기각률을 먼저 알아 QE 예산을 정하기 위한 것이고, "
                           "게이트를 **집행하지 않는다**. 판정은 provisional 이다.",
@@ -1620,6 +1620,48 @@ def _selftest():
                            _A(_s, positions=_p2, cell=_c, pbc=True))
     chk(abs(r2 - (1.0 / np.sqrt(2))) < 1e-9,
         f"골격 원자 하나가 1 Å 움직이면 RMSD = 1/√2 = {r2:.4f} (2 원자 중 하나)")
+
+    # ── endpoint_gate **본문**을 탄다 (UMA 대신 stub 계산기) ─────────────
+    #   ⛔ 2026-09-18 실측: 위 시험들은 헬퍼만 불렀고 함수 본문은 한 번도 안 탔다.
+    #     그래서 본문의 `_today()` NameError 가 **kgy 에서 9 건을 다 돌린 뒤에야**
+    #     JSON 쓰기 직전에 터졌다. 이 파일이 같은 실패(함수만 시험, 배선은 안 탐)를
+    #     겪은 세 번째다. stub 계산기로 전 경로를 태운다.
+    from ase import Atoms as _A2
+    from ase.calculators.lj import LennardJones as _LJ
+    _td = pathlib.Path(_tf.mkdtemp()) / "events"; _td.mkdir(parents=True)
+    _cell = np.eye(3) * 12.0
+    _sym2 = ["Li", "Li", "P", "S", "S", "Cl"]
+    _base = np.array([[1, 1, 1], [5, 1, 1], [3, 3, 3], [3, 5, 3], [5, 3, 3], [8, 8, 8]], float)
+    _evs = []
+    for k, (ai, dx) in enumerate([(0, 2.0), (1, 0.2)], 1):
+        tag = f"ev{k:02d}_atom{ai}"
+        for side, shift in (("i", 0.0), ("f", dx)):
+            q = _base.copy(); q[ai, 0] += shift
+            _A2(_sym2, positions=q, cell=_cell, pbc=True).write(str(_td / f"{tag}_{side}.xyz"))
+        _evs.append({"tag": tag, "atom_index": ai, "disp_A": dx,
+                     "t_start_ps": 0.0, "t_end_ps": 5.0})
+    (_td / "events.json").write_text(json.dumps({"events": _evs}, ensure_ascii=False),
+                                     encoding="utf-8")
+    _real_make_calc = make_calc
+    try:
+        globals()["make_calc"] = lambda turbo=False, device="cuda": _LJ(epsilon=0.01, sigma=2.5)
+        _r = endpoint_gate(str(_td), out_json=str(_td / "g.json"),
+                           card="db/properties/lpscl_smallcell_neb_estimand_2026_09_18.json",
+                           steps=2, log=lambda *a, **k: None)
+    finally:
+        globals()["make_calc"] = _real_make_calc
+    chk(_r["n_events"] == 2, f"[배선] endpoint_gate 본문이 끝까지 돈다 (사건 {_r.get('n_events')})")
+    chk((_td / "g.json").exists(), "[배선] 결과 JSON 을 **쓴다** (여기서 _today() NameError 가 났었다)")
+    _need = {"date", "kind", "⛔_gate_engine", "thresholds", "rows",
+             "provisional_n_survive", "provisional_reject_rate", "⇒_§0b_②_5"}
+    chk(_need <= set(_r), f"[배선] 결과에 필수 키가 다 있다 (빠진 것: {_need - set(_r)})")
+    chk("게이트를 **집행하지 않는다**" in _r["⛔_gate_engine"],
+        "⛔음성: 결과가 스스로 **비준된 게이트가 아님**을 말한다")
+    _rows = {r["tag"]: r for r in _r["rows"]}
+    chk(_rows["ev01_atom0"]["li_sep_after_relax_A"] > _rows["ev02_atom1"]["li_sep_after_relax_A"],
+        "[배선] 많이 움직인 쪽이 이완 후에도 더 벌어져 있다 (자리를 안 뒤바꾼다)")
+    chk(all(isinstance(r["rejected_because"], list) for r in _r["rows"]),
+        "기각 사유를 사건마다 **적는다** (빈 리스트라도 자리가 있다)")
 
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
