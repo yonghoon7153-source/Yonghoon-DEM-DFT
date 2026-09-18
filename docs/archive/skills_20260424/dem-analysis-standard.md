@@ -92,6 +92,15 @@ python scripts/deep_electrode_analysis.py results/atoms_analyzed.csv results/con
 
 ## Key Metrics & Thresholds
 
+> ⛔⛔ **표지 2026-09-18 (원장 `GAP3-DOC`) — 아래 문턱들에는 전거가 없다.**
+> `SE-SE Coordination > 2.4` · `SE Percolation > 70%` · `NCM-SE Interface > 80%` 는 이 문서
+> 어디에도 출처가 없고, 리포의 어느 측정·문헌 카드와도 연결돼 있지 않다.
+> ⚠ 이 파일은 **2026-04-24 아카이브**다 (`docs/archive/`).  현행 판정 기준이 아니며,
+> 여기 숫자를 **판정선으로 인용하지 말 것**.  현행 기준은 `docs/area_contract_*.md` 와
+> 원장 `docs/reviews/claims.json` 이다.
+> ★ 왜 지우지 않나: 이 문턱으로 돌았던 옛 분석이 있고, 그 이력을 지우면 그때 판정을
+> 재현할 수 없다.  ⇒ **남기고 표지를 단다** (이 리포의 pptx 배너와 같은 처방).
+
 ### Ionic Conductivity
 
 | Metric | Threshold | Interpretation |
