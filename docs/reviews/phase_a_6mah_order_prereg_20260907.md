@@ -652,13 +652,23 @@ docs/data/phase_a_6mah/
 
 | 도구 | 하는 일 | 검증 |
 |---|---|---|
-| `scripts/phase_a_plan.py` | 이 문서의 축을 **실제 명령으로** 펼친다.  아무것도 실행 안 함 | 15/15 |
+| ~~`scripts/phase_a_plan.py`~~ | ⛔ **폐기 — 실행 거부** (:16 과 그 파일 docstring).  기록으로만 남는다 | 15/15 (자기정합) |
 | `scripts/phase_a_precompute.py` | `d_h/dx` 게이트 + 첨가제 객체 수 (실측 경로) | 9/9 |
 | `scripts/phase_a_order_verdict.py` | §2 판정 규칙 — `δ_num` 은 **상수, CLI 로 못 바꿈** | 12/12 |
 
+⛔⛔ **정정 2026-09-18** — 아래 첫 두 줄은 **죽은 절차다**.  `phase_a_plan.py` 는 2026-09-07
+(Codex R9, P0-1) 부로 폐기돼 실행을 거부한다 (:16 이 이미 그렇게 적는다).  정본 실행 경로는
+**킷의 `run_mpm.sh`** 이고 `mpm_input_from_case.py` 가 그것을 만든다 —
+`docs/data/phase_a_6mah/kits/<recipe>/` 와 그 폴더의 `README.md`.
+⚠ 그 파일의 `STEP3_SEALED` 는 아직 `--step3-bridge-um 0` (개정 전 값)이다.  실행이 막혀
+  런에 닿지 못하므로 **죽은 상수**지만, 거기서 축을 베끼지 말 것 — §5 가 정본이다
+  (`bridge = 0.24 µm 물리 고정`, CL-87 개정 2026-09-08 = 이 파일보다 **하루 뒤**).
+
 ```bash
-python3 scripts/phase_a_plan.py --emit sh > run_phase_a.sh     # 계획 → 스크립트
-bash run_phase_a.sh                                            # kgy 에서
+# ⛔ 아래 두 줄은 폐기됐다 (기록):
+#   python3 scripts/phase_a_plan.py --emit sh > run_phase_a.sh
+#   bash run_phase_a.sh
+# 정본: docs/data/phase_a_6mah/kits/<recipe>/run_mpm.sh  (README 참조)
 python3 scripts/phase_a_order_verdict.py --dir docs/data/phase_a_6mah/arms --out verdict.json
 ```
 
@@ -675,7 +685,8 @@ python3 scripts/phase_a_order_verdict.py --dir docs/data/phase_a_6mah/arms --out
 - 생성된 **셸 문자열**에도 그 축들이 정확한 횟수만큼 있다
 
 ⚠ `run_phase_a.sh` 를 **손으로 고치지 말 것** — 고치면 사전등록과 어긋나고 selftest 가 그것을
-못 잡는다.  바꿔야 하면 `phase_a_plan.py` 를 고치고 `--selftest` 를 통과시킨 뒤 재생성한다.
+못 잡는다.  ⛔ **정정 2026-09-18** — *"`phase_a_plan.py` 를 고쳐 재생성"* 도 폐기된 절차다
+(위 정정 참조).  바꿔야 하면 킷 생성기 `mpm_input_from_case.py` 쪽을 고친다.
 
 ---
 
