@@ -72,6 +72,9 @@ ACTORS = ('claude', 'codex', 'user')
 
 #: git SHA 형식 (짧은 것도 허용하되 hex 여야 한다).
 SHA_RE = re.compile(r'^[0-9a-f]{7,40}$')
+#: 조상 판정 타임아웃 [s].  옛 값 10 은 게이트 부하에서 자주 넘었고, 그 타임아웃이
+#  '조상이다' 로 읽혔다 (GAP3-41).
+ANCESTRY_TIMEOUT_S = 60
 
 #: 상태별로 **반드시** 있어야 하는 필드.  없으면 그 상태를 주장할 수 없다.
 REQUIRED_BY_STATUS = {
@@ -661,7 +664,12 @@ def check(findings, repo_root=None):
                 continue
             if not SHA_RE.match(str(sha)):
                 problems.append(f'{fid}: {key}={sha!r} 가 SHA 형식이 아니다')
-            elif repo_root and not _commit_exists(repo_root, sha):
+            elif repo_root and (_anc := _commit_exists(repo_root, sha)) is None:
+                problems.append(f'{fid}: {key}={sha} 의 **조상 판정이 시간 안에 안 끝났다** '
+                                f'({ANCESTRY_TIMEOUT_S}s x 2) — git 은 동작한다.  옛 판은 이것을 '
+                                f'"조상이다" 로 읽어 조용히 통과시켰다 (GAP3-41).  '
+                                f'부하를 줄이고 다시 돌릴 것')
+            elif repo_root and _anc is False:
                 #  ★ 2026-08-20 — 외부 검증자(Codex)는 **자기 worktree** 에서 커밋한다.
                 #    그 SHA 는 우리 리포에 없다.  두 극단이 다 틀렸다: 거부하면 독립 검증을
                 #    원장에 못 적고, 조용히 통과시키면 **기계로 확인 못 한 것을 확인한 척**한다.
@@ -699,16 +707,38 @@ def _commit_exists(repo_root, sha):
     ⇒ 이제 **조상 여부**를 본다.  "이 브랜치가 그 수정을 담고 있는가" 가 원장이 주장하는
       바이고, 객체가 어딘가 떠다니는 것은 그 주장이 아니다.
     ⚠ git 이 없거나 HEAD 가 없는 환경에서는 **거짓 실패를 만들지 않는다** (검사 생략).
+
+    ⛔⛔ **GAP3-41 수리 (2026-09-18)** — 옛 판은 `except Exception: return True` 하나로
+      두 가지를 **같이** 삼켰다: ⓐ git 이 없는 환경 ⓑ **이 호출이 10초 안에 안 끝난 것**.
+      게이트는 검사기를 줄줄이 돌려 경합을 만들고, 그때 `merge-base` 타임아웃이
+      **"조상이다"** 로 읽혔다.
+      증상은 selftest 19b 의 간헐 실패(게이트 51/52 ↔ 단독 52/52)였지만, **같은 fail-open 이
+      실제 원장 항목에도 걸린다** — 부하가 걸리면 *"이 브랜치가 그 수정을 담고 있는가"* 가
+      조용히 통과한다.  19b 는 그 카나리아였다.
+    ⇒ **셋으로 가른다**: `True` 조상 · `False` 안 닿음 · **`None` 판정 불가**(git 은 되는데
+      시간 안에 안 끝났다).  호출부가 `None` 을 **명시적 문제**로 적는다.
+      ⚠ git 이 **아예 안 되는** 환경은 종전대로 관대하게 `True` 다 — 그 관용의 범위를
+      좁혔을 뿐 없애지 않았다.
     """
     try:
         if subprocess.run(['git', '-C', repo_root, 'rev-parse', '--verify', 'HEAD'],
                           capture_output=True, timeout=10).returncode != 0:
             return True                                     # HEAD 가 없다 = 판단 불가
-        r = subprocess.run(['git', '-C', repo_root, 'merge-base', '--is-ancestor', sha, 'HEAD'],
-                           capture_output=True, timeout=10)
-        return r.returncode == 0
     except Exception:                                       # noqa: BLE001
-        return True            # git 을 못 쓰는 환경에서 **거짓 실패**를 만들지 않는다
+        return True            # git 을 **못 쓰는 환경**에서 거짓 실패를 만들지 않는다
+    #  ★ 여기부터는 git 이 **쓸 수 있다는 것이 확인된** 상태다 — 타임아웃을 관대하게 읽을
+    #    근거가 없다.  한 번 재시도하고, 그래도 안 끝나면 None(판정 불가)을 돌려준다.
+    for _attempt in (0, 1):
+        try:
+            r = subprocess.run(['git', '-C', repo_root, 'merge-base', '--is-ancestor',
+                                sha, 'HEAD'],
+                               capture_output=True, timeout=ANCESTRY_TIMEOUT_S)
+            return r.returncode == 0
+        except subprocess.TimeoutExpired:
+            continue
+        except Exception:                                   # noqa: BLE001
+            return True        # git 실행 자체가 깨진 환경 — 종전대로 관대하게
+    return None                # git 은 되는데 판정이 시간 안에 안 끝났다
 
 
 def open_items(findings):
@@ -875,6 +905,29 @@ def _selftest():
            any('안 닿는' in p for p in _pd))
     else:
         ok('19b) (git 을 못 써 건너뜀 — 거짓 실패를 만들지 않는다)', True)
+    #  ★★ **음성 대조 (GAP3-41)** — 타임아웃이 **명시적 문제**로 적히는가.
+    #    이 검사가 없으면 수리가 장식이다: 옛 판은 같은 상황에서 `True`(조상이다)를 돌려
+    #    **조용히 통과**했고, 그것이 게이트 51/52 깜빡임의 정체였다.
+    _real_run = subprocess.run
+
+    def _timeout_on_mergebase(cmd, *a, **kw):
+        if isinstance(cmd, (list, tuple)) and 'merge-base' in cmd:
+            raise subprocess.TimeoutExpired(cmd, kw.get('timeout', 0))
+        return _real_run(cmd, *a, **kw)
+
+    _fake_sha = '0123456789abcdef0123456789abcdef01234567'
+    try:
+        subprocess.run = _timeout_on_mergebase
+        _to = check([dict(_corrupt, verified_by='codex', claimed_fixed_sha=_fake_sha,
+                          verified_sha=_fake_sha,
+                          evidence_tests=['webapp/test_pipeline_provenance.py'])],
+                    repo_root=here)
+    finally:
+        subprocess.run = _real_run
+    ok('19c) ★★ 조상 판정 타임아웃을 **명시적 문제**로 적는다 (GAP3-41 — 옛 판은 조용히 통과)',
+       any('시간 안에 안 끝났다' in p for p in _to))
+    ok('19d) ★ git 이 **아예 안 되는** 환경은 종전대로 관대하다 (관용 범위를 좁혔을 뿐)',
+       _commit_exists('/nonexistent-repo-path-for-selftest', _fake_sha) is True)
     ok('20) 정본 actor 세 개는 통과', set(ACTORS) == {'claude', 'codex', 'user'})
 
     led = os.path.join(here, LEDGER_DEFAULT)
