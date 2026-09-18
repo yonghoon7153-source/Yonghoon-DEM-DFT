@@ -1315,7 +1315,7 @@ def neb_from_endpoints(events_dir, out_json, card=BARRIER_CARD, n_images=N_IMAGE
       lpscl 소셀 9 건이 전부 "최대가 끝점 자체" 로 기각됐는데, 진짜 원인은 끝점이
       국소 최소가 아니라는 것이었다 — 끝점은 fmax 0.05(끝점 게이트, FINAL_RELAX 승계)
       로, 밴드는 CI 단계에서 FMAX_CI=0.03 으로 이완돼 **눈금이 달랐다**. 6 개 성한
-      밴드가 자기 끝점보다 45–249 meV 낮았고, `band_health` 는 그 병(−0.05 eV 문턱)을
+      밴드가 자기 끝점보다 45–203 meV 낮았고(9 건 전체로는 40–203), `band_health` 는 그 병(−0.05 eV 문턱)을
       2026-08-19 에 이미 잡을 수 있었다. 선언은 있는데 호출이 없었다 →  **G-B6** 로 배선한다.
       심화 이완(`relax_endpoint_deep`)도 단일홉 경로엔 기본이고 여기엔 없었다 →
       `deep_endpoints=True` 로 열되 **기본은 끈다**(봉인된 라운드의 동작을 바꾸지 않는다).
