@@ -100,7 +100,7 @@ def check_coverage(primary, prereg=PREREG):
     return sorted(want - have), sorted(have - want)
 
 
-def replay_gate(qc, primary):
+def replay_gate(qc, primary, prereg=PREREG):
     """③ exact replay — QC 팔을 **primary 쌍둥이**와 직접 비교한다.
 
     ⚠⚠ 2026-09-07 (Codex R9, P0-2) — 초판은 **fail-open** 이었다.  QC 끼리만 묶고
@@ -134,9 +134,29 @@ def replay_gate(qc, primary):
                      'qc_file': a.get('_file'), 'primary_file': t.get('_file')})
     out = {'pairs': rows, 'n_qc': len(qc), 'orphan_qc': orphan, 'duplicate_qc': dup,
            'worst_abs_log_diff': worst, 'worst_pct': 100.0 * (math.exp(worst) - 1.0)}
+    #  ★★★ PA12-07 (2026-09-18) — **전수를 요구한다.**  옛 판은 `not qc` 만 봐서
+    #    정상 8 개 중 **7 개를 지우고 1 개만 남겨도** `ORDER-ROBUST` 가 나왔다.
+    #    ⇒ QC 를 (조성, vox) 로 묶고 각 묶음이 `n_origin` 전수인지 본다.
+    #  ⚠ 이것은 **등록 밖 게이트가 아니다** — 사전등록 §1 이 `QC exact replay × 8 origin`
+    #    을 등록했고, 여기서는 그 등록을 강제할 뿐이다 (문턱을 새로 세우지 않는다).
+    _n_o = int(prereg['n_origin'])
+    _grp = {}
+    for a in qc:
+        _grp.setdefault((round(float(a['vgcf_wt']), 6), round(float(a['vox']), 6)),
+                        set()).add(int(a['origin']))
+    _short = {f'{w:g}/{v:g}': sorted(set(range(_n_o)) - got)
+              for (w, v), got in _grp.items() if len(got) < _n_o}
+    out['qc_groups'] = {f'{w:g}/{v:g}': sorted(got) for (w, v), got in _grp.items()}
     if not qc:
         out['passes'] = False
         out['refused'] = 'QC(exact replay) 팔이 하나도 없다 — 음성대조 없이 판정하지 않는다'
+    elif _short:
+        out['passes'] = False
+        out['missing_qc_origins'] = _short
+        out['refused'] = (f'QC 가 **전수가 아니다** — 사전등록은 origin {_n_o} 개 전수를 '
+                          f'등록했는데 빠진 것이 있다: '
+                          + ' · '.join(f'{k} 에 origin {v}' for k, v in sorted(_short.items()))
+                          + '.  부분집합 음성대조는 조용히 초록이 된다 (PA12-07)')
     elif orphan:
         out['passes'] = False
         out['refused'] = (f'primary 쌍둥이를 못 찾은 QC 가 {len(orphan)} 개 — 무엇과 비교했는지 '
@@ -180,6 +200,25 @@ def verdict(arms):
     if unconv:
         out.update(order='REFUSED', refused=f'미수렴/비유한 solve {len(unconv)} 팔',
                    unconverged_files=unconv[:20])
+        return out
+    #  ★★★ PA12-07 (2026-09-18) — **중복 primary 를 거부한다.**
+    #    `check_coverage` 는 `have` 를 **집합**으로 세어 중복이 원리적으로 안 보이고,
+    #    `order_stats` 의 `sig[key] = …` 는 **마지막 값**이 이긴다.  팔은 `*.json` 을
+    #    **파일명 정렬**로 읽으므로 ⇒ 같은 잘못된 중복을 `000_*.json` 로 넣으면 한 판정,
+    #    `zzz_*.json` 로 넣으면 다른 판정이 나왔다 = **이름이 결론을 골랐다**.
+    #  ⚠ 등록 밖 게이트가 아니다 — 입력이 모호하면 **판정하지 않는다**는 것이고,
+    #    사전등록 §2 가 이미 셀당 팔 하나를 전제한다.
+    _seen, _dups = set(), []
+    for a in primary:
+        _k = (round(float(a['vgcf_wt']), 6), round(float(a['vox']), 6), int(a['origin']))
+        (_dups.append((a.get('_file'), _k)) if _k in _seen else None)
+        _seen.add(_k)
+    if _dups:
+        out.update(order='REFUSED',
+                   refused=(f'primary 가 같은 설계 칸에 **중복** {len(_dups)} 개 — 어느 값이 '
+                            f'그 칸인지 모호하다.  옛 판은 파일명 정렬 순서가 이긴 값을 골라 '
+                            f'**이름이 결론을 정했다** (PA12-07)'),
+                   duplicate_primary=[[f, list(k)] for f, k in _dups[:20]])
         return out
     missing, extra = check_coverage(primary)
     if missing:
@@ -326,6 +365,49 @@ def _selftest():
     # ⑩ δ_num 은 등록값에서 파생된다 (코드가 두 곳에서 어긋나지 않는지)
     chk(f'⑩ δ_num {DELTA_NUM_PCT} % ↔ log {DELTA_NUM:.6e} 일관',
         abs((math.exp(DELTA_NUM) - 1) * 100 - DELTA_NUM_PCT) < 1e-12)
+
+    # ── ★★★ PA12-07 재현 (원장의 반례 그대로) ────────────────────────────────
+    #  ⓐ QC 전수 — 정상 8개 중 **7개를 지우고 1개만 남겨도** 옛 판은 ORDER-ROBUST 였다.
+    _q = _qc(_full(0.05))
+    _one = [a for a in _q if a['role'] != 'qc_replay'] + \
+           [a for a in _q if a['role'] == 'qc_replay'][:1]
+    _v = verdict(_one)
+    chk('★⑪ PA12-07 ⓐ QC 8 중 1 개만 있으면 거부 (옛 판은 ORDER-ROBUST)',
+        _v['order'] == 'HOLD' and 'QC' in (_v.get('refused') or ''))
+    chk('★⑪ 거부 사유가 "전수" 를 말한다',
+        '8' in (_v.get('refused') or '') or '전수' in (_v.get('refused') or ''))
+    #     음성 대조 — 8 개 다 있으면 통과해야 한다 (과잉차단 아님)
+    chk('⑫ QC 8 개 전수면 통과 (과잉차단 음성대조)',
+        verdict(_qc(_full(0.05)))['order'].startswith('ORDER'))
+
+    #  ⓑ primary 중복 — 같은 칸을 두 번 넣으면 **파일명 순서가 결론을 골랐다**.
+    #    coverage 는 집합이라 못 보고, order_stats 의 dict 는 **마지막 값**을 쓴다.
+    def _dup(fname, sig):
+        arms = _qc(_full(0.05))
+        t = next(a for a in arms if a['role'] == 'primary'
+                 and a['vgcf_wt'] == PREREG['vgcf_wts'][0]
+                 and a['vox'] == PREREG['voxes'][0] and a['origin'] == 0)
+        d = dict(t); d['sigma_e'] = sig; d['_file'] = fname
+        return arms + [d]
+    _lo = verdict(_dup('000_duplicate.json', 9.9e-2))
+    _hi = verdict(_dup('zzz_duplicate.json', 9.9e-2))
+    chk('★⑬ PA12-07 ⓑ primary 중복은 **이름과 무관하게** 거부',
+        _lo['order'] == 'REFUSED' and _hi['order'] == 'REFUSED')
+    #  ⚠⚠ 위 두 줄은 `verdict()` 에 **리스트를 직접** 넘기므로 파일명 정렬을 타지 않는다
+    #    — 초판은 그래서 깨진 코드에서도 PASS 했다 (빈 시험).  실제 기전은 `load_arms` 가
+    #    `*.json` 을 **파일명 순으로** 읽는 것이므로, 아래는 **진짜 파일**로 재현한다.
+    def _verdict_from_files(dupname, dupsig):
+        with tempfile.TemporaryDirectory() as td2:
+            for a2 in _dup(dupname, dupsig):
+                b = dict(a2)
+                fn = b.pop('_file')
+                json.dump(b, open(os.path.join(td2, fn), 'w'))
+            return verdict(load_arms(td2))
+    _f_lo = _verdict_from_files('000_duplicate.json', 9.9e-2)
+    _f_hi = _verdict_from_files('zzz_duplicate.json', 9.9e-2)
+    chk('★⑬ 실제 파일 경로에서도 두 이름의 판정이 같다 (옛 판은 000↔zzz 가 갈렸다)',
+        _f_lo['order'] == _f_hi['order'] == 'REFUSED')
+    chk('★⑬ 거부 사유가 중복을 말한다', '중복' in (_lo.get('refused') or ''))
 
     print(f'\nphase_a_order_verdict selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
