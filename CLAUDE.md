@@ -84,6 +84,29 @@
     tmux 커맨드에는 **절대경로**를 박는다 — base 의 `python3` 는 fairchem 이 없다.
     ⛔ `pgrep -af` 는 **친 그대로의 토큰**(`python3`)을 주지 해석된 경로를 안 준다 — 여기서 경로를 캐지 않는다
     (2026-09-12 실패). 모르면 `~/.bash_history` 의 `conda activate` 줄이 답이다.
+  · ⭐ **CPU pw.x 를 1 랭크로 돌리지 마라 (2026-09-19 실측, 6.8 배)**. LOBSTER SCF 가
+    `-np 1 · OMP=8` 로 돌고 있었는데 **CPU 118 %** 였다 — 20 코어 중 1.2 개. iteration 1 이
+    **4시간 40분**을 넘겼고 그대로면 며칠이었다. `-np 8 -nk 2` 로 **798 %**, 하룻밤으로 줄었다.
+    ```
+    pw.x = /data/apps/qe-7.4.1-cpu/PW/src/pw.x   (libmpi = /lib/x86_64-linux-gnu, GNU OpenMP)
+    mpirun = hpcx (PATH 앞단) + **--allow-run-as-root 필수** (root 계정이라 가드에 막힌다)
+    mpirun --allow-run-as-root --bind-to none -np 8 pw.x -nk 2 -inp x.in
+    ```
+    · **랭크를 올려도 총 메모리가 안 는다** — 실측 `Estimated max dynamical RAM` 총계가
+      np 2/4/8 에서 전부 **~33 GB** (16.65 / 8.33 / 4.17 GB per process). 메모리 걱정 말고 올려라.
+    · **OMP 는 여기서 거의 일을 안 한다** (8 스레드에 118 %). `OMP_NUM_THREADS=1` + 랭크로 간다.
+      kgy 와 달리 `libnvomp` 는 없어서 즉사는 안 하고 **느려지는** 형태로 나타난다.
+  · ⛔ **살아있는 MPI 잡의 환경을 복사해서 새 mpirun 을 띄우지 마라** (2026-09-19, 세 번 헛발질).
+    `/proc/<pid>/environ` 의 `OMPI_MCA_orte_hnp_uri`·`ess_base_jobid` 등은 **그 잡의 런타임 상태**라
+    새 mpirun 이 옛 데몬에 붙으려다 `mpirun does not support recursive calls` 로 죽는다.
+    ⇒ 가져올 것은 **`PATH`·`LD_LIBRARY_PATH`·`OPAL_PREFIX` 셋뿐**이고, 그 다음
+    `unset $(env | grep -oE '^(OMPI|PMIX)_[A-Za-z0-9_]*')` 로 전부 지운 뒤
+    **`OMPI_ALLOW_RUN_AS_ROOT=1` 만 다시 넣는다**(같이 지워진다).
+  · ⭐ **랭크를 바꾸기 전에 스크래치에서 프로브한다** — 돌던 잡을 죽이고 나서 안 되는 걸 알면 최악이다.
+    별도 폴더 + `ESPRESSO_TMPDIR=<scratch>` 로 90 초만 띄워 `Parallel version` 헤더와
+    `Estimated max dynamical RAM` 만 보고 죽인다. `ESPRESSO_TMPDIR` 이 입력의 `outdir` 을 덮으므로
+    **라이브 잡의 `.save` 가 안 다친다**. 2026-09-19 에 이 프로브가 값어치를 했다 —
+    바로 죽였으면 LOBSTER 는 죽고 재시작은 segfault 였다.
 - **desktop WSL**: ORCA r2SCAN-3c (SDCP 분자 계열).
 - 공통: 실행 스크립트에 pgrep 중복실행 가드, 출력 grep은 `grep -a`(NUL 오염 대비), watch 스크립트 관례 유지.
 - **산출물 회수 기본 경로 = `C:\Users\Administrator\Downloads\`** (1저자 지정 2026-09-01).
