@@ -3,6 +3,40 @@
 # ⛔ 솔버를 부르지 않았다 — 포함/제외는 파일 실재로만.  이 목록 전부를 S3 가 돌리고 실패는 REFUSED 로 보존한다.
 # 설계족 분포: UNKNOWN 1 · bimodal 100 · mono_AM_P 15 · mono_AM_S 15
 # ⚠ 설계족이 mono 뿐이면 AREA-11(AM_P–AM_S · AM_P 반경 이종쌍) 효과는 이 코호트로 검증할 수 없다.
+#
+# ══ 경위 (자동 생성분이 아니라 손으로 남기는 기록) ══════════════════════════════
+# ★ 2026-09-19 **재봉인** — `atom_file`·`atom_sha256` **63 행** 변경.  `status` ·
+#   `deck_sha256` · `design_family` · `contact_*` 는 **0 행** (판정은 한 글자도 안 바뀌었다).
+#     62 = 짝이 어긋나 있던 쌍.  옛 봉인은 `plastic_coverage._find_case_files` 가
+#          atom·contact 를 **각각 독립으로** 최신 선택해(=`DESC-06`) 서로 다른 프레임을
+#          가리켰고, 수확기(`lhs_descriptor_harvest.py:404`)가 `ts_a != ts_c` 로 **전부
+#          거부**했다 ⇒ `RAW_OK` 129 중 **62 (48 %) 가 원리적으로 수확 불가**였다 (원장 `LHS-07`).
+#      1 = `lhs00_098` — 계약 D-8(*"contact 결손이어도 있는 atom 은 적는다"*)의 첫 적용.
+#          상태는 `RAW_MISSING_CONTACT` 그대로이고 **기록만** 늘었다.
+#   ⚠ 옛 봉인기(`7b5560eb5`)는 12 열이라 `step_atom`/`step_contact`/`step_gap` 이 **없었다** —
+#     어긋남을 드러낼 유일한 열이 산출물에 없어서 파일명에서 역산해야 보였다.
+#   ⚠ `PAIR_MAX_GAP` 을 5000 → **0** 으로 내렸다 (소비자와 일치).  다시 올리려면 **수확기부터**
+#     고칠 것 — 여기만 올리면 옛 상태로 돌아간다.
+#
+# ★ 실측 규약 (ibb `lhs00_089`, 2026-09-19): contact 덤프는 **1만 단위**, atom 은 **5천 단위**.
+#     atom    … 2835000 2840000 2845000 2850000 2855000
+#     contact … 2810000 2820000 2830000 2840000 2850000
+#   ⇒ atom step 집합이 contact 를 **포함**하므로 *"공통 최신"* = *"contact 최신"* 이다.
+#
+# ★ 증보 2026-09-18 → **봉인 완성 2026-09-19** — `lhs00_034` · `lhs00_089`.
+#   봉인(09-14) 당시 contact 덤프가 없어 `RAW_MISSING_CONTACT` 였고 그 뒤 ibb 에서 완주했다.
+#   ibb(`/home/yonghoon/dem_test/lhs`, `ssh -p 43612 yonghoon@166.104.39.171`) → WSL 전송 후
+#   **양쪽 sha256 6/6 OK**.  그중 **덱 2 줄은 TSV 에 이미 등록돼 있던 지문**이고 그것까지
+#   일치했다 ⇒ *"같은 설계의 같은 런"* 이 전송과 무관하게 독립 확인됐다.
+#   ⚠ `pick_mesh` 는 **atom 과 같은 디렉터리**에서 `mesh_*.stl` 을 찾는다 — atom·contact 만
+#     옮기면 수확이 `NO_MESH` 로 떨어진다.  mesh 도 같이 옮길 것 (TSV 에 mesh 열은 없다).
+#   ⚠ `lhs00_098` 은 아직 도는 중이라 제외한다 (완주하면 RAW_OK 129 → 130).
+#
+# ⛔ 짝 스텝을 `ls | tail` 로 고르지 말 것 — **사전순**이라 `995000` 이 `3560000` 보다 크게
+#   나온다.  실제로 그 때문에 거짓 경보가 두 번 났다 (09-18 · 09-19).
+#   `ls … | sed 's/.*_//;s/\..*//' | sort -n | tail -1` 로 볼 것.
+# ⚠ 리허설의 *"127/127 rc=0"* 는 **dry-run** 이었다 — `lhs_harvest_batch.py:65` 가 그
+#   false-green 을 이미 이름으로 적어 두고 있었다.  **본번과 리허설을 같은 말로 쓰지 말 것.**
 case	status	design_family	family_source	n_types	deck	deck_sha256	atom_file	atom_sha256	contact_file	contact_sha256	step_atom	step_contact	step_gap	reason
 lhs00_000	RAW_OK	bimodal	design_csv	3	/home/yonghoon71/lhs_local/lhs00_000/input_lhs00_000.liggghts	f4a29f22973bed061fc4c6cb0fee4809f21b1176be49e4e442a6e96462b14e8f	/home/yonghoon71/lhs_local/lhs00_000/post_lhs00_000/atom_2420000.liggghts	7aa05fa862a8a4ea63db15669a7d4df744e5eb05e786441e807e28403759c32f	/home/yonghoon71/lhs_local/lhs00_000/post_lhs00_000/contact_2420000.liggghts	5e7685bff0b8019bcb91e0c1f9de8dc120b318171e266549bea4e11377e1819a	2420000	2420000	0	포함: 원자료·덱 실재 (솔버 성공 여부는 보지 않았다)
 lhs00_001	RAW_OK	bimodal	design_csv	3	/home/yonghoon71/lhs_local/lhs00_001/input_lhs00_001.liggghts	50e083962b55b293e70a8a6e77b00792c2ceb746b3f3b1a28063f3502c7f1615	/home/yonghoon71/lhs_local/lhs00_001/post_lhs00_001/atom_1990000.liggghts	d34accffe1173165ca9481400e760f22883cbe111de7a9464acfabc60256edfd	/home/yonghoon71/lhs_local/lhs00_001/post_lhs00_001/contact_1990000.liggghts	bae9113c07666bb84fb9b421fcd0b347c7ce9b98bee3a9993b63bd7bf9a48d29	1990000	1990000	0	포함: 원자료·덱 실재 (솔버 성공 여부는 보지 않았다)
