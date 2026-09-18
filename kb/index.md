@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-17 · managed-files: 427
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-18 · managed-files: 428
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 226건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 227건)
+- 2026-09-18 · `kb/methodology/amorphous_overlap_gate_lessons_2026_09_18.md` — 비정질 겹침 게이트 — 다음 캠페인 설계로 넘기는 것 셋 · 제안 (다음 캠페인 설계용 · 이번 판정 재해석 금지)
 - 2026-09-16 · `kb/methodology/cei_model_transfer_to_cascade_2026_09_16.md` — CEI 모델을 캐스케이드로 옮기기 — 무엇이 이미 배선됐고 무엇이 안 됐나 · 진행
 - 2026-09-16 · `kb/projects/handoff_2026_09_16_cathode_cei.md` — 인수인계 — 2026-09-16 세션 (양극 CEI §A–§E · 도펀트 스크리닝 · dual compatibility) · 진행
 - 2026-09-15 · `kb/papers/self_doping_dft_paragraph_2026_09_08.md` — 원고 자가도핑 DFT 문단 — 스핀 하나로 좁힌 5문단 (2·3·6 계열) · 1저자 승인 — 삽입 위치 대기
@@ -26,7 +27,6 @@
 - 2026-09-13 · `kb/reviews/codex_BQ4_reply_10sweep_basin_2026_09_13.md` — 회신 BQ-4 — 종결 GO · 서술 정정 8건 · P1 2건 · 재개 조건 2범주 · 회신됨-종결GO
 - 2026-09-13 · `kb/reviews/codex_BQ5_prompt_eprime_card_2026_09_13.md` — 회신 BQ-5 프롬프트 — 보고량 카드 v5 (공통 총부피 E′) §1–3 심사 · 회신됨-방향GO-카드NO-GO
 - 2026-09-13 · `kb/reviews/codex_BQ5_reply_eprime_card_2026_09_13.md` — 회신 BQ-5 — E′ 방향 GO · 카드 확정·실행 NO-GO (집계식·MD 판정·비용 상한 세 묶음) · 회신됨-방향GO-카드NO-GO
-- 2026-09-13 · `kb/reviews/codex_BQ6_prompt_eprime_v51_2026_09_13.md` — 회신 BQ-6 프롬프트 — 카드 v5.1: 해제조건 ①②③ 이행 확인 · 회신됨-②미해제
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -53,12 +53,13 @@
 - `kb/physics/vacancy_effects.md` — Vacancy Effects in Argyrodite
 - `kb/physics/vacancy_mechanism_corrected_2026_05_08.md` — Vacancy + Halogen Distribution → Adhesion: Corrected Mechanism
 
-## methodology/ (57)
+## methodology/ (58)
 - `kb/methodology/PHASE1_QUICKSTART_doping.md` — Phase 1 Quickstart Guide
 - `kb/methodology/adhesion_calibration_decision_2026_05_17.md` — Adhesion Calibration Decision — 2026-05-17
 - `kb/methodology/adhesion_energy.md` — Adhesion Energy (Wad) Calculation
 - `kb/methodology/adhesion_methods_comparison.md` — Adhesion Methods Comparison — v2 / v5 crystalline / MQA 500K
 - `kb/methodology/agent_toolkit_adoption_2026_08_11.md` — 외부 에이전트 툴킷 3종(ponytail · caveman · superpowers) 검토와 선별 채택  (2026-08-11 · 확정)
+- `kb/methodology/amorphous_overlap_gate_lessons_2026_09_18.md` — 비정질 겹침 게이트 — 다음 캠페인 설계로 넘기는 것 셋  (2026-09-18 · 제안 (다음 캠페인 설계용 · 이번 판정 재해석 금지))
 - `kb/methodology/argyrodite_mechanical_pipeline.md` — Argyrodite Mechanical Properties — Multi-scale Computational Pipeline (v2)
 - `kb/methodology/b2o3_analysis_plan.md` — B₂O₃-doped champion — 추가 분석 plan (배위·결합·testable)
 - `kb/methodology/b2o3_doping_chemistry.md` — B2O3 Doping in LPSCl1.6 (BO-LPSC) — Chemistry Framework
