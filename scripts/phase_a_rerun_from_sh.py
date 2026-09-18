@@ -73,6 +73,16 @@ def _cmd_span(text):
         j = nl + 1
 
 
+def has_payload_call(text):
+    """이 `.sh` 가 payload 호출을 담고 있나.  ⚠ **조용히 건너뛰지 않는다** — main() 이
+    건너뛴 파일을 **전부 이름으로 보고**하고, `--expect-count` 가 총 개수를 계약으로
+    박는다.  (2026-09-18: 킷 디렉터리에 `harvest.sh` 처럼 payload 가 아닌 `.sh` 가 있다.
+    그것을 말없이 넘기면 "몇 개를 왜 안 만들었는지" 가 사라지고, 그게 규율 ⑤ 의
+    false-green 이다.)"""
+    return len(re.findall(r'^[^\n#]*\bpython3\b[^\n]*' + re.escape(PAYLOAD_CALL),
+                          text, re.M))
+
+
 def _tokens(cmd_text):
     """검증 전용 토큰화.  `\\`+개행을 지우고 shlex 로 자른다."""
     return shlex.split(cmd_text.replace('\\\n', ' '), posix=True)
@@ -293,6 +303,10 @@ def _selftest():
             transform(_FIX, '/tmp/o/v020')))]).index('--out') + 1]
         == '/tmp/o/v020/p2_VGCF_PTFE_1_1_a0.json')
 
+    chk('⑳ payload 호출 유무를 센다 (harvest.sh 류 판별)',
+        has_payload_call(_FIX) == 1 and has_payload_call('echo hi\n') == 0
+        and has_payload_call(_FIX + _FIX) == 2)
+
     print(f"\nphase_a_rerun_from_sh selftest: {ok[0]}/{ok[1]} "
           f"{'PASS' if ok[0] == ok[1] else 'FAIL'}")
     return 0 if ok[0] == ok[1] else 1
@@ -303,6 +317,8 @@ def main(argv=None):
     ap.add_argument('--in', dest='src', help='원본 .sh 디렉터리 (재귀)')
     ap.add_argument('--out-dir', help='새 .sh 를 쓸 디렉터리')
     ap.add_argument('--payload-dir', help='새 payload 를 쓸 디렉터리 (--out 이 여기로)')
+    ap.add_argument('--expect-count', type=int, default=None,
+                    help='생성돼야 하는 .sh 수.  다르면 거부한다 (부분집합 방지)')
     ap.add_argument('--show-diff', action='store_true', help='첫 파일의 diff 를 찍는다')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
@@ -317,8 +333,17 @@ def main(argv=None):
         print(f'⛔ {a.src} 에 .sh 가 없다 — 빈 glob 로 진행하지 않는다', file=sys.stderr)
         return 2
 
-    n, first, seen_out = 0, None, {}
+    n, first, seen_out, skipped = 0, None, {}, []
     for p in files:
+        _txt = open(p, encoding='utf-8').read()
+        _k = has_payload_call(_txt)
+        if _k == 0:
+            skipped.append(p)
+            continue
+        if _k > 1:
+            print(f'⛔ {p}: payload 호출이 {_k}개다 — 어느 것을 고칠지 모호하다',
+                  file=sys.stderr)
+            return 3
         dst = os.path.join(a.out_dir, os.path.relpath(p, a.src))
         try:
             vox = applied_vox(open(p, encoding='utf-8').read())
@@ -341,7 +366,15 @@ def main(argv=None):
             first = (p, old, new)
         n += 1
 
+    if skipped:
+        print(f'ⓘ payload 호출이 없어 건너뛴 .sh {len(skipped)}개 (조용히 넘기지 않는다):')
+        for q in skipped:
+            print(f'    - {q}')
     print(f'✓ {n} 개 생성 → {a.out_dir}   (payload → {a.payload_dir})')
+    if a.expect_count is not None and n != a.expect_count:
+        print(f'⛔ 생성 수 {n} ≠ --expect-count {a.expect_count} — 부분집합으로 진행하지 '
+              f'않는다 (규율 ⑤).  건너뛴 목록을 확인할 것.', file=sys.stderr)
+        return 5
     if a.show_diff and first:
         p, old, new = first
         print(f'\n── diff (첫 파일 {os.path.basename(p)}) ──')
