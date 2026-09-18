@@ -3004,7 +3004,7 @@
     {
       "id": "D-2026-09-18-nd-icohp-kmesh",
       "kind": "method",
-      "decision_state": "proposed",
+      "decision_state": "active",
       "results_seen": false,
       "record_kind": "audit",
       "title": "Nd frozen-4f LOBSTER 의 k-메시 — 6월과 맞출 수 없음을 인정하고 9월과 맞춘다",
@@ -3028,13 +3028,19 @@
         ]
       },
       "slot": "nd_icohp_kmesh",
-      "status": "proposed",
+      "status": "active",
       "status_history": [
         {
           "date": "2026-09-18",
           "state": "proposed",
           "by": "claude",
           "note": "던지기 직전 K_POINTS grep 에서 2 2 1 을 발견 → 도구의 조용한 기본값 → 6월 k 추적 실패 순으로 나온 결정. 계산은 비준 전까지 멈춰 있다. 비준이 필요한 이유: 1저자 비준 필요. 카드가 사전등록한 게이트(6 6 1)를 바꾸는 결정이라 사람이 올려야 한다."
+        },
+        {
+          "date": "2026-09-18",
+          "state": "active",
+          "by": "1저자 (yonghoon)",
+          "note": "AskUserQuestion 로 비준. 고른 것: '2 2 1 — 9월과 맞춘다'. ⇒ 카드 §4 의 '반드시 6 6 1' 은 이 결정으로 대체된다. 6월↔우리 k 일치는 **미상**으로 선언하고 ICOHP 판정문에 한계로 적는다."
         }
       ]
     }
