@@ -57,12 +57,32 @@ fc_state() {   # $1 = scf.out 경로 [$2 = 정체 판정 분(기본 STALL_MIN)] 
 #   이미 수렴해 있어 **건너뛰었다** ⇒ scf.out 이 scf.in 보다 옛것이라 차가 음수다.
 #   음수 소요시간은 낮은 값이 아니라 **측정 불가**다. 그걸 평균에 넣으면 ETA 가
 #   거짓이 되고, 음수를 본 사람은 화면 전체를 못 믿는다.
-fc_secs() {   # $1=scf.in $2=scf.out → 이번 배치의 소요 초. 못 재면 빈 문자열.
+fc_secs() {   # $1=scf.in $2=scf.out → out−in 초. 못 재면 빈 문자열.
     [ -f "$1" ] && [ -f "$2" ] || return 0
     local a b
     a=$(stat -c %Y "$1"); b=$(stat -c %Y "$2")
     [ "$b" -gt "$a" ] && echo $(( b - a ))
     return 0
+}
+
+# ⛔⛔ 2026-09-18 실측 — 화면이 "smallcell 점당 평균 **44분**" 을 찍었다. 실제는 **8.1분**.
+#   `fc_secs`(out−in)는 **점당 소요가 아니다.** 생성기가 scf.in 10개를 한 번에 쓰고
+#   러너가 **직렬**로 돌면, k번째 점의 out−in 은 앞선 k−1 점이 큐에서 기다린 시간을
+#   통째로 품는다 ⇒ 평균이 구조적으로 **(n+1)/2 배** 뻥튀기된다 (실측 8.1 × 5.5 = 44.6).
+#   선언은 "점당 평균" 인데 실행 경로가 다른 것을 재고 **오류는 안 난다** — 조용히 틀린 경로다.
+#
+#   고친 방법: 완료된 점을 **out mtime 순으로 정렬**해 연속차를 쓴다.
+#     duration(k) = out(k) − max( in(k), out(k−1) )
+#   · `max` 가 두 경우를 같이 덮는다 — 첫 점(앞이 없다)과 입력을 나중에 다시 쓴 점.
+#   · 정렬로 재기 때문에 **디렉터리 이름 순서 ≠ 실행 순서**여도 맞는다.
+#   ⛔ 이 함수가 **못 하는 것**: 러너가 **병렬**이면 연속차가 점당 소요가 아니다.
+#     (지금 러너는 직렬이고 헤더에 그렇게 적혀 있다. 병렬로 바꾸면 이 함수도 바꿔야 한다.)
+fc_durations() {   # stdin: "<out_mtime> <in_mtime>" 줄들 → stdout: 점당 소요 초 (줄마다)
+    sort -n | awk '{
+        prev_end = (NR == 1 ? $2 : (prev > $2 ? prev : $2))
+        if ($1 > prev_end) print $1 - prev_end
+        prev = $1
+    }'
 }
 
 if [ "${1:-}" = "--selftest" ]; then
@@ -111,6 +131,31 @@ if [ "${1:-}" = "--selftest" ]; then
   chk "⛔음성: out 이 in 보다 옛것이면 **음수가 아니라 측정 불가**" \
       "$(fc_secs "$t/dur/scf.in" "$t/dur/scf.out")" ""
   chk "⛔음성: .out 이 없으면 측정 불가" "$(fc_secs "$t/dur/scf.in" "$t/dur/nope")" ""
+  # ── fc_durations: 직렬 배치의 점당 소요 (2026-09-18 실측 사고 회귀시험) ──────
+  #   실측: scf.in 10개가 11:06:53 에 한꺼번에 쓰이고 러너가 직렬로 돌아
+  #   out 이 480초 간격. 옛 방식(out−in) 평균은 44분, 진짜는 8분.
+  _serial=$(for k in 1 2 3 4 5 6 7 8 9 10; do echo "$(( 1000 + k*480 )) 1000"; done)
+  _d=$(printf '%s\n' "$_serial" | fc_durations)
+  chk "[양성] 직렬 배치 10점을 전부 480초로 잰다" \
+      "$(printf '%s\n' "$_d" | sort -u | tr -d '\n')" "480"
+  chk "[양성] 점 수를 그대로 센다" "$(printf '%s\n' "$_d" | grep -c .)" "10"
+  # ⛔음성 — 옛 방식이면 평균이 (n+1)/2 배로 뻥튀기된다. 새 방식은 그 값을 내면 안 된다.
+  _old_avg=$(printf '%s\n' "$_serial" | awk '{t+=$1-$2} END{printf "%d", t/NR}')
+  _new_avg=$(printf '%s\n' "$_d" | awk '{t+=$1} END{printf "%d", t/NR}')
+  chk "⛔음성: 옛 방식(out−in)은 2640초로 뻥튀기된다 — 그게 고친 이유다" "$_old_avg" "2640"
+  chk "⛔음성: 새 방식은 그 뻥튀기 값을 **내지 않는다**" \
+      "$( [ "$_new_avg" != "$_old_avg" ] && echo 다름 || echo 같음 )" "다름"
+  chk "첫 점은 out−in 이다 (앞선 점이 없다)" \
+      "$(printf '2000 1000\n' | fc_durations)" "1000"
+  # 입력을 나중에 다시 쓴 점 — max(in, prev_out) 이 먹는다
+  chk "입력이 앞 점 종료보다 **나중**이면 그 입력 시각부터 잰다" \
+      "$(printf '1000 500\n2000 1700\n' | fc_durations | tail -1)" "300"
+  # 디렉터리 순서가 실행 순서와 달라도 정렬로 맞는다
+  chk "⛔음성: 줄 순서가 뒤섞여도 **정렬**해서 맞게 잰다" \
+      "$(printf '1960 1000\n1480 1000\n2440 1000\n' | fc_durations | sort -u | tr -d '\n')" "480"
+  # 되돌아간 시각(out < in)은 **측정 불가**다 — 0 이나 음수로 세지 않는다
+  chk "⛔음성: out 이 in 보다 옛것이면 세지 않는다 (음수를 평균에 넣지 않는다)" \
+      "$(printf '500 1000\n' | fc_durations | grep -c .)" "0"
   rm -rf "$t"; echo "  selftest: ⭕ $ok · ⛔ $bad"; [ "$bad" = 0 ] || exit 1; exit 0
 fi
 
@@ -123,7 +168,7 @@ echo "═══ ${LABEL:-DFT 단일점} ${_N}점 · $(date '+%m-%d %H:%M') · $W
 [ -f "$MARK" ] && echo "    이번 실행 시작 $(date -r "$MARK" '+%m-%d %H:%M')"
 printf "%-20s %-16s %s\n" "점" "상태" "비고"
 tot=0; don=0; run=0; dead=0; wait_n=0
-declare -A SUM CNT SKIP
+declare -A SUM CNT SKIP PAIRS
 for d in $(find "$W" -mindepth 1 -maxdepth 1 -type d | sort); do
   n=$(basename "$d"); tot=$((tot+1))
   IFS='|' read -r st note <<< "$(fc_state "$d/scf.out")"
@@ -138,9 +183,11 @@ for d in $(find "$W" -mindepth 1 -maxdepth 1 -type d | sort); do
     "✓ 완료") don=$((don+1))
       # 계별 평균 소요 — mtime 차이로 잰다 (로그가 없어도 된다)
       sys=${n%%_*}
-      sec=$(fc_secs "$d/scf.in" "$d/scf.out")
-      if [ -n "$sec" ]; then
-        SUM[$sys]=$(( ${SUM[$sys]:-0} + sec )); CNT[$sys]=$(( ${CNT[$sys]:-0} + 1 ))
+      #: ⭐ 2026-09-18 — out−in 을 그대로 쓰지 않는다 (위 fc_durations 주석).
+      #   (out, in) 쌍만 모으고, 소요는 **정렬 뒤 연속차**로 낸다.
+      if [ -f "$d/scf.in" ] && [ -f "$d/scf.out" ]; then
+        PAIRS[$sys]="${PAIRS[$sys]:-}$(stat -c %Y "$d/scf.out") $(stat -c %Y "$d/scf.in")
+"
       else
         SKIP[$sys]=$(( ${SKIP[$sys]:-0} + 1 ))
       fi ;;
@@ -154,9 +201,12 @@ done
 echo "───"
 echo "완료 $don / $tot · 진행 $run · 문제 $dead" \
      "$( [ "$wait_n" -gt 0 ] && echo "· 재시도 대기 $wait_n (이전 배치 출력)" )"
-for sys in $(printf '%s\n' "${!CNT[@]}" "${!SKIP[@]}" | grep -v '^$' | sort -u); do
+for sys in $(printf '%s\n' "${!PAIRS[@]}" "${!SKIP[@]}" | grep -v '^$' | sort -u); do
+  _secs=$(printf '%s' "${PAIRS[$sys]:-}" | grep -v '^$' | fc_durations)
+  CNT[$sys]=$(printf '%s' "$_secs" | grep -c . )
+  SUM[$sys]=$(printf '%s' "$_secs" | awk '{t+=$1} END{print t+0}')
   if [ "${CNT[$sys]:-0}" -gt 0 ]; then
-    printf "  %s 점당 평균 %d분 (%d점 기준)" "$sys" "$(( SUM[$sys] / CNT[$sys] / 60 ))" "${CNT[$sys]}"
+    printf "  %s 점당 평균 %d분 (%d점 기준 · 직렬 연속차)" "$sys" "$(( SUM[$sys] / CNT[$sys] / 60 ))" "${CNT[$sys]}"
     [ "${SKIP[$sys]:-0}" -gt 0 ] && printf " · %d점은 이번 배치에서 안 돌아 제외" "${SKIP[$sys]}"
     echo
   else
