@@ -335,3 +335,84 @@ def test_g1_status_does_not_claim_the_question_is_settled():
     st = g1["status"]
     assert "종결" in st, "종결 사실이 빠졌다"
     assert "미결" in st, f"질문이 미결이라는 말이 status 에 없다: {st}"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# L-1~L-4 사다리 (2026-09-18 추가)
+#
+# 왜: 이 사다리는 **채팅에만** 살았다 — `L-1`·`앙상블 ≥5 시드`·`3.6일` 이
+#     kb/·db/·webapp/ 어디에도 없었다. 그래서 1저자가 들고 있던 표가
+#     L-2·L-3·L-4 셋이 바뀐 걸 모르고 "지금 여기 = L-2" 라고 말하고 있었다.
+#     원장에 두고 화면이 읽게 한 뒤, **다시 낡는 것**을 시험으로 막는다.
+# ─────────────────────────────────────────────────────────────────────────────
+LADDER = "li2s_track_ladder_2026_09_18.json"
+
+
+def test_ladder_has_all_four_rungs(client):
+    ld = D.li2s_ladder()
+    assert ld["ok"], ld.get("why")
+    ids = [r["id"] for r in ld["rungs"]]
+    assert ids == ["L-1", "L-2", "L-3", "L-4"], f"칸이 빠졌거나 순서가 바뀌었다: {ids}"
+
+
+def test_ladder_is_on_screen(client):
+    h = client.get("/li2s").get_data(as_text=True)
+    for k in ("트랙 사다리", "L-1", "L-2", "L-3", "L-4"):
+        assert k in h, f"화면에 {k} 가 없다 — 원장에만 있으면 같은 일이 반복된다"
+
+
+def test_ladder_says_l2_is_not_where_we_are():
+    """⛔음성: L-2 가 'deferred' 가 아니라 진행 중으로 되돌아가면 잡는다.
+
+    옛 표는 L-2 를 '← 지금 여기' 로 적었는데, 소셀 마감이 G3 를 **선언으로**
+    처리했다(단일 시드 조건부 + 영구 단서). 이 구분이 사라지면 다음 사람이
+    '앙상블이 돌고 있다' 로 읽는다.
+    """
+    r = next(x for x in D.li2s_ladder()["rungs"] if x["id"] == "L-2")
+    assert r["state"] == "deferred_by_declaration", f"L-2 상태가 바뀌었다: {r['state']}"
+    assert "지금 여기" in (r["now"] or ""), "옛 표의 '지금 여기' 를 정정한 문구가 사라졌다"
+
+
+def test_ladder_l3_does_not_claim_400atom_g1_is_answered():
+    """⛔음성: L-3 이 '통과' 로 뭉뚱그려지면 잡는다.
+
+    120 원자가 통과했지 **400 원자 G1 은 여전히 미결**이다 (G-B2 탈락).
+    이 둘이 섞이면 소셀 결과로 400 원자를 서술하게 된다.
+    """
+    r = next(x for x in D.li2s_ladder()["rungs"] if x["id"] == "L-3")
+    assert r["state"] == "split", f"L-3 이 갈래를 잃었다: {r['state']}"
+    cav = (r["caveat"] or "")
+    assert "미결" in cav and "G-B2" in cav, f"400 원자가 미결이라는 단서가 없다: {cav[:120]}"
+
+
+def test_ladder_l4_carries_the_translation_ban():
+    """⛔음성: L-4 에서 σ·D·Ea 금지가 빠지면 잡는다."""
+    r = next(x for x in D.li2s_ladder()["rungs"] if x["id"] == "L-4")
+    txt = (r["now"] or "") + (r["caveat"] or "")
+    assert "별도" in txt and ("σ" in txt or "Ea" in txt), f"번역 금지 단서가 없다: {txt[:150]}"
+
+
+def test_ladder_marks_neb_as_off_ladder():
+    """NEB 가 사다리 안으로 들어오면 안 된다 — 다른 축이고 다른 카드다."""
+    ld = D.li2s_ladder()
+    assert ld["branch"], "사다리 밖 가지(NEB)가 없다"
+    assert all(r["id"] != "L-5" for r in ld["rungs"]), "NEB 가 사다리 칸으로 들어왔다"
+    assert "없다" in (ld["branch_note"] or ""), "NEB 가 사다리에 없다는 말이 빠졌다"
+
+
+def test_ladder_missing_record_is_announced(client):
+    """⛔음성: 기록을 못 읽으면 **빈 사다리를 그리지 않는다**."""
+    with patch.object(D, "LI2S_LADDER_JSON", "nonexistent_ladder.json"):
+        ld = D.li2s_ladder()
+        assert not ld["ok"] and not ld["rungs"], "기록이 없는데 사다리를 그렸다"
+        h = client.get("/li2s").get_data(as_text=True)
+    assert "사다리 기록을 못 읽었다" in h, "기록이 없는데 화면이 조용하다"
+    assert "트랙 사다리" in h, "경고는 띄우되 절 제목은 남아야 한다"
+
+
+def test_ladder_l1_numbers_match_what_we_measured():
+    """⛔음성: L-1 재확인 수치가 실측과 갈라지면 잡는다 (ρ 1.6212 · PS₄ 1.0000)."""
+    d = D._load_json(D.DB / "properties" / LADDER)
+    r = next(x for x in d["2_사다리_실제_상태"] if x["id"] == "L-1")
+    assert "1.6212" in r["지금"] and "1.0000" in r["지금"], \
+        f"L-1 의 실측 수치가 바뀌었다: {r['지금'][:160]}"

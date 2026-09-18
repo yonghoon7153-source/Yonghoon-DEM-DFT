@@ -79,6 +79,42 @@
 
 <!-- ── 단계 ─────────────────────────────────────────────── -->
 <h2 style="margin-top:28px;font-size:1rem">단계별 진행</h2>
+<h2 id="ladder">트랙 사다리 L-1 ~ L-4 <span class="mut">— 계획의 <b>상태</b></span></h2>
+{% if not ld.ok %}
+<div class="callout cal-danger"><b>⛔ 사다리 기록을 못 읽었다</b> — {{ ld.why }}.
+  빈 사다리를 그리지 않는다.</div>
+{% else %}
+<div class="callout cal-warn">
+  <b>⚠ 이 사다리는 2026-09-18 까지 원장에 없었다.</b> {{ ld.why_record }}
+</div>
+<p class="mut">{{ ld.same_track }}</p>
+<table class="tbl">
+  <thead><tr><th>칸</th><th>제목</th><th>옛 표가 말한 것</th><th>실제 (2026-09-18)</th></tr></thead>
+  <tbody>
+  {% for r in ld.rungs %}
+    <tr>
+      <td class="mono"><b>{{ r.id }}</b><br><span class="mut">{{ r.state }}</span></td>
+      <td>{{ r.title }}</td>
+      <td class="mut">{{ r.old }}</td>
+      <td>{{ r.now }}
+        {% if r.caveat %}<div class="mut">⛔ {{ r.caveat }}</div>{% endif %}
+        {% if r.reopen %}<div class="mut">다시 열려면: {{ r.reopen }}</div>{% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p class="mut">{{ ld.branch_note }}</p>
+{% if ld.branch %}
+<div class="callout cal-info">
+  <b>사다리 밖 가지 — NEB.</b> {{ ld.branch['왜_생겼나'] }} · {{ ld.branch['지금'] }}
+  <div class="mut">⛔ {{ ld.branch['⛔'] }}</div>
+</div>
+{% endif %}
+<ul class="mut">{% for x in ld.not_doing %}<li>{{ x }}</li>{% endfor %}</ul>
+<p class="mut">기록: <span class="mono">{{ ld.record }}</span></p>
+{% endif %}
+
 {% for s in p.stages %}
 <div class="card" style="padding:14px 18px;margin-top:10px;
      border-left:3px solid {{ '#dc2626' if s.missing else ('#16a34a' if s.verdict and '통과' in s.verdict|string

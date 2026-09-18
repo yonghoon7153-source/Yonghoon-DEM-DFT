@@ -7422,6 +7422,44 @@ def li2s_force_by_element() -> dict:
             "record": "db/properties/lpscl_smallcell_gb3_result_2026_09_18.json"}
 
 
+LI2S_LADDER_JSON = "li2s_track_ladder_2026_09_18.json"
+
+
+def li2s_ladder() -> dict:
+    """L-1~L-4 사다리 — 계획의 **상태**. 값은 각 칸이 가리키는 기록에 있다.
+
+    왜 이 화면에 있나: 이 사다리는 2026-09-18 까지 **채팅에만** 살았다
+    (`L-1`·`앙상블 ≥5 시드`·`3.6일` 이 kb/·db/·webapp/ 어디에도 없었다).
+    그래서 1저자가 붙여넣은 표가 L-2·L-3·L-4 셋이 바뀐 걸 모르고 있었다.
+
+    ⛔ 못 하는 것
+      · 문구를 요약하지 않는다 — 원장 문자열을 그대로 옮긴다.
+      · 상태를 계산하지 않는다 — 기록에 적힌 `상태` 를 그대로 쓴다.
+      · 기록을 못 읽으면 **조용히 빈 사다리를 그리지 않는다** (ok=False 로 말한다).
+    """
+    d = _load_json(DB / "properties" / LI2S_LADDER_JSON)
+    if not d:
+        return {"ok": False, "why": f"사다리 기록을 못 읽었다 ({LI2S_LADDER_JSON})",
+                "rungs": [], "branch": None}
+    rungs = []
+    for r in d.get("2_사다리_실제_상태") or []:
+        rungs.append({
+            "id": r.get("id"), "title": r.get("제목"), "state": r.get("상태"),
+            "old": r.get("옛_표"), "now": r.get("지금"),
+            "source": r.get("근거"),
+            "caveat": r.get("⛔") or r.get("⚠") or r.get("⚠_1저자_인용정책"),
+            "reopen": r.get("다시_열려면"),
+        })
+    br = (d.get("3_사다리_밖_가지") or {}).get("NEB")
+    return {"ok": True, "rungs": rungs,
+            "why_record": _dig(d, "0_왜_이_기록이_생겼나.⇒_문제"),
+            "same_track": _dig(d, "1_트랙의_정체_먼저.⚠_소셀은_다른_트랙이_아니다"),
+            "branch_note": _dig(d, "1_트랙의_정체_먼저.⚠_NEB_는_사다리에_없다"),
+            "branch": br,
+            "not_doing": d.get("4_⛔_이_기록이_하지_않는_것") or [],
+            "record": f"db/properties/{LI2S_LADDER_JSON}"}
+
+
 LI2S_CLOSED_JSON = "lpscl_smallcell_closed_2026_09_18.json"
 
 
