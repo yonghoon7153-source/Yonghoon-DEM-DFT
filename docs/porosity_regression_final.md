@@ -25,6 +25,15 @@
 > - **broken-sim**(물성 아닌 *무효 데이터*): `1mAh_100_*` (CLAUDE.md plate_z 메타버그 →
 >   음수/이상 porosity) — 필터 영구.
 >
+> ⛔⛔ **정정 2026-09-18 (원장 `GAP3-18`) — 코드가 위 두 문단과 어긋나 있었다.**
+>   `scripts/porosity_close.py` 는 `if r2t > r2c + 0.002` 로 **보고 지표가 오를 때만**
+>   케이스를 지우는 **사후 래칫**이었다 (`n=129 0.583 → n=128 0.603`, 지워진 것은 코너
+>   `input_1mAh_9_S1`).  정당화 클래스는 **36건**인데 클래스로 전부 빼면 **0.516 으로
+>   내려가므로**, 한 건만 나간 것은 기준이 물성이 아니었다는 뜻이다.
+>   ⇒ 래칫을 **지웠고** 제외는 선언(`DECLARED_EXCLUSIONS`, 현재 **비어 있음**)으로만 한다.
+>   ★ **이 문서의 수치는 안 움직인다** — 정본 헤드라인이 애초에 **트림 전 0.583** 이었고
+>   래칫판의 `0.603/n=128` 을 인용한 문서가 리포에 없었다.  회귀: `porosity_close.py --selftest`.
+>
 > 별도 발견(닫음): regime-gate · thin SE-poor 코너 경계(SE≲15% **且** thin, 두께-탈출) ·
 > SE-size U(조성-의존, particulate) · E_SE 단조(+2.3%p/E배) · λ-scaling(r_AM_S=4 미완,
 > r_SE=1.33 1점 필요) — `docs/porosity_subum_se_investigation.md`.

@@ -86,7 +86,7 @@ scripts/make_pressure_sweep_decks.py	--selftest	fast	none	claude	초록 0.1s (�
 scripts/make_ps_sweep_decks.py	--selftest	fast	none	claude	초록 0.1s (실측)
 scripts/ml_design_structure.py	--selftest	fast	none	claude	초록 7.8s (실측)
 scripts/mpm3d_compaction.py	--selftest	fast	none	claude	초록 0.3s (실측)
-scripts/mpm_webapp_payload.py	--selftest-provenance	fast	none	claude	초록 <1s — git 을 가로채 재현, 외부 데이터 불요 (PASL-05)
+scripts/mpm_webapp_payload.py	--selftest-provenance	fast	both	claude	초록 <1s — git 을 가로채 재현, 외부 데이터 불요 (PASL-05)
 scripts/mpm_webapp_payload.py	--selftest-temperature	fast	both	claude	초록 0.9s (실측)
 scripts/network_conductivity.py	--selftest	fast	none	claude	초록 0.8s (실측)
 scripts/network_conductivity.py	--selftest-status	fast	none	claude	초록 1.0s (실측)
@@ -107,6 +107,7 @@ scripts/phase_a_precompute.py	--selftest	fast	none	claude	초록 0.5s (실측) �
 scripts/phase_a_rerun_from_sh.py	--selftest	fast	none	claude	초록 0.1s (실측) — 합성 .sh 문자열만 쓴다, 외부 데이터 불요
 scripts/plot_cbd_contacts.py	--selftest	fast	both	claude	초록 2.2s (실측)
 scripts/plot_sigma_e_bars.py	--selftest	fast	both	claude	초록 1.6s (실측)
+scripts/porosity_close.py	--selftest	fast	none	claude	초록 0.18s (실측) — 합성 코퍼스, 외부 데이터 불요 (GAP3-18 래칫 회귀)
 scripts/reduce_arm_payloads.py	--selftest	slow	both	claude	초록이나 31s (실측)
 scripts/rint_cycle_traj.py	--selftest	fast	none	claude	초록 0.1s (실측)
 scripts/run_contract.py	--selftest	fast	both	claude	초록 0.7s (실측)
