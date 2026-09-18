@@ -4028,16 +4028,28 @@ def test_card_links_render_outside_the_fold():
     assert DV.card_links(None) == [] and DV.card_links(["x"]) == []
 
     # ── 실제 렌더 — 접힘 **밖**이어야 한다 ──────────────────────────
+    #   ⛔ 2026-09-18 정정 — 이 시험이 **U(아티팩트 URL)를 요구하고 있었고 빨간불이었다.**
+    #     2026-09-17 에 카드가 정본을 **repo 사본**으로 바꿨는데(그 아티팩트는 만든 세션
+    #     밖에서 원본을 못 받아와 publish 가 거부된다 ⇒ repo 를 고쳐도 URL 이 안 바뀐다)
+    #     이 시험만 안 따라왔다. 카드를 고친 사람이 전체 시험을 안 돌려서 몰랐다.
+    #     시험의 **목적**(정본 링크가 접힘 밖 · 머리 줄에 있다)은 그대로 두고 대상만 옮긴다.
+    REPORT = "/api/file/db/properties/cei_figs/index.html"
     cl = A.app.test_client()
     h = cl.get("/composition/modelc_nd_doped").get_data(as_text=True)
-    assert f'href="{U}"' in h, "카드 링크가 화면에 없다"
-    before = h[:h.index(f'href="{U}"')]
+    assert f'href="{REPORT}"' in h, "정본 보고서 링크가 화면에 없다"
+    before = h[:h.index(f'href="{REPORT}"')]
     depth = before.count("<details") - before.count("</details>")
     assert depth == 0, f"⛔ 링크가 접힘 {depth}겹 안에 있다 — 접힌 링크는 붙인 게 아니다"
 
     # ── 머리 버튼 줄에도 있어야 한다 (1저자가 여기서 찾았다) ─────────
     head = h[h.index('class="page-actions"'):h.index("</div>", h.index("⇄ 비교"))]
-    assert U in head and "📄" in head, f"⛔ 머리 버튼 줄에 보고서가 없다: {head[:200]!r}"
+    assert REPORT in head and "📄" in head, f"⛔ 머리 버튼 줄에 보고서가 없다: {head[:200]!r}"
+
+    # ── ⛔음성: 낡은 아티팩트 URL 은 **앵커로 나가면 안 된다** ───────
+    #   카드가 스스로 "그 URL 은 갱신되지 않는다" 고 적어 놨다. 살아있는 링크로 내보내면
+    #   사람이 옛 사본을 정본으로 읽는다 — 텍스트로 이력을 남기는 것과는 다른 문제다.
+    assert f'href="{U}"' not in h, ("⛔ 낡은 아티팩트 URL 이 앵커로 나간다 — "
+                                    "카드는 이것을 이력으로만 남기기로 했다")
     # ⛔음성: 카드 링크가 없는 조성에는 버튼을 **지어내지 않는다**
     h2 = cl.get("/composition/comp1").get_data(as_text=True)
     head2 = h2[h2.index('class="page-actions"'):h2.index("</div>", h2.index("⇄ 비교"))]
