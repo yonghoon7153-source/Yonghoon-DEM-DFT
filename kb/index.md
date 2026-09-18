@@ -1,13 +1,14 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-18 · managed-files: 428
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-18 · managed-files: 429
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 227건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 228건)
 - 2026-09-18 · `kb/methodology/amorphous_overlap_gate_lessons_2026_09_18.md` — 비정질 겹침 게이트 — 다음 캠페인 설계로 넘기는 것 셋 · 제안 (다음 캠페인 설계용 · 이번 판정 재해석 금지)
+- 2026-09-18 · `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 을 "고전압 양극 계면 열화 억제" 로 · proposed — 1저자 승인 대기
 - 2026-09-16 · `kb/methodology/cei_model_transfer_to_cascade_2026_09_16.md` — CEI 모델을 캐스케이드로 옮기기 — 무엇이 이미 배선됐고 무엇이 안 됐나 · 진행
 - 2026-09-16 · `kb/projects/handoff_2026_09_16_cathode_cei.md` — 인수인계 — 2026-09-16 세션 (양극 CEI §A–§E · 도펀트 스크리닝 · dual compatibility) · 진행
 - 2026-09-15 · `kb/papers/self_doping_dft_paragraph_2026_09_08.md` — 원고 자가도핑 DFT 문단 — 스핀 하나로 좁힌 5문단 (2·3·6 계열) · 1저자 승인 — 삽입 위치 대기
@@ -26,7 +27,6 @@
 - 2026-09-13 · `kb/reviews/codex_BQ4_prompt_10sweep_basin_2026_09_13.md` — 회신 BQ-4 프롬프트 — 10스윕 완결 · 골짜기 비교 · §4b 최종 판정 · 회신됨-종결GO
 - 2026-09-13 · `kb/reviews/codex_BQ4_reply_10sweep_basin_2026_09_13.md` — 회신 BQ-4 — 종결 GO · 서술 정정 8건 · P1 2건 · 재개 조건 2범주 · 회신됨-종결GO
 - 2026-09-13 · `kb/reviews/codex_BQ5_prompt_eprime_card_2026_09_13.md` — 회신 BQ-5 프롬프트 — 보고량 카드 v5 (공통 총부피 E′) §1–3 심사 · 회신됨-방향GO-카드NO-GO
-- 2026-09-13 · `kb/reviews/codex_BQ5_reply_eprime_card_2026_09_13.md` — 회신 BQ-5 — E′ 방향 GO · 카드 확정·실행 NO-GO (집계식·MD 판정·비용 상한 세 묶음) · 회신됨-방향GO-카드NO-GO
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -401,9 +401,10 @@
 - `kb/questions/sdcp_site_preference.md` — SDCP 조각은 LiNiO₂(104)에서 Li 자리와 Ni 자리 중 어디에 붙는가 [active]  (2026-08-11 · active)
 - `kb/questions/sdcp_stageA_holdout_selector_2026_08_30.md` — estimand 카드 — Stage A 홀드아웃: UMA 선택기가 DFT 순위를 맞히나 [open]  (2026-08-30 · open)
 
-## syntheses/ (8)
+## syntheses/ (9)
 - `kb/syntheses/binder_adsorption_charge_state_2026_08_29.md` — 음이온성 바인더의 흡착에너지 — ICEP 의 (−H) 는 탈양성자가 아니라 H 이동이었다  (2026-08-29 · 판독 완료 — ICEP 본문 + SI, Kang 본문 + SI 모두 확보)
 - `kb/syntheses/cathode_coating_computational_lineage.md` — 양극 코팅 계산 계보 — Wolverton → Ceder → Mo 라인과 우리 LPSCl 산화축의 관계  (2026-09-12 · 진행)
+- `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 을 "고전압 양극 계면 열화 억제" 로  (2026-09-18 · proposed — 1저자 승인 대기)
 - `kb/syntheses/li3n_barrier_revision_defense_2026_08_12.md` — Li3N(001) 장벽 — 리비전 방어 카드 (AF-ASSB 원고 v5)  (2026-08-13 · 확정 — 2026-08-12: 0.118 로 통일 · 궤적 패널 제외…)
 - `kb/syntheses/md_sampling_variance_defense_2026_08_25.md` — 왜 3시드·200 ps·β 게이트인가 — 짧은 단일 런은 산포를 없애지 않고 가린다  (2026-08-25 · 방어논지)
 - `kb/syntheses/nd_doping_two_axis_verdict.md` — Nd₂O₃ 도핑 — 열역학 창과 전자구조가 **같은 방향으로** 진다  (2026-08-12 · 진행)

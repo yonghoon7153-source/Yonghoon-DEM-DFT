@@ -1,0 +1,21 @@
+{
+  "structure": "/home/user/Yonghoon-DEM-DFT/db/structures/modelc_nd_doped_DFTrelax.xyz",
+  "n_atoms": 120,
+  "anions": [
+    "Cl",
+    "O",
+    "S"
+  ],
+  "grid": [
+    28,
+    28,
+    282
+  ],
+  "voxel_A": 0.2469,
+  "bvse_min": 0.0,
+  "bvse_perc_level": 0.33599,
+  "Li_migration_barrier_BVSE": 0.336,
+  "Li_site_BVS_mean": 1.7625,
+  "Li_site_BVS_std": 0.2278,
+  "note": "BVSE barrier = percolation threshold above global min (valence^2 units). Empirical BVSE; calibrate scale vs comp1/modelc reference run, not absolute eV."
+}
