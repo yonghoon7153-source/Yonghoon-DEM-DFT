@@ -1144,8 +1144,240 @@ def selftest():
     chk(find_intermediate([0.0, 0.9, 0.3, 0.9, -0.4, 0.9, 0.2])[0] == 4,
         "[양성] 극소가 여럿이면 가장 깊은 것을 고른다")
 
+    # ── ⓑ §9-② `--endpoints_dir` **배선** (stub 계산기로 전 경로) ─────────
+    #   ⛔ 2026-09-18: 같은 날 `--bulk` 를 **플래그만 만들고 배선을 안 해서**
+    #     아무 일도 안 한 적이 있다. 배선은 배선으로만 잡힌다.
+    import subprocess as _sp, sys as _sys, tempfile as _tf
+    from ase import Atoms as _A
+    from ase.calculators.lj import LennardJones as _LJ
+    _td = pathlib.Path(_tf.mkdtemp()) if False else Path(_tf.mkdtemp())
+    _ev = _td / "events"; (_ev / "relaxed").mkdir(parents=True)
+    #: fixture 는 **물리적으로** 안장이 있어야 한다. 앞판은 끝점이 LJ 최소가 아니라
+    #  최대가 끝점에 앉았고 G-B4 가 잡았다(게이트는 옳게 동작했다, fixture 가 틀렸다).
+    #  ⇒ S 4 개가 만든 구멍을 Li 가 통과하는 배치: 양쪽은 최소, 구멍 한가운데가 안장.
+    #  그리고 끝점을 **먼저 이완**한다 — 실제 흐름(끝점 게이트가 이완해서 넘긴다)과 같게.
+    from ase.optimize import FIRE as _FIRE
+    _cell = np.eye(3) * 14.0
+    #: ⛔ 앞판 fixture 는 **대칭**이라 E_i == E_f 였다 — min 을 max 로 바꿔도 시험이
+    #  통과했다. 엉뚱한 것을 재고 있었다. 한쪽에 P 를 더해 **우물 깊이를 갈라놓는다**.
+    _sym = ["Li", "S", "S", "S", "S", "P"]
+    _ring = [[7, 9, 7], [7, 5, 7], [7, 7, 9], [7, 7, 5],      # x=7 평면의 사각 구멍
+             [11.2, 7, 7]]                                    # f 쪽만 깊게 (비대칭)
+    _evs = []
+    for k, x0 in enumerate([4.6, 4.9], 1):
+        tag = f"ev{k:02d}_atom0"
+        for side, xx in (("i", x0), ("f", 14.0 - x0)):
+            q = np.array([[xx, 7, 7]] + _ring, float)
+            at0 = _A(_sym, positions=q, cell=_cell, pbc=True)
+            at0.calc = _LJ(epsilon=0.02, sigma=2.6)
+            _FIRE(at0, logfile=None).run(fmax=0.02, steps=400)
+            at0.write(str(_ev / "relaxed" / f"{tag}_{side}_relaxed.xyz"))
+        _evs.append({"tag": tag, "atom_index": 0, "disp_A": 14.0 - 2 * x0})
+    (_ev / "events.json").write_text(json.dumps({"events": _evs}, ensure_ascii=False),
+                                     encoding="utf-8")
+    _real = load_calc
+    try:
+        globals()["load_calc"] = lambda device="cuda": _LJ(epsilon=0.02, sigma=2.6)
+        _r = neb_from_endpoints(str(_ev), str(_td / "b.json"), n_images=3, steps=300,
+                                log=lambda *a, **k: None)
+    finally:
+        globals()["load_calc"] = _real
+    chk(_r["n_events"] == 2, f"[배선] --endpoints_dir 본문이 끝까지 돈다 ({_r.get('n_events')})")
+    chk((_td / "b.json").exists(), "[배선] 결과 JSON 을 쓴다")
+    chk("⛔_ⓐ_미통과_보고금지" in _r and "보고할 수 없다" in _r["⛔_ⓐ_미통과_보고금지"],
+        "⛔음성: 결과가 스스로 **ⓐ 전에는 보고 금지**라고 말한다")
+    chk("⛔_허용서술_한정_넷" in _r, "⛔음성: 허용 서술 한정 넷을 결과가 들고 다닌다")
+    _r0 = _r["rows"][0]
+    chk({"E_i_eV", "E_f_eV", "E_saddle_eV", "Eb_forward_eV", "Eb_reverse_eV",
+         "dE_f_minus_i_eV"} <= set(_r0), f"원시량을 전부 적는다 (빠진 것: "
+        f"{ {'E_i_eV','E_f_eV','E_saddle_eV','Eb_forward_eV','Eb_reverse_eV','dE_f_minus_i_eV'} - set(_r0) }")
+    _okrows = [r for r in _r["rows"] if r["Eb_eV"] is not None]
+    chk(_okrows, "⛔음성: stub 에서 **적어도 하나는 수렴**해야 Eb 계산 줄이 실제로 돈다 "
+                 f"(수렴 {len(_okrows)}/{len(_r['rows'])})")
+    if _okrows:
+        _r0 = _okrows[0]
+        _lo = min(_r0["E_i_eV"], _r0["E_f_eV"])
+        #: 모든 값이 round(...,6) 이라 1e-6 차는 반올림이다. 3e-6 로 둔다.
+        chk(abs(_r0["Eb_eV"] - (_r0["E_saddle_eV"] - _lo)) < 3e-6,
+            f"Eb = E_saddle − **min**(E_i, E_f) 다 (Eb {_r0['Eb_eV']} · "
+            f"saddle−min {_r0['E_saddle_eV'] - _lo:.6f})")
+        # ⛔음성: 이 fixture 가 **min 과 max 를 실제로 가르는지** 먼저 본다.
+        #   대칭이면 둘이 같아져 시험이 아무것도 안 잰다 (앞판이 그랬다).
+        _hi = max(_r0["E_i_eV"], _r0["E_f_eV"])
+        chk(abs(_hi - _lo) > 1e-3,
+            f"⛔음성: fixture 가 비대칭이다 — ΔE {_hi - _lo:.4f} eV "
+            f"(0 이면 min/max 를 못 가르고 시험이 헛것을 잰다)")
+        chk(_r0["Eb_eV"] >= max(_r0["Eb_forward_eV"], _r0["Eb_reverse_eV"]) - 1e-6,
+            "⛔음성: min 규칙이면 Eb 가 정/역 중 **큰 쪽**이다 (작은 쪽을 집지 않는다)")
+    else:
+        chk(_r0["excluded_because"], "제외됐으면 **사유를 적는다** (조용히 빼지 않는다)")
+    chk(_r["집계"] is not None and ("⛔" in _r["집계"] or "median_eV" in _r["집계"]),
+        "N<3 이면 분포를 말하지 않고 그렇게 적는다 (§0b-③)")
+
+    # ── G-B4 / G-B5 **기각 경로** — run_neb 를 대역으로 세워 직접 태운다 ──────
+    #   ⛔ 2026-09-18 깨보기 실측: 위 fixture 는 항상 내부 안장 + 양쪽 수렴이라
+    #     G-B4 검사를 지워도 · CI 수렴을 안 봐도 **통과했다**. 두 게이트가 시험 밖이었다.
+    #     최적화기 운에 기대지 말고 밴드를 **합성**해 기각 경로를 결정적으로 태운다.
+    _real_neb = run_neb
+
+    def _fake(prof, bc=True, cc=True):
+        def _f(ini, fin, calc, n_images=3, steps=0, log=None, spring_k=0.1):
+            ims = [ini.copy() for _ in range(len(prof))]
+            return ims, np.array(prof, float), {"band_converged": bc, "ci_converged": cc,
+                                                "ci_ran": bc, "steps_band": 1, "steps_ci": 1}
+        return _f
+
+    def _one(prof, bc=True, cc=True):
+        globals()["run_neb"] = _fake(prof, bc, cc)
+        globals()["load_calc"] = lambda device="cuda": _LJ(epsilon=0.02, sigma=2.6)
+        try:
+            return neb_from_endpoints(str(_ev), str(_td / "x.json"), n_images=3, steps=5,
+                                      log=lambda *a, **k: None)["rows"][0]
+        finally:
+            globals()["run_neb"] = _real_neb
+            globals()["load_calc"] = _real
+
+    # 밴드 [E0 .. E4]: 내부는 index 1..3, 끝점은 0 과 4
+    _w = _one([0.0, 0.2, 0.9, 0.3, 0.1])              # 정상 — 최대가 image 2 (내부)
+    chk(_w["status"] == "ok" and _w["image_of_max"] == 2,
+        f"[양성] 내부 최대(image 2)는 통과한다 ({_w['status']})")
+    _w = _one([0.0, 0.2, 0.3, 0.4, 0.9])              # 최대가 **끝점**
+    chk(_w["status"] == "excluded" and any("G-B4" in x for x in _w["excluded_because"])
+        and _w["Eb_eV"] is None,
+        f"⛔음성: 최대가 **끝점**이면 G-B4 로 기각 · Eb=None ({_w['excluded_because']})")
+    _w = _one([0.0, 0.9, 0.3, 0.2, 0.1])              # 최대가 끝점 **바로 옆**(image 1)
+    chk(_w["status"] == "excluded" and any("바로 옆" in x for x in _w["excluded_because"]),
+        f"⛔음성: 최대가 끝점 **바로 옆**이면 내부 안장이 아니다 ({_w['excluded_because']})")
+    _w = _one([0.0, 0.2, 0.9, 0.3, 0.1], bc=True, cc=False)   # 밴드는 수렴, CI 는 미수렴
+    chk(_w["status"] == "excluded" and any("G-B5" in x for x in _w["excluded_because"]),
+        f"⛔음성: **CI 미수렴**이면 밴드가 수렴했어도 기각한다 "
+        f"(2026-08-19 교훈: 미수렴 밴드 위의 CI 는 가짜다) ({_w['excluded_because']})")
+    _w = _one([0.0, 0.2, 0.9, 0.3, 0.1], bc=False, cc=False)  # 둘 다 미수렴
+    chk(_w["status"] == "excluded" and _w["Eb_eV"] is None,
+        "⛔음성: 밴드 미수렴이면 Eb 를 내지 않는다")
+    _sp, _sys  # noqa
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
+
+
+# ═══ ⓑ 카드 §9-② — 봉인된 끝점에서 바로 CI-NEB ═══════════════════════════
+BARRIER_CARD = "db/properties/lpscl_smallcell_neb_barrier_estimand_2026_09_18.json"
+
+
+def neb_from_endpoints(events_dir, out_json, card=BARRIER_CARD, n_images=N_IMAGES,
+                       steps=STEPS_NEB, spring_k=SPRING_K, device="cuda", log=print):
+    """events.json + relaxed/ 의 이완된 끝점 9 쌍 → CI-NEB.
+
+    ⛔ 이 함수가 하지 않는 것
+      · **짝을 고르지 않는다.** §0b-② 가 이미 골랐다. events.json 에 있는 것을 전부 돈다.
+      · 공공을 만들지 않는다 (유리에는 '자리' 가 없다 — 카드 §0-① 선택 (c)).
+      · 셀을 이완하지 않는다 (이 파일의 ⭐ 규율 그대로).
+      · **Eb 를 보고 가능한 값으로 만들지 않는다.** ⓐ(G-N1/G-N2) 통과가 조건이다 —
+        산출 JSON 이 `⛔_ⓐ_미통과_보고금지` 로 그 사실을 들고 다닌다.
+    """
+    import json as _json
+    from ase.io import read as _read
+    ev = Path(events_dir)
+    meta = _json.loads((ev / "events.json").read_text(encoding="utf-8"))
+    rel = ev / "relaxed"
+    if not rel.is_dir():
+        raise SystemExit(f"⛔ {rel} 가 없다 — 끝점 게이트를 다시 돌려 **이완된 끝점**을 "
+                         f"저장해야 한다 (melt_quench_uma.py --endpoint_gate).")
+    calc = load_calc(device)
+    out_dir = ev.parent / "neb"; out_dir.mkdir(exist_ok=True)
+    rows = []
+    for e in meta["events"]:
+        tag, ai = e["tag"], int(e["atom_index"])
+        fi, ff = rel / f"{tag}_i_relaxed.xyz", rel / f"{tag}_f_relaxed.xyz"
+        if not (fi.exists() and ff.exists()):
+            rows.append({"tag": tag, "status": "missing_endpoints", "Eb_eV": None})
+            log(f"  {tag:14s} ⛔ 이완된 끝점 파일이 없다 — 건너뛴다 (**없음이 아니라 미회수**)")
+            continue
+        ini, fin = _read(str(fi)), _read(str(ff))
+        images, E, info = run_neb(ini, fin, calc, n_images=n_images, steps=steps,
+                                  log=out_dir / f"{tag}_neb.log", spring_k=spring_k)
+        E = np.asarray(E, float)
+        E_i, E_f = float(E[0]), float(E[-1])
+        k_max = int(np.argmax(E))
+        #: ⚠ `interior` 는 **게이트가 아니다** — 기각 사유 문구를 고르는 데만 쓴다
+        #  (끝점 자체인가 vs 바로 옆인가). 게이트는 아래 `inner_ok` 하나다.
+        #  2026-09-18 깨보기에서 `interior = True` 로 바꿔도 시험이 통과해 드러났다.
+        interior = 1 <= k_max <= n_images            # 0 과 n_images+1 이 끝점
+        # ⛔ G-B4: CI 가 **끝점 바로 옆**(1 또는 n_images)이면 내부 안장이 아니다
+        inner_ok = 2 <= k_max <= n_images - 1
+        #: ⛔ 이 파일의 2026-08-19 교훈 — 밴드가 미수렴이면 CI 를 **안 켠다**.
+        #   그때 E 는 밴드 값이라 최대가 안장이 아니다. 둘 다 통과해야 ok 다.
+        cb, cc = bool(info["band_converged"]), bool(info["ci_converged"])
+        conv = cb and cc
+        why = []
+        if not conv:
+            why.append(f"G-B5: NEB 미수렴 (밴드 {cb} · CI {cc}) — 제외하고 **센다**")
+        if not interior:
+            why.append("G-B4: 최대가 끝점 자체다 — 안장이 아니다")
+        elif not inner_ok:
+            why.append(f"G-B4: 최대가 끝점 **바로 옆**(image {k_max}) — 내부 안장 없음")
+        ok = conv and inner_ok
+        E_s = float(E[k_max])
+        row = {"tag": tag, "atom_index": ai, "status": "ok" if ok else "excluded",
+               "excluded_because": why,
+               "image_of_max": k_max, "n_images_interior": n_images,
+               "converged": conv, "band_converged": cb, "ci_converged": cc,
+               "E_i_eV": round(E_i, 6), "E_f_eV": round(E_f, 6),
+               "E_saddle_eV": round(E_s, 6),
+               "dE_f_minus_i_eV": round(E_f - E_i, 6),
+               "Eb_forward_eV": round(E_s - E_i, 6),
+               "Eb_reverse_eV": round(E_s - E_f, 6),
+               # ★ 카드 §2 의 스칼라 보고량. 방향은 사람이 안 고른다.
+               "Eb_eV": round(E_s - min(E_i, E_f), 6) if ok else None,
+               "band_eV": [round(float(x), 6) for x in E]}
+        # 안장 부근 3 장(CI ± 1)을 ⓐ 용으로 저장 — 카드 §4 가 '부근' 을 여기로 확정했다
+        if ok:
+            #: ⛔ 저장하는 3 장은 **전부 내부 이미지**여야 한다. 게이트를 느슨하게 바꾸면
+            #  여기서 끝점을 '안장 부근' 으로 저장하거나 IndexError 로 죽는다
+            #  (2026-09-18 깨보기 실측: inner_ok 를 지웠더니 IndexError).
+            #  게이트가 바뀌어도 **여기서 먼저 말하고 죽게** 한다.
+            if not (1 <= k_max - 1 and k_max + 1 <= n_images):
+                raise SystemExit(f"⛔ {tag}: 안장 부근 3 장이 내부를 벗어난다 "
+                                 f"(k_max={k_max}, 내부 1..{n_images}). "
+                                 f"G-B4 게이트가 느슨해졌다 — 카드 §4 를 확인할 것.")
+            saved = []
+            for k in (k_max - 1, k_max, k_max + 1):
+                q = out_dir / f"{tag}_img{k:02d}.xyz"
+                images[k].write(str(q)); saved.append(q.name)
+            row["saddle_region_xyz"] = saved
+        rows.append(row)
+        log(f"  {tag:14s} max@image {k_max}/{n_images+1} · 수렴 {conv} · "
+            f"Eb {row['Eb_eV'] if ok else '—'} eV · {'ok' if ok else ' / '.join(why)}")
+    okr = [r for r in rows if r["status"] == "ok"]
+    res = {"date": time.strftime("%Y-%m-%d"), "kind": "neb_barrier_uma",
+           "card": card,
+           "⛔_ⓐ_미통과_보고금지": "이 Eb 는 **아직 보고할 수 없다.** 카드 §4 대로 "
+                                   "ⓐ(G-N1 수렴 · G-N2 F_RMSE ≤ 0.15 eV/Å) 를 통과해야 "
+                                   "§5 허용 서술로 인용할 수 있다. 여기 값은 UMA PES 위의 값이다.",
+           "⛔_허용서술_한정_넷": "가역 나들이 · 골격 이완 섞임 · 소셀 영구 단서 · N=9 한 시드 "
+                                  "(카드 §5-②). 이 넷 없이 인용하면 그 인용은 무효다.",
+           "settings": {"n_images_interior": n_images, "spring_k": spring_k,
+                        "fmax": FMAX_NEB, "max_steps": steps, "cell": "fixed",
+                        "uma": "uma-s-1p1 omat default"},
+           "n_events": len(rows), "n_ok": len(okr),
+           "n_excluded": len(rows) - len(okr),
+           "rows": rows}
+    # 집계는 §0b-③ — N<3 이면 분포를 말하지 않는다
+    if len(okr) >= 3:
+        v = np.sort([r["Eb_eV"] for r in okr])
+        res["집계"] = {"median_eV": round(float(np.median(v)), 4),
+                       "Q1_eV": round(float(np.percentile(v, 25)), 4),
+                       "Q3_eV": round(float(np.percentile(v, 75)), 4),
+                       "N_selected": len(rows), "N_survive": len(okr)}
+    else:
+        res["집계"] = {"⛔": f"N(생존) {len(okr)} < 3 — **분포를 말하지 않는다**. 개별 값만 나열.",
+                       "values_eV": [r["Eb_eV"] for r in okr]}
+    Path(out_json).write_text(_json.dumps(res, ensure_ascii=False, indent=1),
+                              encoding="utf-8")
+    log(f"  ⇒ 생존 {len(okr)}/{len(rows)} · → {out_json}")
+    log(f"  ⛔ 이 Eb 는 ⓐ 통과 전까지 **보고 금지**다 (카드 §4)")
+    return res
 
 
 def main():
@@ -1191,9 +1423,19 @@ def main():
                     help="옛 동작 — 끝점을 한 번만 이완한다(심화 이완 끔). "
                          "심화 이완이 홉을 바꿔버린 것 같을 때 대조용.")
     ap.add_argument("--out", default=str(OUTDIR / "argyrodite_cage_neb.json"))
+    # ⓑ 카드 §9-② — 봉인된 끝점에서 바로 (케이지 배정·공공 생성 건너뜀)
+    ap.add_argument("--endpoints_dir", metavar="EVENTS_DIR",
+                    help="events.json + relaxed/ 의 이완된 끝점에서 CI-NEB. "
+                         "⛔ 짝을 고르지 않는다 — §0b-② 가 이미 골랐다")
+    ap.add_argument("--endpoints_out", help="--endpoints_dir 결과 JSON 경로")
     if "--selftest" in sys.argv:
         raise SystemExit(selftest())
     a = ap.parse_args()
+    if a.endpoints_dir:
+        _o = a.endpoints_out or str(Path(a.endpoints_dir).parent / "neb_barrier_uma.json")
+        r = neb_from_endpoints(a.endpoints_dir, _o, n_images=a.n_images,
+                               steps=a.neb_steps, spring_k=a.spring_k, device=a.device)
+        raise SystemExit(0 if r["n_ok"] else 3)
     rec = one_run(a)
     p = Path(a.out)
     db = json.loads(p.read_text()) if p.exists() else {

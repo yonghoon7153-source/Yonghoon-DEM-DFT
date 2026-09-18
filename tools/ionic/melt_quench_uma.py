@@ -955,8 +955,15 @@ def endpoint_gate(events_dir, out_json=None, card=NEB_CARD, device="cuda",
             at.calc = calc
             opt = FIRE(at, logfile=None)
             opt.run(fmax=fm, steps=steps)
-            got[side] = (at, opt.get_number_of_steps(), bool(opt.converged()))
-        (a0, s0, c0), (a1, s1, c1) = got["i"], got["f"]
+            #: ⭐ 이완된 구조와 **에너지**를 남긴다 (2026-09-18).
+            #   전에는 판정만 하고 버렸는데, ⓑ 카드 §2 가 E_i·E_f 를 요구하고
+            #   NEB 는 **이완된** 끝점에서 출발해야 한다. 다시 이완하면 같은 값이
+            #   나오겠지만, 그건 '같을 것이다' 라는 가정이고 파일이 증거다.
+            e_tot = float(at.get_potential_energy())
+            rel_dir = ev_dir / "relaxed"; rel_dir.mkdir(exist_ok=True)
+            at.write(str(rel_dir / f"{tag}_{side}_relaxed.xyz"))
+            got[side] = (at, opt.get_number_of_steps(), bool(opt.converged()), e_tot)
+        (a0, s0, c0, E_i), (a1, s1, c1, E_f) = got["i"], got["f"]
         cell = np.array(a0.get_cell())
         dLi = mic_dist(a0.get_positions()[ai], a1.get_positions()[ai], cell)
         rmsd, n_fw, dmax = non_li_rmsd(a0, a1)
@@ -966,6 +973,11 @@ def endpoint_gate(events_dir, out_json=None, card=NEB_CARD, device="cuda",
             (["A: 이완 후 같은 최소로 모였다"] if not okA else []) +
             (["B: 골격이 재배열했다 — 같은 계가 아니다"] if not okB else []))
         rows.append({"tag": tag, "atom_index": ai, "disp_md_A": e["disp_A"],
+                     #: ⓑ 카드 §2 의 원시량. ⛔ 장벽이 아니다 — 끝점 에너지다.
+                     "E_i_eV": round(E_i, 6), "E_f_eV": round(E_f, 6),
+                     "dE_f_minus_i_eV": round(E_f - E_i, 6),
+                     "relaxed_xyz": [f"relaxed/{tag}_i_relaxed.xyz",
+                                     f"relaxed/{tag}_f_relaxed.xyz"],
                      "li_sep_after_relax_A": round(dLi, 4),
                      "non_li_rmsd_A": round(rmsd, 4), "non_li_max_A": round(dmax, 4),
                      "n_framework_atoms": n_fw,
@@ -1662,6 +1674,21 @@ def _selftest():
         "[배선] 많이 움직인 쪽이 이완 후에도 더 벌어져 있다 (자리를 안 뒤바꾼다)")
     chk(all(isinstance(r["rejected_because"], list) for r in _r["rows"]),
         "기각 사유를 사건마다 **적는다** (빈 리스트라도 자리가 있다)")
+    # ⓑ 카드 §2 가 요구하는 원시량 — 전에는 판정만 하고 **버렸다**
+    _r0 = _r["rows"][0]
+    chk({"E_i_eV", "E_f_eV", "dE_f_minus_i_eV"} <= set(_r0),
+        f"[배선] 끝점 에너지 E_i·E_f·ΔE 를 남긴다 (ⓑ 카드 §2 원시량)")
+    chk(abs(_r0["dE_f_minus_i_eV"] - (_r0["E_f_eV"] - _r0["E_i_eV"])) < 1e-6,
+        "ΔE 가 E_f − E_i 와 일치한다 (부호를 뒤집지 않는다)")
+    _rx = [_td / x for x in _r0["relaxed_xyz"]]
+    chk(all(q.exists() for q in _rx),
+        f"[배선] **이완된** 끝점 구조를 파일로 남긴다 (NEB 출발점이다)")
+    # ⛔음성 — 저장된 것이 이완 **전** 구조면 안 된다
+    from ase.io import read as _rd
+    _a_raw = _rd(str(_td / f"{_r0['tag']}_i.xyz"))
+    _a_rel = _rd(str(_rx[0]))
+    chk(np.abs(_a_raw.get_positions() - _a_rel.get_positions()).max() > 1e-6,
+        "⛔음성: 저장된 것이 **이완 후** 구조다 (원본을 그대로 복사하지 않는다)")
 
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
