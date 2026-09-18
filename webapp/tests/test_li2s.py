@@ -236,3 +236,102 @@ def test_closure_value_matches_its_source():
     a2 = closed["1_확정값"]["상대_에너지_MAE_meV_atom"]
     b2 = gate["★_G_B3_힘·에너지"]["상대_E_MAE_meV_atom"]
     assert a2 == b2, f"마감 카드 {a2} ≠ 게이트 기록 {b2} — 두 벌이 갈라졌다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# G1 — "불통과" 와 "미실시" 를 화면이 가르는가 (2026-09-18 추가)
+#
+# 왜: 이 단계에 사실 행이 **하나도 없었다**. 화면에는 제목과 status 만 떴고,
+#     사다리 5칸·실패 지점·'불통과가 아니다' 는 전부 원장에만 있었다.
+#     그러면 사람은 화면을 보고 "G1 은 실패했다(=UMA 가 틀렸다)" 로 읽는다.
+#     실제로는 **한 점도 안 돌았다**. 이 구분이 이 캠페인의 유일한 결론이다.
+# ─────────────────────────────────────────────────────────────────────────────
+G1 = "li2s_layer1_g1_prereg_2026_09_14.json"
+CLOSED_L1 = "lpscl_li2s_layer1_closed_2026_09_15.json"
+
+
+def _stage(key):
+    return next(s for s in D.li2s_pipeline()["stages"] if s["key"] == key)
+
+
+def test_g1_stage_has_facts_at_all():
+    """G1 단계에 사실 행이 있다 — 비어 있으면 화면이 제목만 보여준다."""
+    f = _stage("g1")["facts"]
+    assert f, "G1 단계에 사실 행이 하나도 없다 — 원장에만 있는 상태로 되돌아갔다"
+
+
+def test_g1_says_not_a_failure_but_not_run():
+    """⛔음성: '불통과가 아니다' 가 화면에서 사라지면 잡는다."""
+    labels = {r["label"]: r["value"] for r in _stage("g1")["facts"]}
+    k = [x for x in labels if "불통과" in x]
+    assert k, f"'불통과가 아니다' 행이 없다: {list(labels)}"
+    v = labels[k[0]] or ""
+    assert "존재하지 않는" in v, f"힘 RMSE 부재를 말하지 않는다: {v[:120]}"
+
+
+def test_g1_ladder_shows_all_five_rungs():
+    """사다리가 **5칸**으로 보인다 — ⑤ gabia 48 GB 가 빠지면 '해볼 게 남았나' 를 다시 묻는다."""
+    rows = {r["label"]: r["value"] for r in _stage("g1")["facts"]}
+    k = [x for x in rows if "사다리" in x]
+    assert k, "사다리 행이 없다"
+    rungs = rows[k[0]]
+    assert isinstance(rungs, list) and len(rungs) == 5, f"사다리가 5칸이 아니다: {rungs}"
+    assert any("gabia" in str(x) for x in rungs), f"⑤ gabia 칸이 없다: {rungs}"
+
+
+def test_g1_separates_closed_campaign_from_open_question():
+    """★ 종결 ≠ 미결. 이 구분이 화면에 **글자로** 있어야 한다 (표지가 아니라 본문)."""
+    rows = {r["label"]: r["value"] for r in _stage("g1")["facts"]}
+    k = [x for x in rows if "종결" in x and "미결" in x]
+    assert k, f"'종결 ≠ 미결' 행이 없다: {list(rows)}"
+    v = rows[k[0]] or ""
+    assert "미검증" in v, f"표지 문구(미검증)를 안 말한다: {v[:150]}"
+
+
+def test_closed_stage_shows_the_gabia_retry_measurement():
+    """재개조건 ①을 소진시킨 09-17 실측이 화면에 있다.
+
+    ⛔음성: 없으면 다음 사람이 "gabia 48 GB 해보면 되지 않나" 를 다시 묻는다 —
+    이미 해봤고 OOM 이다.
+    """
+    rows = {r["label"].strip(): r["value"] for r in _stage("closed")["facts"]}
+    assert any("gabia" in x for x in rows), f"gabia 재시도 행이 없다: {list(rows)}"
+    assert "GPU" in rows and rows["GPU"], "GPU 점유 실측이 없다"
+    assert "33.9" in str(rows["GPU"]), f"GPU 실측이 원장과 다르다: {rows['GPU']}"
+
+
+def test_closed_stage_says_host_was_not_the_wall():
+    """⛔음성: host 가 막았다는 옛 예상이 정정된 채로 보이는가.
+
+    원장은 host rss 29.6 GB(여유)였고 **GPU 가 막았다**고 적었다. 화면이 이 정정을
+    안 실으면, 다음 사람은 'host 메모리 큰 기계를 구하면 된다' 로 잘못 읽는다.
+    """
+    rows = {r["label"].strip(): (r["value"] or "") for r in _stage("closed")["facts"]}
+    hk = [x for x in rows if "host" in x.lower()]
+    assert hk, f"host rss 행이 없다: {list(rows)}"
+    assert "29.6" in str(rows[hk[0]]), f"host rss 가 원장과 다르다: {rows[hk[0]]}"
+    wrong = [v for k, v in rows.items() if "예상이 틀렸" in k]
+    assert wrong and "GPU 가 막았다" in str(wrong[0]), f"정정 문구가 없다: {wrong}"
+
+
+def test_g1_record_and_closure_card_do_not_diverge():
+    """⛔음성: §6f 는 마감 카드의 **사본**이다. 갈라지면 잡는다.
+
+    같은 사실이 두 파일에 있는 자리다 — 한쪽만 고치면 조용히 갈라진다.
+    """
+    g1 = D._load_json(D.DB / "properties" / G1)
+    cl = D._load_json(D.DB / "properties" / CLOSED_L1)
+    assert g1 and cl, "기록을 못 읽었다"
+    src = cl["⭐_gabia_48GB_재시도_실측_2026_09_17"]
+    cp = g1["6f_사다리_⑤_gabia_48GB_2026_09_17"]
+    assert cp["실측_2026_09_17"]["죽은_자리"] == src["실측"]["죽은 자리"], "죽은 자리가 갈라졌다"
+    assert cp["실측_2026_09_17"]["GPU"] == src["실측"]["실제 GPU"], "GPU 실측이 갈라졌다"
+    assert cp["⇒_사다리는_이제_5칸_전부_실측이다"] == src["사다리_소진"], "사다리가 갈라졌다"
+
+
+def test_g1_status_does_not_claim_the_question_is_settled():
+    """⛔음성: status 가 '종결' 만 말하고 끝나면 안 된다 — 질문은 미결이다."""
+    g1 = D._load_json(D.DB / "properties" / G1)
+    st = g1["status"]
+    assert "종결" in st, "종결 사실이 빠졌다"
+    assert "미결" in st, f"질문이 미결이라는 말이 status 에 없다: {st}"
