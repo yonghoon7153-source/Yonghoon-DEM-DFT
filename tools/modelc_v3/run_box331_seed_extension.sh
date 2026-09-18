@@ -109,32 +109,10 @@ fi
 #   못 읽으면 경고만 하고 계속 간다(첫 실행일 수 있다). 읽었는데 **다르면 멈춘다**.
 REF=$OUTROOT/s2/run_meta.json
 if [ -f "$REF" ]; then
-  python3 - "$REF" "$V0XYZ" "${_TURBO:+turbo}" <<'PY' || exit 1
-import json, sys, os
-ref, v0 = sys.argv[1], sys.argv[2]
-_mode = sys.argv[3] or "default"
-m = json.load(open(ref, encoding="utf-8"))
-want = {"temperatures": [600, 800, 1000], "prod_ps": 400.0, "equilib_ps": 5.0,
-        "fit_window_ps": [2.0, 50.0], "save_traj": True,
-        "uma_model": "uma-s-1p1", "uma_inference_mode_requested": _mode}
-bad = []
-for k, v in want.items():
-    got = m.get(k)
-    if isinstance(v, list) and isinstance(got, list):
-        ok = [float(x) for x in got] == [float(x) for x in v]
-    elif isinstance(v, float):
-        ok = got is not None and float(got) == v
-    else:
-        ok = got == v
-    if not ok:
-        bad.append(f"  {k}: 기존 {got!r} ≠ 이 스크립트 {v!r}")
-if os.path.basename(str(m.get("v0_xyz", ""))) != os.path.basename(v0):
-    bad.append(f"  v0_xyz: 기존 {m.get('v0_xyz')} ≠ {v0}")
-if bad:
-    print("⛔ 기존 런과 조건이 다르다 — 시드 확장이 아니라 다른 계산이 된다:")
-    print("\n".join(bad)); raise SystemExit(1)
-print(f"  ✓ 기존 s2 와 조건 일치 (n_atoms {m.get('n_atoms')} · supercell {m.get('supercell')})")
-PY
+  # ⭐ 2026-09-18 — 가드를 **파일로 뺐다**. heredoc 안에서는 시험을 칠 수 없고,
+  #   이 가드에 예외조항(옛 판본 run_meta)을 넣게 되어 음성 시험이 필수가 됐다.
+  python3 "$REPO/tools/modelc_v3/check_seed_ext_meta.py" \
+      "$REF" "$V0XYZ" "${_TURBO:+turbo}" || exit 1
 else
   echo "  ⚠ $REF 를 못 읽었다 — 대조 없이 진행한다 (첫 실행이면 정상)"
 fi
