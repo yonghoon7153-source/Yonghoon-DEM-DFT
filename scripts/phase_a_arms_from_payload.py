@@ -240,7 +240,8 @@ def arm_from_payload(d, receipt, fname, role='primary'):
     return arm
 
 
-def build(d, out, receipt_path=None, role='primary', force=False):
+def build(d, out, receipt_path=None, role='primary', force=False,
+          code_sha_missing_ok=''):
     if role not in ROLES:
         raise SystemExit(f'⛔ 알 수 없는 role {role!r} — {ROLES}')
     receipt_path = receipt_path or os.path.join(d, 'run_receipt.json')
@@ -304,6 +305,40 @@ def build(d, out, receipt_path=None, role='primary', force=False):
                          f'(PA12-04): {sorted(str(s)[:12] for s in _shas)}')
     _r_sha = receipt.get('code_sha')
     _a_sha = next(iter(_shas)) if _shas else None
+    #  ══════════════════════════════════════════════════════════════════
+    #  ★★★ PASL-03 (2026-09-18) — **출처가 없는 배치를 통과시키던 이중 fail-open.**
+    #    옛 판의 두 줄이 정확히 이렇게 샜다:
+    #      ⓐ `len(_shas) > 1` — 전 팔이 `None` 이면 집합이 `{None}` 이라 **len == 1**.
+    #         "두 세대가 섞였다" 검사는 통과하는데 **세대가 하나도 없다**.
+    #      ⓑ `if _r_sha and _a_sha and …` — 둘 중 하나라도 비면 대조 **자체를 건너뛴다**.
+    #    ⇒ Phase A 96 팔은 전 계층 `code_sha = null` 이었는데 어댑터를 그대로 지났다.
+    #  ★ 사전등록 §5 + `CL-75` 는 **모든 산출 JSON 에 `code_sha` 봉인**을 요구하고,
+    #    `measure_provenance.validate` 는 *"code_sha 가 비어 있다 (인용 금지)"* 를 낸다.
+    #    그 요구가 어댑터 층에서만 강제되지 않고 있었다.
+    #  ⚠ 기본은 **거부**다.  다만 출처가 **대역 밖(out-of-band)** 으로 봉인된 배치가 실재하므로
+    #    (`docs/reviews/phase_a_seal_breach_20260918.md` §5) 탈출구를 둔다 — 단
+    #    **이유를 요구하고 산출물에 도장을 찍는다**.  조용한 통과는 없앤다.
+    _sha_note = ''
+    if not _a_sha:
+        if not code_sha_missing_ok:
+            raise SystemExit(
+                '⛔ 팔에 `code_sha` 가 없다 (PASL-03) — 출처 없는 배치는 판정에 쓸 수 없다.\n'
+                '  사전등록 §5 · CL-75 는 모든 산출 JSON 의 `code_sha` 봉인을 요구한다.\n'
+                '  ⚠ 옛 어댑터는 이것을 **통과시켰다**: 전 팔이 None 이면 집합이 {None} 이라\n'
+                '    "두 세대 섞임" 검사(len>1)에 안 걸리고, 영수증 대조도 `and` 로 건너뛰었다.\n'
+                '  ⇒ 원인은 대개 `PASL-05` (git dirty 탐침 타임아웃) 다 — 러너 쪽 코드를 올리면 채워진다.\n'
+                '  ⇒ 출처를 **대역 밖으로** 봉인한 배치라면 이유를 명시할 것:\n'
+                '     --code-sha-missing-ok "<어디에 봉인했는지>"   (요약에 그대로 기록된다)')
+        _sha_note = str(code_sha_missing_ok)
+        print(f'⚠ code_sha 부재를 **명시적으로** 허용한다 (PASL-03): {_sha_note}')
+    elif code_sha_missing_ok:
+        raise SystemExit('⛔ `--code-sha-missing-ok` 를 줬는데 팔에 code_sha 가 **있다** '
+                         f'({str(_a_sha)[:12]}) — 필요 없는 면제는 다음 배치에서 진짜 부재를 '
+                         '가린다.  플래그를 빼고 다시 돌릴 것.')
+    if _a_sha and not _r_sha:
+        raise SystemExit('⛔ 팔에는 `code_sha` 가 있는데 **영수증에 없다** (PASL-03) — '
+                         f'({str(_a_sha)[:12]}) 러너가 적은 세대와 대조할 수 없다.\n'
+                         '  옛 판은 `and` 로 이 경우를 조용히 건너뛰었다.')
     if _r_sha and _a_sha and str(_r_sha)[:12] != str(_a_sha)[:12]:
         raise SystemExit(f'⛔ 영수증의 code_sha({str(_r_sha)[:12]}) 와 payload 의 '
                          f'({str(_a_sha)[:12]}) 가 다르다 — 러너 의도와 실제가 갈렸다 (PA12-04)')
@@ -347,6 +382,8 @@ def build(d, out, receipt_path=None, role='primary', force=False):
     summary = {'n_arms': len(arms), 'role': role, 'tool_sha': _tool_sha(),
                'receipt_digest': receipt.get('receipt_digest'),
                'receipt_code_sha': receipt.get('code_sha'),
+               #  ★ PASL-03 — 출처 상태를 **산출물이 들고 다닌다** (콘솔 경고는 사라진다)
+               'code_sha_status': ('SEALED' if _a_sha else f'MISSING — {_sha_note}'),
                'seal': {k: receipt.get(k) for k in SEAL},
                'cells': sorted([a['vgcf_wt'], a['vox'], a['origin']] for a in arms),
                'sigma_e': {f"{a['vgcf_wt']:g}/{a['vox']:g}/{a['origin']}": a['sigma_e']
@@ -509,6 +546,74 @@ def _selftest():
             lambda d2: [os.remove(os.path.join(d2, f))
                         for f in os.listdir(d2) if f.startswith('p2_')])
 
+        #  ── ★★★ PASL-03 재현 — 출처 없는 배치를 통과시키던 이중 fail-open ──────────
+        #    옛 어댑터는 아래 둘을 **전부 통과**시켰다.  96 팔이 그렇게 지나갔다.
+        #  ⚠⚠ `neg()` 는 *SystemExit 이 났는가*만 본다 — **어느 이유인지는 안 본다**.
+        #    실제로 이 시험 초판이 그 함정에 빠졌다: `_strip_sha` 가 엉뚱한 자리를 지워
+        #    code_sha 가 **안 지워졌는데도** 다른 게이트가 죽여 ✓ 가 나왔다.
+        #    ⇒ 여기서는 **메시지까지 단언**한다 (`PA12-09` 의 교훈 그대로).
+        def _strip_sha(d2, arms_only=False):
+            """팔의 code_sha 를 지운다 = 96 팔의 실제 상태.
+
+            ★ 자리가 둘이다: `mpm_metrics.step3.manifest.code_sha` 와 `mpm_metrics.code_sha`.
+              초판은 최상위를 지워서 **아무것도 안 지웠다**."""
+            for f in sorted(os.listdir(d2)):
+                p = os.path.join(d2, f)
+                if not f.endswith('.json'):
+                    continue
+                o = json.load(open(p))
+                if f.startswith('p2_'):
+                    o.get('mpm_metrics', {}).pop('code_sha', None)
+                    _mn = _get(o, 'mpm_metrics', 'step3', 'manifest')
+                    if isinstance(_mn, dict):
+                        _mn.pop('code_sha', None)
+                elif not arms_only:
+                    o.pop('code_sha', None)
+                json.dump(o, open(p, 'w'))
+
+        _neg_n = [0]
+
+        def neg_msg(name, mutate, needle, **bkw):
+            """거부되는가 **그리고 그 이유가 맞는가**.
+
+            ⚠ 디렉터리명은 **일련번호**로 만든다 — 이름에서 ASCII 만 뽑으면 한글·기호뿐인
+              이름이 전부 빈 문자열이 돼 **같은 경로로 충돌한다** (실측: `m_` 재사용)."""
+            _neg_n[0] += 1
+            d2 = os.path.join(td, f'm{_neg_n[0]:02d}')
+            shutil.copytree(src, d2)
+            mutate(d2)
+            try:
+                build(d2, d2 + '_out', **bkw)
+                chk(name + ' [거부 안 됨]', False)
+            except SystemExit as e:
+                chk(name, needle in str(e))
+
+        #  ⓐ 전 팔 code_sha 부재 — 옛 판은 집합이 {None} 이라 len==1 로 통과했다
+        neg_msg('★㉝ PASL-03 ⓐ 전 팔 code_sha 부재 → 거부',
+                _strip_sha, '팔에 `code_sha` 가 없다')
+        #  ⓑ 팔엔 있는데 영수증에 없음 — 옛 판은 `and` 로 대조를 건너뛰었다
+        neg_msg('★㉞ PASL-03 ⓑ 영수증에만 부재 → 거부',
+                lambda d2: [json.dump({k: v for k, v in
+                                       json.load(open(os.path.join(d2, 'run_receipt.json'))).items()
+                                       if k != 'code_sha'},
+                                      open(os.path.join(d2, 'run_receipt.json'), 'w'))],
+                '영수증에 없다')
+        #  ⓒ 면제는 **이유가 있어야** 열린다
+        neg_msg('★㉟ 이유 없는 면제는 안 열린다', _strip_sha, '--code-sha-missing-ok')
+        #  ⓓ 이유를 주면 진행하고 **요약에 도장이 남는다**
+        d3 = os.path.join(td, 'sha_ok'); shutil.copytree(src, d3); _strip_sha(d3)
+        _s4 = build(d3, os.path.join(td, 'sha_ok_out'),
+                    code_sha_missing_ok='대역 밖 봉인 (seal_breach §5)')[1]
+        chk('★㊱ 이유를 주면 진행 + 요약에 도장',
+            _s4.get('code_sha_status', '').startswith('MISSING —')
+            and '대역 밖' in _s4['code_sha_status'])
+        #  ⓔ 정상 배치는 SEALED
+        chk('㊲ 정상 배치는 SEALED 로 찍힌다',
+            build(src, os.path.join(td, 'sha_sealed'))[1].get('code_sha_status') == 'SEALED')
+        #  ⓕ 불필요한 면제는 거부 (다음 배치의 진짜 부재를 가린다)
+        neg_msg('★㊳ 불필요한 면제는 거부', lambda d2: None,
+                '필요 없는 면제', code_sha_missing_ok='필요없음')
+
         #  ── 새 게이트의 음성 대조 (2026-09-15, PA12-02/03/06/08) ────────────────
         #  ⚠ 통과만 하는 검사는 없는 것과 같다 (`PA12-09` 의 교훈) — 각 게이트를
         #    **퇴행시키는 변이**를 하나씩 주고 실제로 빨간불이 나는지 본다.
@@ -577,13 +682,17 @@ def main(argv=None):
                          '주 판정 디렉터리와 다른 --out 에 쓴다')
     ap.add_argument('--force', action='store_true',
                     help='이미 있는 팔을 덮어쓴다 (기본 거부 — PA12-05 재발 방지)')
+    ap.add_argument('--code-sha-missing-ok', default='', metavar='REASON',
+                    help='팔에 code_sha 가 없어도 진행 (PASL-03).  **이유 문자열이 필수**이고 '
+                         '요약의 `code_sha_status` 에 그대로 기록된다')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return _selftest()
     if not a.dir or not a.out:
         raise SystemExit('--dir 와 --out 이 필요하다 (또는 --selftest)')
-    arms, summ = build(a.dir, a.out, a.receipt, role=a.role, force=a.force)
+    arms, summ = build(a.dir, a.out, a.receipt, role=a.role, force=a.force,
+                       code_sha_missing_ok=a.code_sha_missing_ok)
     print(f'✓ 팔 {len(arms)} 개 → {a.out}')
     for w in sorted({x['vgcf_wt'] for x in arms}):
         g = sorted(x['sigma_e'] for x in arms if x['vgcf_wt'] == w)
