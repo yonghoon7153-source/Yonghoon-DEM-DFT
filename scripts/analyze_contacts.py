@@ -468,12 +468,25 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
                         'msg': f"Tortuosity mean={tau['mean']:.1f} (>3): unusually tortuous paths"})
 
     # 2. Low percolation
+    #  ⛔ **전거 없는 문턱이다** (원장 `GAP3-40`, 2026-09-18).  `85` · `95` · `3.5` 는 주석뿐이고
+    #    문헌·코퍼스 어느 쪽에도 근거가 없다.  그런데 `critical` 은 사용자 화면에 뜬다.
+    #  ★ 실측 (n=157, `docs/data/case_master.csv`): σ_ion 이 두 양에 **단조**로 붙긴 하지만
+    #    **이 자리에 무릎이 없다** — percolation 90–95 구간의 σ_ion 중앙(0.0581)이
+    #    95–98 구간(0.0497)보다 **오히려 높다**.  se_se_cn 도 3.0–3.5(0.0570)가
+    #    3.5–4.0(0.0507)보다 높다.  진짜 붕괴는 각각 **85 아래 · 3.0 아래**에서 일어난다.
+    #  ⚠⚠ 그 측정조차 **순환적**이다 — `percolation_pct` · `se_se_cn` · `sigma_full_mScm` 이
+    #    **같은 Kirchhoff 망**에서 나온다.  망이 끊기면 σ 가 낮은 것은 정의상 그렇다
+    #    (corr = +0.62 · +0.79).  ⇒ 우리 코퍼스는 이 문턱을 **세워 줄 수 없다**.
+    #  ⇒ 최소 조치: 값은 **그대로 두고** `critical` → `warning` 으로 낮추고, 전거가 없다는
+    #    사실을 **메시지에 적는다**.  값을 바꾸면 그것도 전거 없는 수가 된다.
     if perc_data.get('percolation_pct', 100) < 85:
-        warnings.append({'type': 'percolation_low', 'severity': 'critical',
-                        'msg': f"Percolation={perc_data['percolation_pct']:.1f}% (<85%): SE network severely fragmented"})
+        warnings.append({'type': 'percolation_low', 'severity': 'warning',
+                        'msg': f"Percolation={perc_data['percolation_pct']:.1f}% (<85%): "
+                               f"SE network likely fragmented.  ⚠ 이 문턱은 **관례이며 전거가 없다** (원장 `GAP3-40`) — 실측상 이 자리에 무릎이 없다.  진단 참고용."})
     elif perc_data.get('percolation_pct', 100) < 95:
         warnings.append({'type': 'percolation_marginal', 'severity': 'warning',
-                        'msg': f"Percolation={perc_data['percolation_pct']:.1f}% (<95%): SE network connectivity marginal"})
+                        'msg': f"Percolation={perc_data['percolation_pct']:.1f}% (<95%): "
+                               f"SE network connectivity marginal.  ⚠ 이 문턱은 **관례이며 전거가 없다** (원장 `GAP3-40`) — 실측상 이 자리에 무릎이 없다.  진단 참고용."})
 
     # 3. High porosity (poor compaction)
     if results.get('porosity', 0) > 25:
@@ -487,9 +500,10 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
                         'msg': f"Total particles={total_particles} (<500): RVE may not be representative"})
 
     # 6. SE-SE CN near percolation threshold
+    #  ⛔ 위 `GAP3-40` 주석과 같은 사유 — `critical` → `warning`, 전거 없음을 메시지에 적는다.
     if cn.get('mean', 10) < 3.5:
-        warnings.append({'type': 'cn_critical', 'severity': 'critical',
-                        'msg': f"SE-SE CN={cn['mean']:.1f} (<3.5): near percolation threshold, network may collapse"})
+        warnings.append({'type': 'cn_critical', 'severity': 'warning',
+                        'msg': f"SE-SE CN={cn['mean']:.1f} (<3.5): may be near percolation threshold.  ⚠ 이 문턱은 **관례이며 전거가 없다** (원장 `GAP3-40`) — 실측상 이 자리에 무릎이 없다.  진단 참고용."})
 
     # (Electronic-Active-AM warnings are network-solver dependent and are
     # emitted by webapp._refresh_post_network_warnings AFTER the solver runs.

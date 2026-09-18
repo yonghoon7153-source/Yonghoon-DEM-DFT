@@ -13,8 +13,14 @@ Incorporates ALL physical mechanisms governing cold-press densification:
   (3) SE-SE plastic network percolation — bulk plastic flow requires
       connected SE-SE contacts (percolation threshold ~25-30 vol%)
 
-  (4) Heckel-type plastic compaction (Heckel 1961) — exponential
-      densification of soft phase under effective pressure
+  (4) ⛔ **NOT Heckel.**  The production path is a *linear* subtraction
+      `eps = eps_rcp − delta_max·f_se·p_se/kc`, with no exponential anywhere
+      (원장 `GAP3-34`, 2026-09-18).  `heckel_compaction()` below is defined
+      but **never called** — the old wording ("exponential densification")
+      advertised physics the curve does not contain.
+      ⚠ Value impact is **zero** — nothing imports this module (the seven
+        sibling plots all use `predict_porosity_strict_physics`).  What was
+        wrong was the *description*, and that is what is fixed here.
 
   (5) Material parameters from user:
       E_AM=140 GPa, E_SE=24 GPa, H_SE=0.85 GPa (Tabor → σ_y=283 MPa),
@@ -165,9 +171,16 @@ def se_percolation(f_se, f_perc=0.70, k=10.0):
     return plastic_activation(f_se, f_perc, k)
 
 
-# ── (5) Heckel-style plastic compaction ────────────────────────────
+# ── (5) Heckel-style plastic compaction — ⛔ **UNUSED** ────────────
 def heckel_compaction(eps_0, P_eff, sigma_y, percolation):
     """Heckel 1961: ε = ε_0 · exp(-K · P_eff · percolation)
+
+    ⛔⛔ **이 함수는 호출되지 않는다** (원장 `GAP3-34`).  AST 호출그래프로 확인:
+    리포 전수에서 등장이 이 정의 한 줄과 감사 인벤토리뿐이다.  `predict_porosity()`
+    는 아래에서 **선형 감산**을 쓴다 — 지수함수가 경로에 하나도 없다.
+    ⇒ 지우지 않고 남기되 **쓰이지 않는다는 사실을 여기 적는다**.  되살리려면
+      `predict_porosity()` 가 실제로 이것을 부르도록 배선하고, 그때 제목·독스트링의
+      "Heckel" 표기가 비로소 참이 된다.
 
     K = 1/(3 σ_y) per Heckel-Tabor relation. The percolation factor
     multiplicatively scales the effective Heckel rate, reflecting
@@ -195,10 +208,10 @@ def predict_porosity_physics(am_se_wt, p_s_vol):
     # (3) SE percolation
     p_se = se_percolation(f_se)
 
-    # (4) Heckel compaction of SE phase only (AM is rigid)
-    # The SE fraction undergoes plastic compaction; rigid AM doesn't
-    # Net porosity: weighted by f_se in the soft phase
-    P_eff = P_PRESS / kc
+    # (4) SE-phase compaction (AM is rigid).
+    #  ⛔ 옛 줄 `P_eff = P_PRESS / kc` 는 **대입 후 한 번도 읽히지 않았다**
+    #    (AST dead-local, 원장 `GAP3-34`).  지운다 — 값에 영향 0.
+    #    이름이 "Heckel 유효압" 을 시사해 아래 선형식을 지수식으로 오독하게 했다.
     # Reduction from RCP achievable by SE plastic flow
     delta_max_pure_SE = EPS_RCP_AM_PURE - EPS_PURE_SE  # 26 %
     delta_eff = delta_max_pure_SE * f_se * p_se / kc
@@ -253,7 +266,8 @@ def main():
 
     ax.set_xlabel('AM weight fraction (%)', fontsize=12)
     ax.set_ylabel('Porosity ε (%)', fontsize=12)
-    ax.set_title('Physics-based prediction: RCP × SFM × percolation × Heckel\n'
+    #  ⛔ 옛 제목의 `× Heckel` 은 **거짓**이었다 (곡선에 지수함수가 없다) — 원장 `GAP3-34`.
+    ax.set_title('Physics-based prediction: RCP × SFM × percolation (linear)\n'
                   f'(σ_y={SIGMA_Y_SE/1e6:.0f} MPa, P={P_PRESS/1e6:.0f} MPa, '
                   f'KC=Sridhar 2000)', fontsize=11)
     ax.grid(alpha=0.3)

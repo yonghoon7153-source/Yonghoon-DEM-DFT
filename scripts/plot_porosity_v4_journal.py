@@ -204,6 +204,28 @@ print(f'\nGBR 5-fold CV: RMSE_all={GBR_RMSE_all:.3f}, '
       f'RMSE_trust={GBR_RMSE_trust:.3f}, R²={GBR_R2_all:.3f}')
 
 # v4 5-fold CV (using v4 model with local refit per fold)
+#  ⚠⚠ **이 CV 는 깨끗한 교차검증이 아니다** (원장 `GAP3-17`, 2026-09-18).
+#    아래 `minimize(lf, P4, …)` 의 시작점 `P4` 는 :88-94 에 하드코딩된 **전체 데이터
+#    differential_evolution 최적해**다.  각 폴드는 거기서 `maxiter=100` 국소 경사법으로만
+#    움직이므로 **테스트 폴드의 정보가 시작점에 배어 있다** — 구조적 누출은 실재한다.
+#
+#  ⛔⛔ **그러나 그 누출이 "CV 를 부풀린다" 는 뜻은 아니다 — 방향이 반대로 측정됐다.**
+#    처음에 나는 cold-start 를 **L-BFGS-B 한 번**으로 잡고 비교해 *"낙관 편향 +0.21~0.52 %p"*
+#    라고 적었는데, 그 cold-start 는 23-파라미터 비볼록 문제에서 **나쁜 국소해**에 빠진다.
+#    ⇒ 그 비교는 누출이 아니라 **내 최적화 선택**을 잰 것이었다.  철회한다.
+#    `P4` 를 얻은 것과 **같은 방법**(per-fold `differential_evolution`)으로 재면 (같은 폴드, n=80):
+#        warm-start L-BFGS-B (현행)      RMSE_all 2.776 · R² +0.517
+#        per-fold DE (maxiter 100)       RMSE_all 2.869 · R² +0.485
+#        per-fold DE (maxiter 300)       RMSE_all 2.498 · R² +0.609   ← **현행보다 좋다**
+#    두 힘이 경쟁한다 — **누출**(시작점이 테스트 폴드를 안다, CV↑)과 **미최적화**
+#    (`maxiter=100` 이라 `P4` 에서 거의 못 움직여 훈련 폴드를 못 맞춘다, CV↓).
+#    관측상 **미최적화가 이긴다** ⇒ 현행 CV 는 낙관이 아니라 오히려 **비관**일 수 있다.
+#
+#  ⬜ **미확정** — DE 가 300→1500 에서 수렴하는지, 시드에 얼마나 흔들리는지 측정 중이다.
+#    그 전까지 위 DE 값을 **대안 수치로 인용하지 말 것**.
+#  ⚠ 절대값을 아래가 찍는 값과 나란히 놓지 말 것 — 프로브는 폴드를 직접 나눴고 여기는 `KFold` 다.
+#  ⚠ 방법을 바꾸면 보고 수치가 **좋아지는 쪽**으로 움직인다.  그것은 `GAP3-18`(지표가 오를 때만
+#    케이스를 지우는 래칫)과 **같은 부류의 위험**이므로, 바꾼다면 사전에 근거를 적고 바꿀 것.
 v4_cv = np.zeros_like(y)
 for tr_idx, te_idx in kf.split(X):
     # Quick local refit on training fold
@@ -568,7 +590,9 @@ particles).  Six outlier groups (A1, A2, B, C, D, E) are circled in red — see
 (f).  (b) Predicted vs measured porosity for all {len(CID)} cases with 95 % bootstrap
 prediction bands (gray error bars).  Outliers are excluded from the trust
 RMSE.  R² = {R2_all:.3f}, RMSE = {RMSE_all:.2f} %p (trust = {RMSE_trust:.2f}), and
-5-fold cross-validated RMSE = {V4_CV_RMSE_all:.2f} %p.  (c) Residual histogram of
+5-fold cross-validated RMSE = {V4_CV_RMSE_all:.2f} %p (⚠ not a clean CV: each fold is
+warm-started from the full-data optimum and refit with only maxiter=100, so the value is
+NOT directly interpretable as out-of-sample performance — ledger GAP3-17).  (c) Residual histogram of
 the v4 physics model (blue) vs a Gradient Boosting Regressor evaluated by
 5-fold cross-validation (red, RMSE = {GBR_RMSE_trust:.2f} %p on the trust set).
 The two distributions overlap within the ±2 %p band, indicating that the
