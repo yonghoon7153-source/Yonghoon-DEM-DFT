@@ -3,6 +3,7 @@
 # ⛔ 솔버를 부르지 않았다 — 포함/제외는 파일 실재로만.  이 목록 전부를 S3 가 돌리고 실패는 REFUSED 로 보존한다.
 # 설계족 분포: UNKNOWN 1 · bimodal 100 · mono_AM_P 15 · mono_AM_S 15
 # ⚠ 설계족이 mono 뿐이면 AREA-11(AM_P–AM_S · AM_P 반경 이종쌍) 효과는 이 코호트로 검증할 수 없다.
+# ★ 경위·교훈·ibb 경로·함정: docs/data/area_s2_cohort_provenance.md  ← 재봉인해도 그 파일은 안 바뀐다
 case	status	design_family	family_source	n_types	deck	deck_sha256	atom_file	atom_sha256	contact_file	contact_sha256	step_atom	step_contact	step_gap	reason
 lhs00_000	RAW_OK	bimodal	design_csv	3	/home/yonghoon71/lhs_local/lhs00_000/input_lhs00_000.liggghts	f4a29f22973bed061fc4c6cb0fee4809f21b1176be49e4e442a6e96462b14e8f	/home/yonghoon71/lhs_local/lhs00_000/post_lhs00_000/atom_2420000.liggghts	7aa05fa862a8a4ea63db15669a7d4df744e5eb05e786441e807e28403759c32f	/home/yonghoon71/lhs_local/lhs00_000/post_lhs00_000/contact_2420000.liggghts	5e7685bff0b8019bcb91e0c1f9de8dc120b318171e266549bea4e11377e1819a	2420000	2420000	0	포함: 원자료·덱 실재 (솔버 성공 여부는 보지 않았다)
 lhs00_001	RAW_OK	bimodal	design_csv	3	/home/yonghoon71/lhs_local/lhs00_001/input_lhs00_001.liggghts	50e083962b55b293e70a8a6e77b00792c2ceb746b3f3b1a28063f3502c7f1615	/home/yonghoon71/lhs_local/lhs00_001/post_lhs00_001/atom_1990000.liggghts	d34accffe1173165ca9481400e760f22883cbe111de7a9464acfabc60256edfd	/home/yonghoon71/lhs_local/lhs00_001/post_lhs00_001/contact_1990000.liggghts	bae9113c07666bb84fb9b421fcd0b347c7ce9b98bee3a9993b63bd7bf9a48d29	1990000	1990000	0	포함: 원자료·덱 실재 (솔버 성공 여부는 보지 않았다)

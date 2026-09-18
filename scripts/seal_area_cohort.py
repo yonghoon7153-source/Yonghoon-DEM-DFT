@@ -105,6 +105,9 @@ def _paired_case_files(d):
     return A[s_], C[s_]
 
 
+#: 경위 문서 — 헤더가 자동 생성이라 손기록이 사라지는 것을 막는 자리 (2026-09-19)
+PROVENANCE = 'docs/data/area_s2_cohort_provenance.md'
+
 COLS = ['case', 'status', 'design_family', 'family_source', 'n_types', 'deck', 'deck_sha256',
         'atom_file', 'atom_sha256', 'contact_file', 'contact_sha256',
         'step_atom', 'step_contact', 'step_gap', 'reason']
@@ -320,6 +323,10 @@ def write_tsv(rows, out: Path, root: Path):
            '# ⛔ 솔버를 부르지 않았다 — 포함/제외는 파일 실재로만.  이 목록 전부를 S3 가 돌리고 실패는 REFUSED 로 보존한다.',
            '# 설계족 분포: ' + ' · '.join(f'{k} {v}' for k, v in sorted(fam.items())),
            '# ⚠ 설계족이 mono 뿐이면 AREA-11(AM_P–AM_S · AM_P 반경 이종쌍) 효과는 이 코호트로 검증할 수 없다.',
+           #  ★★ 2026-09-19 — **경위 포인터는 자동 생성분이다.**  이 헤더는 재봉인할 때마다
+           #    통째로 새로 써지므로 손으로 적은 주석이 사라진다 (실제로 하루에 **두 번** 잃었다).
+           #    ⇒ 경위는 옆 파일에 두고 여기선 **가리키기만** 한다 — 그 줄은 자동이라 안 지워진다.
+           f'# ★ 경위·교훈·ibb 경로·함정: {PROVENANCE}  ← 재봉인해도 그 파일은 안 바뀐다',
            '\t'.join(COLS)]
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text('\n'.join(hdr) + '\n' + '\n'.join('\t'.join(r[k] for k in COLS) for r in rows) + '\n',
@@ -446,6 +453,15 @@ def _selftest() -> int:
         b2['lhs00_915']['atom_file'].endswith('atom_2840000.liggghts')
         and b2['lhs00_915']['contact_file'].endswith('contact_2840000.liggghts'),
         b2['lhs00_915']['atom_file'])
+    #  ★★ 헤더는 재봉인마다 새로 써진다 — **경위 포인터가 거기 있어야** 손기록이 안 사라진다.
+    #    (2026-09-19 하루에 두 번 잃고 나서 세운 규칙.)
+    _p2 = t2 / 'hdr_probe.tsv'
+    write_tsv(list(b2.values()), _p2, t2)
+    _hdr = [ln for ln in _p2.read_text(encoding='utf-8').splitlines() if ln.startswith('#')]
+    chk('★⑨h 경위 포인터가 자동 헤더에 실린다 (없으면 재봉인이 기록을 지운다)',
+        any(PROVENANCE in ln for ln in _hdr if ln.startswith('#')), str(_hdr[:6]))
+    chk('★⑨h 가리키는 경위 파일이 실재한다',
+        (ROOT / PROVENANCE).is_file(), PROVENANCE)
     chk('⑨f step 열이 TSV 에 실린다', all(k in COLS for k in ('step_atom', 'step_contact', 'step_gap')))
 
     chk('⑧ refill: 해시 열 바이트 불변 · 설계족 3/5 채움 · 헤더 분포 갱신', n == 3 and tot == 5 and same_hash
