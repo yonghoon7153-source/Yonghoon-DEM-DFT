@@ -806,6 +806,8 @@ or whether the layer is continuous.</figcaption>
 <p style="margin:0 0 8px">(b) 는 <b>그래서 이로운가</b>. 4.3 V 에서는 Nd 가 가져간 만큼 회색(양극 TM 인산염)이 줄어든다.
 그런데 4.5 V · x ≥ 0.10 에서 주황(P₂S₇)이 열린다 — 남은 P 가 양극 대신 <b>티오인산염</b>으로 갔다.
 P₂S₇ 는 §3 이 <b>이 집합에서 제일 얕은 P 싱크</b>(E_f −0.5120 eV/atom)로 못박은 상이다.
+<b>⚠ 나쁜 이유를 정확히 쓴다</b> — P₂S₇ 는 전해질과 <b>−0.0112 로 거의 안 싸운다</b>(같은 티오인산염 계열이다, §7 추가분).
+그러니 <b>전해질을 공격해서</b>가 아니라 <b>P 를 얕게 잡아서</b> 나쁘다.
 <b>그 칸의 "100 % 보호" 는 보호가 아니다.</b></p>
 <p style="margin:0"><b>(c) 가 이 절에서 제일 중요하다.</b> 몫의 분모는 <i>좌변 양극이 내놓은 TM</i> 인데,
 조성이 바뀌면 <b>최소 꺾임이 다른 혼합비 x 에 앉는다</b>. 그러면 SE:양극 비가 달라 분모가 같은 양이 아니다.
@@ -1451,6 +1453,18 @@ comp1 2.066 vs 재계산 2.0656 (같은 방법) · Nd₂O₃ 우리 3.9479 vs MP
 <tr><td class="mono">NdP<sub>5</sub>O<sub>14</sub></td><td>ultra</td><td>2.8</td><td class="mono">-0.0790</td><td class="mono">&#8212;</td></tr>
 <tr><td class="mono">Li<sub>2</sub>SO<sub>4</sub></td><td>sulfate</td><td>&#8212;</td><td class="mono">-0.0940</td><td class="mono">&#8212;</td></tr>
 <tr><td class="mono">Nd<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub></td><td>sulfate</td><td>&#8212;</td><td class="mono">-0.1470</td><td class="mono">&#8212;</td></tr>
+<tr><td colspan="5" style="padding-top:9px;border-top:2px solid var(--line);font-size:.88rem">
+<b>⭐ 2026-09-18 추가 — <span class="no">⛔ 위 10 종만으로 순위를 읽으면 안 된다</span></b><br>
+위 표에는 <b>무도핑 경로가 4.0 V 이상에서 실제로 만드는 P 수용상</b>(CoP₄O₁₁·Ni(PO₃)₂ 등)이 <b>하나도 없었다</b>.
+3.5 V 는 양쪽(LiPO₃ vs LiNd(PO₃)₄)이 다 있었지만 고전압은 <b>도핑 쪽만</b> 재고 있었다.
+같은 방식(닫힌계 0 V, 전해질 LPSCl1.6)으로 채웠다 —
+기록 <code>db/properties/dual_compat_undoped_hosts_2026_09_18.json</code>.</td></tr>
+<tr><td class="mono">CoP<sub>4</sub>O<sub>11</sub></td><td>TM phosphate (무도핑 @LiCoO₂)</td><td>2.75</td><td class="mono"><b>-0.1334</b></td><td class="mono">&#8212;</td></tr>
+<tr><td class="mono">NiP<sub>4</sub>O<sub>11</sub></td><td>TM phosphate (무도핑 @LiNiO₂)</td><td>2.75</td><td class="mono"><b>-0.1281</b></td><td class="mono">&#8212;</td></tr>
+<tr><td class="mono">Ni(PO<sub>3</sub>)<sub>2</sub></td><td>TM phosphate (무도핑 @LiNiO₂)</td><td>3.0</td><td class="mono"><b>-0.1270</b></td><td class="mono">&#8212;</td></tr>
+<tr><td class="mono">MnP<sub>4</sub>O<sub>11</sub></td><td>TM phosphate (무도핑 @LiMnO₂)</td><td>2.75</td><td class="mono">-0.0872</td><td class="mono">&#8212;</td></tr>
+<tr><td class="mono">Mn(PO<sub>3</sub>)<sub>2</sub></td><td>TM phosphate (무도핑 @LiMnO₂)</td><td>3.0</td><td class="mono">-0.0631</td><td class="mono">&#8212;</td></tr>
+<tr><td class="mono">P<sub>2</sub>S<sub>7</sub></td><td>thiophosphate (§2b 4.5 V 누출)</td><td>&#8212;</td><td class="mono">-0.0112</td><td class="mono">&#8212;</td></tr>
 </tbody></table>
 </div>
 
@@ -1504,6 +1518,24 @@ Li<sub>3</sub>PO<sub>4</sub> 는 전해질과 제일 잘 지내지만(&Delta;E&#
 <strong>가장 많이 나온 상(65 회)</strong>이다 &#8212; <strong>우리가 제일 많이 만든다고 예측하는 상이
 전해질 쪽에서는 거의 최악</strong>이다. 제일 나쁜 Nd<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>
 (-0.1470) 도 황산염이다. 유리한 쪽만 싣는 화면은 원장이 아니라 광고다.</p>
+
+<div class="box" style="border-left:3px solid #16a34a">
+<p style="margin:0 0 7px"><b>⭐ 2026-09-18 — 고전압에서는 판정이 <span style="color:#166534">뒤집힌다</span></b></p>
+<p style="margin:0 0 7px">빠진 칸을 채우니 <b>NdP₅O₁₄(−0.0790)가 무도핑 경로의 Co·Ni 수용상보다 덜 반응한다</b>:
+CoP₄O₁₁ <b>−0.1334</b> · Ni(PO₃)₂ <b>−0.1270</b> · NiP₄O₁₁ <b>−0.1281</b>.
+차이 <b>0.048~0.054 eV/atom</b> 은 결과 보기 전에 정한 유의폭 ±0.010 의 <b>4.8~5.4 배</b>다
+(§7 이 3.5 V 에서 "구분 안 됨" 이라 한 0.0046 과 자릿수가 다르다) ⇒ <b>해소된 차이</b>.</p>
+<p style="margin:0 0 7px">기전은 반응식에 있다 — 무도핑 TM 인산염은 전해질에 <b>환원돼 전이금속을 황화물로 끌고 간다</b>:
+<code>CoP₄O₁₁ + 전해질 → P₂S₅ + LiPO₃ + <b>CoPS + CoS₂</b></code>,
+<code>Ni(PO₃)₂ + 전해질 → P₄S₉ + LiPO₃ + <b>Ni₃S₄</b></code>.
+양극 쪽에서 인산염으로 소모된 TM 이 <b>전해질 쪽에서 한 번 더</b> 소모된다. Nd 인산염엔 그 경로가 없다 —
+Nd 는 양극 금속이 아니기 때문이다.</p>
+<p style="margin:0;font-size:.89rem"><b>⚠ 다만 Mn 계는 다르다.</b> Mn(PO₃)₂(−0.0631)가 NdP₅O₁₄ 보다
+<b>0.0159 덜</b> 반응한다(문턱의 1.6 배 — 구분됨). MnP₄O₁₁(−0.0872)는 0.0082 차로 구분 안 됨.
+⇒ <b>"Nd 산물이 무도핑 산물보다 항상 낫다" 고 쓰면 안 된다. Co·Ni 계에서 그렇다.</b><br>
+<b>⚠ 그리고 Nd₂(SO₄)₃(−0.1470)는 여전히 전체 최악이고 §B 인구조사에 8 회 나온다</b> —
+위 뒤집힘이 그것을 지우지 않는다.</p>
+</div>
 </div>
 
 <div class="card" data-claim="dualcompat.doping.defensive">
