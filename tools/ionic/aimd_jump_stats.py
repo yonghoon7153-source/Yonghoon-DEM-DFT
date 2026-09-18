@@ -127,6 +127,64 @@ def peak_position(rc, g, smooth_A=None):
     return raw + d * float(rc[1] - rc[0]), raw
 
 
+def slice_window(pos, cells, dt_ps, t_from_ps, t_to_ps):
+    """궤적을 [t_from, t_to] ps 로 자른다 (포함 · 프레임 0 기준 시각).
+
+    왜 필요한가 (2026-09-18): melt-quench 궤적 한 파일에 융체·담금질·유리가 다 들어 있다.
+    유리만 보려면 잘라야 하는데, 통째로 넣으면 담금질 중의 큰 이동이 유리의 홉 통계를 **덮는다**.
+
+    ⛔ 못 하는 것
+      · 온도를 안 본다 — **시각으로만** 자른다. 그 시각이 정말 유리인지는 부르는 쪽이 안다.
+      · 창이 비면 **죽는다**. 빈 창을 조용히 전체로 되돌리지 않는다.
+    """
+    T = len(pos)
+    t = np.arange(T) * dt_ps
+    if t_from_ps is None and t_to_ps is None:
+        return pos, cells, 0, T
+    lo = 0 if t_from_ps is None else int(np.searchsorted(t, t_from_ps - 1e-9, "left"))
+    hi = T if t_to_ps is None else int(np.searchsorted(t, t_to_ps + 1e-9, "right"))
+    if hi - lo < 2:
+        raise SystemExit(f"⛔ 창 [{t_from_ps}, {t_to_ps}] ps 에 프레임이 {hi-lo}개다 "
+                         f"(궤적 {T} 프레임 · dt {dt_ps} ps) — 빈 창을 전체로 되돌리지 않는다")
+    return pos[lo:hi], cells[lo:hi], lo, hi
+
+
+def hop_census(uw_Li, dt_ps, lag_ps, min_dist):
+    """**케이지 없이** 홉을 센다 — unwrap 변위가 문턱을 넘은 Li 의 수.
+
+    왜 케이지를 안 쓰나 (2026-09-18): `free_anions()` 는 **P 에 안 묶인 S + Cl** 을 케이지
+    중심으로 삼는데, 이 계는 PS₄ 보존율 1.00 이라 free S 가 **0 개**다. 중심이 Cl 12 개뿐이고
+    한 변이 14 Å 이라 '가장 가까운 중심이 바뀌었나' 는 홉이 아니라 **큰 구역 이동**을 센다.
+    아지로다이트용 정의를 비정질에 그대로 쓰면 조용히 다른 것을 재게 된다.
+
+    ⭐ **lag 이 무엇을 세는지 바꾼다** (2026-09-18 — 시험이 내 오해를 잡았다):
+      · `lag_ps = 0` → nlag = 창 전체 ⇒ 짝이 **하나뿐**이라 per_ion_max 는 사실상
+        **양끝 순변위**다. **왕복은 안 보인다** (갔다 돌아오면 0).
+      · `lag_ps` 를 짧게 주면 미끄럼창이 되어 **바깥 나들이(excursion)도 잡힌다**.
+      ⇒ "홉이 있었나" 를 물으면 **짧은 lag**, "자리를 옮겼나" 를 물으면 **창 전체**다.
+      둘은 다른 질문이고, 부르는 쪽이 어느 쪽인지 알고 골라야 한다.
+
+    ⛔ 못 하는 것
+      · 어느 lag 에서도 **이벤트 수의 하한**이다 — 한 이온이 여러 번 뛰어도 1 로 센다.
+      · 홉인지 유동인지 안 가른다. 유리에 유동이 거의 없다는 **가정** 위에 있다.
+      · 문턱을 정당화하지 않는다 — 부르는 쪽이 선언한다. (문턱이 판정을 지배한다)
+    """
+    nlag = max(1, int(round(lag_ps / dt_ps))) if lag_ps else len(uw_Li) - 1
+    if nlag >= len(uw_Li):
+        raise SystemExit(f"⛔ lag {lag_ps} ps 가 창보다 길다 ({len(uw_Li)} 프레임 × {dt_ps} ps)")
+    d = np.linalg.norm(uw_Li[nlag:] - uw_Li[:-nlag], axis=-1)
+    per_ion_max = d.max(axis=0)
+    moved = per_ion_max >= min_dist
+    return {"lag_ps": float(nlag * dt_ps), "min_dist_A": float(min_dist),
+            "n_Li": int(d.shape[1]), "n_moved": int(moved.sum()),
+            "frac_moved": float(moved.mean()),
+            "per_ion_max_A": {"max": float(per_ion_max.max()),
+                              "median": float(np.median(per_ion_max)),
+                              "p90": float(np.percentile(per_ion_max, 90))},
+            "⛔_하한이다": "한 이온이 여러 번 뛰어도 **1 로 센다**. 그리고 lag = 창 전체면 "
+                          "**왕복은 아예 안 보인다** (양끝 순변위와 같아진다)."}
+
+
 def van_hove(uw, dt_ps, lags_ps, rmax=None, nbins=160, dr=None):
     """자기 van Hove의 **radial displacement density** P_s(r,t) = 4πr²·G_s(r,t).
 
@@ -495,6 +553,53 @@ def _selftest():
             "[E2E·리뷰L] 비정본 D 를 일반 이름으로 저장하지 않는다")
     shutil.rmtree(td, ignore_errors=True)
 
+    # ── 창 슬라이스 · 케이지 없는 홉 집계 (2026-09-18) ────────────────────
+    _pos = np.zeros((11, 2, 3)); _cells = [np.eye(3) * 10.0] * 11
+    w, _, lo, hi = slice_window(_pos, _cells, 1.0, 3.0, 7.0)
+    chk((lo, hi, len(w)) == (3, 8, 5), f"[창] 3–7 ps 를 5 프레임으로 자른다 (얻음 {lo},{hi},{len(w)})")
+    w2, _, lo2, hi2 = slice_window(_pos, _cells, 1.0, None, None)
+    chk((lo2, hi2) == (0, 11), "[창] 인자가 없으면 전체를 그대로 준다")
+    try:
+        slice_window(_pos, _cells, 1.0, 9.5, 9.9); _hit = False
+    except SystemExit:
+        _hit = True
+    chk(_hit, "⛔음성: 창에 프레임이 2개 미만이면 **죽는다** (전체로 조용히 되돌리지 않는다)")
+
+    #: 합성 — 값이 **정확히 예측되게** 만든다 (앞서 sin/cos 로 두고 암산하다 틀렸다)
+    T, dtp = 51, 1.0
+    uw = np.zeros((T, 3, 3))
+    uw[:, 0, 0] = np.linspace(0, 5.0, T)                       # 이동체: 순변위 5.0 · 한 스텝 0.1
+    uw[:, 1, 0] = 0.2 * (-1.0) ** np.arange(T)                 # 진동: 순변위 0 · 한 스텝 0.4
+    #  ion 2 는 완전 정지
+    full = hop_census(uw, dtp, 0, 2.0)
+    chk(full["n_moved"] == 1 and full["n_Li"] == 3,
+        f"[양성] lag=창전체 · 문턱 2 Å → **1/3 Li** (얻음 {full['n_moved']}/{full['n_Li']})")
+    chk(abs(full["per_ion_max_A"]["max"] - 5.0) < 1e-6,
+        f"이온별 최대변위가 실제 순변위다 ({full['per_ion_max_A']['max']:.3f})")
+    # ⭐ lag 이 **누가 잡히는지** 를 바꾼다 — 짧은 lag 에서는 진동체가 잡히고 이동체가 안 잡힌다
+    short = hop_census(uw, dtp, 1.0, 0.3)
+    chk(short["n_moved"] == 1 and abs(short["per_ion_max_A"]["max"] - 0.4) < 1e-6,
+        f"[양성] lag=1 프레임 · 문턱 0.3 Å → 진동체만 (최대 스텝 {short['per_ion_max_A']['max']:.3f})")
+    # ⛔음성 — 문턱을 낮추면 진동까지 홉이 된다. 문턱은 **선언**이지 발견이 아니다.
+    chk(hop_census(uw, dtp, 1.0, 0.05)["n_moved"] == 2,
+        "⛔음성: 문턱 0.05 Å 면 이동체·진동체 **둘 다** 홉으로 센다")
+    # ⛔음성 — 아무도 안 움직이면 0 (0 을 '못 쟀다' 로 뭉개지 않는다)
+    still = np.zeros((T, 3, 3))
+    chk(hop_census(still, dtp, 0, 2.0)["n_moved"] == 0,
+        "⛔음성: 정지 궤적이면 **0** 이다 (없는 홉을 만들지 않는다)")
+    try:
+        hop_census(uw, dtp, 999.0, 2.0); _h2 = False
+    except SystemExit:
+        _h2 = True
+    chk(_h2, "⛔음성: lag 이 창보다 길면 **죽는다**")
+    # ⭐⛔음성 — **왕복**: lag=창전체면 안 보이고, 짧은 lag 면 보인다. 이게 lag 의 뜻이다.
+    back = np.zeros((T, 1, 3))
+    back[:, 0, 0] = np.concatenate([np.linspace(0, 4, T // 2 + 1), np.linspace(4, 0, T - T // 2)[1:]])
+    chk(hop_census(back, dtp, 0, 2.0)["n_moved"] == 0,
+        "⛔음성: 왕복은 **lag=창전체에서 안 보인다** — 그건 순변위이지 홉이 아니다")
+    chk(hop_census(back, dtp, 10.0, 1.0)["n_moved"] == 1,
+        "[양성] 같은 왕복이 **lag 10 프레임에서는 잡힌다** — lag 이 질문을 바꾼다")
+
     print("selftest " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
 
@@ -511,6 +616,11 @@ def _build_parser():
     ap.add_argument("--hop_smooth_ps", type=float, default=2.0,
                     help="rolling-mode window (ps) that removes boundary-vibration flicker "
                          "from the per-frame cage label before counting hops")
+    ap.add_argument("--t_from_ps", type=float, default=None,
+                    help="이 시각부터 (포함) — 융체·담금질을 빼고 유리만 보려면 쓴다")
+    ap.add_argument("--t_to_ps", type=float, default=None, help="이 시각까지 (포함)")
+    ap.add_argument("--hop_census_lag_ps", type=float, default=None,
+                    help="케이지 없이 변위로 홉을 센다 — 이 lag 로 (0 = 창 전체)")
     ap.add_argument("--hop_min_dist", type=float, default=2.5,
                     help="min unwrapped displacement (A) across a cage transition to count it "
                          "as a real inter-cage hop (excludes ~1 A rattle)")
@@ -554,6 +664,11 @@ def main():
     dt_ps = save_fs / 1000.0
 
     sym, pos, cells = read_traj(args.traj)
+    #: ⭐ 2026-09-18 — 창 슬라이스. melt-quench 한 파일에서 **유리 구간만** 보려면 필요하다.
+    pos, cells, _w_lo, _w_hi = slice_window(pos, cells, dt_ps, args.t_from_ps, args.t_to_ps)
+    if args.t_from_ps is not None or args.t_to_ps is not None:
+        print(f"[창] 프레임 {_w_lo}–{_w_hi-1} = {_w_lo*dt_ps:.1f}–{(_w_hi-1)*dt_ps:.1f} ps "
+              f"({_w_hi-_w_lo} 프레임)")
     T = len(pos)
     cell0 = cells[0]
     Li = np.where(sym == "Li")[0]
@@ -575,6 +690,18 @@ def main():
         D = slope / 6.0 * 1e-16 / 1e-12                     # cm^2/s
     np.savetxt(out / f"{args.label}_msd.csv",
                np.c_[t, msd], delimiter=",", header="t_ps,MSD_A2", comments="")
+
+    # ---- 케이지 없는 홉 집계 (2026-09-18) ----
+    hopc = None
+    if args.hop_census_lag_ps is not None:
+        hopc = hop_census(Li_uw, dt_ps, args.hop_census_lag_ps, args.hop_min_dist)
+        print(f"[홉집계] lag {hopc['lag_ps']:.1f} ps · 문턱 {hopc['min_dist_A']} Å → "
+              f"**{hopc['n_moved']}/{hopc['n_Li']} Li** 이동 ({100*hopc['frac_moved']:.1f} %) · "
+              f"이온별 최대변위 중앙값 {hopc['per_ion_max_A']['median']:.2f} Å · "
+              f"p90 {hopc['per_ion_max_A']['p90']:.2f} · max {hopc['per_ion_max_A']['max']:.2f}")
+        print("  ⛔ 이 수는 **하한**이다 — 되돌아온 홉이 한 번으로 보인다.")
+        (out / f"{args.label}_hop_census.json").write_text(
+            json.dumps(hopc, ensure_ascii=False, indent=1), encoding="utf-8")
 
     # ---- Van Hove self Gs(r, dt) ----
     rc, cols, hdr, skipped, vhinfo = van_hove(Li_uw, dt_ps, args.lags_ps,
