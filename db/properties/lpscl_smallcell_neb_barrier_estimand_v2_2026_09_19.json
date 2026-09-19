@@ -92,6 +92,12 @@
    "at": "2026-09-19",
    "state": "ratified",
    "note": "1저자 비준 (scientific_owner) — 내용 변경 없는 **재비준**. 리뷰 이행으로 봉인 대상이 바뀌어 지문이 어긋나 있었다."
+  },
+  {
+   "date": "2026-09-19",
+   "state": "round_no_verdict",
+   "by": "agent",
+   "note": "②(끝점 결합 생성) 실행 → **G-B7 통과 0/9**. Li 를 관측 최종 위치에 놓고 이완하면 돌아온다(이완 후 변위 0.09–1.80 Å). 골격 RMSD 0.047–0.109 Å 로 결합 생성 자체는 먹혔다. ev07 은 ev04 와 원시 쌍이 같아 sha256 가드로 중단. Eb 보고 없음. 기록: db/properties/lpscl_smallcell_neb_round2_gb7_2026_09_19.json"
   }
  ],
  "by": "agent · 2026-09-19 · 계산 0 (NEB 이미지 0 장)",
