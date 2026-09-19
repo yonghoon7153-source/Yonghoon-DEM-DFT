@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import collections
 import csv
 import hashlib
 import json
@@ -720,6 +721,101 @@ def diagnostics(rows):
             'levels': lv}
 
 
+#  ═══ 인계표 — 설계축을 밖(ML 담당)으로 넘긴다 (`LHS-02` 후속, 2026-09-19) ═════════
+#  ⛔ 세 가지가 이 내보내기의 계약이다.  하나라도 빼면 받는 쪽이 조용히 틀린다.
+#   ① **τ 값 열을 넣지 않는다** — `LHS-08` 이 열려 있어 `NOT_PERCOLATING` 이 두 원인을
+#      접고 있다.  열이 CSV 에 있으면 학습에 들어간다("있으니까 쓴다").  대신 **왜 없는지**
+#      를 `tau_*` 진단 열로 넘긴다.
+#   ② **status ≠ OK 인 칸은 빈칸**이고 사유는 옆 열에 있다 (`GAP2-05`).  0 이 아니다.
+#   ③ **유도열을 표시**한다 (`DESC-07`) — 일곱을 독립 타깃으로 세는 것을 막는다.
+HANDOVER_VALUE_COLS = ('phi_se', 'phi_am',
+                       'coverage_AM_P_hertz_pct', 'coverage_AM_S_hertz_pct',
+                       'coverage_AM_total_hertz_pct', 'porosity_sphere_pct_RECORD_ONLY')
+#: ⛔ 인계표에서 **제외**하는 열 (사유를 남긴다 — 조용히 빠지면 안 된다).
+HANDOVER_HELD_BACK = {
+    'tortuosity_dijkstra_SE': 'LHS-08 열림 — 130 중 14 만 값이 있고 `NOT_PERCOLATING` 이 '
+                              '규약 실패와 물리 미관통을 **한 값으로 접는다**.  재수확 뒤 공급.',
+}
+#: 수확 JSON 에서 **추가로** 실어 보내는 것 (새 계산 0 — 이미 측정돼 있다).
+HANDOVER_EXTRA = (
+    ('n_AM_P_measured',      ('phase_counts', 'AM_P'),                      '실측 입자수 (설계의 n_*_est 는 추정)'),
+    ('n_AM_S_measured',      ('phase_counts', 'AM_S'),                      '실측 입자수'),
+    ('n_SE_measured',        ('phase_counts', 'SE'),                        '실측 입자수'),
+    ('cov_AM_P_n_valid',     ('coverage_detail', 'counts', 'AM_P', 'n_valid'), '피복 평균의 분모'),
+    ('cov_AM_S_n_valid',     ('coverage_detail', 'counts', 'AM_S', 'n_valid'), '피복 평균의 분모'),
+    ('cov_n_capped',         ('coverage_detail', 'n_capped'),               'c_i 가 100 %% 로 잘린 횟수'),
+    ('cov_n_free_surf_invalid', ('coverage_detail', 'n_free_surface_invalid'), 'F_i <= 0 분모붕괴 (DESC-05)'),
+    ('closure_residual',     ('closure_residual',),                         'phi 닫힘 잔차 (QC)'),
+    ('tau_status',           ('status', 'tortuosity'),                      'tau 가 왜 없는지'),
+    ('tau_n_sampled',        ('tau_detail', 'n_sampled'),                   'tau 진단'),
+    ('tau_n_valid',          ('tau_detail', 'n_valid'),                     'tau 진단'),
+    ('tau_n_truncated',      ('tau_detail', 'n_truncated'),                 'tau 진단'),
+    ('tau_convention',       ('tau_detail', 'tau_convention'),              'tau 규약 문자열'),
+    ('plate_z_sim',          ('plate_z_sim',),                              '플래튼 z (sim)'),
+    ('plate_z_source',       ('plate_z_source',),                           '플래튼 출처'),
+    ('V_box_sim',            ('V_box_sim',),                                '상자 부피 (sim)'),
+    ('timestep',             ('timestep',),                                 '읽은 덤프 스텝'),
+    ('area_channel',         ('area_channel',),                             'L1-04 — 피복 면적이 무엇인가'),
+    ('atom_sha256',          ('raw', 'atom', 'sha256'),                     '원자료 추적'),
+)
+
+
+def _dig(h, path):
+    cur = h
+    for k in path:
+        if not isinstance(cur, dict) or k not in cur:
+            return None
+        cur = cur[k]
+    return cur
+
+
+def build_handover(rows, harvest, key='case_id'):
+    """설계행 + 수확 → 인계용 행 리스트.  **순수 함수**(파일을 안 쓴다) 라 시험 가능하다.
+
+    반환 (out_rows, cols, report).  계약 위반이면 `FillRefusal`.
+    """
+    #  ⚠ `load_harvest` 는 **dict(case → h)** 를 준다.  초판은 list 만 받아서
+    #    selftest(list) 는 통과하는데 프로덕션(dict)에서 죽었다 — 시험이 프로덕션
+    #    모양을 안 쓰면 그 자리가 곧 사각지대다 (규율 ⑤).  둘 다 받는다.
+    hv = dict(harvest) if isinstance(harvest, dict) else {h['case']: h for h in harvest}
+    miss = [r[key] for r in rows if r[key] not in hv]
+    if miss:
+        raise FillRefusal(f'수확에 없는 설계행 {len(miss)} 건: {miss[:5]} — 부분 인계는 금지 (DESC-09)')
+    design_cols = [c for c in rows[0]
+                   if c not in HANDOVER_VALUE_COLS
+                   and c not in HANDOVER_HELD_BACK
+                   and not c.endswith('_status')]
+    cols = list(design_cols)
+    for c in HANDOVER_VALUE_COLS:
+        cols += [c, c + '_status']
+    cols += [n for n, _p, _w in HANDOVER_EXTRA]
+    out, rep = [], {'n': 0, 'blank_by_status': collections.Counter(),
+                    'held_back': dict(HANDOVER_HELD_BACK)}
+    for r in rows:
+        h = hv[r[key]]
+        o = {c: r.get(c, '') for c in design_cols}
+        for c in HANDOVER_VALUE_COLS:
+            st = h['status'][DESCRIPTOR_STATUS_KEY[c]]
+            v = h.get(c)
+            #  계약 ② — OK 가 아니면 값 칸은 **비운다** (0 이 아니다)
+            o[c] = repr(float(v)) if (st == 'OK' and v is not None) else ''
+            o[c + '_status'] = st
+            if st != 'OK':
+                rep['blank_by_status'][st] += 1
+        for name, path, _why in HANDOVER_EXTRA:
+            v = _dig(h, path)
+            o[name] = '' if v is None else str(v)
+        #  계약 ③ — DESC-07 항등식을 **내보내는 표 위에서 다시** 잰다
+        e1 = abs(float(h['porosity_sphere_pct_RECORD_ONLY'])
+                 - 100.0 * (1.0 - float(h['phi_se']) - float(h['phi_am'])))
+        if e1 > DESC07_TOL['porosity']:
+            raise FillRefusal(f"{r[key]}: DESC-07 항등식 위반 {e1:.3e}")
+        out.append(o)
+        rep['n'] += 1
+    return out, cols, rep
+
+
+
 def _selftest():
     ok, fail = 0, []
 
@@ -1001,6 +1097,72 @@ def _selftest():
             and _df == DESCRIPTOR_FILL_EXPECTED['filled'])
     else:
         chk(f'⑭d 동결 설계 CSV 가 있다 ({DESCRIPTOR_FILL_EXPECTED["path"]})', False)
+
+    #  ═══ ⑯ 인계표 계약 (`build_handover`) — 규율 ② 대로 **먼저** 쓴 시험 ═══════════
+    def _hrow(case, tau_ok=False, mono=False):
+        """수확 한 건을 최소로 흉내낸다."""
+        phi_se, phi_am = 0.20, 0.50
+        return {
+            'case': case, 'timestep': 100, 'plate_z_sim': 0.04, 'plate_z_source': 'mesh_stl',
+            'V_box_sim': 1.0e-4, 'area_channel': 'dem_geometric_c_cpl22 …', 'closure_residual': 0.0,
+            'phi_se': phi_se, 'phi_am': phi_am,
+            'porosity_sphere_pct_RECORD_ONLY': 100.0 * (1 - phi_se - phi_am),
+            'coverage_AM_P_hertz_pct': (None if mono else 11.0),
+            'coverage_AM_S_hertz_pct': 22.0,
+            'coverage_AM_total_hertz_pct': 20.0,
+            'tortuosity_dijkstra_SE': (1.5 if tau_ok else None),
+            'status': {'phi': 'OK', 'porosity': 'OK',
+                       'coverage_AM_P': ('N_A_PHASE_ABSENT' if mono else 'OK'),
+                       'coverage_AM_S': 'OK', 'coverage_AM_total': 'OK',
+                       'tortuosity': ('OK' if tau_ok else 'NOT_PERCOLATING')},
+            'tau_detail': {'n_sampled': 7, 'n_valid': (7 if tau_ok else 0), 'n_truncated': 0,
+                           'tau_convention': 'harvest_v1/…'},
+            'coverage_detail': {'n_capped': 0, 'n_free_surface_invalid': 0,
+                                'counts': {'AM_P': {'n_valid': (0 if mono else 5)},
+                                           'AM_S': {'n_valid': 9}}},
+            'raw': {'atom': {'sha256': 'deadbeef'}},
+        }
+    _drows = [{'case_id': 'c1', 'd_am_p_um': 5.0, 'am_pct': 80.0},
+              {'case_id': 'c2', 'd_am_p_um': 9.0, 'am_pct': 90.0}]
+    _harv = [_hrow('c1', tau_ok=True), _hrow('c2', mono=True)]
+    _o, _c, _rep = build_handover(_drows, _harv)
+    chk('⑯a 행 수 보존 (2)', len(_o) == 2)
+    #  ★ 계약 ① — τ 값 열이 **없어야** 한다 (있으면 학습에 들어간다)
+    chk('⑯b τ 값 열이 인계표에 없다', 'tortuosity_dijkstra_SE' not in _c)
+    chk('⑯c 대신 τ 진단 열이 있다',
+        all(k in _c for k in ('tau_status', 'tau_n_valid', 'tau_convention')))
+    #  ★ 계약 ② — status != OK 는 **빈칸**이고 0 이 아니다
+    _mono = [r for r in _o if r['case_id'] == 'c2'][0]
+    chk('⑯d mono 의 coverage_AM_P 는 빈칸 (0 이 아니다)',
+        _mono['coverage_AM_P_hertz_pct'] == ''
+        and _mono['coverage_AM_P_hertz_pct_status'] == 'N_A_PHASE_ABSENT')
+    chk('⑯e 값 칸마다 _status 짝이 있다',
+        all(v + '_status' in _c for v in HANDOVER_VALUE_COLS))
+    #  ★ 실측 입자수가 설계 추정과 **다른 열**로 들어간다
+    chk('⑯f 실측 입자수 열이 있다',
+        all(k in _c for k in ('n_AM_P_measured', 'n_SE_measured', 'cov_AM_P_n_valid')))
+    #  ★ 변이 대조 1 — 항등식을 깨면 **거부**해야 한다 (안 깨지면 시험이 무의미)
+    _bad = [_hrow('c1', tau_ok=True), _hrow('c2', mono=True)]
+    _bad[0]['porosity_sphere_pct_RECORD_ONLY'] += 1.0
+    try:
+        build_handover(_drows, _bad); _r1 = False
+    except FillRefusal:
+        _r1 = True
+    chk('⑯g 변이① DESC-07 항등식을 깨면 거부한다', _r1)
+    #  ★ 변이 대조 2 — 수확이 모자라면 **부분 인계 금지**
+    try:
+        build_handover(_drows, [_hrow('c1')]); _r2 = False
+    except FillRefusal:
+        _r2 = True
+    chk('⑯h 변이② 수확 누락 시 부분 인계를 거부한다', _r2)
+    #  ★ 보류 사유가 **기계가 읽는 자리**에 있다 (산문에만 있으면 낡는다)
+    #  ★ 변이 대조 3 — **프로덕션 모양(dict)** 으로도 같은 결과여야 한다
+    _od, _cd, _ = build_handover(_drows, {h['case']: h for h in _harv})
+    chk('⑯j dict 모양(load_harvest 산출)으로도 동일', _od == _o and _cd == _c)
+    chk('⑯i 보류 열과 사유가 등록돼 있다',
+        'tortuosity_dijkstra_SE' in HANDOVER_HELD_BACK
+        and 'LHS-08' in HANDOVER_HELD_BACK['tortuosity_dijkstra_SE'])
+
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -1027,6 +1189,13 @@ if __name__ == '__main__':
                     help='--fill-descriptors 의 대상 설계 CSV (기본 = 동결 정본)')
     ap.add_argument('--fill-out', default='', metavar='CSV',
                     help='--fill-descriptors 산출 경로 (기본 = 제자리)')
+    ap.add_argument('--export-handover', default='', metavar='CSV',
+                    help='설계 CSV + 수확 JSON → **인계표**를 쓴다 (ML 담당에게 넘길 표).  '
+                         '⛔ τ 값 열은 넣지 않는다 (`LHS-08` 열림) — 대신 왜 없는지를 진단 열로 '
+                         '넘긴다.  status != OK 는 빈칸이고 0 이 아니다.')
+    ap.add_argument('--harvest', default='', metavar='DIR',
+                    help='--export-handover 가 읽을 수확 JSON 디렉터리 '
+                         '(기본 = DESCRIPTOR_FILL_EXPECTED["source"] 의 경로)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -1060,6 +1229,30 @@ if __name__ == '__main__':
         else:
             print('\n✓ 측정 열이 전부 찼다.')
         raise SystemExit(1 if _miss else 0)
+
+    if a.export_handover:
+        _root = pathlib.Path(__file__).resolve().parent.parent
+        _dp = pathlib.Path(a.design or DESCRIPTOR_FILL_EXPECTED['path'])
+        if not _dp.is_absolute():
+            _dp = _root / _dp
+        _hd = pathlib.Path(a.harvest or (_root / 'docs/data/lhs_descriptors_20260919'))
+        with _dp.open(encoding='utf-8-sig') as _fh:
+            _rows = list(csv.DictReader(_fh))
+        _harv = load_harvest(_hd)
+        _out, _cols, _rep = build_handover(_rows, _harv)
+        _op = pathlib.Path(a.export_handover)
+        if not _op.is_absolute():
+            _op = _root / _op
+        with _op.open('w', encoding='utf-8', newline='') as _fh:
+            _w = csv.DictWriter(_fh, _cols, lineterminator='\n')
+            _w.writeheader()
+            for _r in _out:
+                _w.writerow(_r)
+        print(f'→ {_op}   {_rep["n"]}행 × {len(_cols)}열')
+        print(f'   빈칸 사유: {dict(_rep["blank_by_status"])}')
+        for _k, _v in _rep['held_back'].items():
+            print(f'   ⛔ 보류 열 `{_k}` — {_v}')
+        raise SystemExit(0)
 
     if a.fill_descriptors:
         _root = pathlib.Path(__file__).resolve().parent.parent
