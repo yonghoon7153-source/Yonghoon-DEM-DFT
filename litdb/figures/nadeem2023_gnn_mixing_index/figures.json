@@ -1,0 +1,191 @@
+{
+ "slug": "nadeem2023_gnn_mixing_index",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-19",
+ "sources": [
+  "801db51f-05._A_particle_scale_mixing_measurement_method_using_a_generalized_nearest_neighbor_mixing_index.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Isometric view of the mixer assembly with two 45\u0003 blades attached at the bottom with minimal clearance between the blades and the mixer ﬂoor.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    61.9,
+    563.6,
+    333.1
+   ],
+   "w": 1097,
+   "h": 1131,
+   "dpi": 300,
+   "src": "801db51f-05._A_particle_scale_mixing_measurement_method_using_a_generalized_nearest_neighbor_mixing_index.pdf",
+   "blank": 0.637
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Images of cross-sectional layers A-D extracted from a reconstructed CT of the binary mixture depicting (a) initial ‘‘vertical-plane segregation” distribution pattern and (b) particle distribution after 30 rotations.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    61.9,
+    563.6,
+    263.4
+   ],
+   "w": 2218,
+   "h": 841,
+   "dpi": 300,
+   "src": "801db51f-05._A_particle_scale_mixing_measurement_method_using_a_generalized_nearest_neighbor_mixing_index.pdf",
+   "blank": 0.678
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Individual particles were then identiﬁed by locating circular objects in the images. The average pixel intensity of the identiﬁed particles was calculated and used to assign species. It can be observed in Fig. 3, that the bright colored Delrin\u0004 particles often had internal air pockets, which appeared as dark enclaves in their X-ray images and were often caught as particles dues to their cir- cular shape, giving rise to image recognition errors. These air pock- ets caused an artiﬁcial drop in the average pixel intensities of those particles thereby causing additional image recognition errors in species assignment. As the size of the particles was known, a size ﬁlter was used whereby only circular objects with diameters within 20 % of the average particle diameter were identiﬁed. As the air pockets were much smaller than the average particle size, this excluded them from being iden",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    538.0,
+    563.7,
+    746.6
+   ],
+   "w": 2218,
+   "h": 870,
+   "dpi": 300,
+   "src": "801db51f-05._A_particle_scale_mixing_measurement_method_using_a_generalized_nearest_neighbor_mixing_index.pdf",
+   "blank": 0.666
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Schematic of A-B neighboring pairs. Filled particles are A-type and open particles are B-type.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    495.4,
+    563.6,
+    738.1
+   ],
+   "w": 1097,
+   "h": 1012,
+   "dpi": 300,
+   "src": "801db51f-05._A_particle_scale_mixing_measurement_method_using_a_generalized_nearest_neighbor_mixing_index.pdf",
+   "blank": 0.548
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Mixing index proﬁle for monosized wood and Delrin\u0004 particles as a function of the number of blade rotations. 7",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    526.9,
+    563.6,
+    743.8
+   ],
+   "w": 2218,
+   "h": 905,
+   "dpi": 300,
+   "src": "801db51f-05._A_particle_scale_mixing_measurement_method_using_a_generalized_nearest_neighbor_mixing_index.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Proﬁles of mixing indices for large wood and small Delrin\u0004 particles as a function of the number of rotations, with segregation expected.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    61.9,
+    563.6,
+    279.8
+   ],
+   "w": 2218,
+   "h": 909,
+   "dpi": 300,
+   "src": "801db51f-05._A_particle_scale_mixing_measurement_method_using_a_generalized_nearest_neighbor_mixing_index.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Mixing values for small wood and large Delrin\u0004 particles with better mixing expected.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    307.1,
+    563.6,
+    524.8
+   ],
+   "w": 2218,
+   "h": 908,
+   "dpi": 300,
+   "src": "801db51f-05._A_particle_scale_mixing_measurement_method_using_a_generalized_nearest_neighbor_mixing_index.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Material properties of the particles used in the mixing experiments. Material Wood Delrin acetal",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    42.7,
+    562.7,
+    760.1
+   ],
+   "w": 2210,
+   "h": 2990,
+   "dpi": 300,
+   "src": "801db51f-05._A_particle_scale_mixing_measurement_method_using_a_generalized_nearest_neighbor_mixing_index.pdf",
+   "blank": 0.76
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 Particle details for the CT experiments. Case No. Delrin\u0004 Wood Size Ratio N1 d1 (mm) N2 d2 (mm) 1 286 12.7 286 12.7 1 2 680 9.5 286 12.7 1.33 3 286 12.7 680 9.5 0.75",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    42.7,
+    562.7,
+    760.1
+   ],
+   "w": 2210,
+   "h": 2990,
+   "dpi": 300,
+   "src": "801db51f-05._A_particle_scale_mixing_measurement_method_using_a_generalized_nearest_neighbor_mixing_index.pdf",
+   "blank": 0.888
+  }
+ ]
+}

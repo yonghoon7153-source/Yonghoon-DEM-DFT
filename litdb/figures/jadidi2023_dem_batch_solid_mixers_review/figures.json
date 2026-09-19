@@ -1,0 +1,71 @@
+{
+ "slug": "jadidi2023_dem_batch_solid_mixers_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-19",
+ "sources": [
+  "5629f9d5-07._A_comprehensive_review_of_the_application_of_DEM_in_the_investigation_of_batch_solid_mixers.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1: Schematic of movement of particles during each mixing mechanism: (a) convective mechanism, (b) diffusive mechanism, (c) shear mechanism.",
+   "rotated_deg": 0,
+   "bbox": [
+    56.4,
+    65.7,
+    544.3,
+    580.6
+   ],
+   "w": 2034,
+   "h": 2147,
+   "dpi": 300,
+   "src": "5629f9d5-07._A_comprehensive_review_of_the_application_of_DEM_in_the_investigation_of_batch_solid_mixers.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2: Segregation mechanisms: (a) trajectory, (b) elutriation, (c) percolation (sifting), and (d) push-away.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    244.1,
+    452.2,
+    712.0
+   ],
+   "w": 1698,
+   "h": 1950,
+   "dpi": 300,
+   "src": "5629f9d5-07._A_comprehensive_review_of_the_application_of_DEM_in_the_investigation_of_batch_solid_mixers.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 28,
+   "file": "fig_4.png",
+   "caption": "Figure 4: Quantification of the studies listed in Tables 7–13, based on inclusion or exclusion of 1- nonspherical particles (a), 2- cohesive powders (b) and 3- mono, bi, and poly-dispersed particles (c).",
+   "rotated_deg": 0,
+   "bbox": [
+    56.4,
+    65.7,
+    536.1,
+    480.5
+   ],
+   "w": 2000,
+   "h": 1729,
+   "dpi": 300,
+   "src": "5629f9d5-07._A_comprehensive_review_of_the_application_of_DEM_in_the_investigation_of_batch_solid_mixers.pdf",
+   "blank": 0.724
+  }
+ ]
+}

@@ -54,6 +54,13 @@
    "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf"
   ]
  },
+ "asylbekov2023_cb_fragmentation_pbe_dem_dry_mixing": {
+  "figures": 12,
+  "generated": "2026-09-19",
+  "pdfs": [
+   "35f02330-04._Modeling_of_Carbon_Black_Fragmentation_During_High-Intensity_Dry_Mixing_Using_the_Population_Balance_Equation_and_the_Discrete_Element_Method.pdf"
+  ]
+ },
  "aykol2014_cathode_coating_thermodynamics": {
   "figures": 10,
   "generated": "2026-09-11",
@@ -167,6 +174,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/52. Percolation micro-model to predict the effective properties of the composites.pdf"
+  ]
+ },
+ "chibwe2020_nnsi_segregation_index": {
+  "figures": 19,
+  "generated": "2026-09-19",
+  "pdfs": [
+   "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf"
   ]
  },
  "cho2024_conflicting_roles_conductive_additive": {
@@ -382,6 +396,13 @@
    "83. Han2025_ICEP_Binder_Ultrahigh_Loading_NCM811.pdf"
   ]
  },
+ "hare2026_dem_pept_dry_mixing_nmc622_eirich": {
+  "figures": 19,
+  "generated": "2026-09-19",
+  "pdfs": [
+   "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf"
+  ]
+ },
  "he2019_dft_for_battery_materials_review": {
   "figures": 21,
   "generated": "2026-08-05",
@@ -468,6 +489,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/10. A Finite Element Study of Elasto-Plastic Hemispherical Contact Against a Rigid Flat.pdf"
+  ]
+ },
+ "jadidi2023_dem_batch_solid_mixers_review": {
+  "figures": 3,
+  "generated": "2026-09-19",
+  "pdfs": [
+   "5629f9d5-07._A_comprehensive_review_of_the_application_of_DEM_in_the_investigation_of_batch_solid_mixers.pdf"
   ]
  },
  "jain2026_ml_pipelines_solid_state_electrolyte_design": {
@@ -854,6 +882,20 @@
    "59. Sup) Ling2026_SuppMat.docx (docx 임베디드 이미지 — tools/litdb/docx_to_text.py --media)"
   ]
  },
+ "lippke2023_dem_drying_structure_formation_lib": {
+  "figures": 9,
+  "generated": "2026-09-19",
+  "pdfs": [
+   "eed5f78d-08._Simulation_of_Structure_Formation_during_Drying_of_Lithium-Ion_Battery_Electrodes_using_Discrete_Element_Method.pdf"
+  ]
+ },
+ "lischka2025_dem_eirich_intensive_mixer_dry_mixing": {
+  "figures": 21,
+  "generated": "2026-09-19",
+  "pdfs": [
+   "03. Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method.pdf"
+  ]
+ },
  "liu2013_cage_methane_adsorption_hydrate_nucleation": {
   "figures": 5,
   "generated": "2026-08-05",
@@ -1075,6 +1117,13 @@
    "6ca561e7-104._Sup_Optimizing_Ionic_Conductivity_of_Lithium_in_Li_PS__Argyrodite_via_Dopant_Engineering.pdf"
   ]
  },
+ "nadeem2023_gnn_mixing_index": {
+  "figures": 9,
+  "generated": "2026-09-19",
+  "pdfs": [
+   "801db51f-05._A_particle_scale_mixing_measurement_method_using_a_generalized_nearest_neighbor_mixing_index.pdf"
+  ]
+ },
  "nam2026_primer_layer_dry_electrode_collector": {
   "figures": 33,
   "generated": "2026-08-11",
@@ -1140,6 +1189,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DFT 먹인 논문/43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf"
+  ]
+ },
+ "otani2025_dem_se_dispersion_aggregation_compression": {
+  "figures": 6,
+  "generated": "2026-09-19",
+  "pdfs": [
+   "117e2ceb-01._Quantitative_Study_of_Solid_Electrolyte_Particle_Dispersion_and_Compression_Processes_in_All-Solid-State_Batteries_Using_DEM.pdf"
   ]
  },
  "ou2026_microstructural_multiscale_fast_ion_transport": {
@@ -1398,6 +1454,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/06. Similarity analysis of inelastic contact.pdf"
+  ]
+ },
+ "sun2026_dem_extrusion_recirculation_dry_electrode": {
+  "figures": 10,
+  "generated": "2026-09-19",
+  "pdfs": [
+   "bb4a7605-09._Discrete_Element_Method_Modeling_of_an_Extrusion_Process_with_Recirculation_for_Dry_Manufacturing_of_Lithium-Ion_Battery_Electrodes.pdf"
   ]
  },
  "sundar2025_oxide_coating_screening_lpscl": {
@@ -1660,10 +1723,11 @@
   ]
  },
  "zeng2026_ga_llzto_site_specific_substitution": {
-  "figures": 6,
+  "figures": 33,
   "generated": "2026-09-16",
   "pdfs": [
-   "110. EnergyStorageMater_2026_Zeng_Ga_LLZTO_site_specific_decoupling_substitution_MAIN.pdf"
+   "110. EnergyStorageMater_2026_Zeng_Ga_LLZTO_site_specific_decoupling_substitution_MAIN.pdf",
+   "110. Sup) EnergyStorageMater_2026_Zeng_Ga_LLZTO_SI.docx"
   ]
  },
  "zhang2023_pfib_multiscale_imaging_4d_thick_cathode": {

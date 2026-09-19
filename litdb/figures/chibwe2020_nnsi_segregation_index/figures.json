@@ -1,0 +1,391 @@
+{
+ "slug": "chibwe2020_nnsi_segregation_index",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-19",
+ "sources": [
+  "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic diagram showing (a) homogeneous and (b) heterogeneous particle mixtures.",
+   "rotated_deg": 0,
+   "bbox": [
+    116.5,
+    548.5,
+    470.2,
+    732.1
+   ],
+   "w": 1475,
+   "h": 766,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.421
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Schematic illustration of the nearest-neighbour distance method.",
+   "rotated_deg": 0,
+   "bbox": [
+    328.7,
+    47.2,
+    543.5,
+    276.6
+   ],
+   "w": 896,
+   "h": 957,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Calculation ﬂowchart of the near-neighbour separation index (NNSI).",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    486.1,
+    566.1,
+    732.1
+   ],
+   "w": 1085,
+   "h": 1026,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. The (a) DEM geometry and (b) schematic of the Couette device used in the simulation (c) initial particle arrangement with no impeller (d) initial particle arrangement with an impeller. Using the particle number fraction, pi, particle-scale variances, S2 o, S2 equal to σ2 o [23]; r and S2 t can be calculated using; S2 o ¼ σ2 o ð13Þ X N p‾t ¼ 1 X N t ¼ 1 pi ð12Þ pi−p‾t ð Þ2 ð14Þ S2 N N i¼1 i¼1 r ¼ p 1−p ð Þ n ð15Þ S2 Furthermore, due to the fact that macroscopic quantiﬁcation of o is independent of sample size, n, it follows that S2 σ 2 o can be made",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    47.2,
+    567.6,
+    458.6
+   ],
+   "w": 2213,
+   "h": 1715,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.739
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. The (a) DEM geometry and (b) schematic of the bladed mixer used in the simulation (c) initial particle arrangement for Case XI (d) initial particle arrangement for Case XII.",
+   "rotated_deg": 0,
+   "bbox": [
+    34.6,
+    47.2,
+    552.0,
+    313.7
+   ],
+   "w": 2156,
+   "h": 1112,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.631
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Blade mixer near-neighbourSIas a function of time measured for Case XII at 60 RPM ﬁtted with a damped exponential function. The results of the separation index, SI calculated at the exit (E) as a function of time for the ﬁrst six cases given in Table 3 are shown in Fig. 7.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    47.2,
+    567.6,
+    220.4
+   ],
+   "w": 1098,
+   "h": 723,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Couette device separation index, SIas a function of time measured at the exit (E) for the Cases I to VI. The legend E_Case_I means exit (E) for Case I and so on. The curves are ﬁts of the DEM simulation data to Eqn. (29).",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    537.3,
+    567.6,
+    714.9
+   ],
+   "w": 1097,
+   "h": 741,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Snapshots of Case I simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    88.1,
+    47.2,
+    498.5,
+    169.0
+   ],
+   "w": 1710,
+   "h": 509,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.35
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Snapshots of Case II simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    88.1,
+    215.2,
+    498.5,
+    732.1
+   ],
+   "w": 1710,
+   "h": 2155,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.747
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Couette device separation index, SI as a function of time measured at all deﬁned segments for the Case II. The legend L_Case_II means left (L) for Case II and so on. The curves are ﬁts of the DEM simulation data to Eqn. (29).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    47.2,
+    299.5,
+    225.2
+   ],
+   "w": 1097,
+   "h": 743,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 9,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Couette device separation index, SI as a function of time measured for different particle number fractions. The legend L_Case_VII means left (L) for Case VII and so on. The curves are ﬁts of the DEM simulation data to Eqn. (29).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    536.5,
+    299.6,
+    714.9
+   ],
+   "w": 1097,
+   "h": 744,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 9,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Couette device separation index, SI as a function of time measured for different particle size ratios. The legend L_Case_II means left (L) for Case II and so on. The curves are ﬁts of the DEM simulation data to Eqn. (29).",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    47.2,
+    567.5,
+    225.6
+   ],
+   "w": 1097,
+   "h": 745,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 9,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Bladed mixer separation index, SI as a function of time measured for Case XI. The curves are ﬁts of the DEM simulation data to Eqn. (29).",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    547.4,
+    567.6,
+    723.5
+   ],
+   "w": 1098,
+   "h": 735,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 10,
+   "file": "fig_14.png",
+   "caption": "Fig. 14. Bladed mixer separation index, SI as a function of time measured for Case XII. The curves are ﬁts of the DEM simulation data to Eqn. (29).",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    47.2,
+    290.9,
+    223.3
+   ],
+   "w": 1097,
+   "h": 735,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 10,
+   "file": "fig_15.png",
+   "caption": "Fig. 15. Bladed mixer separation index, SI and particle scale mixing index, PSMI (Redrawn from Chandratilleke et al. [23]) as a function of time measured for Case XI for stirrer rate of 20 RPM. The SI curve is a ﬁt of the DEM simulation data to Eqn. (29).",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    522.5,
+    290.9,
+    714.9
+   ],
+   "w": 1097,
+   "h": 802,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Components of particle contact parameters. Particle contact parameter Equation",
+   "rotated_deg": 0,
+   "bbox": [
+    28.7,
+    32.7,
+    557.9,
+    745.0
+   ],
+   "w": 2206,
+   "h": 2969,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2 Simulation parameters used in the DEM model. Simulation property Particles Geometry Density, ρ (kgm−3) 3300 – Young's modulus, E (MPa) 10 100 Poisson's ratio, v (−) 0.25 0.30 Coefﬁcient of restitution, e (−) 0.20 0.32 Coefﬁcient of particle/wall restitution, ew (−) 0.32 0.32 Coefﬁcient of static friction, μ (−) 0.8 – Coefﬁcient of particle/wall static friction, μw (−) 0.8 0.8 Coefﬁcient of rolling friction, μr (−) 0.5 – Coefﬁcient of particle/wall rolling friction, μr;w (−) 0.5 0.5",
+   "rotated_deg": 0,
+   "bbox": [
+    28.7,
+    32.7,
+    557.9,
+    746.1
+   ],
+   "w": 2206,
+   "h": 2973,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 5,
+   "file": "tab_3.png",
+   "caption": "Table 3 Details of Couette device simulation cases.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    32.7,
+    566.6,
+    745.3
+   ],
+   "w": 2205,
+   "h": 2970,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 6,
+   "file": "tab_4.png",
+   "caption": "Table 4 Details of bladed mixer simulation cases.",
+   "rotated_deg": 0,
+   "bbox": [
+    28.7,
+    32.7,
+    557.9,
+    745.3
+   ],
+   "w": 2206,
+   "h": 2970,
+   "dpi": 300,
+   "src": "818dbd01-06._Particle_near-neighbour_separation_index_for_quantification_of_segregation_of_granular_material.pdf",
+   "blank": 0.797
+  }
+ ]
+}

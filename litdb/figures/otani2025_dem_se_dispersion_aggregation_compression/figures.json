@@ -1,0 +1,131 @@
+{
+ "slug": "otani2025_dem_se_dispersion_aggregation_compression",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-19",
+ "sources": [
+  "117e2ceb-01._Quantitative_Study_of_Solid_Electrolyte_Particle_Dispersion_and_Compression_Processes_in_All-Solid-State_Batteries_Using_DEM.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Electrode and cell manufacturing process for a typical all-solid-state battery.",
+   "rotated_deg": 0,
+   "bbox": [
+    131.1,
+    61.9,
+    464.1,
+    170.0
+   ],
+   "w": 1388,
+   "h": 452,
+   "dpi": 300,
+   "src": "117e2ceb-01._Quantitative_Study_of_Solid_Electrolyte_Particle_Dispersion_and_Compression_Processes_in_All-Solid-State_Batteries_Using_DEM.pdf",
+   "blank": 0.627
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Compression calculation process for aggregation num- bers of 1, 6, and 307. Gray spheres represent the active material, and yellow spheres represent the solid electrolyte. Aggregation numbers (a–d) 1, (e–h) 6, and (i–l) 307. Each ﬁgure shows the aggregation shape of the solid electrolyte and the corresponding compression process. (a, e, i) show the aggregation state of the solid electrolyte particles. (b, f, j) illustrate the initial random arrangement state, followed by gravity ﬁlling in (c, g, k), and the compressed state in (d, h, l).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    61.9,
+    555.9,
+    306.3
+   ],
+   "w": 1067,
+   "h": 1020,
+   "dpi": 300,
+   "src": "117e2ceb-01._Quantitative_Study_of_Solid_Electrolyte_Particle_Dispersion_and_Compression_Processes_in_All-Solid-State_Batteries_Using_DEM.pdf",
+   "blank": 0.695
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Compression pressure and relative density of each aggregation number.",
+   "rotated_deg": 0,
+   "bbox": [
+    125.2,
+    597.6,
+    470.1,
+    779.1
+   ],
+   "w": 1438,
+   "h": 757,
+   "dpi": 300,
+   "src": "117e2ceb-01._Quantitative_Study_of_Solid_Electrolyte_Particle_Dispersion_and_Compression_Processes_in_All-Solid-State_Batteries_Using_DEM.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) and (b) show the stress distributions for aggregation numbers 1 and 6, respectively, represented by a color map of the total force on each particle. (c) shows only the particles with an aggregation number of 6 that were subjected to a force greater than 0.04 N.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    61.9,
+    555.9,
+    195.0
+   ],
+   "w": 2154,
+   "h": 556,
+   "dpi": 300,
+   "src": "117e2ceb-01._Quantitative_Study_of_Solid_Electrolyte_Particle_Dispersion_and_Compression_Processes_in_All-Solid-State_Batteries_Using_DEM.pdf",
+   "blank": 0.562
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a, b, c) Cross-sectional images of the electrode for aggregation numbers of 1 (a), 6 (b), and 307 (c). (d) Relationship between reaction area and aggregation number. The black particles represent the active material particles, and the yellow particles represent single particle of the solid electrolyte. Reaction area was normalized to the ideal dispersed state as 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    241.0,
+    555.9,
+    490.9
+   ],
+   "w": 2154,
+   "h": 1042,
+   "dpi": 300,
+   "src": "117e2ceb-01._Quantitative_Study_of_Solid_Electrolyte_Particle_Dispersion_and_Compression_Processes_in_All-Solid-State_Batteries_Using_DEM.pdf",
+   "blank": 0.838
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1. The physical properties and calculation conditions of the active material, solid electrolyte, and calculation domain used in the DEM calculation.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.4,
+    167.0,
+    554.9,
+    796.0
+   ],
+   "w": 2145,
+   "h": 2622,
+   "dpi": 300,
+   "src": "117e2ceb-01._Quantitative_Study_of_Solid_Electrolyte_Particle_Dispersion_and_Compression_Processes_in_All-Solid-State_Batteries_Using_DEM.pdf",
+   "blank": 0.918
+  }
+ ]
+}

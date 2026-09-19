@@ -1,0 +1,191 @@
+{
+ "slug": "lippke2023_dem_drying_structure_formation_lib",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-19",
+ "sources": [
+  "eed5f78d-08._Simulation_of_Structure_Formation_during_Drying_of_Lithium-Ion_Battery_Electrodes_using_Discrete_Element_Method.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Particle size distribution of NCM 622 measured using laser dif- fraction (gray). The smallest and coarsest 15% of size distribution are neglected and the size distribution is adjusted (blue). The discretized size distribution for the DEM simulation is depicted in red.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    65.5,
+    553.0,
+    273.3
+   ],
+   "w": 1055,
+   "h": 867,
+   "dpi": 300,
+   "src": "eed5f78d-08._Simulation_of_Structure_Formation_during_Drying_of_Lithium-Ion_Battery_Electrodes_using_Discrete_Element_Method.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Propagation of the drying in the pilot-scale dryer. Each dryer sec- tion has a length of 2 m, an individual dryer temperature, as well as an individual heat transfer coefﬁcient. The temperature of the ﬁlm results from the equilibrium between ingoing energy and outgoing energy due to solvent evaporation. The ﬁlm thickness decreases as the ﬁlm shrinks until the particle network consolidates. This ﬁlm shrinkage rate is linearly ﬁtted and transferred to the DEM simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    65.5,
+    298.1,
+    251.3
+   ],
+   "w": 1055,
+   "h": 775,
+   "dpi": 300,
+   "src": "eed5f78d-08._Simulation_of_Structure_Formation_during_Drying_of_Lithium-Ion_Battery_Electrodes_using_Discrete_Element_Method.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Temperature and solvent mass fraction of the ﬁlm in the pilot- scale dryer calculated by the dryer model.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    341.5,
+    298.0,
+    529.8
+   ],
+   "w": 1055,
+   "h": 785,
+   "dpi": 300,
+   "src": "eed5f78d-08._Simulation_of_Structure_Formation_during_Drying_of_Lithium-Ion_Battery_Electrodes_using_Discrete_Element_Method.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Exemplary wet ﬁlm in the beginning of the simulation (left) and dried structure (right).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    536.9,
+    466.2,
+    706.6
+   ],
+   "w": 1768,
+   "h": 707,
+   "dpi": 300,
+   "src": "eed5f78d-08._Simulation_of_Structure_Formation_during_Drying_of_Lithium-Ion_Battery_Electrodes_using_Discrete_Element_Method.pdf",
+   "blank": 0.712
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Development of the ﬂuid surface and the coating thickness dur- ing the DEM drying simulation. The black dot marks the point, where a ﬁxed coating thickness is assumed.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.0,
+    65.5,
+    550.0,
+    267.4
+   ],
+   "w": 1055,
+   "h": 843,
+   "dpi": 300,
+   "src": "eed5f78d-08._Simulation_of_Structure_Formation_during_Drying_of_Lithium-Ion_Battery_Electrodes_using_Discrete_Element_Method.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Thickness and density for different areal loadings.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    65.5,
+    550.9,
+    251.2
+   ],
+   "w": 1046,
+   "h": 775,
+   "dpi": 300,
+   "src": "eed5f78d-08._Simulation_of_Structure_Formation_during_Drying_of_Lithium-Ion_Battery_Electrodes_using_Discrete_Element_Method.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Pore size distribution for an areal loading of 25.2 mg cm\u00022.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    500.3,
+    551.9,
+    705.7
+   ],
+   "w": 1050,
+   "h": 857,
+   "dpi": 300,
+   "src": "eed5f78d-08._Simulation_of_Structure_Formation_during_Drying_of_Lithium-Ion_Battery_Electrodes_using_Discrete_Element_Method.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1. Overview of the formulation used.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    11.9,
+    589.3,
+    771.9
+   ],
+   "w": 2156,
+   "h": 2999,
+   "dpi": 284,
+   "src": "eed5f78d-08._Simulation_of_Structure_Formation_during_Drying_of_Lithium-Ion_Battery_Electrodes_using_Discrete_Element_Method.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2. Overview of the ﬁlm shrinkage rates used for the different electrodes in each segment of the dryer (areal loading relates to the weight of the dried electrodes).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    11.9,
+    589.3,
+    771.9
+   ],
+   "w": 2144,
+   "h": 2999,
+   "dpi": 284,
+   "src": "eed5f78d-08._Simulation_of_Structure_Formation_during_Drying_of_Lithium-Ion_Battery_Electrodes_using_Discrete_Element_Method.pdf",
+   "blank": 0.9
+  }
+ ]
+}
