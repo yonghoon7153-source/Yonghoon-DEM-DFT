@@ -60,7 +60,7 @@
       --struct db/structures/comp1_V0_k444.cif --kind inter \
       --supercell 1 1 1 --tag conv_111        # comp1 은 λ₁ 10.06 이라 --force 불필요
 """
-import argparse, json, os, sys, time
+import argparse, hashlib, json, os, sys, time
 from pathlib import Path
 
 import numpy as np
@@ -1170,9 +1170,13 @@ def selftest():
             q = np.array([[xx, 7, 7]] + _ring, float)
             at0 = _A(_sym, positions=q, cell=_cell, pbc=True)
             at0.calc = _LJ(epsilon=0.02, sigma=2.6)
+            #: 원시 프레임 — 결합 생성(`--couple_endpoints_from`)의 입력이다
+            _A(_sym, positions=q, cell=_cell, pbc=True).write(
+                str(_ev / f"{tag}_{side}.xyz"))
             _FIRE(at0, logfile=None).run(fmax=0.02, steps=400)
             at0.write(str(_ev / "relaxed" / f"{tag}_{side}_relaxed.xyz"))
-        _evs.append({"tag": tag, "atom_index": 0, "disp_A": 14.0 - 2 * x0})
+        _evs.append({"tag": tag, "atom_index": 0, "disp_A": 14.0 - 2 * x0,
+                     "disp_minimum_image_A": 14.0 - 2 * x0})
     (_ev / "events.json").write_text(json.dumps({"events": _evs}, ensure_ascii=False),
                                      encoding="utf-8")
     _real = load_calc
@@ -1340,6 +1344,50 @@ def selftest():
     chk("문턱 없이" in _det["⚠_nonli_rmsd"],
         "골격 RMSD 가 문턱이 아니라는 것을 세부에 적어 들고 다닌다")
 
+    # ── 결합 생성 오케스트레이터를 **실제로 돌린다** (2026-09-19) ──────────────
+    #   ⛔ 이 시험이 없어서 `sha256` 미정의가 kgy 에서 NameError 로 터졌다. 순수 함수
+    #     (mic_disp · couple_verdict) 만 시험하고 본문을 한 번도 안 돌린 selftest 가
+    #     **초록이었다**. 배선은 배선으로만 잡힌다.
+    globals()["load_calc"] = lambda device="cuda": _LJ(epsilon=0.02, sigma=2.6)
+    try:
+        _cr = couple_endpoints_from_events(str(_ev), out_sub="coupled",
+                                           log=lambda *a, **k: None)
+    finally:
+        globals()["load_calc"] = _real
+    chk(_cr["n_events"] == 2 and len(_cr["rows"]) == 2,
+        f"[배선] 결합 생성 본문이 끝까지 돈다 ({_cr.get('n_events')} 사건)")
+    chk((_ev / "coupled" / "ev01_atom0_i_relaxed.xyz").exists()
+        and (_ev / "coupled" / "ev01_atom0_f_relaxed.xyz").exists(),
+        "[배선] 결합 생성한 끝점을 coupled/ 에 쓴다")
+    chk((_ev / "endpoint_coupled_gate.json").exists(), "[배선] G-B7 판정 JSON 을 쓴다")
+    _r0 = _cr["rows"][0]
+    chk({"li_disp_A", "n_over_thresh", "nonli_rmsd_A", "sha256", "raw_sha256",
+         "moved_step_A"} <= set(_r0),
+        f"결합 생성 행이 원시량을 전부 적는다 (빠진 것 "
+        f"{ {'li_disp_A','n_over_thresh','nonli_rmsd_A','sha256','raw_sha256','moved_step_A'} - set(_r0) })")
+    chk(_r0["sha256"]["i"] != _r0["sha256"]["f"], "⛔음성: 한 사건의 두 끝점이 서로 다르다")
+    chk(_cr["rows"][0]["raw_sha256"] != _cr["rows"][1]["raw_sha256"],
+        "⛔음성: 서로 다른 두 사건의 원시 쌍이 다르다 (fixture 가 실제로 다른지 먼저 본다)")
+    #: ⛔음성 — **같은 원시 쌍을 쓰는 두 사건이면 즉시 중단** (ev04/ev07 재발 차단)
+    import shutil as _sh
+    _dup = Path(_tf.mkdtemp()) / "events"; _dup.mkdir(parents=True)
+    for _f in _ev.glob("ev01_atom0_*.xyz"):
+        _sh.copy(_f, _dup / _f.name)
+        _sh.copy(_f, _dup / _f.name.replace("ev01_atom0", "ev09_atom0"))
+    (_dup / "events.json").write_text(json.dumps({"events": [
+        {"tag": "ev01_atom0", "atom_index": 0},
+        {"tag": "ev09_atom0", "atom_index": 0}]}, ensure_ascii=False), encoding="utf-8")
+    globals()["load_calc"] = lambda device="cuda": _LJ(epsilon=0.02, sigma=2.6)
+    try:
+        couple_endpoints_from_events(str(_dup), log=lambda *a, **k: None)
+        _dup_stopped = False
+    except SystemExit as _e:
+        _dup_stopped = "같다" in str(_e)
+    finally:
+        globals()["load_calc"] = _real
+    chk(_dup_stopped,
+        "⛔음성: 두 사건이 **같은 원시 끝점 쌍**을 쓰면 중단한다 (ev04/ev07 재발 차단)")
+
     _sp, _sys  # noqa
 
     print("selftest PASS" if ok else "selftest FAIL")
@@ -1354,6 +1402,13 @@ def selftest():
 #   같으면 그 끝점은 어느 특정 Li 의 홉도 정의하지 않는다.
 #   ⇒ 시작만 이완하고 **이동 Li 하나만** 옮겨 끝점을 만든다 (2026-08-21 처방).
 COUPLE_DISP_A = 2.0          # G-B7 문턱. 사건 선택 문턱(2.0 Å)과 같은 값 — 카드 v2 §3
+
+
+def sha256(path) -> str:
+    """파일 내용의 sha256. ⛔ 2026-09-19: 이 헬퍼가 **없어서** 결합 생성이 NameError 로
+    죽었다. 순수 함수만 시험하고 오케스트레이터를 한 번도 안 돌린 selftest 가 초록이었다.
+    """
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def mic_disp(cell, pos_a, pos_b):
