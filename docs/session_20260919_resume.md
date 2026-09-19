@@ -264,9 +264,20 @@ PY
    ⚠ 기존 `webapp/templates/hetero.html` (`/hetero`, 커밋 `6c13f19c8`) 이 이미 있으니 그 옆에 붙인다.
 
 ### 그 전에 정리돼 있어야 하는 것
-- `LHS-02` 닫기 — 설계 CSV 의 빈 측정 3열을 `docs/data/lhs_descriptors_20260919/` 로 채운다.
-  ⚠ `DESC-07`(7열을 7 독립 회귀로 세면 안 된다) · `DESC-08`(291 코퍼스와 그대로 합치면 안 된다) ·
-  `DESC-09`(미실행 8개는 무작위 결측이 아니다) 를 **같이** 처리한다.
+- ✅ **`LHS-02` 닫았다** (2026-09-19, `c540de993` · 원장 `claimed_fixed`).
+  설계 CSV 열 **39 → 46** — 디스크립터마다 `<열>_status` 가 붙는다.  설계 노브 실측 diff **0**.
+  ```
+  phi_se 130 · phi_am 130 · coverage_AM_P/S 100 (mono 30 = 없는 상) ·
+  coverage_AM_total 130 [유도] · tortuosity 14 (⚠ LHS-08) · porosity 130 [유도]
+  ```
+  **어느 칸에도 0 을 안 썼다** — `status != OK` 면 값은 비우고 옆에 사유를 적는다.
+  `DESC-07` 두 항등식은 실측으로 **성립**(① 2.842e-14 · ② 정확히 0)하고 병합기가 매번 다시
+  잰다.  `DESC-09` 가 지목한 `mono_AM_S × d_SE=2` **다섯 점이 전부 측정**됐고 그 중
+  `lhs00_109` 는 τ = 1.4136 까지 나왔다 ⇒ *"한 수준이 통째로 빈"* 상태가 사라졌다.
+  ⛔ 그래도 `DESC-07/08/09` 는 **열린 채**다 — 각자 남은 절반은 **회귀 단계**에서 걸린다:
+  ⓐ 실현 N 을 모르는 모델이 `C_total` 을 예측했다고 하면 안 된다 (`DESC-07`)
+  ⓑ `ml_design_structure.py:540` 의 `d_am=0` 40행 수용은 **안 건드렸다** (`DESC-08`)
+  ⓒ `finite_size_flag` 는 설계의 결정론적 함수 ⇒ 고정 finite-box 규약 안의 예측 (`DESC-09`)
 - **Phase A** — 96팔이 v100 에서 진행 중.  완주하면
   `phase_a_arms_from_payload.py --code-sha-missing-ok "대역 밖 봉인 — seal_breach §5"` 로 어댑터,
   그 다음 `phase_a_order_verdict.py`.  ⚠ **QC 8팔 미실행이면 `HOLD`** 다 (이제 8 전수를 요구한다).
