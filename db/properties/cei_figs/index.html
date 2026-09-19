@@ -50,6 +50,36 @@
          border-radius:10px;padding:14px;overflow:hidden}
   figure img{width:100%;height:auto;display:block;border-radius:5px;background:#fff}
   figcaption{color:var(--mut);font-size:.82rem;line-height:1.6;margin-top:10px}
+
+  /* ══ v2 재조직 (2026-09-19) ═══════════════════════════════════════════
+     왜: 110 KB 가 통째로 펼쳐져 있었고(details 3 개), card.warn 이 15 개라
+     강조가 강조 구실을 못 했다. ⇒ 결론은 맨 위, 근거는 접기, 금지는 요약에 발췌.
+     ⚠ 접기는 인쇄 스크립트(아래 <script>)가 펼치므로 PDF 에서 내용이 사라지지 않는다. */
+  .tldr{border:1px solid var(--line);border-radius:12px;background:var(--card);
+        padding:18px 20px;margin:8px 0 16px}
+  .tldr-t{font:600 1.02rem/1.3 "IBM Plex Serif",Georgia,serif;margin-bottom:12px}
+  .tldr-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:700px){.tldr-grid{grid-template-columns:1fr}}
+  .tldr-lbl{font-weight:600;font-size:.84rem;margin-bottom:6px}
+  .tldr-yes .tldr-lbl{color:var(--ok)} .tldr-no .tldr-lbl{color:var(--ox)}
+  .tldr-yes{border-left:3px solid var(--ok);padding-left:12px}
+  .tldr-no {border-left:3px solid var(--ox);padding-left:12px}
+  .tldr ul{margin:0;padding-left:17px;font-size:.88rem;line-height:1.65}
+  .tldr li{margin-bottom:5px}
+  .tldr-foot{margin-top:14px;padding-top:11px;border-top:1px solid var(--line);
+             color:var(--mut);font-size:.8rem;line-height:1.6}
+  .sec{scroll-margin-top:92px}
+  @media print{.toc{position:static;border-bottom:none}}
+  .secfold{border-top:1px solid var(--line)}
+  .secfold>summary{cursor:pointer;list-style:none;position:relative;
+                   padding:16px 0 12px 18px;display:flex;flex-direction:column;gap:3px}
+  .secfold>summary::-webkit-details-marker{display:none}
+  .secfold>summary::before{content:"▸";position:absolute;left:0;top:19px;
+                           color:var(--nd);font-size:.82rem}
+  .secfold[open]>summary::before{content:"▾"}
+  .secfold>summary h2.sec-h{border-top:none;padding-top:0;margin:0}
+  .sec-one{color:var(--mut);font-size:.87rem;line-height:1.55}
+  .secfold[open]>summary .sec-one{opacity:.7}
   .tblwrap{overflow-x:auto;margin:14px 0}
   table{border-collapse:collapse;width:100%;font-size:.86rem;
         font-variant-numeric:tabular-nums}
@@ -97,7 +127,7 @@
   .figexp p{margin:0 0 9px;max-width:66ch}
   .figexp p:last-child{margin-bottom:0}
   /* 목차 — 8 절이 되면서 화면이 길어졌다. 접히지 않는 한 줄 지도. */
-  .toc{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 30px;padding:0;list-style:none}
+  .toc{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 30px;padding:0;list-style:none;position:sticky;top:0;z-index:20;background:var(--bg);padding-top:9px;padding-bottom:9px;border-bottom:1px solid var(--line)}
   .toc a{display:inline-block;font-size:.78rem;text-decoration:none;
          border:1px solid var(--line);background:var(--card);color:var(--mut);
          border-radius:999px;padding:4px 11px}
@@ -158,6 +188,24 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes ×
 </div>
 
 <ul class="toc"><li><a href="#s1"><b>1</b> 분해</a></li><li><a href="#s2"><b>2</b> 산물이 말한다</a></li><li><a href="#s2b"><b>2b</b> 얼마나 — 정량 곡선</a></li><li><a href="#s3"><b>3</b> 검증 — 절반 철회</a></li><li><a href="#s4"><b>4</b> 전 혼합범위 스캔</a></li><li><a href="#s5"><b>5</b> 다른 3가 도펀트</a></li><li><a href="#s6"><b>6</b> 갭 단계 계획</a></li><li><a href="#s7"><b>7</b> 반대쪽 접촉(전해질)</a></li><li><a href="#s8"><b>8</b> 양극별 원자료</a></li><li><a href="#s8b"><b>8b</b> 반론 여덟</a></li><li><a href="#s9"><b>9</b> 말하면 안 되는 것</a></li></ul>
+<div class="tldr">
+  <div class="tldr-t">이 페이지가 무엇을 말하나 — 한 화면</div>
+  <div class="tldr-grid">
+    <div class="tldr-yes"><div class="tldr-lbl">✅ 말하는 것</div><ul>
+      <li>고전압에서 Nd 계 계면은 <b>남은 P 를 인산염으로 끌어간다</b> — 양극 TM 이 덜 빠진다</li>
+      <li>그 이득은 <b>조건부</b>다. 게이트를 전 점 통과한 열은 <b>LiCoO₂ 4.30 V · LiNiO₂ 3.50 V 둘뿐</b> (24 칸 중 12 칸 탈락)</li>
+      <li>전해질 쪽은 <b>“새로 망가뜨리지는 않는다”</b> 까지</li>
+    </ul></div>
+    <div class="tldr-no"><div class="tldr-lbl">⛔ 말하지 않는 것 <span class="mono">— 전체 22 개는 <a href="#s9">§9</a></span></div><ul>
+      <li><b>“Nd 가 산화 안정성·전압창을 넓힌다”</b> — 우리 데이터가 <b>반증한다</b>. 2.14 V → <b>1.92 V</b>, 0.22 V <b>좁힌다</b></li>
+      <li><b>“Nd 가 최적의 3 가 도펀트다”</b> — 어느 축에서도 1 등이 아니다. 쓸 수 있는 것은 <b>“Gd·Y·Sc·La 와 구분되지 않는다”</b> 까지</li>
+      <li><b>“NdPO₄ 가 Li₃PO₄ 보다 깊은 P 싱크다”</b> — <b>철회됨</b> (+1.5035 eV/P 양수)</li>
+      <li>이 이득을 <b>부동태화</b>로 읽기 — 계면 <b>반응 구동력</b>이지 산물의 전자 성질이 아니다</li>
+    </ul></div>
+  </div>
+  <div class="tldr-foot">⚠ 값을 인용하기 전 30 초: <a href="#s9">§9 금지 서술 22 개</a> → <code>db/properties/</code> 원장 → <code>db/governance/decisions.json</code>. 이 페이지의 숫자는 전부 원장에서 옮긴 것이고, 충돌하면 <b>원장이 이긴다</b>.</div>
+</div>
+
 
 <div class="card answer">
 <p class="lead" style="margin:0"><strong>질문 둘</strong> — ① 이 효과가 Nd 특화인가 O 효과인가?
@@ -176,9 +224,14 @@ Nd 고유가 아니라 <b>3가 양이온의 성질</b>이다(§5). 일곱을 여
 <p style="margin:10px 0 0"><strong>기전</strong> — <span class="nd">Nd</span> 는 <em>더 좋은</em>
 인산염을 만드는 게 아니라 <strong>Li 를 안 쓰는</strong> 인산염 경로를 연다 (NdPO₄ 는 P 하나당
 Li 0 개, Li₃PO₄ 는 3 개). 고전압이 Li 를 빼가면서 그 경로의 값어치가 커진다 — §3.</p>
+
+
 </div>
 
-<h2 id="s1">1. 분해 — 대조 조성 둘을 추가해서 갈랐다</h2>
+<section id="s1" class="sec">
+<details class="secfold">
+<summary><h2 class="sec-h">1. 분해 — 대조 조성 둘을 추가해서 갈랐다</h2><span class="sec-one">전압 6 점 × 조성 4 — Li 재고 교란을 가르려고 <b>대조 조성 둘</b>을 추가했다</span></summary>
+<div class="secbody">
 
 <p class="plain">익숙한 것에 빗대면 <b>블록 탑에서 블록을 빼는 것</b>이다.
 전지를 충전하면 전해질에서 Li 가 양극 쪽으로 빠져나간다 — 그러니까
@@ -577,7 +630,13 @@ Li 하나당 기울기는 84~94 meV/atom/V 로 세 쌍에서 2 % 안에 모인�
 (<code>db/properties/cei_nd_p_capture_result_2026_09_18.json</code>).</li>
 </ul>
 
-<h2 id="s2">2. 왜 고전압에서 Nd 인가 — 산물이 말한다</h2>
+</div>
+</details>
+</section>
+<section id="s2" class="sec">
+<details class="secfold">
+<summary><h2 class="sec-h">2. 왜 고전압에서 Nd 인가 — 산물이 말한다</h2><span class="sec-one">hull 산물 목록의 패턴 — 남은 P 가 어디로 가나</span></summary>
+<div class="secbody">
 
 <p>hull 은 <em>무엇이</em> 생기는지를 말하지 <em>왜</em> 를 말하지 않는다. 그런데 산물 목록에 뚜렷한 패턴이 있다.</p>
 
@@ -764,7 +823,13 @@ Fig. 1(b) 에서 측정된 사실이고(잔차가 문턱의 1/20), 흔들린 것
 
 
 <!-- ═══ ⛔ GENERATED (§3·§4) — tools/figures/plot_cei_nd_o_decomposition.py 가 유일한 소스다. 여기서 고치면 **다음 재생성에 지워진다** (2026-09-16 에 비유 박스 4 개를 그렇게 잃었다). 고칠 일이 있으면 그 파일에서 고치고 다시 생성한다. ═══ -->
-<h2 id="s2b">2b. 그 산물이 양극을 <b>얼마나</b> 아끼나 — 정량 곡선 <span style="font-size:.8rem;color:var(--mut)">(2026-09-18 신설)</span></h2>
+</div>
+</details>
+</section>
+<section id="s2b" class="sec">
+<details class="secfold">
+<summary><h2 class="sec-h">2b. 그 산물이 양극을 <b>얼마나</b> 아끼나 — 정량 곡선 <span style="font-size:.8rem;color:var(--mut)">(2026-09-18 신설)</span></h2><span class="sec-one">TM 보호율 곡선 — <b>24 칸 중 12 칸 탈락</b>, 전 점 통과는 LiCoO₂ 4.30 V · LiNiO₂ 3.50 V <b>둘뿐</b></span></summary>
+<div class="secbody">
 
 <p>§2 는 <i>무엇이</i> 생기는지를 보였다. 여기는 <i>얼마나</i> 다. 지표는
 <b>좌변 양극이 내놓은 전이금속 중 인산염으로 끌려간 몫</b>이고, 대조군은 <b>Li 를 같게 맞춘 무-Nd 조성</b>이다
@@ -837,7 +902,13 @@ x 를 0.02 → 0.05 로 올리면 보호가 <b>2.6 배</b>가 되고 Li 는 오�
 기록 <code>db/properties/cei_nd_p_capture_result_2026_09_18.json</code> (proposed) ·
 문헌·자가반증 감사 <code>db/properties/cei_nd_novelty_audit_2026_09_18.json</code> (proposed).</p>
 
-<h2 id="s3">3. 검증 — 그리고 가설의 절반이 틀렸다</h2>
+</div>
+</details>
+</section>
+<section id="s3" class="sec">
+<details class="secfold">
+<summary><h2 class="sec-h">3. 검증 — 그리고 가설의 절반이 틀렸다</h2><span class="sec-one">균형반응 10 개 — 검산 고리 둘이 닫히고, <b>가설의 절반이 틀렸다</b> (+1.5035 eV/P 양수)</span></summary>
+<div class="secbody">
 
 <p>§2 의 가설을 재려고 같은 hull 에서 <strong>균형반응 10 개</strong>를 돌렸다
 (<code>ComputedReaction</code>, 계수는 도구가 잡는다). 검산 고리 둘이 닫힌다 —
@@ -1069,7 +1140,13 @@ hull 이 고르는 판정은 §4 쪽이다.</p>
 </div>
 
 
-<h2 id="s4">4. 전 혼합범위 스캔 — 최소점 하나가 아니라 곡선 전체</h2>
+</div>
+</details>
+</section>
+<section id="s4" class="sec">
+<details class="secfold">
+<summary><h2 class="sec-h">4. 전 혼합범위 스캔 — 최소점 하나가 아니라 곡선 전체</h2><span class="sec-one">x 전 구간 스캔 — 최소점 하나가 아니라 <b>곡선 전체</b></span></summary>
+<div class="secbody">
 
 <p class="plain">익숙한 것에 빗대면 <b>물감 두 색을 맞대고 문지른 자리</b>다.
 경계가 칼로 자른 듯 한 줄이 아니라, <b>섞인 띠</b>가 생기고 그 띠 안에서 자리마다
@@ -1140,7 +1217,13 @@ Nd 인산염은 특정 혼합비에서만 나오는 게 아니라 <strong>x 축 
 </div>
 <!-- ═══ ⛔ /GENERATED (§3·§4) — 여기부터 다시 index.html 이 소스다 ═══ -->
 <!-- ⚠ §5 는 **반반**이다 — 아래 본문은 index.html 이 소스이고, 그림(Fig 6, cei_dopant_x_scan.png)만 tools/figures/plot_cei_nd_o_decomposition.py 가 만든다. 본문은 여기서 고쳐도 안 지워진다. -->
-<h2 id="s5">5. 다른 3가 도펀트와 견주면 — 축마다 다른 1등이 나온다</h2>
+</div>
+</details>
+</section>
+<section id="s5" class="sec">
+<details class="secfold">
+<summary><h2 class="sec-h">5. 다른 3가 도펀트와 견주면 — 축마다 다른 1등이 나온다</h2><span class="sec-one">3 가 도펀트 × 6 축 — 축마다 다른 1 등. <b>Nd 는 어느 축에서도 1 등이 아니다</b></span></summary>
+<div class="secbody">
 
 <p class="plain">익숙한 것에 빗대면 <b>선수를 뽑는 일</b>이다. 달리기로 뽑으면 A 가 1등,
 점프로 뽑으면 B 가 1등, 던지기로 뽑으면 C 가 1등인데 — <b>세 종목 성적이 서로 상관이 없다면</b>
@@ -1294,7 +1377,13 @@ Ga(−0.0757)는 <b>0.6591 로 구분된다.</b> 이어 붙이면 구분되는 �
 </div>
 
 <!-- ═══ ⛔ GENERATED (§6·§7) — tools/figures/plot_cei_nd_o_decomposition.py 가 유일한 소스다. 여기서 고치면 **다음 재생성에 지워진다** (2026-09-16 에 비유 박스 4 개를 그렇게 잃었다). 고칠 일이 있으면 그 파일에서 고치고 다시 생성한다. ═══ -->
-<h2 id="s6">6. 갭 단계(§C)는 무엇을 재나 — 목록을 먼저 박았다</h2>
+</div>
+</details>
+</section>
+<section id="s6" class="sec">
+<details class="secfold">
+<summary><h2 class="sec-h">6. 갭 단계(§C)는 무엇을 재나 — 목록을 먼저 박았다</h2><span class="sec-one">갭 단계 대상 목록 — <b>9/10 채워졌다</b> (2026-09-19). 평균 offset +0.053 eV · 순위 7/9 일치</span></summary>
+<div class="secbody">
 
 <p>§4 가 kink 를 전부 남기면서 <strong>산물 집합이 36 → 97 종</strong>이 됐다.
 즉 갭 단계의 대상 목록이 <strong>어제와 다른 자료 위에 서 있다</strong>. 어느 쪽을 쓸지는
@@ -1471,7 +1560,13 @@ comp1 2.066 vs 재계산 2.0656 (같은 방법) · Nd₂O₃ 우리 3.9479 vs MP
 카드와 화면이 같은 JSON 을 본다.</p>
 
 
-<h2 id="s7">7. 반대쪽 접촉 — 이 층은 전해질과도 지내야 한다</h2>
+</div>
+</details>
+</section>
+<section id="s7" class="sec">
+<details class="secfold">
+<summary><h2 class="sec-h">7. 반대쪽 접촉 — 이 층은 전해질과도 지내야 한다</h2><span class="sec-one">전해질 쪽 10 종 — 쓸 수 있는 건 <b>“새로 망가뜨리지는 않는다”</b> 까지</span></summary>
+<div class="secbody">
 
 <p>§1&#8211;§6 은 전부 <strong>양극 쪽</strong>을 봤다. 그런데 CEI 는 양극과 전해질
 <strong>사이</strong>에 끼어 있다 &#8212; 한쪽만 검사한 셈이다. 그래서 §2 의 산물을
@@ -1624,7 +1719,13 @@ x 는 <b>아직 실측 안 했다</b> (그 쌍은 <code>mixing_x</code> 필드�
 <code>cei_dual_compat.csv</code>. 위 &rho;&#183;p 와 모든 수치는 이 화면이
 <strong>원자료에서 다시 계산</strong>한 것이다. <code>citable: false</code> &#8212; 1저자&#183;리뷰 판정 전이다.</p>
 <!-- ═══ ⛔ /GENERATED (§6·§7) — 여기부터 다시 index.html 이 소스다 ═══ -->
-<h2 id="s8">8. 양극별 원자료</h2>
+</div>
+</details>
+</section>
+<section id="s8" class="sec">
+<details class="secfold">
+<summary><h2 class="sec-h">8. 양극별 원자료</h2><span class="sec-one">양극별 원자료 — 무도핑 기준 차이가 아니라 원래 값</span></summary>
+<div class="secbody">
 
 <figure>
 <img src="cei_reaction_energy_by_cathode.png" alt="Reaction energy versus voltage for six electrolytes against four cathodes: LiCoO2, LiNiO2, LiMnO2 and NMC811.">
@@ -1649,7 +1750,13 @@ in that range.</figcaption>
 "계면 반응성" 이 아니다. 캡션의 6/24 · 1/24 가 그 개수다.</p>
 </div>
 
-<h2 id="s8b">8b. 반론 여덟 — 심사자가 물을 것을 <b>먼저</b> 답한다 <span style="font-size:.8rem;color:var(--mut)">(2026-09-19 신설)</span></h2>
+</div>
+</details>
+</section>
+<section id="s8b" class="sec">
+<details class="secfold">
+<summary><h2 class="sec-h">8b. 반론 여덟 — 심사자가 물을 것을 <b>먼저</b> 답한다 <span style="font-size:.8rem;color:var(--mut)">(2026-09-19 신설)</span></h2><span class="sec-one">반론 여덟 — 넷 인정 · 둘 범위 축소 · 둘 축이 다름</span></summary>
+<div class="secbody">
 <p>아래 여덟은 <b>우리가 스스로 세운 반론</b>이다. 넷은 인정하고(①④⑦⑧), 둘은 범위를 좁히고(⑤⑥), 둘은 축이 다름을 보인다(②③). <b>반론 절을 지우지 않는다</b> — 지우면 심사자가 대신 쓴다.</p>
 <p style="font-size:.9rem;color:var(--mut)">출처: <code>kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md</code> §Counter-arguments. ⚠ 이 절은 그 카드를 <b>옮긴 것</b>이고, 충돌하면 카드가 이긴다.</p>
 <div class="card" style="margin:14px 0"><h3 style="margin-top:0">① Δ 반응에너지가 Nd 쪽에 유리한 건 Nd 덕이 아니다.</h3><p style="margin:0 0 8px">grand potential 은 <b>dΦ/dV = +N_Li</b> 라 Li 를 덜 든 조성이 전압과 함께 유리해 <i>보인다</i>. Nd³⁺↔3Li⁺ 는 f.u. 당 Li 0.6 을 뺀다.</p><p style="margin:0 0 6px"><b>↳</b> <b>반박하지 않는다. 사실이다.</b> Li 를 맞춘 무-Nd 대조군에서 Nd 항은 <b>−50.8 meV/atom</b>(4.5 V)로 <b>부호가 뒤집힌다</b>. ΔN_Li = 0 인 O 치환만 전압에 평평하다(−5.5 meV/V). ⇒ <b>그래서 그 축을 주 증거로 쓰지 않는다</b> — §1 이 아니라 §2b 가 주연이다.</p><p class="meta" style="margin:0">원자료 · <code>db/properties/cei_nd_p_capture_result_2026_09_18.json</code></p></div>
@@ -1661,7 +1768,13 @@ in that range.</figcaption>
 <div class="card" style="margin:14px 0"><h3 style="margin-top:0">⑦ 전부 0 K hull 열역학이다.</h3><p style="margin:0 0 8px">속도·두께·연속성·수송이 없다. "생긴다" 가 아니라 "생기고 싶어 한다" 다.</p><p style="margin:0 0 6px"><b>↳</b> <b>인정한다.</b> 모든 허용 서술에 이 단서를 단다 — <b>"그렇게 되고 싶어 한다"</b> 이지 <b>"얼마나 빨리"</b> 가 아니다. 계면상이 실제로 연속막을 이루는지는 이 계산이 답하지 않는다.</p><p class="meta" style="margin:0">원자료 · <code>—</code></p></div>
 <div class="card" style="margin:14px 0"><h3 style="margin-top:0">⑧ x = 0.02 는 보호가 10 % 밖에 안 된다.</h3><p style="margin:0 0 8px">1저자 조성에서 양극 TM 의 <b>10.3 %</b> 만 인산염으로 끌려간다.</p><p style="margin:0 0 6px"><b>↳</b> <b>사실이다.</b> 논문의 기여는 <b>경로 발견 + 규칙</b>이고 x=0.02 는 시연점이다. 곡선이 5x/(1−x) 라 <b>초반이 가파르다</b> — x 0.02 → 0.05 면 보호가 <b>2.6 배</b>(10 → 26 %)가 되고 조성식 Li 는 오히려 <b>+0.06 늘어난다</b>. ⇒ <b>0.05 를 검토할 값어치가 있다</b>는 것이 이 곡선이 주는 설계 정보다.</p><p class="meta" style="margin:0">원자료 · <code>db/properties/cei_nd_p_capture_result_2026_09_18.json</code></p></div>
 
-<h2 id="s9">9. 말하면 안 되는 것</h2>
+</div>
+</details>
+</section>
+<section id="s9" class="sec">
+<details class="secfold" open>
+<summary><h2 class="sec-h">9. 말하면 안 되는 것</h2><span class="sec-one"><b>금지 서술 22 개</b> — 값을 인용하기 전에 여기부터 본다</span></summary>
+<div class="secbody">
 <p style="margin:0 0 10px;font-size:.9rem;color:var(--mut)">
 ⭐ 아래 <b>다섯</b>은 2026-09-18 에 추가됐다 — Li-맞춤 대조군과 문헌 감사에서 나왔다
 (<code>db/properties/cei_nd_p_capture_result_2026_09_18.json</code> · <code>db/properties/cei_nd_novelty_audit_2026_09_18.json</code>).</p>
@@ -1724,7 +1837,13 @@ LiPO₃(−0.0388)와 LiNd(PO₃)₄(−0.0434)는 <strong>구분되지 않는�
 4f 관여 redox 가 모형에 아예 없다.</li>
 </ul>
 
-<h2>파일</h2>
+</div>
+</details>
+</section>
+<section id="sf" class="sec">
+<details class="secfold" open>
+<summary><h2 class="sec-h">파일</h2><span class="sec-one">CSV·그림·원장 경로</span></summary>
+<div class="secbody">
 <div class="files">
 <span>cei_nd_o_decomposition.png / .csv</span>
 <span>cei_nd_protection.png / _curve.csv / _fig.csv</span>
@@ -1755,6 +1874,9 @@ house <code>ELEM["Nd"]</code>(#db2777)는 O(#be123c)와 같은 붉은 계열이�
 citable: false — 1저자·리뷰 판정 전이다.
 </footer>
 
+</div>
+</details>
+</section>
 </div>
 
 <!-- 인쇄(PDF) 때 접힌 details 를 펼친다 (2026-09-17).
