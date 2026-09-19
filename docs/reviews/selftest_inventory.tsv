@@ -69,6 +69,7 @@ scripts/generate_comparison_plots.py	--selftest-descriptions	fast	both	claude	�
 scripts/generate_comparison_plots.py	--selftest-fits	fast	both	claude	초록 0.7s (실측) — L3-08 적합 fail-closed(행수·랭크·LOO 폴드) + L3-12 캐시 내용 지문
 scripts/generate_comparison_plots.py	--selftest-temp	fast	both	claude	초록 1.3s (실측) — 어느 레인에도 없던 것을 2026-09-13 배선
 scripts/heckel_analysis.py	--selftest	fast	none	claude	초록 1.0s (실측)
+scripts/hetero_transcript.py	--selftest	fast	both	claude	초록 0.0s (실측) — 계약 6개 + 이빨 대조 (원문 한 글자 변조·구분자 삭제·해독 복사)
 scripts/holm_exponent_from_field.py	--selftest	fast	none	claude	초록 0.6s (실측)
 scripts/ion_r_verdict.py	--selftest	fast	check_all	claude	초록 0.2s (실측)
 scripts/lhs_design_dataset.py	--selftest	fast	none	claude	초록 1.5s (실측)

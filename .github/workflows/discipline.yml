@@ -134,6 +134,11 @@ jobs:
       - name: LHS 문턱 적합기 (Firth · 프로파일 구간 · 예외 규칙) (selftest)
         run: python scripts/lhs_perc_fit.py --selftest
 
+      # ★ 2026-09-19 — 이종기술 회의록 해체.  **회의록 파일보다 먼저** 계약을 배선한다
+      #   (Codex R11 B1 과 같은 이유).  계약① = 발화를 이으면 원문 **바이트 동일**.
+      - name: 이종기술 회의록 해체 계약 (원문 무손실 · 해독 복사 금지) (selftest)
+        run: python scripts/hetero_transcript.py --selftest
+
       # ★★ 2026-08-31 — LHS 확장 제출 도구 셋.  설계 봉인이 CI 에서 매번 재검증된다.
       - name: LHS 확장 설계 생성기 (LHS 점유 · 소수 seed · 절대 칸) (selftest)
         run: python scripts/lhs_ext_design.py --selftest

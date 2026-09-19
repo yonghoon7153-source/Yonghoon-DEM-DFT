@@ -108,6 +108,10 @@ fi
 run 'lhs_perc_extract       --selftest' python3 scripts/lhs_perc_extract.py --selftest
 run 'lhs_descriptor_harvest --selftest' python3 scripts/lhs_descriptor_harvest.py --selftest
 run 'lhs_perc_fit           --selftest' python3 scripts/lhs_perc_fit.py --selftest
+#  ★ 2026-09-19 — 같은 규칙을 이종기술 회의록에도 적용한다 (비준 (가) = 61 발화 전수).
+#    **회의록 파일보다 먼저** 추출기와 계약을 배선한다 — 원문을 보고 규약을 정하면
+#    규약이 결과를 정당화한다.  계약① 은 재조립이 원문과 **바이트 동일**한지를 본다.
+run 'hetero_transcript      --selftest' python3 scripts/hetero_transcript.py --selftest
 
 #  ★ 2026-08-30 — 이 둘은 selftest 가 **있었는데 배선이 없었다**.  `make_heckel_manifest.scan()`
 #    이 심볼릭 링크 중복을 독립 대조로 세어 인계 문서에 가짜 확인이 적혔고, 그 회귀가
