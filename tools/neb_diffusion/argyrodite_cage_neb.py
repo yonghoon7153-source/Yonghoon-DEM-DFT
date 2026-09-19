@@ -1387,6 +1387,21 @@ def selftest():
         globals()["load_calc"] = _real
     chk(_dup_stopped,
         "⛔음성: 두 사건이 **같은 원시 끝점 쌍**을 쓰면 중단한다 (ev04/ev07 재발 차단)")
+    #: --skip_duplicates 는 **건너뛰되 지우지 않는다**. 행이 사라지면 N 이 틀어진다.
+    globals()["load_calc"] = lambda device="cuda": _LJ(epsilon=0.02, sigma=2.6)
+    try:
+        _sk = couple_endpoints_from_events(str(_dup), out_sub="c2",
+                                           skip_duplicates=True,
+                                           log=lambda *a, **k: None)
+    finally:
+        globals()["load_calc"] = _real
+    chk(_sk["n_events"] == 2 and _sk["n_duplicate_raw_pair"] == 1,
+        f"[양성] --skip_duplicates: 2 행 중 1 행이 중복으로 **남는다** "
+        f"(행 {_sk['n_events']} · 중복 {_sk.get('n_duplicate_raw_pair')})")
+    chk(any(r.get("duplicate_of") for r in _sk["rows"]),
+        "⛔음성: 중복 행이 **어느 사건과 같은지**를 적는다 (조용히 빼지 않는다)")
+    chk(_sk["skip_duplicates"] is True,
+        "산출물이 '게이트를 건너뛰었다' 는 사실을 들고 다닌다")
 
     _sp, _sys  # noqa
 
@@ -1460,7 +1475,7 @@ def couple_verdict(cell, pos_i, pos_f, syms, atom_index, thresh=COUPLE_DISP_A):
 
 
 def couple_endpoints_from_events(events_dir, out_sub="coupled", device="cuda",
-                                 fmax=FMAX_CI, log=print):
+                                 fmax=FMAX_CI, skip_duplicates=False, log=print):
     """events.json + 원시 MD 프레임 → **결합 생성한** 끝점 쌍 + G-B7 판정.
 
     절차 (카드 v2 §1-①·§3)
@@ -1495,9 +1510,18 @@ def couple_endpoints_from_events(events_dir, out_sub="coupled", device="cuda",
         #: ⛔ 원시 쌍의 해시부터 본다. ev04/ev07 은 여기서 잡힌다.
         h = (sha256(fi), sha256(ff))
         if h in seen:
-            raise SystemExit(f"⛔ {tag} 의 원시 끝점 쌍이 {seen[h]} 와 **같다** "
-                             f"(sha256 {h[0][:8]}…/{h[1][:8]}…). 두 사건이 같은 MD "
-                             f"프레임을 쓰고 있다 — 카드 v2 enforcement ③ 로 **중단**한다.")
+            msg = (f"{tag} 의 원시 끝점 쌍이 {seen[h]} 와 **같다** "
+                   f"(sha256 {h[0][:8]}…/{h[1][:8]}…). 두 사건이 같은 MD 프레임을 쓴다.")
+            if not skip_duplicates:
+                raise SystemExit("⛔ " + msg + " — 카드 v2 enforcement ③ 로 **중단**한다.")
+            #: ⛔ 건너뛰되 **지우지 않는다.** 행으로 남겨야 N 이 맞고, 다음 사람이
+            #  "9 건 중 몇 건이 실제로 서로 다른 사건이었나" 를 셀 수 있다.
+            rows.append({"tag": tag, "atom_index": ai, "status": "duplicate_raw_pair",
+                         "failed_because": ["G-B7 전: " + msg],
+                         "duplicate_of": seen[h],
+                         "raw_sha256": {"i": h[0], "f": h[1]}})
+            log(f"  {tag:14s} ⚠ 중복 원시 쌍 ({seen[h]}) — 기록하고 건너뛴다")
+            continue
         seen[h] = tag
         ini, di = relax_endpoint_deep(raw_i, calc, fmax=fmax, track_idx=ai, seed=0)
         #: ② 이동 Li 하나만 옮긴다. 나머지 119 원자는 이완된 시작 구조를 그대로 쓴다.
@@ -1534,7 +1558,11 @@ def couple_endpoints_from_events(events_dir, out_sub="coupled", device="cuda",
                         "track_guard_A": 0.6, "thresh_A": COUPLE_DISP_A,
                         "uma": "uma-s-1p1 omat default", "cell": "fixed"},
            "n_events": len(rows), "n_ok": len(okr),
-           "n_failed": len(rows) - len(okr), "out_subdir": out_sub, "rows": rows}
+           "n_failed": len(rows) - len(okr),
+           "n_duplicate_raw_pair": sum(1 for r in rows
+                                       if r.get("status") == "duplicate_raw_pair"),
+           "skip_duplicates": bool(skip_duplicates),
+           "out_subdir": out_sub, "rows": rows}
     q = ev / "endpoint_coupled_gate.json"
     q.write_text(_json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
     log(f"  ⇒ G-B7 통과 {len(okr)}/{len(rows)} · → {q}")
@@ -1747,6 +1775,10 @@ def main():
                     help="v2 카드 §1-① — events.json + 원시 MD 프레임에서 끝점을 "
                          "**결합 생성**하고 G-B7 을 판정한다. events/<subdir>/ 에 쓴다. "
                          "⛔ NEB 는 돌지 않는다 (끝점만 만든다)")
+    ap.add_argument("--skip_duplicates", action="store_true",
+                    help="--couple_endpoints_from 에서 원시 끝점 쌍이 겹치는 사건을 "
+                         "**중단 대신 기록하고 건너뛴다**. ⛔ 게이트 완화가 아니다 — "
+                         "중복을 이미 기록한 뒤 나머지를 이어 돌 때만 쓴다")
     ap.add_argument("--endpoints_subdir", default="relaxed",
                     help="--endpoints_dir 가 읽을 하위폴더 (기본 relaxed · 결합 생성본은 coupled)")
     ap.add_argument("--deep_endpoints", action="store_true",
@@ -1760,7 +1792,8 @@ def main():
         r = couple_endpoints_from_events(a.couple_endpoints_from,
                                          out_sub=("coupled" if a.endpoints_subdir == "relaxed"
                                                   else a.endpoints_subdir),
-                                         device=a.device)
+                                         device=a.device,
+                                         skip_duplicates=a.skip_duplicates)
         raise SystemExit(0 if r["n_ok"] else 3)
     if a.endpoints_dir:
         _o = a.endpoints_out or str(Path(a.endpoints_dir).parent / "neb_barrier_uma.json")
