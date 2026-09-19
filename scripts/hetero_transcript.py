@@ -59,6 +59,10 @@ CLAIM_STATUS = ('FACT_STATED', 'PLAN', 'REQUEST', 'QUESTION', 'OPINION',
                 'NO_CLAIM', 'UNCERTAIN')
 #: 계약⑤ — 원문에 시각이 있으면 이 모양이다.  **없으면 null 이지 추정이 아니다.**
 TS_RE = re.compile(r'^\s*\(?(\d{1,2}):(\d{2})(?::(\d{2}))?\)?\s*')
+#: `speaker` 자르기 — clovanote 받아쓰기의 발화 머리.  예: `참석자 1 00:01`
+#: ⚠ 이 줄은 **원문의 일부**다 (녹취기가 찍은 것).  `raw` 에 그대로 둔다 — 떼어내면
+#:   계약① 재조립이 그 줄을 다시 **만들어내야** 하고, 만들어낸 것은 원문이 아니다.
+SPEAKER_RE = re.compile(r'^참석자\s+(\d+)\s+(\d+):(\d{2})(?::(\d{2}))?[ \t]*$', re.M)
 SCHEMA_VERSION = 'hetero_transcript_v1'
 
 
@@ -87,8 +91,20 @@ def split_raw(text, rule='blocks'):
     ⚠ 자르기 규칙을 **잘못 골라도 조용히 틀리지 않는다** — 이어붙인 결과가 원문과 다르면
       계약① 이 거부한다.  규칙은 발화 **경계**를 정할 뿐 내용을 못 바꾼다.
     """
-    if rule not in ('blocks', 'lines'):
+    if rule not in ('blocks', 'lines', 'speaker'):
         raise TranscriptRefusal(f'모르는 자르기 규칙: {rule!r}')
+    if rule == 'speaker':
+        ms = list(SPEAKER_RE.finditer(text))
+        if not ms:
+            raise TranscriptRefusal(
+                '`참석자 N 시각` 머리를 하나도 못 찾았다 — 이 받아쓰기 형식이 아니다.  '
+                '`--split blocks` 나 `lines` 를 볼 것 (원문을 고치지 말 것).')
+        head = text[:ms[0].start()]
+        out = []
+        for k, m in enumerate(ms):
+            end = ms[k + 1].start() if k + 1 < len(ms) else len(text)
+            out.append((text[m.start():end], ''))
+        return head, out
     pat = r'(\n[ \t]*\n\s*)' if rule == 'blocks' else r'(\n)'
     parts = re.split(pat, text)
     head, out = '', []
@@ -106,8 +122,22 @@ def split_raw(text, rule='blocks'):
     return head, [(b_, s_) for b_, s_ in out]
 
 
+def body_of(raw):
+    """발화 머리(`참석자 N 시각`)를 뺀 **말 자체**.  파생값이다 — 정본은 `raw`.
+
+    ⚠ 계약④ 는 `raw` **와** 이 `body` 둘 다와 대조한다.  머리를 뗀 복사도 복사다.
+    """
+    m = SPEAKER_RE.match(raw)
+    return raw[m.end():].lstrip('\n') if m else raw
+
+
 def probe_meta(raw):
     """계약⑤ — 시각·화자를 **원문에 있을 때만** 읽는다.  없으면 `None`."""
+    m0 = SPEAKER_RE.match(raw)
+    if m0:
+        sp, h, mi, sec = m0.group(1), m0.group(2), m0.group(3), m0.group(4)
+        ts = f'{int(h):02d}:{mi}' + (f':{sec}' if sec else '')
+        return ts, f'참석자 {sp}'
     ts = None
     m = TS_RE.match(raw)
     rest = raw
@@ -122,7 +152,26 @@ def probe_meta(raw):
     return ts, speaker
 
 
-def ingest(path, rule='blocks', n_expect=None):
+def peel_tail(parts, marker):
+    """마지막 발화 끝에 붙은 **꼬리말**을 떼어 따로 둔다 (예: `clovanote.naver.com`).
+
+    ⚠ 떼되 **버리지 않는다** — `tail` 로 보관해 계약① 재조립에 다시 들어간다.
+      버리면 원문이 줄어들고, 붙여 두면 분석자가 URL 한 줄을 '해독' 하게 된다.
+    떼는 자리는 그 낱말이 **있는 줄의 처음**이다 (임의로 앞뒤 공백을 먹지 않는다).
+    """
+    if not marker or not parts:
+        return parts, ''
+    raw, sep = parts[-1]
+    i = raw.rfind(marker)
+    if i < 0:
+        raise TranscriptRefusal(
+            f'꼬리말 {marker!r} 을 마지막 발화에서 못 찾았다 — 있지도 않은 것을 떼려 한다')
+    j = raw.rfind('\n', 0, i) + 1              # 그 줄의 처음 (없으면 0)
+    parts = parts[:-1] + [(raw[:j], sep)]
+    return parts, raw[j:]
+
+
+def ingest(path, rule='blocks', n_expect=None, tail_marker=''):
     """원문 → 골격.  `decoded`·`claim` 은 **빈 채로** 둔다 (사람이 채운다).
 
     ⛔ 이 도구는 해독을 **생성하지 않는다** — 빈 칸을 남겨 계약③ 이 걸리게 한다.
@@ -130,6 +179,7 @@ def ingest(path, rule='blocks', n_expect=None):
     data = open(path, 'rb').read()
     text = data.decode('utf-8')
     head, parts = split_raw(text, rule)
+    parts, tail = peel_tail(parts, tail_marker)
     if n_expect is not None and len(parts) != n_expect:
         raise TranscriptRefusal(
             f'발화 {len(parts)} 개로 잘렸는데 {n_expect} 을 기대했다 (규칙 {rule!r}).  '
@@ -139,10 +189,11 @@ def ingest(path, rule='blocks', n_expect=None):
     for k, (body, sep) in enumerate(parts, 1):
         ts, sp = probe_meta(body)
         utt.append({'n': k, 'raw': body, 'sep': sep, 'ts': ts, 'speaker': sp,
+                    'body': body_of(body),
                     'decoded': '', 'claim': '', 'claim_status': '',
                     'why_uncertain': ''})
     return {'schema': SCHEMA_VERSION, 'split_rule': rule,
-            'head': head,
+            'head': head, 'tail': tail, 'tail_marker': tail_marker,
             'source': {'path': os.path.basename(path), 'sha256': sha256_bytes(data),
                        'n_bytes': len(data)},
             'n_utterances': len(utt),
@@ -156,6 +207,7 @@ def reassemble(doc):
     """계약① — 발화를 원문 순서로 이어 **원본 바이트**를 만든다."""
     return (doc.get('head', '')
             + ''.join(u['raw'] + u.get('sep', '') for u in doc['utterances'])
+            + doc.get('tail', '')
             ).encode('utf-8')
 
 
@@ -202,9 +254,15 @@ def check(doc, raw_path=None, require_filled=True):
                            '— 확정 못 하는 **이유**가 기록의 내용이다')
             if st and st != 'UNCERTAIN' and (u.get('why_uncertain') or '').strip():
                 bad.append(f'#{n}: why_uncertain 은 UNCERTAIN 에만 쓴다 (지금 {st})')
-        # ④ 복사 금지
-        if (u.get('decoded') or '').strip() and _norm(u['decoded']) == _norm(u['raw']):
-            bad.append(f'#{n}: ④ decoded 가 raw 의 복사다 — 해독이 아니다')
+        # ④ 복사 금지 — `raw` **와** 머리를 뗀 `body` 둘 다와 대조한다.
+        #   머리(`참석자 1 00:01`)만 떼고 붙여넣는 것도 복사다.
+        if (u.get('decoded') or '').strip():
+            dn = _norm(u['decoded'])
+            if dn == _norm(u['raw']) or dn == _norm(u.get('body') or body_of(u['raw'])):
+                bad.append(f'#{n}: ④ decoded 가 raw(또는 머리 뗀 body)의 복사다 — 해독이 아니다')
+        # body 가 있으면 raw 에서 실제로 유도된 것이어야 한다 (몰래 고친 body 금지)
+        if u.get('body') is not None and u.get('body') != body_of(u.get('raw') or ''):
+            bad.append(f'#{n}: body 가 raw 에서 유도되지 않는다 — 파생값을 손으로 고쳤다')
     if bad:
         raise TranscriptRefusal(f'{len(bad)} 건 위반:\n  - ' + '\n  - '.join(bad[:20])
                                 + (f'\n  … 외 {len(bad) - 20} 건' if len(bad) > 20 else ''))
@@ -367,6 +425,50 @@ def selftest():
         chk('⑥ ★UNCERTAIN + 사유는 **통과한다** — 전수 강제의 배출구',
             check(d, raw_path=p)['status_tally'].get('UNCERTAIN') == 1)
 
+        # ── ⑨ `speaker` 규칙 + 꼬리말 (clovanote 받아쓰기 모양) ──────────────
+        SP = ('﻿음성 333\n2026.09.18 금 오후 9:53\n안용훈\n\n\n'
+              '참석자 1 00:01\n첫 발화다\n\n참석자 2 01:35\n둘째 발화\n여러 줄이다\n\n'
+              '참석자 1 20:01\n마지막.\n\n\nclovanote.naver.com')
+        q = os.path.join(tmp, 'sp.txt')
+        with open(q, 'w', encoding='utf-8') as fh:
+            fh.write(SP)
+        d9 = ingest(q, rule='speaker', n_expect=3, tail_marker='clovanote.naver.com')
+        chk('⑨ speaker 규칙: 재조립이 원문과 바이트 동일 (BOM·머리말·꼬리말 포함)',
+            reassemble(d9) == SP.encode('utf-8'))
+        chk('⑨ 머리말(BOM 포함)이 head 로 보관된다', d9['head'].startswith('﻿음성 333'))
+        chk('⑨ 꼬리말이 tail 로 떼어져 마지막 발화에 안 붙는다',
+            d9['tail'] == 'clovanote.naver.com'
+            and 'clovanote' not in d9['utterances'][-1]['raw'])
+        chk('⑨ 화자·시각을 발화 머리에서 읽는다 (추정 아님)',
+            [(u['speaker'], u['ts']) for u in d9['utterances']]
+            == [('참석자 1', '00:01'), ('참석자 2', '01:35'), ('참석자 1', '20:01')])
+        chk('⑨ body = 머리를 뗀 말 자체 (raw 는 머리를 그대로 갖는다)',
+            d9['utterances'][1]['body'] == '둘째 발화\n여러 줄이다\n\n'
+            and d9['utterances'][1]['raw'].startswith('참석자 2 01:35'))
+        neg('⑨ 없는 꼬리말을 떼려 하면 거부 (있지도 않은 것을 자르지 않는다)',
+            lambda: ingest(q, rule='speaker', tail_marker='없는낱말'))
+        neg('⑨ 화자 머리가 없는 원문에 speaker 규칙을 쓰면 거부',
+            lambda: ingest(p, rule='speaker'))
+        g9 = _fill(json.loads(json.dumps(d9)))
+        chk('⑨ 채우면 계약 여섯을 통과한다', check(g9, raw_path=q)['n_utterances'] == 3)
+
+        def _copy_body():
+            e = json.loads(json.dumps(g9))
+            e['utterances'][1]['decoded'] = '  ' + e['utterances'][1]['body'].strip()
+            check(e, raw_path=q)
+        neg('⑨ ★계약④ 확장: 머리만 뗀 복사(body 복사)도 거부', _copy_body)
+
+        def _tamper_body():
+            e = json.loads(json.dumps(g9))
+            e['utterances'][0]['body'] = '딴 말'
+            check(e, raw_path=q)
+        neg('⑨ body 를 손으로 고치면 거부 (파생값은 raw 에서만 나온다)', _tamper_body)
+
+        def _drop_tail():
+            e = json.loads(json.dumps(g9)); e['tail'] = ''
+            check(e, raw_path=q)
+        neg('⑨ ★이빨: 꼬리말을 버리면 재조립이 잡는다 (떼되 안 버린다)', _drop_tail)
+
         #  원문 파일 자체가 바뀌면 잡힌다
         def _src_changed():
             q = os.path.join(tmp, 'm2.txt')
@@ -390,7 +492,11 @@ def main(argv=None):
     ap = argparse.ArgumentParser(
         description='이종기술 회의록 해체 — 원문·해독·주장 세 층 (비준 (가) 전수)')
     ap.add_argument('--ingest', metavar='TXT', help='원문 → 골격 JSON (해독은 빈 칸)')
-    ap.add_argument('--split', choices=('blocks', 'lines'), default='blocks')
+    ap.add_argument('--split', choices=('blocks', 'lines', 'speaker'), default='blocks',
+                    help="speaker = `참석자 N 시각` 머리마다 자른다 (clovanote 받아쓰기)")
+    ap.add_argument('--tail-marker', default='',
+                    help='마지막 발화 끝에 붙은 꼬리말 (예: clovanote.naver.com). '
+                         '떼서 `tail` 로 보관한다 — 버리지 않으므로 계약① 은 그대로 성립한다')
     ap.add_argument('--n-expect', type=int, default=None,
                     help='기대 발화 수.  다르면 **거부** — 수를 맞추려 원문을 고치지 말 것')
     ap.add_argument('--out', help='--ingest 산출 JSON')
@@ -403,7 +509,8 @@ def main(argv=None):
     if a.selftest:
         return selftest()
     if a.ingest:
-        doc = ingest(a.ingest, rule=a.split, n_expect=a.n_expect)
+        doc = ingest(a.ingest, rule=a.split, n_expect=a.n_expect,
+                     tail_marker=a.tail_marker)
         txt = json.dumps(doc, ensure_ascii=False, indent=1)
         if a.out:
             with open(a.out, 'w', encoding='utf-8') as fh:

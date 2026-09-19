@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}이종기술 회의록 해체{% endblock %}
+
+{% block content %}
+<style>
+  /* 앱 테마(--bg/--card/--accent/--dim/--line)를 그대로 쓴다 — 흰 카드 하드코딩 금지. */
+  .tx-head { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:4px; }
+  .tx-head h1 { margin:0; }
+  .tx-sub { color:var(--dim); font-size:.88rem; }
+  .tx-lede { color:var(--dim); max-width:74ch; margin:10px 0 18px; line-height:1.7; }
+
+  .tx-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:11px; margin:14px 0; }
+  .tx-card { background:var(--card); border:1px solid var(--line,#2a2f3a); padding:12px 14px; border-radius:4px; }
+  .tx-card .k { font-size:.68rem; letter-spacing:.09em; text-transform:uppercase; color:var(--dim); }
+  .tx-card .v { font-size:1.15rem; margin-top:5px; font-variant-numeric:tabular-nums; }
+  .tx-card .v small { color:var(--dim); font-size:.72rem; font-weight:400; }
+
+  .tx-note { border:1px solid var(--line,#2a2f3a); border-left:3px solid var(--accent,#5b8dd6);
+             background:var(--card); padding:12px 15px; margin:12px 0; border-radius:3px;
+             font-size:.86rem; line-height:1.68; }
+  .tx-warn { border-left-color:var(--yellow,#d89440); }
+  .tx-bad  { border-left-color:var(--red,#d0645a); }
+
+  .tx-bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:18px 0 10px;
+            padding-bottom:12px; border-bottom:1px solid var(--line,#2a2f3a); }
+  .tx-bar label { font-size:.74rem; letter-spacing:.06em; text-transform:uppercase; color:var(--dim); }
+  .tx-bar select, .tx-bar input {
+    background:var(--card); color:inherit; border:1px solid var(--line,#2a2f3a);
+    border-radius:3px; padding:5px 8px; font:inherit; font-size:.84rem; }
+  .tx-count { color:var(--dim); font-size:.8rem; margin-left:auto; font-variant-numeric:tabular-nums; }
+
+  .u { border:1px solid var(--line,#2a2f3a); background:var(--card);
+       border-radius:4px; margin:10px 0; overflow:hidden; }
+  .u-top { display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+           padding:8px 13px; border-bottom:1px solid var(--line,#2a2f3a); font-size:.8rem; }
+  .u-n  { font-variant-numeric:tabular-nums; color:var(--dim); font-weight:600; min-width:2.4em; }
+  .u-ts { font-variant-numeric:tabular-nums; color:var(--dim); }
+  .u-sp { font-weight:600; }
+  .chip { font-size:.66rem; letter-spacing:.07em; padding:2px 8px; border-radius:10px;
+          border:1px solid var(--line,#2a2f3a); color:var(--dim); white-space:nowrap; }
+  .chip.FACT_STATED { border-color:#4f8a63; color:#7fc396; }
+  .chip.PLAN        { border-color:#4a6fa5; color:#8ab0e0; }
+  .chip.REQUEST     { border-color:#9a6f3c; color:#d8a765; }
+  .chip.QUESTION    { border-color:#6a5a9a; color:#a897dd; }
+  .chip.OPINION     { border-color:#3f6f78; color:#79b6c0; }
+  .chip.NO_CLAIM    { opacity:.55; }
+  .chip.UNCERTAIN   { border-color:#a05050; color:#e08a8a; }
+
+  .u-body { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+  @media (max-width:860px) { .u-body { grid-template-columns:1fr; } }
+  .u-col { padding:11px 14px; line-height:1.72; font-size:.875rem; }
+  .u-col + .u-col { border-left:1px solid var(--line,#2a2f3a); }
+  @media (max-width:860px) { .u-col + .u-col { border-left:0; border-top:1px solid var(--line,#2a2f3a); } }
+  .u-col h4 { margin:0 0 7px; font-size:.64rem; letter-spacing:.11em; text-transform:uppercase;
+              color:var(--dim); font-weight:600; }
+  .u-raw { white-space:pre-wrap; color:var(--dim); }
+  .u-claim { padding:10px 14px; border-top:1px solid var(--line,#2a2f3a);
+             font-size:.875rem; line-height:1.7; }
+  .u-claim b { color:var(--accent,#5b8dd6); font-weight:600; }
+  .u-why { margin-top:7px; font-size:.82rem; color:#e08a8a; line-height:1.65; }
+  .hid { display:none; }
+</style>
+
+<div class="tx-head">
+  <h1>이종기술 회의록 해체</h1>
+  <span class="tx-sub">2026-09-18 · 20분 02초 · <a href="/hetero">← 이종기술 프로젝트 면</a></span>
+</div>
+
+<p class="tx-lede">
+  원문(<b>raw</b>) · 해독(<b>decoded</b>) · 주장(<b>claim</b>)을 <b>세 층으로 갈라</b> 붙든 것이다.
+  셋을 한 칸에 적으면 원문이 해석에 오염되고, 그 오염은 되돌릴 수 없다.
+  범위는 <b>61 발화 전수</b>(비준 2026-09-19) — 선택 해독은 <i>“무엇을 안 골랐나”</i>가 기록에 남지 않는다.
+</p>
+
+{% if t.error %}
+  <div class="tx-note tx-bad"><b>⛔ 계약 검증이 실패했다.</b><br>{{ t.error }}
+    <br><span class="tx-sub">화면은 이 상태를 숨기지 않는다 — 아래 내용을 그대로 믿지 말 것.</span></div>
+{% elif t.report %}
+  <div class="tx-note">
+    <b>✓ 계약 여섯 통과</b> (렌더 시점 실측, 산문 아님) —
+    발화 {{ t.report.n_utterances }} · 시각 {{ t.report.n_ts }} · 화자 {{ t.report.n_speaker }}.
+    {% if not t.raw_exists %}
+      <br><b class="tx-sub">⚠ 계약① (원문 무손실) 은 <b>검사되지 않았다</b> — 원문 파일이 없다.</b>
+    {% else %}
+      <br>계약① = 61 발화를 이어 붙이면 원문과 <b>바이트 동일</b>(sha256 대조).
+    {% endif %}
+  </div>
+{% endif %}
+
+<div class="tx-grid">
+  <div class="tx-card"><div class="k">발화</div><div class="v">{{ utt|length }} <small>전수</small></div></div>
+  {% for s, help in status_help %}
+    {% set c = utt|selectattr('claim_status','equalto',s)|list|length %}
+    {% if c %}<div class="tx-card"><div class="k">{{ s }}</div>
+      <div class="v">{{ c }} <small>{{ help }}</small></div></div>{% endif %}
+  {% endfor %}
+</div>
+
+<div class="tx-note tx-warn">
+  <b>읽는 법.</b>
+  <b>‹원문낱말 → 읽음›</b> 은 자동 받아쓰기의 오인식을 문맥으로 복원한 자리다 — 표기 자체가
+  “이건 추론이다”를 드러낸다.
+  <b>FACT_STATED</b> 는 <b>회의에서 사실로 진술됐다</b>는 뜻이지 우리가 검증했다는 뜻이 아니다.
+  <b>UNCERTAIN</b> 은 원문만으로 확정하지 못한 발화이고, <b>왜</b> 못 하는지를 같이 적는다 —
+  전수 규약이 해독을 강제하지만 <b>확정까지 강제하지는 않는다</b>.
+  화자는 받아쓰기의 <code>참석자 1/2/3</code> 그대로이며 실명은 추정하지 않는다;
+  발화 안의 사람 이름은 <b>언급된 제3자</b>이지 화자 라벨이 아니다.
+  <br>⚠ <code>raw</code> 는 <b>받아쓰기 그대로</b>이고 음성 원본이 아니다 — 받아쓰기가 이미
+  한 번 해석을 거친 층이다.
+</div>
+
+<div class="tx-bar">
+  <label for="f-sp">화자</label>
+  <select id="f-sp"><option value="">전체</option>
+    {% for s in speakers %}<option>{{ s }}</option>{% endfor %}</select>
+  <label for="f-st">주장 지위</label>
+  <select id="f-st"><option value="">전체</option>
+    {% for s, _h in status_help %}<option>{{ s }}</option>{% endfor %}</select>
+  <label for="f-q">낱말</label>
+  <input id="f-q" type="search" placeholder="원문·해독·주장 전체에서" size="22">
+  <span class="tx-count" id="f-n"></span>
+</div>
+
+{% for u in utt %}
+<div class="u" data-sp="{{ u.speaker or '미상' }}" data-st="{{ u.claim_status }}">
+  <div class="u-top">
+    <span class="u-n">{{ '%02d'|format(u.n) }}</span>
+    <span class="u-sp">{{ u.speaker or '미상' }}</span>
+    <span class="u-ts">{{ u.ts or '—' }}</span>
+    <span class="chip {{ u.claim_status }}">{{ u.claim_status }}</span>
+  </div>
+  <div class="u-body">
+    <div class="u-col"><h4>raw — 받아쓰기 그대로</h4><div class="u-raw">{{ u.body|trim }}</div></div>
+    <div class="u-col"><h4>decoded — 무슨 뜻인지</h4><div>{{ u.decoded }}</div></div>
+  </div>
+  <div class="u-claim"><b>claim</b> · {{ u.claim }}
+    {% if u.why_uncertain %}<div class="u-why">⚠ 확정 못 하는 이유 — {{ u.why_uncertain }}</div>{% endif %}
+  </div>
+</div>
+{% endfor %}
+
+<script>
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.u'));
+  var sp = document.getElementById('f-sp'), st = document.getElementById('f-st'),
+      q = document.getElementById('f-q'), n = document.getElementById('f-n');
+  function apply() {
+    var a = sp.value, b = st.value, c = (q.value || '').trim().toLowerCase(), k = 0;
+    rows.forEach(function (r) {
+      var ok = (!a || r.dataset.sp === a) && (!b || r.dataset.st === b)
+            && (!c || r.textContent.toLowerCase().indexOf(c) >= 0);
+      r.classList.toggle('hid', !ok);
+      if (ok) k++;
+    });
+    n.textContent = k + ' / ' + rows.length + ' 발화';
+  }
+  [sp, st].forEach(function (e) { e.addEventListener('change', apply); });
+  q.addEventListener('input', apply);
+  apply();
+})();
+</script>
+{% endblock %}

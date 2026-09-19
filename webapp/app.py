@@ -4043,6 +4043,63 @@ def hetero_page():
                            inv=_hetero_inventory(), lv=_page_lv('hetero'))
 
 
+TRANSCRIPT_JSON = Path(__file__).resolve().parent.parent / 'docs' / 'data' / 'hetero_transcript_20260918.json'
+TRANSCRIPT_RAW = Path(__file__).resolve().parent.parent / 'docs' / 'data' / 'hetero_meeting_20260918_raw.txt'
+
+
+def _transcript_load():
+    """회의록 해체본 + **렌더 시점 계약 검증**.
+
+    ★ 이 앱의 `_hetero_inventory` 와 같은 사고 — 산문이 아니라 **실물을 본다**.
+    계약이 깨져 있으면 *"통과"* 라고 적지 않고 **무엇이 깨졌는지**를 화면에 낸다.
+    ⚠ 계약① (원문 무손실) 은 `raw` 파일이 있어야 검사된다.  없으면 *검사되지 않았다* 고
+      적는다 — '통과' 와 '검사 안 함' 을 같은 초록으로 칠하면 그게 false-green 이다.
+    """
+    out = {'exists': TRANSCRIPT_JSON.is_file(), 'raw_exists': TRANSCRIPT_RAW.is_file(),
+           'doc': None, 'report': None, 'error': ''}
+    if not out['exists']:
+        out['error'] = f'{TRANSCRIPT_JSON.name} 이 없다'
+        return out
+    try:
+        import hetero_transcript as HT
+        doc = json.loads(TRANSCRIPT_JSON.read_text(encoding='utf-8'))
+        out['doc'] = doc
+        out['report'] = HT.check(doc, raw_path=(str(TRANSCRIPT_RAW)
+                                                if out['raw_exists'] else None))
+    except Exception as e:                                        # noqa: BLE001
+        out['error'] = f'{type(e).__name__}: {e}'
+    return out
+
+
+#: 주장 지위 — 화면 라벨과 **한 줄 설명**.  라벨만 두면 `FACT_STATED` 가 '검증된 사실'
+#: 로 읽힌다 (그 오해가 이 원장이 반복해서 데인 자리다).
+CLAIM_STATUS_HELP = [
+    ('FACT_STATED', '회의에서 사실로 진술됨 — ⚠ 우리가 검증했다는 뜻이 아니다'),
+    ('PLAN', '하기로 한 것'),
+    ('REQUEST', '요청·지시'),
+    ('QUESTION', '물음'),
+    ('OPINION', '판단·의견'),
+    ('NO_CLAIM', '주장 없음 (끊긴 말·인사·추임새)'),
+    ('UNCERTAIN', '원문만으로 확정 불가 — 왜 못 하는지를 같이 적는다'),
+]
+
+
+@app.route('/hetero/transcript')
+def hetero_transcript_page():
+    """이종기술 회의록 **해체 분석** — 원문 · 해독 · 주장 세 층 (2026-09-18 회의).
+
+    비준 (가) = 61 발화 **전수**.  선택 해독은 *"무엇을 안 골랐나"* 가 안 남는다.
+    """
+    t = _transcript_load()
+    doc = t['doc'] or {}
+    return render_template(
+        'hetero_transcript.html', active='hetero', t=t, doc=doc,
+        utt=doc.get('utterances') or [],
+        status_help=CLAIM_STATUS_HELP,
+        speakers=sorted({u.get('speaker') or '미상' for u in (doc.get('utterances') or [])}),
+        lv=_page_lv('hetero'))
+
+
 @app.route('/api/seminar/doc/<key>')
 def api_seminar_doc(key):
     """대본/용어집/가이드 원문 (markdown 그대로 — 프런트에서 렌더)."""
