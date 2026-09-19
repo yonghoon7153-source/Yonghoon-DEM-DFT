@@ -102,6 +102,16 @@
     ⇒ 가져올 것은 **`PATH`·`LD_LIBRARY_PATH`·`OPAL_PREFIX` 셋뿐**이고, 그 다음
     `unset $(env | grep -oE '^(OMPI|PMIX)_[A-Za-z0-9_]*')` 로 전부 지운 뒤
     **`OMPI_ALLOW_RUN_AS_ROOT=1` 만 다시 넣는다**(같이 지워진다).
+  · ⛔⛔ **`pkill -f "pw.x"` 금지 — 이름으로 잡으면 남의 계산을 같이 죽인다.**
+    2026-09-19 실측: LOBSTER 를 8 랭크로 재시작하면서 `pkill -f "pw.x"` 를 썼고,
+    같은 기계에서 돌던 **NdP5O14 vc-relax 가 이온스텝 5 에서 같이 죽었다** (03:31,
+    Davidson 한가운데서 에러 없이 끊김 — 밖에서 죽인 시그니처). 7시간 51분을 모르고 보냈다.
+    ⇒ **입력 파일 이름으로 잡는다** (잡마다 유일하다):
+    ```
+    pgrep -af "lobster_scf.in"          # ① 먼저 보고
+    pkill -f "lobster_scf.in"           # ② 그 다음에 죽인다
+    ```
+    PID 를 직접 쓰는 것도 좋다. `pw.x`·`python3`·`mpirun` 같은 **공용 이름으로는 절대** 안 된다.
   · ⭐ **랭크를 바꾸기 전에 스크래치에서 프로브한다** — 돌던 잡을 죽이고 나서 안 되는 걸 알면 최악이다.
     별도 폴더 + `ESPRESSO_TMPDIR=<scratch>` 로 90 초만 띄워 `Parallel version` 헤더와
     `Estimated max dynamical RAM` 만 보고 죽인다. `ESPRESSO_TMPDIR` 이 입력의 `outdir` 을 덮으므로
