@@ -29,6 +29,7 @@ origin_review/fixtures.py	absent	-	일회성 리뷰 픽스처 — 만들어 썼�
 docs/data/mpm_dem_match.csv	external	사용자 WSL `~/work/mpm/` (sha256 미기록)	wallP 교차검증 **원자료**.  요약만 `docs/mpm_dem_wallP_crossvalidation.md` 로 들어왔다.  1차 증거인데 위치만 있고 해시가 없다
 post_lhs00_110/atom_2980000.liggghts	external	ibb `~/dem_test/post_lhs00_110/` (sha256 미기록)	ibb 런 산출물, 용량상 리포 밖 (영수증만 커밋).  1차 증거인데 해시 미기록
 post_lhs00_000/atom_2425000.liggghts	external	ibb `~/dem_test/post_lhs00_000/` (sha256 미기록)	ibb 런 산출물, 용량상 리포 밖 (영수증만 커밋).  1차 증거인데 해시 미기록
+Mixer/input.liggghts	external	사용자 Windows `F:\DEM\examples\LIGGGHTS\Tutorials_public\Mixer\` (LIGGGHTS-PUBLIC 동봉 예제, sha256 미기록)	`prereg_m7_aggregation_20260919.md` §8-④ 가 인용하는 **LIGGGHTS 공식 튜토리얼**이다 — 우리가 쓴 적 없는 파일이라 리포에 없다.  인용한 네 줄(`mesh/surface`·`move/mesh … rotate`·`insert/stream`·2종 상쌍 `coefficientFriction`)은 사용자가 2026-09-19 에 붙여넣은 실물에서 읽었다.  ⚠ sha256 은 그 기계에서 받아야 한다 — 믹서 단계를 실제로 등록·실행하기 전에 닫을 것
 #  ⚠ `regress/make_grid.py` 는 `external` 로 두려 했으나 **위치를 모른다** — 위치조차
 #     없는 것을 "외부 증거" 로 부르면 그 낱말이 거짓이 된다.  아는 대로 `absent` 로 둔다.
 regress/make_grid.py	absent	-	외부 회귀 하네스라고만 적혀 있고 **어디에 있는지 기록이 없다**.  이 브랜치에 없고, 재현하려면 먼저 위치를 찾아야 한다 (찾으면 `external` + 위치·sha256 으로 옮길 것)
