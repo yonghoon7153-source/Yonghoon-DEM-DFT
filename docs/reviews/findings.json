@@ -4609,7 +4609,7 @@
     "scripts/check_contact_validity.py::--selftest",
     "scripts/make_mixer_deck.py::_solve_bond0"
    ],
-   "claimed_fixed_sha": "PENDING"
+   "claimed_fixed_sha": "6a29f3e5c"
   }
  ]
 }
