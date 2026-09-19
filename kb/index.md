@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-18 · managed-files: 429
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-19 · managed-files: 429
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 228건)
+- 2026-09-19 · `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적) · open
 - 2026-09-18 · `kb/methodology/amorphous_overlap_gate_lessons_2026_09_18.md` — 비정질 겹침 게이트 — 다음 캠페인 설계로 넘기는 것 셋 · 제안 (다음 캠페인 설계용 · 이번 판정 재해석 금지)
 - 2026-09-18 · `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 을 "고전압 양극 계면 열화 억제" 로 · proposed — 1저자 승인 대기
 - 2026-09-16 · `kb/methodology/cei_model_transfer_to_cascade_2026_09_16.md` — CEI 모델을 캐스케이드로 옮기기 — 무엇이 이미 배선됐고 무엇이 안 됐나 · 진행
@@ -26,7 +27,6 @@
 - 2026-09-13 · `kb/reviews/codex_BQ3_reply_sweep_complete_2026_09_13.md` — 회신 BQ-3 — 스윕 완결 판정 (NO-GO 유지 · 10스윕 조건부 GO) · 회신됨-NO-GO-조건부GO
 - 2026-09-13 · `kb/reviews/codex_BQ4_prompt_10sweep_basin_2026_09_13.md` — 회신 BQ-4 프롬프트 — 10스윕 완결 · 골짜기 비교 · §4b 최종 판정 · 회신됨-종결GO
 - 2026-09-13 · `kb/reviews/codex_BQ4_reply_10sweep_basin_2026_09_13.md` — 회신 BQ-4 — 종결 GO · 서술 정정 8건 · P1 2건 · 재개 조건 2범주 · 회신됨-종결GO
-- 2026-09-13 · `kb/reviews/codex_BQ5_prompt_eprime_card_2026_09_13.md` — 회신 BQ-5 프롬프트 — 보고량 카드 v5 (공통 총부피 E′) §1–3 심사 · 회신됨-방향GO-카드NO-GO
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -365,7 +365,7 @@
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
 - `kb/projects/PRESENTATION_digital_twin_overview.md` — AI 계산 기반 스크리닝 플랫폼 — 발표용 종합 정리 (구: Digital Twin)
 - `kb/projects/cascade_pipeline_fixes_2026_08_19.md` — cascade 파이프라인 수정 목록 — codex 교차리뷰용 (2026-08-19 전수 정독 산물)  (2026-08-19 · 진행 — 진단 확정, 수정 미착수 (내일 codex 교차리뷰 예정))
-- `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적)  (2026-09-13 · open)
+- `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적)  (2026-09-19 · open)
 - `kb/projects/cascade_v23_review_2026_07_11.md` — Cascade v23 전체 리뷰 — 의도 지도 · 빠진 것 점검 · 후보군 구축 (2026-07-11)
 - `kb/projects/collab_rietveld_request_2026_07.md` — 협업자 Rietveld 데이터 요청 문안 + stable phase 사용현황 정리 — 2026-07-28
 - `kb/projects/decision_registry_design_2026_08_20.md` — 결정 레지스트리 설계 v2.1 — codex 3차 P0 반영 (MVP core 4결정)  (2026-08-20 · 설계 v2.1 — codex 3차 P0 3건 닫음 (구현 착수 대상 …)
