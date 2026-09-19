@@ -1375,9 +1375,32 @@ Ga(−0.0757)는 <b>0.6591 로 구분된다.</b> 이어 붙이면 구분되는 �
 <table>
 <thead><tr><th>상</th><th>우리 공간군</th><th>MP 참조 [eV]</th><th>우리 fixed-occ [eV]</th><th>차</th><th></th></tr></thead>
 <tbody>
-<tr><td>NdPS4</td><td class='mono'>I4_1/acd</td><td class='mono'>2.252</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>Nd2O3</td><td class='mono'>Ia-3</td><td class='mono'>3.708</td><td class='mono'>-6.460</td><td class='mono'>-10.168 (-274.2%)</td><td></td></tr><tr><td>Nd3PO7</td><td class='mono'>Cm</td><td class='mono'>4.284</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>NdCl3</td><td class='mono'>P6_3/m</td><td class='mono'>4.300</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>P2O5</td><td class='mono'>Fdd2</td><td class='mono'>5.202</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td> <span class="mono" style="color:#92400e">⚠ 바닥상 아님</span></td></tr><tr><td>Nd2(SO4)3</td><td class='mono'>C2/c</td><td class='mono'>5.433</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>Nd(PO3)3</td><td class='mono'>C222_1</td><td class='mono'>5.487</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>NdPO4</td><td class='mono'>P2_1/c</td><td class='mono'>5.679</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>LiNd(PO3)4</td><td class='mono'>C2/c</td><td class='mono'>5.979</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr><tr><td>NdP5O14</td><td class='mono'>Pmna</td><td class='mono'>6.336</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td></td></tr>
+<tr><td>NdPS4</td><td class='mono'>I4_1/acd</td><td class='mono'>2.252</td><td class='mono'>2.264</td><td class='mono'>+0.012 (+0.5%)</td><td></td></tr>
+<tr><td>Nd2O3</td><td class='mono'>Ia-3</td><td class='mono'>3.708</td><td class='mono'>3.827</td><td class='mono'>+0.119 (+3.2%)</td><td><span style='color:#be123c;font-weight:700'>⛔ 옛 −6.460 정정</span> <span style='color:#6b7280;font-size:.86em'>— 2026-08-07 tot_magnetization 미동기화로 VBM&gt;CBM 이던 사고값. 지우지 않고 여기 남긴다</span></td></tr>
+<tr><td>Nd3PO7</td><td class='mono'>Cm</td><td class='mono'>4.284</td><td class='mono'>4.352</td><td class='mono'>+0.068 (+1.6%)</td><td><span style='color:#6b7280;font-size:.86em'>↔ NdCl₃ 와 근접쌍 (MP 간격 0.016 eV)</span></td></tr>
+<tr><td>NdCl3</td><td class='mono'>P6_3/m</td><td class='mono'>4.300</td><td class='mono'>4.337</td><td class='mono'>+0.037 (+0.9%)</td><td><span style='color:#6b7280;font-size:.86em'>↔ Nd₃PO₇ 와 근접쌍 — 순서 주장 안 함</span></td></tr>
+<tr><td>P2O5</td><td class='mono'>Fdd2</td><td class='mono'>5.202</td><td class='mono'>5.186</td><td class='mono'>-0.016 (-0.3%)</td><td><span class="mono" style="color:#92400e">⚠ 바닥상 아님</span></td></tr>
+<tr><td>Nd2(SO4)3</td><td class='mono'>C2/c</td><td class='mono'>5.433</td><td class='mono'>5.548</td><td class='mono'>+0.115 (+2.1%)</td><td><span style='color:#6b7280;font-size:.86em'>↔ Nd(PO₃)₃ 와 근접쌍 (MP 간격 0.054 eV)</span></td></tr>
+<tr><td>Nd(PO3)3</td><td class='mono'>C222_1</td><td class='mono'>5.487</td><td class='mono'>5.497</td><td class='mono'>+0.010 (+0.2%)</td><td><span style='color:#6b7280;font-size:.86em'>↔ Nd₂(SO₄)₃ 와 근접쌍 — 순서 주장 안 함</span></td></tr>
+<tr><td>NdPO4</td><td class='mono'>P2_1/c</td><td class='mono'>5.679</td><td class='mono'>5.799</td><td class='mono'>+0.120 (+2.1%)</td><td></td></tr>
+<tr><td>LiNd(PO3)4</td><td class='mono'>C2/c</td><td class='mono'>5.979</td><td class='mono'>5.993</td><td class='mono'>+0.014 (+0.2%)</td><td></td></tr>
+<tr><td>NdP5O14</td><td class='mono'>Pmna</td><td class='mono'>6.336</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td><span style='color:#6b7280;font-size:.86em'>▶ gabia 진행 중 · vc-relax 수렴 16:37 → 02_scf → 03_nscf_gap · 예측 6.33–6.46 eV</span></td></tr>
 </tbody></table>
 </div>
+<p style="margin-top:10px"><strong>9/10 이 채워졌다 (2026-09-19).</strong>
+평균 offset <strong>+0.053 eV</strong> · 최대 차 <strong>+0.120 eV (+3.2 %)</strong> —
+아홉 종 전부 ±3.2 % 안이다.
+<strong>순위는 9 종 중 7 종이 MP 그대로</strong>이고, 뒤바뀐 두 쌍
+(Nd₃PO₇↔NdCl₃ · Nd₂(SO₄)₃↔Nd(PO₃)₃)은 <strong>MP 간격이 0.016 / 0.054 eV</strong> 로
+우리 offset(0.053)과 같거나 작다 — <strong>분해하지 못하는 근접쌍</strong>이지 순위를
+틀린 것이 아니다. <u>이 두 쌍의 상대 순서는 주장하지 않는다.</u></p>
+<p class="muted" style="font-size:.86em">⚠ MP 값도 PBE 라 <strong>같은 근사끼리</strong>의
+비교다. 그래도 문헌·db 분리 규율대로 <strong>우리 db 갭 표에 MP 를 섞지 않고</strong>,
+재현 판정은 <strong>'같은 자릿수·같은 순위'</strong> 로만 한다 — 위 '차' 열은 참고 수치이지
+재현율이 아니다. PBE 갭은 넓은 갭 절연체에서 30–50 % 과소하므로
+<strong>실험값과 나란히 놓지 않는다.</strong>
+원장: <code>db/properties/cei_gap_results_2026_09_19.json</code></p>
+
 
 <p style="color:var(--mut);font-size:.87rem">⛔ MP 값은 <strong>PBE 소환값</strong>이고 우리 db
 갭 표에 안 들어간다 (문헌·db 분리). Nd 함유 상은 4f 배치 때문에 <strong>하한</strong>이다.
