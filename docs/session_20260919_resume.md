@@ -183,6 +183,75 @@ OK 최소(0.1860)보다 SE 가 많은데 미관통인 케이스가 **53** 건.  
 ⇒ 먼저 `NOT_PERCOLATING` 의 **두 원인(ⓐ 전극 밴드가 빔 / ⓑ 진짜 미관통)을 가르는 status** 를
   넣고 재측정한다.  GPU 불요, 원자료는 사용자 기계에 있다.
 
+### ✅ ① 완료 (2026-09-19 저녁) — 진단이 갈라졌다
+
+`ELECTRODE_BAND_EMPTY` 신설 + `tau_detail.band_detail` 진단.  재현 시험을 **먼저** 넣어
+고치기 전 실행에서 실패시켰고(규율 ②), 변이 2건으로 이빨을 확인했다.
+★ 변이②(`plate_z` 를 진짜 규약으로 쓰기)에서 같은 침대가 `ELECTRODE_BAND_EMPTY` →
+**`OK` · τ = 1.0** 으로 뒤집혔다 ⇒ **규약 교체는 판정을 뒤집는 크기**다.  그래서
+재측정 전에 규약을 바꾸지 않는다 (바꾸면 바꾼 규약으로 잰 수로 그 규약을 정당화한다).
+
+⬜ **② 130 재수확 — 사용자 기계에서 돌린다** (ibb 아님, WSL 원자료).  명령은 아래 §재수확.
+⬜ **③ 그 분포를 보고 전극 규약 판단.**  갈림길은 `alt_plate_above_solid` —
+   플래튼이 최고 입자보다 **위**면 plate_z 규약은 밴드를 더 **어렵게** 만들어 후보에서
+   탈락하고, **아래**면 더 쉬워진다.  ⚠ 어느 쪽인지는 재수확 전에는 모른다
+   (130 산출물에 `z_hi` 가 없었다).
+
+### §재수확 — 사용자 기계 (WSL).  **어제 돌린 그 자리에서, 스크립트만 새로 받아**
+
+⚠ 수확기는 **리포 구조 안**에서만 자기 자신을 찾는다 (`ROOT = parent.parent`).
+어제 `/tmp/lhsh/scripts/` 를 만든 이유가 그것이다 — 그 구조를 그대로 쓴다.
+
+```bash
+cd ~/Yonghoon-DEM-DFT && git fetch origin claude/stoic-knuth-NObVQ
+for f in lhs_harvest_batch lhs_descriptor_harvest lhs_perc_extract; do
+    git show origin/claude/stoic-knuth-NObVQ:scripts/$f.py > /tmp/lhsh/scripts/$f.py
+done
+cd /tmp/lhsh
+nohup python3 scripts/lhs_harvest_batch.py --verify-sha \
+    --cohort /tmp/lhsh/cohort.tsv --out-dir /tmp/lhsh/out_full2 \
+    > /tmp/lhsh/harvest2.log 2>&1 &
+```
+⚠ `--cohort` 경로는 **어제 130 을 돌린 그 파일** 그대로다 — 내가 그 기계의 경로를 못 보므로
+어제 쓴 값을 쓸 것 (`--root-from/--root-to` 도 어제 준 대로).  코호트는 안 바뀌었다.
+⚠ **`out_full` 을 덮어쓰지 않는다.**  `out_full2` 로 따로 받는 이유는 **무결성 검사**다 —
+이번 변경은 진단을 **더한** 것이지 규약을 바꾼 것이 아니므로 **τ 값은 130 건 전부 같아야**
+한다.  다르면 내가 τ 를 건드린 것이고, 그건 되돌릴 사유다.
+
+끝나면 두 줄:
+```bash
+# ① 무결성 — τ 가 안 변했나 (0 이어야 한다)
+python3 - <<'PY'
+import json,glob,os
+n=0
+for f in sorted(glob.glob('/tmp/lhsh/out_full2/*.json')):
+    if f.endswith('_batch_summary.json'): continue
+    g=f.replace('/out_full2/','/out_full/')
+    if not os.path.exists(g): print('짝 없음', os.path.basename(f)); continue
+    a=json.load(open(f)); b=json.load(open(g))
+    if a['tortuosity_dijkstra_SE'] != b['tortuosity_dijkstra_SE']: n+=1; print('τ 바뀜', a['case'])
+print('τ 바뀐 건수 =', n, '  (0 이 아니면 보고할 것)')
+PY
+
+# ② 진단 — ⓐ/ⓑ 가 어떻게 갈렸나
+python3 - <<'PY'
+import json,glob,collections
+c=collections.Counter(); ab=collections.Counter(); g=collections.Counter()
+for f in sorted(glob.glob('/tmp/lhsh/out_full2/*.json')):
+    if f.endswith('_batch_summary.json'): continue
+    d=json.load(open(f)); t=d['tau_detail']; b=t.get('band_detail') or {}
+    c[t['status']]+=1
+    if t['status']=='ELECTRODE_BAND_EMPTY':
+        ab['plate 가 고체 위' if b.get('alt_plate_above_solid') else 'plate 가 고체 아래']+=1
+        ab['plate 규약이면 위밴드가 찬다' if (b.get('alt_n_top') or 0)>0
+           else 'plate 규약이어도 여전히 빔']+=1
+        g['위밴드만 빔' if b.get('n_bot') else '아래밴드도 빔']+=1
+print(c); print(ab); print(g)
+PY
+```
+⇒ 이 세 줄이 **③ 규약 판단**의 입력이다.  `plate 규약이면 위밴드가 찬다` 가 크면 규약이
+용의자고, 작으면 규약을 바꿔도 안 풀리는 **물리**다.
+
 ---
 
 ## ★ 내일 (2026-09-20) — 사용자 지시

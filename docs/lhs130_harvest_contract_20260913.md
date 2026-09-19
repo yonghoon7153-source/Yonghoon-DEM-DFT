@@ -53,8 +53,17 @@
 ## 결측을 다섯 종류로 가른다 (`DESC-05`)
 
 `OK` · `N_A_PHASE_ABSENT`(없는 상 — 존재하는데 무접촉인 **0** 과 다르다) · `NOT_PERCOLATING` ·
-`NO_VALID_SAMPLED_PAIR` · `FREE_SURFACE_INVALID`(분모 붕괴 — 무접촉 0 과 다르다) · `INPUT_MISSING`.
+**`ELECTRODE_BAND_EMPTY`** · `NO_VALID_SAMPLED_PAIR` · `FREE_SURFACE_INVALID`(분모 붕괴 —
+무접촉 0 과 다르다) · `INPUT_MISSING`.
 ⛔ **한 타깃이 미정의라고 다른 타깃이 있는 행을 통째로 버리지 않는다.**
+
+★ **여섯 번째가 2026-09-19 에 늘었다** (`LHS-08`).  `NOT_PERCOLATING` 하나가 **두 원인**을
+접고 있었다 — ⓐ 전극 밴드에 SE 가 0 명이라 볼 성분이 애초에 없던 경우와 ⓑ 밴드는 찼는데
+어떤 성분도 못 잇던 경우.  **처방이 정반대**다(ⓐ = 규약, ⓑ = 물리)인데 산출물이 같아
+실물 130 중 **116** 이 어느 쪽인지 판별 불가였다.  ⇒ ⓐ 는 `ELECTRODE_BAND_EMPTY`,
+그리고 두 경우 모두 `tau_detail.band_detail` 에 **세는 수**를 남긴다.
+⚠ 이것은 `DESC-05` 의 *"결측을 종류로 가른다"* 가 **한 겹 더 필요했다**는 뜻이다 —
+종류를 다섯으로 가르고도 그 중 하나가 두 사유를 담고 있으면 같은 false-green 이 난다.
 
 ## 아직 안 한 것 (정직하게)
 

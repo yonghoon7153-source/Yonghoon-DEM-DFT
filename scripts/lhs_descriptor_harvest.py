@@ -77,6 +77,12 @@ c_i = FREE_SURFACE_INVALID                                    [F_i ≤ 0]
   (`P1-HARV-01`: 초판은 raw 좌표차를 써서 평행이동만으로 τ 가 9.66배 바뀌었다.)
 - 슬래브 = 고체(AM ∪ SE) z 범위 `[min(z−r), max(z+r)]` 의 양 끝, 두께 = `r_SE,max`.
   (`lhs_perc_extract` ④ 와 같은 사고 — AM 만의 범위를 쓰면 희박한 침대에서 판정이 쉬워진다.)
+  ⚠⚠ **이 규약은 아직 정당화되지 않았다** (`LHS-08`, 열림).  z 범위는 **전 입자(AM 포함)**
+  가 정하는데 밴드 소속은 **SE 만** 보므로, AM 이 SE 보다 위로 솟은 침대는 위 밴드가
+  구조적으로 빌 수 있다 — 실제 전극면인 `plate_z_sim` 은 이미 출력에 있는데 **안 쓴다**.
+  ⇒ 산출물에 `band_detail.alt_n_top`(plate_z 규약이면 몇 명인지)을 **진단으로만** 적는다.
+  규약을 바꾸는 것은 재측정 **뒤**다 — 먼저 바꾸면 바꾼 규약으로 잰 수로 그 규약을
+  정당화하게 된다 (`규율 ⑤`: 후보를 고르는 코드가 곧 사각지대).
 - 통계량을 **이름으로 가른다**: `tau_mean`(절단본, legacy 호환) · `tau_median` ·
   `tau_mean_untruncated` · `n_truncated`.  등록 별칭 `tortuosity_dijkstra_SE` = **`tau_mean`**.
   ⚠ 판정문 반례: `[1,1,10]` → mean **4** / recommended **1**; `[1, 20.024984]` → 절단 후
@@ -103,8 +109,12 @@ c_i = FREE_SURFACE_INVALID                                    [F_i ≤ 0]
 ═══ 상태 코드 ═══
 
 `OK` · `N_A_PHASE_ABSENT`(없는 상 — 존재하는데 무접촉인 `0` 과 다르다) ·
-`NOT_PERCOLATING` · `NO_VALID_SAMPLED_PAIR` · `FREE_SURFACE_INVALID` · `INPUT_MISSING`.
+`NOT_PERCOLATING` · **`ELECTRODE_BAND_EMPTY`** · `NO_VALID_SAMPLED_PAIR` ·
+`FREE_SURFACE_INVALID` · `INPUT_MISSING`.
 ⚠ 한 타깃이 미정의라고 **다른 타깃이 있는 행을 통째로 버리지 않는다** (`DESC-01` 의 교훈).
+⚠ `ELECTRODE_BAND_EMPTY` 는 `NOT_PERCOLATING` 의 **하위분류가 아니라 다른 사유**다
+(`LHS-08`): 전자는 **규약(밴드 정의)** 을, 후자는 **물리(연결성)** 를 겨눈다.  둘을 같은
+값으로 내면 *"코드 문제냐"* 에 답할 수 없다 — 실제로 130 중 116 이 그 상태였다.
 """
 from __future__ import annotations
 
@@ -137,6 +147,10 @@ AREA_CHANNEL = ('dem_geometric_c_cpl22 — LIGGGHTS 기하 교차 원판 pi(r d 
 STATUS_OK = 'OK'
 STATUS_ABSENT = 'N_A_PHASE_ABSENT'
 STATUS_NOPERC = 'NOT_PERCOLATING'
+#: LHS-08 — `NOT_PERCOLATING` 이 접고 있던 **다른 원인**: 전극 밴드에 SE 가 0 명이라
+#: 성분을 볼 것도 없이 끝난 경우.  ⓐ(밴드 빔)/ⓑ(진짜 미관통)를 같은 값으로 내면
+#: 실물 116 건이 어느 쪽인지 **산출물만으로 판별 불가**다.
+STATUS_BAND_EMPTY = 'ELECTRODE_BAND_EMPTY'
 STATUS_NOPAIR = 'NO_VALID_SAMPLED_PAIR'
 STATUS_MISSING = 'INPUT_MISSING'
 
@@ -317,14 +331,39 @@ def _mi_dist(p, q, lx, ly):
     return float(np.linalg.norm(d))
 
 
-def tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=N_TAU_PAIRS, seed=42):
-    """계약③ — fallback source 승격 **없음**, 쌍은 **같은 성분 안에서만**."""
+def tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=N_TAU_PAIRS, seed=42,
+                  plate_z=None):
+    """계약③ — fallback source 승격 **없음**, 쌍은 **같은 성분 안에서만**.
+
+    ★ `LHS-08` (2026-09-19): 초판은 **두 개의 `return base`** 가 같은 `NOT_PERCOLATING`
+    을 냈다 — ⓐ 전극 밴드에 SE 가 0 명이라 **볼 성분이 애초에 없던** 경우와 ⓑ 밴드는
+    찼는데 어떤 성분도 두 밴드를 못 잇던 경우.  실물 130 중 **116** 이 그 값이었고
+    산출물만으로는 어느 쪽인지 알 수 없었다 ⇒ *"우리 코드 문제냐"* 에 답할 수가 없었다.
+    ⓐ 는 규약(밴드 정의)을 겨누고 ⓑ 는 물리를 겨누는데 **처방이 정반대**다.
+    ⇒ ⓐ = `ELECTRODE_BAND_EMPTY`, ⓑ = `NOT_PERCOLATING`, 그리고 두 경우 모두
+    `band_detail` 에 **왜 그랬는지 세는 수**를 남긴다.
+
+    ⚠ `plate_z` 는 **진단 전용**이다.  보고되는 τ 도 `tau_convention` 도 `solid_zrange`
+    규약 **그대로**다 (selftest ⑭ 가 그것을 강제한다).  규약 판단은 재측정 **뒤**다 —
+    LHS-08 처방 순서 = 진단 분리 → 재측정 → 규약 판단.  순서를 바꾸면 규약을 바꾼 뒤
+    그 규약으로 잰 수로 규약을 정당화하게 된다.
+    """
     import networkx as nx
 
     sel = np.flatnonzero(np.asarray([l == 'SE' for l in labels]))
+    band = dict(
+        n_se=int(sel.size), z_lo=None, z_hi=None, band_t=None,
+        se_z_lo=None, se_z_hi=None, n_bot=0, n_top=0,
+        n_components=0, n_span_components=0,
+        largest_comp_frac=None, largest_comp_z_span_frac=None,
+        alt_plate_z=(None if plate_z is None else float(plate_z)),
+        alt_n_top=None, alt_plate_above_solid=None,
+        alt_note=('진단 전용 (LHS-08) — 위 전극면을 plate_z 로 뒀을 때의 밴드 인원. '
+                  '보고 τ 는 solid_zrange 규약 그대로이며 이 수는 τ 에 안 들어간다.'))
     base = dict(tau_mean=None, tau_median=None, tau_mean_untruncated=None,
                 n_sampled=0, n_valid=0, n_truncated=0, status=STATUS_NOPERC,
-                tau_convention='harvest_v1/solid_zrange/rSEmax/no_fallback/same_component')
+                tau_convention='harvest_v1/solid_zrange/rSEmax/no_fallback/same_component',
+                band_detail=band)
     if sel.size < 2:
         base['status'] = STATUS_ABSENT
         return base
@@ -337,6 +376,9 @@ def tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=N_TAU_PAIRS, seed=42):
     t = float(rad.max())
     lx = float(box_hi[0] - box_lo[0])
     ly = float(box_hi[1] - box_lo[1])
+    band.update(z_lo=z_lo, z_hi=z_hi, band_t=t,
+                se_z_lo=float((xyz[:, 2] - rad).min()),
+                se_z_hi=float((xyz[:, 2] + rad).max()))
 
     pairs = _pairs_within(xyz, rad, lx, ly, z_pad=t)
     G = nx.Graph()
@@ -345,17 +387,36 @@ def tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=N_TAU_PAIRS, seed=42):
         d = _mi_dist(xyz[i].copy(), xyz[j].copy(), lx, ly)   # ★ P1-HARV-01
         G.add_edge(int(i), int(j), distance=d)
 
+    #  ★ LHS-08: 성분 통계를 **밴드 검사 전에** 낸다 — ⓐ 로 빠져도 "SE 가 한 덩어리였나
+    #  산산조각이었나" 를 알아야 밴드 정의가 용의자인지 판별된다.
+    comps = list(nx.connected_components(G))
+    band['n_components'] = int(len(comps))
+    if comps:
+        big = max(comps, key=len)
+        bi = np.fromiter(big, dtype=np.int64, count=len(big))
+        band['largest_comp_frac'] = float(len(big) / sel.size)
+        _span = float((xyz[bi, 2] + rad[bi]).max() - (xyz[bi, 2] - rad[bi]).min())
+        band['largest_comp_z_span_frac'] = (
+            float(_span / (z_hi - z_lo)) if z_hi > z_lo else None)
+
     bot = set(np.flatnonzero((xyz[:, 2] - rad) <= z_lo + t).tolist())
     top = set(np.flatnonzero((xyz[:, 2] + rad) >= z_hi - t).tolist())
+    band.update(n_bot=int(len(bot)), n_top=int(len(top)))
+    if plate_z is not None:                    # ⚠ 진단만 — τ 에 안 들어간다
+        band['alt_n_top'] = int(np.count_nonzero(
+            (xyz[:, 2] + rad) >= float(plate_z) - t))
+        band['alt_plate_above_solid'] = bool(float(plate_z) >= z_hi)
     if not bot or not top:
+        base['status'] = STATUS_BAND_EMPTY      # ⓐ — 규약(밴드 정의)이 용의자
         return base
 
     cands = []
-    for comp in nx.connected_components(G):
+    for comp in comps:
         cb, ct = comp & bot, comp & top
         if cb and ct:
             cands.append((sorted(cb), sorted(ct)))
-    if not cands:                                   # ⇒ 유한 τ 를 내지 않는다
+    band['n_span_components'] = int(len(cands))
+    if not cands:                                   # ⓑ — 유한 τ 를 내지 않는다 (물리)
         return base
 
     rng = np.random.default_rng(seed)
@@ -427,7 +488,9 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
     ids = _atom_ids(atom_path)
     c1, c2, carea, cheaders = read_contact_dump(contact_path)
     cov = coverage_hertz(ids, labels, atoms['radius'], c1, c2, carea)
-    tau = tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=n_pairs)
+    #  plate_z 는 **진단 전용**으로만 넘긴다 (LHS-08) — 보고 τ 의 규약은 안 바뀐다.
+    tau = tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=n_pairs,
+                        plate_z=plate_z)
 
     raw = {'atom': dict(path=os.path.basename(atom_path), sha256=sha256_of(atom_path)),
            'contact': dict(path=os.path.basename(contact_path),
@@ -734,6 +797,78 @@ def selftest():
         _ratio = (np.pi * (_r * _d - _d * _d / 4)) / (np.pi * (_r / 2) * _d)
         chk('⑬b L1-04: A_LIGG/A_Hertz = 2 − δ/(2r) = 1.9875',
             abs(_ratio - 1.9875) < 1e-9)
+
+        # ── ⑭ LHS-08: 미관통의 **두 원인**을 산출물이 가르는가 ───────────────
+        #  초판은 ⓐ 전극 밴드가 비어 **표본이 애초에 없는** 경우와 ⓑ 밴드는 찼는데
+        #  성분이 안 이어진 경우를 **같은 `NOT_PERCOLATING`** 으로 접었다 (두 `return
+        #  base` 가 같은 값을 낸다).  실물 130 중 **116** 이 그 값이었고 어느 쪽인지
+        #  산출물만으로는 알 수 없었다 — φ_SE 로도 안 갈린다 (τ-OK 최소 φ_SE 0.1860
+        #  보다 SE 가 많은데 실패한 케이스가 **53건**).
+        def _bed(rows):
+            """rows = (x, y, z, r, label) — 라벨을 직접 준다 (AM 이 z 범위를 정하는 경우)"""
+            at = dict(x=np.array([q[0] for q in rows], float),
+                      y=np.array([q[1] for q in rows], float),
+                      z=np.array([q[2] for q in rows], float),
+                      radius=np.array([q[3] for q in rows], float),
+                      type=np.ones(len(rows), dtype=np.int64))
+            return at, np.array([q[4] for q in rows], dtype=object)
+
+        _lo8, _hi8 = np.array([0., 0., 0.]), np.array([10., 10., 20.])
+        #  ⓐ 밴드가 빔 — SE 는 **하나로 이어져 있는데** 위 전극 밴드에 닿지 않는다.
+        #    z_hi 를 **AM** 이 정한다 = 고체 z 범위 규약이라 SE 만 봐선 안 보이는 실패.
+        _a_rows = [(5.0, 5.0, 0.5 + 0.9 * k, 0.5, 'SE') for k in range(11)]
+        _a_rows += [(1.0, 1.0, 19.0, 0.5, 'AM_S')]
+        _ta = tortuosity_se(*_bed(_a_rows), _lo8, _hi8)
+        #  ⓑ 진짜 미관통 — 양 밴드에 SE 가 **있는데** 두 덩어리가 끊겼다.
+        _b_rows = [(5.0, 5.0, 0.5 + 0.9 * k, 0.5, 'SE') for k in range(5)]
+        _b_rows += [(5.0, 5.0, 15.5 + 0.9 * k, 0.5, 'SE') for k in range(5)]
+        _tb = tortuosity_se(*_bed(_b_rows), _lo8, _hi8)
+        _bda = _ta.get('band_detail') or {}
+        _bdb = _tb.get('band_detail') or {}
+        chk('⑭ LHS-08 ★재현: ⓐ(밴드 빔) 과 ⓑ(진짜 미관통) 의 status 가 **다르다**',
+            _ta['status'] != _tb['status'])
+        chk('⑭ LHS-08: ⓐ = ELECTRODE_BAND_EMPTY', _ta['status'] == STATUS_BAND_EMPTY)
+        chk('⑭ LHS-08: ⓑ = NOT_PERCOLATING', _tb['status'] == STATUS_NOPERC)
+        chk('⑭ LHS-08: 둘 다 유한 τ 를 내지 않는다 (판정은 그대로 보수적)',
+            _ta['tau_mean'] is None and _tb['tau_mean'] is None)
+        chk('⑭ LHS-08: 진단 블록 band_detail 이 붙는다', bool(_bda) and bool(_bdb))
+        #  ⓐ 는 **한 덩어리인데도** 실패했다 = 규약(밴드 정의)이 용의자라는 신호
+        chk('⑭ LHS-08 ⓐ: 위 밴드가 0 명 · 아래는 있다 · 성분은 하나',
+            _bda.get('n_top', -1) == 0 and _bda.get('n_bot', -1) >= 1
+            and _bda.get('n_components', -1) == 1)
+        #  ⓑ 는 양쪽 밴드가 찼는데 성분이 둘 = 물리
+        chk('⑭ LHS-08 ⓑ: 양 밴드가 차 있고 성분이 둘, 관통 성분 0',
+            _bdb.get('n_bot', -1) >= 1 and _bdb.get('n_top', -1) >= 1
+            and _bdb.get('n_components', -1) == 2
+            and _bdb.get('n_span_components', -1) == 0)
+        #  규약 판단(LHS-08 3단계)에 필요한 수치가 같은 수확에서 나온다 — 그러나
+        #  **보고되는 τ 는 건드리지 않는다**.  이 두 줄이 그것을 강제한다.
+        _tb2 = tortuosity_se(*_bed(_b_rows), _lo8, _hi8, plate_z=12.0)
+        chk('⑭ LHS-08: plate_z 진단은 보고값·규약 문자열을 **안 바꾼다**',
+            _tb2['status'] == _tb['status'] and _tb2['tau_mean'] == _tb['tau_mean']
+            and _tb2['tau_convention'] == _tb['tau_convention'])
+        chk('⑭ LHS-08: 규약 문자열이 solid_zrange 그대로다 (규약 판단은 재측정 뒤)',
+            _tb['tau_convention']
+            == 'harvest_v1/solid_zrange/rSEmax/no_fallback/same_component')
+        chk('⑭ LHS-08: 그래도 plate_z 밴드 인원은 따로 적힌다 (규약 판단용)',
+            (_tb2.get('band_detail') or {}).get('alt_n_top', -1)
+            != (_tb2.get('band_detail') or {}).get('n_top', -1))
+        #  ★ 날카로운 쪽 — ⓐ 는 규약을 바꾸면 **판정이 뒤집히는** 침대다 (BAND_EMPTY →
+        #  OK, τ None → 유한).  여기서 plate_z 가 무해해야 "진단 전용"이 실재한다.
+        #  (ⓑ 로만 검사하면 규약을 바꿔도 답이 안 변해 **통과해 버린다** = 약한 가드.)
+        _ta2 = tortuosity_se(*_bed(_a_rows), _lo8, _hi8, plate_z=10.5)
+        chk('⑭ LHS-08 ★가드: 판정이 뒤집히는 침대에서도 plate_z 가 τ 를 안 건드린다',
+            _ta2['status'] == _ta['status'] and _ta2['tau_mean'] is None
+            and (_ta2.get('band_detail') or {}).get('n_top', -1) == 0)
+        chk('⑭ LHS-08: 그 침대의 alt_n_top 이 **규약을 바꾸면 몇 명인지**를 적는다',
+            (_ta2.get('band_detail') or {}).get('alt_n_top', -1) >= 1
+            and (_ta2.get('band_detail') or {}).get('alt_plate_above_solid') is False)
+        #  양성 대조 — 진단을 붙였다고 성공 경로가 깨지면 안 된다
+        _c_rows = [(5.0, 5.0, 0.5 + 0.9 * k, 0.5, 'SE') for k in range(22)]
+        _tc = tortuosity_se(*_bed(_c_rows), _lo8, _hi8)
+        chk('⑭ LHS-08: 관통 침대는 그대로 OK (진단이 성공을 안 깬다)',
+            _tc['status'] == STATUS_OK
+            and (_tc.get('band_detail') or {}).get('n_span_components', -1) == 1)
 
         # ── ⑬ 계약⑥: 291 코퍼스를 읽지 않는다 (정적) ────────────────────────
         src = open(os.path.abspath(__file__), encoding='utf-8').read()
