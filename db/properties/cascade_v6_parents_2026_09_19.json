@@ -1,0 +1,275 @@
+{
+  "schema": "structure_census/v1",
+  "kind": "structure_census",
+  "date": "2026-09-19",
+  "system": "lpscl_cascade_pilot",
+  "citable": false,
+  "제목": "cascade v6 — 부모 배열 10 개 census (A·B 기존 + C~J 신규 8)",
+  "card": "db/properties/cascade_estimand_card_v6_10parents_2026_09_19.json",
+  "0_무엇인가": "v6 카드 §2 가 요구하는 부모(배열) 10 개. A·B 는 v5 에서 쓰던 것 그대로이고 C~J 를 같은 빌더 규칙·같은 인자로 seed 만 바꿔 새로 만들었다. ⛔ 이 기록은 **구조 생성**만 말한다 — 준비 완화도 MD 도 아직 하나도 돌지 않았다.",
+  "1_생성_명령": {
+    "도구": "tools/doping/substitute_compound.py",
+    "repo_commit": "b85ce7a92",
+    "P1_Al2O3": "python3 tools/doping/substitute_compound.py --base db/structures/comp1_V0_k444.cif --supercell 2 2 1 --compound Al2O3 --x_compound 0.0625 --cation_site Li_24g --anion_site S_16e --method spread --n_fu 4 --seed <N> --s1_contract enforce --quantize_policy exact --distinct_anion_parent --anion_parent_symbol P --anion_parent_cutoff 2.6 --emit_index_plan <plan> --emit_plan_shape positional --out <dir>/P1/",
+    "P2_Al2S3": "python3 tools/doping/substitute_compound.py --base db/structures/comp1_V0_k444.cif --supercell 2 2 1 --compound Al2S3 --x_compound 0.0625 --cation_site Li_24g --anion_site S_16e --method spread --n_fu 4 --seed <N> --s1_contract enforce --quantize_policy exact --index_plan <plan> --out <dir>/P2/",
+    "seed_대응": "A=1 · B=2 (v5 기존) · C=3 · D=4 · E=5 · F=6 · G=7 · H=8 · I=9 · J=10",
+    "⚠_P2_는_규칙을_안_켠다": "P2 는 --index_plan 으로 자리를 그대로 받으므로 --distinct_anion_parent 가 필요 없다 (S 자리에 S 를 놓는 명시된 no-op). A·B 기록도 P2 는 distinct_parent_rule=false 다."
+  },
+  "2_검증_전수_10개": {
+    "① 조성 일치": "P1 Li90Al2P16S77O3Cl16 (204) 10/10 동일 · P2 Li90Al2P16S80Cl16 (204) 10/10 동일",
+    "② host 자리지도": "parent_site_map digest sha256:f6989858c6bbbcc6… 20/20 동일",
+    "③ 배열 고유성": "(Al 자리, O 자리) 조합 10/10 고유 — 중복 없음",
+    "④ distinct-parent": "10/10 true, 세 O 의 부모 P 가 매번 서로 다름 (PS₃O ×3 · PS₁O₃ 없음)",
+    "⑤ P1↔P2 자리": "10/10 일치 — 같은 인덱스에 O vs S 만 다르다"
+  },
+  "3_⚠_보고할_사실_Al_자리_중복": {
+    "무엇": "Al 자리가 부모끼리 겹친다 — (93,145) 가 A·D·H 셋, (88,140) 이 E·I 둘. Al 자리 고유값은 10 개 중 7 종이다.",
+    "왜": "--method spread 가 결정론적 후보 집합에서 고르기 때문이다. seed 는 그 집합 안의 선택만 바꾼다.",
+    "어떻게_했나": "**그대로 쓴다.** 카드 §2 가 '생성된 순서대로 전부 쓴다 — ΔE 나 점수로 고르면 선택 편향' 이라고 박아 뒀고, Al 자리가 겹친다는 이유로 버리는 것도 고르는 것이다.",
+    "⛔_대신_이것을_안다": "부모끼리 완전 독립이 아니다. 부모 간 로그 산포에서 얻는 SE 는 그만큼 **낙관적**일 수 있고, 판정이 미결로 나왔을 때 '표본이 더 필요하다' 의 근거로 이 줄을 인용한다.",
+    "⛔_하지_않은_것": "다른 --method(예: random)로 바꿔 다양성을 늘리는 것 — 그러면 A·B 와 생성 규칙이 달라져 v5 승계가 깨진다. 바꾸려면 새 카드다."
+  },
+  "4_parents": [
+    {
+      "parent": "A",
+      "seed": 1,
+      "Al_targets": [
+        93,
+        145
+      ],
+      "O_targets": [
+        113,
+        123,
+        162
+      ],
+      "O_parent_P": [
+        1,
+        158,
+        159
+      ],
+      "distinct_parent_rule": true,
+      "P1_xyz": "db/structures/cascade_pilot/P1_Al2O3_A.xyz",
+      "P1_sha256": "a2191fb738a1bbb75307da345dbb262c40d85a344901f2e4ab63559c4f2d82cb",
+      "P2_xyz": "db/structures/cascade_pilot/P2_Al2S3_A.xyz",
+      "P2_sha256": "76987138d77d9e630df05375786db16aa6048b023086eb422fdf3915fb00381c",
+      "plan": "db/structures/cascade_pilot/plan_A.json"
+    },
+    {
+      "parent": "B",
+      "seed": 2,
+      "Al_targets": [
+        27,
+        184
+      ],
+      "O_targets": [
+        19,
+        120,
+        121
+      ],
+      "O_parent_P": [
+        55,
+        104,
+        105
+      ],
+      "distinct_parent_rule": true,
+      "P1_xyz": "db/structures/cascade_pilot/P1_Al2O3_B.xyz",
+      "P1_sha256": "7a1cbb11d6199c95288d54a7b13fbda867c763b0dbe979cbc7aaaa1be7a100da",
+      "P2_xyz": "db/structures/cascade_pilot/P2_Al2S3_B.xyz",
+      "P2_sha256": "98c16677d8f0a1994f03c8a19ced42f0bfb84d6f9239644053a70b0a9817f6ed",
+      "plan": "db/structures/cascade_pilot/plan_B.json"
+    },
+    {
+      "parent": "C",
+      "seed": 3,
+      "Al_targets": [
+        30,
+        181
+      ],
+      "O_targets": [
+        57,
+        67,
+        68
+      ],
+      "O_parent_P": [
+        1,
+        52,
+        55
+      ],
+      "distinct_parent_rule": true,
+      "P1_xyz": "db/structures/cascade_pilot/P1_Al2O3_C.xyz",
+      "P1_sha256": "ed8c8fc11d1adb75ca3e99227419f4fb97689e1c648d8033f8d1130d8193c700",
+      "P2_xyz": "db/structures/cascade_pilot/P2_Al2S3_C.xyz",
+      "P2_sha256": "6d585560dce5d0d86a559d4070d217f4646fb7f7a36039a82567057511d4d91b",
+      "plan": "db/structures/cascade_pilot/plan_C.json"
+    },
+    {
+      "parent": "D",
+      "seed": 4,
+      "Al_targets": [
+        93,
+        145
+      ],
+      "O_targets": [
+        69,
+        108,
+        175
+      ],
+      "O_parent_P": [
+        53,
+        104,
+        107
+      ],
+      "distinct_parent_rule": true,
+      "P1_xyz": "db/structures/cascade_pilot/P1_Al2O3_D.xyz",
+      "P1_sha256": "73824c642e94403890f34407402a277dc044bf5200e6a6c8a8b680762c17b96b",
+      "P2_xyz": "db/structures/cascade_pilot/P2_Al2S3_D.xyz",
+      "P2_sha256": "35568058e7646ea64dd1a0f8800821d435f0cb85e3db939e80fa347765d81370",
+      "plan": "db/structures/cascade_pilot/plan_D.json"
+    },
+    {
+      "parent": "E",
+      "seed": 5,
+      "Al_targets": [
+        88,
+        140
+      ],
+      "O_targets": [
+        11,
+        114,
+        160
+      ],
+      "O_parent_P": [
+        2,
+        55,
+        156
+      ],
+      "distinct_parent_rule": true,
+      "P1_xyz": "db/structures/cascade_pilot/P1_Al2O3_E.xyz",
+      "P1_sha256": "56a005852d856e3c8e74c1121607bd4fadd9c5a398b079cc56b7b809994d8bf7",
+      "P2_xyz": "db/structures/cascade_pilot/P2_Al2S3_E.xyz",
+      "P2_sha256": "95b2bc42fdf2ac3c177a3c86415183aeeb025a18e3a65aea5a8f92dd4fc61423",
+      "plan": "db/structures/cascade_pilot/plan_E.json"
+    },
+    {
+      "parent": "F",
+      "seed": 6,
+      "Al_targets": [
+        90,
+        142
+      ],
+      "O_targets": [
+        6,
+        10,
+        58
+      ],
+      "O_parent_P": [
+        2,
+        54,
+        106
+      ],
+      "distinct_parent_rule": true,
+      "P1_xyz": "db/structures/cascade_pilot/P1_Al2O3_F.xyz",
+      "P1_sha256": "2dd64e5266e7225d7ab8708f57025597fe98ab7b45ce2d7a76b5ba9015c27067",
+      "P2_xyz": "db/structures/cascade_pilot/P2_Al2S3_F.xyz",
+      "P2_sha256": "a0ca60e8e34a5053e8ebf467d600cee3506717f16ac4211be8b12535233d78a4",
+      "plan": "db/structures/cascade_pilot/plan_F.json"
+    },
+    {
+      "parent": "G",
+      "seed": 7,
+      "Al_targets": [
+        38,
+        194
+      ],
+      "O_targets": [
+        19,
+        58,
+        69
+      ],
+      "O_parent_P": [
+        53,
+        54,
+        55
+      ],
+      "distinct_parent_rule": true,
+      "P1_xyz": "db/structures/cascade_pilot/P1_Al2O3_G.xyz",
+      "P1_sha256": "fa0387cf37dc9b1346906bae2ad65a463539941272f05629cc61be541cc5cedf",
+      "P2_xyz": "db/structures/cascade_pilot/P2_Al2S3_G.xyz",
+      "P2_sha256": "b721332a8093ce99aa78f9feb76946a6b97335f90680e8af7b093e50d35058ec",
+      "plan": "db/structures/cascade_pilot/plan_G.json"
+    },
+    {
+      "parent": "H",
+      "seed": 8,
+      "Al_targets": [
+        93,
+        145
+      ],
+      "O_targets": [
+        65,
+        69,
+        162
+      ],
+      "O_parent_P": [
+        53,
+        105,
+        158
+      ],
+      "distinct_parent_rule": true,
+      "P1_xyz": "db/structures/cascade_pilot/P1_Al2O3_H.xyz",
+      "P1_sha256": "41eb889ac0828b018d7fdeaf834676e96f6a1efcee6e0813c8859cb40830a674",
+      "P2_xyz": "db/structures/cascade_pilot/P2_Al2S3_H.xyz",
+      "P2_sha256": "9780bacf05f2b25cc87731e4e381c313e6c3150229ad0b9859c888beb50c971e",
+      "plan": "db/structures/cascade_pilot/plan_H.json"
+    },
+    {
+      "parent": "I",
+      "seed": 9,
+      "Al_targets": [
+        88,
+        140
+      ],
+      "O_targets": [
+        17,
+        67,
+        70
+      ],
+      "O_parent_P": [
+        1,
+        54,
+        55
+      ],
+      "distinct_parent_rule": true,
+      "P1_xyz": "db/structures/cascade_pilot/P1_Al2O3_I.xyz",
+      "P1_sha256": "f71ad38343c705153cf233f1ed79fbdf8a9526a2294b3e919422c56e6f27e042",
+      "P2_xyz": "db/structures/cascade_pilot/P2_Al2S3_I.xyz",
+      "P2_sha256": "72c5c7204bffff77a3feb1a4f8e21c44b864daec85d5212a2860bf2f2642102b",
+      "plan": "db/structures/cascade_pilot/plan_I.json"
+    },
+    {
+      "parent": "J",
+      "seed": 10,
+      "Al_targets": [
+        34,
+        178
+      ],
+      "O_targets": [
+        112,
+        173,
+        174
+      ],
+      "O_parent_P": [
+        104,
+        157,
+        158
+      ],
+      "distinct_parent_rule": true,
+      "P1_xyz": "db/structures/cascade_pilot/P1_Al2O3_J.xyz",
+      "P1_sha256": "ffe62e66dba35a8cb392d018320d3d8c2b1f82eea7e9161acd4a5e3cc642b083",
+      "P2_xyz": "db/structures/cascade_pilot/P2_Al2S3_J.xyz",
+      "P2_sha256": "7cb4eb158b5f72f9bf76ff6e65ed7fc390208f13024e068c1c21ee375cc0943f",
+      "plan": "db/structures/cascade_pilot/plan_J.json"
+    }
+  ],
+  "5_다음": "① 1저자 비준(기계·비용 상한) → ② kgy 속도시험 1런 → ③ 견적 확정 → ④ 준비 완화 21 → ⑤ MD 40런. ⛔ 게이트 입력 프리플라이트(--save_traj)가 ④ 앞에서 막는다."
+}

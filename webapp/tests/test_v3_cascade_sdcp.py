@@ -433,3 +433,55 @@ def test_cascade_verdicts_fail_closed_on_missing_record():
         assert bad[0]["ok"] is False and "못 읽었다" in bad[0]["why"]
     finally:
         D.CASCADE_VERDICT_SOURCES = keep
+
+
+# ── 카드 계보 (2026-09-19) ─────────────────────────────────────────────────
+#   ⛔ 왜 생겼나: 1저자 — *"앞으로 12/13 처럼 혼동하는 일 없게."* 보고량 카드가
+#     **09-12 에 셋**(v1·v2·v3) · **09-13 에 둘**(v4·v5) 있었고, 파일명이 날짜라
+#     같은 날짜 카드가 나란히 놓였다. 화면은 어느 게 지금 것인지 말하지 않았다.
+def test_cascade_card_lineage_reaches_the_page():
+    """양성: 계보가 원장에서 읽히고 `/cascade` 본문에 **실제로 실린다**."""
+    L = D.cascade_card_lineage()
+    assert len(L) >= 6, f"계보가 {len(L)}판 — v1~v6 여섯 판 이상이어야 한다"
+    ok = [c for c in L if c.get("ok")]
+    assert len(ok) == len(L), f"못 읽은 카드가 있다: {[c['ver'] for c in L if not c.get('ok')]}"
+    for c in ok:
+        assert c.get("status"), f"{c['ver']}: status 가 비었다 (원장에서 못 읽었다)"
+        assert c.get("date"), f"{c['ver']}: date 가 비었다"
+        assert c["record"].startswith("db/properties/")
+    tips = [c["ver"] for c in ok if c["tip"]]
+    assert tips == ["v6"], f"말단이 {tips} — v6 하나여야 한다 (나머지는 전부 대체됨)"
+    html = A.app.test_client().get("/cascade").get_data(as_text=True)
+    assert "카드 계보" in html, "계보가 화면에 안 나간다"
+    assert 'data-card="v6"' in html and 'data-tip="yes"' in html, "v6 말단 표식이 화면에 없다"
+    assert 'data-card="v1"' in html, "대체된 옛 카드를 화면에서 **지웠다** — 계보는 지우지 않는다"
+    # ★말단의 뜻이 **텍스트로** 화면에 있어야 한다 (CSS content: 는 복사에 안 따라간다)
+    assert "유효하다는 판정이 아니다" in html, "말단≠유효 구분이 화면 텍스트에 없다"
+
+
+def test_cascade_lineage_tip_is_computed_not_hardcoded(monkeypatch):
+    """⛔음성: `tip` 이 **그래프에서 계산**되는지. 붙박이면 이 시험이 빨간불이다."""
+    real = D._load_json
+    fake = "fake_v7_card_for_test.json"
+
+    def stub(path):
+        if getattr(path, "name", "") == fake:
+            return {"date": "2026-09-20", "status": "proposed", "제목": "시험용 v7",
+                    "supersedes": "cascade_estimand_card_v6_10parents_2026_09_19.json (v6)"}
+        return real(path)
+
+    monkeypatch.setattr(D, "_load_json", stub)
+    monkeypatch.setattr(D, "CASCADE_CARD_LINEAGE", D.CASCADE_CARD_LINEAGE + [("v7", fake)])
+    L = {c["ver"]: c for c in D.cascade_card_lineage()}
+    assert L["v6"]["tip"] is False, \
+        "v7 이 v6 를 supersedes 한다고 적었는데 v6 가 여전히 ★말단 — tip 이 계산이 아니라 붙박이다"
+    assert L["v7"]["tip"] is True, "새 말단이 v7 로 안 옮겨갔다"
+
+
+def test_cascade_lineage_fail_closed_on_missing_card(monkeypatch):
+    """⛔음성: 카드 파일이 없으면 **ok=False 로 구멍**이지 조용한 생략이 아니다."""
+    monkeypatch.setattr(D, "CASCADE_CARD_LINEAGE", [("vX", "no_such_card_xyz.json")])
+    L = D.cascade_card_lineage()
+    assert len(L) == 1, "없는 카드가 목록에서 **사라졌다** (조용한 생략)"
+    assert L[0]["ok"] is False and "못 읽었다" in L[0]["why"]
+    assert "status" not in L[0], "원장에 없는데 status 를 지어냈다"

@@ -99,7 +99,14 @@ def test_list_reopen_criteria_is_not_rendered_as_python_repr(gov_html):
     #   권장되는 상호참조다. 그런데 날 HTML 에서 원문을 찾으면 그 자리에서 문자열이
     #   끊겨 **화면이 멀쩡한데도 빨간불**이 난다 (D-2026-09-18-…-neb-estimand 실측).
     #   ⛔ 위 repr 검사는 `plain`(태그 살아있음) 그대로 둔다 — 그건 다른 결함을 본다.
-    stripped = re.sub(r"<[^>]+>", "", plain)
+    # ⛔⛔ 2026-09-19 — **순서가 뒤집혀 있었다.** `plain`(이미 unescape 됨)에서 태그를 지우면,
+    #   본문에 적힌 `&lt;` 가 먼저 `<` 로 풀려서 `<[^>]+>` 가 **본문을 태그로 오인해 삼킨다.**
+    #   실측: 재개 조건 `N(생존) &lt; 3 → 분포를 말하지 않고 개별 값 나열.</li>` 가
+    #   통째로 사라져 **화면이 멀쩡한데 빨간불**이 났다 (D-2026-09-19-…-neb-barrier-v2).
+    #   ⇒ **태그를 먼저 지우고 그 다음 unescape** 한다. 비교 부등호가 든 조건은 앞으로도 나온다.
+    #   ⚠ 위 repr 검사의 `plain` 은 **반대 순서가 맞다** (escape 된 `&#39;` 를 풀어야 repr 이 보인다).
+    #     두 변수가 서로 다른 순서를 쓰는 것이 의도다.
+    stripped = html.unescape(re.sub(r"<[^>]+>", "", gov_html))
     for d in rows:
         for item in d["reopen_criteria"]:
             p = _probe(item)

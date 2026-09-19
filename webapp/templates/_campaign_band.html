@@ -108,6 +108,33 @@
   </div>
   {% endif %}
 
+  {# ── 카드 계보 — 2026-09-19. 1저자: "앞으로 12/13 처럼 혼동하는 일 없게".
+        09-12 에 카드 셋 · 09-13 에 둘이 나란히 있었고 화면은 어느 게 지금 것인지
+        말하지 않았다. ⛔ ★말단은 **그래프 사실**이지 유효 판정이 아니다 —
+        그 구분을 화면 텍스트로 적는다 (CSS content: 로 그리면 복사에 안 따라간다). #}
+  {% if band.lineage %}
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-t">보고량 카드 계보 {{ band.lineage|length }}판</span>
+    <div class="muted" style="font-size:.76rem;margin:1px 0 5px">
+      <b>★ 말단</b> = 이 카드를 <span class="mono">supersedes</span> 로 가리키는 카드가 없다는
+      <b>그래프 사실</b>이다. <b>유효하다는 판정이 아니다</b> — 말단이면서
+      <span class="mono">proposed</span> 일 수 있다.
+    </div>
+    <ul style="margin:2px 0 0;padding-left:18px;font-size:.82rem;line-height:1.65">
+      {% for c in band.lineage %}
+      <li data-card="{{ c.ver }}" data-tip="{{ 'yes' if c.tip else 'no' }}">
+        {% if c.ok %}
+        {% if c.tip %}<b>★ {{ c.ver }}</b>{% else %}<span class="muted">{{ c.ver }} · 대체됨</span>{% endif %}
+        <span class="muted">{{ c.date }}</span> — {{ c.title|bold }}
+        <div class="muted" style="font-size:.76rem">{{ c.status|bold }}
+          · <span class="mono">{{ c.record }}</span></div>
+        {% else %}<b style="color:var(--red)">⛔ {{ c.ver }}</b> — 화면에 실을 카드를 못 읽었다: {{ c.why }}
+        {% endif %}
+      </li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
   {% if band.remaining %}
   <div class="v3-band-cell" style="flex-basis:100%">
     <span class="v3-band-t">남은 해제조건</span>

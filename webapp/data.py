@@ -2243,6 +2243,61 @@ def cascade_verdicts() -> list:
     return out
 
 
+#: 카드 **계보** — `/cascade` 가 "지금 어느 카드인가" 를 한눈에 말하게 한다.
+#  ⛔⛔ 2026-09-19 (1저자 지시: *"앞으로 12/13 처럼 혼동하는 일 없게"*)
+#    카드가 **09-12 에 셋**(v1·v2·v3) · **09-13 에 둘**(v4·v5) 있었다. 파일명이 날짜라
+#    같은 날짜 카드가 나란히 놓이고, 어느 것이 지금 것인지 **화면에 한 글자도 없었다.**
+#    사람은 화면을 인용한다 — 그래서 계보를 싣는다.
+CASCADE_CARD_LINEAGE = [
+    ("v1", "cascade_rebuild_estimand_card_2026_09_12.json"),
+    ("v2", "cascade_rebuild_estimand_card_v2_2026_09_12.json"),
+    ("v3", "cascade_rebuild_estimand_card_v3_2026_09_12.json"),
+    ("v4", "cascade_rebuild_estimand_card_v4_2026_09_13.json"),
+    ("v5", "cascade_rebuild_estimand_card_v5_Eprime_2026_09_13.json"),
+    ("v6", "cascade_estimand_card_v6_10parents_2026_09_19.json"),
+]
+
+
+def cascade_card_lineage() -> list:
+    """카드 계보 — **status 도 supersedes 도 원장에서 읽는다.**
+
+    `tip` 은 **판정이 아니라 그래프 사실**이다: 이 카드를 `supersedes` 로 가리키는
+    다른 카드가 하나도 없다는 뜻이고, 그 카드가 *유효하다*는 말이 **아니다**.
+    말단인데 `proposed` 일 수 있다 — 2026-09-19 의 v6 가 정확히 그 상태다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 어느 카드가 '지금 유효한가' 를 판정하지 않는다. `status` 문자열을 그대로 싣는다.
+      · `db/governance/decisions.json` 의 active 여부를 보지 않는다 (카드 파일만 읽는다).
+      · 파일이 없으면 **조용히 빼지 않는다** — `ok=False` 로 싣는다.
+      · supersede 관계를 검증하지 않는다. 카드가 적은 `supersedes` 문자열에
+        다른 카드의 **파일명이 들어 있는지**만 본다.
+    """
+    recs = []
+    for ver, fn in CASCADE_CARD_LINEAGE:
+        rec = _load_json(DB / "properties" / fn)
+        recs.append((ver, fn, rec))
+    superseded = set()
+    for _ver, _fn, rec in recs:
+        sup = str((rec or {}).get("supersedes") or "")
+        for _v2, fn2, _r2 in recs:
+            if fn2 != _fn and fn2 in sup:
+                superseded.add(fn2)
+    out = []
+    for ver, fn, rec in recs:
+        if not rec:
+            out.append({"ok": False, "ver": ver,
+                        "why": f"db/properties/{fn} 을 못 읽었다",
+                        "record": f"db/properties/{fn}"})
+            continue
+        out.append({"ok": True, "ver": ver,
+                    "date": rec.get("date") or "",
+                    "status": rec.get("status") or "",
+                    "title": rec.get("제목") or "",
+                    "tip": fn not in superseded,
+                    "record": f"db/properties/{fn}"})
+    return out
+
+
 def cascade_campaign_band() -> dict:
     """`/cascade` 최상단 **캠페인 지위 밴드** — 지위·보고량·남은 해제조건·봉인.
 
@@ -2287,6 +2342,7 @@ def cascade_campaign_band() -> dict:
         "forbidden": est.get("5_금지_서술") or [],
         "invalid_if": est.get("7_무효_조건") or [],
         "verdicts": cascade_verdicts(),
+        "lineage": cascade_card_lineage(),
         "record": f"db/properties/{CASCADE_ESTIMAND_JSON}",
         "decision": "D-2026-09-08-cascade-d-rel-estimand",
         "seal": ({"label": seal.get("label"), "at": seal.get("sealed_at"),
