@@ -4084,6 +4084,31 @@ CLAIM_STATUS_HELP = [
 ]
 
 
+#: 분석자 칸(`decoded`·`claim`·`why_uncertain`)의 **최소 마크다운**.
+#  ⛔ `raw` 에는 쓰지 않는다 — 원문은 변형하지 않는다 (해체 계약①의 정신: 원문을 이으면
+#     바이트가 같아야 한다.  화면에서 굵게 만드는 것도 원문을 고치는 쪽으로 새는 길이다).
+#  ★ 리포에 `markdown` 라이브러리가 있지만(`worklog_view`·`_generate_pdf_report`) 그쪽은
+#    **문서 전체**용이라 `<p>` 로 감싸고 **raw HTML 을 그대로 통과**시킨다.  여기는 한 문단짜리
+#    데이터 칸이라 (a) 래퍼가 없어야 하고 (b) 데이터가 HTML 을 실행하면 안 된다.
+#    ⇒ **먼저 전부 이스케이프하고 그 다음 화이트리스트만 되살린다** = 구조적으로 XSS 불가.
+_MDI_CODE = re.compile(r'`([^`\n]+)`')
+_MDI_BOLD = re.compile(r'\*\*([^*\n]+?)\*\*')
+_MDI_ITAL = re.compile(r'(?<![\w*])\*([^*\n]+?)\*(?![\w*])')
+
+
+def md_inline(s):
+    """최소 마크다운 → HTML.  `**굵게**` · `` `코드` `` · `*기울임*` · 줄바꿈만."""
+    from markupsafe import Markup, escape
+    t = str(escape('' if s is None else s))
+    t = _MDI_CODE.sub(r'<code>\1</code>', t)     # 코드 먼저 — 그 안의 * 를 안 건드린다
+    t = _MDI_BOLD.sub(r'<b>\1</b>', t)
+    t = _MDI_ITAL.sub(r'<i>\1</i>', t)
+    return Markup(t.replace('\n', '<br>'))
+
+
+app.jinja_env.filters['mdi'] = md_inline
+
+
 @app.route('/hetero/transcript')
 def hetero_transcript_page():
     """이종기술 회의록 **해체 분석** — 원문 · 해독 · 주장 세 층 (2026-09-18 회의).

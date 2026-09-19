@@ -58,6 +58,11 @@
              font-size:.875rem; line-height:1.7; }
   .u-claim b { color:var(--accent,#5b8dd6); font-weight:600; }
   .u-why { margin-top:7px; font-size:.82rem; color:#e08a8a; line-height:1.65; }
+  .u-col code, .u-claim code {
+    background:rgba(127,127,127,.16); border-radius:3px; padding:1px 5px;
+    font-size:.92em; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+  .u-col b, .u-claim b { color:var(--fg,inherit); font-weight:700; }
+  .u-claim > b:first-child { color:var(--accent,#5b8dd6); }
   .hid { display:none; }
 </style>
 
@@ -130,11 +135,11 @@
     <span class="chip {{ u.claim_status }}">{{ u.claim_status }}</span>
   </div>
   <div class="u-body">
-    <div class="u-col"><h4>raw — 받아쓰기 그대로</h4><div class="u-raw">{{ u.body|trim }}</div></div>
-    <div class="u-col"><h4>decoded — 무슨 뜻인지</h4><div>{{ u.decoded }}</div></div>
+    <div class="u-col"><h4>raw — 받아쓰기 그대로 <span style="opacity:.6">(서식 적용 안 함)</span></h4><div class="u-raw">{{ u.body|trim }}</div></div>
+    <div class="u-col"><h4>decoded — 무슨 뜻인지</h4><div>{{ u.decoded|mdi }}</div></div>
   </div>
-  <div class="u-claim"><b>claim</b> · {{ u.claim }}
-    {% if u.why_uncertain %}<div class="u-why">⚠ 확정 못 하는 이유 — {{ u.why_uncertain }}</div>{% endif %}
+  <div class="u-claim"><b>claim</b> · {{ u.claim|mdi }}
+    {% if u.why_uncertain %}<div class="u-why">⚠ 확정 못 하는 이유 — {{ u.why_uncertain|mdi }}</div>{% endif %}
   </div>
 </div>
 {% endfor %}
