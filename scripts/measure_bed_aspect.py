@@ -95,7 +95,9 @@ def measure(d, r_container=0.05, label=None):
     rad = np.hypot(x, y)                                # ★ 실린더 축(0,0) 기준
     R99 = float(np.percentile(rad, 99))                 # 튄 입자가 최댓값을 지배하지 않도록
     H = float(z.max() - z.min())
-    Vp = n * (4 / 3) * np.pi * float(r.mean()) ** 3
+    #  ⚠ 다분산 침대에서 `n·(4/3)π r̄³` 은 **틀린다** (AM 1.2 mm 와 SE 0.3 mm 를
+    #    평균내면 부피가 엉망이 된다).  입자마다 더한다.
+    Vp = float(((4 / 3) * np.pi * r ** 3).sum())
     phi = Vp / (np.pi * R99 ** 2 * H) if (R99 > 0 and H > 0) else float('nan')
     return dict(label=label or d, step=step, n=n, R=R99, H=H,
                 HR=(H / R99 if R99 > 0 else float('nan')),
@@ -151,6 +153,26 @@ def _selftest():
             STEP_RE.search(os.path.basename(lex)).group(1) == '9600')
         #  ⑤ 느슨한 침대는 경고 대상
         chk('⑤ 느슨한 침대(φ 낮음)를 경고 문턱 아래로 잡는다', m['phi'] < PHI_LOOSE_WARN)
+        #  ★ 다분산 — 큰 입자 하나가 부피를 지배해야 한다 (평균반경 쓰면 못 잡는다)
+        #  ⚠ **제 디렉터리에 둔다** — 같은 td 에 두면 measure() 가 숫자순 마지막인
+        #     249600 을 골라 이 고정구를 아예 안 읽는다 (초판이 그래서 통과 못 했다).
+        with tempfile.TemporaryDirectory() as tp:
+            with open(os.path.join(tp, 'poly_100.liggghts'), 'w') as fh:
+                fh.write('ITEM: TIMESTEP\n100\nITEM: NUMBER OF ATOMS\n3\n')
+                fh.write('ITEM: BOX BOUNDS mm mm mm\n-1 1\n-1 1\n0 1\n')
+                fh.write('ITEM: ATOMS id type x y z radius\n')
+                fh.write('1 1 0.01 0 0.001 0.005\n2 2 -0.01 0 0.002 0.0005\n'
+                         '3 2 0 0.01 0.003 0.0005\n')
+            mp = measure(tp)
+            env = np.pi * mp['R'] ** 2 * mp['H']        # 포락 부피 (공유 분모)
+            v_got = mp['phi'] * env                     # 도구가 실제로 쓴 고체 부피
+            v_true = (4/3)*np.pi*(0.005**3 + 2*0.0005**3)
+            v_mean = 3*(4/3)*np.pi*((0.005+0.0005+0.0005)/3)**3
+            chk('⑥ 다분산 부피를 입자별로 더한다 (참값과 일치)',
+                abs(v_got - v_true) < v_true*1e-9)
+            #  ★ 변이 대조 — 평균반경 판이면 여기서 걸린다 (시험이 장식이 아님을 보인다)
+            chk(f'⑥b 변이: 평균반경 판(n·(4/3)π r̄³)과 {v_true/v_mean:.1f}배 다르다',
+                abs(v_got - v_mean) > v_mean*0.5)
     print(f'\nmeasure_bed_aspect selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0

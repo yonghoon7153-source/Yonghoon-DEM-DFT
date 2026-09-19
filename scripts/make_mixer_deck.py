@@ -35,6 +35,32 @@ PS = (7.0, 3.0)                       # P:S (wt%)
 #: 실제 지름 (µm).  AM_P 12 = 생산 규약 · VGCF 0.15 · PTFE 0.25 는 `CL-66` 앵커
 D_REAL_UM = {'AM_P': 12.0, 'AM_S': 4.0, 'SE': 1.0}
 L_FIB_UM = 10.0                       # ⚠ VGCF 길이.  PTFE 길이는 출처 없음 (`CL-67`)
+#: 타입 순서 — 덱의 `peratomtypepair` 행렬 순서와 같아야 한다
+TYPES = ('AM_P', 'AM_S', 'SE', 'VGCF', 'PTFE')
+#: 점착 원점 (J/m³) — 튜토리얼 `cohesion` 예제값.  ⚠ 우리 소재의 물성이 아니다.
+CED0 = 3.0e5
+#: 팔 — `cohesionEnergyDensity` 3×3(5×5) 만 바꾼다.  나머지는 전부 고정.
+#  `mult[(a,b)]` 가 없으면 1.0.  대칭은 코드가 강제한다.
+ARMS = {
+    'E0': dict(desc='음성 대조 — 점착 0.  지표가 0 을 내는가', ced=0.0, mult={}),
+    'E1': dict(desc='균일', ced=CED0, mult={}),
+    'E2': dict(desc='★ AM 만 10배 — 1저자 질문의 축', ced=CED0,
+               mult={('AM_P', 'AM_P'): 10., ('AM_P', 'AM_S'): 10., ('AM_S', 'AM_S'): 10.}),
+    'E3': dict(desc='SE 만 10배 (대조)', ced=CED0, mult={('SE', 'SE'): 10.}),
+    'E4': dict(desc='AM 만 100배 (축 확장)', ced=CED0,
+               mult={('AM_P', 'AM_P'): 100., ('AM_P', 'AM_S'): 100., ('AM_S', 'AM_S'): 100.}),
+}
+
+
+def ced_matrix(arm):
+    """팔 이름 → 5×5 `cohesionEnergyDensity` 행렬.  **대칭을 강제한다.**"""
+    a = ARMS[arm]
+    n = len(TYPES)
+    M = [[a['ced'] for _ in range(n)] for _ in range(n)]
+    for (x, y), f in a['mult'].items():
+        i, j = TYPES.index(x), TYPES.index(y)
+        M[i][j] = M[j][i] = a['ced'] * f          # ★ 비대칭 입력을 막는다
+    return M
 
 
 def volume_fractions():
@@ -122,7 +148,7 @@ def fibre_file(nsph, d_sph):
     return ''.join(f'{x0 + i*step:.8g} 0 0 {d_sph/2:.8g}\n' for i in range(nsph))
 
 
-def deck(p, rpm, revolutions, seed=32452843):
+def deck(p, rpm, revolutions, seed=32452843, arm='E1'):
     n, d = p['n'], p['d']
     period = 60.0 / rpm
     steps_fill = 20000
@@ -160,9 +186,9 @@ fix m4 all property/global coefficientFriction peratomtypepair 5 &
 {_mat(5, 0.5)}
 fix m5 all property/global coefficientRollingFriction peratomtypepair 5 &
 {_mat(5, 0.2)}
-# ★ 스윕 축 — 표면에너지 대리 (SJKR, J/m³).  팔마다 이 블록만 바꾼다.
+# ★ 스윕 축 — 표면에너지 대리 (SJKR, J/m³).  **팔 {arm}: {ARMS[arm]['desc']}**\n# ⚠ 이 블록만 팔마다 다르다.  나머지는 한 글자도 안 바뀐다.
 fix mC all property/global cohesionEnergyDensity peratomtypepair 5 &
-{_mat(5, 3.0e5)}
+{_mat(5, ced_matrix(arm))}
 fix m9 all property/global characteristicVelocity scalar 2.0
 
 # ⚠ cohesion 은 tangential 뒤 · rolling_friction 앞 (순서가 실재하는 제약)
@@ -225,11 +251,10 @@ run {steps_run}
 
 
 def _mat(n, val):
-    """peratomtypepair n×n 행렬 — 전부 같은 값 (팔에서 이 블록만 바꾼다)."""
-    rows = []
-    for i in range(n):
-        rows.append('    ' + ' '.join(f'{val:g}' for _ in range(n)))
-    return ' &\n'.join(rows)
+    """peratomtypepair n×n 행렬.  `val` 이 스칼라면 균일, 2차원이면 그대로."""
+    if isinstance(val, (list, tuple)):
+        return ' &\n'.join('    ' + ' '.join(f'{v:g}' for v in row) for row in val)
+    return ' &\n'.join('    ' + ' '.join(f'{val:g}' for _ in range(n)) for _ in range(n))
 
 
 def _selftest():
@@ -278,6 +303,41 @@ def _selftest():
     chk('⑰ 변이: 사슬이 길수록 계수가 준다', chain_volume_factor(5) < f3)
     chk('⑭ 변이: atom_type 은 4·5 로 남아 있다',
         'atom_type 4' in dk and 'atom_type 5' in dk)
+    #  ★ 팔 — 점착 블록만 달라야 한다
+    d0, d1, d2 = (deck(p, 60, 5, arm=x) for x in ('E0', 'E1', 'E2'))
+    def _strip_ced(t):
+        '''점착 블록과 **주석**을 뺀 실행 줄만 남긴다.
+
+        ⚠ 주석을 빼는 이유 — 팔 이름이 주석에 들어가서 달라진다.  주석은 물리가
+          아니므로 비교 대상이 아니다.  그러나 **실행되는 줄은 한 글자도 달라서는
+          안 된다** — 그것이 이 시험의 계약이다.
+        '''
+        out, skip = [], False
+        for ln in t.split('\n'):
+            if 'cohesionEnergyDensity' in ln:
+                skip = True
+                continue
+            if skip:
+                if ln.startswith('    ') or ln.strip() == '&':
+                    continue
+                skip = False
+            st = ln.strip()
+            if st.startswith('#') or not st:
+                continue
+            out.append(ln)
+        return '\n'.join(out)
+    chk('⑱ 팔끼리 점착 블록 **밖**은 한 글자도 안 다르다',
+        _strip_ced(d0) == _strip_ced(d1) == _strip_ced(d2))
+    chk('⑲ 팔끼리 점착 블록은 실제로 다르다', d0 != d1 != d2 and d0 != d2)
+    M0, M2 = ced_matrix('E0'), ced_matrix('E2')
+    chk('⑳ E0 는 전부 0 (음성 대조)', all(v == 0 for r in M0 for v in r))
+    chk('㉑ E2 는 AM-AM 만 10배', M2[0][0] == 10 * CED0 and M2[2][2] == CED0)
+    chk('㉒ 행렬이 대칭이다 (비대칭 입력 방지)',
+        all(M2[i][j] == M2[j][i] for i in range(5) for j in range(5)))
+    #  변이 대조 — 대칭 강제가 장식이 아님을 보인다
+    ARMS['_t'] = dict(desc='t', ced=1.0, mult={('AM_P', 'SE'): 7.0})
+    Mt = ced_matrix('_t'); del ARMS['_t']
+    chk('㉓ 변이: 한쪽만 준 배수가 양쪽에 반영된다', Mt[0][2] == 7.0 and Mt[2][0] == 7.0)
     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -290,6 +350,10 @@ if __name__ == '__main__':
     ap.add_argument('--cgf', type=float, default=200.0)
     ap.add_argument('--rpm', type=float, default=60.0)
     ap.add_argument('--revolutions', type=int, default=5)
+    ap.add_argument('--arm', default='E1', choices=sorted(ARMS),
+                    help='점착 팔.  `all` 대신 하나씩 — 디렉터리가 갈린다')
+    ap.add_argument('--all-arms', action='store_true',
+                    help='--out 아래에 팔마다 하위 디렉터리를 만든다')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -312,7 +376,15 @@ if __name__ == '__main__':
             f.write(fibre_file(p['nsph'], p['d']['VGCF']))
         with open(os.path.join(a.out, 'data', 'ptfe.multisphere'), 'w') as f:
             f.write(fibre_file(p['nsph'], p['d']['PTFE']))
-        with open(os.path.join(a.out, 'in.mixer'), 'w') as f:
-            f.write(deck(p, a.rpm, a.revolutions))
-        print(f'\n→ {a.out}/in.mixer  +  data/{{vgcf,ptfe}}.multisphere')
-        print('⬜ STL 3개(Drum·Front·Back)를 같은 디렉터리에 두어야 한다')
+        arms = sorted(ARMS) if a.all_arms else [a.arm]
+        for arm in arms:
+            d = os.path.join(a.out, arm) if a.all_arms else a.out
+            os.makedirs(os.path.join(d, 'data'), exist_ok=True)
+            with open(os.path.join(d, 'data', 'vgcf.multisphere'), 'w') as f:
+                f.write(fibre_file(p['nsph'], p['d']['VGCF']))
+            with open(os.path.join(d, 'data', 'ptfe.multisphere'), 'w') as f:
+                f.write(fibre_file(p['nsph'], p['d']['PTFE']))
+            with open(os.path.join(d, 'in.mixer'), 'w') as f:
+                f.write(deck(p, a.rpm, a.revolutions, arm=arm))
+            print(f'   → {d}/in.mixer   [{arm}] {ARMS[arm]["desc"]}')
+        print('⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다')
