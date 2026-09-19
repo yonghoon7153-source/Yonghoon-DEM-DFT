@@ -2210,15 +2210,14 @@ CASCADE_SEAL_JSON = "cascade_seal_v2_2026_09_08.json"
 CASCADE_VERDICT_SOURCES = [
     ("4축 내부 검증", "cascade_axis_global_audit_2026_09_12.json"),
     ("v23 dV 축 앵커", "cascade_reanchor_comp1k444_2026_09_12.json"),
+    ("v23 지위", "cascade_v23_demoted_2026_09_19.json"),
 ]
 #: ⛔ 원장에 **없는** 판정. 화면이 지어내지 않고 **구멍으로 표시한다**.
-#  "옛 cascade(v23)는 탐색 자료로 강등됐다" 는 kb 일지·주간정리에만 있고 db/ 에 없다.
-CASCADE_VERDICT_GAPS = [
-    {"label": "v23 지위 (강등)",
-     "why": "db/properties 에 기록이 없다 — kb/projects/cascade_rebuild_log_2026_09.md §1 "
-            "과 kb/reports/weekly_2026_09_14.md 에만 있다",
-     "see": "/cascade/rebuild"},
-]
+#  ✅ 2026-09-19 — 마지막 구멍("v23 강등")이 채워졌다 (cascade_v23_demoted_2026_09_19.json,
+#    1저자 비준). 목록이 **비어 있는 것이 정상 상태**다. 새 구멍이 생기면 여기 적는다.
+#  ⚠ 비었다고 구멍 경로가 죽은 게 아니다 — 시험이 fixture 로 그 경로를 직접 태운다
+#    (test_cascade_verdicts_fail_closed_on_missing_record).
+CASCADE_VERDICT_GAPS = []
 
 
 def cascade_verdicts() -> list:

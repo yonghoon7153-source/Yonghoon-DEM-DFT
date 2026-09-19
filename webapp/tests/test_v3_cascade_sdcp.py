@@ -399,15 +399,27 @@ def test_cascade_verdicts_come_from_ledger_and_reach_the_page():
 
 
 def test_cascade_verdict_gap_is_shown_not_swallowed():
-    """⛔음성: 원장에 **없는** 판정은 지어내지도, 조용히 빼지도 않는다 — 구멍으로 싣는다."""
-    vs = D.cascade_verdicts()
-    gaps = [v for v in vs if not v.get("ok")]
-    assert gaps, "구멍이 하나도 없다 — CASCADE_VERDICT_GAPS 가 배선에서 빠졌다"
-    for g in gaps:
-        assert g.get("why"), f"{g.get('label')}: 왜 못 싣는지를 안 적었다"
-        assert not g.get("text"), f"{g.get('label')}: 원장에 없는데 문장을 지어냈다"
-    html = A.app.test_client().get("/cascade").get_data(as_text=True)
-    assert "원장 기록이 없다" in html, "구멍이 화면에 안 나간다 — 조용히 삼켰다"
+    """⛔음성: 원장에 **없는** 판정은 지어내지도, 조용히 빼지도 않는다 — 구멍으로 싣는다.
+
+    ⚠ 2026-09-19 에 마지막 구멍이 채워져 `CASCADE_VERDICT_GAPS` 가 비었다. 그래서 이 시험은
+      **실제 목록이 아니라 fixture 로** 구멍 경로를 태운다 — 목록이 비었다고 경로가 죽은 게
+      아니라는 것을 보증해야 하기 때문이다.
+    """
+    keep = D.CASCADE_VERDICT_GAPS
+    try:
+        D.CASCADE_VERDICT_GAPS = [{"label": "시험용 구멍", "why": "fixture", "see": "/cascade/rebuild"}]
+        gaps = [v for v in D.cascade_verdicts() if not v.get("ok")]
+        assert gaps, "구멍이 목록에 있는데 결과에서 사라졌다"
+        for g in gaps:
+            assert g.get("why"), f"{g.get('label')}: 왜 못 싣는지를 안 적었다"
+            assert not g.get("text"), f"{g.get('label')}: 원장에 없는데 문장을 지어냈다"
+        html = A.app.test_client().get("/cascade").get_data(as_text=True)
+        assert "원장 기록이 없다" in html, "구멍이 화면에 안 나간다 — 조용히 삼켰다"
+    finally:
+        D.CASCADE_VERDICT_GAPS = keep
+    # 지금 실제 상태: 구멍 0 — 세 판정이 **전부 원장에서** 온다
+    assert all(v.get("ok") for v in D.cascade_verdicts()), \
+        "구멍이 다시 생겼다면 CASCADE_VERDICT_GAPS 에 적어라 (조용히 두지 않는다)"
 
 
 def test_cascade_verdicts_fail_closed_on_missing_record():
