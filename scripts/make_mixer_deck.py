@@ -148,10 +148,29 @@ def fibre_file(nsph, d_sph):
     return ''.join(f'{x0 + i*step:.8g} 0 0 {d_sph/2:.8g}\n' for i in range(nsph))
 
 
-def deck(p, rpm, revolutions, seed=32452843, arm='E1'):
+def settle_time(drop_m, restitution=0.3, g=9.81, margin=2.0):
+    """정착 시간 — **유도값**이지 눈대중이 아니다.
+
+    반발계수 e 의 공에서 튐의 총 시간은 등비급수로 `t_ff·(1+e)/(1−e)` 다.
+    ★ 이 식이 실측을 맞힌다 — 튜토리얼 `cohesion` 대조쌍은 낙하 60 mm · e = 0.9 이고
+      `t_ff = 0.111 s` 이므로 식이 **2.11 s** 를 준다.  실제로 250,000 step(2.5 s)
+      에서 정착했고 50,000 step(0.5 s = 정착의 24 %)에서는 지표가 **부호까지 반대**로
+      나왔다.  ⇒ `steps_fill = 20000` 같은 **상수는 쓰지 않는다**.
+    ⚠ 이 식은 홑 입자의 튐만 센다.  무리의 재배열은 더 걸리므로 `margin` 을 곱하고,
+      그래도 맞았는지는 `measure_bed_aspect.py` 의 φ(포락) 경고로 **반드시 확인**한다.
+    """
+    t_ff = math.sqrt(2.0 * drop_m / g)
+    return margin * t_ff * (1.0 + restitution) / (1.0 - restitution)
+
+
+def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None,
+         restitution=0.3):
     n, d = p['n'], p['d']
     period = 60.0 / rpm
-    steps_fill = 20000
+    #  낙하 높이 = 드럼 지름 (꼭대기에서 바닥까지)
+    if settle_s is None:
+        settle_s = settle_time(2.0 * p['R'], restitution)
+    steps_fill = max(1000, int(round(0.5 * settle_s / p['dt'])))   # 두 번 돈다
     steps_run = int(round(revolutions * period / p['dt']))
     dump_every = max(1000, steps_run // 200)
     box = p['R'] * 1.15
@@ -226,7 +245,17 @@ fix ins all insert/pack seed {seed} distributiontemplate pdd &
     maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 &
     region ins_reg particles_in_region {p['n_tpl_total']} ntry_mc 20000   # 템플릿 수 (섬유 1가닥 = 1)
 
-fix integr all multisphere        # multisphere 가 있으면 nve/sphere 대신 이것
+# ⚠⚠ **적분기는 둘 다 필요하다** (2026-09-19 실측으로 확정)
+#   `fix multisphere` 는 **강체만** 적분한다 — 평범한 구는 `body_[i] < 0` 로 건너뛴다.
+#   이 줄 하나만 두고 돌렸더니 AM·SE 47,309 개가 **얼어붙은 조각상**이었다:
+#   KE 가 삽입값에서 한 번도 안 움직였고 E0 과 E4 팔이 H/R 까지 동일했다.
+#   ★ 직접 잰 것 — 평구 하나를 중력 아래 2,000 스텝 두니 z 가 0.02 그대로였다.
+#   `nve/sphere` 를 얹으면 자유낙하가 정확히 복구되고(vz = −g·t),
+#   섬유 결합거리는 0.48000/0.48000/0.96000 mm 로 **소수 5자리까지 불변**이며,
+#   섬유 궤적은 nve 가 강체를 건드리지 않는 판과 **부동소수점까지 동일**하다
+#   (`multisphere` 가 매 스텝 강체 상태를 다시 덮어쓴다 ⇒ 이중적분 피해 0).
+fix integrS all nve/sphere        # ★ 평범한 구 (AM_P·AM_S·SE)
+fix integr  all multisphere       # 강체 사슬 (VGCF·PTFE) — 뒤에 둬 강체를 최종 확정
 
 compute rke all erotate/sphere
 thermo_style custom step atoms ke c_rke vol
@@ -238,6 +267,9 @@ run 1
 dump dmp all custom {dump_every} post/mix_*.liggghts id type mol x y z vx vy vz fx fy fz radius
 
 # ① 채우고 정착 — ⚠ KE 가 떨어진 뒤에 회전을 시작한다 (정착 전에 돌리면 지표가 뒤집힌다)
+#   정착 {2*steps_fill*p['dt']:.3f} s = 낙하 {2*p['R']*1e3:.1f} mm · e {restitution} 에서
+#   유도한 t_ff·(1+e)/(1−e) 의 {2.0:.0f}배.  ⛔ 상수 20000 step 을 쓰지 않는다.
+#   ⚠ 그래도 잰 뒤 φ(포락) 경고를 확인할 것 — 식은 홑 입자의 튐만 센다.
 run {steps_fill}
 unfix ins
 run {steps_fill}
@@ -288,7 +320,26 @@ def _selftest():
     dk = deck(p, rpm=60, revolutions=5)
     chk('⑩ 덱에 cohesion 이 tangential 뒤·rolling 앞',
         'tangential history cohesion sjkr rolling_friction' in dk)
-    chk('⑪ multisphere 적분기를 쓴다', 'fix integr all multisphere' in dk)
+    chk('⑪ multisphere 적분기를 쓴다', 'fix integr  all multisphere' in dk)
+    #  ★⑪b 재현 시험 — 이 결함이 실제로 났다.  `multisphere` 는 강체만 적분하므로
+    #     평범한 구 템플릿이 있으면 `nve/sphere` 가 **반드시** 같이 있어야 한다.
+    _has_sphere_tpl = 'particletemplate/sphere' in dk
+    chk('⑪b 평범한 구가 있으면 nve/sphere 적분기도 있다 (없으면 조각상이 된다)',
+        (not _has_sphere_tpl) or ('fix integrS all nve/sphere' in dk))
+    #  ★⑪c 순서 — nve 가 먼저, multisphere 가 나중 (강체를 최종 확정)
+    chk('⑪c nve/sphere 가 multisphere 보다 먼저 정의된다',
+        dk.index('fix integrS all nve/sphere') < dk.index('fix integr  all multisphere'))
+    #  ★⑪d 정착식 앵커 — 튜토리얼 실측을 맞히는가 (낙하 60 mm · e 0.9 → 2.1 s)
+    _t = settle_time(0.060, 0.9, margin=1.0)
+    chk(f'⑪d 정착식이 튜토리얼 실측 2.1 s 를 맞힌다 (식 {_t:.2f} s)',
+        abs(_t - 2.1) < 0.1)
+    #  ★⑪e 변이 — 정착 스텝이 **상수가 아니다** (드럼이 커지면 길어져야 한다)
+    _small = deck(plan(4000), rpm=60, revolutions=1)
+    _big = deck(plan(32000), rpm=60, revolutions=1)
+    import re as _re
+    _f = lambda t: int(_re.search(r'run (\d+)\nunfix ins', t).group(1))
+    chk(f'⑪e 변이: 정착 스텝이 드럼 크기를 따라간다 ({_f(_small):,} → {_f(_big):,})',
+        _f(_big) > _f(_small) * 1.3)
     chk('⑫ 생산 scale=1000 규약을 안 쓴다', 'scale 1000' not in dk)
     #  ★ 실행으로 배운 제약 — multisphere 템플릿 번호는 1 부터 연속이어야 한다
     import re as _re
@@ -350,6 +401,8 @@ if __name__ == '__main__':
     ap.add_argument('--cgf', type=float, default=200.0)
     ap.add_argument('--rpm', type=float, default=60.0)
     ap.add_argument('--revolutions', type=int, default=5)
+    ap.add_argument('--settle-s', type=float, default=None,
+                    help='정착 시간 (s).  기본은 낙하높이·반발계수에서 유도')
     ap.add_argument('--arm', default='E1', choices=sorted(ARMS),
                     help='점착 팔.  `all` 대신 하나씩 — 디렉터리가 갈린다')
     ap.add_argument('--all-arms', action='store_true',
@@ -385,6 +438,6 @@ if __name__ == '__main__':
             with open(os.path.join(d, 'data', 'ptfe.multisphere'), 'w') as f:
                 f.write(fibre_file(p['nsph'], p['d']['PTFE']))
             with open(os.path.join(d, 'in.mixer'), 'w') as f:
-                f.write(deck(p, a.rpm, a.revolutions, arm=arm))
+                f.write(deck(p, a.rpm, a.revolutions, arm=arm, settle_s=a.settle_s))
             print(f'   → {d}/in.mixer   [{arm}] {ARMS[arm]["desc"]}')
         print('⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다')

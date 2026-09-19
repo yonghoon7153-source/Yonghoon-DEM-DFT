@@ -19,6 +19,7 @@ usage
   python3 scripts/measure_bed_aspect.py <디렉터리> [<디렉터리> ...]
   python3 scripts/measure_bed_aspect.py nocoh/post coh/post
   python3 scripts/measure_bed_aspect.py --r-container 0.05 nocoh/post coh/post
+  python3 scripts/measure_bed_aspect.py --axis x E0/post E4/post   # 가로 드럼
   python3 scripts/measure_bed_aspect.py --selftest
 """
 import argparse
@@ -82,7 +83,17 @@ def read_dump(path):
     raise SystemExit(f'⛔ 읽을 수 없는 형식: {path}')
 
 
-def measure(d, r_container=0.05, label=None):
+def measure(d, r_container=0.05, label=None, axis='z'):
+    """axis = **통의 대칭축** (중력은 언제나 −z).
+
+    ⚠⚠ 축을 인자로 뺀 이유 — 초판은 `hypot(x, y)` 를 **박아** 뒀고, 그것은
+       세로 실린더(튜토리얼 `cohesion`)에서만 맞는다.  우리 드럼은 STL 실측
+       x 15.14 mm · y 75.62 · z 75.56 = **축이 x 인 가로 드럼**이라
+       `hypot(x, y)` 가 드럼 길이(x)와 자유 퍼짐(y)을 섞어 버렸다.
+         axis='z' → 측방 퍼짐은 (x, y) 평면      R = pct99(√(x²+y²))
+         axis='x' → 축이 x 이므로 자유 퍼짐은 y  R = pct99(|y|)
+         axis='y' → 자유 퍼짐은 x                R = pct99(|x|)
+    """
     fr = frames(d)
     if not fr:
         raise SystemExit(f'⛔ {d}: 번호 붙은 덤프가 없다')
@@ -92,14 +103,25 @@ def measure(d, r_container=0.05, label=None):
         raise SystemExit(f'⛔ {path}: radius 열이 없다 — 덤프에 radius 를 넣을 것')
     x, y, z, r = D['x'], D['y'], D['z'], D['radius']
     n = len(x)
-    rad = np.hypot(x, y)                                # ★ 실린더 축(0,0) 기준
+    if axis == 'z':                                     # 세로 실린더 — 중력축 = 통축
+        rad = np.hypot(x, y)
+        env_of = lambda R, H: np.pi * R ** 2 * H        # 원기둥 포락
+    elif axis == 'x':                                   # 가로 드럼, 축 = x
+        rad = np.abs(y)
+        env_of = lambda R, H: 2 * R * float(x.max() - x.min()) * H
+    elif axis == 'y':
+        rad = np.abs(x)
+        env_of = lambda R, H: 2 * R * float(y.max() - y.min()) * H
+    else:
+        raise SystemExit(f'⛔ axis 는 x·y·z 중 하나여야 한다 (받은 값 {axis!r})')
     R99 = float(np.percentile(rad, 99))                 # 튄 입자가 최댓값을 지배하지 않도록
     H = float(z.max() - z.min())
     #  ⚠ 다분산 침대에서 `n·(4/3)π r̄³` 은 **틀린다** (AM 1.2 mm 와 SE 0.3 mm 를
     #    평균내면 부피가 엉망이 된다).  입자마다 더한다.
     Vp = float(((4 / 3) * np.pi * r ** 3).sum())
-    phi = Vp / (np.pi * R99 ** 2 * H) if (R99 > 0 and H > 0) else float('nan')
-    return dict(label=label or d, step=step, n=n, R=R99, H=H,
+    env = env_of(R99, H)
+    phi = Vp / env if (R99 > 0 and H > 0 and env > 0) else float('nan')
+    return dict(label=label or d, step=step, n=n, R=R99, H=H, axis=axis,
                 HR=(H / R99 if R99 > 0 else float('nan')),
                 R_over_Rc=(R99 / r_container if r_container else float('nan')),
                 phi=phi, n_frames=len(fr), path=path)
@@ -107,7 +129,8 @@ def measure(d, r_container=0.05, label=None):
 
 def report(rs):
     for m in rs:
-        print(f'{m["label"]:14s} step {m["step"]:7d} · n {m["n"]:5d} · 프레임 {m["n_frames"]}')
+        print(f'{m["label"]:14s} step {m["step"]:7d} · n {m["n"]:5d} · 프레임 {m["n_frames"]}'
+              f' · 통축 {m.get("axis", "z")}')
         print(f'   R(99%) {m["R"]*1e3:7.2f} mm · H {m["H"]*1e3:7.2f} mm · ★ H/R {m["HR"]:6.3f}'
               f' · R/R_통 {m["R_over_Rc"]:5.3f} · φ(포락) {m["phi"]:5.3f}')
         if m['phi'] < PHI_LOOSE_WARN:
@@ -173,6 +196,26 @@ def _selftest():
             #  ★ 변이 대조 — 평균반경 판이면 여기서 걸린다 (시험이 장식이 아님을 보인다)
             chk(f'⑥b 변이: 평균반경 판(n·(4/3)π r̄³)과 {v_true/v_mean:.1f}배 다르다',
                 abs(v_got - v_mean) > v_mean*0.5)
+
+        #  ⑦ 통축 — 가로 드럼에서 두 규약이 **실제로 갈린다**
+        #     고정구: 축(x) 으로 길고 측방(y) 으로 좁은 침대 = 드럼 바닥의 풀
+        #     axis='z' → R = pct99(√(x²+y²)) 가 드럼 **길이**를 먹어 크게 나온다
+        #     axis='x' → R = pct99(|y|)       = 진짜 측방 퍼짐
+        with tempfile.TemporaryDirectory() as tx:
+            with open(os.path.join(tx, 'drum_10.liggghts'), 'w') as fh:
+                pts = [(X*0.001, Y*0.001, 0.001) for X in range(-30, 31, 2)
+                       for Y in (-2, 0, 2)]
+                fh.write(f'ITEM: TIMESTEP\n10\nITEM: NUMBER OF ATOMS\n{len(pts)}\n')
+                fh.write('ITEM: BOX BOUNDS mm mm mm\n-1 1\n-1 1\n0 1\n')
+                fh.write('ITEM: ATOMS id type x y z radius\n')
+                for i, (X, Y, Z) in enumerate(pts):
+                    fh.write(f'{i+1} 1 {X} {Y} {Z+i*1e-6} 0.0005\n')
+            mz = measure(tx, axis='z')
+            mx = measure(tx, axis='x')
+            chk('⑦ axis=x 는 측방 퍼짐 |y| 만 본다 (2 mm)',
+                abs(mx['R'] - 0.002) < 1e-4)
+            chk('⑦b 변이: axis=z 는 드럼 길이(x)를 먹어 10배 넘게 크다',
+                mz['R'] > mx['R'] * 10)
     print(f'\nmeasure_bed_aspect selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -183,6 +226,8 @@ if __name__ == '__main__':
     ap.add_argument('dirs', nargs='*', help='덤프 디렉터리 (여러 개면 나란히 비교)')
     ap.add_argument('--r-container', type=float, default=0.05, help='통 반경 (m). 기본 0.05')
     ap.add_argument('--label', action='append', default=None, help='디렉터리별 표시 이름')
+    ap.add_argument('--axis', default='z', choices=['x', 'y', 'z'],
+                    help='통의 대칭축 (중력은 언제나 −z).  가로 드럼이면 x.  기본 z')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -190,5 +235,5 @@ if __name__ == '__main__':
     if not a.dirs:
         ap.error('디렉터리를 하나 이상 주세요 (예: nocoh/post coh/post)')
     labs = a.label or [None] * len(a.dirs)
-    report([measure(d, a.r_container, labs[i] if i < len(labs) else None)
+    report([measure(d, a.r_container, labs[i] if i < len(labs) else None, axis=a.axis)
             for i, d in enumerate(a.dirs)])
