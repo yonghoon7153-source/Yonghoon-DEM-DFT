@@ -1405,6 +1405,26 @@ def selftest():
 
     _sp, _sys  # noqa
 
+    # ── coop_verdict (카드 lpscl_smallcell_coophop §4 세 갈래) ────────────────
+    _b, _w = coop_verdict(2.4, 0.09)
+    chk(_b == "b_지지", f"[양성] d_Li 2.4 ≥ 2.0 → b_지지 (얻은 {_b})")
+    _b, _w = coop_verdict(0.5, 0.09)
+    chk(_b == "a_쪽_증거", f"[양성] d_Li 0.5 · 골격 0.09 ≤ 0.15 → a_쪽_증거 (얻은 {_b})")
+    _b, _w = coop_verdict(0.5, 0.40)
+    chk(_b == "미결", f"[양성] d_Li 0.5 인데 골격 0.40 > 0.15 → 미결 (얻은 {_b})")
+    _b, _w = coop_verdict(None, 0.09)
+    chk(_b == "미판정", f"⛔음성: d_Li 가 None 이면 **미판정** — 0 으로 읽어 a_쪽_증거로 세지 않는다 (얻은 {_b})")
+    _b, _w = coop_verdict(2.4, None)
+    chk(_b == "미판정", f"⛔음성: 골격 RMSD 가 None 이면 미판정 (얻은 {_b})")
+    _b, _w = coop_verdict(COUPLE_DISP_A, 0.9)
+    chk(_b == "b_지지", "⛔음성: d_Li 가 문턱과 **같으면** b_지지 (≥ 이지 > 가 아니다)")
+    _b, _w = coop_verdict(0.5, COOP_RMSD_A)
+    chk(_b == "a_쪽_증거", "⛔음성: 골격 RMSD 가 문턱과 **같으면** a_쪽_증거 (≤ 이지 < 가 아니다)")
+    chk("증명이 아니다" in coop_verdict(0.5, 0.09)[1],
+        "⛔음성: a_쪽_증거 사유에 **'증명이 아니다'** 가 들어간다 (단정 금지를 사유가 들고 다닌다)")
+    chk(coop_verdict(0.5, 0.09, thresh=0.4)[0] == "b_지지",
+        "문턱을 인자로 바꿀 수 있다 (카드가 눈금을 바꾸면 여기로 들어온다)")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -1572,6 +1592,144 @@ def couple_endpoints_from_events(events_dir, out_sub="coupled", device="cuda",
 
 
 # ═══ ⓑ 카드 §9-② — 봉인된 끝점에서 바로 CI-NEB ═══════════════════════════
+#: 카드 §4 갈래3 문턱 (`lpscl_smallcell_coophop_estimand_2026_09_19.json`).
+#: 라운드2 실측 골격 RMSD 최대 0.109 Å **위에서 고른 값**이고 물리적 근거가 아니다 —
+#: 카드에 그렇게 적었고, **결과를 보고 바꾸지 않는다**.
+COOP_RMSD_A = 0.15
+
+
+def coop_verdict(d_li, rmsd_frame, thresh=COUPLE_DISP_A, rmsd_thresh=COOP_RMSD_A):
+    """카드 §4 **세 갈래** — (갈래, 사유). ⛔ 이것은 판정이 아니라 **분류**다.
+
+      · `b_지지`     d_Li ≥ thresh → 별개 극소가 있고 **골격 재배열을 동반**한다
+      · `a_쪽_증거`  d_Li < thresh 이고 골격 RMSD ≤ rmsd_thresh
+                     ⛔ '극소가 없다' 의 **증명이 아니다** — 탐색 하나가 증명이 될 수 없다
+      · `미결`       d_Li < thresh 인데 골격 RMSD > rmsd_thresh
+                     → 골격이 다른 데로 갔다. **같은 계의 두 극소를 비교한 것이 아니다**
+      · `미판정`     둘 중 하나라도 못 쟀다 — **못 잰 것을 갈래로 읽지 않는다**
+
+    ⛔ 이 함수가 하지 않는 것
+      · 장벽을 말하지 않는다. (a) 를 증명하지 않는다.
+      · 여러 사건을 합치지 않는다 — 사건 하나를 분류할 뿐이다.
+    """
+    if d_li is None or rmsd_frame is None:
+        return "미판정", "d_Li 또는 골격 RMSD 가 없다 — 못 잰 것을 갈래로 읽지 않는다"
+    if d_li >= thresh:
+        return "b_지지", (f"d_Li {d_li:.3f} Å ≥ {thresh} — 별개 극소, 골격 재배열 동반 "
+                        f"(골격 RMSD {rmsd_frame:.4f})")
+    if rmsd_frame <= rmsd_thresh:
+        return "a_쪽_증거", (f"d_Li {d_li:.3f} Å < {thresh} 이고 골격 RMSD {rmsd_frame:.4f} "
+                          f"≤ {rmsd_thresh} — ⛔ '극소 없음' 의 증명이 아니다")
+    return "미결", (f"d_Li {d_li:.3f} Å < {thresh} 인데 골격 RMSD {rmsd_frame:.4f} > {rmsd_thresh} "
+                  f"— 골격이 옮겨갔다. 같은 계 비교가 아니다")
+
+
+def coop_hop_from_events(events_dir, out_sub="coop", device="cuda",
+                         fmax=FMAX_CI, skip_duplicates=False, log=print):
+    """팔 **A/B/C** 를 한 기계에서 돈다 — 카드 `lpscl_smallcell_coophop_estimand_2026_09_19` §2.
+
+      팔A  `{tag}_i.xyz` 심화 이완 (track_idx=이동 Li, drift 0.6)      ← 라운드2 승계
+      팔B  팔A 종점에서 **이동 Li 만** final 위치로 옮기고 재이완      ← **기계 대조**
+      팔C  `{tag}_f.xyz` 를 **가드 없이** 심화 이완                     ← **본 보고량**
+
+    세 팔이 `relax_endpoint_deep` 의 **같은 탐색 정책**(rattle amp·tries)을 쓴다.
+    다른 것은 **추적 가드 유무 하나**이고 그것이 이 카드가 바꾸는 것이다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · NEB 를 돌리지 않는다. 장벽을 내지 않는다.
+      · 팔B 를 '이미 kgy 에서 했으니' 생략하지 않는다 — 생략하면 기계 대조가 사라진다.
+      · (a) 를 증명하지 않는다 (`coop_verdict` docstring).
+      · 사건을 고르지 않는다 — events.json 에 있는 것을 전부 돈다.
+      · 갈래0(팔B 가 라운드2 0/9 를 재현하나)을 **판정하지 않는다** — `armB_gb7_pass` 를
+        내줄 뿐이고, 비교는 사람이 라운드2 기록과 대조해서 한다.
+    """
+    import time as _time
+    from ase.io import read as ase_read, write as ase_write
+    ev = Path(events_dir)
+    meta = json.loads((ev / "events.json").read_text(encoding="utf-8"))
+    out = ev / out_sub
+    out.mkdir(exist_ok=True)
+    calc = load_calc(device)
+    rows, seen = [], {}
+    for e in meta["events"]:
+        tag, ai = e["tag"], int(e["atom_index"])
+        fi, ff = ev / f"{tag}_i.xyz", ev / f"{tag}_f.xyz"
+        if not (fi.exists() and ff.exists()):
+            rows.append({"tag": tag, "status": "missing_raw_frames"})
+            log(f"  {tag:16s} ⛔ 원시 프레임이 없다 — **없음이 아니라 미회수**")
+            continue
+        #: 원시 쌍 해시 전수 대조 — ev04/ev07(라운드1 무효 원인)이 여기서 잡힌다.
+        key = (sha256(fi), sha256(ff))
+        if key in seen:
+            msg = f"{tag} 와 {seen[key]} 의 **원시 끝점이 같다** (byte-identical)"
+            if not skip_duplicates:
+                raise SystemExit(f"⛔ {msg} — 중단한다. 같은 쌍을 두 사건으로 세지 않는다.")
+            rows.append({"tag": tag, "status": "duplicate_raw_pair", "same_as": seen[key]})
+            log(f"  {tag:16s} ⛔ {msg} (건너뜀)")
+            continue
+        seen[key] = tag
+
+        raw_i, raw_f = ase_read(str(fi)), ase_read(str(ff))
+        cell = np.asarray(raw_i.get_cell(), float)
+        syms = raw_i.get_chemical_symbols()
+
+        # ── 팔A — 라운드2 와 동일 절차 (가드 있음)
+        a, ia = relax_endpoint_deep(raw_i.copy(), calc, fmax=fmax,
+                                    track_idx=ai, max_track_drift=0.6)
+        # ── 팔B — 라운드2 재현: 팔A 종점에서 이동 Li 하나만 옮기고 재이완
+        b0 = a.copy()
+        pb = b0.get_positions()
+        pb[ai] = pb[ai] + mic_disp(cell, pb[ai:ai + 1],
+                                   raw_f.get_positions()[ai:ai + 1])[0]
+        b0.set_positions(pb)
+        b, ib = relax_endpoint_deep(b0, calc, fmax=fmax,
+                                    track_idx=ai, max_track_drift=0.6)
+        okB, whyB, detB = couple_verdict(cell, a.get_positions(), b.get_positions(), syms, ai)
+        # ── 팔C — 본 보고량: final 프레임을 **가드 없이** 이완
+        c, ic = relax_endpoint_deep(raw_f.copy(), calc, fmax=fmax, track_idx=None)
+        _okC, _whyC, detC = couple_verdict(cell, a.get_positions(), c.get_positions(), syms, ai)
+        branch, why = coop_verdict(detC["li_disp_A"], detC["nonli_rmsd_A"])
+
+        for nm, at in (("A", a), ("B", b), ("C", c)):
+            ase_write(str(out / f"{tag}_{nm}.xyz"), at)
+        rows.append({
+            "tag": tag, "atom_index": ai, "status": "ok",
+            "armA": {"converged": ia["converged"], "E": ia["E"], "steps": ia["steps"],
+                     "n_escapes": ia["n_escapes"], "track_drift_A": ia["track_drift_A"]},
+            "armB": {"gb7_ok": bool(okB), "why": whyB, "converged": ib["converged"],
+                     "li_disp_A": detB["li_disp_A"], "nonli_rmsd_A": detB["nonli_rmsd_A"],
+                     "n_over_thresh": detB["n_over_thresh"]},
+            "armC": {"converged": ic["converged"], "E": ic["E"], "steps": ic["steps"],
+                     "d_Li_A": detC["li_disp_A"], "rmsd_frame_A": detC["nonli_rmsd_A"],
+                     "max_disp_A": detC["max_disp_A"], "branch": branch, "why": why},
+        })
+        log(f"  {tag:16s} 팔B G-B7 {'통과' if okB else '탈락'} "
+            f"(Li {detB['li_disp_A']:.2f} Å) · 팔C {branch} "
+            f"(d_Li {detC['li_disp_A']:.2f} · 골격 {detC['nonli_rmsd_A']:.4f})")
+
+    done = [r for r in rows if r.get("status") == "ok"]
+    tally = {}
+    for r in done:
+        tally[r["armC"]["branch"]] = tally.get(r["armC"]["branch"], 0) + 1
+    rec = {
+        "kind": "coop_hop_round", "date": _time.strftime("%Y-%m-%d"),
+        "card": "db/properties/lpscl_smallcell_coophop_estimand_2026_09_19.json",
+        "events_dir": str(ev), "n_events": len(meta["events"]), "n_done": len(done),
+        "armB_gb7_pass": sum(1 for r in done if r["armB"]["gb7_ok"]),
+        "branches": tally,
+        "⛔_갈래0": ("`armB_gb7_pass` 를 라운드2 기록(kgy, 0/9)과 **사람이 대조**한다. "
+                  "재현되지 않으면 팔C 를 라운드2 와 같은 표에 놓지 않는다 (카드 §4 갈래0)."),
+        "⛔_인용": "장벽 아님 · (a) 증명 아님 · σ·D·Ea 로 번역 금지 (카드 §1c).",
+        "thresholds": {"d_Li_A": COUPLE_DISP_A, "rmsd_frame_A": COOP_RMSD_A, "fmax": fmax},
+        "rows": rows,
+    }
+    (ev / f"{out_sub}_result.json").write_text(
+        json.dumps(rec, ensure_ascii=False, indent=2), encoding="utf-8")
+    log(f"\n→ {ev / (out_sub + '_result.json')}")
+    log(f"   팔B G-B7 통과 {rec['armB_gb7_pass']}/{len(done)} · 팔C 갈래 {tally}")
+    return rec
+
+
 BARRIER_CARD = "db/properties/lpscl_smallcell_neb_barrier_estimand_2026_09_18.json"
 
 
@@ -1779,6 +1937,11 @@ def main():
                     help="--couple_endpoints_from 에서 원시 끝점 쌍이 겹치는 사건을 "
                          "**중단 대신 기록하고 건너뛴다**. ⛔ 게이트 완화가 아니다 — "
                          "중복을 이미 기록한 뒤 나머지를 이어 돌 때만 쓴다")
+    ap.add_argument("--coop_hop_from", metavar="EVENTS_DIR",
+                    help="팔 A/B/C 를 **한 기계에서** 돈다 (카드 "
+                         "lpscl_smallcell_coophop_estimand_2026_09_19). 팔A 초기 이완 · "
+                         "팔B 라운드2 재현(기계 대조) · 팔C final 전체 이완(본 보고량). "
+                         "⛔ NEB 를 돌리지 않는다 — 끝점 분류만 한다")
     ap.add_argument("--endpoints_subdir", default="relaxed",
                     help="--endpoints_dir 가 읽을 하위폴더 (기본 relaxed · 결합 생성본은 coupled)")
     ap.add_argument("--deep_endpoints", action="store_true",
@@ -1788,6 +1951,10 @@ def main():
     if "--selftest" in sys.argv:
         raise SystemExit(selftest())
     a = ap.parse_args()
+    if a.coop_hop_from:
+        r = coop_hop_from_events(a.coop_hop_from, device=a.device,
+                                 skip_duplicates=a.skip_duplicates)
+        raise SystemExit(0 if r["n_done"] else 3)
     if a.couple_endpoints_from:
         r = couple_endpoints_from_events(a.couple_endpoints_from,
                                          out_sub=("coupled" if a.endpoints_subdir == "relaxed"
