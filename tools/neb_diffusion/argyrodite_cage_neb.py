@@ -1288,10 +1288,204 @@ def selftest():
     chk(_w["band_health"]["min_interior_rel_eV"] < -0.2,
         f"실측 ev01 의 내부 최소가 시작점보다 200 meV 넘게 낮다 "
         f"({_w['band_health']['min_interior_rel_eV']} eV)")
+    # ── mic_disp · G-B7 (v2 카드, 2026-09-19) ────────────────────────────────
+    from ase import Atoms as _At
+    _C = np.diag([10.0, 10.0, 10.0])
+    #: ⛔음성 먼저 — fixture 가 **실제로 셀 경계를 넘는지** 확인한다. 안 넘으면
+    #  최소이미지 보정이 아무것도 안 하고 시험이 헛것을 잰다 (2026-09-13 교훈).
+    _a = np.array([[0.5, 0.0, 0.0]]); _b = np.array([[9.5, 0.0, 0.0]])
+    chk(abs((_b - _a)[0, 0] - 9.0) < 1e-9,
+        "⛔음성: fixture 가 경계를 넘는다 — 보정 없이는 +9.0 Å 이다 (그래야 시험이 잰다)")
+    chk(abs(mic_disp(_C, _a, _b)[0, 0] + 1.0) < 1e-9,
+        f"[양성] mic_disp 가 짧은 쪽을 잡는다 (−1.0, 실제 {mic_disp(_C, _a, _b)[0, 0]:+.3f})")
+
+    def _pair(nmove=1, dist=2.5, syms=("Li", "Li", "P", "S"), skew=0.0):
+        base = np.array([[1.0, 1.0, 1.0], [5.0, 1.0, 1.0],
+                         [1.0, 5.0, 1.0], [5.0, 5.0, 1.0]])[:len(syms)]
+        moved = base.copy()
+        for k in range(nmove):
+            moved[k, 0] += dist
+        if skew:                      # 골격을 문턱 **아래**로만 흔든다
+            for k in range(len(syms)):
+                if syms[k] != "Li":
+                    moved[k, 1] += skew
+        return _C, base, moved, list(syms)
+
+    _c, _pi, _pf, _sy = _pair(nmove=1)
+    _ok, _why, _det = couple_verdict(_c, _pi, _pf, _sy, 0)
+    chk(_ok and _det["n_over_thresh"] == 1 and abs(_det["li_disp_A"] - 2.5) < 1e-6,
+        f"[양성] Li 하나만 2.5 Å 움직이면 G-B7 통과 ({_det['n_over_thresh']} 개, "
+        f"{_det['li_disp_A']} Å)")
+    _c, _pi, _pf, _sy = _pair(nmove=2)
+    _ok, _why, _ = couple_verdict(_c, _pi, _pf, _sy, 0)
+    chk((not _ok) and any("2 개" in q for q in _why),
+        f"⛔음성: 두 원자가 문턱을 넘으면 기각 ({_why})")
+    _c, _pi, _pf, _sy = _pair(nmove=1)
+    _ok, _why, _ = couple_verdict(_c, _pi, _pf, _sy, 1)     # 움직인 건 0 번인데 1 번을 선언
+    chk((not _ok) and any("이동 Li 가 아니다" in q for q in _why),
+        f"⛔음성: 움직인 원자가 선언된 이동 Li 가 아니면 기각 ({_why})")
+    _ok, _why, _ = couple_verdict(_c, _pi, _pf, _sy, 2)     # atom 2 = P
+    chk((not _ok) and any("Li 가 아니다" in q for q in _why),
+        f"⛔음성: 선언된 원자가 Li 가 아니면 기각 ({_why})")
+    _c, _pi, _pf, _sy = _pair(nmove=1, dist=1.5)            # 문턱 아래
+    _ok, _why, _det = couple_verdict(_c, _pi, _pf, _sy, 0)
+    chk((not _ok) and _det["n_over_thresh"] == 0,
+        f"⛔음성: 변위가 문턱 아래면 **0 개**로 기각 — 끝점 붕괴를 잡는다 ({_det['li_disp_A']} Å)")
+    #: 골격 RMSD 는 **기록만** — 문턱 아래로 흔들려 있어도 통과는 유지된다
+    _c, _pi, _pf, _sy = _pair(nmove=1, skew=0.4)
+    _ok, _why, _det = couple_verdict(_c, _pi, _pf, _sy, 0)
+    chk(_ok and _det["nonli_rmsd_A"] and _det["nonli_rmsd_A"] > 0.3,
+        f"[양성] 골격 RMSD 는 문턱이 아니라 **기록**이다 (통과 유지 · RMSD "
+        f"{_det['nonli_rmsd_A']} Å)")
+    chk("문턱 없이" in _det["⚠_nonli_rmsd"],
+        "골격 RMSD 가 문턱이 아니라는 것을 세부에 적어 들고 다닌다")
+
     _sp, _sys  # noqa
 
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
+
+
+# ═══ ⓑ v2 카드 §1-① — 끝점 **결합 생성** + G-B7 ═════════════════════════════
+#   왜 (2026-09-19 실측). v1 라운드가 생존 0/9 로 무효가 됐고 원인이 장벽이 아니라
+#   **끝점**이었다: `{tag}_i/f.xyz` 는 한 홉의 양끝이 아니라 5 ps 떨어진 MD 스냅샷
+#   두 장이었다. 증거 — ev04(atom78) 와 ev07(atom114) 는 **다른 사건인데 원시 끝점
+#   파일이 바이트 단위로 같았다** (시간창 16–21 ps 공유). 이동 Li 가 다른데 끝점이
+#   같으면 그 끝점은 어느 특정 Li 의 홉도 정의하지 않는다.
+#   ⇒ 시작만 이완하고 **이동 Li 하나만** 옮겨 끝점을 만든다 (2026-08-21 처방).
+COUPLE_DISP_A = 2.0          # G-B7 문턱. 사건 선택 문턱(2.0 Å)과 같은 값 — 카드 v2 §3
+
+
+def mic_disp(cell, pos_a, pos_b):
+    """최소이미지 변위 **b − a**. 같은 셀·같은 원자순서를 전제한다. → (n,3) Å
+
+    ⛔ 못 하는 것: 셀이 다르면 쓰지 않는다 (여기서는 셀 고정이 규율이다).
+    """
+    C = np.asarray(cell, float).reshape(3, 3)
+    Cinv = np.linalg.inv(C)
+    df = (np.asarray(pos_b, float) - np.asarray(pos_a, float)) @ Cinv
+    df -= np.round(df)
+    return df @ C
+
+
+def couple_verdict(cell, pos_i, pos_f, syms, atom_index, thresh=COUPLE_DISP_A):
+    """**G-B7** — 두 끝점이 *한 홉의 양끝* 모양인가. → (ok, 사유들, 세부)
+
+    하드 게이트 하나뿐이다: **변위 ≥ thresh 인 원자가 이동 Li 하나뿐**.
+    비-Li 골격 RMSD 는 **문턱 없이 기록만** 한다 — 지금 문턱을 정하면 결과를 보고
+    정하는 것이 된다 (카드 v2 §3).
+
+    ⛔ 이 함수가 하지 않는 것
+      · 끝점이 물리적으로 의미 있는 자리인지 판정하지 않는다. *모양*만 본다.
+      · 장벽·에너지를 보지 않는다.
+      · 이동 Li 가 실제로 이웃 케이지로 갔는지 판정하지 않는다 (거리만 기록).
+    """
+    d = np.linalg.norm(mic_disp(cell, pos_i, pos_f), axis=1)
+    syms = list(syms)
+    movers = [(int(k), syms[k], round(float(d[k]), 4))
+              for k in range(len(d)) if d[k] >= thresh]
+    nonli = [k for k in range(len(d)) if syms[k] != "Li"]
+    why = []
+    if syms[atom_index] != "Li":
+        why.append(f"G-B7: atom {atom_index} 가 Li 가 아니다 ({syms[atom_index]})")
+    if len(movers) != 1:
+        why.append(f"G-B7: 변위 ≥ {thresh} Å 인 원자가 **{len(movers)} 개**다 "
+                   f"(하나여야 한다) — {movers[:4]}")
+    elif movers[0][0] != int(atom_index):
+        why.append(f"G-B7: 움직인 원자가 이동 Li 가 아니다 "
+                   f"(움직인 것 {movers[0]}, 선언된 이동 Li {atom_index})")
+    det = {"li_disp_A": round(float(d[int(atom_index)]), 4),
+           "max_disp_A": round(float(d.max()), 4),
+           "n_over_thresh": len(movers), "movers": movers,
+           "nonli_rmsd_A": (round(float(np.sqrt((d[nonli] ** 2).mean())), 4)
+                            if nonli else None),
+           "⚠_nonli_rmsd": "문턱 없이 **기록만** 한다 (v1 라운드1 실측 0.158–0.274 Å 와 대조)",
+           "thresh_A": thresh}
+    return (not why), why, det
+
+
+def couple_endpoints_from_events(events_dir, out_sub="coupled", device="cuda",
+                                 fmax=FMAX_CI, log=print):
+    """events.json + 원시 MD 프레임 → **결합 생성한** 끝점 쌍 + G-B7 판정.
+
+    절차 (카드 v2 §1-①·§3)
+      ① `{tag}_i.xyz` 를 `relax_endpoint_deep` 으로 이완 (track_idx = 이동 Li)
+      ② 그 구조에서 **이동 Li 하나만** `{tag}_f.xyz` 의 그 Li 위치로 옮긴다 (최소이미지)
+      ③ 같은 추적 가드로 다시 심화 이완
+      ④ G-B7 판정 · 비-Li RMSD 기록
+      ⑤ 끝점 sha256 **전수 대조** — 두 사건의 쌍이 같으면 **즉시 중단** (ev04/ev07 재발)
+
+    ⛔ 이 함수가 하지 않는 것
+      · 사건을 고르지 않는다 — events.json 에 있는 것을 전부 돈다 (§0b-② 가 이미 골랐다).
+      · 목표 좌표를 '자리' 로 승격하지 않는다. 유리에 자리는 없고, 이건 **관측된 위치**다.
+      · 셀을 이완하지 않는다.
+      · NEB 를 돌리지 않는다. 끝점만 만든다.
+      · G-B7 탈락 사건을 **지우지 않는다** — 기록하고 세고 넘긴다.
+    """
+    import json as _json
+    from ase.io import read as _read
+    ev = Path(events_dir)
+    meta = _json.loads((ev / "events.json").read_text(encoding="utf-8"))
+    out = ev / out_sub; out.mkdir(exist_ok=True)
+    calc = load_calc(device)
+    rows, seen = [], {}
+    for e in meta["events"]:
+        tag, ai = e["tag"], int(e["atom_index"])
+        fi, ff = ev / f"{tag}_i.xyz", ev / f"{tag}_f.xyz"
+        if not (fi.exists() and ff.exists()):
+            rows.append({"tag": tag, "status": "missing_raw_frames"})
+            log(f"  {tag:14s} ⛔ 원시 프레임이 없다 — **없음이 아니라 미회수**")
+            continue
+        raw_i, raw_f = _read(str(fi)), _read(str(ff))
+        #: ⛔ 원시 쌍의 해시부터 본다. ev04/ev07 은 여기서 잡힌다.
+        h = (sha256(fi), sha256(ff))
+        if h in seen:
+            raise SystemExit(f"⛔ {tag} 의 원시 끝점 쌍이 {seen[h]} 와 **같다** "
+                             f"(sha256 {h[0][:8]}…/{h[1][:8]}…). 두 사건이 같은 MD "
+                             f"프레임을 쓰고 있다 — 카드 v2 enforcement ③ 로 **중단**한다.")
+        seen[h] = tag
+        ini, di = relax_endpoint_deep(raw_i, calc, fmax=fmax, track_idx=ai, seed=0)
+        #: ② 이동 Li 하나만 옮긴다. 나머지 119 원자는 이완된 시작 구조를 그대로 쓴다.
+        tgt = ini.copy()
+        pos = tgt.get_positions()
+        step = mic_disp(ini.get_cell(), ini.get_positions()[ai:ai + 1],
+                        raw_f.get_positions()[ai:ai + 1])[0]
+        pos[ai] = pos[ai] + step
+        tgt.set_positions(pos)
+        fin, df = relax_endpoint_deep(tgt, calc, fmax=fmax, track_idx=ai, seed=1)
+        ok, why, det = couple_verdict(ini.get_cell(), ini.get_positions(),
+                                      fin.get_positions(),
+                                      ini.get_chemical_symbols(), ai)
+        qi = out / f"{tag}_i_relaxed.xyz"; qf = out / f"{tag}_f_relaxed.xyz"
+        ini.write(str(qi)); fin.write(str(qf))
+        rows.append({"tag": tag, "atom_index": ai,
+                     "status": "ok" if ok else "coupled_endpoint_failed",
+                     "failed_because": why,
+                     "hop_A_from_events": e.get("disp_minimum_image_A"),
+                     "moved_step_A": round(float(np.linalg.norm(step)), 4),
+                     **det,
+                     "deep_i": di, "deep_f": df,
+                     "sha256": {"i": sha256(qi), "f": sha256(qf)},
+                     "raw_sha256": {"i": h[0], "f": h[1]}})
+        log(f"  {tag:14s} Li 변위 {det['li_disp_A']:.2f} Å · ≥{COUPLE_DISP_A} Å 원자 "
+            f"{det['n_over_thresh']} 개 · 골격 RMSD {det['nonli_rmsd_A']} Å · "
+            f"{'ok' if ok else ' / '.join(why)}")
+    okr = [r for r in rows if r.get("status") == "ok"]
+    res = {"date": time.strftime("%Y-%m-%d"), "kind": "endpoint_coupled_gate",
+           "card": "db/properties/lpscl_smallcell_neb_barrier_estimand_v2_2026_09_19.json",
+           "⛔_이것은_장벽이_아니다": "끝점 모양 판정(G-B7)일 뿐이다. Eb 는 NEB 뒤에, "
+                                     "그리고 ⓐ 통과 뒤에만 나온다.",
+           "settings": {"fmax_endpoint": fmax, "deep_relax": True,
+                        "track_guard_A": 0.6, "thresh_A": COUPLE_DISP_A,
+                        "uma": "uma-s-1p1 omat default", "cell": "fixed"},
+           "n_events": len(rows), "n_ok": len(okr),
+           "n_failed": len(rows) - len(okr), "out_subdir": out_sub, "rows": rows}
+    q = ev / "endpoint_coupled_gate.json"
+    q.write_text(_json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
+    log(f"  ⇒ G-B7 통과 {len(okr)}/{len(rows)} · → {q}")
+    if len(okr) < len(rows):
+        log(f"  ⚠ 탈락 {len(rows) - len(okr)} 건은 **세서 보고한다** (카드 v2 §4)")
+    return res
 
 
 # ═══ ⓑ 카드 §9-② — 봉인된 끝점에서 바로 CI-NEB ═══════════════════════════
@@ -1300,7 +1494,7 @@ BARRIER_CARD = "db/properties/lpscl_smallcell_neb_barrier_estimand_2026_09_18.js
 
 def neb_from_endpoints(events_dir, out_json, card=BARRIER_CARD, n_images=N_IMAGES,
                        steps=STEPS_NEB, spring_k=SPRING_K, device="cuda",
-                       deep_endpoints=False, log=print):
+                       deep_endpoints=False, rel_subdir="relaxed", log=print):
     """events.json + relaxed/ 의 이완된 끝점 9 쌍 → CI-NEB.
 
     ⛔ 이 함수가 하지 않는 것
@@ -1324,7 +1518,7 @@ def neb_from_endpoints(events_dir, out_json, card=BARRIER_CARD, n_images=N_IMAGE
     from ase.io import read as _read
     ev = Path(events_dir)
     meta = _json.loads((ev / "events.json").read_text(encoding="utf-8"))
-    rel = ev / "relaxed"
+    rel = ev / rel_subdir
     if not rel.is_dir():
         raise SystemExit(f"⛔ {rel} 가 없다 — 끝점 게이트를 다시 돌려 **이완된 끝점**을 "
                          f"저장해야 한다 (melt_quench_uma.py --endpoint_gate).")
@@ -1422,6 +1616,7 @@ def neb_from_endpoints(events_dir, out_json, card=BARRIER_CARD, n_images=N_IMAGE
                                               "을 그대로 받는다. CI 가 0.03 이면 **눈금이 "
                                               "다르다** (2026-09-19).",
                         "deep_endpoints": bool(deep_endpoints),
+                        "endpoints_subdir": rel_subdir,
                         "max_steps": steps, "cell": "fixed",
                         "uma": "uma-s-1p1 omat default"},
            "n_events": len(rows), "n_ok": len(okr),
@@ -1493,6 +1688,12 @@ def main():
                     help="events.json + relaxed/ 의 이완된 끝점에서 CI-NEB. "
                          "⛔ 짝을 고르지 않는다 — §0b-② 가 이미 골랐다")
     ap.add_argument("--endpoints_out", help="--endpoints_dir 결과 JSON 경로")
+    ap.add_argument("--couple_endpoints_from", metavar="EVENTS_DIR",
+                    help="v2 카드 §1-① — events.json + 원시 MD 프레임에서 끝점을 "
+                         "**결합 생성**하고 G-B7 을 판정한다. events/<subdir>/ 에 쓴다. "
+                         "⛔ NEB 는 돌지 않는다 (끝점만 만든다)")
+    ap.add_argument("--endpoints_subdir", default="relaxed",
+                    help="--endpoints_dir 가 읽을 하위폴더 (기본 relaxed · 결합 생성본은 coupled)")
     ap.add_argument("--deep_endpoints", action="store_true",
                     help="--endpoints_dir 에서 받은 끝점을 relax_endpoint_deep 으로 "
                          "다시 내린다(이동 Li 추적 가드 포함). ⛔ 봉인된 라운드의 "
@@ -1500,11 +1701,18 @@ def main():
     if "--selftest" in sys.argv:
         raise SystemExit(selftest())
     a = ap.parse_args()
+    if a.couple_endpoints_from:
+        r = couple_endpoints_from_events(a.couple_endpoints_from,
+                                         out_sub=("coupled" if a.endpoints_subdir == "relaxed"
+                                                  else a.endpoints_subdir),
+                                         device=a.device)
+        raise SystemExit(0 if r["n_ok"] else 3)
     if a.endpoints_dir:
         _o = a.endpoints_out or str(Path(a.endpoints_dir).parent / "neb_barrier_uma.json")
         r = neb_from_endpoints(a.endpoints_dir, _o, n_images=a.n_images,
                                steps=a.neb_steps, spring_k=a.spring_k, device=a.device,
-                               deep_endpoints=a.deep_endpoints)
+                               deep_endpoints=a.deep_endpoints,
+                               rel_subdir=a.endpoints_subdir)
         raise SystemExit(0 if r["n_ok"] else 3)
     rec = one_run(a)
     p = Path(a.out)
