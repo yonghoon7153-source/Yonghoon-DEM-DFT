@@ -68,6 +68,11 @@
   .tldr li{margin-bottom:5px}
   .tldr-foot{margin-top:14px;padding-top:11px;border-top:1px solid var(--line);
              color:var(--mut);font-size:.8rem;line-height:1.6}
+  .serbadge{display:inline-block;font-size:.71rem;padding:1px 7px;border-radius:4px;
+            border:1px solid var(--line);color:var(--mut);margin-right:7px;
+            vertical-align:2px;white-space:nowrap}
+  .serbadge.sa{border-color:var(--nd);color:var(--nd)}
+  .serbadge.sb{border-color:var(--ok);color:var(--ok)}
   .sec{scroll-margin-top:92px}
   @media print{.toc{position:static;border-bottom:none}}
   .secfold{border-top:1px solid var(--line)}
@@ -190,6 +195,8 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes ×
 <ul class="toc"><li><a href="#s1"><b>1</b> 분해</a></li><li><a href="#s2"><b>2</b> 산물이 말한다</a></li><li><a href="#s2b"><b>2b</b> 얼마나 — 정량 곡선</a></li><li><a href="#s3"><b>3</b> 검증 — 절반 철회</a></li><li><a href="#s4"><b>4</b> 전 혼합범위 스캔</a></li><li><a href="#s5"><b>5</b> 다른 3가 도펀트</a></li><li><a href="#s6"><b>6</b> 갭 단계 계획</a></li><li><a href="#s7"><b>7</b> 반대쪽 접촉(전해질)</a></li><li><a href="#s8"><b>8</b> 양극별 원자료</a></li><li><a href="#s8b"><b>8b</b> 반론 여덟</a></li><li><a href="#s9"><b>9</b> 말하면 안 되는 것</a></li></ul>
 <div class="tldr">
   <div class="tldr-t">이 페이지가 무엇을 말하나 — 한 화면</div>
+
+
   <div class="tldr-grid">
     <div class="tldr-yes"><div class="tldr-lbl">✅ 말하는 것</div><ul>
       <li>고전압에서 Nd 계 계면은 <b>남은 P 를 인산염으로 끌어간다</b> — 양극 TM 이 덜 빠진다</li>
@@ -205,6 +212,37 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes ×
   </div>
   <div class="tldr-foot">이 페이지의 숫자는 전부 계산 기록에서 옮긴 것이고, 각 절 끝에 출처 파일을 적어 두었다. <b>인용하기 전에 <a href="#s9">§9(말하면 안 되는 것)</a>를 한 번 본다</b> — 같은 데이터로 말할 수 있는 것과 없는 것이 거기 갈려 있다.</div>
 </div>
+<div class="tldr" style="margin-top:14px">
+  <div class="tldr-t">⚠ 이 페이지의 계산은 <b>두 조성 계열</b>에서 나왔다</div>
+  <p style="margin:0 0 10px;font-size:.88rem;color:var(--mut)">
+  Nd³⁺ 를 <b>Li 자리</b>에 넣느냐 <b>P 자리</b>에 넣느냐에 따라 전하 보상 방향이 반대이고,
+  그래서 <b>조성의 Li 수가 반대로 움직인다</b>. 전압 기울기가 그 조성의 Li 수와 같으므로
+  (dΦ/dV = +N<sub>Li</sub>), <b>두 계열은 전압 의존도 반대 방향</b>이다.</p>
+  <div class="tblwrap" style="margin:0">
+  <table>
+  <thead><tr><th>계열</th><th>조성</th><th>Li 재고</th><th>이 절들이 쓴다</th></tr></thead>
+  <tbody>
+  <tr><td><b>A · Li 자리</b></td>
+      <td class="mono">Li<b>4.8</b> Nd0.2 <b>P1.00</b> S4.4 Cl1.6 (+O 0.3)</td>
+      <td class="mono">5.40 → <b>4.80</b> (−11 %)</td>
+      <td><a href="#s1">§1</a> 계면 반응성 · <a href="#s2">§2</a> 산물 ·
+          <a href="#s3">§3</a> 균형반응 · BVSE</td></tr>
+  <tr><td><b>B · P 자리</b></td>
+      <td class="mono">Li<b>5.44</b> Nd0.02 <b>P0.98</b> S4.37 O0.03 Cl1.6</td>
+      <td class="mono">5.40 → <b>5.44</b> (+0.7 %)</td>
+      <td><a href="#s2b">§2b</a> 보호율 곡선 · <b>1저자 목표 조성</b></td></tr>
+  <tr><td class="muted">해당 없음</td>
+      <td class="muted">산물 상(NdPO₄·LiNd(PO₃)₄ …) 자체</td><td class="muted">—</td>
+      <td class="muted"><a href="#s5">§5</a> · <a href="#s6">§6</a> · <a href="#s7">§7</a></td></tr>
+  <tr><td class="muted">별개 축</td>
+      <td class="muted">계면 혼합비 x (Nd 농도 아님)</td><td class="muted">—</td>
+      <td class="muted"><a href="#s4">§4</a></td></tr>
+  </tbody></table></div>
+  <div class="tldr-foot"><b>⇒ 계열 A 의 전압 판정을 계열 B 에 옮기지 않는다</b> — 그리고 그 반대도.
+  <b>이완한 결정구조는 계열 A 만 있다</b>; P 자리 구조는 만든 적이 없어서 구조가 필요한 계산
+  (BVSE·DFT)은 전부 A 위에 있다.</div>
+</div>
+
 
 
 <div class="card answer">
@@ -269,7 +307,7 @@ Li 0 개, Li₃PO₄ 는 3 개). 고전압이 Li 를 빼가면서 그 경로의 
 
 <section id="s1" class="sec">
 <details class="secfold">
-<summary><h2 class="sec-h">1. 분해 — 대조 조성 둘을 추가해서 갈랐다</h2><span class="sec-one">전압 6 점 × 조성 4 — Li 재고 교란을 가르려고 <b>대조 조성 둘</b>을 추가했다</span></summary>
+<summary><h2 class="sec-h">1. 분해 — 대조 조성 둘을 추가해서 갈랐다</h2><span class="serbadge sa">계열 A · Li 자리</span><span class="sec-one">전압 6 점 × 조성 4 — Li 재고 교란을 가르려고 <b>대조 조성 둘</b>을 추가했다</span></summary>
 <div class="secbody">
 
 <p class="plain">익숙한 것에 빗대면 <b>블록 탑에서 블록을 빼는 것</b>이다.
@@ -674,7 +712,7 @@ Li 하나당 기울기는 84~94 meV/atom/V 로 세 쌍에서 2 % 안에 모인�
 </section>
 <section id="s2" class="sec">
 <details class="secfold">
-<summary><h2 class="sec-h">2. 왜 고전압에서 Nd 인가 — 산물이 말한다</h2><span class="sec-one">hull 산물 목록의 패턴 — 남은 P 가 어디로 가나</span></summary>
+<summary><h2 class="sec-h">2. 왜 고전압에서 Nd 인가 — 산물이 말한다</h2><span class="serbadge sa">계열 A · Li 자리</span><span class="sec-one">hull 산물 목록의 패턴 — 남은 P 가 어디로 가나</span></summary>
 <div class="secbody">
 
 <p>hull 은 <em>무엇이</em> 생기는지를 말하지 <em>왜</em> 를 말하지 않는다. 그런데 산물 목록에 뚜렷한 패턴이 있다.</p>
@@ -867,7 +905,7 @@ Fig. 1(b) 에서 측정된 사실이고(잔차가 문턱의 1/20), 흔들린 것
 </section>
 <section id="s2b" class="sec">
 <details class="secfold">
-<summary><h2 class="sec-h">2b. 그 산물이 양극을 <b>얼마나</b> 아끼나 — 정량 곡선</h2><span class="sec-one">TM 보호율 곡선 — <b>24 칸 중 12 칸 탈락</b>, 전 점 통과는 LiCoO₂ 4.30 V · LiNiO₂ 3.50 V <b>둘뿐</b></span></summary>
+<summary><h2 class="sec-h">2b. 그 산물이 양극을 <b>얼마나</b> 아끼나 — 정량 곡선</h2><span class="serbadge sb">계열 B · P 자리</span><span class="sec-one">TM 보호율 곡선 — <b>24 칸 중 12 칸 탈락</b>, 전 점 통과는 LiCoO₂ 4.30 V · LiNiO₂ 3.50 V <b>둘뿐</b></span></summary>
 <div class="secbody">
 
 <p>§2 는 <i>무엇이</i> 생기는지를 보였다. 여기는 <i>얼마나</i> 다. 지표는
@@ -946,7 +984,7 @@ x 를 0.02 → 0.05 로 올리면 보호가 <b>2.6 배</b>가 되고 Li 는 오�
 </section>
 <section id="s3" class="sec">
 <details class="secfold">
-<summary><h2 class="sec-h">3. 검증 — 그리고 가설의 절반이 틀렸다</h2><span class="sec-one">균형반응 10 개 — 검산 고리 둘이 닫히고, <b>가설의 절반이 틀렸다</b> (+1.5035 eV/P 양수)</span></summary>
+<summary><h2 class="sec-h">3. 검증 — 그리고 가설의 절반이 틀렸다</h2><span class="serbadge sa">계열 A · Li 자리</span><span class="sec-one">균형반응 10 개 — 검산 고리 둘이 닫히고, <b>가설의 절반이 틀렸다</b> (+1.5035 eV/P 양수)</span></summary>
 <div class="secbody">
 
 <p>§2 의 가설을 재려고 같은 hull 에서 <strong>균형반응 10 개</strong>를 돌렸다
