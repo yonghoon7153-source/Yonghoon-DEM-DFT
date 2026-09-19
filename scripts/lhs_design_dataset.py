@@ -29,7 +29,9 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import csv
+import hashlib
 import json
 import pathlib
 import sys
@@ -497,11 +499,28 @@ DESCRIPTORS = ['phi_se', 'phi_am',                       # ← 회귀 타깃 (po
 #    `float(x or 0)` 한 줄이면 **0 이 실측처럼** 들어간다 = 원장 `GAP2-05` 와 정확히 같은 자리.
 #  ⇒ 처방은 열 삭제가 **아니다** (수확기 `lhs_descriptor_harvest.py` 가 그 이름에 쓴다).
 #    **읽기를 fail-closed 로** 만들고, 채움 상태를 **수치로 보고**한다.
-DESCRIPTOR_FILL_EXPECTED = {           # 2026-09-15 실측.  채워지면 이 숫자가 움직여 검사가 알려 준다.
+#  ★★ **갱신 2026-09-19 — 채웠다.**  옛 등록값(전부 0)과 그 사유 *"아직 수확되지 않았다"* 는
+#    **낡았다**.  규율 ④ 가 경고한 자리이므로 채우는 커밋에서 같이 고친다.
+#    남은 결측은 **두 종류뿐이고 둘 다 사유가 있다** — 빈 채로 방치된 칸은 없다.
+DESCRIPTOR_FILL_EXPECTED = {           # 2026-09-19 실측.  움직이면 ⑭d 가 알려 준다.
     'path': 'docs/data/lhs_design_20260818.csv', 'n_rows': 130,
-    'filled': {c: 0 for c in DESCRIPTORS},
-    'why_empty': 'DEM 배치가 아직 수확되지 않았다 — 원 dump 는 저자 기계에 있다',
-    'harvester': 'scripts/lhs_descriptor_harvest.py (selftest 전부 통과 2026-09-15)',
+    'filled': {'phi_se': 130, 'phi_am': 130,
+               'coverage_AM_P_hertz_pct': 100, 'coverage_AM_S_hertz_pct': 100,
+               'coverage_AM_total_hertz_pct': 130,
+               'tortuosity_dijkstra_SE': 14,
+               'porosity_sphere_pct_RECORD_ONLY': 130},
+    'why_partial': {
+        'coverage_AM_P_hertz_pct': '30 = mono 설계(단일 AM 상)의 `N_A_PHASE_ABSENT`. '
+                                   '**없는 상**이지 무접촉 0 이 아니다 (DESC-05).',
+        'coverage_AM_S_hertz_pct': '위와 같은 30 건.',
+        'tortuosity_dijkstra_SE': '116 = τ 실패.  ⚠ **원장 `LHS-08` 이 열려 있다** — 그 실패가 '
+                                  '물리인지 전극 밴드 규약인지 아직 안 갈렸다.  재측정 뒤 '
+                                  '이 숫자가 움직일 수 있다 (그때 이 등록값도 같이 고친다).',
+    },
+    'source': 'docs/data/lhs_descriptors_20260919/ (수확 130/130, 2026-09-19)',
+    'manifest': 'docs/data/lhs_design_20260818_descriptor_manifest.json',
+    'harvester': 'scripts/lhs_descriptor_harvest.py (selftest 전부 통과 2026-09-19)',
+    'filler': 'scripts/lhs_design_dataset.py --fill-descriptors',
 }
 
 
@@ -540,6 +559,127 @@ def require_descriptors(rows, cols, path='<rows>'):
             f'.  결측을 0 으로 채우지 말 것 (원장 LHS-02 · GAP2-05).  '
             f'채우려면: {DESCRIPTOR_FILL_EXPECTED["harvester"]}')
     return fill
+
+
+#  ═══ `LHS-02` 수리 — 수확 산출물을 설계 CSV 에 **합친다** (2026-09-19) ══════════════
+#  ⛔ 세 가지를 **동시에** 지킨다.  하나라도 빼면 이 병합이 결함의 새 자리가 된다.
+#   `DESC-07` — 일곱 중 **둘은 정의 종속**이다.  병합 시점에 항등식을 **다시 검증**하고
+#     열에 `_derived` 표시를 남긴다 (일곱 독립 타깃으로 세는 것을 막는다).
+#   `DESC-08` — **291 코퍼스와 합치지 않는다.**  이 병합은 설계 130 ↔ 수확 130 뿐이다.
+#   `DESC-09` — 미실행이 **무작위 결측이 아니다**.  ⇒ 부분 채움을 **금지**한다: 조인이
+#     양방향 전단사가 아니면 거부한다 (반쪽 채움은 "한 수준이 통째로 빈" 것을 숨긴다).
+#  ★ 그리고 `GAP2-05` 의 자리: **status ≠ OK 인 칸에는 숫자를 안 쓴다.**  빈 칸 + 사유
+#    열이다.  0 을 쓰면 그 즉시 '측정된 0' 이 된다.
+DESCRIPTOR_STATUS_KEY = {
+    'phi_se': 'phi', 'phi_am': 'phi',
+    'coverage_AM_P_hertz_pct': 'coverage_AM_P',
+    'coverage_AM_S_hertz_pct': 'coverage_AM_S',
+    'coverage_AM_total_hertz_pct': 'coverage_AM_total',
+    'tortuosity_dijkstra_SE': 'tortuosity',
+    'porosity_sphere_pct_RECORD_ONLY': 'porosity',
+}
+#: `DESC-07` — 이 둘은 **나머지로부터 유도**된다.  기록은 하되 독립 타깃이 아니다.
+DERIVED_DESCRIPTORS = ('porosity_sphere_pct_RECORD_ONLY', 'coverage_AM_total_hertz_pct')
+#: 항등식 허용오차.  ① 은 부동소수(실측 2.8e-14) · ② 는 실측 **정확히 0**.
+DESC07_TOL = {'porosity': 1e-9, 'coverage_total': 1e-9}
+
+
+class FillRefusal(RuntimeError):
+    """병합이 조용히 반쪽으로 되는 것을 막는다 (`DESC-09`)."""
+
+
+def _desc07_check(h):
+    """수확 한 건에서 `DESC-07` 두 항등식을 **다시** 잰다 → (err_porosity, err_cov or None)."""
+    e1 = abs(float(h['porosity_sphere_pct_RECORD_ONLY'])
+             - 100.0 * (1.0 - float(h['phi_se']) - float(h['phi_am'])))
+    cp, cs, ct = (h['coverage_AM_P_hertz_pct'], h['coverage_AM_S_hertz_pct'],
+                  h['coverage_AM_total_hertz_pct'])
+    if cp is None or cs is None:            # mono 침대 — 상이 하나라 가중평균이 정의 안 된다
+        return e1, None
+    cnt = h['coverage_detail']['counts']
+    npp, ns = int(cnt['AM_P']['n_valid']), int(cnt['AM_S']['n_valid'])
+    if npp + ns == 0:
+        return e1, None
+    return e1, abs((npp * float(cp) + ns * float(cs)) / (npp + ns) - float(ct))
+
+
+def load_harvest(dir_path):
+    """수확 JSON 들을 `case → dict` 로.  `_batch_summary.json` 은 케이스가 아니다."""
+    d = pathlib.Path(dir_path)
+    if not d.is_dir():
+        raise FillRefusal(f'수확 디렉터리가 없다: {d}')
+    out = {}
+    for p in sorted(d.glob('*.json')):
+        if p.name.startswith('_'):
+            continue
+        h = json.loads(p.read_text(encoding='utf-8'))
+        case = h.get('case')
+        if not case:
+            raise FillRefusal(f'{p.name}: `case` 가 없다')
+        if case in out:
+            raise FillRefusal(f'수확에 같은 case 가 둘: {case}')
+        h['_file'], h['_sha256'] = p.name, hashlib.sha256(p.read_bytes()).hexdigest()
+        out[case] = h
+    if not out:
+        raise FillRefusal(f'{d}: 수확 JSON 이 하나도 없다')
+    return out
+
+
+def fill_descriptors(rows, harvest, key='case_id'):
+    """설계 행에 측정 열 + `<열>_status` 를 채운다.  **전단사가 아니면 거부**한다.
+
+    반환 = (채워진 행, 보고 dict).  ⚠ 행은 **제자리에서** 바뀐다.
+    """
+    have = {r[key] for r in rows}
+    miss_h = sorted(have - set(harvest))
+    miss_d = sorted(set(harvest) - have)
+    if miss_h or miss_d:
+        raise FillRefusal(
+            f'조인이 전단사가 아니다 — 수확에 없는 설계 {len(miss_h)}건 {miss_h[:5]} · '
+            f'설계에 없는 수확 {len(miss_d)}건 {miss_d[:5]}.  '
+            '부분 채움은 `DESC-09`(결측이 무작위가 아니다)를 숨긴다 ⇒ 전부이거나 아무것도 아니다.')
+
+    rep = {'n_rows': len(rows), 'filled': {c: 0 for c in DESCRIPTORS},
+           'status_tally': {c: {} for c in DESCRIPTORS},
+           'desc07_max_err': {'porosity': 0.0, 'coverage_total': 0.0,
+                              'n_coverage_checked': 0},
+           'derived': list(DERIVED_DESCRIPTORS), 'sources': {}}
+    for r in rows:
+        h = harvest[r[key]]
+        e1, e2 = _desc07_check(h)
+        rep['desc07_max_err']['porosity'] = max(rep['desc07_max_err']['porosity'], e1)
+        if e1 > DESC07_TOL['porosity']:
+            raise FillRefusal(f'{r[key]}: DESC-07 ① 항등식 위반 {e1:.3e} > {DESC07_TOL["porosity"]:.0e} '
+                              '— porosity 가 φ 둘에서 유도되지 않는다면 프레임이 섞인 것이다')
+        if e2 is not None:
+            rep['desc07_max_err']['coverage_total'] = max(
+                rep['desc07_max_err']['coverage_total'], e2)
+            rep['desc07_max_err']['n_coverage_checked'] += 1
+            if e2 > DESC07_TOL['coverage_total']:
+                raise FillRefusal(f'{r[key]}: DESC-07 ② 가중평균 항등식 위반 {e2:.3e} '
+                                  '— C_total 이 (N_P C_P + N_S C_S)/(N_P+N_S) 가 아니다')
+        for c in DESCRIPTORS:
+            st = h['status'][DESCRIPTOR_STATUS_KEY[c]]
+            v = h.get(c)
+            #  ★ 여기가 `GAP2-05` 의 자리다 — 상태가 OK 가 아니면 **숫자를 안 쓴다**.
+            if st == 'OK':
+                if v is None:
+                    raise FillRefusal(f'{r[key]}.{c}: status 가 OK 인데 값이 없다')
+                r[c] = repr(float(v))
+                rep['filled'][c] += 1
+            else:
+                if v is not None:
+                    raise FillRefusal(f'{r[key]}.{c}: status={st} 인데 값이 있다 ({v!r}) '
+                                      '— 실패에 값이 붙으면 그 값이 측정으로 읽힌다')
+                r[c] = ''
+            r[c + '_status'] = st
+            rep['status_tally'][c][st] = rep['status_tally'][c].get(st, 0) + 1
+        rep['sources'][r[key]] = {
+            'harvest_json': h['_file'], 'harvest_sha256': h['_sha256'],
+            'atom_sha256': h['raw']['atom']['sha256'],
+            'contact_sha256': h['raw']['contact']['sha256'],
+            'timestep': h['timestep']}
+    return rows, rep
 
 
 def diagnostics(rows):
@@ -753,6 +893,102 @@ def _selftest():
     except ValueError:
         _passed = False
     chk('⑭c 완전한 행은 통과시킨다 (거부 과잉이 아니다)', _passed)
+    #  ⑮ `LHS-02` 병합 — **거부가 실재하는가** (거부 로직은 안 쏘면 장식이다)
+    def _h(case, **kw):
+        """최소 수확 fixture — 기본은 전부 OK 인 정상 건."""
+        b = dict(case=case, timestep=100, phi_se=0.2, phi_am=0.3,
+                 porosity_sphere_pct_RECORD_ONLY=50.0,
+                 coverage_AM_P_hertz_pct=10.0, coverage_AM_S_hertz_pct=20.0,
+                 coverage_AM_total_hertz_pct=17.5,     # (1·10 + 3·20)/4 = 17.5
+                 tortuosity_dijkstra_SE=1.5,
+                 status=dict(phi='OK', porosity='OK', coverage_AM_P='OK',
+                             coverage_AM_S='OK', coverage_AM_total='OK', tortuosity='OK'),
+                 coverage_detail=dict(counts={'AM_P': {'n_valid': 1}, 'AM_S': {'n_valid': 3}}),
+                 raw=dict(atom=dict(sha256='a' * 64), contact=dict(sha256='b' * 64)),
+                 _file=case + '.json', _sha256='c' * 64)
+        b.update(kw)
+        return b
+
+    def _neg(name, fn):
+        nonlocal ok
+        try:
+            fn()
+        except FillRefusal as e:
+            ok += 1
+            print(f'  PASS  {name} — 거부: {str(e)[:64]}')
+            return
+        except Exception as e:                                    # noqa: BLE001
+            chk(f'{name} (기대 FillRefusal, 실제 {type(e).__name__}: {e})', False)
+            return
+        chk(f'{name} (거부하지 않았다)', False)
+
+    _dr = [{'case_id': 'c1'}, {'case_id': 'c2'}]
+    _hv = {'c1': _h('c1'), 'c2': _h('c2')}
+    _r2, _rp = fill_descriptors([dict(x) for x in _dr], _hv)
+    chk('⑮ 정상 건은 일곱 열이 전부 찬다',
+        all(_rp['filled'][c] == 2 for c in DESCRIPTORS))
+    chk('⑮ 값이 왕복 가능한 정밀도로 쓰인다 (반올림 손실 없음)',
+        float(_r2[0]['phi_se']) == 0.2 and _r2[0]['phi_se_status'] == 'OK')
+    #  ★ `DESC-09` — 반쪽 채움 금지 (양방향)
+    _neg('⑮a DESC-09: 수확에 없는 설계가 있으면 거부',
+         lambda: fill_descriptors([{'case_id': 'c1'}, {'case_id': 'zz'}], _hv))
+    _neg('⑮a DESC-09: 설계에 없는 수확이 있으면 거부',
+         lambda: fill_descriptors([{'case_id': 'c1'}], _hv))
+    #  ★ `DESC-07` — 두 항등식이 병합 시점에 **다시** 검증된다
+    _neg('⑮b DESC-07①: porosity 가 φ 둘에서 안 나오면 거부',
+         lambda: fill_descriptors([{'case_id': 'c1'}],
+                                  {'c1': _h('c1', porosity_sphere_pct_RECORD_ONLY=49.0)}))
+    _neg('⑮b DESC-07②: C_total 이 입자수 가중평균이 아니면 거부',
+         lambda: fill_descriptors([{'case_id': 'c1'}],
+                                  {'c1': _h('c1', coverage_AM_total_hertz_pct=15.0)}))
+    #  ★ `GAP2-05` — 실패에 숫자가 붙거나, 성공에 값이 없으면 거부
+    _neg('⑮c GAP2-05: status≠OK 인데 값이 있으면 거부',
+         lambda: fill_descriptors(
+             [{'case_id': 'c1'}],
+             {'c1': _h('c1', status=dict(phi='OK', porosity='OK', coverage_AM_P='OK',
+                                         coverage_AM_S='OK', coverage_AM_total='OK',
+                                         tortuosity='NOT_PERCOLATING'))}))
+    _neg('⑮c status 가 OK 인데 값이 없으면 거부',
+         lambda: fill_descriptors([{'case_id': 'c1'}],
+                                  {'c1': _h('c1', tortuosity_dijkstra_SE=None)}))
+    #  ★ 그리고 실패 칸은 **빈 칸 + 사유**다 — 0 이 아니다 (이 한 줄이 GAP2-05 그 자체)
+    _hf = _h('c1', tortuosity_dijkstra_SE=None,
+             status=dict(phi='OK', porosity='OK', coverage_AM_P='OK', coverage_AM_S='OK',
+                         coverage_AM_total='OK', tortuosity='NOT_PERCOLATING'))
+    _r3, _rp3 = fill_descriptors([{'case_id': 'c1'}], {'c1': _hf})
+    chk('⑮d 실패 칸은 빈 칸이고 사유가 옆에 붙는다 (0 이 아니다)',
+        _r3[0]['tortuosity_dijkstra_SE'] == ''
+        and _r3[0]['tortuosity_dijkstra_SE_status'] == 'NOT_PERCOLATING'
+        and _rp3['filled']['tortuosity_dijkstra_SE'] == 0)
+    chk('⑮d 그 행의 다른 여섯 열은 그대로 찬다 (DESC-01: 한 타깃 실패로 행을 안 버린다)',
+        all(_rp3['filled'][c] == 1 for c in DESCRIPTORS if c != 'tortuosity_dijkstra_SE'))
+    #  ★ `DESC-08` — 291 코퍼스를 읽는 코드가 이 파일에 없다 (정적, AST)
+    #  ⚠ 소박한 `낱말 not in src` 는 **자기 자신을 탐지한다** (이 검사문에 그 낱말이 있다).
+    #    초판이 실제로 그렇게 FAIL 했다.  그리고 docstring 구분자로 자르는 방식은 **첫 함수
+    #    docstring 까지만** 보므로 뒤쪽 본문을 통째로 놓친다 = false-green.  ⇒ AST 로
+    #    **문자열 상수의 자리**를 보고, 모듈 docstring 과 이 selftest 는 제외한다.
+    _tree = ast.parse(pathlib.Path(__file__).read_text(encoding='utf-8'))
+    _skip = set()
+    if (_tree.body and isinstance(_tree.body[0], ast.Expr)
+            and isinstance(_tree.body[0].value, ast.Constant)):
+        _d = _tree.body[0].value
+        _skip |= set(range(_d.lineno, (_d.end_lineno or _d.lineno) + 1))
+    for _n in ast.walk(_tree):
+        if isinstance(_n, ast.FunctionDef) and _n.name == '_selftest':
+            _skip |= set(range(_n.lineno, (_n.end_lineno or _n.lineno) + 1))
+    _needle = 'design_performance' + '_corpus'
+    _hits = sorted({_n.lineno for _n in ast.walk(_tree)
+                    if isinstance(_n, ast.Constant) and isinstance(_n.value, str)
+                    and _needle in _n.value and _n.lineno not in _skip})
+    chk(f'⑮e DESC-08: 291 코퍼스 경로가 코드에 없다 (AST · docstring/selftest 제외; 적중 {_hits})',
+        not _hits)
+    #  ★ 그 검사가 **실제로 쏘는지** — 같은 판정기에 심은 참조를 먹여 본다 (변이 대조)
+    _mut = ast.parse('def f():\n    return open("docs/data/' + _needle + '.csv")\n')
+    _mhits = [_n.lineno for _n in ast.walk(_mut)
+              if isinstance(_n, ast.Constant) and isinstance(_n.value, str)
+              and _needle in _n.value]
+    chk('⑮e 그 정적 검사가 장식이 아니다 (심은 참조를 잡는다)', len(_mhits) == 1)
+
     #  ⑭d ★★ **동결 설계 CSV 의 채움 상태를 수치로 못박는다.**  누가 채우면 이 검사가
     #      실패하면서 알려 준다 — "아무도 안 봤다" 를 "리포가 본다" 로 바꾸는 자리다.
     _dp = pathlib.Path(__file__).resolve().parent.parent / DESCRIPTOR_FILL_EXPECTED['path']
@@ -784,6 +1020,13 @@ if __name__ == '__main__':
     ap.add_argument('--audit-descriptors', default='', metavar='CSV',
                     help='설계 CSV 의 **측정 열 채움 상태**를 보고한다 (`LHS-02`).  '
                          '결측이 있으면 rc=1 — 파이프라인이 그것을 0 으로 읽기 전에 선다.')
+    ap.add_argument('--fill-descriptors', default='', metavar='DIR',
+                    help='수확 JSON 디렉터리를 설계 CSV 에 **합친다** (`LHS-02`). '
+                         '전단사가 아니거나 DESC-07 항등식이 깨지면 거부한다.')
+    ap.add_argument('--design', default='', metavar='CSV',
+                    help='--fill-descriptors 의 대상 설계 CSV (기본 = 동결 정본)')
+    ap.add_argument('--fill-out', default='', metavar='CSV',
+                    help='--fill-descriptors 산출 경로 (기본 = 제자리)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -800,11 +1043,88 @@ if __name__ == '__main__':
         if _miss:
             print(f'\n⛔ 측정 열 {len(_miss)}/{len(DESCRIPTORS)} 이 불완전하다 — '
                   f'**결측을 0 으로 채우지 말 것** (원장 LHS-02 · GAP2-05).')
-            print(f'   채우려면: {DESCRIPTOR_FILL_EXPECTED["harvester"]}')
-            print(f'   ⚠ 원 dump 가 필요하다 — {DESCRIPTOR_FILL_EXPECTED["why_empty"]}')
+            _why = DESCRIPTOR_FILL_EXPECTED.get('why_partial', {})
+            for _c2 in _miss:
+                if _c2 in _why:
+                    print(f'   · {_c2}: {_why[_c2]}')
+            #  ⚠ 사유가 **등록되지 않은** 결측만 "수확기를 돌려라" 가 답이다.  없는 상
+            #    (`N_A_PHASE_ABSENT`)은 아무리 돌려도 안 채워진다 — 그 줄을 무차별로
+            #    찍으면 "돌리면 채워진다" 는 **틀린 처방**이 된다.
+            _un = [c for c in _miss if c not in _why]
+            if _un:
+                print(f'   채우려면 ({", ".join(_un)}): '
+                      f'{DESCRIPTOR_FILL_EXPECTED["harvester"]}')
+            else:
+                print('   ⇒ 남은 결측은 **전부 사유가 등록돼 있다**.  숫자로 채우는 것이 '
+                      '답이 아니다 — 옆의 `<열>_status` 를 읽을 것.')
         else:
             print('\n✓ 측정 열이 전부 찼다.')
         raise SystemExit(1 if _miss else 0)
+
+    if a.fill_descriptors:
+        _root = pathlib.Path(__file__).resolve().parent.parent
+        _dp = pathlib.Path(a.design or DESCRIPTOR_FILL_EXPECTED['path'])
+        if not _dp.is_absolute():
+            _dp = _root / _dp
+        with _dp.open(encoding='utf-8-sig') as _fh:
+            _rd = csv.DictReader(_fh)
+            _base_cols = list(_rd.fieldnames or [])
+            _rows = list(_rd)
+        _harv = load_harvest(a.fill_descriptors)
+        _rows, _rep = fill_descriptors(_rows, _harv)
+        #  `<열>` 바로 뒤에 `<열>_status` 를 끼운다 (값과 사유가 떨어지면 안 읽힌다)
+        _cols = []
+        for _c in _base_cols:
+            _cols.append(_c)
+            if _c in DESCRIPTORS:
+                _cols.append(_c + '_status')
+        for _c in DESCRIPTORS:                       # 원래 CSV 에 없던 열이면 뒤에 붙인다
+            if _c not in _cols:
+                _cols += [_c, _c + '_status']
+        _op = pathlib.Path(a.fill_out) if a.fill_out else _dp
+        #  ⚠ `csv` 의 기본 줄끝은 CRLF 다 — 그냥 쓰면 LF 파일 전체가 바뀌어 diff 가
+        #    131/131 이 되고 실제 변경이 묻힌다 (한 번 그렇게 했다).  리포 관행은 LF.
+        with _op.open('w', newline='', encoding='utf-8') as _fh:
+            _w = csv.DictWriter(_fh, _cols, lineterminator='\n')
+            _w.writeheader()
+            for _r in _rows:
+                _w.writerow({_c: _r.get(_c, '') for _c in _cols})
+        _mp = _op.with_name(_op.stem + '_descriptor_manifest.json')
+        _mp.write_text(json.dumps({
+            'design_csv': str(_op.relative_to(_root)) if _op.is_relative_to(_root) else str(_op),
+            'harvest_dir': str(a.fill_descriptors), 'n_rows': _rep['n_rows'],
+            'filled': _rep['filled'], 'status_tally': _rep['status_tally'],
+            'derived_not_independent_targets': _rep['derived'],
+            'desc07_identity_max_err': _rep['desc07_max_err'],
+            'contract': ('DESC-07 유도열 표시 · DESC-08 291 코퍼스와 병합 안 함 · '
+                         'DESC-09 전단사 아니면 거부 · GAP2-05 status≠OK 면 숫자 안 씀'),
+            'caveats': [
+                ('tortuosity_dijkstra_SE_status 는 **잠정**이다 (원장 `LHS-08`, 열림). '
+                 '`NOT_PERCOLATING` 은 아직 결론이 아니라 의심 신호이고, 전극 밴드 규약이 '
+                 '재측정·판단 대기다.  그 status 를 "미관통이 확인됐다" 로 읽지 말 것.'),
+                ('`DESC-07`: ' + ' · '.join(DERIVED_DESCRIPTORS) + ' 는 나머지에서 **유도**된다 '
+                 '(이 병합에서 항등식을 다시 쟀다).  일곱을 독립 회귀 타깃으로 세지 말 것.'),
+                ('`DESC-08`: 이 표를 291 행 `design_performance` 코퍼스와 **그대로 합치지 말 것** '
+                 '— 그쪽은 d_am=0 40건과 MPM/DEM 상태 혼합이 남아 있다.'),
+                ('빈 칸은 결측이고 **0 이 아니다**.  읽기 전에 `require_descriptors` 를 부를 것.'),
+            ],
+            'per_case': _rep['sources'],
+        }, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+        print(f'{_op}   {_rep["n_rows"]} 행')
+        for _c in DESCRIPTORS:
+            _n = _rep['filled'][_c]
+            _mark = '✓' if _n == _rep['n_rows'] else '·'
+            _tl = ' · '.join(f'{k} {v}' for k, v in sorted(_rep['status_tally'][_c].items()))
+            _der = '  [DESC-07 유도]' if _c in DERIVED_DESCRIPTORS else ''
+            print(f'  {_mark} {_c:34s} {_n:>4}/{_rep["n_rows"]}   {_tl}{_der}')
+        _e = _rep['desc07_max_err']
+        print(f'\nDESC-07 항등식 재검증: ① porosity 최대오차 {_e["porosity"]:.3e} · '
+              f'② C_total 가중평균 최대오차 {_e["coverage_total"]:.3e} '
+              f'({_e["n_coverage_checked"]} 건; mono 는 정의상 제외)')
+        print(f'→ 프로비넌스 {_mp}')
+        print('⚠ 채워지지 않은 칸은 **빈 칸 + 사유 열**이다.  0 으로 읽지 말 것 '
+              '(원장 LHS-02 · GAP2-05).')
+        raise SystemExit(0)
 
     rows = build(a.n, a.n_end, a.seed, a.restarts, grid=not a.continuous)
     if a.as_radius:                                   # 범위를 반경으로 읽으면 직경이 2배
