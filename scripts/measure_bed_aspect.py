@@ -83,7 +83,32 @@ def read_dump(path):
     raise SystemExit(f'⛔ 읽을 수 없는 형식: {path}')
 
 
-def measure(d, r_container=0.05, label=None, axis='z'):
+def measure_many(d, r_container=0.05, label=None, axis='z', last=1):
+    """마지막 `last` 프레임의 평균 ± 표준편차.
+
+    ⚠⚠ **회전 중인 침대는 한 프레임으로 재면 안 된다** — 텀블링 침대는 매 순간
+      모양이 흔들린다 (cataracting 에서 사태가 주기적으로 무너진다).  한 장만
+      보면 그 요동이 팔 사이 차이로 읽힌다.
+      ⇒ 마지막 한 바퀴 분량을 평균하고 **산포를 같이 보고한다**.
+      ★ 이 산포는 **런 내부** 변동이다.  판정선(§7)이 요구하는 **시드 간** SE 와
+        다른 양이다 — 둘을 섞지 말 것.
+    """
+    fr = frames(d)
+    if not fr:
+        raise SystemExit(f'⛔ {d}: 번호 붙은 덤프가 없다')
+    use = fr[-last:] if last > 1 else fr[-1:]
+    ms = [measure(d, r_container, label, axis, _path=p) for _, p in use]
+    out = dict(ms[-1])
+    out['n_used'] = len(ms)
+    for k in ('HR', 'R', 'H', 'phi'):
+        v = np.array([m[k] for m in ms], dtype=float)
+        out[k] = float(v.mean())
+        out[k + '_sd'] = float(v.std(ddof=1)) if len(v) > 1 else 0.0
+    out['step_lo'] = use[0][0]
+    return out
+
+
+def measure(d, r_container=0.05, label=None, axis='z', _path=None):
     """axis = **통의 대칭축** (중력은 언제나 −z).
 
     ⚠⚠ 축을 인자로 뺀 이유 — 초판은 `hypot(x, y)` 를 **박아** 뒀고, 그것은
@@ -98,6 +123,9 @@ def measure(d, r_container=0.05, label=None, axis='z'):
     if not fr:
         raise SystemExit(f'⛔ {d}: 번호 붙은 덤프가 없다')
     step, path = fr[-1]                                 # ★ 숫자순 마지막
+    if _path is not None:                               # 특정 프레임을 지정할 때
+        step = next(st for st, pp in fr if pp == _path)
+        path = _path
     D = read_dump(path)
     if 'radius' not in D:
         raise SystemExit(f'⛔ {path}: radius 열이 없다 — 덤프에 radius 를 넣을 것')
@@ -131,8 +159,11 @@ def report(rs):
     for m in rs:
         print(f'{m["label"]:14s} step {m["step"]:7d} · n {m["n"]:5d} · 프레임 {m["n_frames"]}'
               f' · 통축 {m.get("axis", "z")}')
-        print(f'   R(99%) {m["R"]*1e3:7.2f} mm · H {m["H"]*1e3:7.2f} mm · ★ H/R {m["HR"]:6.3f}'
-              f' · R/R_통 {m["R_over_Rc"]:5.3f} · φ(포락) {m["phi"]:5.3f}')
+        sd = (f' ± {m["HR_sd"]:.3f}' if m.get('HR_sd') else '')
+        nu = (f' · {m["n_used"]} 프레임 평균 (step {m.get("step_lo")}~)'
+              if m.get('n_used', 1) > 1 else '')
+        print(f'   R(99%) {m["R"]*1e3:7.2f} mm · H {m["H"]*1e3:7.2f} mm · ★ H/R {m["HR"]:6.3f}{sd}'
+              f' · R/R_통 {m["R_over_Rc"]:5.3f} · φ(포락) {m["phi"]:5.3f}{nu}')
         if m['phi'] < PHI_LOOSE_WARN:
             print(f'   ⚠⚠ φ(포락) < {PHI_LOOSE_WARN} — **정착 안 된 것으로 보인다**'
                   f' (침대가 아니라 튀는 구름).  런을 늘리고 다시 잴 것.')
@@ -197,6 +228,23 @@ def _selftest():
             chk(f'⑥b 변이: 평균반경 판(n·(4/3)π r̄³)과 {v_true/v_mean:.1f}배 다르다',
                 abs(v_got - v_mean) > v_mean*0.5)
 
+        #  ⑧ 다중 프레임 평균 — 회전 침대는 한 장으로 재면 안 된다
+        with tempfile.TemporaryDirectory() as tm:
+            for k, st in enumerate((100, 200, 300)):
+                with open(os.path.join(tm, f'r_{st}.liggghts'), 'w') as fh:
+                    fh.write(f'ITEM: TIMESTEP\n{st}\nITEM: NUMBER OF ATOMS\n2\n')
+                    fh.write('ITEM: BOX BOUNDS mm mm mm\n-1 1\n-1 1\n0 1\n')
+                    fh.write('ITEM: ATOMS id type x y z radius\n')
+                    #  H 를 프레임마다 바꾼다 (1·2·3 mm) → 평균 2 mm
+                    fh.write(f'1 1 0.01 0 0 0.0005\n2 1 0.01 0 {0.001*(k+1)} 0.0005\n')
+            mm = measure_many(tm, last=3)
+            m1 = measure_many(tm, last=1)
+            chk(f'⑧ 마지막 3 프레임을 평균한다 (H {mm["H"]*1e3:.2f} mm = 1·2·3 의 평균)',
+                abs(mm['H'] - 0.002) < 1e-9 and mm['n_used'] == 3)
+            chk(f'⑧b 산포를 같이 낸다 (sd {mm["H_sd"]*1e3:.2f} mm)', mm['H_sd'] > 0)
+            chk('⑧c 변이: last=1 이면 마지막 프레임만 (3 mm)',
+                abs(m1['H'] - 0.003) < 1e-9 and m1['H_sd'] == 0.0)
+
         #  ⑦ 통축 — 가로 드럼에서 두 규약이 **실제로 갈린다**
         #     고정구: 축(x) 으로 길고 측방(y) 으로 좁은 침대 = 드럼 바닥의 풀
         #     axis='z' → R = pct99(√(x²+y²)) 가 드럼 **길이**를 먹어 크게 나온다
@@ -226,6 +274,8 @@ if __name__ == '__main__':
     ap.add_argument('dirs', nargs='*', help='덤프 디렉터리 (여러 개면 나란히 비교)')
     ap.add_argument('--r-container', type=float, default=0.05, help='통 반경 (m). 기본 0.05')
     ap.add_argument('--label', action='append', default=None, help='디렉터리별 표시 이름')
+    ap.add_argument('--last', type=int, default=1,
+                    help='마지막 N 프레임 평균 ± sd.  ★ 회전 중이면 한 바퀴 분량을 줄 것')
     ap.add_argument('--axis', default='z', choices=['x', 'y', 'z'],
                     help='통의 대칭축 (중력은 언제나 −z).  가로 드럼이면 x.  기본 z')
     ap.add_argument('--selftest', action='store_true')
@@ -235,5 +285,6 @@ if __name__ == '__main__':
     if not a.dirs:
         ap.error('디렉터리를 하나 이상 주세요 (예: nocoh/post coh/post)')
     labs = a.label or [None] * len(a.dirs)
-    report([measure(d, a.r_container, labs[i] if i < len(labs) else None, axis=a.axis)
+    report([measure_many(d, a.r_container, labs[i] if i < len(labs) else None,
+                         axis=a.axis, last=a.last)
             for i, d in enumerate(a.dirs)])

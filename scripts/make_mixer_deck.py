@@ -526,6 +526,13 @@ def _selftest():
     chk('㉓ 변이: 한쪽만 준 배수가 양쪽에 반영된다',
         Mt[0][2] == Mt[2][0] and Mt[0][2] > Mt[2][2])
 
+    #  ★ 시드 — 판정선(§7)이 SE_시드를 요구한다.  시드는 **삽입 줄 하나만** 바꿔야 한다
+    ds1 = deck(p, rpm=60, revolutions=1, arm='E1', seed=32452843)
+    ds2 = deck(p, rpm=60, revolutions=1, arm='E1', seed=91648301)
+    dif = [(x, y) for x, y in zip(ds1.split('\n'), ds2.split('\n')) if x != y]
+    chk(f'㉓b 시드는 삽입 줄 하나만 바꾼다 (다른 줄 {len(dif)})',
+        len(dif) == 1 and 'insert/pack seed' in dif[0][0])
+
     #  ★★ 점착 눈금 — **실측 앵커**.  이 다섯이 새 사다리의 근거다.
     chk(f'㉔ 겹침식이 E1 실측을 맞힌다 (예측 {overlap_for_ced(3e5, 3e-4, .30)*100:.2f} % '
         f'vs 실측 3.54 %)',
@@ -568,6 +575,8 @@ if __name__ == '__main__':
     ap.add_argument('--cgf', type=float, default=200.0)
     ap.add_argument('--rpm', type=float, default=60.0)
     ap.add_argument('--revolutions', type=int, default=5)
+    ap.add_argument('--seed', type=int, default=32452843,
+                    help='삽입 시드.  ⚠ 판정선(§7)이 SE_시드를 요구하므로 **반복이 필요하다**')
     ap.add_argument('--settle-s', type=float, default=None,
                     help='정착 시간 (s).  기본은 낙하높이·반발계수에서 유도')
     ap.add_argument('--arm', default='E1', choices=sorted(ARMS),
@@ -605,6 +614,7 @@ if __name__ == '__main__':
             with open(os.path.join(d, 'data', 'ptfe.multisphere'), 'w') as f:
                 f.write(fibre_file(p['nsph'], p['d']['PTFE']))
             with open(os.path.join(d, 'in.mixer'), 'w') as f:
-                f.write(deck(p, a.rpm, a.revolutions, arm=arm, settle_s=a.settle_s))
+                f.write(deck(p, a.rpm, a.revolutions, arm=arm,
+                             settle_s=a.settle_s, seed=a.seed))
             print(f'   → {d}/in.mixer   [{arm}] {ARMS[arm]["desc"]}')
         print('⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다')
