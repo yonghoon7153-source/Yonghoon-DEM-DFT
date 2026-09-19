@@ -223,7 +223,9 @@ def test_local_report_is_actually_served(client):
     r = client.get(LOCAL_REPORT)
     assert r.status_code == 200, f"정본이 안 열린다 ({r.status_code})"
     body = r.get_data(as_text=True)
-    assert "<h2 id=\"s1\">" in body, "보고서 본문이 아니다"
+    # 2026-09-19 — v2 개편으로 제목이 <section id="s1"> … <h2 class="sec-h"> 가 됐다.
+    # 시험은 **절이 있는가**를 보지, 옛 태그 모양을 보지 않는다.
+    assert '<section id="s1"' in body, "보고서 본문이 아니다"
     # 이번 세션이 고친 그 문장이 실제로 화면에 온다 (원장↔화면 결속)
     assert "24 조건이 개별로도" in body, "§1 보강 문장이 화면에 없다"
 
@@ -426,7 +428,7 @@ def test_section1_order_is_figure_then_howto_then_definition(client):
         "figure":     h.find('<img src="cei_nd_o_decomposition.png"'),
         "howto":      h.find("Fig. 1 을 읽는 법"),
         "definition": h.find("세로축의 <span"),
-        "s2":         h.find('<h2 id="s2"'),
+        "s2":         h.find('<section id="s2"'),
     }
     missing = [k for k, v in marks.items() if v < 0]
     assert not missing, f"§1 에서 못 찾은 표식: {missing} — 시험이 헛것을 재고 있다"
@@ -508,12 +510,15 @@ def _s2_card(h):
     """§2 의 '1·2·4 번도 산물이 뒷받침하지 않는다' 상자만 잘라 준다.
 
     ⚠ 앞판은 표 뒤 첫 </div> 에서 잘라서 **표만** 들어왔다 — 한정 문장은 표 뒤에 있는데
-      그걸 못 보고 "한정이 없다" 고 빨개졌다. 상자 끝(다음 절 제목)까지 잡는다.
+      그걸 못 보고 "한정이 없다" 고 빨개졌다. 상자 끝까지 잡는다.
+    ⚠ 2026-09-19 — 끝 표식을 <strong>가법성 설명</strong> 이라는 **문구**로 잡고 있었는데,
+      화면에서 내부 용어("가법성")를 걷어내자 그 문구가 사라져 시험이 빨개졌다.
+      **문구는 바뀐다. 구조는 덜 바뀐다** ⇒ 다음 <section 경계로 잡는다.
     """
     i = h.find("⛔ 1·2·4 번도 산물이 뒷받침하지 않는다")
     assert i > 0, "§2 정정 상자를 못 찾았다 — 시험이 헛것을 재고 있다"
-    j = h.find("<strong>가법성 설명</strong>", i)
-    assert j > i, "상자 끝(가법성 설명)을 못 찾았다 — 시험이 헛것을 재고 있다"
+    j = h.find("<section id=", i)
+    assert j > i, "§2 의 끝(다음 절 시작)을 못 찾았다 — 시험이 헛것을 재고 있다"
     return h[i:j]
 
 
@@ -545,13 +550,27 @@ def test_s2_ladder_table_matches_the_record(client):
 def test_s2_correction_keeps_its_epistemic_limits(client):
     """⛔음성 — 한정이 지워지면 사후 관찰이 판정으로 격상된다.
 
-    셋 다 필요하다: 반증이 아니라는 것 · 최소 꺾임만 봤다는 것 · 아직 proposed 라는 것.
+    셋 다 필요하다: 반증이 아니라는 것 · 최소 꺾임만 봤다는 것 · 아직 비준 전이라는 것.
+
+    ⚠ 2026-09-19 — 비준 전 표시를 `"proposed"` 라는 **영어 원장 낱말**로 잡고 있었다.
+      1저자 지시로 화면에서 내부 용어를 걷어내면서 그 자리가 "1저자 검토 전" 로 바뀌자
+      시험이 빨개졌다. 화면은 맞고 시험이 낡았던 것이다.
+      ⇒ 낱말이 아니라 **원장과의 결속**을 본다: 결정이 active 가 아니면 화면에
+        (허용된 어휘 중) 비준 전 표시가 있어야 한다.
     """
+    import json as _json
+    _st = {d["id"]: d.get("decision_state")
+           for d in _json.loads(DECISIONS.read_text(encoding="utf-8"))["decisions"]}
     card = _s2_card(_report_html(client))
     assert "반증한 것이 아니라" in card, "'반증이 아니다' 한정이 없다 — 관찰이 반증으로 읽힌다"
     assert "최소 꺾임 하나만" in card, "최소 꺾임 한정이 없다"
-    assert "proposed" in card, "아직 비준 전이라는 표시가 없다"
     assert "결과를 본 뒤의 관찰" in card, "사후 관찰이라는 표시가 없다"
+    assert _LADDER_ID in _st, f"원장에 {_LADDER_ID} 가 없다 — 시험이 헛것을 재고 있다"
+    if _st[_LADDER_ID] != "active":
+        NOT_RATIFIED = ("proposed", "1저자 검토 전", "비준 전", "검토 전")
+        assert any(w in card for w in NOT_RATIFIED), (
+            f"원장은 {_st[_LADDER_ID]} 인데 화면에 비준 전 표시가 없다 "
+            f"(허용 어휘 {NOT_RATIFIED})")
 
 
 def test_s2_ladder_decision_is_registered_and_not_silently_active():

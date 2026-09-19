@@ -638,6 +638,59 @@ def _selftest():
             "⛔음성: matched=null 이면 band_gap 필드가 남아 있어도 **안 쓴다** "
             "(공간군을 못 맞춘 값은 다른 상의 값이다)")
 
+    # ── reproduce_check (2026-09-19) — 같은 조성을 다시 돌렸나 ──────────────
+    with tempfile.TemporaryDirectory() as _d:
+        _old = Path(_d) / "old.json"
+        _base = {"results": {"LiCoO2": {"by_voltage": {
+            "3.50": {"modelc": -0.62382, "nd_only": -0.60793},
+            "4.50": {"modelc": -0.41000, "nd_only": -0.36000}}}}}
+        _old.write_text(json.dumps(_base), encoding="utf-8")
+        import copy as _cp
+
+        _same = _cp.deepcopy(_base["results"])
+        _r = reproduce_check(_same, str(_old))
+        chk(_r["ok"] and _r["verdict"] == "REPRODUCED" and _r["n_compared"] == 4,
+            f"[양성] 같은 값이면 REPRODUCED · 겹친 칸 4 (얻은 것 {_r['n_compared']})")
+
+        _new = _cp.deepcopy(_base["results"])
+        _new["LiCoO2"]["by_voltage"]["4.50"]["nd_only"] = -0.35000   # 0.01 차
+        _r = reproduce_check(_new, str(_old))
+        chk((not _r["ok"]) and _r["verdict"] == "HULL_MOVED"
+            and _r["worst"]["electrolyte"] == "nd_only"
+            and _r["worst"]["V"] == "4.50",
+            "⛔음성: 문턱 넘는 차이를 HULL_MOVED 로 잡고 **어느 칸인지** 이름으로 댄다")
+
+        _new = _cp.deepcopy(_base["results"])
+        _new["LiCoO2"]["by_voltage"]["4.50"]["nd_only"] = -0.36000 + REPRO_TOL_DEFAULT
+        chk(reproduce_check(_new, str(_old))["ok"],
+            "[경계] 차이가 문턱과 정확히 같으면 통과시킨다 (≤ 이다)")
+
+        _grid = {"LiCoO2": {"by_voltage": {"9.90": {"modelc": -0.6}}}}
+        _r = reproduce_check(_grid, str(_old))
+        chk((not _r["ok"]) and _r["verdict"] == "NO_OVERLAP" and _r["n_compared"] == 0,
+            "⛔음성: 겹치는 칸이 0 이면 **통과가 아니라** NO_OVERLAP "
+            "(0 칸 비교를 '차이 없음' 으로 읽지 않는다)")
+
+        _miss = _cp.deepcopy(_base["results"])
+        _miss["LiCoO2"]["by_voltage"]["4.50"]["nd_only"] = None
+        _r = reproduce_check(_miss, str(_old))
+        chk(_r["n_missing"] == 1 and _r["n_compared"] == 3,
+            "⛔음성: 결측(None)을 **0 차이로 세지 않는다** — 따로 n_missing 으로 센다")
+
+        _more = _cp.deepcopy(_base["results"])
+        for _row in _more["LiCoO2"]["by_voltage"].values():
+            _row["nd_li_002"] = -0.61
+        _r = reproduce_check(_more, str(_old))
+        chk(_r["only_new"] == ["nd_li_002"] and _r["ok"],
+            "[양성] 새로 들어간 조성은 대조 대상이 아니라 only_new 로 이름만 센다")
+
+        _bad = Path(_d) / "bad.json"
+        _bad.write_text(json.dumps({"voltages_V": [2.5]}), encoding="utf-8")
+        chk(reproduce_check({}, str(_bad))["verdict"] == "NO_RESULTS",
+            "⛔음성: results 가 없는 파일을 **조용히 통과시키지 않는다**")
+        chk(reproduce_check({}, str(Path(_d) / "nope.json"))["verdict"] == "READ_FAIL",
+            "⛔음성: 못 읽는 경로도 ok=False (없는 것과 같다고 안 한다)")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -709,6 +762,89 @@ def product_census(results: dict, open_elements=("Li",)) -> dict:
                  "끝점 퇴화 칸(상대가 계산에 안 들어간 자체분해)도 뺐다 "
                  "(endpoint_degenerate_excluded). "
                  "기체·홑원소(S·SO₂ 등)는 **안 걸렀다** — 화학 판단은 카드·사람 몫이다."}
+
+
+#: 같은 조성을 다시 돌렸을 때 "같다" 고 볼 반응에너지 차 (eV/atom).
+REPRO_TOL_DEFAULT = 0.002
+
+
+def reproduce_check(new_results, old_path, tol=REPRO_TOL_DEFAULT):
+    """예전 실행과 **공통 칸**(양극 × 전압 × 조성)을 대조한다 — hull 스냅샷이 움직였나.
+
+    왜 필요한가: MP 엔트리는 갱신된다. 새 실행에 옛 조성을 **같이** 넣어 두면 그 값이
+    옛 파일과 일치하는지가 그대로 **기계 대조**가 된다. 어긋나면 두 파일의 숫자를
+    **섞어서 빼면 안 된다** (Δ 의 기준선이 다른 hull 이 된다).
+
+    ⚠ 이 함수가 **안 하는 것**
+      ① 어느 쪽이 맞는지 판정하지 않는다 — 차이만 보고한다.
+      ② 새 조성(옛 파일에 없는 것)은 대조 대상이 아니다 — `only_new` 로 이름만 센다.
+      ③ 반응식·kink 를 안 본다. 반응에너지 숫자만 본다.
+      ④ 전압 격자가 달라 겹치는 칸이 없으면 **통과시키지 않는다** — `ok=False` 로
+         "대조를 못 했다" 를 말한다 (0 칸 비교를 '차이 없음' 으로 읽으면 안 된다).
+      ⑤ 결측(None)을 **0 으로 세지 않는다** — `n_missing` 으로 따로 센다.
+    """
+    import statistics as _st
+    try:
+        old = json.loads(Path(old_path).read_text(encoding="utf-8"))
+    except Exception as ex:
+        return {"ok": False, "verdict": "READ_FAIL",
+                "reason": f"{type(ex).__name__}: {ex}", "old_path": str(old_path)}
+    oldr = old.get("results")
+    if not isinstance(oldr, dict) or not oldr:
+        return {"ok": False, "verdict": "NO_RESULTS",
+                "reason": f"옛 파일에 results 가 없다 — {old_path}",
+                "old_path": str(old_path)}
+
+    deltas, worst, n_missing = [], None, 0
+    old_labels, new_labels = set(), set()
+    for clab, cd in oldr.items():
+        ob = (cd or {}).get("by_voltage") or {}
+        nb = ((new_results.get(clab) or {}).get("by_voltage")) or {}
+        for V, orow in ob.items():
+            nrow = nb.get(V)
+            for lab, ov in (orow or {}).items():
+                old_labels.add(lab)
+                if nrow is None:
+                    continue                       # 전압 격자가 다르다
+                if lab not in nrow:
+                    continue                       # 새 실행이 안 돌린 조성
+                nv = nrow[lab]
+                if ov is None or nv is None:       # 결측 ≠ 0
+                    n_missing += 1
+                    continue
+                d = abs(float(nv) - float(ov))
+                deltas.append(d)
+                if worst is None or d > worst[0]:
+                    worst = (d, clab, V, lab, float(ov), float(nv))
+    for cd in new_results.values():
+        for row in ((cd or {}).get("by_voltage") or {}).values():
+            new_labels.update((row or {}).keys())
+
+    out = {
+        "old_path": str(old_path), "tol_eV_per_atom": tol,
+        "n_compared": len(deltas), "n_missing": n_missing,
+        "only_old": sorted(old_labels - new_labels),
+        "only_new": sorted(new_labels - old_labels),
+    }
+    if not deltas:
+        out.update(ok=False, verdict="NO_OVERLAP",
+                   reason="겹치는 칸이 0 — 대조를 못 했다 (전압 격자·조성 이름을 본다)")
+        return out
+    # ⚠ 판정과 보고를 **같은 숫자**로 한다. 종전 판은 보고값만 round 하고 판정은
+    #   원시 float 로 해서, 기록에 `max_abs_delta: 0.002 · ok: false` 가 같이 찍힐 수
+    #   있었다 (−0.36 + 0.002 의 부동소수 잔차 2e−18). 읽는 사람이 모순으로 본다.
+    mx = round(max(deltas), 6)
+    out["max_abs_delta"] = mx
+    out["median_abs_delta"] = round(_st.median(deltas), 6)
+    out["worst"] = {"delta": round(worst[0], 6), "cathode": worst[1],
+                    "V": worst[2], "electrolyte": worst[3],
+                    "old": worst[4], "new": worst[5]}
+    out["ok"] = mx <= tol
+    out["verdict"] = "REPRODUCED" if out["ok"] else "HULL_MOVED"
+    if not out["ok"]:
+        out["reason"] = ("옛 실행과 값이 다르다 — MP hull 스냅샷이 움직였을 수 있다. "
+                         "⛔ 두 파일의 숫자를 섞어서 빼지 않는다. 이번 파일 안에서만 뺀다.")
+    return out
 
 
 def parse_formula(f: str) -> dict:
@@ -1106,6 +1242,11 @@ def main():
     ap.add_argument("--voltages", nargs="+", type=float,
                     default=[2.5, 3.0, 3.5, 4.0, 4.3])
     ap.add_argument("--out", default="interface_reactivity_v2.json")
+    ap.add_argument("--reproduce_check", metavar="OLD_JSON",
+                    help="예전 실행과 **공통 칸**을 대조해 hull 스냅샷이 움직였는지 본다 "
+                         "(새 조성을 옛 조성과 함께 다시 돌릴 때)")
+    ap.add_argument("--reproduce_tol", type=float, default=REPRO_TOL_DEFAULT,
+                    metavar="EV", help=f"--reproduce_check 문턱 (기본 {REPRO_TOL_DEFAULT} eV/atom)")
     ap.add_argument("--dopant_fate", metavar="PANELS_CSV",
                     help="도펀트가 최소 꺾임에서 인산염/황산염/염화물 중 어디로 갔나")
     ap.add_argument("--dopant", default="Nd", help="--dopant_fate 가 추적할 원소")
@@ -1299,8 +1440,28 @@ def main():
     print("  ⛔ 이 목록은 **최소 kink 산물**만이다. 다른 kink 의 상은 여기 없다 (카드 G2).")
     print("  ⚠ 기체·홑원소(S·SO₂·PCl₅)는 **안 걸렀다** — 갭 대상인지는 카드·사람이 정한다.")
 
+    repro = None
+    if a.reproduce_check:
+        repro = reproduce_check(results, a.reproduce_check, a.reproduce_tol)
+        print(f"\n══ 재현 대조 vs {a.reproduce_check} ══")
+        print(f"  {repro['verdict']} · 겹친 칸 {repro['n_compared']} · "
+              f"문턱 {repro['tol_eV_per_atom']} eV/atom")
+        if repro.get("worst"):
+            w = repro["worst"]
+            print(f"  최대 차 {w['delta']:.6f}  ({w['cathode']} {w['V']} V "
+                  f"{w['electrolyte']}: {w['old']} → {w['new']})")
+        if repro.get("only_new"):
+            print(f"  이번에 새로 들어간 조성: {', '.join(repro['only_new'])}")
+        if repro.get("only_old"):
+            print(f"  ⚠ 옛 파일에만 있는 조성: {', '.join(repro['only_old'])}")
+        if repro.get("n_missing"):
+            print(f"  ⚠ 한쪽이 결측인 칸 {repro['n_missing']} (0 으로 세지 않았다)")
+        if not repro["ok"]:
+            print(f"  ⛔ {repro.get('reason', '')}")
+
     Path(a.out).write_text(json.dumps({
         "product_census": cen,
+        "reproduce_check": repro,
         "method": "GrandPotentialInterfacialReactivity (Richards/Ong 2016), "
                   "open to Li reservoir; mu_Li = mu_Li(metal) - V; "
                   "use_hull_energy=True; MP GGA_GGA+U. More negative = more "
