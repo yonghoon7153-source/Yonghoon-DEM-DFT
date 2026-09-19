@@ -1,0 +1,108 @@
+# 믹싱 드럼 — 표면에너지 스윕  (생성: scripts/make_mixer_deck.py)
+# ⚠ 손으로 고치지 말 것 — 치수가 조성에서 유도된다.  조성을 바꾸면 생성기를 다시 돌린다.
+#
+# 조성 AM:SE:VGCF:PTFE = 80:18:1:1 (wt%) · P:S = 7:3
+# CGF = 200  (실제 AM_P 12 µm → 사물 2.40 mm)
+# ⛔ 생산 scale=1000 규약을 쓰지 않는다 — 드럼은 중력 구동이라 중력/접촉 비가 깨진다.
+# ⚠ 전단탄성률을 계산비용 때문에 낮췄다 (lischka 와 같은 조작) — 물성으로 인용 금지.
+
+atom_style      granular
+atom_modify     map array sort 0 0
+boundary        f f f
+newton          off
+communicate     single vel yes
+units           si
+processors      1 1 1            # PUBLIC 판 multisphere 는 직렬만 지원
+
+region          reg block -0.0435154 0.0435154 -0.0435154 0.0435154 -0.0435154 0.0435154 units box
+create_box      5 reg
+neighbor        0.0003 bin
+neigh_modify    delay 0
+
+# --- 물성 (1:AM_P 2:AM_S 3:SE 4:VGCF 5:PTFE) ---
+# ⚠ 영률은 계산비용용 연화값이다.  생산 압축 덱의 값(AM 140 GPa · SE 1.35 GPa)이 아니다.
+fix m1 all property/global youngsModulus peratomtype 1.e7 1.e7 1.e7 1.e7 1.e7
+fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30 0.30
+fix m3 all property/global coefficientRestitution peratomtypepair 5 &
+    0.3 0.3 0.3 0.3 0.3 &
+    0.3 0.3 0.3 0.3 0.3 &
+    0.3 0.3 0.3 0.3 0.3 &
+    0.3 0.3 0.3 0.3 0.3 &
+    0.3 0.3 0.3 0.3 0.3
+fix m4 all property/global coefficientFriction peratomtypepair 5 &
+    0.5 0.5 0.5 0.5 0.5 &
+    0.5 0.5 0.5 0.5 0.5 &
+    0.5 0.5 0.5 0.5 0.5 &
+    0.5 0.5 0.5 0.5 0.5 &
+    0.5 0.5 0.5 0.5 0.5
+fix m5 all property/global coefficientRollingFriction peratomtypepair 5 &
+    0.2 0.2 0.2 0.2 0.2 &
+    0.2 0.2 0.2 0.2 0.2 &
+    0.2 0.2 0.2 0.2 0.2 &
+    0.2 0.2 0.2 0.2 0.2 &
+    0.2 0.2 0.2 0.2 0.2
+# ★ 스윕 축 — 표면에너지 대리 (SJKR, J/m³).  팔마다 이 블록만 바꾼다.
+fix mC all property/global cohesionEnergyDensity peratomtypepair 5 &
+    300000 300000 300000 300000 300000 &
+    300000 300000 300000 300000 300000 &
+    300000 300000 300000 300000 300000 &
+    300000 300000 300000 300000 300000 &
+    300000 300000 300000 300000 300000
+fix m9 all property/global characteristicVelocity scalar 2.0
+
+# ⚠ cohesion 은 tangential 뒤 · rolling_friction 앞 (순서가 실재하는 제약)
+pair_style      gran model hertz tangential history cohesion sjkr rolling_friction cdt
+pair_coeff      * *
+timestep        4.683e-06
+fix             gravi all gravity 9.81 vector 0.0 0.0 -1.0
+
+# --- 기구 (STL 은 튜토리얼 Mixer 원본을 scale 로 줄여 쓴다) ---
+fix Drum  all mesh/surface file Drum.stl  type 2 scale 0.0756789
+fix Front all mesh/surface file Front.stl type 2 scale 0.0756789
+fix Back  all mesh/surface file Back.stl  type 2 scale 0.0756789
+fix walls all wall/gran model hertz tangential history cohesion sjkr rolling_friction cdt &
+    mesh n_meshes 3 meshes Drum Front Back
+
+# --- 입자 ---
+fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4800 radius constant 0.0012
+fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4800 radius constant 0.0004
+fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 2000 radius constant 0.0003
+# ★ 섬유는 multisphere 강체 사슬 — 구 하나로 접지 않는다 (sun2026: 접으면 σ_e 순위가 뒤집힌다)
+# ⚠ 끝의 `type` 은 **원자 타입이 아니라 multisphere 템플릿 번호**이고 **1 부터 연속**이어야 한다
+#   (실행으로 확인: ERROR: multisphere template types have to be consecutive starting from 1)
+fix pt4 all particletemplate/multisphere 15101 atom_type 4 density constant 2000 &
+    nspheres 3 ntry 1000000 spheres file data/vgcf.multisphere scale 1.0 type 1
+fix pt5 all particletemplate/multisphere 17093 atom_type 5 density constant 2200 &
+    nspheres 3 ntry 1000000 spheres file data/ptfe.multisphere scale 1.0 type 2
+
+# ⚠ 분율은 **mass%** 다 (LIGGGHTS 규약 — 실행으로 확인).  우리 조성이 wt% 라 그대로 넣는다.
+fix pdd all particledistribution/discrete 32452867 5 &
+    pt1 0.560000 pt2 0.240000 pt3 0.180000 &
+    pt4 0.010000 pt5 0.010000
+
+region ins_reg cylinder x 0.0 0.0 0.0340555 -0.0068111 0.0068111 units box
+fix ins all insert/pack seed 32452843 distributiontemplate pdd &
+    maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 &
+    region ins_reg particles_in_region 47309 ntry_mc 20000   # 템플릿 수 (섬유 1가닥 = 1)
+
+fix integr all multisphere        # multisphere 가 있으면 nve/sphere 대신 이것
+
+compute rke all erotate/sphere
+thermo_style custom step atoms ke c_rke vol
+thermo 5000
+thermo_modify lost ignore norm no
+
+shell mkdir post
+run 1
+dump dmp all custom 5338 post/mix_*.liggghts id type mol x y z vx vy vz fx fy fz radius
+
+# ① 채우고 정착 — ⚠ KE 가 떨어진 뒤에 회전을 시작한다 (정착 전에 돌리면 지표가 뒤집힌다)
+run 20000
+unfix ins
+run 20000
+
+# ② 회전 5 바퀴 @ 60 rpm  (임계 154 rpm · Fr 0.152)
+fix mvD all move/mesh mesh Drum  rotate origin 0 0 0 axis 1. 0. 0. period 1
+fix mvF all move/mesh mesh Front rotate origin 0 0 0 axis 1. 0. 0. period 1
+fix mvB all move/mesh mesh Back  rotate origin 0 0 0 axis 1. 0. 0. period 1
+run 1067656
