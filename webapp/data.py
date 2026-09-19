@@ -2203,6 +2203,47 @@ CASCADE_ESTIMAND_JSON = "cascade_d_rel_estimand_2026_09_08.json"
 CASCADE_SEAL_JSON = "cascade_seal_v2_2026_09_08.json"
 
 
+#: `/cascade` 밴드에 실을 **판정**. 값이 아니라 원장 문장을 옮기는 자리다.
+#  ⛔ 2026-09-19 — 화면을 렌더해 보니 아래 셋이 **한 글자도 없었다.** 그런데 화면은
+#    3,615 · 681 · 91종을 큰 숫자로 띄우고 있었다. CLAUDE.md §화면 규율이 경고하는
+#    그 형태다 — *"규율이 원장에만 있고 화면에 안 실리면 사람은 화면을 인용한다."*
+CASCADE_VERDICT_SOURCES = [
+    ("4축 내부 검증", "cascade_axis_global_audit_2026_09_12.json"),
+    ("v23 dV 축 앵커", "cascade_reanchor_comp1k444_2026_09_12.json"),
+]
+#: ⛔ 원장에 **없는** 판정. 화면이 지어내지 않고 **구멍으로 표시한다**.
+#  "옛 cascade(v23)는 탐색 자료로 강등됐다" 는 kb 일지·주간정리에만 있고 db/ 에 없다.
+CASCADE_VERDICT_GAPS = [
+    {"label": "v23 지위 (강등)",
+     "why": "db/properties 에 기록이 없다 — kb/projects/cascade_rebuild_log_2026_09.md §1 "
+            "과 kb/reports/weekly_2026_09_14.md 에만 있다",
+     "see": "/cascade/rebuild"},
+]
+
+
+def cascade_verdicts() -> list:
+    """밴드에 실을 판정 목록. **원장 문장을 옮기기만 한다.**
+
+    ⛔ 이 함수가 못 하는 것
+      · 판정을 만들지 않는다. `제목` 과 `status` 를 그대로 옮긴다.
+      · 판정이 지금도 유효한지 보지 않는다 (status 문자열을 그대로 싣는다).
+      · 기록이 없으면 **조용히 빼지 않는다** — `ok=False` 로 구멍을 싣는다.
+    """
+    out = []
+    for label, fn in CASCADE_VERDICT_SOURCES:
+        rec = _load_json(DB / "properties" / fn)
+        if not rec:
+            out.append({"ok": False, "label": label,
+                        "why": f"db/properties/{fn} 을 못 읽었다", "see": None})
+            continue
+        out.append({"ok": True, "label": label,
+                    "text": rec.get("제목") or "",
+                    "status": rec.get("status") or "",
+                    "record": f"db/properties/{fn}"})
+    out.extend({**g, "ok": False} for g in CASCADE_VERDICT_GAPS)
+    return out
+
+
 def cascade_campaign_band() -> dict:
     """`/cascade` 최상단 **캠페인 지위 밴드** — 지위·보고량·남은 해제조건·봉인.
 
@@ -2246,6 +2287,7 @@ def cascade_campaign_band() -> dict:
         "allowed": est.get("4_허용_서술_이대로만") or [],
         "forbidden": est.get("5_금지_서술") or [],
         "invalid_if": est.get("7_무효_조건") or [],
+        "verdicts": cascade_verdicts(),
         "record": f"db/properties/{CASCADE_ESTIMAND_JSON}",
         "decision": "D-2026-09-08-cascade-d-rel-estimand",
         "seal": ({"label": seal.get("label"), "at": seal.get("sealed_at"),

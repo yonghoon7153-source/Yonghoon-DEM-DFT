@@ -375,3 +375,49 @@ def test_protected_markers_survive(client):
     assert 'data-claim-not="MD_Ea_eV@b2o3"' in h, "codoping 표의 부인 래퍼가 사라졌다"
     for tab in ("tab-board", "tab-champ", "tab-syn", "tab-stab"):
         assert f'id="{tab}"' in h, f"superseded/diagnostic 탭 {tab} 이 사라졌다 (삭제 금지)"
+
+
+# ── /cascade 판정 밴드 (2026-09-19) ────────────────────────────────────────
+#   ⛔ 왜 생겼나: 화면을 **실제로 렌더해 보니** ratified 판정 둘이 한 글자도 없었다.
+#     그런데 화면은 3,615 · 681 · 91종을 큰 숫자로 띄우고 있었다. CLAUDE.md §화면 규율 —
+#     "규율이 원장에만 있고 화면에 안 실리면 사람은 화면을 인용한다."
+def test_cascade_verdicts_come_from_ledger_and_reach_the_page():
+    """양성: 원장 판정이 `/cascade` 본문에 **실제로 실린다**."""
+    vs = D.cascade_verdicts()
+    assert vs, "판정 목록이 비었다"
+    ok = [v for v in vs if v.get("ok")]
+    assert len(ok) >= 2, f"원장에서 읽힌 판정이 {len(ok)}건 — 2건 이상이어야 한다"
+    for v in ok:
+        assert v.get("text"), f"{v['label']}: 원장 문장이 비었다"
+        assert v.get("record", "").startswith("db/properties/"), \
+            f"{v['label']}: 출처가 db/properties 가 아니다 ({v.get('record')})"
+    html = A.app.test_client().get("/cascade").get_data(as_text=True)
+    for v in ok:
+        # 원장 문장의 꼬리 토막이 화면에 있어야 한다 (전체 문자열은 이스케이프로 갈릴 수 있다)
+        tail = v["text"].split("—")[-1].strip()[:14]
+        assert tail and tail in html, f"{v['label']}: 원장 문장이 화면에 없다 ({tail!r})"
+
+
+def test_cascade_verdict_gap_is_shown_not_swallowed():
+    """⛔음성: 원장에 **없는** 판정은 지어내지도, 조용히 빼지도 않는다 — 구멍으로 싣는다."""
+    vs = D.cascade_verdicts()
+    gaps = [v for v in vs if not v.get("ok")]
+    assert gaps, "구멍이 하나도 없다 — CASCADE_VERDICT_GAPS 가 배선에서 빠졌다"
+    for g in gaps:
+        assert g.get("why"), f"{g.get('label')}: 왜 못 싣는지를 안 적었다"
+        assert not g.get("text"), f"{g.get('label')}: 원장에 없는데 문장을 지어냈다"
+    html = A.app.test_client().get("/cascade").get_data(as_text=True)
+    assert "원장 기록이 없다" in html, "구멍이 화면에 안 나간다 — 조용히 삼켰다"
+
+
+def test_cascade_verdicts_fail_closed_on_missing_record():
+    """⛔음성: 원장 파일이 없으면 **ok=False 로 구멍**이지, 조용한 생략이 아니다."""
+    keep = D.CASCADE_VERDICT_SOURCES
+    try:
+        D.CASCADE_VERDICT_SOURCES = [("없는 것", "no_such_cascade_record_xyz.json")]
+        vs = D.cascade_verdicts()
+        bad = [v for v in vs if v.get("label") == "없는 것"]
+        assert bad, "없는 기록이 목록에서 **사라졌다** (조용한 생략)"
+        assert bad[0]["ok"] is False and "못 읽었다" in bad[0]["why"]
+    finally:
+        D.CASCADE_VERDICT_SOURCES = keep

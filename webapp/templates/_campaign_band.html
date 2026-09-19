@@ -88,6 +88,26 @@
       {{ band.estimand_note|bold }}</div>{% endif %}
   </div>
 
+  {# ── 원장 판정 — 2026-09-19. 화면을 렌더해 보니 아래 문장들이 한 글자도 없었다.
+        그런데 화면은 3,615 · 681 · 91종을 큰 숫자로 띄우고 있었다.
+        ⛔ 문장을 여기서 짓지 않는다. `data.cascade_verdicts()` 가 원장에서 옮겨 온다.
+        ⛔ 원장에 없는 판정은 **구멍으로 싣는다** — 조용히 빼지 않는다. #}
+  {% if band.verdicts %}
+  <div class="v3-band-cell" style="flex-basis:100%">
+    <span class="v3-band-t">이 캠페인에 걸린 판정 {{ band.verdicts|length }}건</span>
+    <ul style="margin:2px 0 0;padding-left:18px;font-size:.82rem;line-height:1.65">
+      {% for v in band.verdicts %}
+      <li data-verdict="{{ v.label }}">
+        {% if v.ok %}<b>{{ v.label }}</b> — {{ v.text|bold }}
+          <div class="muted" style="font-size:.76rem">{{ v.status }} · <span class="mono">{{ v.record }}</span></div>
+        {% else %}<b style="color:var(--red)">⛔ {{ v.label }}</b> — 화면에 실을 원장 기록이 없다: {{ v.why }}
+          {% if v.see %}<a class="v3-chip" href="{{ v.see }}">→ 출처 보기</a>{% endif %}
+        {% endif %}
+      </li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
   {% if band.remaining %}
   <div class="v3-band-cell" style="flex-basis:100%">
     <span class="v3-band-t">남은 해제조건</span>
