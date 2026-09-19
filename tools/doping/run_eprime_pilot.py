@@ -166,6 +166,11 @@ def build_plan(out_root, python="python3", device="cuda") -> list[dict]:
                 "--timestep_fs", str(DT_FS), "--friction", str(FRICTION),
                 "--save_fs", str(SAVE_FS),
                 "--fit_window_ps", str(FIT_WINDOW_PS[0]), str(FIT_WINDOW_PS[1]),
+                #: ⛔ 2026-09-19 — 이게 없어서 **카드 §2 의 자격 게이트가 못 돌았다.**
+                #  `aggregation_eligible(t, y, events_per_run)` 의 셋째 인자는 궤적에서
+                #  세는 2.5 Å 변위 사건 수인데, 궤적을 안 남기면 만들 길이 없다.
+                #  None 은 "통과"가 아니라 "검사 불가 = 자격 없음" 이라 **30 런 전부** 탈락했다.
+                "--save_traj",
                 "--seed", str(seed),
                 "--uma_model", UMA_MODEL, "--uma_task", UMA_TASK,
                 "--device", device]
@@ -188,6 +193,35 @@ def build_plan(out_root, python="python3", device="cuda") -> list[dict]:
                          "temps": temps, "seed": seed, "n_runs": len(temps),
                          "cap_gpu_h": None, "cmd": md_cmd(s, temps, seed, tag)})
     return plan
+
+
+#: 카드가 요구하는 게이트마다 **그 입력을 만드는 플래그**. 선언만 있고 생산이 없으면
+#  게이트는 조용히 "검사 불가" 로 떨어진다 — 2026-09-19 에 그걸로 한 라운드를 날렸다.
+GATE_INPUT_FLAGS = {
+    "--save_traj": "카드 §2 자격 ③ — 2.5 Å 변위 사건 수(궤적에서 센다). "
+                   "없으면 events_per_run=None → **전 런 자격 없음**",
+    "--fit_window_ps": "카드 §2 — MSD 창 2–50 ps 자유절편 D",
+}
+
+
+def gate_input_preflight(plan):
+    """계획의 **모든 MD 명령**이 게이트 입력을 생산하는가 → (ok, 문제들).
+
+    ⛔ 이 함수가 하지 않는 것
+      · 값이 실제로 기록됐는지 보지 않는다 (명령에 플래그가 있는지만 본다).
+        실물 검사는 라운드가 끝난 뒤 판정 도구 몫이다.
+      · 게이트를 정의하지 않는다. 카드가 정의하고 여기는 **입력 생산**만 본다.
+    """
+    probs = []
+    md = [st for st in plan if str(st.get("stage", "")).startswith("md")]
+    if not md:
+        return False, ["MD 단계가 하나도 없다 — 계획이 비었다"]
+    for st in md:
+        cmd = st.get("cmd") or []
+        for flag, why in GATE_INPUT_FLAGS.items():
+            if flag not in cmd:
+                probs.append(f"{st['key']}: `{flag}` 가 없다 — {why}")
+    return (not probs), probs
 
 
 def runs_remaining_from(plan, i) -> int:
@@ -408,6 +442,14 @@ def run_round(out_root, python, device, dry_run=False, resume=False,
             print("   ·", b)
         return 2
     plan = build_plan(out_root, python=python, device=device)
+    #: ⛔ 첫 준비 계산 **전**에 본다. 게이트 입력이 없으면 시작하지 않는다.
+    _ok, _probs = gate_input_preflight(plan)
+    if not _ok:
+        print("⛔ 게이트 입력 프리플라이트 불통과 — **시작하지 않는다**:")
+        for _q in _probs:
+            print("   ·", _q)
+        print("   (게이트를 선언해 놓고 그 입력을 안 만들면 전 런이 조용히 자격 미달이 된다)")
+        return 2
     print(f"계획: 준비 {sum(1 for s in plan if s['stage'] == 'prep')}건 · "
           f"MD 호출 {sum(1 for s in plan if s['stage'].startswith('md'))}건 "
           f"= **{plan_run_count(plan)}런** · 상한 {PERF_SUBCAP_GPU_H:.0f} / {TOTAL_CAP_GPU_H:.0f} GPU-h")
@@ -527,6 +569,31 @@ def _selftest() -> int:
     chk(rest and PERF_RUN["temp"] not in rest[0]["temps"],
         "양성: 속도 시험의 (구조·시드·온도)는 뒤 배치에서 빠진다 — 두 번 안 돈다")
     chk(all("--fit_window_ps" in s["cmd"] for s in md_steps), "양성: MSD 창이 명령에 박힌다")
+
+    # ── 게이트 입력 프리플라이트 (2026-09-19) ───────────────────────────────
+    #   ⛔ 이 검사가 없어서 라운드 하나를 날렸다: `--save_traj` 가 빠져 궤적이 안 남았고,
+    #     카드 §2 자격 ③(2.5 Å 사건 수)의 입력이 없어 **30 런 전부** 자격 미달이 됐다.
+    #     게이트는 있었고, 그 게이트가 읽을 값을 만드는 경로가 없었다.
+    chk(all("--save_traj" in s["cmd"] for s in md_steps),
+        "양성: 모든 MD 명령이 **--save_traj** 를 단다 (사건 수의 유일한 출처)")
+    _ok_pf, _pb = gate_input_preflight(plan)
+    chk(_ok_pf and not _pb, f"양성: 프리플라이트가 정상 계획을 통과시킨다 ({_pb})")
+    #: ⛔음성 — 한 명령에서만 빼도 잡아야 한다 (전수 검사인지 본다)
+    _broken = [dict(st) for st in plan]
+    _mdi = [j for j, st in enumerate(_broken) if str(st["stage"]).startswith("md")]
+    _broken[_mdi[-1]]["cmd"] = [c for c in _broken[_mdi[-1]]["cmd"] if c != "--save_traj"]
+    _ok_b, _pb_b = gate_input_preflight(_broken)
+    chk((not _ok_b) and any("--save_traj" in q for q in _pb_b),
+        f"⛔음성: MD 명령 **하나**에서만 --save_traj 를 빼도 불통과다 ({_pb_b[:1]})")
+    #: ⛔음성 — 다른 게이트 입력도 같이 본다 (save_traj 하나만 특별취급하지 않는다)
+    _b2 = [dict(st) for st in plan]
+    _b2[_mdi[0]]["cmd"] = [c for c in _b2[_mdi[0]]["cmd"] if c != "--fit_window_ps"]
+    chk(not gate_input_preflight(_b2)[0],
+        "⛔음성: --fit_window_ps 가 빠져도 불통과다")
+    #: ⛔음성 — MD 가 없는 계획을 "문제 없음" 으로 읽지 않는다
+    chk(not gate_input_preflight([st for st in plan
+                                  if not str(st["stage"]).startswith("md")])[0],
+        "⛔음성: MD 단계가 0 이면 통과가 아니라 불통과다 (빈 계획을 초록으로 읽지 않는다)")
     rows, bad = check_inputs()
     chk(not bad and len(rows) == 5, f"양성: 실제 다섯 구조가 게이트를 통과한다 ({bad})")
     chk(all(abs(r["V_A3"] - V_COMMON_A3) <= V_TOL_A3 for r in rows),
