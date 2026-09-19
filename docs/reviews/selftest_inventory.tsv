@@ -87,6 +87,7 @@ scripts/make_pressure_sweep_decks.py	--selftest	fast	none	claude	초록 0.1s (�
 scripts/make_ps_sweep_decks.py	--selftest	fast	none	claude	초록 0.1s (실측)
 scripts/make_mixer_deck.py	--selftest	fast	none	claude	초록 0.1s (실측) — 순수 함수(파일 안 씀), 외부 데이터 불요.  LIGGGHTS 실행으로 배운 제약 셋(분율=mass%% · multisphere type 1부터 연속 · cohesion 키워드 순서)과 사슬 겹침 보정을 변이 대조로 지킨다
 scripts/measure_bed_aspect.py	--selftest	fast	none	claude	초록 0.2s (실측) — 순수 함수(임시 덤프 생성), 외부 데이터 불요.  프레임을 숫자순으로 고르는 것과 정착 경고를 변이 대조로 지킨다
+scripts/check_contact_validity.py	--selftest	fast	none	claude	초록 0.3s (실측) — 순수 함수(임시 덤프 생성), 외부 데이터 불요.  점착을 올리면 접촉모델이 먼저 죽는다는 것을 통과(δ/r>50 %)·원자손실로 기각하고, 겹침을 **작은 쪽 반경**으로 재는 것을 변이 대조로 지킨다
 scripts/ml_design_structure.py	--selftest	fast	none	claude	초록 7.8s (실측)
 scripts/mpm3d_compaction.py	--selftest	fast	none	claude	초록 0.3s (실측)
 scripts/mpm_webapp_payload.py	--selftest-contract	fast	both	claude	초록 <1s — 순수 함수, 외부 데이터 불요 (PASL-04 계약 봉인 게이트)

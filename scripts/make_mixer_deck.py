@@ -38,28 +38,160 @@ L_FIB_UM = 10.0                       # ⚠ VGCF 길이.  PTFE 길이는 출처 
 #: 타입 순서 — 덱의 `peratomtypepair` 행렬 순서와 같아야 한다
 TYPES = ('AM_P', 'AM_S', 'SE', 'VGCF', 'PTFE')
 #: 점착 원점 (J/m³) — 튜토리얼 `cohesion` 예제값.  ⚠ 우리 소재의 물성이 아니다.
-CED0 = 3.0e5
-#: 팔 — `cohesionEnergyDensity` 3×3(5×5) 만 바꾼다.  나머지는 전부 고정.
+#  ── 점착 눈금 — **CED(J/m³) 가 아니라 Bond 수로 건다** (2026-09-19 실측으로 갈아엎음) ──
+#
+# ⛔ 초판은 `CED0 = 3.0e5` 에 ×1/×10/×100 을 걸었다.  **5 팔 중 4 팔이 접촉모델 밖으로
+#    나갔다** (`scripts/check_contact_validity.py` 로 실측):
+#        E0 CED 0     겹침 중앙 0.09 %              손실 0 %      ✓
+#        E1 3e5 균일  겹침 중앙 3.54 %              손실 0 %      ⚠
+#        E2 AM 3e6    겹침 **최대 196 %**           손실 4.8 %    ⛔ (KE 가 안 떨어짐)
+#        E3 SE 3e6    겹침 중앙 **40 %**            손실 **63 %** ⛔
+#        E4 AM 3e7    겹침 최대 197 %               손실 28.7 %   ⛔
+#    δ/r = 1.97 은 한 구의 중심이 상대 구 **반대편 바깥**에 있다는 뜻 = 겹침이 아니라 통과.
+#
+# ★ 왜 그랬나 — **SJKR 은 겹침에 선형, Hertz 반발은 δ^1.5** 다.
+#       (4/3)·E*·√R*·δ^1.5  =  W + CED·2π·R*·δ
+#    점착 지배 극한에서 `δ = (3·CED·2π·√R* / (4E*))²` ⇒ **δ ∝ CED²**.
+#    ⇒ CED 를 ×10 하면 겹침이 **×100**.  ×1/×10/×100 사다리는 겹침으로 ×1/×100/×10⁴ 다.
+#    ★ 이 식이 실측을 맞힌다 — 예측 3.3~3.5 % vs E1 실측 중앙 **3.54 %**.
+#
+# ★ 그리고 F_coh ∝ CED·δ ∝ **CED³** 이므로 Bond 수도 CED³ 다.
+#    ⇒ 물리 눈금(Bo)에서 고르게 놓으려면 **CED ∝ Bo^(1/3)** 로 걸어야 한다.
+#    ⇒ Bo = F_coh/W ∝ CED³/(R·ρ·E*²) — 같은 CED 라도 **작고 가벼운 상이 훨씬 점착적**이다
+#      (CED 1.65e5 에서 AM_P 23 · AM_S 70 · SE 210).  그래서 **상마다 CED 를 다르게** 준다.
+#    ⚠ 겹침은 그렇지 않다 — 같은 CED 에서 `δ/r` 은 **반경과 무관**하다 (ν 만 다르다).
+#      ⇒ 두 축이 따로 논다: **Bo 는 크기에 민감하고 겹침은 아니다.**  섞지 말 것.
+#      이것이 설계문서 §11-5 의 열린 질문 `D11`(CG 하면 점착을 어떻게 다시 주나)에 대한
+#      SJKR+Hertz 계의 유도 답이다.
+#
+# ⚠⚠ 한정어를 지우지 말 것 — 이 유도는 ① **점착 지배 극한**(무게항 무시)이고
+#    ② **단일 접촉**이다.  침대에서는 입자가 묻혀 접촉이 여럿이다.  CED 3e5 에서
+#    예측이 맞았다고 낮은 CED 에서도 맞는다는 뜻이 아니다 (거기선 무게항이 지배한다).
+#    ⇒ **모든 팔은 돌린 뒤 `check_contact_validity.py` 로 확인한다.**  식은 사다리를
+#      고르는 도구이지 유효성의 증명이 아니다.
+
+OVL_CEILING = 0.01          # 겹침 천장 δ/r — DEM 연질구 관례 1 %
+#: 상별 (반경 m, 포아송비, 밀도 g/cm³) — 덱의 `property/global` 과 같아야 한다
+PHASE_MECH = {'AM_P': (0.25, 'AM'), 'AM_S': (0.25, 'AM'), 'SE': (0.30, 'SE'),
+              'VGCF': (0.30, 'VGCF'), 'PTFE': (0.30, 'PTFE')}
+E_YOUNG = 1.0e7             # Pa — 계산비용용 연화값.  ⚠ 물성 인용 금지
+
+
+def _estar(nu):
+    return E_YOUNG / (2.0 * (1.0 - nu ** 2))
+
+
+def overlap_for_ced(ced, radius, nu):
+    """CED → 평형 겹침 `δ/r` (점착 지배 극한).  ★ 실측 검증: 3e5·SE → 3.31 % vs 3.54 %."""
+    if ced <= 0:
+        return 0.0
+    rs = radius / 2.0                                   # 같은 크기 두 구의 R*
+    return (3.0 * ced * 2.0 * math.pi * math.sqrt(rs) / (4.0 * _estar(nu))) ** 2 / radius
+
+
+def bond_for_ced(ced, radius, nu, rho_gcc, g=9.81):
+    """CED → Bond 수 `F_coh / W`.  **∝ CED³** 이다."""
+    if ced <= 0:
+        return 0.0
+    rs = radius / 2.0
+    delta = overlap_for_ced(ced, radius, nu) * radius
+    f_coh = ced * 2.0 * math.pi * rs * delta
+    w = (4.0 / 3.0) * math.pi * radius ** 3 * (rho_gcc * 1000.0) * g
+    return f_coh / w
+
+
+def ced_for_bond(bo, radius, nu, rho_gcc, g=9.81):
+    """목표 Bond 수 → CED.  `Bo ∝ CED³` 이므로 한 점에서 세제곱근으로 뽑는다."""
+    if bo <= 0:
+        return 0.0
+    ref = 1.0e5
+    return ref * (bo / bond_for_ced(ref, radius, nu, rho_gcc, g)) ** (1.0 / 3.0)
+
+
+#: 팔 — **Bond 수 배수**를 건다 (CED 배수가 아니다).  나머지는 전부 고정.
 #  `mult[(a,b)]` 가 없으면 1.0.  대칭은 코드가 강제한다.
+#  ★ 기준 Bond 수는 **천장에서 거꾸로 푼다** — 손으로 박지 않는다.
+#    초판은 `CED0 = 3.0e5` 를 박았고 4/5 팔이 접촉모델 밖으로 나갔다.  여기서는
+#    `_solve_bond0()` 가 **가장 센 팔이 겹침 천장에 딱 닿도록** 잡으므로, 나중에
+#    ×1000 팔을 더해도 사다리 전체가 자동으로 내려앉는다 (시험 ㉙ 가 강제한다).
 ARMS = {
-    'E0': dict(desc='음성 대조 — 점착 0.  지표가 0 을 내는가', ced=0.0, mult={}),
-    'E1': dict(desc='균일', ced=CED0, mult={}),
-    'E2': dict(desc='★ AM 만 10배 — 1저자 질문의 축', ced=CED0,
+    'E0': dict(desc='음성 대조 — 점착 0.  지표가 0 을 내는가', bond=0.0, mult={}),
+    'E1': dict(desc='균일 Bo=1 (상별 CED 는 다르다 — 그래야 Bo 가 같다)',
+               bond=1.0, mult={}),
+    'E2': dict(desc='★ AM 만 Bo ×10 — 1저자 질문의 축', bond=1.0,
                mult={('AM_P', 'AM_P'): 10., ('AM_P', 'AM_S'): 10., ('AM_S', 'AM_S'): 10.}),
-    'E3': dict(desc='SE 만 10배 (대조)', ced=CED0, mult={('SE', 'SE'): 10.}),
-    'E4': dict(desc='AM 만 100배 (축 확장)', ced=CED0,
+    'E3': dict(desc='SE 만 Bo ×10 (대조)', bond=1.0, mult={('SE', 'SE'): 10.}),
+    'E4': dict(desc='AM 만 Bo ×100 (축 확장)', bond=1.0,
                mult={('AM_P', 'AM_P'): 100., ('AM_P', 'AM_S'): 100., ('AM_S', 'AM_S'): 100.}),
 }
 
 
-def ced_matrix(arm):
-    """팔 이름 → 5×5 `cohesionEnergyDensity` 행렬.  **대칭을 강제한다.**"""
+for _a in ARMS.values():        # 'bond' 는 이제 BOND0 의 **배수**다 (0 또는 1)
+    _a['bond'] = 1.0 if _a['bond'] else 0.0
+
+
+def _solve_bond0(d, ceiling=None):
+    """모든 팔이 겹침 천장 안에 들도록 기준 Bond 수를 푼다.
+
+    겹침은 `Bo^(2/3)` 에 비례하므로 가장 센 팔·가장 무른 상에서 닫힌형으로 나온다.
+    ⚠ 천장 1 % 는 **관례**다.  실측으로는 δ/r 3.54 % 인 팔이 원자 손실 0 · KE 정착
+      으로 멀쩡했고, 무너진 팔은 중앙 40 % 였다 — **그 사이는 안 재봤다**.
+      ⇒ 1 % 는 외삽하지 않는 쪽으로 고른 값이지 무너지는 경계가 아니다.
+    ⚠ 그리고 이 식 자체가 점착 지배·단일 접촉 극한이다 (모듈 머리말 참조).
+      ⇒ 고른 사다리는 돌린 뒤 `check_contact_validity.py` 로 **반드시** 확인한다.
+    """
+    ceiling = OVL_CEILING if ceiling is None else ceiling
+    worst = 0.0
+    for a in ARMS.values():
+        if not a['bond']:
+            continue
+        for t in TYPES:
+            nu, mat = PHASE_MECH[t]
+            r = d[t] / 2.0
+            #  이 상에 걸린 가장 큰 Bond 배수
+            f = max([v for (x, y), v in a['mult'].items() if t in (x, y)] or [1.0])
+            base = overlap_for_ced(ced_for_bond(1.0, r, nu, DENS[mat]), r, nu)
+            worst = max(worst, base * f ** (2 / 3.))
+    return (ceiling / worst) ** 1.5 if worst > 0 else 0.0
+
+
+def ced_matrix(arm, d):
+    """팔 이름 + 상별 지름 → 5×5 `cohesionEnergyDensity` 행렬.  **대칭을 강제한다.**
+
+    ⚠ 쌍 (i, j) 는 두 상의 목표 CED 중 **작은 쪽**을 쓴다 = 보수적인 쪽.
+      ★ 왜 그게 보수적인가 — 같은 CED 에서 `δ/r` 은 **반경과 무관**하다
+        (`δ ∝ R*` 이고 `δ/r` 에서 반경이 약분된다.  실측 검증: CED 3e5 에서
+         AM_P 3.51 % · AM_S 3.51 % · SE 3.31 %, 차이는 ν 0.25↔0.30 뿐).
+        따라서 **CED 가 낮은 쪽 = 겹침이 작은 쪽**이고 min() 이 곧 안전한 쪽이다.
+      ★ 거꾸로 **같은 Bo** 에서는 `δ/r ∝ (R·ρ)^(2/3)` 이라 **크고 무거운 상이
+        겹침을 더 먹는다** (Bo=1 에서 AM_P 0.130 % vs SE 0.028 %) ⇒ 천장을 정하는
+        것은 AM_P 다.
+      ⚠ 실측에서 SE 팔(E3)이 AM 팔(E4)보다 **낮은 CED 로 더 크게 무너진 것**은
+        상별 민감도 때문이 **아니라** SE 가 침대의 73 % 라 잃은 원자가 많았기
+        때문이다 (손실 63 % vs 28.7 %; 최대 겹침은 187 % vs 197 % 로 비슷하다).
+        ⛔ 이 둘을 섞어 *"작은 상이 먼저 깨진다"* 고 적지 말 것.
+      ★ min() 이라 (i, j) 와 (j, i) 가 **정의상 같다** — 초판은 `d[ti] <= d[tj]` 로
+        골라 SE·VGCF·PTFE 처럼 **지름이 같고 밀도가 다른** 상 쌍에서 순서에 따라
+        답이 갈렸고, 아래 대칭 단언이 그것을 잡았다.
+    """
     a = ARMS[arm]
     n = len(TYPES)
-    M = [[a['ced'] for _ in range(n)] for _ in range(n)]
-    for (x, y), f in a['mult'].items():
-        i, j = TYPES.index(x), TYPES.index(y)
-        M[i][j] = M[j][i] = a['ced'] * f          # ★ 비대칭 입력을 막는다
+    bond0 = _solve_bond0(d)
+    M = [[0.0] * n for _ in range(n)]
+    for i, ti in enumerate(TYPES):
+        for j, tj in enumerate(TYPES):
+            if a['bond'] <= 0:
+                continue
+            f = a['mult'].get((ti, tj), a['mult'].get((tj, ti), 1.0))
+            cand = []                     # ★ 두 상의 목표 CED 중 작은 쪽 (위 설명)
+            for t in (ti, tj):
+                nu, mat = PHASE_MECH[t]
+                cand.append(ced_for_bond(bond0 * a['bond'] * f,
+                                         d[t] / 2.0, nu, DENS[mat]))
+            M[i][j] = min(cand)
+    for i in range(n):                                # ★ 비대칭 입력을 막는다
+        for j in range(i + 1, n):
+            assert abs(M[i][j] - M[j][i]) < 1e-9, '행렬이 비대칭이다'
     return M
 
 
@@ -207,7 +339,7 @@ fix m5 all property/global coefficientRollingFriction peratomtypepair 5 &
 {_mat(5, 0.2)}
 # ★ 스윕 축 — 표면에너지 대리 (SJKR, J/m³).  **팔 {arm}: {ARMS[arm]['desc']}**\n# ⚠ 이 블록만 팔마다 다르다.  나머지는 한 글자도 안 바뀐다.
 fix mC all property/global cohesionEnergyDensity peratomtypepair 5 &
-{_mat(5, ced_matrix(arm))}
+{_mat(5, ced_matrix(arm, d))}
 fix m9 all property/global characteristicVelocity scalar 2.0
 
 # ⚠ cohesion 은 tangential 뒤 · rolling_friction 앞 (순서가 실재하는 제약)
@@ -380,15 +512,50 @@ def _selftest():
     chk('⑱ 팔끼리 점착 블록 **밖**은 한 글자도 안 다르다',
         _strip_ced(d0) == _strip_ced(d1) == _strip_ced(d2))
     chk('⑲ 팔끼리 점착 블록은 실제로 다르다', d0 != d1 != d2 and d0 != d2)
-    M0, M2 = ced_matrix('E0'), ced_matrix('E2')
+    dd = p['d']
+    M0, M1, M2 = (ced_matrix('E0', dd), ced_matrix('E1', dd), ced_matrix('E2', dd))
     chk('⑳ E0 는 전부 0 (음성 대조)', all(v == 0 for r in M0 for v in r))
-    chk('㉑ E2 는 AM-AM 만 10배', M2[0][0] == 10 * CED0 and M2[2][2] == CED0)
+    chk('㉑ E2 는 AM-AM 만 Bo ×10 = CED ×10^(1/3)',
+        abs(M2[0][0] / M1[0][0] - 10 ** (1 / 3.)) < 1e-6
+        and abs(M2[2][2] - M1[2][2]) < 1e-9)
     chk('㉒ 행렬이 대칭이다 (비대칭 입력 방지)',
         all(M2[i][j] == M2[j][i] for i in range(5) for j in range(5)))
     #  변이 대조 — 대칭 강제가 장식이 아님을 보인다
-    ARMS['_t'] = dict(desc='t', ced=1.0, mult={('AM_P', 'SE'): 7.0})
-    Mt = ced_matrix('_t'); del ARMS['_t']
-    chk('㉓ 변이: 한쪽만 준 배수가 양쪽에 반영된다', Mt[0][2] == 7.0 and Mt[2][0] == 7.0)
+    ARMS['_t'] = dict(desc='t', bond=1.0, mult={('AM_P', 'SE'): 7.0})
+    Mt = ced_matrix('_t', dd); del ARMS['_t']
+    chk('㉓ 변이: 한쪽만 준 배수가 양쪽에 반영된다',
+        Mt[0][2] == Mt[2][0] and Mt[0][2] > Mt[2][2])
+
+    #  ★★ 점착 눈금 — **실측 앵커**.  이 다섯이 새 사다리의 근거다.
+    chk(f'㉔ 겹침식이 E1 실측을 맞힌다 (예측 {overlap_for_ced(3e5, 3e-4, .30)*100:.2f} % '
+        f'vs 실측 3.54 %)',
+        abs(overlap_for_ced(3e5, 3e-4, .30) - 0.0354) < 0.006)
+    chk(f'㉕ 겹침식이 ×10 붕괴를 설명한다 (CED 3e6 → '
+        f'{overlap_for_ced(3e6, 3e-4, .30)*100:.0f} % = 통과)',
+        overlap_for_ced(3e6, 3e-4, .30) > 1.0)
+    chk('㉖ δ/r 은 CED 의 **제곱**이다 (×10 이 ×100)',
+        abs(overlap_for_ced(2e5, 3e-4, .30) / overlap_for_ced(1e5, 3e-4, .30) - 4.0) < 1e-9)
+    chk('㉗ Bo 는 CED 의 **세제곱**이다 (사다리를 Bo 로 거는 이유)',
+        abs(bond_for_ced(2e5, 3e-4, .30, 2.0) / bond_for_ced(1e5, 3e-4, .30, 2.0) - 8.0) < 1e-9)
+    chk('㉘ ced_for_bond ↔ bond_for_ced 왕복',
+        abs(bond_for_ced(ced_for_bond(7.0, 3e-4, .30, 2.0), 3e-4, .30, 2.0) - 7.0) < 1e-9)
+    #  ★★ 천장 — **모든 팔이 겹침 천장 안**이어야 한다.  초판은 4/5 가 밖이었다.
+    worst = []
+    for arm in sorted(ARMS):
+        M = ced_matrix(arm, dd)
+        for i, ti in enumerate(TYPES):
+            small_r = dd[ti] / 2.0
+            worst.append((overlap_for_ced(M[i][i], small_r, PHASE_MECH[ti][0]), arm, ti))
+    wv, wa, wt = max(worst)
+    chk(f'㉙ ★ 모든 팔이 겹침 천장 {OVL_CEILING*100:.0f} % 안 '
+        f'(최악 {wa}·{wt} {wv*100:.3f} %)', wv <= OVL_CEILING * (1 + 1e-9))
+    #  ★ 변이 — 옛 사다리(CED 3e5 에 ×100)를 넣으면 이 검사가 **걸려야** 한다
+    chk('㉙b 변이: 옛 사다리(CED 3e7)는 천장을 넘는다',
+        overlap_for_ced(3e7, 3e-4, .30) > OVL_CEILING)
+    #  ★ 상별 CED 가 실제로 다르다 (같은 Bo 를 만들려면 달라야 한다)
+    chk(f'㉚ 같은 Bo 를 위해 상별 CED 가 다르다 '
+        f'(AM_P {M1[0][0]:.3g} vs SE {M1[2][2]:.3g})',
+        abs(M1[0][0] - M1[2][2]) / M1[2][2] > 0.1)
     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
