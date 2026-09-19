@@ -60,7 +60,7 @@ PDF 원문 + Supplementary(DOCX) 재독으로 확인된 것.  **아직 카드를
 | `chibwe2020_nnsi_segregation_index` | **분리지수(NNSI)** |
 | `jadidi2023_dem_batch_solid_mixers_review` | 배치 고체믹서 DEM **리뷰** |
 | `lippke2023_dem_drying_structure_formation_lib` | 습식 **건조** 구조형성 — ⛔ 건식 전이 금지 |
-| ⬜ `sun2026_dem_extrusion_recirculation_dry_electrode` | 건식 **압출** — 후속 커밋 |
+| ✅ `sun2026_dem_extrusion_recirculation_dry_electrode` | 건식 **압출** — 후속 커밋으로 들어왔다 (md5 `df6fadb6c1ec406b864d82661ae0fd0a` · 446줄 46,159 B 대조) |
 
 ⚠ **`INDEX.md` 는 이 커밋에서 안 고쳤다** (사람이 큐레이션하는 축이라 손대지 않는다).
 **`INDEX_DEM.md` 는 고쳤다** — 생성물이므로 `tools/litdb/build_index.py` 를 재실행했다.
