@@ -54,31 +54,50 @@ SE 는 296k 개라 통계가 충분하다. AM_P 를 늘리려면 총수가 선�
 
 ---
 
-## §3. 점착 노브 — **튜토리얼의 SJKR 경로를 쓴다**
+## §3. 점착 노브 — **생산 접촉모델을 그대로 쓰고 SJKR 을 얹는다** (실측 확정)
 
-`Tutorials_public/cohesion` 의 diff 전부:
+> [!check] ★ 초판 철회 — `hertz` 로 갈아탈 필요가 **없다** (2026-09-19 실행으로 확인)
+> 초판은 *"생산 덱의 `hooke/hysteresis` 를 버리고 튜토리얼의 `hertz + cohesion sjkr` 로
+> 간다"* 였다. **두 모델을 합칠 수 있는지 실제로 돌려 봤고, 된다.**
+>
+> ```
+> pair_style gran model hooke/hysteresis tangential history cohesion sjkr rolling_friction cdt
+>                                         └── cohesion 은 tangential 뒤 · rolling_friction 앞
+> soft_particles yes          ← ⚠ 필수.  SE E = 0.135e7 = 1.35e6 < 5e6 문턱
+> fix mC all property/global cohesionEnergyDensity peratomtypepair 3  …3×3…
+> ```
+> 400 입자 · 3종 · **생산 덱 물성 그대로** 10,000 step 완주 (`rc=0`).
+>
+> ⚠ **키워드 순서가 실재하는 제약**이다 — `cohesion` 을 `rolling_friction` 뒤에 두면
+> `ERROR: Unknown argument or wrong keyword order: 'cohesion'`.
+> `model … cohesion sjkr tangential …` 도 거부된다.
+
+### 그래서 노브가 **분리**된다
+
+| | 값 | 이 런에서 |
+|---|---|---|
+| `m7 coefficientAdhesionStiffness` (k_N 대비 비) | 생산값 `1.0e5 / 2.0e5 / 1.0e6` | **고정** — 건드리지 않는다 |
+| **`cohesionEnergyDensity`** (J/m³, 3×3) | 튜토리얼 원점 `3.0e5` | **★ 이것만 스윕** |
+
+⇒ **`k_c ↔ γ` 환산이 필요 없어졌다** (초판 D5 소멸). 두 항은 접촉법칙 안에서
+**가산적으로 따로** 들어가므로, 하나를 고정하고 다른 하나를 스윕하면 된다.
+그리고 **압축 작업과 접촉역학이 같아져** 연속성이 유지된다.
+
+⚠ **SJKR 의 정체는 그대로 적어둔다**: `cohesionEnergyDensity` 는 **접촉면적 × 에너지밀도**
+로 힘을 만드는 **부피형** 응집 모델이지 진짜 표면에너지가 아니다(`sjkr2` 변형도 있다).
+⇒ 본문에 *"SJKR cohesion energy density"* 로 적고 *"surface energy"* 라 부르지 않는다.
+
+### 생산 덱에서 가져오는 물성 (1저자 지시)
+
+`dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts` — Type 1:AM_P · 2:AM_S · 3:SE
 ```
-+ fix m6 all property/global cohesionEnergyDensity peratomtypepair 1 300000
-- pair_style gran model hertz tangential history
-+ pair_style gran model hertz tangential history cohesion sjkr
+youngsModulus   1.4e8  1.4e8  0.135e7     (AM 140 GPa · SE 1.35 GPa — scale 1000 로 나눈 sim 값)
+poissonsRatio   0.25   0.25   0.30
+restitution     3×3 전부 0.3        friction  3×3 전부 0.5
+rollingFriction AM-AM 0.2 · AM-SE 0.1 · SE-SE 0.1
+m6 MaxElasticStiffness 1.5/3.0/5.0   m8 PlasticityDepth 0.05/0.01/0.005
+characteristicVelocity 2.0           density  AM 4800 · SE 2000
 ```
-
-★ **`peratomtypepair`** 다 — AM_P · AM_S · SE 세 종의 **3×3 행렬**을 따로 줄 수 있다.
-단위가 **J/m³** 라 *"표면에너지를 다르게"* 에 가장 가까운 LIGGGHTS 기본 노브고,
-`sun2026`(건식 압출 DEM)도 **SJKR** 을 쓴다.
-
-> [!danger] ⛔ 생산 덱의 `m7` 을 쓰지 않는다
-> 생산 덱은 `hooke/hysteresis` + `coefficientAdhesionStiffness`(k_c) 인데 그것은
-> **강성비**(k_N 대비)이지 에너지가 아니다. 스윕해도 *"표면에너지를 바꿨다"* 가 안 된다.
-> 이 축은 독립이므로 생산 접촉모델을 따를 이유가 없다.
-> ⚠ 그리고 **`k_c ↔ cohesionEnergyDensity ↔ JKR Γ` 환산식은 어디에도 없다**
-> (튜토리얼에도, `lischka` 에도). **환산하지 않는다** — 이 런은 SJKR 안에서만 말한다.
-
-⚠ **SJKR 의 정체를 정확히 적어둔다**: `cohesionEnergyDensity` 는 **접촉면적 × 에너지밀도**
-로 힘을 만드는 **부피형** 응집 모델이지 진짜 표면에너지가 아니다. `sjkr2` 라는 변형도 있다.
-⇒ 본문에는 *"SJKR cohesion energy density"* 로 적고 *"surface energy"* 라 부르지 않는다.
-
----
 
 ## §4. 기구 — Eirich EL1, 비율만 맞춰 축소
 

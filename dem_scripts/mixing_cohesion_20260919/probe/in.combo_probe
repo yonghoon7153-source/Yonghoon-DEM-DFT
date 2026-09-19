@@ -1,0 +1,36 @@
+atom_style granular
+atom_modify map array
+boundary m m m
+newton off
+soft_particles yes
+communicate single vel yes
+units si
+region reg block -0.05 0.05 -0.05 0.05 0. 0.15 units box
+create_box 3 reg
+neighbor 0.002 bin
+neigh_modify delay 0
+fix m1 all property/global youngsModulus peratomtype 1.4e8 1.4e8 0.135e7
+fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30
+fix m3 all property/global coefficientRestitution peratomtypepair 3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3
+fix m4 all property/global coefficientFriction peratomtypepair 3 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5
+fix m5 all property/global coefficientRollingFriction peratomtypepair 3 0.2 0.2 0.1 0.2 0.2 0.1 0.1 0.1 0.1
+fix m6 all property/global coefficientMaxElasticStiffness peratomtypepair 3 1.5 1.5 3.0 1.5 1.5 3.0 3.0 3.0 5.0
+fix m7 all property/global coefficientAdhesionStiffness peratomtypepair 3 1.0e5 1.0e5 2.0e5 1.0e5 1.0e5 2.0e5 2.0e5 2.0e5 1.0e6
+fix m8 all property/global coefficientPlasticityDepth peratomtypepair 3 0.05 0.05 0.01 0.05 0.05 0.01 0.01 0.01 0.005
+fix m9 all property/global characteristicVelocity scalar 2.0
+fix mC all property/global cohesionEnergyDensity peratomtypepair 3 3.0e5 3.0e5 3.0e5 3.0e5 3.0e5 3.0e5 3.0e5 3.0e5 3.0e5
+pair_style gran model hooke/hysteresis tangential history cohesion sjkr rolling_friction cdt
+pair_coeff * *
+timestep 1e-6
+fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+fix zw all wall/gran model hooke/hysteresis tangential history cohesion sjkr rolling_friction cdt primitive type 1 zplane 0.0
+region bc block -0.02 0.02 -0.02 0.02 0.05 0.10 units box
+fix pts1 all particletemplate/sphere 15485863 atom_type 1 density constant 4800 radius constant 0.006
+fix pts3 all particletemplate/sphere 15485867 atom_type 3 density constant 2000 radius constant 0.0005
+fix pdd1 all particledistribution/discrete 32452843 2 pts1 0.05 pts3 0.95
+fix ins all insert/pack seed 32452867 distributiontemplate pdd1 insert_every once overlapcheck yes region bc particles_in_region 400 ntry_mc 10000
+fix integr all nve/sphere
+thermo_style custom step atoms ke vol
+thermo 2000
+thermo_modify lost ignore norm no
+run 10000
