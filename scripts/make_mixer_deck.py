@@ -43,9 +43,9 @@ TYPES = ('AM_P', 'AM_S', 'SE', 'VGCF', 'PTFE')
 # ⛔ 초판은 `CED0 = 3.0e5` 에 ×1/×10/×100 을 걸었다.  **5 팔 중 4 팔이 접촉모델 밖으로
 #    나갔다** (`scripts/check_contact_validity.py` 로 실측):
 #        E0 CED 0     겹침 중앙 0.09 %              손실 0 %      ✓
-#        E1 3e5 균일  겹침 중앙 3.54 %              손실 0 %      ⚠
+#        E1 3e5 균일  겹침 중앙 3.50 %              손실 0 %      ⚠
 #        E2 AM 3e6    겹침 **최대 196 %**           손실 4.8 %    ⛔ (KE 가 안 떨어짐)
-#        E3 SE 3e6    겹침 중앙 **40 %**            손실 **63 %** ⛔
+#        E3 SE 3e6    겹침 중앙 **55 %**            손실 **63 %** ⛔
 #        E4 AM 3e7    겹침 최대 197 %               손실 28.7 %   ⛔
 #    δ/r = 1.97 은 한 구의 중심이 상대 구 **반대편 바깥**에 있다는 뜻 = 겹침이 아니라 통과.
 #
@@ -53,7 +53,9 @@ TYPES = ('AM_P', 'AM_S', 'SE', 'VGCF', 'PTFE')
 #       (4/3)·E*·√R*·δ^1.5  =  W + CED·2π·R*·δ
 #    점착 지배 극한에서 `δ = (3·CED·2π·√R* / (4E*))²` ⇒ **δ ∝ CED²**.
 #    ⇒ CED 를 ×10 하면 겹침이 **×100**.  ×1/×10/×100 사다리는 겹침으로 ×1/×100/×10⁴ 다.
-#    ★ 이 식이 실측을 맞힌다 — 예측 3.3~3.5 % vs E1 실측 중앙 **3.54 %**.
+#    ★ 이 식이 실측을 맞힌다 — 예측 3.3~3.5 % vs E1 실측 중앙 **3.50 %**.
+#      ⚠ 초판은 3.54 % 라 적었다 — 섬유 **자기 겹침**(설계상 δ/r = 0.4)이 섞인 값이다.
+#        `MIX-05` 로 고쳤고, 고친 값이 예측에 **더 가깝다**.
 #
 # ★ 그리고 F_coh ∝ CED·δ ∝ **CED³** 이므로 Bond 수도 CED³ 다.
 #    ⇒ 물리 눈금(Bo)에서 고르게 놓으려면 **CED ∝ Bo^(1/3)** 로 걸어야 한다.
@@ -295,8 +297,30 @@ def settle_time(drop_m, restitution=0.3, g=9.81, margin=2.0):
     return margin * t_ff * (1.0 + restitution) / (1.0 - restitution)
 
 
+def _is_prime(n):
+    if n < 2:
+        return False
+    if n % 2 == 0:
+        return n == 2
+    i = 3
+    while i * i <= n:
+        if n % i == 0:
+            return False
+        i += 2
+    return True
+
+
 def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None,
          restitution=0.3):
+    #  ⚠⚠ LIGGGHTS 의 `fix insert/pack` 시드는 **소수여야 한다**.
+    #    합성수를 주면 런이 `random.cpp:93` 에서 **죽는다** — 그런데 죽는 자리가
+    #    셋업 뒤라 덤프 디렉터리는 이미 만들어져 있고, 배치로 돌리면 "덤프 0 개" 로만
+    #    보여 **조용한 실패처럼** 읽힌다 (2026-09-19 실측: 시드 57204983 으로 두 팔이
+    #    그렇게 죽었다).  ⇒ 덱을 **쓰기 전에** 막는다.
+    if not _is_prime(int(seed)):
+        raise SystemExit(
+            f'⛔ 삽입 시드 {seed} 는 소수가 아니다 — LIGGGHTS 가 거부한다.\n'
+            f'   예: 15485863 · 32452843 · 32452867 · 49979687 · 91648301')
     n, d = p['n'], p['d']
     period = 60.0 / rpm
     #  낙하 높이 = 드럼 지름 (꼭대기에서 바닥까지)
@@ -421,6 +445,14 @@ def _mat(n, val):
     return ' &\n'.join('    ' + ' '.join(f'{val:g}' for _ in range(n)) for _ in range(n))
 
 
+def _raises(fn):
+    try:
+        fn()
+        return False
+    except SystemExit:
+        return True
+
+
 def _selftest():
     ok, fail = 0, []
 
@@ -533,10 +565,17 @@ def _selftest():
     chk(f'㉓b 시드는 삽입 줄 하나만 바꾼다 (다른 줄 {len(dif)})',
         len(dif) == 1 and 'insert/pack seed' in dif[0][0])
 
+    #  ★ 시드 소수 검사 — 합성수를 주면 LIGGGHTS 가 셋업 뒤에 죽어 '조용한 실패' 로 읽힌다
+    chk('㉓c 합성수 시드를 **덱 쓰기 전에** 거부한다 (57204983 = 합성수)',
+        _raises(lambda: deck(p, rpm=60, revolutions=1, seed=57204983)))
+    chk('㉓d 소수 시드는 통과한다 (49979687)',
+        not _raises(lambda: deck(p, rpm=60, revolutions=1, seed=49979687)))
+
     #  ★★ 점착 눈금 — **실측 앵커**.  이 다섯이 새 사다리의 근거다.
+    #  실측 3.50 % — 강체 내부 쌍을 제외하고 다시 잰 값 (초판 3.54 % 는 섬유 자기겹침 포함)
     chk(f'㉔ 겹침식이 E1 실측을 맞힌다 (예측 {overlap_for_ced(3e5, 3e-4, .30)*100:.2f} % '
-        f'vs 실측 3.54 %)',
-        abs(overlap_for_ced(3e5, 3e-4, .30) - 0.0354) < 0.006)
+        f'vs 실측 3.50 %)',
+        abs(overlap_for_ced(3e5, 3e-4, .30) - 0.0350) < 0.006)
     chk(f'㉕ 겹침식이 ×10 붕괴를 설명한다 (CED 3e6 → '
         f'{overlap_for_ced(3e6, 3e-4, .30)*100:.0f} % = 통과)',
         overlap_for_ced(3e6, 3e-4, .30) > 1.0)
