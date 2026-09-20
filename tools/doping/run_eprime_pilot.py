@@ -51,13 +51,61 @@ CELL_DIAG = (20.110191271466373, 20.110191271466373, 10.055095635733187)
 V_TOL_A3 = 1e-3
 CELL_TOL_A = 1e-9
 
-STRUCTURES = ["H0_host", "P1_Al2O3_A", "P1_Al2O3_B", "P2_Al2S3_A", "P2_Al2S3_B"]
 STRUCT_DIR = Path("db/structures/cascade_pilot")
+REPO = Path(__file__).resolve().parents[2]
+
+#: v6 부모 로스터의 **정본은 원장**이다 (카드 v6 §2 · 결정 D-2026-09-20-cascade-v6-10parents).
+#  ⛔ 여기에 손으로 목록을 적지 않는다 — v5 는 5 개가 박혀 있었고, v6 카드가 비준된 뒤에도
+#     코드가 옛 로스터를 돌 수 있는 상태였다 (2026-09-20 실측: watch 가 `P1_Al2O3_A … 못찾음`
+#     을 찍으면서 "MD 1/30" 이라고 말하고 있었다 = v5 설계를 보고 있었다).
+PARENTS_RECORD = Path("db/properties/cascade_v6_parents_2026_09_19.json")
+HOST_STRUCTURE = "H0_host"
+
+
+def load_roster(record=None, repo=None):
+    """부모 census → `(prep_structures, md_structures)`.
+
+      prep : `H0_host` + 부모마다 P1·P2  = 1 + 2N  (카드 §6 "준비 21 구조")
+      md   : 부모마다 P1·P2 만           =     2N  (카드 §6 "MD 40 런" = 2N × 시드 2 × 600 K)
+
+    **H0 는 준비만 하고 MD 배치에 안 들어간다** — 보고량이 P1/P2 **짝비**라 무도핑 기준이
+    집계에 쓰이지 않는다 (카드 §6). H0 의 MD 는 **속도시험 1 런뿐**이고 그것은 `PERF_RUN` 이다.
+
+    ⛔ 이 함수가 **못 하는 것 / 안 하는 것**
+      · 파일을 못 읽으면 **빈 목록을 돌려주지 않는다** — `SystemExit`. 조용히 0 구조로 도는
+        것이 이 러너에서 제일 비싼 실패다.
+      · 부모를 고르거나 거르지 않는다. census 에 적힌 **순서 그대로** 전부 쓴다
+        (카드 §2 `⛔_배열을_고르지_않는다`).
+      · xyz 가 디스크에 있는지 보지 않는다 — 그건 `check_inputs()` 가 한다.
+    """
+    root = Path(repo) if repo else REPO
+    f = Path(record) if record else (root / PARENTS_RECORD)
+    try:
+        rec = json.loads(f.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as ex:
+        raise SystemExit(f"⛔ 부모 census 를 못 읽었다 ({f}): {type(ex).__name__} — 시작하지 않는다")
+    parents = rec.get("4_parents")
+    if not isinstance(parents, list) or not parents:
+        raise SystemExit(f"⛔ {f} 에 `4_parents` 가 없거나 비었다 — 시작하지 않는다")
+    md = []
+    for e in parents:
+        for key in ("P1_xyz", "P2_xyz"):
+            v = (e or {}).get(key)
+            if not v:
+                raise SystemExit(f"⛔ 부모 {(e or {}).get('parent')!r} 에 {key} 가 없다 — 시작하지 않는다")
+            md.append(Path(v).stem)
+    if len(set(md)) != len(md):
+        raise SystemExit(f"⛔ census 에 같은 구조가 두 번 있다 ({len(md)} 중 고유 {len(set(md))}) — 시작하지 않는다")
+    return [HOST_STRUCTURE] + md, md
+
+
+STRUCTURES, MD_STRUCTURES = load_roster()
 
 PREP_FMAX = 0.02
 PREP_STEPS = 3000
 
-TEMPS = (600, 800, 1000)
+#: ⭐ v6 는 **600 K 만** (카드 §2 "온도 3 배는 비용 3 배인데 df 문제를 안 푼다").
+TEMPS = (600,)
 SEEDS = (1, 2)
 EQUILIB_PS = 5.0
 PROD_PS = 200.0
@@ -70,9 +118,11 @@ UMA_MODEL, UMA_TASK = "uma-s-1p1", "omat"
 #: 속도 시험 런 — 이 하나에만 소상한이 붙는다 (카드 §6 ②)
 PERF_RUN = {"structure": "H0_host", "temp": 600, "seed": SEEDS[0]}
 PERF_SUBCAP_GPU_H = 10.0
-TOTAL_CAP_GPU_H = 120.0
+#: ⭐ v6 총상한 — 1저자 2026-09-20 승인. kgy 속도시험 실측 7.066 GPU-h/런 × 40 = 282.6 에
+#  여유 13 %. v5(30 %)보다 조인 이유: 속도시험이 ① torch.compile 오버헤드를 통째로 물고
+#  ② lpsocl_box331 과 같은 GPU 를 나눠 썼다 — 둘 다 **과대** 쪽이라 실제는 더 낮게 나온다.
+TOTAL_CAP_GPU_H = 320.0
 
-REPO = Path(__file__).resolve().parents[2]
 MD_DRIVER = REPO / "tools" / "modelc_v3" / "disorder_ensemble_diffusion.py"
 
 
@@ -182,7 +232,7 @@ def build_plan(out_root, python="python3", device="cuda") -> list[dict]:
                  "cap_gpu_h": PERF_SUBCAP_GPU_H,
                  "cmd": md_cmd(p["structure"], [p["temp"]], p["seed"], tag)})
 
-    for s in STRUCTURES:
+    for s in MD_STRUCTURES:
         for seed in SEEDS:
             temps = [t for t in TEMPS
                      if not (s == p["structure"] and seed == p["seed"] and t == p["temp"])]
@@ -555,19 +605,75 @@ def _selftest() -> int:
         print(("  ✓ " if c else "  ✗ ") + m)
 
     plan = build_plan("/tmp/x")
-    chk(sum(1 for s in plan if s["stage"] == "prep") == 5, "양성: 준비가 5건이다")
-    chk(plan_run_count(plan) == len(STRUCTURES) * len(TEMPS) * len(SEEDS) == 30,
-        f"양성: 계획 런 수가 30 이다 (실제 {plan_run_count(plan)})")
+    # ⭐ v6 — 수를 **손으로 박지 않는다**. 카드 §6 의 계약(준비 1+2N · MD 2N×시드×온도)을
+    #   로스터에서 유도하고, 그 유도값이 카드가 적은 21/40 과 맞는지까지 본다.
+    _n_par = len(MD_STRUCTURES) // 2
+    chk(sum(1 for s in plan if s["stage"] == "prep") == len(STRUCTURES) == 1 + 2 * _n_par == 21,
+        f"양성: 준비가 1+2N = 21 건이다 (부모 {_n_par} · 실제 "
+        f"{sum(1 for s in plan if s['stage'] == 'prep')})")
+    chk(plan_run_count(plan)
+        == len(MD_STRUCTURES) * len(TEMPS) * len(SEEDS) + 1 == 41,
+        f"양성: MD 40 런 + 속도시험 1 = 41 이다 (실제 {plan_run_count(plan)})")
+    chk(HOST_STRUCTURE not in MD_STRUCTURES and HOST_STRUCTURE in STRUCTURES,
+        "양성: H0 는 **준비만** 하고 MD 배치엔 없다 (보고량이 P1/P2 짝비라 집계에 안 들어간다)")
+    chk(TEMPS == (600,), f"양성: v6 는 600 K 만이다 (실제 {TEMPS})")
+    chk(abs(TOTAL_CAP_GPU_H - 320.0) < 1e-9,
+        f"양성: 총상한이 1저자 승인값 320 GPU-h 다 (실제 {TOTAL_CAP_GPU_H})")
+    # ── load_roster 음성 경로 — **조용히 0 구조로 도는 것**이 여기서 제일 비싼 실패다
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as _d:
+        _bad = Path(_d) / "x.json"
+        for _payload, _why in (
+                ("{ not json", "깨진 JSON"),
+                (json.dumps({}), "`4_parents` 키 자체가 없다"),
+                (json.dumps({"4_parents": []}), "`4_parents` 가 빈 리스트다"),
+                (json.dumps({"4_parents": [{"parent": "A", "P1_xyz": "a/P1_A.xyz"}]}),
+                 "부모에 P2_xyz 가 없다")):
+            _bad.write_text(_payload, encoding="utf-8")
+            # ⚠ 세 갈래로 나눈다. `except SystemExit` 만 잡으면 **크래시가 시험을 통째로 죽여서**
+            #   뒤 검사가 아예 안 돌고, 그걸 "✗ 가 없다" 로 읽으면 초록으로 오인한다
+            #   (2026-09-20 실측: 가드를 지우니 TypeError 로 selftest 가 중단됐고
+            #    `grep "✗"` 에 아무것도 안 걸렸다).
+            try:
+                load_roster(record=_bad)
+            except SystemExit:
+                chk(True, f"⛔음성: {_why} → 시작하지 않는다")
+            except Exception as _ex:                                   # noqa: BLE001
+                chk(False, f"⛔음성: {_why} 에서 {type(_ex).__name__} 로 죽었다 — "
+                           f"깨끗한 SystemExit 이어야 한다")
+            else:
+                chk(False, f"⛔음성: {_why} 인데 **통과시켰다**")
+        _bad.write_text(json.dumps({"4_parents": [
+            {"parent": "A", "P1_xyz": "a/P1_A.xyz", "P2_xyz": "a/P2_A.xyz"},
+            {"parent": "B", "P1_xyz": "b/P1_A.xyz", "P2_xyz": "b/P2_B.xyz"}]}), encoding="utf-8")
+        try:
+            load_roster(record=_bad)
+        except SystemExit:
+            chk(True, "⛔음성: census 에 중복 구조가 있으면 시작하지 않는다 "
+                      "(다른 폴더라도 stem 이 같으면 같은 구조다)")
+        except Exception as _ex:                                       # noqa: BLE001
+            chk(False, f"⛔음성: 중복 구조에서 {type(_ex).__name__} 로 죽었다")
+        else:
+            chk(False, "⛔음성: 같은 구조가 두 번 있는데 **통과시켰다**")
+        chk(load_roster(record=REPO / PARENTS_RECORD)[1] == MD_STRUCTURES,
+            "[양성] 정본 census 를 다시 읽어도 같은 목록이다")
+
     md_steps = [s for s in plan if s["stage"].startswith("md")]
     chk(md_steps[0]["stage"] == "md_perf" and md_steps[0]["cap_gpu_h"] == PERF_SUBCAP_GPU_H,
         "양성: **속도 시험이 MD 의 맨 앞**이고 거기에만 소상한이 붙는다")
     chk(sum(1 for s in md_steps if s.get("cap_gpu_h")) == 1,
         "양성: 소상한이 붙은 스텝은 하나뿐이다")
-    perf_tag = f"{PERF_RUN['structure']}__T{PERF_RUN['temp']}__s{PERF_RUN['seed']}"
-    rest = [s for s in md_steps[1:]
-            if s["structure"] == PERF_RUN["structure"] and s["seed"] == PERF_RUN["seed"]]
-    chk(rest and PERF_RUN["temp"] not in rest[0]["temps"],
-        "양성: 속도 시험의 (구조·시드·온도)는 뒤 배치에서 빠진다 — 두 번 안 돈다")
+    # ⚠ 2026-09-20 — 앞판은 "뒤 배치에 같은 구조가 있는데 그 온도만 빠졌나" 를 봤다.
+    #   v6 는 H0 가 md 배치에 **아예 없어서** 그 검사가 빈 리스트에 걸려 빨개졌다.
+    #   재는 성질을 불변량으로 다시 쓴다: **(구조·시드·온도)가 계획 전체에서 정확히 한 번.**
+    _seen = [(st["structure"], st["seed"], t) for st in md_steps for t in st["temps"]]
+    _perf = (PERF_RUN["structure"], PERF_RUN["seed"], PERF_RUN["temp"])
+    chk(_seen.count(_perf) == 1,
+        f"양성: 속도 시험의 (구조·시드·온도)가 계획 전체에 **한 번만** 있다 "
+        f"(실제 {_seen.count(_perf)}) — 두 번 안 돈다")
+    chk(len(set(_seen)) == len(_seen) == plan_run_count(plan),
+        f"⛔음성: 어떤 (구조·시드·온도)도 두 번 안 돈다 "
+        f"({len(_seen)} 칸 중 고유 {len(set(_seen))})")
     chk(all("--fit_window_ps" in s["cmd"] for s in md_steps), "양성: MSD 창이 명령에 박힌다")
 
     # ── 게이트 입력 프리플라이트 (2026-09-19) ───────────────────────────────
@@ -595,7 +701,8 @@ def _selftest() -> int:
                                   if not str(st["stage"]).startswith("md")])[0],
         "⛔음성: MD 단계가 0 이면 통과가 아니라 불통과다 (빈 계획을 초록으로 읽지 않는다)")
     rows, bad = check_inputs()
-    chk(not bad and len(rows) == 5, f"양성: 실제 다섯 구조가 게이트를 통과한다 ({bad})")
+    chk(not bad and len(rows) == len(STRUCTURES) == 21,
+        f"양성: 준비 구조 21 개가 전부 게이트를 통과한다 (받은 {len(rows)} · 문제 {bad})")
     chk(all(abs(r["V_A3"] - V_COMMON_A3) <= V_TOL_A3 for r in rows),
         "양성: 다섯 입력이 공통 부피다 — 맞춰 준 것이 아니라 원래 같다")
 
@@ -628,9 +735,13 @@ def _selftest() -> int:
     ok, why = gate_before(md_steps[-1], b)
     chk(not ok and "누적" in why, "⛔음성: 누적 ≥ 총상한이면 중단한다 (④)")
     # ⛔음성 ⑥: 투영이 총상한을 넘으면 **배치 시작 전** 중단
+    #  ⚠ 문턱은 **상한에서 유도**한다 — 앞판은 200.0 이 박혀 있어 상한이 320 으로 오르자
+    #    통과해 버렸다 (시험이 상한을 따라가지 않았다).
     b2 = {"total_cap_gpu_h": TOTAL_CAP_GPU_H, "used_gpu_h": 10.0, "steps": []}
-    ok2, why2 = gate_before(md_steps[-1], b2, projection=200.0)
+    ok2, why2 = gate_before(md_steps[-1], b2, projection=TOTAL_CAP_GPU_H + 1.0)
     chk(not ok2 and "투영" in why2, "⛔음성: 투영 > 총상한이면 배치 전에 멈춘다 (③)")
+    ok3, _ = gate_before(md_steps[-1], b2, projection=TOTAL_CAP_GPU_H * 0.5)
+    chk(ok3, "[경계] 투영이 상한 아래면 통과한다 (문턱이 상한을 따라간다)")
     # ⛔양성: 여유가 있으면 통과
     ok3, _ = gate_before(md_steps[-1], b2, projection=10.0)
     chk(ok3, "양성: 여유가 있으면 통과한다 (게이트가 늘 막기만 하면 검사가 아니다)")
@@ -668,28 +779,40 @@ def _selftest() -> int:
     _plan = build_plan("/tmp/_st", python="python3", device="cpu")
     _md = [j for j, st in enumerate(_plan) if st["stage"].startswith("md")]
     _rf = lambda j: runs_remaining_from(_plan, j)   # ← 대상 함수를 직접 부른다
-    chk(_rf(0) == 30, f"양성: 처음엔 남은 런 30 (계획 전체) — 실제 {_rf(0)}")
-    chk(_rf(_md[0]) == 30, f"양성: 속도시험 스텝에서도 30 (자기 자신 포함) — 실제 {_rf(_md[0])}")
-    chk(_rf(_md[1]) == 29, f"양성: 속도시험 직후 29 — 실제 {_rf(_md[1])}")
+    # ⚠ 2026-09-20 — 이 블록의 수(30/29/12)가 **v5 로스터에 박혀 있었다.** 로스터가 바뀌면
+    #   시험이 통째로 빨개지는데, 그건 대상이 틀린 게 아니라 **시험이 로스터를 하드코딩한 것**이다.
+    #   ⇒ 이제 전부 계획에서 유도한다. 재는 성질은 그대로다: **남은 런 = 전체 − 끝난 것**.
+    _n_all = plan_run_count(_plan)
+    chk(_rf(0) == _n_all == len(MD_STRUCTURES) * len(TEMPS) * len(SEEDS) + 1,
+        f"양성: 처음엔 남은 런 = 계획 전체 = MD 40 + 속도시험 1 (실제 {_rf(0)})")
+    chk(_rf(_md[0]) == _n_all, f"양성: 속도시험 스텝에서도 전체다 (자기 자신 포함, {_rf(_md[0])})")
+    chk(_rf(_md[1]) == _n_all - int(_plan[_md[0]].get("n_runs") or 0),
+        f"양성: 속도시험 직후엔 그만큼 줄어든다 ({_rf(_md[1])})")
     _last = _md[-1]
     chk(_rf(_last) == int(_plan[_last].get("n_runs") or 0),
         f"양성: 마지막 md 스텝의 남은 런 = 그 스텝 자신뿐 ({_rf(_last)})")
     chk(_rf(_md[1]) > _rf(_md[-1]),
         "⛔음성: 투영 대상 런 수가 **단조 감소**한다 (굳어 있으면 여기서 잡힌다)")
-    # 실측 재현: 18/30 을 마친 시점(=7번째 md 호출 앞)에서 남은 런은 12여야 한다.
+    # 2026-09-14 실측 재현 — 중간 지점에서 `남은 = 전체 − 끝난 것` 이 **정확히** 성립해야 한다.
     _done, _idx = 0, None
     for j in _md:
-        if _done >= 18:
+        if _done >= _n_all // 2:
             _idx = j; break
         _done += int(_plan[j].get("n_runs") or 0)
-    chk(_idx is not None and _rf(_idx) == 12,
-        f"⛔음성: 18런을 마친 시점의 남은 런 = 12 (옛 코드는 29로 굳었다) — 실제 {_rf(_idx) if _idx else None}")
-    _b18 = {"used_gpu_h": 60.67, "total_cap_gpu_h": TOTAL_CAP_GPU_H}
-    _ok_new, _ = gate_before({"stage": "md"}, _b18, project_remaining(2.34, 12))
-    _ok_old, _ = gate_before({"stage": "md"}, _b18, project_remaining(2.34, 29))
+    chk(_idx is not None and _rf(_idx) == _n_all - _done,
+        f"⛔음성: {_done}런을 마친 시점의 남은 런 = {_n_all - _done} "
+        f"(옛 코드는 전체−1 에 굳어 있었다) — 실제 {_rf(_idx) if _idx else None}")
+    # 같은 누적에서 **정직한 투영은 통과 · 굳은 투영은 중단** 이어야 한다.
+    #   런당 단가를 여유의 (남은, 전체) 중점에 맞춰 잡으면 그 경계가 둘 사이에 놓인다.
+    _n_rest = _rf(_idx)
+    _used = 0.5 * TOTAL_CAP_GPU_H
+    _c = (TOTAL_CAP_GPU_H - _used) / ((_n_rest + _n_all) / 2.0)
+    _b18 = {"used_gpu_h": _used, "total_cap_gpu_h": TOTAL_CAP_GPU_H}
+    _ok_new, _ = gate_before({"stage": "md"}, _b18, project_remaining(_c, _n_rest))
+    _ok_old, _ = gate_before({"stage": "md"}, _b18, project_remaining(_c, _n_all))
     chk(_ok_new and not _ok_old,
-        "⛔음성: 같은 누적 60.67 에서 **정직한 투영은 통과 · 굳은 투영은 중단** "
-        "(2026-09-14 라운드가 여기서 멈췄다)")
+        f"⛔음성: 같은 누적 {_used:.1f}/{TOTAL_CAP_GPU_H:.0f} 에서 **정직한 투영({_n_rest}런)은 통과 · "
+        f"굳은 투영({_n_all}런)은 중단** (2026-09-14 라운드가 여기서 멈췄다)")
 
     # ── --resume: frozen 이 다르면 거부한다 ────────────────────────────────
     import tempfile as _tf

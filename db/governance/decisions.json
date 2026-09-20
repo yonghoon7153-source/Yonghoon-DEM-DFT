@@ -3220,15 +3220,72 @@
       "supersedes": [],
       "enforcement": "① 판정은 사전등록(개정문 §3 S1–S4)에 걸어 두고 값을 본 뒤 문턱을 고치지 않았다. ② S4 가 as written 으로 실패해 규칙대로 S2·S3 를 보류했고, 1저자가 ②(부분 해제)로 풀었다 — 실패 이력을 결과 기록에 보존한다. ③ 기존 6 조성을 같은 실행에 넣어 hull 스냅샷을 대조한다.",
       "date": "2026-09-19",
+      "slot": "cathode_cei_site_vs_concentration",
+      "applies_to": {
+        "systems": [
+          "comp1",
+          "modelc",
+          "lpsocl",
+          "modelc_nd_doped"
+        ]
+      },
       "ratification": {
         "state": "ratified",
         "role": "scientific_owner",
         "actor_id": "yonghoon7153@gmail.com",
         "timestamp": "2026-09-19T00:00:00Z",
         "commit": "fa926e2fd4eb34802ea869d28aeb17ee21c24405",
-        "decision_digest": "sha256:37395f81e34c56d93b1ee95a3fd8294b0249d8ae75274a87b55c44e2dc76fd75",
+        "decision_digest": "sha256:e6b7a4b44d65ddafecbbf875684faf2e6d209802420ffd612454448e1f49c77b",
         "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
         "비준_근거": "1저자 2026-09-19 — 보류 해제 선택지 중 ②(부분 해제). S2·S3 인용 가능, S4 정정판은 검증 전."
+      }
+    },
+    {
+      "id": "D-2026-09-20-cascade-v6-10parents",
+      "kind": "estimand",
+      "decision_state": "active",
+      "results_seen": false,
+      "record_kind": "estimand_card",
+      "title": "cascade v6 — 부모 10 개 · 600 K · MD 40 런 (총상한 320 GPU-h)",
+      "statement": "E′ 라운드 v6: 부모(배열) **10 개** × 처방 2(P1 Al2O3 / P2 Al2S3) × 시드 2 × **600 K** = **MD 40 런**, 준비 21 구조. 보고량은 `D_rel(P1/P2; V_common)` 의 **부모 기하평균**이고 H0(무도핑)은 짝비에 안 들어가므로 준비만 한다. 기계는 **kgy · default 모드** 고정. 총상한 **320 GPU-h** (속도시험 실측 7.066/런 × 40 = 282.6 + 여유 13 %). ⛔ v5 대비 바뀌는 것은 **부모 수와 실행 기계 둘뿐**이고 프로토콜·창·집계식은 승계한다. ⛔ 부모를 ΔE 나 점수로 고르지 않는다 — census 순서대로 전부 쓴다.",
+      "reopen_criteria": [
+        "누적 실사용 ≥ 320 GPU-h → 즉시 중단 (부모 수·시드·온도·창 자동 확대 없음)",
+        "투영 비용 > 총상한 → 배치 시작 전 중단",
+        "프리플라이트(`--save_traj`·`--fit_window_ps`)가 하나라도 빠지면 시작하지 않는다 — v5 가 이것으로 30 런을 날렸다",
+        "기계를 kgy·default 밖으로 옮기면 무효 (V100·turbo 는 다른 계열이다 — 수치를 섞지 않는다)",
+        "⛔ 부모 로스터는 `cascade_v6_parents_2026_09_19.json` 이 정본이다 — 코드에 손으로 적으면 무효",
+        "Al 자리가 부모끼리 겹친다(10 중 고유 7 종) — 판정이 미결이면 '표본이 더 필요하다' 의 근거로 이 사실을 인용한다"
+      ],
+      "card": "db/properties/cascade_estimand_card_v6_10parents_2026_09_19.json",
+      "record": "db/properties/cascade_v6_parents_2026_09_19.json",
+      "supersedes": [],
+      "enforcement": "① 러너가 로스터를 **원장에서 읽는다**(`load_roster()`), 못 읽으면 시작하지 않는다. ② selftest 가 준비 21 · MD 40 · 600 K · 상한 320 을 계획에서 유도해 검사한다(50/50). ③ 속도시험 1 런에만 소상한 10 GPU-h. ④ 투영은 `plan[i:]` 합이라 런이 끝나면 줄어든다.",
+      "date": "2026-09-20",
+      "slot": "cascade_v6_roster_and_budget",
+      "applies_to": {
+        "systems": [
+          "lpscl*"
+        ],
+        "tasks": [
+          "transport_pilot"
+        ],
+        "methods": [
+          "uma-s-1p1-omat__langevin-nvt"
+        ],
+        "use_cases": [
+          "diagnostic",
+          "closure"
+        ]
+      },
+      "ratification": {
+        "state": "ratified",
+        "role": "scientific_owner",
+        "actor_id": "yonghoon7153@gmail.com",
+        "timestamp": "2026-09-20T00:00:00Z",
+        "commit": "ba5caf5772956e2f89a48dd86bfc4f48dc5e6d57",
+        "decision_digest": "sha256:346eb98a34cfee4c001e559b4b580aea443bcd6634e74b0c488696cb8f3231c5",
+        "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+        "비준_근거": "1저자 2026-09-20 — 총상한 320 GPU-h 승인."
       }
     }
   ]
