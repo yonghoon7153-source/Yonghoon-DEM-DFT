@@ -202,12 +202,15 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes ×
       <li>고전압에서 Nd 계 계면은 <b>남은 P 를 인산염으로 끌어간다</b> — 양극 TM 이 덜 빠진다</li>
       <li>그 이득은 <b>조건부</b>다. 게이트를 전 점 통과한 열은 <b>LiCoO₂ 4.30 V · LiNiO₂ 3.50 V 둘뿐</b> (24 칸 중 12 칸 탈락)</li>
       <li>전해질 쪽은 <b>“새로 망가뜨리지는 않는다”</b> 까지</li>
+      <li><b>치환 자리가 부호를 바꾼다</b> — 같은 Nd 농도에서 <b>Li 자리</b>는 계면 반응을 줄이고
+          <b>P 자리</b>는 늘린다. 농도는 두 자리 다 선형이다 <span class="mono">(x 0.02–0.20)</span></li>
     </ul></div>
-    <div class="tldr-no"><div class="tldr-lbl">⛔ 말하지 않는 것 <span class="mono">— 전체 24 개는 <a href="#s9">§9</a></span></div><ul>
+    <div class="tldr-no"><div class="tldr-lbl">⛔ 말하지 않는 것 <span class="mono">— 전체 25 개는 <a href="#s9">§9</a></span></div><ul>
       <li><b>“Nd 가 산화 안정성·전압창을 넓힌다”</b> — 우리 데이터가 <b>반증한다</b>. 2.14 V → <b>1.92 V</b>, 0.22 V <b>좁힌다</b></li>
       <li><b>“Nd 가 최적의 3 가 도펀트다”</b> — 어느 축에서도 1 등이 아니다. 쓸 수 있는 것은 <b>“Gd·Y·Sc·La 와 구분되지 않는다”</b> 까지</li>
       <li><b>“NdPO₄ 가 Li₃PO₄ 보다 깊은 P 싱크다”</b> — <b>철회됨</b> (+1.5035 eV/P 양수)</li>
       <li>이 이득을 <b>부동태화</b>로 읽기 — 계면 <b>반응 구동력</b>이지 산물의 전자 성질이 아니다</li>
+      <li><b>Nd 가 실제로 어느 자리에 들어가는지</b> — 이건 조성점 계산이라 자리 선호를 재지 않는다</li>
     </ul></div>
   </div>
   <div class="tldr-foot">이 페이지의 숫자는 전부 계산 기록에서 옮긴 것이고, 각 절 끝에 출처 파일을 적어 두었다. <b>인용하기 전에 <a href="#s9">§9(말하면 안 되는 것)</a>를 한 번 본다</b> — 같은 데이터로 말할 수 있는 것과 없는 것이 거기 갈려 있다.</div>
@@ -248,28 +251,33 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes ×
   <div class="tblwrap" style="margin:0 0 8px">
   <table>
   <thead><tr><th>Δ 반응에너지 <span class="mono">(eV/atom)</span><br>
-    <span style="font-weight:400;color:var(--mut)">무도핑 기준 · <b>양수 = 덜 반응</b></span></th>
+    <span style="font-weight:400;color:var(--mut)">무도핑 기준 · <b>양수 = 덜 반응</b><br>
+    네 조성이 모두 유효한 <b>공통 20 칸</b> 평균</span></th>
     <th>Nd → <b>Li 자리</b></th><th>Nd → <b>P 자리</b></th></tr></thead>
   <tbody>
   <tr><td class="mono"><i>x</i> = 0.02</td>
-      <td class="mono" style="color:var(--ok)"><b>+0.0044</b></td>
-      <td class="mono" style="color:var(--ox)"><b>−0.0071</b></td></tr>
+      <td class="mono" style="color:var(--ok)"><b>+0.0037</b></td>
+      <td class="mono" style="color:var(--ox)"><b>−0.0066</b></td></tr>
   <tr><td class="mono"><i>x</i> = 0.20</td>
-      <td class="mono" style="color:var(--ok)"><b>+0.0422</b></td>
+      <td class="mono" style="color:var(--ok)"><b>+0.0362</b></td>
       <td class="mono" style="color:var(--ox)"><b>−0.0709</b></td></tr>
   </tbody></table></div>
   <ul style="margin:0 0 8px;padding-left:1.1rem;font-size:.88rem">
-    <li><b>농도는 선형이다.</b> 세로로 정확히 10 배다 (잔차 Li 자리 −0.0022 · P 자리 −0.0053,
+    <li><b>농도는 선형이다.</b> 세로로 거의 정확히 10 배다 (잔차 Li 자리 −0.0008 · P 자리 −0.0053,
         문턱 0.010). ⇒ 두 농도를 서로 환산해 읽어도 된다. 단 <b>0.02–0.20 구간 안에서만</b> —
         두 점으로 잰 선형성이라 곡률은 못 본다.</li>
     <li><b>자리는 부호를 뒤집는다.</b> 같은 농도에서 Li 자리는 <b>+</b>(덜 반응), P 자리는
-        <b>−</b>(더 반응)다. 22 칸 중 Li 자리는 22 칸 다 양수, P 자리는 18 칸이 음수다.</li>
+        <b>−</b>(더 반응)다. 공통 20 칸에서 Li 자리는 <b>20 칸 다</b> 양수, P 자리는 16 칸이 음수다.</li>
     <li><b>그 차이는 고전압에서만 커진다.</b> 두 자리의 간격이 2.5 V 에서 0.0009,
-        4.5 V 에서 <b>0.0217</b> 로 24 배가 된다. 저전압에서는 자리가 거의 무관하다.</li>
+        4.5 V 에서 <b>0.0210</b> 으로 23 배가 된다. 저전압에서는 자리가 거의 무관하다.
+        ⚠ 4.5 V 의 공통 칸은 <b>2 칸</b>뿐이다 (P 자리 <i>x</i>=0.20 이 그 전압에서 자체분해로 빠진다)
+        — 고전압 끝을 그대로 외삽하지 않는다.</li>
   </ul>
-  <p style="margin:0;font-size:.88rem"><b>⚠ 다만 아래 두 줄은 아직 <u>보류</u>다</b> — 이 실행에 같이
-  걸어 둔 예측 하나가 <b>틀렸고</b>, 미리 정해 둔 규칙이 "그러면 자리 판정도 보류" 였다.
-  자세한 것은 <a href="#s1">§1</a> 끝의 상자에 있다. 숫자는 맞지만 <b>인용 전에 그 상자를 본다.</b></p>
+  <p style="margin:0;font-size:.88rem"><b>이 판정은 2026-09-19 에 확정됐다.</b>
+  판정 문턱은 값을 보기 전에 박았고 결과를 보고 고치지 않았다.
+  <b>⚠ 다만 한 가지는 아직 확정이 아니다</b> — 같이 걸어 둔 <b>전압 기울기 예측이 틀렸고</b>,
+  고친 설명은 아직 검증 전이다. 위 표의 값·부호와는 별개다.
+  자세한 것은 <a href="#s1">§1</a> 끝의 상자에 있다.</p>
 </div>
   <div class="tldr-foot"><b>⇒ 계열 A 의 전압 판정을 계열 B 에 옮기지 않는다</b> — 그리고 그 반대도.
   <b>이완한 결정구조는 계열 A 만 있다</b>; P 자리 구조는 만든 적이 없어서 구조가 필요한 계산
@@ -305,7 +313,7 @@ Li 자리 치환에 한정된다.</b> P 자리 경로의 계면 반응성은 이
 (§8b ④ 에서 이온전도도 쪽 단서만 다룬다).</p>
 <p style="margin:8px 0 0;font-size:.88rem"><b>✅ 2026-09-19 — 이제 실측이 있다.</b>
 같은 농도·같은 음이온에서 두 자리를 맞대 보니 <b>부호가 실제로 반대다</b>
-(<i>x</i>=0.02 에서 Li 자리 <b>+0.0044</b> · P 자리 <b>−0.0071</b> eV/atom, 22 칸 평균).
+(<i>x</i>=0.02 에서 Li 자리 <b>+0.0037</b> · P 자리 <b>−0.0066</b> eV/atom, 공통 20 칸 평균).
 농도는 두 자리 다 선형이라 <i>x</i>=0.20 이면 각각 10 배가 된다. 표는 페이지 머리의 계열 카드에 있다.</p>
 </div>
 
@@ -325,10 +333,14 @@ Li 자리 치환에 한정된다.</b> P 자리 경로의 계면 반응성은 이
 직접 세어 기울기를 예측하면 <b>열 조성 중 아홉이 한 직선 위에 올라간다</b>
 (<span class="mono">R² = 0.993</span>, 두 자리 전부). 다만 이건 <b>틀린 뒤에 고쳐 맞춘 것이라
 예측이 아니다</b> — 이 설명을 검증됐다고 쓰려면 다음 계에 미리 걸어야 한다.</p>
-<p style="margin:0;font-size:.89rem"><b>⇒ 그래서 보류다.</b> 예측이 틀리면 자리 판정도 함께 보류한다는
-규칙을 <b>값을 보기 전에</b> 정해 두었고, 그 규칙을 지금 결과에 맞춰 고치지 않는다. 위 2×2 숫자는
-그대로 옳지만 <b>"자리가 방향을 바꾼다"를 결론으로 올리는 것은 1저자 판단을 기다린다.</b>
-<span class="mono">cei_site_concentration_result_2026_09_19.json §2</span> 에 선택지 셋을 적어 두었다.</p>
+<p style="margin:0 0 8px;font-size:.89rem"><b>⇒ 그래서 자리 판정을 한 번 멈췄다.</b>
+예측이 틀리면 자리 판정도 함께 멈춘다는 규칙을 <b>값을 보기 전에</b> 정해 두었기 때문이다 —
+규칙을 결과에 맞춰 고치지는 않았다.</p>
+<p style="margin:0;font-size:.89rem"><b>2026-09-19 에 그 멈춤을 풀었다.</b> 2×2 의 부호·크기는
+<b>Δ 값 자체</b>이고 틀린 예측은 <b>기울기 모형</b>이라 계산 경로가 다르다. 실패 원인이 데이터가 아니라
+식이었다는 것도 별도 검사로 확인됐다. ⇒ <b>“자리가 부호를 바꾼다”와 “농도가 선형이다”는 쓸 수 있고,
+“전압 기울기가 Li 수로 설명된다”는 아직 쓸 수 없다.</b>
+<span class="mono">D-2026-09-19-cei-site-vs-concentration</span>(확정)</p>
 </div>
 
 
@@ -1909,7 +1921,7 @@ in that range.</figcaption>
 </section>
 <section id="s9" class="sec">
 <details class="secfold" open>
-<summary><h2 class="sec-h">9. 말하면 안 되는 것</h2><span class="sec-one"><b>금지 서술 24 개</b> — 값을 인용하기 전에 여기부터 본다</span></summary>
+<summary><h2 class="sec-h">9. 말하면 안 되는 것</h2><span class="sec-one"><b>금지 서술 25 개</b> — 값을 인용하기 전에 여기부터 본다</span></summary>
 <div class="secbody">
 <p style="margin:0 0 10px;font-size:.9rem;color:var(--mut)">
 ⭐ 아래 <b>다섯</b>은 2026-09-18 에 추가됐다 — Li-맞춤 대조군과 문헌 감사에서 나왔다
@@ -1975,9 +1987,11 @@ LiPO₃(−0.0388)와 LiNd(PO₃)₄(−0.0434)는 <strong>구분되지 않는�
 (P 자리, <i>x</i>=0.02)를 직접 빼서 “치환 자리 효과”라고 읽기</b> — 그 둘은 자리만이 아니라
 <b>Nd 함량이 10 배</b>, <b>O 함량도 10 배</b> 다르다. 자리 몫만 떼려면 <b>같은 농도·같은 음이온</b>
 대조가 필요하고, 그 계산은 2026-09-19 에 따로 돌렸다(페이지 머리 계열 카드의 2×2).
-⚠ <b>그 판정은 아직 보류 중이다</b> — 같이 걸어 둔 예측이 틀려서, 미리 정해 둔 규칙에 따라 멈춰 있다
-(①답 아래 상자). 쓸 수 있는 것은 <b>“같은 농도에서 부호가 반대로 나왔다, 판정은 아직 안 올렸다”</b>
-까지다.</li>
+그 판정은 2026-09-19 에 확정됐다 — <b>Li 자리는 덜 반응, P 자리는 더 반응</b>이고
+농도는 두 자리 다 선형이다. <b>쓰려면 그 2×2 를 인용한다.</b></li>
+<li><span class="no">⛔</span> <b>“전압 의존이 조성의 Li 수로 설명된다”를 기전으로 쓰기</b> —
+계산 전에 걸어 둔 예측이 <b>부호가 틀렸고</b>(①답 아래 상자), 고친 설명은 <b>틀린 뒤에 맞춘 것</b>이라
+아직 검증 전이다. 이 설명을 쓰려면 다른 계에 <b>미리 걸어</b> 확인해야 한다.</li>
 <li><span class="no">⛔</span> Nd 의 <strong>산화수 변화</strong>를 주장하기 — MP 도 우리도 frozen-4f (<code>Nd_3</code>) 라
 4f 관여 redox 가 모형에 아예 없다.</li>
 </ul>

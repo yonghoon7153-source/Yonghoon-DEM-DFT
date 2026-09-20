@@ -690,3 +690,96 @@ def test_fig2_refuses_to_predict_hull_products(client):
     assert "hull 이 고른 상" in d, "hull 산물 예측 금지가 화면에 없다"
     assert "방향 힌트" in d, "교환이 방향 힌트라는 한정이 없다"
     assert "부호가 어긋났다" in d, "실제로 어긋난 사례가 없다"
+
+
+# ── 치환 자리 × 농도 2×2 (2026-09-19) ────────────────────────────────────────
+#   왜 생겼나: 이 2×2 는 **화면 두 곳**에 실린다 — 정본 보고서(cei_figs/index.html)와
+#   Nd 카드(`/composition/modelc_nd_doped`). 원장은 세 번째 곳이다. 셋이 갈라지면
+#   사람은 눈앞의 화면을 인용한다. 값으로 묶는다 (문자열 일치가 아니라 **숫자**).
+SITE_RESULT = REPORT.parents[3] / "db/properties/cei_site_concentration_result_2026_09_19.json"
+_SITE_DECISION = "D-2026-09-19-cei-site-vs-concentration"
+
+
+def _site_2x2():
+    import json as _json
+    t = _json.loads(SITE_RESULT.read_text(encoding="utf-8"))["★_2x2_공통기준"]["표"]
+    return {k: float(v["값"]) for k, v in t.items()}
+
+
+def _nums(text):
+    """텍스트의 부호 붙은 소수 → float 집합. −(U+2212) 도 마이너스로 읽는다."""
+    return {float(x.replace("−", "-"))
+            for x in re.findall(r"[−+-]?\d+\.\d+", text.replace(",", ""))}
+
+
+def test_site_2x2_record_is_self_consistent():
+    """⛔음성 — 원장 자체가 앞뒤가 맞나 (화면을 보기 전에 원장부터).
+
+    부호가 표의 주장(Li 자리 양수 · P 자리 음수)과 어긋나면 잡는다.
+    """
+    v = _site_2x2()
+    assert set(v) == {"Li자리_x002", "P자리_x002", "Li자리_x020", "P자리_x020"}, \
+        f"2×2 의 칸이 넷이 아니다: {sorted(v)} — 시험이 헛것을 재고 있다"
+    assert v["Li자리_x002"] > 0 and v["Li자리_x020"] > 0, "Li 자리는 양수여야 한다"
+    assert v["P자리_x002"] < 0 and v["P자리_x020"] < 0, "P 자리는 음수여야 한다"
+    # 농도 선형성: x=0.20 이 x=0.02 의 10 배 언저리 (사전 봉인 문턱 0.010)
+    for site, a, b in (("Li", "Li자리_x020", "Li자리_x002"),
+                       ("P", "P자리_x020", "P자리_x002")):
+        assert abs(v[a] - 10 * v[b]) <= 0.010, \
+            f"{site} 자리 선형성 잔차 {v[a] - 10 * v[b]:+.5f} 가 문턱 0.010 을 넘는다"
+
+
+def test_site_2x2_numbers_are_on_the_report(client):
+    """⛔음성 — 정본 보고서의 2×2 표가 원장과 **값으로** 같은가."""
+    h = _report_html(client)
+    i = h.find("빠진 칸을 채웠다")
+    assert i > 0, "2×2 카드를 못 찾았다 — 시험이 헛것을 재고 있다"
+    card = h[i:h.index("</table>", i)]
+    seen = _nums(card)
+    for k, want in _site_2x2().items():
+        assert any(abs(x - want) < 5e-5 for x in seen), \
+            f"{k}: 원장 {want:+.5f} 가 보고서 표에 없다 (화면의 수 {sorted(seen)})"
+
+
+def test_site_2x2_numbers_are_on_the_nd_card():
+    """⛔음성 — Nd 카드(webapp 조성 화면)가 같은 값을 싣는가.
+
+    ⚠ 보고서만 고치고 카드를 안 고치면 **두 화면이 갈라진다** — 이 시험이 그걸 잡는다.
+    """
+    cards = V.interpretation_cards_for(ND)
+    blob = json.dumps(cards, ensure_ascii=False)
+    assert "치환 자리" in blob, "Nd 카드에 치환 자리 절이 없다 — 시험이 헛것을 재고 있다"
+    seen = _nums(blob)
+    for k, want in _site_2x2().items():
+        assert any(abs(x - want) < 5e-5 for x in seen), \
+            f"{k}: 원장 {want:+.5f} 가 Nd 카드에 없다"
+
+
+def test_site_decision_is_ratified_by_a_human():
+    """⛔음성 — 화면이 '확정' 이라고 말하려면 원장에 사람 비준이 있어야 한다."""
+    import json as _json
+    ds = {d["id"]: d for d in
+          _json.loads(DECISIONS.read_text(encoding="utf-8"))["decisions"]}
+    d = ds.get(_SITE_DECISION)
+    assert d, f"{_SITE_DECISION} 가 원장에 없다 — 시험이 헛것을 재고 있다"
+    assert d.get("decision_state") == "active", f"상태가 {d.get('decision_state')!r} 다"
+    rat = d.get("ratification") or {}
+    assert rat.get("state") == "ratified" and rat.get("role") == "scientific_owner", \
+        f"사람(scientific_owner) 비준이 없다: {rat.get('state')!r}/{rat.get('role')!r}"
+
+
+def test_slope_mechanism_stays_forbidden_on_both_surfaces(client):
+    """⛔음성 — **풀리지 않은 것**이 풀린 것처럼 보이면 잡는다.
+
+    자리 판정은 해제됐지만 '전압 기울기를 Li 수로 설명한다' 는 사후 적합이라
+    여전히 금지다. 해제가 통째로 번지는 것이 제일 흔한 사고다.
+    """
+    import json as _json
+    rec = _json.loads(SITE_RESULT.read_text(encoding="utf-8"))
+    assert any("기울기" in x and "⛔" in x for x in rec["금지_서술"]), \
+        "원장 금지 목록에 기울기 항목이 없다 — 시험이 헛것을 재고 있다"
+    h = _report_html(client)
+    assert "부호가 틀렸고" in h, "보고서가 예측 실패를 안 싣는다"
+    assert "검증 전" in h, "보고서가 '아직 검증 전' 한정을 안 싣는다"
+    blob = json.dumps(V.interpretation_cards_for(ND), ensure_ascii=False)
+    assert "검증 전" in blob, "Nd 카드가 '아직 검증 전' 한정을 안 싣는다"
