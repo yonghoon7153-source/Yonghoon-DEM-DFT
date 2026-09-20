@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-19 · managed-files: 429
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-20 · managed-files: 430
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 228건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 229건)
+- 2026-09-20 · `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안) · 완료 (2026-09-20 · 다음 주 문서는 새 파일)
 - 2026-09-19 · `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적) · open
 - 2026-09-18 · `kb/methodology/amorphous_overlap_gate_lessons_2026_09_18.md` — 비정질 겹침 게이트 — 다음 캠페인 설계로 넘기는 것 셋 · 제안 (다음 캠페인 설계용 · 이번 판정 재해석 금지)
 - 2026-09-18 · `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 을 "고전압 양극 계면 열화 억제" 로 · proposed — 1저자 승인 대기
@@ -26,7 +27,6 @@
 - 2026-09-13 · `kb/reviews/codex_BQ3_prompt_sweep_complete_2026_09_13.md` — 회신 BQ-3 프롬프트 — 스윕 완결 · §4b 판정과 다음 런 사양 · 발송 대기
 - 2026-09-13 · `kb/reviews/codex_BQ3_reply_sweep_complete_2026_09_13.md` — 회신 BQ-3 — 스윕 완결 판정 (NO-GO 유지 · 10스윕 조건부 GO) · 회신됨-NO-GO-조건부GO
 - 2026-09-13 · `kb/reviews/codex_BQ4_prompt_10sweep_basin_2026_09_13.md` — 회신 BQ-4 프롬프트 — 10스윕 완결 · 골짜기 비교 · §4b 최종 판정 · 회신됨-종결GO
-- 2026-09-13 · `kb/reviews/codex_BQ4_reply_10sweep_basin_2026_09_13.md` — 회신 BQ-4 — 종결 GO · 서술 정정 8건 · P1 2건 · 재개 조건 2범주 · 회신됨-종결GO
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -353,11 +353,12 @@
 - `kb/reviews/vasp_bundle_codex_request_2026_08_11.md` — Codex 검토 요청 — VASP 외주 원샷 번들 (자리 선호 + E_ads)  (2026-08-11 · 회신 대기)
 - `kb/reviews/vasp_bundle_v2_rereview_request_2026_08_11.md` — Codex 재검토 요청 — VASP 번들 v2 (HOLD 10항 반영 완료 · 발송 GO/NO-GO)  (2026-08-11 · 회신 대기 (GO/NO-GO))
 
-## reports/ (4)
+## reports/ (5)
 - `kb/reports/paper_first_author_requests_2026_08.md` — 논문 1저자 요청 — 답변 누적 (2026-08~)
 - `kb/reports/sdcp_preliminary_final_2026_08_03.md` — SDCP 예비 최종 보고서 (2026-08-03)
 - `kb/reports/sdcp_review_action_plan_2026_08_03.md` — SDCP 파이프라인 — 리뷰 2건 통합 실행계획 (2026-08-03)
 - `kb/reports/weekly_2026_09_14.md` — 주간 정리 2026-09-07 ~ 09-13 (주간보고 초안)  (2026-09-14 · 완료 (2026-09-14 · 다음 주 문서는 새 파일))
+- `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안)  (2026-09-20 · 완료 (2026-09-20 · 다음 주 문서는 새 파일))
 
 ## projects/ (26)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
