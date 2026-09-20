@@ -691,6 +691,86 @@ def _selftest():
         chk(reproduce_check({}, str(Path(_d) / "nope.json"))["verdict"] == "READ_FAIL",
             "⛔음성: 못 읽는 경로도 ok=False (없는 것과 같다고 안 한다)")
 
+    # ── li_ledger_slope (2026-09-19) — 전압 기울기를 방출 Li 로 설명하기 ──────
+    _t, _r = _rxn_atoms_and_released(
+        "0.6732 LiCoO2 + 0.3268 Li5.4P1S4.4Cl1.6 -> 1.405 Li + 0.6732 CoS2")
+    chk(abs(_t - 6.7452) < 1e-3 and abs(_r - 1.405) < 1e-9,
+        f"[양성] 좌변 원자수 6.745 · 방출 Li 1.405 (얻은 것 {_t:.4f} / {_r})")
+    chk(_rxn_atoms_and_released("A -> B") == (None, None),
+        "⛔음성: 계수 없는 반응식은 **못 읽은 것**으로 돌려준다 (0 원자로 세지 않는다)")
+    chk(_rxn_atoms_and_released("전부 분해") == (None, None),
+        "⛔음성: '->' 가 없으면 못 읽은 것이다")
+    _t2, _r2 = _rxn_atoms_and_released("1 LiCoO2 -> 1 CoO2 + 0.5 Li2O")
+    chk(_r2 == 0.0 and _t2 == 4.0,
+        "[경계] 저장소로 빠진 Li 가 없으면 released = **0** 이다 (못 읽음이 아니다)")
+    chk(_rxn_atoms_and_released("1 LiCoO2 -> Li + 1 CoO2")[1] == 1.0,
+        "[경계] 계수 없는 맨 'Li' 는 1.0 이다")
+
+    def _mk(slope_map, deg=None, rel=None):
+        """전압 2 점짜리 최소 results — slope_map: {label: (v35, v45)}"""
+        res = {"C": {"by_voltage": {}, "endpoint_degenerate": {}, "reactions": {}}}
+        for i, V in enumerate(("3.50", "4.50")):
+            res["C"]["by_voltage"][V] = {k: v[i] for k, v in slope_map.items()}
+            res["C"]["endpoint_degenerate"][V] = dict((deg or {}).get(V, {}))
+            res["C"]["reactions"][V] = {
+                k: f"1 X -> {(rel or {}).get(k, (0.0, 0.0))[i]} Li + 1 Y"
+                for k in slope_map}
+        return res
+
+    _res = _mk({"modelc": (-1.0, -1.5), "a": (-1.0, -1.4), "b": (-1.0, -1.6),
+                "c": (-1.0, -1.45)},
+               rel={"modelc": (1.0, 1.0), "a": (0.5, 0.5), "b": (1.5, 1.5),
+                    "c": (0.75, 0.75)})
+    _L = li_ledger_slope(_res)
+    chk(abs(_L["by_electrolyte"]["a"]["slope_dDelta_dV"] - 0.1) < 1e-9,
+        "[양성] dΔ/dV 를 두 전압에서 바로 잰다 (a: +0.1)")
+    chk(_L["fit"]["n"] == 3 and _L["fit"]["r2"] is not None,
+        f"[양성] 세 조성이면 회귀를 한다 (n={_L['fit']['n']})")
+
+    # ⚠ 경계는 **n=2** 다. 앞판은 조성을 둘만 넣어 n=1 로 쟀고, 그래서 `>= 3` 을
+    #   `>= 2` 로 깨도 빨개지지 않았다 — 시험이 헛것을 재고 있었다 (2026-09-19 실측).
+    #   n=2 면 직선이 두 점을 정확히 지나 R²=1.0 이 나온다. 그게 제일 위험한 거짓 초록이다.
+    _res = _mk({"modelc": (-1.0, -1.5), "a": (-1.0, -1.4), "b": (-1.0, -1.6)},
+               rel={"modelc": (1.0, 1.0), "a": (0.5, 0.5), "b": (1.5, 1.5)})
+    _L = li_ledger_slope(_res)
+    chk(_L["fit"]["n"] == 2, f"[전제] 이 fixture 는 n=2 여야 한다 (얻은 것 {_L['fit']['n']})")
+    chk(_L["fit"]["beta"] is None and _L["fit"]["r2"] is None
+        and "못 쟀다" in _L["fit"]["note"],
+        "⛔음성: 점이 둘뿐이면 R² 를 내지 않고 **'못 쟀다'** 고 말한다 "
+        "(두 점을 지나는 R²=1.0 을 '맞았다' 로 읽지 않는다)")
+
+    _res = _mk({"modelc": (-1.0, -1.5), "a": (-1.0, -1.4), "b": (-1.0, -1.6),
+                "c": (-1.0, -1.45)},
+               rel={k: (1.0, 1.0) for k in ("modelc", "a", "b", "c")})
+    chk(li_ledger_slope(_res)["fit"]["beta"] is None,
+        "⛔음성: 예측변수가 전부 같으면 회귀하지 않는다 (0 으로 나누지 않는다)")
+
+    _res = _mk({"modelc": (-1.0, -1.5), "a": (-1.0, -1.4), "b": (-1.0, -1.6),
+                "c": (-1.0, -1.45)},
+               deg={"4.50": {"a": True}},
+               rel={"modelc": (1.0, 1.0), "a": (0.5, 0.5), "b": (1.5, 1.5),
+                    "c": (0.75, 0.75)})
+    chk("a" not in li_ledger_slope(_res)["by_electrolyte"],
+        "⛔음성: 창 한쪽이 끝점 퇴화면 그 조성의 기울기를 **내지 않는다** "
+        "(자체분해 값으로 기울기를 재지 않는다)")
+
+    _res = _mk({"modelc": (-1.0, -1.5), "a": (-1.0, -1.4), "b": (-1.0, -1.6),
+                "c": (-1.0, -1.45)},
+               deg={"4.50": {"modelc": True}},
+               rel={"modelc": (1.0, 1.0), "a": (0.5, 0.5), "b": (1.5, 1.5),
+                    "c": (0.75, 0.75)})
+    chk(li_ledger_slope(_res)["by_electrolyte"] == {},
+        "⛔음성: **기준 조성**이 퇴화한 칸도 뺀다 (기준이 망가지면 Δ 가 망가진다)")
+
+    _res = _mk({"modelc": (-1.0, -1.5), "a": (-1.0, -1.4), "b": (-1.0, -1.6),
+                "c": (-1.0, -1.45)},
+               rel={"modelc": (1.0, 1.0), "a": (0.5, 0.5), "b": (1.5, 1.5),
+                    "c": (0.75, 0.75)})
+    _res["C"]["reactions"]["4.50"]["a"] = "망가진 문자열"
+    _L = li_ledger_slope(_res)
+    chk(_L["n_unreadable_reactions"] == 1,
+        "⛔음성: 못 읽은 반응식을 **세어서 보고한다** (조용히 빼지 않는다)")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -844,6 +924,120 @@ def reproduce_check(new_results, old_path, tol=REPRO_TOL_DEFAULT):
     if not out["ok"]:
         out["reason"] = ("옛 실행과 값이 다르다 — MP hull 스냅샷이 움직였을 수 있다. "
                          "⛔ 두 파일의 숫자를 섞어서 빼지 않는다. 이번 파일 안에서만 뺀다.")
+    return out
+
+
+def _rxn_atoms_and_released(rxn, open_el="Li"):
+    """반응식 → (좌변 원자수, 저장소로 빠진 `open_el` 계수). 못 읽으면 (None, None).
+
+    ⚠ 좌변 계수 합이 1 로 정규화된 pymatgen 출력을 전제한다. 그 형태가 아니면
+      원자수가 달라지므로 **읽지 못한 것으로 돌려준다** (0 으로 세지 않는다).
+    """
+    if not rxn or "->" not in rxn:
+        return None, None
+    lhs, rhs = rxn.split("->", 1)
+    tot = 0.0
+    for t in lhs.split("+"):
+        m = re.match(r"^([0-9.]+)\s+(\S+)$", t.strip())
+        if not m:
+            return None, None
+        try:
+            tot += float(m.group(1)) * sum(parse_formula(m.group(2)).values())
+        except Exception:
+            return None, None
+    rel = 0.0
+    for t in rhs.split("+"):
+        t = t.strip()
+        if t == open_el:
+            rel += 1.0
+        else:
+            m = re.match(r"^([0-9.]+)\s+" + re.escape(open_el) + r"$", t)
+            if m:
+                rel += float(m.group(1))
+    return (tot if tot > 0 else None), rel
+
+
+def li_ledger_slope(results, base="modelc", open_el="Li", lo="3.50", hi="4.50"):
+    """**전압 기울기가 Li 장부로 설명되나** — 조성별 dΔ/dV 를 방출 Li 로 예측한다.
+
+    열린계에서 반응에너지가 전압과 함께 깊어지는 것은 그 반응이 저장소로 내보내는
+    Li 때문이다. 그래서 기준 조성 대비 **방출 Li/원자의 차**가 dΔ/dV 를 정해야 한다.
+    이 함수는 둘을 각각 재서 회귀한다 (기울기·R²).
+
+    ⚠ 이 함수가 **안 하는 것**
+      ① 전치인자를 이론값으로 가정하지 않는다 — **잰다**. 1.0 이 나오리라고 적어 두지
+         않는다 (pymatgen per-atom 정규화 관례에 달렸고, 우리는 그걸 유도하지 않았다).
+      ② 인과를 말하지 않는다 — 상관이다. 같은 hull 이 둘 다 만든다.
+      ③ 끝점 퇴화 칸을 쓰지 않는다 (계면량이 아니다). 기준 조성이 퇴화한 칸도 뺀다.
+      ④ 반응식을 못 읽은 칸을 **0 으로 세지 않는다** — `n_unreadable` 로 센다.
+    """
+    import statistics as _st
+    cath = list(results)
+    volts = sorted({V for c in cath for V in (results[c].get("by_voltage") or {})})
+    labels = sorted({l for c in cath for V in volts
+                     for l in (results[c]["by_voltage"].get(V) or {})})
+
+    def _deg(c, V, l):
+        return bool(((results[c].get("endpoint_degenerate") or {}).get(V) or {}).get(l))
+
+    def _usable(c, V, l):
+        row = results[c]["by_voltage"].get(V) or {}
+        return (row.get(l) is not None and row.get(base) is not None
+                and not _deg(c, V, l) and not _deg(c, V, base))
+
+    rows, n_unreadable = {}, 0
+    for l in labels:
+        if l == base:
+            continue
+        cells = [(c, V) for c in cath for V in volts if _usable(c, V, l)]
+        if not cells:
+            continue
+
+        def _mean_delta(V):
+            xs = [results[c]["by_voltage"][V][l] - results[c]["by_voltage"][V][base]
+                  for (c, VV) in cells if VV == V]
+            return _st.mean(xs) if xs else None
+
+        a, b = _mean_delta(lo), _mean_delta(hi)
+        if a is None or b is None:
+            continue
+        slope = (b - a) / (float(hi) - float(lo))
+        dn = []
+        for (c, V) in cells:
+            if float(V) < float(lo):
+                continue
+            rx = (results[c].get("reactions") or {}).get(V) or {}
+            t1, r1 = _rxn_atoms_and_released(rx.get(l), open_el)
+            t0, r0 = _rxn_atoms_and_released(rx.get(base), open_el)
+            if None in (t1, t0):
+                n_unreadable += 1
+                continue
+            dn.append(r1 / t1 - r0 / t0)
+        if not dn:
+            continue
+        rows[l] = {"n_cells": len(cells), "slope_dDelta_dV": round(slope, 6),
+                   "d_released_per_atom": round(_st.mean(dn), 6),
+                   "predictor_minus_dn": round(-_st.mean(dn), 6)}
+
+    out = {"baseline": base, "open_element": open_el, "window_V": [lo, hi],
+           "n_unreadable_reactions": n_unreadable, "by_electrolyte": rows}
+    xs = [r["predictor_minus_dn"] for r in rows.values()]
+    ys = [r["slope_dDelta_dV"] for r in rows.values()]
+    if len(xs) >= 3 and len(set(xs)) > 1:
+        mx, my = _st.mean(xs), _st.mean(ys)
+        beta = (sum((x - mx) * (y - my) for x, y in zip(xs, ys))
+                / sum((x - mx) ** 2 for x in xs))
+        ss = sum((y - my) ** 2 for y in ys)
+        rss = sum((y - (my + beta * (x - mx))) ** 2 for x, y in zip(xs, ys))
+        out["fit"] = {"n": len(xs), "beta": round(beta, 4),
+                      "r2": round(1 - rss / ss, 4) if ss else None,
+                      "note": "beta 는 **실측 전치인자**다. 1.0 을 기대하지 않는다 — "
+                              "pymatgen per-atom 정규화 관례를 우리가 유도하지 않았다. "
+                              "판정에 쓰는 것은 **부호와 R²**다."}
+    else:
+        out["fit"] = {"n": len(xs), "beta": None, "r2": None,
+                      "note": "회귀를 못 했다 (점이 3 개 미만이거나 예측변수가 상수다) "
+                              "— '맞았다' 가 아니라 '못 쟀다' 이다"}
     return out
 
 
@@ -1242,6 +1436,10 @@ def main():
     ap.add_argument("--voltages", nargs="+", type=float,
                     default=[2.5, 3.0, 3.5, 4.0, 4.3])
     ap.add_argument("--out", default="interface_reactivity_v2.json")
+    ap.add_argument("--li_ledger", metavar="RESULTS_JSON",
+                    help="전압 기울기를 **방출 Li** 로 설명해 본다 (MP 불필요 — 이미 나온 반응식만 읽는다)")
+    ap.add_argument("--li_ledger_base", default="modelc", metavar="LABEL",
+                    help="--li_ledger 기준 조성 (기본 modelc)")
     ap.add_argument("--reproduce_check", metavar="OLD_JSON",
                     help="예전 실행과 **공통 칸**을 대조해 hull 스냅샷이 움직였는지 본다 "
                          "(새 조성을 옛 조성과 함께 다시 돌릴 때)")
@@ -1289,6 +1487,26 @@ def main():
             if r["GAP_UNKNOWN_phases"]:
                 print(f'        ⛔ 갭 모르는 상 {r["GAP_UNKNOWN_phases"]} — 최솟값 안 냄')
         print(f'→ {a.out}')
+        return 0
+    if a.li_ledger:
+        _res = json.loads(Path(a.li_ledger).read_text(encoding="utf-8"))["results"]
+        out = li_ledger_slope(_res, base=a.li_ledger_base)
+        Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2),
+                               encoding="utf-8")
+        print(f'전압 기울기 vs 방출 Li — 기준 {out["baseline"]} · '
+              f'창 {out["window_V"][0]}–{out["window_V"][1]} V')
+        print(f'  {"조성":18s} {"dD/dV 실측":>12} {"-D(방출Li/원자)":>16} {"칸":>4}')
+        for l, r in sorted(out["by_electrolyte"].items(),
+                           key=lambda kv: kv[1]["slope_dDelta_dV"]):
+            print(f'  {l:18s} {r["slope_dDelta_dV"]:+12.5f} '
+                  f'{r["predictor_minus_dn"]:+16.5f} {r["n_cells"]:>4}')
+        f = out["fit"]
+        print(f'  적합: n={f["n"]} · beta={f["beta"]} · R2={f["r2"]}')
+        print(f'  {f["note"]}')
+        if out["n_unreadable_reactions"]:
+            print(f'   !! 반응식을 못 읽은 칸 {out["n_unreadable_reactions"]} '
+                  f'(0 으로 세지 않았다)')
+        print(f'-> {a.out}')
         return 0
     if a.dopant_fate:
         out = dopant_fate(a.dopant_fate, a.dopant)
