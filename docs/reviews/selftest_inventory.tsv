@@ -106,6 +106,7 @@ scripts/pellet_rve_sigma.py	--selftest	fast	none	claude	초록 10.1s (실측)
 scripts/perf_reduced_order.py	--selftest	fast	none	claude	초록 0.1s (실측)
 scripts/plan_se_curve_targets.py	--selftest	fast	none	claude	초록 0.3s (실측)
 scripts/phase_a_arms_from_payload.py	--selftest	fast	none	claude	초록 0.1s (실측) — 합성 payload 만 쓴다, 외부 데이터 불요
+scripts/phase_a_preflight.py	--selftest	fast	none	claude	초록 0.2s (실측) — 합성 payload 만 쓴다, 외부 데이터 불요.  2026-09-18 봉인 이탈 3축(ptfe_stamp=off · LEAN 미적용 · code_sha=null)을 각각 재현 시험으로 잡고, 봉인 축은 어댑터의 SEAL 을 **가져다** 써 두 벌이 갈라지지 않게 한다
 scripts/phase_a_order_verdict.py	--selftest	fast	none	claude	초록 0.4s (실측) — 순수 판정 논리, 외부 데이터 불요
 scripts/phase_a_plan.py	--selftest	fast	none	claude	초록 0.4s (실측) — 계획 생성만, 실행 없음
 scripts/phase_a_precompute.py	--selftest	fast	none	claude	초록 0.5s (실측) — 순수 산술, 외부 데이터 불요
