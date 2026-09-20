@@ -92,7 +92,15 @@ def discover(root, max_depth=4):
          재실행 결과로 읽으면 정확히 거꾸로 판단한다.
       ⓑ **너무 넓다** — `phaseA_h015_20260914.log` 같은 **파일**까지 집어
          "디렉터리가 없다" 를 세 번 찍었다.
-    ⇒ 배치의 정의는 이름이 아니라 **`run_receipt.json` 을 가진 디렉터리**다.
+    ⇒ 배치의 정의는 이름이 아니라 **팔(`p2_*_a*.json`) 또는 영수증을 가진 디렉터리**다.
+
+    ⚠⚠ **영수증만으로 정의하면 안 된다** (2026-09-20, 두 번째 실측).  재실행 도구
+      `phase_a_rerun_from_sh.py` 는 `--out` 만 새 디렉터리로 돌리고 **영수증은 옮기지
+      않는다** (영수증은 러너가 자기 `$OUTDIR` 에 쓴다).  ⇒ 재실행 payload 디렉터리에는
+      영수증이 **없을 수 있다**.  그것을 "배치가 아니다" 로 읽으면 도구가 **아무 말도
+      안 하고**, 사람은 옛 배치만 보게 된다 — 내가 실제로 그렇게 오도했다.
+    ★ **팔이 있는데 영수증이 없는 것은 "배치 아님" 이 아니라 "문제 있는 배치" 다.**
+      찾아서 **문제로 보고**한다.  침묵이 제일 나쁘다.
     ★ 배치를 찾으면 그 아래로는 더 내려가지 않는다 (팔 하위 디렉터리를 배치로 오인 금지).
     """
     root = os.path.expanduser(root)
@@ -102,7 +110,9 @@ def discover(root, max_depth=4):
     for dirpath, dirnames, filenames in os.walk(root):
         rel = os.path.relpath(dirpath, root)
         depth = 0 if rel == '.' else rel.count(os.sep) + 1
-        if 'run_receipt.json' in filenames:
+        has_arm = any(f.startswith('p2_') and '_a' in f and f.endswith('.json')
+                      for f in filenames)
+        if 'run_receipt.json' in filenames or has_arm:
             hits.append(dirpath)
             dirnames[:] = []                      # 배치 안으로는 안 들어간다
             continue
@@ -120,7 +130,13 @@ def check_dir(d, seal):
         out['problems'].append('디렉터리가 없다')
         return out
     if not os.path.exists(rp):
-        out['problems'].append('run_receipt.json 이 없다 — 봉인을 확인할 수 없다')
+        n = len(glob.glob(os.path.join(d, 'p2_*_a*.json')))
+        out['n_arms'] = n
+        out['problems'].append(
+            f'run_receipt.json 이 없다 (팔 {n} 개는 있다) — 봉인을 확인할 수 없다.\n'
+            '       ⚠ 재실행 도구는 `--out` 만 옮기고 **영수증은 안 옮긴다** '
+            '(러너가 자기 $OUTDIR 에 쓴다).\n'
+            '       ⇒ 이 배치에 맞는 영수증을 만들거나 가져와야 어댑터가 돈다.')
         return out
     try:
         r = json.load(open(rp, encoding='utf-8'))
@@ -310,6 +326,24 @@ def _selftest():
         chk('⑧d 배치를 찾으면 그 아래로 안 내려간다 (팔 하위를 배치로 오인 금지)',
             inner not in discover(root))
         chk('⑧e 없는 뿌리는 빈 목록 (죽지 않는다)', discover(os.path.join(t, '없다')) == [])
+
+        #  ★★ ⑨ 영수증 **없이 팔만** 있는 배치 — 재실행 도구가 만드는 실제 모양
+        #     `phase_a_rerun_from_sh.py` 는 `--out` 만 옮기고 영수증은 안 옮긴다.
+        #     ⛔ 이것을 "배치 아님" 으로 읽으면 도구가 **침묵**하고 사람은 옛 배치만 본다
+        #        — 2026-09-20 에 내가 실제로 그렇게 오도했다.
+        r2 = os.path.join(t, 'root2')
+        armonly = os.path.join(r2, 'rerun_h015')
+        os.makedirs(armonly)
+        for i in range(3):
+            json.dump({'mpm_metrics': {'step3': {'manifest': {
+                'component_plan': LEAN2_PLAN, 'code_sha': 'be0ae9568'}}}},
+                open(os.path.join(armonly, f'p2_K_a{i}.json'), 'w'))
+        found2 = discover(r2)
+        chk('⑨ 영수증 없이 팔만 있어도 **배치로 찾는다** (침묵 금지)',
+            found2 == [armonly])
+        m9 = check_dir(armonly, seal)
+        chk(f'⑨b 그리고 **문제로 보고**한다 (팔 {m9["n_arms"]} 개는 센다)',
+            m9['n_arms'] == 3 and any('run_receipt.json 이 없다' in p for p in m9['problems']))
 
     print(f'\nphase_a_preflight selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
