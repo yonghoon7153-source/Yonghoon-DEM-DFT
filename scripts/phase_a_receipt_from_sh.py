@@ -88,6 +88,88 @@ raise SystemExit('NO_PARSE_ARGS')
 '''
 
 
+#: ★★ 로그 교차검증 — `.sh` 를 **되만들어** 영수증을 낼 때 그것이 실제로 돈 것과 같은지 본다.
+#  ⚠⚠ 로그는 payload 의 stdout 이라 **결과 층**이다 (매니페스트와 같은 자격).  그래서
+#    영수증을 로그에서 **만들지 않는다** — 만들면 `PA12-04` 순환 그대로다.  여기서는
+#    `.sh` 에서 만든 선언을 로그와 **대조만** 한다: 선언은 여전히 `.sh` 가 낳고,
+#    로그는 독립적인 반증 기회를 줄 뿐이다.
+#  ⚠ 로그가 안 찍는 축은 **검사되지 않는다** — 그 사실을 통과로 읽지 않도록 도구가
+#    "로그가 덮지 못한 축" 을 이름으로 보고한다 (규율 ⑤: 안 본 것을 초록으로 만들지 않는다).
+LOG_PATTERNS = {
+    'vox_um': (r'vox\s+([0-9.]+)\s*\u00b5m', float),
+    'bridge_um': (r'\ubcf4\ub9ac\uc9c0|AM \uc811\ucd09 \ube0c\ub9ac\uc9c0 \ubc18\uacbd \*\*\uace0\uc815\*\* ([0-9.]+) \u00b5m', float),
+    'fibre_stamp': (r'\uc12c\uc720 \*\*(\uc120\ubd84|\uc810) \uc2a4\ud0ec\ud504\*\* ON', str),
+}
+#: 로그가 찍는 LEAN 플래그 (사전등록 §5 = σ_e 전용)
+LOG_LEAN = ('--no-ion', '--no-pore', '--no-collector')
+
+
+def expect_physics(tokens):
+    """`.sh` 의 `--expect-physics` 선언 → dict.  **스크립트 안의 명시적 선언**이다.
+
+    ★ 이것이 있으면 유도값을 공짜로 반증할 수 있다.  실측 2026-09-20: 원본 `.sh` 가
+      `--step3-vox 0.4` 를 앞에, 진짜 값을 뒤에 둔다 (템플릿 기본값이 남은 형태).
+      argparse 는 뒤가 이기지만 **그 규칙에 결론을 걸지 않는다** — 선언과 대조해
+      어느 쪽이 이겼는지 실제로 확인한다.
+    ⚠ 이 선언은 러너의 계약 검사기가 쓰는 바로 그 문자열이다.  ⛔ 2026-09-18 사고의
+      근본 원인은 여기에 `ptfe_stamp` 가 **없어서** 검사 대상이 아니었던 것이다 —
+      그래서 이 함수는 "선언에 없는 축" 을 통과로 읽지 않고 **호출자가 이름으로 본다**.
+    """
+    out = {}
+    for i, t in enumerate(tokens):
+        if t != '--expect-physics' or i + 1 >= len(tokens):
+            continue
+        for kv in tokens[i + 1].split(','):
+            if '=' not in kv:
+                continue
+            k, v = kv.split('=', 1)
+            k, v = k.strip(), v.strip()
+            if v in ('True', 'False'):
+                out[k] = (v == 'True')
+            else:
+                try:
+                    out[k] = float(v)
+                except ValueError:
+                    out[k] = v
+    return out
+
+
+def verify_logs(rec, log_dir, expect=None, pattern='*.log'):
+    """영수증(선언) ↔ 로그(결과) 대조 → `(problems, covered, uncovered, n_logs)`.
+
+    ⚠ 로그에서 값을 **가져오지 않는다** — 대조만 한다."""
+    import re as _re
+    logs = sorted(glob.glob(os.path.join(log_dir, '**', pattern), recursive=True))
+    problems, covered = [], set()
+    if not logs:
+        return [f'로그가 없다: {log_dir}'], covered, set(RC.RECEIPT_AXES), 0
+    if expect is not None and len(logs) != expect:
+        problems.append(f'로그가 {len(logs)} 개다 (기대 {expect})')
+    for lp in logs:
+        txt = open(lp, encoding='utf-8', errors='replace').read()
+        name = os.path.basename(lp)
+        m = _re.search(r'vox\s+([0-9.]+)\s*\u00b5m', txt)
+        if m:
+            covered.add('vox_um')
+            if abs(float(m.group(1)) - float(rec['vox_um'])) > 1e-9:
+                problems.append(f'{name}: vox {m.group(1)} ≠ 영수증 {rec["vox_um"]}')
+        m = _re.search(r'\ube0c\ub9ac\uc9c0 \ubc18\uacbd \*\*\uace0\uc815\*\* ([0-9.]+)', txt)
+        if m:
+            covered.add('bridge_um')
+            if abs(float(m.group(1)) - float(rec['bridge_um'])) > 1e-9:
+                problems.append(f'{name}: bridge {m.group(1)} ≠ 영수증 {rec["bridge_um"]}')
+        m = _re.search(r'\uc12c\uc720 \*\*(\uc120\ubd84|\uc810) \uc2a4\ud0ec\ud504\*\* ON', txt)
+        if m:
+            covered.add('fibre_stamp')
+            got = 'segment' if m.group(1) == '\uc120\ubd84' else 'point'
+            if got != rec['fibre_stamp']:
+                problems.append(f'{name}: fibre_stamp {got} ≠ 영수증 {rec["fibre_stamp"]}')
+        miss = [f for f in LOG_LEAN if f not in txt]
+        if miss:
+            problems.append(f'{name}: LEAN 플래그 없음 — {", ".join(miss)}')
+    return problems, covered, set(RC.RECEIPT_AXES) - covered, len(logs)
+
+
 def payload_calls(sh_dir):
     """`.sh` 디렉터리 → `[(경로, 토큰들)]`.  payload 호출이 없는 `.sh` 는 **이름으로 보고**한다.
 
@@ -161,7 +243,8 @@ def _axes_from_ns(ns):
     return rec
 
 
-def build(sh_dir, out, expect_arms=None, expect_backend='gpu', force=False):
+def build(sh_dir, out, expect_arms=None, expect_backend='gpu', force=False,
+          logs=None, log_glob='*.log'):
     hits, skipped = payload_calls(sh_dir)
     if not hits:
         raise SystemExit(f'⛔ {sh_dir}: payload 호출을 가진 `.sh` 가 없다')
@@ -175,6 +258,24 @@ def build(sh_dir, out, expect_arms=None, expect_backend='gpu', force=False):
         if diff:
             raise SystemExit(f'⛔ 팔마다 규약이 다르다 — 한 영수증으로 덮을 수 없다\n'
                              f'  {os.path.basename(p)}\n    ' + '\n    '.join(diff))
+
+    #  ①b `--expect-physics` 선언과 대조 — 중복 플래그·순서 함정을 여기서 잡는다
+    ep_cov = set()
+    for (pth, toks), a in zip(hits, axes):
+        dec = expect_physics(toks)
+        for k, v in dec.items():
+            if k not in RC.RECEIPT_AXES:
+                continue
+            ep_cov.add(k)
+            got = a.get(k)
+            same = (abs(float(got) - float(v)) <= 1e-9
+                    if isinstance(v, float) and isinstance(got, (int, float))
+                    else got == v)
+            if not same:
+                raise SystemExit(
+                    f'⛔ `.sh` 의 --expect-physics 선언과 유도값이 다르다 — 영수증을 만들지 않는다\n'
+                    f'  {os.path.basename(pth)}\n    {k}: 유도 {got!r} ≠ 선언 {v!r}\n'
+                    f'  ⇒ 중복 플래그나 인자 순서를 의심할 것.')
 
     #  ② 봉인 (어댑터의 SEAL 을 그대로 쓴다 — 두 벌을 만들지 않는다)
     import phase_a_arms_from_payload as AD
@@ -201,6 +302,7 @@ def build(sh_dir, out, expect_arms=None, expect_backend='gpu', force=False):
     #  ⚠ code_sha 는 `.sh` 가 주지 않으면 **null** 이다.  지어내지 않는다 (PASL-03).
     rec['code_sha'] = None
     rec['receipt_digest'] = RC.receipt_digest(rec)
+    rec['declared_axes'] = sorted(ep_cov)          # `--expect-physics` 가 덮은 축
     #  ★ 출처를 영수증 자신에 박는다 — digest 밖이라 기존 해시를 안 건드린다
     h = hashlib.sha256()
     for p, _ in hits:
@@ -210,13 +312,25 @@ def build(sh_dir, out, expect_arms=None, expect_backend='gpu', force=False):
     rec['derived_sh_sha256'] = h.hexdigest()[:16]
     rec['derived_sh_files'] = len(hits)
 
+    #  ⑤ 로그 교차검증 — **쓰기 전에** 한다 (어긋나면 영수증을 남기지 않는다)
+    log_note = None
+    if logs:
+        probs, cov, unc, nlog = verify_logs(rec, logs, expect=expect_arms,
+                                            pattern=log_glob)
+        if probs:
+            raise SystemExit('⛔ 로그와 어긋난다 — 영수증을 만들지 않는다 (%d 건):\n  %s'
+                             % (len(probs), '\n  '.join(probs[:12])))
+        log_note = (nlog, sorted(cov), sorted(unc))
+        rec['verified_against_logs'] = nlog
+        rec['verified_axes'] = sorted(cov)
+
     dst = os.path.join(out, 'run_receipt.json')
     if os.path.exists(dst) and not force:
         raise SystemExit(f'⛔ 이미 있다: {dst} — 덮으려면 --force (기존 영수증이 정본일 수 있다)')
     os.makedirs(out, exist_ok=True)
     json.dump(rec, open(dst, 'w', encoding='utf-8'), ensure_ascii=False,
               indent=1, sort_keys=True)
-    return rec, dst, skipped
+    return rec, dst, skipped, log_note
 
 
 def _selftest():                                             # noqa: C901
@@ -236,16 +350,23 @@ def _selftest():                                             # noqa: C901
         AD.SEAL['ptfe_stamp'] == 'centerline'
         and 'vox_um' in RC.RECEIPT_AXES and callable(RC.receipt_digest))
 
-    def mk_sh(d, name, origin, vox=0.15, ptfe='centerline', extra=''):
+    def mk_sh(d, name, origin, vox=0.15, ptfe='centerline', extra='',
+              decoy=False, declare=None):
+        """`decoy` = 실제 `.sh` 처럼 템플릿 기본값 `--step3-vox 0.4` 를 **앞에** 둔다."""
         os.makedirs(d, exist_ok=True)
         p = os.path.join(d, name)
         ox, oy, oz = origin
+        dec = declare if declare is not None else (
+            f'vox_um={vox},bridge_um=0.24,fibre_stamp=segment,'
+            f'ptfe_stamp={ptfe},periodic_xy=False')
         open(p, 'w').write(
             '#!/bin/sh\nset -e\n'
-            f'python3 /x/{PAYLOAD} --step3-vox {vox} \\\n'
+            f'python3 /x/{PAYLOAD} '
+            + ('--step3-vox 0.4 ' if decoy else '')
+            + f'--step3-vox {vox} \\\n'
             f'  --step3-origin-shift {ox} {oy} {oz} \\\n'
             f'  --ptfe-stamp {ptfe} --sigma-ptfe 0 --step3-fibre-stamp segment \\\n'
-            f'  --step3-bridge-um 0.24 {extra} --out /y/p2.json\n')
+            f'  --step3-bridge-um 0.24 {extra} --expect-physics {dec} --out /y/p2.json\n')
         return p
 
     h = round(0.15 / 2, 9)
@@ -265,7 +386,7 @@ def _selftest():                                             # noqa: C901
             len(hits2) == 8 and skipped2 == ['harvest.sh'])
 
         out = os.path.join(td, 'out')
-        rec, dst, _ = build(sh, out, expect_arms=8)
+        rec, dst, _, _ = build(sh, out, expect_arms=8)
         chk('④ 영수증을 쓴다 + 봉인 3 축이 맞다',
             os.path.exists(dst) and rec['ptfe_stamp'] == 'centerline'
             and rec['fibre_stamp'] == 'segment' and rec['bridge_um'] == 0.24)
@@ -343,11 +464,96 @@ def _selftest():                                             # noqa: C901
         for d in (sh, out):                       # 함정: 이름만 payload 인 디렉터리
             os.makedirs(os.path.join(d, 'p2_poison_a0.json'))
         try:
-            rec2, _, _ = build(sh, out, expect_arms=8)
+            rec2, _, _, _ = build(sh, out, expect_arms=8)
             trapped = rec2['ptfe_stamp'] == 'centerline'
         except (IsADirectoryError, PermissionError):
             trapped = False
         chk('⑭ payload(`p2_*.json`) 를 하나도 안 읽는다 (PA12-04 순환 금지)', trapped)
+
+    #  ── 로그 교차검증 (실제 런 로그 문장으로) ──────────────────────────────
+    REAL = ('  STEP3: 섬유 **선분 스탬프** ON — 도체점 1,067,455\n'
+            '  STEP3: AM 접촉 브리지 반경 **고정** 0.24 µm (기본은 1.2·vox = 0.180)\n'
+            '  STEP3 σ_e_eff = [봉인] S/cm  (vox 0.15µm, 46,926,476 dof, resid 1.0e-08)\n'
+            '  STEP3: --no-collector — 집전체 건너뜀\n'
+            '  STEP3: --no-ion — 이온 솔브 건너뜀\n'
+            '  STEP3: --no-pore — pore-τ 건너뜀\n')
+    with tempfile.TemporaryDirectory() as td:
+        sh = os.path.join(td, 'sh')
+        for i, o in enumerate(facto):
+            mk_sh(sh, f'p2_K_a{i}.sh', o)
+        lg = os.path.join(td, 'logs')
+        os.makedirs(lg)
+        for i in range(8):
+            open(os.path.join(lg, f'a{i}.log'), 'w').write(REAL)
+        rec3, _, _, note = build(sh, os.path.join(td, 'o'), expect_arms=8, logs=lg)
+        chk('⑮ 실제 런 로그 문장과 대조 통과 + 덮은 축 3 개를 보고한다',
+            note and note[0] == 8 and set(note[1]) == {'vox_um', 'bridge_um', 'fibre_stamp'})
+        chk('⑯ 로그가 **못 덮는** 축을 이름으로 남긴다 (침묵 금지)',
+            'ptfe_stamp' in note[2] and len(note[2]) >= 10)
+
+        open(os.path.join(lg, 'bad.log'), 'w').write(REAL.replace('vox 0.15µm', 'vox 0.20µm'))
+        try:
+            build(sh, os.path.join(td, 'o2'), logs=lg)
+            caught = False
+        except SystemExit as e:
+            caught = '로그와 어긋난다' in str(e)
+        chk('⑰ 로그의 vox 가 다르면 영수증을 **안 쓴다**', caught
+            and not os.path.exists(os.path.join(td, 'o2', 'run_receipt.json')))
+
+        os.remove(os.path.join(lg, 'bad.log'))
+        open(os.path.join(lg, 'lean.log'), 'w').write(REAL.replace('--no-ion', '--yes-ion'))
+        try:
+            build(sh, os.path.join(td, 'o3'), logs=lg)
+            caught2 = False
+        except SystemExit as e:
+            caught2 = 'LEAN' in str(e)
+        chk('⑱ LEAN 플래그가 빠진 로그가 하나라도 있으면 거부한다', caught2)
+
+    #  ── `--expect-physics` 선언 대조 (실제 `.sh` 의 중복 플래그 함정 재현) ─────
+    with tempfile.TemporaryDirectory() as td:
+        sh = os.path.join(td, 'sh')
+        for i, o in enumerate(facto):
+            mk_sh(sh, f'p2_K_a{i}.sh', o, decoy=True)      # ← 0.4 를 앞에 둔다
+        rec4, _, _, _ = build(sh, os.path.join(td, 'o'), expect_arms=8)
+        chk('⑲ 중복 `--step3-vox 0.4 … 0.15` 에서 **뒤가 이긴다** (실제 `.sh` 형태)',
+            abs(rec4['vox_um'] - 0.15) < 1e-12)
+        chk('⑳ 선언(--expect-physics)이 덮은 축을 영수증에 남긴다',
+            'vox_um' in rec4['declared_axes'] and 'ptfe_stamp' in rec4['declared_axes'])
+
+    with tempfile.TemporaryDirectory() as td:
+        sh = os.path.join(td, 'sh')
+        for i, o in enumerate(facto):
+            #  선언만 0.40 으로 어긋나게 — 미끼가 이겼을 때의 신호와 같다
+            mk_sh(sh, f'p2_K_a{i}.sh', o, decoy=True,
+                  declare='vox_um=0.40,bridge_um=0.24,fibre_stamp=segment')
+        try:
+            build(sh, os.path.join(td, 'o'))
+            caught3 = False
+        except SystemExit as e:
+            caught3 = '--expect-physics 선언과 유도값이 다르다' in str(e)
+        chk('㉑ 선언과 유도값이 다르면 거부한다 (중복 플래그가 이긴 경우를 잡는다)', caught3)
+
+    #  ── 배치가 섞인 로그 디렉터리에서 `--log-glob` 으로 고른다 ────────────────
+    with tempfile.TemporaryDirectory() as td:
+        sh = os.path.join(td, 'sh')
+        for i, o in enumerate(facto):
+            mk_sh(sh, f'p2_K_a{i}.sh', o, decoy=True)
+        lg = os.path.join(td, 'logs')
+        os.makedirs(lg)
+        for i in range(8):                                  # 우리 배치
+            open(os.path.join(lg, f'v015.a{i}.log'), 'w').write(REAL)
+        for i in range(8):                                  # 남의 배치 (vox 0.25)
+            open(os.path.join(lg, f'v025.a{i}.log'), 'w').write(
+                REAL.replace('vox 0.15µm', 'vox 0.25µm'))
+        try:
+            build(sh, os.path.join(td, 'x'), logs=lg)
+            mixed_caught = False
+        except SystemExit as e:
+            mixed_caught = '로그와 어긋난다' in str(e)
+        chk('㉒ 섞인 로그를 통째로 주면 거부한다 (조용히 통과 안 한다)', mixed_caught)
+        _, _, _, note2 = build(sh, os.path.join(td, 'y'), expect_arms=8,
+                               logs=lg, log_glob='v015.*.log')
+        chk('㉓ --log-glob 으로 자기 배치만 골라 대조한다', note2 and note2[0] == 8)
 
     print(f'\nphase_a_receipt_from_sh selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
@@ -361,6 +567,10 @@ def main():
     ap.add_argument('--expect-arms', type=int, default=None,
                     help='있어야 하는 팔 수 — 다르면 거부한다 (부분집합 방지)')
     ap.add_argument('--expect-backend', default='gpu')
+    ap.add_argument('--logs', help='런 로그 디렉터리 — 영수증(선언)을 로그(결과)와 대조한다. '
+                    '⚠ 로그에서 값을 가져오지 않는다 (PA12-04)')
+    ap.add_argument('--log-glob', default='*.log',
+                    help="로그 파일 패턴 — 한 디렉터리에 배치가 섞여 있을 때 (예: 'v015.*.log')")
     ap.add_argument('--force', action='store_true', help='기존 영수증을 덮는다')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
@@ -368,12 +578,20 @@ def main():
         raise SystemExit(_selftest())
     if not (a.sh and a.out):
         ap.error('--sh 와 --out 이 필요하다')
-    rec, dst, skipped = build(a.sh, a.out, a.expect_arms, a.expect_backend, a.force)
+    rec, dst, skipped, log_note = build(a.sh, a.out, a.expect_arms,
+                                        a.expect_backend, a.force, a.logs,
+                                        a.log_glob)
     print(f'영수증 → {dst}')
     for k in ('vox_um', 'ptfe_stamp', 'fibre_stamp', 'bridge_um', 'arms',
               'code_sha', 'receipt_digest', 'derived_sh_sha256'):
         print(f'  {k:20s} {rec.get(k)!r}')
     print(f'  origins              {len(rec["origins"])} 개')
+    if log_note:
+        n, cov, unc = log_note
+        print(f'  ★ 선언(--expect-physics)이 덮은 축: {", ".join(rec["declared_axes"])}')
+        print(f'  ★ 로그 {n} 개와 대조 통과 — 덮은 축 {", ".join(cov)}')
+        print(f'  ⚠ 로그가 **못 덮는** 축 {len(unc)} 개 (어댑터가 팔마다 매니페스트로 본다): '
+              f'{", ".join(unc)}')
     if skipped:
         print(f'  ⚠ payload 호출 없는 `.sh` {len(skipped)} 개: {", ".join(skipped[:6])}')
     if rec['code_sha'] is None:
