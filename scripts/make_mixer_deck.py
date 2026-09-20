@@ -168,6 +168,19 @@ ARMS = {
     'B10': dict(desc='경계 탐침 — AM Bo 1.0', bond=1.0,
                 mult={('AM_P', 'AM_P'): 1.0 / 0.21244, ('AM_P', 'AM_S'): 1.0 / 0.21244,
                       ('AM_S', 'AM_S'): 1.0 / 0.21244}),
+    #  ★★ §24 (2026-09-20) — **층상 시작**.  1저자 비준: 헤드라인은 *"코팅하면 더 잘 섞이나"*.
+    #  삽입만 두 층으로 나눈다 (아래 AM · 위 SE+VGCF+PTFE); 나머지는 전부 그대로.
+    #  ⚠ 점착이 걸리는 상(AM)을 **아래**에 둔다 — 깨져야 하는 층을 통째로 두고 시작한다.
+    #    반대로 두면 작은 SE 가 큰 AM 틈으로 체질돼 내려가는 것이 "혼합" 으로 읽힌다 (교락).
+    #  ⚠ 새 팔의 배수는 E4(100) 보다 작아야 BOND0 이 안 밀린다 — 셀프테스트 ㉞ 가 단언한다.
+    'L0': dict(desc='§24 층상 · 점착 0 — 지표 상한 (음성 대조)', bond=0.0, mult={},
+               layered=True),
+    'LA': dict(desc='§24 층상 · 무코팅 AM Bo 3.0 = 문헌 앵커 (hare2026) — 헤드라인 무코팅',
+               bond=1.0, layered=True,
+               mult={('AM_P', 'AM_P'): 3.0 / 0.21244, ('AM_P', 'AM_S'): 3.0 / 0.21244,
+                     ('AM_S', 'AM_S'): 3.0 / 0.21244}),
+    'LC': dict(desc='§24 층상 · 코팅 (AM 표면 = SE, C1 규약) — 헤드라인 코팅',
+               bond=1.0, mult={}, coat={'AM_P': 'SE', 'AM_S': 'SE'}, layered=True),
 }
 
 
@@ -348,6 +361,14 @@ def settle_time(drop_m, restitution=0.3, g=9.81, margin=2.0):
     return margin * t_ff * (1.0 + restitution) / (1.0 - restitution)
 
 
+def _next_prime(n):
+    """n 이상의 첫 소수 — 층상 삽입의 둘째 insert/pack·pdd 시드용 (둘 다 소수여야 한다)."""
+    n = int(n)
+    while not _is_prime(n):
+        n += 1
+    return n
+
+
 def _is_prime(n):
     if n < 2:
         return False
@@ -361,7 +382,7 @@ def _is_prime(n):
     return True
 
 
-def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None,
+def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None, layered=None,
          restitution=0.3, n_baffles=0, baffle_h=0.10):
     #  ⚠⚠ LIGGGHTS 의 `fix insert/pack` 시드는 **소수여야 한다**.
     #    합성수를 주면 런이 `random.cpp:93` 에서 **죽는다** — 그런데 죽는 자리가
@@ -392,6 +413,73 @@ def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None,
     steps_fill = max(1000, int(round(0.5 * settle_s / p['dt'])))   # 두 번 돈다
     steps_run = int(round(revolutions * period / p['dt']))
     dump_every = max(1000, steps_run // 200)
+    #  ── 삽입 블록 (§24 층상 vs 기존 균일) ─────────────────────────────────
+    #  ⚠ 비층상 문자열은 옛 원문과 **바이트 동일**해야 한다 — 셀프테스트 ㉟ 골든 해시.
+    if layered is None:
+        layered = bool(ARMS[arm].get('layered', False))
+    mf = p['massfrac']
+    if not layered:
+        _ins_block = f"""# ⚠ 분율은 **mass%** 다 (LIGGGHTS 규약 — 실행으로 확인).  우리 조성이 wt% 라 그대로 넣는다.
+fix pdd all particledistribution/discrete 32452867 5 &
+    pt1 {mf['AM_P']:.6f} pt2 {mf['AM_S']:.6f} pt3 {mf['SE']:.6f} &
+    pt4 {mf['VGCF']:.6f} pt5 {mf['PTFE']:.6f}
+
+region ins_reg cylinder x 0.0 0.0 {p['R']*0.9:.6g} -{p['L']*0.45:.6g} {p['L']*0.45:.6g} units box
+fix ins all insert/pack seed {seed} distributiontemplate pdd &
+    maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 &
+    region ins_reg particles_in_region {p['n_tpl_total']} ntry_mc 20000   # 템플릿 수 (섬유 1가닥 = 1)
+"""
+        _unfix_ins = 'unfix ins'
+        _unfix_ins2 = ''
+    else:
+        #  층별 mass% 는 층 안에서 다시 정규화한다 (pdd 는 자기 템플릿끼리의 분율만 본다)
+        a_sum = mf['AM_P'] + mf['AM_S']
+        b_sum = mf['SE'] + mf['VGCF'] + mf['PTFE']
+        nA = p['n_tpl']['AM_P'] + p['n_tpl']['AM_S']
+        nB = p['n_tpl']['SE'] + p['n_tpl']['VGCF'] + p['n_tpl']['PTFE']
+        seedB = _next_prime(seed + 2)                 # insA 와 다른 소수
+        pddB = _next_prime(32452867 + 2)              # pddA 와 다른 소수
+        #  ★★ 순서가 물리다 (스모크 실측 2026-09-20): AM_P(Ø2.4 mm) 119 개를 작은 블록에
+        #    `all_in` 으로 넣으면 중심 가용부피 대비 구 부피 59 % = RSA 잼 한계(~38 %) 초과 →
+        #    삽입이 끝나지 않는다.  ⇒ AM 은 **원통 전체**(균일 삽입과 같은 영역)에 넣고 정착 ①
+        #    로 바닥에 깔리게 한 뒤, SE+섬유를 **그 윗면 위 블록**에 넣는다 (정착 ②).
+        #    = "AM 침대 위에 SE 를 붓는다" — 층상의 물리 그대로다.
+        _v_am = sum(p['n'][k] * (math.pi / 6) * d[k] ** 3 for k in ('AM_P', 'AM_S'))
+        _v_bed = _v_am / 0.60                          # plan() 의 pack 기본값
+        _A = _v_bed / p['L']                           # 원 세그먼트 단면적
+        _th = 2.0                                      # θ − sinθ = 2A/R²  (이분법)
+        _lo_t, _hi_t = 0.0, 2 * math.pi
+        for _ in range(60):
+            _th = 0.5 * (_lo_t + _hi_t)
+            if _th - math.sin(_th) < 2 * _A / p['R'] ** 2:
+                _lo_t = _th
+            else:
+                _hi_t = _th
+        _h = p['R'] * (1 - math.cos(_th / 2))          # 침대 높이 (바닥에서)
+        _z_top = -p['R'] + _h
+        _z_lo = _z_top + d['AM_P']                     # 여유 = AM_P 지름 하나
+        _z_hi = 0.78 * p['R']                          # |y| ≤ 0.6R 이면 z ≤ 0.8R 가 원 안
+        assert _z_hi - _z_lo > 4 * d['SE'], '층상 삽입: SE 층 높이가 너무 작다'
+        _ins_block = f"""# ★ §24 층상 삽입 ① — AM 을 원통 전체에 넣는다 (정착 ① 로 바닥에 깔린다).  분율은 층 안 mass%.
+fix pddA all particledistribution/discrete 32452867 2 &
+    pt1 {mf['AM_P']/a_sum:.6f} pt2 {mf['AM_S']/a_sum:.6f}
+fix pddB all particledistribution/discrete {pddB} 3 &
+    pt3 {mf['SE']/b_sum:.6f} pt4 {mf['VGCF']/b_sum:.6f} pt5 {mf['PTFE']/b_sum:.6f}
+
+region ins_reg cylinder x 0.0 0.0 {p['R']*0.9:.6g} -{p['L']*0.45:.6g} {p['L']*0.45:.6g} units box
+fix insA all insert/pack seed {seed} distributiontemplate pddA &
+    maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 &
+    region ins_reg particles_in_region {nA} ntry_mc 20000   # AM 템플릿 수
+"""
+        _unfix_ins = f"""unfix insA
+# ★ §24 층상 삽입 ② — 정착 ① 뒤, SE+VGCF+PTFE 를 AM 침대 **위** 블록에 붓는다 (정착 ② 시작 시 삽입).
+#   AM 침대 윗면 추정: V_AM {_v_am*1e9:.0f} mm³ / pack 0.60 → 세그먼트 높이 {_h*1e3:.2f} mm → z_top {_z_top*1e3:.2f} mm
+#   블록 z ∈ [{_z_lo*1e3:.2f}, {_z_hi*1e3:.2f}] mm · |y| ≤ 0.6R (원 안) · x ±0.45L
+region ins_hi block -{p['L']*0.45:.6g} {p['L']*0.45:.6g} -{p['R']*0.6:.6g} {p['R']*0.6:.6g} {_z_lo:.6g} {_z_hi:.6g} units box
+fix insB all insert/pack seed {seedB} distributiontemplate pddB &
+    maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 &
+    region ins_hi particles_in_region {nB} ntry_mc 20000   # SE+섬유 템플릿 수 (섬유 1가닥 = 1)"""
+        _unfix_ins2 = '\nunfix insB'
     box = p['R'] * 1.15
     return f"""# 믹싱 드럼 — 표면에너지 스윕  (생성: scripts/make_mixer_deck.py)
 # ⚠ 손으로 고치지 말 것 — 치수가 조성에서 유도된다.  조성을 바꾸면 생성기를 다시 돌린다.
@@ -454,16 +542,7 @@ fix pt4 all particletemplate/multisphere 15101 atom_type 4 density constant {DEN
 fix pt5 all particletemplate/multisphere 17093 atom_type 5 density constant {DENS['PTFE']*1000:.0f} &
     nspheres {p['nsph']} ntry 1000000 spheres file data/ptfe.multisphere scale 1.0 type 2
 
-# ⚠ 분율은 **mass%** 다 (LIGGGHTS 규약 — 실행으로 확인).  우리 조성이 wt% 라 그대로 넣는다.
-fix pdd all particledistribution/discrete 32452867 5 &
-    pt1 {p['massfrac']['AM_P']:.6f} pt2 {p['massfrac']['AM_S']:.6f} pt3 {p['massfrac']['SE']:.6f} &
-    pt4 {p['massfrac']['VGCF']:.6f} pt5 {p['massfrac']['PTFE']:.6f}
-
-region ins_reg cylinder x 0.0 0.0 {p['R']*0.9:.6g} -{p['L']*0.45:.6g} {p['L']*0.45:.6g} units box
-fix ins all insert/pack seed {seed} distributiontemplate pdd &
-    maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 &
-    region ins_reg particles_in_region {p['n_tpl_total']} ntry_mc 20000   # 템플릿 수 (섬유 1가닥 = 1)
-
+{_ins_block}
 # ⚠⚠ **적분기는 둘 다 필요하다** (2026-09-19 실측으로 확정)
 #   `fix multisphere` 는 **강체만** 적분한다 — 평범한 구는 `body_[i] < 0` 로 건너뛴다.
 #   이 줄 하나만 두고 돌렸더니 AM·SE 47,309 개가 **얼어붙은 조각상**이었다:
@@ -490,8 +569,8 @@ dump dmp all custom {dump_every} post/mix_*.liggghts id type mol x y z vx vy vz 
 #   유도한 t_ff·(1+e)/(1−e) 의 {2.0:.0f}배.  ⛔ 상수 20000 step 을 쓰지 않는다.
 #   ⚠ 그래도 잰 뒤 φ(포락) 경고를 확인할 것 — 식은 홑 입자의 튐만 센다.
 run {steps_fill}
-unfix ins
-run {steps_fill}
+{_unfix_ins}
+run {steps_fill}{_unfix_ins2}
 
 # ② 회전 {revolutions} 바퀴 @ {rpm:.0f} rpm  (임계 {p['rpm_crit']:.0f} rpm · Fr {(2*math.pi/period)**2*p['R']/9.81:.3f})
 fix mvD all move/mesh mesh Drum  rotate origin 0 0 0 axis 1. 0. 0. period {period:.6g}
@@ -750,6 +829,63 @@ def _selftest():
     chk(f'㉚ 같은 Bo 를 위해 상별 CED 가 다르다 '
         f'(AM_P {M1[0][0]:.3g} vs SE {M1[2][2]:.3g})',
         abs(M1[0][0] - M1[2][2]) / M1[2][2] > 0.1)
+    #  ── §24 층상 팔 ──────────────────────────────────────────────────────────
+    import hashlib as _hl
+    _p8 = plan(8000)
+    chk('㉞ 새 팔(L0·LA·LC)을 넣어도 BOND0 이 0.21244 그대로다 (Bo 라벨이 안 밀린다)',
+        abs(_solve_bond0(_p8['d']) - 0.21244) < 5e-6)
+    _gold = {'E0': '475de96f647f99cb', 'E1': '73292b46192dc5cc', 'E4': '7787d125dfb80d01',
+             'C1': 'fbcd03663fe780cb', 'T1': '60a212d1722da1ec', 'B5': 'da609bb4b5245534'}
+    _got = {a: _hl.sha256(deck(_p8, rpm=60, revolutions=2, seed=32452843, arm=a)
+                          .encode()).hexdigest()[:16] for a in _gold}
+    chk('㉟ 기존 6 팔 덱이 편집 전과 **바이트 동일** (골든 해시, plan(8000)·2바퀴·시드 32452843)',
+        _got == _gold)
+    _la = deck(_p8, rpm=60, revolutions=2, seed=32452843, arm='LA')
+    chk('㊱ LA 는 insert/pack 둘(insA→원통 전체, insB→AM 침대 위 블록), pdd 둘, unfix 둘',
+        _la.count('insert/pack') == 2 and 'pddA' in _la and 'pddB' in _la
+        and 'unfix insA' in _la and 'unfix insB' in _la
+        and 'region ins_reg particles_in_region' in _la and 'region ins_hi particles_in_region' in _la)
+    _i_s1 = _la.index('run 36308') if 'run 36308' in _la else _la.index('run ', _la.index('unfix insA') - 40)
+    chk('㊱b 순서: insA → 정착① → unfix insA·insB 정의 → 정착② → unfix insB → 회전',
+        _la.index('fix insA') < _la.index('unfix insA') < _la.index('fix insB')
+        < _la.index('unfix insB') < _la.index('fix mvD'))
+    import re as _re
+    _nA = int(_re.search(r'region ins_reg particles_in_region (\d+)', _la).group(1))
+    _nB = int(_re.search(r'region ins_hi particles_in_region (\d+)', _la).group(1))
+    #  ⚠ plan() 은 상별로 반올림하므로 상별 합이 n_tpl_total 과 ±1~2 다를 수 있다.
+    #    균일 삽입은 총수(n_tpl_total)를, 층상은 상별 합을 쓴다 — 층상이 조성에 더 충실하다.
+    _sum_tpl = sum(_p8['n_tpl'].values())
+    chk('㊲ 두 층의 템플릿 수 합 = 상별 계획의 합 (입자를 잃지 않는다; 총수와는 반올림 ±2 안)',
+        _nA + _nB == _sum_tpl and abs(_sum_tpl - _p8['n_tpl_total']) <= 2
+        and _nA == _p8['n_tpl']['AM_P'] + _p8['n_tpl']['AM_S'])
+    _seeds = [int(x) for x in _re.findall(r'insert/pack seed (\d+)', _la)]
+    _pdds = [int(x) for x in _re.findall(r'particledistribution/discrete (\d+)', _la)]
+    chk('㊳ 삽입·분포 시드 넷이 전부 소수이고 쌍끼리 다르다',
+        all(_is_prime(x) for x in _seeds + _pdds) and _seeds[0] != _seeds[1] and _pdds[0] != _pdds[1])
+    _hi = _re.search(r'region ins_hi block \S+ \S+ (\S+) (\S+) (\S+) (\S+)', _la).groups()
+    _y, _zl, _zh = abs(float(_hi[0])), float(_hi[2]), float(_hi[3])
+    _ztop = float(_re.search(r'z_top (\S+) mm', _la).group(1)) * 1e-3
+    chk('㊴ SE 층 블록: 아랫면 ≥ AM 침대 윗면 + AM_P 지름, 윗면 0.78R, 모서리가 원 안(y²+z²<R²)',
+        #  덱은 z_top 을 0.01 mm, 좌표를 6 유효숫자로 찍는다 → 허용오차 1e-5 m / 상대 1e-4
+        _zl >= _ztop + _p8['d']['AM_P'] - 1e-5 and abs(_zh - 0.78 * _p8['R']) < 1e-4 * _p8['R']
+        and _y ** 2 + _zh ** 2 < _p8['R'] ** 2 and _y ** 2 + _zl ** 2 < _p8['R'] ** 2)
+    #  RSA 여유: SE 층 블록의 중심 가용부피 대비 SE+섬유 구 부피 (스모크 사고의 정량 가드)
+    _dse = _p8['d']['SE']
+    _vsol = sum(_p8['n'][k] * (math.pi / 6) * _p8['d'][k] ** 3 for k in ('SE', 'VGCF', 'PTFE'))
+    _vc = (0.9 * _p8['L'] - _dse) * (1.2 * _p8['R'] - _dse) * ((_zh - _zl) - _dse)
+    chk(f'㊴b SE 층 삽입 밀도 {_vsol/_vc*100:.0f} % < 30 % (RSA 잼 한계 아래)', _vsol / _vc < 0.30)
+    _fa = [float(x) for x in _re.search(r'pt1 (\S+) pt2 (\S+)\n', _la).groups()]
+    _fb = [float(x) for x in _re.search(r'pt3 (\S+) pt4 (\S+) pt5 (\S+)', _la).groups()]
+    chk('㊵ 층별 mass% 가 각각 1 로 재정규화된다',
+        abs(sum(_fa) - 1) < 2e-6 and abs(sum(_fb) - 1) < 2e-6)
+    _M = ced_matrix('LA', _p8['d'])
+    chk('㊶ LA 의 AM_P–AM_P Bo 가 3.0 (앵커) 이다',
+        abs(bond_for_ced(_M[0][0], _p8['d']['AM_P'] / 2, .25, DENS['AM']) - 3.0) < 1e-3)
+    _Mc = ced_matrix('LC', _p8['d']); _M1 = ced_matrix('C1', _p8['d'])
+    chk('㊷ LC 의 CED 행렬은 C1 과 같다 (코팅 규약을 두 벌 두지 않는다)', _Mc == _M1)
+    _l0 = deck(_p8, rpm=60, revolutions=2, seed=32452843, arm='L0')
+    chk('㊸ L0 도 층상이고 점착 0 이다', _l0.count('insert/pack') == 2 and 'cohesionEnergyDensity' in _l0)
+
     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
