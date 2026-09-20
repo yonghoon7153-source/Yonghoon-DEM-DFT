@@ -143,6 +143,7 @@ run 'webapp: predictor_ui'        python3 webapp/test_predictor_ui_and_sigma_gra
 run 'webapp: security_phase_a'    python3 webapp/test_security_phase_a.py
 run 'webapp: seminar_page'        python3 webapp/test_seminar_page.py
 run 'webapp: worklog_page'        python3 webapp/test_worklog_page.py
+run 'webapp: mixer_devlog_page'   python3 webapp/test_mixer_devlog_page.py
 run 'webapp: launcher (포트 선점)' python3 scripts/test_webapp_launcher.py
 run 'webapp: temp_pressure'       python3 webapp/test_temp_pressure_wiring.py
 #  ★ v3 (2026-09-09) — 화면이 원장을 따라가는가 + **원장을 보여 주는 페이지가 금지값을

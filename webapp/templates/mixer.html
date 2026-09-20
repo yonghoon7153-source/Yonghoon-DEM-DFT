@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% set active = "mixer" %}
+{% block title %}믹서 개발 이력 — DEM/MPM Analyzer{% endblock %}
+
+{% block content %}
+<style>
+  .mx-wrap { max-width:1000px; }
+  .mx-top { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin:6px 0 14px; }
+  .mx-toggle { display:inline-flex; border:1px solid rgba(127,127,127,.4); border-radius:999px; overflow:hidden; }
+  .mx-toggle button { border:0; background:transparent; padding:7px 16px; cursor:pointer; font-weight:600; font-size:13px; color:inherit; }
+  .mx-toggle button.on { background:var(--accent,#4C8DF6); color:#fff; }
+  .mx-timeline { display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 18px; }
+  .mx-chip { display:inline-flex; gap:8px; align-items:center; padding:5px 11px; border-radius:999px;
+             border:1px solid rgba(127,127,127,.35); font-size:12px; text-decoration:none; color:inherit; }
+  .mx-chip b { font:600 12px/1 'JetBrains Mono',monospace; color:var(--accent,#4C8DF6); }
+  .mx-card { margin:16px 0; padding:18px 20px; border-left:4px solid var(--accent,#4C8DF6); }
+  .mx-head { display:flex; gap:12px; align-items:baseline; flex-wrap:wrap; }
+  .mx-ver { font:700 14px/1 'JetBrains Mono',monospace; color:var(--accent,#4C8DF6); }
+  .mx-date { font:600 12px/1 'JetBrains Mono',monospace; opacity:.7; }
+  .mx-title { font-weight:700; font-size:17px; margin:8px 0 4px; }
+  .mx-blurb { margin:6px 0 10px; padding:10px 14px; border-radius:0 10px 10px 0;
+              border-left:3px solid var(--accent,#4C8DF6); background:rgba(76,141,246,.10); font-size:14px; }
+  .mx-body { line-height:1.66; font-size:14.5px; }
+  .mx-body table { border-collapse:collapse; width:100%; margin:12px 0; font-size:13px; display:block; overflow-x:auto; }
+  .mx-body th, .mx-body td { border:1px solid rgba(127,127,127,.28); padding:7px 11px; vertical-align:top; }
+  .mx-body th { background:rgba(76,141,246,.12); white-space:nowrap; }
+  .mx-body figure { margin:16px 0; padding:12px; border:1px solid rgba(127,127,127,.25); border-radius:12px; background:rgba(127,127,127,.04); }
+  .mx-body figure img { display:block; max-width:100%; height:auto; border-radius:8px; }
+  .mx-body figcaption { margin-top:8px; font-size:12.5px; opacity:.8; line-height:1.5; }
+  .mx-body code { background:rgba(127,127,127,.16); padding:1.5px 6px; border-radius:4px; font-size:12.5px; }
+  .mx-body ul { padding-left:22px; } .mx-body li { margin:5px 0; }
+  .mx-wrap[data-mode="easy"] .detail { display:none; }
+  .mx-wrap[data-mode="detail"] .easy { display:none; }
+  .mx-note { font-size:12.5px; opacity:.75; }
+</style>
+
+<div class="mx-wrap" id="mx" data-mode="easy">
+  <h1>&#x1F300; 믹서 개발 이력</h1>
+  <div class="mx-top">
+    <p class="mx-note" style="margin:0;max-width:640px">
+      건식 믹싱 DEM(드럼 · 5상 · 점착 사다리)이 어떻게 발전했는지 <b>버전 누적</b>으로 본다.
+      원본 <code>docs/mixer_devlog/vNN_YYYYMMDD.md</code> · 정본 <code>docs/reviews/mixing_model_design_20260919.md</code>.
+      인용 금지값은 렌더 직전 <code>ledger_view.redact</code> 가 가린다.
+    </p>
+    <div class="mx-toggle" role="tablist">
+      <button class="on" data-m="easy" onclick="mxMode('easy')">쉬운 판</button>
+      <button data-m="detail" onclick="mxMode('detail')">자세한 판</button>
+    </div>
+  </div>
+
+  {% if entries %}
+  <div class="mx-timeline">
+    {% for e in entries|reverse %}
+    <a class="mx-chip" href="#{{ e.key }}"><b>{{ e.ver }}</b> {{ e.date }} · {{ e.title.split(' — ')[-1].split(' (')[0] }}</a>
+    {% endfor %}
+  </div>
+
+  {% for e in entries %}
+  <div class="card mx-card" id="{{ e.key }}">
+    <div class="mx-head"><span class="mx-ver">{{ e.ver }}</span><span class="mx-date">{{ e.date }}</span>
+      {% if e.redacted %}<span class="mx-note">⟨인용금지 가림 적용⟩</span>{% endif %}</div>
+    <div class="mx-title">{{ e.title }}</div>
+    {% if e.blurb %}<div class="mx-blurb">{{ e.blurb }}</div>{% endif %}
+    <div class="mx-body easy">{{ e.easy_html|safe }}</div>
+    <div class="mx-body detail">{{ e.detail_html|safe }}</div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <div class="card">아직 버전이 없다. <code>docs/mixer_devlog/v01_YYYYMMDD.md</code> 를 추가하면 여기 뜬다.</div>
+  {% endif %}
+</div>
+
+<script>
+function mxMode(m){
+  var w=document.getElementById('mx'); w.setAttribute('data-mode',m);
+  document.querySelectorAll('.mx-toggle button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-m')===m);});
+  try{localStorage.setItem('mx-mode',m);}catch(e){}
+}
+try{var s=localStorage.getItem('mx-mode'); if(s==='detail'){mxMode('detail');}}catch(e){}
+</script>
+{% endblock %}

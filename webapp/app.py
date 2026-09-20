@@ -4368,6 +4368,71 @@ def worklog_view(key):
                            date=f'{key[:4]}-{key[4:6]}-{key[6:8]}', key=key)
 
 
+# ─────────────────────────  믹서 개발 이력 (/mixer)  ─────────────────────────
+#  §24 믹싱 모델의 발전을 **버전 누적**으로 한 페이지에 보인다 (1저자 요청 2026-09-20:
+#  "쉬운 버전/자세한 버전으로 version 업데이트 느낌으로 사진 첨부, 계속 누적").
+#  출처: docs/mixer_devlog/vNN_YYYYMMDD.md — 한 파일 = 한 버전.  `## 쉬운 판` / `## 자세한 판`
+#  두 절로 나뉘고 그림은 /static/mixer/*.png.  키는 정규식으로 완전히 결정 → 경로탈출 없음.
+#  ⚠ /worklog 과 같은 관문: 렌더 직전에 ledger_view.redact 를 markdown 변환 **전에** 건다.
+_MIXER_DEVLOG_DIR = 'docs/mixer_devlog'
+_MIXER_DEVLOG_RE = r'v(\d{2})_(\d{8})\.md'
+
+
+def _mixer_devlog_entries():
+    """[{ver, date, title, blurb, easy_html, detail_html, redacted}] — 최신 버전이 앞."""
+    import re as _re
+    try:
+        import markdown as _md
+    except ImportError:
+        _md = None
+    try:
+        names = os.listdir(_repo_path(_MIXER_DEVLOG_DIR))
+    except OSError:
+        return []
+    ents = []
+    for fn in sorted(names):
+        m = _re.fullmatch(_MIXER_DEVLOG_RE, fn)
+        if not m:
+            continue
+        with open(os.path.join(_repo_path(_MIXER_DEVLOG_DIR), fn), encoding='utf-8') as f:
+            raw = f.read()
+        txt = ledger_view.redact(raw)
+        title, blurb = '', ''
+        for line in txt.splitlines():
+            if not title and line.startswith('# '):
+                title = line[2:].strip()
+            elif not blurb and line.startswith('> '):
+                blurb = line[2:].strip()
+            if title and blurb:
+                break
+        #  두 절로 나눈다 — 없으면 전체를 자세한 판으로 (빈 화면을 만들지 않는다)
+        i_e = txt.find('\n## 쉬운 판')
+        i_d = txt.find('\n## 자세한 판')
+        if i_e >= 0 and i_d > i_e:
+            easy, detail = txt[i_e + len('\n## 쉬운 판'):i_d], txt[i_d + len('\n## 자세한 판'):]
+        else:
+            easy, detail = '', txt
+
+        def _render(t):
+            if _md:
+                return _md.markdown(t, extensions=['tables', 'fenced_code'])
+            return '<pre>' + t.replace('&', '&amp;').replace('<', '&lt;') + '</pre>'
+        key, date = m.group(1), m.group(2)
+        ents.append({'ver': f'v0.{int(key)}', 'key': key,
+                     'date': f'{date[:4]}-{date[4:6]}-{date[6:8]}',
+                     'title': title or fn, 'blurb': blurb,
+                     'easy_html': _render(easy), 'detail_html': _render(detail),
+                     'redacted': txt != raw})
+    ents.sort(key=lambda e: e['key'], reverse=True)
+    return ents
+
+
+@app.route('/mixer')
+def mixer_devlog():
+    """믹서 개발 이력 — 버전 누적, 쉬운/자세한 토글."""
+    return render_template('mixer.html', active='mixer', entries=_mixer_devlog_entries())
+
+
 @app.route('/litdb')
 def litdb_page():
     """논문 digest 통합 검색 — 전 브랜치의 litdb 카드 + 작업노트를 한 화면에서."""
