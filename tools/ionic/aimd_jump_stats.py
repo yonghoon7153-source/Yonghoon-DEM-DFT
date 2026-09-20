@@ -22,7 +22,7 @@ Usage:
       --lags_ps 0.5 2 10 --hop_persist 5
   (save_fs auto-read from sibling aimd_results.json if present)
 """
-import argparse, json, re, sys
+import argparse, hashlib, json, re, shutil, sys
 from pathlib import Path
 import pathlib
 import numpy as np
@@ -227,6 +227,170 @@ def hop_census(uw_Li, dt_ps, lag_ps, min_dist):
                               "p90": float(np.percentile(per_ion_max, 90))},
             "⛔_하한이다": "한 이온이 여러 번 뛰어도 **1 로 센다**. 그리고 lag = 창 전체면 "
                           "**왕복은 아예 안 보인다** (양끝 순변위와 같아진다)."}
+
+
+def _sha256_file(path) -> str:
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def _pair_key(d, tag):
+    """사건의 동일성 키 = **원시 끝점 쌍의 sha256**. 파일이 없으면 **중단**한다."""
+    fi, ff = Path(d) / f"{tag}_i.xyz", Path(d) / f"{tag}_f.xyz"
+    for f in (fi, ff):
+        if not f.exists():
+            raise SystemExit(f"⛔ {f} 가 없다 — **없음이 아니라 미회수**다. 합치지 않는다")
+    return (_sha256_file(fi), _sha256_file(ff))
+
+
+def merge_events_dirs(dirs, out_dir, known=None, log=print):
+    """여러 lag 의 `events/` 를 **사전등록 규칙대로** 합친다 → 합집합 events 디렉터리.
+
+    왜 (2026-09-20 · 재개조건 ① 카드 §2-①b). `hop_census` 는 한 번에 lag 하나만 돈다.
+    lag 을 1·2·3·4 ps 로 돌리면 **같은 사건이 여러 번** 들어오는데, 합치는 규칙이 없으면
+    사람이 고르게 된다 — 그게 사후 선택이다.
+
+    규칙 (결과 보기 전에 박혔다)
+      ① 사건의 동일성은 **원시 끝점 쌍의 sha256**(`_i.xyz`, `_f.xyz`)으로 본다.
+         ev04/ev07 중복(2026-09-19 라운드1 무효 원인)을 잡았던 바로 그 기준이다.
+      ② 같은 쌍이 여러 lag 에 있으면 **가장 짧은 lag** 을 남긴다. 동률이면 `disp_A` 큰 것.
+         — 결정적이고 결과와 무관하다.
+      ③ `known`(이미 판정된 모집단, 예: lag 5 ps 라운드2)과 겹치는 쌍은 `inherited_known`
+         으로 **기록만** 하고 산출에서 뺀다 (다시 안 돌린다). 단 그중 `disp_A` 최대
+         **한 건**만 `control` 로 남긴다 — 앞 라운드 판정을 재현하는지 보기 위해서다.
+      ④ **n_new** = 산출 중 `new` 인 것의 수. `control` 은 안 센다.
+
+    ⛔ 이 함수가 하지 않는 것
+      · 사건을 **고르지 않는다**. 문턱이 이미 골랐고 여기서는 합칠 뿐이다.
+      · 끝점이 0 K 극소인지 판정하지 않는다 — 그건 G-B7 이고 다음 단계다.
+      · 서로 다른 문턱(`min_dist_A`)을 섞지 않는다. 다르면 시작하지 않는다.
+      · 같은 lag 을 두 번 받지 않는다 (같은 dir 을 실수로 두 번 준 경우).
+      · `truncated=true` 목록을 합치지 않는다 (사람이 N 을 고른 목록이다).
+      · 창(`t_from/t_to`)이 같은지는 **검사하지 못한다** — events.json 에 안 들어 있다.
+        부르는 쪽이 같은 창으로 돈 dir 만 준다.
+    """
+    dirs = [Path(x) for x in dirs]
+    if len(dirs) < 2:
+        raise SystemExit("⛔ --merge_events 는 events 디렉터리를 **둘 이상** 받는다")
+    metas = []
+    for d in dirs:
+        ej = d / "events.json"
+        if not ej.exists():
+            raise SystemExit(f"⛔ {ej} 가 없다 — census 를 먼저 돌린다")
+        m = json.loads(ej.read_text(encoding="utf-8"))
+        if m.get("truncated"):
+            raise SystemExit(f"⛔ {ej} 는 truncated=true 다 — 사람이 N 을 고른 목록이라 "
+                             "합치지 않는다 (--hop_events_all 로 다시 돌린다)")
+        metas.append((d, m))
+    mins = {round(float(m["min_dist_A"]), 6) for _, m in metas}
+    if len(mins) != 1:
+        raise SystemExit(f"⛔ 문턱이 섞였다 (min_dist_A = {sorted(mins)}) — 같은 눈금만 합친다")
+    lags = [round(float(m["lag_ps"]), 6) for _, m in metas]
+    if len(set(lags)) != len(lags):
+        raise SystemExit(f"⛔ 같은 lag 이 두 번 들어왔다 ({sorted(lags)}) — "
+                         "같은 디렉터리를 두 번 주지 않았는지 본다")
+
+    known_keys = {}
+    if known is not None:
+        kd = Path(known)
+        kj = kd / "events.json"
+        if not kj.exists():
+            raise SystemExit(f"⛔ {kj} 가 없다 (--merge_known)")
+        km = json.loads(kj.read_text(encoding="utf-8"))
+        if round(float(km["min_dist_A"]), 6) not in mins:
+            raise SystemExit("⛔ --merge_known 의 문턱이 다르다 "
+                             f"({km['min_dist_A']} vs {sorted(mins)[0]}) — "
+                             "같은 눈금이어야 겹침 판정이 성립한다")
+        for e in km["events"]:
+            known_keys[_pair_key(kd, e["tag"])] = e["tag"]
+
+    rows = []
+    for d, m in metas:
+        L = round(float(m["lag_ps"]), 6)
+        for e in m["events"]:
+            rows.append({"lag_ps": L, "src_dir": str(d), "src_tag": e["tag"],
+                         "ev": e, "key": _pair_key(d, e["tag"])})
+    #: 규칙 ② — 짧은 lag 먼저, 동률이면 변위 큰 것 먼저. 앞선 것이 이긴다.
+    rows.sort(key=lambda r: (r["lag_ps"], -float(r["ev"]["disp_A"])))
+    seen, merged, dropped = {}, [], []
+    for r in rows:
+        if r["key"] in seen:
+            dropped.append({"lag_ps": r["lag_ps"], "src": f'{r["src_dir"]}::{r["src_tag"]}',
+                            "duplicate_of": seen[r["key"]]})
+            continue
+        seen[r["key"]] = f'{r["src_dir"]}::{r["src_tag"]}'
+        merged.append(r)
+
+    inh = [r for r in merged if r["key"] in known_keys]
+    ctrl = max(inh, key=lambda r: float(r["ev"]["disp_A"])) if inh else None
+    keep, inherited = [], []
+    for r in merged:
+        if r["key"] in known_keys:
+            r["merge_status"] = "control" if r is ctrl else "inherited_known"
+            r["known_tag"] = known_keys[r["key"]]
+        else:
+            r["merge_status"] = "new"
+        (keep if r["merge_status"] != "inherited_known" else inherited).append(r)
+
+    outd = Path(out_dir)
+    evd = outd / "events"
+    evd.mkdir(parents=True, exist_ok=True)
+    man = []
+    for k, r in enumerate(keep, 1):
+        a = int(r["ev"]["atom_index"])
+        tag = f"ev{k:02d}_atom{a}"
+        for suf in ("i", "f"):
+            shutil.copyfile(Path(r["src_dir"]) / f'{r["src_tag"]}_{suf}.xyz',
+                            evd / f"{tag}_{suf}.xyz")
+        man.append({**r["ev"], "tag": tag, "merge_status": r["merge_status"],
+                    "source": {"dir": r["src_dir"], "tag": r["src_tag"],
+                               "lag_ps": r["lag_ps"]},
+                    **({"known_tag": r["known_tag"]} if "known_tag" in r else {})})
+    n_new = sum(1 for r in keep if r["merge_status"] == "new")
+    meta = {"rule": ("합집합 — sha256 쌍 중복제거 · **가장 짧은 lag 우선**(동률이면 disp_A) · "
+                     "known 과 겹치면 inherited_known(제외), 그중 최대 하나만 control"),
+            "truncated": False,
+            "lag_ps": None, "lag_ps_set": sorted(lags),
+            "⛔_lag_ps_는_하나가_아니다": "합집합이라 단일 lag 이 없다. `lag_ps_set` 을 본다.",
+            "min_dist_A": sorted(mins)[0],
+            "n_total_events": len(rows), "taken": len(man),
+            "n_new": n_new, "n_control": sum(1 for r in keep
+                                             if r["merge_status"] == "control"),
+            "n_inherited_known": len(inherited),
+            "n_duplicates_dropped": len(dropped),
+            "merge_sources": [{"dir": str(d), "lag_ps": round(float(m["lag_ps"]), 6),
+                               "n": len(m["events"])} for d, m in metas],
+            "known_dir": str(known) if known else None,
+            "inherited": [{"src": f'{r["src_dir"]}::{r["src_tag"]}',
+                           "known_tag": r["known_tag"],
+                           "disp_A": r["ev"]["disp_A"]} for r in inherited],
+            "duplicates_dropped": dropped,
+            "⛔_끝이_최소인지는_모른다": "이완은 다음 단계다 (G-B7).",
+            "events": man}
+    (evd / "events.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1),
+                                     encoding="utf-8")
+    log(f"[합집합] 입력 {len(rows)} 사건 (lag {sorted(lags)}) → 중복제거 {len(dropped)} 건 "
+        f"→ 남은 {len(merged)} 건")
+    if known is not None:
+        log(f"  known({known}) 과 겹침 {len(inh)} 건 → inherited {len(inherited)} · "
+            f"control {'1' if ctrl else '0'} 건")
+    log(f"  ★ **n_new = {n_new}** (control 은 안 센다) · 산출 {len(man)} 쌍 → {evd}/")
+    return meta
+
+
+def _merge_cli(argv):
+    """`--merge_events` 전용 파서. 본 파서의 required(--traj/--label/--out_dir)를
+    느슨하게 만들지 않으려고 따로 둔다 — 정상 경로의 가드를 건드리지 않는다."""
+    ap = argparse.ArgumentParser(prog="aimd_jump_stats.py --merge_events")
+    ap.add_argument("--merge_events", nargs="+", required=True, metavar="EVENTS_DIR",
+                    help="합칠 events 디렉터리들 (각 lag 의 census 산출). 궤적은 안 읽는다")
+    ap.add_argument("--merge_out", required=True,
+                    help="합집합 산출 루트 — <여기>/events/ 가 만들어진다")
+    ap.add_argument("--merge_known", metavar="EVENTS_DIR", default=None,
+                    help="이미 판정된 모집단(예: lag 5 ps 라운드2). 겹치는 쌍은 "
+                         "inherited_known 으로 빠지고 그중 disp_A 최대 한 건만 control")
+    a = ap.parse_args(argv)
+    merge_events_dirs(a.merge_events, a.merge_out, known=a.merge_known)
+    return 0
 
 
 def van_hove(uw, dt_ps, lags_ps, rmax=None, nbins=160, dr=None):
@@ -746,6 +910,112 @@ def _selftest():
         chk(False, "⛔음성: events.json 이 안 만들어졌다")
     shutil.rmtree(td, ignore_errors=True)
 
+    # ══ 합집합 (--merge_events) — 2026-09-20 재개조건 ① 카드 §2-①b ════════
+    import tempfile
+    _tmp = Path(tempfile.mkdtemp(prefix="mergeev_"))
+
+    def _mkdir_ev(name, lag, evs, min_dist=2.0, truncated=False, write_xyz_for=None):
+        """events 디렉터리 하나를 손으로 만든다. evs = [(tag, atom, disp, payload)]"""
+        d = _tmp / name
+        d.mkdir(parents=True, exist_ok=True)
+        man = []
+        for tag, atom, disp, payload in evs:
+            man.append({"li_rank": atom, "t_start_ps": 0.0, "t_end_ps": lag,
+                        "disp_A": disp, "atom_index": atom, "tag": tag})
+            if write_xyz_for is None or tag in write_xyz_for:
+                (d / f"{tag}_i.xyz").write_text(f"1\nX\nLi 0 0 0  # {payload}i\n")
+                (d / f"{tag}_f.xyz").write_text(f"1\nX\nLi 0 0 {disp}  # {payload}f\n")
+        (d / "events.json").write_text(json.dumps(
+            {"rule": "t", "truncated": truncated, "lag_ps": lag,
+             "min_dist_A": min_dist, "n_total_events": len(man),
+             "taken": len(man), "events": man}, ensure_ascii=False), encoding="utf-8")
+        return d
+
+    def _dies(fn, frag):
+        try:
+            fn()
+        except SystemExit as e:
+            return frag in str(e)
+        except Exception:
+            return False
+        return False
+
+    #: lag1 과 lag2 가 사건 'A' 를 공유한다 (payload 가 같으므로 sha256 이 같다)
+    _d1 = _mkdir_ev("lag1", 1.0, [("ev01_atom10", 10, 3.0, "A"),
+                                  ("ev02_atom11", 11, 2.4, "B")])
+    _d2 = _mkdir_ev("lag2", 2.0, [("ev01_atom10", 10, 3.0, "A"),
+                                  ("ev02_atom12", 12, 2.2, "C")])
+    _m = merge_events_dirs([_d1, _d2], _tmp / "u1", log=lambda *a, **k: None)
+    chk(_m["taken"] == 3 and _m["n_duplicates_dropped"] == 1,
+        f"[양성] 합집합 4 → 중복 1 제거 → 3 (얻은 taken={_m['taken']}, "
+        f"dropped={_m['n_duplicates_dropped']})")
+    _srcA = [e for e in _m["events"] if e["source"]["tag"] == "ev01_atom10"][0]
+    chk(_srcA["source"]["lag_ps"] == 1.0,
+        f"[양성] 중복은 **짧은 lag** 이 이긴다 (남은 것 lag={_srcA['source']['lag_ps']})")
+    chk(_m["n_new"] == 3 and _m["n_control"] == 0 and _m["n_inherited_known"] == 0,
+        "[양성] known 을 안 주면 전부 new")
+    chk(all((_tmp / "u1" / "events" / f"{e['tag']}_{s_}.xyz").exists()
+            for e in _m["events"] for s_ in ("i", "f")),
+        "[배선] 끝점 xyz 가 산출 디렉터리에 복사된다 (다음 단계가 바로 읽는다)")
+    chk(all("atom_index" in e and "tag" in e for e in _m["events"]),
+        "[배선] events.json 이 couple_endpoints_from_events 가 읽는 꼴이다")
+
+    #: known = lag5 가 'A' 와 'B' 를 이미 갖고 있다 → inherited 1 · control 1(disp 큰 A)
+    _dk = _mkdir_ev("lag5", 5.0, [("ev01_atom10", 10, 3.0, "A"),
+                                  ("ev02_atom11", 11, 2.4, "B")])
+    _m2 = merge_events_dirs([_d1, _d2], _tmp / "u2", known=_dk,
+                            log=lambda *a, **k: None)
+    chk(_m2["n_new"] == 1 and _m2["n_control"] == 1 and _m2["n_inherited_known"] == 1,
+        f"[양성] known 겹침 2 → new 1 · control 1 · inherited 1 "
+        f"(얻은 {_m2['n_new']}/{_m2['n_control']}/{_m2['n_inherited_known']})")
+    _ctl = [e for e in _m2["events"] if e["merge_status"] == "control"][0]
+    chk(abs(_ctl["disp_A"] - 3.0) < 1e-9,
+        f"[양성] control 은 **disp_A 최대** 한 건 (얻은 {_ctl['disp_A']})")
+    chk(_m2["taken"] == 2 and len(_m2["inherited"]) == 1,
+        "[양성] inherited 는 산출에서 빠지되 **기록으로 남는다** (조용히 안 버린다)")
+    chk(_m2["n_new"] == 1,
+        "[양성] ★ control 은 n_new 에 **안 센다** (재현 대조지 새 사건이 아니다)")
+
+    #: 겹침 0 이면 control 0
+    _dk0 = _mkdir_ev("lag5b", 5.0, [("ev01_atom99", 99, 9.9, "Z")])
+    _m3 = merge_events_dirs([_d1, _d2], _tmp / "u3", known=_dk0,
+                            log=lambda *a, **k: None)
+    chk(_m3["n_control"] == 0 and _m3["n_new"] == 3,
+        "[경계] known 과 겹침이 0 이면 control 도 0")
+
+    # ── 음성 경로 — 틀린 입력을 **잡아내는지** ─────────────────────────────
+    chk(_dies(lambda: merge_events_dirs([_d1], _tmp / "x", log=lambda *a, **k: None),
+              "둘 이상"),
+        "[음성] events 디렉터리 하나만 주면 거부한다 (합칠 게 없다)")
+    _empty = _tmp / "noev"; _empty.mkdir(exist_ok=True)
+    chk(_dies(lambda: merge_events_dirs([_d1, _empty], _tmp / "x",
+                                        log=lambda *a, **k: None), "가 없다"),
+        "[음성] events.json 이 없는 디렉터리를 거부한다")
+    _dt = _mkdir_ev("trunc", 3.0, [("ev01_atom20", 20, 2.5, "D")], truncated=True)
+    chk(_dies(lambda: merge_events_dirs([_d1, _dt], _tmp / "x",
+                                        log=lambda *a, **k: None), "truncated"),
+        "[음성] truncated=true 목록은 합치지 않는다 (사람이 N 을 골랐다)")
+    _dm = _mkdir_ev("mix", 3.0, [("ev01_atom21", 21, 2.5, "E")], min_dist=1.5)
+    chk(_dies(lambda: merge_events_dirs([_d1, _dm], _tmp / "x",
+                                        log=lambda *a, **k: None), "문턱이 섞였다"),
+        "[음성] 서로 다른 min_dist_A 를 섞으면 거부한다")
+    _dsame = _mkdir_ev("lag1b", 1.0, [("ev01_atom22", 22, 2.5, "F")])
+    chk(_dies(lambda: merge_events_dirs([_d1, _dsame], _tmp / "x",
+                                        log=lambda *a, **k: None), "같은 lag"),
+        "[음성] 같은 lag 이 두 번 들어오면 거부한다 (같은 dir 두 번)")
+    _dnox = _mkdir_ev("noxyz", 4.0, [("ev01_atom23", 23, 2.5, "G")],
+                      write_xyz_for=set())
+    chk(_dies(lambda: merge_events_dirs([_d1, _dnox], _tmp / "x",
+                                        log=lambda *a, **k: None), "미회수"),
+        "[음성] 끝점 xyz 가 없으면 **없음이 아니라 미회수**로 보고 중단한다")
+    _dkm = _mkdir_ev("lag5c", 5.0, [("ev01_atom10", 10, 3.0, "A")], min_dist=1.5)
+    chk(_dies(lambda: merge_events_dirs([_d1, _d2], _tmp / "x", known=_dkm,
+                                        log=lambda *a, **k: None), "문턱이 다르다"),
+        "[음성] --merge_known 의 문턱이 다르면 거부한다 (겹침 판정이 성립 안 한다)")
+    shutil.rmtree(_tmp, ignore_errors=True)
+
+    #: ⛔ 판정 출력은 **마지막 시험 뒤**다. 앞에 두면 뒤에 붙는 시험이 ok 를 떨어뜨려도
+    #   화면은 PASS 라고 말한다 — 종료코드와 화면이 갈린다 (2026-09-20 실측).
     print("selftest " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
 
@@ -802,6 +1072,9 @@ def _build_parser():
 def main():
     if "--selftest" in sys.argv:
         sys.exit(_selftest())
+    #: 합집합 모드 — 궤적을 안 읽으므로 본 파서의 required 를 타지 않는다.
+    if "--merge_events" in sys.argv:
+        sys.exit(_merge_cli(sys.argv[1:]))
     ap = _build_parser()
     args = ap.parse_args()
 
