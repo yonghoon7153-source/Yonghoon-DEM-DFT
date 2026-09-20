@@ -311,7 +311,7 @@ def _is_prime(n):
 
 
 def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None,
-         restitution=0.3):
+         restitution=0.3, n_baffles=0, baffle_h=0.10):
     #  ⚠⚠ LIGGGHTS 의 `fix insert/pack` 시드는 **소수여야 한다**.
     #    합성수를 주면 런이 `random.cpp:93` 에서 **죽는다** — 그런데 죽는 자리가
     #    셋업 뒤라 덤프 디렉터리는 이미 만들어져 있고, 배치로 돌리면 "덤프 0 개" 로만
@@ -323,6 +323,18 @@ def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None,
             f'   예: 15485863 · 32452843 · 32452867 · 49979687 · 91648301')
     n, d = p['n'], p['d']
     period = 60.0 / rpm
+    #  ★ 배플 — `D10(b)` 전단 축.  **원본 Drum.stl 은 안 건드린다** (별도 메시).
+    #  ⚠ `n_baffles = 0` 이면 아래 두 조각이 **빈 문자열**이라 덱이 배플 이전과
+    #    글자 그대로 같다 — 배플 없는 팔을 다시 돌릴 필요가 없다 (시험 ㉛ 이 강제).
+    _baffle_mesh = ('' if not n_baffles else
+                    f'fix Baffle all mesh/surface file Baffles.stl type 2 '
+                    f'scale {p["stl_scale"]:.6g}\n')
+    #  ⚠ 빈 문자열일 때 **줄이 남지 않게** 앞에 줄바꿈을 단다.  초판은 템플릿에서
+    #    제 줄을 차지해 배플 0 인 덱에 **빈 줄 하나**가 더 생겼고, 그래서 이미 돌린
+    #    런의 덱과 바이트가 달라졌다 (자기검사는 '지금 두 출력' 만 비교해 못 잡았다).
+    _baffle_move = ('' if not n_baffles else
+                    f'\nfix mvBf all move/mesh mesh Baffle rotate origin 0 0 0 '
+                    f'axis 1. 0. 0. period {period:.6g}')
     #  낙하 높이 = 드럼 지름 (꼭대기에서 바닥까지)
     if settle_s is None:
         settle_s = settle_time(2.0 * p['R'], restitution)
@@ -376,8 +388,8 @@ fix             gravi all gravity 9.81 vector 0.0 0.0 -1.0
 fix Drum  all mesh/surface file Drum.stl  type 2 scale {p['stl_scale']:.6g}
 fix Front all mesh/surface file Front.stl type 2 scale {p['stl_scale']:.6g}
 fix Back  all mesh/surface file Back.stl  type 2 scale {p['stl_scale']:.6g}
-fix walls all wall/gran model hertz tangential history cohesion sjkr rolling_friction cdt &
-    mesh n_meshes 3 meshes Drum Front Back
+{_baffle_mesh}fix walls all wall/gran model hertz tangential history cohesion sjkr rolling_friction cdt &
+    mesh n_meshes {3 + (1 if n_baffles else 0)} meshes Drum Front Back{' Baffle' if n_baffles else ''}
 
 # --- 입자 ---
 fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant {DENS['AM']*1000:.0f} radius constant {d['AM_P']/2:.6g}
@@ -433,7 +445,7 @@ run {steps_fill}
 # ② 회전 {revolutions} 바퀴 @ {rpm:.0f} rpm  (임계 {p['rpm_crit']:.0f} rpm · Fr {(2*math.pi/period)**2*p['R']/9.81:.3f})
 fix mvD all move/mesh mesh Drum  rotate origin 0 0 0 axis 1. 0. 0. period {period:.6g}
 fix mvF all move/mesh mesh Front rotate origin 0 0 0 axis 1. 0. 0. period {period:.6g}
-fix mvB all move/mesh mesh Back  rotate origin 0 0 0 axis 1. 0. 0. period {period:.6g}
+fix mvB all move/mesh mesh Back  rotate origin 0 0 0 axis 1. 0. 0. period {period:.6g}{_baffle_move}
 run {steps_run}
 """
 
@@ -571,6 +583,47 @@ def _selftest():
     chk('㉓d 소수 시드는 통과한다 (49979687)',
         not _raises(lambda: deck(p, rpm=60, revolutions=1, seed=49979687)))
 
+    #  ★★ ㉛ 배플 — `n=0` 이면 덱이 **배플 이전과 글자 그대로 같아야** 한다.
+    #     이게 깨지면 "배플 없는 팔" 을 다시 돌려야 하고, 그러면 배플 비교가
+    #     **두 축(배플 + 재실행 잡음)** 을 동시에 바꾼 비교가 된다.
+    d_none = deck(p, rpm=60, revolutions=1, arm='E1', n_baffles=0)
+    d_base = deck(p, rpm=60, revolutions=1, arm='E1')          # 기본값 = 배플 없음
+    chk('㉛ ★ 배플 0 개면 덱이 배플 이전과 **바이트 동일**', d_none == d_base)
+    d_baf = deck(p, rpm=60, revolutions=1, arm='E1', n_baffles=6, baffle_h=0.10)
+    chk('㉛b 배플을 켜면 메시가 4개가 되고 회전도 같이 받는다',
+        'n_meshes 4 meshes Drum Front Back Baffle' in d_baf
+        and 'mvBf all move/mesh mesh Baffle rotate' in d_baf
+        and 'Baffles.stl' in d_baf)
+    #  ★ 변이 — 배플 덱과 무배플 덱의 차이가 **배플 줄뿐**이어야 한다
+    _drop = lambda t: '\n'.join(l for l in t.split('\n')
+                                if 'Baffle' not in l and 'n_meshes' not in l)
+    chk('㉛c 변이: 배플 줄을 빼면 나머지는 한 글자도 안 다르다',
+        _drop(d_baf) == _drop(d_none))
+    #  ★ 회전 주기가 드럼과 같아야 한다 (따로 돌면 기구가 아니라 교반기가 된다)
+    import re as _re2
+    #  ⚠ 덱은 정렬용으로 `Drum  rotate` 처럼 **공백 두 개**를 쓴다 — ` +` 로 받는다
+    #    (초판 정규식이 공백 하나라 4개 중 2개만 잡아 시험이 실패했다 — 코드가
+    #     아니라 **시험이** 틀린 경우다)
+    _per = _re2.findall(r'move/mesh mesh \w+ +rotate origin 0 0 0 axis 1\. 0\. 0\. '
+                        r'period ([0-9.eE+-]+)', d_baf)
+    chk(f'㉛d 배플이 드럼과 **같은 주기**로 돈다 ({len(_per)} 메시, 값 {set(_per)})',
+        len(_per) == 4 and len(set(_per)) == 1)
+    #  ★★ ㉛e — ㉛ 이 **놓쳤던** 것.  ㉛ 은 '지금 만든 두 출력' 을 비교하므로 둘 다
+    #     똑같이 망가지면 통과한다.  실제로 `{_baffle_move}` 가 제 줄을 차지해
+    #     배플 0 덱에 **빈 줄 하나**가 더 생겼고, 이미 돌린 런의 덱과 바이트가
+    #     달라졌는데 ㉛ 은 초록이었다.  ⇒ **구조를 직접 못 박는다.**
+    _lines = d_none.split('\n')
+    _mvb = next(i for i, l in enumerate(_lines) if 'move/mesh mesh Back' in l)
+    chk('㉛e ★ 배플 0 덱의 회전 블록 뒤에 **빈 줄이 안 생긴다** '
+        '(두 출력 비교로는 못 잡는 자리)',
+        _lines[_mvb + 1].strip() != '')
+    #  배플 덱은 정확히 **세 줄만** 다르다 (메시 · n_meshes · 회전)
+    import difflib as _dl
+    _dif = [l for l in _dl.unified_diff(d_none.split('\n'), d_baf.split('\n'), n=0)
+            if l[:1] in '+-' and l[:3] not in ('+++', '---')]
+    chk(f'㉛f 배플 덱은 정확히 메시·n_meshes·회전 **세 자리만** 다르다 (실제 {len(_dif)} 줄)',
+        len(_dif) == 4 and sum(1 for l in _dif if l.startswith('+')) == 3)
+
     #  ★★ 점착 눈금 — **실측 앵커**.  이 다섯이 새 사다리의 근거다.
     #  실측 3.50 % — 강체 내부 쌍을 제외하고 다시 잰 값 (초판 3.54 % 는 섬유 자기겹침 포함)
     chk(f'㉔ 겹침식이 E1 실측을 맞힌다 (예측 {overlap_for_ced(3e5, 3e-4, .30)*100:.2f} % '
@@ -614,6 +667,10 @@ if __name__ == '__main__':
     ap.add_argument('--cgf', type=float, default=200.0)
     ap.add_argument('--rpm', type=float, default=60.0)
     ap.add_argument('--revolutions', type=int, default=5)
+    ap.add_argument('--baffles', type=int, default=0,
+                    help='배플 개수 (D10(b) 전단 축).  0 이면 덱이 배플 이전과 바이트 동일')
+    ap.add_argument('--baffle-h', type=float, default=0.10,
+                    help='드럼 반경 대비 배플 높이.  기본 0.10')
     ap.add_argument('--seed', type=int, default=32452843,
                     help='삽입 시드.  ⚠ 판정선(§7)이 SE_시드를 요구하므로 **반복이 필요하다**')
     ap.add_argument('--settle-s', type=float, default=None,
@@ -654,6 +711,15 @@ if __name__ == '__main__':
                 f.write(fibre_file(p['nsph'], p['d']['PTFE']))
             with open(os.path.join(d, 'in.mixer'), 'w') as f:
                 f.write(deck(p, a.rpm, a.revolutions, arm=arm,
-                             settle_s=a.settle_s, seed=a.seed))
+                             settle_s=a.settle_s, seed=a.seed,
+                             n_baffles=a.baffles, baffle_h=a.baffle_h))
+            if a.baffles:
+                import importlib.util as _iu
+                _sp = _iu.spec_from_file_location(
+                    '_bf', os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                        'make_mixer_baffles.py'))
+                _bf = _iu.module_from_spec(_sp); _sp.loader.exec_module(_bf)
+                with open(os.path.join(d, 'Baffles.stl'), 'w') as f:
+                    f.write(_bf.to_stl(_bf.baffle_tris(a.baffles, a.baffle_h)))
             print(f'   → {d}/in.mixer   [{arm}] {ARMS[arm]["desc"]}')
         print('⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다')
