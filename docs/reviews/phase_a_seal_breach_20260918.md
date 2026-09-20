@@ -103,7 +103,7 @@ n_arms = 32 · receipt_code_sha = 70b9e37a
 | | |
 |---|---|
 | `scripts/phase_a_rerun_from_sh.py` (신설) | 원본 `.sh` 에서 **등록된 이탈만** 고친다.  그 외 토큰이 움직이면 거부.  selftest 21/21 (음성대조 6) |
-| 러너 게이트 (미착수) | `--expect-physics` 에 봉인 축이 없으면 **ABORT** — §3 의 재발 방지 |
+| 러너 게이트 | ✅ **닫힘** (`PASL-04`, `09369f8a3`) — 러너마다가 아니라 **길목**에 뒀다: `mpm_webapp_payload.assert_contract_seal()` 이 ⓐ `--ptfe-stamp` 이 **유도된 값**이면 ABORT(명시 강제) ⓑ 봉인 축이 **선언에 없으면** ABORT(선언 완전성).  `--expect-physics` 없는 진단·탐침 런은 안 건드린다.  ★ 이것이 **QC 8팔을 지키는 게이트**다 — 96팔이 깨질 때 없던 바로 그 보호다 |
 | 어댑터 `code_sha` 이중 fail-open | ✅ **닫힘** (`PASL-03`) — 기본이 **거부**다.  탈출구 `--code-sha-missing-ok "<이유>"` 는 **이유를 요구하고 요약에 도장을 찍는다**(`code_sha_status`), 조용한 통과가 없다.  재현 시험 ㉝(전 팔 부재 → 거부) · ㉞(영수증에만 부재 → 거부) · ㊲(정상은 `SEALED`) · ㊳(불필요한 면제는 거부) |
 | `scripts/phase_a_preflight.py` (신설 2026-09-20) | 어댑터 **전에** 영수증(수 KB)만 읽어 봉인 3축을 본다 — 어댑터는 4.8 GB 를 읽고서야 거부한다.  봉인 축은 어댑터의 `SEAL` 을 **가져다** 쓴다(두 벌 금지).  selftest 10/10, 이탈 3축을 각각 재현 |
 
