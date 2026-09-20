@@ -151,6 +151,22 @@
     바로 죽였으면 LOBSTER 는 죽고 재시작은 segfault 였다.
 - **desktop WSL**: ORCA r2SCAN-3c (SDCP 분자 계열).
 - 공통: 실행 스크립트에 pgrep 중복실행 가드, 출력 grep은 `grep -a`(NUL 오염 대비), watch 스크립트 관례 유지.
+- ⛔⛔ **`pgrep -f <패턴>` 은 자기 자신을 센다 — 개수로 쓰면 틀린다** (2026-09-20 에 **하루 두 번** 밟았다).
+  패턴이 명령줄에 들어간 것은 **전부** 걸린다: `watch` 프로세스 · 그 `sh -c` · pgrep 을 감싼 서브셸 ·
+  그 패턴을 쓰는 다른 watch. 실측: MD 파이썬이 **2 개**인데 `pgrep -c -f disorder_ensemble_diffusion`
+  이 **5** 를 줬다. 같은 함정의 앞선 판 — tmux 대기 스크립트가 자기 래퍼를 세서 **영원히 안 끝났다**.
+  ```
+  # ⛔ 이렇게 세지 마라
+  pgrep -c -f disorder_ensemble_diffusion
+  # ✅ comm 으로 거른다 (진짜 그 프로그램만)
+  for x in $(pgrep -f disorder_ensemble_diffusion); do
+    case "$(cat /proc/$x/comm 2>/dev/null)" in python*) echo $x;; esac; done | wc -l
+  ```
+  · **살았나 죽었나**만 볼 때는 개수 말고 **PID 를 잡아 `kill -0 <PID>`** 를 쓴다.
+  · watch 문자열 안에서 그 패턴을 쓰면 **watch 자신이 걸린다** — 특히 조심.
+- ⭐ **진행 신호는 "끝난 것" 이 아니라 "시작한 것" 으로 본다.** MD 러너는 `ensemble_results.json` 을
+  런이 **끝나야** 쓴다(`disorder_ensemble_diffusion.py:507`) — 7 시간짜리면 그동안 0 으로 보여서
+  멈춘 것처럼 읽힌다. `run_meta.json`(시작 시 기록) 개수를 같이 찍는다.
 - **산출물 회수 기본 경로 = `C:\Users\Administrator\Downloads\`** (1저자 지정 2026-09-01).
   scp 블록은 이 경로를 기본으로 쓰고, 받은 뒤 해시 대조까지 한 블록에 넣는다
   (PowerShell `Get-FileHash -Algorithm SHA256` · cmd `certutil -hashfile <경로> SHA256`).
