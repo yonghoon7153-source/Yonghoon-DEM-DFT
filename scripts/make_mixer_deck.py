@@ -125,6 +125,18 @@ ARMS = {
     'E3': dict(desc='SE 만 Bo ×10 (대조)', bond=1.0, mult={('SE', 'SE'): 10.}),
     'E4': dict(desc='AM 만 Bo ×100 (축 확장)', bond=1.0,
                mult={('AM_P', 'AM_P'): 100., ('AM_P', 'AM_S'): 100., ('AM_S', 'AM_S'): 100.}),
+    #  ★★ 코팅 — **AM 표면이 황화물(SE)이 된다** (1저자 질문, 2026-09-20)
+    #  코팅은 **닿는 면을 바꾼다**: 코팅된 AM 끼리의 접촉은 `SE 표면 ↔ SE 표면` 이다.
+    #  ⇒ AM-AM 쌍의 CED 를 **SE-SE 쌍의 값으로 덮는다**.
+    #  ⚠ 바꾸는 것은 **표면 물성(CED)** 이지 Bond 수가 **아니다** — 코팅층은 얇아
+    #    입자의 크기·질량이 안 바뀌므로 `Bo = F_coh/W` 는 **따라 나오게** 둬야 한다.
+    #    (Bo 를 SE 와 같게 맞추면 코팅이 입자를 가볍게 만든 셈이 되어 틀린다.)
+    #  ⚠ AM-SE 쌍은 이미 SE 값이다 (`min(cand)` 규약) — 코팅해도 그대로다.
+    #  ⛔ **피복률(patchy)은 축에 없다** — 1저자 지시 2026-09-20: *"피복률까지 넣으면
+    #    계산이 복잡해진다.  이 전극이 더 잘 믹싱되는지만 보고 싶다"*.
+    #    ⇒ 이 팔은 **완전 피복**을 뜻한다.  부분 피복은 이 결과와 무피복 사이에 있다.
+    'C1': dict(desc='★ AM 에 황화물 코팅 — AM 표면이 SE 가 된다 (완전 피복)',
+               bond=1.0, mult={}, coat={'AM_P': 'SE', 'AM_S': 'SE'}),
 }
 
 
@@ -191,6 +203,16 @@ def ced_matrix(arm, d):
                 cand.append(ced_for_bond(bond0 * a['bond'] * f,
                                          d[t] / 2.0, nu, DENS[mat]))
             M[i][j] = min(cand)
+    #  ★ 코팅 — 코팅된 두 상이 닿으면 **둘 다 코팅재 표면**이므로 그 쌍의 CED 를
+    #    코팅재끼리의 값으로 **덮는다**.  설계식을 다시 풀지 않고 **값을 복사**한다
+    #    (그래야 "표면이 그 재료가 된다" 는 뜻이 그대로 담긴다).
+    coat = a.get('coat') or {}
+    if coat:
+        for i, ti in enumerate(TYPES):
+            for j, tj in enumerate(TYPES):
+                si, sj = coat.get(ti, ti), coat.get(tj, tj)   # 실제 닿는 표면
+                if (si, sj) != (ti, tj):
+                    M[i][j] = M[TYPES.index(si)][TYPES.index(sj)]
     for i in range(n):                                # ★ 비대칭 입력을 막는다
         for j in range(i + 1, n):
             assert abs(M[i][j] - M[j][i]) < 1e-9, '행렬이 비대칭이다'
@@ -623,6 +645,29 @@ def _selftest():
             if l[:1] in '+-' and l[:3] not in ('+++', '---')]
     chk(f'㉛f 배플 덱은 정확히 메시·n_meshes·회전 **세 자리만** 다르다 (실제 {len(_dif)} 줄)',
         len(_dif) == 4 and sum(1 for l in _dif if l.startswith('+')) == 3)
+
+    #  ★★ ㉜ 코팅 팔 — "AM 표면이 SE 가 된다"
+    Mc = ced_matrix('C1', dd)
+    M1 = ced_matrix('E1', dd)
+    _i = {t: k for k, t in enumerate(TYPES)}
+    chk(f'㉜ 코팅하면 AM-AM CED 가 **SE-SE 값**이 된다 '
+        f'({M1[_i["AM_P"]][_i["AM_P"]]:.3g} → {Mc[_i["AM_P"]][_i["AM_P"]]:.3g})',
+        abs(Mc[_i['AM_P']][_i['AM_P']] - Mc[_i['SE']][_i['SE']]) < 1e-9
+        and abs(Mc[_i['AM_S']][_i['AM_S']] - Mc[_i['SE']][_i['SE']]) < 1e-9
+        and abs(Mc[_i['AM_P']][_i['AM_S']] - Mc[_i['SE']][_i['SE']]) < 1e-9)
+    chk('㉜b SE-SE 자신은 안 바뀐다 (코팅재를 건드리지 않는다)',
+        abs(Mc[_i['SE']][_i['SE']] - M1[_i['SE']][_i['SE']]) < 1e-9)
+    chk('㉜c AM-SE 는 원래 SE 값이었으므로 코팅해도 그대로',
+        abs(Mc[_i['AM_P']][_i['SE']] - M1[_i['AM_P']][_i['SE']]) < 1e-9)
+    chk('㉜d 코팅 행렬도 대칭이다',
+        all(Mc[i][j] == Mc[j][i] for i in range(5) for j in range(5)))
+    #  ★ 변이 — 코팅 안 하면 AM-AM 이 SE-SE 와 **다르다** (덮어쓰기가 장식이 아님)
+    chk(f'㉜e 변이: 코팅 없으면 AM-AM ≠ SE-SE '
+        f'({M1[_i["AM_P"]][_i["AM_P"]]:.3g} vs {M1[_i["SE"]][_i["SE"]]:.3g})',
+        abs(M1[_i['AM_P']][_i['AM_P']] - M1[_i['SE']][_i['SE']]) > 1e3)
+    #  ★ 코팅은 **덜 끈적하게** 만든다 (AM 이 크고 무거워 같은 Bo 에 더 큰 CED 가 필요했다)
+    chk('㉜f 코팅이 AM-AM 점착을 **낮춘다** (방향)',
+        Mc[_i['AM_P']][_i['AM_P']] < M1[_i['AM_P']][_i['AM_P']])
 
     #  ★★ 점착 눈금 — **실측 앵커**.  이 다섯이 새 사다리의 근거다.
     #  실측 3.50 % — 강체 내부 쌍을 제외하고 다시 잰 값 (초판 3.54 % 는 섬유 자기겹침 포함)
