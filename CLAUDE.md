@@ -96,6 +96,24 @@
       np 2/4/8 에서 전부 **~33 GB** (16.65 / 8.33 / 4.17 GB per process). 메모리 걱정 말고 올려라.
     · **OMP 는 여기서 거의 일을 안 한다** (8 스레드에 118 %). `OMP_NUM_THREADS=1` + 랭크로 간다.
       kgy 와 달리 `libnvomp` 는 없어서 즉사는 안 하고 **느려지는** 형태로 나타난다.
+  · ⭐ **"출력이 멈췄다" 를 죽었다로 읽지 마라 — 90 초 표본으로 가른다** (2026-09-20 실측).
+    LOBSTER nscf 가 **20.8 시간** 출력 0 바이트였다. 살아 있었다. 판별은 `/proc` 세 줄이면 된다:
+    ```
+    PIDS=$(for x in $(pgrep -f <입력파일명>); do [ "$(cat /proc/$x/comm)" = pw.x ] && echo $x; done)
+    cpu(){ s=0; for x in $PIDS; do s=$((s+$(awk '{print $14+$15}' /proc/$x/stat))); done; echo $s; }
+    T0=$(cpu); sleep 90; echo "$(( ($(cpu)-T0)/100 )) 초 / 90 초 · 랭크 $(echo "$PIDS"|wc -l)"
+    ```
+    **랭크수 × 90 초에 근접**하면 계산 중이다. 0 이면 멈춘 것. I/O·출력이 0 인 것은 **단서가 아니다** —
+    nscf 는 k-점이 **끝나야** 쓰고, Davidson 중엔 디스크를 안 건드린다.
+    · 실측 원가 (gabia CPU 8 랭크 · nat 120 · ecutwfc 70/560): **SCF 10h33m** ·
+      **nscf 는 k-점 하나에 ~20 h** (`nbnd=920`, 시작 wfc 가 `546 atomic + **374 random**`, `nosym`).
+      LOBSTER 용 큰 nbnd + 난수 밴드가 값을 다 먹는다 — 다음에 같은 계를 돌리면 nbnd·k-격자가
+      정말 그 값이어야 하는지 **던지기 전에** 확인한다.
+  · ⛔⛔ **살아 있는 MPI 잡에 `gdb -p` 를 붙이지 마라** (2026-09-20, 내가 했다).
+    gdb 는 붙는 순간 대상을 **정지**시킨다. `timeout` 이 gdb 를 죽이면 랭크가 `T`(stopped) 로
+    남을 수 있다 (이번엔 운 좋게 자동 detach 로 풀렸다 — 운이었다). 20 시간짜리 잡에 얹을 위험이
+    아니다. ⇒ 진단은 위 `/proc` 표본으로 하고, 그래도 스택이 필요하면 `perf top -p` 를 쓴다
+    (읽기만 한다). 상태 확인: `ps -o stat= -p <pid>` 가 `T` 면 `kill -CONT`.
   · ⛔ **살아있는 MPI 잡의 환경을 복사해서 새 mpirun 을 띄우지 마라** (2026-09-19, 세 번 헛발질).
     `/proc/<pid>/environ` 의 `OMPI_MCA_orte_hnp_uri`·`ess_base_jobid` 등은 **그 잡의 런타임 상태**라
     새 mpirun 이 옛 데몬에 붙으려다 `mpirun does not support recursive calls` 로 죽는다.
