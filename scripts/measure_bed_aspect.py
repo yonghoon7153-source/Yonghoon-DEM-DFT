@@ -83,7 +83,7 @@ def read_dump(path):
     raise SystemExit(f'⛔ 읽을 수 없는 형식: {path}')
 
 
-def measure_many(d, r_container=0.05, label=None, axis='z', last=1):
+def measure_many(d, r_container=0.05, label=None, axis='z', last=1, core_r=0.25):
     """마지막 `last` 프레임의 평균 ± 표준편차.
 
     ⚠⚠ **회전 중인 침대는 한 프레임으로 재면 안 된다** — 텀블링 침대는 매 순간
@@ -97,10 +97,11 @@ def measure_many(d, r_container=0.05, label=None, axis='z', last=1):
     if not fr:
         raise SystemExit(f'⛔ {d}: 번호 붙은 덤프가 없다')
     use = fr[-last:] if last > 1 else fr[-1:]
-    ms = [measure(d, r_container, label, axis, _path=p) for _, p in use]
+    ms = [measure(d, r_container, label, axis, _path=p, core_r=core_r)
+          for _, p in use]
     out = dict(ms[-1])
     out['n_used'] = len(ms)
-    for k in ('HR', 'R', 'H', 'phi'):
+    for k in ('HR', 'R', 'H', 'phi', 'core_frac'):
         v = np.array([m[k] for m in ms], dtype=float)
         out[k] = float(v.mean())
         out[k + '_sd'] = float(v.std(ddof=1)) if len(v) > 1 else 0.0
@@ -108,7 +109,7 @@ def measure_many(d, r_container=0.05, label=None, axis='z', last=1):
     return out
 
 
-def measure(d, r_container=0.05, label=None, axis='z', _path=None):
+def measure(d, r_container=0.05, label=None, axis='z', _path=None, core_r=0.25):
     """axis = **통의 대칭축** (중력은 언제나 −z).
 
     ⚠⚠ 축을 인자로 뺀 이유 — 초판은 `hypot(x, y)` 를 **박아** 뒀고, 그것은
@@ -144,12 +145,23 @@ def measure(d, r_container=0.05, label=None, axis='z', _path=None):
         raise SystemExit(f'⛔ axis 는 x·y·z 중 하나여야 한다 (받은 값 {axis!r})')
     R99 = float(np.percentile(rad, 99))                 # 튄 입자가 최댓값을 지배하지 않도록
     H = float(z.max() - z.min())
+    #  ★ 중심부 점유율 — **가로 드럼에서 `H/R` 이 절단될 때 살아 있는 축** (`MIX-06`).
+    #    드럼은 측방 퍼짐을 고정한다 (실측 `R99/R_d` = 0.97 ± 0.002, **점착 0 인 팔까지**)
+    #    ⇒ `H/R` 은 사실상 `H` 를 상수로 나눈 것이고, `H` 가 지름에 닿으면 더 갈 곳이 없다.
+    #    강한 점착은 거기서 멈추지 않고 **드럼 축을 가로질러 다리를 놓는다** — 그것이 여기 잡힌다.
+    #  ⚠ 사전등록은 `docs/reviews/mixing_model_design_20260919.md` §14-2 다.
+    #    ⛔ 이 지표를 **그 등록 이전의 런**에 적용해 판정하지 말 것 (사후 선택이 된다).
+    core = float('nan')
+    if axis in ('x', 'y') and r_container:
+        ax = (y, z) if axis == 'x' else (x, z)          # 드럼 축에 수직인 두 성분
+        core = 100.0 * float((np.hypot(*ax) < core_r * r_container).mean())
     #  ⚠ 다분산 침대에서 `n·(4/3)π r̄³` 은 **틀린다** (AM 1.2 mm 와 SE 0.3 mm 를
     #    평균내면 부피가 엉망이 된다).  입자마다 더한다.
     Vp = float(((4 / 3) * np.pi * r ** 3).sum())
     env = env_of(R99, H)
     phi = Vp / env if (R99 > 0 and H > 0 and env > 0) else float('nan')
     return dict(label=label or d, step=step, n=n, R=R99, H=H, axis=axis,
+                core_frac=core, core_r=core_r,
                 HR=(H / R99 if R99 > 0 else float('nan')),
                 R_over_Rc=(R99 / r_container if r_container else float('nan')),
                 phi=phi, n_frames=len(fr), path=path)
@@ -164,6 +176,10 @@ def report(rs):
               if m.get('n_used', 1) > 1 else '')
         print(f'   R(99%) {m["R"]*1e3:7.2f} mm · H {m["H"]*1e3:7.2f} mm · ★ H/R {m["HR"]:6.3f}{sd}'
               f' · R/R_통 {m["R_over_Rc"]:5.3f} · φ(포락) {m["phi"]:5.3f}{nu}')
+        if m.get('core_frac') == m.get('core_frac'):     # NaN 이 아니면
+            cs = (f' ± {m["core_frac_sd"]:.3f}' if m.get('core_frac_sd') else '')
+            print(f'   중심부(r < {m["core_r"]:.2f}·R_통) {m["core_frac"]:6.3f} %{cs}'
+                  f'   ← 사전등록 §14-2 (H/R 절단 시 살아 있는 축)')
         if m['phi'] < PHI_LOOSE_WARN:
             print(f'   ⚠⚠ φ(포락) < {PHI_LOOSE_WARN} — **정착 안 된 것으로 보인다**'
                   f' (침대가 아니라 튀는 구름).  런을 늘리고 다시 잴 것.')
@@ -264,6 +280,31 @@ def _selftest():
                 abs(mx['R'] - 0.002) < 1e-4)
             chk('⑦b 변이: axis=z 는 드럼 길이(x)를 먹어 10배 넘게 크다',
                 mz['R'] > mx['R'] * 10)
+
+        #  ⑨ 중심부 점유율 — 사전등록 §14-2 (H/R 이 절단될 때 살아 있는 축)
+        with tempfile.TemporaryDirectory() as tc:
+            #  드럼 축 = x.  (y,z) 평면에서 반경을 잰다.  R_통 = 0.02
+            #  10 개 중 3 개를 r = 0.001 (< 0.25·0.02 = 0.005) 에, 7 개를 r = 0.015 에 둔다
+            pts = [(0.0, 0.001, 0.0), (0.0, 0.0, 0.001), (0.0, -0.001, 0.0)]
+            pts += [(0.0, 0.015 * np.cos(t), 0.015 * np.sin(t))
+                    for t in np.linspace(0, 6.0, 7)]
+            with open(os.path.join(tc, 'c_10.liggghts'), 'w') as fh:
+                fh.write(f'ITEM: TIMESTEP\n10\nITEM: NUMBER OF ATOMS\n{len(pts)}\n')
+                fh.write('ITEM: BOX BOUNDS mm mm mm\n-1 1\n-1 1\n-1 1\n')
+                fh.write('ITEM: ATOMS id type x y z radius\n')
+                for i, (X, Y, Z) in enumerate(pts):
+                    fh.write(f'{i+1} 1 {X} {Y} {Z} 0.0002\n')
+            mc = measure(tc, r_container=0.02, axis='x')
+            chk(f'⑨ 중심부 점유율을 정확히 낸다 (설계 30 %, 실제 {mc["core_frac"]:.1f} %)',
+                abs(mc['core_frac'] - 30.0) < 1e-9)
+            #  ★ 변이 ⓐ — 드럼 축을 z 로 보면 이 지표는 정의되지 않는다 (NaN)
+            mzz = measure(tc, r_container=0.02, axis='z')
+            chk('⑨b 변이: axis=z(세로 실린더)에서는 중심부 지표를 내지 않는다 (NaN)',
+                mzz['core_frac'] != mzz['core_frac'])
+            #  ★ 변이 ⓑ — 문턱을 바꾸면 답이 바뀐다 (상수를 내는 것이 아니다)
+            mw = measure(tc, r_container=0.02, axis='x', core_r=0.9)
+            chk(f'⑨c 변이: 문턱 0.9 면 전부 포함 (100 %, 실제 {mw["core_frac"]:.0f} %)',
+                abs(mw['core_frac'] - 100.0) < 1e-9)
     print(f'\nmeasure_bed_aspect selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -274,6 +315,8 @@ if __name__ == '__main__':
     ap.add_argument('dirs', nargs='*', help='덤프 디렉터리 (여러 개면 나란히 비교)')
     ap.add_argument('--r-container', type=float, default=0.05, help='통 반경 (m). 기본 0.05')
     ap.add_argument('--label', action='append', default=None, help='디렉터리별 표시 이름')
+    ap.add_argument('--core-r', type=float, default=0.25,
+                    help='중심부 반경 비율 (드럼 축 기준).  기본 0.25 — 사전등록 §14-2')
     ap.add_argument('--last', type=int, default=1,
                     help='마지막 N 프레임 평균 ± sd.  ★ 회전 중이면 한 바퀴 분량을 줄 것')
     ap.add_argument('--axis', default='z', choices=['x', 'y', 'z'],
@@ -286,5 +329,5 @@ if __name__ == '__main__':
         ap.error('디렉터리를 하나 이상 주세요 (예: nocoh/post coh/post)')
     labs = a.label or [None] * len(a.dirs)
     report([measure_many(d, a.r_container, labs[i] if i < len(labs) else None,
-                         axis=a.axis, last=a.last)
+                         axis=a.axis, last=a.last, core_r=a.core_r)
             for i, d in enumerate(a.dirs)])
