@@ -78,8 +78,10 @@
   `tools/doping/run_force_check_scf.sh` 가 이 전부를 ldd 에서 유도하고, 못 읽으면
   **시작하지 않는다**.
   · pw.x 를 던지기 전 `nvidia-smi` 로 **python3(UMA)가 GPU 를 쓰고 있는지** 본다 — kgy 도 공유다.
-  · **uma python = `/home/kgy/apps/miniforge3/envs/uma/bin/python3.11`** (실측 2026-09-20 ·
-    fairchem ok · torch 2.8.0+cu128). base 는 `/home/kgy/apps/miniforge3/bin/python3` 라
+  · **uma python = `/home/kgy/apps/miniforge3/envs/uma/bin/python`** (실측 2026-09-20 ·
+    fairchem ok · torch 2.8.0+cu128). envs 는 `dft · mpm · uma` 셋이다.
+    ⚠ `/proc/<pid>/exe` 는 `…/bin/python3.11` 로 풀리는데, **버전이 안 박힌 `…/bin/python` 을
+    쓴다** — 3.11 이 올라가도 안 깨진다. base 는 `/home/kgy/apps/miniforge3/bin/python3` 라
     `import fairchem` 이 실패한다. tmux·자식 프로세스엔 **절대경로**를 박는다
     (러너면 `--python <절대경로>` 도 같이 — 자식이 base 로 떨어진다).
   · ⭐ **경로를 모르면 `/proc/<pid>/exe` 에게 묻는다 — 추측·히스토리보다 이게 낫다.**
