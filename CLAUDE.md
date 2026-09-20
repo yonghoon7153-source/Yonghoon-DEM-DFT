@@ -78,6 +78,18 @@
   `tools/doping/run_force_check_scf.sh` 가 이 전부를 ldd 에서 유도하고, 못 읽으면
   **시작하지 않는다**.
   · pw.x 를 던지기 전 `nvidia-smi` 로 **python3(UMA)가 GPU 를 쓰고 있는지** 본다 — kgy 도 공유다.
+  · **uma python = `/home/kgy/apps/miniforge3/envs/uma/bin/python3.11`** (실측 2026-09-20 ·
+    fairchem ok · torch 2.8.0+cu128). base 는 `/home/kgy/apps/miniforge3/bin/python3` 라
+    `import fairchem` 이 실패한다. tmux·자식 프로세스엔 **절대경로**를 박는다
+    (러너면 `--python <절대경로>` 도 같이 — 자식이 base 로 떨어진다).
+  · ⭐ **경로를 모르면 `/proc/<pid>/exe` 에게 묻는다 — 추측·히스토리보다 이게 낫다.**
+    ```
+    pgrep -af disorder_ensemble_diffusion     # ① PID 를 얻는다 (경로는 여기서 안 나온다)
+    readlink -f /proc/<pid>/exe               # ② 실제 인터프리터 — 이게 정답이다
+    ```
+    `pgrep -af` 는 **친 그대로의 토큰**(`python3`)을 주지 해석된 경로를 안 준다. 종전 지침은
+    `~/.bash_history` 를 보라고 했는데, **돌고 있는 잡이 있으면 `/proc` 이 더 정확하다**
+    (히스토리는 그 줄이 실제로 성공했는지 모른다). 2026-09-20 에 이걸로 한 번에 잡았다.
 - **gabia** (A6000 단일 GPU, QE-GPU + fairchem/UMA): root@121.78.116.27. **pw.x와 UMA 동시 실행 금지**
   (VRAM 47/48 GB 점유 사례) — nvidia-smi로 확인 후 실행.
   · UMA python = **`/data/apps/miniforge3/envs/uma/bin/python`** (envs: dft·mace·mlipx·sevennet·uma).
