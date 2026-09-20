@@ -83,10 +83,38 @@ def scan_payload(path, keys=('component_plan', 'code_sha')):
     return want
 
 
+def discover(root, max_depth=4):
+    """`root` 아래에서 payload 배치를 찾는다 — **이름이 아니라 내용으로**.
+
+    ⚠⚠ 초판은 `phaseA_h*_*` 이름 글롭이었다.  2026-09-20 실측으로 두 군데서 틀렸다:
+      ⓐ **너무 좁다** — 재실행이 다른 이름/자리에 쓰면 못 찾고, 찾은 것이 하필
+         **옛 깨진 배치**(`phaseA_h*_20260914`)라 "이탈" 을 보고했다.  사람이 그것을
+         재실행 결과로 읽으면 정확히 거꾸로 판단한다.
+      ⓑ **너무 넓다** — `phaseA_h015_20260914.log` 같은 **파일**까지 집어
+         "디렉터리가 없다" 를 세 번 찍었다.
+    ⇒ 배치의 정의는 이름이 아니라 **`run_receipt.json` 을 가진 디렉터리**다.
+    ★ 배치를 찾으면 그 아래로는 더 내려가지 않는다 (팔 하위 디렉터리를 배치로 오인 금지).
+    """
+    root = os.path.expanduser(root)
+    if not os.path.isdir(root):
+        return []
+    hits = []
+    for dirpath, dirnames, filenames in os.walk(root):
+        rel = os.path.relpath(dirpath, root)
+        depth = 0 if rel == '.' else rel.count(os.sep) + 1
+        if 'run_receipt.json' in filenames:
+            hits.append(dirpath)
+            dirnames[:] = []                      # 배치 안으로는 안 들어간다
+            continue
+        if depth >= max_depth:
+            dirnames[:] = []
+    return sorted(hits)
+
+
 def check_dir(d, seal):
     """디렉터리 하나 → 결과 dict.  ⚠ 없는 것은 **통과가 아니다**."""
     out = dict(dir=d, problems=[], n_arms=0, receipt_sha=None,
-               ptfe=None, lean=None, sample=None, sample_sha=None)
+               ptfe=None, lean=None, sample=None, sample_sha=None, when='—')
     rp = os.path.join(d, 'run_receipt.json')
     if not os.path.isdir(d):
         out['problems'].append('디렉터리가 없다')
@@ -122,6 +150,14 @@ def check_dir(d, seal):
     if not arms:
         out['problems'].append('팔 payload 가 하나도 없다')
         return out
+    #  ★ 배치가 **언제** 돌았나 — 2026-09-20 에 옛 배치(09-14)를 재실행으로 읽을 뻔했다.
+    #    이름은 믿지 않는다 (재실행이 옛 이름을 쓸 수도, 새 이름을 쓸 수도 있다).
+    try:
+        import datetime as _dt
+        _t = max(os.path.getmtime(x) for x in arms)
+        out['when'] = _dt.datetime.fromtimestamp(_t).strftime('%m-%d %H:%M')
+    except Exception:                                        # noqa: BLE001
+        pass
     #  ② LEAN = 2 — 표본 1팔 (전수는 어댑터가 본다)
     out['sample'] = os.path.basename(arms[0])
     got = scan_payload(arms[0])
@@ -149,13 +185,14 @@ def check_dir(d, seal):
 
 def report(rows, expect_arms=32):
     seal_ok = True
-    print(f'{"디렉터리":40s} {"팔":>5s} {"ptfe_stamp":>12s} {"LEAN2":>7s} {"code_sha":>12s}')
+    print(f'{"디렉터리":36s} {"팔":>4s} {"마지막팔":>12s} {"ptfe_stamp":>11s} '
+          f'{"LEAN2":>6s} {"code_sha":>11s}')
     for m in rows:
         lean = '—' if m['lean'] is None else ('✓' if not any(
             bool(m['lean'].get(k)) != v for k, v in LEAN2_PLAN.items()) else '⛔')
         sha = (m['receipt_sha'] or '—')
-        print(f'{os.path.basename(m["dir"])[:40]:40s} {m["n_arms"]:5d} '
-              f'{str(m["ptfe"]):>12s} {lean:>7s} {str(sha)[:12]:>12s}')
+        print(f'{os.path.basename(m["dir"])[:36]:36s} {m["n_arms"]:4d} '
+              f'{m["when"]:>12s} {str(m["ptfe"]):>11s} {lean:>6s} {str(sha)[:11]:>11s}')
         for p in m['problems']:
             print(f'    ⛔ {p}')
             seal_ok = False
@@ -253,6 +290,27 @@ def _selftest():
         chk('⑦ 1 MB 청크 경계 너머의 component_plan 도 읽는다',
             check_dir(big, seal)['lean'] == LEAN2_PLAN)
 
+        #  ★★ ⑧ 탐색 — **이름이 아니라 내용으로** (2026-09-20 실측 재현)
+        #     초판 이름 글롭은 ⓐ 재실행 배치를 못 찾고 하필 **옛 깨진 배치**를 집었고
+        #     ⓑ `*.log` **파일**까지 집어 "디렉터리가 없다" 를 찍었다.
+        root = os.path.join(t, 'root')
+        mk(os.path.join(root, 'phaseA_h015_20260914'))          # 옛 이름
+        mk(os.path.join(root, '재실행', 'h015_rerun'))            # 다른 이름·한 단계 깊이
+        open(os.path.join(root, 'phaseA_h015_20260914.log'), 'w').write('x')
+        os.makedirs(os.path.join(root, 'empty_dir'), exist_ok=True)
+        got = discover(root)
+        chk(f'⑧ 이름이 달라도 배치를 찾는다 ({len(got)} 개)', len(got) == 2)
+        chk('⑧b 변이: `.log` **파일**은 배치가 아니다',
+            not any(g.endswith('.log') for g in got))
+        chk('⑧c 변이: 영수증 없는 디렉터리는 배치가 아니다',
+            not any(g.endswith('empty_dir') for g in got))
+        #  배치 안에 또 배치처럼 보이는 것이 있어도 내려가지 않는다
+        inner = os.path.join(root, 'phaseA_h015_20260914', 'sub')
+        mk(inner)
+        chk('⑧d 배치를 찾으면 그 아래로 안 내려간다 (팔 하위를 배치로 오인 금지)',
+            inner not in discover(root))
+        chk('⑧e 없는 뿌리는 빈 목록 (죽지 않는다)', discover(os.path.join(t, '없다')) == [])
+
     print(f'\nphase_a_preflight selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -260,18 +318,28 @@ def _selftest():
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
-    ap.add_argument('--pa', default='', help='~/pa 같은 상위 경로 — phaseA_h*_* 를 찾는다')
+    ap.add_argument('--pa', default='',
+                    help='~/pa 같은 상위 경로 — `run_receipt.json` 을 가진 배치를 '
+                         '**내용으로** 찾는다 (이름 글롭이 아니다)')
     ap.add_argument('--dir', action='append', default=[], help='payload 디렉터리 (여러 번)')
     ap.add_argument('--expect-arms', type=int, default=32)
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
-    dirs = list(a.dir)
+    dirs = [d for d in a.dir]
     if a.pa:
-        dirs += sorted(glob.glob(os.path.join(os.path.expanduser(a.pa), 'phaseA_h*_*')))
+        found = discover(a.pa)
+        if not found:
+            print(f'⛔ {a.pa} 아래에서 `run_receipt.json` 을 가진 배치를 못 찾았다.')
+            print('   재실행 산출물이 다른 자리에 있으면 `--dir <경로>` 로 직접 줄 것.')
+            raise SystemExit(1)
+        print(f'탐색 {os.path.expanduser(a.pa)} → 배치 {len(found)} 개 '
+              f'(`run_receipt.json` 보유 기준)\n')
+        dirs += found
     if not dirs:
         ap.error('--pa 나 --dir 중 하나는 필요하다')
+    dirs = [d for d in dict.fromkeys(dirs) if os.path.isdir(d) or True]
     seal = _adapter().SEAL
-    raise SystemExit(report([check_dir(d, seal) for d in dict.fromkeys(dirs)],
+    raise SystemExit(report([check_dir(d, seal) for d in dirs],
                             expect_arms=a.expect_arms))
