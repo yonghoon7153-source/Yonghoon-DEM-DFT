@@ -4667,6 +4667,20 @@
     "docs/reviews/mixing_model_design_20260919.md",
     "scripts/make_mixer_deck.py::deck"
    ]
+  },
+  {
+   "id": "MIX-09",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude",
+   "opened_in": "docs/reviews/mixing_model_design_20260919.md",
+   "title": "주지표 `H/R` 이 `Bo ≳ 1` 에서 **천장에 닿는다** — `Bo` 21 배 구간이 0.7 % 안에 뭉쳐 보인다",
+   "note": "경계 탐침(`B5`·`B10`)으로 사다리를 `Bo` 21 배 구간까지 채우자 드러났다 (정본 §22-3).\n★ **실측** (같은 규약 `--r-container 0.02056 --axis x --last 100`, 시드 3):\n```\nBo        1.00      2.12      21.24\nH/R       2.0061    2.0197    2.0164     ← 0.7 % 안, 단조도 아니다\ncore_frac 0.129     0.210     1.599  %  ← 12 배, 계속 간다\n```\n`Bo` 가 **21 배** 늘어도 주지표 `H/R` 이 안 움직인다 ⇒ *\"Bo 1 이나 21 이나 같다\"* 로 읽힌다.  **사실이 아니다.**\n**기전**: 침대가 통 지름을 다 쓰면 (`R99/R_d = 0.97`, §14) `R` 이 고정되고 `H` 도 더 올라갈 데가 없다 = 지표 **포화**.  `MIX-06`(절단)과 **같은 뿌리이고 반대 끝**이다 — 06 은 `R` 이 고정돼 `H/R ≡ H` 가 된 것, 09 는 그 `H` 마저 천장에 닿은 것.\n⇒ **규약: `Bo ≳ 1` 구간의 보고는 `core_frac` 으로 한다.  그 구간에서 `H/R` 차이 없음을 '점착 차이 없음' 으로 옮겨 적지 말 것.**\n★ 사전등록 §14-2 가 `core_frac` 을 *\"`H/R` 절단 시 살아 있는 축\"* 으로 **런 전에** 등록해 둔 것이 실측으로 맞았다 — 새 지표를 사후에 고를 필요가 없었다.\n⚠ `H/R` 자체는 `Bo < 1` 에서 여전히 유효하다 (E0 1.4911 → B10 2.0061 로 35 % 움직인다).  **폐기가 아니라 적용 구간 제한**이다.",
+   "evidence_tests": [
+    "docs/reviews/mixing_model_design_20260919.md",
+    "scripts/measure_bed_aspect.py::measure_many"
+   ]
   }
  ]
 }
