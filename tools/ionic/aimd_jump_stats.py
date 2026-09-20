@@ -269,8 +269,14 @@ def merge_events_dirs(dirs, out_dir, known=None, log=print):
         부르는 쪽이 같은 창으로 돈 dir 만 준다.
     """
     dirs = [Path(x) for x in dirs]
-    if len(dirs) < 2:
-        raise SystemExit("⛔ --merge_events 는 events 디렉터리를 **둘 이상** 받는다")
+    #: dir 하나면 합칠 게 없다 — 단 `known` 이 있으면 겹침 제거가 남으므로 허용한다.
+    #  (실측 동기 2026-09-20: 짧은 lag 넷 중 **한 lag 에서만** 사건이 나오는 경우가 있다.
+    #   그때 막아 버리면 정당한 경로가 도구 때문에 닫힌다.)
+    if len(dirs) < 1:
+        raise SystemExit("⛔ --merge_events 에 events 디렉터리가 없다")
+    if len(dirs) < 2 and known is None:
+        raise SystemExit("⛔ --merge_events 가 디렉터리 하나인데 --merge_known 도 없다 — "
+                         "합칠 것도 뺄 것도 없다. 그 디렉터리를 그대로 쓴다")
     metas = []
     for d in dirs:
         ej = d / "events.json"
@@ -985,8 +991,12 @@ def _selftest():
 
     # ── 음성 경로 — 틀린 입력을 **잡아내는지** ─────────────────────────────
     chk(_dies(lambda: merge_events_dirs([_d1], _tmp / "x", log=lambda *a, **k: None),
-              "둘 이상"),
-        "[음성] events 디렉터리 하나만 주면 거부한다 (합칠 게 없다)")
+              "--merge_known 도 없다"),
+        "[음성] dir 하나 + known 없음 → 거부한다 (합칠 것도 뺄 것도 없다)")
+    _m1 = merge_events_dirs([_d1], _tmp / "u4", known=_dk, log=lambda *a, **k: None)
+    chk(_m1["n_new"] == 0 and _m1["n_control"] == 1 and _m1["n_inherited_known"] == 1,
+        f"[경계] dir 하나라도 known 이 있으면 돈다 — lag1 2 건이 전부 known 과 겹쳐 "
+        f"new 0 · control 1 (얻은 {_m1['n_new']}/{_m1['n_control']})")
     _empty = _tmp / "noev"; _empty.mkdir(exist_ok=True)
     chk(_dies(lambda: merge_events_dirs([_d1, _empty], _tmp / "x",
                                         log=lambda *a, **k: None), "가 없다"),
