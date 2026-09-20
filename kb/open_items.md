@@ -3,13 +3,74 @@
 > 세션이 바뀌어도 유지되는 미결 사항 추적. 닫을 때 날짜+근거를 남기고 ✅로 옮긴다.
 > 등록: 2026-07-27 (MAX 감사 후속).
 
-## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-19 오후 — ⏭-NOW-o 가 최신 (cascade v6 부모 10 개 완성 · 기계 kgy 확정 · 막는 것은 총상한 GPU-h 하나). 같은 날 앞 블록은 ⏭-NOW-n (Nd 논지)**)
+## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-20 밤 — ⏭-NOW-p 가 최신 (LOBSTER nscf 가 두 번 끊겼다 · NdP5O14 갭이 끝나야 재시작 · Γ-only 판단 대기). 같은 날 앞 블록은 ⏭-NOW-o (cascade v6)**)
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 >
 > ⚠ **이 절의 상태 문장은 실측으로만 쓴다.** 2026-09-07 까지 여기 머리가 "ORCA 8잡 실행 중"
 > 이었는데 같은 날 실측은 **프로세스 0개**였다 — 워처·기억이 아니라 `ps`·receipt·git log 로
 > 받친다(`kb/projects/restart_runbook_2026_09_07.md`). 세션을 닫을 때 이 절을 갱신한다.
+
+### ⏭-NOW-p. 2026-09-20 밤 — **LOBSTER nscf 가 두 번 끊겼다. NdP5O14 갭이 끝나야 다시 던진다.**
+
+> 1저자 2026-09-20: *"그래 이거 끝나고 하자"* — **이거 = `/data/work/runs/cei_gap/NdP5O14*/03_nscf_gap`**.
+> 그게 끝나고 호스트 메모리가 풀려야 LOBSTER 를 올릴 수 있다.
+
+| | |
+|---|---|
+| **막는 것** | **호스트 메모리.** LOBSTER nscf 요구 `Estimated total dynamical RAM > **39.68 GB**` vs 실측 `available` **32 GB** (21:00, NdP5O14 갭이 GPU+호스트를 쓰는 중). ⛔ 7.7 GB 모자란다 |
+| **선행** | NdP5O14 `03_nscf_gap` 완주 (`JOB DONE` 확인) |
+| **판단 대기** | **Γ-only 로 갈 것인가** — 아래 §3 |
+
+**실측 (전부 `/proc`·출력에서 확인한 것)**
+
+- **경로**: `/data/work/runs/nd_ppswap_2026_09_16/lobster_frozen4f` · `lobster_nscf.in`
+- **입력 규모**: nat 120 · ecutwfc 70 / ecutrho 560 · **nbnd 920** · `nosym` · K_POINTS `2 2 1 0 0 0` → **k-점 4**
+- **원가**: SCF **10h33m**(완주) · nscf **k-점 1 개에 23.6 h**(`total cpu time 84924.5 secs`)
+  ⇒ 4 k-점 = **≈47 h**
+- **1 차 종료 (09-20 13:46)**: `Computing kpt #: 2 of 2` 찍고 끊김.
+  `JOB DONE` 없음 · QE 오류 없음 · **dmesg OOM 기록 없음**(4월·7월 것뿐) · 내 대기 스크립트도 아님
+  (NdP5O14 는 **19:47** 시작 = 6 h 뒤). ⇒ **원인 미상.**
+  ⛔ `.save/` 가 전부 09-19(SCF) 자다 — **nscf 산출물이 안 나왔다. LOBSTER 가 먹을 게 없다.**
+- **2 차 시도 (09-20 20:57)**: `setsid nohup` 으로 재던짐. 8 랭크 `Rl` 로 붙었으나
+  ⛔ **`Threads/MPI process: 20`** (8 랭크 × 20 = **160 스레드 / 물리 20 코어**, 8× 과다구독) ·
+  ⛔ **메모리 부족**(위) ⇒ **중단 결정.**
+
+**⛔ 내가 만든 손실 하나** — 2 차 시도를 `2> lobster_nscf.err` 로 던져서 **1 차의 stderr 를 덮어썼다.**
+어제 끊긴 단서가 거기 있었을 수 있고 이제 없다. ⇒ 다음부터 **`2>>`(append)** 로 간다.
+
+**3. 재시작 전에 정할 것 — Γ-only 로 갈 것인가 (1저자 판단)**
+
+| | A. 2×2×1 그대로 | B. Γ-only |
+|---|---|---|
+| k-점 | 4 | **1** |
+| 벽시계 | ≈47 h | **≈12 h** |
+| 위험 노출 | 47 h 를 두 번 잃었다 | **1/4** |
+| 대가 | — | ⚠ **ICOHP 가 k-샘플링에 딸린다 — 방법 변경이다** |
+
+- `nbnd=920` 은 **깎을 수 없다** — `build_lobster_nd.py:100` 이 LCAO 기저 함수 수(≈867)에서
+  유도한다(`int(nbf*1.05)+10`). LOBSTER 가 기저 수 이상의 밴드를 요구한다.
+- **k-점 병렬화(`-nk`)로는 총 일이 안 준다** — 어떻게 쪼개도 47 h (한 k-점 × 4).
+  **유일한 레버가 k-점 수 자체**다.
+- ⇒ B 로 가면 **개정 기록이 먼저**다 (보고량 눈금 변경).
+
+**4. 재시작 블록 (갭 끝난 뒤 · 메모리 게이트 포함)**
+
+```
+W=/data/work/runs/nd_ppswap_2026_09_16/lobster_frozen4f; cd $W
+free -g | awk 'NR==2{if($7<45){print "⛔ available "$7" GB < 45 — 던지지 마라"; exit 1} else print "✓ "$7" GB"}' || exit 1
+OMP_NUM_THREADS=1 setsid nohup mpirun --allow-run-as-root --bind-to none \
+  -x OMP_NUM_THREADS=1 -np 8 \
+  /data/apps/qe-7.4.1-cpu/PW/src/pw.x -nk 2 -inp lobster_nscf.in \
+  > lobster_nscf.out 2>> lobster_nscf.err < /dev/null &
+sleep 60; grep -aE "Parallel version|Threads/MPI|Estimated (max|total)" $W/lobster_nscf.out | head -4
+```
+나와야 하는 줄: `running on **8** processor cores` · `Threads/MPI process: **1**`
+
+⛔ **죽일 때는 `pkill -f "lobster_nscf.in"`** — `pw.x` 로는 절대 안 된다 (2026-09-19 에 그걸로
+NdP5O14 vc-relax 를 같이 죽였다).
+
+---
 
 ### ⏭-NOW-o. 2026-09-19 오후 — **cascade v6 가 실행 직전까지 왔다. 막는 것은 숫자 하나.**
 
