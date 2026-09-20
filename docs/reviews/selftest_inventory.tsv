@@ -113,6 +113,7 @@ scripts/phase_a_order_verdict.py	--selftest	fast	none	claude	초록 0.4s (실측
 scripts/phase_a_plan.py	--selftest	fast	none	claude	초록 0.4s (실측) — 계획 생성만, 실행 없음
 scripts/phase_a_precompute.py	--selftest	fast	none	claude	초록 0.5s (실측) — 순수 산술, 외부 데이터 불요
 scripts/phase_a_rerun_from_sh.py	--selftest	fast	none	claude	초록 0.1s (실측) — 합성 .sh 문자열만 쓴다, 외부 데이터 불요
+scripts/phase_a_receipt_from_sh.py	--selftest	fast	none	claude	초록 1.0s (실측) — 재실행 `.sh` 에서 영수증을 유도한다.  payload 파서를 실제로 잡아 기본값까지 채우고, 축·봉인·해시는 run_contract/어댑터에서 가져온다.  음성 대조 5건 (팔별 규약 불일치 · 전팔 off · factorial 아님 · 팔 수 불일치 · payload 읽기 함정).
 scripts/plot_cbd_contacts.py	--selftest	fast	both	claude	초록 2.2s (실측)
 scripts/plot_sigma_e_bars.py	--selftest	fast	both	claude	초록 1.6s (실측)
 scripts/porosity_close.py	--selftest	fast	none	claude	초록 0.18s (실측) — 합성 코퍼스, 외부 데이터 불요 (GAP3-18 래칫 회귀)
