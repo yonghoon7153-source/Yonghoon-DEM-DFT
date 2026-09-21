@@ -135,20 +135,42 @@ def expect_physics(tokens):
     return out
 
 
-def verify_logs(rec, log_dir, expect=None, pattern='*.log'):
-    """영수증(선언) ↔ 로그(결과) 대조 → `(problems, covered, uncovered, n_logs)`.
+#: 로그 **끝부분**이 이 중 하나면 그 런은 끝까지 안 갔다 (중단).
+#  ⚠ 끝 400 자만 본다 — 본문 중간의 경고성 'Error' 를 중단으로 읽지 않기 위해서다.
+_ABORT_RX = re.compile(r'Terminated|Killed|Segmentation fault|MemoryError'
+                       r'|out of memory|Traceback \(most recent call last\)')
 
-    ⚠ 로그에서 값을 **가져오지 않는다** — 대조만 한다."""
+
+def looks_aborted(txt):
+    """로그가 **중단된 런**의 것인가.  끝부분만 본다."""
+    return bool(_ABORT_RX.search(txt[-400:]))
+
+
+def verify_logs(rec, log_dir, expect=None, pattern='*.log', aborted_ok=None):
+    """영수증(선언) ↔ 로그(결과) 대조 → `(problems, covered, uncovered, n_logs, aborted)`.
+
+    ⚠ 로그에서 값을 **가져오지 않는다** — 대조만 한다.
+
+    ★★ **중단된 런의 로그**는 대조 대상이 아니다 (2026-09-21 실측).  실제로 있었던 일:
+      `v025 … a0` 의 payload 는 22:59 에 완주해 남았는데, 같은 팔이 한 번 더 떠서
+      23:26 에 죽으면서 **로그만 덮어썼다**.  그 로그에는 LEAN 고지가 없어 검사가
+      "LEAN 플래그 없음" 으로 거부했지만, 그것은 **산출물의 결함이 아니라 로그의 결함**이다.
+    ⛔ 그렇다고 조용히 빼지 않는다 — 빼면 규율 ⑤ 의 false-green 이다.  `aborted_ok`
+      (= `--aborted-log-ok <이유>`) 를 **명시적으로** 줘야 넘어가고, 그 이유와 로그
+      이름이 **영수증에 남는다** (`PASL-03` 의 `code_sha_status` 와 같은 방식)."""
     import re as _re
     logs = sorted(glob.glob(os.path.join(log_dir, '**', pattern), recursive=True))
-    problems, covered = [], set()
+    problems, covered, aborted = [], set(), []
     if not logs:
-        return [f'로그가 없다: {log_dir}'], covered, set(RC.RECEIPT_AXES), 0
+        return [f'로그가 없다: {log_dir}'], covered, set(RC.RECEIPT_AXES), 0, aborted
     if expect is not None and len(logs) != expect:
         problems.append(f'로그가 {len(logs)} 개다 (기대 {expect})')
     for lp in logs:
         txt = open(lp, encoding='utf-8', errors='replace').read()
         name = os.path.basename(lp)
+        if looks_aborted(txt):
+            aborted.append(name)
+            continue
         m = _re.search(r'vox\s+([0-9.]+)\s*\u00b5m', txt)
         if m:
             covered.add('vox_um')
@@ -168,7 +190,12 @@ def verify_logs(rec, log_dir, expect=None, pattern='*.log'):
         miss = [f for f in LOG_LEAN if f not in txt]
         if miss:
             problems.append(f'{name}: LEAN 플래그 없음 — {", ".join(miss)}')
-    return problems, covered, set(RC.RECEIPT_AXES) - covered, len(logs)
+    if aborted and not aborted_ok:
+        problems.append(
+            f'중단된 런의 로그 {len(aborted)} 개 — 대조에서 빼려면 '
+            f'--aborted-log-ok "<이유>" 로 **이유를 적어야** 한다 (영수증에 남는다): '
+            + ', '.join(sorted(aborted)[:5]))
+    return problems, covered, set(RC.RECEIPT_AXES) - covered, len(logs), aborted
 
 
 #: `.sh` 명령 안의 변수 참조.  배열 확장(`"${X[@]}"`)을 **먼저** 잡는다 (더 긴 형태가 앞).
@@ -307,7 +334,7 @@ def _axes_from_ns(ns):
 
 
 def build(sh_dir, out, expect_arms=None, expect_backend='gpu', force=False,
-          logs=None, log_glob='*.log'):
+          logs=None, log_glob='*.log', aborted_ok=None):
     hits, skipped = payload_calls(sh_dir)
     if not hits:
         raise SystemExit(f'⛔ {sh_dir}: payload 호출을 가진 `.sh` 가 없다')
@@ -378,14 +405,19 @@ def build(sh_dir, out, expect_arms=None, expect_backend='gpu', force=False,
     #  ⑤ 로그 교차검증 — **쓰기 전에** 한다 (어긋나면 영수증을 남기지 않는다)
     log_note = None
     if logs:
-        probs, cov, unc, nlog = verify_logs(rec, logs, expect=expect_arms,
-                                            pattern=log_glob)
+        probs, cov, unc, nlog, aborted = verify_logs(rec, logs, expect=expect_arms,
+                                                     pattern=log_glob,
+                                                     aborted_ok=aborted_ok)
         if probs:
             raise SystemExit('⛔ 로그와 어긋난다 — 영수증을 만들지 않는다 (%d 건):\n  %s'
                              % (len(probs), '\n  '.join(probs[:12])))
-        log_note = (nlog, sorted(cov), sorted(unc))
-        rec['verified_against_logs'] = nlog
+        log_note = (nlog - len(aborted), sorted(cov), sorted(unc), sorted(aborted))
+        rec['verified_against_logs'] = nlog - len(aborted)
         rec['verified_axes'] = sorted(cov)
+        #  ★ 중단된 로그는 **이름과 이유를 산출물이 들고 다닌다** (콘솔 경고는 사라진다)
+        if aborted:
+            rec['aborted_logs'] = sorted(aborted)
+            rec['aborted_log_note'] = aborted_ok
 
     dst = os.path.join(out, 'run_receipt.json')
     if os.path.exists(dst) and not force:
@@ -678,6 +710,43 @@ def _selftest():                                             # noqa: C901
         chk('㉗ 스칼라 `$SCR` 도 푼다 + 빈 배열은 0 개 단어로 사라진다',
             abs(rec6['vox_um'] - 0.15) < 1e-12 and rec6['periodic_xy'] is False)
 
+    #  ── ★ 중단된 런의 로그 (2026-09-21 실측: payload 는 완주했는데 뒤이은 중복 시도가
+    #        죽으면서 **로그만** 덮어썼다.  로그의 결함이지 산출물의 결함이 아니다) ──
+    with tempfile.TemporaryDirectory() as td:
+        sh = os.path.join(td, 'sh')
+        for i, o in enumerate(facto):
+            mk_sh(sh, f'p2_K_a{i}.sh', o, decoy=True)
+        lg = os.path.join(td, 'logs')
+        os.makedirs(lg)
+        for i in range(7):
+            open(os.path.join(lg, f'v015.a{i}.log'), 'w').write(REAL)
+        #  중단 시도: LEAN 고지 전에 죽었고 끝이 `Terminated`
+        open(os.path.join(lg, 'v015.a7.log'), 'w').write(
+            REAL.split('--no-ion')[0] + '\n  STEP3: voxelizing …\nTerminated\n')
+        try:
+            build(sh, os.path.join(td, 'o'), expect_arms=8, logs=lg)
+            caught6 = False
+        except SystemExit as e:
+            caught6 = '--aborted-log-ok' in str(e)
+        chk('㉘ 중단된 런의 로그가 있으면 **이유 없이는 거부**한다', caught6)
+
+        rec7, _, _, note3 = build(sh, os.path.join(td, 'o2'), expect_arms=8, logs=lg,
+                                  aborted_ok='중복 시도가 로그만 덮어씀 — payload 는 완주')
+        chk('㉙ 이유를 주면 그 로그를 빼고 대조하고, 이름·이유를 영수증에 남긴다',
+            rec7.get('aborted_logs') == ['v015.a7.log']
+            and '완주' in (rec7.get('aborted_log_note') or '')
+            and rec7.get('verified_against_logs') == 7 and note3[0] == 7)
+
+        #  음성 대조 — 중단이 아닌데 LEAN 이 없으면 이유를 줘도 여전히 거부한다
+        open(os.path.join(lg, 'v015.a7.log'), 'w').write(REAL.replace('--no-ion', '--yes-ion'))
+        try:
+            build(sh, os.path.join(td, 'o3'), expect_arms=8, logs=lg,
+                  aborted_ok='이유를 줘도 이건 통과하면 안 된다')
+            caught7 = False
+        except SystemExit as e:
+            caught7 = 'LEAN' in str(e)
+        chk('㉚ 중단이 아닌 로그의 LEAN 누락은 `--aborted-log-ok` 로도 안 열린다', caught7)
+
     print(f'\nphase_a_receipt_from_sh selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -695,6 +764,9 @@ def main():
     ap.add_argument('--log-glob', default='*.log',
                     help="로그 파일 패턴 — 한 디렉터리에 배치가 섞여 있을 때 (예: 'v015.*.log')")
     ap.add_argument('--force', action='store_true', help='기존 영수증을 덮는다')
+    ap.add_argument('--aborted-log-ok', default=None, metavar='REASON',
+                    help='**중단된 런**의 로그를 대조에서 뺀다. **이유 문자열이 필수**이고 '
+                         '로그 이름과 함께 영수증의 `aborted_log_note` 에 그대로 남는다')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -703,16 +775,20 @@ def main():
         ap.error('--sh 와 --out 이 필요하다')
     rec, dst, skipped, log_note = build(a.sh, a.out, a.expect_arms,
                                         a.expect_backend, a.force, a.logs,
-                                        a.log_glob)
+                                        a.log_glob, a.aborted_log_ok)
     print(f'영수증 → {dst}')
     for k in ('vox_um', 'ptfe_stamp', 'fibre_stamp', 'bridge_um', 'arms',
               'code_sha', 'receipt_digest', 'derived_sh_sha256'):
         print(f'  {k:20s} {rec.get(k)!r}')
     print(f'  origins              {len(rec["origins"])} 개')
     if log_note:
-        n, cov, unc = log_note
+        n, cov, unc, aborted = log_note
         print(f'  ★ 선언(--expect-physics)이 덮은 축: {", ".join(rec["declared_axes"])}')
         print(f'  ★ 로그 {n} 개와 대조 통과 — 덮은 축 {", ".join(cov)}')
+        if aborted:
+            print(f'  ⚠ **중단된 런**이라 대조에서 뺀 로그 {len(aborted)} 개 '
+                  f'(영수증에 이름과 이유가 남는다): {", ".join(aborted)}')
+            print(f'     이유: {rec.get("aborted_log_note")}')
         print(f'  ⚠ 로그가 **못 덮는** 축 {len(unc)} 개 (어댑터가 팔마다 매니페스트로 본다): '
               f'{", ".join(unc)}')
     if skipped:
