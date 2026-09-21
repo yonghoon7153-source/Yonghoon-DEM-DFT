@@ -3292,7 +3292,7 @@
    "id": "D-2026-09-20-lpscl-smallcell-shortlag",
    "kind": "estimand",
    "decision_state": "proposed",
-   "results_seen": false,
+   "results_seen": true,
    "record_kind": "estimand_card",
    "title": "재개조건 ① — 더 짧은 lag(1–4 ps)으로 사건 재census → G-B7 → CI-NEB. 보고량은 **통과 계수**이지 Eb 가 아니다",
    "statement": "마감 기록 `lpscl_smallcell_neb_closed_2026_09_19.json` §7 재개조건 ① 을 연다. 바뀌는 것은 **lag 하나뿐**이다 — 같은 궤적(kgy A/seed1)·같은 창(1000–1050 ps)·같은 시드·같은 담금질·같은 문턱(2.0 Å)·같은 이완 눈금(fmax 0.03·추적 가드 0.6)·같은 게이트를 승계하고, hop census 의 lag 을 5.0 ps 에서 **{1,2,3,4} ps** 로 내린다. 근거는 census 도구 자신의 한계 문구다 — lag 이 나들이 지속시간보다 길면 왕복은 양끝이 모두 집이라 **안 보인다**(lag 50 ps 에서 0, 5 ps 에서 9 가 그 증거). 보고량은 **계수 셋**이다: N₁(짧은 lag 이 새로 잡은 사건 수) · N₂(끝점 결합 생성 후 G-B7 통과 수) · N₃(CI-NEB 밴드가 G-B4·G-B5·G-B6 를 통과한 수). ⛔ **Eb 는 이 카드의 보고량이 아니다** — v2 §4·§6 그대로 ⓐ(안장 부근 QE 단일점 G-N1/G-N2) 통과가 보고 조건이고 ⓐ 는 이 카드 밖이다. 비정질에 admissible state 가 여럿이라 스칼라 장벽은 아직 정의되지 않고, 계수는 규칙이 사전등록돼 있으면 정의된다(회신 N).",
@@ -3329,6 +3329,15 @@
    ],
    "ratification": {
     "state": "proposed"
+   },
+   "outcome_2026_09_21": {
+    "branch": "갈래2",
+    "N1": 18,
+    "N2": 0,
+    "N3": null,
+    "verdict": "재개조건 ① 소진 (proposed · 1저자 확인 대기)",
+    "record": "db/properties/lpscl_smallcell_shortlag_round_2026_09_21.json",
+    "⚠": "카드 비준 없이 실행됐다 — 1저자 2026-09-20 지시 '1,2,3'"
    }
   }
  ]

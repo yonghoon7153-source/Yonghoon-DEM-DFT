@@ -1,0 +1,367 @@
+{
+ "schema": "round_result/v1",
+ "kind": "round_result",
+ "date": "2026-09-21",
+ "system": "lpscl_amorphous",
+ "citable": false,
+ "card": "db/properties/lpscl_smallcell_shortlag_estimand_2026_09_20.json",
+ "decision": "D-2026-09-20-lpscl-smallcell-shortlag (⚠ proposed — 아래 ⚠_카드_비준_상태)",
+ "제목": "재개조건 ① 라운드 — lag 1–4 ps 재census: N₁ = 18 · G-B7 통과 **0/18** (N₂ = 0) ⇒ 갈래2 · 재개조건 ① 소진",
+ "판정": "⛔ **갈래2** (N₁ ≥ 1 · N₂ = 0) — 카드 §4 결과-보기-전 규칙 그대로. **재개조건 ① 소진.** ③ NEB 은 열리지 않았고 Eb 는 없다.",
+ "산출물": "db/properties/lpscl_smallcell_shortlag_raw/ (원자료 81 파일 · 매니페스트 db/properties/lpscl_smallcell_shortlag_raw.sha256) · V100 tgz sha256 6e3f8ef680c6165d34f7c7cc69dc71832875dae46f1d79bdfe39f6fc6912f0f2",
+ "0_갈래0_대조": {
+  "lag_5.0_재현": "n_moved = **9** (카드 요구값 9) ✓ — 그 위에서 1–4 ps 를 읽었다",
+  "근거": "db/properties/lpscl_smallcell_shortlag_raw/lag5/events/events.json"
+ },
+ "1_census_N1": {
+  "lag별_원시_사건": {
+   "1.0": 5,
+   "2.0": 9,
+   "3.0": 6,
+   "4.0": 10
+  },
+  "원시_합": 30,
+  "합집합_규칙": "drop_all — 원시 끝점 쌍을 공유하는 사건은 **둘 다** 제외 (커밋 846a2e02e · v2 skip_duplicates 정책)",
+  "제외_12": [
+   {
+    "lag_ps": 2.0,
+    "src": "ev03_atom82",
+    "n_sharing": 2
+   },
+   {
+    "lag_ps": 2.0,
+    "src": "ev06_atom77",
+    "n_sharing": 2
+   },
+   {
+    "lag_ps": 2.0,
+    "src": "ev07_atom106",
+    "n_sharing": 2
+   },
+   {
+    "lag_ps": 2.0,
+    "src": "ev08_atom116",
+    "n_sharing": 2
+   },
+   {
+    "lag_ps": 3.0,
+    "src": "ev03_atom91",
+    "n_sharing": 2
+   },
+   {
+    "lag_ps": 3.0,
+    "src": "ev04_atom78",
+    "n_sharing": 2
+   },
+   {
+    "lag_ps": 3.0,
+    "src": "ev05_atom112",
+    "n_sharing": 2
+   },
+   {
+    "lag_ps": 3.0,
+    "src": "ev06_atom79",
+    "n_sharing": 2
+   },
+   {
+    "lag_ps": 4.0,
+    "src": "ev06_atom82",
+    "n_sharing": 2
+   },
+   {
+    "lag_ps": 4.0,
+    "src": "ev07_atom116",
+    "n_sharing": 2
+   },
+   {
+    "lag_ps": 4.0,
+    "src": "ev08_atom77",
+    "n_sharing": 2
+   },
+   {
+    "lag_ps": 4.0,
+    "src": "ev09_atom101",
+    "n_sharing": 2
+   }
+  ],
+  "lag5_와_겹침": 0,
+  "⭐_N1": 18,
+  "⚠_옛_합집합_24": "첫 합집합(union/)은 공유쌍에서 하나를 남겨 24 였다. 규칙 정정 뒤 18. 옛 산출은 증거로만 둔다 (union/events/events.json).",
+  "⚠_lag_간_겹침_0_인_이유": "끝점이 (t, t+lag) 라 lag 이 다르면 t_end 가 달라 sha 가 같아질 수 없다 — 실제로 걸린 12 건은 전부 **같은 lag 안 다른 Li 의 같은 시간창**이다."
+ },
+ "2_G-B7_N2": {
+  "n_events": 18,
+  "n_ok": 0,
+  "n_failed": 18,
+  "n_duplicate_raw_pair": 0,
+  "settings": {
+   "fmax_endpoint": 0.03,
+   "deep_relax": true,
+   "track_guard_A": 0.6,
+   "thresh_A": 2.0,
+   "uma": "uma-s-1p1 omat default",
+   "cell": "fixed"
+  },
+  "표_설명": "raw_disp = census 변위(≥2.0 선택 문턱) · moved_step = 이동 Li 를 최종 프레임 위치로 보낸 거리 · relaxed_li_disp = 결합 생성한 두 끝점 사이 실제 Li 변위 · backbone_rmsd = 비-Li",
+  "rows": [
+   {
+    "tag": "ev01_atom82",
+    "source_lag_ps": 1.0,
+    "raw_disp_A": 2.25,
+    "moved_step_A": 1.54,
+    "relaxed_li_disp_A": 1.133,
+    "backbone_rmsd_A": 0.0625,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev02_atom77",
+    "source_lag_ps": 1.0,
+    "raw_disp_A": 2.08,
+    "moved_step_A": 1.4,
+    "relaxed_li_disp_A": 1.074,
+    "backbone_rmsd_A": 0.0471,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev03_atom90",
+    "source_lag_ps": 1.0,
+    "raw_disp_A": 2.04,
+    "moved_step_A": 1.9,
+    "relaxed_li_disp_A": 1.413,
+    "backbone_rmsd_A": 0.0435,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev04_atom116",
+    "source_lag_ps": 1.0,
+    "raw_disp_A": 2.04,
+    "moved_step_A": 1.57,
+    "relaxed_li_disp_A": 0.331,
+    "backbone_rmsd_A": 0.0379,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev05_atom113",
+    "source_lag_ps": 1.0,
+    "raw_disp_A": 2.01,
+    "moved_step_A": 1.54,
+    "relaxed_li_disp_A": 0.728,
+    "backbone_rmsd_A": 0.0409,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev06_atom91",
+    "source_lag_ps": 2.0,
+    "raw_disp_A": 2.39,
+    "moved_step_A": 2.41,
+    "relaxed_li_disp_A": 0.765,
+    "backbone_rmsd_A": 0.054,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev07_atom90",
+    "source_lag_ps": 2.0,
+    "raw_disp_A": 2.23,
+    "moved_step_A": 2.07,
+    "relaxed_li_disp_A": 1.859,
+    "backbone_rmsd_A": 0.1892,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev08_atom101",
+    "source_lag_ps": 2.0,
+    "raw_disp_A": 2.19,
+    "moved_step_A": 1.58,
+    "relaxed_li_disp_A": 0.812,
+    "backbone_rmsd_A": 0.0415,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev09_atom88",
+    "source_lag_ps": 2.0,
+    "raw_disp_A": 2.15,
+    "moved_step_A": 1.92,
+    "relaxed_li_disp_A": 1.422,
+    "backbone_rmsd_A": 0.0883,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev10_atom78",
+    "source_lag_ps": 2.0,
+    "raw_disp_A": 2.01,
+    "moved_step_A": 2.21,
+    "relaxed_li_disp_A": 0.077,
+    "backbone_rmsd_A": 0.0347,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev11_atom82",
+    "source_lag_ps": 3.0,
+    "raw_disp_A": 2.63,
+    "moved_step_A": 2.37,
+    "relaxed_li_disp_A": 1.247,
+    "backbone_rmsd_A": 0.0639,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev12_atom88",
+    "source_lag_ps": 3.0,
+    "raw_disp_A": 2.58,
+    "moved_step_A": 2.36,
+    "relaxed_li_disp_A": 1.821,
+    "backbone_rmsd_A": 0.0982,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev13_atom88",
+    "source_lag_ps": 4.0,
+    "raw_disp_A": 2.51,
+    "moved_step_A": 1.95,
+    "relaxed_li_disp_A": 1.367,
+    "backbone_rmsd_A": 0.1017,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev14_atom90",
+    "source_lag_ps": 4.0,
+    "raw_disp_A": 2.46,
+    "moved_step_A": 2.23,
+    "relaxed_li_disp_A": 1.529,
+    "backbone_rmsd_A": 0.0603,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev15_atom95",
+    "source_lag_ps": 4.0,
+    "raw_disp_A": 2.41,
+    "moved_step_A": 2.49,
+    "relaxed_li_disp_A": 0.119,
+    "backbone_rmsd_A": 0.0539,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev16_atom78",
+    "source_lag_ps": 4.0,
+    "raw_disp_A": 2.34,
+    "moved_step_A": 2.23,
+    "relaxed_li_disp_A": 0.11,
+    "backbone_rmsd_A": 0.0565,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev17_atom117",
+    "source_lag_ps": 4.0,
+    "raw_disp_A": 2.19,
+    "moved_step_A": 1.93,
+    "relaxed_li_disp_A": 1.082,
+    "backbone_rmsd_A": 0.0673,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   },
+   {
+    "tag": "ev18_atom91",
+    "source_lag_ps": 4.0,
+    "raw_disp_A": 2.0,
+    "moved_step_A": 0.82,
+    "relaxed_li_disp_A": 0.545,
+    "backbone_rmsd_A": 0.0383,
+    "n_over_2A": 0,
+    "status": "coupled_endpoint_failed",
+    "why": "G-B7: 변위 ≥ 2.0 Å 인 원자가 **0 개**다 (하나여야 한다) — []"
+   }
+  ],
+  "요약": {
+   "relaxed_li_disp_A_min_max": [
+    0.077,
+    1.859
+   ],
+   "backbone_rmsd_A_min_max": [
+    0.0347,
+    0.1892
+   ],
+   "≥2.0_Å_원자": "18 건 전부 **0 개** (G-B7 은 '정확히 하나' 를 요구)"
+  }
+ },
+ "3_해석_카드가_허용하는_만큼만": {
+  "허용_문구_하나": "「lag 을 1 ps 까지 줄여도 결합 생성한 끝점이 한 홉의 양끝을 이루지 않았다.」 (카드 §4 갈래2 · 조건 넷 붙임: 담금질 10¹² K/s · 창 1000–1050 ps · lag {1,2,3,4} ps · 문턱 2.0 Å)",
+  "라운드2_와_같은_모양": "lag 5 라운드(0/9)와 동일 — 이완하면 Li 가 돌아온다. 이완 후 변위 최대 1.86 Å(ev07) vs 라운드2 최대 1.80 Å. 골격 RMSD 는 대체로 0.03–0.10 Å 인데 **ev07 만 0.189 Å** 로 라운드2 범위(0.047–0.109) 밖 — 그 사건은 골격도 같이 움직였다는 뜻이고, 그래도 G-B7 은 못 넘었다.",
+  "짧은_lag_이_잡은_것": "raw 변위 2.00–2.63 Å 의 사건 18 건이 새로 잡혔다(N₁ > 0). 즉 '더 짧은 나들이' 는 존재한다. 그러나 그 끝점도 0 K 이완에서 홉의 양끝이 아니다.",
+  "⛔_말하지_않는_것": [
+   "'이 유리에 Li 이동 장벽이 없다' (마감 §4 금지)",
+   "'0 K 극소가 없다' (③ 라운드가 못 갈랐다 · 카드 §1c)",
+   "Eb 값 어느 하나도 (ⓐ 밖)",
+   "σ·D·Ea 로의 번역 (1저자 인용정책 2026-09-18)",
+   "(a)/(b) 갈래 (③ 소진)",
+   "400 원자·결정질과의 비교"
+  ]
+ },
+ "4_비용_기계": {
+  "기계": "V100 (Tesla V100-PCIE-32GB · runyourai 컨테이너 5c218cf9c982) — 카드 §6 지정 기계",
+  "벽시계": "발사 15:04 → 완료 15:29 (≈25 분) — 그중 **≈10 분은 import** (conda env 가 NFS 위 · 매핑 1274 파일)",
+  "GPU-h": "≈ 0.4 (상한 8.0 의 5 %)",
+  "사건당": "≈ 50 초 (카드 견적 7.5 분은 coophop 환산이라 보수적이었다)",
+  "실행": "env LD_LIBRARY_PATH=$CONDA_PREFIX/lib HF_HUB_OFFLINE=1 $CONDA_PREFIX/bin/python -u tools/neb_diffusion/argyrodite_cage_neb.py --couple_endpoints_from <local>/union_v2/events --skip_duplicates --device cuda",
+  "체크포인트": "uma-s-1p1.pt 로컬 사본 (kgy 에서 scp · sha256 07068e9c… 대조) — 라운드2 와 같은 가중치",
+  "⚠_실패_두_번": "NFS 체크포인트·NFS env 로 두 번 던졌다가 2·5 분에 죽였다 — 죽은 게 아니라 import 가 느린 것이었다 (kb/platforms/v100_uma_setup_2026_09_14.md 정정 b9c637c0e)."
+ },
+ "5_닫힘_카드_§7_그대로": {
+  "처리": "갈래2 ⇒ **재개조건 ① 소진.** 마감 기록 `lpscl_smallcell_neb_closed_2026_09_19.json` §7 ① 에 '소진됨' 을 박는다 (proposed).",
+  "남는_재개조건": "② 다른 궤적·창 · ④ 다른 담금질률·다중 시드 — 둘뿐. ①·③ 소진.",
+  "⛔_재개_조건_밖으로_안_간다": "lag < 1 ps 불가(dt 1.0 ps) · 문턱 < 2.0 Å 금지 (마감 §7 ⛔ · 카드 §7)."
+ },
+ "⚠_카드_비준_상태": "카드 `lpscl_smallcell_shortlag_estimand_2026_09_20.json` 은 **proposed** 인 채로 돌았다 — 1저자의 2026-09-20 지시 *\"1,2,3\"* 을 실행 승인으로 봤고 비준 도장(prereg_ratify)은 없다. 문턱·갈래·상한은 전부 결과 보기 전에 박혀 있었고 이 기록은 그 규칙의 **기계적 적용**이다. 소진 처리·마감 개정의 확정은 1저자 확인 뒤다.",
+ "6_이_기록이_말하지_않는_것": [
+  "Eb · σ · D · Ea 어느 값도",
+  "'장벽이 없다' · '극소가 없다'",
+  "다른 궤적·창·시드·담금질에서도 그런지 (재개조건 ②·④ 는 열려 있다)",
+  "UMA 가 400 원자에서 맞는지 (G-B2 탈락 · L-3 ① 미결)"
+ ],
+ "7_원자료": {
+  "dir": "db/properties/lpscl_smallcell_shortlag_raw",
+  "manifest": "db/properties/lpscl_smallcell_shortlag_raw.sha256 (81 파일)",
+  "tgz_sha256": "6e3f8ef680c6165d34f7c7cc69dc71832875dae46f1d79bdfe39f6fc6912f0f2",
+  "V100_원본": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/ (lag1..5 · union · union_v2) + $HOME/local_runs/shortlag/union_v2 (로컬 실행본 · 컨테이너 소멸 시 사라짐 — 회수 완료)",
+  "gate_json_sha256": "ee69de1ba79e41ed2ef710000c24794e4a7a6278e5f1c3e23719051f37204e41"
+ },
+ "출처": {
+  "카드": "db/properties/lpscl_smallcell_shortlag_estimand_2026_09_20.json",
+  "마감": "db/properties/lpscl_smallcell_neb_closed_2026_09_19.json §7 ①",
+  "라운드2": "db/properties/lpscl_smallcell_neb_round2_gb7_2026_09_19.json",
+  "합집합_도구": "tools/ionic/aimd_jump_stats.py --merge_events (846a2e02e)",
+  "G-B7_도구": "tools/neb_diffusion/argyrodite_cage_neb.py --couple_endpoints_from"
+ },
+ "by": "agent · 2026-09-21"
+}

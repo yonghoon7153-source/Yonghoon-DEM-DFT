@@ -15,7 +15,7 @@
 
 | 기계 | 지금 |
 |---|---|
-| **V100** | 🟢 **② G-B7 실행 중** — `union_v2` n_new **18**(30 원시 → 공유쌍 12 제외 · lag5 겹침 0) · 로컬 `$HOME/local_runs/shortlag/union_v2/events` · 로그 `gb7.log`. 사건당 ≈7.5 분 ⇒ ≈2.3 h. 끝나면 `endpoint_coupled_gate.json` → N₂ → 갈래 판정(카드 §4) → N₂≥1 이면 ③ NEB |
+| **V100** | ⛔ **② G-B7 끝 — 통과 0/18 ⇒ 갈래2 · 재개조건 ① 소진(proposed).** N₁ 18(30 원시 → 공유쌍 12 제외 · lag5 겹침 0). 원자료 회수 `db/properties/lpscl_smallcell_shortlag_raw/`(81 파일 · sha 매니페스트) · 기록 `lpscl_smallcell_shortlag_round_2026_09_21.json` · 마감 §7 ① 소진 박음(proposed). GPU 유휴 |
 | **kgy** | 🟢 lpsocl s6/T800 재시작 (14:1x · 세 번 실패 뒤 — 아래) + cascade v6 40런. GPU 공유 |
 | **gabia** | 🟢 LOBSTER nscf 3차 (PID 3003581 · 13:57) · ETA 09-23 낮 |
 
@@ -43,8 +43,7 @@
   (cascade 를 잡으려던 것). CLAUDE.md 금지 이름에 스크립트 이름 추가. 잡은 `--out_root` 로 가른다.
 
 **다음 (순서)**
-1. V100 G-B7 끝 → `endpoint_coupled_gate.json` 회수(`db/properties/lpscl_smallcell_shortlag_raw/`) → N₂ → 갈래.
-   N₂ ≥ 1 이면 ③ NEB (`--neb…`, 사건당 ≈15 분, 총상한 8 GPU-h 안). 라운드 기록 `lpscl_smallcell_shortlag_round_2026_09_21.json`.
+1. ✅ 소셀 재개조건 ① 라운드 종료 (갈래2). **1저자 확인**: 소진 처리 + 카드 사후 비준 여부. 남는 재개조건 ②(다른 궤적·창)·④(담금질·시드)뿐 — 둘 다 새 선언이 필요하고 지금 열 이유 없음.
 2. v42 메일 발송 (1저자) → mirae 회신 대기.
 3. lpsocl 15/15 → C1/C2 → C3 → A/B/C (⚠ run-mode 미기록 시드 하나 먼저 해소).
 4. Li₂S 4×4×4 P1: 기계 정하면 `--scf_probe` 입력 → 단일 SCF 3 iteration → peak VRAM·벽시계 → 카드 §3 기입.

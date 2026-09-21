@@ -1,0 +1,462 @@
+{
+ "rule": "합집합 — sha256 쌍 중복제거 · **가장 짧은 lag 우선**(동률이면 disp_A) · known 과 겹치면 inherited_known(제외), 그중 최대 하나만 control",
+ "truncated": false,
+ "lag_ps": null,
+ "lag_ps_set": [
+  1.0,
+  2.0,
+  3.0,
+  4.0
+ ],
+ "⛔_lag_ps_는_하나가_아니다": "합집합이라 단일 lag 이 없다. `lag_ps_set` 을 본다.",
+ "min_dist_A": 2.0,
+ "n_total_events": 30,
+ "taken": 24,
+ "n_new": 24,
+ "n_control": 0,
+ "n_inherited_known": 0,
+ "n_duplicates_dropped": 6,
+ "merge_sources": [
+  {
+   "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag1/events",
+   "lag_ps": 1.0,
+   "n": 5
+  },
+  {
+   "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag2/events",
+   "lag_ps": 2.0,
+   "n": 9
+  },
+  {
+   "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag3/events",
+   "lag_ps": 3.0,
+   "n": 6
+  },
+  {
+   "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag4/events",
+   "lag_ps": 4.0,
+   "n": 10
+  }
+ ],
+ "known_dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag5/events",
+ "inherited": [],
+ "duplicates_dropped": [
+  {
+   "lag_ps": 2.0,
+   "src": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag2/events::ev07_atom106",
+   "duplicate_of": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag2/events::ev03_atom82"
+  },
+  {
+   "lag_ps": 2.0,
+   "src": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag2/events::ev08_atom116",
+   "duplicate_of": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag2/events::ev06_atom77"
+  },
+  {
+   "lag_ps": 3.0,
+   "src": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag3/events::ev04_atom78",
+   "duplicate_of": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag3/events::ev03_atom91"
+  },
+  {
+   "lag_ps": 3.0,
+   "src": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag3/events::ev06_atom79",
+   "duplicate_of": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag3/events::ev05_atom112"
+  },
+  {
+   "lag_ps": 4.0,
+   "src": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag4/events::ev08_atom77",
+   "duplicate_of": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag4/events::ev07_atom116"
+  },
+  {
+   "lag_ps": 4.0,
+   "src": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag4/events::ev09_atom101",
+   "duplicate_of": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag4/events::ev06_atom82"
+  }
+ ],
+ "⛔_끝이_최소인지는_모른다": "이완은 다음 단계다 (G-B7).",
+ "events": [
+  {
+   "li_rank": 10,
+   "t_start_ps": 45.0,
+   "t_end_ps": 46.0,
+   "disp_A": 2.254663573820626,
+   "atom_index": 82,
+   "tag": "ev01_atom82",
+   "disp_minimum_image_A": 2.254663573820625,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag1/events",
+    "tag": "ev01_atom82",
+    "lag_ps": 1.0
+   }
+  },
+  {
+   "li_rank": 5,
+   "t_start_ps": 17.0,
+   "t_end_ps": 18.0,
+   "disp_A": 2.0783263391060283,
+   "atom_index": 77,
+   "tag": "ev02_atom77",
+   "disp_minimum_image_A": 2.0783263391060283,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag1/events",
+    "tag": "ev02_atom77",
+    "lag_ps": 1.0
+   }
+  },
+  {
+   "li_rank": 18,
+   "t_start_ps": 40.0,
+   "t_end_ps": 41.0,
+   "disp_A": 2.0360586964763647,
+   "atom_index": 90,
+   "tag": "ev03_atom90",
+   "disp_minimum_image_A": 2.0360586964763647,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag1/events",
+    "tag": "ev03_atom90",
+    "lag_ps": 1.0
+   }
+  },
+  {
+   "li_rank": 44,
+   "t_start_ps": 12.0,
+   "t_end_ps": 13.0,
+   "disp_A": 2.0353548631329823,
+   "atom_index": 116,
+   "tag": "ev04_atom116",
+   "disp_minimum_image_A": 2.0353548631329823,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag1/events",
+    "tag": "ev04_atom116",
+    "lag_ps": 1.0
+   }
+  },
+  {
+   "li_rank": 41,
+   "t_start_ps": 37.0,
+   "t_end_ps": 38.0,
+   "disp_A": 2.0132157456852275,
+   "atom_index": 113,
+   "tag": "ev05_atom113",
+   "disp_minimum_image_A": 2.0132157456852275,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag1/events",
+    "tag": "ev05_atom113",
+    "lag_ps": 1.0
+   }
+  },
+  {
+   "li_rank": 19,
+   "t_start_ps": 18.0,
+   "t_end_ps": 20.0,
+   "disp_A": 2.385274501642585,
+   "atom_index": 91,
+   "tag": "ev06_atom91",
+   "disp_minimum_image_A": 2.385274501642585,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag2/events",
+    "tag": "ev01_atom91",
+    "lag_ps": 2.0
+   }
+  },
+  {
+   "li_rank": 18,
+   "t_start_ps": 36.0,
+   "t_end_ps": 38.0,
+   "disp_A": 2.2349619692907026,
+   "atom_index": 90,
+   "tag": "ev07_atom90",
+   "disp_minimum_image_A": 2.234961969290703,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag2/events",
+    "tag": "ev02_atom90",
+    "lag_ps": 2.0
+   }
+  },
+  {
+   "li_rank": 10,
+   "t_start_ps": 47.0,
+   "t_end_ps": 49.0,
+   "disp_A": 2.202014291319436,
+   "atom_index": 82,
+   "tag": "ev08_atom82",
+   "disp_minimum_image_A": 2.202014291319436,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag2/events",
+    "tag": "ev03_atom82",
+    "lag_ps": 2.0
+   }
+  },
+  {
+   "li_rank": 29,
+   "t_start_ps": 34.0,
+   "t_end_ps": 36.0,
+   "disp_A": 2.1899096610081856,
+   "atom_index": 101,
+   "tag": "ev09_atom101",
+   "disp_minimum_image_A": 2.189909661008185,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag2/events",
+    "tag": "ev04_atom101",
+    "lag_ps": 2.0
+   }
+  },
+  {
+   "li_rank": 16,
+   "t_start_ps": 17.0,
+   "t_end_ps": 19.0,
+   "disp_A": 2.1511164581169973,
+   "atom_index": 88,
+   "tag": "ev10_atom88",
+   "disp_minimum_image_A": 2.1511164581169973,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag2/events",
+    "tag": "ev05_atom88",
+    "lag_ps": 2.0
+   }
+  },
+  {
+   "li_rank": 5,
+   "t_start_ps": 15.0,
+   "t_end_ps": 17.0,
+   "disp_A": 2.0940321267378907,
+   "atom_index": 77,
+   "tag": "ev11_atom77",
+   "disp_minimum_image_A": 2.0940321267378907,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag2/events",
+    "tag": "ev06_atom77",
+    "lag_ps": 2.0
+   }
+  },
+  {
+   "li_rank": 6,
+   "t_start_ps": 19.0,
+   "t_end_ps": 21.0,
+   "disp_A": 2.0139696181565303,
+   "atom_index": 78,
+   "tag": "ev12_atom78",
+   "disp_minimum_image_A": 2.013969618156534,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag2/events",
+    "tag": "ev09_atom78",
+    "lag_ps": 2.0
+   }
+  },
+  {
+   "li_rank": 10,
+   "t_start_ps": 46.0,
+   "t_end_ps": 49.0,
+   "disp_A": 2.627120339481098,
+   "atom_index": 82,
+   "tag": "ev13_atom82",
+   "disp_minimum_image_A": 2.627120339481097,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag3/events",
+    "tag": "ev01_atom82",
+    "lag_ps": 3.0
+   }
+  },
+  {
+   "li_rank": 16,
+   "t_start_ps": 17.0,
+   "t_end_ps": 20.0,
+   "disp_A": 2.578967918226191,
+   "atom_index": 88,
+   "tag": "ev14_atom88",
+   "disp_minimum_image_A": 2.578967918226191,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag3/events",
+    "tag": "ev02_atom88",
+    "lag_ps": 3.0
+   }
+  },
+  {
+   "li_rank": 19,
+   "t_start_ps": 18.0,
+   "t_end_ps": 21.0,
+   "disp_A": 2.3609843028824358,
+   "atom_index": 91,
+   "tag": "ev15_atom91",
+   "disp_minimum_image_A": 2.3609843028824353,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag3/events",
+    "tag": "ev03_atom91",
+    "lag_ps": 3.0
+   }
+  },
+  {
+   "li_rank": 40,
+   "t_start_ps": 3.0,
+   "t_end_ps": 6.0,
+   "disp_A": 2.0704535498887733,
+   "atom_index": 112,
+   "tag": "ev16_atom112",
+   "disp_minimum_image_A": 2.0704535498887733,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag3/events",
+    "tag": "ev05_atom112",
+    "lag_ps": 3.0
+   }
+  },
+  {
+   "li_rank": 16,
+   "t_start_ps": 15.0,
+   "t_end_ps": 19.0,
+   "disp_A": 2.50681435953788,
+   "atom_index": 88,
+   "tag": "ev17_atom88",
+   "disp_minimum_image_A": 2.50681435953788,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag4/events",
+    "tag": "ev01_atom88",
+    "lag_ps": 4.0
+   }
+  },
+  {
+   "li_rank": 18,
+   "t_start_ps": 4.0,
+   "t_end_ps": 8.0,
+   "disp_A": 2.4612519889027475,
+   "atom_index": 90,
+   "tag": "ev18_atom90",
+   "disp_minimum_image_A": 2.4612519889027475,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag4/events",
+    "tag": "ev02_atom90",
+    "lag_ps": 4.0
+   }
+  },
+  {
+   "li_rank": 23,
+   "t_start_ps": 18.0,
+   "t_end_ps": 22.0,
+   "disp_A": 2.4070406621300813,
+   "atom_index": 95,
+   "tag": "ev19_atom95",
+   "disp_minimum_image_A": 2.4070406621300795,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag4/events",
+    "tag": "ev03_atom95",
+    "lag_ps": 4.0
+   }
+  },
+  {
+   "li_rank": 6,
+   "t_start_ps": 17.0,
+   "t_end_ps": 21.0,
+   "disp_A": 2.337402585223355,
+   "atom_index": 78,
+   "tag": "ev20_atom78",
+   "disp_minimum_image_A": 2.337402585223355,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag4/events",
+    "tag": "ev04_atom78",
+    "lag_ps": 4.0
+   }
+  },
+  {
+   "li_rank": 45,
+   "t_start_ps": 39.0,
+   "t_end_ps": 43.0,
+   "disp_A": 2.1910005302965425,
+   "atom_index": 117,
+   "tag": "ev21_atom117",
+   "disp_minimum_image_A": 2.1910005302965425,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag4/events",
+    "tag": "ev05_atom117",
+    "lag_ps": 4.0
+   }
+  },
+  {
+   "li_rank": 10,
+   "t_start_ps": 10.0,
+   "t_end_ps": 14.0,
+   "disp_A": 2.18372028561138,
+   "atom_index": 82,
+   "tag": "ev22_atom82",
+   "disp_minimum_image_A": 2.18372028561138,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag4/events",
+    "tag": "ev06_atom82",
+    "lag_ps": 4.0
+   }
+  },
+  {
+   "li_rank": 44,
+   "t_start_ps": 13.0,
+   "t_end_ps": 17.0,
+   "disp_A": 2.131206277027007,
+   "atom_index": 116,
+   "tag": "ev23_atom116",
+   "disp_minimum_image_A": 2.131206277027007,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag4/events",
+    "tag": "ev07_atom116",
+    "lag_ps": 4.0
+   }
+  },
+  {
+   "li_rank": 19,
+   "t_start_ps": 45.0,
+   "t_end_ps": 49.0,
+   "disp_A": 2.0032732666882773,
+   "atom_index": 91,
+   "tag": "ev24_atom91",
+   "disp_minimum_image_A": 2.0032732666882773,
+   "⚠_이미지보정": false,
+   "merge_status": "new",
+   "source": {
+    "dir": "/home/ubuntu/runyourai/1/runs/lpscl_smallcell_shortlag_2026_09_20/lag4/events",
+    "tag": "ev10_atom91",
+    "lag_ps": 4.0
+   }
+  }
+ ]
+}

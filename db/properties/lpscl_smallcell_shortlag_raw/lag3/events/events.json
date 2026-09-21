@@ -1,0 +1,71 @@
+{
+ "rule": "변위 내림차순 · 이온당 사건 1개 · **문턱을 넘긴 전부**(--hop_events_all, NEB 카드 §0b-②-1)",
+ "truncated": false,
+ "lag_ps": 3.0,
+ "min_dist_A": 2.0,
+ "n_total_events": 6,
+ "taken": 6,
+ "⛔_끝이_최소인지는_모른다": "이완은 다음 단계다. 되돌아오는 나들이면 끝이 시작으로 무너질 수 있다.",
+ "events": [
+  {
+   "li_rank": 10,
+   "t_start_ps": 46.0,
+   "t_end_ps": 49.0,
+   "disp_A": 2.627120339481098,
+   "atom_index": 82,
+   "tag": "ev01_atom82",
+   "disp_minimum_image_A": 2.627120339481097,
+   "⚠_이미지보정": false
+  },
+  {
+   "li_rank": 16,
+   "t_start_ps": 17.0,
+   "t_end_ps": 20.0,
+   "disp_A": 2.578967918226191,
+   "atom_index": 88,
+   "tag": "ev02_atom88",
+   "disp_minimum_image_A": 2.578967918226191,
+   "⚠_이미지보정": false
+  },
+  {
+   "li_rank": 19,
+   "t_start_ps": 18.0,
+   "t_end_ps": 21.0,
+   "disp_A": 2.3609843028824358,
+   "atom_index": 91,
+   "tag": "ev03_atom91",
+   "disp_minimum_image_A": 2.3609843028824353,
+   "⚠_이미지보정": false
+  },
+  {
+   "li_rank": 6,
+   "t_start_ps": 18.0,
+   "t_end_ps": 21.0,
+   "disp_A": 2.2722259405893275,
+   "atom_index": 78,
+   "tag": "ev04_atom78",
+   "disp_minimum_image_A": 2.2722259405893275,
+   "⚠_이미지보정": false
+  },
+  {
+   "li_rank": 40,
+   "t_start_ps": 3.0,
+   "t_end_ps": 6.0,
+   "disp_A": 2.0704535498887733,
+   "atom_index": 112,
+   "tag": "ev05_atom112",
+   "disp_minimum_image_A": 2.0704535498887733,
+   "⚠_이미지보정": false
+  },
+  {
+   "li_rank": 7,
+   "t_start_ps": 3.0,
+   "t_end_ps": 6.0,
+   "disp_A": 2.008949215504446,
+   "atom_index": 79,
+   "tag": "ev06_atom79",
+   "disp_minimum_image_A": 2.008949215504446,
+   "⚠_이미지보정": false
+  }
+ ]
+}
