@@ -10,6 +10,9 @@
 # 쓰는 법
 #   SYS=modelc_2x DRY_RUN=1 bash tools/elastic/run_elastic_relaxedion_gabia.sh   # 설정만 본다
 #   SYS=b2o3   tmux new -s el_b -d 'bash tools/elastic/run_elastic_relaxedion_gabia.sh > ~/el_b2o3.log 2>&1'
+#   bash tools/elastic/run_elastic_relaxedion_gabia.sh --selftest                 # 완료 판정·입력 패치 (음성 포함)
+#   재개(2026-09-21~): 같은 명령이면 된다 — 수렴한 점은 건너뛰고, nstep 소진·미수렴 점은 .out 을 보관한 뒤
+#   nstep=200 · trust_radius_max=0.05 (NSTEP · TRUST_RADIUS_MAX 로 덮음) 로 다시 돈다. 호스트 RAM 가드 MINFREE_HOST_GB(30).
 #
 # ⛔ strain 기본값이 왜 0.005 인가 (2026-09-10 판단)
 #   b2o3 의 2026-07-03 전단 실패 카드는 재시도로 `strain 0.01 (2x signal)` 을 적어
@@ -38,6 +41,80 @@
 #     그래서 DRY_RUN 이 해석된 설정을 전부 찍는다.
 # =============================================================================
 set -u; set +H
+# ── 순수 함수 (selftest 대상) ────────────────────────────────────────────────
+# 완료 판정. ⛔ 2026-09-21 (open_items F) — `JOB DONE` 만 보면 **nstep 소진**(strain_23_p, 50 스텝
+#   소진 · max|f| 0.0011 > 0.001)도 완료로 읽어 건너뛴다. QE 는 소진해도 JOB DONE·End of BFGS 를
+#   찍는다. relax 잡은 **`bfgs converged` 선언**만 완료다 — watch_elastic.sh 의 el_state 와 같은 규칙
+#   (여기서 갈리면 watch 는 ⛔ 스텝소진인데 러너는 DONE skip 한다).
+_out_state(){   # $1=.in $2=.out → done | exhausted | unconverged | running | missing
+  [ -s "$2" ] || { echo missing; return; }
+  grep -aq "JOB DONE" "$2" || { echo running; return; }
+  if grep -aqE "calculation *= *'relax'" "$1"; then
+    grep -aq "bfgs converged" "$2" && { echo done; return; }
+    grep -aqi "maximum number of steps has been reached" "$2" && { echo exhausted; return; }
+    echo unconverged; return
+  fi
+  echo done; }
+# 미수렴 점의 입력에 nstep · trust_radius_max 를 넣는다 (F: "남은 점 + 23_p 에 nstep 200 ·
+#   trust_radius_max 0.05"). 키가 있으면 값만 바꾼다(멱등). restart=1 이면 restart_mode='restart'
+#   (BFGS 이력 이어달리기), 0 이면 그 줄을 지운다. &IONS 가 없는 입력(scf)은 거부한다.
+_patch_relax_in(){  # $1=.in $2=nstep $3=trust_radius_max $4=restart(0|1)
+  python3 - "$1" "$2" "$3" "$4" <<'PY'
+import re, sys
+p, nstep, trm, rs = sys.argv[1], int(sys.argv[2]), float(sys.argv[3]), sys.argv[4] == "1"
+s = open(p, encoding="utf-8").read()
+def setkey(s, block, key, val):
+    m = re.search(r"(&%s\b.*?)(\n[ \t]*/)" % block, s, re.S | re.I)
+    if not m:
+        raise SystemExit("⛔ &%s 블록이 없다 — relax 입력이 아니다: %s" % (block, p))
+    body = m.group(1)
+    if re.search(r"(?im)^[ \t]*%s[ \t]*=" % key, body):
+        body = re.sub(r"(?im)^([ \t]*%s[ \t]*=[ \t]*)[^\n!]*" % key, lambda mm: mm.group(1) + str(val), body)
+    else:
+        body += "\n  %s=%s" % (key, val)
+    return s[:m.start(1)] + body + s[m.end(1):]
+if not re.search(r"&IONS\b", s, re.I):
+    raise SystemExit("⛔ &IONS 블록이 없다 — relax 입력이 아니다: %s" % p)
+s = setkey(s, "CONTROL", "nstep", nstep)
+s = setkey(s, "IONS", "trust_radius_max", trm)
+if rs:
+    s = setkey(s, "CONTROL", "restart_mode", "'restart'")
+else:
+    s = re.sub(r"(?im)^[ \t]*restart_mode[ \t]*=.*\n", "", s)
+open(p, "w", encoding="utf-8").write(s)
+PY
+}
+_host_free_gb(){ awk '/MemAvailable/{printf "%d", $2/1048576}' /proc/meminfo 2>/dev/null || echo 0; }
+
+if [ "${1:-}" = "--selftest" ]; then
+  T=$(mktemp -d); f=0
+  ck(){ [ "$2" = "$3" ] && echo "  ✔ $1" || { echo "  ✘ $1: got '$2' want '$3'"; f=1; }; }
+  printf "&CONTROL\n  calculation='relax'\n  prefix='x'\n/\n&SYSTEM\n  nat=2\n/\n&IONS\n  ion_dynamics='bfgs'\n/\n" > "$T/r.in"
+  printf "&CONTROL\n  calculation='scf'\n/\n&SYSTEM\n  nat=2\n/\n" > "$T/s.in"
+  printf '     bfgs converged in 42 scf cycles and 11 bfgs steps\n     End of BFGS Geometry Optimization\nJOB DONE.\n' > "$T/conv.out"
+  printf '     number of bfgs steps    =  49\n     The maximum number of steps has been reached.\n     End of BFGS Geometry Optimization\nJOB DONE.\n' > "$T/exh.out"
+  printf '     End of BFGS Geometry Optimization\nJOB DONE.\n' > "$T/unc.out"
+  printf '     iteration #  3\n' > "$T/run.out"
+  printf 'JOB DONE.\n' > "$T/scf.out"
+  ck "relax 수렴 선언 = done"                                  "$(_out_state "$T/r.in" "$T/conv.out")" done
+  ck "⛔음성 nstep 소진은 done 아님 (End of BFGS·JOB DONE 있어도)" "$(_out_state "$T/r.in" "$T/exh.out")" exhausted
+  ck "⛔음성 JOB DONE 만 있고 수렴 선언 없음"                    "$(_out_state "$T/r.in" "$T/unc.out")" unconverged
+  ck "진행 중"                                                 "$(_out_state "$T/r.in" "$T/run.out")" running
+  ck "출력 없음"                                               "$(_out_state "$T/r.in" "$T/none.out")" missing
+  ck "scf 는 JOB DONE 이 done"                                 "$(_out_state "$T/s.in" "$T/scf.out")" done
+  _patch_relax_in "$T/r.in" 200 0.05 0
+  ck "nstep 추가 (&CONTROL)"          "$(awk '/&CONTROL/,/^ *\//' "$T/r.in" | grep -c 'nstep=200')" 1
+  ck "trust_radius_max 추가 (&IONS)"  "$(awk '/&IONS/,/^ *\//' "$T/r.in" | grep -c 'trust_radius_max=0.05')" 1
+  ck "다른 블록은 그대로"              "$(grep -c "ion_dynamics='bfgs'" "$T/r.in")/$(grep -c 'nat=2' "$T/r.in")" "1/1"
+  _patch_relax_in "$T/r.in" 300 0.05 1
+  ck "멱등: nstep 줄 하나 · 값 교체"   "$(grep -c 'nstep' "$T/r.in")/$(grep -c 'nstep=300' "$T/r.in")" "1/1"
+  ck "restart_mode 추가"              "$(grep -c "restart_mode='restart'" "$T/r.in")" 1
+  _patch_relax_in "$T/r.in" 300 0.05 0
+  ck "restart 끄면 줄 제거"            "$(grep -c restart_mode "$T/r.in")" 0
+  ck "⛔음성 &IONS 없는 입력은 거부 (rc 1)" "$(_patch_relax_in "$T/s.in" 200 0.05 0 >/dev/null 2>&1; echo $?)" 1
+  ck "⛔음성 거부하면 파일 불변"        "$(grep -c nstep "$T/s.in")" 0
+  rm -rf "$T"; [ "$f" = 0 ] && echo "selftest ✅ (음성 5 포함)" || echo "selftest ⛔"; exit "$f"
+fi
 SYS=${SYS:-comp2}
 # ⛔⛔ 2026-09-10 실측 — 종전엔 `$HOME/Yonghoon-DEM-DFT` 를 먼저 봤다. gabia 에는
 #   repo 가 **두 벌**(/root/Yonghoon-DEM-DFT · /data/work/repo) 있어서, /data/work/repo
@@ -117,16 +194,29 @@ export LD_LIBRARY_PATH=$HPCX/lib:/data/apps/nvhpc/Linux_x86_64/24.11/compilers/l
 export OPAL_PREFIX=$HPCX OMP_NUM_THREADS=1 CUDA_VISIBLE_DEVICES=0 OMPI_ALLOW_RUN_AS_ROOT=1 OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
 QE=/data/apps/qe-7.4.1-gpu/bin; MPIRUN=$HPCX/bin/mpirun
 ts(){ date +%H:%M:%S; }
-wait_gpu(){ local free
+# ⛔ 2026-09-21 — VRAM 만 보면 안 된다. LOBSTER nscf(CPU · 호스트 40 GB) 가 도는 동안 available 이
+#   15 GB 였는데 이 pw.x 는 `Estimated max dynamical RAM per process > 23.83 GB` 를 요구한다 —
+#   던지면 OOM 킬러가 **제일 큰 프로세스(LOBSTER 47 h)** 를 잡는다. 호스트 available 도 같이 기다린다.
+MINFREE_HOST_GB=${MINFREE_HOST_GB:-30}
+wait_gpu(){ local free h
   while :; do
     free=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits -i 0 2>/dev/null | head -1); [ -z "$free" ] && free=0
-    [ "$free" -ge "$MINFREE" ] && { echo "[$(ts)] GPU free ${free} MiB — go"; return; }
-    echo "[$(ts)] GPU free ${free} < $MINFREE 대기"; sleep 60
+    h=$(_host_free_gb)
+    if [ "$free" -ge "$MINFREE" ] && [ "$h" -ge "$MINFREE_HOST_GB" ]; then
+      echo "[$(ts)] GPU free ${free} MiB · host available ${h} GB — go"; return; fi
+    echo "[$(ts)] 대기 — GPU free ${free}/${MINFREE} MiB · host ${h}/${MINFREE_HOST_GB} GB"; sleep 60
   done; }
-run_pw(){ grep -q "JOB DONE" "$2" 2>/dev/null && { echo "[$(ts)] $2 DONE skip"; return 0; }
+run_pw(){ local st bak; st=$(_out_state "$1" "$2")
+  case "$st" in
+    done) echo "[$(ts)] $2 DONE skip"; return 0 ;;
+    exhausted|unconverged)
+      bak="$2.${st}_$(date +%m%d_%H%M)"; mv "$2" "$bak"
+      echo "[$(ts)] ⛔ $2 는 JOB DONE 인데 bfgs converged 가 없다 ($st) — $(basename "$bak") 로 보관하고 다시 돈다" ;;
+  esac
   wait_gpu; echo "[$(ts)] pw.x $1"
   "$MPIRUN" -np 1 "$QE/pw.x" -npool 1 -in "$1" > "$2" 2>&1
-  grep -q "JOB DONE" "$2" && echo "[$(ts)] $1 OK" || { echo "[$(ts)] $1 FAIL:"; tail -12 "$2"; return 1; } }
+  st=$(_out_state "$1" "$2")
+  [ "$st" = done ] && echo "[$(ts)] $1 OK" || { echo "[$(ts)] $1 FAIL ($st):"; tail -12 "$2"; return 1; } }
 
 # ── pseudo — find-or-fail ────────────────────────────────────────────────────
 PSE=$WORK/pseudo; mkdir -p "$PSE"
@@ -167,6 +257,12 @@ PY
 fi
 
 cd "$WORK"
+case "$(_out_state V0_relax.in V0_relax.out)" in
+  exhausted|unconverged)
+    echo "⛔ V0_relax.out 이 JOB DONE 인데 bfgs converged 가 없다 — 재실행하면 그 위에 세운 strain 점들이 고아가 된다."
+    echo "   사람이 판단할 것: V0 를 다시 풀고 12 점을 전부 다시 돌리든지, 이 V0 를 받아들이는 개정을 적든지. 시작하지 않는다."
+    exit 1 ;;
+esac
 run_pw V0_relax.in V0_relax.out || { echo "⛔ V0 relax FAIL"; exit 1; }
 
 if [ ! -f "$WORK/strain_11_p.in" ]; then
@@ -181,11 +277,20 @@ TAGS="strain_11_p strain_11_m strain_22_p strain_22_m strain_33_p strain_33_m \
 for t in $TAGS; do
   sed -i "s|outdir *=.*|outdir='./tmp_$t'|; s|prefix *=.*|prefix='$t'|; s|pseudo_dir *=.*|pseudo_dir='$PSE'|" "$t.in"
 done
+# ── F 선행조건 (open_items 2026-09-17): 미수렴 점 + nstep 소진 점(23_p)에 nstep·trust_radius_max ──
+#   수렴한 점은 **입력도 손대지 않는다**. 소진 점은 BFGS 이력(tmp_<t>/<t>.bfgs)이 있으면 이어 달린다.
+NSTEP=${NSTEP:-200}; TRUST_RADIUS_MAX=${TRUST_RADIUS_MAX:-0.05}
+for t in $TAGS; do
+  st=$(_out_state "$t.in" "$t.out"); [ "$st" = done ] && continue
+  rs=0; [ "$st" = exhausted ] && [ -f "tmp_$t/$t.bfgs" ] && rs=1
+  _patch_relax_in "$t.in" "$NSTEP" "$TRUST_RADIUS_MAX" "$rs" || { echo "⛔ $t.in 패치 실패"; exit 1; }
+  echo "[$(ts)] $t.in ← nstep=$NSTEP trust_radius_max=$TRUST_RADIUS_MAX$([ "$rs" = 1 ] && echo ' · restart_mode=restart (BFGS 이력 승계)') (상태 $st)"
+done
 for t in $TAGS; do run_pw "$t.in" "$t.out" || echo "  ($t FAIL — fit 전 재실행 필요)"; done
 
 # ⛔ 12점이 다 끝나야 fit 한다. 11점으로 Cij 를 맞추면 한 열이 통째로 비어
 #   고유값이 무의미해진다 — b2o3 2026-07-03 판이 정확히 그 종류의 오염이었다.
-NDONE=$(for t in $TAGS; do grep -qa "JOB DONE" "$t.out" 2>/dev/null && echo x; done | wc -l)
+NDONE=$(for t in $TAGS; do [ "$(_out_state "$t.in" "$t.out")" = done ] && echo x; done | wc -l)   # ⛔ JOB DONE 이 아니라 bfgs converged
 echo "[$(ts)] 완료 $NDONE/12"
 [ "$NDONE" = 12 ] || { echo "⛔ 12점이 안 찼다 — fit 하지 않는다. 실패한 점을 다시 돌려라."; exit 1; }
 echo "[$(ts)] fit Cij -> VRH ($SYS · ecut $ECUTWFC/$ECUTRHO · k $KLINE · ±$STRAIN):"
