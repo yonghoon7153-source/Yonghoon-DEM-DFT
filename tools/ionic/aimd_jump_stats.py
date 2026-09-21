@@ -1089,6 +1089,38 @@ def _selftest():
         "[음성] --merge_known 의 문턱이 다르면 거부한다 (겹침 판정이 성립 안 한다)")
     shutil.rmtree(_tmp, ignore_errors=True)
 
+    #: ── --export_frame (2026-09-21) — 양성 하나 · **음성 셋** ──────────────────
+    #   이 플래그가 생긴 이유 자체가 "라벨 없는 배포" 라서, 음성(라벨 없이 내보내려 할 때
+    #   막히는가)이 이 시험의 본체다. 양성만 있으면 통과해도 아무것도 보증 못 한다.
+    _ex = Path("/tmp/_ajs_export"); shutil.rmtree(_ex, ignore_errors=True); _ex.mkdir(parents=True)
+    _tj = _ex / "t.xyz"
+    with open(_tj, "w") as fh:
+        for _k in range(4):
+            fh.write("2\nLattice=\"5.0 0 0 0 5.0 0 0 0 5.0\" Properties=species:S:1:pos:R:3 "
+                     f"pbc=\"T T T\" t_ps={_k}\n")
+            fh.write(f"Li {0.1*_k:.4f} 0.0 0.0\nS 2.0 0.0 0.0\n")
+    _rc = _export_cli(["--export_frame", "2.0", "--traj", str(_tj), "--save_fs", "1000",
+                       "--export_out", str(_ex / "o"), "--export_stage", "raw_md"])
+    _h = (_ex / "o.xyz").read_text().splitlines()[1] if (_ex / "o.xyz").exists() else ""
+    chk(_rc == 0 and "stage=raw_md" in _h and "t_ps=2.0000" in _h
+        and "traj_sha256_16=" in _h and (_ex / "o.vasp").exists(),
+        "[양성] 프레임을 내보내고 **계보를 주석에 박는다** (stage·t_ps·원본 sha)")
+    chk("stage=raw_md" in (_ex / "o.vasp").read_text().splitlines()[0],
+        "[양성] .vasp 첫 줄에도 같은 stamp 가 간다 (xyz 만 라벨되면 반쪽이다)")
+    chk(_dies(lambda: _export_cli(["--export_frame", "2.0", "--traj", str(_tj),
+                                   "--save_fs", "1000", "--export_out", str(_ex / "n")]),
+              ""),
+        "[음성] --export_stage 없이 내보내려 하면 **거부한다** (이 플래그의 존재 이유)")
+    chk(_export_cli(["--export_frame", "999", "--traj", str(_tj), "--save_fs", "1000",
+                     "--export_out", str(_ex / "n2"), "--export_stage", "raw_md"]) != 0
+        and not (_ex / "n2.xyz").exists(),
+        "[음성] 범위 밖 t_ps 는 0 으로 잘라 내보내지 않고 **죽는다**")
+    chk(_dies(lambda: _export_cli(["--export_frame", "2.0", "--traj", str(_tj),
+                                   "--save_fs", "1000", "--export_out", str(_ex / "n3"),
+                                   "--export_stage", "폴리싱"]), ""),
+        "[음성] 어휘 밖 stage 는 거부한다 (아무 말이나 라벨이 되면 라벨이 아니다)")
+    shutil.rmtree(_ex, ignore_errors=True)
+
     #: ⛔ 판정 출력은 **마지막 시험 뒤**다. 앞에 두면 뒤에 붙는 시험이 ok 를 떨어뜨려도
     #   화면은 PASS 라고 말한다 — 종료코드와 화면이 갈린다 (2026-09-20 실측).
     print("selftest " + ("PASS" if ok else "FAIL"))
@@ -1144,12 +1176,112 @@ def _build_parser():
     return ap
 
 
+def write_poscar(path, sym, pos, cell, comment=""):
+    """POSCAR(.vasp) 한 프레임, Cartesian. xyz 와 **같은 좌표**를 쓴다 (래핑 안 함).
+
+    ⛔ 못 하는 것: 선택적 동역학·속도·원자 순서 재배열을 안 한다. 종별 묶음만 한다.
+    """
+    order, counts = [], []
+    for a in sym:
+        if not order or order[-1] != a:
+            if a in order:            # 흩어진 종 — 묶어야 POSCAR 가 성립한다
+                order, counts = None, None
+                break
+            order.append(a); counts.append(0)
+        counts[-1] += 1
+    if order is None:                 # 흩어져 있으면 종별로 다시 모은다
+        seen = []
+        for a in sym:
+            if a not in seen: seen.append(a)
+        idx = [i for a in seen for i, b in enumerate(sym) if b == a]
+        sym = [sym[i] for i in idx]; pos = np.asarray(pos, float)[idx]
+        order, counts = seen, [sum(1 for b in sym if b == a) for a in seen]
+    with open(path, "w") as fh:
+        fh.write(f"{comment}\n1.0\n")
+        for row in np.asarray(cell, float):
+            fh.write(f"  {row[0]:.8f} {row[1]:.8f} {row[2]:.8f}\n")
+        fh.write("  " + " ".join(order) + "\n")
+        fh.write("  " + " ".join(str(c) for c in counts) + "\n")
+        fh.write("Cartesian\n")
+        for r in np.asarray(pos, float):
+            fh.write(f"  {r[0]:.8f} {r[1]:.8f} {r[2]:.8f}\n")
+
+
+def _export_cli(argv):
+    """궤적 프레임 하나를 **계보를 박아서** 내보낸다 (2026-09-21 신설).
+
+    왜 생겼나: 배포한 `lpscl_smallcell_glass.{vasp,xyz,vesta}` 가 원시 MD 스냅샷인지
+    0 K relax 구조인지 **파일 어디에도 안 적혀 있었다**. 외부 검토자가 P–S 분산이
+    300 K 치고 좁다고 지적해서야 relax 본임이 드러났다 (P–S σ 원시 0.045 Å vs relax
+    0.013 Å — `db/properties/lpscl_smallcell_glass_provenance_2026_09_21.json`).
+    ⇒ **`--export_stage` 를 필수로 만든다.** 무엇인지 선언하지 않으면 내보내지 않는다.
+
+    ⛔ 이 도구가 못 하는 것
+      · **relax 를 하지 않는다.** `--export_stage relaxed` 는 *이미 relax 된 궤적/구조*를
+        내보낼 때 쓰는 라벨이지, 이 도구가 이완시켜 준다는 뜻이 아니다.
+      · 좌표를 **래핑하지 않는다**. 셀 밖 원자 수를 세어 알려만 준다 (MD 궤적은 unwrap 이
+        정상이고, 래핑은 보는 쪽 몫이다).
+      · `.vesta` 는 안 만든다 — VESTA 세션은 사람이 만든다(CLAUDE.md VESTA 규율).
+    """
+    ap = argparse.ArgumentParser(prog="aimd_jump_stats.py --export_frame")
+    ap.add_argument("--export_frame", required=True, metavar="T_PS",
+                    help="내보낼 시각(ps). 'last' 면 마지막 프레임")
+    ap.add_argument("--traj", required=True)
+    ap.add_argument("--save_fs", type=float, default=None,
+                    help="프레임 간격(fs). 없으면 옆 aimd_results.json 에서 읽는다")
+    ap.add_argument("--export_out", required=True, metavar="PREFIX",
+                    help="<PREFIX>.xyz 와 <PREFIX>.vasp 를 쓴다")
+    ap.add_argument("--export_stage", required=True,
+                    choices=["raw_md", "relaxed", "time_averaged"],
+                    help="이 구조가 무엇인가. **필수** — 라벨 없는 배포가 이 플래그를 만든 이유다")
+    ap.add_argument("--export_note", default="", help="주석에 덧붙일 한 줄")
+    a = ap.parse_args(argv)
+
+    save_fs = a.save_fs
+    if save_fs is None:
+        sib = Path(a.traj).parent / "aimd_results.json"
+        if sib.exists():
+            try: save_fs = float(json.load(open(sib)).get("save_fs"))
+            except Exception: pass
+    if save_fs is None:
+        print("ERROR: --save_fs 가 필요하다 (옆 aimd_results.json 을 못 읽었다)"); return 2
+    dt_ps = save_fs / 1000.0
+
+    sym, pos, cells = read_traj(a.traj)
+    if a.export_frame == "last":
+        k = len(pos) - 1
+    else:
+        k = int(round(float(a.export_frame) / dt_ps))
+        if not (0 <= k < len(pos)):
+            print(f"ERROR: t={a.export_frame} ps → 프레임 {k} 는 범위 밖이다 "
+                  f"(0–{len(pos)-1}, dt={dt_ps:.4f} ps)"); return 2
+    sha = hashlib.sha256(Path(a.traj).read_bytes()).hexdigest()[:16]
+    cell = cells[k]
+    f = np.asarray(pos[k], float) @ np.linalg.inv(cell)
+    n_out = int(((f < 0) | (f >= 1)).any(axis=1).sum())
+    stamp = (f'stage={a.export_stage} t_ps={k*dt_ps:.4f} frame={k}/{len(pos)-1} '
+             f'source_traj={Path(a.traj).name} traj_sha256_16={sha} '
+             f'dt_ps={dt_ps:.4f} n_atoms_outside_cell={n_out}/{len(sym)} '
+             f'exported_by=aimd_jump_stats.py')
+    if a.export_note:
+        stamp += f' note="{a.export_note}"'
+    write_xyz(f"{a.export_out}.xyz", sym, pos[k], cell, stamp)
+    write_poscar(f"{a.export_out}.vasp", list(sym), pos[k], cell, stamp)
+    print(f"  {a.export_out}.xyz / .vasp  ← {stamp}")
+    if n_out:
+        print(f"  ⚠ 셀 밖 원자 {n_out}/{len(sym)} — MD unwrap 좌표다. 래핑은 보는 쪽에서 한다")
+    return 0
+
+
 def main():
     if "--selftest" in sys.argv:
         sys.exit(_selftest())
     #: 합집합 모드 — 궤적을 안 읽으므로 본 파서의 required 를 타지 않는다.
     if "--merge_events" in sys.argv:
         sys.exit(_merge_cli(sys.argv[1:]))
+    #: 프레임 내보내기 — 궤적만 읽으므로 본 파서의 required 를 타지 않는다 (2026-09-21).
+    if "--export_frame" in sys.argv:
+        sys.exit(_export_cli(sys.argv[1:]))
     ap = _build_parser()
     args = ap.parse_args()
 
