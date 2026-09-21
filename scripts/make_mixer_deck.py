@@ -42,7 +42,7 @@ PS = (7.0, 3.0)                       # P:S (wt%)
 #    VGCF 지름은 0.15 µm 다 (`CL-66`).  1 µm 로 풀면 SE 입자가 11배(≈67,000)로 늘고
 #    `dt` 가 0.44배라 비용이 **약 19배**가 된다 (층상 한 블록 6.5 h → 5일).  ⇒ 굵힌 채로
 #    가되 **굵혔다는 것을 표가 말하게** 둔다.  이 값들을 "소재 크기" 로 인용하지 말 것.
-D_REAL_UM = {'AM_P': 12.0, 'AM_S': 4.0, 'SE': 3.0, 'VGCF': 3.0, 'PTFE': 3.0}
+D_REAL_UM = {'AM_P': 9.0, 'AM_S': 4.0, 'SE': 3.0, 'VGCF': 3.0, 'PTFE': 3.0}
 L_FIB_UM = 10.0                       # ⚠ VGCF 길이.  PTFE 길이는 출처 없음 (`CL-67`)
 #: 타입 순서 — 덱의 `peratomtypepair` 행렬 순서와 같아야 한다
 TYPES = ('AM_P', 'AM_S', 'SE', 'VGCF', 'PTFE')
@@ -169,14 +169,21 @@ ARMS = {
     #    Bo 0.212 → H/R 1.573 (깨끗)  ·  Bo 2.124 → 2.020 (뭉침)
     #    그 사이 **10배 구간**에 경계가 있는데 아무것도 안 찍었다.  경계를 모르면
     #    코팅(0.0235)·볼텍스(0.07)·Thinky(0.012) 의 **여유 배수**를 말할 수 없다.
-    #  ⚠ AM 쌍에만 배수를 건다 — E2·E4 와 같은 구조여야 비교가 한 축이다.
-    #    배수 = 목표Bo / BOND0(0.2124),  그리고 Bo ∝ 배수 (BOND0 이 이미 Bo 단위다).
+    #  ⚠ AM 쌍에만 건다 — E2·E4 와 같은 구조여야 비교가 한 축이다.
+    #  ⛔⛔ 초판은 `mult = 목표Bo / 0.21244` 로 **BOND0 을 상수로 박았다**.  그러면
+    #    지름이 바뀌는 순간 `BOND0` 이 움직여 **Bo 라벨이 통째로 밀린다** — 이 파일이
+    #    `D_REAL_UM` 에서 경고하는 바로 그 **선언 ≠ 사용**이다.  실측(2026-09-21):
+    #    AM_P 12 → 9 µm 에서 BOND0 0.21244 → 0.28326 이라 LA 의 **문헌 앵커 Bo 3.0 이
+    #    4.00 으로**, B5 의 0.5 가 0.667 로 조용히 밀렸다.
+    #  ⇒ `abs_mult` 는 **목표 Bo 그 자체**다 (배수가 아니다).  `ced_matrix` 가 BOND0 을
+    #    거치지 않고 직접 푼다 ⇒ 지름·CGF 가 바뀌어도 Bo 라벨이 고정된다.
+    #    `bond` 는 그대로 곱한다 = 기계 층(고-G) 스케일러.
     'B5': dict(desc='경계 탐침 — AM Bo 0.5', bond=1.0,
-               mult={('AM_P', 'AM_P'): 0.5 / 0.21244, ('AM_P', 'AM_S'): 0.5 / 0.21244,
-                     ('AM_S', 'AM_S'): 0.5 / 0.21244}),
+               abs_mult={('AM_P', 'AM_P'): 0.5, ('AM_P', 'AM_S'): 0.5,
+                     ('AM_S', 'AM_S'): 0.5}),
     'B10': dict(desc='경계 탐침 — AM Bo 1.0', bond=1.0,
-                mult={('AM_P', 'AM_P'): 1.0 / 0.21244, ('AM_P', 'AM_S'): 1.0 / 0.21244,
-                      ('AM_S', 'AM_S'): 1.0 / 0.21244}),
+                abs_mult={('AM_P', 'AM_P'): 1.0, ('AM_P', 'AM_S'): 1.0,
+                      ('AM_S', 'AM_S'): 1.0}),
     #  ★★ §24 (2026-09-20) — **층상 시작**.  1저자 비준: 헤드라인은 *"코팅하면 더 잘 섞이나"*.
     #  삽입만 두 층으로 나눈다 (아래 AM · 위 SE+VGCF+PTFE); 나머지는 전부 그대로.
     #  ⚠ 점착이 걸리는 상(AM)을 **아래**에 둔다 — 깨져야 하는 층을 통째로 두고 시작한다.
@@ -186,8 +193,8 @@ ARMS = {
                layered=True),
     'LA': dict(desc='§24 층상 · 무코팅 AM Bo 3.0 = 문헌 앵커 (hare2026) — 헤드라인 무코팅',
                bond=1.0, layered=True,
-               mult={('AM_P', 'AM_P'): 3.0 / 0.21244, ('AM_P', 'AM_S'): 3.0 / 0.21244,
-                     ('AM_S', 'AM_S'): 3.0 / 0.21244}),
+               abs_mult={('AM_P', 'AM_P'): 3.0, ('AM_P', 'AM_S'): 3.0,
+                     ('AM_S', 'AM_S'): 3.0}),
     'LC': dict(desc='§24 층상 · 코팅 (AM 표면 = SE, C1 규약) — 헤드라인 코팅',
                bond=1.0, mult={}, coat={'AM_P': 'SE', 'AM_S': 'SE'}, layered=True),
 }
@@ -208,11 +215,17 @@ def _solve_bond0(d, ceiling=None):
     for a in ARMS.values():
         if not a['bond']:
             continue
+        am = a.get('abs_mult') or {}
         for t in TYPES:
+            #  ★ 절대-Bo 로 고정된 상은 BOND0 에 **딸려 움직이지 않는다** ⇒ 천장 방정식
+            #    밖이다.  (천장을 넘지 않는지는 셀프테스트 ㊹ 가 따로 단언한다.)
+            if any(t in k for k in am):
+                continue
             nu, mat = PHASE_MECH[t]
             r = d[t] / 2.0
             #  이 상에 걸린 가장 큰 Bond 배수
-            f = max([v for (x, y), v in a['mult'].items() if t in (x, y)] or [1.0])
+            f = max([v for (x, y), v in (a.get('mult') or {}).items()
+                     if t in (x, y)] or [1.0])
             #  ⚠ `bond` 는 이제 0/1 이 아니라 **배율**이다 (고-G 팔이 1/268 을 쓴다).
             #    a['bond'] 를 안 곱하면 약한 팔을 강한 팔로 오해해 BOND0 이 잘못 풀린다.
             base = overlap_for_ced(ced_for_bond(1.0, r, nu, DENS[mat]), r, nu)
@@ -247,12 +260,16 @@ def ced_matrix(arm, d):
         for j, tj in enumerate(TYPES):
             if a['bond'] <= 0:
                 continue
-            f = a['mult'].get((ti, tj), a['mult'].get((tj, ti), 1.0))
+            rel = a.get('mult') or {}
+            f = rel.get((ti, tj), rel.get((tj, ti), 1.0))
+            am = a.get('abs_mult') or {}
+            bo_abs = am.get((ti, tj), am.get((tj, ti)))
+            #  ★ `abs_mult` 는 **목표 Bo 자체**라 BOND0 을 안 거친다 (라벨 고정).
+            bo = (bo_abs * a['bond']) if bo_abs is not None else (bond0 * a['bond'] * f)
             cand = []                     # ★ 두 상의 목표 CED 중 작은 쪽 (위 설명)
             for t in (ti, tj):
                 nu, mat = PHASE_MECH[t]
-                cand.append(ced_for_bond(bond0 * a['bond'] * f,
-                                         d[t] / 2.0, nu, DENS[mat]))
+                cand.append(ced_for_bond(bo, d[t] / 2.0, nu, DENS[mat]))
             M[i][j] = min(cand)
     #  ★ 코팅 — 코팅된 두 상이 닿으면 **둘 다 코팅재 표면**이므로 그 쌍의 CED 를
     #    코팅재끼리의 값으로 **덮는다**.  설계식을 다시 풀지 않고 **값을 복사**한다
@@ -808,7 +825,7 @@ def _selftest():
         abs(_P1(9.81 * 268, E_YOUNG) / _P1(9.81, E_YOUNG) - 268.0) < 1e-6)
     #  ★ BOND0 은 약한 팔이 늘어도 안 흔들린다 (천장은 가장 센 팔이 정한다)
     chk('㉝e 고-G 팔을 더해도 BOND0 이 안 바뀐다 (천장은 최강 팔이 정한다)',
-        abs(_solve_bond0(dd) - 0.2124) < 1e-3)
+        abs(_solve_bond0(dd) - 0.2833) < 1e-3)
 
     #  ★★ 점착 눈금 — **실측 앵커**.  이 다섯이 새 사다리의 근거다.
     #  실측 3.50 % — 강체 내부 쌍을 제외하고 다시 잰 값 (초판 3.54 % 는 섬유 자기겹침 포함)
@@ -844,10 +861,31 @@ def _selftest():
     #  ── §24 층상 팔 ──────────────────────────────────────────────────────────
     import hashlib as _hl
     _p8 = plan(8000)
-    chk('㉞ 새 팔(L0·LA·LC)을 넣어도 BOND0 이 0.21244 그대로다 (Bo 라벨이 안 밀린다)',
-        abs(_solve_bond0(_p8['d']) - 0.21244) < 5e-6)
-    _gold = {'E0': '475de96f647f99cb', 'E1': '73292b46192dc5cc', 'E4': '7787d125dfb80d01',
-             'C1': 'fbcd03663fe780cb', 'T1': '60a212d1722da1ec', 'B5': 'da609bb4b5245534'}
+    chk('㉞ 새 팔(L0·LA·LC)을 넣어도 BOND0 이 0.283257 그대로다 (천장은 E4 가 정한다)',
+        abs(_solve_bond0(_p8['d']) - 0.283257) < 5e-6)
+    #  ★★ 진짜 "Bo 라벨이 안 밀린다" 는 **지름을 흔들어야** 보인다 — ㉞ 는 팔만 흔든다.
+    #    초판(`mult = 목표Bo / 0.21244`)은 AM_P 12 → 9 µm 에서 LA 를 3.0 → **4.00** 으로
+    #    밀었고 ㉞ 는 그것을 **못 잡았다** (BOND0 자체는 그 시점에 맞았으므로).
+    def _bo_amp(arm, dd_):
+        _nu, _mat = PHASE_MECH['AM_P']
+        return bond_for_ced(ced_matrix(arm, dd_)[0][0], dd_['AM_P'] / 2.0, _nu, DENS[_mat])
+    chk('㊺ ★ LA 의 AM_P Bo 3.0 (hare2026 앵커) 이 **지름·CGF 를 흔들어도** 안 밀린다',
+        all(abs(_bo_amp('LA', plan(8000, cgf=_c)['d']) - 3.0) < 1e-9
+            for _c in (100.0, 200.0, 400.0)))
+    chk('㊺b ★ B5·B10 경계탐침 Bo 0.5·1.0 도 CGF 에 불변',
+        all(abs(_bo_amp(_a, plan(8000, cgf=_c)['d']) - _t) < 1e-9
+            for _a, _t in (('B5', 0.5), ('B10', 1.0)) for _c in (100.0, 400.0)))
+    #  ★ 절대-Bo 팔은 BOND0 방정식 밖이므로 천장을 **따로** 단언한다 (위 `_solve_bond0` 주석)
+    chk(f"㊺c 절대-Bo 팔이 겹침 천장 {OVL_CEILING*100:.1f} % 안이다 "
+        f"(LA {overlap_for_ced(ced_matrix('LA', _p8['d'])[0][0], _p8['d']['AM_P']/2, 0.25)*100:.3f} %)",
+        all(overlap_for_ced(ced_matrix(_a, _p8['d'])[_i][_i], _p8['d'][_t] / 2.0,
+                            PHASE_MECH[_t][0]) <= OVL_CEILING
+            for _a in ('B5', 'B10', 'LA') for _i, _t in enumerate(TYPES)))
+    #  ⚠ 2026-09-21 갱신 — **두 가지가 같이 바뀌었다**: AM_P 12 → 9 µm (소재 실측) ·
+    #    절대-Bo 팔의 하드코딩 제거.  후자만으로는 5/6 이 **바이트 동일**하고 B5 만
+    #    바뀐다 (옛 `0.5/0.21244 × BOND0` 이 정확히 0.5 가 아니라 0.500001 이었다).
+    _gold = {'E0': '18ecb638558b6a08', 'E1': '8b51d0270216d94b', 'E4': '941cf4e5f7cc34b2',
+             'C1': 'ac0a48324f9dc1f4', 'T1': 'c07d6e850724ba4c', 'B5': '6a7aecb781b4b315'}
     _got = {a: _hl.sha256(deck(_p8, rpm=60, revolutions=2, seed=32452843, arm=a)
                           .encode()).hexdigest()[:16] for a in _gold}
     chk('㉟ 기존 6 팔 덱이 편집 전과 **바이트 동일** (골든 해시, plan(8000)·2바퀴·시드 32452843)',
