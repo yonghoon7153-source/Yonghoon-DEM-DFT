@@ -3,7 +3,7 @@
  "kind": "estimand",
  "record_kind": "estimand_card",
  "date": "2026-09-21",
- "status": "proposed",
+ "status": "ratified",
  "citable": false,
  "results_seen": false,
  "system": "lpscl_amorphous",
@@ -149,7 +149,24 @@
    "state": "proposed",
    "by": "agent",
    "note": "1저자 지시 '2,3 하자 MD까지 가보자' + 온도 설계 '그래 이걸로 가보자'. 온도 세 점·파일럿 게이트·갈래·상한을 결과 보기 전에 박았다. ⚠ 온도 지렛대는 1저자 지적으로 400/450/500 → 400/465/550 으로 고쳤다. 비준은 1저자 — 비준 전에는 던지지 않는다."
+  },
+  {
+   "at": "2026-09-21",
+   "state": "ratified",
+   "note": "1저자 비준 2026-09-21 ('ㅇㅇ 돌리자'). 온도 400/465/550 K · 120 원자 1×1×1 · 독립담금질 5 시드 · 400 ps · default 모드 · 파일럿 2런 선행 · 갈래 0~3 · 총상한 180 GPU-h · 보고량은 N_pass/15 와 Ea 시드 IQR(절대값 아님). 온도 간격은 1저자 지적(아레니우스 지렛대)으로 400/450/500 에서 정정된 값이다."
   }
  ],
- "by": "agent · 2026-09-21"
+ "by": "agent · 2026-09-21",
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "at": "2026-09-21",
+  "by": "1저자",
+  "content_digest": "bc2feafbf463743ca2b53aa4e26d2f02f02ac96c0f4f471a9b27ed94e11b40c4",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-21T07:28:40Z",
+  "commit": "768b2f2508a5d38c3518b281766f9dd5ae3afcb2",
+  "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다 — 비준을 받아 놓고 내용을 고치는 경로를 닫는다.",
+  "⚠_base_commit_이_아니다": "`commit` 은 기록일 뿐 앵커가 아니다. 앵커는 위 digest 다."
+ }
 }
