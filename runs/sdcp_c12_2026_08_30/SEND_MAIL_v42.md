@@ -1,9 +1,9 @@
 # C-12 v42 발송 메일 (그대로 복붙)
 
-> ## ⛔ 먼저 읽어 주십시오 — **이전에 보내 드린 `sdcp_c12_v41.zip` 은 폐기해 주십시오.**
-> 이 메일의 묶음이 그것을 **대체**합니다. 두 개를 같이 돌리지 말아 주십시오.
-> · 아직 시작하지 않으셨다면: 이전 zip 을 지우고 이 묶음으로만 진행해 주십시오.
-> · 이미 시작하셨다면: **멈추고 알려 주십시오.** 지금까지 쓰신 시간은 저희가 부담하겠습니다.
+> ## ⛔ 먼저 읽어 주십시오 — 이 묶음이 `sdcp_c12_v41.zip` 을 **대체**합니다. 그러나 **v41 를 푼 디렉터리는 지우지 마십시오.**
+> · v41 에서 **완주하신 잡은 이 판이 승계**합니다 (아래 §1′) — 다시 돌리지 않습니다. 승계가 그 디렉터리의 경로·MANIFEST·봉인을 읽으므로 그대로 두십시오.
+> · v41 러너로 **새 잡을 시작하지는 말아 주십시오.** 지금 v41 에서 도는 잡이 있으면 끝나게 두시고, 끝난 뒤 §1′ 로 이어 주십시오 (완주한 잡은 승계됩니다).
+> · **회신을 기다리지 않으셔도 됩니다** — §0 의 확인 사항은 이전 판 회신으로 이미 답해 주셨습니다. 바로 §1′ 로 진행해 주십시오.
 > · 바뀐 이유: v41 러너는 같은 extraction 에서 다시 부르면 완주한 잡의 거부를 실패로 세어 2물결(nzmag 2잡)이 열리지 않았습니다 — 09-21 회신에 적어 주신 그대로이고 저희 결함입니다. v42 는 같은 19잡·같은 입력이며 러너·문서만 고쳤고, v41 에서 완주하신 7잡을 승계하는 절차(§1′)를 넣었습니다. 완주하신 7잡은 다시 돌리지 않습니다.
 
 
@@ -23,7 +23,7 @@
 SDCP·PTFE 바인더 계면 계산 번들을 보내드립니다. **VASP 단일점(static) 19잡**이고,
 실행·검증·분석 스크립트가 번들 안에 전부 들어 있습니다.
 
-### 0. 먼저 회신해 주실 것 — **이 답을 받기 전에는 시작하지 말아 주십시오**
+### 0. 시작 전 확인 사항 — ✅ 이전 판 회신으로 **이미 답해 주셨습니다** (참고용 · 다시 답하실 필요 없습니다 · 바로 §1′ 로)
 
 이 묶음은 ZIP 을 함께 드리지만, **아래 다섯 가지 답을 저희가 받기 전에는 `run_staged.sh` 를 시작하지 말아 주십시오.**
 답에 따라 코어 수 · 동시 잡 수 · walltime 계획을 다시 계산해 드려야 할 수 있고, 그때는 지금 숫자
@@ -52,8 +52,8 @@ SDCP·PTFE 바인더 계면 계산 번들을 보내드립니다. **VASP 단일�
 ### 1. 무결성 확인 (먼저)
 
 ```
-EXPECT_ZIP_SHA256      = 455dfe8ace9f537c53ffdc5b8bd74834e4d4800bb4a78e4d5bf96fc82c8945e7
-EXPECT_MANIFEST_SHA256 = 714a4bf678c24befaf74861b9470ac2d75822fc2636b74adf1198d45f79c69d8
+EXPECT_ZIP_SHA256      = 9a3976b8b13a7a6e7505dcdba6bdfceb3c2ba1ebfe8eb81764c42fd159f89014
+EXPECT_MANIFEST_SHA256 = a2e3e820a276757389862ae7bf0bd273fd7362a35e1368d5b74c5937c7eb17e7
 ```
 
 ```bash
@@ -82,8 +82,8 @@ export POTCAR_ALLOWLIST=/abs/site_allow.txt
 
 # ── 배포본 결박 (ZIP 밖의 값이 유일한 앵커입니다) ──
 export BUNDLE_ZIP_SHA256=$(sha256sum /경로/받은번들.zip | cut -d" " -f1)
-export EXPECT_MANIFEST_SHA256=714a4bf678c24befaf74861b9470ac2d75822fc2636b74adf1198d45f79c69d8
-export EXPECT_ZIP_SHA256=455dfe8ace9f537c53ffdc5b8bd74834e4d4800bb4a78e4d5bf96fc82c8945e7
+export EXPECT_MANIFEST_SHA256=a2e3e820a276757389862ae7bf0bd273fd7362a35e1368d5b74c5937c7eb17e7
+export EXPECT_ZIP_SHA256=9a3976b8b13a7a6e7505dcdba6bdfceb3c2ba1ebfe8eb81764c42fd159f89014
 
 # ── 실행 방식 ──
 # ⛔ 자유형 launcher 문자열(VASP_CMD·VASP_LAUNCHER)은 **폐지됐습니다** (회신 AV P0-2) —
@@ -180,8 +180,8 @@ export POTCAR_ALLOWLIST=/abs/site_allow.txt
 
 # ── 배포본 결박 (ZIP 밖의 값이 유일한 앵커입니다) ──
 export BUNDLE_ZIP_SHA256=$(sha256sum /경로/받은번들.zip | cut -d" " -f1)
-export EXPECT_MANIFEST_SHA256=714a4bf678c24befaf74861b9470ac2d75822fc2636b74adf1198d45f79c69d8
-export EXPECT_ZIP_SHA256=455dfe8ace9f537c53ffdc5b8bd74834e4d4800bb4a78e4d5bf96fc82c8945e7
+export EXPECT_MANIFEST_SHA256=a2e3e820a276757389862ae7bf0bd273fd7362a35e1368d5b74c5937c7eb17e7
+export EXPECT_ZIP_SHA256=9a3976b8b13a7a6e7505dcdba6bdfceb3c2ba1ebfe8eb81764c42fd159f89014
 
 # ── 실행 방식 ──
 # ⛔ 자유형 launcher 문자열(VASP_CMD·VASP_LAUNCHER)은 **폐지됐습니다** (회신 AV P0-2) —
@@ -299,7 +299,7 @@ bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
 
 ## ⚠ 보내기 전 확인 (1저자)
 
-- [ ] 첨부 zip sha256 == `455dfe8ace9f53…`
+- [ ] 첨부 zip sha256 == `9a3976b8b13a7a…`
 - [ ] 본문에 두 해시가 정확히 들어갔는가
 - [ ] 실행 블록에 `PP`·`POTCAR_ALLOWLIST`·`LAUNCHER_BIN`·`VASP_EXE` 가 살아 있는가
 - [ ] 받는 사람 주소
@@ -347,5 +347,5 @@ bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
 |---|---|
 | 번들 | `runs/sdcp_c12_2026_08_30/sdcp_c12_v42.zip` |
 | 증서 | `runs/sdcp_c12_2026_08_30/IDENTITY_v42.json` |
-| 생성 커밋 | `8cd04e5f` (clean · 생성 시점에 origin 에 있던 커밋) |
+| 생성 커밋 | `d5d4414e` (clean · 생성 시점에 origin 에 있던 커밋) |
 | 리뷰 | BH(다중 감사 7렌즈) · v34 6렌즈 — `kb/reviews/` |
