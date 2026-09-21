@@ -3,13 +3,53 @@
 > 세션이 바뀌어도 유지되는 미결 사항 추적. 닫을 때 날짜+근거를 남기고 ✅로 옮긴다.
 > 등록: 2026-07-27 (MAX 감사 후속).
 
-## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-20 밤 — ⏭-NOW-p 가 최신 (LOBSTER nscf 가 두 번 끊겼다 · NdP5O14 갭이 끝나야 재시작 · Γ-only 판단 대기). 같은 날 앞 블록은 ⏭-NOW-o (cascade v6)**)
+## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-21 오후 — ⏭-NOW-r 가 최신 (v42 발송 준비 완료 · V100 G-B7 18 사건 실행 중 · lpsocl s6 재시작). 앞 블록 ⏭-NOW-q 는 같은 날 낮**)
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 >
 > ⚠ **이 절의 상태 문장은 실측으로만 쓴다.** 2026-09-07 까지 여기 머리가 "ORCA 8잡 실행 중"
 > 이었는데 같은 날 실측은 **프로세스 0개**였다 — 워처·기억이 아니라 `ps`·receipt·git log 로
 > 받친다(`kb/projects/restart_runbook_2026_09_07.md`). 세션을 닫을 때 이 절을 갱신한다.
+
+### ⏭-NOW-r. 2026-09-21 오후 — **v42 발송 준비 끝 · 소셀 재개조건 ① 이 ② G-B7 에 들어갔다 · V100 NFS 함정**
+
+| 기계 | 지금 |
+|---|---|
+| **V100** | 🟢 **② G-B7 실행 중** — `union_v2` n_new **18**(30 원시 → 공유쌍 12 제외 · lag5 겹침 0) · 로컬 `$HOME/local_runs/shortlag/union_v2/events` · 로그 `gb7.log`. 사건당 ≈7.5 분 ⇒ ≈2.3 h. 끝나면 `endpoint_coupled_gate.json` → N₂ → 갈래 판정(카드 §4) → N₂≥1 이면 ③ NEB |
+| **kgy** | 🟢 lpsocl s6/T800 재시작 (14:1x · 세 번 실패 뒤 — 아래) + cascade v6 40런. GPU 공유 |
+| **gabia** | 🟢 LOBSTER nscf 3차 (PID 3003581 · 13:57) · ETA 09-23 낮 |
+
+**오늘 오후 끝난 것**
+- **SDCP C-12 v42** — 러너 승계(`SKIP_COMPLETE=1` + `CONTINUE_FROM`) · 19잡 입력 v41 과 바이트 동일 ·
+  실물 7잡 픽스처 e2e(승계 7·건너뜀 7·nzmag 2 가 승계된 부모 기하로 실행) · 자체리뷰 17항목
+  `runs/sdcp_c12_2026_08_30/SELF_REVIEW_v42.md`. 산출물 커밋 `91bdffb35` (zip `9a3976b8b13a…` · IDENTITY · SEND_MAIL).
+  ⚠ 첫 렌더는 v40→v41 배너("지우고·멈추고 알려 주십시오")를 그대로 달고 나갈 뻔했다 — 승계 메일은
+  **반대 지시**라 렌더러에 `_banner(continuation)` 분기 (`d5d4414e9`). **발송은 1저자.**
+  남은 위험: mirae 가 습관대로 §2(처음부터)로 돌리는 것 · `CONTINUE_FROM` 경로가 로그 추정.
+- **소셀 합집합 규칙 정정** (`846a2e02e`): 원시 끝점 쌍을 공유하는 사건은 **둘 다** 버린다 (lag 간 겹침은
+  구조적으로 0 — 끝점이 (t, t+lag) 라 lag 이 다르면 sha 가 같을 수 없다). 24 → **18**.
+- **Li₂S 셀수렴 P1 입력 경로** — `build_neb_inputs.py --scf_probe` (`d81284cc0`). 4×4×4 = 191 원자 · k 2 2 2 ·
+  λ₁ 16.04 Å. ⏳ **실측은 아직** — 카드가 kgy 지정인데 kgy GPU 가 MD 로 차 있고, gabia 는 사유가 낡음. 기계 결정 대기.
+
+**⛔ 오늘 밟은 것 (다음 사람용)**
+- **lpsocl s6 재시작 세 번 실패**: ① 붙여넣기 훼손 → 한 줄로 · ② `REPO` 기본값 틀림 → `REPO=$HOME/lldvar` ·
+  ③ 맨 `python3` 가 `(base)` 로 풀려 `ModuleNotFoundError: ase` (2 분 뒤 traceback). 러너에 `PY=` + import
+  사전검사 (`42338fbea`) — 던지기 **전에** 막는다.
+- **V100 에서 UMA 가 안 뜨는 것처럼 보인 것**: conda env 가 **NFS** 위(`$STORE/opt/miniforge3/envs/uma`)라
+  import 가 파일 개수당 왕복 지연으로 10 분+ (매핑 25 → 1163 파일 / 7.6 분). 두 번을 2·5 분에 죽였다.
+  판별은 `read_bytes` 가 아니라 **`rchar`·`/proc/<pid>/maps` 의 NFS 파일 수** (문서 정정 `b9c637c0e`).
+  체크포인트는 kgy 에서 scp (11 MB/s) 로 로컬 사본 · 실행은 `env LD_LIBRARY_PATH=$CONDA_PREFIX/lib HF_HUB_OFFLINE=1 $CONDA_PREFIX/bin/python -u`.
+- ⛔ `for x in $(pgrep -f disorder_ensemble_diffusion); do kill $x; done` 으로 **lpsocl s6/T800 을 43 % 에서 죽였다**
+  (cascade 를 잡으려던 것). CLAUDE.md 금지 이름에 스크립트 이름 추가. 잡은 `--out_root` 로 가른다.
+
+**다음 (순서)**
+1. V100 G-B7 끝 → `endpoint_coupled_gate.json` 회수(`db/properties/lpscl_smallcell_shortlag_raw/`) → N₂ → 갈래.
+   N₂ ≥ 1 이면 ③ NEB (`--neb…`, 사건당 ≈15 분, 총상한 8 GPU-h 안). 라운드 기록 `lpscl_smallcell_shortlag_round_2026_09_21.json`.
+2. v42 메일 발송 (1저자) → mirae 회신 대기.
+3. lpsocl 15/15 → C1/C2 → C3 → A/B/C (⚠ run-mode 미기록 시드 하나 먼저 해소).
+4. Li₂S 4×4×4 P1: 기계 정하면 `--scf_probe` 입력 → 단일 SCF 3 iteration → peak VRAM·벽시계 → 카드 §3 기입.
+
+---
 
 ### ⏭-NOW-q. 2026-09-21 낮 — **셋 다 다시 섰다. 그리고 cascade 가 v5 로 23 h 헛돌았다.**
 
