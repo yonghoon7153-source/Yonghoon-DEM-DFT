@@ -82,6 +82,15 @@ OUTROOT=${OUTROOT:-$HOME/work/runs/$_ROOT}
 SEEDS=${SEEDS:-"5 6"}
 V0XYZ=${V0XYZ:-$REPO/db/structures/$_XYZ}
 DRIVER=$REPO/tools/modelc_v3/disorder_ensemble_diffusion.py
+# ⛔ 2026-09-21 실측 — 맨 `python3` 가 `(base)` 인터프리터로 풀려 `ModuleNotFoundError: ase`
+#   로 2 분 뒤에 죽었다 (lpsocl s6 재시작 3 번째 실패). 드라이버를 부르는 인터프리터는
+#   **변수로 받고, 던지기 전에 import 로 검사**한다. 기본값은 CLAUDE.md 의 uma python.
+PY=${PY:-/home/kgy/apps/miniforge3/envs/uma/bin/python}
+[ -x "$PY" ] || PY=python3          # 다른 기계(경로 없음)면 셸의 python3 — 아래 검사가 거른다
+"$PY" -c "import ase, fairchem" 2>/dev/null || {
+  echo "⛔ $PY 에 ase/fairchem 이 없다 — uma env 가 아니다. PY=<uma python 절대경로> 로 지정하라"
+  echo "   (실측 경로: /home/kgy/apps/miniforge3/envs/uma/bin/python · 확인: readlink -f /proc/<pid>/exe)"
+  exit 1; }
 LOG=${LOG:-$HOME/logs/${SYS}_box331_seed_extension.log}
 
 # ── 가드 1: 중복 실행 (flock — pgrep 은 tmux 래퍼까지 세서 자기 자신에 걸린다) ──
@@ -120,6 +129,7 @@ fi
 mkdir -p "$(dirname "$LOG")"
 echo "SYS    = $SYS   (실행모드 ${_TURBO:-default})"
 echo "REPO   = $REPO"
+echo "PY     = $PY"
 echo "V0     = $V0XYZ  ($NAT atoms)"
 echo "OUT    = $OUTROOT/s{$SEEDS}"
 echo "seeds  = $SEEDS   (드라이버가 온도별로 base+int(T) 로 갈라 쓴다)"
@@ -133,7 +143,7 @@ for S in $SEEDS; do
     echo "  ✓ s${S} 이미 끝나 있다 — 건너뜀 ($OUT)"; continue
   fi
   echo "===================== $SYS box331 seed ${S} ====================="
-  python3 "$DRIVER" \
+  "$PY" "$DRIVER" \
     --v0_xyz "$V0XYZ" --label modelc \
     --temperatures 600 800 1000 \
     --disorder_levels 0.0 --n_configs 1 \

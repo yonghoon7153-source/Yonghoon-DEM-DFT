@@ -144,6 +144,10 @@
     pkill -f "lobster_scf.in"           # ② 그 다음에 죽인다
     ```
     PID 를 직접 쓰는 것도 좋다. `pw.x`·`python3`·`mpirun` 같은 **공용 이름으로는 절대** 안 된다.
+    ⛔ **스크립트 이름도 공용이다** — `disorder_ensemble_diffusion` 으로 잡으면 그 드라이버를 쓰는
+    **모든** MD 가 걸린다. 2026-09-21 kgy 에서 `for x in $(pgrep -f disorder_ensemble_diffusion); do
+    kill $x; done` 으로 **lpsocl s6/T800 을 43 %(≈7.4 h)에서 죽였다** (cascade 를 잡으려던 것).
+    잡을 가르는 것은 `--out_root`·`--label` 같은 **잡 고유 인자**다: `pgrep -af "lpsocl_box331_400ps/s6"`.
   · ⭐ **랭크를 바꾸기 전에 스크래치에서 프로브한다** — 돌던 잡을 죽이고 나서 안 되는 걸 알면 최악이다.
     별도 폴더 + `ESPRESSO_TMPDIR=<scratch>` 로 90 초만 띄워 `Parallel version` 헤더와
     `Estimated max dynamical RAM` 만 보고 죽인다. `ESPRESSO_TMPDIR` 이 입력의 `outdir` 을 덮으므로
