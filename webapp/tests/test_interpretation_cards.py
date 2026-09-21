@@ -915,49 +915,208 @@ def test_s0_onset_table_matches_the_esw_record(client):
 #   유도되지 않았다. 추적해 보니 **선행 지표**(cei_tm_fate, 4 양극 × 6 전압 = 24)의
 #   격자 수가 산문으로 옮겨와 **다른 표의 분모**가 돼 있었다. 한 기록 안에 두 분모가
 #   있으면 산문은 가까운 쪽을 집어 간다 — 그래서 CSV 에 값으로 묶는다.
+#   2026-09-21 재결속: 34 행 부분 라운드 → **전조건 라운드 120 행**(4 × 6 × 5).
+#   옛 CSV 는 정정 기록이 가리키는 역사라 지우지 않고, 화면의 현재 숫자는 새 CSV 에 묶는다.
 PROT_CSV = REPORT.parent / "cei_nd_protection_curve.csv"
+PROT_CSV_ALL = REPORT.parent / "cei_nd_protection_allcells.csv"
 
 
-def _prot_rows():
+def _prot_rows(path=None):
     import csv as _csv
-    return list(_csv.DictReader(PROT_CSV.open(encoding="utf-8")))
+    return list(_csv.DictReader((path or PROT_CSV_ALL).open(encoding="utf-8")))
+
+
+def _prot_counts(rows):
+    n_all = len(rows)
+    n_fail = sum(1 for r in rows if r["gate_pass"] == "False")
+    n_pass = sum(1 for r in rows if r["gate_pass"] == "True")
+    cols = {(r["cathode"], r["voltage_V"]) for r in rows}
+    full = {c for c in cols
+            if all(r["gate_pass"] == "True" for r in rows
+                   if (r["cathode"], r["voltage_V"]) == c)}
+    return n_all, n_pass, n_fail, len(cols), full
 
 
 def test_protection_gate_denominator_matches_the_csv(client):
-    """양성 — 화면이 인용하는 분모·탈락·통과·열수가 전부 CSV 에서 나온다.
+    """양성 — 화면이 인용하는 분모·탈락·통과·열수가 전부 **전조건 CSV** 에서 나온다.
 
     ⚠ 맨 숫자로 재지 않는다. 첫 판은 `re.search(r"\\b7\\b", h)` 였는데 "7" 은 이 페이지
     어디에나 있어서 **열 수를 지워도 통과했다**(2026-09-21 break-verify 에서 잡았다).
     그래서 숫자를 **자기 문맥에 묶어** 찾는다.
     """
     rows = _prot_rows()
-    n_all = len(rows)
-    n_fail = sum(1 for r in rows if r["gate_pass"] == "False")
-    n_pass = sum(1 for r in rows if r["gate_pass"] == "True")
-    n_col = len({(r["cathode"], r["voltage_V"]) for r in rows})
+    n_all, n_pass, n_fail, n_col, full = _prot_counts(rows)
+    n_full = len(full)
     assert n_all == n_pass + n_fail, "gate_pass 가 True/False 말고 다른 값을 갖는다"
     h = _report_html(client)
     need = {
         "본문 분모":      f"잰 <b>{n_all} 칸</b>",
-        "본문 탈락":      f"<b>{n_fail} 칸</b>",
-        "본문 통과":      f"통과 {n_pass}",
-        "본문 열수":      f"열 <b>{n_col} 개</b>",
-        "TL;DR 분모":     f"잰 <b>{n_all} 칸</b> 중 <b>{n_fail} 칸 탈락</b>",
-        "TL;DR 열수":     f"열 {n_col} 개",
-        "요지줄":         f"잰 {n_all} 칸 중 {n_fail} 탈락, 열 {n_col} 개",
+        "본문 탈락":      f"중 <b>{n_fail} 칸</b>이",
+        "본문 통과":      f"(통과 <b>{n_pass}</b>)",
+        "본문 열수":      f"열 <b>{n_col} 개</b> 중 다섯 농도를 전부 통과한 것은 <b>{n_full} 개</b>",
+        "TL;DR 칸수":     f"전조건 라운드(<b>{n_all} 칸</b>",
+        "TL;DR 열수":     f"열 <b>{n_col} 개 중 {n_full} 개</b>가 전 농도 통과",
+        "요지줄":         f"<b>{n_all} 칸</b> 전조건에서 열 <b>{n_col} 중 {n_full}</b> 통과",
         "§9":             f"잰 <b>{n_all} 칸</b> 중 <b>{n_fail} 칸</b>이 탈락했다(통과 {n_pass} · 열 {n_col} 개)",
-        "영문 캡션":      f"Of the {n_all} measured cells, {n_fail} fail",
+        "영문 캡션":      f"Of {n_all} measured cells, {n_fail} fail",
+        "영문 캡션 열":   f"of the {n_col} (cathode, voltage) columns, {n_full} pass at every",
     }
     missing = [k for k, v in need.items() if v not in h]
     assert not missing, f"CSV 수가 화면의 그 자리에 없다: {missing}"
 
-    full = {c for c in {(r["cathode"], r["voltage_V"]) for r in rows}
-            if all(r["gate_pass"] == "True" for r in rows
-                   if (r["cathode"], r["voltage_V"]) == c)}
-    assert len(full) == 2 and len({c[0] for c in full}) == 2, sorted(full)
-    for cath, volt in sorted(full):
+    #: NMC811 6/6 은 이 개정의 표제다 — 자료에서 세고, 화면 문구와 맞춘다
+    nmc = sorted(v for c, v in full if c == "NMC811")
+    assert len(nmc) == 6, f"NMC811 전 농도 통과 열이 {len(nmc)} 개다 — 화면은 6 이라 적었다"
+    assert "<b>NMC811 은 6 전압 전부</b>" in h
+
+    #: 식이 잘 맞는 세 열은 이름으로 화면에 있어야 한다
+    for cath, volt in [("LiCoO2", "4.3"), ("LiNiO2", "3.5"), ("NMC811", "3.5")]:
+        assert (cath, volt) in full, f"{cath} {volt} V 가 CSV 에서 전 농도 통과가 아니다"
         sub = cath.replace("LiCoO2", "LiCoO₂").replace("LiNiO2", "LiNiO₂")
         assert f"{sub} {float(volt):.2f} V" in h, f"통과 열 {cath} {volt} V 가 화면에 없다"
+
+
+def test_undefined_protection_columns_are_not_drawn_as_zero(client):
+    """양성 — 보호율이 **정의되지 않는** 열(양쪽 다 TM 인산염 없음)을 0 으로 말하지 않는다.
+
+    repo 규율: "화면·출력에서 없는 값을 0 으로 그리지 않는다". 여기선 그 열이 몇 개인지를
+    자료에서 세고, 화면이 같은 수를 **'정의되지 않는다'** 라고 적었는지 본다.
+    """
+    rows = _prot_rows()
+    _, _, _, _, full = _prot_counts(rows)
+    undef = sorted(c for c in full
+                   if all((r["protection_observed"] or "").strip() == ""
+                          for r in rows if (r["cathode"], r["voltage_V"]) == c))
+    assert undef, "정의되지 않는 열이 자료에 없다 — 시험이 헛것을 잰다"
+    h = _report_html(client)
+    assert f"<b>{len(undef)} 개</b>(LiCoO₂ 2.5·3.0 · LiMnO₂ 2.5 · LiNiO₂ 2.5·3.0 V)" in h, \
+        f"정의되지 않는 열 {len(undef)} 개를 화면이 그 수로 적지 않았다"
+    assert "보호율이 <b>정의되지 않는다</b>" in h
+    assert "<b>0 이 아니라 빈칸(&#8212;)</b> 으로 둔다" in h
+    #: 예측선 CSV 는 (a) 가 그리는 세 곡선과 열 수가 같아야 한다 — 조용히 빠진 적이 있다
+    hdr = (REPORT.parent / "cei_nd_protection_fig.csv").read_text("utf-8").splitlines()[0]
+    assert hdr.count(",") == 3, f"예측선 CSV 열이 {hdr.count(',')} 개다 — 곡선 셋과 안 맞는다"
+    for tag in ("LiCoO2_4.3V", "LiNiO2_3.5V", "NMC811_3.5V"):
+        assert tag in hdr, f"예측선 CSV 에 {tag} 열이 없다"
+
+
+def test_the_rule_counts_phosphorus_but_the_measurement_counts_tm(client):
+    """양성 — 이 라운드가 새로 알려준 **조건**이 화면에 결속돼 있다.
+
+    저전압 NMC811 은 도핑·대조의 TM-인산염 몫이 둘 다 0.100(= Mn 분율)이라 보호율이 0 이다.
+    수치를 CSV 에서 읽어 화면 문구와 맞춘다 — 산문만 고치고 자료가 안 바뀌는 일을 막는다.
+    """
+    rows = _prot_rows()
+    zero = [r for r in rows if r["cathode"] == "NMC811"
+            and r["voltage_V"] in ("2.5", "3.0")]
+    assert len(zero) == 10, len(zero)
+    vals = {round(float(r["tm_phosphate_share"]), 3) for r in zero} | \
+           {round(float(r["tm_phosphate_share_control"]), 3) for r in zero}
+    assert vals == {0.100}, f"NMC811 저전압 TM-인산염 몫이 {vals} 다 — 0.100 바닥이 아니다"
+    assert all(abs(float(r["protection_observed"])) < 1e-9 for r in zero)
+    h = _report_html(client)
+    assert "둘 다 0.100" in h and "Mn 분율" in h, "Mn 바닥 설명이 화면에 없다"
+    assert "<b>식은 P 를 세고 실측은 TM 을 센다</b>" in h, "요지줄에 조건이 없다"
+    assert "예측 보호율과 실측 보호율을 같은 양으로 쓰기" in _section(h, "s9"), \
+        "§9 에 새 금지 항목이 없다"
+
+
+def test_deviation_tiers_match_the_csv(client):
+    """양성 — "식이 잘 맞는 열" 의 **문턱과 식구**가 CSV 에서 나온다.
+
+    왜 생겼나: 처음엔 세 열을 "≤2.5 %p" 라고 적었는데 그중 LiNiO₂ 3.50 V 가 **3.1 %p** 였다.
+    셋 중 제일 나쁜 값을 문턱으로 써야 하는데 둘째 값을 썼다 — 산문이 자료보다 좋게 들렸다.
+    그리고 **오차 0.0 %p 인 열이 하나 더 있는데 그건 일치가 아니다**(예측도 실측도 0).
+    """
+    rows = _prot_rows()
+    _, _, _, _, full = _prot_counts(rows)
+
+    def _f(v):
+        v = (v or "").strip()
+        return None if v == "" else float(v)
+
+    dev, trivial = {}, set()
+    for c in full:
+        sub = [r for r in rows if (r["cathode"], r["voltage_V"]) == c]
+        ds = [abs(_f(r["protection_observed"]) - _f(r["P_taken_by_Nd"])) * 100 for r in sub
+              if _f(r["protection_observed"]) is not None and _f(r["P_taken_by_Nd"]) is not None]
+        if not ds:
+            continue
+        dev[c] = max(ds)
+        if all(_f(r["k_observed"]) is None for r in sub):
+            trivial.add(c)          #: Nd 인산염이 아예 안 나온 열 — 0 = 0 은 시험이 아니다
+    assert len(dev) == 12, f"값이 있는 열이 {len(dev)} 개다 — 화면은 12 라 적었다"
+    assert "값이 있는 12 개를" in _report_html(client)
+
+    good = sorted(c for c in dev if c not in trivial and dev[c] <= 3.11)
+    assert good == [("LiCoO2", "4.3"), ("LiNiO2", "3.5"), ("NMC811", "3.5")], good
+    thresh = max(dev[c] for c in good)
+    h = _report_html(client)
+    assert f"<b>≤{thresh:.1f} %p</b>" in h, \
+        f"문턱이 셋 중 **제일 나쁜** 값({thresh:.1f})으로 적혀 있지 않다"
+    assert "≤2.5 %p" not in h, "옛 문턱(둘째로 나쁜 값)이 남아 있다"
+
+    #: 사소하게 0 인 열은 '맞는 셋' 에 못 들어가고, 왜 아닌지가 적혀 있어야 한다
+    assert trivial == {("LiMnO2", "3.5")}, sorted(trivial)
+    assert "LiMnO₂ 3.50 V 는 오차 0.0 %p 지만" in h and "예측도 0, 실측도 0" in h, \
+        "오차 0 이지만 시험이 아닌 열의 설명이 화면에 없다"
+
+    #: 계층은 **여집합**으로 센다. 25.0 문턱으로 세면 24.9999 인 NMC811 3.00 V 가 빠진다
+    #  (첫 판에서 실제로 빠졌다) — 사소한 부동소수 경계가 산문의 수를 바꾸면 안 된다.
+    mid = sorted(c for c in dev if c not in trivial and 3.11 < dev[c] <= 8.85)
+    worst = sorted(c for c in dev if c not in trivial and dev[c] > 8.85)
+    assert len(mid) == 3, sorted((c, round(dev[c], 1)) for c in mid)
+    assert len(worst) == 5, sorted((c, round(dev[c], 1)) for c in worst)
+    assert f"<b>≤{max(dev[c] for c in mid):.1f} %p</b> 가 셋" in h
+    assert f"나머지 다섯이 <b>25~{max(dev.values()):.0f} %p</b> 어긋난다" in h
+
+
+def test_non_monotonic_column_is_flagged_and_no_gate_was_added(client):
+    """양성 — LiMnO₂ 3.00 V 가 단조롭지 않다는 사실과, **게이트를 지금 넣지 않았다**는 사실 둘 다.
+
+    ⚠ 두 번째가 핵심이다. 결과를 보고 문턱을 만들면 사전등록이 죽는다 — 그래서 동결된
+    게이트가 셋 그대로인지도 기록에서 확인한다.
+    """
+    rows = _prot_rows()
+    seq = [float(r["protection_observed"]) for r in
+           sorted((r for r in rows if r["cathode"] == "LiMnO2" and r["voltage_V"] == "3.0"),
+                  key=lambda r: float(r["x_Nd"]))]
+    assert any(b < a for a, b in zip(seq, seq[1:])), f"{seq} 가 단조증가다 — 시험이 헛것을 잰다"
+    h = _report_html(client)
+    assert "1.5 → 44.9 → 9.8 → 100 → 100 %" in h, "화면에 그 수열이 없다"
+    assert "단조성 게이트를 지금 넣지 않는다" in h, "게이트를 안 넣었다는 기록이 화면에 없다"
+
+    #: 몇 개인지도 자료에서 센다. 처음엔 화면이 **하나만** 적었는데 실제로는 셋이었다
+    #  (탐지기를 쓰고서야 알았다) — 수를 자료에 묶어 다시 벌어지지 않게 한다.
+    #  ⚠ 범위는 **전 농도 통과 열**이다. 안 적으면 3 과 5 가 갈린다 — 통과·탈락이 섞인
+    #  열은 남은 점이 성긴 것이지 단조롭지 않은 것이 아니다.
+    _, _, _, _, full_cols = _prot_counts(rows)
+    nm = set()
+    for c in full_cols:
+        ys = [float(r["protection_observed"]) for r in
+              sorted((r for r in rows if (r["cathode"], r["voltage_V"]) == c),
+                     key=lambda r: float(r["x_Nd"]))
+              if (r["protection_observed"] or "").strip() != ""]
+        if any(b < a - 1e-9 for a, b in zip(ys, ys[1:])):
+            nm.add(c)
+    assert len(nm) == 3, f"단조롭지 않은 열이 {len(nm)} 개다 — 화면은 셋이라 적었다: {sorted(nm)}"
+    assert f"<b>통과 열 {len(full_cols)} 개 중 단조롭지 않은 열이 셋</b>" in h, \
+        "화면이 그 수를(범위와 함께) 적지 않았다"
+    for cath, volt in sorted(nm):
+        sub = cath.replace("LiMnO2", "LiMnO₂")
+        assert f"{sub} {float(volt):.2f}" in h, f"{cath} {volt} V 가 화면에 없다"
+    rec_nm = json.loads((REPORT.parents[3] /
+                         "db/properties/cei_protection_allcells_result_2026_09_21.json"
+                         ).read_text("utf-8")).get("⭐_추가_2026_09_21_단조성_탐지", {})
+    assert set(rec_nm.get("열", {})) == {f"{c}@{float(v):.2f}V" for c, v in nm}, \
+        "원장의 단조성 덧댐이 자료와 다르다"
+    rec = json.loads((REPORT.parents[3] /
+                      "db/properties/cei_protection_allcells_result_2026_09_21.json"
+                      ).read_text("utf-8"))
+    assert set(rec["gates_frozen"]) >= {"G1_dx_max", "G2", "G3"}, rec["gates_frozen"]
+    assert rec["gates_frozen"]["G1_dx_max"] == 0.05, "동결 게이트 문턱이 바뀌었다"
+    assert not any("단조" in k for k in rec["gates_frozen"]), \
+        "결과를 본 뒤 단조성 게이트가 들어갔다 — 사전등록이 죽는다"
 
 
 def test_old_24_denominator_survives_only_as_a_struck_correction(client):
@@ -973,6 +1132,12 @@ def test_old_24_denominator_survives_only_as_a_struck_correction(client):
     around = h[max(0, hits[0] - 120): hits[0] + 60]
     assert "<s>" in around and "분모 정정" in around, \
         "남은 '24 칸' 이 취소선·정정 표지 안에 있지 않다"
+    #: 같은 날 전조건 라운드가 24 를 **열의 개수로는** 되살렸다. 두 층이 다 있어야 한다 —
+    #  정정만 남으면 다음 사람이 24 라는 수 자체를 금지된 것으로 읽는다.
+    assert "2026-09-21 2차 갱신" in h and "지금은 24 가 맞다 — 열의 개수로서" in h, \
+        "정정 뒤 전조건 라운드가 24 를 열 수로 되살린 기록이 없다"
+    old_rows = _prot_rows(PROT_CSV)
+    assert len(old_rows) == 34, "옛 34 행 CSV 가 사라졌다 — 정정 기록이 가리키는 역사다"
     rec = json.loads((REPORT.parents[3] /
                       "db/properties/cei_nd_p_capture_result_2026_09_18.json").read_text("utf-8"))
     assert "⛔_정정_2026_09_21_24_칸_의_분모" in rec, "원장에 정정 주석이 없다"
