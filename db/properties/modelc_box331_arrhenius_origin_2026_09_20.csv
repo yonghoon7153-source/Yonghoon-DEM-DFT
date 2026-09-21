@@ -1,0 +1,9 @@
+"# modelc(LPSCl1.6) 3x3x1 400 ps, 5 seeds. Ea(cell-conditioned) = 0.1690 eV, CI95 [0.1658, 0.1718]"
+# sources: db/properties/modelc_box331_c2_mto_5seed_2026_09_18.json ; db/properties/modelc_box331_c3_result_5seed_2026_09_18.json ; db/properties/modelc_box331_c3_result_2026_09_15.json
+"# D per eligible seed (cm^2/s): MTO, window 2-50 ps, free intercept. blank = excluded (relative spread > 10 %)."
+# fit_lnD = 3-point unweighted fit of ln(D_mean) vs 1000/T; Ea = -slope*kB*1000
+"# PROTOCOL GENERATION gen2_400ps_4window. Current standard (2026-08-30 onward): 400 ps production, MTO D on the 2-50 ps window with free intercept, 4-window D_inc plateau gate, framework census, pre-registered closure conditions. Ea is cell-conditioned (3x3x1; spatial convergence not established - not a bulk Ea); no cross-system comparison; no absolute sigma or D."
+T_K,x_1000_over_T,D_s2_cm2_s,D_s3_cm2_s,D_s4_cm2_s,D_s5_cm2_s,D_s6_cm2_s,n_eligible,n_total,D_mean_cm2_s,lnD_mean,fit_lnD
+600,1.666667,1.416e-05,,1.374e-05,,1.376e-05,3,5,1.3887e-05,-11.18458,-11.19786
+800,1.250000,2.986e-05,3.076e-05,2.876e-05,2.991e-05,3.044e-05,5,5,2.9946e-05,-10.41611,-10.38072
+1000,1.000000,4.995e-05,5.289e-05,5.264e-05,5.182e-05,5.165e-05,5,5,5.1790e-05,-9.86831,-9.89044
