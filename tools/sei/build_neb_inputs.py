@@ -30,6 +30,8 @@
   python3 tools/sei/build_neb_inputs.py --plan          # 비용만 먼저 본다 (실행 안 함)
   python3 tools/sei/build_neb_inputs.py
   python3 tools/sei/build_neb_inputs.py --min_l 12 --images 9
+  python3 tools/sei/build_neb_inputs.py --only li2s --min_l 14 \
+      --scf_probe --allow_unrelaxed_endpoints   # P1 비용 실측 입력만
 """
 import argparse
 import glob
@@ -756,6 +758,61 @@ def build(tag, path, disp, a, pool):
             else:
                 last = got
     info["endpoints_relaxed"] = ep_ready
+
+    # ── P1 비용 실측용 단일 SCF (--scf_probe) ───────────────────────────────
+    #   왜 있나: li2s_cellconv_card_2026_09_01.json §3.P1 이 선행조건으로
+    #   *"NEB 을 던지기 전에 **단일 SCF 1잡**으로 peak VRAM 과 벽시계를 잰다"* 를 박아 뒀다.
+    #   NEB 한 이미지 = 이 SCF 한 번이므로 **같은 셀·전하·k·컷오프·PP** 로 만든다
+    #   (추정으로 던지지 않는다 — gabia 48 GB 에서 SDCP 대형 셀 7개 설정이 전부 터진 선례).
+    #   ⛔ 이것은 **값을 내는 계산이 아니다** — electron_maxstep 을 잘라 놨고
+    #      disk_io='none' 이라 .save 도 안 남는다. 여기서 나온 에너지·힘은 인용 금지.
+    #   ⛔ 못 하는 것: VRAM 을 **재지 않는다**. 입력만 만든다 — 실제 측정은
+    #      러너(nvidia-smi 표본)가 한다. 여기 숫자는 '얼마나 클지' 의 근거가 아니라
+    #      '무엇을 쟀는지' 의 지문이다.
+    if getattr(a, "scf_probe", False):
+        _pd = os.path.join(d, "scf_probe")
+        os.makedirs(_pd, exist_ok=True)
+        _pb = ["&CONTROL", "    calculation     = 'scf'",
+               f"    prefix          = '{tag}_scfprobe'", "    outdir          = './tmp'",
+               f"    pseudo_dir      = '{a.pseudo_dir}'",
+               "    disk_io         = 'none'", "    tprnfor         = .true.", "/",
+               "&SYSTEM", "    ibrav           = 0", f"    nat             = {nat}",
+               f"    ntyp            = {len(els)}",
+               f"    ecutwfc         = {ECUTWFC}", f"    ecutrho         = {ECUTRHO}",
+               f"    tot_charge      = {q:.1f}",
+               "    occupations     = 'smearing'", f"    smearing        = '{smear}'",
+               f"    degauss         = {degauss}", "/",
+               "&ELECTRONS", "    conv_thr        = 1.0d-8", "    mixing_beta     = 0.3",
+               f"    electron_maxstep = {int(a.scf_probe_steps)}", "/",
+               "", "ATOMIC_SPECIES"]
+        for _e in els:
+            _pb.append(f"  {_e:3s} {atomic_masses[atomic_numbers[_e]]:8.3f}  {pool[_e]}")
+        _pb += ["", "ATOMIC_POSITIONS angstrom"]
+        for _e, _p in first:
+            _pb.append(f"  {_e:3s} %16.10f %16.10f %16.10f" % tuple(_p))
+        _pb += ["", "K_POINTS automatic", "  %d %d %d 0 0 0" % tuple(info["kpts"]),
+                "", "CELL_PARAMETERS angstrom"]
+        for _v in at.cell.array:
+            _pb.append("  %16.10f %16.10f %16.10f" % tuple(_v))
+        open(os.path.join(_pd, "scf_probe.in"), "w").write("\n".join(_pb) + "\n")
+        info["scf_probe"] = {
+            "in": os.path.join(_pd, "scf_probe.in"),
+            "role": "cost_probe_only",
+            "nat": nat, "kpts": list(info["kpts"]), "nelec": nelec_vac,
+            "electron_maxstep": int(a.scf_probe_steps),
+            "supercell": list(rep), "lambda1_A": round(float(_lam1), 3),
+            "tot_charge": q, "smearing": smear, "degauss": degauss,
+            "ecutwfc_Ry": ECUTWFC, "ecutrho_Ry": ECUTRHO,
+            "kdens": a.kdens, "pps": {e: pool[e] for e in els},
+            "geometry_source": info["geometry_source"],
+            "endpoints_relaxed": ep_ready,
+            "⛔_금지": "electron_maxstep 을 잘랐고 disk_io='none' 이다 — "
+                      "여기서 나온 에너지·힘·전하밀도를 값으로 인용하지 않는다.",
+            "카드": "db/properties/li2s_cellconv_card_2026_09_01.json §3_던지기_전_선행.P1"}
+        with open(os.path.join(_pd, "probe_meta.json"), "w", encoding="utf-8") as _f:
+            json.dump(info["scf_probe"], _f, ensure_ascii=False, indent=1)
+        print(f"   ⏱ scf_probe: {os.path.join(_pd, 'scf_probe.in')}  "
+              f"(nat {nat} · k {info['kpts']} · q {q:+.1f} · maxstep {a.scf_probe_steps})")
     # ★ 자체검토 P1-3 — **이완 뒤에** 두 끝점이 아직 서로 다른 구조인지 본다.
     #   끝점 이완에서 뛰는 Li 가 공공으로 굴러떨어지면(무장벽) first ≈ last 가 되어
     #   Ea≈0 이 나온다 — collect_neb 가 사후에 잡는 그 붕괴를, 여기서 공짜로 잡는다.
@@ -1308,6 +1365,110 @@ def _selftest():
         ck("vep_stale_msg", "미수렴 끝점 위에 세워졌다" in out5, True)
         neg += 1
 
+
+    # ── --scf_probe: **본문 경로로** 만든다 (헬퍼만 부르는 시험 금지) ──────────
+    #   ⚠ 이 repo 가 세 번 밟은 함정: selftest 가 헬퍼만 불러 본문이 안 탔다.
+    #     그래서 여기는 build() 를 **그대로** 부른다 — 가짜 pseudo 디렉터리만 세운다.
+    _STRUCT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           "..", "..", "db", "structures", "sei_li2s_mp-1153.vasp")
+    if os.path.isfile(_STRUCT):
+        def _probe_ns(root, pdir, **kw):
+            base = dict(allow_unrelaxed=True, allow_unrelaxed_endpoints=True,
+                        ci_scheme="no-CI", hop_shell=None, ignore_electronic_class=False,
+                        images=7, kdens=0.04, min_l=14.0, min_l_basis="lambda1",
+                        nstep=100, path_thr=0.05, plan=False, pseudo_dir=pdir,
+                        relaxed_from=DFT_WORK, restart=False, scf_probe=True,
+                        scf_probe_steps=3, vacancy_charge="minus1", work=root)
+            base.update(kw)
+            return argparse.Namespace(**base)
+
+        def _fake_pseudo(pdir):
+            os.makedirs(pdir, exist_ok=True)
+            for el, z in (("Li", 3.0), ("S", 6.0)):
+                open(os.path.join(pdir, f"{el}.upf"), "w").write(
+                    f'<PP_HEADER z_valence="{z:.2f}" />\n')
+            return {"Li": "Li.upf", "S": "S.upf"}
+
+        def _sections(txt):
+            return {ln.split("=")[0].strip(): ln.split("=", 1)[1].strip()
+                    for ln in txt.splitlines() if "=" in ln and not ln.lstrip().startswith("!")}
+
+        with _tf.TemporaryDirectory() as _r:
+            _pdir = os.path.join(_r, "pseudo")
+            _pool = _fake_pseudo(_pdir)
+            _inf = build("li2s", _STRUCT, "Li2S", _probe_ns(_r, _pdir), dict(_pool))
+            ck("probe_no_skip_reason", _inf.get("skip"), None)
+            ck("probe_in_info", "scf_probe" in _inf, True)
+            _pin = os.path.join(_r, "li2s", "scf_probe", "scf_probe.in")
+            ck("probe_file_written", os.path.isfile(_pin), True)
+            _ptxt = open(_pin, encoding="utf-8").read()
+            _kv = _sections(_ptxt)
+            # ① 정말 scf 인가 (relax 가 아니다)
+            ck("probe_is_scf", _kv.get("calculation"), "'scf'")
+            ck("probe_not_relax", "'relax'" in _ptxt, False)
+            # ② 카드가 고정한 것들이 그대로 실렸나
+            ck("probe_ecutwfc", float(_kv["ecutwfc"]), ECUTWFC)
+            ck("probe_ecutrho", float(_kv["ecutrho"]), ECUTRHO)
+            ck("probe_tot_charge", float(_kv["tot_charge"]), -1.0)
+            ck("probe_maxstep", int(_kv["electron_maxstep"]), 3)
+            ck("probe_disk_io_none", _kv.get("disk_io"), "'none'")
+            # ③ 4×4×4 · 192-1 원자 · k-density 고정이 mesh 를 줄였나
+            ck("probe_rep_444", list(_inf["scf_probe"]["supercell"]), [4, 4, 4])
+            ck("probe_nat_191", int(_kv["nat"]), 191)
+            ck("probe_kpts_222", list(_inf["scf_probe"]["kpts"]), [2, 2, 2])
+            ck("probe_lambda1_ge14", _inf["scf_probe"]["lambda1_A"] >= 14.0, True)
+            # ④ **ep_initial/relax.in 과 같은 계인가** — 좌표·셀·k 가 한 글자도 달라선 안 된다
+            _rin = open(os.path.join(_r, "li2s", "ep_initial", "relax.in"),
+                        encoding="utf-8").read()
+            def _pos(t):
+                i = t.index("ATOMIC_POSITIONS")
+                j = t.index("K_POINTS", i)
+                return t[i:j].strip()
+            def _cel(t):
+                return t[t.index("CELL_PARAMETERS"):].strip()
+            def _kp(t):
+                i = t.index("K_POINTS")
+                return t[i:t.index("CELL_PARAMETERS", i)].strip()
+            ck("probe_positions_match_ep", _pos(_ptxt) == _pos(_rin), True)
+            ck("probe_cell_match_ep", _cel(_ptxt) == _cel(_rin), True)
+            # ⚠ dict 의 kpts 만 보면 **파일에 딴 mesh 가 찍혀도 통과한다** (2026-09-21 깨기시험
+            #   4번이 초록으로 지나갔다). 파일의 K_POINTS 줄을 직접 본다.
+            ck("probe_kpoints_match_ep", _kp(_ptxt) == _kp(_rin), True)
+            ck("probe_kpoints_in_file",
+               _kp(_ptxt).splitlines()[-1].split(), ["2", "2", "2", "0", "0", "0"])
+            ck("probe_meta_json", os.path.isfile(
+                os.path.join(_r, "li2s", "scf_probe", "probe_meta.json")), True)
+
+        # ── 음성 ①: 플래그를 안 주면 **아무것도 안 만든다** (배선 없는 플래그 방지) ──
+        with _tf.TemporaryDirectory() as _r2:
+            _pdir2 = os.path.join(_r2, "pseudo")
+            _pool2 = _fake_pseudo(_pdir2)
+            _inf2 = build("li2s", _STRUCT, "Li2S",
+                          _probe_ns(_r2, _pdir2, scf_probe=False), dict(_pool2))
+            ck("probe_off_no_key", "scf_probe" in _inf2, False)
+            ck("probe_off_no_file",
+               os.path.exists(os.path.join(_r2, "li2s", "scf_probe", "scf_probe.in")), False)
+            neg += 1
+            # ── 음성 ②: min_l 을 낮추면 3×3×3 이 나와야 한다 (셀 선택이 진짜 도는가) ──
+            _inf3 = build("li2s", _STRUCT, "Li2S",
+                          _probe_ns(_r2, _pdir2, min_l=10.0,
+                                    work=os.path.join(_r2, "w10")), dict(_pool2))
+            ck("probe_min_l10_rep333", list(_inf3["scf_probe"]["supercell"]), [3, 3, 3])
+            ck("probe_min_l10_k333", list(_inf3["scf_probe"]["kpts"]), [3, 3, 3])
+            ck("probe_444_differs_from_333",
+               _inf3["scf_probe"]["nat"] != 191, True)
+            neg += 1
+            # ── 음성 ③: 중성 공공을 요구하면 tot_charge 가 따라 바뀌어야 한다 ──
+            _inf4 = build("li2s", _STRUCT, "Li2S",
+                          _probe_ns(_r2, _pdir2, vacancy_charge="neutral",
+                                    work=os.path.join(_r2, "wq0")), dict(_pool2))
+            _q0 = open(os.path.join(_r2, "wq0", "li2s", "scf_probe", "scf_probe.in"),
+                       encoding="utf-8").read()
+            ck("probe_neutral_q0", float(_sections(_q0)["tot_charge"]), 0.0)
+            neg += 1
+    else:
+        print("   ⚠ scf_probe 시험 건너뜀 — 구조 파일이 없다:", _STRUCT)
+
     if fails:
         print(f"⛔ selftest 실패 {len(fails)}/{n}")
         for f in fails:
@@ -1376,6 +1537,13 @@ def main():
     ap.add_argument("--uma_out", default="db/properties/sei_neb_uma_scout.json")
     ap.add_argument("--uma_allow_no_symmetry", action="store_true",
                     help="spglib 없이 강행 (⚠ 전역 최단만 잰다 — li3nd 함정)")
+    ap.add_argument("--scf_probe", action="store_true",
+                    help="NEB 을 던지기 전 **비용 실측용 단일 SCF** 입력을 같이 쓴다 "
+                         "(<work>/<tag>/scf_probe/scf_probe.in). 같은 셀·전하·k·컷오프·PP. "
+                         "⛔ 값을 내는 계산이 아니다 — 에너지·힘 인용 금지.")
+    ap.add_argument("--scf_probe_steps", type=int, default=3,
+                    help="scf_probe 의 electron_maxstep (기본 3). peak VRAM 은 첫 몇 "
+                         "iteration 에서 이미 잡히므로 끝까지 붙일 필요가 없다.")
     ap.add_argument("--plan", action="store_true",
                     help="⚠ 비용만 보고 **입력을 만들지 않는다** (돌리기 전에 이걸 먼저)")
     ap.add_argument("--verify_endpoints", action="store_true",
