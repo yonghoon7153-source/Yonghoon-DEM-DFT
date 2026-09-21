@@ -989,3 +989,71 @@ def test_title_no_longer_claims_the_retracted_sink(client):
     t = re.search(r"<title>(.*?)</title>", h, re.S)
     assert t and "Sink" not in t.group(1), f"탭 제목이 아직 Sink 다: {t and t.group(1)!r}"
     assert "+1.5035" in h, "§3 의 철회 근거가 화면에서 빠졌다 — 제목만 고치면 반쪽이다"
+
+
+# ── §0 산화 기전 (2026-09-21) ────────────────────────────────────────────────
+#   왜 생겼나: §0 이 "onset 이 안 움직인다" 는 **사실**만 싣고 **왜**를 안 실었다.
+#   1저자가 발표 준비 중에 물었고(2026-09-21), 근거는 이미 repo 에 있었다 —
+#   우리 PDOS 밴드 가장자리 성분과 ESW 반응식. 화면에 없으면 사람은 문헌만 인용한다.
+PDOS_EDGE = REPORT.parents[3] / "db/properties/pdos_band_edge_composition_2026_09_14.json"
+
+
+def test_s0_vbm_composition_matches_the_pdos_record(client):
+    """양성 — §0 의 VBM/CBM 성분이 원장 값 그대로다 (숫자를 화면이 자체 보관하지 않는다)."""
+    rows = {r["label"]: r for r in json.loads(PDOS_EDGE.read_text("utf-8"))}
+    s0 = _section(_report_html(client), "s0")
+    for lab in ("modelc_undoped", "ndo_lpscl16_n5fu"):
+        for edge in ("VBM_composition_pct", "CBM_composition_pct"):
+            for el, pct in rows[lab][edge].items():
+                assert f"{pct:.2f}" in s0, f"{lab} {edge} {el} {pct} 이 §0 에 없다"
+    # 논지 문장: 산화는 S 에서 시작, Nd 는 CBM 쪽
+    assert "산화 개시 자리는 S 쪽" in s0
+    assert "frozen-4f" in s0 and "산화수" in s0, "4f 한정이 빠졌다 — 산화수 주장 금지의 근거다"
+    assert "절대 위치" in s0 and "정렬" in s0, "VBM 절대 위치 비교 금지가 빠졌다"
+
+
+def test_s0_nd_s_channel_reactions_match_the_esw_record(client):
+    """양성 — Nd 가 onset 을 내리는 기전(Nd–S 채널)이 반응식과 함께 실려 있다."""
+    esw = json.loads((REPORT.parents[3] /
+                      "db/properties/cei_esw_Li_2026_09_16.json").read_text("utf-8"))["results"]
+    s0 = _section(_report_html(client), "s0")
+    assert "Nd₁₀S₁₉" in s0 and "LiS₄" in s0, "산화 onset 산물이 바뀐다는 사실이 화면에 없다"
+    assert "Nd₂S₃" in s0, "환원 쪽 Nd 산물이 없다"
+    # 창 폭이 두 원장값에서 나온다
+    w0 = esw["modelc"]["oxidation_limit_V"] - esw["modelc"]["reduction_limit_V"]
+    w1 = esw["modelc_nd"]["oxidation_limit_V"] - esw["modelc_nd"]["reduction_limit_V"]
+    assert f"{w0:.3f}" in s0 and f"{w1:.3f}" in s0, f"창 폭 {w0:.3f}/{w1:.3f} 이 화면에 없다"
+    # 해석과 측정을 갈라 적었는가
+    assert "해석" in s0 and "측정된 것은" in s0, "'황친화' 가 해석이라는 구분이 없다"
+
+
+def test_s0_refuses_to_harden_the_0p22V_and_to_call_nd_passivating(client):
+    """⛔음성 — 0.22 V 를 단단한 값으로 쓰거나 Nd 산물을 부동태라 부르면 잡는다."""
+    s0 = _section(_report_html(client), "s0")
+    assert "뒤집히는 크기" in s0, "0.22 V 가 hull 오차로 뒤집힌다는 한정이 없다"
+    assert "0.76" in s0 and "Nd₂S₃" in s0, "산화 쪽 Nd 산물이 샌다는 반대 증거가 없다"
+    assert "부동태가 아니다" in s0, "'Nd 가 부동태를 만든다' 부인이 없다"
+
+
+def test_s0_separates_thermodynamic_window_from_measured_CV(client):
+    """양성+음성 — 열역학 창과 CV·LSV 실효 창을 같은 양으로 놓지 않는다.
+
+    이 구분이 없으면 '계산은 창이 좁아진다는데 실험 CV 는 좋아진다' 가 모순으로 읽힌다.
+    """
+    h = _report_html(client)
+    s0 = _section(h, "s0")
+    assert 'data-claim="cei.esw.not_cv"' in s0, "CV 구분 상자가 자기 id 로 결속돼 있지 않다"
+    assert '<span class="claim-mark">[다른 양]</span>' in s0, "표식이 텍스트 노드가 아니다"
+    for must in ("열역학 창", "실효 창", "자기제한", "충분조건이 아니다"):
+        assert must in s0, f"§0 에 {must!r} 가 없다"
+    # §9 에도 같은 금지가 이름을 대고 있어야 한다
+    s9 = _section(h, "s9")
+    assert "CV·LSV" in s9 and "직접 비교" in s9, "§9 에 CV 비교 금지 항목이 없다"
+    assert "ndo_passivation_argument_2026_09_14" in s0, "해석 카드 포인터가 없다"
+
+
+def test_s0_scopes_the_esw_to_the_Li_site_cell(client):
+    """⛔음성 — Li 자리 x=0.20 결과가 P 자리 x=0.02 이야기로 조용히 번지면 잡는다."""
+    s0 = _section(_report_html(client), "s0")
+    assert "Li 자리에 있는 셀" in s0 and "0.20" in s0, "ESW 셀이 Li 자리 x=0.20 이라는 한정이 없다"
+    assert "P 자리" in s0 and "부호가 반대" in s0, "P 자리로 못 옮긴다는 이유가 없다"
