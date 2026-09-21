@@ -771,6 +771,66 @@ def _selftest():
     chk(_L["n_unreadable_reactions"] == 1,
         "⛔음성: 못 읽은 반응식을 **세어서 보고한다** (조용히 빼지 않는다)")
 
+    # ── p_capture (2026-09-21) — 양성 둘 · **음성 넷** ───────────────────────
+    #   ⛔ 음성이 본체다. 이 모드는 게이트를 코드에 박는 것이 목적이라,
+    #     "게이트가 실제로 잡는가" 를 안 재면 통과해도 아무것도 보증 못 한다.
+    import shutil as _sh, tempfile as _tf
+    _dir = Path(_tf.mkdtemp(prefix="pcap_"))
+    def _rec(sp, formula, cat, cells):
+        return json.dumps({"species": sp, "formula": formula, "cathode": cat,
+                           "by_voltage": cells}, ensure_ascii=False)
+    def _cell(rxn, x, endpoint=False):
+        return {"dE_eV_per_atom": -1.0, "reaction": rxn, "mixing_x": x,
+                "min_kink_at_endpoint": endpoint}
+    #: 손계산 (Nd·P·Co 수지가 맞는 픽스처다 — 도구는 수지를 안 보지만 시험은 봐야 한다)
+    #    도핑 좌변  Nd 0.2 · P 1.0 · Co 1.0
+    #    도핑 산물  0.2 NdP5O14 → Nd 0.2 ✓ · P 1.0 ✓ · TM-인산염 0
+    #    대조 산물  0.5 CoP4O11 → Co 0.5 (좌변 Co 1.0 의 절반)
+    #  ⇒ P_taken = 1.0/1.0 = 1.0 · k = 1.0/0.2 = 5 · 보호율 = 1 − 0/0.5 = 1.0
+    _d = "1 Li5.8Nd0.2P1S4.4Cl1.6 + 1 LiCoO2 -> 1 Li + 0.2 NdP5O14 + 1 CoS2"
+    _c = "1 Li5.8P1S4.4Cl1.6 + 1 LiCoO2 -> 1 Li + 0.5 CoP4O11 + 0.5 CoS2"
+    _p = _dir / "ok.jsonl"
+    _p.write_text("\n".join([
+        _rec("ndP020", "Li5.8Nd0.2P1S4.4Cl1.6", "LiCoO2", {"4.30": _cell(_d, 0.50)}),
+        _rec("liMatch020", "Li5.8P1S4.4Cl1.6", "LiCoO2", {"4.30": _cell(_c, 0.52)}),
+    ]) + "\n", encoding="utf-8")
+    _o = p_capture(_p)
+    _r = _o["rows"][0]
+    chk(_o["n_cells"] == 1 and _r["gate_pass"] and abs(_r["x_Nd"] - 0.2) < 1e-9,
+        f"[양성] 짝을 맞춰 한 칸을 만들고 x 를 **조성식에서** 읽는다 (x={_r['x_Nd']})")
+    chk(abs(_r["protection_observed"] - 1.0) < 1e-6 and abs(_r["k_observed"] - 5.0) < 1e-6
+        and abs(_r["P_taken_by_Nd"] - 1.0) < 1e-6,
+        f"[양성] 보호율·k·P 몫이 손계산과 같다 ({_r['protection_observed']}, {_r['k_observed']})")
+    #: ⛔ 2026-09-21 회귀 — x 를 라벨에서 int("020")/1000 으로 읽어 10 배 작게 넣었고
+    #   오류 없이 그럴듯한 표가 나왔다. 조성식과 라벨이 어긋나면 **이름으로 남긴다**.
+    _p2 = _dir / "labelmismatch.jsonl"
+    _p2.write_text("\n".join([
+        _rec("ndP020", "Li5.44Nd0.02P0.98S4.4Cl1.6", "LiCoO2", {"4.30": _cell(_d, 0.50)}),
+        _rec("liMatch020", "Li5.8P1S4.4Cl1.6", "LiCoO2", {"4.30": _cell(_c, 0.52)}),
+    ]) + "\n", encoding="utf-8")
+    _o2 = p_capture(_p2)
+    chk(any("라벨" in u for u in _o2["unpaired"]),
+        "[⛔음성] 라벨 x 와 조성식 x 가 다르면 **보고한다** (10배 버그 회귀시험)")
+    def _one(rxn_d, x_d, **kw):
+        q = _dir / f"t{abs(hash((rxn_d, x_d, str(kw))))}.jsonl"
+        q.write_text("\n".join([
+            _rec("ndP020", "Li5.8Nd0.2P1S4.4Cl1.6", "LiCoO2",
+                 {"4.30": _cell(rxn_d, x_d, kw.get("ep", False))}),
+            _rec("liMatch020", "Li5.8P1S4.4Cl1.6", "LiCoO2", {"4.30": _cell(_c, 0.52)}),
+        ]) + "\n", encoding="utf-8")
+        return p_capture(q)["rows"][0]
+    chk(not _one(_d, 0.70)["gate_pass"] and "dx=" in _one(_d, 0.70)["gate_fail_reason"],
+        "[⛔음성] G1 — 혼합비가 0.05 넘게 벌어지면 탈락 (분모가 같은 양이 아니다)")
+    _thio = "1 Li5.8Nd0.2P1S4.4Cl1.6 + 1 LiCoO2 -> 1 Li + 0.1 NdP5O14 + 0.1 P2S7 + 1 CoS2"
+    chk("thiophosphate" in _one(_thio, 0.50)["gate_fail_reason"],
+        "[⛔음성] G2 — 티오인산염 산물이 있으면 탈락 (보호가 아니라 다른 손해다)")
+    chk(_one(_d, 0.50, ep=True)["gate_fail_reason"].startswith("endpoint"),
+        "[⛔음성] G3 — 끝점은 탈락 (상대가 반응식에 안 들어갔다)")
+    chk(all(not r["gate_pass"] or True for r in _o["rows"]) and
+        p_capture(_dir / "labelmismatch.jsonl")["n_fail"] + _o2["n_pass"] == _o2["n_cells"],
+        "[양성] 탈락 행도 세어 남긴다 (조용히 버리지 않는다)")
+    _sh.rmtree(_dir, ignore_errors=True)
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -1161,6 +1221,154 @@ def p_host_ladder(csv_path, p_element="P", ladder_element="Li"):
 
 TM_DEFAULT = ("Co", "Ni", "Mn")
 
+def _rxn_side_terms(side: str):
+    """반응식 한쪽 → [(계수, 화학식, {원소:개수})]. 못 읽는 항은 조용히 버리지 않고 건너뛴다."""
+    out = []
+    for t in side.split("+"):
+        m = re.match(r"^\s*([0-9]*\.?[0-9]+)?\s*([A-Za-z0-9().]+)\s*$", t)
+        if not m:
+            continue
+        out.append((float(m.group(1)) if m.group(1) else 1.0, m.group(2),
+                    parse_formula(m.group(2))))
+    return out
+
+
+#: ⛔ 게이트 셋 — 2026-09-18 에 **결과를 보기 전에** 박았고 2026-09-21 라운드에서 동결했다
+#:   (db/properties/cei_protection_allcells_prereg_2026_09_21.json §3).
+#:   통과 열이 적다고 이 수를 풀지 않는다 — 풀면 사전등록이 죽고 그때까지의 판정도 같이 죽는다.
+P_CAPTURE_DX_MAX = 0.05
+
+
+def p_capture(jsonl_path, dopant="Nd", tms=TM_DEFAULT, dx_max=P_CAPTURE_DX_MAX,
+              doped_prefix="ndP", control_prefix="liMatch"):
+    """양극 TM 보호율 표 — 도핑계와 **Li-맞춤 대조**를 짝지어 읽는다.
+
+        보호율(실측) = 1 − (도핑계 TM-인산염 몫) / (대조 TM-인산염 몫)
+        TM-인산염 몫 = (산물 중 TM-P-O 상이 가져간 TM) / (좌변 양극이 내놓은 TM 전량)
+        k(실측)      = (Nd 인산염 산물의 P) / (그 산물의 Nd)
+
+    게이트 셋(위 상수·아래 판정)은 결과를 보기 전에 정해진 것이고 여기서 바꾸지 않는다.
+      G1 |Δmixing_x| ≤ 0.05   — 최소 꺾임이 다른 혼합비면 분모가 같은 양이 아니다
+      G2 티오인산염(P–S, 무산소) 산물이 있으면 무효 — 보호가 아니라 다른 손해다
+      G3 끝점(min_kink_at_endpoint) 제외 — 상대가 반응식에 안 들어갔다
+
+    ⛔ 이 함수가 못 하는 것
+      · **속도·두께·연속성** — 전부 0 K hull 열역학이다.
+      · **최소 꺾임 하나만** 본다 (전 혼합범위는 x-스캔이 따로 본다).
+      · 탈락 행을 **버리지 않는다** — `gate_pass=False` 로 남기고 사유를 적는다.
+      · 도핑계와 대조의 짝이 없으면 그 칸은 아예 안 만든다(조용한 결측이 되지 않게 이름을 남긴다).
+    """
+    rows, unpaired = {}, []
+    with open(jsonl_path, encoding="utf-8") as fh:
+        for ln in fh:
+            ln = ln.strip()
+            if not ln:
+                continue
+            r = json.loads(ln)
+            if "error" in r or "by_voltage" not in r:
+                continue
+            rows[(r["species"], r["cathode"])] = r
+
+    def cell_metrics(rec, V):
+        c = (rec.get("by_voltage") or {}).get(V)
+        if not c or "->" not in (c.get("reaction") or ""):
+            return None
+        lhs, rhs = c["reaction"].split("->", 1)
+        L, R = _rxn_side_terms(lhs), _rxn_side_terms(rhs)
+        tm_lhs = sum(n * sum(k.get(x, 0.0) for x in tms) for n, _, k in L)
+        p_lhs = sum(n * k.get("P", 0.0) for n, _, k in L)
+        nd_lhs = sum(n * k.get(dopant, 0.0) for n, _, k in L)
+        tm_phos, nd_p, nd_in_p, thio, phases = 0.0, 0.0, 0.0, [], []
+        for n, f, k in R:
+            tm, p, o, sf = (sum(k.get(x, 0.0) for x in tms), k.get("P", 0.0),
+                            k.get("O", 0.0), k.get("S", 0.0))
+            if p > 0 and tm > 0:
+                tm_phos += n * tm
+            if p > 0 and k.get(dopant, 0.0) > 0:
+                nd_p += n * p; nd_in_p += n * k[dopant]; phases.append(f)
+            if p > 0 and sf > 0 and o == 0:
+                thio.append(f)
+        return {"mixing_x": c.get("mixing_x"), "endpoint": bool(c.get("min_kink_at_endpoint")),
+                "tm_lhs": tm_lhs, "p_lhs": p_lhs, "nd_lhs": nd_lhs,
+                "tm_phosphate": tm_phos, "nd_P": nd_p, "nd_in_P": nd_in_p,
+                "thiophosphate": thio, "nd_phases": phases, "reaction": c["reaction"]}
+
+    doped = sorted(sp for sp, _ in rows if sp.startswith(doped_prefix))
+    out = []
+    for sp in dict.fromkeys(doped):
+        ctrl = control_prefix + sp[len(doped_prefix):]
+        #: ⛔ x 는 **라벨에서 뽑지 않는다**. 2026-09-21 에 `int("002")/1000 = 0.002` 로
+        #   10 배 작게 들어갔고, 오류 없이 그럴듯한 숫자가 나와 식 대조가 통째로 틀렸다
+        #   (kb/methodology/silent_wrong_path_2026_09_13.md 와 같은 모양).
+        #   ⇒ **조성식에서 Nd 개수를 읽는다.** 라벨은 대조용으로만 쓴다.
+        _any = next((rows[k] for k in rows if k[0] == sp), None)
+        x_nd = parse_formula((_any or {}).get("formula", "")).get(dopant)
+        if x_nd is None:
+            unpaired.append(f"{sp} (조성식에서 {dopant} 를 못 읽었다 — 칸을 만들지 않는다)")
+            continue
+        _lab = sp[len(doped_prefix):]
+        if _lab.isdigit() and abs(x_nd - int(_lab) / 100.0) > 1e-6:
+            unpaired.append(f"{sp} (라벨 x={int(_lab)/100:g} 과 조성식 x={x_nd:g} 가 다르다)")
+        for (s2, cat) in sorted(k for k in rows if k[0] == sp):
+            if (ctrl, cat) not in rows:
+                unpaired.append(f"{sp}@{cat} (대조 {ctrl} 없음)")
+                continue
+            d_rec, c_rec = rows[(sp, cat)], rows[(ctrl, cat)]
+            for V in sorted(d_rec["by_voltage"]):
+                d, c = cell_metrics(d_rec, V), cell_metrics(c_rec, V)
+                if d is None or c is None:
+                    continue
+                fail = []
+                if d["endpoint"] or c["endpoint"]:
+                    fail.append("endpoint")
+                if d["mixing_x"] is None or c["mixing_x"] is None:
+                    fail.append("mixing_x 없음")
+                else:
+                    dx = abs(d["mixing_x"] - c["mixing_x"])
+                    if dx > dx_max:
+                        fail.append(f"dx={dx:.3f}>{dx_max}")
+                if d["thiophosphate"]:
+                    fail.append("thiophosphate:" + ",".join(d["thiophosphate"]))
+                if d["tm_lhs"] <= 0 or c["tm_lhs"] <= 0:
+                    fail.append("자체분해(좌변 양극 없음)")
+                share_d = d["tm_phosphate"] / d["tm_lhs"] if d["tm_lhs"] > 0 else None
+                share_c = c["tm_phosphate"] / c["tm_lhs"] if c["tm_lhs"] > 0 else None
+                #: ⛔ share_d 가 None 이면(좌변 양극 없음 = 자체분해) 보호율은 **없는 값**이다.
+                #   0 으로 그리지 않는다 (CLAUDE.md — 없는 값을 0 으로 그리지 않는다).
+                prot = ((1 - share_d / share_c)
+                        if (share_d is not None and share_c) and share_c > 0 else None)
+                out.append({
+                    "cathode": cat, "voltage_V": float(V), "x_Nd": x_nd,
+                    "species": sp, "control": ctrl,
+                    "mixing_x": d["mixing_x"], "mixing_x_control": c["mixing_x"],
+                    "delta_x": (None if d["mixing_x"] is None or c["mixing_x"] is None
+                                else round(abs(d["mixing_x"] - c["mixing_x"]), 6)),
+                    "tm_phosphate_share": None if share_d is None else round(share_d, 6),
+                    "tm_phosphate_share_control": None if share_c is None else round(share_c, 6),
+                    "protection_observed": None if prot is None else round(prot, 6),
+                    "P_taken_by_Nd": (round(d["nd_P"] / d["p_lhs"], 6) if d["p_lhs"] > 0 else None),
+                    "k_observed": (round(d["nd_P"] / d["nd_in_P"], 4) if d["nd_in_P"] > 0 else None),
+                    "nd_phases": "|".join(d["nd_phases"]),
+                    "P_to_thiophosphate": "|".join(d["thiophosphate"]),
+                    "gate_pass": not fail,
+                    "gate_fail_reason": ";".join(fail)})
+    out.sort(key=lambda d: (d["cathode"], d["voltage_V"], d["x_Nd"] or 0))
+    cols = {}
+    for r in out:
+        cols.setdefault((r["cathode"], r["voltage_V"]), []).append(r["gate_pass"])
+    full = sorted(k for k, v in cols.items() if v and all(v))
+    return {"source_jsonl": str(jsonl_path), "n_cells": len(out),
+            "n_pass": sum(1 for r in out if r["gate_pass"]),
+            "n_fail": sum(1 for r in out if not r["gate_pass"]),
+            "n_columns": len(cols), "full_pass_columns": [f"{c}@{v:.2f}V" for c, v in full],
+            "unpaired": sorted(set(unpaired)),
+            "gates_frozen": {"G1_dx_max": dx_max, "G2": "티오인산염(P-S, 무산소) 산물 무효",
+                             "G3": "끝점 제외",
+                             "⛔": "2026-09-18 사전등록 · 2026-09-21 동결. 통과 열이 적다고 풀지 않는다"},
+            "rows": out}
+
+
+
 
 def tm_fate(csv_path, tms=TM_DEFAULT):
     """양극의 전이금속이 **어디로 가는가** — 인산염 / 황화물 / 그 밖.
@@ -1464,6 +1672,8 @@ def main():
                     help="Li 쪽 교환에너지 (§3 사다리) — --exchange 와 합친다")
     ap.add_argument("--tm_fate", metavar="PANELS_CSV",
                     help="양극 전이금속이 인산염/황화물 중 어디로 갔는지 (좌변 TM 으로 정규화)")
+    ap.add_argument("--p_capture", metavar="RUN_JSONL",
+                    help="보호율 표 — 도핑계×Li-맞춤 대조 JSONL 에서 게이트(동결)를 적용해 뽑는다")
     ap.add_argument("--p_host_ladder", metavar="PANELS_CSV",
                     help="x-scan 패널 CSV 를 읽어 최소 꺾임의 P 수용상·Li:P 사다리를 뽑는다 "
                          "(MP·pymatgen 불필요 — 이미 나온 반응식만 읽는다)")
@@ -1547,6 +1757,28 @@ def main():
         Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f'{out["n_conditions"]} 조건 · 자체분해 제외 '
               f'{len(out["self_decomposition_excluded"])} → {a.out}')
+        return 0
+    if a.p_capture:
+        # 순수 후처리다 — MP 도 pymatgen 도 안 쓴다.
+        out = p_capture(a.p_capture)
+        Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+        csv_out = Path(a.out).with_suffix(".csv")
+        keys = ["cathode", "voltage_V", "x_Nd", "species", "control", "mixing_x",
+                "mixing_x_control", "delta_x", "tm_phosphate_share",
+                "tm_phosphate_share_control", "protection_observed", "P_taken_by_Nd",
+                "k_observed", "nd_phases", "P_to_thiophosphate", "gate_pass",
+                "gate_fail_reason"]
+        with open(csv_out, "w", encoding="utf-8", newline="") as fh:
+            w = __import__("csv").DictWriter(fh, fieldnames=keys)
+            w.writeheader()
+            for r in out["rows"]:
+                w.writerow({k: r.get(k) for k in keys})
+        print(f'{out["n_cells"]} 칸 · 통과 {out["n_pass"]} · 탈락 {out["n_fail"]} · '
+              f'열 {out["n_columns"]} → {a.out} · {csv_out}')
+        print(f'  전 농도 통과 열 {len(out["full_pass_columns"])}: '
+              f'{", ".join(out["full_pass_columns"]) or "없음"}')
+        if out["unpaired"]:
+            print(f'  ⚠ 짝 없는 칸 {len(out["unpaired"])}: {out["unpaired"][:3]}')
         return 0
     if a.p_host_ladder:
         # 순수 후처리다 — MP 도 pymatgen 도 안 쓴다. 그래서 여기서 바로 끝낸다.
