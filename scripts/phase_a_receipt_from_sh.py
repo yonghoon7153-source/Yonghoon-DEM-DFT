@@ -38,6 +38,7 @@ import glob
 import hashlib
 import json
 import os
+import re
 import shlex
 import subprocess
 import sys
@@ -170,6 +171,59 @@ def verify_logs(rec, log_dir, expect=None, pattern='*.log'):
     return problems, covered, set(RC.RECEIPT_AXES) - covered, len(logs)
 
 
+#: `.sh` 명령 안의 변수 참조.  배열 확장(`"${X[@]}"`)을 **먼저** 잡는다 (더 긴 형태가 앞).
+_VAR_REF = re.compile(r'"\$\{(\w+)\[@\]\}"|\$\{(\w+)\[@\]\}|\$\{(\w+)\}|\$(\w+)')
+#: **리터럴** 대입만 받는다 — 한 줄이 그 대입으로 끝나야 한다.
+_ASSIGN = re.compile(
+    r"^[ \t]*(?:export[ \t]+)?(\w+)=(\(.*\)|\"[^\"\n]*\"|'[^'\n]*'|[^\s;#&|]*)[ \t]*$", re.M)
+
+
+def _var_value(pre, name):
+    """`.sh` 의 명령 **앞부분**에서 `name` 의 리터럴 값을 찾는다.  모호하면 ValueError.
+
+    ⚠ **셸을 돌리지 않는다** — `.sh` 를 실행하면 솔브가 돈다.  그래서 정적으로 풀되,
+      조금이라도 모호하면 **거부**한다.  옛 판은 이 함수가 없어 `shlex` 가
+      `"${PSIG[@]}"` 를 **글자 그대로** 토큰으로 넘겼고, payload 파서가
+      `unrecognized arguments: ${PSIG[@]}` 로 죽었다 (2026-09-21 uma 박스 실측).
+      셀프테스트 픽스처에 그 모양이 없어서 23/23 이 초록이었다 = 규율 ⑤ 의 false-green.
+    """
+    clean = [m.group(2) for m in _ASSIGN.finditer(pre) if m.group(1) == name]
+    total = len(re.findall(r'(?:^|[\s;&|{}()])' + re.escape(name) + r'=', pre, re.M))
+    if total != len(clean):
+        raise ValueError(f'${name} 의 대입이 리터럴이 아니다 (조건부·명령치환·복문) — '
+                         f'{total} 곳 중 {len(clean)} 곳만 리터럴.  셸을 돌리지 않으므로 '
+                         f'어느 쪽이 이겼는지 추측하지 않는다')
+    if not clean:
+        raise ValueError(f'${name} 의 대입을 `.sh` 안에서 못 찾았다 — 바깥 환경변수면 '
+                         f'실행 때 무엇이었는지 알 수 없다')
+    if len(set(clean)) > 1:
+        raise ValueError(f'${name} 에 서로 다른 리터럴 대입이 {len(set(clean))} 개')
+    return clean[-1]
+
+
+def _expand_vars(pre, cmd):
+    """명령 텍스트의 변수 참조를 리터럴 대입으로 치환한다 (셸이 하던 확장)."""
+    def _sub(m):
+        arr_q, arr, braced, bare = m.groups()
+        name = arr_q or arr or braced or bare
+        raw = _var_value(pre, name)
+        if raw.startswith('(') and raw.endswith(')'):
+            if not (arr_q or arr):
+                raise ValueError(f'${name} 는 배열인데 `[@]` 없이 참조됐다')
+            inner = raw[1:-1].strip()
+            if '$' in inner or '`' in inner:
+                raise ValueError(f'${name} 의 배열 원소가 또 치환을 담고 있다: {inner!r}')
+            #  ★ 빈 배열은 **0 개 단어**로 사라진다 (셸의 `"${X[@]}"` 규칙과 같다)
+            return inner
+        if arr_q or arr:
+            raise ValueError(f'${name} 는 배열이 아닌데 `[@]` 로 참조됐다')
+        val = raw[1:-1] if raw[:1] in ('"', "'") else raw
+        if '$' in val or '`' in val:
+            raise ValueError(f'${name} 의 값이 또 치환을 담고 있다: {val!r}')
+        return shlex.quote(val)
+    return _VAR_REF.sub(_sub, cmd)
+
+
 def payload_calls(sh_dir):
     """`.sh` 디렉터리 → `[(경로, 토큰들)]`.  payload 호출이 없는 `.sh` 는 **이름으로 보고**한다.
 
@@ -178,7 +232,7 @@ def payload_calls(sh_dir):
       만들었는지" 가 사라진다 = 규율 ⑤ 의 false-green).
     """
     import phase_a_rerun_from_sh as RS
-    hits, skipped = [], []
+    hits, skipped, unresolved = [], [], []
     for p in sorted(glob.glob(os.path.join(sh_dir, '**', '*.sh'), recursive=True)):
         text = open(p, encoding='utf-8', errors='replace').read()
         try:
@@ -187,6 +241,12 @@ def payload_calls(sh_dir):
             skipped.append(os.path.basename(p))
             continue
         cmd = text[i:j].replace('\\\n', ' ')
+        #  ★ 셸이 하던 변수 확장을 여기서 한다 — 실물 `.sh` 는 `"${PSIG[@]}"` 를 담는다
+        try:
+            cmd = _expand_vars(text[:i], cmd)
+        except ValueError as e:
+            unresolved.append(f'{os.path.basename(p)}: {e}')
+            continue
         toks = shlex.split(cmd)
         #  `python3 …/mpm_webapp_payload.py` 앞부분을 떼어 argparse 가 볼 것만 남긴다
         for k, t in enumerate(toks):
@@ -197,6 +257,9 @@ def payload_calls(sh_dir):
             skipped.append(os.path.basename(p))
             continue
         hits.append((p, toks))
+    if unresolved:
+        raise SystemExit('⛔ 변수 확장을 못 푼 `.sh` 가 %d 개 — 추측하지 않는다:\n  %s'
+                         % (len(unresolved), '\n  '.join(unresolved[:8])))
     return hits, skipped
 
 
@@ -351,8 +414,14 @@ def _selftest():                                             # noqa: C901
         and 'vox_um' in RC.RECEIPT_AXES and callable(RC.receipt_digest))
 
     def mk_sh(d, name, origin, vox=0.15, ptfe='centerline', extra='',
-              decoy=False, declare=None):
-        """`decoy` = 실제 `.sh` 처럼 템플릿 기본값 `--step3-vox 0.4` 를 **앞에** 둔다."""
+              decoy=False, declare=None, psig='PSIG=()'):
+        """`decoy` = 실제 `.sh` 처럼 템플릿 기본값 `--step3-vox 0.4` 를 **앞에** 둔다.
+
+        ★ `psig` = 러너가 실제로 내는 **배열 확장** 형태를 기본으로 재현한다
+          (`sdcp_gain_vox015_8arm.sh` 가 `PSIG=(…)` 를 앞줄에 박고 명령에
+          `"${PSIG[@]}"` 를 둔다).  ⚠ 2026-09-21 까지 이 모양이 픽스처에 **없어서**
+          셀프테스트는 23/23 초록인데 실물에서 파서가 rc=2 로 죽었다.
+        """
         os.makedirs(d, exist_ok=True)
         p = os.path.join(d, name)
         ox, oy, oz = origin
@@ -361,12 +430,14 @@ def _selftest():                                             # noqa: C901
             f'ptfe_stamp={ptfe},periodic_xy=False')
         open(p, 'w').write(
             '#!/bin/sh\nset -e\n'
-            f'python3 /x/{PAYLOAD} '
+            + ((psig + '\n') if psig else '')
+            + f'python3 /x/{PAYLOAD} '
             + ('--step3-vox 0.4 ' if decoy else '')
             + f'--step3-vox {vox} \\\n'
             f'  --step3-origin-shift {ox} {oy} {oz} \\\n'
             f'  --ptfe-stamp {ptfe} --sigma-ptfe 0 --step3-fibre-stamp segment \\\n'
-            f'  --step3-bridge-um 0.24 {extra} --expect-physics {dec} --out /y/p2.json\n')
+            + ('  "${PSIG[@]}" \\\n' if psig else '')
+            + f'  --step3-bridge-um 0.24 {extra} --expect-physics {dec} --out /y/p2.json\n')
         return p
 
     h = round(0.15 / 2, 9)
@@ -554,6 +625,58 @@ def _selftest():                                             # noqa: C901
         _, _, _, note2 = build(sh, os.path.join(td, 'y'), expect_arms=8,
                                logs=lg, log_glob='v015.*.log')
         chk('㉓ --log-glob 으로 자기 배치만 골라 대조한다', note2 and note2[0] == 8)
+
+    #  ── ★ 실물 형태: 셸 배열 확장 (2026-09-21 uma 박스에서 rc=2 로 죽은 자리) ──
+    with tempfile.TemporaryDirectory() as td:
+        sh = os.path.join(td, 'sh')
+        for i, o in enumerate(facto):
+            mk_sh(sh, f'p2_K_a{i}.sh', o, psig='PSIG=(--periodic)',
+                  declare=('vox_um=0.15,bridge_um=0.24,fibre_stamp=segment,'
+                           'ptfe_stamp=centerline,periodic_xy=True'))
+        rec5, _, _, _ = build(sh, os.path.join(td, 'o'), expect_arms=8)
+        chk('㉔ `PSIG=(--periodic)` 배열 확장이 축으로 들어온다 (셸이 하던 확장)',
+            rec5['periodic_xy'] is True)
+
+    with tempfile.TemporaryDirectory() as td:
+        sh = os.path.join(td, 'sh')
+        for i, o in enumerate(facto):
+            mk_sh(sh, f'p2_K_a{i}.sh', o,
+                  psig='PSIG=(); [ "${MPM_PERIODIC_SIGMA:-0}" = "1" ] && PSIG=(--periodic)')
+        try:
+            payload_calls(sh)
+            caught4 = False
+        except SystemExit as e:
+            caught4 = 'PSIG' in str(e)
+        chk('㉕ 조건부 대입은 **추측하지 않고 거부**한다 (셸을 돌리지 않으므로)', caught4)
+
+    with tempfile.TemporaryDirectory() as td:
+        sh = os.path.join(td, 'sh')
+        for i, o in enumerate(facto):
+            mk_sh(sh, f'p2_K_a{i}.sh', o, psig=None, extra='"${NOPE[@]}"')
+        try:
+            payload_calls(sh)
+            caught5 = False
+        except SystemExit as e:
+            caught5 = 'NOPE' in str(e)
+        chk('㉖ 대입을 못 찾은 변수 참조는 거부한다 (빈 토큰으로 넘기지 않는다)', caught5)
+
+    #  ── 스칼라 변수(`$SCR`) — payload 경로가 변수로 적힌 실물 형태 ──────────────
+    with tempfile.TemporaryDirectory() as td:
+        sh = os.path.join(td, 'sh')
+        os.makedirs(sh)
+        for i, o in enumerate(facto):
+            ox, oy, oz = o
+            open(os.path.join(sh, f'p2_K_a{i}.sh'), 'w').write(
+                '#!/bin/sh\nset -e\nSCR="/x"\nPSIG=()\n'
+                f'python3 "$SCR/{PAYLOAD}" --step3-vox 0.15 \\\n'
+                f'  --step3-origin-shift {ox} {oy} {oz} \\\n'
+                '  --ptfe-stamp centerline --sigma-ptfe 0 --step3-fibre-stamp segment \\\n'
+                '  "${PSIG[@]}" --step3-bridge-um 0.24 \\\n'
+                '  --expect-physics vox_um=0.15,bridge_um=0.24,fibre_stamp=segment,'
+                'ptfe_stamp=centerline,periodic_xy=False --out /y/p2.json\n')
+        rec6, _, _, _ = build(sh, os.path.join(td, 'o'), expect_arms=8)
+        chk('㉗ 스칼라 `$SCR` 도 푼다 + 빈 배열은 0 개 단어로 사라진다',
+            abs(rec6['vox_um'] - 0.15) < 1e-12 and rec6['periodic_xy'] is False)
 
     print(f'\nphase_a_receipt_from_sh selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
