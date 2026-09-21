@@ -52,6 +52,30 @@ def _split_blocks(readme_text):
     return _main[0].strip("\n"), (_cont[0].strip("\n") if _cont else None)
 
 
+def _banner(supersedes, reason, continuation):
+    """교체 메일의 맨 앞 배너. ⚠ 2026-09-21 — 승계 메일(continuation=True)은 **반대 지시**다:
+    옛 판 extraction 을 **지우지 말라**(승계가 그 경로·MANIFEST·봉인을 읽는다) · 멈추고 회신을
+    기다리지 말라(§1′ 로 바로). 종전 배너("지우고 · 멈추고 알려 주십시오")를 그대로 달면 본문
+    §1′ 과 정반대로 읽혀 외주처가 멈추고 회신을 기다린다 (v42 첫 렌더에서 실제로 그렇게 나갔다)."""
+    if not supersedes:
+        return ""
+    if continuation:
+        return f"""
+> ## ⛔ 먼저 읽어 주십시오 — 이 묶음이 `sdcp_c12_{supersedes}.zip` 을 **대체**합니다. 그러나 **{supersedes} 를 푼 디렉터리는 지우지 마십시오.**
+> · {supersedes} 에서 **완주하신 잡은 이 판이 승계**합니다 (아래 §1′) — 다시 돌리지 않습니다. 승계가 그 디렉터리의 경로·MANIFEST·봉인을 읽으므로 그대로 두십시오.
+> · {supersedes} 러너로 **새 잡을 시작하지는 말아 주십시오.** 지금 {supersedes} 에서 도는 잡이 있으면 끝나게 두시고, 끝난 뒤 §1′ 로 이어 주십시오 (완주한 잡은 승계됩니다).
+> · **회신을 기다리지 않으셔도 됩니다** — §0 의 확인 사항은 이전 판 회신으로 이미 답해 주셨습니다. 바로 §1′ 로 진행해 주십시오.
+> · 바뀐 이유: {reason}
+"""
+    return f"""
+> ## ⛔ 먼저 읽어 주십시오 — **이전에 보내 드린 `sdcp_c12_{supersedes}.zip` 은 폐기해 주십시오.**
+> 이 메일의 묶음이 그것을 **대체**합니다. 두 개를 같이 돌리지 말아 주십시오.
+> · 아직 시작하지 않으셨다면: 이전 zip 을 지우고 이 묶음으로만 진행해 주십시오.
+> · 이미 시작하셨다면: **멈추고 알려 주십시오.** 지금까지 쓰신 시간은 저희가 부담하겠습니다.
+> · 바뀐 이유: {reason}
+"""
+
+
 def _selftest():
     ok = [0, 0]
     def chk(c, m):
@@ -70,6 +94,14 @@ def _selftest():
         _split_blocks(_R + "```\nCONTINUE_FROM=/q\nbash run_staged.sh 1\n```\n"); chk(False, "⛔음성: 승계 블록이 둘이면 죽어야 한다")
     except AssertionError as e:
         chk("승계 블록이 2개" in str(e), "⛔음성: 승계 블록이 둘이면 거부한다")
+    bc, bo, bn = _banner("v41", "R", True), _banner("v41", "R", False), _banner(None, "R", False)
+    chk("지우지 마십시오" in bc and "§1′" in bc and "기다리지 않으셔도" in bc,
+        "양성: 승계 배너는 '지우지 마십시오 · §1′ · 기다리지 않아도' 를 말한다")
+    chk("멈추고 알려 주십시오" not in bc and "이전 zip 을 지우고" not in bc,
+        "⛔음성: 승계 배너에 종전 문구('멈추고 알려' · '지우고')가 섞이면 안 된다")
+    chk("멈추고 알려 주십시오" in bo and "폐기해 주십시오" in bo, "양성: 승계 없는 교체판은 종전 배너 그대로")
+    chk(bn == "", "양성: 교체판이 아니면 배너 없음")
+    chk("R" in bc and "R" in bo, "양성: 사유가 두 배너에 다 실린다")
     print("  render selftest %d/%d" % (ok[1], ok[0]))
     return 0 if ok[0] == ok[1] else 1
 
@@ -216,14 +248,13 @@ _reason = (a.supersede_reason if getattr(a, "supersede_reason", None)
                  "귀측 실행과는 무관합니다." if a.supersedes == "v35"
                  else "아래 **이 판에서 바뀐 것** 절에 적었습니다. 저희 쪽 수정이며 "
                       "귀측 실행과는 무관합니다."))
-_replace_block = ("" if not a.supersedes else f"""
-> ## ⛔ 먼저 읽어 주십시오 — **이전에 보내 드린 `sdcp_c12_{a.supersedes}.zip` 은 폐기해 주십시오.**
-> 이 메일의 묶음이 그것을 **대체**합니다. 두 개를 같이 돌리지 말아 주십시오.
-> · 아직 시작하지 않으셨다면: 이전 zip 을 지우고 이 묶음으로만 진행해 주십시오.
-> · 이미 시작하셨다면: **멈추고 알려 주십시오.** 지금까지 쓰신 시간은 저희가 부담하겠습니다.
-> · 바뀐 이유: {_reason}
-""")
+_replace_block = _banner(a.supersedes, _reason, bool(cont_block_mail))
 
+# 2026-09-21 — 승계 메일이면 §0 은 이미 답을 받은 항목이다. 제목이 "답을 받기 전에는 시작하지 말라" 로
+#   남아 있으면 배너·§1′ 과 모순돼 외주처가 다시 기다린다 (자체리뷰 v42 #16).
+_sec0_head = ("### 0. 시작 전 확인 사항 — ✅ 이전 판 회신으로 **이미 답해 주셨습니다** (참고용 · 다시 답하실 필요 없습니다 · 바로 §1′ 로)"
+              if cont_block_mail else
+              "### 0. 먼저 회신해 주실 것 — **이 답을 받기 전에는 시작하지 말아 주십시오**")
 cores = int((man.get("submission") or {}).get("cores_per_job") or (man.get("cost_frozen") or {}).get("cores_per_job") or 48)
 # 2026-09-21 — 교체판 + README 승계 블록이 있으면, 메일에서 **승계가 먼저**다 (완주 잡을 다시 돌리게 두지 않는다).
 _cont_section = ""
@@ -264,7 +295,7 @@ mail = f"""# C-12 {label.split('_')[-1]} 발송 메일 (그대로 복붙)
 SDCP·PTFE 바인더 계면 계산 번들을 보내드립니다. **VASP 단일점(static) {n_jobs}잡**이고,
 실행·검증·분석 스크립트가 번들 안에 전부 들어 있습니다.
 
-{("### 0. 먼저 회신해 주실 것 — **이 답을 받기 전에는 시작하지 말아 주십시오**" + chr(10) + chr(10) + pre_body + chr(10)) if pre_body else ""}
+{(_sec0_head + chr(10) + chr(10) + pre_body + chr(10)) if pre_body else ""}
 ### 1. 무결성 확인 (먼저)
 
 ```
