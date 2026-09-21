@@ -32,20 +32,66 @@ DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00, 'PTFE': 2.20}
 #: 1저자 지시 조성 (2026-09-19) — 에너지밀도 최대 조합
 WT = {'AM': 80.0, 'SE': 18.0, 'VGCF': 1.0, 'PTFE': 1.0}
 PS = (7.0, 3.0)                       # P:S (wt%)
-#: **모델이 실제로 쓰는** 지름 (µm) — 이 표가 유일한 출처다.
+#: **소재 실측 지름** (µm) — 이 표가 유일한 출처다.  모델 지름 = 이 값 × CGF.
 #  ⚠⚠ 2026-09-21 이전 판은 이 표에 `SE 1.0` 을 적어 놓고 **쓰지 않았다**.  지름은
 #    `AM_P` 만 읽고 나머지는 `dP/3` · `dP×0.25` 로 깎았다.  AM_P 12 에서 우연히
 #    `AM_S 4` 는 맞았지만 `SE` 는 실제로 **3 µm** 였다 = **선언과 사용이 갈린 표**.
 #    AM_P 를 바꾸는 순간 나머지가 조용히 따라 움직이는 구조였다.  ⇒ 전 상을 여기서 읽는다.
 #  ★ AM_P 9 · AM_S 4 는 **소재 실측** (1저자, 2026-09-21).  AM_S 는 단결정이다.
-#  ⚠ SE·VGCF·PTFE 의 값은 **소재 크기가 아니라 계산비용 바닥**이다 — 실제 SE 는 1 µm,
-#    VGCF 지름은 0.15 µm 다 (`CL-66`).  1 µm 로 풀면 SE 입자가 11배(≈67,000)로 늘고
-#    `dt` 가 0.44배라 비용이 **약 19배**가 된다 (층상 한 블록 6.5 h → 5일).  ⇒ 굵힌 채로
-#    가되 **굵혔다는 것을 표가 말하게** 둔다.  이 값들을 "소재 크기" 로 인용하지 말 것.
-D_REAL_UM = {'AM_P': 9.0, 'AM_S': 4.0, 'SE': 3.0, 'VGCF': 3.0, 'PTFE': 3.0}
+#  ★★ **SE = 1.0 µm 는 1저자 확인값이다** (2026-09-21): 전극에 들어가는 **소립** LPSCl 이다.
+#    ⛔⛔ 옛 표의 `SE 3.0` 은 **소재 크기가 아니었다** — 계산비용을 맞추려고 굵힌 값이고,
+#      그 때문에 **크기 비가 3배 어긋나 있었다**:
+#          d_SE/d_AM_P   소재 0.111  →  옛 모델 0.333
+#      ⚠ 한때 이것을 *"3 µm 응집체를 한 덩이로 본 것"* 으로 변호할 수 있나 검토했으나
+#        (그 해석이면 비가 정확히 맞는다) **1저자가 1 µm 를 확인해 기각**됐다.
+#    ★ 왜 비가 중요한가 — 작은 구가 큰 구 더미에서 무엇을 하는지는 비 하나가 정하고
+#      문턱이 셋이다: 삼각 틈 통과 0.1547 · 사면체 공극 0.2247 · 팔면체 공극 0.4142.
+#      소재 0.111 은 **자유 체질**(AM 사이로 빠져나간다) 영역인데 옛 모델 0.333 은
+#      **팔면체 공극만 채우는** 영역이다 ⇒ **문턱을 가로질렀다**.  크기 기반 분리와
+#      Furnas 틈 채움이 옛 덱에서는 원리적으로 안 나타났다.
+#    ⚠⚠ **대가는 통계다 — 이것을 모르고 이 값을 쓰지 말 것.**  소재 비에서는 개수비
+#      SE/AM_P = 562 라 원자의 **0.178 % 만 AM_P** 다.  실측(2 g · 3 상):
+#          원자 2 만 → AM_P **35 개**  (혼합도를 못 잰다)
+#          원자 10 만 → AM_P 176 · AM_S 859   |   원자 30 만 → AM_P 528 · AM_S 2,577
+#      옛 덱(SE 3 µm · 8 천 원자)은 AM_P 276 개였다 ⇒ 같은 통계를 소재 비에서 얻으려면
+#      **약 15 만 원자**가 필요하다.  ⇒ **원자 예산은 SE 지름과 같이 정해야 한다.**
+#    ⚠ VGCF·PTFE 값도 **소재 실측**이다 (`CL-66`).  이 지름으로 풀면 종횡비 67 이라
+#      원자 예산의 97 % 를 섬유가 먹는다 — 그래서 생산에서 뺀다 (아래 `TYPES`).
+D_REAL_UM = {'AM_P': 9.0, 'AM_S': 4.0, 'SE': 1.0, 'VGCF': 0.15, 'PTFE': 0.25}
 L_FIB_UM = 10.0                       # ⚠ VGCF 길이.  PTFE 길이는 출처 없음 (`CL-67`)
+#: 전체 상 목록 (카탈로그).  실제로 도는 것은 `TYPES` 다.
+ALL_TYPES = ('AM_P', 'AM_S', 'SE', 'VGCF', 'PTFE')
+FIBRE_TYPES = ('VGCF', 'PTFE')
+#: 상별 particletemplate 시드 — **소수**여야 한다.  상이 빠져도 나머지는 안 흔들린다.
+TPL_SEED = {'AM_P': 10487, 'AM_S': 11887, 'SE': 13901, 'VGCF': 15101, 'PTFE': 17093}
 #: 타입 순서 — 덱의 `peratomtypepair` 행렬 순서와 같아야 한다
-TYPES = ('AM_P', 'AM_S', 'SE', 'VGCF', 'PTFE')
+#  ★★ 생산 기본은 **AM_P · AM_S · SE 셋**이다 (1저자 비준 2026-09-21).
+#    VGCF·PTFE 를 뺀 이유는 **비용이 아니라 말이 되게 하려고**다 — 실측:
+#      · 실물 VGCF 는 종횡비 L/Ø = 66.7 인데 옛 덱의 것은 **2.6** 이었다 (26배).
+#        섬유가 믹싱에서 하는 일(엉킴·가교·뭉침)은 길쭉해야 생긴다 ⇒ 그건 섬유가
+#        아니라 **짧은 소시지**였고, "VGCF 를 넣었다" 고 말할 수 없다.
+#        ⚠ SE 와 달리 **응집체로 읽어도 구제되지 않는다** — "카본 응집 덩이" 라면
+#          말은 되지만 그러면 `multisphere` 강체 사슬로 넣을 이유가 없다.
+#      · 진짜 종횡비로 풀면 원자 5만 중 **97 %** 를 섬유가 먹는다 (VGCF 50.8 ·
+#        PTFE 46.2) ⇒ AM_P 가 드럼을 4.8 알갱이밖에 못 가로질러 믹싱을 못 본다.
+#      · 굵힌 채로 두면 9.9 % 밖에 안 먹어서 **빼도 비용은 거의 안 준다**
+#        (5만 원자에서 15.3x → 15.8x).  ⇒ 판단 근거는 비용이 아니다.
+#      · 헤드라인은 *"코팅하면 더 잘 섞이나"* = AM–SE 점착 축이고, 섬유는 부피로
+#        1.9 %(VGCF)·1.7 %(PTFE) 다.
+#    ⚠ 포기하는 것: *"카본이 잘 분산되나"* 는 이 덱으로 물을 수 없다.  그건 AM 을
+#      줄인 작은 도메인에서 **진짜 종횡비**로 따로 돈다 — 그래서 섬유 기계를 지우지
+#      않고 `set_phases(ALL_TYPES)` 로 되살릴 수 있게 남겨 둔다.
+TYPES = ('AM_P', 'AM_S', 'SE')
+
+
+def set_phases(types):
+    """도는 상 집합을 바꾼다.  카탈로그 순서를 강제한다 (행렬 순서 = 타입 번호)."""
+    global TYPES
+    bad = [t for t in types if t not in ALL_TYPES]
+    assert not bad, f'모르는 상: {bad}'
+    assert 'SE' in types and ('AM_P' in types or 'AM_S' in types), 'AM 과 SE 는 있어야 한다'
+    TYPES = tuple(t for t in ALL_TYPES if t in types)
+    return TYPES
 #: 점착 원점 (J/m³) — 튜토리얼 `cohesion` 예제값.  ⚠ 우리 소재의 물성이 아니다.
 #  ── 점착 눈금 — **CED(J/m³) 가 아니라 Bond 수로 건다** (2026-09-19 실측으로 갈아엎음) ──
 #
@@ -85,38 +131,93 @@ OVL_CEILING = 0.01          # 겹침 천장 δ/r — DEM 연질구 관례 1 %
 #: 상별 (반경 m, 포아송비, 밀도 g/cm³) — 덱의 `property/global` 과 같아야 한다
 PHASE_MECH = {'AM_P': (0.25, 'AM'), 'AM_S': (0.25, 'AM'), 'SE': (0.30, 'SE'),
               'VGCF': (0.30, 'VGCF'), 'PTFE': (0.30, 'PTFE')}
-E_YOUNG = 1.0e7             # Pa — 계산비용용 연화값.  ⚠ 물성 인용 금지
+E_YOUNG = 1.0e7             # Pa — SE 급 연화값 (앵커 시험·하위호환).  ⚠ 물성 인용 금지
+#: ★ 상별 영률 — **÷135 균일 연화** (1저자 비준 2026-09-21, A안)
+#  실물 AM 1.4e11 · SE(E_eff, 18배 연화) 1.35e9 · 강철 벽 2.0e11 을 **같은 배수**로 내린다.
+#  옛 "전 상 1e7" 은 AM 을 14,000배, SE 를 135배 연화해 실물 대비 104 가 1.0 으로 사라져 있었다.
+#  ⛔ 기각된 안 — SE 를 9.64e4 로 내리기(÷14,000): 중력만으로 SE 겹침 5.39 % (천장 1 % 초과).
+#  ⇒ SE 는 그대로 두고 **AM 을 올린다**.  dt 는 가장 작은 SE 가 정하므로 **비용 변화 0**.
+#  검증(10만 원자·2 g): 중력 겹침 AM 0.011 % · SE 0.244 % · 접촉시간 = 회전주기의 0.042 %.
+#  ⛔ 물성으로 인용 금지 · 믹서에서 압밀/porosity 를 읽지 말 것 · 압연 겹침과 비교 금지.
+E_PHASE = {'AM_P': 1.037e9, 'AM_S': 1.037e9, 'SE': 1.0e7, 'VGCF': 1.0e7, 'PTFE': 1.0e7,
+           'WALL': 1.48e9}
+#: ★ 벽 — (B) 벽 전용 타입 (1저자 비준 2026-09-21).  강철 200 GPa ÷ 135 = 1.48e9.
+#  옛 판은 메시가 `type 2`(= AM_S) 의 물성을 빌려 썼다.  이제 **마지막 타입이 벽**이다.
+#  벽 점착: hare2026 은 JKR `γ_pw/γ_pp = 1/6.25` = **힘비 1/6.25**.  우리는 SJKR 이라
+#  `F_coh ∝ CED³` ⇒ 같은 힘비를 내려면 **CED ÷ 6.25^(1/3) = ÷1.842**.
+#  ⛔ CED 를 글자 그대로 ÷6.25 하면 힘이 **244배** 사라진다.  ⚠ γ↔CED 환산이 아니라
+#     "JKR 힘비를 SJKR 에서 재현" 한 것이다 — O(1) 불확실을 원고에 적을 것.
+WALL = 'WALL'
+WALL_NU = 0.30
+WALL_CED_DIV = 6.25 ** (1.0 / 3.0)
+#: ★ 마찰 — hare2026 세트 (1저자 비준 2026-09-21).  옛 μ_s 0.5 · μ_r 0.2 는 출처가 없었다.
+#  우리 Bo 3.0 앵커는 hare2026 의 γ 에서 오고, 그 γ 는 **안식각+전단셀로 bulk 유동성에 맞춘**
+#  값이며 그 맞춤이 이 마찰에서 이뤄졌다 ⇒ Bo 만 빌리고 마찰을 안 빌리면 앵커가 성립하지 않는다.
+#  ⚠ NMC622 값을 SE 에도 쓴다 (가정).  ⚠ 압연 덱(0.5 · 0.2/0.1)과 다른 것은 결함이 아니라
+#     정합이다 — 다른 공정을 다른 실험에 정박했다 (frame[4]).  원고에 "왜 다른가" 한 줄 적을 것.
+MU_S = 0.9                  # 정지마찰 (pp = pw)
+MU_R = 0.075                # 구름마찰 (비구형성 대리)
+COR = 0.3                   # 반발계수 (변경 없음)
+#: ★ Froude 앵커 — 씽키 컵프레임 밴드 (설계문서 §18-1; ⚠ 1차 출처 미확보, 원장 §11)
+#  `R = C·CGF·N^(1/3)` 라 원자 예산·CGF·질량 중 하나만 바꿔도 R 이 움직이고 같은 rpm 이
+#  다른 Fr 을 준다.  실측: 새 드럼 R 13.14 mm 에서 옛 기본 60 rpm 은 Fr 0.053 = **밴드 밖**.
+#  ⇒ `--fr` 이 주 노브고 rpm 은 유도한다.  `--rpm` 을 직접 주면 밴드 밖일 때 **거부**한다
+#    (경고가 아니라 거부 — 선언 안 한 축은 검사도 안 된다는 것이 Phase A 96팔 사고의 교훈).
+FR_ANCHOR = 0.0827
+FR_BAND = (0.055, 0.086)
 
 
-def _estar(nu):
-    return E_YOUNG / (2.0 * (1.0 - nu ** 2))
+def rpm_for_fr(fr, R):
+    return 60.0 / (2 * math.pi) * math.sqrt(fr * 9.81 / R)
 
 
-def overlap_for_ced(ced, radius, nu):
-    """CED → 평형 겹침 `δ/r` (점착 지배 극한).  ★ 실측 검증: 3e5·SE → 3.31 % vs 3.54 %."""
+def fr_of(rpm, R):
+    return (2 * math.pi * rpm / 60.0) ** 2 * R / 9.81
+
+
+def resolve_rpm(R, fr=FR_ANCHOR, rpm=None, allow_off_band=False):
+    """rpm 을 정한다.  `rpm` 이 없으면 `fr` 에서 유도, 있으면 밴드 검사 (fail-closed)."""
+    if rpm is None:
+        return rpm_for_fr(fr, R)
+    f = fr_of(rpm, R)
+    if not (FR_BAND[0] <= f <= FR_BAND[1]) and not allow_off_band:
+        raise SystemExit(f'⛔ --rpm {rpm:g} → Fr {f:.4f} 가 씽키 앵커 밴드 {FR_BAND} 밖이다.  '
+                         f'이 드럼(R {R*1e3:.2f} mm)에서 Fr {fr} 은 {rpm_for_fr(fr, R):.1f} rpm 이다.  '
+                         f'일부러면 --allow-off-band')
+    return rpm
+
+
+def _estar(nu, E=None):
+    E = E_YOUNG if E is None else E
+    return E / (2.0 * (1.0 - nu ** 2))
+
+
+def overlap_for_ced(ced, radius, nu, E=None):
+    """CED → 평형 겹침 `δ/r` (점착 지배 극한).  ★ 실측 검증: 3e5·SE → 3.31 % vs 3.54 %.
+    `E` 를 안 주면 SE 급 1e7 (앵커 시험·하위호환).  상별로는 `E_PHASE[t]` 를 넘긴다."""
     if ced <= 0:
         return 0.0
     rs = radius / 2.0                                   # 같은 크기 두 구의 R*
-    return (3.0 * ced * 2.0 * math.pi * math.sqrt(rs) / (4.0 * _estar(nu))) ** 2 / radius
+    return (3.0 * ced * 2.0 * math.pi * math.sqrt(rs) / (4.0 * _estar(nu, E))) ** 2 / radius
 
 
-def bond_for_ced(ced, radius, nu, rho_gcc, g=9.81):
+def bond_for_ced(ced, radius, nu, rho_gcc, g=9.81, E=None):
     """CED → Bond 수 `F_coh / W`.  **∝ CED³** 이다."""
     if ced <= 0:
         return 0.0
     rs = radius / 2.0
-    delta = overlap_for_ced(ced, radius, nu) * radius
+    delta = overlap_for_ced(ced, radius, nu, E) * radius
     f_coh = ced * 2.0 * math.pi * rs * delta
     w = (4.0 / 3.0) * math.pi * radius ** 3 * (rho_gcc * 1000.0) * g
     return f_coh / w
 
 
-def ced_for_bond(bo, radius, nu, rho_gcc, g=9.81):
+def ced_for_bond(bo, radius, nu, rho_gcc, g=9.81, E=None):
     """목표 Bond 수 → CED.  `Bo ∝ CED³` 이므로 한 점에서 세제곱근으로 뽑는다."""
     if bo <= 0:
         return 0.0
     ref = 1.0e5
-    return ref * (bo / bond_for_ced(ref, radius, nu, rho_gcc, g)) ** (1.0 / 3.0)
+    return ref * (bo / bond_for_ced(ref, radius, nu, rho_gcc, g, E)) ** (1.0 / 3.0)
 
 
 #: 팔 — **Bond 수 배수**를 건다 (CED 배수가 아니다).  나머지는 전부 고정.
@@ -125,180 +226,167 @@ def ced_for_bond(bo, radius, nu, rho_gcc, g=9.81):
 #    초판은 `CED0 = 3.0e5` 를 박았고 4/5 팔이 접촉모델 밖으로 나갔다.  여기서는
 #    `_solve_bond0()` 가 **가장 센 팔이 겹침 천장에 딱 닿도록** 잡으므로, 나중에
 #    ×1000 팔을 더해도 사다리 전체가 자동으로 내려앉는다 (시험 ㉙ 가 강제한다).
+#: ★★ **모든 팔이 절대 Bo 다** (1저자 비준 2026-09-21, ⑤-1).  `abs_base` = 모든 쌍의 Bo,
+#  `abs_mult` = 쌍별 덮어쓰기.  **BOND0(천장에서 거꾸로 푸는 기준)은 폐지**했다 — 지름·영률·
+#  상 집합·가장 센 팔의 함수라 덱을 바꾸면 조용히 밀렸다 (실측 0.21244 → 0.28326 → 0.37412,
+#  AM_P 지름에 정확히 ∝ 1/d).  천장은 이제 `ced_matrix` 끝의 **단언**이 지킨다 (fail-closed).
+#  ⚠ 초판 `abs_mult` 는 목록에 적힌 쌍만 절대였고 나머지는 BOND0 을 썼다 = 반쪽.  `abs_base` 로 닫았다.
+#: 사다리 기준값 — **옛 값 승계**.  측정된 H/R 사다리(Bo 0.212 → 1.573 깨끗 · 0.472 → 1.750
+#  전이 · 2.124 → 2.020 뭉침 · 경계 ≈ 0.5)와 같은 Bo 를 새 덱에서 다시 재어 잇기 위해서다.
+#  ⚠ 그 H/R 값들은 옛 덱(지름·상집합·영률·마찰)의 것이라 **전수 재측정** 대상이다.
+BO_BASE = 0.21244
+
+
+def _am_pairs(bo):
+    return {('AM_P', 'AM_P'): bo, ('AM_P', 'AM_S'): bo, ('AM_S', 'AM_S'): bo}
+
+
 ARMS = {
-    'E0': dict(desc='음성 대조 — 점착 0.  지표가 0 을 내는가', bond=0.0, mult={}),
-    'E1': dict(desc='균일 Bo=1 (상별 CED 는 다르다 — 그래야 Bo 가 같다)',
-               bond=1.0, mult={}),
-    'E2': dict(desc='★ AM 만 Bo ×10 — 1저자 질문의 축', bond=1.0,
-               mult={('AM_P', 'AM_P'): 10., ('AM_P', 'AM_S'): 10., ('AM_S', 'AM_S'): 10.}),
-    'E3': dict(desc='SE 만 Bo ×10 (대조)', bond=1.0, mult={('SE', 'SE'): 10.}),
-    'E4': dict(desc='AM 만 Bo ×100 (축 확장)', bond=1.0,
-               mult={('AM_P', 'AM_P'): 100., ('AM_P', 'AM_S'): 100., ('AM_S', 'AM_S'): 100.}),
-    #  ★★ 코팅 — **AM 표면이 황화물(SE)이 된다** (1저자 질문, 2026-09-20)
-    #  코팅은 **닿는 면을 바꾼다**: 코팅된 AM 끼리의 접촉은 `SE 표면 ↔ SE 표면` 이다.
-    #  ⇒ AM-AM 쌍의 CED 를 **SE-SE 쌍의 값으로 덮는다**.
-    #  ⚠ 바꾸는 것은 **표면 물성(CED)** 이지 Bond 수가 **아니다** — 코팅층은 얇아
-    #    입자의 크기·질량이 안 바뀌므로 `Bo = F_coh/W` 는 **따라 나오게** 둬야 한다.
-    #    (Bo 를 SE 와 같게 맞추면 코팅이 입자를 가볍게 만든 셈이 되어 틀린다.)
-    #  ⚠ AM-SE 쌍은 이미 SE 값이다 (`min(cand)` 규약) — 코팅해도 그대로다.
-    #  ⛔ **피복률(patchy)은 축에 없다** — 1저자 지시 2026-09-20: *"피복률까지 넣으면
-    #    계산이 복잡해진다.  이 전극이 더 잘 믹싱되는지만 보고 싶다"*.
-    #    ⇒ 이 팔은 **완전 피복**을 뜻한다.  부분 피복은 이 결과와 무피복 사이에 있다.
+    'E0': dict(desc='음성 대조 — 점착 0.  지표가 0 을 내는가', bond=0.0),
+    'E1': dict(desc='균일 Bo 0.212 (상별 CED 는 다르다 — 그래야 Bo 가 같다)',
+               bond=1.0, abs_base=BO_BASE),
+    'E2': dict(desc='★ AM 만 Bo 2.124 (×10) — 1저자 질문의 축', bond=1.0,
+               abs_base=BO_BASE, abs_mult=_am_pairs(2.1244)),
+    'E3': dict(desc='SE 만 Bo 2.124 (×10, 대조)', bond=1.0,
+               abs_base=BO_BASE, abs_mult={('SE', 'SE'): 2.1244}),
+    'E4': dict(desc='AM 만 Bo 21.24 (×100, 축 확장)', bond=1.0,
+               abs_base=BO_BASE, abs_mult=_am_pairs(21.244)),
+    #  ★★ 코팅 — **AM 표면이 황화물(SE)이 된다**.  AM 쌍의 CED 를 **SE-SE 값으로 덮는다**.
+    #  ⚠ 바꾸는 것은 표면 물성(CED)이지 Bo 가 아니다 — 코팅층은 얇아 크기·질량이 안 바뀌므로
+    #    `Bo = F_coh/W` 는 **따라 나오게** 둔다.  ⛔ 피복률 축 없음 = 완전 피복 (1저자 지시).
     'C1': dict(desc='★ AM 에 황화물 코팅 — AM 표면이 SE 가 된다 (완전 피복)',
-               bond=1.0, mult={}, coat={'AM_P': 'SE', 'AM_S': 'SE'}),
-    #  ★★ 고-G 믹서 (Thinky · 볼텍스) — **중력을 올리지 않고 Bo 를 내린다**
-    #  1저자 정정 2026-09-20: 우리 영률 1e7 은 임의 연화가 아니라 **스케일 팩터**다
-    #  (압축 덱이 300 MPa·E_real 을 0.3 MPa·E/1000 으로 내려 `P/E` 를 보존한 것).
-    #  ⇒ 중력만 268배 올리고 E 를 그대로 두면 `P/E` 가 268배가 되어 **그 규약을 깬다**.
-    #    실측: Π₁ = ρaR/E 가 5.7e-6 → 1.5e-3, 찌그러짐 0.032 % → 1.32 %.
-    #    실제 Thinky 안의 NCM 은 Π₁ 5.4e-10 = **거의 강체**이므로 중력을 올리면
-    #    **실제에서 오히려 멀어진다**.
-    #  ★ 믹서의 물리를 정하는 무차원수는 둘뿐이다:
-    #      Fr = ω²R/a   (유동 영역)     Bo = F_점착/(m·a)   (점착 지배도)
-    #    Fr 은 이미 맞다 — Thinky 컵프레임 0.055~0.086 vs 우리 드럼 60 rpm 0.083.
-    #    ⇒ **Bo 만 1/G 로 내리면 같은 물리다.**  그리고 Bo 는 CED 로 내릴 수 있어
-    #      겹침이 **더 작아진다** (δ ∝ CED²) = 접촉모델이 더 안전해지고 비용은 0.
-    #  ⚠ 이 팔들은 `E4` 의 재료(끈적한 맨 AM)를 **그 기계에서** 섞는 것이다.
-    'T1': dict(desc='★ Thinky 268 G 에서 본 E4 (Bo 를 268 로 나눈다)',
-               bond=1.0 / 268.0,
-               mult={('AM_P', 'AM_P'): 100., ('AM_P', 'AM_S'): 100., ('AM_S', 'AM_S'): 100.}),
-    'T2': dict(desc='볼텍스 45 G 에서 본 E4 (Bo 를 45 로 나눈다)',
-               bond=1.0 / 45.0,
-               mult={('AM_P', 'AM_P'): 100., ('AM_P', 'AM_S'): 100., ('AM_S', 'AM_S'): 100.}),
-    #  ★★ 경계 탐침 — 측정된 점 사이가 **비어 있다**
-    #    Bo 0.212 → H/R 1.573 (깨끗)  ·  Bo 2.124 → 2.020 (뭉침)
-    #    그 사이 **10배 구간**에 경계가 있는데 아무것도 안 찍었다.  경계를 모르면
-    #    코팅(0.0235)·볼텍스(0.07)·Thinky(0.012) 의 **여유 배수**를 말할 수 없다.
-    #  ⚠ AM 쌍에만 건다 — E2·E4 와 같은 구조여야 비교가 한 축이다.
-    #  ⛔⛔ 초판은 `mult = 목표Bo / 0.21244` 로 **BOND0 을 상수로 박았다**.  그러면
-    #    지름이 바뀌는 순간 `BOND0` 이 움직여 **Bo 라벨이 통째로 밀린다** — 이 파일이
-    #    `D_REAL_UM` 에서 경고하는 바로 그 **선언 ≠ 사용**이다.  실측(2026-09-21):
-    #    AM_P 12 → 9 µm 에서 BOND0 0.21244 → 0.28326 이라 LA 의 **문헌 앵커 Bo 3.0 이
-    #    4.00 으로**, B5 의 0.5 가 0.667 로 조용히 밀렸다.
-    #  ⇒ `abs_mult` 는 **목표 Bo 그 자체**다 (배수가 아니다).  `ced_matrix` 가 BOND0 을
-    #    거치지 않고 직접 푼다 ⇒ 지름·CGF 가 바뀌어도 Bo 라벨이 고정된다.
-    #    `bond` 는 그대로 곱한다 = 기계 층(고-G) 스케일러.
-    'B5': dict(desc='경계 탐침 — AM Bo 0.5', bond=1.0,
-               abs_mult={('AM_P', 'AM_P'): 0.5, ('AM_P', 'AM_S'): 0.5,
-                     ('AM_S', 'AM_S'): 0.5}),
-    'B10': dict(desc='경계 탐침 — AM Bo 1.0', bond=1.0,
-                abs_mult={('AM_P', 'AM_P'): 1.0, ('AM_P', 'AM_S'): 1.0,
-                      ('AM_S', 'AM_S'): 1.0}),
-    #  ★★ §24 (2026-09-20) — **층상 시작**.  1저자 비준: 헤드라인은 *"코팅하면 더 잘 섞이나"*.
-    #  삽입만 두 층으로 나눈다 (아래 AM · 위 SE+VGCF+PTFE); 나머지는 전부 그대로.
-    #  ⚠ 점착이 걸리는 상(AM)을 **아래**에 둔다 — 깨져야 하는 층을 통째로 두고 시작한다.
-    #    반대로 두면 작은 SE 가 큰 AM 틈으로 체질돼 내려가는 것이 "혼합" 으로 읽힌다 (교락).
-    #  ⚠ 새 팔의 배수는 E4(100) 보다 작아야 BOND0 이 안 밀린다 — 셀프테스트 ㉞ 가 단언한다.
-    'L0': dict(desc='§24 층상 · 점착 0 — 지표 상한 (음성 대조)', bond=0.0, mult={},
-               layered=True),
+               bond=1.0, abs_base=BO_BASE, coat={'AM_P': 'SE', 'AM_S': 'SE'}),
+    #  ⛔ 고-G 기계 팔 `T1`(Thinky) · `T2`(볼텍스)는 **폐지** (⑤-2, 2026-09-21).  기계는 사다리
+    #    위의 **점**이다 — 곡선에서 읽는다.  장비 제원이 바뀌어도(볼텍스 45 → 14.0 G 정정 등)
+    #    곡선은 그대로고 화살표만 옮긴다 ⇒ 재실행 불필요.  덮개 검증은 원장 §10.
+    #  균일 삽입 경계 탐침 — 층상 `LB2` 와 같은 Bo 0.5 라 **삽입 방식 효과**의 대조쌍이 된다.
+    'B5': dict(desc='경계 탐침 — AM Bo 0.5 (균일 삽입)', bond=1.0,
+               abs_base=BO_BASE, abs_mult=_am_pairs(0.5)),
+    'B10': dict(desc='경계 탐침 — AM Bo 1.0 (균일 삽입)', bond=1.0,
+                abs_base=BO_BASE, abs_mult=_am_pairs(1.0)),
+    #  ★★ §24 층상 — 헤드라인 *"코팅하면 더 잘 섞이나"*.  AM 을 **아래**에, SE 를 위에.
+    #  ★★ 캠페인 (원장 §10, 1저자 비준): L0 · LC · LB1 · LB2 · LB3 · LA = 6 팔, 시드 가중
+    #    (LA·LC 3 시드, 나머지 1) = 11 런.  사다리가 있어야 `LA`(3.0) vs `LC` 의 **128배 Bo 차이**와
+    #    "코팅" 처리를 갈라 읽을 수 있다 — LC 가 곡선 위면 "코팅 = Bo 낮추기", 벗어나면 그 이상.
+    'L0': dict(desc='§24 층상 · 점착 0 — 지표 상한 (음성 대조)', bond=0.0, layered=True),
+    'LB1': dict(desc='층상 사다리 · AM Bo 0.1 — 씽키 구간', bond=1.0, layered=True,
+                abs_base=BO_BASE, abs_mult=_am_pairs(0.1)),
+    'LB2': dict(desc='층상 사다리 · AM Bo 0.5 — 유동성 경계', bond=1.0, layered=True,
+                abs_base=BO_BASE, abs_mult=_am_pairs(0.5)),
+    'LB3': dict(desc='층상 사다리 · AM Bo 1.5 — 볼텍스(14 G) E4 기준', bond=1.0, layered=True,
+                abs_base=BO_BASE, abs_mult=_am_pairs(1.5)),
     'LA': dict(desc='§24 층상 · 무코팅 AM Bo 3.0 = 문헌 앵커 (hare2026) — 헤드라인 무코팅',
-               bond=1.0, layered=True,
-               abs_mult={('AM_P', 'AM_P'): 3.0, ('AM_P', 'AM_S'): 3.0,
-                     ('AM_S', 'AM_S'): 3.0}),
+               bond=1.0, layered=True, abs_base=BO_BASE, abs_mult=_am_pairs(3.0)),
     'LC': dict(desc='§24 층상 · 코팅 (AM 표면 = SE, C1 규약) — 헤드라인 코팅',
-               bond=1.0, mult={}, coat={'AM_P': 'SE', 'AM_S': 'SE'}, layered=True),
+               bond=1.0, layered=True, abs_base=BO_BASE, coat={'AM_P': 'SE', 'AM_S': 'SE'}),
 }
+#: 캠페인 런 목록 — (팔, 시드).  시드는 **소수** (덱이 합성수를 거부한다).
+CAMPAIGN_SEEDS = (32452843, 49979687, 67867967)
+CAMPAIGN = ([('L0', CAMPAIGN_SEEDS[0]), ('LB1', CAMPAIGN_SEEDS[0]),
+             ('LB2', CAMPAIGN_SEEDS[0]), ('LB3', CAMPAIGN_SEEDS[0])]
+            + [('LC', sd) for sd in CAMPAIGN_SEEDS] + [('LA', sd) for sd in CAMPAIGN_SEEDS])
 
 
-def _solve_bond0(d, ceiling=None):
-    """모든 팔이 겹침 천장 안에 들도록 기준 Bond 수를 푼다.
+def _assert_ceiling(arm, M, d, ceiling=None):
+    """모든 상·벽 쌍의 겹침이 천장 안인지 **단언**한다 (BOND0 폐지 후 유일한 안전장치).
 
-    겹침은 `Bo^(2/3)` 에 비례하므로 가장 센 팔·가장 무른 상에서 닫힌형으로 나온다.
-    ⚠ 천장 1 % 는 **관례**다.  실측으로는 δ/r 3.54 % 인 팔이 원자 손실 0 · KE 정착
-      으로 멀쩡했고, 무너진 팔은 중앙 40 % 였다 — **그 사이는 안 재봤다**.
-      ⇒ 1 % 는 외삽하지 않는 쪽으로 고른 값이지 무너지는 경계가 아니다.
-    ⚠ 그리고 이 식 자체가 점착 지배·단일 접촉 극한이다 (모듈 머리말 참조).
-      ⇒ 고른 사다리는 돌린 뒤 `check_contact_validity.py` 로 **반드시** 확인한다.
+    ⚠ 천장 1 % 는 **관례**다 — 실측으로는 δ/r 3.54 % 팔이 멀쩡했고 무너진 팔은 40 % 였다.
+      1 % 는 외삽하지 않는 쪽으로 고른 값이다.  이 식은 점착 지배·단일 접촉 극한이므로
+      돌린 뒤 `check_contact_validity.py` 로 **반드시** 실측 확인한다.
     """
     ceiling = OVL_CEILING if ceiling is None else ceiling
-    worst = 0.0
-    for a in ARMS.values():
-        if not a['bond']:
-            continue
-        am = a.get('abs_mult') or {}
-        for t in TYPES:
-            #  ★ 절대-Bo 로 고정된 상은 BOND0 에 **딸려 움직이지 않는다** ⇒ 천장 방정식
-            #    밖이다.  (천장을 넘지 않는지는 셀프테스트 ㊹ 가 따로 단언한다.)
-            if any(t in k for k in am):
-                continue
-            nu, mat = PHASE_MECH[t]
-            r = d[t] / 2.0
-            #  이 상에 걸린 가장 큰 Bond 배수
-            f = max([v for (x, y), v in (a.get('mult') or {}).items()
-                     if t in (x, y)] or [1.0])
-            #  ⚠ `bond` 는 이제 0/1 이 아니라 **배율**이다 (고-G 팔이 1/268 을 쓴다).
-            #    a['bond'] 를 안 곱하면 약한 팔을 강한 팔로 오해해 BOND0 이 잘못 풀린다.
-            base = overlap_for_ced(ced_for_bond(1.0, r, nu, DENS[mat]), r, nu)
-            worst = max(worst, base * (a['bond'] * f) ** (2 / 3.))
-    return (ceiling / worst) ** 1.5 if worst > 0 else 0.0
+    w = len(TYPES)
+    for i, t in enumerate(TYPES):
+        nu = PHASE_MECH[t][0]
+        for j, ced in ((i, M[i][i]), (w, M[i][w])):
+            ov = overlap_for_ced(ced, d[t] / 2.0, nu, E=E_PHASE[t])
+            if ov > ceiling * (1 + 1e-9):
+                raise SystemExit(f'⛔ 팔 {arm}: {t}–{"WALL" if j == w else t} 겹침 {ov*100:.3f} % '
+                                 f'> 천장 {ceiling*100:.1f} %.  Bo 를 낮추거나 천장을 논의할 것')
+
+
+def worst_overlap(d):
+    """모든 팔에 대해 (겹침, 팔, 상) 최악값 — 셀프테스트·보고용."""
+    out = []
+    for arm in sorted(ARMS):
+        M = ced_matrix(arm, d)
+        for i, t in enumerate(TYPES):
+            out.append((overlap_for_ced(M[i][i], d[t] / 2.0, PHASE_MECH[t][0], E=E_PHASE[t]), arm, t))
+    return max(out)
 
 
 def ced_matrix(arm, d):
-    """팔 이름 + 상별 지름 → 5×5 `cohesionEnergyDensity` 행렬.  **대칭을 강제한다.**
+    """팔 + 상별 지름 → (n+1)×(n+1) `cohesionEnergyDensity` 행렬.  **마지막 행/열 = 벽.**
 
-    ⚠ 쌍 (i, j) 는 두 상의 목표 CED 중 **작은 쪽**을 쓴다 = 보수적인 쪽.
-      ★ 왜 그게 보수적인가 — 같은 CED 에서 `δ/r` 은 **반경과 무관**하다
-        (`δ ∝ R*` 이고 `δ/r` 에서 반경이 약분된다.  실측 검증: CED 3e5 에서
-         AM_P 3.51 % · AM_S 3.51 % · SE 3.31 %, 차이는 ν 0.25↔0.30 뿐).
-        따라서 **CED 가 낮은 쪽 = 겹침이 작은 쪽**이고 min() 이 곧 안전한 쪽이다.
-      ★ 거꾸로 **같은 Bo** 에서는 `δ/r ∝ (R·ρ)^(2/3)` 이라 **크고 무거운 상이
-        겹침을 더 먹는다** (Bo=1 에서 AM_P 0.130 % vs SE 0.028 %) ⇒ 천장을 정하는
-        것은 AM_P 다.
-      ⚠ 실측에서 SE 팔(E3)이 AM 팔(E4)보다 **낮은 CED 로 더 크게 무너진 것**은
-        상별 민감도 때문이 **아니라** SE 가 침대의 73 % 라 잃은 원자가 많았기
-        때문이다 (손실 63 % vs 28.7 %; 최대 겹침은 187 % vs 197 % 로 비슷하다).
-        ⛔ 이 둘을 섞어 *"작은 상이 먼저 깨진다"* 고 적지 말 것.
-      ★ min() 이라 (i, j) 와 (j, i) 가 **정의상 같다** — 초판은 `d[ti] <= d[tj]` 로
-        골라 SE·VGCF·PTFE 처럼 **지름이 같고 밀도가 다른** 상 쌍에서 순서에 따라
-        답이 갈렸고, 아래 대칭 단언이 그것을 잡았다.
+    ★ 모든 팔이 **절대 Bo** — `abs_base`(전 쌍) + `abs_mult`(쌍별 덮어쓰기).  BOND0 없음.
+    ⚠ 쌍 (i, j) 는 두 상의 목표 CED 중 **작은 쪽** = 보수적인 쪽.  같은 CED 에서 `δ/r` 은
+      반경과 무관(ν 만)하므로 **CED 가 낮은 쪽 = 겹침이 작은 쪽**이다.  min() 이라 (i,j)=(j,i).
+      ⚠ 이제 상별 E 가 다르므로 (AM 이 104배 단단) 같은 Bo 의 CED 는 AM 이 훨씬 크다 ⇒
+        AM–SE 쌍은 **SE 값**이 된다.
+    ★ 코팅: 코팅된 상은 **원천 상의 표면**을 갖는다.  옛 판은 CED 를 복사했는데, 상별 E 가
+      갈리자 **깨졌다** — SJKR 은 `F = CED·A` 라 힘이 접촉면적(∝ 1/E*²)에 걸려, 104배 단단한
+      AM 에 SE 의 CED 를 주면 Bo 가 ~1e-6 (실측) = 코팅 팔이 음성 대조와 같아진다.
+      ⇒ **JKR 힘 스케일링**으로 Bo 를 정의한다: 같은 표면에너지면 `F_pull-off = (3/2)πγR*` 이라
+        `Bo_t = Bo_src · (r_src² ρ_src)/(r_t² ρ_t)`.  그 Bo 로 상별 CED 를 역산한다 (E 무관).
+        AM_P(9 µm)는 SE(1 µm)의 1/81 × 2000/4800 = **1/194** → Bo 0.212 → 0.00109.
+      ⚠ 이것은 규약 변경이다 (2026-09-21) — 리뷰 대상 1순위.
+    ★ 벽: `M[w][i] = M[i][i] / WALL_CED_DIV` — JKR 힘비 1/6.25 를 SJKR 로 재현.  벽–벽 0.
+    ★ 끝에 겹침 천장을 **단언**한다 (fail-closed).
     """
     a = ARMS[arm]
     n = len(TYPES)
-    bond0 = _solve_bond0(d)
-    M = [[0.0] * n for _ in range(n)]
-    for i, ti in enumerate(TYPES):
-        for j, tj in enumerate(TYPES):
-            if a['bond'] <= 0:
-                continue
-            rel = a.get('mult') or {}
-            f = rel.get((ti, tj), rel.get((tj, ti), 1.0))
-            am = a.get('abs_mult') or {}
-            bo_abs = am.get((ti, tj), am.get((tj, ti)))
-            #  ★ `abs_mult` 는 **목표 Bo 자체**라 BOND0 을 안 거친다 (라벨 고정).
-            bo = (bo_abs * a['bond']) if bo_abs is not None else (bond0 * a['bond'] * f)
-            cand = []                     # ★ 두 상의 목표 CED 중 작은 쪽 (위 설명)
-            for t in (ti, tj):
-                nu, mat = PHASE_MECH[t]
-                cand.append(ced_for_bond(bo, d[t] / 2.0, nu, DENS[mat]))
-            M[i][j] = min(cand)
-    #  ★ 코팅 — 코팅된 두 상이 닿으면 **둘 다 코팅재 표면**이므로 그 쌍의 CED 를
-    #    코팅재끼리의 값으로 **덮는다**.  설계식을 다시 풀지 않고 **값을 복사**한다
-    #    (그래야 "표면이 그 재료가 된다" 는 뜻이 그대로 담긴다).
-    coat = a.get('coat') or {}
-    if coat:
+    w = n
+    M = [[0.0] * (n + 1) for _ in range(n + 1)]
+    if a['bond'] > 0:
+        if 'abs_base' not in a:                        # fail-closed (SystemExit = 프로젝트 규약)
+            raise SystemExit(f'⛔ 팔 {arm}: 절대 Bo 기준(abs_base)이 없다 — BOND0 상대 팔은 폐지됐다')
+        am = a.get('abs_mult') or {}
+        coat = a.get('coat') or {}
+
+        def _bo_phase(t, pair_bo):
+            """상 t 의 목표 Bo.  코팅된 상은 원천 상의 Bo 를 JKR 기하로 환산한다."""
+            if t in coat:
+                src = coat[t]
+                bo_src = am.get((src, src), a['abs_base'])
+                r_s, r_t = d[src] / 2.0, d[t] / 2.0
+                rho_s, rho_t = DENS[PHASE_MECH[src][1]], DENS[PHASE_MECH[t][1]]
+                return bo_src * (r_s ** 2 * rho_s) / (r_t ** 2 * rho_t)
+            return pair_bo
         for i, ti in enumerate(TYPES):
             for j, tj in enumerate(TYPES):
-                si, sj = coat.get(ti, ti), coat.get(tj, tj)   # 실제 닿는 표면
-                if (si, sj) != (ti, tj):
-                    M[i][j] = M[TYPES.index(si)][TYPES.index(sj)]
-    for i in range(n):                                # ★ 비대칭 입력을 막는다
-        for j in range(i + 1, n):
+                pair_bo = am.get((ti, tj), am.get((tj, ti), a['abs_base']))
+                cand = []
+                for t in (ti, tj):
+                    nu, mat = PHASE_MECH[t]
+                    cand.append(ced_for_bond(_bo_phase(t, pair_bo) * a['bond'],
+                                             d[t] / 2.0, nu, DENS[mat], E=E_PHASE[t]))
+                M[i][j] = min(cand)
+        for i in range(n):
+            M[i][w] = M[w][i] = M[i][i] / WALL_CED_DIV
+    for i in range(n + 1):
+        for j in range(n + 1):
             assert abs(M[i][j] - M[j][i]) < 1e-9, '행렬이 비대칭이다'
+    _assert_ceiling(arm, M, d)
     return M
 
 
 def volume_fractions():
-    wt = {'AM_P': WT['AM'] * PS[0] / sum(PS), 'AM_S': WT['AM'] * PS[1] / sum(PS),
-          'SE': WT['SE'], 'VGCF': WT['VGCF'], 'PTFE': WT['PTFE']}
-    rho = {'AM_P': DENS['AM'], 'AM_S': DENS['AM'], 'SE': DENS['SE'],
-           'VGCF': DENS['VGCF'], 'PTFE': DENS['PTFE']}
-    v = {k: wt[k] / rho[k] for k in wt}
+    """활성 상(`TYPES`)만의 부피분율·wt%.  **빠진 상의 질량은 재정규화한다.**
+
+    ⚠ 그래서 VGCF·PTFE 를 빼면 AM:SE 가 80:18 → 81.63:18.37 이 된다 — 두 상 **사이의**
+      비는 실물 그대로이고(1.6 g : 0.36 g), 바뀌는 것은 "전체 중 몇 %" 라는 라벨뿐이다.
+    """
+    raw = {'AM_P': WT['AM'] * PS[0] / sum(PS), 'AM_S': WT['AM'] * PS[1] / sum(PS),
+           'SE': WT['SE'], 'VGCF': WT['VGCF'], 'PTFE': WT['PTFE']}
+    tot_w = sum(raw[k] for k in TYPES)
+    wt = {k: raw[k] * 100.0 / tot_w for k in TYPES}
+    rho = {k: PHASE_MECH[k][1] for k in TYPES}
+    v = {k: wt[k] / DENS[rho[k]] for k in TYPES}
     tot = sum(v.values())
     return {k: v[k] / tot for k in v}, wt
 
 
-def plan(n_total, cgf=200.0,
-         fill=0.30, pack=0.60, drum_r_over_l=2.5, shear_mod=3.85e6, nu=0.25):
+def plan(n_total, cgf=200.0, fill=0.30, pack=0.60, drum_r_over_l=2.5):
     """조성 → 개수 · 드럼 치수 · 시간스텝.  **순수 함수**라 시험 가능하다.
 
     ★ 지름은 전부 `D_REAL_UM` 에서 나온다 (비율 노브 없음).  옛 `d_se_over_am` ·
@@ -313,10 +401,10 @@ def plan(n_total, cgf=200.0,
     #    ⇒ 우리 조성이 이미 wt% 이므로 **그대로 넣는다**.
     #  섬유 — 구 개수는 종횡비가 정한다 (길이는 CGF 로 같이 늘어난다)
     L_fib = L_FIB_UM * 1e-6 * cgf
-    nsph = max(2, int(round(L_fib / d['VGCF'])))
-    NSPH = {'AM_P': 1, 'AM_S': 1, 'SE': 1, 'VGCF': nsph, 'PTFE': nsph}
-    rho_i = {'AM_P': DENS['AM'], 'AM_S': DENS['AM'], 'SE': DENS['SE'],
-             'VGCF': DENS['VGCF'], 'PTFE': DENS['PTFE']}
+    fibres = tuple(t for t in FIBRE_TYPES if t in TYPES)
+    nsph = max(2, int(round(L_fib / d[fibres[0]]))) if fibres else 1
+    NSPH = {k: (nsph if k in fibres else 1) for k in TYPES}
+    rho_i = {k: DENS[PHASE_MECH[k][1]] for k in TYPES}
     #  템플릿 1개의 질량 (섬유는 구 nsph 개)
     #  ★ 섬유는 구가 겹쳐 있어 nsph 개 합보다 가볍다 — 기하로 보정한다 (실측 +3.8 % 편향 제거)
     fac = {k: (chain_volume_factor(NSPH[k]) if NSPH[k] > 1 else 1.0) for k in d}
@@ -330,17 +418,21 @@ def plan(n_total, cgf=200.0,
     n_tpl_total = int(round(n_total / atoms_per_tpl))
     n_tpl = {k: int(round(n_tpl_total * c[k] / per)) for k in d}
     n = {k: n_tpl[k] * NSPH[k] for k in d}                    # 원자 수
-    n_fib = {k: n_tpl[k] for k in ('VGCF', 'PTFE')}
+    n_fib = {k: n_tpl[k] for k in fibres}
     #  드럼 — 고체 부피에서 역산
     v_solid = n['AM_P'] * (math.pi / 6) * d['AM_P'] ** 3 / phi['AM_P']
     v_drum = v_solid / (fill * pack)
     R = (drum_r_over_l * v_drum / math.pi) ** (1 / 3.0)
     L = R / drum_r_over_l
     #  시간스텝 — Rayleigh 의 20 %, 가장 작은 입자·SE 밀도 기준
-    d_small = min(d.values())
-    rho_si = DENS['SE'] * 1000.0
-    dt = 0.2 * math.pi * (d_small / 2) * math.sqrt(rho_si / shear_mod) \
-        / (0.1631 * nu + 0.8766)
+    #  ★ 상별 영률로 상별 Rayleigh dt 를 내고 **최소**를 쓴다 (가장 작고 무른 SE 가 정한다)
+    dts = []
+    for t in TYPES:
+        nu_t, mat = PHASE_MECH[t]
+        G = E_PHASE[t] / (2.0 * (1.0 + nu_t))
+        dts.append(0.2 * math.pi * (d[t] / 2) * math.sqrt(DENS[mat] * 1000.0 / G)
+                   / (0.1631 * nu_t + 0.8766))
+    dt = min(dts)
     rpm_crit = 60 / (2 * math.pi) * math.sqrt(9.81 / R)
     return dict(phi=phi, wt=wt, d=d, n=n, n_tpl=n_tpl, n_tpl_total=n_tpl_total,
                 massfrac=massfrac, n_fib=n_fib, nsph=nsph, L_fib=L_fib,
@@ -373,6 +465,17 @@ def fibre_file(nsph, d_sph):
     step = 0.8 * d_sph
     x0 = -0.5 * step * (nsph - 1)
     return ''.join(f'{x0 + i*step:.8g} 0 0 {d_sph/2:.8g}\n' for i in range(nsph))
+
+
+def _write_fibres(data_dir, p):
+    """활성 섬유 상의 multisphere 파일만 쓴다.  섬유가 없으면 아무것도 안 쓴다.
+
+    ⚠ 옛 판은 VGCF·PTFE 파일을 **무조건** 써서 3 상 덱에서 `KeyError: 'VGCF'` 로 죽었다.
+    """
+    for t in FIBRE_TYPES:
+        if t in TYPES:
+            with open(os.path.join(data_dir, f'{t.lower()}.multisphere'), 'w') as f:
+                f.write(fibre_file(p['nsph'], p['d'][t]))
 
 
 def settle_time(drop_m, restitution=0.3, g=9.81, margin=2.0):
@@ -428,7 +531,7 @@ def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None, layered=No
     #  ⚠ `n_baffles = 0` 이면 아래 두 조각이 **빈 문자열**이라 덱이 배플 이전과
     #    글자 그대로 같다 — 배플 없는 팔을 다시 돌릴 필요가 없다 (시험 ㉛ 이 강제).
     _baffle_mesh = ('' if not n_baffles else
-                    f'fix Baffle all mesh/surface file Baffles.stl type 2 '
+                    f'fix Baffle all mesh/surface file Baffles.stl type {len(TYPES)+1} '
                     f'scale {p["stl_scale"]:.6g}\n')
     #  ⚠ 빈 문자열일 때 **줄이 남지 않게** 앞에 줄바꿈을 단다.  초판은 템플릿에서
     #    제 줄을 차지해 배플 0 인 덱에 **빈 줄 하나**가 더 생겼고, 그래서 이미 돌린
@@ -448,10 +551,10 @@ def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None, layered=No
         layered = bool(ARMS[arm].get('layered', False))
     mf = p['massfrac']
     if not layered:
+        _frac = ' '.join(f'pt{i+1} {mf[t]:.6f}' for i, t in enumerate(TYPES))
         _ins_block = f"""# ⚠ 분율은 **mass%** 다 (LIGGGHTS 규약 — 실행으로 확인).  우리 조성이 wt% 라 그대로 넣는다.
-fix pdd all particledistribution/discrete 32452867 5 &
-    pt1 {mf['AM_P']:.6f} pt2 {mf['AM_S']:.6f} pt3 {mf['SE']:.6f} &
-    pt4 {mf['VGCF']:.6f} pt5 {mf['PTFE']:.6f}
+fix pdd all particledistribution/discrete 32452867 {len(TYPES)} &
+    {_frac}
 
 region ins_reg cylinder x 0.0 0.0 {p['R']*0.9:.6g} -{p['L']*0.45:.6g} {p['L']*0.45:.6g} units box
 fix ins all insert/pack seed {seed} distributiontemplate pdd &
@@ -462,10 +565,14 @@ fix ins all insert/pack seed {seed} distributiontemplate pdd &
         _unfix_ins2 = ''
     else:
         #  층별 mass% 는 층 안에서 다시 정규화한다 (pdd 는 자기 템플릿끼리의 분율만 본다)
-        a_sum = mf['AM_P'] + mf['AM_S']
-        b_sum = mf['SE'] + mf['VGCF'] + mf['PTFE']
-        nA = p['n_tpl']['AM_P'] + p['n_tpl']['AM_S']
-        nB = p['n_tpl']['SE'] + p['n_tpl']['VGCF'] + p['n_tpl']['PTFE']
+        _A_T = tuple(t for t in TYPES if t.startswith('AM_'))
+        _B_T = tuple(t for t in TYPES if not t.startswith('AM_'))
+        a_sum = sum(mf[t] for t in _A_T)
+        b_sum = sum(mf[t] for t in _B_T)
+        nA = sum(p['n_tpl'][t] for t in _A_T)
+        nB = sum(p['n_tpl'][t] for t in _B_T)
+        _fracA = ' '.join(f'pt{TYPES.index(t)+1} {mf[t]/a_sum:.6f}' for t in _A_T)
+        _fracB = ' '.join(f'pt{TYPES.index(t)+1} {mf[t]/b_sum:.6f}' for t in _B_T)
         seedB = _next_prime(seed + 2)                 # insA 와 다른 소수
         pddB = _next_prime(32452867 + 2)              # pddA 와 다른 소수
         #  ★★ 순서가 물리다 (스모크 실측 2026-09-20): AM_P(Ø2.4 mm) 119 개를 작은 블록에
@@ -473,7 +580,7 @@ fix ins all insert/pack seed {seed} distributiontemplate pdd &
         #    삽입이 끝나지 않는다.  ⇒ AM 은 **원통 전체**(균일 삽입과 같은 영역)에 넣고 정착 ①
         #    로 바닥에 깔리게 한 뒤, SE+섬유를 **그 윗면 위 블록**에 넣는다 (정착 ②).
         #    = "AM 침대 위에 SE 를 붓는다" — 층상의 물리 그대로다.
-        _v_am = sum(p['n'][k] * (math.pi / 6) * d[k] ** 3 for k in ('AM_P', 'AM_S'))
+        _v_am = sum(p['n'][k] * (math.pi / 6) * d[k] ** 3 for k in _A_T)
         _v_bed = _v_am / 0.60                          # plan() 의 pack 기본값
         _A = _v_bed / p['L']                           # 원 세그먼트 단면적
         _th = 2.0                                      # θ − sinθ = 2A/R²  (이분법)
@@ -490,10 +597,10 @@ fix ins all insert/pack seed {seed} distributiontemplate pdd &
         _z_hi = 0.78 * p['R']                          # |y| ≤ 0.6R 이면 z ≤ 0.8R 가 원 안
         assert _z_hi - _z_lo > 4 * d['SE'], '층상 삽입: SE 층 높이가 너무 작다'
         _ins_block = f"""# ★ §24 층상 삽입 ① — AM 을 원통 전체에 넣는다 (정착 ① 로 바닥에 깔린다).  분율은 층 안 mass%.
-fix pddA all particledistribution/discrete 32452867 2 &
-    pt1 {mf['AM_P']/a_sum:.6f} pt2 {mf['AM_S']/a_sum:.6f}
-fix pddB all particledistribution/discrete {pddB} 3 &
-    pt3 {mf['SE']/b_sum:.6f} pt4 {mf['VGCF']/b_sum:.6f} pt5 {mf['PTFE']/b_sum:.6f}
+fix pddA all particledistribution/discrete 32452867 {len(_A_T)} &
+    {_fracA}
+fix pddB all particledistribution/discrete {pddB} {len(_B_T)} &
+    {_fracB}
 
 region ins_reg cylinder x 0.0 0.0 {p['R']*0.9:.6g} -{p['L']*0.45:.6g} {p['L']*0.45:.6g} units box
 fix insA all insert/pack seed {seed} distributiontemplate pddA &
@@ -501,20 +608,60 @@ fix insA all insert/pack seed {seed} distributiontemplate pddA &
     region ins_reg particles_in_region {nA} ntry_mc 20000   # AM 템플릿 수
 """
         _unfix_ins = f"""unfix insA
-# ★ §24 층상 삽입 ② — 정착 ① 뒤, SE+VGCF+PTFE 를 AM 침대 **위** 블록에 붓는다 (정착 ② 시작 시 삽입).
+# ★ §24 층상 삽입 ② — 정착 ① 뒤, {'+'.join(_B_T)} 를 AM 침대 **위** 블록에 붓는다 (정착 ② 시작 시 삽입).
 #   AM 침대 윗면 추정: V_AM {_v_am*1e9:.0f} mm³ / pack 0.60 → 세그먼트 높이 {_h*1e3:.2f} mm → z_top {_z_top*1e3:.2f} mm
 #   블록 z ∈ [{_z_lo*1e3:.2f}, {_z_hi*1e3:.2f}] mm · |y| ≤ 0.6R (원 안) · x ±0.45L
 region ins_hi block -{p['L']*0.45:.6g} {p['L']*0.45:.6g} -{p['R']*0.6:.6g} {p['R']*0.6:.6g} {_z_lo:.6g} {_z_hi:.6g} units box
 fix insB all insert/pack seed {seedB} distributiontemplate pddB &
     maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 &
-    region ins_hi particles_in_region {nB} ntry_mc 20000   # SE+섬유 템플릿 수 (섬유 1가닥 = 1)"""
+    region ins_hi particles_in_region {nB} ntry_mc 20000   # 층 B 템플릿 수 (섬유 1가닥 = 1)"""
         _unfix_ins2 = '\nunfix insB'
+    #  ── 입자 템플릿 — 활성 상만.  multisphere `type` 은 **1 부터 연속**이어야 한다 ──
+    _fib = tuple(t for t in TYPES if t in FIBRE_TYPES)
+    _tpl = []
+    for _i, _t in enumerate(TYPES):
+        _rho = DENS[PHASE_MECH[_t][1]] * 1000.0
+        if _t in _fib:
+            _tpl.append(
+                f'fix pt{_i+1} all particletemplate/multisphere {TPL_SEED[_t]} '
+                f'atom_type {_i+1} density constant {_rho:.0f} &\n'
+                f'    nspheres {p["nsph"]} ntry 1000000 spheres file '
+                f'data/{_t.lower()}.multisphere scale 1.0 type {_fib.index(_t)+1}')
+        else:
+            _tpl.append(
+                f'fix pt{_i+1} all particletemplate/sphere {TPL_SEED[_t]} '
+                f'atom_type {_i+1} density constant {_rho:.0f} '
+                f'radius constant {d[_t]/2:.6g}')
+    if _fib:
+        _tpl.insert(len(TYPES) - len(_fib),
+                    '# ★ 섬유는 multisphere 강체 사슬 — 구 하나로 접지 않는다 '
+                    '(sun2026: 접으면 σ_e 순위가 뒤집힌다)\n'
+                    '# ⚠ 끝의 `type` 은 **원자 타입이 아니라 multisphere 템플릿 번호**이고 '
+                    '**1 부터 연속**이어야 한다\n'
+                    '#   (실행으로 확인: ERROR: multisphere template types have to be '
+                    'consecutive starting from 1)')
+    _tpl_block = '\n'.join(_tpl)
+    #  ★ 강체 적분기는 섬유가 있을 때만 — 없는데 켜면 LIGGGHTS 가 빈 그룹으로 죽는다
+    _integr = ('fix integrS all nve/sphere        # ★ 평범한 구 ('
+               + '·'.join(t for t in TYPES if t not in _fib) + ')')
+    if _fib:
+        _integr += ('\nfix integr  all multisphere       # 강체 사슬 ('
+                    + '·'.join(_fib) + ') — 뒤에 둬 강체를 최종 확정')
+    _comp = ' · '.join(f'{t} {p["wt"][t]:.2f}' for t in TYPES)
+    _nt = len(TYPES) + 1                               # ★ 마지막 타입 = 벽
+    _procs = ('processors      1 1 1            # PUBLIC 판 multisphere 는 직렬만 지원' if _fib else
+              '# processors — 섬유(multisphere) 없음 ⇒ MPI 가능.  `mpirun -np N` 이면 자동 분할')
+    _E_line = ' '.join(f'{E_PHASE[t]:.4g}' for t in TYPES) + f' {E_PHASE[WALL]:.4g}'
+    _nu_line = ' '.join(f'{PHASE_MECH[t][0]:.2f}' for t in TYPES) + f' {WALL_NU:.2f}'
     box = p['R'] * 1.15
     return f"""# 믹싱 드럼 — 표면에너지 스윕  (생성: scripts/make_mixer_deck.py)
 # ⚠ 손으로 고치지 말 것 — 치수가 조성에서 유도된다.  조성을 바꾸면 생성기를 다시 돌린다.
 #
-# 조성 AM:SE:VGCF:PTFE = {WT['AM']:.0f}:{WT['SE']:.0f}:{WT['VGCF']:.0f}:{WT['PTFE']:.0f} (wt%) · P:S = {PS[0]:.0f}:{PS[1]:.0f}
-# CGF = {p['cgf']:.0f}  (실제 AM_P {D_REAL_UM['AM_P']:.0f} µm → 사물 {d['AM_P']*1e3:.2f} mm)
+# 조성 (활성 상만, 재정규화 wt%): {_comp}
+#   ⚠ 원 배합은 AM:SE:VGCF:PTFE = {WT['AM']:.0f}:{WT['SE']:.0f}:{WT['VGCF']:.0f}:{WT['PTFE']:.0f} · P:S = {PS[0]:.0f}:{PS[1]:.0f}
+#   ⚠ 빠진 상: {', '.join(t for t in ALL_TYPES if t not in TYPES) or '없음'}  (LAMMPS 단계에서 다룬다)
+# CGF = {p['cgf']:.0f}  (소재 AM_P {D_REAL_UM['AM_P']:.0f} µm → 모델 {d['AM_P']*1e3:.2f} mm · SE {D_REAL_UM['SE']:.0f} µm → {d['SE']*1e3:.3f} mm)
+#   ★ 크기 비는 소재 그대로다: d_SE/d_AM_P = {d['SE']/d['AM_P']:.3f}
 # ⛔ 생산 scale=1000 규약을 쓰지 않는다 — 드럼은 중력 구동이라 중력/접촉 비가 깨진다.
 # ⚠ 전단탄성률을 계산비용 때문에 낮췄다 (lischka 와 같은 조작) — 물성으로 인용 금지.
 
@@ -524,26 +671,29 @@ boundary        f f f
 newton          off
 communicate     single vel yes
 units           si
-processors      1 1 1            # PUBLIC 판 multisphere 는 직렬만 지원
+{_procs}
 
 region          reg block -{box:.6g} {box:.6g} -{box:.6g} {box:.6g} -{box:.6g} {box:.6g} units box
-create_box      5 reg
-neighbor        {d['VGCF']*0.5:.6g} bin
+create_box      {_nt} reg
+# ★ 메시 `type {_nt}` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ {WALL_CED_DIV:.3f}).  옛 판은 type 2 = AM_S 를 빌려 썼다
+neighbor        {min(d.values())*0.5:.6g} bin
 neigh_modify    delay 0
 
 # --- 물성 (1:AM_P 2:AM_S 3:SE 4:VGCF 5:PTFE) ---
-# ⚠ 영률은 계산비용용 연화값이다.  생산 압축 덱의 값(AM 140 GPa · SE 1.35 GPa)이 아니다.
-fix m1 all property/global youngsModulus peratomtype 1.e7 1.e7 1.e7 1.e7 1.e7
-fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30 0.30 0.30
-fix m3 all property/global coefficientRestitution peratomtypepair 5 &
-{_mat(5, 0.3)}
-fix m4 all property/global coefficientFriction peratomtypepair 5 &
-{_mat(5, 0.5)}
-fix m5 all property/global coefficientRollingFriction peratomtypepair 5 &
-{_mat(5, 0.2)}
+# ⚠ 영률은 ÷135 균일 연화값이다 (AM 1.037e9 · SE 1.0e7 · 벽 1.48e9).  물성으로 인용 금지.
+#   비 104 는 실물(AM 1.4e11 / SE_eff 1.35e9)과 같다.  마지막 열 = 벽.
+fix m1 all property/global youngsModulus peratomtype {_E_line}
+fix m2 all property/global poissonsRatio peratomtype {_nu_line}
+# ★ 마찰 = hare2026 세트 (μ_s {MU_S} · μ_r {MU_R}) — Bo 3.0 앵커를 정의한 조건.  압연 덱과 다른 것은 정합이다.
+fix m3 all property/global coefficientRestitution peratomtypepair {_nt} &
+{_mat(_nt, COR)}
+fix m4 all property/global coefficientFriction peratomtypepair {_nt} &
+{_mat(_nt, MU_S)}
+fix m5 all property/global coefficientRollingFriction peratomtypepair {_nt} &
+{_mat(_nt, MU_R)}
 # ★ 스윕 축 — 표면에너지 대리 (SJKR, J/m³).  **팔 {arm}: {ARMS[arm]['desc']}**\n# ⚠ 이 블록만 팔마다 다르다.  나머지는 한 글자도 안 바뀐다.
-fix mC all property/global cohesionEnergyDensity peratomtypepair 5 &
-{_mat(5, ced_matrix(arm, d))}
+fix mC all property/global cohesionEnergyDensity peratomtypepair {_nt} &
+{_mat(_nt, ced_matrix(arm, d))}
 fix m9 all property/global characteristicVelocity scalar 2.0
 
 # ⚠ cohesion 은 tangential 뒤 · rolling_friction 앞 (순서가 실재하는 제약)
@@ -553,23 +703,14 @@ timestep        {p['dt']:.4g}
 fix             gravi all gravity 9.81 vector 0.0 0.0 -1.0
 
 # --- 기구 (STL 은 튜토리얼 Mixer 원본을 scale 로 줄여 쓴다) ---
-fix Drum  all mesh/surface file Drum.stl  type 2 scale {p['stl_scale']:.6g}
-fix Front all mesh/surface file Front.stl type 2 scale {p['stl_scale']:.6g}
-fix Back  all mesh/surface file Back.stl  type 2 scale {p['stl_scale']:.6g}
+fix Drum  all mesh/surface file Drum.stl  type {_nt} scale {p['stl_scale']:.6g}
+fix Front all mesh/surface file Front.stl type {_nt} scale {p['stl_scale']:.6g}
+fix Back  all mesh/surface file Back.stl  type {_nt} scale {p['stl_scale']:.6g}
 {_baffle_mesh}fix walls all wall/gran model hertz tangential history cohesion sjkr rolling_friction cdt &
     mesh n_meshes {3 + (1 if n_baffles else 0)} meshes Drum Front Back{' Baffle' if n_baffles else ''}
 
 # --- 입자 ---
-fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant {DENS['AM']*1000:.0f} radius constant {d['AM_P']/2:.6g}
-fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant {DENS['AM']*1000:.0f} radius constant {d['AM_S']/2:.6g}
-fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant {DENS['SE']*1000:.0f} radius constant {d['SE']/2:.6g}
-# ★ 섬유는 multisphere 강체 사슬 — 구 하나로 접지 않는다 (sun2026: 접으면 σ_e 순위가 뒤집힌다)
-# ⚠ 끝의 `type` 은 **원자 타입이 아니라 multisphere 템플릿 번호**이고 **1 부터 연속**이어야 한다
-#   (실행으로 확인: ERROR: multisphere template types have to be consecutive starting from 1)
-fix pt4 all particletemplate/multisphere 15101 atom_type 4 density constant {DENS['VGCF']*1000:.0f} &
-    nspheres {p['nsph']} ntry 1000000 spheres file data/vgcf.multisphere scale 1.0 type 1
-fix pt5 all particletemplate/multisphere 17093 atom_type 5 density constant {DENS['PTFE']*1000:.0f} &
-    nspheres {p['nsph']} ntry 1000000 spheres file data/ptfe.multisphere scale 1.0 type 2
+{_tpl_block}
 
 {_ins_block}
 # ⚠⚠ **적분기는 둘 다 필요하다** (2026-09-19 실측으로 확정)
@@ -581,8 +722,7 @@ fix pt5 all particletemplate/multisphere 17093 atom_type 5 density constant {DEN
 #   섬유 결합거리는 0.48000/0.48000/0.96000 mm 로 **소수 5자리까지 불변**이며,
 #   섬유 궤적은 nve 가 강체를 건드리지 않는 판과 **부동소수점까지 동일**하다
 #   (`multisphere` 가 매 스텝 강체 상태를 다시 덮어쓴다 ⇒ 이중적분 피해 0).
-fix integrS all nve/sphere        # ★ 평범한 구 (AM_P·AM_S·SE)
-fix integr  all multisphere       # 강체 사슬 (VGCF·PTFE) — 뒤에 둬 강체를 최종 확정
+{_integr}
 
 compute rke all erotate/sphere
 thermo_style custom step atoms ke c_rke vol
@@ -655,15 +795,30 @@ def _selftest():
     dk = deck(p, rpm=60, revolutions=5)
     chk('⑩ 덱에 cohesion 이 tangential 뒤·rolling 앞',
         'tangential history cohesion sjkr rolling_friction' in dk)
-    chk('⑪ multisphere 적분기를 쓴다', 'fix integr  all multisphere' in dk)
+    #  ★★ 생산 기본(3 상)에는 섬유가 없다 ⇒ 강체 적분기도 **없어야** 한다 (빈 그룹이면
+    #    LIGGGHTS 가 죽는다).  섬유 기계 자체는 5 상 경로로 계속 시험한다.
+    _saved_types = TYPES
+    try:
+        set_phases(ALL_TYPES)
+        dk5 = deck(plan(8000), rpm=60, revolutions=5)
+    finally:
+        set_phases(_saved_types)
+    chk('⑪ 섬유가 있으면 multisphere 적분기를 쓴다 (5 상 경로)',
+        'fix integr  all multisphere' in dk5)
+    #  ⚠ `'multisphere' not in dk` 로 쓰면 안 된다 — 머리말 주석의 `processors 1 1 1
+    #    # PUBLIC 판 multisphere 는 직렬만 지원` 에 걸려 **항상 실패**한다 (실제로 걸렸다).
+    chk('⑪a ★ 섬유가 없으면 multisphere 적분기가 **없다** (3 상 = 생산 기본)',
+        'fix integr  all multisphere' not in dk
+        and 'particletemplate/multisphere' not in dk
+        and 'fix integrS all nve/sphere' in dk)
     #  ★⑪b 재현 시험 — 이 결함이 실제로 났다.  `multisphere` 는 강체만 적분하므로
     #     평범한 구 템플릿이 있으면 `nve/sphere` 가 **반드시** 같이 있어야 한다.
     _has_sphere_tpl = 'particletemplate/sphere' in dk
     chk('⑪b 평범한 구가 있으면 nve/sphere 적분기도 있다 (없으면 조각상이 된다)',
         (not _has_sphere_tpl) or ('fix integrS all nve/sphere' in dk))
     #  ★⑪c 순서 — nve 가 먼저, multisphere 가 나중 (강체를 최종 확정)
-    chk('⑪c nve/sphere 가 multisphere 보다 먼저 정의된다',
-        dk.index('fix integrS all nve/sphere') < dk.index('fix integr  all multisphere'))
+    chk('⑪c nve/sphere 가 multisphere 보다 먼저 정의된다 (5 상 경로)',
+        dk5.index('fix integrS all nve/sphere') < dk5.index('fix integr  all multisphere'))
     #  ★⑪d 정착식 앵커 — 튜토리얼 실측을 맞히는가 (낙하 60 mm · e 0.9 → 2.1 s)
     _t = settle_time(0.060, 0.9, margin=1.0)
     chk(f'⑪d 정착식이 튜토리얼 실측 2.1 s 를 맞힌다 (식 {_t:.2f} s)',
@@ -678,7 +833,7 @@ def _selftest():
     chk('⑫ 생산 scale=1000 규약을 안 쓴다', 'scale 1000' not in dk)
     #  ★ 실행으로 배운 제약 — multisphere 템플릿 번호는 1 부터 연속이어야 한다
     import re as _re
-    _t = [int(m) for m in _re.findall(r'\.multisphere scale [\d.]+ type (\d+)', dk)]
+    _t = [int(m) for m in _re.findall(r'\.multisphere scale [\d.]+ type (\d+)', dk5)]
     chk(f'⑬ multisphere 템플릿 번호가 1 부터 연속 ({_t})',
         _t == list(range(1, len(_t) + 1)))
     #  변이 대조 — atom_type 은 그대로 4·5 여야 한다 (둘을 헷갈리면 상이 섞인다)
@@ -687,8 +842,10 @@ def _selftest():
     chk(f'⑮ 3구 사슬 부피계수 {f3:.4f} ≈ 0.9627 (해석)', abs(f3 - 0.9627) < 5e-3)
     chk('⑯ 변이: nsph=1 이면 보정 없음', chain_volume_factor(1) == 1.0)
     chk('⑰ 변이: 사슬이 길수록 계수가 준다', chain_volume_factor(5) < f3)
-    chk('⑭ 변이: atom_type 은 4·5 로 남아 있다',
-        'atom_type 4' in dk and 'atom_type 5' in dk)
+    chk('⑭ 변이: 5 상 경로에서 atom_type 은 그대로 4·5 다 (템플릿 번호와 헷갈리면 상이 섞인다)',
+        'atom_type 4' in dk5 and 'atom_type 5' in dk5)
+    chk('⑭b ★ 3 상 경로는 atom_type 3 까지만 쓰고 create_box 도 3 이다',
+        'atom_type 4' not in dk and 'create_box      4 reg' in dk)   # 3 상 + 벽 타입
     #  ★ 팔 — 점착 블록만 달라야 한다
     d0, d1, d2 = (deck(p, 60, 5, arm=x) for x in ('E0', 'E1', 'E2'))
     def _strip_ced(t):
@@ -722,9 +879,9 @@ def _selftest():
         abs(M2[0][0] / M1[0][0] - 10 ** (1 / 3.)) < 1e-6
         and abs(M2[2][2] - M1[2][2]) < 1e-9)
     chk('㉒ 행렬이 대칭이다 (비대칭 입력 방지)',
-        all(M2[i][j] == M2[j][i] for i in range(5) for j in range(5)))
+        all(M2[i][j] == M2[j][i] for i in range(len(TYPES)) for j in range(len(TYPES))))
     #  변이 대조 — 대칭 강제가 장식이 아님을 보인다
-    ARMS['_t'] = dict(desc='t', bond=1.0, mult={('AM_P', 'SE'): 7.0})
+    ARMS['_t'] = dict(desc='t', bond=1.0, abs_base=BO_BASE, abs_mult={('AM_P', 'SE'): 7.0 * BO_BASE})
     Mt = ced_matrix('_t', dd); del ARMS['_t']
     chk('㉓ 변이: 한쪽만 준 배수가 양쪽에 반영된다',
         Mt[0][2] == Mt[2][0] and Mt[0][2] > Mt[2][2])
@@ -787,17 +944,21 @@ def _selftest():
     Mc = ced_matrix('C1', dd)
     M1 = ced_matrix('E1', dd)
     _i = {t: k for k, t in enumerate(TYPES)}
-    chk(f'㉜ 코팅하면 AM-AM CED 가 **SE-SE 값**이 된다 '
-        f'({M1[_i["AM_P"]][_i["AM_P"]]:.3g} → {Mc[_i["AM_P"]][_i["AM_P"]]:.3g})',
-        abs(Mc[_i['AM_P']][_i['AM_P']] - Mc[_i['SE']][_i['SE']]) < 1e-9
-        and abs(Mc[_i['AM_S']][_i['AM_S']] - Mc[_i['SE']][_i['SE']]) < 1e-9
-        and abs(Mc[_i['AM_P']][_i['AM_S']] - Mc[_i['SE']][_i['SE']]) < 1e-9)
+    #  ★ 코팅 규약 (2026-09-21 변경): CED 복사가 아니라 **JKR 힘 스케일링으로 Bo** 를 준다.
+    #    옛 기대(*"AM-AM CED 가 SE-SE 값이 된다"*)는 상별 E 가 갈리면 Bo ~1e-6 으로 무너진다.
+    _geo = lambda src, t: (dd[src] ** 2 * DENS[PHASE_MECH[src][1]]) / (dd[t] ** 2 * DENS[PHASE_MECH[t][1]])
+    _boP = bond_for_ced(Mc[0][0], dd['AM_P'] / 2, .25, DENS['AM'], E=E_PHASE['AM_P'])
+    chk(f'㉜ 코팅된 AM_P 의 Bo = SE Bo × (r_SE²ρ_SE)/(r_AM²ρ_AM) = {BO_BASE*_geo("SE","AM_P"):.5f} (실측 {_boP:.5f})',
+        abs(_boP / (BO_BASE * _geo('SE', 'AM_P')) - 1.0) < 1e-6)
+    chk('㉜a 변이: AM 을 104배 무르게 해도 코팅 Bo 는 **E 에 불변** (JKR 정의의 요점)',
+        abs(bond_for_ced(ced_for_bond(_boP, dd['AM_P'] / 2, .25, DENS['AM'], E=E_PHASE['AM_P'] / 104),
+                         dd['AM_P'] / 2, .25, DENS['AM'], E=E_PHASE['AM_P'] / 104) / _boP - 1.0) < 1e-9)
     chk('㉜b SE-SE 자신은 안 바뀐다 (코팅재를 건드리지 않는다)',
         abs(Mc[_i['SE']][_i['SE']] - M1[_i['SE']][_i['SE']]) < 1e-9)
     chk('㉜c AM-SE 는 원래 SE 값이었으므로 코팅해도 그대로',
         abs(Mc[_i['AM_P']][_i['SE']] - M1[_i['AM_P']][_i['SE']]) < 1e-9)
     chk('㉜d 코팅 행렬도 대칭이다',
-        all(Mc[i][j] == Mc[j][i] for i in range(5) for j in range(5)))
+        all(Mc[i][j] == Mc[j][i] for i in range(len(TYPES)) for j in range(len(TYPES))))
     #  ★ 변이 — 코팅 안 하면 AM-AM 이 SE-SE 와 **다르다** (덮어쓰기가 장식이 아님)
     chk(f'㉜e 변이: 코팅 없으면 AM-AM ≠ SE-SE '
         f'({M1[_i["AM_P"]][_i["AM_P"]]:.3g} vs {M1[_i["SE"]][_i["SE"]]:.3g})',
@@ -807,25 +968,12 @@ def _selftest():
         Mc[_i['AM_P']][_i['AM_P']] < M1[_i['AM_P']][_i['AM_P']])
 
     #  ★★ ㉝ 고-G 팔 — 중력이 아니라 **Bo 를 내려** 기계를 표현한다
-    M4, MT1, MT2 = ced_matrix('E4', dd), ced_matrix('T1', dd), ced_matrix('T2', dd)
-    _bo = lambda M: bond_for_ced(M[0][0], dd['AM_P'] / 2, .25, DENS['AM'])
-    chk(f'㉝ T1 의 Bo 가 E4 의 **1/268** ({_bo(M4):.3f} → {_bo(MT1):.5f})',
-        abs(_bo(MT1) * 268.0 / _bo(M4) - 1.0) < 1e-6)
-    chk(f'㉝b T2 의 Bo 가 E4 의 **1/45** ({_bo(MT2):.5f})',
-        abs(_bo(MT2) * 45.0 / _bo(M4) - 1.0) < 1e-6)
-    #  ★ 핵심 — 고-G 팔은 겹침이 **더 작다** (중력을 올렸다면 커졌을 것)
-    _ov = lambda M: overlap_for_ced(M[0][0], dd['AM_P'] / 2, .25)
-    chk(f'㉝c ★ 고-G 팔의 겹침이 E4 보다 **작다** '
-        f'({_ov(M4)*100:.3f} % → {_ov(MT1)*100:.3f} %) — 접촉모델이 더 안전해진다',
-        _ov(MT1) < _ov(M4) and _ov(MT2) < _ov(M4))
+    #  ⛔ 고-G 팔 T1·T2 시험(㉝·㉝b·㉝c)은 팔 폐지와 함께 제거 (기계는 사다리에서 읽는다, 원장 §10)
     #  ★ 변이 — 중력을 268배 올렸다면 Π₁ 이 268배가 되어 규약이 깨진다는 것을 못 박는다
     _P1 = lambda a, E: 4800.0 * a * (dd['AM_P'] / 2) / E
     chk(f'㉝d 변이: 중력을 268배 올리면 Π₁=ρaR/E 가 268배가 된다 '
         f'({_P1(9.81, E_YOUNG):.2e} → {_P1(9.81*268, E_YOUNG):.2e}) — 스케일 팩터 위반',
         abs(_P1(9.81 * 268, E_YOUNG) / _P1(9.81, E_YOUNG) - 268.0) < 1e-6)
-    #  ★ BOND0 은 약한 팔이 늘어도 안 흔들린다 (천장은 가장 센 팔이 정한다)
-    chk('㉝e 고-G 팔을 더해도 BOND0 이 안 바뀐다 (천장은 최강 팔이 정한다)',
-        abs(_solve_bond0(dd) - 0.2833) < 1e-3)
 
     #  ★★ 점착 눈금 — **실측 앵커**.  이 다섯이 새 사다리의 근거다.
     #  실측 3.50 % — 강체 내부 쌍을 제외하고 다시 잰 값 (초판 3.54 % 는 섬유 자기겹침 포함)
@@ -847,7 +995,8 @@ def _selftest():
         M = ced_matrix(arm, dd)
         for i, ti in enumerate(TYPES):
             small_r = dd[ti] / 2.0
-            worst.append((overlap_for_ced(M[i][i], small_r, PHASE_MECH[ti][0]), arm, ti))
+            worst.append((overlap_for_ced(M[i][i], small_r, PHASE_MECH[ti][0], E=E_PHASE[ti]), arm, ti))
+            worst.append((overlap_for_ced(M[i][len(TYPES)], small_r, PHASE_MECH[ti][0], E=E_PHASE[ti]), arm, ti + '–WALL'))
     wv, wa, wt = max(worst)
     chk(f'㉙ ★ 모든 팔이 겹침 천장 {OVL_CEILING*100:.0f} % 안 '
         f'(최악 {wa}·{wt} {wv*100:.3f} %)', wv <= OVL_CEILING * (1 + 1e-9))
@@ -861,31 +1010,35 @@ def _selftest():
     #  ── §24 층상 팔 ──────────────────────────────────────────────────────────
     import hashlib as _hl
     _p8 = plan(8000)
-    chk('㉞ 새 팔(L0·LA·LC)을 넣어도 BOND0 이 0.283257 그대로다 (천장은 E4 가 정한다)',
-        abs(_solve_bond0(_p8['d']) - 0.283257) < 5e-6)
+    chk('㉞ ★ 점착이 있는 모든 팔이 절대 Bo(abs_base) 다 — BOND0 상대 팔 0 개',
+        all(('abs_base' in a) == (a['bond'] > 0) for a in ARMS.values()))
+    chk('㉞b ★ 상대 팔(mult 만)은 덱 생성이 **거부**된다 (fail-closed)',
+        (ARMS.__setitem__('_rel', dict(desc='r', bond=1.0, mult={('AM_P', 'AM_P'): 10.})) or
+         _raises(lambda: ced_matrix('_rel', _p8['d']))) and (ARMS.pop('_rel') is not None))
+    chk('㉞c ★ 캠페인 6 팔이 전부 층상이고 10 런이다 (4×1 + LA·LC 3 시드, 원장 §10)',
+        all(ARMS[a].get('layered') for a in ('L0', 'LC', 'LB1', 'LB2', 'LB3', 'LA')) and len(CAMPAIGN) == 10
+        and sum(1 for a, _ in CAMPAIGN if a in ('LA', 'LC')) == 6)
     #  ★★ 진짜 "Bo 라벨이 안 밀린다" 는 **지름을 흔들어야** 보인다 — ㉞ 는 팔만 흔든다.
     #    초판(`mult = 목표Bo / 0.21244`)은 AM_P 12 → 9 µm 에서 LA 를 3.0 → **4.00** 으로
     #    밀었고 ㉞ 는 그것을 **못 잡았다** (BOND0 자체는 그 시점에 맞았으므로).
     def _bo_amp(arm, dd_):
         _nu, _mat = PHASE_MECH['AM_P']
-        return bond_for_ced(ced_matrix(arm, dd_)[0][0], dd_['AM_P'] / 2.0, _nu, DENS[_mat])
+        return bond_for_ced(ced_matrix(arm, dd_)[0][0], dd_['AM_P'] / 2.0, _nu, DENS[_mat], E=E_PHASE['AM_P'])
     chk('㊺ ★ LA 의 AM_P Bo 3.0 (hare2026 앵커) 이 **지름·CGF 를 흔들어도** 안 밀린다',
         all(abs(_bo_amp('LA', plan(8000, cgf=_c)['d']) - 3.0) < 1e-9
             for _c in (100.0, 200.0, 400.0)))
     chk('㊺b ★ B5·B10 경계탐침 Bo 0.5·1.0 도 CGF 에 불변',
         all(abs(_bo_amp(_a, plan(8000, cgf=_c)['d']) - _t) < 1e-9
             for _a, _t in (('B5', 0.5), ('B10', 1.0)) for _c in (100.0, 400.0)))
-    #  ★ 절대-Bo 팔은 BOND0 방정식 밖이므로 천장을 **따로** 단언한다 (위 `_solve_bond0` 주석)
+    #  ★ 천장은 `ced_matrix` 가 단언하지만, 여기서 값을 **보이게** 한 번 더 잰다
     chk(f"㊺c 절대-Bo 팔이 겹침 천장 {OVL_CEILING*100:.1f} % 안이다 "
-        f"(LA {overlap_for_ced(ced_matrix('LA', _p8['d'])[0][0], _p8['d']['AM_P']/2, 0.25)*100:.3f} %)",
+        f"(LA {overlap_for_ced(ced_matrix('LA', _p8['d'])[0][0], _p8['d']['AM_P']/2, 0.25, E=E_PHASE['AM_P'])*100:.3f} %)",
         all(overlap_for_ced(ced_matrix(_a, _p8['d'])[_i][_i], _p8['d'][_t] / 2.0,
-                            PHASE_MECH[_t][0]) <= OVL_CEILING
+                            PHASE_MECH[_t][0], E=E_PHASE[_t]) <= OVL_CEILING
             for _a in ('B5', 'B10', 'LA') for _i, _t in enumerate(TYPES)))
-    #  ⚠ 2026-09-21 갱신 — **두 가지가 같이 바뀌었다**: AM_P 12 → 9 µm (소재 실측) ·
-    #    절대-Bo 팔의 하드코딩 제거.  후자만으로는 5/6 이 **바이트 동일**하고 B5 만
-    #    바뀐다 (옛 `0.5/0.21244 × BOND0` 이 정확히 0.5 가 아니라 0.500001 이었다).
-    _gold = {'E0': '18ecb638558b6a08', 'E1': '8b51d0270216d94b', 'E4': '941cf4e5f7cc34b2',
-             'C1': 'ac0a48324f9dc1f4', 'T1': 'c07d6e850724ba4c', 'B5': '6a7aecb781b4b315'}
+    #  ⚠ 2026-09-21 3차 갱신 — 3 상 · SE 1 µm · 벽 타입 · 영률 ÷135 · 마찰 hare2026 ·
+    #    전 팔 절대 Bo · 코팅 JKR 규약.  T1·B5 대신 LA·LC 를 골든에 넣는다 (캠페인 헤드라인).
+    _gold = {'E0': 'd0e7ea46413165a2', 'E1': 'cb6203cc991b1b3a', 'E4': '8fceed028b99a8c6', 'C1': '6d62e278496f476e', 'LA': '22eae3da4366e09e', 'LC': 'd9bc9a9a9b28d55d'}
     _got = {a: _hl.sha256(deck(_p8, rpm=60, revolutions=2, seed=32452843, arm=a)
                           .encode()).hexdigest()[:16] for a in _gold}
     chk('㉟ 기존 6 팔 덱이 편집 전과 **바이트 동일** (골든 해시, plan(8000)·2바퀴·시드 32452843)',
@@ -921,16 +1074,19 @@ def _selftest():
         and _y ** 2 + _zh ** 2 < _p8['R'] ** 2 and _y ** 2 + _zl ** 2 < _p8['R'] ** 2)
     #  RSA 여유: SE 층 블록의 중심 가용부피 대비 SE+섬유 구 부피 (스모크 사고의 정량 가드)
     _dse = _p8['d']['SE']
-    _vsol = sum(_p8['n'][k] * (math.pi / 6) * _p8['d'][k] ** 3 for k in ('SE', 'VGCF', 'PTFE'))
+    _vsol = sum(_p8['n'][k] * (math.pi / 6) * _p8['d'][k] ** 3 for k in TYPES if not k.startswith('AM_'))
     _vc = (0.9 * _p8['L'] - _dse) * (1.2 * _p8['R'] - _dse) * ((_zh - _zl) - _dse)
     chk(f'㊴b SE 층 삽입 밀도 {_vsol/_vc*100:.0f} % < 30 % (RSA 잼 한계 아래)', _vsol / _vc < 0.30)
-    _fa = [float(x) for x in _re.search(r'pt1 (\S+) pt2 (\S+)\n', _la).groups()]
-    _fb = [float(x) for x in _re.search(r'pt3 (\S+) pt4 (\S+) pt5 (\S+)', _la).groups()]
+    #  ★ 상 집합이 바뀌어도 성립해야 한다 — `pt3 … pt5` 를 박아 두면 3 상에서 깨진다
+    _fa = [float(x) for x in _re.findall(r'pt\d+ (\S+)',
+                                         _re.search(r'pddA .*?\n\s*(.+)', _la).group(1))]
+    _fb = [float(x) for x in _re.findall(r'pt\d+ (\S+)',
+                                         _re.search(r'pddB .*?\n\s*(.+)', _la).group(1))]
     chk('㊵ 층별 mass% 가 각각 1 로 재정규화된다',
         abs(sum(_fa) - 1) < 2e-6 and abs(sum(_fb) - 1) < 2e-6)
     _M = ced_matrix('LA', _p8['d'])
     chk('㊶ LA 의 AM_P–AM_P Bo 가 3.0 (앵커) 이다',
-        abs(bond_for_ced(_M[0][0], _p8['d']['AM_P'] / 2, .25, DENS['AM']) - 3.0) < 1e-3)
+        abs(bond_for_ced(_M[0][0], _p8['d']['AM_P'] / 2, .25, DENS['AM'], E=E_PHASE['AM_P']) - 3.0) < 1e-3)
     _Mc = ced_matrix('LC', _p8['d']); _M1 = ced_matrix('C1', _p8['d'])
     chk('㊷ LC 의 CED 행렬은 C1 과 같다 (코팅 규약을 두 벌 두지 않는다)', _Mc == _M1)
     _l0 = deck(_p8, rpm=60, revolutions=2, seed=32452843, arm='L0')
@@ -963,7 +1119,12 @@ if __name__ == '__main__':
     ap.add_argument('--out', default='', help='덱을 쓸 디렉터리')
     ap.add_argument('--n-total', type=int, default=50000)
     ap.add_argument('--cgf', type=float, default=200.0)
-    ap.add_argument('--rpm', type=float, default=60.0)
+    ap.add_argument('--fr', type=float, default=FR_ANCHOR,
+                    help=f'★ 주 노브.  Froude ω²R/g.  기본 {FR_ANCHOR} = 씽키 컵프레임 밴드 중앙.  rpm 은 R 에서 유도')
+    ap.add_argument('--rpm', type=float, default=None,
+                    help='override.  주면 결과 Fr 을 찍고 밴드 밖이면 **거부** (--allow-off-band 로만 통과)')
+    ap.add_argument('--allow-off-band', action='store_true',
+                    help='Fr 스윕처럼 일부러 밴드 밖으로 갈 때만')
     ap.add_argument('--revolutions', type=int, default=5)
     ap.add_argument('--baffles', type=int, default=0,
                     help='배플 개수 (D10(b) 전단 축).  0 이면 덱이 배플 이전과 바이트 동일')
@@ -982,33 +1143,29 @@ if __name__ == '__main__':
     if a.selftest:
         raise SystemExit(_selftest())
     p = plan(a.n_total, cgf=a.cgf)
+    rpm = resolve_rpm(p['R'], a.fr, a.rpm, a.allow_off_band)
     print(f'조성 → 개수 (N={p["n_total"]:,})')
-    for k in ('AM_P', 'AM_S', 'SE', 'VGCF', 'PTFE'):
+    for k in TYPES:
         print(f'   {k:5s} φ {p["phi"][k]:.4f} · d {p["d"][k]*1e3:6.3f} mm · n {p["n"][k]:8,d}'
               + (f'  ({p["n_fib"][k]:,} 가닥 × {p["nsph"]} 구)' if k in p['n_fib'] else ''))
     print(f'\n드럼  R {p["R"]*1e3:.1f} mm (지름 {2*p["R"]*1e3:.0f} mm) · L {p["L"]*1e3:.1f} mm'
           f' · 부피 {p["v_drum"]*1e6:.0f} mL · STL scale {p["stl_scale"]:.4f}')
     print(f'시간  dt {p["dt"]:.3g} s · 임계 {p["rpm_crit"]:.0f} rpm'
-          f' · {a.rpm:.0f} rpm 에서 Fr {(2*math.pi*a.rpm/60)**2*p["R"]/9.81:.3f}')
-    steps = int(round(a.revolutions * (60/a.rpm) / p['dt']))
+          f' · {rpm:.1f} rpm 에서 Fr {fr_of(rpm, p["R"]):.4f}  (밴드 {FR_BAND})')
+    steps = int(round(a.revolutions * (60/rpm) / p['dt']))
     print(f'비용  {a.revolutions} 바퀴 = {steps:,} step · 직렬 추정 '
           f'{p["n_total"]*steps/2.99e6/3600:.1f} h  (실측 처리율 2.99e6 p·step/s)')
     if a.out:
         os.makedirs(os.path.join(a.out, 'data'), exist_ok=True)
-        with open(os.path.join(a.out, 'data', 'vgcf.multisphere'), 'w') as f:
-            f.write(fibre_file(p['nsph'], p['d']['VGCF']))
-        with open(os.path.join(a.out, 'data', 'ptfe.multisphere'), 'w') as f:
-            f.write(fibre_file(p['nsph'], p['d']['PTFE']))
+        #  ★ 섬유 파일은 **섬유가 도는 경우에만** 쓴다 (생산 3 상에는 없다)
+        _write_fibres(os.path.join(a.out, 'data'), p)
         arms = sorted(ARMS) if a.all_arms else [a.arm]
         for arm in arms:
             d = os.path.join(a.out, arm) if a.all_arms else a.out
             os.makedirs(os.path.join(d, 'data'), exist_ok=True)
-            with open(os.path.join(d, 'data', 'vgcf.multisphere'), 'w') as f:
-                f.write(fibre_file(p['nsph'], p['d']['VGCF']))
-            with open(os.path.join(d, 'data', 'ptfe.multisphere'), 'w') as f:
-                f.write(fibre_file(p['nsph'], p['d']['PTFE']))
+            _write_fibres(os.path.join(d, 'data'), p)
             with open(os.path.join(d, 'in.mixer'), 'w') as f:
-                f.write(deck(p, a.rpm, a.revolutions, arm=arm,
+                f.write(deck(p, rpm, a.revolutions, arm=arm,
                              settle_s=a.settle_s, seed=a.seed,
                              n_baffles=a.baffles, baffle_h=a.baffle_h))
             if a.baffles:
