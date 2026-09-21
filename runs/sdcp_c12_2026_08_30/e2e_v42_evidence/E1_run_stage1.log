@@ -1,0 +1,281 @@
+  ✔ 랭크 16 = KPAR 4 × NCORE 4 × 1
+     → 배치 결박: VASP_NODES=16 · VASP_RANKS_PER_NODE=1
+  (봉인 검사는 SEAL 뒤 두 번째 census 로 미룬다 — 회신 BA P0-1)
+  ✓ 입력 무결성 129 파일
+✓ census: MANIFEST 3ab7ffd596a2 · 잡 19 · 단계 {'1': 12, '2': 7}
+== 거버넌스 사전 검사 (SEAL·첫 VASP 실행 전 · 회신 BD P0-4) ==
+  decision D-2026-08-30-sdcp-c12-path               state=active   ratified=True digest=True
+  decision D-2026-08-28-closure-criteria-first      state=active   ratified=True digest=True
+  ref      c12_poses_2026_08_30.json                role=frozen_input  ratified=False
+  ref      sdcp_c12_claim_prereg_2026_08_31.json    role=claim         ratified=True
+  ref      sdcp_c12_protocol_2026_08_30.json        role=claim         ratified=True
+  ✔ 거버넌스 통과 — 비용을 써도 되는 상태다
+  ✔ 정적 물리: protocol exact map (네 경로가 비준 원문과 정확히 같다)
+  ✔ 정적 물리: 진공 c1/c2 (36.6551 · 40.6551 — protocol 절대값과 일치)
+  ✔ 정적 물리: 기체 절대관계 ['ptfe_c10', 'sdcp_neutral'] (COM 중앙 · span+margin · 내부기하 · planned phases)
+  ✔ 정적 물리: kconv 설계 제외 (비준 사전등록 축_설계_제외_2026_09_03 · 재개 조건 기계 평가 가능 · 드리프트 없음)
+  ⚠ 정적 물리 **건너뜀** (통과 아님): 기체 **실행된** 상 집합 (receipt 는 반송 뒤에 생긴다 — 최종 분석 몫)
+  ⛔ 이 검사가 **못 하는 것**: POTCAR 신원은 보지 않는다 (`--check_attestation` 의 몫) · 에너지·수렴·k 는 결과가 없어 못 본다.
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE Li_sv 01Jan2000
+   TITEL  = PAW_PBE Ni_pv 01Jan2000
+   TITEL  = PAW_PBE O 01Jan2000
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE F 01Jan2000
+✔ 조립 완료 — 종 순서 Li Ni O C F · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE Li_sv 01Jan2000
+   TITEL  = PAW_PBE Ni_pv 01Jan2000
+   TITEL  = PAW_PBE O 01Jan2000
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE F 01Jan2000
+✔ 조립 완료 — 종 순서 Li Ni O C F · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE Li_sv 01Jan2000
+   TITEL  = PAW_PBE Ni_pv 01Jan2000
+   TITEL  = PAW_PBE O 01Jan2000
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE F 01Jan2000
+✔ 조립 완료 — 종 순서 Li Ni O C F · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE Li_sv 01Jan2000
+   TITEL  = PAW_PBE Ni_pv 01Jan2000
+   TITEL  = PAW_PBE O 01Jan2000
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE F 01Jan2000
+✔ 조립 완료 — 종 순서 Li Ni O C F · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE Li_sv 01Jan2000
+   TITEL  = PAW_PBE Ni_pv 01Jan2000
+   TITEL  = PAW_PBE O 01Jan2000
+   TITEL  = PAW_PBE S 01Jan2000
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE H 01Jan2000
+✔ 조립 완료 — 종 순서 Li Ni O S C H · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE Li_sv 01Jan2000
+   TITEL  = PAW_PBE Ni_pv 01Jan2000
+   TITEL  = PAW_PBE O 01Jan2000
+   TITEL  = PAW_PBE S 01Jan2000
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE H 01Jan2000
+✔ 조립 완료 — 종 순서 Li Ni O S C H · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE Li_sv 01Jan2000
+   TITEL  = PAW_PBE Ni_pv 01Jan2000
+   TITEL  = PAW_PBE O 01Jan2000
+   TITEL  = PAW_PBE S 01Jan2000
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE H 01Jan2000
+✔ 조립 완료 — 종 순서 Li Ni O S C H · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE Li_sv 01Jan2000
+   TITEL  = PAW_PBE Ni_pv 01Jan2000
+   TITEL  = PAW_PBE O 01Jan2000
+   TITEL  = PAW_PBE S 01Jan2000
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE H 01Jan2000
+✔ 조립 완료 — 종 순서 Li Ni O S C H · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE Li_sv 01Jan2000
+   TITEL  = PAW_PBE Ni_pv 01Jan2000
+   TITEL  = PAW_PBE O 01Jan2000
+✔ 조립 완료 — 종 순서 Li Ni O · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE Li_sv 01Jan2000
+   TITEL  = PAW_PBE Ni_pv 01Jan2000
+   TITEL  = PAW_PBE O 01Jan2000
+✔ 조립 완료 — 종 순서 Li Ni O · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE F 01Jan2000
+✔ 조립 완료 — 종 순서 C F · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE F 01Jan2000
+✔ 조립 완료 — 종 순서 C F · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE F 01Jan2000
+✔ 조립 완료 — 종 순서 C F · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE O 01Jan2000
+   TITEL  = PAW_PBE S 01Jan2000
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE H 01Jan2000
+✔ 조립 완료 — 종 순서 O S C H · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE O 01Jan2000
+   TITEL  = PAW_PBE S 01Jan2000
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE H 01Jan2000
+✔ 조립 완료 — 종 순서 O S C H · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE O 01Jan2000
+   TITEL  = PAW_PBE S 01Jan2000
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE H 01Jan2000
+✔ 조립 완료 — 종 순서 O S C H · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE Li_sv 01Jan2000
+   TITEL  = PAW_PBE Ni_pv 01Jan2000
+   TITEL  = PAW_PBE O 01Jan2000
+✔ 조립 완료 — 종 순서 Li Ni O · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE Li_sv 01Jan2000
+   TITEL  = PAW_PBE Ni_pv 01Jan2000
+   TITEL  = PAW_PBE O 01Jan2000
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE F 01Jan2000
+✔ 조립 완료 — 종 순서 Li Ni O C F · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  ✔ allowlist 대조 통과 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/site_allow.txt)
+   TITEL  = PAW_PBE Li_sv 01Jan2000
+   TITEL  = PAW_PBE Ni_pv 01Jan2000
+   TITEL  = PAW_PBE O 01Jan2000
+   TITEL  = PAW_PBE S 01Jan2000
+   TITEL  = PAW_PBE C 01Jan2000
+   TITEL  = PAW_PBE H 01Jan2000
+✔ 조립 완료 — 종 순서 Li Ni O S C H · variant·순서·PAW_PBE 확인
+  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)
+  POTCAR 재조립 19 잡 (이전과 동일 0 · 달라서 교체 0)
+  ✔ PP 원본 SHA·TITEL·allowlist 를 잡마다 **독립 재계산**했습니다 (회신 AT P0-3)
+  POTCAR root 봉인 생성 (7 variant · allowlist e4ad5eb479d4 · vasp vasp.5.4.4.18Apr17-6-g9f)
+  ✔ 봉인 통과 — 조립본을 확정했습니다 (실패했다면 트리가 그대로 남습니다)
+  ✓ 입력 무결성 129 파일
+✓ census: MANIFEST 3ab7ffd596a2 · 잡 19 · 단계 {'1': 12, '2': 7}
+  ⚠ POTCAR 신원 정책 = post_hoc — attestation 없이 진행합니다.
+     이 묶음의 결과는 **탐색용**이고 원고 인용 자격이 서지 않습니다
+     (승인된 PAW dataset 인지 확인 못 함 · 회신 AZ P0-7·Q4).
+== 단계 1 · 12 잡 (묶음 전체 19 · 계획 19) ==
+prospective/ptfe_c10__b00__afm2424_pm1
+prospective/sdcp_neutral__b00__afm2424_pm1
+refs/clean_slab__afm2424_pm1
+refs/mol__ptfe_c10__box20
+refs/mol__ptfe_c10__box24
+refs/mol__ptfe_c10__box24__nzmag
+refs/mol__sdcp_neutral__box20
+refs/mol__sdcp_neutral__box24
+refs/mol__sdcp_neutral__box24__nzmag
+vacconv/clean_slab__afm2424_pm1__c2
+vacconv/ptfe_c10__b00__afm2424_pm1__c2
+vacconv/sdcp_neutral__b00__afm2424_pm1__c2
+✓ 실행파일 = 봉인한 그 파일 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/bin/vasp_std · 3acc104766ff)
+== 완주 잡 승계: CONTINUE_FROM=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/prev/sdcp_c12_v42 ==
+  ✓ 승계 prospective/ptfe_c10__b00__afm2424_pm1 (상 static · 파일 10 · 입력 6 동일 확인)
+  ✓ 승계 prospective/sdcp_neutral__b00__afm2424_pm1 (상 static · 파일 10 · 입력 6 동일 확인)
+  ✓ 승계 refs/clean_slab__afm2424_pm1 (상 static · 파일 10 · 입력 6 동일 확인)
+  ✓ 승계 refs/mol__ptfe_c10__box20 (상 static · 파일 10 · 입력 6 동일 확인)
+  ✓ 승계 refs/mol__ptfe_c10__box24 (상 static · 파일 10 · 입력 6 동일 확인)
+  ✓ 승계 refs/mol__sdcp_neutral__box20 (상 static · 파일 10 · 입력 6 동일 확인)
+  ✓ 승계 refs/mol__sdcp_neutral__box24 (상 static · 파일 10 · 입력 6 동일 확인)
+  · 승계 안 함 refs/mol__ptfe_c10__box24__nzmag — static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)
+  · 승계 안 함 refs/mol__sdcp_neutral__box24__nzmag — static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)
+  · 승계 안 함 vacconv/clean_slab__afm2424_pm1__c2 — static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)
+  · 승계 안 함 vacconv/ptfe_c10__b00__afm2424_pm1__c2 — static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)
+  · 승계 안 함 vacconv/sdcp_neutral__b00__afm2424_pm1__c2 — static/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)
+  → CONTINUATION.json (승계 7 잡 · 미승계 5 잡 · 이전 MANIFEST 3ab7ffd596a2)
+== 병렬도 1 · 1물결 10 잡 · 2물결(부모 의존) 2 잡 ==
+⚠ SKIP_COMPLETE=1 — **완주가 증명된** 잡만 건너뜁니다 (1회용 계약의 명시적 예외).
+   자격 둘을 다 채워야 합니다: ① 존재하는 모든 상이 'General timing' 으로 끝났다
+                              ② receipt 에 '_runner_start' 가 정확히 하나
+   ⛔ '산출물이 있다' 는 자격이 아닙니다 — 0스텝 찌꺼기도 파일을 남깁니다.
+   ⛔ 자격 미달이면 건너뛰지 않고 **실패로 셉니다**.
+  ✓ prospective/ptfe_c10__b00__afm2424_pm1 이미 완주 — 건너뜁니다 (SKIP_COMPLETE · receipt 손대지 않음)
+  ✓ prospective/sdcp_neutral__b00__afm2424_pm1 이미 완주 — 건너뜁니다 (SKIP_COMPLETE · receipt 손대지 않음)
+  ✓ refs/clean_slab__afm2424_pm1 이미 완주 — 건너뜁니다 (SKIP_COMPLETE · receipt 손대지 않음)
+  ✓ refs/mol__ptfe_c10__box20 이미 완주 — 건너뜁니다 (SKIP_COMPLETE · receipt 손대지 않음)
+  ✓ refs/mol__ptfe_c10__box24 이미 완주 — 건너뜁니다 (SKIP_COMPLETE · receipt 손대지 않음)
+  ✓ refs/mol__sdcp_neutral__box20 이미 완주 — 건너뜁니다 (SKIP_COMPLETE · receipt 손대지 않음)
+  ✓ refs/mol__sdcp_neutral__box24 이미 완주 — 건너뜁니다 (SKIP_COMPLETE · receipt 손대지 않음)
+=== vacconv/clean_slab__afm2424_pm1__c2 시작 ===
+  ✔ 랭크 배치: slot_1 = [e1-node01,e1-node02,e1-node03,e1-node04,e1-node05,e1-node06,e1-node07,e1-node08,e1-node09,e1-node10,e1-node11,e1-node12,e1-node13,e1-node14,e1-node15,e1-node16] · 노드 16 × 1랭크 · --hostfile /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/cur/sdcp_c12_v42/_hostpool/busy/slot_1 -N 1
+  ✔ POTCAR provenance 확인 (allowlist 대조본 · sha 일치)
+  ▶ static
+✅ clean_slab__afm2424_pm1__c2 완료
+=== vacconv/clean_slab__afm2424_pm1__c2 완료 ===
+=== vacconv/ptfe_c10__b00__afm2424_pm1__c2 시작 ===
+  ✔ 랭크 배치: slot_1 = [e1-node01,e1-node02,e1-node03,e1-node04,e1-node05,e1-node06,e1-node07,e1-node08,e1-node09,e1-node10,e1-node11,e1-node12,e1-node13,e1-node14,e1-node15,e1-node16] · 노드 16 × 1랭크 · --hostfile /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/cur/sdcp_c12_v42/_hostpool/busy/slot_1 -N 1
+  ✔ POTCAR provenance 확인 (allowlist 대조본 · sha 일치)
+  ▶ static
+✅ ptfe_c10__b00__afm2424_pm1__c2 완료
+=== vacconv/ptfe_c10__b00__afm2424_pm1__c2 완료 ===
+=== vacconv/sdcp_neutral__b00__afm2424_pm1__c2 시작 ===
+  ✔ 랭크 배치: slot_1 = [e1-node01,e1-node02,e1-node03,e1-node04,e1-node05,e1-node06,e1-node07,e1-node08,e1-node09,e1-node10,e1-node11,e1-node12,e1-node13,e1-node14,e1-node15,e1-node16] · 노드 16 × 1랭크 · --hostfile /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/cur/sdcp_c12_v42/_hostpool/busy/slot_1 -N 1
+  ✔ POTCAR provenance 확인 (allowlist 대조본 · sha 일치)
+  ▶ static
+✅ sdcp_neutral__b00__afm2424_pm1__c2 완료
+=== vacconv/sdcp_neutral__b00__afm2424_pm1__c2 완료 ===
+   [_wave1.txt] 잡 10 · 표지 10 · 건너뜀 7 · 실패 0
+=== refs/mol__ptfe_c10__box24__nzmag 시작 ===
+  ✔ 랭크 배치: slot_1 = [e1-node01,e1-node02,e1-node03,e1-node04,e1-node05,e1-node06,e1-node07,e1-node08,e1-node09,e1-node10,e1-node11,e1-node12,e1-node13,e1-node14,e1-node15,e1-node16] · 노드 16 × 1랭크 · --hostfile /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/cur/sdcp_c12_v42/_hostpool/busy/slot_1 -N 1
+  ✔ POTCAR provenance 확인 (allowlist 대조본 · sha 일치)
+  canary 기하 = 부모(../mol__ptfe_c10__box24) 와 동일
+  ▶ static
+✅ mol__ptfe_c10__box24__nzmag 완료
+=== refs/mol__ptfe_c10__box24__nzmag 완료 ===
+=== refs/mol__sdcp_neutral__box24__nzmag 시작 ===
+  ✔ 랭크 배치: slot_1 = [e1-node01,e1-node02,e1-node03,e1-node04,e1-node05,e1-node06,e1-node07,e1-node08,e1-node09,e1-node10,e1-node11,e1-node12,e1-node13,e1-node14,e1-node15,e1-node16] · 노드 16 × 1랭크 · --hostfile /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/e1/cur/sdcp_c12_v42/_hostpool/busy/slot_1 -N 1
+  ✔ POTCAR provenance 확인 (allowlist 대조본 · sha 일치)
+  canary 기하 = 부모(../mol__sdcp_neutral__box24) 와 동일
+  ▶ static
+✅ mol__sdcp_neutral__box24__nzmag 완료
+=== refs/mol__sdcp_neutral__box24__nzmag 완료 ===
+   [_wave2.txt] 잡 2 · 표지 2 · 건너뜀 0 · 실패 0
+== 1단계 판정 ==
+=== 무결성 ===  검사 129개 · 변경 0 · 없음 0
+=== 잡 게이트 ===  통과 12/19 · 문제 7건:
+  ⛔ prospective/ptfe_c10__b00__afm2424_net4: NOT_RUN(static), RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)
+  ⛔ prospective/ptfe_c10__b52__afm2424_net4: NOT_RUN(static), RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)
+  ⛔ prospective/ptfe_c10__b52__afm2424_pm1: NOT_RUN(static), RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)
+  ⛔ prospective/sdcp_neutral__b00__afm2424_net4: NOT_RUN(static), RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)
+  ⛔ prospective/sdcp_neutral__b12__afm2424_net4: NOT_RUN(static), RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)
+  ⛔ prospective/sdcp_neutral__b12__afm2424_pm1: NOT_RUN(static), RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)
+  ⛔ refs/clean_slab__afm2424_net4: NOT_RUN(static), RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 잡마다 남는다)
+
+=== 자리 선호 (ΔE = E(Ni_top) − E(Li_top), 양수 = Li 우세 · seed-매칭) ===
+
+=== 조각별 판정 ===
+  ptfe_c10       n=0/0  중앙값 —  → NO_DATA
+  sdcp_neutral   n=0/0  중앙값 —  → NO_DATA
+  ℹ 수치게이트 box_ptfe_c10: 0.1 meV
+  ℹ 수치게이트 box_sdcp_neutral: 0.2 meV
+
+→ ./RESULTS.json
+■ stage gate = vacconv · ok — Δ_vac 0.0 meV (문턱 5) · 반올림 일치
+■ stage-1 prerequisites:
+   ✓ vacuum: ok — Δ_vac 0.0 meV (문턱 5) · 반올림 일치
+   ✓ molecular_state: 비영 시작이 부모보다 낮지 않다
+   ✓ canary_geometry: 부모/canary static 기하 동일 (2조각)
+   ✓ potcar_identity: sealed_root_v13 — variant 별 원본 SHA256 을 **생산 전에 봉인**하고 완주 전 잡이 그 봉인과 일
+   ✓ gas_box_delta: {'delta_gas_meV': -0.086, 'tol_meV': 5.0}
+   ✓ estimand_topology_pm1: 두 complex 가 같은 자기 branch (같음)
+   ✓ closure_blocks_clear: exact/global closure block 0건
+   ✓ root_seal_covers_plan: 봉인이 현재 MANIFEST·계획 잡 19개·variant ['C', 'F', 'H', 'Li_sv', 'Ni_pv', 'O'
+✅ 1단계 통과 (10잡) — STAGE1_PASS.json 기록 · 2단계 제출 가능
+1단계 통과 — 2단계는 'bash run_staged.sh 2'
+  ── 메모리·배치 사전검사 (모형) ──
+     최악 잡 vacconv/ptfe_c10__b00__afm2424_pm1__c2
+     바닥 119.4 GB + 랭크 16 x 0.90 GB = 133.8 GB
+     노드 16 개 x 랭크 1 개/노드 (VASP_NODES)  ->  노드당 8.4 GB
+     노드 메모리 13.4 GB (cgroup v1 /sys/fs/cgroup/memory/process_api/01a0c240-edc6-766d-adde-f4cb85d700b1/claude-code-bash/memory.limit_in_bytes) x 0.85 = 가용 11.4 GB
+     ✔ 74 % 사용 — 통과 (모형 기준 1.36배 여유)
+  ✔ 호스트 풀: 1 조각 × 16 호스트 (출처 16 호스트)
+  ✔ 배치 프로브 1 개 동시 통과: 각 16 호스트 × 1 랭크 · 프로브 간 호스트 서로소 · 실행 노드 메모리 최소 15.7 GiB ≥ 필요 8.4/0.85 · 제한 상태 {'unlimited': 16} · PLACEMENT_PROBE.json

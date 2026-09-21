@@ -2303,6 +2303,219 @@ PYEXE
 #     때문이다. 여기서 다시 계산하면 두 곳이 갈린다 (실제로 갈린 전례가 있다).
 [ -n "${NPAR:-}" ] || { echo "⛔ 내부 오류: NPAR 이 안 정해졌다"; exit 3; }
 
+# ══ 2026-09-21 — 다른 extraction 의 **완주 잡 승계** (CONTINUE_FROM) ══════════════════
+#   mirae 실측 (v41): 같은 extraction 에서 1단계를 세 번 불러 7잡 완주 · 12잡 미실행. 새 판은
+#   스크립트만 다르고 잡 입력은 바이트 동일한데, 완주 7잡(≈97 h)을 이어 쓸 길이 없었다:
+#     (a) 옛 extraction 에 새 스크립트를 덮으면 census 의 files_sha256·봉인의 manifest_sha256 에 막힌다
+#         (봉인은 바꾸지 않는다 — 그게 봉인이다).
+#     (b) 새 extraction 에 완주 폴더를 **먼저** 복사하면 SEAL 이 "생산 산출물이 이미 있습니다" 로
+#         최초 봉인을 거부한다 (AP #7 — 계산 뒤에 만든 봉인은 사전 승인이 아니다).
+#   ⇒ 러너가 **봉인·census·실행파일 대조가 끝난 뒤** 승계한다. 그래서 봉인은 여전히 이 extraction 의
+#     생산 전이고, 승계는 "같은 입력·같은 PP 트리·같은 실행파일로 이미 완주한 결과를 옮겨 온 것" 으로
+#     CONTINUATION.json 에 기록된다 (반송 목록).
+#   자격 — 전부 fail-closed (하나라도 어긋나면 **아무 잡도 옮기지 않고** 멈춘다):
+#     ① CONTINUE_FROM = 이전 extraction 의 묶음 루트 **절대경로** (MANIFEST.json · POTCAR_ROOT_SEAL.json 존재)
+#     ② SKIP_COMPLETE=1 이 같이 켜져 있다 (옮겨 온 잡은 아래 물결에서 "완주 증명" 으로 건너뛴다)
+#     ③ 이전 봉인 == 지금 봉인: PP 원본 SHA(variant 전부) · VASP 실행파일 SHA · launcher 종류/SHA
+#        (다르면 옮겨 온 receipt 가 판정에서 막힌다 — 그것을 90 h 뒤가 아니라 지금 잡는다)
+#     ④ 잡마다: 이 번들이 실은 입력 전부(MANIFEST files_sha256 의 <잡>/… 항목)가 이전 extraction 에서
+#        **바이트 동일** · 이전 MANIFEST 의 planned[잡] 동일 · 조립본 해시(POTCAR_PROVENANCE) 동일 ·
+#        이전 static/POSCAR == 이 잡이 돌아야 할 기하(PARENT_GEOM 이면 부모 루트 POSCAR)
+#     ⑤ 잡마다 완주 증명: 존재하는 모든 상이 General timing · receipt 의 _runner_start 정확히 하나
+#   ⑤ 미달(0스텝 찌꺼기 · qdel 잔재)은 옮기지 않고 **여기서 새로 돈다**. ④ 위반은 전체 중단 —
+#   입력이 다른 것은 다른 계산이다. 옮기는 것: receipt · _placement.tsv · 상 폴더의 파일 전부
+#   (이미 있는 파일은 같은 내용이면 손대지 않고, 다르면 중단). POTCAR_PROVENANCE.json 은 **지금 것**을
+#   둔다 (조립본 해시가 같음을 ④ 에서 확인했다 · allowlist 경로만 다를 수 있다).
+#   ⛔ 이 승계가 못 하는 것: 이전 extraction 이 정직했는지는 증명하지 못한다 — 옮겨 온 receipt·
+#     OUTCAR 는 남의 기계가 쓴 파일이고, 그 대조는 분석기(receipt 게이트·봉인 대조)가 반송 뒤에 한다.
+if [ -n "${CONTINUE_FROM:-}" ]; then
+  echo "== 완주 잡 승계: CONTINUE_FROM=$CONTINUE_FROM =="
+  if [ "${SKIP_COMPLETE:-0}" != "1" ]; then
+    echo "⛔ CONTINUE_FROM 은 SKIP_COMPLETE=1 과 **같이** 써야 합니다 — 옮겨 온 잡을 건너뛰는 자격 검사가"
+    echo "   거기 있습니다. 둘 다 export 하고 다시 부르십시오. (아무 잡도 시작하지 않았습니다)"
+    exit 2
+  fi
+  python3 - "$CONTINUE_FROM" _stage_jobs.txt "$stage" <<'PYCONT' || { echo "⛔ 승계 실패 — 중단 (아무 잡도 시작하지 않았습니다 · 자격 검사에서 막혔으면 아무 파일도 옮기지 않았고, 옮기는 중 막혔으면 위에 어디까지인지 적혀 있습니다)"; exit 2; }
+import gzip, hashlib, json, os, shutil, sys, time
+prev, stage_list, stage = sys.argv[1], sys.argv[2], sys.argv[3]
+def sha(p):
+    return hashlib.sha256(open(p, "rb").read()).hexdigest()
+def die(m):
+    print("⛔ " + m)
+    sys.exit(1)
+if not os.path.isabs(prev):
+    die("CONTINUE_FROM 은 절대경로여야 합니다: %r" % prev)
+prev = os.path.normpath(prev)
+if not os.path.isdir(prev):
+    die("CONTINUE_FROM 디렉터리가 없습니다: %s" % prev)
+if os.path.realpath(prev) == os.path.realpath("."):
+    die("CONTINUE_FROM 이 이 extraction 자신입니다 — 이전 extraction 의 루트를 주십시오")
+for f in ("MANIFEST.json", "POTCAR_ROOT_SEAL.json"):
+    if not os.path.isfile(os.path.join(prev, f)):
+        die("이전 extraction 에 %s 가 없습니다 (묶음 **루트**를 가리켜야 합니다): %s" % (f, prev))
+man = json.load(open("MANIFEST.json", encoding="utf-8"))
+pman = json.load(open(os.path.join(prev, "MANIFEST.json"), encoding="utf-8"))
+seal = json.load(open("POTCAR_ROOT_SEAL.json", encoding="utf-8"))
+pseal = json.load(open(os.path.join(prev, "POTCAR_ROOT_SEAL.json"), encoding="utf-8"))
+# ③ 같은 트리 · 같은 실행파일 · 같은 launcher
+if not seal.get("source_sha256") or (pseal.get("source_sha256") or {}) != seal["source_sha256"]:
+    die("이전 봉인의 PP 원본 SHA 가 지금 봉인과 다릅니다 — 다른 트리의 결과는 승계하지 않습니다")
+for k in ("vasp_executable_sha256", "launcher_kind", "launcher_sha256", "launcher_wrapper_sha256"):
+    if (pseal.get(k) or "") != (seal.get(k) or ""):
+        die("이전 봉인의 %s 가 지금과 다릅니다 (이전 %s / 지금 %s) — 옮겨 온 receipt 가 판정에서 막히므로 승계하지 않습니다"
+            % (k, str(pseal.get(k))[:12], str(seal.get(k))[:12]))
+fh = man.get("files_sha256") or {}
+pfh = pman.get("files_sha256") or {}
+planned = man.get("planned") or {}
+pplanned = pman.get("planned") or {}
+pasm = pseal.get("assembled_sha256_by_job") or {}
+stage_jobs = [l.strip() for l in open(stage_list, encoding="utf-8") if l.strip()]
+plan, not_imported = [], []
+for j in stage_jobs:
+    pj = os.path.join(prev, j)
+    if not os.path.isdir(pj):
+        not_imported.append({"job": j, "why": "이전 extraction 에 폴더가 없다"}); continue
+    phases = [ph for ph in ("pre", "relax", "static", "dense") if os.path.isdir(os.path.join(pj, ph))]
+    # ⑤ 완주 증명 — 미달은 승계하지 않는다 (여기서 새로 돈다)
+    why = None
+    if "static" not in phases:
+        why = "static 상 폴더가 없다"
+    for ph in phases:
+        if why:
+            break
+        oc, ocg = os.path.join(pj, ph, "OUTCAR"), os.path.join(pj, ph, "OUTCAR.gz")
+        if os.path.isfile(oc) and os.path.isfile(ocg):
+            die("%s/%s: OUTCAR 와 OUTCAR.gz 가 둘 다 있다 — 어느 쪽이 정본인지 판정 불가 (분석기도 막는다). 하나만 남기십시오" % (j, ph))
+        if os.path.isfile(oc):
+            txt = open(oc, "rb").read()
+        elif os.path.isfile(ocg):
+            txt = gzip.open(ocg).read()
+        else:
+            why = "%s/OUTCAR 가 없다 (0스텝 찌꺼기 · qdel 잔재)" % ph; break
+        if b"General timing" not in txt:
+            why = "%s/OUTCAR 가 General timing 으로 안 끝났다" % ph
+    rp = os.path.join(pj, "EXECUTABLE_RECEIPT.tsv")
+    if not why:
+        if not os.path.isfile(rp):
+            why = "EXECUTABLE_RECEIPT.tsv 가 없다"
+        else:
+            _ns = sum(1 for l in open(rp, encoding="utf-8", errors="replace") if "_runner_start" in l)
+            if _ns != 1:
+                why = "receipt 의 _runner_start 가 %d 개 (정확히 1 이어야 한다)" % _ns
+    if why:
+        not_imported.append({"job": j, "why": why}); continue
+    # ④ 입력 동일성 — 위반은 **전체 중단**
+    ins = sorted(k for k in fh if k.startswith(j + "/"))
+    if not ins:
+        die("%s: MANIFEST files_sha256 에 이 잡의 입력이 없다 — 대조 불가" % j)
+    for rel in ins:
+        pf = os.path.join(prev, rel)
+        if not os.path.isfile(pf):
+            die("%s: 이전 extraction 에 입력 %s 가 없다 — 승계하지 않고 중단" % (j, rel))
+        if sha(pf) != fh[rel]:
+            die("%s: 이전 extraction 의 %s 가 이 번들의 입력과 **다릅니다** — 다른 계산입니다. 승계하지 않고 중단" % (j, rel))
+        if pfh.get(rel) != fh[rel]:
+            die("%s: 이전 MANIFEST 의 files_sha256[%s] 가 이 번들과 다릅니다 — 다른 설계의 잡입니다" % (j, rel))
+    if (pplanned.get(j) or {}) != (planned.get(j) or {}):
+        die("%s: 이전 MANIFEST 의 planned 항목(phases·meta)이 이 번들과 다릅니다 — 승계하지 않고 중단" % j)
+    pv, cv = os.path.join(pj, "POTCAR_PROVENANCE.json"), os.path.join(j, "POTCAR_PROVENANCE.json")
+    for q in (pv, cv):
+        if not os.path.isfile(q):
+            die("%s: %s 가 없습니다 (조립본 대조 불가)" % (j, q))
+    pa = str(json.load(open(pv, encoding="utf-8")).get("assembled_sha256") or "")
+    ca = str(json.load(open(cv, encoding="utf-8")).get("assembled_sha256") or "")
+    if not pa or pa != ca:
+        die("%s: 조립본(POTCAR) 해시가 다릅니다 (이전 %s / 지금 %s) — 다른 POTCAR 로 돈 결과는 승계하지 않습니다" % (j, pa[:12], ca[:12]))
+    if str(pasm.get(j) or "") != pa:
+        die("%s: 이전 봉인의 assembled_sha256_by_job 이 이전 provenance 와 다릅니다 (%s / %s)" % (j, str(pasm.get(j))[:12], pa[:12]))
+    # 실제로 돈 기하 == 이 잡이 돌아야 할 기하 (run_job.sh 와 같은 규칙: PARENT_GEOM 이면 부모 루트 POSCAR)
+    pg = os.path.join(j, "PARENT_GEOM")
+    if os.path.isfile(pg):
+        tgt = os.path.normpath(os.path.join(j, open(pg, encoding="utf-8").read().strip()))
+        want = os.path.join(tgt, "relax", "CONTCAR") if os.path.isdir(os.path.join(tgt, "relax")) else os.path.join(tgt, "POSCAR")
+    else:
+        want = os.path.join(j, "relax", "CONTCAR") if "relax" in phases else os.path.join(j, "POSCAR")
+    sp = os.path.join(pj, "static", "POSCAR")
+    if not os.path.isfile(sp):
+        die("%s: 이전 static/POSCAR 가 없다 — 실제로 돈 기하를 확인할 수 없어 승계하지 않습니다" % j)
+    if not os.path.isfile(want) or sha(sp) != sha(want):
+        die("%s: 이전 static/POSCAR 가 이 잡의 기하(%s)와 다릅니다 — 다른 기하의 결과는 승계하지 않습니다" % (j, want))
+    files = []
+    for f in ("EXECUTABLE_RECEIPT.tsv", "_placement.tsv"):
+        if os.path.isfile(os.path.join(pj, f)):
+            files.append((os.path.join(pj, f), os.path.join(j, f)))
+    for ph in phases:
+        for fn in sorted(os.listdir(os.path.join(pj, ph))):
+            src = os.path.join(pj, ph, fn)
+            if os.path.isfile(src):
+                files.append((src, os.path.join(j, ph, fn)))
+    for src, dst in files:
+        if os.path.exists(dst) and sha(src) != sha(dst):
+            die("%s: 여기 이미 있는 %s 가 이전 산출물과 다릅니다 — 덮지 않고 중단 (폴더를 새로 푸십시오)" % (j, dst))
+    plan.append((j, phases, ins, files, pa))
+if not plan:
+    if stage != "1":
+        # 2단계에는 승계할 것이 없는 게 정상이다 (1단계 산출물은 이미 이 extraction 에 있다).
+        # 셸에 CONTINUE_FROM 이 남아 있다고 2단계를 막으면 그게 새 헛돌이다 — 경고만 하고 진행한다.
+        print("  ⚠ 단계 %s 에는 승계할 완주 잡이 없습니다 — 승계 없이 진행합니다 (CONTINUE_FROM 은 1단계용)" % stage)
+        sys.exit(0)
+    die("승계할 완주 잡이 하나도 없습니다 — CONTINUE_FROM 이 이전 extraction 의 **묶음 루트**인지, 그 안에 완주 잡이 있는지 확인하십시오. 미승계 사유: %s"
+        % [(x["job"], x["why"]) for x in not_imported[:6]])
+# ── 여기까지 한 건도 옮기지 않았다. 전부 통과했으므로 이제 옮긴다 ──
+imported = []
+for j, phases, ins, files, pa in plan:
+    rec = {}
+    for src, dst in files:
+        if os.path.exists(dst):
+            rec[dst] = {"sha256": sha(dst), "action": "already_identical"}; continue
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        try:
+            try:
+                os.link(src, dst); act = "hardlink"      # 같은 파일시스템이면 즉시 (WAVECAR·CHGCAR 가 GB 급이다)
+            except OSError:
+                shutil.copy2(src, dst); act = "copy"
+        except Exception as e:                             # noqa: BLE001
+            # ⚠ 여기부터는 "아무것도 안 옮겼다" 가 아니다 — 어디까지 옮겼는지 적고 멈춘다
+            die("%s: 옮기는 중 실패 (%s → %s: %r) — **이 잡까지 일부 파일이 이미 옮겨졌습니다.** 폴더를 새로 풀고 다시 하십시오" % (j, src, dst, e))
+        rec[dst] = {"sha256": sha(dst), "action": act}
+    imported.append({"job": j, "phases": phases, "inputs_verified_identical": ins,
+                     "assembled_potcar_sha256": pa, "files": rec})
+    print("  ✓ 승계 %s (상 %s · 파일 %d · 입력 %d 동일 확인)" % (j, "/".join(phases), len(rec), len(ins)))
+for x in not_imported:
+    print("  · 승계 안 함 %s — %s" % (x["job"], x["why"]))
+def _rd(p):
+    try:
+        return open(p, encoding="utf-8").read().split()[0]
+    except Exception:
+        return None
+out = {
+    "schema": "continuation/v1",
+    "at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    "stage": stage,
+    "from": {"path": prev, "bundle_label": pman.get("bundle_label"),
+             "manifest_sha256": sha(os.path.join(prev, "MANIFEST.json")),
+             "zip_sha256_txt": _rd(os.path.join(prev, "ZIP_SHA256.txt")),
+             "seal_sha256": sha(os.path.join(prev, "POTCAR_ROOT_SEAL.json")),
+             "seal_sealed_at_utc": pseal.get("sealed_at_utc")},
+    "this": {"bundle_label": man.get("bundle_label"), "manifest_sha256": sha("MANIFEST.json"),
+             "zip_sha256_txt": _rd("ZIP_SHA256.txt"), "seal_sealed_at_utc": seal.get("sealed_at_utc")},
+    "seal_fields_equal": ["source_sha256", "vasp_executable_sha256", "launcher_kind", "launcher_sha256"],
+    "imported": imported,
+    "not_imported": not_imported,
+    "⛔_이_기록이_보증하지_않는_것": [
+        "이전 extraction 의 정직성 (옮겨 온 receipt·OUTCAR 는 남의 기계가 쓴 파일 — 분석기가 반송 뒤 봉인과 대조한다)",
+        "옮겨 온 결과의 물리적 타당성 (SCF 수렴·자기상태는 분석기 게이트의 몫)"],
+}
+if os.path.isfile("CONTINUATION.json"):
+    try:
+        out["previous_record"] = json.load(open("CONTINUATION.json", encoding="utf-8"))
+    except Exception:
+        out["previous_record"] = "unreadable"
+json.dump(out, open("CONTINUATION.json", "w", encoding="utf-8"), indent=1, ensure_ascii=False)
+print("  → CONTINUATION.json (승계 %d 잡 · 미승계 %d 잡 · 이전 MANIFEST %s)" % (len(imported), len(not_imported), out["from"]["manifest_sha256"][:12]))
+PYCONT
+fi
+
 : > _wave1.txt; : > _wave2.txt
 while read -r j; do
   [ -n "$j" ] || continue
@@ -14369,6 +14582,9 @@ def _return_contract(man: Dict[str, Any]) -> Dict[str, Any]:
     ]
     if staged:
         root.append("STAGE1_PASS.json (1단계 통과 receipt)")
+        # 2026-09-21 — 다른 extraction 의 완주 잡을 승계(CONTINUE_FROM)했으면 러너가 남기는 기록
+        root.append("CONTINUATION.json — 이전 extraction 의 완주 잡을 승계(SKIP_COMPLETE=1 + CONTINUE_FROM)"
+                    "했을 때 러너가 만듭니다. 승계했으면 **필수**, 승계하지 않았으면 이 파일은 없습니다")
     # ⛔ 회신 AY P1 — attestation 이 반송 목록에는 있는데 주 실행 절차에 생성 단계가
     #   없어 필수/선택이 갈렸다.
     # ⛔⛔ 회신 AZ P0-7 (2026-09-01) — 필수/선택을 **정책이 정한다.** 사후 provenance
@@ -14427,6 +14643,62 @@ def _return_contract_flat(man: Dict[str, Any]) -> list:
                       " · ".join(rc["relax_extra"]["files"])))
     out += ["묶음 루트: " + x for x in rc["root"]]
     return out
+
+
+def _continuation_block(man: Dict[str, Any], a, manifest_sha: str = "<메일 본문의 MANIFEST SHA256>",
+                        zip_sha: str = "<메일 본문의 ZIP SHA256>") -> str:
+    """**완주 잡 승계** 붙여넣기 블록의 단일 정본 — README(·발송 메일)가 이것을 렌더한다.
+
+    2026-09-21 (mirae 실측): 이전 extraction 에서 완주한 잡을 새 판에서 이어 쓰는 유일한 경로는
+    러너의 `SKIP_COMPLETE=1 CONTINUE_FROM=<이전 루트>` 다. 손으로 폴더를 옮기면 SEAL 이
+    "생산 산출물이 이미 있습니다" 로 거부하고, 옛 extraction 에 새 스크립트를 덮으면 census 가
+    files_sha256 로 거부한다 — 둘 다 코드로 확인했다 (selftest 승계 e2e).
+    ⚠ 블록 안에 `exit` 를 넣지 않는다 (붙여넣으면 로그인 셸이 끊긴다) — GO=0 플래그로 멈춘다.
+    ⛔ 이 블록이 못 하는 것: 이전 extraction 의 경로를 대신 알아내지 못한다 — 사람이 채운다.
+    """
+    _env = _run_env_block(man, a, manifest_sha, zip_sha)
+    _cut = "\nbash run_staged.sh 1"
+    assert _cut in _env, "실행 블록 정본에 'bash run_staged.sh 1' 이 없다"
+    _head = _env.split(_cut, 1)[0].rstrip("\n")
+    return _head + """
+
+# ── 승계: 이전 extraction 에서 **완주한** 잡을 옮겨 오고 건너뜁니다 (1단계에만) ──
+export SKIP_COMPLETE=1      # 완주가 증명된 잡(모든 상 'General timing' · receipt _runner_start 정확히 1개)만 건너뜁니다
+export CONTINUE_FROM=/abs/path/to/<이전 extraction 의 묶음 루트>   # MANIFEST.json · POTCAR_ROOT_SEAL.json 이 있는 폴더 · **절대경로**
+#    러너가 봉인·census·실행파일 대조를 끝낸 **뒤에** 이전 extraction 의 완주 잡 산출물(receipt·상 폴더)을 옮겨 옵니다.
+#    옮기기 전에 잡마다 입력(job.json·POSCAR·INCAR·KPOINTS·run_job.sh·조립기) 바이트 동일 · 같은 PP 트리 ·
+#    같은 VASP/launcher · 같은 조립본 해시 · 실제로 돈 기하 동일을 확인하고, 하나라도 어긋나면 **아무것도 옮기지 않고**
+#    멈춥니다. 완주가 증명되지 않은 잡(qdel 찌꺼기 등)은 옮기지 않고 여기서 새로 실행됩니다. 기록: CONTINUATION.json (반송 목록).
+GO=1
+[ -f "$CONTINUE_FROM/MANIFEST.json" ] && [ -f "$CONTINUE_FROM/POTCAR_ROOT_SEAL.json" ] \\
+  || { echo "CONTINUE_FROM 이 이전 extraction 의 묶음 루트가 아닙니다: $CONTINUE_FROM"; GO=0; }
+[ "$GO" = 1 ] && bash run_staged.sh 1     # 봉인 → 승계(CONTINUATION.json) → 완주 잡 건너뜀 → 나머지 실행 → 1단계 판정
+# 2단계는 승계 없이 그대로 (CONTINUE_FROM 이 남아 있어도 러너가 '승계할 것 없음' 으로 지나갑니다):
+#   bash run_staged.sh 2"""
+
+
+def _continuation_section(man: Dict[str, Any], a) -> str:
+    """README 의 '완주 잡 승계' 절 (staged 묶음에만). 산문 + 위 정본 블록."""
+    return """### 이전 extraction 에서 완주한 잡을 이어 쓰기 (승계 · `SKIP_COMPLETE=1` + `CONTINUE_FROM`)
+
+같은 계산(잡 입력이 바이트 동일한 이전 판)에서 이미 **완주한** 잡이 있으면 다시 돌리지 않습니다.
+⛔ 다만 **손으로 옮기지 마십시오** — 완주 폴더를 새 extraction 에 먼저 복사하면 봉인 스크립트가
+"생산 산출물이 이미 있습니다" 로 거부하고, 이전 extraction 에 새 스크립트를 덮어쓰면 census 가
+`files_sha256` 불일치로 거부합니다 (봉인은 MANIFEST·ZIP 해시에 묶여 있고 바꾸지 않습니다).
+러너가 봉인 **뒤에** 스스로 옮깁니다. 절차는 위 실행 블록에 두 줄이 더 붙은 것이고, 아래 블록을
+그대로 쓰시면 됩니다 (`<…>` 두 곳 — 이 묶음 디렉터리 · 이전 extraction 루트 — 만 채우십시오).
+
+```
+""" + _continuation_block(man, a) + """
+```
+
+- 러너 출력에 `✓ 승계 <잡>` 가 완주 잡 수만큼 찍히고, 물결 집계에 `건너뜀 N` 으로 잡힙니다.
+  완주가 증명되지 않은 잡(중단 잔재)은 `승계 안 함 … — <사유>` 로 찍히고 여기서 새로 실행됩니다.
+- 옮겨 온 잡의 `EXECUTABLE_RECEIPT.tsv` 는 손대지 않습니다 (분석기가 그 receipt 를 봉인과 대조합니다).
+- 이전 extraction 은 지우지 마시고 그대로 두십시오 (승계 기록 `CONTINUATION.json` 이 그 경로·MANIFEST·봉인 해시를 가리킵니다).
+- ⚠ 잡 입력이 하나라도 다르면(다른 판·다른 설계) 러너가 승계를 **통째로 거부**합니다 — 그때는 저희에게 알려 주십시오.
+
+"""
 
 
 def _run_env_block(man: Dict[str, Any], a, manifest_sha: str = "<메일 본문의 MANIFEST SHA256>",
@@ -14852,7 +15124,7 @@ RELEASE_LABEL="potpaw_PBE.54" SITE="기관/담당자" bash MAKE_POTCAR_ATTESTATI
 **그 잡만 담은 별도 rescue 묶음**을 만들어 보내 드립니다 — 그 묶음은 부모 번들을
 `parent`/`supersedes` 로 명시해 계보가 끊기지 않습니다 (회신 BB Q3).
 
-""") if _staged else ""
+""" + _continuation_section(man, a)) if _staged else ""
 
     # 🔴 `dense_calibrators` 는 **선언 필드**라 비어 있어도 실제 dense 상이 있을 수 있다.
     #   실물 v13 이 그 사례였다 — 필드가 null 인데 refs/clean_slab__afm2424_pm1/dense 가
@@ -15176,6 +15448,9 @@ sbatch --array=1-$(wc -l < JOBS.txt)%%%%%d \\
 `run_all.sh` 는 이 묶음에 **넣지 않았습니다**.
 ⛔ `BUNDLE_ZIP_SHA256` 이 없으면 봉인 스크립트가 거부합니다 (번들 안에는 자기 해시를
 넣을 수 없어 받으신 파일에서 직접 구해 주셔야 합니다).
+⚠ 이전 extraction 에서 **완주한** 잡이 있으면 README 의 *승계* 절(`SKIP_COMPLETE=1` + `CONTINUE_FROM`)을
+따르십시오 — 완주 폴더를 손으로 옮기면 봉인이 거부하고, 옛 extraction 에 새 스크립트를 덮으면 census 가
+거부합니다. 러너가 봉인 뒤에 스스로 옮기고 `CONTINUATION.json` 을 남깁니다 (반송 목록).
 
 ## 수치 게이트 (이 값들이 결과 판정을 정합니다)
 
@@ -19008,6 +19283,288 @@ def selftest() -> int:
         chk("TALLY_RC=0" in _r2.stdout,
             "[양성] 표지가 다 있고 fail 이 없으면 통과한다")
         _shutil = __import__("shutil"); _shutil.rmtree(_td2, ignore_errors=True)
+
+        # ══ 2026-09-21 — 완주 잡 승계(CONTINUE_FROM) e2e. **실제 bash 로 돌린다** ═════════
+        #   왜: mirae 가 v41 에서 7잡(≈97 h)을 완주했는데, 봉인 규칙 때문에 (a) 옛 extraction 에
+        #   새 스크립트를 덮을 수도 (b) 새 extraction 에 완주 폴더를 먼저 복사할 수도 없었다.
+        #   승계 블록은 봉인 뒤에 돈다. 여기서는 승계 블록 + 물결 블록을 **잘라서 그대로** 돌린다.
+        _j0 = _rs.index("# ══ 2026-09-21 — 다른 extraction 의 **완주 잡 승계** (CONTINUE_FROM)")
+        _CONT_SH = _rs[_j0:_i0]
+        chk('<<\'PYCONT\'' in _CONT_SH and "CONTINUATION.json" in _CONT_SH and _j0 < _i0,
+            "[배선] 승계 블록이 물결 블록 **앞**에 있고 러너 본문에서 잘라낸 것이다")
+        _H64c = lambda ch: ch * 64
+
+        def _cont_fixture(td, *, gz=False):
+            """cur/(새 extraction) · prev/(이전 extraction). 잡: a·b 완주 · c 안 돔 · kid(PARENT_GEOM=../b) ·
+            z 찌꺼기(OUTCAR 없음) · y receipt 둘. 둘 다 같은 입력·같은 봉인."""
+            cur, prev = Path(td) / "cur", Path(td) / "prev"
+            jobs = ["refs/a", "refs/b", "refs/c", "refs/kid", "refs/z", "refs/y"]
+            fh, planned = {}, {}
+            for root in (cur, prev):
+                for nm in jobs:
+                    d = root / nm
+                    (d / "static").mkdir(parents=True, exist_ok=True)
+                    (d / "job.json").write_text('{"kind": "mol_ref", "phases": ["static"]}\n', encoding="utf-8")
+                    (d / "POSCAR").write_text("POSCAR of %s\n1.0\n" % nm, encoding="utf-8")
+                    (d / "run_job.sh").write_text(
+                        "#!/bin/sh\nmkdir -p static\n: > static/RAN\n"
+                        "printf 'x\\n General timing and accounting\\n' > static/OUTCAR\nexit 0\n",
+                        encoding="utf-8")
+                    (d / "POTCAR_ASSEMBLE.sh").write_text("#!/bin/sh\n", encoding="utf-8")
+                    (d / "static/INCAR").write_text("NSW = 0\n", encoding="utf-8")
+                    (d / "static/KPOINTS").write_text("k\n", encoding="utf-8")
+                    (d / "POTCAR_PROVENANCE.json").write_text(
+                        json.dumps({"assembled_sha256": _H64c("1")}), encoding="utf-8")
+                    if nm == "refs/kid":
+                        (d / "PARENT_GEOM").write_text("../b\n", encoding="utf-8")
+                    if root is cur:
+                        for f in ("job.json", "POSCAR", "run_job.sh", "POTCAR_ASSEMBLE.sh",
+                                  "static/INCAR", "static/KPOINTS") + (("PARENT_GEOM",) if nm == "refs/kid" else ()):
+                            fh[nm + "/" + f] = hashlib.sha256((d / f).read_bytes()).hexdigest()
+                        planned[nm] = {"phases": ["static"], "required": True,
+                                       "meta": {"kind": "mol_ref", "species_order": ["X"]}}
+            man = {"bundle_label": "fx", "staged_runner": "run_staged.sh",
+                   "planned": planned, "files_sha256": fh}
+            seal = {"schema": "potcar_root_seal/v2", "source_sha256": {"X": _H64c("a")},
+                    "assembled_sha256_by_job": {j: _H64c("1") for j in jobs},
+                    "vasp_executable_sha256": _H64c("b"), "launcher_kind": "mpirun",
+                    "launcher_sha256": _H64c("c"), "sealed_at_utc": "2026-09-12T00:00:00Z"}
+            for root in (cur, prev):
+                (root / "MANIFEST.json").write_text(json.dumps(man, ensure_ascii=False), encoding="utf-8")
+                (root / "POTCAR_ROOT_SEAL.json").write_text(json.dumps(seal), encoding="utf-8")
+                (root / "ZIP_SHA256.txt").write_text(_H64c("d") + "\n", encoding="utf-8")
+            (cur / "_stage_jobs.txt").write_text("".join(j + "\n" for j in jobs), encoding="utf-8")
+            _row = "2026-09-12T00:00:00Z\t_runner_start\tsha\texe\tmpirun\t1\t-\t-\t-\n"
+            _srow = "2026-09-12T00:00:01Z\tstatic\tsha\texe\tmpirun\t1\t-\t-\t" + _H64c("1") + "\n"
+            for nm in ("refs/a", "refs/b"):                 # 완주
+                d = prev / nm
+                oc = "head\n General timing and accounting\n"
+                if gz:
+                    import gzip as _gz
+                    with _gz.open(d / "static/OUTCAR.gz", "wb") as _f:
+                        _f.write(oc.encode())
+                else:
+                    (d / "static/OUTCAR").write_text(oc, encoding="utf-8")
+                (d / "static/OSZICAR").write_text("1 F= -1\n", encoding="utf-8")
+                (d / "static/CONTCAR").write_text((d / "POSCAR").read_text(), encoding="utf-8")
+                (d / "static/POSCAR").write_text((d / "POSCAR").read_text(), encoding="utf-8")
+                (d / "static/WAVECAR").write_text("wav\n", encoding="utf-8")
+                (d / "EXECUTABLE_RECEIPT.tsv").write_text(_row + _srow, encoding="utf-8")
+                (d / "_placement.tsv").write_text("t\tslot_1\tn33\n", encoding="utf-8")
+            d = prev / "refs/z"                              # qdel 찌꺼기 — OUTCAR 없음
+            (d / "static/vasp.out").write_text("running\n", encoding="utf-8")
+            (d / "static/OSZICAR").write_text("", encoding="utf-8")
+            (d / "static/POSCAR").write_text((d / "POSCAR").read_text(), encoding="utf-8")
+            (d / "EXECUTABLE_RECEIPT.tsv").write_text(_row + _srow, encoding="utf-8")
+            d = prev / "refs/y"                              # 완주인데 receipt 가 둘
+            (d / "static/OUTCAR").write_text("h\n General timing and accounting\n", encoding="utf-8")
+            (d / "static/POSCAR").write_text((d / "POSCAR").read_text(), encoding="utf-8")
+            (d / "EXECUTABLE_RECEIPT.tsv").write_text(_row * 2 + _srow, encoding="utf-8")
+            return cur, prev
+
+        def _run_cont(cur, prev, *, skip_complete=True, with_wave=True, cont=None):
+            head = ("set -u\nNPAR=2\nstage=1\nVASP_EXE=/bin/sh\nVASP_LAUNCHER_KIND=none\nVASP_NPROC=1\n"
+                    "export VASP_EXE VASP_LAUNCHER_KIND VASP_NPROC\n"
+                    + ("SKIP_COMPLETE=1\nexport SKIP_COMPLETE\n" if skip_complete else "")
+                    + "CONTINUE_FROM=%s\nexport CONTINUE_FROM\n" % (str(prev) if cont is None else cont))
+            body = _CONT_SH + (_WAVE_SH + '\necho "FINAL_FAIL=$fail"\n' if with_wave else "\necho CONT_OK\n")
+            sh = Path(cur) / "_c.sh"
+            sh.write_text(head + body, encoding="utf-8")
+            r = _sp.run(["bash", str(sh)], cwd=str(cur), capture_output=True, text=True, timeout=180)
+            return r.returncode, r.stdout + r.stderr
+
+        # ── P1 양성: 승계 + 물결 — 완주 2 승계·건너뜀, 찌꺼기·receipt 둘은 여기서 새로 돌고, 2물결 자식이 돈다 ──
+        _cur, _prev = _cont_fixture(_tf.mkdtemp(prefix="cont_e2e_"))
+        _rcC, _oC = _run_cont(_cur, _prev)
+        chk(_rcC == 0 and "FINAL_FAIL=0" in _oC and "승계 2 잡" in _oC,
+            f"★ [양성] 승계 블록이 완주 2잡을 옮기고 물결이 끝까지 간다 (rc={_rcC})")
+        chk((_cur / "refs/a/static/OUTCAR").is_file() and (_cur / "refs/a/EXECUTABLE_RECEIPT.tsv").read_bytes()
+            == (_prev / "refs/a/EXECUTABLE_RECEIPT.tsv").read_bytes()
+            and (_cur / "refs/a/_placement.tsv").is_file() and (_cur / "refs/a/static/WAVECAR").is_file(),
+            "[양성] receipt·_placement·상 폴더 산출물이 **바이트 그대로** 옮겨진다")
+        chk(not (_cur / "refs/a/static/RAN").exists() and not (_cur / "refs/b/static/RAN").exists(),
+            "[양성] 옮겨 온 완주 잡은 물결에서 **다시 안 돈다** (SKIP_COMPLETE 자격으로 건너뜀)")
+        chk((_cur / "refs/c/static/RAN").exists() and (_cur / "refs/z/static/RAN").exists()
+            and (_cur / "refs/y/static/RAN").exists(),
+            "[양성] 안 돈 잡 · 찌꺼기 잡 · receipt 둘인 잡은 **여기서 새로 돈다** (승계 대상 아님)")
+        chk((_cur / "refs/kid/static/RAN").exists(),
+            "★ [양성] 부모(b)가 승계·건너뜀이어도 **2물결 자식이 실제로 돈다** — nzmag 자리")
+        _cj = json.loads((_cur / "CONTINUATION.json").read_text(encoding="utf-8"))
+        chk(sorted(x["job"] for x in _cj["imported"]) == ["refs/a", "refs/b"]
+            and {x["job"]: x["why"] for x in _cj["not_imported"]}.get("refs/z", "").startswith("static/OUTCAR 가 없다")
+            and "_runner_start 가 2 개" in {x["job"]: x["why"] for x in _cj["not_imported"]}.get("refs/y", "")
+            and _cj["from"]["manifest_sha256"] == hashlib.sha256((_prev / "MANIFEST.json").read_bytes()).hexdigest(),
+            "[증거] CONTINUATION.json 이 승계·미승계 잡과 사유, 이전 MANIFEST 해시를 남긴다")
+        chk("건너뜀 2" in _oC, "[배선] 승계한 2잡이 물결 집계에 '건너뜀' 으로 잡힌다")
+        chk(not (_cur / "refs/z/static/vasp.out").exists() or (_cur / "refs/z/static/RAN").exists(),
+            "[양성] 찌꺼기 잡의 vasp.out 은 옮겨지지 않는다 (승계 안 한 잡은 파일도 안 옮긴다)")
+        # OUTCAR.gz 만 있는 완주 잡도 승계한다 (mirae 는 반송 때 gz 로 압축한다)
+        _curg, _prevg = _cont_fixture(_tf.mkdtemp(prefix="cont_gz_"), gz=True)
+        _rcG, _oG = _run_cont(_curg, _prevg)
+        chk(_rcG == 0 and "승계 2 잡" in _oG and (_curg / "refs/a/static/OUTCAR.gz").is_file()
+            and (_curg / "refs/kid/static/RAN").exists(),
+            f"[양성] OUTCAR.gz 만 있는 완주 잡도 승계·건너뛰기 자격이 된다 (rc={_rcG})")
+
+        # ── 음성 — 전부 **아무 파일도 옮기지 않고** 멈춰야 한다 ──
+        def _neg(tag, mutate, want, *, skip_complete=True, cont=None):
+            cur, prev = _cont_fixture(_tf.mkdtemp(prefix="cont_neg_"))
+            mutate(cur, prev)
+            _snap = lambda: {str(q.relative_to(cur)) for pat in ("static/*", "EXECUTABLE_RECEIPT.tsv", "_placement.tsv")
+                             for q in cur.rglob(pat) if q.is_file()}
+            _before = _snap()                       # 돌리기 **전** 상태 — 변이로 심은 파일은 '옮긴 것' 이 아니다
+            rc, out = _run_cont(cur, prev, skip_complete=skip_complete, with_wave=False, cont=cont)
+            moved = sorted(_snap() - _before)
+            chk(rc != 0 and want in out and not moved and not (cur / "CONTINUATION.json").exists(),
+                f"⛔음성 승계 {tag}: 거부하고(rc={rc}) **아무 파일도 안 옮긴다** (옮긴 것 {moved[:2]})"
+                + ("" if want in out else f" — 기대 문구 없음: {out[-300:]!r}"))
+        _neg("SKIP_COMPLETE 없이", lambda c, p: None, "같이** 써야", skip_complete=False)
+        _neg("이전 잡의 입력(POSCAR)이 다르면", lambda c, p: (p / "refs/a/POSCAR").write_text("tampered\n"),
+             "이 번들의 입력과 **다릅니다**")
+        _neg("이전 봉인의 PP 원본 SHA 가 다르면",
+             lambda c, p: (p / "POTCAR_ROOT_SEAL.json").write_text(json.dumps(
+                 dict(json.loads((p / "POTCAR_ROOT_SEAL.json").read_text()), source_sha256={"X": _H64c("e")}))),
+             "PP 원본 SHA")
+        _neg("이전 봉인의 VASP 실행파일이 다르면",
+             lambda c, p: (p / "POTCAR_ROOT_SEAL.json").write_text(json.dumps(
+                 dict(json.loads((p / "POTCAR_ROOT_SEAL.json").read_text()), vasp_executable_sha256=_H64c("f")))),
+             "vasp_executable_sha256")
+        _neg("이전 planned 가 다르면",
+             lambda c, p: (p / "MANIFEST.json").write_text(json.dumps(dict(
+                 json.loads((p / "MANIFEST.json").read_text()),
+                 planned=dict(json.loads((p / "MANIFEST.json").read_text())["planned"],
+                              **{"refs/a": {"phases": ["relax", "static"], "required": True, "meta": {}}})))),
+             "planned 항목")
+        _neg("조립본(POTCAR) 해시가 다르면",
+             lambda c, p: (p / "refs/a/POTCAR_PROVENANCE.json").write_text(json.dumps({"assembled_sha256": _H64c("9")})),
+             "조립본(POTCAR) 해시가 다릅니다")
+        _neg("이전 static/POSCAR 가 이 잡의 기하와 다르면",
+             lambda c, p: (p / "refs/b/static/POSCAR").write_text("other geometry\n"),
+             "기하")
+        _neg("여기 이미 다른 산출물이 있으면",
+             lambda c, p: (c / "refs/a/static").joinpath("OUTCAR").write_text("different\n General timing and accounting\n"),
+             "덮지 않고 중단")
+        _neg("OUTCAR 와 OUTCAR.gz 가 둘 다면",
+             lambda c, p: (p / "refs/a/static/OUTCAR.gz").write_bytes(b"x"),
+             "둘 다 있다")
+        _neg("완주 잡이 하나도 없으면",
+             lambda c, p: [(p / n / "static/OUTCAR").unlink() for n in ("refs/a", "refs/b")],
+             "하나도 없습니다")
+        _neg("상대경로면", lambda c, p: None, "절대경로", cont="../prev")
+        _neg("없는 경로면", lambda c, p: None, "디렉터리가 없습니다", cont="/nonexistent/x")
+        _neg("상대경로 '.' 이면", lambda c, p: None, "절대경로", cont=".")
+        # 절대경로로 자기 자신을 주는 경우는 상대경로 검사를 지나므로 따로 본다
+        _curS, _prevS = _cont_fixture(_tf.mkdtemp(prefix="cont_self_"))
+        _rcS, _oS = _run_cont(_curS, _prevS, with_wave=False, cont=str(_curS))
+        chk(_rcS != 0 and "자신입니다" in _oS, "⛔음성 승계: 절대경로로 자기 자신을 주면 막는다")
+        _neg("이전 루트에 봉인이 없으면", lambda c, p: (p / "POTCAR_ROOT_SEAL.json").unlink(), "POTCAR_ROOT_SEAL.json 가 없습니다")
+
+        # ── ★ 실물 픽스처: mirae 가 회수해 준 v41 완주 7잡 + 실제 run_job.sh + stub VASP ──
+        #   cur = v41.zip 을 새로 푼 것 (v42 와 잡 입력이 바이트 동일 — 생성기가 그렇게 만든다)
+        #   prev = 같은 zip + 회수본 7잡 산출물(OUTCAR.gz → OUTCAR) + mirae 가 남긴 vacconv c2 찌꺼기
+        #   봉인·POTCAR·provenance 는 stub 값으로 **양쪽 같게** 놓는다 (실물 POTCAR 는 라이선스로 없다).
+        #   ⛔ 이 시험이 못 하는 것: 실물 VASP·POTCAR 신원 — receipt 의 실행파일 열은 실물 값이라
+        #     stub 봉인과 다르고, 그 대조는 분석기(반송 뒤)의 몫이다. 여기서 보는 것은 **러너 경로**다.
+        _rz = HERE.parent.parent / "runs" / "sdcp_c12_2026_08_30" / "sdcp_c12_v41.zip"
+        _rraw = HERE.parent.parent / "db" / "properties" / "sdcp_c12_v41_partial_raw"
+        if not (_rz.is_file() and _rraw.is_dir()):
+            print("  ⚠ 실물 픽스처(v41.zip · partial_raw)가 없어 실물 승계 e2e 를 건너뛴다 (통과로 세지 않는다)")
+        else:
+            import zipfile as _zf
+            _tdr = Path(_tf.mkdtemp(prefix="cont_real_"))
+            for _nm in ("cur", "prev"):
+                with _zf.ZipFile(_rz) as _z:
+                    _z.extractall(_tdr / _nm)
+            _curR, _prevR = _tdr / "cur" / "sdcp_c12_v41", _tdr / "prev" / "sdcp_c12_v41"
+            _done7 = ["prospective/ptfe_c10__b00__afm2424_pm1", "prospective/sdcp_neutral__b00__afm2424_pm1",
+                      "refs/clean_slab__afm2424_pm1", "refs/mol__ptfe_c10__box20", "refs/mol__ptfe_c10__box24",
+                      "refs/mol__sdcp_neutral__box20", "refs/mol__sdcp_neutral__box24"]
+            import gzip as _gz2
+            for _j in _done7:
+                for _f in ("EXECUTABLE_RECEIPT.tsv", "_placement.tsv"):
+                    shutil.copy2(_rraw / _j / _f, _prevR / _j / _f)
+                for _f in sorted((_rraw / _j / "static").iterdir()):
+                    if _f.name == "OUTCAR.gz":
+                        (_prevR / _j / "static/OUTCAR").write_bytes(_gz2.open(_f).read())
+                    else:
+                        shutil.copy2(_f, _prevR / _j / "static" / _f.name)
+            # mirae 실측 잔재: qdel 직후 몇 초 기동한 vacconv c2 — receipt 두 행 + vasp.out, OUTCAR 없음
+            _c2 = _prevR / "vacconv/clean_slab__afm2424_pm1__c2"
+            shutil.copy2(_rraw / "refs/clean_slab__afm2424_pm1/EXECUTABLE_RECEIPT.tsv", _c2 / "EXECUTABLE_RECEIPT.tsv")
+            (_c2 / "static/vasp.out").write_text(" running on 64 total cores\n", encoding="utf-8")
+            shutil.copy2(_c2 / "POSCAR", _c2 / "static/POSCAR")
+            # stub 실행파일·launcher·봉인·POTCAR (양쪽 같게)
+            _binR = _tdr / "bin"; _binR.mkdir()
+            (_binR / "vasp_std").write_text(STUB_VASP); (_binR / "vasp_std").chmod(0o755)
+            (_binR / "mpirun").write_text(FAKE_MPIRUN); (_binR / "mpirun").chmod(0o755)
+            _shf = lambda q: hashlib.sha256(Path(q).read_bytes()).hexdigest()
+            _manR = json.loads((_curR / "MANIFEST.json").read_text(encoding="utf-8"))
+            _asmR = {}
+            for _root in (_curR, _prevR):
+                for _j in _manR["planned"]:
+                    _jd = _root / _j
+                    (_jd / "POTCAR").write_text("stub POTCAR %s\n" % _j, encoding="utf-8")
+                    _asmR[_j] = _shf(_jd / "POTCAR")
+                    (_jd / "POTCAR_PROVENANCE.json").write_text(json.dumps({
+                        "schema": "potcar_provenance/v1", "allowlist": "/abs/site_allow.txt",
+                        "allowlist_sha256": _H64c("0"), "allowlist_waived": False,
+                        "assembled_sha256": _asmR[_j]}), encoding="utf-8")
+                _sealR = {"schema": "potcar_root_seal/v2", "source_sha256": {"Li_sv": _H64c("1"), "C": _H64c("2")},
+                          "assembled_sha256_by_job": dict(_asmR), "vasp_executable": str(_binR / "vasp_std"),
+                          "vasp_executable_sha256": _shf(_binR / "vasp_std"), "launcher_kind": "mpirun",
+                          "launcher_path": str(_binR / "mpirun"), "launcher_sha256": _shf(_binR / "mpirun"),
+                          "sealed_at_utc": "2026-09-12T00:00:00Z"}
+                (_root / "POTCAR_ROOT_SEAL.json").write_text(json.dumps(_sealR), encoding="utf-8")
+                (_root / "ZIP_SHA256.txt").write_text(_H64c("7") + "\n", encoding="utf-8")
+            # 러너가 run_job.sh 에 넘기는 것들 (배치 규칙 · 호스트 풀 · lock 토큰)
+            (_curR / "_place_flags.sh").write_text(
+                "place_args() { case \"$1\" in ompi) printf -- '--hostfile %s -N %s' \"$2\" \"$4\" ;; *) return 1 ;; esac; }\n")
+            (_curR / "_hostpool" / "free").mkdir(parents=True); (_curR / "_hostpool" / "busy").mkdir(parents=True)
+            (_curR / "_hostpool" / "free" / "slot_1").write_text("nodeA\nnodeB\n")
+            (_curR / ".lock_bundle").write_text("host|1|stage1|2026-09-21T00:00:00Z\n")
+            _stR = [j for j, s in _manR["run_census"]["stage_of"].items() if s == "1"]
+            (_curR / "_stage_jobs.txt").write_text("".join(j + "\n" for j in sorted(_stR)), encoding="utf-8")
+            _logR = _tdr / "stub.log"
+            _headR = ("set -u\nNPAR=1\nstage=1\nexport VASP_EXE=%s VASP_LAUNCHER_KIND=mpirun LAUNCHER_BIN=%s VASP_NPROC=2\n"
+                      "export VASP_NODES=2 VASP_RANKS_PER_NODE=1 VASP_PLACE_MODE=ompi STUB_LOG=%s\n"
+                      "export RUNNER_TOKEN=\"$(cat .lock_bundle)\"\nexport SKIP_COMPLETE=1 CONTINUE_FROM=%s\n"
+                      % (_binR / "vasp_std", _binR / "mpirun", _logR, _prevR))
+            (_curR / "_c.sh").write_text(_headR + _CONT_SH + _WAVE_SH + '\necho "FINAL_FAIL=$fail"\n', encoding="utf-8")
+            _rR = _sp.run(["bash", "_c.sh"], cwd=str(_curR), capture_output=True, text=True, timeout=600,
+                          env={**os.environ, "PATH": f"{_binR}:{os.environ.get('PATH', '')}"})
+            _oR = _rR.stdout + _rR.stderr
+            chk(_rR.returncode == 0 and "FINAL_FAIL=0" in _oR and "승계 7 잡" in _oR,
+                f"★★ [실물] 회수본 7잡을 승계하고 1단계 물결이 끝까지 간다 (rc={_rR.returncode})")
+            if not ("FINAL_FAIL=0" in _oR and "승계 7 잡" in _oR):
+                print("     [진단]\n" + _oR[-2500:])
+            _mkR = _curR / "_wave_status"
+            _skipR = sorted(q.name for q in _mkR.rglob("*") if q.is_file() and q.read_text().strip() == "skip")
+            _okR = sorted(q.name for q in _mkR.rglob("*") if q.is_file() and q.read_text().strip() == "ok")
+            chk(len(_skipR) == 7 and len(_okR) == 5 and all("nzmag" in n for n in _okR if n.startswith("refs_")),
+                f"[실물] 표지: 건너뜀 7 (완주) · ok 5 (vacconv 3 + nzmag 2) — {len(_skipR)}/{len(_okR)}")
+            _ranR = _logR.read_text().split() if _logR.is_file() else []
+            chk(len(_ranR) == 5, f"[실물] stub VASP 가 **정확히 5 번** 돌았다 (승계 7잡은 한 번도 안 돌았다) — {len(_ranR)}")
+            for _j in _done7:
+                pass
+            chk(all((_curR / _j / "EXECUTABLE_RECEIPT.tsv").read_bytes() == (_rraw / _j / "EXECUTABLE_RECEIPT.tsv").read_bytes()
+                    for _j in _done7),
+                "[실물] 승계한 7잡의 receipt 가 회수본과 **바이트 동일** (손대지 않았다)")
+            for _nz, _par in (("refs/mol__ptfe_c10__box24__nzmag", "refs/mol__ptfe_c10__box24"),
+                              ("refs/mol__sdcp_neutral__box24__nzmag", "refs/mol__sdcp_neutral__box24")):
+                chk((_curR / _nz / "static/POSCAR").read_bytes() == (_curR / _par / "POSCAR").read_bytes()
+                    and (_curR / _nz / "static/POSCAR").read_bytes() == (_rraw / _par / "static/POSCAR").read_bytes(),
+                    f"★ [실물·PARENT_GEOM] {_nz.split('/')[-1]} 이 승계된 부모의 기하로 돌았다 "
+                    "(부모 루트 POSCAR == 회수본 부모 static/POSCAR)")
+            chk(_oR.count("canary 기하 = 부모(") == 2, "[실물] 실제 run_job.sh 의 PARENT_GEOM 분기가 두 canary 에서 지나갔다")
+            _cjR = json.loads((_curR / "CONTINUATION.json").read_text(encoding="utf-8"))
+            _niR = {x["job"]: x["why"] for x in _cjR["not_imported"]}
+            chk(sorted(x["job"] for x in _cjR["imported"]) == sorted(_done7)
+                and "OUTCAR 가 없다" in _niR.get("vacconv/clean_slab__afm2424_pm1__c2", ""),
+                "[실물·증거] CONTINUATION.json: 승계 7 · mirae 의 vacconv c2 찌꺼기는 '승계 안 함(OUTCAR 없음)' 으로 남고 여기서 새로 돌았다")
+            _rc2R = (_curR / "vacconv/clean_slab__afm2424_pm1__c2/EXECUTABLE_RECEIPT.tsv").read_text()
+            chk(_rc2R.count("_runner_start") == 1 and "General timing" in
+                (_curR / "vacconv/clean_slab__afm2424_pm1__c2/static/OUTCAR").read_text(),
+                "[실물] 찌꺼기 잡은 새 receipt(_runner_start 1) 로 새로 완주했다")
+            shutil.rmtree(_tdr, ignore_errors=True)
         # ── 2026-09-08 Codex v38 P1-1·P1-2·P1-3·P2 ─────────────────────────────
         chk(_rs.index('LOCK=".lock_bundle"') < _rs.index('MEM_GUARD:-on')
             < _rs.index('mkdir -p _hostpool/free _hostpool/busy') < _rs.index('PP=${PP:?'),
@@ -19624,6 +20181,26 @@ def selftest() -> int:
             "🔴 BH P1-1 (%s): **렌더된 문서**의 staged 실행 블록에 필수 변수 9개가 전부 "
             "있다 — 손으로 옮겨 적던 것을 `_run_env_block()` 한 곳으로 묶었다 (PP·"
             "POTCAR_ALLOWLIST 누락이 메일에서 재발했다)" % _who)
+    # ── 2026-09-21 — 승계 블록(README)·반송 계약(CONTINUATION.json) 렌더 검사 ──
+    _rd_cont = _readme_sp(_man_rel, a_st, 0.0, 16, 16, 0, 16, {})
+    _cblk = [b for b in _rd_cont.split("```") if "CONTINUE_FROM=" in b]
+    chk(len(_cblk) == 1 and "export SKIP_COMPLETE=1" in _cblk[0] and "bash run_staged.sh 1" in _cblk[0]
+        and all(("export %s=" % v) in _cblk[0] for v in _RUN_REQ),
+        "★ 2026-09-21: staged README 에 **승계 블록**이 정확히 하나 있고 필수 변수 9개 + SKIP_COMPLETE + CONTINUE_FROM 을 담는다")
+    chk(_cblk and "GO=0" in _cblk[0] and not re.search(r"(?m)^\s*exit\b|;\s*exit\s+\d", _cblk[0]),
+        "⛔음성 2026-09-21: 승계 블록에 `exit` 가 없다 (붙여넣으면 로그인 셸이 끊긴다) — GO=0 플래그로 멈춘다")
+    chk(_cblk and "$CONTINUE_FROM/POTCAR_ROOT_SEAL.json" in _cblk[0],
+        "2026-09-21: 승계 블록이 CONTINUE_FROM 이 **묶음 루트**인지(봉인 파일) 먼저 본다")
+    _pln = [b for b in _rd_cont.split("```") if "run_staged.sh 1" in b and "CONTINUE_FROM" not in b]
+    chk(len(_pln) == 1, "2026-09-21: 승계 블록을 넣어도 **기본 실행 블록은 여전히 하나**다 (메일 렌더러가 그것을 뽑는다)")
+    chk("relax/CONTCAR" not in _continuation_section(_man_rel, a_st) and "relax/OUTCAR" not in _continuation_section(_man_rel, a_st),
+        "2026-09-21: 승계 절이 이완판 문구(relax/…)를 쓰지 않는다 (verify_bundle 의 단일점 README 검사와 충돌 방지)")
+    chk(any("CONTINUATION.json" in x for x in _return_contract({"staged_runner": "run_staged.sh", "planned": {}})["root"])
+        and not any("CONTINUATION.json" in x for x in _return_contract({"planned": {}})["root"]),
+        "2026-09-21: 반송 계약 정본에 CONTINUATION.json 이 있다 (staged 에만)")
+    _sub_cont = _submit_contract(_man_rel, a_st, {})
+    chk("CONTINUE_FROM" in _sub_cont and len([b for b in _sub_cont.split("```") if "CONTINUE_FROM=" in b]) == 0,
+        "2026-09-21: SUBMIT 은 승계를 **가리키기만** 한다 (실행 블록 정본은 README 하나)")
     _ns2 = {}
     exec(compile(ANALYZER, "<analyzer-template>", "exec"), _ns2)
     _epk = _ns2["_expected_pose_keys"]

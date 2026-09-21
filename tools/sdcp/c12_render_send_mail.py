@@ -9,11 +9,13 @@
 """
 import argparse, hashlib, json, pathlib, re
 
+import sys as _sys
+_REQ = "--selftest" not in _sys.argv          # 자체시험은 번들 없이 돈다
 ap = argparse.ArgumentParser()
-ap.add_argument("--bundle", required=True)
-ap.add_argument("--zip", required=True)
-ap.add_argument("--commit", required=True)
-ap.add_argument("--out", required=True)
+ap.add_argument("--bundle", required=_REQ)
+ap.add_argument("--zip", required=_REQ)
+ap.add_argument("--commit", required=_REQ)
+ap.add_argument("--out", required=_REQ)
 ap.add_argument("--variant", default="?")
 ap.add_argument("--supersede_reason", default=None,
                 help="교체 사유 한 문장 (외주처가 읽는 문장). ⚠ 안 주면 '아래 변경 절 참조' "
@@ -27,7 +29,53 @@ ap.add_argument("--changes_md", default=None,
                 help="'이 판에서 바뀐 것' 절 본문(markdown 파일). ⛔ 2026-09-11 (v41): 판별 분기가 "
                      "없는 --supersedes(v37 이후)에 else 절의 v38 시절 문장이 그대로 박히는 것을 "
                      "막는다 — 분기도 파일도 없으면 **렌더하지 않는다** (거짓 변경 절 방지).")
+ap.add_argument("--continue_from_hint", default=None,
+                help="2026-09-21: 승계 블록(README 정본)의 `<이전 extraction 의 묶음 루트>` 자리에 박을 실제 경로 "
+                     "(예: /home/kgy/projects/sdcp_c12_v41_2026_09_11/sdcp_c12_v41). 안 주면 자리표시자 그대로 나간다. "
+                     "⚠ README 에 승계 블록이 없으면 이 플래그는 거부된다 (없는 절차를 메일에만 적지 않는다).")
+ap.add_argument("--selftest", action="store_true", help="블록 선택·거부 경로 자체시험 (음성 포함)")
 a = ap.parse_args()
+
+
+def _split_blocks(readme_text):
+    """README 의 ```…``` 중 실행 블록(하나)과 승계 블록(0 또는 1)을 가른다.
+
+    2026-09-21 — 승계 블록도 `run_staged.sh 1` 을 담는다. 종전 규칙("run_staged.sh 1 이 든 블록이
+    하나여야 한다")은 그것을 두 개로 세어 죽었다. 승계 블록은 `CONTINUE_FROM=` 으로 가른다.
+    ⛔ 못 하는 것: 블록의 **내용**이 러너와 맞는지는 모른다 — 그것은 생성기 selftest 의 몫이다.
+    """
+    _all = [b for b in readme_text.split("```") if "run_staged.sh 1" in b]
+    _main = [b for b in _all if "CONTINUE_FROM=" not in b]
+    _cont = [b for b in _all if "CONTINUE_FROM=" in b]
+    assert len(_main) == 1, "README 실행 블록이 %d개 (승계 블록 제외)" % len(_main)
+    assert len(_cont) <= 1, "README 승계 블록이 %d개" % len(_cont)
+    return _main[0].strip("\n"), (_cont[0].strip("\n") if _cont else None)
+
+
+def _selftest():
+    ok = [0, 0]
+    def chk(c, m):
+        ok[0] += 1; ok[1] += bool(c); print(("  ✔ " if c else "  ✘ ") + m)
+    _R = "x\n```\nexport PP=1\nbash run_staged.sh 1\n```\ny\n```\nexport PP=1\nexport CONTINUE_FROM=/p\n[ \"$GO\" = 1 ] && bash run_staged.sh 1\n```\n"
+    m, c = _split_blocks(_R)
+    chk("CONTINUE_FROM" not in m and c is not None and "CONTINUE_FROM=/p" in c,
+        "양성: 실행 블록과 승계 블록을 가른다 (둘 다 run_staged.sh 1 을 담는다)")
+    m2, c2 = _split_blocks("```\nexport PP=1\nbash run_staged.sh 1\n```\n")
+    chk(c2 is None and "PP=1" in m2, "양성: 승계 블록이 없는 README (구판) 도 그대로 읽힌다")
+    try:
+        _split_blocks(_R + "```\nbash run_staged.sh 1\n```\n"); chk(False, "⛔음성: 실행 블록이 둘이면 죽어야 한다")
+    except AssertionError as e:
+        chk("2개" in str(e), "⛔음성: 실행 블록이 둘이면 거부한다 (%s)" % e)
+    try:
+        _split_blocks(_R + "```\nCONTINUE_FROM=/q\nbash run_staged.sh 1\n```\n"); chk(False, "⛔음성: 승계 블록이 둘이면 죽어야 한다")
+    except AssertionError as e:
+        chk("승계 블록이 2개" in str(e), "⛔음성: 승계 블록이 둘이면 거부한다")
+    print("  render selftest %d/%d" % (ok[1], ok[0]))
+    return 0 if ok[0] == ok[1] else 1
+
+
+if a.selftest:
+    raise SystemExit(_selftest())
 
 B = pathlib.Path(a.bundle)
 readme = (B / "README_REQUEST.md").read_text(encoding="utf-8")
@@ -38,10 +86,21 @@ label = B.name
 n_jobs = len(man.get("planned") or {})
 zip_mb = pathlib.Path(a.zip).stat().st_size / 1e6
 
-# ── 실행 블록: README 의 ```…``` 중 `run_staged.sh 1` 이 든 것 (하나여야 한다) ──
-blocks = [b for b in readme.split("```") if "run_staged.sh 1" in b]
-assert len(blocks) == 1, "README 실행 블록이 %d개" % len(blocks)
-run_block = blocks[0].strip("\n")
+# ── 실행 블록: README 의 ```…``` 중 `run_staged.sh 1` 이 든 것 (승계 블록 제외 · 하나여야 한다) ──
+run_block, cont_block = _split_blocks(readme)
+if a.continue_from_hint and not cont_block:
+    raise SystemExit("⛔ --continue_from_hint 를 줬는데 README 에 승계 블록(CONTINUE_FROM)이 없다 — "
+                     "없는 절차를 메일에만 적지 않는다 (번들을 다시 만들어라)")
+cont_block_mail = None
+if cont_block:
+    cont_block_mail = (cont_block
+                       .replace("export EXPECT_MANIFEST_SHA256=<메일 본문의 MANIFEST SHA256>",
+                                "export EXPECT_MANIFEST_SHA256=%s" % msha)
+                       .replace("export EXPECT_ZIP_SHA256=<메일 본문의 ZIP SHA256>",
+                                "export EXPECT_ZIP_SHA256=%s" % zsha))
+    if a.continue_from_hint:
+        assert "/abs/path/to/<이전 extraction 의 묶음 루트>" in cont_block_mail, "승계 블록의 자리표시자가 바뀌었다"
+        cont_block_mail = cont_block_mail.replace("/abs/path/to/<이전 extraction 의 묶음 루트>", a.continue_from_hint)
 # 메일에는 EXPECT 두 값을 실제 값으로 박는다 (README 는 '<메일 본문의 …>' 자리표시자)
 run_block_mail = (run_block
                   .replace("export EXPECT_MANIFEST_SHA256=<메일 본문의 MANIFEST SHA256>",
@@ -166,6 +225,25 @@ _replace_block = ("" if not a.supersedes else f"""
 """)
 
 cores = int((man.get("submission") or {}).get("cores_per_job") or (man.get("cost_frozen") or {}).get("cores_per_job") or 48)
+# 2026-09-21 — 교체판 + README 승계 블록이 있으면, 메일에서 **승계가 먼저**다 (완주 잡을 다시 돌리게 두지 않는다).
+_cont_section = ""
+if cont_block_mail and a.supersedes:
+    _cont_section = f"""### 1′. 이전 판({a.supersedes})에서 **완주한 잡을 이어 쓰기** — 권장 경로
+
+이전 extraction 에서 완주한 잡은 다시 돌리지 않습니다. ⛔ **완주 폴더를 손으로 옮기지 마십시오** —
+새 extraction 에 먼저 복사하면 봉인 스크립트가 "생산 산출물이 이미 있습니다" 로 거부하고, 이전 extraction 에
+새 스크립트를 덮으면 census 가 거부합니다. 러너가 봉인 **뒤에** 스스로 옮깁니다. 이 묶음을 **새 빈 디렉터리에** 풀고
+(§1 과 같이 해시 대조 뒤), 아래 블록을 그대로 쓰십시오 — `<이 묶음을 푼 디렉터리>` 와 `CONTINUE_FROM` 만 채우시면 됩니다.
+
+```bash
+{cont_block_mail}
+```
+
+러너 출력에 `✓ 승계 <잡>` 가 완주 잡 수만큼 찍히고 물결 집계에 `건너뜀 N` 으로 잡힙니다. 완주가 증명되지 않은
+잡(중단 잔재)은 `승계 안 함 … — <사유>` 로 찍히고 그 자리에서 새로 실행됩니다. 이전 extraction 은 지우지 말고 두십시오
+(`CONTINUATION.json` 이 그 경로·MANIFEST·봉인 해시를 가리키며, 반송 목록에 들어갑니다).
+
+"""
 
 mail = f"""# C-12 {label.split('_')[-1]} 발송 메일 (그대로 복붙)
 {_replace_block}
@@ -201,11 +279,12 @@ unzip /경로/{label}.zip && cd {label}
 sha256sum MANIFEST.json             # 위 값과 대조
 ```
 
-### 2. 실행
+{_cont_section}### 2. 실행{" — 처음부터 (승계하지 않을 때만)" if cont_block_mail and a.supersedes else ""}
 
 ⚠ 아래 변수가 **전부 필수**입니다. 하나라도 빠지면 러너가 즉시 멈춥니다
 (조용히 다른 설정으로 도는 것보다 멈추는 게 낫다고 보아 그렇게 만들었습니다).
 실행은 **계산 노드 할당 안에서** 해 주십시오 — 러너가 그 자리에서 잡 {conc}개를 동시에 띄웁니다.
+{"⚠ 이전 판의 완주 잡을 이어 쓰시려면 이 블록이 아니라 **위 §1′ 승계 블록**을 쓰십시오 — 이 블록은 19잡을 전부 처음부터 돌립니다." if cont_block_mail and a.supersedes else ""}
 
 ```bash
 {run_block_mail}

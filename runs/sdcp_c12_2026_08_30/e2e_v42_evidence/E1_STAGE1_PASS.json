@@ -1,0 +1,73 @@
+{
+ "schema": "stage1_pass/v1",
+ "gate": "vacconv",
+ "verdict": "ok — Δ_vac 0.0 meV (문턱 5) · 반올림 일치",
+ "delta_vac_meV": 0.001,
+ "delta_vac_eV": 1e-06,
+ "manifest_sha256": "3ab7ffd596a28618fba6ac270ffe5203cdaae764028b637aac22337b05098aa4",
+ "stage1_jobs": [
+  "prospective/ptfe_c10__b00__afm2424_pm1",
+  "prospective/sdcp_neutral__b00__afm2424_pm1",
+  "refs/mol__ptfe_c10__box20",
+  "refs/mol__ptfe_c10__box24",
+  "refs/mol__ptfe_c10__box24__nzmag",
+  "refs/mol__sdcp_neutral__box20",
+  "refs/mol__sdcp_neutral__box24",
+  "refs/mol__sdcp_neutral__box24__nzmag",
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2",
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2"
+ ],
+ "stage1_energies_eV": {
+  "prospective/ptfe_c10__b00__afm2424_pm1": -1123.59334184,
+  "prospective/sdcp_neutral__b00__afm2424_pm1": -1151.29228248,
+  "refs/mol__ptfe_c10__box20": -177.85486528,
+  "refs/mol__ptfe_c10__box24": -177.85499666,
+  "refs/mol__ptfe_c10__box24__nzmag": -177.853997,
+  "refs/mol__sdcp_neutral__box20": -205.38963155,
+  "refs/mol__sdcp_neutral__box24": -205.38984936,
+  "refs/mol__sdcp_neutral__box24__nzmag": -205.388849,
+  "vacconv/ptfe_c10__b00__afm2424_pm1__c2": -1123.593342,
+  "vacconv/sdcp_neutral__b00__afm2424_pm1__c2": -1151.292282
+ },
+ "integrity_checked": 129,
+ "n_planned_required": 19,
+ "stage1_prerequisites": {
+  "vacuum": {
+   "pass": true,
+   "why": "ok — Δ_vac 0.0 meV (문턱 5) · 반올림 일치"
+  },
+  "molecular_state": {
+   "pass": true,
+   "why": "비영 시작이 부모보다 낮지 않다"
+  },
+  "canary_geometry": {
+   "pass": true,
+   "why": "부모/canary static 기하 동일 (2조각)"
+  },
+  "potcar_identity": {
+   "pass": true,
+   "why": "sealed_root_v13 — variant 별 원본 SHA256 을 **생산 전에 봉인**하고 완주 전 잡이 그 봉인과 일치함을 확인했다. 이전 wave 와의 수치적 동등성은 가정하지 않는다. ⚠ 공식 release 여부는 이 라벨이 보증하지 않는다 (POTCAR_ATTESTATION.json 이 그 몫이다)"
+  },
+  "gas_box_delta": {
+   "pass": true,
+   "why": {
+    "delta_gas_meV": -0.086,
+    "tol_meV": 5.0
+   }
+  },
+  "estimand_topology_pm1": {
+   "pass": true,
+   "why": "두 complex 가 같은 자기 branch (같음)"
+  },
+  "closure_blocks_clear": {
+   "pass": true,
+   "why": "exact/global closure block 0건"
+  },
+  "root_seal_covers_plan": {
+   "pass": true,
+   "why": "봉인이 현재 MANIFEST·계획 잡 19개·variant ['C', 'F', 'H', 'Li_sv', 'Ni_pv', 'O', 'S'] 를 포괄한다"
+  }
+ },
+ "⚠_receipt_는_증거가_아니다": "회신 AP #4 — 이 파일이 있다는 것만으로 2단계를 열지 않는다. 러너가 2단계 **직전에** `--gate vacconv` 를 다시 실행해 현재 결과로 재판정한다",
+ "⛔": "1단계 통과 증거. run_staged.sh 2 는 이것 없이 열리지 않는다. MANIFEST.json 이 바뀌면 manifest_sha256 이 달라져 무효다."
+}
