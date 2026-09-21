@@ -2311,11 +2311,33 @@ done < _stage_jobs.txt
 n1=$(grep -c . _wave1.txt || true); n2=$(grep -c . _wave2.txt || true)
 echo "== 병렬도 $NPAR · 1물결 $n1 잡 · 2물결(부모 의존) $n2 잡 =="
 
+# ⛔⛔ 2026-09-21 (mirae 실측) — **완주한 잡의 거부가 실패로 집계돼 2물결이 영영 안 열렸다.**
+#   거부도 `exit 1`, 진짜 실패도 `exit 1` 이라 xargs 가 둘을 못 갈랐다. 같은 extraction 에서
+#   1단계를 다시 부르면 이미 끝난 1물결 잡이 전부 "실패" 가 되고, `PARENT_GEOM` 을 가진
+#   2물결(nzmag canary 2잡)이 **구조적으로** 시작될 수 없었다 — 우회로도 없었다
+#   (ALLOW_RESUME 폐지 · PLANNED_CONTINUATION 은 DENSE_PLAN.json 요구 · 잡 부분선택 없음).
+#   ⇒ 자식이 `ok|skip|fail` 을 **파일 표지**로 남기고, 부모가 **fail 만** 센다.
+#   ⚠ 표지를 못 남긴 잡은 **실패로 센다** (fail-closed — 자식이 죽은 경우).
+WAVE_STAT="$PWD/_wave_status"
+rm -rf "$WAVE_STAT"; mkdir -p "$WAVE_STAT"
+export WAVE_STAT
+if [ "${SKIP_COMPLETE:-0}" = "1" ]; then
+  echo "⚠ SKIP_COMPLETE=1 — **완주가 증명된** 잡만 건너뜁니다 (1회용 계약의 명시적 예외)."
+  echo "   자격 둘을 다 채워야 합니다: ① 존재하는 모든 상이 'General timing' 으로 끝났다"
+  echo "                              ② receipt 에 '_runner_start' 가 정확히 하나"
+  echo "   ⛔ '산출물이 있다' 는 자격이 아닙니다 — 0스텝 찌꺼기도 파일을 남깁니다."
+  echo "   ⛔ 자격 미달이면 건너뛰지 않고 **실패로 셉니다**."
+  : > _SKIP_COMPLETE_USED
+fi
+
 run_wave() {   # $1 = 목록 파일
   [ -s "$1" ] || return 0
+  WAVE_DIR="$WAVE_STAT/$(basename "$1" .txt)"
+  rm -rf "$WAVE_DIR"; mkdir -p "$WAVE_DIR"; export WAVE_DIR
   xargs -a "$1" -I{} -P "$NPAR" sh -c '
     j="$1"
-    [ -f "$j/run_job.sh" ] || { echo "없음: $j"; exit 1; }
+    _mk="$WAVE_DIR/$(echo "$j" | tr "/" "_")"
+    [ -f "$j/run_job.sh" ] || { echo "없음: $j"; echo fail > "$_mk"; exit 1; }
     # 🔴 회신 AT P0-5 · AV P0-2 — receipt 는 **헤더행(러너) + 상별 행(run_job.sh)**.
     #   종전엔 러너가 잡당 한 행만 썼고 분석기가 읽지 않았다. 이제 run_job.sh 가
     #   상 직전마다 해시를 재서 append 하고, 분석기가 **필수 반송물**로 읽는다.
@@ -2360,11 +2382,40 @@ run_wave() {   # $1 = 목록 파일
         done
       done
       if [ -n "$_stale_pre" ]; then
+        # ⭐ 2026-09-21 — **완주가 증명되면** 거부가 아니라 건너뛰기다. 증명은 둘 다 필요하다:
+        #   ① 존재하는 모든 상이 `General timing` 으로 끝났다  ② receipt `_runner_start` 정확히 하나
+        #   ⛔ "파일이 있다" 는 증명이 아니다 — 0스텝 찌꺼기도 OSZICAR·CONTCAR 를 남긴다
+        #      (실측: mirae 3잡이 qdel 직후 그런 찌꺼기를 남겼다).
+        if [ "${SKIP_COMPLETE:-0}" = "1" ]; then
+          _cpl=1
+          [ -d "$j/static" ] || _cpl=0
+          for _ph in pre relax static dense; do
+            [ -d "$j/$_ph" ] || continue
+            if [ -f "$j/$_ph/OUTCAR" ]; then
+              grep -aq "General timing" "$j/$_ph/OUTCAR" || _cpl=0
+            elif [ -f "$j/$_ph/OUTCAR.gz" ]; then
+              gzip -cd "$j/$_ph/OUTCAR.gz" 2>/dev/null | grep -aq "General timing" || _cpl=0
+            else
+              _cpl=0
+            fi
+          done
+          _ns=$(grep -c "_runner_start" "$j/EXECUTABLE_RECEIPT.tsv" 2>/dev/null || true)
+          [ "$_ns" = "1" ] || _cpl=0
+          if [ "$_cpl" = 1 ]; then
+            echo "  ✓ $j 이미 완주 — 건너뜁니다 (SKIP_COMPLETE · receipt 손대지 않음)"
+            echo skip > "$_mk"; exit 0
+          fi
+          echo "⛔ $j 에 산출물이 있는데 **완주가 증명되지 않습니다**:$_stale_pre"
+          echo "   (상이 General timing 으로 안 끝났거나 receipt 의 _runner_start 가 $_ns 개)"
+          echo "   → 건너뛰지 않고 **실패로 셉니다.** 폴더를 새로 풀고 처음부터 돌려 주십시오."
+          echo fail > "$_mk"; exit 1
+        fi
         echo "⛔ $j 에 이미 산출물이 있습니다:$_stale_pre"
         echo "   이 잡은 **1회용**입니다 — 폴더를 새로 풀고 처음부터 돌려 주십시오."
         echo "   ⚠ receipt 는 **손대지 않았습니다** (회신 BD P1: 종전엔 먼저 덮어쓴 뒤"
         echo "      거부해 증거가 망가졌습니다)."
-        exit 1
+        echo "   ⚠ 완주한 잡을 건너뛰려면 SKIP_COMPLETE=1 로 부르십시오 (자격 검사 있음)."
+        echo fail > "$_mk"; exit 1
       fi
     fi
     # 계획된 이어달리기(dense 승격)는 **새 상**을 여는 것이라 성격이 다르다.
@@ -2387,16 +2438,31 @@ run_wave() {   # $1 = 목록 파일
         "$_hl" "$_hlh" "-" > "$j/EXECUTABLE_RECEIPT.tsv"
     fi
     echo "=== $j 시작 ==="
-    ( cd "$j" && bash run_job.sh ) || { echo "⛔ $j 실패"; exit 1; }
+    ( cd "$j" && bash run_job.sh ) || { echo "⛔ $j 실패"; echo fail > "$_mk"; exit 1; }
+    echo ok > "$_mk"
     echo "=== $j 완료 ==="
   ' _ {}
+  #: 부모 집계는 **표지로** 한다 — xargs 종료코드는 "거부" 와 "실패" 를 못 가른다.
+  _njob=$(grep -c . "$1" || true)
+  _nmk=$(ls -1 "$WAVE_DIR" 2>/dev/null | wc -l | tr -d " ")
+  _nfail=$(grep -lx fail "$WAVE_DIR"/* 2>/dev/null | wc -l | tr -d " ")
+  _nskip=$(grep -lx skip "$WAVE_DIR"/* 2>/dev/null | wc -l | tr -d " ")
+  echo "   [$1] 잡 $_njob · 표지 $_nmk · 건너뜀 $_nskip · 실패 $_nfail"
+  if [ "$_nmk" != "$_njob" ]; then
+    echo "⛔ 상태 표지가 $_nmk/$_njob 뿐입니다 — 표지를 못 남긴 잡은 **실패로 셉니다** (fail-closed)"
+    return 1
+  fi
+  [ "$_nfail" = 0 ] || return 1
+  return 0
 }
 fail=0
 run_wave _wave1.txt || fail=1
 if [ "$fail" = 0 ]; then
   run_wave _wave2.txt || fail=1
 else
-  echo "⛔ 1물결에 실패가 있어 2물결(부모 의존 잡)을 시작하지 않습니다"
+  echo "⛔ 1물결에 **실패**가 있어 2물결(부모 의존 잡)을 시작하지 않습니다"
+  echo "   ⚠ 이미 완주한 잡은 실패가 아닙니다 — SKIP_COMPLETE=1 로 다시 부르면 건너뜁니다"
+  echo "      (자격: 모든 상이 General timing · receipt _runner_start 정확히 하나)"
 fi
 
 if [ "$stage" = 1 ]; then
@@ -18812,6 +18878,136 @@ def selftest() -> int:
             "⛔음성 재검토 b: VASP_TOTAL_NODES 선언이 관측(SLURM·hostfile)을 넘으면 **거부**한다")
         chk("MEMG_NODES_UNOBSERVED" in _rs and "프로브가 실제 호스트로 검증" in _rs,
             "재검토 b: 관측 불가는 '경고 후 진행' 이 아니라 **프로브로 검증**으로 넘긴다")
+        # ══ 2026-09-21 — 물결 게이트 e2e. **실제 bash 로 돌린다** ══════════════
+        #   왜 텍스트 grep 이 아닌가: 이 버그(완주 잡 거부가 실패로 집계 → 2물결이
+        #   영영 안 열림)는 문구가 전부 멀쩡했다. `exit 1` 두 개가 같은 값이라는
+        #   **동작**이 문제였고, 오케스트레이터를 돌려야만 보인다.
+        #   (같은 교훈: "순수 함수만 시험하고 오케스트레이터를 한 번도 안 돌린 selftest
+        #    가 초록이었다" — 회신 BD 전후 실측.)
+        import subprocess as _sp
+        import tempfile as _tf
+
+        _i0 = _rs.index(": > _wave1.txt; : > _wave2.txt")
+        _i1 = _rs.index("if [ \"$stage\" = 1 ]; then")
+        _WAVE_SH = _rs[_i0:_i1]
+        chk("run_wave _wave2.txt" in _WAVE_SH and "SKIP_COMPLETE" in _WAVE_SH,
+            "[배선] 물결 블록을 러너 본문에서 **잘라내 그대로** 돌린다 (복사본 아님)")
+
+        def _mkjob(root, name, *, kind, parent=None, rc=0):
+            """kind: done(완주) · stale(찌꺼기) · fresh(안 돈 잡) · badreceipt"""
+            d = Path(root) / name
+            (d / "static").mkdir(parents=True, exist_ok=True)
+            (d / "run_job.sh").write_text(
+                "#!/bin/sh\nmkdir -p static\n: > static/RAN\nexit %d\n" % rc, encoding="utf-8")
+            if parent:
+                (d / "PARENT_GEOM").write_text(parent + "\n", encoding="utf-8")
+            _row = "t\t_runner_start\tsha\texe\tkind\t1\t-\t-\t-\n"
+            if kind == "done":
+                (d / "static/OUTCAR").write_text(
+                    "stuff\n General timing and accounting\n", encoding="utf-8")
+                (d / "EXECUTABLE_RECEIPT.tsv").write_text(_row, encoding="utf-8")
+            elif kind == "stale":                      # qdel 찌꺼기: OUTCAR 없음
+                (d / "static/OSZICAR").write_text("1 F= -1\n", encoding="utf-8")
+                (d / "EXECUTABLE_RECEIPT.tsv").write_text(_row, encoding="utf-8")
+            elif kind == "badreceipt":                 # 완주했는데 receipt 가 둘
+                (d / "static/OUTCAR").write_text(
+                    "stuff\n General timing and accounting\n", encoding="utf-8")
+                (d / "EXECUTABLE_RECEIPT.tsv").write_text(_row * 2, encoding="utf-8")
+            elif kind == "fresh":
+                (d / "static").rmdir()
+            return d
+
+        def _run_waves(jobs, skip_complete):
+            """jobs: [(name, kind, parent, rc)] → (rc, stdout)"""
+            td = _tf.mkdtemp(prefix="wave_e2e_")
+            for nm, kd, par, rc in jobs:
+                _mkjob(td, nm, kind=kd, parent=par, rc=rc)
+            Path(td, "_stage_jobs.txt").write_text(
+                "".join(nm + "\n" for nm, *_ in jobs), encoding="utf-8")
+            head = ("set -u\nNPAR=2\nstage=1\n"
+                    "VASP_EXE=/bin/sh\nVASP_LAUNCHER_KIND=none\nVASP_NPROC=1\n"
+                    "export VASP_EXE VASP_LAUNCHER_KIND VASP_NPROC\n"
+                    + ("SKIP_COMPLETE=1\nexport SKIP_COMPLETE\n" if skip_complete else ""))
+            sh = Path(td, "_w.sh")
+            sh.write_text(head + _WAVE_SH + '\necho "FINAL_FAIL=$fail"\n', encoding="utf-8")
+            r = _sp.run(["bash", str(sh)], cwd=td, capture_output=True, text=True, timeout=120)
+            return td, r.returncode, r.stdout + r.stderr
+
+        #: ① 실측 재현 — 완주 2잡 + PARENT_GEOM 자식 1잡. **종전엔 자식이 안 열렸다.**
+        _JOBS = [("refs/a", "done", None, 0), ("refs/b", "done", None, 0),
+                 ("refs/c", "fresh", None, 0), ("refs/kid", "fresh", "refs/b", 0)]
+        _td, _rc, _out = _run_waves(_JOBS, skip_complete=False)
+        chk("2물결(부모 의존 잡)을 시작하지 않습니다" in _out and "FINAL_FAIL=1" in _out,
+            "⛔음성 재현: SKIP_COMPLETE 없이는 완주 잡 때문에 **2물결이 안 열린다** (종전 동작 보존)")
+        chk(not (Path(_td) / "refs/kid/static/RAN").exists(),
+            "⛔음성 재현: 그때 자식(nzmag 자리)은 **한 번도 안 돌았다**")
+
+        _td, _rc, _out = _run_waves(_JOBS, skip_complete=True)
+        chk("FINAL_FAIL=0" in _out and _rc == 0,
+            f"[양성] SKIP_COMPLETE=1 이면 물결이 **끝까지 간다** (rc={_rc})")
+        chk((Path(_td) / "refs/kid/static/RAN").exists(),
+            "★ [양성] **2물결 자식이 실제로 돌았다** — 이 한 줄이 이번 수정의 전부다")
+        chk((Path(_td) / "refs/c/static/RAN").exists(),
+            "[양성] 안 돈 잡은 그대로 돈다")
+        chk(not (Path(_td) / "refs/a/static/RAN").exists(),
+            "[양성] 완주 잡은 **다시 안 돈다** (건너뛴다)")
+        chk((Path(_td) / "refs/a/EXECUTABLE_RECEIPT.tsv").read_text().count(
+            "_runner_start") == 1,
+            "[양성] 건너뛴 잡의 receipt 를 **손대지 않았다** (회신 BD P1 계약 유지)")
+        chk("건너뜀 2" in _out, "[배선] 건너뛴 수를 화면에 센다")
+
+        #: ② ⛔ 가장 위험한 오탐 — **찌꺼기를 완주로 세면 안 된다**
+        _td, _rc, _out = _run_waves(
+            [("refs/a", "done", None, 0), ("refs/z", "stale", None, 0),
+             ("refs/kid", "fresh", "refs/a", 0)], skip_complete=True)
+        chk("완주가 증명되지 않습니다" in _out and "FINAL_FAIL=1" in _out,
+            "⛔음성: 0스텝 찌꺼기(OUTCAR 없음)는 **건너뛰지 않고 실패**다")
+        chk(not (Path(_td) / "refs/kid/static/RAN").exists(),
+            "⛔음성: 그 경우 2물결은 **여전히 막힌다** (진짜 실패이므로)")
+
+        #: ③ ⛔ receipt 가 이상하면(_runner_start 둘) 완주로 안 센다
+        _td, _rc, _out = _run_waves(
+            [("refs/a", "badreceipt", None, 0), ("refs/kid", "fresh", "refs/a", 0)],
+            skip_complete=True)
+        chk("완주가 증명되지 않습니다" in _out and "FINAL_FAIL=1" in _out,
+            "⛔음성: receipt 의 _runner_start 가 둘이면 **완주로 안 센다** (이어붙인 receipt)")
+
+        #: ④ 진짜 실패는 여전히 실패다
+        _td, _rc, _out = _run_waves(
+            [("refs/a", "done", None, 0), ("refs/bad", "fresh", None, 1),
+             ("refs/kid", "fresh", "refs/a", 0)], skip_complete=True)
+        chk("FINAL_FAIL=1" in _out and "실패 1" in _out,
+            "⛔음성: run_job.sh 가 죽으면 **실패로 센다** (SKIP_COMPLETE 와 무관)")
+        chk(not (Path(_td) / "refs/kid/static/RAN").exists(),
+            "⛔음성: 진짜 실패가 있으면 2물결을 **열지 않는다**")
+
+        #: ⑤ 표지를 못 남긴 잡은 실패로 센다 (fail-closed)
+        _td, _rc, _out = _run_waves([("refs/a", "done", None, 0)], skip_complete=True)
+        _wd = Path(_td) / "_wave_status/_wave1"
+        chk(_wd.is_dir() and len(list(_wd.iterdir())) == 1,
+            "[배선] 잡마다 상태 표지가 정확히 하나 생긴다")
+
+        #: ⛔ 표지 결측 fail-closed — 집계부만 떼어 단위로 건다.
+        #   (자식을 실제로 죽이는 픽스처는 불안정하다. 그리고 이 가드는
+        #    2026-09-21 일부러 깨기에서 **혼자 빨간불이 안 떴다** — 시험이 없었다.)
+        _i2 = _WAVE_SH.index("  #: 부모 집계는")
+        _i3 = _WAVE_SH.index("  return 0\n}", _i2)
+        _TALLY = _WAVE_SH[_i2:_i3] + "  return 0\n}\n"
+        _td2 = Path(_tf.mkdtemp(prefix="tally_"))
+        (_td2 / "jobs.txt").write_text("a\nb\n", encoding="utf-8")
+        (_td2 / "wd").mkdir()
+        (_td2 / "wd/a").write_text("ok\n", encoding="utf-8")      # b 표지가 없다
+        (_td2 / "t.sh").write_text(
+            'set -u\nWAVE_DIR="$PWD/wd"\ntally() {\n' + _TALLY
+            + '\ntally jobs.txt; echo "TALLY_RC=$?"\n', encoding="utf-8")
+        _r2 = _sp.run(["bash", "t.sh"], cwd=_td2, capture_output=True, text=True, timeout=60)
+        chk("TALLY_RC=1" in _r2.stdout and "표지를 못 남긴 잡은" in _r2.stdout,
+            "⛔음성: 표지가 잡 수보다 적으면 **실패로 센다** (fail-closed · 자식이 죽은 경우)")
+        (_td2 / "wd/b").write_text("ok\n", encoding="utf-8")
+        _r2 = _sp.run(["bash", "t.sh"], cwd=_td2, capture_output=True, text=True, timeout=60)
+        chk("TALLY_RC=0" in _r2.stdout,
+            "[양성] 표지가 다 있고 fail 이 없으면 통과한다")
+        _shutil = __import__("shutil"); _shutil.rmtree(_td2, ignore_errors=True)
         # ── 2026-09-08 Codex v38 P1-1·P1-2·P1-3·P2 ─────────────────────────────
         chk(_rs.index('LOCK=".lock_bundle"') < _rs.index('MEM_GUARD:-on')
             < _rs.index('mkdir -p _hostpool/free _hostpool/busy') < _rs.index('PP=${PP:?'),
