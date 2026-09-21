@@ -989,8 +989,15 @@ def test_undefined_protection_columns_are_not_drawn_as_zero(client):
                           for r in rows if (r["cathode"], r["voltage_V"]) == c))
     assert undef, "정의되지 않는 열이 자료에 없다 — 시험이 헛것을 잰다"
     h = _report_html(client)
-    assert f"<b>{len(undef)} 개</b>(LiCoO₂ 2.5·3.0 · LiMnO₂ 2.5 · LiNiO₂ 2.5·3.0 V)" in h, \
-        f"정의되지 않는 열 {len(undef)} 개를 화면이 그 수로 적지 않았다"
+    #: ⛔ 열 **이름도** 자료에서 만든다. 개수만 맞으면 통과하던 시험이었다
+    #  (2026-09-21 외부 리뷰: 미정의 열을 다른 열로 바꿔도 5 만 맞으면 통과했다).
+    sub = {"LiCoO2": "LiCoO₂", "LiNiO2": "LiNiO₂", "LiMnO2": "LiMnO₂"}
+    by_cat = {}
+    for c, v in sorted(undef):
+        by_cat.setdefault(sub.get(c, c), []).append(f"{float(v):.1f}")
+    want = " · ".join(f"{k} {'·'.join(vs)}" for k, vs in by_cat.items()) + " V"
+    assert f"<b>{len(undef)} 개</b>({want})" in h, \
+        f"미정의 열 목록이 자료와 다르다 — 자료는 {want!r}"
     assert "보호율이 <b>정의되지 않는다</b>" in h
     assert "<b>0 이 아니라 빈칸(&#8212;)</b> 으로 둔다" in h
     #: 예측선 CSV 는 (a) 가 그리는 세 곡선과 열 수가 같아야 한다 — 조용히 빠진 적이 있다
@@ -1035,20 +1042,42 @@ def test_deviation_tiers_match_the_csv(client):
         v = (v or "").strip()
         return None if v == "" else float(v)
 
-    dev, trivial = {}, set()
+    #: ⛔ 2026-09-21 정정 (외부 리뷰). 첫 판은 `P_taken_by_Nd` 와 뺐다 — **식의 오차가 아니다**.
+    #  hull 이 식보다 Nd 를 덜 쓰는 칸에서 갈린다(NMC811 4.00 V: 5.49 대 14.63 %p).
+    #  식을 평가하는 자리이므로 예측식 min(1, k·x/(1−x)) 로 잰다. 원장과 같은 기준이다.
+    def _pred(r):
+        k, x = _f(r["k_observed"]), _f(r["x_Nd"])
+        return None if k is None else min(1.0, k * x / (1 - x))
+
+    dev, noк = {}, set()
     for c in full:
         sub = [r for r in rows if (r["cathode"], r["voltage_V"]) == c]
-        ds = [abs(_f(r["protection_observed"]) - _f(r["P_taken_by_Nd"])) * 100 for r in sub
-              if _f(r["protection_observed"]) is not None and _f(r["P_taken_by_Nd"]) is not None]
+        ds = [abs(_f(r["protection_observed"]) - _pred(r)) * 100 for r in sub
+              if _f(r["protection_observed"]) is not None and _pred(r) is not None]
         if not ds:
+            #: k 가 아예 없는 열 — Nd 인산염이 안 나온다. 식과 견줄 수 없다(0 = 0 은 일치가 아니다)
+            if any(_f(r["protection_observed"]) is not None for r in sub):
+                noк.add(c)
             continue
         dev[c] = max(ds)
-        if all(_f(r["k_observed"]) is None for r in sub):
-            trivial.add(c)          #: Nd 인산염이 아예 안 나온 열 — 0 = 0 은 시험이 아니다
-    assert len(dev) == 12, f"값이 있는 열이 {len(dev)} 개다 — 화면은 12 라 적었다"
-    assert "값이 있는 12 개를" in _report_html(client)
 
-    good = sorted(c for c in dev if c not in trivial and dev[c] <= 3.11)
+    #: 원장과 **같은 값**이어야 한다 — 화면·그림·원장이 세 갈래로 갈리는 것을 막는다
+    led = json.loads((REPORT.parents[3] /
+                      "db/properties/cei_protection_allcells_result_2026_09_21.json"
+                      ).read_text("utf-8"))["★_식_vs_실측_열별_오차_%p"]
+    for c, d in dev.items():
+        key = f"{c[0]}@{float(c[1]):.2f}V"
+        assert key in led, f"원장에 {key} 가 없다"
+        assert abs(led[key]["최대"] - round(d, 2)) < 0.011, (key, led[key]["최대"], d)
+    assert len(dev) == len(led) == 11, (len(dev), len(led))
+    assert noк == {("LiMnO2", "3.5")}, sorted(noк)
+
+    h0 = _report_html(client)
+    assert "식과 견줄 수 있는 <b>11 개</b>" in h0
+    assert "LiMnO₂ 3.50 V 는 여기 없다" in h0, "k 없는 열을 뺐다는 말이 화면에 없다"
+    assert "14.6 %p" in h0, "식 기준과 P_taken 기준이 갈리는 칸을 화면이 안 밝힌다"
+
+    good = sorted(c for c in dev if dev[c] <= 3.11)
     assert good == [("LiCoO2", "4.3"), ("LiNiO2", "3.5"), ("NMC811", "3.5")], good
     thresh = max(dev[c] for c in good)
     h = _report_html(client)
@@ -1056,19 +1085,50 @@ def test_deviation_tiers_match_the_csv(client):
         f"문턱이 셋 중 **제일 나쁜** 값({thresh:.1f})으로 적혀 있지 않다"
     assert "≤2.5 %p" not in h, "옛 문턱(둘째로 나쁜 값)이 남아 있다"
 
-    #: 사소하게 0 인 열은 '맞는 셋' 에 못 들어가고, 왜 아닌지가 적혀 있어야 한다
-    assert trivial == {("LiMnO2", "3.5")}, sorted(trivial)
-    assert "LiMnO₂ 3.50 V 는 오차 0.0 %p 지만" in h and "예측도 0, 실측도 0" in h, \
-        "오차 0 이지만 시험이 아닌 열의 설명이 화면에 없다"
-
     #: 계층은 **여집합**으로 센다. 25.0 문턱으로 세면 24.9999 인 NMC811 3.00 V 가 빠진다
     #  (첫 판에서 실제로 빠졌다) — 사소한 부동소수 경계가 산문의 수를 바꾸면 안 된다.
-    mid = sorted(c for c in dev if c not in trivial and 3.11 < dev[c] <= 8.85)
-    worst = sorted(c for c in dev if c not in trivial and dev[c] > 8.85)
-    assert len(mid) == 3, sorted((c, round(dev[c], 1)) for c in mid)
+    mid = sorted(c for c in dev if 3.11 < dev[c] <= 8.85)
+    odd = sorted(c for c in dev if 8.85 < dev[c] < 20)
+    worst = sorted(c for c in dev if dev[c] >= 20)
+    assert len(mid) == 2, sorted((c, round(dev[c], 1)) for c in mid)
+    assert len(odd) == 1 and odd[0] == ("NMC811", "4.0"), odd
     assert len(worst) == 5, sorted((c, round(dev[c], 1)) for c in worst)
-    assert f"<b>≤{max(dev[c] for c in mid):.1f} %p</b> 가 셋" in h
-    assert f"나머지 다섯이 <b>25~{max(dev.values()):.0f} %p</b> 어긋난다" in h
+    assert f"<b>≤{max(dev[c] for c in mid):.1f} %p</b> 둘" in h
+    assert f"<b>{dev[odd[0]]:.1f} %p</b> 하나" in h, f"14.6 계층이 화면에 없다 ({dev[odd[0]]:.4f})"
+    assert f"나머지 <b>다섯</b>이 <b>25~{max(dev.values()):.0f} %p</b> 어긋난다" in h
+
+
+def test_resume_block_does_not_carry_retracted_numbers(client):
+    """양성 — 새 세션이 **먼저 읽는** kb/open_items.md ⏭ 블록이 화면과 같은 수를 말한다.
+
+    왜 생겼나: 화면의 오차 문턱을 2.5 → 3.1 로 고쳤는데 ⏭ 블록에는 2.5 가 남았다
+    (2026-09-21 외부 리뷰). CLAUDE.md 가 모든 새 세션을 이 블록으로 보내므로,
+    여기가 낡으면 다음 사람이 **철회된 값을 되살린다** — band gap 줄에서 이미 겪은 실패다.
+    그래서 산문끼리가 아니라 **CSV → 화면 → ⏭** 세 곳을 같은 수에 묶는다.
+    """
+    rows = _prot_rows()
+    n_all, n_pass, n_fail, n_col, full = _prot_counts(rows)
+    blk = (REPORT.parents[3] / "kb/open_items.md").read_text("utf-8")
+    i = blk.find("### ⏭-NOW-t")
+    assert i >= 0, "⏭-NOW-t 블록이 없다 — 이 시험이 헛것을 잰다"
+    j = blk.find("### ⏭-NOW-s", i)
+    blk = blk[i: j if j > 0 else len(blk)]
+
+    for must in (f"집계: {n_all} 칸 중 **탈락 {n_fail}**(통과 {n_pass})",
+                 f"열 **{n_col} 중 {len(full)}** 전 농도 통과"):
+        assert must in blk, f"⏭ 블록에 {must!r} 가 없다 — 화면과 갈렸다"
+
+    #: 철회된 문턱이 **주장으로** 되살아나면 잡는다 (리뷰 이력으로 언급하는 것은 허용)
+    assert "식이 **≤2.5 %p** 로 맞는" not in blk, \
+        "⏭ 블록이 철회된 문턱 2.5 %p 를 다시 주장한다"
+    assert "식이 **≤3.1 %p** 로 맞는 열은 **셋뿐**" in blk, "⏭ 블록에 현행 문턱이 없다"
+
+    #: 시험 개수도 실물과 맞춘다 — "62 → 65" 로 적어 두고 66 개였다
+    n_tests = sum(1 for ln in (REPORT.parents[3] /
+                               "webapp/tests/test_interpretation_cards.py"
+                               ).read_text("utf-8").splitlines()
+                  if ln.startswith("def test_"))
+    assert f"**62 → {n_tests}**" in blk, f"⏭ 블록의 시험 개수가 실물({n_tests})과 다르다"
 
 
 def test_non_monotonic_column_is_flagged_and_no_gate_was_added(client):
@@ -1083,7 +1143,10 @@ def test_non_monotonic_column_is_flagged_and_no_gate_was_added(client):
                   key=lambda r: float(r["x_Nd"]))]
     assert any(b < a for a, b in zip(seq, seq[1:])), f"{seq} 가 단조증가다 — 시험이 헛것을 잰다"
     h = _report_html(client)
-    assert "1.5 → 44.9 → 9.8 → 100 → 100 %" in h, "화면에 그 수열이 없다"
+    #: ⛔ 수열을 **자료에서 만든다**. 고정 문자열로 두면 CSV 가 바뀌어도 옛 수열이 있는
+    #  화면을 통과시킨다 (2026-09-21 외부 리뷰: 1.5 → 20 으로 바꿔도 통과했다).
+    seq_txt = " → ".join(f"{round(v * 100, 1):g}" for v in seq) + " %"
+    assert seq_txt in h, f"화면의 수열이 자료와 다르다 — 자료는 {seq_txt!r}"
     assert "단조성 게이트를 지금 넣지 않는다" in h, "게이트를 안 넣었다는 기록이 화면에 없다"
 
     #: 몇 개인지도 자료에서 센다. 처음엔 화면이 **하나만** 적었는데 실제로는 셋이었다

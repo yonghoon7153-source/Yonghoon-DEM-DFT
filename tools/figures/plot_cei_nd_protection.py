@@ -73,11 +73,18 @@ def _column_k(cat, V, pts):
         raise SystemExit(f"⛔ {cat}@{V} 의 k 가 **포화 안 된 점에서** 갈린다 {sorted(ks)} — "
                          "한 곡선으로 못 그린다. CLEAN 에서 빼거나 열을 나눠라")
     k = ks.pop()
-    for r in pts:                       # 뺀 점들이 정말 포화인지 확인한다
+    #: ⛔ 2026-09-21 정정 (외부 리뷰). 첫 판은 뺀 점을 **공통 k** 로 검사했다.
+    #  그러면 그 행의 k 가 달라도 공통 k 가 포화를 주는 한 통과해서, 실제로는 그 행의
+    #  예측이 포화가 아닌데도 100 % 곡선을 그렸다 (x=0.20·자기 k=3 이면 예측 75 %).
+    #  포화라서 빼도 되는 근거는 **그 행 자신의 k 로도 포화일 때**만 성립한다.
+    for r in pts:
         if r["protection_observed"] is not None and r["protection_observed"] >= SAT:
-            if min(1.0, k * r["x_Nd"] / (1 - r["x_Nd"])) < SAT:
+            kr = r["k_observed"] if r["k_observed"] is not None else k
+            if min(1.0, kr * r["x_Nd"] / (1 - r["x_Nd"])) < SAT:
                 raise SystemExit(f"⛔ {cat}@{V} x={r['x_Nd']} 는 실측이 포화인데 "
-                                 f"k={k:g} 예측은 아니다 — 포화로 빼면 안 되는 점이다")
+                                 f"**그 행의 k={kr:g}** 예측은 포화가 아니다 "
+                                 f"({min(1.0, kr * r['x_Nd'] / (1 - r['x_Nd']))*100:.0f} %) — "
+                                 "포화로 빼면 안 되는 점이다. 한 곡선으로 못 그린다")
     return k
 
 
@@ -94,7 +101,8 @@ def load():
                          "protection_observed": f("protection_observed"),
                          "P_taken_by_Nd": f("P_taken_by_Nd"),
                          "k_observed": f("k_observed"),
-                         "nd_phases": r.get("nd_phases", "")})
+                         "nd_phases": r.get("nd_phases", ""),
+                         "gate_fail_reason": r.get("gate_fail_reason", "")})
     return rows
 
 
@@ -104,11 +112,25 @@ def _col(rows, cat, V, only_pass=True):
 
 
 def _full_pass(rows):
-    """전 농도 통과 열 — **자료에서 센다**. 손으로 적으면 자료가 바뀔 때 갈린다."""
+    """전 농도 통과 열 — **자료에서 센다**. 손으로 적으면 자료가 바뀔 때 갈린다.
+
+    ⛔ 2026-09-21 정정 (외부 리뷰). 첫 판은 남아 있는 행의 `all(gate_pass)` 만 봤다.
+    그러면 **농도가 빠져도** 전 농도 통과로 올라간다 — 실패한 행을 지우기만 해도
+    승격됐고, 농도 하나를 중복시켜도 안 걸렸다. 그래서 **기대 농도 집합**(자료 전체의
+    x 합집합)을 만들고, 그것과 정확히 같은 집합을 가진 열만 인정한다.
+    """
+    want = {round(r["x_Nd"], 6) for r in rows}
     cols = {}
     for r in rows:
-        cols.setdefault((r["cathode"], r["voltage_V"]), []).append(r["gate_pass"])
-    return sorted(k for k, v in cols.items() if v and all(v))
+        cols.setdefault((r["cathode"], r["voltage_V"]), []).append(r)
+    out = []
+    for c, v in cols.items():
+        xs = [round(r["x_Nd"], 6) for r in v]
+        if len(xs) != len(set(xs)):
+            raise SystemExit(f"⛔ {c[0]}@{c[1]} 에 농도가 중복돼 있다 {sorted(xs)} — 자료가 깨졌다")
+        if set(xs) == want and all(r["gate_pass"] for r in v):
+            out.append(c)
+    return sorted(out)
 
 
 def _non_monotonic(rows):
@@ -135,8 +157,8 @@ def panel_a(ax, rows):
     xs = np.linspace(0.0, 0.22, 300)
     for cat, V, col, mk in CLEAN:
         pts = _col(rows, cat, V)
-        if not pts:
-            continue
+        if not pts:                     # _preflight 가 먼저 잡지만 이중으로 둔다
+            raise SystemExit(f"⛔ CLEAN 열 {cat}@{V} V 가 비었다")
         k = _column_k(cat, V, pts)
         #: 상 라벨도 k 와 **같은 점들**(포화 전)에서 읽는다. 포화 점은 hull 이 상을 섞어
         #  내서 "NdP5O14|Nd(PO3)3" 처럼 나오고, 그걸 라벨로 쓰면 빈칸이 된다(2026-09-21 실측).
@@ -171,6 +193,15 @@ def panel_b(ax, rows):
     """
     full = set(_full_pass(rows))
     nonmono = _non_monotonic(rows)
+    #: 무엇이 빠지는지 **세어서 그림에 적는다**. 캡션이 "every comparable column" 이라고
+    #  적혀 있었는데 실제로는 k 없는 열을 조용히 뺐다 (2026-09-21 외부 리뷰).
+    have = {c for c in full
+            if any(r["protection_observed"] is not None
+                   for r in rows if (r["cathode"], r["voltage_V"]) == c)}
+    drawn = {c for c in have
+             if any(r["protection_observed"] is not None and r["k_observed"] is not None
+                    for r in rows if (r["cathode"], r["voltage_V"]) == c)}
+    skipped = sorted(have - drawn)
     ax.plot([0, 100], [0, 100], "-", color=MUT, lw=1.0, zorder=1)
     ax.fill_between([0, 100], [-5, 95], [5, 105], color=OKC, alpha=.10, zorder=0)
     seen = set()
@@ -205,6 +236,14 @@ def panel_b(ax, rows):
     ax.set_xlim(-3, 105); ax.set_ylim(-8, 108)
     ax.text(66, 14, "predicted P intercepted\nbut no TM spared", fontsize=8.6,
             color=BADC, ha="center", va="center", linespacing=1.35)
+    if skipped:
+        names = ", ".join(f"{c[0]} {c[1]:.1f} V" for c in skipped)
+        #: 범례 바로 아래 빈 자리에 둔다 — y=0 의 빨간 점 위에 얹으면 둘 다 안 읽힌다.
+        ax.text(1, 74,
+                f"{len(drawn)} of {len(have)} columns drawn\n"
+                f"({names} has no $k$: 0 vs 0)",
+                fontsize=7.8, color=MUT, ha="left", va="top", linespacing=1.35,
+                bbox=dict(fc="white", ec="none", alpha=.85, pad=2.0))
     ax.text(84, 72, "$\\pm$5 %p", fontsize=8.6, color="#0f766e", va="center",
             ha="center", rotation=42)
     apply_axes(ax, "Predicted: share of P taken by Nd (%)",
@@ -218,9 +257,10 @@ def panel_c(ax, rows):
     """(c) 게이트 — **열 단위**로 그린다. 점만 뿌리면 "어느 열이 살았나" 를 못 읽는다."""
     ax.axhspan(0, DX_MAX, color="#dcfce7", zorder=0)
     ax.axhline(DX_MAX, color="#16a34a", lw=1.0, zorder=1)
-    ax.text(.218, DX_MAX * .40, f"$\\Delta x \\leq$ {DX_MAX:.2f}\ncomparable",
-            fontsize=9, color="#166534", ha="right",
-            bbox=dict(fc="white", ec="none", alpha=.8, pad=1.6))
+    #: 라벨은 녹색 선 **바로 위 오른쪽**에 둔다 — 띠 안은 실선 자료가 꽉 차 있다.
+    ax.text(.222, DX_MAX * 1.10, f"$\\Delta x \\leq$ {DX_MAX:.2f}  comparable",
+            fontsize=9, color="#166534", ha="right", va="bottom",
+            bbox=dict(fc="white", ec="none", alpha=.85, pad=1.6))
     survivors = set(_full_pass(rows))
     ramp = {"LiCoO2": ND_DARK, "LiNiO2": ND_MID, "NMC811": ND_LIGHT, "LiMnO2": "#c4b5fd"}
     for cat, V in sorted({(r["cathode"], r["voltage_V"]) for r in rows}):
@@ -236,14 +276,22 @@ def panel_c(ax, rows):
                 zorder=4 if live else 2)
     for cat, c in ramp.items():
         ax.plot([], [], "-", color=c, lw=1.7, label=cat)
-    ax.set_xlim(0, .225); ax.set_ylim(0, .20)
+    #: ⛔ 상한을 0.20 으로 박아 뒀더니 **가장 크게 탈락한 두 점**(0.2448 · 0.2883)이
+    #  표시도 없이 잘려 나갔다 (2026-09-21 외부 리뷰). 탈락 정도를 보여주는 패널에서
+    #  제일 큰 값을 못 읽으면 패널이 제 일을 못 한다. ⇒ 상한을 **자료에서** 잡는다.
+    dmax = max((r["delta_x"] for r in rows if r["delta_x"] is not None), default=DX_MAX)
+    ax.set_xlim(0, .225); ax.set_ylim(0, dmax * 1.08)
     apply_axes(ax, "Nd content $x$", "$|\\Delta x_{\\mathrm{mix}}|$ vs lithium-matched control",
                f"(c)  {len(survivors)} of "
                f"{len({(r['cathode'], r['voltage_V']) for r in rows})} columns survive")
-    ax.text(.004, .193,
+    #: ⛔ 종전 문구는 점선을 **전부** "혼합비 이동" 으로 설명했다. 실제로는 점선 선택이
+    #  전체 게이트 결과라, LiMnO₂ 4.5 V 처럼 Δx 는 0.001–0.002 로 멀쩡한데 끝점·P₂S₇
+    #  사유로 탈락한 열도 점선이다 (2026-09-21 외부 리뷰). 사유를 갈라 적는다.
+    ax.text(.004, dmax * 1.045,
             "solid = every concentration comparable\n"
-            "dotted = the minimum kink moves to a\ndifferent mixing ratio, so the\n"
-            "denominators are not the same quantity",
+            "dotted = some concentration failed a gate\n"
+            "  above the line = the comparability gate itself\n"
+            "  below it = the thiophosphate or endpoint gate",
             fontsize=8.5, color=MUT, va="top",
             bbox=dict(fc="white", ec="none", alpha=.85, pad=2.4))
     ax.legend(frameon=False, fontsize=8.6, loc="center right", labelcolor=INK,
@@ -257,11 +305,32 @@ PANELS = {"a": (panel_a, "One Nd sequesters k P"),
 PANEL_W, FIG_H = 4.4, 4.3
 
 
+def _preflight(which, rows):
+    """그리기 **전에** 죽는다 — 잘못된 PNG 를 남기지 않으려고.
+
+    ⛔ 2026-09-21 추가 (외부 리뷰). 종전에는 panel_a 가 없는 CLEAN 열을 조용히 건너뛰고
+    그림을 **저장한 뒤** CSV 단계에서야 죽었다 — 곡선 둘짜리 PNG 와 0 바이트 CSV 가
+    남았다. 검증을 앞으로 당긴다.
+    """
+    if "a" not in which:
+        return
+    for cat, V, _, _ in CLEAN:
+        pts = _col(rows, cat, V)
+        if not pts:
+            raise SystemExit(f"⛔ CLEAN 열 {cat}@{V} V 가 자료에 없다 — "
+                             "조용히 빼고 그리지 않는다. CLEAN 을 고치거나 자료를 확인해라")
+        _column_k(cat, V, pts)          # k 가 못 정해지면 여기서 죽는다
+
+
 def build(which="abc", out=None, rows=None):
     rows = rows if rows is not None else load()
     bad = [w for w in which if w not in PANELS]
     if bad:
         raise SystemExit(f"⛔ 모르는 패널 {bad} — 있는 것은 {sorted(PANELS)}")
+    if not which:
+        raise SystemExit("⛔ 패널을 하나도 안 골랐다")
+    which = "".join(dict.fromkeys(which))   # 중복 패널은 합친다 (abca → abc)
+    _preflight(which, rows)
     fig, axs = plt.subplots(1, len(which), figsize=(PANEL_W * len(which), FIG_H))
     axs = np.atleast_1d(axs)
     for ax, w in zip(axs, which):
@@ -306,13 +375,29 @@ def write_pred_csv(xs=None, out=None, rows=None):
 
 
 def _selftest():
+    import copy as _cp, shutil as _sh, tempfile as _tf
     ok = True
+    #: ⛔ /tmp 를 박아 쓰면 Windows 에서 FileNotFoundError 로 죽고, 공유 기계에서는
+    #  두 세션이 같은 이름을 두고 경합한다 (2026-09-21 외부 리뷰 · 실제 재현됨).
+    TD = _tf.mkdtemp(prefix="pcap_selftest_")
+
+    def tp(name):
+        return str(pathlib.Path(TD) / name)
 
     def chk(c, m):
         nonlocal ok
         ok = ok and bool(c)
         print(f"  {'✓' if c else '✗'} {m}")
 
+    try:
+        _selftest_body(chk, tp, _cp)
+    finally:
+        _sh.rmtree(TD, ignore_errors=True)
+    print("selftest " + ("PASS" if ok else "FAIL"))
+    return 0 if ok else 1
+
+
+def _selftest_body(chk, tp, _cp):
     rows = load()
     chk(len(rows) == 120, f"[양성] 자료 120 행 (실측 {len(rows)})")
     npass = sum(1 for r in rows if r["gate_pass"])
@@ -325,28 +410,76 @@ def _selftest():
     chk(("NMC811", 3.5) in full,
         "[양성] NMC811 3.5 V 가 전 농도 통과다 — 이 개정의 이유다")
     # ⛔음성 — 열 안에서 k 가 갈리면 한 곡선으로 그리지 않고 죽는다
-    import copy as _cp
     bad = _cp.deepcopy(rows)
     for r in bad:                       # x=0.02 는 포화가 아니다 — 여기를 깨야 잡혀야 한다
         if r["cathode"] == "LiCoO2" and abs(r["voltage_V"] - 4.3) < 1e-9 and r["x_Nd"] == 0.02:
             r["k_observed"] = 99.0
     died = False
     try:
-        build("a", out="/tmp/_pcap_bad.png", rows=bad)
+        build("a", out=tp("bad.png"), rows=bad)
     except SystemExit as e:
         died = "갈린다" in str(e)
     chk(died, "[⛔음성] **포화 안 된 점**에서 k 가 갈리면 평균 내지 않고 죽는다")
-    # ⛔음성 — 포화 점의 k 가 달라도(상 혼합) 곡선은 안 바뀌므로 통과해야 한다
-    sat = _cp.deepcopy(rows)
-    for r in sat:
+
+    # ⛔음성 — 포화 점이라도 **그 행의 자기 k** 로 포화가 아니면 빼면 안 된다.
+    #   ⚠ 첫 판은 이 입력을 "통과해야 하는 사례" 로 **축복했다**. k=3·x=0.20 이면
+    #     그 행의 예측은 75 % 인데 공통 k=5 로 100 % 를 그렸다 (2026-09-21 외부 리뷰).
+    sat_bad = _cp.deepcopy(rows)
+    for r in sat_bad:
         if r["cathode"] == "LiCoO2" and abs(r["voltage_V"] - 4.3) < 1e-9 and r["x_Nd"] == 0.2:
-            r["k_observed"] = 3.0
+            r["k_observed"] = 3.0       # 3×0.25 = 0.75 → 포화 아님
+    died_sb = False
+    try:
+        build("a", out=tp("satbad.png"), rows=sat_bad)
+    except SystemExit as e:
+        died_sb = "포화로 빼면 안 되는 점" in str(e)
+    chk(died_sb, "[⛔음성] 포화 점의 **자기 k** 예측이 포화가 아니면 죽는다 (75 % 를 100 % 로 안 그린다)")
+
+    # [양성] 실제 자료처럼 자기 k 로도 포화면(4×0.25 = 1.0) 열을 버리지 않는다
+    sat_ok = _cp.deepcopy(rows)
+    for r in sat_ok:
+        if r["cathode"] == "LiCoO2" and abs(r["voltage_V"] - 4.3) < 1e-9 and r["x_Nd"] == 0.2:
+            r["k_observed"] = 4.0
     okpass = True
     try:
-        build("a", out="/tmp/_pcap_sat.png", rows=sat)
+        build("a", out=tp("satok.png"), rows=sat_ok)
     except SystemExit:
         okpass = False
-    chk(okpass, "[양성] 포화 점의 k 가 달라도(상 혼합) 열을 버리지 않는다")
+    chk(okpass, "[양성] 포화 점의 자기 k 로도 포화면(k=4·x=0.20) 열을 버리지 않는다")
+
+    # ⛔음성 — 농도가 빠지거나 중복되면 '전 농도 통과' 로 안 올려준다
+    miss = [r for r in _cp.deepcopy(rows)
+            if not (r["cathode"] == "NMC811" and abs(r["voltage_V"] - 4.5) < 1e-9
+                    and r["x_Nd"] == 0.2)]
+    chk(("NMC811", 4.5) not in _full_pass(miss),
+        "[⛔음성] 농도 하나가 빠진 열은 전 농도 통과가 아니다")
+    drop_fail = [r for r in _cp.deepcopy(rows)
+                 if not (r["cathode"] == "LiMnO2" and abs(r["voltage_V"] - 4.0) < 1e-9
+                         and not r["gate_pass"])]
+    chk(("LiMnO2", 4.0) not in _full_pass(drop_fail),
+        "[⛔음성] 탈락 행을 지운다고 승격되지 않는다")
+    dup = _cp.deepcopy(rows)
+    for r in dup:
+        if r["cathode"] == "NMC811" and abs(r["voltage_V"] - 4.5) < 1e-9 and r["x_Nd"] == 0.2:
+            r["x_Nd"] = 0.15
+    died_dup = False
+    try:
+        _full_pass(dup)
+    except SystemExit as e:
+        died_dup = "중복" in str(e)
+    chk(died_dup, "[⛔음성] 농도가 중복되면 죽는다 (조용히 세지 않는다)")
+
+    # ⛔음성 — CLEAN 열이 없으면 **그리기 전에** 죽는다 (잘못된 PNG 를 안 남긴다)
+    nocol = [r for r in _cp.deepcopy(rows)
+             if not (r["cathode"] == "NMC811" and abs(r["voltage_V"] - 3.5) < 1e-9)]
+    png_missing = tp("nocol.png")
+    died_nc = False
+    try:
+        build("a", out=png_missing, rows=nocol)
+    except SystemExit as e:
+        died_nc = "CLEAN 열" in str(e)
+    chk(died_nc and not pathlib.Path(png_missing).exists(),
+        "[⛔음성] CLEAN 열이 없으면 죽고 **PNG 를 안 남긴다**")
     # ── 단조성 탐지: (b) 가 세 갈래로 나눌 수 있어야 한다 ─────────────────────
     nm = _non_monotonic(rows)
     chk(("LiMnO2", 3.0) in nm,
@@ -365,7 +498,7 @@ def _selftest():
     # ── 예측선 CSV: 그림과 **같은 열 수**여야 한다 ────────────────────────────
     #   왜 재나: 첫 판은 k 집합이 2 원소면 조용히 건너뛰어 **LiCoO2 4.30 V 가 빠졌다**.
     #   그림은 3 곡선, CSV 는 2 열 — 아무도 오류를 안 봤다.
-    hdr = open(write_pred_csv(out="/tmp/_pcap_pred.csv", rows=rows),
+    hdr = open(write_pred_csv(out=tp("pred.csv"), rows=rows),
                encoding="utf-8").readline().strip().split(",")
     chk(len(hdr) == 1 + len(CLEAN),
         f"[양성] 예측선 CSV 열 {len(hdr)-1} = 그림 곡선 {len(CLEAN)}")
@@ -373,22 +506,33 @@ def _selftest():
         "[양성] 세 열이 이름으로 전부 들어 있다 (LiCoO2 4.3 V 포함)")
     died3 = False
     try:
-        write_pred_csv(out="/tmp/_pcap_pred_bad.csv", rows=bad)
+        write_pred_csv(out=tp("pred_bad.csv"), rows=bad)
     except SystemExit as e:
         died3 = "갈린다" in str(e)
     chk(died3, "[⛔음성] k 가 갈리는 열은 CSV 에서도 **건너뛰지 않고** 죽는다")
     # ⛔음성 — 모르는 패널
     died2 = False
     try:
-        build("z", out="/tmp/_pcap_bad2.png", rows=rows)
+        build("z", out=tp("bad2.png"), rows=rows)
     except SystemExit as e:
         died2 = "모르는 패널" in str(e)
     chk(died2, "[⛔음성] 모르는 패널 이름은 거부한다")
+    # ⛔음성 — 되살린 가드 둘 (빈 선택 · 중복 패널)
+    died4 = False
+    try:
+        build("", out=tp("empty.png"), rows=rows)
+    except SystemExit as e:
+        died4 = "하나도 안 골랐다" in str(e)
+    chk(died4, "[⛔음성] 패널을 하나도 안 고르면 거부한다")
+    f_dup = pathlib.Path(build("abca", out=tp("dup.png"), rows=rows))
+    from PIL import Image as _Im
+    w_dup = _Im.open(f_dup).size[0]
+    w_abc = _Im.open(pathlib.Path(build("abc", out=tp("abc_ref.png"), rows=rows))).size[0]
+    chk(abs(w_dup - w_abc) < 40, "[⛔음성] 중복 패널(abca)은 합쳐져 abc 와 같은 폭이다")
+    chk(build.__defaults__[0] == "abc", "[양성] 기본 패널이 abc 다 (바뀌면 기존 그림이 조용히 달라진다)")
     for w in ("a", "b", "c", "abc"):
-        f = pathlib.Path(build(w, out=f"/tmp/_pcap_{w}.png", rows=rows))
+        f = pathlib.Path(build(w, out=tp(f"{w}.png"), rows=rows))
         chk(f.exists() and f.stat().st_size > 20000, f"[양성] --panels {w} 가 그려진다")
-    print("selftest " + ("PASS" if ok else "FAIL"))
-    return 0 if ok else 1
 
 
 def main(argv=None):

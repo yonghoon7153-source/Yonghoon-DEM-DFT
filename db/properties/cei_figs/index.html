@@ -1113,7 +1113,7 @@ Fig. 1(b) 에서 측정된 사실이고(잔차가 문턱의 1/20), 흔들린 것
 </section>
 <section id="s2b" class="sec">
 <details class="secfold" open>
-<summary><h2 class="sec-h">2b. 그 산물이 양극을 <b>얼마나</b> 아끼나 — 정량 곡선</h2><span class="serbadge sb">계열 B · P 자리</span><span class="sec-one">보호율 = min(1, k·x/(1−x)), 맞춘 매개변수 0 — <b>120 칸</b> 전조건에서 열 <b>24 중 17</b> 통과(<b>NMC811 6/6</b>). 식이 잘 맞는 열 셋: LiCoO₂ 4.30 V · LiNiO₂ 3.50 V · <b>NMC811 3.50 V</b>(≤3.1 %p). ⚠ <b>식은 P 를 세고 실측은 TM 을 센다</b> — 저전압에서는 갈린다. 1저자 조성 x=0.02 는 <b>10.3 %</b></span></summary>
+<summary><h2 class="sec-h">2b. 그 산물이 양극을 <b>얼마나</b> 아끼나 — 정량 곡선</h2><span class="serbadge sb">계열 B · P 자리</span><span class="sec-one">보호율 = min(1, k·x/(1−x)), 맞춘 매개변수 0 — <b>120 칸</b> 전조건에서 열 <b>24 중 17</b> 통과(<b>NMC811 6/6</b>). 식이 잘 맞는 열 셋: LiCoO₂ 4.30 V · LiNiO₂ 3.50 V · <b>NMC811 3.50 V</b>(≤3.1 %p, <b>식 기준</b>). ⚠ <b>식은 P 를 세고 실측은 TM 을 센다</b> — 저전압에서는 갈린다. 1저자 조성 x=0.02 는 <b>10.3 %</b></span></summary>
 <div class="secbody">
 
 <p>§2 는 <i>무엇이</i> 생기는지를 보였다. 여기는 <i>얼마나</i> 다. 지표는
@@ -1125,7 +1125,7 @@ NdP₅O₁₄ 의 화학식(P/Nd = 5)에서 <b>보호율 = min(1, k·x/(1−x))<
 0.05 · 0.10 · 0.15 를 돌렸다. 곡선을 보고 식을 맞춘 것이 아니다.</p>
 
 <figure>
-<img src="cei_nd_protection.png" alt="Three panels. (a) Cathode transition-metal spared from phosphate versus Nd content for three columns — LiCoO2 at 4.3 V, LiNiO2 at 3.5 V and NMC811 at 3.5 V; measured points sit on dashed curves min(1, k x over 1 minus x) with k equal to 5, 4 and 4. (b) Measured cathode transition metal spared against the share of phosphorus predicted to be intercepted by neodymium, for every comparable column; most points lie on the diagonal inside a plus-minus five percentage-point band, a group of low-voltage points sits at zero measured sparing, and open markers flag three columns that are not monotonic in Nd content. (c) Absolute difference in mixing fraction against the lithium-matched control versus Nd content, one line per cathode and voltage, solid where every concentration is comparable; seventeen of twenty-four columns survive.">
+<img src="cei_nd_protection.png" alt="Three panels. (a) Cathode transition-metal spared from phosphate versus Nd content for three columns — LiCoO2 at 4.3 V, LiNiO2 at 3.5 V and NMC811 at 3.5 V; measured points sit on dashed curves min(1, k x over 1 minus x) with k equal to 5, 4 and 4. (b) Measured cathode transition metal spared against the share of phosphorus predicted to be intercepted by neodymium, for the eleven comparable columns in which a neodymium phosphate forms; most points lie on the diagonal inside a plus-minus five percentage-point band, a group of low-voltage points sits at zero measured sparing, and open markers flag three columns that are not monotonic in Nd content. (c) Absolute difference in mixing fraction against the lithium-matched control versus Nd content, one line per cathode and voltage, solid where every concentration is comparable and dotted where some concentration failed a gate; seventeen of twenty-four columns survive.">
 <figcaption><b>Fig. 3. How much cathode transition metal the neodymium phosphate spares,
 and where the rule stops holding.</b>
 (a) Fraction of the cathode transition metal kept out of a phosphate product, against Nd content
@@ -1142,7 +1142,10 @@ NdP<sub>5</sub>O<sub>14</sub>. Where that mixing appears only at concentrations 
 (LiCoO<sub>2</sub> 4.3&#8201;V, where the <i>x</i>&#8201;=&#8201;0.20 cell mixes but the four below it do
 not); where it appears before saturation, <i>k</i> is not single-valued and that column is not drawn
 as one curve.
-(b) The same measurement against what the rule predicts, for every comparable column. The predicted
+(b) The same measurement against what the rule predicts, for the 11 comparable columns in which the
+hull selects a neodymium phosphate at all. The twelfth, LiMnO<sub>2</sub> at 3.5&#8201;V, forms none, so
+the rule has no <i>k</i> there and both quantities are zero; it is left out rather than drawn at the
+origin, and the panel states the count. The predicted
 quantity is the share of the electrolyte&#8217;s <b>phosphorus</b> intercepted by neodymium; the measured
 quantity is the share of cathode <b>transition metal</b> spared. They coincide only where the transition
 metal was competing for that phosphorus: the filled red points at zero measured sparing are the 2.5 and
@@ -1155,7 +1158,12 @@ concentrations, so those columns pass the comparability gate but are not curves.
 not removed &#8212; a threshold invented after seeing the results would void the pre-registration.
 (c) The comparability gate: |&#916;<i>x</i><sub>mix</sub>| between each doped composition and its
 lithium-matched control. Where the minimum kink moves to a different mixing ratio the two shares
-have different denominators and are not the same quantity. Of 120 measured cells, 19 fail this gate,
+have different denominators and are not the same quantity. A dotted column failed a gate at some
+concentration, but not always this one: points above the line failed the comparability gate itself,
+while a dotted column lying entirely below it failed the thiophosphate or endpoint gate instead
+(LiMnO<sub>2</sub> at 4.5&#8201;V has |&#916;<i>x</i><sub>mix</sub>| &#8804; 0.0024 throughout).
+The vertical axis is scaled to the data so the two largest excursions (0.24 and 0.29) stay on the
+panel &#8212; a fixed limit had been clipping them. Of 120 measured cells, 19 fail this gate,
 the thiophosphate gate or the endpoint gate; of the 24 (cathode, voltage) columns, 17 pass at every
 concentration, including all six voltages of NMC811.
 <b>&#9888;</b> This is 0&#8201;K hull thermodynamics &#8212; it says what is consumed, not how fast, how thick,
@@ -1191,12 +1199,17 @@ or whether the layer is continuous.</figcaption>
 <p style="margin:8px 0 0"><b>&#8220;통과&#8221; 와 &#8220;식이 맞는다&#8221; 는 다른 말이다.</b> 통과 열 17 개 중
 <b>5 개</b>(LiCoO₂ 2.5·3.0 · LiMnO₂ 2.5 · LiNiO₂ 2.5·3.0 V)는 도핑·대조 <b>양쪽에 TM 인산염이 아예 없어</b>
 보호율이 <b>정의되지 않는다</b> — 그림에서 <b>0 이 아니라 빈칸(&#8212;)</b> 으로 둔다.
-값이 있는 12 개를 오차로 줄 세우면 — 식이 <b>≤3.1 %p</b> 로 맞는 것이 셋
-(LiCoO₂ 4.30 V 0.4 · <b>NMC811 3.50 V</b> 2.5 · LiNiO₂ 3.50 V 3.1 %p),
-<b>≤8.8 %p</b> 가 셋(NMC811 4.00 V 5.5 · LiCoO₂ 4.00 V · LiNiO₂ 4.50 V),
-나머지 다섯이 <b>25~82 %p</b> 어긋난다.
-⚠ 열두 번째 <b>LiMnO₂ 3.50 V 는 오차 0.0 %p 지만 시험이 아니다</b> —
-Nd 인산염이 아예 안 나와서 <b>예측도 0, 실측도 0</b> 이다. 0 = 0 을 일치로 세지 않는다.
+⚠ <b>오차는 예측식 min(1, k·x/(1−x)) 기준이다</b> — CSV 의 <code>P_taken_by_Nd</code> 열이 아니다.
+둘은 hull 이 예측식보다 Nd 를 덜 쓰는 칸에서 갈린다(NMC811 4.00 V 는 5.5 대 <b>14.6 %p</b>).
+식을 평가하는 자리이므로 <b>식 기준이 맞다</b>. 원장 <code>★_식_vs_실측_열별_오차_%p</code> 와 같은 값이다.</p>
+<p style="margin:8px 0 0">식과 견줄 수 있는 <b>11 개</b>를 오차로 줄 세우면 —
+<b>≤3.1 %p</b> 셋(LiCoO₂ 4.30 V 0.4 · <b>NMC811 3.50 V</b> 2.5 · LiNiO₂ 3.50 V 3.1),
+<b>≤8.8 %p</b> 둘(LiCoO₂ 4.00 V · LiNiO₂ 4.50 V, 둘 다 8.8),
+<b>14.6 %p</b> 하나(NMC811 4.00 V),
+나머지 <b>다섯</b>이 <b>25~82 %p</b> 어긋난다.
+⚠ 열두 번째 <b>LiMnO₂ 3.50 V 는 여기 없다</b> —
+Nd 인산염이 아예 안 나와 <b>k 가 정의되지 않는다</b>. 예측도 실측도 0 이라 0 = 0 을 일치로 세지 않고,
+그림 (b) 에도 안 그린다.
 깨지는 자리는 셋이다 — ⓐ 저전압 NMC811 의 <b>Mn 바닥</b>(위 (b)),
 ⓑ <b>통과 열 17 개 중 단조롭지 않은 열이 셋</b> — LiMnO₂ 3.00 V 가 <b>크게</b>
 (1.5 → 44.9 → 9.8 → 100 → 100 %, 82.4 %p), NMC811 4.00·4.30 V 가 끝에서 <b>작게</b>(1.3·2.3 %p 되짚음).
@@ -2163,8 +2176,10 @@ x = 0.10 · 0.15 · 4.5 V 에서 남은 P 가 P₂S₇ 로 간다.</li>
 전조건 라운드에서 잰 <b>120 칸</b> 중 <b>19 칸</b>이 탈락했다(통과 101 · 열 24 개).
 |Δx<sub>mix</sub>| &gt; 0.05 면 최소 꺾임이 다른 혼합비에 앉아 <b>분모가 같은 양이 아니다</b>.
 전 농도 통과한 열은 <b>17 개</b>지만 그중 <b>5 개는 보호율이 정의되지 않고</b>(도핑·대조 양쪽에 TM 인산염 없음),
-식이 <b>≤3.1 %p</b> 로 맞는 열은 <b>셋뿐</b>이다 — LiCoO₂ 4.30 V · LiNiO₂ 3.50 V · NMC811 3.50 V
-(열두 번째 LiMnO₂ 3.50 V 는 오차 0.0 %p 지만 <b>예측도 실측도 0</b> 이라 시험이 아니다).
+식이 <b>≤3.1 %p</b>(<b>예측식 기준</b>) 로 맞는 열은 <b>셋뿐</b>이다 —
+LiCoO₂ 4.30 V · LiNiO₂ 3.50 V · NMC811 3.50 V.
+⚠ 오차를 CSV 의 <code>P_taken_by_Nd</code> 로 재면 NMC811 4.00 V 가 5.5 %p 로 보이는데
+<b>식 기준으로는 14.6 %p</b> 다 — 식을 평가할 때는 <b>식 기준</b>을 쓴다.
 (도구 docstring 의 "좌변 TM 정규화라 x 무관" 은 <b>한 반응 안에서만</b> 맞다.)</li>
 <li><span class="no">⛔</span> <b>예측 보호율과 실측 보호율을 같은 양으로 쓰기</b> —
 식이 세는 것은 Nd 가 가로챈 <b>P</b> 의 몫이고, 실측은 인산염을 면한 <b>양극 TM</b> 의 몫이다.
