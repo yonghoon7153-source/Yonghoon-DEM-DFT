@@ -153,6 +153,17 @@
     `Estimated max dynamical RAM` 만 보고 죽인다. `ESPRESSO_TMPDIR` 이 입력의 `outdir` 을 덮으므로
     **라이브 잡의 `.save` 가 안 다친다**. 2026-09-19 에 이 프로브가 값어치를 했다 —
     바로 죽였으면 LOBSTER 는 죽고 재시작은 segfault 였다.
+- **Materials Project REST 조회**: ⛔ **403 을 키 문제로 읽지 마라 — Cloudflare 가 UA 를 막는다**
+  (2026-09-21 gabia 실측). `urllib` 기본 UA 로 치면 `error 1010 · browser_signature_banned` 로
+  **무키 요청도 똑같이 403** 이다. 키는 멀쩡했다(32자 신 API 키).
+  ```
+  # 판별: 무키 요청도 403 이면 인증이 아니라 문턱이다
+  UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+  # urllib: headers={"X-API-KEY": KEY, "User-Agent": UA}   ← UA 를 반드시 준다
+  curl -s -H "X-API-KEY: $MP_API_KEY" -H "accept: application/json" <url>   # curl UA 는 대개 통과
+  ```
+  · gabia 의 **어느 conda env 에도 `mp_api` 가 없다** (dft·mace·mlipx·sevennet·uma 전부). stdlib REST 로 친다.
+  · ⚠ **MP 가 id 를 옮기는 중이다** — `mp-1211324` 로 물으면 `mp-aaacqxxk` 가 돌아온다. 기록엔 둘 다 남긴다.
 - **desktop WSL**: ORCA r2SCAN-3c (SDCP 분자 계열).
 - 공통: 실행 스크립트에 pgrep 중복실행 가드, 출력 grep은 `grep -a`(NUL 오염 대비), watch 스크립트 관례 유지.
 - ⛔⛔ **`pgrep -f <패턴>` 은 자기 자신을 센다 — 개수로 쓰면 틀린다** (2026-09-20 에 **하루 두 번** 밟았다).
