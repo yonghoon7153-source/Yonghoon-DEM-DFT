@@ -3291,7 +3291,7 @@
   {
    "id": "D-2026-09-20-lpscl-smallcell-shortlag",
    "kind": "estimand",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "results_seen": true,
    "record_kind": "estimand_card",
    "title": "재개조건 ① — 더 짧은 lag(1–4 ps)으로 사건 재census → G-B7 → CI-NEB. 보고량은 **통과 계수**이지 Eb 가 아니다",
@@ -3318,26 +3318,43 @@
     ]
    },
    "slot": "lpscl_smallcell_shortlag_neb",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-09-20",
      "state": "proposed",
      "by": "agent",
      "note": "1저자 '1,2,3' 지시로 ①②③ 을 한 카드에 사전등록. 문턱·상한·갈래 전부 결과 보기 전에 박았다. 비준은 1저자."
+    },
+    {
+     "at": "2026-09-21",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
+    },
+    {
+     "at": "2026-09-21",
+     "state": "active",
+     "by": "agent (1저자 지시 '이거 진행하자')",
+     "note": "지문 재계산 — 첫 도장 직후 outcome_2026_09_21.verdict 를 '1저자 확인 대기'→'1저자 확정' 으로 고쳐 decision_digest 가 어긋났다. 표기 정정이지 내용 변경이 아니다. prereg_ratify.decision_digest() 로 다시 찍음 (구 739d2321be31…)."
     }
    ],
-   "ratification": {
-    "state": "proposed"
-   },
    "outcome_2026_09_21": {
     "branch": "갈래2",
     "N1": 18,
     "N2": 0,
     "N3": null,
-    "verdict": "재개조건 ① 소진 (proposed · 1저자 확인 대기)",
+    "verdict": "재개조건 ① 소진 — 1저자 확정 2026-09-21 (사후 비준)",
     "record": "db/properties/lpscl_smallcell_shortlag_round_2026_09_21.json",
     "⚠": "카드 비준 없이 실행됐다 — 1저자 2026-09-20 지시 '1,2,3'"
+   },
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-21T06:39:49Z",
+    "commit": "38d17009de17cdb98decae16071a9e094262140e",
+    "decision_digest": "sha256:6307ee01f9fcde1e2aa4f0994c98309113aa7599ab246d7f78650a8a8d0fd463",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
   }
  ]
