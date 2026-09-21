@@ -416,3 +416,180 @@ def test_ladder_l1_numbers_match_what_we_measured():
     r = next(x for x in d["2_사다리_실제_상태"] if x["id"] == "L-1")
     assert "1.6212" in r["지금"] and "1.0000" in r["지금"], \
         f"L-1 의 실측 수치가 바뀌었다: {r['지금'][:160]}"
+
+
+# ── ④ 사다리 밖 가지 — NEB 마감 + 재개조건 (2026-09-21 신설) ──────────────
+#   ⛔ 왜 생겼나: 이 화면에 NEB 가지는 사다리 옆 **한 줄**뿐이었고, 그 줄이 사다리
+#     기록에서 와서 "끝점 9/9 생존 → 다음은 ⓑ 허용 서술 봉인 후 UMA-NEB" 라고 3 일째
+#     말했다. 실제로는 09-19 에 G-B7 0/9 로 닫혔고 09-21 에 재개조건 ① 도 0/18 로
+#     소진됐다. 화면만 보는 사람은 "이제 NEB 를 돌린다" 로 읽는다.
+NEBC = "lpscl_smallcell_neb_closed_2026_09_19.json"
+SHORTLAG = "lpscl_smallcell_shortlag_round_2026_09_21.json"
+
+
+def test_neb_branch_shows_closed_verdict(client):
+    """가지가 **닫혔다**는 것과 0/9 가 화면에 있다."""
+    h = _html(client)
+    nb = D.li2s_neb_branch()
+    assert nb["ok"], nb.get("why")
+    assert "사다리 밖 가지 — NEB" in h, "NEB 가지 절이 화면에 없다"
+    assert nb["state"] == "closed", "마감 기록의 상태가 closed 가 아니다"
+    assert nb["state"] in h and nb["state_at"] in h, "마감 상태·날짜가 화면에 없다"
+    assert nb["gb7"] and "0 / 9" in nb["gb7"], "원장의 G-B7 값이 0/9 가 아니다"
+    assert "0 / 9" in h, "G-B7 0/9 가 화면에 없다"
+
+
+def test_neb_branch_does_not_say_neb_is_next(client):
+    """⛔음성: **낡은 문구가 화면에 없다.** 이 시험이 이 절을 만든 이유다."""
+    h = _html(client)
+    for stale in ("다음은 ⓑ 허용 서술 봉인 후 UMA-NEB", "다음은 UMA-NEB"):
+        assert stale not in h, f"낡은 문구가 화면에 남아 있다: {stale!r}"
+
+
+def test_reopen_spent_flag_comes_from_the_ledger(client):
+    """⛔음성: '소진' 표시는 **원장 문자열**에서 온다 — 화면·코드가 정하지 않는다.
+
+    원장에서 ①의 '소진' 글자를 빼면 화면이 그 줄을 **열림**으로 그려야 한다.
+    (여기서 초록이면 소진 표시가 어딘가에 하드코딩된 것이다.)
+    """
+    real = D._load_json
+
+    def fake(p):
+        d = real(p)
+        if Path(p).name == NEBC and d:
+            d = dict(d)
+            d["7_재개_조건_이것들만"] = [
+                x.replace("소진됨", "진행중") if isinstance(x, str) else x
+                for x in d["7_재개_조건_이것들만"]]
+        return d
+
+    with patch.object(D, "_load_json", side_effect=fake):
+        spent = [r["spent"] for r in D.li2s_neb_branch()["reopen"] if not r["is_rule"]]
+        h = client.get("/li2s").get_data(as_text=True)
+    assert spent == [False, False, False, False], (
+        "원장에서 '소진' 을 뺐는데도 소진으로 그린다 — 표시가 원장에서 오지 않는다")
+    assert "⛔ 소진" not in h, "원장에 소진이 없는데 화면에 소진 표지가 있다"
+    # 양성 대조: 진짜 원장에서는 ①·③ 이 소진이다
+    real_spent = [r["spent"] for r in D.li2s_neb_branch()["reopen"] if not r["is_rule"]]
+    assert real_spent == [True, False, True, False], f"실제 원장 소진 표시가 다르다: {real_spent}"
+
+
+def test_reopen_rule_line_is_not_counted_as_a_condition(client):
+    """⛔음성: 목록 끝의 '넷 밖으로 안 연다' 줄은 재개 **조건**이 아니다."""
+    nb = D.li2s_neb_branch()
+    rules = [r for r in nb["reopen"] if r["is_rule"]]
+    conds = [r for r in nb["reopen"] if not r["is_rule"]]
+    assert len(rules) == 1 and rules[0]["spent"] is None, "규칙 줄이 조건으로 세어졌다"
+    assert len(conds) == 4, f"재개 조건은 넷이어야 한다 (got {len(conds)})"
+
+
+def test_round1_numbers_come_from_the_round_record(client):
+    """① 라운드 수치(N₁ 18 · 0/18)가 라운드 기록에서 온다."""
+    import json
+    d = json.loads((ROOT / "db" / "properties" / SHORTLAG).read_text(encoding="utf-8"))
+    r1 = D.li2s_neb_branch()["round1"]
+    assert r1["n1"] == d["1_census_N1"]["⭐_N1"] == 18, "N₁ 이 기록과 다르다"
+    assert r1["n_ok"] == d["2_G-B7_N2"]["n_ok"] == 0, "G-B7 통과 수가 기록과 다르다"
+    assert r1["n_events"] == d["2_G-B7_N2"]["n_events"] == 18
+    h = _html(client)
+    assert "N₁ = 18" in h and "0 / 18" in h, "① 라운드 수치가 화면에 없다"
+
+
+def test_missing_round_record_is_dash_not_zero(client):
+    """⛔음성: 라운드 기록이 없으면 **0 이 아니라 안내**다 (CLAUDE.md: `or 0.0` 금지)."""
+    real = D._load_json
+
+    def fake(p):
+        return None if Path(p).name == SHORTLAG else real(p)
+
+    with patch.object(D, "_load_json", side_effect=fake):
+        assert D.li2s_neb_branch()["round1"] is None, "없는 라운드를 빈 dict 로 만들었다"
+        h = client.get("/li2s").get_data(as_text=True)
+    assert "재개조건 ① 라운드 기록을 못 읽었다" in h, "못 읽었다는 말이 없다"
+    assert "N₁ = 0" not in h, "없는 값을 0 으로 그렸다"
+
+
+def _with_round(monkey_dict):
+    """SHORTLAG 기록만 바꿔치기한 `_load_json` 을 돌려준다."""
+    real = D._load_json
+
+    def fake(p):
+        d = real(p)
+        if Path(p).name == SHORTLAG and d:
+            d = dict(d)
+            for k, v in monkey_dict.items():
+                d[k] = v
+        return d
+    return fake
+
+
+def test_round1_screen_follows_the_record_not_the_template(client):
+    """⛔음성: 기록의 N₁ 을 바꾸면 **화면이 따라와야** 한다.
+
+    ⚠ 이 시험은 앞 시험이 엉뚱한 것을 재서 추가됐다 (2026-09-21 깨기 5). 앞 시험은
+      `"N₁ = 18" in h` 만 봤는데, 템플릿에 18 을 **박아 넣어도** 초록이었다.
+    """
+    import json
+    real_c = json.loads((ROOT / "db" / "properties" / SHORTLAG)
+                        .read_text(encoding="utf-8"))["1_census_N1"]
+    bent = dict(real_c)
+    bent["⭐_N1"] = 7
+    with patch.object(D, "_load_json", side_effect=_with_round({"1_census_N1": bent})):
+        assert D.li2s_neb_branch()["round1"]["n1"] == 7
+        h = client.get("/li2s").get_data(as_text=True)
+    assert "N₁ = 7" in h, "기록을 바꿨는데 화면이 안 따라온다 — 템플릿에 값이 박혀 있다"
+    assert "N₁ = 18" not in h, "옛 값이 화면에 남아 있다 (하드코딩)"
+
+
+def test_round1_present_but_field_missing_is_dash_not_zero(client):
+    """⛔음성: 기록은 **있는데 그 칸이 비면** `—` 다. `x or 0` 이면 0 으로 둔갑한다.
+
+    ⚠ 앞의 '기록이 통째로 없다' 시험은 이 경로를 **한 번도 안 탄다** (round1 이 None
+      이라 `or 0` 줄까지 가지 않는다) — 2026-09-21 깨기 2 가 초록으로 지나갔다.
+    """
+    with patch.object(D, "_load_json", side_effect=_with_round({"1_census_N1": {}})):
+        r1 = D.li2s_neb_branch()["round1"]
+        assert r1 is not None and r1["n1"] is None, (
+            "빈 칸을 0 으로 채웠다 — CLAUDE.md: 없는 값을 0 으로 그리지 않는다")
+        h = client.get("/li2s").get_data(as_text=True)
+    assert "N₁ = —" in h, "빈 칸이 `—` 로 안 나온다"
+    assert "N₁ = 0" not in h, "없는 값을 0 으로 그렸다"
+
+
+def test_gb7_zero_is_a_real_zero_not_a_missing_value(client):
+    """양성 대조: G-B7 통과 **0** 은 진짜 0 이다 — `—` 로 가려지면 안 된다.
+
+    (위 두 음성이 '0 을 —' 로 과교정하는 것을 막는다.)
+    """
+    assert D.li2s_neb_branch()["round1"]["n_ok"] == 0
+    assert "0 / 18" in _html(client), "진짜 0 이 화면에서 사라졌다"
+
+
+def test_missing_neb_closure_is_announced_not_hidden(client):
+    """⛔음성: 마감 기록이 없으면 절을 **빈 채로 그리지 않는다**."""
+    real = D._load_json
+
+    def fake(p):
+        return None if Path(p).name == NEBC else real(p)
+
+    with patch.object(D, "_load_json", side_effect=fake):
+        nb = D.li2s_neb_branch()
+        assert nb["ok"] is False and NEBC in nb["why"]
+        r = client.get("/li2s")
+        assert r.status_code == 200, "기록 하나가 없다고 화면이 죽으면 안 된다"
+        h = r.get_data(as_text=True)
+    assert "NEB 가지 기록을 못 읽었다" in h and NEBC in h, "없는 기록을 화면이 말하지 않는다"
+    # ⚠ 헤딩은 **마감 카드 절과 달라야** 한다 — 같은 문자열이면 한쪽이 사라졌는지
+    #   다른 쪽이 그린 것인지 시험이 구분하지 못한다 (2026-09-21 실측: 실제로 충돌했다).
+    assert "NEB 가지 — 재개 조건" not in h, "기록이 없는데 재개조건 절을 그렸다"
+    assert "NEB 가지 — ⛔ 금지 서술" not in h, "기록이 없는데 금지 서술 절을 그렸다"
+
+
+def test_forbidden_statements_are_on_screen(client):
+    """금지 서술이 화면에 실린다 — 원장에만 있으면 사람은 화면을 인용한다."""
+    h = _html(client)
+    nb = D.li2s_neb_branch()
+    assert nb["forbidden"], "금지 서술이 비었다"
+    assert "「이 유리에 Li 이동 장벽이 없다」" in h, "핵심 금지 서술이 화면에 없다"
+    for x in nb["forbidden"]:
+        assert x in h, f"금지 서술이 화면에서 빠졌다: {x[:40]}"

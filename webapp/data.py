@@ -7557,6 +7557,71 @@ def li2s_ladder() -> dict:
             "record": f"db/properties/{LI2S_LADDER_JSON}"}
 
 
+LI2S_NEB_CLOSED_JSON = "lpscl_smallcell_neb_closed_2026_09_19.json"
+LI2S_SHORTLAG_ROUND_JSON = "lpscl_smallcell_shortlag_round_2026_09_21.json"
+
+
+def li2s_neb_branch() -> dict:
+    """소셀 **NEB 가지**의 마감 + 재개조건 현황.
+
+    왜 이 절이 생겼나 (2026-09-21): 이 화면에는 NEB 가지가 사다리 칸 옆 **한 줄**로만
+      있었고, 그 줄이 사다리 기록에서 와서 *"끝점 9/9 생존 → 다음은 UMA-NEB"* 라고
+      3 일째 말하고 있었다. 실제로는 09-19 에 **G-B7 0/9** 로 닫혔고 09-21 에 재개조건
+      ① 도 **0/18** 로 소진됐다. 화면만 보는 사람은 "이제 NEB 를 돌린다" 로 읽는다 —
+      CLAUDE.md §화면 규율이 경고하는 바로 그 자리다.
+
+    무엇을 싣나: 마감 기록의 **확정값·허용/금지 서술·§7 재개조건**, 그리고 각 재개조건이
+      소진됐는지. 소진 여부는 **원장 문자열에서 읽는다**(`소진` 표시) — 화면이 세지 않는다.
+
+    ⛔ 못 하는 것
+      · 판정하지 않는다. 문구를 요약하지도 않는다 — 원장 문자열 그대로다.
+      · 소진 개수를 화면이 계산해 '남은 조건 N 개' 라고 쓰지 않는다. 원장에 적힌 표시만 옮긴다.
+      · 기록을 못 읽으면 **빈 절을 그리지 않는다** (ok=False 로 말한다).
+      · 라운드 기록이 없으면 ①의 세부를 **0 으로 그리지 않는다** — `None` 으로 두고 화면이 `—` 를 낸다.
+    """
+    d = _load_json(DB / "properties" / LI2S_NEB_CLOSED_JSON)
+    if not d:
+        return {"ok": False,
+                "why": f"db/properties/{LI2S_NEB_CLOSED_JSON} 을 못 읽었다"}
+    hist = d.get("status_history") or []
+    fixed = d.get("1_확정값") or {}
+    reopen = []
+    for x in d.get("7_재개_조건_이것들만") or []:
+        if not isinstance(x, str):
+            continue
+        if x.lstrip().startswith("⛔"):          # 목록 끝의 "넷 밖으로 안 연다" 줄
+            reopen.append({"text": x, "spent": None, "is_rule": True})
+            continue
+        reopen.append({"text": x, "spent": "소진" in x, "is_rule": False})
+    rd = _load_json(DB / "properties" / LI2S_SHORTLAG_ROUND_JSON)
+    round1 = None
+    if rd:
+        c = rd.get("1_census_N1") or {}
+        g = rd.get("2_G-B7_N2") or {}
+        round1 = {"verdict": rd.get("판정"), "n1": c.get("⭐_N1"),
+                  "n_raw": c.get("원시_합"), "n_dropped": len(c.get("제외_12") or []),
+                  "n_ok": g.get("n_ok"), "n_events": g.get("n_events"),
+                  "allowed": _dig(rd, "3_해석_카드가_허용하는_만큼만.허용_문구_하나"),
+                  "record": f"db/properties/{LI2S_SHORTLAG_ROUND_JSON}"}
+    return {
+        "ok": True,
+        "title": d.get("제목") or "",
+        "state": (hist[-1].get("state") if hist else None) or d.get("status"),
+        "state_at": (hist[-1].get("at") if hist else None) or d.get("date"),
+        "closed_target": d.get("닫는_대상") or "",
+        "order": d.get("⚠_순서") or "",
+        "eb": fixed.get("Eb"), "gb7": fixed.get("G-B7_통과"),
+        "why": fixed.get("왜"), "cond": fixed.get("조건"),
+        "allowed": d.get("3_★_허용_서술_이대로만") or [],
+        "forbidden": d.get("4_⛔_금지_서술") or [],
+        "undecided": d.get("5_가르지_못한_것") or {},
+        "reopen": reopen,
+        "left_behind": d.get("8_이_가지가_남긴_것") or [],
+        "round1": round1,
+        "record": f"db/properties/{LI2S_NEB_CLOSED_JSON}",
+    }
+
+
 LI2S_CLOSED_JSON = "lpscl_smallcell_closed_2026_09_18.json"
 
 

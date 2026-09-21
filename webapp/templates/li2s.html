@@ -115,6 +115,63 @@
 <p class="mut">기록: <span class="mono">{{ ld.record }}</span></p>
 {% endif %}
 
+{# ── 사다리 밖 가지: NEB — 마감 + 재개조건 현황 (2026-09-21 신설) ──────────────
+   왜: 종전엔 사다리 옆 한 줄뿐이었고 그 줄이 "9/9 생존 → 다음은 UMA-NEB" 로 3 일 낡아
+   화면이 "이제 NEB 를 돌린다" 고 말했다. 실제는 0/9 로 닫혔고 ① 도 0/18 로 소진됐다. #}
+{% if not nb.ok %}
+<div class="callout cal-danger"><b>⛔ NEB 가지 기록을 못 읽었다</b> — {{ nb.why }}.
+  빈 절로 흉내내지 않는다.</div>
+{% else %}
+<h2 style="margin-top:22px">사다리 밖 가지 — NEB <span class="mut" style="font-weight:400">({{ nb.state }} · {{ nb.state_at }})</span></h2>
+<div class="callout cal-danger">
+  <b>{{ nb.title }}</b>
+  <div style="margin-top:6px">닫는 대상: {{ nb.closed_target }}</div>
+  <div class="mut" style="margin-top:4px">{{ nb.order }}</div>
+</div>
+<table class="tbl"><tbody>
+  <tr><th style="width:12rem">Eb</th><td>{{ nb.eb or '—' }}</td></tr>
+  <tr><th>G-B7 통과</th><td>{{ nb.gb7 or '—' }}</td></tr>
+  <tr><th>왜</th><td>{{ nb.why or '—' }}</td></tr>
+  <tr><th>조건</th><td class="mut">{{ nb.cond or '—' }}</td></tr>
+</tbody></table>
+
+{% if nb.round1 %}
+<div class="callout cal-warn" style="margin-top:10px">
+  <b>재개조건 ① 라운드 (2026-09-21) — {{ nb.round1.verdict }}</b>
+  <div style="margin-top:6px">
+    census 원시 {{ nb.round1.n_raw if nb.round1.n_raw is not none else '—' }} 건
+    → 끝점 쌍 공유 {{ nb.round1.n_dropped if nb.round1.n_dropped is not none else '—' }} 건 제외
+    → <b>N₁ = {{ nb.round1.n1 if nb.round1.n1 is not none else '—' }}</b>
+    · G-B7 통과 <b>{{ nb.round1.n_ok if nb.round1.n_ok is not none else '—' }} / {{ nb.round1.n_events if nb.round1.n_events is not none else '—' }}</b>
+  </div>
+  {% if nb.round1.allowed %}<div class="mut" style="margin-top:4px">허용 문구: {{ nb.round1.allowed }}</div>{% endif %}
+  <div class="mut">기록: <span class="mono">{{ nb.round1.record }}</span></div>
+</div>
+{% else %}
+<div class="callout cal-warn" style="margin-top:10px">
+  <b>⚠ 재개조건 ① 라운드 기록을 못 읽었다</b> — 수치를 0 으로 그리지 않는다.
+</div>
+{% endif %}
+
+<h3 style="margin-top:14px">NEB 가지 — 재개 조건 (이것들만)</h3>
+<ul>
+{% for r in nb.reopen %}
+  {% if r.is_rule %}<li class="mut">{{ r.text }}</li>
+  {% else %}<li>{% if r.spent %}<b>⛔ 소진</b> · {% else %}<b>열림</b> · {% endif %}{{ r.text }}</li>{% endif %}
+{% endfor %}
+</ul>
+
+<h3 style="margin-top:14px">NEB 가지 — 허용 서술 (이대로만)</h3>
+<ul>{% for x in nb.allowed %}<li>{{ x }}</li>{% endfor %}</ul>
+<h3>NEB 가지 — ⛔ 금지 서술</h3>
+<ul>{% for x in nb.forbidden %}<li>{{ x }}</li>{% endfor %}</ul>
+{% if nb.undecided %}
+<p class="mut">가르지 못한 것 — (a) {{ nb.undecided['a'] }} / (b) {{ nb.undecided['b'] }} · {{ nb.undecided['⛔'] }}</p>
+{% endif %}
+<ul class="mut">{% for x in nb.left_behind %}<li>{{ x }}</li>{% endfor %}</ul>
+<p class="mut">기록: <span class="mono">{{ nb.record }}</span></p>
+{% endif %}
+
 {% for s in p.stages %}
 <div class="card" style="padding:14px 18px;margin-top:10px;
      border-left:3px solid {{ '#dc2626' if s.missing else ('#16a34a' if s.verdict and '통과' in s.verdict|string

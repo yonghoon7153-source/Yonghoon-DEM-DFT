@@ -1444,7 +1444,8 @@ def li2s_pipeline_page():
     return render_template("li2s.html", active="li2s", p=p,
                            fe=D.li2s_force_by_element(),
                            cc=D.li2s_closure_card(),
-                           ld=D.li2s_ladder())
+                           ld=D.li2s_ladder(),
+                           nb=D.li2s_neb_branch())
 
 
 @app.route("/benchmarks")
