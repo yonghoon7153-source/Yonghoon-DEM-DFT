@@ -15,8 +15,8 @@
 
 | 기계 | 지금 |
 |---|---|
-| **V100** | ⛔ **② G-B7 끝 — 통과 0/18 ⇒ 갈래2 · 재개조건 ① 소진(proposed).** N₁ 18(30 원시 → 공유쌍 12 제외 · lag5 겹침 0). 원자료 회수 `db/properties/lpscl_smallcell_shortlag_raw/`(81 파일 · sha 매니페스트) · 기록 `lpscl_smallcell_shortlag_round_2026_09_21.json` · 마감 §7 ① 소진 박음(proposed). GPU 유휴 |
-| **kgy** | 🟢 lpsocl s6/T800 재시작 (14:1x · 세 번 실패 뒤 — 아래) + cascade v6 40런. GPU 공유 |
+| **V100** | ⛔⛔ **이 캠페인에서 뺀다 — uma env 가 깨졌다.** DEM 이 같은 env 를 공유하는데 오늘 15:45 pip 이 돌아 cu12 payload(nccl·nvshmem·cusparseLt)를 지우고 cu13 으로 갈아엎다 멈췄다 (mtime 확정 · `kb/platforms/v100_uma_setup_2026_09_14.md` 함정 ⑧). 복구 불가(nvshmem 이 kgy 에도 없고 인터넷 차단 · 대안 env 없음). ✅ G-B7 18 사건은 **삭제 직전 15:29 에 끝나** 살았고 원자료는 repo 로 회수 완료 |
+| **kgy** | 🟢 lpsocl s6 + cascade v6 **+ 소셀 유리 담금질 seed2 (17:06 발사 · turbo · `~/work/runs/lpscl_smallcell_2026_09_16/A/seed2`)**. ⚠ GPU util 100 % 3-way 공유라 15 h 견적은 늘어난다 — 첫 시드 실측으로 카드 견적을 갈아끼운다 || **kgy** | 🟢 lpsocl s6/T800 재시작 (14:1x · 세 번 실패 뒤 — 아래) + cascade v6 40런. GPU 공유 |
 | **gabia** | 🟢 LOBSTER nscf 3차 (PID 3003581 · 13:57 · 15:38 에 1/4 k-점 진행 중) · ETA 09-23 낮. ⏸ **탄성(modelc_2x) 재개는 그 뒤** — GPU 는 비었지만 호스트 available **15 GB** (LOBSTER 40 GB) 에 pw.x 는 >23.8 GB 요구 → OOM 킬러가 LOBSTER 를 잡는다. 러너에 F 선행조건(nstep 200 · trust_radius_max 0.05 · 23_p 재실행 · 완료판정 `bfgs converged`) + 호스트 RAM 가드 넣음 (`793bc03b7`) — 같은 명령으로 재개하면 된다 |
 
 **오늘 오후 끝난 것**
