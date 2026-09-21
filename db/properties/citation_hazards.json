@@ -508,6 +508,25 @@
    "added": "2026-09-16",
    "binding_scope": "partial",
    "binding_scope_why": "rho·p 는 레지스트리 항목이 아니라 **파생 통계량**이라 claim 을 걸 자리가 없다. 다만 화면(아티팩트 §7 Fig. 7a 캡션·figexp·말하면 안 되는 것)에 단서 3 건이 같이 실려 있어 발췌돼도 조건이 따라간다."
+  },
+  {
+   "file": "db/properties/cei_gap_results_2026_09_19.json",
+   "source_path": "db/properties/cei_gap_results_2026_09_19.json",
+   "level": "CONDITIONAL",
+   "added": "2026-09-21",
+   "what": "NdP5O14 fixed-occ nscf 갭 **5.393 eV** (rows[9] · tag NdP5O14_mp-aaabfxkr)",
+   "why": "MP(mp-560681, Pmna) 6.336 대비 **−0.943 eV (−14.9 %)** 미재현. 나머지 9 종은 |Δ| ≤ 0.120 eV. 구조(Pmna)·설정(nbnd 332 · k 5×5×4)·수렴(P −0.35 kbar)은 정상이고 부피 가설(+3.66 %)은 P₂O₅(+9.42 % 팽창 · 갭 −0.016)가 반증 — **원인 미확정**",
+   "fix": "'−0.943 eV 미재현(원인 미확정)' 단서와 함께만 인용한다. 이 값으로 '축합될수록 갭이 넓어진다' 를 말하지 않는다 — 우리 값은 NdPO4 5.799 → Nd(PO3)3 5.497 → NdP5O14 5.393 으로 내려간다. 허용: '판별종 10 종 전부 갭 열림 (2.26–5.99 eV, PBE)'. 남은 확인은 MP 참조값 쪽 조회(어느 엔트리·범함수의 6.336 인가)이지 재계산이 아니다",
+   "id": "HZ-cei-gap-ndp5o14-unreproduced",
+   "binding_scope": "partial",
+   "binding_scope_why": "5.393 은 canonical_registry 에 없어 숫자 결속이 안 된다. 화면(db/properties/cei_figs/index.html §6)은 표 행과 예측 카드에 data-claim 으로 이 id 를 단다. '축합 사다리' 문장은 산문이라 문구로만 잡히는데, 지금 그 문구는 kb/open_items.md · kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md · 보고서 §6/§9 에 '쓰지 않는다' 는 교육 문장으로 살아 있어 forbidden_phrases 로 켜면 무관용 결속 시험이 깨진다 → pending 에 둔다",
+   "pending_forbidden_phrases": {
+    "why": "문구가 실제로 걸리지만 걸리는 자리가 전부 '이 문장은 쓰지 않는다' 는 교육 문장이다. 그 요소가 data-claim=\"HZ-cei-gap-ndp5o14-unreproduced\" 로 이름을 대면 결속이 성립한다.",
+    "measured": "2026-09-21 · grep -rl 로 3 파일 (kb/open_items.md · kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md · db/properties/cei_figs/index.html)",
+    "phrases": {
+     "축합될수록 갭이 넓어진다": "3 파일 — 보고서 §6 카드는 이미 data-claim 결속, §9 항목과 kb 두 문서는 미결속"
+    }
+   }
   }
  ],
  "_history": [
@@ -530,9 +549,14 @@
    "date": "2026-09-16",
    "what": "dual compatibility 3 건 등록 — O/P 단일 축 철회(SUPERSEDED) · 열린계 실행 전량 무효(BLOCKED) · n=4 순열 p 조건부(CONDITIONAL)",
    "why": "카드와 화면에는 실었는데 **인용위험 원장에 없었다.** 인용 전 30 초 점검(레지스트리 → hazards → decisions)을 하는 사람에게는 안 보인다."
+  },
+  {
+   "date": "2026-09-21",
+   "what": "CEI 갭 1 건 등록 — NdP₅O₁₄ 5.393 eV 미재현(CONDITIONAL). §6 10/10 완주와 같이 올렸다.",
+   "why": "미재현 값이 화면(§6)에 실리면서 단서 없이 복사될 위험이 생겼다. 화면 행·카드에 data-claim 으로 결속하고, 원장에도 같은 id 로 남긴다."
   }
  ],
- "updated": "2026-09-13",
+ "updated": "2026-09-21",
  "_schema_note": {
   "claim": "화면 결속용 claim id (`<metric>@<system>`, canonical_registry 파생). 이 위험이 **어느 정본 주장**에 대한 것인지 이름을 대면, /governance 표에서 근접성 없이 결속이 성립한다 (회신 BG ②).",
   "id": "안정 hazard 식별자. 화면·handoff 가 `data-claim=\"<id>\"` 로 이 위험을 선언한다 (회신 BG ②).",

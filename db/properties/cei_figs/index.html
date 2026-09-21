@@ -172,15 +172,18 @@
 
 <p class="eyebrow">배경 지식 없이 읽는 설명을 같이 담았다</p>
 <h1>Nd 는 인산염 싱크다</h1>
-<p class="sub">고전압에서 Nd 가 하는 일 — CEI 계면 반응성의 Nd/O 분해</p>
+<p class="sub">Nd 치환을 통한 <b>고전압 양극 계면 열화 억제</b> — 전압창이 아니라 분해 산물의 이야기</p>
 
 <p class="lede">고체 전해질을 양극에 붙여 높은 전압까지 충전하면 둘이 닿은 면에서
 반응이 일어나 <strong>새로운 층</strong>이 생긴다. 그 층이 잘 생기면 더 이상의 반응을 막아 주고,
 잘못 생기면 전지가 계속 갉힌다. 이 페이지는 <strong>전해질에 Nd 와 O 를 넣으면 그 층이
-어떻게 달라지는가</strong>를 계산으로 따진 기록이다. 실험은 하나도 없고, 전부
-<strong>어떤 상이 생기는 것이 에너지상 이로운가</strong>를 데이터베이스 위에서 푼 것이다.</p>
-<p class="meta">2026-09-16 · grand-potential interfacial reactivity (Richards/Ong 2016) ·
-MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes × 6 voltages)</p>
+어떻게 달라지는가</strong>를 계산으로 따진 기록이다. 실험은 하나도 없다. 계산은 두 층이다 —
+<strong>어떤 상이 생기는 것이 에너지상 이로운가</strong>는 데이터베이스(MP hull) 위에서 풀었고(§1–5·§7),
+<strong>그렇게 생긴 상이 전자를 막을 성질인가</strong>(밴드갭)는 우리가 직접 DFT 로 쟀다(§6, 판별종 10 종 완주).</p>
+<p class="meta">2026-09-16 시작 · <b>2026-09-21 개정</b>(§0 도입 · 층 가르기 · Fig. 1 3패널 · §6 10/10 · 그림 번호 정리) ·
+grand-potential interfacial reactivity (Richards/Ong 2016) ·
+MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes × 6 voltages) ·
+갭: QE PBE fixed-occupations nscf, 판별종 10 종 (gabia, 2026-09-19 ~ 21)</p>
 
 <div class="noprint" style="margin:2px 0 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
   <button type="button" onclick="window.print()"
@@ -192,7 +195,7 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes ×
     &#183; <b>배경 그래픽</b> 켜야 모식도 색이 나온다</span>
 </div>
 
-<ul class="toc"><li><a href="#s1"><b>1</b> 분해</a></li><li><a href="#s2"><b>2</b> 산물이 말한다</a></li><li><a href="#s2b"><b>2b</b> 얼마나 — 정량 곡선</a></li><li><a href="#s3"><b>3</b> 검증 — 절반 철회</a></li><li><a href="#s4"><b>4</b> 전 혼합범위 스캔</a></li><li><a href="#s5"><b>5</b> 다른 3가 도펀트</a></li><li><a href="#s6"><b>6</b> 갭 단계 계획</a></li><li><a href="#s7"><b>7</b> 반대쪽 접촉(전해질)</a></li><li><a href="#s8"><b>8</b> 양극별 원자료</a></li><li><a href="#s8b"><b>8b</b> 반론 여덟</a></li><li><a href="#s9"><b>9</b> 말하면 안 되는 것</a></li></ul>
+<ul class="toc"><li><a href="#s0"><b>0</b> 왜 ‘열화 억제’ 인가</a></li><li><a href="#s1"><b>1</b> 분해 (Li 미보정)</a></li><li><a href="#s2"><b>2</b> 산물이 말한다</a></li><li><a href="#s2b"><b>2b</b> 얼마나 — 정량 곡선</a></li><li><a href="#s3"><b>3</b> 검증 — 절반 철회</a></li><li><a href="#s4"><b>4</b> 전 혼합범위 스캔</a></li><li><a href="#s5"><b>5</b> 다른 3가 도펀트</a></li><li><a href="#s6"><b>6</b> 갭 10/10 (우리 DFT)</a></li><li><a href="#s7"><b>7</b> 반대쪽 접촉(전해질)</a></li><li><a href="#s8"><b>8</b> 양극별 원자료</a></li><li><a href="#s8b"><b>8b</b> 반론 여덟</a></li><li><a href="#s9"><b>9</b> 말하면 안 되는 것</a></li><li><a href="#sf"><b>F</b> 파일</a></li></ul>
 <div class="tldr">
   <div class="tldr-t">이 페이지가 무엇을 말하나 — 한 화면</div>
 
@@ -204,17 +207,66 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes ×
       <li>전해질 쪽은 <b>“새로 망가뜨리지는 않는다”</b> 까지</li>
       <li><b>치환 자리가 부호를 바꾼다</b> — 같은 Nd 농도에서 <b>Li 자리</b>는 계면 반응을 줄이고
           <b>P 자리</b>는 늘린다. 농도는 두 자리 다 선형이다 <span class="mono">(x 0.02–0.20)</span></li>
+      <li>hull 이 고르는 <b>판별종 10 종을 우리 DFT 로 직접 쟀다 — 10/10 갭이 열려 있다</b> (2.26–5.99 eV, PBE).
+          9 종은 MP 와 ±0.12 eV 안에서 재현, <b>NdP₅O₁₄ 1 종은 −0.94 eV 미재현</b>(원인 미확정, 그래도 5.39 eV 절연체)</li>
     </ul></div>
-    <div class="tldr-no"><div class="tldr-lbl">⛔ 말하지 않는 것 <span class="mono">— 전체 25 개는 <a href="#s9">§9</a></span></div><ul>
+    <div class="tldr-no"><div class="tldr-lbl">⛔ 말하지 않는 것 <span class="mono">— 전체 28 개는 <a href="#s9">§9</a></span></div><ul>
       <li><b>“Nd 가 산화 안정성·전압창을 넓힌다”</b> — 우리 데이터가 <b>반증한다</b>. 2.14 V → <b>1.92 V</b>, 0.22 V <b>좁힌다</b></li>
       <li><b>“Nd 가 최적의 3 가 도펀트다”</b> — 어느 축에서도 1 등이 아니다. 쓸 수 있는 것은 <b>“Gd·Y·Sc·La 와 구분되지 않는다”</b> 까지</li>
       <li><b>“NdPO₄ 가 Li₃PO₄ 보다 깊은 P 싱크다”</b> — <b>철회됨</b> (+1.5035 eV/P 양수)</li>
-      <li>이 이득을 <b>부동태화</b>로 읽기 — 계면 <b>반응 구동력</b>이지 산물의 전자 성질이 아니다</li>
+      <li>이 이득을 <b>부동태화</b>로 읽기 — §1–5 는 계면 <b>반응 구동력</b>이고, §6 은 판별종 10 종이 <b>넓은 갭 절연체</b>라는 것까지다. 실제 계면층의 연속성·두께·전자 수송은 <b>안 쟀다</b></li>
+      <li><b>“Δ 반응에너지가 전압과 함께 6.6 배”</b> — Nd 화학이 아니라 <b>Li 장부</b>다 (Li 를 맞춘 무-Nd 대조군에서 Nd 항 <b>−50.8 meV/atom</b> @4.5 V). Fig. 1 의 옛 패널 (c) 를 그래서 뺐다</li>
       <li><b>Nd 가 실제로 어느 자리에 들어가는지</b> — 이건 조성점 계산이라 자리 선호를 재지 않는다</li>
     </ul></div>
   </div>
   <div class="tldr-foot">이 페이지의 숫자는 전부 계산 기록에서 옮긴 것이고, 각 절 끝에 출처 파일을 적어 두었다. <b>인용하기 전에 <a href="#s9">§9(말하면 안 되는 것)</a>를 한 번 본다</b> — 같은 데이터로 말할 수 있는 것과 없는 것이 거기 갈려 있다.</div>
 </div>
+
+<section id="s0" class="sec">
+<details class="secfold" open>
+<summary><h2 class="sec-h">0. 왜 “고전압 안정성 개선” 이 아니라 “양극 계면 열화 억제” 인가</h2><span class="sec-one">전압창은 <b>안 넓어진다</b> — 우리 데이터가 먼저 반증했다(산화 onset 2.14 → <b>1.92 V</b>). 논지는 창이 아니라 <b>분해 산물</b>이다</span></summary>
+<div class="secbody">
+<p class="plain">이 절이 맨 앞에 있는 이유: “Nd 도핑으로 고전압 안정성이 좋아진다” 는 문장은 <b>두 가지로 읽힌다</b>.
+① 전해질이 더 높은 전압까지 산화되지 않는다(<b>전압창</b>), ② 계면에서 생기는 층이 양극을 덜 망가뜨린다(<b>양극 열화</b>).
+이 페이지의 데이터는 ①을 <b>반증</b>하고 ②를 받친다. 첫 문단에서 못박지 않으면 심사자는 ①로 읽는다.</p>
+
+<div class="card warn" data-claim="cei.esw.nd_narrows_window">
+<p style="margin:0 0 8px"><b>🔴 우리 데이터가 먼저 말한다 — Nd 는 산화창을 넓히지 않고 <u>좁힌다</u>.</b> <span class="claim-mark">[자가반증]</span></p>
+<div class="tblwrap" style="margin:0 0 8px"><table>
+<thead><tr><th>조성</th><th>산화 onset (V vs Li/Li⁺)</th><th>환원 onset (V)</th></tr></thead>
+<tbody>
+<tr><td class="mono">comp1 (Li₆PS₅Cl)</td><td class="mono">2.14</td><td class="mono">1.242</td></tr>
+<tr><td class="mono">modelc (LPSCl₁.₆)</td><td class="mono">2.14</td><td class="mono">1.242</td></tr>
+<tr><td class="mono">lpsocl (O 치환)</td><td class="mono">2.14</td><td class="mono">1.242</td></tr>
+<tr><td class="mono">modelc_nd (Nd + O)</td><td class="mono" style="color:var(--ox)"><b>1.92</b></td><td class="mono" style="color:var(--ox)"><b>1.518</b></td></tr>
+</tbody></table></div>
+<p style="margin:0;font-size:.9rem">O 치환은 onset 을 <b>안 움직이고</b>(2.14 고정), Nd 는 <b>0.22 V 내린다</b> — 환원 쪽도 0.28 V 올라가 창은 양쪽에서 좁아진다.
+grand-potential element profile (Li 열림, MP hull) — <code>db/properties/cei_esw_Li_2026_09_16.json</code>.
+심사자가 찾아낼 것이 아니라 우리가 먼저 싣는 것이다.</p>
+</div>
+
+<p><b>문헌도 같은 결론이다.</b> Banik 외 (Yifei Mo · Wolfgang Zeier, 2022) 는 argyrodite 에서 P→Si/Ge, Cl→I 치환이
+산화 분해를 <b>바꾸지 못한다</b>는 것을 HAXPES(VBM 실측) · stepwise CV · DFT 세 축으로 닫았다 —
+VBM 이 PS₄³⁻ 비결합 + free S²⁻ 라 <b>S 가 조성에 있는 한 S 가 산화 한계를 고정</b>한다. 결론은
+<i>“단순 치환으로는 황화물 SE 의 산화 안정성을 개선할 수 없다 — 양극 코팅이 필요하다.”</i>
+우리 2.14 V 고정이 정확히 그 S-pinning 이다. <b>정면으로 받으면 진다. 동의하고 인용한다.</b></p>
+
+<div class="card answer">
+<p style="margin:0"><b>⇒ 그래서 창이 아니라 산물을 본다.</b> 창은 S 가 고정하지만, 산화가 <i>일어난 뒤</i>
+<b>무엇이 생기느냐</b>는 도펀트가 바꾼다. 무도핑 LPSCl 은 4 V 위에서 남은 P 를 <b>양극의 전이금속</b>으로 받아
+CoP₄O₁₁ · Ni(PO₃)₂ 를 만들고(§2 표), Nd 계는 그 P 를 <b>Nd 인산염</b>(NdPO₄ → LiNd(PO₃)₄ → NdP₅O₁₄)으로
+선점한다 — Li 를 안 쓰는 방을 전해질이 <b>제자리에서</b> 들고 온다. Banik 이 말한 “코팅” 의 기능을 SE 도펀트가
+in-situ 로 하는 셈이고, onset 은 건드리지 않으므로 그의 결론과 충돌하지 않는다.</p>
+<p style="margin:8px 0 0;font-size:.9rem">읽는 순서 — <a href="#s2">§2</a> 무엇이 생기나(산물 사다리) →
+<a href="#s2b">§2b</a> 얼마나 아끼나(정량 규칙 · 1저자 조성) → <a href="#s6">§6</a> 그 산물이 전자를 막나(우리 DFT 갭 10/10) →
+<a href="#s7">§7</a> 전해질 쪽에서도 지내나(양면 검사). <b>접힌 절은 근거·검산·반론</b>이고, 요지는 접힘 밖 한 줄에 있다.</p>
+</div>
+
+<p class="meta" style="margin:8px 0 0">출처 · <code>db/properties/cei_nd_novelty_audit_2026_09_18.json</code> §1·§6
+(문헌·자가반증 감사 · 1저자 검토 전) · Banik 은 litdb digest 텍스트만 봤고 그림은 안 봤다.</p>
+</div>
+</details>
+</section>
 <div class="tldr" style="margin-top:14px">
   <div class="tldr-t">⚠ 이 페이지의 계산은 <b>두 조성 계열</b>에서 나왔다</div>
   <p style="margin:0 0 10px;font-size:.88rem;color:var(--mut)">
@@ -286,6 +338,9 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes ×
 
 
 
+<details class="secfold">
+<summary><h2 class="sec-h">질문 둘에 대한 답 — ① Nd 특화인가 O 효과인가 · ② Nd 여야만 하나</h2><span class="serbadge sa">계열 A · Li 자리</span><span class="sec-one">① 둘 다 반응성을 낮춘다 — 크기를 도펀트 화학으로 읽을 수 있는 건 <b>O 뿐</b>(Nd 쪽 전압 기울기는 Li 장부, 대조군에서 −50.8 meV/atom) · ② <b>다른 3가도 된다</b> — Nd 는 시연 대표</span></summary>
+<div class="secbody">
 <div class="card answer">
 <p class="lead" style="margin:0"><strong>질문 둘</strong> — ① 이 효과가 Nd 특화인가 O 효과인가?
 ② <b>Nd 여야만 하나, 다른 3가 양이온도 되나?</b></p>
@@ -375,10 +430,12 @@ Li 0 개, Li₃PO₄ 는 3 개). 고전압이 Li 를 빼가면서 그 경로의 
 
 
 </div>
+</div>
+</details>
 
 <section id="s1" class="sec">
 <details class="secfold">
-<summary><h2 class="sec-h">1. 분해 — 대조 조성 둘을 추가해서 갈랐다</h2><span class="serbadge sa">계열 A · Li 자리</span><span class="sec-one">전압 6 점 × 조성 4 — Li 재고 교란을 가르려고 <b>대조 조성 둘</b>을 추가했다</span></summary>
+<summary><h2 class="sec-h">1. 분해 — 대조 조성 둘을 추가해서 갈랐다</h2><span class="serbadge sa">계열 A · Li 자리</span><span class="sec-one">Nd·O 둘 다 반응성을 낮추고 <b>그냥 더해진다</b>(잔차 문턱의 1/20 · Li 미보정). 그러나 전압 기울기는 <b>Li 장부</b>(dΦ/dV = +N<sub>Li</sub>)라 §1 은 <b>주 증거가 아니다</b> — 옛 “6.6 배” 는 철회, 옛 패널 (c) 는 뺐다</span></summary>
 <div class="secbody">
 
 <p class="plain">익숙한 것에 빗대면 <b>블록 탑에서 블록을 빼는 것</b>이다.
@@ -410,83 +467,66 @@ Li 0 개, Li₃PO₄ 는 3 개). 고전압이 Li 를 빼가면서 그 경로의 
 기계 경로라 바꾸지 않는다(바꾸면 원장·게이트가 끊긴다). <b>사람이 읽는 이름만</b> 이 문서에서 바꿨다.</p>
 
 <figure>
-<img src="cei_nd_o_decomposition.png" alt="Four panels. (a) Delta reaction energy versus voltage for Nd only, O only and both, with the sum of parts overlaid; the Nd curve overtakes the flat O curve at 3.5 V and rises steeply. (b) Additivity residual inside the pre-registered plus-minus 0.010 band at every voltage. (c) The same quantities normalised to their 2.5 V value: delta Nd only rises 6.58 times while the amount of Nd-bearing product rises only 1.42 times and delta O only stays at 1.03. (d) Dot matrix of which phase the Nd ends up in at each voltage, rows ordered by phosphorus per Nd, showing NdPO4 at low voltage giving way to the condensed phosphates Nd(PO3)3 and NdP5O14 at high voltage.">
+<img src="cei_nd_o_decomposition.png" alt="Three panels. (a) Delta reaction energy versus voltage for Nd only, O only and both, with the sum of parts overlaid and shaded bands spanning the four cathodes; the Nd curve overtakes the flat O curve at 3.5 V and rises steeply. (b) Additivity residual inside the pre-registered plus-minus 0.010 band at every voltage. (c) Dot matrix of which phase the Nd ends up in at each voltage, rows ordered by phosphorus per Nd, showing NdPO4 at low voltage giving way to the condensed phosphates Nd(PO3)3 and NdP5O14 at high voltage.">
 <figcaption><b>Fig. 1. Decomposition of the Nd/O co-substitution effect on interfacial
-reactivity, and where the voltage dependence comes from.</b> (a) Change in grand-potential interfacial reaction energy relative to the
+reactivity.</b> (a) Change in grand-potential interfacial reaction energy relative to the
 undoped Li<sub>5.4</sub>PS<sub>4.4</sub>Cl<sub>1.6</sub> reference, against applied voltage,
 for the Nd-only (Li<sub>4.8</sub>Nd<sub>0.2</sub>PS<sub>4.4</sub>Cl<sub>1.6</sub>), O-only
 (Li<sub>5.4</sub>PS<sub>4.1</sub>O<sub>0.3</sub>Cl<sub>1.6</sub>) and co-substituted
 (Li<sub>48</sub>Nd<sub>2</sub>P<sub>10</sub>O<sub>3</sub>S<sub>41</sub>Cl<sub>16</sub>)
 compositions. Higher values indicate lower reactivity. Dotted line: arithmetic sum of the two
-single-substitution effects. Shaded bands span the four cathodes. (b) Additivity residual,
+single-substitution effects. Shaded bands span the four cathodes. The lithium inventory is
+<i>not</i> matched between compositions: because d&#934;/dV = +N<sub>Li</sub>, the slope of the
+Nd-only curve is dominated by the 0.6 Li per formula unit removed by
+Nd<sup>3+</sup>&#8596;3Li<sup>+</sup>, not by neodymium chemistry &#8212; against a lithium-matched
+Nd-free control the Nd term is negative (&#8722;50.8&#8201;meV/atom at 4.5&#8201;V). The O substitution,
+which leaves &#916;N<sub>Li</sub> = 0, is the flat control. (b) Additivity residual,
 &#916;(Nd) + &#916;(O) &#8722; &#916;(Nd+O). The yellow band is the &#177;0.010&#8201;eV/atom threshold
 registered before the calculations were run; the residual stays inside it at every voltage, so
-(a) may be read as two independent channels. (c) The three quantities of (a) normalised to their
-own 2.5&#8201;V value. From 2.5 to 4.5&#8201;V the Nd channel grows &#215;6.58 while the O channel
-is flat (&#215;1.03). <b>&#9940; RETRACTED 2026-09-18:</b> the original sentence here read
-<s>&#8220;so the entire voltage dependence of (a) is neodymium&#8221;</s>. The voltage dependence tracks
-the change in lithium inventory, not neodymium chemistry: the grand potential gives
-d&#934;/dV = +N<sub>Li</sub>, so a composition carrying fewer Li looks progressively better as V rises.
-Nd<sup>3+</sup>&#8596;3Li<sup>+</sup> removes 0.6 Li per formula unit; the O substitution, which changes
-&#916;N<sub>Li</sub> by zero, is the flat control. Against a lithium-matched Nd-free control the Nd term is
-<b>negative</b> (&#8722;50.8&#8201;meV/atom at 4.5&#8201;V). Over the same range the
-<i>amount</i> of Nd-bearing product the hull forms grows only &#215;1.42 &#8212; the growth is
-therefore not &#8220;more Nd product&#8221;. (d) The phase the Nd ends up in at the minimum-energy
-reaction, one row per phase ordered by phosphorus per Nd, the number in each dot being how many of
-the four cathodes give that phase. NdPO<sub>4</sub> at 2.5&#8211;3.0&#8201;V gives way to the
-condensed phosphates Nd(PO<sub>3</sub>)<sub>3</sub> and NdP<sub>5</sub>O<sub>14</sub> at
-4.3&#8211;4.5&#8201;V. This tracks the system-wide P-host ladder of &#167;3, in which the Li:P of
-whatever phase accepts phosphorus descends 3&#8594;2&#8594;1&#8594;0 with voltage in <i>all six</i>
-electrolytes, Nd-free ones included: voltage strips Li from phosphate, and the Nd phosphate
-condenses with it.
-&#9888; (c) and (d) close two explanations and open none &#8212; the remaining growth is not
-accounted for by the amount of product, nor by the pairwise exchange energy of Fig.&#8201;2a,
-which is flat above 4.0&#8201;V. &#9888; The ratio &#916;/amount is arithmetic, not a separately
-measured quantity; this is a partition, not a mechanism.
-&#9888; (c) and (d) use the <code>nd_only</code> branch only, matching the &#916;(Nd&#8201;only)
-curve of (a); mixing in the co-substituted branch gives &#215;1.80 instead of &#215;1.42 and a
-different conclusion.</figcaption>
+(a) may be read as two independent channels on this lithium-unmatched axis. (c) The phase the Nd
+ends up in at the minimum-energy reaction, one row per phase ordered by phosphorus per Nd, the
+number in each dot being how many of the four cathodes give that phase (<code>nd_only</code>
+branch, matching the &#916;(Nd&#8201;only) curve of (a)). NdPO<sub>4</sub> at 2.5&#8211;3.0&#8201;V
+gives way to the condensed phosphates Nd(PO<sub>3</sub>)<sub>3</sub> and
+NdP<sub>5</sub>O<sub>14</sub> at 4.3&#8211;4.5&#8201;V, following the system-wide P-host ladder of
+&#167;2 (the Li:P of whatever phase accepts phosphorus descends 3&#8594;2&#8594;1&#8594;0 with voltage
+in all six electrolytes, Nd-free ones included): voltage strips Li from phosphate, and the Nd
+phosphate condenses with it. Over the same range the <i>amount</i> of Nd-bearing product grows only
+&#215;1.42 (<code>cei_nd_o_decomposition.csv</code>). A fourth panel of the previous version,
+&#916;(Nd&#8201;only) normalised to its 2.5&#8201;V value (&#215;6.58), was removed on 2026-09-21: that growth
+is the lithium-inventory effect described under (a), not evidence for the Nd mechanism.</figcaption>
 </figure>
 
 <div class="figexp">
 <div class="figexp-h">Fig. 1 을 읽는 법</div>
-<p class="plain" style="margin:0 0 10px">네 패널이 <b>한 논지 사슬</b>이다 —
-(a) 결과 · (b) 그 결과를 두 채널로 읽어도 되는가 · (c) 성장이 <b>양</b> 때문인가 ·
-(d) 그럼 무엇이 바뀌는가.</p>
-<p><b>왼쪽 위(a) 에서 선이 위에 있을수록 좋은 전해질</b>이다. 세로축은 무도핑 기준으로 얼마나
-덜 반응하느냐라서, 0 이 무도핑이고 위로 갈수록 덜 반응한다.</p>
-<p>빨강(<b>O 만</b>)은 전압이 올라가도 <b>거의 평평하다</b> — 2.5 V 에서든 4.5 V 에서든 이득이
-같다. 보라(<b>Nd 만</b>)는 3.5 V 까지는 빨강보다 아래인데 그 뒤로 <b>급격히 올라가</b>
-4.5 V 에서는 빨강의 4 배가 넘는다. <b>저전압에서는 O 가, 고전압에서는 Nd 가 주역</b>이라는
-말이 이 교차에서 나온다.</p>
-<p>가장 중요한 것은 <b>점선과 검은 선이 겹친다</b>는 점이다. 점선은 "Nd 효과와 O 효과를
-그냥 더한 값", 검은 선은 "둘을 실제로 같이 넣고 계산한 값" 이다. 둘이 겹친다는 건
-<b>서로 방해하지도 도와주지도 않는다</b>는 뜻이다.</p>
-<p><b>(b)</b> 가 그 겹침을 확대한 것이다. 세로축은 (Nd 효과 + O 효과) − (둘 다) 이고,
-0 이면 정확히 더해진다는 뜻이다. <b>노란 띠는 결과를 보기 전에 정해 놓은 합격선</b>(±0.010)이고,
-측정된 잔차는 그 띠의 1/20 수준이다. 문턱을 나중에 정했다면 이 그림은 아무 말도 못 한다 —
-먼저 박았기 때문에 판정이 된다.</p>
-<p>음영은 양극 4 종(LiCoO₂·LiNiO₂·LiMnO₂·NMC811)의 <b>흩어진 범위</b>다.
-선은 그 넷의 평균이다.</p>
-
-<p><b>(c) 는 (a) 의 성장이 어디서 오는지</b> 를 묻는다. 세 선을 각자의 2.5 V 값으로 나눴다
-(맨 왼쪽 점 기준 — 결과를 보고 고른 자리가 아니다). 2.5 → 4.5 V 에서
-<b>Nd 채널은 ×6.58</b>, <b>O 채널은 ×1.03</b> 이다. Fig. 1 이 벌어지는 건
-<b>전부 Nd 때문</b>이라는 말이 여기서 나온다.</p>
-<p>그 위에 회색 파선이 <b>hull 이 만드는 Nd 산물의 양</b>이다. 같은 구간에서 <b>×1.42</b>
-밖에 안 커진다. 그래서 <b>"Nd 산물이 더 많이 생겨서"</b> 라는 제일 쉬운 설명이
-<b>닫힌다</b> — 보라와 회색 사이의 벌어진 면적이 그 설명으로 못 메우는 몫이다.</p>
-<p><b>(d) 가 그럼 무엇이 바뀌는지</b> 를 보여준다. 가로는 전압, 세로는 <b>Nd 가 결국
-가는 상</b>이고 <b>P/Nd(축합도) 순서로</b> 쌓았다. 점 안 숫자는 양극 4 종 중 몇 개가
-그 상을 주는지다. 2.5·3.0 V 에서는 넷 다 <b>NdPO₄</b> 인데, 4.3·4.5 V 에서는
-<b>Nd(PO₃)₃ · NdP₅O₁₄</b> 로 올라간다 — <b>인산염이 축합된다</b>.</p>
-<p>이게 Nd 의 특이성이 아니라는 게 중요하다. §3 의 <b>P-host 사다리</b>가
+<p class="plain" style="margin:0 0 10px">세 패널이 <b>한 논지 사슬</b>이다 —
+(a) 결과 · (b) 그 결과를 두 채널로 읽어도 되는가 · (c) 전압이 오르면 Nd 가 가는 상이 어떻게 바뀌는가.</p>
+<p><b>왼쪽(a) 에서 선이 위에 있을수록 덜 반응하는 전해질</b>이다. 세로축은 무도핑 기준으로 얼마나
+덜 반응하느냐라서, 0 이 무도핑이고 위로 갈수록 덜 반응한다. 빨강(<b>O 만</b>)은 전압이 올라가도
+<b>거의 평평하고</b>, 보라(<b>Nd 만</b>)는 3.5 V 위에서 <b>가파르게 올라간다</b>.</p>
+<p style="padding:9px 11px;border-left:3px solid var(--warn);background:var(--warn-soft)">
+<span class="no">⛔</span> <b>그 기울기를 “고전압에서는 Nd 가 주역” 으로 읽지 않는다 — 2026-09-18 철회.</b>
+전압에 대한 기울기는 그 조성의 Li 수와 같다(dΦ/dV = +N<sub>Li</sub>, 아래 상자). Nd³⁺ 하나가 Li⁺ 셋을 대신해
+조성의 Li 가 f.u. 당 0.6 줄고, <b>Li 가 적은 조성은 전압이 오를수록 저절로 유리해 보인다</b>. Li 를 같게 맞춘 무-Nd
+대조군(Li₄.₈PS₄.₄Cl₁.₆)을 넣으면 Nd 항은 4.5 V 에서 <b>−50.8 meV/atom</b> 으로 <b>부호가 뒤집힌다</b>.
+ΔN<sub>Li</sub> = 0 인 O 치환만 평평한 것이 그 증거다. 이전 판의 패널 (c) “Nd 채널 ×6.58” 은 이 Li 장부를
+그림 제목으로 광고하고 있어서 <b>2026-09-21 에 뺐다</b> — “산물 양은 ×1.42 밖에 안 는다” 는 사실만 CSV 에 자료로 남겼다.
+⇒ (a) 는 “Nd 와 O 가 둘 다 반응성을 낮춘다” 까지만 말하고, <b>Nd 의 값어치는 §2·§2b 의 산물 쪽</b>에 있다.</p>
+<p><b>(b)</b> 는 점선(Nd 효과 + O 효과)과 검은 선(둘을 같이 넣고 계산)이 겹치는지를 확대한 것이다.
+세로축은 (Nd 효과 + O 효과) − (둘 다) 이고, 0 이면 정확히 더해진다는 뜻이다.
+<b>노란 띠는 결과를 보기 전에 정해 놓은 합격선</b>(±0.010)이고, 측정된 잔차는 그 띠의 1/20 수준이다.
+문턱을 나중에 정했다면 이 그림은 아무 말도 못 한다 — 먼저 박았기 때문에 판정이 된다.
+⚠ 다만 이 더해짐은 <b>Li 를 보정하지 않은 축</b>에서 잰 것이다 — Li 를 맞추면 Nd 항 자체가 바뀌므로
+“두 효과가 독립이다” 를 조건 없이 쓰지 않는다.</p>
+<p>음영은 양극 4 종(LiCoO₂·LiNiO₂·LiMnO₂·NMC811)의 <b>흩어진 범위</b>다. 선은 그 넷의 평균이다.</p>
+<p><b>(c) 가 이 그림에서 살아남은 논지다.</b> 가로는 전압, 세로는 <b>Nd 가 결국 가는 상</b>이고
+<b>P/Nd(축합도) 순서로</b> 쌓았다. 점 안 숫자는 양극 4 종 중 몇 개가 그 상을 주는지다.
+2.5·3.0 V 에서는 넷 다 <b>NdPO₄</b> 인데, 4.3·4.5 V 에서는 <b>Nd(PO₃)₃ · NdP₅O₁₄</b> 로 올라간다 —
+<b>인산염이 축합된다</b>. §2b 의 정량 규칙에서 이 축합도(P/Nd = 4 → 5)가 곧 <b>계수 k</b> 다.</p>
+<p>이게 Nd 의 특이성이 아니라는 게 중요하다. §2 의 <b>P-host 사다리</b>가
 <b>여섯 전해질 전부</b>(무Nd 포함)에서 P 를 받는 상의 Li:P 가 3→2→1→0 으로 내려간다고
-말한다. <b>전압이 인산염에서 Li 를 벗기는 것</b>이 계 전체의 사실이고, (d) 는 그 사실이
+말한다. <b>전압이 인산염에서 Li 를 벗기는 것</b>이 계 전체의 사실이고, (c) 는 그 사실이
 Nd 쪽에서 드러난 모습이다.</p>
-<p>⚠ <b>(c)(d) 는 설명 두 개를 닫을 뿐 새 설명을 열지 않는다.</b> 남은 성장은 산물 양으로도,
-Fig. 2(a) 의 쌍별 교환에너지로도 안 채워진다(그건 4.0 V 위에서 평평하다).
-그리고 Δ/양 은 내가 나눈 값이지 따로 잰 양이 아니다 — <b>분해지 기전이 아니다</b>.</p>
 </div>
 
 <!-- 방법 박스 — "reaction energy 가 뭔가".
@@ -774,7 +814,7 @@ Li 를 같게 맞춘 무-Nd 대조군(Li4.8P1S4.4Cl1.6)을 넣으면 Nd 항이 <
 부호가 뒤집힌다. ΔN<sub>Li</sub> = 0 인 조성 둘(O 0.3 · LPSOCl)만 전압에 평평하고(−5.5 · −3.6 meV/V),
 ΔN<sub>Li</sub> ≠ 0 인 조성은 예외 없이 가파르며 <b>기울기 부호가 ΔN<sub>Li</sub> 부호를 따라간다</b>.
 Li 하나당 기울기는 84~94 meV/atom/V 로 세 쌍에서 2 % 안에 모인다.
-⇒ <b>(a)·(c) 를 이 논지의 증거로 쓰지 않는다.</b> 근거는 §2 의 산물 쪽으로 옮겼다
+⇒ <b>(a) 와 옛 패널 (c) 를 이 논지의 증거로 쓰지 않는다</b> (옛 (c) 는 2026-09-21 에 그림에서 뺐다). 근거는 §2 의 산물 쪽으로 옮겼다
 (<code>db/properties/cei_nd_p_capture_result_2026_09_18.json</code>).</li>
 </ul>
 
@@ -782,8 +822,8 @@ Li 하나당 기울기는 84~94 meV/atom/V 로 세 쌍에서 2 % 안에 모인�
 </details>
 </section>
 <section id="s2" class="sec">
-<details class="secfold">
-<summary><h2 class="sec-h">2. 왜 고전압에서 Nd 인가 — 산물이 말한다</h2><span class="serbadge sa">계열 A · Li 자리</span><span class="sec-one">hull 산물 목록의 패턴 — 남은 P 가 어디로 가나</span></summary>
+<details class="secfold" open>
+<summary><h2 class="sec-h">2. 왜 고전압에서 Nd 인가 — 산물이 말한다</h2><span class="serbadge sa">계열 A · Li 자리</span><span class="sec-one">P 를 받는 방의 Li/P 가 <b>3 → 2 → 1 → 0</b> 으로 내려간다(전해질 6 종 전부). 4 V 위에서 무도핑은 <b>양극 전이금속</b>이 그 방이고, Nd 계는 <b>Nd 인산염</b>이다. Fig. 2 의 교환에너지 부호 전환은 3.0–3.5 V — 고전압이 아니다</span></summary>
 <div class="secbody">
 
 <p>hull 은 <em>무엇이</em> 생기는지를 말하지 <em>왜</em> 를 말하지 않는다. 그런데 산물 목록에 뚜렷한 패턴이 있다.</p>
@@ -792,7 +832,8 @@ Li 하나당 기울기는 84~94 meV/atom/V 로 세 쌍에서 2 % 안에 모인�
      옛 Fig. 2 (양극 개수 막대 집계)를 **대체했다** (1저자 2026-09-17: "교체한것만 남겨줘").
      옛 그림이 못 하던 것: 세로축이 4 단계 카운트 · 두 갈래만 세어 전이금속 인산염이
      안 보임 · 노란 막대가 전부 0 · 끝점 퇴화 칸을 안 거름.
-     ⛔ 번호는 2 를 그대로 승계한다 — 되번호하면 §3 이하가 밀리고 그 절들은 생성기 소유다. -->
+     번호 2 승계는 그대로다. 2026-09-21: 나머지 번호를 문서 순서로 유일하게 정리했다
+     (보호율 곡선 2→3 · 양극별 원자료 3→8). index.html 이 정본이라 "생성기 소유" 제약은 없어졌다. -->
 <figure style="margin:14px 0">
 <img src="cei_p_host_ladder.png" alt="Left: Li-to-P ratio of the phase that accepts phosphorus against voltage, one dot per condition, with a bold step line for the maximum and a dashed step for the median, both descending from three to zero. Right: hundred-percent stacked bars of the P-accepting phase classes at each voltage, no-Nd bar beside with-Nd bar, showing transition-metal phosphates dominating the Nd-free route.">
 <figcaption><b>Fig. 2. Voltage changes who neodymium competes against.</b>
@@ -838,6 +879,10 @@ Li 가 없을 때 P 가 앉는 자리이고 Nd 가 이긴다. 이것이 §3 의 
 <b>0.0515 → 0.0970 으로 1.9 배</b> 커진다. <b>부호는 시작을 설명하고 성장은 설명 못 한다.</b>
 남은 후보는 <b>양</b>이다 &#8212; 얼마나 많은 P 가 그 경로를 타느냐.
 그것이 §2 가설 <b>4 번</b>이고, 이 계산은 계수를 안 보므로 <b>재지 못한다</b>.</p>
+<p style="margin:0 0 6px;padding:7px 10px;background:var(--card);border-radius:6px;font-size:.9rem"><b>⭐ 2026-09-18 뒤에 읽으면 —</b>
+그 “성장” 의 대부분은 §1 의 <b>Li 장부</b>(dΦ/dV = +N<sub>Li</sub>)였다. Li 를 맞춘 대조군에서 Nd 항은 부호가 뒤집히므로
+<b>“양” 가설을 더 세울 필요가 없어졌다</b>. 이 상자에서 살아남는 것은 <b>시작(부호 전환 3.0–3.5 V)</b>이고,
+Nd 의 정량 이득은 §2b 의 보호율 곡선이 따로 잰다. 위 문장들은 기록으로 남긴다.</p>
 <p style="margin:0"><b>그리고 교환이 이득의 전부가 아니다.</b> 2.5 V 에서는 음수가
 <b>하나도 없는데</b>(Nd 가 진다) Fig. 1 의 Δ 는 이미 <b>+0.0147</b> 로 이롭다.</p>
 <p style="margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--line)">
@@ -970,13 +1015,13 @@ Fig. 1(b) 에서 측정된 사실이고(잔차가 문턱의 1/20), 흔들린 것
 
 
 
-<!-- ═══ ⛔ GENERATED (§3·§4) — tools/figures/plot_cei_nd_o_decomposition.py 가 유일한 소스다. 여기서 고치면 **다음 재생성에 지워진다** (2026-09-16 에 비유 박스 4 개를 그렇게 잃었다). 고칠 일이 있으면 그 파일에서 고치고 다시 생성한다. ═══ -->
+<!-- ═══ §3·§4 — 2026-09-21 부터 index.html 이 정본이다. plot_cei_nd_o_decomposition.py 는 그림·CSV 와 참고 조각(/tmp/claude-0/cei_fig/sections_new.html)만 만들고 이 파일을 덮어쓰지 않는다. 조각을 다시 끼울 때는 이 절의 손편집(2026-09-17 이후)을 먼저 대조한다. ═══ -->
 </div>
 </details>
 </section>
 <section id="s2b" class="sec">
-<details class="secfold">
-<summary><h2 class="sec-h">2b. 그 산물이 양극을 <b>얼마나</b> 아끼나 — 정량 곡선</h2><span class="serbadge sb">계열 B · P 자리</span><span class="sec-one">TM 보호율 곡선 — <b>24 칸 중 12 칸 탈락</b>, 전 점 통과는 LiCoO₂ 4.30 V · LiNiO₂ 3.50 V <b>둘뿐</b></span></summary>
+<details class="secfold" open>
+<summary><h2 class="sec-h">2b. 그 산물이 양극을 <b>얼마나</b> 아끼나 — 정량 곡선</h2><span class="serbadge sb">계열 B · P 자리</span><span class="sec-one">보호율 = min(1, k·x/(1−x)), 맞춘 매개변수 0 — 전 농도 통과 열은 <b>둘뿐</b>(LiCoO₂ 4.30 V · LiNiO₂ 3.50 V, 24 칸 중 12 탈락). 1저자 조성 x=0.02 는 <b>10.3 %</b>, 0.05 면 26.6 %</span></summary>
 <div class="secbody">
 
 <p>§2 는 <i>무엇이</i> 생기는지를 보였다. 여기는 <i>얼마나</i> 다. 지표는
@@ -989,7 +1034,7 @@ NdP₅O₁₄ 의 화학식(P/Nd = 5)에서 <b>보호율 = min(1, k·x/(1−x))<
 
 <figure>
 <img src="cei_nd_protection.png" alt="Three panels. (a) Cathode transition-metal spared from phosphate versus Nd content, for LiCoO2 at 4.3 V and LiNiO2 at 3.5 V; measured points fall on dashed curves min(1, k x over 1 minus x) with k equal to 5 and 4 respectively, and the target composition x equals 0.02 is marked. (b) Stacked bars of where the electrolyte phosphorus goes at 4.3 and 4.5 V; a thiophosphate slice opens at 4.5 V for x of 0.10 and 0.15. (c) Absolute difference in mixing fraction against the undoped control versus Nd content, one line per cathode and voltage; only two columns stay inside the 0.05 comparability band.">
-<figcaption><b>Fig. 2. How much cathode transition metal the neodymium phosphate spares,
+<figcaption><b>Fig. 3. How much cathode transition metal the neodymium phosphate spares,
 and the two gates that decide which columns may be compared.</b>
 (a) Fraction of the cathode transition metal kept out of a phosphate product, against Nd content
 <i>x</i> in Li<sub>5.4+2x</sub>Nd<sub>x</sub>P<sub>1&#8722;x</sub>S<sub>4.37</sub>O<sub>0.03</sub>Cl<sub>1.6</sub>.
@@ -1013,9 +1058,9 @@ or whether the layer is continuous.</figcaption>
 <p style="margin:0 0 8px"><b>읽는 법 — 세 패널이 한 사슬이다</b></p>
 <p style="margin:0 0 8px">(a) 는 <b>규칙이 맞나</b>. 점이 실측, 파선이 예측인데 <b>맞춘 매개변수가 하나도 없다</b>.
 파선의 유일한 수 <i>k</i> 는 hull 이 그 전압에서 고른 Nd 인산염의 P/Nd 이고, 반응식에서 읽은 값이다.
-<b>§1 패널 (d) 의 상 사다리가 곧 이 계수다</b> — NdPO₄(1) → LiNd(PO₃)₄(4) → NdP₅O₁₄(5) 으로
+<b>§1 Fig. 1 패널 (c) 의 상 사다리가 곧 이 계수다</b> — NdPO₄(1) → LiNd(PO₃)₄(4) → NdP₅O₁₄(5) 으로
 축합될수록 Nd 하나가 받는 P 가 많아지고, hull 은 전압이 오를수록 더 축합된 쪽을 고른다.
-⇒ <b>Nd 의 수용력이 전압과 함께 커진다 — 필요해지는 구간에서.</b> (d) 는 장식이 아니라 계수다.</p>
+⇒ <b>Nd 의 수용력이 전압과 함께 커진다 — 필요해지는 구간에서.</b> (c) 는 장식이 아니라 계수다.</p>
 <p style="margin:0 0 8px">(b) 는 <b>그래서 이로운가</b>. 4.3 V 에서는 Nd 가 가져간 만큼 회색(양극 TM 인산염)이 줄어든다.
 그런데 4.5 V · x ≥ 0.10 에서 주황(P₂S₇)이 열린다 — 남은 P 가 양극 대신 <b>티오인산염</b>으로 갔다.
 P₂S₇ 는 §3 이 <b>이 집합에서 제일 얕은 P 싱크</b>(E_f −0.5120 eV/atom)로 못박은 상이다.
@@ -1055,7 +1100,7 @@ x 를 0.02 → 0.05 로 올리면 보호가 <b>2.6 배</b>가 되고 Li 는 오�
 </section>
 <section id="s3" class="sec">
 <details class="secfold">
-<summary><h2 class="sec-h">3. 검증 — 그리고 가설의 절반이 틀렸다</h2><span class="serbadge sa">계열 A · Li 자리</span><span class="sec-one">균형반응 10 개 — 검산 고리 둘이 닫히고, <b>가설의 절반이 틀렸다</b> (+1.5035 eV/P 양수)</span></summary>
+<summary><h2 class="sec-h">3. 검증 — 그리고 가설의 절반이 틀렸다</h2><span class="serbadge sa">계열 A · Li 자리</span><span class="sec-one">균형반응 10 개 — 검산 고리 둘이 닫히고, <b>가설의 절반이 틀렸다</b>(+1.5035 eV/P 양수). Nd 가 이기는 조건은 <b>Li/P ≲ 1.67</b> 또는 밀려난 Li 가 LiCl 로 갈 때 — 사다리 자체는 Xiao 2019 선행</span></summary>
 <div class="secbody">
 
 <p>§2 의 가설을 재려고 같은 hull 에서 <strong>균형반응 10 개</strong>를 돌렸다
@@ -1293,7 +1338,7 @@ hull 이 고르는 판정은 §4 쪽이다.</p>
 </section>
 <section id="s4" class="sec">
 <details class="secfold">
-<summary><h2 class="sec-h">4. 전 혼합범위 스캔 — 최소점 하나가 아니라 곡선 전체</h2><span class="sec-one">x 전 구간 스캔 — 최소점 하나가 아니라 <b>곡선 전체</b></span></summary>
+<summary><h2 class="sec-h">4. 전 혼합범위 스캔 — 최소점 하나가 아니라 곡선 전체</h2><span class="sec-one">x 전 구간 스캔 — 최소점 하나가 아니라 <b>곡선 전체</b>. Nd 인산염 kink 는 Nd 계에만 나오고, 쓸 수 있는 건 <b>순서</b>뿐(∫E dx 인용 금지)</span></summary>
 <div class="secbody">
 
 <p class="plain">익숙한 것에 빗대면 <b>물감 두 색을 맞대고 문지른 자리</b>다.
@@ -1363,7 +1408,7 @@ Nd 인산염은 특정 혼합비에서만 나오는 게 아니라 <strong>x 축 
 혼합비일 뿐 실제 계면에서 어느 x 가 실현되는지는 이 계산이 말하지 않는다. 여기서
 쓸 수 있는 것은 <strong>같은 격자 위에서의 순서</strong>다.</p>
 </div>
-<!-- ═══ ⛔ /GENERATED (§3·§4) — 여기부터 다시 index.html 이 소스다 ═══ -->
+<!-- ═══ /§3·§4 ═══ -->
 <!-- ⚠ §5 는 **반반**이다 — 아래 본문은 index.html 이 소스이고, 그림(Fig 6, cei_dopant_x_scan.png)만 tools/figures/plot_cei_nd_o_decomposition.py 가 만든다. 본문은 여기서 고쳐도 안 지워진다. -->
 </div>
 </details>
@@ -1524,13 +1569,13 @@ Ga(−0.0757)는 <b>0.6591 로 구분된다.</b> 이어 붙이면 구분되는 �
 개정문 <code>trivalent_dopant_screen_amendment_C_gate_2026_09_16</code> (1저자 검토 전).</p>
 </div>
 
-<!-- ═══ ⛔ GENERATED (§6·§7) — tools/figures/plot_cei_nd_o_decomposition.py 가 유일한 소스다. 여기서 고치면 **다음 재생성에 지워진다** (2026-09-16 에 비유 박스 4 개를 그렇게 잃었다). 고칠 일이 있으면 그 파일에서 고치고 다시 생성한다. ═══ -->
+<!-- ═══ §6·§7 — 2026-09-21 부터 index.html 이 정본이다 (§6 은 10/10 결과·예측 실패 기록이 손편집이다). 생성기 조각은 참고용. ═══ -->
 </div>
 </details>
 </section>
 <section id="s6" class="sec">
-<details class="secfold">
-<summary><h2 class="sec-h">6. 갭 단계(§C)는 무엇을 재나 — 목록을 먼저 박았다</h2><span class="sec-one">갭 단계 대상 목록 — <b>9/10 채워졌다</b> (2026-09-19). 평균 offset +0.053 eV · 순위 7/9 일치</span></summary>
+<details class="secfold" open>
+<summary><h2 class="sec-h">6. 갭 — 판별종 10 종을 우리 DFT 로 쟀다 (목록은 결과 전에 박았다)</h2><span class="sec-one"><b>10/10 완주</b>(2026-09-21) — 9 종 MP 재현(평균 +0.053 eV · 순위 7/9) · <b>NdP₅O₁₄ 1 종 −0.943 eV 미재현</b>(원인 미확정). 10 종 전부 갭 열림 2.26–5.99 eV. 등록 예측(6.33–6.46)은 <b>틀렸다</b> — 문턱은 안 옮긴다</span></summary>
 <div class="secbody">
 
 <p>§4 가 kink 를 전부 남기면서 <strong>산물 집합이 36 → 97 종</strong>이 됐다.
@@ -1577,7 +1622,7 @@ Ga(−0.0757)는 <b>0.6591 로 구분된다.</b> 이어 붙이면 구분되는 �
 </tbody></table>
 </div>
 
-<p>1 종은 이미 있다 (<span class="mono">Nd2O3</span>, frozen-4f,
+<p><span class="muted" style="font-size:.86em">(2026-09-16 계획 당시의 문장이다 — 2026-09-21 현재 10/10 완주)</span> 1 종은 이미 있다 (<span class="mono">Nd2O3</span>, frozen-4f,
 2026-08-12 마감). ⇒ <strong>신규는 9 종</strong>.
 전압 6 구간 전부에 나오는 것은 <strong>NdPO4</strong> 하나뿐이라, 그것을
 <strong>파일럿</strong>으로 먼저 완주하고 실측 벽시계로 나머지를 추정한다.</p>
@@ -1621,16 +1666,18 @@ Ga(−0.0757)는 <b>0.6591 로 구분된다.</b> 이어 붙이면 구분되는 �
 <tr><td>Nd(PO3)3</td><td class='mono'>C222_1</td><td class='mono'>5.487</td><td class='mono'>5.497</td><td class='mono'>+0.010 (+0.2%)</td><td><span style='color:#6b7280;font-size:.86em'>↔ Nd₂(SO₄)₃ 와 근접쌍 — 순서 주장 안 함</span></td></tr>
 <tr><td>NdPO4</td><td class='mono'>P2_1/c</td><td class='mono'>5.679</td><td class='mono'>5.799</td><td class='mono'>+0.120 (+2.1%)</td><td></td></tr>
 <tr><td>LiNd(PO3)4</td><td class='mono'>C2/c</td><td class='mono'>5.979</td><td class='mono'>5.993</td><td class='mono'>+0.014 (+0.2%)</td><td></td></tr>
-<tr><td>NdP5O14</td><td class='mono'>Pmna</td><td class='mono'>6.336</td><td class='mono'>아직 없다</td><td class='mono'>—</td><td><span style='color:#6b7280;font-size:.86em'>▶ gabia 진행 중 · vc-relax 수렴 16:37 → 02_scf → 03_nscf_gap · 예측 6.33–6.46 eV</span></td></tr>
+<tr data-claim="HZ-cei-gap-ndp5o14-unreproduced"><td>NdP5O14</td><td class='mono'>Pmna</td><td class='mono'>6.336</td><td class='mono'><b>5.393</b> <span class="claim-mark">[미재현]</span></td><td class='mono' style='color:#be123c;font-weight:700'>-0.943 (-14.9%)</td><td><span style='color:#be123c;font-weight:700'>⛔ 미재현 — 원인 미확정</span> <span style='color:#6b7280;font-size:.86em'>— 구조 Pmna 확인(spglib) · nscf fixed-occ, nbnd 332, k 5×5×4(기약 51) · vc-relax 수렴 P −0.35 kbar · 부피 가설(+3.66 %)은 P₂O₅(+9.42 % 팽창, 갭 −0.016)가 반증. 인용할 때 이 단서를 뗄 수 없다 — 아래 카드</span></td></tr>
 </tbody></table>
 </div>
-<p style="margin-top:10px"><strong>9/10 이 채워졌다 (2026-09-19).</strong>
-평균 offset <strong>+0.053 eV</strong> · 최대 차 <strong>+0.120 eV (+3.2 %)</strong> —
-아홉 종 전부 ±3.2 % 안이다.
-<strong>순위는 9 종 중 7 종이 MP 그대로</strong>이고, 뒤바뀐 두 쌍
+<p style="margin-top:10px"><strong>10/10 완주 (2026-09-21).</strong>
+재현된 <strong>9 종</strong>은 평균 offset <strong>+0.053 eV</strong> · 최대 차 <strong>+0.120 eV (+3.2 %)</strong> —
+전부 ±3.2 % 안이다. <strong>순위는 9 종 중 7 종이 MP 그대로</strong>이고, 뒤바뀐 두 쌍
 (Nd₃PO₇↔NdCl₃ · Nd₂(SO₄)₃↔Nd(PO₃)₃)은 <strong>MP 간격이 0.016 / 0.054 eV</strong> 로
 우리 offset(0.053)과 같거나 작다 — <strong>분해하지 못하는 근접쌍</strong>이지 순위를
-틀린 것이 아니다. <u>이 두 쌍의 상대 순서는 주장하지 않는다.</u></p>
+틀린 것이 아니다. <u>이 두 쌍의 상대 순서는 주장하지 않는다.</u>
+<strong>NdP₅O₁₄ 1 종은 −0.943 eV (−14.9 %) 로 재현되지 않았다</strong> — 평균 offset 은 이 종을
+빼고 낸다(섞으면 재현율이 아니라 혼합값이 된다). 원인은 아래 카드에 있다.
+<b>10 종 전부 갭이 열려 있다 — 2.26 (NdPS₄) ~ 5.99 (LiNd(PO₃)₄) eV.</b></p>
 <p class="muted" style="font-size:.86em">⚠ MP 값도 PBE 계산이므로 <strong>같은 근사끼리</strong>의
 비교다. 그래서 위 '차' 열은 <strong>방법이 재현되는지 보는 눈금</strong>이지 정확도가 아니다 —
 우리가 확인하는 것은 <strong>같은 자릿수와 같은 순위</strong>까지다. 그리고 PBE 갭은 넓은 갭
@@ -1666,21 +1713,29 @@ Ga(−0.0757)는 <b>0.6591 로 구분된다.</b> 이어 붙이면 구분되는 �
 황화물 채널(<b>NdPS₄ 2.25</b>)은 <b>여섯 전압 어디서도 안 나온다</b>. NdPS₄ 를 10 종에
 넣어 둔 것이 그래서 판별용이다 — 좁은 갭 결말이 <b>가능했는데</b> hull 이 거길 안 갔다는
 것을 말할 수 있어야 하니까.</p>
+<p class="plain">우리 값으로 다시 봐도 병목은 같다 — NdCl₃ <b>4.337 eV</b>(우리) vs 4.300(MP).
+NdP₅O₁₄ 는 우리 값 5.393 이라도 병목이 아니다.</p>
 
-<h3>⭐ NdP₅O₁₄ — 결과를 보기 전에 <b>예측을 등록했다</b> (2026-09-19)</h3>
-<div class="card" style="border-left:3px solid var(--nd);margin:10px 0">
-<p style="margin:0 0 8px"><b>등록 예측: 2.06–2.12 eV 가 아니라 <span class="mono">6.33 ~ 6.46 eV</span></b>
- — MP 참조 <span class="mono">6.336</span> + 우리 계산이 재현한 <b>8 종의 편차 중앙값 +0.053 eV</b>.</p>
-<p style="margin:0 0 8px">지금 gabia 에서 <code>01_vcrelax → 02_scf → 03_nscf_gap</code> 가 돌고 있다.
- <b>아직 값이 없다</b> — 위 표의 <span class="mono">아직 없다</span> 가 그 뜻이다.
- <span class="no">⛔</span> 예측값을 측정값처럼 인용하지 않는다.</p>
-<p style="margin:0 0 8px"><b>왜 미리 박나.</b> NdP₅O₁₄ 는 §1 패널 (d) 사다리의 <b>맨 끝</b>이고
- (전압이 오를수록 hull 이 고르는 가장 축합된 Nd 인산염), 우리 논지는
- <b>"축합될수록 갭이 넓어진다"</b> 다. 값을 본 뒤에 "역시 넓다" 고 말하면 그건 사후해석이다.
- <b>먼저 적어 두면 맞든 틀리든 증거가 된다.</b></p>
-<p class="meta" style="margin:0">읽는 법 — 결과가 <b>6.33~6.46 안</b>이면 사다리 논지가 닫힌다.
- <b>밖</b>이면 예측이 틀린 것이고, 그 사실을 먼저 적는다 (문턱을 옮기지 않는다).
- 원자료 · <code>db/properties/cei_nd_p_capture_result_2026_09_18.json</code> ·
+<h3>⭐ NdP₅O₁₄ — 결과를 보기 전에 <b>예측을 등록했고, 예측이 틀렸다</b> (등록 2026-09-19 · 결과 2026-09-21)</h3>
+<div class="card warn" style="margin:10px 0" data-claim="HZ-cei-gap-ndp5o14-unreproduced">
+<p style="margin:0 0 8px"><b>등록 예측: <span class="mono">6.33 ~ 6.46 eV</span></b>
+ — MP 참조 <span class="mono">6.336</span> + 우리 계산이 재현한 8 종의 편차 중앙값 +0.053 eV.
+ <b>결과: <span class="mono">5.393 eV</span></b> <span class="claim-mark">[미재현]</span> — 문턱 <b>밖</b>이다.
+ <b>예측이 틀렸다. 문턱을 옮기지 않는다.</b></p>
+<p style="margin:0 0 8px"><b>확인한 것은 전부 정상이다.</b> 이완 후 구조가 의도한 다형체 <b>Pmna</b>(spglib, symprec 0.05–0.2)이고
+다른 다형체(P2₁/c)로 넘어가지 않았다 · nscf 는 <code>occupations='fixed'</code>, nbnd 332, k 5×5×4(기약 51) ·
+vc-relax 는 bfgs 수렴, 최종 P −0.35 kbar 로 10 종과 같은 프로토콜 · Pulay 경고 없음.</p>
+<p style="margin:0 0 8px"><b>부피 가설은 반증됐다.</b> 우리 셀이 MP 보다 +3.66 % 커서 갭이 눌렸다는 가설을 세웠는데,
+<b>P₂O₅ 는 +9.42 % 팽창하고도 갭이 −0.016 eV 로 맞았다</b>. 10 종의 ΔV(−1.76 ~ +9.42 %)와 Δ갭 사이에 상관이 없다.
+그래서 제안했던 MP 셀 고정 재측정은 <b>던지기 전에 취소</b>했다. (처음 든 “층상 인산염의 층간 팽창” 설명도
+축별 팽창이 +0.84 / +1.28 / +1.49 % 로 거의 균일해서 서지 않는다.)</p>
+<p style="margin:0 0 8px"><b>지금 결론 — 원인 미확정.</b> 이 값을 쓸 때는 “−0.943 eV 미재현(원인 미확정)” 을 같이 적는다.
+반대로 “우리 계산이 틀렸다” 고도 단정하지 않는다 — 구조·설정·수렴이 다 정상이고 부피 가설은 반증됐다.
+남은 것은 MP 참조값 쪽 확인(어느 엔트리·어느 범함수의 6.336 인가)이고, 그건 계산이 아니라 조회다.</p>
+<p class="meta" style="margin:0"><b>논지에 미치는 영향 — 없다.</b> 5.393 eV 도 넓은 갭 절연체다. §6 이 묻는 것은
+“판별종이 전자를 흘리나” 이고 그 답은 10/10 절연체로 같다. 다만 “축합될수록 갭이 넓어진다” 는 사다리 문장은
+<b>이 점에서 닫히지 않았다</b> — 우리 값은 NdPO₄ 5.80 → Nd(PO₃)₃ 5.50 → NdP₅O₁₄ 5.39 로 오히려 <b>내려간다</b>. 그 문장은 쓰지 않는다.
+ 원자료 · <code>db/properties/cei_gap_results_2026_09_19.json</code> (<code>⛔_NdP5O14_미재현</code>) ·
  gabia <code>/data/work/runs/cei_gap/NdP5O14_mp-aaabfxkr/</code></p>
 </div>
 
@@ -1700,6 +1755,14 @@ comp1 2.066 vs 재계산 2.0656 (같은 방법) · Nd₂O₃ 우리 3.9479 vs MP
 <li><strong>G5 ⛔</strong> — 갭으로 <strong>부동태 결론을 내지 않는다</strong>. 연속성·두께·Li⁺ 전도가
 이 계산에 없다. §C 는 "이 층이 전자를 막을 성질을 갖는가" 까지만 답한다.</li>
 </ul>
+<div class="card warn" style="margin:10px 0">
+<p style="margin:0 0 6px"><b>결과가 다 나온 뒤의 G2 산수 — 판정 미등록 · 1저자 검토 전</b></p>
+<p style="margin:0;font-size:.9rem">Nd 판별종 목록의 최소 갭은 <b>NdPS₄ 2.264 eV</b>(우리 값 — 한 전압의 비최소 꺾임에만 나오는 상)이고,
+최소 꺾임이 실제로 배정하는 상 중 최소는 <b>NdCl₃ 4.337 eV</b> 다. 어느 쪽이든 P₂O₅ <b>5.186 eV</b> 보다 0.30 eV 이상 작다.
+등록 문구를 그대로 읽으면 G2 는 <b>“Nd 는 (P₂O₅ 보다) 더 좁은 갭의 층을 추가한다”</b> 쪽이다.
+단 G5 대로 이것은 “샌다” 가 아니라 “상대적으로 좁다” 이고, 4.34 eV 는 여전히 넓은 갭이다.
+이 판정문은 아직 결정 원장에 없다 — <b>등록 전에는 인용하지 않는다.</b></p>
+</div>
 
 <p style="color:var(--mut);font-size:.87rem">개정문
 <code>cathode_cei_gap_target_amendment_2026_09_16</code> (확정 · 결과를 보기 전에 고정) ·
@@ -1712,8 +1775,8 @@ comp1 2.066 vs 재계산 2.0656 (같은 방법) · Nd₂O₃ 우리 3.9479 vs MP
 </details>
 </section>
 <section id="s7" class="sec">
-<details class="secfold">
-<summary><h2 class="sec-h">7. 반대쪽 접촉 — 이 층은 전해질과도 지내야 한다</h2><span class="sec-one">전해질 쪽 10 종 — 쓸 수 있는 건 <b>“새로 망가뜨리지는 않는다”</b> 까지</span></summary>
+<details class="secfold" open>
+<summary><h2 class="sec-h">7. 반대쪽 접촉 — 이 층은 전해질과도 지내야 한다</h2><span class="sec-one">전해질 쪽 — 3.5 V 는 <b>“새로 망가뜨리지는 않는다”</b> 까지. 고전압 Co·Ni 계는 NdP₅O₁₄(−0.079)가 무도핑 TM 인산염(−0.13)보다 덜 싸운다(Mn 계는 아니다). 황산염은 사다리 밖 <b>별도 위험</b></span></summary>
 <div class="secbody">
 
 <p>§1&#8211;§6 은 전부 <strong>양극 쪽</strong>을 봤다. 그런데 CEI 는 양극과 전해질
@@ -1866,18 +1929,18 @@ x 는 <b>아직 실측 안 했다</b> (그 쌍은 <code>mixing_x</code> 필드�
 <code>dual_compat_amendment_2026_09_16.json</code> · 그림 자료
 <code>cei_dual_compat.csv</code>. 위 &rho;&#183;p 와 모든 수치는 이 화면이
 <strong>원자료에서 다시 계산</strong>한 것이다. 아직 인용하지 않는다 &#8212; 1저자&#183;리뷰 판정 전이다.</p>
-<!-- ═══ ⛔ /GENERATED (§6·§7) — 여기부터 다시 index.html 이 소스다 ═══ -->
+<!-- ═══ /§6·§7 ═══ -->
 </div>
 </details>
 </section>
 <section id="s8" class="sec">
 <details class="secfold">
-<summary><h2 class="sec-h">8. 양극별 원자료</h2><span class="sec-one">양극별 원자료 — 무도핑 기준 차이가 아니라 원래 값</span></summary>
+<summary><h2 class="sec-h">8. 양극별 원자료</h2><span class="sec-one">양극별 원자료(Fig. 8) — 무도핑 기준 차이가 아니라 원래 값. 절대값을 타 논문 옆에 놓지 않는다</span></summary>
 <div class="secbody">
 
 <figure>
 <img src="cei_reaction_energy_by_cathode.png" alt="Reaction energy versus voltage for six electrolytes against four cathodes: LiCoO2, LiNiO2, LiMnO2 and NMC811.">
-<figcaption><b>Fig. 3. Absolute interfacial reaction energies.</b> Six electrolyte
+<figcaption><b>Fig. 8. Absolute interfacial reaction energies.</b> Six electrolyte
 compositions against four cathodes, as a function of applied voltage. The ordering of
 compositions is preserved across all four cathodes. Some points above 4.0&#8201;V correspond to
 electrolyte self-decomposition rather than an interfacial reaction (LPSCl 6/24, LPSCl<sub>1.6</sub> 1/24,
@@ -1886,7 +1949,7 @@ in that range.</figcaption>
 </figure>
 
 <div class="figexp">
-<div class="figexp-h">Fig. 3 을 읽는 법</div>
+<div class="figexp-h">Fig. 8 을 읽는 법</div>
 <p>앞 두 그림은 무도핑 기준의 <b>차이</b>를 봤고, 이건 <b>원래 값</b>이다. 아래로 갈수록
 반응이 잘 일어난다.</p>
 <p>보는 법은 하나다 — <b>네 패널에서 선들의 위아래 순서가 같은가.</b> 같다.
@@ -1920,11 +1983,12 @@ in that range.</figcaption>
 </details>
 </section>
 <section id="s9" class="sec">
-<details class="secfold" open>
-<summary><h2 class="sec-h">9. 말하면 안 되는 것</h2><span class="sec-one"><b>금지 서술 25 개</b> — 값을 인용하기 전에 여기부터 본다</span></summary>
+<details class="secfold">
+<summary><h2 class="sec-h">9. 말하면 안 되는 것</h2><span class="sec-one"><b>금지 서술 28 개</b> — 값을 인용하기 전에 여기부터 본다 (2026-09-21 에 셋 추가 · 부동태 항목 축소)</span></summary>
 <div class="secbody">
 <p style="margin:0 0 10px;font-size:.9rem;color:var(--mut)">
-⭐ 아래 <b>다섯</b>은 2026-09-18 에 추가됐다 — Li-맞춤 대조군과 문헌 감사에서 나왔다
+⭐ 아래 <b>다섯</b>은 2026-09-18 에 추가됐다 — Li-맞춤 대조군과 문헌 감사에서 나왔다.
+<b>끝의 셋</b>은 2026-09-21 에 추가됐고(Li 장부 · Xiao 선행 · NdP₅O₁₄ 단서), 부동태 항목은 §6 완주에 맞춰 좁혔다
 (<code>db/properties/cei_nd_p_capture_result_2026_09_18.json</code> · <code>db/properties/cei_nd_novelty_audit_2026_09_18.json</code>).</p>
 <ul>
 <li><span class="no">⛔</span> <b>"Nd 치환이 산화 안정성·전압창을 넓힌다"</b> —
@@ -1951,8 +2015,9 @@ MP 보정 눈금이 산화물(+U)·황화물(GGA) <strong>혼합</strong>이다.
 Nd³⁺↔3Li⁺ 라 <strong>Li 공공 2개/Nd</strong> 가 묶여 있고, 전하중성 때문에 이 설계로는 못 뗀다.</li>
 <li><span class="no">⛔</span> <code>Nd only</code>·<code>O 0.3 only</code> 을 <strong>실재하는 조성</strong>으로 말하기 —
 만들거나 이완한 적 없는 hull 위의 조성점이다.</li>
-<li><span class="no">⛔</span> 이 이득을 <strong>부동태화</strong>로 읽기 — 이건 계면 반응 <strong>구동력</strong>이지
-산물의 전자 성질이 아니다. 갭 단계가 따로 답한다.</li>
+<li><span class="no">⛔</span> 이 이득을 <strong>부동태화</strong>로 읽기 — §1–5 는 계면 반응 <strong>구동력</strong>이지
+산물의 전자 성질이 아니다. §6 이 답하는 것은 <strong>“판별종 10 종이 넓은 갭 절연체다”</strong> 까지이고(2.26–5.99 eV, PBE),
+실제 계면층의 <strong>연속성·두께·전자 수송은 재지 않았다</strong>(G5). “CEI 전체가 절연이다” 도 아니다 — 전이금속 상은 대상 밖이다.</li>
 <li><span class="no">⛔</span> <strong>"NdPO₄ 가 Li₃PO₄ 보다 깊은 P 싱크다"</strong> —
 <strong>철회됨</strong> (§3). 균형반응이 <span class="mono">+1.5035 eV/P</span> 로 양수다.
 Nd 가 이기는 것은 <strong>Li 예산이 P 하나당 ~1.7 개 밑</strong>일 때이거나,
@@ -1994,6 +2059,15 @@ LiPO₃(−0.0388)와 LiNd(PO₃)₄(−0.0434)는 <strong>구분되지 않는�
 아직 검증 전이다. 이 설명을 쓰려면 다른 계에 <b>미리 걸어</b> 확인해야 한다.</li>
 <li><span class="no">⛔</span> Nd 의 <strong>산화수 변화</strong>를 주장하기 — MP 도 우리도 frozen-4f (<code>Nd_3</code>) 라
 4f 관여 redox 가 모형에 아예 없다.</li>
+<li><span class="no">⛔</span> <b>“Δ 반응에너지가 전압과 함께 6.6 배 커진다”</b> — <b>Li 장부</b>다.
+dΦ/dV = +N<sub>Li</sub> 라 Li 를 0.6 덜 든 Nd 조성이 전압과 함께 유리해 <i>보이는</i> 것이고,
+Li 를 맞춘 무-Nd 대조군에서 Nd 항은 <b>−50.8 meV/atom</b>(4.5 V)이다. Fig. 1 의 옛 패널 (c) 는 그래서 뺐다(2026-09-21).</li>
+<li><span class="no">⛔</span> <b>“Li 를 안 쓰는 인산염 경로” 를 우리 발견으로 쓰기</b> — Xiao 2019 (Joule) 가
+산화한계 ↔ Li 분율 음의 상관과 ortho &lt; pyro &lt; meta 사다리를 먼저 냈다(§3). 우리 것은 <b>독립 확인 + 재는 양</b>(M³⁺←Li
+교환에너지 · 교차점 Li/P ≈ 1.67) + <b>경로</b>(코팅이 아니라 SE 도펀트가 제자리에서)다.</li>
+<li><span class="no">⛔</span> <b>NdP₅O₁₄ 갭 5.393 eV 를 “−0.943 eV 미재현(원인 미확정)” 단서 없이 인용하기</b> —
+그리고 이 값으로 “축합될수록 갭이 넓어진다” 를 말하기. 우리 값은 NdPO₄ 5.80 → Nd(PO₃)₃ 5.50 → NdP₅O₁₄ 5.39 로 <b>내려간다</b>.
+쓸 수 있는 것은 “10 종 전부 절연체” 까지다 (<code>HZ-cei-gap-ndp5o14-unreproduced</code>).</li>
 </ul>
 
 </div>
@@ -2006,6 +2080,7 @@ LiPO₃(−0.0388)와 LiNd(PO₃)₄(−0.0434)는 <strong>구분되지 않는�
 <div class="files">
 <span>cei_nd_o_decomposition.png / .csv</span>
 <span>cei_nd_protection.png / _curve.csv / _fig.csv</span>
+<span>cei_nd_protection_ab.png (2-panel manuscript variant, --panels ab)</span>
 <span>cei_p_host_ladder.png / _fig.csv</span>
 <span>cei_reaction_energy_by_cathode.png / .csv</span>
 <span>cei_li_budget_ladder.png / .csv</span>
@@ -2017,7 +2092,10 @@ LiPO₃(−0.0388)와 LiNd(PO₃)₄(−0.0434)는 <strong>구분되지 않는�
 <p style="color:var(--mut);font-size:.87rem">CSV 는 Origin 바로 넣을 수 있게 열 이름을 명시했다.
 그림은 house style (INK #1f2937 · MUT #6b7280 · dpi 300 · top/right spine 제거).
 ⚠ Nd 는 CLAUDE.md 원소 팔레트에 없어 여기서 보라(#6d28d9)로 고정했다 —
-house <code>ELEM["Nd"]</code>(#db2777)는 O(#be123c)와 같은 붉은 계열이라 한 그림에서 안 갈린다.</p>
+house <code>ELEM["Nd"]</code>(#db2777)는 O(#be123c)와 같은 붉은 계열이라 한 그림에서 안 갈린다.<br>
+생성기 — <code>tools/figures/plot_cei_nd_o_decomposition.py</code> (Fig. 1·4·5·6·7·8 + CSV) ·
+<code>plot_cei_p_host_ladder.py</code> (Fig. 2) · <code>plot_cei_nd_protection.py</code> (Fig. 3).
+⭐ 2026-09-21 부터 <b>이 index.html 이 손편집 정본</b>이다 — 생성기는 그림·CSV 와 참고 조각(<code>sections_new.html</code>, /tmp)만 만들고 이 파일을 덮어쓰지 않는다.</p>
 
 <footer>
 카드 <code>cathode_cei_decomposition_estimand_2026_09_16</code> (확정) ·
@@ -2034,6 +2112,8 @@ house <code>ELEM["Nd"]</code>(#db2777)는 O(#be123c)와 같은 붉은 계열이�
 <code>cei_formation_2026_09_16.json</code> ·
 <code>cei_esw_Li_2026_09_16.json</code> · <code>cei_esw_O_2026_09_16.json</code> ·
 <code>dual_compat_closed_2026_09_16.jsonl</code><br>
+갭 <code>db/properties/cei_gap_results_2026_09_19.json</code> (10/10 · citable · NdP₅O₁₄ 는 <code>HZ-cei-gap-ndp5o14-unreproduced</code> 단서와 함께만) ·
+문헌·자가반증 감사 <code>cei_nd_novelty_audit_2026_09_18.json</code><br>
 아직 인용하지 않는다 — 1저자·리뷰 검토 전이다.
 </footer>
 

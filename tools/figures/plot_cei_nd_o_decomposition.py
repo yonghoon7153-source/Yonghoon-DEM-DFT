@@ -1,5 +1,12 @@
 """CEI 그림 + Origin-ready CSV + **화면 절(§3·§4·§6·§7) 생성**. house_style 준수 · 라벨 영문만.
 
+⭐ **2026-09-21 개정** — 발행본 `db/properties/cei_figs/index.html` 은 이제 **손편집 정본**이다
+  (§0 도입 · 접이식 층 가르기 · §6 10/10 결과·예측 실패 기록 · Fig 번호 정리 · Fig. 1 3패널).
+  이 파일은 그림·CSV 와 참고 조각(`OUT/sections_new.html`, /tmp)만 만들고 **index.html 을 쓰지
+  않는다**. 아래 소관 지도의 "이 파일" 절은 조각을 손으로 끼울 때만 유효하고, 끼우기 전에
+  발행본의 손편집(2026-09-17 이후 전부)을 먼저 대조한다. Fig. 1 은 2026-09-21 부터 (a)(b)(c) 세
+  패널이다 — 옛 (c) 상대성장 패널은 철회된 해석(Li 장부)이라 뺐다 (아래 주석).
+
 ⛔ **소관 지도 — 발행본(`db/properties/cei_figs/index.html`) 번호 기준**
 
   | 절 | 소스 |
@@ -91,8 +98,14 @@ if _miss:
     raise SystemExit(f"⛔ (d) P/Nd 를 모르는 상 {sorted(_miss)} — 표에 넣고 다시 그린다")
 
 # ── Fig 1: 분해 (주 그림) ────────────────────────────────────────────────
-fig, _axs = plt.subplots(2, 2, figsize=(11.6, 8.4))
-(a1, a2), (a3, a4) = _axs
+# 2026-09-21: 2×2 → 1×3. 옛 (c) "상대 성장 ×6.58" 패널은 2026-09-18 에 철회된 해석
+#   (전압 기울기 = Li 장부, dΦ/dV = +N_Li — Li 를 맞춘 무-Nd 대조군에서 Nd 항이
+#   −50.8 meV/atom 으로 부호가 뒤집힌다) 을 그림 제목으로 광고하고 있었다.
+#   철회된 값을 그림 안에 두고 캡션에서 취소선으로 부인하는 것은 결속이 아니다 —
+#   그림은 복사될 때 캡션을 안 데려간다. 패널을 뺀다.
+#   그 비율(×1.42 · ×6.58)은 CSV 의 rel_* 열에 **자료로만** 남는다
+#   (산문에서 "hull 이 만드는 Nd 산물의 양은 ×1.42 뿐" 을 인용할 수 있게).
+fig, (a1, a2, a4) = plt.subplots(1, 3, figsize=(15.6, 4.7))
 for s, col, lab, mk in ((dn, ND, "Nd only (Nd$^{3+}$$\\leftrightarrow$3Li$^+$)", "o"),
                         (do, OX, "O only (O 0.3, S$\\rightarrow$O)", "s"),
                         (dt, BOTH, "LPSCl$_{1.6}$@Nd$_2$O$_3$ (measured)", "^")):
@@ -120,24 +133,7 @@ a2.text(0.04, 0.90, "pre-registered band  $\\pm$0.010", transform=a2.transAxes,
         fontsize=8.5, color="#92400e")
 a2.set_ylim(-0.014, 0.014)
 
-# ── (c) 성장이 **양** 때문인가 — 아니다 ───────────────────────────────────
-_n = [st.mean(namt[V]) for V in VS]
-_d = [st.mean(dn[V]) for V in VS]
-_o = [st.mean(do[V]) for V in VS]
-_rel = lambda y: [v / y[0] for v in y]        # 2.5 V = 1 (맨 왼쪽 점. 사후선택 아님)
-a3.fill_between(VS, _rel(_n), _rel(_d), color=ND, alpha=0.10, lw=0)
-a3.plot(VS, _rel(_d), marker="o", color=ND, lw=2.0, ms=6, label="$\\Delta$ Nd only")
-a3.plot(VS, _rel(_n), marker="v", color=MUT, lw=1.8, ms=5.5, ls="--",
-        label="amount of Nd-bearing product")
-a3.plot(VS, _rel(_o), marker="s", color=OX, lw=1.6, ms=5, label="$\\Delta$ O only")
-a3.axhline(1.0, color=MUT, lw=0.8, ls=":")
-for _y, _c, _dy in ((_rel(_d)[-1], ND, .30), (_rel(_n)[-1], MUT, .34),
-                    (_rel(_o)[-1], OX, -.55)):
-    a3.annotate(f"$\\times${_y:.2f}", (VS[-1], _y), (VS[-1] - .03, _y + _dy),
-                fontsize=9.5, color=_c, ha="right", fontweight="bold")
-apply_axes(a3, "Voltage (V vs Li/Li$^+$)", "Relative to 2.5 V")
-a3.legend(frameon=False, fontsize=8.2, loc="upper left")
-a3.set_ylim(0.0, 7.8)
+# ── (옛 c) 상대 성장 패널 — 2026-09-21 제거. 위 주석 참조. 자료는 CSV rel_* 열. ──
 
 # ── (d) 그럼 무엇이 바뀌나 — Nd 가 **가는 상**이 축합된다 ──────────────────
 _ORD = sorted(P_PER_ND, key=lambda f: (P_PER_ND[f], f))
@@ -162,10 +158,11 @@ a4.annotate("", xy=(-0.52, len(_ORD) - .6), xytext=(-0.52, .4),
 a4.text(-0.44, len(_ORD) - 1.5, "more condensed", fontsize=8, color=MUT,
         rotation=90, va="center")
 
-for _ax, _t in ((a1, "(a)  Doping helps more as voltage rises"),
-                (a2, "(b)  Nd and O act independently"),
-                (a3, "(c)  Not because more Nd product forms"),
-                (a4, "(d)  The phase the Nd goes to changes")):
+#: 제목에 해석을 싣지 않는다 (2026-09-21). 옛 "(a) Doping helps more as voltage rises" 는
+#:   철회된 읽기(기울기 = Li 장부)였다. 제목은 축이 무엇인지까지만 말한다.
+for _ax, _t in ((a1, "(a)  $\\Delta$ reaction energy vs voltage (Li inventory not matched)"),
+                (a2, "(b)  Additivity residual, Nd + O"),
+                (a4, "(c)  Phase the Nd ends up in, by voltage")):
     _ax.set_title(_t, fontsize=10, color=INK, pad=8, loc="left")
 
 fig.tight_layout(); fig.savefig(OUT / "cei_nd_o_decomposition.png", dpi=300); plt.close(fig)

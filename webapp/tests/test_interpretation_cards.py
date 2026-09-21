@@ -783,3 +783,128 @@ def test_slope_mechanism_stays_forbidden_on_both_surfaces(client):
     assert "검증 전" in h, "보고서가 '아직 검증 전' 한정을 안 싣는다"
     blob = json.dumps(V.interpretation_cards_for(ND), ensure_ascii=False)
     assert "검증 전" in blob, "Nd 카드가 '아직 검증 전' 한정을 안 싣는다"
+
+
+# ── 2026-09-21 쇄신 — 층 가르기 · Fig 번호 · Fig. 1 3패널 · §6 10/10 · §9 개수 · §0 onset ────
+#   왜 생겼나: 보고서를 통째로 재배열했다. 재배열은 문자열 시험이 제일 잘 깨지는 자리라
+#   시험을 **재는 것(구조·번호·원장 일치)** 으로 다시 썼다. 각 시험은 쓴 뒤 대상을 일부러
+#   깨서 빨간불을 확인했다 (커밋 메시지에 기록).
+GAP_RESULT = REPORT.parents[3] / "db/properties/cei_gap_results_2026_09_19.json"
+HAZARDS = REPORT.parents[3] / "db/properties/citation_hazards.json"
+ESW = REPORT.parents[3] / "db/properties/cei_esw_Li_2026_09_16.json"
+_NDP_HZ = "HZ-cei-gap-ndp5o14-unreproduced"
+
+
+def _section(h, sid):
+    i = h.index(f'<section id="{sid}"')
+    return h[i:h.index("</section>", i)]
+
+
+def test_figure_numbers_are_unique_and_in_document_order(client):
+    """양성 — 캡션 번호가 문서 순서로 1..8 이고 중복이 없다.
+    2026-09-21 전에는 1, 2, 2, 4, 5, 6, 7, 3 이었다 (보호율 곡선이 Fig. 2 를 두 번 썼다)."""
+    h = _report_html(client)
+    nums = re.findall(r"<figcaption><b>Fig\. (\d+)\.", h)
+    assert nums == [str(i) for i in range(1, 9)], nums
+
+
+def test_fig1_is_three_panels_and_caption_carries_no_strikethrough(client):
+    """양성+음성 — 옛 (c) ×6.58 패널이 그림에서 빠졌고, 캡션은 취소선 철회문 없이 선다.
+    철회 표지는 한글 '읽는 법' 상자에 ⛔ 로 있다 (그림은 복사될 때 캡션을 안 데려간다)."""
+    h = _report_html(client)
+    i = h.index('<img src="cei_nd_o_decomposition.png"')
+    cap = h[i:h.index("</figcaption>", i)]
+    assert 'alt="Three panels.' in cap, "alt 가 아직 네 패널이다"
+    assert "RETRACTED" not in cap and "<s>" not in cap, "캡션 안에 취소선 철회문이 남아 있다"
+    assert "lithium-matched" in cap, "Li 장부 설명이 캡션에서 빠졌다"
+    r = client.get(LOCAL_REPORT.rsplit("/", 1)[0] + "/cei_nd_o_decomposition.png")
+    import struct
+    w, hgt = struct.unpack(">II", r.data[16:24])            # PNG IHDR
+    assert w / hgt > 2.5, f"그림이 1×3 이 아니다 (옛 2×2 는 비 1.38): {w}×{hgt}"
+    gen = (REPORT.parents[3] / "tools/figures/plot_cei_nd_o_decomposition.py").read_text("utf-8")
+    assert "plt.subplots(1, 3" in gen and re.search(r"^\s*a3\.", gen, re.M) is None, \
+        "생성기에 옛 (c) 패널(a3)이 되돌아왔다"
+    j = h.index("Fig. 1 을 읽는 법")
+    box = h[j:h.index("<!-- 방법 박스", j)]
+    assert "⛔" in box and "Li 장부" in box and "−50.8" in box, "읽는 법 상자에 철회 표지가 없다"
+
+
+def test_layer_split_open_sections_are_the_thesis(client):
+    """양성 — 접힘 밖(open)은 논지 절이고, 근거·검산·반론 절은 접혀 있되 요지 한 줄이 밖에 있다."""
+    h = _report_html(client)
+    st = dict(re.findall(r'<section id="(\w+)" class="sec">\n<details class="secfold"( open)?>', h))
+    assert set(st) >= {"s0", "s1", "s2", "s2b", "s3", "s4", "s5", "s6", "s7", "s8", "s8b", "s9", "sf"}, sorted(st)
+    opened = {k for k, v in st.items() if v}
+    assert opened == {"s0", "s2", "s2b", "s6", "s7", "sf"}, sorted(opened)
+    for sid in st:
+        m = re.search(r'<span class="sec-one">(.*?)</span></summary>', _section(h, sid), re.S)
+        assert m and len(re.sub(r"<[^>]+>", "", m.group(1)).strip()) > 10, f"{sid}: 요지 줄이 없다"
+
+
+def test_s6_gap_table_is_10_of_10_and_matches_the_record(client):
+    """양성 — §6 표의 우리 값 10 개가 원장과 같고, 미재현 값은 자기 id 를 단 요소 **안**에
+    텍스트 표식과 같이 있다 (근처 ⛔ 는 결속이 아니다 — CLAUDE.md 화면 규율)."""
+    rec = json.loads(GAP_RESULT.read_text("utf-8"))
+    sec = _section(_report_html(client), "s6")
+    assert "아직 없다" not in sec, "§6 이 아직 9/10 이다"
+    for r in rec["rows"]:
+        assert f"{r['gap_eV']:.3f}" in sec, f"{r['phase']} 우리 값 {r['gap_eV']} 이 §6 에 없다"
+    nd = [r for r in rec["rows"] if r["phase"] == "NdP5O14"][0]
+    assert abs(nd["gap_eV"] - 5.393) < 1e-6 and "⛔" in nd, "원장의 NdP5O14 행이 바뀌었다 — 시험이 헛것을 재고 있다"
+    rows = re.findall(r'<tr data-claim="%s">(.*?)</tr>' % _NDP_HZ, sec, re.S)
+    assert len(rows) == 1 and "5.393" in rows[0], "미재현 값이 자기 id 요소 안에 없다"
+    assert '<span class="claim-mark">[미재현]</span>' in rows[0], "표식이 텍스트 노드가 아니다"
+    assert "0.053" in sec and "10/10" in sec
+
+
+def test_s6_prediction_failure_is_recorded_and_threshold_not_moved(client):
+    """양성+음성 — 등록 예측(6.33–6.46)이 지워지지 않았고, 틀렸다고 적혀 있고, 문턱을 안 옮겼다.
+    실패한 예측을 '재현' 으로 읽게 하는 문장이 없다."""
+    sec = _section(_report_html(client), "s6")
+    assert "6.33 ~ 6.46" in sec, "등록 예측이 지워졌다 — 사후해석이 된다"
+    assert "예측이 틀렸다" in sec and "문턱을 옮기지 않는다" in sec
+    assert "부피 가설은 반증됐다" in sec and "9.42" in sec
+    assert "축합될수록 갭이 넓어진다" in sec and "쓰지 않는다" in sec
+    assert "10/10 재현" not in sec and "10 종 재현" not in sec and "10 종 전부 재현" not in sec
+
+
+def test_ndp5o14_hazard_registered_bound_and_ledger_valid(client):
+    """양성 — 인용위험 원장에 CONDITIONAL 항목이 있고, 원장 검사가 0 이고, 화면이 그 id 로
+    두 자리(표 행 · 예측 카드)에서 결속하며, §9 도 같은 id 를 이름으로 댄다."""
+    hz = json.loads(HAZARDS.read_text("utf-8"))["hazards"]
+    z = [x for x in hz if x.get("id") == _NDP_HZ]
+    assert len(z) == 1 and z[0]["level"] == "CONDITIONAL" and "5.393" in z[0]["what"]
+    from webapp import canonical as C
+    assert C.validate_hazards() == [], C.validate_hazards()
+    h = _report_html(client)
+    assert h.count(f'data-claim="{_NDP_HZ}"') >= 2, "표 행과 예측 카드 둘 다 결속돼야 한다"
+    assert h.count('<span class="claim-mark">[미재현]</span>') >= 2
+    assert _NDP_HZ in _section(h, "s9")
+
+
+def test_s9_count_matches_tldr_and_gist(client):
+    """양성 — §9 항목 수가 TL;DR 과 요지 줄에 적힌 개수와 같다 (25 로 굳어 있던 사고 방지)."""
+    h = _report_html(client)
+    s9 = _section(h, "s9")
+    n = s9.count('<li><span class="no">⛔</span>')
+    m1 = re.search(r"⛔ 말하지 않는 것 <span class=\"mono\">— 전체 (\d+) 개는", h)
+    m2 = re.search(r"<b>금지 서술 (\d+) 개</b>", s9)
+    assert m1 and m2, "개수 표기를 못 찾았다 — 시험이 헛것을 재고 있다"
+    assert int(m1.group(1)) == n == int(m2.group(1)), (m1.group(1), n, m2.group(1))
+    for must in ("6.6 배", "Xiao 2019", _NDP_HZ):
+        assert must in s9, f"§9 에 {must!r} 항목이 없다"
+
+
+def test_s0_onset_table_matches_the_esw_record(client):
+    """양성 — §0 자가반증 표의 onset 이 esw 원장 값 그대로이고, 부제가 '창' 이 아니라 '열화 억제' 다."""
+    esw = json.loads(ESW.read_text("utf-8"))["results"]
+    h = _report_html(client)
+    s0 = _section(h, "s0")
+    for lab in ("comp1", "modelc", "lpsocl", "modelc_nd"):
+        row = re.search(r'<tr><td class="mono">%s \([^<]*</td>(.*?)</tr>' % lab, s0, re.S)
+        assert row, f"§0 표에 {lab} 행이 없다"
+        cells = [re.sub(r"<[^>]+>", "", c) for c in re.findall(r"<td[^>]*>(.*?)</td>", row.group(1), re.S)]
+        assert float(cells[0]) == esw[lab]["oxidation_limit_V"], (lab, cells)
+        assert float(cells[1]) == esw[lab]["reduction_limit_V"], (lab, cells)
+    assert "1.92" in s0 and "좁힌다" in s0 and "Banik" in s0
+    assert "고전압 양극 계면 열화 억제" in h[:h.index('<ul class="toc">')], "부제가 아직 '안정성 개선' 이다"
