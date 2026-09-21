@@ -3391,17 +3391,44 @@
      "at": "2026-09-21",
      "state": "active",
      "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
+    },
+    {
+     "at": "2026-09-21",
+     "state": "proposed",
+     "by": "agent",
+     "note": "개정 1 로 active → proposed. 재비준 필요."
+    },
+    {
+     "at": "2026-09-21",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
+    },
+    {
+     "at": "2026-09-21",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
+    },
+    {
+     "at": "2026-09-21",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
     }
    ],
    "date": "2026-09-21",
    "status": "active",
+   "amendment_1_2026_09_21": {
+    "기계": "V100 → kgy",
+    "실행모드": "default → turbo",
+    "사유": "V100 env 가 torch 의존 .so(nccl·cusparselt·nvshmem) 삭제로 깨졌고 복구 불가. kgy 로 가면 seed1(turbo)과 모드가 일치해 모드 혼입 문제도 사라진다.",
+    "⛔_안_바뀐_것": "온도·셀·시드수·길이·게이트·갈래·보고량·총상한"
+   },
    "ratification": {
     "state": "ratified",
     "role": "scientific_owner",
     "actor_id": "yonghoon7153@gmail.com",
-    "timestamp": "2026-09-21T07:28:40Z",
-    "commit": "768b2f2508a5d38c3518b281766f9dd5ae3afcb2",
-    "decision_digest": "sha256:47af1f2cef23bf763f3933af8f7e915ada56b7304943df9f8307d8bdb2112cc6",
+    "timestamp": "2026-09-21T08:03:47Z",
+    "commit": "f9f93d1e3679c120c1dac0914bd1b7543e03b51f",
+    "decision_digest": "sha256:3ede68fe3a2c183a44f92bbb80bb3a9b5f7973ffd284508851a631b08f28e572",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
   }

@@ -33,7 +33,7 @@
    "⚠_저온_제외_판정과의_관계": "`kb/methodology/md_conductivity_protocol.md` §3 이 400/500 K 를 메인에서 뺐다. 사유 셋 중 ②(참조 deck 일관)·③((5,40) 창 불일치)은 해당 없고(새로 돌리므로 전부 (2,50)), ①(저온 잡음)은 **결정**의 저온 얘기라 방향이 반대다 — 이 유리는 Tg 근처라 그 온도에서 오히려 빠르다. ⛔ 그 판정을 무효화하지 않는다: 그 문서는 **결정 계**의 규약이고 이 계는 이 카드로 따로 선언한다."
   },
   "MD": "Langevin NVT · dt 2 fs · friction 0.02 · equilib 5 ps · prod **400 ps** · save 100 fs · **MSD 창 2–50 ps 고정** · 자유절편 D (repo 규약 · convention_check 대상)",
-  "★_실행모드_default_고정": "⛔ **turbo 를 쓰지 않는다.** V100 은 Volta 라 bf16/TF32 가 없어 turbo 가 안 된다. ⇒ 전부 **default**. modelc 9런은 **turbo** 라 **같은 표에 못 놓는다** — Phase B 대조 잡도 default 로 새로 돌려야 한다.",
+  "★_실행모드_default_고정": "⛔ **개정 1(2026-09-21): turbo 로 고정한다.** 기계가 kgy 로 바뀌어 turbo 가 가능하고, seed1 이 turbo 라 **같은 모드로 맞추는 것이 옳다**. 원판 문구(default 고정 · V100 Volta 라 turbo 불가)는 V100 을 전제했고 그 전제가 깨졌다.",
   "모델": "UMA uma-s-1p1 · task omat · 체크포인트 sha256 07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a (V100 로컬 사본 · kgy 원본과 해시 일치 확인 2026-09-21)",
   "담금질": "`tools/ionic/melt_quench_uma.py` — seed1 과 **같은 인자**: melt 100 ps @1200 K → 1e12 K/s 선형 담금질 900 ps → 300 K 유지 50 ps. `--seed` 만 다르다.",
   "도구": "`tools/modelc_v3/disorder_ensemble_diffusion.py` (--disorder_levels 0.0 --n_configs 1) · 게이트 `tools/ionic/msd_diffusive_check.py` · 적합 `tools/ionic/arrhenius_compat.py`"
@@ -100,7 +100,7 @@
   "⛔_게이트_완화_금지": "탈락이 많다고 문턱을 풀지 않는다. v1 NEB 라운드가 무효가 된 이유가 게이트가 아니라 끝점이었다."
  },
  "6_기계_비용": {
-  "어디": "**V100** (Tesla V100-PCIE-32GB · runyourai). 지금 유휴이고, V100 문서가 'NFS 를 놔두기로 한 판단은 **긴 MD** 에 묶여 있다' 고 적었다 — 이 캠페인이 그 워크로드다.",
+  "어디": "⛔ **개정 1(2026-09-21): kgy.** 원판은 V100 이었으나 그 env 가 복구 불가로 깨졌다 — 개정_1 절 참조.",
   "⚠_V100_은_대여_기계다": "2026-09-14 에 컨테이너가 **한 번 소멸**했다(그래서 cascade v6 는 kgy 로 갔다). 완화 셋: ① 런 단위(≈4–5 h)로 산출이 남아 손실 입도가 작다 ② **시드 하나 끝날 때마다 결과를 NFS($STORE)로 복사** ③ 체크포인트 로컬 사본은 컨테이너와 함께 사라지므로 재설치는 문서 절차대로.",
   "견적_⚠_추정이다": {
    "담금질_4시드": "≈ 15 h/시드 × 4 = **60 h** (400 원자 실측 23.9 ps/h 에서 원자수 환산 — **첫 담금질이 끝나면 실측으로 갈아 끼운다**)",
@@ -131,7 +131,7 @@
  "9_Phase_B_예고_이_카드_밖": {
   "무엇": "같은 온도(400/465/550 K)·같은 프로토콜·**같은 default 모드**의 **modelc 결정 대조 잡** → ΔEa = Ea(유리) − Ea(결정) 과 D 비. 그게 인용정책이 허용하는 형태다.",
   "왜_지금_안_여나": "비용을 **추정으로 잡지 않는다.** Phase A 가 끝나면 실측 시간이 나오고, 결정은 저온에서 느려 400 ps 로 될지도 그때 판단한다(feasibility: modelc 400 K 는 실무 323 ps).",
-  "⚠": "modelc 기존 9런은 turbo 라 **재활용 불가**다. Phase B 는 전부 새로 돈다."
+  "⚠": "⛔ **개정 1 로 철회** — 이 캠페인도 turbo 가 되므로 modelc 9런과 모드가 같다. 다만 **온도가 다르므로**(400/465/550 vs 600/800/1000) Phase B 는 여전히 새로 돌아야 한다."
  },
  "출처": {
   "스캔": "db/properties/lpscl_smallcell_quench_scan_2026_09_21.json",
@@ -154,18 +154,65 @@
    "at": "2026-09-21",
    "state": "ratified",
    "note": "1저자 비준 2026-09-21 ('ㅇㅇ 돌리자'). 온도 400/465/550 K · 120 원자 1×1×1 · 독립담금질 5 시드 · 400 ps · default 모드 · 파일럿 2런 선행 · 갈래 0~3 · 총상한 180 GPU-h · 보고량은 N_pass/15 와 Ea 시드 IQR(절대값 아님). 온도 간격은 1저자 지적(아레니우스 지렛대)으로 400/450/500 에서 정정된 값이다."
+  },
+  {
+   "at": "2026-09-21",
+   "state": "amended_pending_ratify",
+   "by": "agent",
+   "note": "개정 1 — 기계 V100→kgy · 실행모드 default→turbo. V100 env 가 torch 의존 .so 3 종 삭제로 깨졌고 우리 손으로 복구 불가(nvshmem 이 kgy 에도 없고 인터넷 차단). 결과는 아직 하나도 안 봤다(results_seen false) — 설계 변경이 결과에 오염되지 않는다. 1저자 재비준 필요."
+  },
+  {
+   "at": "2026-09-21",
+   "state": "ratified",
+   "note": "개정 1 재비준 (1저자 2026-09-21 'kgy로 가'). 기계 V100 → kgy · 실행모드 default → turbo. V100 env 가 torch 의존 .so 3종(nccl·cusparselt·nvshmem) 삭제로 깨졌고 복구 불가(nvshmem 이 kgy 에도 없고 인터넷 차단, V100 에 대안 env 없음). kgy 로 가면 seed1(turbo)과 모드가 일치해 모드 혼입 문제가 사라지고 seed1 이 그대로 산다. 온도·셀·시드수·길이·게이트·갈래·보고량·총상한은 안 바뀐다. results_seen false — 결과를 보기 전의 설계 변경이다. ⚠ 원인 문구는 1저자 지적(DEM 공유 env)을 받아 '자동 정리' → '공유 env 경합(pip 중단)' 으로 고쳤다 — 증거 cu13/include."
+  },
+  {
+   "at": "2026-09-21",
+   "state": "ratified",
+   "note": "재도장 — 비준 직후 개정 1 의 **원인 문구만** 고쳤다(1저자 지적: DEM 공유 env 의 pip 중단, 증거 nvidia/cu13/include). 설계(온도·셀·시드·길이·게이트·갈래·보고량·상한·기계·모드)는 한 글자도 안 바뀌었다. ✅ 원인 확정 — mtime 으로 pip 시각(15:45 시작 · 16:19~16:32 삭제/교체)을 잡았다."
+  },
+  {
+   "at": "2026-09-21",
+   "state": "ratified",
+   "note": "재도장 — 개정 1 의 원인을 가설에서 **확정**으로 (mtime 실측: pip 15:45 시작 · nccl 16:19 · nvshmem/cu13 16:20 · cudnn 16:32, 나머지는 09-14). 설계는 불변."
   }
  ],
  "by": "agent · 2026-09-21",
+ "개정_1_2026_09_21_기계와_실행모드": {
+  "무엇을_바꾸나": {
+   "기계": "V100 → **kgy**",
+   "실행모드": "default 고정 → **turbo 고정**"
+  },
+  "왜_바꾸나_강제된_것": {
+   "V100_env_가_깨졌다": "2026-09-21 실측 — `import torch` 가 `ImportError: libnccl.so.2` 로 실패한다. `ldd libtorch_cuda.so` 가 **세 개**를 못 찾는다: libnccl.so.2 · libcusparseLt.so.0 · libnvshmem_host.so.3. `nvidia/nccl/`·`nvidia/nvshmem/` 이 **빈 디렉터리**인데 `.dist-info` 는 남아 있다(RECORD 는 libnccl.so.2 가 394 MB 여야 한다고 적는다). 같은 시간대에 NFS 사용량이 57G→55G 로 **2 GB 줄었다** ⇒ 덩치 큰 .so 만 골라 지워졌다. ",
+   "우리_손으로_못_고친다": "kgy 에서 채울 수 있는 건 nccl(2.27.3 · soname 호환)·cusparselt(0.7.1 일치) **둘뿐**이고 **nvshmem 은 kgy 에 아예 없다**. 바깥 인터넷이 막혀 pip 도 안 된다(V100 문서). V100 에는 `uma` env 하나뿐이라 대안 env 도 없다.",
+   "⚠_오늘_아침엔_돌았다": "같은 env 로 15:04–15:29 에 G-B7 18 사건이 돌았다. 그 뒤에 지워진 것이다 — **이 기계가 도중에 환경을 잃는다**는 뜻이고, 5–6 일 캠페인을 얹을 수 없는 이유다. (09-14 컨테이너 소멸 이력 + 오늘 NFS 0.3 MB/s 체험과 같은 줄기)",
+   "⚠_원인_1저자_지적_2026_09_21": "1저자: *'DEM 이 같은 uma 환경을 쓰는데 그거 때문에 깨진 것일 수도.'* — **증거가 맞는다.** `nvidia/cu13/` 에 `include` 만 있다. 다른 작업이 **cu13 계열 torch 를 pip 으로 설치하다 중단**하면 정확히 이 모양이 된다: pip 이 옛 cu12 payload(.so)를 먼저 지우고 새것을 받다 멈추면 `.dist-info` 는 남고 `lib` 은 비고 새 `cu13` 트리가 반쯤 생기고 디스크가 풀린다. ⇒ 원인은 **플랫폼 자동 정리가 아니라 공유 env 를 다른 워크로드가 갈아엎은 것**으로 본다. ✅ **확정됐다 (mtime 실측 2026-09-21)**: `nvidia/nccl` 16:19 · `nvidia/nvshmem` 16:20 · `nvidia/cu13` 16:20 신규 · `nvidia/cudnn` 16:32 갱신 — 나머지 nvidia 트리는 전부 **09-14** 자다. `~/.cache/pip/selfcheck` 가 **15:45**. ⇒ 오늘 15:45 에 pip 이 시작해 16:19–16:32 에 cu12 payload 를 지우고 cu13 으로 갈아엎다 멈췄다. `torch-2.14.0+cu126.dist-info` 는 남아 있는데 그 torch 가 요구하는 cu12 payload 가 지워진 상태다. ⭐ G-B7(15:04–15:29)은 **그 직전에 끝나서 살았다**. `~` 잔해가 없는 것은 uninstall 은 끝내고 install 에서 멈췄다는 뜻이다.",
+   "⇒_기계_판단에_미치는_영향": "원인이 **공유 env 경합으로 확정**됐다 ⇒ V100 을 고쳐도 DEM 이 다시 설치하면 또 깨진다. 우리가 통제할 수 없는 변수다. kgy 행은 이 확정으로 더 강해진다."
+  },
+  "⭐_부수_이득_모드_혼입이_사라진다": "seed1 은 kgy 에서 **turbo** 로 담금질됐다(plan.json `uma_inference_mode: turbo`). V100 은 Volta 라 turbo 가 안 돼서 원판 카드는 default 로 고정했고, 그러면 seed1 과 모드가 갈려 *'seed1 을 버리고 5 개 다시 담금질(+15 h)'* 을 검토해야 했다. kgy 로 가면 **seed 2–5 를 seed1 과 똑같이 turbo 로** 돌릴 수 있어 그 문제가 **통째로 없어진다.** seed1 이 그대로 산다.",
+  "⚠_대가": "kgy GPU 경합. lpsocl s6 가 ≈34 h, cascade v6 가 40 런(상한 320 GPU-h) 돌고 있다. ⇒ **seed2 하나를 먼저** 돌려 실측 시간을 얻고, 나머지는 lpsocl 이 끝나는 자리에 줄 세운다.",
+  "⛔_바뀌지_않는_것": [
+   "온도 400/465/550 K",
+   "셀 120 원자 1×1×1",
+   "시드 5 (독립 담금질)",
+   "prod 400 ps · MSD 창 2–50 ps",
+   "게이트 문턱(§5)",
+   "갈래 0~3",
+   "보고량(N_pass/15 · Ea 시드 IQR)",
+   "총상한 180 GPU-h"
+  ],
+  "⚠_모드_변경이_비교에_미치는_영향": "MD 도 turbo 가 된다. modelc 9런도 turbo 라 **오히려 Phase B 대조가 쉬워진다** — 원판 §9 의 *'modelc 기존 9런은 turbo 라 재활용 불가'* 가 **철회**된다(단 온도가 달라 새로 돌리는 것은 그대로다). turbo↔default 등가는 `uma_turbo_equivalence_2026_09_11.json` 2차 판정에 이미 서 있다."
+ },
  "ratification": {
   "state": "ratified",
   "role": "scientific_owner",
   "at": "2026-09-21",
   "by": "1저자",
-  "content_digest": "bc2feafbf463743ca2b53aa4e26d2f02f02ac96c0f4f471a9b27ed94e11b40c4",
+  "content_digest": "1e35b1e7c29d042c6f14c62daef4f386b9e4c7dab68a110bb9729c8af23449e1",
   "actor_id": "yonghoon7153@gmail.com",
-  "timestamp": "2026-09-21T07:28:40Z",
-  "commit": "768b2f2508a5d38c3518b281766f9dd5ae3afcb2",
+  "timestamp": "2026-09-21T08:03:47Z",
+  "commit": "f9f93d1e3679c120c1dac0914bd1b7543e03b51f",
   "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다 — 비준을 받아 놓고 내용을 고치는 경로를 닫는다.",
   "⚠_base_commit_이_아니다": "`commit` 은 기록일 뿐 앵커가 아니다. 앵커는 위 digest 다."
  }
