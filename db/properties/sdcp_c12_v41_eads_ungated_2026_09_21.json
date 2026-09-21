@@ -1,0 +1,133 @@
+{
+ "schema": "measurement_result/v1",
+ "record_kind": "result",
+ "date": "2026-09-21",
+ "system": "sdcp_c12",
+ "citable": false,
+ "results_seen": true,
+ "status": "diagnostic — ⛔ 사전등록 게이트 미통과. 인용 불가",
+ "제목": "C-12 v41 완료 7잡으로 낸 **E_ads 와 대비 D** — 산술은 되지만 **보고량이 아니다**",
+ "0_왜_이_기록이_있나": {
+  "요청": "1저자 2026-09-21 — *'일단 adsorption energy 는 구할 수 있는거잖아 구해봐봐'*",
+  "답": "구할 수 있다. 재료(복합체 2 · 슬랩 1 · 기체 4)가 다 왔다. **다만 사전등록 게이트가 안 열린다** — 그래서 이 기록은 `citable: false` 이고 진단이다.",
+  "⛔_이것을_D_로_부르지_않는다": "사전등록 보고량은 `ddE_lowE = min_p A(SDCP,p) − min_q A(PTFE,q)` 로 **자세 최소** 위에서 정의된다. 여기 있는 것은 **한 자세(b00·pm1) 위의 값**이다. net4 자세는 2단계라 안 돌았다."
+ },
+ "1_입력_원자료": {
+  "출처": "mirae 통합 반송본 sdcp_c12_v41_stage1_partial7_2026-09-21.tgz (2026-09-21 수령)",
+  "규약": "각 잡 `static/OUTCAR.gz` 의 **마지막** `energy(sigma->0)` — 분석기와 같은 정규식(`vasp_handoff_bundle.py:4356`)",
+  "⚠_HANDOFF_표와_다르다": "보고자 표는 `TOTEN F` 다. SDCP 복합체에서 **5.5 meV** 차가 난다 (−1151.2978 vs −1151.292282). 두 규약을 섞으면 D 가 5.4 meV 틀어진다 ⇒ **정본은 sigma->0**.",
+  "E_eV": {
+   "prospective/ptfe_c10__b00__afm2424_pm1": -1123.593342,
+   "prospective/sdcp_neutral__b00__afm2424_pm1": -1151.292282,
+   "refs/clean_slab__afm2424_pm1": -944.947604,
+   "refs/mol__ptfe_c10__box20": -177.854865,
+   "refs/mol__ptfe_c10__box24": -177.854997,
+   "refs/mol__sdcp_neutral__box20": -205.389632,
+   "refs/mol__sdcp_neutral__box24": -205.389849
+  },
+  "Edisp_eV": {
+   "prospective/ptfe_c10__b00__afm2424_pm1": -28.97637,
+   "prospective/sdcp_neutral__b00__afm2424_pm1": -28.80731,
+   "refs/clean_slab__afm2424_pm1": -27.52246,
+   "refs/mol__ptfe_c10__box20": -0.63129,
+   "refs/mol__ptfe_c10__box24": -0.63123,
+   "refs/mol__sdcp_neutral__box20": -0.71783,
+   "refs/mol__sdcp_neutral__box24": -0.71776
+  },
+  "설정_전수확인": "ENCUT 520 · ISPIN 2 · IVDW 11 · NELM 200 · ISMEAR 0/SIGMA 0.05 · LDIPOL/IDIPOL 4 · k: 슬랩계 Γ 3×4×1 · 기체 Γ 1×1×1 — 7잡 전부 `General timing` 정상종료",
+  "outcar_sha256": {
+   "prospective/ptfe_c10__b00__afm2424_pm1": "96f64e4156ecf0ae086e47940a3381dfb6fc6b3738f33bc518ab2463b10d3839",
+   "prospective/sdcp_neutral__b00__afm2424_pm1": "a168ffd15d6657f2e2272fbe3a6f2af416150abb0690cbcd200825af710dee72",
+   "refs/clean_slab__afm2424_pm1": "bdb5bdd86f2d54605c7a9ec7eb6915d746ef5015575e51a6fa7b3c0241d10d55",
+   "refs/mol__ptfe_c10__box20": "5a7bf712740cbc11f1221342e9d82f9dc252fed51cebf82df828179e376821b0",
+   "refs/mol__ptfe_c10__box24": "d403a7ee09c96518c93059cadfd938bcef8719a4a80579d4c713b88367623f55",
+   "refs/mol__sdcp_neutral__box20": "086ce0174ce84c3238e5ba190a0a7dc8aec36914bf6b45cb985523cd30c0f975",
+   "refs/mol__sdcp_neutral__box24": "4e96a863c53184ca98114152ba15549667d24304da5df8fafdaf5e09c861ee61"
+  },
+  "회수경로": "db/properties/sdcp_c12_v41_partial_raw/<잡>/static/OUTCAR.gz (2026-09-21 7잡 전수 회수)"
+ },
+ "2_★_결과": {
+  "정의": "E_ads(f) = E_complex(f) − E_slab − E_mol(f, box24)",
+  "E_ads_eV": {
+   "ptfe_c10": -0.790741,
+   "sdcp_neutral": -0.954829
+  },
+  "대비_D_pm1_b00_eV": -0.164088,
+  "부호": "음수 = SDCP 가 이 자세에서 **더 세게 붙는다**",
+  "box_감도": {
+   "PTFE": "0.131 meV",
+   "SDCP": "0.218 meV",
+   "D": "0.086 meV",
+   "⇒": "box20↔box24 가 D 에 주는 영향은 **0.1 meV 미만** — 이 축은 수렴했다"
+  },
+  "⚠_지위": "**한 자세 위의 값**이다. 사전등록 보고량이 아니다."
+ },
+ "3_★_D3_항등분해": {
+  "근거": "IVDW=11 의 Edisp 는 SCF 밖에서 핵좌표만 보고 더해지는 항이다 ⇒ `E_전자 = E(sigma->0) − Edisp` 가 **항등식**이고 모형이 아니다 (도구 주석 `vasp_handoff_bundle.py:4357-4360`)",
+  "표_eV": {
+   "ptfe_c10": {
+    "총": -0.79074,
+    "분산": -0.82268,
+    "전자": 0.03194
+   },
+   "sdcp_neutral": {
+    "총": -0.95483,
+    "분산": -0.56709,
+    "전자": -0.38774
+   },
+   "D": {
+    "총": -0.16409,
+    "분산": 0.25559,
+    "전자": -0.41968
+   }
+  },
+  "★_읽히는_것": "**PTFE 는 사실상 분산으로만 붙는다** — 전자항이 +0.032 eV 로 오히려 **반발**이다. **SDCP 는 전자항이 −0.388 eV 로 진짜 결합**이 있다. D 의 부호를 정하는 것은 전자항(−0.420)이고 분산항(+0.256)은 그것을 **일부 상쇄**한다.",
+  "⛔_이것도_인용_불가": "같은 게이트에 걸린다. 그리고 이 분해는 **한 자세**의 것이다."
+ },
+ "4_⛔_왜_보고할_수_없나": {
+  "분석기가_세울_블록": [
+   "MOLECULAR_SPIN_CONTROL_PENDING(ptfe_c10)",
+   "MOLECULAR_SPIN_CONTROL_PENDING(sdcp_neutral)",
+   "CANARY_GEOM_UNCHECKED(ptfe_c10)",
+   "CANARY_GEOM_UNCHECKED(sdcp_neutral)"
+  ],
+  "왜": "1단계 6·9(`mol__*__box24__nzmag`)가 미실행이다. 러너 2물결 버그로 열리지 않는다.",
+  "★_이건_형식이_아니라_실질이다": "기체 기준은 **NUPDOWN=0 으로 제약**돼 있고(닫힌 껍질 일중항) 슬랩·복합체는 **NUPDOWN=−1 자유**다 (회신 AM P0-5 에 선언). 이 비대칭이 괜찮다는 **증거가 바로 nzmag 대조**다. 그게 없으면 *'제약된 기준에서 자유로운 복합체를 뺐다'* — CLAUDE.md 가 이름으로 부르는 2026-08-28 사고와 같은 모양이 된다.",
+  "그_외_미검증": [
+   "진공 두께 수렴 (vacconv 10–12 미실행)",
+   "자세 최소 (net4 자세 4잡이 2단계라 미실행) ⇒ min over poses 가 성립 안 함",
+   "민감도 자세 b52/b12 미실행"
+  ]
+ },
+ "5_⚠_같이_봐야_할_관측": {
+  "SDCP_복합체_자화": "0.0802 μB (PTFE 복합체 0.0004 · 슬랩 0.0002 · 기체 0.0000). NUPDOWN=−1 이라 막혀 있지 않다 — 선언대로 **seed-conditioned realized basin** 이고 자기 바닥상태 주장이 아니다. 보고자도 이 값을 짚었다.",
+  "⚠_판단_보류": "0.08 μB 가 E_ads 에 얼마나 들어갔는지는 **이 자료로 못 가른다**. net4 자세(2단계)와 비교해야 basin 의존성이 보인다."
+ },
+ "6_허용_서술_이대로만": [
+  "「완료 7잡의 산술로 b00·pm1 자세에서 E_ads(PTFE) −0.791 eV · E_ads(SDCP) −0.955 eV · 차 −0.164 eV 가 나온다 — 단 사전등록 게이트(기체 스핀 대조·진공 수렴·자세 최소)가 **하나도 통과하지 않았다**.」",
+  "「box20↔box24 가 D 에 주는 영향은 0.1 meV 미만이다.」",
+  "⚠ 두 문장 다 **'한 자세 · 게이트 미통과'** 를 떼고 쓰면 무효다."
+ ],
+ "7_금지_서술": [
+  "⛔ 이 −0.164 eV 를 **사전등록 보고량 ddE_lowE 로 부르기** — 자세 최소 위에서 정의된 양인데 자세가 하나뿐이다",
+  "⛔ **원고·SI·슬라이드에 싣기** — citable: false 다",
+  "⛔ D3 분해를 **기전 주장**으로 쓰기 (「SDCP 는 화학결합, PTFE 는 분산」) — 한 자세의 항등분해일 뿐이다",
+  "⛔ HANDOFF 표의 `TOTEN F` 와 **섞어 쓰기** — 규약이 다르고 5.5 meV 어긋난다",
+  "⛔ 자화 0.08 μB 를 **무시하거나** 반대로 **기전으로 읽기** — 둘 다 이 자료 밖이다"
+ ],
+ "8_이_값이_살아나려면": "6·9(nzmag) 가 돌아야 한다. 그게 러너 2물결 버그로 막혀 있고, 선택지는 ⓐ 스킵 모드 러너(v42) ⓑ 1단계 전체 재실행이다 (1저자 판단 대기).",
+ "출처": {
+  "번들": "sdcp_c12_v41 (zip sha256 76d76d50e4daeb5f… · MANIFEST fd5e4488cc097af9…)",
+  "반송": "sdcp_c12_v41_stage1_partial7_2026-09-21.tgz",
+  "분석기_규약": "tools/sdcp/vasp_handoff_bundle.py:4356 (energy(sigma->0)) · 11226·11247 (블록)"
+ },
+ "status_history": [
+  {
+   "at": "2026-09-21",
+   "state": "diagnostic",
+   "by": "agent",
+   "note": "1저자 요청으로 산술만 냈다. 게이트 미통과라 인용 불가 — 그 사실을 기록 머리에 박았다."
+  }
+ ],
+ "by": "agent · 2026-09-21 · 계산 0 (반송 OUTCAR 재분석)"
+}

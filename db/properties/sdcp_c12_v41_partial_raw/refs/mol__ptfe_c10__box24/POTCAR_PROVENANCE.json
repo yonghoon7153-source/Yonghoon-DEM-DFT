@@ -1,0 +1,23 @@
+{
+ "schema": "potcar_provenance/v1",
+ "species_order": [
+  "C",
+  "F"
+ ],
+ "expected_variants": [
+  "C",
+  "F"
+ ],
+ "titel_lines": [
+  "TITEL  = PAW_PBE C 08Apr2002",
+  "TITEL  = PAW_PBE F 08Apr2002"
+ ],
+ "source_sha256": {
+  "C": "253f7b50bb8d59471dbedb8285d89021f4a42ed1a2c5d38a03a736e69125dd95",
+  "F": "53c630871ac675939349fc2b976745ee17808dedc90b5bdde026bc81f0faf456"
+ },
+ "allowlist": "/home/kgy/projects/sdcp_c12_v41_2026_09_11/site_allow.txt",
+ "allowlist_sha256": "8d192587cf8b1b7cec52804d0aff311a99a5c25c471dae230f0b90b8ce13dc49",
+ "allowlist_waived": false,
+ "assembled_sha256": "e33939e9a2c61a14e270b51445ff991aea49c0e3583aec71681e5b9ab286c925"
+}
