@@ -285,6 +285,10 @@ CAMPAIGN_SEEDS = (32452843, 49979687, 67867967)
 CAMPAIGN = ([('L0', CAMPAIGN_SEEDS[0]), ('LB1', CAMPAIGN_SEEDS[0]),
              ('LB2', CAMPAIGN_SEEDS[0]), ('LB3', CAMPAIGN_SEEDS[0])]
             + [('LC', sd) for sd in CAMPAIGN_SEEDS] + [('LA', sd) for sd in CAMPAIGN_SEEDS])
+#: ★ 기준 런 — `measure_mixing_index.py --ref` 의 상대 (S_R² = 완전 무작위 기준).  **균일 삽입 · 점착 0
+#  (`E0`) · 회전 0** = 삽입+정착만.  캠페인과 **같은 시드**로 짝짓는다 (자가 리뷰 R-2: 이것 없이는
+#  캠페인에 판독기가 없다).  회전 0 이라 비용 ≈ 정착분(~3.6 h)뿐.
+REFERENCE = [('E0', sd, 0) for sd in CAMPAIGN_SEEDS]
 
 
 def _assert_ceiling(arm, M, d, ceiling=None):
@@ -731,7 +735,9 @@ thermo_modify lost ignore norm no
 
 shell mkdir post
 run 1
-dump dmp all custom {dump_every} post/mix_*.liggghts id type mol x y z vx vy vz fx fy fz radius
+# ⚠ `mol` 은 `fix multisphere` 가 있어야 할당된다 (LIGGGHTS-PUBLIC fix_multisphere.cpp:175; 없으면
+#   dump_custom.cpp:1058 "Dumping an atom property that isn't allocated" 로 **즉시 죽는다** — 자가 리뷰 R-1)
+dump dmp all custom {dump_every} post/mix_*.liggghts id type{' mol' if _fib else ''} x y z vx vy vz fx fy fz radius
 
 # ① 채우고 정착 — ⚠ KE 가 떨어진 뒤에 회전을 시작한다 (정착 전에 돌리면 지표가 뒤집힌다)
 #   정착 {2*steps_fill*p['dt']:.3f} s = 낙하 {2*p['R']*1e3:.1f} mm · e {restitution} 에서
@@ -807,6 +813,8 @@ def _selftest():
         'fix integr  all multisphere' in dk5)
     #  ⚠ `'multisphere' not in dk` 로 쓰면 안 된다 — 머리말 주석의 `processors 1 1 1
     #    # PUBLIC 판 multisphere 는 직렬만 지원` 에 걸려 **항상 실패**한다 (실제로 걸렸다).
+    chk('⑪f ★ dump 열 `mol` 은 섬유가 있을 때만 (없으면 LIGGGHTS 가 즉시 죽는다 — 리뷰 R-1)',
+        'id type mol x y z' in dk5 and 'id type x y z' in dk and ' mol ' not in dk.split('dump dmp')[1].split('\n')[0])
     chk('⑪a ★ 섬유가 없으면 multisphere 적분기가 **없다** (3 상 = 생산 기본)',
         'fix integr  all multisphere' not in dk
         and 'particletemplate/multisphere' not in dk
@@ -1018,6 +1026,10 @@ def _selftest():
     chk('㉞c ★ 캠페인 6 팔이 전부 층상이고 10 런이다 (4×1 + LA·LC 3 시드, 원장 §10)',
         all(ARMS[a].get('layered') for a in ('L0', 'LC', 'LB1', 'LB2', 'LB3', 'LA')) and len(CAMPAIGN) == 10
         and sum(1 for a, _ in CAMPAIGN if a in ('LA', 'LC')) == 6)
+    chk('㉞d ★ 기준 런 3 개 = E0(균일·점착 0) · 캠페인 시드 · 회전 0 (판독기 --ref 상대, 리뷰 R-2)',
+        len(REFERENCE) == 3 and all(a == 'E0' and r == 0 for a, _, r in REFERENCE)
+        and {sd for _, sd, _ in REFERENCE} == set(CAMPAIGN_SEEDS)
+        and 'run 0\n' in deck(_p8, rpm=60, revolutions=0, arm='E0'))
     #  ★★ 진짜 "Bo 라벨이 안 밀린다" 는 **지름을 흔들어야** 보인다 — ㉞ 는 팔만 흔든다.
     #    초판(`mult = 목표Bo / 0.21244`)은 AM_P 12 → 9 µm 에서 LA 를 3.0 → **4.00** 으로
     #    밀었고 ㉞ 는 그것을 **못 잡았다** (BOND0 자체는 그 시점에 맞았으므로).
@@ -1037,8 +1049,8 @@ def _selftest():
                             PHASE_MECH[_t][0], E=E_PHASE[_t]) <= OVL_CEILING
             for _a in ('B5', 'B10', 'LA') for _i, _t in enumerate(TYPES)))
     #  ⚠ 2026-09-21 3차 갱신 — 3 상 · SE 1 µm · 벽 타입 · 영률 ÷135 · 마찰 hare2026 ·
-    #    전 팔 절대 Bo · 코팅 JKR 규약.  T1·B5 대신 LA·LC 를 골든에 넣는다 (캠페인 헤드라인).
-    _gold = {'E0': 'd0e7ea46413165a2', 'E1': 'cb6203cc991b1b3a', 'E4': '8fceed028b99a8c6', 'C1': '6d62e278496f476e', 'LA': '22eae3da4366e09e', 'LC': 'd9bc9a9a9b28d55d'}
+    #    전 팔 절대 Bo · 코팅 JKR 규약 · **dump `mol` 조건부(R-1)**.  T1·B5 대신 LA·LC 를 골든에 넣는다.
+    _gold = {'E0': 'c8d6700f0c67d856', 'E1': 'd68c220a8d4b412e', 'E4': 'dc41b6266010080e', 'C1': '7b577d9c37a1bfb7', 'LA': '9101d3f6f87e668a', 'LC': 'a173f07c8d555be2'}
     _got = {a: _hl.sha256(deck(_p8, rpm=60, revolutions=2, seed=32452843, arm=a)
                           .encode()).hexdigest()[:16] for a in _gold}
     chk('㉟ 기존 6 팔 덱이 편집 전과 **바이트 동일** (골든 해시, plan(8000)·2바퀴·시드 32452843)',
@@ -1148,7 +1160,7 @@ if __name__ == '__main__':
     for k in TYPES:
         print(f'   {k:5s} φ {p["phi"][k]:.4f} · d {p["d"][k]*1e3:6.3f} mm · n {p["n"][k]:8,d}'
               + (f'  ({p["n_fib"][k]:,} 가닥 × {p["nsph"]} 구)' if k in p['n_fib'] else ''))
-    print(f'\n드럼  R {p["R"]*1e3:.1f} mm (지름 {2*p["R"]*1e3:.0f} mm) · L {p["L"]*1e3:.1f} mm'
+    print(f'\n드럼  R {p["R"]*1e3:.3f} mm (지름 {2*p["R"]*1e3:.1f} mm) · L {p["L"]*1e3:.3f} mm'
           f' · 부피 {p["v_drum"]*1e6:.0f} mL · STL scale {p["stl_scale"]:.4f}')
     print(f'시간  dt {p["dt"]:.3g} s · 임계 {p["rpm_crit"]:.0f} rpm'
           f' · {rpm:.1f} rpm 에서 Fr {fr_of(rpm, p["R"]):.4f}  (밴드 {FR_BAND})')
