@@ -1,151 +1,243 @@
 {
-  "schema": "property_table/v1",
-  "kind": "gap_result",
-  "date": "2026-09-19",
-  "property": "cei_gap_discriminants_fixed_occ_nscf",
-  "citable": true,
-  "제목": "§C 판별종 갭 — fixed-occ nscf 고유값 9/10 (NdP₅O₁₄ 진행 중)",
-  "방법": "fixed-occupations nscf 의 VBM/CBM 고유값. ⛔ DOS 문턱 판독 아님 (CLAUDE.md 규율).",
-  "⚠_PBE": "PBE 갭이다 — 넓은 갭 절연체에서 30–50 % 과소. **실험값과 나란히 놓지 않는다.**",
-  "⚠_MP_대조_규율": "MP 값도 PBE 라 **같은 근사끼리** 비교다. 그래도 `cei_gap_targets_matched_2026_09_17` 의 ⛔ 대로 **우리 db 갭 표에 MP 를 섞지 않고**, 재현 판정은 **'같은 자릿수·같은 순위'** 로만 한다. 아래 `diff_eV` 는 참고 수치이지 재현율이 아니다.",
-  "source": "/data/work/runs/cei_gap/*/gap.json (gabia, 2026-09-19 전수)",
-  "rows": [
-    {
-      "phase": "NdPS4",
-      "spacegroup": "I4_1/acd",
-      "tag": "NdPS4_mp-aaaaafmc",
-      "vbm_eV": 5.136,
-      "cbm_eV": 7.4,
-      "gap_eV": 2.264,
-      "mp_ref_eV": 2.252,
-      "diff_eV": 0.012,
-      "diff_pct": 0.53
-    },
-    {
-      "phase": "Nd2O3",
-      "spacegroup": "Ia-3",
-      "tag": "Nd2O3_mp-aaaaabof",
-      "vbm_eV": 8.143,
-      "cbm_eV": 11.97,
-      "gap_eV": 3.827,
-      "mp_ref_eV": 3.708,
-      "diff_eV": 0.119,
-      "diff_pct": 3.21
-    },
-    {
-      "phase": "Nd3PO7",
-      "spacegroup": "Cm",
-      "tag": "Nd3PO7_mp-aaacqmbf",
-      "vbm_eV": 7.209,
-      "cbm_eV": 11.561,
-      "gap_eV": 4.352,
-      "mp_ref_eV": 4.284,
-      "diff_eV": 0.068,
-      "diff_pct": 1.59
-    },
-    {
-      "phase": "NdCl3",
-      "spacegroup": "P6_3/m",
-      "tag": "NdCl3_mp-aaaabihr",
-      "vbm_eV": 4.094,
-      "cbm_eV": 8.431,
-      "gap_eV": 4.337,
-      "mp_ref_eV": 4.3,
-      "diff_eV": 0.037,
-      "diff_pct": 0.86
-    },
-    {
-      "phase": "P2O5",
-      "spacegroup": "Fdd2",
-      "tag": "P2O5_mp-aaaaadqi",
-      "vbm_eV": 1.431,
-      "cbm_eV": 6.617,
-      "gap_eV": 5.186,
-      "mp_ref_eV": 5.202,
-      "diff_eV": -0.016,
-      "diff_pct": -0.31
-    },
-    {
-      "phase": "Nd2(SO4)3",
-      "spacegroup": "C2/c",
-      "tag": "Nd2SO43_mp-aaaabrhp",
-      "vbm_eV": 4.126,
-      "cbm_eV": 9.674,
-      "gap_eV": 5.548,
-      "mp_ref_eV": 5.433,
-      "diff_eV": 0.115,
-      "diff_pct": 2.12
-    },
-    {
-      "phase": "Nd(PO3)3",
-      "spacegroup": "C222_1",
-      "tag": "NdPO33_mp-aaaaaktk",
-      "vbm_eV": 3.87,
-      "cbm_eV": 9.367,
-      "gap_eV": 5.497,
-      "mp_ref_eV": 5.487,
-      "diff_eV": 0.01,
-      "diff_pct": 0.18
-    },
-    {
-      "phase": "NdPO4",
-      "spacegroup": "P2_1/c",
-      "tag": "NdPO4_mp-aaaaafhw",
-      "vbm_eV": 7.486,
-      "cbm_eV": 13.285,
-      "gap_eV": 5.799,
-      "mp_ref_eV": 5.679,
-      "diff_eV": 0.12,
-      "diff_pct": 2.11
-    },
-    {
-      "phase": "LiNd(PO3)4",
-      "spacegroup": "C2/c",
-      "tag": "LiNdPO34_mp-aaaabbrr",
-      "vbm_eV": 3.057,
-      "cbm_eV": 9.05,
-      "gap_eV": 5.993,
-      "mp_ref_eV": 5.979,
-      "diff_eV": 0.014,
-      "diff_pct": 0.23
-    }
-  ],
-  "pending": [
-    {
-      "phase": "NdP5O14",
-      "spacegroup": "Pmna",
-      "mp_ref_eV": 6.336,
-      "status": "01_vcrelax 수렴(2026-09-19 16:37) → 02_scf → 03_nscf_gap 대기 중 (gabia)",
-      "예측": "6.33–6.46 eV (MP 6.336 + 실측 offset +0.053)"
-    }
-  ],
-  "집계": {
-    "n": 9,
-    "mean_offset_eV": 0.0532,
-    "max_abs_diff_eV": 0.12,
-    "max_abs_diff_pct": 3.21
+ "schema": "property_table/v1",
+ "kind": "gap_result",
+ "date": "2026-09-21",
+ "property": "cei_gap_discriminants_fixed_occ_nscf",
+ "citable": true,
+ "제목": "§C 판별종 갭 — fixed-occ nscf 고유값 **10/10 완주**. 9 종 재현 · NdP₅O₁₄ 1 종 −0.943 eV 미재현(원인 미확정)",
+ "방법": "fixed-occupations nscf 의 VBM/CBM 고유값. ⛔ DOS 문턱 판독 아님 (CLAUDE.md 규율).",
+ "⚠_PBE": "PBE 갭이다 — 넓은 갭 절연체에서 30–50 % 과소. **실험값과 나란히 놓지 않는다.**",
+ "⚠_MP_대조_규율": "MP 값도 PBE 라 **같은 근사끼리** 비교다. 그래도 `cei_gap_targets_matched_2026_09_17` 의 ⛔ 대로 **우리 db 갭 표에 MP 를 섞지 않고**, 재현 판정은 **'같은 자릿수·같은 순위'** 로만 한다. 아래 `diff_eV` 는 참고 수치이지 재현율이 아니다.",
+ "source": "/data/work/runs/cei_gap/*/gap.json (gabia, 2026-09-19 전수)",
+ "rows": [
+  {
+   "phase": "NdPS4",
+   "spacegroup": "I4_1/acd",
+   "tag": "NdPS4_mp-aaaaafmc",
+   "vbm_eV": 5.136,
+   "cbm_eV": 7.4,
+   "gap_eV": 2.264,
+   "mp_ref_eV": 2.252,
+   "diff_eV": 0.012,
+   "diff_pct": 0.53
   },
-  "★_순위_대조": {
-    "일치": "9 종 중 **7 종**이 MP 순위 그대로다.",
-    "뒤바뀐_쌍": [
-      {
-        "pair": [
-          "Nd3PO7",
-          "NdCl3"
-        ],
-        "mp_gap_eV": 0.016,
-        "our_gap_eV": 0.015
-      },
-      {
-        "pair": [
-          "Nd2(SO4)3",
-          "Nd(PO3)3"
-        ],
-        "mp_gap_eV": 0.054,
-        "our_gap_eV": 0.051
-      }
+  {
+   "phase": "Nd2O3",
+   "spacegroup": "Ia-3",
+   "tag": "Nd2O3_mp-aaaaabof",
+   "vbm_eV": 8.143,
+   "cbm_eV": 11.97,
+   "gap_eV": 3.827,
+   "mp_ref_eV": 3.708,
+   "diff_eV": 0.119,
+   "diff_pct": 3.21
+  },
+  {
+   "phase": "Nd3PO7",
+   "spacegroup": "Cm",
+   "tag": "Nd3PO7_mp-aaacqmbf",
+   "vbm_eV": 7.209,
+   "cbm_eV": 11.561,
+   "gap_eV": 4.352,
+   "mp_ref_eV": 4.284,
+   "diff_eV": 0.068,
+   "diff_pct": 1.59
+  },
+  {
+   "phase": "NdCl3",
+   "spacegroup": "P6_3/m",
+   "tag": "NdCl3_mp-aaaabihr",
+   "vbm_eV": 4.094,
+   "cbm_eV": 8.431,
+   "gap_eV": 4.337,
+   "mp_ref_eV": 4.3,
+   "diff_eV": 0.037,
+   "diff_pct": 0.86
+  },
+  {
+   "phase": "P2O5",
+   "spacegroup": "Fdd2",
+   "tag": "P2O5_mp-aaaaadqi",
+   "vbm_eV": 1.431,
+   "cbm_eV": 6.617,
+   "gap_eV": 5.186,
+   "mp_ref_eV": 5.202,
+   "diff_eV": -0.016,
+   "diff_pct": -0.31
+  },
+  {
+   "phase": "Nd2(SO4)3",
+   "spacegroup": "C2/c",
+   "tag": "Nd2SO43_mp-aaaabrhp",
+   "vbm_eV": 4.126,
+   "cbm_eV": 9.674,
+   "gap_eV": 5.548,
+   "mp_ref_eV": 5.433,
+   "diff_eV": 0.115,
+   "diff_pct": 2.12
+  },
+  {
+   "phase": "Nd(PO3)3",
+   "spacegroup": "C222_1",
+   "tag": "NdPO33_mp-aaaaaktk",
+   "vbm_eV": 3.87,
+   "cbm_eV": 9.367,
+   "gap_eV": 5.497,
+   "mp_ref_eV": 5.487,
+   "diff_eV": 0.01,
+   "diff_pct": 0.18
+  },
+  {
+   "phase": "NdPO4",
+   "spacegroup": "P2_1/c",
+   "tag": "NdPO4_mp-aaaaafhw",
+   "vbm_eV": 7.486,
+   "cbm_eV": 13.285,
+   "gap_eV": 5.799,
+   "mp_ref_eV": 5.679,
+   "diff_eV": 0.12,
+   "diff_pct": 2.11
+  },
+  {
+   "phase": "LiNd(PO3)4",
+   "spacegroup": "C2/c",
+   "tag": "LiNdPO34_mp-aaaabbrr",
+   "vbm_eV": 3.057,
+   "cbm_eV": 9.05,
+   "gap_eV": 5.993,
+   "mp_ref_eV": 5.979,
+   "diff_eV": 0.014,
+   "diff_pct": 0.23
+  },
+  {
+   "phase": "NdP5O14",
+   "spacegroup": "Pmna",
+   "tag": "NdP5O14_mp-aaabfxkr",
+   "vbm_eV": 3.325,
+   "cbm_eV": 8.719,
+   "gap_eV": 5.393,
+   "mp_ref_eV": 6.336,
+   "diff_eV": -0.943,
+   "diff_pct": -14.88,
+   "⛔": "미재현. 아래 `⛔_NdP5O14_미재현` 참조 — 인용할 때 이 단서를 뗄 수 없다."
+  }
+ ],
+ "집계": {
+  "n": 10,
+  "⚠": "평균 offset 은 **재현된 9 종만** 으로 낸다 — 미재현 1 종을 섞으면 재현율이 아니라 혼합값이 된다.",
+  "재현_9종": {
+   "n": 9,
+   "mean_offset_eV": 0.0532,
+   "max_abs_diff_eV": 0.12,
+   "max_abs_diff_pct": 3.21
+  },
+  "미재현_1종": {
+   "phase": "NdP5O14",
+   "diff_eV": -0.943,
+   "diff_pct": -14.88
+  }
+ },
+ "★_순위_대조": {
+  "일치": "9 종 중 **7 종**이 MP 순위 그대로다.",
+  "뒤바뀐_쌍": [
+   {
+    "pair": [
+     "Nd3PO7",
+     "NdCl3"
     ],
-    "판정": "두 쌍 다 **MP 간격이 우리 평균 offset(0.053 eV)보다 작거나 비슷한 근접쌍**이다. ⇒ **분해하지 못하는 것**이지 순위를 틀린 것이 아니다. 이 두 쌍의 상대 순서는 **주장하지 않는다.**"
+    "mp_gap_eV": 0.016,
+    "our_gap_eV": 0.015
+   },
+   {
+    "pair": [
+     "Nd2(SO4)3",
+     "Nd(PO3)3"
+    ],
+    "mp_gap_eV": 0.054,
+    "our_gap_eV": 0.051
+   }
+  ],
+  "판정": "두 쌍 다 **MP 간격이 우리 평균 offset(0.053 eV)보다 작거나 비슷한 근접쌍**이다. ⇒ **분해하지 못하는 것**이지 순위를 틀린 것이 아니다. 이 두 쌍의 상대 순서는 **주장하지 않는다.**"
+ },
+ "⛔_정정": "이 표가 나오기 전 화면(§6)은 Nd₂O₃ 를 **−6.460 eV (−274.2 %)** 로 싣고 있었다. 그것은 2026-08-07 의 **사고값**이다 — fixed-occ nscf 에 `tot_magnetization` 을 동기화하지 않아 VBM > CBM 이 나온 것이고, 그래서 `sync_magnetization.py` 가 체인에 들어갔다. 정상값은 **3.827 eV**(+3.2 %)다. 옛 값은 지우지 않고 이 줄로 정정한다.",
+ "⛔_NdP5O14_미재현": {
+  "사실": "우리 5.393 eV vs MP(mp-560681, Pmna) 6.336 eV — **−0.943 eV (−14.9 %)**. 나머지 9 종은 전부 |Δ| ≤ 0.120 eV.",
+  "확인한_것_전부_정상": {
+   "구조": "spglib 으로 이완 후 구조가 **Pmna (53)** 임을 확인(symprec 0.05–0.2). 의도한 다형체가 맞다 — 다른 다형체(mp-4736, P2₁/c)로 넘어간 것이 아니다. ⚠ symprec 1e-3 이하에서는 P1 인데 그건 이완 변위 때문이다.",
+   "설정": "03_nscf_gap: `occupations='fixed'` · nbnd 332 · K 5×5×4 → **irreducible k 51 개** · ecut 60/480 · JOB DONE. k 도 밴드도 부족하지 않다.",
+   "수렴": "vc-relax `bfgs converged` · 최종 P = −0.35 kbar. 10 종 전부 P ≈ 0 (−0.93 ~ +0.22 kbar) 로 같은 프로토콜이다.",
+   "Pulay_경고": "출력에 없음. `01_vcrelax.restart.in` 은 컷오프·문턱을 하나도 안 바꾸는 단순 이어달리기 입력이다."
   },
-  "⛔_정정": "이 표가 나오기 전 화면(§6)은 Nd₂O₃ 를 **−6.460 eV (−274.2 %)** 로 싣고 있었다. 그것은 2026-08-07 의 **사고값**이다 — fixed-occ nscf 에 `tot_magnetization` 을 동기화하지 않아 VBM > CBM 이 나온 것이고, 그래서 `sync_magnetization.py` 가 체인에 들어갔다. 정상값은 **3.827 eV**(+3.2 %)다. 옛 값은 지우지 않고 이 줄로 정정한다."
+  "⛔_반증된_가설_부피": {
+   "가설": "우리 이완 셀이 MP 대비 **+3.66 %** 커서(1037.83 → 1075.77 Å³) PBE 갭이 눌렸다.",
+   "반증": "**P₂O₅ 가 +9.42 % 팽창하고도 갭이 −0.016 eV 로 맞았다.** 10 종의 ΔV 는 −1.76 ~ +9.42 % 인데 Δ갭과 **상관이 없다**.",
+   "ΔV_대_Δ갭": [
+    {
+     "phase": "P2O5",
+     "dV_pct": 9.42,
+     "dgap_eV": -0.016
+    },
+    {
+     "phase": "NdP5O14",
+     "dV_pct": 3.66,
+     "dgap_eV": -0.943
+    },
+    {
+     "phase": "Nd(PO3)3",
+     "dV_pct": 2.49,
+     "dgap_eV": 0.01
+    },
+    {
+     "phase": "Nd2(SO4)3",
+     "dV_pct": 2.36,
+     "dgap_eV": 0.115
+    },
+    {
+     "phase": "NdPO4",
+     "dV_pct": 1.84,
+     "dgap_eV": 0.12
+    },
+    {
+     "phase": "Nd3PO7",
+     "dV_pct": -1.76,
+     "dgap_eV": 0.068
+    },
+    {
+     "phase": "NdPS4",
+     "dV_pct": 1.27,
+     "dgap_eV": 0.012
+    },
+    {
+     "phase": "Nd2O3",
+     "dV_pct": -1.1,
+     "dgap_eV": 0.119
+    },
+    {
+     "phase": "NdCl3",
+     "dV_pct": 0.78,
+     "dgap_eV": 0.037
+    },
+    {
+     "phase": "LiNd(PO3)4",
+     "dV_pct": -0.74,
+     "dgap_eV": 0.014
+    }
+   ],
+   "⇒": "MP 셀 고정 재측정(scf+nscf)을 제안했다가 **취소했다** — 이미 반증된 가설을 GPU 로 다시 확인하는 것이다. 던지기 전에 반증돼서 시간을 안 썼다.",
+   "⚠_agent_가_먼저_틀린_것": "처음엔 *'층상 인산염이라 vdW 없는 PBE 에서 층간이 벌어진다'* 고 했는데, 축별로 보면 +0.84/+1.28/+1.49 % 로 **거의 균일 팽창**이라 층상 시나리오가 안 선다. 그 다음 Pulay 로 갈아탔는데 그것도 위 반증에 같이 걸린다."
+  },
+  "남은_후보": [
+   "① **MP 쪽 값**. 같은 조성 다형체 둘이 PBE 에서 0.95 eV 차이(Pmna 6.336 vs P2₁/c 5.39)는 이례적으로 크고, 우리 Pmna 값 5.393 이 MP 의 **P2₁/c** 값과 소수 셋째 자리까지 겹친다. ⚠ 우연일 수 있다 — 그러나 확인은 우리 계산이 아니라 **MP 조회**다.",
+   "② 우리가 아직 못 본 것 — Nd frozen-4f PP 와 이 상의 밴드 가장자리 성격(P/O 유도)의 상호작용 등. 가설일 뿐 검사 안 했다."
+  ],
+  "⛔_지금_결론": "**원인 미확정.** 이 값을 쓸 때는 '−0.943 eV 미재현' 을 같이 적는다. ⛔ 반대로 *'우리 계산이 틀렸다'* 고도 단정하지 않는다 — 구조·설정·수렴이 다 정상이고 부피 가설은 반증됐다.",
+  "⭐_논지에_미치는_영향": "**없다.** 5.393 eV 도 넓은 갭 절연체다. §C 가 묻는 것은 '판별종이 전자를 흘리나' 이고 그 답은 10/10 절연체로 같다. 6.3 이냐 5.4 이냐가 바뀌는 주장은 이 페이지에 없다."
+ },
+ "status_history": [
+  {
+   "at": "2026-09-21",
+   "by": "agent",
+   "note": "NdP₅O₁₄ 완주로 10/10. 미재현 1 종을 숨기지 않고 별도 절로 박았다. 부피 가설은 P₂O₅(+9.42 % 팽창·갭 −0.016)가 반증 — 제안했던 MP 셀 고정 재측정은 취소."
+  }
+ ]
 }
