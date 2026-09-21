@@ -62,6 +62,16 @@ CONV_KEYS = ('cg_info', 'unconverged', 'converged', 'resid', 'residual',
 #  (Codex PA12-05).  role 은 CLI/receipt 에서 오고, 파일명에 실리고, 덮어쓰기는 거부된다.
 ROLES = ('primary', 'qc')
 
+#: ⚠⚠ **CLI 의 역할 이름 ≠ 파일에 쓰는 역할 이름** (2026-09-21 실사고).
+#  판정기(`phase_a_order_verdict.py`)의 스키마는 `'primary' | 'secondary' | 'qc_replay'` 인데
+#  이 어댑터는 `'qc'` 를 써 왔다.  판정기는 그 팔을 **어느 버킷에도 못 넣고 조용히 버렸고**
+#  (104 읽고 96 분류, 경고 0건) `QC 팔이 하나도 없다` 로 HOLD 를 냈다.
+#  ★ 두 도구의 셀프테스트가 **각자 자기 문자열을 시험**해서 둘 다 초록이었다 = 규율 ⑤ 가
+#    경고한 false-green 이 **도구 사이 경계**에서 재현된 것이다.
+#  ⇒ 쓰는 값은 판정기 스키마에 맞춘다.  CLI 값(`--role qc`)과 파일명 접두사(`arm_qc_`)는 유지.
+ROLE_WRITE = {'primary': 'primary', 'qc': 'qc_replay'}
+ROLE_FNAME = {'primary': '', 'qc_replay': 'qc_', 'secondary': 'secondary_'}
+
 #: 파일명에서 조성을 읽는 **교차확인 전용** 패턴
 FNAME_RE = re.compile(r'VGCF_PTFE_(\d+)_(\d+)')
 
@@ -225,7 +235,7 @@ def arm_from_payload(d, receipt, fname, role='primary'):
                          '모르는 것을 수렴으로 읽지 않는다.  step3 키: '
                          + ', '.join(sorted(s)[:30]))
 
-    arm = {'role': role, 'vgcf_wt': wt, 'ptfe_wt': float(pt),
+    arm = {'role': ROLE_WRITE.get(role, role), 'vgcf_wt': wt, 'ptfe_wt': float(pt),
            'vox': float(vox), 'origin': oi, 'sigma_e': float(sig),
            'source_file': fname, 'origin_shift_um': [float(x) for x in shift],
            'sigma_vgcf_S_cm': man.get('sigma_vgcf_S_cm'),
@@ -351,7 +361,7 @@ def build(d, out, receipt_path=None, role='primary', force=False,
     #    그리고 **이미 있으면 거부한다** — 이름 규칙만으로는 실수를 못 막는다 (PA12-05).
     tgt = []
     for a in arms:
-        tag = '' if a['role'] == 'primary' else f"{a['role']}_"
+        tag = ROLE_FNAME.get(a['role'], f"{a['role']}_")
         tgt.append((a, os.path.join(
             adir, f"arm_{tag}w{a['vgcf_wt']:g}_v{a['vox']:g}_o{a['origin']}.json")))
     #  ★★ **`PA12-06`** — 옛 판은 **이름이 같은** 팔만 거부했다.  그래서 같은 `--out` 을 다시 쓰면
@@ -529,7 +539,7 @@ def _selftest():
         chk('⑲ ★ QC 파일명에 role 이 실린다 (primary 이름과 충돌 불가)',
             all(f.startswith('arm_qc_') for f in os.listdir(os.path.join(qout, 'arms'))))
         chk('⑳ 팔의 role 이 하드코딩 primary 가 아니다',
-            all(a2['role'] == 'qc' for a2 in qarms))
+            all(a2['role'] == 'qc_replay' for a2 in qarms))
         try:
             build(qsrc, qout, role='qc')
             chk('㉑ 같은 디렉터리 재변환은 거부된다 (덮어쓰기 금지)', False)
@@ -668,6 +678,18 @@ def _selftest():
             len(build(src, _g)[0]) == len(origins) * 2)
     finally:
         shutil.rmtree(td, ignore_errors=True)
+    #  ★★★ **경계 계약** (2026-09-21 실사고) — 이 어댑터가 **쓰는** role 을 판정기가 아는가.
+    #    두 도구의 셀프테스트가 각자 자기 문자열만 시험해서 둘 다 초록인 채로
+    #    `'qc'` ↔ `'qc_replay'` 가 어긋나 있었고, 판정기가 QC 8팔을 **조용히 버려** HOLD 가 났다.
+    #    ⇒ 한쪽만 고치면 재발한다.  **경계를 시험한다.**
+    import importlib.util as _iu
+    _vs = _iu.spec_from_file_location(
+        '_pa_verdict', os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                    'phase_a_order_verdict.py'))
+    _v = _iu.module_from_spec(_vs); _vs.loader.exec_module(_v)
+    _unk = [r for r in ROLE_WRITE.values() if r not in _v._KNOWN_ROLES]
+    chk('★★ 경계 계약: 쓰는 role 이 전부 판정기의 알려진 role 이다 '
+         f'({sorted(set(ROLE_WRITE.values()))} ⊆ {list(_v._KNOWN_ROLES)})', not _unk)
     print('  ' + ('전부 통과' if ok[0] else '실패 있음'))
     return 0 if ok[0] else 1
 

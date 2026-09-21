@@ -55,6 +55,8 @@ DELTA_NUM_PCT = 0.04                       # prereg §2
 DELTA_NUM = math.log1p(DELTA_NUM_PCT / 100.0)      # log 차로 환산
 PREREG = {'vgcf_wts': (1.0, 2.0, 3.0, 4.0), 'voxes': (0.25, 0.20, 0.15), 'n_origin': 8}
 _REQUIRED = ('role', 'vox', 'origin', 'sigma_e')
+#: 알려진 역할 — 이 밖의 값은 **거부**한다 (조용히 버리면 QC 부재로 둔갑한다)
+_KNOWN_ROLES = ('primary', 'secondary', 'qc_replay')
 
 
 def load_arms(d):
@@ -71,6 +73,13 @@ def load_arms(d):
         miss = [k for k in _REQUIRED if k not in a]
         if miss:
             bad.append(f'{os.path.basename(p)}: 키 없음 {miss}'); continue
+        #  ★★ 2026-09-21 — **모르는 role 은 거부한다.**  옛 판은 셋 중 어느 것도 아닌 팔을
+        #    버킷에 못 넣고 **말없이 흘려보냈다**: 어댑터가 쓰던 `'qc'` 8팔이 그렇게 사라져
+        #    `QC 가 하나도 없다` 로 HOLD 가 났고, **104 읽고 96 분류**라는 사실은 아무 데도
+        #    안 찍혔다.  읽은 수와 분류한 수가 다르면 그 자체가 결함이다.
+        if a['role'] not in _KNOWN_ROLES:
+            bad.append(f"{os.path.basename(p)}: 모르는 role {a['role']!r} "
+                       f"(알려진 값: {', '.join(_KNOWN_ROLES)})"); continue
         if a['role'] in ('primary', 'qc_replay') and 'vgcf_wt' not in a:
             bad.append(f'{os.path.basename(p)}: primary/qc 인데 vgcf_wt 가 없다'); continue
         s = a['sigma_e']

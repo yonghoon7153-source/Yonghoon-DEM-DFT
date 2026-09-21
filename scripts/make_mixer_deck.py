@@ -549,6 +549,10 @@ def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None, layered=No
     steps_fill = max(1000, int(round(0.5 * settle_s / p['dt'])))   # 두 번 돈다
     steps_run = int(round(revolutions * period / p['dt']))
     dump_every = max(1000, steps_run // 200)
+    #  ★ 체크포인트 간격 — 잃어도 되는 시간이 기준이다.  실측 21.8 step/s 에서 500,000 스텝
+    #    ≈ 6.4 h 이므로 ~1 h 손실선으로 잡는다.  회전이 없는 기준런(steps_run=0)은 정착만
+    #    도는데 그 전체가 385,336 스텝(≈4.9 h)이라 같은 값이면 한 번도 안 찍힌다 ⇒ 하한을 둔다.
+    restart_every = max(50_000, min(200_000, (steps_run or 2 * steps_fill) // 20))
     #  ── 삽입 블록 (§24 층상 vs 기존 균일) ─────────────────────────────────
     #  ⚠ 비층상 문자열은 옛 원문과 **바이트 동일**해야 한다 — 셀프테스트 ㉟ 골든 해시.
     if layered is None:
@@ -739,6 +743,14 @@ thermo 5000
 thermo_modify lost ignore norm no
 
 shell mkdir post
+# ★★ 체크포인트 — 측정런은 {steps_run:,} 스텝(실측 ~21.8 step/s 에서 **5일**)인데 덱에 `restart` 가
+#   한 줄도 없었다.  재부팅·OOM 한 번에 런 전체가 0 으로 돌아간다 (13 런이면 하나쯤 난다).
+#   두 파일을 **번갈아** 써서 쓰다 죽어도 직전 것이 남는다 (디스크 ~40 MB/런).
+#   ⚠ 궤적은 안 바뀐다 — I/O 뿐이다 (골든 해시는 그래서 재생성한다).
+#   ★ 드럼은 축대칭이라 재시작 때 `fix move/mesh` 의 회전 위상이 0 으로 돌아가도 **기하가 같다**
+#     — ps45 플래튼(2026-09-21, 재부양 7.8 mm)과 달리 이 덱에는 그 함정이 없다.
+shell mkdir restart
+restart {restart_every} restart/a.bin restart/b.bin
 run 1
 # ⚠ `mol` 은 `fix multisphere` 가 있어야 할당된다 (LIGGGHTS-PUBLIC fix_multisphere.cpp:175; 없으면
 #   dump_custom.cpp:1058 "Dumping an atom property that isn't allocated" 로 **즉시 죽는다** — 자가 리뷰 R-1)
@@ -751,6 +763,9 @@ dump dmp all custom {dump_every} post/mix_*.liggghts id type{' mol' if _fib else
 run {steps_fill}
 {_unfix_ins}
 run {steps_fill}{_unfix_ins2}
+
+# ★ 정착 끝 상태를 남긴다 — 회전 중 죽어도 정착({2*steps_fill*p['dt']:.3f} s)을 다시 안 돈다
+write_restart restart/settled.bin
 
 # ② 회전 {revolutions} 바퀴 @ {rpm:.0f} rpm  (임계 {p['rpm_crit']:.0f} rpm · Fr {(2*math.pi/period)**2*p['R']/9.81:.3f})
 fix mvD all move/mesh mesh Drum  rotate origin 0 0 0 axis 1. 0. 0. period {period:.6g}
@@ -844,6 +859,24 @@ def _selftest():
     chk(f'⑪e 변이: 정착 스텝이 드럼 크기를 따라간다 ({_f(_small):,} → {_f(_big):,})',
         _f(_big) > _f(_small) * 1.3)
     chk('⑫ 생산 scale=1000 규약을 안 쓴다', 'scale 1000' not in dk)
+    #  ★★ 체크포인트 (2026-09-21) — 측정런이 실측 ~21.8 step/s 에서 **5일**인데 덱에 `restart` 가
+    #    없었다.  재부팅 한 번에 런 전체가 0 이 된다.  I/O 뿐이라 궤적은 안 바뀐다.
+    chk('⑬a ★ `restart` 체크포인트가 있고 두 파일을 **번갈아** 쓴다 (쓰다 죽어도 직전이 남는다)',
+        _re.search(r'^restart \d+ restart/a\.bin restart/b\.bin$', dk, _re.M) is not None)
+    chk('⑬b ★ `shell mkdir restart` 가 `restart` 줄보다 앞이다 (디렉터리 없으면 LIGGGHTS 가 못 쓴다)',
+        dk.index('shell mkdir restart') < dk.index('\nrestart '))
+    chk('⑬c ★ `restart` 가 첫 `run` 보다 앞이다 (뒤면 그 run 은 체크포인트가 없다)',
+        dk.index('\nrestart ') < dk.index('\nrun '))
+    chk('⑬d ★ 정착 끝에 `write_restart` — 회전 중 죽어도 정착을 다시 안 돈다',
+        'write_restart restart/settled.bin' in dk
+        and dk.index('write_restart') < dk.index('fix mvD'))
+    _re_every = int(_re.search(r'^restart (\d+) ', dk, _re.M).group(1))
+    chk(f'⑬e 체크포인트 간격이 밴드 [50,000, 200,000] 안이다 ({_re_every:,})',
+        50_000 <= _re_every <= 200_000)
+    #  ★ 변이 — 회전 0 인 기준런도 체크포인트를 찍는다 (옛 식은 steps_run=0 이라 0 으로 죽었다)
+    _dk0 = deck(p, rpm=60, revolutions=0, seed=32452843, arm='E0')
+    chk('⑬f 변이: 회전 0 기준런도 `restart` 간격이 양수다 (정착만 도는 런)',
+        int(_re.search(r'^restart (\d+) ', _dk0, _re.M).group(1)) > 0)
     #  ★ 실행이 가르쳐 준 제약 (2026-09-21 스모크): E > 1e9 는 LIGGGHTS 가 거부한다
     chk('⑫b ★ E > 1e9 이면 `hard_particles yes` 가 있다 (없으면 LIGGGHTS 가 거부)',
         (max(E_PHASE[t] for t in TYPES + (WALL,)) <= 1e9) or ('hard_particles  yes' in dk))
@@ -1062,7 +1095,7 @@ def _selftest():
             for _a in ('B5', 'B10', 'LA') for _i, _t in enumerate(TYPES)))
     #  ⚠ 2026-09-21 3차 갱신 — 3 상 · SE 1 µm · 벽 타입 · 영률 ÷135 · 마찰 hare2026 ·
     #    전 팔 절대 Bo · 코팅 JKR 규약 · **dump `mol` 조건부(R-1)**.  T1·B5 대신 LA·LC 를 골든에 넣는다.
-    _gold = {'E0': '996e1b8357c52036', 'E1': 'a0f4b12c8eda7440', 'E4': 'cee915bc6eb853e9', 'C1': '567bfa45f51aa794', 'LA': 'b1e342d850b899f2', 'LC': 'bbe817cf6725b58f'}
+    _gold = {'E0': '8e95e2253498ce9b', 'E1': 'd5a34634afc8c88c', 'E4': '8a55492ec2404e65', 'C1': 'df1c9f0501d65711', 'LA': 'd2ab3fc53e034cdf', 'LC': 'c9d084b40c16c880'}
     _got = {a: _hl.sha256(deck(_p8, rpm=60, revolutions=2, seed=32452843, arm=a)
                           .encode()).hexdigest()[:16] for a in _gold}
     chk('㉟ 기존 6 팔 덱이 편집 전과 **바이트 동일** (골든 해시, plan(8000)·2바퀴·시드 32452843)',
