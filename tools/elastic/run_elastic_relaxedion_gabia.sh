@@ -111,6 +111,8 @@ if [ "${1:-}" = "--selftest" ]; then
   ck "restart_mode 추가"              "$(grep -c "restart_mode='restart'" "$T/r.in")" 1
   _patch_relax_in "$T/r.in" 300 0.05 0
   ck "restart 끄면 줄 제거"            "$(grep -c restart_mode "$T/r.in")" 0
+  # ⚠ 이 음성은 _patch_relax_in 의 명시 &IONS 검사와 setkey() 의 "블록 없으면 죽는다" **둘 중 하나**만
+  #   있어도 초록이다 — 깨기 시험은 둘 다 꺼야 빨강이 난다 (2026-09-21 실측: 명시 검사만 끄면 초록).
   ck "⛔음성 &IONS 없는 입력은 거부 (rc 1)" "$(_patch_relax_in "$T/s.in" 200 0.05 0 >/dev/null 2>&1; echo $?)" 1
   ck "⛔음성 거부하면 파일 불변"        "$(grep -c nstep "$T/s.in")" 0
   rm -rf "$T"; [ "$f" = 0 ] && echo "selftest ✅ (음성 5 포함)" || echo "selftest ⛔"; exit "$f"

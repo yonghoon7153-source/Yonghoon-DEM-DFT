@@ -17,7 +17,7 @@
 |---|---|
 | **V100** | ⛔ **② G-B7 끝 — 통과 0/18 ⇒ 갈래2 · 재개조건 ① 소진(proposed).** N₁ 18(30 원시 → 공유쌍 12 제외 · lag5 겹침 0). 원자료 회수 `db/properties/lpscl_smallcell_shortlag_raw/`(81 파일 · sha 매니페스트) · 기록 `lpscl_smallcell_shortlag_round_2026_09_21.json` · 마감 §7 ① 소진 박음(proposed). GPU 유휴 |
 | **kgy** | 🟢 lpsocl s6/T800 재시작 (14:1x · 세 번 실패 뒤 — 아래) + cascade v6 40런. GPU 공유 |
-| **gabia** | 🟢 LOBSTER nscf 3차 (PID 3003581 · 13:57) · ETA 09-23 낮 |
+| **gabia** | 🟢 LOBSTER nscf 3차 (PID 3003581 · 13:57 · 15:38 에 1/4 k-점 진행 중) · ETA 09-23 낮. ⏸ **탄성(modelc_2x) 재개는 그 뒤** — GPU 는 비었지만 호스트 available **15 GB** (LOBSTER 40 GB) 에 pw.x 는 >23.8 GB 요구 → OOM 킬러가 LOBSTER 를 잡는다. 러너에 F 선행조건(nstep 200 · trust_radius_max 0.05 · 23_p 재실행 · 완료판정 `bfgs converged`) + 호스트 RAM 가드 넣음 (`793bc03b7`) — 같은 명령으로 재개하면 된다 |
 
 **오늘 오후 끝난 것**
 - **SDCP C-12 v42** — 러너 승계(`SKIP_COMPLETE=1` + `CONTINUE_FROM`) · 19잡 입력 v41 과 바이트 동일 ·
