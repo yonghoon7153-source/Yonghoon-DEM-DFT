@@ -11,6 +11,48 @@
 > 이었는데 같은 날 실측은 **프로세스 0개**였다 — 워처·기억이 아니라 `ps`·receipt·git log 로
 > 받친다(`kb/projects/restart_runbook_2026_09_07.md`). 세션을 닫을 때 이 절을 갱신한다.
 
+### ⏭-NOW-q. 2026-09-21 낮 — **셋 다 다시 섰다. 그리고 cascade 가 v5 로 23 h 헛돌았다.**
+
+| 기계 | 지금 |
+|---|---|
+| **gabia** | 🟢 **LOBSTER nscf 3차 발사 13:57** (PID 3003581). 게이트 전수 통과 — 전하밀도 101 MB(09-19 SCF) · k `2 2 1 0 0 0`(비준값) · available **55 GB** · pw.x 0. ETA **≈47 h → 09-23 낮**. ⚠ 20 h 씩 출력 0 바이트가 정상이다(nscf 는 k-점이 끝나야 쓴다) |
+| **kgy** | 🟢 **cascade v6 진짜 발사 13:55** — out_root `~/work/runs/cascade_v6_40run_0921` · code_id `8e138ba1` · 남은 **41 런**(속도시험 1 + 40) · 상한 320 GPU-h |
+| **V100** | 소셀 재개조건 ① — 궤적 회수·census 대기 (⏭-NOW-p 아래 그대로) |
+
+**⛔⛔ 사고: cascade 가 v5 계획으로 23 h · 21.73 GPU-h 를 태웠다**
+
+- `~/work/runs/cascade_v6/` 는 **이름만 v6 이고 내용은 v5** 다 (30 런 · 5 구조 · 3 온도).
+  **지우지 않는다**(증거). 진짜 v6 는 `cascade_v6_40run_0921/` 이다.
+- 원인은 **kgy 가 pull 을 안 한 채 발사**했고, 내가 준 **발사 블록에 계획 게이트가 없었다**.
+  감시 블록에는 넣어 놓고 정작 던질 때 안 넣었다.
+- 두 번째 원인: 내가 준 확인 명령 `grep -c "P2_Al2S3_J" run_eprime_pilot.py` 가 **틀렸다.**
+  v6 는 부모 이름을 코드에 안 박고 `cascade_v6_parents_2026_09_19.json` 에서 읽는다
+  (`load_roster`) — grep 은 영원히 0 이다.
+- 세 번째: `run_eprime_pilot.py` **docstring 이 7 일째 v5 를 설명**하고 있었다(코드는 v6).
+  2026-09-21 에 고쳤다(커밋 8e138ba1).
+
+**⇒ 계획 확인은 grep 이 아니라 계획을 만들어 보는 것이다**
+```
+cd ~/lldvar && python3 -c "
+import sys; sys.path.insert(0,'tools/doping')
+import run_eprime_pilot as R
+from collections import Counter
+print('MD', len(R.MD_STRUCTURES), R.TEMPS, R.SEEDS, R.TOTAL_CAP_GPU_H)
+print(dict(Counter(s['stage'] for s in R.build_plan('/tmp/x'))))"
+```
+나와야 하는 줄: `MD 20 (600,) (1, 2) 320.0` · `{'prep': 21, 'md_perf': 1, 'md': 40}`
+⭐ watch 화면의 **`완료 스텝 N/M`** 도 지표다 — M = `구조수 + 11`. v5 때 **24/16**(분자>분모)이
+어긋남의 흔적이었고, v6 는 **1/32** 로 맞는다.
+
+**⏳ 남은 것**
+- 21.73 GPU-h 를 어느 예산에 다는가 — v6 상한 320 과 **별개**로 기록한다(다른 캠페인이다)
+- LOBSTER 끝나면 `D-2026-09-18-nd-icohp-kmesh` **enforcement ④** — k-탐침 SCF 1 개
+- 1~9 / 10~19 분할(논문 vs revision)이 **repo 에 없다** — 1저자는 db 에 있다고 했는데 grep 0.
+  ⚠ 그 분할대로면 vacconv(10–12)가 revision 인데, **vacuum_convergence 는 Figure 2e 의 hard gate** 다
+  (`|D(c2) − D(c1)| ≤ 0.005 eV`, 실패시 Figure 2e 제거). 분할과 게이트가 어긋난다 — 밤 미팅 안건
+
+---
+
 ### ⏭-NOW-p. 2026-09-20 밤 — **LOBSTER nscf 가 두 번 끊겼다. NdP5O14 갭이 끝나야 다시 던진다.**
 
 > 1저자 2026-09-20: *"그래 이거 끝나고 하자"* — **이거 = `/data/work/runs/cei_gap/NdP5O14*/03_nscf_gap`**.
