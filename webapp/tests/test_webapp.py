@@ -161,6 +161,44 @@ def test_assessment_sidecar_is_authoritative(tmp_path, monkeypatch):
     assert cur["pmf_ensemble"]["T600"]["used"] == 4, "PMF 4궤적이 Ea 분모와 섞이면 안 된다"
 
 
+def test_governance_reports_non_list_supersedes_instead_of_crashing():
+    """⛔음성: `supersedes` 가 리스트가 아니면 **보고**한다 — 죽지 않는다.
+
+    ⛔ 2026-09-21 실측: 결정 하나에 `supersedes: null` 을 넣었더니 검사가
+      `TypeError: 'NoneType' object is not iterable` 로 **죽었다**. 바로 윗줄이
+      "리스트가 아니다" 를 이미 `bad` 에 넣은 뒤였는데, 그 다음 줄이 **보고 전에**
+      순회하다 터진 것이다. 진단을 내놓아야 할 자리에서 crash 하면 fail-closed 가 아니다
+      — 부르는 쪽은 "위반 없음" 과 "검사가 못 돌았음" 을 구분하지 못한다.
+    ⚠ 키가 **없는** 경우는 정상이다 (원장 대부분이 그 모양) — 아래 양성이 그걸 지킨다.
+    """
+    real_dec, real_ass = C.decisions, C.assessments
+    real_reg, real_art = C.registry, C.artifacts
+    try:
+        C.assessments = lambda root=None: {}
+        C.registry = lambda root=None: {"entries": []}
+        C.artifacts = lambda root=None: {}
+
+        def _only(d):
+            C.decisions = lambda root=None: {d["id"]: d}
+            return [x for x in C.validate_governance() if d["id"] in x]
+
+        base = {"decision_state": "proposed", "slot": "s"}
+        for bad_val in (None, "D-other", 3, {"a": 1}):
+            got = _only({**base, "id": "D-bad", "supersedes": bad_val})
+            assert any("리스트가 아니다" in x for x in got), (
+                f"supersedes={bad_val!r} 를 보고하지 않는다 (얻음 {got})")
+        # 양성 ①: 키가 없으면 정상
+        assert not _only({**base, "id": "D-nokey"}), "키 없는 정상 기록을 오탐한다"
+        # 양성 ②: 빈 리스트도 정상
+        assert not _only({**base, "id": "D-empty", "supersedes": []}), "빈 리스트를 오탐한다"
+        # 양성 ③: 정상 리스트는 dangling 만 잡는다
+        got = _only({**base, "id": "D-dang", "supersedes": ["D-missing"]})
+        assert any("dangling" in x for x in got), f"dangling 을 못 잡는다 ({got})"
+    finally:
+        C.decisions, C.assessments = real_dec, real_ass
+        C.registry, C.artifacts = real_reg, real_art
+
+
 def test_governance_graph_has_no_dangling_edges():
     """판례·판정 원장 무결성 — **db 도구와 같은 함수**로 검사한다.
 

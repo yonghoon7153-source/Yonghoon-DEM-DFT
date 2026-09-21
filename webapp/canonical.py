@@ -1439,7 +1439,12 @@ def validate_governance(reg: dict = None, root=None) -> list:
         for f in ("supersedes", "does_not_supersede", "open_conflicts", "evidence"):
             if f in d and not isinstance(d[f], list):
                 bad.append(f"결정 {d['id']} 의 {f} 가 리스트가 아니다 ({type(d[f]).__name__})")
-        for ref in d.get("supersedes", []):
+        #: ⛔ 2026-09-21 — 바로 위 검사가 "리스트가 아니다" 를 `bad` 에 넣는데, 그 다음 줄이
+        #:   **보고 전에** 순회하다 TypeError 로 죽었다 (`supersedes: null` 인 결정 하나로 실측).
+        #:   진단을 내놓아야 할 자리에서 crash 하면 그건 fail-closed 가 아니다.
+        #:   ⚠ 키가 **없는** 경우는 종전처럼 정상이다 — 원장 대부분이 그 모양이다.
+        _sup = d.get("supersedes")
+        for ref in (_sup if isinstance(_sup, list) else []):
             if ref not in dec:
                 bad.append(f"결정 {d['id']} 의 supersedes 대상 {ref} 가 원장에 없다 (dangling)")
             else:
