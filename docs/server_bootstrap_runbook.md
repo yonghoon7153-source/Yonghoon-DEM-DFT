@@ -107,6 +107,12 @@ DL="/mnt/c/Users/안용훈/Downloads"; cp <파일> "$DL/"                # 윈�
 | 프로세스 확인 착오 | `kill <틀린PID>` / tail ^C를 런 종료로 오인 | `pgrep -af 'step4_dyn\|mpm3d'` 로 이름 검색, ^C는 tail만 멈춤 |
 | 실행 중 코드 교체 | git checkout 해도 옛 코드로 계속 돔 | 파이썬은 시작 시점 로드 — **kill 후 재시작** 필수 |
 | pyflakes 미설치 | Phase A/SDCP **팔 0** (미정의-이름 게이트 ABORT, 오탐 114건) | setup [4/7] pyflakes 설치·[7/7] import 검증 — ⚠ **sdcp 판 curl** 로만 (옛 stoic-knuth 판엔 없음) |
+| **CUDA 13 pip 세트가 NVRTC 를 가로챔** | V100 에서 `nvrtc: error: invalid value for --gpu-architecture (-arch)` · `NVRTC_ERROR_INVALID_OPTION` — import 는 되는데 **첫 GPU 연산에서** 죽는다 | **CUDA 13 은 Volta(sm_70) 지원을 끊었다.**  접미사 **없는** `nvidia-*`(=CUDA 13, `site-packages/nvidia/cu13/lib/`)가 깔려 있으면 cupy-cuda12x 라도 그쪽 `libnvrtc.so.13` 을 잡는다.  ⇒ 고아면 세트째 `pip uninstall`.  ⚠ **드라이버가 13 인 건 무해하다** — 문제는 **NVRTC 가 13** 인 것 (2026-09-21 실사고) |
+| `LD_LIBRARY_PATH` 로 안 고쳐짐 | cu12 nvrtc 경로를 앞세워도 그대로 cu13 을 연다 | cupy 가 **전체 경로로 직접 dlopen** 한다 ⇒ 검색 경로가 무의미.  패키지를 빼는 수밖에 없다 |
+| `cupy-cuda12x[ctk]` 가 아무것도 안 가져옴 | 설치 로그에 `nvidia-*` 가 하나도 없다 | `[ctk]` 를 믿지 말고 `pip list \| grep -i nvidia` 로 **실제로 확인**할 것 |
+| cu12/cu13 이 같은 디렉터리를 공유 | cu13 을 지웠더니 **torch 가** `libcudnn.so.9` → `libnccl.so.2` 로 연쇄 실패 | 둘 다 `site-packages/nvidia/<lib>/lib/` 에 쓴다 ⇒ 한쪽 제거가 다른 쪽 파일을 가져간다.  `pip install --force-reinstall --no-deps <cu12 세트>` 로 복구 (**`--no-deps` 없으면 cu13 이 다시 딸려온다**) |
+| **런 중에 `pip` 실행** | 솔브가 오류 한 줄 없이 사라지고 루프가 `Done` 으로 끝난다 | 파일이 발밑에서 바뀐다.  ⛔ **솔브와 `pip` 를 동시에 돌리지 말 것** (2026-09-21 실사고) |
+| 루프를 죽여도 **자식 솔브가 살아남음** | `Done` 이 떴는데 `ps` 에 솔브가 남아 있고, 재시작하면 **같은 `--out` 에 두 프로세스**가 쓴다 | 루프 정지 후 `ps -eo pid,ppid,etime,rss,args \| grep '[m]pm_webapp_payload'` 로 **고아를 PID 로 확인·정리**한 뒤 재시작 |
 | 런처가 옛 인스턴스를 안 죽임 | `git pull` 해도 웹앱에 **새 라우트가 404**, 런처는 `✓ PID` 를 찍음 (거짓 초록) | `run_dem_webapp.sh` 가 포트 기준 `_stop_port` 로 **먼저 종료 후 기동** + `--stop` 모드.  ⚠ `pkill -f webapp/app.py` 는 안 맞는다 (cmdline 이 `python3 app.py`) |
 
 ⚠ 이 런북과 setup 스크립트가 **정본**이다 — 새 지뢰를 밟으면 여기와 setup_gpu_server.sh 에
