@@ -32,8 +32,17 @@ DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00, 'PTFE': 2.20}
 #: 1저자 지시 조성 (2026-09-19) — 에너지밀도 최대 조합
 WT = {'AM': 80.0, 'SE': 18.0, 'VGCF': 1.0, 'PTFE': 1.0}
 PS = (7.0, 3.0)                       # P:S (wt%)
-#: 실제 지름 (µm).  AM_P 12 = 생산 규약 · VGCF 0.15 · PTFE 0.25 는 `CL-66` 앵커
-D_REAL_UM = {'AM_P': 12.0, 'AM_S': 4.0, 'SE': 1.0}
+#: **모델이 실제로 쓰는** 지름 (µm) — 이 표가 유일한 출처다.
+#  ⚠⚠ 2026-09-21 이전 판은 이 표에 `SE 1.0` 을 적어 놓고 **쓰지 않았다**.  지름은
+#    `AM_P` 만 읽고 나머지는 `dP/3` · `dP×0.25` 로 깎았다.  AM_P 12 에서 우연히
+#    `AM_S 4` 는 맞았지만 `SE` 는 실제로 **3 µm** 였다 = **선언과 사용이 갈린 표**.
+#    AM_P 를 바꾸는 순간 나머지가 조용히 따라 움직이는 구조였다.  ⇒ 전 상을 여기서 읽는다.
+#  ★ AM_P 9 · AM_S 4 는 **소재 실측** (1저자, 2026-09-21).  AM_S 는 단결정이다.
+#  ⚠ SE·VGCF·PTFE 의 값은 **소재 크기가 아니라 계산비용 바닥**이다 — 실제 SE 는 1 µm,
+#    VGCF 지름은 0.15 µm 다 (`CL-66`).  1 µm 로 풀면 SE 입자가 11배(≈67,000)로 늘고
+#    `dt` 가 0.44배라 비용이 **약 19배**가 된다 (층상 한 블록 6.5 h → 5일).  ⇒ 굵힌 채로
+#    가되 **굵혔다는 것을 표가 말하게** 둔다.  이 값들을 "소재 크기" 로 인용하지 말 것.
+D_REAL_UM = {'AM_P': 12.0, 'AM_S': 4.0, 'SE': 3.0, 'VGCF': 3.0, 'PTFE': 3.0}
 L_FIB_UM = 10.0                       # ⚠ VGCF 길이.  PTFE 길이는 출처 없음 (`CL-67`)
 #: 타입 순서 — 덱의 `peratomtypepair` 행렬 순서와 같아야 한다
 TYPES = ('AM_P', 'AM_S', 'SE', 'VGCF', 'PTFE')
@@ -271,13 +280,16 @@ def volume_fractions():
     return {k: v[k] / tot for k in v}, wt
 
 
-def plan(n_total, d_se_over_am=0.25, d_fib_over_am=0.25, cgf=200.0,
+def plan(n_total, cgf=200.0,
          fill=0.30, pack=0.60, drum_r_over_l=2.5, shear_mod=3.85e6, nu=0.25):
-    """조성 → 개수 · 드럼 치수 · 시간스텝.  **순수 함수**라 시험 가능하다."""
+    """조성 → 개수 · 드럼 치수 · 시간스텝.  **순수 함수**라 시험 가능하다.
+
+    ★ 지름은 전부 `D_REAL_UM` 에서 나온다 (비율 노브 없음).  옛 `d_se_over_am` ·
+      `d_fib_over_am` 인자는 **삭제**했다 — 아무도 넘기지 않으면서 표를 무력화하고
+      있었다 (선언 ≠ 사용).  셀프테스트 ㊵ 가 "표 = 사용" 을 강제한다.
+    """
     phi, wt = volume_fractions()
-    dP = D_REAL_UM['AM_P'] * 1e-6 * cgf                      # m
-    d = {'AM_P': dP, 'AM_S': dP / 3.0, 'SE': dP * d_se_over_am,
-         'VGCF': dP * d_fib_over_am, 'PTFE': dP * d_fib_over_am}
+    d = {k: D_REAL_UM[k] * 1e-6 * cgf for k in TYPES}        # m
     #  ⚠⚠ LIGGGHTS `particledistribution/discrete` 는 분율을 **mass%** 로 읽는다
     #    (실행으로 확인: 로그가 "distribution based on mass%" 를 먼저 찍고 number% 를 유도한다).
     #    초판은 개수분율을 넣어 AM_P 가 744 → **6개**로 들어갔다.
@@ -886,6 +898,23 @@ def _selftest():
     _l0 = deck(_p8, rpm=60, revolutions=2, seed=32452843, arm='L0')
     chk('㊸ L0 도 층상이고 점착 0 이다', _l0.count('insert/pack') == 2 and 'cohesionEnergyDensity' in _l0)
 
+    #  ★★ 선언 ↔ 사용 — 이 결함이 실제로 있었다 (2026-09-21).  표에 `SE 1.0` 을 적어 두고
+    #     코드는 `AM_P×0.25` 를 썼다.  AM_P 12 에서 `AM_S` 만 우연히 맞아 **아무도 못 봤다**.
+    #     ⇒ 표에 적힌 값이 **실제로 쓰인 값**인지 매번 확인한다.
+    for _cg in (200.0, 137.0):
+        _pd = plan(8000, cgf=_cg)['d']
+        _bad = [k for k in TYPES if abs(_pd[k] / _cg * 1e6 - D_REAL_UM[k]) > 1e-9]
+        chk(f'㊹ CGF {_cg:g}: 표의 실제 지름 = 실제로 쓰인 지름 (어긋남 {len(_bad)})', not _bad)
+    #  ⚠ 변이 대조 — 표를 바꾸면 덱도 바뀌어야 한다 (표가 장식이 아님을 보인다)
+    _base_s = plan(8000)['d']['AM_S']
+    _orig = D_REAL_UM['AM_S']
+    try:
+        D_REAL_UM['AM_S'] = _orig * 1.5
+        _moved = plan(8000)['d']['AM_S']
+    finally:
+        D_REAL_UM['AM_S'] = _orig
+    chk('㊹b 변이: 표의 AM_S 를 ×1.5 하면 지름도 ×1.5 (표가 실제로 쓰인다)',
+        abs(_moved / _base_s - 1.5) < 1e-9)
     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0

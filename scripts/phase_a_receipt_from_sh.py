@@ -251,6 +251,29 @@ def _expand_vars(pre, cmd):
     return _VAR_REF.sub(_sub, cmd)
 
 
+#: `--code-sha` 로 받을 수 있는 형태 — 짧은/긴 SHA, 뒤에 `-dirty` 허용.
+_SHA_RX = re.compile(r'^[0-9a-f]{7,40}(-dirty)?$')
+
+
+def normalize_code_sha(v):
+    """`--code-sha` 값 검증.  **지어내지 않는다** — 형태가 아니면 거부한다.
+
+    ★ 왜 CLI 로 받나: 영수증은 `.sh` 에서 유도되는데 `.sh` 에는 코드 세대가 안 적힌다.
+      러너는 payload 에 `code_sha` 를 적으므로, 영수증이 비어 있으면 어댑터가
+      *'팔에는 있는데 영수증에 없다'* 로 **거부한다** (`PASL-03`).  ⇒ 운영자가 리포의
+      실제 `git rev-parse --short HEAD` 를 **선언**으로 싣고, 어댑터가 그것을 러너가
+      적은 값과 대조한다.  선언과 결과가 서로 다른 출처이므로 그 대조는 진짜 대조다.
+    ⚠ 이 옵션으로 **과거 배치를 소급해 채우지 말 것** — 그때 무엇이었는지 모르면
+      `null` 로 두고 어댑터의 `--code-sha-missing-ok <이유>` 로 간다.
+    """
+    if v is None:
+        return None
+    t = str(v).strip().lower()
+    if not _SHA_RX.match(t):
+        raise SystemExit(f'⛔ --code-sha 가 SHA 형태가 아니다: {v!r} '
+                         '(16진 7~40자, 뒤에 -dirty 허용)')
+    return t
+
 def payload_calls(sh_dir):
     """`.sh` 디렉터리 → `[(경로, 토큰들)]`.  payload 호출이 없는 `.sh` 는 **이름으로 보고**한다.
 
@@ -334,7 +357,7 @@ def _axes_from_ns(ns):
 
 
 def build(sh_dir, out, expect_arms=None, expect_backend='gpu', force=False,
-          logs=None, log_glob='*.log', aborted_ok=None):
+          logs=None, log_glob='*.log', aborted_ok=None, code_sha=None):
     hits, skipped = payload_calls(sh_dir)
     if not hits:
         raise SystemExit(f'⛔ {sh_dir}: payload 호출을 가진 `.sh` 가 없다')
@@ -390,7 +413,8 @@ def build(sh_dir, out, expect_arms=None, expect_backend='gpu', force=False,
     rec['arms'] = len(hits)
     rec['expect_backend'] = expect_backend
     #  ⚠ code_sha 는 `.sh` 가 주지 않으면 **null** 이다.  지어내지 않는다 (PASL-03).
-    rec['code_sha'] = None
+    #    `--code-sha` 로 **운영자가 선언**한 경우에만 싣는다 (위 normalize_code_sha 참조).
+    rec['code_sha'] = normalize_code_sha(code_sha)
     rec['receipt_digest'] = RC.receipt_digest(rec)
     rec['declared_axes'] = sorted(ep_cov)          # `--expect-physics` 가 덮은 축
     #  ★ 출처를 영수증 자신에 박는다 — digest 밖이라 기존 해시를 안 건드린다
@@ -747,6 +771,29 @@ def _selftest():                                             # noqa: C901
             caught7 = 'LEAN' in str(e)
         chk('㉚ 중단이 아닌 로그의 LEAN 누락은 `--aborted-log-ok` 로도 안 열린다', caught7)
 
+    #  ── `--code-sha` — 선언으로만 싣는다 (2026-09-21) ────────────────────────
+    with tempfile.TemporaryDirectory() as td:
+        sh = os.path.join(td, 'sh')
+        for i, o in enumerate(facto):
+            mk_sh(sh, f'p2_K_a{i}.sh', o)
+        r_null, _, _, _ = build(sh, os.path.join(td, 'o'), expect_arms=8)
+        r_sha, _, _, _ = build(sh, os.path.join(td, 'o2'), expect_arms=8,
+                               code_sha='7d24439f6')
+        chk('㉛ --code-sha 를 안 주면 null 이다 (지어내지 않는다)',
+            r_null['code_sha'] is None)
+        chk('㉜ --code-sha 를 주면 영수증에 실리고 **digest 가 달라진다**',
+            r_sha['code_sha'] == '7d24439f6'
+            and r_sha['receipt_digest'] != r_null['receipt_digest']
+            and r_sha['receipt_digest'] == RC.receipt_digest(r_sha))
+        bad = 0
+        for v in ('deadbee', 'nothex!', '123', 'HEAD', 'abc123z'):
+            try:
+                normalize_code_sha(v)
+            except SystemExit:
+                bad += 1
+        chk(f'㉝ SHA 형태가 아니면 거부한다 (거부 {bad}/5, 정상 7자리는 통과)',
+            bad == 4 and normalize_code_sha('deadbee') == 'deadbee'
+            and normalize_code_sha('7D24439F6-dirty') == '7d24439f6-dirty')
     print(f'\nphase_a_receipt_from_sh selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -764,6 +811,8 @@ def main():
     ap.add_argument('--log-glob', default='*.log',
                     help="로그 파일 패턴 — 한 디렉터리에 배치가 섞여 있을 때 (예: 'v015.*.log')")
     ap.add_argument('--force', action='store_true', help='기존 영수증을 덮는다')
+    ap.add_argument('--code-sha', default=None, metavar='SHA',
+                    help='리포의 실제 `git rev-parse --short HEAD` 를 **선언**으로 싣는다. 생략하면 null (지어내지 않는다). 어댑터가 러너의 payload 값과 대조한다')
     ap.add_argument('--aborted-log-ok', default=None, metavar='REASON',
                     help='**중단된 런**의 로그를 대조에서 뺀다. **이유 문자열이 필수**이고 '
                          '로그 이름과 함께 영수증의 `aborted_log_note` 에 그대로 남는다')
@@ -775,7 +824,7 @@ def main():
         ap.error('--sh 와 --out 이 필요하다')
     rec, dst, skipped, log_note = build(a.sh, a.out, a.expect_arms,
                                         a.expect_backend, a.force, a.logs,
-                                        a.log_glob, a.aborted_log_ok)
+                                        a.log_glob, a.aborted_log_ok, a.code_sha)
     print(f'영수증 → {dst}')
     for k in ('vox_um', 'ptfe_stamp', 'fibre_stamp', 'bridge_um', 'arms',
               'code_sha', 'receipt_digest', 'derived_sh_sha256'):
