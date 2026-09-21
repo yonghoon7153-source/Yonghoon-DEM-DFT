@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nd Phosphate Sink</title>
+<title>Nd Intercepts Phosphorus</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Serif:wght@600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
@@ -175,7 +175,10 @@
 <div class="wrap">
 
 <p class="eyebrow">배경 지식 없이 읽는 설명을 같이 담았다</p>
-<h1>Nd 는 인산염 싱크다</h1>
+<h1>Nd 는 P 를 선점한다</h1>
+<!-- 2026-09-21 제목 개정. 옛 제목 "Nd 는 인산염 싱크다" 는 §3 이 철회한 문장
+     ("NdPO4 가 Li3PO4 보다 깊은 P 싱크다", +1.5035 eV/P 양수)의 축약으로 읽혔다.
+     살아남은 논지는 '더 좋은 싱크' 가 아니라 '무도핑이면 양극 TM 이 쓰일 P 를 먼저 가져간다' 다. -->
 <p class="sub">Nd 치환을 통한 <b>고전압 양극 계면 열화 억제</b> — 전압창이 아니라 분해 산물의 이야기</p>
 
 <p class="lede">고체 전해질을 양극에 붙여 높은 전압까지 충전하면 둘이 닿은 면에서
@@ -207,7 +210,7 @@ MP GGA/GGA+U hull, Cl-Co-Li-Mn-Nd-Ni-O-P-S 5061 entries · n = 24 (4 cathodes ×
   <div class="tldr-grid">
     <div class="tldr-yes"><div class="tldr-lbl">✅ 말하는 것</div><ul>
       <li>고전압에서 Nd 계 계면은 <b>남은 P 를 인산염으로 끌어간다</b> — 양극 TM 이 덜 빠진다</li>
-      <li>그 이득은 <b>조건부</b>다. 게이트를 전 점 통과한 열은 <b>LiCoO₂ 4.30 V · LiNiO₂ 3.50 V 둘뿐</b> (24 칸 중 12 칸 탈락)</li>
+      <li>그 이득은 <b>조건부</b>다. 게이트를 전 점 통과한 열은 <b>LiCoO₂ 4.30 V · LiNiO₂ 3.50 V 둘뿐</b> (잰 <b>34 칸</b> 중 <b>12 칸 탈락</b> · (양극,전압) 열 7 개 중 둘)</li>
       <li>전해질 쪽은 <b>“새로 망가뜨리지는 않는다”</b> 까지</li>
       <li><b>치환 자리가 부호를 바꾼다</b> — 같은 Nd 농도에서 <b>Li 자리</b>는 계면 반응을 줄이고
           <b>P 자리</b>는 늘린다. 농도는 두 자리 다 선형이다 <span class="mono">(x 0.02–0.20)</span></li>
@@ -1038,7 +1041,7 @@ Fig. 1(b) 에서 측정된 사실이고(잔차가 문턱의 1/20), 흔들린 것
 </section>
 <section id="s2b" class="sec">
 <details class="secfold" open>
-<summary><h2 class="sec-h">2b. 그 산물이 양극을 <b>얼마나</b> 아끼나 — 정량 곡선</h2><span class="serbadge sb">계열 B · P 자리</span><span class="sec-one">보호율 = min(1, k·x/(1−x)), 맞춘 매개변수 0 — 전 농도 통과 열은 <b>둘뿐</b>(LiCoO₂ 4.30 V · LiNiO₂ 3.50 V, 24 칸 중 12 탈락). 1저자 조성 x=0.02 는 <b>10.3 %</b>, 0.05 면 26.6 %</span></summary>
+<summary><h2 class="sec-h">2b. 그 산물이 양극을 <b>얼마나</b> 아끼나 — 정량 곡선</h2><span class="serbadge sb">계열 B · P 자리</span><span class="sec-one">보호율 = min(1, k·x/(1−x)), 맞춘 매개변수 0 — 전 농도 통과 열은 <b>둘뿐</b>(LiCoO₂ 4.30 V · LiNiO₂ 3.50 V — 잰 34 칸 중 12 탈락, 열 7 개). 1저자 조성 x=0.02 는 <b>10.3 %</b>, 0.05 면 26.6 %</span></summary>
 <div class="secbody">
 
 <p>§2 는 <i>무엇이</i> 생기는지를 보였다. 여기는 <i>얼마나</i> 다. 지표는
@@ -1065,8 +1068,9 @@ Largest deviation 0.3&#8201;percentage points (LiCoO<sub>2</sub>) and 1.0 (LiNiO
 apparent complete sparing in that cell is an exchange, not protection.
 (c) The comparability gate: |&#916;<i>x</i><sub>mix</sub>| between each doped composition and its
 lithium-matched control. Where the minimum kink moves to a different mixing ratio the two shares
-have different denominators and are not the same quantity. Of 24 cells, 12 fail this gate or the
-thiophosphate gate; exactly two columns pass at every concentration, one per cathode.
+have different denominators and are not the same quantity. Of the 34 measured cells, 12 fail this gate or the
+thiophosphate gate; of the seven (cathode, voltage) columns, exactly two pass at every
+concentration, one per cathode.
 <b>&#9888;</b> This is 0&#8201;K hull thermodynamics &#8212; it says what is consumed, not how fast, how thick,
 or whether the layer is continuous.</figcaption>
 </figure>
@@ -1087,8 +1091,14 @@ P₂S₇ 는 §3 이 <b>이 집합에서 제일 얕은 P 싱크</b>(E_f −0.512
 <p style="margin:0"><b>(c) 가 이 절에서 제일 중요하다.</b> 몫의 분모는 <i>좌변 양극이 내놓은 TM</i> 인데,
 조성이 바뀌면 <b>최소 꺾임이 다른 혼합비 x 에 앉는다</b>. 그러면 SE:양극 비가 달라 분모가 같은 양이 아니다.
 도구 주석의 <i>"좌변 TM 으로 정규화하니 x 무관"</i> 은 <b>한 반응 안에서만</b> 맞다.
-24 칸 중 <b>12 칸</b>이 이 게이트(또는 P₂S₇ 게이트)에 걸리고, 전 농도에서 통과한 열은
+잰 <b>34 칸</b> 중 <b>12 칸</b>이 이 게이트(또는 P₂S₇ 게이트)에 걸리고(통과 22),
+(양극,전압) 열 <b>7 개</b> 중 다섯 농도를 전부 통과한 것은
 <b>LiCoO₂ 4.30 V · LiNiO₂ 3.50 V 둘뿐</b>이다. 양극이 달라 <b>독립 확인 둘</b>이 된다.</p>
+<p style="margin:0 0 8px;font-size:.85rem;color:var(--mut)">⛔ <b>2026-09-21 분모 정정</b> — 이 자리는
+<s>&#8220;24 칸 중 12 칸&#8221;</s> 이었다. <b>24 는 이 표의 분모가 아니다</b> — 선행 지표
+<code>cei_tm_fate_2026_09_17.json</code> 의 (양극,전압) 격자가 4 &#215; 6 = 24 이고, 그 수가 산문으로 옮겨왔다.
+이 게이트가 실제로 본 것은 <code>cei_nd_protection_curve.csv</code> 의 <b>34 행</b>(통과 22 · 탈락 12)이고
+열은 <b>7 개</b>다. <b>탈락 12 와 &#8220;전 농도 통과 열 둘&#8221;은 CSV 에서 그대로 확인된다</b> — 바뀐 것은 분모뿐이다.</p>
 </div>
 
 <div class="box" style="border-left:3px solid var(--nd)">
@@ -2029,7 +2039,7 @@ dΦ/dV = +N<sub>Li</sub> 이므로 ΔN<sub>Li</sub> ≠ 0 인 두 조성의 Δ �
 <li><span class="no">⛔</span> <b>"Nd 계는 전 구간에서 P₂S₇ 가 0"</b> — 반증됨(§2 정정).
 x = 0.10 · 0.15 · 4.5 V 에서 남은 P 가 P₂S₇ 로 간다.</li>
 <li><span class="no">⛔</span> <b>양극 TM 보호율을 게이트 밖에서 인용하기</b> —
-24 칸 중 <b>12 칸</b>이 탈락했다. |Δx<sub>mix</sub>| &gt; 0.05 면 최소 꺾임이 다른 혼합비에
+잰 <b>34 칸</b> 중 <b>12 칸</b>이 탈락했다(통과 22 · 열 7 개). |Δx<sub>mix</sub>| &gt; 0.05 면 최소 꺾임이 다른 혼합비에
 앉아 <b>분모가 같은 양이 아니다</b>. 전 점 통과한 열은 <b>LiCoO₂ 4.30 V · LiNiO₂ 3.50 V 둘뿐</b>이다.
 (도구 docstring 의 "좌변 TM 정규화라 x 무관" 은 <b>한 반응 안에서만</b> 맞다.)</li>
 <li><span class="no">⛔</span> 반응에너지 <strong>절대값</strong>을 다른 논문 값과 나란히 놓기 —

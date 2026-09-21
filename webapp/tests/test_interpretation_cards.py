@@ -908,3 +908,84 @@ def test_s0_onset_table_matches_the_esw_record(client):
         assert float(cells[1]) == esw[lab]["reduction_limit_V"], (lab, cells)
     assert "1.92" in s0 and "좁힌다" in s0 and "Banik" in s0
     assert "고전압 양극 계면 열화 억제" in h[:h.index('<ul class="toc">')], "부제가 아직 '안정성 개선' 이다"
+
+
+# ── 보호율 게이트의 분모 (2026-09-21) ───────────────────────────────────────
+#   왜 생겼나: 화면이 5 곳에서 "24 칸 중 12 탈락" 이라 적었는데 24 가 CSV 에서
+#   유도되지 않았다. 추적해 보니 **선행 지표**(cei_tm_fate, 4 양극 × 6 전압 = 24)의
+#   격자 수가 산문으로 옮겨와 **다른 표의 분모**가 돼 있었다. 한 기록 안에 두 분모가
+#   있으면 산문은 가까운 쪽을 집어 간다 — 그래서 CSV 에 값으로 묶는다.
+PROT_CSV = REPORT.parent / "cei_nd_protection_curve.csv"
+
+
+def _prot_rows():
+    import csv as _csv
+    return list(_csv.DictReader(PROT_CSV.open(encoding="utf-8")))
+
+
+def test_protection_gate_denominator_matches_the_csv(client):
+    """양성 — 화면이 인용하는 분모·탈락·통과·열수가 전부 CSV 에서 나온다.
+
+    ⚠ 맨 숫자로 재지 않는다. 첫 판은 `re.search(r"\\b7\\b", h)` 였는데 "7" 은 이 페이지
+    어디에나 있어서 **열 수를 지워도 통과했다**(2026-09-21 break-verify 에서 잡았다).
+    그래서 숫자를 **자기 문맥에 묶어** 찾는다.
+    """
+    rows = _prot_rows()
+    n_all = len(rows)
+    n_fail = sum(1 for r in rows if r["gate_pass"] == "False")
+    n_pass = sum(1 for r in rows if r["gate_pass"] == "True")
+    n_col = len({(r["cathode"], r["voltage_V"]) for r in rows})
+    assert n_all == n_pass + n_fail, "gate_pass 가 True/False 말고 다른 값을 갖는다"
+    h = _report_html(client)
+    need = {
+        "본문 분모":      f"잰 <b>{n_all} 칸</b>",
+        "본문 탈락":      f"<b>{n_fail} 칸</b>",
+        "본문 통과":      f"통과 {n_pass}",
+        "본문 열수":      f"열 <b>{n_col} 개</b>",
+        "TL;DR 분모":     f"잰 <b>{n_all} 칸</b> 중 <b>{n_fail} 칸 탈락</b>",
+        "TL;DR 열수":     f"열 {n_col} 개",
+        "요지줄":         f"잰 {n_all} 칸 중 {n_fail} 탈락, 열 {n_col} 개",
+        "§9":             f"잰 <b>{n_all} 칸</b> 중 <b>{n_fail} 칸</b>이 탈락했다(통과 {n_pass} · 열 {n_col} 개)",
+        "영문 캡션":      f"Of the {n_all} measured cells, {n_fail} fail",
+    }
+    missing = [k for k, v in need.items() if v not in h]
+    assert not missing, f"CSV 수가 화면의 그 자리에 없다: {missing}"
+
+    full = {c for c in {(r["cathode"], r["voltage_V"]) for r in rows}
+            if all(r["gate_pass"] == "True" for r in rows
+                   if (r["cathode"], r["voltage_V"]) == c)}
+    assert len(full) == 2 and len({c[0] for c in full}) == 2, sorted(full)
+    for cath, volt in sorted(full):
+        sub = cath.replace("LiCoO2", "LiCoO₂").replace("LiNiO2", "LiNiO₂")
+        assert f"{sub} {float(volt):.2f} V" in h, f"통과 열 {cath} {volt} V 가 화면에 없다"
+
+
+def test_old_24_denominator_survives_only_as_a_struck_correction(client):
+    """⛔음성 — 옛 분모 24 가 **정정 표지 없이** 되돌아오면 잡는다.
+
+    지우는 것이 아니라 취소선으로 남기는 것이 이 repo 규약이다(무엇이 틀렸는지가 기록).
+    그래서 '사라졌나' 가 아니라 '표지 안에만 있나' 를 잰다.
+    """
+    h = _report_html(client)
+    assert "24 cells" not in h, "영문 캡션에 옛 분모가 남아 있다"
+    hits = [m.start() for m in re.finditer("24 칸", h)]
+    assert len(hits) == 1, f"'24 칸' 이 {len(hits)}곳 — 정정 표지 하나만 남아야 한다"
+    around = h[max(0, hits[0] - 120): hits[0] + 60]
+    assert "<s>" in around and "분모 정정" in around, \
+        "남은 '24 칸' 이 취소선·정정 표지 안에 있지 않다"
+    rec = json.loads((REPORT.parents[3] /
+                      "db/properties/cei_nd_p_capture_result_2026_09_18.json").read_text("utf-8"))
+    assert "⛔_정정_2026_09_21_24_칸_의_분모" in rec, "원장에 정정 주석이 없다"
+    assert "24 칸" in json.dumps(rec, ensure_ascii=False), \
+        "원장 원문이 덮어써졌다 — 정정은 덮어쓰기가 아니다"
+
+
+def test_title_no_longer_claims_the_retracted_sink(client):
+    """⛔음성 — 철회된 문장("NdPO₄ 가 Li₃PO₄ 보다 깊은 P 싱크")의 축약이 제목으로 돌아오면 잡는다."""
+    h = _report_html(client)
+    m = re.search(r"<h1>(.*?)</h1>", h, re.S)
+    assert m, "h1 을 못 찾았다 — 시험이 헛것을 재고 있다"
+    assert "싱크" not in m.group(1), f"제목이 다시 '싱크' 를 주장한다: {m.group(1)!r}"
+    t = re.search(r"<title>(.*?)</title>", h, re.S)
+    assert t and "Sink" not in t.group(1), f"탭 제목이 아직 Sink 다: {t and t.group(1)!r}"
+    assert "+1.5035" in h, "§3 의 철회 근거가 화면에서 빠졌다 — 제목만 고치면 반쪽이다"
