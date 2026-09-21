@@ -113,6 +113,9 @@ DL="/mnt/c/Users/안용훈/Downloads"; cp <파일> "$DL/"                # 윈�
 | cu12/cu13 이 같은 디렉터리를 공유 | cu13 을 지웠더니 **torch 가** `libcudnn.so.9` → `libnccl.so.2` 로 연쇄 실패 | 둘 다 `site-packages/nvidia/<lib>/lib/` 에 쓴다 ⇒ 한쪽 제거가 다른 쪽 파일을 가져간다.  `pip install --force-reinstall --no-deps <cu12 세트>` 로 복구 (**`--no-deps` 없으면 cu13 이 다시 딸려온다**) |
 | **런 중에 `pip` 실행** | 솔브가 오류 한 줄 없이 사라지고 루프가 `Done` 으로 끝난다 | 파일이 발밑에서 바뀐다.  ⛔ **솔브와 `pip` 를 동시에 돌리지 말 것** (2026-09-21 실사고) |
 | 루프를 죽여도 **자식 솔브가 살아남음** | `Done` 이 떴는데 `ps` 에 솔브가 남아 있고, 재시작하면 **같은 `--out` 에 두 프로세스**가 쓴다 | 루프 정지 후 `ps -eo pid,ppid,etime,rss,args \| grep '[m]pm_webapp_payload'` 로 **고아를 PID 로 확인·정리**한 뒤 재시작 |
+| **WSL 에서 MPI 경로가 통째로 막힘** (1저자 데스크탑) | `lmp_auto` 직접 실행도 `mpirun -np 1` 도 **둘 다** CPU 0 % · RSS 13~20 MB · sleeping · 로그 0 바이트 | 이 기계에서는 **MPI 를 쓰지 않는다**.  `lmp_serial`(STUBS 직렬 빌드, `~/src/LIGGGHTS-PUBLIC/src/`) 로 돌린다 — 믹서 대조쌍(2026-09-19)도 그것으로 돌았다.  ⇒ 런처 기본값은 `lmp_serial`, MPI 빌드를 주면 **거부**한다 (`MPIOK=1` 로만 강제).  **"serial 로 동시에"** = 런마다 1 코어 · 여러 개 병렬 |
+| **MPI 빌드를 `mpirun` 없이 실행** | 배너도 없고 **CPU 0 % · RSS ~20 MB 고정 · sleeping · 로그 0 바이트**.  죽은 줄 알기 쉽다 | `MPI_Init` 무한 대기다.  **np=1 이라도 `mpirun -np 1` 을 거친다.**  2026-08-25 `oat_sweep` 에서 39 분, 2026-09-21 믹서에서 **같은 사고 재현** — 새 런처에 그 교훈을 안 담았기 때문 ⇒ 런처를 새로 쓸 때 `dem_scripts/oat_sweep/run_all.sh` 의 머리말을 먼저 읽을 것 |
+| 로그가 비어 보임 | 살아 있는데 `log` 가 0 바이트 / 안 자람 | 파일로 보내면 stdio 가 **4 KB 블록 버퍼**를 쓴다 ⇒ `stdbuf -oL -eL` 로 줄 단위로 흘린다 |
 | 런처가 옛 인스턴스를 안 죽임 | `git pull` 해도 웹앱에 **새 라우트가 404**, 런처는 `✓ PID` 를 찍음 (거짓 초록) | `run_dem_webapp.sh` 가 포트 기준 `_stop_port` 로 **먼저 종료 후 기동** + `--stop` 모드.  ⚠ `pkill -f webapp/app.py` 는 안 맞는다 (cmdline 이 `python3 app.py`) |
 
 ⚠ 이 런북과 setup 스크립트가 **정본**이다 — 새 지뢰를 밟으면 여기와 setup_gpu_server.sh 에

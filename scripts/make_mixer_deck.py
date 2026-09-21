@@ -671,6 +671,11 @@ fix insB all insert/pack seed {seedB} distributiontemplate pddB &
 
 atom_style      granular
 atom_modify     map array sort 0 0
+# ⚠ LIGGGHTS 는 SI 에서 `youngsModulus > 1e9` 를 **거부**한다
+#   (`ERROR: youngsModulus <= 1e9 required for SI units`, global_properties.cpp:371).
+#   우리 AM 1.037e9 · 벽 1.48e9 가 그 위다 — 2026-09-21 스모크 런이 실제로 여기서 멈췄다.
+#   ⇒ 공식 override 를 쓴다.  dt 는 이미 **상별 Rayleigh 최소**로 잡으므로(plan) 안전 근거는 그쪽이다.
+hard_particles  yes
 boundary        f f f
 newton          off
 communicate     single vel yes
@@ -839,6 +844,13 @@ def _selftest():
     chk(f'⑪e 변이: 정착 스텝이 드럼 크기를 따라간다 ({_f(_small):,} → {_f(_big):,})',
         _f(_big) > _f(_small) * 1.3)
     chk('⑫ 생산 scale=1000 규약을 안 쓴다', 'scale 1000' not in dk)
+    #  ★ 실행이 가르쳐 준 제약 (2026-09-21 스모크): E > 1e9 는 LIGGGHTS 가 거부한다
+    chk('⑫b ★ E > 1e9 이면 `hard_particles yes` 가 있다 (없으면 LIGGGHTS 가 거부)',
+        (max(E_PHASE[t] for t in TYPES + (WALL,)) <= 1e9) or ('hard_particles  yes' in dk))
+    # ⚠ 낱말 `youngsModulus` 로 찾으면 **바로 위 주석**이 먼저 걸린다 (2026-09-21 실제로 걸렸다).
+    #   실제 지시어(`fix m1 … youngsModulus`)를 찾는다 — 주석은 `fix ` 로 시작하지 않는다.
+    chk('⑫c ★ `hard_particles` 는 물성 선언보다 **앞**에 온다',
+        dk.index('\nhard_particles') < dk.index('\nfix m1 all property/global youngsModulus'))
     #  ★ 실행으로 배운 제약 — multisphere 템플릿 번호는 1 부터 연속이어야 한다
     import re as _re
     _t = [int(m) for m in _re.findall(r'\.multisphere scale [\d.]+ type (\d+)', dk5)]
@@ -1050,7 +1062,7 @@ def _selftest():
             for _a in ('B5', 'B10', 'LA') for _i, _t in enumerate(TYPES)))
     #  ⚠ 2026-09-21 3차 갱신 — 3 상 · SE 1 µm · 벽 타입 · 영률 ÷135 · 마찰 hare2026 ·
     #    전 팔 절대 Bo · 코팅 JKR 규약 · **dump `mol` 조건부(R-1)**.  T1·B5 대신 LA·LC 를 골든에 넣는다.
-    _gold = {'E0': 'c8d6700f0c67d856', 'E1': 'd68c220a8d4b412e', 'E4': 'dc41b6266010080e', 'C1': '7b577d9c37a1bfb7', 'LA': '9101d3f6f87e668a', 'LC': 'a173f07c8d555be2'}
+    _gold = {'E0': '996e1b8357c52036', 'E1': 'a0f4b12c8eda7440', 'E4': 'cee915bc6eb853e9', 'C1': '567bfa45f51aa794', 'LA': 'b1e342d850b899f2', 'LC': 'bbe817cf6725b58f'}
     _got = {a: _hl.sha256(deck(_p8, rpm=60, revolutions=2, seed=32452843, arm=a)
                           .encode()).hexdigest()[:16] for a in _gold}
     chk('㉟ 기존 6 팔 덱이 편집 전과 **바이트 동일** (골든 해시, plan(8000)·2바퀴·시드 32452843)',
