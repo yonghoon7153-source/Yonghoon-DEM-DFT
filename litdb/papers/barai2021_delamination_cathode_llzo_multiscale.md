@@ -211,7 +211,7 @@
 | **LCO/LLZO** | x `≈ 15`, y `≈ 6.3` (막대 ≈3–33) → **노랑(위험)** |
 | **NMC/Sulfides** | x `≈ 2.2`, y `≈ 2.0` → **경계선 바로 위** (본문: *"reside close to the boundary of safe and unsafe domains"*) |
 | **LCO/Sulfides** | x `≈ 2.2`, y `≈ 6.3` → **노랑(위험)** — 본문: *"LCO/sulfides should experience severe delamination"* |
-| 영-변형 양극 기준 | **V̄ < 0.5 cm³/mol** (ref 72 = Lee 2019, 리튬화 스피넬 LiCo₁₋ₓAlₓO₂) | 본문 |
+| 영-변형 양극 기준 (본문) | **V̄ < 0.5 cm³/mol** — ref 72 = Lee 2019, 리튬화 스피넬 LiCo₁₋ₓAlₓO₂ |
 
 > 🔑 **YM_Li 역산** (*우리 산수*): Y_LLZO(GI) = 141 GPa 가 x `figure-read ≈ 15` 에 찍혔으므로 **YM_Li ≈ 9.4 GPa**. 본문이 *"sulfide … only two/three times (2×/3×) larger than that of Li"* 라 한 것과 황화물 마커 x ≈ 2.2 가 서로 맞는다(22 GPa / 9.4 ≈ 2.3 ✅). 로그축 읽기 오차를 감안하면 **YM_Li ≈ 8–11 GPa** 대역이다. ⚠ **논문은 YM_Li 값을 한 번도 안 적는다** — 상도 가로축을 재현하려면 이 역산이 필요하다.
 > 🔑 그래서 **우리 아지로다이트는 `Fig. 11` 가로축에서 comp1 22.06/9.4 ≈ **2.3**, modelc 27.66/9.4 ≈ **2.9** 에 놓인다** — 정확히 "NMC/Sulfides" 마커가 있는 칸이다. **사슬이 안 끊긴다**: 본문 ref 71 = **Deng 2016** 이고, 그 논문의 Li₆PS₅Cl **E = 22.1 GPa** 가 우리 comp1 relaxed-ion **22.06** 과 **0.2 % 일치**(우리 `deng2016_…` digest §7.2 에서 이미 검증).
