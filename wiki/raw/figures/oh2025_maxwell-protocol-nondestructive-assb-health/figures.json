@@ -1,0 +1,131 @@
+{
+ "slug": "oh2025_maxwell-protocol-nondestructive-assb-health",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "6d88b337-13._Maxwell_Protocol_for_Non-Destructive_Health_Diagnosis_of_All-Solid-State_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Graphical illustration of the non-destructive analysis of ASSB cells using the Maxwell relations. This method allows for the nondestructive detection of delithiation heterogeneity in the layered cathode materials and void formation within the composite electrode under isobaric and isothermal conditions, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.7,
+    26.0,
+    297.7,
+    189.6
+   ],
+   "w": 1051,
+   "h": 683,
+   "dpi": 300,
+   "src": "6d88b337-13._Maxwell_Protocol_for_Non-Destructive_Health_Diagnosis_of_All-Solid-State_Batteries.pdf",
+   "blank": 0.669
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Entropymetry for detecting delithiation heterogeneity in layered cathode materials. a), b) Comparison of entropy (S) and entropy change (\u0002S) proﬁles for a) homogeneous and b) heterogeneous delithiation. V1 and V2 represent the potentials at which the equivalent energy states of Li ions are most abundant. The color-ﬁlled convex curves are deconvoluted from the overall S proﬁles.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.2,
+    53.3,
+    540.8,
+    254.6
+   ],
+   "w": 2062,
+   "h": 839,
+   "dpi": 300,
+   "src": "6d88b337-13._Maxwell_Protocol_for_Non-Destructive_Health_Diagnosis_of_All-Solid-State_Batteries.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Entropymetry: methodology and results for NCM∥LPSCl∥Li. a) Method for determining the entropy change (\u0002S) by measuring the change in OCV in response to temperature variations during the rest period. b) \u0002S calculated from entropymetry and corresponding dQ dV−1 proﬁle. The dQ dV−1 peaks coincide with the start of the decrease in the individual (shaded) regimes of the \u0002S proﬁle. c) Entropymetry results before and after cycling. d), e) Cross-sectional SEM images of the composite cathodes d) before cycling and e) after 100 charge-discharge cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.7,
+    53.1,
+    544.8,
+    451.6
+   ],
+   "w": 2076,
+   "h": 1661,
+   "dpi": 300,
+   "src": "6d88b337-13._Maxwell_Protocol_for_Non-Destructive_Health_Diagnosis_of_All-Solid-State_Batteries.pdf",
+   "blank": 0.736
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Volumetry: methodology and results. After discharge at 2.5 V and a rest period to allow OCV stabilization, the rate at which the OCV changed by varying the stack pressure of the cell at constant temperature was measured. a) Schematic illustration of the eﬀect of changes in the stack pressure on internal voids before and after cycling. b), c) Volumetry results b) before cycling and c) after 50 charge-discharge cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.7,
+    53.8,
+    533.1,
+    472.0
+   ],
+   "w": 2028,
+   "h": 1743,
+   "dpi": 300,
+   "src": "6d88b337-13._Maxwell_Protocol_for_Non-Destructive_Health_Diagnosis_of_All-Solid-State_Batteries.pdf",
+   "blank": 0.807
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Correlation of the internal porosity of the cell with the volumetry results. a), b) XRM 3D renderings of the composite cathodes a) before cycling and b) after 50 cycles under 10 MPa. c), d) XRM void mappings of the cathodes after cycling at a stack pressure of c) 10 MPa and d) 20 MPa. e), f) Volumetry results at the stack pressure of e) 10 MPa and f) 20 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.2,
+    53.8,
+    545.2,
+    424.6
+   ],
+   "w": 2080,
+   "h": 1546,
+   "dpi": 300,
+   "src": "6d88b337-13._Maxwell_Protocol_for_Non-Destructive_Health_Diagnosis_of_All-Solid-State_Batteries.pdf",
+   "blank": 0.528
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Conceptual diagram illustrating the Maxwell diagnostic protocol. Angew. Chem. 2025, 137, e202514910 (7 of 9) © 2025 The Author(s). Angewandte Chemie published by Wiley-VCH GmbH",
+   "rotated_deg": 0,
+   "bbox": [
+    46.2,
+    483.5,
+    548.3,
+    714.5
+   ],
+   "w": 2093,
+   "h": 964,
+   "dpi": 300,
+   "src": "6d88b337-13._Maxwell_Protocol_for_Non-Destructive_Health_Diagnosis_of_All-Solid-State_Batteries.pdf",
+   "blank": 0.872
+  }
+ ]
+}

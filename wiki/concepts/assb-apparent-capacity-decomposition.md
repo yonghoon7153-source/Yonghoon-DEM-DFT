@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md]
+sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -262,6 +262,29 @@ evolution of electrode-electrolyte interfaces" 로 꼽는다 — **1 번이 접�
 
 ⚠ 13호는 데이터 0 이다. 이 절이 더한 것은 **요구서의 형태**이지 분해의 근거가 아니다.
 
+## ★★★ 2026-09-22 (`assb` 14호 Oh 2025, **실험**) — **void 가 `Q_apparent` 에 안 들어가는 실측**: `θ_AM` 은 void 의 함수가 아니라 퍼콜레이션의 함수다
+
+`raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md` → [[assb-maxwell-ocv-derivative-channels]].
+
+`[인쇄]` NCM811‖LPSCl‖Li, 50 사이클 0.5C: XRM 공극률 **4.5 → 9.8 %**(10 MPa) ↔ **4.4 → 5.3 %**
+(20 MPa) 인데 용량 유지율 **86.0 % ↔ 84.0 %**. void 가 2 배인 셀이 **더 높다**. 논문은
+"similar … internal voids may not directly affect the early-cycle performance [73,74]" 로
+지나간다.
+
+`[해석]` 이 페이지의 언어로 — **`θ_AM` 이 두 셀에서 모두 ≈1** 이다. void 부피분율 +5.3 %p
+가 `Q_apparent` 를 전혀 안 움직였으므로, **`θ_AM` 은 void 분율의 연속 함수가 아니라
+퍼콜레이션 문턱의 함수**([[composite-cathode-percolation-utilization]] 의 `p_c`)이고, 이
+창은 문턱 **아래**다. 4호 Shi(면적 10.4 % ↔ 60 %p 회복)는 문턱 **위**다. ⇒ **접촉 손실 →
+용량 사상은 문턱형**이고 두 실험이 그 양 끝을 찍는다.
+
+이것이 이 페이지의 3 항에 주는 것:
+- **`θ_AM` 을 형태학(void %)에서 직접 읽을 수 없다** — 사상에 문턱이 있다. 1호의 `p_c` 가
+  실험에서 처음 **간접** 확인된 자리 (14호 ref [69] Bielefeld 2022 가 그 실험 원전 후보).
+- **문턱 아래에서 OCV 적합은 `LAM_PE ≈ 0` 을 정확히 보고하고 void 성장을 놓친다** — 닻
+  물음(오독)의 반대편, **무감**. 그것을 보는 관측이 `F(∂E/∂P)_T`(−18 %)다.
+- ⚠ 모집단: 50 사이클 · 조건당 셀 1 · 2 점 · 0.5C · 10–20 MPa. 그리고 두 셀의 **초기 용량이
+  다르다**(`[도표]` 138 ↔ 144 mAh g⁻¹) — 20 MPa 셀이 처음부터 더 컸다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **3항 분해가 논문의 식이라고 주장하지 않는다.** 우리 해석이고, 위 G1 때문에 `C_norm` 이
@@ -301,6 +324,7 @@ evolution of electrode-electrolyte interfaces" 로 꼽는다 — **1 번이 접�
 - [[ag-c-interlayer-lithium-phase-path]] — 음극 쪽 `Q_material` 이 율 의존이라는 것의 출처(7호).
 - [[fitting-degeneracy]] — 이 3 항 중 앞의 두 항이 OCV 에 대해 만드는 null 방향.
 - [[near-optimal-set-width-measurement]] — 율을 하나 더 넣었을 때 폭이 얼마나 줄어드는지 잴 기계.
+- [[assb-maxwell-ocv-derivative-channels]] — **void ≠ `Q_apparent`** 실측(14호)과 그것을 보는 관측 `F(∂E/∂P)_T`.
 - [[halfcell-ocp-shape-invariance]] — 아핀 창 모형이 깨지는 자리. 3호가 **두 번째 경로**를
   연다: 식 (21) 의 `μ_mech = −(1/C_max) F_c S · ∂V_c/∂θ` 때문에 **OCV 자체가 응력 의존**이다
   (⚠ 3호는 그 크기를 보고하지 않는다 — `μ_mech` 를 끈 대조군이 없다).

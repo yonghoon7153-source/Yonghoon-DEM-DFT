@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md]
+sources: [raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -237,6 +237,31 @@ constant at 20 MPa**". `[해석]` **볼트·너트는 정변위 구속이지 정
 ★ **2호의 율 스윕 분리 시험을 실험이 간접 검증한 첫 사례**다.
 ⚠ 단 4호는 **율 스윕을 하지 않았다** — 직접 증명이 아니다.
 
+## ★★ 14호(Oh 2025)가 붙인 것 — **이 연산자의 소신호 판** (2026-09-22)
+
+`raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md` → [[assb-maxwell-ocv-derivative-channels]].
+
+| | **대신호 `P↑`** (4호 Shi · 11호 Yu) | **소신호 `ΔP`** (14호 volumetry) |
+|---|---|---|
+| 조작 | 300 / >500 MPa 재가압 | `[인쇄]` **−5 MPa (10→5) · −10 MPa (20→10)**, ≤0.01 MPa, 원압 복귀 |
+| 읽는 것 | `ΔQ_mech = Q(P_high) − Q(P_low)` (용량) | `F(∂E/∂P)_T` (**OCV 기울기**, 0.4 mV 급) |
+| 가역성 | ❌ 비가역(경고 3) | ✅ 가역·반복 가능 — 단 `[도표]` S16 재가압 뒤 **+0.4 mV 오프셋**(5호 이력의 그림자) |
+| 실측 | 4호 +60.5 %p · 11호 +4.91 % | `[인쇄]` 신품 2.2 mV → 50 사이클 뒤 1.8 mV(**−18 %**, 3 셀 18–20 %); XRM 공극률 4.5 → 9.8 % |
+| 전극 귀속 | 음극이 섞인다(경고 2) | `[인쇄]` "10 MPa → Li creep → 음극 pore 무시" — ⚠ 식 (10) 의 Li 몰부피 **상수항 13 cm³ mol⁻¹** 은 이 논거 밖(`[재현]` 실측 2.2 mV 의 30 %) |
+| 상한 | 5호 75 MPa(Li 금속) — 4호 300 MPa 는 그 4 배 | 운전 압력 안에서 움직인다 — 상한 문제 없음 |
+
+★ `[해석]` **같은 물리 `θ_AM(P)` 의 적분(대신호) ↔ 미분(소신호)** 이다. 소신호는 셀을 안
+망가뜨리므로 **먼저** 쓸 수 있고, 대신호는 마지막에 한 번 — 위 "적용 순서" 표에 세 번째
+행이 생긴다: **① 율 `i→0` → ② 소신호 `ΔP`(반복) → ③ 대신호 `P↑`(1 회)**.
+⚠ 그러나 소신호 계수가 상수가 아니다 — `[재현]` 신품끼리 **0.44 mV/MPa (5–10) ↔ 0.23
+(10–20)**, `E(P)` 오목 비선형; 전·후 측정 SOC 도 171 mV 다르다. **`E(P, x)` 면 없이는
+`ΔQ_mech` 와 같은 좌표에 못 놓는다.**
+★★ 그리고 14호가 이 연산자의 **필요성**을 뒤집어 보인다: `[인쇄]` void 2 배 셀(86.0 %)과
++0.9 %p 셀(84.0 %)의 **용량이 같다** — 문턱 아래에서는 되돌릴 `ΔQ_mech` 자체가 **0** 이고,
+void 는 소신호로만 보인다. 4호(60 %p)와 14호(0)가 사상의 양 끝이다.
+⚠ 14호는 ">300 MPa recondition" 을 **처방만 하고 수행하지 않는다**, 그리고 4호를 인용하지
+않는다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **원문의 식이 아니다.** Shi 2020 은 `ΔQ_mech` 를 정의하지도, 10.4 % 와 60 %p 를
@@ -259,3 +284,4 @@ constant at 20 MPa**". `[해석]` **볼트·너트는 정변위 구속이지 정
 - [[near-optimal-set-width-measurement]] — 압력 축을 하나 더 넣었을 때 폭이 얼마나 줄어드는지 잴 기계.
 - [[anode-free-li-inventory-accounting]] — 같은 논문(6호)의 음극 축. **연산자를 못 쓰는 셀에서 무엇이 남는가.**
 - [[thermo-kinetic-loss-partition]] — 액체셀 축의 같은 형식(외부 변수를 관측 축으로 쓰는 분해).
+- [[assb-maxwell-ocv-derivative-channels]] — 이 연산자의 **소신호 판**(14호 volumetry, `F(∂E/∂P)_T`).

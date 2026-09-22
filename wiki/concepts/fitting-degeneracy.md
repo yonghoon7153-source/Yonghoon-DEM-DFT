@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-22
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -242,6 +242,14 @@ flat 방향의 비율이 "LAM_PE ≈ LAM_NE 는 수학" 가설의 직접 증거 
 이 페이지의 최악 축퇴가 사라진다.** 대신 `LAM_PE ↔ 접촉 손실`이 그 자리를 차지한다.
 물음과 수집 지침은 [[assb-contact-loss-vs-lampe]], 실측은
 `bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §1.
+
+★ **2026-09-22 (`assb` 14호 Oh 2025)** — Q4(유일성) 계보에 **역문제가 없는 형태**의 표본이
+들어왔다: `E(x)` 를 적합하지 않고 `−F(∂E/∂T)_P`·`F(∂E/∂P)_T` 를 직접 재므로 조건수·프로파일이
+**정의될 자리가 없다** — 그 대신 **귀속의 유일성**(ΔS 변화 = 비균질인가 재료 변화인가)을
+아무도 묻지 않는다 (`identifiab*`·`uncertaint*` 0). `[재현]` ΔS 의 SOC 축 적분이 전·후에
+≈ −3.5 → +1.5 로 부호가 바뀌는데 비균질만으로는 총합이 안 변한다(sum rule) — 논문은 이 뺄셈을
+안 한다. 계보: 안 쟀다(1–7) → 이름(8) → 지문(9) → 명제(10) → 재료만(11) → 0(12·13) →
+**역문제 부재(14)**. Q4 **0/14**. → [[assb-maxwell-ocv-derivative-channels]].
 
 ## ★★ 다른 관측 영역에서 같은 축퇴가 **분야의 공식 문장**으로 인쇄돼 있다 (2026-09-22)
 

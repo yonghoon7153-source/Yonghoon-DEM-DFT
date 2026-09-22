@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md]
+sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -357,6 +357,32 @@ of solid electrolytes" 라 스스로 적는다 — **이 벽의 위치는 아무
 `MPa` 본문 2 회. **창의 값은 하나도 움직이지 않았다.** 움직인 것은 **창의 구조**(위 벽 둘,
 압력 = 제어변수)와 **요구치의 자릿수 수렴**이다.
 
+## ★★ 2026-09-22 (`assb` 14호 Oh 2025, **실험 · Hot Paper**) — 압력이 **관측 변수**가 되고, 계보 최초의 **`E(P)`** 가 들어온다
+
+`raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md` → [[assb-maxwell-ocv-derivative-channels]].
+NCM811‖LPSCl‖**Li 금속**, 제작 100(SE)/350(스택) MPa, 운전 **10 / 20 MPa**(스프링 하우징 ·
+디지털 프레스), 진단 **ΔP = −5 / −10 MPa**(≤0.01 MPa), 처방 **>300 MPa**(미수행).
+
+1. ★ **압력 → OCV — 이 페이지에 없던 관측량.** 5호는 `Z(P)`, 6호는 `Q(P)` 1.5 %p, 14호는
+   **`E(P)` 의 기울기**: `[인쇄]` 신품 **2.2 mV / 5 MPa (10→5)** · **2.3 mV / 10 MPa (20→10)**
+   ⇒ `[재현]` **0.44 ↔ 0.23 mV/MPa — 2 배, 오목 비선형** (논문 무언급; Fig. 5e/f 눈금이 달라
+   가려진다). `[해석]` 접촉 역학(Hertz 형)이 OCV 에 얹힌 모양 — 압력 창의 **아래쪽일수록
+   OCV 가 압력에 민감**하다는 뜻이고, 산업 요구치(<≈1–5 MPa)에서는 더 가파를 것이다.
+2. ★ **압력 → 용량 2 점 (13/13 → 14호)**: `[인쇄]` 50 사이클 유지율 **10 MPa 86.0 % ↔ 20 MPa
+   84.0 %** — 그리고 공극률은 **9.8 ↔ 5.3 %**. **역상관**(void 적은 쪽이 용량 낮다). 논문은
+   "similar" 로 덮는다. ⚠ 조건당 셀 1.
+3. ★ **위 벽 대조**: 5호 Li 금속 **20 MPa → 190 h 단락**. 14호는 20 MPa 에서 50 사이클 0.5C
+   (`[재현]` ≈225 h) 를 돌리고 **단락 보고 0** — 다른 설계(스프링·펠릿 ∅10 mm)·전류밀도
+   (로딩 미기재)라 직접 비교 불가이지만, **5호 상한이 보편값이 아니라는 세 번째 표본**
+   (6호 4 MPa · 10호 400 MPa 에 이어).
+4. **이력의 그림자**: `[도표]` S16 재가압(10→20 MPa) 뒤 OCV 가 초기보다 **+0.4 mV 높게**
+   안착, 감압 유지 중 **+0.5 mV 표류** — 노화 신호(0.1–0.4 mV)와 같은 자릿수. 5호 `θ(P)`
+   경로 의존의 소신호 판. 논문은 `dE` 판독 규칙을 안 적는다.
+5. **"10 MPa 는 Li creep 을 일으키기에 충분"** `[인쇄]` (ref [70] LePage 2019) — 음극 pore
+   무시의 근거. 5호의 Li 항복강도 ≈0.8 MPa 와 같은 방향.
+6. ⚠ **>300 MPa recondition 은 Li 금속 셀에 5호 상한(75 MPa)의 4 배** — 수행도 인용(4호)도
+   없다. 로드셀 명시 0(프레스 "sensing" 만), 스윕 0(2 구간), 압력 시계열 0.
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -403,3 +429,4 @@ of solid electrolytes" 라 스스로 적는다 — **이 벽의 위치는 아무
 - [[ag-c-interlayer-lithium-phase-path]] — 7호(Spencer-Jolly 2023)의 본체. 압력 축은 위 절이 전부다.
 - [[anode-free-li-inventory-accounting]] — 같은 논문(Lee 2020)의 **음극 인벤토리 축**.
   이 페이지가 그 논문의 압력을, 그 페이지가 그 논문의 `LLI` 를 받는다.
+- [[assb-maxwell-ocv-derivative-channels]] — 압력을 **관측 변수**로 쓰는 편(14호). 계보 최초의 `E(P)` 와 그 비선형.

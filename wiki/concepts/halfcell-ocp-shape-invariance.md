@@ -5,7 +5,7 @@ created: 2026-09-10
 updated: 2026-09-22
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md]
+sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -210,6 +210,19 @@ Spencer-Jolly 2023 (`assb` 7호)은 **한 사이클 안에서** 같은 가정을
 추정). 그리고 half-cell 적합의 γ_Si(25.7–30.5 %)와 full-cell 적합 Cycle 0 의
 γ_Si(≈20.5 %), Schmitt 의 MJ1 pristine 9.52 % 가 서로 다르다 — 정의·OCP 출처·셀이
 다를 수 있어 직접 비교하지 않는다 (raw digest 공백 11).
+
+## ★ 아핀 전제의 **두 번째 상태함수 검사** — ΔS(x) (2026-09-22, `assb` 14호 Oh 2025)
+
+`raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md` → [[assb-maxwell-ocv-derivative-channels]].
+Oh 2025 는 ASSB 셀(NCM811‖LPSCl‖Li)에서 `ΔS(x) = −F(∂E/∂T)_P` 를 5 % SOC 마다 잰다 —
+`E(x)` 와 **같은 상태함수의 다른 편미분**이다. `[해석]` 이 페이지의 아핀 전제(열화 전극
+OCP = pristine 곡선의 `α·β` 변환)가 맞으면 **`E(x)` 와 `∂E/∂T(x)` 가 같은 `(α, β)` 로
+재조정돼야 한다** — 두 곡선의 `(α, β)` 가 어긋나면 `E(x)` 하나로는 못 보던 방식으로 전제가
+깨진 것이다. 그리고 `∫(dS/dx)dx` 는 상태함수 차이라 **비균질·아핀 어느 쪽도 총합을 못
+바꾼다** — `[재현]` 14호의 ΔS 는 100 사이클 전·후에 SOC 축 평균이 ≈ −3.5 → +1.5 J mol⁻¹
+K⁻¹ 로 **부호가 바뀐다**(sum rule 위반 후보 = 재료 변화·창 변화·음극 항 중 하나). 논문은
+이 뺄셈을 안 한다. ⚠ 14호의 ΔS 는 **OCV 축**이라 SOC 축 변환이 먼저이고, 실셀 1 종·3 셀·
+전·후 2 점이다.
 
 ## 관련
 - [[fitting-degeneracy]] — 같은 증상(적합도 불변, 파라미터 이동)의 다른 원인

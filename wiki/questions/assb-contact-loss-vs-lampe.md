@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: research-question
 tags: [battery, degradation, research, assb]
-sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md]
+sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -206,7 +206,30 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 
 | **Zheng, Xie, Zhang, Yang, Zhou, Zhu 2026 (`assb` 13호 — 첫 **그리드 용도 appraisal** · Nanjing Tech + **Huadian 전력연구원 + Shuangdeng(전지 제조사)** · *Energy* 345, 140229 · ⚠ **Perspective, 1차 측정 0, `[인쇄]` "No data was used", 그림 5 장 전부 모식도/레이더**)** | **없다 (정량 0).** `contact loss` **1 회**(M³ 시뮬 대상 열거) · `interfacial contact` 6 · `θ`·`percolat*`·`tortuos*` 0 · 단위·모델 형태 0. ★ 대신 **대리량을 지목한다**: `[인쇄]` "decay of **interfacial contact pressure** — a primary driver of impedance growth" → 압력 센서 시계열 = 접촉 손실의 관측 (9호가 힘을 **재고도 모델에 안 넣은** 자리를 처방으로 채운다). 인과 방향 `압력 감쇠 → 임피던스 ↑` 명시 | **없다 — perspective.** 처방 셋: ① 압전/박막 **압력 센서**(셀 스택 내장) ② `[인쇄]` "**EIS** could be used as a **proxy for contact integrity**"(주파수·특징 0, `DRT` 0) ③ **음향/초음파**(void·crack; 인용 [41] 은 음향 논문이 아님 D9). `LAM_PE` ↔ 접촉 손실을 가르는 관측으로 제시된 것 **0** | **해당 없음 + 정의 하나.** Table 1 ASSB 열 = 투영(재인용 2 + **무인용 5**, 10000–15000 cycles 무인용 G2), LCOS 식 (1) 입력(`d`·`P_charge`·`C_deg`) **미공개**(G1) → `$0.08–0.12/kWh` 재현 불가. ★ **라벨 정의는 인쇄됐다**: `[인쇄]` SOH 는 "**true active material loss**" ↔ "**reduction in usable capacity caused by rising impedance or increasing overpotentials**" 를 갈라야 한다 — **2 항 이분법**이고 **같은 절이 지배 실패 모드 1 번으로 꼽은 접촉 손실의 소속을 말하지 않는다** (`θ_AM` 이 문장에서 사라짐). 12호 `LAM ⊃ 접촉 손실` ↔ 13호 `LAM ∣ kinetic + 접촉 손실 미배정` — **두 종설의 분류가 다르고 둘 다 우리 3 항과 다르다** | **0 (13/13 편).** `identifiab*`·`ill-posed`·`regulariz*`·`uncertaint*`·`confidence`·`error bar` 전수 0, `uniqu*` 3 무관. ★ 성질: **역추정을 워크플로로 처방한다** — `[인쇄]` "These models **inversely estimate** the current state of interfacial contact **and** material properties" — 유일성 경고 **0**. 9호의 `A_eff·ε_p/R_s` 곱 축퇴가 정확히 "접촉 상태 ↔ 재료 물성" 사이에 있는데 이 논문은 그것을 모른다. ⇒ 8호(2026, `identifiab*` 5)와 **같은 해**에 이름 없이 역문제를 처방 — "2026 년 문헌은 식별 가능성을 안다" 는 8호 한 편의 일 | **해당 없음.** `indium`·`In-Li` 0. Li 금속 음극 자체를 `[인쇄]` "may be misguided" 로 배제 | **★★ 있다 — 이 편의 본체(값은 적다).** `pressure` **24** · `stack pressure` 7 · `pressure-less` 5 · `MPa` 본문 **2**(둘 다 `<5`). ① 1 차 주장 `[인쇄]` **`<5 MPa`** ×2(Si 음극 / 저압 아키텍처 문턱; 근거 [35]·[45], "5" 의 출처 미명시 G3) ② `[도표]` **Fig. 2 클래스별 창 — 본문에 없는 다섯 값**: Oxides **≥30** · Sulfides **5–20** · Halides **2–10** · Polymers **0/compliant** · Composites **1–10 MPa** (⚠ 권장 두 클래스 상단 10 = 문턱의 2 배, D4) ③ ★★ **상한의 두 번째 형태**: `[인쇄]` 고정 고압 → "creep and stress relaxation … **fatigue-driven micro-crack initiation** … gradually degrading interfacial contact" — 5호의 단락 상한(시간 ~h)과 **다른 축**(피로, ~년) ④ ★★ **압력 = 제어변수 + 정책**: `[인쇄]` "apply higher pressure during high-rate cycling … reduce pressure during extended rest periods or as the cell ages"(8호 "coupled state/control variable" + 정책) ⑤ 요구치 계보 세 번째: 8호 `<≈1`(Xu 2024) · 12호 `0.4–1`(Tian/Shao) · **13호 `<5`** — **원전 셋 다 다르고 자릿수 같음**; 실험실 창 2–490 MPa 은 셋 다의 위. ⚠ **압력→용량 · 스윕 · 이력 · 계측 전부 0** | **해당 없음.** Si 계 음극 권장. `dead li`·`isolated` 0 · `plating` 2(그리드 주파수조정 "resistance to lithium plating" · Table 2) | **★ 부분 — 처방과 경고, 곡선 0 장.** ① 양극 권장 **LFP / LFMP**(저전압 → 계면 열화 최소) ② `[인쇄]` "**flat voltage profiles** … (e.g., LFP cathodes) exhibit minimal voltage change over large SOC ranges" ③ ★ **운전 창 절단**: `[인쇄]` "**20–80 % SOC** … **impossible to obtain a full OCV curve** for calibration" ④ `[인쇄]` "distorted by **voltage hysteresis arising from mechanical stresses**"(인용·크기·전극 0, G6) ⑤ 음극 권장 **Si 계**(비평탄·이력 OCP — 논의 0, G10). `OCV` 1 회 · `GITT`·`dV/dQ`·`half-cell` 0 · **V–Q·OCP 0 장**. ★ 닻 "모르는 것 5"(LFP 평탄 → `(X1, X3)` 축퇴)가 그리드에서 **설계 권장 + 운전 창 절단 + 응력 이력** 세 겹으로 강화되고, "전고체 음극 = 평탄" 전제는 **세 번째로**(9호 Li-Si · 11호 graphite 에 이어 **설계 처방으로서**) 깨진다 |
 
-**1호 단독 1.5 → 2편 ≈2.5 → 3편 ≈3.0 → 4편 ≈5.5 → 5편 ≈6.5 → 6편 ≈7.0 → 7편 ≈7.0 → 8편 ≈7.0 → 9편 ≈7.5 → 10편 ≈8.0 → 11편 누적 ≈8.5 칸이다.**
+| **★★ Oh, Kim, Kim, An, Kwon, Choi 2025 (`assb` 14호 — 첫 **열역학 도함수 진단** · 서울대 + **HMG-SNU JBRC(현대차)** · *Angew. Chem. Int. Ed.* 64, e202514910, **Hot Paper** · 실험 논문 + **SI .docx(진짜 SI, 표 0)** · ⚠ 자기 인용 21/74)** | **★ 있다 — 두 층위.** ① XRM 공극률 `[인쇄]` **4.5 → 9.8 vol%**(10 MPa, 50 cy) · **4.4 → 5.3**(20 MPa) — 4호 Shi 의 void vol%(2.87 → 9.50 @50 cy)와 **같은 종류·같은 자릿수** ② ★ **계보 최초의 비파괴 in situ 대리량** `F(dE/dP)_T` = `[인쇄]` **42.7 → 34.7 µJ mol⁻¹ Pa⁻¹(−18 %)**, 3 셀 `[도표]` 18.1–20.3 %. ⚠ 무차원 `θ` 아님 · 공극률→`dE/dP` 사상 **2 점** · `[재현]` **`dE/dP` 가 압력 구간에 2 배 의존**(0.44 mV/MPa @5–10 ↔ 0.23 @10–20, 신품끼리; 논문 무언급) · `LAM` **0 회** → **접촉 손실 = LAM 안/밖: 미언급** | **★★ 있다, 셋 — 그러나 가르는 쌍이 다르다.** 엔트로피메트리 `ΔS = −F(dE/dT)_P` · volumetry `ΔV = F(dE/dP)_T` · XRM/SEM. 주장은 `[인쇄]` "distinguish between **mechanical and chemical** degradation" — **`LAM_PE` ↔ 접촉 손실은 물음 자체가 없다.** ★★ 그리고 `[인쇄]` ΔS 는 "local physical **contact loss** … **as well as** an increase in the **interfacial resistance**" 를 **한 신호로** 받는다고 스스로 정의 ⇒ **ΔS 채널은 우리 쌍을 합친다.** 교차 실험 0(화학 단독 대조군 0 · 20 MPa 셀 엔트로피메트리 0). ★★★ 실익 = `[인쇄]` **void +5.3 %p 인 셀(86.0 %)과 +0.9 %p 인 셀(84.0 %)의 용량이 같다(역상관)** — 접촉 손실이 이 창에서는 **겉보기 `LAM_PE` 로 나타나지 않는다** | **measured-morphological**(XRM "window leveling" 문턱, 복셀·정확도 0) + **measured-thermodynamic**(ΔS drop `[도표]` 13–15 → 5.8–8 J mol⁻¹ K⁻¹ · volumetry drop 18–20 %; n = 3, **오차 막대 0**). ★ **"health" 등급(reuse/recondition/recycle)의 문턱값 0** — `[인쇄]` "quantitative metrics … requires analyzing many cells … currently difficult". 적합 라벨 0(`fit*` 0). ⚠ `[도표]` Fig. 3c "after" 곡선이 S2 세 셀 어느 것과도 끝점이 다르다(D2) | **0 (14/14 편) — 성질이 또 다르다: 역문제가 없다.** 관측이 **직접 열역학 도함수**이고 적합이 없으므로 조건수·프로파일이 **정의될 자리가 없다**; 대신 **귀속이 가정**이다(ΔS 변화 → "비균질", `dE/dP` 감소 → "void"), 대안 원인(재료 변화 · 음극 상수항 · 이완 · 압력 비선형) 배제 시험 0. `identifiab*`·`uncertaint*`·`error bar` **0**. ★ `[재현]` **sum rule 위반 후보**: 비균질은 OCV 축을 뭉갤 뿐 SOC 축 적분을 못 바꾸는데 `[도표]` 전 곡선 평균 ≈ −3.5 ↔ 후 ≈ +1.5 — 논문은 이 뺄셈을 안 한다 | **해당 없음(Li 금속) → 그러나 남는다.** `[인쇄]` "Li metal anode, whose potential can reasonably be assumed to remain constant" → 전부 양극 귀속. `[해석]` 식 (6)·(10) 의 음극항은 **상수 ≠ 0**(S°(Li) 29 J mol⁻¹ K⁻¹ · **V_m 13.0 cm³ mol⁻¹** — `[재현]` 이 항만으로 5 MPa 에 **0.67 mV**, 실측 2.2 mV 의 30 %); "10 MPa → Li creep → pore 무시" 는 pore 항 논거이지 상수항 논거가 아니다. 100 사이클 뒤 음극 계면 기여 미검토 | **★★★ 있다 — 이 계보에서 가장 새로운 형태: 압력이 관측 변수다.** 제작 100/350 MPa · 운전 **10 / 20 MPa** · 진단 **ΔP = −5 / −10 MPa (≤0.01 MPa)** · 처방 **>300 MPa**(**미수행**, 4호 미인용, Li 금속 셀에 5호 상한의 4 배). ① ★ **압력 → OCV 기울기 = 계보 최초의 `E(P)`**: `[인쇄]` 2.2 mV/5 MPa · 2.3 mV/10 MPa(**비선형, 오목**) ② 압력 → 공극률 2 점(9.8 / 5.3 %) ③ **압력 → 용량 2 점**(86.0 / 84.0 % — 역상관) ④ `[도표]` S16 재가압 뒤 **+0.4 mV 비가역 오프셋 + 감압 중 +0.5 mV 표류** = 노화 신호와 같은 자릿수(5호 이력의 그림자) ⑤ 20 MPa Li 금속 셀 `[재현]` ≈225 h 사이클에 단락 보고 0(5호 190 h 와 대조 — 설계·전류 다름). ⚠ 로드셀 명시 0 · 스윕 0(2 구간) | **해당 없음**(Li 금속). `dead li`·`isolated`·`plating` 0. CE `[도표]` S1 첫 사이클 ≈85 %, 이후 ≈98–99 %(눈금 20 %p) | **★★★ 있다 — 계보 최초로 ASSB 실셀의 OCV 축 위에 열역학 도함수를 준다.** LiNbO₃-**NCM811** / LPSCl / Li, **2.5–4.3 V**, 기울기 있음. `[도표]` ΔS(OCV) 3.53–4.25 V ≈28 점(5 % SOC 간격) + dQ/dV(OCV) 봉우리 **3.60 / 3.73(H1→M) / 4.00 / 4.18 V** 신품 → 후 3.75 + 둔덕 4.05. ⚠ **SOC 축 없음** — `E(x)` 곡선은 여전히 0 장. 접촉 손실 = LAM 안/밖: **미언급** |
+
+**1호 단독 1.5 → 2편 ≈2.5 → 3편 ≈3.0 → 4편 ≈5.5 → 5편 ≈6.5 → 6편 ≈7.0 → 7편 ≈7.0 → 8편 ≈7.0 → 9편 ≈7.5 → 10편 ≈8.0 → 11편 누적 ≈8.5 칸이다.** (12·13·14편 ≈8.5 유지 — 12·13호는 종설, 14호는 새 칸 대신 **층 셋**: Q1 "비파괴 대리량" · Q6 "압력 → OCV" · Q8 "OCV 축 열역학 도함수".)
+
+★★ **2026-09-22 (14호 Oh et al. 2025) — 새 칸 0, 그러나 이 카드의 물음에 가장 직접적인
+실측 하나와 Q4 의 일곱 번째 성질이 들어왔다.**
+
+- ★★★ **접촉 손실(void)이 겉보기 용량에 안 보인다는 실측** — `[인쇄]` void 4.5→9.8 % 셀
+  86.0 % ↔ 4.4→5.3 % 셀 84.0 %. 이 카드의 물음이 "OCV 적합이 접촉 손실을 `LAM_PE` 로
+  **오독**하는가" 였다면, 이 창(50 사이클, 10–20 MPa)에서는 **오독할 신호 자체가 용량에
+  없다** — `θ_AM` 이 `p_c` 위에서 ≈1 로 버티는 1호 그림과 정합. `[해석]` 접촉 손실 → 용량
+  사상은 **문턱형**이고, 문턱 아래에서 OCV 적합은 `LAM_PE ≈ 0` 을 정확히 보고하되 **void 가
+  2 배 됐다는 사실을 놓친다** — 그것을 보는 것이 volumetry 다.
+- ★★ **Q4 의 성질 — 일곱 번째: 역문제가 없어서 유일성 물음이 사라진 자리.** 8호 이름 →
+  9호 지문 → 10호 명제 → 11호 재료 → 12·13호 0 → **14호: 관측이 직접 도함수라 조건수가
+  정의될 자리가 없고, 그 대신 "귀속의 유일성"(ΔS 변화 = 비균질? `dE/dP` 감소 = void?)을
+  아무도 묻지 않는다.** 여전히 **0/14**.
+- ★★ **Q2 의 형태 — 세 번째**: 1–10호 형태학, 11호 조작, **14호 열역학 도함수**. 그리고
+  이 편의 ΔS 는 스스로 우리 쌍(접촉 손실 + 계면 저항)을 **합친 신호**라고 정의한다 →
+  분리 관측 후보는 **volumetry 쪽**이다 (`[해석]`, 아래 새 제약).
+- ✅ **Q6 에 새 층** — 압력이 사이클 변수·개입이 아니라 **관측 변수**(소신호 ΔP = −5 MPa,
+  가역). 계보 최초의 `E(P)` 두 구간과 그 **비선형**(2 배).
+- ✅ **Q8 에 새 층** — OCV 축 위의 열역학 도함수 ≈28 점 × 3 셀 × 전·후. ⚠ SOC 축 없음.
+- ⚠ **13호 후속 4 순위(Oh *AEM* 2025) = 이 편 ref [10], 같은 저자·연구실** → 1 순위로 승격.
 
 ★★★★ **2026-09-22 (11호 Yu et al. 2024) — 두 칸이 움직였고, Q4 의 성질이 다섯
 번째로 바뀌었다.**
@@ -748,6 +771,37 @@ the system"** 이라고 쓴다 — 10호의 `[인쇄]` "mathematically **ill-pos
 requiring regularization" 의 **정반대 진술**이다.
 `[재현]` 10호 처방 14 항목 채점: **✅ 2 · ⚠ 5 · ❌ 7** (digest §18).
 
+### ★★ 열한 번째 — **For 에 붙는 야생 실측 + "관측 추가" 의 첫 실험 표본** (2026-09-22, Oh et al. 2025 · 실험, Hot Paper)
+
+`raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md` (*Angew. Chem. Int. Ed.* 64,
+e202514910; 서울대 + HMG-SNU JBRC). 컴파일: [[assb-maxwell-ocv-derivative-channels]].
+
+**이 편이 이 카드에 하는 일은 셋이다 — 실측 하나, 관측 축 하나, 경고 하나.**
+
+1. ★★★ **실측 (For)**: `[인쇄]` 50 사이클 뒤 XRM 공극률 **4.5 → 9.8 %**(10 MPa) ↔ **4.4 →
+   5.3 %**(20 MPa) 인데 용량 유지율은 **86.0 % ↔ 84.0 %** — void 가 2 배인 셀이 **더 높다**.
+   논문은 "similar … internal voids may not directly affect the early-cycle performance" 로
+   지나간다. `[해석]` 이 카드의 언어로: **접촉 손실이 이 창에서는 `Q_apparent` 에 전혀
+   안 들어간다.** OCV 적합은 `LAM_PE ≈ 0` 을 (정확히) 보고하고 **void 2 배를 놓친다** —
+   "OCV 만으로는 못 본다" 의 가장 깨끗한 형태(오독이 아니라 **무감**). 1호의 `θ_AM ≈ 1
+   above p_c` 와 정합하고, 4호(면적 10.4 % ↔ 60 %p)의 반대쪽 끝이다 — **사상이 문턱형**이라는
+   두 점.
+2. ★★ **관측 축 (관측 추가)**: 이 편은 `E(x)` 를 적합하지 않고 같은 상태함수의 두 편미분
+   `−F(∂E/∂T)_P = ΔS` · `F(∂E/∂P)_T = ΔV` 를 잰다 — [[constrained-crb-identifiability]] 의
+   "관측 추가" 칸에 들어가는 **첫 ASSB 실험 표본**이다. `[해석]` 우리 쌍에 대한 새 행의
+   부호: 균일 `LAM_PE`·완전 고립 접촉 손실은 둘 다 **아핀**이라 ΔS(x) 모양 불변(**새 행 = 0**);
+   void 는 `dE/dP` 를 움직인다(**새 행 ≠ 0**, 이 편의 주장) ⇒ **분리 후보 행은 volumetry**이고
+   **엔트로피메트리는 아니다** — 이 편은 반대로 ΔS 를 주 진단으로 둔다. ⚠ 실측 0, 우리 명제.
+3. ⚠ **경고 (Against 쪽 단서)**: `[인쇄]` ΔS 는 "contact loss **as well as** … interfacial
+   resistance" 를 한 신호로 받는다 — **이 편 스스로 우리 쌍을 합친 채널이라 정의한다.**
+   그리고 volumetry 의 `dE/dP` 는 `[재현]` **압력 구간에 2 배 의존**(0.44 ↔ 0.23 mV/MPa,
+   신품끼리)하고 **전·후 측정의 SOC 가 171 mV 다르다**(D7) — 관측 추가의 "새 행" 이
+   상수가 아니라 `(P, x)` 의 함수라는 뜻. 상수 `ΔV` 로 넣으면 모델 오차가 된다.
+
+**Q4 는 0/14 이고 성질이 일곱 번째로 바뀐다** — 역문제가 없어서 조건수가 정의될 자리가
+없고, 대신 **귀속의 유일성**(ΔS 변화가 비균질인가 재료 변화인가; `[재현]` SOC 축 적분이
+≈ −3.5 → ≈ +1.5 로 부호가 바뀌는 것은 비균질만으로는 안 나온다 — G8)을 아무도 묻지 않는다.
+
 ### Against / 단서 — "독립 관측이 존재할 수 있다" 쪽
 
 - **ex situ XRD 의 inactive AM 분율** = 원리적으로 `1 − θ_AM` 의 **measured 라벨**
@@ -1270,6 +1324,28 @@ state of interfacial contact **and** material properties." 9호의 곱 축퇴 `A
 5. ⚠ **13호의 수치를 근거로 옮기지 않는다.** Table 1 의 ASSB 열은 투영(무인용 5 항목),
    LCOS 는 입력 미공개(G1), `<5 MPa` 는 출처 미명시(G3), Fig. 2 의 다섯 창은 `[도표]` 이고
    산정 규칙 0(G8). "이 지면에 이렇게 적혀 있다" 까지만.
+
+### 새 제약 (2026-09-22, Oh 2025 — 열역학 도함수 진단이 들어오면서 붙은 것)
+
+1. ★★ **접촉 손실 → 용량 사상을 문턱형으로 적는다.** 4호(면적 10.4 % ↔ 60 %p)와 14호
+   (void 2 배 ↔ 용량 불변)가 같은 사상의 **양 끝**이다. 우리 3 항의 `θ_AM` 은 void 분율의
+   함수가 아니라 **퍼콜레이션의 함수**이고, 문턱 아래에서 OCV 적합은 `LAM_PE ≈ 0` 을
+   보고하면서 void 성장을 **놓친다**(오독이 아니라 무감). 분리 시험을 설계할 때 **문턱
+   위·아래 두 표본**이 필요하다.
+2. ★★ **관측 추가 후보를 volumetry 로 등록한다 — 단, 상수가 아니라 곡선으로.** `dE/dP` 는
+   압력 구간에 2 배(D4), SOC 에 미지(D7)로 의존한다. 근최적 폭 측정에 넣을 때는 `E(P, x)`
+   면을 먼저 모델링하고, 선형 `ΔV` 상수를 쓰지 않는다. 소신호(ΔP = −5 MPa, 가역)와
+   대신호(`P↑` 300 MPa, 비가역)를 **다른 연산자**로 적는다
+   ([[assb-pressure-reapplication-separation-test]]).
+3. ★ **엔트로피메트리를 분리 관측으로 쓰지 않는다.** 균일 `LAM_PE` 와 완전 고립 접촉
+   손실은 둘 다 아핀이라 ΔS(x) 모양이 안 바뀐다(`[해석]`). 대신 **아핀 전제의 검사**로
+   쓴다 — `E(x)` 와 `∂E/∂T(x)` 가 같은 (α, β) 로 재조정되는가 ([[halfcell-ocp-shape-invariance]]).
+4. ★ **sum rule 을 검사 항목으로 둔다.** `∫(dS/dx)dx` 는 상태함수 차이 — 전·후가 다르면
+   비균질이 아니라 재료·창·음극 변화다. 14호는 그 뺄셈을 안 했고(7호·11호와 같은 형태),
+   우리가 그림에서 할 수 있다.
+5. ⚠ **비파괴 진단의 라벨에도 문턱값 0 이다.** reuse/recondition/recycle 의 수치 기준이
+   없고 논문 스스로 "many cells … currently difficult" 라 적는다 — 14호의 등급을 Q3 의
+   measured 라벨로 옮기지 않는다.
 
 ## Status Log
 
@@ -1863,6 +1939,58 @@ state of interfacial contact **and** material properties." 9호의 곱 축퇴 `A
   **Gu et al., *AEM* 2023, 13, 2203153** (응력 측정 종설 — 9호 힘 시계열의 측정법 계보).
   큐 13~37 과 겹침 검색 **0 건**.
 
+- **2026-09-22 (ingest 14)** — `assb` 14호 논문 흡수 (큐 13번 — **"OCV 경쟁 접근"** 으로
+  등록된 편): `raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md` (Oh⁺, Kim⁺,
+  Kim, An, Kwon, **Choi Jang Wook**, *Angew. Chem. Int. Ed.* **64** (2025) e202514910,
+  doi `10.1002/anie.202514910`, **Batteries Hot Paper**, CC BY-NC-ND; 본문 9 쪽 + **SI .docx**
+  (Experimental + Note S1 + Fig. S1–S16, 표 0), PDF `fa35a5cdd5d3fcec…` · SI
+  `ce0b9a35c96ef99c…` 실측 일치). 접수→승인 **35 일**. 서울대 + **HMG-SNU JBRC(현대차)**.
+  자기 인용 **21/74**. ⚠ 지면은 *Angew. Chem.* 독일어판 조판이지만 **본문 영어**.
+  **실험 논문** (엔트로피메트리 3 셀 · volumetry 3+1 셀 · XRM 4 · SEM). 크로핑 본문 **6 장
+  전부 봄**, SI 16 장 중 **11 장 봄**(S1·S2·S3·S4·S7·S8·S9·S12·S13·S14·S16; 안 본 것 S5·S6·
+  S10·S11·S15 형태학 패널). 합자 잔존 0; ⚠ 대소문자 무시 집계에서 `SOH` 5 회는 전부 저자
+  "**Soh**n" — 약어 재집계.
+  **판정: "OCV 경쟁" 이 아니라 "OCV 의 관측 추가"** — `E(x)` 를 적합하지 않고 같은 상태함수의
+  두 편미분 `−F(∂E/∂T)_P` · `F(∂E/∂P)_T` 를 잰다. 분리 주장은 mechanical ↔ chemical 이고
+  `LAM_PE` ↔ 접촉 손실은 물음 자체가 없다. **결과 다섯**:
+  ① **새 칸 0 (14편 누적 ≈8.5/8 유지, Q4 0/14).** 층 셋 — Q1 비파괴 대리량 `F(dE/dP)`
+     42.7 → 34.7 µJ mol⁻¹ Pa⁻¹(−18 %) · Q6 계보 최초 `E(P)`(2 구간, **비선형 2 배**) · Q8
+     OCV 축 열역학 도함수 ≈28 점 × 3 셀.
+  ② ★★★ **void 2 배에 용량 불변**(86.0 ↔ 84.0 %, 역상관) — 접촉 손실이 문턱 아래에서
+     `Q_apparent` 에 안 들어간다 = OCV 적합의 **무감** 형태. 4호의 반대쪽 끝.
+  ③ ★★ **Q4 성질 일곱 번째** — 역문제 없음 → 조건수 정의 자리 없음, 귀속 유일성 미검토.
+     `[재현]` ΔS SOC 축 적분 부호 반전(≈ −3.5 → +1.5)은 비균질만으로 안 나온다(sum rule, G8).
+  ④ ★★ ΔS 는 `[인쇄]` "contact loss as well as interfacial resistance" 를 **한 신호로** 받는다
+     고 스스로 정의 → 분리 후보 행은 **volumetry**(우리 `[해석]`, 실측 0).
+  ⑤ ⚠ Li 금속 음극항을 "constant" 로 두지만 식 (10) 의 `V_m(Li)` 13 cm³ mol⁻¹ 은 **상수 ≠ 0**
+     이고 `[재현]` 실측 2.2 mV 의 30 % 크기; 실측 `dE/dP` 는 격자 몰부피로 설명되지 않는
+     **유효 컴플라이언스**.
+  **어긋남 15 건**(D1 Fig. 3a 이탈 ≈2–4 mV ↔ ΔS 함의 0.47 mV · **D2 Fig. 3c "after" 가 S2 세
+  셀 어느 것과도 다름** · **D4 신품 volumetry 42.5 ↔ 22.2 = 압력 구간 2 배** · D6 Fig. 6 등급
+  규칙 ↔ 본문 · **D7 전·후 volumetry OCV 171 mV 차** · D11 화학 단독 대조군 0 · D12 "similar"
+  로 덮인 역상관 · D13 음극 상수항). 공백 14 건(G1 등급 문턱 0 · G3 `dE` 판독 규칙 0 · G7
+  SOC 축 0 · G8 sum rule · G11 >300 MPa 미수행 · G12 (ΔS, ¬ΔV) 칸 없음).
+  컴파일: **새 개념 페이지 1** [[assb-maxwell-ocv-derivative-channels]] (관측 축이 새롭고
+  이 카드·CRB 페이지·압력 페이지 셋에서 반복 참조된다 — SCHEMA Page Thresholds 충족).
+  이 카드(채움표 14행 + Evidence **열한 번째** 절 + 새 제약 5 개 + 이 항목 + "주장하지 않는
+  것" 1 항) · [[assb-pressure-reapplication-separation-test]] (소신호 판) ·
+  [[assb-stack-pressure-operating-window]] (`E(P)` 첫 데이터 + 20 MPa Li 금속 ≈225 h) ·
+  [[assb-apparent-capacity-decomposition]] (void ≠ `Q_apparent` 실측) ·
+  [[constrained-crb-identifiability]] (관측 추가의 첫 ASSB 표본) · [[fitting-degeneracy]]
+  (Q4 계보 2025 표본 — 역문제 없는 형태) · [[halfcell-ocp-shape-invariance]] (두 번째 상태함수
+  검사). `index.md` +1.
+  13호와의 대조: **공통 원전 1 건** — **Oh *AEM* 2025**(13호 [34] = 14호 [10], 14호 저자의
+  **자기 논문**) ⇒ 13호 후속 4 순위가 14호 저자 자신의 저압 실셀이므로 **1 순위로 승격**.
+  우리 계보와의 인용: 5호 Doux 2020 = 14호 [35] · 4호 Shi 2020 미인용 · 1호 Bielefeld 2019
+  대신 Bielefeld 2022 = [69].
+  후속 후보 1 순위 = **Oh et al., *AEM* 2025, 15, 2404817**(ref [10], 저압 실셀 — Q6) · 2 순위 =
+  **Bielefeld et al., *JES* 2022, 169, 020539**(ref [69], pore 문턱 → 저항 급증 = 1호 `p_c` 의
+  실험판 — Q1) · 3 순위 = **Kim … Choi, *PNAS* 2022, 119, e2211436119**(ref [56], 엔트로피메트리
+  원전 — SOC 축·sum rule) · 4 순위 = **Kim … Yazami, Choi, *EES* 2020, 13, 286**(ref [57]) ·
+  5 순위 = **LePage 2019 *JES* 166, A89**(ref [70], "10 MPa Li creep") · 6 순위 = Lewis 2021
+  *Nat. Mater.* / Lu 2022 *Sci. Adv.*(refs [73][74], "void 가 초기 성능에 안 보인다" 원전).
+  큐 14~37 겹침 **0 건**(Bielefeld 는 2019 편만 큐에 있음).
+
 ## 이 페이지가 주장하지 않는 것
 
 - ASSB 실셀 자료를 **본 적이 없다.**
@@ -1921,3 +2049,14 @@ state of interfacial contact **and** material properties." 9호의 곱 축퇴 `A
   ③ **"접촉 손실을 임피던스 쪽에 둔다" 가 13호의 입장이라고 단정하지 않는다.** 13호는
   소속을 **적지 않았다** — 우리가 확인한 것은 **누락**이지 배정이 아니다. 12호의
   `LAM ⊃ 접촉 손실` 과 나란히 놓을 때도 "다른 방식으로 분리 물음이 없다" 까지만 말한다.
+- ★ **2026-09-22 (14호 Oh 2025) — 세 가지를 주장하지 않는다.**
+  ① **"volumetry 가 `LAM_PE` ↔ 접촉 손실을 가른다" 고 하지 않는다.** 새 감도 행의 부호표
+  (ΔS 행 = 0 / `dE/dP` 행 ≠ 0)는 **우리 `[해석]`** 이고 실측 0 이다 — 논문은 그 물음을
+  두지 않았고, 폭 측정기로 검사할 명제로만 등록한다.
+  ② **42.7 µJ mol⁻¹ Pa⁻¹ 를 "ΔV" 라는 재료 상수로 옮기지 않는다.** 같은 신품에서 압력
+  구간에 따라 2 배(D4), 전·후 측정의 SOC 가 171 mV 다르다(D7). `E(P, x)` 면이 모델링되기
+  전까지 "이 셀에서 이 구간에 이 값" 까지만.
+  ③ **"void 는 용량에 안 보인다" 를 일반화하지 않는다.** 50 사이클 · 조건당 셀 1 · 2 점 ·
+  0.5C 의 것이고, 4호는 같은 자릿수의 void 에서 98 % 손실을 봤다. 우리가 받는 것은
+  **사상이 문턱형이라는 두 점**까지다. 그리고 **Q4 는 0/14** — 역문제가 없다는 것은
+  "유일성이 필요 없다" 가 아니라 "귀속의 유일성을 아무도 안 물었다" 이다.

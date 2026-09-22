@@ -1,10 +1,10 @@
 ---
 title: 제약 Cramér–Rao 하한으로 재는 식별 가능성
 created: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-22
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md]
+sources: [raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -86,7 +86,7 @@ DW-deep·σ = 10 mV·95 %): `V_max` 등식 하나를 걸면 `y₁₀₀` 2.5 →
 | 조작 | 무엇을 바꾸나 | 예 | 우리 실측 |
 |---|---|---|---|
 | **제약 추가** | `𝒪` 를 좁힌다. 정보는 안 늘고 **모르는 방향이 준다**. 대신 제약이 참값에서 성립해야 하고, 안 성립하면 **모델 오차**가 된다 | 컷오프 전압 등식 (Birkl 2017, Mohtat 2019 식 (P)) | Phase 1e/1h — 우리 자료에서는 **손해**. 등식이 참값에서 127 mV/54 mV 폭으로 깨지고, σ_min 은 3~6 % 오를 뿐 (정본: `mode-observability/results/phase1e/`, `.../phase1h/`) |
-| **관측 추가** | `S` 에 **행을 더한다**. 새 행이 기존 행과 선형독립이면 정보가 실제로 는다 | 셀 팽창 `Δt_c` (Mohtat 2019) | **미측정** — 우리가 아직 안 해 본 축 |
+| **관측 추가** | `S` 에 **행을 더한다**. 새 행이 기존 행과 선형독립이면 정보가 실제로 는다 | 셀 팽창 `Δt_c` (Mohtat 2019); ★ **ASSB 실험 표본 (2026-09-22)**: OCV 의 두 편미분 `−F(∂E/∂T)_P`·`F(∂E/∂P)_T` (Oh 2025 — [[assb-maxwell-ocv-derivative-channels]]) | **미측정** — 우리가 아직 안 해 본 축. `[해석]` Oh 2025 의 두 행에 대해 손으로 적은 부호: 균일 `LAM_PE`·완전 고립 접촉 손실은 **ΔS 행 = 0**(아핀 → intensive 량 불변), void 는 **`dE/dP` 행 ≠ 0** — Mohtat 의 "LFP 팽창 행 = 0" 과 같은 종류의 판정 |
 | **창 이동** | `S` 의 **행을 갈아 끼운다**. 개수가 같아도 다른 정보 | 데이터 창 `DW = [Q_s, Q_e]` (Lee 2020) | **미측정** — 상세는 [[data-window-identifiability]] |
 
 **관측 추가가 이득이 되는 조건은 기계적으로 검사할 수 있다** (Mohtat 식 39):
@@ -135,3 +135,4 @@ DW-deep·σ = 10 mV·95 %): `V_max` 등식 하나를 걸면 `y₁₀₀` 2.5 →
 - [[birkl-ocv-degradation-diagnostic]] — 컷오프 등식 처방의 앞선 사례
 - [[dubarry-mechanistic-mode-synthesis]] — Mohtat 의 LLI/LAM 어휘 출처
 - [[data-window-identifiability]] — 같은 기계를 **관측 창** 축에서 돌린 자매편(Lee 2020)
+- [[assb-maxwell-ocv-derivative-channels]] — **관측 추가**의 ASSB 실험 표본(Oh 2025): 새 행이 `(P, x)` 의 함수라 상수로 못 넣는다는 경고까지
