@@ -120,9 +120,73 @@ g64 N1·N2 preimage 이동 (N1: 판정 함수의 `auto = …` → `auto = True`;
 ### 2-4. 전체 pytest · strict smoke
 
 ```
-python -m pytest tests/ -q          <FULL_PYTEST>
-./scripts/smoke_e2e.sh (clean 커밋) <SMOKE>
+python3 -m pytest tests/ -q -p no:cacheprovider
+  3 failed · 1759 passed · 1 skipped · 2 xfailed  in 2542.90s (0:42:22)   EXIT=1
+./scripts/smoke_e2e.sh                 ✅ pipeline smoke 통과 · ❌ 0건        EXIT=0
+  시작 HEAD = 종료 HEAD = 397057c820005834e0de199f19682a0f4f905c3a (실행 중 이동 없음)
 ```
+
+**실패 3건의 분류** — 셋 다 이 컨테이너의 환경 조건이고, 이번 diff 에 RUN_SCOPE 파일은 0건이다.
+
+| 실패 | 실측 원인 | 분류 |
+|---|---|---|
+| `test_docs_lint.py::test_a_smoke_run_cannot_be_promoted_to_a_canonical_report` | `tools/preserve.py:4647 PreserveError [promote] results/grid_fit_v4 에 manifest 가 없다`. 그 경로가 **이 기계에 없다** (`ls` 실패 · `git ls-files` 빈 출력 = 미추적 실행 산출물) | 환경 |
+| `test_lifecycle_e2e.py::test_grid_then_fit_then_finalize_completes_across_processes` | `src/baseline.py:203 RuntimeError 승인한 완방상태 캐시가 이 실행과 다른 runtime 로 계산됐습니다` — 캐시는 커널 `…-fc-v33`, 이 기계는 `…-fc-v37`. **52차 P0-5 가 재계산을 거부** | 환경 · **층이 설계대로 동작** |
+| `test_lifecycle_e2e.py::test_a_released_leg_can_be_started_again` | 같은 원인 (같은 캐시) | 환경 · 동상 |
+
+두 번째·세 번째는 실패라기보다 **fail-closed 가 제 일을 한 것**이다 — 승인이 특정 바이트를
+가리키므로 런타임이 바뀌면 조용히 재계산하지 않는다. 우리가 승인을 갱신하지 않는 한 이
+기계에서는 계속 빨갛다.
+
+### 2-5. ★ 자체 발견 (이번 라운드에 우연히 재현) — F50b 가 **옆 검사에 남아 있다**
+
+smoke 를 처음 돌렸을 때 **5건이 실패**했다. 원인을 산출물에서 직접 읽었다:
+
+```
+results/_smoke/art_g/manifest_start.yaml      git_commit 90ea155e…   (우리 문서 커밋)
+results/_smoke/art_g/manifest.yaml
+   start_provenance                           git_commit 397057c8…   (다른 에이전트의 wiki 커밋)
+   source_digest                              e9ee7475dea7de1d       ← 양쪽 동일
+   source_digest_changed_during_run           False
+   git_commit_changed_during_run              False
+```
+
+**코드는 한 글자도 안 바뀌었는데**(`source_digest` 동일) resume 이 다른 git commit 에서
+일어나 `start_파일_일치` 가 깨졌고, 그 하나가 5건으로 연쇄했다 (resume journal · 보고서
+갱신 · 격리 복원 · archive wrapper 승격 · artifact_index).
+
+`src/io.py:1683` 의 비교 목록:
+
+```python
+sdiff = sorted(k for k in ("source_digest", "git_commit", "git_dirty",
+                           "env", "input_sha256", "halfcell_recipe")
+               if disk.get(k) != sp.get(k))
+checks["start_파일_일치"] = (not sdiff, …)
+```
+
+바로 **여섯 줄 아래**에 이 저장소가 같은 결함을 한 번 고친 기록이 있다:
+
+> ★ F50b — 판정 기준은 **실제로 돌아간 코드가 바뀌었는가**(`source_digest`)다. `git_commit` 은
+> 문서만 커밋해도 바뀌므로 그것까지 실패로 보면 무해한 변경에 발목이 잡힌다
+> (**실측: 실행 중 회답 문서를 커밋했더니 걸렸다**).
+
+F50b 는 `실행중_코드불변` 에서 `git_commit` 을 뺐다. 그런데 **`start_파일_일치` 의 목록에는
+남아 있다** — 같은 결함이 옆 검사에 살아 있다.
+
+**대조 실험 (같은 코드, 같은 기계)**
+
+| 실행 | 실행 중 git commit | 결과 |
+|---|---|---|
+| 1회차 | 3회 이동 (우리 2 + 다른 에이전트 1) | **❌ 5건 · EXIT=1** |
+| 2회차 | 0회 (시작 HEAD = 종료 HEAD) | **✅ 0건 · EXIT=0** |
+
+**고치지 않았다.** `src/io.py` 는 **RUN_SCOPE 안**이라 한 줄만 바꿔도 `source_digest` 가
+움직여 기존 산출물이 전부 무효화된다(재생성 ~28분 + 10시간). 고칠지, 고친다면 어느 라운드에
+묶을지는 **리뷰어 판단을 받는다** — 질문 6.
+
+한 가지는 지금도 말할 수 있다: 이 결함은 **본 실행을 막지는 않는다**(본 실행은 clean 커밋에서
+돌고 중간에 커밋하지 않는다). 대신 **개발 중 검증을 조용히 빨갛게 만들어** "실패 5건" 을
+코드 결함으로 오독하게 만든다 — 우리가 방금 그 오독의 직전까지 갔다.
 
 ### 2-5. 두 환경 결과 (T1 최소 종결 조건 4)
 
@@ -146,8 +210,8 @@ test_the_interpreter_fixture_measures_its_own_premise[False] passed
 ```
 
 `class: canonical` · `sealed: true` 다. 즉 **시험이 운영 등록부에 canonical 권한 기록을
-직접 쓴다** — 리뷰어가 센 "264 real leg=L grid canonical" 이 자라는 경로가 이것이고,
-conftest 의 세션 말 정리(155–191줄)는 이 파일을 지우지 않았다.
+직접 쓴다** — 리뷰어가 센 "264 real leg=L grid canonical" 이 자라는 경로가 이것이다.
+그리고 이 파일은 그 pytest 세션이 끝난 뒤에도 **남아 있었다**(아래 정정 참조).
 
 조치: **커밋하지 않았다.** 리뷰 외부(스크래치패드)로 옮겨 실행 전 상태로 되돌렸고,
 tracked 366 = 디스크 366 으로 일치함을 확인했다. 기존 sealed 기록은 **하나도 건드리지
@@ -172,9 +236,23 @@ provenance 검증이 아니다" 라고 한 것의 반대쪽이기도 하다: **�
 구분하지 못한다.** 65차 Q5 답의 261/264 구분(합성 261 · 실제 264)이 이 두 문자열에
 대응하고, 양쪽 모두 canonical 권한으로 적힌다.
 
+**★ 정정 — 이 175건은 세션 종료 시 지워졌다.** 전체 회귀가 끝난 뒤 다시 세니 디스크
+366 = tracked 366 으로, 새로 생긴 175건이 **하나도 남아 있지 않았다**. 즉 conftest 의
+세션 말 정리는 **정상 종료 경로에서는 동작한다.** 우리가 처음 쓴 문장("conftest 정리가
+지우지 않는다")은 175건에 대해서는 **틀렸고**, 위 §2-6 머리의 단일 기록 하나에 대해서만
+맞다. 그 기록은 **다른 세션(게이트 6파일 회귀, 05:52)** 에서 생겨 그 세션이 끝난 뒤에도
+남아 있었고, 우리가 손으로 옮겨 냈다.
+
+그래서 이 라운드가 실제로 보인 것은 둘이다:
+1. **노출 창** — 회귀가 도는 **동안** 운영 등록부에 실행당 **175건, 전량 canonical** 이
+   들어가 있다. 그 사이에 운영 reader 가 읽거나 실행이 중단되면 그대로 남는다.
+2. **누수 1건** — 정상 종료 정리를 통과하지 못한 기록이 실제로 하나 있었다. 리뷰어가
+   "세션 끝에 지우는 conftest 만으로는 **중단·동시 실행**을 격리하지 못한다" 고 적은
+   그 자리다.
+
 이것을 새 발견으로 세지 않는다 (누적 문제는 이미 신고됐다). 격리 계약의 설계 입력으로만
-쓴다 — 리뷰어 권고 1(임시 등록부 주입 + 운영 등록부 전후 불변 확인)이 닫아야 할 대상이
-**실행당 175건, 전량 canonical** 이라는 규모를 이제 숫자로 안다.
+쓴다 — 닫아야 할 대상이 "실행 뒤에 남는 쓰레기" 가 아니라 **실행 중 175건이 canonical
+권한으로 운영 등록부 안에 존재하는 시간 구간** 이라는 것이 이번 측정의 값이다.
 
 ## 3. 질문 (판단이 갈릴 수 있는 곳 — 되돌릴 수 있다)
 
@@ -191,7 +269,12 @@ provenance 검증이 아니다" 라고 한 것의 반대쪽이기도 하다: **�
 4. **T1 의 fixture 는 venv 로 전제를 만든다.** venv 를 못 만들거나 실측이 기대와 다르면 skip
    (이유에 실측값). CI 의 고정 환경에서 활성·비활성 둘 다 돈다는 증거는 이번엔 이 기계의 실행
    출력뿐이다 — "적어도 한 고정 환경" 요구를 이것으로 볼 수 있는가?
-5. **E2-R 후속** — 공유 판정 함수 + 같은-token 음성 + 상수-True 회귀로 보류를 닫은 것으로
+6. **§2-5 의 F50b 잔존을 어떻게 다루는가.** `start_파일_일치` 에서 `git_commit` 을 빼는 것이
+   F50b 의 판단과 일관되지만, `src/io.py` 는 RUN_SCOPE 라 `source_digest` 가 움직인다. 선택지는
+   (a) 이번 라운드에 고치고 산출물을 재생성한다 (b) 다음 RUN_SCOPE 변경에 묶는다 (c) 검사
+   의미가 다르므로 그대로 둔다(그러면 "resume 은 같은 commit 에서만 유효" 가 계약이 되고,
+   그 문장을 문서에 적는다). 우리 판단은 (b) 이지만 되돌릴 수 있다.
+7. **E2-R 후속** — 공유 판정 함수 + 같은-token 음성 + 상수-True 회귀로 보류를 닫은 것으로
    봐도 되는가, 아니면 planned lifecycle 시험(`test_gate63_defensive.py` 479·487 줄의 token
    관측)에도 음성 관측을 넣어야 하는가? (후자는 lifecycle 중간에 lock 을 풀어야 해서 관측이
    상태를 바꾼다 — 그래서 안 넣었다.)
