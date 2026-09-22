@@ -1,0 +1,251 @@
+{
+ "slug": "ncube2026_ionic_interdiffusion_lco_lgps_multiscale",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Workflow for the computational multiscale approach adopted in this research paper. The procedure starts with initial atomic structures used in first-principles calculations, DFT, and AIMD. The data generated from these calculations is used as a training set to develop a Deep Learning Potential for Machine Learning (ML) Molecular Dynamics. The ion transport parameters obtained from MD simulations are subsequently used to develop the continuum model. Finally, the results from both Machine Learning MD and the Continuum Model are analyzed to reach a coherent conclusion and provide recommendations. 2",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    455.5,
+    565.7,
+    702.1
+   ],
+   "w": 2227,
+   "h": 1029,
+   "dpi": 300,
+   "src": "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Ball and stick models of optimized bulk structures of a) LNTO, b)LGPS, and c) LCO; Red, blue, light green, dark green, tan, yellow, purple, and gray balls are oxygen (O), cobalt (Co), lithium (Li), niobium (Nb), tantalum (Ta), sulfur (S), germanium (Ge), and phosphorous (P) atoms, respectively; d) surface energies per unit area for 18 LNTO surfaces; Light blue bar shows the (131) surface with the lowest surface energy. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.) 3",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    439.5,
+    565.8,
+    702.1
+   ],
+   "w": 2227,
+   "h": 1095,
+   "dpi": 300,
+   "src": "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Schematic of the workflow for developing a Deep Learning Potential (DLP) for Machine Learning Molecular Dynamics (MLMD). Atomic coordinates obtained from AIMD data are used as inputs to neural networks that predict atomic energies and forces for MLMD simulations. The embedding neural network generates descriptors from atomic coordinates and passes them to the fitting neural networks. The fitting neural networks output the atomic energy contributions, which are summed to obtain the total energy and corresponding forces. thickness of the passivating interphase layer on the LGPS side esti­ mated by the 1D continuum model was used to calculate the charge- transfer resistance at the cathode|solid-electrolyte (LCO|LGPS) interface. Distribution of lithium inside the LCO cathode was assumed to follow a solid solution mechanism, where mass transfer occurs through a diffusion process model",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.9,
+    566.0,
+    205.0
+   ],
+   "w": 2228,
+   "h": 647,
+   "dpi": 300,
+   "src": "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
+   "blank": 0.631
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. DFT vs DLP energies (a) and forces (b–f) for atoms at the LCO|LGPS interface, i.e., cobalt (Co), germanium (Ge), lithium (Li), oxygen (O), and phosphorus (P). FDFT and EDFT are forces and energy, respectively, calculated from DFT-generated data. FDLP and EDLP are predicted forces and energy, respectively, generated using the DLP. A dashed 45◦line shows an ideal, perfect correlation between trained and predicted data. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    473.4,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 994,
+   "dpi": 300,
+   "src": "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Equilibrium plots of temperature (T, K), kinetic energy (KE, eV), potential energy (PE, eV/atom), and pressure (P, bar/atom) for the Machine Learning Molecular Dynamics simulation. The simulation of the (001)LGPS|(010)LCO interface was performed for ~3 ns using a Deep Learning Potential. The thermodynamic properties begin to stabilize at approximately 2 ns, indicating the system approaches equilibrium beyond this time. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    580.6,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 547,
+   "dpi": 300,
+   "src": "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
+   "blank": 0.835
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Interdiffusion of Co atom into LGPS (a) NVT at 0 ns, (b) NVT at 1.5 ns, (c) NVT at 3 ns. Red, blue, green, yellow, purple, and gray balls are O, Co, Li, S, P, and Ge atoms, respectively. The red-blueish region represents LCO, and the green-yellowish region represents LGPS. The mixed region at the interface observed at 1.5 ns and 3 ns indicates ionic interdiffusion and intermixing, leading to the formation and growth of an interphase layer. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.) bulk values in Table 2. At the interface, the atomic diffusion coefficients follow the trend: O > Li > P > S > Ge > Co. In contrast, the bulk structures showed a different trend, which can be attributed to the dif­ ferences in the local chemical environments at the interface compared to those within individual bulk s",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    49.9,
+    566.0,
+    289.0
+   ],
+   "w": 1107,
+   "h": 997,
+   "dpi": 300,
+   "src": "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
+   "blank": 0.258
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Mean Square Displacement (MSD in m2) vs Time (nanoseconds) profiles of atomic species associated with (010)LCO|(001)LGPS interface. Cobalt (Co) in green exhibits a distinct MSD profile compared to other ions, germanium (Ge) in red, lithium (Li) in dark blue, oxygen (O) in yellow, phosphorus (P) in purple, and sulfur (S) in cyan. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.1,
+    296.8,
+    192.4
+   ],
+   "w": 1106,
+   "h": 594,
+   "dpi": 300,
+   "src": "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. (a) Evolution of the phase variables with time, where LGPS is located on the left, and LCO is on the right side. The sharp interface at 10 s is shown by the dashed line, whereas the interdiffusion-induced diffused interphase obtained after 150 h is denoted by the solid black line. (b) The distribution of various species after 150 h within the LCO, interphase, and LGPS domains. Concentrations of oxygen (O), cobalt (Co), sulfur (S), phosphorus (P), and germanium (Ge) are shown by the black, blue, red, green, and magenta lines, respectively. (c) The increase in interphase layer thickness and pressure with time is denoted by the solid black (left axis) and solid red (right axis) lines, respectively. A rapid initial increase in interphase layer thickness is observed, which slows down over time due to the compressive pressure-induced decrease in diffusion coefficients. A power law, fit",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    503.2,
+    565.8,
+    673.4
+   ],
+   "w": 2227,
+   "h": 710,
+   "dpi": 300,
+   "src": "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Final trajectory structures of the LCO|LNTO interface at 2 ns with no Cobalt (blue) interdiffusion for the LCO surfaces a) (104), b) (010), c) (110). The blue- dominant region is LCO, while the red-orange region corresponds to LNTO. No ionic interdiffusion or intermixing is observed throughout the simulation, indicating that the structure remains stable over the entire trajectory. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.) 8",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    603.6,
+    565.8,
+    702.1
+   ],
+   "w": 2227,
+   "h": 412,
+   "dpi": 300,
+   "src": "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
+   "blank": 0.513
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. (a) Distribution of lithium concentration within the LCO cathode close to the end of discharge at 0.1C rate. No variation in electrolyte salt concentration occurs within LGPS because it is a single-ion conducting solid electrolyte. (b) Distribution of hydrostatic stress within the LCO cathode and LGPS solid electrolyte as observed close to the end of discharge. The randomness in stress distribution observed within the LCO cathode can be attributed to the randomness in the orientation of the anisotropic grains. (c) Comparison between the model-predicted (solid line) and experimentally observed (circular symbols) voltage vs capacity discharge curves for LCO|liquid-electrolyte (LCO|LE, shown in black), LCO|LGPS (red), and LCO|LNTO|LGPS (blue) systems. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.) me",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    566.0,
+    214.0
+   ],
+   "w": 2228,
+   "h": 685,
+   "dpi": 300,
+   "src": "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
+   "blank": 0.713
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1 Calculated loss function parameters for the LCO|LGPS and LCO|LNTO interface reported in terms of the Mean Absolute Error (MAE) and Root Mean Square Error (RMSE) of the DLP model. Unit LCO|LGPS LCO|LNTO Energy MAE eV/atom 4.8 × 10−5 9.70 × 10−4 Energy RMSE eV/atom 6.4 × 10−5 2.14 × 10−3 Force MAE eV/Å 1.8 × 10−3 5.83 × 10−2 Force RMSE eV/Å 2.8 × 10−3 7.97 × 10−2",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.3
+   ],
+   "w": 2213,
+   "h": 2987,
+   "dpi": 300,
+   "src": "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 Diffusion coefficients (D in m2/s) of atoms in the LCO|LGPS system. Calculated D values for bulk structures (LCO and LGPS) are compared with reported experi­ mental values in the middle columns. Calculated diffusion coefficients at the (010)LCO|(100) LGPS interface are presented in the last column.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    768.8
+   ],
+   "w": 2161,
+   "h": 3001,
+   "dpi": 293,
+   "src": "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
+   "blank": 0.869
+  }
+ ]
+}
