@@ -1,0 +1,35 @@
+# bms-balancing 전체 회귀 — 이 컨테이너 (Linux, fcntl/Bash 있음), 2026-09-22, R17 대응 뒤
+# python3 -m pytest tests/ -q -p no:cacheprovider
+........................................................................ [ 17%]
+........................................................................ [ 34%]
+........................................................................ [ 51%]
+.................F...................................................... [ 69%]
+........................................................................ [ 86%]
+.........................................................                [100%]
+=================================== FAILURES ===================================
+_________ test_i6d_04_working_state_test_count_matches_the_collection __________
+
+    def test_i6d_04_working_state_test_count_matches_the_collection():
+        """[R6 내부 DF-04] "86 passed 기대" 가 87 개짜리 트리에 남았다 (Codex R5 §1 이 지난 라운드에 74/75 로 같은
+        종류를 짚었다). 문서의 기대 수는 수집된 테스트 수와 같아야 한다."""
+        import subprocess
+        out = subprocess.run([sys.executable, "-m", "pytest", "tests/", "--collect-only", "-q", "-p", "no:cacheprovider"],
+                             cwd=ROOT, capture_output=True, text=True).stdout
+        n = int(re.search(r"(\d+) tests? collected", out).group(1))          # 매개변수화된 항목까지 센 수 = "N passed"
+        m = re.search(r"# (\d+) passed 기대", _doc("WORKING_STATE.md"))
+>       assert m and int(m.group(1)) == n, (m and m.group(0), n)
+E       AssertionError: ('# 390 passed 기대', 417)
+E       assert (<re.Match object; span=(52364, 52379), match='# 390 passed 기대'> and 390 == 417)
+E        +  where 390 = int('390')
+E        +    where '390' = <built-in method group of re.Match object at 0x7fcd3dfc72e0>(1)
+E        +      where <built-in method group of re.Match object at 0x7fcd3dfc72e0> = <re.Match object; span=(52364, 52379), match='# 390 passed 기대'>.group
+
+tests/test_r6_internal.py:235: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_r6_internal.py::test_i6d_04_working_state_test_count_matches_the_collection
+1 failed, 416 passed in 611.33s (0:10:11)
+EXIT=1
+
+# 위 1 failed 는 WORKING_STATE.md 의 시험 개수 계약(390→417, 실행 중 문서 갱신). 그 시험만 재실행:
+# python3 -m pytest tests/test_r6_internal.py::test_i6d_04_working_state_test_count_matches_the_collection -q
+1 passed in 4.57s
