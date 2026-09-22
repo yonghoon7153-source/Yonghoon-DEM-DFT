@@ -39,7 +39,7 @@
 | 조건 | 상태 |
 |---|---|
 | **P0-1** producer 결속 · trusted launcher · **P0-4** typed 보존 영수증 소비 · 독립 replay · immutable bundle | **미착수** (65차 요청문 §0 과 같다) |
-| **⑩ 등록부 격리** (tracked root JSON 541 = 261 synthetic · 264 real canonical · 16 re-key) | **미착수** — 별도 계약. 리뷰어 권고 "둘 다"(임시 등록부 주입 + 운영 등록부 불변 확인 · synthetic 을 canonical 권한으로 유입시키지 않기 · reader 가 읽는지/authority 를 주는지 같이 고정 · 기존 기록은 append-only supersession) 을 §81 에 적었다. 기존 class/삭제 계약 변경은 **별도 승인 대상**이라 손대지 않았다 |
+| **⑩ 등록부 격리** (tracked root JSON 541 = 261 synthetic · 264 real canonical · 16 re-key) | **미착수** — 별도 계약. ★ **이번 라운드에 현행범으로 관측**: 아래 §2-6 |  리뷰어 권고 "둘 다"(임시 등록부 주입 + 운영 등록부 불변 확인 · synthetic 을 canonical 권한으로 유입시키지 않기 · reader 가 읽는지/authority 를 주는지 같이 고정 · 기존 기록은 append-only supersession) 을 §81 에 적었다. 기존 class/삭제 계약 변경은 **별도 승인 대상**이라 손대지 않았다 |
 | **Q4 권고** (고정 `error_code`·검사 단계 구조화, 문맥 매트릭스) | **미착수**. 이번 증인 문구는 전부 시험의 고정 문구 (production reason · digest · 경로 없음) |
 | 보조 인터프리터의 신뢰 경계 | **64차와 같다** — `_replay_context` 가 띄우는 인터프리터도 같은 startup 코드를 실행한다. 부모가 독립적으로 믿는 것은 그 경로 위의 **바이트를 부모가 직접 읽은 값**이다 (docstring 에 명시). 이것을 신고로 유지한다 |
 
@@ -132,6 +132,27 @@ test_the_interpreter_fixture_measures_its_own_premise[True]  passed
 test_the_interpreter_fixture_measures_its_own_premise[False] passed
 활성 판 시험(on fixture) · 비활성 판 시험(off fixture) 전부 같은 실행에서 통과 — skip 0
 ```
+
+### 2-6. ⑩ 등록부 오염 — 이번 회귀 실행이 쓴 기록 하나 (실측)
+
+65차 Q5 의 답("541 = 261/264/16, 이 누적 문제는 이미 신고돼 새 발견으로 세지 않는다")을
+확인하는 **현행범 관측**이다. 이번 라운드의 게이트 회귀(`pytest` gate65·64·63 + evidence)가
+돌던 중 `docs/22p_gap/_exec_class/` 에 미추적 파일 하나가 생겼다:
+
+```json
+{"content_id":"5a0c20901bd73e9eb1690b8a4ebd9b6b774725314241cde37e7e08b6bf4c7a30",
+ "evidence":"산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+ "execution_class":"canonical","recorded_at":"2026-09-22T05:52:29Z","sealed":true}
+```
+
+`class: canonical` · `sealed: true` 다. 즉 **시험이 운영 등록부에 canonical 권한 기록을
+직접 쓴다** — 리뷰어가 센 "264 real leg=L grid canonical" 이 자라는 경로가 이것이고,
+conftest 의 세션 말 정리(155–191줄)는 이 파일을 지우지 않았다.
+
+조치: **커밋하지 않았다.** 리뷰 외부(스크래치패드)로 옮겨 실행 전 상태로 되돌렸고,
+tracked 366 = 디스크 366 으로 일치함을 확인했다. 기존 sealed 기록은 **하나도 건드리지
+않았다** (리뷰어: JSON 삭제·소급 수정·class/삭제 계약 변경은 별도 승인 대상).
+격리 계약 자체는 여전히 **미착수**다.
 
 ## 3. 질문 (판단이 갈릴 수 있는 곳 — 되돌릴 수 있다)
 

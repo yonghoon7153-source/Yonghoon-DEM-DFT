@@ -134,7 +134,12 @@ the-token-probe-negative-is-asserted-g65         G63T  E2-R (token is False → 
 
 ## 이 라운드가 하지 않은 것
 
-- **⑩ 등록부 격리** — 별도 계약 (리뷰어 권고 "둘 다": 임시 등록부 주입 + 운영 등록부 불변 확인
+- **⑩ 등록부 격리** — 별도 계약. ★ 이번 라운드에 **현행범 관측**: 게이트 회귀가 도는 중
+  `docs/22p_gap/_exec_class/` 에 `class: canonical` · `sealed: true` 기록 하나가 생겼다
+  (`5a0c2090…a30.json`, `recorded_at 2026-09-22T05:52:29Z`, evidence `leg=L phase=grid
+  class=canonical`). conftest 의 세션 말 정리가 지우지 않는다. **커밋하지 않고** 스크래치패드로
+  옮겨 실행 전 상태로 되돌렸다 (tracked 366 = 디스크 366 확인). 기존 sealed 기록은 하나도
+  건드리지 않았다. 상세는 `GATE66_REQUEST.md` §2-6. 권고 "둘 다": 임시 등록부 주입 + 운영 등록부 불변 확인
   · synthetic 을 canonical 권한으로 유입시키지 않기 · reader 가 읽는지·authority 를 주는지 같이
   고정 · 기존 기록은 append-only supersession). 기존 class/삭제 계약 변경은 별도 승인 대상 —
   이번 라운드에 손대지 않았다.
