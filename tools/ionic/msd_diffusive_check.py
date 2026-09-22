@@ -278,6 +278,20 @@ def lognormal_from_rsd(rsd):
             "median_over_mean": math.exp(mu)}
 
 
+def _resample_D(A, t, m, starts, block, n_o, rng):
+    """블록 재표본 **한 번** → D [cm²/s]. (`block_bootstrap_D` 와 3 온도 동시판이 **공유**한다)
+
+    떼어 놓은 이유는 복제 방지다 — 같은 재표본 규약이 두 군데에 있으면 한쪽만 고쳐진다.
+    """
+    import numpy as _np
+    n_blk = int(math.ceil(n_o / block))
+    pick = rng.integers(0, len(starts), size=n_blk)
+    idx = _np.concatenate([_np.arange(starts[k], min(starts[k] + block, n_o))
+                           for k in pick])[:n_o]
+    sl = _np.polyfit(t[m], A[idx].mean(axis=0)[m], 1)[0]
+    return sl / 6.0 * 1e-4
+
+
 def block_bootstrap_D(msd_per_origin, t_ps, lo, hi, block, n_boot=400, seed=0):
     """시간원점 **블록** 부트스트랩으로 런 내부 σ(D) 를 **실측**한다.
 
@@ -304,17 +318,9 @@ def block_bootstrap_D(msd_per_origin, t_ps, lo, hi, block, n_boot=400, seed=0):
         return None
     n_o = A.shape[0]
     block = max(1, min(int(block), n_o))
-    n_blk = int(math.ceil(n_o / block))
     starts = _np.arange(0, n_o, block)
     rng = _np.random.default_rng(seed)
-    Ds = []
-    for _ in range(int(n_boot)):
-        pick = rng.integers(0, len(starts), size=n_blk)
-        idx = _np.concatenate([_np.arange(starts[k], min(starts[k] + block, n_o))
-                               for k in pick])[:n_o]
-        curve = A[idx].mean(axis=0)
-        sl = _np.polyfit(t[m], curve[m], 1)[0]
-        Ds.append(sl / 6.0 * 1e-4)
+    Ds = [_resample_D(A, t, m, starts, block, n_o, rng) for _ in range(int(n_boot))]
     Ds = _np.asarray(Ds, float)
     mean = float(Ds.mean())
     return {"sigma_D": float(Ds.std(ddof=1)),
@@ -323,6 +329,240 @@ def block_bootstrap_D(msd_per_origin, t_ps, lo, hi, block, n_boot=400, seed=0):
             "hi68": float(_np.percentile(Ds, 84.135)),
             "median_over_mean": float(_np.median(Ds) / mean) if mean else None,
             "n_boot": int(n_boot), "block": block, "n_origin": n_o}
+
+
+# ── 블록 길이 선택 · 3 온도 **동시** 부트스트랩 (회신 BU · 2026-09-22 합의) ───────
+#: 회신 BU 에서 1저자와 합의해 **결과를 보기 전에** 박은 것 셋을 코드로 내린다.
+#:   ① 블록 길이 `b` 를 고르는 **규칙** — σ(b) 가 plateau 에 드는 최소 b
+#:   ② **세 온도를 한 번의 재표본에서 동시에** 뽑아 Ea 를 **직접** 적합
+#:   ③ 아레니우스 `reduced χ²` 를 한 열로 기록 (dof = 1 — **약한 지표**)
+#: ②가 핵심이다. 온도별 D 를 먼저 내고 ± 를 전파하면 그 단계에서 **대칭 가정**이
+#: 슬그머니 들어온다 — D 표본분포는 오른쪽으로 치우쳐 있다(he2018 `Fig. S2` 실독).
+#: 직접 적합은 그 우회를 없앤다.
+KB_EV = 8.617333262e-5       # eV/K
+BLOCK_PLATEAU_TOL = 0.05     # 연속 상대변화 문턱. ⚠ **우리가 정한 값**이다 —
+                             #    회신 BU 에 "더 나은 기준이 있으면 그쪽을 따른다" 고 적었다.
+BLOCK_PLATEAU_RUN = 3        # "연속 세 b"
+
+
+def ea_from_lnD(temps_K, lnD):
+    """무가중 아레니우스 적합. → (Ea_eV, lnD0, [잔차…])
+
+    `ln D = ln D0 − Ea/(kT)` 를 `x = 1/(kT)` 직선으로 푼다 ⇒ 기울기 = −Ea.
+
+    ⛔ **가중하지 않는다.** 가중하려면 σ(ln D) 가 있어야 하는데 그건 이 적합을 B 회
+    반복해야 나온다(순환). 가중판이 필요하면 부트스트랩이 끝난 뒤 **밖에서** 한다.
+    """
+    n = len(temps_K)
+    if n < 2 or len(lnD) != n:
+        return None
+    x = [1.0 / (KB_EV * float(T)) for T in temps_K]
+    mx = sum(x) / n
+    my = sum(lnD) / n
+    sxx = sum((xi - mx) ** 2 for xi in x)
+    if sxx <= 0:
+        return None
+    slope = sum((xi - mx) * (yi - my) for xi, yi in zip(x, lnD)) / sxx
+    icpt = my - slope * mx
+    resid = [yi - (icpt + slope * xi) for xi, yi in zip(x, lnD)]
+    return -slope, icpt, resid
+
+
+def reduced_chi2(resid, sigmas, n_par=2):
+    """`χ²_red = Σ(r/σ)² / (n − n_par)`. → float 또는 None
+
+    ⚠ **dof = 1 이다** (3 점 · 2 모수). 회신 BU: *"약한 지표"* — **거친 이상**(온도 역전
+    같은 것)만 잡는다. 그래도 찍는 이유는 he2018 `Fig. S5a` 의 역전을 드러내는 것이
+    정확히 이 열이기 때문이다.
+
+    ⛔ 이 함수가 **못 하는 것**: σ 가 틀리면 χ²_red 도 같이 틀린다 — σ 의 타당성을
+    검증하지 않는다. σ 는 **같은 부트스트랩**에서 온 값이어야 한다.
+    """
+    dof = len(resid) - int(n_par)
+    if dof < 1 or len(sigmas) != len(resid):
+        return None
+    if any((s is None or s <= 0) for s in sigmas):
+        return None
+    return sum((r / s) ** 2 for r, s in zip(resid, sigmas)) / dof
+
+
+def joint_ea_bootstrap(runs, lo, hi, block, n_boot=400, seed=0):
+    """**세 온도를 한 재표본에서 동시에** 뽑아 Ea 를 직접 적합한다 (회신 BU 합의).
+
+    `runs` = `[{"T_K": 600.0, "msd_per_origin": (n_o, n_lag), "t_ps": (n_lag,)}, …]`
+
+    한 복제(replicate)에서 **온도마다 독립으로** 블록을 뽑아 D 를 셋 만들고, 그 자리에서
+    3 점 아레니우스를 적합해 Ea 하나를 얻는다. 이걸 `n_boot` 회 반복해 **Ea 분포**를 낸다.
+
+    온도 간 draw 가 독립인 근거: 드라이버가 온도마다 다른 RNG 를 쓴다
+    (`disorder_ensemble_diffusion.py:427` — `seed = args.seed + 1000*ci + int(T)`).
+    같은 시드 번호라는 것 외에 pairing 근거가 없다 (`arrhenius_compat.py` 초판이 틀린 지점).
+
+    ⛔ 이 함수가 **못 하는 것**
+      · `block` 을 **스스로 못 정한다** — `choose_block_plateau()` 로 먼저 고른다.
+        그리고 고른 b 는 **전 시드·전 온도에 하나로 고정**해야 한다(R 의 분모가 섞인다).
+      · 온도가 2 개면 Ea 는 나오지만 `χ²_red` 는 **못 낸다**(dof = 0) — None 으로 적는다.
+      · 시드 간(구조) 산포는 안 잰다. 그건 `arrhenius_compat.py --vr` 의 분자다.
+      · 궤적이 실제로 확산적인지 판정하지 않는다 — 앞 게이트(C1·plateau)가 할 일이다.
+    """
+    import numpy as _np
+    if not runs or len(runs) < 2:
+        return None
+    temps, prep, point_lnD = [], [], []
+    for r in runs:
+        A = _np.asarray(r["msd_per_origin"], float)
+        t = _np.asarray(r["t_ps"], float)
+        if A.ndim != 2 or A.shape[0] < 2:
+            return None
+        m = (t >= lo) & (t <= hi)
+        if m.sum() < 3:
+            return None
+        n_o = A.shape[0]
+        b = max(1, min(int(block), n_o))
+        #: 점추정은 **정본 MTO 곡선**(`mean_curve`)에서 낸다 — 부트스트랩 행렬은 공통
+        #: 원점 집합이라 짧은 lag 의 원점 수가 정본보다 적다(아래 `msd_per_origin_from_traj`
+        #: 의 "못 하는 것" 참조). σ 만 그 행렬에서 내고, **값은 정본이 이긴다.**
+        base = _np.asarray(r["mean_curve"], float) if r.get("mean_curve") is not None \
+            else A.mean(axis=0)
+        if base.shape != t.shape:
+            return None
+        D0 = _np.polyfit(t[m], base[m], 1)[0] / 6.0 * 1e-4
+        if D0 <= 0:
+            return None
+        temps.append(float(r["T_K"]))
+        point_lnD.append(math.log(D0))
+        prep.append((A, t, m, _np.arange(0, n_o, b), b, n_o))
+    rng = _np.random.default_rng(seed)
+    Ea_s, lnD_s = [], []
+    for _ in range(int(n_boot)):
+        row = []
+        for (A, t, m, starts, b, n_o) in prep:
+            D = _resample_D(A, t, m, starts, b, n_o, rng)
+            if D <= 0:
+                row = None
+                break
+            row.append(math.log(D))
+        if row is None:
+            continue
+        fit = ea_from_lnD(temps, row)
+        if fit is None:
+            continue
+        Ea_s.append(fit[0])
+        lnD_s.append(row)
+    if len(Ea_s) < 2:
+        return None
+    Ea_s = _np.asarray(Ea_s, float)
+    L = _np.asarray(lnD_s, float)
+    sig_lnD = [float(L[:, i].std(ddof=1)) for i in range(L.shape[1])]
+    pfit = ea_from_lnD(temps, point_lnD)
+    rc_point = reduced_chi2(pfit[2], sig_lnD) if pfit else None
+    rc_boot = [reduced_chi2(ea_from_lnD(temps, list(row))[2], sig_lnD) for row in L]
+    rc_boot = [v for v in rc_boot if v is not None]
+    return {
+        "Ea_eV": float(pfit[0]) if pfit else None,
+        "Ea_boot_mean_eV": float(Ea_s.mean()),
+        "Ea_boot_median_eV": float(_np.median(Ea_s)),
+        "Ea_sigma_eV": float(Ea_s.std(ddof=1)),
+        "Ea_lo68_eV": float(_np.percentile(Ea_s, 15.865)),
+        "Ea_hi68_eV": float(_np.percentile(Ea_s, 84.135)),
+        "temps_K": temps,
+        "lnD_point": point_lnD,
+        "sigma_lnD_by_T": sig_lnD,
+        "red_chi2_point": rc_point,
+        "red_chi2_boot_median": float(_np.median(rc_boot)) if rc_boot else None,
+        "dof": len(temps) - 2,
+        "red_chi2_note": ("dof = %d. ⚠ **약한 지표** — 거친 이상(온도 역전)만 잡는다."
+                          % (len(temps) - 2)),
+        "n_boot_used": int(len(Ea_s)), "n_boot_asked": int(n_boot),
+        "block": int(block), "window_ps": [float(lo), float(hi)],
+        "design": "세 온도 **동시 재표본 → Ea 직접 적합** (회신 BU). "
+                  "온도별 D 를 먼저 내고 ± 를 전파하지 **않는다** (대칭 가정 유입 방지).",
+    }
+
+
+def block_sigma_curve(sigma_of_block, blocks):
+    """블록 사다리마다 σ 를 재서 곡선으로. → `[(b, σ), …]` (σ 가 None 인 b 는 뺀다)
+
+    `sigma_of_block(b) -> float|None` 를 받는다 — σ(D) 든 σ(Ea) 든 **같은 규칙**을 쓴다.
+    회신 BU 의 규칙은 **σ(Ea)** 에 대한 것이다(그게 판정의 분모라서). σ(D) 는 진단용이다.
+    """
+    out = []
+    for b in blocks:
+        try:
+            s = sigma_of_block(int(b))
+        except Exception:
+            s = None
+        if s is not None and s > 0:
+            out.append((int(b), float(s)))
+    return out
+
+
+def choose_block_plateau(curve, tol=BLOCK_PLATEAU_TOL, run=BLOCK_PLATEAU_RUN, n_boot=None):
+    """σ(b) 곡선에서 **plateau 에 드는 최소 b** 를 고른다 (회신 BU · 결과 보기 전 확정).
+
+    plateau 판정: **연속 `run` 개의 b** 에서 σ 의 **이웃 간 상대변화가 모두 ≤ `tol`**.
+    (`run = 3` 이면 상대변화는 2 개다 — 회신 문구 *"연속 세 b"* 의 문자 그대로다.
+     "3 개의 변화" 로 읽는 판도 가능해서 `run` 을 인자로 뒀다. 고른 판을 기록에 남긴다.)
+
+    → `{"block": b|None, "sigma": σ|None, "curve": [...], "why": "...", "rule": {...}}`
+
+    ⛔⛔ **plateau 가 없으면 b 를 고르지 않는다.** `block=None` 을 돌려주고 호출자는
+    σ_within 을 *"못 구했다"* 로 적고 **판정을 보류**한다. 아무 b 나 골라 숫자를 만들지 않는다.
+
+    ⛔⛔ **규칙이 성립하는 범위에 두 가지 가드가 있다 (2026-09-22 실측으로 찾았다).**
+      ① **몬테카를로 바닥.** 부트스트랩 SD 자체의 MC 오차는 대략 `σ/√(2B)` 다.
+         `tol` 이 그 바닥에 가까우면 **잡음이 규칙을 통과시킨다.** 합성 궤적 실측:
+         같은 곡선에서 `B=150` 이면 `b=12`, `B=3000` 이면 `b=7` 을 골랐다 —
+         **복제 수가 답을 바꿨다.** ⇒ `n_boot` 을 주면 `tol ≥ 3/√(2B)` 를 요구하고,
+         모자라면 **고르지 않는다**(필요한 B 를 같이 알려 준다).
+      ② **사다리 간격.** 상대변화는 이웃 b 의 **간격에 비례**한다. 성긴 사다리는 변화를
+         부풀리고 촘촘한 사다리는 줄인다 — 천천히 오르기만 하는 곡선도 사다리를 촘촘히
+         하면 언젠가 통과한다. 합의한 규칙은 *"b 를 1 부터 키우며"*, 즉 **연속 정수**다.
+         ⇒ plateau 삼각의 b 가 연속이 아니면 **고르지 않는다.**
+      두 가드는 규칙을 **바꾸지 않는다** — 규칙이 안 통하는 자리에서 **기권**할 뿐이다.
+      (합의한 규칙을 조용히 고치는 것이 더 나쁘다.)
+
+    ⛔ 이 함수가 **못 하는 것**: 곡선이 단조 증가만 하는 **원인**(상관시간이 창보다 긴가?)
+    을 말하지 못한다. 못 골랐다는 사실만 말한다.
+    """
+    c = sorted(curve, key=lambda p: p[0])
+    rule = {"tol": float(tol), "run": int(run),
+            "definition": "연속 run 개 b 의 이웃 간 상대변화가 모두 ≤ tol",
+            "guards": ["MC 바닥 tol ≥ 3/√(2B)", "plateau 삼각의 b 는 연속 정수"]}
+    base = {"block": None, "sigma": None, "curve": c, "rule": rule}
+    if n_boot:
+        floor = 1.0 / math.sqrt(2.0 * float(n_boot))
+        rule["mc_floor"] = floor
+        if tol < 3.0 * floor:
+            need = int(math.ceil(0.5 * (3.0 / tol) ** 2))
+            return {**base,
+                    "why": f"복제가 모자란다 — σ 의 MC 오차 ≈ {floor:.3f} 이고 "
+                           f"tol {tol} 은 그 3 배({3 * floor:.3f}) 미만이다. "
+                           f"**잡음이 규칙을 통과시킨다.** B ≥ {need} 로 올리고 다시 재라. "
+                           "b 를 고르지 않는다."}
+    if len(c) < run:
+        return {**base,
+                "why": f"곡선의 점이 {len(c)} 개 — 연속 {run} 개를 볼 수 없다. "
+                       "**b 를 고르지 않는다**(판정 보류)."}
+    for i in range(len(c) - run + 1):
+        rels = [abs(c[j + 1][1] - c[j][1]) / c[j][1] for j in range(i, i + run - 1)]
+        if not all(r <= tol for r in rels):
+            continue
+        gaps = [c[j + 1][0] - c[j][0] for j in range(i, i + run - 1)]
+        if any(g != 1 for g in gaps):
+            return {**base, "rel_changes": rels, "gaps": gaps,
+                    "why": f"b = {c[i][0]} 에서 문턱은 넘었지만 사다리 간격이 {gaps} 다 — "
+                           "합의 규칙은 **연속 정수 b** 에 대한 것이고, 성긴 간격은 "
+                           "상대변화를 부풀린다(= 문턱을 쉽게 만든다). "
+                           f"b = {c[i][0]} 부근을 **1 간격으로 다시 재라.** 지금은 안 고른다."}
+        return {"block": c[i][0], "sigma": c[i][1], "curve": c, "rule": rule,
+                "rel_changes": rels, "gaps": gaps,
+                "why": f"b = {c[i][0]} 부터 연속 {run} 점의 상대변화가 "
+                       f"{max(rels):.3f} ≤ {tol} — plateau 최소 b."}
+    best = min(abs(c[j + 1][1] - c[j][1]) / c[j][1] for j in range(len(c) - 1))
+    return {**base,
+            "why": f"plateau 없음 — 최선의 이웃 상대변화가 {best:.3f} > {tol}. "
+                   "**b 를 고르지 않는다.** σ_within 은 '못 구했다' 로 적고 판정을 보류한다."}
 
 
 def rsd_report(rec, block=None, boot=None):
@@ -1029,6 +1269,71 @@ def mto_from_traj(json_path, save_fs=None, cache=True):
         except (OSError, ValueError) as e:
             print(f"   ⚠ 되쓰기 실패({type(e).__name__}) — 이번만 쓰고 버린다")
     return out
+
+
+def msd_per_origin_from_traj(json_path, save_fs=None, n_lag=150):
+    """`traj.xyz` 에서 **원점별** MSD 곡선 행렬을 만든다 → 블록 부트스트랩의 입력.
+
+    → `{"t_ps": (n_lag,), "msd_per_origin": (n_origin, n_lag), "n_origin": …,
+        "lag_max": …, "save_fs": …, "save_fs_assumed": bool}`  또는 None
+
+    **왜 필요한가.** `block_bootstrap_D`/`joint_ea_bootstrap` 이 재표본하는 단위는
+    *시간 원점*인데, 정본 MTO 경로(`msd_multi_origin`)는 원점을 **이미 평균해서** 준다.
+    그래서 2026-09-22 까지 부트스트랩은 **입력 생산자가 없는 선언**이었다 — 이 함수가
+    그 배선이다.
+
+    ⛔⛔ **이 곡선의 평균은 정본 MTO 곡선과 같지 않다.**
+      `msd_multi_origin` 은 lag 마다 쓸 수 있는 원점을 **전부**(nt−L 개) 쓴다 — 짧은 lag
+      일수록 원점이 많다. 재표본은 **교환가능한 단위**가 있어야 하므로 여기서는 모든 lag 를
+      덮는 **공통 원점 집합**(`t0 < nt − lag_max`)만 쓴다. ⇒ 짧은 lag 의 표본이 정본보다
+      적고, 평균 곡선이 미세하게 다르다.
+      **그래서 이 행렬은 σ 전용이다.** D·Ea 의 **값**은 정본 곡선에서 내고
+      (`joint_ea_bootstrap(runs=[{… "mean_curve": 정본곡선}])`), 여기서는 **산포만** 가져온다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 궤적이 없으면 아무것도 못 한다 (원리적 복구 불가 — 새로 돌려야 한다).
+      · `save_fs` 를 못 읽으면 캠페인 기본 100 fs 를 **가정하고 그 사실을 돌려준다**
+        (`save_fs_assumed=True`). 조용히 가정하지 않는다.
+      · 원점 사이 상관을 **고치지 않는다** — 그건 블록 길이가 할 일이다.
+      · 드리프트를 빼지 않는다 (정본 경로와 같은 규약: 빼지 않는다).
+    """
+    import numpy as _np
+    jp = pathlib.Path(json_path)
+    traj = jp.parent / "traj.xyz"
+    if not traj.exists():
+        return None
+    assumed = save_fs is None
+    if assumed:
+        save_fs = 100.0
+    try:
+        frames = _ase_read(traj, ":")
+    except BaseException as e:
+        print(f"   ⚠ traj 읽기 실패: {type(e).__name__} {e}")
+        return None
+    if not frames or len(frames) < 8:
+        return None
+    sym = frames[0].get_chemical_symbols()
+    li = [i for i, s in enumerate(sym) if s == "Li"]
+    if not li:
+        print("   ⚠ traj 에 Li 가 없다")
+        return None
+    cart = _np.array([f.get_positions() for f in frames])[:, li]
+    nt = cart.shape[0]
+    lag_max = max(2, nt // 2)
+    #: lag 격자는 `msd_multi_origin` 과 **같은 식**이다 — 시간축이 정본과 어긋나면
+    #: 점추정(정본 곡선)과 σ(이 행렬)를 같은 창에서 못 쓴다.
+    lags = _np.unique(_np.linspace(1, lag_max, min(int(n_lag), lag_max)).astype(int))
+    n_o = nt - int(lags[-1])
+    if n_o < 2:
+        return None
+    M = _np.empty((n_o, len(lags)), float)
+    for j, L in enumerate(lags):
+        d = cart[int(L):int(L) + n_o] - cart[:n_o]      # (n_o, n_Li, 3)
+        M[:, j] = (d ** 2).sum(-1).mean(axis=1)
+    return {"t_ps": [float(L) * save_fs / 1000.0 for L in lags],
+            "msd_per_origin": M, "n_origin": int(n_o), "lag_max": int(lags[-1]),
+            "save_fs": float(save_fs), "save_fs_assumed": bool(assumed),
+            "note": "공통 원점 집합. 평균 곡선은 정본 MTO 와 **다르다** — σ 전용."}
 
 
 def _ase_read(path, index=":"):
@@ -2275,6 +2580,117 @@ def selftest():
     _b1 = block_bootstrap_D(_A, _t, 2.0, 50.0, block=1, n_boot=120, seed=1)
     chk(_b1 and _b1["sigma_D"] > 0,
         "[음성] block=1 도 돈다 (낱개 추출 — 상관을 무시하므로 σ 가 작게 나온다)")
+    _same = _np.array([2.0 * _t for _ in range(12)])          # 원점이 전부 동일
+    _bs = block_bootstrap_D(_same, _t, 2.0, 50.0, block=3, n_boot=60, seed=2)
+    chk(_bs and _bs["sigma_D"] == 0.0,
+        "[음성] 원점이 전부 같으면 σ_D = **정확히 0** (산포는 원점 간에서만 온다)")
+
+    # ── 회신 BU ①: 블록 길이 plateau 규칙 ─────────────────────────────
+    _cur = [(1, 1.0), (2, 1.6), (3, 2.2), (4, 2.50), (5, 2.52), (6, 2.53), (8, 2.54)]
+    _pl = choose_block_plateau(_cur)
+    chk(_pl["block"] == 4 and abs(_pl["sigma"] - 2.50) < 1e-12,
+        "plateau: 연속 3 점 상대변화 ≤5 % 인 **최소 b** 를 고른다 (b=4)")
+    chk(choose_block_plateau([(1, 1.0), (2, 1.2), (3, 1.5), (4, 1.9), (5, 2.4)])["block"] is None,
+        "[음성] 단조 상승이면 **b 를 고르지 않는다** (판정 보류)")
+    _two = [(1, 1.0), (2, 2.0), (3, 2.02), (4, 3.0), (5, 4.0)]
+    chk(choose_block_plateau(_two)["block"] is None,
+        "[음성] **연속 2 점**만 평평하면 안 고른다 — run=3 이 실제로 강제된다")
+    chk(choose_block_plateau(_two, run=2)["block"] == 2,
+        "[음성] run=2 로 주면 같은 곡선에서 b=2 를 고른다 — run 이 배선돼 있다")
+    chk(choose_block_plateau([(1, 1.0), (2, 1.0)])["block"] is None
+        and "볼 수 없다" in choose_block_plateau([(1, 1.0), (2, 1.0)])["why"],
+        "[음성] 점이 run 보다 적으면 **못 본다**고 말한다 (평평해 보여도 안 고른다)")
+    chk("plateau 없음" in choose_block_plateau(
+        [(1, 1.0), (2, 1.2), (3, 1.5), (4, 1.9), (5, 2.4)])["why"],
+        "[음성] 못 고른 이유를 문장으로 남긴다")
+    #: 가드 ① 몬테카를로 바닥 — 2026-09-22 실측(B=150 → b=12, B=3000 → b=7)에서 나왔다
+    _mc = choose_block_plateau(_cur, n_boot=150)
+    chk(_mc["block"] is None and "복제가 모자란다" in _mc["why"] and "B ≥" in _mc["why"],
+        "[음성] 복제가 적으면 **고르지 않는다** — tol 이 MC 바닥에 잠기면 잡음이 통과한다")
+    chk(choose_block_plateau(_cur, n_boot=10000)["block"] == 4,
+        "[음성] 복제가 충분하면 같은 곡선에서 정상적으로 b 를 고른다")
+    #: 가드 ② 사다리 간격 — 성긴 사다리는 상대변화를 부풀려 문턱을 쉽게 만든다
+    _gap = choose_block_plateau([(1, 1.0), (2, 1.6), (4, 2.50), (6, 2.52), (8, 2.53)])
+    chk(_gap["block"] is None and "사다리 간격" in _gap["why"] and _gap["gaps"] == [2, 2],
+        "[음성] plateau 삼각의 b 가 연속이 아니면 **고르지 않는다** (1 간격으로 다시 재라)")
+    _sc = block_sigma_curve(lambda b: None if b == 3 else float(b), [2, 3, 4])
+    chk(_sc == [(2, 2.0), (4, 4.0)],
+        "[음성] σ 를 못 낸 b 는 곡선에서 **빠진다** (0 으로 안 채운다)")
+    chk(block_sigma_curve(lambda b: 1 / 0, [2, 3]) == [],
+        "[음성] σ 계산이 터져도 곡선이 비는 것으로 끝난다 (전체가 안 죽는다)")
+
+    # ── 회신 BU ②③: 3 온도 동시 부트스트랩 + reduced χ² ───────────────
+    _Ea, _D0, _Ts = 0.25, 1.0e-3, [600.0, 800.0, 1000.0]
+    _lnD = [math.log(_D0) - _Ea / (KB_EV * T) for T in _Ts]
+    _fit = ea_from_lnD(_Ts, _lnD)
+    chk(_fit and abs(_fit[0] - _Ea) < 1e-9 and max(abs(r) for r in _fit[2]) < 1e-9,
+        "아레니우스 적합이 Ea 를 정확히 되돌린다 (잔차 ≈ 0)")
+    chk(ea_from_lnD([600.0], [1.0]) is None and ea_from_lnD([600.0, 800.0], [1.0]) is None,
+        "[음성] 점이 1 개거나 길이가 안 맞으면 None")
+    chk(ea_from_lnD([600.0, 600.0], [1.0, 2.0]) is None,
+        "[음성] 온도가 전부 같으면 None (기울기가 정의 안 된다)")
+    chk(abs(reduced_chi2([0.1, -0.2, 0.1], [0.1, 0.1, 0.1]) - 6.0) < 1e-12,
+        "reduced χ²: dof = 3 − 2 = 1 로 나눈다")
+    chk(reduced_chi2([0.1, 0.1], [0.1, 0.1]) is None,
+        "[음성] 점 2 개면 dof = 0 ⇒ None (0 으로 안 찍는다)")
+    chk(reduced_chi2([0.1, 0.1, 0.1], [0.1, 0.0, 0.1]) is None
+        and reduced_chi2([0.1, 0.1, 0.1], [0.1, 0.1]) is None,
+        "[음성] σ 가 0 이거나 개수가 안 맞으면 None")
+
+    def _mk(T, noise, n_o=24, seed=7):
+        r = _np.random.default_rng(seed + int(T))
+        sl = 6e4 * _D0 * math.exp(-_Ea / (KB_EV * T))       # Å²/ps
+        return {"T_K": T, "t_ps": _t,
+                "msd_per_origin": _np.array(
+                    [sl * _t * (1 + noise * r.standard_normal()) for _ in range(n_o)])}
+    _runs = [_mk(T, 0.05) for T in _Ts]
+    _jb = joint_ea_bootstrap(_runs, 2.0, 50.0, block=4, n_boot=150, seed=3)
+    chk(_jb and abs(_jb["Ea_eV"] - _Ea) < 0.05 and _jb["Ea_sigma_eV"] > 0,
+        "3 온도 동시 재표본 → Ea 직접 적합 (진값 0.25 eV 를 되찾고 σ > 0)")
+    chk(_jb["Ea_lo68_eV"] < _jb["Ea_hi68_eV"] and _jb["dof"] == 1
+        and _jb["block"] == 4 and _jb["window_ps"] == [2.0, 50.0],
+        "[음성] block·창·dof 를 **기록한다** (재현 못 하면 숫자가 아니다)")
+    chk(_jb["red_chi2_point"] is not None and _jb["red_chi2_boot_median"] is not None,
+        "reduced χ² 를 점추정과 재표본 양쪽에서 낸다")
+    chk(joint_ea_bootstrap(_runs[:1], 2.0, 50.0, block=4) is None,
+        "[음성] 온도가 1 개면 None (Ea 를 흉내내지 않는다)")
+    chk(joint_ea_bootstrap(_runs, 200.0, 300.0, block=4) is None,
+        "[음성] 창에 점이 3 개 미만인 온도가 있으면 None")
+    _det = [{"T_K": T, "t_ps": _t,
+             "msd_per_origin": _np.array([6e4 * _D0 * math.exp(-_Ea / (KB_EV * T)) * _t
+                                          for _ in range(10)])} for T in _Ts]
+    _jd = joint_ea_bootstrap(_det, 2.0, 50.0, block=2, n_boot=40, seed=4)
+    chk(_jd and _jd["Ea_sigma_eV"] == 0.0 and _jd["red_chi2_point"] is None,
+        "[음성] 원점이 전부 같으면 σ_Ea = 0 이고 **χ² 는 None** (0 으로 나누지 않는다)")
+    _ov = [dict(r) for r in _runs]
+    _ov[0]["mean_curve"] = _runs[0]["msd_per_origin"].mean(axis=0) * 2.0
+    _jo = joint_ea_bootstrap(_ov, 2.0, 50.0, block=4, n_boot=40, seed=3)
+    chk(_jo and _jo["Ea_eV"] < _jb["Ea_eV"] - 1e-6,
+        "[음성] `mean_curve` 가 **실제로 읽힌다** — 600 K D 를 2 배 하면 Ea 가 내려간다")
+
+    # ── 부트스트랩 입력 생산자 (배선 확인) ─────────────────────────────
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as _td:
+        _p = pathlib.Path(_td)
+        with open(_p / "traj.xyz", "w") as _fh:
+            _rg = _np.random.default_rng(11)
+            for _k in range(40):
+                _fh.write("2\nLattice=\"10.0 0.0 0.0 0.0 10.0 0.0 0.0 0.0 10.0\"\n")
+                for _a2 in range(2):
+                    _xyz = _rg.standard_normal(3) + _k * 0.1
+                    _fh.write("Li %.6f %.6f %.6f\n" % tuple(_xyz))
+        json.dump({}, open(_p / "msd.json", "w"))
+        _po = msd_per_origin_from_traj(_p / "msd.json", save_fs=100.0)
+        chk(_po and _po["msd_per_origin"].shape == (40 - _po["lag_max"], len(_po["t_ps"])),
+            "생산자: 공통 원점 행렬 (n_origin, n_lag) 을 만든다 — 부트스트랩 입력이 생겼다")
+        chk(_po["save_fs_assumed"] is False
+            and msd_per_origin_from_traj(_p / "msd.json")["save_fs_assumed"] is True,
+            "[음성] save_fs 를 **가정했는지**를 돌려준다 (조용히 가정하지 않는다)")
+        chk(abs(_po["t_ps"][0] - 0.1) < 1e-12,
+            "[음성] 시간축이 save_fs 에서 온다 (100 fs ⇒ 첫 lag 0.1 ps)")
+        json.dump({}, open(_p / "msd.json", "w"))
+        chk(msd_per_origin_from_traj(_p.parent / "없는곳" / "msd.json") is None,
+            "[음성] traj.xyz 가 없으면 None (지어내지 않는다)")
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
 
@@ -2320,6 +2736,20 @@ def main():
                          "로그정규 비대칭 구간 · median/mean. ⛔ RSD > 0.30 이면 대칭 ± 를 "
                          "**출력하지 않는다**(2σ 가 음수로 간다). ⚠ He 식은 lag 창을 제한한 "
                          "적합에 대해 **검증되지 않았다**(회신 BT §6-e) — 정본은 부트스트랩이다.")
+    ap.add_argument("--ea_boot", metavar="T=JSON,T=JSON,T=JSON",
+                    help="**3 온도 동시 부트스트랩 → Ea 직접 적합** (회신 BU 2026-09-22). "
+                         "`600=…/msd.json,800=…,1000=…`. 같은 시드의 세 온도를 준다. "
+                         "블록은 --block_scan 으로 고르거나 --rsd_block 으로 박는다.")
+    ap.add_argument("--block_scan", metavar="1,2,4,8",
+                    help="--ea_boot 와 함께: 블록 사다리에서 σ(Ea) plateau 를 찾아 b 를 고른다. "
+                         "⛔ plateau 가 없으면 **b 를 고르지 않고 판정을 보류한다**(종료코드 2).")
+    ap.add_argument("--n_boot", type=int, default=400, metavar="B",
+                    help="부트스트랩 복제 수 (기본 400)")
+    ap.add_argument("--save_fs", type=float, default=None, metavar="FS",
+                    help="프레임 저장 간격 [fs]. 안 주면 msd.json 에서 읽고, 그것도 없으면 "
+                         "캠페인 기본 100 fs 를 **가정하고 그 사실을 찍는다**. "
+                         "⚠ 이 값이 틀리면 시간축 전체가 틀린다.")
+    ap.add_argument("--out", metavar="JSON", help="결과 JSON 경로 (--ea_boot 용)")
     ap.add_argument("--rsd_block", type=int, default=None, metavar="N",
                     help="--rsd 와 함께: 시간원점 **블록 부트스트랩**의 블록 길이(원점 개수). "
                          "⛔ **기본값을 두지 않는다** — 상관시간에 걸리므로 궤적을 보고 사람이 "
@@ -2355,8 +2785,90 @@ def main():
         return selftest()
     if a.directional:
         return cmd_directional(a)
+    # ── 3 온도 동시 부트스트랩 → Ea (회신 BU · 2026-09-22) ───────────────
+    if a.ea_boot:
+        import numpy as _np
+        runs, bad = [], []
+        for tok in a.ea_boot.split(","):
+            if "=" not in tok:
+                raise SystemExit(f"⛔ --ea_boot 항목 형식은 `온도=msd.json` 이다: {tok!r}")
+            Ts, jp = tok.split("=", 1)
+            jp = pathlib.Path(jp.strip())
+            #: ⛔ `resolve_save_fs` 는 **튜플** `(값, 가정여부, 출처)` 를 준다.
+            #:   그대로 넘기면 시간축이 통째로 망가진다 (2026-09-22 에 여기서 한 번 밟았다).
+            sf_v, sf_assumed, sf_src = resolve_save_fs(jp, a.save_fs)
+            po = msd_per_origin_from_traj(jp, save_fs=sf_v)
+            if po is None:
+                bad.append(str(jp))
+                continue
+            d = json.load(open(jp)) if jp.exists() else {}
+            mc, src = None, "공통원점 행렬 (⚠ 정본 MTO 아님)"
+            if d.get("msd_Li_A2_mto") and len(d["msd_Li_A2_mto"]) == len(po["t_ps"]):
+                mc = d["msd_Li_A2_mto"]
+                src = "정본 MTO 곡선 (msd_Li_A2_mto)"
+            elif d.get("msd_Li_A2_mto"):
+                print(f"   ⚠ {jp.parent.name}: 정본 MTO 길이 {len(d['msd_Li_A2_mto'])} ≠ "
+                      f"재생성 lag {len(po['t_ps'])} — **점추정을 정본에서 못 낸다**. "
+                      "행렬 평균으로 간다 (추정자가 다르다는 것을 기록에 남긴다).")
+            runs.append({"T_K": float(Ts), "t_ps": po["t_ps"],
+                         "msd_per_origin": po["msd_per_origin"], "mean_curve": mc,
+                         "_src": src, "_n_origin": po["n_origin"],
+                         "_save_fs": sf_v, "_save_fs_src": sf_src or "캠페인 기본 가정",
+                         "_save_fs_assumed": bool(sf_assumed)})
+        if bad:
+            raise SystemExit(f"⛔ traj.xyz 를 못 읽은 런: {bad} — 부트스트랩을 시작하지 않는다.")
+        if len(runs) < 2:
+            raise SystemExit("⛔ 온도가 2 개 미만이다.")
+        lo, hi = a.window
+        for r in runs:
+            print(f"   {r['T_K']:.0f} K · 원점 {r['_n_origin']} · 점추정 ← {r['_src']}"
+                  + f" · save_fs {r['_save_fs']:g} fs ({r['_save_fs_src']})"
+                  + ("  ⚠ **가정값**" if r["_save_fs_assumed"] else ""))
+        blk = a.rsd_block
+        scan = None
+        if a.block_scan:
+            ladder = [int(x) for x in a.block_scan.split(",") if x.strip()]
+            print(f"\n블록 사다리 {ladder} 로 σ(Ea) 를 재고 plateau 를 고른다 "
+                  f"(연속 {BLOCK_PLATEAU_RUN} 점 · 상대변화 ≤ {BLOCK_PLATEAU_TOL:.0%})")
+            cur = block_sigma_curve(
+                lambda b: (joint_ea_bootstrap(runs, lo, hi, b, a.n_boot, seed=0) or {})
+                .get("Ea_sigma_eV"), ladder)
+            for b, s in cur:
+                print(f"   b={b:3d}   σ(Ea) = {s:.5f} eV")
+            scan = choose_block_plateau(cur, n_boot=a.n_boot)
+            print(f"\n   → {scan['why']}")
+            blk = scan["block"]
+        if blk is None:
+            print("\n⛔ **블록 길이를 고르지 않는다** ⇒ σ_within 은 '못 구했다' 로 적고 "
+                  "판정을 보류한다 (회신 BU 규칙). 아무 b 나 골라 숫자를 만들지 않는다.")
+            if a.out:
+                pathlib.Path(a.out).write_text(json.dumps(
+                    {"status": "판정보류_블록_plateau_없음", "block_scan": scan},
+                    ensure_ascii=False, indent=1) + "\n")
+                print(f"-> {a.out}")
+            return 2
+        jb = joint_ea_bootstrap(runs, lo, hi, blk, a.n_boot, seed=0)
+        if jb is None:
+            raise SystemExit("⛔ 부트스트랩 실패 — 창에 점이 모자라거나 D ≤ 0 인 온도가 있다.")
+        jb["block_scan"] = scan
+        jb["point_estimate_source"] = {f"{r['T_K']:.0f}K": r["_src"] for r in runs}
+        print(f"\n  Ea (점추정)  = {jb['Ea_eV']:.4f} eV")
+        print(f"  σ(Ea)        = {jb['Ea_sigma_eV']:.5f} eV   "
+              f"[68 % {jb['Ea_lo68_eV']:.4f}, {jb['Ea_hi68_eV']:.4f}]")
+        rc = jb["red_chi2_point"]
+        print(f"  reduced χ²   = " + (f"{rc:.3f}" if rc is not None else "— (못 냈다)")
+              + f"   ({jb['red_chi2_note']})")
+        print(f"  재표본 {jb['n_boot_used']}/{jb['n_boot_asked']} · block {jb['block']} · "
+              f"창 {jb['window_ps']} ps")
+        print("\n  ⚠ 이 σ(Ea) 는 **런 내부**다. 시드 간 산포와의 비교는 "
+              "`arrhenius_compat.py --vr` 가 한다 (분산비 판정, 회신 BU).")
+        if a.out:
+            pathlib.Path(a.out).write_text(json.dumps(jb, ensure_ascii=False, indent=1) + "\n")
+            print(f"-> {a.out}")
+        return 0
+
     if not a.glob:
-        ap.error('--glob 이 필요하다 (또는 --selftest)')
+        ap.error('--glob 이 필요하다 (또는 --selftest / --ea_boot)')
 
     # ⚠⚠ 2026-08-11 — `recursive=True` 가 빠져 있었다. 그러면 `**` 가 재귀가 아니라
     #   **한 단계**로만 동작해서, 캠페인이 실제로 쓰는 경로

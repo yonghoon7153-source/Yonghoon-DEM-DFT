@@ -50,6 +50,160 @@ MC_N = 20_000
 MC_SEED = 20260911
 
 
+# ── 분산비 판정 규칙 (회신 BU · 2026-09-22 1저자 합의) ────────────────────────
+#: **무엇을 가르나.** 시드 간 Ea 산포가 *구조 무질서* 때문인지 *런 내부 통계* 때문인지.
+#:   σ̄²_within = 시드별 부트스트랩 σ²(Ea) 의 **평균** (⛔ 중앙값 아님)
+#:   s²_seed   = 시드별 Ea 의 표본분산
+#:   R = s²_seed / σ̄²_within,  귀무(구조 산포 없음) 아래 **R ~ χ²_{n−1}/(n−1)**
+#: ⛔ **폐기된 초안**: IQR/1.349 로 SD 를 만들어 비교하려 했다. 두 번 틀렸다 —
+#:   ① n=5 에서 IQR 이 SD 보다 **더** 흔들린다(실측 0.573 vs 0.365)
+#:   ② 1.349 는 **모집단** 상수다. n=5 표본 비는 1.053 이라 SD 를 **1.28 배 과대평가**한다.
+#: ⚠ σ̄²_within 을 **오차 없는 상수**로 본다 — 부트스트랩 복제가 충분하다는 가정이다.
+#:   복제가 적으면 R 의 분모도 흔들리므로 이 문턱이 낙관적이 된다.
+VR_P_3SIGMA = 0.0013498980316301035   # 단측 1 − Φ(3)
+VR_P_95 = 0.05
+VR_MIN_SEEDS = 3                      # n=2 는 표본분산의 dof 가 1 — 판정하지 않는다
+#: 회신 BU 본문은 검출한계를 *"σ_struct ≈ 2 σ_within"* 으로 적었다. 정확값은
+#: `√(R_3σ − 1)` 이고 n=5 에서 **1.857** 이다 (E[R] = 1 + (σ_s/σ_w)²). 회신의 "≈2" 는
+#: 반올림이고, 여기서는 **정확값을 계산해 적는다**.
+
+
+def _gammainc_reg(s, x):
+    """정규화 하부 불완전감마 `P(s, x)`. (scipy 없이 — 이 도구는 stdlib 전용이다)"""
+    if s <= 0 or x < 0:
+        return None
+    if x == 0:
+        return 0.0
+    lead = math.exp(-x + s * math.log(x) - math.lgamma(s))
+    if x < s + 1.0:                                   # 급수
+        ap, total, d = s, 1.0 / s, 1.0 / s
+        for _ in range(1000):
+            ap += 1.0
+            d *= x / ap
+            total += d
+            if abs(d) < abs(total) * 1e-16:
+                break
+        return total * lead
+    tiny = 1e-300                                     # 연분수 (Q 쪽)
+    b, c, d = x + 1.0 - s, 1.0 / tiny, 1.0 / (x + 1.0 - s)
+    h = d
+    for i in range(1, 1000):
+        an = -i * (i - s)
+        b += 2.0
+        d = an * d + b
+        if abs(d) < tiny:
+            d = tiny
+        c = b + an / c
+        if abs(c) < tiny:
+            c = tiny
+        d = 1.0 / d
+        de = d * c
+        h *= de
+        if abs(de - 1.0) < 1e-16:
+            break
+    return 1.0 - lead * h
+
+
+def chi2_cdf(x, k):
+    """χ²_k 누적분포. ⛔ `k` 는 양의 정수 자유도."""
+    return _gammainc_reg(k / 2.0, x / 2.0)
+
+
+def chi2_ppf(p, k):
+    """χ²_k 분위수 (이분법). ⛔ 못 하는 것: `p` 가 0/1 이면 None — 무한대를 흉내내지 않는다."""
+    if not (0.0 < p < 1.0) or k < 1:
+        return None
+    hi = max(10.0, 2.0 * k)
+    for _ in range(80):
+        if chi2_cdf(hi, k) >= p:
+            break
+        hi *= 2.0
+    lo = 0.0
+    for _ in range(200):
+        mid = 0.5 * (lo + hi)
+        if chi2_cdf(mid, k) < p:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
+
+
+def variance_ratio_thresholds(n_seeds):
+    """→ `{"dof", "R_3sigma", "R_95", "sd_ratio_3sigma", "sigma_struct_over_within_at_3sigma"}`"""
+    k = int(n_seeds) - 1
+    if k < 1:
+        return None
+    r3 = chi2_ppf(1.0 - VR_P_3SIGMA, k) / k
+    r95 = chi2_ppf(1.0 - VR_P_95, k) / k
+    return {"dof": k, "R_3sigma": r3, "R_95": r95,
+            "sd_ratio_3sigma": math.sqrt(r3),
+            "sigma_struct_over_within_at_3sigma": math.sqrt(max(r3 - 1.0, 0.0))}
+
+
+def variance_ratio_verdict(ea_by_seed, sigma_within_by_seed):
+    """**분산비 판정** — 시드 간 Ea 산포가 구조인가 통계인가 (회신 BU 규칙 그대로).
+
+    `ea_by_seed` / `sigma_within_by_seed` = `{"s1": 0.31, …}` / `{"s1": 0.02, …}` [eV].
+    두 딕셔너리의 **키가 같아야** 한다 — 하나라도 짝이 없으면 **판정하지 않는다**.
+
+    ⛔⛔ **판정 보류가 기본값이다.** σ_within 이 하나라도 없거나(블록 plateau 미검출)
+    0 이면 `R` 을 **계산하지 않고** None 으로 둔다. 있는 것만으로 비를 만들면 분모가 섞인다.
+    ⛔ `R ≤ R_95` 를 *"통계로 설명된다"* 로 쓰지 않는다 — 검출한계를 같이 적는다
+    (`detection_limit` 필드). n=5 의 검정력이 그 문장을 허락하지 않는다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · σ_within 을 **계산하지 않는다** — `msd_diffusive_check.joint_ea_bootstrap` 이 낸다.
+      · 블록 길이가 전 시드에 같은지 **검사하지 못한다**(σ 만 받는다). 호출자가 보장한다.
+      · 구조 산포가 *무엇 때문인지*(Cl/S 배열? 밀도?) 말하지 못한다. 있다/없다까지다.
+    """
+    seeds = sorted(ea_by_seed)
+    n = len(seeds)
+    th = variance_ratio_thresholds(n) or {}
+    out = {"n_seeds": n, "seeds": seeds, "R": None, "s2_seed": None,
+           "sigma2_within_mean": None, **th,
+           "rule": "R = s²_seed / σ̄²_within ~ χ²_{n−1}/(n−1)  (회신 BU 2026-09-22)",
+           "aggregation": "σ̄²_within 은 σ² 의 **평균**이다 (중앙값 아님)"}
+    if n < VR_MIN_SEEDS:
+        out["verdict"] = "판정보류_시드부족"
+        out["why"] = f"시드 {n} 개 — {VR_MIN_SEEDS} 개 미만이면 표본분산을 판정에 쓰지 않는다."
+        return out
+    missing = [s for s in seeds
+               if sigma_within_by_seed.get(s) is None or not sigma_within_by_seed.get(s, 0) > 0]
+    if missing:
+        out["verdict"] = "판정보류_σ_within_없음"
+        out["missing_sigma_seeds"] = missing
+        out["why"] = ("σ_within 을 **못 구한** 시드가 있다 " + str(missing) +
+                      " — 블록 길이 plateau 가 안 나왔거나 부트스트랩을 안 돌렸다. "
+                      "있는 것만으로 R 을 만들지 않는다 (분모가 섞인다).")
+        return out
+    s2 = statistics.variance([float(ea_by_seed[s]) for s in seeds])
+    sw2 = sum(float(sigma_within_by_seed[s]) ** 2 for s in seeds) / n
+    R = s2 / sw2
+    out.update({"s2_seed": s2, "sigma2_within_mean": sw2, "R": R,
+                "sd_seed_eV": math.sqrt(s2), "sd_within_eV": math.sqrt(sw2)})
+    if R > th["R_3sigma"]:
+        out["verdict"] = "구조_산포_있음"
+        out["why"] = f"R = {R:.3f} > {th['R_3sigma']:.3f} (단측 p < {VR_P_3SIGMA:.5f})"
+    elif R > th["R_95"]:
+        out["verdict"] = "시사적_판정보류"
+        out["why"] = (f"{th['R_95']:.3f} < R = {R:.3f} ≤ {th['R_3sigma']:.3f} — "
+                      "95 % 는 넘고 3σ 는 못 넘는다.")
+    else:
+        out["verdict"] = "구조_산포_미검출"
+        out["why"] = f"R = {R:.3f} ≤ {th['R_95']:.3f}"
+        out["forbidden_phrasing"] = ("⛔ *\"시드 간 차이는 통계로 설명된다\"* 로 쓰지 않는다. "
+                                     "**못 봤다**와 **없다**는 다르다.")
+    out["detection_limit"] = {
+        "sigma_struct_over_within": th["sigma_struct_over_within_at_3sigma"],
+        "sd_seed_over_within": th["sd_ratio_3sigma"],
+        "sigma_struct_eV_at_3sigma": (th["sigma_struct_over_within_at_3sigma"]
+                                      * math.sqrt(sw2)) if sw2 else None,
+        "note": ("E[R] = 1 + (σ_struct/σ_within)² 가 문턱에 닿는 지점 — **≈50 % 검정력**이지 "
+                 "보장이 아니다. 회신 BU 본문의 '≈2 σ_within' 은 이 값의 반올림이다."),
+    }
+    return out
+
+
 def ea_two_point(T1, D1, T2, D2):
     """두 온도 사이의 아레니우스 기울기 Ea [eV]. T1 < T2 를 가정하지 않는다."""
     if D1 <= 0 or D2 <= 0:
@@ -312,6 +466,56 @@ def _selftest():
              if not str(k).startswith("_")}
     chk(600 in _raw2 and len(_raw2) == 1, "⛔음성: 메타키만 건너뛰고 온도키는 남긴다")
 
+    # ── 분산비 판정 규칙 (회신 BU) ─────────────────────────────────────
+    chk(abs(chi2_ppf(1 - VR_P_3SIGMA, 4) - 17.800) < 5e-3
+        and abs(chi2_ppf(0.95, 4) - 9.488) < 5e-3,
+        "χ² 분위수가 회신 BU 의 값을 재현한다 (χ²₄: 3σ 17.800 · 95 % 9.488)")
+    _t5 = variance_ratio_thresholds(5)
+    chk(abs(_t5["R_3sigma"] - 4.450) < 5e-3 and abs(_t5["R_95"] - 2.372) < 5e-3
+        and abs(_t5["sd_ratio_3sigma"] - 2.110) < 5e-3,
+        "n=5 문턱: R 4.450 / 2.372 · SD 비 2.110 (회신 BU 표와 일치)")
+    chk(abs(_t5["sigma_struct_over_within_at_3sigma"] - 1.857) < 5e-3,
+        "검출한계 정확값 1.857 σ_within — 회신의 '≈2' 는 반올림이다")
+    try:
+        from scipy import stats as _st
+        chk(abs(chi2_ppf(1 - VR_P_3SIGMA, 4) - _st.chi2.ppf(1 - VR_P_3SIGMA, 4)) < 1e-6
+            and abs(chi2_cdf(9.488, 4) - _st.chi2.cdf(9.488, 4)) < 1e-10
+            and abs(chi2_cdf(0.7, 9) - _st.chi2.cdf(0.7, 9)) < 1e-12,
+            "⛔음성: 손으로 쓴 χ² 가 scipy 와 급수·연분수 **양쪽 가지**에서 일치한다")
+    except ImportError:
+        print("  … scipy 없음 — 교차검증 건너뜀 (stdlib 구현은 그대로 쓴다)")
+    chk(chi2_ppf(0.0, 4) is None and chi2_ppf(1.0, 4) is None and chi2_ppf(0.5, 0) is None,
+        "⛔음성: p 가 0/1 이거나 dof < 1 이면 None (무한대를 흉내내지 않는다)")
+
+    _ea = {"s1": 0.20, "s2": 0.25, "s3": 0.30, "s4": 0.35, "s5": 0.40}   # SD = 0.0791
+    _v = variance_ratio_verdict(_ea, {k: 0.02 for k in _ea})             # R ≈ 15.6
+    chk(_v["verdict"] == "구조_산포_있음" and _v["R"] > _t5["R_3sigma"],
+        "시드 SD 가 런 내부의 4 배면 **구조 산포 있음**")
+    _v2 = variance_ratio_verdict(_ea, {k: 0.055 for k in _ea})           # R ≈ 2.07
+    chk(_v2["verdict"] == "구조_산포_미검출" and "forbidden_phrasing" in _v2
+        and _v2["detection_limit"]["sigma_struct_eV_at_3sigma"] > 0,
+        "미검출이면 **금지 문구**와 **검출한계**를 같이 낸다")
+    _v3 = variance_ratio_verdict(_ea, {k: 0.043 for k in _ea})           # R ≈ 3.38
+    chk(_v3["verdict"] == "시사적_판정보류",
+        "95 % 는 넘고 3σ 는 못 넘으면 **시사적, 판정 보류**")
+    chk(variance_ratio_verdict({"s1": 0.2, "s2": 0.3},
+                               {"s1": 0.01, "s2": 0.01})["verdict"] == "판정보류_시드부족",
+        "⛔음성: 시드 2 개면 판정하지 않는다")
+    _vm = variance_ratio_verdict(_ea, {"s1": 0.02, "s2": 0.02, "s3": None,
+                                       "s4": 0.02, "s5": 0.02})
+    chk(_vm["verdict"] == "판정보류_σ_within_없음" and _vm["R"] is None
+        and _vm["missing_sigma_seeds"] == ["s3"],
+        "⛔음성: σ_within 이 하나라도 없으면 **R 을 아예 안 만든다** (있는 것만으로 안 낸다)")
+    chk(variance_ratio_verdict(_ea, {k: 0.0 for k in _ea})["R"] is None,
+        "⛔음성: σ_within 이 0 이면 나눗셈을 시도하지 않는다")
+    #: ⛔음성 — 평균이냐 중앙값이냐가 **판정을 바꾼다**. 규칙은 평균이다.
+    _ea3 = {"s1": 0.28, "s2": 0.30, "s3": 0.32}                # s²_seed = 4.0e-4
+    _sg3 = {"s1": 0.01, "s2": 0.01, "s3": 0.10}                # 평균 σ² 3.4e-3 · 중앙값 1e-4
+    _vx = variance_ratio_verdict(_ea3, _sg3)
+    chk(abs(_vx["sigma2_within_mean"] - 3.4e-3) < 1e-12
+        and _vx["verdict"] == "구조_산포_미검출",
+        "⛔음성: σ² 의 **평균**을 쓴다 — 중앙값을 썼다면 R=4.0 으로 '시사적' 이 됐다")
+
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
 
@@ -326,11 +530,42 @@ def main():
     ap.add_argument("--min_per_T", type=int, default=2,
                     help="온도별 최소 자격 시드 수 (기본 2 = 09-01 개정 R1 '3시드 중 2개 이상')")
     ap.add_argument("--out", help="결과 JSON 경로")
+    ap.add_argument("--vr", metavar="JSON",
+                    help='**분산비 판정**(회신 BU): {"Ea_eV":{"s1":0.31,…},'
+                         '"sigma_Ea_eV":{"s1":0.02,…}} — 시드 간 산포가 구조인가 통계인가. '
+                         'σ 는 msd_diffusive_check.py --ea_boot 이 낸다.')
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
+    if a.vr:
+        raw = json.loads(pathlib.Path(a.vr).read_text(encoding="utf-8"))
+        ea = {k: v for k, v in (raw.get("Ea_eV") or {}).items() if not str(k).startswith("_")}
+        sg = {k: v for k, v in (raw.get("sigma_Ea_eV") or {}).items() if not str(k).startswith("_")}
+        if not ea:
+            raise SystemExit("⛔ --vr JSON 에 `Ea_eV` 가 없다.")
+        extra = sorted(set(sg) - set(ea))
+        if extra:
+            print(f"⚠ σ 에만 있는 시드 {extra} — 무시한다 (Ea 가 기준이다)")
+        v = variance_ratio_verdict(ea, sg)
+        print(f"\n시드 {v['n_seeds']} 개 {v['seeds']} · dof {v.get('dof')}")
+        if v["R"] is None:
+            print(f"  ★ 판정: **{v['verdict']}** — {v['why']}")
+        else:
+            print(f"  s_seed   = {v['sd_seed_eV']:.5f} eV   (표본 SD)")
+            print(f"  σ̄_within = {v['sd_within_eV']:.5f} eV   (σ² 의 **평균**의 제곱근)")
+            print(f"  R = {v['R']:.3f}   문턱 3σ {v['R_3sigma']:.3f} · 95 % {v['R_95']:.3f}")
+            print(f"\n  ★ 판정: **{v['verdict']}** — {v['why']}")
+            dl = v["detection_limit"]
+            print(f"  검출한계: σ_struct ≳ {dl['sigma_struct_over_within']:.3f} σ_within"
+                  f" = {dl['sigma_struct_eV_at_3sigma']:.5f} eV  ({dl['note'].split('—')[1].strip()})")
+            if "forbidden_phrasing" in v:
+                print("  " + v["forbidden_phrasing"])
+        if a.out:
+            pathlib.Path(a.out).write_text(json.dumps(v, ensure_ascii=False, indent=1) + "\n")
+            print(f"\n-> {a.out}")
+        raise SystemExit(0)
     if not a.d:
-        ap.error("--d 가 필요하다 (--selftest 제외)")
+        ap.error("--d 또는 --vr 이 필요하다 (--selftest 제외)")
 
     raw = json.loads(pathlib.Path(a.d).read_text(encoding="utf-8"))
     # ⛔ 2026-09-15 — `_` 로 시작하는 메타키(`_출처`·`_단위`)를 건너뛴다.
