@@ -1,0 +1,125 @@
+E                                                                        [100%]
+=================================== ERRORS ====================================
+______ ERROR at setup of test_g66_07_the_replay_context_is_measured_once ______
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x000001793AA9E660>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\pluggy\_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\pluggy\_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\logging.py:858: in pytest_runtest_setup
+    yield
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\pluggy\_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\pluggy\_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\python.py:1710: in setup
+    self._request._fillfixtures()
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\fixtures.py:806: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\fixtures.py:630: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\fixtures.py:726: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\fixtures.py:1232: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\pluggy\_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\pluggy\_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\fixtures.py:1328: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\fixtures.py:998: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\tmpdir.py:300: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\tmpdir.py:287: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\tmpdir.py:141: in mktemp
+    p = make_numbered_dir(root=self.getbasetemp(), prefix=basename, mode=0o700)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/gate67_review_20260922/partial-mutations-isolated/the-replay-context-is-measured-once-g66.mutant.tmp/pytest-of-User/pytest-0')
+prefix = 'test_g66_07_the_replay_context', mode = 448
+
+    def make_numbered_dir(root: Path, prefix: str, mode: int = 0o700) -> Path:
+        """Create a directory with an increased number as suffix for the given prefix."""
+        for i in range(10):
+            # try up to 10 times to create the directory
+            max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+            new_number = max_existing + 1
+            new_path = root.joinpath(f"{prefix}{new_number}")
+            try:
+                new_path.mkdir(mode=mode)
+            except Exception:
+                pass
+            else:
+                _force_symlink(root, prefix + "current", new_path)
+                return new_path
+        else:
+>           raise OSError(
+                "could not create numbered dir with prefix "
+                f"{prefix} in {root} after 10 tries"
+            )
+E           OSError: could not create numbered dir with prefix test_g66_07_the_replay_context in C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\outputs\gate67_review_20260922\partial-mutations-isolated\the-replay-context-is-measured-once-g66.mutant.tmp\pytest-of-User\pytest-0 after 10 tries
+
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\gate65-venv\Lib\site-packages\_pytest\pathlib.py:239: OSError
+=========================== short test summary info ===========================
+ERROR tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once
+76 deselected, 1 error in 0.57s

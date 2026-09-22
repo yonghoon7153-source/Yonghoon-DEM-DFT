@@ -1,0 +1,82 @@
+{
+  "name": "usercustomize-follows-the-startup-activation-g64",
+  "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay__kf08oz0\\degradation-degeneracy",
+  "registered_expected": {
+    "fail": [
+      "tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected"
+    ],
+    "witness": {
+      "tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected": "Failed: DID NOT RAISE _ReplayError"
+    }
+  },
+  "phases": {
+    "baseline": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_evidence_receipt_62.py",
+        "tests/test_gate64_defensive.py",
+        "tests/test_gate65_defensive.py",
+        "tests/test_gate66_defensive.py",
+        "--noconftest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "a_forged_absent_namespace_is_still_rejected",
+        "--json-report",
+        "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-isolated\\usercustomize-follows-the-startup-activation-g64.baseline.pytest.json"
+      ],
+      "pytest_temp_root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-isolated\\usercustomize-follows-the-startup-activation-g64.baseline.tmp",
+      "rc": 1,
+      "seconds": 1.3910000000032596,
+      "summary": {
+        "error": 1,
+        "total": 1,
+        "collected": 77,
+        "deselected": 76
+      },
+      "observed_failed": [],
+      "skipped": [],
+      "expected_failure_set_matches": false,
+      "call_witness_matches": {},
+      "failure_phases": {}
+    },
+    "mutant": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_evidence_receipt_62.py",
+        "tests/test_gate64_defensive.py",
+        "tests/test_gate65_defensive.py",
+        "tests/test_gate66_defensive.py",
+        "--noconftest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "a_forged_absent_namespace_is_still_rejected",
+        "--json-report",
+        "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-isolated\\usercustomize-follows-the-startup-activation-g64.mutant.pytest.json"
+      ],
+      "pytest_temp_root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-isolated\\usercustomize-follows-the-startup-activation-g64.mutant.tmp",
+      "rc": 1,
+      "seconds": 1.4210000000020955,
+      "summary": {
+        "error": 1,
+        "total": 1,
+        "collected": 77,
+        "deselected": 76
+      },
+      "observed_failed": [],
+      "skipped": [],
+      "expected_failure_set_matches": false,
+      "call_witness_matches": {},
+      "failure_phases": {}
+    }
+  },
+  "target_unchanged": true,
+  "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+}

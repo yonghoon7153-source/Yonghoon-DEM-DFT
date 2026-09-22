@@ -1,0 +1,28 @@
+{
+  "command": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_gate66_defensive.py",
+    "tests/test_gate65_defensive.py",
+    "tests/test_gate64_defensive.py",
+    "--noconftest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-k",
+    "not kernel_lock_probe_control_actually",
+    "--basetemp=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\pytest-target",
+    "--junitxml=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\targeted.xml"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate67-head\\degradation-degeneracy",
+  "rc": 0,
+  "seconds": 22.343000000008033,
+  "utc": "2026-09-22T12:48:04.519712+00:00",
+  "env_overrides": {
+    "PYTHONUTF8": "1",
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONNOUSERSITE": null
+  }
+}

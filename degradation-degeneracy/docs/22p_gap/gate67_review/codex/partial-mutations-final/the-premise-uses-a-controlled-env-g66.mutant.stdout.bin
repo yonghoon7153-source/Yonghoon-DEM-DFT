@@ -1,0 +1,34 @@
+.F                                                                       [100%]
+================================== FAILURES ===================================
+_ test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite] __
+
+env_extra = {'PYTHONNOUSERSITE': '1'}
+
+    @pytest.mark.parametrize("env_extra", [{}, {"PYTHONNOUSERSITE": "1"}], ids=["clean", "nousersite"])
+    def test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env(env_extra):
+        """★ G66-T1 — 외부 `PYTHONNOUSERSITE=1` 은 **환경이 user site 를 끈 것**이지 fixture 가
+        `--system-site-packages` 를 빠뜨린 것이 아니다. 전제 시험은 그 둘을 갈라야 하고, 앞의 경우는
+        **실패가 아니라 skip(미측정)** 이어야 한다.
+    
+        리뷰어 실측(Windows): `PYTHONNOUSERSITE=1` 에서 `1 failed · 1 passed`.
+        """
+        r = _premise_run(sys.executable, env_extra)
+>       assert "failed" not in (r.stdout or "").lower(), (
+            "물려받은 env 때문에 전제 시험이 실패했다 — 환경의 비활성을 fixture 구현 실패로 오판한다 "
+            "(G66-T1)", (r.stdout or "")[-600:])
+E       AssertionError: ('물려받은 env 때문에 전제 시험이 실패했다 — 환경의 비활성을 fixture 구현 실패로 오판한다 (G66-T1)', ' 옵션 제거 변이가 그 경로다).
+E         >       assert measured_user...fensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]
+E         1 failed, 1 passed, 15 deselected in 0.75s
+E         ')
+E       assert 'failed' not in 'f.         ...d in 0.75s\n'
+E         
+E         'failed' is contained here:
+E           =========
+E           failed tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[true]
+E         ? ++++++
+E           1 failed, 1 passed, 15 deselected in 0.75s
+
+tests\test_gate66_defensive.py:259: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]
+1 failed, 1 passed, 75 deselected in 3.26s

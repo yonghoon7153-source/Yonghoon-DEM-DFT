@@ -1,0 +1,104 @@
+{
+  "name": "parent-compares-the-loaded-origin-g66",
+  "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_0bzut6wb\\degradation-degeneracy",
+  "registered_expected": {
+    "fail": [
+      "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected",
+      "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted",
+      "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted"
+    ],
+    "witness": {
+      "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected": "AssertionError: startup 이 읽지 않은 cwd 파일을 부모가 기대해 정상 영수증을 거부했다 (G66-N1 A)",
+      "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted": "AssertionError: 자기 검색 경로를 정리한 정상 startup 의 영수증을 거부했다 (G66-N1 B)",
+      "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted": "AssertionError: startup 이 앞에 넣은 다른 후보를 부모가 로드된 것으로 봤다 (G66-N1 C)"
+    }
+  },
+  "phases": {
+    "baseline": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_evidence_receipt_62.py",
+        "tests/test_gate64_defensive.py",
+        "tests/test_gate65_defensive.py",
+        "tests/test_gate66_defensive.py",
+        "--noconftest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "a_cwd_file_that_startup_never_imported_is_not_expected or a_startup_that_cleans_its_own_path_is_still_accepted or a_startup_that_prepends_another_candidate_is_still_accepted",
+        "--json-report",
+        "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-final\\parent-compares-the-loaded-origin-g66.baseline.pytest.json"
+      ],
+      "pytest_temp_root": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\g67pt_28v4f32y",
+      "rc": 0,
+      "seconds": 3.2039999999979045,
+      "summary": {
+        "passed": 3,
+        "total": 3,
+        "collected": 77,
+        "deselected": 74
+      },
+      "observed_failed": [],
+      "skipped": [],
+      "expected_failure_set_matches": false,
+      "call_witness_matches": {},
+      "failure_phases": {}
+    },
+    "mutant": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_evidence_receipt_62.py",
+        "tests/test_gate64_defensive.py",
+        "tests/test_gate65_defensive.py",
+        "tests/test_gate66_defensive.py",
+        "--noconftest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "a_cwd_file_that_startup_never_imported_is_not_expected or a_startup_that_cleans_its_own_path_is_still_accepted or a_startup_that_prepends_another_candidate_is_still_accepted",
+        "--json-report",
+        "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-final\\parent-compares-the-loaded-origin-g66.mutant.pytest.json"
+      ],
+      "pytest_temp_root": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\g67pt_rov3vqeq",
+      "rc": 1,
+      "seconds": 3.2179999999934807,
+      "summary": {
+        "failed": 3,
+        "total": 3,
+        "collected": 77,
+        "deselected": 74
+      },
+      "observed_failed": [
+        "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected",
+        "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted",
+        "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted"
+      ],
+      "skipped": [],
+      "expected_failure_set_matches": true,
+      "call_witness_matches": {
+        "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected": true,
+        "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted": true,
+        "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted": true
+      },
+      "failure_phases": {
+        "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected": [
+          "call"
+        ],
+        "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted": [
+          "call"
+        ],
+        "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted": [
+          "call"
+        ]
+      }
+    }
+  },
+  "target_unchanged": true,
+  "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+}

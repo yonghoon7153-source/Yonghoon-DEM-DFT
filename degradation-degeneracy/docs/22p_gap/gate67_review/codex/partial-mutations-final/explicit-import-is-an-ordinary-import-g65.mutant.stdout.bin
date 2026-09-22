@@ -1,0 +1,37 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_a_disabled_interpreter_with_an_explicit_import_is_accepted _______
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_f72qcbie/pytest-of-User/pytest-0/test_a_disabled_interpreter_wi0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024BA482C860>
+off = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_f72qcbie/pytest-of-User/pytest-0/interp-off0/venv-user-site-off/Scripts/python.exe')
+
+    def test_a_disabled_interpreter_with_an_explicit_import_is_accepted(tmp_path, monkeypatch, off):
+        """★ N1a — 비활성 + 정상 명시 로드. child 는 진짜 digest 를 내고 이력도 올렸다고
+        증언한다. 부모가 조건만 보고 `<absent>` 를 기대하면 정상 영수증을 거부한다."""
+        site = _explicit_import_site(tmp_path)
+        use_interpreter(monkeypatch, off)
+        _pin_env(monkeypatch, {"PYTHONPATH": str(site)})
+        mr = _mr()
+    
+        got = _receipt_in({"PYTHONPATH": str(site)}, tmp_path, off)
+        cust = got["startup"]["customization"]
+        print("customization:", cust)
+        assert cust["usercustomize"] == _digest(site / "usercustomize.py"), (
+            "비활성인데 명시 import 가 안 올라갔다 — 전제가 깨졌다")
+        assert "usercustomize" in got["startup"]["startup_history"]["modules"], (
+            "이력이 명시 import 를 못 봤다")
+        try:
+            mr._assert_customization_matches_parent(got)
+        except mr._ReplayError:
+>           raise AssertionError(
+                "user site 가 꺼졌어도 정상 sitecustomize 의 `import usercustomize` 는 평범한 "
+                "import 다 — 부모가 그 영수증을 거부했다 (G65-N1a)") from None
+E           AssertionError: user site 가 꺼졌어도 정상 sitecustomize 의 `import usercustomize` 는 평범한 import 다 — 부모가 그 영수증을 거부했다 (G65-N1a)
+
+tests\test_gate65_defensive.py:162: AssertionError
+---------------------------- Captured stdout call -----------------------------
+customization: {'site': 'b39ab288cc7a6d0c', 'sitecustomize': 'a6b6f7ff67248404', 'usercustomize': '9d23b5592c7bfcb8'}
+=========================== short test summary info ===========================
+FAILED tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted
+1 failed, 76 deselected in 1.17s

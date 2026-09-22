@@ -7571,3 +7571,62 @@ _complete_artifact 가 정본 산출로 합성했다` **87** 이다 — 리뷰�
 바꾸라고 승인하지 않는다" 고 명시했고, 등록부의 class·삭제 계약 변경은 **별도 승인 대상**이다.
 여기 적은 것은 **사실과 명부**이고, 복원 여부·근거·권한 영향의 판단은 승인 뒤에 한다.
 삭제 전 바이트는 `5e4cf103` 트리에 그대로 있으므로 복원은 언제든 가능하다.
+
+## §85 67차 접수 — 부분 수용 / 종결 NO-GO (P1 2 · P2 1)
+
+2026-09-22 접수. 리뷰어가 고정한 HEAD `cdc49e91af15b2ef968753110cfae3bbe7ab5c2f` · 직전 리뷰
+`fa947cc9` · 과학 정본 `743f65be` · `source_digest e9ee7475dea7de1d` (리뷰어가 **직접 실행**한
+값이고 우리 실측과 같다). 리뷰 플랫폼 Windows / Python 3.12.14. 패키지 원본은
+`docs/22p_gap/gate67_review/` (zip sha256 `3ab027349935843f8a2404a87b988b3e7264fa0a9d3266f2e3f20a757bd10220`).
+
+**닫혔다고 인정받은 것** (되돌리지 않는다): G66-N1 A/B/C 원 반례 — 기존 재현기 `--full-sandbox`
+5조건 전부 entry ACCEPTED · `PYTHONNOUSERSITE=1` 직접 전제 시험 2 passed · 문맥 1회 측정 ·
+G66-R1 삭제 사실 정정. 등록부 delta 도 리뷰어가 직접 확인했다 (tracked 366→367 · 추가 1 ·
+삭제 0 · 기존 변경 0).
+
+| ID | 심각도 | 리뷰어가 실행으로 확인한 반례 | 무효화되는 주장 |
+|---|---|---|---|
+| G67-N1 | P1 | user site OFF + 명시 import namespace 에서 영수증 한 칸을 `<absent>` 로 바꿔도 completeness·parent 비교·실제 `_execution_receipt()` 전부 ACCEPTED | customization 존재/종류의 영수증 결속 |
+| G67-N2 | P1 | 표준 ZIP **package** 가 자기 archive 를 `sys.path` 에서 빼면 **정상 영수증을 거부** | 정상 startup 을 지원한다는 재생 계약 |
+| G67-T1 | P2 | 상속 `PYTEST_ADDOPTS` 로 child pytest 가 rc 4 또는 수집만(call 0건)인데 전제 회귀는 초록 | G66-T1 회귀의 실행 증거 |
+| G67-T1-b | P2 | 등록 변이 witness 에 `stdout[-600:]` 에서 잘린 꼬리가 있어 다른 기계에서 불일치 | 변이 witness 의 이식성 |
+
+리뷰어가 스스로 한정한 것도 그대로 받는다: N1 은 **영수증 reader 경계의 fault injection** 이고
+독립 provenance 인증을 뚫었다거나 production 실행권을 얻었다는 주장이 아니다 · N2 는 fail-open 이
+아니라 **false rejection** 이다 · T1 은 실제 subprocess 이고 CompletedProcess 를 가짜로 만들지
+않았다 · 전체 pytest·strict smoke·Linux native 3종은 그 기계에서 완주하지 않았고 우리 숫자를
+**제출 측 보고**로 구분해 두었다 · `-k g66` 보충 변이 9종은 `--noconftest` 라 공식 coverage 가
+아니다 · 기존 P0 미착수를 새 발견으로 세지 않았다.
+
+## §86 67차 대응 — 잰 것과 판정하는 것을 잇지 않았다
+
+작업 상태 정본은 `docs/GATE67_WORKING_STATE.md`, 요청문은 `docs/22p_gap/GATE68_REQUEST.md`.
+`source_digest` 는 `e9ee7475dea7de1d` 그대로 — 이번 고침도 전부 RUN_SCOPE 밖이다.
+
+**한 줄**: 잰 것과 판정하는 것을 잇지 않았다 (N1 `auto` · N2 사후 재탐색) · 시험이 돌았다는
+것과 초록이라는 것을 잇지 않았다 (T1 · T1-b).
+
+- **G67-N1** — 판정의 기준을 **부모가 잰 것 하나**로 했다. `if g != cand:` 를 앞세워 세 종류
+  (`<absent>`·hex16·namespace)를 한 줄로 대조하고 startup 이력 교차 확인은 그 뒤에 남긴다.
+  `auto` 는 판정에서 빠지고 **사유 문장에만** 남는다 (리뷰어 Q3 의 답 그대로). 정상은 계속
+  받는다 — OFF + 명시 import namespace 의 정직한 영수증, OFF + 정말로 미로드인 `<absent>`.
+- **G67-N2** — `_archive_member_digest()` 신설. origin 경로를 조상 쪽으로 걸어 **실재하는
+  archive 파일**을 찾고 남은 부분을 member 로 써서 `zipfile` 로 바이트를 읽는다. 사후 검색
+  경로도, 임의 loader 실행도 없다. 표준 archive 아님·member 못 읽음·바이트 변경은 거부 유지.
+- **G67-T1** — 두 축으로 갈랐다. ① **입력 경계**: child env 에서 pytest 손잡이 넷을 걷는다
+  ② **실행 증거**: `--junitxml`(내장)로 **정확히 그 두 node** 가 `passed`/`skipped` 인지 본다.
+  `skipped` 는 통과가 아니라 **미측정**으로 따로 찍는다. 검사 순서가 사유의 정확도를 정하므로
+  결과 파일 → node 집합 → 각 node 의 결말 → 그 밖의 rc 순으로 본다.
+- **G67-T1-b** — witness 를 사유 문장까지만 남기고, 재발 방지 정적 회귀(`test_g67_14`)를 두었다:
+  닫히지 않은 따옴표 **뒤에 글자가 남으면** 실패. 값 직전에서 끊는 기존 관행은 허용한다.
+
+**Q1 은 문장을 좁혔다** — 탐침이 주는 것은 *"startup 후 관측한 module origin"* 이고 로드 순간의
+불변 기록이 아니다. 66차 작업 상태 문서의 제목과 코드 주석을 같이 고쳤다 (정정 블록 보존).
+
+**하지 않은 것**: 등록부 복원·class 변경 (Q5 의 순서를 받아 **읽기 전용 영향 확인을 먼저**,
+나머지는 별도 승인) · P0-1·trusted launcher·typed 영수증 소비·독립 replay·immutable bundle ·
+Q6 F50b (여전히 (b)). **본 실행 GO 를 요청하지 않는다.**
+
+⚠ **한 번은 거부가 증거가 아니었다** — 첫 재실행에서 리뷰어 스크립트의 T1 칸이 REJECTED 였으나
+사유가 `TypeError`(내가 시험 함수 서명을 깼다)였다. 서명을 되돌리고 `AssertionError` 로 거부되는
+것을 확인하고서야 닫혔다고 적었다. 이 관측도 원장에 남긴다.

@@ -1,0 +1,802 @@
+[
+  {
+    "name": "parent-customization-uses-the-path-finder-g63",
+    "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_1mxatvue\\degradation-degeneracy",
+    "registered_expected": {
+      "fail": [
+        "tests/test_evidence_receipt_62.py::test_the_real_probe_agrees_with_the_parent_view",
+        "tests/test_gate63_defensive.py::test_parent_customization_lookup_supports_a_normal_package"
+      ],
+      "witness": {
+        "tests/test_evidence_receipt_62.py::test_the_real_probe_agrees_with_the_parent_view": "AssertionError: child 와 부모의 customization 이 ['sitecustomize'] 에서 다르다 (62차 자체 리뷰 F1)",
+        "tests/test_gate63_defensive.py::test_parent_customization_lookup_supports_a_normal_package": "AssertionError: parent lookup disagrees with Python on an ordinary package"
+      }
+    },
+    "phases": {
+      "baseline": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "parent_customization_lookup_supports_a_normal_package or the_real_probe_agrees_with_the_parent_view",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\parent-customization-uses-the-path-finder-g63.baseline.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 1.687999999994645,
+        "summary": {
+          "passed": 1,
+          "total": 1,
+          "collected": 77,
+          "deselected": 76
+        },
+        "observed_failed": [],
+        "skipped": [],
+        "expected_failure_set_matches": false,
+        "call_witness_matches": {},
+        "failure_phases": {}
+      },
+      "mutant": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "parent_customization_lookup_supports_a_normal_package or the_real_probe_agrees_with_the_parent_view",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\parent-customization-uses-the-path-finder-g63.mutant.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 1.625,
+        "summary": {
+          "passed": 1,
+          "total": 1,
+          "collected": 77,
+          "deselected": 76
+        },
+        "observed_failed": [],
+        "skipped": [],
+        "expected_failure_set_matches": false,
+        "call_witness_matches": {},
+        "failure_phases": {}
+      }
+    },
+    "target_unchanged": true,
+    "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+  },
+  {
+    "name": "usercustomize-follows-the-startup-activation-g64",
+    "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_zdd8wb30\\degradation-degeneracy",
+    "registered_expected": {
+      "fail": [
+        "tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected"
+      ],
+      "witness": {
+        "tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected": "Failed: DID NOT RAISE _ReplayError"
+      }
+    },
+    "phases": {
+      "baseline": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "a_forged_absent_namespace_is_still_rejected",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\usercustomize-follows-the-startup-activation-g64.baseline.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 1.9839999999967404,
+        "summary": {
+          "passed": 1,
+          "total": 1,
+          "collected": 77,
+          "deselected": 76
+        },
+        "observed_failed": [],
+        "skipped": [],
+        "expected_failure_set_matches": false,
+        "call_witness_matches": {},
+        "failure_phases": {}
+      },
+      "mutant": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "a_forged_absent_namespace_is_still_rejected",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\usercustomize-follows-the-startup-activation-g64.mutant.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 2.0,
+        "summary": {
+          "failed": 1,
+          "total": 1,
+          "collected": 77,
+          "deselected": 76
+        },
+        "observed_failed": [
+          "tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected"
+        ],
+        "skipped": [],
+        "expected_failure_set_matches": true,
+        "call_witness_matches": {
+          "tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected": true
+        },
+        "failure_phases": {
+          "tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected": [
+            "call"
+          ]
+        }
+      }
+    },
+    "target_unchanged": true,
+    "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+  },
+  {
+    "name": "explicit-import-is-an-ordinary-import-g65",
+    "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_ti0jcz6a\\degradation-degeneracy",
+    "registered_expected": {
+      "fail": [
+        "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted"
+      ],
+      "witness": {
+        "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted": "AssertionError: user site 가 꺼졌어도 정상 sitecustomize 의 `import usercustomize` 는 평범한 import 다 — 부모가 그 영수증을 거부했다 (G65-N1a)"
+      }
+    },
+    "phases": {
+      "baseline": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "a_disabled_interpreter_with_an_explicit_import_is_accepted",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\explicit-import-is-an-ordinary-import-g65.baseline.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 1.9840000000112923,
+        "summary": {
+          "passed": 1,
+          "total": 1,
+          "collected": 77,
+          "deselected": 76
+        },
+        "observed_failed": [],
+        "skipped": [],
+        "expected_failure_set_matches": false,
+        "call_witness_matches": {},
+        "failure_phases": {}
+      },
+      "mutant": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "a_disabled_interpreter_with_an_explicit_import_is_accepted",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\explicit-import-is-an-ordinary-import-g65.mutant.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 2.0469999999913853,
+        "summary": {
+          "failed": 1,
+          "total": 1,
+          "collected": 77,
+          "deselected": 76
+        },
+        "observed_failed": [
+          "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted"
+        ],
+        "skipped": [],
+        "expected_failure_set_matches": true,
+        "call_witness_matches": {
+          "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted": true
+        },
+        "failure_phases": {
+          "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted": [
+            "call"
+          ]
+        }
+      }
+    },
+    "target_unchanged": true,
+    "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+  },
+  {
+    "name": "search-path-comes-from-the-replay-context-g65",
+    "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_men0mfqu\\degradation-degeneracy",
+    "registered_expected": {
+      "fail": [
+        "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd",
+        "tests/test_gate65_defensive.py::test_the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd"
+      ],
+      "witness": {
+        "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd": "AssertionError: 부모가 상대 PYTHONPATH 를 호출자 cwd 로 풀었다 — 재생 문맥이 둘이다 (G65-N1b)",
+        "tests/test_gate65_defensive.py::test_the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd": "AssertionError: 실제 진입점이 상대 PYTHONPATH 의 정상 영수증을 거부했다 (G65-N1b)"
+      }
+    },
+    "phases": {
+      "baseline": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "a_relative_pythonpath_is_resolved_in_the_replay_cwd or the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\search-path-comes-from-the-replay-context-g65.baseline.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 2.4839999999967404,
+        "summary": {
+          "passed": 2,
+          "total": 2,
+          "collected": 77,
+          "deselected": 75
+        },
+        "observed_failed": [],
+        "skipped": [],
+        "expected_failure_set_matches": false,
+        "call_witness_matches": {},
+        "failure_phases": {}
+      },
+      "mutant": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "a_relative_pythonpath_is_resolved_in_the_replay_cwd or the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\search-path-comes-from-the-replay-context-g65.mutant.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 2.547000000005937,
+        "summary": {
+          "failed": 2,
+          "total": 2,
+          "collected": 77,
+          "deselected": 75
+        },
+        "observed_failed": [
+          "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd",
+          "tests/test_gate65_defensive.py::test_the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd"
+        ],
+        "skipped": [],
+        "expected_failure_set_matches": true,
+        "call_witness_matches": {
+          "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd": true,
+          "tests/test_gate65_defensive.py::test_the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd": true
+        },
+        "failure_phases": {
+          "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd": [
+            "call"
+          ],
+          "tests/test_gate65_defensive.py::test_the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd": [
+            "call"
+          ]
+        }
+      }
+    },
+    "target_unchanged": true,
+    "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+  },
+  {
+    "name": "namespace-is-loaded-code-free-not-absent-g65",
+    "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_29tfixs5\\degradation-degeneracy",
+    "registered_expected": {
+      "fail": [
+        "tests/test_gate65_defensive.py::test_a_namespace_usercustomize_is_measured_and_accepted"
+      ],
+      "witness": {
+        "tests/test_gate65_defensive.py::test_a_namespace_usercustomize_is_measured_and_accepted": "AssertionError: 정상 namespace customization 이 이력을 failed 로 만든다 (G65-N2b)"
+      }
+    },
+    "phases": {
+      "baseline": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "a_namespace_usercustomize_is_measured_and_accepted",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\namespace-is-loaded-code-free-not-absent-g65.baseline.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 2.0310000000026776,
+        "summary": {
+          "passed": 1,
+          "total": 1,
+          "collected": 77,
+          "deselected": 76
+        },
+        "observed_failed": [],
+        "skipped": [],
+        "expected_failure_set_matches": false,
+        "call_witness_matches": {},
+        "failure_phases": {}
+      },
+      "mutant": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "a_namespace_usercustomize_is_measured_and_accepted",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\namespace-is-loaded-code-free-not-absent-g65.mutant.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 1.9839999999967404,
+        "summary": {
+          "failed": 1,
+          "total": 1,
+          "collected": 77,
+          "deselected": 76
+        },
+        "observed_failed": [
+          "tests/test_gate65_defensive.py::test_a_namespace_usercustomize_is_measured_and_accepted"
+        ],
+        "skipped": [],
+        "expected_failure_set_matches": true,
+        "call_witness_matches": {
+          "tests/test_gate65_defensive.py::test_a_namespace_usercustomize_is_measured_and_accepted": true
+        },
+        "failure_phases": {
+          "tests/test_gate65_defensive.py::test_a_namespace_usercustomize_is_measured_and_accepted": [
+            "call"
+          ]
+        }
+      }
+    },
+    "target_unchanged": true,
+    "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+  },
+  {
+    "name": "the-fixture-measures-its-premise-g65",
+    "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_e1ahyl7e\\degradation-degeneracy",
+    "registered_expected": {
+      "fail": [
+        "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]"
+      ],
+      "witness": {
+        "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]": "AssertionError: assert False is True"
+      }
+    },
+    "phases": {
+      "baseline": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "the_interpreter_fixture_measures_its_own_premise",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\the-fixture-measures-its-premise-g65.baseline.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 1.7189999999973224,
+        "summary": {
+          "passed": 2,
+          "total": 2,
+          "collected": 77,
+          "deselected": 75
+        },
+        "observed_failed": [],
+        "skipped": [],
+        "expected_failure_set_matches": false,
+        "call_witness_matches": {},
+        "failure_phases": {}
+      },
+      "mutant": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "the_interpreter_fixture_measures_its_own_premise",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\the-fixture-measures-its-premise-g65.mutant.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 1.7339999999967404,
+        "summary": {
+          "failed": 1,
+          "passed": 1,
+          "total": 2,
+          "collected": 77,
+          "deselected": 75
+        },
+        "observed_failed": [
+          "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]"
+        ],
+        "skipped": [],
+        "expected_failure_set_matches": true,
+        "call_witness_matches": {
+          "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]": true
+        },
+        "failure_phases": {
+          "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]": [
+            "call"
+          ]
+        }
+      }
+    },
+    "target_unchanged": true,
+    "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+  },
+  {
+    "name": "parent-compares-the-loaded-origin-g66",
+    "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_irs4b_kj\\degradation-degeneracy",
+    "registered_expected": {
+      "fail": [
+        "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected",
+        "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted",
+        "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted"
+      ],
+      "witness": {
+        "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected": "AssertionError: startup 이 읽지 않은 cwd 파일을 부모가 기대해 정상 영수증을 거부했다 (G66-N1 A)",
+        "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted": "AssertionError: 자기 검색 경로를 정리한 정상 startup 의 영수증을 거부했다 (G66-N1 B)",
+        "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted": "AssertionError: startup 이 앞에 넣은 다른 후보를 부모가 로드된 것으로 봤다 (G66-N1 C)"
+      }
+    },
+    "phases": {
+      "baseline": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "a_cwd_file_that_startup_never_imported_is_not_expected or a_startup_that_cleans_its_own_path_is_still_accepted or a_startup_that_prepends_another_candidate_is_still_accepted",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\parent-compares-the-loaded-origin-g66.baseline.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 3.297000000005937,
+        "summary": {
+          "passed": 3,
+          "total": 3,
+          "collected": 77,
+          "deselected": 74
+        },
+        "observed_failed": [],
+        "skipped": [],
+        "expected_failure_set_matches": false,
+        "call_witness_matches": {},
+        "failure_phases": {}
+      },
+      "mutant": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "a_cwd_file_that_startup_never_imported_is_not_expected or a_startup_that_cleans_its_own_path_is_still_accepted or a_startup_that_prepends_another_candidate_is_still_accepted",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\parent-compares-the-loaded-origin-g66.mutant.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 3.202999999994063,
+        "summary": {
+          "failed": 3,
+          "total": 3,
+          "collected": 77,
+          "deselected": 74
+        },
+        "observed_failed": [
+          "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected",
+          "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted",
+          "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted"
+        ],
+        "skipped": [],
+        "expected_failure_set_matches": true,
+        "call_witness_matches": {
+          "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected": true,
+          "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted": true,
+          "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted": true
+        },
+        "failure_phases": {
+          "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected": [
+            "call"
+          ],
+          "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted": [
+            "call"
+          ],
+          "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted": [
+            "call"
+          ]
+        }
+      }
+    },
+    "target_unchanged": true,
+    "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+  },
+  {
+    "name": "the-premise-uses-a-controlled-env-g66",
+    "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_tuzt7cs8\\degradation-degeneracy",
+    "registered_expected": {
+      "fail": [
+        "tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]"
+      ],
+      "witness": {
+        "tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]": "AssertionError: ('물려받은 env 때문에 전제 시험이 실패했다 — 환경의 비활성을 fixture 구현 실패로 오판한다 (G66-T1)', '도 기대와 다르면 그때는"
+      }
+    },
+    "phases": {
+      "baseline": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "the_premise_test_does_not_fail_on_an_inherited_env",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\the-premise-uses-a-controlled-env-g66.baseline.pytest.json"
+        ],
+        "rc": 0,
+        "seconds": 4.030999999988126,
+        "summary": {
+          "passed": 2,
+          "total": 2,
+          "collected": 77,
+          "deselected": 75
+        },
+        "observed_failed": [],
+        "skipped": [],
+        "expected_failure_set_matches": false,
+        "call_witness_matches": {},
+        "failure_phases": {}
+      },
+      "mutant": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "the_premise_test_does_not_fail_on_an_inherited_env",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\the-premise-uses-a-controlled-env-g66.mutant.pytest.json"
+        ],
+        "rc": 0,
+        "seconds": 3.9070000000065193,
+        "summary": {
+          "passed": 2,
+          "total": 2,
+          "collected": 77,
+          "deselected": 75
+        },
+        "observed_failed": [],
+        "skipped": [],
+        "expected_failure_set_matches": false,
+        "call_witness_matches": {},
+        "failure_phases": {}
+      }
+    },
+    "target_unchanged": true,
+    "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+  },
+  {
+    "name": "the-replay-context-is-measured-once-g66",
+    "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_it61av0g\\degradation-degeneracy",
+    "registered_expected": {
+      "fail": [
+        "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once"
+      ],
+      "witness": {
+        "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once": "AssertionError: ('한 번의 진입점 호출이 재생 문맥을 여러 번 쟀다', 2)"
+      }
+    },
+    "phases": {
+      "baseline": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "the_replay_context_is_measured_once",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\the-replay-context-is-measured-once-g66.baseline.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 1.9069999999919673,
+        "summary": {
+          "passed": 1,
+          "total": 1,
+          "collected": 77,
+          "deselected": 76
+        },
+        "observed_failed": [],
+        "skipped": [],
+        "expected_failure_set_matches": false,
+        "call_witness_matches": {},
+        "failure_phases": {}
+      },
+      "mutant": {
+        "command": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/test_evidence_receipt_62.py",
+          "tests/test_gate64_defensive.py",
+          "tests/test_gate65_defensive.py",
+          "tests/test_gate66_defensive.py",
+          "--noconftest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "the_replay_context_is_measured_once",
+          "--json-report",
+          "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\the-replay-context-is-measured-once-g66.mutant.pytest.json"
+        ],
+        "rc": 1,
+        "seconds": 2.047000000005937,
+        "summary": {
+          "failed": 1,
+          "total": 1,
+          "collected": 77,
+          "deselected": 76
+        },
+        "observed_failed": [
+          "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once"
+        ],
+        "skipped": [],
+        "expected_failure_set_matches": true,
+        "call_witness_matches": {
+          "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once": true
+        },
+        "failure_phases": {
+          "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once": [
+            "call"
+          ]
+        }
+      }
+    },
+    "target_unchanged": true,
+    "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+  }
+]

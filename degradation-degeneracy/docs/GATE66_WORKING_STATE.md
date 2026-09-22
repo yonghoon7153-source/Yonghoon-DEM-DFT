@@ -123,3 +123,15 @@ the-replay-context-is-measured-once-g66    MR   정적관측  (문맥을 두 번
 - **Linux native 커널 검증** — 리뷰어 환경에서 미실행. 우리 쪽 출력을 다음 요청문에 싣는다.
 - `source_digest` 는 `e9ee7475dea7de1d` 그대로 — 이번 고침도 전부 RUN_SCOPE 밖.
 **본 실행 GO 는 요청하지 않는다.**
+
+---
+
+> **정정 (67차, 2026-09-22)** — 위 §고침 N1 의 제목 *"부모가 로드 시점의 origin 을 읽는다"* 는
+> **과한 주장이었다.** 탐침이 주는 것은 startup 이 끝난 뒤 `sys.modules` 의
+> `__file__`/`__spec__.origin` 이고, Python 은 그 둘의 자동 동기화를 보장하지 않으며 런타임
+> 수정도 가능하다 (67차 리뷰어 Q1). 참인 문장은 **"부모가 *관측된* origin 의 바이트를
+> 읽는다"** 다. *로드 순간의 봉인된 출처*는 trusted launcher / immutable input bundle 이
+> 필요하고 **미착수**다. 코드 주석도 같이 고쳤다 (`mutation_replay.py`).
+> 그리고 이 문서의 §고침 N1 이 말한 보호에는 **구멍이 있었다** — 67차 G67-N1: `auto` 가
+> 부재 위조의 마지막 방어였고 user site OFF + 명시 import namespace 조합을 빠져나갔다.
+> 자세한 것은 `docs/GATE67_WORKING_STATE.md`.

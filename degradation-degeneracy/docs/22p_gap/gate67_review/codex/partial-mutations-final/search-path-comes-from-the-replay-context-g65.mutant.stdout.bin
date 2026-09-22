@@ -1,0 +1,58 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+__________ test_a_relative_pythonpath_is_resolved_in_the_replay_cwd ___________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_g88_827r/pytest-of-User/pytest-0/test_a_relative_pythonpath_is_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000011134F29F10>
+off = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_g88_827r/pytest-of-User/pytest-0/interp-off0/venv-user-site-off/Scripts/python.exe')
+
+    def test_a_relative_pythonpath_is_resolved_in_the_replay_cwd(tmp_path, monkeypatch, off):
+        """★ N1b — `PYTHONPATH=startup` (상대). child 는 자기 cwd 로 푼다. 부모가 호출자
+        cwd 로 풀면 다른 정상 파일의 digest 를 기대해 정상 영수증을 거부한다."""
+        child, caller = _two_cwds(tmp_path)
+        use_interpreter(monkeypatch, off)
+        _pin_env(monkeypatch, {"PYTHONPATH": "startup"})
+        monkeypatch.chdir(caller)
+        mr = _mr()
+    
+        got = _receipt_in({"PYTHONPATH": "startup"}, child, off)
+        assert got["startup"]["customization"]["sitecustomize"] == _digest(
+            child / "startup" / "sitecustomize.py"), "child 가 자기 cwd 로 풀지 않았다"
+        ctx = mr._replay_context(child)
+        try:
+            mr._assert_customization_matches_parent(got, ctx)
+        except mr._ReplayError:
+>           raise AssertionError(
+                "부모가 상대 PYTHONPATH 를 호출자 cwd 로 풀었다 — 재생 문맥이 둘이다 (G65-N1b)"
+            ) from None
+E           AssertionError: 부모가 상대 PYTHONPATH 를 호출자 cwd 로 풀었다 — 재생 문맥이 둘이다 (G65-N1b)
+
+C:\Users\ADMINI~1\AppData\Local\Temp\mutation_replay_rwph4ra6\degradation-degeneracy\tests\test_gate65_defensive.py:241: AssertionError
+__ test_the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd ___
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_g88_827r/pytest-of-User/pytest-0/test_the_real_entry_point_acce0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000011134F31DC0>
+off = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_g88_827r/pytest-of-User/pytest-0/interp-off1/venv-user-site-off/Scripts/python.exe')
+
+    def test_the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd(
+            tmp_path, monkeypatch, off):
+        """★ N1b — 같은 축을 **실제 진입점** `_execution_receipt()` 에서 (리뷰어는 여기서
+        재현했다). 재생 root 는 child, 호출자 cwd 는 caller."""
+        child, caller = _two_cwds(tmp_path)
+        use_interpreter(monkeypatch, off)
+        _pin_env(monkeypatch, {"PYTHONPATH": "startup"})
+        monkeypatch.chdir(caller)
+        mr = _mr()
+        monkeypatch.setattr(mr, "_sandboxed", lambda p: child)      # 재생 root = child
+        try:
+            rec = mr._execution_receipt()
+        except mr._ReplayError:
+>           raise AssertionError(
+                "실제 진입점이 상대 PYTHONPATH 의 정상 영수증을 거부했다 (G65-N1b)") from None
+E           AssertionError: 실제 진입점이 상대 PYTHONPATH 의 정상 영수증을 거부했다 (G65-N1b)
+
+C:\Users\ADMINI~1\AppData\Local\Temp\mutation_replay_rwph4ra6\degradation-degeneracy\tests\test_gate65_defensive.py:259: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd
+FAILED tests/test_gate65_defensive.py::test_the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd
+2 failed, 75 deselected in 1.80s

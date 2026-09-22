@@ -1,0 +1,37 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_g66_07_the_replay_context_is_measured_once _______________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_7utw8d_c/pytest-of-User/pytest-0/test_g66_07_the_replay_context0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F12D45F530>
+off = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_7utw8d_c/pytest-of-User/pytest-0/g66-off0/venv-user-site-off/Scripts/python.exe')
+
+    def test_g66_07_the_replay_context_is_measured_once(tmp_path, monkeypatch, off):
+        """리뷰어의 정적 관측 — `ctx` 를 생략한 경로가 보조 인터프리터를 **두 번** 띄운다
+        (`_parent_customization_view(None)` 가 한 번, 그 다음 줄이 또 한 번). "한 번 측정한 하나의
+        문맥" 이라고 적었으므로 그대로 만든다. 별도 finding 으로 세지 않겠다고 했지만 고친다."""
+        start = tmp_path / "startup"
+        _startup(start, "# 평범한 startup\n")
+        cwd = tmp_path / "replay"
+        cwd.mkdir()
+        use_interpreter(monkeypatch, off)
+        _pin(monkeypatch, {"PYTHONPATH": str(start)})
+        mr = _mr()
+        calls = []
+        real = mr._replay_context
+    
+        def counted(c=None):
+            calls.append(c)
+            return real(c)
+    
+        monkeypatch.setattr(mr, "_replay_context", counted)
+        _entry(monkeypatch, cwd)
+>       assert len(calls) == 1, ("한 번의 진입점 호출이 재생 문맥을 여러 번 쟀다", len(calls))
+E       AssertionError: ('한 번의 진입점 호출이 재생 문맥을 여러 번 쟀다', 2)
+E       assert 2 == 1
+E        +  where 2 = len([None, None])
+
+tests\test_gate66_defensive.py:235: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once
+1 failed, 76 deselected in 1.20s

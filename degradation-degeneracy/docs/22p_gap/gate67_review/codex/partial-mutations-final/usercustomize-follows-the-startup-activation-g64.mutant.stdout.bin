@@ -1,0 +1,36 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_g66_05b_a_forged_absent_namespace_is_still_rejected ___________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_8aytf1o6/pytest-of-User/pytest-0/test_g66_05b_a_forged_absent_n0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F3C43FE180>
+on = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_8aytf1o6/pytest-of-User/pytest-0/g66-on0/venv-user-site-on/Scripts/python.exe')
+
+    def test_g66_05b_a_forged_absent_namespace_is_still_rejected(tmp_path, monkeypatch, on):
+        """대조군 — **이력에 파일로 잡히지 않는** customization(표준 namespace)을 child 가
+        `<absent>` 라 적으면 거부해야 한다.
+    
+        이력(`-X importtime -v` → 파일 있는 module) 은 namespace 를 `unfiled` 로 세므로 첫 분기
+        (`loaded_file`)가 안 잡는다. 부모가 **올라와 있다고 잰** 이름을 child 가 없다고 적는 것을
+        막는 두 번째 분기가 그 자리다 — 66차에서 `auto` 축이 옮겨 온 곳이다.
+        (`sitecustomize` 는 이 기계의 stdlib 자리 파일이 가리므로 자유로운 이름 `usercustomize` 로 만든다.)
+        """
+        site = tmp_path / "site"
+        (site / "usercustomize").mkdir(parents=True)
+        use_interpreter(monkeypatch, on)
+        _pin(monkeypatch, {"PYTHONPATH": str(site)})
+        mr = _mr()
+        cwd = tmp_path / "replay"
+        cwd.mkdir()
+        rec = _entry(monkeypatch, cwd)
+        assert rec["startup"]["customization"]["usercustomize"].startswith("<namespace>"), \
+            rec["startup"]["customization"]
+        rec["startup"]["customization"]["usercustomize"] = "<absent>"          # 세탁본
+>       with pytest.raises(mr._ReplayError, match="usercustomize"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE _ReplayError
+
+tests\test_gate66_defensive.py:187: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected
+1 failed, 76 deselected in 1.28s

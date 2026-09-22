@@ -1,0 +1,90 @@
+{
+  "name": "the-replay-context-is-measured-once-g66",
+  "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_8p2snfm2\\degradation-degeneracy",
+  "registered_expected": {
+    "fail": [
+      "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once"
+    ],
+    "witness": {
+      "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once": "AssertionError: ('한 번의 진입점 호출이 재생 문맥을 여러 번 쟀다', 2)"
+    }
+  },
+  "phases": {
+    "baseline": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_evidence_receipt_62.py",
+        "tests/test_gate64_defensive.py",
+        "tests/test_gate65_defensive.py",
+        "tests/test_gate66_defensive.py",
+        "--noconftest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "the_replay_context_is_measured_once",
+        "--json-report",
+        "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-final\\the-replay-context-is-measured-once-g66.baseline.pytest.json"
+      ],
+      "pytest_temp_root": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\g67pt_21d71j5b",
+      "rc": 0,
+      "seconds": 1.8589999999967404,
+      "summary": {
+        "passed": 1,
+        "total": 1,
+        "collected": 77,
+        "deselected": 76
+      },
+      "observed_failed": [],
+      "skipped": [],
+      "expected_failure_set_matches": false,
+      "call_witness_matches": {},
+      "failure_phases": {}
+    },
+    "mutant": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_evidence_receipt_62.py",
+        "tests/test_gate64_defensive.py",
+        "tests/test_gate65_defensive.py",
+        "tests/test_gate66_defensive.py",
+        "--noconftest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "the_replay_context_is_measured_once",
+        "--json-report",
+        "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-final\\the-replay-context-is-measured-once-g66.mutant.pytest.json"
+      ],
+      "pytest_temp_root": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\g67pt_7utw8d_c",
+      "rc": 1,
+      "seconds": 1.9689999999973224,
+      "summary": {
+        "failed": 1,
+        "total": 1,
+        "collected": 77,
+        "deselected": 76
+      },
+      "observed_failed": [
+        "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once"
+      ],
+      "skipped": [],
+      "expected_failure_set_matches": true,
+      "call_witness_matches": {
+        "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once": true
+      },
+      "failure_phases": {
+        "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once": [
+          "call"
+        ]
+      }
+    }
+  },
+  "target_unchanged": true,
+  "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+}

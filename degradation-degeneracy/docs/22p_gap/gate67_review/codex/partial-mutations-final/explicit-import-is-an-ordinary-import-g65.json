@@ -1,0 +1,90 @@
+{
+  "name": "explicit-import-is-an-ordinary-import-g65",
+  "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_q__rqlc7\\degradation-degeneracy",
+  "registered_expected": {
+    "fail": [
+      "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted"
+    ],
+    "witness": {
+      "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted": "AssertionError: user site 가 꺼졌어도 정상 sitecustomize 의 `import usercustomize` 는 평범한 import 다 — 부모가 그 영수증을 거부했다 (G65-N1a)"
+    }
+  },
+  "phases": {
+    "baseline": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_evidence_receipt_62.py",
+        "tests/test_gate64_defensive.py",
+        "tests/test_gate65_defensive.py",
+        "tests/test_gate66_defensive.py",
+        "--noconftest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "a_disabled_interpreter_with_an_explicit_import_is_accepted",
+        "--json-report",
+        "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-final\\explicit-import-is-an-ordinary-import-g65.baseline.pytest.json"
+      ],
+      "pytest_temp_root": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\g67pt_fobmdav4",
+      "rc": 0,
+      "seconds": 1.8439999999973224,
+      "summary": {
+        "passed": 1,
+        "total": 1,
+        "collected": 77,
+        "deselected": 76
+      },
+      "observed_failed": [],
+      "skipped": [],
+      "expected_failure_set_matches": false,
+      "call_witness_matches": {},
+      "failure_phases": {}
+    },
+    "mutant": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_evidence_receipt_62.py",
+        "tests/test_gate64_defensive.py",
+        "tests/test_gate65_defensive.py",
+        "tests/test_gate66_defensive.py",
+        "--noconftest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "a_disabled_interpreter_with_an_explicit_import_is_accepted",
+        "--json-report",
+        "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-final\\explicit-import-is-an-ordinary-import-g65.mutant.pytest.json"
+      ],
+      "pytest_temp_root": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\g67pt_f72qcbie",
+      "rc": 1,
+      "seconds": 1.9060000000026776,
+      "summary": {
+        "failed": 1,
+        "total": 1,
+        "collected": 77,
+        "deselected": 76
+      },
+      "observed_failed": [
+        "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted"
+      ],
+      "skipped": [],
+      "expected_failure_set_matches": true,
+      "call_witness_matches": {
+        "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted": true
+      },
+      "failure_phases": {
+        "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted": [
+          "call"
+        ]
+      }
+    }
+  },
+  "target_unchanged": true,
+  "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+}

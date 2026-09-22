@@ -1,0 +1,88 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+_____ test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected ______
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_rov3vqeq/pytest-of-User/pytest-0/test_g66_01_a_cwd_file_that_st0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002004EA60560>
+off = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_rov3vqeq/pytest-of-User/pytest-0/g66-off0/venv-user-site-off/Scripts/python.exe')
+
+    def test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected(tmp_path, monkeypatch, off):
+        """★ G66-N1 A — replay cwd 에 정상 `sitecustomize.py` 가 있지만 **`PYTHONPATH` 에는 없다**.
+        `python -c` 의 `sys.path[0]=''` 는 초기화가 **끝난 뒤** 붙으므로 startup 은 그 파일을 읽지
+        않는다. 부모가 사후 경로로 그것을 찾아 "읽었어야 한다" 고 하면 정상 영수증이 거부된다."""
+        cwd = tmp_path / "replay"
+        cwd.mkdir()
+        (cwd / "sitecustomize.py").write_text("# 아무도 안 읽는 cwd 파일\n", encoding="utf-8")
+        empty = tmp_path / "empty"
+        empty.mkdir()
+        use_interpreter(monkeypatch, off)
+        _pin(monkeypatch, {"PYTHONPATH": str(empty)})
+        mr = _mr()
+        try:
+            _entry(monkeypatch, cwd)
+        except mr._ReplayError:
+>           raise AssertionError(
+                "startup 이 읽지 않은 cwd 파일을 부모가 기대해 정상 영수증을 거부했다 (G66-N1 A)"
+            ) from None
+E           AssertionError: startup 이 읽지 않은 cwd 파일을 부모가 기대해 정상 영수증을 거부했다 (G66-N1 A)
+
+tests\test_gate66_defensive.py:88: AssertionError
+______ test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted _______
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_rov3vqeq/pytest-of-User/pytest-0/test_g66_02_a_startup_that_cle0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002004CF887D0>
+off = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_rov3vqeq/pytest-of-User/pytest-0/g66-off1/venv-user-site-off/Scripts/python.exe')
+
+    def test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted(tmp_path, monkeypatch, off):
+        """★ G66-N1 B — 정상 `sitecustomize` 가 **자기 디렉터리를 `sys.path` 에서 지운다** (Python 이
+        sitecustomize 에 허용하는 일이다). 파일도 `sys.modules` 도 그대로인데, 부모가 사후 경로에서
+        다시 찾으면 그 후보가 없어 `<absent>` 를 기대한다."""
+        start = tmp_path / "startup"
+        _startup(start, "import os, sys\n"
+                        "_here = os.path.dirname(__file__)\n"
+                        "sys.path[:] = [p for p in sys.path if os.path.abspath(p) != _here]\n")
+        cwd = tmp_path / "replay"
+        cwd.mkdir()
+        use_interpreter(monkeypatch, off)
+        _pin(monkeypatch, {"PYTHONPATH": str(start)})
+        mr = _mr()
+        try:
+            rec = _entry(monkeypatch, cwd)
+        except mr._ReplayError:
+>           raise AssertionError(
+                "자기 검색 경로를 정리한 정상 startup 의 영수증을 거부했다 (G66-N1 B)") from None
+E           AssertionError: 자기 검색 경로를 정리한 정상 startup 의 영수증을 거부했다 (G66-N1 B)
+
+tests\test_gate66_defensive.py:109: AssertionError
+___ test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted ___
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_rov3vqeq/pytest-of-User/pytest-0/test_g66_03_a_startup_that_pre0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002004EBA18B0>
+off = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt_rov3vqeq/pytest-of-User/pytest-0/g66-off2/venv-user-site-off/Scripts/python.exe')
+
+    def test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted(tmp_path, monkeypatch, off):
+        """★ G66-N1 C — startup 이 다른 디렉터리를 `sys.path` **앞에** 넣고 그곳에 또 다른
+        `sitecustomize.py` 가 있다. 이미 올라간 것은 원래 것인데 부모의 사후 탐색은 새 것을 고른다."""
+        start = tmp_path / "startup"
+        other = tmp_path / "other"
+        other.mkdir()
+        (other / "sitecustomize.py").write_text("# 한 번도 import 되지 않는 다른 후보\n", encoding="utf-8")
+        _startup(start, f"import sys\nsys.path.insert(0, {str(other)!r})\n")
+        cwd = tmp_path / "replay"
+        cwd.mkdir()
+        use_interpreter(monkeypatch, off)
+        _pin(monkeypatch, {"PYTHONPATH": str(start)})
+        mr = _mr()
+        try:
+            rec = _entry(monkeypatch, cwd)
+        except mr._ReplayError:
+>           raise AssertionError(
+                "startup 이 앞에 넣은 다른 후보를 부모가 로드된 것으로 봤다 (G66-N1 C)") from None
+E           AssertionError: startup 이 앞에 넣은 다른 후보를 부모가 로드된 것으로 봤다 (G66-N1 C)
+
+tests\test_gate66_defensive.py:130: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected
+FAILED tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted
+FAILED tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted
+3 failed, 74 deselected in 2.47s

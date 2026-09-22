@@ -24,6 +24,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -237,14 +238,84 @@ def test_g66_07_the_replay_context_is_measured_once(tmp_path, monkeypatch, off):
 
 # ── G66-T1 — 전제의 환경 의존 ────────────────────────────────────────────────────
 
-def _premise_run(python, env_extra: dict) -> subprocess.CompletedProcess:
+#: child pytest 의 **입력 경계** — 바깥이 얹는 옵션·plugin 정책은 이 시험의 자료가 아니다.
+#: ★ 67차 G67-T1: 전 판은 `dict(os.environ)` 을 그대로 물려줬다. 바깥
+#:   `PYTEST_ADDOPTS=--g67-option-does-not-exist` 면 child 가 **사용법 오류(rc 4)** 로 끝나고
+#:   `PYTEST_ADDOPTS=--collect-only` 면 **수집만 하고 실행 0건**인데, 이 시험은 둘 다 초록이었다
+#:   (리뷰어 실측). 옵션은 우리가 정한다.
+_PYTEST_ENV_KNOBS = ("PYTEST_ADDOPTS", "PYTEST_PLUGINS", "PYTEST_DISABLE_PLUGIN_AUTOLOAD",
+                     "PYTEST_CURRENT_TEST")
+#: 이 전제 시험이 **반드시 돌아야 하는** 두 node (True=활성 · False=비활성).
+_PREMISE_NODES = frozenset({"test_the_interpreter_fixture_measures_its_own_premise[True]",
+                            "test_the_interpreter_fixture_measures_its_own_premise[False]"})
+
+
+def _premise_run(python, env_extra: dict, junit: Path | None = None) -> subprocess.CompletedProcess:
     env = dict(os.environ)
+    for k in _PYTEST_ENV_KNOBS:
+        env.pop(k, None)
     env.update(env_extra)
-    return subprocess.run(
-        [str(python), "-m", "pytest", str(REPO / "tests" / "test_gate65_defensive.py"),
-         "--noconftest", "-q", "-p", "no:cacheprovider",
-         "-k", "the_interpreter_fixture_measures_its_own_premise"],
-        cwd=REPO, env=env, capture_output=True, text=True, timeout=900)
+    cmd = [str(python), "-m", "pytest", str(REPO / "tests" / "test_gate65_defensive.py"),
+           "--noconftest", "-q", "-p", "no:cacheprovider",
+           "-k", "the_interpreter_fixture_measures_its_own_premise"]
+    if junit is not None:
+        cmd.append(f"--junitxml={junit}")
+    return subprocess.run(cmd, cwd=REPO, env=env, capture_output=True, text=True, timeout=900)
+
+
+def _premise_outcomes(junit: Path) -> dict:
+    """JUnit XML → `{node: 'passed'|'skipped'|'failed'|'error'}`.
+
+    ★ 67차 G67-T1 — `"failed" not in stdout` 은 *시험이 돌았다*를 말하지 않는다. 기계가 읽는
+      결과를 쓰고, **수집만 된 것·사용법 오류·node 누락**을 전부 PASS 가 아닌 것으로 가른다.
+      `--junitxml` 은 pytest 내장이라 plugin 을 더 요구하지 않는다.
+    """
+    import xml.etree.ElementTree as ET
+
+    out = {}
+    for case in ET.parse(junit).getroot().iter("testcase"):
+        if case.find("error") is not None:
+            state = "error"
+        elif case.find("failure") is not None:
+            state = "failed"
+        elif case.find("skipped") is not None:
+            state = "skipped"
+        else:
+            state = "passed"
+        out[case.get("name")] = state
+    return out
+
+
+def assert_premise_actually_ran(r: subprocess.CompletedProcess, junit: Path) -> list:
+    """child pytest 가 **정말 돌았고** 두 전제 node 가 call 단계를 지났는가 → 미측정 node 목록.
+
+    ★ 67차 G67-T1 — 전 판의 증거는 `"failed" not in stdout` 하나였다. 그래서 child 가 사용법
+      오류(rc 4)로 끝나거나 수집만 하고 실행 0건이어도 초록이었다 (리뷰어 실측 4 case).
+      리뷰어가 짚은 대로 **`rc 0` 만 더해도 `--collect-only` 는 남는다** — 그래서 넷을 본다:
+      rc 0 · 결과 파일 존재 · **정확히 그 두 node** · 각 node 가 `passed`/`skipped`.
+      `skipped` 는 통과가 아니라 **미측정**이므로 돌려주고 호출자가 따로 적는다.
+
+      이 helper 가 따로 있는 이유: 이것을 **실제 child 로** 적대적으로 묻는 회귀
+      (`test_gate67_defensive.py::test_g67_11`)가 fake subprocess 없이 돌 수 있어야 한다.
+    """
+    tail = ((r.stdout or "")[-600:], (r.stderr or "")[-400:])
+    # ⚠ 순서가 **사유의 정확도**를 정한다. rc 를 먼저 보면 어떤 고장이든 "정상 종료하지 않았다"
+    #   하나로 뭉개지고, 그러면 변이 증인도 그 뭉갠 문장이 된다. 구체적인 것부터 본다:
+    #   결과 파일 → 정확한 node 집합 → 각 node 의 결말 → 그 밖의 rc (남은 것을 잡는 그물).
+    assert junit.is_file(), (
+        "child pytest 가 결과 파일을 남기지 않았다 — 무엇이 돌았는지 말할 수 없다 (G67-T1)", tail)
+    outcomes = _premise_outcomes(junit)
+    assert set(outcomes) == set(_PREMISE_NODES), (
+        "기대한 두 전제 node 가 실제로 돌지 않았다 — 수집만 했거나 선택이 어긋났다 (G67-T1)",
+        sorted(outcomes), sorted(_PREMISE_NODES))
+    broken = {k: v for k, v in outcomes.items() if v not in ("passed", "skipped")}
+    assert not broken, (
+        "물려받은 env 때문에 전제 시험이 실패했다 — 환경의 비활성을 fixture 구현 실패로 오판한다 "
+        "(G66-T1)", broken, tail)
+    assert r.returncode == 0, (
+        "전제 시험을 돌린 child pytest 가 정상 종료하지 않았다 — 사용법·수집·setup 오류는 "
+        "통과가 아니다 (G67-T1)", r.returncode, tail)
+    return sorted(k for k, v in outcomes.items() if v == "skipped")
 
 
 @pytest.mark.parametrize("env_extra", [{}, {"PYTHONNOUSERSITE": "1"}], ids=["clean", "nousersite"])
@@ -254,11 +325,23 @@ def test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env(env_extra):
     **실패가 아니라 skip(미측정)** 이어야 한다.
 
     리뷰어 실측(Windows): `PYTHONNOUSERSITE=1` 에서 `1 failed · 1 passed`.
+
+    ★ 67차 G67-T1 — 증거의 모양을 바꿨다. 전 판은 `"failed" not in stdout` 하나였고, 그래서
+    child 가 **아예 안 돌아도**(rc 4 · 수집 0건) 초록이었다. 이제 넷을 요구한다:
+    rc 0 · JUnit 산출 존재 · **정확히 그 두 node** · 각 node 가 `passed` 또는 `skipped`.
+    `skipped` 는 통과가 아니라 **미측정**이므로 따로 적는다.
     """
-    r = _premise_run(sys.executable, env_extra)
-    assert "failed" not in (r.stdout or "").lower(), (
-        "물려받은 env 때문에 전제 시험이 실패했다 — 환경의 비활성을 fixture 구현 실패로 오판한다 "
-        "(G66-T1)", (r.stdout or "")[-600:])
+    # ⚠ 67차 — **`tmp_path` fixture 를 쓰지 않는다.** 외부 검토 스크립트가 이 시험 함수를
+    #   `(env_extra)` 하나로 **직접** 부르기 때문이다 (리뷰어 `repro_boundaries.py`). 인자를
+    #   늘리면 그쪽 관측이 `TypeError` 가 되고, **그 거부는 우리 수정의 증거가 아니다** —
+    #   실제로 한 번 그렇게 나왔고 그것을 통과로 세지 않았다. (기본값을 주는 방법은
+    #   pytest 가 fixture 를 안 넣어 임시 디렉터리가 새어 나가므로 쓰지 않는다 — 실측.)
+    with tempfile.TemporaryDirectory(prefix="g66t1-") as _d:
+        junit = Path(_d) / "premise.xml"
+        r = _premise_run(sys.executable, env_extra, junit)
+        unmeasured = assert_premise_actually_ran(r, junit)
+    if unmeasured:
+        print(f"[G66-T1] 이 기계의 정책으로 **미측정**(skip)된 전제 node: {unmeasured}")
 
 
 def test_g66_09_the_fixture_still_catches_a_missing_activation_option(tmp_path, monkeypatch):

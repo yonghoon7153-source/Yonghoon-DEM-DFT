@@ -1,0 +1,40 @@
+{
+  "verified_utc": "2026-09-22T13:10:08.378641+00:00",
+  "head": "cdc49e91af15b2ef968753110cfae3bbe7ab5c2f",
+  "status_porcelain": "",
+  "target_identity_files_byte_unchanged": [
+    "CLAUDE.md",
+    "degradation-degeneracy/docs/22p_gap/GATE67_REQUEST.md",
+    "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+    "degradation-degeneracy/docs/GATE66_WORKING_STATE.md",
+    "degradation-degeneracy/docs/22p_gap/mutation_replay.py",
+    "degradation-degeneracy/tests/interpreter_fixture.py",
+    "degradation-degeneracy/tests/test_gate66_defensive.py",
+    "degradation-degeneracy/tests/test_gate65_defensive.py",
+    "degradation-degeneracy/tests/test_gate64_defensive.py",
+    "degradation-degeneracy/tests/test_gate63_defensive.py",
+    "degradation-degeneracy/tests/conftest.py",
+    "degradation-degeneracy/tools/preserve.py"
+  ],
+  "findings": [
+    "G67-N1:P1",
+    "G67-N2:P1",
+    "G67-T1:P2"
+  ],
+  "mutation_supplement": {
+    "selected": 9,
+    "exact_failure_node_and_call_matches": 8,
+    "witness_matches": 7,
+    "official_coverage": false
+  },
+  "registry_delta": {
+    "previous": 366,
+    "current": 367,
+    "added": 1,
+    "deleted": 0,
+    "changed_survivors": 0
+  },
+  "original_repro_copy_sha256": "8af9d30fb4885fbbcb045782725b8b10313d4eb35e4f67f53772187cd67fa80e",
+  "production_edits": 0,
+  "scope": "Offline evidence consistency and target identity, not a new test run or independent scientific validation"
+}

@@ -1,0 +1,39 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_a_namespace_usercustomize_is_measured_and_accepted ___________
+
+tmp_path = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt__2c53bzh/pytest-of-User/pytest-0/test_a_namespace_usercustomize0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019C96E810D0>
+on = WindowsPath('C:/Users/Administrator/AppData/Local/Temp/g67pt__2c53bzh/pytest-of-User/pytest-0/interp-on0/venv-user-site-on/Scripts/python.exe')
+
+    def test_a_namespace_usercustomize_is_measured_and_accepted(tmp_path, monkeypatch, on):
+        """★ N2b — 활성 인터프리터가 namespace `usercustomize` 를 올린다 (`__file__ None`).
+        이것은 로드된 코드 없는 module 이다 — `<absent>` 도, `failed` 도 아니다.
+    
+        (이 기계에서 `sitecustomize` 는 stdlib 자리의 일반 파일이 namespace 를 가리므로 —
+        Python 은 정규 module 을 먼저 찾는다 — 자유로운 이름 `usercustomize` 로 만든다.)"""
+        site = _namespace_site(tmp_path, "usercustomize")
+        use_interpreter(monkeypatch, on)
+        _pin_env(monkeypatch, {"PYTHONPATH": str(site)})
+        mr = _mr()
+    
+        got = _receipt_in({"PYTHONPATH": str(site)}, tmp_path, on)
+        st = got["startup"]
+        # 증인 문구는 **기계 독립**이어야 한다 — production 의 reason·digest 를 assert 문구에
+        # 싣지 않는다 (64차 ① 회차의 교훈). 관측값은 stdout 으로만 남긴다.
+        print("startup:", json.dumps(st.get("startup_history"), ensure_ascii=False)[:400])
+        assert st.get("status") == "measured", "정상 namespace customization 이 startup 을 failed 로 만든다 (G65-N2b)"
+>       assert st["startup_history"].get("status") == "measured", (
+            "정상 namespace customization 이 이력을 failed 로 만든다 (G65-N2b)")
+E       AssertionError: 정상 namespace customization 이 이력을 failed 로 만든다 (G65-N2b)
+E       assert 'failed' == 'measured'
+E         
+E         - measured
+E         + failed
+
+tests\test_gate65_defensive.py:319: AssertionError
+---------------------------- Captured stdout call -----------------------------
+startup: {"reason": "손자는 usercustomize 을 올렸다는데 customization 은 <absent> 다 — 어긋난 증거", "status": "failed"}
+=========================== short test summary info ===========================
+FAILED tests/test_gate65_defensive.py::test_a_namespace_usercustomize_is_measured_and_accepted
+1 failed, 76 deselected in 1.14s

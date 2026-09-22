@@ -1,0 +1,14 @@
+sandbox: C:\Users\ADMINI~1\AppData\Local\Temp\mutation_replay_0nqy35fo\degradation-degeneracy
+
+★ 실행오류     parent-compares-the-loaded-origin-g66 수집 rc 가 0 이 아니다 (3): 
+★ 실행오류     the-premise-uses-a-controlled-env-g66 수집 rc 가 0 이 아니다 (3): 
+★ 실행오류     the-replay-context-is-measured-once-g66 수집 rc 가 0 이 아니다 (3): 
+
+scenario_total 3 · scenario_executable 3 · scenario_declared 0 · site_total 3 · site_executable 3 · site_declared 0 · ran 0
+
+=== 문제 ===
+parent-compares-the-loaded-origin-g66: 수집 rc 가 0 이 아니다 (3): 
+the-premise-uses-a-controlled-env-g66: 수집 rc 가 0 이 아니다 (3): 
+the-replay-context-is-measured-once-g66: 수집 rc 가 0 이 아니다 (3): 
+
+sandbox 를 남긴다: C:\Users\ADMINI~1\AppData\Local\Temp\mutation_replay_0nqy35fo\degradation-degeneracy

@@ -1,0 +1,1757 @@
+{
+  "schema_version": 1,
+  "head": "cdc49e91af15b2ef968753110cfae3bbe7ab5c2f",
+  "scope": "review evidence only",
+  "payloads": [
+    {
+      "path": "CLAUDE_REPLY.md",
+      "bytes": 5310,
+      "sha256": "5b91f3b408457c5843cfc457de4b65576681c905854145bc15559414c4497f54"
+    },
+    {
+      "path": "FINAL_CHECK.json",
+      "bytes": 1479,
+      "sha256": "6c2c477b1a15a81fcab4adabc1dbcd5a86097f8440723ba00d1f286dd6133c3b"
+    },
+    {
+      "path": "GATE67_REVIEW_KO.md",
+      "bytes": 22561,
+      "sha256": "6f4954c6133e957e42a5f7a68fff2736ca693d0a71688e543906259553da5c8e"
+    },
+    {
+      "path": "REPRO_README.md",
+      "bytes": 6191,
+      "sha256": "8a9f69956a4189d8cd3b30ddf75f34bf497afd0ad75bb10268bf17f41fc0b429"
+    },
+    {
+      "path": "TARGET_IDENTITY.json",
+      "bytes": 3373,
+      "sha256": "ebff6900167473f809940d89b63d15d21bcd40b10377e959554091ad97956ac5"
+    },
+    {
+      "path": "audit_identity.py",
+      "bytes": 3828,
+      "sha256": "953a800584cdbe944e84f8c509575304c030d28842984c0f25db5332d1cb9a37"
+    },
+    {
+      "path": "boundary-cases/explicit-namespace/sitecustomize.py",
+      "bytes": 22,
+      "sha256": "a6b6f7ff672484049998abf71eefdb0e70bfa4488de0ca6a874006c07a0319a6"
+    },
+    {
+      "path": "boundary-cases/namespace_explicit_off/context.json",
+      "bytes": 4171,
+      "sha256": "7f25cbbba3ecdfcb77f24c1ea624037ababa50137afd917feb4ce7b77336cd49"
+    },
+    {
+      "path": "boundary-cases/namespace_explicit_off/forged.json",
+      "bytes": 6439,
+      "sha256": "19914ea82d02506ceae0972f67573a4113a19547e1fb132bd7284533742fe844"
+    },
+    {
+      "path": "boundary-cases/namespace_explicit_off/observation.json",
+      "bytes": 2764,
+      "sha256": "605310fb85147362d641e52f917c2397efc7cffedad1f71208fd39bf70436ce0"
+    },
+    {
+      "path": "boundary-cases/namespace_explicit_off/receipt.json",
+      "bytes": 6459,
+      "sha256": "8c17a24c3443f396c00aad479605559cc290401491d1e737c9e3aa4934e2eac4"
+    },
+    {
+      "path": "boundary-cases/namespace_explicit_on/context.json",
+      "bytes": 4289,
+      "sha256": "fa2afabf1be24f8ce27ce898fe008fdb9f076fdf695b596f11015727b817df24"
+    },
+    {
+      "path": "boundary-cases/namespace_explicit_on/forged.json",
+      "bytes": 8616,
+      "sha256": "47190802cae866e1b548a911d644b86108c5c02a8071e7f1b76bcafe822225bf"
+    },
+    {
+      "path": "boundary-cases/namespace_explicit_on/observation.json",
+      "bytes": 3773,
+      "sha256": "7d60d9650ea1bfc18fb4bb172c8a5f0ab1a7e57a67205c91e2361942753fef8e"
+    },
+    {
+      "path": "boundary-cases/namespace_explicit_on/receipt.json",
+      "bytes": 8636,
+      "sha256": "9ba3b659e110be8f731a67a5d6c8734d1f2360b54eac93800701ce74b3c1ed69"
+    },
+    {
+      "path": "boundary-cases/premise_collection_only.json",
+      "bytes": 460,
+      "sha256": "5ecc66190469282ccdcbbf48bb0aa8dcdaeed58ca0824044cf6ba5dedcb13ec7"
+    },
+    {
+      "path": "boundary-cases/premise_pytest_usage_error.json",
+      "bytes": 560,
+      "sha256": "929e8befe5b37bbba34e133c743d26e88fa160371606c7d75585f21b8698f6c8"
+    },
+    {
+      "path": "boundary-cases/summary.json",
+      "bytes": 16094,
+      "sha256": "561a0d7079e0b6bafab35427f6c3f85d94b7c44164aef2d387d83bee4628947a"
+    },
+    {
+      "path": "boundary-cases/zip_module_remove_path.zip",
+      "bytes": 295,
+      "sha256": "92d82bd261ab987319dc1893709b6e1f4e00b92b2d71d14a8dc437f9e047caa2"
+    },
+    {
+      "path": "boundary-cases/zip_module_remove_path/context.json",
+      "bytes": 3826,
+      "sha256": "cbdd6d53845f959a2aa519b020e4b51bbb8f0a801ddb3621533411885a446713"
+    },
+    {
+      "path": "boundary-cases/zip_module_remove_path/observation.json",
+      "bytes": 2200,
+      "sha256": "80a6aaf997c18539184dac61deda75baf8d5b7a499c22962ad8a9836e6cb0320"
+    },
+    {
+      "path": "boundary-cases/zip_module_remove_path/receipt.json",
+      "bytes": 6401,
+      "sha256": "25d7224ad6c48f817b0a949e3fbbb0334058a783b881a245ba5cb9038c2f5186"
+    },
+    {
+      "path": "boundary-cases/zip_package_plain.zip",
+      "bytes": 171,
+      "sha256": "f991b0582841b822c5d05860707a2b59521c701cb3b5c34ca96f4a18e752fbe1"
+    },
+    {
+      "path": "boundary-cases/zip_package_plain/context.json",
+      "bytes": 4194,
+      "sha256": "b4ff84d947e7143d5c57da7b229b8f83519873337b2eaa18a29d717b87c2e55e"
+    },
+    {
+      "path": "boundary-cases/zip_package_plain/observation.json",
+      "bytes": 2590,
+      "sha256": "bd57cd89e6b6f59f17dd617de738651c037ab8df08c7f2bc86e522648ac7f282"
+    },
+    {
+      "path": "boundary-cases/zip_package_plain/receipt.json",
+      "bytes": 6391,
+      "sha256": "39aabbfc4632c089b2bdf042da84cfb88fd6493f4326c90630c47eb90e7012f9"
+    },
+    {
+      "path": "boundary-cases/zip_package_remove_path.zip",
+      "bytes": 330,
+      "sha256": "e0479e67d7a3758a7799eb7cdcfe0a21215e22945c82499549cb792e13ba4894"
+    },
+    {
+      "path": "boundary-cases/zip_package_remove_path/context.json",
+      "bytes": 4040,
+      "sha256": "ab773bbb859ad48b8d3e46f62a0c1a48762ba75f853afe3523d5e36fcc9107ce"
+    },
+    {
+      "path": "boundary-cases/zip_package_remove_path/observation.json",
+      "bytes": 3363,
+      "sha256": "0db643e2c342a91f1441d293c0c93c660bec8e916ec6da000432a0b46c646c56"
+    },
+    {
+      "path": "boundary-cases/zip_package_remove_path/receipt.json",
+      "bytes": 6403,
+      "sha256": "51e8ddfb3660795725a66cdbd63ab5b028424cc4c839bdd3166e0f36039f4d31"
+    },
+    {
+      "path": "collection.json",
+      "bytes": 692,
+      "sha256": "f4241c94057c738e76d5984f57a003ada84ae416a2c4f645776eaee47add4dd6"
+    },
+    {
+      "path": "collection.stderr.bin",
+      "bytes": 5515,
+      "sha256": "b39e57019e8b4921bfbd63ca0f9c67ecc8cdb005014110ccc8b3e152c25e14a9"
+    },
+    {
+      "path": "collection.stdout.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disabled.json",
+      "bytes": 1075,
+      "sha256": "2e57a7876c9c0a621b3dd564f9a68cca241f91cecf2df2c7927a38908280d220"
+    },
+    {
+      "path": "disabled.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disabled.stdout.bin",
+      "bytes": 115,
+      "sha256": "f5f54a12dbf44bd2b84e93b844344be9f576175327c7c25eccc3b4f7b1085c11"
+    },
+    {
+      "path": "disabled.xml",
+      "bytes": 516,
+      "sha256": "5ed4d49a6499c0deec1d8dc3931ef872096185b325ca34c6d74ef9f56477e4c9"
+    },
+    {
+      "path": "finalize_package.py",
+      "bytes": 6635,
+      "sha256": "514800f1ee759c9f69a80e7bd7e7f28f6d4c9be71916f20a49f48e23f2f3610b"
+    },
+    {
+      "path": "identity.json",
+      "bytes": 664,
+      "sha256": "844192a1f0877c5e49d6321b0dab52cd1e366ea4933df32760d981a8ef58577b"
+    },
+    {
+      "path": "identity.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "identity.stdout.bin",
+      "bytes": 85,
+      "sha256": "5ff7e5acfe137209bc2e2dd6c6136d74dda434be121930d1b50d17bf5e21fef7"
+    },
+    {
+      "path": "old-startup/cwd_on_pythonpath/observation.json",
+      "bytes": 6414,
+      "sha256": "ca4ddcef7cdc260ad9c17b5979c3dd500d997f3ccb8d02d377cfc8611e79915d"
+    },
+    {
+      "path": "old-startup/cwd_on_pythonpath/receipt.json",
+      "bytes": 9104,
+      "sha256": "c261ff20bdbeb3a6dc7f9678bb680ac266738e845dbe011110fef63daea35871"
+    },
+    {
+      "path": "old-startup/cwd_on_pythonpath/startup/sitecustomize.py",
+      "bytes": 20,
+      "sha256": "4d0e48c34fc51ddce27c94c40ca3a5f3b1ce2bce2b6fe9752cf7af8f3ac3dfb3"
+    },
+    {
+      "path": "old-startup/cwd_on_pythonpath/startup/usercustomize.py",
+      "bytes": 10,
+      "sha256": "3f107fe0e2bb9e780d61b25bf7734d995076e31bccadca38c54bd2fcafc27e51"
+    },
+    {
+      "path": "old-startup/cwd_only_candidate/observation.json",
+      "bytes": 6449,
+      "sha256": "0d46b004d30202a13ac3eb42d716813b0f837d5789e3e59f41ae7664a8b4c4e4"
+    },
+    {
+      "path": "old-startup/cwd_only_candidate/receipt.json",
+      "bytes": 9026,
+      "sha256": "bd636ca603a3f68cb015270661cf026fec1b12776a5e9f9fbe22fdfdd2c91bbc"
+    },
+    {
+      "path": "old-startup/cwd_only_candidate/startup/sitecustomize.py",
+      "bytes": 20,
+      "sha256": "4d0e48c34fc51ddce27c94c40ca3a5f3b1ce2bce2b6fe9752cf7af8f3ac3dfb3"
+    },
+    {
+      "path": "old-startup/cwd_only_candidate/startup/usercustomize.py",
+      "bytes": 10,
+      "sha256": "3f107fe0e2bb9e780d61b25bf7734d995076e31bccadca38c54bd2fcafc27e51"
+    },
+    {
+      "path": "old-startup/observations.json",
+      "bytes": 34736,
+      "sha256": "65b57ba51a8515712c5246c2bb0913511c2fc6d7ca267776c03f02617d2221a4"
+    },
+    {
+      "path": "old-startup/plain/observation.json",
+      "bytes": 6989,
+      "sha256": "979de7e3f11082c2202259dae4131494db2c5e153da4d3f5dd50a1d9f27f0418"
+    },
+    {
+      "path": "old-startup/plain/receipt.json",
+      "bytes": 9244,
+      "sha256": "b7f398de403d809024338edf399f61b4248d1aa1c6561b900718321231aa9649"
+    },
+    {
+      "path": "old-startup/plain/startup/sitecustomize.py",
+      "bytes": 20,
+      "sha256": "4d0e48c34fc51ddce27c94c40ca3a5f3b1ce2bce2b6fe9752cf7af8f3ac3dfb3"
+    },
+    {
+      "path": "old-startup/plain/startup/usercustomize.py",
+      "bytes": 10,
+      "sha256": "3f107fe0e2bb9e780d61b25bf7734d995076e31bccadca38c54bd2fcafc27e51"
+    },
+    {
+      "path": "old-startup/remove_loaded_path/observation.json",
+      "bytes": 6510,
+      "sha256": "3b543a4780de98a35e8ab44886b7a8670777bac14313d5c60fb4c15dfcfdba0c"
+    },
+    {
+      "path": "old-startup/remove_loaded_path/receipt.json",
+      "bytes": 9205,
+      "sha256": "8cecfc058c0d007e1582cbf77011a480552f754b3a9ad640c120704f5987dadc"
+    },
+    {
+      "path": "old-startup/remove_loaded_path/startup/sitecustomize.py",
+      "bytes": 112,
+      "sha256": "714392a77b46c917dd1f906a9af0d7affeefd627766712d97923b4e02aa7a20f"
+    },
+    {
+      "path": "old-startup/remove_loaded_path/startup/usercustomize.py",
+      "bytes": 10,
+      "sha256": "3f107fe0e2bb9e780d61b25bf7734d995076e31bccadca38c54bd2fcafc27e51"
+    },
+    {
+      "path": "old-startup/reorder_loaded_path/observation.json",
+      "bytes": 7470,
+      "sha256": "2e63f1b4b8700300cfa02f3c55518d45746b6cac1ef6a758afd2b092201506de"
+    },
+    {
+      "path": "old-startup/reorder_loaded_path/other/sitecustomize.py",
+      "bytes": 44,
+      "sha256": "3d4c0e115a180f72054aab16f354a7996176e277601f99f65edc500ce6636c9a"
+    },
+    {
+      "path": "old-startup/reorder_loaded_path/receipt.json",
+      "bytes": 9272,
+      "sha256": "0d11f6429cdd018545f4a626cb69a00d96d4590598d65d204cc90f7421adae3a"
+    },
+    {
+      "path": "old-startup/reorder_loaded_path/startup/sitecustomize.py",
+      "bytes": 200,
+      "sha256": "bc2e88890997d52ca56ffdf20206f46423f0fe685c6986034f80d51734bcb73a"
+    },
+    {
+      "path": "old-startup/reorder_loaded_path/startup/usercustomize.py",
+      "bytes": 10,
+      "sha256": "3f107fe0e2bb9e780d61b25bf7734d995076e31bccadca38c54bd2fcafc27e51"
+    },
+    {
+      "path": "old_repro.json",
+      "bytes": 1246,
+      "sha256": "9c63ab2e280f013e48459df5c217dd2aeeaf3a20700ab636b70965dacda6010b"
+    },
+    {
+      "path": "old_repro.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "old_repro.stdout.bin",
+      "bytes": 707,
+      "sha256": "599869c78f49e057c99787f83f46e1d921c63e279763c247420560c81e79dd70"
+    },
+    {
+      "path": "partial-mutations-final/explicit-import-is-an-ordinary-import-g65.baseline.pytest.json",
+      "bytes": 14802,
+      "sha256": "350a657eda14ff94890e20e1d008cbb0d38d73c673090b23f70b088e5450a60a"
+    },
+    {
+      "path": "partial-mutations-final/explicit-import-is-an-ordinary-import-g65.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/explicit-import-is-an-ordinary-import-g65.baseline.stdout.bin",
+      "bytes": 115,
+      "sha256": "3ed8c46300a3678b6e062da30317167ed5614d246927c4d669306c113a6ca68a"
+    },
+    {
+      "path": "partial-mutations-final/explicit-import-is-an-ordinary-import-g65.json",
+      "bytes": 3724,
+      "sha256": "a527464933e4d8b585516015f32ecf044e232691668bf1d4ac303ffb0e44d864"
+    },
+    {
+      "path": "partial-mutations-final/explicit-import-is-an-ordinary-import-g65.mutant.pytest.json",
+      "bytes": 17702,
+      "sha256": "824f24a2c89de6d31046175c8e3ceb613ea6b5e9c91d5ba3dd81fb21da9c2945"
+    },
+    {
+      "path": "partial-mutations-final/explicit-import-is-an-ordinary-import-g65.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/explicit-import-is-an-ordinary-import-g65.mutant.stdout.bin",
+      "bytes": 2590,
+      "sha256": "060bb9ece7c9e3bb63ff5cfdb88b8998710e70da683c4e5a0fe79dd1764eb5cd"
+    },
+    {
+      "path": "partial-mutations-final/namespace-is-loaded-code-free-not-absent-g65.baseline.pytest.json",
+      "bytes": 14997,
+      "sha256": "38a006d739e62e41a3f125b8a1f2b42e916ad0760319169a51e70df8f67e7144"
+    },
+    {
+      "path": "partial-mutations-final/namespace-is-loaded-code-free-not-absent-g65.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/namespace-is-loaded-code-free-not-absent-g65.baseline.stdout.bin",
+      "bytes": 115,
+      "sha256": "149d3d20105c29b71c3dc78bbc97be1f99696c17cbb94deeeda57f9fc2bb3262"
+    },
+    {
+      "path": "partial-mutations-final/namespace-is-loaded-code-free-not-absent-g65.json",
+      "bytes": 3599,
+      "sha256": "122305e5e3081b58b4433c8fa5c282a2ea4ece1ff14c820836eb96cd46f35014"
+    },
+    {
+      "path": "partial-mutations-final/namespace-is-loaded-code-free-not-absent-g65.mutant.pytest.json",
+      "bytes": 17839,
+      "sha256": "82343416ac2a54945c1e8e1620e22a60579d0f81ee7620e8e0365a32eed1a3bf"
+    },
+    {
+      "path": "partial-mutations-final/namespace-is-loaded-code-free-not-absent-g65.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/namespace-is-loaded-code-free-not-absent-g65.mutant.stdout.bin",
+      "bytes": 2709,
+      "sha256": "ea655223f9f2cfb9c8d16ca44afa5970957e654c61ebbba0c6862f94feb97b31"
+    },
+    {
+      "path": "partial-mutations-final/parent-compares-the-loaded-origin-g66.baseline.pytest.json",
+      "bytes": 15638,
+      "sha256": "9a30758be9c5d5638b1a480b6bb19e61ebb11c507b87eb443beae5d30514cd42"
+    },
+    {
+      "path": "partial-mutations-final/parent-compares-the-loaded-origin-g66.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/parent-compares-the-loaded-origin-g66.baseline.stdout.bin",
+      "bytes": 115,
+      "sha256": "c0bd74f323023846f6f197f0bc0f68da09e4ae65dd882009c49bc4b3716b1bfb"
+    },
+    {
+      "path": "partial-mutations-final/parent-compares-the-loaded-origin-g66.json",
+      "bytes": 5319,
+      "sha256": "aef19100ed8bf47e99b1417c4d4552f8743201c15a55808acce05460dcf3256a"
+    },
+    {
+      "path": "partial-mutations-final/parent-compares-the-loaded-origin-g66.mutant.pytest.json",
+      "bytes": 22998,
+      "sha256": "956eda84c0f805e9e6d08538bf6eaf32302ffd9b85c33aea6a4b017ff4ec264b"
+    },
+    {
+      "path": "partial-mutations-final/parent-compares-the-loaded-origin-g66.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/parent-compares-the-loaded-origin-g66.mutant.stdout.bin",
+      "bytes": 5740,
+      "sha256": "502fc9f2a7d1a138ec52f6d985fe788d632c109b5970269160e3525f01773689"
+    },
+    {
+      "path": "partial-mutations-final/parent-customization-uses-the-path-finder-g63.baseline.pytest.json",
+      "bytes": 14645,
+      "sha256": "47afe4c7ea993dfdbe69fb3c9ea7362ca99169d641b84c75dc5c7551f8da79bc"
+    },
+    {
+      "path": "partial-mutations-final/parent-customization-uses-the-path-finder-g63.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/parent-customization-uses-the-path-finder-g63.baseline.stdout.bin",
+      "bytes": 115,
+      "sha256": "bc057ff8f280407448bbf4419e4daa077740a5fcac044a3c4dd83f411d81cb3e"
+    },
+    {
+      "path": "partial-mutations-final/parent-customization-uses-the-path-finder-g63.json",
+      "bytes": 3633,
+      "sha256": "e4710995fdfd91d0ca9a60fda55a6f6e53cfc459a273d4e3bfa792b121372cc4"
+    },
+    {
+      "path": "partial-mutations-final/parent-customization-uses-the-path-finder-g63.mutant.pytest.json",
+      "bytes": 14644,
+      "sha256": "44c5b5c3af9ca00c6bfbac1ece9f9594f19bff62cb2bd21318319c5698fe0e5f"
+    },
+    {
+      "path": "partial-mutations-final/parent-customization-uses-the-path-finder-g63.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/parent-customization-uses-the-path-finder-g63.mutant.stdout.bin",
+      "bytes": 115,
+      "sha256": "bc057ff8f280407448bbf4419e4daa077740a5fcac044a3c4dd83f411d81cb3e"
+    },
+    {
+      "path": "partial-mutations-final/search-path-comes-from-the-replay-context-g65.baseline.pytest.json",
+      "bytes": 15144,
+      "sha256": "140d256d3ce12999653398ae3b46a8b717e0fc2d65814984e311fad219df3717"
+    },
+    {
+      "path": "partial-mutations-final/search-path-comes-from-the-replay-context-g65.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/search-path-comes-from-the-replay-context-g65.baseline.stdout.bin",
+      "bytes": 115,
+      "sha256": "c345915d54fee5a205c6a3ab85b776c2d977c47d0d93507fd672cc8159cce9cf"
+    },
+    {
+      "path": "partial-mutations-final/search-path-comes-from-the-replay-context-g65.json",
+      "bytes": 4498,
+      "sha256": "61a57c727bf92acadfd18293dd30ed94fb800219ce4fec9c3615f61bae918030"
+    },
+    {
+      "path": "partial-mutations-final/search-path-comes-from-the-replay-context-g65.mutant.pytest.json",
+      "bytes": 20015,
+      "sha256": "f8793b89be9b82e30b389901ae70ff007f7344dd589130e4a28a2908758d3a76"
+    },
+    {
+      "path": "partial-mutations-final/search-path-comes-from-the-replay-context-g65.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/search-path-comes-from-the-replay-context-g65.mutant.stdout.bin",
+      "bytes": 3855,
+      "sha256": "f6b181db2ebf58a429b49734cfe86203f17b44c10b0c7a8197a1fc6480e7a8dc"
+    },
+    {
+      "path": "partial-mutations-final/summary.json",
+      "bytes": 36858,
+      "sha256": "a927fd04d456a7770614258adf7dac1932842e386264c64c28dc5b35e82b536e"
+    },
+    {
+      "path": "partial-mutations-final/the-fixture-measures-its-premise-g65.baseline.pytest.json",
+      "bytes": 15204,
+      "sha256": "e724df0241d4af540745a3200a7dd29c7593c3a8e631aa4a3a82925e8cc9c40a"
+    },
+    {
+      "path": "partial-mutations-final/the-fixture-measures-its-premise-g65.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/the-fixture-measures-its-premise-g65.baseline.stdout.bin",
+      "bytes": 115,
+      "sha256": "60ae8db3b164d256a66cb3a606efee33627b3354e66e9bc12ebfac0f3b5b1e7a"
+    },
+    {
+      "path": "partial-mutations-final/the-fixture-measures-its-premise-g65.json",
+      "bytes": 3557,
+      "sha256": "249a5b6e239f9cd28d210a8382630a87b2bc56aad67583128078a00d1177a33d"
+    },
+    {
+      "path": "partial-mutations-final/the-fixture-measures-its-premise-g65.mutant.pytest.json",
+      "bytes": 17910,
+      "sha256": "80b27715d2a954f9ac4f410b0adeff45f0dfbce8e0fb31864d3c3125431dc4bf"
+    },
+    {
+      "path": "partial-mutations-final/the-fixture-measures-its-premise-g65.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/the-fixture-measures-its-premise-g65.mutant.stdout.bin",
+      "bytes": 2104,
+      "sha256": "519939c4394014f17d5e8b8fc9dc5aea54a3a817be3fe1cb39b729b97bd2417a"
+    },
+    {
+      "path": "partial-mutations-final/the-premise-uses-a-controlled-env-g66.baseline.pytest.json",
+      "bytes": 15263,
+      "sha256": "b042af7e6755be968a7ca44a92088682616ce9226bc31eb46495c7155c274678"
+    },
+    {
+      "path": "partial-mutations-final/the-premise-uses-a-controlled-env-g66.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/the-premise-uses-a-controlled-env-g66.baseline.stdout.bin",
+      "bytes": 115,
+      "sha256": "3db9b3aa6096c9b5a4e34edf783681de5d6440aaf82f63e3687cc510cc10231a"
+    },
+    {
+      "path": "partial-mutations-final/the-premise-uses-a-controlled-env-g66.json",
+      "bytes": 3789,
+      "sha256": "598e7eab9acb7c0a967d31d4c605bccdd1da74fd9caf91bcad21d9393a6a16de"
+    },
+    {
+      "path": "partial-mutations-final/the-premise-uses-a-controlled-env-g66.mutant.pytest.json",
+      "bytes": 18476,
+      "sha256": "293144d710b22e11c40dbda10982ea2bc74b0d11666b36f24f9d5819309adb4f"
+    },
+    {
+      "path": "partial-mutations-final/the-premise-uses-a-controlled-env-g66.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/the-premise-uses-a-controlled-env-g66.mutant.stdout.bin",
+      "bytes": 2193,
+      "sha256": "6764fe88e3a6c95f9adb79ff37d8147d3ea9acb032ca228d7426979003b5b962"
+    },
+    {
+      "path": "partial-mutations-final/the-replay-context-is-measured-once-g66.baseline.pytest.json",
+      "bytes": 14635,
+      "sha256": "90cd5c94792eea817d878eba603544b77e75f9903bbc01e7b27f633ad90040f8"
+    },
+    {
+      "path": "partial-mutations-final/the-replay-context-is-measured-once-g66.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/the-replay-context-is-measured-once-g66.baseline.stdout.bin",
+      "bytes": 115,
+      "sha256": "70018ff6af31a8b340428b166b38748f1b5d95c400058fa41b58cfdc4378c0fb"
+    },
+    {
+      "path": "partial-mutations-final/the-replay-context-is-measured-once-g66.json",
+      "bytes": 3511,
+      "sha256": "029b512aeb9417a173c6bcea61ca4ef843a854df8281bd74157614c1fe1821db"
+    },
+    {
+      "path": "partial-mutations-final/the-replay-context-is-measured-once-g66.mutant.pytest.json",
+      "bytes": 17177,
+      "sha256": "ede0ee86f17e8f541eed17c5f7f66384243864d8c100e9a35f95de52bf5d48b8"
+    },
+    {
+      "path": "partial-mutations-final/the-replay-context-is-measured-once-g66.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/the-replay-context-is-measured-once-g66.mutant.stdout.bin",
+      "bytes": 2116,
+      "sha256": "46fda5520f260b933f7aa4cb64900af11a9de50ba43c866f2770bd9559f241d9"
+    },
+    {
+      "path": "partial-mutations-final/usercustomize-follows-the-startup-activation-g64.baseline.pytest.json",
+      "bytes": 14657,
+      "sha256": "35670b0c33cb5ebbea6b1580454ac7d23f34ac271d344306f08dd73d4da78fdf"
+    },
+    {
+      "path": "partial-mutations-final/usercustomize-follows-the-startup-activation-g64.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/usercustomize-follows-the-startup-activation-g64.baseline.stdout.bin",
+      "bytes": 115,
+      "sha256": "25b917011aaaf1bcbcf2988ad15cee6516e36fc910a5f8241fad9c1910501313"
+    },
+    {
+      "path": "partial-mutations-final/usercustomize-follows-the-startup-activation-g64.json",
+      "bytes": 3544,
+      "sha256": "1df78a72fe309e02548116d1c18aa7f232edeec515d298e7d3e0d676ad8ea38c"
+    },
+    {
+      "path": "partial-mutations-final/usercustomize-follows-the-startup-activation-g64.mutant.pytest.json",
+      "bytes": 17262,
+      "sha256": "7c04502a1496217d37d6d9b26969e3b8faef48ec84e4d3a7766ed79cc30ebb15"
+    },
+    {
+      "path": "partial-mutations-final/usercustomize-follows-the-startup-activation-g64.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-final/usercustomize-follows-the-startup-activation-g64.mutant.stdout.bin",
+      "bytes": 2337,
+      "sha256": "8e5ac84679a8d3442db83c683d3f73ad204889b9dc5e86991aa041bb62a719ad"
+    },
+    {
+      "path": "partial-mutations-isolated/explicit-import-is-an-ordinary-import-g65.baseline.pytest.json",
+      "bytes": 29093,
+      "sha256": "dda26a0d1a2d8929ad3616b9c11ab2390fdf6169f80d434ac4f54672b7c01a6c"
+    },
+    {
+      "path": "partial-mutations-isolated/explicit-import-is-an-ordinary-import-g65.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/explicit-import-is-an-ordinary-import-g65.baseline.stdout.bin",
+      "bytes": 9015,
+      "sha256": "5382f72da51e1941a5444ffe7a0e4cca1a61ee54b378eb09f9a8d537efc72c68"
+    },
+    {
+      "path": "partial-mutations-isolated/explicit-import-is-an-ordinary-import-g65.json",
+      "bytes": 3646,
+      "sha256": "ecbec3e1872afe98b7d95532c4eda42bfd9f3d367b5321130100bd1d3affc851"
+    },
+    {
+      "path": "partial-mutations-isolated/explicit-import-is-an-ordinary-import-g65.mutant.pytest.json",
+      "bytes": 29088,
+      "sha256": "0d637407acb8cae3e1e344372a958aec89ee002d2990289ce911ae43c2dcbab5"
+    },
+    {
+      "path": "partial-mutations-isolated/explicit-import-is-an-ordinary-import-g65.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/explicit-import-is-an-ordinary-import-g65.mutant.stdout.bin",
+      "bytes": 9011,
+      "sha256": "203c42a028932000c8d6cbcd4701a2ca7da95a0310653450dea4e15792a5e506"
+    },
+    {
+      "path": "partial-mutations-isolated/namespace-is-loaded-code-free-not-absent-g65.baseline.pytest.json",
+      "bytes": 29086,
+      "sha256": "7e841f2d49ec5d1147d7554d0db10a73f9e84561fc9f8bd5655c7ad7afc11ae9"
+    },
+    {
+      "path": "partial-mutations-isolated/namespace-is-loaded-code-free-not-absent-g65.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/namespace-is-loaded-code-free-not-absent-g65.baseline.stdout.bin",
+      "bytes": 9007,
+      "sha256": "b4ff9127acf5981cab24978738de2e81ce6ce1e5b8f924facb32d68d26d384f8"
+    },
+    {
+      "path": "partial-mutations-isolated/namespace-is-loaded-code-free-not-absent-g65.json",
+      "bytes": 3551,
+      "sha256": "f23cc0ee8b5e611cc579ed23e1e735aba175a4fbcf0b1f8631c62da241403ee4"
+    },
+    {
+      "path": "partial-mutations-isolated/namespace-is-loaded-code-free-not-absent-g65.mutant.pytest.json",
+      "bytes": 29079,
+      "sha256": "59a0c3fb76874a22534948591efd9c0539899e5c3e75a58d13d5853e3f3ba79a"
+    },
+    {
+      "path": "partial-mutations-isolated/namespace-is-loaded-code-free-not-absent-g65.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/namespace-is-loaded-code-free-not-absent-g65.mutant.stdout.bin",
+      "bytes": 9003,
+      "sha256": "2cd4252aa9111753015b40a3824ec1a24c5df8dc6115c3146ae9c10c08a5472d"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-compares-the-loaded-origin-g66.baseline.pytest.json",
+      "bytes": 58878,
+      "sha256": "73d95e795d615142f718251e9f1aeacd19ce8805814783f340d1db39552a4862"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-compares-the-loaded-origin-g66.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-compares-the-loaded-origin-g66.baseline.stdout.bin",
+      "bytes": 26494,
+      "sha256": "d8d72b1003a471c3159bf0899da2d652ca072f305e46c23a3a8aeb4d2ef0d53e"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-compares-the-loaded-origin-g66.json",
+      "bytes": 4473,
+      "sha256": "16864419c6acb650171cb36a29df902607e2c04ee72335e8179f1381a770a32a"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-compares-the-loaded-origin-g66.mutant.pytest.json",
+      "bytes": 58860,
+      "sha256": "2dcb8ad8991f9436108bec6404975117f72132df081ab5e3e81ab01cca673745"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-compares-the-loaded-origin-g66.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-compares-the-loaded-origin-g66.mutant.stdout.bin",
+      "bytes": 26482,
+      "sha256": "1a5e76c3a8579668bebaaf5cea1c1b9405c41c785125dbbb9c299a1654972fbe"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-customization-uses-the-path-finder-g63.baseline.pytest.json",
+      "bytes": 29079,
+      "sha256": "de3230adc8a8e71ed8656ff7fa18e6d9f669b6519ce70736ef1867c21902452a"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-customization-uses-the-path-finder-g63.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-customization-uses-the-path-finder-g63.baseline.stdout.bin",
+      "bytes": 9003,
+      "sha256": "68edcfff82f7d32af98444851fe8623d2454838993fa44d3b729d25572e9a97e"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-customization-uses-the-path-finder-g63.json",
+      "bytes": 3946,
+      "sha256": "52b7e8cbefaf5ee39f770e763b3cded0031af5266bff64b04566f0b7487cb6ad"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-customization-uses-the-path-finder-g63.mutant.pytest.json",
+      "bytes": 29071,
+      "sha256": "91798fff5d846d44069ea006b66a145220f4beec72262bc2a954f6f8183ad296"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-customization-uses-the-path-finder-g63.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/parent-customization-uses-the-path-finder-g63.mutant.stdout.bin",
+      "bytes": 9000,
+      "sha256": "ba87d997c8c098c0a8cfffad7b7a35a5ee6985d87d6af8b6b5bb8b83e5b007bb"
+    },
+    {
+      "path": "partial-mutations-isolated/search-path-comes-from-the-replay-context-g65.baseline.pytest.json",
+      "bytes": 44019,
+      "sha256": "2afac5f7972b578d0c49af9d590c9b189c7444210b9b5f843a92671399e82a24"
+    },
+    {
+      "path": "partial-mutations-isolated/search-path-comes-from-the-replay-context-g65.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/search-path-comes-from-the-replay-context-g65.baseline.stdout.bin",
+      "bytes": 17774,
+      "sha256": "6c1eb1db779d8220d1061b4bccd6500a935c64f9037ef0cc96c47454e074d833"
+    },
+    {
+      "path": "partial-mutations-isolated/search-path-comes-from-the-replay-context-g65.json",
+      "bytes": 4061,
+      "sha256": "f875fe01632683fa03f64997415cb8f377f2d05dcc21ba87dbba93901f6c0ff1"
+    },
+    {
+      "path": "partial-mutations-isolated/search-path-comes-from-the-replay-context-g65.mutant.pytest.json",
+      "bytes": 44010,
+      "sha256": "099fec577fdf6da5bb1480980dd995675487ccd660ac8951493fbbace0f1fbe2"
+    },
+    {
+      "path": "partial-mutations-isolated/search-path-comes-from-the-replay-context-g65.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/search-path-comes-from-the-replay-context-g65.mutant.stdout.bin",
+      "bytes": 17768,
+      "sha256": "b4fe8fbe0b500f694dd1b5eb4d373b5dfcee02ed9573f78147352915e7b6921a"
+    },
+    {
+      "path": "partial-mutations-isolated/summary.json",
+      "bytes": 35497,
+      "sha256": "5ad5b9250d4ff45451b8cb494f6885e6a5936c3eae411d3082c70b33a2146025"
+    },
+    {
+      "path": "partial-mutations-isolated/the-fixture-measures-its-premise-g65.baseline.pytest.json",
+      "bytes": 44020,
+      "sha256": "58f3bdfbbb0a14ea1f6fa82b8882a1f9ca439fc86eabbbe0c9dcc93d124e1eec"
+    },
+    {
+      "path": "partial-mutations-isolated/the-fixture-measures-its-premise-g65.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/the-fixture-measures-its-premise-g65.baseline.stdout.bin",
+      "bytes": 17721,
+      "sha256": "68e34992e03f22c683045930ff98807637326da7e481e1ebd74e04ec6d1c951b"
+    },
+    {
+      "path": "partial-mutations-isolated/the-fixture-measures-its-premise-g65.json",
+      "bytes": 3665,
+      "sha256": "482d415d74aa8317f0f38aacd4ac908e8ca966dfe37eb5f5f2c9bbceb8aa2346"
+    },
+    {
+      "path": "partial-mutations-isolated/the-fixture-measures-its-premise-g65.mutant.pytest.json",
+      "bytes": 16717,
+      "sha256": "24c17fd9f352b6a7a06d10a1033851c6b69a6cb52de30e6aa8c53ee7eb8c94a0"
+    },
+    {
+      "path": "partial-mutations-isolated/the-fixture-measures-its-premise-g65.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/the-fixture-measures-its-premise-g65.mutant.stdout.bin",
+      "bytes": 116,
+      "sha256": "7af743cf60fd934d94c3412611fac620795f28f0145406751555f786cd46774b"
+    },
+    {
+      "path": "partial-mutations-isolated/the-premise-uses-a-controlled-env-g66.baseline.pytest.json",
+      "bytes": 15262,
+      "sha256": "c531f22f7ff46bf67f2760760fc75b2e80594c1a4df1eec4c66cbe043e209904"
+    },
+    {
+      "path": "partial-mutations-isolated/the-premise-uses-a-controlled-env-g66.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/the-premise-uses-a-controlled-env-g66.baseline.stdout.bin",
+      "bytes": 115,
+      "sha256": "9961ceda53b71864700a8e90aaa16124daea6725588492059b4d2d45fcd8a192"
+    },
+    {
+      "path": "partial-mutations-isolated/the-premise-uses-a-controlled-env-g66.json",
+      "bytes": 3648,
+      "sha256": "98f31d3b7e95f44ac41f655c37c3a4c45f56a7b56c1c72724a5d5de97c33debe"
+    },
+    {
+      "path": "partial-mutations-isolated/the-premise-uses-a-controlled-env-g66.mutant.pytest.json",
+      "bytes": 15260,
+      "sha256": "203309e0bafa0650eeee0b2bb8f64e09bf52cb41f2e278827a1d40d7c11427de"
+    },
+    {
+      "path": "partial-mutations-isolated/the-premise-uses-a-controlled-env-g66.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/the-premise-uses-a-controlled-env-g66.mutant.stdout.bin",
+      "bytes": 115,
+      "sha256": "01a2364dbc868d6b768574bbcc46bac903a0d4e596d982fe6769d040f6b080dd"
+    },
+    {
+      "path": "partial-mutations-isolated/the-replay-context-is-measured-once-g66.baseline.pytest.json",
+      "bytes": 29057,
+      "sha256": "4504493bc9904e6f4ff7226f60f2e5a246d62280a0f36f2d3bdc9033844910f2"
+    },
+    {
+      "path": "partial-mutations-isolated/the-replay-context-is-measured-once-g66.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/the-replay-context-is-measured-once-g66.baseline.stdout.bin",
+      "bytes": 8989,
+      "sha256": "c40f6c54f159db4b1d6898d117a25d55e5f95f9b238a00e490830ddb1ebc7709"
+    },
+    {
+      "path": "partial-mutations-isolated/the-replay-context-is-measured-once-g66.json",
+      "bytes": 3477,
+      "sha256": "a7f90557d99298a0513357452030fc91434a7514edb0b5a5a1c4f9a79cab6e96"
+    },
+    {
+      "path": "partial-mutations-isolated/the-replay-context-is-measured-once-g66.mutant.pytest.json",
+      "bytes": 29051,
+      "sha256": "f76f096f023f28fa0b0618bcf2c8208f0fc5f91c296591c6978bfb8a3291a23b"
+    },
+    {
+      "path": "partial-mutations-isolated/the-replay-context-is-measured-once-g66.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/the-replay-context-is-measured-once-g66.mutant.stdout.bin",
+      "bytes": 8985,
+      "sha256": "002833dd8cf54d7ad7516ba483dfb5087625af03e77f3746214abe4253a7a99e"
+    },
+    {
+      "path": "partial-mutations-isolated/usercustomize-follows-the-startup-activation-g64.baseline.pytest.json",
+      "bytes": 29098,
+      "sha256": "01bcdf367d683bddd6f33556b2275e162cfb6c5f69eb55752aba0c1dd43539a9"
+    },
+    {
+      "path": "partial-mutations-isolated/usercustomize-follows-the-startup-activation-g64.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/usercustomize-follows-the-startup-activation-g64.baseline.stdout.bin",
+      "bytes": 9012,
+      "sha256": "e36784224eb88e1ea9623582beef3de23cec856945779cd9d966c6002119282a"
+    },
+    {
+      "path": "partial-mutations-isolated/usercustomize-follows-the-startup-activation-g64.json",
+      "bytes": 3502,
+      "sha256": "58ce54ec1df620d1bc8fb84abfd340a668bbc5b4e34b8a3f905caa89f7f69e74"
+    },
+    {
+      "path": "partial-mutations-isolated/usercustomize-follows-the-startup-activation-g64.mutant.pytest.json",
+      "bytes": 29093,
+      "sha256": "624d64ef9384c3e7da08e788a990d450a0b342ed1a04332b80c5eacbbb8f3194"
+    },
+    {
+      "path": "partial-mutations-isolated/usercustomize-follows-the-startup-activation-g64.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-isolated/usercustomize-follows-the-startup-activation-g64.mutant.stdout.bin",
+      "bytes": 9010,
+      "sha256": "ffd273aaeec3f46b6b990be85fce9708d1cbd787c41a59c6384c0a4df2c187e9"
+    },
+    {
+      "path": "partial-mutations-portable/explicit-import-is-an-ordinary-import-g65.baseline.pytest.json",
+      "bytes": 14803,
+      "sha256": "e7e79e53fd8c4230fcf1e2caa8806461b9dc1149ab94a10f9ab1614b5839de60"
+    },
+    {
+      "path": "partial-mutations-portable/explicit-import-is-an-ordinary-import-g65.baseline.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/explicit-import-is-an-ordinary-import-g65.baseline.stdout.bin",
+      "bytes": 79,
+      "sha256": "7d44b6916f65c131ede6114c527559babd0bd84cf8394b5d4bdcd5f612faf175"
+    },
+    {
+      "path": "partial-mutations-portable/explicit-import-is-an-ordinary-import-g65.json",
+      "bytes": 3554,
+      "sha256": "932a0c2ba8a250b7462e2e5d0022da8dabe22f26480700f83c0c498a0fb1106a"
+    },
+    {
+      "path": "partial-mutations-portable/explicit-import-is-an-ordinary-import-g65.mutant.pytest.json",
+      "bytes": 17675,
+      "sha256": "721836c3c15c3c9c5c77a5bdad052eac0233f04fc2376a416956fad4a05aeb89"
+    },
+    {
+      "path": "partial-mutations-portable/explicit-import-is-an-ordinary-import-g65.mutant.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/explicit-import-is-an-ordinary-import-g65.mutant.stdout.bin",
+      "bytes": 79,
+      "sha256": "19c3754f8166449e6bb5953f24273574abf32ac365c52a15760066c836dbf29c"
+    },
+    {
+      "path": "partial-mutations-portable/namespace-is-loaded-code-free-not-absent-g65.baseline.pytest.json",
+      "bytes": 14997,
+      "sha256": "cfa2875e2330dd4ceb300a46f9edba4d9f530d5c27506354d3ad5aa8ea0dde8b"
+    },
+    {
+      "path": "partial-mutations-portable/namespace-is-loaded-code-free-not-absent-g65.baseline.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/namespace-is-loaded-code-free-not-absent-g65.baseline.stdout.bin",
+      "bytes": 79,
+      "sha256": "7d44b6916f65c131ede6114c527559babd0bd84cf8394b5d4bdcd5f612faf175"
+    },
+    {
+      "path": "partial-mutations-portable/namespace-is-loaded-code-free-not-absent-g65.json",
+      "bytes": 3429,
+      "sha256": "4dbe8e75686c853ebed38f7197cf54cbfe14484807fcbad3e69024a989644d43"
+    },
+    {
+      "path": "partial-mutations-portable/namespace-is-loaded-code-free-not-absent-g65.mutant.pytest.json",
+      "bytes": 17813,
+      "sha256": "c47d44a5cba152c1b9b4bdcf35ac8ff2567ee6ec33632efa8e0bed2bbc812a0a"
+    },
+    {
+      "path": "partial-mutations-portable/namespace-is-loaded-code-free-not-absent-g65.mutant.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/namespace-is-loaded-code-free-not-absent-g65.mutant.stdout.bin",
+      "bytes": 79,
+      "sha256": "19c3754f8166449e6bb5953f24273574abf32ac365c52a15760066c836dbf29c"
+    },
+    {
+      "path": "partial-mutations-portable/parent-compares-the-loaded-origin-g66.baseline.pytest.json",
+      "bytes": 15638,
+      "sha256": "7448ba6b5c35a628e81bee8649e6ede6204f6aec2087a739b1d9fa67b610e77f"
+    },
+    {
+      "path": "partial-mutations-portable/parent-compares-the-loaded-origin-g66.baseline.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/parent-compares-the-loaded-origin-g66.baseline.stdout.bin",
+      "bytes": 79,
+      "sha256": "0d81056c6eecd1ccb3a21dd167dff3fff00b0bbe1bc9725b7b297a74862a415b"
+    },
+    {
+      "path": "partial-mutations-portable/parent-compares-the-loaded-origin-g66.json",
+      "bytes": 5147,
+      "sha256": "93d6ada6851496bad0ffa77eca06fcc0829a1fb802cded0650a859a24e58beca"
+    },
+    {
+      "path": "partial-mutations-portable/parent-compares-the-loaded-origin-g66.mutant.pytest.json",
+      "bytes": 22914,
+      "sha256": "b012a342a5024614c30a196b374f732d892ff32a85162ab647ceccddd6ecd229"
+    },
+    {
+      "path": "partial-mutations-portable/parent-compares-the-loaded-origin-g66.mutant.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/parent-compares-the-loaded-origin-g66.mutant.stdout.bin",
+      "bytes": 79,
+      "sha256": "ba37efa430cead77384105ac31d7377a963e59d7f067c30161c7add10d6a26ef"
+    },
+    {
+      "path": "partial-mutations-portable/parent-customization-uses-the-path-finder-g63.baseline.pytest.json",
+      "bytes": 14645,
+      "sha256": "baabeeb7a95c0cb38d9927e8f6faeda9a98e69fda01ce426025add8f6177e780"
+    },
+    {
+      "path": "partial-mutations-portable/parent-customization-uses-the-path-finder-g63.baseline.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/parent-customization-uses-the-path-finder-g63.baseline.stdout.bin",
+      "bytes": 79,
+      "sha256": "7d44b6916f65c131ede6114c527559babd0bd84cf8394b5d4bdcd5f612faf175"
+    },
+    {
+      "path": "partial-mutations-portable/parent-customization-uses-the-path-finder-g63.json",
+      "bytes": 3450,
+      "sha256": "689bf3aa328c01f5deb932a74f60f76451e1a8c92c012c7a3f4e970599aa9ec1"
+    },
+    {
+      "path": "partial-mutations-portable/parent-customization-uses-the-path-finder-g63.mutant.pytest.json",
+      "bytes": 14645,
+      "sha256": "ba5cd37ba0582f8d45e136a94ba64459f65df5b2040ce84fe6a0665966e8f627"
+    },
+    {
+      "path": "partial-mutations-portable/parent-customization-uses-the-path-finder-g63.mutant.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/parent-customization-uses-the-path-finder-g63.mutant.stdout.bin",
+      "bytes": 79,
+      "sha256": "7d44b6916f65c131ede6114c527559babd0bd84cf8394b5d4bdcd5f612faf175"
+    },
+    {
+      "path": "partial-mutations-portable/search-path-comes-from-the-replay-context-g65.baseline.pytest.json",
+      "bytes": 15145,
+      "sha256": "285fd07fe2ed9cbccce345212093f59d530a309107022726d7dcad99be3327be"
+    },
+    {
+      "path": "partial-mutations-portable/search-path-comes-from-the-replay-context-g65.baseline.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/search-path-comes-from-the-replay-context-g65.baseline.stdout.bin",
+      "bytes": 79,
+      "sha256": "4811bfda1cf821a950b49ec9a0e9d183431bbc229357996d2bdd3686cef825c1"
+    },
+    {
+      "path": "partial-mutations-portable/search-path-comes-from-the-replay-context-g65.json",
+      "bytes": 4328,
+      "sha256": "c856a22ca54a46aec9c8262a3c72b766a66d8a88bd5dc04fb29c7cbebb1fd315"
+    },
+    {
+      "path": "partial-mutations-portable/search-path-comes-from-the-replay-context-g65.mutant.pytest.json",
+      "bytes": 19959,
+      "sha256": "abfb6139af54a30d843a354ffbc1874b86d2cc97cf2836adc0efa7b51f32da94"
+    },
+    {
+      "path": "partial-mutations-portable/search-path-comes-from-the-replay-context-g65.mutant.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/search-path-comes-from-the-replay-context-g65.mutant.stdout.bin",
+      "bytes": 79,
+      "sha256": "8dbcfb3b0bdf45dff0e27f40ea5e79b03efb0dc0b1f89912a077d12a285f4701"
+    },
+    {
+      "path": "partial-mutations-portable/summary.json",
+      "bytes": 34807,
+      "sha256": "5fafffa519d34a3d0f98f16cac252f52b6578bb7bd55250a0c3e627cbc49d189"
+    },
+    {
+      "path": "partial-mutations-portable/the-fixture-measures-its-premise-g65.baseline.pytest.json",
+      "bytes": 15203,
+      "sha256": "8dd45bbecf78683fcf52d12b7c0026b1ab6f8de32d37b78eec737c5d0c8832e2"
+    },
+    {
+      "path": "partial-mutations-portable/the-fixture-measures-its-premise-g65.baseline.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/the-fixture-measures-its-premise-g65.baseline.stdout.bin",
+      "bytes": 79,
+      "sha256": "4811bfda1cf821a950b49ec9a0e9d183431bbc229357996d2bdd3686cef825c1"
+    },
+    {
+      "path": "partial-mutations-portable/the-fixture-measures-its-premise-g65.json",
+      "bytes": 3388,
+      "sha256": "36adf89f0fcc640845759e63bfdb978ebdf88773732138d25422cd21b3d65d5f"
+    },
+    {
+      "path": "partial-mutations-portable/the-fixture-measures-its-premise-g65.mutant.pytest.json",
+      "bytes": 17871,
+      "sha256": "855d7a4aa896281ee75b8641437789f17bcecf196ef7e8e75414653fce78def2"
+    },
+    {
+      "path": "partial-mutations-portable/the-fixture-measures-its-premise-g65.mutant.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/the-fixture-measures-its-premise-g65.mutant.stdout.bin",
+      "bytes": 79,
+      "sha256": "a3b508d4beeafff113d110173a5abe95edc55fd6f9c9417c738be39765d64b49"
+    },
+    {
+      "path": "partial-mutations-portable/the-premise-uses-a-controlled-env-g66.baseline.pytest.json",
+      "bytes": 15262,
+      "sha256": "ba2207e73423c1064ec9a5c71e86805a4f470baa3f1665c94f37946b4fbf916c"
+    },
+    {
+      "path": "partial-mutations-portable/the-premise-uses-a-controlled-env-g66.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-portable/the-premise-uses-a-controlled-env-g66.baseline.stdout.bin",
+      "bytes": 115,
+      "sha256": "1356607a70985727aa3de272c23b7c87c50768392d5038da01d2f5dd73f2dd05"
+    },
+    {
+      "path": "partial-mutations-portable/the-premise-uses-a-controlled-env-g66.json",
+      "bytes": 3181,
+      "sha256": "883d8338835f39c0b630ef021e1f91adeb669d266ff2663e3c7ebe529f040141"
+    },
+    {
+      "path": "partial-mutations-portable/the-premise-uses-a-controlled-env-g66.mutant.pytest.json",
+      "bytes": 15261,
+      "sha256": "61a7fee46e1c6db343288c8eed6d2a3d36ddf5d263d2bffaeadf244796681680"
+    },
+    {
+      "path": "partial-mutations-portable/the-premise-uses-a-controlled-env-g66.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations-portable/the-premise-uses-a-controlled-env-g66.mutant.stdout.bin",
+      "bytes": 115,
+      "sha256": "d709f9041d92165382cfda37f3a0d59a5d25c228365ec6e29d858f3615f361d1"
+    },
+    {
+      "path": "partial-mutations-portable/the-replay-context-is-measured-once-g66.baseline.pytest.json",
+      "bytes": 14637,
+      "sha256": "d1a9091d7eb74031bd941645abab2ca7e0895a2fab78cddb775018571a20a74f"
+    },
+    {
+      "path": "partial-mutations-portable/the-replay-context-is-measured-once-g66.baseline.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/the-replay-context-is-measured-once-g66.baseline.stdout.bin",
+      "bytes": 79,
+      "sha256": "7d44b6916f65c131ede6114c527559babd0bd84cf8394b5d4bdcd5f612faf175"
+    },
+    {
+      "path": "partial-mutations-portable/the-replay-context-is-measured-once-g66.json",
+      "bytes": 3340,
+      "sha256": "0b588839042d88abc6a28ad6148443c4b079d32f63e1b520899f9b39bfcdde85"
+    },
+    {
+      "path": "partial-mutations-portable/the-replay-context-is-measured-once-g66.mutant.pytest.json",
+      "bytes": 17151,
+      "sha256": "caab32c61812b533668da41e200ec0cb220fccde637a711216c39890b2c127bd"
+    },
+    {
+      "path": "partial-mutations-portable/the-replay-context-is-measured-once-g66.mutant.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/the-replay-context-is-measured-once-g66.mutant.stdout.bin",
+      "bytes": 79,
+      "sha256": "19c3754f8166449e6bb5953f24273574abf32ac365c52a15760066c836dbf29c"
+    },
+    {
+      "path": "partial-mutations-portable/usercustomize-follows-the-startup-activation-g64.baseline.pytest.json",
+      "bytes": 14657,
+      "sha256": "a09398767764c8230cbf750476756de8162134c0b0d2164b2242b3e74ae3572e"
+    },
+    {
+      "path": "partial-mutations-portable/usercustomize-follows-the-startup-activation-g64.baseline.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/usercustomize-follows-the-startup-activation-g64.baseline.stdout.bin",
+      "bytes": 79,
+      "sha256": "7d44b6916f65c131ede6114c527559babd0bd84cf8394b5d4bdcd5f612faf175"
+    },
+    {
+      "path": "partial-mutations-portable/usercustomize-follows-the-startup-activation-g64.json",
+      "bytes": 3360,
+      "sha256": "49d31124383ae461013555de0c5e91b92c7e0c0c690c64cd377522ad87e28d53"
+    },
+    {
+      "path": "partial-mutations-portable/usercustomize-follows-the-startup-activation-g64.mutant.pytest.json",
+      "bytes": 17230,
+      "sha256": "e60d4ab81683aefffbfe0e061029ea07fa86562250baab73b0bcb032ea28fb41"
+    },
+    {
+      "path": "partial-mutations-portable/usercustomize-follows-the-startup-activation-g64.mutant.stderr.bin",
+      "bytes": 6962,
+      "sha256": "99addf71923a9a839c8216806084e51089e5b544700f754a827074f7fc6e3754"
+    },
+    {
+      "path": "partial-mutations-portable/usercustomize-follows-the-startup-activation-g64.mutant.stdout.bin",
+      "bytes": 79,
+      "sha256": "19c3754f8166449e6bb5953f24273574abf32ac365c52a15760066c836dbf29c"
+    },
+    {
+      "path": "partial-mutations/explicit-import-is-an-ordinary-import-g65.baseline.pytest.json",
+      "bytes": 7701,
+      "sha256": "3f742173f69a5175f5c5dd513e2c99a3c002411cba3982cc27107c1e9092708c"
+    },
+    {
+      "path": "partial-mutations/explicit-import-is-an-ordinary-import-g65.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/explicit-import-is-an-ordinary-import-g65.baseline.stdout.bin",
+      "bytes": 1019,
+      "sha256": "0974388633f56bb05aaba0d8a97a1e7117e495bc6599895c3baf2dda08a4bf60"
+    },
+    {
+      "path": "partial-mutations/explicit-import-is-an-ordinary-import-g65.json",
+      "bytes": 3103,
+      "sha256": "8c9c4e56633f3716d7735a48a09d86763dce478cd28ca4b1455e8aa1683e342e"
+    },
+    {
+      "path": "partial-mutations/explicit-import-is-an-ordinary-import-g65.mutant.pytest.json",
+      "bytes": 7700,
+      "sha256": "9caaad6b706ab8f6dfbc4109b5c8827a937c5ef4d8b3105a78968aba694e5073"
+    },
+    {
+      "path": "partial-mutations/explicit-import-is-an-ordinary-import-g65.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/explicit-import-is-an-ordinary-import-g65.mutant.stdout.bin",
+      "bytes": 1019,
+      "sha256": "5ed9bcca23fc738f6a7b8d878ec45063a1a987c185d0f6186a871fa066a92104"
+    },
+    {
+      "path": "partial-mutations/namespace-is-loaded-code-free-not-absent-g65.baseline.pytest.json",
+      "bytes": 7701,
+      "sha256": "f2c91f2c404e6d06168f4e9e3f7cc8837bf80496f204e33b75a124d8b882e3d7"
+    },
+    {
+      "path": "partial-mutations/namespace-is-loaded-code-free-not-absent-g65.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/namespace-is-loaded-code-free-not-absent-g65.baseline.stdout.bin",
+      "bytes": 1019,
+      "sha256": "c558fe325a28bf999d4e748bf725264be1a8fb3ad40d672f7106ea67536a4748"
+    },
+    {
+      "path": "partial-mutations/namespace-is-loaded-code-free-not-absent-g65.json",
+      "bytes": 3003,
+      "sha256": "2ddd1c88e684dca033259f3d429d93827c7f06757b87f7bb6fb3bd4692593386"
+    },
+    {
+      "path": "partial-mutations/namespace-is-loaded-code-free-not-absent-g65.mutant.pytest.json",
+      "bytes": 7702,
+      "sha256": "0f4cf80de7e313694d4db556209ef1e0ba99419f123c197e40aa76063f0a4e6d"
+    },
+    {
+      "path": "partial-mutations/namespace-is-loaded-code-free-not-absent-g65.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/namespace-is-loaded-code-free-not-absent-g65.mutant.stdout.bin",
+      "bytes": 1019,
+      "sha256": "d70dee4d1818ce3f92d97cff40d06fd63667b5bdd0f36ffee78ce79ddfabad59"
+    },
+    {
+      "path": "partial-mutations/parent-compares-the-loaded-origin-g66.baseline.pytest.json",
+      "bytes": 7662,
+      "sha256": "7db197df13215be3a3341761af3314e53e421f977208904446d63177fb306ce7"
+    },
+    {
+      "path": "partial-mutations/parent-compares-the-loaded-origin-g66.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/parent-compares-the-loaded-origin-g66.baseline.stdout.bin",
+      "bytes": 1019,
+      "sha256": "13d16ea7ab8131e8bae760771b84fd1e4e381feba1577e1da609bd3da6b07266"
+    },
+    {
+      "path": "partial-mutations/parent-compares-the-loaded-origin-g66.json",
+      "bytes": 3938,
+      "sha256": "5bda4b102c696be78066643a9e8203d707db8f6863d4adfb240cdf3f95a675d3"
+    },
+    {
+      "path": "partial-mutations/parent-compares-the-loaded-origin-g66.mutant.pytest.json",
+      "bytes": 7661,
+      "sha256": "9b9ea670c8c564c162a0ca22d7ad51e29e37581116d93444e1ff147e67983799"
+    },
+    {
+      "path": "partial-mutations/parent-compares-the-loaded-origin-g66.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/parent-compares-the-loaded-origin-g66.mutant.stdout.bin",
+      "bytes": 1019,
+      "sha256": "c9585331f0ab31275841310eff3b570349a26c5006380dfff67dbac492aab21e"
+    },
+    {
+      "path": "partial-mutations/parent-customization-uses-the-path-finder-g63.baseline.pytest.json",
+      "bytes": 7718,
+      "sha256": "780f2a30708a4b72c08e71044fdcce339ffde2a897a767e2096130ba4f261da7"
+    },
+    {
+      "path": "partial-mutations/parent-customization-uses-the-path-finder-g63.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/parent-customization-uses-the-path-finder-g63.baseline.stdout.bin",
+      "bytes": 1019,
+      "sha256": "8184715ab6fe6876c5c8f8d30e355a7da498e77567c857f7faa4723503d86f1a"
+    },
+    {
+      "path": "partial-mutations/parent-customization-uses-the-path-finder-g63.json",
+      "bytes": 3395,
+      "sha256": "46841f5206c8a5f95c0338901b0d48fc70b1c1640292a99ead942b3a9f3f344d"
+    },
+    {
+      "path": "partial-mutations/parent-customization-uses-the-path-finder-g63.mutant.pytest.json",
+      "bytes": 7721,
+      "sha256": "deb8b4712bbb36cf298086ff6141c0d18f7df86529a7759286d7e9d1faf16165"
+    },
+    {
+      "path": "partial-mutations/parent-customization-uses-the-path-finder-g63.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/parent-customization-uses-the-path-finder-g63.mutant.stdout.bin",
+      "bytes": 1019,
+      "sha256": "0d9cbedad200207c01c6e6f12210bcd49ca736a8d1939d95dc48fb23fe96ac0e"
+    },
+    {
+      "path": "partial-mutations/search-path-comes-from-the-replay-context-g65.baseline.pytest.json",
+      "bytes": 7681,
+      "sha256": "0b2ff258aa68e951f13b5fb4e74c42e1b0422a0e5a760d07674fc0a7f01f4f40"
+    },
+    {
+      "path": "partial-mutations/search-path-comes-from-the-replay-context-g65.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/search-path-comes-from-the-replay-context-g65.baseline.stdout.bin",
+      "bytes": 1019,
+      "sha256": "27ba9e783cf021ba9c738e6397b0072d450fa9698694cbbf4fe1ffc91c1e4bad"
+    },
+    {
+      "path": "partial-mutations/search-path-comes-from-the-replay-context-g65.json",
+      "bytes": 3510,
+      "sha256": "e03377139e86bce1ac343aa023539ae8c99d4cfe08e3b6d0e39e89815caaeba0"
+    },
+    {
+      "path": "partial-mutations/search-path-comes-from-the-replay-context-g65.mutant.pytest.json",
+      "bytes": 7682,
+      "sha256": "d859880177bb540c04ba6081782be8b72b4c1f5c9c84cdc4c814a9c1a02b38e5"
+    },
+    {
+      "path": "partial-mutations/search-path-comes-from-the-replay-context-g65.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/search-path-comes-from-the-replay-context-g65.mutant.stdout.bin",
+      "bytes": 1019,
+      "sha256": "38cd9ea144771f55b3ec5859b25182652ecfed2d41193496eb96eefdff467b67"
+    },
+    {
+      "path": "partial-mutations/summary.json",
+      "bytes": 30310,
+      "sha256": "3a19979b6289b289d8cc4dd29b71272bc817170934d55016204d26774ab271b3"
+    },
+    {
+      "path": "partial-mutations/the-fixture-measures-its-premise-g65.baseline.pytest.json",
+      "bytes": 7681,
+      "sha256": "2af235457316c23ab15cdf6be086fb836c42ed88043d9768f569a7a480e99165"
+    },
+    {
+      "path": "partial-mutations/the-fixture-measures-its-premise-g65.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/the-fixture-measures-its-premise-g65.baseline.stdout.bin",
+      "bytes": 1019,
+      "sha256": "1b5b5f472609154adeee313c203f6c580063f11af17ec0b5b87c3a83477e8889"
+    },
+    {
+      "path": "partial-mutations/the-fixture-measures-its-premise-g65.json",
+      "bytes": 2926,
+      "sha256": "f4a204e68c7ccf1723ea6b2867c3782164d83c1dd286e060621f827c9f8c57f2"
+    },
+    {
+      "path": "partial-mutations/the-fixture-measures-its-premise-g65.mutant.pytest.json",
+      "bytes": 7680,
+      "sha256": "ab65526efe06568504a90192e70c4da159ed97a2837fad9280e4b36a8ee0fbf9"
+    },
+    {
+      "path": "partial-mutations/the-fixture-measures-its-premise-g65.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/the-fixture-measures-its-premise-g65.mutant.stdout.bin",
+      "bytes": 1019,
+      "sha256": "adb0bd66737b8e9fcc37e73781486590ae971635203de5e306d17c90376e5b78"
+    },
+    {
+      "path": "partial-mutations/the-premise-uses-a-controlled-env-g66.baseline.pytest.json",
+      "bytes": 7681,
+      "sha256": "a6f5f91172c71eb4ad174c9eb55de095eb0475a13d00f9a8a612556d21aec7db"
+    },
+    {
+      "path": "partial-mutations/the-premise-uses-a-controlled-env-g66.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/the-premise-uses-a-controlled-env-g66.baseline.stdout.bin",
+      "bytes": 1019,
+      "sha256": "f4ddb5d6dba8a0c3aed03c5611be5410fb355fb142cf1db2fd8fa9bbef2e1765"
+    },
+    {
+      "path": "partial-mutations/the-premise-uses-a-controlled-env-g66.json",
+      "bytes": 3100,
+      "sha256": "4023ce4e621ccaa9d72b8032b4bc3f2d29385d63a0f03832f405f99f42b5c248"
+    },
+    {
+      "path": "partial-mutations/the-premise-uses-a-controlled-env-g66.mutant.pytest.json",
+      "bytes": 7681,
+      "sha256": "4780f58a012a4c676e606323f6b440f51ddb3ce32589236a16153b1c2ea8745a"
+    },
+    {
+      "path": "partial-mutations/the-premise-uses-a-controlled-env-g66.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/the-premise-uses-a-controlled-env-g66.mutant.stdout.bin",
+      "bytes": 1019,
+      "sha256": "95ed8bebeb957488bb28265a12bcb623f6786595f27ea68524ec561eccb24709"
+    },
+    {
+      "path": "partial-mutations/the-replay-context-is-measured-once-g66.baseline.pytest.json",
+      "bytes": 7701,
+      "sha256": "72b5dd3a69eae43f1177aa8da46bc78ba6a05fb636da85141d899a98f02cabf7"
+    },
+    {
+      "path": "partial-mutations/the-replay-context-is-measured-once-g66.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/the-replay-context-is-measured-once-g66.baseline.stdout.bin",
+      "bytes": 1019,
+      "sha256": "6f7f2689811effc2d9cfc419de9133ae0044f2d441fec6bb4f1fb9348813cee7"
+    },
+    {
+      "path": "partial-mutations/the-replay-context-is-measured-once-g66.json",
+      "bytes": 2939,
+      "sha256": "e8a71beddb0f58a1146e4378e64b25d256230de03ae846af71ccbdf377f6112d"
+    },
+    {
+      "path": "partial-mutations/the-replay-context-is-measured-once-g66.mutant.pytest.json",
+      "bytes": 7701,
+      "sha256": "b9c6e0ffca3c791e7563a05904453691fd6f73d8f8a94c27b6e3ce2208e3927d"
+    },
+    {
+      "path": "partial-mutations/the-replay-context-is-measured-once-g66.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/the-replay-context-is-measured-once-g66.mutant.stdout.bin",
+      "bytes": 1019,
+      "sha256": "87e73db5c75bf04dbb05873a85897389d2d8147af0485d55d717e75b88a80b22"
+    },
+    {
+      "path": "partial-mutations/usercustomize-follows-the-startup-activation-g64.baseline.pytest.json",
+      "bytes": 7701,
+      "sha256": "bdbc2d3e919f06b0c473e062c66cd5b99e21a490f036582a5f415ea3390dda9d"
+    },
+    {
+      "path": "partial-mutations/usercustomize-follows-the-startup-activation-g64.baseline.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/usercustomize-follows-the-startup-activation-g64.baseline.stdout.bin",
+      "bytes": 1019,
+      "sha256": "b0fa4f872aa8f4dacf1164c0268f4690937b98027548b34187f6fbe7b629774a"
+    },
+    {
+      "path": "partial-mutations/usercustomize-follows-the-startup-activation-g64.json",
+      "bytes": 2946,
+      "sha256": "74b8f881d5affd1e035ae371f74354e16f8a1d78cf50da3f45b86215a60d6bd1"
+    },
+    {
+      "path": "partial-mutations/usercustomize-follows-the-startup-activation-g64.mutant.pytest.json",
+      "bytes": 7701,
+      "sha256": "c0e16f8d78ed943fa1fb68ed312c49753ac88dfbd7c7470f1471dfdb57b326ae"
+    },
+    {
+      "path": "partial-mutations/usercustomize-follows-the-startup-activation-g64.mutant.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "partial-mutations/usercustomize-follows-the-startup-activation-g64.mutant.stdout.bin",
+      "bytes": 1019,
+      "sha256": "7e5d1ea5ac11378c4344ff0e43b9f4fdba03a2782e64596beef0189136d20b31"
+    },
+    {
+      "path": "partial_mutations.py",
+      "bytes": 3859,
+      "sha256": "aadf8e94baa6426dea1d417230081dd4255fe43bfb9cbd9d163133b506d55159"
+    },
+    {
+      "path": "preimages.json",
+      "bytes": 623,
+      "sha256": "b26aced14aaae48365aede3a80b952f8acb212c7d005c1ef31ace503e1f470d9"
+    },
+    {
+      "path": "preimages.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "preimages.stdout.bin",
+      "bytes": 56,
+      "sha256": "8422588a1b96645075346f28568b1e4db61353fc549077a0b958139d03c88e08"
+    },
+    {
+      "path": "premise-no-execution/collect_only_clean.pytest.json",
+      "bytes": 3294,
+      "sha256": "5a1ea41460330fc5945579ca2685f8c6c491196a7705dd733e1dfee10b72c552"
+    },
+    {
+      "path": "premise-no-execution/collect_only_clean.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "premise-no-execution/collect_only_clean.stdout.bin",
+      "bytes": 232,
+      "sha256": "e98ece15d03f5f0c0e7032cfa90715709a199554a01bcb60ef93bcb52a831d9c"
+    },
+    {
+      "path": "premise-no-execution/collect_only_nousersite.pytest.json",
+      "bytes": 3293,
+      "sha256": "73eb54a879c13bef558a57c5bf90bca4004107800e790ce603e6455f14aa78e6"
+    },
+    {
+      "path": "premise-no-execution/collect_only_nousersite.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "premise-no-execution/collect_only_nousersite.stdout.bin",
+      "bytes": 232,
+      "sha256": "e98ece15d03f5f0c0e7032cfa90715709a199554a01bcb60ef93bcb52a831d9c"
+    },
+    {
+      "path": "premise-no-execution/observations.json",
+      "bytes": 3152,
+      "sha256": "a3126a0e079d077d3686cb0fb99b4cb6dde352ae9bb02086739691f95a82bd53"
+    },
+    {
+      "path": "premise-no-execution/usage_error_clean.stderr.bin",
+      "bytes": 306,
+      "sha256": "729bf76f02f04704f38ce41f48d248378156ca2bcbf6c20f7cb1717d196bf3fa"
+    },
+    {
+      "path": "premise-no-execution/usage_error_clean.stdout.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "premise-no-execution/usage_error_nousersite.stderr.bin",
+      "bytes": 306,
+      "sha256": "729bf76f02f04704f38ce41f48d248378156ca2bcbf6c20f7cb1717d196bf3fa"
+    },
+    {
+      "path": "premise-no-execution/usage_error_nousersite.stdout.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "registry-audit.json",
+      "bytes": 132355,
+      "sha256": "773f136fc978a76eed1ddecdbf759def5eaafc48bfcde7c8d5ee8eeb9464671a"
+    },
+    {
+      "path": "replay.json",
+      "bytes": 642,
+      "sha256": "a5c3cf0858fa0d1d2d2e7fb93bee1ae243e74d5e069de665d0b48824554d4c85"
+    },
+    {
+      "path": "replay.stderr.bin",
+      "bytes": 2311,
+      "sha256": "1ce56e641339e3e998a3f31fd3bcadf0999d4af26bf80a2b4120b52b79f81732"
+    },
+    {
+      "path": "replay.stdout.bin",
+      "bytes": 879,
+      "sha256": "d65cc4929b4b5f3ad05a5ed53c659c85312c820f9abd5eabf8afc46a39cd0a7c"
+    },
+    {
+      "path": "repro_boundaries.py",
+      "bytes": 5033,
+      "sha256": "3d638436b1d5f4c468708210ae0d2a84fe73f1dfefb1fc48bf2734cd7ba34597"
+    },
+    {
+      "path": "repro_premise_no_execution.py",
+      "bytes": 2042,
+      "sha256": "9c4a3227661b64dadb6b3ab0088efeb76b9f1afea7ef1738891cc15fc3db0419"
+    },
+    {
+      "path": "repro_startup_gate66.py",
+      "bytes": 3654,
+      "sha256": "8af9d30fb4885fbbcb045782725b8b10313d4eb35e4f67f53772187cd67fa80e"
+    },
+    {
+      "path": "reviewed-code.diff",
+      "bytes": 39890,
+      "sha256": "126f24edb86a87d9f2cfb8b5870b9b53345614883c797914850832faebdfd896"
+    },
+    {
+      "path": "run_checks.py",
+      "bytes": 2687,
+      "sha256": "7b809a98b2429b6c5730da9a1890476042195d2ae874ac5a7dc56a4830f938dd"
+    },
+    {
+      "path": "targeted.json",
+      "bytes": 1143,
+      "sha256": "a0b930fb7256f2da68b0343f42ecf625a5038b10401a6e627997e19d74ec42a9"
+    },
+    {
+      "path": "targeted.stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "targeted.stdout.bin",
+      "bytes": 127,
+      "sha256": "cd338cd5f25e07591dda280746ad57beb75f0dca8bdd0e678cfd4b163e9f2100"
+    },
+    {
+      "path": "targeted.xml",
+      "bytes": 5686,
+      "sha256": "826952c1b41ecc36e71966f024d3bd99dcf5ae30ac7f5a4820ae7be7709a4ae6"
+    }
+  ]
+}

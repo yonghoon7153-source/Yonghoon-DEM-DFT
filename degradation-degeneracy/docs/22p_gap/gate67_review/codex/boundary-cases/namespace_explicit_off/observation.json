@@ -1,0 +1,35 @@
+{
+  "case": "namespace_explicit_off",
+  "mode": "off",
+  "sandbox": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_la56zpqk\\degradation-degeneracy",
+  "pythonpath": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\boundary-cases\\explicit-namespace",
+  "executable": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\boundary-cases\\venv-off\\Scripts\\python.exe",
+  "native_control": {
+    "rc": 0,
+    "stdout": "{\"user_site\": false, \"customization\": {\"sitecustomize\": {\"loaded\": true, \"origin\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\gate67_review_20260922\\\\boundary-cases\\\\explicit-namespace\\\\sitecustomize.py\", \"locations\": []}, \"usercustomize\": {\"loaded\": true, \"origin\": null, \"locations\": [\"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\gate67_review_20260922\\\\boundary-cases\\\\explicit-namespace\\\\usercustomize\"]}}, \"sys_path\": [\"\", \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\gate67_review_20260922\\\\boundary-cases\\\\explicit-namespace\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\python312.zip\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\DLLs\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\Lib\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\", \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\gate67_review_20260922\\\\boundary-cases\\\\venv-off\", \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\gate67_review_20260922\\\\boundary-cases\\\\venv-off\\\\Lib\\\\site-packages\"]}\r\n",
+    "stderr": ""
+  },
+  "complete": {
+    "result": "ACCEPTED"
+  },
+  "comparison": {
+    "result": "ACCEPTED"
+  },
+  "entry": {
+    "result": "ACCEPTED"
+  },
+  "customization": {
+    "site": "b39ab288cc7a6d0c",
+    "sitecustomize": "a6b6f7ff67248404",
+    "usercustomize": "<namespace>:af88ff36e8d82a2a"
+  },
+  "forged_complete": {
+    "result": "ACCEPTED"
+  },
+  "forged_comparison": {
+    "result": "ACCEPTED"
+  },
+  "forged_actual_entry": {
+    "result": "ACCEPTED"
+  }
+}

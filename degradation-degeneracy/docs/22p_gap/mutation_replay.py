@@ -30,6 +30,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import zipfile
 from typing import NamedTuple
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -44,6 +45,7 @@ MR = ROOT / "docs" / "22p_gap" / "mutation_replay.py"
 ARCHIVE = ROOT / "tools" / "archive_bundle.py"                     # 62차 ζ′
 G63T = ROOT / "tests" / "test_gate63_defensive.py"                 # 64차 E2-R
 IF = ROOT / "tests" / "interpreter_fixture.py"                      # 65차 T1
+G66T = ROOT / "tests" / "test_gate66_defensive.py"                  # 67차 T1
 
 #: ★ 46차 #9 조건 9 — 변이는 **작업 트리에 손대지 않는다.** 45차 runner 는
 #:   실제 저장소 파일을 고쳤다가 `finally` 로 되돌렸다. 그러면 (a) 중단되면
@@ -1618,7 +1620,7 @@ MUTANTS = [
      '                            "\u0075nfiled": int, "attempted_not_loaded": _Seq(str)},',
      '                            "unfiled": int},',
      "the_schema_carries_the_attempted_list or a_full_receipt_matches_the_schema"),
-    #   66차 G66-N1 로 부모가 사후 탐색을 그만두고 **로드 시점 origin 의 바이트를 읽는다** —
+    #   66차 G66-N1 로 부모가 사후 탐색을 그만두고 **관측된 origin 의 바이트를 읽는다** —
     #   이 축이 지키는 성질(부모가 정상 package 를 child 와 같게 본다)은 그대로이고 자리만 옮겼다.
     ("parent-customization-uses-the-path-finder-g63", MR,                    # F3
      '            out[n] = _\u0064(origin)               # **부모가 그 자리의 바이트를 직접 읽는다**',
@@ -1646,10 +1648,19 @@ MUTANTS = [
     #   대상이 아닌 이름을 기대하지 않는다)은 이제 측정이 지킨다. 그래서 이 축의 자리를
     #   **"부모가 올렸다고 본 것을 child 가 <absent> 라 적으면 거부한다"** 로 옮긴다 —
     #   비활성+미로드 정상 영수증이 거부되던 N1 의 반대쪽이자 살아 있는 보호다.
+    #   67차 G67-N1: `auto` 가 판정에서 **빠졌다** (부재 위조의 근거로 쓰면 안 된다는 리뷰어
+    #   Q3 의 답). 그래서 이 축의 preimage 가 또 사라졌고, 성질("부모가 올렸다고 잰 것을 child
+    #   가 <absent> 라 적으면 거부")은 이제 **측정과의 동일성 검사**가 지킨다 — 거기로 옮긴다.
+    #   변이는 그 동일성을 통과시키는 것이고, 위조 대조군 셋이 한꺼번에 빨개진다.
     ("usercustomize-follows-the-startup-activation-g64", MR,                 # N1
-     '            elif auto and cand != "<\u0061bsent>":',
-     '            elif False:',
-     "a_forged_absent_namespace_is_still_rejected"),
+     '        if g != \u0063and:\n'
+     '            why = " (startup 이 자동 import 하는 이름이다)" if auto else ""',
+     '        if False:\n'
+     '            why = " (startup 이 자동 import 하는 이름이다)" if auto else ""',
+     "a_forged_absent_namespace_is_still_rejected or "
+     "a_forged_absent_is_still_rejected or "
+     "a_forged_absent_namespace_is_rejected_with_user_site_off or "
+     "the_same_forgery_is_rejected_with_user_site_on"),
     ("customization-reads-origins-like-the-rest-g64", MR,                    # N2
      '            cust[n] = _\u0068ash_origin(\n'
      '                f, getattr(_spec, "loader", None) or getattr(m, "__loader__", None))',
@@ -1664,10 +1675,13 @@ MUTANTS = [
     #   64차 종결의 **부분 수용** — 원 사례는 닫혔지만 고치면서 세운 등식이 틀렸다.
     #   변이는 그 틀린 등식으로 되돌린다. 증인은 시험의 고정 문구다 (production 문구·
     #   digest·경로를 담지 않는다 — 64차 ① 회차의 교훈).
+    #   67차: `auto` 가 판정에서 빠지면서 이 분기가 `elif` → `if` 로 바뀌었다 (동일성 검사가
+    #   앞에서 `continue` 한다). 축의 성질("명시 import 는 평범한 import 다")은 그대로이므로
+    #   같은 줄의 새 모양에 다시 겨눈다.
     ("explicit-import-is-an-ordinary-import-g65", MR,                        # N1a
-     '            elif not \u006coaded_file:\n'
+     '            if not \u006coaded_file:\n'
      '                bad.append(f"{n}: child 가 바이트를 냈는데 startup 이력에 없다")',
-     '            elif not loaded_file or not auto:\n'
+     '            if not loaded_file or not auto:\n'
      '                bad.append(f"{n}: child 가 바이트를 냈는데 startup 이력에 없다")',
      "a_disabled_interpreter_with_an_explicit_import_is_accepted"),
     #   66차: 부모 탐색이 없어졌으므로 이 축의 자리는 **문맥을 어느 cwd 에서 재는가** 로 옮겼다.
@@ -1714,6 +1728,28 @@ MUTANTS = [
      '        env.pop(k, None)',
      '    env = dict(os.environ)',
      "the_premise_test_does_not_fail_on_an_inherited_env"),
+    # ── 67차 (G67-N1 은 위 g64 축이 옮겨 가 덮는다 · N2 · T1) ────────────────
+    #   N2: ZIP 분기의 **사후 검색 경로 재탐색**으로 되돌린다. 자기 archive 를 경로에서 뺀
+    #   정상 ZIP package 가 다시 거부된다 (리뷰어 반례 그대로).
+    ("zip-bytes-come-from-the-archive-member-g67", MR,                       # G67-N2
+     '            out[n] = _\u0061rchive_member_digest(n, origin)',
+     '            _spec = _PF.find_spec(n, [os.path.dirname(origin)] + list(ctx["search_path"]))\n'
+     '            _gd = getattr(getattr(_spec, "loader", None), "get_data", None)\n'
+     '            if _gd is None or getattr(_spec, "origin", None) != origin:\n'
+     '                raise _ReplayError(f"부모가 {n} 의 origin 을 읽을 수 없다")\n'
+     '            out[n] = hashlib.sha256(_gd(origin)).hexdigest()[:16]',
+     "a_zip_package_that_removes_its_archive_is_accepted"),
+    #   T1: 전제 회귀의 증거를 **stdout 문자열 하나**로 되돌린다. child 가 안 돌아도 초록이 된다.
+    #   변이는 **전 판의 증거**로 정확히 되돌린다 — `"failed" not in stdout` 이면 통과.
+    #   그러면 rc 4(사용법 오류)도 수집 0건도 다시 초록이 되고 두 반례가 한꺼번에 빨개진다.
+    ("the-premise-checks-the-child-actually-ran-g67", G66T,                  # G67-T1
+     '    assert junit.is_file(), (\n'
+     '        "child pytest 가 결과 파일을 남기지 않았다 — 무엇이 돌았는지 말할 수 없다 (G67-T1)", tail)',
+     '    if "failed" not in (r.stdout or "").lower():\n'
+     '        return []\n'
+     '    assert junit.is_file(), (\n'
+     '        "child pytest 가 결과 파일을 남기지 않았다 — 무엇이 돌았는지 말할 수 없다 (G67-T1)", tail)',
+     "the_premise_regression_refuses_an_unrun_child"),
     ("the-replay-context-is-measured-once-g66", MR,                          # 정적 관측
      '    ctx = ctx if ctx is not None else _\u0072eplay_context()\n'
      '    want = _parent_customization_view(ctx)',
@@ -5052,11 +5088,19 @@ EXPECT: dict = {
         }
     },
     "usercustomize-follows-the-startup-activation-g64": {
+        # 67차 G67-N1: 자리를 **측정과의 동일성 검사**로 옮겼다 (`auto` 가 판정에서 빠졌다).
+        # 위조 대조군 셋이 한꺼번에 빨개진다 — ON·OFF·이력에 안 잡히는 namespace.
         "fail": [
             "tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected",
+            "tests/test_gate67_defensive.py::test_g67_01_a_forged_absent_namespace_is_rejected_with_user_site_off",
+            "tests/test_gate67_defensive.py::test_g67_04_the_same_forgery_is_rejected_with_user_site_on",
         ],
         "witness": {
             "tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_gate67_defensive.py::test_g67_01_a_forged_absent_namespace_is_rejected_with_user_site_off":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_gate67_defensive.py::test_g67_04_the_same_forgery_is_rejected_with_user_site_on":
                 "Failed: DID NOT RAISE _ReplayError",
         }
     },
@@ -5142,7 +5186,33 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]":
-                "AssertionError: ('물려받은 env 때문에 전제 시험이 실패했다 — 환경의 비활성을 fixture 구현 실패로 오판한다 (G66-T1)', '도 기대와 다르면 그때는",
+            # ★ 67차 G67-T1-b — 전 판은 `stdout[-600:]` 에서 **우연히 잘린 꼬리**
+            #   (`'도 기대와 다르면 그때는`)를 담았다. 그 꼬리는 기계마다 다른 자리에서
+            #   시작하므로 리뷰어 환경에서는 `call_witness_matches=false` 였다 (실패 집합과
+            #   call 단계는 맞았다). 이제 시험이 **고정 문구로** 실패하므로 그것만 적는다.
+                "AssertionError: ('물려받은 env 때문에 전제 시험이 실패했다 — 환경의 비활성을 fixture 구현 실패로 오판한다 (G66-T1)',",
+        }
+    },
+    # ── 67차 (G67-N2 · T1) ────────────────────────────────────────────────
+    "zip-bytes-come-from-the-archive-member-g67": {
+        "fail": [
+            "tests/test_gate67_defensive.py::test_g67_05_a_zip_package_that_removes_its_archive_is_accepted",
+        ],
+        "witness": {
+            "tests/test_gate67_defensive.py::test_g67_05_a_zip_package_that_removes_its_archive_is_accepted":
+                "mutation_replay._ReplayError: 부모가 sitecustomize 의 origin 을 읽을 수 없다",
+        }
+    },
+    "the-premise-checks-the-child-actually-ran-g67": {
+        "fail": [
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[collect_only]",
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[usage_error]",
+        ],
+        "witness": {
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[collect_only]":
+                "Failed: DID NOT RAISE AssertionError",
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[usage_error]":
+                "Failed: DID NOT RAISE AssertionError",
         }
     },
     "the-replay-context-is-measured-once-g66": {
@@ -5811,7 +5881,7 @@ def _replay_context(cwd=None) -> dict:
     """
     cwd = pathlib.Path(cwd) if cwd is not None else _sandboxed(ROOT)
     frame = _new_frame()
-    # ★ 66차 G66-N1 — **로드 시점의 origin 을 여기서 같이 잰다.** 65차 판은 `sys.path` 만 받고
+    # ★ 66차 G66-N1 — **올라와 있는 module 의 origin 을 여기서 같이 잰다.** 65차 판은 `sys.path` 만 받고
     #   부모가 거기서 `PathFinder.find_spec()` 를 다시 했다. 그런데 `python -c` 의
     #   `sys.path[0]=''`(cwd)는 **초기화가 끝난 뒤** 붙으므로(CPython `main.c` 의 path0 추가),
     #   startup 이 한 줄도 읽지 않은 cwd 파일이 "읽었어야 하는 후보" 로 소급됐다. 정상
@@ -5909,7 +5979,11 @@ def _parent_customization_view(ctx: dict | None = None) -> dict:
 
     ctx = ctx if ctx is not None else _replay_context()
     # ★ 66차 G66-N1 — **사후 후보로 과거 import 를 판정하지 않는다.** 이제 기준은 문맥 탐침이
-    #   잰 **로드 시점의 origin** 이고, 부모는 그 origin 의 **바이트를 직접 읽는다**. 탐침은
+    #   잰 **startup 후 관측한 module origin** 이고, 부모는 그 origin 의 **바이트를 직접 읽는다**.
+    #   ⚠ 67차 Q1 정정 — 이것을 *"로드 순간의 불변 기록"* 이라고 적으면 과한 주장이다 (리뷰어 지적).
+    #   탐침은 startup 이 끝난 뒤 `sys.modules` 의 `__file__`/`__spec__.origin` 을 읽고, Python 은
+    #   그 둘의 자동 동기화를 보장하지 않으며 런타임 수정도 가능하다. 그 이상(로드 시점의 봉인된
+    #   출처)은 trusted launcher / immutable input bundle 설계가 필요하고 **미착수**다. 탐침은
     #   64차부터 선언한 그 신뢰 경계(같은 startup 코드를 도는 보조 인터프리터) 안에 있고,
     #   부모가 독립적으로 믿는 것은 여전히 **자기가 읽은 바이트**다 — 바이트가 바뀌면 거부된다.
     #   `PathFinder` 탐색은 더 이상 판정의 근거가 아니다 (사후 `sys.path` 는 startup 이 본 것이
@@ -5930,15 +6004,8 @@ def _parent_customization_view(ctx: dict | None = None) -> dict:
             out[n] = _d(origin)               # **부모가 그 자리의 바이트를 직접 읽는다**
             continue
         if origin:
-            # 파일이 아닌 origin(zip 등) — 그 origin 을 담은 실제 파일을 찾아 loader 에게 묻는다.
-            spec = _PF.find_spec(n, [os.path.dirname(origin)] + list(ctx["search_path"]))
-            get_data = getattr(getattr(spec, "loader", None), "get_data", None)
-            if get_data is None or getattr(spec, "origin", None) != origin:
-                raise _ReplayError(
-                    f"부모가 {n} 의 origin {origin!r} 을 읽을 수 없다 — 파일이 아니고 "
-                    "loader 가 바이트를 못 준다. 지원하지 않는 loader 로는 child 와 "
-                    "대조할 수 없다 (63차 F3)")
-            out[n] = hashlib.sha256(get_data(origin)).hexdigest()[:16]
+            # 파일이 아닌 origin(표준 archive 안) — **archive 와 member 로 직접 읽는다.**
+            out[n] = _archive_member_digest(n, origin)
             continue
         if locs is not None:
             out[n] = "<namespace>:" + _namespace_identity(list(locs))    # noqa: F821
@@ -5947,6 +6014,50 @@ def _parent_customization_view(ctx: dict | None = None) -> dict:
             f"부모가 잰 {n} 은 올라와 있는데 origin 도 검색 위치도 없다 — 무엇과 대조할지 "
             f"정할 수 없다 (65차 N2b · 66차 G66-N1)")
     return out
+
+
+def _archive_member_digest(name: str, origin: str) -> str:
+    """파일이 아닌 origin(표준 ZIP archive 안)의 바이트를 **부모가 직접** 읽는다.
+
+    ★ 67차 G67-N2 — 전 판은 `PathFinder.find_spec(name, [dirname(origin)] + search_path)` 로
+      **사후 `sys.path` 에서 이름을 다시 찾았다.** 두 가지가 틀렸다:
+
+        ① ZIP *package* 의 `dirname(origin)` 은 archive root 가 아니라 `archive.zip/sitecustomize`
+           다 — 거기서 top-level 이름을 다시 찾으면 그 package 가 아니다.
+        ② 정상 startup 이 자기 archive 를 `sys.path` 에서 빼면 root 도 final path 에 없다.
+
+      그래서 표준 ZIP package 하나가 자기 경로를 정리했다는 이유로 **정상 영수증이 거부**됐다
+      (리뷰어 실측 `zip_package_remove_path` REJECTED, 단일 module 과 경로 유지 package 는
+      ACCEPTED). 66차에 일반 파일 분기에서 걷어낸 "사후 후보로 과거를 판정한다" 가 ZIP 분기에
+      그대로 남아 있었던 것이다 — 주석의 "`search_path` 는 진단용" 과도 어긋났다.
+
+    이제 **origin 경로 자체**를 갈라 archive 파일과 member 이름을 얻고, `zipfile` 로 그 member 의
+    바이트를 읽는다. 사후 검색 경로를 안 쓰고, 임의 loader 를 부모가 실행하지도 않는다 —
+    부모가 믿는 것은 여전히 **자기가 읽은 바이트**다 (실행 뒤 archive 를 갈아 끼우면 거부된다).
+    """
+    parts = pathlib.PurePath(origin).parts
+    for i in range(len(parts) - 1, 0, -1):
+        cand = os.path.join(*parts[:i])
+        if not os.path.isfile(cand):
+            continue
+        member = "/".join(parts[i:])
+        if not zipfile.is_zipfile(cand):
+            raise _ReplayError(
+                f"부모가 {name} 의 origin {origin!r} 을 읽을 수 없다 — {cand!r} 은 표준 "
+                "archive 가 아니다. 지원하지 않는 loader 로는 child 와 대조할 수 없다 "
+                "(63차 F3 · 67차 G67-N2)")
+        try:
+            with zipfile.ZipFile(cand) as z:
+                data = z.read(member)
+        except (KeyError, OSError, zipfile.BadZipFile) as e:
+            raise _ReplayError(
+                f"부모가 {name} 의 origin {origin!r} 을 읽을 수 없다 — archive {cand!r} 에서 "
+                f"member {member!r} 를 못 읽었다 ({type(e).__name__}). 읽기 실패는 거부다 "
+                "(67차 G67-N2)")
+        return hashlib.sha256(data).hexdigest()[:16]
+    raise _ReplayError(
+        f"부모가 {name} 의 origin {origin!r} 에서 archive 파일을 찾지 못했다 — 파일도 "
+        "아니고 어느 조상도 실재하는 파일이 아니다. 대조할 바이트가 없다 (67차 G67-N2)")
 
 
 def _assert_customization_matches_parent(receipt: dict, ctx: dict | None = None) -> None:
@@ -5989,21 +6100,28 @@ def _assert_customization_matches_parent(receipt: dict, ctx: dict | None = None)
         g, cand = got.get(n), want[n]
         auto = n == "sitecustomize" or bool(ctx["user_site"])   # startup 이 자동 import 하는가
         loaded_file = n in hist                                   # 이력: 파일 있는 module 로 올렸다
+        # ★ 67차 G67-N1 — **판정의 기준은 부모가 잰 것(`cand`) 하나다.** 전 판은 child 가
+        #   `<absent>` 라 적으면 ① 이력이 올렸다고 하는가 ② `auto` 인가 — 둘로만 막았다.
+        #   user site 가 꺼져 있으면 `auto=False` 이고, 표준 namespace 는 origin 이 없어 이력의
+        #   파일 목록에도 안 잡힌다. 그래서 **부모가 올라와 있다고 잰** 이름을 child 가 없다고
+        #   적어도 통과했다 (리뷰어 실측: OFF + 명시 import namespace 의 한 칸 위조가 ACCEPTED,
+        #   같은 위조가 ON 에서는 REJECTED).
+        #   `auto` 는 *startup 이 자동으로 import 하는가* 이고 지금 묻는 것은 *실제로 올라왔는가*
+        #   다 — 둘은 다른 사실이고, 65차 N1a 가 "비활성 = 미로드" 등식을 깬 것과 같은 종류의
+        #   혼동이었다. 이제 `auto` 는 **사유 문장**에만 쓰고 판정에는 쓰지 않는다.
+        if g != cand:
+            why = " (startup 이 자동 import 하는 이름이다)" if auto else ""
+            bad.append(f"{n}: child={g!r} parent={cand!r}{why}")
+            continue
+        # 여기부터는 child 표현 == 부모 측정이다. 남은 것은 **startup 이력과의 교차 확인**.
         if g == "<absent>":
             if loaded_file:
                 bad.append(f"{n}: child=<absent> 인데 startup 이력은 올렸다고 한다")
-            elif auto and cand != "<absent>":
-                bad.append(f"{n}: startup 이 자동 import 하는 후보가 있는데 child=<absent> "
-                           f"(parent={cand!r})")
         elif isinstance(g, str) and _HEX16.fullmatch(g):
-            if g != cand:
-                bad.append(f"{n}: child={g!r} parent={cand!r}")
-            elif not loaded_file:
+            if not loaded_file:
                 bad.append(f"{n}: child 가 바이트를 냈는데 startup 이력에 없다")
         elif isinstance(g, str) and _NAMESPACE_ID.fullmatch(g):
-            if g != cand:
-                bad.append(f"{n}: child={g!r} parent={cand!r}")
-            elif loaded_file:
+            if loaded_file:
                 bad.append(f"{n}: child 는 namespace 라는데 startup 이력은 파일로 올렸다고 한다")
         else:
             bad.append(f"{n}: 대조할 바이트가 없는 origin {g!r} — 지원하지 않는다")

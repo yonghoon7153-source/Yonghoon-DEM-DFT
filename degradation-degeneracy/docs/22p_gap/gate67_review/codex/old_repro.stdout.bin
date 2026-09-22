@@ -1,0 +1,5 @@
+{"case": "plain", "complete": true, "comparison": "ACCEPTED", "entry": "ACCEPTED", "entry_error": null, "diagnostic_error": null}
+{"case": "cwd_only_candidate", "complete": true, "comparison": "ACCEPTED", "entry": "ACCEPTED", "entry_error": null, "diagnostic_error": null}
+{"case": "cwd_on_pythonpath", "complete": true, "comparison": "ACCEPTED", "entry": "ACCEPTED", "entry_error": null, "diagnostic_error": null}
+{"case": "remove_loaded_path", "complete": true, "comparison": "ACCEPTED", "entry": "ACCEPTED", "entry_error": null, "diagnostic_error": null}
+{"case": "reorder_loaded_path", "complete": true, "comparison": "ACCEPTED", "entry": "ACCEPTED", "entry_error": null, "diagnostic_error": null}

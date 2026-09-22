@@ -1,0 +1,82 @@
+{
+  "name": "parent-customization-uses-the-path-finder-g63",
+  "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_1mxatvue\\degradation-degeneracy",
+  "registered_expected": {
+    "fail": [
+      "tests/test_evidence_receipt_62.py::test_the_real_probe_agrees_with_the_parent_view",
+      "tests/test_gate63_defensive.py::test_parent_customization_lookup_supports_a_normal_package"
+    ],
+    "witness": {
+      "tests/test_evidence_receipt_62.py::test_the_real_probe_agrees_with_the_parent_view": "AssertionError: child 와 부모의 customization 이 ['sitecustomize'] 에서 다르다 (62차 자체 리뷰 F1)",
+      "tests/test_gate63_defensive.py::test_parent_customization_lookup_supports_a_normal_package": "AssertionError: parent lookup disagrees with Python on an ordinary package"
+    }
+  },
+  "phases": {
+    "baseline": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_evidence_receipt_62.py",
+        "tests/test_gate64_defensive.py",
+        "tests/test_gate65_defensive.py",
+        "tests/test_gate66_defensive.py",
+        "--noconftest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "parent_customization_lookup_supports_a_normal_package or the_real_probe_agrees_with_the_parent_view",
+        "--json-report",
+        "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\parent-customization-uses-the-path-finder-g63.baseline.pytest.json"
+      ],
+      "rc": 1,
+      "seconds": 1.687999999994645,
+      "summary": {
+        "passed": 1,
+        "total": 1,
+        "collected": 77,
+        "deselected": 76
+      },
+      "observed_failed": [],
+      "skipped": [],
+      "expected_failure_set_matches": false,
+      "call_witness_matches": {},
+      "failure_phases": {}
+    },
+    "mutant": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/test_evidence_receipt_62.py",
+        "tests/test_gate64_defensive.py",
+        "tests/test_gate65_defensive.py",
+        "tests/test_gate66_defensive.py",
+        "--noconftest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "parent_customization_lookup_supports_a_normal_package or the_real_probe_agrees_with_the_parent_view",
+        "--json-report",
+        "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\partial-mutations-portable\\parent-customization-uses-the-path-finder-g63.mutant.pytest.json"
+      ],
+      "rc": 1,
+      "seconds": 1.625,
+      "summary": {
+        "passed": 1,
+        "total": 1,
+        "collected": 77,
+        "deselected": 76
+      },
+      "observed_failed": [],
+      "skipped": [],
+      "expected_failure_set_matches": false,
+      "call_witness_matches": {},
+      "failure_phases": {}
+    }
+  },
+  "target_unchanged": true,
+  "scope": "--noconftest supplemental check, no official replay/coverage claim; Linux kernel not substituted"
+}

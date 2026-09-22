@@ -1,0 +1,89 @@
+{
+  "case": "cwd_only_candidate",
+  "ROOT": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate67-head\\degradation-degeneracy",
+  "sandbox": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_wj1wtsmd\\degradation-degeneracy",
+  "pythonpath": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\old-startup\\cwd_only_candidate\\other",
+  "full_sandbox": true,
+  "native_control": {
+    "rc": 0,
+    "stdout": "{\"loaded\": false, \"origin\": null, \"sys_path\": [\"\", \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\gate67_review_20260922\\\\old-startup\\\\cwd_only_candidate\\\\other\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\python312.zip\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\DLLs\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\Lib\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\", \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\work\\\\gate65-venv\", \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\work\\\\gate65-venv\\\\Lib\\\\site-packages\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\Lib\\\\site-packages\"]}\r\n",
+    "stderr": ""
+  },
+  "customization": {
+    "site": "b39ab288cc7a6d0c",
+    "sitecustomize": "<absent>",
+    "usercustomize": "<absent>"
+  },
+  "history": {
+    "attempted_not_loaded": [
+      "sitecustomize",
+      "usercustomize"
+    ],
+    "modules": {
+      "_distutils_hack": "ced72e54431ecf2d",
+      "encodings": "78c4744d407690f3",
+      "encodings.aliases": "6fdcc49ba23a0203",
+      "encodings.cp949": "950a7d29467ce059",
+      "encodings.utf_8": "ba0cac0602695835",
+      "encodings.utf_8_sig": "1ef3da8d8aa08149"
+    },
+    "status": "measured",
+    "unfiled": 29
+  },
+  "complete": true,
+  "context": {
+    "executable": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+    "argv": [
+      "-c"
+    ],
+    "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_wj1wtsmd\\degradation-degeneracy",
+    "env": {
+      "DD_SMOOTH_CACHE": "",
+      "LANG": "C.UTF-8",
+      "LC_ALL": "C.UTF-8",
+      "PATH": "C:\\Users\\Administrator\\.codex\\tmp\\arg0\\codex-arg0YEGgDy;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\libheif\\libheif\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\jxrlib\\jxrlib\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\poppler\\Library\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\override;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\MATLAB\\R2026a\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\fallback;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd;C:\\Users\\Administrator\\AppData\\Local\\OpenAI\\Codex\\bin\\73fd6465d9c76545;C:\\Users\\Administrator\\AppData\\Local\\OpenAI\\Codex\\bin\\247581e40ee272fb",
+      "PYTHONHASHSEED": "0",
+      "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\old-startup\\cwd_only_candidate\\other",
+      "SYSTEMROOT": "C:\\Windows",
+      "TEMP": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp",
+      "TMP": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp"
+    },
+    "user_site": true,
+    "search_path": [
+      "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_wj1wtsmd\\degradation-degeneracy",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate67_review_20260922\\old-startup\\cwd_only_candidate\\other",
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python312.zip",
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\DLLs",
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib",
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Lib\\site-packages",
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\site-packages"
+    ],
+    "site_file": "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\site.py",
+    "customization": {
+      "site": {
+        "loaded": true,
+        "origin": "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\site.py",
+        "locations": null
+      },
+      "sitecustomize": {
+        "loaded": false,
+        "origin": null,
+        "locations": null
+      },
+      "usercustomize": {
+        "loaded": false,
+        "origin": null,
+        "locations": null
+      }
+    }
+  },
+  "parent": {
+    "site": "b39ab288cc7a6d0c",
+    "sitecustomize": "<absent>",
+    "usercustomize": "<absent>"
+  },
+  "comparison": "ACCEPTED",
+  "entry": "ACCEPTED"
+}
