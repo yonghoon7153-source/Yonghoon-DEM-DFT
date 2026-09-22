@@ -927,7 +927,7 @@
   ]
  },
  "lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging": {
-  "figures": 6,
+  "figures": 29,
   "generated": "2026-09-22",
   "pdfs": [
    "6. Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.pdf",
@@ -1724,6 +1724,14 @@
   "pdfs": [
    "dc978d7f-90._A_pretrained_deep_potential_model_for_sulfide_solid_electrolytes_with_broad_coverage_and_high_accuracy.pdf",
    "ad74839f-90._Sup_A_pretrained_deep_potential_model_for_sulfide_solid_electrolytes_with_broad_coverage_and_high_accuracy.pdf"
+  ]
+ },
+ "wang2026_domain_oriented_universal_machine_learning_potential": {
+  "figures": 17,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "1. NatCommun_2026_Wang_Domain_oriented_uMLP_battery_electrolytes_MAIN.pdf",
+   "1. Sup) NatCommun_2026_Wang_Domain_oriented_uMLP_SI.pdf"
   ]
  },
  "wang2026_dryprocess_thick_cathode_failure_ncm94": {
