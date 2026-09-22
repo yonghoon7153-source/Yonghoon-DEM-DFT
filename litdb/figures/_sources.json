@@ -324,7 +324,7 @@
   ]
  },
  "du2022_lmro_lpscl_reversible_redox_assb": {
-  "figures": 16,
+  "figures": 17,
   "generated": "2026-09-22",
   "pdfs": [
    "65beba50-19._High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
@@ -548,10 +548,10 @@
   ]
  },
  "islam2026_microstructure_resolved_impedance_lpscl_symmetric_cell": {
-  "figures": 9,
+  "figures": 11,
   "generated": "2026-09-22",
   "pdfs": [
-   "79b422f7-5._Microstructure-Resolved_Impedance_Modeling_of_Solid-State_Batteries.pdf"
+   "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf"
   ]
  },
  "jacksongreen2005_fem_elastoplastic_hemispherical_contact": {
@@ -782,10 +782,11 @@
   ]
  },
  "kim2025_lto_pald_conformal_coating_nca": {
-  "figures": 8,
+  "figures": 21,
   "generated": "2026-09-22",
   "pdfs": [
-   "p23_main.pdf"
+   "p23_main.pdf",
+   "p23_si.docx"
   ]
  },
  "kim2026_charge_engineered_cnf_binder": {
@@ -926,7 +927,7 @@
   ]
  },
  "lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging": {
-  "figures": 29,
+  "figures": 6,
   "generated": "2026-09-22",
   "pdfs": [
    "6. Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.pdf",
@@ -1756,10 +1757,11 @@
   ]
  },
  "wei2023_linbo3_coating_cutoff_voltage_lco_argyrodite": {
-  "figures": 6,
+  "figures": 15,
   "generated": "2026-09-22",
   "pdfs": [
-   "131. ElectrochimActa_2023_Wei_LiNbO3_coating_LCO_argyrodite_cutoff_voltages_MAIN.pdf"
+   "131. ElectrochimActa_2023_Wei_LiNbO3_coating_LCO_argyrodite_cutoff_voltages_MAIN.pdf",
+   "131. Sup) ElectrochimActa_2023_Wei_LiNbO3_coating_SI.docx"
   ]
  },
  "wet_processing_resolved_am_ssb_cathode_manufacturing": {

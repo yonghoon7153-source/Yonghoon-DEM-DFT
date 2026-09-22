@@ -376,6 +376,37 @@ def blank_ratio(pix):
     return white / max(cnt, 1)
 
 
+def orphans_if_cleaned(slug, new_paths, out_root=None):
+    """`--clean` 이 **되살릴 수 없게** 지우는 그림을 미리 찾는다 → [(파일명, src), …].
+
+    ⛔⛔ 2026-09-22 실측 사고. `lee2026_microcrack…` 의 SI 그림 **23장**이 이 경로로 날아갔다.
+      그 23장은 SI(.docx)에서 나왔는데 이 도구에는 **docx 경로가 없다** — 즉 같은 명령을
+      다시 돌려도 안 나온다. 게다가 대체 경로(PyMuPDF 없는 컨테이너)가 만든 **.jpg** 라
+      `*.png` 로 세는 점검에도 안 걸려서 "원래 없었다" 로 오독하기까지 했다.
+      ⇒ 지우기 **전에** 기존 색인의 `src` 를 보고, 이번 원본 목록에 없는 것이 있으면 멈춘다.
+
+    ⛔ 이 함수가 **못 하는 것**: 같은 원본에서 나온 그림이 이번 실행에서 *더 적게* 나오는
+      경우(캡션 규칙이 바뀌었다든가)는 못 잡는다. src 가 같으면 재생 가능으로 본다.
+    """
+    root = Path(out_root) if out_root else OUT_ROOT
+    idx = root / slug / "figures.json"
+    if not idx.exists():
+        return []
+    try:
+        meta = json.loads(idx.read_text(encoding="utf-8"))
+    except Exception:
+        return []                                   # 못 읽는 색인은 판단 근거가 아니다
+    have = {Path(p).name for p in new_paths}
+    out = []
+    for f in meta.get("figures", []):
+        if not isinstance(f, dict):
+            continue
+        src = f.get("src")
+        if src and Path(str(src)).name not in have:
+            out.append((f.get("file", "?"), Path(str(src)).name))
+    return out
+
+
 def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
             maxpx=1500, relto=None):
     out_dir = OUT_ROOT / slug
@@ -1364,6 +1395,30 @@ def selftest():
     ):
         chk(f"캡션판정 {why}", (is_caption(txt) is not None) == want)
 
+    # ── orphans_if_cleaned — **이 가드가 없어서 SI 그림 23장이 날아갔다** (2026-09-22) ──
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        (root / "slg").mkdir(parents=True)
+        idx = root / "slg" / "figures.json"
+        w = lambda figs: idx.write_text(json.dumps({"slug": "slg", "figures": figs},
+                                                   ensure_ascii=False), encoding="utf-8")
+        MAIN, SI = "paper_MAIN.pdf", "paper_SI.docx"
+        w([{"file": "fig_1.png", "src": MAIN}, {"file": "fig_S1.jpg", "src": SI}])
+        chk("clean 양성: 원본을 **다 주면** 막지 않는다",
+            orphans_if_cleaned("slg", [f"litdb/inbox/{MAIN}", f"x/{SI}"], root) == [])
+        chk("⛔음성: 빠진 원본의 그림을 **이름으로 집어낸다** (SI 23장 사고의 그 경로)",
+            orphans_if_cleaned("slg", [f"litdb/inbox/{MAIN}"], root) == [("fig_S1.jpg", SI)])
+        chk("⛔음성: **확장자가 달라도** 잡는다 (.jpg 라 `*.png` 점검에 안 걸렸던 것이 사고의 절반)",
+            orphans_if_cleaned("slg", [f"z/{SI}"], root) == [("fig_1.png", MAIN)])
+        chk("⛔음성: 경로가 달라도 **파일명이 같으면** 재생 가능으로 본다",
+            orphans_if_cleaned("slg", [f"/other/dir/{MAIN}", f"/q/{SI}"], root) == [])
+        w([{"file": "fig_1.png"}])
+        chk("⛔음성: src 가 없는 옛 색인은 막지 않는다 (판단 근거가 없다 ≠ 고아다)",
+            orphans_if_cleaned("slg", [], root) == [])
+        idx.write_text("{ 깨진 json", encoding="utf-8")
+        chk("⛔음성: 색인이 깨져도 죽지 않는다", orphans_if_cleaned("slg", [], root) == [])
+        chk("⛔음성: 색인이 아예 없으면 빈 목록", orphans_if_cleaned("없는슬러그", [], root) == [])
+
     print(f"\nselftest: {ok} 통과 / {fail} 실패")
     return 1 if fail else 0
 
@@ -1521,6 +1576,8 @@ def main():
                     help="긴 변 픽셀 상한. 0 이면 --dpi 그대로. 기본: 논문 3000 · 덱(--slides) 1600")
     ap.add_argument("--dry", action="store_true", help="파일 안 쓰고 표만 출력")
     ap.add_argument("--clean", action="store_true", help="기존 <slug> 폴더를 지우고 새로")
+    ap.add_argument("--force_clean", action="store_true",
+                    help="--clean 의 '되살릴 수 없는 그림' 가드를 넘긴다 (정말 버릴 때만)")
     ap.add_argument("--audit-src", dest="audit_src", action="store_true",
                     help="남의 논문 그림이 섞였는지 점검 (그림의 src ↔ 논문 제목 대조)")
     ap.add_argument("--audit", action="store_true",
@@ -1682,6 +1739,16 @@ def main():
         if not Path(p).exists():
             raise SystemExit(f"⛔ PDF 없음: {p}")
     if a.clean and not a.dry:
+        lost = orphans_if_cleaned(a.slug, a.pdf)
+        if lost and not a.force_clean:
+            raise SystemExit(
+                "⛔⛔ **--clean 을 멈췄다 — 이 재추출로는 되살릴 수 없는 그림이 있다.**\n"
+                f"   기존 색인의 그림 {len(lost)}장이 **지금 --pdf 로 준 원본에서 나온 것이 아니다**:\n"
+                + "".join(f"     {f}  ← src: {s}\n" for f, s in lost[:12])
+                + (f"     … 외 {len(lost)-12}장\n" if len(lost) > 12 else "")
+                + "   2026-09-22 실측: SI 가 .docx 인 논문에서 이 경로로 **SI 그림 23장이 날아갔다**\n"
+                  "   (대체 경로로 만든 .jpg 였고, 확장자가 달라 `*.png` 점검에도 안 걸렸다).\n"
+                  "   ⇒ 빠진 원본을 --pdf 로 같이 주든가, 정말 버릴 거면 --force_clean 을 쓴다.")
         shutil.rmtree(OUT_ROOT / a.slug, ignore_errors=True)
 
     if a.why:
