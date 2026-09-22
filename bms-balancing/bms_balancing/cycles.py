@@ -116,7 +116,7 @@ def _width_fields(widths, obj, ref_p, ref_c, c_cell, best, best_val, tol, starts
         return {"width_status": "failed", **_WIDTH_EMPTY}
 
 
-def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=None,
+def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, objective_version: str, cycles=None,
                n_starts: int = 20, seed: int = 0, scale_seed: int = 0, w_dqdv: float = 0.0, run_id: str = "",
                literature=None, gamma_prefit: bool = False, gamma_lb: float | None = None,
                widths: bool = False, width_tol: float = 0.01, width_starts: int = 4,
@@ -184,12 +184,14 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=
                 "width_method": width_method_name(bool(widths), width_grid),
                 "free": ["a_PE", "b_PE", "a_NE", "b_NE", "gamma_Si"], "n_multistart": int(n_starts),
                 "seed": int(seed), "scale_seed": int(scale_seed), "w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": float(w_dqdv),
+                # ⑥ 어느 미분으로 적합했는가 — sidecar 의 control 축이고 `width_report` 가 견주는 설정이다
+                "objective_version": str(objective_version),
                 "optimizer": "L-BFGS-B (scipy)"}
     fits = {}
     for k in want:
         c, v = load_cycle(df, k)
         obj = Objective(half, blend, c, v, window=11, poly_order=3, w_pocv=1.0, w_dvdq=1.0, w_dqdv=w_dqdv,
-                        use_peak_weight=True, scale_seed=scale_seed)
+                        use_peak_weight=True, scale_seed=scale_seed, objective_version=objective_version)
         best, val, _ = multistart(obj, n_starts=n_starts, seed=seed, x0=initial5, lb=lb5, ub=UB5)
         if best is None:
             raise RuntimeError(f"cycle {k}: 채택된 적합이 없다 ({multistart.last_stats})")
@@ -215,6 +217,7 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=
             # ⚠ scale 은 행이 스스로 말한다 (R5-07) — 두 seed 실행의 scale 열이 같아야 그 차이가 시작점의 것이다
             "scale_seed": int(scale_seed), "scale_pocv": o.scales.get("pocv"), "scale_dvdq": o.scales.get("dvdq"),
             "scale_dqdv": o.scales.get("dqdv"),
+            "objective_version": o.objective_version,          # ⑥ 행이 스스로 말한다
             # ⚠ W-06: 경계 판정은 **이 실행이 쓴 상자**로 한다. 상자를 안 넘기던 판은 `--gamma-lb 0.05` 로
             #   올린 하한에 γ 가 정확히 붙어도 `b_PE=ub` 만 적고 γ 는 자유로운 것처럼 내보냈다 (실측).
             #   "경계에 붙은 값" 을 세는 것이 규진팀 97 행에서 32 행을 잡아낸 그 검사다 (§2).

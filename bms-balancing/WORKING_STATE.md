@@ -50,8 +50,13 @@ P1 5 · P2 2**, 전부 인정. 리뷰 원문·반례 스크립트·우리 BAD �
 **요청문 정정**: `R17_REQUEST.md` 의 "R14 GO 대상 `1bb45b3`" 은 틀렸다 (`1bb45b3` 은 NO-GO, `3aca0906` 에서 종결).
 머리에 정정 블록만 붙이고 리뷰된 본문(sha `a434a103…`)은 그대로.
 
-**chain rule (⑥)**: 리뷰어 답 넷을 받아 `objective_version ∈ {legacy_matlab, chain_rule_v2}` **명시 선택 계약**을 제안했다
-(`R17_RESPONSE.md` §4). **미구현** — 실데이터 재계산은 승인된 계산이 아니다. "200 배" 는 계약 회귀가 아니라 보조 관측.
+**chain rule (⑥) — 구현 완료 (사용자 승인 2026-09-22)**: 리뷰어 답 넷대로 `objective_version ∈ {legacy_matlab, chain_rule_v2}`
+**필수 키워드**(기본값 없음)를 `Objective`·`fit_cycles`·CLI(`--objective-version` 필수)·`CYCLES_ROW`·`CYCLES_META_CONTROLS`·
+`width_report.COMPARED_SETTINGS` 에 넣었다. 상태 파이프라인은 `legacy_matlab` 명시(canonical `out/` 보존). RED
+`tests/test_chain_rule_contract.py` **9 failed → 9 passed**; analytic 항등식 + 절대 허용 회수(v2 LAM_NE 오차 −0.0171 /
+−0.0577 / +0.6819 %p, legacy −3.39 / −7.49 / −3.12 %p **기록만**) — `FINDINGS.md` §1-2-b. **"200 배" 는 계약이 아니다.**
+실데이터 A/B 는 미실행(승인 뒤 · 사용자 기계 ⑦). 기존 시험의 `fit_cycles` 호출 16 곳(Python 10 · CLI 6)에 legacy 를 **명시**했다 —
+그것이 "침묵 기본값 없음" 의 뜻이다.
 
 **⚠ §14 의 실데이터 두 파일은 새 reader 로 읽히지 않는다** (`dataset_manifest` 등 결속 키가 R16 축 ② 이전 산출) →
 그 비교의 조건 동일성은 **"미검증"** 으로 내렸다. 결속된 재실행(사용자 기계, ⑤·⑦) 뒤에만 다시 말한다.
@@ -418,10 +423,11 @@ bytecode 만 막았고(C08·C09), `rc 0` 인데 승격 불가인 상태를 런�
 ```bash
 # 세트는 HD_knee (L_* 원자료는 없다 — BML_R1_RESPONSE §10-4). D = 규진팀 'degradation mode' 폴더, H = 하네스
 # (b) 첫 실행은 끝났다 (§10-4 표). 깨끗한 시작점 실험은 scale 고정으로 다시:
-python3 $H/scripts/fit_cycles.py --data-root "$D" --half-cell "$D/data/half_cell/GITT/pristine.xlsx" \
+python3 $H/scripts/fit_cycles.py --objective-version legacy_matlab \   # ⑥ 필수 — 이 실행들은 원본 미분(legacy)이었다
+  --data-root "$D" --half-cell "$D/data/half_cell/GITT/pristine.xlsx" \
   --full-cell "$D/experiment/HD_ICA/300cycle knee point large cell.xlsx" --cell HD_knee --si-source Li \
   --starts 20 --seed 1 --scale-seed 0 --out ~/out_cycles/seed1s0
-python3 $H/scripts/fit_cycles.py ... --seed 0 --scale-seed 0 --out ~/out_cycles/seed0s0
+python3 $H/scripts/fit_cycles.py --objective-version legacy_matlab ... --seed 0 --scale-seed 0 --out ~/out_cycles/seed0s0
 python3 $H/scripts/check_rails.py ~/out_cycles/seed0s0/cycles_HD_knee_Li.csv ~/out_cycles/seed1s0/cycles_HD_knee_Li.csv
 python3 $H/scripts/check_u14.py --new ~/out_cycles/seed1s0 --old ~/out_cycles/seed0s0   # scale_* 같고 numbers 만 다르면 그 차이가 시작점의 것
 # (a) MATLAB — D 폴더에서 (rng( 가 남아 있으면 드라이버가 거부한다). fit_cycles_driver.m 을 D 로 복사한 뒤:
@@ -675,7 +681,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 417 passed 기대 (원자료 불필요; R17 에서 +27)
+python3 -m pytest tests/ -q                       # 426 passed 기대 (원자료 불필요; R17 +27 · ⑥ chain rule 계약 +9)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

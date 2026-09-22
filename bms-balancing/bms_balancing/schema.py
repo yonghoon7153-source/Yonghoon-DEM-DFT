@@ -56,6 +56,8 @@ CYCLES_ROW = ("cell", "cycle", "C_cell", "x_cell", "a_PE", "b_PE", "a_NE", "b_NE
               "obj", "rmse_pocv", "rmse_dvdq", "rmse_dqdv", "n_starts", "n_accepted",
               #: scale 은 행이 스스로 말한다 (R5-07) — 시작점 seed 실험은 이 네 열이 같아야 성립한다
               "scale_seed", "scale_pocv", "scale_dvdq", "scale_dqdv",
+              #: ⑥ 어느 미분으로 적합했는가 — 행이 스스로 말한다 (`OBJECTIVE_VERSIONS`). 없거나 모르는 값은 위반.
+              "objective_version",
               "bounds", "run_id", "inputs_sha", "consumed_inputs")
 DEGENERACY_KEYS = (
     "state", "si_source", "half_cell", "w_dqdv", "tol_percent_of_best", "n_starts", "seed", "n_grid", "n_samples",
@@ -251,7 +253,11 @@ SHAPE_META_CONTROLS = ("half_cell_source", "si_source", "grid_n", "grid_range", 
 #:   **두 자가 다른 것을 재고 있었던 것**이고, 자를 맞춘다.
 #: ⚠ 여기 더할 때 확인할 것: 값이 `None`·`""` 이면 `check_u14` 가 **schema-only 에서도** 부재로 센다
 #:   (`--gamma-lb` 는 기본 `null` 이라 넣으면 안 된다). `w_dqdv` 는 항상 float 로 실린다 (기본 0.0).
-CYCLES_META_CONTROLS = ("cell", "si_source", "starts", "seed", "scale_seed", "w_dqdv")
+#: ⑥ chain rule 계약 (Codex R17 §4): 어느 미분으로 적합했는가. `legacy_matlab` = 원본 그대로(`dv_cell` 에 1/a 없음,
+#:   재현용) · `chain_rule_v2` = 수학적으로 맞는 미분. **기본값은 없다** — producer 가 적어야 하고 행·sidecar·controls·
+#:   `width_report.COMPARED_SETTINGS` 에 실린다. 두 판의 산출을 한 판인 것처럼 견주면 controls 불일치다.
+OBJECTIVE_VERSIONS = ("legacy_matlab", "chain_rule_v2")
+CYCLES_META_CONTROLS = ("cell", "si_source", "starts", "seed", "scale_seed", "w_dqdv", "objective_version")
 
 
 def meta_controls(kind: str) -> tuple:
@@ -347,7 +353,7 @@ SHAPE_NUMERIC = tuple(c for c in SHAPE_ROW if c not in SHAPE_NON_NUMERIC)
 #:   넣지 않으면 `width_status 가 숫자가 아니다 ('measured')` 로 rc 2 가 난다 (e2e 가 잡았다).
 #:   `lo`/`hi` 여섯은 숫자가 맞으므로 그대로 둔다 — 다만 **빈 칸일 수 있다** (not_requested · failed).
 CYCLES_NON_NUMERIC = ("cell", "bounds", "run_id", "inputs_sha", "consumed_inputs",
-                      "width_status", "width_is_lower_bound")
+                      "width_status", "width_is_lower_bound", "objective_version")
 CYCLES_NUMERIC = tuple(c for c in CYCLES_ROW if c not in CYCLES_NON_NUMERIC)
 #: 숫자 대조에서 뺄 열 (출처·감사 문자열 — 숫자가 아니다)
 ROW_SKIP = frozenset({"run_id", "inputs_sha", "ref_inputs_sha", "consumed_inputs", "ref_consumed_inputs",
@@ -733,6 +739,11 @@ def check_rows(kind: str, rows: list, header: list, name: str = "") -> list:
                                   roles=receipt_roles(kind))
         if kind == "cycles" and "width_status" in header:
             p += check_width_union(r, f"행 {i}: ")
+        if kind == "cycles" and "objective_version" in header:
+            _ov = str(r.get("objective_version") or "").strip()
+            if _ov not in OBJECTIVE_VERSIONS:
+                p.append(f"행 {i}: objective_version 이 {OBJECTIVE_VERSIONS} 중 하나가 아니다 ({r.get('objective_version')!r}) "
+                         f"— 어느 미분으로 적합했는지 없는 행은 인용될 수 없다 (⑥ chain rule 계약)")
         if kind == "shape" and all(c in header for c in SHAPE_MAY_BE_EMPTY):
             # R3-03: 빈 칸은 "격자에서 증인 없음" 이라는 값이므로 둘이 **함께** 비어야 뜻이 있다
             wit, delta = (str(r.get(c) or "").strip() for c in ("gamma_witness", "gamma_witness_delta"))

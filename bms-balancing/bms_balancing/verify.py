@@ -233,9 +233,13 @@ def build(root: Path, source: str, state: str, si_source: str,
         fc_id = {}
         c, v = D.load_full_cell(root, state, workbook=D.full_cell_workbook(root), identity=fc_id)
     blend = Blend(si_c, si_v, gr_c, gr_v, window=11, poly_order=3)
+    # ⚠ ⑥ chain rule 계약: 상태 파이프라인(matrix·profile·shape·degeneracy)은 **명시적으로 legacy** 다 — canonical
+    #   `out/` 은 이 미분으로 만들어졌고 승격돼 있다. 여기를 `chain_rule_v2` 로 바꾸는 것은 전 산출의 재실행·재승격을
+    #   뜻하는 별도 결정이다 (R17_RESPONSE §4). 침묵 기본값이 아니라 **적어 둔 선택**이라는 것이 이 줄의 뜻이다.
     obj = Objective(half, blend, c, v, window=11, poly_order=3,
                     w_pocv=1.0, w_dvdq=1.0, w_dqdv=w_dqdv,
-                    use_peak_weight=use_peak_weight, scale_seed=scale_seed)
+                    use_peak_weight=use_peak_weight, scale_seed=scale_seed,
+                    objective_version="legacy_matlab")
     # ⚠ R6 내부 F4: 풀셀 워크북은 폴더의 이름순 첫 xlsx 라 사본 하나로 조용히 바뀌는데 이름·sha256 이 어디에도
     #   없었다 (R5-05 는 ne_shape 만). 소비한 입력 셋의 identity 를 Objective 가 들고 다니고 산출마다 적는다.
     # ⚠ Codex R7-02: 잡음 진단은 **원시** capacity/voltage 가 필요한데 (Objective 는 평균·정규화한다) 전 판은

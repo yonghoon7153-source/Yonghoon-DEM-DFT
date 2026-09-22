@@ -69,7 +69,7 @@ export D='/mnt/d/…/degradation mode'          # 규진팀 원자료 루트
 export H=~/…/Yonghoon-DEM-DFT/bms-balancing   # 이 저장소
 
 # ── A: w_dqdv 0 (원본 기본 = "방법 3")
-python3 $H/scripts/fit_cycles.py --data-root "$D" \
+python3 $H/scripts/fit_cycles.py --objective-version legacy_matlab --data-root "$D" \   # ⑥ 필수 (2026-09-22 뒤). 이 실행은 legacy 였다
   --half-cell "$D/data/half_cell/GITT/pristine.xlsx" \
   --full-cell "$D/experiment/HD_ICA/300cycle knee point large cell.xlsx" \
   --cell HD_knee --si-source Li \
@@ -79,7 +79,7 @@ python3 $H/scripts/fit_cycles.py --data-root "$D" \
   --out ~/out_widths/w0
 
 # ── B: w_dqdv 1 — 위와 **이 한 줄만** 다르다
-python3 $H/scripts/fit_cycles.py --data-root "$D" \
+python3 $H/scripts/fit_cycles.py --objective-version legacy_matlab --data-root "$D" \   # ⑥ 필수 (2026-09-22 뒤). 이 실행은 legacy 였다
   --half-cell "$D/data/half_cell/GITT/pristine.xlsx" \
   --full-cell "$D/experiment/HD_ICA/300cycle knee point large cell.xlsx" \
   --cell HD_knee --si-source Li \

@@ -68,7 +68,7 @@ def test_cy_03_fit_cycles_end_to_end_passes_rails_and_u14(tmp_path):
     out = tmp_path / "out"; out.mkdir()
 
     def run(seed, dest):
-        r = subprocess.run([sys.executable, str(ROOT / "scripts/fit_cycles.py"), "--data-root", str(src),
+        r = subprocess.run([sys.executable, str(ROOT / "scripts/fit_cycles.py"), "--objective-version", "legacy_matlab", "--data-root", str(src),
                             "--half-cell", str(src / "data/half_cell/GITT/pristine.xlsx"), "--full-cell", str(wb),
                             "--cell", "L_syn", "--si-source", "Li", "--starts", "2", "--seed", str(seed),
                             "--out", str(dest)], cwd=ROOT, capture_output=True, text=True, timeout=900)
@@ -111,7 +111,7 @@ def test_cy_04_producer_refuses_a_workbook_without_cycle_zero(tmp_path):
     import pandas as pd
     src = _synth_root(tmp_path)
     pd.DataFrame({"3_capacity": [0.0, 1.0, 2.0], "3_voltage": [3.0, 3.5, 4.0]}).to_excel(tmp_path / "no0.xlsx", index=False)
-    r = subprocess.run([sys.executable, str(ROOT / "scripts/fit_cycles.py"), "--data-root", str(src),
+    r = subprocess.run([sys.executable, str(ROOT / "scripts/fit_cycles.py"), "--objective-version", "legacy_matlab", "--data-root", str(src),
                         "--half-cell", str(src / "data/half_cell/GITT/pristine.xlsx"), "--full-cell", str(tmp_path / "no0.xlsx"),
                         "--cell", "L_x", "--si-source", "Li", "--starts", "1", "--out", str(tmp_path / "o")],
                        cwd=ROOT, capture_output=True, text=True, timeout=300)
@@ -127,7 +127,7 @@ def test_cy_05_start_seed_and_scale_seed_are_separate_controls(tmp_path):
     wb = _cycle_workbook(src, tmp_path / "L_syn_cycles.xlsx", n_cycles=2)
 
     def run(seed, scale_seed, dest):
-        r = subprocess.run([sys.executable, str(ROOT / "scripts/fit_cycles.py"), "--data-root", str(src),
+        r = subprocess.run([sys.executable, str(ROOT / "scripts/fit_cycles.py"), "--objective-version", "legacy_matlab", "--data-root", str(src),
                             "--half-cell", str(src / "data/half_cell/GITT/pristine.xlsx"), "--full-cell", str(wb),
                             "--cell", "L_syn", "--si-source", "Li", "--starts", "1", "--seed", str(seed),
                             "--scale-seed", str(scale_seed), "--out", str(dest)],
@@ -181,7 +181,7 @@ def test_cy_06_external_literature_file_is_read_and_receipted_as_itself(tmp_path
     assert not (np.isnan(si_c).any() or np.isnan(gr_c).any()), "열마다 NaN 꼬리를 따로 잘라야 한다"
 
     wb = _cycle_workbook(src, tmp_path / "cyc.xlsx", n_cycles=2)
-    out = C.fit_cycles(src, src / "data/half_cell/GITT/pristine.xlsx", wb, "external",
+    out = C.fit_cycles(src, src / "data/half_cell/GITT/pristine.xlsx", wb, "external", objective_version="legacy_matlab",
                        cell="pydma", n_starts=2, seed=0, scale_seed=0, literature=lit)
     import hashlib
     want = hashlib.sha256(lit.read_bytes()).hexdigest()
@@ -198,7 +198,7 @@ def test_cy_07_external_literature_and_the_source_label_must_agree(tmp_path):
     src = _synth_root(tmp_path)
     lit = _pydma_literature(src, tmp_path / "pydma_lit.xlsx")
     wb = _cycle_workbook(src, tmp_path / "cyc.xlsx", n_cycles=2)
-    base = [sys.executable, str(ROOT / "scripts/fit_cycles.py"), "--data-root", str(src),
+    base = [sys.executable, str(ROOT / "scripts/fit_cycles.py"), "--objective-version", "legacy_matlab", "--data-root", str(src),
             "--half-cell", str(src / "data/half_cell/GITT/pristine.xlsx"), "--full-cell", str(wb),
             "--cell", "pydma", "--starts", "2", "--out", str(tmp_path / "o")]
 
@@ -273,11 +273,11 @@ def test_cy_10_gamma_prefit_and_lower_bound_are_recorded_controls(tmp_path):
     hc = src / "data/half_cell/GITT/pristine.xlsx"
     base = dict(cell="pf", n_starts=2, seed=0, scale_seed=0)
 
-    off = C.fit_cycles(src, hc, wb, "Li", **base)
+    off = C.fit_cycles(src, hc, wb, "Li", objective_version="legacy_matlab", **base)
     assert off["settings"]["gamma_prefit"] is False and off["settings"]["gamma_init"] is None
     assert off["settings"]["initial"][4] == 0.25 and off["settings"]["lb"][4] == 0.0
 
-    on = C.fit_cycles(src, hc, wb, "Li", gamma_prefit=True, gamma_lb=0.02, **base)
+    on = C.fit_cycles(src, hc, wb, "Li", objective_version="legacy_matlab", gamma_prefit=True, gamma_lb=0.02, **base)
     s = on["settings"]
     assert s["gamma_prefit"] is True and s["gamma_lb"] == 0.02
     g = s["gamma_init"]
@@ -307,7 +307,7 @@ def test_cy_11_the_objective_weight_is_a_declared_control_not_unexplained_drift(
     outs = {}
     for w in (0, 1):
         d = tmp_path / f"w{w}"
-        r = subprocess.run([sys.executable, str(ROOT / "scripts/fit_cycles.py"),
+        r = subprocess.run([sys.executable, str(ROOT / "scripts/fit_cycles.py"), "--objective-version", "legacy_matlab",
                             "--data-root", str(src), "--half-cell", str(hc), "--full-cell", str(wb),
                             "--cell", "L_syn", "--si-source", "Li", "--starts", "2",
                             "--seed", "0", "--scale-seed", "0", "--w-dqdv", str(w),

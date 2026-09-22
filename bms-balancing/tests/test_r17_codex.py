@@ -173,7 +173,8 @@ _CONSUMED = {"full_cell": {"path": "cell.xlsx", "sha256": "a" * 64},
 
 def _base_row():
     base = {k: "1" for k in S.CYCLES_ROW}
-    base.update(cell="syn", cycle="0", width_status="measured", width_tol="0.01", width_is_lower_bound="True")
+    base.update(cell="syn", cycle="0", width_status="measured", width_tol="0.01", width_is_lower_bound="True",
+                objective_version="legacy_matlab")                 # ⑥ — 행이 어느 미분인지 말해야 완전한 행이다
     base.update(consumed_inputs=json.dumps(_CONSUMED), inputs_sha=S.inputs_digest(_CONSUMED))
     for m in ("LAM_PE", "LAM_NE", "LLI"):
         base.update({m: "0", m + "_lo": "-0.01", m + "_hi": "0.01"})
@@ -190,7 +191,7 @@ def _width_pair(tmp_path, name, change=None, meta_change=None):
         meta = {"lb": [0.1, -0.2, 0.1, -0.2, 0], "ub": [2, 0.5, 2, 0.5, 1],
                 "initial": [1, 0, 1, 0, 0.25], "gamma_prefit": False, "gamma_lb": 0,
                 "n_multistart": 20, "seed": 0, "scale_seed": 0, "w_pocv": 1, "w_dvdq": 1,
-                "w_dqdv": i, "optimizer": "SLSQP", "widths": True, "width_tol": 0.01,
+                "w_dqdv": i, "objective_version": "legacy_matlab", "optimizer": "SLSQP", "widths": True, "width_tol": 0.01,
                 "width_starts": 4, "width_method": "constrained-extrema", "width_grid": 0,
                 "cell": "syn", "si_source": "external", "starts": 20, "cycles": [0, 1],
                 "consumed_inputs": copy.deepcopy(_CONSUMED),

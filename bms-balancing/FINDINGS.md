@@ -184,6 +184,35 @@ dv_cell_model = @(p, x) dv_PE((x - p(2)) / p(1)) - dv_NE_blend((x - p(4)) / p(3)
 → 수정 제안 **#9** 로 옮긴다 (그들에게 보고할 사항). 우리는 고치지 않는다 —
 고치면 "그들의 답" 이 아니라 "우리 답" 을 재게 된다.
 
+#### 1-2-b. ⑥ 결함의 **크기**를 쟀고, **명시 objective 계약**으로 저장소에 고정했다 (2026-09-22)
+
+§1-2 는 결함의 존재를 확정했지만 **답을 얼마나 움직이는지는 재지 않았다.** 정답을 심은 합성 두 상태
+(pristine · aged)를 forward model 로 만들고 두 미분으로 적합해 보고 LAM/LLI 를 정답과 댔다
+(`tests/test_chain_rule_contract.py::test_cr_04`, `V.multistart` 6 시작 · seed 0):
+
+| truth | 판 | LAM_PE 오차 | **LAM_NE 오차** | LLI 오차 |
+|---|---|---:|---:|---:|
+| A (noiseless) | `legacy_matlab` | +0.6578 %p | **−3.3921 %p** | +0.8992 %p |
+| A (noiseless) | `chain_rule_v2` | +0.0071 %p | **−0.0171 %p** | +0.0029 %p |
+| B (noiseless) | `legacy_matlab` | +0.8744 %p | **−7.4932 %p** | +2.3903 %p |
+| B (noiseless) | `chain_rule_v2` | +0.0239 %p | **−0.0577 %p** | +0.0095 %p |
+| A (1 mV 잡음) | `legacy_matlab` | +0.7983 %p | **−3.1224 %p** | +0.7618 %p |
+| A (1 mV 잡음) | `chain_rule_v2` | −0.3525 %p | **+0.6819 %p** | −0.0297 %p |
+
+`[해석]` legacy 는 LAM_NE 를 **3~7 %p 편향**시키고 v2 는 절대 허용(0.5 %p · 잡음 1 %p) 안에서 되찾는다. ⚠ Codex R17 §4 ②:
+**"200 배" 같은 오차비는 계약이 아니다** — optimizer·잡음·상자에 따라 달라지는 보조 관측이고, 회귀가 고정한 것은
+(a) analytic chain-rule 항등식(`E_PE=3+x²`, `E_NE=0.2+0.3x²`, a≠1 에서 legacy 최대 오차 > 0.1 · v2 < 1e−8, a=1 대조군은
+둘이 같다 — `test_cr_03`) 과 (b) v2 의 **절대 허용 안 회수**다. legacy 의 오차는 **기록만** 한다.
+
+**계약 (R17 §4 답 채택 · 사용자 승인 2026-09-22)**: `Objective(..., objective_version=…)` 가 **필수 키워드**이고 값은
+`legacy_matlab` | `chain_rule_v2` (`schema.OBJECTIVE_VERSIONS`). **기본값 없음** — 알려진 잘못된 미분을 침묵 기본값으로
+권하지 않는다. 값은 `CYCLES_ROW` 열 · sidecar(`settings`) · `CYCLES_META_CONTROLS` · `width_report.COMPARED_SETTINGS` 에
+실린다 (두 판을 한 판인 것처럼 견주면 rc 2, `--axis objective_version` 으로 고르면 견준다). `fit_cycles.py` 는
+`--objective-version` 필수. **상태 파이프라인(matrix·profile·shape·degeneracy)은 `legacy_matlab` 을 명시**한다 —
+canonical `out/` 이 그 미분으로 승격돼 있고, 바꾸는 것은 전 산출의 재실행·재승격이라 별도 결정이다.
+**§1-2 의 결론은 그대로다**: 결함은 그들 모델의 것이고 포팅은 충실했다 — 이제 그 충실 포팅이 `legacy_matlab` 이라는
+**이름을 갖는다.** 실데이터 A/B 는 미실행 (승인 뒤 · 사용자 기계 ⑦).
+
 ### 1-3. 목적함수 scale 표본의 경계 — **닫혔다: 원 파이프라인은 전역 경계다**
 
 ```matlab

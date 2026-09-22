@@ -369,7 +369,16 @@ class Objective:
                  cell_voltage, window=11, poly_order=3,
                  w_pocv=1.0, w_dvdq=1.0, w_dqdv=0.0,
                  peak_weight=7.0, sigma_ratio=0.03, use_peak_weight=True,
-                 n_model=500, scale_seed=0, n_scale_samples=50):
+                 n_model=500, scale_seed=0, n_scale_samples=50, *, objective_version):
+        # ⚠ ⑥ chain rule 계약 (Codex R17 §4): `dv_cell` 의 `1/a` 누락은 원본 MATLAB 의 것이고 포팅은 충실하다
+        #   (`FINDINGS.md` §1-2). 고치되 **충실 포팅을 명시 legacy 모드로 보존**한다 — 어느 미분을 쓰는지는 부르는 쪽이
+        #   **적어야** 하고 기본값은 없다 (알려진 잘못된 미분을 침묵 기본값으로 권하지 않는다). 값은 행·sidecar·
+        #   controls·비교기에 실린다 (`schema.OBJECTIVE_VERSIONS`).
+        from .schema import OBJECTIVE_VERSIONS
+        if objective_version not in OBJECTIVE_VERSIONS:
+            raise ValueError(f"objective_version 은 {OBJECTIVE_VERSIONS} 중 하나여야 한다 — 받은 것: {objective_version!r} "
+                             f"(⑥ chain rule 계약: 어느 미분으로 적합하는지 적지 않은 실행은 없다)")
+        self.objective_version = objective_version
         self.half, self.blend = half, blend
         self.window, self.poly_order = window, poly_order
 
@@ -415,8 +424,15 @@ class Objective:
                 - self.blend.E(np.atleast_1d((x - p[3]) / p[2]), p[4]))
 
     def dv_cell(self, p, x):
-        return (self.half.dv_PE((x - p[1]) / p[0])
-                - self.blend.dv(np.atleast_1d((x - p[3]) / p[2]), p[4]))
+        # E_cell = E_PE((x−b_PE)/a_PE) − E_NE((x−b_NE)/a_NE, γ) 이므로 d/dx 는 각 항에 **1/a** 가 붙는다.
+        #   legacy_matlab : 원본 electrode_balancing_blend 그대로 — 1/a 없음 (충실 포팅, 재현용).
+        #   chain_rule_v2 : 수학적으로 맞는 미분. analytic 항등식 회귀 `tests/test_chain_rule_contract.py::test_cr_03`.
+        #   a=1 이면 둘이 같고, a≠1 이면 legacy 의 dV/dQ 항은 참 미분이 아니다 — 그것이 §1-2 의 결함이다.
+        d_pe = self.half.dv_PE((x - p[1]) / p[0])
+        d_ne = self.blend.dv(np.atleast_1d((x - p[3]) / p[2]), p[4])
+        if self.objective_version == "chain_rule_v2":
+            return d_pe / p[0] - d_ne / p[2]
+        return d_pe - d_ne
 
     def rmse_pocv(self, p) -> float:
         r = self.voltage - self.E_cell(p, self.capacity)

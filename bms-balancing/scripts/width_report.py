@@ -46,7 +46,10 @@ COMPARED_SETTINGS = ("lb", "ub", "initial", "gamma_prefit", "gamma_lb", "n_multi
                      # ⚠ W-21: `width_method` 는 켬/끔만 가른다 — **격자 수가 다른 두 켠 실행**은 이름이 같아서
                      #   그대로 견줘졌다. 폭 차이의 일부가 격자 탓인데 눈에 안 보인다.
                      "widths", "width_tol", "width_starts", "width_method", "width_grid",
-                     "cell", "si_source", "starts", "cycles")
+                     "cell", "si_source", "starts", "cycles",
+                     # ⑥ chain rule 계약: 어느 미분으로 적합했나. 축으로 고르면(`--axis objective_version`) 두 판을 견주고,
+                     #   아니면 같아야 한다 — 두 판을 한 판인 것처럼 섞지 않는다 (Codex R17 §4).
+                     "objective_version")
 
 
 def load(path: pathlib.Path):

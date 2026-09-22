@@ -176,12 +176,12 @@ def test_w06_fit_cycles_records_bounds_against_the_box_it_used(tmp_path):
     hc = src / "data/half_cell/GITT/pristine.xlsx"
     base = dict(cell="w06", n_starts=2, seed=0, scale_seed=0)
 
-    free = C.fit_cycles(src, hc, wb, "Li", **base)
+    free = C.fit_cycles(src, hc, wb, "Li", objective_version="legacy_matlab", **base)
     g_free = max(float(r["gamma_Si"]) for r in free["rows"])
     lb_gamma = min(round(g_free + 0.05, 6), float(UB5[4]))
     assert lb_gamma > g_free, (g_free, lb_gamma)         # 하한을 자유 최적값 **위로** 올린다
 
-    pinned = C.fit_cycles(src, hc, wb, "Li", gamma_lb=lb_gamma, **base)
+    pinned = C.fit_cycles(src, hc, wb, "Li", objective_version="legacy_matlab", gamma_lb=lb_gamma, **base)
     at_lb = [r for r in pinned["rows"] if abs(float(r["gamma_Si"]) - lb_gamma) < 1e-6]
     assert at_lb, [(r["cycle"], r["gamma_Si"]) for r in pinned["rows"]]   # fixture 전제
 
@@ -266,7 +266,7 @@ def test_w10_widths_off_is_empty_not_zero(tmp_path):
     성공 영수증이 되면 안 된다.**"""
     from bms_balancing import cycles as C                  # noqa: PLC0415
     src, wb, hc = _cycles_fixture(tmp_path)
-    out = C.fit_cycles(src, hc, wb, "Li", cell="w10", n_starts=2, seed=0, scale_seed=0)
+    out = C.fit_cycles(src, hc, wb, "Li", objective_version="legacy_matlab", cell="w10", n_starts=2, seed=0, scale_seed=0)
     for r in out["rows"]:
         assert r["width_status"] == "not_requested", r["width_status"]
         for c in ("LAM_PE_lo", "LAM_PE_hi", "LAM_NE_lo", "LAM_NE_hi", "LLI_lo", "LLI_hi",
@@ -284,7 +284,7 @@ def test_w11_widths_on_bracket_the_point_estimate(tmp_path):
     """
     from bms_balancing import cycles as C                  # noqa: PLC0415
     src, wb, hc = _cycles_fixture(tmp_path)
-    out = C.fit_cycles(src, hc, wb, "Li", cell="w11", n_starts=2, seed=0, scale_seed=0,
+    out = C.fit_cycles(src, hc, wb, "Li", objective_version="legacy_matlab", cell="w11", n_starts=2, seed=0, scale_seed=0,
                        widths=True, width_tol=0.01, width_starts=2)
     assert out["settings"]["widths"] is True and out["settings"]["width_tol"] == 0.01
     for r in out["rows"]:
@@ -303,8 +303,8 @@ def test_w12_the_width_is_measured_in_the_box_the_fit_used(tmp_path):
     from bms_balancing import cycles as C                  # noqa: PLC0415
     src, wb, hc = _cycles_fixture(tmp_path)
     base = dict(cell="w12", n_starts=2, seed=0, scale_seed=0, widths=True, width_tol=0.05, width_starts=2)
-    wide = C.fit_cycles(src, hc, wb, "Li", **base)
-    tight = C.fit_cycles(src, hc, wb, "Li", gamma_lb=0.45, **base)   # γ 를 [0.45, 0.50] 으로 가둔다
+    wide = C.fit_cycles(src, hc, wb, "Li", objective_version="legacy_matlab", **base)
+    tight = C.fit_cycles(src, hc, wb, "Li", objective_version="legacy_matlab", gamma_lb=0.45, **base)   # γ 를 [0.45, 0.50] 으로 가둔다
     assert tight["settings"]["lb"][4] == 0.45
     w = max(float(r["LAM_NE_hi"]) - float(r["LAM_NE_lo"]) for r in wide["rows"])
     t = max(float(r["LAM_NE_hi"]) - float(r["LAM_NE_lo"]) for r in tight["rows"])
@@ -323,7 +323,7 @@ def test_w13_a_failed_width_is_not_a_number(tmp_path, monkeypatch):
     monkeypatch.setattr(V, "near_optimal_extrema", boom)
     monkeypatch.setattr(C, "near_optimal_extrema", boom, raising=False)
 
-    out = C.fit_cycles(src, hc, wb, "Li", cell="w13", n_starts=2, seed=0, scale_seed=0,
+    out = C.fit_cycles(src, hc, wb, "Li", objective_version="legacy_matlab", cell="w13", n_starts=2, seed=0, scale_seed=0,
                        widths=True, width_tol=0.01, width_starts=2)
     for r in out["rows"]:
         assert r["width_status"] == "failed", r["width_status"]
@@ -344,7 +344,7 @@ def test_w14_the_published_artifact_carries_widths_and_passes_both_validators(tm
     src, wb, hc = _cycles_fixture(tmp_path)
     out = tmp_path / "out"
     rc = subprocess.run(
-        [sys.executable, str(ROOT / "scripts/fit_cycles.py"),
+        [sys.executable, str(ROOT / "scripts/fit_cycles.py"), "--objective-version", "legacy_matlab",
          "--data-root", str(src), "--half-cell", str(hc), "--full-cell", str(wb),
          "--cell", "w14", "--si-source", "Li", "--starts", "2", "--seed", "0", "--scale-seed", "0",
          "--widths", "--width-tol", "0.05", "--width-starts", "2", "--out", str(out)],
@@ -394,7 +394,8 @@ def test_w15_the_width_columns_are_a_tagged_union_not_just_optional(tmp_path):
     from test_cycles import _cycle_workbook                # noqa: F401,PLC0415  (fixture 경로 확보)
 
     base = {c: "1" for c in S.CYCLES_ROW}
-    base.update({"cell": "x", "bounds": "-", "run_id": "r", "inputs_sha": "s", "consumed_inputs": "{}"})
+    base.update({"cell": "x", "bounds": "-", "run_id": "r", "inputs_sha": "s", "consumed_inputs": "{}",
+                 "objective_version": "legacy_matlab"})
     W = ("width_tol", "width_is_lower_bound", "LAM_PE_lo", "LAM_PE_hi",
          "LAM_NE_lo", "LAM_NE_hi", "LLI_lo", "LLI_hi")
 
@@ -439,7 +440,7 @@ _FAKE_CONSUMED = {"full_cell": {"path": "cell.xlsx", "sha256": "a" * 64},
                                  "si": {"path": "si.xlsx", "sha256": "e" * 64}}}
 
 
-def _fake_widths_csv(d, name, *, w_dqdv, seed=0, spans=(1.0, 5.0, 2.0)):
+def _fake_widths_csv(d, name, *, w_dqdv, seed=0, spans=(1.0, 5.0, 2.0), objective_version="legacy_matlab"):
     """폭이 실린 cycles CSV + sidecar 한 벌 — 리포터는 순수 reader 라 적합을 안 돌려도 된다.
 
     R17 이후 sidecar 는 실제 `fit_cycles` 가 쓰는 결속 키(`sha256`·`run_id`·`git_commit`·`env`·`consumed_inputs`·
@@ -456,7 +457,7 @@ def _fake_widths_csv(d, name, *, w_dqdv, seed=0, spans=(1.0, 5.0, 2.0)):
                  b_NE="0", gamma_Si="0.25", c_lit="1", obj="1", rmse_pocv="1", rmse_dvdq="1", rmse_dqdv="1",
                  n_starts="4", n_accepted="4", scale_seed="0", scale_pocv="1", scale_dvdq="1", scale_dqdv="1",
                  bounds="-", run_id="r", inputs_sha=S.inputs_digest(_FAKE_CONSUMED),
-                 consumed_inputs=_j.dumps(_FAKE_CONSUMED),
+                 consumed_inputs=_j.dumps(_FAKE_CONSUMED), objective_version=objective_version,
                  width_status="measured", width_tol="0.01", width_is_lower_bound="True")
         for m, sp in zip(("LAM_PE", "LAM_NE", "LLI"), spans):
             r[m] = str(k * 0.01)
@@ -471,7 +472,7 @@ def _fake_widths_csv(d, name, *, w_dqdv, seed=0, spans=(1.0, 5.0, 2.0)):
             "initial": [1.08, -0.04, 1.05, -0.03, 0.25], "gamma_prefit": False, "gamma_lb": None,
             "n_multistart": 4, "cycles": [0, 1],
             "widths": True, "width_tol": 0.01, "width_starts": 3, "width_method": "near_optimal_extrema",
-            "width_grid": 0,
+            "width_grid": 0, "objective_version": objective_version,
             # R17 결속 — 두 실행이 같아야 하는 것들 (axis 와 seed 만 시험이 흔든다)
             "run_id": "r", "sha256": _h.sha256(art.read_bytes()).hexdigest(),
             "git_commit": "0" * 40, "env": {"python": "3.11", "numpy": "1", "scipy": "1", "pandas": "1",

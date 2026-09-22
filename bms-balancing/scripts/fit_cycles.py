@@ -49,6 +49,9 @@ def main(argv=None) -> int:
     ap.add_argument("--seed", type=int, default=0, help="MultiStart 시작점 seed — 이것만 바꿔 두 번 돌리면 '시작점이 정한 적합인가' 를 묻는다")
     ap.add_argument("--scale-seed", type=int, default=0, help="목적함수 scale 표본 seed (R5-07) — 시작점 실험에서는 고정한다")
     ap.add_argument("--w-dqdv", type=float, default=0.0, help='dQ/dV 항 가중 (원본 기본 0 = "방법3")')
+    ap.add_argument("--objective-version", required=True, choices=S.OBJECTIVE_VERSIONS,
+                    help="⑥ chain rule 계약 — 어느 미분으로 적합하나. legacy_matlab = 원본 그대로(dv_cell 에 1/a 없음, "
+                         "재현용) · chain_rule_v2 = 수학적으로 맞는 미분. **기본값 없음** — 적어야 돈다 (Codex R17 §4)")
     ap.add_argument("--gamma-prefit", action="store_true",
                     help="γ 를 반쪽전지만으로 먼저 적합해 초기값으로 (fit_gamma_si.m · pyDMA Track C 규약)")
     ap.add_argument("--gamma-lb", type=float, default=None, help="γ 하한 (기본 0.0; Track C 는 0.02)")
@@ -83,6 +86,7 @@ def main(argv=None) -> int:
     rid = a.run_id or os.environ.get("BMS_RUN_ID") or uuid.uuid4().hex
     try:
         res = C.fit_cycles(root, a.half_cell, a.full_cell, a.si_source, cell=a.cell, cycles=cycles,
+                           objective_version=a.objective_version,          # ⑥ — sidecar 에는 settings 로 실린다
                            n_starts=a.starts, seed=a.seed, scale_seed=a.scale_seed, w_dqdv=a.w_dqdv, run_id=rid,
                            literature=a.literature, gamma_prefit=a.gamma_prefit, gamma_lb=a.gamma_lb,
                            widths=a.widths, width_tol=a.width_tol, width_starts=a.width_starts, width_grid=a.width_grid,
