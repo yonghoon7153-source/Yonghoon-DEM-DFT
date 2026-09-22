@@ -21,13 +21,18 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import pathlib
+import re
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
 from bms_balancing.verify import PARTIAL_INDEX      # noqa: E402
+
+#: 기록된 digest 의 모양 — 댈 수 없는 값은 대조가 아니다 (R17 후속 3차 F3-01).
+_HEX64 = re.compile(r"[0-9a-f]{64}")
 
 
 def load_index(root: pathlib.Path) -> dict:
@@ -117,6 +122,44 @@ def main(argv=None) -> int:
               f"(디렉터리째 지우면 이 바이트가 같이 사라진다):", file=sys.stderr)
         for f in stray[:20]:
             print(f"    {f}", file=sys.stderr)
+        return 2
+
+    # ⚠ Codex R17 후속 3차 F3-01: **대조가 단방향이었다.** 전 판은 `on_disk - known`(모르는
+    #   디렉터리)과 미등록 파일만 봤다 — 즉 "디스크에 있는데 index 가 모르는 것" 만. 반대 방향,
+    #   **"index 가 안다고 한 것이 실제로 있는가 · 그 바이트가 index 가 지목한 것인가"** 는 아무도
+    #   안 봤다. 그래서 둘이 실측으로 뚫렸다 (리뷰어, 동시성 가정 없이 정적 상태로 재현):
+    #
+    #     ① 버릴 항목의 경로에 **다른 바이트**가 들어 있어도 rc 0 으로 지웠다 — 로그에는 index 의
+    #        **원래 SHA** 를 인쇄하면서.
+    #     ② **최신 보존 파일이 없어도** rc 0 으로 유일하게 남은 이전 파일을 지웠다 — 결과 payload
+    #        0 개, 남은 index 는 없는 파일을 가리킨다.
+    #
+    #   `rmtree` 를 버린 것(F2-01)은 옳았지만 **삭제 단위를 파일로 줄이는 것과 그 파일의 동일성을
+    #   검증하는 것은 다르다.** 경로 집합은 파일 동일성이 아니다.
+    #   그래서 **삭제·보존을 가르기 전에, 전체 항목**에 대해 일반 파일 존재와 digest 를 댄다.
+    #   하나라도 어긋나면 **삭제 0 · index 쓰기 0 · rc 2** — dry-run 도 마찬가지다 (dry-run 의
+    #   출력은 *무엇을 지울지*의 예고이고, 예고가 틀린 바이트를 가리키면 사람이 그것을 믿는다).
+    bad: list = []
+    for i, e in enumerate(idx["attempts"]):
+        want = str(e["sha256"])
+        if not _HEX64.fullmatch(want):
+            bad.append(f"항목 {i} ({e['path']}): 기록된 sha256 이 64자리 hex 가 아니다 ({want!r}) — "
+                       f"댈 수 없는 digest 는 통과가 아니다")
+            continue
+        f = (root / e["path"]).resolve()
+        if not f.is_file():
+            bad.append(f"항목 {i} ({e['path']}): index 가 아는 payload 가 **없다** — "
+                       f"등록된 파일의 부재도 '모르는 상태' 다")
+            continue
+        got = hashlib.sha256(f.read_bytes()).hexdigest()
+        if got != want:
+            bad.append(f"항목 {i} ({e['path']}): 바이트가 index 가 지목한 것이 아니다 "
+                       f"(index {want[:12]} ≠ 실제 {got[:12]})")
+    if bad:
+        print(f"! index 와 디스크가 어긋난다 {len(bad)} 건 — 아무것도 지우지 않고 index 도 "
+              f"건드리지 않는다 (삭제의 근거가 없다):", file=sys.stderr)
+        for b in bad[:20]:
+            print(f"    {b}", file=sys.stderr)
         return 2
 
     # (종류, 산출)마다 index 순서(=기록 순서)의 뒤쪽 keep 개를 남긴다

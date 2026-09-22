@@ -1,0 +1,21 @@
+{
+  "command": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+    "scripts/check_u14.py",
+    "--new",
+    "out/archive/legacy_r6_u14",
+    "--schema-only"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing",
+  "rc": 2,
+  "seconds": 0.8429999999934807,
+  "utc": "2026-09-22T13:25:24.061267+00:00",
+  "env_overrides": {
+    "PYTHONUTF8": "1",
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "PYTEST_DEBUG_TEMPROOT": null
+  }
+}

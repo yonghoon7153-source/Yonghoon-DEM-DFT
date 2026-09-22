@@ -535,7 +535,13 @@ def near_optimal_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
                 if not np.isfinite(r.fun):
                     continue
                 # 제약을 실제로 지키는지 직접 확인한다 (SLSQP 는 살짝 넘길 수 있다)
-                if obj(np.asarray(r.x, float)) <= limit * (1 + 1e-9):
+                # ⚠ R17 후속 3차 §5-3 (리뷰어의 별도 권고): 전 판은 **최종 반환점에 `_in_box` 를
+                #   적용하지 않았다.** 리뷰어가 solver 반환을 명시적으로 주입하자 참 상자 범위
+                #   ±16.6667 %p 대신 −733.3333 %p 가 나왔다 (실제 SciPy 가 그 값을 만들었다는
+                #   native 반례는 아니다 — 의존 solver 의 비정상 반환까지 방어한다는 계약을
+                #   유지하려면 같은 술어를 여기에도 걸어야 한다는 뜻이다).
+                #   "모든 후보에 같은 술어" 는 **solver 가 돌려준 점도 후보**라는 뜻이다.
+                if _in_box(r.x) and obj(np.asarray(r.x, float)) <= limit * (1 + 1e-9):
                     vals.append(mode_of(r.x, key))
         v = np.array(vals, dtype=float) * 100.0
         # ⚠ Codex R17 후속 2차 F2-05: **끝점도 같은 검증 경로에 묶는다.** 후보가 상자 안이고 제약을

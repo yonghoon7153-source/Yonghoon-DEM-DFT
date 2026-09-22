@@ -1,0 +1,69 @@
+{
+  "cell": "syn",
+  "si_source": "Li",
+  "starts": 4,
+  "seed": 0,
+  "scale_seed": 0,
+  "w_pocv": 1.0,
+  "w_dvdq": 1.0,
+  "w_dqdv": 1.0,
+  "optimizer": "L-BFGS-B (scipy)",
+  "lb": [
+    0
+  ],
+  "ub": [
+    0
+  ],
+  "initial": [
+    0
+  ],
+  "gamma_prefit": false,
+  "gamma_lb": null,
+  "n_multistart": 4,
+  "cycles": [
+    0,
+    1
+  ],
+  "widths": true,
+  "width_tol": 0.01,
+  "width_starts": 3,
+  "width_method": "near_optimal_extrema",
+  "width_grid": 0,
+  "objective_version": "legacy_matlab",
+  "run_id": "r",
+  "sha256": "7811ff366ea51c3b80a8aaa81edd0da792d290548b04a56f67939f9c59c494b8",
+  "git_commit": "e834b01e4066c5e78c06b6ed1f77878e5a27a481",
+  "env": {
+    "python": "3.11",
+    "numpy": "1",
+    "scipy": "1",
+    "pandas": "1",
+    "openpyxl": "3",
+    "platform": "Linux"
+  },
+  "consumed_inputs": {
+    "full_cell": {
+      "path": "cell.xlsx",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "half_cell": {
+      "path": "half.xlsx",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "literature": {
+      "gr": {
+        "path": "gr.xlsx",
+        "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      "si": {
+        "path": "si.xlsx",
+        "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      }
+    }
+  },
+  "dataset_manifest": {
+    "version": 1,
+    "dataset_id": "regime-team/electrode_balancing_blend/half_cell",
+    "sha256": "2d4a4893d3c90c632d28d3203fe04764e70dff5dfc9ae0e14767cc5609379e4d"
+  }
+}

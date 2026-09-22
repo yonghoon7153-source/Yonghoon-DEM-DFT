@@ -1,0 +1,39 @@
+{
+  "index_version": 1,
+  "attempts": [
+    {
+      "attempt": "victim",
+      "kind": "..",
+      "artifact": "matrix_100.csv",
+      "status": "partial",
+      "path": "matrix/A/matrix_100.csv",
+      "sha256": "cba06b5736faf67e54b07b561eae94395e774c517a7d910a54369e1263ccfbd4",
+      "recorded_utc": "A"
+    },
+    {
+      "attempt": "B",
+      "kind": "..",
+      "artifact": "matrix_100.csv",
+      "status": "partial",
+      "path": "matrix/B/matrix_100.csv",
+      "sha256": "11507a0e2f5e69d5dfa40a62a1bd7b6ee57e6bcd85c67c9b8431b36fff21c437",
+      "recorded_utc": "B"
+    },
+    {
+      "attempt": "A",
+      "kind": "matrix",
+      "artifact": "keep_A",
+      "status": "partial",
+      "path": "matrix/A/retained.txt",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    {
+      "attempt": "B",
+      "kind": "matrix",
+      "artifact": "keep_B",
+      "status": "partial",
+      "path": "matrix/B/retained.txt",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ]
+}

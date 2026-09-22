@@ -1,0 +1,14 @@
+{
+  "index_version": 1,
+  "attempts": [
+    {
+      "attempt": "B",
+      "kind": "matrix",
+      "artifact": "matrix_100.csv",
+      "status": "partial",
+      "path": "matrix/B/matrix_100.csv",
+      "sha256": "11507a0e2f5e69d5dfa40a62a1bd7b6ee57e6bcd85c67c9b8431b36fff21c437",
+      "recorded_utc": "B"
+    }
+  ]
+}

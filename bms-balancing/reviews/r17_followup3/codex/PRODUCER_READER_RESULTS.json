@@ -1,0 +1,45 @@
+{
+  "target": "e834b01e4066c5e78c06b6ed1f77878e5a27a481",
+  "fixture": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\producer-9k14occp",
+  "scope": "real fit_cycles API with synthetic inputs; review-owned serialization, not CLI publication",
+  "seconds": 18.421999999991385,
+  "width_status": [
+    "measured",
+    "measured"
+  ],
+  "check_rows": [],
+  "common_full_cell": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\producer-9k14occp\\syn.xlsx",
+    "sha256": "d46d92e18a0a04c17af5e4b668578f901bcfe6fe6ee02c15515df58639a196b5"
+  },
+  "row_full_cell": [
+    {
+      "cycle": 0,
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\producer-9k14occp\\syn.xlsx",
+      "sha256": "d46d92e18a0a04c17af5e4b668578f901bcfe6fe6ee02c15515df58639a196b5"
+    },
+    {
+      "cycle": 1,
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\producer-9k14occp\\syn.xlsx",
+      "sha256": "d46d92e18a0a04c17af5e4b668578f901bcfe6fe6ee02c15515df58639a196b5"
+    }
+  ],
+  "command": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\width_report.py",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\producer-9k14occp\\cycles_syn_Li.csv"
+  ],
+  "rc": 0,
+  "stdout": "\n══ cycles_syn_Li.csv  (허용 0.01 · w_dqdv 0.0 · seed 0 · starts 1) ══\n cyc              LAM_PE                        LAM_NE                         LLI              \n            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]      \n   0     0.00 [  -0.79,   2.14]    0.00 [  -3.38,   1.10]    0.00 [  -2.14,   2.18] \n   1     4.86 [   4.86,   5.61]    2.14 [  -3.16,   5.71]    5.04 [   3.44,   6.16] \n   폭          최대    2.94 %p         최대    8.87 %p         최대    4.32 %p \n  ⚠ 이 폭은 **하한**이다 (국소 해법 + 격자). 참 폭은 이보다 넓을 수 있다.\n  ⚠ **모델 고정 축**의 폭이다 — 문헌 곡선 선택이 만드는 폭은 여기 안 들어간다.\n",
+  "stderr": "",
+  "control_without_row_cycle": {
+    "command": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\width_report.py",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\producer-9k14occp\\control_without_row_cycle\\cycles_syn_Li.csv"
+    ],
+    "rc": 2,
+    "stdout": "",
+    "stderr": "! 행 0 (cycle 0) 의 receipt 가 **그 cycle 의 기대 receipt** 와 다르다 (cycles_syn_Li.csv) — 이 행은 이 sidecar 의 것이 아니다\n"
+  }
+}

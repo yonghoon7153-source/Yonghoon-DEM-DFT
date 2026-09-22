@@ -1,0 +1,768 @@
+{
+  "head": "e834b01e4066c5e78c06b6ed1f77878e5a27a481",
+  "bms_fix": "7f09804fdc6be2892746dece201b98da48aac6cd",
+  "tree": "97a8cc7dfb9af1026fdba5e7fbb154efd7a6c122",
+  "status": "",
+  "bms_diff_after_fix": "M\tbms-balancing/docs/ASSB_TRANSFER_NOTE.md",
+  "utc": "2026-09-22T13:17:46.924551+00:00",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "packages": {
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pandas": "3.0.6",
+    "openpyxl": "3.1.5",
+    "pytest": "9.1.1"
+  },
+  "files": [
+    {
+      "path": "CLAUDE.md",
+      "sha256": "7abaa02501583393f2c4c3482bb6d9f67fdbc75f2e9de08461214a0bb02d3f17",
+      "bytes": 8383
+    },
+    {
+      "path": "bms-balancing/WORKING_STATE.md",
+      "sha256": "2a75c331535bdd4298ca3f8d37a17ee419b67dfddf72b2d9e12a356a0150337c",
+      "bytes": 113920
+    },
+    {
+      "path": "bms-balancing/bms_balancing/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "bms-balancing/bms_balancing/cycles.py",
+      "sha256": "114a5bc6f4e59d69a6f96d701e9cb716383a0df3a756224f3a938ec576c26884",
+      "bytes": 15511
+    },
+    {
+      "path": "bms-balancing/bms_balancing/data.py",
+      "sha256": "1252e66e5096a287dd7aa21cc54f8b8ebe432c03437e720f91d3f624c9ab5e53",
+      "bytes": 12401
+    },
+    {
+      "path": "bms-balancing/bms_balancing/model.py",
+      "sha256": "8e9d4461e3a3153fbecd302a94a46dfe30d92a5cc641a529620091b660e163ea",
+      "bytes": 29244
+    },
+    {
+      "path": "bms-balancing/bms_balancing/rails.py",
+      "sha256": "a74b9be1181bbf8b5d0d1cccdd387045e76c01226e44a2116e18a918d2365cdc",
+      "bytes": 14696
+    },
+    {
+      "path": "bms-balancing/bms_balancing/schema.py",
+      "sha256": "f2ebb1d7a7762b23096eb3045b81106e74a249547fdec261bc29acfe1a5e987e",
+      "bytes": 71883
+    },
+    {
+      "path": "bms-balancing/bms_balancing/verify.py",
+      "sha256": "71400ee5f18a219df9c648f4ec5a10f602aaa16c9e53b90b87647251f37d4d9c",
+      "bytes": 134896
+    },
+    {
+      "path": "bms-balancing/matlab/tests/check_e2e.py",
+      "sha256": "204acbb12c38cf58475b1e88c2cc5a5aa8511a069565d49d7ddf4407b2cf5ec6",
+      "bytes": 4736
+    },
+    {
+      "path": "bms-balancing/matlab/tests/check_shims.py",
+      "sha256": "76c57020b02c89b66bd1f1ab91167e7028c20673e0fdacadf0cc1f92033850f3",
+      "bytes": 5181
+    },
+    {
+      "path": "bms-balancing/matlab/tests/gen_shim_cases.py",
+      "sha256": "d59d38e702ea288658fd6a507cac8236feb585c9e4f176edd660b1559a343478",
+      "bytes": 3739
+    },
+    {
+      "path": "bms-balancing/matlab/tests/gen_synth_data.py",
+      "sha256": "bca787e8602fd14ddd6a21ed9ff7c7bc9f8c6aed5cbec6438b5a3f21c982ac87",
+      "bytes": 3515
+    },
+    {
+      "path": "bms-balancing/matlab/tests/gen_synth_xlsx.py",
+      "sha256": "96acf1eb1b7fdb05e3a8acb260acffe7079a0eab26a8ee45a4bce80bb14ae01c",
+      "bytes": 4973
+    },
+    {
+      "path": "bms-balancing/matlab/tests/mirror_dd_eval.py",
+      "sha256": "a53a5c15c6bd6f458a18dc4e52302f3758cecf73a06840280c609bb917954b08",
+      "bytes": 9971
+    },
+    {
+      "path": "bms-balancing/matlab/tests/test_compare_bisect.py",
+      "sha256": "3c7121757b97847079544892f4b0a160c4c1d075621b739320424bd7c331db9e",
+      "bytes": 6321
+    },
+    {
+      "path": "bms-balancing/matlab/tests/test_py_smoke.py",
+      "sha256": "e7b6d6d7d0dc8a2aa645a7b9c29b54196d56681799fed96db4ee5dfe4143ed72",
+      "bytes": 5421
+    },
+    {
+      "path": "bms-balancing/reviews/R17_FOLLOWUP2_RESPONSE.md",
+      "sha256": "8a62d4dd786d62b11516ee5e8874b4bb69d3720a0c0dd83ead6b14ce8f967cec",
+      "bytes": 19235
+    },
+    {
+      "path": "bms-balancing/reviews/evidence_gate.py",
+      "sha256": "91e203cc3cba2514d7c1b699bde82cbbfbcd604de333497db0362159e0986725",
+      "bytes": 23934
+    },
+    {
+      "path": "bms-balancing/reviews/r10_repros/codex/r10_evidence_repros.py",
+      "sha256": "cd84e37b427c032acca6d6a441627edbf0b06cbadc771da5aca2d90024d6df71",
+      "bytes": 12559
+    },
+    {
+      "path": "bms-balancing/reviews/r10_repros/codex/r10_snapshot_repros.py",
+      "sha256": "e521fd83393f66e06d444676b522133aef40b9fc81d72e4c180a791fa2087b02",
+      "bytes": 18091
+    },
+    {
+      "path": "bms-balancing/reviews/r10_repros/codex/r10_u18_shape_repros.py",
+      "sha256": "40385898878974cb9e9f51b22f77c33933117a44ae5ad30de1c8bf8932165cea",
+      "bytes": 11047
+    },
+    {
+      "path": "bms-balancing/reviews/r10_repros/replay_codex_r10.py",
+      "sha256": "aff128659367518143cff9a9d90b9681b28bd8eef78e62158ac73e06515d6221",
+      "bytes": 23187
+    },
+    {
+      "path": "bms-balancing/reviews/r11_repros/codex/r11_data_contract_repros.py",
+      "sha256": "9c427e0d2bbc8dece59f1e62078176aac4cd1d92a707bbbbeffa7a1c998c84ec",
+      "bytes": 18895
+    },
+    {
+      "path": "bms-balancing/reviews/r11_repros/codex/r11_evidence_gate_repros.py",
+      "sha256": "6500dcb78e4369450f86419c122039149ace222c0605638caaa557710cff10d5",
+      "bytes": 19791
+    },
+    {
+      "path": "bms-balancing/reviews/r11_repros/codex/r11_publish_schema_repros.py",
+      "sha256": "421c429052560a7eb072dfba0d8dd1d82915007e957a43231d9fe14da548be6e",
+      "bytes": 18098
+    },
+    {
+      "path": "bms-balancing/reviews/r11_repros/codex/r11_root_repros.py",
+      "sha256": "f3ad0e6deb9e199a0bc9d6e6918d711a115cb5acbd2f0ddd7c49c1ba8baabe3c",
+      "bytes": 12579
+    },
+    {
+      "path": "bms-balancing/reviews/r11_repros/replay_codex_r11.py",
+      "sha256": "74f2321ac089bf536a3f1870f6bfc34e343e1e7cad391c25a66ac2d60d3aa095",
+      "bytes": 32725
+    },
+    {
+      "path": "bms-balancing/reviews/r13_repros/codex/pkg/r13_cli_contract_checks.py",
+      "sha256": "3f940f674f4685cfcf8ee7252da5516ef62a422335de1233f2dfd35d10826863",
+      "bytes": 6807
+    },
+    {
+      "path": "bms-balancing/reviews/r13_repros/codex/pkg/r13_passive_evidence_audit.py",
+      "sha256": "903e3c811dc853cf19387e5ff3351ac2e60331590c29fd737edbe357d25ebf00",
+      "bytes": 6289
+    },
+    {
+      "path": "bms-balancing/reviews/r13_repros/codex/pkg/r13_receipt_identity_checks.py",
+      "sha256": "2784f7a800daa12b486c34f4a0f4acd83ec6b970ee84839f14672180ec0954e3",
+      "bytes": 8211
+    },
+    {
+      "path": "bms-balancing/reviews/r13_repros/codex/pkg/r13_roster_schema_checks.py",
+      "sha256": "f1e76cd79d8acbf1fc3bde7069d8b04b54dc0ddd9298330d6a22f55196c4a1b1",
+      "bytes": 8769
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex/closure_3aca090/r14_close_checks.py",
+      "sha256": "f4f71e8f08b5583e003d26d60412f08121cc63246e3c3a78aa9a55aec54ec8a2",
+      "bytes": 1984
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex/closure_3aca090/r14_env_value_checks_f21cb648.py",
+      "sha256": "28bfce6533568291af1154243aa27e94aafb479bf2650eaabe97472afff5a701",
+      "bytes": 2463
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex/followup_f21cb648/r14_env_schema_checks.py",
+      "sha256": "2fdc81e04e83b9dc5464b3ca38ea74b5674d30cd141ef29b86b843725692eb6f",
+      "bytes": 3931
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex/followup_f21cb648/r14_env_value_checks_f21cb648.py",
+      "sha256": "28bfce6533568291af1154243aa27e94aafb479bf2650eaabe97472afff5a701",
+      "bytes": 2463
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex/followup_f21cb648/r14_followup_checks.py",
+      "sha256": "21096164018a449cac27ee52fa2f6f6d88ee25f23364ffcbeeb5419eb057bcaa",
+      "bytes": 2431
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex/followup_f21cb648/r14_nested_output_check.py",
+      "sha256": "7ee8882d4cd1341f1119c2163eb71a15e09e969f486b55e911e197b7c9fc22c2",
+      "bytes": 2429
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex/followup_f21cb648/r14_response_preservation_audit.py",
+      "sha256": "e580f689a19d6e168ef6ecf5a31164c32f3160c4787ef5773f334fc3847407db",
+      "bytes": 2970
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex/pkg/harness_r14_archive_audit.py",
+      "sha256": "cb0309c6d5fa37fc0f19ccb6bc91547fc26937276889c511874a2bebac4f51b2",
+      "bytes": 6013
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex/pkg/mph_review_checks.py",
+      "sha256": "60f53a9ae3108d8271a0ff8e590bd68b993bb8ff29c4f6f19dd1bc8f1fcf06fa",
+      "bytes": 4971
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex/pkg/r14_env_schema_checks.py",
+      "sha256": "2fdc81e04e83b9dc5464b3ca38ea74b5674d30cd141ef29b86b843725692eb6f",
+      "bytes": 3931
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex/pkg/r14_nested_output_check.py",
+      "sha256": "7ee8882d4cd1341f1119c2163eb71a15e09e969f486b55e911e197b7c9fc22c2",
+      "bytes": 2429
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex/pkg/r14_run_checks.py",
+      "sha256": "f2e1aa30485b167c6ced869aa2f97b7f650a209211cc066a58a2308422d446dd",
+      "bytes": 3204
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/mph_dump.py",
+      "sha256": "7596b4d2473602feda003344c6ec33fc39fc7f9e79b7d826e5533442bf79056a",
+      "bytes": 6228
+    },
+    {
+      "path": "bms-balancing/reviews/r17_repros/codex/pkg/package_review.py",
+      "sha256": "188cfc6bed7e46eb2d62944d6abaa693add3439d8544fa204a3522dc7d23fc4e",
+      "bytes": 2120
+    },
+    {
+      "path": "bms-balancing/reviews/r17_repros/codex/pkg/repro_r17.py",
+      "sha256": "cfea7227ee51cdcd75ad602691f348d7e8dc7cc88afe36643d4771fe9388415c",
+      "bytes": 10506
+    },
+    {
+      "path": "bms-balancing/reviews/r17_repros/codex/pkg/run_checks.py",
+      "sha256": "4c40fd4fb0a50401c749f457c7194a4ac00dedef43be384bd708075e4b93258f",
+      "bytes": 1284
+    },
+    {
+      "path": "bms-balancing/reviews/r17_repros/codex/pkg/science_repro.py",
+      "sha256": "91fe1cc461f624a99e5fff3efdd678bb44ade9ecdf4f0dcd1ed29b2193a7ab05",
+      "bytes": 3722
+    },
+    {
+      "path": "bms-balancing/reviews/r2_repros/harness_r2_consumed_axis_repro.py",
+      "sha256": "37cd88c97f1b77bc4b3b982e947bc3c8c7da2be558950c07e22efec382e1f299",
+      "bytes": 3462
+    },
+    {
+      "path": "bms-balancing/reviews/r2_repros/harness_r2_inference_repros.py",
+      "sha256": "5c08299a2fd5d7d35e2a9e7e4df34aefd3ee0c4f3251925901012f50f1c669a3",
+      "bytes": 8516
+    },
+    {
+      "path": "bms-balancing/reviews/r2_repros/harness_r2_port_repros.py",
+      "sha256": "c19e8e9c19ad64ad11a86e7943a05cb8758fb61b36d03a8fc2dfa7e2e576ac49",
+      "bytes": 5830
+    },
+    {
+      "path": "bms-balancing/reviews/r2_repros/harness_r2_replay.py",
+      "sha256": "e378f2af0d5649f81b4755b81e2307bec4c7dcb39b291467c9427df15f77361d",
+      "bytes": 1908
+    },
+    {
+      "path": "bms-balancing/reviews/r2_repros/harness_r2_shape_repros.py",
+      "sha256": "44bddb5d3c232fa3228319658df7e2fa835cb60e619c7a6702ffd213b6feec88",
+      "bytes": 9960
+    },
+    {
+      "path": "bms-balancing/reviews/r3_repros/harness_r3_artifact_repros.py",
+      "sha256": "c3d67d15602b346952d1520bd3b32f33764f84342d0c4a3304fba375182f8458",
+      "bytes": 4522
+    },
+    {
+      "path": "bms-balancing/reviews/r3_repros/harness_r3_inference_repros.py",
+      "sha256": "715f381e994479befb22dbed825d91fa3462e37305f90503ca3590def7e44f13",
+      "bytes": 9284
+    },
+    {
+      "path": "bms-balancing/reviews/r3_repros/harness_r3_port_repros.py",
+      "sha256": "cd9712f5ba73c675e47458474d3f4a293233b221f08c4c9a37a03ea185322091",
+      "bytes": 8486
+    },
+    {
+      "path": "bms-balancing/reviews/r3_repros/harness_r3_replay.py",
+      "sha256": "10508f23b544dfb3d8a831389a6318cb4ad6cd505e6c3d733e7d74fd02425327",
+      "bytes": 4647
+    },
+    {
+      "path": "bms-balancing/reviews/r3_repros/harness_r3_shape_repros.py",
+      "sha256": "d64d36ed8c5cf6e9e4f979a099253a7c5c4083e030e301e8eaf6811ccf6bb177",
+      "bytes": 7740
+    },
+    {
+      "path": "bms-balancing/reviews/r4_repros/harness_r4_execution_repros.py",
+      "sha256": "dc63cb0805ec335d4d5ca69e5efc30315a231dba2c276a1a5c12da26f89c5918",
+      "bytes": 9782
+    },
+    {
+      "path": "bms-balancing/reviews/r4_repros/harness_r4_inference_repros.py",
+      "sha256": "fbed1f8729993ef6d45921bada42870d79f7ae99bc133a1b94ae1c8204da3798",
+      "bytes": 7574
+    },
+    {
+      "path": "bms-balancing/reviews/r4_repros/harness_r4_port_repros.py",
+      "sha256": "b77504b658818259630ea4c8af8bbefc9a96d3b0c9c2752d19600e8dd7a821b7",
+      "bytes": 9239
+    },
+    {
+      "path": "bms-balancing/reviews/r4_repros/harness_r4_replay.py",
+      "sha256": "3225cdfe593a24e1aa88c3e2c0fbc8376b3404ae22571351c311cd6b0e9f470e",
+      "bytes": 5856
+    },
+    {
+      "path": "bms-balancing/reviews/r4_repros/harness_r4_shape_repros.py",
+      "sha256": "9c29ccadc3f21a184df8b9bf4bd2ea07ac4742a9fb39b0b791db4e493f159db3",
+      "bytes": 7831
+    },
+    {
+      "path": "bms-balancing/reviews/r5_repros/harness_r5_claims_repros.py",
+      "sha256": "ff87e4466f9ed837c9292e2096f040c129273e07573848d73c0590777ba9be59",
+      "bytes": 10529
+    },
+    {
+      "path": "bms-balancing/reviews/r5_repros/harness_r5_execution_repros.py",
+      "sha256": "2578b6255367de946e845f5841161ff034116d4db251f486a5d514e7d06746f3",
+      "bytes": 9076
+    },
+    {
+      "path": "bms-balancing/reviews/r5_repros/harness_r5_inference_repros.py",
+      "sha256": "7fa314e7f7974a3ea8ee77f0830fb909456e7a26b3cf9c7eb7b7dc024d0defab",
+      "bytes": 11310
+    },
+    {
+      "path": "bms-balancing/reviews/r5_repros/harness_r5_port_repros.py",
+      "sha256": "d4c7ea443b3d948085a08f6ca82c09a755a3eb8cb783ba25d5b7ea28bb9143c5",
+      "bytes": 10292
+    },
+    {
+      "path": "bms-balancing/reviews/r5_repros/harness_r5_replay.py",
+      "sha256": "3d2134d0cb6974742901d8d4d4a00e5749fa295264364dce5cee0bcc706e7c38",
+      "bytes": 4146
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/codex/harness_r6_final_claims_repros.py",
+      "sha256": "0f6b3582e7e16026628791bf87c4ef37df92d7abffea8a3eb43c9ea6842dcb53",
+      "bytes": 10195
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/codex/harness_r6_final_execution_repros.py",
+      "sha256": "004b923895b4fee8e3daa52e114ae0743b34929d71b24ea75647dea54f54252a",
+      "bytes": 9746
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/codex/harness_r6_final_inference_repros.py",
+      "sha256": "4c73a69440b3f4e021acf7be653b37f28bf36071102fba13b1d4662864d51cb8",
+      "bytes": 20420
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/codex/harness_r6_final_port_repros.py",
+      "sha256": "19fc579629962c95282e9999455afc87c4eea95e640d70028906c67be3d44e54",
+      "bytes": 11531
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/codex/harness_r6_final_replay.py",
+      "sha256": "c7e731b08036e541d04532b43320877fd993ad63bc3d6457b3bfbe423710168a",
+      "bytes": 5950
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/codex/mutation_adapted.py",
+      "sha256": "3fde8e84ab06ac1571366bd93ae172cfb7a543e19228db3f4b0fce742de4610e",
+      "bytes": 3865
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/codex/replay_codex_r6.py",
+      "sha256": "f91b297b65fdc14f8451ca87a94ef824c7eed1654201b18b2ed3d4ad93afabb6",
+      "bytes": 5027
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/codex/replay_codex_r6_adapted.py",
+      "sha256": "9bdeff25203c97802f55334a3aef57139538793c3122e842b3b756b44070a9de",
+      "bytes": 22974
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/codex_r6_mutation_audit.py",
+      "sha256": "94ce881cfb2dc4e2cc6cf5df47deec1fae0bc03c6dc6a92e7e3a24ede49b6ec4",
+      "bytes": 7014
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/derived/check_df01.py",
+      "sha256": "5c240916bbf8df0bb112dfa3b07d0bc707fee77bd4f5d9f1cdd40bd6eccae226",
+      "bytes": 2124
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/derived/check_df03.py",
+      "sha256": "a2b3372aec931507465343956b71efe93e8deabf3ddc0b68c80de47567f2588f",
+      "bytes": 1406
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/derived/check_df06_df09.py",
+      "sha256": "eb7008aaa7e1eaf2f02b0b0cdb08a0dd78c2a21f1d3cafdc8997829c165eb935",
+      "bytes": 1482
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/derived/repro_derived_fairness.py",
+      "sha256": "6f3bc5a12350c8285ca77acd68a1cc6080bc15734d5f895306223e4dede3ef54",
+      "bytes": 22953
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/sig_port/e_cross_build.py",
+      "sha256": "a540d4664abde9e9e58e6007c44e663979d84fb13ea04f22832ce04077f92281",
+      "bytes": 963
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/sig_port/e_cross_savgol.py",
+      "sha256": "889b7807bfc56771be555c9a5a525793fafac224c73558baec0a281786e0447e",
+      "bytes": 181
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/sig_port/f3_cross_build.py",
+      "sha256": "a295058b5e9c5ce74b4e0eab40ce0c45e9f88b04999892021e3d64a0bd4d2603",
+      "bytes": 1061
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/sig_port/repro_sig_port.py",
+      "sha256": "fbecdd10e0b15f994fa4ae92ecd7594e19f1c6580193904abce4d22f0679cc09",
+      "bytes": 22410
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/sig_port/verify_sig.py",
+      "sha256": "839da073d8fcb68419eb1687ae58c4117e78fd58ee35b7a313e81912c8c5a386",
+      "bytes": 11829
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/toctou/repro_toctou.py",
+      "sha256": "a8703c6a64a79931cac32c4cf4e20c8406b2d63d8e41ba76705bd40d64f17164",
+      "bytes": 44992
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/toctou/verify_toctou.py",
+      "sha256": "b84c9cd6682826844e2536a39888bbe61925e752bd6d0637259a6073a22a5291",
+      "bytes": 20528
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/validator/driver.py",
+      "sha256": "0a0a8f17fc7b9c798d6b0338e537ea89c044a92d6af62df9758a01166eb1f7a0",
+      "bytes": 1329
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/validator/repro_validator.py",
+      "sha256": "cfa99f6045c7430bfc63f220e46ae50457e613d6d203d0c38fd3c95139187a54",
+      "bytes": 16234
+    },
+    {
+      "path": "bms-balancing/reviews/r6_repros/validator/verify_r6.py",
+      "sha256": "307495b405df3ce836ae5ebacd322c577f2d96131ee5055af48a0dbd035415e0",
+      "bytes": 17380
+    },
+    {
+      "path": "bms-balancing/reviews/r7_repros/codex/harness_r7_claims_repros.py",
+      "sha256": "4b304fcd27a5e54722d59c6aa4d176413fff23032e01f304ad68008d214abcce",
+      "bytes": 14532
+    },
+    {
+      "path": "bms-balancing/reviews/r7_repros/codex/harness_r7_execution_repros.py",
+      "sha256": "dd04367270ce262337ae46c91a5de1c0bdf89f354640fe0b15860eb19dc73ed6",
+      "bytes": 10962
+    },
+    {
+      "path": "bms-balancing/reviews/r7_repros/codex/harness_r7_inference_repros.py",
+      "sha256": "574801ec5db0d12d3921e0207f8afa3c4d732f53a5864c2609cabfd467fbac06",
+      "bytes": 28253
+    },
+    {
+      "path": "bms-balancing/reviews/r7_repros/codex/harness_r7_port_repros.py",
+      "sha256": "29555e973f52450201c7a249ab0974b8e8dcd24176c5a4c224c71d5c450d6e6d",
+      "bytes": 9147
+    },
+    {
+      "path": "bms-balancing/reviews/r7_repros/codex/harness_r7_replay.py",
+      "sha256": "faaf69fa4080ff8c288ee1f7e5682fdaf0b4b2e74195e9bae553bd417d280046",
+      "bytes": 4626
+    },
+    {
+      "path": "bms-balancing/reviews/r7_repros/replay_codex_r7.py",
+      "sha256": "b3759ddc68345a0f538265e0c442341aa689d7cfdf37a7d6b3d56a3bb3100eb0",
+      "bytes": 19326
+    },
+    {
+      "path": "bms-balancing/reviews/r8_repros/codex/harness_r8_replay.py",
+      "sha256": "2878c8f02579a3c5b8bd6a8ea3148543e57ce3888dd505c3ac8eefaa5d5aaedb",
+      "bytes": 5133
+    },
+    {
+      "path": "bms-balancing/reviews/r8_repros/codex/r8_claims_repros.py",
+      "sha256": "976376ad3b7abc67d34eb1c88cb931e7f048ddc9cc8c0c0a448655160c62bf62",
+      "bytes": 11051
+    },
+    {
+      "path": "bms-balancing/reviews/r8_repros/codex/r8_inference_repros.py",
+      "sha256": "13cc06e2b94ff75f5375568589c7cadc51a4c71855740dfa7f2743733fb69fd7",
+      "bytes": 14952
+    },
+    {
+      "path": "bms-balancing/reviews/r8_repros/codex/r8_port_repros.py",
+      "sha256": "bfaccaba32707a944897c716c52505b1db79713940d53541fc5f85cc0a06a8b6",
+      "bytes": 11750
+    },
+    {
+      "path": "bms-balancing/reviews/r9_repros/codex/r9_aggregation_repros.py",
+      "sha256": "d53025cf9b1cee783d2153cea50b7b70a6d6f9565e20b0c5e1d59717edb4fc16",
+      "bytes": 11714
+    },
+    {
+      "path": "bms-balancing/reviews/r9_repros/codex/r9_evidence_classify_probe.py",
+      "sha256": "74be23c6dc85aee5c4a8e3afa46ea5b9b37cb5e17a2dc40c83921d33030f0b91",
+      "bytes": 877
+    },
+    {
+      "path": "bms-balancing/reviews/r9_repros/codex/r9_provenance_repro.py",
+      "sha256": "b937bfbf29691c288d32cdd065bcdc62257237afe5997c11ba17414415b80990",
+      "bytes": 12171
+    },
+    {
+      "path": "bms-balancing/reviews/r9_repros/codex/r9_root_repros.py",
+      "sha256": "202eab8172eae142e4b382bf349a0a659dddb303c6b32db995d5ac02a01559ca",
+      "bytes": 12361
+    },
+    {
+      "path": "bms-balancing/reviews/r9_repros/replay_codex_r9.py",
+      "sha256": "96ff242e978fa0d876396fc69a3069ca4e99af823f22837c4b8559d987593572",
+      "bytes": 35358
+    },
+    {
+      "path": "bms-balancing/scripts/audit97.py",
+      "sha256": "c941183eafd70962f47cbc09c2721241d820f5a037dc0bb31ae8e9a7de97bdc3",
+      "bytes": 8836
+    },
+    {
+      "path": "bms-balancing/scripts/check_rails.py",
+      "sha256": "1d0896da22f2464394a99eb25ab27b194aa72a3d848d25258587f89207ffa740",
+      "bytes": 4767
+    },
+    {
+      "path": "bms-balancing/scripts/check_u14.py",
+      "sha256": "9b8a383c48e031dc4886aede6ae2674044687f52c46d1bd7ed4d568c1b6c8358",
+      "bytes": 75957
+    },
+    {
+      "path": "bms-balancing/scripts/compare_states.py",
+      "sha256": "646b621e9da235be414d07aab0c9b4a449d568da388afe6e12d667202b7cdd65",
+      "bytes": 15791
+    },
+    {
+      "path": "bms-balancing/scripts/fit_cycles.py",
+      "sha256": "cf0a0e13d2736359a5d37861fe07be062d4efb78c75d6a20ad95cc7db93e00c4",
+      "bytes": 9916
+    },
+    {
+      "path": "bms-balancing/scripts/fixed_hc.py",
+      "sha256": "1acc21f29e0ca09b13accb897d23f0780b78ab181aa0686f6753f30f2bbc3570",
+      "bytes": 6790
+    },
+    {
+      "path": "bms-balancing/scripts/gamma_prefit_report.py",
+      "sha256": "82d14bd29509ff97eac13a7f381110c70723760d175d7ddf5f4ef03fa7164847",
+      "bytes": 12395
+    },
+    {
+      "path": "bms-balancing/scripts/gc_partial.py",
+      "sha256": "67db832d151e97c2e3c700acd06613b82cce759db021307cc74cd07e89b15da8",
+      "bytes": 12986
+    },
+    {
+      "path": "bms-balancing/scripts/handoff_manifest.py",
+      "sha256": "961041ffe416b0d620969078135104c5773ad942c3a2ab68a72dbde4c782794c",
+      "bytes": 3146
+    },
+    {
+      "path": "bms-balancing/scripts/ne_shape.py",
+      "sha256": "3da4062c76069cc8bcccaab51bb3745f27181eae257b6a7ce68be7a8c181cce4",
+      "bytes": 42248
+    },
+    {
+      "path": "bms-balancing/scripts/prepare_cell.py",
+      "sha256": "3c489ab5308f4833288a381585e81ff3246a99b8c6a424303b816b9f8aae3ddf",
+      "bytes": 8497
+    },
+    {
+      "path": "bms-balancing/scripts/provenance.py",
+      "sha256": "4e7f3053cafbc9aa34d1d8151ac2162c5d2c24ed3c73a9044d7bce21ca7a9017",
+      "bytes": 22169
+    },
+    {
+      "path": "bms-balancing/scripts/recheck_core16_control.py",
+      "sha256": "d951a7a605a32d9c9d8bc46fcd84f9faf8506076801e7ac7f07e72a267d89cbb",
+      "bytes": 6401
+    },
+    {
+      "path": "bms-balancing/scripts/recheck_desktop_postproc.py",
+      "sha256": "6920b2e567302b0bc32e699ff6c1687a681490083cb0b997cc3d9722a52d7ef8",
+      "bytes": 11313
+    },
+    {
+      "path": "bms-balancing/scripts/recheck_physical600_b.py",
+      "sha256": "30dee8206233d949a4383bf09d8f18f77bef40e3a9105870910c2b93ec21bba5",
+      "bytes": 11286
+    },
+    {
+      "path": "bms-balancing/scripts/verify_run_receipt.py",
+      "sha256": "8221b55c4063395743a2fe3d16ea32c4caa23bcab6abe7104d628be575c02162",
+      "bytes": 12779
+    },
+    {
+      "path": "bms-balancing/scripts/width_report.py",
+      "sha256": "e6a4a86e9f366cca87b0af48d5b8407c4c72fe2e8cdab07d3c6d06b90433cd82",
+      "bytes": 26838
+    },
+    {
+      "path": "bms-balancing/tests/conftest.py",
+      "sha256": "6ecf97fbdeeb4919bb467a88558d09bfc9c7d4c317816e5c92a693858f360bc7",
+      "bytes": 6170
+    },
+    {
+      "path": "bms-balancing/tests/test_chain_rule_contract.py",
+      "sha256": "16e5089296bcda75eba2216ce29970455a80da7d8a2b38498f3f5b22683a15b4",
+      "bytes": 11492
+    },
+    {
+      "path": "bms-balancing/tests/test_cycles.py",
+      "sha256": "6386cae8acf60d8a70f54c83be1538a31a29cf7cb063c5a3c4fef524b3503702",
+      "bytes": 26089
+    },
+    {
+      "path": "bms-balancing/tests/test_r10_codex.py",
+      "sha256": "7af66f609ec17648b10f7a5e7afadc68d5906d13392a19470d9e22051c1caf9a",
+      "bytes": 41133
+    },
+    {
+      "path": "bms-balancing/tests/test_r11_codex.py",
+      "sha256": "878072cbcee308cdb9aa242de20166011f78e4906729be5c5e9394f29d0ff3f1",
+      "bytes": 41485
+    },
+    {
+      "path": "bms-balancing/tests/test_r12_selfreview.py",
+      "sha256": "9a59b5286073978b81660d8d7081b833fe65d64c33a330a2f1e882b6f37337ca",
+      "bytes": 50101
+    },
+    {
+      "path": "bms-balancing/tests/test_r13_codex.py",
+      "sha256": "902ef48059b672adf13f3e932507cb30a7ba87fc027f846f8ad276ce6159403f",
+      "bytes": 50114
+    },
+    {
+      "path": "bms-balancing/tests/test_r14_codex.py",
+      "sha256": "87bfb7640d210c940fb273caf30e371e968a28f88fec7252c34dddfceac317d6",
+      "bytes": 7797
+    },
+    {
+      "path": "bms-balancing/tests/test_r15_open_items.py",
+      "sha256": "e1b15f4c304f0ad11f9e9dcd7fcf7f7edbb9f2bdc71b3a03d56041cdb8d10fc5",
+      "bytes": 26054
+    },
+    {
+      "path": "bms-balancing/tests/test_r16_dataset_manifest.py",
+      "sha256": "2e2c9efd2ae2032292479a5a954e84cce7ca45bf709b95466bd5408830e31e26",
+      "bytes": 9996
+    },
+    {
+      "path": "bms-balancing/tests/test_r16_dynamic_bypass.py",
+      "sha256": "ba50a2183772317e9028c7e5c1329152038b91ab0dc8e8fec9b188f520ba5fc7",
+      "bytes": 10276
+    },
+    {
+      "path": "bms-balancing/tests/test_r16_env_contract.py",
+      "sha256": "887a8b00ab662a2457d8ea2c63a5854275d8f8944def9639e0626c28b42334df",
+      "bytes": 13178
+    },
+    {
+      "path": "bms-balancing/tests/test_r16_locator.py",
+      "sha256": "3baa91f0113f5e5bba621a59f2eef6b79f3a312db89f3809399271a2b4fbadb5",
+      "bytes": 6428
+    },
+    {
+      "path": "bms-balancing/tests/test_r16_partial_lifetime.py",
+      "sha256": "4b66121d7cc511b3a0a771b033b3f4b66064b99a0e490bd3456d6d6e194177fc",
+      "bytes": 8365
+    },
+    {
+      "path": "bms-balancing/tests/test_r16_run_receipt.py",
+      "sha256": "1e678c8c71ac39208f1b060965a76421f6b0fe70b2f43373153352d68cda880a",
+      "bytes": 10330
+    },
+    {
+      "path": "bms-balancing/tests/test_r16_shared_snapshot.py",
+      "sha256": "1ea4127ea7937cd5d0dc3c960ac495db11891025e3989fd883d3b20ca506a835",
+      "bytes": 5946
+    },
+    {
+      "path": "bms-balancing/tests/test_r17_codex.py",
+      "sha256": "1b198114b0338576d1692b097a22956ab91649bfc4da1c0396997939287f77fb",
+      "bytes": 19905
+    },
+    {
+      "path": "bms-balancing/tests/test_r17_followup.py",
+      "sha256": "903555f58bd2c610d84398a85b158b1137740eb9acf2d1423ab1ece3c795ad1a",
+      "bytes": 25654
+    },
+    {
+      "path": "bms-balancing/tests/test_r17_followup2.py",
+      "sha256": "b29b009f5c2ce19b3a128b3d53e6dedee6a68915cd1aa46ee48c6d3309b6fd53",
+      "bytes": 34791
+    },
+    {
+      "path": "bms-balancing/tests/test_r6_internal.py",
+      "sha256": "a7f31537e7c8ce7bc9b9c541f6883c572e3c8493045306ec033a44ec704b84cd",
+      "bytes": 97160
+    },
+    {
+      "path": "bms-balancing/tests/test_r7_codex.py",
+      "sha256": "ceb3d02bbca22def24f7a30a88589c66005f95619e260a49d66899504c4bf298",
+      "bytes": 19800
+    },
+    {
+      "path": "bms-balancing/tests/test_r8_codex.py",
+      "sha256": "a7b423ac4c1af6b15bf6801780a8526164569ff20f6cdff8920d050b6119bed8",
+      "bytes": 28972
+    },
+    {
+      "path": "bms-balancing/tests/test_r9_codex.py",
+      "sha256": "875aa685294800fba87fb08d6a7b96cc9643b84d5e47728bc97fad96f48fa3c2",
+      "bytes": 26326
+    },
+    {
+      "path": "bms-balancing/tests/test_rails.py",
+      "sha256": "8605d779e26e37124fec195529ca6e690789a166064319cacfda9ac22ac93089",
+      "bytes": 8870
+    },
+    {
+      "path": "bms-balancing/tests/test_review_findings.py",
+      "sha256": "b0bcea5bcd692b5c5022b0ecbf7531ca1108445eb6c2fbbf564adb2b377c59c5",
+      "bytes": 183427
+    },
+    {
+      "path": "bms-balancing/tests/test_widths.py",
+      "sha256": "1faf601eb5304c30b51d07e6a8088475529458b1477480f9f3336dd9f1d9cf60",
+      "bytes": 38375
+    }
+  ]
+}

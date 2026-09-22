@@ -1,0 +1,243 @@
+{
+  "scope": "Checks recorded observations only; not a product GO",
+  "passed": 59,
+  "total": 59,
+  "checks": [
+    {
+      "name": "old case count 47",
+      "observed": true
+    },
+    {
+      "name": "width_positive",
+      "observed": true
+    },
+    {
+      "name": "width_seed_negative",
+      "observed": true
+    },
+    {
+      "name": "width_meta_version_negative",
+      "observed": true
+    },
+    {
+      "name": "width_body_version",
+      "observed": true
+    },
+    {
+      "name": "width_body_tol",
+      "observed": true
+    },
+    {
+      "name": "width_body_cell",
+      "observed": true
+    },
+    {
+      "name": "width_body_run",
+      "observed": true
+    },
+    {
+      "name": "width_body_mixed_version",
+      "observed": true
+    },
+    {
+      "name": "width_fractional_cycles",
+      "observed": true
+    },
+    {
+      "name": "width_null_identity",
+      "observed": true
+    },
+    {
+      "name": "width_null_settings",
+      "observed": true
+    },
+    {
+      "name": "width_row_scale_seed",
+      "observed": true
+    },
+    {
+      "name": "width_row_n_starts",
+      "observed": true
+    },
+    {
+      "name": "width_row_scale_mixed",
+      "observed": true
+    },
+    {
+      "name": "width_scale_meta_negative",
+      "observed": true
+    },
+    {
+      "name": "width_starts_meta_negative",
+      "observed": true
+    },
+    {
+      "name": "width_env_python_only",
+      "observed": true
+    },
+    {
+      "name": "width_env_null_values",
+      "observed": true
+    },
+    {
+      "name": "width_env_whitespace",
+      "observed": true
+    },
+    {
+      "name": "width_manifest_whitespace",
+      "observed": true
+    },
+    {
+      "name": "width_bounds_singleton",
+      "observed": true
+    },
+    {
+      "name": "width_bounds_nan",
+      "observed": true
+    },
+    {
+      "name": "width_untyped_width_starts",
+      "observed": true
+    },
+    {
+      "name": "receipt_positive",
+      "observed": true
+    },
+    {
+      "name": "receipt_null_runtime",
+      "observed": true
+    },
+    {
+      "name": "receipt_bad_runtime",
+      "observed": true
+    },
+    {
+      "name": "receipt_bad_materialized",
+      "observed": true
+    },
+    {
+      "name": "receipt_bad_date",
+      "observed": true
+    },
+    {
+      "name": "receipt_non_digest",
+      "observed": true
+    },
+    {
+      "name": "receipt_runtime_python_null",
+      "observed": true
+    },
+    {
+      "name": "receipt_runtime_wrong_keys",
+      "observed": true
+    },
+    {
+      "name": "receipt_materialized_wrong_fields",
+      "observed": true
+    },
+    {
+      "name": "receipt_missing_runtime_negative",
+      "observed": true
+    },
+    {
+      "name": "gc_control",
+      "observed": true
+    },
+    {
+      "name": "gc_old_cross_artifact",
+      "observed": true
+    },
+    {
+      "name": "gc_duplicate",
+      "observed": true
+    },
+    {
+      "name": "gc_cleanup_escape",
+      "observed": true
+    },
+    {
+      "name": "gc_retained_path_alias",
+      "observed": true
+    },
+    {
+      "name": "gc_unknown_file",
+      "observed": true
+    },
+    {
+      "name": "gc_unknown_dir_negative",
+      "observed": true
+    },
+    {
+      "name": "old NaN best refuses",
+      "observed": true
+    },
+    {
+      "name": "old actual producer reader rc0",
+      "observed": true
+    },
+    {
+      "name": "old remove cycle control rc2",
+      "observed": true
+    },
+    {
+      "name": "gc_valid_control",
+      "observed": true
+    },
+    {
+      "name": "gc_changed_bytes",
+      "observed": true
+    },
+    {
+      "name": "gc_missing_retained",
+      "observed": true
+    },
+    {
+      "name": "gc unindexed negative control rc2",
+      "observed": true
+    },
+    {
+      "name": "mismatched bytes actually removed",
+      "observed": true
+    },
+    {
+      "name": "missing retained => no payload left",
+      "observed": true
+    },
+    {
+      "name": "unindexed negative preserves full snapshot",
+      "observed": true
+    },
+    {
+      "name": "starts1_single",
+      "observed": true
+    },
+    {
+      "name": "starts2_single",
+      "observed": true
+    },
+    {
+      "name": "starts_axis_compare",
+      "observed": true
+    },
+    {
+      "name": "n_multistart_axis_compare",
+      "observed": true
+    },
+    {
+      "name": "receipt_code_null",
+      "observed": true
+    },
+    {
+      "name": "receipt_instrument_list",
+      "observed": true
+    },
+    {
+      "name": "receipt positive remains rc0",
+      "observed": true
+    },
+    {
+      "name": "source of old scripts unmodified",
+      "observed": true
+    }
+  ]
+}

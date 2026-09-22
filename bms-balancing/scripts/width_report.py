@@ -60,6 +60,22 @@ COMPARED_SETTINGS = ("lb", "ub", "initial", "gamma_prefit", "gamma_lb", "n_multi
 #:   전 판은 행 enum 이 "각각 유효한 값인가" 만 보고, 비교 조건은 sidecar 에서만 읽었다 — 그래서
 #:   행만 `chain_rule_v2` 로 바꾸거나(한 파일 안에서 섞어도) `width_tol`·`cell` 을 어긋나게 해도
 #:   rc 0 이었다 (본문 sha256 과 입력 receipt 는 정확한 채로). 왼쪽이 행의 열, 오른쪽이 sidecar 키다.
+#: ⚠ R17 후속 3차 F3-02: **같은 실행 축의 두 이름**. `fit_cycles.py` 는 `--starts` 하나를 받아
+#:   sidecar 에 `starts` 와 `n_multistart` 로 **두 번** 적는다. 단일 파일 안에서 둘의 일치를
+#:   요구한 것(F2-02)은 옳지만, 비교에서 **독립 축 둘로 세면** 정상 변경이 표현 불가능해진다 —
+#:   `--axis starts` 면 `n_multistart` 가, `--axis n_multistart` 면 `starts` 가 남아 **둘 다 rc 2**
+#:   였다 (리뷰어가 실제 producer 산출 두 벌로 실측). 축을 고르면 그 **무리 전체**를 뺀다.
+SETTING_ALIASES = (("starts", "n_multistart"),)
+
+
+def alias_group(key: str) -> tuple:
+    """`key` 와 같은 의미 축의 이름들 — 무리에 없으면 자기 자신 하나."""
+    for group in SETTING_ALIASES:
+        if key in group:
+            return group
+    return (key,)
+
+
 #: ⚠ R17 후속 2차 F2-02: 행에만 남아 있던 실행 조건 둘이 **결속 목록에 없었다** — 한쪽 파일의 행만
 #:   `scale_seed=99`/`n_starts=999` 로 바꾸고 본문 sha256 을 정확히 갱신하면 rc 0 · "동일 확인" 이었다.
 #:   둘 다 생산자가 행에 적는 값이고(`cycles.py` 의 `scale_seed`·`n_starts` 열), sidecar 의 짝은
@@ -348,13 +364,23 @@ def table(rows, meta, path):
 
 
 def guard_same_except(axis, ma, mb, pa, pb):
-    """축 하나 말고 다른 설정이 다르면 **비교를 거부한다.**"""
-    diff = [k for k in COMPARED_SETTINGS
-            if k != axis and json.dumps(ma.get(k), sort_keys=True) != json.dumps(mb.get(k), sort_keys=True)]
+    """축 하나 말고 다른 설정이 다르면 **비교를 거부한다.**
+
+    ⚠ R17 후속 3차 F3-02 — 고른 축의 **별칭 무리 전체**를 뺀다. 한 의미를 두 이름으로 세면
+      정상 변경이 어느 이름으로도 표현되지 않는다. 무리 안의 일치는 파일마다 이미
+      `_typed_meta_problems` 가 요구하므로(`starts == n_multistart`), 무리를 통째로 빼도
+      "축 하나만 다르다" 는 약해지지 않는다 — 무리 밖 설정은 전부 그대로 본다.
+    """
     if axis not in COMPARED_SETTINGS:
         print(f"! `--axis {axis}` 는 견주는 설정 목록에 없다: {COMPARED_SETTINGS}", file=sys.stderr); raise SystemExit(2)
-    if json.dumps(ma.get(axis)) == json.dumps(mb.get(axis)):
-        print(f"! 두 실행의 {axis} 가 같다 ({ma.get(axis)!r}) — 이 비교는 그 축의 것이 아니다",
+    group = alias_group(axis)
+    diff = [k for k in COMPARED_SETTINGS
+            if k not in group and json.dumps(ma.get(k), sort_keys=True) != json.dumps(mb.get(k), sort_keys=True)]
+    moved = [k for k in group
+             if json.dumps(ma.get(k), sort_keys=True) != json.dumps(mb.get(k), sort_keys=True)]
+    if not moved:
+        print(f"! 두 실행의 {axis} 가 같다 ({ma.get(axis)!r}) — 이 비교는 그 축의 것이 아니다"
+              + (f" (같은 축의 이름 {list(group)} 도 전부 같다)" if len(group) > 1 else ""),
               file=sys.stderr); raise SystemExit(2)
     if diff:
         print(f"! 축({axis}) 말고 다른 설정이 다르다 — 비교하지 않는다:", file=sys.stderr)

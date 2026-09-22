@@ -1,0 +1,22 @@
+{
+  "receipt_version": "r16.1",
+  "code": {
+    "commit": "e834b01e4066c5e78c06b6ed1f77878e5a27a481",
+    "tree": "97a8cc7dfb9af1026fdba5e7fbb154efd7a6c122"
+  },
+  "instrument": {
+    "reviews/evidence_gate.py": "6fca0a100c1a45481d0406508a7f83f983b6df0b"
+  },
+  "package": {
+    "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "materialized": {
+    "mode": 17
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "win32"
+  },
+  "produced_utc": "2026-09-22T13:19:01.813930+00:00",
+  "signature": "29f197b1d00e9c4acfaa9bb2d670e61e6281044551af6013384ed4ae57409e53"
+}

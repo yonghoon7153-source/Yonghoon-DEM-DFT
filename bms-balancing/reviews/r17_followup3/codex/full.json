@@ -1,0 +1,24 @@
+{
+  "command": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--junitxml=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\full.xml"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing",
+  "rc": 1,
+  "seconds": 1049.5620000000054,
+  "utc": "2026-09-22T13:35:26.906412+00:00",
+  "env_overrides": {
+    "PYTHONUTF8": "1",
+    "PYTHONIOENCODING": "utf-8",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "PYTEST_DEBUG_TEMPROOT": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\r17f3pt_v0ph6_kx"
+  }
+}

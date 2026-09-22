@@ -1,0 +1,57 @@
+{
+  "head": "e834b01e4066c5e78c06b6ed1f77878e5a27a481",
+  "git_status": "",
+  "changed_reviewed_files": [],
+  "utc": "2026-09-22T13:36:29.939658+00:00",
+  "old_script_identical": true,
+  "reviewed_sources": {
+    "scripts/gc_partial.py": {
+      "raw_sha256": "67db832d151e97c2e3c700acd06613b82cce759db021307cc74cd07e89b15da8",
+      "git_blob_content_sha256": "67db832d151e97c2e3c700acd06613b82cce759db021307cc74cd07e89b15da8",
+      "exact_bytes_equal": true,
+      "lf_normalized_equal": true
+    },
+    "scripts/width_report.py": {
+      "raw_sha256": "e6a4a86e9f366cca87b0af48d5b8407c4c72fe2e8cdab07d3c6d06b90433cd82",
+      "git_blob_content_sha256": "e6a4a86e9f366cca87b0af48d5b8407c4c72fe2e8cdab07d3c6d06b90433cd82",
+      "exact_bytes_equal": true,
+      "lf_normalized_equal": true
+    },
+    "scripts/verify_run_receipt.py": {
+      "raw_sha256": "8221b55c4063395743a2fe3d16ea32c4caa23bcab6abe7104d628be575c02162",
+      "git_blob_content_sha256": "8221b55c4063395743a2fe3d16ea32c4caa23bcab6abe7104d628be575c02162",
+      "exact_bytes_equal": true,
+      "lf_normalized_equal": true
+    },
+    "bms_balancing/schema.py": {
+      "raw_sha256": "f2ebb1d7a7762b23096eb3045b81106e74a249547fdec261bc29acfe1a5e987e",
+      "git_blob_content_sha256": "f2ebb1d7a7762b23096eb3045b81106e74a249547fdec261bc29acfe1a5e987e",
+      "exact_bytes_equal": true,
+      "lf_normalized_equal": true
+    },
+    "bms_balancing/verify.py": {
+      "raw_sha256": "71400ee5f18a219df9c648f4ec5a10f602aaa16c9e53b90b87647251f37d4d9c",
+      "git_blob_content_sha256": "71400ee5f18a219df9c648f4ec5a10f602aaa16c9e53b90b87647251f37d4d9c",
+      "exact_bytes_equal": true,
+      "lf_normalized_equal": true
+    },
+    "bms_balancing/cycles.py": {
+      "raw_sha256": "114a5bc6f4e59d69a6f96d701e9cb716383a0df3a756224f3a938ec576c26884",
+      "git_blob_content_sha256": "114a5bc6f4e59d69a6f96d701e9cb716383a0df3a756224f3a938ec576c26884",
+      "exact_bytes_equal": true,
+      "lf_normalized_equal": true
+    },
+    "reviews/evidence_gate.py": {
+      "raw_sha256": "91e203cc3cba2514d7c1b699bde82cbbfbcd604de333497db0362159e0986725",
+      "git_blob_content_sha256": "91e203cc3cba2514d7c1b699bde82cbbfbcd604de333497db0362159e0986725",
+      "exact_bytes_equal": true,
+      "lf_normalized_equal": true
+    },
+    "tests/test_r17_followup2.py": {
+      "raw_sha256": "b29b009f5c2ce19b3a128b3d53e6dedee6a68915cd1aa46ee48c6d3309b6fd53",
+      "git_blob_content_sha256": "b29b009f5c2ce19b3a128b3d53e6dedee6a68915cd1aa46ee48c6d3309b6fd53",
+      "exact_bytes_equal": true,
+      "lf_normalized_equal": true
+    }
+  }
+}

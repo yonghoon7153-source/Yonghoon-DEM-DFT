@@ -1,0 +1,273 @@
+{
+  "head": "e834b01e4066c5e78c06b6ed1f77878e5a27a481",
+  "fixture": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\new-fast-8azz7yo_",
+  "cases": {
+    "gc_valid_control": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\gc_partial.py",
+        "--root",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\new-fast-8azz7yo_\\gc_valid_control",
+        "--keep",
+        "1",
+        "--apply"
+      ],
+      "rc": 0,
+      "stdout": "지운 부분 산출 1 / 전체 2 ((종류, 산출)마다 최근 1 개는 남긴다 · 삭제 단위는 **파일**이고 시도 디렉터리는 retained 산출이 참조하지 않을 때만 정리한다)\n  - matrix/A/matrix_100.csv  [partial]  21c514850291\n  → 지웠다. index 도 같은 항목 단위로 정리했다 (남은 부분 산출 1)\n",
+      "stderr": "",
+      "before": {
+        "partial/index.json": "a24acd01e84f71f20d772bde0a0b6fbb82ccdb72bdb02aae7c9b054bd41a9fe9",
+        "partial/matrix/A/matrix_100.csv": "21c51485029154c544a40105e0bb5c35a38e4efa1fccbe24f35cf56d4102660b",
+        "partial/matrix/B/matrix_100.csv": "fdb65a1c07494adbe366dac64a1ae136d668208a52aeb35f207cf7ce048261d5"
+      },
+      "after": {
+        "partial/index.json": "c99abbf9de7243386f3daaa4bc2fb0b1217fadabfc5b9f77126217286b905dfd",
+        "partial/matrix/B/matrix_100.csv": "fdb65a1c07494adbe366dac64a1ae136d668208a52aeb35f207cf7ce048261d5"
+      },
+      "index": {
+        "index_version": 1,
+        "attempts": [
+          {
+            "attempt": "B",
+            "kind": "matrix",
+            "artifact": "matrix_100.csv",
+            "status": "partial",
+            "path": "matrix/B/matrix_100.csv",
+            "sha256": "fdb65a1c07494adbe366dac64a1ae136d668208a52aeb35f207cf7ce048261d5",
+            "recorded_utc": "B"
+          }
+        ]
+      }
+    },
+    "gc_changed_bytes": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\gc_partial.py",
+        "--root",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\new-fast-8azz7yo_\\gc_changed_bytes",
+        "--keep",
+        "1",
+        "--apply"
+      ],
+      "rc": 0,
+      "stdout": "지운 부분 산출 1 / 전체 2 ((종류, 산출)마다 최근 1 개는 남긴다 · 삭제 단위는 **파일**이고 시도 디렉터리는 retained 산출이 참조하지 않을 때만 정리한다)\n  - matrix/A/matrix_100.csv  [partial]  21c514850291\n  → 지웠다. index 도 같은 항목 단위로 정리했다 (남은 부분 산출 1)\n",
+      "stderr": "",
+      "before": {
+        "partial/index.json": "a24acd01e84f71f20d772bde0a0b6fbb82ccdb72bdb02aae7c9b054bd41a9fe9",
+        "partial/matrix/A/matrix_100.csv": "11918e8ab351e31cdef13b7782691cf4191a09e5087d160d356b3db5abb7d1e6",
+        "partial/matrix/B/matrix_100.csv": "fdb65a1c07494adbe366dac64a1ae136d668208a52aeb35f207cf7ce048261d5"
+      },
+      "after": {
+        "partial/index.json": "c99abbf9de7243386f3daaa4bc2fb0b1217fadabfc5b9f77126217286b905dfd",
+        "partial/matrix/B/matrix_100.csv": "fdb65a1c07494adbe366dac64a1ae136d668208a52aeb35f207cf7ce048261d5"
+      },
+      "index": {
+        "index_version": 1,
+        "attempts": [
+          {
+            "attempt": "B",
+            "kind": "matrix",
+            "artifact": "matrix_100.csv",
+            "status": "partial",
+            "path": "matrix/B/matrix_100.csv",
+            "sha256": "fdb65a1c07494adbe366dac64a1ae136d668208a52aeb35f207cf7ce048261d5",
+            "recorded_utc": "B"
+          }
+        ]
+      }
+    },
+    "gc_missing_retained": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\gc_partial.py",
+        "--root",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\new-fast-8azz7yo_\\gc_missing_retained",
+        "--keep",
+        "1",
+        "--apply"
+      ],
+      "rc": 0,
+      "stdout": "지운 부분 산출 1 / 전체 2 ((종류, 산출)마다 최근 1 개는 남긴다 · 삭제 단위는 **파일**이고 시도 디렉터리는 retained 산출이 참조하지 않을 때만 정리한다)\n  - matrix/A/matrix_100.csv  [partial]  21c514850291\n  → 지웠다. index 도 같은 항목 단위로 정리했다 (남은 부분 산출 1)\n",
+      "stderr": "",
+      "before": {
+        "partial/index.json": "a24acd01e84f71f20d772bde0a0b6fbb82ccdb72bdb02aae7c9b054bd41a9fe9",
+        "partial/matrix/A/matrix_100.csv": "21c51485029154c544a40105e0bb5c35a38e4efa1fccbe24f35cf56d4102660b"
+      },
+      "after": {
+        "partial/index.json": "c99abbf9de7243386f3daaa4bc2fb0b1217fadabfc5b9f77126217286b905dfd"
+      },
+      "index": {
+        "index_version": 1,
+        "attempts": [
+          {
+            "attempt": "B",
+            "kind": "matrix",
+            "artifact": "matrix_100.csv",
+            "status": "partial",
+            "path": "matrix/B/matrix_100.csv",
+            "sha256": "fdb65a1c07494adbe366dac64a1ae136d668208a52aeb35f207cf7ce048261d5",
+            "recorded_utc": "B"
+          }
+        ]
+      }
+    },
+    "gc_unindexed_control": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\gc_partial.py",
+        "--root",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\new-fast-8azz7yo_\\gc_unindexed_control",
+        "--keep",
+        "1",
+        "--apply"
+      ],
+      "rc": 2,
+      "stdout": "",
+      "stderr": "! index 에 없는 파일 1 개가 시도 디렉터리 안에 있다 — 지우지 않는다 (디렉터리째 지우면 이 바이트가 같이 사라진다):\n    C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\new-fast-8azz7yo_\\gc_unindexed_control\\partial\\matrix\\A\\unknown.txt\n",
+      "before": {
+        "partial/index.json": "a24acd01e84f71f20d772bde0a0b6fbb82ccdb72bdb02aae7c9b054bd41a9fe9",
+        "partial/matrix/A/matrix_100.csv": "21c51485029154c544a40105e0bb5c35a38e4efa1fccbe24f35cf56d4102660b",
+        "partial/matrix/A/unknown.txt": "c0daf45ab7070b3a126e4614b49f0e0f227c4b295272b57f62eee2d2338c9467",
+        "partial/matrix/B/matrix_100.csv": "fdb65a1c07494adbe366dac64a1ae136d668208a52aeb35f207cf7ce048261d5"
+      },
+      "after": {
+        "partial/index.json": "a24acd01e84f71f20d772bde0a0b6fbb82ccdb72bdb02aae7c9b054bd41a9fe9",
+        "partial/matrix/A/matrix_100.csv": "21c51485029154c544a40105e0bb5c35a38e4efa1fccbe24f35cf56d4102660b",
+        "partial/matrix/A/unknown.txt": "c0daf45ab7070b3a126e4614b49f0e0f227c4b295272b57f62eee2d2338c9467",
+        "partial/matrix/B/matrix_100.csv": "fdb65a1c07494adbe366dac64a1ae136d668208a52aeb35f207cf7ce048261d5"
+      },
+      "index": {
+        "index_version": 1,
+        "attempts": [
+          {
+            "attempt": "A",
+            "kind": "matrix",
+            "artifact": "matrix_100.csv",
+            "status": "partial",
+            "path": "matrix/A/matrix_100.csv",
+            "sha256": "21c51485029154c544a40105e0bb5c35a38e4efa1fccbe24f35cf56d4102660b",
+            "recorded_utc": "A"
+          },
+          {
+            "attempt": "B",
+            "kind": "matrix",
+            "artifact": "matrix_100.csv",
+            "status": "partial",
+            "path": "matrix/B/matrix_100.csv",
+            "sha256": "fdb65a1c07494adbe366dac64a1ae136d668208a52aeb35f207cf7ce048261d5",
+            "recorded_utc": "B"
+          }
+        ]
+      }
+    },
+    "common_cycle_control": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\width_report.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\new-fast-8azz7yo_\\common_cycle_control\\cycles_syn_Li.csv"
+      ],
+      "rc": 0,
+      "stdout": "\n══ cycles_syn_Li.csv  (허용 0.01 · w_dqdv 0.0 · seed 0 · starts 4) ══\n cyc              LAM_PE                        LAM_NE                         LLI              \n            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]      \n   0     0.00 [  -0.50,   0.50]    0.00 [  -2.50,   2.50]    0.00 [  -1.00,   1.00] \n   1     1.00 [   0.50,   1.50]    1.00 [  -1.50,   3.50]    1.00 [   0.00,   2.00] \n   폭          최대    1.00 %p         최대    5.00 %p         최대    2.00 %p \n  ⚠ 이 폭은 **하한**이다 (국소 해법 + 격자). 참 폭은 이보다 넓을 수 있다.\n  ⚠ **모델 고정 축**의 폭이다 — 문헌 곡선 선택이 만드는 폭은 여기 안 들어간다.\n",
+      "stderr": ""
+    },
+    "common_cycle_999": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\width_report.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\new-fast-8azz7yo_\\common_cycle_999\\cycles_syn_Li.csv"
+      ],
+      "rc": 0,
+      "stdout": "\n══ cycles_syn_Li.csv  (허용 0.01 · w_dqdv 0.0 · seed 0 · starts 4) ══\n cyc              LAM_PE                        LAM_NE                         LLI              \n            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]      \n   0     0.00 [  -0.50,   0.50]    0.00 [  -2.50,   2.50]    0.00 [  -1.00,   1.00] \n   1     1.00 [   0.50,   1.50]    1.00 [  -1.50,   3.50]    1.00 [   0.00,   2.00] \n   폭          최대    1.00 %p         최대    5.00 %p         최대    2.00 %p \n  ⚠ 이 폭은 **하한**이다 (국소 해법 + 격자). 참 폭은 이보다 넓을 수 있다.\n  ⚠ **모델 고정 축**의 폭이다 — 문헌 곡선 선택이 만드는 폭은 여기 안 들어간다.\n",
+      "stderr": ""
+    },
+    "receipt_valid_control": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\verify_run_receipt.py",
+        "--receipt",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\new-fast-8azz7yo_\\receipt_valid_control.json",
+        "--target",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing"
+      ],
+      "rc": 0,
+      "stdout": "\n══ run receipt 검증 — receipt_valid_control.json ══\n  완전성 ok · 서명 ok · ancestry ok · tree ok · instrument ok\n  기준 커밋 e834b01e4066c5e78c06b6ed1f77878e5a27a481\n  검증기(자기 인증 아님): bms-balancing\\scripts\\verify_run_receipt.py 8221b55c4063\nRUN_RECEIPT_VERIFY {\"verified\": true, \"checks\": {\"complete\": true, \"signature\": true, \"ancestry\": true, \"tree\": true, \"instrument\": true}, \"failed\": [], \"code_reference_verified\": true, \"runtime_partial\": false, \"receipt\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\r17_followup3_e834b01\\\\new-fast-8azz7yo_\\\\receipt_valid_control.json\", \"receipt_version\": \"r16.1\", \"code\": {\"commit\": \"e834b01e4066c5e78c06b6ed1f77878e5a27a481\", \"tree\": \"97a8cc7dfb9af1026fdba5e7fbb154efd7a6c122\"}, \"skipped_instrument\": false, \"verifier\": {\"path\": \"bms-balancing\\\\scripts\\\\verify_run_receipt.py\", \"sha256\": \"8221b55c4063395743a2fe3d16ea32c4caa23bcab6abe7104d628be575c02162\", \"checked_against\": \"e834b01e4066c5e78c06b6ed1f77878e5a27a481\", \"note\": \"이 검증기는 **자기를 인증하지 않는다 — 드러낼 뿐이다** (R12 Q3). 변조 여부는 `evidence_gate.instrument_sealed` 가 바깥에서 본다\"}}\n",
+      "stderr": ""
+    },
+    "receipt_code_null": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\verify_run_receipt.py",
+        "--receipt",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\new-fast-8azz7yo_\\receipt_code_null.json",
+        "--target",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\verify_run_receipt.py\", line 218, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\verify_run_receipt.py\", line 160, in main\n    commit, tree = str(r[\"code\"].get(\"commit\", \"\")), str(r[\"code\"].get(\"tree\", \"\"))\n                       ^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'get'\n"
+    },
+    "receipt_instrument_list": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\verify_run_receipt.py",
+        "--receipt",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\new-fast-8azz7yo_\\receipt_instrument_list.json",
+        "--target",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing"
+      ],
+      "rc": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\verify_run_receipt.py\", line 218, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\verify_run_receipt.py\", line 181, in main\n    for rel, want in (r.get(\"instrument\") or {}).items():\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'list' object has no attribute 'items'\n"
+    },
+    "receipt_tree_instead_of_blob": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing\\scripts\\verify_run_receipt.py",
+        "--receipt",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup3_e834b01\\new-fast-8azz7yo_\\receipt_tree_instead_of_blob.json",
+        "--target",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-followup3-head\\bms-balancing"
+      ],
+      "rc": 0,
+      "stdout": "\n══ run receipt 검증 — receipt_tree_instead_of_blob.json ══\n  완전성 ok · 서명 ok · ancestry ok · tree ok · instrument ok\n  기준 커밋 e834b01e4066c5e78c06b6ed1f77878e5a27a481\n  검증기(자기 인증 아님): bms-balancing\\scripts\\verify_run_receipt.py 8221b55c4063\nRUN_RECEIPT_VERIFY {\"verified\": true, \"checks\": {\"complete\": true, \"signature\": true, \"ancestry\": true, \"tree\": true, \"instrument\": true}, \"failed\": [], \"code_reference_verified\": true, \"runtime_partial\": false, \"receipt\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\r17_followup3_e834b01\\\\new-fast-8azz7yo_\\\\receipt_tree_instead_of_blob.json\", \"receipt_version\": \"r16.1\", \"code\": {\"commit\": \"e834b01e4066c5e78c06b6ed1f77878e5a27a481\", \"tree\": \"97a8cc7dfb9af1026fdba5e7fbb154efd7a6c122\"}, \"skipped_instrument\": false, \"verifier\": {\"path\": \"bms-balancing\\\\scripts\\\\verify_run_receipt.py\", \"sha256\": \"8221b55c4063395743a2fe3d16ea32c4caa23bcab6abe7104d628be575c02162\", \"checked_against\": \"e834b01e4066c5e78c06b6ed1f77878e5a27a481\", \"note\": \"이 검증기는 **자기를 인증하지 않는다 — 드러낼 뿐이다** (R12 Q3). 변조 여부는 `evidence_gate.instrument_sealed` 가 바깥에서 본다\"}}\n",
+      "stderr": ""
+    },
+    "optimizer_out_of_box_fault": {
+      "returned": {
+        "LAM_PE": {
+          "min": -733.3333333333333,
+          "max": 15.999999999999995,
+          "span": 749.3333333333333,
+          "n_points": 34,
+          "is_lower_bound": true
+        },
+        "LAM_NE": {
+          "min": 0.0,
+          "max": 0.0,
+          "span": 0.0,
+          "n_points": 34,
+          "is_lower_bound": true
+        },
+        "LLI": {
+          "min": -733.3333333333333,
+          "max": 15.999999999999995,
+          "span": 749.3333333333333,
+          "n_points": 34,
+          "is_lower_bound": true
+        }
+      },
+      "expected_PE_range": [
+        -16.666666666666668,
+        16.666666666666668
+      ],
+      "injected_x": [
+        25,
+        0,
+        3,
+        0,
+        0.1
+      ],
+      "injected_success": false
+    }
+  }
+}

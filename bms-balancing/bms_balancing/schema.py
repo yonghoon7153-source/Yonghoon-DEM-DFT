@@ -552,6 +552,15 @@ def per_cycle_receipt(common: dict, cycle) -> dict:
     if not isinstance(leaf, dict) or not leaf:
         raise ValueError(f"공통 receipt 에 `{PER_CYCLE_RECEIPT_ROLE}` 객체가 없다 — "
                          f"어느 입력에 cycle 을 붙일지 말할 수 없다 ({common.get(PER_CYCLE_RECEIPT_ROLE)!r})")
+    # ⚠ Codex R17 후속 3차 §5-1 (리뷰어의 별도 권고 — "금지할지 무시 가능으로 명시할지 정하라"):
+    #   **금지한다.** 공통 receipt 는 정의상 cycle 이 없는 것이고(그것이 "공통" 의 뜻이다),
+    #   거기 cycle 이 적혀 있으면 생산자와 sidecar 중 하나가 틀린 것이다. 전 판은 그것을 행의
+    #   cycle 로 **조용히 덮어썼다** — 덮어쓰면 틀린 선언이 사라져 아무도 못 본다.
+    if PER_CYCLE_RECEIPT_KEY in leaf:
+        raise ValueError(
+            f"공통 receipt 의 `{PER_CYCLE_RECEIPT_ROLE}` 에 이미 `{PER_CYCLE_RECEIPT_KEY}` 가 있다 "
+            f"({leaf[PER_CYCLE_RECEIPT_KEY]!r}) — 공통은 cycle 을 말하지 않는다. 덮어쓰지 않고 거부한다 "
+            f"(R17 후속 3차 §5-1)")
     k = int(cycle)
     return dict(common, **{PER_CYCLE_RECEIPT_ROLE: dict(leaf, **{PER_CYCLE_RECEIPT_KEY: k})})
 
