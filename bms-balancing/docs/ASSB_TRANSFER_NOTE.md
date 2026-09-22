@@ -127,8 +127,8 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 | 05 | **Doux 2020** — Stack Pressure Considerations (Adv. Energy Mater., DOI `10.1002/aenm.201903253`) · 본문 6p `f1fc5062a6e259cd` · SI 8p `daa3b7a141c2f571` | **Q6** | ⏸ 수령·대기 |
 | 06 | **Lee 외 2020** — Ag–C 무음극 (**Samsung SAIT**, Nature Energy `10.1038/s41560-020-0575-z`) · 본문 10p `3452770465c31f45` · SI 18p `120d136d99668016` | **Q7** | ⏸ 수령·대기 |
 | 07 | **Spencer-Jolly 외** — Structural changes in the Ag–C composite anode interlayer (**Joule** vol. 7) · 본문 13p `a59c7405b40a1f42` · SI 6p `28eddf6139c1b529` | Q7 | ⏸ 수령·대기 |
-| 08 | From state estimation to active intelligence (**Frontiers in Chemistry**, `10.3389/fchem.2026.1960882`, Mini Review, 2026-09-15 게재) · 12p `a54b551671eea230` | Q3·Q4 | ⏸ 수령·대기 |
-| 09 | **Huo 외** — Characterization of cathode degradation + **결합 전기화학-노화 모델** (sulfide ASSB, *JPS*) · 11p `9f2496907f7e65a0` | **Q2 · 전압축** | ⏸ 수령·대기 · **권장 1순위** |
+| 08 | From state estimation to active intelligence (**Frontiers in Chemistry**, `10.3389/fchem.2026.1960882`, Mini Review, 2026-09-15 게재) · 12p `a54b551671eea230` | Q3·Q4 | ✅ **흡수 완료** (`c90b7f67`) — 칸 0 추가. 실익은 **원 논문 후보 5편**(→ 31~35) 과 **종설 숫자가 우리 원전과 어긋난 실측**(Su 2024) |
+| 09 | **Huo 외** — Characterization of cathode degradation + **결합 전기화학-노화 모델** (sulfide ASSB, *JPS*) · 11p `9f2496907f7e65a0` · SI(.docx) `cee297a20e00d37e` | **Q2 · 전압축** | ▶ **처리 중** (2026-09-22) · **권장 1순위** |
 
 | 10 | **Vadhva·Hu·Johnson·Stocker 외** — EIS for ASSB: Theory, Methods and Future Outlook · 18p `537a508716afd2b3` | **Q2 독립 관측** | ⏸ 수령·대기 |
 | 11 | Sadegh Kouhestani 외 — PHM of Solid-State Batteries (*Energies* 2022) · 26p `912b3d1df0233ba4` | Q3·Q4 | ⏸ 수령·대기 |
@@ -208,6 +208,59 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 `LLI` 숫자 전체가 의심스러워지는데, 그 축을 이제 실제로 잴 수 있다.
 **★ 21·22 는 01 이 자기 참고문헌으로 가리킨 둘**이다 — `1 − θ_AM` 의 measured 라벨과
 접촉 손실의 실험 원전(전압축 포함).
+
+### 6-3-d. 추가 수령분 31~35 (2026-09-22) — **08 번이 낳은 다섯**
+
+08 번(Frontiers 종설) digest 가 뽑아 낸 원 논문 후보 5편을 사용자가 **그날 바로** 다
+올렸다. 번호 31~35 는 사용자 업로드 순서이고 6-3 과 같은 규칙으로 정본이다.
+**SI 는 34 번만 있다** — 31·32·33·35 는 본문에 Supplementary/Supporting 선언이 없고
+`Data availability` 만 있다 (직접 확인). 즉 이 다섯에 **누락된 첨부는 없다**.
+
+| # | 논문 | 종류·쪽 | sha256(앞 32) | 겨냥 |
+|---|---|---|---|---|
+| **31** | **Biçer·Aksöz·Bakar·Odabaşı·Vonk·Soares 외** — Solid-State Batteries: Chemistry, Battery, and Thermal Management System, Battery Assembly, and Applications—**A Critical Review** (*Batteries* 2025, **11**, 212, `10.3390/batteries11060212`, CC BY) | **Review** 49p | `055eb542b3b5fb4b575e4b2afe3d0f52` | Q1·Q2 — 08 의 "접촉 손실 ↔ 보통 노화 분리 진단" 요구가 매단 **유일한** 인용 |
+| **32** | **Zhang·Fu·Lu·Hu·Xia·Zhang 외, Wang·Sun(교신)** — Challenges and Strategies of **Low-Pressure** All-Solid-State Batteries (*Adv. Mater.* 2025, **37**, 2413499) | **Review** 22p | `6b3ed38fa4666c0986929173792e175b` | **Q6**·Q1 — 24 번(저압 장수명)과 짝 |
+| **33** | **Liang·Tao·Shi·Lyu·Ji·Dong·Mo** — **Pulse excitation** for active battery management systems (*npj Clean Energy* 2026, **2**, 16) | ⚠ **Comment** 5p | `30e679dc37e5e7d1233bd48436eb2948` | Q4 설계 축 — 우리 폭 측정기의 **역방향** |
+| **34** | **Roman·Saxena·Robu·Pecht·Flynn** — Machine learning pipeline for battery state-of-health estimation (*Nat. Mach. Intell.* 2021, **3**, 447–456) | **Article** 10p **+SI 18p** | 본문 `efab9d462848d75f158e71aef2bd16c6` / SI `b856d5919e0a8b6ad9997c8d899c1f6b` | **Q3** — 08 Table 2 여덟 행 중 **유일하게 신뢰구간을 보고** |
+| **35** | **Thelen·Huan·Paulson·Onori·Hu·Hu** — **Probabilistic** machine learning for battery health diagnostics and prognostics—review and perspectives (*npj Mater. Sustain.* 2024, **2**, 14) | **Review** 33p | `5ab976ae18496b268a8a044bf473fc29` | **Q3·Q4** — 불확실성 **보정** |
+
+**★ 단어 지문 — 순서를 다시 매겨야 한다** (digest 가 정본이고 이건 예비 지표다):
+
+| | `identifiab` | `uncertaint` | `conf.interval` | `Bayes` | `posterior` | `calibrat` | `LLI` | `LAM`¹ | `degradation mode` | `contact loss` | `MPa` |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 31 | **0** | 3 | **0** | 0 | 0 | **0** | 0 | 0 | 1 | **0** | **0** |
+| 32 | **0** | **0** | **0** | 0 | 0 | **0** | 0 | 0 | 0 | 4 | **50** |
+| 33 | **0** | 3 | **0** | 1 | 0 | **0** | 0 | 0 | 0 | **0** | **0** |
+| 34 | **0** | 26 | **10** | 9 | 0 | **39** | 0 | 0 | 0 | **0** | **0** |
+| **35** | **0** | **205** | **0** | **53** | **28** | 8 | **5** | **5** | **38** | **0** | **0** |
+
+¹ `LAM` 또는 `loss of active material`. 대소문자 무시 검사도 같이 돌렸다 —
+**`identifiab` 은 다섯 편 전부 0 회**이고, `Cramér`/`Fisher` 는 33 번만 2 회, `credible` 은
+전부 0 회다.
+
+- **★★ 35 번이 이 다섯의 머리다.** `uncertaint` 205 · `Bayes` 53 · `posterior` 28 ·
+  `degradation mode` 38 · `LLI` 5 · `LAM` 5 — **우리 축(열화 모드)과 불확실성 정량을
+  한 문서에서 같이 쓰는 첫 자료**다. 08 번이 8/8 편에서 "보정된 불확실성 0" 이라고
+  센 그 칸을, 이 편은 `calibrat` 8 회로 직접 다룬다.
+- **34 번이 Q3 의 실물이다.** `confidence interval` 10 · `calibrat` 39. 08 Table 2 에서
+  유일하게 신뢰구간을 보고한 행의 원전이 맞다는 것이 지문으로 확인된다. **SI 18p** 도 왔다.
+- **⚠ 33 번은 원전이 아니라 Comment 5 쪽이다.** 내가 08 digest 를 받아 "active pulse
+  원전" 이라고 추천했는데 **틀렸다** — 1 차 측정이 없는 전망 논평이다. Q4 설계 축의
+  아이디어는 읽을 값이 있지만 **근거로는 08 번과 같은 급**이다. 순서를 앞으로 당기지 않는다.
+- **⚠ 31 번에 `contact loss` 가 0 회다.** 08 번이 "diagnostics capable of distinguishing
+  contact loss from ordinary electrochemical aging" 이라는 **요구를 매단 유일한 인용**인데,
+  그 인용 대상에 그 낱말이 없다. 08 번 D-계열(인용 어긋남)의 **여섯 번째 사례**로 보이고,
+  Q1 은 이 편으로 안 닫힌다. 49 쪽이라 비용도 크다 — 순서를 뒤로 내린다.
+- **★ 32 번은 `MPa` 50 회로 Q6 을 실제로 다룬다.** `contact loss` 4 회도 있다. 다만 Review 다.
+- ⚠ **다섯 중 1 차 측정 논문은 34 번 하나다.** 31·32·35 는 Review, 33 은 Comment.
+  즉 **Q1(양극 접촉 손실 정량)과 Q4(유일성)의 0 은 이 다섯으로 깨지지 않을 가능성이
+  높다** — 깨는 것은 여전히 21·22·23·28 쪽(1 차 측정)과 25·26·27(방법론)이다.
+
+**아직 안 온 것 (2026-09-22 기준)**: 08 번이 인쇄한 `<≈1 MPa` 산업 요구치의 출처
+**Xu, H.·Yang, S.·Li, B. (2024) — "Pressure effects and countermeasures in solid-state
+batteries: a comprehensive review", *Adv. Energy Mater.* 14, 2303539,
+`10.1002/aenm.202303539`** 는 아직 없다. ⚠ 그것도 Review 이므로 32 번과 겹친다 —
+**32 번을 읽은 뒤에 필요한지 다시 판단**하는 게 맞다. 그 밖 미수령 후보는 6-3-b.
 
 ### 6-3-c. ⚠ 30 번의 보충 데이터 ZIP — **30 번 에이전트에게 반드시 넘길 것**
 
@@ -302,11 +355,16 @@ E   = E_p - E_n    # 셀 전압
 03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12
    → 13 → 14 → 15 → 16 → 17 → 18 → 19 → 20 → 21 → 22 → 23 → 24
    → 25 → 26 → 27 → 28 → 29 → 30
+   → 31 → 32 → 33 → 34 → 35          ← 2026-09-22 추가 (6-3-d)
 ```
 
 **재배열하지 않는다.** 아래 6-4-a 는 내가 한때 권한 재배열인데 **채택되지 않았다** —
-근거로만 남긴다. **28 편 × ~20 분 ≈ 9.5 시간**이고 순차로만 돈다(lint 훅이 전체 위키를
+근거로만 남긴다. **33 편 × ~20 분 ≈ 11 시간**이고 순차로만 돈다(lint 훅이 전체 위키를
 보므로 병렬 불가). 한 편이 끝날 때마다 **lint 0 errors 확인 → 커밋 → 다음 편 착수**.
+
+> 31~35 도 **먹인 순서 그대로 꼬리에 붙인다.** 6-3-d 의 지문은 35·34 가 앞서고
+> 33·31 이 처지는 것을 가리키지만, **순서 규칙이 지문보다 위**다 (2026-09-16 사용자
+> 지시). 지문은 "한 편만 먼저 볼 수 있다면 무엇인가" 를 묻게 될 때 쓰는 근거로만 남긴다.
 
 ### 6-4-a. (채택 안 됨) 내가 권했던 재배열
 
