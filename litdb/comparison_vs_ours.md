@@ -881,6 +881,8 @@
 ## H. ⚠️ 우리가 아직 못 하는 것 (정직 목록 → 향후)
 | gap | 누가 필요로 함 | 보강책 |
 |---|---|---|
+| **⭐⭐⭐ CEI 요구 4칸 중 우리가 채운 칸 — *원전 실물 기준* 정리표** (2026-09-22 신설 · 정본 §J-23) | **[WangZeierYou25]** `Fig. 1` (= `[Wu26MLIF]` `Fig. 10` 의 원전, **실독**). CEI 칸 = **① 분해·부반응 ② 전자누설 ③ 부피변화 ④ 압력변화**. ⚠ **원전 정정 3건**: SE 설계축은 **5 가 아니라 4**이고 · **SEI/CEI 로 갈라지지 않으며**(캡션이 4축 전부가 양쪽을 위한 것이라 못박는다) · **SEI 는 5불릿 / CEI 는 4불릿**으로 비대칭 | **① ✅ 채움** — `ΔE_rxt`(반응에너지 eV/atom). 문헌 합격선 **≥ −0.1 eV/atom**([Xiao19]) vs 우리 comp1\|LCO **−0.3227 = 3.2배 초과** ⇒ *"이 계는 코팅 없이 성립하지 않는다"* 가 도입부가 된다. **② 🟡 절반** — 원 측정량은 **σ_e** 이고 갭은 대리. 문헌 문턱이 **0.5 / 1 / 3 eV 세 갈래**(`Fig. 9A`/식(1)/`Fig. 6E`)라 우리 2.066·2.099 eV 는 **문턱에 따라 통과도 탈락도** 한다 ⇒ ⛔ 문턱 명시 없이 "만족" 인용 금지. 게다가 우리 갭은 **벌크 SE** 것이지 CEI 상의 것이 아니다(위 §H 계면 전자구조 행과 짝). **③ ⛔ 공백 — 그런데 원전에도 CEI 용 기준량이 없다**(서술어만; 부피변화 정량은 Si 음극 맥락). 우리 EOS V₀ 는 벌크 상태방정식이라 이 칸이 **아니다**. **④ ⛔ 공백 — 단 유일하게 새 계산 없이 손댈 수 있다**: `K_eff < K_crit → 계속 성장 / K_eff > K_crit → 구조 유지`(ref 136 Fitzhugh *EES* 14, 4574 (2021) · ref 137 Wang *JACS Au* 2, 886 (2022)). 우리는 C_ij·B₀·E_VRH 를 이미 갖고 있으므로 **Nd 인산염 상들의 K_VRH 를 같이 내면 칸이 실제로 채워진다**. ⇒ ⭐ **§Limitations 문구는 "3칸을 안 했다" 가 아니라 "정량 기준이 확립된 칸은 ①뿐이고 ③④는 원전에도 CEI 용 기준량이 없다" 가 정확하다** |
+| **⭐⭐ "Passivating" 을 우리는 *관측하지 않는다* — 0 K 이라 원리적으로 못 본다** (2026-09-22 신설) | **[WangZeierYou25]** `Fig. 7C` (원전 = ref 133 **Lomeli/Ransom/Sendek/Reed/Devereaux, *ACS AMI* 16, 51584 (2024)**): AIMD 관측 기반 3분법 — Stable *"nearly zero crossing of non-Li atoms"* / **Passivating *"limited change in SE sublattice atoms"*** / Reactive *"SE sublattice atoms far from interfaces"*. **우리 주장이 겨냥하는 칸이 정확히 Passivating 이다** | 🟢 **기존 궤적으로 가능하다 (새 MD 0회)**: UMA 궤적에서 **SE 부격자 원자(P·S·Cl)의 변위 분포 + 계면 교차 개수**를 z-분해로 세면 세 분류의 조작적 기준을 그대로 잰다. §H 의 **T3 프로토콜(Li‖SE)** 이 같은 형태로 이미 설계돼 있으니 양극 쪽에 재사용. ⚠ **선결**: 우리 계면 구조(`adhesion.json` v5)가 MD 를 견디는지 · 어느 층까지를 "부격자" 로 볼지 **보고량 카드 먼저**. ⛔ 그 전까지 원고에서 *"부동태 보호상을 만든다"* 를 쓸 때는 **열역학 구동력 기준임을 명시**할 것 |
 | **⭐⭐ 계면 *전자구조* 자체 — 우리는 벌크 갭만 있고 **계면 갭·계면 준위를 낸 적이 없다*** (2026-09-22 신설) | **[Haru17]** 의 기전이 **전부 계면 준위**다: `Fig. 4` 에서 pristine LCO\|LPS 계면의 유효 갭이 `figure-read ≈` **0.4 eV** — 벌크 LCO `figure-read ≈` 2.05 · 벌크 LPS `figure-read ≈` 2.6 eV 의 **1/5 수준**이고, 그 갭 안(≈VBM+0.4~0.8 eV)에 **pseudo-tetrahedral CoO₄ 유래 빈 준위**가 있다. 그 준위가 `P_Co` 의 전자 2개를 받아 **교환에너지의 부호를 뒤집는다**(벌크 +1.98 → 계면 −2.18 eV) | **우리 자산으로 바로 된다 (새 구조 생성 0회)**: `db/properties/adhesion.json` 의 **v5 계면 구조**(LiNiO₂\|LPSCl, single-interface + vacuum 30 Å)에 **fixed-occ nscf + 층분해 PDOS** 를 붙이면 ① 계면 유효 갭이 벌크 2.066/2.099 eV 대비 얼마나 좁아지는가 ② 그 준위의 원자·배위 성격은 무엇인가 를 처음 말할 수 있다. ⭐ **우리가 그들보다 한 칸 더 간다** — 그들은 PDOS 하나뿐이었지만 **우리는 LOBSTER 가 이미 돌아간다**(ICOHP 로 배위까지). ⚠ **선결 (보고량 카드 먼저)**: *"계면 갭" 의 정의*를 돌리기 전에 못박는다 — 어느 원자층까지를 계면으로 볼 것인가 · 층분해 PDOS 인가 전체 DOS 인가 · **fixed-occ nscf 고유값만 인정**(우리 band-gap 규율: DOS-threshold 판독 금지, ~0.3 eV 과소) · 무질서 배열 몇 개. ⛔ **[Haru17] 의 0.4 eV 는 순수 `figure-read` 라 수치로 인용하지 않는다** — *"벌크보다 크게 좁다"* 까지 |
 | **⭐⭐⭐ 계면 *Li 고갈층 / 공간전하* — 우리 grand-potential 은 μ_Li 를 *공간 무관 스칼라*(전압)로 주입하므로 이 물리가 **원리적으로 없다*** (2026-09-22 신설) | **[Guo25Kin]** 이 그 칸을 실물로 보여 준다 — `Fig. 3a` Li₇P₃S₁₁/Li₀.₅CoO₂ 계면 **z ≈ 28 Å 에 Li 완전 고갈 골**(figure-read 폭 ≈5 Å), 양극 내 Li 피크 0.04 → **0.077 Å⁻¹**. 원인 귀속 = *"황화물 쪽 μ(Li⁺) 가 낮고 Li 공공 생성이 더 유리"*. 선행 원전 **ref 7 Haruyama 2014 *Chem. Mater.* 26, 4248**(공간전하층) · ref 11 Tateyama 2019 · ref 12 Swift–Qi *PRL* 2019. `[Wu26MLIF]` §4.6 의 **Δμ_Li↔공간전하** 칸과 같은 물리다 | **① 즉시**: 우리 보호율 식이 *면적 피복*만 말하고 **Li 고갈·상호확산은 피복으로 막히지 않는다**는 것을 §Limitations 에 명시. **② 싸게**: 기존 MD 궤적으로 **Li 수 밀도 z-히스토그램**(t=0 vs 마지막 100 ps 평균)을 도핑/무도핑 계에 적용 — 새 MD 0, 후처리만. **③ 본격**: 계면 슬랩 파일럿 (Zur–McGill + MCIA<400 Å² + 총길이>50 Å + 종단 2종). ⚠ 열 때 **시드·오차막대·MSD 창 규약을 우리 표준으로 박는다** — [Guo25Kin] 이 안 한 것이 그것이다 |
 | **⭐⭐⭐ 양극 CEI 의 *운동학* — 우리는 0 K hull 평형만이다. "얼마나 빨리 · 얼마나 두껍게 · 연속적인지" 를 못 말한다** (2026-09-22 신설) | **[Ncube26]** 이 **그 칸을 통째로 채우는 형태**로 존재한다: MLMD(nat>6000·3 ns·300 K) 로 LCO\|LGPS 상호확산을 **직접 보고**, 거기서 뽑은 D 를 **1D phase-field** 에 먹여 `두께 = 0.265·t^0.155`(t=초, μm) → **24 h 에 >1 μm**, 그 두께를 **2D 셀 모델**의 전하전달저항·활물질 손실로 환산해 **첫 방전 용량 126→75 mAh/g**(figure-read)까지 잇는다. **이음매에 흐르는 것이 확산계수 하나뿐**이라는 설계(`Fig. 1`)가 우리가 베낄 수 있는 형태다 | ⛔ **그들의 D·두께 수치는 이식 금지**(§Reference key [Ncube26] 비판 ①②③ — MSD 가 확산영역이 아니고 `Table 2` 와 재현도 안 된다). **가져오는 것은 *구조* 뿐**: ① **MLMD → D → 상장 → 셀** 4단 사다리 ② 상변수 판정(>0.95/<0.05) ③ 되먹임 고리(부피팽창 → 압축응력 → D↓ → 성장 감쇠, 지수 <0.5 = damped). **우리 쪽 최소 실행 = 새 MD 0회**: 기존 UMA 궤적에 **z-분해 원소 밀도 열지도 · RDF 시간추적 · 층별 잔존 PS₄ 수**를 붙이면 그들이 3 ns 6000원자에서 뽑은 것(**MSD 하나**)보다 이미 많다 — §H 의 **T3 프로토콜(Li‖SE)이 같은 형태로 이미 설계돼 있으니 양극 쪽에 재사용**. ⚠ **정책 충돌을 먼저 푼다**: 연속체는 **절대 D** 를 요구하는데 우리 인용정책(2026-09-18)은 **상대차만**이다 ⇒ 무차원화(`D/D_bulk` 만 넘기고 D_bulk 는 실험 σ 로 고정)를 **계산 전에** 결정할 것 |
@@ -983,6 +985,7 @@
 | **[Basu26MFB]** | `basu2026_multifidelity_bandit_dopant_screening_funnel` — **다중충실도 밴딧 + 3단 DFT 검증 깔때기** (**arXiv:2604.10157v1**, 2026, 단독저자·미심사). 계 = **산화물 반도체 5종(ZnO·TiO₂·SrTiO₃·SnO₂·MgO) 격자 치환 도핑**, 목표물성 = **밴드갭 2.0 eV**. ⛔ **황화물 아님 — 물성 4축(A–D)에 수치로 넣지 않는다.** 쓰는 곳은 **§J-11(파이프라인 구조·다중충실도) 하나**. 자체 DFT **583계산 1차 근거**(J-10 `[Jain26Rev]` 의 2차 인용과 층위가 다르다) |
 | **[Imbalzano21]** 🔧 | `imbalzano2021_committee_uq_md_thermodynamic_averages` — **committee UQ → 열역학 평균 전파 원전** (EPFL COSMO, ⚠ **PDF 에 저널·DOI 없음**). ⚠ **물성값 0 · 물/펩타이드/페놀/Ga 전용** → 아래 **J-7** 에만 등장, A–D 축 금지. 🔴 **동역학량(D·수송) 0회 — 우리 D 인용 금지** |
 | **[Wu26MLIF]** 🔧 | `wu2026_ml_driven_electrolyte_interface_design_review` — **ML×(전해질+계면) 리뷰** (Wu/Wang 외, 샤먼대, ***Adv. Funct. Mater.* 2026, 0:e78357**, DOI `10.1002/adfm.78357`; 34 pp · Fig 16 · Table 5 · refs 148 · SI 없음). ⚠ **자체 계산 0 · 자체 실험 0 — 전량 2차 인용** → 아래 **J-20** 에만 등장, **A–D 물성축 금지**. 🔴 이 편의 값은 수치가 아니라 **우리 hull 방법에 대한 두 개의 비판**과 **§4.6 계면 설계규칙 번역표**다 |
+| **[WangZeierYou25]** 🔧 ⭐⭐⭐ **CEI 요구 4칸의 원전** ( = `[Wu26MLIF]` `Fig. 10` 의 출처 ) | `wang2025_ai_ecosystems_electrolyte_interface_ssb` — **Zhilong Wang**/**Wolfgang G. Zeier**/**Fengqi You\*** (Cornell AI for Science Inst. + 공대 + CAISI · Münster 무기분석화학 · Helmholtz-Institute Münster/FZ Jülich IMD-4), "**Toward AI Ecosystems for Electrolyte and Interface Engineering in Solid-State Batteries**", ***Sci. Adv.* 11(48), eaea0638 (2025)**, DOI `10.1126/sciadv.aea0638` (투고 2025-06-24 / 수락 2025-10-29 / 게재 2025-11-26; 본문 **27 pp** · Fig 1–10 · 본문 표 **0장** · refs **196** · SI = Tables S1–S5 **우리 미확보**; CC BY 4.0). ⚠⚠ **자체 계산 0 · 자체 실험 0 · 물성 수치 0** → 아래 **J-23** 에만 등장, **A–D 물성축 금지**(값이 없어 행을 만들 수 없다). ⛔ **"Zeier 그룹 논문" 아님** — 저자기여상 **Zeier 는 `Writing—review and editing` 뿐**, 나머지 전부 Z.W.+F.Y., 교신 Cornell. ⛔ **우리 축 B 의 방법 근거로도 금지** — [Rich16]·[Zhu15]·[Xiao20Rev]·[Nolan18Rev] 을 **하나도 인용하지 않는다**. 🔑 이 편의 값은 ① `Fig. 1` **CEI 요구 4칸의 정본** ② hull 비판의 **편향 방향**(불안정 쪽 오분류, `Fig. 7D` 그림 증명) ③ **`dual compatibility` 용어 선취** ④ 인용 문턱 3개(ΔE_rxt ≥ −0.1 · K,G < 30 GPa · σ 2–3배) 다. ⚠ 자매편 `[Jain26ML]`(같은 Z.Wang·F.You)와 **독립 근거 2건으로 세지 말 것** |
 
 ### J-0b. ★★ [UMA] 우리 계산기의 사양서 — 원논문 대조 (2026-08-25 신설)
 
@@ -4254,6 +4257,152 @@ a = 9.87 Å · Z = 4 ⇒ **1/f.u. = 4.16×10²¹ cm⁻³**. `Fig. 3` 픽셀 실�
 - ⛔ `Table S2` 의 Li 전도도 — **이중 인용**(저자가 남의 논문에서 가져온 문헌값). 우리 원장 금지.
 - ⛔ Cl-rich 델타 −13 meV/atom 을 **"Cl 효과" 단독**으로 — Li 감소와 교락 + 조성식 오기(§B③).
 - ⛔ `Fig. 1a`·`Fig. 7` 의 **절대값을 우리 값 옆에 나란히** — [Xiao19] 와 같은 쌍에서 **158 meV/atom** 갈린다(§B③).
+
+---
+
+### J-23. 🔧 **방법 원전 — [WangZeierYou25] `Fig. 1` 이 CEI 요구 4칸의 정본이다** (2026-09-22 신설)
+
+> 📎 출처: `papers/wang2025_ai_ecosystems_electrolyte_interface_ssb.md` (논문 에이전트, 2026-09-22).
+> 📌 **§J-20 의 후속.** §J-20 은 `[Wu26MLIF]` 리뷰의 `Fig. 10` 을 근거로 우리 CEI 빈칸 표를 세웠다.
+> **그 그림의 원전이 이 논문 `Fig. 1` 이고, 이번에 원전을 실독했다.**
+> ⛔⛔ **이 편은 자체 계산 0 · 자체 실험 0 · 물성 수치 0 이다.** 물성 4축(A–D)에 **행을 만들지 않는다** —
+> 값 없는 행을 넣으면 표가 무의미해진다. 여기는 **🔧 방법 원전 블록**이다.
+
+**1. ⭐⭐⭐ 원전 실독으로 §J-20 의 소개 문장 3건이 정정된다**
+
+| §J-20 이 적은 것 | 원전 `Fig. 1` 실물 | 판정 |
+|---|---|---|
+| SE 설계 **5축** | **4축** — Ionic-electronic conductivity · Electrochemical stability · Mechanical strength · Air/humidity stability | ❌ **정정** |
+| 4축이 **좌 SEI / 우 CEI 로 갈라진다** | **안 갈라진다.** 캡션이 4축 전부가 *"…**to address key scientific problems associated with SEI/CEI**"* 라고 못박는다. 물결 화살표는 조판 | ❌ **정정** |
+| CEI 4칸 | **Decomposition and side reactions / Electronic leakage / Volume change / Pressure change** | ✅ **확정** |
+| (§J-20 에 없던 사실) | **SEI 는 4가 아니라 5불릿**(Multiphase structure · Ion migration · Electronic conductivity · Volume change · Pressure change) — 목록이 **비대칭**이다 | ➕ **추가** |
+
+**2. 🔴 `Fig. 1` 은 불릿 목록이지 *정의* 가 아니다 — 본문 전수 추적 결과**
+
+| CEI 칸 | 이 논문이 실제로 주는 측정량 | 문턱 | 우리 |
+|---|---|---|---|
+| **① 분해·부반응** | ✅ `ΔE_rxt` = *"the **reaction energy** of the material with the cathode or electrolyte in eV/atom"* (`Fig. 9` 캡션) · `ΔE_rxn` = *"**chemical mixing energy** with other battery components by DFT"* (`Fig. 7D` 캡션) | **≥ −0.1 eV/atom** (vs LPS=Li₃PS₄ & 만충 NCM) | ✅ **우리가 계산하는 유일한 칸.** comp1\|LiCoO₂ **−0.3227 eV/atom = 3.2배 초과 탈락** |
+| **② 전자누설** | 🟡 **대리뿐.** 원 측정량은 **σ_e** (*"the electronic conductivity of the SEI determines the growth kinetics"*), 스크리닝은 전부 **band gap** 대리 | ⚠ **0.5 eV**(`Fig. 9A`) · **1 eV**(식 (1)) · **3 eV**(`Fig. 6E`) — **한 문서 안에 셋** | 🟡 갭만(comp1 2.066 / modelc 2.099 eV). **문턱에 따라 통과도 탈락도** · **벌크 SE 갭이지 CEI 상의 갭이 아니다** |
+| **③ 부피변화** | ❌ **CEI 용 정량 틀이 아예 없다.** 서술어만(*"volumetric fluctuations at the interfaces … local stress concentrations can induce mechanical failure"*), 부피변화 정량은 **Si 음극 맥락** | **없다** | ⛔ 0건. 우리 EOS V₀ 는 벌크 상태방정식이라 **이 칸이 아니다** |
+| **④ 압력변화** | 🟡 **SEI 절에만.** `K_eff`(effective local moduli) vs `K_crit`: *"When **K_eff < K_crit** … this SEI continues to react and grow … Conversely, when **K_eff > K_crit**, the interface remains structurally intact"* + ML 예측 `K*` (124,497 종) | 부등식 (절대 문턱은 계 의존) | ⛔ 0건. **단 이 틀은 우리 C_ij·B₀ 로 손댈 수 있는 유일한 CEI 빈칸** |
+
+⇒ ⭐ **우리 §Limitations 문구를 바꾼다.** *"우리는 4칸 중 3칸을 안 했다"* 가 아니라
+***"이 4칸 중 정량 기준이 확립된 것은 분해·부반응 하나이고 우리는 그것을 계산한다. 전자누설은
+갭 대리로 부분적이고 문턱 자체가 문헌에서 0.5–3 eV 로 갈린다. 부피·압력 변화는 **원전에도
+CEI 용 기준량이 없다**."*** — 자백이 아니라 **지형 서술**이 된다.
+
+**3. 🔴🔴 hull 비판 — §J-20/J-21 의 세 번째 증언, 그리고 *편향의 방향*을 처음 말한다**
+
+p.14 (원전 = **ref 133 Lomeli/Ransom/Sendek/Reed/Devereaux, *ACS AMI* 16, 51584 (2024)**):
+
+> *"…identified more than **300 chemically stable SEs** and more than **780 passivating SEs**,
+> **challenging previous thermodynamic-based assessments that often-misclassified materials as unstable**
+> … the pool of viable SEs may be **far larger than previously anticipated**."*
+
+⭐ **§J-20·J-21 과 다른 새 정보 = 편향의 *방향*이다.** 열역학 판정은 **불안정 쪽으로 틀린다**(false negative).
+
+**`Fig. 7D` 가 그 그림 증명** (실독 · figure-read ≈ · 세로축 ΔE_rxn eV/atom · 색 = AIMD 3분류):
+
+| 분류 | ΔE_rxn 범위 | 양 끝 |
+|---|---|---|
+| 🟩 Stable (14점) | 0.00 → −0.40 | Li₆NBr₃·Li₂S·Li₃N ≈ 0.00 / Li₇VGeO₈ ≈ −0.40 |
+| 🟧 Passivating (12점) | 0.00 → −0.50 | Li₆WN₄ ≈ 0.00 / **Li₃Sc₂(PO₄)₃ ≈ −0.50** |
+| 🟪 Reactive (24점) | **−0.16** → −1.12 | **Li₃ErCl₆ ≈ −0.16** / LiSO₃F ≈ −1.12 |
+
+⇒ **−0.16 이 Reactive 인데 −0.50 이 Passivating 이다. 반응에너지가 운동학 결과를 순서짓지 못한다.**
+그리고 **세 분류가 전부 겹치는 −0.16 ~ −0.50 구간이 우리 comp1\|LCO −0.3227 이 앉은 자리**다.
+
+🔴 **우리에게 가장 아픈 따름정리**: 우리 **§E dual-compat 에서 "음수라 나쁘다" 로 탈락시킨 상들**
+(Li₂SO₄ **−0.0940** · Nd₂(SO₄)₃ **−0.1470** eV/atom)은 `Fig. 7D` 기준으로 **Stable/Passivating 구간에
+그대로 들어간다** ⇒ **§E 의 탈락 판정이 false negative 일 수 있다.**
+⚠ **단 `Fig. 7D` 는 vs Li 금속(SEI)이고 우리는 vs LiCoO₂(CEI)다 — 숫자 대조 금지, 논리만 전이.**
+⇒ **T: ref 133 원문을 확보해 분류 경계가 우리 축에서도 성립하는지 확인**(§14b-1).
+
+**4. ⚠ 그런데 이 편도 hull 을 버리지 않는다 — §J-21 판정을 재확인**
+
+`Fig. 6E` ML E_hull<50 meV → DFT E_hull<50 meV 재검증 · `Fig. 9A` E_hull<0.005 eV/atom ·
+`Fig. 8E–G` 설계공간의 한 축이 E_hull 자체 · 식 (1) 예시 *"E_hull<50 meV"*.
+⇒ **"hull 은 필요조건, 충분조건 아님"** — §J-21 의 결론이 세 번째로 확인된다.
+
+**5. 💰 인용 가능한 문턱값 3개 (전부 2차 인용 — 원 출처 병기)**
+
+| 문턱 | 원 출처 | 우리 |
+|---|---|---|
+| **ΔE_rxt ≥ −0.1 eV/atom** (코팅 합격선, vs Li₃PS₄ & NCM) | ref 160 = **[Xiao19]** *Joule* 3, 1252 (2019) — 🔁 **원전 digest 보유** | comp1\|LCO **−0.3227 → 3.2배 초과.** ⇒ *"이 계는 코팅 없이 성립하지 않는다"* 가 우리 도입부 |
+| **K_VRH, G_VRH < 30 GPa** (실전지 SE 기준) | ref 122 = Chen…Troyer *JACS* 146, 20009 (2024), `Fig. 6E` | comp1 B₀ **26.23** · modelc **21.71 GPa** → **둘 다 통과**. ⚠ **K_VRH ≠ B₀(EOS BM3)** — 정의 각주 필수 |
+| **아지로다이트 σ 가 실험실 간 2–3배 변동** | ref 172 = **Ohno…Zeier 외 23인**, *ACS Energy Lett.* 5, 910 (2020) 실험실간 비교연구 | ⭐ **우리 σ 절대값 인용금지 정책(1저자 2026-09-18)의 문헌 근거.** 동반 문장: *"modeling and prediction using **activation energy instead of ionic conductivity** may be more accurate and reliable"* ⚠ **우리 정책은 Ea 도 상대차만 — 완화 근거로 쓰지 말 것** |
+
+**6. ⭐ `Fig. 6C` 를 우리 강점으로 뒤집는다 (축 C 새 논거)**
+
+ML 탄성 예측 MAE (실독): **LGBM K_VRH 21.580 / G_VRH 16.048 GPa** (최고) · CGCNN 50.364/19.047 ·
+MEGNet 55.722/32.763 · MPNN 37.487/19.833 · SchNet 166.044/36.278.
+검증 가넷 10종의 K_VRH 범위는 `Fig. 6D` 에서 **47–124 GPa**(figure-read).
+⇒ **최고 모델의 오차(21.6 GPa)가 우리 황화물 B₀(21.7–26.2 GPa)와 같은 크기다.**
+🔑 ***"현행 ML 탄성 대리모형의 오차가 황화물 SE 의 탄성값과 같은 자릿수이므로, 이 계에서는
+first-principles 탄성이 대체 불가능하다"*** 를 **숫자로** 말할 수 있다. ⚠ 정의 각주 필수.
+
+**7. ⭐⭐ 선점 판정 — 우리 §E 가 *이름까지* 선언돼 있다**
+
+p.19: *"Identifying **universal coating materials** using AI offers a promising alternative to separately
+optimizing CEI interfaces. By leveraging high-throughput screening and generative models, **AI can predict
+materials with dual compatibility, ensuring both interfacial stability with SEs and electrochemical/
+structural compatibility with cathodes.**"*
+
+| | 이 리뷰 | 우리 §E |
+|---|---|---|
+| 용어 | **"dual compatibility"** 그대로 | 동일 |
+| 양쪽 제약 | 전해질 계면안정 + 양극 전기화학/구조 적합성 | **전해질 적합성 + V_ox** — 같은 두 축 |
+| 형태 | **한 문장 제안. 계산 0 · 데이터 0** | 닫힌계 0 V **20 쌍 실행**, 단조 4점, ρ=−1, 사전등록 단측 **p=0.042** |
+
+⇒ ⛔ ***"우리가 처음 제안했다" 는 이제 불가능하다.*** 가능한 것은 ***"처음 **실행**했다"***.
+**원고에서 `dual compatibility` 를 쓸 때 이 문장을 인용하지 않으면 용어 선취 시비가 난다.**
+🔁 `[Cha24]`(할라이드 실험) 와 **층위가 다르다** — cha2024 = 특정 계의 실험적 확인,
+이 리뷰 = 범용 코팅 탐색 **전략 선언**, 우리 §E = **다수 상의 두 축 동시 스크리닝**. **셋을 구분해 인용.**
+
+**8. ✅ 선점되지 않은 것 (우리 몫이 남아 있다)**
+
+| 우리 주장 | 이 리뷰에 있나 | 근거 |
+|---|---|---|
+| **§2b 보호율 `min(1, k·x/(1−x))`** | ❌ **없다** | 피복은 **요구조건**으로만 — *"uniformity and strong adhesion, to ensure **continuous and defect-free coverage**"*. 정량 모델은 **두께 축 하나**(a-LiF ≈1 nm, ref 139 재인용)뿐 |
+| **§D "Li 를 안 쓰는 인산염 경로"** (NdPO₄ P당 Li 0 vs Li₃PO₄ 3; Li/P≈1.67 부호반전) | ❌ **없다** | 최근접 = **ref 140 Gao/Jalem/Tateyama** *Chem. Mater.* 32, 85 (2020): **LCO\|β-Li₃PS₄ 의 μ_Li(r) 지도 → 높은 μ_Li 자리가 충전 개시 시 Li 고갈을 유도 → SE 산화분해 촉발**. ⚠ **인과가 반대 방향**이다. ⇒ 우리 문장은 *"계면 Li 예산 축은 알려져 있으나 [ref], **싱크 상의 Li 화학량론이 그 예산의 부호를 뒤집는다**는 점은 보고된 바 없다"* 로 |
+
+**9. ⚠ 서지·귀속 주의 (인용 전 필독)**
+
+- ⛔⛔ **"Zeier 그룹 논문" 으로 인용 금지.** 저자기여: Conceptualization/Methodology/Investigation/
+  Visualization/Supervision/original draft **전부 Z.W.+F.Y.**, **Zeier 는 `Writing—review and editing` 뿐**.
+  교신 Cornell, 연구비 Schmidt AI in Science 하나. 정확한 서술 = *"Cornell 의 AI/공정시스템 그룹이
+  쓰고 Zeier 가 편집으로 참여한 리뷰"*.
+- ⛔ **우리 축 B 의 *방법* 근거로 인용 금지.** refs 196 중 **[Rich16]·[Zhu15]·Zhu16·[Xiao20Rev]·
+  [Nolan18Rev] 이 하나도 없다**(있는 건 [Xiao19] ref 160 뿐). `ΔE_rxt` 를 쓰면서 pseudo-binary
+  최소화 정의를 한 줄도 안 적는다.
+- ⚠ **ΔE_rxt / ΔE_rxn / 우리 pseudo-binary 최소값이 같은 양이라는 보증이 없다** —
+  −0.1 게이트를 우리 −0.3227 에 대기 전 `[Xiao19]` digest 정의와 **1:1 대조** 필수.
+- ⚠ **자매편 `[Jain26ML]`(같은 Z.Wang·F.You Cornell)과 독립 근거 2건으로 세지 말 것.**
+- ⚠ **SI(Tables S1–S5) 미확보** — "이 리뷰에 없다" 판정은 **본문 기준**이다.
+
+**10. ⚠ 본문↔그림 불일치 3건 (이 편에서 인용하면 안 되는 것)**
+
+- ⛔ **`Fig. 10C` 를 "MLFF 가 계면을 정확히 잡는다" 의 근거로** — 본문은 *"confirm the high accuracy"*
+  인데 실독하면 **LLZO-LCO 계면이 힘 RMSE ≈0.26–0.27 eV/Å · 에너지 ≈15.5–18 meV/atom** 로
+  **벌크 LLZO(cubic) ≈0.135 / ≈4.5 의 2배·3.5배**다(figure-read). **정확도가 계면에서 계통적으로 무너진다** —
+  우리 UMA 계면 적용에도 같은 경고가 걸린다.
+- ⛔ **`Fig. 6F` COSNet 의 어떤 값도** — 본문은 *"superior performance"* 인데 **밴드갭 R² 0.24 ·
+  전도도 R² 0.44**. 게다가 전도도 MAE 0.924 의 **단위가 로그인지 안 밝힌다**.
+- ⛔ **`Fig. 8G` 의 *"moderate E_hull"* 서술** — 그림의 최적점(LPSCl-min(K\*)-shell)은 **최하단
+  ≈2–3 meV/atom** 이고 core(≈250)와 **두 자릿수** 차다. 원전(ref 137 *JACS Au* 2, 886) 확인 전 사용 금지.
+- ⛔ **`>300 stable / >780 passivating` 숫자** — 리뷰 자신이 소표본(<10³)·과적합 위험을 단다.
+
+**11. ✅ 이 편에서 **쓸 수 있는** 것 (요약)**
+
+| 쓸 것 | 원문 근거 | 용도 |
+|---|---|---|
+| **CEI 요구 4칸 목록** | `Fig. 1` | §Limitations 의 지형 서술 |
+| *"CEI 가 SEI 보다 복잡하다 — 양극 종류가 많아서"* | p.19 | **우리가 CEI 를 고른 것의 정당화** (실물 비대칭: SEI 5 pp/2그림/5불릿 vs CEI 3 pp/2그림/4불릿) |
+| *"SE 와 양극 물질의 스크리닝을 **독립**시키고 나서 계면 물성을 종합하라"* | p.19 | 우리 §B 격자(6×4×6)가 정확히 그 형태 |
+| **반응성 3분법 정의** — Stable *"nearly zero crossing of non-Li atoms"* / **Passivating *"limited change in SE sublattice atoms"*** / Reactive *"SE sublattice atoms far from interfaces"* | `Fig. 7C` | ⭐ **우리 주장이 겨냥하는 칸 = Passivating.** 우리는 그 관측을 안 한다(0 K) ⇒ **기존 UMA 궤적에서 SE 부격자 원자 변위를 재면 그 칸이 채워진다** |
+| **"패들휠은 상온 결정 Li₆PS₅Cl 에 없다"** (rotating [PS₄]³⁻ 는 Li 확산에 **약한 음의 영향**) | p.10, 원전 **ref 103 Ding…Zeier/Delaire, *Nat. Phys.* 21, 118 (2025)** | **우리 확산 기전 서술에서 패들휠 금지** |
+| **Li₆PS₅Cl 은 Cl⁻ 이 4c 자리 25 % 를 점유할 때 σ 최대** (무질서 최대 50 % 가 아니라; 6,500 원자·25 ns) | p.6, 원전 **ref 71 Lee…Han(서울대), *ACS AMI* 16, 46442 (2024)** | 우리 무질서 축의 외부 좌표계. ⚠ `[Wu26MLIF]` 가 인용한 *"최적창 37.5–50 %"* [80] 과 **숫자가 다르다** — 같은 양인지 확인 전 나란히 쓰지 말 것 |
+| **"AI 생태계는 SSB 에 아직 없다"** (*"the field of SSBs still lacks such intelligent research infrastructure"*; 구현 사례는 촉매·신약·무기합성뿐) | Direction 3 | ⛔ 반대로 *"AI 생태계가 SSB 를 바꾸고 있다"* 류는 **인용 금지 — 사례 0건** |
 
 ---
 

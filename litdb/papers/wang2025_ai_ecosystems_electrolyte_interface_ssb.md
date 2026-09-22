@@ -67,7 +67,8 @@ digest 가 그 그림(거기서는 `Fig. 10` 으로 재수록)을 *"이 리뷰�
 | Sendek 12,831 스크리닝 (`Fig. 4A`, ref 88·89) | `sendek2017_ml_screening_12k_conductors.md` | 원전 확보됨 |
 | 계면 병목 · SEI/CEI 리뷰 | `liang2026_interface_bottleneck_solid_state_batteries.md` · `miao2023_role_of_interfaces_solid_state_batteries.md` · `kim2021_review_oxide_sulfide_se_interfaces.md` | — |
 | 할로겐 화학 (Cl/Br/I 치환) | `he2023_halogen_chemistry_solid_electrolytes.md` | 리뷰는 할라이드를 스치기만 한다 |
-| a-LiF 코팅 임계두께 ≈1 nm (ref 139 Hu) | `wu2026_ml_driven_electrolyte_interface_design_review.md` §10-② | **두 리뷰가 같은 원전을 인용**한다. 오차막대 비판은 그쪽 digest 에 있다 |
+| a-LiF 코팅 임계두께 ≈1 nm (**ref 139**) | ✅ **`hu2024_amorphous_lif_coating_lco_lpscl_interface.md` — 원전 digest 를 이미 갖고 있다** (+ `wu2026…` §10-② 의 오차막대 비판) | **세 문서가 같은 원전을 가리킨다.** 여기서는 반복 안 함 |
+| 저항망(resistor network) 모델로 수송 예측 (**ref 87**) | ✅ **`ketter2025_resistor_network_models_predict_transport_properties.md`** — **Ketter, Greb, Bernges, Zeier** 원전 보유 | Zeier 색채 삽입의 출처 중 하나 |
 | MLFF 일반론 · uMLIP · 파인튜닝 | `makino2026_mlip_battery_materials_review.md` · `liu2026_finetuning_umlip_tutorial.md` · `chang2026_performance_based_mlip_selection_sse.md` 외 | 이 리뷰의 MLFF 절은 얕다 |
 | 능동학습 폐루프 | `cho2025_multicompositional_argyrodite_experimental_active_learning.md` · `hu2026_foundation_model_surrogates_active_learning.md` 외 | — |
 | ML 파이프라인 지형 | **`jain2026_ml_pipelines_solid_state_electrolyte_design.md`** | ⭐ **같은 그룹의 자매편이다** — V. Jain, **Z. Wang, F. You\*** (Cornell), *Mater. Horiz.* 13(1), 15–44 (2026). **제1·2저자와 교신이 겹친다.** 그쪽은 **ML 파이프라인의 4단 구조 + 6단 HTVS 깔때기**(`Fig. 3`)를 더 깊이 쓰고, 이쪽은 **계면(SEI/CEI)** 을 더 깊이 쓴다. ⚠ **두 편을 독립 근거 2건으로 세지 마라** — 같은 그룹·같은 해·겹치는 저자다 |
@@ -777,7 +778,9 @@ UMA-MD 로 **SE 부격자 원자 변위**를 재면 그 칸이 실제로 채워�
 | **5** 🟡 | **본 논문 SI (Tables S1–S5)** | **table S5 = SEI/CEI AI 연구 목록** — 우리 CEI 축 선행연구 목록일 개연성 |
 | **6** 🟡 | **ref 71 = J. Lee, S. Ju, S. Hwang, J. You, J. Jung, Y. Kang, S. Han, "Disorder-dependent Li diffusion in Li₆PS₅Cl investigated by machine-learning potential", *ACS AMI* 16, 46442 (2024)** | **4c 자리 25 % 최적**. 우리 무질서 축 직결. 서울대 한승우 그룹 |
 | **7** 🟡 | **ref 172 = S. Ohno … W. G. Zeier 외 (23인), "How certain are the reported ionic conductivities of thiophosphate-based solid electrolytes? An interlaboratory study", *ACS Energy Lett.* 5, 910–915 (2020)** | **σ 절대값 금지 정책의 문헌 근거**. 원문 확보하면 "2–3배" 의 정확한 조건을 인용할 수 있다 |
-| **8** ⬜ | ref 136 Fitzhugh 외 *EES* 14, 4574 (2021) (K_crit 원전) · ref 139 Hu 외 *AFM* 34, 2402993 (2024) (a-LiF 1 nm — `wu2026…` 와 공통) | 압력/두께 축 확장 시 |
+| **8** 🟡 | **ref 103 = J. Ding, M. K. Gupta, C. Rosenbach, H.-M. Lin, N. C. Osti, D. L. Abernathy, **W. G. Zeier**, O. Delaire, "Liquid-like dynamics in a solid-state lithium electrolyte", *Nat. Phys.* 21, 118–125 (2025)** | **패들휠이 상온 결정 Li₆PS₅Cl 에 *없다*** 는 판정의 원전. 우리 확산 기전 서술에 직접 걸린다. **우리 litdb 에 없다** |
+| **9** ⬜ | ref 136 Fitzhugh 외 *EES* 14, 4574 (2021) (K_crit 원전) | 압력/구속 축 확장 시 (§13-④) |
+| ✅ **이미 보유** | **ref 139 = Hu 외 *AFM* 34, 2402993 (2024)** → `hu2024_amorphous_lif_coating_lco_lpscl_interface.md` · **ref 87 = Ketter…Zeier** → `ketter2025_resistor_network_models_predict_transport_properties.md` · **ref 160 = Xiao 외 *Joule* 3, 1252 (2019)** → `xiao2019_cathode_coating_screening.md` · **ref 88 = Sendek 2017** → `sendek2017_ml_screening_12k_conductors.md` | 이 리뷰가 인용한 것 중 **4편은 이미 원전으로 갖고 있다** |
 
 ---
 

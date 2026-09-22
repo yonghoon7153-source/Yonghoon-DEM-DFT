@@ -134,6 +134,13 @@
    "건식전극 논문/08. modeling-effective-ionic-conductivity-and-binder-influence-in-composite-cathodes-for-all-solid-state-batteries.pdf"
   ]
  },
+ "bong2023_linbo3_thickness_uniformity_ncm523": {
+  "figures": 9,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "130. JPowerSources_2023_Bong_LiNbO3_thickness_uniformity_NCM523_sulfide_ASSB_MAIN.pdf"
+  ]
+ },
  "boschpadros2014_dem_liggghts_msc_thesis": {
   "figures": 4,
   "generated": "2026-08-05",
@@ -341,7 +348,7 @@
   ]
  },
  "dutra2025_atomistic_modelling_ml_se_review": {
-  "figures": 1,
+  "figures": 6,
   "generated": "2026-09-22",
   "pdfs": [
    "128. NatRevMater_2025_Dutra_Islam_Dawson_Understanding_SSB_electrolytes_atomistic_modelling_ML_REVIEW_MAIN.pdf"
@@ -570,10 +577,11 @@
   ]
  },
  "jang2023_zno_cosubstitution_argyrodite": {
-  "figures": 8,
+  "figures": 15,
   "generated": "2026-09-22",
   "pdfs": [
-   "15. JAlloysCompd_2023_Jang_Li6-2xZnxPS5-xOxCl_ZnO_cosubstitution_air_stability_MAIN.pdf"
+   "15. JAlloysCompd_2023_Jang_Li6-2xZnxPS5-xOxCl_ZnO_cosubstitution_air_stability_MAIN.pdf",
+   "jang_si.docx"
   ]
  },
  "jang2025_thioarsenate_argyrodite_mlip_mechanism": {
@@ -773,6 +781,13 @@
    "이상욱 교수님/5. New crystal structure of Li₃YCl₆ structural relationship and ionic conductivity for solid-state electrolytes.pdf"
   ]
  },
+ "kim2025_lto_pald_conformal_coating_nca": {
+  "figures": 8,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "p23_main.pdf"
+  ]
+ },
  "kim2026_charge_engineered_cnf_binder": {
   "figures": 43,
   "generated": "2026-08-05",
@@ -892,6 +907,14 @@
   "pdfs": [
    "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode.pdf",
    "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf"
+  ]
+ },
+ "lee2026_lpscl_coating_thickness_ncm811": {
+  "figures": 24,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "f676cf0c-20._Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf",
+   "c4456457-20._Sup_Balancing_Ionic_and_Electronic_Conductivities_in_All_Solid_State_Batteries_The_Effect_of_LPSCl_Coating_Thickness_on_Cathode_Active_Materials.pdf"
   ]
  },
  "lee2026_mechanical_halogen_argyrodite_drycoating": {
@@ -1730,6 +1753,13 @@
   "generated": "2026-09-13",
   "pdfs": [
    "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf"
+  ]
+ },
+ "wei2023_linbo3_coating_cutoff_voltage_lco_argyrodite": {
+  "figures": 6,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "131. ElectrochimActa_2023_Wei_LiNbO3_coating_LCO_argyrodite_cutoff_voltages_MAIN.pdf"
   ]
  },
  "wet_processing_resolved_am_ssb_cathode_manufacturing": {

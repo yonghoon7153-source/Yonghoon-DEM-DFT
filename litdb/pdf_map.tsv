@@ -93,3 +93,14 @@ lynch2026_greenkubo_mlip_conductivity_thesis	paper9_computational_se_firstprinci
 #   [!] '--slug xu2026_xlsdft_linear_scaling_100m_atoms --clean' 을 돌리면 fig_5 가 사라진다.
 #       ('--inbox --run --skip-done' 은 안전.) 재생성이 필요하면 위 bbox 를 그대로 다시 쓴다.
 #   본문 PDF 만 있고 SI 는 없다(논문에 SI 자체가 없음). 자동 매칭은 제목으로 붙는다.
+wang2025_ai_ecosystems_electrolyte_interface_ssb	127. SciAdv_2025_Wang_Zeier_You_Toward_AI_ecosystems_electrolyte_interface_SSB_MAIN.pdf
+#   ↑ 2026-09-22. 제목은 잘 붙지만, **이 논문은 크로핑에 손이 들어가 있다**:
+#   자동 크로퍼가 Fig. 1·Fig. 2 를 '영역 없음' 으로 제외한다(전폭 벡터 도식 — 캡션 위 블록이 36 pt 미만).
+#   손으로 넣은 값: fig_1 = page 2(0-based 1) clip (36, 55, 560, 341) @300 dpi → 2184x1192
+#                   fig_2 = page 3(0-based 2) clip (36, 415, 560, 675) @300 dpi → 2184x1084
+#   또 fig_2/4/6/8/9 는 자동 bbox 가 패널 A 를 잘라내서 상단을 그래픽 실제 경계까지 확장했다:
+#                   f2 y0=275 · f4 y0=58 · f6 y0=56 · f8 y0=72 · f9 y0=58 (x·y1 은 자동값 유지)
+#   [!] '--slug wang2025_ai_ecosystems_electrolyte_interface_ssb --clean' 을 돌리면
+#       Fig. 1·2 가 사라지고 나머지 5장이 다시 잘린다. ('--inbox --run --skip-done' 은 안전.)
+#   ⭐ Fig. 1 이 이 논문을 구한 이유다 — 잃어버리면 digest 의 §4 근거가 사라진다.
+#   SI(Tables S1–S5)는 별도 PDF 이고 **우리 미확보**.

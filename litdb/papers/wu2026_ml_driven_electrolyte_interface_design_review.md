@@ -208,7 +208,7 @@ ML 을 *"스크리닝 가속기"* 가 아니라 **다목적·폐루프 허브**�
 | 7 | 스크리닝 흐름도 3패널: (a) **Sendek 2017** (b) **Honrao 2021** (c) 분자 라이브러리 | 안 봄 — **둘 다 원전 digest 보유** |
 | 8 | 수송 동역학 7패널 (LGPS D, LOTF-MD 아레니우스, GPR uMLIP, 응력효과, 협동이동, paddlewheel, dynamic monkey cage) | 안 봄 — 전부 기존 digest 와 중복. 단 §3d 의 paddlewheel 부호충돌은 텍스트로 확보 |
 | 9 | **Si(Li₁₅Si₄) ‖ Li₆PS₅Cl SEI 진화 3단** (Initial → Equilibrium). 범례가 LPSCl 분해 산물을 **이름으로** 찍는다: P–Sₙ · S²⁻ · **LiCl · Li₂S · LiₓP** | **본 그림.** 우리 grand-potential **환원** 산물 목록(Li₂S·LiCl·Li₃P)과 **종이 일치**. 단 이건 음극축이고 우리 논문은 양극축이다 |
-| 10 | **SE 설계 5축 ↔ SEI/CEI 요구 대응도** (출처 [122] Wang–Zeier–You, *Sci. Adv.* 2025): 중앙 "Solid electrolyte design" 에서 ① 이온-전자전도 ② 전기화학안정 ③ 기계강도 ④ 공기/습도안정 이 갈라져 **좌 SEI / 우 CEI** 로 화살표 | **본 그림 · ★ 이 리뷰에서 우리에게 제일 값있는 한 장.** CEI 칸이 요구하는 4가지 = **분해·부반응 / 전자누설 / 부피변화 / 압력변화**. 우리는 1번만 계산한다 — **§7 의 빈칸 표가 이 그림에서 바로 나온다** |
+| 10 | **SE 설계축 ↔ SEI/CEI 요구 대응도** (출처 [122] Wang–Zeier–You, *Sci. Adv.* 2025): 중앙 "Solid electrolyte design" 타원 주위에 ① 이온-전자전도 ② 전기화학안정 ③ 기계강도 ④ 공기/습도안정, 좌 SEI / 우 CEI 로 물결 화살표 | **본 그림 · ★ 이 리뷰에서 우리에게 제일 값있는 한 장.** CEI 칸이 요구하는 4가지 = **분해·부반응 / 전자누설 / 부피변화 / 압력변화**. 우리는 1번만 계산한다 — **§7 의 빈칸 표가 이 그림에서 바로 나온다**. 🔴 **2026-09-22 정정 (원전 실독)**: 원전 `wang2025_ai_ecosystems_electrolyte_interface_ssb` `Fig. 1` 을 직접 보니 ① 축은 **5 가 아니라 4** ② **좌/우로 갈라지지 않는다** — 캡션이 4축 전부가 *"to address key scientific problems associated with **SEI/CEI**"* 라고 못박고 물결 화살표는 조판이다 ③ **SEI 는 5불릿 / CEI 는 4불릿**으로 비대칭이다. **CEI 4칸 자체는 정확하므로 §8-② 의 자백 전략은 그대로 유효**하고, 소개 문장만 고치면 된다 |
 | 11 | **InterOptimus 계면 순위 검증 12패널** — E_it^MLIP(주황) vs E_it^DFT(파랑) + ΔX. 계 3종 × 모델 **2종(ORB · 7Net)** | **본 그림 · ★★ 우리 방법 감사의 핵심.** uMLIP 계면에너지는 **순위는 살지만 절대값은 안 산다** (r_s 0.83–1.0 vs MAE 0.1–0.61 J m⁻²). 그리고 **가장 나쁜 칸이 하필 Li₃PS₄\|Li** (§11c) |
 | 12 | **입계가 Li 를 끌어모아 환원시킨다** 3패널 (출처 [129] Xia, *JPCL* 2025): (a) 120 Å 셀 Region I–IV (b) Li 개수 히스토그램 t = 0/4/6/10 ns (c) **Li 원자전하 지도**, 컬러바 **0.50 – 0.55** | **본 그림.** ⚠ 컬러바 폭이 **0.05 e 뿐**이다 — "Li 환원" 주장이 **부분전하 0.05 e 이동**에 걸려 있다 (§10-④). 우리가 Bader/ICOHP 로 같은 논법을 쓸 때의 경고 |
 | 13 | **Li ‖ β-Li₃PS₄ SEI 4단 형성** (출처 [131] Ren, *EES* 2024) a–h + (i) **양극\|SE 계면 모델의 두 종단면(A/B)** (출처 [132] Guo) | **본 그림.** (b–f) 타임라인 **305 / 306 / 421 / 768 / 2000 ps** — 핵생성이 **1 ps 안**에 일어난다. (g) 최종 층 두께 라벨 **7.4 / 5.0 / 1.0** (비정질/결정/계면). (h) SEI 내 결정이 **Li₂S(Fm3̄m)** 로 동정 |
@@ -266,6 +266,12 @@ ML 을 *"스크리닝 가속기"* 가 아니라 **다목적·폐루프 허브**�
   만든다**"* 로 차별화하면 문단이 저절로 써진다. (⛔ 5개 칸 자체는 남의 분류다 — 인용 표기 필수)
 - ② **`Fig. 10` 의 CEI 요구 4칸으로 우리 빈칸을 자백한다.** 분해·부반응 ✅ / 전자누설 🟡(갭만) /
   부피변화 ⛔ / 압력변화 ⛔. 리뷰어가 물을 것을 우리가 먼저 적으면 방어가 된다.
+  🔴 **2026-09-22 갱신 — 원전(`wang2025_ai_ecosystems_electrolyte_interface_ssb`)을 읽고 나니 더 세게 쓸 수 있다.**
+  원전 본문을 전수로 훑으면 **네 칸 중 측정량이 확립된 것은 ①뿐**이고(`ΔE_rxt`, 합격선 −0.1 eV/atom),
+  ②는 대리(σ_e 대신 갭, **문턱이 0.5/1/3 eV 로 셋**), **③은 CEI 용 기준량이 원전에도 아예 없고**,
+  ④는 SEI 절의 `K_eff`–`K_crit` 뿐이다. ⇒ 자백 문구를 *"3칸을 안 했다"* 가 아니라
+  ***"정량 기준이 확립된 칸은 하나이고 우리는 그것을 계산한다. 나머지는 문헌에도 CEI 용 기준량이 없다"***
+  로 쓴다. 정본 = `comparison_vs_ours.md` **§J-23** + **§H** 표.
 - ③ **보호율 식에 두께 축을 붙이거나, 없음을 명시한다.** [47] 의 1 nm 임계는 우리 모델이 **원리적으로
   못 보는 축**이다. 최소한 §Limitations 에 *"본 모델은 피복 면적분율만 다루며 두께 최적점은 다루지 않는다.
   LiF 계 선행연구는 ~1 nm 초과 시 Li 수송이 저하됨을 보고한다 [Hu 2024]"* 를 넣는다.
@@ -520,8 +526,16 @@ Li₄PS₄Cl/Li₁₁PS₅Cl, `comparison_vs_ours.md` §B [Rupp])이 hull 밖이
    ⇒ **in-situ 사례 없음이 원문 근거로 확정.** 정본 `papers/park2026_ml_framework_stable_interfaces_assb.md` §0b·§7a.
 2. 우리 litdb 의 `cha2024_dualcompatible_halide_ncm_lpscl_interface` 가 이미 dual-compatibility 축을 갖고 있다 —
    그쪽과의 관계를 원고에서 정리해야 한다.
-3. 리뷰가 인용하는 `[122] Wang–Zeier–You *Sci. Adv.* 2025` (= `Fig. 10` 출처) 는 **Zeier 그룹**이다.
-   우리 축 B 의 주요 대조군(Zuo/Janek/Zeier 라인)과 같은 계보 — **그 편도 확보 대상**이다.
+3. ~~리뷰가 인용하는 `[122] Wang–Zeier–You *Sci. Adv.* 2025` (= `Fig. 10` 출처) 는 **Zeier 그룹**이다.
+   우리 축 B 의 주요 대조군(Zuo/Janek/Zeier 라인)과 같은 계보 — **그 편도 확보 대상**이다.~~
+   ✅ **2026-09-22 확보·digest 완료 → `papers/wang2025_ai_ecosystems_electrolyte_interface_ssb.md`**
+   ⛔⛔ **그리고 이 줄의 판정이 틀렸다**: 원전 저자기여 표기는 **Conceptualization/Methodology/Investigation/
+   Visualization/Supervision/original draft 전부 Z. Wang + F. You(Cornell)** 이고 **Zeier 는
+   `Writing—review and editing` 하나뿐**이다. 교신도 Cornell, 연구비도 Schmidt AI in Science 하나.
+   ⇒ **"Zeier 그룹 논문" 으로 인용하면 틀린다.** 게다가 그 편은 **[Rich16]·[Zhu15]·[Xiao20Rev]·[Nolan18Rev] 을
+   하나도 인용하지 않아** 우리 축 B 계보와 **연결되지 않는다**. 🔑 **대신 얻은 것**: `Fig. 1` CEI 4칸 정본 ·
+   hull 오분류의 **방향**(불안정 쪽) · **`dual compatibility` 용어 선취**(위 2번 항목과 직결 — cha2024 말고
+   **이 편이 용어의 리뷰급 선언**이다) · 인용 문턱 3개. 정본 = `comparison_vs_ours.md` **§J-23**.
 
 ## 12b. 🔴 *"보호상은 많을수록 좋다"* — **여기가 약해진다**
 
@@ -741,7 +755,7 @@ Li₄PS₄Cl/Li₁₁PS₅Cl, `comparison_vs_ours.md` §B [Rupp])이 hull 밖이
 | 순위 | 논문 | 왜 |
 |---|---|---|
 | **1** | **[139] S. Park, M. Jang, H. G. Jung, K. Y. Chung, S. Yu, "Machine-Learning Framework for Designing Stable Interfaces in All-Solid-State Lithium-Ion Batteries," *Adv. Sci.* (2026) e76305** | 🔴 **우리 방법의 최근접 선행연구.** 809×10×7 반응에너지 + 비지도 군집. **in-situ 사례가 정말 없는지 원문에서 확인해야 한다** (§12a) |
-| **2** | **[122] Z. Wang, W. G. Zeier, F. You, "Toward AI Ecosystems for Electrolyte and Interface Engineering in Solid-State Batteries," *Sci. Adv.* 11, aea0638 (2025)** | 🔴 `Fig. 10`(우리에게 제일 값있는 그림)의 원전. **Zeier 그룹** = 우리 축 B 대조군 계보 |
+| ~~**2**~~ ✅ **완료 2026-09-22** | **[122] Z. Wang, W. G. Zeier, F. You, "Toward AI Ecosystems for Electrolyte and Interface Engineering in Solid-State Batteries," *Sci. Adv.* **11(48), eaea0638** (2025)** · DOI `10.1126/sciadv.aea0638` → **`papers/wang2025_ai_ecosystems_electrolyte_interface_ssb.md`** | ~~🔴 `Fig. 10`의 원전. **Zeier 그룹** = 우리 축 B 대조군 계보~~ ⛔ **뒷부분 철회**: Zeier 는 `Writing—review and editing` 뿐이고 축 B 계보 문헌([Rich16]·[Zhu15]·[Xiao20Rev]·[Nolan18Rev])을 **하나도 인용하지 않는다**. ✅ 얻은 것 = **CEI 4칸 정본**(축은 4개·좌우로 안 갈라짐·SEI 5 vs CEI 4) · hull 오분류 **방향** · **`dual compatibility` 용어 선취** · 문턱 3개 |
 | ~~**3**~~ ✅ **확보·digest 완료 2026-09-22** | **[132] X. Guo, "Kinetic analysis of cathode–solid electrolyte interface in all-solid-state batteries," *J. Mater. Chem. A* **13**, 38919–38927 (2025)** → **`papers/guo2025_kinetic_cathode_se_interface.md`** | 🔴 **3기전의 원전은 맞다(✅ 리뷰 정확)**. ⛔ **코팅 4조건은 원전에 없다(오귀속)** · ⛔ **"속도와 최종 형태"도 없다(강화)** · ⭐ **원전은 hull 을 3회 추인한다** — 판정 전문 `comparison_vs_ours.md` §J-21 |
 | **4** | **[17] A. C. C. Dutra, B. A. Goldmann, M. S. Islam, J. A. Dawson, "Understanding Solid-State Battery Electrolytes Using Atomistic Modelling and Machine Learning," *Nat. Rev. Mater.* 10, 566 (2025)** | 🟠 `Table 2` 가 *"원자단위 모델링에 강함"* 으로 분류. **Islam/Dawson 그룹** — 우리 litdb 에 없다 |
 | **5** | **[47] T. Hu, L. Xu, F. Dai 외, "Impact of Amorphous LiF Coating Layers on Cathode-Electrolyte Interfaces in Solid-State Batteries," *Adv. Funct. Mater.* 34, 2402993 (2024)** | 🟠 **§12b 의 반론 원전.** LCO/**Li₆PS₅Cl** — 우리 계 그 자체. 두께-D 데이터 원본 필요 |
@@ -781,7 +795,7 @@ Li₄PS₄Cl/Li₁₁PS₅Cl, `comparison_vs_ours.md` §B [Rupp])이 hull 밖이
 
 ## ③ 추가로 구해야 할 논문
 
-**1순위 3편**: [139] Park *Adv. Sci.* 2026 (최근접 선행) · [122] Wang–Zeier–You *Sci. Adv.* 2025 (`Fig. 10` 원전) ·
+**1순위 3편**: [139] Park *Adv. Sci.* 2026 (최근접 선행) · ~~[122] Wang–Zeier–You *Sci. Adv.* 2025 (`Fig. 10` 원전)~~ **✅ 2026-09-22 완료 → `papers/wang2025_ai_ecosystems_electrolyte_interface_ssb.md`** ·
 [132] Guo *JMCA* 2025 (임피던스 3기전 — ✅ 정확 / ⛔ **코팅 4조건은 원전에 없다**, 2026-09-22 확인 → `papers/guo2025_kinetic_cathode_se_interface.md`).
 **2순위 4편**: [17] Dutra *Nat. Rev. Mater.* · [47] Hu *AFM* 2024 (LiF 두께) · [109] Sendek 2020 (Cl/Br/I 우선) ·
 [126] Ou 2024 (`ou2026…` 의 미확보 직계).
