@@ -92,6 +92,38 @@ def _p998_from_cloud(vals_desc, n_total):
     return v_lo + (v_hi - v_lo) * frac
 
 
+_WANT = ('field_scale_e', 'field_scale_ion', 'electronic_field', 'ionic_field',
+         'n_dof', 'ion_n_dof')
+
+
+def find_key_paths(obj, keys=_WANT, path='', out=None, _depth=0):
+    """JSON 어디에 그 키가 있는지 전수로 찾는다 → {key: [(경로, 부모 dict), …]}.
+
+    ★★ 왜 재귀인가 (2026-09-22, 실물에서 두 번 틀린 뒤) — 초판은 `payload['step3']`
+      에서, 2판은 거기 + 최상위에서 찾았다.  둘 다 실물과 달랐다 (`webapp/mpm_lab/
+      <case>/payload.json` 은 또 다른 자리에 싣는다).  **소비자가 생산자의 중첩을
+      외우면 생산자가 바뀔 때마다 조용히 거짓 거부한다** — 그리고 fail-closed 라
+      아무 숫자도 안 나오니 "결함이 없다" 처럼 보인다.
+      ⇒ 구조를 **추측하지 않고 찾는다**.  못 찾거나 후보가 둘 이상이면 **거부**하되
+        어디에 무엇이 있는지 출력한다 (다음 사람이 한 번에 알 수 있게)."""
+    if out is None:
+        out = {k: [] for k in keys}
+    if _depth > 12:
+        return out
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if k in out:
+                out[k].append((path + '/' + k, obj))
+            if isinstance(v, (dict, list)):
+                find_key_paths(v, keys, path + '/' + k, out, _depth + 1)
+    elif isinstance(obj, list):
+        #  거대한 점군 리스트는 원소가 dict 가 아니므로 즉시 빠진다 (비용 0)
+        for i, v in enumerate(obj[:4]):
+            if isinstance(v, (dict, list)):
+                find_key_paths(v, keys, path + f'[{i}]', out, _depth + 1)
+    return out
+
+
 def repair_channel(step3, fs_key, field_key, ndof_key, payload=None):
     """한 채널을 고친다 → dict(ok, reason, …).  payload 는 **바꾸지 않는다**.
 
@@ -205,12 +237,37 @@ def run(paths, write=False, csv_out=None):
             print(f'⛔ {p}: 읽기 실패 — {e}')
             bad += 1
             continue
-        #  전체 payload 든 잘라낸 step3 블록이든 받는다 (리포의 `step3_*.json` 은 후자다).
-        step3 = payload.get('step3') if isinstance(payload.get('step3'), dict) else None
-        if step3 is None:
-            step3 = payload if ('field_scale_e' in payload or 'field_scale_ion' in payload) else {}
-        res = [repair_channel(step3, fsk, fk, nk, payload=payload) for _, fsk, fk, nk in _CH]
+        #  ★ 구조를 추측하지 않고 **찾는다** (위 find_key_paths 배너).
+        found = find_key_paths(payload)
         print(f'\n── {p}')
+        _hits = {k: [pp for pp, _ in v] for k, v in found.items() if v}
+        if not _hits.get('field_scale_e') and not _hits.get('field_scale_ion'):
+            print('   ⛔ field_scale_* 가 이 파일 어디에도 없다 (STEP3 필드 스케일 이전 세대?)')
+            print('      찾은 것: ' + (', '.join(f'{k}@{v[0]}' for k, v in _hits.items()) or '없음'))
+            continue
+        for _k, _v in sorted(_hits.items()):
+            print(f'   · {_k:<17} {_v[0]}' + (f'   (+{len(_v) - 1} 곳 더)' if len(_v) > 1 else ''))
+        res = []
+        for _, fsk, fk, nk in _CH:
+            _fs_hits = found.get(fsk) or []
+            if len(_fs_hits) != 1:
+                res.append({'channel': fsk, 'ok': False,
+                            'reason': (f'{fsk} 후보가 {len(_fs_hits)} 개 — '
+                                       + (', '.join(pp for pp, _ in _fs_hits) or '없음')
+                                       + '.  하나로 정해지지 않으면 고르지 않는다')})
+                continue
+            _owner = _fs_hits[0][1]                      # field_scale_* 를 담은 dict = step3 격
+            _cloud_hits = found.get(fk) or []
+            _cloud_owner = _cloud_hits[0][1] if len(_cloud_hits) == 1 else None
+            _shim = dict(_owner)
+            if _cloud_owner is not None and fk not in _shim:
+                _shim[fk] = _cloud_owner.get(fk)
+            #  N(도체 복셀 수)도 같은 규약으로 — 다만 **후보가 하나일 때만** 쓴다.
+            #  여럿이면 어느 solve 의 것인지 알 수 없으므로 채우지 않고 거부하게 둔다.
+            _nd_hits = found.get(nk) or []
+            if nk not in _shim and len(_nd_hits) == 1:
+                _shim[nk] = _nd_hits[0][1].get(nk)
+            res.append(repair_channel(_shim, fsk, fk, nk, payload=payload))
         for r in res:
             if not r['ok']:
                 print(f"   {r['channel']:<16} ⛔ {r['reason']}")
@@ -352,6 +409,25 @@ def _selftest():
     e5 = r4['ok'] and r4.get('noop')
     ok &= e5
     print(f"noop-new-payload: 전수 기준 payload 는 건드리지 않는다  {'OK' if e5 else 'FAIL'}")
+    # ── 재귀 탐색 — 중첩이 달라도 찾는가 · 모호하면 거부하는가 ──────────────
+    _nested = {'a': {'b': {'step3': {'field_scale_e': {'focus_top': 1.0}, 'n_dof': 7}}},
+               'c': {'electronic_field': [[0, 0, 0, 1.0]]}}
+    _f = find_key_paths(_nested)
+    e6 = ([p for p, _ in _f['field_scale_e']] == ['/a/b/step3/field_scale_e']
+          and [p for p, _ in _f['electronic_field']] == ['/c/electronic_field']
+          and [p for p, _ in _f['n_dof']] == ['/a/b/step3/n_dof'])
+    ok &= e6
+    print(f"find-nested: 중첩 2단 아래의 키를 경로째 찾는다  {'OK' if e6 else 'FAIL'}")
+    _dup = {'x': {'field_scale_e': {}}, 'y': {'field_scale_e': {}}}
+    e7 = len(find_key_paths(_dup)['field_scale_e']) == 2
+    ok &= e7
+    print(f"find-ambiguous: 후보가 둘이면 둘 다 보고한다 (호출자가 거부)  "
+          f"{'OK' if e7 else 'FAIL'}")
+    e8 = find_key_paths({'electronic_field': [[0, 0, 0, 0.5]] * 3})['electronic_field'] != []
+    ok &= e8
+    print(f"find-cheap: 거대한 점군 리스트를 파고들지 않는다 (원소가 dict 아님)  "
+          f"{'OK' if e8 else 'FAIL'}")
+
     print('SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
