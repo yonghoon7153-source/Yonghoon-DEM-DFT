@@ -1,0 +1,131 @@
+{
+ "slug": "jung2026_sio2_cosubstitution_mechanical_argyrodite",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "122. AdvFunctMater_2026_Jung_SiO2_cosubstitution_LPSiSOCl_mechanical_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Structural analysis of solid electrolyte Li6 + x P1-x Six S5-2x O2x Cl. (a) Schematic illustration of the structure of Li6 + x P1-x Six S5-2x O2x Cl, (b) X-ray diffraction (XRD) patterns and (c) Nyquist plots of Li6 + x P1-x Six S5-2x O2x Cl powders (x = 0, 0.1, 0.2, and 0.3), SEM images of (d) Li6 PS5 Cl (LPSCl) and (e) Li6.1 P0.9 Si0.1 S4.8 O0.2 Cl (LPSiSOCl) powders, (f) particle size distribution of LPSiSOCl powder, X-ray photoelectron spectroscopy (XPS) (g) P 2p and (h) Si 2p spectra, and (i) 31 P magic angle spinning nuclear magnetic resonance (MAS NMR) spectra of LPSCl and LPSiSOCl powders.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.1,
+    488.3
+   ],
+   "w": 2170,
+   "h": 1890,
+   "dpi": 300,
+   "src": "122. AdvFunctMater_2026_Jung_SiO2_cosubstitution_LPSiSOCl_mechanical_MAIN.pdf",
+   "blank": 0.764
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Mechanical properties of solid electrolyte Li6 + x P1-x Six S5-2x O2x Cl. (a) Density functional theory-derived bulk modulus values for the Li6 PS5 Cl, Li6 Si0.25 P0.75 S5 Cl, Li6 PS4.75 O0.25 Cl, and Li6 Si0.25 P0.75 S4.75 O0.25 Cl structures. (b) Young’s modulus mapping results for Li6 PS5 Cl (LPSCl) and Li6.1 P0.9 Si0.1 S4.8 O0.2 Cl (LPSiSOCl).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.9,
+    568.0,
+    421.3
+   ],
+   "w": 2169,
+   "h": 1611,
+   "dpi": 300,
+   "src": "122. AdvFunctMater_2026_Jung_SiO2_cosubstitution_LPSiSOCl_mechanical_MAIN.pdf",
+   "blank": 0.816
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Electrochemical performance of the cathodes with LPSCl and LPSiSOCl. Voltage profiles of the (a) 1st, (b) 200th, and (c) 500th cycles. (d) Cycling performance from the 2nd to the 500th cycles. Electrochemical impedance spectroscopy (EIS) measurements: (e,f) Nyquist plots with cathodes containing LPSCl and LPSiSOCl after the 1st and 500th cycles, and (g) distribution of relaxation time (DRT) transformed from Nyquist plots after the 500th cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    568.1,
+    456.3
+   ],
+   "w": 2170,
+   "h": 1756,
+   "dpi": 300,
+   "src": "122. AdvFunctMater_2026_Jung_SiO2_cosubstitution_LPSiSOCl_mechanical_MAIN.pdf",
+   "blank": 0.825
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Electrochemical performance of the cathodes under a low stack pressure of 7 MPa. Voltage profiles of the cathodes with (a) LPSCl and (b) LPSiSOCl, and (c) cycling performance for 100 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    568.1,
+    176.3
+   ],
+   "w": 2170,
+   "h": 588,
+   "dpi": 300,
+   "src": "122. AdvFunctMater_2026_Jung_SiO2_cosubstitution_LPSiSOCl_mechanical_MAIN.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Ex situ SEM-EDS analysis of composite cathodes. Cross-sectional SEM images and EDS elemental maps of composite cathodes with (a) LPSCl and (b) LPSiSOCl before cycling, and after 500 cycles for (c) LPSCl and (d) LPSiSOCl. (e,f) Quantitative evaluation of cathode material coverage obtained from (c) and (d).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.7,
+    568.1,
+    413.3
+   ],
+   "w": 2170,
+   "h": 1574,
+   "dpi": 300,
+   "src": "122. AdvFunctMater_2026_Jung_SiO2_cosubstitution_LPSiSOCl_mechanical_MAIN.pdf",
+   "blank": 0.446
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 Visualization of pore evolution and proposed cycling mechanism. 3D XRM images and corresponding pore-segmented reconstructions of the cathodes with (a) LPSCl and (b) LPSiSOCl after 50 cycles. (c,d) Schematic illustrations of the proposed long-term cycling mechanisms in solid electrolytes with improved mechanical properties.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.8,
+    568.1,
+    230.3
+   ],
+   "w": 2170,
+   "h": 816,
+   "dpi": 300,
+   "src": "122. AdvFunctMater_2026_Jung_SiO2_cosubstitution_LPSiSOCl_mechanical_MAIN.pdf",
+   "blank": 0.539
+  }
+ ]
+}

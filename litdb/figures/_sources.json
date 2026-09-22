@@ -522,6 +522,14 @@
    "89._Sup_Unraveling_the_concerted_motion_of_Li_ions_in_argyrodite_Li6xAs1_xSixS5I_solid_electrolytes.pdf"
   ]
  },
+ "jeong2025_tough_adhesive_binder_shield_ncm811": {
+  "figures": 19,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "123. AdvEnergyMater_2025_Jeong_Tough_adhesive_protective_binder_shield_highNi_NCM811_MAIN.pdf",
+   "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx"
+  ]
+ },
  "jiang2022_se_doped_lpscl_high_throughput_dft": {
   "figures": 23,
   "generated": "2026-09-09",
@@ -557,6 +565,13 @@
   "generated": "2026-09-03",
   "pdfs": [
    "47e468ac-72._Advanced_Materials__2025__Jung__Enhanced_Kinetics_and_Dual_Interfacial_Stability_in_High_Areal_Loading_Electrodes_for.pdf"
+  ]
+ },
+ "jung2026_sio2_cosubstitution_mechanical_argyrodite": {
+  "figures": 6,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "122. AdvFunctMater_2026_Jung_SiO2_cosubstitution_LPSiSOCl_mechanical_MAIN.pdf"
   ]
  },
  "kahle2020_ht_aimd_screening": {
@@ -1002,6 +1017,13 @@
    "72. Sup) Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf"
   ]
  },
+ "lynch2026_greenkubo_mlip_conductivity_thesis": {
+  "figures": 20,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "paper9_computational_se_firstprinciples_ml.pdf"
+  ]
+ },
  "lyu2025_3d_dem_drying_calendering_lib": {
   "figures": 10,
   "generated": "2026-08-05",
@@ -1130,6 +1152,13 @@
   "pdfs": [
    "e8080c51-3._____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf",
    "c93d2ee5-23._Sup_____revisitingprimerlayerdesignforrobustdryelectrodecurrentcollectorinterfacesinlithiumionbatteries.pdf"
+  ]
+ },
+ "ncube2026_ionic_interdiffusion_lco_lgps_multiscale": {
+  "figures": 12,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf"
   ]
  },
  "ngandjong2021_dem_calendering_digital_twin": {
@@ -1639,12 +1668,26 @@
    "d42adcb4-74._Sup1_Nat._Comm.__2026__Wu__Dilute_electrolytes_for_suppressing_metal_anode_corrosion_during_calendar_aging_and_cycling_in_aqueous_zinc_batteries.pdf"
   ]
  },
+ "wu2026_ml_driven_electrolyte_interface_design_review": {
+  "figures": 21,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf"
+  ]
+ },
  "wu2026_ta_argyrodite_selfpassivating": {
   "figures": 39,
   "generated": "2026-08-19",
   "pdfs": [
    "58. Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf",
    "58. Sup) Wu2026_High-Conductivity_Argyrodite_SelfPassivating.pdf"
+  ]
+ },
+ "wu2026_tmd_intercalation_engineering_review": {
+  "figures": 8,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "b0ff39c5-7._Recent_progress_in_intercalation_engineering_of_transition_metal_dichalcogenides_for_energy_storage_and_conversion.pdf"
   ]
  },
  "xiao2019_cathode_coating_screening": {
@@ -1676,6 +1719,13 @@
   "pdfs": [
    "57. NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
    "57. Sup) NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf"
+  ]
+ },
+ "xu2026_xlsdft_linear_scaling_100m_atoms": {
+  "figures": 5,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "122. arXiv_2026_Xu_XLSDFT_Extreme_Scale_Linear_Scaling_KS_DFT_100M_atoms_MAIN.pdf"
   ]
  },
  "yang2025_lao_dualdoping_argyrodite_lacl3": {
@@ -1792,6 +1842,13 @@
   "generated": "2026-09-03",
   "pdfs": [
    "Zhu et al., Adv. Funct. Mater. 2026, 36, e23442 — Supporting Information (스캔/이미지 PDF, 폰트 0개)"
+  ]
+ },
+ "ziemke2026_li3ocl_substitutional_defects": {
+  "figures": 5,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "122. arXiv_2609.12300_2026_Ziemke_Ab_initio_substitutional_defects_Li3OCl_MAIN.pdf"
   ]
  },
  "zuo2022_chlorination_cathode_interface": {
