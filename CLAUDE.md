@@ -176,7 +176,13 @@
   # urllib: headers={"X-API-KEY": KEY, "User-Agent": UA}   ← UA 를 반드시 준다
   curl -s -H "X-API-KEY: $MP_API_KEY" -H "accept: application/json" <url>   # curl UA 는 대개 통과
   ```
-  · gabia 의 **어느 conda env 에도 `mp_api` 가 없다** (dft·mace·mlipx·sevennet·uma 전부). stdlib REST 로 친다.
+  · ⛔ **정정 2026-09-22: `mp_api` 는 gabia 의 `uma` env 에 있다.** 종전 이 줄은 *"어느 conda env 에도
+    없다 (dft·mace·mlipx·sevennet·uma 전부)"* 라고 단언했는데 **틀렸다** — 실측:
+    `/data/apps/miniforge3/envs/uma/bin/python -c "import mp_api,pymatgen"` → **ok**.
+    나머지 넷(dft·mace·mlipx·sevennet)은 여전히 **없다**(전부 `ModuleNotFoundError` 확인).
+    ⇒ **MP·pymatgen 작업은 `uma` env 로 간다.** stdlib REST 는 그 env 를 못 쓸 때의 대안이지 기본이 아니다.
+    ⚠ 이 오기를 그대로 믿고 **한 번 우회 경로를 설계할 뻔했다** — env 하나만 물어보면 갈리는 것을
+    "전부 없다" 로 적어 둔 게 원인이다. **없다고 쓸 때는 어디까지 봤는지 같이 적는다.**
   · ⚠ **MP 가 id 를 옮기는 중이다** — `mp-1211324` 로 물으면 `mp-aaacqxxk` 가 돌아온다. 기록엔 둘 다 남긴다.
 - **desktop WSL**: ORCA r2SCAN-3c (SDCP 분자 계열).
 - 공통: 실행 스크립트에 pgrep 중복실행 가드, 출력 grep은 `grep -a`(NUL 오염 대비), watch 스크립트 관례 유지.
