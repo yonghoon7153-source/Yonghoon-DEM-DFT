@@ -126,6 +126,25 @@ def find_key_paths(obj, keys=_WANT, path='', out=None, _depth=0):
     return out
 
 
+#  ★ 사다리 — p99.8 이 못 닿아도 **더 얕은 백분위에서는 정확**하다.  두 전극을 같은
+#    백분위에서 나란히 놓으면 순서 주장("DBE 가 더 고르게 분산한다")을 재실행 없이
+#    검정할 수 있다.  여러 깊이에서 같은 순서면 그 주장은 깊이에 강건하다.
+QUANTILE_LADDER = (0.998, 0.999, 0.9995, 0.9999)
+
+
+def _value_at_quantile(vals_desc, n_total, q, hot_kept):
+    """장의 q-분위 값 → (값, 정확한가).  `numpy.percentile(linear)` 규약과 같게.
+
+    보존된 상위 `hot_kept` 안이면 **정확**, 밖이면 (상한, False) 를 준다."""
+    pos = q * (n_total - 1)
+    lo, frac = math.floor(pos), pos - math.floor(pos)
+    r_lo = n_total - lo                      # 내림차순 rank (1-기반)
+    r_hi = max(1, r_lo - 1)
+    if r_lo <= min(hot_kept, len(vals_desc)):
+        return vals_desc[r_lo - 1] + (vals_desc[r_hi - 1] - vals_desc[r_lo - 1]) * frac, True
+    return vals_desc[min(hot_kept, len(vals_desc)) - 1], False      # 단조성 → 상한
+
+
 def repair_channel(step3, fs_key, field_key, ndof_key, payload=None):
     """한 채널을 고친다 → dict(ok, reason, …).  payload 는 **바꾸지 않는다**.
 
@@ -165,6 +184,37 @@ def repair_channel(step3, fs_key, field_key, ndof_key, payload=None):
     n_cloud = len(vals)
     subsampled = n_cloud < n_total
     hot_kept = int(n_cloud * HOT_BUDGET_FRAC) if subsampled else n_cloud
+
+    #  ★★ 2026-09-22 — p99.8 이 못 닿아도 **이 둘은 항상 복원된다**.  거부 분기보다
+    #    앞에서 계산해 언제나 보고한다 (리뷰어 ②③ 이 요구한 것이 정확히 이것들이다).
+    #    ⓐ ⟨|J|⟩_cond : 배경 58,501 점이 나머지 모집단의 **균일추출**이라 그 평균이
+    #       불편추정이다 (픽스처 검증 +0.11 %).  ⇒ ⟨|J|⟩_cond/J_app 는 곧
+    #       전도상 단면분율의 역수 규모 = 리뷰어 ③ 이 표에 넣자고 한 값.
+    #    ⓑ 백분위 사다리 : 보존된 꼬리 안(≤ hot_kept)이면 **정확**하다.  두 전극을
+    #       같은 백분위에서 나란히 놓으면 순서 주장을 재실행 없이 검정할 수 있다
+    #       — 여러 깊이에서 순서가 같으면 그 주장은 깊이에 강건하다 (리뷰어 ②).
+    if subsampled and n_cloud > hot_kept:
+        _bg = vals[hot_kept:]
+        _mean_norm = (sum(vals[:hot_kept])
+                      + (sum(_bg) / len(_bg)) * (n_total - hot_kept)) / n_total
+    else:
+        _mean_norm = sum(vals) / len(vals)
+    mean_A = _mean_norm * float(j_top)
+    out['j_mean_local_A_cm2_per_V'] = mean_A
+    out['local_mean_over_j_app'] = mean_A / float(j_app)
+    out['n_total'] = n_total
+    out['n_cloud'] = n_cloud
+    out['hot_kept'] = hot_kept
+    out['deepest_quantile'] = 1.0 - hot_kept / n_total
+    ladder = {}
+    for _q in QUANTILE_LADDER:
+        _v, _exact = _value_at_quantile(vals, n_total, _q, hot_kept)
+        _vA = _v * float(j_top)
+        ladder[_q] = {'exact': _exact,
+                      'focus_over_j_app': _vA / float(j_app),
+                      'focus_over_local_mean': _vA / max(mean_A, 1e-30)}
+    out['ladder'] = ladder
+
     need = _rank_for(n_total)
     if need > hot_kept:
         #  ★★ 점 추정은 못 해도 **엄밀한 상한**은 낸다 (2026-09-22, N=26.4 M 실물에서).
@@ -205,16 +255,7 @@ def repair_channel(step3, fs_key, field_key, ndof_key, payload=None):
                focus_top_as_published=focus_pub,
                focus_top_repaired=focus_rep,
                overstatement=(focus_pub / focus_rep) if focus_rep else None)
-    #  ⟨|J|⟩ 는 상위 hot 전수 + 균일 배경의 가중평균으로 복원된다 (배경이 균일추출이므로
-    #  그 평균이 나머지 모집단의 불편추정).  ⚠ 점군이 전수면 그냥 평균이다.
-    if subsampled and n_cloud > hot_kept:
-        bg = vals[hot_kept:]
-        mean_norm = (sum(vals[:hot_kept]) + (sum(bg) / len(bg)) * (n_total - hot_kept)) / n_total
-    else:
-        mean_norm = sum(vals) / len(vals)
-    mean_A = mean_norm * float(j_top)
-    out['j_mean_local_A_cm2_per_V'] = mean_A
-    out['local_mean_over_j_app'] = mean_A / float(j_app)
+    #  ⟨|J|⟩ 는 위에서 이미 복원했다 (거부 분기보다 앞).  여기선 비만 붙인다.
     out['focus_over_local_mean'] = p998_A / mean_A if mean_A else None
     out['markov_ok'] = bool(out['focus_over_local_mean'] is not None
                             and out['focus_over_local_mean'] <= 500.0 + 1e-9)
@@ -245,6 +286,37 @@ def apply_to_payload(payload, results):
                         'j_top_A_cm2_per_V 로 곱해 읽지 말고 j_top_as_published 를 쓸 것.')
         fs['j_top_as_published_A_cm2_per_V'] = float(f"{r['j_top_as_published_A_cm2_per_V']:.4g}")
     return payload
+
+
+def _flat(path, r):
+    """CSV 한 행 — 사다리를 q 별 열로 편다 (중첩 dict 는 CSV 가 못 쓴다)."""
+    row = {'payload': path, **{k: v for k, v in r.items()
+                               if k not in ('reason', 'ladder')}}
+    for q, d in (r.get('ladder') or {}).items():
+        tag = f'q{100 * q:g}'.replace('.', '_')
+        row[f'{tag}_over_j_app'] = d['focus_over_j_app']
+        row[f'{tag}_over_local_mean'] = d['focus_over_local_mean']
+        row[f'{tag}_exact'] = d['exact']
+    return row
+
+
+def _print_recovered(r):
+    """거부·성공 양쪽에서 **항상** 나오는 복원값 — 리뷰어 ②③ 이 요구한 것."""
+    if 'local_mean_over_j_app' not in r:
+        return
+    print(f"   {'':<16} ⟨|J|⟩_cond = {r['j_mean_local_A_cm2_per_V']:.5g} A/cm²  ·  "
+          f"⟨|J|⟩_cond / J_app = {r['local_mean_over_j_app']:.4f}   "
+          f"[전도상 단면분율의 역수 규모]")
+    lad = r.get('ladder') or {}
+    if lad:
+        print(f"   {'':<16} 백분위 사다리 (접근 가능한 가장 깊은 곳 "
+              f"= {100 * r['deepest_quantile']:.4f} %):")
+        print(f"   {'':<16}   {'q':>9} {'J_q/J_app':>12} {'J_q/⟨|J|⟩_cond':>16}  정확?")
+        for q in sorted(lad):
+            d = lad[q]
+            print(f"   {'':<16}   {100 * q:>8.2f}% {d['focus_over_j_app']:>12.4g} "
+                  f"{d['focus_over_local_mean']:>16.4g}  "
+                  f"{'정확' if d['exact'] else '상한'}")
 
 
 def run(paths, write=False, csv_out=None):
@@ -295,9 +367,9 @@ def run(paths, write=False, csv_out=None):
         for r in res:
             if not r['ok']:
                 print(f"   {r['channel']:<16} ⛔ {r['reason']}")
+                _print_recovered(r)
                 if 'focus_top_upper_bound' in r:      # 점 추정은 없어도 상한은 남긴다
-                    rows.append({'payload': p, **{k: v for k, v in r.items()
-                                                  if k != 'reason'}})
+                    rows.append(_flat(p, r))
                 continue
             if r.get('noop'):
                 print(f"   {r['channel']:<16} ✅ {r['reason']}")
@@ -307,10 +379,10 @@ def run(paths, write=False, csv_out=None):
                   f"({r['overstatement']:.2f}× 과대)")
             print(f"   {'':<16} N {r['n_total']:,} · 점군 {r['n_cloud']:,} · "
                   f"참 rank {r['rank_needed']:,} ≤ 보존 {r['hot_kept']:,}")
-            print(f"   {'':<16} ⟨|J|⟩/J_app {r['local_mean_over_j_app']:.3f} · "
-                  f"p99.8/⟨|J|⟩ {r['focus_over_local_mean']:.1f} "
+            print(f"   {'':<16} p99.8/⟨|J|⟩_cond {r['focus_over_local_mean']:.1f} "
                   f"(Markov 500 {'통과' if r['markov_ok'] else '★위반 — 버그'})")
-            rows.append({'payload': p, **{k: v for k, v in r.items() if k != 'reason'}})
+            _print_recovered(r)
+            rows.append(_flat(p, r))
         if write and any(x.get('ok') and not x.get('noop') for x in res):
             apply_to_payload(payload, res)
             with open(p, 'w', encoding='utf-8') as fh:
@@ -413,6 +485,26 @@ def _selftest():
     ok &= e2b
     print(f"repair-mean: ⟨|J|⟩ 복원 {r.get('j_mean_local_A_cm2_per_V', 0):.6g} vs "
           f"{truth_mean:.6g} (≤2 %)  {'OK' if e2b else 'FAIL'}")
+    # 사다리 — 접근 가능한 백분위에서 **참값과 같은가** · 밖이면 상한인가
+    _lad_ok = True
+    for _q in QUANTILE_LADDER:
+        _got, _exact = _value_at_quantile(sorted(cloud, reverse=True), n_total, _q, hot)
+        _pos = _q * (n_total - 1)
+        _lo, _fr = math.floor(_pos), _pos - math.floor(_pos)
+        _rl = n_total - _lo
+        _true = full[_rl - 1] + (full[max(1, _rl - 1) - 1] - full[_rl - 1]) * _fr
+        if _exact:
+            _lad_ok &= abs(_got - _true) <= 1e-9 * max(_true, 1e-30)
+        else:
+            _lad_ok &= _got >= _true - 1e-12             # 단조성 → 상한
+    ok &= _lad_ok
+    print(f"ladder-exact-or-bound: 접근 가능한 q 는 참값과 같고 밖은 상한이다  "
+          f"{'OK' if _lad_ok else 'FAIL'}")
+    _deep = _value_at_quantile(sorted(cloud, reverse=True), n_total, 0.5, hot)
+    e_deep = (not _deep[1]) and _deep[0] >= full[hot - 1] - 1e-12
+    ok &= e_deep
+    print(f"ladder-deep-refuses: 보존 밖(q=0.5)은 '정확' 이라고 말하지 않는다  "
+          f"{'OK' if e_deep else 'FAIL'}")
     # 거부 ①: 예산이 너무 작아 참 rank 가 보존 밖
     small = {'n_dof': 5_000_000,
              'field_scale_e': step3['field_scale_e'],
