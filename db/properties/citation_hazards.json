@@ -207,7 +207,8 @@
     ]
    },
    "⚠_금지_밖_명시": "`oxidation_limit_V`(2.256) 와 `ocv_self_decomposition_V`(1.717) **두 값 자체는 이 위험이 아니다.** 틀린 것은 **둘을 빼는 방식**과 `reduction_limit_V` 라는 **이름**이다. 값과 라벨을 같이 금지하면 고칠 재료까지 막힌다.",
-   "관련": "litdb/papers/schwietert2021_intrinsic_vs_decomposition_window_sse.md §7 · tools/oxidation/esw_cascade_batch.py:417-421 · tools/oxidation/constrained_esw.py:91-94 · db/properties/esw_lis4excluded.json"
+   "관련": "litdb/papers/schwietert2021_intrinsic_vs_decomposition_window_sse.md §7 · tools/oxidation/esw_cascade_batch.py:417-421 · tools/oxidation/constrained_esw.py:91-94 · db/properties/esw_lis4excluded.json",
+   "⚠_문헌_관례는_일관된다_다만_독립은_아니다": "**우리만 다르게 하고 있다** 는 근거로 쓸 수 있는 외부 표본이 셋이다 — ① `[Zhu15]` (원전, 창 0.30 V) ② `[Schw21]` *JACS Au* **1**, 1488 이 정의를 활자로 준다: *\"the decomposition potential **closest to the stable solid electrolyte phase** defines the reduction and oxidation redox potentials\"* (= Li 교환이 0 에서 벗어나기 시작하는 두 전압) ③ `[Sjolin23]` (`litdb/papers/sjolin2023_accelerated_workflow_antiperovskite_sse.md`) 가 ESW 를 **\"hull 위에 머무는 μ 구간\"** 으로 정의한다 — 우리 `evolution == 0` 구간과 같은 것이다. ⚠ **다만 셋은 독립 검증이 아니다** — 전부 Zhu 2015 계보이고 `[Schw21]` 은 그 창을 **명시적으로 재현**한다. 그래서 이건 *'관례가 일관된다 + 우리만 어긋난다'* 의 근거이지 *'세 번이 독립으로 맞았다'* 가 아니다. ⚠ 그리고 그 관례 자체도 느슨하다 — `[Sjolin23]` 은 창을 **두 겹으로 넓히고도**(알칼리 산화물 제외 + E_hull 만큼 인하) 실험의 **1/4** 밖에 못 맞췄다(2.52 vs 10 V). ⇒ 라벨을 고치는 근거로는 충분하지만, **고친 값이 실험과 맞을 것이라는 근거는 아니다.**"
   },
   {
    "file": "litdb/papers/barai2021_delamination_cathode_llzo_multiscale.md",
