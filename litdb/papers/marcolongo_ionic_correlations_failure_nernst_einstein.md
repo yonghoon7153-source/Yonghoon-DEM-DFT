@@ -631,7 +631,7 @@ Li 밀도 등가면의 isovalue 가 본문·캡션·SI 어디에도 없다. 임�
 
 | 위치 | 내용 |
 |---|---|
-| **`comparison_vs_ours.md` §J `🔧 방법 원전`** (번호는 병합자 배정) | **주 등재.** Haven 부호·GK vs Einstein·MSD 창·NVE vs Langevin·골격 기준계 — **방법과 판정만**. 물성 수치 행 없음 |
+| **`comparison_vs_ours.md` §J-31 `🔧 방법 원전`** (병합 2026-09-22) | **주 등재.** Haven 부호·GK vs Einstein·MSD 창·NVE vs Langevin·골격 기준계 — **방법과 판정만**. 물성 수치 행 없음 |
 | **`comparison_vs_ours.md` §H (정직 목록)** | **한 줄**: *"우리 계(아르지로다이트)에서 H_R 을 닫은 적이 없다"* + 보강책 |
 | **`kb/concepts/md.md` §6** | 🔵 **한 줄 추가 후보** (사람이 결정): 2026-09-07 정정의 **외부 원전**이 생겼다 |
 | **`db/properties/haven_ratio_measured_2026_09_07.json`** | 🔵 **비교 맥락 추가 후보** (사람이 결정): 고체 H_R 분포에 LGPS FPMD 0.42 를 문맥값으로. ⛔ **우리 측정값은 손대지 않는다** |
