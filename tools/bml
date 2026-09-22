@@ -2999,6 +2999,22 @@ tunnel_verify_by_ip() {
 tunnel_block_layer() {
   local host
   host="$(url_host "${1:-}")" || { printf 'unknown'; return; }
+
+  # **저쪽이 대답했으면 끊긴 곳은 없다.**  이 함수의 나머지는 *어디서 끊겼나*
+  # 를 짚는 것인데, 확정 HTTP 코드가 왔다는 것은 DNS·TCP·TLS·HTTP 가 **끝까지
+  # 다 됐다**는 뜻이다.  그런데 아래 검사는 TLS 를 걸어 보지 않고 TCP 가 붙으면
+  # `tls` 를 찍는다 -- 짐작이다.  그 짐작이 화면에서 "이 망의 장비가 끊는
+  # 것으로 보입니다" 가 되고, 사람은 멀쩡한 망을 의심하며 다른 망을 찾아간다.
+  #
+  # 실측 2026-09-22: VPS 가 HTTP 502 를 냈는데(= nginx 는 살아 있고 그 뒤의
+  # 터널이 안 붙은 것) 화면은 "망의 장비가 도메인을 보고 끊는 신호" 를 찍었다.
+  # 사용자는 그 VPS 에 ssh 로 멀쩡히 들어가 있었다.
+  local code; code="$(http_code_of "${1:-}" 4)"
+  case "$code" in
+    ''|000) : ;;
+    *) printf 'http'; return ;;
+  esac
+
   if command -v getent >/dev/null 2>&1; then
     # **아니라고 답하는 것과 멎는 것은 다르다.**  이 랩의 resolver 는 멎는다:
     # `getent` 가 한 번은 되고 다음 번엔 안 되고, curl 은 "못 찾음"(6)이 아니라
@@ -3032,6 +3048,7 @@ tunnel_block_layer() {
 block_layer_meaning() {
   local alive="${2:-}"
   case "$1" in
+    http) printf '저쪽이 HTTP 로 대답했습니다 — 이름도 TLS 도 다 됐고, 막힌 곳은 없습니다' ;;
     dns) if [ -n "$alive" ]; then
            printf '이름을 못 찾습니다 — 터널 프로그램은 살아 있으니, 이 기계의 DNS 가 그 도메인을 거르는 쪽이 유력합니다 (랩 DNS 가 터널 도메인을 막는 일이 흔합니다)'
          else
@@ -3130,10 +3147,22 @@ write_env_key() {
 #: bml share" 를 시킨다 — 열지도 않은 터널을 닫으라는 말이다.  우리가 쓰는
 #: 제공자의 도메인만 그 절차로 보낸다.
 is_our_tunnel_url() {
-  local h d; h="$(url_host "${1:-}")" || return 1
+  local h d v; h="$(url_host "${1:-}")" || return 1
   case "$h" in
     *.lhr.life|*.localhost.run|*.trycloudflare.com) return 0 ;;
   esac
+  # **우리 VPS 도 우리 터널이다** (ADR 0034).  안 넣으면 그 주소가 502 를 낼 때
+  # 확정 갈래(터널이 끊겼나 / 서버가 내려갔나)로 못 가고, 화면이 "망이 막는다"
+  # 쪽으로 새어 나간다 -- 실측 2026-09-22 에 그랬다.
+  #
+  # `sslip.io` 는 주소를 이름으로 만들어 주는 서비스라 `193-123-161-75.sslip.io`
+  # 가 곧 `193.123.161.75` 다.  점을 빼고 견주면 둘이 같은 것으로 잡힌다.
+  if v="$(vps_host_only)"; then
+    [ "$h" = "$v" ] && return 0
+    case "$h" in
+      "${v//./-}".sslip.io|"${v//./-}".*.sslip.io) return 0 ;;
+    esac
+  fi
   # 우리 도메인으로 열었으면 그것도 우리 터널이다.  안 넣으면 그 주소가 안
   # 열릴 때 화면이 LAN 안내(방화벽·포트포워딩)를 주는데, 터널에는 아무 상관이
   # 없는 것들이라 확인하느라 시간만 쓴다.
@@ -3211,7 +3240,11 @@ server_unreachable_help() {
       # 찾았습니다" 라고 하면, 바로 위에 찍힌 curl 의 말과 정반대가 된다.
       local seen_layer=""
       [ -n "$uhost" ] && seen_layer="$(tunnel_block_layer "$url")"
-      if [ "$seen_layer" = "tls" ] || [ "$seen_layer" = "tcp" ]; then
+      if [ "$seen_layer" = "http" ]; then
+        # 저쪽이 대답했다.  막힌 곳이 없으므로 망 얘기를 하지 않는다.
+        say "  ${B}저쪽이 대답은 합니다${OFF} ${DIM}($(block_layer_meaning http))${OFF}"
+        say "  ${DIM}그 주소 뒤의 서버나 터널 쪽 문제입니다 — 중추 서버에서${OFF} ${GREEN}bml status${OFF}${DIM}.${OFF}"
+      elif [ "$seen_layer" = "tls" ] || [ "$seen_layer" = "tcp" ]; then
         say "  ${B}이름은 풀렸는데 그 뒤에서 끊깁니다${OFF} ${DIM}($(block_layer_meaning "$seen_layer"))${OFF}"
         say "  ${DIM}이 망의 장비가 도메인을 보고 끊는 신호입니다 — 이름을 IP 로 바꿔 줘도${OFF}"
         say "  ${DIM}같은 이름으로 TLS 를 걸기 때문에${OFF} ${GREEN}bmlonly${OFF} ${DIM}도 안 됩니다.${OFF}"
@@ -3335,6 +3368,10 @@ server_unreachable_help() {
       xhost="$(url_host "$url" 2>/dev/null)" || xhost=""
       [ -n "$xhost" ] && xlayer="$(tunnel_block_layer "$url")"
       case "$xlayer" in
+        http)
+          say "  ${B}저쪽이 대답은 합니다${OFF} ${DIM}($(block_layer_meaning http))${OFF}"
+          say "  ${DIM}막힌 곳이 아니라 그 주소 뒤의 서버·터널 쪽입니다 — 중추 서버에서${OFF} ${GREEN}bml status${OFF}${DIM}.${OFF}"
+          ;;
         tls|tcp)
           say "  ${B}이름은 풀렸는데 그 뒤에서 끊깁니다${OFF} ${DIM}($(block_layer_meaning "$xlayer"))${OFF}"
           say "  ${DIM}이 망의 장비가 도메인을 보고 끊는 신호입니다 — 이름을 IP 로 바꿔 줘도${OFF}"
@@ -4000,6 +4037,17 @@ KEEPALIVE
 #: 우리 VPS.  `.bml/env` 의 `WORKBENCH_VPS` — `사용자@호스트[:포트]`.
 #:
 #: 여기가 붙으면 나머지 길은 안 탄다.  주소가 우리 것이고 안 바뀌기 때문이다.
+#: `WORKBENCH_VPS` 의 호스트 부분만 (`사용자@호스트[:포트]` → `호스트`).
+#: 안 적어 뒀으면 1.
+vps_host_only() {
+  local target="${WORKBENCH_VPS:-}" host
+  [ -n "$target" ] || return 1
+  host="${target##*@}"
+  host="${host%%:*}"
+  [ -n "$host" ] || return 1
+  printf '%s' "$host"
+}
+
 tunnel_vps() {
   local target="${WORKBENCH_VPS:-}"
   [ -n "$target" ] || return 1

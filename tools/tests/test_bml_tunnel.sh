@@ -1540,6 +1540,64 @@ check "이름표는 프로세스마다 한 번" \
   "$(grep -c '^INSTANCE = secrets.token_hex' "$HERE/../../apps/api/app/main.py")" "1"
 
 echo
+#: 아래 갈래들은 `bml` 을 서브셸에서 다시 읽어 함수를 갈아끼운다 — 이 파일이
+#: 위에서 이미 읽어 둔 것을 건드리면 뒤따르는 시험이 그 가짜를 쓴다.
+BML="$HERE/../bml"
+LAYERTMP="$(mktemp -d)"
+trap 'rm -rf "$LAYERTMP"' EXIT
+
+echo "저쪽이 대답했으면 막힌 곳이 아니다"
+#: 실측 2026-09-22.  VPS 가 HTTP 502 를 냈는데 (= nginx 는 살아 있고 그 뒤의
+#: 터널이 안 붙은 것) 화면은 "이 망의 장비가 도메인을 보고 끊는 신호입니다" 를
+#: 찍었다.  사용자는 바로 그 VPS 에 ssh 로 들어가 있었다 — 막힌 것이 없었다.
+#:
+#: 원인은 `tunnel_block_layer` 가 **TLS 를 걸어 보지 않고** TCP 가 붙으면
+#: `tls` 를 찍는 것이었다.  확정 HTTP 코드는 DNS·TCP·TLS·HTTP 가 끝까지 다
+#: 됐다는 뜻이라, 그 짐작보다 앞선다.
+(
+  BML_SOURCE_ONLY=1 . "$BML"
+  http_code_of() { printf '502'; }
+  printf '%s' "$(tunnel_block_layer https://example.test)"
+) > "$LAYERTMP/layer502" 2>/dev/null
+check "HTTP 502 는 'http' — 층 짐작을 덮는다" "$(cat "$LAYERTMP/layer502")" "http"
+
+(
+  BML_SOURCE_ONLY=1 . "$BML"
+  http_code_of() { printf '000'; }
+  url_host() { printf 'no-such-host.invalid'; }
+  printf '%s' "$(tunnel_block_layer https://no-such-host.invalid)"
+) > "$LAYERTMP/layer000" 2>/dev/null
+check "코드가 없으면 예전 길 그대로" "$(cat "$LAYERTMP/layer000")" "dns"
+
+(
+  BML_SOURCE_ONLY=1 . "$BML"
+  printf '%s' "$(block_layer_meaning http)"
+) > "$LAYERTMP/mean" 2>/dev/null
+case "$(cat "$LAYERTMP/mean")" in
+  *"막힌 곳은 없습니다"*) pass=$((pass+1)); echo "  ok   그 뜻을 '막힌 곳은 없습니다' 로 적는다" ;;
+  *) fail=$((fail+1)); echo "  FAIL 'http' 의 뜻이 막힌 곳이 없다고 말하지 않는다" ;;
+esac
+
+echo
+echo "우리 VPS 주소도 우리 터널이다"
+#: 안 그러면 502 가 왔을 때 확정 갈래(터널이 끊겼나 / 서버가 내려갔나)로 못
+#: 가고, 화면이 망 탓을 하는 쪽으로 새어 나간다.  `sslip.io` 는 주소를 이름으로
+#: 만들어 주므로 `193-123-161-75.sslip.io` 가 곧 `193.123.161.75` 다.
+vps_says() {
+  (
+    BML_SOURCE_ONLY=1 . "$BML"
+    WORKBENCH_VPS="$1"
+    if is_our_tunnel_url "$2"; then printf 'yes'; else printf 'no'; fi
+  ) 2>/dev/null
+}
+check "sslip.io 로 쓴 우리 VPS"   "$(vps_says 'ubuntu@193.123.161.75' 'https://193-123-161-75.sslip.io')" "yes"
+check "IP 로 쓴 우리 VPS"   "$(vps_says 'ubuntu@193.123.161.75' 'https://193.123.161.75')" "yes"
+check "포트를 붙여 적어 뒀어도"   "$(vps_says 'ubuntu@193.123.161.75:443' 'https://193-123-161-75.sslip.io')" "yes"
+#: 오타에 대고 "터널을 다시 여세요" 를 시키면 안 된다 (Codex 리뷰 12번의 자리).
+check "남의 주소는 우리 터널이 아니다"   "$(vps_says 'ubuntu@193.123.161.75' 'https://typo.example.invalid')" "no"
+check "VPS 를 안 적어 뒀으면 모른다"   "$(vps_says '' 'https://193-123-161-75.sslip.io')" "no"
+
+echo
 if [ "$fail" -eq 0 ]; then
   printf '결과: %d개 통과\n' "$pass"
   exit 0
