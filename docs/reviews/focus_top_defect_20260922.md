@@ -672,12 +672,11 @@ ssh v100 'for d in sbe dbe; do echo "== $d =="; cd ~/runyourai/1/rerun/$d && \
 | | `phase` | `fibre` | `fibre_dia` | `metrics_json` |
 |---|---|---|---|---|
 | **SBE** (봉인 매니페스트 대조) | `601a887701420ea3` ✅ | `bf5ff65dd265d540` ✅ | `95d320717868a4d0` ✅ | `7b81d62524b74fca` ✅ |
-| **DBE** | `ec903b552319a935` ✅ | `ec20195cc44297d4` ★ | `b164870ad1b3f960` ★ | `17fd3a6d612768a6` ★ |
+| **DBE** | `ec903b552319a935` ✅ | `ec20195cc44297d4` ✅ | `b164870ad1b3f960` ✅ | `17fd3a6d612768a6` ✅ |
 
-★ = **이번에 처음 기록되는 값**.  DBE 는 §I 표에 `phase` 지문만 있었다 (나머지 셋은 DBE
-`meta.json` 을 안 열어 봐서 대조 기준이 없다).  ⇒ 이 세 값은 **대조가 아니라 측정**이다 —
-DBE 의 침대 동일성은 `phase` 일치 + `--expect-physics` 계약검사 + **σ_e 소수점 재현**이 닫는다.
-DBE `meta.json` 의 `input_digest` 표를 나중에 열게 되면 여기에 대조를 추가할 것.
+⚠ **갱신 2026-09-22 밤** — 초판은 DBE 셋을 *"대조가 아니라 측정"* 으로 적었다 (§I 표에
+`phase` 지문만 있었기 때문).  그 뒤 DBE `meta.json.mpm_metrics.step3.manifest` 를 열어
+`input_files` 표를 확보했고 **넷 다 일치**한다 (§J-6).  ⇒ 이제 **대조**다.
 
 ### I-7-c. ⛔ 실행 **전** 관문 (셋 다 통과해야 한다)
 
@@ -838,3 +837,79 @@ focus_over_local_mean(ion) = 3.8        local_mean_over_j_app(ion) = 3.054
   (`webapp/mpm_lab/260714_145738_778fa4_f79b67/`, 저자 기계) 하나뿐이다.
 - ⬜ Figure S14/S15 재정규화 (e · ion · 열류 · joule 넷 다 `full_field` 기준으로)
 - ⬜ §H 회신문의 이온 문단 교체 · 본문 인용값 교체
+
+## J-6. DBE 봉인 매니페스트 — **팔 `.sh` 가 함정이었던 것이 확정됐다**
+
+출처: `webapp/mpm_lab/260714_145738_778fa4_f79b67/{meta,payload}.json` 의
+`/mpm_metrics/step3/manifest` (둘이 동일 내용).  저자 기계에서 읽었다.
+
+### J-6-a. 네 축이 팔 `.sh` 와 다르다 — 베꼈으면 전부 틀렸다
+
+| 축 | **매니페스트 (정본)** | `p2_DBE_sph_a0.768021.sh` (팔) |
+|---|---|---|
+| `vox_um` | **0.15** | `--step3-vox 0.125` ❌ |
+| `sigma_vgcf_S_cm` | **78.5398** | `--sigma-vgcf 113.097` ❌ |
+| `sdcp_bridge_um` | **0.0** (= 플래그 없음) | `--step3-sdcp-bridge 0.01` ❌ |
+| `sigma_ion_sdcp_S_cm` | **0.001** | `--sigma-ion-sdcp 0` ❌ |
+
+★ σ_VGCF 는 **vox 에 묶인 유도량**이다 (직경보존 재척도 `100·π(0.15)²/(4·vox²)`):
+vox 0.15 → 78.5398, vox 0.125 → 113.097.  둘 다 자기 격자에 대해 정확하므로 값만 보고는
+어느 쪽이 원고인지 못 가린다 — **매니페스트를 봐야** 갈린다.
+
+⚠ 그리고 팔 파일 34개는 **30가지 서로 다른 해시**다 (`md5sum … | sort | uniq -c` 실측).
+"같은 팔의 재실행" 이 아니라 **설정이 다른 팔들**이므로, 아무거나 하나 열어 보는 것은
+표본추출이지 확인이 아니다.
+
+### J-6-b. 나머지는 SBE 와 **전부 같다**
+
+`bridge_um 0.48 (explicit)` · `dilate_z 1.0719` · `plate_z_grid_um [0.0, 72.534]` ·
+`ptfe_stamp centerline` · `fibre_stamp segment` · `sdcp_stamp sphere (d 0.3)` ·
+`sdcp_yield_to_vgcf false` · `periodic_xy false` · `plate_rule p2-occupied-surface-first` ·
+σ 세트 전부 (SDCP 250 · PTFE 0 · SuperP 10 · SWCNT 100 · AM_S 0.01 · AM_P 0.005 ·
+SE_ion 0.003 · SDCP_ion 0.001) · `field_requested true` · `electronic/ionic_field_pts 90000` ·
+`code_sha 657c2192` · `physics_protocol_id p2-9cd29a0c61085621` · 집전체/열/pore/pnm **disabled**.
+
+⇒ **`--expect-physics` 문자열이 SBE 와 글자 하나 다르지 않다.**
+
+`input_digest` 는 당연히 다르다 (`d1022e090ab625a9` vs SBE `04b5a565ff4069f4`) — 침대가
+다르니 그래야 맞다.  `scaffold` 지문만 **같다** (`6184147f573f021d`) = 두 전극이 **같은 AM
+골격** 위에 세워졌다는 뜻이고, 이것이 SBE↔DBE 비교가 성립하는 근거다.
+
+### J-6-c. DBE 실행 명령 — SBE 에서 **네 곳만** 바뀐다
+
+```bash
+ssh v100
+cat > ~/runyourai/1/rerun/dbe/run_self45_dbe.sh <<'SH'
+#!/bin/bash
+E=/home/ubuntu/runyourai/1/opt/miniforge3/envs/uma/bin
+REPO=/home/ubuntu/runyourai/1/Yonghoon-DEM-DFT
+cd /home/ubuntu/runyourai/1/rerun/dbe || exit 9
+$E/python $REPO/scripts/mpm_webapp_payload.py \
+  --se se_dump.npy --scaffold am_scaffold.csv --se-dump se_scaffold.csv \
+  --n-vox 192 --tri-step 4 --smooth 1.5 --target-porosity 0.0759 --eps se_dump_eps.npy \
+  --dilate-z 1.0719 --void-max 180000 --step3-vox 0.4 --field-max-points 90000 --step3-gpu \
+  --joule-heat --metrics-json mpm_metrics.json --case 260714_145738_778fa4 \
+  --phase phase.npy --fibre fibre.npy --fibre-dia fibre_dia.npy \
+  --collector-rint 46 --collector-name bare_Al+DBE_electrode --collector-scenario dbe \
+  --save-step4-grid step4_grid_SELF45_DBE.npz \
+  --step3-fibre-stamp segment --sigma-vgcf 78.5398 --step3-vox 0.15 --step3-bridge-um 0.48 \
+  --step3-origin-shift 0 0 0 --step3-sdcp-sphere-d 0.30 --ptfe-stamp centerline \
+  --step3-require-gpu \
+  --expect-physics vox_um=0.15,bridge_um=0.48,sigma_vgcf_S_cm=78.5398,fibre_stamp=segment,sdcp_stamp=sphere,sdcp_yield_to_vgcf=False,periodic_xy=False,ptfe_stamp=centerline \
+  --sigma-ion-sdcp 0.001 --sigma-ion-se 0.003 \
+  --no-step4 --no-thermal --no-trackb --no-pore --no-collector \
+  --out payload_SELF45_DBE.json
+echo "EXIT_RC=$?"
+SH
+chmod +x ~/runyourai/1/rerun/dbe/run_self45_dbe.sh
+nohup ~/runyourai/1/rerun/dbe/run_self45_dbe.sh > ~/runyourai/1/rerun/dbe/run_SELF45_DBE.log 2>&1 &
+echo "PID=$!"
+```
+
+바뀐 네 곳: 작업 디렉터리 · `--collector-rint 46` · `--collector-name/--collector-scenario` ·
+출력 두 개(`--save-step4-grid`, `--out`).  ⛔ **`--step3-sdcp-bridge` 를 넣지 말 것**
+(매니페스트 `sdcp_bridge_um: 0.0`) · ⛔ **`--step3-maxiter` 도 넣지 말 것**
+(팔 파일의 200000 은 vox 0.125 의 악조건 때문이고, 매니페스트에 기록이 없다.  SBE 는 기본값으로
+`resid 9.9e-09` 에 수렴했다.  수렴 실패는 `cg_info`·σ_e 재현 실패로 **스스로 드러난다**).
+
+수용 판정: `σ_e = 0.0714004401030127` (상대편차 ≤1e-10).
