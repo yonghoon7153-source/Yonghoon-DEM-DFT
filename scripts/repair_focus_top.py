@@ -34,10 +34,13 @@
 
 ## 쓰는 법
 
-    python3 scripts/repair_focus_top.py <payload.json> [...]           # 보고만
-    python3 scripts/repair_focus_top.py <payload.json> --write         # 제자리 수정
-    python3 scripts/repair_focus_top.py <dir> --glob 'mpm_payload*.json' --csv out.csv
+    python3 scripts/repair_focus_top.py PAYLOAD.json [PAYLOAD2.json ...]   # 보고만
+    python3 scripts/repair_focus_top.py PAYLOAD.json --write               # 제자리 수정
+    python3 scripts/repair_focus_top.py DIR --csv out.csv                  # 트리 전체
     python3 scripts/repair_focus_top.py --selftest
+
+⚠ 웹앱이 쓰는 파일 이름은 `payload.json`(`webapp/mpm_lab/<case>/payload.json`) 이고
+  킷 러너가 내는 것은 `mpm_payload.json` 이다 — 기본 glob 이 **둘 다** 잡는다.
 
 `--write` 는 `field_scale_*` 에 `focus_top_repaired` · `focus_over_local_mean` ·
 `percentile_basis` 등을 **추가**하고 원래 `focus_top` 은 `focus_top_as_published` 로
@@ -52,8 +55,15 @@ import os
 import sys
 
 HOT_BUDGET_FRAC = 0.35                      # step3_sigma.field_point_cloud 의 기본값
-_CH = (('e', 'field_scale_e', 'elec_field', 'n_dof'),
-       ('ion', 'field_scale_ion', 'ion_field', 'ion_n_dof'))
+#  ★★ 2026-09-22 — **실제 직렬화 키를 쓴다.**  초판은 생산자의 *지역 변수* 이름
+#    (`elec_field`·`ion_field`)을 적었고 그 둘은 payload 에 **없다**.  실물 키는
+#    `mpm_webapp_payload.py:3189-3190` 의 `electronic_field`·`ionic_field` 이고,
+#    `step3` 안이 아니라 **payload 최상위**에 있다 (`field_scale_*` 만 step3 안).
+#    그대로 뒀으면 모든 실제 payload 에서 "점군 없음" 으로 **거짓 거부**했다 —
+#    fail-closed 라 틀린 숫자는 안 나오지만 도구가 무용지물이 된다.
+#    ⇒ 아래 `_selftest_keys()` 가 생산자 소스를 AST 로 읽어 이 이름들을 **대조**한다.
+_CH = (('e', 'field_scale_e', 'electronic_field', 'n_dof'),
+       ('ion', 'field_scale_ion', 'ionic_field', 'ion_n_dof'))
 
 
 def _rank_for(n_total):
@@ -82,10 +92,15 @@ def _p998_from_cloud(vals_desc, n_total):
     return v_lo + (v_hi - v_lo) * frac
 
 
-def repair_channel(step3, fs_key, field_key, ndof_key):
-    """한 채널을 고친다 → dict(ok, reason, …).  payload 는 **바꾸지 않는다**."""
+def repair_channel(step3, fs_key, field_key, ndof_key, payload=None):
+    """한 채널을 고친다 → dict(ok, reason, …).  payload 는 **바꾸지 않는다**.
+
+    `field_scale_*` 는 `step3` 안에, 점군(`electronic_field`·`ionic_field`)은 payload
+    **최상위**에 있다.  `payload` 를 안 주면 `step3` 안에서도 찾아본다 (잘라낸 블록 대응)."""
     fs = step3.get(fs_key)
     field = step3.get(field_key)
+    if field is None and payload is not None:
+        field = payload.get(field_key)
     out = {'channel': fs_key, 'ok': False, 'reason': None}
     if not fs:
         out['reason'] = f'{fs_key} 없음'
@@ -194,7 +209,7 @@ def run(paths, write=False, csv_out=None):
         step3 = payload.get('step3') if isinstance(payload.get('step3'), dict) else None
         if step3 is None:
             step3 = payload if ('field_scale_e' in payload or 'field_scale_ion' in payload) else {}
-        res = [repair_channel(step3, fsk, fk, nk) for _, fsk, fk, nk in _CH]
+        res = [repair_channel(step3, fsk, fk, nk, payload=payload) for _, fsk, fk, nk in _CH]
         print(f'\n── {p}')
         for r in res:
             if not r['ok']:
@@ -227,9 +242,55 @@ def run(paths, write=False, csv_out=None):
     return 1 if bad else 0
 
 
+def _selftest_keys():
+    """★ 계약 — 우리가 찾는 키가 **생산자가 실제로 직렬화하는 키**인가 (AST 대조).
+
+    왜: 초판은 `mpm_webapp_payload` 의 *지역 변수* 이름 `elec_field`·`ion_field` 를 적었는데
+    실제 직렬화 키는 `electronic_field`·`ionic_field` 다.  합성 payload 만으로 도는 selftest 는
+    **내가 지은 이름을 나에게 다시 물어보는 것**이라 이 실수를 영원히 통과시킨다 (규율 ⑤).
+    ⇒ 생산자 소스를 파싱해 **payload 조립 dict 의 문자열 키**를 직접 본다."""
+    import ast
+    ok = True
+    src_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mpm_webapp_payload.py')
+    tree = ast.parse(open(src_path, encoding='utf-8').read())
+    dicts = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Dict):
+            keys = {k.value for k in node.keys
+                    if isinstance(k, ast.Constant) and isinstance(k.value, str)}
+            if keys:
+                dicts.append(keys)
+    asm = [d for d in dicts if 'electronic_field' in d]
+    e0 = bool(asm)
+    ok &= e0
+    print(f"keys-assembly-found: payload 조립 dict 를 찾았다 (검사가 헛돌지 않는다)  "
+          f"{'OK' if e0 else 'FAIL'}")
+    if asm:
+        a = asm[0]
+        for _, _, fk, _ in _CH:
+            e = fk in a
+            ok &= e
+            print(f"keys-cloud `{fk}`: 생산자가 그 이름으로 싣는다  {'OK' if e else 'FAIL'}")
+        for stale in ('elec_field', 'ion_field'):
+            e = stale not in a
+            ok &= e
+            print(f"keys-no-stale `{stale}`: 지역 변수 이름을 키로 쓰지 않는다  "
+                  f"{'OK' if e else 'FAIL'}")
+    #  `field_scale_*` · `n_dof` 는 dict 리터럴의 키가 아니라 `step3['…'] = …` 로 대입된다
+    #  ⇒ 모듈의 **모든 문자열 상수**를 본다 (첨자 대입의 문자열도 ast.Constant 다).
+    allstr = {n.value for n in ast.walk(tree)
+              if isinstance(n, ast.Constant) and isinstance(n.value, str)}
+    for _, fsk, _, nk in _CH:
+        for name, what in ((fsk, 'field_scale'), (nk, '도체셀 수')):
+            e = name in allstr
+            ok &= e
+            print(f"keys-{what} `{name}`: 생산자에 실재한다  {'OK' if e else 'FAIL'}")
+    return ok
+
+
 def _selftest():
     """합성 payload 로 복원이 참값을 되돌리는지 — 그리고 **거부**가 작동하는지."""
-    ok = True
+    ok = _selftest_keys()
     n_total, n_cloud = 50_000, 4_000
     hot = int(n_cloud * HOT_BUDGET_FRAC)                 # 1,400
     # 멱법칙 꼬리 J(rank) = rank^-0.5 (실측 픽스처와 같은 모양)
@@ -252,8 +313,8 @@ def _selftest():
     step3 = {'n_dof': n_total,
              'field_scale_e': {'j_top_A_cm2_per_V': naive, 'j_mean_z_A_cm2_per_V': 1.0,
                                'focus_top': naive},
-             'elec_field': [[0.0, 0.0, 0.0, v / naive] for v in cloud]}
-    r = repair_channel(step3, 'field_scale_e', 'elec_field', 'n_dof')
+             'electronic_field': [[0.0, 0.0, 0.0, v / naive] for v in cloud]}
+    r = repair_channel(step3, 'field_scale_e', 'electronic_field', 'n_dof')
     e1 = r['ok'] and abs(r['focus_top_repaired'] - truth) <= 1e-9 * max(truth, 1e-30)
     ok &= e1
     print(f"repair-exact: 복원 {r.get('focus_top_repaired', float('nan')):.8g} vs "
@@ -270,23 +331,24 @@ def _selftest():
           f"{truth_mean:.6g} (≤2 %)  {'OK' if e2b else 'FAIL'}")
     # 거부 ①: 예산이 너무 작아 참 rank 가 보존 밖
     small = {'n_dof': 5_000_000,
-             'field_scale_e': step3['field_scale_e'], 'elec_field': step3['elec_field']}
-    r2 = repair_channel(small, 'field_scale_e', 'elec_field', 'n_dof')
+             'field_scale_e': step3['field_scale_e'],
+             'electronic_field': step3['electronic_field']}
+    r2 = repair_channel(small, 'field_scale_e', 'electronic_field', 'n_dof')
     e3 = (not r2['ok']) and '복원 불가' in (r2['reason'] or '')
     ok &= e3
     print(f"refuse-budget: 보존 꼬리를 넘는 rank 는 **거부**한다  {'OK' if e3 else 'FAIL'}")
     # 거부 ②: 이온 N 없음 (SELF-45 이전 payload)
     r3 = repair_channel({'field_scale_ion': {'j_top_A_cm2_per_V': 1.0,
                                              'j_mean_z_A_cm2_per_V': 1.0, 'focus_top': 1.0},
-                         'ion_field': [[0, 0, 0, 1.0]]},
-                        'field_scale_ion', 'ion_field', 'ion_n_dof')
+                         'ionic_field': [[0, 0, 0, 1.0]]},
+                        'field_scale_ion', 'ionic_field', 'ion_n_dof')
     e4 = (not r3['ok']) and 'ion_n_dof' in (r3['reason'] or '')
     ok &= e4
     print(f"refuse-no-N: 이온 N 이 없으면 **거부**한다 (근사 금지)  {'OK' if e4 else 'FAIL'}")
     # 이미 고쳐진 payload 는 no-op
     r4 = repair_channel({'n_dof': 10, 'field_scale_e': {'percentile_basis': 'full_field',
-                                                        'focus_top': 7.0}, 'elec_field': []},
-                        'field_scale_e', 'elec_field', 'n_dof')
+                                                        'focus_top': 7.0}, 'electronic_field': []},
+                        'field_scale_e', 'electronic_field', 'n_dof')
     e5 = r4['ok'] and r4.get('noop')
     ok &= e5
     print(f"noop-new-payload: 전수 기준 payload 는 건드리지 않는다  {'OK' if e5 else 'FAIL'}")
@@ -297,7 +359,9 @@ def _selftest():
 def main(argv=None):
     ap = argparse.ArgumentParser(description='SELF-45 — payload 의 focus_top 을 장 전수 기준으로 복원')
     ap.add_argument('paths', nargs='*', help='payload JSON 또는 디렉터리')
-    ap.add_argument('--glob', default='mpm_payload*.json', help='디렉터리에 쓸 glob')
+    ap.add_argument('--glob', default='*payload*.json',
+                    help="디렉터리에 쓸 glob (기본 '*payload*.json' — webapp 의 payload.json 과 "
+                         "킷의 mpm_payload.json 을 둘 다 잡는다)")
     ap.add_argument('--write', action='store_true', help='제자리 수정 (원값 보존)')
     ap.add_argument('--csv', help='결과 CSV')
     ap.add_argument('--selftest', action='store_true')
