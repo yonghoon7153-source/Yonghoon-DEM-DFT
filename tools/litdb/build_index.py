@@ -257,6 +257,22 @@ def selftest():
         [b[1:3] for b in check_tables(H + "| a | b | c |\n\n| p | q |\n|---|---|\n| 1 |\n")] == [(1, 2)])
     chk("표 음성⑧: 실물 정본이 지금 깨끗하다 (회귀 탐지)",
         (not CMP_DFT.exists()) or check_tables(CMP_DFT.read_text(encoding="utf-8")) == [])
+    # ── check_orphan_rows — **`check_tables` 의 ✅ 0건이 지표가 아님을 드러내는 검사** ──
+    #   2026-09-22: INDEX.md 가 check_tables 로 ✅ 0건인데 3행이 7·7·8칸이었다.
+    #   빈 줄로 표가 조각나면 그 조각은 **검사 대상에서 통째로 빠진다**.
+    ORPH = H + "| a | b | c |\n\n| x | y | z | w |\n"
+    chk("떠있는행 양성: 정상 표 하나면 떠 있는 행 0건",
+        check_orphan_rows(H + "| a | b | c |\n| d | e | f |\n") == [])
+    chk("떠있는행 음성①: **빈 줄 뒤 머리 없는 행을 잡는다** (실측 버그 그 모양)",
+        [o[:2] for o in check_orphan_rows(ORPH)] == [(5, 4)])
+    chk("떠있는행 음성②: ⛔ **같은 입력을 `check_tables` 는 통과시킨다** — 이 검사가 없으면 못 본다",
+        check_tables(ORPH) == [])
+    chk("떠있는행 음성③: 코드블록 안의 `|` 줄은 떠 있다고 하지 않는다 (산문 오탐 방지)",
+        check_orphan_rows("```\n| a | b |\n```\n") == [])
+    chk("떠있는행 음성④: 구분자만 있고 헤더가 없으면 그 줄도 떠 있다 (반쪽 표를 놓치지 않는다)",
+        [o[0] for o in check_orphan_rows("머리말\n\n|---|---|\n| 1 | 2 |\n")] == [3, 4])
+    chk("떠있는행 음성⑤: 실물 INDEX 가 **지금은 떠 있는 행을 가진다** — 고치면 이 줄을 뒤집는다",
+        (not SE_INDEX.exists()) or len(check_orphan_rows(SE_INDEX.read_text(encoding="utf-8"))) > 0)
     # ── cell() — 생성 경로의 이스케이프. **이게 없어서 INDEX_DEM 70행이 12칸이었다** ──
     chk("cell 음성①: `|` 를 이스케이프한다 (안 하면 한 칸이 8칸으로 쪼개진다)",
         cell("⏳ 문서 대기 (exp|DFT|AIMD|MLIP|DEM|MPM|FEM|mixed)")
@@ -339,6 +355,55 @@ def check_tables(md_text):
     return bad
 
 
+def check_orphan_rows(md_text):
+    """표로 **인식되지 않는** 떠 있는 `|` 행을 찾는다. 반환 = [(행번호, 칸수, 행앞머리)].
+
+    ⛔⛔ **`check_tables()` 의 `✅ 0건` 은 이 검사 없이는 지표가 아니다.**
+      그 함수는 `헤더 + 구분자` 쌍으로 시작하는 조각만 본다. 표 중간에 **빈 줄**이 들어가
+      표가 조각나면, 그 뒤 행들은 **검사 대상에서 통째로 빠지고** 칸이 몇 개든 조용히 통과한다.
+      2026-09-22 실측: `litdb/INDEX.md` 가 `check_tables` 로는 **✅ 0건**인데
+      119·125·132 행이 헤더 3칸에 대해 **7·7·8칸**이었다 — `## ✅ Digest 완료` 표가
+      빈 줄 8개로 조각나 있었다. 렌더에서 칸이 버려지거나 표로 안 잡힌다.
+
+    ⛔ **이 도구가 못 하는 것**: 떠 있는 행이 **어느 헤더에 속해야 하는지는 모른다.**
+      '떠 있다' 는 사실만 보고한다 — 가까운 헤더를 추측해 붙이면 **틀린 분모로 검사해서
+      더 나쁜 초록불**이 된다. 붙일 자리는 사람이 정한다(대개 빈 줄을 지우면 된다).
+    """
+    lines = md_text.split("\n")
+    in_table = [False] * len(lines)
+    i, fence = 0, False
+    while i < len(lines):
+        if lines[i].lstrip().startswith("```"):
+            fence = not fence
+            i += 1
+            continue
+        if fence:
+            in_table[i] = True          # 코드블록 안은 표가 아니다 — 떠 있다고 하지 않는다
+            i += 1
+            continue
+        hdr = _row_cells(lines[i])
+        if hdr is not None and i + 1 < len(lines) and re.match(r"^\|[\s:\-|]+\|\s*$", lines[i + 1]):
+            in_table[i] = in_table[i + 1] = True
+            j = i + 2
+            while j < len(lines) and _row_cells(lines[j]) is not None:
+                in_table[j] = True
+                j += 1
+            i = j
+        else:
+            i += 1
+    out, fence = [], False
+    for n, ln in enumerate(lines):
+        if ln.lstrip().startswith("```"):
+            fence = not fence
+            continue
+        if fence or in_table[n]:
+            continue
+        cs = _row_cells(ln)
+        if cs is not None:
+            out.append((n + 1, len(cs), (cs[0].strip()[:60] if cs else "")))
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true", help="점검만 (파일 안 씀)")
@@ -383,6 +448,27 @@ def main():
             print(f"        {ln}행  {got}칸 → 헤더 {want}칸   {head}")
         if len(bad) > 12:
             print(f"        … 외 {len(bad)-12}행")
+
+    # ── 떠 있는 표 행 — **위 ✅ 0건이 지표가 아님을 드러낸다** (2026-09-22 신설) ──
+    #   위 검사는 `헤더+구분자` 로 시작하는 조각만 본다. 빈 줄로 표가 끊기면 그 뒤 행은
+    #   칸이 몇 개든 조용히 통과한다. 실측: INDEX.md 가 ✅ 0건인데 3행이 7·7·8칸이었다.
+    print("\n=== 떠 있는 표 행 점검 (어느 헤더에도 안 속한 `|` 행 — 위 검사가 못 보는 자리)")
+    n_orph = 0
+    for doc in (CMP_DFT, CMP_DEM, SE_INDEX, DEM_INDEX):
+        if not doc.exists():
+            continue
+        orph = check_orphan_rows(doc.read_text(encoding="utf-8"))
+        n_orph += len(orph)
+        print(f"   {doc.name:28} {'✅ 0건' if not orph else f'⚠ {len(orph)}건'}")
+        for ln, got, head in orph[:12]:
+            print(f"        {ln}행  {got}칸  {head}")
+        if len(orph) > 12:
+            print(f"        … 외 {len(orph)-12}행")
+    if n_orph:
+        print("   ↳ 대개 **표 중간의 빈 줄** 때문이다. 빈 줄을 지우면 조각이 합쳐지며")
+        print("      위 셀수 검사가 비로소 그 행들을 본다. ⛔ 어느 헤더에 붙일지는 사람이 정한다.")
+    # ⚠ 떠 있는 행은 **경고**로 둔다 — 종료코드에 안 넣는다. 지금 실물에 기존 건이 있어서
+    #   실패로 바꾸면 무관한 작업이 전부 빨간불이 된다. 고친 뒤 실패로 승격한다.
     return 1 if (missing or n_tbl_bad) else 0
 
 
