@@ -47,6 +47,7 @@ Cost ~ (n_levels with d=0 counts as 1 replica) * n_configs * n_T MD runs.
 Default comp1: (1 + 3) configs * 3 T = 12 MD * ~35-45 min = ~7-9 h. Run in bg.
 """
 import argparse
+import sys
 import json
 import time
 from pathlib import Path
@@ -131,6 +132,31 @@ def msd_multi_origin(cart_li, dt_ps, n_lag=150):
     return tau, msd, norig
 
 
+#: He/Zhu/Epstein/Mo, npj Comput. Mater. 4, 18 (2018) 식 (8)·(9) 의 `a`.
+#: `msd_diffusive_check.D_HOP_A` 와 **같은 값·같은 뜻**이다 (이웃 Li 자리 간격).
+#: ⛔ 여기 박아 두는 이유: `msd.json` 만 보고 N_eff 를 다시 낼 수 있어야 하는데,
+#:   `a` 가 기록에 없으면 다음 사람이 **딴 값을 가정**한다.
+HE2018_SITE_DISTANCE_A = 3.0
+
+
+def he2018_neff(n_li, msd_max_a2, a=HE2018_SITE_DISTANCE_A):
+    """He 2018 식 (8) 의 유효 점프 수 `N_eff = n_Li · max(MSD) / a²`.
+
+    ⛔⛔ **`max(MSD)` 는 궤적 전체의 최대값이다 — 적합 창끝 값이 아니다.**
+    2026-09-22 회신 BT 에서 내가 정확히 그 둘을 헷갈렸다: C1·C2 게이트의 문턱
+    (창끝 50 ps 의 3 / 48.88 Å²)을 궤적 전체(400 ps) 공식에 넣어 **N_eff 를 8 배
+    과소평가**했고, 거기서 "셀이 정밀도 천장 25 % 를 정한다" 는 틀린 결론을 냈다.
+    그래서 `msd.json` 은 **두 값을 다른 이름으로 따로** 적는다.
+
+    ⛔ 이 함수가 **못 하는 것**: He 식은 **lag 창을 제한한 적합**에 대해 검증된 적이
+    없다. 궤적이 길어지면 정밀도가 좋아지는데 식에는 그게 안 들어간다(회신 BT §6-e).
+    런 내부 오차의 정본은 **시간원점 블록 부트스트랩**이고 이 값은 **귀무모형**이다.
+    """
+    if not n_li or msd_max_a2 is None or msd_max_a2 <= 0:
+        return None
+    return float(n_li) * float(msd_max_a2) / float(a) ** 2
+
+
 def li_diffusion_from_frames(frames, save_fs, fit_window_ps):
     """Cell-correct unwrap in fractional coords; MSD(Li); D from MSD=6Dt fit.
 
@@ -154,8 +180,22 @@ def li_diffusion_from_frames(frames, save_fs, fit_window_ps):
     # --- multi-time-origin companion curve (free: no extra MD, no extra disk) ------
     tau, msd_mto, norig = msd_multi_origin(cart[:, li], save_fs / 1000.0)
     lo, hi = fit_window_ps
+    n_li = int(li.sum())
+    # ⛔ **두 MSD 를 다른 이름으로 적는다** (회신 BT — 내가 이 둘을 헷갈려 N_eff 를
+    #   8 배 과소평가했다). 이름이 같으면 다음 사람도 똑같이 헷갈린다.
+    #   · msd_max_A2            = **궤적 전체** 최대 → He 2018 N_eff 용
+    #   · msd_at_fit_window_end_A2 = **적합 창끝** 값 → C1·C2 게이트용
     extra = {"times_ps_mto": tau, "msd_Li_A2_mto": msd_mto, "n_origins_mto": norig,
-             "n_Li": int(li.sum())}
+             "n_Li": n_li,
+             "msd_max_A2": float(np.max(msd)) if len(msd) else None,
+             "site_distance_A": HE2018_SITE_DISTANCE_A,
+             "site_distance_source":
+                 "msd_diffusive_check.D_HOP_A 와 같은 규약 (이웃 Li 자리 간격)",
+             "n_eff_he2018": he2018_neff(n_li, float(np.max(msd)) if len(msd) else None),
+             "n_eff_note":
+                 "He 2018 식 (8). **궤적 전체 max(MSD)** 로 냈다 — 창끝 값이 아니다. "
+                 "⛔ He 식은 lag 창을 제한한 적합에 대해 **검증되지 않았다**(회신 BT §6-e); "
+                 "런 내부 오차의 정본은 시간원점 블록 부트스트랩이고 이 값은 귀무모형이다."}
     if tau:
         mm = [(a, b) for a, b in zip(tau, msd_mto) if lo <= a <= hi]
         if len(mm) >= 3:
@@ -164,7 +204,13 @@ def li_diffusion_from_frames(frames, save_fs, fit_window_ps):
 
     m = (t_ps >= lo) & (t_ps <= hi)
     if m.sum() < 3:
+        # ⛔ **'못 구함' 과 '없음' 을 가른다** — 키를 빼면 다음 사람이 0 으로 읽는다.
+        extra["msd_at_fit_window_end_A2"] = None
+        extra["msd_at_fit_window_end_why"] = (
+            f"적합 창 [{lo}, {hi}] ps 안에 점이 {int(m.sum())} 개뿐이라 안 구했다 "
+            "(구했는데 0 인 것이 아니다)")
         return None, t_ps.tolist(), msd.tolist(), extra
+    extra["msd_at_fit_window_end_A2"] = float(msd[m][-1])   # C1·C2 게이트가 보는 값
     slope = np.polyfit(t_ps[m], msd[m], 1)[0]        # Å²/ps
     D = slope / 6.0 * 1e-4                            # Å²/ps -> cm²/s
     return float(D), t_ps.tolist(), msd.tolist(), extra
@@ -285,8 +331,78 @@ def arrhenius(Ts, Ds):
                        for t, d in zip(Ts[m], Ds[m])]}
 
 
+def selftest():
+    """He 2018 N_eff 기록 경로 — **음성 경로가 본체다** (2026-09-22 신설).
+
+    왜 필요한가: 회신 BT 에서 내가 **적합 창끝 MSD 를 궤적 전체 공식에 넣어** N_eff 를
+    8 배 과소평가했다. 코드는 그 계산을 안 했지만(그래서 실행에는 영향이 없었다),
+    **`msd.json` 이 두 값을 구분해 적지 않으면 다음 사람이 같은 실수를 한다.**
+    그래서 이 시험의 핵심은 *"두 값이 다른 이름으로, 실제로 다르게 적히는가"* 다.
+
+    ⛔ 이 시험이 **못 하는 것**: He 식이 이 계에서 **맞는지**는 안 본다 (유리는 He 의
+    적합 대상이 아니다 — 회신 BT §6-d). 기록이 맞는지만 본다.
+    """
+    import numpy as _np
+    from ase import Atoms as _Atoms
+    ok = [0, 0]
+
+    def chk(name, cond):
+        print(("  ⭕ " if cond else "  ⛔ ") + name)
+        ok[0 if cond else 1] += 1
+
+    # ── he2018_neff — 양성 + 음성 ────────────────────────────────────────
+    chk("양성: N_eff = n_Li·max(MSD)/a²  (48 · 24 / 9 = 128)",
+        abs(he2018_neff(48, 24.0) - 128.0) < 1e-9)
+    chk("양성: a 를 바꾸면 제곱으로 들어간다 (a=6 이면 1/4)",
+        abs(he2018_neff(48, 24.0, a=6.0) - 32.0) < 1e-9)
+    chk("⛔음성: max(MSD) 가 None 이면 **None** 이다 (0 이 아니다 — 0 이면 RSD 가 발산한다)",
+        he2018_neff(48, None) is None)
+    chk("⛔음성: max(MSD) 가 0 이어도 None (자리 이탈 0 은 '쟀는데 0' 이 아니라 '못 잰 것')",
+        he2018_neff(48, 0.0) is None)
+    chk("⛔음성: n_Li 가 0 이면 None (Li 없는 계를 조용히 통과시키지 않는다)",
+        he2018_neff(0, 24.0) is None)
+
+    # ── 기록 경로 — **두 MSD 가 다르게 적히는가** ─────────────────────────
+    #   합성 궤적: Li 1개가 x 로 등속 이동 ⇒ MSD = (v t)², 창끝과 전체가 **다르다**
+    cell = _np.eye(3) * 100.0                  # 감김 없게 큰 셀
+    nt, v, dt = 101, 0.5, 1.0                  # 100 ps · 0.5 Å/ps · save 1000 fs
+    frames = [_Atoms("Li", positions=[[v * i * dt, 0, 0]], cell=cell, pbc=True)
+              for i in range(nt)]
+    D, t_ps, msd, ex = li_diffusion_from_frames(frames, save_fs=1000.0,
+                                                fit_window_ps=(2.0, 50.0))
+    chk("양성: 궤적 전체 max(MSD) 를 적는다 ((0.5·100)² = 2500)",
+        ex["msd_max_A2"] is not None and abs(ex["msd_max_A2"] - 2500.0) < 1e-6)
+    chk("양성: 적합 창끝 MSD 를 **따로** 적는다 ((0.5·50)² = 625)",
+        abs(ex["msd_at_fit_window_end_A2"] - 625.0) < 1e-6)
+    chk("⛔음성(핵심): **두 값이 실제로 다르다** — 같으면 구분이 무의미하다 (4 배)",
+        abs(ex["msd_max_A2"] / ex["msd_at_fit_window_end_A2"] - 4.0) < 1e-6)
+    chk("⛔음성: N_eff 는 **궤적 전체** 값으로 낸다 (창끝으로 내면 1/4 이 된다)",
+        abs(ex["n_eff_he2018"] - he2018_neff(1, 2500.0)) < 1e-6)
+    chk("양성: a 를 기록에 박는다 (없으면 다음 사람이 딴 값을 가정한다)",
+        ex["site_distance_A"] == HE2018_SITE_DISTANCE_A and ex.get("site_distance_source"))
+    chk("양성: He 식의 **미검증 범위**를 기록에 같이 적는다",
+        "검증되지 않았다" in ex.get("n_eff_note", ""))
+
+    # ── 창에 점이 모자랄 때 — '못 구함' 과 '없음' 을 가른다 ────────────────
+    D2, _, _, ex2 = li_diffusion_from_frames(frames[:9], save_fs=1000.0,
+                                             fit_window_ps=(100.0, 200.0))
+    chk("⛔음성: 창 밖이면 D 는 None",
+        D2 is None)
+    chk("⛔음성: 창끝 MSD 를 **None 으로 명시**한다 (키를 빼면 0 으로 읽힌다)",
+        "msd_at_fit_window_end_A2" in ex2 and ex2["msd_at_fit_window_end_A2"] is None)
+    chk("⛔음성: **왜 못 구했는지**를 같이 적는다 ('구했는데 0' 과 구분)",
+        "안 구했다" in ex2.get("msd_at_fit_window_end_why", ""))
+    chk("⛔음성: 그래도 **N_eff 는 살아 있다** — 창과 무관한 양이다",
+        ex2.get("msd_max_A2") is not None and ex2.get("n_eff_he2018") is not None)
+
+    print(f"\n  selftest {ok[0]}/{ok[0]+ok[1]} 통과")
+    return 1 if ok[1] else 0
+
+
 def main():
     ap = argparse.ArgumentParser()
+    if "--selftest" in sys.argv:
+        raise SystemExit(selftest())
     ap.add_argument("--v0_xyz", required=True)
     ap.add_argument("--supercell", type=int, nargs=3, default=None, metavar=("NA", "NB", "NC"),
                     help="V0 를 이 배수로 타일링한 뒤 MD 를 돈다 (예: 2 2 2). "
