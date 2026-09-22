@@ -97,3 +97,8 @@ python3 scripts/phase_a_order_verdict.py docs/data/phase_a_104arms_20260921/arms
   `Δ +-23/+-18 = plastic conforming` 이라고 **부호가 음수인데도 "conforming"** 을 찍는다 — 라벨 문자열이 부호를 안 본다
   (규율 ⑤ 부류의 표시 결함 후보).  σ_e 판정에는 안 쓰이는 값이나, 침대 1/2 의 같은 두 수와 나란히 놓고 확인할 것.
 - pore-τ `no_through_component` · closed-from-top 99.95 % 는 DR3-07/08 그대로 (인용 금지 값 계산 안 함 = LEAN 의 이유).
+
+## ④ MPM 트랙 — 정본 신선도 정리 (1저자 "3번 진행" 09-22)
+
+- `docs/mpm_platen_kinematic_stop_defect.md` 는 이미 **rev7 (2026-09-02, `ca46e420d`) 에 R1 을 반영**하고 있었다 — 낡은 것은 **맨 위 배너**(*"rev6 에서 멈춰 있다"*)와 CLAUDE.md 트랙 #2 의 한 줄이었다.  둘 다 09-22 로 고침.  (내가 오늘 오전에 *"rev6 에서 멈춰 R1 미반영"* 이라 보고한 것은 그 낡은 줄을 현재형으로 읽은 것이다 — 규율 ④ 의 그 실패.)
+- **f_AM(②) 검증 상태를 §7-8 로 정본에 박음**: 06-26 corner 검증은 08-11 에 무효(폐기된 추정기 값) · R3 는 등록돼 있으나 R2 뒤로 게이트 + `0.847` 이 금지 경로 값 · 세 팔 재실행은 계획만.  ⇒ **끝나지 않았다.**  순서 = f_AM 실측(contact dump / c_strs) → 재등록 → R2 → R3 → corner 세 팔.
