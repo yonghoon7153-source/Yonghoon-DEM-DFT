@@ -169,6 +169,23 @@
    "binding_scope_why": "재현 불가 사유(MP 스냅샷 미기록)는 값마다가 아니라 **파일 전체**에 걸린다. 그 파일 값은 레지스트리에 없다."
   },
   {
+   "file": "db/properties/anode_interface_b2o3.json",
+   "source_path": "db/properties/anode_interface_b2o3.json",
+   "level": "BLOCKED",
+   "added": "2026-09-22",
+   "what": "`results.*.by_anode.*.reaction` **반응식 문자열 전량** (0.00 V · 0.62 V, b2o3 · LPSCl1.6 네 줄). `products`·`min_product_gap_eV`·`leaky_products` 는 이 금지 **밖**이다",
+   "why": "**방향이 뒤집혀 있다.** 0 V 는 SE 가 Li 을 **흡수**하는 쪽인데 기록된 식은 Li 을 **내놓는다** — `Li5.4P1S4.4Cl1.6 -> Li3P + 1.6 LiCl + 4.4 S + 0.8 Li`, b2o3 는 `+ 10 Li`. 그래서 **Li₂S 가 생성물에 없고 원소 S 와 자유 Li 가 같이 서 있다**(공존 불가). 문헌(Wenzel XPS · Wang/Canepa 2022 Eq.8)은 만장일치로 Li 금속 접촉 산물 = **Li₂S + Li₃P + LiCl** 이다. 원인 후보는 `tools/oxidation/anode_interface_stability.py:78` 의 `min(steps, key=|V−Va|)` 가 산화쪽 regime 을 집는 것인데, 도구가 `evolution`(부호 있는 Li 흡수량)을 기록하지 않아 **방향을 구분할 수단 자체가 없다** (2026-09-22 json 직접 확인)",
+   "fix": "도구에 `evolution` 기록 + 방향(흡수/방출) 선언을 넣고 재실행한 뒤 RESOLVED 로 올린다. 그때까지 **반응식 문자열을 어떤 표면에도 인용하지 않는다**. 산물 목록·갭 판정은 계속 쓰되, `products` 가 잘못된 regime 에서 왔을 수 있으므로 *\"산물 집합도 재확인 대기\"* 를 같이 적는다. ⚠ 이전 판단(`결론은 안 바뀐다`)은 **확인된 사실이 아니다** — 지금 상태는 \"안 바뀐다\" 가 아니라 **\"확인 안 됐다\"** 다",
+   "id": "HZ-anode-b2o3-reaction-direction",
+   "binding_scope": "partial",
+   "binding_scope_why": "반응식은 레지스트리에 없는 **문자열**이라 숫자 결속이 안 걸린다. 화면·문서는 id 로 이름을 댈 수 있다. forbidden_phrases 는 켜지 않았다 — 금지 대상 문자열(`-> Li3P + 1.6 LiCl + 4.4 S + 0.8 Li` 등)이 이 원장 자신의 `why` 와 digest 의 인용 절에 **교육 문장으로** 들어 있어서 켜면 무관용 결속 시험이 깨진다(교차행 누출).",
+   "pending_forbidden_phrases": {
+    "why": "화면이 아직 이 id 로 data-claim 을 안 단다. 화면 쪽 선언이 붙으면 forbidden_phrases 로 옮긴다.",
+    "phrases": ["4.4 S + 0.8 Li", "41 S + 10 Li"]
+   },
+   "관련": "litdb/papers/wang2022_resistive_decomposing_interfaces_se_alkali_metal.md · litdb/_pending_index_wang2022_resistive_decomposing_interfaces_se_alkali_metal.md ⑤"
+  },
+  {
    "file": "db/properties/eos.json",
    "level": "CONDITIONAL",
    "what": "V0_A3",
@@ -554,9 +571,14 @@
    "date": "2026-09-21",
    "what": "CEI 갭 1 건 등록 — NdP₅O₁₄ 5.393 eV 미재현(CONDITIONAL). §6 10/10 완주와 같이 올렸다.",
    "why": "미재현 값이 화면(§6)에 실리면서 단서 없이 복사될 위험이 생겼다. 화면 행·카드에 data-claim 으로 결속하고, 원장에도 같은 id 로 남긴다."
+  },
+  {
+   "date": "2026-09-22",
+   "what": "음극 계면 반응식 1 건 등록 — `anode_interface_b2o3.json` 의 `reaction` 문자열 전량 BLOCKED (`HZ-anode-b2o3-reaction-direction`). 같은 파일에 이미 있던 `HZ-anode-b2o3-mp-unversioned`(CONDITIONAL, MP 스냅샷 미기록)와 **별개의 위험**이라 행을 나눴다.",
+   "why": "Wang/Canepa 2022 digest 가 \"우리 0 V 산물표에 Li₂S 가 없다\" 를 지적했고, json 을 직접 열어 확인했더니 사실이었다 — 식이 Li 을 **내놓는** 방향이고 원소 S 와 자유 Li 가 공존한다. 값이 아니라 **문자열**이라 숫자 결속이 못 잡는다. 원장에 안 올리면 다음 사람이 반응식을 그대로 원고에 옮긴다."
   }
  ],
- "updated": "2026-09-21",
+ "updated": "2026-09-22",
  "_schema_note": {
   "claim": "화면 결속용 claim id (`<metric>@<system>`, canonical_registry 파생). 이 위험이 **어느 정본 주장**에 대한 것인지 이름을 대면, /governance 표에서 근접성 없이 결속이 성립한다 (회신 BG ②).",
   "id": "안정 hazard 식별자. 화면·handoff 가 `data-claim=\"<id>\"` 로 이 위험을 선언한다 (회신 BG ②).",
