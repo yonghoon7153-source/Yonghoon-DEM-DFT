@@ -486,3 +486,36 @@ grep -n 'step3-vox 0.15' ~/.bash_history 2>/dev/null | tail -5
 ⚠ 3 이 중요하다: **원고 payload 를 만든 env 는 이것이 아니다** (여기선 STEP 2 가 죽었다).
 `meta.json` 의 `exec_env.python = /home/kgy/dem-venv/bin/python3` (3.8.10) 가 그 env 다 —
 `(base)` conda 가 아니라 **`/home/kgy/dem-venv`** 를 써야 한다.
+
+## I-4. 실측 마무리 (2026-09-22 밤) — env 확정 + 남은 단서
+
+- ✅ **env 확정**: `/home/kgy/dem-venv/bin/python3` 에 `skimage`·`scipy`·`numpy` **있다**
+  (`(base)` conda 에는 없다).  `meta.json` 의 `exec_env.python` 과 일치 ⇒ **재실행은 반드시
+  이 python 으로.**  2026-08-27 STEP 2 가 죽은 것은 `(base)` 로 돌렸기 때문이다.
+- ⛔ `kit_SBE` 에 `payload*.sh` 가 **없다** (`harvest.sh`·`run_a1_anchors.sh`·`run_mpm.sh` 뿐).
+  `~/.bash_history` 에도 `step3-vox 0.15` 매치가 없다 ⇒ 원고 명령은 **파일로 안 남았다**.
+- ★ **단서**: DBE 의 **08-12** 런 폴더에 `LDBE_v015_pt.sh` 라는 **손으로 만든** 스크립트가 있다
+  (`_pt` = 점 스탬프로 보이므로 원고(구 스탬프)와는 다를 수 있다).  그런 일회성 스크립트가
+  런 폴더에 저장된다는 뜻이므로 ⬜ **SBE 08-12 폴더를 먼저 볼 것**:
+  `ls /home/kgy/sdcp/kit_SBE/run_VGCF3_PTFE1_20260812_204806_75857/*.sh | head -20`
+
+### ⇒ 다음 세션의 두 경로
+
+**(A) 흔적이 있으면** 그 스크립트를 쓴다 (`--out` 만 변경).
+**(B) 없으면 arm `.sh` 에서 조립한다** — 물리 축이 맞는 유일한 후보다:
+```
+arm p2_SBE_sph_a0.*.sh 에서
+  · `--no-field` **제거**            (점군·joule 을 만들어야 한다)
+  · `--sigma-ion-sdcp 0` → `0.001`   (원고 manifest 값)
+  · `--out` 을 새 파일로
+  · python 을 /home/kgy/dem-venv/bin/python3 로
+  · 나머지 플래그는 **한 글자도 건드리지 않는다**
+```
+⚠ 조립의 안전장치는 **둘뿐이고 둘 다 통과해야 한다**:
+① arm `.sh` 에 이미 박힌 `--expect-physics vox_um=0.15,bridge_um=0.48,sigma_vgcf_S_cm=78.5398,
+fibre_stamp=segment,sdcp_stamp=sphere,sdcp_yield_to_vgcf=False,periodic_xy=False,ptfe_stamp=centerline`
+② **σ_e 재현** = `0.054530439566226836` (SBE) · `0.0714004401030127` (DBE).
+⛔ 둘 중 하나라도 어긋나면 **멈추고 보고** — 다른 침대·다른 규약으로 비교하면 무효다.
+
+⚠ `--no-field` 를 떼면 `--no-thermal --no-pore --no-collector --no-step4 --no-trackb` 는
+그대로 둔다 (원고 manifest 의 component 표와 일치: thermal/pore/pnm/collector_geom = disabled).
