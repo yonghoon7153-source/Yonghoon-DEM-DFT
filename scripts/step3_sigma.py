@@ -1093,10 +1093,12 @@ def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None, field_sids=Non
         #    solve 의 정규화 온도 T(z)@ΔT=1 이 있어야 한다.)  '_' prefix = JSON 前 pop 대상.
         out['_res'] = res
         if field_sids is not None:                             # 열류 |k∇T| 점군 (多상 = 全상 solid conduct)
-            fp, fj = field_point_cloud(res, sid, k_table, vox, tuple(field_sids), max_points=field_max)
+            fp, fj, fst = field_point_cloud(res, sid, k_table, vox, tuple(field_sids),
+                                            max_points=field_max)
             if fp is not None:
                 out['_field_pts'] = fp
                 out['_field_j'] = fj
+                out['_field_stats'] = fst                      # SELF-45: 정규화는 **전수** p99.8 로
     return out
 
 
@@ -1312,21 +1314,45 @@ def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0
     sel_sids : iterable of σ-ids to KEEP (electronic field → AM+carbon {1,2,3,4,5};
                ionic field → SE+SDCP {5,6}).  Only voxels that are BOTH sel AND conductive (in the
                plate-connected component `cond`) are emitted — floating islands already dropped.
-    Returns (pts_um [N,3] float32, jmag [N] float32) in the payload µm frame (voxel centres +
-    box_lo), or (None, None) if the solve early-returned / nothing selected.
+    Returns (pts_um [N,3] float32, jmag [N] float32, stats dict) in the payload µm frame (voxel
+    centres + box_lo), or (None, None, None) if the solve early-returned / nothing selected.
 
     Subsample keeps ALL of the hottest `hot_budget_frac` of the budget (so the conduction
-    backbone survives at low point counts) + a uniform-random background for honest density."""
+    backbone survives at low point counts) + a uniform-random background for honest density.
+
+    ★★★ 2026-09-22 (`SELF-45`, 리뷰어 A-2 가 촉발) — **점군에서 통계를 내지 말 것.**
+      그래서 이 함수가 `stats` 를 **부분추출 전 전수**로 계산해 같이 돌려준다.
+      옛 판은 `(pts, vals)` 만 돌려줬고 소비자(`mpm_webapp_payload`)가 **돌려받은 점군에**
+      `np.percentile(vals, 99.8)` 를 걸어 `focus_top` 을 만들었다.  그런데 위 추출은
+      **상위 `hot_budget_frac` 를 전수 보존**하므로 점군은 뜨거운 쪽으로 편향돼 있다 ⇒
+      "p99.8" 이 장의 99.8 %가 아니라 **위에서 `0.002·max_points` 번째 셀**이었다.
+      실측 (AM 협착 픽스처, N=157,889): `--field-max-points` 를 5,000 → 90,000 → 전수로
+      키우면 같은 침대의 같은 양이 **×201.2 → ×71.6 → ×52.9** 로 움직인다 = 보고값이
+      **그림 점 개수의 함수**였다 (장의 참값은 ×52.9, 90,000 에서 **1.35× 과대**).
+      ⚠ 편향 크기는 **꼬리 모양에 걸린다** — 같은 격자에서 탄소 섬유가 있는 침대는 상위가
+      고원이라 1.00× 였다.  ⇒ 침대 간 **비에서 상쇄되지 않는다** (이것이 진짜 독이다).
+      ★ 규율 ⑤ 의 그 자리 — *"후보를 고르는 코드가 곧 사각지대다."*  `joule_hotspot` 은
+      처음부터 `conc_ratio`·`hot_frac_50` 을 추출 **전**에 쟀다(:1284-1287); 이 함수만
+      규약이 갈려 있었다.  ⇒ 둘을 같은 규약으로 맞춘다.
+      ⚠ `stats` 는 **내부 jmag 단위**(= J·vox_cm)다 — 소비자가 `/vox_cm` 로 A/cm² 로 바꾼다."""
     if 'phi' not in res:
-        return None, None
+        return None, None, None
     P, cond = res['phi'], res['cond']
     sig = sigma_field(sigma_of_sid, sid)
     jmag = _voxel_jmag(P, cond, sig, periodic_xy=bool(res.get('periodic_xy')))
     sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond
     ii, jj, kk = np.where(sel)
     if not len(ii):
-        return None, None
+        return None, None, None
     vals = jmag[ii, jj, kk]
+    #  ★ 전수 통계 — **부분추출 앞에서** 잰다 (위 배너).  소비자는 이것만 쓴다.
+    stats = {'n_total': int(vals.size),
+             'mean': float(vals.mean()),
+             'p99_8': float(np.percentile(vals, 99.8)),
+             'max': float(vals.max()),
+             'subsampled': bool(len(ii) > max_points),
+             'n_emitted': int(min(len(ii), max_points)),
+             'hot_kept': int(max_points * hot_budget_frac) if len(ii) > max_points else int(vals.size)}
     if len(ii) > max_points:
         rng = np.random.default_rng(seed)
         order = np.argsort(vals)[::-1]
@@ -1338,7 +1364,7 @@ def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0
     pts = np.stack([(ii + 0.5) * vox + box_lo[0],
                     (jj + 0.5) * vox + box_lo[1],
                     (kk + 0.5) * vox + box_lo[2]], axis=1)
-    return pts.astype(np.float32), vals.astype(np.float32)
+    return pts.astype(np.float32), vals.astype(np.float32), stats
 
 
 def pore_tau(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0), periodic_xy=False):
@@ -2651,6 +2677,64 @@ def _selftest():
     ok &= _q6
     print(f"plate-share-failclosed: 플레이트 원장 없는 res 는 **거부**한다  "
           f"{'OK' if _q6 else 'FAIL'}")
+
+    # ── ★★ `SELF-45` (2026-09-22) — **필드 통계가 그림 예산에 불변인가** ──────────────
+    #   재현 시험 먼저 (규율 ②).  옛 판은 소비자가 **돌려받은 점군**에 백분위를 걸었고,
+    #   그 점군은 상위 35 % 를 전수 보존하는 hot-biased 추출이라 보고값이
+    #   `--field-max-points` 의 함수였다 (실측 ×201.2 → ×71.6 → ×52.9).
+    #   ⇒ 같은 solve 에서 예산만 바꿔 `stats` 가 **비트 단위로 같은지** 단언한다.
+    #   ⚠ 꼬리가 평평한 침대(균일 도선)는 편향이 0 이라 **이 픽스처는 꼬리가 가파라야**
+    #     공허하지 않다 — 그래서 목이 좁은 AM 협착 침대를 쓴다 (탄소 도선 없음).
+    _NB = 34                                                 # 상자 한 변 (구슬 사슬 3×3)
+    _NZ45 = 34
+    _fs = np.full((_NB, _NB, _NZ45), 2, np.int8)             # 절연 바탕 (전 셀 '점유' = 표면 규약 작동)
+    _ax = np.arange(_NB); _az = np.arange(_NZ45)
+    _gx, _gy, _gz = np.meshgrid(_ax, _ax, _az, indexing='ij')
+    _tab45 = np.array([0.0, 1.0, 0.0])                       # sid 1 만 도체 (sid 2 = 절연)
+    #  ⚠ 목 굵기를 사슬마다·층마다 **다르게** 준다.  똑같은 사슬 9 개를 놓으면 상위 9 개
+    #    값이 완전히 같아져 "옛 규약이 움직인다" 는 비공허 단언이 대칭 때문에 통과해 버린다
+    #    (실제로 첫 판이 그렇게 FAIL 했다 — 픽스처가 시험을 무력화한 자리).
+    for _ci, _cx in enumerate((8.0, 17.0, 26.0)):            # 사슬 9 개
+        for _cj, _cy in enumerate((8.0, 17.0, 26.0)):
+            for _n, _cz in enumerate(range(0, _NZ45, 3)):    # z 로 겹친 구슬 = 좁은 목
+                _big = _n % 2 == 0
+                _rr = 2.4 if _big else 1.25 + 0.07 * (((_ci * 3 + _cj) * 5 + _n) % 11)
+                #  ★ 목마다 **가로 오프셋**도 준다.  안 주면 목 안의 셀이 4겹 대칭이라
+                #    상위 값이 4 개씩 같아져 꼬리가 계단이 된다 (같은 이유로 첫 판이 FAIL).
+                _ox = 0.0 if _big else 0.37 * (((_n + _ci) % 3) - 1)
+                _oy = 0.0 if _big else 0.41 * (((_n + _cj) % 3) - 1)
+                _fs[((_gx - _cx - _ox) ** 2 + (_gy - _cy - _oy) ** 2
+                     + (_gz - _cz) ** 2) <= _rr * _rr] = 1
+    _r45 = solve_sigma_z(_fs, _tab45, 0.5, return_field=True,
+                         z_bot_um=0.0, z_top_um=_NZ45 * 0.5)
+    _ok45 = 'phi' in _r45 and _r45['sigma_eff'] > 0
+    ok &= _ok45
+    print(f"field-stats-fixture: 구슬 사슬이 관통한다 (σ_eff={_r45.get('sigma_eff', 0):.4g}, "
+          f"dof {_r45.get('n_dof', 0):,})  {'OK' if _ok45 else 'FAIL'}")
+    _st45 = []
+    for _mp in (200, 1200, 10 ** 9):
+        _, _v45, _s45 = field_point_cloud(_r45, _fs, _tab45, 0.5, (1,), max_points=_mp)
+        _st45.append((_s45, float(np.percentile(_v45, 99.8))))
+    _inv = all(abs(s['p99_8'] - _st45[0][0]['p99_8']) <= 1e-12 * max(abs(_st45[0][0]['p99_8']), 1e-30)
+               and abs(s['mean'] - _st45[0][0]['mean']) <= 1e-12 * max(abs(_st45[0][0]['mean']), 1e-30)
+               and s['n_total'] == _st45[0][0]['n_total'] for s, _ in _st45)
+    ok &= _inv
+    print(f"field-stats-budget-invariant: p99.8/mean/N 이 max_points 에 불변  "
+          f"{'OK' if _inv else 'FAIL'}")
+    #  ★ **공허하지 않음의 증거** — 옛 규약(점군 백분위)은 같은 solve 에서 실제로 움직인다.
+    #    이 단언이 깨지면 픽스처의 꼬리가 평평해진 것이므로 위 시험도 무의미하다.
+    _naive = [c for _, c in _st45]
+    _nonvac = max(_naive) > min(_naive) * 1.05
+    ok &= _nonvac
+    print(f"field-stats-nonvacuous: 옛 규약(점군 백분위)은 예산에 따라 움직인다 "
+          f"({min(_naive):.4g} → {max(_naive):.4g}, {max(_naive)/max(min(_naive), 1e-30):.2f}×)  "
+          f"{'OK' if _nonvac else 'FAIL'}")
+    #  ★ Markov — 같은 모집단의 비는 **정의상** ≤ 500 이어야 한다 (리뷰어 A-2 의 부등식).
+    _s0 = _st45[0][0]
+    _mk = _s0['p99_8'] <= 500.0 * _s0['mean'] + 1e-12
+    ok &= _mk
+    print(f"field-stats-markov: p99.8 ≤ 500·⟨|J|⟩ (같은 모집단)  "
+          f"{_s0['p99_8'] / max(_s0['mean'], 1e-30):.1f} ≤ 500  {'OK' if _mk else 'FAIL'}")
 
     print('SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1

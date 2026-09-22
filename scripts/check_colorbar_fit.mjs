@@ -142,7 +142,11 @@ chk('부제도 맞춤 결과로 그린다', !/cx\.fillText\(String\(sp\.sub\),/.
     const q = _focusTicks({ focus_top: 3.85e3 });
     chk('눈금 양 끝이 0 과 1', q[0].p === 0 && q[q.length - 1].p === 1);
     chk('눈금 p 가 단조 증가', q.every((x, i) => i === 0 || x.p > q[i - 1].p));
-    chk('마지막 눈금이 기준량을 밝힌다 (⟨J⟩)', /⟨J⟩$/.test(q[q.length - 1].label));
+    //  ★ SELF-45 (2026-09-22) — 기준량 이름이 `⟨J⟩` 에서 **`J_app`** 으로 바뀌었다.
+    //    옛 이름은 "그 분포의 평균" 으로 읽혀 외부 리뷰어가 Markov 상한 위반으로 신고했다
+    //    (실제 분모는 인가 전류밀도 I/A = σ_eff·ΔV/L, 전 단면).  검사의 **취지**(마지막
+    //    눈금이 기준량을 밝힌다)는 그대로이고 이름만 더 구체적인 것으로 고정한다.
+    chk('마지막 눈금이 기준량을 밝힌다 (J_app)', /J_app$/.test(q[q.length - 1].label));
     chk('눈금 라벨에 부동소수 찌꺼기가 없다',
         q.every(x => !/\d\.\d{6,}/.test(x.label)), JSON.stringify(q.map(x => x.label)));
     chk('top 이 없거나 비정상이면 눈금을 안 그린다 (fail-closed)',

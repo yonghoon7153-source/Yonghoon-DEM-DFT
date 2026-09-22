@@ -90,6 +90,9 @@ jobs:
       - name: STEP3 솔버 규약 (selftest)
         run: python scripts/step3_sigma.py --selftest
 
+      - name: 집중계수 복원기 (SELF-45 — 옛 payload 의 focus_top) (selftest)
+        run: python scripts/repair_focus_top.py --selftest
+
       - name: 설명 ↔ 상수 정합 (L3-11 — 어느 수식을 계산했다고 보고하는가)
         run: python scripts/generate_comparison_plots.py --selftest-descriptions
 

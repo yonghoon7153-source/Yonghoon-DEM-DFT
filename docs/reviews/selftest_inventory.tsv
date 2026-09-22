@@ -87,6 +87,7 @@ scripts/make_pressure_sweep_decks.py	--selftest	fast	none	claude	초록 0.1s (�
 scripts/make_ps_sweep_decks.py	--selftest	fast	none	claude	초록 0.1s (실측)
 scripts/make_mixer_deck.py	--selftest	fast	none	claude	초록 0.1s (실측) — 순수 함수(파일 안 씀), 외부 데이터 불요.  LIGGGHTS 실행으로 배운 제약 셋(분율=mass%% · multisphere type 1부터 연속 · cohesion 키워드 순서)과 사슬 겹침 보정을 변이 대조로 지킨다
 scripts/make_mixer_baffles.py	--selftest	fast	none	claude	초록 0.1s (실측) — 순수 기하, 외부 데이터 불요.  배플 평판의 높이·각도·법선을 설계값과 대조하고, 퇴화 높이(0·1·음수)를 거부하는 것을 변이 대조로 지킨다
+scripts/repair_focus_top.py	--selftest	fast	both	claude	초록 0.1s (실측) — SELF-45 복원기
 scripts/viz_mixer_bed.py	--selftest	fast	none	claude	초록 1s (실측) — 합성 덤프로 PNG 를 실제로 만들어 본다.  **matplotlib 필요**.  색은 viz_mpm_continuum 의 dem 팔레트를 가져다 쓰고(두 벌 금지), CJK 폰트가 없으면 한글이 조용히 □ 가 되므로 폰트 선택을 시험으로 강제한다.  덤프 없는 디렉터리는 거부
 scripts/measure_bed_aspect.py	--selftest	fast	none	claude	초록 0.2s (실측) — 순수 함수(임시 덤프 생성), 외부 데이터 불요.  프레임을 숫자순으로 고르는 것과 정착 경고를 변이 대조로 지킨다
 scripts/measure_mixing_index.py	--selftest	fast	none	claude	초록 0.4s (실측) — §24 Lacey 혼합지수.  합성 구름(완전분리·반혼합·무작위)으로 S² 순서, 부피가중≠개수가중, 숫자순 프레임, 빈 칸 보고, 바닥 검사 거부, 덱 run 줄 파싱(실제 덱 36308×2/427062).

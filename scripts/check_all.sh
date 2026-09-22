@@ -66,6 +66,9 @@ run 'porosity_filter_axes    --selftest' python3 scripts/porosity_filter_axes_ch
 run 'sr01_stamp_compare     --selftest' python3 scripts/sr01_stamp_compare.py --selftest
 run 'mpm_webapp_payload     --selftest-temperature' python3 scripts/mpm_webapp_payload.py --selftest-temperature
 run 'step3_sigma            --selftest' python3 scripts/step3_sigma.py --selftest
+#  ★ SELF-45 (2026-09-22) — 필드 통계가 **그림 예산에 불변**인지는 step3_sigma 의 selftest 가
+#    보고, 옛 payload 를 고치는 후처리기는 자기 selftest 가 본다 (복원의 정확성 + 거부).
+run 'repair_focus_top       --selftest' python3 scripts/repair_focus_top.py --selftest
 run 'gen_plots  --selftest-descriptions' python3 scripts/generate_comparison_plots.py --selftest-descriptions
 run 'gen_plots  --selftest-fits' python3 scripts/generate_comparison_plots.py --selftest-fits
 run 'eis_drt_ica            --selftest' python3 scripts/eis_drt_ica.py --selftest

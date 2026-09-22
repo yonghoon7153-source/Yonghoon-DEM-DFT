@@ -841,6 +841,41 @@ def _regime_label(r_bulk, blind):
             '≈ 계면과 동급 — carbon-free/희박 배선 regime' if r_bulk < 100.0 else '≫ 계면(!)')
 
 
+def _field_basis(stats, voxcm, j_mean_z):
+    """`field_scale_*` 에 붙는 **집중계수의 정의 원장** (`SELF-45`, 2026-09-22).
+
+    왜 있나 — 2026-09-22 리뷰어 지적 A-2: *"p99.8/평균 = 1447 은 Markov 로 불가능하다
+    (비음수 분포면 `q_0.998 ≤ 500·E[X]`)"*.  **부등식은 맞고, 우리 열 이름이 틀렸다**:
+    `focus_top` 의 분모는 그 백분위의 모집단 평균이 **아니라** 인가 전류밀도
+    `J_app = I/A = σ_eff·ΔV/L` 이고, `A` 는 **공극·SE 를 포함한 전 단면**이다
+    (`step3_sigma.solve_sigma_z`: `σ_eff = I·L/(A·ΔV)`, `A = nx·ny·vox²`).
+    분자는 **도체 복셀만**의 |J| 백분위다 ⇒ 모집단도 면적 규약도 달라 Markov 가 두 수를
+    묶지 않는다.  실측 (AM 협착 픽스처) `⟨|J|⟩_cond/J_app` = 2.0~3.1.
+    ⇒ 두 비를 **나란히** 싣고 분모를 문자열로 못 박는다.  `focus_over_local_mean` 은
+      같은 모집단이라 **정의상 ≤ 500** 이고, 넘으면 그것은 라벨이 아니라 버그다.
+    ⚠ 소비자는 `focus_basis` 를 **읽어서** 캡션에 적을 것 — 표 이름만으로는 같은 질문이
+      다시 온다 (실제로 왔다)."""
+    if not stats:
+        return {}
+    mean_A = float(stats['mean']) / voxcm
+    p998_A = float(stats['p99_8']) / voxcm
+    return {
+        'j_mean_local_A_cm2_per_V': float(f"{mean_A:.4g}"),
+        'j_max_A_cm2_per_V': float(f"{float(stats['max']) / voxcm:.4g}"),
+        'focus_over_local_mean': float(f"{p998_A / max(mean_A, 1e-30):.4g}"),
+        'local_mean_over_j_app': float(f"{mean_A / max(j_mean_z, 1e-30):.4g}"),
+        'n_conducting_voxels': int(stats['n_total']),
+        'percentile_basis': 'full_field',            # ⛔ 점군이 아니다 (SELF-45)
+        'cloud_subsampled': bool(stats['subsampled']),
+        'focus_basis': ('focus_top = J_99.8 / J_app; J_99.8 = 99.8th percentile of |J| over '
+                        'CONDUCTING voxels (full field, not the render cloud); J_app = I/A = '
+                        'sigma_eff*dV/L = applied through-plane current density averaged over the '
+                        'FULL electrode cross-section (pores and SE included).  Different '
+                        'populations and different area conventions -> Markov does not relate '
+                        'them.  focus_over_local_mean uses the SAME population as the percentile '
+                        'and is therefore bounded by 1/(1-0.998) = 500 by construction.')}
+
+
 def _blind(a):
     return not bool(getattr(a, 'show_results', False))
 
@@ -1932,14 +1967,21 @@ def main():
             elif _res3['n_dof']:
                 je_am = np.nan_to_num(_s3.per_particle_current(_res3, sid3, pid3, _sig3, len(r)),
                                       nan=0.0, posinf=0.0, neginf=0.0)   # a bare NaN token kills JSON.parse
-                _p998e = None                               # 필드 정량 스케일용 (아래 step3에 기록)
+                _p998e = _este = None                       # 필드 정량 스케일용 (아래 step3에 기록)
                 if not a.no_field:                          # ELECTRONIC field (AM+carbon {1,2,3,4,5}) — the
-                    _ep, _ej = _s3.field_point_cloud(       # paper Fig-4 grammar: |J_e| cloud, hot backbone
+                    _ep, _ej, _este = _s3.field_point_cloud(  # paper Fig-4 grammar: |J_e| cloud, hot backbone
                         _res3, sid3, _sig3, a.step3_vox, (1, 2, 3, 4, 5, 7, 8), max_points=a.field_max_points)
                     if _ep is not None:
                         _ej = np.nan_to_num(_ej, nan=0.0, posinf=0.0, neginf=0.0)  # bare NaN kills JSON.parse
-                        _p998e = max(float(np.percentile(_ej, 99.8)), 1e-30)
-                        _ejn = _ej / _p998e                                        # p99.8-norm (top 0.2%>1,
+                        #  ★★ 2026-09-22 (`SELF-45`) — **점군이 아니라 장(field) 전수의 p99.8.**
+                        #    옛 판은 `np.percentile(_ej, 99.8)` 로 **돌려받은 점군**에 걸었는데
+                        #    그 점군은 상위 35 % 를 전수 보존하는 hot-biased 추출이라, 보고된
+                        #    `focus_top` 이 `--field-max-points`(그림 예산)의 함수였다
+                        #    (실측 ×201.2 → ×71.6 → ×52.9).  정규화도 같은 값을 써야 컬러바
+                        #    상단 라벨과 색이 같은 것을 가리킨다 — 의도적으로 뜨거운 점을
+                        #    그리므로 0.2 % 보다 많은 점이 1.0 을 넘는 것이 **정상**이다(뷰어 clamp).
+                        _p998e = max(float(_este['p99_8']), 1e-30)
+                        _ejn = _ej / _p998e                                        # 장-p99.8 정규화
                         elec_field = [[round(float(_ep[i, 0]), 2), round(float(_ep[i, 1]), 2),   # viewer clamps;
                                        round(float(_ep[i, 2]), 2), round(float(_ejn[i]), 4)]     # keeps dim-end
                                       for i in range(len(_ep))]                                  # range vs max-norm)
@@ -2025,6 +2067,7 @@ def main():
                         'dV_V': 1.0,
                         'areal_capacity_mAh_cm2': float(f"{_areal_mAh_cm2:.4g}"),
                         'j_1C_mA_cm2': float(f"{_areal_mAh_cm2:.4g}"),
+                        **_field_basis(_este, _voxcm, _jm_e),
                         'note': ('v(0..1): ×j_top→A/cm²@ΔV=1V; ×focus_top→|J|/⟨J_z⟩(바이어스 무관); '
                                  '국소 mA/cm²@C-rate = focus×j_1C×C (j_1C=면적용량, Chen2020 창)')}
                 # COLLECTOR-INTERFACE post-processing (C-SUS/primer axis, manuscript-anchored):
@@ -2304,12 +2347,17 @@ def main():
                 if _res3i['n_dof']:
                     _sharei = _s3.phase_current_share(_res3i, sid3, _sig3i)
                     if not a.no_field:                      # IONIC field (SE+SDCP {5,6}) — Li⁺ |J| cloud,
-                        _ip, _ij = _s3.field_point_cloud(   # the partner panel to the electronic field
+                        _ip, _ij, _esti = _s3.field_point_cloud(  # partner panel to the electronic field
                             _res3i, sid3, _sig3i, a.step3_vox, (5, 6, 8), max_points=a.field_max_points)
                         if _ip is not None:
                             _ij = np.nan_to_num(_ij, nan=0.0, posinf=0.0, neginf=0.0)  # bare NaN kills JSON.parse
-                            _p998i = max(float(np.percentile(_ij, 99.8)), 1e-30)
-                            _ijn = _ij / _p998i                                        # p99.8-norm (top 0.2%>1,
+                            #  ★★ SELF-45 (2026-09-22) — 전자 쌍둥이와 **같은 규약**: 장 전수의
+                            #    p99.8 (점군 백분위 금지).  ⚠ 이온망은 SE 매트릭스가 모집단이라
+                            #    N 이 전자망보다 훨씬 크다 ⇒ 옛 편향도 **채널마다 달랐다**
+                            #    (그래서 "전자 ×1447 vs 이온 ×26.75 = 54배" 같은 채널 간 비도
+                            #     안전하지 않았다).
+                            _p998i = max(float(_esti['p99_8']), 1e-30)
+                            _ijn = _ij / _p998i                                        # 장-p99.8 정규화
                             ion_field = [[round(float(_ip[i, 0]), 2), round(float(_ip[i, 1]), 2),   # viewer clamps)
                                           round(float(_ip[i, 2]), 2), round(float(_ijn[i]), 4)]
                                          for i in range(len(_ip))]
@@ -2329,6 +2377,7 @@ def main():
                                 # 정상상태 단일-이온 SE: 이온 관통 ⟨J⟩ = 전자 ⟨J⟩ = 면적전류 (직렬)
                                 'areal_capacity_mAh_cm2': _fse.get('areal_capacity_mAh_cm2'),
                                 'j_1C_mA_cm2': _fse.get('j_1C_mA_cm2'),
+                                **_field_basis(_esti, _voxcm, _jm_i),
                                 'note': ('v(0..1): ×j_top→A/cm²@ΔV=1V; ×focus_top→|J|/⟨J_z⟩(바이어스 무관); '
                                          '국소 mA/cm²@C-rate = focus×j_1C×C (j_1C=면적용량, Chen2020 창)')}
                     # 전자(정본) + 전자(bare 집전체: 계면 강하 그림) + 이온 3곡선 (헬퍼는 위에서 정의).
@@ -2351,6 +2400,10 @@ def main():
                     #  ★ 판정기가 **기계로** 읽는 이온 수렴 봉인 (전자의 cg_info/unconverged 와 대칭)
                     step3['ion_cg_info'] = int(_res3i.get('cg_info', 0) or 0)
                     step3['ion_unconverged'] = _ion_unconv
+                    #  ★ SELF-45 — 전자는 `n_dof` 를 싣는데 이온은 안 실었다.  그래서 옛 payload
+                    #    로는 **이온 쪽 집중계수를 고칠 수 없다** (도체셀 수 N 을 모른다) —
+                    #    `repair_focus_top.py` 가 그 경우 fail-closed 로 거부한다.
+                    step3['ion_n_dof'] = int(_res3i['n_dof'])
                     step3['ion_dissipation_share'] = {_s3.SID_NAME.get(k, str(k)): round(v, 4)
                                                       for k, v in _sharei.items()}
                     step3['sigma_ion_table_S_cm'] = {'SE': a.sigma_ion_se, 'SDCP': a.sigma_ion_sdcp}
@@ -2507,6 +2560,7 @@ def main():
                                                 field_max=a.field_max_points, periodic_xy=a.periodic)
                         _tfp = _th.pop('_field_pts', None)
                         _tfj = _th.pop('_field_j', None)
+                        _tfst = _th.pop('_field_stats', None)
                         _tres = _th.pop('_res', None)          # T(z) 프로파일용 (JSON 前 pop 필수)
                         step3['thermal'] = {
                             'k_eff_W_mK': _th['k_eff_W_mK'], 'n_dof': _th['n_dof'],
@@ -2531,8 +2585,12 @@ def main():
                                 step3.setdefault('phi_profile', {})['thermal'] = _tprof
                         if _tfp is not None and _tfj is not None:   # 열류 |k∇T| 필드 (전자/이온 필드 문법)
                             _tfj = np.nan_to_num(_tfj, nan=0.0, posinf=0.0, neginf=0.0)
-                            _p998t = max(float(np.percentile(_tfj, 99.8)), 1e-30)
-                            _tfjn = _tfj / _p998t                   # p99.8 정규화 (상위 0.2%>1 = 열 hot-spot)
+                            #  ★ SELF-45 — 전자·이온과 같은 규약 (장 전수 p99.8).  열류는 보고되는
+                            #    비가 없어 라벨 위험은 없지만, 세 필드의 **정규화 규약이 갈리면**
+                            #    한 화면에서 비교하는 뷰어가 거짓말을 한다.
+                            _p998t = max(float(_tfst['p99_8']) if _tfst
+                                         else float(np.percentile(_tfj, 99.8)), 1e-30)
+                            _tfjn = _tfj / _p998t                   # 장-p99.8 정규화 (상위 = 열 hot-spot)
                             thermal_field = [[round(float(_tfp[i, 0]), 2), round(float(_tfp[i, 1]), 2),
                                               round(float(_tfp[i, 2]), 2), round(float(_tfjn[i]), 4)]
                                              for i in range(len(_tfp))]

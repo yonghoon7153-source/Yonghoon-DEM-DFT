@@ -4537,6 +4537,23 @@
    ]
   },
   {
+   "id": "SELF-45",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "reviewer(A-2) → claude",
+   "opened_in": "docs/session_20260922_progress.md",
+   "title": "전류 집중계수 `focus_top` 이 **장(field)이 아니라 그림용 점군**의 99.8 백분위였다 — 보고값이 `--field-max-points` 의 함수",
+   "note": "외부 리뷰어가 *\"Table S3 의 p99.8/평균 = 1447·1189 는 Markov 로 불가능하다 (비음수면 q_0.998 ≤ 500·E[X])\"* 라고 지적했다.  **부등식은 맞다.**  확인 결과 둘이 갈린다.\n① **라벨 결함 (리뷰어가 맞힘)** — `focus_top` 의 분모는 그 백분위의 모집단 평균이 아니라 인가 전류밀도 `J_app = I/A = σ_eff·ΔV/L` 이고 `A` 는 **공극·SE 포함 전 단면**이다 (`step3_sigma.solve_sigma_z:891`).  분자는 **도체 복셀만**의 |J| 백분위 (`mpm_webapp_payload:1941` → `field_point_cloud`) ⇒ 모집단도 면적 규약도 달라 Markov 가 두 수를 묶지 않는다.  실측 `⟨|J|⟩_cond/J_app` = 2.0~3.1.\n② **진짜 버그 (리뷰어가 못 본 쪽)** — 그 백분위를 **부분추출된 점군**에 걸고 있었다.  `field_point_cloud` 는 그림에서 백본을 살리려고 상위 `hot_budget_frac`(0.35)×`max_points` 를 **전수 보존**하므로, 집히는 값은 장의 99.8 % 가 아니라 **위에서 `0.002·max_points` 번째 셀**이다.\n실측 (AM 협착 픽스처, 실물 `solve_sigma_z`, N=157,889 · vox 0.15): `--field-max-points` 를 5,000 → 20,000 → 40,000 → 90,000 → 전수로 키우면 같은 침대의 같은 양이 **×201.2 → ×157.0 → ×118.6 → ×71.6 → ×52.9** 로 움직인다 (생산 예산 90,000 에서 **1.35× 과대**).\n⚠⚠ **편향이 꼬리 모양에 걸려 침대·채널마다 다르다** — 같은 격자에서 탄소 섬유가 있는 침대는 상위가 고원이라 1.00× 였다.  ⇒ **SBE↔DBE 비에서도, 전자↔이온 비에서도 상쇄되지 않는다.**  `docs/reviews/ms_si_v7_edit_sheet_20260901.md` §4-3b 와 `ms_readthrough_20260903.md` 의 *\"×1447 → ×1189 (−17.8 %)\"* 및 *\"전자/이온 = 54배\"* 는 **재계산 전까지 인용 불가**다 (둘 다 아직 **제안**이고 본문·Methods·덱에는 안 들어갔다 — 전수 스윕으로 확인).\n★ 규율 ⑤ 의 그 자리 — *\"후보를 고르는 코드가 곧 사각지대다\"*.  같은 파일의 `joule_hotspot` 은 처음부터 `conc_ratio`·`hot_frac_50` 을 추출 **전**에 쟀다 (:1284-1287) ⇒ 한 모듈 안에서 규약이 갈려 있었고, 갈린 쪽만 보고값이 됐다.\n수리: `field_point_cloud` 가 `stats`(전수 `p99_8`·`mean`·`n_total`)를 같이 반환하고 소비자는 그것만 쓴다 (전자·이온·열류 셋 다 + 컬러바 정규화).  `field_scale_*` 에 같은 모집단 비 `focus_over_local_mean`(정의상 ≤ 500)과 분모 정의 문자열 `focus_basis` 를 병기.  옛 payload 는 **재실행 없이** `scripts/repair_focus_top.py` 로 복원된다 — 상위 35 % 가 전수 보존돼 있어 `0.002·N ≤ 0.35·max_points` 면 정확하다 (픽스처 검증 +0.037 %); 조건을 못 넘거나 이온 `ion_n_dof` 가 없는 옛 payload 는 **거부**한다.",
+   "evidence_tests": [
+    "scripts/step3_sigma.py",
+    "scripts/repair_focus_top.py",
+    "scripts/mpm_webapp_payload.py"
+   ],
+   "fixed_in": "scripts/step3_sigma.py · scripts/mpm_webapp_payload.py · scripts/repair_focus_top.py · webapp/static/js/viewer3d.js",
+   "verification_note": "⬜ 잔여 둘 — ① 이 커밋의 SHA 로 `claimed_fixed` 승격 ② 원고용 두 케이스(SBE·DBE)의 실제 payload 를 `repair_focus_top.py` 에 통과시켜 정정값 산출.  그 payload 는 이 리포에 없어 **저자 기계에서** 해야 한다.\n재현: `python3 scripts/step3_sigma.py --selftest` (field-stats-budget-invariant · -nonvacuous · -markov) · `python3 scripts/repair_focus_top.py --selftest`."
+  },
+  {
    "id": "LHS-09",
    "severity": "P2",
    "status": "open",

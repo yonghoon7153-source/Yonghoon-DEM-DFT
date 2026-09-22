@@ -5143,8 +5143,17 @@ function showMPMAnalysisSummary(state) {
       : (pore.eps_total_pct != null ? '비퍼콜 · ε ' + pore.eps_total_pct + '% (기공 폐색)' : '—')],
     ['첨가제→SE 거리 (분산)', dAll.nn_med_um != null
       ? dAll.nn_med_um + ' µm (×' + dAll.nn_clustering + ' vs random)' : '—'],
-    ['전류 집중 e (p99.8/⟨J⟩)', fse.focus_top != null ? '×' + Number(fse.focus_top).toPrecision(3) + ' ⟨J⟩' : '—'],
-    ['전류 집중 ion (p99.8/⟨J⟩)', fsi.focus_top != null ? '×' + Number(fsi.focus_top).toPrecision(3) + ' ⟨J⟩' : '—'],
+    // SELF-45 (2026-09-22): 분모를 이름에 **못 박는다**.  옛 라벨 '⟨J⟩' 는 "그 분포의 평균"
+    // 으로 읽혀 리뷰어가 Markov 상한(q₀.₉₉₈ ≤ 500·E[X]) 위반으로 신고했다 — 분모는 인가
+    // 전류밀도 J_app = I/A(전 단면)이지 도체셀 평균이 아니다.  같은 모집단 비도 병기한다.
+    ['전류 집중 e (p99.8 / J_app)', fse.focus_top != null
+      ? '×' + Number(fse.focus_top).toPrecision(3) + ' J_app'
+        + (fse.focus_over_local_mean != null
+           ? '  (= ×' + Number(fse.focus_over_local_mean).toPrecision(3) + ' ⟨|J|⟩_도체셀)' : '') : '—'],
+    ['전류 집중 ion (p99.8 / J_app)', fsi.focus_top != null
+      ? '×' + Number(fsi.focus_top).toPrecision(3) + ' J_app'
+        + (fsi.focus_over_local_mean != null
+           ? '  (= ×' + Number(fsi.focus_over_local_mean).toPrecision(3) + ' ⟨|J|⟩_도체셀)' : '') : '—'],
     ['면적용량 (자동산출)', fse.areal_capacity_mAh_cm2 != null
       ? Number(fse.areal_capacity_mAh_cm2).toFixed(2) + ' mAh/cm² · 1C ' + Number(fse.j_1C_mA_cm2).toFixed(2) + ' mA/cm²' : '—'],
     ['반응 계면 (BV faces)', rxn.n_bv_faces != null
@@ -5293,7 +5302,7 @@ function showMPMAnalysisSummary(state) {
     ['z / 손실분담', 'z = 두께방향(0 하단 집전체 ~ 상단 압축면) · 손실(발열)분담 = 각 상의 전력손실 % (∝ J²·R)'],
     ['pore-τ', '기공(void)상 유효확산 tortuosity (D_eff/D0 = ε/τ) · 구조 지표 — Li⁺ 수송 τ 아님(수송은 SE 접촉망 σ_ion) · 비퍼콜 = 기공 폐색(기체 불투과)'],
     ['분산 D / nn', 'D = 셀별 첨가제 점수 분산/평균(AM-마스킹, 랜덤=1·응집↑, 같은 phase run간 비교) · nn = SE→최근접 첨가제 거리(µm), ×N = 동밀도 랜덤 대비'],
-    ['전류 집중 (focus)', '|J|(p99.8)/⟨J_z⟩ · 전류 쏠림 무차원 지표(선형해라 바이어스 무관) · 낮을수록 균일=병목 해소 · 운전 국소 mA/cm² = focus×면적전류×C'],
+    ['전류 집중 (focus)', 'focus = J(p99.8) / J_app.  분자 = **도체 복셀만**의 |J| 99.8 백분위(장 전수 — 그림 점군 아님, SELF-45) · 분모 J_app = I/A = σ_eff·ΔV/L = **공극·SE 를 포함한 전 단면** 평균 인가 전류밀도.  ⇒ 분자·분모의 모집단이 다르므로 Markov 상한 500 이 걸리지 않는다.  같은 모집단 비 J(p99.8)/⟨|J|⟩_도체셀 은 정의상 ≤ 500 이고 옆에 같이 표시된다.  선형해라 바이어스 무관 · 낮을수록 균일=병목 해소 · 운전 국소 mA/cm² = focus×면적전류×C'],
     ['면적용량 / BV faces', '면적용량 = F·c_max·|Δx|·V_AM/면적 (Chen2020 창, 자동산출); 1C 전류밀도 = 면적용량/1h · BV faces = AM|SE·AM|SDCP 반응계면 수(STEP4), active% = 반응 참여 입자'],
     ['SE/solid · ρ_bulk', 'SE 부피 / 전 고체상 % · ρ_bulk = 침대 벌크 밀도 (g/cm³)'],
     ['사이클 열화 fade(N)', '진짜 열화 = ★정직 분해(frame[5]): ①접촉-기계 몫 = ledger(recontact-forbid: 충전상태 gap→δcr 접촉파단→R_ct↑, v1 MPM으로 gap 검증) ②화학 몫 = B-1 계면상(CEI). '
@@ -5743,7 +5752,7 @@ function _focusTicks(f) {
   for (let v = step; v < top * 0.86; v += step) {
     t.push({ p: v / top, label: '×' + Number(v.toFixed(dec)) });
   }
-  t.push({ p: 1, label: '×' + Number(top.toPrecision(3)) + ' ⟨J⟩' });
+  t.push({ p: 1, label: '×' + Number(top.toPrecision(3)) + ' J_app' });
   return t;
 }
 /* COMSOL식 표면 반응전류 필드 지오메트리 빌더 (단독뷰어 renderSt4Faces.buildSurface와 동일 문법).
@@ -6202,10 +6211,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
      '운전(1C) 전자 평균 전류밀도 = 면적용량[mAh/cm²]×1C = j_1C [mA/cm²] (payload j_1C_mA_cm2).\n@1V 프로브(σ_e/L=273 A/cm²)를 실운전 전류로 환산한 값 — 전류가 rate-고정이라 평균은 j_1C(~3 mA/cm²).\n전류보존으로 이온판과 동일값; σ 차이는 과전위 η=J·L/σ로 이동(이온이 10⁴× 비쌈). 국소 피크 = j_1C × 집중(focus 행).'],
     ['⟨J_ion⟩ 평균 (mA/cm²@1C)', jc1(sA), jc1(sB),
      '운전(1C) 이온 평균 전류밀도 = j_1C [mA/cm²] — 전류보존이라 전자판과 같은 값.\n@1V의 σ_ion/L(0.028 A/cm²)와 전자 273의 10⁴× 격차는 운전전류에선 사라짐(둘 다 총전류 j_1C를 나름).\n채널 차이는 평균이 아니라 국소 집중(focus 행)·과전위에서 드러남.'],
-    ['e-집중 p99.8 (×⟨J_e⟩)', (sA.field_scale_e || {}).focus_top, (sB.field_scale_e || {}).focus_top,
-     '전류 집중계수 focus = |J|(p99.8) / ⟨J_z⟩ — 선형해라 바이어스 무관(구조 고유량).\n국소 운전값 = focus × 면적전류 × C-rate [mA/cm²].\n↓ = 직렬 병목 해소(평균은 오르고 극단 핫스팟 의존은 준다).\n⚠ 옛 캡션의 "(+52%) / (−23%)" 숫자는 vox 0.4 점-스탬프 산물로 **철회**됐다 (CL-24) — 방향만 읽고 값은 payload 에서 볼 것. 논문: "current-focusing factor".'],
-    ['ion-집중 p99.8 (×⟨J_ion⟩)', (sA.field_scale_ion || {}).focus_top, (sB.field_scale_ion || {}).focus_top,
-     '이온판 집중계수 — 최악 SE 목(constriction)의 국소 전류 / 평균.\n↓ = SDCP 이온 우회로(분담 13.8%)가 SE 병목을 분산 → 국소 SE 과부하 완화 = 수명/안정성 축의 이득.\n논문: "peak constriction current −8%; the ionic counterpart of series-constriction relief".'],
+    ['e-집중 p99.8 (× J_app)', (sA.field_scale_e || {}).focus_top, (sB.field_scale_e || {}).focus_top,
+     '전류 집중계수 focus = J(p99.8) / J_app — 선형해라 바이어스 무관(구조 고유량).\n분자 = 도체 복셀만의 |J| 99.8 백분위(장 전수) · 분모 J_app = I/A = σ_eff·ΔV/L = 공극·SE 포함 전 단면 인가 전류밀도 ⇒ **모집단이 다르다**(Markov 500 상한은 같은 모집단 비에만 걸린다 — 그 비는 "×⟨|J|⟩_도체셀" 로 따로 싣는다).\n국소 운전값 = focus × 면적전류 × C-rate [mA/cm²].\n↓ = 직렬 병목 해소(평균은 오르고 극단 핫스팟 의존은 준다).\n⚠ SELF-45 이전(2026-09-22)에 만들어진 payload 의 focus_top 은 **그림 점군**의 백분위라 과대다 (--field-max-points 의 함수) — scripts/repair_focus_top.py 로 고쳐 읽을 것.\n⚠ 옛 캡션의 "(+52%) / (−23%)" 숫자는 vox 0.4 점-스탬프 산물로 **철회**됐다 (CL-24) — 방향만 읽고 값은 payload 에서 볼 것. 논문: "current-focusing factor".'],
+    ['ion-집중 p99.8 (× J_app)', (sA.field_scale_ion || {}).focus_top, (sB.field_scale_ion || {}).focus_top,
+     '이온판 집중계수 — 최악 SE 목(constriction)의 국소 전류 / 인가 전류밀도 J_app(전 단면).\n↓ = SDCP 이온 우회로(분담 13.8%)가 SE 병목을 분산 → 국소 SE 과부하 완화 = 수명/안정성 축의 이득.\n⚠ 이온망은 SE 매트릭스가 모집단이라 도체셀 수 N 이 전자망보다 훨씬 크다 ⇒ SELF-45 의 옛 편향이 **채널마다 달랐다**.  전자↔이온 집중도를 나란히 비교하려면 둘 다 고친 값으로 할 것.\n논문: "peak constriction current −8%; the ionic counterpart of series-constriction relief".'],
     ['e-분담 SDCP (%)', gsh(sA, 'dissipation_share', 'SDCP'), gsh(sB, 'dissipation_share', 'SDCP'),
      'SDCP의 전자 줄열(소산) 분담 = P_SDCP/ΣP (Kirchhoff 해의 에너지 분해).\n병렬 전도라면 이득 ≈ 분담이어야 하는데 실제 분담은 그보다 훨씬 작다 = **직렬 병목 해소**의 시그니처.\n⚠ 옛 "분담 7.3%로 +52%" 짝은 vox 0.4 점-스탬프 산물로 **철회** (CL-24).  σ_SDCP 스윕의 분담↓·이득↑ 역행(방향)은 유지.'],
     ['ion-분담 SDCP (%)', gsh(sA, 'ion_dissipation_share', 'SDCP'), gsh(sB, 'ion_dissipation_share', 'SDCP'),
@@ -6886,12 +6895,12 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
              + ' A/cm² @ΔV=1V' + (fscT.j_1C_mA_cm2 ? ' · @1C top ' + Number(fscT.j_1C_mA_cm2 * fscT.focus_top).toPrecision(3) + ' mA/cm²' : '');
       } else if (fA3 && fB3) {
         subT = 'per-case self-normalized: A top ×' + Number(fA3.focus_top).toPrecision(3) + ' / B top ×'
-             + Number(fB3.focus_top).toPrecision(3) + ' ⟨J⟩ — 수치 눈금은 σ공동 스케일에서 유효';
+             + Number(fB3.focus_top).toPrecision(3) + ' J_app — 수치 눈금은 σ공동 스케일에서 유효';
       }
       cbarSpec = { map: 'jet', gamma: 1.6,
                    title: (ionic ? '|J_ion|' : '|J_e|') + (fscT ? ' / ⟨J_z⟩ current-focusing' : ' relative current density')
                           + ' (p99.8-normalized' + (jointOn ? ', σ-joint scale' : '') + ')',
-                   left: '0', right: fscT ? '×' + Number(fscT.focus_top).toPrecision(3) + ' ⟨J⟩' : 'high',
+                   left: '0', right: fscT ? '×' + Number(fscT.focus_top).toPrecision(3) + ' J_app' : 'high',
                    ...(jointOn && fscT ? { ticks: _focusTicks(fscT) } : {}),
                    ...(subT ? { sub: subT } : {}) };
     } else if (mode === 'je') {
