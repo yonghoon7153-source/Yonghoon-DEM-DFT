@@ -606,3 +606,143 @@ p99.8 정확값·Figure S14/S15 를 마무리한다.
 (수백 개의 `p2_*.sh`·`step4_grid_*.npz` 는 **옮기지 않는다**.)
 
 ⇒ 명령 전문은 아래 §I-7.
+
+---
+
+## I-7. 전송 실측 + v100 실행 명령 (2026-09-22 밤)
+
+⚠ §I-6 마지막 줄이 이 절을 가리켜 놓고 **비어 있었다**.  아래가 그 내용이다.
+
+### I-7-a. 전송 — kgy → v100 **직송**이 답이었다 (실측)
+
+옛 계획의 `kgy → WSL → v100` tar-pipe 중계는 **0.57 MiB/s**(단일) 였고 케이스당 ~50 분으로
+추정됐다.  세 번 시도해 세 번 다 실패·중단했다.  실제로 통한 경로:
+
+| 관문 | 실측 |
+|---|---|
+| kgy 가 `machine.runyour.ai` 를 푸는가 | **예** — `101.79.28.40`, 배너 `SSH-2.0-SSHPiper` |
+| 키를 kgy 에 두지 않고 되는가 | **예** — WSL 에서 `ssh-add v100.pem` 후 `ssh -A kgy` (에이전트 포워딩) |
+| 한 방 tar-pipe | ⛔ **안 된다** — 게이트웨이가 `Connection closed by remote host` 로 끊는다 (2/2) |
+| rsync | v100 에 **없었다** → `apt-get install -y rsync` 로 설치 |
+| rsync + 재시도 루프, **단일 스트림** | ✅ **SBE 8/8 · 1분 30초** |
+
+실측 SBE: `total 1,703,831,562 B` · 회선 위 **702 MB** (`speedup 2.43`) · 평균 7.36 MB/s ·
+`fibre_dia.npy` 는 **205 MB/s** (상수 배열이라 압축이 거의 다 먹는다) · `rc=0`.
+
+★ **교훈 세 줄** — ⓐ 병목은 "WSL 을 거치는 것" 이 아니라 **집 업링크를 3.3 GB 가 두 번 타는 것**
+이었다.  Windows Downloads 경유는 구간을 하나도 안 줄이므로 **더 느리다**(디스크 왕복 추가 ·
+`/mnt/c` = drvfs).  ⓑ **이 게이트웨이에 한 방 파이프를 쓰지 말 것** — 끊기면 전부 날아간다.
+`rsync --partial --append-verify` 는 `tar` 가 남긴 반쪽 파일도 **정확한 prefix 라 이어받는다**.
+ⓒ **동시 2세션이 끊김의 방아쇠로 의심**된다 (둘 다 같은 메시지로 죽었고, 단일 스트림에서는
+한 번도 안 끊겼다) ⇒ **순차로 돌린다.**
+
+재현 명령 (SBE; DBE 는 `kit_DBE` · 런디렉터리 · `dbe` 로 바꿈):
+
+```bash
+# WSL 에서 한 번 — 키는 에이전트에만 (kgy 디스크에 .pem 을 두지 않는다)
+eval "$(ssh-agent -s)"; ssh-add ~/.ssh/v100.pem
+
+ssh -A kgy '
+R=/home/kgy/sdcp/kit_SBE/run_VGCF3_PTFE1_20260827_134104_3672586
+K=/home/kgy/sdcp/kit_SBE
+n=0
+until rsync -av --partial --append-verify -z --progress \
+    --rsync-path="mkdir -p ~/runyourai/1/rerun/sbe && rsync" \
+    -e "ssh -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=30 -o ServerAliveCountMax=6" \
+    "$R/se_dump.npy" "$R/se_dump_eps.npy" "$R/phase.npy" "$R/fibre.npy" "$R/fibre_dia.npy" \
+    "$R/mpm_metrics.json" "$K/am_scaffold.csv" "$K/se_scaffold.csv" \
+    ubuntu@machine.runyour.ai:~/runyourai/1/rerun/sbe/ ; do
+  n=$((n+1)); [ $n -ge 30 ] && { echo "GAVE UP after $n"; break; }
+  echo "--- 끊김, 재시도 $n (15초 후) ---"; sleep 15
+done
+echo "RSYNC EXIT rc=$?"
+'
+```
+
+⚠ 에이전트 환경변수(`SSH_AUTH_SOCK`)는 **셸 단위**다 — 새 창을 열면 포워딩이 깨진다.
+
+### I-7-b. 지문 검수 결과 (2026-09-22, v100 `~/runyourai/1/rerun/`)
+
+```bash
+ssh v100 'for d in sbe dbe; do echo "== $d =="; cd ~/runyourai/1/rerun/$d && \
+  for f in phase.npy fibre.npy fibre_dia.npy mpm_metrics.json; do \
+    echo "$(sha256sum $f | cut -c1-16)  $f"; done; done'
+```
+
+| | `phase` | `fibre` | `fibre_dia` | `metrics_json` |
+|---|---|---|---|---|
+| **SBE** (봉인 매니페스트 대조) | `601a887701420ea3` ✅ | `bf5ff65dd265d540` ✅ | `95d320717868a4d0` ✅ | `7b81d62524b74fca` ✅ |
+| **DBE** | `ec903b552319a935` ✅ | `ec20195cc44297d4` ★ | `b164870ad1b3f960` ★ | `17fd3a6d612768a6` ★ |
+
+★ = **이번에 처음 기록되는 값**.  DBE 는 §I 표에 `phase` 지문만 있었다 (나머지 셋은 DBE
+`meta.json` 을 안 열어 봐서 대조 기준이 없다).  ⇒ 이 세 값은 **대조가 아니라 측정**이다 —
+DBE 의 침대 동일성은 `phase` 일치 + `--expect-physics` 계약검사 + **σ_e 소수점 재현**이 닫는다.
+DBE `meta.json` 의 `input_digest` 표를 나중에 열게 되면 여기에 대조를 추가할 것.
+
+### I-7-c. ⛔ 실행 **전** 관문 (셋 다 통과해야 한다)
+
+```bash
+ssh v100 'cd ~/runyourai/1/Yonghoon-DEM-DFT && git log --oneline -1 && \
+  echo "--- percentile_basis (1 이어야 함) ---" && \
+  grep -c percentile_basis scripts/mpm_webapp_payload.py && \
+  echo "--- step3 selftest (다섯 줄) ---" && \
+  python3 scripts/step3_sigma.py --selftest 2>&1 | grep -E "field-stats|joule-stats"'
+ssh v100 'nvidia-smi --query-gpu=name,memory.total,memory.used --format=csv'
+```
+
+1. `grep -c percentile_basis` = **1** (0 이면 옛 코드 — 같은 편향값이 또 나오고 이번엔 그걸
+   정답으로 믿게 된다).
+2. selftest 가 `field-stats-fixture` · `field-stats-budget-invariant` · `field-stats-nonvacuous` ·
+   `field-stats-markov` · `joule-stats-budget-invariant` **다섯 줄**을 OK 로 낸다.
+3. GPU 가 비어 있다 (`--step3-require-gpu` · 26.4 M dof × 415 B ≈ **11 GB**).
+
+### I-7-d. SBE 실행 명령 — **v100 판** (§I-5 를 경로만 바꾼 것)
+
+§I-5 의 kgy 판에서 바뀐 곳은 **경로 셋뿐**이다: 파이썬(`/home/kgy/dem-venv/bin/python3` →
+v100 `python3`) · 스크립트(`/home/kgy/dem-mt/scripts/` → uma 리포) · `$KIT` (scaffold CSV 두 개가
+이제 런 디렉터리에 같이 있으므로 맨 이름).  **플래그는 한 글자도 안 바꾼다.**
+
+```bash
+ssh v100
+cd ~/runyourai/1/rerun/sbe
+REPO=~/runyourai/1/Yonghoon-DEM-DFT
+python3 $REPO/scripts/mpm_webapp_payload.py \
+  --se se_dump.npy --scaffold am_scaffold.csv --se-dump se_scaffold.csv \
+  --n-vox 192 --tri-step 4 --smooth 1.5 --target-porosity 0.0759 --eps se_dump_eps.npy \
+  --dilate-z 1.0719 --void-max 180000 --step3-vox 0.4 --field-max-points 90000 --step3-gpu \
+  --joule-heat --metrics-json mpm_metrics.json --case 260714_145738_778fa4 \
+  --phase phase.npy --fibre fibre.npy --fibre-dia fibre_dia.npy \
+  --collector-rint 110 --collector-name bare_Al+SBE_electrode --collector-scenario sbe \
+  --save-step4-grid step4_grid_SELF45_SBE.npz \
+  --step3-fibre-stamp segment --sigma-vgcf 78.5398 --step3-vox 0.15 --step3-bridge-um 0.48 \
+  --step3-origin-shift 0 0 0 --step3-sdcp-sphere-d 0.30 --ptfe-stamp centerline \
+  --step3-require-gpu \
+  --expect-physics vox_um=0.15,bridge_um=0.48,sigma_vgcf_S_cm=78.5398,fibre_stamp=segment,sdcp_stamp=sphere,sdcp_yield_to_vgcf=False,periodic_xy=False,ptfe_stamp=centerline \
+  --sigma-ion-sdcp 0.001 --sigma-ion-se 0.003 \
+  --no-step4 --no-thermal --no-trackb --no-pore --no-collector \
+  --out payload_SELF45_SBE.json 2>&1 | tee run_SELF45_SBE.log
+```
+
+⚠ `--step3-vox` 가 두 번 나오는 것은 **원본 그대로**다 (0.4 뒤에 0.15 — argparse 는 뒤를 쓴다).
+고치지 말 것 — 봉인 명령에서 한 글자라도 바꾸면 *"무엇이 달라졌나"* 를 따로 증명해야 한다.
+실제 적용값은 `--expect-physics vox_um=0.15` 가 **실행 전에** 검증한다.
+(⚠ `input_digest` 는 **파일 내용만** 덮으므로 명령 문자열의 보증이 아니다 — CLAUDE.md 규율 ⑤.)
+
+### I-7-e. DBE 실행 명령 — ⬜ **아직 조립 안 됨**
+
+§I-5 가 *"DBE 는 그쪽 arm `.sh`(`p2_DBE_sph_a0.*.sh`)에서 같은 네 곳만 바꿔 조립한다 — 베껴
+쓰지 말 것"* 이라고 못 박는다.  다른 값: `--collector-rint 46` · `--collector-scenario dbe` ·
+`--case` · `--target-porosity` · `--dilate-z` · `--sigma-ion-sdcp`(SDCP 가 실재해 **물리에
+영향**) 등.  ⇒ SBE 를 베끼면 **다른 물리를 돌리게 된다.**
+
+조립에 필요한 원본:
+```bash
+ssh kgy 'ls /home/kgy/sdcp/kit_DBE/run_VGCF3_PTFE0.5_SDCP0.5_20260827_150029_3687585/p2_DBE_sph_a0.*.sh'
+ssh kgy 'cat <위에서 나온 파일>'
+```
+
+### I-7-f. 수용 판정
+
+`σ_e` 가 **`0.054530439566226836`**(SBE) · **`0.0714004401030127`**(DBE) 로 **소수점까지**
+재현되면 같은 침대·같은 물리가 증명되고, 그 payload 의 `field_scale_e/ion` 이 **최종값**이다.
+⛔ 어긋나면 **멈추고 보고**한다 (다른 침대·다른 규약으로 비교하면 무효).
