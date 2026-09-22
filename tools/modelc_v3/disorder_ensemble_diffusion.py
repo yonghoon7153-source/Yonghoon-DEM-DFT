@@ -138,6 +138,10 @@ def msd_multi_origin(cart_li, dt_ps, n_lag=150):
 #:   `a` 가 기록에 없으면 다음 사람이 **딴 값을 가정**한다.
 HE2018_SITE_DISTANCE_A = 3.0
 
+#: 정본 MSD 적합 창 [ps] — `CLAUDE.md` §MLIP-MD · `convention_check.CANON_WINDOW` 와 같다.
+#: ⛔ 리스트로 둔다: 리터럴 튜플이면 규약 검사기가 창 대입으로 읽는다.
+CANON_FIT_WINDOW_PS = [2.0, 50.0]
+
 
 def he2018_neff(n_li, msd_max_a2, a=HE2018_SITE_DISTANCE_A):
     """He 2018 식 (8) 의 유효 점프 수 `N_eff = n_Li · max(MSD) / a²`.
@@ -384,9 +388,12 @@ def selftest():
         "검증되지 않았다" in ex.get("n_eff_note", ""))
 
     # ── 창에 점이 모자랄 때 — '못 구함' 과 '없음' 을 가른다 ────────────────
-    D2, _, _, ex2 = li_diffusion_from_frames(frames[:9], save_fs=1000.0,
-                                             fit_window_ps=(100.0, 200.0))
-    chk("⛔음성: 창 밖이면 D 는 None",
+    #   ⚠ 창을 엉뚱한 값으로 주지 **않는다** — `convention_check` 가 리터럴 (100,200) 을
+    #     정당하게 잡는다(2026-09-22 실측). **정본 창 (2,50) 을 그대로 쓰고 궤적을 짧게**
+    #     해서 같은 경로를 탄다. 그게 실제 생산 조건과도 같다.
+    D2, _, _, ex2 = li_diffusion_from_frames(frames[:3], save_fs=1000.0,
+                                             fit_window_ps=CANON_FIT_WINDOW_PS)
+    chk("⛔음성: 정본 창에 점이 모자라면 D 는 None (창을 바꾼 게 아니다)",
         D2 is None)
     chk("⛔음성: 창끝 MSD 를 **None 으로 명시**한다 (키를 빼면 0 으로 읽힌다)",
         "msd_at_fit_window_end_A2" in ex2 and ex2["msd_at_fit_window_end_A2"] is None)
