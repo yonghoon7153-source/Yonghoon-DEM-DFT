@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md]
+sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -599,6 +599,79 @@ physical contact". **면적이 유일한 차이라면 `C_dl` 도 2.0–2.4 배�
 ⇒ `[해석]` **등가회로 파라미터를 점추정으로 보고하는 관행의 야생 눈금**이고,
 **18호 검사 B 의 단서 (ㄹ)(셀 간 산포 ±20 % 추정)에 붙는 실측 상한**이다.
 
+## ★★★★ 처방의 네 번째 적용 (2026-09-22, `assb` 20호) — **주파수 영역이 없는 편, 그리고 처방이 시간 영역으로 번역된다**
+
+`raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md`
+(Chang 외 2020, *Ionics* 26, 1555–1561). **2019년 접수 — 이 계보에서 시간이 가장 이르다.**
+
+### 입력 점검 — 1·2단계는 적용 불가
+
+| 처방 단계 | 필요한 입력 | 20호 | 판정 |
+|---|---|---|---|
+| **1단계** (16호) | `R_CT` **와** `C_dl` 을 같이 | `equivalent circuit`·`capacitance`·`C_dl` **0회**, 본문 `impedance` **0회**(5회 전부 참고문헌), `EIS`·`Nyquist`·`DRT` **0회** | ❌ **주파수 영역이 통째로 없다** |
+| **2단계** (18호) | + 면적을 아는 대조군 | 셀 **1 개**, 면적 축 없음 | ❌ |
+| **3단계-a** (19호) | `Ea` 를 면적-불변 채널로 | 본문 `Ea`·`Arrhenius`·`temperature` **0회** (정규식 2건은 참고문헌 저자 이니셜 "Suslov EA" 오검출, 확인함) | ❌ |
+| **3단계-b** (19호) | `C` 가 물리 상한 안인가 | ★ **시간 영역으로 번역하면 있다** | ✅ **적용** |
+
+### ★★★★ 3단계-b 의 번역 — `C = τ / R`, 그리고 즉시 실패한다
+
+20호는 EIS 대신 **단일 정전류 스텝의 3시상수 분해**를 쓴다:
+`[인쇄]` `R₀` = 순간 강하 / I · `R_ct` = 이어지는 **비선형** 강하 / I ·
+`R_p` = 그 뒤 **~1 h 의 선형** 강하 / I.
+⇒ **비선형 구간의 지속이 곧 그 성분의 시상수다.** 따라서 19호의 상한 검사가
+그대로 걸린다:
+
+| 양 | 값 | 근거 |
+|---|---|---|
+| `R_ct`(Cell, 방전) | **670 Ω** | `[인쇄]` Table 1 |
+| 비선형 구간 지속 | **≈0.8–1.2 h** (합류 ≈3–5 τ 로 보면 τ ≳ 300 s) | `[도표]` Fig. 4a |
+| ⇒ `C = τ / R_ct` | **≈1.5 F = ≈1 F cm⁻²** (A = 1.539 cm²) | `[재현]` |
+| 이중층 상한 | **≈10⁻² F cm⁻²** | 19호 절 기준 |
+| **초과 배수** | **10² – 10³ 배** | `[재현]` |
+
+⇒ **`R_ct` 라 이름 붙은 성분은 전하이동이 아니다.** 19호가 `P2` 에서 찾은
+**200–480 배** 초과보다 **한 자릿수 더 크다** — 그리고 이번에는 그 위에
+**기구 서사**가 얹혀 있다(`[인쇄]` *"the de-alloying reaction is known to be
+faster than the alloying reaction"*). **서사는 이름표를 잃는다.**
+
+### ⇒ 처방에 **4단계**를 더한다
+
+> **4단계**: *"**시간 영역 분해에도 같은 검사를 건다.** 성분의 시상수 τ 와
+> 저항 R 로 `C = τ/R` 을 만들어 물리 상한 안인지 본다. 주파수 영역 분해가
+> 없다고 해서 이 검사를 면제받지 않는다."*
+
+계보: "두 값을 같이"(16호) → "+ 면적을 아는 대조군"(18호) →
+"+ `C` 가 물리 상한 안인지 + `Ea` 를 면적-불변 채널로"(19호) →
+**"+ 시간 영역에도 같은 상한 검사"(20호)**.
+
+### ★★★ 그리고 이 편에 곱 축퇴가 있다 — **음극에서, 방정식 없이**
+
+20호는 식을 한 줄도 쓰지 않는데도 곱에 걸린다. **진단 → 처방 사이**가 그 자리다:
+
+| | 20호가 말한 것 | 어느 인자 |
+|---|---|---|
+| 진단 | `[인쇄]` *"the relatively **sluggish kinetics** of the alloying process"* (근거: 음극 `R_ct` 135→340, `R_p` 60→170) | **`j₀`** |
+| 처방 | `[인쇄]` *"refine the particle size and optimize the morphology **for larger interface areas**"* | **`A`** |
+
+`[재현]` 그리고 두 인자가 실제로 갈리지 않는다: 음극은 **8.4배 과잉**
+(Li₄.₄Si 2011 mAh g⁻¹ × 0.06 g = 120.7 mAh vs 양극 14.34 mAh)이고 사이클된
+DOD 는 **11.2 %** 인데, 그 11 % 에서 음극 전위가 **0.29 V** 움직여 충전을 끊는다.
+설명은 둘 중 하나다 — **(a) 극심한 분극** 또는 **(b) 접근 가능한 음극 분율
+≈1/9 이하**. **`R₀`·`R_ct`·`R_p` 세 수로는 가를 수 없다.**
+⇒ **이 페이지의 곱이 양극(`A_eff·ε_p/R_s`)뿐 아니라 음극에도 같은 모양으로
+있다**는 첫 표본이고, **모델 없이 문장만으로도 걸린다**는 것을 보인다.
+
+### ⚠ 부수 — 뺄셈으로 만든 "접촉 저항" 의 이름표
+
+`[인쇄]` σ = 1.8×10⁻⁴ S cm⁻¹ ⇒ SE **448 Ω**, 측정 `R₀`(Cell) **810 Ω**, 차
+**362 Ω** 을 *"layer-to-layer contact resistance"* 로 배정한다.
+`[재현]` 448 Ω 은 **정확히 재현된다**(L = 1240 µm, A = 1.539 cm²). 그러나 뺀 것은
+**분리막 SE 슬래브뿐**이고, 남은 값에 `[도표]` **388 µm 양극 · 438 µm 음극
+복합체 내부의 이온 경로**가 통째로 들어 있다 — ε_SE = 0.4 · 굴곡도 2 · 평균 경로
+가정에서 **양극 복합체만 ≈350 Ω** 이다.
+⇒ **뺄셈 잔차에 물리 이름을 붙이려면 뺀 항의 완전성을 먼저 보여야 한다.**
+이 페이지의 곱 축퇴와 **같은 병**의 옴 판이다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -627,3 +700,12 @@ physical contact". **면적이 유일한 차이라면 `C_dl` 도 2.0–2.4 배�
   확인했다는 뜻이 아니다.** 10호는 `A_eff`·`ε_p`·`R_s` 를 언급조차 하지 않는다.
   주장하는 것은 **"주파수 영역에 별개의 축퇴가 하나 더 있고, 그것이 이 페이지의
   처방 중 한 줄을 약화시킨다"** 는 것뿐이다. 두 축퇴는 **독립이다.**
+- ★ **2026-09-22 (20호)**: **`C ≈ 1 F cm⁻²` 를 측정값으로 쓰지 않는다.** τ 는
+  **그림에서 읽은 합류 시간**이고 합류는 3–5 τ 라 τ 자체에 3–5 배 불확실이 있다.
+  주장은 **"자릿수가 이중층과 맞지 않는다"** 까지이고, 그 결론은 τ 를 5배 줄여도
+  바뀌지 않는다. 그리고 **`R_ct` 가 무엇인지 우리가 안다고 주장하지 않는다** —
+  **전하이동이 아니라는 것**까지다.
+- ★ **2026-09-22 (20호)**: **"접촉 저항 362 Ω 이 틀렸다" 고 주장하지 않는다.**
+  복합전극 내부 저항 추정은 **ε·τ 를 우리가 가정**한 것이고, 원전은 복합체
+  조성을 인쇄하지 않았다(ref [12] 에 있다). 주장은 **잔차가 유일 해석을 갖지
+  않는다**는 것까지다.

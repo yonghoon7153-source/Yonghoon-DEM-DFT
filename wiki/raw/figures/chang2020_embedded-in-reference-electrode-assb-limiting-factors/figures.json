@@ -1,0 +1,51 @@
+{
+ "slug": "chang2020_embedded-in-reference-electrode-assb-limiting-factors",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "451b8e91-19._Characterization_of_limiting_factors_of_an_all-solid-state_Li-ion_battery_using_an_embedded_indium_reference_electrode.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 V1 (a), V2 (b), and V3 (c) change profile as a function of time during the first discharge, indicating R0, Rct, and Rp; V1 (c), V2 (d), and V3 (f) change profile as a function of time during the first charge, indicating R0, Rct, and Rp",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    47.9,
+    550.3,
+    531.4
+   ],
+   "w": 2106,
+   "h": 2016,
+   "dpi": 300,
+   "src": "451b8e91-19._Characterization_of_limiting_factors_of_an_all-solid-state_Li-ion_battery_using_an_embedded_indium_reference_electrode.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1 R0, Rct, and Rp of ‘Cell R’, ‘Cathode R’, and ‘Anode R’ during the first discharge, which were determined on the basis of Fig. 4a–c, respectively; R0, Rct, and Rp of ‘Cell R’, ‘Cathode R’, and ‘Anode R’ during the first charge, which were determined on the basis of Fig. 4d–f, respectively. Rtotal is the sum of R0, Rct, and Rp",
+   "rotated_deg": 0,
+   "bbox": [
+    45.9,
+    28.0,
+    549.3,
+    721.2
+   ],
+   "w": 2098,
+   "h": 2890,
+   "dpi": 300,
+   "src": "451b8e91-19._Characterization_of_limiting_factors_of_an_all-solid-state_Li-ion_battery_using_an_embedded_indium_reference_electrode.pdf",
+   "blank": 0.847
+  }
+ ]
+}
