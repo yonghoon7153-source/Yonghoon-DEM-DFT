@@ -819,8 +819,8 @@ several particles to assess the uniformity of the coating layer (`Fig. S5a-f`)."
 | **`nolan2021_garnet_cathode_coating`** | ★ **σ 교차값** | **Li₄Ti₅O₁₂ σ = 5.7×10⁻⁷ S/cm (RT)** — §13-2 환산의 두 번째 입력 |
 | **`aykol2016_ht_cathode_coating_design`** | ★ **Li–Ti–O 상도** | OQMD Li–Ti–O 삼원 상도에 **Li₄Ti₅O₁₂ 가 hull 위(안정)** 로 표시 |
 | **`wei2023_linbo3_coating_cutoff_voltage_lco_argyrodite`** · **`lee2026_lpscl_coating_thickness_ncm811`** | 🟡 **5각형 동료** | 습식/건식 두께 축. 이 논문이 **등각 상한**을 맡는다 |
-| **inbox `130. Bong, JPS 577 (2023) 233259`** | ⭐ **이 논문의 ref [60]** | LiNbO₃ **두께·균일도** — 이 논문이 *"mol% 제어는 두께 제어가 안 된다"* 의 근거로 인용. **digest 미작성 — 수배 1순위** |
-| **inbox `20. Lee, SmallStruct 2026, LPSCl coating thickness NCM811`** | 🟡 | 같은 두께 축 |
+| **`bong2023_linbo3_thickness_uniformity_ncm523`** (inbox `130. Bong, JPS 577 (2023) 233259`) | ⭐ **이 논문의 ref [60]** | LiNbO₃ **두께·균일도** — 이 논문이 *"mol% 제어는 두께 제어가 안 된다"* 의 근거로 인용. ✅ **digest 완료 (2026-09-22)** — `papers/bong2023_linbo3_thickness_uniformity_ncm523.md` · 비교표 **§H 2행 + §J-28** |
+| **`lee2026_lpscl_coating_thickness_ncm811`** (inbox `20. Lee, SmallStruct 2026`) | 🟡 | 같은 두께 축. ✅ **digest 완료 (2026-09-22)** — 비교표 **§A 1행 + §H 2행 + §J-26** |
 
 ---
 
@@ -853,7 +853,7 @@ several particles to assess the uniformity of the coating layer (`Fig. S5a-f`)."
    ⇒ **§12-1 의 공백을 메우는 유일한 길.** 수배 1순위.
 2. ⭐⭐ **[60] Bong et al., *J. Power Sources* 577, 233259 (2023)** — 우리 inbox 에 **이미 있다**
    (`130. JPowerSources_2023_Bong_LiNbO3_thickness_uniformity_NCM523_sulfide_ASSB_MAIN.pdf`).
-   *"두께·균일도"* 를 정면으로 다룬 습식/건식 짝 ⇒ **5각형 완성에 필요.** digest 미작성.
+   *"두께·균일도"* 를 정면으로 다룬 습식/건식 짝 ⇒ **5각형 완성에 필요.** ✅ **2026-09-22 digest 완료** (`papers/bong2023_linbo3_thickness_uniformity_ncm523.md`).
 3. ⭐ **[52] Banerjee et al., *ACS AMI* 11, 43138 (2019)** — *"1.75–4.25 V 에서 LTO 안정"* 의 **원 출처**.
    `zhu2015` 의 3.71 V 와 어떻게 갈리는지 확인해야 §11-2 판정이 닫힌다.
 4. **[54] Huang et al., *Natl. Sci. Rev.* 6, 239 (2018)** — *"비정질 LTO 가 더 높은 σ"* 의 근거.
