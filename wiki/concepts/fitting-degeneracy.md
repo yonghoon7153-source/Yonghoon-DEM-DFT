@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-22
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -281,6 +281,36 @@ flat 방향의 비율이 "LAM_PE ≈ LAM_NE 는 수학" 가설의 직접 증거 
 applied to simulated immittance data" 이고 ASB 실험 적용은 0 이다.**
 → 축퇴를 어디에서 어떻게 깨는지는 [[assb-lampe-contact-product-degeneracy]] ·
 [[assb-contact-loss-vs-lampe]].
+
+### ★★★ 갱신 (2026-09-22, `assb` 11호 Yu et al. 2024) — 그 표준 문장을 실제로 돌리면 무슨 일이 나는가
+
+10호는 **리뷰**였다. `assb` **11호(Yu et al. 2024, *J. Power Sources* 597, 234116)**
+가 그 처방(DRT)을 실제로 돌린 첫 편이고, **위 표의 두 번째 줄이 데이터로 나타난다.**
+
+★★ **축퇴가 한 층 위에 있다는 것이 확인됐다.** 이 페이지는 지금까지 **파라미터
+값**(`X1 ↔ X3`, `LAM_NE ↔ γ_Si`)의 축퇴를 다뤘다. 11호가 보여 주는 것은
+**모델 차수 자체가 정해지지 않는다**는 것이다 — 분해되는 DRT 봉우리 수가
+`[도표]` **노화로 늘고(3 사례) · 개입으로 줄고(1 사례) · 배선으로 바뀐다(1 사례).**
+전용 페이지: **[[drt-peak-count-nonidentifiability]]**.
+
+★★★ **그리고 이 계보에서 처음으로 "축퇴의 폭" 을 잴 재료가 지면에 있다** —
+`[도표]` Fig. S3 가 **같은 셀에서 계측 경로만 바꿔** DRT 봉우리를 **−15 % ~ +69 %**
+움직인다. 그런데 **같은 논문 본문의 개입 효과가 −10 ~ −25 %** 로 **그 폭 안**이다.
+`[해석]` 우리 어휘로는 **nuisance 하나에 대한 근최적 폭의 1 점 표본**이고
+([[near-optimal-set-width-measurement]]), **논문은 그것을 "폭" 이라고 부르지도,
+본문의 점추정 옆에 놓지도 않는다** (`uncertaint*`·`uniqu*`·`regulariz*`·
+`Kramers` 본문 + SI **전수 0 회**).
+⚠ **단서**: 배선 변화의 일부는 진짜 물리이고, 두 측정의 대역이 **1 MHz ↔ 2 MHz**
+로 다르며, SI 가 "같은 셀" 을 명시하지 않는다 → **69 % 는 상한이다.**
+
+★ **provenance 층위에 칸 하나를 더한다**: **`inverted-nonunique`** — 라벨이
+**ill-posed 역변환의 출력**이고 그 **정규화 설정이 보고되지 않은** 경우.
+9호(Huo 2025)의 `fitted-single-parameter` 위층이다.
+
+⚠ **Q4 계보의 다섯 번째 형태**: 안 쟀다(1–7호) → 이름이 로드맵 실패 모드에(8호) →
+지문이 자기 표 안에(9호) → 방법의 비유일성이 분야의 공식 문장(10호) →
+**잴 재료를 SI 에 인쇄해 놓고 뺄셈을 안 했다(11호).**
+**"쟀다" 는 여전히 `assb` 0 / 11 편이다.**
 
 ## 이 개념이 속한 논지
 

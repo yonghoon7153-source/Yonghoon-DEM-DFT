@@ -2,10 +2,10 @@
 title: 압력 재인가 분리 시험 — ASSB 겉보기 용량 손실의 가역/비가역 가르기
 description: "Pressure re-application as the second separation operator in ASSB: rate erases the kinetic term η(i), stack pressure (partially) restores the geometric term θ_AM, and what is left is true LAM_PE (Shi 2020 measured instance)"
 created: 2026-09-16
-updated: 2026-09-16
+updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md]
+sources: [raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -158,6 +158,64 @@ NMC532(LZO 코팅) / 비정질 LPS / CNF 60:35:5 wt%, **In 금속 음극**, 8 mm
    644.5 ± 2.9 → **609.0 ± 2.4 µm** (`[재현]` **−5.51 %**), **7 일 무압 방치 후
    609.8 ± 2.6** — 복원 **+0.8 µm** 로 산포 안이다. `[인쇄]` "the microstructural
    relaxation **did not occur**". → **압축은 상태에 영구히 남는다.**
+
+## ★★★ 11호(Yu 2024)가 붙인 것 — **연산자가 직교하지 않는다** (2026-09-22)
+
+`raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md`
+(Schaeffler + Ohio State, *J. Power Sources* 597, 234116). **이 연산자를 쓴 두
+번째 실험 논문**이고, 4호를 `[인쇄]` "agree with previous report by **Ceder et
+al. [21]**" 로 명시 인용한다 (ref. [21] = 우리 4호). 세 가지를 붙인다.
+
+**(1) ✅ 압력 → 용량 점이 5 개로 늘었다 — 그리고 4호의 효과 크기가 재현되지 않는다.**
+
+| | 4호 (Shi 2020) | **11호 (Yu 2024)** |
+|---|---|---|
+| 셀 | In 음극 · NMC532 · 50 사이클 | In–Li 반쪽 / graphite 완전지 · NMC622 · **>500 사이클** |
+| 제작 / 운전 압력 | 100–300 / **~2 MPa** | **>500** / **20 MPa** |
+| 재가압 | 300 MPa (1 점) | **150 · >500 MPa** (2 점) |
+| 회복 | `[도표]` ≈2 → `[인쇄]` **80 mAh g⁻¹** = `[재현]` **+60.5 %p** | `[인쇄]` 165.0 → 166.9 → **173.1** = `[재현]` **+1.15 % / +4.91 %** |
+| 완전지 | 없음 | `[인쇄]` 169.9 → **171.7** = `[재현]` **+1.06 %** |
+
+`[해석]` **한 자릿수 이상 다르다.** 6호(Lee 2020)의 논리가 그대로 적용된다 —
+**11호의 제작 압력이 `[인쇄]` ">500 MPa" 로 4호(100–300)보다 높고 운전 압력도
+20 MPa 로 10 배**라서, **계면이 애초에 좋아서 되돌릴 것이 적다.**
+⇒ **`ΔQ_mech` 의 크기는 셀 고유값이 아니라 제작·운전 압력 이력의 함수다.**
+⚠ 그리고 **11호는 이 크기 차이를 언급하지 않고 "agree with" 로만 적는다.**
+
+**(2) ⚠⚠⚠ 이 페이지의 핵심 가정에 반례가 붙었다 — `P` 가 `θ_AM` 에만 들어가지 않는다.**
+
+11호는 재가압 전후의 **DRT 스펙트럼 전체**를 준다. `[도표]` (세로 판독 오차 ±1):
+
+| 봉우리 | 논문의 귀속 (`[인쇄]` Table 1) | 재가압 >500 MPa 의 Δ |
+|---|---|---:|
+| 160 kHz (P1) | SE 벌크·입계 **and/or 케이블** | **−11 %** |
+| 8 kHz (P2) | **화학적** 접촉 (SEI/CEI) | **−10 %** |
+| 1.3 kHz (P3) | **기계적** 접촉 | **−16 %** |
+| 무표기 ≈0.03 Hz | (라벨 없음) | **−27 %** |
+| 0.25 Hz (P4, 완전지 Fig. 7d) | **graphite 전하이동** | **−25 %** |
+
+★★★★ **기계적 조작이 "화학" 항과 "전하이동" 항을 같이 줄인다.** 그리고 상대
+감소가 가장 큰 것은 **P3 가 아니라 무표기 저주파 봉우리(−27 %)** 다.
+⚠ `[인쇄]` 본문은 "Particularly discernible change was the reduction of **P3**
+intensity" 라고 적는다 — **그림이 지지하지 않는다** (digest D3).
+⇒ **`Q_apparent = θ_AM(P,N) · η(i) · Q_material(N)` 에서 `P` 가 `θ_AM` 에만
+들어간다는 이 페이지의 분해가 이 데이터에서 성립하지 않는다.**
+`[해석]` 최소한 **`η = η(i, P)`** 까지 가야 하고(5호가 이미 그 방향을 줬다 —
+[[assb-stack-pressure-operating-window]]), **화학 항도 압력 의존일 수 있다.**
+**→ 이 페이지의 `confidence: low` 를 유지한다. 올릴 근거가 아니라 내릴 근거가
+들어왔다.**
+
+**(3) ⚠ 압력 계측 수단이 없다 — 5호에서 후퇴.**
+`[도표]` Fig. S1(b) 의 고정구는 **볼트·너트**다. 로드셀·스프링·토크 규격·교정
+**전부 없다**. 그런데 `[인쇄]` "the operating pressures of the cells **remained
+constant at 20 MPa**". `[해석]` **볼트·너트는 정변위 구속이지 정하중이 아니다** —
+스택 두께가 변하면 압력이 변한다. 5호(Doux)가 **Instron 교정 로드셀**로 0–220 MPa
+를 실계측한 것과 정반대다. ⇒ **11호의 "20 MPa" 는 측정값이 아니라 설계 의도다.**
+
+★ 그럼에도 **11호가 이 연산자에 더한 진짜 값**: **되돌림의 결과를 용량 한 점이
+아니라 주파수 분해된 스펙트럼으로 읽은 첫 편**이다. 그것이 없었다면 (2) 의
+비직교성을 볼 수 없었다. 봉우리 개수가 조작으로 **4 → 3** 으로 줄어드는 것도
+여기서 나왔다 → [[drt-peak-count-nonidentifiability]].
 
 ## 율 연산자와의 짝 — 두 조작의 성질이 다르다
 

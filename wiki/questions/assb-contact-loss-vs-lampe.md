@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: research-question
 tags: [battery, degradation, research, assb]
-sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -200,7 +200,34 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 
 | **★★★ Vadhva, Hu, Johnson (3인 공동 1저자), Stocker, Braglia, Brett, Rettie 2021 (`assb` 10호 — 첫 **방법론 리뷰** · UCL + **HORIBA MIRA**(기업) · ⚠ **1차 측정 0**)** | **없다 (10/10 편).** `contact loss`·`percolat*`·`θ` **0 회**. 유일한 접점 = `[인쇄]` Fig. 9 본문 "**loss of interfacial contact in the composite cathode due to volumetric expansion**" — ★★ 그런데 그 문장이 **분해층 형성과 `and` 로 한 저항(`R_MF`)에 묶여 있다**. 가장 가까운 정량 채널은 **TLM + 전자차단 대칭셀의 유효 이온 굴곡도**(ref. 57 Kaiser) — `θ_AM` 과 같은 양이 아니다 | **★★ 있다 — 그러나 "가르는 관측" 이 아니라 "가르는 절차" 다.** ① **상보 대칭셀 쌍**(차단/가역) ② **저온으로 시상수 벌리기**(ref. 82 Bron — `R_gb` 를 −130 °C 에서 동정해 **실온 적합의 구속으로 되가져온다**) ③ **가압으로 큰 시상수 제거**(ref. 28, `[도표]` 400 MPa 에서 `R_int` 가 사라지자 `GB` 가 드러난다) ④ **DRT 로 개수를 먼저 정하기**(ref. 62) ⑤ **4 단자**(ref. 21) ⑥ **K–K / Lin-KK 사전 검증**(ref. 41–43). ⚠ **전부 재인용 · ASB 복합양극에 `LAM_PE` ↔ 접촉 손실로 적용된 사례 0** | **해당 없음 — 리뷰다** (1차 측정 0, 열화 라벨 0: `LLI`·`LAM`·`degradation mode`·`half-cell` 전수 0 회). ★ **새 층위 하나**: `[인쇄]` **기관 간 라운드로빈 산포** — `>1 mS cm⁻¹` 에서 상대 중앙값 오차 **22 %**, `<1` 에서 **~10 %** (⚠ 재인용, ⚠⚠ 인용 번호가 틀렸다 — D5). **"같은 양을 여러 기관이 재면 얼마나 벌어지는가" 의 첫 숫자** + `[인쇄]` **삼중 측정 권고** | **★★★ 0 이 깨진다 — 단 "쟀다" 가 아니라 "일반 현상임을 인쇄했다".** `[인쇄]` "**As no solution to an EIS spectrum is unique**" · "**The non-uniqueness of an ECM solution**" · "**the inclusion of more elements will tend to improve the fit**" · "how many time constants … **highly subjective**" · "Physical features **may not be visible**" · **AIC 로 회로 순위 매기기**(ref. 51,52; `[인쇄]` "only recently applied to **simulated** data") · **DRT 는 `ill-posed`, `regularization` 필요**. ★★ 그리고 **"분해 가능한 RC 개수 = 실험 조건의 함수" 를 다섯 사례로 보인다**(황화물 5 중 3 만 입계 분해 · LGPS 실온 원호 0 개 · 400 MPa 에서 GB 등장 · 폴리머 60 °C 에서 상경계 소멸 · **노화가 RQ 를 3→4 로**). ⚠ **측정 0** — `identifiab*`·`uncertaint*`·`confidence`·`condition number`·`error bar` **전수 0 회** | **★★ 부분 — 새 경고 둘.** `indium` 2 · `Li-In` 2 회. ① Li 금속이 비이상적이라 **Li-In 을 기준극 대안**으로 제시 ② ★★ `[인쇄]` **방전 중 In 음극 계면 저항이 리튬화도(In-rich 화)로 크게 증가** ⇒ **`R_anode(N)` 에서 노화분과 SoC 분이 안 갈린다** (4호 `R_LF` ≈157 배 해석에 직접 걸린다) ③ ★★★ `[인쇄]` **In–Li 음극 셀은 LMA 셀과 전극↔주파수 귀속이 반대다** ⇒ **"저주파=양극" 같은 보편 규칙이 없다**. ⚠ 전위 오프셋 안정성은 여전히 0 | **부분 — 값 3 개.** `[인쇄]` **~120 MPa**(σ 포화, 단 그것이 인가 최대압) · `[인쇄]` **~400 MPa**(Li₆PS₅Cl σ 는 거기까지 계속 증가, ref. 84 = **Doux JMCA 2020**, 우리 5호의 자매) · `[도표]` **400 MPa**(Fig. 11a, Li\|LLZO\|Li). ★★ **개념 기여가 값보다 크다**: ① `[인쇄]` "**<1 Ω cm², remained after the pressure was removed**" = **5호의 이력을 산화물에서 독립 재현** ② **압력이 분해능 연산자다** ③ `[인쇄]` 제언 2 가 **다변수(온도·압력·SoC) 시험**을 ECM 구축의 표준 처방으로 올린다. ⚠ **압력→용량 곡선 0 (10/10 편)** | **없다.** `dead li`·`isolated` 0 회. ★ 인접 둘: ① `[인쇄]` **soft short**(LLZO 내부 Li 석출)를 **`R_leak` ECM 원소**로 잡고 `R_b`·`R_gb` 안정성으로 부재 확인 ② `[인쇄]` **NLEIS 가 상용 LiB 에서 Li 도금 검출**(ref. 184). 둘 다 **석출**이지 **고립**이 아니다 | **없다.** `OCV` **1 회**(⚠ 그것도 `[인쇄]` "**OCV variation due to small capacity changes can affect the low-frequency range**" — 즉 **OCV 드리프트가 EIS 저주파를 오염시킨다**는 경고다). `GITT`·`half-cell` 0 회, **V–Q 곡선 0 장**. ★ 대신 `[도표]` Fig. 9b/9c = **SoC 축 위 EIS 10+10 점**(충전 3.305–3.599 V / 방전 3.442–2.000 V, LCO) — **전압축은 있고 용량축이 없다** |
 
-**1호 단독 1.5 → 2편 ≈2.5 → 3편 ≈3.0 → 4편 ≈5.5 → 5편 ≈6.5 → 6편 ≈7.0 → 7편 ≈7.0 → 8편 ≈7.0 → 9편 ≈7.5 → 10편 누적 ≈8.0 칸이다.**
+| **★★★ Yu, Choi, Dunham, …, Farahati, Kim 2024 (`assb` 11호 — 첫 **graphite 음극 완전지** · 첫 **DRT** · **Schaeffler**(산업체) + Ohio State · *J. Power Sources* 597, 234116)** | **부분 — 단위가 Ω 다.** `contact loss`·`percolat*`·`tortuos*`·`θ` **0 회**. 대리량 = **P3 DRT 봉우리 높이**(`Ω` 또는 `Ω mg⁻¹`). ★ **계보 최초로 (i) 주파수로 국소화되고 (ii) 시계열이 있고(최장 6 점) (iii) 조작(재가압)으로 되돌려지는** 접촉 손실 대리량. ⚠ 셋이 막는다 — ① 무차원 분율이 아니다(용량 사상 0) ② ★★ **전극을 가르지 않는다** (`[도표]` Fig. 8 이 P3 에 **Cathode + Anode 둘 다** 찍는다) ③ `[인쇄]` Table 1 이 P3 를 "active material/SE **and/or** electrode/current-collector" 로 둔다 — **복합양극 내부 접촉과 집전체 접촉을 안 가른다** | **★★ 있다 — 네 조작, 그러나 전부 임피던스 안이다.** ① **완전지 ↔ NMC/In–Li ↔ graphite/In–Li 반쪽전지 분해**(계보 최초) ② **SE 입도 스윕**(nano ≤1 µm vs micro ≤20 µm) ③ **코팅 유무**(LiNbO₃ vs bare) ④ **재가압**(150 / >500 MPa). ⚠⚠ **형태학·화학 관측 0** — SEM·TEM·FIB 토모·XRD·XPS·ToF-SIMS **전수 0**. **접촉 손실을 임피던스 밖에서 확인한 관측 0 건** (4호가 FIB-SEM 으로 void 를 실측한 것과 정반대) | ★★ **새 층위: `inverted-nonunique`.** 라벨이 **ill-posed 역변환의 봉우리 높이**인데 **정규화 설정이 보고되지 않았다**(`regulariz*`·`λ`·`L-curve`·`GCV`·RBF shape **전수 0 회**). 그 위에 `[인쇄]` Fig. 2 캡션 — DRT 를 **"simulated Nyquist curves" 위에서** 계산했다 ⇒ **ECM 을 입력으로 받은 DRT**(순환). 오차막대 0 · 셀 수 0(`n =` 0 회) · 반복 0. ★ `[인쇄]` **"The authors do not have permission to share data."** ⚠⚠ **파라미터 표가 아예 없다** — 9호는 6 개를 "not disclosed" 로 **찍었는데** 38호는 구멍을 셀 기준조차 없다 (**어느 셀이 Cl 이고 어느 셀이 Br 인지도 끝까지 안 밝힌다**) | **0 (11/11 편).** `identifiab*`·`uniqu*`·`ill-posed`·`regulariz*`·`uncertaint*`·`confidence`·`error bar`·`Kramers`·`Kronig`·`condition number`·`Fisher`·`Bayes*`·`posterior`·`overfit*`·`degenerac*`·`λ`·`L-curve`·`GCV`·`cross-valid*` — **본문 + SI 전수 0 회**. ★★★ **성질이 다섯 번째로 바뀐다 — "잴 재료를 SI 에 인쇄해 놓고 뺄셈을 안 했다"**: `[도표]` **Fig. S3 가 같은 셀에서 배선만 바꿔 DRT 봉우리를 −15 % ~ +69 % 움직인다**(≈3 kHz −15 % · ≈0.03 Hz **+69 %** · 분해된 어깨 **1 개 유무 차이**), 그런데 **본문의 재가압 효과는 −10 ~ −25 %** 로 **그 폭 안**이다. 논문은 둘을 나란히 놓지 않는다. ★★ 두 번째 재료: `[재현]` **P3 의 보고 위치가 논문 안에서 500 Hz–10 kHz = 1.3 자릿수**인데 **P2–P3 간격은 0.8 자릿수**(`log₁₀(6000/900)=0.82`) ⇒ **이름표의 불확정성이 이름표 간격보다 크다** = P2(화학) ↔ P3(기계) 분리 붕괴 | **부분 — 값은 들어왔고 검토는 0.** `indium` **1 회** · `In–Li` 7 회. `[인쇄]` 반쪽전지 창 **−0.595 – 0.9 V**(음극) · **2.1–3.7 V**(양극) · 완전지 **2.7–4.2 V** ⇒ `[재현]` **오프셋 ≈0.60–0.62 V vs Li/Li⁺ 가 함의된다** (계보 최초로 소수 셋째 자리까지). ⚠ **명시·인용·안정성 논의 전부 0**. ⚠⚠ 10호의 경고(방전 중 In 계면 저항이 리튬화도로 변한다)를 **검토하지 않는다** — 모든 EIS 가 `[인쇄]` **완전지 기준 50 % SOC** 이고 **반쪽전지의 In–Li 리튬화도는 통제되지 않았다** | **★★★ 이 계보에서 가장 넓다 — 그리고 `압력 → 용량` 을 처음으로 준다.** 제작 `[인쇄]` **>500 MPa** · 운전 `[인쇄]` **20 MPa** · 재가압 **150 / >500 MPa**. `MPa` **48 회**. ★ **압력→용량 반쪽 3 점**(`[인쇄]` 165.0 / 166.9 / **173.1** mAh g⁻¹) + **완전지 2 점**(169.9 / 171.7) — **10/10 편이 못 준 칸이 채워진다**. ★★ 그리고 **압력 → 봉우리별 Δ**(`[도표]` Fig. 4d · 7d). ⚠ **효과가 4호의 1/12** (`[재현]` +4.91 % vs 4호 +60.5 %p) 인데 `[인쇄]` "agree with previous report by **Ceder et al. [21]**"(= 우리 4호) 라고만 쓰고 **크기를 비교하지 않는다**. ⚠⚠ **계측 수단 0** — `[도표]` Fig. S1 은 **볼트·너트**(정변위)인데 `[인쇄]` "remained **constant at 20 MPa**". ⚠⚠⚠ ★★ **선택성이 없다** — 재가압이 `[도표]` P1 **−11 %** · P2 **−10 %** · P3 **−16 %** · P4(전하이동) **−25 %** · 무표기 0.03 Hz **−27 %** 를 **전부** 줄인다 | **해당 없음** (graphite 음극). `dead li`·`isolated`·`plating` **0 회**. ★ 인접 하나 — `[인쇄]` graphite 반쪽 CE ">99.99 %" 인데 `[도표]` Fig. 6(a) 의 CE 축은 **5 %p 눈금**이라 0.01 % 를 분해 못 하고 **사이클 ≈65 에 ≈98.5 % 로 떨어지는 점**이 있다 (`[재현]` 용량 역산 평균은 ≈99.98 %/cycle 로 정합) | **★★★ 계보 최초의 graphite 음극 ASSB 완전지.** LiNbO₃-코팅 **NMC622** + **graphite** + Li₆PS₅X, **2.7–4.2 V**, C/3, `[인쇄]` **192.4 → 179.8(200 cy) → 169.9(500 cy) mAh g⁻¹**. `OCV`·`open circuit`·`GITT` **0 회**, **V–Q 곡선 0 장**(10호와 같다). ★★★★ **그런데 이 칸이 이 카드의 전제를 깬다** — graphite 는 **스테이지 평탄역이 여럿인 구조 있는 OCP** 다 ⇒ **"전고체 음극은 평탄 → 5→3 붕괴" 가 이 셀에 성립하지 않는다** (9호 Li-Si 에 이은 **두 번째 반례**이고 이쪽은 **상용 흑연**이라 더 직접적) |
+
+**1호 단독 1.5 → 2편 ≈2.5 → 3편 ≈3.0 → 4편 ≈5.5 → 5편 ≈6.5 → 6편 ≈7.0 → 7편 ≈7.0 → 8편 ≈7.0 → 9편 ≈7.5 → 10편 ≈8.0 → 11편 누적 ≈8.5 칸이다.**
+
+★★★★ **2026-09-22 (11호 Yu et al. 2024) — 두 칸이 움직였고, Q4 의 성질이 다섯
+번째로 바뀌었다.**
+
+- ✅ **`Q1` 의 10/10 편 0 이 반쯤 깨졌다.** 여전히 **무차원 분율은 없다**(`θ` 0 회).
+  그러나 이 계보 최초로 접촉 손실 대리량이 **주파수로 국소화되고 · 시계열이 있고 ·
+  조작으로 되돌려진다**. ⚠ 그리고 같은 그림이 **그 대리량이 전극을 가르지 않는다**는
+  것도 같이 인쇄한다 (Fig. 8 의 P3 에 Cathode + Anode).
+- ✅✅ **`Q6` 의 마지막 빈칸(`압력 → 용량 곡선`)이 채워졌다** — 10/10 편이 못 주던
+  것이다. 반쪽 3 점 + 완전지 2 점. ⚠ 다만 **점이 5 개이고 계측 수단이 없다**.
+- ★★★ **`Q4` 의 성질 — 다섯 번째 변신**: 안 쟀다(1–7호) → 이름이 로드맵 실패 모드에
+  (8호) → 지문이 자기 표 안에(9호) → 방법의 비유일성이 분야의 공식 문장(10호) →
+  **11호: 축퇴의 크기를 잴 재료를 SI 에 인쇄해 놓고 본문 효과와 나란히 놓지 않는다.**
+  **여전히 "쟀다" 가 아니다 — Q4 는 0/11 이다.** 7호가 `LLI` 뺄셈을 안 한 것과
+  **같은 형태**이고, 축이 Q7 이 아니라 Q4 이며 재료가 **SI 에** 있다는 점이 다르다.
+- ★★★ **`Q8` 이 이 카드의 출발 전제를 깼다** (위 표 끝 칸). **흑연 음극이면
+  5 → 3 파라미터 붕괴가 성립하지 않는다.** 이 카드 §"지금까지 아는 것" 의 붕괴표는
+  **Li-In / Li 금속 / 무음극 셀에만** 유효하다.
+- ★★ **`Q2` 가 형태를 바꿨다** — 1–10 호에서 "가르는 관측" 은 **형태학**(FIB-SEM ·
+  토모 · XRD)이었다. 11호는 **형태학이 0 인데 조작이 넷**이다(반쪽전지 분해 · 입도
+  스윕 · 코팅 유무 · 재가압). `[해석]` **분해를 관측이 아니라 설계로 한다** —
+  그래서 결론이 **설계가 통제한 것만큼만** 강하다.
+- ⚠ **`Q3` 가 후퇴했다.** 9호는 표에 "not disclosed" 를 찍기라도 했는데 **11호는
+  파라미터 표가 없다.** `[인쇄]` "The authors do not have permission to share data."
+
 ★★★ **10호가 `Q4` 의 0 을 처음으로 깼다 — 그리고 깬 방식을 정확히 적어야 한다.**
 **"쟀다" 가 아니다**(측정 0, 10/10 편 그대로). **"축퇴가 일반 현상임을 방법론으로
 인쇄했다"** 이다: `[인쇄]` "**no solution to an EIS spectrum is unique**" ·
@@ -628,6 +655,95 @@ Ohno *ACS Energy Lett.* 2020) — 원전을 받기 전까지 **방향만** 쓴�
 ⚠⚠⚠ 그리고 이것은 **단일 파라미터 `σ_ion`** 의 산포다. `[해석]` **다중 RC 적합
 파라미터의 산포는 이것보다 클 수밖에 없다** — 리뷰는 그 말을 하지 않는다.
 
+### ★★★★ 여덟 번째 — **For 에 붙는 야생 실측, 그리고 10호의 경고가 데이터로 나타난 자리** (2026-09-22, Yu et al. 2024 · Schaeffler + Ohio State)
+
+`raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md`
+(*J. Power Sources* **597** (2024) 234116; 본문 8 쪽 + **SI `.docx`** 7,607 자 +
+그림 S1–S5, 둘 다 sha256 봉인). **수치의 정본은 원문이고 아래는 사본이다.**
+
+**이 편은 10호(Vadhva)가 처방한 DRT 를 실제로 돌린 첫 `assb` 논문이다.** 그리고
+10호가 경고한 것들이 **데이터로 나타난다** — 논문이 알아채지 못한 채로.
+
+**(가) ★★★ "분해 가능한 시상수 개수" 가 상태·조작·장비의 함수라는 것을 1 차
+데이터로 네 번 보인다.** 10호는 이것을 **Larfaillou 2016 재인용**(신품 3 RQ →
+노화 4 RQ)으로만 전했다. 11호에서는 우리가 그림을 직접 열어 셌다:
+
+| 자리 | `[도표]` 무엇이 변하는가 |
+|---|---|
+| Fig. 2(a) 완전지 | 국소 극대 **2–3 (4 cy) → 5 (48 cy)**. P3 는 4 cy 에 **어깨**였다가 48 cy 에 **봉우리**가 된다 |
+| Fig. 3(c) micro-SE 반쪽 | 중주파 극대 **1 개 (cy 3) → 2 개 (cy 29~)**. 그리고 cy 3 의 극대는 ≈9 × 10³ Hz 인데 이후 P2 는 ≈1.8 × 10⁴ Hz — **봉우리가 쪼개지며 자리를 옮긴다** |
+| Fig. 6(c) graphite 반쪽 | **P4 가 없던 자리(평탄 ≈1.5)에 생긴다** (cy 133 에 ≈10 Hz, 5.5) |
+| Fig. 7(d) 완전지 재가압 | **4 → 3** — 재가압 후 P3 의 독립 극대가 **사라진다** |
+
+`[해석]` **노화가 개수를 올리고 개입이 개수를 내린다 ⇒ 모델 차수는 상태변수다.**
+⚠ 그리고 **논문은 세 번 다 "봉우리가 커졌다" 고 적고 "봉우리가 생겼다" 고 적지
+않는다** (`[인쇄]` "growth of P3 … peak intensities" · "P4 … exhibits a **gradual
+increase** in peak intensity"). → **고정 회로로 노화 시계열을 적합하는 관행
+(9호가 한 일) 전체에 대한 실측 반례다.**
+
+**(나) ★★★★ 축퇴의 크기를 잴 재료가 SI 에 있고, 그 크기가 본문 효과와 같다.**
+`[도표]` **Fig. S3** — 같은 셀(로 보이는 것)을 **배선만 바꿔** 잰 두 DRT:
+
+| 봉우리 | Arbin+Gamry | Gamry 직결 | `[재현]` Δ |
+|---|---:|---:|---:|
+| ≈3.5 × 10⁵ Hz | 117 | 105 | −10 % |
+| ★ ≈2 × 10⁴ Hz | **39 (분해된 어깨)** | **없음** | **특징 1 개 차이** |
+| ≈3 × 10³ Hz (= P3 자리) | 78 | 66 | **−15 %** |
+| ★ ≈3 × 10⁻² Hz | 45 | 76 | ★★ **+69 %** |
+
+**본문이 물리로 해석한 변화**: 재가압이 P3 **−16 %** · P1 **−11 %** · P2 **−10 %** ·
+P4 **−25 %**. → ★★★★★ **본문의 모든 개입 효과가 SI 의 배선 인공물 폭 안에 있다.**
+논문은 이 비교를 하지 않는다 — `uncertaint*`·`error bar`·`uniqu*`·`regulariz*`
+**전수 0 회**라서 **할 어휘가 없다**.
+⚠ **공정하게**: 배선이 바뀌면 인덕턴스·접촉저항이 실제로 변하므로 일부는 진짜
+물리이고, 두 측정의 최고 주파수가 **1 MHz ↔ 2 MHz** 로 다르며, "같은 셀" 이라는
+명시가 SI 에 없다. **그러므로 69 % 는 상한이다.** 그러나 **상한조차 본문 효과보다
+크다**는 것이 요점이다.
+
+**(다) ★★★★ 이름표의 위치 불확정성이 이름표 간격보다 크다.**
+`[재현]` P3 의 보고 위치: **~500 Hz**(§3.1 완전지) · **10³–10² Hz**(§3.1 NMC 반쪽) ·
+**10⁴–10³ Hz**(§3.2) · **~1 kHz**(§3.3) · **~10³ Hz**(Table 1) · `[도표]` **0.9 kHz**
+(Fig. 7d) · **1.3 kHz**(Fig. 4d) · **≈2.8 kHz**(Fig. 3c) ⇒ **500 Hz – 10 kHz =
+1.3 자릿수**. 그런데 **P2–P3 간격은 0.8 자릿수** (`log₁₀(6000/900) = 0.82`).
+★ `[인쇄]` Table 1 은 **P2 = 화학적 접촉(SEI/CEI)**, **P3 = 기계적 접촉**이다.
+→ `[해석]` **화학 열화와 기계 열화의 분리가 바로 이 자리에서 무너진다.**
+
+**(라) ★★★ 논문 자신의 결론 지도가 축퇴를 그림으로 인쇄한다.** `[도표]` **Fig. 8**:
+- **P2 와 P3 에 `Cathode`(빨강)와 `Anode`(파랑)가 둘 다 찍혀 있다** ⇒
+  **"P3 가 자랐다" 가 어느 전극인지 말해 주지 않는다.**
+- **P4(음극 CT, 넓음)와 P5(양극 CT, 좁음)가 ≈10 Hz 에서 겹쳐 그려져 있다** ⇒
+  **두 전극의 전하이동이 주파수로 분리되지 않는다.**
+- **(P1′) 이 회색 점선이다** — 측정 대역(2 MHz) 위에 있어 **못 본 봉우리를 지도에
+  그려 넣었다**. 그리고 `P1′` 는 본문·Table 1 에 **없다**.
+
+**(마) ★★★ 압력 연산자가 직교하지 않는다 — 4호에 붙는 반례.**
+`[도표]` Fig. 7(d): 재가압(>500 MPa)이 **P4(graphite 전하이동)를 −25 %** 줄인다.
+Fig. 4(d): **P1(SE 입계/케이블) −11 %**, **P2(화학 접촉) −10 %**.
+`[해석]` **기계적 조작이 "화학" 항과 "전하이동" 항도 같이 줄인다** ⇒
+[[assb-pressure-reapplication-separation-test]] 의 `Q_apparent = θ_AM(P,N)·η(i)·
+Q_material(N)` 에서 **`P` 가 `θ_AM` 에만 들어간다는 가정에 반례가 붙는다.**
+⚠ 그리고 **회복 크기가 4호의 1/12** (`[재현]` +4.91 % vs `[재현]` +60.5 %p)인데
+`[인쇄]` "agree with previous report by **Ceder et al. [21]**" 라고만 쓰고
+**크기를 비교하지 않는다** — ref. [21] 이 바로 우리 **4호(Shi 2020)** 다.
+
+**(바) ★★ 순환: DRT 가 ECM 을 입력으로 받는다.**
+`[인쇄]` Fig. 2 캡션 — "The DRT peaks were computed **based on the simulated
+Nyquist curves (green solid-line)** after subtracting the low-frequency data."
+10호의 정답 절차(ref. 62 Pang 2019)는 **K–K → DRT 로 개수 결정 → 그 개수만큼
+ECM** 인데, 11호는 **ECM 적합 → 그 곡선으로 DRT** 다. `[해석]` **DRT 가 분해할 수
+있는 개수가 적합 모델의 차수에 의해 위에서 막힌다.**
+⚠ SI 는 다르게 쓴다 — `[인쇄]` "the fitted model is subtracted from the
+**measurement data**". **두 절차가 같은 논문 안에서 충돌한다** (digest D1).
+
+**(사) 그리고 10호의 λ 공백(G4)은 메워지지 않았다 — 더 깊어졌다.**
+`regulariz*`·`λ`·`L-curve`·`GCV`·`cross-valid*`·RBF shape factor **본문 + SI 전수
+0 회**. 유일한 방법 서술이 `[인쇄]` "MATLAB-based DRT calculation code developed
+by **T.H. Wan et al. [16]**" 한 줄이고, SI 는 DRT 를 **보통의 적합 문제**로
+소개하며 `[인쇄]` **"The well-fitted `Z_DRT` can represent the actual physics in
+the system"** 이라고 쓴다 — 10호의 `[인쇄]` "mathematically **ill-posed**,
+requiring regularization" 의 **정반대 진술**이다.
+`[재현]` 10호 처방 14 항목 채점: **✅ 2 · ⚠ 5 · ❌ 7** (digest §18).
+
 ### Against / 단서 — "독립 관측이 존재할 수 있다" 쪽
 
 - **ex situ XRD 의 inactive AM 분율** = 원리적으로 `1 − θ_AM` 의 **measured 라벨**
@@ -964,6 +1080,42 @@ Ohno *ACS Energy Lett.* 2020) — 원전을 받기 전까지 **방향만** 쓴�
    `state I~IX` 중 **넷이 DC 전류 중** 측정이라 리뷰 자신의 `stability` 요건을
    위반하고, **모드 라벨이 없으며**, ARD 가 고른 두 주파수가 **비식별**이다.
    ⇒ **리뷰의 "ASB 로 옮기자" 는 권고에 우리가 붙일 단서가 이미 검증돼 있다.**
+
+### 새 제약 (2026-09-22, Yu 2024 — DRT 를 실제로 돌린 첫 편이 들어오면서 붙은 것)
+
+1. ★★★★ **이 카드의 출발 전제가 음극 재료의 함수라는 것이 확정됐다.**
+   §"지금까지 아는 것" 의 **5 → 3 파라미터 붕괴**는 `a_NE`·`b_NE`·`γ_Si` 의
+   민감도가 **0** 이라는 것에서 나왔고, 그것은 **음극 OCP 가 평탄**할 때만 참이다.
+   11호의 음극은 **graphite** — 스테이지 평탄역이 여럿인 **구조 있는 OCP** 다.
+   ⇒ **붕괴표에 단서를 단다: "Li-In / Li 금속 / 무음극 셀에 한함."**
+   9호(Li-Si)에 이어 **두 번째 반례**이고, 이쪽은 **액체셀과 같은 상용 흑연**이라
+   `LLI ↔ LAM_NE` 축퇴가 **그대로 이식된다.** (`γ_Si` 축만 안 온다.)
+2. ★★★★ **"DRT 를 쓰면 개수 문제가 풀린다" 는 기대를 접는다.**
+   8호가 DRT 를 처방했고 10호가 `[인쇄]` "A powerful tool to **guide ECM
+   selection**" 이라 적었다. 11호가 실제로 돌린 결과는:
+   **개수가 사이클로 늘고(3 사례) · 조작으로 줄고(1 사례) · 배선으로 바뀐다(1 사례).**
+   ⇒ **DRT 는 개수를 "재는" 도구가 아니라 개수가 무엇에 달려 있는지 보여 주는
+   도구다.** 우리가 9호·11호에 적용할 판정은 **"몇 개가 맞는가" 가 아니라
+   "개수가 정해지는가" 여야 한다.**
+3. ★★★ **우리 폭 측정기가 붙을 자리가 구체적으로 특정됐다.**
+   11호가 남긴 것은 **nuisance 1 점 변동**(Fig. S3, 배선 1 회 교체)이다.
+   [[near-optimal-set-width-measurement]] 의 기계를 여기에 붙이면
+   **`λ` 를 격자로 흔들어 봉우리 개수·위치·높이의 궤적**을 만들 수 있고,
+   그것이 **"DRT 로 잰 저항 증가분" 에 폭을 붙이는 최소 절차**다.
+   ⇒ **화학·방법에 무관하게 "답이 하나로 정해지는가" 를 재는 우리 논리가
+   EIS·DRT 축에도 그대로 이식된다**는 것이 이 편으로 확인된다.
+4. ⚠ **압력을 "θ_AM 전용 연산자" 로 쓰지 않는다.**
+   [[assb-pressure-reapplication-separation-test]] 는 4호 1 편(1 셀 1 점)에
+   기대어 있었다. 11호가 **5 점**을 주면서 동시에 **선택성이 없다**는 것을 보였다
+   (`[도표]` 재가압이 P1·P2·P3·P4 를 **전부** 10–27 % 줄인다).
+   ⇒ 그 개념 페이지의 `confidence: low` 는 **유지**하고, 반례를 본문에 적는다.
+5. ⚠ **산업체 논문의 provenance 가 9호보다 뒤다.**
+   9호는 Table 3 에 6 개 값을 `[인쇄]` "not disclosed" 로 **찍어 두어** 구멍을
+   셀 수 있었다. 11호는 **파라미터 표가 없다** — 조성비·로딩·두께·N/P·입도·
+   코팅 두께·`Ω mg⁻¹` 정규화 질량·**어느 셀이 Cl 이고 어느 셀이 Br 인지**가
+   전부 없고, `[인쇄]` "The authors do not have permission to share data."
+   ⇒ **`assb` 산업체 편(9·11호, 그리고 36호 예정)에는 "구멍을 찍었는가" 를
+   별도 항목으로 기록한다.**
 
 ## Status Log
 
@@ -1428,6 +1580,49 @@ Ohno *ACS Energy Lett.* 2020) — 원전을 받기 전까지 **방향만** 쓴�
   도구 후보: **ref [43] Schönleber, Lin-KK**(KIT 2015).
   ⚠ **정정 하나**: ref [190] 의 **Bielefeld, Weber, Janek** *ACS AMI* **2020**, *12*,
   12821 은 우리 **1호(Bielefeld 2019, *J. Phys. Chem. C*)와 다른 논문**이다(후속).
+- **2026-09-22 (ingest 11 — 큐 38번, 순서를 당겨서)** — `assb` 11호 흡수:
+  `raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md`
+  (Yu, Choi, Dunham, Ghahremani, Liu, Lindemann, Garver, Barchiesi, Farahati,
+  Kim, *J. Power Sources* **597** (2024) 234116 — **Schaeffler Transmission
+  Systems LLC**(산업체) + **Ohio State University**; 본문 8 쪽 + **SI `.docx`**
+  7,607 자 + 그림 S1–S5, 본문·SI 둘 다 sha256 봉인).
+  **10호(Vadhva) 와 짝으로 읽으려고 순서를 당겼다** — 10호가 DRT 를 `[인쇄]`
+  "ill-posed … requiring regularization" 으로 판정하고 λ 선택 규칙을 공백(G4)으로
+  남겼고, **11호가 그 DRT 를 실제로 돌린 첫 `assb` 논문**이기 때문이다.
+  **그림 14 장 모두 등록 · 12 장 열람**(본문 Fig. 1–8 + SI Fig. S1–S5;
+  Table 1 은 텍스트로). ★ **SI 가 `.docx` 라 크로퍼가 못 읽어 `zipfile` 로
+  `word/media/image1–5.png` 를 직접 꺼냈다** — 텍스트만 긁었으면 §12(Fig. S2)·
+  §13(Fig. S3)·§10(Fig. 1 = Fig. S3 동일 데이터)을 **통째로 놓쳤다.**
+  **결과 여섯**:
+  ① **`Q1` 이 반쯤 깨지고 `Q6` 의 마지막 빈칸(`압력 → 용량`)이 채워졌다**
+     (누적 **≈8.5 / 8** 칸; 반쪽 3 점 165.0/166.9/**173.1**, 완전지 2 점 169.9/171.7).
+  ② ★★★ **`Q4` 의 성질이 다섯 번째로 바뀌었다 — "잴 재료를 SI 에 인쇄하고
+     뺄셈을 안 했다".** `[도표]` Fig. S3 가 **같은 셀에서 배선만 바꿔 DRT 봉우리를
+     −15 % ~ +69 %** 움직이는데, 본문의 재가압 효과는 **−10 ~ −25 %** 로 그 폭
+     **안**이다. **Q4 측정은 여전히 0 / 11.**
+  ③ ★★★ **"모델 차수는 상태변수" 가 1 차 데이터로 네 번 확인됐다**
+     (Fig. 2a 2–3→5 · Fig. 3c 1→2 · Fig. 6c P4 신생 · Fig. 7d 4→3 재가압).
+     10호가 Larfaillou 재인용으로만 전한 것의 **직접 재현**.
+  ④ ★★★ **`Q8` 이 이 카드의 출발 전제를 깼다** — **graphite 음극 완전지**라
+     "전고체 음극은 평탄 → 5→3 붕괴" 가 성립하지 않는다 (9호 Li-Si 에 이은
+     두 번째 반례, 이쪽은 상용 흑연).
+  ⑤ ⚠ **압력 연산자가 직교하지 않는다** — 재가압이 P1·P2·P3·**P4(전하이동)** 를
+     전부 10–27 % 줄인다 ⇒ [[assb-pressure-reapplication-separation-test]] 에
+     반례 기록, `confidence: low` 유지.
+  ⑥ **어긋남 18 건** (D1 전처리 이중 서술 · D2 P1 주파수 최대 2 자릿수 ·
+     D3 "P3 만 줄었다" 가 그림에 없다 · D10 본문이 자기 Fig. 1 을 잘못 묘사 ·
+     **D11 Fig. 1 은 "Illustration" 이 아니라 Fig. S3 하단의 실측** ·
+     D13 DRT 봉우리가 측정 대역(0.1 Hz) 밖에 있다 …).
+  컴파일: 새 개념 [[drt-peak-count-nonidentifiability]] +
+  [[fitting-degeneracy]] Q4 계보 갱신 + [[assb-pressure-reapplication-separation-test]] 반례.
+  후속 후보 1 순위 = **Wan, Saccoccio, Chen, Ciucci, DRTtools** (*Electrochim.
+  Acta* 184 (2015) 483 — **λ 와 RBF shape factor 가 이 논문의 인터페이스**이고
+  G1 을 닫는 유일한 경로), 2 순위 = **Hori, Kanno, …, Ivers-Tiffée** (*J. Power
+  Sources* 556 (2023) 232450 — 같은 재료계 EIS–DRT, 봉우리 귀속의 외부 검증),
+  3 순위 = **Danzer, generalized DRT** (*Batteries* 5 (2019) 53 — 10호가 지목하고
+  11호가 **인용만 하고 안 쓴** 것), 4 순위 = **Illig 2012 + Schmidt 2011**
+  (P3 = "solid-solid contact impedance" 귀속의 **원전**; 액체셀 LFP/Al 의
+  주파수대를 황화물 복합양극에 이식한 것이 정당한지 확인해야 한다).
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -1455,3 +1650,17 @@ Ohno *ACS Energy Lett.* 2020) — 원전을 받기 전까지 **방향만** 쓴�
   **인용 번호가 틀렸다**(digest D5). 원전을 받기 전까지 **방향만** 쓴다.
   ⚠ 단 **방법론적 주장**(비유일성 · 최소 원소 · ill-posedness · 주관적 귀속)은
   **저자들의 1차 주장**이므로 이 규율의 바깥이다 — 그렇게 구분해서 인용한다.
+- ★★★ **2026-09-22 (11호 Yu 2024) — 세 가지를 주장하지 않는다.**
+  ① **"Q4 가 측정됐다" 고 하지 않는다.** 11호도 재지 않았다 (**0 / 11 편**).
+  우리가 한 것은 **논문이 인쇄한 두 그림(Fig. S3, Fig. 4d/7d)을 나란히 놓고
+  크기를 비교한 것**이고, 그 비교는 **우리 `[재현]` 이지 논문의 주장이 아니다.**
+  ② **"DRT 봉우리 높이가 배선 때문에 69 % 틀렸다" 고 하지 않는다.** 배선이
+  바뀌면 인덕턴스·접촉저항이 **실제로** 바뀌고, 두 측정의 최고 주파수가
+  **1 MHz ↔ 2 MHz** 로 다르며, SI 가 **"같은 셀" 이라고 명시하지 않는다.**
+  우리가 말하는 것은 **"인공물의 상한이 본문 효과보다 크다"** 까지다.
+  ③ **11호의 봉우리 개수(5–6)를 "정답" 으로 삼지 않는다.** 같은 논문이
+  개수가 **사이클·조작·배선의 함수**라는 것을 보여 준다 —
+  9호를 판정할 때 쓰는 것은 **"2 개는 모자란다"** 가 아니라
+  **"개수를 고르는 규칙이 문헌에 없다"** 이다.
+  ④ ⚠ **그림에서 읽은 봉우리 높이·위치는 전부 `[도표]` 다.** 세로 판독 오차
+  ±1–3, 가로 ≈1/4 자릿수. 이 값들을 정본으로 인용하지 않는다.

@@ -1,0 +1,267 @@
+{
+ "slug": "yu2024_drt-time-resolved-aging-sulfide-assb-fullcell",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "fe443ab3-38._Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.pdf",
+  "ac1ae225-38._Sup_Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.docx"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Illustration of (a) electrochemical impedance spectroscopy (EIS) and (b) distributions of relaxation times (DRT) techniques, showing their application in solid-state battery research.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    414.7,
+    296.8,
+    711.7
+   ],
+   "w": 1106,
+   "h": 1239,
+   "dpi": 300,
+   "src": "fe443ab3-38._Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.pdf",
+   "blank": 0.775
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Nyquist plots and corresponding DRT profiles of (a) LiNbO3-coated NMC/graphite full-cell, (b) LiNbO3-coated NMC/In–Li half-cell, and (c) graphite/In–Li half-cell. The DRT peaks were computed based on the simulated Nyquist curves (green solid-line) after subtracting the low-frequency data (i.e., Warburg-type diffusion). (For interpretation of the references to color in this figure legend, the reader is referred to the Web version of this article.) 3",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    475.3,
+    565.7,
+    711.7
+   ],
+   "w": 2227,
+   "h": 986,
+   "dpi": 300,
+   "src": "fe443ab3-38._Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Schematic diagram demonstrating the impact of nano-vs. micro- sized SE particles on cathode microstructure. Assumed nano-scale SE particles provide a denser cathode (i.e., less voids) after compression (>500 MPa) and deliver better mechanical contact with CAM. Evolution of DRT profiles during cycling of LiNbO3-coated NMC/In–Li half-cells using (b) nano-scale (≤1 μm) and (c) micro-scale (≤20 μm) SEs in the cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    338.3,
+    296.8,
+    683.0
+   ],
+   "w": 1106,
+   "h": 1437,
+   "dpi": 300,
+   "src": "fe443ab3-38._Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.pdf",
+   "blank": 0.68
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) Cycling performance of the LiNbO3-coated NMC cathode half-cell with operating pressure of 20 MPa. (b) Specific discharge capacities of aged half-cells before and after re-pelletizing at 150 MPa or > 500 MPa. After the re- pelletizing, 20 MPa was applied to the cells as the operating pressure during cycling. The changes in (c) Nyquist plots and (d) DRT profiles before and after re-pelletizing at 150 MPa or > 500 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    373.3,
+    565.8,
+    683.0
+   ],
+   "w": 1106,
+   "h": 1291,
+   "dpi": 300,
+   "src": "fe443ab3-38._Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.pdf",
+   "blank": 0.816
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) Nyquist plots and (b) DRT profiles of coating-free (i.e., bare) NMC cathode half-cell recorded during cycling under 20 MPa. In the Nyquist plots, the frequency changes were indexed by magenta color. (For interpretation of the references to color in this figure legend, the reader is referred to the Web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    281.2,
+    296.8,
+    692.6
+   ],
+   "w": 1106,
+   "h": 1715,
+   "dpi": 300,
+   "src": "fe443ab3-38._Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) Specific discharge capacity and Coulombic efficiency of graphite half-cell measured under 20 MPa. Evolution of (b) Nyquist plots and (c) DRT profiles of the half-cells during cycling. compelling evidence supporting the assumption that P3 (around 1 kHz) is associated with the contact between the cathode and SE. Although the P3 peak is also present in the graphite anode, it remains stable over repeated cycles. This observation indicates that the contact impedance of the LiNbO3-coated NMC cathode has a more significant impact on the overall impedances of the full-cell. The large charge-transfer impedance at low frequency is attributed to the graphite anode, as evidenced by the rapid growth of charge transfer impedance in the graphite anode half- cell, whereas the charge transfer impedance remained relatively stable in the cathode half-cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    297.0,
+    486.7
+   ],
+   "w": 1107,
+   "h": 1822,
+   "dpi": 300,
+   "src": "fe443ab3-38._Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) Cycling performance of the LiNbO3-coated NMC/graphite full-cell under operating pressure of 20 MPa. (b) Specific discharge capacities of the aged full-cells before and after re-pelletizing at > 500 MPa. The changes in (c) Nyquist plots and (d) DRT profiles of the full-cell before and after re-pelletizing at > 500 MPa. solid-electrolyte interphase (SEI) on graphite or cathode-electrolyte interphase (CEI) on the LiNbO3-coated NMC cathode. Our result sug­ gests that it would be distinguishable from the mechanical contact, which is influenced by the geometry of the cathodes and anode, as verified by examining different particle sizes of the SE in the cathode (refer to Fig. 3). Such mechanical contact impedance between the electrode and SE is characterized as the P3 peak. The P3 peak was dominant at the cathode- SE contact with cycles and could be effectively reduced by applying r",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    49.4,
+    566.0,
+    348.7
+   ],
+   "w": 1107,
+   "h": 1249,
+   "dpi": 300,
+   "src": "fe443ab3-38._Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.pdf",
+   "blank": 0.814
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Summarized interpretation of DRT peaks in sulfide-type solid-state batteries across frequency domains. Data availability",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    49.4,
+    523.3,
+    140.6
+   ],
+   "w": 1882,
+   "h": 381,
+   "dpi": 300,
+   "src": "fe443ab3-38._Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.pdf",
+   "blank": 0.84
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "Table 1 Summary of proposed impedance sources, observed frequency ranges, and supporting experimental evidences/references in sulfide-type solid-state battery full-cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    560.7,
+    739.2
+   ],
+   "w": 2202,
+   "h": 2949,
+   "dpi": 300,
+   "src": "fe443ab3-38._Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": null,
+   "file": "fig_s1.png",
+   "caption": "Figure S1. Schematic illustration for in-house design of Pellet-die cell. (a) Cell configuration in a full-cell, and (b) structure of cell fixture and cell's wire connection. The operation pressure was given by tightening bolt and nut, and electrodes were connected with exterior wire and the cell was kept by the insulating cap from short-circuit.",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1750,
+   "h": 777,
+   "dpi": null,
+   "src": "ac1ae225-38._Sup_Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.docx",
+   "note": "docx word/media/imageN.png 에서 직접 추출 (zipfile). 크로퍼는 .docx 를 읽지 못한다."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": null,
+   "file": "fig_s2.png",
+   "caption": "Figure S2. Impedance spectroscopy of simple SE measured at a low temperature of -20 oC. The obtained experimental data was continued through fitting the line.",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1527,
+   "h": 715,
+   "dpi": null,
+   "src": "ac1ae225-38._Sup_Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.docx",
+   "note": "docx word/media/imageN.png 에서 직접 추출 (zipfile). 크로퍼는 .docx 를 읽지 못한다."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": null,
+   "file": "fig_s3.png",
+   "caption": "Figure S3. Impedance spectroscopy examined using (top) battery cycler-connected potentiostat, and (bottom) potentiostat (direct connection)",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1644,
+   "h": 659,
+   "dpi": null,
+   "src": "ac1ae225-38._Sup_Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.docx",
+   "note": "docx word/media/imageN.png 에서 직접 추출 (zipfile). 크로퍼는 .docx 를 읽지 못한다."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": null,
+   "file": "fig_s4.png",
+   "caption": "Figure S4. (a) Typical equivalent RC circuits model for battery analysis and (b) single RC circuit.",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1663,
+   "h": 432,
+   "dpi": null,
+   "src": "ac1ae225-38._Sup_Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.docx",
+   "note": "docx word/media/imageN.png 에서 직접 추출 (zipfile). 크로퍼는 .docx 를 읽지 못한다."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": null,
+   "file": "fig_s5.png",
+   "caption": "Figure S5. Illustration on the preprocessing steps of Nyquist plot before DRT analysis: (1) original Nyquist plot; (2) fitting diffusion tail at low frequency region; (3) subtraction the diffusion tails from the original Nyquist plot for DRT analysis.",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1512,
+   "h": 362,
+   "dpi": null,
+   "src": "ac1ae225-38._Sup_Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.docx",
+   "note": "docx word/media/imageN.png 에서 직접 추출 (zipfile). 크로퍼는 .docx 를 읽지 못한다."
+  }
+ ]
+}
