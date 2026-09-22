@@ -93,6 +93,7 @@ evidenceScope: multi-source-primary
 | BQ | 2026-09-13 | `codex_BQ_prompt_eos_v0_disordered_2026_09_13.md` | `codex_BQ_reply_eos_v0_disordered_2026_09_13.md` | (frontmatter 없음) | 같은 라벨 · 주제 토큰 일치 ['disordered', 'eos', 'v0']; 판정 인용 16회 |
 | BR | 2026-09-14 | `codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` | `codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` | 발송됨 | 같은 라벨 · 주제 토큰 일치 ['density', 'g2', 'layer1', 'li2s']; 판정 인용 14회 |
 | BS | 2026-09-22 | `li2s1a_BS_prompt_li2s_relax_provenance_2026_09_22.md` | `li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md` | 수신됨-회신함 | 같은 라벨 · 주제 토큰 일치 ['li2s', 'provenance', 'relax'] |
+| BT | 2026-09-22 | `li2s1a_BT_prompt_neff_window_bootstrap_2026_09_22.md` | `li2s1a_BT_reply_neff_window_bootstrap_2026_09_22.md` | 수신됨-회신함 | 같은 라벨 · 주제 토큰 일치 ['bootstrap', 'neff', 'window'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
