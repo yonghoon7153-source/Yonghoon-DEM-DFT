@@ -977,8 +977,12 @@ Li₆PS₅Cl 이 **7 종 황화물 중 산화물 양극에 가장 온건**(−33
    *EES* **14**, 4574 (2021) (Park ref 25) — **"constrained ensemble"** = 기계적 구속을 넣은 계면 열역학.
    우리 §B 의 구속 축과 직접 관련.
 5. **Jung, Sun, Kim, Shin, Min**, *"Scalable AI-Accelerated Design of Dual-Doped LGPS Electrolytes"*,
-   *eTransportation* **28**, 100570 (2026) (Park ref 37) — 🔴 **"dual-doped 전해질" + AI.
-   우리 도핑 축의 최근접일 수 있다. 제목만으로는 판정 불가 → 확보 필요.**
+   *eTransportation* **28**, 100570 (2026) (Park ref 37) — ✅ **확보·판정 완료 (2026-09-22)**
+   → `papers/jung2026_scalable_ai_dual_doped_lgps.md` · **판정 🟡 인접(선점 아님)**.
+   계(LGPS ≠ 아지로다이트)·도펀트공간(**Nd·란타나이드 0종**)·"dual-doped" 의 뜻(자리쌍 조합론 +
+   Li 가감 전하보정)이 갈려 **우리 Nd/O 서사는 선점되지 않았다**. 단 *"ML 대리모형 → DFT ECW →
+   AIMD σ"* **프레임**과 *"S 자리 최적 도펀트는 Cl·O"* **결론**은 선점됐다 →
+   `comparison_vs_ours.md` **§J-30**.
 6. **Lee, Noh, Seong, Lee, Park**, *"Suppressing Unfavorable Interfacial Reactions Using Polyanionic Oxides
    as Efficient Buffer Layers: Low-Cost Li₃PO₄ Coatings"*, *ACS AMI* **15**, 12998 (2023) (Park ref 46) —
    `Fig. 7` 챔피언 Li₃PO₄ 의 실험 판.
