@@ -183,6 +183,14 @@
    "★ 랩실 논문/05. Stabilizing the interface between high-Ni oxide cathode and Li6PS5Cl for all-solid-state batteries via dual-compatible halides.pdf"
   ]
  },
+ "chaney2024_two_step_sei_growth_argyrodite_li_metal": {
+  "figures": 10,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "8. Two-step_growth_SEI_argyrodite_Li_metal_MAIN.pdf",
+   "8. Sup) Two-step_growth_SEI_argyrodite_SI.pdf"
+  ]
+ },
  "chang2026_performance_based_mlip_selection_sse": {
   "figures": 16,
   "generated": "2026-09-09",
@@ -1594,6 +1602,14 @@
   "pdfs": [
    "6. NatMater_2020_Schwietert_Clarifying_redox_activity_vs_ESW_MAIN.pdf",
    "6. Sup) NatMater_2020_Schwietert_Clarifying_redox_SI.pdf"
+  ]
+ },
+ "schwietert2021_intrinsic_vs_decomposition_window_sse": {
+  "figures": 29,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "7. FirstPrinciples_prediction_ESW_reaction_mechanisms_SSE_MAIN.pdf",
+   "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf"
   ]
  },
  "sendek2017_ml_screening_12k_conductors": {
