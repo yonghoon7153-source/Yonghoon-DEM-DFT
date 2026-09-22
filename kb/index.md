@@ -1,12 +1,15 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-21 · managed-files: 430
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-22 · managed-files: 432
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 229건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 231건)
+- 2026-09-22 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-09-22 · `kb/reviews/codex_BS_prompt_li2s_relax_provenance_2026_09_22.md` — BS 수신 원문 — li2s relax 계보·E_hull 분해·−38.4 읽는 방향·600 K 문구 · 수신됨-회신함
+- 2026-09-22 · `kb/reviews/codex_BS_reply_li2s_relax_provenance_2026_09_22.md` — BS 회신 — relax 프레임 동정 불가 · E_hull 분해 · −38.4 상한 읽기 · 600 K 문구 정정 · 회신문-작성됨
 - 2026-09-20 · `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안) · 완료 (2026-09-20 · 다음 주 문서는 새 파일)
 - 2026-09-19 · `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적) · open
 - 2026-09-18 · `kb/methodology/amorphous_overlap_gate_lessons_2026_09_18.md` — 비정질 겹침 게이트 — 다음 캠페인 설계로 넘기는 것 셋 · 제안 (다음 캠페인 설계용 · 이번 판정 재해석 금지)
@@ -14,7 +17,6 @@
 - 2026-09-16 · `kb/methodology/cei_model_transfer_to_cascade_2026_09_16.md` — CEI 모델을 캐스케이드로 옮기기 — 무엇이 이미 배선됐고 무엇이 안 됐나 · 진행
 - 2026-09-16 · `kb/projects/handoff_2026_09_16_cathode_cei.md` — 인수인계 — 2026-09-16 세션 (양극 CEI §A–§E · 도펀트 스크리닝 · dual compatibility) · 진행
 - 2026-09-15 · `kb/papers/self_doping_dft_paragraph_2026_09_08.md` — 원고 자가도핑 DFT 문단 — 스핀 하나로 좁힌 5문단 (2·3·6 계열) · 1저자 승인 — 삽입 위치 대기
-- 2026-09-14 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-14 · `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나 · 발송됨
 - 2026-09-14 · `kb/reviews/codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 회신 — G4 는 합격선이 아니라 경보. '셀 문제 배제' 는 받아들일 수 없다 · 회신됨
 - 2026-09-14 · `kb/reports/weekly_2026_09_14.md` — 주간 정리 2026-09-07 ~ 09-13 (주간보고 초안) · 완료 (2026-09-14 · 다음 주 문서는 새 파일)
@@ -25,8 +27,6 @@
 - 2026-09-13 · `kb/reviews/codex_BP_reply_static_pair_result_2026_09_13.md` — 회신 BP 접수 — 조건 1 이행 인정 · 파일럿 조건부 GO (셀 정책 구현 불일치로 즉시 실행 승인은 아님) · 접수
 - 2026-09-13 · `kb/reviews/codex_BQ2_reply_fix_verification_2026_09_13.md` — 회신 BQ-2 — 수정본 검증 (NO-GO) · 회신됨-NO-GO
 - 2026-09-13 · `kb/reviews/codex_BQ3_prompt_sweep_complete_2026_09_13.md` — 회신 BQ-3 프롬프트 — 스윕 완결 · §4b 판정과 다음 런 사양 · 발송 대기
-- 2026-09-13 · `kb/reviews/codex_BQ3_reply_sweep_complete_2026_09_13.md` — 회신 BQ-3 — 스윕 완결 판정 (NO-GO 유지 · 10스윕 조건부 GO) · 회신됨-NO-GO-조건부GO
-- 2026-09-13 · `kb/reviews/codex_BQ4_prompt_10sweep_basin_2026_09_13.md` — 회신 BQ-4 프롬프트 — 10스윕 완결 · 골짜기 비교 · §4b 최종 판정 · 회신됨-종결GO
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -210,9 +210,9 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (141)
+## reviews/ (143)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
-- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-14 · 자동생성)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-22 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
 - `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
@@ -287,6 +287,8 @@
 - `kb/reviews/codex_BQ_reply_eos_v0_disordered_2026_09_13.md` — 회신 BQ — 예비 판정 (원문)
 - `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나  (2026-09-14 · 발송됨)
 - `kb/reviews/codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 회신 — G4 는 합격선이 아니라 경보. '셀 문제 배제' 는 받아들일 수 없다  (2026-09-14 · 회신됨)
+- `kb/reviews/codex_BS_prompt_li2s_relax_provenance_2026_09_22.md` — BS 수신 원문 — li2s relax 계보·E_hull 분해·−38.4 읽는 방향·600 K 문구  (2026-09-22 · 수신됨-회신함)
+- `kb/reviews/codex_BS_reply_li2s_relax_provenance_2026_09_22.md` — BS 회신 — relax 프레임 동정 불가 · E_hull 분해 · −38.4 상한 읽기 · 600 K 문구 정정  (2026-09-22 · 회신문-작성됨)
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서)  (2026-08-20 · 리뷰대기)
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
@@ -493,4 +495,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 283개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 304개 (정본 목록: litdb/INDEX.md)
