@@ -14,6 +14,7 @@
 > methods: XPS
 
 > 🎤 **관련 발표**: 없음 (`litdb/talks/*.md` 인입 대기열 전수 확인 — `lee2026_skku_mlip_materials_design.md` 의 9건 어디에도 이 논문 없음)
+> 🔗 **역링크**: 이 편은 **`papers/wang2026_lirich_mn_cathode_solid_state_review.md` 의 `ref 42` 원문**이다 — 그 리뷰 digest 의 §10-**F4** 와 §11-1 이 *"원출처를 직접 digest 해야 센다"* 고 두 번 적어 둔 논문이고, **2026-09-22 에 양쪽을 다 갱신했다**(그쪽 머리말 + F4 해소 + §11-1 1번 완료 표시). **⛔ 방향은 이 digest → 리뷰가 아니라, 리뷰의 2차 인용을 이 원문이 *대체* 하는 것이다** — 값이 충돌하면 **이 편이 정본이다**.
 
 > **저자**: **Wubin Du**^a,b,⊥ · **Qinong Shao**^b,⊥ · Yiqi Wei^b · Chenhui Yan^b · Panyu Gao^c · Yue Lin^d · Yinzhu Jiang^b · Yongfeng Liu^b · Xuebin Yu^c · **Mingxia Gao\***^b · Wenping Sun^b · **Hongge Pan\***^{a,b}  (⊥ Du·Shao 공동 1저자)
 > · ^a **西安工业大学 新能源科学技术研究院** (Xi'an Technological University, Institute of Science and Technology for New Energy), Xi'an 710021
