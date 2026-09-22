@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -198,6 +198,36 @@ LGPS 는 **실온에서 원호가 0 개**이며, Li|LLZO|Li 는 **400 MPa 에서
 ⚠ **10호는 리뷰다** — 1차 측정 0, `contact loss` 0 회(위 인용구가 전부),
 `identifiab*`·`uncertaint*` 전수 0 회. **재지 않았다.** 위에서 쓰는 것은 수치가
 아니라 **방법론적 주장**이다.
+
+## ★ 이 모델 형태는 9호 고유가 아닐 수 있다 — `A_eff` 의 계보 입구 (2026-09-22, `assb` 12호)
+
+`assb` 12호(Sadegh Kouhestani et al. 2022, *Energies* 15, 6599 — ⚠ **PHM 종설, 1차 측정 0**,
+`raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md`) §3.1.1 이 한 문장으로
+같은 형태를 소개한다:
+
+> `[인쇄]` "Tian et al. [60] and Shao et al. [60] introduced **a parameter to describe the
+> contact area, which adjusts the current density in the 1-D Newman model**. They found
+> that **the capacity drop was correlated with the loss of contact area**, and the optimal
+> charging performance could be obtained under medium compressive pressures (0.4–1 MPa)."
+
+`[해석]` "접촉 면적을 기술하는 파라미터가 1D Newman 모델의 **전류밀도를 조정**한다" 는
+위 §정의의 `j^p_ct = (I − I^p_dl) / (A^p_eff · a_{s,p} · A · L_p)` 와 **자리가 같다** —
+BV 분모의 유효 면적 인자. 즉 이 페이지가 손으로 보인 `A_eff · ε_p / R_s` 곱 축퇴는
+**Huo 2025 가 만든 형태가 아니라 2017 년(Tian & Qi, *JES* 164, E3512)부터 있던 형태**일
+가능성이 높고, Shao 2022 (*Energy* 239, 121929) 가 거기에 **압력 의존**을 얹었다.
+
+**이것이 이 페이지에 뜻하는 것 둘**:
+1. `evidenceScope: single-source` 는 **유지**한다 — 12호는 식을 인쇄하지 않았고, 원전 둘을
+   우리가 읽지 않았다. 다만 §"주장하지 않는 것" 의 "P2D 계열에 널리 반복될 가능성" 이
+   **한 문장의 문헌 근거**를 얻었다.
+2. ★ Shao 2022 가 정말 `A_eff = A_eff(P)` 를 넣었다면, **압력 되돌림 연산자**
+   ([[assb-pressure-reapplication-separation-test]])가 **모델 안에 이미 들어 있는** 첫 사례다
+   — 그러면 곱 축퇴를 깨는 "다른 반응을 하는 자극" 이 그 모델에서는 **압력**이 된다.
+   확인 전이다.
+
+⚠ **단서**: 12호는 두 저자에 **같은 인용번호 [60]** 을 붙였다(Shao 는 [63] 이어야 한다).
+그래서 `0.4–1 MPa` 가 어느 쪽 결과인지 **그 지면으로는 확정되지 않는다.** 이 절의 수치는
+쓰지 않고 **형태**만 쓴다. 9호(Huo 2025)가 Tian & Qi 를 인용하는지도 **확인하지 않았다**.
 
 ## 이 페이지가 주장하지 않는 것
 

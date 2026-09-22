@@ -1,0 +1,171 @@
+{
+ "slug": "kouhestani2022_phm-solid-state-batteries-perspective",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "6aa69153-11._Prognosis_and_Health_Management_PHM_of_Solid-State_Batteries_Perspectives_Challenges_and_Opportunities.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic proﬁle of typical structures of solid−state batteries. Adapted with permission from Ref. [15]. Copyright © 2022 Royal Society of Chemistry. The working principle of SSBs is similar to that of LIBs. The typical chemical reaction process is as follows:",
+   "rotated_deg": 0,
+   "bbox": [
+    160.1,
+    465.7,
+    565.3,
+    697.7
+   ],
+   "w": 1689,
+   "h": 968,
+   "dpi": 300,
+   "src": "6aa69153-11._Prognosis_and_Health_Management_PHM_of_Solid-State_Batteries_Perspectives_Challenges_and_Opportunities.pdf",
+   "blank": 0.711
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Data acquisition process for RUL prediction of LIBs. The blue line referring the as- signed/designed battery performance or expectation; The blue line representing the actual battery performance. Adapted with permission from Ref. [30]. Copyright © 2022 Creative Commons Attribu- tion 4.0 International License. The SSB health management system is similar to liquid electrolyte batteries. Hence it is necessary to understand the health management strategy of liquid electrolyte batteries. The development of a literature review on the health management of batteries is discussed herein. Berecibar et al. [32] summarized battery SOH monitoring methods, reviewed the advantages and disadvantages of online BMS applications, and proposed a practical battery SOH estimation method. Cuma et al. [33] summarized the estimation strategies and methods that are used in EV. The above two papers summa",
+   "rotated_deg": 0,
+   "bbox": [
+    160.1,
+    263.8,
+    567.0,
+    565.4
+   ],
+   "w": 1696,
+   "h": 1257,
+   "dpi": 300,
+   "src": "6aa69153-11._Prognosis_and_Health_Management_PHM_of_Solid-State_Batteries_Perspectives_Challenges_and_Opportunities.pdf",
+   "blank": 0.631
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Relationship between SOH and RUL. Adapted with permission from Ref. [31]. Copyright © 2022 Elsevier Ltd.",
+   "rotated_deg": 0,
+   "bbox": [
+    157.0,
+    297.9,
+    566.6,
+    453.0
+   ],
+   "w": 1707,
+   "h": 647,
+   "dpi": 300,
+   "src": "6aa69153-11._Prognosis_and_Health_Management_PHM_of_Solid-State_Batteries_Perspectives_Challenges_and_Opportunities.pdf",
+   "blank": 0.553
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Methods for SOH estimation and RUL prediction. Adapted with permission from Ref. [31]. Copyright © 2022 Elsevier Ltd.",
+   "rotated_deg": 0,
+   "bbox": [
+    160.4,
+    485.1,
+    566.8,
+    752.7
+   ],
+   "w": 1694,
+   "h": 1116,
+   "dpi": 300,
+   "src": "6aa69153-11._Prognosis_and_Health_Management_PHM_of_Solid-State_Batteries_Perspectives_Challenges_and_Opportunities.pdf",
+   "blank": 0.581
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Prospects of SOH characterization, estimation, and application for batteries. Adapted with permission from Ref. [40]. Copyright © 2022 Elsevier Ltd. 2. SOH estimation After developing a health management model, a time-domain analysis is needed, which plays a vital role in the improvement and optimization of the model. First, a trade-off needs to be made between model complexity and computational efﬁciency. Secondly, the extraction and estimation of SOH characteristics in the process of dynamic discharge and controllable charging is an essential task. In practice, there are very few instances where a battery can be completely exhausted or fully charged at the pack level. Therefore, the SOH estimation method should consider the working condition of the battery. Finally, the SOH estimation of fused multi-signals is likely to become a research hotspot in the future. 3. SOH applicat",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    184.9,
+    566.9,
+    556.8
+   ],
+   "w": 2168,
+   "h": 1550,
+   "dpi": 300,
+   "src": "6aa69153-11._Prognosis_and_Health_Management_PHM_of_Solid-State_Batteries_Perspectives_Challenges_and_Opportunities.pdf",
+   "blank": 0.58
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Main degradation mechanisms of LIBs. Adapted with permission from Ref. [41]. Copyright © 2022 Elsevier Ltd. Tian et al. [29] studied the related investigations and attributed the battery aging to external environmental and internal factors. As shown in Figure 7, the external environ- mental factors refer to its working environment condition, such as temperature [44,45], charging and discharging rate [46,47], depth of discharge (DoD) [48,49], and charging cut-off voltage [46,50]. However, the internal factors mainly refer to three inﬂuencing mechanisms: lithium inventory loss (LLI) [51,52], active substance loss (LAM) [53–56], and conductivity loss (CL) [57,58]. LLI includes the formation of SEI layer, lithium dendrite, and battery self-discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    354.2,
+    566.9,
+    622.1
+   ],
+   "w": 2080,
+   "h": 1118,
+   "dpi": 300,
+   "src": "6aa69153-11._Prognosis_and_Health_Management_PHM_of_Solid-State_Batteries_Perspectives_Challenges_and_Opportunities.pdf",
+   "blank": 0.536
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Schematic diagram of the causes of battery aging. Adapted with permission from Ref. [29]. Copyright © 2022 Elsevier Ltd. 3. Prognostics and Health Management (PHM) PHM techniques devise a set of technologies and approaches to support condition monitoring, health status, fault diagnosis, and maintenance to maximize the reliability and safety of battery systems. They are mainly divided into three categories: model- based (physics-based), data-driven, and hybrid approaches. Each of these methods will be discussed in detail in the following sections. 3.1. Model-Based (Physics-Based) Approaches The physics-based approach aims to establish a mathematical model that describes the degradation behavior of a battery accurately. It can be divided into four groups: electrochemical (mechanistic) models, ECMs, empirical models, or fused models. 3.1.1. Electrochemical (Mechanistic) Models The",
+   "rotated_deg": 0,
+   "bbox": [
+    41.9,
+    93.1,
+    566.9,
+    398.3
+   ],
+   "w": 2189,
+   "h": 1273,
+   "dpi": 300,
+   "src": "6aa69153-11._Prognosis_and_Health_Management_PHM_of_Solid-State_Batteries_Perspectives_Challenges_and_Opportunities.pdf",
+   "blank": 0.564
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 20,
+   "file": "tab_1.png",
+   "caption": "Table 1. Summary of PHM techniques for solid-state batteries. Categories Technique Equivalent circuit model [85] Electrochemical model [61,62,77] Electrochemical-mechanical model [63,64,68,70] Model-based and Physics-based method Mathematical model [65,72,78] ANN [104–107,114,115] kNN [108] DDP [111,112] Data-driven method SVM [113] RF [109] PF [87] BM [86,90] Hybrid method Series [129,130] Parallel [131]",
+   "rotated_deg": 0,
+   "bbox": [
+    161.0,
+    52.1,
+    566.0,
+    787.5
+   ],
+   "w": 1649,
+   "h": 2993,
+   "dpi": 293,
+   "src": "6aa69153-11._Prognosis_and_Health_Management_PHM_of_Solid-State_Batteries_Perspectives_Challenges_and_Opportunities.pdf",
+   "blank": 0.875
+  }
+ ]
+}

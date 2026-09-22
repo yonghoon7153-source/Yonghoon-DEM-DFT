@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research, eis]
-sources: [raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/su2024_drt-soh-health-features.md]
+sources: [raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -54,6 +54,18 @@ and **the inclusion of more elements will tend to improve the fit**" ·
 "it is often challenging to decipher **how many time constants are present** in
 a given dataset and their assignment can be **highly subjective**."
 ⚠ **10호는 λ(정규화 파라미터) 선택 규칙을 주지 않는다** (digest G4).
+
+#### 층 1 의 이웃 — PHM 종설이 액체셀 ECM 맥락에서 같은 말을 재인용으로 인쇄 (Kouhestani 2022, `assb` 12호)
+
+`raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md` §3.1.2 (`[인쇄]`,
+⚠ 재인용, ref [84] = Cho et al. 2012, *Comput. Chem. Eng.* 41, 1):
+"the aging or temperature change of the LIB will cause the internal impedance
+characteristics of the battery to change **from a single impedance arc to a double
+impedance arc**, which significantly impacts the accuracy of the battery model."
+→ **"분해 가능한 원호 개수 = 노화·온도의 함수" 의 세 번째 독립 인쇄**(10호 Larfaillou
+재인용 · 11호 1차 DRT · 12호 액체셀 ECM 재인용). 그런데 같은 종설은 `identifiab*` **0 회**이고,
+이 문장을 **"1차 RC 모델의 정확도가 떨어진다"** 는 실무 문제로만 적는다 — **차수가 정해지지
+않는다는 문제로는 읽지 않는다.** ⚠ 원전 [84]가 실제로 그것을 보였는지는 확인 전이다.
 
 ### 층 2 — 실측: 개수가 상태·조작·장비로 움직인다 (Yu 2024, `assb` 11호)
 

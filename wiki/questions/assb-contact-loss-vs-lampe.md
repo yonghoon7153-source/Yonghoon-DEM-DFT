@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: research-question
 tags: [battery, degradation, research, assb]
-sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md]
+sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -201,6 +201,8 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 | **★★★ Vadhva, Hu, Johnson (3인 공동 1저자), Stocker, Braglia, Brett, Rettie 2021 (`assb` 10호 — 첫 **방법론 리뷰** · UCL + **HORIBA MIRA**(기업) · ⚠ **1차 측정 0**)** | **없다 (10/10 편).** `contact loss`·`percolat*`·`θ` **0 회**. 유일한 접점 = `[인쇄]` Fig. 9 본문 "**loss of interfacial contact in the composite cathode due to volumetric expansion**" — ★★ 그런데 그 문장이 **분해층 형성과 `and` 로 한 저항(`R_MF`)에 묶여 있다**. 가장 가까운 정량 채널은 **TLM + 전자차단 대칭셀의 유효 이온 굴곡도**(ref. 57 Kaiser) — `θ_AM` 과 같은 양이 아니다 | **★★ 있다 — 그러나 "가르는 관측" 이 아니라 "가르는 절차" 다.** ① **상보 대칭셀 쌍**(차단/가역) ② **저온으로 시상수 벌리기**(ref. 82 Bron — `R_gb` 를 −130 °C 에서 동정해 **실온 적합의 구속으로 되가져온다**) ③ **가압으로 큰 시상수 제거**(ref. 28, `[도표]` 400 MPa 에서 `R_int` 가 사라지자 `GB` 가 드러난다) ④ **DRT 로 개수를 먼저 정하기**(ref. 62) ⑤ **4 단자**(ref. 21) ⑥ **K–K / Lin-KK 사전 검증**(ref. 41–43). ⚠ **전부 재인용 · ASB 복합양극에 `LAM_PE` ↔ 접촉 손실로 적용된 사례 0** | **해당 없음 — 리뷰다** (1차 측정 0, 열화 라벨 0: `LLI`·`LAM`·`degradation mode`·`half-cell` 전수 0 회). ★ **새 층위 하나**: `[인쇄]` **기관 간 라운드로빈 산포** — `>1 mS cm⁻¹` 에서 상대 중앙값 오차 **22 %**, `<1` 에서 **~10 %** (⚠ 재인용, ⚠⚠ 인용 번호가 틀렸다 — D5). **"같은 양을 여러 기관이 재면 얼마나 벌어지는가" 의 첫 숫자** + `[인쇄]` **삼중 측정 권고** | **★★★ 0 이 깨진다 — 단 "쟀다" 가 아니라 "일반 현상임을 인쇄했다".** `[인쇄]` "**As no solution to an EIS spectrum is unique**" · "**The non-uniqueness of an ECM solution**" · "**the inclusion of more elements will tend to improve the fit**" · "how many time constants … **highly subjective**" · "Physical features **may not be visible**" · **AIC 로 회로 순위 매기기**(ref. 51,52; `[인쇄]` "only recently applied to **simulated** data") · **DRT 는 `ill-posed`, `regularization` 필요**. ★★ 그리고 **"분해 가능한 RC 개수 = 실험 조건의 함수" 를 다섯 사례로 보인다**(황화물 5 중 3 만 입계 분해 · LGPS 실온 원호 0 개 · 400 MPa 에서 GB 등장 · 폴리머 60 °C 에서 상경계 소멸 · **노화가 RQ 를 3→4 로**). ⚠ **측정 0** — `identifiab*`·`uncertaint*`·`confidence`·`condition number`·`error bar` **전수 0 회** | **★★ 부분 — 새 경고 둘.** `indium` 2 · `Li-In` 2 회. ① Li 금속이 비이상적이라 **Li-In 을 기준극 대안**으로 제시 ② ★★ `[인쇄]` **방전 중 In 음극 계면 저항이 리튬화도(In-rich 화)로 크게 증가** ⇒ **`R_anode(N)` 에서 노화분과 SoC 분이 안 갈린다** (4호 `R_LF` ≈157 배 해석에 직접 걸린다) ③ ★★★ `[인쇄]` **In–Li 음극 셀은 LMA 셀과 전극↔주파수 귀속이 반대다** ⇒ **"저주파=양극" 같은 보편 규칙이 없다**. ⚠ 전위 오프셋 안정성은 여전히 0 | **부분 — 값 3 개.** `[인쇄]` **~120 MPa**(σ 포화, 단 그것이 인가 최대압) · `[인쇄]` **~400 MPa**(Li₆PS₅Cl σ 는 거기까지 계속 증가, ref. 84 = **Doux JMCA 2020**, 우리 5호의 자매) · `[도표]` **400 MPa**(Fig. 11a, Li\|LLZO\|Li). ★★ **개념 기여가 값보다 크다**: ① `[인쇄]` "**<1 Ω cm², remained after the pressure was removed**" = **5호의 이력을 산화물에서 독립 재현** ② **압력이 분해능 연산자다** ③ `[인쇄]` 제언 2 가 **다변수(온도·압력·SoC) 시험**을 ECM 구축의 표준 처방으로 올린다. ⚠ **압력→용량 곡선 0 (10/10 편)** | **없다.** `dead li`·`isolated` 0 회. ★ 인접 둘: ① `[인쇄]` **soft short**(LLZO 내부 Li 석출)를 **`R_leak` ECM 원소**로 잡고 `R_b`·`R_gb` 안정성으로 부재 확인 ② `[인쇄]` **NLEIS 가 상용 LiB 에서 Li 도금 검출**(ref. 184). 둘 다 **석출**이지 **고립**이 아니다 | **없다.** `OCV` **1 회**(⚠ 그것도 `[인쇄]` "**OCV variation due to small capacity changes can affect the low-frequency range**" — 즉 **OCV 드리프트가 EIS 저주파를 오염시킨다**는 경고다). `GITT`·`half-cell` 0 회, **V–Q 곡선 0 장**. ★ 대신 `[도표]` Fig. 9b/9c = **SoC 축 위 EIS 10+10 점**(충전 3.305–3.599 V / 방전 3.442–2.000 V, LCO) — **전압축은 있고 용량축이 없다** |
 
 | **★★★ Yu, Choi, Dunham, …, Farahati, Kim 2024 (`assb` 11호 — 첫 **graphite 음극 완전지** · 첫 **DRT** · **Schaeffler**(산업체) + Ohio State · *J. Power Sources* 597, 234116)** | **부분 — 단위가 Ω 다.** `contact loss`·`percolat*`·`tortuos*`·`θ` **0 회**. 대리량 = **P3 DRT 봉우리 높이**(`Ω` 또는 `Ω mg⁻¹`). ★ **계보 최초로 (i) 주파수로 국소화되고 (ii) 시계열이 있고(최장 6 점) (iii) 조작(재가압)으로 되돌려지는** 접촉 손실 대리량. ⚠ 셋이 막는다 — ① 무차원 분율이 아니다(용량 사상 0) ② ★★ **전극을 가르지 않는다** (`[도표]` Fig. 8 이 P3 에 **Cathode + Anode 둘 다** 찍는다) ③ `[인쇄]` Table 1 이 P3 를 "active material/SE **and/or** electrode/current-collector" 로 둔다 — **복합양극 내부 접촉과 집전체 접촉을 안 가른다** | **★★ 있다 — 네 조작, 그러나 전부 임피던스 안이다.** ① **완전지 ↔ NMC/In–Li ↔ graphite/In–Li 반쪽전지 분해**(계보 최초) ② **SE 입도 스윕**(nano ≤1 µm vs micro ≤20 µm) ③ **코팅 유무**(LiNbO₃ vs bare) ④ **재가압**(150 / >500 MPa). ⚠⚠ **형태학·화학 관측 0** — SEM·TEM·FIB 토모·XRD·XPS·ToF-SIMS **전수 0**. **접촉 손실을 임피던스 밖에서 확인한 관측 0 건** (4호가 FIB-SEM 으로 void 를 실측한 것과 정반대) | ★★ **새 층위: `inverted-nonunique`.** 라벨이 **ill-posed 역변환의 봉우리 높이**인데 **정규화 설정이 보고되지 않았다**(`regulariz*`·`λ`·`L-curve`·`GCV`·RBF shape **전수 0 회**). 그 위에 `[인쇄]` Fig. 2 캡션 — DRT 를 **"simulated Nyquist curves" 위에서** 계산했다 ⇒ **ECM 을 입력으로 받은 DRT**(순환). 오차막대 0 · 셀 수 0(`n =` 0 회) · 반복 0. ★ `[인쇄]` **"The authors do not have permission to share data."** ⚠⚠ **파라미터 표가 아예 없다** — 9호는 6 개를 "not disclosed" 로 **찍었는데** 38호는 구멍을 셀 기준조차 없다 (**어느 셀이 Cl 이고 어느 셀이 Br 인지도 끝까지 안 밝힌다**) | **0 (11/11 편).** `identifiab*`·`uniqu*`·`ill-posed`·`regulariz*`·`uncertaint*`·`confidence`·`error bar`·`Kramers`·`Kronig`·`condition number`·`Fisher`·`Bayes*`·`posterior`·`overfit*`·`degenerac*`·`λ`·`L-curve`·`GCV`·`cross-valid*` — **본문 + SI 전수 0 회**. ★★★ **성질이 다섯 번째로 바뀐다 — "잴 재료를 SI 에 인쇄해 놓고 뺄셈을 안 했다"**: `[도표]` **Fig. S3 가 같은 셀에서 배선만 바꿔 DRT 봉우리를 −15 % ~ +69 % 움직인다**(≈3 kHz −15 % · ≈0.03 Hz **+69 %** · 분해된 어깨 **1 개 유무 차이**), 그런데 **본문의 재가압 효과는 −10 ~ −25 %** 로 **그 폭 안**이다. 논문은 둘을 나란히 놓지 않는다. ★★ 두 번째 재료: `[재현]` **P3 의 보고 위치가 논문 안에서 500 Hz–10 kHz = 1.3 자릿수**인데 **P2–P3 간격은 0.8 자릿수**(`log₁₀(6000/900)=0.82`) ⇒ **이름표의 불확정성이 이름표 간격보다 크다** = P2(화학) ↔ P3(기계) 분리 붕괴 | **부분 — 값은 들어왔고 검토는 0.** `indium` **1 회** · `In–Li` 7 회. `[인쇄]` 반쪽전지 창 **−0.595 – 0.9 V**(음극) · **2.1–3.7 V**(양극) · 완전지 **2.7–4.2 V** ⇒ `[재현]` **오프셋 ≈0.60–0.62 V vs Li/Li⁺ 가 함의된다** (계보 최초로 소수 셋째 자리까지). ⚠ **명시·인용·안정성 논의 전부 0**. ⚠⚠ 10호의 경고(방전 중 In 계면 저항이 리튬화도로 변한다)를 **검토하지 않는다** — 모든 EIS 가 `[인쇄]` **완전지 기준 50 % SOC** 이고 **반쪽전지의 In–Li 리튬화도는 통제되지 않았다** | **★★★ 이 계보에서 가장 넓다 — 그리고 `압력 → 용량` 을 처음으로 준다.** 제작 `[인쇄]` **>500 MPa** · 운전 `[인쇄]` **20 MPa** · 재가압 **150 / >500 MPa**. `MPa` **48 회**. ★ **압력→용량 반쪽 3 점**(`[인쇄]` 165.0 / 166.9 / **173.1** mAh g⁻¹) + **완전지 2 점**(169.9 / 171.7) — **10/10 편이 못 준 칸이 채워진다**. ★★ 그리고 **압력 → 봉우리별 Δ**(`[도표]` Fig. 4d · 7d). ⚠ **효과가 4호의 1/12** (`[재현]` +4.91 % vs 4호 +60.5 %p) 인데 `[인쇄]` "agree with previous report by **Ceder et al. [21]**"(= 우리 4호) 라고만 쓰고 **크기를 비교하지 않는다**. ⚠⚠ **계측 수단 0** — `[도표]` Fig. S1 은 **볼트·너트**(정변위)인데 `[인쇄]` "remained **constant at 20 MPa**". ⚠⚠⚠ ★★ **선택성이 없다** — 재가압이 `[도표]` P1 **−11 %** · P2 **−10 %** · P3 **−16 %** · P4(전하이동) **−25 %** · 무표기 0.03 Hz **−27 %** 를 **전부** 줄인다 | **해당 없음** (graphite 음극). `dead li`·`isolated`·`plating` **0 회**. ★ 인접 하나 — `[인쇄]` graphite 반쪽 CE ">99.99 %" 인데 `[도표]` Fig. 6(a) 의 CE 축은 **5 %p 눈금**이라 0.01 % 를 분해 못 하고 **사이클 ≈65 에 ≈98.5 % 로 떨어지는 점**이 있다 (`[재현]` 용량 역산 평균은 ≈99.98 %/cycle 로 정합) | **★★★ 계보 최초의 graphite 음극 ASSB 완전지.** LiNbO₃-코팅 **NMC622** + **graphite** + Li₆PS₅X, **2.7–4.2 V**, C/3, `[인쇄]` **192.4 → 179.8(200 cy) → 169.9(500 cy) mAh g⁻¹**. `OCV`·`open circuit`·`GITT` **0 회**, **V–Q 곡선 0 장**(10호와 같다). ★★★★ **그런데 이 칸이 이 카드의 전제를 깬다** — graphite 는 **스테이지 평탄역이 여럿인 구조 있는 OCP** 다 ⇒ **"전고체 음극은 평탄 → 5→3 붕괴" 가 이 셀에 성립하지 않는다** (9호 Li-Si 에 이은 **두 번째 반례**이고 이쪽은 **상용 흑연**이라 더 직접적) |
+
+| **Sadegh Kouhestani, Yi, Qi, Liu, Wang, Gao, Yu, Liu 2022 (`assb` 12호 — 첫 **PHM 종설** · Kansas + USTB + North Minzu · *Energies* 15, 6599 · ⚠ **Review, 1차 측정 0, 그림 7 장 전부 타 논문 재수록(LIB 6 + 2009 모식도 1)**)** | **없다 (12/12 편).** `contact loss`·`θ`·`percolat*` **0 회**. `contact area` 3 회 = 전부 §3.1.1 재인용 — `[인쇄]` "Tian et al. [60] and Shao et al. [60] introduced **a parameter to describe the contact area, which adjusts the current density in the 1-D Newman model** … the capacity drop was correlated with the loss of contact area", **값 0**. ★ `[해석]` 그 형태는 9호 `A^p_eff`(BV 분모)의 **조상 후보**(Tian & Qi 2017 → Shao 2022) — 원전 미확인 | **없다 — 리뷰다.** 인용 중 실험 영상이 모델에 들어간 것은 Fathiannasab 2021 토모그래피 1 편(재인용). ★★★ 그리고 **분리 물음을 정의에서 지운다**: `[인쇄]` §2.2 "**The loss of active materials mainly stems from the electrical contact loss** that is caused by graphite spalling, adhesive decomposition, collector corrosion, and electrode particle cracking" ⇒ 이 리뷰의 어휘에서 **`LAM ⊃ 접촉 손실`** 이고, 열거된 기구는 **전부 액체셀 것**. `[도표]` Fig. 6 의 "Contact Loss" 두 자리도 **집전체**(Cu 균열·Al 부식) | **해당 없음 + 날짜 하나.** SOH = `[인쇄]` 식 (6) 스칼라 `Q_max/Q_nominal`; 열화 모드 라벨 **0**(`LLI` 2 · `LAM` 1 회는 정의 문장뿐, 정량법 0 — 모드 정량 원전 두 편 refs 57·58 은 "**CL**" 이라는 낱말의 각주로만 쓰인다); Table 1 에 검증·불확실성·화학 열 **없음**(열이 Categories·Technique 둘); `[인쇄]` "Data Availability Statement: **Not applicable**". ★ `[인쇄]` "**very few instances where a battery can be completely exhausted or fully charged at the pack level**"(재인용) + `[인쇄]` "**most PHM techniques are based on simulation results and not experimental**"(1차) ⇒ 8호(2026)의 "no direct capacity labels" 와 같은 명제가 **2022 년에** 인쇄돼 있다 | **0 (12/12 편). 성질은 8호 이전 — 계보의 출발점을 날짜로 고정한다.** `identifiab*` **0** · `uniqu*` 1(무관: "no unique technique") · `ill-posed`·`regulariz*`·`confidence`·`error bar`·`standard deviation` **0** · `uncertaint*` 3(일반론). 가장 가까운 문장 셋: ① `[인쇄]` "difficult parameter identification"(×2, 실무 곤란) ② `[인쇄]` "large number of parameters … **inevitable errors in each parameter**" ③ 재인용 `[인쇄]` "**from a single impedance arc to a double impedance arc**" (노화·온도로, [84] LIB ECM) — 그리고 ②의 **반대 명제** `[인쇄]` "the more parameters … **the higher the accuracy**"(§3.1.3)가 같은 논문에 있다. ⇒ 8호가 이름을 붙인 것(`identifiab*` 5 회)이 **2022 년 PHM 종설에는 이름조차 없었다** | **없다.** `indium`·`In-Li`·`Li-In` 0 회 | **부분 — 재인용 1 값.** `[인쇄]` "optimal charging performance … under medium compressive pressures (**0.4–1 MPa**)" — ⚠ 출처가 **중복 인용번호 [60]**(D4) 탓에 Tian & Qi 2017 / Shao 2022 중 **확정 불가**. `[인쇄]` "anisotropic displacement of AM particles can also be prevented by applying **external compressive pressure**"(Fathiannasab). `stack` 0 · `MPa` 1 회. ★ 8호의 재인용 "<≈1 MPa"(Xu 2024, 산업 요구)와 **다른 원전에서 같은 자릿수** — 실험실 창(2–490 MPa)은 둘 다의 위 | **없다.** LLI 원인 = `[인쇄]` "SEI layer, lithium dendrite, and battery self-discharge"(LIB). `anode-free`·`dead li`·`isolated` 0 회 | **없다.** LCO(식 1; `[인쇄]` "LiCoO₂ **or LTO**" — LTO 는 음극, D1) · TiS₂ · LiPON 등 **이름만**. `OCV` 2 회(PNGV 설명 · Fig. 4 회로 기호) · `IC curve` 1 회 · `GITT` 1 회(Fabre 파라미터화) · **V–Q 곡선 0 장 · OCP 곡선 0 장**. 유일한 미분곡선 = `[도표]` 재수록 Fig. 5 의 dV/dQ 삽도. ⚠ `[도표]` 같은 Fig. 5 가 **`SOH = {FOI₁ … FOIₙ}` 벡터**를 인쇄하는데 본문 식 (6) 은 **스칼라** — 논문은 언급 없음(D20) |
 
 **1호 단독 1.5 → 2편 ≈2.5 → 3편 ≈3.0 → 4편 ≈5.5 → 5편 ≈6.5 → 6편 ≈7.0 → 7편 ≈7.0 → 8편 ≈7.0 → 9편 ≈7.5 → 10편 ≈8.0 → 11편 누적 ≈8.5 칸이다.**
 
@@ -982,6 +984,63 @@ requiring regularization" 의 **정반대 진술**이다.
   (DOI 10.5287/bodleian:kKBPZ282m)** 에 공개돼 있다 — **이 계보에서 자료를 공개
   저장소에 올린 첫 편**이다. (우리가 산포·검출한계를 직접 잴 수 있는 자리.)
 
+### ★ 아홉 번째 — **반례도 근거도 아닌, 계보의 출발점을 날짜로 찍는 표본** (2026-09-22, Sadegh Kouhestani et al. 2022 · ⚠ Review, 1차 측정 0)
+
+`raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md`
+(*Energies* **15** (2022) 6599; 본문 26 쪽, SI 없음, sha256 봉인). **수치는 전부 재인용이고
+이 절에서 쓰는 것은 수치가 아니라 "2022 년 PHM 종설이 무엇을 어휘로 갖고 있었는가" 다.**
+
+**(가) ★★★ 이 카드의 물음이 분류 차원에서 지워진 자리를 찍는다.**
+`[인쇄]` §2.2 "**The loss of active materials mainly stems from the electrical contact
+loss** that is caused by graphite spalling, adhesive decomposition, collector corrosion,
+and electrode particle cracking." → 이 리뷰의 어휘에서 **`LAM ⊃ 접촉 손실`** 이다.
+`[해석]` 3호(Liu 2024)가 `[인쇄]` "실험의 활물질 손실은 rock-salt + 파괴로 고립된 활물질을
+둘 다 포함한다" 고 **실험의 한계로** 적은 병합을, 이 종설은 **정의로** 한다. 우리가 가르려는
+두 양이 **PHM 문헌에서는 처음부터 한 낱말**이었다는 것 — 그리고 그 낱말의 기구 목록이
+**전부 액체셀**(흑연 박리·바인더·집전체 부식·입자 균열)이고 `[도표]` Fig. 6 의 "Contact
+Loss" 두 자리도 **Cu/Al 집전체**라는 것. **복합양극 AM|SE 계면은 이 리뷰에 없다.**
+
+**(나) ★★ Q4 계보의 "1–7호 상태(안 쟀다)" 가 PHM 쪽에서도 같은 시점에 성립했음을 확인한다.**
+`identifiab*` **0 회** (8호 Li 2026 은 5 회). 가장 가까운 문장이 `[인쇄]` "difficult parameter
+identification" — **실무 곤란**으로만 — 과 `[인쇄]` "large number of parameters … inevitable
+errors in each parameter" 이고, **같은 논문 §3.1.3 이 정반대**를 인쇄한다: `[인쇄]`
+"Generally, **the more parameters** that are involved in the model, **the higher the
+accuracy** of the model." → **모델 차수에 대한 두 방향 명제가 한 논문 안에서 화해되지
+않은 채 있다.** 이것이 2022 년의 상태다.
+
+**(다) ★ "모델 차수는 상태변수" 의 세 번째 독립 인쇄 — 단 액체셀 ECM, 재인용.**
+`[인쇄]` §3.1.2 "the aging or temperature change of the LIB will cause the internal
+impedance characteristics of the battery to change **from a single impedance arc to a
+double impedance arc**, which significantly impacts the accuracy of the battery model [84]."
+10호(Larfaillou 2016 재인용, LiPON RQ 3→4) · 11호(1차 DRT, 2–3→5) 에 이어 **셋째**.
+⚠ ref [84](Cho 2012)가 실제로 그것을 보였는지는 원전 확인 전이다 →
+[[drt-peak-count-nonidentifiability]].
+
+**(라) ★★ `A_eff` 형 접촉 파라미터의 계보 입구.**
+`[인쇄]` §3.1.1 "Tian et al. [60] and Shao et al. [60] introduced **a parameter to describe
+the contact area, which adjusts the current density in the 1-D Newman model**. They found
+that the capacity drop was correlated with the loss of contact area, and the optimal
+charging performance could be obtained under medium compressive pressures (0.4–1 MPa)."
+`[해석]` 9호(Huo 2025) Table 1 의 `A^p_eff`(BV 분모의 유효 접촉 면적비)와 **형태가
+같다**. [[assb-lampe-contact-product-degeneracy]] 가 손으로 보인 `A_eff·ε_p/R_s` 곱 축퇴가
+**2017 년 모델 형태에서 시작됐을 가능성**. ⚠ 두 저자에 같은 번호 [60] 이 붙어 있어
+(digest D4) **`0.4–1 MPa` 의 출처는 이 지면으로 확정되지 않는다.** 원전 둘(Tian & Qi
+*JES* 2017, 164, E3512 · Shao *Energy* 2022, 239, 121929)을 받아야 한다.
+
+**(마) "라벨이 없다" 의 2022 년 판.** `[인쇄]` "very few instances where a battery can be
+completely exhausted or fully charged at the pack level"(재인용, Yang 2021) ·
+`[인쇄]` §4 "**most PHM techniques are based on simulation results and not
+experimental**"(1차) · 결론 (1) `[인쇄]` "primarily used to estimate the **SOC** of SSBs" ·
+(2) "very few studies … **lack of accurate data**". → **8호의 "no direct capacity labels"
+와 같은 명제가 다른 원전에서 4 년 앞서 나온다.** 그리고 우리가 Table 1 을 한 줄씩 대조한
+결과(digest §Table 1 해체) **SSB 실측 열화 데이터로 SOH/RUL 을 추정한 항목은 0 / 28** —
+논문 자신의 결론과 일치한다.
+
+**이 절이 For / Against 어느 쪽인가**: **어느 쪽도 아니다.** 이 편은 근거를 주지 않는다 —
+**우리 물음이 문헌에서 어떤 어휘 상태에서 출발했는가**를 날짜와 함께 고정한다. 그것이
+종설 두 편(8호·12호)을 넣고 얻은 것이다: **2022 → 2026 사이에 PHM 문헌은 "identifiability"
+라는 이름을 얻었고(0 → 5 회), 여전히 재지는 않았다.**
+
 ### 새 제약 (2026-09-22, Li et al. 2026 — 종설이 들어오면서 붙은 것)
 
 > ⚠ 이 절의 제약은 **1 차 측정이 아니라 문헌의 요구·재인용**에서 온다. 앞 절들(1–7호)의
@@ -1116,6 +1175,27 @@ requiring regularization" 의 **정반대 진술**이다.
    전부 없고, `[인쇄]` "The authors do not have permission to share data."
    ⇒ **`assb` 산업체 편(9·11호, 그리고 36호 예정)에는 "구멍을 찍었는가" 를
    별도 항목으로 기록한다.**
+
+### 새 제약 (2026-09-22, Sadegh Kouhestani 2022 — PHM 종설이 들어오면서 붙은 것)
+
+1. ★★ **`LAM` 이라는 낱말을 문헌에서 받을 때 "접촉 손실을 포함하는가" 를 먼저 묻는다.**
+   12호가 `[인쇄]` "The loss of active materials **mainly stems from** the electrical
+   contact loss" 로 정의했으므로, PHM 계열 논문의 `LAM` 은 **우리 `LAM_PE` 가 아니라
+   `1 − θ_AM·(Q_material/Q₀)` 전체**일 수 있다. 라벨 층위 표(Q3)에 **"LAM 의 정의 범위"**
+   를 적는다 — 이 칸이 없으면 액체셀 `LAM` 수치를 ASSB 로 옮길 때 두 양이 섞인다.
+2. ★★ **`A_eff` 형 파라미터의 원전을 받기 전까지 9호의 곱 축퇴를 "Huo 2025 고유" 로
+   적지 않는다.** 12호가 Tian & Qi 2017 · Shao 2022 를 같은 형태로 소개했으므로
+   `evidenceScope: single-source` 는 유지하되 **"P2D 계열에 널리 반복될 가능성"** 을
+   [[assb-lampe-contact-product-degeneracy]] 에 이미 적어 둔 그대로 두고, 원전 두 편을
+   **큐 후속 1·2 순위**로 올린다.
+3. ★ **종설의 "≈1 MPa" 는 두 원전에서 독립적으로 나왔으나, 둘 다 우리 근거가 아니다.**
+   8호 "<≈1 MPa"(Xu 2024, 산업 요구) · 12호 "0.4–1 MPa"(Tian/Shao, 모델 최적, 출처
+   미확정). [[assb-stack-pressure-operating-window]] 의 **아래 벽 후보**로만 두고 값은
+   원전 확인 후 적는다.
+4. ⚠ **인용 위생이 무너진 종설은 재인용 수치를 위키에 옮기지 않는다 — 방향도.**
+   12호는 인용번호 오류·제목-내용 뒤바뀜이 **21 건**(digest D1–D21)이고 접수→승인이
+   9 일이다. 10호(D5 인용번호 1 건)·8호(Su 2024 숫자 어긋남 1 건)에 적용한 규율을
+   **더 강하게** 적용한다: 이 편에서는 **"이 지면에 이렇게 적혀 있다" 이상을 쓰지 않는다.**
 
 ## Status Log
 
@@ -1623,6 +1703,45 @@ requiring regularization" 의 **정반대 진술**이다.
   11호가 **인용만 하고 안 쓴** 것), 4 순위 = **Illig 2012 + Schmidt 2011**
   (P3 = "solid-solid contact impedance" 귀속의 **원전**; 액체셀 LFP/Al 의
   주파수대를 황화물 복합양극에 이식한 것이 정당한지 확인해야 한다).
+- **2026-09-22 (ingest 12)** — `assb` 12호 논문 흡수 (큐 11번 — 38·39 를 당겨 끝낸 뒤
+  큐 순서로 복귀한 첫 편): `raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md`
+  (Sadegh Kouhestani, Yi, Qi, Liu, Wang, Gao, Yu, Liu, *Energies* **15** (2022) 6599,
+  doi `10.3390/en15186599`, MDPI CC BY; 본문 26 쪽, **SI 없음**, sha256 봉인).
+  ⚠ **Review — 1차 측정 0. 그림 7 장 전부 타 논문 재수록**(LIB 6 + Palacín 2009 모식도 1)
+  이라 **이 논문에는 SSB 데이터 그림이 0 장**이다. **그림 7 장 전부 열어 봤다**(Table 1 은
+  텍스트로 전사). **결과 다섯**:
+  ① **Q1~Q8 어느 칸에도 새 칸을 더하지 않는다** (누적 **≈8.5 / 8 유지**). Q4 는 **0 / 12**.
+  ② ★★★ **분리 물음이 정의에서 지워진 자리를 찍었다** — `[인쇄]` "The loss of active
+     materials **mainly stems from** the electrical contact loss" ⇒ PHM 어휘에서
+     `LAM ⊃ 접촉 손실`. 기구 목록은 **전부 액체셀**, Fig. 6 의 "Contact Loss" 는 **집전체**.
+  ③ ★★ **Q4 계보의 출발점을 날짜로 고정** — `identifiab*` **0**(8호는 5), 가장 가까운
+     어휘가 "difficult parameter identification"(실무 곤란)이고, **같은 논문이 모델 차수에
+     대해 정반대 두 문장**을 인쇄한다(§3.1.2 "inevitable errors in each parameter" ↔
+     §3.1.3 "the more parameters … the higher the accuracy").
+  ④ ★★ **`A_eff` 형 접촉 파라미터의 계보 입구** — `[인쇄]` Tian & Qi 2017 / Shao 2022
+     "a parameter to describe the contact area, which adjusts the current density in the
+     1-D Newman model" = 9호 `A^p_eff` 와 같은 형태. ⚠ 두 저자에 같은 번호 [60] → `0.4–1
+     MPa` 출처 미확정(D4).
+  ⑤ **Table 1 ("PHM techniques for SSB") 28 슬롯을 한 줄씩 대조**: SSB 실측 열화 데이터로
+     SOH/RUL **0 / 28** (납축전지 ECM · 전방십자인대 예후 · 1976 kNN 이 들어 있다).
+     논문 자신의 결론 (1)(2)와 일치.
+  **어긋남 21 건**(D1 "LiCoO₂ or LTO" · D4 중복 [60] · D5 Deng [79] 이중 용도 · D6 "Song
+  [29]" = Tian 종설 · **D7 §3.3.1/3.3.2 제목 뒤바뀜** · **D8 Table 1** · D9 ECM 식별법
+  인용 4 건 전부 무관 · **D13 모델 차수 두 명제 충돌** · **D20 Fig. 5 `SOH = {FOI}` 벡터 ↔
+  식 (6) 스칼라** …). 공백 10 건(G1~G10). 접수→승인 **9 일**.
+  컴파일: **새 개념 페이지 없음**(이 편의 명제는 전부 기존 페이지의 같은 축이고 1차 내용이
+  0 — SCHEMA Page Thresholds). 대신 이 카드(채움표 12행 + Evidence 아홉 번째 절 + 새 제약
+  4 개 + 이 항목 + "주장하지 않는 것" 1 항) · [[assb-lampe-contact-product-degeneracy]]
+  (`A_eff` 계보 절) · [[drt-peak-count-nonidentifiability]] ("원호 1→2" 세 번째 인쇄) ·
+  [[fitting-degeneracy]] (Q4 계보에 2022 년 표본).
+  8호와의 대조: **공통 원전 0 건**이라 "같은 원전을 다르게 적었는가" 는 수행 불가; 대신
+  **같은 명제 둘(라벨 부재 · ≈1 MPa)이 다른 원전에서 독립적으로** 나왔다.
+  후속 후보 1 순위 = **Tian & Qi, *J. Electrochem. Soc.* 2017, 164, E3512** (`A_eff` 원전
+  후보), 2 순위 = **Shao et al., *Energy* 2022, 239, 121929** (접촉 면적 손실 + 압력 —
+  Q1·Q6 동시, `0.4–1 MPa` 의 진짜 출처), 3 순위 = **Kim, Lin, … Chung, *Electrochim. Acta*
+  2019, 317, 663** (Table 1 유일의 SSB 상태추정 — 관측 가능성을 다뤘는지; ⚠ 10호 후속
+  1 순위 Ingdal 2019 와 같은 권), 4 순위 = **Schmidt, Bitzer, Imre, Guzzella, *JPS* 2010,
+  195, 7634** (용량 손실 ↔ 율 특성 저하의 모델 기반 구분 — 우리 3항 분해의 액체셀 원형).
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -1664,3 +1783,11 @@ requiring regularization" 의 **정반대 진술**이다.
   **"개수를 고르는 규칙이 문헌에 없다"** 이다.
   ④ ⚠ **그림에서 읽은 봉우리 높이·위치는 전부 `[도표]` 다.** 세로 판독 오차
   ±1–3, 가로 ≈1/4 자릿수. 이 값들을 정본으로 인용하지 않는다.
+- ★ **2026-09-22 (12호 Sadegh Kouhestani 2022) — 세 가지를 주장하지 않는다.**
+  ① **이 종설의 어느 수치도 이 카드의 근거로 쓰지 않는다** — `0.4–1 MPa`·EV 판매 통계·
+  `40–70 °C` 전부 재인용이고, 인용번호 오류가 21 건이라 **귀속 자체가 불확실**하다.
+  ② **"PHM 분야가 LAM 과 접촉 손실을 같은 것으로 본다" 고 일반화하지 않는다.** 확인된 것은
+  **이 종설 한 편의 §2.2 정의 문장**이고, 그 원전(Hu 2020 *Joule*)이 같은 정의를 쓰는지는
+  원전을 받아야 안다.
+  ③ **`A_eff` 가 Tian & Qi 2017 에서 왔다고 주장하지 않는다.** 12호의 한 문장에서 **형태가
+  같다**는 것까지이고, 9호(Huo 2025)가 그 논문을 인용하는지는 **확인하지 않았다**.

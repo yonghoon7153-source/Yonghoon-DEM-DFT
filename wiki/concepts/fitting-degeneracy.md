@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-22
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -311,6 +311,15 @@ applied to simulated immittance data" 이고 ASB 실험 적용은 0 이다.**
 지문이 자기 표 안에(9호) → 방법의 비유일성이 분야의 공식 문장(10호) →
 **잴 재료를 SI 에 인쇄해 놓고 뺄셈을 안 했다(11호).**
 **"쟀다" 는 여전히 `assb` 0 / 11 편이다.**
+
+★ **2026-09-22 (`assb` 12호 Sadegh Kouhestani et al. 2022, *Energies* 15, 6599 — PHM 종설,
+1차 측정 0)**: 계보에 **새 형태가 아니라 날짜**가 붙었다. 이 2022 년 ASSB PHM 종설은
+`identifiab*` **0 회**(8호 2026 은 5 회)이고, 가장 가까운 어휘가 `[인쇄]` "difficult
+parameter identification"(실무 곤란)이며, **모델 차수에 대해 정반대 두 문장**을 한 논문에
+인쇄한다 — §3.1.2 `[인쇄]` "large number of parameters … **inevitable errors in each
+parameter**" ↔ §3.1.3 `[인쇄]` "**the more parameters** … **the higher the accuracy**".
+→ "안 쟀다(1–7호)" 상태가 **PHM 문헌 쪽에서 2022 년에 어떤 어휘였는가**의 표본.
+**"쟀다" 는 `assb` 0 / 12 편.** 상세는 [[assb-contact-loss-vs-lampe]] Evidence 아홉 번째.
 
 ## 모양이 같고 물리량이 다른 이웃 — 팩 결함 검출 (2026-09-22)
 
