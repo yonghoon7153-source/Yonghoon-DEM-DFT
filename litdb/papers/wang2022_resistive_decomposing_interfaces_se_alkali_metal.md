@@ -15,7 +15,7 @@
 > 접수 2022-03-20 / 수락 2022-06-06 / 온라인 2022-06-07 · **CC BY-NC 4.0** · 연구비 NRF Fellowship **NRFF12-2020-0012** · 계산자원 **NSCC Singapore**
 > **코드·퍼텐셜 공개**: `github.com/caneparesearch/MTP-Li_interface_binaries.git` (학습된 MTP 전부)
 >
-> **계보**: Lepley & Holzwarth (Li\|Li₂O·Li₂S·Li₃PO₄·Li₃PS₄ 계면 DFT, ref 26) → Yang & Qi(lithiophilic, ref 27) / Seymour & Aguadero(bond-breaking 판정식, ref 28) / Yang et al.(고전MD Li₂O plating, ref 29) → **본 논문**(20계 전수 + MTP-MD 로 수송까지). 실험 앵커는 **Wenzel 2016**(ref 14, 아르지로다이트 XPS → Li₂S·LiX·Li₃P)과 **Schwietert 2020**(ref 22).
+> **계보**: Lepley & Holzwarth (Li\|Li₂O·Li₂S·Li₃PO₄·Li₃PS₄ 계면 DFT, ref 26) → Yang & Qi(lithiophilic, ref 27) / Seymour & Aguadero(bond-breaking 판정식, ref 28) / Yang et al.(고전MD Li₂O plating, ref 29) → **본 논문**(20계 전수 + MTP-MD 로 수송까지). 실험 앵커는 **Wenzel **2018**(ref 14 = *Solid State Ionics* **318**, 102–112 · ⛔ 2026-09-22 정정: 종전 표기 "2016" 은 우리 digest 의 연도 오타였다 — Wang22 원문 ref 14 는 2018 이고, `chaney2024` ref 11 과 **같은 논문**이다. 옆 ref 15 `Richards 2016` 에 끌린 것으로 보인다), 아르지로다이트 XPS → Li₂S·LiX·Li₃P)과 **Schwietert 2020**(ref 22).
 > **우리 litdb 안에서의 위치**: `dutra2025_atomistic_modelling_ml_se_review.md` §6 표가 이 논문을 *"work of adhesion = 우리 §2b 보호율의 인접 정식화. **선점 확인 필요**"* 로 올려 뒀다 — **이 digest 가 그 미결 항목을 닫는다** (판정: §9).
 
 ---

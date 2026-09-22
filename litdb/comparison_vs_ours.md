@@ -148,6 +148,7 @@
 | **[Wang22Res]** ⭐⭐ **"분해가 끝난 뒤" 음극 계면 — 접합일 + 계면 MD 의 정본** · 🟡 **선점 판정 = 인접(adjacent)**(겹치는 칸 단 하나 = *Li 금속‖Li₂S·Li₃P·LiCl 의 접합일/계면수송*) · ⛔ **계가 Li/Na 금속 + 이원화합물 8종 — 아르지로다이트 슬랩 0개 ⇒ A–D 물성 4축 진입 금지** | **Juefan Wang**/**Abhishek A. Panchal**/**Gopalakrishnan Sai Gautam**(IISc Bangalore)/**Pieremanuele Canepa\*** (NUS MSE + NUS ChBE) 2022 ***J. Mater. Chem. A* 10, 19732–19742** (DOI 10.1039/d2ta02202h; **CC BY-NC 4.0**; `Fig. 1`–`5` + `Fig. S1`–`S13` + `Table S1`–`S9`; NRF Singapore NRFF12-2020-0012; **학습된 MTP 전부 공개** `github.com/caneparesearch/MTP-Li_interface_binaries`) — "**The resistive nature of decomposing interfaces of solid electrolytes with alkali metal electrodes**". **SE 를 계산한 논문이 아니다** — *"SE 가 이미 다 분해됐다고 치고, 남은 이원화합물이 알칼리 금속에 붙어 있나 / 그 계면을 Li 가 통과하나"* 둘만 판다. **핵심 셋**: ① **접합일 W_adh 전수 20계**(Li 15 + Na 5, Dupré `γ_A+γ_B−σ`) — **Li‖LiCl 0.045–0.263 ≪ Li‖Li₂S 0.470–0.545 < Li‖Li₃P 0.675 J m⁻²** 이고 **셋 다 Yang 0.7 J m⁻²·Seymour `W>2γ_metal` 을 못 넘는다** ② **γ 사다리** — Li(100) 0.46 · **LiCl(100) 0.12 = 표 전체 최저** · Li₂S(111) 0.33 · Li₃P(001) 0.48 · Li₂O(111) 0.53 · Li₃N(100) 0.52 ③ **MTP-MD 계면수송**(LAMMPS·NVT·dt 1 fs·평형 1 ns + **생산 10–20 ns**·최대 **8320 원자**) — 400 K 에서 **Li₃P 3.03×10⁻⁶ ≫ Li₂S 4.86×10⁻⁸ ≫ LiCl 1.81×10⁻⁹ cm²/s**, 전 계면에서 **out-of-plane ≪ in-plane**. **방법**: VASP·PAW·PBE(vdW 0·+U 0)·MITRelaxSet·**520 eV**·k-density 25 Å⁻¹·진공 15 Å·**대칭 계면**·Taylor et al. 셀매칭·**계면마다 MTP 를 따로 학습(총 10 모델)**·공공 벌크 0.8 %/계면 1.1 %·**무질서 처리 0**. 🔴 **비판**: LiCl 계면 4개 중 3개에서 **σ > E_f (탄성변형에너지 음수)** · `Fig. S10` **Li₂S E_f 두께 미수렴(+0.094 J m⁻²)** 이 핵심 격차 0.13 과 같은 자릿수 · **계면 3개가 서로 다른 MTP 로 계산됐고 300 K 에서 Li-금속 D\* 가 1709× 로 갈린다** · **400 K 에서 Li 금속 융해 미점검**(융점 ≈454 K) · **LiCl 쪽 D\* 는 10 ns 총 MSD ≈1.1 Å² 라 확산 측정이 아니라 상한** · 본문 서술 오류 4건. ⛔ **ESW 0회 · grand-potential 0회 · NEB/Bader/COHP/DOS/ELF/포논/탄성 0회 · 면저항(Ω cm²) 0회 · 분해층 두께 0회** | ✅ `papers/wang2022_resistive_decomposing_interfaces_se_alkali_metal.md` — 판정은 **§E 3행** + **§H 2행** + **§J-36**(방법 원전). ⛔ A–D 4축 진입 없음(§B·§C 는 명시적으로 **넣지 않는다**) | 정적 DFT(VASP·PBE) + **계별학습 MTP-MD** (실험 0 · 아르지로다이트 0) |
 | **[Morgan21Mech]** ⭐⭐⭐ **아지로다이트 "음이온 무질서 → superionic" 기전의 정본** · ⛔⛔ **D·Ea·σ 가 0건 → A–D 물성 4축 진입 금지** · 🔴 **"협동 운동 = superionic" 오인용의 정면 반례** | **Benjamin J. Morgan\*** (**단독 저자**, University of Bath 화학 + **The Faraday Institution**) 2021 ***Chem. Mater.* 33, 2004−2018** (DOI 10.1021/acs.chemmater.0c03738; **OPEN**; refs 119 · **SI 2 pp, `Fig. S1`·`S2` 뿐**) — "**Mechanistic Origin of Superionic Lithium Diffusion in Anion-Disordered Li₆PS₅X Argyrodites**". **AIMD 6 궤적** = `Li₆PS₅I`·`Li₆PS₅Cl` × 자리반전 0/50/100 % · **VASP · PBEsol · 416 원자 · Γ · 500 K 단일온도 · dt 2 fs · 생산 70 ps** · **수준당 무작위 배열 1개(I·Cl 공유) · 시드 1개**. 🔑 **핵심**: 100 % 자리반전도 갇힌다 ⇒ **무질서 자체가 필요조건**; 자리 *점유*는 100 % 가 최고인데 확산 0 ⇒ **점유 ≠ 연결**; **각주 76 이 "2→2 · 5→4→5 = intercage"** 라고 못박아 `[dK16]` 과 잇는다; 정렬은 Li 자리를 S 쪽으로 **규칙적**으로 밀어 경로를 죽이고, 무질서는 **무작위**로 밀어 퍼콜레이션 + **SLi₆/SLi₇ 좌절**로 배위수 불변 Li 교환을 연다. **figure-read 회수**: 퍼콜레이션 문턱 무질서 **≈1.8 Å** vs 정렬 **≈2.3–2.4 Å** · 7배위 분율 Cl 50 % 0.63 vs I 50 % 0.42 · 최대 끈 길이 Cl 50 % **13** vs 정렬 **4–6**. **각주 80**: 다면체 간 교환률 I 0 %·100 % **0** / Cl 0 % **0.002** / Cl 100 % **0.019** per polyhedron per ps. ⛔ **Ea 0 · D 0 · σ 0 · Br 미계산 · 실험 0 · thermostat 미기재 · MSD 창 미선언** | ✅ `papers/morgan2021_anion_disorder_superionic_mechanism_li6ps5x.md` — 판정은 **§J-33**(방법·기전 원전) + **§A 주석**(값 없이 기전만) | AIMD 전용 (실험 0 · MLIP 0 · NEB 0 · 전자구조 0) |
 | **[Okuno20]** ⭐⭐ **Tateyama 3부작의 완결편**(= [Haru14] → [Haru17] → 본 편) · 🔴 **우리 `W_ad = 0.8 J/m²` 각주를 *부인*하는 편** · 🎉 **[Haru14] 의 최대 공백(nat·슬랩두께·μ)을 8계면 전부 공개해 메운다** · ⛔ **LiCoO₂ / β-Li₃PS₄ / γ-Li₃PO₄ / LLZO / Li₄Ti₅O₁₂ 계 — Ea·σ·D·ESW·탄성·벌크갭이 전부 0 ⇒ A–D 물성 4축 진입 금지** | Okuno, Haruyama, Tateyama, *ACS Appl. Energy Mater.* **3**, 11061–11072 (2020), DOI `10.1021/acsaem.0c02033` (open access; MEXT Fugaku 배터리 프로젝트 + KAKENHI JP19H05815; 본문 12 pp + SI 22 pp) — "**Comparative Study on Sulfide and Oxide Electrolyte Interfaces with Cathodes in All-Solid-State Battery via First-Principles Calculations**". **계 = LCO((104)·(110)) × β-Li₃PS₄(010) / γ-Li₃PO₄(001·010) / LLZO(001) + 버퍼 Li₄Ti₅O₁₂(111) = 계면 8종**. **보고량 = 자리별 Li 공공 형성에너지 `E_f` 의 *분포*(총 271자리) + 양이온 교환에너지 `E_ex` + PDOS 밴드오프셋**. **방법**: QE·PBE·USPP·40/320 Ry·**U(Co 3d)=4.9 eV**(⚠ [Haru14] 는 5.9)·spin-unpolarized·중성셀·진공 1–1.5 nm·**k = Γ-only 또는 2×1×1(계면마다 다름)** · ⛔ **힘/응력/에너지 수렴기준·이완 자유도·무질서 처리·QE 버전 전부 미기재**. 🔴🔴 **W_ad 는 4개뿐이고 단위가 eV/Å²**: LCO(104)/LPS **0.025** · LCO(104)/LPO(010) **0.028** · LCO(104)/LPO(001) **0.021** · LTO(111)/LPS **0.019** (*우리 산수* ×16.0218 = **0.400 / 0.449 / 0.337 / 0.304 J/m²**) — ⛔ **LCO(110)/LPS 의 W_ad 는 아예 없다** ⇒ **`0.8 J/m²` 는 이 논문에 없다**(hazard `HZ-wad-0p8-misattributed`) | ✅ `papers/okuno2020_sulfide_vs_oxide_electrolyte_cathode_interfaces.md` — 판정은 **§J-35**(방법 원전) + **§H 3행**. ⛔ A–D 4축 진입 없음 | 정적 DFT+U 슬랩 (계산 100 % · 실험 대조 0회 · NEB·MD·AIMD·Bader·COHP·ELF·ESW·포논·탄성 0회) |
+| **[Chaney24SEI]** ★★★ **아르지로다이트‖Li 금속 SEI 의 *시간축* 원전 (우리 litdb 최초)** · 🔴 **우리 0 V 반응식 방향 오류의 3번째 독립 외부 확인** · ⛔⛔ **σ·D·Ea·갭·두께 0건 → A–D 물성 4축 진입 금지** | **Gracie Chaney**/**Andrey Golov**/**Ambroise van Roekeghem**/**Javier Carrasco**/**Natalio Mingo\*** (CEA LITEN Grenoble + CIC energiGUNE + Ikerbasque) 2024 ***ACS Appl. Mater. Interfaces* 16, 24624–24630** (DOI 10.1021/acsami.4c02548 · refs 43 · SI 7 pp `Fig. S1`–`S5`+`Table S1` · ⛔ 데이터·퍼텐셜 비공개) — "**Two-Step Growth Mechanism of the Solid Electrolyte Interphase in Argyrodyte/Li-Metal Contacts**". **MTP(MLIP-2 · level 8 · R_cut 5 Å) · NPT Nosé–Hoover · 10 ns · dt 1 fs · 300/350/400 K × 1 bar/1 kbar × 시드 2 · Li(110)/LPSC(110) 샌드위치 7,956 / 31,824 원자**. 🔑 **반응식 축자 `Li₆PS₅Cl + 8Li → 5Li₂S + LiCl + Li₃P`**(Li **흡수**, Li₂S 주생성물, 원소 S 없음) · **two-step = 비정질 먼저(log t) → 고용체 결정화 나중(√t/linear 주장)** · **산물은 상분리 3상이 아니라 antifluorite `Li₂(S₅ₐ₇P₁ₐ₇Cl₁ₐ₇)` 고용체**(⚠ 원전은 ref 34) · **비정질 입계 22–29 % 영구 잔존**. ⛔ **두께(nm) 0 · σ/D/Ea 0 · 갭/DOS 0 · 전자전도 0 · 도핑/조성축 0 · 무질서 처리 0줄 · DFT 코드·범함수 0줄 · `self-limiting` 0회** | ✅ `papers/chaney2024_two_step_sei_growth_argyrodite_li_metal.md` — 판정은 **§E 2행** + **§H 1행** + **§J-37**(기전·시간축 원전) | 계산 전용 (MLIP-MD. 실험 0회 · AIMD 0회(ref 21 에서 학습셋만 상속) · 후처리는 α·결정성 두 가지뿐) |
 
 ---
 
@@ -857,6 +858,8 @@
 ## E. 환원 / 음극(Li 금속) 계면 — **⚠ Cl-rich 유불리 문헌 충돌 (자리 점유가 변수)**
 | 주장 | 출처 | 우리 | 일치 |
 |---|---|---|---|
+| **⭐⭐⭐ 🆕 Li 금속 접촉 분해는 *Li 을 f.u. 당 정확히 8개 흡수* 하고 Li₂S 가 주생성물이다 — 방향과 산물이 동역학으로 직접 관측됐다** (2026-09-22 신설) — 본문 Appendix 축자 **`Li₆⁺P⁵⁺S₅²⁻Cl⁻ + 8Li⁰ → 5Li₂⁺S²⁻ + Li⁺Cl⁻ + Li₃⁺P³⁻`**. 근거는 **단계적 P–S 절단 4단**(`(PS₄)³⁻+2e⁻→(PS₃)³⁻+S²⁻` … `(PS)³⁻+2e⁻→P³⁻+S²⁻`), P 산화수 **+5→+3→+1→−1→−3**. ✎ *우리 유도*: 산화환원 중심이 **P⁵⁺→P³⁻ 하나뿐**이므로(S 는 이미 S²⁻, Cl 은 Cl⁻) **8 Li/f.u. 은 S/Cl 비와 무관** | **[Chaney24SEI]** Appendix *Tracking the Total Amount of Reduction* (MTP-MD 31,824 원자·10 ns·NPT·300–400 K. 관측량 α = (8N(P)+6N(PS)+4N(PS₂)+2N(PS₃))/8Z, **P–S 컷오프 3 Å**) | `anode_interface_b2o3.json` 0 V 행이 **Li 을 방출**하는 식이고(`… + 0.8 Li` / `… + 10 Li`) **Li₂S 가 없으며 원소 S 가 4.4 / 41 몰** 서 있다 → `HZ-anode-b2o3-reaction-direction` **BLOCKED**(2026-09-22 등록) | 🔴🔴 **우리가 틀렸다 — 외부 3건째 독립 확인.** `[Wenzel18]`(XPS·실험) · `[Wang22Res]`(Eq.8·열역학) 에 이어 **이번엔 동역학**이다(Li 이 실제로 들어가는 것을 10 ns 동안 센다). ⇒ **방향 오류를 "혹시 맞을 수도" 로 읽을 여지가 없다.** ✎ **고친 식의 *모양* 템플릿**(값 아님, 체로만 쓴다): `Li₅.₄PS₄.₄Cl₁.₆ + **8Li** → 4.4Li₂S + Li₃P + 1.6LiCl` · `Li₅₈B₂P₈S₄₁Cl₁₆O₃ + **72Li** → 41Li₂S + 8Li₃P + 16LiCl + 3Li₂O + 2LiB`(72 = 8×8 + 8). **거르는 규칙 한 줄: 0 V 식에서 Li 계수가 음수이거나 생성물에 원소 S 가 있으면 그 식은 틀렸다** |
+| **⭐⭐ 🆕 SEI 는 "상분리된 Li₂S/Li₃P/LiCl 결정" 이 아니라 *antifluorite 고용체* 이고, 그나마 22–29 % 는 비정질 입계로 남는다** (2026-09-22 신설) — *"the crystalline products are **not a phase-separated mixture** … but a `5Li₂S·Li₃P·LiCl` **solid solution**, which corresponds to the **antifluorite structure type**"* (SI 표기 `Li₂(SPCl)`). ✎ *우리 검산*: = **Li₁₄PS₅Cl**, 음이온 7 · Li 14 ⇒ **정확히 Li₂X**, 전하 +14/−14 **중성** ⇒ **Li₂(S₅ₐ₇P₁ₐ₇Cl₁ₐ₇)**. **총 화학량론은 3상 혼합과 완전히 동일 — 다른 것은 미세구조뿐.** **figure-read 결정화도(10 ns)**: 400 K **≈76 %** · 350 K ≈75–80 % · 300 K **≈70 %**, 나머지는 **비정질 입계**(*"cannot expect 100 % crystallinity … defects and grain boundaries"*). XPS 방어: *"faces difficulties in distinguishing between **phase-separated domains or a singular solid solution**"* + Wenzel 의 *"unknown reduced P species"* ⚠ **양립 가능성 논증이지 고용체의 실험 증거가 아니다** · ⚠ **주장의 원전은 ref 34 Golov & Carrasco 2023**(본문 *"As previously shown using AIMD"*) | **[Chaney24SEI]** `Fig. 2`·`Fig. 3`·`Fig. S5` + 본문 p.2 (결정성 판정은 **ref 34 방법 — 알고리즘·컷오프·문턱이 이 편에 0줄**) | `sei_products.json` 역할 문턱(insulator ≥4 / marginal 2–4 / conductor <2 eV)과 `anode_interface_b2o3.json` 의 `min_product_gap_eV`·`leaky_products` — **둘 다 순수 이원화합물 갭**(Li₃P 0.70 · Li₂S 3.90 · LiCl 6.65 eV) | 🔴 **반박이 아니라 *라벨링 요구* 다.** 우리 판정축이 **"상분리 가정" 위에 서 있었다는 것이 드러났고, 우리는 그 전제를 한 번도 명시하지 않았다**(`method` 문자열·`_role_threshold` 어디에도 없다). ⇒ **앞으로 "상분리 가정 하" 라고 적는다.** 🟢 **동시에 우리 것이 하나 열린다**: **`Li₁₄PS₅Cl` antifluorite 고용체의 밴드갭은 이 편도, `[Wang22Res]` 도, 우리도 계산한 적이 없다 = 문헌 공백**. 우리는 이미 Li₂S·Li₃P·LiCl 계열 셀을 다뤄 봤으므로 **SQS + fixed-occ nscf(우리 표준)** 로 낼 수 있다 ⚠ **배열이 여럿이라 집계 규칙을 먼저 선언**해야 스칼라 갭이 정의된다 → **보고량 카드 먼저** |
 | **⭐⭐ 🆕 아르지로다이트의 Li-금속 분해산물 3형제는 접합일 사다리가 `LiCl ≪ Li₂S < Li₃P` 이고 *셋 다 어느 접합 문턱도 못 넘는다*** (2026-09-22 신설) — W_adh(Eq.4 `γ_A+γ_B−σ`, 0 K 정적 DFT) **Li‖LiCl 0.045–0.263 / Li‖Li₂S 0.470–0.545 / Li‖Li₃P 0.675 J m⁻²**. **Yang 공극억제 문턱 0.7(20–30 MPa) 과 Seymour `W>2γ_metal`(=0.92–1.00) 을 셋 다 미달.** 통과하는 것은 **Li₂O(110) 1.010 · Li₃N(110) 1.034/1.000** 뿐. **Eq.5(변형 포함)로 바꿔도 순위 불변**(0.059–0.297 < 0.367–0.445 < 0.614) | **[Wang22Res]** `Table S4`·`Fig. 2a`·`Fig. S7` (VASP·PBE·520 eV·k-density 25 Å⁻¹·진공 15 Å·대칭계면·**0 K·0 기압·무엔트로피**) | **없다.** 우리 음극측 자산은 `anode_interface_b2o3.json`(grand-potential 산물표) 한 장이고 **슬랩·W_ad·계면 MD 0건**. 양극측 `adhesion.json`(SE‖NCM, MLIP 담금질, **비-canonical**) 은 **다른 계면**이다 | 🟡 **대조 불가(우리 값 없음) + 🔑 프레임 획득.** *"황화물 SE 의 Li 금속 문제는 분해 자체가 아니라 **분해 후 산물의 접합 부족**"* 을 수치로 받칠 수 있다(소환값 표기 필수). ⛔ **`okuno2020` 0.8 J m⁻² 와 같은 표 금지** — 그쪽은 **양극측 파단문턱 Ψ_t**, 이쪽은 **음극측 접합일**. 숫자가 0.8 vs 0.675 로 가까워 보이는 것이 함정이다(`barai2021` 이 이미 *"Bucci γ>5 와 Barai Ψ_t 를 같은 표에 놓지 말 것"* 이라 그은 것과 같은 종류) |
 | **⭐⭐⭐ 🆕 Li₃P 딜레마 — *유일한 이온통로*이자 *유일한 전자누설원*이 같은 상이다** (2026-09-22 신설) — [Wang22Res] 400 K 계면 D\*: **Li₃P 쪽 3.03×10⁻⁶ ≫ Li₂S 4.86×10⁻⁸ ≫ LiCl 1.81×10⁻⁹ cm²/s** 이고 `Fig. 4c` 에서 5 ns 만에 금속 Li ↔ Li₃P 가 **완전 혼합**된다. 그런데 분해식상 Li₃P 는 **7몰 중 1몰**(부피 18 %)뿐이고, **Li₂S 가 5배 과량**이라 침투경로를 Li₂S 가 막는다 | **[Wang22Res]** `Table S8`·`Fig. 4`·`Fig. 5`·Eq.(8) (MTP-MD, **계면마다 별도 학습**, 8320원자, 10–20 ns) | `anode_interface_b2o3.json`: LPSCl1.6·b2o3 모두 **Li₃P(MP gap 0.70 eV) 가 유일한 leaky 산물**(LiCl 6.65 · Li₂O 4.9 · Li₃BO₃ 5.15 · S 2.61). b2o3 는 0 V 에서 **금속성 LiB(gap 0)** 까지 추가 | ⭕⭕ **두 계산이 같은 상을 서로 다른 이유로 지목한다 → 딜레마의 정식화.** *"Li₃P 를 없애면 이온이 안 통하고, 두면 전자가 샌다."* ⇒ **도핑 서사의 새 축**: Li₃P 를 **Li₂O(W 1.010, gap 4.9) · Li₃N(W 1.034)** 같은 고-W·와이드갭 상으로 치환할 수 있는가. ⚠ 우리 b2o3 는 **0 V 에서 금속성 LiB 가 같이 나오므로 순이득이 아니다**(Li-In 음극에서만 유리) |
 | **🔴 🆕 Cl 함량은 음극측 계면 *수송* 을 거의 안 바꾼다 — 우리 "Cl-rich 가 빠르다" 는 벌크 이야기이고 음극 계면으로 넘어가지 않는다** (2026-09-22 신설) — ✎ **digest 재계산**(가정 4개 명시: 분해완결·면적비=부피비·병렬경로·[Wang22Res] D\*/W 그대로): 산물 부피비 comp1 **Li₂S 71.5 / Li₃P 18.0 / LiCl 10.5 %** → modelc **64.4 / 18.4 / 17.2 %**. 면적가중 W_adh **0.539 → 0.520 (−3.5 %)**, 면적가중 400 K 수송 **5.80 → 5.89×10⁻⁷ cm²/s (+1.5 %)**. 이유: **컨덕턴스를 Li₃P 가 94 % 지배하는데 Li₃P 양은 P 가 정한다**(두 조성 다 f.u. 당 1 Li₃P). Cl 증가는 **Li₂S(막힘) ↔ LiCl(더 막힘)** 교환일 뿐 | **[Wang22Res]** W·D\* + **우리 조성/격자 환산**(Li₂S 46.5 · Li₃P 58.6 · LiCl 34.2 Å³/f.u., PBE `Table S1`) — ⚠ **논문 미보고. 자릿수 감각용이며 수치 인용 금지** | 축 A: comp1 D(600 K) 3.09e−6 / modelc 7.90e−6 (**2.6×**), Ea 0.253 → 0.224 eV. **전부 벌크값** | 🔴 **불리한 결론.** ⛔ 발표·원고에서 *"Cl-rich 가 Li 금속 계면에도 유리하다"* 라고 말할 근거가 **이 논문에 없다**(불리하다는 근거도 없다 — **중립**). ⚠ 단 **한 방향으로는 불리할 수 있다**: LiCl 은 W 최저상이고 [Wang22Res] `Fig. 5` 논리대로면 **젖지 않아 미접촉 영역**이 되므로 **Cl-rich 는 공극 핵생성 자리를 1.64배로 늘린다** — **정량은 논문도 우리도 안 했다**(→ §H) |
@@ -1001,6 +1004,7 @@
 ## H. ⚠️ 우리가 아직 못 하는 것 (정직 목록 → 향후)
 | gap | 누가 필요로 함 | 보강책 |
 |---|---|---|
+| **🔴🔴 ⭐⭐ 우리 음극 서사에 *시간축* 이 없다 — 그리고 "SEI = 결정성 부동태층" 이라는 우리 그림이 문헌 기준으로 과하다** (2026-09-22 신설) | **[Chaney24SEI]** 가 눈금을 준다: SEI 는 **비정질로 먼저 생기고**(α ∝ log t, Butler–Volmer Δη 제한) **결정화는 별개의 느린 2단계**이며, 실온 10 ns 에도 **결정화도 ≈70 %·비정질 입계 ≈29 % 잔존**. 우리 음극 자산은 `anode_interface_b2o3.json`(grand-potential 산물표) **한 장뿐**이고 그것은 **④단계 이후의 평형 세계만** 말한다 — **초기 수백 ps 의 과리튬화 비정질상은 상도 전자구조도 아무도 계산 안 했다** | ① **표기부터**: 우리 갭 판정에 **"상분리 가정 하"** 라벨을 붙인다(무료·즉시) ② **문헌 공백을 우리가 딴다**: `Li₁₄PS₅Cl` antifluorite 고용체를 **SQS + fixed-occ nscf** 로 — ⚠ **보고량 카드(`kb/templates/estimand_card.md`) 먼저**, 배열 앙상블 집계 규칙을 결과 보기 전에 선언 ③ **계면 MD 능력 자체가 0 이다** — 우리 MLIP-MD 는 **벌크·조성고정·200 ps** 라 반응하는 계면을 돌린 적이 없다. 시작한다면 **앙상블을 NPT 로** 잡는다(✎ 반응 순부피 **−19 %**, NVT 면 그 수축이 응력으로 갇힌다) ④ ⛔ **이 편에서 두께·σ·Ea 를 가져올 수 없다 — 0건이다.** 두께 축의 눈금은 여전히 **우리도 문헌도 없다**(`[Wang22Res]` 0회 · `[Chaney24SEI]` 0회) |
 | **🔴🔴 ⭐⭐⭐ 음극(Li 금속) 계면을 우리는 *슬랩으로 만든 적이 없다* — 산물 목록만 있고 접합일도 계면 수송도 없다** (2026-09-22 신설) | **[Wang22Res]** 가 우리가 가진 것(grand-potential 산물표 1장)의 **다음 세 칸을 전부 채워 놓았다**: ① **W_adh 20계**(J m⁻², 정적 DFT) ② **계면 Li D\***(MTP-MD, 8320원자, 10–20 ns) ③ **두 개의 접합 판정 문턱**(Yang 0.7 J m⁻² @20–30 MPa · Seymour `W>2γ_metal`). 우리 4축(A/B/C/D)은 **전부 벌크**이고, 음극 계면에서 `db/properties/` 에 있는 것은 `anode_interface_b2o3.json` 의 **산물·밴드갭 목록뿐**이다 | **① 겹치지 않는 칸부터 간다** — [Wang22Res] 가 **명시적으로 안 했다고 적은** `Li₆PS₅Cl ‖ Li₂S` · `Li₆PS₅Cl ‖ Li₃P` · `Li₆PS₅Cl ‖ LiCl` **계면**(저자 스스로 후속으로 지목). **② 조성축**: 우리 grand-potential 이 이미 산물표를 내므로, 거기에 [Wang22Res] 의 W·D\* 사다리를 **곱하기만 하면** Cl 함량·도핑의 음극측 효과가 나온다(§E 3번째 행이 그 시제품). **③ 방법 이식(값 아님)**: `E_f / σ / W_adh` 3분해 + **변형에너지 명시** · **슬랩두께 수렴 그림**(`Fig. S10` 형식) · **구속완화 민감도**(`Fig. S6` 형식) · **계면영역/벌크영역 분리 + in-plane/out-of-plane 분해** |
 | **🔴 ⭐⭐ `db/properties/adhesion.json` 은 *원장 바깥의 값*이고 보고 규율이 부족하다 — "우리도 W_ad 를 했다" 고 말하려면 먼저 고쳐야 한다** (2026-09-22 신설) | **[Wang22Res]** 대비 3가지가 없다: ① **E_f/σ 분해와 탄성변형에너지** ② **슬랩두께 수렴** ③ **구속완화(Fix-metal/Fix-binary) 민감도**. 그리고 파일 자체에 **`z_cuts_DEPRECATED` 0.006–9.252 J m⁻²** 와 **`xy_shift` comp1 20-seed 0.686–1.850(2.7배)** 산포가 남아 있다. **`canonical_registry.json` 에 adhesion 항목 없음 · `citation_hazards.json` 에도 없음** ⇒ status/comparison_group/prohibitions 가 **선언된 적이 없다** | ① `adhesion.json` 에 **보고량 카드**(`kb/templates/estimand_card.md`) 를 붙여 *"무엇을 재는가 — 비정질 SE‖결정 NCM 의 분리일인가, 결정 SE 의 그것인가"* 를 먼저 선언 ② 3분해·수렴·민감도 보고 추가 ③ 그 뒤 `canonical_registry` 등재 여부 판정. ⛔ **그 전까지 `adhesion.json` 의 W_ad 를 [Wang22Res] 값 옆에 놓지 않는다**(계면·방법 둘 다 다르다) |
 | **계면 Li 자리별 공공 형성에너지 `E_v`** (= 계면 Li 화학퍼텐셜 지도) (2026-09-22 신설)<br>⛔ **우리 원장에 0건.** v5 계면 구조는 있으나 자리별 E_v 를 낸 적이 없다 | **[Haru14]** 가 이 지표 **하나로** SCL 서사 전체를 세웠다 (`Table 1`, 21개 자리). 벌크 기준 LCO 4.0 / LNO 5.1 / **LPS 3.2 eV**. **그리고 [Okuno20] 이 같은 지표를 8계면 271자리로 키운다** — QE DFT+U, 스칼라 요약은 *"E_f < 2.0 eV 자리 비율"* | **가능하다** — QE 중성 셀 + μ_Li = Li 금속. ⚠ 단 아지로다이트는 **무질서 + free S²⁻ + Cl⁻** 라 "자리" 가 유일하지 않다 ⇒ **보고량 카드에 자리선택·집계규칙을 먼저 선언**하고 **분포로 보고**. 중성 셀이면 **밴드정렬이 값의 일부를 정한다**(Haru14 가 LNO 에서 실증)<br>**[Okuno20] 쪽 보강책**: **QE 계면 셀**(저쪽 384–1056 원자) + 자리 선택 규칙 + **집계 규칙**(분포/문턱) 을 보고량 카드에 선언. ⚠ **UMA 로는 못 한다**(0.1 eV 급 차이) |
@@ -5294,6 +5298,92 @@ A–D 4축 행 금지. 아래는 **판정**과 **우리 위치**뿐이다.
 | **무질서** | ⛔ **없다**(질서 이원화합물). 공공 배치 무작위 **1건**, **시드 수 미기재** | SQS·앙상블·시드 명시 | ✅ **우리가 낫다.** ⇒ 아르지로다이트의 Cl/S 무질서는 **이 논문의 사정거리 밖**이고, 그것이 §9-2 구분선의 세 번째 근거다 |
 | **판정 문턱 소환** | **Yang 0.7 J m⁻² @20–30 MPa**(ref 29) · **Seymour `W > 2γ_metal`**(ref 28) | 없음 | 🔵 **두 문턱을 우리 음극 축의 눈금으로 도입 권고.** ⚠ **[Wang22Res] 의 값은 0 K·0 기압인데 Yang 문턱은 20–30 MPa 조건이다 — 기준과 값의 조건이 안 맞는다**(digest §13-⑩). 우리가 쓸 때는 그 불일치를 같이 적는다 |
 | **공개 자산** | **학습된 MTP 전부 공개** `github.com/caneparesearch/MTP-Li_interface_binaries` | — | 🔎 **확보 가치 있음** — Li·Li₂S·Li₃P·LiCl 및 3계면 MTP. 우리 UMA 와 **같은 계에서 교차검증**할 수 있는 드문 기회(§3g 의 1709× 가 모델 탓인지 물리 탓인지 가를 수 있다) |
+
+---
+
+### J-37. 🔧 **기전·시간축 원전 — [Chaney24SEI] 가 음극 SEI 에 *시간* 을 넣는 방식, 그리고 그것이 우리 판정축에 요구하는 것** (2026-09-22 신설)
+
+📎 **출처**: `papers/chaney2024_two_step_sei_growth_argyrodite_li_metal.md` · 병합 2026-09-22 (초안 `_pending_index_chaney2024_two_step_sei_growth_argyrodite_li_metal.md`, 병합 후 삭제)
+
+**J-37-a. 우리가 이 논문에서 *못* 가져오는 것 (먼저 못박는다)**
+
+| 양 | 이 논문 | 결론 |
+|---|---|---|
+| SEI **두께 (nm)** | ❌ **0회** — 성장곡선 y축은 **환원율 %** 다 | ⛔ 존재하지 않는 값 |
+| **σ · D · Ea · MSD** | ❌ 이 계에서 **한 번도 안 잼**. *"poor ionic conductors"* 는 **ref 33 소환** | ⛔ 인용 금지 |
+| **밴드갭 · DOS · 전자전도도 · 터널링** | ❌ — **MTP 는 고전 퍼텐셜이라 전자가 없다** | ⛔ 전자 누설 축에 **아무것도 못 준다** |
+| **자기제한 두께** | ❌ 미증명(J-37-c) | ⛔ *"자기제한적임을 보였다"* 금지 |
+| **시간법칙 지수 0.5 / 1.0** | ⚠ 주장만, 검정 없음 | ⛔ 인용 금지(J-37-d) |
+| **조성축**(Cl·O·B 도핑) | ❌ **0건**, `Li₆PS₅Cl` 단일 | ⛔ Cl-rich 유불리에 **중립** |
+
+**J-37-b. MD 규약 한 줄 대조** (판정 아님 — 나란히만)
+
+| 항목 | [Chaney24SEI] | 우리 (modelc/lpsocl) |
+|---|---|---|
+| MLIP | **MTP 자체학습, level 8, R_cut 5 Å** | **UMA-s-1p1(omat) 범용 사전학습** |
+| 학습 정확도 | **18.4 / 20.9 meV/atom** (RMS E) · **힘 미보고** | 외부 벤치마크 |
+| 앙상블 | **NPT** + Nosé–Hoover (thermo+baro) | **Langevin NVT**, friction 0.02 |
+| dt | **1 fs**(일부 0.5) | **2 fs** |
+| 온도 | **300 / 350 / 400 K** | **600 / 800 / 1000 K** |
+| 시간 | **10 ns** | prod **200 ps** |
+| 원자수 | **7,956 / 31,824** | box331 **558** |
+| 계면 | ✅ 샌드위치 2면 | ❌ 벌크 주기셀 |
+| 반응 | ✅ 결합 절단 허용 | ❌ 조성 고정 |
+| 무질서 | 🔴 **0줄** | ⭐ 배열 앙상블 규율 있음 |
+| 오차막대 | 🔴 **없음**(시드 2) | ⭐ 멀티시드 규율 |
+| 보고량 | **α(t) · 결정성(t)** | **MSD → D → σ(NE, Haven=1)** |
+
+🔴 **겹치는 온도가 하나도 없다**(300–400 vs 600–1000 K) ⇒ **어떤 동역학 수치도 나란히 놓을 수 없다.**
+
+**J-37-c. 🔴🔴 "자기제한" 을 어디까지 말할 수 있나 — 전수 조사**
+
+논문 텍스트에 **`self-limiting` 0회**. 저자 용어는 *negative-feedback · stalls · clogging · percolation threshold*.
+
+| 계 | 조건 | 정지? | figure-read |
+|---|---|---|---|
+| **model II** (31,824) | 3 T × 2열 = **6런** | ❌ **0건** | SI 축자 *"all our simulations for model II displayed **complete reduction**"* |
+| model I (7,956) | 400 K / 1 kbar / seed 1 | ⚠ **일시** | ≈73–74 % 에서 **≈200 ps→1 ns 평탄**, 그 뒤 **≈96 % 회복** |
+| model I | **300 K / 1 kbar / seed 1** | 🔴 **완전 — 논문 미언급** | **≈73 % 에서 2 ns~10 ns 완전 평탄**. 같은 패널 seed 2 는 **≈98 %**(시드 간 **25 %p**) |
+| model I | 300 K / 1 bar | ❌ (느릴 뿐) | 10 ns 에 ≈85 / ≈91 %, 아직 상승 중 |
+
+✎ **결정적 설계 한계**: 두 모델은 **두께가 같고 옆면만 2×2 다**(면적비 4.00 = f.u.비 4.00) ⇒ **LPSC 슬랩이 ≈5.1–5.4 nm 뿐**이고 **양쪽에서 먹으므로 한 계면이 최대로 먹을 수 있는 두께가 ≈2.6 nm** 다. ⇒ *"막혀서 끝났나, 다 먹어서 끝났나"* 를 **설계상 가를 수 없다.**
+👉 **허용 서술**: *"결정층이 비정질 통로를 끊어 Li 유입을 막는 음의 되먹임을 제안하고, 작은 계의 일부 런에서 정지를 관측했다."* ⛔ **금지**: *"아르지로다이트 SEI 가 자기제한적임을 보였다."*
+
+**J-37-d. 🔴 시간법칙 주장 — ✎ 우리 재독이 부정한다**
+
+논문 주장: 300·350 K = **√t**(확산 제한) / *"Above 400 K"* = **linear**(계면 제한). ⚠ **400 K 가 최고온이다.**
+`Fig. 4` 에 **적합선·R²·잔차·반대축 검정 0**, **온도마다 창이 다르다**(400 K 0–420 ps vs 300/350 K 0–702 ps).
+
+✎ **2점 멱법칙 재독 (figure-read, 논문 미보고)**
+
+| 패널 | 두 점 | **유효 지수 n** | 주장 |
+|---|---|---|---|
+| 300 K | (100 ps, 4 %) → (702 ps, 20 %) | **0.83** | 0.5 |
+| 350 K | (100 ps, 7 %) → (702 ps, 32.5 %) | **0.79** | 0.5 |
+| 400 K | (100 ps, 12 %) → (420 ps, 42 %) | **0.87** | 1.0 |
+| 400 K 전반/후반 | | **0.70 → 1.03**(단일 지수 아님) | 1.0 |
+
+🔴 **셋 다 n ≈ 0.8 로 뭉친다.** n = 0.5 라면 300 K 곡선이 100→702 ps 에서 **√7.02 = 2.65배**만 올라야 하는데 **실제 5.0배**(4 → 20 %) 오른다. ⇒ **0.5↔1.0 이분법이 데이터에 없다.** (내 y 읽기 오차 ±1–2 %p 로는 뒤집히지 않는다 — 그러려면 종점이 ≈10.6 % 여야 하는데 곡선은 분명히 ≈20 % 에서 끝난다.)
+⛔ **인용 금지**: *"확산 제한 → 계면 제한 전이가 입증됐다."*
+
+**J-37-e. ⭐⭐ 우리 판정축에 대한 요구 — "어떤 상이 생기나" 에서 "그 상들이 어떻게 배열되나" 로**
+
+1. **`min_product_gap_eV`·`leaky_products` 에 "상분리 가정 하" 라벨을 단다** (`HZ-anode-b2o3-reaction-direction` 의 `fix` — 2026-09-22 반영 완료).
+2. **누설 경로 후보가 하나 늘었다 — 비정질 입계(22–29 %).** 우리 `sei_products.json` 은 이미 `Li₃PO₄` 를 *"cuts GB electron percolation"* 으로 쓰고 있다 ⇒ **같은 언어인데 우리 쪽엔 값이 0건**이다.
+3. **NPT 를 쓸 이유가 생겼다** — ✎ 반응 순부피 **−19 %**(전해질+소모 Li 대비; +36 % 는 전해질만 대비). NVT 면 그 수축이 **응력으로 갇혀** 공극·박리를 못 본다. ⚠ 부피값은 **`[Wang22Res]` `Table S1` PBE 격자**에서 왔다 — **자릿수 감각용, 수치 인용 금지**.
+4. 🟢 **문헌 공백 하나를 우리가 딸 수 있다** — `Li₁₄PS₅Cl` antifluorite 고용체의 밴드갭. **SQS + fixed-occ nscf**(우리 표준). ⚠ **보고량 카드 먼저**(배열 앙상블 집계 규칙을 결과 보기 전에 선언).
+
+**J-37-f. ⭐ 우리 MD 규율을 *지지* 하는 외부 사례 2건**
+
+- **단일 시드 금지**: model I 300 K/1 kbar 에서 **시드 하나는 73 %, 다른 하나는 98 %**(25 %p). 우리 *"단일시드 1.33× 철회"* 규율과 같은 종류의 함정이고, **이 논문은 시드 2개로 결론을 낸다**.
+- **"model II 에서 시드 의존이 사라진다" 는 해석이 과하다**: model II 는 model I 의 **옆면 2×2 복제**라 **면적 4배의 중심극한만으로 산포가 ≈2배 준다**. 퍼콜레이션 임계의 크기 의존과 **구별할 시험이 없다**.
+
+**J-37-g. ⛔ 이 논문을 인용할 때 반드시 같이 다는 단서 4개**
+
+① **고용체 주장의 원전은 ref 34 (Golov & Carrasco 2023)** — 본문이 *"As previously shown using AIMD"* 라 적는다. 이 편으로 귀속하면 잘못된 인용이다.
+② **MLIP 오차 18.4 / 20.9 meV/atom** — 같은 MTP 를 쓴 `[Wang22Res]`(0.32–0.87)의 **21–65배**, **힘 오차 미보고**. 결정 vs 비정질 상대안정성이 이 오차와 같은 자릿수일 수 있다.
+③ **결정성 판정이 재현 불가** — 알고리즘·컷오프·문턱 **0줄**, 민감도 **0**. 논문의 **모든 곡선**이 그 분류 위에 있다.
+④ **DFT 설정 전무** — 코드·범함수·ecut·k-점 **0줄**(`VASP` 0 · `PBE` 0 · `LAMMPS` 0). 이 편만 읽고는 아무것도 재현할 수 없다.
 
 ---
 
