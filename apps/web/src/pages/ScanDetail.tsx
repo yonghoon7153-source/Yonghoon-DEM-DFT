@@ -837,6 +837,23 @@ export function ScanDetail() {
                     ? { x: drtAxisLabel(drtAxis), y: `γ (${zUnit})` }
                     : { x: `Z′ (${zUnit})`, y: `−Z″ (${zUnit})` }),
                 },
+                // **같은 것을 뒤집어서 한 번 더.**  온도 스윕은 60 °C 에서
+                // 내려가며 재기도 하고 -20 °C 에서 올라가며 재기도 하는데,
+                // 논문 그림의 범례 차례는 그것과 따로 정해진다.  Origin 에서
+                // 열을 손으로 옮겨 담는 것이 이 화면에서 제일 잦은 잔일이라,
+                // 뒤집은 판을 한 번에 준다 (ADR 0039 의 대칭셀 파트).
+                {
+                  label: mode === 'drt'
+                    ? 'γ(τ) (스윕 전부 · 역순)' : '나이퀴스트 (스윕 전부 · 역순)',
+                  title: `같은 열들을 스윕 차례만 뒤집어서 — 지금 켜 둔 ${shownOverlay.length}개`,
+                  disabled: shownOverlay.length < 2,
+                  skipped: flat.length - shownOverlay.length,
+                  skippedNote: (n: number) => `꺼 둔 ${n}개는 빠졌습니다`,
+                  build: () => seriesWideTsv([...shownOverlay].reverse(),
+                    mode === 'drt'
+                      ? { x: drtAxisLabel(drtAxis), y: `γ (${zUnit})` }
+                      : { x: `Z′ (${zUnit})`, y: `−Z″ (${zUnit})` }),
+                },
                 // **이격 값은 이격을 보고 있을 때만 내보낸다.**  이 저장소의
                 // 규칙이 "클립보드는 보이는 그림" 이고, 겹쳐 그린 화면에서
                 // 올린 수를 복사하면 붙여 넣은 표가 화면과 다른 것이 된다.
