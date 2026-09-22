@@ -1,0 +1,332 @@
+{
+ "slug": "du2022_lmro_lpscl_reversible_redox_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "65beba50-19._High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+  "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) XRD patterns of LMROs with different Co contents. The right part shows enlarged patterns from 20 to 24 degrees. (b) Electronic conductivities, ionic conductivities, and C2/m phase contents of LMROs with different Co contents. (c) Initial charge−discharge curves of LMROs with different Co contents in ASSLIBs in the range 2.0−4.8 V vs Li/Li+ at 0.1C. (d) Cycling performance of LMROs with different Co contents in ASSLIBs at 0.1C. ASSLIBs.21,22 Basically, the interfaces between the sulfide electrolytes and cathodes in ASSLIBs would remain efficient if the generated −S0−species could be reduced during the discharge process. In the field of Li−S batteries, it is widely reported that the S0 can be reduced within the range 2.0−2.3 V.23,24 Considering that the discharge cutoff voltage of LMROs is 2.0 V, we speculate that combining LMROs with sulfide electrolytes in ASSLIBs might mit",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    51.4,
+    561.5,
+    397.2
+   ],
+   "w": 2151,
+   "h": 1441,
+   "dpi": 300,
+   "src": "65beba50-19._High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.829
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) XRD patterns of LRCo10@yLN cathodes; the right part shows enlarged patterns from 20 to 24 degrees. (b) Atomic-resolution high-angle annular dark-field scanning transmission electron microscopy (HAADF-STEM) image of the LRCo10 cathode. (c) Atomic- resolution HAADF-STEM image of the LRCo10@10LN cathode. (d) Electronic conductivities, ionic conductivities, and C2/m phase contents of LRCo10@yLN cathodes. (e) Initial charge−discharge curves of LRCo10@yLN ASSLIBs in the range 2.0−4.8 V vs Li/Li+ at 0.1C. (f) Cycling performance of LRCo10@yLN ASSLIBs at 0.1C. (g) Cycling performance of LRCo10@yLN ASSLIBs at 0.5C. (h) Comparison of the long-term cycling stability of the LRCo10@10LN cathode in a liquid battery and an ASSLIB at 0.5C. According to our previous work,32 the addition of the nominal LiNiO2 component in the LMRO cathode can significantly enhance the structural stability an",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    584.6
+   ],
+   "w": 2151,
+   "h": 2210,
+   "dpi": 300,
+   "src": "65beba50-19._High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.718
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) CV curves of the (LPSCl + VGCF)/LPSCl/In−Li cell during the initial four cycles between 2.0 and 4.8 V vs Li/Li+ at 0.1 mV s−1. (b) CV curves of the (LPSCl + VGCF)/LPSCl/In−Li cell during the initial four cycles between 2.5 and 4.8 V vs Li/Li+ at 0.1 mV s−1. (c) S 2p XPS spectra of the pristine LPSCl electrolyte and the LRCo10@10LN composite cathode during cycling. (d) P 2p XPS spectra of the pristine LPSCl electrolyte and the LRCo10@10LN composite cathode during cycling. LRCo10@10LN, respectively) were synthesized to further improve the performance of ASSLIBs. All LRCo10−yLiNiO2 cathodes show the same bulk α-NaFeO2-type layered structure (Figure 2a), whereas the surface structure varies significantly with the increase of the LiNiO2 content. The LRCo10 cathode has a uniform layered structure from the surface to the bulk (Figure 2b), while a spinel-like phase is formed on the",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    56.2,
+    561.5,
+    377.0
+   ],
+   "w": 2151,
+   "h": 1337,
+   "dpi": 300,
+   "src": "65beba50-19._High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Atomic-resolution HAADF-STEM image of the LRCo10@10LN cathode in a liquid battery after 1000 cycles. The inset at the top right is the atomic model of the spinel-like phase in the [112̅] orientation. (b) FFT-filtered image of the rose red rectangle in part a. (c) FFT pattern of part a. (d) HAADF-STEM image of the LRCo10@10LN cathode in the ASSLIB after 1000 cycles. (e) Atomic-resolution HAADF-STEM image of the LPSCl/LRCo10@10LN interface after 1000 cycles (the region is marked by a blue rectangle in part d). (f) FFT- filtered image of the orange rectangle in part e. (g) Atomic-resolution HAADF-STEM image of the bulk LRCo10@10LN cathode in an ASSLIB after 1000 cycles (the region is marked by a purple rectangle in part d). (h) FFT-filtered image of the red rectangle in part g. exhibit the highest energy density and best cycling perform- ance by far. reduction peaks produced d",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    269.2
+   ],
+   "w": 2151,
+   "h": 896,
+   "dpi": 300,
+   "src": "65beba50-19._High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.277
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 9,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Characterization of LPSCl Electrolytes. a) SEM image of the LPSCl electrolyte. The LPSCl electrolyte exhibits large particle sizes of 30~50 μm. b) SEM image of the LPSCl- BM electrolyte. The LPSCl-BM electrolyte shows relatively small particle sizes of 2~5 μm. c) XRD profiles of LPSCl, LPSCl-BM and LPSCl-EtOH electrolytes. All diffraction peaks of the three electrolytes can be indexed to the lithium argyrodite structure. The low intensity and broadening of the peaks of the LPSCl-BM and LPSCl-EtOH electrolytes correspond to the decrease of particle sizes. d) Nyquist plots of the LPSCl electrolyte at different temperatures. e) Nyquist plots of the LPSCl-BM electrolyte at different temperatures. f) Nyquist plots of the LPSCl-EtOH electrolyte at different temperatures. g) Arrhenius plots of LPSCl, LPSCl-BM and LPSCl-EtOH electrolytes. h) DC polarization curves of the LPSCl electro",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    26.0,
+    534.5,
+    457.8
+   ],
+   "w": 1958,
+   "h": 1800,
+   "dpi": 300,
+   "src": "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.698
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 10,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Characterization of the morphology and structure of the LPSCl-coated LMRO cathode (using the LRCo10@10LN cathode as an example). a) SEM images of LRCo10@10LN cathode powders. The LRCo10@10LN cathode displays a particle size of 200~300 nm and a smooth surface. b) SEM images of LPSCl-coated LRCo10@10LN cathode powders. The particle surface is rough, indicating the LPSCl electrolyte coating. c,d) TEM images of LPSCl-coated LRCo10@10LN cathode powders. e) HAADF-STEM image of the LPSCl-coated LRCo10@10LN cathode. f) Atomic-resolution HAADF-STEM image of the LPSCl/ LRCo10@10LN interface (the region is marked by a purple rectangle in e) 10",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    67.6,
+    533.5,
+    611.3
+   ],
+   "w": 1953,
+   "h": 2266,
+   "dpi": 300,
+   "src": "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.19
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 11,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. STEM-EDS mapping of the LPSCl-coated LRCo10@10LN cathode. Ni, Co and Mn are uniformly distributed in the bulk, while S, P and Cl are agglomerated on the surface, consistent with the targeted LPSCl composition. In addition, the LiNbO3 layer is approximately 1-2 nm thick.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    66.7,
+    533.5,
+    273.9
+   ],
+   "w": 1953,
+   "h": 865,
+   "dpi": 300,
+   "src": "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.193
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 12,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Characterization of electronic and ionic conductivities of LMROs with different Co contents. a) Linear scanning of the voltage from 0 to 1 V for LRCo0, LRCo05 and LRCo10. b) Linear scanning of the voltage from 0 to 1 V for LRCo15, LRCo20, LRCo25, and LRCo33. The electronic conductivity was calculated with Ohm’s law. c~i) EIS plots of LMRO cathodes with different Co contents based on SS/cathode/SS symmetric cells. The low frequency limit of the EIS corresponds to the electronic resistance and the electronic conductivity can be calculated with Ohm’s law. The electronic conductivities obtained from linear scanning and EIS are almost identical. j~l) DC polarization curves of LMRO cathodes with different Co contents based on SS/Li-In/LPSCl/cathode/LPSCl/Li-In/SS symmetric cells. The ionic conductivity was calculated according to the stable current value.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    179.5,
+    533.5,
+    516.4
+   ],
+   "w": 1953,
+   "h": 1405,
+   "dpi": 300,
+   "src": "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 13,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Electrochemical performance of LMROs with different Co contents in liquid batteries. a) Initial charge/discharge curves of LMROs with different Co contents at 0.1C in liquid batteries. b) Discharge capacities of LMROs with different Co contents at 0.1C in liquid batteries. c,d) Cycling performance of LRCo0, LRCo10, LRCo20, and LRCo33 cathodes in liquid batteries. It can be seen that when the Co content increases too much, it will deteriorate the discharge capacities and cycling stabilities of the cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    70.2,
+    533.5,
+    413.3
+   ],
+   "w": 1953,
+   "h": 1431,
+   "dpi": 300,
+   "src": "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.846
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 14,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Characterization of the electronic and ionic conductivities of LRCo10@yLN cathodes. a) Linear scanning of the voltage from 0 to 1 V for LRCo10@yLN cathodes. The electronic conductivity was calculated with Ohm’s law. b,c) EIS plots of LRCo10@yLN cathodes based on SS/cathode/SS symmetric cells. The low frequency limit of the EIS corresponds to the electronic resistance and the electronic conductivity can be calculated with Ohm’s law. The electronic conductivities obtained from linear scanning and EIS are almost identical. d) DC polarization curves of LRCo10@yLN cathodes based on the SS/Li- In/LPSCl/cathode/LPSCl/Li-In/SS symmetric cells. The ionic conductivity was calculated according to the stable current value.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    227.6,
+    533.5,
+    407.5
+   ],
+   "w": 1953,
+   "h": 750,
+   "dpi": 300,
+   "src": "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 16,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. a) The first charge-discharge curves of the sulfide-based ASSLIBs with LCO cathode at different discharge cut-off voltage (2.0 V vs. 3.0 V) at 0.1C. b) Cycling performance of sulfide-based ASSLIBs with LCO cathode at different discharge cut-off voltage (2.0 V vs. 3.0 V) at 0.5C. The preparation process of LCO ASSLIB is the same as that of LMRO. For the LCO cathode, its suitable discharge voltage is 3.0 V. If the discharge cut-off voltage is reduced to 2.0 V, it will lead to the over-insertion of lithium in the LCO, which is not conducive to the cycle performance of ASSLIB.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    70.5,
+    533.5,
+    260.7
+   ],
+   "w": 1953,
+   "h": 794,
+   "dpi": 300,
+   "src": "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 17,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. a) The first charge-discharge curves and b) cycling performance of (LPSCl+VGCF)/LPSCl/In-Li ASSLIB at 20 mA g-1.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    71.0,
+    533.4,
+    257.8
+   ],
+   "w": 1953,
+   "h": 779,
+   "dpi": 300,
+   "src": "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 18,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. EIS analyses of the LRCo10@10LN cathode during cycling. a) Nyquist plots of the LRCo10@10LN cathode during the first charge-discharge process in an ASSLIB. b) Variations of three resistances during the first cycle obtained by fitting the impedance data. Among them, the resistance of the solid electrolyte (RSE) and the interfacial resistance between LPSCl and the Li-In anode (RAnode) remain stable, while the interfacial resistance between LPSCl and the LRCo10@10LN cathode (Rcathode) increases during charging and decreases during discharging, indicating the reversible decomposition of the LPSCl electrolyte in the composite cathode. c) Nyquist plots of the LRCo10@10LN cathode during cycling in an ASSLIB. d) Variations of three resistances during cycling obtained by fitting the impedance data. The RSE and RAnode remain stable during cycling and the Rcathode slightly increases dur",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    362.5,
+    533.5,
+    523.2
+   ],
+   "w": 1953,
+   "h": 671,
+   "dpi": 300,
+   "src": "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.848
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 19,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. SEM images of the LRCo10@10LN composite cathode before cycling and after 1000 cycles. a) SEM images of the LRCo10@10LN composite cathode before cycling. b) SEM images of the LRCo10@10LN composite cathode after 1000 cycles. The large dark areas are the LPSCl electrolyte after pressing. The small bright particles correspond to cathode active materials. The slender fibres are VGCF.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    67.4,
+    533.5,
+    236.8
+   ],
+   "w": 1953,
+   "h": 707,
+   "dpi": 300,
+   "src": "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.173
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 20,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. (a~c) EELS line-scans from the surface into the bulk of the LRCo10@10LN cathode in a liquid battery after 1000 cycles. (d~f) EELS line-scans from the surface into the bulk of the LRCo10@10LN cathode in an ASSLIB after 1000 cycles. (g) EELS mapping of the LRCo10@10LN cathode in a liquid battery after 1000 cycles. (h) EELS mapping of the LRCo10@10LN cathode in an ASSLIB after 1000 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    70.0,
+    533.5,
+    656.9
+   ],
+   "w": 1953,
+   "h": 2447,
+   "dpi": 300,
+   "src": "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.64
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 23,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Comparison of electrochemical performance for high-voltage oxide cathodes in",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.4,
+    581.9,
+    778.9
+   ],
+   "w": 2151,
+   "h": 2970,
+   "dpi": 300,
+   "src": "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
+   "blank": 0.938
+  }
+ ]
+}

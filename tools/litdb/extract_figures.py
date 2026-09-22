@@ -64,9 +64,13 @@ OUT_ROOT = ROOT / "litdb" / "figures"
 #     "Fig. 3." → **"F19. 3."** (i→1, g→9, o→0, s→5, l→1). 캡션은 멀쩡한데 키워드만 깨져
 #     9쪽짜리 논문에서 캡션 인정 0건이었다. 키워드 철자만 관대하게 받는다 (번호는 진짜 숫자).
 SI_PRE = r"(?:Supplementary|Supplemental|Supporting|Extended\s+Data|Extended|Online)\s+"
+#   ⚠ 키워드 **뒤**에 콜론을 붙이는 SI 양식이 있다 — 실측(Barai 2021 Chem. Mater. SI):
+#     `Table: S-I.` / `Figure: S1.` 형식이라 25쪽 SI 에서 **0 개**가 나왔다.
+#     키워드 뒤 `[.:]?` 로 받는다. 번호 앞의 하이픈(`S-I`)은 로마숫자라 여전히 탈락 —
+#     이건 의도한 한계다(이 도구는 아라비아 숫자 라벨만 다룬다, §"못 하는 것").
 CAP_RE = re.compile(
     r"^\s*(?P<si>" + SI_PRE + r")?"
-    r"(?P<kind>F[i1l][gq9](?:ure|s)?\.?|Tab[l1]e|Sche[mn]e)\s*"
+    r"(?P<kind>F[i1l][gq9](?:ure|s)?[.:]?|Tab[l1]e[.:]?|Sche[mn]e[.:]?)\s*"
     r"(?P<label>S?\d+)(?![a-z0-9])\s*(?P<sep>[.|:,–—]|\s)\s*(?P<rest>.*)",
     re.S | re.I)
 # 본문 문단이 흔히 쓰는 동사 — 구두점이 없을 때 최종 판별
@@ -1348,6 +1352,15 @@ def selftest():
          False, "⛔음성: 본문 (and)"),
         ("Figure 2 is shown in the appendix of this manuscript",
          False, "⛔음성: 본문 (is)"),
+        # ── 키워드 뒤 콜론 양식 (2026-09-22 Barai 2021 SI 실측 — 종전에 25쪽 0개였다)
+        ("Figure: S1. Demonstration of the cathode computational domain",
+         True, "★키워드 뒤 콜론 SI 캡션 (barai2021 실측)"),
+        ("Table: S-II. List of parameters used in the continuum model",
+         False, "⛔음성: 로마숫자 라벨(S-II)은 안 받는다 — 문서화된 한계"),
+        ("Figure: 3. Comparison between the performance curves",
+         True, "키워드 뒤 콜론 + 본문 번호"),
+        ("Figure: 3 shows the trajectory of Li ions in the cell",
+         False, "⛔음성: 콜론이 있어도 본문은 본문 (shows)"),
     ):
         chk(f"캡션판정 {why}", (is_caption(txt) is not None) == want)
 

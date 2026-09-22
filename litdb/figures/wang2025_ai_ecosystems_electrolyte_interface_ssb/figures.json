@@ -1,0 +1,217 @@
+{
+ "slug": "wang2025_ai_ecosystems_electrolyte_interface_ssb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "127. SciAdv_2025_Wang_Zeier_You_Toward_AI_ecosystems_electrolyte_interface_SSB_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Key scientific goals and challenges for SE and SEI/CEI design. The factors that have to be considered for the SE design are demonstrated, including ionic-electronic conductivity, electrochemical stability, mechanical strength, and air/humidity stability, to address key scientific problems associated with SEI/CEI. This review aims to provide comprehensive AI-driven applications in SE design and SEI/CEI optimization. The anode, cathode, and SE are shown figuratively and do not represent their actual structures.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    55.0,
+    560.0,
+    341.0
+   ],
+   "w": 2184,
+   "h": 1192,
+   "dpi": 300,
+   "src": "127. SciAdv_2025_Wang_Zeier_You_Toward_AI_ecosystems_electrolyte_interface_SSB_MAIN.pdf",
+   "blank": null,
+   "note": "자동 크로퍼가 '영역 없음' 으로 제외 → 손으로 bbox 지정 (2026-09-22)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Overview of the review. First, three AI strategies for the SSB research are summarized. Next, advances in discovery of high-performance SEs with high ionic conductivity, as well as high mechanical strength and stability are reviewed and analyzed. Then, advances in SEI and CEI engineering are summarized and discussed. Last, three key ongoing limitations and corresponding potential solutions associated with SE and SEI/CEI engineering are proposed.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    275.0,
+    560.0,
+    675.0
+   ],
+   "w": 2184,
+   "h": 1668,
+   "dpi": 300,
+   "src": "127. SciAdv_2025_Wang_Zeier_You_Toward_AI_ecosystems_electrolyte_interface_SSB_MAIN.pdf",
+   "blank": null,
+   "note": "자동 크롭이 윗부분(패널 A 등)을 잘라내 손으로 상단 확장 (2026-09-22)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Strategies for SE and interface design. (A) Traditional approach to SE, including experimental and theoretical processes. Solid polylines denote the feedback of performance testing or property calculation, while the dashed polyline is the feedback of computational results to the experimental process. (B) Accelerated exploration of SEs and SEI/CEI layers using AI-­driven methods. The process can be divided into four core parts: materials representation, AI predictive model, property prediction, and automated screening. Three AI-­driven modes are summarized: establishing a screening pipeline based on structure-­property relationships, performing MD simulations based on MLFFs, and designing materials based on generative models. Wang et al., Sci. Adv. 11, eaea0638 (2025) 26 November 2025 4 of 27",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    586.7,
+    565.6,
+    655.5
+   ],
+   "w": 2232,
+   "h": 288,
+   "dpi": 300,
+   "src": "127. SciAdv_2025_Wang_Zeier_You_Toward_AI_ecosystems_electrolyte_interface_SSB_MAIN.pdf",
+   "blank": 0.826
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Mainstream methods for discovering fast-­ion conductors. (A) Data-­driven classification model using an LR algorithm for predicting ionic conductivity (88). El- emental costs, earth abundance, and environmental factors of raw materials were taken into account in the screening pipeline. Also, for the SE application, electronic conductivity was used as a screening indicator. (B) IonML platform for the fast-­ion conductor discovery and design (67). A hybrid multisource fingerprint was integrated into the IonML, which describes the structural, compositional, and site information of fast-­ion conductors. The active learning module can be used as an optimization tool to direct the design of chemical compositions for fast-­ion conductors. (C) Predicting the ionic conductivity based on a combination of the bond-­valence (BV) method and graph convolutional network (GCN) (91). Each BV node",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    58.0,
+    565.6,
+    513.6
+   ],
+   "w": 2232,
+   "h": 1899,
+   "dpi": 300,
+   "src": "127. SciAdv_2025_Wang_Zeier_You_Toward_AI_ecosystems_electrolyte_interface_SSB_MAIN.pdf",
+   "blank": 0.898,
+   "note": "자동 크롭이 윗부분(패널 A 등)을 잘라내 손으로 상단 확장 (2026-09-22)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Discovery of fast-­ion conductors using microstructures, x-­ray diffraction, and machine learning interatomic potentials. (A) Microstructure-­property rela- tionship in solid electrolyte through the ResNet-­18 model. The SE pellets (LLZTO) were prepared, and their ionic conductivities were measured (94). Scanning electron microscopy (SEM) was used to reveal the microstructure of the solid electrolyte pellets. The ionic conductivities of solid electrolyte pellets were divided into three levels: low, median, and high. (B) Semisupervised learning framework for predicting the ionic conductivity (96). Labeled data were derived from experimental results, while the unlabeled data were sourced from the ICSD (56). (C) Scheme of the GNoME platform (39). Massive structures were collected from both the structural and compositional pipelines to form the training dataset for the GNN model. An ",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    54.8,
+    566.2,
+    516.8
+   ],
+   "w": 2235,
+   "h": 1926,
+   "dpi": 300,
+   "src": "127. SciAdv_2025_Wang_Zeier_You_Toward_AI_ecosystems_electrolyte_interface_SSB_MAIN.pdf",
+   "blank": 0.849
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Screening SEs with high mechanical strength and stability via ML methods. (A) Flowchart of the ML process to predict elastic properties (bulk modulus KVRH and shear modulus GVRH) and ionic conductivities of SE candidates (196). LGBM, light gradient boosting machine; CGCNN, crystal graph convolutional neural network; MEGNet, MatErials graph network; MPNN, message passing neural network; and SchNet, Schrodinger network. (B) Screening process to select garnet-­type SE candidates (from 5329 to 10) (121). (C) Predictive MAE of each model for KVRH and GVRH. (D) KVRH and GVRH for 10 materials validated as promising SEs. (E) Main screening stages of the HPC workflow for filtering candidate materials (122). The first stage identifies stable materials using MLFFs to perform structural relaxation and assess thermodynamic phase stabilities. The second stage is used to discover SEs with elect",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    56.0,
+    565.6,
+    546.9
+   ],
+   "w": 2232,
+   "h": 2046,
+   "dpi": 300,
+   "src": "127. SciAdv_2025_Wang_Zeier_You_Toward_AI_ecosystems_electrolyte_interface_SSB_MAIN.pdf",
+   "blank": 0.828,
+   "note": "자동 크롭이 윗부분(패널 A 등)을 잘라내 손으로 상단 확장 (2026-09-22)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 13,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. SEI investigation by combining AIMD simulations and ML methods. (A) Workflow of LASP (144): LASP takes input setups (lasp.in) and structure coordinates (lasp.str) to perform energy and force evaluations using MLFFs and interfaces with various first-­principles and force field packages. (B) Modeling structures for Li/LiZrC or Li/LiHfC systems. MLFFs are used to conduct MD simulations based on the LASP. (C) Visualization and labeling of three interfaces in the ML training set (stable, passivating, and reactive) from AIMD simulations. (D) Labeling of SEI reactivity based on AIMD simulations. ΔErxn is chemical mixing energy with other battery components by DFT calculations. (E) Flowchart for predicting the SEI reactivity. Two classification models (stable model and reactive model) can be built to differentiate between reactive and unreactive SEI. Wang et al., Sci. Adv. 11, eaea0638 (",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    215.1,
+    565.6,
+    645.2
+   ],
+   "w": 2232,
+   "h": 1793,
+   "dpi": 300,
+   "src": "127. SciAdv_2025_Wang_Zeier_You_Toward_AI_ecosystems_electrolyte_interface_SSB_MAIN.pdf",
+   "blank": 0.764
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 15,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Predicting SEI properties by using ML methods. (A) Scheme of XPS prediction using ML models (135). The features of the structure can be generated using local many-­body tensor representation (LMBTR) (148). The specified system simulated is LiFSI in DME and TTE. (B) RMSE and MAE values of four ML models [linear regression (LR), random forest (RF), extreme gradient boosting (XGBoost), and artificial neural network (ANN)] for predicting the C1s XPS values. (C) Comparison of the different chemical and electrochemical reactions that can occur during battery assembly (left) and cycling (right). The illustrations below the table show how the electrolyte (light brown) and active material (blue) react to form a stable or unstable SEI depending on mechanical constriction. The initial SEI is in dark brown. (D) Overview of computa- tional approach for predicting Kcrit. High-­throughput compu",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    72.0,
+    566.2,
+    467.8
+   ],
+   "w": 2235,
+   "h": 1650,
+   "dpi": 300,
+   "src": "127. SciAdv_2025_Wang_Zeier_You_Toward_AI_ecosystems_electrolyte_interface_SSB_MAIN.pdf",
+   "blank": 0.821,
+   "note": "자동 크롭이 윗부분(패널 A 등)을 잘라내 손으로 상단 확장 (2026-09-22)"
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 17,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Approaches for screening coating materials for cathodes. (A) Flowchart describing the computational screening of cathode coating materials, following the initial screening, phase stability, electrochemical stability, and chemical stability were used as sequential filters for the high-­throughput screening (160). Vred and Vox are the reduction and oxidation limits of the electrochemical stability window in V versus Li metal, respectively. ΔErxt is the reaction energy of the material with the cathode or electrolyte in eV/atom; LPS denotes the SE Li3PS4; and NCM denotes the fully lithiated cathode material LiNi1/3Co1/3MN1/3O2. (B) Flowchart of the learning on-­the-­fly MD (LOFT-­MD) simulations for screening coating materials (138). All potentials were pretrained by DFT data generation in AIMD simulations before being used in LOFT-­MD simulations. (C) Investigation of effects of coa",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    58.0,
+    565.6,
+    513.0
+   ],
+   "w": 2232,
+   "h": 1897,
+   "dpi": 300,
+   "src": "127. SciAdv_2025_Wang_Zeier_You_Toward_AI_ecosystems_electrolyte_interface_SSB_MAIN.pdf",
+   "blank": 0.72,
+   "note": "자동 크롭이 윗부분(패널 A 등)을 잘라내 손으로 상단 확장 (2026-09-22)"
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 18,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. AI-­assisted modeling for CEI investigation. (A) Flowchart for the prediction scheme of heterogeneous interface structures using the CALYPSO methodology (162). LiCoO2 (LCO) and β-­Li3PS4 (LPS) were selected as cathode and SE (140). Then, a lattice-­matched superlattice for the LCO(104)/LPS(010) interface was determined, and the local atomistic structure in the interface region was explored by the CALYPSO method. (B) Schematic overview of class inheritance for a neural network potential package (n2p2) (55). Gray lines point from inherited to base classes, and the red dotted line indicates that the PairNNP instantiates the LAMMPS (Large-­scale Atomic/ Molecular Massively Parallel Simulator) interface. On the basis of the n2p2, the interface of LCO/ Li7La3Zr2O12 (LLZO) was then explored (163). (C) RMSEs of energies and forces of snapshots from the ML-­assisted simulations. Gray poi",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    175.5,
+    565.6,
+    625.3
+   ],
+   "w": 2233,
+   "h": 1875,
+   "dpi": 300,
+   "src": "127. SciAdv_2025_Wang_Zeier_You_Toward_AI_ecosystems_electrolyte_interface_SSB_MAIN.pdf",
+   "blank": 0.853
+  }
+ ]
+}

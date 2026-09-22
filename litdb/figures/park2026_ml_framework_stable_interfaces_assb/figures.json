@@ -1,0 +1,232 @@
+{
+ "slug": "park2026_ml_framework_stable_interfaces_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "125. AdvSci_2026_Park_ML_framework_stable_interfaces_ASSLIB_MAIN.pdf",
+  "125. Sup) AdvSci_2026_Park_ML_framework_stable_interfaces_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Assessment of interfacial chemical stability. (a) Heatmap illustrating the calculated mutual reaction energies between 7 sulfide SEs and 10 oxide cathode materials. (b) Mean mutual reaction energies of coating material candidates against the 7 sulfide SEs and 10 oxide cathodes. The red dashed line denotes the stability threshold of − 50 meV/atom.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    248.9,
+    568.2,
+    357.9
+   ],
+   "w": 2170,
+   "h": 456,
+   "dpi": 300,
+   "src": "125. AdvSci_2026_Park_ML_framework_stable_interfaces_ASSLIB_MAIN.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Anion-composition fingerprints of Cluster 3 shown as an UpSet plot. The left bars report the number of compounds containing each individual anion, and the top bars give the intersection counts for the ten most frequent anion combinations. The dot matrix indicates the anions included in each combination (filled dots), with open dots denoting absence.",
+   "rotated_deg": 0,
+   "bbox": [
+    308.4,
+    68.0,
+    567.8,
+    268.4
+   ],
+   "w": 1082,
+   "h": 836,
+   "dpi": 300,
+   "src": "125. AdvSci_2026_Park_ML_framework_stable_interfaces_ASSLIB_MAIN.pdf",
+   "blank": 0.849
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Schematic workflow for constructing an expanded set of coating-composition candidates guided by cluster-derived compositional signatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    308.4,
+    276.4,
+    567.8,
+    491.6
+   ],
+   "w": 1082,
+   "h": 898,
+   "dpi": 300,
+   "src": "125. AdvSci_2026_Park_ML_framework_stable_interfaces_ASSLIB_MAIN.pdf",
+   "blank": 0.379
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 Prediction performance for Li-based coating candidates in the expanded composition set: (a) Li ─M ─O and (b) Li ─M ─A ─O. Blue markers denote candidates not reported in the Materials Project database, while orange markers indicate candidates covered by the Materials Project. The dashed line corresponds to the parity line ( y = x ).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.8,
+    568.1,
+    271.3
+   ],
+   "w": 2170,
+   "h": 986,
+   "dpi": 300,
+   "src": "125. AdvSci_2026_Park_ML_framework_stable_interfaces_ASSLIB_MAIN.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Heatmap of the mutual reaction energies of cathode materials and sulfide SEs against coating material candidates.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    505.5,
+    532.1,
+    638.0
+   ],
+   "w": 1943,
+   "h": 553,
+   "dpi": 300,
+   "src": "125. Sup) AdvSci_2026_Park_ML_framework_stable_interfaces_SI.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Comparison of unsupervised clustering methods using the number of clusters (k) and cluster-size imbalance quantified by the relative standard deviation (RSD; σ/μ) of cluster populations; marker color indicates the silhouette score (higher is better). The selected setting (k-medoids) is highlighted.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    85.1,
+    532.4,
+    342.7
+   ],
+   "w": 1944,
+   "h": 1075,
+   "dpi": 300,
+   "src": "125. Sup) AdvSci_2026_Park_ML_framework_stable_interfaces_SI.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Heatmaps summarizing cluster fingerprints: (left) element presence rate within each cluster and (right) anion-pair co-occurrence rates, where co-occurrence is defined as the fraction of compositions in a cluster that contain both anion species in the given pair.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    83.9,
+    532.4,
+    548.1
+   ],
+   "w": 1944,
+   "h": 1935,
+   "dpi": 300,
+   "src": "125. Sup) AdvSci_2026_Park_ML_framework_stable_interfaces_SI.pdf",
+   "blank": 0.342
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Model selection map showing total MAE (x-axis) versus the generalization gap (y- axis), defined here as the absolute difference between training and test MAE, evaluated using five-fold cross-validation. The shaded region marks models with total MAE below the median across all candidates. The best-performing model (XGB) and the most stable model under the MAE-median constraint (HGBR) are highlighted and combined as the final ensemble predictor.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    81.9,
+    532.4,
+    355.8
+   ],
+   "w": 1944,
+   "h": 1142,
+   "dpi": 300,
+   "src": "125. Sup) AdvSci_2026_Park_ML_framework_stable_interfaces_SI.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. domain analysis of the expanded Li–M–O and Li–M–A–O composition set. (a) Distribution of mean k nearest neighbor distances for the reference set, expanded Li–M–O compositions, and expanded Li–M–A–O compositions. The reference distribution was calculated using leave one out distances, whereas expanded composition distances were calculated relative to the reference set. (b) Sorted mean k nearest neighbor distance spectrum for the expanded composition set.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    118.8,
+    532.4,
+    250.6
+   ],
+   "w": 1944,
+   "h": 551,
+   "dpi": 300,
+   "src": "125. Sup) AdvSci_2026_Park_ML_framework_stable_interfaces_SI.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 8,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Representative compositions were selected to reflect both the side-specific reaction- energy behavior and dominant chemical motifs of each cluster. The listed values are the mean reaction energies against the oxide cathode set, ⟨Ereaction⟩OC and the sulfide solid electrolyte set, ⟨Ereaction⟩SSE [unit: meV/atom].",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    531.3,
+    380.6
+   ],
+   "w": 1935,
+   "h": 1252,
+   "dpi": 300,
+   "src": "125. Sup) AdvSci_2026_Park_ML_framework_stable_interfaces_SI.pdf",
+   "blank": 0.613
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 9,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Literature based Li-ion transport trends for related chemical families represented in the expanded composition set. Reported values are taken from related coating or electrolyte families and are intended as chemical family level indicators of Li-ion transport relevance. They should not be interpreted as quantitative conductivity assignments to individual expanded compositions.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    531.4,
+    472.8
+   ],
+   "w": 1936,
+   "h": 1635,
+   "dpi": 300,
+   "src": "125. Sup) AdvSci_2026_Park_ML_framework_stable_interfaces_SI.pdf",
+   "blank": 0.593
+  }
+ ]
+}

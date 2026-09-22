@@ -1,0 +1,284 @@
+{
+ "slug": "jang2023_zno_cosubstitution_argyrodite",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "15. JAlloysCompd_2023_Jang_Li6-2xZnxPS5-xOxCl_ZnO_cosubstitution_air_stability_MAIN.pdf",
+  "jang_si.docx"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a, b) XRD patterns, (c) Laser-Raman spectra and (d) 7Li solid-state NMR analysis of prepared solid electrolyte (x = 0, 0.025, 0.05, 0.075, 0.1).",
+   "rotated_deg": 0,
+   "bbox": [
+    72.3,
+    47.2,
+    524.6,
+    393.4
+   ],
+   "w": 1885,
+   "h": 1444,
+   "dpi": 300,
+   "src": "15. JAlloysCompd_2023_Jang_Li6-2xZnxPS5-xOxCl_ZnO_cosubstitution_air_stability_MAIN.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. XPS spectra of (a) P 2p, (b) S 2p region of Li6–2xZnxPS5−xOxCl (x = 0, 0.025) solid electrolyte. 3- derived from γ-Li3PS4. In­ terestingly, the peak at 82.0 ppm corresponds to a peak in which both PS4 Further, it showed slight peak shift due to the detection limit of the NMR instrument. On the other hand, it can be seen that the ZnO- substituted solid electrolyte (x = 0.1) is shifted by ∼ 0.2 ppm to a lower ppm. It is presumed this is due to the substitution of Zn2+ at the Li site, which affects bonds such as the Li-S or Li-P. And we ad­ ditionally show 31P solid-state NMR in Fig. S1 to prove that Zn is substituted at the Li site. The PS4 located at 88.5 ppm corresponds to PS4 3- and PS3O3- are present [38]. This means that the O ion of ZnO affected the PS4 3- structure and contributed to the formation of PS3O3-. In addition, this can be additional evidence suggesting that the Zn",
+   "rotated_deg": 0,
+   "bbox": [
+    30.6,
+    47.2,
+    566.7,
+    290.7
+   ],
+   "w": 2235,
+   "h": 1016,
+   "dpi": 300,
+   "src": "15. JAlloysCompd_2023_Jang_Li6-2xZnxPS5-xOxCl_ZnO_cosubstitution_air_stability_MAIN.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. FE-SEM images of (a) x = 0, (b) x = 0.025 for Li6–2xZnxPS5−xOxCl solid electrolyte. 4",
+   "rotated_deg": 0,
+   "bbox": [
+    129.7,
+    480.7,
+    465.7,
+    731.0
+   ],
+   "w": 1401,
+   "h": 1044,
+   "dpi": 300,
+   "src": "15. JAlloysCompd_2023_Jang_Li6-2xZnxPS5-xOxCl_ZnO_cosubstitution_air_stability_MAIN.pdf",
+   "blank": 0.176
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) Nyquist plots, (b) calculated ionic conductivity, (c) activation energy plot and (d) cyclic voltammetry for Li6–2xZnxPS5−xOxCl (x = 0, 0.025, 0.05, 0.075, 0.1) solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.6,
+    47.2,
+    566.3,
+    409.7
+   ],
+   "w": 2233,
+   "h": 1511,
+   "dpi": 300,
+   "src": "15. JAlloysCompd_2023_Jang_Li6-2xZnxPS5-xOxCl_ZnO_cosubstitution_air_stability_MAIN.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. DC profiles of (a) x = 0, (b) x = 0.025 and (c) calculated critical current density for Li6–2xZnxPS5−xOxCl (x = 0, 0.025, 0.05, 0.075, 0.1) solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    60.4,
+    47.2,
+    536.4,
+    391.5
+   ],
+   "w": 1985,
+   "h": 1436,
+   "dpi": 300,
+   "src": "15. JAlloysCompd_2023_Jang_Li6-2xZnxPS5-xOxCl_ZnO_cosubstitution_air_stability_MAIN.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Long-term DC profiles of (a) x = 0 and (b) x = 0.025 with a fixed stripping/plating current density of 0.4 mA·cm−2 at room temperature for Li6–2xZnxPS5−xOxCl solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.6,
+    47.1,
+    566.3,
+    316.2
+   ],
+   "w": 2233,
+   "h": 1122,
+   "dpi": 300,
+   "src": "15. JAlloysCompd_2023_Jang_Li6-2xZnxPS5-xOxCl_ZnO_cosubstitution_air_stability_MAIN.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) Initial specific capacity charge/discharge curve, (b) cycle stability over 40 cycles, (c, d) Nyquist plots of (c) fresh cells and (d) cells after 40 cycles of Li/LPSCl/LNO- NCM811 and Li/LPSCl-0.025ZnO/LNO-NCM811 cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.6,
+    362.1,
+    566.2,
+    717.7
+   ],
+   "w": 2233,
+   "h": 1483,
+   "dpi": 300,
+   "src": "15. JAlloysCompd_2023_Jang_Li6-2xZnxPS5-xOxCl_ZnO_cosubstitution_air_stability_MAIN.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. (a) H2S gas generation, (b) Nyquist plots, (c) calculated ionic conductivity, (d) XRD patterns after expose to humid air for 30 min from the prepared solid electrolyte (0 ≤ x ≤ 0.1).",
+   "rotated_deg": 0,
+   "bbox": [
+    30.6,
+    47.1,
+    566.3,
+    399.1
+   ],
+   "w": 2233,
+   "h": 1467,
+   "dpi": 300,
+   "src": "15. JAlloysCompd_2023_Jang_Li6-2xZnxPS5-xOxCl_ZnO_cosubstitution_air_stability_MAIN.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": null,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. 31P Solid-state NMR analysis of Li6-2xZnxPS5-xOxCl solid electrolyte.",
+   "w": 856,
+   "h": 657,
+   "src": "jang_si.docx",
+   "src_media": [
+    "image1.jpeg"
+   ],
+   "src_note": "docx word/media → document.xml 의 r:embed 등장 순서로 캡션과 1:1 매핑. media 13장 = 캡션 7건(S1×1,S2×3,S3×1,S4×1,S5×3,S6×3,S7×1) 로 개수·순서 모두 일치."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": null,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. XPS spectra of (a) Li 1s, (b) Cl 2p, (c) Zn 2p region for Li6-2xZnxPS5-xOxCl (x = 0, 0.025) solid electrolyte.",
+   "w": 2596,
+   "h": 1002,
+   "src": "jang_si.docx",
+   "src_media": [
+    "image2.jpeg",
+    "image3.jpeg",
+    "image4.jpeg"
+   ],
+   "src_note": "docx word/media → document.xml 의 r:embed 등장 순서로 캡션과 1:1 매핑. media 13장 = 캡션 7건(S1×1,S2×3,S3×1,S4×1,S5×3,S6×3,S7×1) 로 개수·순서 모두 일치."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": null,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. FE-SEM images of (a) & (b) Li6.8Zn0.1P2S7.9O0.1I (x = 0.1), (c) & (d) Li6.7Zn0.15P2S7.85O0.15I (x = 0.15), (e) & (f) Li6.6Zn0.2P2S7.8O0.2I (x = 0.2) solid electrolyte.  [⚠ 원문 캡션 그대로 — 조성이 본 논문 계열이 아니다]",
+   "w": 807,
+   "h": 594,
+   "src": "jang_si.docx",
+   "src_media": [
+    "image5.png"
+   ],
+   "src_note": "docx word/media → document.xml 의 r:embed 등장 순서로 캡션과 1:1 매핑. media 13장 = 캡션 7건(S1×1,S2×3,S3×1,S4×1,S5×3,S6×3,S7×1) 로 개수·순서 모두 일치."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": null,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. EDS mapping for (a) x = 0, (b) x = 0.025, (c) x = 0.05, (d) x = 0.075, and (e) x = 0.1 for Li6-2xZnxPS5-xOxCl solid electrolyte.",
+   "w": 721,
+   "h": 834,
+   "src": "jang_si.docx",
+   "src_media": [
+    "image6.png"
+   ],
+   "src_note": "docx word/media → document.xml 의 r:embed 등장 순서로 캡션과 1:1 매핑. media 13장 = 캡션 7건(S1×1,S2×3,S3×1,S4×1,S5×3,S6×3,S7×1) 로 개수·순서 모두 일치."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": null,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Cyclic voltammetry of (a) x = 0.05, (b) x = 0.075, and (c) x = 0.1 for Li6-2xZnxPS5-xOxCl solid electrolyte.",
+   "w": 2075,
+   "h": 556,
+   "src": "jang_si.docx",
+   "src_media": [
+    "image7.jpeg",
+    "image8.jpeg",
+    "image9.jpeg"
+   ],
+   "src_note": "docx word/media → document.xml 의 r:embed 등장 순서로 캡션과 1:1 매핑. media 13장 = 캡션 7건(S1×1,S2×3,S3×1,S4×1,S5×3,S6×3,S7×1) 로 개수·순서 모두 일치."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": null,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. DC profiles of (a) x = 0.05, (b) x = 0.075 and (c) x = 0.1 for Li6-2xZnxPS5-xOxCl solid electrolyte at room temperature.",
+   "w": 2072,
+   "h": 484,
+   "src": "jang_si.docx",
+   "src_media": [
+    "image10.jpeg",
+    "image11.jpeg",
+    "image12.jpeg"
+   ],
+   "src_note": "docx word/media → document.xml 의 r:embed 등장 순서로 캡션과 1:1 매핑. media 13장 = 캡션 7건(S1×1,S2×3,S3×1,S4×1,S5×3,S6×3,S7×1) 로 개수·순서 모두 일치."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": null,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. XRD patterns after exposure to humid air for Li6-2xZnxPS5-xOxCl (x = 0.05, 0.075, 0.1) solid electrolyte.",
+   "w": 676,
+   "h": 615,
+   "src": "jang_si.docx",
+   "src_media": [
+    "image13.jpeg"
+   ],
+   "src_note": "docx word/media → document.xml 의 r:embed 등장 순서로 캡션과 1:1 매핑. media 13장 = 캡션 7건(S1×1,S2×3,S3×1,S4×1,S5×3,S6×3,S7×1) 로 개수·순서 모두 일치."
+  }
+ ],
+ "si_mapping_evidence": "SI(docx) 는 캡션이 짧아 값이 그림에 있다. word/media/*(13장)을 word/document.xml 의 blip r:embed 등장 순서로 훑어 직후 캡션 문단과 짝지었다. 합계 13 = 7 캡션의 패널 수 합(1+3+1+1+3+3+1) 으로 개수·순서가 동시에 일치 → 매핑 확정."
+}

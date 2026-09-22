@@ -1,0 +1,292 @@
+{
+ "slug": "haruyama2017_cation_mixing_co_diffusion_lco_lps",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "10. ACSAMI_2017_Haruyama_Cation_mixing_Co_diffusion_LCO_LPS_MAIN.pdf",
+  "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Structure of the LCO(110)/LPS(010) interface and (b) corresponding Co ↔Li exchange energies. The Li, O, P, S, and Co atoms are depicted as light green, red, purple, yellow, and blue spheres, respectively. Blue, purple, and light green polyhedrons represent CoO6, PS4, and LiS4 complexes, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.4,
+    280.3
+   ],
+   "w": 1050,
+   "h": 906,
+   "dpi": 300,
+   "src": "10. ACSAMI_2017_Haruyama_Cation_mixing_Co_diffusion_LCO_LPS_MAIN.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Structure of the LCO(110)/LPS(010) interface and (b) corresponding Co ↔P exchange energies.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    505.0,
+    306.4,
+    733.2
+   ],
+   "w": 1050,
+   "h": 951,
+   "dpi": 300,
+   "src": "10. ACSAMI_2017_Haruyama_Cation_mixing_Co_diffusion_LCO_LPS_MAIN.pdf",
+   "blank": 0.762
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Structures of (a) LCO(110)/LNO(11̅0) and (b) LNO(11̅0)/LPS(010). The Nb atoms and NbO6 complexes are depicted as green spheres and green polyhedrons, respectively. Corresponding exchange energies for (c) Co ↔Li/Nb in the LCO/ LNO interface and (d) P ↔Li/Nb in the LNO/LPS interface are also shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    360.7,
+    570.5,
+    575.0
+   ],
+   "w": 1051,
+   "h": 894,
+   "dpi": 300,
+   "src": "10. ACSAMI_2017_Haruyama_Cation_mixing_Co_diffusion_LCO_LPS_MAIN.pdf",
+   "blank": 0.749
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. PDOSs of the LCO/LPS interface (a) pristine and (b) with Co2 ↔P3 exchange. The black, green, blue, red, purple, and yellow lines represent the PDOS of the total, Li, Co, O, P, and S atoms, respectively. The dotted lines indicate Fermi levels. The energy origins are set at the top levels of the occupied band of the pristine interface. attributed to pseudotetrahedral CoO4 placed at the edge of the CoO2 layer.46 The levels of such interface states frequently appear in the energy gaps of the bulk crystals (especially such oxide/sulﬁde interfaces, see ref 21). Here we analyze the exchange energies in detail again by using the LCO and LPS bulk crystals in addition to the interface systems. The total energies of the LCO and LPS bulk crystals with various defects are listed in Table S3 in the Supporting Information. The Co ↔P exchange energy calculated with the individual LCO and LPS b",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    96.7,
+    570.5,
+    324.7
+   ],
+   "w": 1052,
+   "h": 951,
+   "dpi": 300,
+   "src": "10. ACSAMI_2017_Haruyama_Cation_mixing_Co_diffusion_LCO_LPS_MAIN.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Pristine interface structures of (a) LCO(110)/LPS (010), (b) LCO(110)/LNO(110), and (c) LNO(110)/LPS(010). The Li, O, P, S, Co, and Nb atoms are depicted as light green, red, purple, yellow, blue, and green spheres, respectively. Blue, green, purple, and light green polyhedrons represent CoO6, NbO6, PS4, and LiS4 complexes, respectively. Side views (left) and top views (right) are displayed.",
+   "rotated_deg": 0,
+   "bbox": [
+    78.6,
+    134.5,
+    518.9,
+    562.7
+   ],
+   "w": 1836,
+   "h": 1785,
+   "dpi": 300,
+   "src": "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf",
+   "blank": 0.648
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Structures of the LCO/LPS interface with the exchange of (a) Co1↔Li2 and (b) Co2↔Li5.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    96.1,
+    509.2,
+    261.6
+   ],
+   "w": 1791,
+   "h": 690,
+   "dpi": 300,
+   "src": "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf",
+   "blank": 0.633
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Structures of the LCO/LPS interface with the exchange of (a) Co1↔P3 and (b) Co2↔P3.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    301.7,
+    502.5,
+    475.3
+   ],
+   "w": 1763,
+   "h": 725,
+   "dpi": 300,
+   "src": "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf",
+   "blank": 0.521
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Relaxed structures of (a) the pristine LCO/LPS interface and (b) that with the Co2↔P3 exchange. The bond lengths of Co/P−O and P/Co−S are also depicted.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    513.7,
+    518.9,
+    669.8
+   ],
+   "w": 1832,
+   "h": 651,
+   "dpi": 300,
+   "src": "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf",
+   "blank": 0.507
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Crystal bulk structures of (a) LCO including PCo defect and (b) LPS including CoP defect. Corresponding PDOSs of (c) the LCO and (d) the LPS crystals are also shown. The black, green, blue, red, purple, and yellow lines represent the PDOS of the total, Li, Co, O, P, and S atoms, respectively. The dotted lines indicate Fermi levels. The energy origins are set at the top levels of their valence bands.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    135.0,
+    518.9,
+    422.5
+   ],
+   "w": 1832,
+   "h": 1199,
+   "dpi": 300,
+   "src": "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf",
+   "blank": 0.809
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Relaxed structure of the LCO/LPS interface with 6 Co↔P exchanges. Side view (left) and top view (right) are displayed.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    123.0,
+    516.8,
+    275.0
+   ],
+   "w": 1823,
+   "h": 634,
+   "dpi": 300,
+   "src": "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf",
+   "blank": 0.643
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 7,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Formation energies of the Li vacancies at the LCO/LPS interface in the case with 6 Co↔P exchanges. The displayed values on the Li atoms show the vacancy formation energies of the atoms (in eV). The values in parentheses also indicate the vacancy formation energies at the pristine LCO/LPS interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    312.0,
+    518.9,
+    590.1
+   ],
+   "w": 1832,
+   "h": 1159,
+   "dpi": 300,
+   "src": "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf",
+   "blank": 0.632
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1. The optimized cell parameters in the interface calculations.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.5,
+    101.1,
+    581.6,
+    612.7
+   ],
+   "w": 2089,
+   "h": 2132,
+   "dpi": 300,
+   "src": "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2.png",
+   "caption": "Table S2. The crystal lattices and optimized lattice constants of LCO and LPS bulk crystals.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.5,
+    101.1,
+    581.6,
+    612.7
+   ],
+   "w": 2089,
+   "h": 2132,
+   "dpi": 300,
+   "src": "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 6,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Total energies of LCO (upper) and LPS (lower) bulk crystals including various defects.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.6,
+    541.0,
+    515.6,
+    645.8
+   ],
+   "w": 1818,
+   "h": 437,
+   "dpi": 300,
+   "src": "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf",
+   "blank": 0.934
+  }
+ ]
+}

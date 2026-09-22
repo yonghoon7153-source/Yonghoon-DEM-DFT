@@ -90,6 +90,8 @@ ML 스크리닝/능동학습 6편 · 계면 8편, 합계 **25편 이상**의 dig
 ML 을 *"스크리닝 가속기"* 가 아니라 **다목적·폐루프 허브**로 재정의하려는 34 pp 리뷰인데,
 우리에게 값있는 것은 그 주장이 아니라 **두 문장**이다 — ① *"**볼록껍질 열역학에만 기대는 것은 모델의 현실성을 제한한다**"*(§2.5)
 ② *"계면 열화의 속도와 최종 형태는 열역학 구동력보다 **운동학 인자**가 더 지배한다"*(§4.3).
+   ⛔ **2026-09-22 원전 확인: 이 문장은 리뷰의 강화다** — 원전 [132] Guo 는 *"thermodynamic predictions alone are
+   insufficient"* 까지만 말하고 **속도도 최종 형태도 재지 않았다**. 판정 §11b 주석 · `comparison_vs_ours.md` §J-21.
 둘 다 **우리 방법(0 K MP hull grand-potential)의 급소를 정확히 찌른다.**
 동시에 §4.6 이 *"원자단위 양 → 실험 조절변수 5개"* 매핑을 먼저 체계화해 놓아서, 우리 CEI 논문의
 **positioning 문단은 이 절을 인용해 쓰는 것이 가장 싸다.**
@@ -246,6 +248,7 @@ ML 을 *"스크리닝 가속기"* 가 아니라 **다목적·폐루프 허브**�
 | 항목 | 이 리뷰의 입장 | 우리 | 판정 — 진짜 차이인가, 방법 산물인가 |
 |---|---|---|---|
 | **계면 안정성 판정의 층위** | §4.3: *"정적 계면형성에너지만으로는 계면이 실제로 쓸 만한지 결정할 수 없다"* + *"열화의 속도와 최종 형태는 열역학 구동력보다 **운동학**이 더 지배"* | **0 K MP hull grand-potential 만** (Richards/Ong 2016) | 🔴 **진짜 차이 — 우리 급소다.** 우리 방법은 리뷰의 3분법 중 "**반응이 일어나는가**" 만 답하고, "**멈추는가(부동태)**" 와 "**얼마나 빨리**" 를 못 답한다. §11b |
+| ↳ **그 판정의 2026-09-22 갱신** | 원전 [132] Guo 를 직접 읽었다 → `papers/guo2025_kinetic_cathode_se_interface.md` | 같음 | 🟡 **완화.** 원전은 *"불충분하다"* 까지만 말하고 **속도·최종형태를 재지 않았으며**, **hull 을 3회 명시적으로 추인한다**(반응에너지 23/21 meV/atom 을 자기 결론 근거로 사용). ⇒ **적용범위 비판은 유효, 타당성 비판은 무효.** `comparison_vs_ours.md` §J-21 |
 | **볼록껍질 의존** | §2.5: *"**Reliance on convex-hull thermodynamics alone limits the realism of such models**"* (능동학습 맥락) + *"많은 고성능 전해질이 **준안정상**이라 합성 시 운동학 제어가 필요"* | 우리 cascade 전체가 hull(`e_above_hull`) 위에 서 있다 | 🔴 **진짜 차이.** 단 ⚠ **완화 근거 2개**: ① 우리는 hull 을 *합성가능성 게이트* 로 쓰는 게 아니라 **계면 반응산물 선택**에 쓴다(Richards 식 grand-potential) — 리뷰가 때리는 대상은 *후보물질 생성* 쪽이다 ② 우리 보호율 식은 hull 이 고른 **Nd 인산염의 P/Nd 비**만 쓰고 **에너지 절대값을 쓰지 않는다** ⇒ 껍질 오차에 1차적으로 둔감. **이 반론을 §10 에 적어 두지만, 리뷰의 지적을 무효화하지는 않는다** |
 | **계면에너지 uMLIP 대체** | `Fig. 11`: 순위 r_s 0.83–1.0 **살아남음**, 절대값 MAE **0.1–0.61 J m⁻²** | 우리는 계면에너지를 **아예 안 낸다** (hull 반응에너지만) | ⚪ 층위가 다름. 다만 **우리가 W_ad/γ 축으로 확장할 때**(`comparison_vs_ours.md` §H) 이 그림이 **기대 정확도의 상한**을 준다 |
 | **보호층 두께** | [47]: a-LiF **1 nm 초과 시 Li 수송 차단**, 20 Å 에서 D **3.3× 감소** | 우리 보호율 = min(1, k·x/(1−x)) — **두께 항이 없다**. 피복 *면적분율* 만 | 🔴 **진짜 차이 — 우리 모델의 구조적 한계.** 우리는 "덮으면 좋다" 인데 문헌은 "덮되 얇게" 다. §12b |
@@ -281,10 +284,14 @@ ML 을 *"스크리닝 가속기"* 가 아니라 **다목적·폐루프 허브**�
 - *"계면은 안정/불안정의 2분법이 아니라 최소 **3분법**으로 갈라야 한다 — 진짜 불활성, **보호층을 만드는 부동태**,
   그리고 계속 반응해 장벽층을 두껍게 하는 활성. 전고체전지에서 공학적으로 값있는 것은 두 번째다."* (§4.3)
   → **우리 주장이 겨냥하는 칸이 두 번째임을 이 문장으로 선언**할 수 있다.
-- *"성공적인 계면 코팅은 네 조건을 **동시에** 만족해야 한다 — 분해의 열역학 구동력 제거 · **Li 수송경로 보존** ·
-  양이온 상호확산 차단 · **전자절연 유지**."* (§4.6, 원전 [132] Guo *JMCA* 13, 38919 (2025))
-  → 우리 Nd 인산염 CEI 가 4조건 중 1·4 만 논증됐음을 **자백하는 틀**로 쓴다.
-- *"양극/SE 계면 임피던스는 세 운동학 기전으로 분해된다 — 저전도 계면상 형성 · **Li 고갈 영역** · 양이온 상호확산."* (§4.6)
+- ⛔⛔ ~~*"성공적인 계면 코팅은 네 조건을 동시에 만족해야 한다 — 분해의 열역학 구동력 제거 · Li 수송경로 보존 ·
+  양이온 상호확산 차단 · 전자절연 유지."*~~ **(§4.6, 원전 [132] Guo 로 표기) — 2026-09-22 원전 확인 결과 오귀속. 인용 금지.**
+  원전 `papers/guo2025_kinetic_cathode_se_interface.md` 전문에 **`coating`·`coat` 가 0회**이고 **코팅 논의 자체가 없다.**
+  4조건은 **리뷰가 Guo 의 3기전을 뒤집어 만든 자체 종합**이고, 원문 근거가 있는 칸은 **"전자절연 유지" 하나뿐**
+  (Li₃PO₄ = *"electronically insulating but ionically conductive … could potentially passivate"*).
+  ⇒ 쓰려면 **리뷰를 인용**하거나 우리 문장으로 다시 쓰고, **Guo 는 3기전에만 붙인다**.
+- ✅ *"양극/SE 계면 임피던스는 세 운동학 기전으로 분해된다 — 저전도 계면상 형성 · **Li 고갈 영역** · 양이온 상호확산."* (§4.6)
+  → **2026-09-22 원전 확인: 이 한 건은 정확하다** (Guo 초록·Discussion 에 번호까지 달려 그대로 있다).
 - *"a-LiF 코팅에는 **약 1 nm 의 임계 두께**가 있고, 그것을 넘으면 규칙적 Li–F 사면체가 생겨 Li⁺ 수송을 막는다."*
   (§4.5, 원전 [47] Hu *AFM* 34, 2402993 (2024))
 - ⛔ **쓰지 말 것**: *"ML 이 재료발견의 중심 허브가 되었다"* 류 — 리뷰의 **자기 주장**이지 결과가 아니다.
@@ -388,6 +395,15 @@ Li₄PS₄Cl/Li₁₁PS₅Cl, `comparison_vs_ours.md` §B [Rupp])이 hull 밖이
 
 > *"이 발견들은 계면 열화의 **속도와 최종 형태**가 열역학 구동력만이 아니라 **운동학 인자에 의해 더 지배됨**을 보여준다."* (§4.3 말미, [132] 근거)
 
+> ⛔⛔ **2026-09-22 원전 확인 — 이 문장은 리뷰가 한 단계 강화한 것이다** (`papers/guo2025_kinetic_cathode_se_interface.md` §3b).
+> 원전이 실제로 말하는 것은 ***"thermodynamic predictions alone are insufficient"***(결론) /
+> *"kinetic effects that **dominate during operation**"*(초록)까지다.
+> **"속도" 를 잰 적이 없다** — `rate` 는 승온율 0.25 K fs⁻¹ 한 번뿐이고 **온도열 0 · 시간법칙 0 · Ea 0**(300 K 단일).
+> **"최종 형태" 도 없다** — `Fig. S1` 총에너지가 Li₀.₅CoO₂/Li₇P₃S₁₁ 에서 **1 ns 끝까지 감소 중**이라 **반응이 안 끝났다**.
+> ⭐ 그리고 **원전은 hull 을 3회 명시적으로 추인한다**(S_n 이 *"agrees with previous thermodynamic analysis"* ·
+> 염화물 4.2 V 안정성 *"in line with thermodynamic analysis and experiments"* · **계면 반응에너지 23/21 meV/atom 을 결론 근거로 사용**).
+> ⇒ **비판은 우리 도구의 *적용범위* 에는 전면 유효하고, *타당성* 에는 유효하지 않다.** 판정 전문은 `comparison_vs_ours.md` §J-21.
+
 ### 그 지적이 우리한테 유효한가 — 조목별
 
 | 리뷰의 지적 | 우리한테 유효한가 | 근거 / 완화 |
@@ -441,7 +457,7 @@ Li₄PS₄Cl/Li₁₁PS₅Cl, `comparison_vs_ours.md` §B [Rupp])이 hull 밖이
 | 입계에서 Li 축적 **≈20 Å** → 국부 전도 저하 | Kim [94], 13 860 원자 | ⛔ 불가 (우리는 단결정) |
 | 공극(void) 형성 @ LPSCl‖Li | Tawfik [133] | ⛔ 불가 |
 | **SEI 밴드갭 축소 → 전자누설 → 음극에서 1 nm 떨어진 SEI *내부* 에서 Li 클러스터 핵생성** | An [135], enhanced-sampling DPMD | 🟡 **갭은 낸다 · 공간분포는 못 낸다.** 우리 gap 축이 "기능" 을 얻는 지점 (§8-②) |
-| 양극/SE 임피던스 3기전 (저전도 계면상 · **Li 고갈** · 양이온 상호확산) | Guo [132], `Fig. 13i` | 🟡 1번만 부분적으로. **Li 고갈·상호확산은 0** |
+| 양극/SE 임피던스 3기전 (저전도 계면상 · **Li 고갈** · 양이온 상호확산) | Guo [132], `Fig. 13i` — ✅ **원전 digest 완료 2026-09-22**: `papers/guo2025_kinetic_cathode_se_interface.md` (MACE-MP-0·300 K·1 ns·nat 656–1320). ⛔ **원전에 임피던스 계산이 0 건**이고, 유일한 정량축(계면 D)은 **셀 혼합평균 인공물**이다 | 🟡 1번만 부분적으로. **Li 고갈·상호확산은 0** |
 
 ## 11e. 🔴 §4.6 — "원자단위 양 → 설계규칙" 번역표 (**우리가 하려던 일이 먼저 체계화돼 있다**)
 
@@ -456,7 +472,7 @@ Li₄PS₄Cl/Li₁₁PS₅Cl, `comparison_vs_ours.md` §B [Rupp])이 hull 밖이
 | **SEI 형태 4단 + 시간법칙** | **이온전도·전자절연 중간층**이 되게 설계하라, 혼합전도 계면상이 계속 두꺼워지지 않게 | [130][131] | ⛔ 없음 |
 | **전자누설 (SEI 밴드갭)** | *"SEI 의 **전자구조**를, 조성만이 아니라, 제어해야 한다"* ⇒ **갭을 넓혀** 전자누설 차단 → 음극에서 떨어진 곳의 덴드라이트 개시 차단 | [135] An | 🟡 갭은 있음 |
 | **응력·접착 (W_ad)** | MLIP steered-MD 로 정량 가능. **결정면 배향에 따라 크게 달라짐** — Cathode(100)/SSE(100) 이 우수 ⇒ **화학 수정과 독립인 설계 레버** | [140] Shin, *J. Power Sources* 653, 237670 (2025) | ⛔ 없음 (`comparison_vs_ours.md` §H 의 W_ad 빈칸) |
-| **분해 경로** (산물 + **순서·형태·이온/전자 성격**) | 코팅의 **4조건 동시 만족**: 분해 구동력 제거 · Li 경로 보존 · 양이온 상호확산 차단 · 전자절연 유지 | [132] Guo | 🟡 **산물까지만** |
+| **분해 경로** (산물 + **순서·형태·이온/전자 성격**) | ⛔ ~~코팅의 **4조건 동시 만족**~~ — **오귀속 확정(2026-09-22)**: [132] 원문에 `coating` 0회. 실제 Guo 의 것은 **임피던스 3기전**(계면반응 / Li 고갈 / 양이온 상호확산)이고 4조건은 **리뷰의 종합**이다 | [132] Guo → `papers/guo2025_kinetic_cathode_se_interface.md` | 🟡 **산물까지만** |
 
 **마무리 문장** (리뷰 §4.6 끝):
 > *"ML 은 서술도구에서 **정량 다리**로 성숙했다 — 원자단위 관측량을 실험적으로 조절 가능한 소수의 매개변수로
@@ -476,6 +492,19 @@ Li₄PS₄Cl/Li₁₁PS₅Cl, `comparison_vs_ours.md` §B [Rupp])이 hull 밖이
 | 근접도 | 무엇 | 우리 주장과 어디서 갈리나 |
 |---|---|---|
 | **1위** | **[139] Park 2026** (*Adv. Sci.* e76305) — **809 상안정 Li 화합물 × 10 산화물 양극 × 7 황화물 전해질** 의 반응에너지를 계산하고 **비지도 군집**으로 반응성 그룹 + 조성 지문(**폴리음이온 관용성 · 고정원자가 양이온**)을 뽑아 **저반응성 설계영역**을 정의 → **코팅 후보 발굴** | 🔴 **방법은 우리와 같은 층위**(hull 반응에너지 대량 스캔). 하지만 **밖에서 바르는 ex-situ 코팅**을 고른다. 우리는 **SE 안의 도펀트가 in-situ 로 상을 만든다**. 그리고 Park 은 **피복률 법칙이 없다** — 후보 목록이지 정량 모델이 아니다 |
+
+> ✅✅ **2026-09-22 — [139] Park 원문 확보·판정 완료. 위 표의 1위 행은 원문으로 확인됐고, 아래 경고 1 은 해소됐다.**
+> 정본: **`papers/park2026_ml_framework_stable_interfaces_assb.md`** (본문 그림 6/6 + SI 그림 3/5 실독) ·
+> `comparison_vs_ours.md` **§B③**(수치) + **§J-22**(방법·ML 감사).
+> **위에서 원문 없이 적은 4가지가 4/4 맞았다**: 809×10×7 ✅ · 비지도 군집 ✅ · **피복률 법칙 없음** ✅ ·
+> **ex-situ vs in-situ** ✅(그리고 더 강하다 — `in situ`/`ex situ` 가 본문·SI **0회**로 *개념 자체가 부재*).
+> **추가로 확인된 것 2가지**: ① **전압 축이 없다** — `grand`·`applied potential`·`μ_Li` **0회**, 보고는 `min_x E_reaction` **1개**
+> (우리 §B 는 grand-potential 2.5–4.5 V 6점 + 전 kink) ⇒ 우리 §B 도 선점 아님 ② **Li-분율 축이 없다** — `Li/P`·`Li content` **0회**
+> ⇒ Xiao 2019 형 축을 계면으로 확장하지 **않았다**.
+> 🟠 **단 하나 물러설 것**: Park 의 M pool 에 **란타나이드 6종**(La·Gd·Dy·Ho·Er·Lu)이 있고 선정 근거가
+> *"limited oxidation-state variability"* = **우리가 Nd 를 고른 논리와 같다**. `Fig. S1` 상위 20 에 **LiTmSiO₄**,
+> `Table S1` 에 **LiLa(WO₄)₂** ⇒ *"란타나이드+폴리음이온이 저반응성"* 을 **발견으로 쓰면 안 된다**.
+> ✅ 그래도 **Nd 는 그 pool 에 없고**, 란타나이드는 그들 **적용가능영역 p95 초과 최저신뢰 구간**이며 **최종 후보 10종에 0개**다.
 | 2위 | §4.3 의 **3분법 중 (ii) 부동태 계면** | 개념 칸은 있다. **그 칸을 도펀트로 조작한다는 처방은 없다** |
 | 3위 | §4.5 의 **a-LiF 코팅** [47] / 4.6 의 **완충층**, §4.6 의 "코팅 조성·두께" 레버 | 전부 **외부 코팅**. SE 조성 변화로 CEI 를 바꾼다는 축이 없다 |
 
@@ -484,7 +513,11 @@ Li₄PS₄Cl/Li₁₁PS₅Cl, `comparison_vs_ours.md` §B [Rupp])이 hull 밖이
 > 작동 중 제자리에 보호상을 만드는** 경로를 다루며, 피복률을 **맞춘 매개변수 없이** 예측한다."*
 
 ⚠ **단 경고 셋**:
-1. 리뷰의 침묵은 **약한 증거**다. `[139] Park 2026` **원문을 반드시 확보**해서 in-situ 사례가 없는지 확인한다 (§18).
+1. ~~리뷰의 침묵은 **약한 증거**다. `[139] Park 2026` **원문을 반드시 확보**해서 in-situ 사례가 없는지 확인한다 (§18).~~
+   ✅ **해소 2026-09-22** — 원문 확보·전수검색 완료. `in situ`/`ex situ` **0회**, 처방 전부
+   *"precursor-based synthesis, wet-chemical coating, or thin-film deposition"*, `Fig. 5` 워크플로에
+   **`M selection: Redox-inactive, Fixed-valence metal`** 이 박혀 가변원자가 도펀트를 **규칙으로 배제**한다.
+   ⇒ **in-situ 사례 없음이 원문 근거로 확정.** 정본 `papers/park2026_ml_framework_stable_interfaces_assb.md` §0b·§7a.
 2. 우리 litdb 의 `cha2024_dualcompatible_halide_ncm_lpscl_interface` 가 이미 dual-compatibility 축을 갖고 있다 —
    그쪽과의 관계를 원고에서 정리해야 한다.
 3. 리뷰가 인용하는 `[122] Wang–Zeier–You *Sci. Adv.* 2025` (= `Fig. 10` 출처) 는 **Zeier 그룹**이다.
@@ -498,7 +531,7 @@ Li₄PS₄Cl/Li₁₁PS₅Cl, `comparison_vs_ours.md` §B [Rupp])이 hull 밖이
 - [47] Hu 2024 (`Fig. 15`): a-LiF 코팅은 **~1 nm 를 넘으면 규칙 Li–F 사면체가 생겨 Li⁺ 수송을 막는다.**
   D 는 5 Å **0.056** → 20 Å **0.017** ×10⁻⁵ cm²/s (**3.3× 감소**), 사면체 수 **0 → 86**.
 - §4.5 의 다목적 원칙: *"**과도하게 두꺼운 임피던스 층을 만들지 않으면서** 전자누설을 제한한다"*
-- §4.6 의 4조건 중 2번: *"**Li 수송경로 보존**"*
+- §4.6 의 4조건(⚠ **리뷰의 종합이지 Guo 의 것이 아니다** — §11e) 중 2번: *"**Li 수송경로 보존**"*
 
 ⇒ **우리 모델은 "보호"만 세고 "대가"를 안 센다.** 원고에서 할 일 두 가지 중 하나:
   - (A) 한계로 명시한다 — *"본 모델은 피복 면적분율을 다루며 층 두께와 그에 따른 Li 수송 저하는 다루지 않는다"*
@@ -709,7 +742,7 @@ Li₄PS₄Cl/Li₁₁PS₅Cl, `comparison_vs_ours.md` §B [Rupp])이 hull 밖이
 |---|---|---|
 | **1** | **[139] S. Park, M. Jang, H. G. Jung, K. Y. Chung, S. Yu, "Machine-Learning Framework for Designing Stable Interfaces in All-Solid-State Lithium-Ion Batteries," *Adv. Sci.* (2026) e76305** | 🔴 **우리 방법의 최근접 선행연구.** 809×10×7 반응에너지 + 비지도 군집. **in-situ 사례가 정말 없는지 원문에서 확인해야 한다** (§12a) |
 | **2** | **[122] Z. Wang, W. G. Zeier, F. You, "Toward AI Ecosystems for Electrolyte and Interface Engineering in Solid-State Batteries," *Sci. Adv.* 11, aea0638 (2025)** | 🔴 `Fig. 10`(우리에게 제일 값있는 그림)의 원전. **Zeier 그룹** = 우리 축 B 대조군 계보 |
-| **3** | **[132] X. Guo, "Kinetic Analysis of Cathode-Solid Electrolyte Interface in All-Solid-State Batteries," *J. Mater. Chem. A* 13, 38919 (2025)** | 🔴 **양극/SE 임피던스 3기전 + 코팅 4조건**의 원전. 우리 CEI 논문의 반론 프레임이 여기서 나온다 |
+| ~~**3**~~ ✅ **확보·digest 완료 2026-09-22** | **[132] X. Guo, "Kinetic analysis of cathode–solid electrolyte interface in all-solid-state batteries," *J. Mater. Chem. A* **13**, 38919–38927 (2025)** → **`papers/guo2025_kinetic_cathode_se_interface.md`** | 🔴 **3기전의 원전은 맞다(✅ 리뷰 정확)**. ⛔ **코팅 4조건은 원전에 없다(오귀속)** · ⛔ **"속도와 최종 형태"도 없다(강화)** · ⭐ **원전은 hull 을 3회 추인한다** — 판정 전문 `comparison_vs_ours.md` §J-21 |
 | **4** | **[17] A. C. C. Dutra, B. A. Goldmann, M. S. Islam, J. A. Dawson, "Understanding Solid-State Battery Electrolytes Using Atomistic Modelling and Machine Learning," *Nat. Rev. Mater.* 10, 566 (2025)** | 🟠 `Table 2` 가 *"원자단위 모델링에 강함"* 으로 분류. **Islam/Dawson 그룹** — 우리 litdb 에 없다 |
 | **5** | **[47] T. Hu, L. Xu, F. Dai 외, "Impact of Amorphous LiF Coating Layers on Cathode-Electrolyte Interfaces in Solid-State Batteries," *Adv. Funct. Mater.* 34, 2402993 (2024)** | 🟠 **§12b 의 반론 원전.** LCO/**Li₆PS₅Cl** — 우리 계 그 자체. 두께-D 데이터 원본 필요 |
 | **6** | **[109] A. D. Sendek, G. Cheon, M. Pasta, E. J. Reed, "Quantifying the Search for Solid Li-Ion Electrolyte Materials by Anion: A Data-Driven Perspective," *JPC C* 124, 8067 (2020)** | 🟠 `Table 5` 황화물 행의 *"Cl/Br/I-rich 우선"* 원전. 우리 modelc 선택의 문헌 근거 |
@@ -726,7 +759,8 @@ Li₄PS₄Cl/Li₁₁PS₅Cl, `comparison_vs_ours.md` §B [Rupp])이 hull 밖이
 ## ① 우리가 당장 할 수 있는 것
 
 1. **Nd 인산염 CEI 산물의 밴드갭 판정** — 이미 있는 `sei_products` 식 절연 판정을 그대로 돌린다.
-   리뷰 §4.6 의 4조건 중 **"전자절연 유지"** 칸이 바로 채워지고, `Fig. 10` 의 CEI "전자누설" 칸도 채워진다. **비용 ~0.**
+   리뷰 §4.6 의 4조건 중 **"전자절연 유지"** 칸 — ⭐ **이 칸만은 원전 근거가 있다** (Guo Discussion: Li₃PO₄ =
+   *"electronically insulating but ionically conductive … could potentially passivate"*) — 이 바로 채워지고, `Fig. 10` 의 CEI "전자누설" 칸도 채워진다. **비용 ~0.**
 2. **보호상 두께 환산** — 생성 몰수 × 몰부피 ÷ 비표면적으로 **nm 로 바꿔** [47] 의 1 nm 임계와 대조.
    §12b 의 (B) 노선. **계산 없이 산수로 된다.**
 3. **VDOS 1회** — 리뷰의 MLIP 검증 2단이 요구하는데 우리는 0건. UMA 로 하루짜리.
@@ -748,7 +782,7 @@ Li₄PS₄Cl/Li₁₁PS₅Cl, `comparison_vs_ours.md` §B [Rupp])이 hull 밖이
 ## ③ 추가로 구해야 할 논문
 
 **1순위 3편**: [139] Park *Adv. Sci.* 2026 (최근접 선행) · [122] Wang–Zeier–You *Sci. Adv.* 2025 (`Fig. 10` 원전) ·
-[132] Guo *JMCA* 2025 (임피던스 3기전 + 코팅 4조건).
+[132] Guo *JMCA* 2025 (임피던스 3기전 — ✅ 정확 / ⛔ **코팅 4조건은 원전에 없다**, 2026-09-22 확인 → `papers/guo2025_kinetic_cathode_se_interface.md`).
 **2순위 4편**: [17] Dutra *Nat. Rev. Mater.* · [47] Hu *AFM* 2024 (LiF 두께) · [109] Sendek 2020 (Cl/Br/I 우선) ·
 [126] Ou 2024 (`ou2026…` 의 미확보 직계).
 **별건**: 공간전하 ↔ Δμ_Li 원전 — 리뷰가 ref 를 안 붙였다. 전체 목록 §18.

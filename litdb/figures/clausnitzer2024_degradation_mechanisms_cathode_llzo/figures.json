@@ -1,0 +1,352 @@
+{
+ "slug": "clausnitzer2024_degradation_mechanisms_cathode_llzo",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+  "a4da61d2-18._Sup_Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic overview of the workflow in this study. Measured discharge curves for the composite cathode sintered using conventional methods are adapted from Ref. [22]. EIS data and electrochemical discharge curves for the composite cathode sintered by FAST/SPS are adapted from Ref. [30]. Different parameter sets (HT1, HT2, LT) are used in our simulations to reproduce and interpret the experimental data. 2",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    536.3,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 732,
+   "dpi": 300,
+   "src": "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.704
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. 3D FIB-SEM reconstructions of two composite cathodes. Sample HT was manufactured at high temperatures and long dwell times [22]. Sample LT was sintered with FAST-SPS at elevated pressures and reduced sintering temperatures and dwell time [29]. Structural properties of the reconstructions are summarized in Table 1. 3",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    583.5,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 535,
+   "dpi": 300,
+   "src": "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.725
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Overview of the different simulation cases: A sharp interface corresponding to the standard simulation case, a degraded SE phase with high ionic and low electric conductivity, a degraded CAM phase with low ionic and high electric conductivity and a combined case with both a degraded SE and CAM phase. (b) Overview of the implemented resistive film model. The resistive film is described with two parameters for a degraded SE phase and three parameters for a degraded CAM phase. 4",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    464.6,
+    565.8,
+    702.1
+   ],
+   "w": 2227,
+   "h": 991,
+   "dpi": 300,
+   "src": "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.584
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Sensitivity analysis of the resistive film model considering additional ohmic contributions at the CAM/SE interface. (a) Required additional surface over­ potential to achieve specific interface currents in the 0D simulation case, considering different film resistances. (b) Influence of additional film resistance on discharge curve in a 3D simulation case using the reconstructed electrode HT at a current of 0.1 mA/cm2. (c) Impact of film resistance on normalized capacity at applied current densities of 0.1, 0.5, 1, and 2 mA/cm2 in a 3D simulation based on the reconstructed sample HT. (d) Current distribution in the SE phase of the composite cathode at t = 1s for RRF = 0.1 kΩ cm2 and RRF = 100 kΩ cm2, respectively. The separator is on the left, and the current collector is on the right of the depic­ ted structures. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    369.5,
+    565.8,
+    681.6
+   ],
+   "w": 2227,
+   "h": 1302,
+   "dpi": 300,
+   "src": "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Sensitivity analysis of the resistive film model with reduced Li-ion mobility at the CAM/SE interface. (a) Effect of film diffusivity on the concentration gradient across a 100-nm-thick film, considering an interface current of iBV = 0.01 mA/cm2 during discharge. (b) Impact of reduced Li-ion mobility on the discharge curve in a 3D simulation using the reconstructed electrode HT at a current of 0.1 mA/cm2. (c) Normalized capacity versus Li-ion diffusivity of the resistive film for current densities between 0.1 and 2 mA/cm2 in a 3D simulation based on the reconstruction of sample HT. (d) Li-ion concentration in the CAM phase after discharge for DCAM RF = 5⋅10−12 cm2/s and DCAM RF = 5⋅10−14 cm2/s, respectively. The separator is on the left, and the current collector is on the right of the depicted structures.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    354.0
+   ],
+   "w": 2227,
+   "h": 1271,
+   "dpi": 300,
+   "src": "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) Comparison between experimental data (dotted lines) and simulation results for cell operation at 100 ◦C and 25 ◦C using two models: the standard interface model (dashed lines) and resistive film model (solid lines) with parameter sets HT1 and HT2, respectively. Resistive film parameters are: lRF = 100 nm, σCAM RF = 1 S/cm, DCAM RF = 1.55⋅10−14 cm2/s at 25 ◦C. The current is 0.1 mA/cm2. (b) Influence of varying Li-ion mobility of a resistive film with a thickness of lRF = 100 nm on cell performance at 25 ◦C. Between DCAM RF = 2⋅10−13 cm2/s at 100 ◦C and DCAM RF = 1.65⋅10−14 cm2/s, diffusivity is changed with in­ crements of 0.01⋅10−14 cm2/s. (c) CAM phase lithiation state upon reaching the lower cut-off voltage, based on resistive film simulations at 100 and 25 ◦C. RF = 1.55⋅10−14 and DCAM standard interface model, we achieve good qualitative agreement with the experimental da",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    310.9
+   ],
+   "w": 2228,
+   "h": 1091,
+   "dpi": 300,
+   "src": "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.819
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) Elemental mapping for sample LT after manufacturing (uncycled) performed via SIMS. (b) Elemental mapping for sample LT after 10 cycles (cycled). Co signal is shown in red, La signal in blue, and Al signal in yellow. For each sample, three line profiles across the LLZO/LCO interface are shown, which are indicated by the white arrows in the elemental map. The count for each elemental signal is shown in relation to the total count of Co, La and Al for every pixel. Black arrows indicate the position of the interface LLZO/LCO. 9",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    420.5,
+    565.8,
+    702.1
+   ],
+   "w": 2227,
+   "h": 1174,
+   "dpi": 300,
+   "src": "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.575
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Analysis of capacity loss due to Al-LCO phase propagation. (a) Comparison of experimental capacity loss over ten cycles with the simulation assuming 100% Al-LCO phase. Values are corrected for a 16% capacity loss due to inactive particles. (b) Aligned simulated and experimental capacities over cycling. Six geometries are examined, each with different Al-LCO layer thickness, corresponding to varying Al-LCO phase fractions. Simulated capacities are adjusted for a 16% loss due to inactive particles. (c) Li-ion concentration in the CAM after discharge for increasing Al-LCO layer thickness and DLi = 6⋅10−13 cm2/s. The separator is on the left and the current collector on the right of the depicted structures. diffusion controlled growth of the Al-LCO interphase. • The rate of secondary phase formation appears to be more rapid in the initial cycles and slows down in subsequent cycles. •",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    329.9
+   ],
+   "w": 2228,
+   "h": 1170,
+   "dpi": 300,
+   "src": "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.809
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Workflow for generating the simulation input geometry from the FIB-SEM image stack, exemplified by sample LT. To enhance clarity in the figure, the separator length of the virtual cell has been reduced.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    72.9,
+    546.4,
+    309.2
+   ],
+   "w": 2002,
+   "h": 986,
+   "dpi": 300,
+   "src": "a4da61d2-18._Sup_Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.712
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Influence of a reduction in the active interface area on normalized capacity, considering varying film resistance in the 3D simulation case for the reconstructed sample HT, and an applied current density of 1 mA/cm².",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    309.2
+   ],
+   "w": 2001,
+   "h": 1015,
+   "dpi": 300,
+   "src": "a4da61d2-18._Sup_Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Measured capacity after discharge during electrochemical cycling at 80 °C.1",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    369.9,
+    534.2,
+    673.9
+   ],
+   "w": 1951,
+   "h": 1267,
+   "dpi": 300,
+   "src": "a4da61d2-18._Sup_Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Workflow to estimate the inactive LCO fraction shown for an exemplary ROI. Particles showing Co but no Al signal are interpreted as electrochemically inactive.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.1,
+    314.7
+   ],
+   "w": 2001,
+   "h": 1038,
+   "dpi": 300,
+   "src": "a4da61d2-18._Sup_Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.39
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Simulated discharge curves comparing the standard parameter set LT against a scenario with reduced electrolyte conductivity in the composite cathode. The reduction of ionic conductivity by two orders of magnitude simulates the phase transition from cubic to tetragonal LLZO due to Al diffusion. The experimental current density is 0.05 mA/cm2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.1,
+    339.5
+   ],
+   "w": 2001,
+   "h": 1140,
+   "dpi": 300,
+   "src": "a4da61d2-18._Sup_Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Characteristics of the 3D reconstructions for sample HT and LT. The recon­ structed microstructures were mirrored to achieve the experimental electrode length. Symbol Short description Unit Sample HT Sample LT lx Cathode length in x-direction μm 11 26 ly Cathode length in y-direction μm 25 35 lz Cathode length in z-direction μm 16 28 ϵCAM CAM volume fraction % 63 53 ϵSE SE volume fraction % 30 43 ϵ0 Pore volume fraction % 7 4 lx,exp Experimental electrode length μm 25 35",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    564.7,
+    748.3
+   ],
+   "w": 2219,
+   "h": 2987,
+   "dpi": 300,
+   "src": "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.856
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2 Governing equations used in BEST [37,45]. Equation Short description Transport in active material ∂cAM Li ) Mass balance Li ∇cAM ∂t = − ∇⋅( − DAM 0 = − ∇⋅iAM Charge balance Li ∇ΦAM Electric current iAM = −σAM Transport in solid electrolyte (t+ Li = 1) 0 = − ∇⋅iSE Charge balance Li ∇φSE Ionic current Interface between AM and SE iSE = − κSE",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.3
+   ],
+   "w": 2212,
+   "h": 2987,
+   "dpi": 300,
+   "src": "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 5,
+   "file": "tab_3.png",
+   "caption": "Table 3 Parameters used for the electrochemical simulations. We use three different parameter sets: HT1: Sintered conventionally and operation at 100 ◦C. HT2: Sintered conventionally and operation at 25 ◦C. LT: Sintered by FAST/SPS and operation at 80 ◦C. Functional parameters are indicated by * and are given at initial conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    564.8,
+    747.3
+   ],
+   "w": 2219,
+   "h": 2983,
+   "dpi": 300,
+   "src": "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Results of the image processing to determine inactive LCO particles from the SIMS images. The LCO fraction with and without an Al signal was determined for three ROIs after cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.7,
+    545.1,
+    727.6
+   ],
+   "w": 1993,
+   "h": 2750,
+   "dpi": 300,
+   "src": "a4da61d2-18._Sup_Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
+   "blank": 0.939
+  }
+ ]
+}
