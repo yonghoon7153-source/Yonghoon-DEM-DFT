@@ -1,0 +1,152 @@
+{
+ "delta_num_pct": 0.04,
+ "n_primary": 96,
+ "n_qc": 8,
+ "n_secondary": 0,
+ "replay": {
+  "pairs": [
+   {
+    "key": [
+     1.0,
+     0.15,
+     0
+    ],
+    "abs_log_diff": 0.0,
+    "pct": 0.0,
+    "qc_file": "arm_qc_w1_v0.15_o0.json",
+    "primary_file": "arm_w1_v0.15_o0.json"
+   },
+   {
+    "key": [
+     1.0,
+     0.15,
+     1
+    ],
+    "abs_log_diff": 0.0,
+    "pct": 0.0,
+    "qc_file": "arm_qc_w1_v0.15_o1.json",
+    "primary_file": "arm_w1_v0.15_o1.json"
+   },
+   {
+    "key": [
+     1.0,
+     0.15,
+     2
+    ],
+    "abs_log_diff": 0.0,
+    "pct": 0.0,
+    "qc_file": "arm_qc_w1_v0.15_o2.json",
+    "primary_file": "arm_w1_v0.15_o2.json"
+   },
+   {
+    "key": [
+     1.0,
+     0.15,
+     3
+    ],
+    "abs_log_diff": 0.0,
+    "pct": 0.0,
+    "qc_file": "arm_qc_w1_v0.15_o3.json",
+    "primary_file": "arm_w1_v0.15_o3.json"
+   },
+   {
+    "key": [
+     1.0,
+     0.15,
+     4
+    ],
+    "abs_log_diff": 0.0,
+    "pct": 0.0,
+    "qc_file": "arm_qc_w1_v0.15_o4.json",
+    "primary_file": "arm_w1_v0.15_o4.json"
+   },
+   {
+    "key": [
+     1.0,
+     0.15,
+     5
+    ],
+    "abs_log_diff": 0.0,
+    "pct": 0.0,
+    "qc_file": "arm_qc_w1_v0.15_o5.json",
+    "primary_file": "arm_w1_v0.15_o5.json"
+   },
+   {
+    "key": [
+     1.0,
+     0.15,
+     6
+    ],
+    "abs_log_diff": 2.2204460492503136e-16,
+    "pct": 2.220446049250313e-14,
+    "qc_file": "arm_qc_w1_v0.15_o6.json",
+    "primary_file": "arm_w1_v0.15_o6.json"
+   },
+   {
+    "key": [
+     1.0,
+     0.15,
+     7
+    ],
+    "abs_log_diff": 0.0,
+    "pct": 0.0,
+    "qc_file": "arm_qc_w1_v0.15_o7.json",
+    "primary_file": "arm_w1_v0.15_o7.json"
+   }
+  ],
+  "n_qc": 8,
+  "orphan_qc": [],
+  "duplicate_qc": [],
+  "worst_abs_log_diff": 2.2204460492503136e-16,
+  "worst_pct": 2.220446049250313e-14,
+  "qc_groups": {
+   "1/0.15": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ]
+  },
+  "passes": true
+ },
+ "order": "ORDER-ROBUST",
+ "n_comparisons": 72,
+ "worst_arm": {
+  "vox": 0.25,
+  "origin": 1,
+  "pair": [
+   3.0,
+   4.0
+  ],
+  "d": 0.7111787331427668,
+  "pct": 103.63902051365228
+ },
+ "n_violating": 0,
+ "violations": [],
+ "descriptive": {
+  "d_median": 1.2122696536288955,
+  "d_min_pct": 103.63902051365228,
+  "d_max_pct": 775.0421169525231
+ },
+ "note": "평균·SD·범위는 기술 보고 전용이고 게이트가 아니다.  판정은 **최악 팔** 하나가 정한다 (prereg §2).",
+ "provenance": {
+  "code_sha": "b6d9a2036c046d0aafc5b1e446883e6811fd5fca",
+  "code_dirty": null,
+  "dirty_scope": [
+   "scripts/"
+  ],
+  "branch": "claude/stoic-knuth-NObVQ",
+  "argv": [
+   "--dir",
+   "/home/ubuntu/runyourai/1/pa/verdict_dir_20260921",
+   "--out",
+   "/home/ubuntu/runyourai/1/pa/verdict_20260921.json"
+  ],
+  "utc": "2026-09-21T13:17:45Z",
+  "note": "이 측정을 만든 코드 상태.  `code_sha` 가 없거나 `code_dirty` 가 참이면 수치를 인용하지 말 것 (CL-75)."
+ }
+}

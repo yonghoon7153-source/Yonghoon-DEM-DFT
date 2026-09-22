@@ -1,0 +1,88 @@
+{
+ "aborted_log_note": "a0 은 22:59 payload 완주(148,016,746 B) · 같은 팔의 중복 시도가 23:26 에 죽으며 로그만 덮어씀 — 산출물이 아니라 로그의 결함",
+ "aborted_logs": [
+  "v025.p2_VGCF_PTFE_1_1_a0.21058.log"
+ ],
+ "arms": 32,
+ "bridge_um": 0.24,
+ "code_sha": null,
+ "declared_axes": [
+  "bridge_um",
+  "fibre_stamp",
+  "periodic_xy",
+  "ptfe_stamp",
+  "sdcp_stamp",
+  "sdcp_yield_to_vgcf",
+  "sigma_ptfe_S_cm",
+  "sigma_vgcf_S_cm",
+  "vox_um"
+ ],
+ "derived_from": "sh",
+ "derived_sh_dir": "/home/ubuntu/pa_sh/v025_rr",
+ "derived_sh_files": 32,
+ "derived_sh_sha256": "67fcafdc314934f1",
+ "expect_backend": "gpu",
+ "fibre_stamp": "segment",
+ "origins": [
+  [
+   0.0,
+   0.0,
+   0.0
+  ],
+  [
+   0.0,
+   0.0,
+   0.125
+  ],
+  [
+   0.0,
+   0.125,
+   0.0
+  ],
+  [
+   0.0,
+   0.125,
+   0.125
+  ],
+  [
+   0.125,
+   0.0,
+   0.0
+  ],
+  [
+   0.125,
+   0.0,
+   0.125
+  ],
+  [
+   0.125,
+   0.125,
+   0.0
+  ],
+  [
+   0.125,
+   0.125,
+   0.125
+  ]
+ ],
+ "periodic_xy": false,
+ "ptfe_block_scope": "se",
+ "ptfe_block_um": 0.0,
+ "ptfe_stamp": "centerline",
+ "receipt_digest": "4be855b5b99d",
+ "sdcp_bridge_um": 0.0,
+ "sdcp_sphere_d_um": 0.0,
+ "sdcp_stamp": "point",
+ "sdcp_yield_to_vgcf": false,
+ "sigma_ion_sdcp_S_cm": 0.001,
+ "sigma_ion_se_ref_S_cm": 0.003,
+ "sigma_ptfe_S_cm": 0.0,
+ "sigma_vgcf_S_cm": 28.2743,
+ "verified_against_logs": 31,
+ "verified_axes": [
+  "bridge_um",
+  "fibre_stamp",
+  "vox_um"
+ ],
+ "vox_um": 0.25
+}

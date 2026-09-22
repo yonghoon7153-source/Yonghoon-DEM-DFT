@@ -17,7 +17,7 @@
 
 | 축 | 상태 | 정본 |
 |---|---|---|
-| **6 mAh Phase A — VGCF 조성 순서** (현 주력) | ✅ **판정 완료 2026-09-21 = ORDER-ROBUST** (팔 104 · 72/72 · replay 0.00000 %).  한정어 셋을 떼지 말 것: (i) 등록된 estimand 는 **순서**뿐 (ii) 증분 % 는 **기술 보고 전용** (iii) QC 는 vox 0.15 · 1 wt% **한 셀**의 음성대조.  ⚠ 판정 산출물(verdict · 영수증 3 · 104팔 JSON)은 **uma 에만** 있고 리포에 없다 — 커밋 대기 (§C-2) | `docs/reviews/phase_a_6mah_order_prereg_20260907.md` · `docs/session_20260921_progress.md` |
+| **6 mAh Phase A — VGCF 조성 순서** (현 주력) | ✅ **판정 완료 2026-09-21 = ORDER-ROBUST** (팔 104 · 72/72 · replay 0.00000 %).  한정어 셋을 떼지 말 것: (i) 등록된 estimand 는 **순서**뿐 (ii) 증분 % 는 **기술 보고 전용** (iii) QC 는 vox 0.15 · 1 wt% **한 셀**의 음성대조.  ✅ 판정 산출물(verdict · 영수증 · 104팔 JSON)은 **`docs/data/phase_a_104arms_20260921/`** 에 커밋됐고 판정기 재실행이 **같은 답**을 냈다 (09-22, §C-2).  ⚠ `code_sha` 는 전 팔 null (PASL-03 — exact replay 0.00000 % 가 경험적으로 메운다) | `docs/reviews/phase_a_6mah_order_prereg_20260907.md` · `docs/session_20260921_progress.md` · `docs/data/phase_a_104arms_20260921/README.md` |
 | **Lee 2025 절대 대조 (Secondary)** | STEP2 침대 **2/2 완주** (09-22 03:26 KST, mach 0.01 · `MPM_QS_FRAMES=7500`) → 다음 = STEP3 16 팔 (vox 0.15 × origin 8 × 두 침대, `LEAN=2` · `PTFE_STAMP=centerline`) | prereg §6 · `docs/session_20260921_progress.md` |
 | **PTFE 전도격자 규약** | **`centerline` 이 본문 규약** — `off` 는 **기각된 쪽** | 원장 `CL-60`(live) · `docs/reviews/ptfe_convention_prereg_20260829.md` |
 | **LHS 수확** | **130/130 수확 완료 (09-19)** · 설계 CSV 측정 열 4/7 완전, 3/7 은 사유 등록 (`LHS-08` τ 14/130 열림) | `docs/data/area_s2_cohort.tsv` · `docs/data/lhs_design_20260818.csv` |
