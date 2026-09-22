@@ -4,7 +4,8 @@
  "maxpx": 3000,
  "generated": "2026-09-22",
  "sources": [
-  "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf"
+  "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
+  "_p8si/p8_si.docx (SI)"
  ],
  "figures": [
   {
@@ -246,6 +247,176 @@
    "dpi": 293,
    "src": "6b246279-8._Ionic_interdiffusion_at_cathodesolid-electrolyte_interface_A_machine_earning_assisted_multiscale_investigation_and_mitigation_strategies.pdf",
    "blank": 0.869
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": null,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. An illustration of the number of atoms plotted against the strain for the surface cells. The image shows that the strain was applied to the second surface (i.e., the LNTO or LGPS surface). The selected interface is shown by a red point, highlighting a 6440 atom structure with a mean absolute strain of 4.07%",
+   "w": 565,
+   "h": 659,
+   "src": "si_docx_media",
+   "si": true,
+   "mapping": "document.xml r:embed order -> caption order (manual, verified count+order)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": null,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. DFT vs DLP energies (a) and forces (b-f) for atoms at the LCO|LNTO interface, i.e., cobalt (Co), lithium (Li), niobium (Nb), oxygen (O), and tantalum (Ta).",
+   "w": 1290,
+   "h": 860,
+   "src": "si_docx_media",
+   "si": true,
+   "mapping": "document.xml r:embed order -> caption order (manual, verified count+order)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": null,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Ball and stick models of the LCO|LGPS interface. The red-blueish region represents LCO surfaces, i.e., (001),(010), and (104). The green-yellowish region represents the (100) surface of LGPS.",
+   "w": 1224,
+   "h": 912,
+   "src": "si_docx_media",
+   "si": true,
+   "mapping": "document.xml r:embed order -> caption order (manual, verified count+order)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": null,
+   "file": "fig_S4.jpg",
+   "caption": "Figure S4. (a) Snapshot of the phase variable at 3 hours (dashed) and 150 hours (solid). (b) Distribution of pressure along the LCO|LGPS domain after 3 hours and 150 hours. Note that positive pressure indicates compressive stress.",
+   "w": 982,
+   "h": 440,
+   "src": "si_docx_media",
+   "si": true,
+   "mapping": "document.xml r:embed order -> caption order (manual, verified count+order)"
+  },
+  {
+   "key": "fS5a",
+   "kind": "figure",
+   "label": "S5a",
+   "page": null,
+   "file": "fig_S5a.png",
+   "caption": "Figure S5 (a). Equilibrium plots of Temperature (K) and Potential Energy (eV) for the MLMD simulation of the (104), (010), (110) LCO | (131) LNTO interfaces, 2 ns. The potential energy stabilizes within 1 ns.",
+   "w": 1879,
+   "h": 850,
+   "src": "si_docx_media",
+   "si": true,
+   "mapping": "document.xml r:embed order -> caption order (manual, verified count+order)"
+  },
+  {
+   "key": "fS5b",
+   "kind": "figure",
+   "label": "S5b",
+   "page": null,
+   "file": "fig_S5b.png",
+   "caption": "Figure S5 (b). Progress of the MLMD simulation for the (104)LCO|(131)LNTO interface comprising 6800 atoms. No cobalt diffusion from LCO into LNTO is observed.",
+   "w": 937,
+   "h": 409,
+   "src": "si_docx_media",
+   "si": true,
+   "mapping": "document.xml r:embed order -> caption order (manual, verified count+order)"
+  },
+  {
+   "key": "fS5c",
+   "kind": "figure",
+   "label": "S5c",
+   "page": null,
+   "file": "fig_S5c.png",
+   "caption": "Figure S5 (c). Progress of the MLMD simulation for the (010)LCO|(131)LNTO interface comprising 9984 atoms. No cobalt diffusion is observed.",
+   "w": 894,
+   "h": 523,
+   "src": "si_docx_media",
+   "si": true,
+   "mapping": "document.xml r:embed order -> caption order (manual, verified count+order)"
+  },
+  {
+   "key": "fS5d",
+   "kind": "figure",
+   "label": "S5d",
+   "page": null,
+   "file": "fig_S5d.png",
+   "caption": "Figure S5 (d). Progress of the MLMD simulation for the (110)LCO|(131)LNTO interface comprising 10560 atoms. No cobalt diffusion is observed.",
+   "w": 979,
+   "h": 322,
+   "src": "si_docx_media",
+   "si": true,
+   "mapping": "document.xml r:embed order -> caption order (manual, verified count+order)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": null,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Schematic illustration of lithium substitution by cobalt in (a) LNTO, (b) LGPS. Unfavorable in LNTO (+0.144 eV); favorable in LGPS (-1.109 eV).",
+   "w": 547,
+   "h": 474,
+   "src": "si_docx_media",
+   "si": true,
+   "mapping": "document.xml r:embed order -> caption order (manual, verified count+order)"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": null,
+   "file": "fig_S7.jpg",
+   "caption": "Figure S7. Space and timestep independence of the interdiffusion model. (a) interphase thickness vs time. (b) thickness after 5.55 hours vs dx. (c) vs dt. Selected values highlighted in green.",
+   "w": 1431,
+   "h": 441,
+   "src": "si_docx_media",
+   "si": true,
+   "mapping": "document.xml r:embed order -> caption order (manual, verified count+order)"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": null,
+   "file": "fig_S8.jpg",
+   "caption": "Figure S8. (a) The LCO-cathode|LGPS-solid-electrolyte computational domain. (b) The open circuit potential of the LCO cathode, adopted from Guo et al. JES 158 (2) A122-A132 (2011).",
+   "w": 730,
+   "h": 352,
+   "src": "si_docx_media",
+   "si": true,
+   "mapping": "document.xml r:embed order -> caption order (manual, verified count+order)"
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": null,
+   "file": "fig_S9.jpg",
+   "caption": "Figure S9. Timestep independence of the performance model at 0.1C for 5000 sec. Large timestep (>25 sec) leads to numerical instability.",
+   "w": 1431,
+   "h": 438,
+   "src": "si_docx_media",
+   "si": true,
+   "mapping": "document.xml r:embed order -> caption order (manual, verified count+order)"
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": null,
+   "file": "fig_S10.jpg",
+   "caption": "Figure S10. (a-d) Hydrostatic stress within LCO cathode and electrolyte at end of discharge for (a) liquid electrolyte, (b) LGPS, (c) LLZO, (d) LGPS with LNTO layer. (e) Maximum tensile stress at the electrolyte side. LE and LGPS well below 100 MPa (minimal delamination); LLZO and LNTO/LGPS around 400 MPa or larger (delamination favorable).",
+   "w": 716,
+   "h": 903,
+   "src": "si_docx_media",
+   "si": true,
+   "mapping": "document.xml r:embed order -> caption order (manual, verified count+order)"
   }
- ]
+ ],
+ "si_note": "SI 그림은 docx word/media/* 를 document.xml 의 r:embed 등장 순서로 캡션 13개와 1:1 매핑해 복원한 것이다 (순서·개수 일치 확인). 추출 도구가 아니라 사람이 매핑했다."
 }

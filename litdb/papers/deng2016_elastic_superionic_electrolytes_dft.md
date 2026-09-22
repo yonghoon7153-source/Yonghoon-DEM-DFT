@@ -7,6 +7,17 @@
 > elements: Br Cl I La Li Na O P S Ti Zr
 > methods: dft, dos, elastic, functional, md, mlip, neb, pseudo
 
+> 🔗 **역링크 (2026-09-22 추가) — 이 논문의 수치가 *다른 축의 판정*으로 쓰이는 것을 확인했다.**
+> **[Ncube26]** (`papers/ncube2026_ionic_interdiffusion_lco_lgps_multiscale.md`) 의 SI `Table S2`·`Table S3` 가
+> **연속체 입력 `E(LGPS) = 20 GPa` 의 출처로 이 논문(ref 13)을 명시**한다 — 본 digest Table III 의
+> **LGPS E = 21.7 GPa 를 반올림**한 값이다. 그 E 로 돌린 2D 모델이 `Fig. S10e` 에서
+> **최대 인장응력 ≈50 MPa → "박리 없음"** 판정을 내고, LLZO(≈500)·LNTO/LGPS(≈400 MPa)와 갈린다.
+> 🔑 **그래서 사슬이 우리까지 끊기지 않고 온다**: 같은 Table III 의 **Li₆PS₅Cl E = 22.1 / G = 8.1** 이
+> **우리 comp1 relaxed-ion 22.06 / 8.13 과 0.2 / 0.4 % 일치**(본 digest §7의 부수 발견)이므로,
+> **우리 아지로다이트는 [Ncube26] 박리 분류의 "무른·안전" 칸에 든다**(`comparison_vs_ours.md` §C 신설행).
+> ⚠ [Ncube26] 은 자기 출처와 두 군데 어긋난다 — **ν 를 0.37(Deng) 대신 0.3 "가정"** 으로 쓰고, 21.7→20 반올림.
+> ⛔ 옮기는 것은 **분류(칸)** 뿐이고 **MPa 값은 이식 금지**다.
+
 ---
 
 ## 0. 이 digest를 읽는 법 — 존재 이유는 "Deng=SQS" 2차 귀속의 원문 검증
