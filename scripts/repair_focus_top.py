@@ -288,6 +288,43 @@ def apply_to_payload(payload, results):
     return payload
 
 
+def inspect(path, pat=None):
+    """payload 의 **스칼라 잎과 리스트 길이**를 전수로 찍는다 (구조 탐색용).
+
+    ★ 왜 — 이온 채널을 고치려면 `N_ion`(이온 도체 복셀 수)이 필요한데 옛 payload 는
+      그것을 `ion_n_dof` 로 싣지 않았다.  그러나 **상별 셀 수 원장**이 다른 이름으로
+      들어 있을 수 있다.  추측해서 키 이름을 대는 대신 **실물을 본다** (이 도구가 이미
+      두 번 이름을 잘못 대서 거짓 거부를 냈다).
+    ⚠ 읽기 전용.  아무것도 고치지 않는다."""
+    with open(path, encoding='utf-8') as fh:
+        d = json.load(fh)
+    hits = []
+
+    def walk(o, pre='', dep=0):
+        if dep > 12:
+            return
+        if isinstance(o, dict):
+            for k, v in o.items():
+                q = pre + '/' + k
+                if isinstance(v, (dict, list)):
+                    if isinstance(v, list):
+                        hits.append((q, f'list[{len(v)}]'))
+                    walk(v, q, dep + 1)
+                else:
+                    hits.append((q, v))
+        elif isinstance(o, list):
+            for i, v in enumerate(o[:2]):
+                if isinstance(v, (dict, list)):
+                    walk(v, pre + f'[{i}]', dep + 1)
+    walk(d)
+    print(f'── {path}   ({len(hits)} 잎)')
+    for q, v in hits:
+        sv = str(v)
+        if pat and pat.lower() not in q.lower() and pat.lower() not in sv.lower():
+            continue
+        print(f'   {q:<62} = {sv[:90]}')
+
+
 def _flat(path, r):
     """CSV 한 행 — 사다리를 q 별 열로 편다 (중첩 dict 는 CSV 가 못 쓴다)."""
     row = {'payload': path, **{k: v for k, v in r.items()
@@ -319,7 +356,7 @@ def _print_recovered(r):
                   f"{'정확' if d['exact'] else '상한'}")
 
 
-def run(paths, write=False, csv_out=None):
+def run(paths, write=False, csv_out=None, n_ion=None):
     rows, bad = [], 0
     for p in paths:
         try:
@@ -363,6 +400,8 @@ def run(paths, write=False, csv_out=None):
             _nd_hits = found.get(nk) or []
             if nk not in _shim and len(_nd_hits) == 1:
                 _shim[nk] = _nd_hits[0][1].get(nk)
+            if nk == 'ion_n_dof' and n_ion and not _shim.get(nk):
+                _shim[nk] = int(n_ion)          # --n-ion (출처는 호출자가 기록한다)
             res.append(repair_channel(_shim, fsk, fk, nk, payload=payload))
         for r in res:
             if not r['ok']:
@@ -560,6 +599,13 @@ def main(argv=None):
     ap.add_argument('--write', action='store_true', help='제자리 수정 (원값 보존)')
     ap.add_argument('--csv', help='결과 CSV')
     ap.add_argument('--selftest', action='store_true')
+    ap.add_argument('--inspect', action='store_true',
+                    help='payload 의 스칼라 잎·리스트 길이를 전수로 찍는다 (읽기 전용, 구조 탐색)')
+    ap.add_argument('--grep', help='--inspect 출력에서 이 문자열을 포함한 줄만')
+    ap.add_argument('--n-ion', type=int,
+                    help='이온 도체 복셀 수 N_ion 을 직접 준다 (옛 payload 에 ion_n_dof 가 '
+                         '없을 때).  ⚠ 값의 출처를 반드시 기록할 것 — 추측값을 넣으면 '
+                         'rank 가 틀린다')
     a = ap.parse_args(argv)
     if a.selftest:
         return _selftest()
@@ -571,7 +617,11 @@ def main(argv=None):
             files.append(p)
     if not files:
         ap.error('payload 를 못 찾았다')
-    return run(files, write=a.write, csv_out=a.csv)
+    if a.inspect:
+        for f in files:
+            inspect(f, a.grep)
+        return 0
+    return run(files, write=a.write, csv_out=a.csv, n_ion=a.n_ion)
 
 
 if __name__ == '__main__':
