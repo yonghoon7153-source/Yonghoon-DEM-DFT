@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md]
+sources: [raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -200,6 +200,111 @@ Li-In electrodes are **ca. 3.7 and 0.6 V** vs. Li/Li⁺".
 **"2 (2019) 524–529"** 로 정상이다 ⇒ **17호의 `[인쇄]` "414, 359 (2019)" 가 오기임이
 확인된다** (17호 digest 의 후속 후보 1 순위 서지가 정정된다).
 
+### ★★★★ `assb` 19호 (Yoshida et al. 2024) — **네 번째 형태: 기준 전위를 *소거한다*, 그리고 그 대가**
+
+`raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md`
+(*Electrochim. Acta* **497** (2024) 144523, **CC BY**, Tokyo Tech).
+★ **18호와 같은 연구실**(Ikezawa·Okajima·Arai 겹침, 감사문이 18호 제1저자 Fukunishi 에게
+기술 자문을 사례). ⚠ **이 편에는 전극이 없다** — 잰 것은 SE\|SE 계면 하나다.
+
+**① ★★★★ 4전극에서는 기준극의 절대 전위가 상쇄된다.**
+측정·제어되는 것은 `[인쇄]` **RE₂(오른쪽) − RE₁(왼쪽)** 이고, 두 RE 는 **같은 재료
+(R-LTO 메시)** 이며 **계면 양쪽 펠릿의 중앙면에 매립**된다.
+`[인쇄]` Fig. S1 캡션이 세 배선을 나란히 놓는다:
+
+| 배선 | 측정량에 들어오는 것 |
+|---|---|
+| **4전극** | **계면 구간만** — `[인쇄]` "**without the polarization of the two counter electrodes**" |
+| **3전극** | 계면 + **작업전극 분극** |
+| **2전극** | 계면 + **상대극 분극 + 작업전극 분극** |
+
+⇒ **`assum*` 0 회, "1.55" 0 회.** 18호의 G4("Assuming that the potential of the R-LTO
+reference electrode is 1.55 V")가 **여기서는 생기지 않는다.**
+`[해석]` **계보의 다섯 번째 형태다**: 안 쟀다(4호) → 설치하고 미검증(16호) → 실측(17호)
+→ **가정을 제3물질로 옮김**(18호) → **차분으로 소거**(19호).
+
+**② ★★★ 대가 — 새 바닥은 "기준극 쌍의 불일치" 이고 그 숫자가 처음 인쇄된다.**
+`[인쇄]` 세 셀의 RE–RE 개방회로 전압 **−4 / −5 / +25 mV**, 그리고
+> `[인쇄]` "These potentials are **within the reproducibility of the reference electrode
+> potentials (ca. ±30 mV)**, indicating **no difference in the activity of Li-ion in these
+> solid electrolytes that this measurement system can detect**."
+
+⇒ 한 문장에 셋: **기준극 쌍 재현성 = ca. ±30 mV** · **그것이 검출 하한** ·
+**황화물 3 종(LGPS·LPSI·LPSCl) 사이에 검출 가능한 Li⁺ 활동도 차가 없다.**
+⚠ **±30 mV 의 근거가 지면에 없다** — 데이터도 인용도 없다. ref [18](Ikezawa 2020)에
+있어야 한다(→ 처방 **P6**).
+★ **비교**: 열역학 평탄 폭 ①의 상한이 17호에서 **±10 mV** 였는데, **19호의 기준극
+재현성이 ±30 mV 라서 이 측정계로는 ① 을 볼 수 없다.**
+
+**③ ★★ R-LTO 의 조성이 처음 인쇄된다**: `[인쇄]` **Li₇Ti₅O₁₂ : Li₄Ti₅O₁₂ = 67 : 33 mol%**
+(상용 Li₄Ti₅O₁₂ 를 리튬 나프탈레나이드/THF 로 화학 환원).
+⇒ **2 상 혼합의 한복판** ⇒ **평탄 전위가 성립할 구조적 근거**가 생긴다.
+**18호의 "부분환원(화학량론 불명)" 공백이 절반 메워진다.** ⚠ 절대값(1.55 V)의 근거는
+여전히 없다 — 다만 **이 편은 그것을 필요로 하지 않는다.**
+
+**④ ★★★★ 그런데 Li-In 상대극이 평탄하지 않은 모습으로 찍힌다.**
+> `[인쇄]` "The potential change in the counter electrode is **not linear**, and the
+> voltammogram of the counter electrode is **asymmetric**, especially in the case of the
+> LGPS | LPSCl cell. This result shows that **the polarization of the counter electrode
+> affects the voltammogram** … measured with the **two-electrode system**."
+
+`[도표]` Fig. S4 (CV 1 사이클 = 200 s, ±50 mV @ 1.0 mV s⁻¹):
+
+| 셀 | `E_CE` 진폭 | 전류 범위 | `[재현]` `ΔE/ΔI` | 같은 셀 `R₂`(계면) |
+|---|---:|---:|---:|---:|
+| LPSI \| LPSCl | **≈42 mV** | +0.49 … −0.46 mA | **≈44 Ω** | 21.5 Ω |
+| LGPS \| LPSI | **≈126 mV** | +0.26 … −0.215 | **≈221 Ω** | 12 Ω |
+| LGPS \| LPSCl | **≈75 mV** | +0.20 … −0.70 | **≈83 Ω** | 29.3 Ω |
+
+★★★★ **상대극 가지가 관심 신호보다 2–18 배 크다.** 이것이 **"4전극이 3전극보다 무엇을
+더 재는가" 의 정량 답**이다.
+★ **비선형의 실체**: `[도표]` LGPS\|LPSCl 에서 `E_CE` 의 극값이 **t ≈ 23 s · 124 s** 인데
+CV 반전은 **50 s · 150 s** — **27 초 앞서고, 하강 구간이 상승 구간의 1/4** 이다.
+★★ **그리고 이것은 고갈이 아니라 가역 분극이다**: `[재현]` CV 반주기 통과 전하가
+Li 재고의 **0.39 %**, `E_CE` 가 200 s 뒤 출발값으로 복귀.
+⚠ `[재현]` **(a)의 42 mV 는 CE–RE 옴 강하(≈`R₁`/2 ≈ 42 Ω)와 구별되지 않는다.**
+(c)의 221 Ω 은 `R₁/2 ≈ 104 Ω` 의 2 배라 **절반은 옴이 아니다.**
+
+**⑤ ★★★★ 경계 조건에서 (ㄷ)만 깬 첫 표본.**
+조성은 `[인쇄]` **Li : In = 25 : 75 at%** — 17호(40) · 18호(37.7→40.0)와 **다른 세 번째 값**.
+
+| | 17호 (foil·CA) | 18호 | **19호** |
+|---|---|---|---|
+| (1) 2 상역 안 | 40 at% | 37.7 → 40.0 | **25 at%** ✅ |
+| (5) 재고 / 이동 전하 | ≈5 배 ❌ | 9.5 배 ✅ | **≈260 배** ✅✅ |
+| (6) 전류밀도 | ≈16 mA cm⁻² ❌ | 0.054 ✅ | **0.41 – 1.07** ❌ |
+| **관측 `ΔE_CE`** | **+680 … +780 mV**(지속) | **≈0** | **42 – 126 mV**(가역) |
+
+⇒ ★★★★ `[해석]` **재고 여유가 충분하면 전류밀도를 20 배 올려도 이동은 10⁻¹ V 에 못
+미친다. 17호의 0.7 V 는 전류밀도가 아니라 고갈(5)의 산물이다.**
+⚠⚠ **네 편을 가로지르는 추론이고 통제 실험이 아니다** — SE·압력·조성·제조법이 전부
+다르다. 그리고 **19호의 이동은 가역 분극, 17호의 것은 지속 이동이라 같은 양이 아니다.**
+검증은 처방 **P7**.
+
+**⑥ ★★ 절대값 교차 확인** (`[재현]`, **가정 위**): 18호의 1.55 V 를 빌리면
+`E_CE` ≈ −0.95 V ⇒ **Li-In ≈ 0.60 V vs Li/Li⁺ @ 25 at%**.
+17호(0.61 @ 40 at%) · 18호(≈0.60 @ 37.7–40 at%)와 **일치** ⇒ **2 상 평탄이 25–40 at%
+전 구간에서 같은 값**이라는 교차 확인.
+⚠⚠ **1.55 V 는 이 편에 없는 값이다. 이 줄은 인용 근거가 아니다.**
+
+**⑦ ⚠⚠ 기준극 검증의 범주 오류가 두 번째로 반복된다.**
+18호는 **K–K 잔차**로 기준극 안정성을 주장했다. 19호는
+`[인쇄]` "These semicircles do **not show the AC amplitude dependence** (Fig. 3(a)),
+suggesting that the semicircles are **not derived from artifacts related to the RE**"
+라고 한다. ⇒ **진폭 비의존성은 선형성을 보지 기원을 보지 않는다** — 기하학적 수축이나
+프로브 결합 같은 **선형 artifact 는 정의상 진폭 무관**이다.
+⇒ `[해석]` **같은 그룹, 같은 구조의 추론이 두 번.** 올바른 검사는 **기준극의 위치·개수·
+재료를 바꿔 스펙트럼 불변을 보는 것**이고, 두 편 다 하지 않는다 (→ 처방 **P8**).
+
+**⑧ ★★★ 그리고 Li-In 의 산포가 임피던스 축에서 숫자가 된다.**
+`[인쇄]` "**poor reproducibility of the InLi impedance**".
+`[도표]` Fig. S5(3전극으로 Li-In 전극만 잰 것): **39 / 172 / 54 Ω — 4.4 배 (n = 3)**,
+같은 공칭 조성(25 at%)의 같은 공정 박이다.
+⇒ **17호가 `E_CE` 축에서 준 0.61 ↔ 1.35 V(제조법 차)의 임피던스 축 대응물.**
+★★ 그리고 `[인쇄]` **그 반원이 P1(>1 kHz)과 P2(1 kHz–0.1 Hz) 둘 다와 겹쳐**
+"**P1 and P2 are difficult to extract from the impedance measured with the two-electrode
+system**" ⇒ [[drt-peak-count-nonidentifiability]] 계보의 네 번째 층.
+
 ## ★★ 평탄이 유지되는 조건 (현재까지의 정리)
 
 > **Li-In 기준 전위가 ±10 mV 안에서 평탄한 것은 다음 넷이 동시에 성립할 때뿐이다.**
@@ -232,7 +337,9 @@ Li-In electrodes are **ca. 3.7 and 0.6 V** vs. Li/Li⁺".
 | **P4** | **Li 박 방향 뒤집기** (분리막 쪽 ↔ 집전체 쪽) + 3전극 | ③(국소 고갈)의 기원이 **제조**인지 **방전**인지 가른다. 17호 `[인쇄]` Sedlmeier(ref 21)가 시도했다 |
 | **P5** | **`E_CE(P)`** — 같은 셀에서 압력 스윕 | 0 편. 16호와 17호의 음극 임피던스가 **한 자릿수 다른** 이유의 후보 |
 | **P6** ★ (2026-09-22, 18호에서) | **제 3 물질 기준극의 전위를 같은 셀에서 Li 금속 대비 실측** | 18호가 보인 **탈출로**(Li-In 을 기준에서 빼기)가 성립하려면 R-LTO 의 **1.55 V 가정**이 실측이어야 한다. 현재 근거는 **인용 2 건 + 순환 논증**(가정한 값으로 얻은 두 평탄값이 문헌과 맞는다 ⇒ 가정이 맞다) |
-| **P7** ★ | **재고비 · 전류밀도를 각각 독립으로 스윕** | 위 (1)–(6) 중 **무엇이 평탄을 지키는가**. 17호 ↔ 18호는 축이 전부 같이 움직인 두 표본이다 |
+| **P7** ★ | **재고비 · 전류밀도를 각각 독립으로 스윕** | 위 (1)–(6) 중 **무엇이 평탄을 지키는가**. 17 ↔ 18 ↔ 19호는 축이 전부 같이 움직인 세 표본이다. ★ 19호가 **(6)만 깬 점**을 주어 **재고비 축이 지배적이라는 가설**이 생겼다 — 그것을 가르는 실험이 P7 |
+| **P8** ★★ (2026-09-22, 19호에서) | **기준극의 위치·개수·재료를 바꿔 스펙트럼·전위가 불변인지** | ★ **같은 그룹이 기준극 검증에 범주 오류를 두 번 썼다**: 18호 **K–K 잔차**(스펙트럼의 선형·인과·정상성 ≠ RE 의 DC 전위), 19호 **진폭 비의존성**(선형성 ≠ 기원 — 선형 artifact 는 진폭 무관). **올바른 검사는 섭동이고, 네 편 중 아무도 안 했다** |
+| **P9** ★ (2026-09-22, 19호에서) | **4전극 배선을 전극 셀로 옮기기** — RE 를 양극 쪽·음극 쪽에 하나씩 | 19호가 보인 소거는 **SE\|SE** 계면에서만 실증됐다. 완전지에서 **양극 RE ↔ 음극 RE** 차분을 쓰면 **상대극 분극을 구조적으로 제거**할 수 있는가. ⚠ 전극 셀에서는 RE 가 전류 경로를 막는 문제가 더 크다 |
 
 ## ★ 16호 ↔ 17호 대질 — 같은 "In 박 음극" 인데 반대다 (`[해석]`, 미검증)
 
@@ -261,6 +368,11 @@ Li-poor 인데도 잘 작동하는 것은 LiIn 이 **필요한 자리**에 생�
   (Li 금속은 14호가 `[인쇄]` "potential can reasonably be assumed to remain constant"
   라고 쓰고, 그 가정의 상수항 검토가 없다 — 다른 페이지의 일.)
 - **`n = 1` 이다.** 17호는 조건당 셀 1 개, 오차막대 0, `n =` 0 회.
+- ★ **2026-09-22 (19호)**: **`Li-In ≈ 0.60 V @ 25 at%` 를 이 편의 측정으로 쓰지 않는다** —
+  1.55 V 는 **18호에서 빌려온 가정**이고 19호에는 없는 값이다.
+  **`ca. ±30 mV` 도 검증된 값으로 쓰지 않는다** — 근거가 지면에 없다.
+  그리고 **19호의 42–126 mV 는 가역 분극**이라 17호의 **지속 이동**과 같은 축의 같은
+  양이 아니다. 주장하는 것은 **"(6)만 깨면 10⁻²–10⁻¹ V 대에 머문다"** 까지다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻. 이 페이지는 그 카드의 **Q5** 와 "아직 모르는 것 2"

@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research, eis]
-sources: [raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md]
+sources: [raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -223,6 +223,59 @@ affects the low-frequency behavior" 라고 적는다.
 
 ⚠ **두 편 다 이 함의를 "규칙이 없다" 로 일반화하지 않는다** — 16호는 자기 셀에 그
 반원이 없다는 관찰로, 18호는 있다는 관찰로 끝낸다.
+
+## ★★★★ 다섯 번째 경보 — **상대극이 전 대역에 걸쳐 있다, 그리고 저자가 그렇게 인쇄한다** (2026-09-22, `assb` 19호)
+
+`raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md`
+(Yoshida, Ikezawa, Okajima, Arai, *Electrochim. Acta* **497** (2024) 144523, **CC BY**;
+18호와 같은 연구실). ⚠ **이 편은 DRT 를 쓰지 않는다**(`DRT`·`Kramers`·`regulariz*`
+**0 회**) — 등가회로만 쓴다. 그런데 이 페이지에 들어오는 이유가 있다.
+
+19호는 **Li-In 상대극 자신의 임피던스를 3전극으로 따로 잰다**(Fig. S5: WE = 왼쪽 Li-In,
+RE = 왼쪽 R-LTO, CE = 오른쪽 Li-In). 결과:
+
+> `[인쇄]` "the Li-In electrode showed semicircles in the frequency ranges **overlapping
+> with P1 (above ca. 1 kHz) and P2 (ca. 1 kHz to 0.1 Hz)**."
+> `[인쇄]` "the impedance spectra of the Li-In electrodes … **does not match well, showing
+> poor reproducibility of the InLi impedance**."
+> `[인쇄]` "These results show that **P1 and P2 are difficult to extract from the impedance
+> measured with the two-electrode system with InLi counter electrodes**."
+
+`[도표]` **같은 공칭 Li-In 박(Li : In = 25 : 75 at%)의 전극 저항이 39 / 172 / 54 Ω —
+4.4 배 (n = 3).**
+
+★★★★ **이것이 계보의 다섯 번째이자 가장 아래 층이다.**
+
+| 층 | 편 | 무엇이 흔들리는가 |
+|---|---|---|
+| 1 | 10호 Vadhva | 역변환이 **ill-posed**, 귀속이 **화학의 함수** |
+| 2 | 11호 Yu | 봉우리 **이름표가 상태·배선·조작**으로 (−15 … +69 %) |
+| 3 | 16호 Ramanayagam | 전극별 DRT 의 **합이 완전지 DRT 가 아니다** |
+| 4 | 18호 Fukunishi | **양극 미세구조**(단결정 ↔ 다결정)가 "저주파 = 음극" 을 깬다 |
+| **5** | **19호 Yoshida** | ★ **음극 자체가 1 MHz – 0.1 Hz 전 대역에 걸쳐 있다** |
+
+⇒ ★★★ `[해석]` **4 층과 충돌이 아니라 보강이고 한 층 아래다** — 18호는 "양극을 바꾸면
+저주파가 바뀐다" 고 했고, 19호는 "**양극을 바꿔도 음극은 그대로 거기 있다**" 고 말한다.
+⇒ **주파수만으로 성분을 전극에 배정하는 모든 절차는, 같은 셀 안에서 배선으로
+검증되기 전까지 가설이다.**
+
+★★★★ **그리고 19호는 해법이 알고리즘이 아니라 배선임을 보인다.**
+`[인쇄]` Fig. S1 이 셋을 나란히 놓는다: **4전극 = 계면 구간만** · **3전극 = + 작업전극
+분극** · **2전극 = + 상대극 분극**. `[재현]` 그 대가의 크기: **상대극 가지의
+`ΔE/ΔI` 가 44 / 221 / 83 Ω 로 같은 셀 계면 저항(21.5 / 12 / 29.3 Ω)의 2–18 배**다.
+⇒ **분해가 어려운 것이 아니라, 2전극에서는 분해할 정보가 애초에 섞여 들어온다.**
+
+⚠⚠ **다만 19호 자신의 성분 귀속도 같은 병을 앓는다.**
+- **`P3`** 는 `[인쇄]` "we **deduce** … the ion transport at the **crack**" 으로만
+  정체가 붙는다 — 근거는 **시상수 위치**와 **셀마다 크기가 다르다**는 것뿐이고,
+  균열의 직접 관찰은 **0**(`crack` 본문 1 회). `[도표]` 그 크기가 **4.8 Ω ↔ ≈35 Ω (7 배)**
+  로 흔들리고 **`P2` 바로 옆 주파수**에 있는데, **`P2` 적합의 `P3` 민감도 검사가 0** 이다.
+- **`P1`** 의 꼭짓점이 `[재현]` **측정 상한(7 MHz) 밖**이다(Table 2 의 특성 주파수
+  2.4×10⁷ · 9.4×10⁶ Hz — 인쇄값은 지수 부호가 틀렸다) ⇒ **`R₁` 은 외삽값**이고,
+  `[도표]` 한 셀은 원호 208 Ω 중 **26 %** 만 측정됐다.
+- 그리고 **"RE artifact 가 아니다" 의 근거가 진폭 비의존성**이다 —
+  **선형성을 보지 기원을 보지 않는다**(18호의 K–K 잔차와 같은 구조).
+  ⇒ **체크리스트 C2 에 "K–K 를 돌렸나" 뿐 아니라 "무엇을 주장하는 데 썼나" 를 같이 본다.**
 
 ## 이 위키에서의 적용
 

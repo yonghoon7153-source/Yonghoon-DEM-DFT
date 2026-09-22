@@ -1,0 +1,352 @@
+{
+ "slug": "yoshida2024_four-electrode-assb-cell-li-transport",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "b89ee050-18._An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+  "889c03b9-18._Sup_An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) A schematic of the electrochemical all-solid-state four-electrode cell and images of (b) the R-LTO reference electrode, (c) the Ni-mesh current collector masked with tapes, and (d) the four-electrode cell sealed in the air tight container filled with Ar gas. ASS-LIBs, since such metal reference electrodes are not reversible to ions but electrons. On the other hand, we have recently developed a mesh-shaped Li7Ti5O12 | Li4Ti5O12 (R-LTO) reference electrode, which is reversible to Li-ion, and applied it to electrochemical measurements, including AC impedance measurements, with all-solid-state three-elec­ trode cells [18-20].",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    494.6
+   ],
+   "w": 2228,
+   "h": 1856,
+   "dpi": 300,
+   "src": "b89ee050-18._An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.772
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Cyclic voltammograms of (a) the LPSI | LPSCl cell, (b) the LGPS | LPSI cell, and (c) the LGPS | LPSCl cell at 1.0 mV sec–1 and 25◦C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.4,
+    49.4,
+    533.1,
+    433.4
+   ],
+   "w": 1946,
+   "h": 1601,
+   "dpi": 300,
+   "src": "b89ee050-18._An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.976
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Nyquist plots of (a) the LPSI | LPSCl cell, (b) the LGPS | LPSI cell, and (c) the LGPS | LPSCl cell at 25◦C and (d) the equivalent circuit used for the curve fittings.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    567.9,
+    468.3
+   ],
+   "w": 2236,
+   "h": 1747,
+   "dpi": 300,
+   "src": "b89ee050-18._An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a,c) R1 and (b,d) R2 plotted against (a,b) the inverse of the cross-sectional area of the cell (S) and (c,d) the distance between the REs (d). pressurized with 280 MPa for 1 min using a hydraulic press. An interface between two solid electrolytes was formed by stacking two solid elec­ trolyte pellets in a poly(ethylene terephthalate) tube. Li-In foils were put on the outer sides of the stacked pellet as the counter electrodes. Finally, the cell was pressurized with ca. 420 kPa using a torque wrench and sealed in a plastic container filled with Ar gas (Fig. 1(d)). show similar ionic conductivities and activation energies to previously reported ones (LPSI: 1.35 × 10–3 S cm–1, 28.8 kJ mol–1 [22], LPSCl: 7.4 × 10–4–4.73 × 10–3 S cm–1, 11–34 kJ mol–1) [25,26]. On the other hand, LGPS shows similar ionic conductivity but relatively high activation energy compared to the previous repor",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    409.9
+   ],
+   "w": 2228,
+   "h": 1502,
+   "dpi": 300,
+   "src": "b89ee050-18._An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Arrhenius plots of R1 and R2 measured with (a) the LPSI | LPSCl cell, (b) the LGPS | LPSI cell, and (c) the LGPS | LPSCl cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    78.5,
+    49.4,
+    521.0,
+    421.7
+   ],
+   "w": 1845,
+   "h": 1553,
+   "dpi": 300,
+   "src": "b89ee050-18._An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. A schematic of the Li-ion transport processes at the SE1 | SE2 interface. (i) ion transport in the interphase between SEs, (ii) ion transport at SE1|inter­ phase interface, and (iii) ion transport at SE2|interphase interface. 3.3. AC impedance measurement Fig. 3 shows the Nyquist plots of the LPSI | LPSCl, LGPS | LPSI, and LGPS | LPSCl cells at 298 K. All the cells show two semicircles at similar frequency regions. The specific frequencies of the semicircles at higher (P1) and lower (P2) frequency regions are > 1 MHz and ca. 5 Hz, respectively. These semicircles do not show the AC amplitude depen­ dence (Fig. 3 (a)), suggesting that the semicircles are not derived from artifacts related to the RE but from the Li-ion transport between the REs. Table 2 shows fitting parameters obtained by the curve fittings with an equivalent circuit shown in Fig. 3 (d). The values of apparent capa",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    463.0,
+    297.0,
+    565.9
+   ],
+   "w": 1107,
+   "h": 430,
+   "dpi": 300,
+   "src": "b89ee050-18._An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.77
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Nyquist plots at 25◦C measured with the (a) LPSCl and (b) LPSCl | LPSCl cells. (c) Arrhenius plots of R1 and R2 measured with the LPSCl | LPSCl cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.6,
+    49.4,
+    563.3,
+    241.3
+   ],
+   "w": 2208,
+   "h": 801,
+   "dpi": 300,
+   "src": "b89ee050-18._An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. (a) Nyquist plot of the LPSI | LPSCl cell at 25◦C pressurized at ca. 560 kPa and 840 kPa. (b) R1 and R2 of the LPSI | LPSCl cell at 25 ◦C plotted against applied pressure. Arrhenius plots of R1 and R2 measured with the LPSI | LPSCl cell at 25◦C pressurized at ca. (c) 560 and (d) 840 kPa. impedance measured with the two-electrode system with InLi counter electrodes. assign the resistance components, the cross-sectional area of the SE pellet and the distance between the REs were changed. Fig. 4(a) and (b) show the resistance values plotted against the inverse of the cross- sectional area. R1 and R2 increase roughly in proportion to the inverse of the cross-sectional area, which shows that it is reasonable to assign P1 The Li-ion transport between REs can be roughly classified into two processes: Li-ion transport within solid electrolyte pellets and Li-ion transport at the interface",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    273.6,
+    566.0,
+    642.9
+   ],
+   "w": 2228,
+   "h": 1540,
+   "dpi": 300,
+   "src": "b89ee050-18._An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Schematics of the electrochemical (a) four-, (b) three-, and (c) two-electrode cells. The",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    77.6,
+    550.3,
+    558.0
+   ],
+   "w": 2093,
+   "h": 2002,
+   "dpi": 300,
+   "src": "889c03b9-18._Sup_An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.696
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. A schematic of the electrochemical two-electrode cell to measure the ionic conductivity of solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.8,
+    292.3,
+    563.0,
+    571.2
+   ],
+   "w": 2101,
+   "h": 1163,
+   "dpi": 300,
+   "src": "889c03b9-18._Sup_An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. X-ray diffraction patterns of (a) synthesized LGPS, (b) commercial LPSCl, and (c)",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    116.0,
+    550.3,
+    681.5
+   ],
+   "w": 2093,
+   "h": 2357,
+   "dpi": 300,
+   "src": "889c03b9-18._Sup_An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. (a, c, e) Potentials of the Li-In counter electrodes in the left sides of the solid electrolytes",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    86.8,
+    550.3,
+    606.6
+   ],
+   "w": 2093,
+   "h": 2167,
+   "dpi": 300,
+   "src": "889c03b9-18._Sup_An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Nyquist plots of the LPSI | LPSCl cell at (a) 25 °C, (b) 15 °C, (c) 5 °C and (d) –5 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    78.9,
+    529.8,
+    524.3
+   ],
+   "w": 2008,
+   "h": 1857,
+   "dpi": 300,
+   "src": "889c03b9-18._Sup_An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Nyquist plots of the LGPS | LPSI cell at (a) 25 °C, (b) 15 °C, (c) 5 °C and (d) –5 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.9,
+    79.8,
+    537.2,
+    523.6
+   ],
+   "w": 1990,
+   "h": 1850,
+   "dpi": 300,
+   "src": "889c03b9-18._Sup_An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Nyquist plots of the LGPS | LPSCl cell at (a) 25 °C, (b) 15 °C, (c) 5 °C and (d) –5 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    57.5,
+    74.7,
+    540.8,
+    510.7
+   ],
+   "w": 2015,
+   "h": 1817,
+   "dpi": 300,
+   "src": "889c03b9-18._Sup_An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 Ionic conductivity and activation energy of the solid electrolytes. Solid electrolyte Ionic conductivity/mS cm–1 Activation energy/kJ mol–1 LGPS 7.1 37 ± 2 LPSI 2.1 29.8 ± 0.3 LPSCl 1.8 40.5 ± 0.3",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    745.6
+   ],
+   "w": 2212,
+   "h": 2976,
+   "dpi": 300,
+   "src": "b89ee050-18._An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2 Parameters obtained by the impedance curve fittings of (a) the LGPS | LPSI cell, (b) the LPSI | LPSCl cell, and (c) the LGPS | LPSCl cell. (a) Resistance / Ω CPE constant / F sp–1 CPE index (p) Capacitance / F Specific frequency / Hz Time constant / s P1 208 3.1 × 10–8 0.71 2.3 × 10–10 3.3 × 106 4.8 × 10–8 P2 12 1.4 × 10–2 0.57 3.8 × 10–3 3.4 × 100 4.6 × 10–2 (b) Resistance / Ω CPE constant / F sp–1 CPE index (p) Capacitance / F Specific frequency / Hz Time constant / s P1 84.5 1.8 × 10–7 0.59 7.8 × 10–11 2.4 × 10–7 6.6 × 10–9 P2 21.5 6.0 × 10–3 0.61 1.7 × 10–3 4.5 × 100 3.6 × 10–2 (c) Resistance / Ω CPE constant / F sp–1 CPE index (p) Capacitance / F Specific frequency / Hz Time constant / s P1 149 2.5 × 10–8 0.70 1.2 × 10–10 9.1 × 10–6 1.7 × 10–8 P2 29.3 6.3 × 10–3 0.55 1.6 × 10–3 3.4 × 100 4.6 × 10–2 P3 4.8 1.8 × 10–6 0.96 1.0 × 10–6 3.2 × 10–4 4.9 × 10–6",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    747.0
+   ],
+   "w": 2212,
+   "h": 2982,
+   "dpi": 300,
+   "src": "b89ee050-18._An_all-solid-state_electrochemical_four-electrode_cell_Application_to_Li-ion_transport_between_two_sulfide_solid_electrolytes.pdf",
+   "blank": 0.937
+  }
+ ]
+}
