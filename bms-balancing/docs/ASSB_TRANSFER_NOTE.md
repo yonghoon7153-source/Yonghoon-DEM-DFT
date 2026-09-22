@@ -128,9 +128,9 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 | 06 | **Lee 외 2020** — Ag–C 무음극 (**Samsung SAIT**, Nature Energy `10.1038/s41560-020-0575-z`) · 본문 10p `3452770465c31f45` · SI 18p `120d136d99668016` | **Q7** | ⏸ 수령·대기 |
 | 07 | **Spencer-Jolly 외** — Structural changes in the Ag–C composite anode interlayer (**Joule** vol. 7) · 본문 13p `a59c7405b40a1f42` · SI 6p `28eddf6139c1b529` | Q7 | ⏸ 수령·대기 |
 | 08 | From state estimation to active intelligence (**Frontiers in Chemistry**, `10.3389/fchem.2026.1960882`, Mini Review, 2026-09-15 게재) · 12p `a54b551671eea230` | Q3·Q4 | ✅ **흡수 완료** (`c90b7f67`) — 칸 0 추가. 실익은 **원 논문 후보 5편**(→ 31~35) 과 **종설 숫자가 우리 원전과 어긋난 실측**(Su 2024) |
-| 09 | **Huo 외** — Characterization of cathode degradation + **결합 전기화학-노화 모델** (sulfide ASSB, *JPS*) · 11p `9f2496907f7e65a0` · SI(.docx) `cee297a20e00d37e` | **Q2 · 전압축** | ▶ **처리 중** (2026-09-22) · **권장 1순위** |
+| 09 | **Huo 외** — Characterization of cathode degradation + **결합 전기화학-노화 모델** (sulfide ASSB, *JPS*) · 11p `9f2496907f7e65a0` · SI(.docx) `cee297a20e00d37e` | **Q2 · 전압축** | ✅ **흡수 완료** (`dfc1fc78`) — **누적 ≈7.0 → ≈7.5 칸** (Q6 반 칸 + Q3 새 층위 `fitted-single-parameter`). **Q1·Q4 는 여전히 0** 이나 **Q4 의 성질이 세 번째로 바뀌었다**(지문이 자기 표 안에 있다). 새 개념 페이지 `assb-lampe-contact-product-degeneracy`. 후속 후보 1·2·3 순위 → **36·37·38** |
 
-| 10 | **Vadhva·Hu·Johnson·Stocker 외** — EIS for ASSB: Theory, Methods and Future Outlook · 18p `537a508716afd2b3` | **Q2 독립 관측** | ⏸ 수령·대기 |
+| 10 | **Vadhva·Hu·Johnson·Stocker 외** — EIS for ASSB: Theory, Methods and Future Outlook · 18p `537a508716afd2b3` | **Q2 독립 관측** → ★ **Q4 재조준** | ▶ **처리 중** (2026-09-22). 9호가 남긴 질문(하나의 원호에서 두 시상수)에 답하는지가 1순위 |
 | 11 | Sadegh Kouhestani 외 — PHM of Solid-State Batteries (*Energies* 2022) · 26p `912b3d1df0233ba4` | Q3·Q4 | ⏸ 수령·대기 |
 | 12 | Zheng 외 — ASSB for the grid: A realistic appraisal · 10p `496f3b4580a81b9b` | Q3·Q4 | ⏸ 수령·대기 |
 | 13 | **Maxwell Protocol for Non-Destructive Health Diagnosis** (*Angew. Chem. Int. Ed.* 2025, 64, e202514910, **Hot Paper**) · 본문 9p `fa35a5cdd5d3fcec` · **SI(.docx)** `ce0b9a35c96ef99c` | Q3·Q4 · **OCV 경쟁 접근** | ⏸ 수령·대기 |
@@ -262,6 +262,50 @@ batteries: a comprehensive review", *Adv. Energy Mater.* 14, 2303539,
 `10.1002/aenm.202303539`** 는 아직 없다. ⚠ 그것도 Review 이므로 32 번과 겹친다 —
 **32 번을 읽은 뒤에 필요한지 다시 판단**하는 게 맞다. 그 밖 미수령 후보는 6-3-b.
 
+### 6-3-e. 추가 수령분 36~37 (2026-09-22) — **9호(Huo 2025)가 낳은 둘, 그리고 둘 다 1·2 순위였다**
+
+09 번 digest 가 뽑은 후속 후보 1·2 순위를 사용자가 **그날 바로** 올렸다. 8호가 낳은
+31~35 와 달리 이 둘은 **9호가 자기 본문에서 위임하거나 기각한 논문**이므로 성격이 다르다 —
+**재인용 지도가 아니라 원전 추적**이다.
+
+| # | 논문 | 종류·쪽 | sha256(앞 32) | 겨냥 |
+|---|---|---|---|---|
+| **36** | **Li, Fan, Zhang(교신), Han, Wang, Liu, Jia, Guo, Zhu, He** — Modeling of an all-solid-state battery with a **composite positive electrode** (*eTransportation* **20** (2024) 100315, Elsevier) | **Article** 15p **+ SI(.docx)** | 본문 `abab37041fc1f1982a6100150b8fabdd` / SI `20f8d0c333ef7fe8ff35fd12ff4dc06e` | ★★★ **9호가 모델·PSO·해법·`A_eff` 정의를 전부 위임한 곳.** 같은 연구실·같은 셀 계열 (9호 저자 8/10 중복). 9호 digest 의 공백 G1(OCP 출처)·G2(provenance)·G4(PSO 설정)의 답이 여기 있을 가능성이 가장 높다 |
+| **37** | **Conforto, Ruess, Schröder, Trevisanello, Fantin, Richter, Janek** — Editors' Choice: **Quantification** of the Impact of Chemo-Mechanical Degradation on the Performance and Cycling Stability of NCM-Based Cathodes in Solid-State Li-Ion Batteries (*J. Electrochem. Soc.* **168** (2021) 070546, **OPEN ACCESS**) | **Article** 12p | `256d89b805dd0d52f15858e65256f6f3` | ★★★ **Q1 을 깰 1 순위.** 9호가 `[인쇄]` "정량한 몇 안 되는 문헌" 으로 지목하고 `[인쇄]` "the error … is relatively large" 로 **기각한다** — 그 오차의 크기를 우리가 직접 봐야 한다. 방법이 **relaxed OCP + EIS-PSD** 라 **우리 축(OCV 기반)과 직결**. Janek 그룹(22 번 Koerver 2017 과 같은 계보) |
+
+**★ 36 번의 SI 는 텍스트가 1,136 자뿐이고 실체는 그림이다.** `zipfile` 로 열면
+`word/media/image1.png`(★ **Supplementary note 1: SEM image of NCM811**) +
+`image2~5.wmf`(수식 4 개)다. **텍스트만 긁으면 SI 의 유일한 데이터를 놓친다** —
+`word/media/image1.png` 를 꺼내 **직접 봐야 한다**. (09 번 SI 는 제출 체크리스트라
+내용이 없었지만 **36 번 SI 는 내용이 있다** — 반대 경우다.)
+
+⚠ **36 번에 산업체 공저자가 있다** (Minghui He, *Shanghai Firm-lithium New Energy
+Technology Co., Ltd.*) — 비공개 파라미터의 사유가 여기일 수 있다. 9호가 6 개 값을
+`[인쇄]` "not disclosed" 한 것과 같은 계열인지 확인할 자리다.
+
+| **38** | **Yu(교신), Choi, Dunham, Ghahremani, Liu, Lindemann, Garver, Barchiesi, Farahati, Kim(교신)** — **Time-resolved** impedance spectroscopy analysis of aging in sulfide-based ASSB full-cells using **distribution of relaxation times** (*J. Power Sources* **597** (2024) 234116) | **Article** 8p **+ SI(.docx)** | 본문 `407b42abfe5275791998a7acf9b1a8f6` / SI `fd7ffdc06ebd5280d17a7c203083248d` | ★★★ **9호 §5.1 의 "하나의 원호에서 두 시상수" 를 가르는 도구.** 9호가 자기 논거("접촉 손실이 심했다면 EIS 변화가 더 컸을 것")의 근거로 **두 번 인용**한다. **8호(Li 2026)의 DRT 처방**과 **10호(Vadhva 2021, EIS 방법론)** 와 **한 자리에서 만난다** |
+
+**★ 38 번 SI 는 내용이 있다** — 텍스트 7,739 자 + `word/media/image1~5.png` **5 장**.
+36 번과 같은 방식(`zipfile` → `word/document.xml` + `word/media/`)으로 둘 다 꺼내야 한다.
+
+⚠ **38 번도 산업체 주도다** (Schaeffler Transmission Systems LLC + Ohio State).
+36 번(Shanghai Firm-lithium)에 이어 둘이므로, **비공개 파라미터의 사유가 산업 소속인지**
+두 편을 대조해 볼 수 있다.
+
+**★★ 9호가 낳은 후속 후보 1·2·3 순위가 전부 도착했다 (36·37·38).** 세 편이 각각
+9호의 다른 구멍을 겨냥한다 — 36 = 모델·PSO·`A_eff` 정의의 원전(공백 G1·G2·G4) ·
+37 = Q1 정량(relaxed OCP + EIS-PSD, 9호가 기각한 오차의 크기) ·
+38 = §5.1 EIS 축퇴를 가르는 도구(DRT).
+
+**왜 이 셋을 순서 규칙의 예외로 볼 여지가 있는가 (판단은 사용자)**: 31~35 는 8호의
+**재인용 지도**여서 늦게 읽어도 손실이 없다. 그러나 36·37·38 은 **이미 흡수한 9호의
+공백을 직접 메우는 원전**이고, 특히 36 번은 9호 digest 가 **12 개 공백(G1~G12)의
+답이 여기 있을 것**이라고 적어 둔 곳이다. 9호의 기억이 살아 있는 동안 읽는 것이
+싸다. 그리고 **38 번은 10 번(Vadhva EIS 방법론)과 짝으로 읽는 것이 가장 싸다** —
+10 번이 지금 처리 중이므로 이 짝은 **시간이 지나면 값이 떨어진다**.
+**그래도 6-4 의 순서 규칙(먹인 순서)이 지문·편의보다 위이므로 꼬리에 붙였다** —
+당길지는 사용자가 정한다.
+
 ### 6-3-c. ⚠ 30 번의 보충 데이터 ZIP — **30 번 에이전트에게 반드시 넘길 것**
 
 사용자 기계 `C:\Users\Administrator\Downloads\30. Sup) …zip` (82 MB, **이중 압축** —
@@ -355,11 +399,12 @@ E   = E_p - E_n    # 셀 전압
 03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12
    → 13 → 14 → 15 → 16 → 17 → 18 → 19 → 20 → 21 → 22 → 23 → 24
    → 25 → 26 → 27 → 28 → 29 → 30
-   → 31 → 32 → 33 → 34 → 35          ← 2026-09-22 추가 (6-3-d)
+   → 31 → 32 → 33 → 34 → 35          ← 2026-09-22 추가 (6-3-d, 8호가 낳은 다섯)
+   → 36 → 37 → 38                    ← 2026-09-22 추가 (6-3-e, 9호가 낳은 셋)
 ```
 
 **재배열하지 않는다.** 아래 6-4-a 는 내가 한때 권한 재배열인데 **채택되지 않았다** —
-근거로만 남긴다. **33 편 × ~20 분 ≈ 11 시간**이고 순차로만 돈다(lint 훅이 전체 위키를
+근거로만 남긴다. **36 편 × ~20 분 ≈ 12 시간**이고 순차로만 돈다(lint 훅이 전체 위키를
 보므로 병렬 불가). 한 편이 끝날 때마다 **lint 0 errors 확인 → 커밋 → 다음 편 착수**.
 
 > 31~35 도 **먹인 순서 그대로 꼬리에 붙인다.** 6-3-d 의 지문은 35·34 가 앞서고
