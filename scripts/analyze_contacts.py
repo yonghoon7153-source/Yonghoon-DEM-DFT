@@ -16,6 +16,7 @@ from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(__file__))
 from dem_analysis_core import run_full_analysis
+import type_map_resolve as _tmr
 
 
 def load_atoms_raw(csv_path):
@@ -164,6 +165,22 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
     rows = []
     for t, name in type_map.items():
         ids = [aid for aid, a in atoms_raw.items() if a['type'] == t]
+        if not ids:
+            # ★ 덤프에 0개인 타입 = P:S 10:0 의 AM_S 처럼 **설계상** 비는 상이다.
+            #   옛 판은 여기서 `np.min(빈 배열)` 로 죽었다 (2026-09-22 실사고,
+            #   케이스 260922_092001_0853b1).  퇴화 케이스는 죽는 것이 아니라
+            #   `—` 다 — 위 124행 particle_info 루프가 이미 `if not sub: continue`
+            #   로 같은 규약을 쓰고 있었고 이 루프만 빠져 있었다.
+            #   ⚠ 이 관용이 안전한 **유일한** 이유는 main() 이 계산 **전에**
+            #     type_map ↔ 덤프를 대조해 *틀린* map 을 거부하기 때문이다.
+            #     그 게이트 없이 관용만 넣으면 틀린 map 이 조용히 통과한다
+            #     (실제로 그 크래시가 false-green 을 우연히 막고 있었다).
+            rows.append({
+                '입자유형': name, '입자수': 0,
+                '배위수_mean': '—', '배위수_std': '—',
+                '배위수_min': '—', '배위수_max': '—',
+            })
+            continue
         vals = np.array([coord.get(aid, 0) for aid in ids])
         rows.append({
             '입자유형': name, '입자수': len(ids),
@@ -811,6 +828,27 @@ def main():
 
     atoms_raw, df_atom = load_atoms_raw(args.atoms_csv)
     print(f"  {len(atoms_raw)} atoms")
+
+    # ★★ fail-closed 게이트 (2026-09-22).  **계산 전에** type_map 을 덤프와 대조한다.
+    #   실사고: ps_sweep 덱은 3:SE 인데 map 이 `1:AM_P,2:SE` 로 들어와 원자의
+    #   99.75 % 가 상(phase) 없이 `?` 가 됐다.  그런데도 파이프라인은 40분을 돌며
+    #   porosity·CN·파괴지수를 **그럴듯하게** 다 뽑았고, 마지막 CSV 쓰기에서
+    #   빈 배열에 걸려 **우연히** 터졌다.  ⇒ 그 크래시가 false-green 을 막고
+    #   있었을 뿐이다 (CLAUDE.md 규율 ⑤).  이제 몇 초 만에 거부한다.
+    _dump = _tmr.types_from_pairs(
+        (a['type'], a.get('radius')) for a in atoms_raw.values())
+    _errs, _notes = _tmr.validate(type_map, _dump)
+    for _n in _notes:
+        print('  ' + _n)
+    if _errs:
+        print()
+        for _e in _errs:
+            print(_e, file=sys.stderr)
+        print('   ⇒ 덱의 `particletemplate/sphere … atom_type N … radius constant '
+              '${r_XXX}` 줄이 정답을 말한다.  확인:', file=sys.stderr)
+        print('     python3 scripts/type_map_resolve.py --deck <in.*.liggghts> '
+              '--atoms <atom_*.liggghts>', file=sys.stderr)
+        return 2
     contacts_raw, df_contact = load_contacts_raw(args.contacts_csv)
     print(f"  {len(contacts_raw)} contacts")
 
@@ -821,7 +859,8 @@ def main():
     save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
                  type_map, args.scale, args.output)
     print("Done!")
+    return 0
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())

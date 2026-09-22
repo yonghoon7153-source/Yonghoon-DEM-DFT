@@ -35,6 +35,7 @@ except ImportError:                                # gunicorn 은 webapp/ 안에
 #   타지 않아 못 잡았다.  아래 R-PD1 회귀가 실제로 그 함수를 호출한다.
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'scripts'))
 import press_units as _press_units                 # noqa: E402  (압력 단위 규약 — F-11)
+import type_map_resolve as _type_map_resolve      # noqa: E402  (atom-type ↔ 상 매핑 — 덱이 선언한 것을 읽는다)
 
 #: network_conductivity.json → full_metrics.json 으로 옮기는 σ 키들.
 #: ⚠ 이 목록은 원래 analyze() **지역 변수**였는데 run_pipeline 이 그것을 참조해
@@ -5486,12 +5487,46 @@ def upload():
     if mode == 'auto':
         mode = detect_mode(case_dir)
 
-    # Default type maps
+    # ── type_map ────────────────────────────────────────────────────────────
+    # ★★ 2026-09-22 (케이스 260922_092001_0853b1).  옛 판은 standard 모드에서
+    #   `f'1:{am_type_name},2:SE'` 로 **SE 를 type 2 에 박아** 있었다.  덤프를 열어
+    #   반지름까지 읽어 놓고 type 1 만 보고 AM_P/AM_S 를 정한 뒤, SE 는 확인조차
+    #   안 했다 — 정보를 손에 쥐고 버린 것이다.
+    #   `ps_sweep` 세대 덱은 `create_box 3` 에 **1:AM_P · 2:AM_S · 3:SE** 라
+    #   P:S=10:0 을 올리면 SE(type 3, 원자의 **99.75 %**)가 아무 상에도 안 붙어
+    #   `?` 가 되고, 그 상태로 40분을 돌아 마지막 CSV 에서 터졌다.
+    #   ⇒ 이제 **덱이 선언한 것을 읽는다**.  덱은 매번 같이 업로드되고 그 안의
+    #     `particletemplate/sphere … atom_type N … radius constant ${r_SE}` 가
+    #     타입↔상을 글자로 적어 놓았다 — 추정이 아니라 선언이다.
+    #   ⚠ 업로드는 **fail-open** 이다 (덱 없이 올릴 수도 있고, 여기서 막으면
+    #     올리지도 못한다).  틀린 map 을 실제로 막는 fail-closed 게이트는
+    #     `analyze_contacts.py` 에 있다 — 거기서 계산 **전에** 거부한다.
+    _tm_resolved, _tm_notes = '', []
+    _tm_deck = _tm_dump = None
+    for f in sorted(os.listdir(case_dir)):
+        if not f.endswith('.liggghts'):
+            continue
+        if f.startswith('atom'):
+            _tm_dump = _tm_dump or os.path.join(case_dir, f)
+        elif not f.startswith('contact') and _tm_deck is None:
+            _tm_deck = os.path.join(case_dir, f)
+    if _tm_deck and _tm_dump:
+        try:
+            _m, _n, _e = _type_map_resolve.resolve_from_files(_tm_deck, _tm_dump)
+            _tm_notes = list(_n) + list(_e)
+            if _m and not _e:
+                _tm_resolved = _type_map_resolve.format_map(_m)
+        except Exception as _exc:                         # noqa: BLE001
+            _tm_notes = [f'type_map 자동판독 실패 ({_exc}) — 기존 규칙으로 되돌린다']
+
     if not type_map:
-        if mode == 'bimodal':
+        if _tm_resolved:
+            type_map = _tm_resolved
+        elif mode == 'bimodal':
             type_map = '1:AM_P,2:AM_S,3:SE'
         else:
-            # Standard: detect AM_P vs AM_S from radius in atom file
+            # 되돌림 경로 — 덱을 못 읽었을 때만.  ⚠ 기존 코퍼스(170여 케이스)의
+            # 상 라벨이 이 반지름 규칙에 걸려 있으므로 **그대로** 둔다.
             am_type_name = 'AM_S'  # default: small AM
             for f in sorted(os.listdir(case_dir)):
                 if f.startswith('atom') and f.endswith('.liggghts'):
@@ -5519,12 +5554,20 @@ def upload():
                                         continue
                     break
             type_map = f'1:{am_type_name},2:SE'
+            _tm_notes.append('⚠ 덱을 못 읽어 반지름 규칙으로 되돌렸다 — '
+                             '세 타입 덱이면 이 값이 틀릴 수 있다')
+    elif _tm_resolved and type_map.strip() != _tm_resolved:
+        # 사용자가 직접 적은 값이 이긴다 (의도적인 경우가 있다).  다만 **기록**한다.
+        _tm_notes.append(f'⚠ 사용자 입력 type_map({type_map.strip()}) 과 '
+                         f'덱 판독({_tm_resolved})이 다르다')
 
     meta = {
         'name': case_name or case_id,
         'created': datetime.now().isoformat(),
         'mode': mode,
         'type_map': type_map,
+        'type_map_resolved': _tm_resolved,      # 덱에서 읽은 값 (빈 문자열 = 판독 실패)
+        'type_map_notes': _tm_notes,            # 판독 근거·경고 (UI/로그에서 볼 수 있게)
         'ps_ratio': ps_ratio,
         'scale': int(scale),
         'files': filenames,
