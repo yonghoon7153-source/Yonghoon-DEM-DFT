@@ -222,6 +222,146 @@ def hops_per_ion_msd(y, d_hop=D_HOP_A):
     return (max(y) / d_hop ** 2) if y else None
 
 
+#: ── He 2018 오차식 + 로그정규 + 블록 부트스트랩 (2026-09-22, 회신 BT) ───────────
+#:
+#: ⛔⛔ **이 절의 존재 이유는 "He 식을 쓰자" 가 아니라 "He 식만 쓰지 말자" 다.**
+#:   회신 BS §6 에서 내가 **적합 창끝 MSD 를 궤적 전체 공식에 넣어** N_eff 를 8 배
+#:   과소평가했고(BT 에서 철회), 그 과정에서 세 가지가 드러났다:
+#:     ① He 식은 **lag 창을 제한한 적합에 대해 검증된 적이 없다** — 궤적이 길어지면
+#:        정밀도가 좋아지는데 식에 그게 안 들어간다.
+#:     ② He 코드의 `absolute_sigma=True` 는 **적합 잔차를 전혀 안 본다** — 점이 선에서
+#:        2.5σ 벗어나도 ± 가 안 커진다(그들 `Fig. S5a` 실측).
+#:     ③ D 의 표본분포는 **정규가 아니라 오른쪽 치우침**이다(그들 `Fig. S2` 실독).
+#:   ⇒ **런 내부 오차의 정본은 블록 부트스트랩**이고 He 식은 **귀무모형**이다.
+HE2018_A_RSD = 3.43          # RSD = A/√N_eff + B  (He 2018 식 9)
+HE2018_B_RSD = 0.04          #   ⚠ B 는 Fig. 4a (N_eff ≤ 265) 적합의 **외삽**이다 —
+                             #      그 논문에 RSD < 0.10 인 실측이 하나도 없다.
+RSD_SYMMETRIC_MAX = 0.30     # 이보다 크면 대칭 ± 를 **출력하지 않는다** (아래 참조)
+
+
+def he2018_neff(n_li, msd_max_a2, a=D_HOP_A):
+    """He 2018 식 (8): `N_eff = n_Li · max(MSD) / a²`.
+
+    ⛔⛔ **`max(MSD)` 는 궤적 전체 최대다 — 적합 창끝 값이 아니다.** 회신 BT 에서
+    내가 정확히 그 둘을 헷갈렸다. `msd.json` 은 2026-09-22 부터 두 값을
+    `msd_max_A2` / `msd_at_fit_window_end_A2` 로 **따로** 적는다.
+    """
+    if not n_li or msd_max_a2 is None or msd_max_a2 <= 0:
+        return None
+    return float(n_li) * float(msd_max_a2) / float(a) ** 2
+
+
+def he2018_rsd(n_eff):
+    """He 2018 식 (9). ⛔ **귀무모형이다** — 런 내부 오차의 정본이 아니다(위 주석)."""
+    if not n_eff or n_eff <= 0:
+        return None
+    return HE2018_A_RSD / math.sqrt(n_eff) + HE2018_B_RSD
+
+
+def lognormal_from_rsd(rsd):
+    """RSD → 로그정규 파라미터. → dict(s, lo68, hi68, median_over_mean) (평균=1 단위).
+
+    왜 로그정규인가: `he2018` `Fig. S2` 실독에서 D 표본분포가 **오른쪽으로 치우쳐**
+    있었다(우/좌 꼬리 비 1.86 / 1.38, N_eff 커지면 감소, 최빈/평균이 예측과 정합).
+    ⚠ **증명은 아니다** — 논문이 표본 수도 왜도도 안 준다. **방향은 확정, 분포형은
+    '정합' 까지**다. 그래서 이 값은 **부트스트랩이 없을 때의 대용**이고, 있으면 그쪽이 이긴다.
+
+    ⛔ 이 함수가 **못 하는 것**: 실제 분포가 감마·와이블이면 꼬리가 다르다. 구간을
+    '정확' 하다고 읽지 마라 — **대칭 ± 보다 낫다** 까지다.
+    """
+    if not rsd or rsd <= 0:
+        return None
+    s = math.sqrt(math.log(1.0 + rsd ** 2))        # shape
+    mu = -0.5 * s ** 2                              # 평균 1 이 되게
+    return {"s": s,
+            "lo68": math.exp(mu - s), "hi68": math.exp(mu + s),
+            "median_over_mean": math.exp(mu)}
+
+
+def block_bootstrap_D(msd_per_origin, t_ps, lo, hi, block, n_boot=400, seed=0):
+    """시간원점 **블록** 부트스트랩으로 런 내부 σ(D) 를 **실측**한다.
+
+    `msd_per_origin` = (n_origin, n_lag) 배열 — 원점마다의 MSD(τ) 곡선.
+    원점을 길이 `block` 의 **연속 덩이**로 잘라 복원추출하고, 덩이 평균 곡선을
+    창 [lo, hi] 에서 다시 적합해 D 분포를 만든다.
+
+    왜 블록인가: 이웃 원점은 **상관**돼 있다. 낱개로 뽑으면 상관을 무시해 σ 를
+    과소평가한다. 덩이로 뽑으면 덩이 안 상관이 보존된다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · **`block` 을 스스로 못 정한다.** 상관시간에 걸리므로 **궤적을 보고** 정해야
+        한다 — 회신 BT 에서 *"결과 전에 못 박는 항목"* 으로 명시했다. 호출자가 준다.
+      · 분포형을 가정하지 않는 대신 **원점 수가 적으면 그대로 흔들린다.**
+      · 시드 간(구조) 산포는 안 잰다 — 그건 시드 5 개의 IQR 이다. **직교하는 양**이다.
+    """
+    import numpy as _np
+    A = _np.asarray(msd_per_origin, float)
+    if A.ndim != 2 or A.shape[0] < 2:
+        return None
+    t = _np.asarray(t_ps, float)
+    m = (t >= lo) & (t <= hi)
+    if m.sum() < 3:
+        return None
+    n_o = A.shape[0]
+    block = max(1, min(int(block), n_o))
+    n_blk = int(math.ceil(n_o / block))
+    starts = _np.arange(0, n_o, block)
+    rng = _np.random.default_rng(seed)
+    Ds = []
+    for _ in range(int(n_boot)):
+        pick = rng.integers(0, len(starts), size=n_blk)
+        idx = _np.concatenate([_np.arange(starts[k], min(starts[k] + block, n_o))
+                               for k in pick])[:n_o]
+        curve = A[idx].mean(axis=0)
+        sl = _np.polyfit(t[m], curve[m], 1)[0]
+        Ds.append(sl / 6.0 * 1e-4)
+    Ds = _np.asarray(Ds, float)
+    mean = float(Ds.mean())
+    return {"sigma_D": float(Ds.std(ddof=1)),
+            "rsd": float(Ds.std(ddof=1) / abs(mean)) if mean else None,
+            "lo68": float(_np.percentile(Ds, 15.865)),
+            "hi68": float(_np.percentile(Ds, 84.135)),
+            "median_over_mean": float(_np.median(Ds) / mean) if mean else None,
+            "n_boot": int(n_boot), "block": block, "n_origin": n_o}
+
+
+def rsd_report(rec, block=None, boot=None):
+    """한 런의 오차 열들을 만든다. → dict
+
+    ⛔⛔ **RSD > RSD_SYMMETRIC_MAX 이면 대칭 `±` 를 내지 않는다.**
+      회신 BT 검산: 평균=1 단위에서 대칭 2σ 가 RSD 0.5 에서 `[0.000, 2.000]`,
+      0.9 에서 **`[−0.800, 2.800]` = 음수**가 된다. 확산계수에 음수 구간을 찍는 것은
+      틀린 정도가 아니라 **말이 안 된다.** 그 구간은 로그정규/부트스트랩으로만 낸다.
+    """
+    n_li = rec.get("n_Li")
+    msd_max = rec.get("msd_max_A2")
+    if msd_max is None:                      # 2026-09-22 이전 기록 — 배열에서 되살린다
+        y = rec.get("msd_Li_A2") or []
+        msd_max = max(y) if y else None
+    a = rec.get("site_distance_A", D_HOP_A)
+    neff = he2018_neff(n_li, msd_max, a)
+    rsd = he2018_rsd(neff)
+    out = {"n_Li": n_li, "msd_max_A2": msd_max, "site_distance_A": a,
+           "n_eff_he2018": neff, "rsd_he2018": rsd,
+           "rsd_he2018_note": "귀무모형. ⛔ lag 창을 제한한 적합에 대해 **미검증**"
+                              " (회신 BT §6-e). 런 내부 오차의 정본은 부트스트랩이다."}
+    if rsd:
+        ln = lognormal_from_rsd(rsd)
+        out.update({"s_lognorm": ln["s"], "D_lo68_rel": ln["lo68"],
+                    "D_hi68_rel": ln["hi68"], "median_over_mean": ln["median_over_mean"]})
+        out["symmetric_pm_allowed"] = bool(rsd <= RSD_SYMMETRIC_MAX)
+        if rsd > RSD_SYMMETRIC_MAX:
+            out["symmetric_pm_blocked_why"] = (
+                f"RSD {rsd:.3f} > {RSD_SYMMETRIC_MAX} — 대칭 ± 는 2σ 에서 음수로 간다. "
+                "비대칭 구간(로그정규 또는 부트스트랩)만 쓴다.")
+    out["sigma_boot"] = boot if boot else None
+    if boot is None:
+        out["sigma_boot_why"] = (
+            "원점별 MSD 곡선이 없어 **못 구했다** (구했는데 0 이 아니다). "
+            "`--from_traj` 로 궤적을 주면 잰다. block 은 상관시간에 걸리므로 호출자가 준다.")
+    return out
+
+
 def run_verdict(t, y, beta=None, windows=DINC_WINDOWS):
     """한 런의 판정. → (code, 사유들)  code ∈ {no_value, hold, citable}
 
@@ -2085,6 +2225,56 @@ def selftest():
         (tdp / "aimd_results.json").write_text(json.dumps({"save_fs": 50.0}))
         v, a, src = resolve_save_fs(mj, 20.0)
         chk((v, a) == (20.0, False), "[음성] 호출자 지정이 sidecar 를 이긴다")
+    # ── 런 내부 오차 (2026-09-22, 회신 BT) — **음성 경로가 본체다** ────────────
+    #   회신 BS §6 에서 내가 창끝 MSD 를 궤적 전체 공식에 넣어 N_eff 를 8 배
+    #   과소평가했다. 코드는 그 계산을 한 적이 없지만, 여기서 같은 실수를 하면
+    #   이번엔 **숫자가 실제로 나간다.**
+    chk(abs(he2018_neff(48, 24.0) - 128.0) < 1e-9,
+        "N_eff = n_Li·max(MSD)/a² (48·24/9 = 128)")
+    chk(he2018_neff(48, None) is None and he2018_neff(48, 0.0) is None
+        and he2018_neff(0, 24.0) is None,
+        "[음성] N_eff: max(MSD) 가 None/0 이거나 n_Li 가 0 이면 **None** (0 이 아니다)")
+    chk(abs(he2018_rsd(128) - (3.43 / 128 ** 0.5 + 0.04)) < 1e-12,
+        "RSD = 3.43/√N_eff + 0.04 (He 식 9)")
+    chk(he2018_rsd(0) is None and he2018_rsd(None) is None,
+        "[음성] RSD: N_eff 가 0/None 이면 None (0 으로 나누지 않는다)")
+    _ln = lognormal_from_rsd(0.30)
+    chk(_ln and _ln["lo68"] < 1.0 < _ln["hi68"] and _ln["median_over_mean"] < 1.0,
+        "로그정규: 구간이 평균 1 을 감싸고 **중앙값 < 평균** (오른쪽 치우침)")
+    chk(lognormal_from_rsd(0.90)["lo68"] > 0.0,
+        "[음성] RSD 0.9 에서도 하한이 **양수** — 대칭 2σ 는 여기서 음수가 된다")
+    # ⛔음성(핵심): RSD > 0.30 이면 대칭 ± 를 **막는다**
+    _hi = rsd_report({"n_Li": 48, "msd_max_A2": 24.0})          # RSD ≈ 0.343
+    _lo = rsd_report({"n_Li": 48, "msd_max_A2": 400.0})         # RSD ≈ 0.10
+    chk(_hi["symmetric_pm_allowed"] is False and "why" in " ".join(_hi.keys()),
+        "[음성] **RSD > 0.30 이면 대칭 ± 를 막고 이유를 적는다**")
+    chk(_lo["symmetric_pm_allowed"] is True,
+        "[음성] RSD 가 작으면 막지 않는다 — 정상까지 막으면 도구가 안 쓰인다")
+    chk(_hi["sigma_boot"] is None and "못 구했다" in _hi.get("sigma_boot_why", ""),
+        "[음성] 부트스트랩이 없으면 **'못 구했다'** 를 적는다 (0 이 아니다)")
+    chk("미검증" in _hi.get("rsd_he2018_note", ""),
+        "[음성] He 식 열에 **'lag 창 제한 적합에 미검증'** 단서가 붙는다")
+    # ⛔음성: 옛 기록(msd_max_A2 없음)은 배열에서 되살린다
+    _old = rsd_report({"n_Li": 48, "msd_Li_A2": [0.0, 5.0, 24.0, 11.0]})
+    chk(_old["msd_max_A2"] == 24.0 and abs(_old["n_eff_he2018"] - 128.0) < 1e-9,
+        "[음성] 2026-09-22 이전 기록도 msd 배열에서 max 를 되살린다")
+    # ── 블록 부트스트랩 ────────────────────────────────────────────────
+    import numpy as _np
+    _rng = _np.random.default_rng(0)
+    _t = _np.arange(0, 60.0, 1.0)
+    _A = _np.array([2.0 * _t * (1 + 0.05 * _rng.standard_normal()) for _ in range(40)])
+    _b = block_bootstrap_D(_A, _t, 2.0, 50.0, block=4, n_boot=120, seed=1)
+    chk(_b and _b["sigma_D"] > 0 and _b["lo68"] < _b["hi68"],
+        "부트스트랩: σ_D > 0 이고 구간이 정렬돼 있다")
+    chk(_b["block"] == 4 and _b["n_origin"] == 40,
+        "[음성] block·n_origin 을 **기록한다** (재현 못 하면 숫자가 아니다)")
+    chk(block_bootstrap_D(_A[:1], _t, 2.0, 50.0, block=4) is None,
+        "[음성] 원점이 1 개면 None — 부트스트랩을 흉내내지 않는다")
+    chk(block_bootstrap_D(_A, _t, 200.0, 300.0, block=4) is None,
+        "[음성] 창에 점이 3 개 미만이면 None")
+    _b1 = block_bootstrap_D(_A, _t, 2.0, 50.0, block=1, n_boot=120, seed=1)
+    chk(_b1 and _b1["sigma_D"] > 0,
+        "[음성] block=1 도 돈다 (낱개 추출 — 상관을 무시하므로 σ 가 작게 나온다)")
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
 
@@ -2124,6 +2314,16 @@ def main():
                          "MACE-MP-0 의 LGPS 골격이 1050 K 부터 인위적으로 녹는 걸 잡았고, "
                          "우리 아레니우스 상한 1000 K 가 그 바로 아래다. 골격이 녹으면 "
                          "Li 의 'D' 는 확산이 아니라 구조 붕괴다.")
+    # ── 런 내부 오차 (2026-09-22, 회신 BT) ─────────────────────────────────
+    ap.add_argument("--rsd", action="store_true",
+                    help="런별 **오차 열**을 낸다 — N_eff · He 2018 RSD(귀무모형) · "
+                         "로그정규 비대칭 구간 · median/mean. ⛔ RSD > 0.30 이면 대칭 ± 를 "
+                         "**출력하지 않는다**(2σ 가 음수로 간다). ⚠ He 식은 lag 창을 제한한 "
+                         "적합에 대해 **검증되지 않았다**(회신 BT §6-e) — 정본은 부트스트랩이다.")
+    ap.add_argument("--rsd_block", type=int, default=None, metavar="N",
+                    help="--rsd 와 함께: 시간원점 **블록 부트스트랩**의 블록 길이(원점 개수). "
+                         "⛔ **기본값을 두지 않는다** — 상관시간에 걸리므로 궤적을 보고 사람이 "
+                         "정해야 한다(회신 BT: '결과 전에 못 박는 항목'). 안 주면 He 식만 낸다.")
     ap.add_argument("--haven", action="store_true",
                     help="궤적에서 **Haven 비 H_R = D*/D_σ 를 직접 잰다** (MD 재계산 0). "
                          "우리는 σ 를 H_R=1 로 환산해 왔고 그걸 '상한' 이라고 적어 왔는데 "
@@ -2207,6 +2407,45 @@ def main():
 
     LBL = _label_map(files)
 
+
+    # ── 런 내부 오차 (2026-09-22, 회신 BT) ──────────────────────────────
+    if a.rsd:
+        print(f"런 내부 오차  (창 {lo}–{hi} ps)")
+        print("⛔ He 2018 식은 **귀무모형**이다 — lag 창을 제한한 적합에 대해 미검증"
+              " (회신 BT §6-e). 정본은 시간원점 블록 부트스트랩이다.")
+        if a.rsd_block is None:
+            print("⚠ --rsd_block 이 없다 ⇒ **부트스트랩을 못 돌린다**(안 돌린 것이지 0 이 아니다)."
+                  " 블록 길이는 상관시간에 걸리므로 궤적을 보고 정한다.")
+        print(f"{'런':34s}{'n_Li':>5s}{'maxMSD':>9s}{'N_eff':>9s}{'RSD_He':>8s}"
+              f"{'s_ln':>7s}{'lo68':>7s}{'hi68':>7s}{'med/mean':>9s}  대칭±")
+        n_blk = 0
+        for f in files:
+            try:
+                rec = json.loads(pathlib.Path(f).read_text())
+            except Exception as e:
+                print(f"{LBL[f]:34s}  ⚠ 못 읽음 ({e})")
+                continue
+            rr = rsd_report(rec, block=a.rsd_block)
+            if rr["rsd_he2018"] is None:
+                print(f"{LBL[f]:34s}{str(rr['n_Li'] or '—'):>5s}"
+                      f"{'—':>9s}{'—':>9s}{'—':>8s}"
+                      "   ⛔ N_eff 를 못 냈다 — n_Li 또는 max(MSD) 가 없다")
+                continue
+            blocked = not rr.get("symmetric_pm_allowed", True)
+            n_blk += int(blocked)
+            print(f"{LBL[f]:34s}{rr['n_Li']:5d}{rr['msd_max_A2']:9.1f}"
+                  f"{rr['n_eff_he2018']:9.0f}{rr['rsd_he2018']:8.3f}"
+                  f"{rr['s_lognorm']:7.3f}{rr['D_lo68_rel']:7.3f}{rr['D_hi68_rel']:7.3f}"
+                  f"{rr['median_over_mean']:9.3f}  {'⛔ 차단' if blocked else '✅'}")
+        print(f"\n  lo68·hi68·med/mean 은 **평균 = 1 단위의 상대값**이다 (D 를 곱해 쓴다).")
+        if n_blk:
+            print(f"  ⛔ **{n_blk} 런에서 대칭 ± 를 막았다** — RSD > {RSD_SYMMETRIC_MAX} 면 "
+                  "대칭 2σ 가 음수로 간다. 비대칭 구간만 쓴다.")
+        print("  ⚠ median/mean < 1 은 **단일 런 D 가 절반 이상 확률로 참값보다 낮다**는 뜻이다"
+              " (D 분포가 오른쪽 치우침 — he2018 `Fig. S2`).")
+        print("  ⚠ 단, 짧은 런은 **탄도 오염으로 D 를 과대**평가하기도 한다(he2018 `Fig. S4`)."
+              " **두 편향은 부호가 반대**고 어느 쪽이 이기는지는 계마다 다르다.")
+        return 0
 
     # ── Haven 비 직접 측정 (2026-09-07) ─────────────────────────────────
     if a.haven:
