@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -54,6 +54,7 @@ commercialization problem** (Zhang et al., 2025)."
 | 5호 (권고 운전) | 5 MPa (>1000 h 무단락) | 운전 |
 | 6호·7호 (운전) | **2–4 MPa** | 운전 |
 | **8호 (산업 요구치, 재인용)** | **< ≈1 MPa** | **위 전부보다 아래** |
+| **★ 16호 Ramanayagam 2026** | **389 MPa 제작 = 389 MPa 운전**, 그리고 **97 MPa 운전** | **제작과 운전이 같은 첫 표본** (아래 §16호) |
 
 ★ `[해석]` **결과 둘**:
 1. [[assb-pressure-reapplication-separation-test]] 의 `P↑` 연산자는 **산업 셀에서
@@ -383,6 +384,97 @@ NCM811‖LPSCl‖**Li 금속**, 제작 100(SE)/350(스택) MPa, 운전 **10 / 20
 6. ⚠ **>300 MPa recondition 은 Li 금속 셀에 5호 상한(75 MPa)의 4 배** — 수행도 인용(4호)도
    없다. 로드셀 명시 0(프레스 "sensing" 만), 스윕 0(2 구간), 압력 시계열 0.
 
+## ★★★ 2026-09-22 (`assb` 16호 Ramanayagam 2026, **실험 · 3전극**) — **제작 = 운전**, 그리고 압력 → 용량의 폭
+
+`raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md`.
+NMC83|6|11(단결정, LiNbO₃ 1 wt%) ‖ Li₅.₃PS₄.₃ClBr₀.₇ ‖ **In/InLi**, ∅12 mm(A = 1.13 cm²),
+양극 두께 **26–219 µm 5 점**, **0.1 C · SOC50 · 2 번째 사이클 · 셀 12 개 · 조건당 n = 1**.
+`pressure` **49 회 — 이 계보 최대**(13호 24 회를 넘는다).
+
+### 1. ★★ 이 페이지의 두 축(제작 ↔ 운전)이 **처음으로 겹친다**
+
+6호(Lee)가 쪼갠 두 축 — 제작 490 MPa / 운전 2 MPa — 은 **서로 다른 장비**의 압력이었다.
+16호는 **CompreDrive 전기화학 프레스 (active force control)** 안에서 제작하고
+**그대로 그 압력에서 측정**한다.
+
+| | 제작 | 운전(측정) |
+|---|---|---|
+| 분리막 선압축 | **97 MPa / 3 min** | — |
+| 셀 압착 | **389 MPa / 3 min** | — |
+| 측정 | — | **389 MPa** 또는 **97 MPa** |
+
+★★★ `[해석]` **결과: 97 MPa 점은 처녀 상태가 아니라 389 MPa 에서 내려온 점이다.**
+5호(Doux)의 이력(처녀 5 MPa 110 Ω ↔ 25 MPa 를 찍고 내려온 5 MPa 50 Ω)이 참이면
+**이 편의 97 MPa 데이터는 전부 하강 분기**다. **논문은 이 사실을 한 번도 말하지 않고**
+(`hysteres*` **0 회**) 두 압력을 **대칭적인 두 조건**처럼 비교한다.
+⇒ **5호의 `θ(P)` 이력 물음에 답하지 않는다. 대신 그 물음이 왜 중요한지를 보여 준다** —
+이 계보에서 이력을 명시적으로 잰 편은 **여전히 5호 하나뿐**이다 (10호가 재인용으로 재현).
+
+### 2. 압력 → 임피던스 — **1 차 측정, 그리고 전극별로 갈라서**
+
+| 관측 | **389 MPa** | **97 MPa** | 비 | 층위 |
+|---|---:|---:|---:|---|
+| 완전지 반원합 (얇은 양극) | **23 Ωcm²** | **85 Ωcm²** | 3.7 | `[인쇄]` |
+| 완전지 반원합 (두꺼운 양극) | **11 Ωcm²** | **23 Ωcm²** | 2.1 | `[인쇄]` |
+| **양극** 중주파 반원 (3E) | **≈10 Ωcm²** | **≈20 Ωcm²** | 2.0 | `[인쇄]` |
+| **음극** 중주파 반원 (3E) | **≈4 Ωcm²** | **≈9 Ωcm²** | 2.25 | `[인쇄]` |
+| TLM `R_CT` (계면 면적 기준) | `[재현]` 193 Ωcm² | `[재현]` 347 Ωcm² | **1.80** | `[재현]` (식 5 + Table 2) |
+| TLM `R_ion` (d = 200 µm) | `[도표]` ≈64.5 | `[도표]` ≈74 | 1.15 | `[도표]` = `[재현]` 64.9/74.2 |
+
+★ `[재현]` **양극(2.0)과 음극(2.25)이 거의 같은 배율로 움직인다.** 논문은 두 전극에 다른
+기구를 붙이는데(양극 = 전하이동 개선, 음극 = interphase 통로 수 증가) **배율이 같다.**
+`[해석]` 두 계면이 **같은 기하 인자(접촉 면적)를 공유한다**는 쪽을 가리킨다 —
+[[assb-lampe-contact-product-degeneracy]] 의 논거.
+
+★★ **그리고 5호와 자릿수가 완전히 다르다**: 5호는 **1 → 25 MPa 에서 >500 → 32 Ω (>15 배)**,
+16호는 **97 → 389 MPa 에서 2–3.7 배**. `[해석]` **모순이 아니라 같은 포화 곡선의 다른 구간**이다 —
+**저압 구간에 정보가 있고 고압 구간은 평평하다**는 이 페이지의 §1 이 **네 자릿수 위에서 재확인**된다.
+
+### 3. ★★★ 압력 → 용량 — **세 번째 표본, 그리고 폭이 압도적**
+
+| 편 | 압력 구간 | 용량 차 | 층위 |
+|---|---|---|---|
+| 6호 Lee 2020 | 2 / 3 / 4 MPa (+무압) | 율특성 **1.5 %p** | `[도표]` |
+| 14호 Oh 2025 | 10 / 20 MPa | 50 사이클 유지율 **2 %p** (역상관) | `[인쇄]` |
+| **16호 (이 편)** | **97 / 389 MPa** | **1 사이클 방전 +9 … +59 %** | `[도표]` (SI Fig. S2) |
+
+`[도표]` 두께 쌍별 1 사이클 방전용량(mAh g⁻¹, ±5): 26↔31 µm **181 ↔ 120** ·
+58↔54 **157 ↔ 123** · 80↔81 **159 ↔ 134** · 104↔106 **164 ↔ 103** · 207↔219 **93 ↔ 85**.
+**모든 쌍에서 389 MPa 이 크다.**
+
+⚠⚠ **그런데 논문은 용량을 한 번도 읽지 않는다** — `capacity` **본문 1 회**이고 그것도
+서론의 "energy storage capacity" 다. **이 표는 전부 SI 그림에서 우리가 읽은 것이다.**
+⚠ 셀이 다르고 각 점 **n = 1**, 97 MPa 쪽은 두께 의존이 **비단조**(81 µm 최대)라
+셀 간 산포가 작지 않다.
+
+★★★ `[해석]` **세 편을 나란히 놓으면 압력 → 용량 감도가 구간에 따라 두 자릿수 다르다**:
+2–4 MPa 에서 1.5 %p, 10–20 MPa 에서 2 %p, **97–389 MPa 에서 9–59 %**.
+**산업 요구치(<≈1–5 MPa)는 가장 평평한 쪽에 있다** ⇒ **압력을 진단 여기(excitation)로 쓰려는
+계획은 산업 셀에서 신호가 가장 약한 구간을 쓴다.** ⚠ 셀·화학·전류가 전부 달라 **한 곡선으로
+잇지 않는다** — 세 점은 **같은 곡선 위의 점이 아니다.**
+
+### 4. ★ 압력 → 공극률 — **기하는 둔하고 계면은 예민하다**
+
+`[인쇄]` in situ 공극률–압력 장치 [34] 로: **97 MPa 에서 12.9 %**, **389 MPa 에서 11.2 %**.
+⇒ `[재현]` **압력 4 배에 공극률 1.7 %p (상대 13 %)** 움직이는 동안
+**`R_CT` 는 1.8 배 · 음극 DRT 는 최대 15 배** 움직인다.
+
+★★ `[해석]` **같은 압력 구간에서 두 관측의 감도가 한 자릿수 이상 다르다.**
+14호(Oh)가 **volumetry**(부피·void)를 비파괴 분리 후보로 민 것과 **긴장 관계**에 있다 —
+volumetry 가 보는 양은 **압력 여기에 대해 가장 둔한 채널**일 수 있다.
+⚠ 두 논문의 압력 구간(10–20 ↔ 97–389 MPa)·화학·측정이 달라 **직접 비교가 아니다.**
+후속에서 확인할 좌표로 남긴다.
+⚠⚠ 그리고 이 공극률의 출처 [34] 는 **심사 전 chemRxiv 프리프린트**이고, 이 편의
+**두께 전부(26–219 µm)** 가 거기에 걸려 있다.
+
+### 5. 이 편이 이 페이지에 **안 준 것**
+
+**스윕**(2 점뿐) · **이력**(같은 셀 재가압·감압 0) · **로드셀 시계열 0** ·
+**사이클 중 압력 변화 0**(2 번째 사이클에서 끝난다) · **상한·단락 0**(In 음극이라 Li 도금
+단락 기구가 없다) · **열화 0**. **창의 위 벽·아래 벽 값은 하나도 움직이지 않았다.**
+움직인 것은 **창의 폭**(운전 압력 최댓값이 75 → **389 MPa**, ⚠ 화학이 다르다)과
+**압력 → 용량 감도의 구간 의존성**이다.
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -395,7 +487,7 @@ NCM811‖LPSCl‖**Li 금속**, 제작 100(SE)/350(스택) MPa, 운전 **10 / 20
 3. **하한이 탐색되지 않았다.** 논문은 "optimal 5 MPa" 라고 쓰지만 SI Fig. S3 이
    **2 MPa 에서 163 h 무단락 · 과전압 거의 동일**을 보여주고 본문은 그 실험을
    **언급조차 하지 않는다.**
-4. ~~**압력 → 용량 곡선은 아직 0 편이다.**~~ Doux 는 저항·수명·과전압을 압력의 함수로
+4. ~~**압력 → 용량 곡선은 아직 0 편이다.**~~ (→ 16호가 **세 번째이자 가장 넓은 표본**을 줬다: §16호 3) Doux 는 저항·수명·과전압을 압력의 함수로
    주지만 **완전지 용량은 압력 1 점(5 MPa)** 뿐이다. 4호도 각 1 점이었다.
    → ✅ **2026-09-16: 6호(Lee)가 처음 줬다** — `[도표]` 율특성 **2/3/4 MPa = 94.0/95.1/95.5 %**
    + 300 사이클 유지율 3 곡선 + **무압 대조**. ⚠ 단 **폭이 1.5 %p** 라 정보량이 거의

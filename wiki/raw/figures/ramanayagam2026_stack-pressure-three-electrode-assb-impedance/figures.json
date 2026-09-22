@@ -1,0 +1,392 @@
+{
+ "slug": "ramanayagam2026_stack-pressure-three-electrode-assb-impedance",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "d023c108-15._Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+  "e239908a-15._Sup_Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 | Stacked Nyquist plot of the impedance of ASSBs with different cathode thicknesses. The impedance spectra were taken in a frequency range from 105 to 5·10−4 Hz at 50% state of charge (SOC50) of the cathode during the second cycle at a stack pressure of (a) 389 MPa and (b) 97 MPa, respectively. The high-frequency offset, mainly originating from the separator resistance, was subtracted for a better comparability.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    508.9,
+    558.0,
+    697.2
+   ],
+   "w": 2163,
+   "h": 785,
+   "dpi": 300,
+   "src": "d023c108-15._Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 | Nyquist plot of ASSBs measured in a 3E configuration in a frequency range of 105 to 10−3 Hz for (a) cathode thickness of 117 μm and stack pressure of 389 MPa and (b) cathode thickness of 62 μm and stack pressure of 97 MPa. The cathode and anode contribution are illustrated in blue and red, respectively. The measured full-cell spectrum is plotted in purple, while the sum of anode and cathode contribution is plotted as a green line.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.3,
+    514.4,
+    557.9,
+    696.4
+   ],
+   "w": 2162,
+   "h": 759,
+   "dpi": 300,
+   "src": "d023c108-15._Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 | Left: Bode plots of anode impedance, cathode impedance, and full-cell impedance measured in a 3E configuration; right: corresponding DRT plots; (a) and (b): cathode thickness = 117 μm and stack pressure = 389 MPa; (c) and (d): cathode thickness = 62 μm and stack pressure = 97 MPa. Hollow markers indicate impedance data points excluded from the DRT analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    28.4,
+    558.0,
+    432.6
+   ],
+   "w": 2162,
+   "h": 1685,
+   "dpi": 300,
+   "src": "d023c108-15._Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 | DRT plot of the full-cell ASSB impedance at varying cathode thickness and at stack pressures of (a) 389 MPa and (b) 97 MPa, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    499.2,
+    557.9,
+    697.0
+   ],
+   "w": 2162,
+   "h": 825,
+   "dpi": 300,
+   "src": "d023c108-15._Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 | Schematic illustration of transport processes taking place at the anode | separator interface: (a) low stack pressure leading to less transport pathways for Li+ ions across the interphase and (b) high stack pressure resulting in more transport pathways for Li+ ions across the interphase.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.3,
+    444.5,
+    297.2,
+    668.2
+   ],
+   "w": 1076,
+   "h": 933,
+   "dpi": 300,
+   "src": "d023c108-15._Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.307
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 | Stacked Nyquist plot of the full-cell impedance of ASSBs with different cathode thicknesses and fits with a transmission-line model at a stack pressure of (a) 389 MPa and (b) 97 MPa, respectively (frequency range from 105 to 2·10−3 Hz). The highlighted semicircle corresponds to the cathode semicircle calculated from the TLM model parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.3,
+    479.9,
+    558.0,
+    697.2
+   ],
+   "w": 2162,
+   "h": 906,
+   "dpi": 300,
+   "src": "d023c108-15._Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "FIGURE 7 | Dependence of the ion transport resistance Rion, of the ⋅d, and of the semicircle diameter normalized charge transfer resistance a R CT V Rsemicircle on the cathode thickness d, as derived from the TLM parameters listed in Tables 1 and 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    504.6,
+    297.2,
+    670.3
+   ],
+   "w": 1076,
+   "h": 691,
+   "dpi": 300,
+   "src": "d023c108-15._Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Potential of the W/Au wire vs. the NMC cathode during its in-situ lithiation at a stack pressure of a) 389 MPa and b) 97 MPa, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.4,
+    58.8,
+    556.1,
+    262.8
+   ],
+   "w": 2153,
+   "h": 850,
+   "dpi": 300,
+   "src": "e239908a-15._Sup_Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. First galvanostatic charge/ discharge cycle of an ASSB in a 2E setup at a stack pressure of a) 389 MPa and b) 97 MPa, respectively. All batteries were cycled at a rate of 0.1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    319.3,
+    556.4,
+    498.9
+   ],
+   "w": 2149,
+   "h": 749,
+   "dpi": 300,
+   "src": "e239908a-15._Sup_Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 2,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. First galvanostatic charge/ discharge cycle of an ASSB in a 3E setup with a) a cathode thickness of 117 µm and stack pressure of 389 MPa and b) a cathode thickness of 62 µm and stack pressure of 97 MPa. The batteries were cycled at a rate of 0.1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    540.3,
+    556.4,
+    720.0
+   ],
+   "w": 2149,
+   "h": 749,
+   "dpi": 300,
+   "src": "e239908a-15._Sup_Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Galvanostatic cycle of the NMC composite cathode at a rate of 0.1 C and at a stack pressure of a) 389 MPa and b) 97 MPa, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    81.5,
+    554.5,
+    256.0
+   ],
+   "w": 2141,
+   "h": 728,
+   "dpi": 300,
+   "src": "e239908a-15._Sup_Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Bode plots of the full-cell impedance of ASSBs with different cathode thickness including fits with a transmission-line model at a stack pressure of 389 MPa. (Cathode thicknesses: a) 26 μm, b) 58 μm, c) 80 μm, d) 104 μm and e) 207 μm)",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    78.9,
+    556.4,
+    728.0
+   ],
+   "w": 2149,
+   "h": 2706,
+   "dpi": 300,
+   "src": "e239908a-15._Sup_Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Bode plots of the full-cell impedance of ASSBs with different cathode thickness including fits with a transmission-line model at a stack pressure of 97 MPa. (Cathode thicknesses: a) 31 μm, b) 54 μm, c) 81 μm, d) 106 μm and e) 219 μm)",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    58.8,
+    556.4,
+    715.8
+   ],
+   "w": 2149,
+   "h": 2738,
+   "dpi": 300,
+   "src": "e239908a-15._Sup_Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Powder XRD pattern of the glass-ceramic solid electrolyte Li5.3PS4.3ClBr0.7 in comparison to crystalline Li5.3PS4.3ClBr0.7 taken from Ref.1.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    83.0,
+    518.5,
+    279.3
+   ],
+   "w": 1991,
+   "h": 818,
+   "dpi": 300,
+   "src": "e239908a-15._Sup_Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 6,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Arrhenius plot of the ionic conductivity of the glass-ceramic solid electrolyte Li5.3PS4.3ClBr0.7.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    311.6,
+    430.9,
+    507.8
+   ],
+   "w": 1626,
+   "h": 818,
+   "dpi": 300,
+   "src": "e239908a-15._Sup_Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "TABLE 1 | Fixed parameters in the TLM fit of the cathode contribution at both stack pressures (389 and 97 MPa). Parameter Symbol Value Unit Thickness of the composite cathode d Variable m Volume fraction of SE particles εSE 0.505 — Volume fraction of CAM particles εCAM 0.495 — Ionic conductivity of SE σ 0.47 −1 S·m Average radius of the CAM particles [30] rCAM 2.5·10−6 m dU dcLi −3.48·10−5 V m3 mol−1 Dependence of equilibrium potential on Li concentration in CAM Temperature T 298 K Area of the cell A 1.13·10−4 2 m",
+   "rotated_deg": 0,
+   "bbox": [
+    40.4,
+    11.9,
+    589.2,
+    771.4
+   ],
+   "w": 2166,
+   "h": 2997,
+   "dpi": 284,
+   "src": "d023c108-15._Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "TABLE 2 | Variable parameters in the TLM fit of cathode contribution. Stack pressure Stack pressure Parameter Symbol 389 MPa 97 MPa Unit Tortuosity of ion transport τLi + 7.7 8.8 — Li diffusion coefficient in CAM DCAM 6.6 *0−15 2.1·10−15 2 −1 m s Exchange current density j0 1.33 0.74 A m−2 prefactor of double layer CPE QDL 0.54 0.18 −2 F sβ−1 m Exponent of double layer CPE β 0.89 0.81 —",
+   "rotated_deg": 0,
+   "bbox": [
+    40.4,
+    11.9,
+    589.2,
+    771.4
+   ],
+   "w": 2166,
+   "h": 2997,
+   "dpi": 284,
+   "src": "d023c108-15._Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Parameters of the investigated solid-state battery cells at a stack pressure of 389 MPa, including the masses of cathode, of solid electrolyte, and of indium, as well as layer thicknesses and dgree of lithiation of the anode. 𝑥Li of anode 𝑚cathode (NMC + LPSIClBr0.7) 𝑥CAM 𝑥SE 𝑑cathode 𝑚LPSClBr0.7 𝑚indium 𝑑indium at SOC50 of the cathode 09.8 mg 0.699 0.301 026 µm 100.3 mg 43.7 mg 100 µm 0.06 22.3 mg 0.699 0.301 058 µm 105.3 mg 53.2 mg 084 µm 0.09 30.7 mg 0.699 0.301 080 µm 106.6 mg 53.3 mg 109 µm 0.12 39.8 mg 0.699 0.301 104 µm 100.4 mg 44.0 mg 084 µm 0.18 79.1 mg 0.699 0.301 207 µm 100.3 mg 28.3 mg 067 µm 0.28 42.2 mg 0.697 0.303 117 µm 308.3 mg 38.9 mg 101 µm 0.18",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    288.3,
+    559.3,
+    677.1
+   ],
+   "w": 2181,
+   "h": 1621,
+   "dpi": 300,
+   "src": "e239908a-15._Sup_Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 1,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Parameters of the investigated solid-state battery cells at a stack pressure of 98 MPa, including the masses of cathode, of solid electrolyte, and of indium, as well as layer thicknesses and dgree of lithiation of the anode. 𝑥Li of anode 𝑚cathode (NMC + LPSIClBr0.7) 𝑥CAM 𝑥SE 𝑑cathode 𝑚LPSClBr0.7 𝑚indium 𝑑indium at SOC50 of the cathode 11.7 mg 0.700 0.300 031 µm 97.7 mg 42.5 mg 109 µm 0.05 20.3 mg 0.700 0.300 054 µm 102.2 mg 35.5 mg 087 µm 0.09 30.5 mg 0.700 0.300 081 µm 101.1 mg 38.9 mg 101 µm 0.14 40.0 mg 0.700 0.300 106 µm 101.5 mg 49.3 mg 098 µm 0.17 82.4 mg 0.700 0.300 219 µm 102.0 mg 41.3 mg 087 µm 0.20 22.4 mg 0.697 0.303 062 µm 309.2 mg 29.8 mg 091 µm 0.14",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    485.1,
+    559.3,
+    677.1
+   ],
+   "w": 2181,
+   "h": 801,
+   "dpi": 300,
+   "src": "e239908a-15._Sup_Elucidating_the_Influence_of_Stack_Pressure_on_Anodeand_Cathode_Impedance_of_All-Solid-State_Batteriesvia_Three-Electrode_Measurements.pdf",
+   "blank": 0.92
+  }
+ ]
+}

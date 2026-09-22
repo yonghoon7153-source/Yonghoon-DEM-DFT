@@ -1,16 +1,16 @@
 ---
 title: "복합양극 동역학 항의 곱 축퇴 — LAM_PE 와 접촉 손실이 A_eff·ε_p/R_s 한 조합으로만 들어간다"
-description: "In a published composite-cathode ASSB P2D model the Butler-Volmer denominator sees only the product A_eff x eps_p / R_s, so active-material loss, contact-area loss and particle radius are not separately identifiable from a discharge curve"
+description: "In a published composite-cathode ASSB P2D model the Butler-Volmer denominator sees only the product A_eff x eps_p / R_s, so active-material loss, contact-area loss and particle radius are not separately identifiable from a discharge curve; a second, experimental paper (three-electrode EIS + transmission-line model) stands on the same product and assigns all of it to the exchange current density"
 created: 2026-09-22
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md]
+sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
 claimType: theoretical
-evidenceScope: single-source
+evidenceScope: multi-source-primary
 ---
 
 # 복합양극 동역학 항의 곱 축퇴 (`A_eff · ε_p / R_s`)
@@ -143,6 +143,7 @@ physical significance** of the parameters" 라고 쓴다.
 | **다중 SOC EIS** | 같은 곱의 주파수 분해 | ★ 원전이 100/50/0 % 를 재고 100 % 만 썼다. ⚠⚠ **단독으로는 못 쓴다 — 아래 §"EIS 는 대가를 받는다"** |
 | **압력 되돌림** | `θ_AM` 만 (부분) 복원 → 진짜 재료 손실과 분리 | [[assb-pressure-reapplication-separation-test]] |
 | **`J^T J` 최소 고유벡터** | 이 곱이 실제로 null 방향인지 수치 확인 | [[fitting-degeneracy]] 의 "그리는 법" |
+| ★★★ **`R_CT · C_dl` 짝** (2026-09-22 신설, 16호에서) | **`R_CT·C` 는 접촉 면적이 소거되는 조합**(고유 시상수), **`C` 단독은 접촉 면적에 비례** ⇒ **둘을 같이 보면 `θ` 와 `j₀` 가 갈린다** | ★★ **16호가 두 값을 다 인쇄해 놓고 조합을 안 만든다** (아래 §16호) |
 
 ★ **마지막 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -217,9 +218,11 @@ BV 분모의 유효 면적 인자. 즉 이 페이지가 손으로 보인 `A_eff 
 가능성이 높고, Shao 2022 (*Energy* 239, 121929) 가 거기에 **압력 의존**을 얹었다.
 
 **이것이 이 페이지에 뜻하는 것 둘**:
-1. `evidenceScope: single-source` 는 **유지**한다 — 12호는 식을 인쇄하지 않았고, 원전 둘을
-   우리가 읽지 않았다. 다만 §"주장하지 않는 것" 의 "P2D 계열에 널리 반복될 가능성" 이
-   **한 문장의 문헌 근거**를 얻었다.
+1. `evidenceScope: single-source` 는 **이때는 유지했다** — 12호는 식을 인쇄하지 않았고,
+   원전 둘을 우리가 읽지 않았다. 다만 §"주장하지 않는 것" 의 "P2D 계열에 널리 반복될
+   가능성" 이 **한 문장의 문헌 근거**를 얻었다.
+   → **2026-09-22 늦게 `multi-source-primary` 로 승격**했다. 근거는 12호가 아니라
+   **16호(식을 인쇄한 두 번째 1차 문헌)** 다 — 아래 §"두 번째 출처".
 2. ★ Shao 2022 가 정말 `A_eff = A_eff(P)` 를 넣었다면, **압력 되돌림 연산자**
    ([[assb-pressure-reapplication-separation-test]])가 **모델 안에 이미 들어 있는** 첫 사례다
    — 그러면 곱 축퇴를 깨는 "다른 반응을 하는 자극" 이 그 모델에서는 **압력**이 된다.
@@ -229,6 +232,97 @@ BV 분모의 유효 면적 인자. 즉 이 페이지가 손으로 보인 `A_eff 
 그래서 `0.4–1 MPa` 가 어느 쪽 결과인지 **그 지면으로는 확정되지 않는다.** 이 절의 수치는
 쓰지 않고 **형태**만 쓴다. 9호(Huo 2025)가 Tian & Qi 를 인용하는지도 **확인하지 않았다**.
 
+## ★★★ 두 번째 출처, 그리고 **실측 판** — 16호가 같은 곱 위에 서서 한쪽 끝을 고른다 (2026-09-22)
+
+`assb` 16호 (Ramanayagam, Miß, Leier, Duncker, Kirczek, Roling 2026, *Batteries & Supercaps*
+**9**, e70315, `raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md`)
+는 **3전극 실측 + TLM 적합**이다. 9호가 **모델 논문**이었다면 16호는 **실험 논문**이고,
+**같은 구조가 EIS 쪽에서도 나타난다**는 것을 보인다.
+
+### 정의 — 같은 자리, 다른 이름
+
+원전의 **인쇄된 식** (`[인쇄]`):
+
+```
+식 (4)   a_V = 3·ε_CAM / r_CAM        캡션: "The area of the CAM particles in CONTACT with the SE
+                                       normalized to the cathode volume"   ← 접촉 분율 인자가 없다
+식 (5)   R_CT = R·T / (F · j₀)
+극한 (i) 얇은 전극:  R_semicircle = R_CT / (a_V · d)
+```
+
+`[해석]` 합치면:
+
+```
+      ★  측정량이 보는 것 =  R·T·r_CAM / ( 3·F · j₀ · ε_CAM · d )
+         ⇒ 식별되는 조합은   j₀ · ε_CAM / r_CAM   하나  ★
+```
+
+**9호의 `A_eff · ε_p / R_s` 와 같은 자리다.** 다른 점은 **`A_eff` 가 아예 없다는 것** —
+16호는 접촉 분율을 **변수로 두지 않고 1 로 못 박는다.** 그러면서 **그 양에 "접촉 면적"
+이라는 이름을 붙인다.**
+
+### ★★★ 배정의 자유 — 같은 데이터, 반대 결론
+
+논문의 배정(`ε_CAM`·`r_CAM` 고정): **`j₀` 0.74 → 1.33 A m⁻² (1.80 배 증가)**
+(97 → 389 MPa). 그런데 **같은 Table 2 가 이중층 CPE 계수도 준다**:
+**`Q_DL` 0.18 → 0.54 (3.0 배)**, `β` 0.81 → 0.89.
+
+접촉 분율 `θ` 를 넣으면 — **두 양이 같은 가정 면적 `a_V` 로 정규화되므로**:
+
+```
+R_CT^meas = R_CT^true / θ         C^meas = θ · C^true
+⇒ R_CT^meas · C^meas = R_CT^true · C^true      (★ θ 가 소거된다)
+⇒ C^meas 단독은 θ 에 비례                        (★ θ 를 직접 준다)
+```
+
+| 배정 | `θ(389)/θ(97)` | `j₀^true(389)/j₀^true(97)` | 원전의 **말**과 |
+|---|---:|---:|---|
+| **논문 (`θ ≡ 1`)** | 1.0 | **1.80 (증가)** | 수치 결론 |
+| **`Q_DL` 을 면적으로 읽음** | **3.0** | `[재현]` **0.60 (감소)** | `[인쇄]` "pressure improves the **interfacial contacts** between SE particles and CAM particles **considerably**" 와 정합 |
+
+`[재현]` 둘째 행: `j₀^true ∝ 1/(θ · R_CT^meas)` ⇒ `(1/3.0) × 1.797 = 0.60`.
+
+★★★ `[해석]` **같은 데이터가 `j₀` 의 증가와 감소를 둘 다 허용한다.** 그리고 원전의
+**문장은 둘째 배정을 말하고 숫자는 첫째 배정을 쓴다.** 이것이 이 페이지가 9호에서
+**식으로** 보인 것의 **실물**이다.
+
+★ **단서 셋 (전부 우리가 붙인다)**:
+1. `β` 가 0.89 ↔ 0.81 로 달라 **두 `Q` 는 엄밀히 차원이 다르다**(F sᵝ⁻¹ m⁻²).
+   `[재현]` Brug 류 유효용량(`C = Q^{1/β}·R^{(1−β)/β}`)으로 고치면 비가 **3.0 → ≈5.6** —
+   **방향은 그대로이고 세진다.**
+2. 이중층 **비용량**이 압력에 무관하다는 가정이 필요하다.
+3. `[재현]` **`R_CT·Q` 가 두 압력에서 같지 않다**(1.67 배; 유효용량으로는 3.1 배)
+   ⇒ **순수 면적 효과만으로도 설명되지 않는다.** 즉 **세 번째 배정**(면적도 변하고
+   고유 동역학도 변한다)이 가장 그럴듯하고, **원전은 세 배정 중 어느 것도 고를 관측을
+   갖고 있지 않다.**
+
+### ★★ 그래서 나오는 처방 — `R_CT · C_dl` 채널
+
+> **`R_CT·C_dl` 은 접촉 면적이 소거된 고유 시상수이고, `C_dl` 단독은 접촉 면적에 비례한다.
+> 둘을 같이 보고하면 `θ` 와 `j₀` 가 갈린다.**
+
+이것이 위 §처방표의 새 행이다. **원전은 두 값을 다 갖고 있으면서 그 조합을 만들지 않는다.**
+⚠ 우리도 **아직 재지 않았다** — 여기 적는 것은 **설계**다. 그리고 CPE(β<1)가 개입하면
+변환이 **모형 의존적**이어서, 이 채널을 쓰려면 **`β` 를 압력 간에 고정하거나 유효용량
+변환을 명시**해야 한다. 원전 데이터는 `[인쇄]` "available **on request**" 라 재적합 불가.
+
+### ★ 같은 논문 안에서 서사가 전극마다 바뀐다
+
+`[도표]` 16호 **Figure 5**(음극 모식도)는 압력이 바꾸는 것을 **"interphase 를 통하는 칸의
+개수"** 로 **그림으로 명시**한다 (저압 통함 3/8 ↔ 고압 5/8). 즉 **음극에서는 면적 서사**다.
+그런데 같은 논문의 **양극 TLM 은 면적을 고정**하고 `j₀` 를 움직인다 — **동역학 서사**.
+`[해석]` **전극이 바뀌면 같은 현상의 이름이 바뀐다.** 이것은 저자의 실수라기보다
+**두 배정이 관측상 구별되지 않기 때문에 생기는 자유**다 — 이 페이지의 논지 그 자체.
+
+### 이 절이 페이지의 `evidenceScope` 에 하는 일
+
+`single-source` → **`multi-source-primary`**. 근거 둘:
+① 9호 Huo 2025 — **P2D 모델의 인쇄된 식**(`A_eff·ε_p/R_s`, 방전곡선 적합)
+② 16호 Ramanayagam 2026 — **TLM/EIS 의 인쇄된 식**(`j₀·ε_CAM/r_CAM`, 임피던스 적합)
+**다른 모델족 · 다른 관측 · 다른 그룹 · 다른 나라**인데 **같은 자리에서 축퇴한다.**
+⚠ `confidence` 는 **medium 유지**다 — **두 편 다 축퇴를 재지 않았고**(`identifiab*` 0/0),
+우리도 아직 폭을 재지 않았다. 근거 폭이 늘었을 뿐 **측정은 여전히 0 편**이다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **원전의 결론(양극 활물질 손실이 지배적)이 틀렸다고 주장하지 않는다.**
@@ -237,8 +331,8 @@ BV 분모의 유효 면적 인자. 즉 이 페이지가 손으로 보인 `A_eff 
   주장한다.
 - **축퇴를 수치로 재지 않았다.** 위 관계는 **인쇄된 식에서 손으로 읽은 구조**이고,
   근최적 집합의 **폭**은 아직 재지 않았다 ([[near-optimal-set-width-measurement]]).
-- **이 관계가 다른 ASSB 모델에도 있다고 주장하지 않는다.** 근거는 **1 편**이다
-  (`evidenceScope: single-source`). 다만 `a_s = 3ε/R` 과 `j = i/(a_s·A·L)` 은
+- **이 관계가 다른 ASSB 모델에도 있다고 주장하지 않는다.** 근거는 **2 편**이다
+  (`evidenceScope: multi-source-primary`, 2026-09-22 승격 — 9호 P2D + 16호 TLM/EIS). 다만 `a_s = 3ε/R` 과 `j = i/(a_s·A·L)` 은
   P2D 계열의 표준형이라 **같은 구조가 널리 반복될 가능성이 높다** — 확인 안 됨.
 - ★ **2026-09-22 추가**: 위 §"EIS 는 대가를 받는다" 는 **10호가 이 곱 축퇴를
   확인했다는 뜻이 아니다.** 10호는 `A_eff`·`ε_p`·`R_s` 를 언급조차 하지 않는다.
