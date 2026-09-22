@@ -926,15 +926,85 @@ def _prot_rows(path=None):
     return list(_csv.DictReader((path or PROT_CSV_ALL).open(encoding="utf-8")))
 
 
+def _gen():
+    """그림 생성기 모듈 — 판정 함수는 **거기 하나**만 쓴다 (두 곳에서 판정하면 두 판정이 갈린다)."""
+    import importlib.util
+    src = REPORT.parents[3] / "tools/figures/plot_cei_nd_protection.py"
+    spec = importlib.util.spec_from_file_location("plot_cei_nd_protection", src)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _fnum(v):
+    v = (v or "").strip()
+    return None if v in ("", "None") else float(v)
+
+
 def _prot_counts(rows):
+    """행 수·통과·탈락·열 수·전농도통과 열.
+
+    ⛔ 2026-09-22 정정 (2차 리뷰 ②). 종전엔 여기서 `all(gate_pass)` 로 **따로** 판정했다 —
+    생성기 `_full_pass` 가 완전성 검사를 받은 뒤에도 이 쌍둥이는 그대로여서, 탈락 행을 지우면
+    시험 쪽 18 · 생성기 쪽 17 로 갈렸다(실측). 이제 전농도통과는 **생성기 함수 한 곳**에서 받는다.
+    격자가 깨지면(농도 누락·낯선 농도) 그 함수가 SystemExit 로 죽고, 이 헬퍼도 그대로 죽는다.
+    """
     n_all = len(rows)
     n_fail = sum(1 for r in rows if r["gate_pass"] == "False")
     n_pass = sum(1 for r in rows if r["gate_pass"] == "True")
     cols = {(r["cathode"], r["voltage_V"]) for r in rows}
-    full = {c for c in cols
-            if all(r["gate_pass"] == "True" for r in rows
-                   if (r["cathode"], r["voltage_V"]) == c)}
+    typed = [{"cathode": r["cathode"], "voltage_V": _fnum(r["voltage_V"]),
+              "x_Nd": _fnum(r["x_Nd"]), "gate_pass": r["gate_pass"] == "True"} for r in rows]
+    gen_full = _gen()._full_pass(typed)
+    full = {(c, v) for (c, v) in cols
+            if any(c == fc and abs(float(v) - fV) < 1e-9 for fc, fV in gen_full)}
+    assert len(full) == len(gen_full), (sorted(full), gen_full)   # 형 변환에서 잃은 열이 없다
     return n_all, n_pass, n_fail, len(cols), full
+
+
+def _prot_deviation(rows, full):
+    """열별 최대 |실측 − 예측식| (%p) 와 'k 가 없어 견줄 수 없는' 열 — 예측식 min(1, k·x/(1−x)) 기준.
+
+    ⛔ P_taken_by_Nd 와 빼지 않는다 (2026-09-21 외부 리뷰 P1-1) — 식을 평가하는 자리다.
+    두 시험(오차 계층 · ⏭ 블록)이 **같은 함수**로 문턱을 만든다.
+    """
+    def _pred(r):
+        k, x = _fnum(r["k_observed"]), _fnum(r["x_Nd"])
+        return None if k is None else min(1.0, k * x / (1 - x))
+    dev, nok = {}, set()
+    for c in full:
+        sub = [r for r in rows if (r["cathode"], r["voltage_V"]) == c]
+        ds = [abs(_fnum(r["protection_observed"]) - _pred(r)) * 100 for r in sub
+              if _fnum(r["protection_observed"]) is not None and _pred(r) is not None]
+        if not ds:
+            if any(_fnum(r["protection_observed"]) is not None for r in sub):
+                nok.add(c)          #: Nd 인산염이 아예 안 나온 열 — 0 = 0 은 일치가 아니다
+            continue
+        dev[c] = max(ds)
+    return dev, nok
+
+
+def _resume_block_violations(blk, thresh):
+    """⏭ 블록이 철회된 문턱을 **주장으로** 되살렸는지 — 굵기·띄어쓰기에 흔들리지 않게 본다.
+
+    ⛔ 2026-09-22 정정 (2차 리뷰 ③). 종전 시험은 `"식이 **≤2.5 %p** 로 맞는"` 정확한 굵기
+    표기만 금지했다 — 굵기 없이 `식이 ≤2.5 %p 로 맞는 열은 셋뿐이다` 라고 쓰면 **통과**했고,
+    반대로 현행 문장의 `**셋뿐**` 을 `**세 개뿐**` 으로 바꾸면 **실패**했다(실측). 문자열
+    스냅숏이지 주장 검사가 아니었다. 이제 별표를 전부 벗기고 공백을 접은 뒤 "≤X %p (…) 로 맞는"
+    꼴의 **모든** 주장을 찍어, 현행 문턱과 다른 값이 하나라도 있으면 위반이다.
+    (리뷰 이력으로 "철회된 ≤2.5 %p 잔존" 이라 적는 것은 '로 맞는' 이 없어 걸리지 않는다.)
+    """
+    import re as _re
+    norm = _re.sub(r"\s+", " ", _re.sub(r"\*+", "", blk))
+    claims = _re.findall(r"≤\s*([0-9]+(?:\.[0-9]+)?)\s*%p\s*(?:\([^)]{0,40}\)\s*)?(?:로|으로)\s+맞는", norm)
+    bad = []
+    if not claims:
+        bad.append("현행 문턱 주장('≤X.X %p 로 맞는')이 ⏭ 블록에 없다")
+    want = f"{thresh:.1f}"
+    for c in claims:
+        if c != want:
+            bad.append(f"⏭ 블록이 현행({want})과 다른 문턱 ≤{c} %p 를 주장한다 — 철회값이 되살아났다")
+    return bad
 
 
 def test_protection_gate_denominator_matches_the_csv(client):
@@ -1038,28 +1108,8 @@ def test_deviation_tiers_match_the_csv(client):
     rows = _prot_rows()
     _, _, _, _, full = _prot_counts(rows)
 
-    def _f(v):
-        v = (v or "").strip()
-        return None if v == "" else float(v)
-
-    #: ⛔ 2026-09-21 정정 (외부 리뷰). 첫 판은 `P_taken_by_Nd` 와 뺐다 — **식의 오차가 아니다**.
-    #  hull 이 식보다 Nd 를 덜 쓰는 칸에서 갈린다(NMC811 4.00 V: 5.49 대 14.63 %p).
-    #  식을 평가하는 자리이므로 예측식 min(1, k·x/(1−x)) 로 잰다. 원장과 같은 기준이다.
-    def _pred(r):
-        k, x = _f(r["k_observed"]), _f(r["x_Nd"])
-        return None if k is None else min(1.0, k * x / (1 - x))
-
-    dev, noк = {}, set()
-    for c in full:
-        sub = [r for r in rows if (r["cathode"], r["voltage_V"]) == c]
-        ds = [abs(_f(r["protection_observed"]) - _pred(r)) * 100 for r in sub
-              if _f(r["protection_observed"]) is not None and _pred(r) is not None]
-        if not ds:
-            #: k 가 아예 없는 열 — Nd 인산염이 안 나온다. 식과 견줄 수 없다(0 = 0 은 일치가 아니다)
-            if any(_f(r["protection_observed"]) is not None for r in sub):
-                noк.add(c)
-            continue
-        dev[c] = max(ds)
+    #: ⛔ 예측식 기준 (P1-1). 계산은 공용 헬퍼 한 곳 — ⏭ 블록 시험과 같은 문턱을 쓴다.
+    dev, noк = _prot_deviation(rows, full)
 
     #: 원장과 **같은 값**이어야 한다 — 화면·그림·원장이 세 갈래로 갈리는 것을 막는다
     led = json.loads((REPORT.parents[3] /
@@ -1073,7 +1123,7 @@ def test_deviation_tiers_match_the_csv(client):
     assert noк == {("LiMnO2", "3.5")}, sorted(noк)
 
     h0 = _report_html(client)
-    assert "식과 견줄 수 있는 <b>11 개</b>" in h0
+    assert f"식과 견줄 수 있는 <b>{len(dev)} 개</b>" in h0, f"화면의 견줄 수 있는 열 수가 자료({len(dev)})와 다르다"
     assert "LiMnO₂ 3.50 V 는 여기 없다" in h0, "k 없는 열을 뺐다는 말이 화면에 없다"
     assert "14.6 %p" in h0, "식 기준과 P_taken 기준이 갈리는 칸을 화면이 안 밝힌다"
 
@@ -1118,10 +1168,14 @@ def test_resume_block_does_not_carry_retracted_numbers(client):
                  f"열 **{n_col} 중 {len(full)}** 전 농도 통과"):
         assert must in blk, f"⏭ 블록에 {must!r} 가 없다 — 화면과 갈렸다"
 
-    #: 철회된 문턱이 **주장으로** 되살아나면 잡는다 (리뷰 이력으로 언급하는 것은 허용)
-    assert "식이 **≤2.5 %p** 로 맞는" not in blk, \
-        "⏭ 블록이 철회된 문턱 2.5 %p 를 다시 주장한다"
-    assert "식이 **≤3.1 %p** 로 맞는 열은 **셋뿐**" in blk, "⏭ 블록에 현행 문턱이 없다"
+    #: 철회된 문턱이 **주장으로** 되살아나면 잡는다 — 굵기·띄어쓰기 무관 (2026-09-22 ③).
+    #  현행 문턱은 손으로 안 적는다: 자료에서 '식이 맞는 셋' 의 최악값으로 만든다.
+    dev, _ = _prot_deviation(rows, full)
+    good = sorted(c for c in dev if dev[c] <= 3.11)
+    assert len(good) == 3, good
+    thresh = max(dev[c] for c in good)
+    viol = _resume_block_violations(blk, thresh)
+    assert not viol, viol
 
     #: 시험 개수도 실물과 맞춘다 — "62 → 65" 로 적어 두고 66 개였다
     n_tests = sum(1 for ln in (REPORT.parents[3] /
@@ -1285,3 +1339,43 @@ def test_s0_scopes_the_esw_to_the_Li_site_cell(client):
     s0 = _section(_report_html(client), "s0")
     assert "Li 자리에 있는 셀" in s0 and "0.20" in s0, "ESW 셀이 Li 자리 x=0.20 이라는 한정이 없다"
     assert "P 자리" in s0 and "부호가 반대" in s0, "P 자리로 못 옮긴다는 이유가 없다"
+
+
+def test_prot_counts_dies_when_the_grid_is_broken():
+    """⛔음성 — 시험 쪽 전농도통과 판정도 격자가 깨지면 **세지 않고 죽는다** (2차 리뷰 ①②).
+
+    왜: 탈락 행 3 개를 지우면 종전 `_prot_counts` 는 LiMnO₂ 4.0 V 를 전농도통과로 올려
+    18 을 냈고, 생성기는 17 을 냈다 — 같은 질문에 두 답. 이제 한 함수라 둘 다 죽는다.
+    """
+    import pytest as _pt
+    rows = _prot_rows()
+    n_all, n_pass, n_fail, n_col, full = _prot_counts(rows)
+    assert (n_all, n_col, len(full)) == (120, 24, 17), (n_all, n_col, len(full))
+    #: 생성기가 자기 load() 로 센 것과 형 변환을 거친 시험 쪽이 같다 — 어댑터 검사
+    P = _gen()
+    assert len(P._full_pass(P.load())) == len(full)
+    dropped = [r for r in rows if not (r["cathode"] == "LiMnO2" and r["voltage_V"] == "4.0"
+                                       and r["gate_pass"] != "True")]
+    with _pt.raises(SystemExit, match="농도 집합이 다르다"):
+        _prot_counts(dropped)
+    stray = list(rows) + [dict(rows[0], x_Nd="0.25")]
+    with _pt.raises(SystemExit, match="농도 집합이 다르다"):
+        _prot_counts(stray)
+
+
+def test_resume_block_checker_catches_unbolded_retracted_claim():
+    """⛔음성 — ⏭ 검사기가 굵기 없는 재주장·다른 문턱을 실제로 잡는다 (2차 리뷰 ③).
+
+    시험을 쓴 뒤 대상을 일부러 깨서 빨간불을 본다 — 검사기 자체를 여기서 깬다.
+    """
+    ok_blk = "집계 … 식이 **≤3.1 %p** 로 맞는 열은 **셋뿐**이다. ⏭ 블록에 철회된 ≤2.5 %p 잔존 · 고정 문자열"
+    assert _resume_block_violations(ok_blk, 3.0991) == []
+    #: 굵기 없이 되살린 철회 문턱 — 종전 시험은 이걸 **통과**시켰다
+    esc = ok_blk + " 식이 ≤2.5 %p 로 맞는 열은 셋뿐이다(LiCoO₂ 4.30 V · LiNiO₂ 3.50 V · NMC811 3.50 V)."
+    assert any("2.5" in v for v in _resume_block_violations(esc, 3.0991)), "굵기 없는 재주장을 놓쳤다"
+    #: 굵기 있는 재주장도, 괄호 삽입도 잡는다
+    assert _resume_block_violations(ok_blk + " 식이 **≤2.5 %p**(예측식 기준) 으로 맞는다", 3.0991)
+    #: 현행 주장이 하나도 없으면 그것도 위반이다
+    assert _resume_block_violations("아무 말도 없다", 3.0991)
+    #: 같은 뜻의 다른 표기(세 개뿐)는 위반이 아니다 — 스냅숏이 아니라 주장 검사다
+    assert _resume_block_violations("식이 ≤3.1 %p 로 맞는 열은 세 개뿐", 3.0991) == []

@@ -69,6 +69,11 @@ def _column_k(cat, V, pts):
     unsat = [r for r in pts if r["k_observed"] is not None
              and r["protection_observed"] is not None and r["protection_observed"] < SAT]
     ks = {r["k_observed"] for r in unsat}
+    #: ⛔ 2026-09-22 (2차 리뷰 ⑦). 빈 집합을 "갈린다 []" 로 말했다 — 죽긴 했지만 사람이
+    #  잘못 고친다. 없는 것과 갈리는 것은 다른 고장이다.
+    if not ks:
+        raise SystemExit(f"⛔ {cat}@{V} 의 **포화 안 된 점에 k 가 하나도 없다** — k 를 읽을 자리가 "
+                         "없다(Nd 인산염이 안 나왔거나 전부 포화다). 한 곡선으로 못 그린다")
     if len(ks) != 1:
         raise SystemExit(f"⛔ {cat}@{V} 의 k 가 **포화 안 된 점에서** 갈린다 {sorted(ks)} — "
                          "한 곡선으로 못 그린다. CLEAN 에서 빼거나 열을 나눠라")
@@ -79,7 +84,13 @@ def _column_k(cat, V, pts):
     #  포화라서 빼도 되는 근거는 **그 행 자신의 k 로도 포화일 때**만 성립한다.
     for r in pts:
         if r["protection_observed"] is not None and r["protection_observed"] >= SAT:
-            kr = r["k_observed"] if r["k_observed"] is not None else k
+            #: ⛔ 2026-09-22 (2차 리뷰 ⑥). 첫 정정은 k 가 None 인 포화 행을 **공통 k 로 봐줬다**.
+            #  실측 100 % 인데 Nd 인산염이 안 나온 행은 이 규칙(k 개의 P 를 가로챈다)의
+            #  증거가 아니다 — 곡선 위에 얹으면 규칙이 맞는 척한다. 죽인다.
+            if r["k_observed"] is None:
+                raise SystemExit(f"⛔ {cat}@{V} x={r['x_Nd']} 는 실측이 포화인데 **Nd 인산염(k)이 "
+                                 "없다** — k 규칙의 증거가 아니라 곡선에 못 얹는다. 한 곡선으로 못 그린다")
+            kr = r["k_observed"]
             if min(1.0, kr * r["x_Nd"] / (1 - r["x_Nd"])) < SAT:
                 raise SystemExit(f"⛔ {cat}@{V} x={r['x_Nd']} 는 실측이 포화인데 "
                                  f"**그 행의 k={kr:g}** 예측은 포화가 아니다 "
@@ -115,22 +126,34 @@ def _full_pass(rows):
     """전 농도 통과 열 — **자료에서 센다**. 손으로 적으면 자료가 바뀔 때 갈린다.
 
     ⛔ 2026-09-21 정정 (외부 리뷰). 첫 판은 남아 있는 행의 `all(gate_pass)` 만 봤다.
-    그러면 **농도가 빠져도** 전 농도 통과로 올라간다 — 실패한 행을 지우기만 해도
-    승격됐고, 농도 하나를 중복시켜도 안 걸렸다. 그래서 **기대 농도 집합**(자료 전체의
-    x 합집합)을 만들고, 그것과 정확히 같은 집합을 가진 열만 인정한다.
+    그러면 **농도가 빠져도** 전 농도 통과로 올라간다 — 실패한 행을 지우기만 해도 승격됐다.
+    ⛔ 2026-09-22 재정정 (2차 리뷰 ①). 그 정정이 기대 농도를 **자료 전체의 x 합집합**으로
+    만들었다. 그러면 낯선 농도 **한 행**이 다른 23 열의 집합을 전부 '다르게' 만들어
+    17 → 1 로 조용히 무너뜨렸다((c) 제목 "1 of 24", (b) 점 0, PNG 는 정상 저장 — 실측).
+    전조건 격자는 4 양극 × 6 전압 × **같은 5 농도**다(사전등록 §1). 그러므로 기대 집합을
+    자료에서 '만들지' 않고 **열마다 같은 집합인지 검사**한다 — 다르면 자료가 깨진 것이고
+    어느 열이 살았는지 세는 대신 **죽는다**. 조용한 강등도 조용한 승격만큼 나쁘다.
+
+    ⛔ 이 함수가 못 하는 것: 농도 집합이 **무엇이어야 하는지**는 모른다. 전 열이 같은 집합을
+      공유하면(예: 전부 4 농도) 통과한다 — 격자 크기는 selftest 의 120 행 검사가 본다.
     """
-    want = {round(r["x_Nd"], 6) for r in rows}
     cols = {}
     for r in rows:
         cols.setdefault((r["cathode"], r["voltage_V"]), []).append(r)
-    out = []
+    xsets = {}
     for c, v in cols.items():
         xs = [round(r["x_Nd"], 6) for r in v]
         if len(xs) != len(set(xs)):
             raise SystemExit(f"⛔ {c[0]}@{c[1]} 에 농도가 중복돼 있다 {sorted(xs)} — 자료가 깨졌다")
-        if set(xs) == want and all(r["gate_pass"] for r in v):
-            out.append(c)
-    return sorted(out)
+        xsets[c] = frozenset(xs)
+    distinct = set(xsets.values())
+    if len(distinct) > 1:
+        common = max(distinct, key=lambda s: sum(1 for v in xsets.values() if v == s))
+        odd = sorted((f"{c[0]}@{c[1]}", sorted(s)) for c, s in xsets.items() if s != common)
+        raise SystemExit("⛔ 열마다 **농도 집합이 다르다** — 전조건 격자가 깨졋다. 다수 집합 "
+                         f"{sorted(common)} 과 다른 열: {odd}. 어느 열이 살았는지 세지 않고 죽는다 "
+                         "(낯선 행 하나가 나머지 전부를 강등시킨 적이 있다, 2026-09-22)")
+    return sorted(c for c, v in cols.items() if all(r["gate_pass"] for r in v))
 
 
 def _non_monotonic(rows):
@@ -280,14 +303,18 @@ def panel_c(ax, rows):
     #  표시도 없이 잘려 나갔다 (2026-09-21 외부 리뷰). 탈락 정도를 보여주는 패널에서
     #  제일 큰 값을 못 읽으면 패널이 제 일을 못 한다. ⇒ 상한을 **자료에서** 잡는다.
     dmax = max((r["delta_x"] for r in rows if r["delta_x"] is not None), default=DX_MAX)
-    ax.set_xlim(0, .225); ax.set_ylim(0, dmax * 1.08)
+    #: ⛔ 2026-09-22 (2차 리뷰 ④). 자료가 전부 비교 가능하면 dmax < DX_MAX 라 ylim 이 0.001 대로
+    #  내려가 **게이트 선(0.05)과 라벨이 축 밖**으로 나가고 녹색 띠가 패널을 다 채웠다(실측).
+    #  게이트 패널은 게이트를 항상 보여야 한다 — 상한은 자료와 게이트 중 **큰 쪽**이다.
+    ymax = max(dmax * 1.08, DX_MAX * 1.30)
+    ax.set_xlim(0, .225); ax.set_ylim(0, ymax)
     apply_axes(ax, "Nd content $x$", "$|\\Delta x_{\\mathrm{mix}}|$ vs lithium-matched control",
                f"(c)  {len(survivors)} of "
                f"{len({(r['cathode'], r['voltage_V']) for r in rows})} columns survive")
     #: ⛔ 종전 문구는 점선을 **전부** "혼합비 이동" 으로 설명했다. 실제로는 점선 선택이
     #  전체 게이트 결과라, LiMnO₂ 4.5 V 처럼 Δx 는 0.001–0.002 로 멀쩡한데 끝점·P₂S₇
     #  사유로 탈락한 열도 점선이다 (2026-09-21 외부 리뷰). 사유를 갈라 적는다.
-    ax.text(.004, dmax * 1.045,
+    ax.text(.004, ymax * 0.968,
             "solid = every concentration comparable\n"
             "dotted = some concentration failed a gate\n"
             "  above the line = the comparability gate itself\n"
@@ -312,6 +339,7 @@ def _preflight(which, rows):
     그림을 **저장한 뒤** CSV 단계에서야 죽었다 — 곡선 둘짜리 PNG 와 0 바이트 CSV 가
     남았다. 검증을 앞으로 당긴다.
     """
+    full = set(_full_pass(rows))        # 격자가 깨졌으면 패널이 무엇이든 여기서 죽는다 (①)
     if "a" not in which:
         return
     for cat, V, _, _ in CLEAN:
@@ -319,6 +347,11 @@ def _preflight(which, rows):
         if not pts:
             raise SystemExit(f"⛔ CLEAN 열 {cat}@{V} V 가 자료에 없다 — "
                              "조용히 빼고 그리지 않는다. CLEAN 을 고치거나 자료를 확인해라")
+        #: ⛔ 2026-09-22 (2차 리뷰 ⑤). 45 행 주석이 "(a) 는 전 농도 통과 열" 이라 선언만 했다.
+        #  실측: CLEAN 열의 한 농도를 탈락시키면 **4 점으로 그리고 k 도 4 점에서 읽고 오류 없음**.
+        if (cat, V) not in full:
+            raise SystemExit(f"⛔ CLEAN 열 {cat}@{V} V 가 **전 농도 통과가 아니다**(농도 일부 탈락) — "
+                             "(a) 는 전 농도 통과 열만 그린다. CLEAN 에서 빼거나 자료를 확인해라")
         _column_k(cat, V, pts)          # k 가 못 정해지면 여기서 죽는다
 
 
@@ -447,17 +480,34 @@ def _selftest_body(chk, tp, _cp):
         okpass = False
     chk(okpass, "[양성] 포화 점의 자기 k 로도 포화면(k=4·x=0.20) 열을 버리지 않는다")
 
-    # ⛔음성 — 농도가 빠지거나 중복되면 '전 농도 통과' 로 안 올려준다
+    # ⛔음성 — 격자가 깨지면(농도 누락·탈락행 삭제·낯선 농도) 세지 않고 **죽는다** (2026-09-22 ①)
+    #   2026-09-21 판은 '그 열만 강등' 이었는데, 그 구현(합집합 want)이 낯선 행 하나로
+    #   나머지 23 열을 조용히 강등시켰다. 조용한 강등도 조용한 승격만큼 나쁘다 → 죽는다.
+    def _dies_grid(data):
+        try:
+            _full_pass(data)
+        except SystemExit as e:
+            return "농도 집합이 다르다" in str(e)
+        return False
     miss = [r for r in _cp.deepcopy(rows)
             if not (r["cathode"] == "NMC811" and abs(r["voltage_V"] - 4.5) < 1e-9
                     and r["x_Nd"] == 0.2)]
-    chk(("NMC811", 4.5) not in _full_pass(miss),
-        "[⛔음성] 농도 하나가 빠진 열은 전 농도 통과가 아니다")
+    chk(_dies_grid(miss), "[⛔음성] 농도 하나가 빠진 열이 있으면 세지 않고 죽는다")
     drop_fail = [r for r in _cp.deepcopy(rows)
                  if not (r["cathode"] == "LiMnO2" and abs(r["voltage_V"] - 4.0) < 1e-9
                          and not r["gate_pass"])]
-    chk(("LiMnO2", 4.0) not in _full_pass(drop_fail),
-        "[⛔음성] 탈락 행을 지운다고 승격되지 않는다")
+    chk(_dies_grid(drop_fail), "[⛔음성] 탈락 행을 지우면 승격이 아니라 **죽는다**(격자 깨짐)")
+    stray = _cp.deepcopy(rows)
+    _s = dict([r for r in stray if r["cathode"] == "LiMnO2" and abs(r["voltage_V"] - 2.5) < 1e-9
+               and r["x_Nd"] == 0.2][0]); _s["x_Nd"] = 0.25; stray.append(_s)
+    chk(_dies_grid(stray), "[⛔음성] 낯선 농도 **한 행**이 있으면 나머지를 강등시키지 않고 죽는다 (17→1 사고)")
+    died_stray_png = False; _png = tp("stray.png")
+    try:
+        build("bc", out=_png, rows=stray)
+    except SystemExit as e:
+        died_stray_png = "농도 집합" in str(e)
+    chk(died_stray_png and not pathlib.Path(_png).exists(),
+        "[⛔음성] 격자가 깨지면 (a) 없는 패널(bc)도 그리기 전에 죽고 PNG 를 안 남긴다")
     dup = _cp.deepcopy(rows)
     for r in dup:
         if r["cathode"] == "NMC811" and abs(r["voltage_V"] - 4.5) < 1e-9 and r["x_Nd"] == 0.2:
@@ -480,6 +530,54 @@ def _selftest_body(chk, tp, _cp):
         died_nc = "CLEAN 열" in str(e)
     chk(died_nc and not pathlib.Path(png_missing).exists(),
         "[⛔음성] CLEAN 열이 없으면 죽고 **PNG 를 안 남긴다**")
+    # ⛔음성 ⑤ — CLEAN 열의 한 농도만 탈락해도 4 점으로 조용히 그리지 않는다
+    partial = _cp.deepcopy(rows)
+    for r in partial:
+        if r["cathode"] == "LiNiO2" and abs(r["voltage_V"] - 3.5) < 1e-9 and r["x_Nd"] == 0.15:
+            r["gate_pass"] = False
+    _pp = tp("partial.png"); died_p = False
+    try:
+        build("a", out=_pp, rows=partial)
+    except SystemExit as e:
+        died_p = "전 농도 통과가 아니다" in str(e)
+    chk(died_p and not pathlib.Path(_pp).exists(),
+        "[⛔음성] CLEAN 열의 농도 하나가 탈락하면 **4 점으로 그리지 않고** 죽는다 (⑤)")
+    # ⛔음성 ⑥ — 포화 행에 k 가 없으면 공통 k 로 봐주지 않는다
+    knone = _cp.deepcopy(rows)
+    for r in knone:
+        if r["cathode"] == "LiCoO2" and abs(r["voltage_V"] - 4.3) < 1e-9 and r["x_Nd"] == 0.2:
+            r["k_observed"] = None
+    died_k = False
+    try:
+        build("a", out=tp("knone.png"), rows=knone)
+    except SystemExit as e:
+        died_k = "Nd 인산염(k)이 없다" in str(e)
+    chk(died_k, "[⛔음성] 포화 행에 k 가 없으면 **공통 k 로 얹지 않고** 죽는다 (⑥)")
+    # ⛔음성 ⑦ — 포화 안 된 점에 k 가 하나도 없으면 '갈린다 []' 가 아니라 '없다' 로 죽는다
+    nounsat = _cp.deepcopy(rows)
+    for r in nounsat:
+        if (r["cathode"] == "LiCoO2" and abs(r["voltage_V"] - 4.3) < 1e-9
+                and r["protection_observed"] is not None and r["protection_observed"] < SAT):
+            r["k_observed"] = None
+    msg = ""
+    try:
+        _column_k("LiCoO2", 4.3, _col(nounsat, "LiCoO2", 4.3))
+    except SystemExit as e:
+        msg = str(e)
+    chk("하나도 없다" in msg and "갈린다" not in msg,
+        "[⛔음성] k 를 읽을 점이 없으면 '갈린다 []' 라 하지 않고 '없다' 로 죽는다 (⑦)")
+    # [양성] ④ — 자료가 전부 비교 가능해도 (c) 의 게이트 선·라벨이 축 안에 있다
+    allok = _cp.deepcopy(rows)
+    for r in allok:
+        r["delta_x"] = 0.001 if r["delta_x"] is not None else None
+        r["gate_pass"] = True
+    _fig, _ax = plt.subplots()
+    panel_c(_ax, allok)
+    _lab = [tx for tx in _ax.texts if "comparable" in tx.get_text()][0].get_position()[1]
+    _y1 = _ax.get_ylim()[1]
+    plt.close(_fig)
+    chk(_y1 >= DX_MAX * 1.2 and _lab < _y1,
+        f"[양성] 전부 비교 가능한 자료에서도 (c) 게이트 선(0.05)·라벨이 축 안에 있다 (ylim {_y1:.3f}) (④)")
     # ── 단조성 탐지: (b) 가 세 갈래로 나눌 수 있어야 한다 ─────────────────────
     nm = _non_monotonic(rows)
     chk(("LiMnO2", 3.0) in nm,
