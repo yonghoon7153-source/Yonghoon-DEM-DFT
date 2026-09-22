@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # 캠페인 실행 — 런마다 **np=1 직렬**, 여러 개를 **동시에** 띄운다 (MPI 효율 걱정 없음).
 # 사용:  MAXJ=10 bash dem_scripts/mixer_20260921/run_all.sh
-#   LMP  = LIGGGHTS 실행 파일 (기본 **lmp_serial**)   MAXJ = 동시 실행 수 (기본 = 코어 수)
+#   LMP   = LIGGGHTS 실행 파일 (기본 **lmp_serial**)   MAXJ = 동시 실행 수 (기본 = 코어 수)
+#   FORCE=1 = 죽은(미완주) 런을 **처음부터** 다시 띄운다 (로그·덤프가 덮인다).  기본은 **목록만** 찍는다.
 #
 # ★★ **기본은 `lmp_serial` (STUBS 직렬 빌드)** 이다 — 1저자 WSL 에서 믹서 대조쌍을 실제로 돌린
 #   바이너리가 이것이다 (`docs/reviews/mixing_model_design_20260919.md` §13: *"lmp_serial, STUBS 직렬"*).
@@ -13,6 +14,14 @@
 # ⚠ 로그를 파일로 보내면 stdio 가 4 KB 블록 버퍼를 써서 **살아 있어도 로그가 비어 보인다**
 #   ⇒ `stdbuf -oL -eL` 로 줄 단위로 흘린다.
 # ⚠ 정지는 **PID 로만**: kill $(cat runs/<런>/pid)   — pkill -f 금지 (규약)
+#
+# ★★ 2026-09-22 — **완주 판정은 배너 하나로 하지 않는다.**  완주 = `Total wall time` 배너 **또는**
+#   마지막 thermo step ≥ 덱의 `run` 합.  새 덱(09-21, `restart` 포함)은 마지막 `run` 을 끝내고
+#   **배너 없이 죽는다** (E0 기준 런 3/3 실측 — 같은 자리, 결정론; 덤프·`settled.bin` 은 무사).
+#   배너만 보던 옛 판은 그 런을 "미완주" 로 읽어 **재발사해 로그·덤프를 지웠다** — 09-22 10:2x 에
+#   `E0_s49979687` 이 실제로 그렇게 됐다 (런처가 MAXJ 대기열에서 기다리다 슬롯이 비는 순간 띄웠다).
+# ★★ 죽은(미완주) 런은 **자동 재발사하지 않는다** — 목록만 찍고 끝낸다.  원인을 본 뒤 `FORCE=1` 로만.
+#   회귀: dem_scripts/mixer_20260921/test_launcher.sh (check_all.sh 에 배선).
 set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 OUT="${OUT:-$ROOT/dem_scripts/mixer_20260921/runs}"
@@ -23,14 +32,31 @@ case "$LMP" in *lmp_auto|*lmp_mpi)
   echo "   MPI 로 가려면 MPI 가 실제로 도는 기계에서 LMP=$LMP MPIOK=1 로 강제할 것."
   [ "${MPIOK:-0}" = 1 ] || exit 1;; esac
 PRE=(); command -v stdbuf >/dev/null && PRE=(stdbuf -oL -eL)
-echo "[실행] ${PRE[*]} $LMP  ·  런마다 1 코어 · 동시 상한 $MAXJ"
+echo "[실행] ${PRE[*]} $LMP  ·  런마다 1 코어 · 동시 상한 $MAXJ  ·  FORCE=${FORCE:-0}"
 
+tot_steps() { grep -oE '^run +[0-9]+' "$1/in.mixer" 2>/dev/null | awk '{s+=$2} END{print s+0}'; }
+last_step() { grep -E '^ +[0-9]+ +[0-9]+ ' "$1/log.lmp" 2>/dev/null | tail -1 | awk '{print $1+0}'; }
+#  완주 = 배너 **또는** 마지막 thermo step ≥ run 합 (배너 없이 죽는 새 덱의 종료 결함을 데이터 손실로 번역하지 않는다)
+done_run() {
+  local d="$1" t l; [ -f "$d/log.lmp" ] || return 1
+  grep -q "Total wall time" "$d/log.lmp" && return 0
+  t=$(tot_steps "$d"); l=$(last_step "$d")
+  [ "${t:-0}" -gt 0 ] && [ "${l:-0}" -ge "$t" ]
+}
 live() { local c=0; for f in "$OUT"/*_s*/pid; do [ -f "$f" ] && kill -0 "$(cat "$f")" 2>/dev/null && c=$((c+1)); done; echo $c; }
-n=0
+n=0; dead=()
 for d in "$OUT"/*_s*/; do
+  d="${d%/}"
   [ -f "$d/in.mixer" ] || continue
   if [ -f "$d/pid" ] && kill -0 "$(cat "$d/pid")" 2>/dev/null; then echo "· 이미 실행 중: $d"; continue; fi
-  if [ -f "$d/log.lmp" ] && grep -q "Total wall time" "$d/log.lmp"; then echo "· 완료됨: $d"; continue; fi
+  if done_run "$d"; then
+    if grep -q "Total wall time" "$d/log.lmp"; then echo "· 완료됨: $d"
+    else echo "· 완료됨 (배너 없음 — 종료 결함, 데이터 무사): $d"; fi
+    continue
+  fi
+  if [ -f "$d/log.lmp" ] && [ "${FORCE:-0}" != 1 ]; then
+    echo "⚠ 죽은 런(미완주) — 자동 재발사 안 함 (원인 확인 뒤 FORCE=1 로만): $d"; dead+=("$d"); continue
+  fi
   #  ★ 동시 상한 — pid 파일 + kill -0 로 **살아 있는 lmp 만** 센다 (리뷰 R-14: `jobs -rp` 는 서브셸이
   #    바로 끝나 무효였다)
   while [ "$(live)" -ge "$MAXJ" ]; do sleep 30; done
@@ -48,3 +74,8 @@ for d in "$OUT"/*_s*/; do
   sleep 2
 done
 echo "런처 종료 — 시작한 런 $n 개.  진행은 watch.sh"
+if [ ${#dead[@]} -gt 0 ]; then
+  echo "⚠ 미완주(죽은) 런 ${#dead[@]} 개 — 로그 꼬리를 본 뒤 FORCE=1 로만 재발사 (로그·덤프가 덮인다):"
+  printf '   %s\n' "${dead[@]}"
+fi
+exit 0

@@ -144,6 +144,9 @@ run 'webapp: security_phase_a'    python3 webapp/test_security_phase_a.py
 run 'webapp: seminar_page'        python3 webapp/test_seminar_page.py
 run 'webapp: worklog_page'        python3 webapp/test_worklog_page.py
 run 'webapp: mixer_devlog_page'   python3 webapp/test_mixer_devlog_page.py
+#  ★ 2026-09-22 — 믹서 런처·생성기 회귀 (LIGGGHTS 없이 가짜 실행파일로).  같은 날 사고 둘을 재현해 막는다:
+#    배너 없는 완주 런을 "죽음" 으로 읽고 재발사(E0_s49979687) · 실행 중 덱 제자리 덮어쓰기(E0_s32452843).
+run 'mixer launcher (완주 판정 · 덮어쓰기 가드)' bash dem_scripts/mixer_20260921/test_launcher.sh
 run 'webapp: launcher (포트 선점)' python3 scripts/test_webapp_launcher.py
 run 'webapp: temp_pressure'       python3 webapp/test_temp_pressure_wiring.py
 #  ★ v3 (2026-09-09) — 화면이 원장을 따라가는가 + **원장을 보여 주는 페이지가 금지값을

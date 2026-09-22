@@ -139,6 +139,11 @@ jobs:
       - name: 이종기술 회의록 해체 계약 (원문 무손실 · 해독 복사 금지) (selftest)
         run: python scripts/hetero_transcript.py --selftest
 
+      # ★ 2026-09-22 — 믹서 런처·생성기 회귀 (LIGGGHTS 없이 가짜 실행파일).  같은 날 사고 둘:
+      #   배너 없는 완주 런을 "죽음" 으로 읽고 재발사(덤프 소실) · 실행 중 덱 제자리 덮어쓰기.
+      - name: 믹서 런처 · 생성기 (완주 판정 · 덮어쓰기 가드) (regression)
+        run: bash dem_scripts/mixer_20260921/test_launcher.sh
+
       # ★★ 2026-08-31 — LHS 확장 제출 도구 셋.  설계 봉인이 CI 에서 매번 재검증된다.
       - name: LHS 확장 설계 생성기 (LHS 점유 · 소수 seed · 절대 칸) (selftest)
         run: python scripts/lhs_ext_design.py --selftest
