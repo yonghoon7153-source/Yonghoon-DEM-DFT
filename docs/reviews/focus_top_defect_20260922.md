@@ -380,3 +380,61 @@ the two cases have been re-run on the machine that holds their inputs.
 - ⛔ 이온 문장 — **삭제**.  "comparable" 도 "다르다" 도 말하지 않는다.
 - ✅ 순서(SBE > DBE) · 크기(−11.4~12.4 %) · `⟨|J|⟩_cond/J_app`(5.381 / 5.160) — 세 깊이 정확값.
 - ⚠ 99.9 % 채택은 **결과를 본 뒤의 규약 변경**이다.  회신문·캡션 둘 다에 그 사실을 적었다.
+
+---
+
+# I. 재실행 경로 확정 (2026-09-22 밤) — **MPM 재압밀 불요, STEP 2 만**
+
+## 입력 위치 (kgy, phase 지문으로 확정)
+
+| | 경로 | `phase.npy` 지문 |
+|---|---|---|
+| **SBE** | `/home/kgy/sdcp/kit_SBE/run_VGCF3_PTFE1_20260827_134104_3672586/` | `601a887701420ea3` ✓ |
+| **DBE** | `/home/kgy/sdcp/kit_DBE/run_VGCF3_PTFE0.5_SDCP0.5_20260827_150029_3687585/` | `ec903b552319a935` |
+
+킷 루트(`/home/kgy/sdcp/kit_SBE/`)에 `am_scaffold.csv` · `se_scaffold.csv` · `mpm_input.json` ·
+`run_mpm.sh` · `harvest.sh` · `latest_run`.  런 디렉터리에 `se_dump.npy` · `se_dump_eps.npy` ·
+`phase.npy` · `fibre.npy` · `fibre_dia.npy` · `mpm_metrics.json`.
+
+## ★ 원고 payload 는 arm `.sh` 가 아니다
+
+런 디렉터리의 `p2_{SBE,DBE}_sph_a{0..7}.*.sh` 37+개는 **SR-01 origin 앙상블** 팔이고
+**`--no-field`** 다 ⇒ 점군·joule 을 안 만든다.  원고 payload 는 필드·joule·이온·collector 를
+전부 갖고 있으므로 킷의 **`run_mpm.sh` STEP 2** 산출이다.
+
+⇒ **MPM 압밀(STEP 1)을 다시 돌릴 필요가 없다** — `se_dump.npy` 가 그대로 있다.
+`mpm_run.log` 가 그 재실행법을 직접 적어 둔다:
+
+```bash
+cd /home/kgy/sdcp/kit_SBE/run_VGCF3_PTFE1_20260827_134104_3672586
+sed -n '/mpm_webapp_payload/,/--out mpm_payload.json/p' /home/kgy/sdcp/kit_SBE/run_mpm.sh > payload_only.sh
+bash payload_only.sh
+```
+
+⚠ 이 런의 STEP 2 는 당시 **실패**했다 (`mpm_payload.json.failed`, 흔한 원인 = pip 모듈 누락:
+`scikit-image` · `scipy`).  원고 payload 는 다른 시도에서 성공했다 (09-02 업로드).
+⇒ 재실행 전에 그 모듈을 먼저 확인한다.
+
+## 코드 위치 — **`/home/kgy/dem-mt/scripts`**
+
+arm `.sh` 의 `SCR="/home/kgy/dem-mt/scripts"`.  ⇒ 재실행 전에 **거기**가 고쳐진 판인지 본다
+(uma 의 리포가 아니다):
+
+```bash
+cd /home/kgy/dem-mt && git status -sb | head -3 && git log --oneline -1
+grep -c percentile_basis scripts/mpm_webapp_payload.py        # 1 이어야 함 (0 = 옛 코드)
+python3 scripts/step3_sigma.py --selftest 2>&1 | grep -E "field-stats|joule-stats"   # 다섯 줄 OK
+```
+
+## 검수 조건 (변경 없음)
+
+`σ_e_eff` 가 **0.054530439566226836 (SBE)** · **0.0714004401030127 (DBE)** 로 소수점까지
+재현될 것.  SELF-45 패치는 통계·정규화만 건드렸으므로 물리는 비트 동일해야 한다.
+⚠ 재현 안 되면 **멈춘다** — 다른 침대로 비교하면 무효다.
+
+## 부수 관찰
+
+- arm `.sh` 에 `--step3-vox 0.4` 가 먼저 나오고 뒤에 `--step3-vox 0.15` 가 다시 나온다
+  (argparse 는 뒤가 이긴다 = 0.15).  manifest 와 일치하므로 무해하지만 **읽을 때 헷갈린다**.
+- `--sigma-ion-sdcp 0` (arm) vs 원고 manifest `sigma_ion_sdcp 0.001` ⇒ **arm 과 원고 런은
+  플래그가 다르다**.  한 번 더 확인: 재실행은 반드시 **`run_mpm.sh` 의 STEP 2** 에서 뽑는다.
