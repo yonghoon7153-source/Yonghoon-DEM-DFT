@@ -1754,3 +1754,15 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   3 순위 **inbox 15번**(3전극 + 압력 — 전극 귀속 공백), 4 순위 **Kasemchainan 2019**
   (`Nat. Mater.` 18, 1105 — 7호 ref 49, 상대극 void; §7 전하 수지의 상대극 쪽 오차원).
 - lint 0 errors / 0 warnings.
+
+## [2026-09-22] ingest | `assb` 8호 — Li et al. 2026, safety-aware BMS (Front. Chem. 14, 1960882) ⚠ Mini Review
+- 대상: `wiki/raw/papers/li2026_safety-aware-bms-active-intelligence.md` (본문 12쪽, SI 없음, sha256 봉인, PDF `a54b551671eea230…`, doi `10.3389/fchem.2026.1960882`).
+- ★★ **ASSB 수집 큐에서 처음으로 성격이 다른 자료다** — 1–7호는 ASSB 미세구조·계면·전극 논문(시뮬레이션 3 + 실험 4), 8호는 **BMS·진단 종설**이고 **ASSB 는 12쪽 중 한 문단(§6.1)** 뿐이다.
+- ⚠⚠ **Mini Review 다 — 1차 측정 0, 모든 수치가 재인용.** digest 머리·채움표 행·Evidence 절에 그 사실을 박았다. 근거로 쓰려면 원 논문 필요.
+- 그림: 크로핑 **6장**(fig 2 + tab 4) 중 **fig 2장 전부 열람**(Table 3 은 fig_2 크롭에 함께 들어와 이미지로도 이중 확인), 표 4장은 도구 권고대로 PDF 텍스트. ✅ **크로퍼 누락 0** (pymupdf 내장 이미지 2개와 일치). ✅ µ 탈락 위험 없음 (이 PDF 에 µ 필요 수치 0).
+- 컴파일: **새 개념 페이지 없음** (1차 근거가 없어 개념을 세울 재료가 안 된다). [[assb-contact-loss-vs-lampe]] 에 Q1~Q8 채움표 행 + Evidence 1절 + 새 제약 1절 + Status Log, [[assb-stack-pressure-operating-window]] 에 산업 요구치 절. ⚠ [[composite-cathode-percolation-utilization]] 은 건드리지 않았다 (339줄 분할 대기 + 내용상 `θ` 에 아무것도 안 준다).
+- Q1~Q8: **8편 누적 ≈7.0/8 — 칸은 안 늘었다.** 남은 0 은 **Q1(양극 접촉 손실 정량) · Q4(유일성)**.
+- 최대 수확 넷: ① **이 카드의 질문이 BMS 요구 사항으로 인쇄됐다** (`[인쇄]` "diagnostics capable of distinguishing contact loss from ordinary electrochemical aging") ② **Q4 의 성질 변화** — `identifiab*` 5회(1–7호 0회) + Table 4 중기 실패 모드 "Unidentifiable pulse response" (⚠ 측정은 0, 8/8편) ③ **보정된 불확실성 0/8** — 액체셀 17/17·`assb` 7/7 에 이은 **세 번째 비어 있음 원장** ④ **산업 압력 요구치 `<≈1 MPa`** — 실험실 창 2–490 MPa 전체가 그 위.
+- 어긋남 **10건** (형태가 다르다 — 자기 실험 0 이라 **인용 어긋남**이 주종): D1 ★★★ 재인용이 원전을 넘어선 것을 **우리 위키로 검증**(`≤0.873 %` ↔ `raw/papers/su2024_drt-soh-health-features.md` 의 5셀 평균·cell5 1.607 %·자기 대조군에 패배) · D2 `poorly identifiable` 인용이 **Si–C 음극 소재 종설** · D3 Fig. 2 가 "lexicographic" 이라 적고 **`min()`** 을 계산 · D4 본문이 **Figure 1 에 없는** safety supervisor 를 Figure 1 의 것이라 부름 · D5 심사 응답 문장이 게재본에 잔존 + Figure 1 은 생성형 AI 제작 + 접수→게재 39일 · D6 PyBaMM 인용 서지가 DOI 와 불일치 · D8 Birkl 2017 이 EIS/DRT 표에 붙어 있고 이 리뷰는 열화 모드를 한 번도 안 씀(`LLI`·`LAM` 전수 0회).
+- ★★★ **이 편의 실익은 수치가 아니라 원 논문 지도다** (digest §15, 7편): Xu 2024 (*AEM* 14, 2303539) · Zhang 2025 (*Adv. Mater.* 37, 2413499) · Biçer 2025 (*Batteries* 11, 212) · Liang 2026 (*npj Clean Energy* 2, 16) · LeBel 2022 (*JES* 54, 105303) · Roman 2021 (*NMI* 3, 447) · Thelen 2024 (*npj Mater. Sustain.* 2, 14). ⚠ 1–3순위가 전부 종설이고, 닻의 오랜 1순위 **Koerver 2017 은 이 리뷰가 인용조차 하지 않는다**(참고문헌 48편에 0회).
+- lint: 0 errors.

@@ -2,10 +2,10 @@
 title: ASSB 스택 압력의 작동 창 — 아래는 접촉 손실, 위는 단락
 description: "Stack pressure in ASSBs is a two-sided constraint: too low gives interfacial contact loss, too high drives Li creep into electrolyte pores and shorts the cell. Doux 2020 gives the first measured pressure sweeps (P→impedance, P→time-to-short, P→overpotential) and a hard upper bound"
 created: 2026-09-16
-updated: 2026-09-16
+updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md]
+sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -30,6 +30,46 @@ evidenceScope: multi-source-primary
 > ★★★ **압력이 하나의 축이 아니다.** 아래 §"제작 압력 ↔ 운전 압력" 을 먼저 읽는다.
 > 이 페이지의 Doux 수치는 전부 **운전 압력**이고, Lee 는 **제작 압력 490 MPa** 를
 > 쓰면서 **운전 압력은 2 MPa** 로 내리고 심지어 **0 으로도 돌린다.**
+
+## ⚠ 2026-09-22 (`assb` 8호 Li et al. 2026, **Mini Review**) — 창 **전체가 산업 요구치 위**에 있다
+
+> ⚠⚠ **재인용이다.** 8호는 1 차 측정이 0 인 종설이고, 아래 값은 그 안의 재인용이다.
+> **설계 입력으로 쓰기 전에 원전(Xu 2024)을 받아야 한다.**
+
+`[인쇄]` §6.1: "Reviews emphasize that many laboratory solid-state cells **still rely on
+high external pressure**, whereas practical targets are moving toward **much lower
+operating pressure**; **Xu et al. (2024) note industrial requirements below approximately
+1 MPa**, and recent low-pressure reviews identify **pressure reduction as a central
+commercialization problem** (Zhang et al., 2025)."
+
+`[재현]` 8호 12 쪽 전수에서 `MPa` 는 **1 회**뿐이고 그 값이 **1** 이다.
+이 페이지가 모은 실측과 나란히 놓으면:
+
+| 출처 | 압력 | 역할 |
+|---|---|---|
+| 6호 Lee 2020 | **490 MPa** (WIP 등방) | 제작 — 계면을 만든다 (비가역) |
+| 7호 Spencer-Jolly 2023 | 400 MPa (일축) | 제작 |
+| 4호 Shi 2020 | **300 MPa** | 개입 — `θ_AM` 재가압 회복 |
+| 5호 Doux 2020 | **75 MPa** 에서 도금 전 기계적 단락 | Li 금속 셀의 **위 벽** |
+| 5호 (권고 운전) | 5 MPa (>1000 h 무단락) | 운전 |
+| 6호·7호 (운전) | **2–4 MPa** | 운전 |
+| **8호 (산업 요구치, 재인용)** | **< ≈1 MPa** | **위 전부보다 아래** |
+
+★ `[해석]` **결과 둘**:
+1. [[assb-pressure-reapplication-separation-test]] 의 `P↑` 연산자는 **산업 셀에서
+   더더욱 쓸 수 없다** — 4호의 300 MPa 는 이 요구치의 **≈300 배**다.
+2. 거꾸로 **`θ_AM` 의 시간 변화가 산업 조건에서 더 크고 더 빠를 것**이라는 방향이
+   생긴다. 우리 분리 시험의 **운전 압력 기준점**은 실험실 값(2–5 MPa)이 아니라
+   이쪽이어야 한다.
+
+★★ 그리고 8호는 **압력을 BMS 상태변수로 올리자고 처음 제안한다**:
+`[인쇄]` "stack pressure becomes a **coupled state/control variable**" ·
+"A solid-state BMS may therefore need **pressure or force sensing**,
+**pressure-dependent impedance models**, and diagnostics capable of **distinguishing
+contact loss from ordinary electrochemical aging**."
+→ `[해석]` 5호가 로드셀로 압력을 **실험실에서** 쟀다면, 8호는 그것을
+**차량 안의 센서**로 올리자고 한다. ⚠ 구현·정확도·비용은 하나도 적혀 있지 않다.
+⚠ Table 4 장기 실패 모드에 "**pressure/contact failure**" 가 올라 있지만 **측정법은 0**.
 
 ## 정의
 

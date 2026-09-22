@@ -1,0 +1,131 @@
+{
+ "slug": "li2026_safety-aware-bms-active-intelligence",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "3cccdbf7-08._From_state_estimation_to_active_intelligence_safety-aware_battery_management_for_electric_vehicles.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Integrated framework for safety-aware battery management in electric vehicles. Battery representation, state intelligence, fast-charging control, thermal safety and fault diagnosis, cell balancing and pack coordination, and digital twins with active sensing are coupled through the BMS core. Robust validation, uncertainty quantification, multiscale integration, and standardized benchmarks are identified as key priorities for safer and longer-lasting electric-vehicle batteries.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.6,
+    88.3,
+    541.5,
+    415.5
+   ],
+   "w": 2026,
+   "h": 1365,
+   "dpi": 300,
+   "src": "3cccdbf7-08._From_state_estimation_to_active_intelligence_safety-aware_battery_management_for_electric_vehicles.pdf",
+   "blank": 0.431
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Decision flow for a low-temperature fast-charging request. State/health/uncertainty estimates feed thermal, electrochemical, and pack gates; the safety supervisor computes the most restrictive admissible current, while charge-time optimization is performed only within that safe set. Invalid sensing or high uncertainty forces a conservative fallback.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    89.9,
+    551.7,
+    657.0
+   ],
+   "w": 2118,
+   "h": 2364,
+   "dpi": 300,
+   "src": "3cccdbf7-08._From_state_estimation_to_active_intelligence_safety-aware_battery_management_for_electric_vehicles.pdf",
+   "blank": 0.775
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "TABLE 1 Functional layers of a safety-aware BMS, with explicit information exchange, evidence, and deployment limitations. Functional layer Information in/out Representative",
+   "rotated_deg": 0,
+   "bbox": [
+    44.6,
+    75.9,
+    550.6,
+    783.4
+   ],
+   "w": 2109,
+   "h": 2949,
+   "dpi": 300,
+   "src": "3cccdbf7-08._From_state_estimation_to_active_intelligence_safety-aware_battery_management_for_electric_vehicles.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "TABLE 2 Representative quantitative benchmarks for battery state/health estimation and their deployment boundaries. Reported metrics come from the cited studies and should not be compared without considering",
+   "rotated_deg": 90,
+   "bbox": [
+    6.0,
+    6.0,
+    835.9,
+    589.3
+   ],
+   "w": 2998,
+   "h": 2107,
+   "dpi": 260,
+   "src": "3cccdbf7-08._From_state_estimation_to_active_intelligence_safety-aware_battery_management_for_electric_vehicles.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 7,
+   "file": "tab_3.png",
+   "caption": "TABLE 3 Electrochemical diagnostic methods and their roles in a deployable BMS. Method Electrochemical",
+   "rotated_deg": 0,
+   "bbox": [
+    44.6,
+    75.9,
+    550.6,
+    347.3
+   ],
+   "w": 2110,
+   "h": 1131,
+   "dpi": 300,
+   "src": "3cccdbf7-08._From_state_estimation_to_active_intelligence_safety-aware_battery_management_for_electric_vehicles.pdf",
+   "blank": 0.826
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 10,
+   "file": "tab_4.png",
+   "caption": "TABLE 4 Proposed testable roadmap for safety-aware active BMS development. TRL ranges are proposed targets rather than ratings of the cited literature. Horizon Specific objective Data requirement Validation/ Major failure Measurable deliverable target TRL modes Short term (1– Report boundary-case error, Multi-temperature cell datasets Cell + HIL; target TRL Domain shift; false Electrochemical 3 years) observability + calibration curves, runtime/ with sensor bias, missing data, 4–5 confidence; diagnostic noise uncertainty memory; compare sparse EIS/ multiple aging modes, raw DRT, relaxation and pulse diagnostic metadata features under common protocols Short term (1– Reproducible model Record chemistry, format, Public benchmark splits and Cell/module replication; Selective reporting; hidden 3 years) cards current/T range, sampling, independent hold-out cells target TRL 4–5 leakage; incompa",
+   "rotated_deg": 0,
+   "bbox": [
+    44.6,
+    75.9,
+    550.7,
+    505.2
+   ],
+   "w": 2110,
+   "h": 1789,
+   "dpi": 300,
+   "src": "3cccdbf7-08._From_state_estimation_to_active_intelligence_safety-aware_battery_management_for_electric_vehicles.pdf",
+   "blank": 0.87
+  }
+ ]
+}
