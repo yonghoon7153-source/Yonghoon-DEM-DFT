@@ -75,6 +75,10 @@ run 'repair_focus_top       --selftest' python3 scripts/repair_focus_top.py --se
 #    자동 규율이 아니다").  ⇒ 둘 다 두 레인에 건다.
 run 'webapp_env_audit       --selftest' python3 scripts/webapp_env_audit.py --selftest
 run 'type_map_resolve       --selftest' python3 scripts/type_map_resolve.py --selftest
+#  ★ 2026-09-22 (패치 §8 세 번째) — `type_map_resolve` 는 **앞으로** 들어오는 덱만 막는다.
+#    이미 `?` 로 계산돼 저장된 옛 케이스는 전수 확인된 적이 없다.  스윕 도구의 selftest 가
+#    ⓐ 실사고 재현 ⓑ **다른 표식**(atoms 는 `?` 가 아니라 빈 칸이다) ⓒ 빈 스윕 거부를 건다.
+run 'type_map_unknown_sweep --selftest' python3 scripts/audit_type_map_unknown.py --selftest
 run 'gen_plots  --selftest-descriptions' python3 scripts/generate_comparison_plots.py --selftest-descriptions
 run 'gen_plots  --selftest-fits' python3 scripts/generate_comparison_plots.py --selftest-fits
 run 'eis_drt_ica            --selftest' python3 scripts/eis_drt_ica.py --selftest

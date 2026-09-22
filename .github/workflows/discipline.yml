@@ -99,6 +99,9 @@ jobs:
       - name: atom-type ↔ 상 매핑 경계 계약 (selftest)
         run: python scripts/type_map_resolve.py --selftest
 
+      - name: 저장된 케이스의 미상 상 라벨 스윕 (selftest)
+        run: python scripts/audit_type_map_unknown.py --selftest
+
       - name: 설명 ↔ 상수 정합 (L3-11 — 어느 수식을 계산했다고 보고하는가)
         run: python scripts/generate_comparison_plots.py --selftest-descriptions
 
