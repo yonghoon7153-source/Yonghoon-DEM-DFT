@@ -1,0 +1,171 @@
+{
+ "slug": "wu2026_tmd_intercalation_engineering_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "b0ff39c5-7._Recent_progress_in_intercalation_engineering_of_transition_metal_dichalcogenides_for_energy_storage_and_conversion.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1 Schematic illustrations of different intercalation meth- ods. (A) Preparation of ­FexTaS2 via CVT. Reproduced with per- mission from Ref. [24]. Copyright 2025, American Chemical Society (ACS). (B) Preparation of ­FexTaS2. Reproduced with per-",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    312.6,
+    550.3,
+    667.6
+   ],
+   "w": 2106,
+   "h": 1480,
+   "dpi": 300,
+   "src": "b0ff39c5-7._Recent_progress_in_intercalation_engineering_of_transition_metal_dichalcogenides_for_energy_storage_and_conversion.pdf",
+   "blank": 0.628
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2 Structural evolutions induced by intercalation. (A) Syn- thesis of V-WS2 with EDS/SAED patterns of ­LixWS2 and V-WS2. Reproduced with permission from Ref. [43]. Copyright 2023, ACS. (B) Crystal structures of ­FexNbSe2. Reproduced with permission from Ref. [46]. Copyright 2023, the Authors. (C) Time-resolved",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    51.8,
+    550.3,
+    321.0
+   ],
+   "w": 2106,
+   "h": 1123,
+   "dpi": 300,
+   "src": "b0ff39c5-7._Recent_progress_in_intercalation_engineering_of_transition_metal_dichalcogenides_for_energy_storage_and_conversion.pdf",
+   "blank": 0.538
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3 Optical and electronic property modulation of TMDs induced by intercalation. (A) Optical transmission spectra of h-LixMoS2. Reproduced with permission from Ref. [52]. Copyright 2017, ACS. (B) Electronic band structures of few-layer ­MX2 before and after Ga intercalation. Reproduced with permission from Ref. [53]. Copyright 2018, ACS. (C) Schematic of three representative",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    51.8,
+    550.3,
+    536.1
+   ],
+   "w": 2106,
+   "h": 2019,
+   "dpi": 300,
+   "src": "b0ff39c5-7._Recent_progress_in_intercalation_engineering_of_transition_metal_dichalcogenides_for_energy_storage_and_conversion.pdf",
+   "blank": 0.798
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Figure 4 Electrocatalytic applications of intercalated TMDs. (A) Polarization curves of ­Pd0.1TaS2 (inset: magnified low-overpo- tential region at − 10 mA ­cm−2). Reproduced with permission from Ref. [26]. Copyright 2017, RSC. (B) Polarization curves of ­CrS2-Cr1/3-CrS2 (inset: chronoamperometric curve). Reproduced with permission from Ref. [23]. Copyright 2021, ACS. (C) Top and side",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    51.8,
+    550.3,
+    324.9
+   ],
+   "w": 2106,
+   "h": 1139,
+   "dpi": 300,
+   "src": "b0ff39c5-7._Recent_progress_in_intercalation_engineering_of_transition_metal_dichalcogenides_for_energy_storage_and_conversion.pdf",
+   "blank": 0.792
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 12,
+   "file": "fig_5.png",
+   "caption": "Figure 5 Battery applications of intercalated TMDs. (A) Cyclic vol- tammetry curves of e-MoSe2. Reproduced with permission from Ref. [74]. Copyright 2021, ACS. (B) Two pathways of ­Na+ diffu- sion. Reproduced with permission from Ref. [81]. Copyright 2025, ACS. (C) Nyquist plots of ­VS2-NF and ­VS2-NS electrodes before cycling and after 50 cycles (inset). Reproduced with permission from",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    51.8,
+    550.3,
+    438.0
+   ],
+   "w": 2106,
+   "h": 1611,
+   "dpi": 300,
+   "src": "b0ff39c5-7._Recent_progress_in_intercalation_engineering_of_transition_metal_dichalcogenides_for_energy_storage_and_conversion.pdf",
+   "blank": 0.746
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 15,
+   "file": "fig_6.png",
+   "caption": "Figure 6 Battery and supercapacitor applications of intercalated TMDs. (A) LiPSs conversion catalysis mechanism on Fe-MoS2-C. Reproduced with permission from Ref. [106]. Copyright 2024, ACS. (B) Differential charge density of ­Li2S on 1T/Zn-MoS2. Reproduced with permission from Ref. [107]. Copyright 2024, ACS. (C) ­Li2S decomposition energy barrier curves on different ­MoS2 phases/hosts.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    51.8,
+    550.3,
+    261.2
+   ],
+   "w": 2106,
+   "h": 874,
+   "dpi": 300,
+   "src": "b0ff39c5-7._Recent_progress_in_intercalation_engineering_of_transition_metal_dichalcogenides_for_energy_storage_and_conversion.pdf",
+   "blank": 0.709
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 11,
+   "file": "tab_1.png",
+   "caption": "Table 1 Hydrogen evolution reaction performance of intercalated TMDs TMDs Intercalant Content Overpotential (mV) Tafel slope (mV ­dec−1) Refs. (at%) MoS2 MnP 3.23 125@10 mA ­cm−2 35 [32] MoS2 Na+ / 183@10 mA ­cm−2 45 [64] MoS2 Cu 11.5 104@10 mA ­cm−2 52 [66] NbS2 Cu 11.76 153@10 mA ­cm−2 114.55 [28] TaS2 Pd 3.23 241@10 mA ­cm−2 52.7 [26] WS2 CoCp2 / 170@10 mA ­cm−2 40 [67]",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    27.6,
+    551.4,
+    722.6
+   ],
+   "w": 2107,
+   "h": 2897,
+   "dpi": 300,
+   "src": "b0ff39c5-7._Recent_progress_in_intercalation_engineering_of_transition_metal_dichalcogenides_for_energy_storage_and_conversion.pdf",
+   "blank": 0.856
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 16,
+   "file": "tab_2.png",
+   "caption": "Table 2 Battery performance of intercalated TMDs TMDs Intercalant Content Battery Capacity",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    27.6,
+    549.4,
+    722.6
+   ],
+   "w": 2099,
+   "h": 2897,
+   "dpi": 300,
+   "src": "b0ff39c5-7._Recent_progress_in_intercalation_engineering_of_transition_metal_dichalcogenides_for_energy_storage_and_conversion.pdf",
+   "blank": 0.873
+  }
+ ]
+}
