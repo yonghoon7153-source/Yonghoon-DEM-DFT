@@ -1,0 +1,211 @@
+{
+ "slug": "sjolin2023_accelerated_workflow_antiperovskite_sse",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "12. Accelerated_workflow_antiperovskite_SSE_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. The general structure of antiperovskites with formula X3BA and space group Pm-3m.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    582.1,
+    282.6,
+    722.0
+   ],
+   "w": 1009,
+   "h": 584,
+   "dpi": 300,
+   "src": "12. Accelerated_workflow_antiperovskite_SSE_MAIN.pdf",
+   "blank": 0.758
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. The compositional space for the antiperovskites examined in this study. Since we are examining SSEs, we have restricted X to Li, Na, and Mg. For any compound X, A, and B must be unique.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    41.8,
+    595.3,
+    191.0
+   ],
+   "w": 2481,
+   "h": 623,
+   "dpi": 300,
+   "src": "12. Accelerated_workflow_antiperovskite_SSE_MAIN.pdf",
+   "blank": 0.729
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. A visualization of the steps in the workflow, along with the filtering criteria used to lower the total computational cost of the screening. The underscored and italic numbers represent the number of compounds present at each step and the number lost to each criterion, respectively. The inset illustrates the steps of the S-NEB method.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    538.1,
+    295.9,
+    695.0
+   ],
+   "w": 1064,
+   "h": 655,
+   "dpi": 300,
+   "src": "12. Accelerated_workflow_antiperovskite_SSE_MAIN.pdf",
+   "blank": 0.546
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Illustration of the two supercell structures used in the S-NEB procedure. The color scheme is the same as in Figure 1 with the inclusion of white for the vacancies, and gray for the X-ion used for the TS, X°. In a) the vacancy state is shown, whereas b) shows the TS.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.7,
+    590.6,
+    551.6,
+    704.1
+   ],
+   "w": 1055,
+   "h": 474,
+   "dpi": 300,
+   "src": "12. Accelerated_workflow_antiperovskite_SSE_MAIN.pdf",
+   "blank": 0.635
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Minimum charge density path between two Li sites in Li3OCl. The straight line shows the initial path. The connected red spheres show the final path and the points used in the NEB algorithm. The larger green sphere indicates the found TS position, X°. Shown contours are the 38 and 160 meV/Å isosurfaces.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    26.0,
+    595.3,
+    226.4
+   ],
+   "w": 2481,
+   "h": 836,
+   "dpi": 300,
+   "src": "12. Accelerated_workflow_antiperovskite_SSE_MAIN.pdf",
+   "blank": 0.69
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. The barrier energies found using S-NEB and the accompanying charge density barrier, plotted against the CI-NEB barriers. The S-NEB and charge density barriers are scaled using Equation (4) with optimal weights of wS=0.470 and wCD=7.55×103.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    402.0,
+    295.4,
+    594.6
+   ],
+   "w": 1062,
+   "h": 804,
+   "dpi": 300,
+   "src": "12. Accelerated_workflow_antiperovskite_SSE_MAIN.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Figure 7. The relative error between S-NEB and CI-NEB as a function of the distance between X° in the TSs. The colors indicate the average pair-wise displacement of atoms between the TS for the methods. The labeled points are those identified as outliers from the linear trend.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.7,
+    508.8,
+    549.9,
+    704.1
+   ],
+   "w": 1048,
+   "h": 815,
+   "dpi": 300,
+   "src": "12. Accelerated_workflow_antiperovskite_SSE_MAIN.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Charge density and optimized path for a) Na3PCd, and b) Li3FSe. a) Failure of the S-NEB method, where the TS has been incorrectly identified very near the edge of the unit cell. b) Success of the method with a properly identified TS, seen by the fully formed loop in the charge density. Settings used are like Figure 5.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    568.5,
+    294.7,
+    695.0
+   ],
+   "w": 1059,
+   "h": 529,
+   "dpi": 300,
+   "src": "12. Accelerated_workflow_antiperovskite_SSE_MAIN.pdf",
+   "blank": 0.405
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1. The mean absolute error (MAE), standard deviation (SD) of errors, and mean relative error (MRE) between barrier energies calculated by S- NEB and CI-NEB. Compound MAE [meV] SD [meV] MRE [%] Li3BA 56 58 22 Na3BA 49 47 17 Mg3BA 171 91 23 All 73 96 20",
+   "rotated_deg": 0,
+   "bbox": [
+    28.9,
+    14.0,
+    589.2,
+    830.7
+   ],
+   "w": 2055,
+   "h": 2995,
+   "dpi": 264,
+   "src": "12. Accelerated_workflow_antiperovskite_SSE_MAIN.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2. The 14 candidates that made it to the Surrogate NEB step in Figure 3, ordered by X-ion and calculated CI-NEB barrier. The compounds in italic are the ones not in the top 10. A weight of wS=0.470 is used for scaling E°",
+   "rotated_deg": 0,
+   "bbox": [
+    41.8,
+    14.0,
+    589.2,
+    830.7
+   ],
+   "w": 2008,
+   "h": 2995,
+   "dpi": 264,
+   "src": "12. Accelerated_workflow_antiperovskite_SSE_MAIN.pdf",
+   "blank": 0.862
+  }
+ ]
+}

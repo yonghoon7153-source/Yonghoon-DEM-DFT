@@ -19,6 +19,8 @@
 | 산화 onset (grand-potential) | **2.256 V** (LiS4 포함 시 2.14) | **2.256 V** (LiS4 포함 시 2.14) | get_element_profile, LiS4/SCl3/Li5PS4Cl2 제외 = GG set |
 | 환원 한계 / OCV | 1.242 V / 1.717 V | 1.242 V / 1.717 V | grand-potential |
 
+> 🔴 **⛔ 2026-09-22: `reduction_V` 라벨 오류로 폭이 계통적으로 넓다.** 위 두 줄로 만든 창 `1.242–2.256 = 1.014 V` 는 쓰지 않는다 — `[Schw21]`(*JACS Au* **1**, 1488 · `papers/schwietert2021_intrinsic_vs_decomposition_window_sse.md` §7-2·§7-3) 의 정의(*"the decomposition potential closest to the stable solid electrolyte phase"*)로 우리 프로파일을 다시 읽으면 **1.717–2.256 = 0.539 V** 이고, **1.242 V 는 *두 번째* 환원 평탄**(P → `LiP₇`)이다. 원장 `HZ-esw-reduction-limit-label`(BLOCKED) · **1저자 결정 전까지 폭 인용 금지**. ⚠ 값은 **이력 보존을 위해 지우지 않는다** (틀린 것은 값이 아니라 *이름*과 *빼는 방식*이다).
+
 ### ESW 상세 (LiS4 제외, 2026-06-23 gabia 재계산 — `esw_lis4excluded.json`)
 > LiS4(현 MP id `mp-aaaceqmj`)·SCl3·Li5PS4Cl2 제외(Gil-González 2022 phase set). **두 조성 onset 동일 2.256 V (S²⁻-limited).**
 - **comp1 onset (2.256 V)**: `Li6PS5Cl → Li3PS4 + LiCl + S + 2 Li⁺ + 2 e⁻` ← **Zuo Eq1과 정확히 일치** (원소 S, 2 e⁻)
