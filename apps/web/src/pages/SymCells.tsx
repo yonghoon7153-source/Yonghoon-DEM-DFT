@@ -5,9 +5,14 @@
  *  지우기.  두 화면이 같은 종류의 목록이라 어휘가 갈리면 안 된다 — 한쪽에서
  *  익힌 손이 다른 쪽에서 헤매는 것이 이 저장소에서 제일 흔한 불편이었다.
  *
- *  다른 것은 **무엇을 세느냐** 뿐이다.  여기서 한 줄은 늘 파일 하나이고(스윕을
- *  펴 놓지 않는다), 열에는 주파수·점 대신 **온도**와 **이온전도도로 가는 길**이
- *  선다.
+ *  다른 것은 **무엇을 세느냐** 뿐이다.  열에는 주파수·점 대신 **온도**와
+ *  **이온전도도로 가는 길**이 선다.
+ *
+ *  **`묶기`/`스윕 전부` 는 EIS 라이브러리에 있는 그대로 있다.**  처음에는 여기
+ *  한 줄은 늘 파일 하나라고 두었는데 (묻는 것이 "이 전해질의 활성화에너지" 라
+ *  스윕 아홉 줄은 그 질문에 답을 안 한다), 그러면 **스윕 하나를 고칠 길이
+ *  없어진다** — 온도를 한 칸만 고치거나, 잘못 잰 스윕 하나를 빼거나, 그 스윕만
+ *  다른 셀에 붙이는 일이 실제로 있다.  기본은 묶기이고, 펴는 길을 남긴다.
  */
 
 import { useCallback, useMemo, useState } from 'react'
@@ -24,7 +29,7 @@ import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { CONDUCTIVITY_PURPOSE } from '../lib/conductivity'
 import { isScan, scanFit } from '../lib/eis'
-import { dateTime } from '../lib/format'
+import { dateTime, num } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
 import type { Spectrum } from '../lib/types'
 
@@ -40,6 +45,9 @@ function isSymMeasurement(item: Spectrum): boolean {
 
 export function SymCells() {
   const [onlySym, setOnlySym] = useStickyState('bml.symOnly', true)
+  //: 기본은 묶기 — 파일 하나가 스윕 아홉이면 아홉 줄이 서로 아무것도 구별해
+  //  주지 않는다.  펴는 길을 남기는 이유는 위 주석에 있다.
+  const [foldScans, setFoldScans] = useStickyState('bml.symFoldScans', true)
   const [purpose, setPurpose] = useState('')
   const [search, setSearch] = useState('')
   const [reloadKey, bumpReload] = useState(false)
@@ -84,17 +92,18 @@ export function SymCells() {
     })
   }, [spectra.data, onlySym, purpose, search, inGroup])
 
-  //: 여기서 한 줄은 **늘 파일 하나**다.  EIS 라이브러리는 펴는 길을 남기지만
-  //  (스윕 하나를 지우거나 따로 붙이는 일이 있다) 이 화면이 묻는 것은 "이
-  //  전해질의 활성화에너지" 라, 스윕 아홉 줄은 그 질문에 아무 답도 안 한다.
+  //: 접을 때는 **파일마다 첫 스윕만** 남긴다.  걸러진 뒤에 접는 순서가 맞다 —
+  //  먼저 접으면 검색어에 맞는 스윕이 3번인데 1번만 남아 아무것도 안 걸린다
+  //  (EIS 라이브러리와 같은 규칙).
   const shown = useMemo(() => {
+    if (!foldScans) return matched
     const seen = new Set<string>()
     return matched.filter((item) => {
       if (seen.has(item.sha256)) return false
       seen.add(item.sha256)
       return true
     })
-  }, [matched])
+  }, [matched, foldScans])
 
   //: 접힌 줄이 대표하는 스윕들 — fitting 칸과 온도 칸이 이것으로 선다.
   //  첫 스윕만 보면 하나만 맞춘 파일이 맞춘 파일로 보인다 (`scanFit`).
@@ -148,6 +157,16 @@ export function SymCells() {
                       onClick={() => setOnlySym(true)}>대칭셀</button>
               <button type="button" className={onlySym ? '' : 'on'}
                       onClick={() => setOnlySym(false)}>스캔 전부</button>
+            </div>
+          </Field>
+          {/* 펴면 스윕이 한 줄씩 — 온도를 한 칸만 고치거나, 잘못 잰 스윕
+              하나를 빼거나, 그 스윕만 다른 셀에 붙일 때 쓴다. */}
+          <Field label="스캔" hint="스윕을 한 줄로 접습니다">
+            <div className="segmented" role="group" aria-label="스캔">
+              <button type="button" className={foldScans ? 'on' : ''}
+                      onClick={() => setFoldScans(true)}>묶기</button>
+              <button type="button" className={foldScans ? '' : 'on'}
+                      onClick={() => setFoldScans(false)}>스윕 전부</button>
             </div>
           </Field>
           <Field label="목적" hint="올릴 때 적어 둔 것">
@@ -238,27 +257,40 @@ export function SymCells() {
 
   function row(item: Spectrum) {
     const sweeps = sweepsOf.get(item.sha256) ?? [item]
-    const scan = scanFit(sweeps, item.sweep_count ?? sweeps.length)
+    const total = item.sweep_count ?? sweeps.length
+    //: 접힌 줄은 **그 파일 전부**를 대표하고, 편 줄은 **그 스윕 하나**다.
+    //  fitting 칸도 지우기도 그 단위를 따라간다 — 한쪽만 따라가면 화면이
+    //  스스로 모순된다 (줄에는 스윕 하나가 적혀 있는데 지우면 아홉이 사라진다).
+    const scan = foldScans ? scanFit(sweeps, total) : null
     return (
-      <tr key={item.sha256}>
+      <tr key={foldScans ? item.sha256 : `${item.sha256}#${item.sweep_index}`}>
         <td className="text">
-          {/* 지우기를 이름 앞에 — EIS 라이브러리와 같은 자리다.  한 줄이 곧
-              파일 하나이므로 지우는 것도 그 파일 전부다. */}
+          {/* 지우기를 이름 앞에 — EIS 라이브러리와 같은 자리다. */}
           <DeleteMeasurementButton
             name={item.name}
-            note={`스윕 ${item.sweep_count ?? sweeps.length}개 전부`}
+            note={foldScans ? `스윕 ${total}개 전부` : `스윕 ${item.sweep_index}/${total} 만`}
             onError={setRowError}
             onDelete={async () => {
-              await api.deleteScan(item.sha256)
+              if (foldScans) await api.deleteScan(item.sha256)
+              else await api.deleteSpectrum(item.id)
               bumpReload((value) => !value)
             }}
           />
           <GroupTag name={leafOf(item.group_label)} path={item.group_label} />
           <OwnerTag owner={item.created_by} />
-          <Link to={`/sym/scan/${item.sha256}`}>{scanName(item)}</Link>
+          <Link to={`/sym/scan/${item.sha256}`}>
+            {foldScans ? scanName(item) : item.name}
+          </Link>
           {' '}
-          {/* 나이퀴스트로 가는 길 — 같은 파일의 다른 보기다. */}
-          <Link to={`/scans/${item.sha256}`} className="tiny">[나이퀴스트]</Link>
+          {/* 나이퀴스트로 가는 길 — 같은 파일의 다른 보기다.  편 줄에서는
+              그 스윕 하나의 화면으로 간다 (거기서 고친다). */}
+          {foldScans ? (
+            <Link to={`/scans/${item.sha256}`} className="tiny">[나이퀴스트]</Link>
+          ) : (
+            <Link to={`/eis/${item.id}`} className="tiny">
+              [스윕 {item.sweep_index}/{total}]
+            </Link>
+          )}
         </td>
         <td className="text dim">
           <div className="col" style={{ gap: 3, minWidth: 0, width: 200 }}>
@@ -276,11 +308,15 @@ export function SymCells() {
           </div>
         </td>
         <td className="text dim">{item.purpose || '—'}</td>
-        <td>{item.sweep_count ?? sweeps.length}</td>
+        <td>{foldScans ? total : `${item.sweep_index}/${total}`}</td>
         {/* 온도는 **사람이 적는다** (ADR 0039).  안 적혔으면 그렇게 적는다 —
-            비어 있는 것이 정상이고, 그것이 다음에 할 일이다. */}
+            비어 있는 것이 정상이고, 그것이 다음에 할 일이다.  편 줄에서는 그
+            스윕 자신의 온도 하나다. */}
         <td className="text dim tiny">
-          {temperatureSpan(sweeps, item.sweep_count ?? sweeps.length)}
+          {foldScans
+            ? temperatureSpan(sweeps, total)
+            : (item.temperature_c === null || item.temperature_c === undefined
+                ? '아직 없음' : `${item.temperature_c} °C`)}
         </td>
         <td className="text dim tiny">
           {scan ? (
@@ -288,7 +324,9 @@ export function SymCells() {
               {scan.label}
               {scan.detail ? <div className="faint">{scan.detail}</div> : null}
             </>
-          ) : '—'}
+          ) : item.fit_count
+            ? `${item.best_circuit} χ²=${num(item.best_chi_squared, 3)}`
+            : '—'}
         </td>
         <td className="dim">{dateTime(item.uploaded_at)}</td>
       </tr>
