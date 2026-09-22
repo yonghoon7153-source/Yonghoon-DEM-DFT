@@ -105,7 +105,23 @@ tests/test_r17_codex.py tests/test_widths.py tests/test_r16_partial_lifetime.py 
 - 여섯 파일 표적 (`test_r17_codex` · `test_widths` · `test_r16_partial_lifecycle` · `test_r15_open_items` · `test_r16_run_receipt` · `test_cycles`) → **100 passed** (fixture 정정 뒤)
 - 전체 `python3 -m pytest tests/ -q`: **아래 줄에 실측으로 채운다 — 채워지기 전에는 390 재확인을 주장하지 않는다.**
 
-<!-- FULL_SUITE: 실행 중 — 끝나면 이 줄을 실측으로 바꾼다 -->
+```
+$ python3 -m pytest tests/ -q -p no:cacheprovider                    # 이 컨테이너 · Linux · 2026-09-22
+1 failed, 416 passed in 611.33s (0:10:11)                            # rc 1
+FAILED tests/test_r6_internal.py::test_i6d_04_working_state_test_count_matches_the_collection
+  AssertionError: ('# 390 passed 기대', 417)
+```
+
+그 하나는 **문서 계약**이다 — `WORKING_STATE.md` 의 "N passed 기대" 가 수집 개수와 같아야 하는데(R6 내부 DF-04),
+이 라운드가 27 시험을 더해 390 → **417** 이 됐고 전수가 도는 중에 문서를 고쳤다. 그 시험만 다시 돌렸다:
+
+```
+$ python3 -m pytest tests/test_r6_internal.py::test_i6d_04_working_state_test_count_matches_the_collection -q
+1 passed in 4.57s
+```
+
+즉 **417 수집 · 417 통과** 다 — 다만 "417 passed 한 줄" 은 두 실행을 합친 것이라 그렇게 적지 않는다. 실측은 위 둘이다.
+R14 대상 시점 277 → 286 → 326 → 332 → 390 → **417**.
 
 리뷰어 환경의 3 failed(Bash 1 · fcntl 2)는 이 환경에서는 조건이 달라 그대로 재현되지 않는다 — 그것은 "통과" 가 아니라
 "다른 환경" 이다. Windows 재현이 필요하면 fcntl 없는 경로의 skip 사유 출력을 별도 항목으로 연다.
