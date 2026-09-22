@@ -1,0 +1,272 @@
+{
+ "slug": "fukunishi2023_ncm523-three-electrode-impedance-degradation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "9109b95c-17._AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+  "88b1366a-17._Sup_AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Charge-discharge curves of (a) NCM523, (b) Li-In electrodes in LPSI systems and those of (c) NCM523, (d) Li-In electrodes in LPSCl systems, both at 0.10C rate. software Z-View (Scribner) based on the equivalent circuit shown later. The distribution of relaxation times (DRT) analysis [28,29] was occa­ sionally performed to separate several electrode processes. Inductive components at high-frequency regions were subtracted by curve fittings prior to the DRT analysis. The analyzed data was proven to satisfy the Kramers-Kronig (K-K) equation by using the software for K-K trans­ formation (Lin-KK tools, Karlsruhe Institute of Technology [30]), and residuals were less than 0.40 (See Fig. S1 and Fig. S2). The data were then imported into the DRT analysis software (Z-assist, TOYO Corp.). The impedance curve fitting based on the DRT result was performed with the following procedure. First",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    300.2
+   ],
+   "w": 2228,
+   "h": 1046,
+   "dpi": 300,
+   "src": "9109b95c-17._AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Nyquist plots of NCM523 impedance in various SoCs at 298 K with experimental data (dots) and fitted curves (solid lines), (b) equivalent circuit used for the analysis, (c) obtained resistance values R1, R2, R3, and R4 at various SoCs, and (d) Arrhenius plots for R1, R2, R3, and R4 (at SoC = 100%). 3",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    468.4,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1055,
+   "dpi": 300,
+   "src": "9109b95c-17._AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Nyquist plots of NCM523 (D50 = 5.0 and 11.2 μm), (b), (c) cross-sectional SEM images and EDX-mappings of NCM523 composite electrodes (× 2500), and (d), (e) those of NCM523 secondary particles (× 50,000). (b) and (d) correspond to NCM523 with D50 = 5.0 μm while (c) and (e) correspond to that with D50 = 11.2 μm. were dismantled, cut with a variable angle slicer (SliceMaster HW-1S, JASCO), and then sectioned using an ion milling device (IM-4000, Hitachi High-Tech). The electrodes were simultaneously observed by field emission (FE)-SEM (Regulus 8230, Hitachi High-Tech) and energy dispersive X-ray (EDX) (FlatQUAD, Bruker) analyzer. Image processing software Image-J was used to estimate the contact area between the solid electrolyte and active material particles [31]. confirms that the R-LTO reference electrode works as a Li7Ti5O12/Li4­ Ti5O12 redox couple. Furthermore, the charge-",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    462.5
+   ],
+   "w": 2228,
+   "h": 1722,
+   "dpi": 300,
+   "src": "9109b95c-17._AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "blank": 0.693
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a), (b) Charge-discharge curves at 0.10C rates and (c), (d) Nyquist plots of NCM523 before and after charge-discharge cycle (durability) tests. (a), (c) correspond to the data obtained in the LPSI system while (b), (d) correspond to those obtained in the LPSCl system.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    238.4,
+    565.7,
+    497.3
+   ],
+   "w": 2227,
+   "h": 1080,
+   "dpi": 300,
+   "src": "9109b95c-17._AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Comparisons of fitting parameters at logarithmic scale in (a,b) LPSI and (c,d) LPSCl systems; (a,c) resistance; (b,d) time constant. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    71.2,
+    534.2,
+    528.2,
+    730.8
+   ],
+   "w": 1905,
+   "h": 820,
+   "dpi": 300,
+   "src": "9109b95c-17._AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "blank": 0.829
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Cross-sectional SEM images and EDX-mappings of the inside of NCM523 electrode layer in LPSI system (a) before and (b) after cycle tests ( × 10,000), and (c) overall image of NCM523 secondary particles after cycle tests ( × 25,000), together with Ni, O, and P element mapping. (before), the independent components of R2 to R4 are confirmed by using λ = 8.5 × 10−4 as the regularization parameter. Finally, the Arrhenius plots were also made for the LPSCl system, and the comparison of the activation energies with the LPSI system is summarized in Table 1 (before), showing good agreement in the two systems except for the electrolyte behavior itself (Ea (R1)). The activation energy of R3 is about 50 kJ mol−1 for both LPSI and LPSCl, which is lower than that of the liquid electrolyte systems [10], indicating the solvation-free nature of the solid electrolyte systems. caused by the resistan",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    478.7
+   ],
+   "w": 2228,
+   "h": 1790,
+   "dpi": 300,
+   "src": "9109b95c-17._AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "blank": 0.64
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Cross-sectional SEM images and EDX-mappings of the inside of NCM523 electrode layer in LPSCl system (a) before and (b) after cycle tests ( × 10,000), and (c) overall image of NCM523 secondary particles after cycle tests ( × 50,000), together with Ni, O, and P element mapping. increase in R4 in the LPSCl system was much suppressed. charge transfer process. This could explain the large capacity decrease in the LPSI system. Furthermore, apart from the original large voids, there were fine voids inside the NCM523 secondary particles in the LPSI system more than in the LPSCl system, which is probably caused by particle cracking during the repeated cycling. Considering that the in­ crease of R4 was much large in the LPSI system, it is suggested that R4 is a resistance associated with charge transfer between primary particles (within NCM523 secondary particles) and the generated voids a",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    483.1
+   ],
+   "w": 2228,
+   "h": 1808,
+   "dpi": 300,
+   "src": "9109b95c-17._AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "blank": 0.657
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1 (a-c) DRT spectra (λ＝6.0×10–2) and (d-e) corresponding relative Kramers Kronig residuals of LPSI system at (a, d) 283 K, (b, e) 293 K, and (c, f) 303 K before and after the cycle tests.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.8,
+    123.8,
+    567.9,
+    423.9
+   ],
+   "w": 2202,
+   "h": 1252,
+   "dpi": 300,
+   "src": "88b1366a-17._Sup_AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2 (a-c) DRT spectra (λ＝8.5×10–4) and (d-e) corresponding relative Kramers- Kronig residuals of LPSCl system at (a, d) 283 K, (b, e) 293 K, and (c, f) 303 K before and after the cycle tests.",
+   "rotated_deg": 0,
+   "bbox": [
+    24.5,
+    173.7,
+    564.2,
+    464.5
+   ],
+   "w": 2250,
+   "h": 1213,
+   "dpi": 300,
+   "src": "88b1366a-17._Sup_AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3 Nyquist plots of NCM523 and Li-In impedances measured with the reference electrode and combined impedance of them, with cell impedance measured with two- electrode configuration. (a) 283 K, (b) 293 K, (c) 303 K were measured with the LPSI electrolyte while (d) 283 K, (e) 293 K, (f) 303 K were measured with the LPSCl electrolyte. (g) shows the comparison of NCM523 impedance of the LPSI and LPSCl systems at 293 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    25.5,
+    102.1,
+    561.7,
+    642.0
+   ],
+   "w": 2235,
+   "h": 2251,
+   "dpi": 300,
+   "src": "88b1366a-17._Sup_AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4 (a) A schematic of the Al|NCM523 composite|Al symmetric cells. (b) Nyquist plots of the cells with different loading mass of the NCM523 composite. (c) The electronic resistance plotted against the weight of the composite.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.1,
+    199.1,
+    595.0,
+    383.1
+   ],
+   "w": 2334,
+   "h": 768,
+   "dpi": 300,
+   "src": "88b1366a-17._Sup_AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1 Activation energy in LPSI and LPSCl systems before and after charge-discharge cycle test (SoC = 100%). LPSI LPSCl before after before after Ea（R1 or R1 + R1’）/kJ mol−1 24 ± 1 26 ±4 40 ±2 36 ±5 Ea（R2）/kJ mol−1 70 ± 20 41 ±8 60 ±1 0 43 ±6 Ea（R3）/kJ mol−1 49 ± 6 54 ± 1 50 ± 2 63 ±5 Ea（R4）/kJ mol−1 42 ± 1 64 ±4 50 ±3 56 ±1",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.3
+   ],
+   "w": 2213,
+   "h": 2987,
+   "dpi": 300,
+   "src": "9109b95c-17._AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 6,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Comparison of R3 fitting parameters by NCM523 particle size (SoC=100 %)",
+   "rotated_deg": 0,
+   "bbox": [
+    78.5,
+    205.4,
+    559.5,
+    391.9
+   ],
+   "w": 2005,
+   "h": 778,
+   "dpi": 300,
+   "src": "88b1366a-17._Sup_AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "blank": 0.935
+  }
+ ]
+}

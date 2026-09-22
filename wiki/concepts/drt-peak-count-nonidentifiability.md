@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research, eis]
-sources: [raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md]
+sources: [raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -193,6 +193,37 @@ Fig. 4(d)·Fig. S3 도 ≈3 × 10⁻² Hz 에 봉우리를 놓는다. x 축은 *
 11호의 nuisance 1 점(배선 교체)과 달리 **정답이 알려진 검사**다 (합은 보존돼야 한다).
 ⚠ 16호 원시 데이터는 `[인쇄]` "available **on request**" 라 **지금은 못 돌린다.**
 
+## ★★★★ 네 번째 경보 — **주파수 → 전극 규칙은 양극 미세구조의 함수다** (2026-09-22, `assb` 18호 ↔ 16호)
+
+이 페이지는 지금까지 **"봉우리 개수"** 를 다뤘다. 18호와 16호를 맞대면 **그 앞 단계 —
+"어느 봉우리가 어느 전극인가" — 도 데이터가 정하지 않는다**는 것이 보인다.
+
+| 편 | 양극 | 저주파(≲1 Hz) 반원 |
+|---|---|---|
+| **16호** Ramanayagam 2026 | **단결정** NMC 83\|6\|11 | **없다** → `[인쇄]` 결론 "저주파 = 주로 **음극**" |
+| **18호** Fukunishi 2023 | **다결정** NCM523 (2차 입자) | **있다** — `R4` ≈1 Hz, `[인쇄]` **2차 입자 내 1차 입자 간 전하이동** = **양극** |
+
+★ **두 편이 서로를 인용하며 동의한다.** 16호는 `[인쇄]` "Fukunishi 는 **저주파 반원을
+하나 더** 봤고 그것을 **2차 입자의 전하이동**으로 돌렸다. 이 논문은 **단결정**을 써서
+그 반원이 없다" 고 적고, 18호는 `[인쇄]` "The existence of **R4 is apparent when the
+three-electrode cell is applied to separate the Li-In component**, which significantly
+affects the low-frequency behavior" 라고 적는다.
+
+⇒ `[해석]` **같은 화학(In-Li 음극 + 황화물 + 층상 양극)에서도 양극 활물질의 형태가
+"저주파 = 음극" 규칙을 깬다.** 10호(Vadhva)가 **화학**으로 보인 것
+(`[인쇄]` In–Li 셀과 Li 금속 셀은 귀속이 반대, "**system-by-system basis**")에
+**미세구조**라는 축이 하나 더 붙는다.
+
+★★ **그리고 이것이 하류에 무엇을 하는가**: 18호의 `R4` 는 노화에서 **9.3 배**(LPSI)
+자라고 논문이 **용량 손실의 원인**으로 지목하는 성분이다. 만약 3전극이 없었다면
+그 성분은 **음극 기여와 같은 대역에 묻혔을 것**이고 — 논문 자신이 그렇게 말한다 —
+**"음극이 열화했다" 로 읽혔을 것이다.**
+⇒ **DRT 봉우리에 전극 이름표를 붙이는 유일하게 안전한 길은 전극을 물리적으로
+분리하는 것**이고, 그것조차 16호에서 **DRT 단계에서 다시 깨진다**(세 번째 경보).
+
+⚠ **두 편 다 이 함의를 "규칙이 없다" 로 일반화하지 않는다** — 16호는 자기 셀에 그
+반원이 없다는 관찰로, 18호는 있다는 관찰로 끝낸다.
+
 ## 이 위키에서의 적용
 
 ### 1. 진단 — "개수를 쟀는가" 를 묻는 체크리스트
@@ -217,7 +248,51 @@ EIS/DRT 를 쓴 논문을 받을 때 **이 다섯 개를 먼저 찾는다.** 없
 | C4 | ❌ 봉우리 개수 선택 규칙 **0 회** (개수는 Nyquist 반원 개수와 맞춰 사후 확인) |
 | C5 | ❌ 반복 **0** (조건당 셀 1) |
 
-⚠ **그리고 C1 의 통과가 부분적이다**: λ 값은 있는데 **선택 규칙(L-curve·GCV·CV)도,
+★★★★ **2026-09-22 추가 — 18호(Fukunishi 2023)가 C1 과 C2 를 동시에 통과하고,
+바로 그 통과가 이 페이지의 논지를 가장 선명하게 예시한다.**
+
+| # | 18호 |
+|---|---|
+| **C1** | ✅ **λ 값 둘 다 인쇄** — `[인쇄]` LPSI **λ = 6.0 × 10⁻²**, LPSCl **λ = 8.5 × 10⁻⁴**. ⚠⚠ **70 배 다르다** |
+| **C2** | ★ **✅ 계보 최초** — `[인쇄]` "proven to satisfy the **Kramers-Kronig** … using **Lin-KK tools** (KIT [30]), and **residuals were less than 0.40**" (SI Fig. S1·S2 에 잔차 6 패널) |
+| C3 | ❌ DRT 불확실성 0 |
+| C4 | ❌ 개수 선택 규칙 0 — ⚠ 그 반대다(아래) |
+| C5 | ❌ 반복 0 (`n =` 0 회) |
+
+★★★★ **C4 가 단순한 ❌ 가 아니라 반대 방향이다 — 개수가 λ 의 목표다.**
+`[인쇄]` "the independent components of R2 to R4 are **confirmed by using λ = 8.5 × 10⁻⁴**
+as the regularization parameter" · `[인쇄]` "We were able to **confirm the independent
+components of R2, R3 and R4, by applying adequate regularization parameters**".
+⇒ **λ 를 골라서 원하는 개수가 나오는지 확인한다.** 그리고 그 개수가 하류로 흐르는
+사슬이 같은 지면에 인쇄돼 있다:
+
+> `[인쇄]` "First, the **time constants obtained from the DRT analysis were fixed** and the
+> other parameters were refined. Then, all the valuable parameters in the equivalent circuit
+> were refined."
+>
+> ⇒ **λ → 봉우리 개수·위치 → 등가회로의 차수와 고정 시상수 → `R3`/`R4` 의 값 →
+> "열화의 주 원인" 판정.**
+
+`[해석]` 11호는 λ 를 **안 적었고**, 16호는 **적었고**, **18호는 적은 뒤 그것으로 개수를
+확인한다** — 세 편이 같은 축의 세 지점이다. **가장 투명한 편이 동시에 가장 명시적으로
+이 문제를 겪는다**는 것이 요점이다.
+
+★★ **그리고 λ 의 차이가 재료의 차이와 구별되지 않는다.** `[도표]` SI Fig. S1(LPSI,
+λ = 6.0×10⁻²)은 **완만한 혹 3 개**(신품에서는 골/마루 비가 **1.3–1.7** 에 불과하다),
+SI Fig. S2(LPSCl, λ = 8.5×10⁻⁴)는 **날카로운 봉우리 4 개**(≈10⁶ Hz 에 높이 190 의 첨봉
+`P_R1′` 포함)를 보인다. 논문은 그 추가 봉우리를 **재료 탓**으로 돌린다 —
+`[인쇄]` LPSCl 의 낮은 Young 계수(22.1 ↔ 30, **단위 없음**, 제일원리 계산값) → 입자 간
+접착 부족 → **void** → 용량성 성분.
+⚠ **λ 를 같게 두고 비교한 그림이 없다** ⇒ **"봉우리가 하나 더 있다" 와 "정규화가 70 배
+약하다" 가 이 지면에서 구별되지 않는다.**
+
+⚠ **C2 의 통과에도 단서가 둘**: ① `[도표]` 잔차 축 라벨이 **"Residuals / −"(무차원)** 인데
+값이 저주파에서 **±0.2 … ±0.4** 까지 간다 — Lin-KK 관례(% 단위, |Δ| < 1 %)와 자릿수가
+다르다. ② 그 잔차를 `[인쇄]` **"suggest the stability of the reference electrodes"** 의
+근거로 쓴다 — **K–K 는 스펙트럼의 선형·인과·정상성을 보는 검사이고 기준극의 DC 전위를
+보지 않는다.** ★ `[해석]` **C2 를 통과하는 것과 그 결과를 옳게 쓰는 것은 다른 일이다.**
+
+⚠ **그리고 C1 의 통과가 부분적이다**(16호): λ 값은 있는데 **선택 규칙(L-curve·GCV·CV)도,
 λ 민감도도 없다.** `[인쇄]` 저주파(확산)·유도성·인공물 데이터를 "**제외**" 했다고만 적고,
 **어느 점을 뺐는지는 Fig. 3 의 속 빈 마커로만** 표시된다 (좌표 미인쇄).
 `[해석]` **λ 를 적는 것은 재현의 최소 조건이지 유일성의 근거가 아니다.**

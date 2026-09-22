@@ -1,11 +1,11 @@
 ---
 title: "복합양극 동역학 항의 곱 축퇴 — LAM_PE 와 접촉 손실이 A_eff·ε_p/R_s 한 조합으로만 들어간다"
-description: "In a published composite-cathode ASSB P2D model the Butler-Volmer denominator sees only the product A_eff x eps_p / R_s, so active-material loss, contact-area loss and particle radius are not separately identifiable from a discharge curve; a second, experimental paper (three-electrode EIS + transmission-line model) stands on the same product and assigns all of it to the exchange current density"
+description: "In a published composite-cathode ASSB P2D model the Butler-Volmer denominator sees only the product A_eff x eps_p / R_s, so active-material loss, contact-area loss and particle radius are not separately identifiable from a discharge curve; a second, experimental paper (three-electrode EIS + transmission-line model) stands on the same product and assigns all of it to the exchange current density; a third one prints both the resistance and the capacitance and so lets the product be broken - by us, not by its authors"
 created: 2026-09-22
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md]
+sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -143,7 +143,7 @@ physical significance** of the parameters" 라고 쓴다.
 | **다중 SOC EIS** | 같은 곱의 주파수 분해 | ★ 원전이 100/50/0 % 를 재고 100 % 만 썼다. ⚠⚠ **단독으로는 못 쓴다 — 아래 §"EIS 는 대가를 받는다"** |
 | **압력 되돌림** | `θ_AM` 만 (부분) 복원 → 진짜 재료 손실과 분리 | [[assb-pressure-reapplication-separation-test]] |
 | **`J^T J` 최소 고유벡터** | 이 곱이 실제로 null 방향인지 수치 확인 | [[fitting-degeneracy]] 의 "그리는 법" |
-| ★★★ **`R_CT · C_dl` 짝** (2026-09-22 신설, 16호에서) | **`R_CT·C` 는 접촉 면적이 소거되는 조합**(고유 시상수), **`C` 단독은 접촉 면적에 비례** ⇒ **둘을 같이 보면 `θ` 와 `j₀` 가 갈린다** | ★★ **16호가 두 값을 다 인쇄해 놓고 조합을 안 만든다** (아래 §16호) |
+| ★★★ **`R_CT · C_dl` 짝** (2026-09-22 신설, 16호에서) | **`R_CT·C` 는 접촉 면적이 소거되는 조합**(고유 시상수), **`C` 단독은 접촉 면적에 비례** ⇒ **둘을 같이 보면 `θ` 와 `j₀` 가 갈린다** | ★★ **16호가 두 값을 다 인쇄해 놓고 조합을 안 만든다** (아래 §16호) · ★★★★ **18호에서 실제로 갈렸다 — 단, 전제 `C∝θ` 를 먼저 검증해야 한다** (아래 §18호) |
 
 ★ **마지막 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -392,16 +392,102 @@ R_CT^meas = R_CT^true / θ         C^meas = θ · C^true
 [[assb-li-in-reference-potential-window]] (같은 공칭 조성의 두 Li-In 음극이 전류 ≈0 에서
 `E_CE` 0.61 ↔ 1.35 V). **음극 임피던스뿐 아니라 음극 전위도 배정을 오염시킨다.**
 
+## ★★★★ 처방의 두 번째 적용 (2026-09-22, `assb` 18호) — **첫 성공, 그리고 전제의 발견**
+
+`raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md`
+(Fukunishi et al. 2023, *J. Power Sources* **564**, 232864 — 3전극 NCM523/Li-In,
+LPSI·LPSCl 두 전해질, **1.0 C × 50 사이클 열화**).
+
+### 입력이 처음으로 다 있다
+
+| 처방 입력 | 9호 | 16호 | 17호 | **18호** |
+|---|---|---|---|---|
+| `R_CT` | 적합 1 개 | Table 2 | **없다** | ✅ **Table S1(신품 3 온도 × 2 입경) + Fig. 5(노화 전후 × 2 계)** |
+| `C_dl`/`Q`/CPE | **없다** | Table 2 | **없다** | ✅ **Table S1 `CPE2-C` + Fig. 5 의 `τ`** |
+| CPE 지수 `p` | — | β 0.89/0.81 | — | ✅ Table S1 (⚠ **노화 후는 없다**) |
+| 면적을 바꾼 조작 | **없다** | 압력 2 점 | **없다** | ✅ **입자 크기 2 점** + ✅ **노화 전후** |
+| **판정** | 곱을 적합했다 | 한쪽 끝을 골랐다(`θ≡1`) | 곱을 만들지 않았다 | ★ **우리가 곱을 만들었다** |
+
+### ★★★★ 검사 B (열화 축) — 저자가 인쇄한 "or" 가 갈린다
+
+18호는 우리 물음을 **문장으로 인쇄하고 가르지 않는다**:
+
+> `[인쇄]` "R3 drastically increased (6 times larger) … These results suggest that the
+> **chemical composition at the interface or the contact area** between the NCM523 and
+> electrolyte particles changed."
+
+**면적만 잃으면** `R ∝ 1/θ` · `C ∝ θ` ⇒ **`C` 비 = 1/(R 비)**.
+**고유 동역학만 나빠지면** `C` 비 = **1.00**.
+`[재현]` (`C ≡ τ/R`, Fig. 5 로그 막대 판독 ±0.04 ⇒ `C` 비 상대오차 ≈±18 %):
+
+| 계 · 항 | `R` 비 | `τ` 비 | **`C` 비** | 순수 면적 | 순수 동역학 | 판정 |
+|---|---:|---:|---:|---:|---:|---|
+| **LPSI · R3** | 6.5 | 2.4 | **0.37 ± 0.07** | 0.15 | 1.00 | **둘 다** — 유효 면적 ≈2.7 배 감소 + 고유 `R_ct` ≈2.4 배 증가 |
+| **LPSCl · R3** | 7.4 | 7.9 | **1.07 ± 0.19** | 0.13 | 1.00 | ★ **면적 손실 없음 — 전부 고유 동역학** |
+| LPSI · R4 | 9.3 | 5.3 | 0.56 ± 0.10 | 0.11 | 1.00 | 둘 다 |
+| LPSCl · R4 | 3.4 | 21 | **6.3** | 0.30 | 1.00 | ⚠ 비물리 — `R4` 가 2.8 Ω 로 작아 안 정해진다 |
+
+★★★★ **그리고 이 분해가 같은 논문의 독립 관측과 일치한다**: `[인쇄]` **LPSI 에만**
+2차 입자를 두르는 **O·P 퇴적층(2 µm)**이 생겼고 LPSCl 에는 `[인쇄]` "**not apparent**".
+**덮으면 면적이 준다** ⇒ LPSI 0.37 ✔ · LPSCl 1.07 ✔.
+⇒ **처방이 실제로 무언가를 갈랐다 — 그리고 두 번째 관측이 그 결과를 지지한다.**
+★ 요점은 **새 실험이 아니라 같은 표의 두 열을 곱한 것**이라는 데 있다.
+
+### ⚠⚠ 검사 A (신품, 입자 크기 축) — **처방의 전제가 흔들린다**
+
+18호의 신품 논증: `R3` 비 0.5 = 접촉 면적 비 2.0–2.4 의 역수 ⇒ `[인쇄]` "uniform
+physical contact". **면적이 유일한 차이라면 `C_dl` 도 2.0–2.4 배여야 한다.**
+`[재현]` (`C_eff = Q^{1/p} R^{(1-p)/p}`):
+
+| T | `R3(11.2)/R3(5.0)` | **`C_eff(5.0)/C_eff(11.2)`** | `p` 가 같나 |
+|---|---:|---:|---|
+| 283 K | 1.88 | **2.26** | ❌ 0.57 ↔ 0.76 |
+| **293 K** | 2.10 | **0.68** | ✅ |
+| **303 K** | 2.05 | **1.10** | ✅ |
+| 면적 설명의 예측 | 2.0–2.4 | **2.0–2.4** | |
+
+⇒ **`p` 가 같은 두 온도에서 2–3 배 어긋난다.** 맞는 유일한 온도는 **`p` 가 달라 두 `Q` 의
+차원이 애초에 다른** 온도다.
+⚠ **"반증" 으로 적지 않는 이유**: `[재현]` **같은 계면의 `C_eff` 가 283/293/303 K 에서
+5.82 / 1.32 / 1.49 µF 로 4.4 배 움직인다.** 이중층 용량이 20 K 에 4 배 변하는 물리는 없다
+⇒ **`Q` 는 이 적합에서 잘 안 정해지는 파라미터**이고, **Table S1 에서 ± 가 빠진 유일한
+열이 `CPE2-C`·`τ3`** 다.
+
+★★★ **그래서 처방이 한 단계 정련된다**:
+
+> **`R_CT·C_dl` 채널을 쓰려면 `C_dl ∝ 접촉 면적` 을 먼저 검증해야 한다.**
+> 검증 수단은 **면적을 아는 조작**(입자 크기·로딩)이고, 18호는 그것을 갖고 있으면서
+> **우리 계산으로는 통과하지 못한다**. 즉 **처방은 "두 값을 보고하라" 가 아니라
+> "두 값 + 면적을 아는 대조군을 같이 보고하라" 여야 한다.**
+
+⚠ **세 가지 대안을 18호는 검토하지 않는다**: (ㄱ) 두 입경 시료의 **고유 전하이동 속도가
+다르다**(코팅 두께·표면 상태), (ㄴ) `C_dl` 이 접촉 면적의 대리가 아니다(**LiNbO₃ 유전층**이
+용량을 지배), (ㄷ) **적합이 `R`–`Q` 를 교환한다**.
+
+### 부수 결과 — 절대 스케일 (⚠ 가정 위, 인용하지 않는다)
+
+`[재현]` 이중층 비용량을 **10 µF cm⁻²** 로 놓으면 293/303 K 의 `C_eff` 는 **실면적
+0.13–0.15 cm²** 에 해당하고, 같은 전극의 NCM 기하 표면적은 18호 자신의 식 (4)
+`S_w = 3M/(dr)` 로 **7.5 cm²** 다 ⇒ **활성 접촉이 입자 표면의 ≈2 %.**
+⚠⚠ **이 숫자를 쓰지 않는다** — 비용량은 우리 가정이고 `C_eff` 가 4 배 흔들린다.
+**다만 방향은 분명하다**: `[인쇄]` "completely immersed" · "uniform physical contact" 와
+자기 용량 데이터가 맞지 않는다. ⇒ [[composite-cathode-percolation-utilization]] 의
+`θ_AM` 이 **1 에 가깝다는 가정이 실측 지면 안에서 근거를 잃는 첫 자리**다.
+
 ## 이 페이지가 주장하지 않는 것
 
+- ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
+  노화 후 `p` 미공개 · `C ∝ θ` 가정(검사 A 가 흔든다) · 조건당 셀 1 개 위에 있다.
+  주장은 **"같은 지면의 두 열을 곱하면 저자가 남긴 'or' 가 갈린다"** 와
+  **"그 전제를 먼저 검증해야 한다"** 까지다.
 - **원전의 결론(양극 활물질 손실이 지배적)이 틀렸다고 주장하지 않는다.**
   주장하는 것은 **그 절차가 그것을 가려낸 절차가 아니라는 것**이다.
 - **`A^p_eff = 0.4938` 이 틀렸다고 주장하지 않는다.** 단독으로 해석될 수 없다고
   주장한다.
 - **축퇴를 수치로 재지 않았다.** 위 관계는 **인쇄된 식에서 손으로 읽은 구조**이고,
   근최적 집합의 **폭**은 아직 재지 않았다 ([[near-optimal-set-width-measurement]]).
-- **이 관계가 다른 ASSB 모델에도 있다고 주장하지 않는다.** 근거는 **2 편**이다
-  (`evidenceScope: multi-source-primary`, 2026-09-22 승격 — 9호 P2D + 16호 TLM/EIS). 다만 `a_s = 3ε/R` 과 `j = i/(a_s·A·L)` 은
+- **이 관계가 다른 ASSB 모델에도 있다고 주장하지 않는다.** 근거는 **3 편**이다
+  (`evidenceScope: multi-source-primary` — 9호 P2D + 16호 TLM/EIS + **18호 ECM/EIS + 열화**). 다만 `a_s = 3ε/R` 과 `j = i/(a_s·A·L)` 은
   P2D 계열의 표준형이라 **같은 구조가 널리 반복될 가능성이 높다** — 확인 안 됨.
 - ★ **2026-09-22 추가**: 위 §"EIS 는 대가를 받는다" 는 **10호가 이 곱 축퇴를
   확인했다는 뜻이 아니다.** 10호는 `A_eff`·`ε_p`·`R_s` 를 언급조차 하지 않는다.

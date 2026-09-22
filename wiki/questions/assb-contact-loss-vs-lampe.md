@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: research-question
 tags: [battery, degradation, research, assb]
-sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md]
+sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -87,6 +87,16 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
    **undetectable by the tomography**").
    ⚠⚠ **그리고 4호의 양은 `θ` 가 아니다** — **접촉 면적분율**(10.4 %)이고, 그것을
    곱셈 인자 자리에 넣으면 **자기 압력 실험과 6 배 어긋난다**(아래 Evidence).
+   → ★ **18호(Fukunishi 2023)가 접촉 면적을 처음으로 "측정된 양" 으로 만든다** —
+   `[인쇄]` **Image-J 로 단면 SEM 에서 SE|활물질 접촉 면적**, 값은 **입자 크기 두 시료의
+   비 2.0**(기하 계산 2.4 와 대조). ⚠ **절대 분율·오차·임계값이 없고**, 원자료 두 장은
+   **배율·가속전압이 다르다**(캡션 "×2500" ↔ 스탬프 2500x/1000x). ⚠⚠ **그리고 노화
+   축의 `θ(N)` 은 또 0 이다 — 이번에는 도구(Image-J)와 시편(Fig. 6·7)이 둘 다 같은
+   지면에 있는데도.** ⇒ `θ(N)` 을 안 준 편이 **`assb` 18/18** 이다.
+   → ★★★★ **다만 18호는 `θ(N)` 을 다른 통로로 준다** — **적합된 용량 파라미터**다.
+   `[재현]` `C ≡ τ/R` 의 노화 전후 비가 **LPSI 0.37 · LPSCl 1.07** ⇒ **LPSI 는 유효 면적이
+   ≈2.7 배 줄고 LPSCl 은 안 줄었다**(§18호 절 2). **이것이 이 카드가 지금까지 본 `θ(N)` 에
+   가장 가까운 숫자**이고, ⚠ 측정이 아니라 **지면 두 열의 조합**이다.
 2. **Li-In 기준 전위가 얼마나 안정한가.** 평탄한 것은 두 상 공존 영역 안에서만이다.
    벗어나면 기준이 이동하고 그것은 전체 곡선의 **밀기** — **`LLI` 와 같은 모양**이다.
    → ★★★★ **17호(Yanev 2024)가 이 항목에 답한다 — 이 계보에서 처음으로.**
@@ -101,6 +111,19 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
    음극이 `E_CE` = 0.61 ↔ 1.35 V, ≈0.74 V 갈린다. 차이는 제조법뿐이다.**
    ⚠ **16호(0.47–0.58 V)와 절대값이 다르고 둘 다 자기 기준극을 검증하지 않았다.**
    ⚠ **`E_CE(N)`(사이클)도 `E_CE(P)`(압력)도 여전히 0 편이다.**
+   → ★★★ **18호(Fukunishi 2023)가 경계 조건의 윤곽을 준다 — 반대편 끝의 표본으로.**
+   `[도표]` 두 전해질계 모두 **0.1 C 전 사이클에서 Li-In 이 완전 평탄(≈0.60 V)** 이고,
+   `[재현]` 그 이유가 계산된다: **`x_Li` 37.7 → 40.0 at%**(2상역 한복판),
+   **Li 재고 / 이동 전하 = 9.5 배**, **전류밀도 0.054 mA cm⁻²** = 17호 0.1 C 의 **1/5** ·
+   17호 CA 의 **1/300**. ⇒ **17호와 모순이 아니다** — 17호는 (ㄴ)(ㄷ)을 깬 표본이고
+   18호는 세 조건을 다 만족하는 표본이다: **(ㄱ) 조성이 2상역 안 · (ㄴ) Li 재고가 이동
+   전하의 한 자릿수 이상 · (ㄷ) 전류밀도 ≲0.1 mA cm⁻².**
+   ⚠ **셋 중 무엇이 지배적인지 가른 실험은 0 편.**
+   → ★★ **그리고 18호가 "기준을 Li-In 에서 빼는 길" 을 보여 준다** — 제 3 물질
+   기준극(**R-LTO 메시**, 전류가 흐르지 않는 3전극 전위 측정)을 쓰면 **Li-In 의 리튬화도
+   변화가 기준 축에서 사라진다**. ⚠ **대신 가정이 옮겨간다**: `[인쇄]` "**Assuming** that
+   the potential of the R-LTO reference electrode is **1.55 V**", 자기 셀 검증 0,
+   안정성 근거가 `[인쇄]` **K–K 잔차**라는 **범주 오류**.
    → ★ **4호가 답이 아니라 경고를 준다**: 실험 논문이 `[인쇄]` "1.4–3.7 V vs In
    (2–4.3 V vs Li/Li⁺)" 로 **오프셋 0.6 V 를 고정 가정하고 검토하지 않는다**
    (`indium` 0 회). ⚠ **그런데 같은 논문의 EIS 에서 음극 쪽 `R_LF` 가
@@ -226,6 +249,8 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 
 | **★★★★ Yanev, Heubner, Nikolowski, Partsch, Auer, Michaelis 2024 (`assb` 17호 — 이 계보에서 **Q5 를 본체로 삼은 첫 편** · 두 번째 3전극 실측이자 **첫 전위 채널** · Fraunhofer IKTS + TU Dresden · *J. Electrochem. Soc.* 171, 020512, **Editors' Choice, CC BY** · ⚠ **열화 0 — 최대 5 사이클, `LAM`·`LLI`·`SOH`·`aging` 전수 0회**)** | **없다 (17/17) — 형태가 새롭다.** `contact surface` **1 회**가 `[인쇄]` "the Li depletion is primarily a function of the **contact surface between the SE and LiIn**" 로 **인과 변수를 지목**하고, `contact area` **1 회**가 `[인쇄]` "high **effective contact area** to the separator" 로 **처방의 근거**가 되는데 **값·단위·측정법이 0**. ★ 9호=적합(0.4938) · 16호=기하로 계산해 1 로 못 박음(θ≡1) · **17호=이름만**. ⚠ 그리고 이것은 **양극이 아니라 음극/분리막 계면**의 접촉이다 — 축이 다르다 | **★★★ 있다 — 계보 두 번째 전극 분해, 그리고 첫 "전위" 채널.** 16호가 임피던스를 전극별로 갈랐다면 17호는 **전위를 전극별로 가른다**(`E_WE`·`E_CE`·`E_cell` 시계열, Li 금속 RE). ★★★ **결정적 대조: 양극 임피던스가 두 음극에서 `[재현]` ≈31 ↔ ≈32.5 Ω (5 % 차)로 같다** ⇒ 용량·율 차이가 **전부 음극**. ★ 우리가 한 합산 검사 `[재현]`: `Z_WE/CE ≈ Z_WE/RE + Z_CE/RE` 가 **2 Hz 에서 두 셀 다 1 % 안**(HF 절편은 foil 만 7 % 어긋남) — **논문은 이 자기 검증을 하지 않는다**. ⚠⚠ **형태학·화학 관측 0** — XRD·EDS·XPS·**단면 SEM·post-mortem 전수 0**, Fig. 2 광학 사진 2 장이 전부 | ★★ **새 층위: `measured-potentiometric`.** 적합(9·16호)도 형태학(4·14호)도 열역학 도함수(14호)도 역변환(11호)도 아닌 **기준극 대비 전압계 판독**이다. ⚠ 오차막대 0 · 반복 0 · 조건당 셀 1(총 12) · `n =` 0 회 · 데이터 가용성 문장 0. ⚠⚠ **기준극 자체가 검증되지 않았다** — RE 는 LPSCl 안에 도금한 **Li 금속**인데 같은 논문 서론이 `[인쇄]` Li 금속의 "high reactivity towards sulfide SEs" 를 적는다. ★ 단 `[재현]` **합의 상한 ≈20 mV / 20 h** (복합 셀 `E_CE` 가 0.61–0.63 밖으로 안 나감) = **계보 최초의 기준극 표류 상한** | **없다 — 0 / 17. 열 번째 성질: "인쇄로 사양했다".** `identifiab*`·`uniqu*`·`uncertaint*`·`condition number`·`error bar`·`confidence`·`n =` **전수 0 회**. ★★ 그리고 **적합 어휘 자체가 0** — `fit*`·`equivalent circuit`·`ECM`·`CPE`·`capacitance`·`DRT` **전수 0**, `[인쇄]` "Detailed quantitative analyses and **modelling of the impedance spectra are beyond the scope of this study**". 계보: 안 쟀다(1–7) → 이름만(8) → 지문이 자기 표에(9) → 분야가 명제로(10) → 재료만(11) → 0(12·13) → 역문제 없음(14) → 추정기 없음(15) → 밟고 지나갔다(16) → **17호: 역문제가 눈앞에 있는데 지면이 명시적으로 사양했다.** ★ 그리고 **그 사양이 결론을 방어한다** — 결론은 적합의 출력이 아니라 **전압계 판독**이라 축퇴할 자리가 없다(14호는 귀속이 **가정**이었고 17호는 **배선**이다). ⚠ 단 그 배선에도 오염원 둘(옴 · RE 안정성)이 있고 **논문은 둘 다 안 다룬다** | **★★★★ 이 계보에서 가장 크게 채워진 칸이고 이 편의 본체다** → [[assb-li-in-reference-potential-window]]. `[인쇄]` 0.62 V 는 **인용값**(ref 26 Santhosha 2019 쿨로메트릭 적정)이고 **개방회로 실측이 0 회**(G1). 실측: 0.1 C **0.61(충전)/0.63(방전)** · 0.1 C 방전 종료 **foil `[도표]` ≈1.0 V** (논문 수치 없음) · CA 정상 **복합 0.64 ↔ foil `[인쇄]` 1.30–1.40** · 과리튬화 **≈0.42**. **전체 폭 0.42 → 1.40 V ≈ 0.98 V.** ★★★ 우리 옴 분리 `[재현]`(CE–RE 절편 `[도표]` foil ≈28.7 Ω, A = 1.131 cm²): 0.1 C **9.1 mV = 관측 편차의 ≈100 %** · CA 초기 **0.52 V = 76 %** · **CA 정상 ≈1.8 mV = 0.2 %** ⇒ **+0.73 V 는 과전압이 아니다.** ⚠ "평형 전위" 는 `[해석]` — **CA 후 이완 곡선을 안 쟀다**(G2) | **한 점.** 운전 `[인쇄]` **ca. 50 MPa**(2E) / **50 MPa**(3E), 제작 **500 MPa**(3E 분리막만 **375**). `pressure` 7 · `MPa` 13 · `stack pressure` 2 · **`hysteres*` 0**. **스윕 0 · 이력 0 · 계측 0 · 압력→용량 0 · `E_CE(P)` 0.** ★ 유일한 개념 기여가 **부정적**이다 — Wang et al.(ref 28, `[인쇄]` **14.3 at% Li 가 최적**)과의 정면 충돌을 `[인쇄]` "considerably higher rates and **lower stack and assembly pressure**" 로 넘기면서 **상대 압력값도 자기 스윕도 없다** | **해당 없음** (Li-In 음극). `dead`·`isolated` **0**. `dendrit*` **2** 는 Li 금속을 **피하는 사유**로만 | **★ 있다.** **단결정 NCM811** : Li₆PS₅Cl : VGCF = **73.2:24.0:2.8 wt%**, `[재현]` **19.1 mg cm⁻² · 2.80 mAh cm⁻² · 공칭 200 mAh g⁻¹**(역산 정합 ✔, 1 C = 2.80 mA cm⁻²). 창 **3.00–4.30 V vs Li⁺/Li (2.38–3.68 vs LiIn)**, `[도표]` **전 구간 기울기 있음**. ★ **V–Q 곡선 11 장**(Fig. 1a–c 10 + Fig. 4a) — 10·11호가 0 장이던 칸. ⚠ **`OCV`·`GITT` 0 회** — 곡선은 전부 0.1 C pseudo-OCV. 접촉 손실 = LAM 안/밖: **미언급** |
 
+| **★★★★ Fukunishi, Tabuchi, Ikezawa, Okajima, Kitamura, Suzuki, Hirayama, Kanno, Arai 2023 (`assb` 18호 — 첫 **전극 분해 + 열화 동시** · 첫 **컷오프를 작업전극 전위에** · 첫 **K–K 검증** · Tokyo Tech + NEDO SOLiD-EV · *J. Power Sources* 564, 232864 · **16호가 지목한 유일한 외부 실측 대조군**)** | **★ 부분 — 계보에서 가장 가까이 갔다가 돌아선다.** ① `[인쇄]` **Image-J 로 SE\|활물질 접촉 면적을 실제로 쟀다**(계보 최초의 **이미지 기반 접촉 면적 측정**) — 그러나 값은 **입자 크기 두 시료의 비 2.0** 하나뿐이고 절대 면적·분율·오차·임계값 0(G6), 원자료 두 장은 **배율이 다르다**(D1: 캡션 "×2500" ↔ 스탬프 2500x/1000x, 15↔10 kV). ② 식 (4) `S_w = 3M/(dr)` 는 **완전구 기하 면적**이고 `[인쇄]` "**completely immersed**" 로 **접촉 분율을 소거**한다 — **16호의 `a_V = 3ε/r` 과 같은 자리·같은 수법**. ③ ★★★ **노화 축 `θ` 는 또 0** — 이번에는 **도구(Image-J)와 시편(Fig. 6·7)이 둘 다 지면에 있는데도**. ④ ★★★★ 말로는 가장 멀리 간다: `[인쇄]` "insulative layers **completely cover** the active material to make the particle **inactive**, such **dead particles** … no contribution to the charge transfer process. This could explain the **large capacity decrease**" = **`θ_AM` 의 기구 서술**, **값 0** | **★★★ 있다 — 계보 세 번째 전극 분해이고 열화를 동반한 첫 편.** ① **R-LTO 메시 3전극**(전극별 임피던스 **+ 전극별 충방전 곡선**) ② **입자 크기 스윕 2점**(= **면적 여기**) ③ **온도 3점**(Ea) ④ **SoC 5점** ⑤ **Al\|복합체\|Al 전자차단 대칭셀**(R2 귀속의 독립 근거) ⑥ **단면 FE-SEM + EDX 원소맵 노화 전후** ⑦ **전해질 2종 대조**. ★ `[인쇄]` **2전극 = 3전극 합** 자기 검증도 있다(⚠ 중주파에서 ≈13 %·≈60 Ω 어긋난다 — D10). ⚠ **`LAM_PE` ↔ 접촉 손실을 가르는 데 쓰인 조합은 0** — 접촉 면적은 **신품 입자크기 축에서만** 쟀다 | **fitted — 층이 하나 더 깊다.** 열화 라벨 = `R1..R4` 등가회로 적합값이고, **회로의 차수와 시상수가 DRT 에서 오고 DRT 는 λ 가 정한다**(`[인쇄]` "the time constants obtained from the DRT … were **fixed** and the other parameters were refined"). ★ **단 계보 최초로 ± 를 인쇄한다**(Table 1 의 Ea 4개 × 4조건, Table S1 의 `R3`·`p`) — ⚠ 3점 회귀·단일 적합의 표준오차이고 **셀 간 반복이 아니다**(`n =` 0회). ⚠ **`CPE2-C` 와 `τ3` 에만 ± 가 없다** = **우리 검사가 쓰는 바로 그 값**. ★★ 그리고 **용량 축은 fitted 가 아니다** — 0.1 C RPT 실측이고 **컷오프가 작업전극 전위**라 상대극 오염이 없다 | **0 / 18. ★ 열한 번째 성질 = "축퇴를 'A 또는 B' 로 인쇄하고 가르지 않는다".** `identifiab*`·`uniqu*`·`uncertaint*`·`degenerac*`·`condition number`·`error bar`·`n =` **전수 0회**(NFKC·대소문자 구분; `flam*`·`Soh` 오검출 0 확인). 그런데 `[인쇄]` "**the chemical composition at the interface or the contact area** between the NCM523 and electrolyte particles changed" 는 **우리 닻 물음의 두 항을 이름으로 나란히 적은 문장**이다. ★★ 그리고 **가를 입력을 자기 지면에 갖고 있다** — **9호가 "지문이 자기 표에" 였다면 18호는 "해답이 자기 표에"** 다 (Table S1 이 `R3`+`CPE2-C`+`p` 를, Fig. 5 가 노화 전후 `R`과 `τ` 를 함께 인쇄) | **★★★ 있다 — 성질이 세 편 중 가장 다르다.** ① **기준극이 Li-In 이 아니다**: **R-LTO**(부분환원 Li₄Ti₅O₁₂) 메시, `[인쇄]` 전위 **1.55 V vs Li/Li⁺ 를 가정** ⇒ **Li-In 이 처음으로 "기준" 이 아니라 "피측정 전극"** 이 된다. ② `[도표]` **Fig. 1(b)(d): 두 전해질계 모두 0.1 C 전 사이클에서 Li-In 이 완전 평탄 ≈0.60 V**(판독 분해능 ≈±30 mV — 17호의 ±10 mV 보다 좁게는 못 잰다). ③ ★★ `[재현]` **평탄한 이유가 설계에 있다**: `x_Li` **37.7 → 40.0 at%**, 재고비 **9.5배**, 전류밀도 **0.054 mA cm⁻²** = 17호 0.1 C 의 **1/5** · 17호 CA 의 **1/300** ⇒ **17호와 모순이 아니라 반대편 끝의 표본**. ④ ⚠ 기준 축이 **R-LTO 의 가정된 1.55 V** 로 옮겨갔고 자기 셀 검증 0, 안정성 근거가 `[인쇄]` **K–K 잔차**라는 **범주 오류** | **★ 거의 없다 — "없음" 의 형태가 가장 날카롭다.** `pressure`·`stack pressure`·`hysteres*` **본문 0회**, `MPa` **2회**(제작 **110 MPa** · 대칭셀 **150 MPa**). **운전 압력은 값도 장치도 문장도 없다** — 셀은 PET 관에 눌러 `[인쇄]` "Ar-filled polystyrene container" 에 넣는다. ⚠⚠ **그런데 이 편의 두 열화 기구 중 하나가 `void formation`**(`void` **7회** — 실측 편 최다)이고 LPSCl 의 R1′ 반원도 void 로 설명된다 ⇒ **압력에 가장 민감한 양을 주인공으로 삼으면서 압력을 통제하지 않은 첫 실측 편.** 비교: 16호 49회 · 17호 7회 · **18호 0회** | **해당 없음** (Li-In 음극). `dendrit*` 0. ⚠ **`dead` 1회는 음극이 아니라 양극이다** — `[인쇄]` "such **dead particles**"(절연층에 덮인 NCM 2차 입자). **낱말은 같고 대상이 다르다** | **★★ 있다 — 계보 최초의 조합.** **LiNbO₃ 코팅 NCM523**(D50 **5.0 / 11.2 µm**, 다결정) + **LPSI**(2.6 mS cm⁻¹) 또는 **LPSCl**(1.8 mS cm⁻¹) + **Li-In**. ⚠ **두 계의 복합양극 조성이 다르다**(49:43:8 ↔ 69:26:5 wt%) — 전해질 비교 전체가 교락. `[인쇄]` 창 **2.40–4.20 V vs Li/Li⁺**, 평탄 ≈3.7 V 뒤 전 구간 기울기, 0.1 C **140–150 mAh g⁻¹**(공칭 160), `[재현]` 로딩 **3.7–5.2 mg cm⁻²**(계보 최박). ★ **V–Q 곡선 6장**(양극 4 + **음극 2**) · ★★ **`R3(SoC)` 5점**(Fig. 2c: 180→80→60→57→60 Ω) = 계보에서 가장 조밀한 양극 전하이동 저항의 SOC 곡선. ⚠ `OCV`·`GITT` 0회 |
+
 **1호 단독 1.5 → 2편 ≈2.5 → 3편 ≈3.0 → 4편 ≈5.5 → 5편 ≈6.5 → 6편 ≈7.0 → 7편 ≈7.0 → 8편 ≈7.0 → 9편 ≈7.5 → 10편 ≈8.0 → 11편 누적 ≈8.5 칸이다.** (12·13·14편 ≈8.5 유지 — 12·13호는 종설, 14호는 새 칸 대신 **층 셋**: Q1 "비파괴 대리량" · Q6 "압력 → OCV" · Q8 "OCV 축 열역학 도함수". **15편도 ≈8.5 유지 — 새 칸 0이고, 이 편은 Q1·Q4·Q6 에서 "안 쟀다" 가 아니라 "낱말이 없다" 여서 계보의 바닥을 찍는다.**
 **→ 16편 ≈9.5 — 14편 만에 칸이 움직였다**: **Q2 +0.5**(전극 분해 관측이 처음으로 들어왔고, 2E = 3E 합으로 **자기 검증**까지 있다) ·
 **Q5 +0.5**(기준극을 실제로 설치한 첫 편이고, 그 기준의 **셀 간 0.11 V 어긋남**을 지면이 인쇄한다).
@@ -236,6 +261,169 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 [[assb-li-in-reference-potential-window]]).
 **Q1·Q4 는 여전히 0** — 17호의 Q4 0 은 **"인쇄로 사양했다"** 다
 (`[인쇄]` "beyond the scope of this study", `fit*` 전수 0 회).
+**→ 18편 ≈10.5 — 세 편 연속으로 칸이 움직였다**: **Q1 +0.5** — **접촉 면적이 처음으로
+"측정된 양"이 됐다** (`[인쇄]` Image-J 로 SE|활물질 접촉 면적, 비 **2.0**, 기하 계산
+**2.4** 와 대조). **반 칸인 이유 둘**: 나온 것이 **비 하나**이고 절대 분율·오차가 없으며,
+**노화 축의 `θ` 는 여전히 0** 이다 — 그런데 이번에는 **도구와 시편이 둘 다 지면에 있었다.**
+**Q4 는 0/18** — 18호의 0 은 **"갈림을 인쇄하고 가르지 않았다"** 다
+(`[인쇄]` "the chemical composition at the interface **or** the contact area … changed").
+
+## ★★★★ 2026-09-22 (18호 Fukunishi et al. 2023) — **저자가 남긴 "A 또는 B" 를 저자의 표로 가른 첫 편**
+
+`raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md`
+(*J. Power Sources* **564** (2023) 232864, Tokyo Tech + NEDO SOLiD-EV).
+**16호가 자기 ref [39] 로 든 유일한 외부 실측 대조군**이고, 큐 축은 **Q2 + 양극 열화**였다.
+
+### 1. ★★★★ 이 카드의 물음이 **지면에 문장으로 인쇄된다 — 그리고 갈리지 않는다**
+
+> `[인쇄]` "R3 drastically increased (6 times larger) during the durability tests.
+> These results suggest that **the chemical composition at the interface or the contact area**
+> between the NCM523 and electrolyte particles **changed**."
+
+**이 계보에서 처음으로, 실험 논문이 우리 물음의 두 항(계면 화학 ↔ 접촉 면적)을
+이름으로 나란히 적는다.** 그리고 **다음 문단으로 간다.**
+
+두 번째 문장은 더 멀리 간다 — **`θ_AM` 의 기구를 서술한다**:
+
+> `[인쇄]` "**if insulative layers completely cover the active material to make the particle
+> inactive, such dead particles probably have no contribution to the charge transfer process.
+> This could explain the large capacity decrease in the LPSI system.**"
+
+★ **`assb` 계보에서 "덮여서 죽은 활물질이 용량 감소를 설명한다" 를 실측 논문이 말한 첫
+문장**이다 ([[composite-cathode-percolation-utilization]] 의 `θ_AM` 이 문장으로 나타난 자리).
+⚠ **분율·면적·값은 0.**
+
+### 2. ★★★★ 그런데 **가를 입력이 같은 지면에 있다** — 16호 처방의 첫 성공
+
+[[assb-lampe-contact-product-degeneracy]] 가 16호에서 세운 처방:
+**`R_CT·C_dl` 은 면적이 소거된 조합, `C_dl` 단독은 면적에 비례** ⇒ 둘을 같이 보면 갈린다.
+
+| 처방 입력 | 9호 | 16호 | 17호 | **18호** |
+|---|---|---|---|---|
+| `R_CT` · `C`/`Q` · `p` | 적합 / 없다 | Table 2 / Table 2 | 0 / 0 | ✅ **Table S1 + Fig. 5** |
+| 면적을 바꾼 조작 | 없다 | 압력 2 점 | 없다 | ✅ **입자 크기 2 점 + 노화 전후** |
+| 판정 | 곱을 적합했다 | 한쪽 끝을 골랐다 | 곱을 만들지 않았다 | ★ **우리가 곱을 만들었다** |
+
+`[재현]` **열화 축** (Fig. 5 의 로그 막대 판독, `C ≡ τ/R`, 상대오차 ≈±18 %):
+
+| 계 · 항 | `R` 비 | `τ` 비 | **`C` 비** | 순수 면적 예측 | 순수 동역학 예측 | 판정 |
+|---|---:|---:|---:|---:|---:|---|
+| **LPSI · R3** | 6.5 | 2.4 | **0.37 ± 0.07** | 0.15 | 1.00 | **둘 다** — 유효 면적 ≈2.7 배 감소 + 고유 `R_ct` ≈2.4 배 증가 |
+| **LPSCl · R3** | 7.4 | 7.9 | **1.07 ± 0.19** | 0.13 | 1.00 | ★ **면적 손실 없음 — 전부 고유 동역학** |
+
+★★★★ **그리고 이 분해가 같은 논문의 두 번째 관측과 독립으로 일치한다**: `[인쇄]`
+**LPSI 에만** 2차 입자를 두르는 **O·P 퇴적층(2 µm)**이 생겼고 LPSCl 에는 `[인쇄]`
+"not apparent" 다. **덮으면 면적이 준다** ⇒ LPSI 0.37 ✔ · LPSCl 1.07 ✔.
+⇒ **저자의 "or" 가 갈린다: LPSCl 은 화학, LPSI 는 둘 다.**
+
+⚠⚠ **단서 넷**: (ㄱ) `R`·`τ` 가 **로그 막대 판독값**(수치 표 없음) · (ㄴ) **노화 후 `p` 미공개**
+⇒ `p` 가 함께 변하면 `τ/R` 는 유효용량이 아니다 · (ㄷ) `C_dl ∝ 면적` 은 **가정**이고
+**신품 축의 검사 A 가 그 가정을 흔든다**(아래 3) · (ㄹ) **조건당 셀 1 개**.
+⇒ **이것을 측정값으로 쓰지 않는다.** 주장은 **"같은 지면의 두 열을 곱하면 'or' 가
+갈린다"** 까지다.
+
+### 3. ⚠⚠ 검사 A(신품, 입자 크기 축) — **면적 설명이 자기 용량 데이터의 지지를 못 받는다**
+
+논문의 논증: `R3` 비 0.5 = 접촉 면적 비 2.0–2.4 의 역수 ⇒ `R3` 는 계면 저항이고
+`[인쇄]` "**uniform physical contact**" 다. **면적이 유일한 차이라면 `C_dl` 도 2.0–2.4 배여야
+한다.** `[재현]` (`C_eff = Q^{1/p} R^{(1-p)/p}`):
+
+| T | `R3(11.2)/R3(5.0)` | **`C_eff(5.0)/C_eff(11.2)`** | `p` 가 같나 |
+|---|---:|---:|---|
+| 283 K | 1.88 | **2.26** | ❌ 0.57 ↔ 0.76 |
+| **293 K** | 2.10 | **0.68** | ✅ |
+| **303 K** | 2.05 | **1.10** | ✅ |
+| 면적 설명의 예측 | 2.0–2.4 | **2.0–2.4** | |
+
+⇒ **`p` 가 같은 두 온도에서 2–3 배 어긋난다.** 맞는 유일한 온도(283 K)는 **`p` 가 달라
+두 `Q` 의 차원이 애초에 다른** 온도다.
+⚠ **반증이라고 적지 않는 이유**: `[재현]` **같은 계면의 `C_eff` 가 283/293/303 K 에서
+5.82 / 1.32 / 1.49 µF 로 4.4 배 움직인다** — 이중층 용량이 20 K 에 4 배 변하는 물리는
+없으므로 **`Q` 자체가 잘 안 정해지는 파라미터**다. 그리고 **Table S1 에서 ± 가 빠진 유일한
+열이 `CPE2-C` 와 `τ3`** 다 — **우리 검사가 쓰는 바로 그 값.**
+
+### 4. ★★★★ 17호가 연 오염 경로가 **18호에서는 설계상 닫혀 있다**
+
+17호는 **2전극 완전지 전압 컷오프** 때문에 `E_CE` 상승이 양극 용량을 깎아 `LAM_PE` 를
+흉내 내는 것을 보였다. **18호는 컷오프를 작업전극 전위에 건다**:
+`[인쇄]` "The **cutoff potential of the working electrode** was set at 0.85–2.65 V".
+게다가 `[도표]` Fig. 1(b)(d) 가 **상대극이 실제로 전 구간 평탄(≈0.60 V)** 임을 보인다.
+⇒ `[인쇄]` "**the amount of effective active material decreased only in the LPSI system**" 은
+**17호의 오염원이 제거된 상태의 진술**이고, **이 계보에서 양극 활물질 손실을 상대극 오염
+없이 말한 첫 문장**이다. ⚠ **값이 없다** — 그래서 채움표에서 반 칸이다.
+
+### 5. ★★★ Q5 — 17호와 **모순이 아니라 반대편 끝**, 그리고 경계 조건의 윤곽
+
+`[재현]` 18호의 Li-In 상대극: **`x_Li` 37.7 → 40.0 at%**(In+LiIn 2상역 한복판),
+**Li 재고 / 이동 전하 = 9.5 배**, **0.1 C = 0.054 mA cm⁻²**(17호 0.1 C 의 **1/5**,
+17호 CA 의 **1/300**). ⇒ **17호가 본 고갈(+0.7 V)이 일어날 수 없는 설계**다.
+★★ 두 편을 겹치면 [[assb-li-in-reference-potential-window]] 에 **경계 조건 셋**이 생긴다:
+**(ㄱ) 조성이 2상역 안 · (ㄴ) Li 재고가 이동 전하의 한 자릿수 이상 · (ㄷ) 전류밀도
+≲0.1 mA cm⁻²** 일 때 평탄하다. ⚠ **셋 중 무엇이 지배적인지 가른 실험은 0 편.**
+⚠ 그리고 **가정은 사라지지 않고 옮겨갔다** — `[인쇄]` "**Assuming** that the potential of
+the R-LTO reference electrode is **1.55 V**", 자기 셀 검증 0, 안정성 근거가 **K–K 잔차**(범주 오류).
+
+### 6. ★★★★ 16호와의 3전극 배정 대질 — **절반만 재현되고, 어긋나는 절반이 더 중요하다**
+
+16호 결론 2: `[인쇄]` "고·중주파 = 주로 양극, 저주파 = 주로 음극".
+
+1. **고주파(≈1 MHz) = 양극–집전체 전자 접촉**: **같다.** ★ 그리고 18호 쪽에 **대칭셀
+   독립 근거**가 있다(16호는 문헌 인용이었다) ⇒ **이 칸은 두 편이 서로를 보강한다.**
+2. **중주파 = 양극 전하이동**: **같다** (16호 `[도표]` ≈30–50 Hz ↔ 18호 `[인쇄]` ≈1 kHz —
+   1.5 자릿수 차이지만 배정은 같다).
+3. ★★★★ **저주파는 다르다 — 그리고 16호가 그 사실을 알고 있다.** 16호는 `[인쇄]`
+   "Fukunishi 는 **저주파 반원을 하나 더** 봤고 그것을 **2차 입자의 전하이동**으로 돌렸다.
+   이 논문은 **단결정**이라 그 반원이 없다" 고 적는다. 18호를 읽으니 맞다 — `R4` 는
+   **2차 입자 안쪽**이고 **단결정에는 있을 수 없다**. 그리고 `[인쇄]` 18호 자신이
+   "The existence of R4 is **apparent when the three-electrode cell is applied to separate
+   the Li-In component**" 라고 적는다.
+4. **Warburg(< 1 Hz)도 양극이다** — 18호에서 가장 크게 자라는 성분(`[도표]` −Z″ 660 Ω)
+   이고 **주파수만으로는 음극과 구별되지 않는다**. ⚠ **`Wo` 값은 지면에 없다.**
+
+★★★★ `[해석]` **"분해의 비유일성" 계보에 층이 하나 더 붙는다**:
+**10호** 화학이 바꾼다(In-Li ↔ Li 금속 귀속이 반대) → **11호** 상태·배선·조작이 흔든다 →
+**16호** 전극별 DRT 의 합이 완전지가 아니다 → **18호 ★ 같은 화학에서도 양극의
+미세구조(단결정 ↔ 다결정)가 "저주파 = 음극" 규칙을 깬다.**
+⇒ **주파수 → 전극 규칙은 화학뿐 아니라 미세구조의 함수다.** ★ 이것은 **두 편이 서로를
+인용하며 동의하는 내용**이라 `[해석]` 이 아니라 **문헌이 이미 말한 것**이다 —
+다만 **두 편 다 "규칙이 없다" 로 일반화하지는 않는다.**
+
+### 7. ★★★ DRT — **λ 가 봉우리 개수를 정하는 사슬이 지면에 그대로 있다**
+
+`[인쇄]` 적합 절차: "First, **the time constants obtained from the DRT analysis were fixed**
+and the other parameters were refined." ⇒ **λ → 봉우리 개수 → 회로 차수 → `R3`/`R4` 값.**
+그리고 `[인쇄]` "the independent components of R2 to R4 are **confirmed** by using
+**λ = 8.5 × 10⁻⁴**" · "by applying **adequate** regularization parameters
+(LPSI: **λ = 6.0 × 10⁻²**, LPSCl: **λ = 8.5 × 10⁻⁴**)".
+★★ **두 λ 가 70 배 다르고, 분해된 봉우리 개수도 3 ↔ 4 로 다르다** (SI Fig. S1 ↔ S2).
+논문은 그 차이를 **재료 탓**(LPSCl 의 낮은 Young 계수 → void)으로 돌리지만
+**λ 를 같게 두고 비교한 그림이 없다** ⇒ **"봉우리가 하나 더 있다" 와 "정규화가 70 배
+약하다" 가 이 지면에서 구별되지 않는다.** → [[drt-peak-count-nonidentifiability]].
+★ 반면 **C2(K–K/Lin-KK)는 이 계보 최초로 통과**한다(`[인쇄]` Lin-KK tools, KIT).
+⚠ 다만 그 잔차를 `[인쇄]` **"기준극의 안정성"** 근거로 쓰는 것은 **범주 오류**이고,
+잔차 축이 `[도표]` **무차원 ±0.6 스케일에 0.2–0.4** 까지 간다(0.4 % 라면 정상, 무차원이면
+저주파에서 K–K 를 크게 벗어난다 — **어느 쪽이든 기준극 안정성은 따라오지 않는다**).
+
+### 8. ⚠ Q6 — **압력이라는 낱말이 없는 열화 논문**
+
+`pressure`·`stack pressure`·`hysteres*` **본문 0 회**. `MPa` 2 회(**110 MPa** 셀 제작 ·
+**150 MPa** 대칭셀). **운전 압력은 값도 장치도 문장도 없다.**
+⚠⚠ 그런데 이 편의 두 열화 기구 중 하나가 **`void formation`**(`void` **7 회** — 실측 편
+최다)이고, LPSCl 의 추가 반원(`R1′`)도 `[인쇄]` "void formation" 으로 설명된다.
+⇒ **압력에 가장 민감한 양을 주인공으로 삼으면서 압력을 통제하지 않은 첫 실측 편.**
+→ [[assb-stack-pressure-operating-window]] 의 빈칸이 하나 더 구체화된다.
+
+### 9. ⚠ 교락과 산포 — 이 편의 가장 큰 약점 둘
+
+- **G3 교락**: `[인쇄]` 복합양극 조성이 **LPSI 계 49:43:8.0**, **LPSCl 계 69:26:5.0 wt%** 로
+  다르다. 근거는 `[인쇄]` "optimized … **preliminary tests**" 뿐이고 데이터가 없다.
+  ⇒ **전해질 비교 전체가 "전해질 종류" 와 "조성" 의 교락**이다 — 이 편의 중심 결론
+  (LPSI 만 용량 손실 · void)이 그 위에 있다.
+- **D17 산포**: `[재현]` 같은 이름표("LPSI · D50 5.0 µm · SoC 100 %")의 `R3` 가
+  **Table S1 외삽 ≈55 Ω · Fig. 2c ≈60 Ω · Fig. 5a ≈79 Ω** 로 **1.45 배** 벌어진다.
+  ⇒ **이 편에서 우리가 만들 수 있는 유일한 셀 간 산포 추정 ≈±20 %.**
+  **노화 효과(6.5 배)는 그 위에 안전하게 서 있고, 입자 크기 효과(2.0 배)는 여유가 훨씬 적다.**
+  논문은 이 세 값을 나란히 놓지 않는다.
 
 ## ★★★★ 2026-09-22 (17호 Yanev et al. 2024) — **"겉보기 `LAM_PE` 가 사실은 상대극" 을 한 셀 안에서 전극 분해로 실증한 첫 편**
 
@@ -1205,6 +1393,42 @@ aqueous solution using biochar derived from rambutan peel**". **배터리 논문
    이 편이 **"평탄하다" 고 확인한 쪽의 분해능도 ±10 mV 가 바닥이다.**
 
 → [[assb-li-in-reference-potential-window]] (전용 페이지, 2026-09-22 신설).
+
+### ★★★★ 열다섯 번째 — **For 에 붙는, 그러나 절반이 갈린 야생 실측** (2026-09-22, Fukunishi et al. 2023 · 실험, 3전극 + 열화)
+
+`raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md`
+
+**For 쪽 근거 — 지면이 갈림을 인쇄한다:**
+
+> `[인쇄]` "R3 drastically increased (6 times larger) during the durability tests.
+> These results suggest that **the chemical composition at the interface or the contact area**
+> between the NCM523 and electrolyte particles changed."
+
+**전극 분해된 임피던스 + 단면 SEM/EDX + 원소 맵을 다 갖춘 실측 논문이, 자기 관측량
+하나(`R3`)로는 계면 화학과 접촉 면적을 못 가른다고 인쇄한다.** 이 카드가 액체셀에서
+받았던 것과 같은 형태의 진술이고, **여기서는 ASSB 실험 지면에서 나온다.**
+
+그리고 같은 절이 **`θ_AM` 을 용량 손실의 기구로 명시**한다:
+`[인쇄]` "if insulative layers **completely cover** the active material to make the particle
+**inactive**, such **dead particles** … **could explain the large capacity decrease**". **값 0.**
+
+**⚠ Against 쪽으로 반쯤 넘어가는 이유 — 우리가 그 "or" 를 갈랐다:**
+
+`[재현]` 저자의 **Fig. 5**(노화 전후 `R`과 `τ` 를 둘 다 인쇄)에 16호 처방을 적용하면
+`C ≡ τ/R` 의 비가 **LPSI 0.37 ± 0.07 · LPSCl 1.07 ± 0.19** 이고, 순수 면적 손실이면
+0.15 / 0.13, 순수 동역학이면 1.00 이어야 한다 ⇒ **LPSCl 은 화학만, LPSI 는 둘 다.**
+★ 그리고 그 분해가 **같은 논문의 SEM(LPSI 에만 입자를 덮는 O·P 층 2 µm)과 독립으로
+일치한다.**
+
+⇒ `[해석]` **이 카드의 답이 "못 가른다" 에서 "관측을 하나 더 인쇄하면 갈린다" 로
+한 칸 움직인다.** 필요한 추가 관측은 새 장비가 아니라 **이미 적합된 용량 파라미터를
+같이 보고하는 것**이었다.
+⚠⚠ **단, 이것은 측정이 아니다** — 로그 막대 판독 · 노화 후 `p` 미공개 · `C∝θ` 가정 ·
+조건당 셀 1 개 위에 있다. 그리고 **같은 처방을 신품 입자크기 축에 적용하면(검사 A)
+용량이 면적처럼 스케일하지 않는다**(`p` 가 같은 두 온도에서 0.68 / 1.10 vs 예측 2.0–2.4)
+— 즉 **`C_dl ∝ 접촉 면적` 이라는 처방의 전제 자체가 이 데이터에서 흔들린다.**
+⇒ **처방은 "쓸 수 있다" 가 아니라 "쓰려면 `C_dl` 의 면적 비례성을 먼저 검증해야 한다"
+로 정련된다.**
 
 ### Against / 단서 — "독립 관측이 존재할 수 있다" 쪽
 
@@ -2570,6 +2794,46 @@ state of interfacial contact **and** material properties." 9호의 곱 축퇴 `A
   ⚠ **큐 대조**: 큐 **17**(Fukunishi 2023) · **19**(embedded indium RE) · **20**(μ-RE,
   Indium-Lithium anodes) 세 편이 전부 이 축이다. **위 1·2·3 순위는 큐에 없다.**
 
+- ★★★★ **2026-09-22 (18호 Fukunishi et al. 2023) — `assb` 18호, 큐 17번.**
+  `raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md`
+  (*J. Power Sources* **564** (2023) 232864, Tokyo Tech + NEDO SOLiD-EV; 본문 10 쪽 +
+  SI 6 쪽; **16호가 지목한 유일한 외부 실측 대조군**).
+  크로핑 **13 장** 중 **그림 11 장 전부 열람** + 캡션이 없어 크로퍼가 놓친 **1 쪽
+  Graphical Abstract 를 직접 렌더**해 열람. 안 본 것은 표 크롭 2 장(PDF 텍스트 사용).
+  누락은 `get_images()`/`get_drawings()` 페이지별 계수로 기계 확인 — **놓친 그래픽은
+  무캡션 도판 1 건뿐**.
+  ★★★★ **최대 수확 둘.** ① **이 카드의 물음이 지면에 문장으로 인쇄되고 갈리지 않는다**:
+  `[인쇄]` "the **chemical composition at the interface or the contact area** … changed",
+  그리고 `[인쇄]` "insulative layers **completely cover** … such **dead particles** …
+  could explain the **large capacity decrease**"(= `θ_AM` 의 기구 서술, 값 0).
+  ② ★★★★ **16호 처방의 첫 성공 — 저자의 표로 저자의 "or" 를 갈랐다.** `[재현]`
+  `C ≡ τ/R` 의 노화 전후 비 **LPSI 0.37 ± 0.07 · LPSCl 1.07 ± 0.19**(순수 면적 0.15/0.13 ·
+  순수 동역학 1.00) ⇒ **LPSCl 은 화학만, LPSI 는 면적 ≈1/2.7 + 화학 ≈2.4 배.**
+  ★ 그 분해가 **같은 논문의 SEM(LPSI 에만 입자를 덮는 O·P 층 2 µm)과 독립으로 일치한다.**
+  ⚠ 측정이 아니라 **지면 두 열의 조합**이다(로그 막대 판독 · 노화 후 `p` 미공개 ·
+  `C∝θ` 가정 · 조건당 셀 1).
+  ★★★ **17호가 연 오염 경로가 설계상 닫혀 있다** — `[인쇄]` 컷오프가 **작업전극 전위**
+  (0.85–2.65 V)이고 `[도표]` 상대극이 전 구간 평탄(≈0.60 V) ⇒ `[인쇄]` "the amount of
+  **effective active material** decreased **only in the LPSI system**" 은 **상대극 오염 없이
+  말해진 첫 양극 활물질 손실 문장**이다(⚠ 값 0).
+  ★★★ **16호와의 3전극 배정 대질**: 고주파(집전체)·중주파(전하이동)는 **같고**,
+  **저주파가 다르다** — 다결정 NCM523 은 **2차 입자 내부 반원(`R4`, ~1 Hz)**을 저주파에
+  하나 더 놓고, 그것이 음극 기여와 겹친다. 16호는 단결정이라 없다(두 편이 서로 인용하며
+  동의한다). ⇒ **"저주파 = 음극" 규칙은 화학뿐 아니라 양극 미세구조의 함수다.**
+  ★★ **DRT**: C1(λ) ✅ 두 값 인쇄 — 다만 **LPSI 6.0×10⁻² ↔ LPSCl 8.5×10⁻⁴ 로 70 배** 다르고
+  봉우리 개수도 3 ↔ 4 다. **C2(K–K/Lin-KK) 계보 최초 ✅** — ⚠ 그 잔차를 `[인쇄]`
+  **기준극 안정성**의 근거로 쓰는 것은 범주 오류.
+  ⚠ **Q6**: `pressure` **본문 0 회**(제작 110/150 MPa 두 값뿐, 운전 압력 미보고)인데
+  주 열화 기구가 **void 형성**이다. ⚠ **교락**: 두 전해질계의 **복합양극 조성이 다르다**
+  (49:43:8 ↔ 69:26:5 wt%). ⚠ **산포**: `[재현]` 같은 이름표의 `R3` 가 세 곳에서 **1.45 배**
+  벌어진다(≈±20 %).
+  **채움표 18호 행 — 누적 ≈10.0 → ≈10.5** (**Q1 +0.5**, 접촉 면적이 처음으로 측정된 양이
+  됐다; 비뿐이고 `θ(N)` 은 0 이라 반 칸). **Q4 0/18 — 열한 번째 성질 = "갈림을 인쇄하고
+  가르지 않았다".**
+  후속 후보 1 순위 = **Ikezawa et al., *Electrochem. Commun.* 116 (2020) 106743**(ref 27 —
+  **R-LTO 기준극과 이 편 방법의 원전**; 1.55 V 의 근거와 안정성 데이터가 거기 있어야 한다).
+  ⚠ **16·17·18호 세 편이 전부 이 한 편을 가리키는데 큐에 없다.**
+
 ## 이 페이지가 주장하지 않는 것
 
 - ASSB 실셀 자료를 **본 적이 없다.**
@@ -2684,3 +2948,21 @@ state of interfacial contact **and** material properties." 9호의 곱 축퇴 `A
   ⑥ **Q4 는 여전히 0 / 17 이다.** 17호는 유일성을 **잰 것이 아니라 역문제를 안 푼 것**
   이다 (`[인쇄]` "beyond the scope of this study"). 그 덕에 이 편의 결론이 축퇴에 덜
   노출되지만, **그것은 "쟀다" 가 아니다.**
+- ★★★★ **2026-09-22 (18호 Fukunishi et al. 2023) — 여섯 가지를 주장하지 않는다.**
+  ① **논문의 결론(R3 증가가 주 원인, R4 는 2차 입자 내부)이 틀렸다고 주장하지 않는다.**
+  비판은 **교락(두 계의 양극 조성이 다르다) · 산포(같은 이름표의 `R3` 가 1.45 배) ·
+  배정 근거(접촉 면적 원자료 두 장의 배율이 다르다) · λ 선택**에 있다.
+  ② ★★ **`C` 비 분해(LPSI 면적 ≈1/2.7 + 화학 ≈2.4 배)를 측정값으로 쓰지 않는다.**
+  그것은 **로그 막대에서 읽은 두 수의 비**이고, 노화 후 `p` 미공개 · `C ∝ θ` 가정 ·
+  조건당 셀 1 위에 있다. 주장은 **"같은 지면의 두 열을 곱하면 저자가 남긴 'or' 가
+  갈린다"** 까지다.
+  ③ **"활성 접촉이 입자 표면의 ≈2 %" 를 수치로 인용하지 않는다** — 이중층 비용량
+  10 µF cm⁻² 는 **우리 가정**이고, 같은 계면의 `C_eff` 가 283/293/303 K 에서 **4.4 배**
+  흔들린다. 다만 **방향은 분명하다: `[인쇄]` "completely immersed" · "uniform physical
+  contact" 와 자기 용량 데이터가 맞지 않는다.**
+  ④ **LPSI ↔ LPSCl 의 차이를 전해질의 성질로 옮기지 않는다** — **복합양극 조성이
+  다르다**(49:43:8 ↔ 69:26:5 wt%, 근거는 "preliminary tests" 뿐).
+  ⑤ **이 편의 열화 값을 다른 셀로 옮기지 않는다** — `[재현]` **3.7–5.2 mg cm⁻²** 의
+  초박형 전극, **0.54 mA cm⁻²(1.0 C)**, **333 K · 50 사이클**, **운전 압력 미상**이다.
+  그리고 **압력에 대해 아무것도 주장하지 않는다**(`pressure` 0 회).
+  ⑥ **Q4 는 0 / 18 이다.** 저자들이 갈림을 **인쇄했다**는 것이 **갈랐다**는 뜻은 아니다.

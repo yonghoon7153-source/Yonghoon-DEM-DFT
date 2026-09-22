@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md]
+sources: [raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -157,6 +157,49 @@ Q_apparent = θ_AM · Q_material( E_cut^eff ) · η(i)
 [[anode-free-li-inventory-accounting]] 에서 6호(Lee 2020)의 "CE 로 `LLI` 를 센다" 가
 **10 배 어긋났던** 자리에, ASSB Li-In 셀에서는 **기준 전위라는 오염원이 하나 더** 붙는다.
 
+### ★★★ `assb` 18호 (Fukunishi et al. 2023) — **반대편 끝의 표본, 그리고 기준을 Li-In 에서 빼는 길**
+
+`raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md`
+(*J. Power Sources* **564** (2023) 232864 — NCM523/Li-In 3전극, **기준극이 R-LTO**).
+
+**① Li-In 이 처음으로 "기준" 이 아니라 "피측정 전극" 이 된다.**
+기준극은 **부분환원 Li₄Ti₅O₁₂(R-LTO) 메시**이고, `[인쇄]` 그 전위는
+"**Assuming** that the potential of the R-LTO reference electrode is **1.55 V** vs. Li/Li⁺
+[32,33]" 로 **가정**된다. 그 가정 위에서 `[인쇄]` "the plateau potentials of the NCM523 and
+Li-In electrodes are **ca. 3.7 and 0.6 V** vs. Li/Li⁺".
+
+**② `[도표]` Fig. 1(b)(d): 두 전해질계 모두 0.1 C 전 사이클(충·방전 4 곡선)에서 Li-In 이
+완전히 평탄, ≈0.60 V vs Li/Li⁺.** 축 분해능상 우리가 읽을 수 있는 한계는 **≈±30 mV** —
+**17호의 ±10 mV 보다 좁게는 못 잰다.**
+
+**③ ★★ 평탄한 이유가 설계에서 계산된다** `[재현]` (지면에 없다):
+- In 박 φ10 mm × 50 µm = **28.7 mg = 0.250 mmol**, Li 박 φ5 mm × 100 µm =
+  **1.05 mg = 0.151 mmol** ⇒ **`x_Li` = 37.7 at%** — **2 상역 한복판**
+- 이동 전하 **0.0159 mmol**(LPSI) ⇒ **`x_Li` 37.7 → 40.0 at%**, **Li 재고 / 이동 전하 = 9.5 배**
+- 전류밀도 **0.054 mA cm⁻²**(0.1 C) = **17호 0.1 C 의 1/5**, **17호 CA 초기의 1/300**;
+  최대(1.0 C)도 **0.54 mA cm⁻²** = 17호 1 C 의 1/5
+
+⇒ ★★★ **17호와 모순이 아니다 — 같은 축의 반대편 끝이다.** 17호의 foil/CA 는
+아래 목록의 (2)(3)을 깬 표본이고, **18호는 넷을 다 만족하는 표본**이다.
+
+**④ ⚠ 가정은 사라지지 않고 옮겨갔다.**
+- 계보: **4호(Shi)** In 오프셋 **0.6 V 고정 가정** → **16호** μ-RE 설치 + **안정성 미측정**
+  → **17호** Li 금속 RE 로 `E_CE` **실측**(RE 자체는 미검증) → **18호** **제 3 물질 기준극 +
+  그 전위의 문헌 가정**.
+- ★ **덜 위험한 이유**: R-LTO 는 **Li₇Ti₅O₁₂/Li₄Ti₅O₁₂ 2상 평탄**이고 3전극 전위 측정이라
+  **기준극에 전류가 흐르지 않는다** ⇒ **Li-In 기준극의 구조적 약점(상대극을 겸하며
+  리튬화도가 변한다)이 제거된다.**
+- ⚠ **여전히 위험한 이유**: 값 검증 0 · 16호가 인용한 Zhang 2025 의 LTO-RE 는
+  `[인쇄]` **1.57 V**(여기는 1.55) · **"부분환원" 의 화학량론이 불명확** ·
+  안정성 근거가 `[인쇄]` "The **Kramers-Kronig residuals within ±0.4** … **suggest the
+  stability of the reference electrodes**" 라는 **범주 오류**(K–K 는 스펙트럼의 선형·인과·
+  정상성을 보지 **기준극의 DC 전위를 보지 않는다**).
+- ⚠ 그리고 **컷오프 환산(0.85–2.65 → 2.40–4.20 V)이 전부 이 1.55 V 위에 있다.**
+
+**⑤ ★ 부수 확인**: 18호는 Li-In 전위의 근거로 **Santhosha 2019** 를 인용하며 서지가
+**"2 (2019) 524–529"** 로 정상이다 ⇒ **17호의 `[인쇄]` "414, 359 (2019)" 가 오기임이
+확인된다** (17호 digest 의 후속 후보 1 순위 서지가 정정된다).
+
 ## ★★ 평탄이 유지되는 조건 (현재까지의 정리)
 
 > **Li-In 기준 전위가 ±10 mV 안에서 평탄한 것은 다음 넷이 동시에 성립할 때뿐이다.**
@@ -167,6 +210,13 @@ Q_apparent = θ_AM · Q_material( E_cut^eff ) · η(i)
 > 3. **율이 낮다** (17호: `[인쇄]` "already ≥ 1 C = 2.80 mA cm⁻²" 에서 음극이 지배)
 > 4. **CE–RE 옴 강하가 보상됐거나 무시할 만하다** (17호: 0.1 C 에서 ≈9 mV = 관측
 >    편차의 전부)
+>
+> ★★ **2026-09-22 추가 (18호) — 정량 조건 둘이 붙는다.** 18호는 위 넷을 다 만족하면서
+> `[도표]` **전 사이클 평탄(≈0.60 V)** 을 보이고, 그 이유가 `[재현]` 계산된다:
+> **(5) Li 재고 / 이동 전하 ≥ 한 자릿수** (18호 **9.5 배**; 17호 foil 은 ≈5 배) ·
+> **(6) 전류밀도 ≲ 0.1 mA cm⁻²** (18호 0.1 C = **0.054 mA cm⁻²**, 17호 0.1 C 의 **1/5**).
+> ⚠ **(1)–(6) 중 무엇이 지배적인지 가른 실험은 여전히 0 편이다** — 18호와 17호는
+> **여러 축이 동시에 다른 두 표본**이지 통제 실험이 아니다.
 
 ⚠ **압력은 아직 이 목록에 없다.** 17호는 **50 MPa 한 점**, 16호는 **두 점(97/389 MPa,
 다른 셀)** 이다. `E_CE(P)` 를 잰 편이 **0 편**이다.
@@ -181,6 +231,8 @@ Q_apparent = θ_AM · Q_material( E_cut^eff ) · η(i)
 | **P3** | **`i·R(CE–RE)` 보상** — CE/RE 고주파 절편을 같은 셀에서 재서 빼기 | 17호에서 0.1 C 편차의 **전부**가 여기였다. 이것 없이 "과전압 10 mV" 는 무의미 |
 | **P4** | **Li 박 방향 뒤집기** (분리막 쪽 ↔ 집전체 쪽) + 3전극 | ③(국소 고갈)의 기원이 **제조**인지 **방전**인지 가른다. 17호 `[인쇄]` Sedlmeier(ref 21)가 시도했다 |
 | **P5** | **`E_CE(P)`** — 같은 셀에서 압력 스윕 | 0 편. 16호와 17호의 음극 임피던스가 **한 자릿수 다른** 이유의 후보 |
+| **P6** ★ (2026-09-22, 18호에서) | **제 3 물질 기준극의 전위를 같은 셀에서 Li 금속 대비 실측** | 18호가 보인 **탈출로**(Li-In 을 기준에서 빼기)가 성립하려면 R-LTO 의 **1.55 V 가정**이 실측이어야 한다. 현재 근거는 **인용 2 건 + 순환 논증**(가정한 값으로 얻은 두 평탄값이 문헌과 맞는다 ⇒ 가정이 맞다) |
+| **P7** ★ | **재고비 · 전류밀도를 각각 독립으로 스윕** | 위 (1)–(6) 중 **무엇이 평탄을 지키는가**. 17호 ↔ 18호는 축이 전부 같이 움직인 두 표본이다 |
 
 ## ★ 16호 ↔ 17호 대질 — 같은 "In 박 음극" 인데 반대다 (`[해석]`, 미검증)
 

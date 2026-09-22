@@ -65,6 +65,14 @@
    "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf"
   ]
  },
+ "fukunishi2023_ncm523-three-electrode-impedance-degradation": {
+  "figures": 13,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "9109b95c-17._AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf",
+   "88b1366a-17._Sup_AC_impedance_analysis_of_NCM523_composite_electrodes_in_all-solid-state_three_electrode_cells_and_their_degradation_behavior.pdf"
+  ]
+ },
  "huo2025_assb-cathode-lampe-coupled-aging-model": {
   "figures": 11,
   "generated": "2026-09-22",

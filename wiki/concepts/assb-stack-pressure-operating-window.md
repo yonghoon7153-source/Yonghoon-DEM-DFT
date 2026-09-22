@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md]
+sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -526,6 +526,39 @@ volumetry 가 보는 양은 **압력 여기에 대해 가장 둔한 채널**일 
 `[해석]` **두 크기가 300 배 차이다.** 압력이 전위에 주는 영향(mV 자릿수)은 제조법이
 주는 영향(수백 mV)에 묻힌다. ⇒ **`E_CE(P)` 를 재려면 제조법을 고정해야 하고,
 그것이 위 §2 의 실험이다.**
+
+## ⚠⚠ 2026-09-22 (`assb` 18호 Fukunishi 2023, **실험 · 3전극 · 열화**) — **압력이라는 낱말이 없는 열화 논문**
+
+`raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md`
+(*J. Power Sources* **564** (2023) 232864).
+
+**어휘 집계 결과가 이 편의 Q6 전부다**: `pressure` **본문 0 회** ·
+`stack pressure` **0** · `hysteres*` **0** · `MPa` **2 회뿐** —
+`[인쇄]` 3전극 셀을 "pressed at **110 MPa**", 대칭셀을 "pressuring at **150 MPa**".
+**운전 압력은 값도 장치도 문장도 없다**: 셀은 PET 관(φ10 mm) 안에 눌린 뒤
+`[인쇄]` "Ar-filled **polystyrene container**" 에 들어가고 단자로만 측정된다.
+
+⚠⚠ **그런데 이 편의 두 열화 기구 중 하나가 정확히 `void formation` 이다**
+(`void` **7 회** — 이 계보 실측 편 최다):
+- `[인쇄]` 결론 — "the **void formation** seen in the LPSI system that causes the increase
+  in R4 and the diffusion-related resistance … leads to the **capacity loss**"
+- `[인쇄]` 그리고 LPSCl 의 추가 고주파 반원(`R1′`)도 **void 로 설명된다** —
+  "Young's modulus of LPSCl (22.1) lower than that of LPSI (30) … adhesions … **less
+  sufficient** … leading to **void formation** to generate capacitive components"
+  (⚠ 단위 없음, ref 는 **제일원리 계산**인데 LPSI 는 glass-ceramic)
+
+⇒ ★★★ **압력에 가장 민감한 양(입자 간 공극)을 주인공으로 삼으면서 압력을 통제하지
+않은 첫 실측 편이다.** 계보 비교: **16호 `pressure` 49 회 · 17호 7 회 · 18호 0 회.**
+
+`[해석]` **이 페이지가 받는 것은 값이 아니라 빈칸의 형태다** — 지금까지 이 페이지의
+빈칸은 "스윕이 없다 · 이력이 없다 · 계측이 없다" 였다. **18호는 그 앞 단계의 빈칸을
+보인다: 열화 기구를 void 로 지목하고도 압력을 변수로 *인식하지 않는* 논문이 있다.**
+⇒ **`θ(N)` 을 문헌에서 모으려는 시도가 왜 계속 막히는지의 한 이유**이기도 하다 —
+**같은 셀을 다른 압력에서 늙혔을 때 void 가 어떻게 다른가를 물은 편이 0 편**이다.
+
+⚠ 그리고 **제작 압력 축에는 값이 하나 더 붙는다**: **110 MPa**(3전극 셀) ·
+**150 MPa**(대칭셀). ⚠ **같은 논문 안에서 두 셀의 제작 압력이 36 % 다르고**,
+그 대칭셀이 **`R2`(집전체 전자 접촉) 귀속의 유일한 독립 근거**다.
 
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
