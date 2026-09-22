@@ -11,16 +11,18 @@
 | **실행 계약** | `docs/reviews/*_prereg_*.md` | 런 **전에** 등록한 예측.  결과 보고 창을 옮기면 무효 |
 | **불변 증거** | `docs/data/` · git 이력 · litdb 정본 브랜치 | 측정 원자료 |
 
-⚠⚠⚠ **현재 상태 — 2026-09-18.  이 블록이 최신이다.**
-아래 *"살아있는 트랙 3개"* 는 **2026-08-12 시점**이고, 그 뒤 3.5주(08-26 ~ 09-18)의 트랙은
+⚠⚠⚠ **현재 상태 — 2026-09-22 (표 갱신; 09-18 판을 인계 검증 `docs/handoff_review_20260922.md` §C-3 로 고침).  이 블록이 최신이다.**
+아래 *"살아있는 트랙 3개"* 는 **2026-08-12 시점**이고, 그 뒤 5주(08-26 ~ 09-22)의 트랙은
 여기에 있다.  ⇒ **이 파일의 문장은 날짜를 보고 읽을 것.  날짜 없는 서술을 현재형으로 읽지 말 것.**
 
 | 축 | 상태 | 정본 |
 |---|---|---|
-| **6 mAh Phase A — VGCF 조성 순서** (현 주력) | ⛔ **96 primary 재실행 필요** · QC 8팔 미실행 | `docs/reviews/phase_a_6mah_order_prereg_20260907.md` |
+| **6 mAh Phase A — VGCF 조성 순서** (현 주력) | ✅ **판정 완료 2026-09-21 = ORDER-ROBUST** (팔 104 · 72/72 · replay 0.00000 %).  한정어 셋을 떼지 말 것: (i) 등록된 estimand 는 **순서**뿐 (ii) 증분 % 는 **기술 보고 전용** (iii) QC 는 vox 0.15 · 1 wt% **한 셀**의 음성대조.  ⚠ 판정 산출물(verdict · 영수증 3 · 104팔 JSON)은 **uma 에만** 있고 리포에 없다 — 커밋 대기 (§C-2) | `docs/reviews/phase_a_6mah_order_prereg_20260907.md` · `docs/session_20260921_progress.md` |
+| **Lee 2025 절대 대조 (Secondary)** | STEP2 침대 **2/2 완주** (09-22 03:26 KST, mach 0.01 · `MPM_QS_FRAMES=7500`) → 다음 = STEP3 16 팔 (vox 0.15 × origin 8 × 두 침대, `LEAN=2` · `PTFE_STAMP=centerline`) | prereg §6 · `docs/session_20260921_progress.md` |
 | **PTFE 전도격자 규약** | **`centerline` 이 본문 규약** — `off` 는 **기각된 쪽** | 원장 `CL-60`(live) · `docs/reviews/ptfe_convention_prereg_20260829.md` |
-| **LHS 수확** | 129 케이스 진행 | `docs/data/area_s2_cohort.tsv` |
-| **결함 원장 (GAP3)** | open 114 건 | `docs/reviews/findings.json` · `gap_audit_r3_repair_20260917.md` |
+| **LHS 수확** | **130/130 수확 완료 (09-19)** · 설계 CSV 측정 열 4/7 완전, 3/7 은 사유 등록 (`LHS-08` τ 14/130 열림) | `docs/data/area_s2_cohort.tsv` · `docs/data/lhs_design_20260818.csv` |
+| **믹서 층상 캠페인** | 13 런 발사 09-21 밤 (~5 일) — ⛔ **사전등록 §2 판정선 8 칸이 비어 있다** · 저자 판정 **R-3 · R-4** 대기.  완주 전에 채워 커밋해야 사전등록이 성립한다 (§C-1) | `docs/reviews/mixer_layered_prereg_20260921.md` · `docs/session_20260921_mixer_decisions.md` |
+| **결함 원장** | open **126 / 328** (2026-09-22) | `docs/reviews/findings.json` · `gap_audit_r3_repair_20260917.md` |
 | **MPM 플래튼 · AM 하중분담** | ⛔ **③ 은 닫혔다 · ② 가 유일한 병목** (아래 DO-NOT) | `docs/reviews/fam_platen_prereg_20260812.md` §11 |
 | **납품** | **9월 말 회사 보고** | — |
 
