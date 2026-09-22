@@ -246,3 +246,54 @@ Current-focusing factor   F = J_q / ⟨|J|⟩_cond        SBE      DBE
   q = 99.99 %                                         174.9    153.2   (−12.4 %)
   ⟨|J|⟩_cond / J_app                                  5.381    5.160
 ```
+
+---
+
+# G. 재실행 레시피 — `meta.json` 이 전부 들고 있다 (2026-09-22 밤)
+
+⚠ **정정**: 앞 §A 에서 vox 를 `0.3 µm` 로 적었는데 그것은 `/econn_summary/vox_um`(다른
+서브시스템)이다.  **STEP3 격자는 `vox_um = 0.15 µm`** 다 (manifest · `step3.vox_um` 둘 다).
+⇒ 26.4 M dof × 415 B/dof ≈ **11 GB** — V100 32 GB 에 들어간다 (이미 한 번 돌았다).
+
+## 봉인된 재실행 인자 (SBE `f752da` 의 `meta.json.mpm_metrics.step3.manifest`)
+
+| 축 | 값 |
+|---|---|
+| `code_sha` | `657c2192` |
+| `input_digest` | `04b5a565ff4069f4` |
+| `physics_protocol_id` | `p2-9cd29a0c61085621` |
+| `vox_um` · `plate_z_grid_um` | **0.15** · `[0.0, 72.534]` |
+| 스탬프 | `ptfe_stamp centerline` · `fibre_stamp segment` · `sdcp_stamp sphere (d 0.3)` |
+| 기하 | `bridge_um 0.48 (explicit)` · `dilate_z 1.0719` · `ptfe_block 0.0` · `periodic_xy false` |
+| 판 규약 | `plate_rule p2-occupied-surface-first` |
+| σ (S/cm) | VGCF **78.5398** · SDCP 250 · PTFE **0** · SuperP 10 · SWCNT 100 · AM_S 0.01 · AM_P 0.005 |
+| σ_ion (S/cm) | SE **0.003** · SDCP 0.001 · `swcnt_ion_block false` |
+| 성분 | `electronic ✓ · ionic ✓` · thermal/pore/pnm/collector **disabled** |
+| 필드 | `field_max 90000` (전자·이온 각 90,000 점 저장됨) |
+| `se_source` | `npy` |
+| 입력 지문 | scaffold `6184147f573f021d` · se `6146d358d8e9fd6a` · phase `601a887701420ea3` · fibre `bf5ff65dd265d540` · fibre_dia `95d320717868a4d0` · metrics_json `7b81d62524b74fca` |
+| 실행 환경 | `/home/kgy/dem-venv/bin/python3` (3.8.10) — **kgy 에서 돌았다** |
+| 수렴 | `cg_resid 9.93e-09` · `n_floating_dropped 41,445` |
+
+DBE(`f79b67`)도 같은 구조의 `meta.json` 을 갖고 있다 — 그쪽 지문으로 대조할 것.
+
+## ⛔ 재실행 전 확인 두 가지
+
+1. **코드가 고쳐진 판인가** — 인계 §7 #7: `~/runyourai/1/Yonghoon-DEM-DFT` 는 git 리포가
+   아니라서 러너의 `git pull --ff-only` 가 **조용히 실패**한다.  옛 코드로 돌리면 같은
+   편향값이 또 나오고 이번엔 그것을 정답으로 믿게 된다.
+   ```
+   grep -c percentile_basis scripts/mpm_webapp_payload.py     # 0 이면 옛 코드
+   python3 scripts/step3_sigma.py --selftest | grep -E "field-stats|joule-stats"   # 네 줄 OK
+   ```
+2. **입력 `.npy` 가 아직 있는가** — `se_source npy` 이므로 scaffold·se·phase·fibre·fibre_dia
+   다섯 개가 필요하다.  위 지문으로 동일성을 확인한다 (같은 침대가 아니면 비교가 무효다).
+
+## 재실행이 닫는 것
+
+- 이온 채널 전부 (`ion_n_dof` 신설 ⇒ *"ionic comparable"* 검정 가능)
+- p99.8 정확값 (rank 1.68× 부족이 사라진다)
+- Figure S14/S15 (정규화가 장 p99.8 로 — e·ion·열류·**joule** 넷 다)
+
+⚠ **플래그는 하나도 바꾸지 않는다.**  고친 코드는 통계를 장 전수에서 내므로
+`--field-max-points` 와 무관하다.  90,000 은 그림용으로 그대로 둔다.
