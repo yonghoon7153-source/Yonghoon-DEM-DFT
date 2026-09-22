@@ -292,6 +292,46 @@ def resolve_from_files(deck_path: str, atom_path: str) -> tuple:
     return resolve(deck, types_in_dump(atom_path))
 
 
+LEGACY_FALLBACK_MAP = '1:AM,2:SE'
+
+
+def map_str_from_meta(meta, where='', log=None):
+    """`meta['type_map']` 을 읽는다.  없으면 레거시 2상 map 으로 떨어지되 **조용하지 않다**.
+
+    -> (map_str, used_fallback)
+
+    ★ 왜 상수로 끌어냈나 (2026-09-22, webapp 패치 §8 두 번째 항목)
+      업로드 입구에는 `resolve_from_files` 게이트가 붙었고 `analyze_contacts` 는
+      계산 **전에** fail-closed 로 거부한다.  그런데 그 **뒤의 소비자들**은
+      `meta.get('type_map', '1:AM,2:SE')` 라는 리터럴을 네 군데(app.py 5819·5833·
+      5950·7860)에 **각자** 들고 있었다.  meta 에 키가 없으면 3상 덱이 조용히
+      **2상**으로 읽히고, type 3(=SE, 실사고에서 원자의 99.75 %)이 상 없이 남는다.
+      게이트를 통과한 뒤에 같은 사고가 재현되는 경로다.
+
+    ⚠ **값은 바꾸지 않는다.**  레거시 케이스(meta 에 type_map 이 없던 옛 세대)가
+      여전히 읽혀야 하므로 fallback 자체는 남긴다 — 170여 케이스 코퍼스가 걸려 있다.
+      바뀌는 것은 ⓐ 출처가 하나라는 것과 ⓑ **떨어질 때 말을 한다**는 것뿐이다.
+      `app_wiring_errors` 의 검사가 리터럴 재등장을 거부해 네 군데로 흩어지는 것을 막는다.
+
+    ★ 표식이 셋이라는 것도 여기 적어 둔다 (실측) — 같은 "맵에 없는 타입" 이
+      `analyze_contacts.py:804` 에서는 `'?'`, 같은 파일 800 에서는 **빈 칸**(NaN),
+      `webapp/app.py:7902` 에서는 **`T<n>`** 으로 남는다.  하나만 훑는 스윕은
+      나머지를 못 본다 (`scripts/audit_type_map_unknown.py` 가 둘을 같이 본다)."""
+    s = ((meta or {}).get('type_map') or '').strip()
+    if s:
+        return s, False
+    msg = ('⚠ meta 에 type_map 이 없다 — 레거시 2상 `%s` 로 되돌린다 (%s).  '
+           '3상 덱이면 type 3 이 상 없이 남는다.'
+           % (LEGACY_FALLBACK_MAP, where or '호출부 미상'))
+    if log is not None:
+        try:
+            log.append(msg)
+        except Exception:                                          # noqa: BLE001
+            pass
+    print('  ' + msg)
+    return LEGACY_FALLBACK_MAP, True
+
+
 def app_wiring_errors(src, exists=True) -> list:
     """`webapp/app.py` 가 이 모듈을 **실제로** 쓰는가 → 오류 목록 (빈 = 통과).
 
@@ -321,6 +361,11 @@ def app_wiring_errors(src, exists=True) -> list:
     if re.search(r'[<>]=?\s*0\.004\b', src):
         errs.append(f'⛔ 반지름 문턱 0.004 가 app.py 에 리터럴로 박혀 있다 — '
                     f'`AM_P_RADIUS_CUT_SIM`({AM_P_RADIUS_CUT_SIM}) 를 쓸 것 (두 곳 금지)')
+    #  ★ 2026-09-22 (§8 ②) — 게이트를 통과한 **뒤** 다시 2상으로 떨어지는 경로.
+    #    리터럴이 네 군데 흩어져 있었고 전부 조용했다.  `map_str_from_meta()` 가 정본이다.
+    if re.search(r'''['"]1:AM,2:SE['"]''', src):
+        errs.append('⛔ 레거시 2상 fallback `1:AM,2:SE` 가 app.py 에 리터럴로 박혀 있다 — '
+                    '`map_str_from_meta(meta, where)` 를 쓸 것 (조용한 2상 되돌림 금지)')
     return errs
 
 
@@ -471,10 +516,32 @@ def selftest() -> int:
             ('app.py 자체가 없음 (fail-closed)', ('', False), True),
             ('import 만 있고 호출이 없음', ('import type_map_resolve as _t\n',), True),
             ('문턱 0.004 를 리터럴로 다시 박음', (_GOOD + "y = r > 0.004\n",), True),
+            ('2상 fallback `1:AM,2:SE` 를 리터럴로 박음',
+             (_GOOD + "tm = meta.get('type_map', '1:AM,2:SE')\n",), True),
             ('올바른 배선 (양성 대조)', (_GOOD,), False)):
         _e = app_wiring_errors(*_args)
         chk(f'⑩c {"거부" if _want_fail else "통과"}: {_label}',
             bool(_e) == _want_fail, _e if bool(_e) != _want_fail else '')
+
+    # ── ⑪ 게이트를 통과한 **뒤** 다시 2상으로 떨어지는 경로 (§8 ②) ──────────
+    #   ⚠ 값은 안 바꾼다 — 레거시 케이스가 읽혀야 한다.  바뀌는 것은 출처가
+    #     하나라는 것과 **떨어질 때 말을 한다**는 것뿐이다.
+    _s_ok, _f_ok = map_str_from_meta({'type_map': '1:AM_P,2:AM_S,3:SE'}, 'test')
+    chk('⑪ meta 에 있으면 그대로 쓴다', _s_ok == '1:AM_P,2:AM_S,3:SE' and not _f_ok,
+        _s_ok)
+    _log = []
+    _s_fb, _f_fb = map_str_from_meta({}, 'test-where', _log)
+    chk('⑪b 없으면 레거시 2상으로 **되돌리되 값은 그대로**',
+        _s_fb == LEGACY_FALLBACK_MAP and _f_fb, _s_fb)
+    chk('⑪c ★ 되돌림이 **조용하지 않다** (로그에 남고 호출부를 말한다)',
+        len(_log) == 1 and 'test-where' in _log[0] and LEGACY_FALLBACK_MAP in _log[0],
+        _log)
+    _s_blank, _f_blank = map_str_from_meta({'type_map': '   '}, 'test')
+    chk('⑪d 빈 문자열도 "없음" 으로 본다 (빈 -t 가 조용히 흘러가지 않는다)',
+        _s_blank == LEGACY_FALLBACK_MAP and _f_blank, _s_blank)
+    chk('⑪e app.py 에 리터럴이 남아 있지 않다 (실물 대조)',
+        (not _ap_ok) or not re.search(r'''['"]1:AM,2:SE['"]''', _src),
+        'app.py 를 못 읽음' if not _ap_ok else '')
 
     print()
     if fails:

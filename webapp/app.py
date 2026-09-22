@@ -5816,7 +5816,8 @@ def retry_network(case_id):
         _log = []
         stages, run_id = _network_and_stage_e(
             results_dir, app.config['SCRIPTS_FOLDER'], atoms_csv, contacts_csv,
-            meta.get('type_map', '1:AM,2:SE'), meta.get('scale', 1000), _log,
+            _type_map_resolve.map_str_from_meta(meta, 'retry/_network_and_stage_e', _log)[0],
+            meta.get('scale', 1000), _log,
             preserve_network=False)
         status, failed = _ps.summarize(stages)
 
@@ -5830,7 +5831,8 @@ def retry_network(case_id):
                     met_data = json.load(_f)
                 for _fn, _tag in ((calc_am_am_stats, 'CN'), (calc_am_am_paths, 'Gd')):
                     try:
-                        st = _fn(atoms_csv, contacts_csv, meta.get('type_map', '1:AM,2:SE'),
+                        st = _fn(atoms_csv, contacts_csv,
+                                 _type_map_resolve.map_str_from_meta(meta, 'retry/AM-AM backfill')[0],
                                  scale=meta.get('scale', 1000))
                         if st:
                             met_data.update(st)
@@ -5947,7 +5949,7 @@ def batch_rerun_physics():
             try:
                 with open(c['meta']) as f: meta = json.load(f)
                 mode = meta.get('mode', 'standard')
-                type_map = meta.get('type_map', '1:AM,2:SE')
+                type_map = _type_map_resolve.map_str_from_meta(meta, 'batch reanalyze')[0]
                 scale = str(meta.get('scale', 1000))
 
                 # Order matters. analyze_contacts writes full_metrics.json from
@@ -7857,7 +7859,7 @@ def serve_3d_data(case_id):
     with open(meta_file) as f:
         meta = json.load(f)
     scale = meta.get('scale', 1000)
-    type_map_str = meta.get('type_map', '1:AM,2:SE')
+    type_map_str = _type_map_resolve.map_str_from_meta(meta, 'viewer payload')[0]
     type_map = {}
     for item in type_map_str.split(','):
         k, v = item.split(':')
@@ -10019,9 +10021,9 @@ def archive_reanalyze(folder):
         """
         scripts = app.config['SCRIPTS_FOLDER']
         mode = meta.get('mode', 'standard')
-        type_map = meta.get('type_map', '1:AM,2:SE')
-        scale = meta.get('scale', 1000)
         stages, log = [], []
+        type_map = _type_map_resolve.map_str_from_meta(meta, 'reprocess pipeline', log)[0]
+        scale = meta.get('scale', 1000)
 
         for pyc in globmod.glob(os.path.join(scripts, '__pycache__', '*.pyc')):
             os.remove(pyc)
@@ -10183,7 +10185,7 @@ def serve_archive_3d_data(folder):
         with open(meta_file) as f:
             meta = json.load(f)
     scale = meta.get('scale', 1000)
-    type_map_str = meta.get('type_map', '1:AM,2:SE')
+    type_map_str = _type_map_resolve.map_str_from_meta(meta, 'viewer payload')[0]
     type_map = {}
     for item in type_map_str.split(','):
         k, v = item.split(':')

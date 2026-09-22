@@ -93,8 +93,17 @@
         </select>
       </div>
       <div class="form-group">
-        <label>Type Map</label>
-        <input type="text" name="type_map" placeholder="자동 (예: 1:AM_P,2:AM_S,3:SE)" class="input">
+        <label>Type Map <small>— 비워 두는 것이 기본</small></label>
+        <input type="text" name="type_map" placeholder="비워 두세요 — 덱에서 자동 판독합니다" class="input">
+        <!-- ⚠ 여기에 `1:AM_P,2:AM_S,3:SE` 같은 **구체적 예시를 다시 넣지 말 것** (2026-09-22, §8 ③).
+             P:S=10:0 덱은 AM_S 질량분율이 0 이라 type 2 가 **0개**이고 올바른 map 은
+             `1:AM_P,3:SE` 다.  예시를 베껴 넣으면 SE(type 3)가 엉뚱한 상에 붙거나
+             상 없이 남는다 — 실사고 260922_092001_0853b1 이 정확히 그 경로였다. -->
+        <small style="display:block;margin-top:4px;opacity:.75;line-height:1.45">
+          덱의 <code>particletemplate/sphere … atom_type N</code> 에서 읽으므로 보통 비워 둡니다.
+          ⚠ 직접 적을 때는 <b>번호가 건너뛸 수 있다</b>는 점에 주의하세요 —
+          P:S=10:0 처럼 AM_S 가 없는 덱의 정답은 <code>1:AM_P,3:SE</code> 입니다.
+        </small>
       </div>
       <div class="form-group">
         <label>P:S 비율</label>
