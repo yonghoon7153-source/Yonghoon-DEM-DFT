@@ -424,8 +424,21 @@ def near_optimal_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
     반환값에 `is_lower_bound: True` 를 같이 실어 그 사실을 지운 채 인용하지
     못하게 한다.
     """
+    # ⚠ Codex R17 P2-01: 전 판은 tol·best_val 을 검사하지 않았고, 허용집합이 비면 `best` 를 조용히 넣어
+    #   `measured / 폭 0` 을 냈다 — 읽는 쪽은 그것을 "완벽히 식별됐다" 로 읽는다. 폭이 **뜻을 갖는 전제**를 먼저 본다:
+    #   tol 은 유한한 비음수, best_val 은 유한, best 는 상자 안. 어긋나면 값을 지어내지 않고 예외다 —
+    #   `cycles._width_fields` 가 이것을 받아 `failed` 로 적는다 (안 잼/실패/빈 집합은 0 이 아니다).
+    tol = float(tol)
+    if not (np.isfinite(tol) and tol >= 0.0):
+        raise ValueError(f"폭 허용 tol 은 유한한 비음수여야 한다 — {tol!r} 이면 근최적 집합이 정의되지 않는다 (R17 P2-01)")
+    if not np.isfinite(float(best_val)):
+        raise ValueError(f"best_val 이 유한하지 않다 ({best_val!r}) — 근최적 집합의 기준값이 없다 (R17 P2-01)")
     limit = best_val * (1.0 + tol)
     lo, hi = resolve_box(lb, ub)                     # ⚠ W-02: 상자는 인자다 (적합이 쓴 그것과 같아야 한다)
+    _b = np.asarray(best, float)
+    if _b.shape != lo.shape or np.any(_b < lo - 1e-12) or np.any(_b > hi + 1e-12):
+        raise ValueError(f"best 가 상자 밖이다 (best {_b.tolist()}, lb {lo.tolist()}, ub {hi.tolist()}) — "
+                         f"적합이 쓴 상자와 폭의 상자가 다르다 (R17 P2-01 · W-02)")
     bounds = list(zip(lo, hi))
     rng = np.random.default_rng(seed + 7)
     # 시작점은 **상자 전체**에 뿌린다. 최적점 둘레에만 뿌리면 멀리 뻗은
@@ -463,7 +476,11 @@ def near_optimal_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
         if obj(q) <= limit * (1 + 1e-9):
             feasible.append(q)
     if not feasible:
-        feasible = [np.asarray(best, float)]
+        # ⚠ R17 P2-01: 전 판은 여기서 `best` 를 복구값으로 넣었다. 유효 witness 가 하나도 없으면 폭은 **없는 것**이지
+        #   0 이 아니다 — 결과를 내지 않고 실패한다 (`best` 자체가 제약을 못 지키면 `best_val` 이 그 점의 목적값이
+        #   아니라는 뜻이고, 그것은 호출자의 버그다).
+        raise RuntimeError(f"근최적 집합 {{J ≤ {limit:.6g}}} 안에 유효한 점이 하나도 없다 — obj(best)={obj(_b):.6g}. "
+                           f"폭을 0 으로 적지 않는다 (R17 P2-01)")
 
     out = {}
     for key in ("LAM_PE", "LAM_NE", "LLI"):
@@ -1274,13 +1291,26 @@ def publish_target(out, status, run_id: str | None = None):
     같은 시도 자리에 두 번 쓰는 것은 버그이므로 `FileExistsError` 다 (immutable 이라는 말이 무엇도
     막지 않으면 이름뿐이다). `run_id` 가 없으면 자리를 정할 수 없으므로 거부한다 — 부재는 안전값이 아니다.
     """
+    import re as _re
     out = Path(out)
     if status == "complete":
         out.parent.mkdir(parents=True, exist_ok=True)
         return out
     if not run_id:
         raise ValueError("부분 산출은 attempt-id(run_id) 없이 자리를 정할 수 없다 (조건 8 축 ④)")
-    dest = out.parent / "partial" / S.kind_of(out.name) / str(run_id) / out.name
+    # ⚠ Codex R17 P1-02: `Path / str(run_id)` 에서 run_id 가 **절대경로**면 앞의 `partial/<종류>` 가 버려진다 —
+    #   `run_id=str(canonical.parent)` 하나로 partial 목적지가 **canonical 자체**가 됐다 (반환 경로 실측).
+    #   production 은 그 경로에 먼저 쓰고 `record_partial` 을 부르므로 뒤의 `relative_to` 오류는 예방이 아니다.
+    #   attempt-id 는 **단일 경로 성분**이어야 한다: 구분자·상위 이동(`..`)·alias(`.`)·절대경로·빈 값을 첫
+    #   mkdir 전에 거부하고, 해석된 목적지가 고정 partial root 아래인지 **쓰기 전에** 확인한다.
+    rid = str(run_id)
+    if not _re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", rid):
+        raise ValueError(f"attempt-id(run_id) 는 단일 경로 성분이어야 한다 ([A-Za-z0-9._-], 선두는 영숫자, "
+                         f"128 자 이하) — 받은 것: {rid!r} (Codex R17 P1-02)")
+    root = out.parent / "partial"
+    dest = root / S.kind_of(out.name) / rid / out.name
+    if not dest.resolve().is_relative_to(root.resolve()) or dest.resolve() == out.resolve():
+        raise ValueError(f"부분 산출의 목적지가 partial root 밖이다: {dest} (Codex R17 P1-02)")
     if dest.exists():
         raise FileExistsError(f"같은 시도 자리에 두 번 쓴다: {dest} — 부분 단위는 immutable 이다")
     dest.parent.mkdir(parents=True, exist_ok=True)

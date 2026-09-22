@@ -1,0 +1,24 @@
+{
+  "command": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_widths.py",
+    "-q",
+    "--tb=short",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r17_review_20260922/tmp_widths_01",
+    "-k",
+    "w08 or w09 or w15 or w16 or w17 or w18 or w19 or w21",
+    "--junitxml",
+    "C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r17_review_20260922/pytest_width.xml"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-head\\bms-balancing",
+  "rc": 0,
+  "seconds": 4.735000000000582,
+  "utc": "2026-09-22T01:24:54.126216+00:00",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0"
+}

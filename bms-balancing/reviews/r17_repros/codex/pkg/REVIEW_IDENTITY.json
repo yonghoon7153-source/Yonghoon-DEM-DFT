@@ -1,0 +1,75 @@
+{
+  "reviewed_commit": "dfc1fc78b3396c95709650860f1502c0e83ead40",
+  "out_tree": "1da2e9f5600dc5f91dd0a989188ef7b0ecb19437",
+  "final_git_status": [],
+  "source_files": [
+    {
+      "path": "bms-balancing/scripts/check_u14.py",
+      "bytes": 75254,
+      "sha256": "45bbe7597aa735d15b810b954fda07431091c0c5ecda073921deff91247e4160"
+    },
+    {
+      "path": "bms-balancing/scripts/gc_partial.py",
+      "bytes": 5120,
+      "sha256": "0ec60624b7b190b67a583bb008539f17de7e8e0977fa2082baf2c1f1e7149c11"
+    },
+    {
+      "path": "bms-balancing/scripts/width_report.py",
+      "bytes": 7374,
+      "sha256": "f904c72e2b70f04cdbd07f82318e213354e3a00fb3ba291916e6356e2a548fe6"
+    },
+    {
+      "path": "bms-balancing/scripts/verify_run_receipt.py",
+      "bytes": 7065,
+      "sha256": "f8cec7a9d745788c286414b787bb31f22364d407597045e3de9a8e6fb94d5fce"
+    },
+    {
+      "path": "bms-balancing/bms_balancing/verify.py",
+      "bytes": 127802,
+      "sha256": "f907c3e6657dc3ac98d13c82c69b0d4170f069356dc8de6ea01fe87550c1d472"
+    },
+    {
+      "path": "bms-balancing/bms_balancing/schema.py",
+      "bytes": 66907,
+      "sha256": "5123bccd40ad64c413301690d35d7a44b4b1bda4a323b37cf3799dea610949e1"
+    },
+    {
+      "path": "bms-balancing/bms_balancing/cycles.py",
+      "bytes": 14918,
+      "sha256": "0a54665bcaf9ccd80aec7999dde8792f230bc68f86438e2617b72184818541c0"
+    },
+    {
+      "path": "bms-balancing/bms_balancing/model.py",
+      "bytes": 27660,
+      "sha256": "f8ea30e829852a78efdcf467e6e16cb68df72e424754319f896c5ae9562ed287"
+    },
+    {
+      "path": "bms-balancing/reviews/R17_REQUEST.md",
+      "bytes": 15707,
+      "sha256": "a434a10358536acba11cc03fc9b58d3a811d1ec4a3ef3a8d1b489ce76f723f76"
+    },
+    {
+      "path": "bms-balancing/reviews/BML_R1_RESPONSE.md",
+      "bytes": 65172,
+      "sha256": "36fbac8ffa4de94844f048678783ab7a2671767d3e13e0dca85ee30f61ff7e7c"
+    }
+  ],
+  "pip_freeze": [
+    "colorama==0.4.6",
+    "et_xmlfile==2.0.0",
+    "iniconfig==2.3.0",
+    "numpy==2.5.3",
+    "openpyxl==3.1.5",
+    "packaging==26.3",
+    "pandas==3.0.6",
+    "pluggy==1.6.0",
+    "Pygments==2.21.0",
+    "pytest==9.1.1",
+    "python-dateutil==2.9.0.post0",
+    "scipy==1.18.1",
+    "six==1.17.0",
+    "tzdata==2026.4"
+  ],
+  "external_data_fits_executed": false,
+  "comsol_calls": 0
+}

@@ -75,6 +75,25 @@ def main(argv=None) -> int:
 
     checks, failed = {}, []
 
+    # ⚠ Codex R17 P2-02: 전 판은 code/instrument/signature 만 있는 객체 — receipt_version·package·materialized·
+    #   runtime·produced_utc 가 **없는** 것 — 에 `verified=true` 를 줬다 (서명·ancestry·tree 대조는 맞았으므로).
+    #   서명은 "내용이 안 바뀌었다" 만 말하고 ancestry 는 "그 커밋이 역사에 있다" 만 말한다 — 둘 다 **run receipt 의
+    #   완전성**을 말하지 않는다. typed 필수 구조와 지원 version 을 **먼저** 보고, 빠지면 전체 verified 를 주지 않는다.
+    #   부분 대조(코드 참조)가 맞았다는 사실은 `code_reference_verified` 라는 **다른 상태**로 따로 낸다.
+    required = ("receipt_version", "code", "instrument", "package", "materialized", "runtime", "produced_utc",
+                "signature")
+    missing = [k for k in required if k not in r]
+    ok_version = r.get("receipt_version") == gate.RUN_RECEIPT_VERSION
+    ok_package = isinstance(r.get("package"), dict) and bool(str((r.get("package") or {}).get("digest") or "").strip())
+    checks["complete"] = not missing and ok_version and ok_package
+    if missing:
+        failed.append(f"run receipt 의 필수 결속이 빠졌다: {missing} — 불완전한 객체는 전체 검증을 받지 않는다")
+    if not ok_version:
+        failed.append(f"receipt_version 이 지원 버전이 아니다 (적힌 {r.get('receipt_version')!r} ≠ "
+                      f"{gate.RUN_RECEIPT_VERSION!r})")
+    if "package" in r and not ok_package:
+        failed.append("package.digest 가 비었다 — 묶음 결속 없는 receipt 는 실행 증거가 아니다")
+
     want_sig = gate.receipt_signature(r)
     checks["signature"] = (want_sig == r["signature"])
     if not checks["signature"]:
@@ -112,12 +131,17 @@ def main(argv=None) -> int:
             failed.append(f"instrument digest 가 그 커밋의 blob 과 다르다: "
                           f"{sorted(k for k, v in detail.items() if v != 'ok')}")
 
+    code_ref_ok = bool(checks["signature"] and checks["ancestry"] and checks["tree"]
+                       and (checks["instrument"] in (True, None)))
     verdict = {"verified": not failed, "checks": checks, "failed": failed,
+               # 부분 상태 — 코드 참조(서명·ancestry·tree·instrument)만 맞은 객체는 **이것**이고 verified 가 아니다
+               "code_reference_verified": code_ref_ok,
                "receipt": str(a.receipt), "receipt_version": r.get("receipt_version"),
                "code": r.get("code"), "skipped_instrument": bool(a.skip_instrument),
                "verifier": me}
     print(f"\n══ run receipt 검증 — {a.receipt.name} ══")
-    print(f"  서명 {'ok' if checks['signature'] else '**다름**'} · "
+    print(f"  완전성 {'ok' if checks['complete'] else '**불완전**'} · "
+          f"서명 {'ok' if checks['signature'] else '**다름**'} · "
           f"ancestry {'ok' if checks['ancestry'] else '**아님**'} · "
           f"tree {'ok' if checks['tree'] else '**아님**'} · "
           f"instrument {'건너뜀' if checks['instrument'] is None else ('ok' if checks['instrument'] else '**다름**')}")

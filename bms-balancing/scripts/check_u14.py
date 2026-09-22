@@ -468,6 +468,13 @@ def legacy_transition(new_roster: set, commits: set, old_rev_full: str | None,
             if v and k not in (*UNKNOWN_BLOCKERS, "baseline_absent")]
     if hard or not unknown:
         return None
+    # ⚠ Codex R17 P1-03: 전 판은 `old_rev_full` 이 None 이면 (c) 의 비교를 **건너뛰었다** — `--old <디렉터리>` 로
+    #   비교하면 revision 이 None 이라, 현행 out 사본에서 sidecar 와 run_id 만 지운 디렉터리가 rc 4 와 함께
+    #   `legacy_transition_approved=true` 를 받았다. 승인은 **기록이 이름한 옛 리비전**에 대한 것이다.
+    #   None 은 "미검증" 이지 wildcard 가 아니다 — revision 결속 없는 디렉터리 비교에는 승인을 붙이지 않는다.
+    #   (`promotion_eligible=false` 와 rc 4 는 어차피 그대로였다 — 넓어진 것은 사용자 승인의 **범위**였다.)
+    if not old_rev_full:
+        return None
     for e in decisions["legacy_transitions"]:
         if set(e["new"]["roster"]) != new_roster:
             continue
@@ -475,7 +482,7 @@ def legacy_transition(new_roster: set, commits: set, old_rev_full: str | None,
             continue
         if not unknown <= set(e["allowed_unknown"]):
             continue
-        if old_rev_full and e["old"]["rev"] != old_rev_full:
+        if e["old"]["rev"] != old_rev_full:
             continue
         return e["id"]
     return None

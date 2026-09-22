@@ -1,0 +1,40 @@
+        git = lambda *a: subprocess.check_output(["git", *a], cwd=ROOT, text=True).strip()  # noqa: E731
+        receipt = {"code": {"commit": git("rev-parse", "HEAD"), "tree": git("rev-parse", "HEAD^{tree}")},
+                   "instrument": {"reviews/evidence_gate.py": git("rev-parse", "HEAD:./reviews/evidence_gate.py")}}
+        receipt["signature"] = gate.receipt_signature(receipt)
+        rp = tmp_path / "incomplete-receipt.json"; rp.write_text(json.dumps(receipt), encoding="utf-8")
+        r = _run("scripts/verify_run_receipt.py", "--receipt", rp, "--target", ROOT)
+        line = next((x for x in r.stdout.splitlines() if x.startswith("RUN_RECEIPT_VERIFY ")), None)
+        assert line, r.stdout + r.stderr
+        v = json.loads(line[len("RUN_RECEIPT_VERIFY "):])
+>       assert r.returncode != 0 and v["verified"] is not True, \
+            f"receipt_version·package·runtime 없는 객체를 verified=true 로 냈다 (P2-02): {v}"
+E       AssertionError: receipt_version·package·runtime 없는 객체를 verified=true 로 냈다 (P2-02): {'verified': True, 'checks': {'signature': True, 'ancestry': True, 'tree': True, 'instrument': True}, 'failed': [], 'receipt': '/tmp/pytest-of-root/pytest-2722/test_r17_12_incomplete_run_rec0/incomplete-receipt.json', 'receipt_version': None, 'code': {'commit': 'dfc1fc78b3396c95709650860f1502c0e83ead40', 'tree': 'd2cfd85cadfffaae1b78df45f785f5ba7b5c4f51'}, 'skipped_instrument': False, 'verifier': {'path': 'bms-balancing/scripts/verify_run_receipt.py', 'sha256': 'f8cec7a9d745788c286414b787bb31f22364d407597045e3de9a8e6fb94d5fce', 'checked_against': 'dfc1fc78b3396c95709650860f1502c0e83ead40', 'note': '이 검증기는 **자기를 인증하지 않는다 — 드러낼 뿐이다** (R12 Q3). 변조 여부는 `evidence_gate.instrument_sealed` 가 바깥에서 본다'}}
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/usr/local/bin/python3', '/tmp/r17-bad/bms-balancing/scripts/verify_run_receipt.py', '--receip...ote": "이 검증기는 **자기를 인증하지 않는다 — 드러낼 뿐이다** (R12 Q3). 변조 여부는 `evidence_gate.instrument_sealed` 가 바깥에서 본다"}}\n', stderr='').returncode
+
+tests/test_r17_codex.py:286: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_r17_codex.py::test_r17_01_gc_keeps_an_attempt_dir_that_a_retained_artifact_still_references
+FAILED tests/test_r17_codex.py::test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[absolute-path]
+FAILED tests/test_r17_codex.py::test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[parent-traversal]
+FAILED tests/test_r17_codex.py::test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[separator]
+FAILED tests/test_r17_codex.py::test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[dot]
+FAILED tests/test_r17_codex.py::test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[dotdot]
+FAILED tests/test_r17_codex.py::test_r17_04_publish_target_never_resolves_onto_canonical
+FAILED tests/test_r17_codex.py::test_r17_05_legacy_transition_needs_a_recorded_old_revision_not_a_wildcard
+FAILED tests/test_r17_codex.py::test_r17_06_check_u14_old_directory_without_identity_gets_no_legacy_approval
+FAILED tests/test_r17_codex.py::test_r17_08_width_report_refuses_input_roster_and_finite_violations[input-sha-changed]
+FAILED tests/test_r17_codex.py::test_r17_08_width_report_refuses_input_roster_and_finite_violations[cycle-dropped]
+FAILED tests/test_r17_codex.py::test_r17_08_width_report_refuses_input_roster_and_finite_violations[duplicate-cycle]
+FAILED tests/test_r17_codex.py::test_r17_08_width_report_refuses_input_roster_and_finite_violations[nan-endpoint]
+FAILED tests/test_r17_codex.py::test_r17_08_width_report_refuses_input_roster_and_finite_violations[blank-tol]
+FAILED tests/test_r17_codex.py::test_r17_09_width_union_closes_semantics_not_just_presence[lower-bound-False]
+FAILED tests/test_r17_codex.py::test_r17_09_width_union_closes_semantics_not_just_presence[lower-bound-garbage]
+FAILED tests/test_r17_codex.py::test_r17_09_width_union_closes_semantics_not_just_presence[negative-tol]
+FAILED tests/test_r17_codex.py::test_r17_09_width_union_closes_semantics_not_just_presence[inverted-interval]
+FAILED tests/test_r17_codex.py::test_r17_09_width_union_closes_semantics_not_just_presence[point-outside-interval]
+FAILED tests/test_r17_codex.py::test_r17_10_width_producer_refuses_an_empty_feasible_set_instead_of_measured_zero
+FAILED tests/test_r17_codex.py::test_r17_11_near_optimal_extrema_does_not_fall_back_to_best_when_nothing_is_feasible
+FAILED tests/test_r17_codex.py::test_r17_12_incomplete_run_receipt_is_not_reported_as_fully_verified
+22 failed, 5 passed in 8.30s

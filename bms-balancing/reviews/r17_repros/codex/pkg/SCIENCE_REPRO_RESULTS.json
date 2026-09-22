@@ -1,0 +1,129 @@
+{
+  "scope": "Analytical synthetic countermodels; no real battery input or external fit results reproduced.",
+  "same_optimum_not_nonidentifiability": [
+    {
+      "model": "A",
+      "gamma_initial": 0.25,
+      "gamma_lower": 0.0,
+      "optimum": [
+        1.0,
+        0.0,
+        1.02,
+        0.0,
+        0.2407
+      ],
+      "hessian_eigenvalues": [
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0
+      ],
+      "signed_ne_proxy": -0.020000000000000018
+    },
+    {
+      "model": "A",
+      "gamma_initial": 0.02,
+      "gamma_lower": 0.02,
+      "optimum": [
+        1.0,
+        0.0,
+        1.02,
+        0.0,
+        0.2407
+      ],
+      "hessian_eigenvalues": [
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0
+      ],
+      "signed_ne_proxy": -0.020000000000000018
+    },
+    {
+      "model": "B",
+      "gamma_initial": 0.25,
+      "gamma_lower": 0.0,
+      "optimum": [
+        1.0,
+        0.0,
+        0.98,
+        0.0,
+        0.224
+      ],
+      "hessian_eigenvalues": [
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0
+      ],
+      "signed_ne_proxy": 0.020000000000000018
+    },
+    {
+      "model": "B",
+      "gamma_initial": 0.02,
+      "gamma_lower": 0.02,
+      "optimum": [
+        1.0,
+        0.0,
+        0.98,
+        0.0,
+        0.22399999999999998
+      ],
+      "hessian_eigenvalues": [
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0
+      ],
+      "signed_ne_proxy": 0.020000000000000018
+    }
+  ],
+  "lower_bound_order_counterexample": {
+    "observed_A": 2.439,
+    "observed_B": 7.099,
+    "possible_true_A": 20.0,
+    "possible_true_B": 8.0,
+    "observed_B_over_A": 2.910619106191062,
+    "true_B_over_A": 0.4,
+    "all_lower_bound_inequalities_hold": true
+  },
+  "relative_threshold_counterexample": {
+    "A": {
+      "minimum": 1.0,
+      "curvature": 2.0,
+      "exact_width": 0.2
+    },
+    "B": {
+      "minimum": 101.005,
+      "curvature": 4.0,
+      "exact_width": 1.4213022197970422
+    },
+    "definition": "full width of J<=1.01*J_min",
+    "reason": "Minimum-dependent threshold changes, not a calibrated confidence region."
+  },
+  "known_chain_rule_independent_check": {
+    "legacy_max_abs_error": 0.37083333345545677,
+    "corrected_formula_max_abs_error": 4.0270053958124663e-10,
+    "not_new_finding": true,
+    "not_author_200x_fit_reproduction": true
+  },
+  "negative_tolerance_empty_set": {
+    "objective_everywhere": 1.0,
+    "limit": 0.5,
+    "actual": {
+      "width_status": "measured",
+      "width_tol": -0.5,
+      "width_is_lower_bound": true,
+      "LAM_PE_lo": 0.0,
+      "LAM_PE_hi": 0.0,
+      "LAM_NE_lo": 0.0,
+      "LAM_NE_hi": 0.0,
+      "LLI_lo": 0.0,
+      "LLI_hi": 0.0
+    }
+  }
+}

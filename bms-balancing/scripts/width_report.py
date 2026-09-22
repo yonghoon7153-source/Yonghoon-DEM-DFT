@@ -17,11 +17,27 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import pathlib
 import sys
 
+HERE = pathlib.Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent))
+from bms_balancing import schema as S          # noqa: E402
+
 MODES = ("LAM_PE", "LAM_NE", "LLI")
+
+#: ⚠ Codex R17 P1-04: 전 판의 rc 0 은 "열거한 설정 스무 개가 같다" 만 뜻했다 — 입력 SHA 가 바뀌어도, cycle 하나가
+#:   빠져도(교집합으로 비교), 같은 cycle 이 두 번 있어도(dict 가 마지막 행을 고름), 끝점이 NaN 이어도 rc 0 이었고,
+#:   키가 양쪽에 **없으면** `None == None` 으로 통과했다. 그래서 `BML_R1_RESPONSE` §14-1 의 "rc 0 이 그 자체로
+#:   증거다" 는 성립하지 않았다. 이제 reader 가 **일반 검증 경로**(`schema.check_rows`: 스키마·유한·receipt·
+#:   union·중복 key)를 먼저 타고, 본문↔sidecar↔입력을 SHA 로 묶고, 두 실행의 **코드·환경·입력·모집단**이 같음을
+#:   요구한다. 부분 비교는 하지 않는다 — 필요하면 그것은 다른 이름의 다른 도구다.
+#: 두 실행이 **같아야** 하는 결속 — 이것이 다르면 "축 하나만 다르다" 가 거짓이다.
+BOUND_IDENTITY = ("git_commit", "env", "consumed_inputs", "dataset_manifest")
+#: sidecar 에 **있어야** 하는 키 — 없는 키는 `None` 으로 견주지 않는다 (부재는 안전값이 아니다).
+REQUIRED_META = ("sha256", "run_id", "cycles") + BOUND_IDENTITY
 
 #: 두 실행이 **같아야** 하는 설정 — 여기가 다르면 그 비교는 축 하나의 것이 아니다.
 #: (`--axis` 로 지정한 것 하나만 예외다. `run_states.sh` 의 "같은 설정이어야 비교가 성립한다" 와 같은 규율.)
@@ -47,8 +63,54 @@ def load(path: pathlib.Path):
         print(f"! 폭이 전부 measured 가 아니다 ({path.name}): {sorted(st)} — "
               f"안 잰 행이 섞이면 이 표는 모집단을 말할 수 없다", file=sys.stderr)
         raise SystemExit(2)
+    # ① 일반 검증 경로 — 스키마·유한값·receipt·폭 union(뜻까지)·중복 (cell, cycle). 이 도구만의 검사를 따로 두지 않는다.
+    header = list(rows[0].keys())
+    problems = S.check_rows("cycles", rows, header, path.name)
+    if problems:
+        print(f"! {path.name} 이 cycles 계약을 어긴다 — 표를 그리지 않는다:", file=sys.stderr)
+        for q in problems[:20]:
+            print(f"    {q}", file=sys.stderr)
+        raise SystemExit(2)
+    # ② sidecar 는 선택이 아니다 — 없으면 이 CSV 가 무엇을 읽어 어떤 코드로 나왔는지 말할 수 없다.
     mp = path.with_name(path.name + ".meta.json")
-    meta = json.loads(mp.read_text(encoding="utf-8")) if mp.is_file() else {}
+    if not mp.is_file():
+        print(f"! sidecar 가 없다: {mp.name} — 결속 없는 폭은 표로 옮길 수 없다", file=sys.stderr); raise SystemExit(2)
+    try:
+        meta = json.loads(mp.read_text(encoding="utf-8"))
+    except ValueError as e:
+        print(f"! sidecar 를 못 읽었다 ({mp.name}): {e}", file=sys.stderr); raise SystemExit(2)
+    missing = [k for k in REQUIRED_META + COMPARED_SETTINGS if k not in meta]
+    if missing:
+        print(f"! sidecar 에 필수 키가 없다 ({mp.name}): {missing} — 없는 키는 None 으로 견주지 않는다", file=sys.stderr)
+        raise SystemExit(2)
+    # ③ 본문 ↔ sidecar — sidecar 가 적은 sha256 이 **이 bytes** 의 것이어야 한다.
+    sha = hashlib.sha256(path.read_bytes()).hexdigest()
+    if str(meta["sha256"]) != sha:
+        print(f"! sidecar 의 sha256 이 본문과 다르다 ({path.name}): sidecar {str(meta['sha256'])[:12]} ≠ "
+              f"본문 {sha[:12]} — 다른 파일의 sidecar 다", file=sys.stderr)
+        raise SystemExit(2)
+    # ④ 행 ↔ sidecar 입력 결속 — 모든 행의 receipt 가 sidecar 의 `consumed_inputs` 와 같은 입력을 가리켜야 한다.
+    want_inputs = json.dumps(meta["consumed_inputs"], sort_keys=True)
+    want_sha = S.inputs_digest(meta["consumed_inputs"])
+    for i, r in enumerate(rows):
+        try:
+            got = json.dumps(json.loads(r.get("consumed_inputs") or "null"), sort_keys=True)
+        except ValueError:
+            got = None
+        if got != want_inputs or str(r.get("inputs_sha")) != want_sha:
+            print(f"! 행 {i} 의 receipt 가 sidecar 의 입력과 다르다 ({path.name}) — 이 행은 이 sidecar 의 것이 아니다",
+                  file=sys.stderr)
+            raise SystemExit(2)
+    # ⑤ 명부 — 본문의 cycle 집합이 sidecar 가 선언한 `cycles` 와 **정확히** 같아야 한다 (중복은 ① 이 잡았다).
+    body_cycles = sorted(S.cycles_key(r) for r in rows)
+    try:
+        declared = sorted(int(c) for c in meta["cycles"])
+    except (TypeError, ValueError):
+        print(f"! sidecar 의 cycles 가 정수 목록이 아니다 ({mp.name}): {meta['cycles']!r}", file=sys.stderr); raise SystemExit(2)
+    if body_cycles != declared:
+        print(f"! 본문의 cycle 집합 {body_cycles} 이 sidecar 의 선언 {declared} 과 다르다 ({path.name}) — "
+              f"빠졌거나 넘친 행이 있다", file=sys.stderr)
+        raise SystemExit(2)
     return rows, meta
 
 
@@ -96,13 +158,29 @@ def guard_same_except(axis, ma, mb, pa, pb):
         raise SystemExit(2)
 
 
+def guard_same_identity(ma, mb, pa, pb):
+    """코드·환경·입력·모집단 선언이 다르면 **비교를 거부한다** — 설정 스무 개가 같아도 그 비교는 축 하나의 것이 아니다."""
+    diff = [k for k in BOUND_IDENTITY
+            if json.dumps(ma.get(k), sort_keys=True) != json.dumps(mb.get(k), sort_keys=True)]
+    if diff:
+        print(f"! 두 실행의 결속이 다르다 — 비교하지 않는다 (같은 코드·환경·입력·모집단이어야 축 하나의 비교다):",
+              file=sys.stderr)
+        for k in diff:
+            print(f"    {k}: {pa.name} ≠ {pb.name}", file=sys.stderr)
+        raise SystemExit(2)
+
+
 def compare(axis, ra, ma, pa, rb, mb, pb):
     guard_same_except(axis, ma, mb, pa, pb)
-    ca, cb = {r["cycle"]: r for r in ra}, {r["cycle"]: r for r in rb}
-    common = [c for c in ca if c in cb]
-    if not common:
-        print("! 공통 cycle 이 없다", file=sys.stderr); raise SystemExit(2)
-    print(f"\n══ 폭 비교 — 축 `{axis}`: {ma.get(axis)!r} → {mb.get(axis)!r}  (공통 cycle {len(common)}) ══")
+    guard_same_identity(ma, mb, pa, pb)
+    ca, cb = {S.cycles_key(r): r for r in ra}, {S.cycles_key(r): r for r in rb}
+    # ⚠ R17 P1-04: 교집합으로 비교하지 않는다 — 한쪽에 없는 cycle 이 있으면 두 파일은 같은 모집단이 아니다.
+    if sorted(ca) != sorted(cb):
+        print(f"! 두 실행의 cycle 집합이 다르다 ({sorted(ca)} ↔ {sorted(cb)}) — 부분 비교는 이 도구가 하지 않는다",
+              file=sys.stderr)
+        raise SystemExit(2)
+    common = sorted(ca)
+    print(f"\n══ 폭 비교 — 축 `{axis}`: {ma.get(axis)!r} → {mb.get(axis)!r}  (cycle {len(common)} · 코드·환경·입력·모집단 동일 확인) ══")
     print(f"{'축':>8}  {'A 최대 폭':>12}  {'B 최대 폭':>12}  {'B/A':>8}   판정")
     for m in MODES:
         a = max(span(ca[c], m) for c in common)

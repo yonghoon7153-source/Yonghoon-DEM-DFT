@@ -298,11 +298,39 @@ def check_width_union(r: dict, where: str = "") -> list:
     if st not in CYCLES_WIDTH_STATUSES:
         return [f"{where}width_status 가 {CYCLES_WIDTH_STATUSES} 중 하나가 아니다 ({r.get('width_status')!r})"]
     filled = [c for c in CYCLES_WIDTH_VALUES if str(r.get(c) or "").strip() != ""]
-    if st == "measured":
-        missing = [c for c in CYCLES_WIDTH_VALUES if c not in filled]
-        return [f"{where}width_status=measured 인데 폭 칸이 비었다: {missing}"] if missing else []
-    return ([f"{where}width_status={st} 인데 폭 칸에 값이 있다: {filled} — 안 잰 것과 0 은 다르다"]
-            if filled else [])
+    if st != "measured":
+        return ([f"{where}width_status={st} 인데 폭 칸에 값이 있다: {filled} — 안 잰 것과 0 은 다르다"]
+                if filled else [])
+    missing = [c for c in CYCLES_WIDTH_VALUES if c not in filled]
+    if missing:
+        return [f"{where}width_status=measured 인데 폭 칸이 비었다: {missing}"]
+    # ⚠ Codex R17 P2-01: 전 판은 **있고 없음**만 봤다 — `width_is_lower_bound="banana"`·`"False"`, 음수 tol,
+    #   lo>hi 가 전부 통과했다. 칸이 차 있어도 **뜻이 틀리면** 거부한다 (producer 와 consumer 가 같은 규칙):
+    #   ① 하한 태그는 정확히 `True` 의 직렬화 — 폭은 국소 해법 + 격자라 늘 하한이고, 그 사실을 지우거나 헐렁하게
+    #      적은 행은 인용될 수 없다  ② tol 은 유한한 비음수 — 음수면 `J ≤ J_best·(1+tol)` 이 공집합이다
+    #   ③ 구간은 lo ≤ hi 이고 유한  ④ 점추정이 그 구간 안이다 — 최적점은 언제나 근최적 집합의 원소다.
+    p: list = []
+    if str(r.get("width_is_lower_bound")).strip() != "True":
+        p.append(f"{where}width_is_lower_bound 가 정확히 'True' 가 아니다 ({r.get('width_is_lower_bound')!r}) — "
+                 f"폭은 하한이고 그 태그는 불린 True 의 직렬화 하나뿐이다")
+    try:
+        tol = float(r.get("width_tol"))
+        if not (math.isfinite(tol) and tol >= 0):
+            p.append(f"{where}width_tol 이 유한한 비음수가 아니다 ({r.get('width_tol')!r})")
+    except (TypeError, ValueError):
+        p.append(f"{where}width_tol 이 숫자가 아니다 ({r.get('width_tol')!r})")
+    for mode in ("LAM_PE", "LAM_NE", "LLI"):
+        try:
+            lo, hi, pt = (float(r.get(f"{mode}_lo")), float(r.get(f"{mode}_hi")), float(r.get(mode)))
+        except (TypeError, ValueError):
+            p.append(f"{where}{mode} 의 lo/hi/점추정 중 숫자가 아닌 것이 있다"); continue
+        if not (math.isfinite(lo) and math.isfinite(hi)):
+            p.append(f"{where}{mode} 구간 끝점이 유한하지 않다 ({lo!r}, {hi!r})"); continue
+        if lo > hi:
+            p.append(f"{where}{mode} 구간이 뒤집혔다 (lo {lo} > hi {hi})")
+        elif math.isfinite(pt) and not (lo - 1e-9 <= pt <= hi + 1e-9):
+            p.append(f"{where}{mode} 점추정 {pt} 이 폭 구간 [{lo}, {hi}] 밖이다 — 최적점은 근최적 집합의 원소여야 한다")
+    return p
 
 #: 숫자가 **아닌** 열 (라벨·출처·감사 문자열). 나머지는 전부 유한한 숫자여야 한다 — 목록을 반대로 두면 새 숫자 열이
 #: 생겼을 때 검사에서 조용히 빠진다 (Codex R11 P1-8: `a_NE="not-a-number"` 가 통과했다).

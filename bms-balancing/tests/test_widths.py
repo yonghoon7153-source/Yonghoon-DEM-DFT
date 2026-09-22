@@ -404,7 +404,10 @@ def test_w15_the_width_columns_are_a_tagged_union_not_just_optional(tmp_path):
     ok_off = dict(base, width_status="not_requested", **{c: "" for c in W})
     assert probs(ok_off) == [], probs(ok_off)
 
+    # ⚠ R17 P2-01: 전 판 fixture 는 점추정 1.0 에 구간 [0.01, 0.01] 을 "정상 measured 행" 으로 놓았다 — union 이
+    #   있고/없음만 볼 때는 통과했고, 뜻(점추정 ∈ 구간)까지 보게 되자 먼저 깨졌다. 의도는 그대로, 점만 구간 안으로.
     ok_on = dict(base, width_status="measured", width_is_lower_bound="True",
+                 LAM_PE="0.01", LAM_NE="0.01", LLI="0.01",
                  **{c: "0.01" for c in W if c != "width_is_lower_bound"})
     assert probs(ok_on) == [], probs(ok_on)
 
@@ -426,9 +429,23 @@ def test_w15_the_width_columns_are_a_tagged_union_not_just_optional(tmp_path):
 # 비교는 **축 하나만 달라야** 뜻이 있다. 손으로 두 번 돌리면 한 줄에서 seed 를 흘려도 눈에 안 보이므로
 # (`run_states.sh` 가 같은 이유로 스크립트다), 읽는 쪽이 sidecar 를 보고 **거부**한다.
 
+#: 실제 producer 모양의 receipt — 전 판 fixture 는 `inputs_sha="s"` · `consumed_inputs="{}"` 같은 **자리표시**를
+#: 썼고 sidecar 에 `sha256`·`git_commit`·`env`·`consumed_inputs` 가 없었다. Codex R17 P1-04 가 reader 에 결속을
+#: 요구하자 이 fixture 가 먼저 깨졌다 — validator 를 강화하면 fixture 가 먼저 깨져야 정상이고(CLAUDE.md 규율 2),
+#: 안 깨졌다면 fixture 가 위조 통로였다는 뜻이다. 시험의 **의도**(W-16 성립 · W-17/W-21 거부)는 그대로다.
+_FAKE_CONSUMED = {"full_cell": {"path": "cell.xlsx", "sha256": "a" * 64},
+                  "half_cell": {"path": "half.xlsx", "sha256": "c" * 64},
+                  "literature": {"gr": {"path": "gr.xlsx", "sha256": "d" * 64},
+                                 "si": {"path": "si.xlsx", "sha256": "e" * 64}}}
+
+
 def _fake_widths_csv(d, name, *, w_dqdv, seed=0, spans=(1.0, 5.0, 2.0)):
-    """폭이 실린 cycles CSV + sidecar 한 벌 — 리포터는 순수 reader 라 적합을 안 돌려도 된다."""
-    import json as _j
+    """폭이 실린 cycles CSV + sidecar 한 벌 — 리포터는 순수 reader 라 적합을 안 돌려도 된다.
+
+    R17 이후 sidecar 는 실제 `fit_cycles` 가 쓰는 결속 키(`sha256`·`run_id`·`git_commit`·`env`·`consumed_inputs`·
+    `dataset_manifest`·`cycles`)를 갖고, 행의 receipt 는 그 `consumed_inputs` 의 digest 다.
+    """
+    import hashlib as _h, json as _j
     from bms_balancing import schema as S                  # noqa: PLC0415
     d.mkdir(parents=True, exist_ok=True)
     art = d / name
@@ -438,7 +455,8 @@ def _fake_widths_csv(d, name, *, w_dqdv, seed=0, spans=(1.0, 5.0, 2.0)):
         r.update(cell="syn", cycle=str(k), C_cell="1", x_cell="1", a_PE="1.1", b_PE="0", a_NE="1.1",
                  b_NE="0", gamma_Si="0.25", c_lit="1", obj="1", rmse_pocv="1", rmse_dvdq="1", rmse_dqdv="1",
                  n_starts="4", n_accepted="4", scale_seed="0", scale_pocv="1", scale_dvdq="1", scale_dqdv="1",
-                 bounds="-", run_id="r", inputs_sha="s", consumed_inputs="{}",
+                 bounds="-", run_id="r", inputs_sha=S.inputs_digest(_FAKE_CONSUMED),
+                 consumed_inputs=_j.dumps(_FAKE_CONSUMED),
                  width_status="measured", width_tol="0.01", width_is_lower_bound="True")
         for m, sp in zip(("LAM_PE", "LAM_NE", "LLI"), spans):
             r[m] = str(k * 0.01)
@@ -452,7 +470,13 @@ def _fake_widths_csv(d, name, *, w_dqdv, seed=0, spans=(1.0, 5.0, 2.0)):
             "lb": [1.0, -0.5, 1.0, -0.5, 0.0], "ub": [1.4, 0.0, 1.4, 0.1, 0.5],
             "initial": [1.08, -0.04, 1.05, -0.03, 0.25], "gamma_prefit": False, "gamma_lb": None,
             "n_multistart": 4, "cycles": [0, 1],
-            "widths": True, "width_tol": 0.01, "width_starts": 3, "width_method": "near_optimal_extrema"}
+            "widths": True, "width_tol": 0.01, "width_starts": 3, "width_method": "near_optimal_extrema",
+            "width_grid": 0,
+            # R17 결속 — 두 실행이 같아야 하는 것들 (axis 와 seed 만 시험이 흔든다)
+            "run_id": "r", "sha256": _h.sha256(art.read_bytes()).hexdigest(),
+            "git_commit": "0" * 40, "env": {"python": "3.11", "numpy": "1", "scipy": "1", "pandas": "1",
+                                            "openpyxl": "3", "platform": "Linux"},
+            "consumed_inputs": _FAKE_CONSUMED, "dataset_manifest": {"id": "fake-manifest"}}
     art.with_name(art.name + ".meta.json").write_text(
         _j.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return art
