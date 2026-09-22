@@ -186,6 +186,24 @@
    "관련": "litdb/papers/wang2022_resistive_decomposing_interfaces_se_alkali_metal.md · litdb/_pending_index_wang2022_resistive_decomposing_interfaces_se_alkali_metal.md ⑤"
   },
   {
+   "file": "litdb/papers/barai2021_delamination_cathode_llzo_multiscale.md",
+   "source_path": "litdb/papers/barai2021_delamination_cathode_llzo_multiscale.md",
+   "level": "BLOCKED",
+   "added": "2026-09-22",
+   "what": "**`Ψ_t(황화물) = 0.8 J/m²` 를 *문헌 실측값* 으로 인용하는 것.** 우리 문서 안 등장 자리 — `barai2021_…md` §1·§2 표 ④·§8 `Fig. 11` 파라미터 표·§5.9 의 `√(2.0/0.8) = 1.58 배`, 그리고 `litdb/INDEX.md` 의 barai 행 산문",
+   "why": "**Barai 2021 이 채택한 수이고 그가 지목한 두 원전 어디에도 없다.** 본 세션에서 원전 둘을 전수로 읽어 확인했다 — **ref 69 = Haruyama 2014 는 0.689 J/m²**(4.3 eV/nm², LCO(110)‖β-Li₃PS₄), **ref 70 = Okuno 2020 은 0.400 J/m²**(0.025 eV/Å², LCO(**104**)‖β-Li₃PS₄)이고 **Okuno 에는 LCO(110)‖LPS 의 W_ad 가 아예 없다**(Barai 가 ref 69 로 지목한 바로 그 계면). Okuno 본문·SI 에 `J/m²`·`fracture`·`toughness` 표기가 **0건**이고 단위는 eV/Å² 뿐이다. **0.400 은 0.8 의 정확히 절반**이다. 더 나아가 **셋이 같은 양도 아니다** — 원전 둘은 0 K 완전이완 **정적 부착일 W_ad**, Barai 는 **난수 파단문턱 Ψ_t**(연속체 모형 입력)다. `db/literature/refs.json` 에 Okuno 항목은 **0건**이라 원장 결속도 없었다",
+   "fix": "*'Barai 2021 이 채택한 Ψ_t 값'* 으로만 쓰고 **원전 미확인 단서를 같이 붙인다**. 원전값이 필요하면 **0.689(Haruyama) 또는 0.400(Okuno)** 을 계면·정의와 함께 대고, W_ad 와 Ψ_t 를 **한 표에 놓지 않는다**. ⚠ 파생 결론 하나가 직접 걸린다 — §5.9 의 Nd 인산염 논거 `√(2.0/0.8) = 1.58 배` 는 분모가 문헌값이 아니다. 원전값이면 **1.70(0.689) / 2.24(0.400)** 이고, *'강성 2 배(√2 = 1.41)를 상쇄한다'* 는 **방향은 셋 다 살아남지만 여유 폭이 11.8 % → 20.5 % → 58.1 % 로 갈린다**. 배수를 적을 때 **어느 분모인지 반드시 같이 적는다**",
+   "id": "HZ-wad-0p8-misattributed",
+   "binding_scope": "partial",
+   "binding_scope_why": "0.8 은 **문헌 소환값**이라 `canonical_registry` 에 없다 — 숫자 결속이 안 걸린다. digest 본문에는 머리 정정 상자 + 하중을 받는 네 자리(§1 · 표 ④ · `Fig. 11` 표 · §5.9)에 직접 표식을 달았다. forbidden_phrases 는 켜지 않았다 — `0.8 J/m²` 라는 문자열이 이 원장 자신의 why/fix 와 okuno·haruyama digest 의 **정정 설명 문장**에 들어 있어 켜면 교차행 누출로 무관용 결속 시험이 깨진다.",
+   "pending_forbidden_phrases": {
+    "why": "화면이 아직 이 id 로 data-claim 을 안 단다. 붙으면 forbidden_phrases 로 옮긴다.",
+    "phrases": ["Ψ_t,C/Sulfides ≈ 0.8", "√(2.0/0.8)"]
+   },
+   "⚠_우연일치_부인": "`kb/results/section2_bader_cross_comp.md:226` 의 *'실측 0.8 J/m²'* 는 **이 위험이 아니다.** 그건 우리 자체 W_ad 두 값의 **차**(2.0 − 1.2 = 0.8)이지 문헌 소환값이 아니다. 숫자가 같아서 걸리는데 **다른 양**이므로 여기서 부인해 둔다 — 안 적어 두면 다음 사람이 그 줄에 표식을 달고, 그건 틀린 결속이다.",
+   "관련": "litdb/papers/okuno2020_sulfide_vs_oxide_electrolyte_cathode_interfaces.md §3g·§11-① · litdb/papers/haruyama2014_space_charge_layer_oxide_cathode_sulfide_se.md §3c · litdb/_pending_index_okuno2020_… ④"
+  },
+  {
    "file": "db/properties/eos.json",
    "level": "CONDITIONAL",
    "what": "V0_A3",
@@ -576,6 +594,11 @@
    "date": "2026-09-22",
    "what": "음극 계면 반응식 1 건 등록 — `anode_interface_b2o3.json` 의 `reaction` 문자열 전량 BLOCKED (`HZ-anode-b2o3-reaction-direction`). 같은 파일에 이미 있던 `HZ-anode-b2o3-mp-unversioned`(CONDITIONAL, MP 스냅샷 미기록)와 **별개의 위험**이라 행을 나눴다.",
    "why": "Wang/Canepa 2022 digest 가 \"우리 0 V 산물표에 Li₂S 가 없다\" 를 지적했고, json 을 직접 열어 확인했더니 사실이었다 — 식이 Li 을 **내놓는** 방향이고 원소 S 와 자유 Li 가 공존한다. 값이 아니라 **문자열**이라 숫자 결속이 못 잡는다. 원장에 안 올리면 다음 사람이 반응식을 그대로 원고에 옮긴다."
+  },
+  {
+   "date": "2026-09-22",
+   "what": "문헌 **오귀속** 1 건 등록 — `Ψ_t(황화물) = 0.8 J/m²` 를 문헌 실측값으로 쓰는 것 BLOCKED (`HZ-wad-0p8-misattributed`). 원장 파일이 아니라 **litdb digest** 를 `file` 로 다는 첫 행이다.",
+   "why": "Okuno 2020 digest 의 1번 임무가 \"0.8 의 출처가 정말 그 논문인가\" 였는데 **아니었다** — Barai 채택값이고 그가 지목한 두 원전(Haruyama 0.689 · Okuno 0.400) 어디에도 없다. `refs.json` 에 Okuno 항목이 **0건**이라 원장 결속도 없었고, 그래서 6개월 넘게 산문으로만 돌아다녔다. 파생 결론(`√(2.0/0.8) = 1.58 배`)이 직접 걸려 있어 BLOCKED 로 올린다. 같이 **우연 일치 부인**도 행 안에 적었다 — `section2_bader_cross_comp.md:226` 의 '실측 0.8' 은 우리 자체 W_ad 의 차라서 이 위험이 아니다."
   }
  ],
  "updated": "2026-09-22",
