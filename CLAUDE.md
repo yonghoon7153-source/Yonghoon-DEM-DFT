@@ -106,7 +106,7 @@
     `pgrep -af` 는 **친 그대로의 토큰**(`python3`)을 주지 해석된 경로를 안 준다. 종전 지침은
     `~/.bash_history` 를 보라고 했는데, **돌고 있는 잡이 있으면 `/proc` 이 더 정확하다**
     (히스토리는 그 줄이 실제로 성공했는지 모른다). 2026-09-20 에 이걸로 한 번에 잡았다.
-- **gabia** (A6000 단일 GPU, QE-GPU + fairchem/UMA): root@121.78.116.27. **pw.x와 UMA 동시 실행 금지**
+- **gabia** (A6000 단일 GPU, QE-GPU + fairchem/UMA): root@121.78.116.27. **pw.x와 UMA 동시 실행 금지** (VRAM 47/48 GB 점유 사례) — nvidia-smi 로 확인 후 실행.
   · ⭐ **어느 잡이 GPU 냐를 먼저 가른다 — 2026-09-22 에 여기서 틀렸다.**
     **GPU 줄**: **탄성(el)** · NEB(`qe-7.4.1-gpu/bin/neb.x`) · G1 · PP-swap vc-relax · UMA MD/담금질.
     **CPU 줄**: LOBSTER SCF/nscf 등 `qe-7.4.1-cpu` 빌드.
@@ -117,7 +117,6 @@
     ⇒ 탄성 + UMA = 42.5/49 GB 로 **들어는 가지만** 여유 6.5 GB 다. 47/48 사례의 재현이라 **안 한다**.
   ⚠ 내가 `build_elastic_strain_inputs.py`(입력 **생성기**)만 보고 *"탄성은 DFT SCF 니까 CPU"* 라고
     단정했다가 틀렸다. **생성기는 실행 경로를 말해 주지 않는다** — 러너 스크립트의 바이너리 경로를 본다.
-  (VRAM 47/48 GB 점유 사례) — nvidia-smi로 확인 후 실행.
   · UMA python = **`/data/apps/miniforge3/envs/uma/bin/python`** (envs: dft·mace·mlipx·sevennet·uma).
     tmux 커맨드에는 **절대경로**를 박는다 — base 의 `python3` 는 fairchem 이 없다.
     ⛔ `pgrep -af` 는 **친 그대로의 토큰**(`python3`)을 주지 해석된 경로를 안 준다 — 여기서 경로를 캐지 않는다
