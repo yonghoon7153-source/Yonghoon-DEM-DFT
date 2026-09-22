@@ -482,11 +482,11 @@
   ]
  },
  "he2018_statistical_variances_diffusional_aimd": {
-  "figures": 8,
+  "figures": 13,
   "generated": "2026-09-22",
   "pdfs": [
    "2. npjCompMater_2018_He_Mo_Statistical_variances_diffusional_AIMD_MAIN.pdf",
-   "2. Sup) npjCompMater_2018_He_Mo_Statistical_variances_SI.docx"
+   "2. Sup) npjCompMater_2018_He_Mo_Statistical_variances_SI.pdf"
   ]
  },
  "he2019_dft_for_battery_materials_review": {
@@ -685,11 +685,11 @@
   ]
  },
  "jung2026_scalable_ai_dual_doped_lgps": {
-  "figures": 10,
+  "figures": 16,
   "generated": "2026-09-22",
   "pdfs": [
-   "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.docx",
-   "14. eTransportation_2026_Jung_Scalable_AI_dual_doped_LGPS_MAIN.pdf"
+   "14. eTransportation_2026_Jung_Scalable_AI_dual_doped_LGPS_MAIN.pdf",
+   "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.pdf"
   ]
  },
  "jung2026_sio2_cosubstitution_mechanical_argyrodite": {

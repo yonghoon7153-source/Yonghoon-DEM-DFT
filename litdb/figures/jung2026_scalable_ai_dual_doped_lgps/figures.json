@@ -4,8 +4,8 @@
  "maxpx": 3000,
  "generated": "2026-09-22",
  "sources": [
-  "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.docx",
-  "14. eTransportation_2026_Jung_Scalable_AI_dual_doped_LGPS_MAIN.pdf"
+  "14. eTransportation_2026_Jung_Scalable_AI_dual_doped_LGPS_MAIN.pdf",
+  "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.pdf"
  ],
  "figures": [
   {
@@ -109,6 +109,126 @@
    "blank": 0.925
   },
   {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Scatter plots of machine learning prediction results for Eform, Egap, log_GVRH, and log_KVRH.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    236.9,
+    532.2,
+    610.5
+   ],
+   "w": 1943,
+   "h": 1557,
+   "dpi": 300,
+   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Scatter plots showing the predictive performance of the coGN/coNGN models specifically for sulfur-containing compounds. These data correspond to the subset of entries in Figure S1 that include sulfur in their composition. Predicted versus DFT-calculated values are shown for Eform (eV/atom), Egap(eV), GVRH (log(GPa)), and KVRH (log(GPa)). The results demonstrate that sulfur-containing systems do not exhibit systematically larger errors compared to the full dataset, despite the model being trained on an oxide-dominated MP dataset.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    532.2,
+    463.0
+   ],
+   "w": 1943,
+   "h": 1601,
+   "dpi": 300,
+   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Distribution of space groups among the 50 structures with the largest prediction errors in GVRH. The error-dominated samples span multiple cubic, hexagonal, trigonal, and monoclinic symmetries (e.g., Pm-3m, Fm-3m, I4/mmm, Fd-3m, R-3, C2/m), with no occurrence of the LGPS-type tetragonal space group (P4₂/nmc). This indicates that the model’s largest errors are not concentrated in space groups, supporting that the elastic-modulus predictions do not exhibit structural bias against LGPS-type materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    82.6,
+    532.2,
+    432.7
+   ],
+   "w": 1943,
+   "h": 1460,
+   "dpi": 300,
+   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. (a) Dopant survival analysis and (b) site-specific dopant survival rate across Li, Ge, P, and S sites.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    532.2,
+    641.6
+   ],
+   "w": 1943,
+   "h": 2345,
+   "dpi": 300,
+   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.pdf",
+   "blank": 0.749
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Relationship of ECW with GVRH for the 21 screened materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    112.1,
+    79.0,
+    483.1,
+    366.3
+   ],
+   "w": 1547,
+   "h": 1198,
+   "dpi": 300,
+   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Structure of Li9P3OS11 and PS2O2 polyhedral.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    450.8,
+    510.8,
+    662.9
+   ],
+   "w": 1854,
+   "h": 885,
+   "dpi": 300,
+   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.pdf",
+   "blank": 0.755
+  },
+  {
    "key": "t1",
    "kind": "table",
    "label": "1",
@@ -152,21 +272,21 @@
    "key": "tS1",
    "kind": "table",
    "label": "S1",
-   "page": 3,
+   "page": 4,
    "file": "tab_S1.png",
-   "caption": "Table S1. Performance comparison of coGN and coNGN models trained on the Matbench benchmark. The evaluation metrics include the mean absolute error averaged over five folds in cross- validation (MAE_mean), the standard deviation of MAE across folds (MAE_std), the root mean squared error (RMSE), and the largest maximum error among the five folds (Max_error) for predicting Eform, Egap, GVRH, and KVRH.",
+   "caption": "Table S1. Performance comparison of coGN and coNGN models trained on the Matbench benchmark. The evaluation metrics include the mean absolute error averaged over five folds in cross-validation (MAE_mean), the standard deviation of MAE across folds (MAE_std), the root mean squared error (RMSE), and the largest maximum error among the five folds (Max_error) for predicting Eform, Egap, GVRH, and KVRH.",
    "rotated_deg": 0,
    "bbox": [
-    28.0,
-    28.9,
-    367.5,
-    558.1
+    67.0,
+    83.5,
+    528.8,
+    354.8
    ],
-   "w": 1416,
-   "h": 2206,
+   "w": 1925,
+   "h": 1131,
    "dpi": 300,
-   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.docx",
-   "blank": 0.935
+   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.pdf",
+   "blank": 0.922
   },
   {
    "key": "tS2",
@@ -177,36 +297,36 @@
    "caption": "Table S2. Summary of prediction errors (MAE, RMSE, R2) for Eform, Egap, GVRH and KVRH obtained by the coGN and coNGN model for the candidate structures analyzed in Figure S2.",
    "rotated_deg": 0,
    "bbox": [
-    28.0,
-    28.9,
-    357.2,
-    547.1
+    67.0,
+    83.5,
+    531.2,
+    294.2
    ],
-   "w": 1373,
-   "h": 2160,
+   "w": 1935,
+   "h": 878,
    "dpi": 300,
-   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.docx",
-   "blank": 0.94
+   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.pdf",
+   "blank": 0.93
   },
   {
    "key": "tS3",
    "kind": "table",
    "label": "S3",
-   "page": 8,
+   "page": 10,
    "file": "tab_S3.png",
    "caption": "Table S3. ML-predicted and DFT-calculated Ehull values for the 20 screened materials (excluding LGPS), along with other screening properties.",
    "rotated_deg": 0,
    "bbox": [
-    28.0,
-    61.9,
-    363.0,
-    537.0
+    67.0,
+    83.7,
+    531.0,
+    648.3
    ],
-   "w": 1397,
-   "h": 1981,
+   "w": 1934,
+   "h": 2354,
    "dpi": 300,
-   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.docx",
-   "blank": 0.927
+   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.pdf",
+   "blank": 0.94
   }
  ]
 }

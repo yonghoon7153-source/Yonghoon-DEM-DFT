@@ -5,7 +5,7 @@
  "generated": "2026-09-22",
  "sources": [
   "2. npjCompMater_2018_He_Mo_Statistical_variances_diffusional_AIMD_MAIN.pdf",
-  "2. Sup) npjCompMater_2018_He_Mo_Statistical_variances_SI.docx"
+  "2. Sup) npjCompMater_2018_He_Mo_Statistical_variances_SI.pdf"
  ],
  "figures": [
   {
@@ -129,6 +129,106 @@
    "blank": 0.925
   },
   {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1. Harmonic motion model. (a) The MSD as a function of ∆t for",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    93.6,
+    546.0,
+    313.6
+   ],
+   "w": 2000,
+   "h": 917,
+   "dpi": 300,
+   "src": "2. Sup) npjCompMater_2018_He_Mo_Statistical_variances_SI.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2. Statistical histogram of diffusivity. Histogram of the fitted D values",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.4,
+    267.6
+   ],
+   "w": 2002,
+   "h": 840,
+   "dpi": 300,
+   "src": "2. Sup) npjCompMater_2018_He_Mo_Statistical_variances_SI.pdf",
+   "blank": 0.509
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3. Upper fitting bound analysis of LGPS and LLZO. (a-d) MSD-t",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    535.9,
+    491.4
+   ],
+   "w": 1958,
+   "h": 1773,
+   "dpi": 300,
+   "src": "2. Sup) npjCompMater_2018_He_Mo_Statistical_variances_SI.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4. Diffusional properties from short AIMD simulations. (a) MSD-t",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.8,
+    541.7,
+    287.4
+   ],
+   "w": 1982,
+   "h": 866,
+   "dpi": 300,
+   "src": "2. Sup) npjCompMater_2018_He_Mo_Statistical_variances_SI.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure 5. Diffusional properties fitted from different data points. (a-c) Arrhenius plot of Li+ diffusivity D as a function of temperature T in LGPS from AIMD",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    536.5,
+    204.1
+   ],
+   "w": 1961,
+   "h": 576,
+   "dpi": 300,
+   "src": "2. Sup) npjCompMater_2018_He_Mo_Statistical_variances_SI.pdf",
+   "blank": 0.927
+  },
+  {
    "key": "t1",
    "kind": "table",
    "label": "1",
@@ -152,21 +252,21 @@
    "key": "tS1",
    "kind": "table",
    "label": "S1",
-   "page": 4,
+   "page": 9,
    "file": "tab_S1.png",
-   "caption": "Supplementary Table 1. Activation energy Ea and extrapolated Li+ conductivity at 300 K from fitted Arrhenius relation in Supplementary Figure 5. Arrhenius relation Ea (eV) at 300 K (mS cm-1) Error bound [min, max] (mS cm-1) Fig. S5 (a) 0.21 ± 0.01 14.2 [8.1, 25.0] Fig. S5 (b) 0.26 ± 0.02 3.7 [1.7, 7.9] Fig. S5 (c)",
+   "caption": "Supplementary Table 1. Activation energy Ea and extrapolated Li+ conductivity  at 300 K",
    "rotated_deg": 0,
    "bbox": [
-    28.0,
-    28.9,
-    367.8,
-    565.6
+    67.0,
+    208.4,
+    525.1,
+    647.6
    ],
-   "w": 1417,
-   "h": 2237,
+   "w": 1909,
+   "h": 1831,
    "dpi": 300,
-   "src": "2. Sup) npjCompMater_2018_He_Mo_Statistical_variances_SI.docx",
-   "blank": 0.953
+   "src": "2. Sup) npjCompMater_2018_He_Mo_Statistical_variances_SI.pdf",
+   "blank": 0.937
   }
  ]
 }
