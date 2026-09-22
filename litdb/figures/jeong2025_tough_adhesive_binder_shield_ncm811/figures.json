@@ -1,0 +1,280 @@
+{
+ "slug": "jeong2025_tough_adhesive_binder_shield_ncm811",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "123. AdvEnergyMater_2025_Jeong_Tough_adhesive_protective_binder_shield_highNi_NCM811_MAIN.pdf",
+  "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Molecular characterizations and tensile properties of a series of PVDFA-N#. a) Synthetic route of PVDFA-N#, where # indicates the mol% of ethyleneimine groups in PEI along the VDF repeating units of PVDFA. b) FT-IR spectra of PVDF, PVDFA, and PVDFA-N5 (left) and magniﬁed region of PVDFA and PVDFA-N5 (right). c) Schematic illustration of the PVDFA-N# binder composed of PVDFA and PEI. d) Stress–strain curves of PVDF, PVDFA, and PVDFA-N# and the resulting e) elongation at break, f) ultimate tensile strength, and g) toughness determined by the stress–strain curves.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.3,
+    550.1,
+    337.7
+   ],
+   "w": 2118,
+   "h": 1116,
+   "dpi": 300,
+   "src": "123. AdvEnergyMater_2025_Jeong_Tough_adhesive_protective_binder_shield_highNi_NCM811_MAIN.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Preparation and adhesion properties of NCM cathodes. a) Schematic illustration of preparing NCM cathodes prepared with PVDFA-N#. b) 180° peel test proﬁles and the resulting c) average peel strength of NCM cathodes prepared with PVDF, PVDFA, and PVDFA-N#. d) Peeling force values of NCM cathodes with PVDF, PVDFA, and PVDFA-N5 determined by SAICAS. Top-view SEM images of NCM cathodes prepared with e) PVDF, f) PVDFA, and g) PVDFA-N5. The mass loading of the active materials in the NCM cathode is ≈10–11 mg cm−2, with a NCM: Super P: binder composition of 8:1:1 (wt.%).",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.1,
+    552.9,
+    428.3
+   ],
+   "w": 2118,
+   "h": 1489,
+   "dpi": 300,
+   "src": "123. AdvEnergyMater_2025_Jeong_Tough_adhesive_protective_binder_shield_highNi_NCM811_MAIN.pdf",
+   "blank": 0.58
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Cycling performance under 0.5 C at 30 °C within the voltage range of 3.0–4.3 V. The cells were subjected to formation steps, cycled under 0.1 C for 3 cycles before the main cycling. a) Long-term cycling performance of the cells with PVDF, PVDFA, and PVDFA-N# (active material loading: 10–11 mg cm−2). b) Relationship between the cycle life of the cells and physical properties (toughness and peel strength) of binders. c) Nyquist plots of the cells with PVDF and PVDFA-N5 before and after cycling. d) Cycling performance of PVDF and PVDFA-N5 cathodes with high mass loading (27–28 mg cm−2). Surface and cross-sectional (inset) SEM images of the NCM cathodes prepared with e) PVDF and f) PVDFA-N5 with high mass loading. g) Cycling performance of PVDF and PVDFA-N5 cathodes with lean binder condition (2 wt.%) and the corresponding cross-sectional SEM images of the cathodes prepared with h)",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.9,
+    552.9,
+    541.3
+   ],
+   "w": 2118,
+   "h": 1961,
+   "dpi": 300,
+   "src": "123. AdvEnergyMater_2025_Jeong_Tough_adhesive_protective_binder_shield_highNi_NCM811_MAIN.pdf",
+   "blank": 0.722
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Post-mortem analysis of the cycled NCM cathodes prepared with PVDF and PVDFA-N5 after 300 cycles under 0.5 C at 30 °C within the voltage range of 3.0–4.3 V. a) STEM images and the corresponding fast Fourier transform (FFT) patterns of the PVDF and PVDFA-N5 cathode. b) Cross-sectional FIB-SEM images and c) top-view SEM images of the PVDF and PVDFA-N5 cathode. d) Concentration of Ni, Mn, and Co ions deposited on the surface of Li metal from PVDF and PVDFA-N5 cells determined by ICP-MS. e) Top-view SEM images of the Li metal anodes retrieved from the PVDF and PVDFA-N5 cells. f) DFT-calculated binding energies of PVDF, PVDFA, and PVDFA-N5 with Ni2+ and their electrostatic potential maps.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.0,
+    550.1,
+    315.3
+   ],
+   "w": 2118,
+   "h": 1019,
+   "dpi": 300,
+   "src": "123. AdvEnergyMater_2025_Jeong_Tough_adhesive_protective_binder_shield_highNi_NCM811_MAIN.pdf",
+   "blank": 0.477
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Post-mortem in-depth characterizations of the CEI layers on the cycled NCM cathodes prepared with PVDF and PVDFA-N5 after 300 cycles. a) In-depth XPS proﬁling of the atomic ratio of the PVDF and PVDFA-N5 cathode. Representative deconvoluted C1s, F1s, and Ni2p XPS spectra of the b) PVDF and c) PVDFA-N5 cathode. Normalized TOF-SIMS depth proﬁles of the d) PVDF and e) PVDFA-N5 cathode with 3D maps of the selected species and overlay images. f) Schematic illustration highlighting the role of the PVDFA-N5 as a protective shield.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.8,
+    550.1,
+    477.7
+   ],
+   "w": 2118,
+   "h": 1696,
+   "dpi": 300,
+   "src": "123. AdvEnergyMater_2025_Jeong_Tough_adhesive_protective_binder_shield_highNi_NCM811_MAIN.pdf",
+   "blank": 0.721
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": null,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. 1H NMR spectra of a) PVDF (in DMSO-d6), b) PVDF-g-PtBA (in acetone-d6), and c) PVDFA (in DMSO-d6).",
+   "w": 793,
+   "h": 687,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": null,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Optical photographs of the cathodes and adhesive tapes used in the peel test.",
+   "w": 667,
+   "h": 831,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": null,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Representative SAICAS profiles of the NCM cathodes prepared with a) PVDF, b) PVDFA, and c) PVDFA-N5.",
+   "w": 2116,
+   "h": 639,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": null,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Top-view SEM images of a) PVDFA-N1 and b) PVDFA-N2 cathode.",
+   "w": 821,
+   "h": 331,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": null,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Voltage-capacity profiles of a) PVDF and b) PVDFA-N5 cell.",
+   "w": 1526,
+   "h": 698,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": null,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Optical photographs of the cycled cathode of a) PVDF (inset: cycled separator) and b) PVDFA-N5 cell after cycling.",
+   "w": 644,
+   "h": 375,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": null,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Rate capability of the cells prepared with PVDF and PVDFA-N5 under various C-rates at 30 C.",
+   "w": 530,
+   "h": 401,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": null,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. a) GITT profiles for the PVDF and PVDFA-N5 cathodes (3.0-4.3 V). b) D_Li+ vs SOC. c) internal resistance vs SOC.",
+   "w": 1736,
+   "h": 492,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": null,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Differential capacity (dQ/dV) curves and magnified H2-H3 redox peaks of a) PVDF and b) PVDFA-N5 cathodes.",
+   "w": 1601,
+   "h": 539,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": null,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Cross-sectional SEM images and EDS maps of a) PVDF and b) PVDFA-N5 cathode with low binder content (2 wt%).",
+   "w": 1216,
+   "h": 892,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": null,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Low magnification TEM image with FFT patterns of PVDF and PVDFA-N5 cathode after 300 cycles.",
+   "w": 1276,
+   "h": 714,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": null,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. XRD patterns of a) PVDF and b) PVDFA-N5 cathode before and after cycling.",
+   "w": 1286,
+   "h": 518,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": null,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. TEM images of a,b) PVDF cathode and c,d) PVDFA-N5 cathode.",
+   "w": 844,
+   "h": 856,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": null,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. DFT-calculated binding energies of PVDF, PVDFA, and PVDFA-N5 with a) Co2+ and b) Mn2+.",
+   "w": 1305,
+   "h": 454,
+   "src": "123. Sup) AdvEnergyMater_2025_Jeong_binder_shield_SI.docx",
+   "note": "SI docx embedded image (mapped by document.xml paragraph order)"
+  }
+ ]
+}
