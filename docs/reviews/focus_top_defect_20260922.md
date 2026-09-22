@@ -1087,3 +1087,26 @@ would rather not change a reporting convention after seeing results.
 
 ★ 재생성은 **새 솔브가 필요 없다** — 새 payload 두 개에 `field_scale_e/ion` 이 이미 들어
 있고 점의 **위치는 그대로**이며 **색 스케일만** 바뀐다.
+
+### K-2-a. 새 payload 가 어디 있나 (2026-09-22 밤 전송 완료)
+
+| | 경로 |
+|---|---|
+| v100 (원본) | `~/runyourai/1/rerun/{sbe,dbe}/payload_SELF45_{SBE,DBE}.json` + `run_SELF45_*.log` |
+| **저자 기계 (WSL)** | **`~/Yonghoon-DEM-DFT/webapp/mpm_lab/SELF45_rerun_20260922/`** |
+
+전송: `rsync -av --partial --append-verify -z` 로 v100 → WSL (JSON 이라 `-z` 가 크게 먹는다).
+로그도 같이 받았다 — **영수증**이라 "이 그림이 어느 런에서 나왔나" 를 답해 준다.
+
+⛔ **원고 payload 를 덮어쓰지 않았다** — `webapp/mpm_lab/260714_145738_778fa4_{f752da,f79b67}/`
+는 아카이브 증거이므로 **새 폴더**에 받았다.
+
+수신 검증 (6/6 일치, 2026-09-22 밤):
+
+| | `focus_top` e / ion | `percentile_basis` | `input_digest` |
+|---|---|---|---|
+| SBE | 435.1 / 11.61 | `full_field` | `04b5a565ff4069f4` |
+| DBE | 375.8 / 11.35 | `full_field` | `d1022e090ab625a9` |
+
+★ `percentile_basis: full_field` 가 **옛 payload 와 구분되는 표식**이다 — 옛 것에는 이 키가
+아예 없다.  그림을 뽑기 전에 이 한 줄을 먼저 본다.
