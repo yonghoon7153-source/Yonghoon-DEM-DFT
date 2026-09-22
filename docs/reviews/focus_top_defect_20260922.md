@@ -519,3 +519,67 @@ fibre_stamp=segment,sdcp_stamp=sphere,sdcp_yield_to_vgcf=False,periodic_xy=False
 
 ⚠ `--no-field` 를 떼면 `--no-thermal --no-pore --no-collector --no-step4 --no-trackb` 는
 그대로 둔다 (원고 manifest 의 component 표와 일치: thermal/pore/pnm/collector_geom = disabled).
+
+## I-5. 탐색 종료 — **경로 (B) 확정** + 조립된 명령 (2026-09-22 밤)
+
+`LSBE_v015_sph.sh` 는 원고 명령이 **아니다**: `--step3-rasterize-only
+/home/kgy/sdcp/phase_ledger/ledger_SBE_v015_sph.json` 에 `--out unused_SBE_v015_sph.json` 이다
+= **상별 부피 원장(CL-25) 전용**이라 솔브 전에 종료한다.  (`SCR` 도 `/home/kgy/dem-sk/scripts`
+로 **세 번째** 코드 경로다.)
+
+⇒ 저장된 스크립트 중 원고 명령은 **없다**.  **arm `.sh` 에서 조립한다.**
+
+### 조립 규칙 (arm → 원고) — 네 곳만 바꾼다
+
+| 바꾸는 것 | 이유 |
+|---|---|
+| `--no-field` **삭제** | 점군·joule 을 만들어야 한다 (원고 payload 에 있다) |
+| `--sigma-ion-sdcp 0` → **`0.001`** | 원고 manifest 값 (SBE 엔 SDCP 상이 없어 물리 무영향, 기록 일치용) |
+| `--out p2_SBE_sph_a0.json` → **새 이름** | 옛 산출을 덮지 않는다 |
+| `python3` → **`/home/kgy/dem-venv/bin/python3`** | `(base)` 엔 skimage 가 없다 (2026-08-27 STEP 2 사망 원인) |
+
+**그 밖의 플래그는 한 글자도 건드리지 않는다.**  특히 `--no-thermal --no-pore --no-collector
+--no-step4 --no-trackb` 는 **유지** (원고 manifest 의 component 표와 일치).  `--collector-rint
+110 --collector-name … --collector-scenario sbe` 도 유지 — `--no-collector` 는 기하 계산만
+끄고 시나리오 후처리는 남는다 (원고 manifest 가 정확히 그 모양이다).
+
+### SBE 실행 명령 (런 디렉터리 = **08-27**, `se_dump.npy` 가 거기 있다)
+
+```bash
+cd /home/kgy/sdcp/kit_SBE/run_VGCF3_PTFE1_20260827_134104_3672586
+KIT=/home/kgy/sdcp/kit_SBE
+/home/kgy/dem-venv/bin/python3 /home/kgy/dem-mt/scripts/mpm_webapp_payload.py \
+  --se se_dump.npy --scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" \
+  --n-vox 192 --tri-step 4 --smooth 1.5 --target-porosity 0.0759 --eps se_dump_eps.npy \
+  --dilate-z 1.0719 --void-max 180000 --step3-vox 0.4 --field-max-points 90000 --step3-gpu \
+  --joule-heat --metrics-json mpm_metrics.json --case 260714_145738_778fa4 \
+  --phase phase.npy --fibre fibre.npy --fibre-dia fibre_dia.npy \
+  --collector-rint 110 --collector-name bare_Al+SBE_electrode --collector-scenario sbe \
+  --save-step4-grid step4_grid_SELF45_SBE.npz \
+  --step3-fibre-stamp segment --sigma-vgcf 78.5398 --step3-vox 0.15 --step3-bridge-um 0.48 \
+  --step3-origin-shift 0 0 0 --step3-sdcp-sphere-d 0.30 --ptfe-stamp centerline \
+  --step3-require-gpu \
+  --expect-physics vox_um=0.15,bridge_um=0.48,sigma_vgcf_S_cm=78.5398,fibre_stamp=segment,sdcp_stamp=sphere,sdcp_yield_to_vgcf=False,periodic_xy=False,ptfe_stamp=centerline \
+  --sigma-ion-sdcp 0.001 --sigma-ion-se 0.003 \
+  --no-step4 --no-thermal --no-trackb --no-pore --no-collector \
+  --out payload_SELF45_SBE.json
+```
+
+⚠ **DBE 는 그쪽 arm `.sh`(`p2_DBE_sph_a0.*.sh`)에서 같은 네 곳만 바꿔 조립한다** — 베껴 쓰지
+말 것 (`--collector-rint 46` · `--collector-scenario dbe` 등이 다르고, SDCP 가 실재해
+`--sigma-ion-sdcp` 가 **물리에 영향**을 준다).
+
+### ⛔ 실행 전 · 후 검수 (둘 다 통과해야 한다)
+
+1. **코드**: `/home/kgy/dem-mt` 가 detached HEAD `17f5f017` (옛 코드)다.  브랜치로 돌려 pull 하고
+   `grep -c percentile_basis scripts/mpm_webapp_payload.py` → **1**,
+   `step3_sigma --selftest` 의 `field-stats*`·`joule-stats*` **다섯 줄 OK**.
+2. **σ_e 재현**: `0.054530439566226836` (SBE) · `0.0714004401030127` (DBE) — 소수점까지.
+   어긋나면 **멈추고 보고**한다 (다른 침대·다른 규약으로 비교하면 무효).
+   ⚠ `--expect-physics` 계약검사가 실행 **전에** 한 번 더 막아 준다.
+
+### 성공 판정
+
+새 payload 를 복원기에 넣어 `✅ 이미 전수 기준 (SELF-45 이후 payload)` 가 나오면 그 안의
+`field_scale_e/ion` 이 **최종값**이다.  그것으로 §H 회신문의 이온 문단을 교체하고,
+p99.8 정확값·Figure S14/S15 를 마무리한다.
