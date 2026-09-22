@@ -1,0 +1,311 @@
+{
+ "slug": "vadhva2021_eis-for-assb-theory-methods",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Plot describing the relationship between the input voltage, E(t) and output current, j(t) (or vice versa), the ratio of which results in impedance.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    41.8,
+    595.3,
+    195.4
+   ],
+   "w": 2481,
+   "h": 641,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Equivalent circuit for single electron transfer and ion migration in the electrolyte. b) Nyquist plot of the real impedance against the imaginary impedance showing the resistance for the electrolyte. c) Bode plot of the magnitude of the impedance and phase angle against frequency.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    562.5,
+    296.2,
+    706.4
+   ],
+   "w": 1066,
+   "h": 601,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Schematic representation of the cell geometry for impedance measurements by the a) 2-electrode and b) 4-electrode setups. c) Nyquist plot of resistivity measured at 650 K of 2- and 4-electrode setups. Reprinted from Ref. [21] with the permission. Copyright (2013) AIP Publishing.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    583.7,
+    546.6,
+    724.4
+   ],
+   "w": 2109,
+   "h": 588,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.734
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Schematic representation of an all-solid-state 3-point probe cell of a) cell design 1 and b) cell design 2. Reproduced from Ref. [23] with permission. Copyright (2018) Royal Society of Chemistry.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    26.0,
+    595.3,
+    160.0
+   ],
+   "w": 2481,
+   "h": 559,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.834
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Schematic representation of the equivalent circuit model used for a Li-ion battery. Republished from Ref. [44] with permission. Copyright (2016) The Westerhoff et.al. b) Depicts the Nyquist plot produced by fitting these parameters to the ECM shown for a typical Li-ion battery. Reproduced from Ref. [45] with permission. Copyright (2020) The Authors.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    302.9,
+    544.8,
+    485.6
+   ],
+   "w": 2102,
+   "h": 763,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.744
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) Cross-sectional SEM of a LiPON micro-battery. Reprinted from Ref. [67] with permission. Copyright (2000) Elsevier. b) EIS of PtjLiPONjPt and c) LijLiPONjLi cells. Reprinted from Ref. [70] with permission. Copyright (2005) Elsevier. d) Compares EIS of a LijLiPONjLiCoO2 full cell at 90% and 10% SoC, whilst e) shows the overlay of EIS (dark blue) over DRT (light blue) at 90% SoC where three peaks can clearly be seen. Republished from Ref. [62] with permission. Copyright (2019) Royal Society of Chemistry.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    530.0,
+    293.8,
+    679.5
+   ],
+   "w": 1056,
+   "h": 624,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.798
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Impedance plots of the conductivity data from lower (upper insert) to higher (lower insert) temperatures and Arrhenius conductivity plots of LGPS. The plotted total conductivity represents the sum of the bulk and grain boundary contributions. Reprinted from Ref. [79] with permission. Copyright (2011) Springer Nature.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    41.8,
+    595.3,
+    256.5
+   ],
+   "w": 2481,
+   "h": 895,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Figure 8. a–e) Five sulfide SEs impedance plots showing that some exhibit grain/bulk (red) and grain boundary (pink) contributions while some only exhibit contribution from the bulk solid electrolyte (grain only) at low temperatures. The red and pink colours relate to the grain and grain boundary contributions as seen in the Nyquist plot and fitted using the equivalent circuit model. The electrode polarization is modelled by a single CPE. Reprinted from Ref. [82] with permission. Copyright (2016) Elsevier.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    26.0,
+    595.3,
+    225.5
+   ],
+   "w": 2481,
+   "h": 832,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 10,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Stacked Nyquist plots of a InjLGPSjLCO cell with LiNb0.5Ta0.5O3 (LNTO)-coated LCO as the active material. a) ECM and EIS during b) charge and c) discharge at different SoC points. The low-frequency semicircle is assigned to the anode interface resistance with the electrolyte, while the mid-frequency semicircle is assigned to the cathode interface resistance. Reprinted from Ref. [97] with permission. Copyright (2017) American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    288.5,
+    288.0,
+    679.5
+   ],
+   "w": 1031,
+   "h": 1631,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.839
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 11,
+   "file": "fig_10.png",
+   "caption": "Figure 10. a) Impedance plot of Li7La3Zr2O12 measured in air at 18.8°C for the thick pellet (1.02 cm in thickness). The solid line represents simulated data. The impedance plot measured in air at 18.8°C for the thin pellet (0.18 cm in thickness) is shown in the inset. Reproduced from Ref. [115] with permission. Copyright (2007) Wiley-VCH. b) Hot-pressing to control grain boundary effects in LLZO. Republished with permission from Ref. [119] Copyright (2015) The American Ceramic Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    317.3,
+    294.1,
+    679.5
+   ],
+   "w": 1057,
+   "h": 1511,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 11,
+   "file": "fig_11.png",
+   "caption": "Figure 11. a) Pressure-dependent Nyquist plots of LijLLZOjLi cells showing the large impact of external force on the interfacial resistance Rint. Operando EIS spectrum for lithium metal b) stripping and c) plating. Reprinted from Ref. [28] with permission. Copyright (2019) American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.7,
+    312.5,
+    551.9,
+    706.4
+   ],
+   "w": 1056,
+   "h": 1642,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.737
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 12,
+   "file": "fig_12.png",
+   "caption": "Figure 12. a) Nyquist plot for the LiCoO2jLi6.75La3Zr1.75Nb0.25O12jLi cell at 3.95 V. b) Nyquist plot for the LijLi6.75La3Zr1.75Nb0.25O12jLi cell. Reprinted from Ref. [126] with permission. Copyright (2012) Elsevier.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.8,
+    370.3,
+    295.1,
+    715.5
+   ],
+   "w": 1061,
+   "h": 1440,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 13,
+   "file": "fig_13.png",
+   "caption": "Figure 13. a) Equivalent circuit used to model impedance of Li metal symmetric cells at 70°C with impedance evolution over 24 h with b) PEO/ LiTFSI c) non-plasticized HNBR/LiTFSI and d) HNBR/LiTFSI/20% DEP electro- lytes. Reprinted from Ref. [160] with permission. Copyright (2019) American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    26.0,
+    595.3,
+    436.4
+   ],
+   "w": 2481,
+   "h": 1711,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.856
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 14,
+   "file": "fig_14.png",
+   "caption": "Figure 14. Complex plane impedance plot showing LFPjPEMjLi cells after being cycled for 50 times at 20°C (solid square) and 60°C (open square) and LFPjm-PEMjLi cells after being cycled for 50 times at 20°C (solid circle) and 60°C (open circle). Note that the m-PEM contains 0.4 wt% of LiBOB concentration. Reprinted from Ref. [161] with permission. Copyright (2017) Elsevier.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    41.8,
+    595.3,
+    277.5
+   ],
+   "w": 2481,
+   "h": 983,
+   "dpi": 300,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "Table 1. Commonly used equivalent circuit elements and their physical interpretation. Element Symbol Physical Meaning",
+   "rotated_deg": 0,
+   "bbox": [
+    41.8,
+    13.4,
+    589.2,
+    779.2
+   ],
+   "w": 2145,
+   "h": 3000,
+   "dpi": 282,
+   "src": "8e4e3cfa-10._Electrochemical_Impedance_Spectroscopy_for_All-Solid-State_Batteries_Theory_Methods_and_Future_Outlook.pdf",
+   "blank": 0.848
+  }
+ ]
+}
