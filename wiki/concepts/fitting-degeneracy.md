@@ -312,6 +312,15 @@ applied to simulated immittance data" 이고 ASB 실험 적용은 0 이다.**
 **잴 재료를 SI 에 인쇄해 놓고 뺄셈을 안 했다(11호).**
 **"쟀다" 는 여전히 `assb` 0 / 11 편이다.**
 
+## 모양이 같고 물리량이 다른 이웃 — 팩 결함 검출 (2026-09-22)
+
+[[isc-detection-vs-balancing-masking]] (`pack-fault` 섹션의 닻) 은 **이 페이지의 축퇴가
+아니다** — 미지수가 LLI/LAM 이 아니라 **한 셀의 누설 전류**다. 그런데 문제의 **모양**이
+같다: 두 원인(누설 vs 자기방전·용량 편차)이 같은 관측을 만들고, 그 위에 **조작(균등화)**
+이 겹치며, 유일성을 아무도 재지 않았다. 그쪽 1호(Lai 2025)의 Fig. 7 은 이 페이지 어휘로
+**nuisance(SoH) 한 방향의 근최적 폭**이다. 이 페이지에 `pack-fault` 태그는 붙이지 않는다
+(SCHEMA 경계 ②) — 링크만 둔다.
+
 ## 이 개념이 속한 논지
 
 [[mode-identifiability-unmeasured-lineage]] — 이 계보가 축퇴를 세 번 인쇄하고도

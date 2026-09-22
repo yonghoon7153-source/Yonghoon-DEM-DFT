@@ -101,6 +101,13 @@ sha256: <hex digest of body after frontmatter, leading blank lines stripped>
   2026-09-16 시드로 선언: 이 주제의 논문을 따로 모으기로 했고 (사용자 결정) 닻은
   `questions/assb-contact-loss-vs-lampe.md`. **액체셀 계열 페이지에 이 태그를 붙이지
   않는다** — 섞이면 "무엇이 ASSB 근거인가" 를 다시 못 가른다.
+- pack-fault: 팩·모듈 레벨 **결함 검출** — 내부단락(ISC)·누설 전류·불균형, 그리고 **균등화가
+  그 위에 겹치는 문제**. **액체셀 팩**이다. 2026-09-22 시드로 선언 (사용자 결정 — `assb` 와
+  다른 섹션으로; `bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §6-3-f-1). 닻은
+  `questions/isc-detection-vs-balancing-masking.md`. 경계 두 가지: ① **`assb` 를 같이 붙이지
+  않는다** (액체셀 팩이고 축이 다르다). ② **열화 모드 지분(LLI/LAM) 페이지에 이 태그를 붙이지
+  않는다** — 결함 **검출**과 모드 **정량**은 다른 물음이다; 섞이면 "무엇이 무엇의 근거인가"
+  를 다시 못 가른다.
 
 ## Page Thresholds
 - Create a page when a concept is central to a source or recurs across sources.
