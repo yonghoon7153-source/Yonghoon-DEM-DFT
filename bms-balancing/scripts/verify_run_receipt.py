@@ -36,6 +36,56 @@ import evidence_gate as gate                     # noqa: E402
 
 _HEX40 = 40
 _HEX64 = 64
+_HEXRE = __import__("re").compile(r"^[0-9a-f]+$")
+
+
+def _is_hex(v, n: int) -> bool:
+    return isinstance(v, str) and len(v) == n and bool(_HEXRE.fullmatch(v))
+
+
+def _typed_problems(r: dict) -> list:
+    """run receipt 의 **nested schema** (R17 후속 P2-02).
+
+    생산자(`reviews/evidence_gate.py:run_receipt`)가 실제로 내는 모양이 정본이다:
+      code       {commit: 40hex, tree: 40hex}
+      instrument {상대경로: 40hex blob} — 비어 있지 않다
+      package    {digest: 64hex}         — **검사 상태가 아니라 내용 주소**
+      materialized  None **또는** 객체   — 생산자가 둘 다 낸다 (없음도 뜻이 있다)
+      runtime    비지 않은 객체
+      produced_utc  ISO-8601 시각 문자열
+    `materialized=None` 을 금지하지 않는다 — 리뷰어가 짚은 대로 그 상태는 생산자가 허용한다.
+    금지하는 것은 **뜻을 알 수 없는 타입**이다 (`17` 은 "무엇이 materialize 됐다" 를 말하지 않는다).
+    """
+    import datetime as _dt
+
+    p = []
+    code = r.get("code")
+    if not isinstance(code, dict) or not _is_hex(code.get("commit"), _HEX40) \
+            or not _is_hex(code.get("tree"), _HEX40):
+        p.append(f"code 가 {{commit: 40hex, tree: 40hex}} 가 아니다 ({code!r})")
+    inst = r.get("instrument")
+    if not isinstance(inst, dict) or not inst \
+            or not all(isinstance(k, str) and _is_hex(v, _HEX40) for k, v in inst.items()):
+        p.append("instrument 가 {경로: 40hex blob} 의 비지 않은 객체가 아니다")
+    pkg = r.get("package")
+    if isinstance(pkg, dict) and not _is_hex(pkg.get("digest"), _HEX64):
+        p.append(f"package.digest 가 64자리 hex 내용 주소가 아니다 ({pkg.get('digest')!r}) — "
+                 f"검사 상태 문자열을 내용 주소 자리에 넣지 않는다")
+    if "materialized" in r and not (r.get("materialized") is None or isinstance(r.get("materialized"), dict)):
+        p.append(f"materialized 가 객체도 null 도 아니다 ({r.get('materialized')!r})")
+    rt = r.get("runtime")
+    if not isinstance(rt, dict) or not rt:
+        p.append(f"runtime 이 비지 않은 객체가 아니다 ({rt!r}) — 못 잰 실행환경은 증거가 아니다")
+    ts = r.get("produced_utc")
+    ok_ts = isinstance(ts, str) and bool(ts.strip())
+    if ok_ts:
+        try:
+            _dt.datetime.fromisoformat(ts.replace("Z", "+00:00"))
+        except ValueError:
+            ok_ts = False
+    if not ok_ts:
+        p.append(f"produced_utc 가 ISO-8601 시각이 아니다 ({ts!r})")
+    return p
 
 
 def _git(target, *args):
@@ -85,7 +135,13 @@ def main(argv=None) -> int:
     missing = [k for k in required if k not in r]
     ok_version = r.get("receipt_version") == gate.RUN_RECEIPT_VERSION
     ok_package = isinstance(r.get("package"), dict) and bool(str((r.get("package") or {}).get("digest") or "").strip())
-    checks["complete"] = not missing and ok_version and ok_package
+    # ⚠ Codex R17 후속 P2-02: 전 판은 **키가 있는가**만 봤다. 그래서 `runtime=null`·
+    #   `runtime="not-a-runtime-object"`·`materialized=17`·`produced_utc="not-a-date"`·
+    #   `package.digest="not-a-digest"` 가 전부 `verified=true` 였다 (서명을 정확히 다시 계산한
+    #   영수증이므로 암호학적 위조가 아니다 — **typed 완전성**의 문제다). 공개 checksum·ancestry 가
+    #   통과한다는 것은 그 객체가 **완전하다**는 뜻이 아니다. 아래가 그 schema 다.
+    typed = _typed_problems(r)
+    checks["complete"] = not missing and ok_version and ok_package and not typed
     if missing:
         failed.append(f"run receipt 의 필수 결속이 빠졌다: {missing} — 불완전한 객체는 전체 검증을 받지 않는다")
     if not ok_version:
@@ -93,6 +149,7 @@ def main(argv=None) -> int:
                       f"{gate.RUN_RECEIPT_VERSION!r})")
     if "package" in r and not ok_package:
         failed.append("package.digest 가 비었다 — 묶음 결속 없는 receipt 는 실행 증거가 아니다")
+    failed += typed
 
     want_sig = gate.receipt_signature(r)
     checks["signature"] = (want_sig == r["signature"])

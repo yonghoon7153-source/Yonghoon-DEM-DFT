@@ -1,0 +1,14 @@
+{
+  "command": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+    "scripts/check_u14.py",
+    "--new",
+    "out/archive/legacy_r6_u14",
+    "--schema-only"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-response-7c8f61f9\\bms-balancing",
+  "rc": 2,
+  "seconds": 1.110000000000582,
+  "utc": "2026-09-22T08:19:31.469298+00:00",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+}

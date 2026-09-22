@@ -187,7 +187,10 @@ def _width_pair(tmp_path, name, change=None, meta_change=None):
     d = tmp_path / name; d.mkdir()
     paths = []
     for i in (0, 1):
-        rows = [dict(base, cycle=str(k)) for k in (0, 1)]
+        # ⚠ R17 후속 P1-02 — 행의 `run_id` 는 production(`cycles.py:224`)이 실제로 쓰는 열이고
+        #   sidecar 의 선언과 같아야 한다. 채움값 "1" 로 두면 본문↔sidecar 결속 검사가 fixture 에서
+        #   먼저 걸린다 (리뷰어가 `width_body_run` 으로 짚은 바로 그 축이다).
+        rows = [dict(base, cycle=str(k), run_id=f"r{i}") for k in (0, 1)]
         meta = {"lb": [0.1, -0.2, 0.1, -0.2, 0], "ub": [2, 0.5, 2, 0.5, 1],
                 "initial": [1, 0, 1, 0, 0.25], "gamma_prefit": False, "gamma_lb": 0,
                 "n_multistart": 20, "seed": 0, "scale_seed": 0, "w_pocv": 1, "w_dvdq": 1,

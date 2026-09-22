@@ -1,0 +1,42 @@
+{
+  "suites": [
+    {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "3",
+      "skipped": "0",
+      "tests": "59",
+      "time": "151.091",
+      "timestamp": "2026-09-22T17:13:01.169060+09:00",
+      "hostname": "DESKTOP-IK8J81H"
+    }
+  ],
+  "cases": 59,
+  "failed": 3,
+  "failures": [
+    {
+      "test": "tests.test_r17_codex::test_r17_01_gc_keeps_an_attempt_dir_that_a_retained_artifact_still_references",
+      "message": "ModuleNotFoundError: No module named 'fcntl'",
+      "tags": [
+        "fcntl"
+      ],
+      "trace": "tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r17_followup_7c8f61f9/pytest-target/test_r17_01_gc_keeps_an_attemp0')\n\n    def test_r17_01_gc_keeps_an_attempt_dir_that_a_retained_artifact_still_references(tmp_path):\n        \"\"\"[P1-01] `--keep 1 --apply` 는 100 의 A 만 버려야 하고 **200 의 유일한 결과(A)는 남아야 한다**.\"\"\"\n>       out = _gc_fixture(tmp_path)\n              ^^^^^^^^^^^^^^^^^^^^^\n\ntests\\test_r17_codex.py:64: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\ntests\\test_r17_codex.py:58: in _gc_fixture\n    V.record_partial(canonical, d, status=\"partial\", run_id=rid)\nbms_balancing\\verify.py:1370: in record_partial\n    atomic_write_json(idx_path, idx)\nbms_balancing\\verify.py:132: in atomic_write_json\n    _publish_or_keep(fh.name, out)\nbms_balancing\\verify.py:139: in _publish_or_keep\n    with publish_lock(out):\n         ^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <bms_balancing.verify.publish_lock object at 0x0000025C4563ACF0>\n\n    def __enter__(self):\n>       import fcntl\nE       ModuleNotFoundError: No module named 'fcntl'\n\nbms_balancing\\verify.py:87: ModuleNotFoundError"
+    },
+    {
+      "test": "tests.test_r17_codex::test_r17_02_gc_dry_run_names_files_not_whole_attempts",
+      "message": "ModuleNotFoundError: No module named 'fcntl'",
+      "tags": [
+        "fcntl"
+      ],
+      "trace": "tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r17_followup_7c8f61f9/pytest-target/test_r17_02_gc_dry_run_names_f0')\n\n    def test_r17_02_gc_dry_run_names_files_not_whole_attempts(tmp_path):\n        \"\"\"[P1-01 · 대조군] dry-run 도 같은 모델을 말해야 한다 — 지울 것은 `matrix/A/matrix_100.csv` 하나다.\"\"\"\n>       out = _gc_fixture(tmp_path)\n              ^^^^^^^^^^^^^^^^^^^^^\n\ntests\\test_r17_codex.py:79: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\ntests\\test_r17_codex.py:58: in _gc_fixture\n    V.record_partial(canonical, d, status=\"partial\", run_id=rid)\nbms_balancing\\verify.py:1370: in record_partial\n    atomic_write_json(idx_path, idx)\nbms_balancing\\verify.py:132: in atomic_write_json\n    _publish_or_keep(fh.name, out)\nbms_balancing\\verify.py:139: in _publish_or_keep\n    with publish_lock(out):\n         ^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <bms_balancing.verify.publish_lock object at 0x0000025C4577A810>\n\n    def __enter__(self):\n>       import fcntl\nE       ModuleNotFoundError: No module named 'fcntl'\n\nbms_balancing\\verify.py:87: ModuleNotFoundError"
+    },
+    {
+      "test": "tests.test_widths::test_w14_the_published_artifact_carries_widths_and_passes_both_validators",
+      "message": "AssertionError: (1, '  cycle 0: a_PE 1.388971 b_PE 0.000000 a_NE 1.011133 b_NE -0.082611 γ 0.0000 · obj 0.816826 · 채택 3/3\n    cycle 1: ...\\bms_balancing\\\\verify.py\", line 87, in __enter__\n      import fcntl\n  ModuleNotFoundError: No module named \\'fcntl\\'\n  ')\nassert 1 == 0\n +  where 1 = CompletedProcess(args=['C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\w...\\bms_balancing\\\\verify.py\", line 87, in __enter__\\n    import fcntl\\nModuleNotFoundError: No module named \\'fcntl\\'\\n').returncode",
+      "tags": [
+        "fcntl"
+      ],
+      "trace": "tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r17_followup_7c8f61f9/pytest-target/test_w14_the_published_artifac0')\n\n    def test_w14_the_published_artifact_carries_widths_and_passes_both_validators(tmp_path):\n        \"\"\"[W-14] 계약 고리를 닫는다: CLI 로 게시한 CSV 가 (a) 폭 열을 싣고 (b) `check_rails` 와\n        `check_u14 --schema-only` 를 **둘 다** 통과해야 한다.\n    \n        열을 늘리면 난간·승격 게이트가 같이 움직인다 — 늘려 놓고 검사를 안 돌리면 그 열은 계약이 아니라 장식이다.\n        \"\"\"\n        import json as _json\n        import subprocess\n    \n        src, wb, hc = _cycles_fixture(tmp_path)\n        out = tmp_path / \"out\"\n        rc = subprocess.run(\n            [sys.executable, str(ROOT / \"scripts/fit_cycles.py\"), \"--objective-version\", \"legacy_matlab\",\n             \"--data-root\", str(src), \"--half-cell\", str(hc), \"--full-cell\", str(wb),\n             \"--cell\", \"w14\", \"--si-source\", \"Li\", \"--starts\", \"2\", \"--seed\", \"0\", \"--scale-seed\", \"0\",\n             \"--widths\", \"--width-tol\", \"0.05\", \"--width-starts\", \"2\", \"--out\", str(out)],\n            cwd=ROOT, capture_output=True, text=True, timeout=1800)\n>       assert rc.returncode == 0, (rc.returncode, rc.stdout[-1500:], rc.stderr[-1500:])\nE       AssertionError: (1, '  cycle 0: a_PE 1.388971 b_PE 0.000000 a_NE 1.011133 b_NE -0.082611 γ 0.0000 · obj 0.816826 · 채택 3/3\nE           cycle 1: ...\\bms_balancing\\\\verify.py\", line 87, in __enter__\nE             import fcntl\nE         ModuleNotFoundError: No module named \\'fcntl\\'\nE         ')\nE       assert 1 == 0\nE        +  where 1 = CompletedProcess(args=['C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\w...\\bms_balancing\\\\verify.py\", line 87, in __enter__\\n    import fcntl\\nModuleNotFoundError: No module named \\'fcntl\\'\\n').returncode\n\ntests\\test_widths.py:352: AssertionError"
+    }
+  ]
+}

@@ -443,8 +443,30 @@ def near_optimal_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
     if _b.shape != lo.shape or np.any(_b < lo - 1e-12) or np.any(_b > hi + 1e-12):
         raise ValueError(f"best 가 상자 밖이다 (best {_b.tolist()}, lb {lo.tolist()}, ub {hi.tolist()}) — "
                          f"적합이 쓴 상자와 폭의 상자가 다르다 (R17 P2-01 · W-02)")
+    # ⚠ Codex R17 후속 P2-01: **전달된 `best_val` 이 `best` 의 목적값인지 확인한다.** 전 판은
+    #   그것을 믿고 한계를 정한 뒤, 아래에서 `best` 를 witness 로 **무조건** 다시 넣었다 — stale
+    #   `best_val` 이면 허용집합 **밖**의 점이 하한을 정했다 (리뷰어 실측: 참 min +8.33 %p 인데
+    #   −16.67 %p 를 `measured` 로 냈다). 기준값과 기준점이 어긋나면 그것은 호출자의 버그이고,
+    #   폭은 **없는 것**이지 넓은 것이 아니다.
+    _obj_best = float(obj(_b))
+    if not np.isfinite(_obj_best):
+        raise ValueError(f"obj(best) 가 유한하지 않다 ({_obj_best!r}) — 근최적 집합의 기준점이 없다 "
+                         f"(R17 후속 P2-01)")
+    if _obj_best > limit * (1 + 1e-9):
+        raise RuntimeError(
+            f"obj(best)={_obj_best:.6g} 가 한계 {limit:.6g} 밖이다 (best_val={float(best_val):.6g}, "
+            f"tol={tol:.6g}) — 전달된 best_val 이 이 점의 목적값이 아니다. 허용집합 밖의 점을 "
+            f"witness 로 쓰지 않는다 (R17 후속 P2-01)")
     bounds = list(zip(lo, hi))
     rng = np.random.default_rng(seed + 7)
+
+    def _in_box(q) -> bool:
+        """상자 안인가 — **모든 후보**에 같은 술어를 적용한다 (R17 후속 P2-01).
+        전 판은 `seeds` 를 bounds 검사 없이 feasible 에 넣어, 상자 밖 seed 하나가
+        −733 %p 를 하한으로 만들었다 (참 범위 ±16.67 %p)."""
+        a = np.asarray(q, float)
+        return (a.shape == lo.shape and np.all(np.isfinite(a))
+                and np.all(a >= lo - 1e-9) and np.all(a <= hi + 1e-9))
     # 시작점은 **상자 전체**에 뿌린다. 최적점 둘레에만 뿌리면 멀리 뻗은
     # 골짜기 끝을 못 민다 — 그게 전 판이 0 %p 를 보고한 이유다.
     starts = [np.asarray(best, float)]
@@ -469,6 +491,8 @@ def near_optimal_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
     feasible = []
     for s0 in starts:
         q = np.asarray(s0, float)
+        if not _in_box(q):
+            continue                                 # 상자 밖 후보는 시작점으로도 쓰지 않는다
         if obj(q) > limit:
             try:
                 r0 = minimize(obj, q, method="L-BFGS-B", bounds=bounds,
@@ -477,8 +501,8 @@ def near_optimal_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
                     q = np.asarray(r0.x, float)
             except Exception:                        # noqa: BLE001
                 continue
-        if obj(q) <= limit * (1 + 1e-9):
-            feasible.append(q)
+        if _in_box(q) and obj(q) <= limit * (1 + 1e-9):
+            feasible.append(q)                       # 상자 안 + 제약 안인 점만 witness 다
     if not feasible:
         # ⚠ R17 P2-01: 전 판은 여기서 `best` 를 복구값으로 넣었다. 유효 witness 가 하나도 없으면 폭은 **없는 것**이지
         #   0 이 아니다 — 결과를 내지 않고 실패한다 (`best` 자체가 제약을 못 지키면 `best_val` 이 그 점의 목적값이

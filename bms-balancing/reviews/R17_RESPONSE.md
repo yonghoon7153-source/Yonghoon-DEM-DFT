@@ -11,7 +11,7 @@
 > | §4 chain rule | **구현 완료.** `Objective(..., *, objective_version)` 기본값 없음 · `schema.OBJECTIVE_VERSIONS` 검증 · `cycles.fit_cycles` 와 `scripts/fit_cycles.py --objective-version` 필수(choices 고정, 빠뜨리면 rc 2) · 행·sidecar·`COMPARED_SETTINGS` 에 기록 · 파이프라인은 **명시적으로** `legacy_matlab` 을 넘긴다(호출 16곳 전부) |
 > | §5 표의 "chain rule / 계약 제안" 줄 | **"구현 완료"** 로 읽어 달라. 단 같은 줄의 **"실데이터 A/B 는 사용자 승인 뒤"** 는 **그대로 유효**하다 — 실데이터 재계산은 **여전히 하지 않았다** |
 > | §7 전수 회귀 | 본문의 `1 failed · 416 passed` → (그 실패는 개수 계약 갱신) → 이후 ⑥ 이 시험 9 건을 더해 **`426 passed in 638.13s (0:10:38)` · EXIT=0** (`python3 -m pytest tests/ -q -p no:cacheprovider`, `7c8f61f9` 트리에서 방금 실행). 개수 계약도 417 → **426** 으로 갱신했다 |
-> | 회수 실측 (부수 관찰, 계약 아님) | LAM_NE 오차 — legacy `−3.39 / −7.49 / −3.12 %p` vs chain_rule_v2 `−0.0171 / −0.0577 / +0.68 %p` (합성 truth 3종, `tests/test_chain_rule_contract.py` cr_04). 리뷰어 ②를 그대로 받아 **"200 배" 를 계약 회귀로 못 박지 않았다** — 회귀는 analytic 항등식 + `a=1` 대조군이다 |
+> | 회수 실측 (부수 관찰, 계약 아님) | LAM_NE 오차 — legacy `−3.39 / −7.49 / −3.12 %p` vs chain_rule_v2 `−0.0171 / −0.0577 / −0.0078 %p` (합성 truth 3종, `tests/test_chain_rule_contract.py` cr_04). 리뷰어 ②를 그대로 받아 **"200 배" 를 계약 회귀로 못 박지 않았다** — 회귀는 analytic 항등식 + `a=1` 대조군이다. ⚠ 셋째 값은 후속 회신에서 `+0.68 → −0.0078` 로 **정정**됐다 (잡음 배열을 두 버전이 공유하지 않던 것을 고쳤다 — 후속 §2) |
 >
 > 새 시험 9 건(cr_01~07)은 계약 부재 시 **9 failed → 구현 뒤 9 passed**. cr_07 은 첫 판에서
 > 두 fixture 의 `w_dqdv` 가 같아 "축이 같다" guard 에 먼저 걸렸다 — A(legacy,w0)·B(v2,w1)·

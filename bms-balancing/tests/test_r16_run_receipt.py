@@ -45,7 +45,10 @@ def _tree(head):
 def _receipt(**over):
     g = _gate()
     head = _head()
-    base = dict(head=head, tree=_tree(head), instrument={"reviews/evidence_gate.py": "0" * 64},
+    # ⚠ R17 후속 P2-02 — 전 판은 `"0"*64` 였다. 실제 `gate.instrument_digests()` 는 **40자리 git
+    #   blob** 을 돌려주고 소비자도 그것과 견준다 (이 시험은 `--skip-instrument` 라 대조를 건너뛰어
+    #   64자리 자리표시가 드러나지 않았다). typed 완전성 검사를 넣자 fixture 가 먼저 깨졌다.
+    base = dict(head=head, tree=_tree(head), instrument={"reviews/evidence_gate.py": "0" * 40},
                 package_digest="1" * 64, materialized={"mode": "sparse detached worktree"},
                 runtime={"python": "3.12.3"})
     base.update(over)

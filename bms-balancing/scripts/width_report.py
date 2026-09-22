@@ -20,6 +20,7 @@ import csv
 import hashlib
 import json
 import pathlib
+import re
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -50,6 +51,52 @@ COMPARED_SETTINGS = ("lb", "ub", "initial", "gamma_prefit", "gamma_lb", "n_multi
                      # ⑥ chain rule 계약: 어느 미분으로 적합했나. 축으로 고르면(`--axis objective_version`) 두 판을 견주고,
                      #   아니면 같아야 한다 — 두 판을 한 판인 것처럼 섞지 않는다 (Codex R17 §4).
                      "objective_version")
+
+#: ⚠ Codex R17 후속 P1-02: **행이 선언한 실행 조건**과 sidecar 의 선언이 같은 것을 말해야 한다.
+#:   전 판은 행 enum 이 "각각 유효한 값인가" 만 보고, 비교 조건은 sidecar 에서만 읽었다 — 그래서
+#:   행만 `chain_rule_v2` 로 바꾸거나(한 파일 안에서 섞어도) `width_tol`·`cell` 을 어긋나게 해도
+#:   rc 0 이었다 (본문 sha256 과 입력 receipt 는 정확한 채로). 왼쪽이 행의 열, 오른쪽이 sidecar 키다.
+BODY_META_BOUND = (("objective_version", "objective_version"),
+                   ("cell", "cell"),
+                   ("width_tol", "width_tol"),
+                   ("run_id", "run_id"))
+
+#: ⚠ R17 후속 P1-03: 필수 키를 넣고 **`null` 로 채우면** 동일성 검사가 다시 열린다 (absent==absent 가
+#:   null==null 로 옮겨 간 것). 그래서 값의 **타입까지** 본다. `gamma_lb` 처럼 합법적으로 nullable 한
+#:   항목은 여기 넣지 않는다 — "null 이면 전부 거부" 로 넓히면 정상 산출이 막힌다.
+_HEX40 = re.compile(r"^[0-9a-f]{40}$")
+_HEX64 = re.compile(r"^[0-9a-f]{64}$")
+
+
+def _typed_meta_problems(meta: dict, name: str) -> list:
+    """sidecar 의 **필수 값**이 타입·형식까지 맞는가 (R17 후속 P1-03). 문제 목록을 돌려준다."""
+    p = []
+
+    def _need(key, ok, what):
+        if key in meta and not ok(meta.get(key)):
+            p.append(f"{name}: `{key}` 가 {what} 가 아니다 ({meta.get(key)!r})")
+
+    _need("sha256", lambda v: isinstance(v, str) and _HEX64.fullmatch(v), "64자리 hex")
+    _need("git_commit", lambda v: isinstance(v, str) and _HEX40.fullmatch(v), "40자리 hex commit")
+    _need("run_id", lambda v: isinstance(v, str) and v.strip(), "비지 않은 문자열")
+    _need("env", lambda v: isinstance(v, dict) and bool(v), "비지 않은 객체")
+    _need("dataset_manifest", lambda v: isinstance(v, (dict, str)) and bool(v), "비지 않은 객체/문자열")
+    _need("consumed_inputs", lambda v: isinstance(v, dict) and bool(v), "비지 않은 객체")
+    _need("cycles", lambda v: isinstance(v, list) and bool(v)
+          and all(isinstance(c, int) and not isinstance(c, bool) for c in v), "정수 목록")
+    _need("seed", lambda v: isinstance(v, int) and not isinstance(v, bool), "정수")
+    _need("scale_seed", lambda v: isinstance(v, int) and not isinstance(v, bool), "정수")
+    _need("n_multistart", lambda v: isinstance(v, int) and not isinstance(v, bool), "정수")
+    for k in ("lb", "ub", "initial"):
+        _need(k, lambda v: isinstance(v, list) and bool(v)
+              and all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in v),
+              "수 목록")
+    _need("objective_version", lambda v: v in S.OBJECTIVE_VERSIONS,
+          f"{list(S.OBJECTIVE_VERSIONS)} 중 하나")
+    _need("cell", lambda v: isinstance(v, str) and v.strip(), "비지 않은 문자열")
+    _need("width_tol", lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)
+          and float(v) >= 0.0, "0 이상의 수")
+    return p
 
 
 def load(path: pathlib.Path):
@@ -86,6 +133,14 @@ def load(path: pathlib.Path):
     if missing:
         print(f"! sidecar 에 필수 키가 없다 ({mp.name}): {missing} — 없는 키는 None 으로 견주지 않는다", file=sys.stderr)
         raise SystemExit(2)
+    # ⚠ R17 후속 P1-03 — 키가 **있기만** 하면 통과하던 자리. 필수 값의 타입·형식까지 본다.
+    typed = _typed_meta_problems(meta, mp.name)
+    if typed:
+        print(f"! sidecar 의 필수 값이 타입·형식을 어긴다 ({mp.name}) — 키 존재는 완전성이 아니다:",
+              file=sys.stderr)
+        for q in typed[:20]:
+            print(f"    {q}", file=sys.stderr)
+        raise SystemExit(2)
     # ③ 본문 ↔ sidecar — sidecar 가 적은 sha256 이 **이 bytes** 의 것이어야 한다.
     sha = hashlib.sha256(path.read_bytes()).hexdigest()
     if str(meta["sha256"]) != sha:
@@ -104,7 +159,38 @@ def load(path: pathlib.Path):
             print(f"! 행 {i} 의 receipt 가 sidecar 의 입력과 다르다 ({path.name}) — 이 행은 이 sidecar 의 것이 아니다",
                   file=sys.stderr)
             raise SystemExit(2)
+    # ⚠ R17 후속 P1-02 — ④ 의 연장: 입력 receipt 만이 아니라 **행이 선언한 실행 조건**도 sidecar 와
+    #   같아야 하고, 한 파일 안에서 **하나**여야 한다 (파일 안 버전 혼합을 막는다).
+    for row_key, meta_key in BODY_META_BOUND:
+        if row_key not in rows[0]:
+            continue                                  # 이 산출의 행이 선언하지 않는 축은 건너뛴다
+        seen = {str(r.get(row_key)) for r in rows}
+        if len(seen) != 1:
+            print(f"! 한 파일 안에서 `{row_key}` 가 섞여 있다 ({path.name}): {sorted(seen)} — "
+                  f"비교 조건은 파일당 하나여야 한다", file=sys.stderr)
+            raise SystemExit(2)
+        want = meta.get(meta_key)
+        got = seen.pop()
+        same = (str(want) == got)
+        if not same and isinstance(want, (int, float)) and not isinstance(want, bool):
+            try:                                      # 0.01 ↔ "0.01" 같은 표기 차이는 값으로 견준다
+                same = float(want) == float(got)
+            except (TypeError, ValueError):
+                same = False
+        if not same:
+            print(f"! 본문의 `{row_key}` 가 sidecar 의 `{meta_key}` 와 다르다 ({path.name}): "
+                  f"본문 {got!r} ≠ sidecar {want!r} — 이 행들은 그 선언의 것이 아니다", file=sys.stderr)
+            raise SystemExit(2)
+
     # ⑤ 명부 — 본문의 cycle 집합이 sidecar 가 선언한 `cycles` 와 **정확히** 같아야 한다 (중복은 ① 이 잡았다).
+    # ⚠ R17 후속 P1-02 — `cycles_key` 는 `int(float(...))` 라 0.9 를 0 으로 접는다. **절단하기 전에**
+    #   정수성을 본다 (그러지 않으면 0.9/1.9 가 선언 [0,1] 과 같아 보인다).
+    bad_cyc = [r.get("cycle") for r in rows
+               if not (str(r.get("cycle")).strip() != "" and float(r.get("cycle")).is_integer())]
+    if bad_cyc:
+        print(f"! 본문의 cycle 이 정수가 아니다 ({path.name}): {bad_cyc[:8]} — "
+              f"절단해서 같은 행으로 취급하지 않는다", file=sys.stderr)
+        raise SystemExit(2)
     body_cycles = sorted(S.cycles_key(r) for r in rows)
     try:
         declared = sorted(int(c) for c in meta["cycles"])

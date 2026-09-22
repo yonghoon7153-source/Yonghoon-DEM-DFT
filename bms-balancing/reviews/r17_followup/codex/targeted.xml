@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="59" time="151.091" timestamp="2026-09-22T17:13:01.169060+09:00" hostname="DESKTOP-IK8J81H"><testcase classname="tests.test_r17_codex" name="test_r17_01_gc_keeps_an_attempt_dir_that_a_retained_artifact_still_references" time="0.032"><failure message="ModuleNotFoundError: No module named 'fcntl'">tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r17_followup_7c8f61f9/pytest-target/test_r17_01_gc_keeps_an_attemp0')
+
+    def test_r17_01_gc_keeps_an_attempt_dir_that_a_retained_artifact_still_references(tmp_path):
+        """[P1-01] `--keep 1 --apply` 는 100 의 A 만 버려야 하고 **200 의 유일한 결과(A)는 남아야 한다**."""
+&gt;       out = _gc_fixture(tmp_path)
+              ^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_r17_codex.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_r17_codex.py:58: in _gc_fixture
+    V.record_partial(canonical, d, status="partial", run_id=rid)
+bms_balancing\verify.py:1370: in record_partial
+    atomic_write_json(idx_path, idx)
+bms_balancing\verify.py:132: in atomic_write_json
+    _publish_or_keep(fh.name, out)
+bms_balancing\verify.py:139: in _publish_or_keep
+    with publish_lock(out):
+         ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;bms_balancing.verify.publish_lock object at 0x0000025C4563ACF0&gt;
+
+    def __enter__(self):
+&gt;       import fcntl
+E       ModuleNotFoundError: No module named 'fcntl'
+
+bms_balancing\verify.py:87: ModuleNotFoundError</failure></testcase><testcase classname="tests.test_r17_codex" name="test_r17_02_gc_dry_run_names_files_not_whole_attempts" time="0.012"><failure message="ModuleNotFoundError: No module named 'fcntl'">tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r17_followup_7c8f61f9/pytest-target/test_r17_02_gc_dry_run_names_f0')
+
+    def test_r17_02_gc_dry_run_names_files_not_whole_attempts(tmp_path):
+        """[P1-01 · 대조군] dry-run 도 같은 모델을 말해야 한다 — 지울 것은 `matrix/A/matrix_100.csv` 하나다."""
+&gt;       out = _gc_fixture(tmp_path)
+              ^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_r17_codex.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_r17_codex.py:58: in _gc_fixture
+    V.record_partial(canonical, d, status="partial", run_id=rid)
+bms_balancing\verify.py:1370: in record_partial
+    atomic_write_json(idx_path, idx)
+bms_balancing\verify.py:132: in atomic_write_json
+    _publish_or_keep(fh.name, out)
+bms_balancing\verify.py:139: in _publish_or_keep
+    with publish_lock(out):
+         ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;bms_balancing.verify.publish_lock object at 0x0000025C4577A810&gt;
+
+    def __enter__(self):
+&gt;       import fcntl
+E       ModuleNotFoundError: No module named 'fcntl'
+
+bms_balancing\verify.py:87: ModuleNotFoundError</failure></testcase><testcase classname="tests.test_r17_codex" name="test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[absolute-path]" time="0.004" /><testcase classname="tests.test_r17_codex" name="test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[parent-traversal]" time="0.003" /><testcase classname="tests.test_r17_codex" name="test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[separator]" time="0.003" /><testcase classname="tests.test_r17_codex" name="test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[empty]" time="0.003" /><testcase classname="tests.test_r17_codex" name="test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[dot]" time="0.003" /><testcase classname="tests.test_r17_codex" name="test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[dotdot]" time="0.003" /><testcase classname="tests.test_r17_codex" name="test_r17_04_publish_target_never_resolves_onto_canonical" time="0.003" /><testcase classname="tests.test_r17_codex" name="test_r17_05_legacy_transition_needs_a_recorded_old_revision_not_a_wildcard" time="0.038" /><testcase classname="tests.test_r17_codex" name="test_r17_06_check_u14_old_directory_without_identity_gets_no_legacy_approval" time="2.795" /><testcase classname="tests.test_r17_codex" name="test_r17_07_width_report_positive_and_negative_controls" time="0.395" /><testcase classname="tests.test_r17_codex" name="test_r17_08_width_report_refuses_input_roster_and_finite_violations[input-sha-changed]" time="0.193" /><testcase classname="tests.test_r17_codex" name="test_r17_08_width_report_refuses_input_roster_and_finite_violations[cycle-dropped]" time="0.194" /><testcase classname="tests.test_r17_codex" name="test_r17_08_width_report_refuses_input_roster_and_finite_violations[duplicate-cycle]" time="0.196" /><testcase classname="tests.test_r17_codex" name="test_r17_08_width_report_refuses_input_roster_and_finite_violations[nan-endpoint]" time="0.189" /><testcase classname="tests.test_r17_codex" name="test_r17_08_width_report_refuses_input_roster_and_finite_violations[blank-tol]" time="0.197" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[lower-bound-False]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[lower-bound-garbage]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[negative-tol]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[nan-tol]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[inverted-interval]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[nan-endpoint]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[point-outside-interval]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_10_width_producer_refuses_an_empty_feasible_set_instead_of_measured_zero" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_11_near_optimal_extrema_does_not_fall_back_to_best_when_nothing_is_feasible" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_12_incomplete_run_receipt_is_not_reported_as_fully_verified" time="0.708" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_01_objective_version_is_a_required_keyword_with_no_default" time="0.001" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_02_unknown_version_is_rejected_before_any_fit" time="2.026" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_03_v2_matches_the_derivative_of_E_cell_and_legacy_does_not_when_a_is_not_one" time="0.001" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_05_the_version_rides_in_row_schema_controls_and_is_validated" time="0.001" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_06_cli_requires_the_flag" time="2.157" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_07_width_report_compares_the_version_like_any_other_setting" time="0.406" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_04_v2_recovers_injected_modes_within_tolerance_legacy_error_is_recorded_only[truth-A-noiseless]" time="13.229" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_04_v2_recovers_injected_modes_within_tolerance_legacy_error_is_recorded_only[truth-B-noiseless]" time="12.032" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_04_v2_recovers_injected_modes_within_tolerance_legacy_error_is_recorded_only[truth-A-1mV-noise]" time="10.234" /><testcase classname="tests.test_widths" name="test_w01_active_bounds_sees_the_box_that_was_actually_used" time="0.001" /><testcase classname="tests.test_widths" name="test_w01b_active_bounds_without_a_box_still_means_the_default" time="0.001" /><testcase classname="tests.test_widths" name="test_w02_near_optimal_extrema_respects_the_given_box" time="0.237" /><testcase classname="tests.test_widths" name="test_w03_mode_profile_extrema_respects_the_given_box" time="0.049" /><testcase classname="tests.test_widths" name="test_w04_a_box_that_is_not_a_box_is_refused" time="0.000" /><testcase classname="tests.test_widths" name="test_w05_multistart_uses_the_same_box_rule" time="0.000" /><testcase classname="tests.test_widths" name="test_w05b_resolve_box_defaults_and_passthrough" time="0.000" /><testcase classname="tests.test_widths" name="test_w06_fit_cycles_records_bounds_against_the_box_it_used" time="4.345" /><testcase classname="tests.test_widths" name="test_w08_a_hex_digest_that_looks_like_a_float_is_not_an_infinite_number" time="0.001" /><testcase classname="tests.test_widths" name="test_w08b_check_degeneracy_publishes_an_artifact_whose_digest_looks_numeric" time="0.001" /><testcase classname="tests.test_widths" name="test_w09_cycles_row_declares_the_width_columns" time="0.000" /><testcase classname="tests.test_widths" name="test_w10_widths_off_is_empty_not_zero" time="3.260" /><testcase classname="tests.test_widths" name="test_w11_widths_on_bracket_the_point_estimate" time="21.158" /><testcase classname="tests.test_widths" name="test_w12_the_width_is_measured_in_the_box_the_fit_used" time="33.681" /><testcase classname="tests.test_widths" name="test_w13_a_failed_width_is_not_a_number" time="3.334" /><testcase classname="tests.test_widths" name="test_w14_the_published_artifact_carries_widths_and_passes_both_validators" time="28.770"><failure message="AssertionError: (1, '  cycle 0: a_PE 1.388971 b_PE 0.000000 a_NE 1.011133 b_NE -0.082611 γ 0.0000 · obj 0.816826 · 채택 3/3&#10;    cycle 1: ...\bms_balancing\\verify.py&quot;, line 87, in __enter__&#10;      import fcntl&#10;  ModuleNotFoundError: No module named \'fcntl\'&#10;  ')&#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\w...\bms_balancing\\verify.py&quot;, line 87, in __enter__\n    import fcntl\nModuleNotFoundError: No module named \'fcntl\'\n').returncode">tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r17_followup_7c8f61f9/pytest-target/test_w14_the_published_artifac0')
+
+    def test_w14_the_published_artifact_carries_widths_and_passes_both_validators(tmp_path):
+        """[W-14] 계약 고리를 닫는다: CLI 로 게시한 CSV 가 (a) 폭 열을 싣고 (b) `check_rails` 와
+        `check_u14 --schema-only` 를 **둘 다** 통과해야 한다.
+    
+        열을 늘리면 난간·승격 게이트가 같이 움직인다 — 늘려 놓고 검사를 안 돌리면 그 열은 계약이 아니라 장식이다.
+        """
+        import json as _json
+        import subprocess
+    
+        src, wb, hc = _cycles_fixture(tmp_path)
+        out = tmp_path / "out"
+        rc = subprocess.run(
+            [sys.executable, str(ROOT / "scripts/fit_cycles.py"), "--objective-version", "legacy_matlab",
+             "--data-root", str(src), "--half-cell", str(hc), "--full-cell", str(wb),
+             "--cell", "w14", "--si-source", "Li", "--starts", "2", "--seed", "0", "--scale-seed", "0",
+             "--widths", "--width-tol", "0.05", "--width-starts", "2", "--out", str(out)],
+            cwd=ROOT, capture_output=True, text=True, timeout=1800)
+&gt;       assert rc.returncode == 0, (rc.returncode, rc.stdout[-1500:], rc.stderr[-1500:])
+E       AssertionError: (1, '  cycle 0: a_PE 1.388971 b_PE 0.000000 a_NE 1.011133 b_NE -0.082611 γ 0.0000 · obj 0.816826 · 채택 3/3
+E           cycle 1: ...\bms_balancing\\verify.py", line 87, in __enter__
+E             import fcntl
+E         ModuleNotFoundError: No module named \'fcntl\'
+E         ')
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\w...\bms_balancing\\verify.py", line 87, in __enter__\n    import fcntl\nModuleNotFoundError: No module named \'fcntl\'\n').returncode
+
+tests\test_widths.py:352: AssertionError</failure></testcase><testcase classname="tests.test_widths" name="test_w15_the_width_columns_are_a_tagged_union_not_just_optional" time="0.003" /><testcase classname="tests.test_widths" name="test_w16_width_report_prints_the_interval_and_compares_one_axis" time="0.377" /><testcase classname="tests.test_widths" name="test_w17_width_report_refuses_a_comparison_that_moved_two_things" time="0.368" /><testcase classname="tests.test_widths" name="test_w18_width_report_refuses_artifacts_that_carry_no_width" time="0.375" /><testcase classname="tests.test_widths" name="test_w19_width_method_name_says_which_method_measured_it" time="0.001" /><testcase classname="tests.test_widths" name="test_w20_the_union_is_never_narrower_than_the_constrained_extrema_alone" time="0.317" /><testcase classname="tests.test_widths" name="test_w21_width_report_refuses_two_runs_that_used_different_grids" time="0.214" /></testsuite></testsuites>

@@ -333,6 +333,10 @@ def main() -> int:
         return 2
 
     digest_ok, digest = gate.package_digest(PKG, SUMS)
+    # ⚠ R17 후속 P2-02: `digest` 는 `{파일: ok|mismatch|missing}` 인 **검사 상태**다. 전 판은 그것을
+    #   `str()` 해서 receipt 의 `package.digest` 에 넣었고, 그래서 bytes 가 다른 두 정상 패키지가
+    #   똑같이 `{'one.txt': 'ok'}` 를 digest 로 가졌다 (리뷰어 실측). 상태와 내용 주소를 가른다.
+    content_digest = gate.package_content_digest(PKG, SUMS)
     out = {"target_head": head, "expected_head": exp, "expected_tree": tree, "pinned_sha": PINNED,
            "pin_bypassed": True, "dirty": bool(dirty), "dirty_allowed": bool(a.allow_dirty),
            "dirty_paths": dirty[:50],
@@ -341,12 +345,13 @@ def main() -> int:
            "materialized": ({"path": str(snapshot), "head": head, "mode": "sparse detached worktree",
                              "kept": bool(a.keep_materialized)} if snapshot else None),
            "ran_in": "격리 snapshot" if snapshot else "working tree (--allow-dirty)",
-           "package_digest_ok": digest_ok, "package_digest": digest,
+           "package_digest_ok": digest_ok, "package_status": digest,
+           "package_content_digest": content_digest,
            # ⚠ R16 (조건 8 축 ③): 흩어진 조각을 **한 receipt 로 묶고 서명한다**. 소비자는
            #   `scripts/verify_run_receipt.py` — 서명·ancestry·tree·instrument 를 댄다.
            "run_receipt": gate.run_receipt(
                head=exp, tree=tree, instrument=gate.instrument_digests(target, INSTRUMENT),
-               package_digest=str(digest),
+               package_digest=content_digest,        # 상태가 아니라 **내용 주소** (R17 후속 P2-02)
                materialized=({"mode": "sparse detached worktree"} if snapshot else None),
                runtime={"python": sys.version.split()[0], "platform": sys.platform}),
            "설명": "R11 네 스크립트를 자식으로 그대로 돌리고 case 마다 **봉인한 술어**로 닫힘을 판정한다 — "

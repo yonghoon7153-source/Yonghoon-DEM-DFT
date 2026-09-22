@@ -169,8 +169,14 @@ def test_cr_04_v2_recovers_injected_modes_within_tolerance_legacy_error_is_recor
             v = v + rng.normal(0.0, noise_mv * 1e-3, v.shape)
         return x * c, v
 
-    def fit(version, p_true, c):
-        cap, vol = make(p_true, c)
+    # ⚠ Codex R17 후속: 전 판은 `fit()` 안에서 `make()` 를 불렀다 — 그러면 버전 루프마다 RNG 를
+    #   다시 소비해 legacy 와 v2 가 **서로 다른 잡음 실현**을 적합한다. v2 의 절대 허용 시험은
+    #   그래도 유효하지만, 두 오차의 차이를 "한 축(1/a)의 효과" 로 읽을 수 없다. 입력 배열을
+    #   **먼저 한 번 만들어 두 버전이 공유**한다.
+    data = {"ref": make(p_ref, c_ref), "age": make(p_age, c_age)}
+
+    def fit(version, which):
+        cap, vol = data[which]
         o = Objective(half, blend, cap, vol, w_pocv=1.0, w_dvdq=1.0, w_dqdv=0.0, objective_version=version)
         best, val, _ = V.multistart(o, n_starts=6, seed=0, lb=LB5, ub=UB5)
         assert best is not None, f"{version}: 채택된 적합이 없다"
@@ -179,7 +185,7 @@ def test_cr_04_v2_recovers_injected_modes_within_tolerance_legacy_error_is_recor
     truth = degradation_modes(p_ref, c_ref, p_age, c_age)
     got = {}
     for ver in VERSIONS:
-        a, b = fit(ver, p_ref, c_ref), fit(ver, p_age, c_age)
+        a, b = fit(ver, "ref"), fit(ver, "age")
         got[ver] = degradation_modes(a, c_ref, b, c_age)
     err = {ver: {k: (got[ver][k] - truth[k]) * 100.0 for k in truth} for ver in VERSIONS}
     print("\n  회수 오차 (%p):", {v: {k: f"{e:+.4f}" for k, e in d.items()} for v, d in err.items()})   # legacy 는 기록만

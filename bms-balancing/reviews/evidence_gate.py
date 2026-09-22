@@ -65,6 +65,33 @@ def package_digest(pkg: pathlib.Path, sums: pathlib.Path):
     return bool(status) and all(v == "ok" for v in status.values()), status
 
 
+def package_content_digest(pkg: pathlib.Path, sums: pathlib.Path) -> str:
+    """패키지의 **내용 주소** — `SHA256SUMS` 가 이름 붙인 파일들의 정규 digest (R17 후속 P2-02).
+
+    ⚠ `package_digest()` 의 둘째 반환값은 `{파일: ok|mismatch|missing}` 인 **검사 상태**다.
+      그것을 `str()` 해서 receipt 의 `package.digest` 에 넣으면, bytes 가 다른 두 패키지가
+      똑같이 `{'one.txt': 'ok'}` 를 갖는다 — 내용 주소가 아니다 (리뷰어 실측). 상태는 상태로
+      두고, 내용은 여기서 따로 발행한다.
+
+    정규화: 이름으로 정렬한 `sha256(bytes)  이름` 줄을 이어 붙여 다시 해시한다. 파일이 없거나
+    읽을 수 없으면 그 자리를 `<missing>` 으로 적는다 — 빠진 것도 내용의 일부다 (ok 로 접지 않는다).
+    """
+    lines = []
+    for ln in sums.read_text(encoding="utf-8").splitlines():
+        if not ln.strip():
+            continue
+        _want, name = ln.split(None, 1)
+        name = name.strip()
+        f = pkg / name
+        try:
+            h = hashlib.sha256(f.read_bytes()).hexdigest()
+        except OSError:
+            h = "<missing>"
+        lines.append(f"{h}  {name}")
+    body = "\n".join(sorted(lines)) + "\n"
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+
 def parse_probes(text: str, known):
     """`--probes` → (목록, 문제). 빈 이름·모르는 이름·중복은 전부 거부한다 (Codex R9 P2-1)."""
     want = [p.strip() for p in str(text).split(",")]
