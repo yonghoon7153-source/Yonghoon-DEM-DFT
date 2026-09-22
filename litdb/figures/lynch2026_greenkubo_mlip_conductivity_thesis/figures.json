@@ -1,0 +1,411 @@
+{
+ "slug": "lynch2026_greenkubo_mlip_conductivity_thesis",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "paper9_computational_se_firstprinciples_ml.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 128,
+   "file": "fig_1.png",
+   "caption": "[본문 5.2.1] Figure 5.12: Figure depicting the relaxed electronic ground-state structures for two configurations of Li3.25Si0.25P0.75O4: structure S1 (left) and structure S2 (right). Green, blue, red, and white spheres represent Li, Si, P, and O atoms respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.9,
+    289.9,
+    546.3,
+    472.0
+   ],
+   "w": 1853,
+   "h": 759,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 129,
+   "file": "fig_2.png",
+   "caption": "[본문 5.2.1] Figure 5.13: Figure depicting the impact of the choice of rcut on the model’s training EMAE error for a fixed model “size” (choice of hyperparameters) and input dataset size (number of configurations). Here rcut is given in ˚A and EMAE is given in eV. EMAE is defined in equation 53 of the preprint manuscript C.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.9,
+    139.1,
+    546.3,
+    321.1
+   ],
+   "w": 1853,
+   "h": 760,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.986
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 131,
+   "file": "fig_3.png",
+   "caption": "[본문 5.2.1] Figure 5.14: Dataset size test with 2500, 5000, and 7500 input dataset sizes, showing average training EMAE (left) and FMAE (right) error vs. input dataset size (number of configurations), with error defined by the standard deviation. Here EMAE is given in eV and FMAE is given in eV/˚A. FMAE is defined in equation 54 of the preprint manuscript C.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.9,
+    66.0,
+    546.3,
+    233.9
+   ],
+   "w": 1853,
+   "h": 701,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 131,
+   "file": "fig_4.png",
+   "caption": "[본문 5.2.1] Figure 5.15: Hyperparameter test with “small”, “medium”, and “large” model sizes, showing average training (left) and validation (right) weighted sum values vs. model size, with error defined by the standard deviation. The weighted sum values are unitless, and are defined in equation 56 of the preprint manuscript C.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.9,
+    395.5,
+    546.3,
+    585.0
+   ],
+   "w": 1853,
+   "h": 791,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 134,
+   "file": "fig_5.png",
+   "caption": "[본문 5.2.2] Figure 5.16: Figure showing example temperature plots, depicting model instability during a molecular dynamics run (left) compared to a stable molecular dynamics run (right), both at target temperatures of 900K.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.9,
+    66.0,
+    546.3,
+    233.9
+   ],
+   "w": 1853,
+   "h": 701,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.827
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 136,
+   "file": "fig_6.png",
+   "caption": "[본문 5.2.4] Figure 5.17: Structure S1 (red) and S2 (blue) volume change (left) and energy change (right) vs Allegro model validation weighted sum error. Volume changes are given in ˚A3, energy changes are given in meV, and weighted sum values are unitless. In these plots, the data is given by the unfilled markers and the linear fit to the data is given by the lines.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.9,
+    255.9,
+    546.3,
+    447.1
+   ],
+   "w": 1853,
+   "h": 797,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 203,
+   "file": "fig_7.png",
+   "caption": "[부록C preprint] FIG. 3. Plot of deviations of temperature (left) and to- tal energy (right) from their respective averages for Al- legro model CS2 during molecular dynamics runs at tar- get temperature 350K, 450K, 550K, and 900K, initialzed with reference structure S1. Note that there is a 5-fold diﬀerence in the vertical scales for the two plots.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.9,
+    332.2,
+    528.0,
+    501.4
+   ],
+   "w": 951,
+   "h": 706,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.648
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 205,
+   "file": "fig_8.png",
+   "caption": "[부록C preprint] FIG. 5. Plots (S1) and (S2) show the temperatures T(t) (in K) for molecular dynamics simulations using lammps with the Allegro model CS1 at target temper- ature 900K as a function of simulation time (in ps units) for structures S1 and S2, respectively. Each simulation used a diﬀerent velocity distribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.6,
+    250.3,
+    309.2,
+    436.3
+   ],
+   "w": 974,
+   "h": 776,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.822
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 207,
+   "file": "fig_9.png",
+   "caption": "[부록C preprint] FIG. 6. Graphical representations of volume errors ∆Ω (left) and energy errors ∆E (right) for all 10 Allegro models listed in Table VI represented with open circles versus the validation error WS, with structure S1 and S2 given by red and black colors, respectively. The straight lines indicate trends in terms linear least squares ﬁts.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.6,
+    371.2,
+    300.5,
+    460.9
+   ],
+   "w": 938,
+   "h": 375,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 208,
+   "file": "fig_10.png",
+   "caption": "[부록C preprint] FIG. 7. Left plot shows Λ",
+   "rotated_deg": 0,
+   "bbox": [
+    75.6,
+    115.8,
+    193.1,
+    231.5
+   ],
+   "w": 490,
+   "h": 483,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.849
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 208,
+   "file": "fig_11.png",
+   "caption": "[부록C preprint] FIG. 8. Left plot shows Λ",
+   "rotated_deg": 0,
+   "bbox": [
+    75.6,
+    344.9,
+    193.1,
+    460.6
+   ],
+   "w": 490,
+   "h": 483,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.849
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 209,
+   "file": "fig_12.png",
+   "caption": "[부록C preprint] FIG. 11. Left plots show Λ",
+   "rotated_deg": 0,
+   "bbox": [
+    75.6,
+    115.8,
+    193.1,
+    231.5
+   ],
+   "w": 490,
+   "h": 483,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 209,
+   "file": "fig_13.png",
+   "caption": "[부록C preprint] FIG. 12. Left plots show Λ",
+   "rotated_deg": 0,
+   "bbox": [
+    75.6,
+    351.2,
+    193.1,
+    466.9
+   ],
+   "w": 490,
+   "h": 483,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 210,
+   "file": "fig_14.png",
+   "caption": "[부록C preprint] FIG. 19. Arrhenius plots of full (left) and tracer (right) conductivity results for each of the Allegro models CS2 - CS6 for structure S1.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.9,
+    177.6,
+    524.8,
+    266.6
+   ],
+   "w": 938,
+   "h": 372,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 210,
+   "file": "fig_15.png",
+   "caption": "[부록C preprint] FIG. 21. Arrhenius plots of full and tracer conductivity results for the CS2 - CS6 model average for structure S1 (left) and S2 (right).",
+   "rotated_deg": 0,
+   "bbox": [
+    299.9,
+    451.4,
+    524.8,
+    541.2
+   ],
+   "w": 938,
+   "h": 375,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 148,
+   "file": "fig_16.png",
+   "caption": "[본문 5.4.1] Figure 5.25: Idealized candidate cubic structures for Li24P4S20Cl4 (left), Li22P4S19Cl4ZnO (center), and Li21P4S18Cl5ZnO (right). Here blue, magenta, grey, yellow, red, and green spheres represent lithium, phosphorous, silicon, sulfur, oxygen, and chlorine.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.9,
+    66.0,
+    546.3,
+    198.5
+   ],
+   "w": 1853,
+   "h": 553,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.735
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 148,
+   "file": "fig_17.png",
+   "caption": "[본문 5.4.2] Figure 5.26: X-ray results for all three idealized cubic structures determined compu- tationally (left) and the idealized Li22P4S19Cl4ZnO cubic structure’s computed x-ray data compared to its experimental counterpart (right).",
+   "rotated_deg": 0,
+   "bbox": [
+    101.9,
+    354.7,
+    546.3,
+    633.3
+   ],
+   "w": 1853,
+   "h": 1162,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 177,
+   "file": "fig_18.png",
+   "caption": "[부록B PRM2024] FIG. 10. The electrochemical stability ranges of (thio)boracites electrolyte materials, generated using the data summarized in Table II.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.3,
+    550.5,
+    540.4,
+    713.3
+   ],
+   "w": 1001,
+   "h": 680,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.825
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 27,
+   "file": "fig_19.png",
+   "caption": "[본문 1.2.3 (전재)] Figure 1.9: Figure showing Arrhenius plots of the ionic conductivity of Li6B7S13I as reproduced from reference [20] with permission. The figure on the left shows the data from first principles simulations and the figure on the right shows data from EIS measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.9,
+    66.0,
+    546.3,
+    233.1
+   ],
+   "w": 1853,
+   "h": 698,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 31,
+   "file": "fig_20.png",
+   "caption": "[본문 1.4.1 (전재)] Figure 1.13: Figure showing an Arrhenius plot of Li6PS5Cl derived from impedence spectroscopy at 309K as reproduced from reference [25] with permission.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.9,
+    185.2,
+    546.2,
+    399.7
+   ],
+   "w": 1853,
+   "h": 895,
+   "dpi": 300,
+   "src": "paper9_computational_se_firstprinciples_ml.pdf",
+   "blank": 0.961
+  }
+ ]
+}

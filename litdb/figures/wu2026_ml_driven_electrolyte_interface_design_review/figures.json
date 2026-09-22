@@ -1,0 +1,431 @@
+{
+ "slug": "wu2026_ml_driven_electrolyte_interface_design_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Schematic overview of machine learning applications in chemistry and materials science.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    303.1,
+    557.9,
+    599.7
+   ],
+   "w": 2127,
+   "h": 1237,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.63
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Schematic of the leading conventional ML algorithms applied in battery design. Reproduced with permission [ 24 ]. Copyright 2025, Wiley-VCH GmbH.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.5,
+    568.1,
+    318.3
+   ],
+   "w": 2169,
+   "h": 1179,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.711
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Graph representation of crystal structures and message-passing mechanisms in graph neural networks. Reproduced with permission [ 35 ]. Copyright 2023, The Author(s), American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.9,
+    568.0,
+    438.3
+   ],
+   "w": 2169,
+   "h": 1682,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Workflow for Dataset Generation and Training. (a) DP-GEN concurrent learning scheme. Reproduced with permission [ 47 ]. Copyright 2024, Wiley-VCH GmbH. (b) LiPS-25 benchmark dataset generation. Reproduced with permission [ 49 ]. Copyright 2026, The Author(s), American Chemical Society. (c) LiPS-25 benchmark dataset generation. Reproduced with permission [ 42 ]. Copyright 2025, The Author(s), Springer Nature. (d) Temperature-dependent AIMD ionic conductivities showing large scatter. Reproduced with permission [ 50 ]. Copyright 2026, The Author(s), Wiley-VCH GmbH.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    568.0,
+    647.3
+   ],
+   "w": 2169,
+   "h": 2551,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.607
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 The performance of solid-state batteries (such as stability and rate capability) typically depends on atomic-scale phenomena, such as phase transitions or structural features at interfaces and grain boundaries. Machine learning techniques can extend the temporal and spatial scope of atomic-level simulations. Reproduced with permission [ 66 ]. Copyright 2026, The Author(s), Springer Nature.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    125.2,
+    568.1,
+    686.2
+   ],
+   "w": 2169,
+   "h": 2339,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.732
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 (a) Schematic of the integrated platform. A trained state perception module is implemented based on the real-time cycling data from every 3 cycles, serving as an intelligent in situ monitor to identify the state of the operating battery, including stable, transitional, and decay states. Reinforcement learning (RL) further enables intelligent cycling by adaptively optimizing fast charging strategies for solid-state batteries across cycles based on the battery state. An electrochemical test station is used to cycle actual batteries controlled by the above AI workstation. (b) Engineering- oriented workflow showing the real-time communication, data, and control loop. The AI workstation enables bidirectional communication with the tester hardware. Every 3-cycle data is continuously collected to evaluate the battery state, which is then used to adaptively control the charging strategy",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.9,
+    568.2,
+    214.3
+   ],
+   "w": 2170,
+   "h": 748,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.777
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 14,
+   "file": "fig_7.png",
+   "caption": "FIGURE 7 (a) Flowchart of the approach that consists of two main efforts: ionic conductivity model building and structure screening. Reproduced with permission [ 77 ]. Copyright 2017. Royal Society of Chemistry. (b) Promising electrolyte and anode coating candidates identified through the screening approach. Reproduced with permission [ 78 ]. Copyright 2021, The Author(s), Springer Nature. (c) High-throughput screening concept of the molecular library. Reproduced with permission [ 79 ]. Copyright 2015, The Royal Society of Chemistry.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.7,
+    568.2,
+    359.3
+   ],
+   "w": 2170,
+   "h": 1349,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.676
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 15,
+   "file": "fig_8.png",
+   "caption": "FIGURE 8 (a) Diffusion coefficients of Li10 GeP2 S12 , Li10 SiP2 S12 , and Li10 SnP2 S12 averaged over cation site ordered/disordered configurations. Reproduced with permission [ 43 ]. Copyright 2021, AIP Publishing. (b) Arrhenius plot comparing diffusivities obtained by high-temperature AIMD and intermediate-temperature LOTF-MD. The migration energies (eV) calculated by weighted least-squares regression between log(D) and 1/T are shown next to the fitting dashed lines for the LOTF-MD data. Reproduced with permission [ 84 ]. Copyright 2020, American Chemical Society. (c) Construction of composable machine learning interatomic potentials via sparse Gaussian process regression to efficiently screen and transferably predict fast lithium- ion conductors in solid electrolytes. Reproduced with permission [ 85 ]. Copyright 2021, American Chemical Society. (d) Compressive stress enhances Li ─S b",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.1,
+    595.7
+   ],
+   "w": 2170,
+   "h": 2338,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.741
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 20,
+   "file": "fig_9.png",
+   "caption": "FIGURE 9 Schematic of SEI evolution process at the electrode–electrolyte interface. Reproduced with permission [ 121 ]. Copyright 2026, Elsevier.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.5,
+    568.0,
+    483.3
+   ],
+   "w": 2169,
+   "h": 1867,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.615
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 21,
+   "file": "fig_10.png",
+   "caption": "FIGURE 10 Key scientific objectives and challenges in SE and SEI/CEI (cathode electrolyte interphase) design. This paper discusses the key factors that must be considered in SE design, including ionic and electronic conductivity, electrochemical stability, mechanical strength, and air/humidity stability, in order to address core scientific issues related to SEI/CEI, reproduced with permission [ 122 ]. Copyright 2025, The American Association for the Advancement of Science.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.1,
+    365.3
+   ],
+   "w": 2170,
+   "h": 1377,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.661
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 22,
+   "file": "fig_11.png",
+   "caption": "FIGURE 11 Interface ranking results. EMLIP",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    550.6,
+    403.3
+   ],
+   "w": 2097,
+   "h": 1535,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.773
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 23,
+   "file": "fig_12.png",
+   "caption": "FIGURE 12 Strong attraction of Li ions to the grain boundary region causes their migration and accumulation from the bulk to the grain boundary, where the low charge of Li ions facilitates their reduction and subsequent lithium dendrite formation. Reproduced with permission [ 129 ]. Copyright 2025, American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.1,
+    500.3
+   ],
+   "w": 2170,
+   "h": 1940,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.762
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 24,
+   "file": "fig_13.png",
+   "caption": "FIGURE 13 Formation process of the SEI layer between Li(001) and β-Li3 PS4 (010) under conditions of 300 K and 100 bar. (a) Initial interface model. (b) ion diffusion; (c, d) nucleation process (the crystallized region indicated in (c) corresponds to the nucleation region) (d, e) crystal growth; (e, f) stabilization process; and (g) final structure of the reactive interface model. (h) Structures of crystallized SEI regions along different directions, as well as the surface structures of Li2 S with space group Fm3m along the 101/110/011 and 100/010/001 crystal planes. Reproduced with permission [ 131 ]. Copyright 2024. Royal Society of Chemistry. (i) Schematic of a representative interface model. The cathode slab exposes two distinct terminations at the interface, defined as region A(LiCoO2 -terminated, P2m2 ) and region B(Li-terminated, C2m1 ). Reproduced with permission [ 132 ]. Copyrig",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    568.1,
+    647.3
+   ],
+   "w": 2170,
+   "h": 2551,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.765
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 26,
+   "file": "fig_14.png",
+   "caption": "FIGURE 14 Time evolution of biased potentials applied on electrodes, variations of Li atomic charges along ConstP trajectories, and products’ distributions of SEI components. Reproduced with permission [ 136 ]. Copyright 2025, The Author(s), Springer Nature.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.2,
+    568.0,
+    545.8
+   ],
+   "w": 2169,
+   "h": 2129,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.697
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 27,
+   "file": "fig_15.png",
+   "caption": "FIGURE 15 (a) Mean square displacement (MSD) of lithium ions relative to the simulation time in the a-LiF coating region for models with different LiF thicknesses. The calculated diffusion coefficients are also shown. (b) Atomic packing patterns of lithium fluoride for coating thicknesses of 5 and 20 Å. The figure also illustrates the regular Li-F tetrahedral structure and the P-S tetrahedral structure. Reproduced with permission [ 47 ]. Copyright 2024, Wiley-VCH GmbH.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.8,
+    568.2,
+    575.3
+   ],
+   "w": 2170,
+   "h": 2253,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.708
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 29,
+   "file": "fig_16.png",
+   "caption": "FIGURE 16 Summary of primary challenges and opportunities in AI for materials design in rechargeable battery technology. Reproduced with permission [ 24 ]. Copyright 2025, Wiley-VCH GmbH.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.4,
+    568.0,
+    563.3
+   ],
+   "w": 2169,
+   "h": 2200,
+   "dpi": 300,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.425
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "TABLE 1 The ML hub with legacy screening tools. Dimension Traditional screening accelerator ML hub (This work’s thesis) Data source Siloed computational datasets Unified pool of DFT, MD, and experimental metadata Workflow mode One-off forward prediction Autonomous “prediction-validation-optimization” loop Optimization target Single metric (e.g., ionic conductivity) Multi-objective (conductivity, stability, mechanics) Output value Candidate list for lab testing Design rules for scalable, interface-compatible solid-state batteries (SSBs)",
+   "rotated_deg": 0,
+   "bbox": [
+    48.6,
+    12.3,
+    606.2,
+    788.2
+   ],
+   "w": 2154,
+   "h": 2997,
+   "dpi": 278,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "TABLE 2 Positioning of the present review relative to recent related reviews.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.6,
+    12.3,
+    606.2,
+    788.2
+   ],
+   "w": 2154,
+   "h": 2997,
+   "dpi": 278,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.819
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 10,
+   "file": "tab_3.png",
+   "caption": "TABLE 3 Quantitative benchmark of universal MLIPs on SSE-relevant tasks.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.6,
+    12.3,
+    606.2,
+    788.2
+   ],
+   "w": 2154,
+   "h": 2997,
+   "dpi": 278,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.801
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 13,
+   "file": "tab_4.png",
+   "caption": "TABLE 4 Comparison of major machine learning approaches applied in solid-state battery research. Typical model Approach Input data Target properties",
+   "rotated_deg": 0,
+   "bbox": [
+    48.6,
+    12.3,
+    606.2,
+    788.2
+   ],
+   "w": 2154,
+   "h": 2997,
+   "dpi": 278,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 18,
+   "file": "tab_5.png",
+   "caption": "TABLE 5 Comparative summary of machine learning strategies, core findings, and validation status across major solid electrolyte families. Electrolyte family Representative ML ML-derived design strategy Core finding Validation status guidance Sulfide Logistic regression Multi-feature models, Computational validation (AIMD) on 21 candidates; experimental synthesis and testing of Li8 B10 S19 with 0.13 Prioritize Cl/Br/I-rich anion frameworks; avoid classifier on 20 physics-based features; not single atomistic descriptors, predict relying on single atomic screening of 12 831 ionic conductivity; descriptors; use multi-feature classifiers mS cm− 1 and 1.2 V stability candidates [ 77 ]. Cl/Br/I-based conductors generally outperform S-based and window [ 110 ]. for initial screening. O-based ones in jointly satisfying fast conduction and electrochemical stability [ 109 ]. Computational + experime",
+   "rotated_deg": 0,
+   "bbox": [
+    48.6,
+    12.3,
+    606.2,
+    788.2
+   ],
+   "w": 2154,
+   "h": 2997,
+   "dpi": 278,
+   "src": "124. AdvFunctMater_2026_Wu_ML_driven_electrolyte_interface_design_review_MAIN.pdf",
+   "blank": 0.915
+  }
+ ]
+}

@@ -28,6 +28,7 @@
 | **[Mulks24]** | **Mulks** 2024 *Chem* **10**, 2724–2744 (단독 저자, RWTH Aachen) — "**Hard and soft electrons and holes**": HSAB 를 **전자/홀의 hard–soft** 로 확장한 개념화학(HSEH). **EHR** `f^(2,±)(r)` / **EHI** `f_k^(2,±)` = 전자수에 대한 밀도(또는 원자전하)의 **2차 유한차분**, 고정 기하 단일점 3회로 계산(ORCA·DSD-BLYP-D3BJ/def2-QZVPP//PBEh-3c·기체상·Hirshfeld). **양=hard·음=soft**. ⚠ **분자 유기·유기금속 전용 — 무기 고체/황화물 적용 선례 0건, 정량 예측 모델 아님**(저자 명시). `fan2026` 리뷰 §3.1 ref [80] 의 원전 | ✅ `papers/mulks2024_hard_soft_electrons_holes.md` | **[EXTERNAL] theory framework only — 물성 4축 수치 비교 제외** |
 | **[Miao23]** | **Miao/Guan/Ma/Liangliang Li\*/Ce-Wen Nan\*** 2023 *Adv. Mater.* **35**, 2206402 (Tsinghua + USTC) — "**Role of Interfaces in Solid-State Batteries**", 21 pp **계면 전용 리뷰**. **자체 계산·실험 0**(본문에 DFT/first-principles/band gap/VBM **0회**) → **수치 행이 아니라 프레임 행으로만** 이 문서에 들어간다. 산출물 = **F1 계면 3층위** / **F2 Li·SE 계면 3유형**(열역학 안정·**MCI**·passivating SEI) / **F3 μ_c↔HOMO 정렬**(Fig 4c) + **Table 1·2·3**(압력↔성능 15행 / CAM 코팅 19행 / **Li‖SE 버퍼 27행**). **`fan2026_…ECERD2600097`(Nan 공저, 심사 중)의 3년 전 선행 리뷰** — digest §10 이 상속/신규/**누락**/상충을 전수 대조 | ✅ `papers/miao2023_role_of_interfaces_solid_state_batteries.md` | **review · 프레임 전용 — 물성 4축 *수치* 비교 제외** |
 | **[Shin26]** | **Shin/Han/Kim**(공동1저자 3인)/…/**Sangdoo Ahn\***/**Sang Uck Lee\***/**Young Whan Cho\***/**Young Joo Lee\*** 2026 ***Small* 22, e73722** (KBSI + 중앙대 화학 + KIST 수소에너지소재 + **성균관대 화공 = 이상욱 랩**) — "**Enhancing Li⁺ Ion Transport via Dynamic Coupling With Borohydride Reorientation in Li₆PS₅X Argyrodites**". **⭐⭐ 우리 물질 그 자체**(Li₆PS₅X). `Li₇₋ₓ₋ᵧPS₆₋ₓ₋ᵧ(BH₄)ₓClᵧ` 3조성 σ 16.4/7.9/0.7 mS/cm(EIS). **BH₄⁻ 는 halide/free-S²⁻ 자리(4a·4d) 점유**. **coupling 을 3중으로 측정**(⁷Li↔¹¹B SLR Ea 일치 · 회전구속 AIMD D 2–3배↓ · hop 31건 중 28건 동반). 계산은 **AIMD(VASP/PBE/Γ/80원자/500–900 K)**, 무질서 = **BH₄ 배향 4배열 Boltzmann 가중**. ⚠ **계산 σ 는 자유 파라미터 2개(χ_c 0.6↔0.8, 차원 불성립 가중식)로 지탱** — 우리가 3자리 재현해 확정 | ✅ `papers/shin2026_bh4_reorientation_li_transport_li6ps5x.md` | **exp 주(EIS·XRD-Rietveld·MAS/SLR/PFG/EXSY NMR·SEM) + AIMD 보조** — **σ·D 절대값은 소환값, 계산 σ 는 인용 금지** |
+| **[Lynch26GK]** 🔧방법 원전 · ⛔물성 4축 아님 | **D. Cory Lynch** (Wake Forest Univ. Physics, 지도 **N. A. W. Holzwarth**) **박사학위논문 2026-08** (234 pp; NSF DMR-2242959) — "A Computational Investigation of Solid Electrolyte Materials Using First Principles and Machine Learning Methodologies". **인용은 부록의 두 산출물로**: ① Lynch/Y.Li/**P. Canepa**/Holzwarth ***Phys. Rev. Materials* 8, 065401 (2024)** DOI `10.1103/PhysRevMaterials.8.065401` ② Lynch/**C.W.Tan**/**B. Kozinsky**/Holzwarth **preprint dated 2026-08-03, DOI 없음**. **계**: (thio)boracite 8종 · **Li₃.₂₅P₀.₇₅Si₀.₂₅O₄**(ML 시험대) · 아지로다이트 ZnO 3종(**미출판·중단**). **Allegro + LAMMPS NVE 2.8 ns × 속도 10 × 모델 5** 로 **full Green-Kubo σ** 와 **tracer** 를 같은 궤적에서 비교, **H_R = 0.53–1.03**. ⛔ 아지로다이트 물성값 0건 | ✅ `papers/lynch2026_greenkubo_mlip_conductivity_thesis.md` (2026-09-22, 그림 **11/20 실독**) | **[외부]** 계산 100 % (자체 실험 0) · **§J-7 방법 원전 전용** |
 | **[Zuo]** | Zuo 2022 Angew — 양극 계면 chlorination | ✅ `papers/zuo2022_chlorination_cathode_interface.md` | exp |
 | **[Qian26]** | Qian/Dean/Kochetkov/Chen/Huang/**Nazar** 2026 Angew (e9983580) — **SE 입자 유기(데칸산) 표면코팅**: 수분(39 % RH 2 h σ 91 %) + 양극(무코팅 NCM85 150cyc 96 %) + 음극(대칭셀 1000 h) 동시. **[Adeli]/[Zuo]와 동일 Waterloo/Nazar 그룹** | ✅ `papers/qian2026_decanoate_coating_lpscl_moisture_interface.md` | exp + DFT보조(슬랩 표면E·분자흡착) |
 | **[Qian25]** | **Lanting Qian⁺**/**Yangyang Huang⁺**/Dean/**Kochetkov**/**B. Singh**/**Nazar\*** 2025 *Angew. Chem. Int. Ed.* **64**, e202413591 (Univ. Waterloo; BASF+NSERC; OA CC-BY) — "**Engineering Stable Decomposition Products on Cathode Surfaces…**": **LiPO₂F₂(LiPOF) 를 NCM85 입자에 1 wt% 용액코팅(~35 nm 비정질, 소결 0)**. 근거는 **convex-hull 3종**(element profile / 닫힌 pseudo-binary / grand-potential 계면반응, VASP+pymatgen+MP). **[Adeli]→[Zuo]→본 논문(2025)→[Qian26](2026)** = Waterloo/Nazar 라인 4번째, **[Qian26] 과 1저자 동일** | ✅ `papers/qian2025_lipo2f2_coating_stable_cei.md` | DFT(hull) + exp |
@@ -931,6 +932,7 @@
 | **[Aqib26MFAL]** | `papers/aqib2026_multifidelity_active_learning_alloy_design.md` — **다중충실도 능동학습(MTGP-ICM + 비용가중 EI/KG/LCB)** (M. Aqib/K. Ravikiran/L. Li/**V. Prasad**, Univ. of Alberta, ***Mater. Des.* 263, 115520 (2026)**, CC BY-NC). 계 = **Fe-Ni-Co-Cr-V-Cu 합금 717 조성**(Rao 2022 *Science* 데이터 재사용), 목표 = **CTE 최소화 단일 스칼라**. ⚠ **자체 DFT·MD·실험 0회 — 순수 알고리즘 벤치마크.** ⛔ **황화물 아님·물성값 0개 ⇒ 물성 4축(A–D)에 수치로 넣지 않는다.** 쓰는 곳은 **§J-12 하나**. ★ **공개 코드(`github.com/aqibm08/MFAL_HEA`)로 논문 서술을 검증한 유일한 편이고, 9건이 안 맞았다** |
 | **[Basu26MFB]** | `basu2026_multifidelity_bandit_dopant_screening_funnel` — **다중충실도 밴딧 + 3단 DFT 검증 깔때기** (**arXiv:2604.10157v1**, 2026, 단독저자·미심사). 계 = **산화물 반도체 5종(ZnO·TiO₂·SrTiO₃·SnO₂·MgO) 격자 치환 도핑**, 목표물성 = **밴드갭 2.0 eV**. ⛔ **황화물 아님 — 물성 4축(A–D)에 수치로 넣지 않는다.** 쓰는 곳은 **§J-11(파이프라인 구조·다중충실도) 하나**. 자체 DFT **583계산 1차 근거**(J-10 `[Jain26Rev]` 의 2차 인용과 층위가 다르다) |
 | **[Imbalzano21]** 🔧 | `imbalzano2021_committee_uq_md_thermodynamic_averages` — **committee UQ → 열역학 평균 전파 원전** (EPFL COSMO, ⚠ **PDF 에 저널·DOI 없음**). ⚠ **물성값 0 · 물/펩타이드/페놀/Ga 전용** → 아래 **J-7** 에만 등장, A–D 축 금지. 🔴 **동역학량(D·수송) 0회 — 우리 D 인용 금지** |
+| **[Wu26MLIF]** 🔧 | `wu2026_ml_driven_electrolyte_interface_design_review` — **ML×(전해질+계면) 리뷰** (Wu/Wang 외, 샤먼대, ***Adv. Funct. Mater.* 2026, 0:e78357**, DOI `10.1002/adfm.78357`; 34 pp · Fig 16 · Table 5 · refs 148 · SI 없음). ⚠ **자체 계산 0 · 자체 실험 0 — 전량 2차 인용** → 아래 **J-20** 에만 등장, **A–D 물성축 금지**. 🔴 이 편의 값은 수치가 아니라 **우리 hull 방법에 대한 두 개의 비판**과 **§4.6 계면 설계규칙 번역표**다 |
 
 ### J-0b. ★★ [UMA] 우리 계산기의 사양서 — 원논문 대조 (2026-08-25 신설)
 
@@ -2413,6 +2415,117 @@ design 과 host 는 **다른 궤적 = 독립** ⇒ 1차 전파는 **상대 표�
 ⇒ 이 논문의 주장은 **정확도 논증이 아니라 추정량 논증**이다. 그 구분을 흐리고 인용하면 데이터가 안 받쳐준다.
 
 <sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_zaby2026_reliable_conductivity_estimates_md.md` ## ③ .</sub>
+
+**[Lynch26GK] `lynch2026_greenkubo_mlip_conductivity_thesis` — MLIP 로 full Green-Kubo σ 를 실제로 수렴시킨 편 (2026-09-22 신설)**
+
+> **D. Cory Lynch** 박사학위논문(Wake Forest, 지도 **N. A. W. Holzwarth**, 2026-08, 234 pp).
+> 인용은 부록의 두 산출물로: **PRM 8, 065401 (2024)**(boracite) · **preprint dated 2026-08-03**(Green-Kubo, **DOI 없음**).
+> ⛔ **물성 4축 금지** — 우리 계(아지로다이트)에서 잰 σ·Ea·gap·탄성이 **0건**이다.
+> 시험계는 **산화물 `Li₃.₂₅P₀.₇₅Si₀.₂₅O₄`(132원자, 질서배열 2개)** 이고, 아지로다이트 절은 **미출판·중단**이다.
+
+**a. 규약 대조 — 우리 MLIP-MD 스택 vs 이 논문**
+
+| 축 | **[Lynch26GK]** | 우리 (UMA 스택) | 판정 |
+|---|---|---|---|
+| MLIP | **Allegro** 전용학습(24.5 k–91 k params, r_cut 6.0 Å) | **UMA-s-1p1(omat)** 범용·무파인튜닝 | 🔀 노선 자체가 다르다 |
+| 앙상블 | **NVE** (써모스탯 없음 — *재현성* 목적, 부피고정→고압 자인) | **Langevin NVT**(friction 0.02) | ⚠ Langevin 은 **집단 전하흐름에 잡음 주입** ⇒ full σ 를 재면 우리가 불리 |
+| dt | **0.5 fs** | **2 fs** | ⚠ 4배 — UMA 로 검증된 값이나 **GK 용으로는 미검증** |
+| 생산 길이 | **2.8 ns** | **200 ps** | 🔴 **14배** |
+| 온도 | 목표 350/450/550 K (**실측 T̄ 373/470/565 K**) | **600/800/1000 K** | 🔴 우리는 그들이 *"Lyapunov 로 못 믿겠다"* 한 550 K 보다 **전부 위** |
+| 적합 | Λ(τ) 를 **`f₀+f₁/τ` 로 τ→∞ 외삽** | **MSD 2–50 ps 고정창 OLS** | 🔴 **보고량이 다르다** (극한 vs 고정창) |
+| 블록 표본 | **모든 τ 에 M≈10⁵ 고정** | **단일 시간원점** | 🔴 `[McC25D]` 판정과 같은 방향 |
+| 시드 | **초기속도 10 × 모델 5** | 속도 3(600 K) · 모델 1 | 🔴 양쪽 다 부족 |
+| σ 정의 | **full GK(교차항 포함) + tracer 둘 다** | **tracer + NE, H_R = 1** | 🔴 그들이 *"불충분"* 이라 한 쪽만 쓴다 |
+| MSD 기준계 | **골격 전하중심 `r_corr(t)` 를 뺀다**(full 과 논리일관 목적) | 빼지 않는다 | ⚠ 그들도 *"대개 작다"* — 우리 쪽 크기는 **미측정** |
+| 학습데이터 | FPMD 100/400/600/900 K **1:1:2:2** · **낮은 tol 로 뽑고 엄격 tol 로 재계산** · E·F·**응력** 필수 · **close-pair ~400 추가** | 해당 없음(범용 모델) | ★ **재계산 규율**은 우리가 파인튜닝할 날 그대로 베낄 것 |
+| 무질서 | **대칭 유지 질서배열 손열거** (아지로다이트는 24g 완전점유 vs 48h 50 % 두 출발) | **disorder_ensemble** | ✅ **우리가 낫다** |
+| 하드웨어 재현성 | CPU 고정(AMD) · **AMD↔Intel 은 ~1 ps 뒤 갈림** · **GPU 는 매 런 다름** | GPU(UMA) — **미점검** | ⚠ 우리가 안 본 축 |
+
+**b. ★★ Haven 비 — 우리 db 의 부호 논쟁에 표본 하나 추가** *(고체 vs 액체의 갈림이 이 편으로 더 굳는다)*
+
+| 출처 | 계 | **H_R = σ_tr/σ_full** | σ_full/σ_tr | 방법 |
+|---|---|---|---|---|
+| **[Adeli]** | Li₆₋ₓPS₅₋ₓCl₁₊ₓ | **0.23 – 0.30** | 3.3 – 4.3 × | 실험(⁷Li PFG + EIS) |
+| **[Fang22PW]** | Li₆POS₄(SH) / Li₆.₂₅PS₅.₂₅(BH₄)₀.₇₅ | 0.769 / 0.667 | 1.30 / 1.50 × | AIMD |
+| **[Lynch26GK]** ← 신규 | Li₃.₂₅P₀.₇₅Si₀.₂₅O₄ (**산화물**) | **0.53 – 1.03** (모델평균 0.60–0.77) | **1.0 – 1.9 ×** | **MLIP full GK** |
+| 우리 자체 | modelc | 0.84 ± 0.06 (`citable:false`) | 1.19 × | MLIP |
+| **[Zaby26σ]** | 이온액체 · 에테르 전해질 | **1.3 – 2.1** | 0.5 – 0.8 × | 고전 MD |
+
+⇒ **판정 갱신**: **고체 Li 전도체는 지금까지 전부 H_R < 1**(= tracer/NE 가 σ 를 **과소**평가),
+**액체만 H_R > 1**. `[Zaby26σ]` 의 *"NE 는 과대"* 를 우리 계로 옮기지 말라는 앞선 판정에 **한 표 더**.
+단 크기가 **1.2–4.3 배**로 여전히 벌어져 있어 **σ 절대값 인용 금지는 유지**되고,
+우리 자체 0.84 는 이 분포 안에 무난히 든다.
+
+**c. 🔴 digest 재계산 — 원논문이 보고하지 않은 모델 시드 산포** *(`Table VII`/`VIII`/`IX` 의 5개 값으로 낸 표본통계)*
+
+| 양 (구조 S1) | 350 K 목표 (T̄ 373 K) | 550 K 목표 (T̄ 565 K) |
+|---|---|---|
+| σ_full 범위 | **1.56 – 6.70 mS/cm** | 52.19 – 77.11 |
+| **max/min** | **4.29 ×** | 1.48 × |
+| CV = sd/mean | **49.2 %** | 14.7 % |
+| σ_tr CV | 38.2 % | 5.5 % |
+
+- **이건 초기속도 10개를 이미 평균한 뒤 남은 산포다** — 즉 **순수 MLIP 학습 시드 효과**.
+  (S2 는 1.80 ×·CV 30.1 % 로 덜하다. 두 값을 같이 인용할 것.)
+- **E_a^full 모델 산포**: S1 **226.34 – 388.03 meV(sd 60.0)** · S2 241.11 – 322.47(sd 32.2).
+  ⛔ 논문이 보고한 오차막대(±41.32 / ±13.53 meV)는 **실제 모델 산포보다 1.45× / 2.38× 작다**.
+- ★ **저온의 역설 (논문이 짚지 않은 것)**: 저자 결론은 *"저온이 Lyapunov 를 줄여 안전하다"* 인데,
+  **같은 표의 모델 간 산포는 저온에서 3배 커진다**. 물리적으로 자연스럽다 — 저온에선 2.8 ns 안의 hop 수가 적다.
+  ⇒ 정확한 명제 = **"저온은 τ-수렴을 사고 hop 통계를 판다."**
+
+**d. 🔧 우리 파이프라인에 그대로 걸리는 것 3건**
+
+1. **우리 2–50 ps 창이 평탄부 안인지 한 번도 확인 안 했다.** `Fig. 11` 실독: 그들 계의 Λ^tr 은
+   **τ ≈ 200 ps 에서야 평평**해진다(373 K). 우리는 온도가 높아 더 빠를 것이나 **잰 적이 없다.**
+   ⇒ **액션**: modelc 600 K 궤적 하나에서 `MSD(τ)/(6τ)` 를 τ = 2 → 200 ps 로 그려 평탄 시작점을 잰다.
+   **`tools/ionic/` 기존 도구에 τ-스캔 플래그 추가**(새 파일 금지 — 코드 규율 사다리 ③).
+2. **우리 온도격자(600/800/1000 K)는 full σ 를 재기 시작하면 부적절**하다.
+   ⛔ 단 **tracer D 에는 이 논문이 불리한 근거를 주지 않는다** — 그들 Λ^tr 은 550 K 에서도 수렴했다.
+   정확한 명제: *"위험한 것은 **full σ 를 잴 때**다."*
+3. **모델 시드 산포를 우리는 구조적으로 못 본다** (UMA 하나만 쓴다).
+   ⛔ 이것을 *"우리는 안정적"* 으로 읽으면 안 된다 — **재지 않은 것**이다.
+   우리 쪽 대응물은 **모델 committee**(`[Wang25DPA]`·`[Chang26]`·`[Carrete23UQ]` 축)이고,
+   이 편이 그 축에 **"모델 시드만으로 4.3배"** 라는 정량 근거를 하나 보탠다.
+
+**e. ✅ 우리 규율을 지지하는 것**
+
+- **`Fig. 10` vs `Fig. 11` 실독**: 같은 궤적·같은 τ 인데 **교차항 하나가 수렴성을 가른다** —
+  full 은 550 K 에서 τ=1400 ps 까지 약 **6배 산포**, tracer 는 세 온도 다 τ≈200 ps 에 평탄.
+  ⇒ 우리가 **tracer 만 재고 σ 절대값을 안 쓰는 선택**은 이 논문 기준으로 **정합적**이다.
+- **`Fig. 5` 실독**: 900 K 에서 **고장이 ~900 ps 뒤 시작해 1.4 ns 에 폭주**했다.
+  우리 prod 200 ps 는 이런 고장을 **구조적으로 못 본다** ⇒ **고온 장시간 스크리닝 1회를 계당 게이트로** (저비용).
+- **ESW 부동태화 논증**(PRM 2024): 계산 창 **2.369 V** ↔ 실험 **4.3 V** 의 괴리를
+  *"분해산물이 전자절연성이라 자기제한"* 으로 설명 — **우리 "grand-potential ESW = worst-case 하한" 규율의 독립 선례**.
+  ★ 도구도 같다(**pymatgen grand canonical potential**, 0–5 V 균일 스캔).
+- **황화물 anodic 한계 2.117 – 2.491 V**(B–S 골격) ↔ **우리 comp1/modelc 2.256 V**(P–S 골격).
+  ✅ **같은 대역, 같은 기전(S²⁻ 산화 = 축 ①)**. ⛔ 골격이 달라 **값 대 값 인용 금지** — "황화물이면 2.1–2.5 V 대"까지만.
+
+**f. ⛔ [Lynch26GK] 에서 인용하면 안 되는 것**
+
+- **σ·E_a·H_R 절대값을 아지로다이트 문장에** — 산화물 인산/규산염 · 132원자 · 질서배열 2개.
+- **`Table 5.4` 의 ΔE_F(−2.3/−3.6/−3.4 eV)를 도핑 선호도 근거로** — 셀당 총에너지이고 **전구체 집합이 서로 다르다**.
+  *digest 재계산*으로 균형반응을 복원해야 한다:
+  `Li₂₄P₄S₂₀Cl₄ + ZnO → Li₂₂P₄S₁₉Cl₄ZnO + Li₂S` = **−1.3 eV/셀**(결론은 살아남음) ·
+  `Li₂₂P₄S₁₉Cl₄ZnO + LiCl → Li₂₁P₄S₁₈Cl₅ZnO + Li₂S` = **+0.2 eV/셀 = +4 meV/atom**(**분해능 밖**, "Cl-rich 불리" 로 읽지 말 것).
+- **§5.4 를 "Si 도핑" 으로** — 절 제목과 `Fig. 16` 캡션이 Zn 을 "silicon" 이라 적은 **템플릿 잔재**다(그림 실독으로 확인).
+- **§1.4.2 의 ZnO 선행연구 [26]** — 그 [26] 은 **MEGNet 논문**(Chen/Ye/Zuo/Zheng/**Ong**, *Chem. Mater.* 31, 3564 (2019))이다.
+  저자·연도만 맞는 **인용 충돌** ⇒ 우리 규율 *"인용 역할 확인 후 삽입"*(2026-07 Kim/Cui 교훈)의 정확한 재현.
+- **이 논문의 LPSCl 기준선** — Deiseroth 2011 재수록(`Fig. 20` figure-read **E_A 0.38(2) eV**, RT σ ≈ **1.3×10⁻⁶ S/cm**)이라
+  **현대 최적화 LPSCl(1–10 mS/cm)보다 3 자릿수 낮다**.
+- **"close-pair 400개" 를 규칙화** — 저자 근거가 *"정성적으로 실패 수가 줄어 보인다"* 뿐이다(대조군·n 없음).
+- **"검증오차 = 내삽능력"** — 10점 산점도, R² 미보고, 같은 WS 에서 ΔE 가 **1–53 meV** (`Fig. 9` 실독).
+- **a = 9.8/9.7 Å 를 PBEsol 평형격자로** — *"실험과 일치시키려 cubic 으로 구성 후 **격자벡터 고정** 이온완화"* 라
+  계산값인지 실험 입력값인지 논문이 구분하지 않는다.
+
+**🔎 확보 후보 (이 편 경유)**
+- ref [88] **Jang, Rajagopal, Kang, Ryu (2023) *J. Alloys Compd.* 957, 170273** — `Li₆₋₂ₓZnₓPS₅₋ₓOₓCl` 실험.
+  **우리 Nd/O 도핑 축의 Zn/O 대조군**이 될 수 있다. 미보유.
+- ref [20] **Kaup, Bishop, Assoud, Liu, Nazar (2021) *JACS* 143, 6952** — Li₆B₇S₁₃I, 제목에
+  *"argyrodite-like lithium substructure"*. **boracite ↔ 아지로다이트를 잇는 고리**이자 [Adeli]/[Zuo] 와 같은 Nazar 그룹. 미보유.
+- ref [23] **Deng, Eames, …, Grey, Masquelier, Islam (2015) *JACS* 137, 9136** — 시험계 원전(Li₄SiO₄–Li₃PO₄). 미보유.
+
+<sub>> 📎 2026-09-22 litdb-curator 신설 · 그림 20장 크로핑 중 **11장 실독** · digest `papers/lynch2026_greenkubo_mlip_conductivity_thesis.md`</sub>
+
 
 
 **[Hu26ICAL] `hu2026_foundation_model_surrogates_active_learning`** — 능동학습 **대리모형·획득함수·UQ 캘리브레이션 지표**의
