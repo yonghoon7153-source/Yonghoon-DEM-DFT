@@ -43,6 +43,7 @@ IO = ROOT / "src" / "io.py"
 MR = ROOT / "docs" / "22p_gap" / "mutation_replay.py"
 ARCHIVE = ROOT / "tools" / "archive_bundle.py"                     # 62차 ζ′
 G63T = ROOT / "tests" / "test_gate63_defensive.py"                 # 64차 E2-R
+IF = ROOT / "tests" / "interpreter_fixture.py"                      # 65차 T1
 
 #: ★ 46차 #9 조건 9 — 변이는 **작업 트리에 손대지 않는다.** 45차 runner 는
 #:   실제 저장소 파일을 고쳤다가 `finally` 로 되돌렸다. 그러면 (a) 중단되면
@@ -1636,20 +1637,57 @@ MUTANTS = [
     #   셋 다 **정상 입력**에서 우리 층이 거부하거나 실패한 축이다. 그래서 변이는
     #   "옛 규칙으로 되돌리면 정상 사례가 다시 빨갛다" 모양이고, 증인도 정상
     #   환경의 문구다. MR 자기 변이는 철자를 escape 한다.
+    #   65차: N1 의 지점은 `_parent_customization_view` 의 조건 분기에서 판정 함수의
+    #   `auto` 로 옮겨 갔다 (조건은 재생 문맥의 필드가 됐다). 변이는 "조건을 무시하고
+    #   항상 자동 import 를 기대한다" — 비활성+미로드 정상 영수증이 다시 거부된다.
     ("usercustomize-follows-the-startup-activation-g64", MR,                 # N1
-     '        if n == "\u0075sercustomize" and not _user_site:',
-     '        if False:',
+     '        auto = n == "sitecustomize" or bool(ctx["\u0075ser_site"])   # startup 이 자동 import 하는가',
+     '        auto = True   # startup 이 자동 import 하는가',
      "a_child_with_user_site_disabled_matches_the_parent or "
      "a_disabled_user_site_receipt_passes_the_parent_assertion"),
     ("customization-reads-origins-like-the-rest-g64", MR,                    # N2
-     '        cust[n] = _\u0068ash_origin(\n'
-     '            f, getattr(getattr(m, "__spec__", None), "loader", None)\n'
-     '               or getattr(m, "__loader__", None)) if f else "<absent>"',
-     '        cust[n] = _d(f) if f else "<absent>"',
+     '            cust[n] = _\u0068ash_origin(\n'
+     '                f, getattr(_spec, "loader", None) or getattr(m, "__loader__", None))',
+     '            cust[n] = _d(f)',
      "a_zip_customization_is_measured_not_failed"),
     ("the-probe-control-asserts-both-directions-g64", G63T,                  # E2-R
      "    assert _kernel_lock_held_at(p) is False          # ★ 음성 대조군 (64차 E2-R)",
      "    assert _kernel_lock_held_at(p) in (True, False)  # 음성 축을 지운다",
+     "the_committed_probe_control_asserts_both_directions"),
+
+    # ── 65차 (N1a · N1b · N2b · T1 · E2-R 후속) ─────────────────────────────
+    #   64차 종결의 **부분 수용** — 원 사례는 닫혔지만 고치면서 세운 등식이 틀렸다.
+    #   변이는 그 틀린 등식으로 되돌린다. 증인은 시험의 고정 문구다 (production 문구·
+    #   digest·경로를 담지 않는다 — 64차 ① 회차의 교훈).
+    ("explicit-import-is-an-ordinary-import-g65", MR,                        # N1a
+     '            elif not \u006coaded_file:\n'
+     '                bad.append(f"{n}: child 가 바이트를 냈는데 startup 이력에 없다")',
+     '            elif not loaded_file or not auto:\n'
+     '                bad.append(f"{n}: child 가 바이트를 냈는데 startup 이력에 없다")',
+     "a_disabled_interpreter_with_an_explicit_import_is_accepted"),
+    ("search-path-comes-from-the-replay-context-g65", MR,                    # N1b
+     '    dirs = list(ctx["\u0073earch_path"])',
+     '    dirs = [p for p in sys.path if p]',
+     "a_relative_pythonpath_is_resolved_in_the_replay_cwd or "
+     "the_parents_sys_path_is_not_the_childs_search_path"),
+    ("namespace-is-loaded-code-free-not-absent-g65", MR,                     # N2b
+     '        elif _locs is not None:\n'
+     '            cust[n] = "<namespace>:" + _\u006eamespace_identity(list(_locs))',
+     '        elif _locs is not None:\n'
+     '            cust[n] = "<absent>"',
+     "a_namespace_usercustomize_is_measured_and_accepted"),
+    #   T1 의 변이는 fixture 가 활성 조건을 **안 만드는** 것이다 — 64차 대조군이 하던 대로
+    #   "환경변수만 지우면 활성" 이라고 가정하는 셈. 전제 시험의 [True] 가 빨개져야 한다.
+    ("the-fixture-measures-its-premise-g65", IF,                             # T1
+     '        args.append("--system-site-packages")      # CPython site.venv(): 이것이 활성 조건이다',
+     '        pass      # 활성 조건을 만들지 않는다 (64차 대조군의 가정)',
+     "the_interpreter_fixture_measures_its_own_premise"),
+    #   token 음성을 지우면 g64 의 AST 대조군도 같이 빨개진다 (65차부터 탐침별로 센다).
+    ("the-token-probe-negative-is-asserted-g65", G63T,                       # E2-R 후속
+     "        assert _kernel_lock_held(tok) is False       # ★ token 판의 음성 (65차)",
+     "        assert _kernel_lock_held(tok) in (True, False)  # 음성 축을 지운다",
+     "the_committed_control_asserts_the_token_probe_negative or "
+     "a_constant_true_token_probe_is_caught_by_the_committed_control or "
      "the_committed_probe_control_asserts_both_directions"),
 ]
 
@@ -4973,7 +5011,7 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_gate64_defensive.py::test_the_committed_probe_control_asserts_both_directions":
-                "AssertionError: ('커밋된 대조군이 한쪽만 고정한다 \u2014 원장 문구가 시험보다 강하다 (E2-R)', [True, True])",
+                "AssertionError: ('커밋된 대조군이 한쪽만 고정한다 — 원장 문구가 시험보다 강하다 (E2-R)', ['_kernel_lock_held_at'])",
         }
     },
     "usercustomize-follows-the-startup-activation-g64": {
@@ -4983,9 +5021,67 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_gate64_defensive.py::test_a_child_with_user_site_disabled_matches_the_parent":
-                "AssertionError: \ubd80\ubaa8\uac00 startup \uc774 \uc2e4\ud589\ud558\uc9c0 \uc54a\ub294 \ubaa8\ub4c8\uc758 digest \ub97c \ub0b8\ub2e4 (N1)",
+                "AssertionError: 부모가 startup 이 실행하지 않는 모듈의 digest 를 기대해 정상 영수증을 거부했다 (N1)",
             "tests/test_gate64_defensive.py::test_a_disabled_user_site_receipt_passes_the_parent_assertion":
                 "AssertionError: user site 가 꺼졌는데 부모가 usercustomize 를 기대해 정상 영수증이 거부됐다 (N1)",
+        }
+    },
+
+    # ── 65차 (N1a · N1b · N2b · T1 · E2-R 후속) ─────────────────────────────
+    #   증인은 전부 시험의 **고정 문구**다 — production reason·digest·경로를 담지 않는다.
+    #   token 축은 g64 의 AST 대조군(탐침별로 센다)도 함께 빨개진다 — 선언에 넣었다.
+    "explicit-import-is-an-ordinary-import-g65": {
+        "fail": [
+            "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted",
+        ],
+        "witness": {
+            "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted":
+                "AssertionError: user site 가 꺼졌어도 정상 sitecustomize 의 `import usercustomize` 는 평범한 import 다 — 부모가 그 영수증을 거부했다 (G65-N1a)",
+        }
+    },
+    "namespace-is-loaded-code-free-not-absent-g65": {
+        "fail": [
+            "tests/test_gate65_defensive.py::test_a_namespace_usercustomize_is_measured_and_accepted",
+        ],
+        "witness": {
+            "tests/test_gate65_defensive.py::test_a_namespace_usercustomize_is_measured_and_accepted":
+                "AssertionError: 정상 namespace customization 이 이력을 failed 로 만든다 (G65-N2b)",
+        }
+    },
+    "search-path-comes-from-the-replay-context-g65": {
+        "fail": [
+            "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd",
+            "tests/test_gate65_defensive.py::test_the_parents_sys_path_is_not_the_childs_search_path",
+        ],
+        "witness": {
+            "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd":
+                "AssertionError: 부모가 상대 PYTHONPATH 를 호출자 cwd 로 풀었다 — 재생 문맥이 둘이다 (G65-N1b)",
+            "tests/test_gate65_defensive.py::test_the_parents_sys_path_is_not_the_childs_search_path":
+                "AssertionError: 부모가 자기 sys.path 의 usercustomize 를 child 것으로 기대했다 (G65-N1b)",
+        }
+    },
+    "the-fixture-measures-its-premise-g65": {
+        "fail": [
+            "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        ],
+        "witness": {
+            "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]":
+                "AssertionError: assert False is True",
+        }
+    },
+    "the-token-probe-negative-is-asserted-g65": {
+        "fail": [
+            "tests/test_gate64_defensive.py::test_the_committed_probe_control_asserts_both_directions",
+            "tests/test_gate65_defensive.py::test_a_constant_true_token_probe_is_caught_by_the_committed_control",
+            "tests/test_gate65_defensive.py::test_the_committed_control_asserts_the_token_probe_negative",
+        ],
+        "witness": {
+            "tests/test_gate64_defensive.py::test_the_committed_probe_control_asserts_both_directions":
+                "AssertionError: ('커밋된 대조군이 한쪽만 고정한다 — 원장 문구가 시험보다 강하다 (E2-R)', ['_kernel_lock_held'])",
+            "tests/test_gate65_defensive.py::test_a_constant_true_token_probe_is_caught_by_the_committed_control":
+                "Failed: DID NOT RAISE AssertionError",
+            "tests/test_gate65_defensive.py::test_the_committed_control_asserts_the_token_probe_negative":
+                "AssertionError: ('커밋된 대조군이 token 탐침의 음성을 고정하지 않는다 (E2-R 후속)', [True, True])",
         }
     },
 }
@@ -5168,6 +5264,21 @@ BOUND_INPUT_GLOBS = ("requirements*.txt", "configs/*.yaml", "scripts/*.sh",
 #:   것은 그것이 **어느 프로세스에서 재도 같은** 면이기 때문이다. `sys.modules`
 #:   전체를 재면 `python -c` 와 pytest child 가 다른 값을 내고, 그러면 증언이
 #:   서로 대조될 수 없다 (그 대조가 L12 의 핵심이다).
+#: ★ 65차 N2b — namespace package 의 **identity**. 코드가 없는 module 이므로 바이트가
+#: 없다 — 대신 **종류 + 검색 위치**(`__path__` / `submodule_search_locations`, 절대
+#: 경로로 정규화)에 결속한다. 다른 자리의 빈 디렉터리는 다른 값이다. child(탐침)와
+#: 부모가 **같은 문자열**을 실행한다 — 규칙을 두 곳에 적으면 언젠가 어긋난다
+#: (`_FRAMED_PARSER_SRC` 와 같은 방식).
+_NAMESPACE_IDENTITY_SRC = '''
+def _namespace_identity(locs):
+    """namespace package 의 identity — `<namespace>:` 뒤에 붙는 hex16 (65차 N2b)."""
+    import hashlib as _hl, os as _os
+    _norm = [_os.path.normcase(_os.path.normpath(_os.path.abspath(str(p)))) for p in locs]
+    return _hl.sha256("\\n".join(_norm).encode("utf-8")).hexdigest()[:16]
+'''
+exec(_NAMESPACE_IDENTITY_SRC)     # noqa: S102 — 위 문자열이 정본이다 (부모도 같은 규칙)
+
+
 _ENV_PROBE_BODY = '''
 # ★ 59차 M14 — **시작 시 올라온 module 집합을 맨 먼저 찍는다.**
 #   이 본문은 `python -c` 스크립트의 첫 줄부터 실행되므로, 이 시점의
@@ -5175,7 +5286,7 @@ _ENV_PROBE_BODY = '''
 #   (`sitecustomize` 가 끌어온 것도, 그것이 다시 끌어온 것도 여기 있다).
 #   이름 세 개를 세던 58차 목록으로는 겹수만큼 구멍이 남았다.
 _STARTUP_MODULES = sorted(__import__("sys").modules)
-
+''' + _NAMESPACE_IDENTITY_SRC + '''
 
 class _Unreadable(Exception):
     """읽지 못한 바이트 — 그 섹션은 `measured` 가 아니다 (62차 P1-4)."""
@@ -5223,13 +5334,32 @@ def _env_facts_measured(NAMES):
     #   (표준 zipimport) 를 OS 파일로 열려다 `[Errno 20] Not a directory` 로 죽고
     #   영수증 전체가 `failed` 였다. 읽기 실패는 여전히 `_Unreadable` → typed
     #   `failed` 다 — 예외를 `<absent>` 로 바꿔 정상으로 취급하지 않는다.
+    # ★ 65차 N2b — **상태를 넷으로 가른다**: 안 올라왔다(`<absent>`) · 올라왔고 바이트가
+    #   있다(hex16 — 파일·ZIP) · 올라왔는데 코드가 없다(`<namespace>:hex16` — 표준
+    #   namespace package, `__file__ None`) · 올라왔는데 origin 도 검색 위치도 없다
+    #   (`_Unreadable` → typed `failed`). 64차 판은 `__file__` 부재를 전부 `<absent>` 로
+    #   접었고, 아래 이력 검사가 "올렸다는데 <absent>" 를 모순으로 보아 **정상 namespace
+    #   customization 이 failed** 였다 (리뷰어 실측). "origin 없는 module 은 전부 정상"
+    #   으로 넓히지 않는다 — 넷째 상태는 여전히 못 잰 것이다.
     cust = {}
     for n in ("site", "sitecustomize", "usercustomize"):
         m = sys.modules.get(n)
-        f = getattr(m, "__file__", None) if m is not None else None
-        cust[n] = _hash_origin(
-            f, getattr(getattr(m, "__spec__", None), "loader", None)
-               or getattr(m, "__loader__", None)) if f else "<absent>"
+        if m is None:
+            cust[n] = "<absent>"                    # 안 올라왔다
+            continue
+        _spec = getattr(m, "__spec__", None)
+        f = getattr(m, "__file__", None) or getattr(_spec, "origin", None)
+        _locs = getattr(_spec, "submodule_search_locations", None)
+        if f in ("built-in", "frozen"):
+            cust[n] = "<%s>" % f                   # 부모가 대조할 바이트가 없다 — 거부된다
+        elif f:
+            cust[n] = _hash_origin(
+                f, getattr(_spec, "loader", None) or getattr(m, "__loader__", None))
+        elif _locs is not None:
+            cust[n] = "<namespace>:" + _namespace_identity(list(_locs))
+        else:
+            raise _Unreadable("%s 은 올라와 있는데 origin 도 검색 위치도 없다 — "
+                              "무엇이 실행됐는지 잴 수 없다" % n)
 
     dirs = []
     for get in (getattr(site, "getsitepackages", None),
@@ -5587,50 +5717,78 @@ def _run_probe(tail_expr: str, cwd, what: str) -> dict:
         raise _ReplayError(f"{what} 탐침의 출력을 받을 수 없다: {exc}") from None
 
 
-def _parent_user_site_enabled() -> bool:
-    """재생 인터프리터의 startup 이 `usercustomize` 를 **실제로 자동 import 하는가**
-    (64차 N1).
+def _replay_context(cwd=None) -> dict:
+    """탐침·재생·부모 대조가 **공유하는 하나의 재생 문맥** (65차 N1b · 64차 N1).
 
-    Python 의 `site.main()` 은 `execusercustomize()` 를 `ENABLE_USER_SITE` 가 참일
-    때만 부른다. 그러므로 "resolver 가 이름을 찾는다" 와 "startup 이 그것을 실행한다"
-    는 다른 물음이고, 부모의 판정은 **뒤쪽**을 따라야 한다.
+    같은 실행 파일·같은 env 문자열만으로는 경로 해석 문맥이 같아지지 않는다 (리뷰어
+    실측): child 는 재생 cwd(sandbox) 에서 `-c` 로 뜨므로 `sys.path[0]` 은 **그 cwd** 고,
+    상대 `PYTHONPATH` 항목도 그 cwd 로 풀린다. 64차 판의 부모는 원시 상대 문자열을
+    **자기 cwd** 로 풀고, 거기에 **pytest 가 얹은 자기 `sys.path`** 를 child 의 검색
+    경로라고 가정했다 — 두 정상 영수증이 거부됐다.
 
-    조건을 이 프로세스에서 읽지 않고 **재생이 실제로 띄우는 것과 같은 실행 파일·같은
-    env** 로 인터프리터를 하나 띄워 묻는다 — 부모 프로세스는 pytest 가 온갖 플래그로
-    띄운 것이라 child 의 조건과 다를 수 있다. 영수증 child 의 자기 증언은 쓰지 않는다
-    (그것을 믿으면 세탁 통로가 된다).
+    그래서 문맥을 **한 번, 한 곳에서** 잰다: 재생이 실제로 띄우는 것과 같은 실행 파일 ·
+    같은 argv 모양(`-c`) · 같은 env · 같은 cwd 로 인터프리터를 하나 띄워
+    `site.ENABLE_USER_SITE` · `sys.path` · `os.getcwd()` · `site.__file__` 를 받고,
+    `sys.path` 를 그 cwd 기준 절대 경로로 정규화한다. 부모 프로세스의 어떤 값도 child
+    의 것이라고 가정하지 않는다 (부모는 pytest 가 온갖 플래그로 띄운 프로세스다).
 
-    못 재면 fail-closed — 조건을 모르면 대조 규칙을 정할 수 없다.
+    영수증 child 의 자기 증언은 쓰지 않는다 — 그것을 믿으면 세탁 통로가 된다. 이 보조
+    인터프리터도 같은 startup 코드를 실행한다는 점은 64차와 같다: 부모가 **독립적으로**
+    믿는 것은 여기서 받은 경로 위의 **바이트를 부모가 직접 읽은 값**이고, 이 문맥은
+    그 바이트를 어디서 읽을지를 정한다.
+
+    못 재면 fail-closed — 문맥을 모르면 대조 규칙을 정할 수 없다.
     """
+    cwd = pathlib.Path(cwd) if cwd is not None else _sandboxed(ROOT)
     frame = _new_frame()
-    src = ("import json, site\n"
-           f"print({frame!r} + json.dumps({{'enabled': bool(site.ENABLE_USER_SITE)}}) "
+    src = ("import json, os, site, sys\n"
+           f"print({frame!r} + json.dumps({{'enabled': bool(site.ENABLE_USER_SITE), "
+           "'path': [p for p in sys.path if isinstance(p, str)], 'cwd': os.getcwd(), "
+           "'site_file': getattr(site, '__file__', None)}) "
            f"+ {frame!r})\n")
-    r = subprocess.run([sys.executable, "-c", src], cwd=ROOT, env=replay_env(),
+    r = subprocess.run([sys.executable, "-c", src], cwd=str(cwd), env=replay_env(),
                        capture_output=True, text=True, timeout=300)
     if r.returncode != 0 or not r.stdout.strip():
         raise _ReplayError(
-            "재생 인터프리터의 user-site 활성 조건을 재지 못했다 "
-            f"(rc={r.returncode}): {r.stderr[-300:]} — 조건을 모르면 customization "
-            "대조 규칙을 정할 수 없다 (64차 N1)")
+            "재생 문맥(user-site 활성 조건 · 검색 경로 · cwd)을 재지 못했다 "
+            f"(rc={r.returncode}): {r.stderr[-300:]} — 문맥을 모르면 customization "
+            "대조 규칙을 정할 수 없다 (64차 N1 · 65차 N1b)")
     try:
-        return bool(_parse_framed_receipt(r.stdout, frame)["enabled"])
+        got = _parse_framed_receipt(r.stdout, frame)       # noqa: F821
+        enabled, path, child_cwd, site_file = (
+            bool(got["enabled"]), list(got["path"]), str(got["cwd"]), got["site_file"])
     except (ValueError, KeyError, TypeError) as exc:
         raise _ReplayError(
-            f"user-site 활성 조건의 출력을 받을 수 없다: {exc} (64차 N1)") from None
+            f"재생 문맥의 출력을 받을 수 없다: {exc} (64차 N1 · 65차 N1b)") from None
+    if not site_file or not os.path.isfile(site_file):
+        raise _ReplayError(
+            f"재생 인터프리터의 site 파일을 찾을 수 없다: {site_file!r} (65차 N1b)")
+    # `-c` 의 `sys.path[0]` 은 `''` — child 의 cwd 다. 상대 항목도 child 의 cwd 로 푼다.
+    search = []
+    for p in path:
+        q = child_cwd if p == "" else (p if os.path.isabs(p) else os.path.join(child_cwd, p))
+        search.append(os.path.normpath(q))
+    return {"executable": sys.executable, "argv": ["-c"], "cwd": child_cwd,
+            "env": replay_env(), "user_site": enabled, "search_path": search,
+            "site_file": site_file}
 
 
-def _parent_customization_view() -> dict:
-    """부모가 **자기 프로세스에서** 잰 customization (62차 자체 리뷰 F1).
+def _parent_user_site_enabled() -> bool:
+    """재생 인터프리터의 startup 이 `usercustomize` 를 **자동 import 하는가** (64차 N1).
+    65차부터는 재생 문맥의 한 필드다 — `_replay_context()["user_site"]`."""
+    return _replay_context()["user_site"]
 
-    child 가 `sys.modules` 의 `site`·`sitecustomize`·`usercustomize` 의 `__file__`
-    을 해시하는 것을 부모는 **같은 검색 순서로 파일을 찾아** 재현한다: 재생 env
-    의 `PYTHONPATH` 항목 → 부모의 `sys.path` (child 도 같은 인터프리터라 stdlib ·
-    site-packages 자리가 같다). 첫 번째로 찾은 파일이 child 가 import 한 것이다.
-    `site` 는 같은 인터프리터의 같은 파일이다.
+
+def _parent_customization_view(ctx: dict | None = None) -> dict:
+    """부모가 **자기 프로세스에서** 잰 customization 의 **후보** (62차 자체 리뷰 F1).
+
+    child 가 `sys.modules` 의 `site`·`sitecustomize`·`usercustomize` 를 해시하는 것을
+    부모는 **child 와 같은 검색 경로에서 resolver 로 파일을 찾아** 재현한다. 값은 child
+    가 그 이름을 올렸다면 적어야 하는 것 — hex16(파일·ZIP 바이트) · `<namespace>:hex16`
+    (코드 없는 표준 namespace) · `<absent>`(찾을 수 없다). **후보**다: 실제로 올라왔는지
+    는 이 함수가 아니라 `_assert_customization_matches_parent` 가 조건·이력과 함께
+    판정한다 (65차 N1a — 세 상태를 가른다).
     """
-    import site as _site
-
     def _d(p):
         h = hashlib.sha256()
         with open(p, "rb") as fh:
@@ -5644,64 +5802,114 @@ def _parent_customization_view() -> dict:
     #   시스템 `sitecustomize.py` digest 를 돌려줘 정상 환경을 불일치로 거부했다
     #   (리뷰어 실측: package `2f10edcf…` vs 부모 `43d81125…`). 같은 순서의
     #   path 목록을 `PathFinder.find_spec` 에 주면 `.py` · package · 앞/뒤 root
-    #   전부 child 와 같은 규칙이다. namespace package(origin 없음)는 실행할
-    #   코드가 없으므로 child 의 `__file__ None` 과 같이 `<absent>` 다. 파일이
-    #   아닌 origin(zip) 은 loader 에게 바이트를 묻고, 못 주면 지원하지 않는
-    #   loader 로 **거부**한다 — 모르는 것을 `<absent>` 로 적지 않는다.
+    #   전부 child 와 같은 규칙이다. 파일이 아닌 origin(zip) 은 loader 에게 바이트를
+    #   묻고, 못 주면 지원하지 않는 loader 로 **거부**한다 — 모르는 것을 `<absent>`
+    #   로 적지 않는다.
+    # ★ 64차 N1 — 찾을 수 있는 모듈 ≠ startup 이 실행한 모듈. 그 조건(`ENABLE_USER_SITE`)
+    #   은 65차부터 재생 문맥의 필드(`ctx["user_site"]`)이고, 이 함수가 아니라 판정 함수가
+    #   쓴다 — 여기서 조건으로 `<absent>` 를 미리 넣으면 "비활성 = 미로드" 등식이 된다
+    #   (65차 N1a 가 그 등식을 깼다: 정상 `sitecustomize` 의 `import usercustomize`).
+    # ★ 65차 N1b — 검색 경로는 **재생 문맥**에서 온다. 64차 판은 재생 env 의 원시
+    #   `PYTHONPATH` 문자열(상대 항목은 부모 cwd 로 풀림) + **부모의 `sys.path`** 를
+    #   썼다 — child 는 sandbox cwd 에서 뜨고 pytest 가 부모에 얹은 자리를 보지 않는다.
+    # ★ 65차 N2b — namespace package(origin 없음, 검색 위치 있음)는 `<absent>` 가
+    #   아니라 `<namespace>:identity` 다. child 와 같은 규칙(`_namespace_identity`).
     import importlib
     from importlib.machinery import PathFinder as _PF
 
-    env = replay_env()
-    dirs = [x for x in str(env.get("PYTHONPATH", "")).split(os.pathsep) if x]
-    dirs += [p for p in sys.path if p and p not in dirs]
+    ctx = ctx if ctx is not None else _replay_context()
+    dirs = list(ctx["search_path"])
     importlib.invalidate_caches()             # 방금 생긴 디렉터리도 본다
-    # ★ 64차 N1 — **찾을 수 있는 모듈과 startup 이 실행한 모듈은 같은 집합이 아니다.**
-    #   Python 의 `site` 는 `ENABLE_USER_SITE` 가 참일 때만 `usercustomize` 를
-    #   자동 import 한다. 63차 F3 는 탐색 규칙(`.py` · package · root 순서)을 맞췄지만
-    #   **실행 조건**은 안 봤다 — 그래서 user site 가 꺼진 정상 venv 에서 child 는
-    #   `<absent>` 인데 부모는 PYTHONPATH 의 정상 모듈 digest 를 내고, 정상 영수증이
-    #   거부됐다 (리뷰어 실측: child `<absent>` · parent `09aa30aa88e05969`).
-    #
-    #   child 의 자기 증언을 믿지 않는다 — 부모가 **같은 실행 파일·같은 재생 env** 로
-    #   자기 인터프리터를 하나 띄워 조건을 직접 잰다. 활성이면 아래 바이트 대조가
-    #   그대로 산다 (`usercustomize` 를 통째로 무시하는 수정이 아니다).
-    _user_site = _parent_user_site_enabled()
-    out = {"site": _d(_site.__file__)}
+    out = {"site": _d(ctx["site_file"])}      # child 인터프리터의 site — 부모가 바이트를 읽는다
     for n in ("sitecustomize", "usercustomize"):
-        if n == "usercustomize" and not _user_site:
-            out[n] = "<absent>"               # startup 이 아예 부르지 않는다
-            continue
         spec = _PF.find_spec(n, dirs)
-        origin = getattr(spec, "origin", None) if spec is not None else None
-        if not origin:
+        if spec is None:
             out[n] = "<absent>"
             continue
-        if os.path.isfile(origin):
+        origin = getattr(spec, "origin", None)
+        locs = getattr(spec, "submodule_search_locations", None)
+        if origin and os.path.isfile(origin):
             out[n] = _d(origin)
             continue
-        get_data = getattr(getattr(spec, "loader", None), "get_data", None)
-        if get_data is None:
-            raise _ReplayError(
-                f"부모가 {n} 의 origin {origin!r} 을 읽을 수 없다 — 파일이 아니고 "
-                "loader 가 바이트를 못 준다. 지원하지 않는 loader 로는 child 와 "
-                "대조할 수 없다 (63차 F3)")
-        out[n] = hashlib.sha256(get_data(origin)).hexdigest()[:16]
+        if origin:
+            get_data = getattr(getattr(spec, "loader", None), "get_data", None)
+            if get_data is None:
+                raise _ReplayError(
+                    f"부모가 {n} 의 origin {origin!r} 을 읽을 수 없다 — 파일이 아니고 "
+                    "loader 가 바이트를 못 준다. 지원하지 않는 loader 로는 child 와 "
+                    "대조할 수 없다 (63차 F3)")
+            out[n] = hashlib.sha256(get_data(origin)).hexdigest()[:16]
+            continue
+        if locs is not None:
+            out[n] = "<namespace>:" + _namespace_identity(list(locs))    # noqa: F821
+            continue
+        raise _ReplayError(
+            f"부모가 {n} 의 spec 을 받았는데 origin 도 검색 위치도 없다 ({spec!r}) — "
+            "무엇과 대조할지 정할 수 없다 (65차 N2b)")
     return out
 
 
-def _assert_customization_matches_parent(receipt: dict) -> None:
-    """child 의 `customization` 이 부모의 시야와 같은가 (62차 자체 리뷰 F1)."""
-    want = _parent_customization_view()
-    got = ((receipt.get("startup") or {}).get("customization")
-           if isinstance(receipt, dict) else None) or {}
-    diff = sorted(k for k in set(want) | set(got) if want.get(k) != got.get(k))
-    if diff:
+def _assert_customization_matches_parent(receipt: dict, ctx: dict | None = None) -> None:
+    """child 의 `customization` 이 부모의 시야와 **양립하는가** (62차 자체 리뷰 F1 ·
+    65차 N1a).
+
+    ★ 65차 N1a — **세 상태를 가른다.** 64차 판은 "user site 비활성 = `<absent>`" 라는
+    등식을 세웠다. 그런데 Python 의 `ENABLE_USER_SITE` 는 `site` 가 하는 **자동 import
+    시도**에만 걸리는 조건이다 — 정상 `sitecustomize` 의 `import usercustomize` 는
+    평범한 import 이고, 그러면 child 는 진짜 digest 를 낸다. 그 정상 영수증이 거부됐다
+    (리뷰어 실측: child `1cfeb13a…` · parent `<absent>`).
+
+    부모가 독립적으로 아는 것은 둘이다 — **조건**(startup 이 그 이름을 자동 import 하는가:
+    `sitecustomize` 는 항상, `usercustomize` 는 활성일 때) 과 **후보**(재생 검색 경로에서
+    resolver 가 찾는 바이트). 무엇이 실제로 올라왔는지는 영수증의 startup **이력**
+    (`-X importtime -v` 손자)이 증언한다. 그래서 이름마다:
+
+      · child `<absent>`  → 이력에 없어야 하고, 자동 import 대상에 후보가 있으면 거부
+                            (startup 이 올렸어야 한다 — 64차까지의 규칙 그대로)
+      · child hex16       → 후보와 **같아야** 하고, 이력이 올렸다고 해야 한다
+                            (비활성이어도 명시 import 면 정상 — 여기가 N1a)
+      · child namespace   → 후보와 같아야 한다 (코드 없는 module, 이력은 unfiled)
+      · 그 밖(`<built-in>`·`<frozen>`·모르는 값) → 대조할 바이트가 없다 → 거부
+
+    child 가 준 digest 를 정답으로 쓰지 않는다 — 후보와 같아야만 받고, 이력과 어긋나면
+    `<absent>` 도 받지 않는다 ("비활성 = absent" 등식을 다른 등식으로 바꾸는 것이 아니다).
+    """
+    want = _parent_customization_view(ctx)
+    ctx = ctx if ctx is not None else _replay_context()
+    st = (receipt.get("startup") or {}) if isinstance(receipt, dict) else {}
+    got = st.get("customization") or {}
+    hist = ((st.get("startup_history") or {}).get("modules") or {})
+    bad = []
+    if got.get("site") != want["site"]:
+        bad.append(f"site: child={got.get('site')!r} parent={want['site']!r}")
+    for n in ("sitecustomize", "usercustomize"):
+        g, cand = got.get(n), want[n]
+        auto = n == "sitecustomize" or bool(ctx["user_site"])   # startup 이 자동 import 하는가
+        loaded_file = n in hist                                   # 이력: 파일 있는 module 로 올렸다
+        if g == "<absent>":
+            if loaded_file:
+                bad.append(f"{n}: child=<absent> 인데 startup 이력은 올렸다고 한다")
+            elif auto and cand != "<absent>":
+                bad.append(f"{n}: startup 이 자동 import 하는 후보가 있는데 child=<absent> "
+                           f"(parent={cand!r})")
+        elif isinstance(g, str) and _HEX16.fullmatch(g):
+            if g != cand:
+                bad.append(f"{n}: child={g!r} parent={cand!r}")
+            elif not loaded_file:
+                bad.append(f"{n}: child 가 바이트를 냈는데 startup 이력에 없다")
+        elif isinstance(g, str) and _NAMESPACE_ID.fullmatch(g):
+            if g != cand:
+                bad.append(f"{n}: child={g!r} parent={cand!r}")
+            elif loaded_file:
+                bad.append(f"{n}: child 는 namespace 라는데 startup 이력은 파일로 올렸다고 한다")
+        else:
+            bad.append(f"{n}: 대조할 바이트가 없는 origin {g!r} — 지원하지 않는다")
+    if bad:
         raise _ReplayError(
-            "환경 영수증의 customization 이 부모가 본 것과 다르다: "
-            + " · ".join(f"{k}: child={got.get(k)!r} parent={want.get(k)!r}"
-                         for k in diff)
+            "환경 영수증의 customization 이 부모가 본 것과 양립하지 않는다: "
+            + " · ".join(bad)
             + " — startup 코드가 자기 파일을 세탁했거나 검색 순서가 어긋났다. "
-            "못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 F1)")
+            "못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 F1 · 65차 N1a)")
 
 
 def _observed_receipt() -> dict:
@@ -5838,6 +6046,10 @@ _TYPED_MEASUREMENTS = (("startup",), ("startup", "startup_history"),
 #:   "쟀다" 를 증명하지 못한다. 여기 것이 정본이고, 필드가 하나 늘면 여기도 는다
 #:   (`tests/receipt_fixture.py` 의 예시가 이 schema 를 그대로 만족한다).
 _HEX16 = re.compile(r"^[0-9a-f]{16}$")
+#: ★ 65차 N2b — 코드 없는 namespace customization 의 identity (종류 + 검색 위치).
+_NAMESPACE_ID = re.compile(r"^<namespace>:[0-9a-f]{16}$")
+#: 바이트를 댈 수 없는 origin — schema 는 받되 customization 대조가 **이름을 붙여** 거부한다.
+_UNSUPPORTED_ORIGIN = re.compile(r"^<(built-in|frozen)>$")
 
 
 class _Map:
@@ -5869,8 +6081,10 @@ _RECEIPT_SCHEMA = {
         # ★ 62차 자체 리뷰 (영수증 F5) — 키 집합을 고정한다 (`_Map` 이면
         #   `{"whatever": "<absent>"}` 도 통과했다).
         "customization": {"site": _Or(_HEX16, "<absent>"),
-                          "sitecustomize": _Or(_HEX16, "<absent>"),
-                          "usercustomize": _Or(_HEX16, "<absent>")},
+                          "sitecustomize": _Or(_HEX16, "<absent>", _NAMESPACE_ID,
+                                               _UNSUPPORTED_ORIGIN),
+                          "usercustomize": _Or(_HEX16, "<absent>", _NAMESPACE_ID,
+                                               _UNSUPPORTED_ORIGIN)},
         "startup_modules": _Map(_HEX16),
         # ★ 63차 F2 — 시도만 한 이름은 **영수증 안**이다 (digest 에 묶인다).
         "startup_history": {"status": "measured", "modules": _Map(_HEX16),

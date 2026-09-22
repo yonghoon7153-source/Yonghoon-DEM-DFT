@@ -299,17 +299,25 @@ def test_a_type_parameter_bound_is_evaluated_outside_the_parameters():
 
 
 # ── E2 ──────────────────────────────────────────────────────────────────────
+def _flock_reports_held(fd) -> bool:
+    """**하나뿐인 판정** — 이 fd 로 non-blocking 배타 flock 을 시도해 커널이 거절하면
+    True(누가 쥐고 있다), 받아 주면 즉시 풀고 False. token 판과 경로 판은 **여는 방식만**
+    다르고 판정은 이 함수 하나를 공유한다 (65차 E2-R 후속 — 두 wrapper 가 판정을 따로
+    갖고 있으면 한쪽만 양방향으로 시험돼도 다른 쪽은 밖이다)."""
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        return True
+    fcntl.flock(fd, fcntl.LOCK_UN)
+    return False
+
+
 def _kernel_lock_held(tok) -> bool:
     """token 의 lock 파일을 **따로 열어** flock 을 시도한다 — 커널이 배타를
     쥐고 있으면 BlockingIOError 다. 경로 exists 가 아니라 커널의 답이다."""
     fd = os.open(tok.name, os.O_RDWR, dir_fd=tok.dir_fd)
     try:
-        try:
-            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            return True
-        fcntl.flock(fd, fcntl.LOCK_UN)
-        return False
+        return _flock_reports_held(fd)
     finally:
         os.close(fd)
 
@@ -320,12 +328,7 @@ def _kernel_lock_held_at(path) -> bool:
     다르고 묻는 것은 같다: 커널이 배타를 쥐고 있는가."""
     fd = os.open(str(path), os.O_RDWR)
     try:
-        try:
-            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            return True
-        fcntl.flock(fd, fcntl.LOCK_UN)
-        return False
+        return _flock_reports_held(fd)
     finally:
         os.close(fd)
 
@@ -346,6 +349,14 @@ def test_the_kernel_lock_probe_itself_is_not_vacuous(tmp_path):
     try:
         assert _kernel_lock_held(tok) is True
         assert _kernel_lock_held_at(p) is True       # 같은 자리를 경로로 봐도 잡혀 있다
+        # ★ 65차 E2-R 후속 — 실제 lifecycle 이 부르는 것은 **token 판**이다. 그 음성을
+        #   같은 token · 같은 inode 에서 관측한다: 밖에서 풀면 False, 다시 쥐면 True.
+        #   경로 판의 음성만 있던 64차 판은 token 판을 상수 True 로 바꿔도 통과했다
+        #   (리뷰어 후속 스크립트, 이 기계 실측).
+        fcntl.flock(tok.fd, fcntl.LOCK_UN)
+        assert _kernel_lock_held(tok) is False       # ★ token 판의 음성 (65차)
+        fcntl.flock(tok.fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        assert _kernel_lock_held(tok) is True
     finally:
         io.release_run_lock(tok)
     # release 는 lock 파일을 **지운다** — 그것부터 관측으로 고정한다 (그래서 놓은 뒤의

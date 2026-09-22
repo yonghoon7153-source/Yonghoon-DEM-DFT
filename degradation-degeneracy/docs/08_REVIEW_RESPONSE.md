@@ -7324,3 +7324,158 @@ module)을 각각 별도 시험으로 두었다.
 
 첫 관측의 증인 문구 둘이 tmp 경로와 기계별 digest 를 담고 있어 시험 문구에서
 걷어냈다 — 62차 ① · 63차 ① 회차가 같은 자리에서 조각 재생을 깨뜨렸던 교훈이다.
+
+## §81 65차 접수 — "전부 종결" 불수용, 부분 수용 (P1 3 · P2 1)
+
+2026-09-22 접수 (`GATE65_REVIEW_20260922.zip`, 보존: `docs/22p_gap/gate65_review/`).
+리뷰어가 고정한 HEAD `5e4cf1038f0f26a6a624d9984386cfd046657ac3` · 과학 코드 정본
+`743f65bead671bf353ce38027c2e8e457738ec08` · `source_digest e9ee7475dea7de1d` — 셋 다
+우리 요청값과 일치, 정본 → HEAD 의 RUN_SCOPE log·diff 빈 출력. RUN_SCOPE 밖 세 파일
+(`mutation_replay.py` · `test_gate63_defensive.py` · `test_gate64_defensive.py`)은 따로
+SHA-256 을 고정해 검토했다. 리뷰 환경은 CPython 3.12.14 / Windows.
+
+**받아들인 것.** N1 원 사례(비활성 user site · 명시 import 없음) 닫힘. N2 원 사례(ZIP package
+customization) 닫힘 — 일반 파일 · ZIP package · 일반 customization 이 가져오는 ZIP module
+대조도 통과. E2-R 의 커밋된 음성 assertion 추가 확인. `--check-preimages` rc 0.
+
+**받아들이지 않은 것.** "접수 셋 전부 종결". 원 사례는 닫혔지만 **고치면서 세운 새 등식이
+틀렸다** — 둘은 수정하지 않은 실제 `_execution_receipt()` 진입점에서 재현했다.
+
+| ID | 등급 | 무엇이 틀렸나 |
+|---|---|---|
+| G65-N1a | P1 | 64차 고침이 "자동 import 비활성" 을 **"모듈 미로드"** 로 바꿔 읽었다. `site.ENABLE_USER_SITE == False` 인 인터프리터에서 정상 `sitecustomize.py` 가 `import usercustomize` 를 하면 child 는 진짜 digest(`1cfeb13a…`)를 내는데 부모는 origin 을 보기도 전에 `<absent>` 를 넣는다 → **정상 영수증 거부**. Python 문서도 `ENABLE_USER_SITE` 를 `site` 가 하는 **자동 import 시도**의 조건으로만 적는다 |
+| G65-N1b | P1 | 부모가 상대 `PYTHONPATH` 를 **자기 cwd** 로 풀고 **자기 `sys.path`** 를 child 의 검색 경로로 쓴다. child 는 `cwd=sandbox` 로 뜬다. 호출 cwd 에만 `startup/sitecustomize.py` 를 두고 `PYTHONPATH=startup` 이면 child `<absent>` vs parent `2e252a13…` → 거부. 호출 cwd 를 ROOT 에 둔 경우도, runner 가 만든 실제 sandbox 를 재사용해 재현했다 — 보조 user-site 탐침도 sandbox 가 아니라 ROOT 를 쓴다. "저장소 안에서 실행하라" 로는 안 닫힌다 |
+| G65-N2b | P1 | PYTHONPATH 아래 빈 `sitecustomize/` (`__init__.py` 없음) 는 표준 namespace package 로 import 되고 `__file__` 은 None 이다. child 는 그것을 `<absent>` 로 접고, 이력 검사가 "손자는 올렸다는데 customization 은 `<absent>`" 를 **모순 → failed** 로 본다. 뒤의 unfiled 분기와 부모 함수 주석은 namespace 를 정상으로 적는데 앞의 검사에서 먼저 막힌다. ZIP 결함의 재발이 아니라 **다른 정상 origin 종류의 기존 결함** |
+| G65-T1 | P2 | `test_an_enabled_user_site_still_compares_the_bytes` 가 환경변수 하나를 지우고 활성을 **가정**한다. `pyvenv.cfg` 로 꺼진 일반 venv 에서는 켜지지 않아 시험이 자기 전제(`assert child != '<absent>'`)에서 죽는다 — 활성 인터프리터 9 passed · 일반 venv **1 failed** (같은 소스). 생산 코드가 아니라 **시험이 전제를 구성하지 못한 것** |
+
+**E2-R 판정 (보류, 발견 수에 넣지 않음).** 경로 탐침(`_kernel_lock_held_at`)의 음성은 진짜다.
+그러나 실제 planned lifecycle 이 관측하는 것은 **token 탐침 `_kernel_lock_held(tok)`** 이고
+그것은 여전히 True 쪽에서만 불린다. 등록된 E2-R 변이도 token helper 를 망가뜨리는 것이 아니라
+시험의 False assertion 을 바꾼다. 같은 살아 있는 token 에서 `flock(LOCK_UN)` 뒤 token 탐침의
+False 를 확인하거나, 두 wrapper 가 공유하는 단일 fd 판정 함수에 양방향 시험을 두라고 했다.
+Linux 전용 후속 스크립트 `repro_e2_linux_NOT_RUN.py` 를 주었고 **Windows 에서는 미실행**.
+
+**요청문 질문에 대한 답.** Q1/⑨: 같은 실행파일·env 만으로 충분하지 않고(N1b),
+`ENABLE_USER_SITE` 는 로드 이력의 대용물이 아니다(N1a) — 두 반례는 추가 인터프리터도 성공한
+정상 환경이라 신고 ⑨ 로 흡수할 수 없다. Q2: `get_data` 는 loader 필수 기능이 아니고
+`ResourceReader` 도 별도 선택 인터페이스 — bytes 를 못 주는 loader 를 **명시적 미지원**으로
+거부하는 정책은 합리적일 수 있으나, 표준 namespace(코드가 없을 뿐)와 읽기 실패는 구분해야
+한다. Q4: `except _ReplayError` 전체를 같은 AssertionError 로 바꾸면 **다른 원인의
+`_ReplayError` 까지 N1 증인으로 보일 수 있다** — 새 finding 으로 세지 않되, 고정
+`error_code`·검사 단계를 내보내고 정확한 실패 원인에 assertion 을 걸라고 권고. Q5/⑩:
+고정 HEAD 의 tracked root JSON **541** — `_complete_artifact` 합성 261 · `leg=L phase=grid
+class=canonical` 264 · re-key/legacy 16. 문자열 분류는 provenance 검증이 아니다. 권고는
+"둘 다" (임시 등록부 주입 + production 등록부 전후 불변 확인 · 시험 synthetic 을 canonical
+권한으로 유입시키지 않기 · `local/` 이동만으로는 부족, reader 가 읽는지·authority 를 주는지
+같이 고정 · 기존 기록은 append-only supersession/revocation 으로). 기존 class/삭제 계약
+변경은 별도 승인 대상.
+
+**리뷰어가 스스로 좁힌 범위.** 9건 회귀는 `--noconftest` 로 실행(conftest 의 frozen seal
+초기화가 `/proc/self/mountinfo` 부재로 `BoundaryUnknown`) — Linux 전용 seal bootstrap 을
+우회한 한정 시험. 원래 `-k g64 --keep-sandbox` 는 rc 1 (collection rc 3, 같은 원인). 커널
+lock 1건은 `fcntl` 부재로 미실행. **전체 pytest · strict smoke · 변이 전수 재생 ·
+evidence_layer_58 전체 · 실제 planned grid→fit 은 완주/통과했다고 주장하지 않는다.**
+**본 실행 GO 는 별도이며 승인하지 않았다.**
+
+**최소 재심 조건 (원문 순서).** ① 비활성+명시 import 정상 receipt 수용, bytes 변경 거부
+(N1a) ② 실제 replay 문맥으로 상대 경로·검색 순서 고정, 다른 cwd 에서도 정상 receipt 수용
+(N1b) ③ 표준 namespace 를 미로드/읽기 실패와 구분, 파일·ZIP·읽기 실패 대조 유지 (N2b)
+④ 활성/비활성 interpreter 회귀 전제를 명시적으로 만들고 두 환경 결과 제출 (T1) ⑤ Linux
+에서 원래 커널 대조와 g64 3개 replay 실행, token/path 탐침의 음성 결속 별도 확인, 전체
+pytest 미완 숫자를 완주 증거로 바꾸지 않기.
+
+## §82 65차 대응 — 넷 다 재현 시험부터, 리뷰어 재현기부터
+
+RED 관측: `tests/test_gate65_defensive.py` 첫 실행 **10 failed · 7 passed** (통과한 일곱은
+대조군). 그 전에 리뷰어 재현기 셋을 **이 Linux 에서 먼저 돌렸다** (`gate65_review/codex/`):
+`repro_imports.py` 가 N1a(`disabled_but_explicit_import` REJECTED) · N1b(`relative_pythonpath`
+REJECTED) 를 그대로 재현했고, `repro_e2_linux_NOT_RUN.py` (리뷰어가 Windows 에서 못 돌린
+후속) 는 `same_token_baseline [true, false]` 이면서 **token 탐침을 상수 True 로 바꿔도 커밋된
+대조군 둘이 PASS** — 리뷰어가 보류로 남긴 것이 이 기계에서 실측으로 확정됐다.
+`repro_namespace.py` 는 이 기계에서 ACCEPTED 였다 — Debian 의 `/usr/lib/python3.11/
+sitecustomize.py`(0 바이트) 가 namespace 를 가린다 (Python 은 정규 module 을 먼저 찾는다).
+그래서 N2b 시험은 자유로운 이름 `usercustomize` + 활성 인터프리터로 만들었다.
+
+RED 열 중 하나(`test_a_constant_true_token_probe…`)는 첫 판에서 `tmp_path/"a"` 를 안 만들어
+이유가 틀린 빨강이었다 — 그 시험만 고쳐 제대로 빨개진 뒤 production 을 고쳤다.
+
+### N1a — 세 상태를 가른다
+
+`[고침]` "비활성 = `<absent>`" 등식을 지웠다. `_parent_customization_view(ctx)` 는 **후보**만
+돌려주고(재생 검색 경로에서 resolver 가 찾는 것 — hex16 · `<namespace>:hex16` · `<absent>`),
+판정은 `_assert_customization_matches_parent(receipt, ctx)` 가 **조건 · 후보 · 이력** 셋으로
+한다: child `<absent>` 는 이력에 없어야 하고 자동 import 대상에 후보가 있으면 거부 / child
+hex16 은 후보와 같아야 하고 이력이 올렸다고 해야 한다 (비활성이어도 명시 import 면 정상 —
+여기가 N1a) / child namespace 는 후보와 같아야 한다 / 그 밖은 대조할 바이트가 없어 거부.
+child 의 digest 를 정답으로 쓰지 않고, **이력과 어긋나면 `<absent>` 도 받지 않는다** (명시 import
+영수증의 `usercustomize` 를 `<absent>` 로 바꾼 세탁본은 거부 — 회귀로 고정). 바이트 변경 거부
+대조군 유지. 조건을 못 재면 여전히 fail-closed.
+
+### N1b — 재생 문맥은 하나다
+
+`[고침]` `_replay_context(cwd)` — 같은 실행 파일 · 같은 argv 모양(`-c`) · 같은 env · 같은 cwd
+(기본 `_sandboxed(ROOT)`, 더 이상 ROOT 가 아니다) 로 인터프리터를 하나 띄워 `ENABLE_USER_SITE` ·
+`sys.path` · `os.getcwd()` · `site.__file__` 을 받고, `sys.path` 를 **child cwd 기준 절대 경로**로
+정규화한다 (`''` → cwd, 상대 → `join(cwd, p)`). 부모 프로세스의 `sys.path` 는 쓰지 않는다.
+탐침·재생·부모 대조가 이 문맥을 공유한다. 회귀: 상대 `PYTHONPATH` + 다른 호출 cwd (조각 판과
+**실제 진입점 `_execution_receipt()` 판** 둘 다) · 부모 `sys.path` 에만 있는 module.
+
+신뢰 경계는 64차와 같다는 것을 docstring 에 적었다 — 보조 인터프리터도 같은 startup 코드를
+실행한다. 부모가 독립적으로 믿는 것은 그 경로 위의 **바이트를 부모가 직접 읽은 값**이다.
+
+### N2b — 코드 없는 module 은 미로드도 읽기 실패도 아니다
+
+`[고침]` child 의 customization 을 **상태 넷**으로 가른다: `<absent>`(안 올라왔다) · hex16(바이트
+— 파일·ZIP) · `<namespace>:hex16`(`__file__ None` 이고 검색 위치 있음) · `_Unreadable` → typed
+`failed`(origin 도 검색 위치도 없다 — startup 코드가 `sys.modules` 에 빈 ModuleType 을 심은
+경우. "origin 없는 module 은 전부 정상" 으로 넓히지 않는다 — 리뷰어 금지 조건, 회귀로 고정).
+namespace identity 는 **종류 + 검색 위치**(절대 경로 정규화 후 sha256[:16]) — 다른 자리의 빈
+디렉터리는 다른 값(회귀). child 와 부모가 **같은 문자열**(`_NAMESPACE_IDENTITY_SRC`)을 실행한다.
+schema 에 `_NAMESPACE_ID` · `_UNSUPPORTED_ORIGIN` 추가. 이력 검사의 "올렸다는데 `<absent>`" 는
+그대로다 — namespace 는 이제 `<absent>` 가 아니다. 파일·ZIP·읽기 실패 대조군은 같은 fixture
+인터프리터로 한 번 더 돌린다.
+
+### T1 — 전제는 만들고 잰다
+
+`[고침]` `tests/interpreter_fixture.py`: `python -m venv --without-pip [--system-site-packages]`
+로 활성/비활성 인터프리터를 **만들고**(`build_interpreter`), 띄워서 `ENABLE_USER_SITE` 를
+**실측**한 뒤에야 돈다(`make_interpreter`). 기대와 다르면 `pytest.skip` 에 기대값·실측값을 적는다
+(미측정으로 보고). 64차의 활성 대조군을 이 fixture 위로 옮기고 **활성 확인 assertion 은 지우지
+않았다**. 비활성은 venv 판과 env 변수 판 둘 다 남겼다. 이 기계 실측: 활성 venv `True` · 일반
+venv `False` — 두 환경 결과를 같은 실행에서 제출한다.
+
+### E2-R 후속 — 판정 함수 하나
+
+`[고침]` `_flock_reports_held(fd)` 하나를 token 판과 경로 판이 공유한다. 커밋된 대조군에
+**같은 token · 같은 inode 에서** `LOCK_UN` → False → 다시 쥐면 True 를 넣었다. g64 의 AST
+대조군은 이제 **탐침별로** True·False 를 센다 — 어느 쪽 음성을 지워도 이름을 대며 빨개진다.
+새 회귀: token 탐침을 상수 True 로 바꾸면 커밋된 대조군이 빨개진다.
+
+### fixture 가 먼저 깨졌다 (규율 2)
+
+`tests/receipt_fixture.py` 의 완전한 영수증은 이력이 customization 과 양립해야 한다 — 부모
+판정이 이력을 보기 시작하자 fixture 가 먼저 깨졌고, 의도를 유지하며 채웠다.
+`test_gate64_defensive` 의 `want["usercustomize"] == "<absent>"` 는 틀린 등식을 그대로 적은
+assertion 이었다 — 판정 함수로 바꿨다.
+
+### 변이 축 (65차)
+
+g64 N1·N2 의 변이 지점이 코드 이동으로 사라져 preimage 를 옮겼다 (N1 은 판정 함수의 `auto`).
+새 축 5 (`-g65`): `explicit-import-is-an-ordinary-import-g65` (N1a) ·
+`search-path-comes-from-the-replay-context-g65` (N1b) ·
+`namespace-is-loaded-code-free-not-absent-g65` (N2b) · `the-fixture-measures-its-premise-g65`
+(T1, `tests/interpreter_fixture.py` 를 겨냥) · `the-token-probe-negative-is-asserted-g65`
+(E2-R 후속, `tests/test_gate63_defensive.py` 를 겨냥). 증인은 전부 시험의 고정 문구 —
+production reason·digest·경로를 담지 않는다 (64차 ① 회차의 교훈).
+
+첫 재생에서 둘이 **안 물었다**: (i) g64 E2-R 축 — 경로 판 음성을 지워도 AST 대조군이 token
+판의 `is False` 를 세어 통과했다 → 탐침별로 세게 고쳤다. (ii) T1 축 — 실측 함수를 상수 True
+로 바꾸면 fixture 가 **skip** 해서 실패가 아니었다 → 변이를 "활성 조건을 만들지 않는다" 로,
+전제 시험을 검증 없는 `build_interpreter` 위로 옮겼다. 재관측 (EXPECT 이식 뒤): `-k g64`
+**3/3 물었다** · `-k g65` **5/5 물었다** · `--check-preimages` rc 0.
+
+### 하지 않은 것
+
+⑩ 등록부 격리(별도 계약, 기존 class/삭제 계약 변경은 별도 승인) · Q4 의 `error_code` 매트릭스 ·
+§0 의 독립 GO 전제. `source_digest` 는 `e9ee7475dea7de1d` 그대로 — 이번 고침도 전부 RUN_SCOPE
+밖이다. **본 실행 GO 는 요청하지 않는다.**

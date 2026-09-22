@@ -61,26 +61,41 @@ def _pin_env(monkeypatch, extra: dict) -> None:
 # ── N1 · usercustomize 의 실행 활성 조건 ──────────────────────────────────────────────────
 
 def test_a_child_with_user_site_disabled_matches_the_parent(tmp_path, monkeypatch):
-    """★ N1 — user site 가 꺼진 정상 인터프리터에서 **양쪽이 `<absent>`** 여야 한다.
+    """★ N1 — user site 가 꺼진 정상 인터프리터에서 아무도 부르지 않은 `usercustomize`
+    는 **양쪽 다 미로드**여야 한다.
 
     Python 은 `site.ENABLE_USER_SITE` 가 참일 때만 `usercustomize` 를 자동 import 한다.
     부모가 그 조건을 안 보고 resolver 로만 찾으면, PYTHONPATH 에 놓인 정상 모듈 하나가
     **정상 영수증을 거부**하게 만든다 (리뷰어 실측: child `<absent>` · parent digest).
+
+    ★ 65차 — 전제(비활성)는 **fixture 로 만들고 잰다** (G65-T1: `pyvenv.cfg` 로 꺼진
+      일반 venv). 부모 시야는 이제 **후보**를 돌려주므로(G65-N1a — 후보가 있어도 아무도
+      import 하지 않았으면 `<absent>` 가 정상) 판정은 `_assert_customization_matches_parent`
+      로 본다. 아래 시험은 같은 축을 **env 변수**(`PYTHONNOUSERSITE=1`)로 끈 경우다.
     """
+    from interpreter_fixture import make_interpreter, use_interpreter
+
+    off = make_interpreter(tmp_path, user_site=False)
     site = tmp_path / "site"
     site.mkdir()
     (site / "usercustomize.py").write_text("# 주석 한 줄뿐\n", encoding="utf-8")
-    _pin_env(monkeypatch, {"PYTHONPATH": str(site), "PYTHONNOUSERSITE": "1"})
+    use_interpreter(monkeypatch, off)
+    _pin_env(monkeypatch, {"PYTHONPATH": str(site)})
     mr = _mr()
 
-    got = _receipt_in({"PYTHONPATH": str(site), "PYTHONNOUSERSITE": "1"}, tmp_path)
+    got = _receipt_in({"PYTHONPATH": str(site)}, tmp_path)
     assert got["startup"]["customization"]["usercustomize"] == "<absent>", (
-        "child 가 안 올린 것을 올렸다고 적는다", got["startup"]["customization"])
-    want = mr._parent_customization_view()
+        "child 가 안 올린 것을 올렸다고 적는다")
+    ctx = mr._replay_context(tmp_path)
+    assert ctx["user_site"] is False, "fixture 가 비활성 전제를 만들지 못했다 (G65-T1)"
     # 증인 문구는 **기계 독립**이어야 한다 — digest 도 tmp 경로도 담지 않는다
     # (62차 ① 회차 · 63차 ① 회차가 같은 자리에서 조각 재생을 깨뜨렸다).
-    assert want["usercustomize"] == "<absent>", (
-        "부모가 startup 이 실행하지 않는 모듈의 digest 를 낸다 (N1)")
+    try:
+        mr._assert_customization_matches_parent(got, ctx)
+    except mr._ReplayError:
+        raise AssertionError(
+            "부모가 startup 이 실행하지 않는 모듈의 digest 를 기대해 정상 영수증을 거부했다 (N1)"
+        ) from None
 
 
 def test_a_disabled_user_site_receipt_passes_the_parent_assertion(tmp_path, monkeypatch):
@@ -106,21 +121,30 @@ def test_a_disabled_user_site_receipt_passes_the_parent_assertion(tmp_path, monk
 
 def test_an_enabled_user_site_still_compares_the_bytes(tmp_path, monkeypatch):
     """대조군 — **활성이면** 실제 바이트를 계속 댄다. usercustomize 를 통째로 무시하는
-    수정이면 이 시험이 통과하지 못한다 (리뷰어 최소 종결 조건 3)."""
+    수정이면 이 시험이 통과하지 못한다 (리뷰어 최소 종결 조건 3).
+
+    ★ 65차 G65-T1 — 64차 판은 환경변수 하나를 지우고 "이제 활성이다" 라고 **가정**했다.
+      `pyvenv.cfg` 로 꺼진 일반 venv 에서는 그 가정이 틀리고 시험이 자기 전제에서 죽었다
+      (리뷰어 실측 1 failed). 전제는 만들고 잰다 — `--system-site-packages` venv 를
+      만들어 `ENABLE_USER_SITE` 를 실측한 뒤에야 돈다. 못 만들면 정확히 skip 이다.
+      아래 활성 확인 assertion 은 지우지 않는다 — 이제 전제가 있으니 진짜 검사다.
+    """
+    from interpreter_fixture import make_interpreter, use_interpreter
+
+    on = make_interpreter(tmp_path, user_site=True)
     site = tmp_path / "site"
     site.mkdir()
     uc = site / "usercustomize.py"
     uc.write_text("# 진짜로 올라간다\n", encoding="utf-8")
     env = {"PYTHONPATH": str(site)}
-    env.pop("PYTHONNOUSERSITE", None)
+    use_interpreter(monkeypatch, on)
     _pin_env(monkeypatch, env)
-    monkeypatch.delenv("PYTHONNOUSERSITE", raising=False)
     mr = _mr()
 
     got = _receipt_in(env, tmp_path)
     child = got["startup"]["customization"]["usercustomize"]
-    assert child != "<absent>", ("user site 가 켜진 환경인데 child 가 안 올렸다 — "
-                                 "이 기계에서는 이 대조군을 잴 수 없다", child)
+    assert child != "<absent>", ("user site 가 켜진 인터프리터인데 child 가 안 올렸다 — "
+                                 "fixture 가 전제를 만들지 못했다 (G65-T1)")
     assert mr._parent_customization_view()["usercustomize"] == child
     mr._assert_customization_matches_parent(got)
 
@@ -218,14 +242,22 @@ def test_the_committed_probe_control_asserts_both_directions():
                if isinstance(n, ast.FunctionDef)
                and n.name == "test_the_kernel_lock_probe_itself_is_not_vacuous"), None)
     assert fn is not None, "탐침 대조군 시험이 없다"
-    outcomes = []
+    # ★ 65차 E2-R 후속 — "어느 탐침의" 음성인지 본다. 64차 판은 `is True`/`is False` 의
+    #   존재만 세어서, 한 탐침(경로 판)의 음성이 다른 탐침(token 판)의 음성 부재를 가렸다
+    #   (리뷰어: 실제 lifecycle 이 쓰는 것은 token 판이다). 두 탐침 각각에 True·False 가 있어야
+    #   한다 — 어느 쪽 음성을 지워도 이 시험이 그 이름을 대며 빨개진다.
+    outcomes: dict = {"_kernel_lock_held": set(), "_kernel_lock_held_at": set()}
     for node in ast.walk(fn):
-        if isinstance(node, ast.Compare) and isinstance(node.ops[0], ast.Is):
+        if (isinstance(node, ast.Compare) and isinstance(node.ops[0], ast.Is)
+                and isinstance(node.left, ast.Call)
+                and isinstance(node.left.func, ast.Name)
+                and node.left.func.id in outcomes):
             c = node.comparators[0]
             if isinstance(c, ast.Constant) and isinstance(c.value, bool):
-                outcomes.append(c.value)
-    assert True in outcomes and False in outcomes, (
-        "커밋된 대조군이 한쪽만 고정한다 — 원장 문구가 시험보다 강하다 (E2-R)", outcomes)
+                outcomes[node.left.func.id].add(c.value)
+    missing = sorted(name for name, seen in outcomes.items() if seen != {True, False})
+    assert not missing, (
+        "커밋된 대조군이 한쪽만 고정한다 — 원장 문구가 시험보다 강하다 (E2-R)", missing)
 
 
 def test_the_kernel_lock_probe_control_actually_runs_both_directions(tmp_path):

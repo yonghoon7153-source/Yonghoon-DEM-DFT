@@ -29,6 +29,12 @@ def _parent_view() -> dict:
 
 def full_receipt(**over) -> dict:
     """schema 에 정확히 맞는 영수증. `over` 는 최상위 키를 덮는다."""
+    view = _parent_view()
+    # ★ 65차 N1a — 부모는 customization 을 startup **이력**과 함께 판정한다: 바이트를
+    #   낸 이름은 이력에 올라 있어야 하고, `<absent>` 인 이름은 이력에 없어야 한다.
+    #   그래서 완전한 영수증의 이력은 부모 시야와 **양립**해야 한다 (fixture 가 먼저
+    #   깨지는 것이 정상 — CLAUDE.md 규율 2).
+    loaded = {k: v for k, v in view.items() if k != "site" and len(v) == 16}
     rec = {
         "interpreter": "3.11.2",
         "packages": {"status": "measured",
@@ -40,11 +46,12 @@ def full_receipt(**over) -> dict:
         "startup": {
             "status": "measured",
             "executable_sha256": _H,
-            "customization": _parent_view(),
+            "customization": view,
             "startup_modules": {"os": _H},
             "startup_history": {"status": "measured",
-                                "modules": {"os": _H}, "unfiled": 3,
-                                "attempted_not_loaded": ["usercustomize"]},
+                                "modules": {"os": _H, **loaded}, "unfiled": 3,
+                                "attempted_not_loaded":
+                                    [n for n in ("usercustomize",) if n not in loaded]},
             "importable_roots": {"0/x.py": _H},
             "pth": [["/usr/lib/python3/dist-packages/x.pth", _H]],
             "version": "3.11.2",
