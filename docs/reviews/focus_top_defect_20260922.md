@@ -438,3 +438,51 @@ python3 scripts/step3_sigma.py --selftest 2>&1 | grep -E "field-stats|joule-stat
   (argparse 는 뒤가 이긴다 = 0.15).  manifest 와 일치하므로 무해하지만 **읽을 때 헷갈린다**.
 - `--sigma-ion-sdcp 0` (arm) vs 원고 manifest `sigma_ion_sdcp 0.001` ⇒ **arm 과 원고 런은
   플래그가 다르다**.  한 번 더 확인: 재실행은 반드시 **`run_mpm.sh` 의 STEP 2** 에서 뽑는다.
+
+## I-2. ⚠ 정정 — `run_mpm.sh` 의 STEP 2 **도** 원고 명령이 아니다 (실측)
+
+§I 에서 *"원고 payload 는 킷 `run_mpm.sh` STEP 2 산출"* 이라고 적었는데 **틀렸다.**
+그 명령을 실제로 뽑아 보니 `--step3-vox 0.4` 이고 **p2 플래그가 하나도 없다**:
+
+```
+--n-vox 192 --tri-step 4 --smooth 1.5 --target-porosity 0.0759 --eps se_dump_eps.npy
+--dilate-z 1.0719 --void-max 180000 --step3-vox 0.4 --field-max-points 90000 --step3-gpu
+--joule-heat --metrics-json mpm_metrics.json --case 260714_145738_778fa4 --phase phase.npy
+--fibre fibre.npy --fibre-dia fibre_dia.npy --collector-rint 110 ... --out mpm_payload.json
+```
+
+원고 manifest 는 `vox 0.15` · `bridge_um 0.48` · `ptfe_stamp centerline` ·
+`fibre_stamp segment` · `sdcp_stamp sphere(0.3)` · `sigma_vgcf 78.5398` ·
+`sigma_ion_sdcp 0.001` 이다 ⇒ **둘 다 아니다.**
+
+| 후보 | 물리 축 | 필드 | 판정 |
+|---|---|---|---|
+| arm `p2_*_a0.*.sh` | **p2 맞음** (`--expect-physics` 계약까지 있음) | ⛔ `--no-field` | 점군·joule 없음 |
+| 킷 `run_mpm.sh` STEP 2 | ⛔ vox 0.4 · p2 플래그 없음 | ✅ 필드·joule | 격자가 다름 |
+| **원고 payload** | p2 (vox 0.15) | ✅ 필드·joule·이온·collector | **제3의 명령** |
+
+⇒ 원고 payload 는 **따로 손으로 만든 명령**(또는 `payload_only.sh` 류)의 산출이다.
+**⬜ 다음 세션 첫 일**: kgy 에서 그 명령의 흔적을 찾는다 —
+```bash
+ls -la /home/kgy/sdcp/kit_SBE/*.sh /home/kgy/sdcp/kit_SBE/run_*/payload*.sh 2>/dev/null
+grep -rl 'step3-vox 0.15' /home/kgy/sdcp/ 2>/dev/null | head
+grep -n 'step3-vox 0.15' ~/.bash_history 2>/dev/null | tail -5
+```
+
+못 찾으면 **arm `.sh` 에서 조립한다** (그쪽이 물리 축이 맞으므로):
+`--no-field` 제거 · `--sigma-ion-sdcp 0` → **`0.001`** · `--out` 변경.
+⚠ 그 조립의 **유일한 안전장치 둘**: ① arm `.sh` 에 이미 있는
+`--expect-physics vox_um=0.15,bridge_um=0.48,…` 계약검사 ② σ_e 재현
+(0.054530439566226836 / 0.0714004401030127).  둘 다 통과해야 그 명령이 맞다.
+
+## I-3. kgy 환경 — 실행 전에 고쳐야 할 것 셋 (실측)
+
+| # | 실측 | 조치 |
+|---|---|---|
+| 1 | `/home/kgy/dem-mt` 가 **detached HEAD** `17f5f017` · `percentile_basis` **0** = 옛 코드 | 브랜치로 돌린 뒤 pull.  ⚠ detached 라 로컬 변경이 있는지 먼저 확인 |
+| 2 | `step3_sigma --selftest` 가 `field-stats*` 를 **한 줄도 안 냄** (옛 코드 확인) | 위 1 뒤 다섯 줄 OK 확인 |
+| 3 | `(base)` conda 에 **`skimage` 없음** — 2026-08-27 STEP 2 가 실패한 그 원인 | 그 런을 성공시킨 env 를 찾거나 설치 |
+
+⚠ 3 이 중요하다: **원고 payload 를 만든 env 는 이것이 아니다** (여기선 STEP 2 가 죽었다).
+`meta.json` 의 `exec_env.python = /home/kgy/dem-venv/bin/python3` (3.8.10) 가 그 env 다 —
+`(base)` conda 가 아니라 **`/home/kgy/dem-venv`** 를 써야 한다.
