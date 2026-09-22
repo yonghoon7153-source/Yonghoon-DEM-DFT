@@ -1,0 +1,45 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_the_kernel_lock_probe_control_actually_runs_both_directions _______
+
+tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/gate65_review_20260922/tmp_kernel_log/test_the_kernel_lock_probe_con0')
+
+    def test_the_kernel_lock_probe_control_actually_runs_both_directions(tmp_path):
+        """정적 대조만으로는 부족하다 — 그 두 방향을 **실제로 관측**한다."""
+        import src.io as io
+        sys.path.insert(0, str(REPO / "tests"))
+>       from test_gate63_defensive import _kernel_lock_held, _kernel_lock_held_at
+
+tests\test_gate64_defensive.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\gate65-venv\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    """63차 — 방어적 검토 F1~F4 · 증거 공백 E1·E2.
+    
+    리뷰어의 `test_gate62_defensive_contracts.py` 7건을 이 저장소 경로로 옮겨
+    **그대로** 고정한다 (모의 자원 · 무해한 입력 · 우회 재현물 없음). 그 위에
+    F2 의 정상 사례(정상 선택적 import 실패) 와 E1 의 3.11 합성 AST 판, E2 의
+    실제 planned lifecycle 관측을 더한다.
+    
+      F1  두 lock 의 부분 취득·해제 오류를 정리하지 못한다 (list comprehension 뒤
+          try · finally 의 단순 for).
+      F2  `-X importtime` 의 이름을 성공한 import 로 취급 → `site` 의 실패한
+          선택적 import 를 "올렸다 지운 module" 로 오분류 → 정상 환경이 failed.
+      F3  부모 customization 탐색이 package(`sitecustomize/__init__.py`)를 안 본다.
+      F4  `_HEX16` 을 `re.match` + `$` 로 검사 → 후행 LF 17자 통과.
+      E1  3.12 `type_params` 의 bound 가 scoped walker 밖.
+      E2  "receipt 까지 held" 시험이 경로 exists 와 smoke namespace 위의 관측이라
+          실제 planned phase 기록 중 커널 배타를 본 적이 없다.
+    """
+    from __future__ import annotations
+    
+    import ast
+>   import fcntl
+E   ModuleNotFoundError: No module named 'fcntl'
+
+tests\test_gate63_defensive.py:21: ModuleNotFoundError
+=========================== short test summary info ===========================
+FAILED tests/test_gate64_defensive.py::test_the_kernel_lock_probe_control_actually_runs_both_directions
+1 failed, 9 deselected in 0.86s

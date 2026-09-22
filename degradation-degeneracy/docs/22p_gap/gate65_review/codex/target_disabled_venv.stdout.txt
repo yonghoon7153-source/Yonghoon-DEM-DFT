@@ -1,0 +1,31 @@
+..F......                                                                [100%]
+================================== FAILURES ===================================
+_____________ test_an_enabled_user_site_still_compares_the_bytes ______________
+
+tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/gate65_review_20260922/tmp_disabled/test_an_enabled_user_site_stil0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022A2E121BE0>
+
+    def test_an_enabled_user_site_still_compares_the_bytes(tmp_path, monkeypatch):
+        """대조군 — **활성이면** 실제 바이트를 계속 댄다. usercustomize 를 통째로 무시하는
+        수정이면 이 시험이 통과하지 못한다 (리뷰어 최소 종결 조건 3)."""
+        site = tmp_path / "site"
+        site.mkdir()
+        uc = site / "usercustomize.py"
+        uc.write_text("# 진짜로 올라간다\n", encoding="utf-8")
+        env = {"PYTHONPATH": str(site)}
+        env.pop("PYTHONNOUSERSITE", None)
+        _pin_env(monkeypatch, env)
+        monkeypatch.delenv("PYTHONNOUSERSITE", raising=False)
+        mr = _mr()
+    
+        got = _receipt_in(env, tmp_path)
+        child = got["startup"]["customization"]["usercustomize"]
+>       assert child != "<absent>", ("user site 가 켜진 환경인데 child 가 안 올렸다 — "
+                                     "이 기계에서는 이 대조군을 잴 수 없다", child)
+E       AssertionError: ('user site 가 켜진 환경인데 child 가 안 올렸다 — 이 기계에서는 이 대조군을 잴 수 없다', '<absent>')
+E       assert '<absent>' != '<absent>'
+
+tests\test_gate64_defensive.py:122: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_gate64_defensive.py::test_an_enabled_user_site_still_compares_the_bytes
+1 failed, 8 passed, 1 deselected in 2.73s

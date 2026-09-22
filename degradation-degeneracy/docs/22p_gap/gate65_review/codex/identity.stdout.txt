@@ -1,0 +1,3 @@
+3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]
+user_site True
+source_digest e9ee7475dea7de1d

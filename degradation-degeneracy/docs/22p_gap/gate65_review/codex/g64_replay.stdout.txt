@@ -1,0 +1,14 @@
+sandbox: C:\Users\ADMINI~1\AppData\Local\Temp\mutation_replay_ewh92g3w\degradation-degeneracy
+
+★ 실행오류     usercustomize-follows-the-startup-activation-g64 수집 rc 가 0 이 아니다 (3): 
+★ 실행오류     customization-reads-origins-like-the-rest-g64 수집 rc 가 0 이 아니다 (3): 
+★ 실행오류     the-probe-control-asserts-both-directions-g64 수집 rc 가 0 이 아니다 (3): 
+
+scenario_total 3 · scenario_executable 3 · scenario_declared 0 · site_total 3 · site_executable 3 · site_declared 0 · ran 0
+
+=== 문제 ===
+usercustomize-follows-the-startup-activation-g64: 수집 rc 가 0 이 아니다 (3): 
+customization-reads-origins-like-the-rest-g64: 수집 rc 가 0 이 아니다 (3): 
+the-probe-control-asserts-both-directions-g64: 수집 rc 가 0 이 아니다 (3): 
+
+sandbox 를 남긴다: C:\Users\ADMINI~1\AppData\Local\Temp\mutation_replay_ewh92g3w\degradation-degeneracy

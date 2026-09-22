@@ -1,0 +1,65 @@
+[
+  {
+    "case": "explicit_import",
+    "ROOT": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-head\\degradation-degeneracy",
+    "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate65_review_20260922\\real_entry_sandbox_cases\\explicit_import",
+    "sandbox": null,
+    "pythonpath": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate65_review_20260922\\real_entry_sandbox_cases\\explicit_import\\startup",
+    "receipt_complete": true,
+    "customization": {
+      "site": "b39ab288cc7a6d0c",
+      "sitecustomize": "a6b6f7ff67248404",
+      "usercustomize": "1cfeb13a2258c8d8"
+    },
+    "enabled": false,
+    "parent": {
+      "site": "b39ab288cc7a6d0c",
+      "sitecustomize": "a6b6f7ff67248404",
+      "usercustomize": "<absent>"
+    },
+    "entry_result": "REJECTED",
+    "error": "_ReplayError: 환경 영수증의 customization 이 부모가 본 것과 다르다: usercustomize: child='1cfeb13a2258c8d8' parent='<absent>' — startup 코드가 자기 파일을 세탁했거나 검색 순서가 어긋났다. 못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 F1)"
+  },
+  {
+    "case": "relative_caller_only",
+    "ROOT": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-head\\degradation-degeneracy",
+    "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate65_review_20260922\\real_entry_sandbox_cases\\relative_caller_only",
+    "sandbox": null,
+    "pythonpath": "startup",
+    "receipt_complete": true,
+    "customization": {
+      "site": "b39ab288cc7a6d0c",
+      "sitecustomize": "<absent>",
+      "usercustomize": "<absent>"
+    },
+    "enabled": false,
+    "parent": {
+      "site": "b39ab288cc7a6d0c",
+      "sitecustomize": "2e252a13409dfd33",
+      "usercustomize": "<absent>"
+    },
+    "entry_result": "REJECTED",
+    "error": "_ReplayError: 환경 영수증의 customization 이 부모가 본 것과 다르다: sitecustomize: child='<absent>' parent='2e252a13409dfd33' — startup 코드가 자기 파일을 세탁했거나 검색 순서가 어긋났다. 못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 F1)"
+  },
+  {
+    "case": "relative_from_repo_with_real_sandbox",
+    "ROOT": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-head\\degradation-degeneracy",
+    "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-head\\degradation-degeneracy",
+    "sandbox": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\mutation_replay_ewh92g3w\\degradation-degeneracy",
+    "pythonpath": "..\\..\\..\\outputs\\gate65_review_20260922\\real_entry_sandbox_cases\\relative_from_repo_with_real_sandbox\\startup",
+    "receipt_complete": true,
+    "customization": {
+      "site": "b39ab288cc7a6d0c",
+      "sitecustomize": "<absent>",
+      "usercustomize": "<absent>"
+    },
+    "enabled": false,
+    "parent": {
+      "site": "b39ab288cc7a6d0c",
+      "sitecustomize": "2e252a13409dfd33",
+      "usercustomize": "<absent>"
+    },
+    "entry_result": "REJECTED",
+    "error": "_ReplayError: 환경 영수증의 customization 이 부모가 본 것과 다르다: sitecustomize: child='<absent>' parent='2e252a13409dfd33' — startup 코드가 자기 파일을 세탁했거나 검색 순서가 어긋났다. 못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 F1)"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+    "docs/22p_gap/mutation_replay.py",
+    "--check-preimages"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-head\\degradation-degeneracy",
+  "rc": 0,
+  "seconds": 133.594,
+  "stdout_sha256": "0c7a0106a7c8a70ea4cb25dce5dbc07d746072ee7b0d5e93cf3f6867b65f1d4e"
+}

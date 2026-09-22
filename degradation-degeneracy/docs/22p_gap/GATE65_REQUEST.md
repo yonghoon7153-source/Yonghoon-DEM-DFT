@@ -189,7 +189,17 @@ N1·N2 로 Python resolver 와 **같은 규칙**이 됐지만, 위조자가 자�
 `[해석]` 우리 판단으로는 두 가지가 갈린다 — (a) 시험이 `local/`(무시되는 경로)에
 쓰게 하는 것과 (b) 합성 산출물에 `canonical` 을 주지 않는 것. **(b)가 더 중요해
 보인다**: 등록부가 "정본" 이라고 봉인한 366 개 중 대부분이 시험 fixture 이면
-등록부의 `canonical` 표식이 의미를 잃는다. **다만 우리는 이번 라운드에서 이것을
+등록부의 `canonical` 표식이 의미를 잃는다.
+
+> ⚠ **정정 (2026-09-22, GATE65 회신 뒤 추가 — 리뷰된 본문 sha `1e8829f8…` 은 이 블록이 없는 판이다).**
+> 위 "대부분이 시험 fixture" 는 **틀렸다.** 리뷰어가 고정 HEAD 의 tracked root JSON **541 개**를 evidence 문자열로
+> 직접 집계했다: `_complete_artifact` 합성 기록 **261** · `leg=L phase=grid class=canonical` 완료 기록 **264** ·
+> re-key/legacy 설명 **16**. 즉 절반 가까이가 **실제 과학 실행의 등록**이고, 그것이 합성 기록과 **같은 파일·같은
+> authority 로 섞여 있다**는 것이 문제의 정확한 모양이다 — "전부 fixture" 도 "대부분 fixture" 도 아니다.
+> (문자열 분류는 provenance 검증이 아니다 — 264 개가 실제 실행임을 우리가 확인한 것도 아니다.)
+> 리뷰어 권고는 **운영 authority 와 테스트 authority 의 구조적 격리**다: 모든 시험·자식 프로세스에 임시 원장/등록부를
+> 주입하고 production 등록부의 전후 불변을 검사하며, 기존 기록은 삭제가 아니라 reader 가 반영하는 append-only
+> supersession/revocation/epoch 로 정리한다. `local/`·gitignore 는 신뢰 경계가 아니다. **다만 우리는 이번 라운드에서 이것을
 고치지 않았다** — 계약 변경이고, 고치는 방향을 리뷰어에게 먼저 묻는다.
 
 ---
