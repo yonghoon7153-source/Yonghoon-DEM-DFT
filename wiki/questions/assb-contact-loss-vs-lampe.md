@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: research-question
 tags: [battery, degradation, research, assb]
-sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -208,7 +208,51 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 
 | **★★ Oh, Kim, Kim, An, Kwon, Choi 2025 (`assb` 14호 — 첫 **열역학 도함수 진단** · 서울대 + **HMG-SNU JBRC(현대차)** · *Angew. Chem. Int. Ed.* 64, e202514910, **Hot Paper** · 실험 논문 + **SI .docx(진짜 SI, 표 0)** · ⚠ 자기 인용 21/74)** | **★ 있다 — 두 층위.** ① XRM 공극률 `[인쇄]` **4.5 → 9.8 vol%**(10 MPa, 50 cy) · **4.4 → 5.3**(20 MPa) — 4호 Shi 의 void vol%(2.87 → 9.50 @50 cy)와 **같은 종류·같은 자릿수** ② ★ **계보 최초의 비파괴 in situ 대리량** `F(dE/dP)_T` = `[인쇄]` **42.7 → 34.7 µJ mol⁻¹ Pa⁻¹(−18 %)**, 3 셀 `[도표]` 18.1–20.3 %. ⚠ 무차원 `θ` 아님 · 공극률→`dE/dP` 사상 **2 점** · `[재현]` **`dE/dP` 가 압력 구간에 2 배 의존**(0.44 mV/MPa @5–10 ↔ 0.23 @10–20, 신품끼리; 논문 무언급) · `LAM` **0 회** → **접촉 손실 = LAM 안/밖: 미언급** | **★★ 있다, 셋 — 그러나 가르는 쌍이 다르다.** 엔트로피메트리 `ΔS = −F(dE/dT)_P` · volumetry `ΔV = F(dE/dP)_T` · XRM/SEM. 주장은 `[인쇄]` "distinguish between **mechanical and chemical** degradation" — **`LAM_PE` ↔ 접촉 손실은 물음 자체가 없다.** ★★ 그리고 `[인쇄]` ΔS 는 "local physical **contact loss** … **as well as** an increase in the **interfacial resistance**" 를 **한 신호로** 받는다고 스스로 정의 ⇒ **ΔS 채널은 우리 쌍을 합친다.** 교차 실험 0(화학 단독 대조군 0 · 20 MPa 셀 엔트로피메트리 0). ★★★ 실익 = `[인쇄]` **void +5.3 %p 인 셀(86.0 %)과 +0.9 %p 인 셀(84.0 %)의 용량이 같다(역상관)** — 접촉 손실이 이 창에서는 **겉보기 `LAM_PE` 로 나타나지 않는다** | **measured-morphological**(XRM "window leveling" 문턱, 복셀·정확도 0) + **measured-thermodynamic**(ΔS drop `[도표]` 13–15 → 5.8–8 J mol⁻¹ K⁻¹ · volumetry drop 18–20 %; n = 3, **오차 막대 0**). ★ **"health" 등급(reuse/recondition/recycle)의 문턱값 0** — `[인쇄]` "quantitative metrics … requires analyzing many cells … currently difficult". 적합 라벨 0(`fit*` 0). ⚠ `[도표]` Fig. 3c "after" 곡선이 S2 세 셀 어느 것과도 끝점이 다르다(D2) | **0 (14/14 편) — 성질이 또 다르다: 역문제가 없다.** 관측이 **직접 열역학 도함수**이고 적합이 없으므로 조건수·프로파일이 **정의될 자리가 없다**; 대신 **귀속이 가정**이다(ΔS 변화 → "비균질", `dE/dP` 감소 → "void"), 대안 원인(재료 변화 · 음극 상수항 · 이완 · 압력 비선형) 배제 시험 0. `identifiab*`·`uncertaint*`·`error bar` **0**. ★ `[재현]` **sum rule 위반 후보**: 비균질은 OCV 축을 뭉갤 뿐 SOC 축 적분을 못 바꾸는데 `[도표]` 전 곡선 평균 ≈ −3.5 ↔ 후 ≈ +1.5 — 논문은 이 뺄셈을 안 한다 | **해당 없음(Li 금속) → 그러나 남는다.** `[인쇄]` "Li metal anode, whose potential can reasonably be assumed to remain constant" → 전부 양극 귀속. `[해석]` 식 (6)·(10) 의 음극항은 **상수 ≠ 0**(S°(Li) 29 J mol⁻¹ K⁻¹ · **V_m 13.0 cm³ mol⁻¹** — `[재현]` 이 항만으로 5 MPa 에 **0.67 mV**, 실측 2.2 mV 의 30 %); "10 MPa → Li creep → pore 무시" 는 pore 항 논거이지 상수항 논거가 아니다. 100 사이클 뒤 음극 계면 기여 미검토 | **★★★ 있다 — 이 계보에서 가장 새로운 형태: 압력이 관측 변수다.** 제작 100/350 MPa · 운전 **10 / 20 MPa** · 진단 **ΔP = −5 / −10 MPa (≤0.01 MPa)** · 처방 **>300 MPa**(**미수행**, 4호 미인용, Li 금속 셀에 5호 상한의 4 배). ① ★ **압력 → OCV 기울기 = 계보 최초의 `E(P)`**: `[인쇄]` 2.2 mV/5 MPa · 2.3 mV/10 MPa(**비선형, 오목**) ② 압력 → 공극률 2 점(9.8 / 5.3 %) ③ **압력 → 용량 2 점**(86.0 / 84.0 % — 역상관) ④ `[도표]` S16 재가압 뒤 **+0.4 mV 비가역 오프셋 + 감압 중 +0.5 mV 표류** = 노화 신호와 같은 자릿수(5호 이력의 그림자) ⑤ 20 MPa Li 금속 셀 `[재현]` ≈225 h 사이클에 단락 보고 0(5호 190 h 와 대조 — 설계·전류 다름). ⚠ 로드셀 명시 0 · 스윕 0(2 구간) | **해당 없음**(Li 금속). `dead li`·`isolated`·`plating` 0. CE `[도표]` S1 첫 사이클 ≈85 %, 이후 ≈98–99 %(눈금 20 %p) | **★★★ 있다 — 계보 최초로 ASSB 실셀의 OCV 축 위에 열역학 도함수를 준다.** LiNbO₃-**NCM811** / LPSCl / Li, **2.5–4.3 V**, 기울기 있음. `[도표]` ΔS(OCV) 3.53–4.25 V ≈28 점(5 % SOC 간격) + dQ/dV(OCV) 봉우리 **3.60 / 3.73(H1→M) / 4.00 / 4.18 V** 신품 → 후 3.75 + 둔덕 4.05. ⚠ **SOC 축 없음** — `E(x)` 곡선은 여전히 0 장. 접촉 손실 = LAM 안/밖: **미언급** |
 
-**1호 단독 1.5 → 2편 ≈2.5 → 3편 ≈3.0 → 4편 ≈5.5 → 5편 ≈6.5 → 6편 ≈7.0 → 7편 ≈7.0 → 8편 ≈7.0 → 9편 ≈7.5 → 10편 ≈8.0 → 11편 누적 ≈8.5 칸이다.** (12·13·14편 ≈8.5 유지 — 12·13호는 종설, 14호는 새 칸 대신 **층 셋**: Q1 "비파괴 대리량" · Q6 "압력 → OCV" · Q8 "OCV 축 열역학 도함수".)
+| **Rahman, Lu 2024 (`assb` 15호 — 첫 **학회 회의록** · South Dakota State Univ. (Construction and Operations Management) · *Proc. IISE Annual Conf. & Expo 2024*, Abstract ID 8085 · ⚠⚠ **6 쪽 · 1차 측정 0 · 재인용 수치도 0 · 본문 그림 1 장(타 논문 재수록) · 표 0 · 식 0**)** | **없다 — 계보에서 가장 없다.** `contact` **0 회**(낱말 자체가 논문에 없다) · `percolat*`·`θ` 0 · `capacity` **0 회** · `LAM`·`LLI` 0. ASSB 기하 어휘는 `tortuos*` **1 회**가 전부이고 그것도 ref [28](Bielefeld 2020 바인더 편) 요약 안이다 | **없다.** 1차 측정 0, 인용된 관측 수단도 0 (`EIS`·`impedance`·토모·XRD 전부 **0 회**). ⚠ **Figure 1 에는 "Impedance models" 가 있는데 본문에 0 회** — 그림이 **액체셀 종설(ref [16] Zou 2023)의 재수록**이라 본문보다 넓다 | ★ **`simulated` — 그리고 그것이 확인 가능한 유일한 라벨이다.** 이 편 전체에서 SSB + ML 인용은 ref **[22]**(Asheri 2023) 한 편이고 `[인쇄]` "data-driven multiscale **simulation** framework … focusing on **interface damage**". 자기 라벨 0 · 데이터셋 0 · `experiment*`·`measur*` **0 회** · 오차막대 0 | **없다 (0/15) — 성질이 여덟 번째다: 추정기 자체가 없다.** `identifiab*`·`uniqueness`·`condition number` **0 회**. 14호가 "역문제가 없어 조건수 자리가 없음" 이었다면 **15호는 RUL 추정기가 없어 역문제를 말할 대상이 없다.** ⚠ 그런데 `accuracy` **7 회** — **정확도 수치 0 · 불확실성 표기(`RMSE`·`MAE`·`error bar`·`uncertainty`) 0** | **없다.** `indium`·`Li-In` 0. 음극은 §4.1(나)의 "lithium-anode" 2 회뿐 | **없다 — `pressure` 0 회.** ⚠ 초록이 `[인쇄]` "sensitivity to various **operational** and environmental conditions" 를 약속하고 ASSB 운전 조건의 첫째(스택 압력)를 **낱말로도 쓰지 않는다** | **없다.** `dead`·`isolated`(본문)·`dendrit*` 0 | **없다.** `NMC`·`LFP`·`LCO` 0 · OCP 곡선 0. `OCV` **1 회**는 ref [17](Dang 2016, 액체셀)의 **SOC 대리 변수**로서 — **열화 모드와 연결되지 않는다** |
+
+**1호 단독 1.5 → 2편 ≈2.5 → 3편 ≈3.0 → 4편 ≈5.5 → 5편 ≈6.5 → 6편 ≈7.0 → 7편 ≈7.0 → 8편 ≈7.0 → 9편 ≈7.5 → 10편 ≈8.0 → 11편 누적 ≈8.5 칸이다.** (12·13·14편 ≈8.5 유지 — 12·13호는 종설, 14호는 새 칸 대신 **층 셋**: Q1 "비파괴 대리량" · Q6 "압력 → OCV" · Q8 "OCV 축 열역학 도함수". **15편도 ≈8.5 유지 — 새 칸 0이고, 이 편은 Q1·Q4·Q6 에서 "안 쟀다" 가 아니라 "낱말이 없다" 여서 계보의 바닥을 찍는다.**)
+
+★ **2026-09-22 (15호 Rahman & Lu 2024) — 새 칸 0. 이 편이 준 것은 근거가 아니라
+**계보의 바닥 눈금**과, 이 위키 최초의 **원전 대조 실측** 둘이다.**
+
+- ★★★ **1호(Bielefeld 2019)가 야생에서 어떻게 인용되는지를 처음 봤다 — 그리고 어긋난다.**
+  15호 ref **[5]** 가 우리 1호이고, 인용된 **유일한 자리**가 `[인쇄]` "They mainly address
+  key challenges such as **load balancing, state-of-charge estimation, and overall battery
+  health monitoring [5, 6]**" 다. 우리 1호 digest 는 그 논문에 `[인쇄]` **"셀 실험 0,
+  사이클링·전압·용량이 없다"** · `voltage` **1 회(그마저 참고문헌 제목)** · **모델에 음극이
+  없다**고 전수 계수로 기록해 뒀다. **부하 균등화·SOC 추정·건전성 모니터링은 그 논문에
+  없다.** ⚠ 서지도 틀렸다 — **연도 2018 (원전 2019)**, 저자 "W. Dominik A"(= Dominik A.
+  **Weber**).
+  `[해석]` **단순 번호 실수로 보기 어렵다** — 같은 저자의 **다른 논문 [28]**(2020 바인더
+  편)이 §4.1 에 따로 있고 거기서는 내용이 대체로 맞게 요약된다. 서론의 `[5, 6]` 은
+  "SSB 문헌임" 만으로 고른 **장식 인용**이다.
+  ★ **이것이 우리에게 주는 것**: 1호 digest §12.4 에서 `Q_apparent = θ_AM · Q_material`
+  을 **우리 해석**이라고 못 박고 "논문은 용량도 전압도 주지 않는다" 고 적었던 경고가
+  **과하지 않았다는 증거**다. 바깥에서는 그 다리 없이 BMS 문장에 직결된다.
+- ★★ **12호(Kouhestani 2022)와의 대조 — 어긋나지 않지만 껍데기만 간다.**
+  15호 ref **[21]** 이 우리 12호이고, 쓰인 자리가 **FNN/RNN 의 교과서적 정의 한 문장**이다
+  (우리 12호 digest 가 그 수준을 채록하지 않아 **어긋남은 미확인·정합 추정**).
+  ★ 문제는 **12호의 자기 결론을 한 글자도 옮기지 않는다**는 것 — 우리가 Table 1 을 한 줄씩
+  대조해 적은 `[재현]` **"SSB 실측 열화 데이터로 SOH/RUL 을 추정한 항목 0 / 28"** 과
+  `[인쇄]` "most PHM techniques are based on **simulation** results and not experimental".
+  `[해석]` **12호(2022)가 감사로 적어 둔 공백을 15호(2024)가 12호를 인용하면서 재생산한다.**
+  12호 항목이 "2022 → 2026 사이 PHM 문헌은 identifiability 라는 **이름**을 얻었고 여전히
+  재지 않았다" 로 끝났는데, **15호는 그 사이(2024)에서 이름조차 못 얻은 표본**이다
+  (`identifiab*` **0 회**).
+- ★★ **분류 체계 세 번째 표본 — "미도입" 유형.** 12호 = `LAM ⊃ 접촉 손실`(**정의로 병합**) ·
+  13호 = **미배정** · **15호 = 어휘 미도입**(`contact` **0 회**). 세 편 다 **종설/전망/회의록**
+  이고, **1차 측정이 있는 편(4·5·6·7·9·11·14호)은 전부 어떤 형태로든 접촉 축을 갖는다.**
+  `[해석]` **접촉 손실이라는 구분은 실험 층위에서 강제되고 종합 층위에서 소실된다** —
+  우리가 폭을 재서 공급하려는 대상이 **종합 층위**라는 뜻이다. ⚠ 표본 3 개, 다음 종설에서 다시 본다.
+- ⚠ **Q4 의 성질 — 여덟 번째, 그리고 가장 얕다.** 안 쟀다(1–7호) → 이름만(8호) → 지문이
+  자기 표 안에(9호) → 분야가 비유일성을 명제로(10호) → 재료만 인쇄(11호) → 0(12·13호) →
+  역문제가 없어 조건수 자리가 없음(14호) → **15호: 추정기 자체가 없어 역문제를 말할
+  대상이 없다.** 그런데 `accuracy` **7 회** : 정확도 수치 **0** : 불확실성 표기 **0**.
+  **여전히 0/15.**
+- ★ **후속 후보 1 순위 신설**: **Asheri et al., *Comput. Mater. Sci.* 226, 112186 (2023)**
+  (이 편 ref [22]) — 이 계보에서 **ML × SSB 계면 손상**이 만나는 첫 좌표이고, **12호가
+  감사한 28 슬롯에도 없던 항목**이다. 2 순위 **Bielefeld 2020 *ACS AMI* 12, 12821**
+  (ref [28]) — 1호의 직계 속편, 1호 모집단 경고("탄소·바인더 없는 2 성분")의 바인더 축.
 
 ★★ **2026-09-22 (14호 Oh et al. 2025) — 새 칸 0, 그러나 이 카드의 물음에 가장 직접적인
 실측 하나와 Q4 의 일곱 번째 성질이 들어왔다.**
@@ -801,6 +845,72 @@ e202514910; 서울대 + HMG-SNU JBRC). 컴파일: [[assb-maxwell-ocv-derivative-
 **Q4 는 0/14 이고 성질이 일곱 번째로 바뀐다** — 역문제가 없어서 조건수가 정의될 자리가
 없고, 대신 **귀속의 유일성**(ΔS 변화가 비균질인가 재료 변화인가; `[재현]` SOC 축 적분이
 ≈ −3.5 → ≈ +1.5 로 부호가 바뀌는 것은 비균질만으로는 안 나온다 — G8)을 아무도 묻지 않는다.
+
+### ★ 열두 번째 — **근거가 아니라 "1호가 야생에서 어떻게 읽히는가" 의 첫 실측** (2026-09-22, Rahman & Lu 2024 · ⚠⚠ 학회 회의록 6 쪽, 1차 측정 0, **재인용 수치도 0**)
+
+`raw/papers/rahman2024_sbms-rul-solid-state-batteries.md`
+(*Proc. IISE Annual Conf. & Expo 2024*, Abstract ID 8085; 6 쪽, SI 없음, sha256 봉인).
+
+⚠ **이 절은 이 편의 주장을 근거로 쓰지 않는다.** 쓸 수 있는 주장이 없다 —
+`[재현]` 본문 2,331 단어에서 인용 괄호·절 번호를 빼면 남는 숫자가 **`2024`(회의 연도) ·
+`8085`(Abstract ID) · `19`(COVID-19) · `2021`·`2026`(연구비 기간)** 뿐이다.
+`capacity`·`experiment*`·`measur*`·`contact`·`pressure` 가 **전부 0 회**다.
+이 절이 쓰는 것은 **인용 관계 두 개**다.
+
+**(가) ★★★ `assb` 1호가 인용되는 방식 — 어긋난다.**
+이 편 ref **[5]** = 우리 1호 (Bielefeld, Weber, Janek, *JPCC* 123, 1626−1634).
+인용된 **유일한 자리**가 서론의 이 문장이다:
+`[인쇄]` "These technologies [ANN, Adaptive Fuzzy Logic] … mainly address key challenges
+such as **load balancing, state-of-charge estimation, and overall battery health
+monitoring [5, 6]**."
+우리 1호 digest 가 전수 계수로 기록한 원전의 상태: `[인쇄]` **"셀 실험 0 개이고,
+사이클링·전압·용량이 없다"** · Q5 행 `voltage` **1 회 — 그마저 참고문헌 제목** ·
+**"모델에 음극이 없다 — 복합양극만"** · Q8 행 **"OCP 곡선이 없다. 전압축 자체가 없다."**
+그 논문이 실제로 계산하는 것은 **이용률 `θ = V_c/V_ν`(식 6)** 와 **활성 계면적**이다.
+→ **판정: 어긋난다.** 그리고 서지도 틀렸다 — **연도 2018(원전 2019)**, 저자 "W. Dominik A".
+`[해석]` **번호 실수로 보기 어렵다**: 같은 저자의 **다른 논문 [28]**(2020 바인더 편)이
+§4.1 에 따로 있고 거기서는 내용이 대체로 맞게 요약된다. 서론의 `[5, 6]` 은 "SSB 문헌임"
+만으로 고른 **장식 인용**이다([6] 도 argyrodite 합성 논문).
+★★ **이 카드에 주는 함의**: 1호 digest §12.4 에서 `Q_apparent = θ_AM · Q_material` 을
+**우리 해석**이라고 못 박고 "논문은 용량도 전압도 주지 않는다" 고 적은 것이
+**보수적이지 않았다** — 바깥에서는 그 다리가 없는 채로 **BMS 문장에 직결된다.**
+
+**(나) ★★ `assb` 12호가 인용되는 방식 — 어긋나지 않지만 결론이 버려진다.**
+이 편 ref **[21]** = 우리 12호 (Sadegh Kouhestani et al., *Energies* 15, 6599).
+쓰인 자리는 §3.1 끝의 **교과서적 ANN 정의**(세 층 · FNN 비순환 vs RNN 순환) 한 문장이다.
+⚠ 우리 12호 digest 가 그 수준을 채록하지 않았으므로 **어긋남 미확인(정합 추정)**.
+★ 문제는 다른 데 있다 — **12호의 자기 결론이 전달되지 않는다**:
+`[재현]`(12호 digest, Table 1 해체) **"SSB 의 실측 열화 데이터로 SOH/RUL 을 추정한 항목:
+0 / 28"** · `[인쇄]`(12호 §4) "most PHM techniques are based on **simulation** results and
+not experimental" · `[인쇄]`(12호 결론) "very few studies … **lack of accurate data**".
+15호는 이 논문을 인용하면서 **그 위에 "SBMS 로 SSB 의 RUL 을 늘린다" 를 얹는다.**
+`[해석]` **12호(2022)가 감사로 적어 둔 공백을, 15호(2024)가 12호를 인용하면서
+그대로 재생산한다.** 12호 항목이 "2022 → 2026 사이 PHM 문헌은 identifiability 라는
+**이름**을 얻었고 여전히 재지 않았다" 로 끝났는데, **15호는 그 사이(2024)에서 이름조차
+못 얻은 표본**이다 (`identifiab*` **0 회**).
+
+**(다) 이 편이 아는 유일한 SSB-ML 라벨 = `simulated`.**
+`[인쇄]` ref [22] (Asheri 2023) — "a **data-driven multiscale simulation framework**
+(leveraging artificial neural networks) to predict and analyze the degradation in
+solid-state batteries, focusing on **interface damage** and its impact on cell
+performance." `[재현]` 이 편 참고문헌 **33 편 중 SSB 15 · 액체 LIB/EV 14 · 배터리가
+아닌 것 2**([27] Cu(II) 흡착, [31] COVID-19) — **그리고 SSB 집합과 ML/BMS 집합이
+교차하지 않는다**([21] 종설·[22] 시뮬 제외). **"SSB 데이터에 ML 을 돌려 RUL 을 낸"
+인용은 0 편이다.**
+
+**(라) ⚠ 인용 구조 자체의 결함 — 결론의 근거가 도메인 밖이다.**
+`[인쇄]` §5 "Significant progress has been made in integrating ANN and adaptive fuzzy
+logic **in SBMS**, **as evidenced by** studies by Y. J. Wongt et al. **[27]**."
+ref [27] = Wong et al., *Environ. Monit. Assess.* 192 (2020) — "**Cu(II) adsorption from
+aqueous solution using biochar derived from rambutan peel**". **배터리 논문이 아니다.**
+(§4.2 의 [31] COVID 논문은 적어도 `[인쇄]` "**could be insightful**" 로 유추임을 밝힌다 —
+이 편에서 인용 위생이 지켜진 유일한 자리다.)
+
+**이 절이 For / Against 어느 쪽인가**: **어느 쪽도 아니다.** 이 편은 근거를 주지 않는다.
+이 절이 고정하는 것은 둘이다 — ① **우리 1호의 결과가 인용 체인을 타고 나갈 때
+어디서 끊어지는가**(전압·용량으로 번역되는 층이 통째로 건너뛰어진다) ②
+**분류 체계 세 번째 표본 "어휘 미도입"** (12호 병합 · 13호 미배정 · 15호 미도입;
+셋 다 종합 층위 문헌이고, 1차 측정이 있는 편은 전부 접촉 축을 갖는다).
 
 ### Against / 단서 — "독립 관측이 존재할 수 있다" 쪽
 
@@ -1990,6 +2100,34 @@ state of interfacial contact **and** material properties." 9호의 곱 축퇴 `A
   5 순위 = **LePage 2019 *JES* 166, A89**(ref [70], "10 MPa Li creep") · 6 순위 = Lewis 2021
   *Nat. Mater.* / Lu 2022 *Sci. Adv.*(refs [73][74], "void 가 초기 성능에 안 보인다" 원전).
   큐 14~37 겹침 **0 건**(Bielefeld 는 2019 편만 큐에 있음).
+- **2026-09-22 (ingest 15)** — `assb` **15호** 흡수:
+  `raw/papers/rahman2024_sbms-rul-solid-state-batteries.md`
+  (Rahman & Lu, *Proc. IISE Annual Conf. & Expo 2024*, Abstract ID 8085; **6 쪽**, SI 없음,
+  PDF sha256 `0d99b00e…`, 본문 sha256 봉인). **첫 학회 회의록**이고 **이 계보에서 심사
+  강도가 가장 낮은 표본**이다 — DOI·접수/게재 일자·심사 기록 전부 없다.
+  ⚠⚠ **1차 측정 0 을 넘어 재인용 수치도 0** (12·13호보다 한 단계 아래):
+  `[재현]` 본문 2,331 단어에서 인용 괄호·절 번호를 빼면 남는 숫자가 **2024 · 8085 · 19 ·
+  2021 · 2026** 뿐이고, `capacity`·`experiment*`·`measur*`·`contact`·`pressure` 가 **전부 0 회**.
+  본문 그림 **1 장**(액체셀 종설 ref [16] Zou 2023 의 재수록) · 표 0 · 식 0.
+  컴파일: **새 개념 0** (6 쪽 회의록에 새 축이 없다). 갱신 — 닻 이 카드(채움표 15호 행 +
+  Evidence 열두 번째 + 이 항목) · [[composite-cathode-percolation-utilization]]
+  (1호가 야생에서 인용되는 방식 1 절 추가). `index.md` 변동 없음(새 컴파일 페이지 0).
+  ★★ **최대 수확은 논문의 내용이 아니라 인용 관계 둘이다** — 이 위키 최초로
+  **우리가 이미 읽은 원전을 인용하는 편**이 들어왔다:
+  ① **ref [5] = 1호, 어긋난다** (기하 모형 논문이 "부하 균등화·SOC 추정·건전성 모니터링"
+  의 근거 · 연도 2018 오기) ② **ref [21] = 12호, 어긋나지 않지만 12호의 결론
+  (`[재현]` SSB 실측 열화 라벨 **0/28**)을 버리고 FNN/RNN 정의만 가져간다.**
+  ★ **분류 체계 세 번째 표본 = "어휘 미도입"** (12호 병합 · 13호 미배정 · 15호 미도입) →
+  `[해석]` **접촉 구분은 실험 층위에서 강제되고 종합 층위에서 소실된다** (표본 3, 잠정).
+  Q1~Q8 채움표 행 추가 (**누적 ≈8.5/8 유지, 새 칸 0**). **Q4 여덟 번째 성질 — 가장 얕은 0**
+  (추정기 자체가 없다; `accuracy` 7 회 : 수치 0 : 불확실성 0). **여전히 0/15.**
+  어긋남 원장 **11 건**(원전 대조로 확인된 것 2 · 제목 기준 판단 3 · 나머지는 내부 정합).
+  후속 후보 1 순위 = **Asheri et al., *Comput. Mater. Sci.* 226, 112186 (2023)**(ref [22] —
+  ML × SSB **계면 손상**, 12호의 28 슬롯에도 없던 좌표) · 2 순위 = **Bielefeld et al.,
+  *ACS AMI* 12, 12821 (2020)**(ref [28] — 1호의 직계 속편, 바인더·탄소 축) ·
+  3 순위 = Zou et al., *JES* 73, 109069 (2023)(ref [16], Figure 1 의 원전; ⚠ 액체셀이므로
+  `assb` 태그 금지) · 4 순위 = Lipu et al., *JES* 55, 105752 (2022)(ref [33] — 이 편
+  참고문헌 중 **제목에 RUL 이 있는 유일한 편**인데 15호가 RUL 을 안 가져왔다; ⚠ 액체셀).
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -2060,3 +2198,15 @@ state of interfacial contact **and** material properties." 9호의 곱 축퇴 `A
   0.5C 의 것이고, 4호는 같은 자릿수의 void 에서 98 % 손실을 봤다. 우리가 받는 것은
   **사상이 문턱형이라는 두 점**까지다. 그리고 **Q4 는 0/14** — 역문제가 없다는 것은
   "유일성이 필요 없다" 가 아니라 "귀속의 유일성을 아무도 안 물었다" 이다.
+- ★ **2026-09-22 (15호 Rahman & Lu 2024) — 다섯 가지를 주장하지 않는다.**
+  ① **이 편의 어떤 문장도 이 카드의 근거로 쓰지 않는다.** 1차 측정 0 · **재인용 수치도 0**
+  이고, 우리가 가져온 것은 **인용 관계 두 개**뿐이다.
+  ② **"[5] 인용이 어긋난다" 는 우리 1호 digest 대조로 확인된 것**이고, 그 digest 자체는
+  원문 PDF 의 **사본**이다 — 논문·보고서에 옮기려면 원문 두 편을 다시 편다.
+  ③ **"[21](12호) 인용이 원전과 맞다" 고 단정하지 않는다.** 우리 12호 digest 가 FNN/RNN
+  정의 수준을 채록하지 않아 **어긋남 미확인(정합 추정)** 이다. 우리가 말하는 것은
+  "12호의 **결론**이 전달되지 않았다" 까지다.
+  ④ **ref [28]·[22]·[16]·[15]·[2] 를 읽지 않았다.** 그들에 대한 판단은 **제목·서지
+  수준**이고, 특히 D6(Janek & Zeier 논조 반대)은 **제목만으로 한 판단**이다.
+  ⑤ **"IISE 회의록이 심사를 받지 않았다" 고 주장하지 않는다.** PDF 에 심사 기록·DOI·
+  접수일이 **없다**는 것만 적었다.

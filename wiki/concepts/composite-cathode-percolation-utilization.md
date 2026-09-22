@@ -2,10 +2,10 @@
 title: 복합양극 퍼콜레이션 이용률 (utilization level)
 description: "Bielefeld 2019 utilization level θ = V_c/V_ν as the geometric surrogate for ASSB composite-cathode contact loss, its units, closed forms, and its own irreducible width"
 created: 2026-09-16
-updated: 2026-09-16
+updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md]
+sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -311,6 +311,36 @@ Fig. 10 의 "상위 3 개"(0.94 / 0.93 / 0.89) 같은 순위는 **신뢰 근거�
   **분할·검출 한계의 정량**(4호: 분할 정확도 0, 면내 화소 크기 0) +
   **접근 가능한 코드**(3호: 공개된 것은 DAMASK v2.0.2, 실제로 쓴 것은 별 저장소 +
   기관 허가 + CLA. 공개본에는 Li 화학도, 논문이 "developed" 라고 적은 FEM 솔버도 없다).
+
+## ★★ 이 `θ` 가 야생에서 어떻게 인용되는가 — 첫 실측 (2026-09-22 추가, `assb` 15호)
+
+이 페이지는 1호의 `θ` 에서 용량·전압으로 내려가는 다리가 **원문에 없다**고 적어 왔다
+(§"이 페이지가 주장하지 않는 것" 첫 항). **2026-09-22 에 그 공백이 바깥에서 어떻게
+처리되는지의 첫 표본이 들어왔다** — `raw/papers/rahman2024_sbms-rul-solid-state-batteries.md`
+(Rahman & Lu, *Proc. IISE Annual Conf. & Expo 2024*, Abstract ID 8085).
+
+**(가) 1호를 BMS 문장의 근거로 쓴다 — 그리고 어긋난다.**
+그 편의 ref **[5]** 가 1호이고, 인용된 **유일한 자리**가 `[인쇄]` "These technologies
+[ANN, Adaptive Fuzzy Logic] … mainly address key challenges such as **load balancing,
+state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
+1호 digest 가 전수 계수로 적은 원전의 상태는 `[인쇄]` **"셀 실험 0 개이고, 사이클링·
+전압·용량이 없다"** · `voltage` **1 회(참고문헌 제목)** · **모델에 음극이 없다** 이다.
+→ **어긋난다.** 서지도 틀렸다 — **연도 2018(원전 2019)**.
+
+**(나) 다리가 없는 채로 결론만 건넌다.**
+같은 편 §4.1 은 1호의 **속편**(ref [28], Bielefeld *ACS AMI* 12, 12821, 2020, 바인더 편)을
+대체로 맞게 요약한 뒤 `[인쇄]` "**These aspects are crucial for optimizing SBMS in SSBs**"
+로 끝낸다. **굴곡도·유효 전도도·활성 표면적에서 BMS 로 가는 문장이 0 줄이다** —
+그 기하량이 셀 전압/용량으로 어떻게 내려오는지, BMS 가 무엇으로 관측하는지 없다.
+
+`[해석]` **이 페이지가 `Q_apparent = θ_AM · Q_material` 을 "우리 해석" 이라고 못 박고
+"원문은 용량도 전압도 주지 않는다" 고 경고한 것이 보수적이지 않았다.** 그 다리는
+바깥에서 **건너뛰어진 채로** 인용된다. 우리가 `θ` 를 DEM 라벨로 쓸 때 **폭을 반드시
+붙이기로 한 규율**([[near-optimal-set-width-measurement]])이 여기서 다시 정당화된다.
+
+⚠ **15호 자체는 이 페이지에 아무 수치도 더하지 않는다** — `contact`·`capacity`·
+`percolat*`·`θ` 가 전부 **0 회**인 6 쪽 회의록이고 1차 측정도 재인용 수치도 0 이다.
+여기 적히는 것은 **인용 관계**뿐이다.
 
 ## 이 페이지가 주장하지 않는 것
 
