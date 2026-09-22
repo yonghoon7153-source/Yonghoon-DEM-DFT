@@ -4539,7 +4539,7 @@
   {
    "id": "SELF-45",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "reviewer(A-2) → claude",
    "opened_in": "docs/session_20260922_progress.md",
@@ -4551,7 +4551,8 @@
     "scripts/mpm_webapp_payload.py"
    ],
    "fixed_in": "scripts/step3_sigma.py · scripts/mpm_webapp_payload.py · scripts/repair_focus_top.py · webapp/static/js/viewer3d.js",
-   "verification_note": "⬜ 잔여 둘 — ① 이 커밋의 SHA 로 `claimed_fixed` 승격 ② 원고용 두 케이스(SBE·DBE)의 실제 payload 를 `repair_focus_top.py` 에 통과시켜 정정값 산출.  그 payload 는 이 리포에 없어 **저자 기계에서** 해야 한다.\n재현: `python3 scripts/step3_sigma.py --selftest` (field-stats-budget-invariant · -nonvacuous · -markov) · `python3 scripts/repair_focus_top.py --selftest`."
+   "verification_note": "⬜ 잔여 — 원고용 두 케이스(SBE·DBE)의 실제 payload 를 `repair_focus_top.py` 에 통과시켜 정정값을 산출하는 것.  그 payload 는 이 리포에 없어 **저자 기계에서** 한다.\n재현: `python3 scripts/step3_sigma.py --selftest` (field-stats-budget-invariant · -nonvacuous · -markov) · `python3 scripts/repair_focus_top.py --selftest`.\n정본 기록: `docs/reviews/focus_top_defect_20260922.md`.",
+   "claimed_fixed_sha": "e6c10c0967f951b757be6ef24b0bd655926e0755"
   },
   {
    "id": "LHS-09",
