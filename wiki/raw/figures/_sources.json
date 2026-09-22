@@ -73,6 +73,13 @@
    "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf"
   ]
  },
+ "lai2025_balanced-capacity-isc-detection-modules": {
+  "figures": 15,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "39. Balanced capacity-based quantitative method for detecting internal short circuits in Lithium-ion battery modules.pdf"
+  ]
+ },
  "lee2020_ag-c-anode-free-assb": {
   "figures": 26,
   "generated": "2026-09-16",
@@ -214,10 +221,11 @@
   ]
  },
  "yu2024_drt-time-resolved-aging-sulfide-assb-fullcell": {
-  "figures": 9,
+  "figures": 14,
   "generated": "2026-09-22",
   "pdfs": [
-   "fe443ab3-38._Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.pdf"
+   "fe443ab3-38._Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.pdf",
+   "ac1ae225-38._Sup_Time-resolved_impedance_spectroscopy_analysis_of_aging_in_sulfide-based_all-solid-state_battery_full-cells_using_distribution_of_relaxation_times_technique.docx"
   ]
  },
  "zhang2020_eis-gpr-capacity-rul": {
