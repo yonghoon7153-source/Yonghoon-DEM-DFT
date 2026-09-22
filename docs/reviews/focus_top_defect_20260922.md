@@ -583,3 +583,26 @@ KIT=/home/kgy/sdcp/kit_SBE
 새 payload 를 복원기에 넣어 `✅ 이미 전수 기준 (SELF-45 이후 payload)` 가 나오면 그 안의
 `field_scale_e/ion` 이 **최종값**이다.  그것으로 §H 회신문의 이온 문단을 교체하고,
 p99.8 정확값·Figure S14/S15 를 마무리한다.
+
+## I-6. ⛔ kgy 코드 리포는 건드리지 말 것 · 실행은 **uma(V100)** 에서 (2026-09-22 밤)
+
+`/home/kgy/dem-mt` 에서 `git checkout claude/stoic-knuth-NObVQ && git pull` 을 시도하니
+**`ahead 2188, behind 3038`** 로 갈라져 있고 `CLAUDE.md`·`README.md`·`litdb/**`·`webapp/**` 등
+거의 모든 파일이 **`add/add` 충돌**을 냈다 = 같은 브랜치 이름을 쓰는 **별개 이력**이다.
+⇒ `git merge --abort` 로 중단했다.  ⛔ **그 리포를 정본에 맞추려 들지 말 것** — 해결하려면
+2000 커밋 규모의 이력 수술이고 이번 일과 무관하다.  kgy 는 **데이터 공급원**으로만 쓴다.
+
+⚠ 인계 §7 #7 이 *"`~/runyourai/1/Yonghoon-DEM-DFT` 는 git 리포가 아니다"* 라고 적었는데
+실측은 **git 리포다** (오늘 pull 로 최신화됐고 selftest 다섯 줄 OK).  낡은 항목이다.
+진짜 위험한 자리는 그쪽이 아니라 **`/home/kgy/dem-mt` 의 갈라진 이력**이었다.
+
+### 실행 계획 (확정)
+
+코드는 **uma 의 `~/runyourai/1/Yonghoon-DEM-DFT`** (최신·검증됨), 데이터는 kgy 에서 scp.
+
+입력 크기 (케이스당 **≈ 1.63 GB**, 8 파일):
+`se_dump.npy` 778M · `se_dump_eps.npy` 260M · `fibre.npy` 260M · `fibre_dia.npy` 260M ·
+`phase.npy` 65M · `se_scaffold.csv` 5.5M · `am_scaffold.csv` 52K · `mpm_metrics.json` 4K.
+(수백 개의 `p2_*.sh`·`step4_grid_*.npz` 는 **옮기지 않는다**.)
+
+⇒ 명령 전문은 아래 §I-7.
