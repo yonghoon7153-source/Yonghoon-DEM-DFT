@@ -297,3 +297,86 @@ DBE(`f79b67`)도 같은 구조의 `meta.json` 을 갖고 있다 — 그쪽 지�
 
 ⚠ **플래그는 하나도 바꾸지 않는다.**  고친 코드는 통계를 장 전수에서 내므로
 `--field-max-points` 와 무관하다.  90,000 은 그림용으로 그대로 둔다.
+
+---
+
+# H. 최종 회신문 (2026-09-22 밤) — 재실행 없이 ①②③ 확정, ④ 한정어
+
+> 실행 판정: 원고 SBE/DBE 의 입력(`se_source npy` · `phase/fibre/fibre_dia`)은 **uma 에 없다**
+> (uma 의 `pa/kits/*` 는 CSV 스캐폴드를 쓰는 **Phase A** 킷이다).  그 런은 `/home/kgy/dem-venv`
+> 에서 돌았으므로 재실행은 **kgy** 에서만 가능하다.  ⇒ 아카이브된 필드로 답할 수 있는 데까지
+> 답하고, 못 하는 것은 **못 한다고 적는다**.
+
+```
+Thank you — the inequality is right, and following it up turned out to matter more than the
+label. Three things changed.
+
+1. The denominator was mislabelled. The quantity we printed as "× mean" is not normalised by
+   the mean of the distribution the percentile is taken over. It was normalised by the applied
+   through-plane current density J_app = I/A = sigma_eff·dV/L, averaged over the FULL electrode
+   cross-section (pores and solid electrolyte included), while the numerator is a percentile of
+   |J| over electronically conducting voxels only. Different populations and different area
+   conventions, so Markov's inequality does not relate them — which is why the number could
+   exceed 500 without being impossible.
+
+2. You are right that the denominator should change, and for the reason you gave. J_app carries
+   the conducting-phase area fraction, so it mixes "the current is spread more evenly" with
+   "there is more conducting phase". We measure that mixing directly: <|J|>_cond / J_app =
+   5.381 (SBE) and 5.160 (DBE), i.e. the DBE has ~4 % more conducting cross-section. We have
+   moved the reported quantity to the within-network measure, J_q / <|J|>_cond, and renamed it
+   the current-focusing factor.
+
+3. The numerator was also wrong, and this is the substantive error. The percentile had been
+   evaluated on the point cloud we store for the field figures, not on the field. That cloud
+   deliberately keeps the hottest 35 % of its budget so the conduction backbone survives in the
+   rendering, which makes it a biased sample for a percentile: on a reference bed the reported
+   value moves from x201 to x53 as the plotting budget goes from 5x10^3 points to the full
+   field. The estimator now computes the statistic on the complete field before any
+   subsampling, and a regression pins it to be invariant to the plotting budget.
+
+   The archived fields retain the top 31,499 values exactly, which is enough to bound the
+   published numbers rigorously (monotonicity, not extrapolation): the true 99.8th-percentile
+   focusing factor is <= 520.6 for the SBE and <= 445.9 for the DBE, so the published 1447 and
+   1189 are overstated by at least 2.78x and 2.67x respectively. They should not be used.
+
+On your specific question about the ordering — it survives. The archived fields let us evaluate
+the focusing factor exactly at any percentile shallower than ~99.88 %, and the SBE exceeds the
+DBE at every accessible depth:
+
+    percentile      F = J_q / <|J|>_cond           J_q / J_app
+                     SBE      DBE      change     SBE      DBE     change
+    99.9  %        102.6    90.87     -11.4 %    552.0   468.9    -15.1 %
+    99.95 %        124.3    109.0     -12.3 %    668.7   562.2    -15.9 %
+    99.99 %        174.9    153.2     -12.4 %    941.3   790.5    -16.0 %
+
+So the direction of the claim holds and is stable with depth, but the magnitude is smaller than
+published: about -11 to -12 % on the within-network measure, rather than -17.8 %. The
+difference between the two columns is the conducting-area effect you identified. We propose to
+report the ladder itself in the SI so the choice of percentile is visible rather than assumed,
+and to state explicitly that 99.9 % (not 99.8 %) is used because that is what the archived
+fields determine exactly.
+
+Two things we cannot yet answer, and we would rather say so than paper over them:
+
+  - The ionic channel. The archived payloads do not record the number of ionic conducting
+    voxels, so the ionic focusing factors cannot be recomputed from them at all. The published
+    ionic values came from the same biased estimator, and the ionic network has a much larger
+    voxel population than the electronic one, so the bias was larger there, not smaller. We are
+    therefore withdrawing the sentence "the ionic current distributions are comparable in the
+    two electrodes" pending a re-run; it is not supported by anything we can currently stand
+    behind.
+  - Figures S14/S15. They are rendered from the same biased cloud and normalised by the same
+    biased scale, and the bias differs between panels, so cross-panel visual comparison is not
+    like-for-like. They will be regenerated with the corrected normalisation.
+
+We will send the recomputed p99.8 values, the ionic factors and the regenerated figures once
+the two cases have been re-run on the machine that holds their inputs.
+```
+
+## 무엇을 주장하지 **않는지** (내부용 체크)
+
+- ⛔ `×1447` · `×1189` · `−17.8 %` · *"전자/이온 54배"* — 전부 철회.  상한만 인용 가능.
+- ⛔ p99.8 **값** — 아카이브로는 상한뿐.  본문은 **99.9 %** 로 간다.
+- ⛔ 이온 문장 — **삭제**.  "comparable" 도 "다르다" 도 말하지 않는다.
+- ✅ 순서(SBE > DBE) · 크기(−11.4~12.4 %) · `⟨|J|⟩_cond/J_app`(5.381 / 5.160) — 세 깊이 정확값.
+- ⚠ 99.9 % 채택은 **결과를 본 뒤의 규약 변경**이다.  회신문·캡션 둘 다에 그 사실을 적었다.
