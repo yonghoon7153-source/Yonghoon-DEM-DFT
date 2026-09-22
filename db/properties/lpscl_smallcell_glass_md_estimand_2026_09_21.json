@@ -36,7 +36,8 @@
   "★_실행모드_default_고정": "⛔ **개정 1(2026-09-21): turbo 로 고정한다.** 기계가 kgy 로 바뀌어 turbo 가 가능하고, seed1 이 turbo 라 **같은 모드로 맞추는 것이 옳다**. 원판 문구(default 고정 · V100 Volta 라 turbo 불가)는 V100 을 전제했고 그 전제가 깨졌다.",
   "모델": "UMA uma-s-1p1 · task omat · 체크포인트 sha256 07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a (V100 로컬 사본 · kgy 원본과 해시 일치 확인 2026-09-21)",
   "담금질": "`tools/ionic/melt_quench_uma.py` — seed1 과 **같은 인자**: melt 100 ps @1200 K → 1e12 K/s 선형 담금질 900 ps → 300 K 유지 50 ps. `--seed` 만 다르다.",
-  "도구": "`tools/modelc_v3/disorder_ensemble_diffusion.py` (--disorder_levels 0.0 --n_configs 1) · 게이트 `tools/ionic/msd_diffusive_check.py` · 적합 `tools/ionic/arrhenius_compat.py`"
+  "도구": "`tools/modelc_v3/disorder_ensemble_diffusion.py` (--disorder_levels 0.0 --n_configs 1) · 게이트 `tools/ionic/msd_diffusive_check.py` · 적합 `tools/ionic/arrhenius_compat.py`",
+  "⛔_담금질_프로토콜의_계보_2026_09_22": "**이 카드는 담금질 프로토콜을 스스로 선언하지 않는다 — 물려받는다.** 그런데 종전엔 **어디서 물려받는지를 안 적었다.** 실측으로 확인한 계보 —\n· 원 선언: **`db/properties/lpscl_li2s_interphase_prereg_2026_09_11.json`** (`G2_담금질_속도_선언` · melt-quench NPT · **담금질 시드 N ≥ 5** · **중앙값+산포** 보고). 이 카드의 *'시드 5'* 와 *'중앙값 + IQR'* 이 거기서 온다.\n· 기계 기록: `melt_quench_uma.py` 가 `plan.json` 의 `card` 필드에 **그 prereg 를 박는다**(소스 리터럴). seed1·2·3 의 `plan.json` 이 전부 그걸 가리킨다.\n⛔ **그래서 `plan.json` 의 `card` 가 이 카드를 안 가리키는 것은 버그가 아니다** — 담금질 프로토콜의 정본이 그 prereg 이기 때문이다. 이 카드는 **그 위에 얹힌 다른 층**(담금질된 구조로 무엇을 재는가)이다.\n⚠ 종전에 이 계보가 **어느 쪽에도 안 적혀 있어서**, `plan.json` 을 본 사람은 이 카드를 못 찾고 이 카드를 본 사람은 prereg 를 못 찾았다. **양방향으로 끊겨 있었다.**"
  },
  "1c_답하지_않는_것": [
   "⛔ **Ea·D·σ 의 절대값** — 대조 계가 이 카드에 없다 (1저자 인용정책 2026-09-18).",
