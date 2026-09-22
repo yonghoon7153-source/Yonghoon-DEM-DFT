@@ -1,6 +1,18 @@
 fastapi>=0.111
 uvicorn[standard]>=0.30
-sqlmodel>=0.0.22
+# **위를 막아 둔다.**  0.0.45 부터 naive datetime 을 거절한다 ("Datetime values
+# must have timezone information").  이 저장소는 UTC 를 **naive 로** 저장한다 --
+# `datetime.now(timezone.utc).replace(tzinfo=None)` 가 모델 전체의 규칙이고,
+# SQLite 에 tz 를 붙여 넣으면 이미 들어가 있는 수백 행과 비교가 어긋난다.
+#
+# 실측 2026-09-22: 새로 만든 venv 가 0.0.45 를 가져와 API 시험 수십 개가 setup
+# 에서 ERROR 로 떨어졌다.  화면에는 아무 표시도 안 나므로, 랩에서 `bml repair`
+# 를 하는 순간 같은 일이 난다 -- 고쳐 둔 것이 없는데 갑자기 안 된다.
+# 0.0.44 는 전량 통과한다.
+#
+# 푸는 조건: 모델의 datetime 칸을 `NaiveDatetime` 으로 바꾸거나 tz-aware 로
+# 옮기는 마이그레이션.  둘 다 한 커밋으로 할 일이지 핀을 푸는 김에 할 일이 아니다.
+sqlmodel>=0.0.22,<0.0.45
 python-multipart>=0.0.9
 numpy>=1.24
 openpyxl>=3.1

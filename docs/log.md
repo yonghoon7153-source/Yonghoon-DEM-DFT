@@ -8070,3 +8070,29 @@ ssh 로 멀쩡히 들어가 있었다. 502 가 말하는 것은 하나뿐이다:
 시험 5개가 그 단위를 잡는다 (`SymCells.test.tsx`) — 특히 "편 줄의 지우기는
 스캔 주소를 부르지 않는다" 와 "접힌 줄의 지우기는 스펙트럼 주소를 부르지
 않는다" 두 줄이 서로를 막는다.
+
+## [2026-09-22] fix | sqlmodel 0.0.45 가 naive datetime 을 거절해 API 시험이 통째로 깨졌다
+
+새 컨테이너에서 venv 를 처음 만들었더니 `sqlmodel>=0.0.22` 가 **0.0.45** 를
+가져왔고, API 시험 수십 개가 setup 에서 ERROR 로 떨어졌다:
+
+```
+ValueError: Datetime values must have timezone information.
+Use datetime.now(timezone.utc), or annotate the field with NaiveDatetime
+```
+
+이 저장소는 UTC 를 **naive 로** 저장한다 —
+`datetime.now(timezone.utc).replace(tzinfo=None)` 가 모델 전체의 규칙이고,
+SQLite 에 tz 를 붙여 넣으면 이미 들어가 있는 수백 행과 비교가 어긋난다.
+
+**이 자리가 무서운 이유는 아무 표시가 없다는 것이다.** 코드는 그대로인데 어느
+날 venv 를 다시 만든 사람만 깨진다 — 랩에서 `bml repair` 를 하는 순간, 또는 새
+노트북에서 클론하는 순간. 고친 것이 없는데 갑자기 안 되는 종류다.
+
+경계를 재서 `>=0.0.22,<0.0.45` 로 막았다. 0.0.44 는 API 시험 전량 통과,
+0.0.45 는 `test_samples`·`test_services`·`test_storage`·`test_upload` 가
+setup 에서 떨어진다.
+
+**푸는 조건을 requirements.txt 에 함께 적어 뒀다**: 모델의 datetime 칸을
+`NaiveDatetime` 으로 바꾸거나 tz-aware 로 옮기는 마이그레이션. 둘 다 한 커밋으로
+할 일이지, 핀을 푸는 김에 할 일이 아니다.
