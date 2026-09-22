@@ -292,6 +292,38 @@ def resolve_from_files(deck_path: str, atom_path: str) -> tuple:
     return resolve(deck, types_in_dump(atom_path))
 
 
+def app_wiring_errors(src, exists=True) -> list:
+    """`webapp/app.py` 가 이 모듈을 **실제로** 쓰는가 → 오류 목록 (빈 = 통과).
+
+    ★★★ 2026-09-22 (병합 검증에서 잡힘) — **초판 ⑩ 은 공허했다.**
+      옛 판은 `(not src) or 'type_map_resolve' in src` 였다.  두 구멍:
+        ⓐ `(not src) or …` = app.py 가 **없거나 못 읽히면 통과** (fail-OPEN).
+           실측: `webapp/app.py` 를 통째로 지워도 ⑩ 이 초록이었다.
+        ⓑ 부분문자열 검사라 메타 키 이름 `type_map_resolved` **하나만** 남아도
+           통과한다.  실측: app.py 를 `meta = {'type_map_resolved': None}` 한 줄로
+           바꿔도 초록이었다 ⇒ 배선을 다 뜯어내도 못 잡는다.
+      *"배선 전에는 FAIL 이었다"* 는 사실이지만 그것은 **아무 출현도 없던 순간**의
+      이야기이고, 회귀 가드로는 작동하지 않았다.  규율 ⑤ 의 그 자리다.
+    ⇒ 이제 ⓐ 를 fail-CLOSED 로 바꾸고, ⓑ 를 **import · 호출 · 문턱 단일화** 세
+      가지로 쪼갠다.  각 항목의 음성 대조는 selftest ⑩c 가 직접 돌린다.
+
+    ★ 문턱 단일화가 왜 여기 있나 — ⑩ 의 라벨이 *"문턱 상수를 두 곳에 두지 않는다"*
+      인데 실제로는 `0.004` 가 app.py 에 **리터럴**로, 여기 `AM_P_RADIUS_CUT_SIM` 에
+      상수로 **두 곳**에 있었고 검사가 그것을 보지 않았다.  하필 그 되돌림 경로에
+      170여 케이스 코퍼스의 상 라벨이 걸려 있어 조용한 분기가 가장 비싼 자리다."""
+    if not exists:
+        return ['⛔ webapp/app.py 를 읽을 수 없다 — 경계 계약을 확인할 수 없다']
+    errs = []
+    if not re.search(r'^\s*import\s+type_map_resolve\b', src, re.M):
+        errs.append('⛔ app.py 에 `import type_map_resolve` 가 없다')
+    if 'resolve_from_files(' not in src:
+        errs.append('⛔ app.py 가 `resolve_from_files(` 를 부르지 않는다 (이름만 있고 배선이 없다)')
+    if re.search(r'[<>]=?\s*0\.004\b', src):
+        errs.append(f'⛔ 반지름 문턱 0.004 가 app.py 에 리터럴로 박혀 있다 — '
+                    f'`AM_P_RADIUS_CUT_SIM`({AM_P_RADIUS_CUT_SIM}) 를 쓸 것 (두 곳 금지)')
+    return errs
+
+
 # ───────────────────────────── selftest ────────────────────────────────────
 _DECK_PS_10_0 = '''
 variable r_AM_P  equal 4.5e-3
@@ -420,14 +452,29 @@ def selftest() -> int:
     chk('⑩b types_from_pairs 가 파일 리더와 같은 답',
         {t: v['n'] for t, v in types_from_pairs(pairs).items()} == {1: 1, 3: 2})
 
-    # ── ⑩ app.py 의 문턱과 이 모듈의 상수가 같은 값인가 (경계 계약) ───────
-    src = ''
+    # ── ⑩ app.py 경계 계약 — import · 호출 · 문턱 단일화 (fail-CLOSED) ────
     ap = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                       'webapp', 'app.py')
-    if os.path.exists(ap):
-        src = open(ap, encoding='utf-8', errors='replace').read()
-    chk('⑩ ★ app.py 가 이 모듈을 쓴다 (문턱 상수를 두 곳에 두지 않는다)',
-        (not src) or 'type_map_resolve' in src)
+    _ap_ok = os.path.exists(ap)
+    _src = open(ap, encoding='utf-8', errors='replace').read() if _ap_ok else ''
+    _werr = app_wiring_errors(_src, exists=_ap_ok)
+    chk('⑩ ★ app.py 가 이 모듈을 실제로 쓴다 (import · 호출 · 문턱 단일화)',
+        not _werr, _werr)
+
+    # ── ⑩c ★★ 그 검사가 공허하지 않은가 — 음성 대조 넷 + 양성 대조 하나 ──
+    #   초판 ⑩ 은 아래 넷을 **전부 통과**시켰다 (부분문자열 + fail-open).
+    _GOOD = ('import type_map_resolve as _t\n'
+             'm, n, e = _t.resolve_from_files(d, a)\n'
+             'x = r > _t.AM_P_RADIUS_CUT_SIM\n')
+    for _label, _args, _want_fail in (
+            ('메타 키 이름만 남은 app.py', ("meta = {'type_map_resolved': None}\n",), True),
+            ('app.py 자체가 없음 (fail-closed)', ('', False), True),
+            ('import 만 있고 호출이 없음', ('import type_map_resolve as _t\n',), True),
+            ('문턱 0.004 를 리터럴로 다시 박음', (_GOOD + "y = r > 0.004\n",), True),
+            ('올바른 배선 (양성 대조)', (_GOOD,), False)):
+        _e = app_wiring_errors(*_args)
+        chk(f'⑩c {"거부" if _want_fail else "통과"}: {_label}',
+            bool(_e) == _want_fail, _e if bool(_e) != _want_fail else '')
 
     print()
     if fails:

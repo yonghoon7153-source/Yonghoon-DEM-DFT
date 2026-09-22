@@ -1992,8 +1992,13 @@ def main():
                                              max_points=a.field_max_points)
                     if _jhs is not None:
                         _jq = np.nan_to_num(_jhs['q'], nan=0.0, posinf=0.0, neginf=0.0)
-                        _p998j = max(float(np.percentile(_jq, 99.8)), 1e-30)
-                        _jqn = _jq / _p998j                                        # p99.8-norm (전자/이온 필드 동일)
+                        #  ★ SELF-45 — Joule 필드도 **장 전수** p99.8 로 정규화한다.
+                        #    `joule_hotspot` 의 `q` 는 추출된 것이라 거기에 백분위를 걸면
+                        #    색 스케일이 다시 `--field-max-points` 의 함수가 된다 (전자·이온·
+                        #    열류는 고쳤는데 이 네 번째만 남아 있었다 — 2026-09-22 리뷰어
+                        #    회답을 읽다 잡았다).
+                        _p998j = max(float(_jhs.get('q_p99_8') or np.percentile(_jq, 99.8)), 1e-30)
+                        _jqn = _jq / _p998j                                        # 장-p99.8 정규화
                         joule_field = [[round(float(_jhs['pts'][i, 0]), 2), round(float(_jhs['pts'][i, 1]), 2),
                                         round(float(_jhs['pts'][i, 2]), 2), round(float(_jqn[i]), 4)]
                                        for i in range(len(_jhs['pts']))]

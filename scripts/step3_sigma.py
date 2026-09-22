@@ -1287,6 +1287,7 @@ def joule_hotspot(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
     srt = np.sort(vals)[::-1]; cum = np.cumsum(srt); tot = float(cum[-1])
     hot_frac_50 = float((np.searchsorted(cum, 0.5 * tot) + 1) / len(vals)) if tot > 0 else 0.0
     conc_ratio = float(vals.max() / max(vals.mean(), 1e-30))
+    _q_p998, _q_mean, _q_n = float(np.percentile(vals, 99.8)), float(vals.mean()), int(vals.size)
     if len(ii) > max_points:                                          # field_point_cloud 규약: 상위 hot 유지 + 균일 배경
         rng = np.random.default_rng(seed)
         order = np.argsort(vals)[::-1]
@@ -1296,7 +1297,12 @@ def joule_hotspot(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
     pts = np.stack([(ii + 0.5) * vox + box_lo[0], (jj + 0.5) * vox + box_lo[1],
                     (kk + 0.5) * vox + box_lo[2]], axis=1).astype(np.float32)
     return {'pts': pts, 'q': vals.astype(np.float32), 'hot_frac_50': hot_frac_50,
-            'conc_ratio': conc_ratio, 'n': int(len(vals))}
+            'conc_ratio': conc_ratio, 'n': int(len(vals)),
+            #  ★ SELF-45 잔여 (2026-09-22) — `hot_frac_50`·`conc_ratio` 는 처음부터 추출
+            #    **전** 전수로 쟀는데 `q` 는 추출된 것이라, 소비자가 `q` 에 백분위를 걸면
+            #    필드 정규화가 다시 예산의 함수가 된다 (전자·이온·열류는 고쳤는데 여기만
+            #    남아 있었다).  ⇒ 전수 p99.8·평균을 같이 돌려준다.
+            'q_p99_8': float(_q_p998), 'q_mean': float(_q_mean), 'n_total': int(_q_n)}
 
 
 def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
@@ -2735,6 +2741,17 @@ def _selftest():
     ok &= _mk
     print(f"field-stats-markov: p99.8 ≤ 500·⟨|J|⟩ (같은 모집단)  "
           f"{_s0['p99_8'] / max(_s0['mean'], 1e-30):.1f} ≤ 500  {'OK' if _mk else 'FAIL'}")
+    #  ★ 네 번째 필드 — Joule.  `q` 는 추출된 것이므로 소비자가 거기에 백분위를 걸면
+    #    색 스케일이 다시 예산의 함수가 된다.  전수 통계가 예산에 불변인지 같이 문다.
+    _jq45 = [joule_hotspot(_r45, _fs, _tab45, 0.5, (1,), max_points=_mp)
+             for _mp in (200, 1200, 10 ** 9)]
+    _jinv = (all(j is not None for j in _jq45)
+             and all(abs(j['q_p99_8'] - _jq45[0]['q_p99_8'])
+                     <= 1e-12 * max(abs(_jq45[0]['q_p99_8']), 1e-30)
+                     and j['n_total'] == _jq45[0]['n_total'] for j in _jq45))
+    ok &= _jinv
+    print(f"joule-stats-budget-invariant: q 의 전수 p99.8·N 이 max_points 에 불변  "
+          f"{'OK' if _jinv else 'FAIL'}")
 
     print('SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1

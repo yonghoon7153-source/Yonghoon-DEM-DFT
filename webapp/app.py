@@ -5547,8 +5547,16 @@ def upload():
                                         t = int(parts[1])
                                         r = float(parts[5])
                                         if t == 1:
-                                            # sim r > 0.004 → AM_P (6μm), else AM_S (2μm)
-                                            am_type_name = 'AM_P' if r > 0.004 else 'AM_S'
+                                            # sim r > AM_P_RADIUS_CUT_SIM → AM_P (6µm), else AM_S (2µm)
+                                            #  ⚠ 문턱의 정본은 `type_map_resolve` 다 — 여기에
+                                            #    리터럴로 다시 적지 않는다.  이 되돌림 경로에
+                                            #    170여 케이스 코퍼스의 상 라벨이 걸려 있어
+                                            #    두 곳이 조용히 갈리는 것이 가장 비싸다
+                                            #    (selftest ⑩ 이 리터럴 재등장을 거부한다).
+                                            am_type_name = (
+                                                'AM_P'
+                                                if r > _type_map_resolve.AM_P_RADIUS_CUT_SIM
+                                                else 'AM_S')
                                             break
                                     except (ValueError, IndexError):
                                         continue

@@ -93,6 +93,12 @@ jobs:
       - name: 집중계수 복원기 (SELF-45 — 옛 payload 의 focus_top) (selftest)
         run: python scripts/repair_focus_top.py --selftest
 
+      - name: 웹앱 파이썬 환경 감사 (selftest)
+        run: python scripts/webapp_env_audit.py --selftest
+
+      - name: atom-type ↔ 상 매핑 경계 계약 (selftest)
+        run: python scripts/type_map_resolve.py --selftest
+
       - name: 설명 ↔ 상수 정합 (L3-11 — 어느 수식을 계산했다고 보고하는가)
         run: python scripts/generate_comparison_plots.py --selftest-descriptions
 

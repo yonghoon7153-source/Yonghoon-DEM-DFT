@@ -69,6 +69,12 @@ run 'step3_sigma            --selftest' python3 scripts/step3_sigma.py --selftes
 #  ★ SELF-45 (2026-09-22) — 필드 통계가 **그림 예산에 불변**인지는 step3_sigma 의 selftest 가
 #    보고, 옛 payload 를 고치는 후처리기는 자기 selftest 가 본다 (복원의 정확성 + 거부).
 run 'repair_focus_top       --selftest' python3 scripts/repair_focus_top.py --selftest
+#  ★ 2026-09-22 (병합 검증) — 웹앱 패치 2건의 selftest 가 **어느 레인에도 없었다**
+#    (원장 lane=none · check_all/CI grep 0/0).  합쳐 3.5 초인데 자동 규율이 아니었다 =
+#    CDXR3-8 이 잡았던 그 모양("테스트가 존재하고 수동 실행이 녹색인 것만으로는
+#    자동 규율이 아니다").  ⇒ 둘 다 두 레인에 건다.
+run 'webapp_env_audit       --selftest' python3 scripts/webapp_env_audit.py --selftest
+run 'type_map_resolve       --selftest' python3 scripts/type_map_resolve.py --selftest
 run 'gen_plots  --selftest-descriptions' python3 scripts/generate_comparison_plots.py --selftest-descriptions
 run 'gen_plots  --selftest-fits' python3 scripts/generate_comparison_plots.py --selftest-fits
 run 'eis_drt_ica            --selftest' python3 scripts/eis_drt_ica.py --selftest
