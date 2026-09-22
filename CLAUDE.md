@@ -21,7 +21,7 @@
 | **Lee 2025 절대 대조 (Secondary)** | STEP2 침대 **2/2 완주** (09-22 03:26 KST, mach 0.01 · `MPM_QS_FRAMES=7500`) → 다음 = STEP3 16 팔 (vox 0.15 × origin 8 × 두 침대, `LEAN=2` · `PTFE_STAMP=centerline`) | prereg §6 · `docs/session_20260921_progress.md` |
 | **PTFE 전도격자 규약** | **`centerline` 이 본문 규약** — `off` 는 **기각된 쪽** | 원장 `CL-60`(live) · `docs/reviews/ptfe_convention_prereg_20260829.md` |
 | **LHS 수확** | **130/130 수확 완료 (09-19)** · 설계 CSV 측정 열 4/7 완전, 3/7 은 사유 등록 (`LHS-08` τ 14/130 열림) | `docs/data/area_s2_cohort.tsv` · `docs/data/lhs_design_20260818.csv` |
-| **믹서 층상 캠페인** | 13 런 발사 09-21 밤 (~5 일) — ⛔ **사전등록 §2 판정선 8 칸이 비어 있다** · 저자 판정 **R-3 · R-4** 대기.  완주 전에 채워 커밋해야 사전등록이 성립한다 (§C-1) | `docs/reviews/mixer_layered_prereg_20260921.md` · `docs/session_20260921_mixer_decisions.md` |
+| **믹서 층상 캠페인** | ✅ **사전등록 성립** — §2 판정선 **확정 2026-09-22 (결과 0 건)** · 저자 판정 **R-3 (A) · R-4 (a)** 기록됨 (prereg §0).  진행 (09-22 22:25): **E0 3/3 완주** ⇒ `S_R²` 확보 · `L*` 10 런 **~10 %** (~4.5 일 남음).  ★ 지금 할 수 있는 것 = **바닥 검사** `S₀²/S_R² ≥ 5` — `t₀` 는 정착 끝 프레임이라 이미 지나 있다.  깨지면 층상 삽입 결함이므로 **4.5 일을 더 태우기 전에** 안다.  ⚠⚠ 옛 표기 *"§2 판정선 8 칸이 비어 있다 · R-3·R-4 대기"* 는 **09-22 오전** 상태이고 같은 날 해소됐다 — 2026-09-22 밤에 내가 그 줄을 현재형으로 읽고 **헛경보**를 냈다 (E0 완주 보고를 받고 *"사전등록이 무효가 된다"* 고 잘못 알렸다).  규율 ④ 가 경고한 그 실패가 **이 표 자신에서** 난 것이다 | `docs/reviews/mixer_layered_prereg_20260921.md` · `docs/session_20260921_mixer_decisions.md` |
 | **결함 원장** | open **126 / 328** (2026-09-22) | `docs/reviews/findings.json` · `gap_audit_r3_repair_20260917.md` |
 | **MPM 플래튼 · AM 하중분담** | ⛔ **③ 은 닫혔다 · ② 가 유일한 병목** (아래 DO-NOT) | `docs/reviews/fam_platen_prereg_20260812.md` §11 |
 | **납품** | **9월 말 회사 보고** | — |
