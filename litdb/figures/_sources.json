@@ -565,14 +565,6 @@
    "36dc36f5-78._Uncertainty_estimation_by_committee_models_for_molecular_dynamics_and_thermodynamic_averages.pdf"
   ]
  },
- "interfacial_stability_halide_se_highv_na_assb": {
-  "figures": 18,
-  "generated": "2026-09-22",
-  "pdfs": [
-   "13. Interfacial_stability_halide_SE_highV_Na_ASSB_MAIN.pdf",
-   "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf"
-  ]
- },
  "intergranular_cracking_nmc811_jmca2023": {
   "figures": 5,
   "generated": "2026-08-05",
@@ -630,6 +622,14 @@
   "pdfs": [
    "aab365ce-107._Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf",
    "34819e19-107._Sup_Mechanistic_insights_into_superionic_thioarsenate_argyrodite_solid_electrolytes_via_machine_learning_interatomic_potentials.pdf"
+  ]
+ },
+ "jang2026_halide_se_interfacial_stability_highv_na": {
+  "figures": 18,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "13. Interfacial_stability_halide_SE_highV_Na_ASSB_MAIN.pdf",
+   "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf"
   ]
  },
  "jeon2026_concerted_li_motion_argyrodite_assi": {
