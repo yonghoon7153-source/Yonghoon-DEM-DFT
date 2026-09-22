@@ -1,0 +1,372 @@
+{
+ "slug": "interfacial_stability_halide_se_highv_na_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "13. Interfacial_stability_halide_SE_highV_Na_ASSB_MAIN.pdf",
+  "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Electrochemical stability windows of sodium HSEs—including chlorides (blue), oxychlorides (orange), and fluorine- substituted chloride (green)—in comparison with sodium sulfide SEs (red). Gray bars represent the operating voltage ranges of cathode materials. The dashed box indicates the kinetically extended stability region (up to − 25 meV/atom).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    29.8,
+    559.4,
+    182.3
+   ],
+   "w": 1081,
+   "h": 636,
+   "dpi": 300,
+   "src": "13. Interfacial_stability_halide_SE_highV_Na_ASSB_MAIN.pdf",
+   "blank": 0.841
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 (a–d) Decomposition energy profiles of sodium HSEs as a function of sodium chemical potential and (e–h) corresponding electrochemical potential curves under oxidation (desodiation) and reduction (sodiation) conditions for: (a,e) Na2 ZrCl6 , (b,f) NaTaCl6 , (c,g) NaAlCl2.5 O0.75 , and (d,h) Na0.5 ZrCl4 F0.5 .",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    27.2,
+    559.7,
+    293.0
+   ],
+   "w": 2169,
+   "h": 1108,
+   "dpi": 300,
+   "src": "13. Interfacial_stability_halide_SE_highV_Na_ASSB_MAIN.pdf",
+   "blank": 0.739
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Heatmap of Δ𝐸D, mutual between sodium SEs and sodium oxide cathodes. More negative values indicate a stronger thermodynamic driving force for interfacial decomposition. The color bar denotes the mutual decomposition reaction energy scale, with blue indicating lower reaction energies (greater interfacial stability) and red indicating higher reaction energies (greater interfacial reactivity).",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    30.5,
+    559.7,
+    285.3
+   ],
+   "w": 2169,
+   "h": 1063,
+   "dpi": 300,
+   "src": "13. Interfacial_stability_halide_SE_highV_Na_ASSB_MAIN.pdf",
+   "blank": 0.682
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Schematic diagram of the high-throughput computa- tional workflow used to identify coating materials capable of stabilizing interfaces between sodium HSEs and cathode materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    334.3,
+    298.6,
+    452.3
+   ],
+   "w": 1082,
+   "h": 493,
+   "dpi": 300,
+   "src": "13. Interfacial_stability_halide_SE_highV_Na_ASSB_MAIN.pdf",
+   "blank": 0.396
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 (a) PCA–K-means clustering of coating materials based on Δ𝐸D, mutual profiles, defining four stability groups (A–D). (b) Corresponding heatmap showing average Δ𝐸D, mutual of each group with sodium HSEs and cathodes, highlighting their interfacial reactivity trends.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    27.2,
+    559.6,
+    192.6
+   ],
+   "w": 2169,
+   "h": 690,
+   "dpi": 300,
+   "src": "13. Interfacial_stability_halide_SE_highV_Na_ASSB_MAIN.pdf",
+   "blank": 0.738
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 Heatmap of Δ𝐸D, mutual of (a) sodium HSEs and (b) cathodes against energetically stable coating materials. The bottom two rows correspond to cathodes and HSEs for comparison.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    249.6,
+    559.7,
+    580.7
+   ],
+   "w": 2169,
+   "h": 1381,
+   "dpi": 300,
+   "src": "13. Interfacial_stability_halide_SE_highV_Na_ASSB_MAIN.pdf",
+   "blank": 0.626
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "FIGURE 7 Heatmap of Δ𝐸D, mutual of sodium HSEs and cathodes against practically relevant coating materials. The bottom two rows represent cathodes and HSEs for comparison.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    32.7,
+    559.7,
+    498.3
+   ],
+   "w": 2169,
+   "h": 1941,
+   "dpi": 300,
+   "src": "13. Interfacial_stability_halide_SE_highV_Na_ASSB_MAIN.pdf",
+   "blank": 0.496
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "FIGURE 8 Calculated mutual reaction energies among cathodes, HSEs, and coating materials. Each panel compares three interfaces—HSE– coating (red), cathode–coating (blue), and cathode–HSE (gray). Panels (a–c) correspond to Na2 ZrCl6 -based systems, and (d–f) to NaTaOCl4 -based systems, paired with cathodes (a,d) Na0.67 Mn0.65 Co0.2 Ni0.15 O2 , (b,e) NaNi0.33 Fe0.33 Mn0.33 O2 , and (c,f) NaNi0.61 Co0.12 Mn0.27 O2 .",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    26.6,
+    559.6,
+    319.3
+   ],
+   "w": 2169,
+   "h": 1221,
+   "dpi": 300,
+   "src": "13. Interfacial_stability_halide_SE_highV_Na_ASSB_MAIN.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a–c) Decomposition energy profiles of sodium HSEs as a function of sodium chemical potential and (d–f) corresponding electrochemical potential curves under oxidation (desodiation) and reduction (sodiation) conditions for: (a,d) Na0.7La0.7Zr0.3Cl4, (b,e) Na0.625Y0.25Zr0.75Cl4.375, and (c,f) NaTaOCl4.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    83.2,
+    532.4,
+    412.8
+   ],
+   "w": 1944,
+   "h": 1374,
+   "dpi": 300,
+   "src": "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf",
+   "blank": 0.74
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Schematic illustration distinguishing the decomposition reaction energy and the mutual decomposition reaction energy. The energy of a two-phase mixture composed of materials A and B is shown as a function of mixing ratio. The decomposition reaction energy, ΔED(A, B, x), represents the total thermodynamic driving force for decomposition into equilibrium phases and includes the intrinsic decomposition tendencies of the individual compounds. In contrast, the mutual decomposition reaction energy, ΔED, mutual(A, B, x), defined in Equation (2), subtracts these intrinsic contributions and isolates the additional thermodynamic driving force arising specifically from interfacial contact between A and B.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    92.9,
+    532.4,
+    316.7
+   ],
+   "w": 1944,
+   "h": 933,
+   "dpi": 300,
+   "src": "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 9,
+   "file": "tab_1.png",
+   "caption": "TABLE 1 Sodium HSEs with high ionic conductivities and their reported values.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.2,
+    11.9,
+    589.2,
+    771.8
+   ],
+   "w": 2167,
+   "h": 2999,
+   "dpi": 284,
+   "src": "13. Interfacial_stability_halide_SE_highV_Na_ASSB_MAIN.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Electrochemical performance of oxide cathode materials in sodium-ion batteries.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    518.2,
+    540.7
+   ],
+   "w": 1881,
+   "h": 1918,
+   "dpi": 300,
+   "src": "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 5,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Reduction and oxidation potentials of sodium halide solid electrolytes with corresponding phase equilibria.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    531.1,
+    375.0
+   ],
+   "w": 1935,
+   "h": 1228,
+   "dpi": 300,
+   "src": "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 6,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Reduction and oxidation reactions of sodium halide solid electrolytes as a function of the chemical potential of sodium. Solid electrolytes Potential ED (eV/atom) Phase equilibria (V) 0.00 -0.614 Zr, NaCl 1.04 -0.153 ZrCl, NaCl 1.24 -0.086 ZrCl₂, NaCl 1.57 -0.013 ZrCl₃, NaCl Na2ZrCl6 1.69 0.000 Na2ZrCl6 3.75 0.000 NaCl₃, ZrCl₄ 4.78 -0.152 NaCl₇, ZrCl₄ 5.68 -0.324 ZrCl₄, Cl₂ 0.00 -0.436 NaCl, Zr, La 0.40 -0.207 LaCl₃, NaCl, Zr 1.04 -0.072 LaCl₃, NaCl, ZrCl 1.24 -0.040 ZrCl₂, LaCl₃, NaCl 1.57 -0.006 ZrCl₃, LaCl₃, NaCl Na0.7La0.7Zr0.3Cl4 1.68 0.000 Na0.7La0.7Zr0.3Cl4 3.76 0.000 NaCl₃, ZrCl₄, LaCl₃ 4.78 -0.084 NaCl₇, ZrCl₄, LaCl₃ 5.68 -0.179 ZrCl₄, LaCl₃, Cl₂ 0.00 -0.761 NaCl, Zr, Y 0.52 -0.434 Y₂Cl₃, NaCl, Zr 0.58 -0.400 Na₃YCl₆, NaCl, Zr 1.04 -0.172 Na₃YCl₆, NaCl, ZrCl 1.24 -0.097 Na₃YCl₆, ZrCl₂, NaCl Na0.625Y0.25Zr0.75Cl4.375 1.57 -0.015 ZrCl₃, Na₃YCl₆, NaCl 1.69 0.000 Na0.625Y0",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    531.3,
+    772.0
+   ],
+   "w": 1935,
+   "h": 2882,
+   "dpi": 300,
+   "src": "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 8,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Mutual reaction energy and phase equilibria of chemical reactions between sodium halide solid electrolytes and cathode materials. Reaction SE Cathode energy (meV/atom) Decomposition phases Na₃V₂(PO₄)₃ -73 NaZr₂(PO₄)₃, VCl₃, NaCl NaFePO₄ -80 Fe₂PClO₄, NaZr₂(PO₄)₃, NaCl Na₀.₆Mn₀.₈Li₀.₂O₂ -116 Li₅Mn₇O₁₆, NaCl₃, MnO₂, NaCl, ZrO₂ Na₀.₆₇Fe₀.₅Mn₀.₅O₂ -139 Mn₂O₃, NaMn₈O₁₆, Fe₂O₃, NaCl, ZrO₂ Na₀.₆₇Ni₀.₃₃Mn₀.₃₃Ti₀.₃₃O₂ -144 MnNiO₃, NaClO₄, TiO₂, NaCl, ZrO₂ Na₀.₆₇Co₀.₅Mn₀.₅O₂ -125 Mn₃(CoO₄)₂, Co₂₃O₃₂, MnO₂, NaCl, ZrO₂ Na₀.₆₇Mn₀.₆₅Co₀.₂Ni₀.₁₅O₂ -131 Mn₃(CoO₄)₂, Co₂₃O₃₂, MnNiO₃, MnO₂, NaCl, ZrO₂ Na2ZrCl6 Na₀.₆₇Mn₀.₇Ni₀.₂Mg₀.₁O₂ -142 Mg₂Mn₃O₈, Mn₂O₃, NaMn₈O₁₆, MnNiO₃, NaCl, ZrO₂ NaFe₀.₅Co₀.₅O₂ -191 Na(CoO₂)₃, Co₂₃O₃₂, Fe₂O₃, NaCl, ZrO₂ NaNi₀.₅Mn₀.₅O₂ -215 MnNiO₃, NaCl, ZrO₂ NaNi₀.₅Fe₀.₅O₂ -234 Fe₂NiO₄, NaClO₄, NiO, NaCl, ZrO₂ NaNi₀.₃₃Fe₀.₃₃Mn₀.₃₃O₂ -213 MnNiO₃, NaClO₄, Fe₂O₃, NaCl, ZrO₂ NaNi",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    531.4,
+    769.8
+   ],
+   "w": 1936,
+   "h": 2873,
+   "dpi": 300,
+   "src": "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 12,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Classification of coating materials (Groups A–D) derived from PCA–K-means clustering.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    531.4,
+    678.0
+   ],
+   "w": 1936,
+   "h": 2491,
+   "dpi": 300,
+   "src": "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 13,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Reduction and oxidation potentials and phase equilibria of coating materials with average reaction energies below 50 meV/atom and maximum values below 60 meV/atom against sodium halide solid electrolytes and cathode materials. Reduc Oxid ation poten tion potent Phase equilibria Phase equilibria MP-ID at the reduction at the oxidation ial (V) potential tial (V) potential NaAlH₂CO₅ mp- 644506 1.57 Na₂CO₃, AlHO₂, H₂O, C 4.03 AlHO₂, H₂O, O₂, CO₂ Na₆CdCl₈ mp- 28022 1.97 Cd, NaCl 3.75 NaCl₃, CdCl₂ Na₂Ca(SO₄)₂ mp-6397 1.63 Na₂SO₄, CaO, CaS 4.16 Na₂S₂O₇, CaSO₄, O₂ Na₂Al₂Si₃(HO₃)₄ mp- 1173798 1.16 NaAlSiO₄, Na₂SiO₃, H₂, H₂O 3.69 NaAlSi₃O₈, AlHO₂, O₂, H₂O NaB₃O₅ mp- 557406 1.12 B₆O, Na₃B₇O₁₂ 3.54 Na₂B₈O₁₃, O₂ NaAlSi₃O₈ mp- 721988 0.73 Na₂Si₂O₅, NaAlSiO₄, Si 3.79 Al₂SiO₅, O₂, SiO₂ NaB₅(H₂O₅)₂ mp- 721294 1.63 NaB₃H₄O₇, Na₂B₈O₁₃, H₂ 3.86 Na₂B₈O₁₃, B(HO)₃, O₂ Na₂B₈O₁₃ mp- 542300 1.15 B₆O, Na",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    531.4,
+    464.0
+   ],
+   "w": 1936,
+   "h": 1599,
+   "dpi": 300,
+   "src": "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 14,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Reduction and oxidation potentials and phase equilibria of coating materials— including ternary and quaternary metal oxides and polyanionic compounds—with up to four elements. Reduc Oxid ation poten tion potent Phase equilibria Phase equilibria Coating Materials MP-ID at the reduction at the oxidation ial (V) potential tial (V) potential Na₂Ca(SO₄)₂ mp-6397 1.63 Na₂SO₄, CaO, CaS 4.16 Na₂S₂O₇, CaSO₄, O₂ NaAlSi₃O₈ mp- 721988 0.73 Na₂Si₂O₅, NaAlSiO₄, Si 3.79 Al₂SiO₅, O₂, SiO₂ Na₆Mg(SO₄)₄ mp- 558427 2.20 Na₂S₅, Na₂SO₄, MgO 4.12 NaMg₂(SO₄)₃, Na₂SO₄ NaB₃O₅ mp- 557406 1.12 B₆O, Na₃B₇O₁₂ 3.54 Na₂B₈O₁₃, O₂ BaNa(B₃O₅)₃ mp- 17864 1.33 Na₂B₈O₁₃, BaB₄O₇, B₆O 3.80 BaB₈O₁₃, Na₂B₈O₁₃, O₂ Na₂B₈O₁₃ mp- 542300 1.15 B₆O, NaBO₂ 4.30 B₆O, Na₃B₇O₁₂ Na₃B₆PO₁₃ mp- 556801 1.48 Na₅B₂P₃O₁₃, Na₃B₇O₁₂, P 3.84 Na₂B₈O₁₃, BPO₄, O₂ Na₂Ta₄O₁₁ mp-3285 1.45 NaTa₄O₈, NaTaO₃ 3.68 Ta₂O₅, O₂ Na₃Sc₂(PO₄)₃ mp- 16956 1.0",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    531.4,
+    766.9
+   ],
+   "w": 1935,
+   "h": 2861,
+   "dpi": 300,
+   "src": "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf",
+   "blank": 0.899
+  }
+ ]
+}

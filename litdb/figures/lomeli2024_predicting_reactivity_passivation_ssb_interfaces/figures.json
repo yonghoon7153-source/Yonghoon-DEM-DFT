@@ -1,0 +1,272 @@
+{
+ "slug": "lomeli2024_predicting_reactivity_passivation_ssb_interfaces",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "4. ACSAMI_2024_Lomeli_Predicting_reactivity_passivation_SSB_interfaces_MAIN.pdf",
+  "4. Sup1) ACSAMI_2024_Lomeli_Predicting_reactivity_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Labeling of training set interfaces. Here we visualize the time evolution of three interfaces in the training set Li2PNO2 (stable), LiDyS2 (passivating), and Li3InCl6 (reactive) from a 40 ps DFT-MD calculation at 550 K. In the bottom we plot the normalized MSD for reactive atoms which cross the original Li|SSE, with colored labels assigned by inspection of the simulation cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    274.5
+   ],
+   "w": 2151,
+   "h": 918,
+   "dpi": 300,
+   "src": "4. ACSAMI_2024_Lomeli_Predicting_reactivity_passivation_SSB_interfaces_MAIN.pdf",
+   "blank": 0.787
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Feature search for linear models. The misclassification rates are shown here with increasing number of features for our SM (a) and RM (b) models. Both binary models use the same data for training but partitioned differently. The SM model splits the data set into stable vs passivating/ reactive, while the RM model splits the data as stable/passivating vs reactive. The best feature combination is used for each number of features. As a benchmark we also show the misclassification of the current thermodynamic only ΔErxn metric, random guessing, and baseline misclassification. shows significant Fe states contribution at the Fermi energy. These arise from Fe atoms in the surface of SSE melting into the liquid Li part of the cell while the rest of the SSE cell remains unchanged and hence retains a moderate normalized MSD value and passivating prediction for the material. For interface",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    313.5,
+    561.5,
+    482.4
+   ],
+   "w": 2151,
+   "h": 704,
+   "dpi": 300,
+   "src": "4. ACSAMI_2024_Lomeli_Predicting_reactivity_passivation_SSB_interfaces_MAIN.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Decision boundary for the 2-feature reactivity predictors and resulting expansion of the material search space. Top two panels show the spread of the training data in 2-feature space. In purple we show the decision boundary of the current thermodynamic model −100 meV/atom. Additionally we show the decision boundaries of the 2-feature SM and RM type binary predictors, based on different splits of the training data, which represent the kinetic stabilization barrier dependence on the average atomic volume (a) and packing fraction (b). The lower two panels depict 3535 SSE candidates in the t-SNE representation of our full feature space. Panel (c) shows the labeling using the current method of interfacial reactivity prediction, where all interfaces with |ΔErxn| < 100 meV/atom are considered stable, totaling 229 candidates. In panel (d) we present the predictions for the combined SM ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    402.2
+   ],
+   "w": 2151,
+   "h": 1450,
+   "dpi": 300,
+   "src": "4. ACSAMI_2024_Lomeli_Predicting_reactivity_passivation_SSB_interfaces_MAIN.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. LiB13C2 and LiB12PC: new stable SSEs with high ionic conductivity. (a) The crystal structures of LiB13C2 and LiB12PC are shown, which exhibit 1D lithium diffusion channels held together by a lattice of boron icosahedron. (b) To confirm the stability prediction from the classifier trained in this work, we perform interfacial AIMD for 40 ps for both materials and see no reactivity of the boron lattice with Li metal. (c) Width of the diffusion channels in the borate materials, and their modeled Li vacancy diffusivity and conductivity using AIMD. The large diffusion channels, with a shortest width of 3.52 or 3.75 Å, lead to a high vacancy diffusivity which, if we assume a vacancy concentration of only 0.05% of Li sites, results in a high ionic conductivity σLi of 4.43 × 10−4 and 1.30 × 10−3 S/cm for LiB12PC and LiB13C2, respectively. https://doi.org/10.1021/acsami.4c06095 ACS Appl.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    403.9,
+    561.5,
+    684.4
+   ],
+   "w": 2151,
+   "h": 1170,
+   "dpi": 300,
+   "src": "4. ACSAMI_2024_Lomeli_Predicting_reactivity_passivation_SSB_interfaces_MAIN.pdf",
+   "blank": 0.77
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: AIMD Snapshots for LiDyS2 and Li6ZnGe2O8. The two materials are at the boundary of the normalized MSD parameter between the passivating and reactive interfaces (see Figure 1 in the main text). After the simulation, LiDySS2 maintains it’s crystal structure while some reactivity is seen at its interface, while the Li6ZnGe2O8 original crystal structure is not present anymore as Li moves into the cell, making it a reactive interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    44.0,
+    612.0,
+    296.4
+   ],
+   "w": 2281,
+   "h": 1052,
+   "dpi": 300,
+   "src": "4. Sup1) ACSAMI_2024_Lomeli_Predicting_reactivity_SI.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Relationship of ∆Eformation and Normalized MSD values. For materials in the training set, their normalized MSD values, calculated as described in the main text, are compared to the driving force for chemical mixing for each Li—SSE pair. Those with bigger driving force tend to show more displacement, though outliers in each group hint at the need to take into account the structure of the SSE when considering the thermodynamic driving force for classifying the reactivity of a particular interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    464.5,
+    528.1,
+    649.3
+   ],
+   "w": 1851,
+   "h": 771,
+   "dpi": 300,
+   "src": "4. Sup1) ACSAMI_2024_Lomeli_Predicting_reactivity_SI.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Final pDOS for predicted passivating materials. Static DFT calculations were done for the final atomic configuration from the AIMD simulation at 550K for each phase. Same DFT set up as discussed in the methods section is used, except that 3x3x1 k-grid is used, where the longest axis in the computational cell had a single k-point sampling.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    464.5,
+    528.1,
+    649.3
+   ],
+   "w": 1851,
+   "h": 771,
+   "dpi": 300,
+   "src": "4. Sup1) ACSAMI_2024_Lomeli_Predicting_reactivity_SI.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Final pDOS for predicted reactive materials. Static DFT calculations were done for the final atomic configuration from the AIMD simulation at 550K for each phase. Same DFT set up as discussed in the methods section is used, except that 3x3x1 k-grid is used, where the longest axis in the computational cell had a single k-point sampling.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    145.1,
+    528.1,
+    589.1
+   ],
+   "w": 1851,
+   "h": 1851,
+   "dpi": 300,
+   "src": "4. Sup1) ACSAMI_2024_Lomeli_Predicting_reactivity_SI.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Training Set in Feature Space. t-SNE dimension reduction of all potential candidates for SSE application in the Materials Project database, with those in our training set shown in orange. The training set in this work includes diverse examples from the total list of candidates, providing a representative set of the total feature space.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    181.1,
+    528.1,
+    553.1
+   ],
+   "w": 1851,
+   "h": 1551,
+   "dpi": 300,
+   "src": "4. Sup1) ACSAMI_2024_Lomeli_Predicting_reactivity_SI.pdf",
+   "blank": 0.762
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Histograms of ∆Erxn values for linear model predictions. Distribution of ∆Erxn values for materials predicted to be stable (left), passivating (center), and reactive (right) by the combined linear model discussed in this work and for the predictions show in Figure 5d in the main text.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    201.2,
+    538.4,
+    545.0
+   ],
+   "w": 1894,
+   "h": 1433,
+   "dpi": 300,
+   "src": "4. Sup1) ACSAMI_2024_Lomeli_Predicting_reactivity_SI.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Training models with different feature sets. Training on linear models using the data split described in the main text for RM and SM are performed with composition (magpie) and structural features from matminer, as well as the features used in the main text. L1 regularization is done for both in this case as opposed to the L2 regularization with combinatorial search used in the main text. The number of features in the matminer set are too large to combinatorially search through at higher N feature models. Instead all features are used in the model, and the regularization strength is changed. At higher inverse regularization more and more features include non-zero coefficients and are effectively N feature models. The performance using matminer and the ionic conductivity features from Sendek et al. show little difference in misclassification rate, and feature similar features i",
+   "rotated_deg": 0,
+   "bbox": [
+    61.4,
+    195.0,
+    553.4,
+    467.3
+   ],
+   "w": 2051,
+   "h": 1136,
+   "dpi": 300,
+   "src": "4. Sup1) ACSAMI_2024_Lomeli_Predicting_reactivity_SI.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Training Set of SSE Candidate Materialsa",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    53.5,
+    296.5,
+    94.4
+   ],
+   "w": 1043,
+   "h": 172,
+   "dpi": 300,
+   "src": "4. ACSAMI_2024_Lomeli_Predicting_reactivity_passivation_SSB_interfaces_MAIN.pdf",
+   "blank": 0.643
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2. Validation Set and Model Predictionsa",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    35.2,
+    560.5,
+    783.4
+   ],
+   "w": 2057,
+   "h": 2994,
+   "dpi": 288,
+   "src": "4. ACSAMI_2024_Lomeli_Predicting_reactivity_passivation_SSB_interfaces_MAIN.pdf",
+   "blank": 0.81
+  }
+ ]
+}

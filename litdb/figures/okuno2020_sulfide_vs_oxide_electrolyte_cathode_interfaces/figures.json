@@ -1,0 +1,1093 @@
+{
+ "slug": "okuno2020_sulfide_vs_oxide_electrolyte_cathode_interfaces",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+  "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
+  "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Surfaces of (a) LiCoO2 (LCO)-(104), (b) LCO-(110), (c) β-Li3PS4 (LPS)-(010), (d) γ-L3PO4 (LPO)-(001), (e) Li7La3Zr2O12 (LLZO)-(001), and (f) Li4Ti5O12(LTO)-(111), examined in this work. Li, O, P, S, Co, La, Zr, and Ti are depicted as light green, red, purple, yellow, blue, brown, blue, and light blue spheres, respectively. CoO6, PS4, PO4, ZrO6, LaO8, and TiO6 complexes are represented by blue, green, gray, light green, brown, and light blue polyhedrons, respectively. 4.9 eV.58 The cutoﬀenergies of wave function and charge density were set as 40 and 320 Ry, respectively. With regard to the K-point mesh, we set 2 × 1 × 1 for LCO(110)/LPS(010) and LCO(110)/LPO(001), and for other interface models, we set only the Γ-point. We set the system to be neutral, and the occupation number was determined by the Gaussian smearing technique with a smearing parameter of 0.001 Ry. With regard t",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    263.8
+   ],
+   "w": 2151,
+   "h": 837,
+   "dpi": 300,
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.767
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 8,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Phase-field-generated SE microstructure evolution over a 700×350 μm domain and the corresponding predicted impedance. (a) Simulated microstructure with an initial porosity of ~12% at the initial and final stages of sintering. (b) Simulated microstructure with an initial porosity of ~20% at the initial and final stages of sintering. (c) Predicted impedance spectra for a single-crystal SE and the SE microstructures with porosities of ~12% and ~20% at step 1000 respectively. To examine how impedance evolves as sintering proceeds, the ~20% porosity microstructure was advanced through five simulated sintering steps (step 1, 500, 1000, 10,000, and 20,000), tracking the progressive coarsening of grains and the coalescence of pores into fewer, larger voids (Fig. 3a). The porosity and GB maps in Fig. 3b and 3c use a 0/1 grayscale convention (0 = pore, 1 = dense SE in (b); 0 = grain interi",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    64.3,
+    549.0,
+    375.8
+   ],
+   "w": 2013,
+   "h": 1298,
+   "dpi": 300,
+   "src": "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
+   "blank": 0.664
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 9,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Simulated microstructure evolution during sintering and the corresponding impedance response of the SE at ~20% porosity. (a) Simulated microstructure at steps 1, 500, 1000, 10,000 and 20,000 over a 700×350 μm domain. (b) Corresponding porosity evolution maps at each step. (c) Corresponding grain- boundary (GB) evolution maps at each step. (d) Predicted Nyquist impedance spectra at steps 1, 500, 1000, 10,000, and 20,000 showing the impedance change that accompanies the microstructural changes. (e) Porosity fraction as a function of simulation steps during sintering. (f) GB fraction as a function of simulation steps during sintering.",
+   "rotated_deg": 0,
+   "bbox": [
+    56.5,
+    100.2,
+    574.2,
+    593.5
+   ],
+   "w": 2158,
+   "h": 2057,
+   "dpi": 300,
+   "src": "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
+   "blank": 0.63
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Distributions of Li sites classiﬁed with the Li vacancy- formation energies at the (a) LCO(104)/LPS(010) and (b) both LCO/LPS interfaces, respectively. The vacancy-formation energies of 65 Li sites in 8 diﬀerent interface structures (23 sites in three diﬀerent interface structures) are calculated for LCO(104)/LPS(010) and (LCO(110)/LPS(010)). The distributions are normalized by the total number of calculated Li sites. The blue bars denote the distribution of all the calculated Li sites in the LCO/LPS and the red bars denote those of calculated Li sites located in the LPS region. dynamical Li+ depletion can be a major origin of the interfacial resistance, the LCO(110) interfaces have a higher resistance than that of the LCO(104). The details of the structure dependence of the Li vacancy-formation energies in LCO/LPS interfaces are discussed in Figure S3 and Table S3.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    328.8
+   ],
+   "w": 1051,
+   "h": 1108,
+   "dpi": 300,
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) Representative LCO(104)/LPS(010) interface structure with the site labels and the mutual cation exchange energies for (b) Co ↔P and (c) Co ↔Li.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    478.4
+   ],
+   "w": 1051,
+   "h": 1731,
+   "dpi": 300,
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.764
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Effect of SEI (Li2S) volume fraction on predicted impedance. Simulated microstructures for (a) 8.8%, (b) 8%, and (c) 7.6% Li2S volume fraction. (d) Corresponding predicted impedance, showing the impedance increases with increasing Li2S content relative to the single-crystal baseline. Because the SEI is a multi-phase layer, the individual conductivities of its three decomposition products Li2S, Li3P, and LiCl were then varied independently at a fixed SEI volume fraction of 8.8% (Fig. 7). Among the three assigned phase conductivities (one of which was set to",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    386.9,
+    549.0,
+    612.4
+   ],
+   "w": 2014,
+   "h": 940,
+   "dpi": 300,
+   "src": "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
+   "blank": 0.636
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 12,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Effect of individual SEI-phase conductivity on predicted impedance where SEI volume fraction is 8.8%. (a) simulated microstructure. (b) Predicted impedance obtained by independently assigning the conductivity of LiCl, Li3P, and Li2S, showing that impedance increases as the assigned phase conductivity decreases. Finally, all three SEI decomposition products (Li2S, Li3P, and LiCl) were considered together, alongside the grain and grain-boundary structure, in a single simulation (Fig. 8). Relative to the grain-boundary-only baseline (real(Z) ≈ 22–32 Ωcm², Fig. 5), the combined multi-phase SEI shifts the predicted impedance to real(Z) ≈ 586–599 Ωcm². Much of this change appears as an increased ohmic offset, and it can become the primary microstructural feature responsible for degrading Li/SE interfacial performance during interphase formation. Note that the SEI layer thickness used h",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    184.0,
+    549.0,
+    320.2
+   ],
+   "w": 2013,
+   "h": 569,
+   "dpi": 300,
+   "src": "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Distributions of Li sites divided by their Li vacancy- formation energies at the (a) LCO(104)/LPO(010) and (b) LCO(104))/LPO(001) interfaces. The vacancy-formation energies of 28 Li sites in four diﬀerent interface structures and 36 sites in ﬁve diﬀerent interface structures are calculated for LCO(104)/LPO(010) and LCO(104)/LPO(001), respectively. The distributions are normalized by the total number of calculated Li sites. The blue bar graphs denote the distribution of all the calculated Li sites in LCO/ LPO, and the red bar graphs denote those of the calculated Li sites located in the LPO region. Unlike the sulﬁde LPS case, the exchange energies of Co ↔P and Co ↔Li are over 3 eV, and the LPO surface is inert to reactions with the LCO surface. This result suggests that unlike in case of LPS, Co diﬀusion is less likely to occur on the LPO phase. Here, we point out that the therm",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    339.4
+   ],
+   "w": 1051,
+   "h": 1151,
+   "dpi": 300,
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Figure 9. (a) Schematic picture of the optimized LCO(104)/ LPO(001) interface with the sites where we calculated mutual cation exchange energy. (b) Co ↔P and (c) Co ↔Li cation exchange energies corresponding to sites denoted in (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    497.3
+   ],
+   "w": 1052,
+   "h": 1810,
+   "dpi": 300,
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.799
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Optimized interface structures of LCO(104)/LLZO(001). The insets show the detailed atomic structures at the interface. CoO6, ZrO6, and LaO8 complexes are represented by dark blue, light green, and brown polyhedrons.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    201.4
+   ],
+   "w": 1051,
+   "h": 577,
+   "dpi": 300,
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.751
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "Figure 11. PDOS of the optimized interfaces of LCO(104)/ LLZO(001). Red line: total DOS; green line: LCO atoms; blue line: LLZO atoms; violet line: LCO atoms facing the vacuum; light blue line: the ﬁrst LCO layer facing the LLZO slab. We set zero reference energy as the center of the band gap.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    250.2,
+    306.5,
+    429.9
+   ],
+   "w": 1051,
+   "h": 750,
+   "dpi": 300,
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 8,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Distributions of the Li sites classiﬁed by their Li vacancy- formation energies at the LCO(104)/LLZO(001) interface. The vacancy-formation energies of 36 Li sites in four diﬀerent interface structures are calculated. The distributions are normalized by the total number of calculated Li sites. The blue bar graphs denote the distribution of all the calculated Li sites in LCO/LLZO, and the red bar graphs denote those of the calculated Li sites located in the LLZO region.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    231.6
+   ],
+   "w": 1052,
+   "h": 703,
+   "dpi": 300,
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 9,
+   "file": "fig_13.png",
+   "caption": "Figure 13. (a) Structure of the LCO(104)/LLZO(001) interface (upper panel) and its corresponding (b) Co ↔Zr and (c) Co ↔La mutual cation exchange reaction energies (lower panel). The positive values of exchange energies indicate endothermic reactions.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    394.8
+   ],
+   "w": 1051,
+   "h": 1382,
+   "dpi": 300,
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.792
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 9,
+   "file": "fig_14.png",
+   "caption": "Figure 14. Optimized interface structures of LTO(111)/LPS(010). The insets show the detailed atomic structures at the interface. TiO6 and PS4 complexes are represented by light blue and green polyhedrons.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    609.0,
+    306.5,
+    713.1
+   ],
+   "w": 1051,
+   "h": 435,
+   "dpi": 300,
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.782
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 9,
+   "file": "fig_15.png",
+   "caption": "Figure 15. PDOS of the optimized interfaces of LTO(111)/ LPS(010). Red line: total DOS; gray line: LTO atoms; blue line: LPS atoms. We set zero reference energy as the center of the band gap. contrast to the LCO/LPS interface, there is no gap state around the interface. The CBM is composed of LTO and the LPS states are located 1 eV higher than the CBM, while the VBM consists of the LPS state and the states of LTO are lower than −1.5 eV with respect to the VBM. The adhesion energy between LTO and LPS is 0.019 eV/Å2 and is smaller than those of the LCO/LPS interfaces. We then examined the distribution of the Li vacancy- formation energies around the LTO(111)/LPS(010) interface, as shown in Figure 16. The values of Ef(VLi_j) in the LTO",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    96.7,
+    570.5,
+    258.9
+   ],
+   "w": 1052,
+   "h": 677,
+   "dpi": 300,
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 9,
+   "file": "fig_16.png",
+   "caption": "Figure 16. Distributions of Li sites divided by their Li vacancy- formation energies at the LTO(111)/LPS(010) interface. The vacancy-formation energies of 31 Li sites in four diﬀerent interface structures are calculated. The distributions are normalized by the total number of calculated Li sites. The blue bar graphs denote the distribution of all the calculated Li sites in LTO/LPS, and the red bar graphs denote those of calculated Li sites located in the LPS region.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    429.4,
+    570.5,
+    604.3
+   ],
+   "w": 1052,
+   "h": 730,
+   "dpi": 300,
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.844
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Top and side views of slab models of (a) LCO(104)/LPS(010) and (b) LCO(110)/LPS(010).",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    333.3,
+    519.5,
+    672.2
+   ],
+   "w": 1834,
+   "h": 1413,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.683
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. PDOS of Co atoms in LCO(104)/LPS(010) interface. Blue line: Co atom of CoO5S octahedron at the LCO(104)/LPS(010) boundary ; red line: Co atom of CoO5 quadrangular cone on the LCO surface at the LCO(104)/LPS(010) boundary; green line: Co atoms of CoO6 octahedron in the center of LCO slab. We set zero reference energy as the center of the band gap.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    355.2,
+    519.5,
+    535.0
+   ],
+   "w": 2054,
+   "h": 750,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Calculated interface structures with the lowest energies (a) and the highest energy (b) models of LCO(104)/LPS(010) interface, and the sites where we calculated Li vacancy formation energy (Ef(VLi_j)). Structure of (c) and (d) are the lowest and the highest energy structures of LCO(110)/LPS(010) interfaces, respectively, and the sites where we calculated Li vacancy formation energy (Ef(VLi_j)).",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    108.3,
+    519.5,
+    555.0
+   ],
+   "w": 1834,
+   "h": 1862,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.768
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Calculated interface structures with the lowest energy (a) and the highest energy of LCO(104)/LPS(010) interface model. Co ↔ P exchange energy for the interface with the lowest energy (c) and that with highest energy (d). The indexes of Co1~Co3 and P1~P3 in (c) and (d) are corresponding to (a) and (b), respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    101.3,
+    519.5,
+    371.6
+   ],
+   "w": 1834,
+   "h": 1127,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.75
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. The Li sites where we calculated Li vacancy formation energy after Co↔P cation mixing had occurred. Six Co atoms on LCO surface are exchanged to the P atoms in first layer in LPS phase. The model before exchange of cation are the most stable model of LCO(104)/LPS(010).",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    520.2,
+    522.1,
+    694.6
+   ],
+   "w": 1845,
+   "h": 728,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.856
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. (a): Total DOS (red) and PDOS of Co (blue), O (green), S (purple) atoms in LCO(104)/LPS(010) interface with Co↔P cation mixing corresponding to Fig.S5. (b): Total DOS (red), PDOS of Co atoms in LPS layer (light blue) and PDOS of Co atom in first LCO layer facing to the LPS slabs (orange). The zero reference energy is set to Fermi level of LCO(104)/LPS(010) interface slab.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    135.3,
+    595.0,
+    427.7
+   ],
+   "w": 2480,
+   "h": 1220,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Top and side views of slab models of (a) LCO(104)/LPO(001) and (b) LCO(104)/LPO(010).",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    105.0,
+    519.5,
+    347.5
+   ],
+   "w": 1834,
+   "h": 1011,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.723
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Top and side views of slab models of LCO(110)/LPO(010).",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    369.3,
+    492.3,
+    536.2
+   ],
+   "w": 1721,
+   "h": 697,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.772
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 11,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Calculated interface structures with the lowest (a) and the highest energy (b) models of LCO(104)/LPO(001) interface, and the sites where we calculated Li vacancy formation energy.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    119.0,
+    519.5,
+    275.4
+   ],
+   "w": 1834,
+   "h": 653,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.57
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 12,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. The distributions of Li sites divided by their Li vacancy formation energies at LCO(110)/LPO(010) interface. The vacancy formation energies of 28 Li sites in 4 different interface structures are calculated. The distributions are normalized by the total number of calculated Li sites. The blue bar graphs denote distribution of all the calculated Li sites in LCO/LPO and red bar graphs are those of calculated Li sites located in LPO region.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    135.3,
+    522.1,
+    334.4
+   ],
+   "w": 1845,
+   "h": 831,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. (a) The most stable and (b) the highest energy LCO(110)/LPO(010) interface structures we calculated, and the Li sites where we calculated Li vacancy formation energy.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    501.3,
+    519.5,
+    701.1
+   ],
+   "w": 1834,
+   "h": 834,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.594
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 14,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Total and PDOS of bulk LLZO crystal.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    143.7,
+    417.8,
+    317.6
+   ],
+   "w": 1410,
+   "h": 726,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 15,
+   "file": "fig_S13.png",
+   "caption": "Figure S13 Top and side views of slab models of LCO(104)/LLZO(001) interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    144.0,
+    503.7,
+    289.6
+   ],
+   "w": 1768,
+   "h": 607,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 15,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. (a) Total and PDOS of LCO(104)/LLZO(001) interface model. (b) PDOS of atom species of LCO(104)/LLZO(001) interface model.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    144.0,
+    558.9,
+    289.6
+   ],
+   "w": 1998,
+   "h": 607,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 15,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Structure of (a) the lowest and (b) high energy models of LCO(104)/LLZO(001) interface and the sites where we calculated Li vacancy formation energy..",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    513.3,
+    519.5,
+    674.8
+   ],
+   "w": 1834,
+   "h": 674,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.659
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 16,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. (a)Structure of the LCO(104)/LLZO(001) interface (upper panel) and its corresponding (b) Co ↔ Li mutual cation exchange reaction energies (lower panel). The positive values of exchange energies indicate endothermic reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    311.0,
+    519.5,
+    511.1
+   ],
+   "w": 1834,
+   "h": 835,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.731
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 17,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Top and side views of slab models of LTO(111)/LPS(010) interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    333.8,
+    457.2,
+    553.0
+   ],
+   "w": 1575,
+   "h": 915,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.732
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 18,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Typical structure of LTO(111)/LPS(010) interface and the sites where we calculated Li vacancy formation energy.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    103.3,
+    519.5,
+    276.6
+   ],
+   "w": 1834,
+   "h": 723,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.759
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 18,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. The sites where we calculated cation exchange energies in LTO(111)/LPS(010) interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.4,
+    506.9,
+    519.4,
+    628.0
+   ],
+   "w": 1835,
+   "h": 505,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.811
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 19,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. The reaction energies of (a) Ti ↔ P and (b) Ti ↔ Li cation exchange reaction energies, where the atom indexes corresponds to Fig.S19. The positive values of exchange energies correspond to endothermic reaction.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    108.1,
+    519.5,
+    234.8
+   ],
+   "w": 1834,
+   "h": 529,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.83
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 19,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Typical structure of LTO(111)/LPS(010) interface and the sites where we calculated Li vacancy formation energy.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    573.8,
+    523.5,
+    709.3
+   ],
+   "w": 1851,
+   "h": 566,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.645
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 20,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. The distributions of Li sites divided by their Li vacancy formation energies at LCO(104)/LTO(111) interface. The vacancy formation energies of 24 Li sites in 3 different interface structures are calculated. The distributions are normalized by the total number of calculated Li sites. The blue bar graphs denote distribution of all the calculated Li sites in LCO/LTO and red bar graphs are those of calculated Li sites located in LTO region.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.5,
+    243.3,
+    522.1,
+    497.6
+   ],
+   "w": 1845,
+   "h": 1061,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 21,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Typical structure of LCO(104)/LTO(111) interface and the sites where we calculated Li vacancy formation energy.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.4,
+    117.7,
+    519.5,
+    280.2
+   ],
+   "w": 1835,
+   "h": 678,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.726
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1. Parameters for phase-field sintering simulations Parameters Values A 16 B 1 𝜅𝜅𝜌𝜌 4 𝜅𝜅𝜂𝜂 4 𝑀𝑀𝑠𝑠 0.01 𝑀𝑀𝑝𝑝 0.001 𝑀𝑀𝑠𝑠𝑠𝑠𝑠𝑠𝑠𝑠 1 𝑀𝑀𝑔𝑔𝑔𝑔 0.1 L 10 To further generate the SEI microstructure, we set ρ=1 and assign η1, η2, and η3 to be the three SEI phases, while the rest non-conserved order parameters( ) 4 10 ~ η η are assigned to be Li6PS5Cl grains. This treatment effectively reduces the sintering model to a grain growth model. Initially, small circular particles of 1 3 ~ η η are put randomly within the left 150 μm region, while large circular particles of η4~η10 are put in the right region; the rest regions are hypothetical liquid phases with( ) ( ) 1 2 10 , ,..., 0,0,...,0 η η η = . Simulations are performed until no hypothetical liquid regions left. 3. Results and Discussion The EIS of the symmetric cell is simulated using the parameters tabulated in Table 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    70.4,
+    548.0,
+    761.7
+   ],
+   "w": 2005,
+   "h": 2881,
+   "dpi": 300,
+   "src": "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2. Material properties used in the modelling. Parameters Name Symbol Value Unit Ref Electrochemical Temperature T 298 K 0i 4.97 mA/cm2 Exp Exchange current density",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    70.4,
+    545.1,
+    761.7
+   ],
+   "w": 1993,
+   "h": 2881,
+   "dpi": 300,
+   "src": "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Optimized lattice constant of bulk crystal structures and Li vacancy formation energies (Ev) of β-Li3PS4, LiCoO2, Li4Ti5O12, γ-Li3PO4, and Li7La3Zr2O12. The numbers in parentheses are experimental lattice constants.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.5,
+    188.6,
+    518.5,
+    468.2
+   ],
+   "w": 1826,
+   "h": 1166,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table S2. The repeated numbers of LCO and LPS units in the slab model and the misfit parameter (μ) of the calculated interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.0,
+    98.6,
+    518.4,
+    232.8
+   ],
+   "w": 1849,
+   "h": 560,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 6,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Li vacancy formation energies (eV) of each Li site. The symbols of Li sites (LC1~LP8 ) are corresponding to Figure S3. (a) and (b) are the most stable and the highest energy models of LCO(104)/LPS(010), respectively, and (c) and (d) are those of LCO(110)/LPS(010), in our sampling structures. LC1 LC2 LC3 LP4 LP5 LP6 LP7 LP8 (a) LCO(104)/LPS(010) 3.37 3.41 2.41 2.43 2.17 2.40 2.15 2.27 (b) LCO(104)/LPS(010) 3.48 3.18 2.21 2.20 2.22 1.23 1.48 1.61 (c) LCO(110)/LPS(010) 2.98 3.30 2.75 2.51 2.84 1.97 1.86 -",
+   "rotated_deg": 0,
+   "bbox": [
+    75.0,
+    98.6,
+    518.5,
+    269.7
+   ],
+   "w": 1849,
+   "h": 714,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 8,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Li vacancy formation energy (eV) before and after Co and P exchange reaction in LCO(104) /LPS(010) interface. L1~L4 are Li site we calculated Li vacancy formation energy and their locations are shown in Fig.S4.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.0,
+    98.6,
+    521.1,
+    232.7
+   ],
+   "w": 1860,
+   "h": 560,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 9,
+   "file": "tab_S5.png",
+   "caption": "Table S5. The repeated numbers of LCO and LPO units in the slab model and the misfit parameter (μ) of the calculated interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.0,
+    350.6,
+    518.4,
+    503.3
+   ],
+   "w": 1849,
+   "h": 637,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 11,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Li vacancy formation energies (eV) of each Li site where LC1~LC3 are Li site in LCO and LP1~LP4 are those in LPO. The symbols of Li sites (LC1~LP4 ) are corresponding to (a) and (b) in Fig. S9 are the lowest and the highest energy models in our sampling calculation, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.5,
+    350.6,
+    518.5,
+    478.5
+   ],
+   "w": 1826,
+   "h": 534,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 13,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Li vacancy formation energies (eV) of each Li site where LC1~LC3 are Li site in LCO and LP1~LP4 are those in LPO. The symbols of Li sites (LC1~LP4 ) are corresponding to (a) and (b) in Fig. S11 are the most stable and the highest energy models in our sampling calculation, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.5,
+    98.6,
+    518.5,
+    244.5
+   ],
+   "w": 1826,
+   "h": 609,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 14,
+   "file": "tab_S8.png",
+   "caption": "Table S8. The repeated numbers of LCO and LLZO units in the slab model and the misfit parameter (μ) of the calculated interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.9,
+    512.6,
+    518.5,
+    610.3
+   ],
+   "w": 1849,
+   "h": 408,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 16,
+   "file": "tab_S9.png",
+   "caption": "Table S9. Li vacancy formation energies of each Li site where LC1~LC3 are Li site in LCO and LZ1~LZ4 are those in LLZO. The symbols of Li sites (LC1~LZ4 ) are corresponding to Fig. S15.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.0,
+    98.6,
+    521.1,
+    226.5
+   ],
+   "w": 1860,
+   "h": 534,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 17,
+   "file": "tab_S10.png",
+   "caption": "Table S10. The repeated numbers of LTO and LPS units in the slab model and the misfit parameter (μ) of the calculated interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.9,
+    260.6,
+    518.5,
+    358.3
+   ],
+   "w": 1849,
+   "h": 408,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 18,
+   "file": "tab_S11.png",
+   "caption": "Table S11. Li vacancy formation energies of each Li site where LT1~LT3 are Li site in LTO and LP1~LP5 are those in LPS. The symbols of Li sites (LC1~LP5 ) are corresponding to Figure S17.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.9,
+    332.6,
+    521.2,
+    424.0
+   ],
+   "w": 1860,
+   "h": 382,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "tS12",
+   "kind": "table",
+   "label": "S12",
+   "page": 19,
+   "file": "tab_S12.png",
+   "caption": "Table S12. The repeated numbers of LCO and LTO units in the slab model and the misfit parameter (μ) of the calculated interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.9,
+    500.6,
+    518.5,
+    598.3
+   ],
+   "w": 1849,
+   "h": 408,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "tS13",
+   "kind": "table",
+   "label": "S13",
+   "page": 21,
+   "file": "tab_S13.png",
+   "caption": "Table S13. Li vacancy formation energies of each Li site where LC1~LC3 are Li site in LCO and LT1~LT5 are those in LTO. The symbols of Li sites (LC1~LT5 ) are corresponding to Figure S22.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.0,
+    332.6,
+    521.1,
+    424.0
+   ],
+   "w": 1860,
+   "h": 382,
+   "dpi": 300,
+   "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
+   "blank": 0.916
+  }
+ ]
+}

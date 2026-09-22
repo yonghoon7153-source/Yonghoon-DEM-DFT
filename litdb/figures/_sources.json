@@ -1,4 +1,11 @@
 {
+ "accelerated_workflow_antiperovskite_sse": {
+  "figures": 10,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "12. Accelerated_workflow_antiperovskite_SSE_MAIN.pdf"
+  ]
+ },
  "adeli2019_halide_substitution_boosting_argyrodite": {
   "figures": 18,
   "generated": "2026-08-05",
@@ -390,6 +397,14 @@
    "6fe46724-41467_2022_29769_MOESM1_ESM.pdf"
   ]
  },
+ "firstprinciples_prediction_esw_reaction_mechanisms_sse": {
+  "figures": 29,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "7. FirstPrinciples_prediction_ESW_reaction_mechanisms_SSE_MAIN.pdf",
+   "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf"
+  ]
+ },
  "fujimura2013_ml_conductivity_origin": {
   "figures": 4,
   "generated": "2026-08-05",
@@ -448,6 +463,14 @@
   "generated": "2026-09-19",
   "pdfs": [
    "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf"
+  ]
+ },
+ "haruyama2014_space_charge_layer_oxide_cathode_sulfide_se": {
+  "figures": 17,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "11. ChemMater_2014_Haruyama_Space_charge_layer_oxide_cathode_sulfide_SE_MAIN.pdf",
+   "11. Sup) ChemMater_2014_Haruyama_Space_charge_layer_SI.pdf"
   ]
  },
  "haruyama2017_cation_mixing_co_diffusion_lco_lps": {
@@ -539,6 +562,14 @@
   "generated": "2026-09-09",
   "pdfs": [
    "36dc36f5-78._Uncertainty_estimation_by_committee_models_for_molecular_dynamics_and_thermodynamic_averages.pdf"
+  ]
+ },
+ "interfacial_stability_halide_se_highv_na_assb": {
+  "figures": 18,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "13. Interfacial_stability_halide_SE_highV_Na_ASSB_MAIN.pdf",
+   "13. Sup) Interfacial_stability_halide_SE_highV_Na_SI.pdf"
   ]
  },
  "intergranular_cracking_nmc811_jmca2023": {
@@ -651,6 +682,14 @@
   "generated": "2026-09-03",
   "pdfs": [
    "47e468ac-72._Advanced_Materials__2025__Jung__Enhanced_Kinetics_and_Dual_Interfacial_Stability_in_High_Areal_Loading_Electrodes_for.pdf"
+  ]
+ },
+ "jung2026_scalable_ai_dual_doped_lgps": {
+  "figures": 10,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.docx",
+   "14. eTransportation_2026_Jung_Scalable_AI_dual_doped_LGPS_MAIN.pdf"
   ]
  },
  "jung2026_sio2_cosubstitution_mechanical_argyrodite": {
@@ -1089,6 +1128,14 @@
    "DFT 먹인 논문/45. Sup) ﻿Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries.pdf"
   ]
  },
+ "lomeli2024_predicting_reactivity_passivation_ssb_interfaces": {
+  "figures": 13,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "4. ACSAMI_2024_Lomeli_Predicting_reactivity_passivation_SSB_interfaces_MAIN.pdf",
+   "4. Sup1) ACSAMI_2024_Lomeli_Predicting_reactivity_SI.pdf"
+  ]
+ },
  "lu2024_lowtemp_assb_li2zro3_interface": {
   "figures": 18,
   "generated": "2026-09-12",
@@ -1169,6 +1216,16 @@
    "117. MLIP_MACHIN1_MAIN.pdf"
   ]
  },
+ "marcolongo_ionic_correlations_failure_nernst_einstein": {
+  "figures": 14,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "10. ACSAMI_2017_Haruyama_Cation_mixing_Co_diffusion_LCO_LPS_MAIN.pdf",
+   "10. Ionic_correlations_failure_Nernst_Einstein_SSE_MAIN.pdf",
+   "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf",
+   "10. Sup) Ionic_correlations_failure_NE_SI.pdf"
+  ]
+ },
  "matthews2024_ptfe_nanofibril_network": {
   "figures": 9,
   "generated": "2026-09-04",
@@ -1182,6 +1239,14 @@
   "pdfs": [
    "a21a6645-84._Accurate_Estimation_of_Diffusion_Coefficients_and_their_Uncertainties_from_Computer_Simulation.pdf",
    "2219d416-84._Sup_Accurate_Estimation_of_Diffusion_Coefficients_and_their_Uncertainties_from_Computer_Simulation.pdf"
+  ]
+ },
+ "mechanistic_origin_superionic_li_diffusion_li6ps5x": {
+  "figures": 18,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "9. Sup) Mechanistic_origin_superionic_Li6PS5X_SI.pdf"
   ]
  },
  "meng2026_pvdf_li2zrf6_phase_ordering": {
@@ -1322,6 +1387,15 @@
   "generated": "2026-08-25",
   "pdfs": [
    "oh2026_kecs_cell_polarization.pdf"
+  ]
+ },
+ "okuno2020_sulfide_vs_oxide_electrolyte_cathode_interfaces": {
+  "figures": 54,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
+   "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf"
   ]
  },
  "ong2013_lgps_family_substitution": {
@@ -1509,6 +1583,16 @@
    "DEM 논문/50. Modeling of the Calendering Process for Lithium-Ion Batteries.pdf"
   ]
  },
+ "schwietert2020_redox_activity_vs_electrochemical_stability": {
+  "figures": 19,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "6. Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.pdf",
+   "6. NatMater_2020_Schwietert_Clarifying_redox_activity_vs_ESW_MAIN.pdf",
+   "6. Sup) Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.docx",
+   "6. Sup) NatMater_2020_Schwietert_Clarifying_redox_SI.pdf"
+  ]
+ },
  "sendek2017_ml_screening_12k_conductors": {
   "figures": 16,
   "generated": "2026-08-05",
@@ -1683,6 +1767,14 @@
    "82. Sup) Tu2026_Diffusion_Descriptor_ML_SSE_Li_Metal.pdf"
   ]
  },
+ "twostep_growth_sei_argyrodite_li_metal": {
+  "figures": 10,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "8. Sup) Two-step_growth_SEI_argyrodite_SI.pdf",
+   "8. Two-step_growth_SEI_argyrodite_Li_metal_MAIN.pdf"
+  ]
+ },
  "uma2026_family_of_universal_models_for_atoms": {
   "figures": 34,
   "generated": "2026-08-25",
@@ -1702,6 +1794,14 @@
   "generated": "2026-09-11",
   "pdfs": [
    "43b5cb04-______simulation_deep_learning_2025_ESM.pdf"
+  ]
+ },
+ "wang2022_resistive_decomposing_interfaces_se_alkali_metal": {
+  "figures": 26,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "3. JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_interfaces_SE_alkali_metal_MAIN.pdf",
+   "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf"
   ]
  },
  "wang2022_sulfide_thermal_stability_th_descriptor": {

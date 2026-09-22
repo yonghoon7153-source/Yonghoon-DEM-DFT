@@ -1,0 +1,592 @@
+{
+ "slug": "firstprinciples_prediction_esw_reaction_mechanisms_sse",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "7. FirstPrinciples_prediction_ESW_reaction_mechanisms_SSE_MAIN.pdf",
+  "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Calculated intrinsic electrochemical stability window and decomposition electrochemical stability window. For most solid electrolytes, the intrinsic oxidation and reduction voltages result in a wider stability window than the decomposition window. However, for LLTO and LATP materials, the intrinsic oxidation/reduction potential is lower/higher than the direct oxidation/reduction, indicated by the solid line.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    283.5
+   ],
+   "w": 1052,
+   "h": 919,
+   "dpi": 300,
+   "src": "7. FirstPrinciples_prediction_ESW_reaction_mechanisms_SSE_MAIN.pdf",
+   "blank": 0.788
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Formation energies per formula unit of LixAl0.5Ti1.5(PO4)3 (LATP) with (b) corresponding structures after DFT relaxations for x = 0, 1.5, and 3. On the convex hull the most stable Li concentrations are shown with an orange circle. Red spheres indicate oxygen, orange phosphorus, white titanium, blue aluminum, and pink lithium. (c) Formation energies of LixGeP2S12 (LGPS) with (d) the corresponding structures of x = 4, 10, and 22, where the green sphere indicates germanium and the yellow indicates sulfur. The convex hull of LATP has a convex shape, indicating solid solution behavior for both Li insertion and removal; the corresponding structures for lithiation and complete delithiation appear to be stable after DFT relaxation. For LGPS, the convex is V-shaped between x = 4 and x = 18, indicating phase separation. Further proof is also seen in the corresponding structure after ",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    415.4
+   ],
+   "w": 2151,
+   "h": 1468,
+   "dpi": 300,
+   "src": "7. FirstPrinciples_prediction_ESW_reaction_mechanisms_SSE_MAIN.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Schematic representation of a solid-state battery, the solid electrolyte is exposed to a potential at the interface with the conductive additive and active electrode particles. (b, c) Schematic energy diagrams versus Li composition in a solid electrolyte for a ﬁrst-order phase and solid solution reaction. For phase separation, the solid electrolyte generally tends to react toward decomposition products in thermodynamic equilibrium. However, the stability window is determined by the nucleation barrier between the solid electrolyte and the reaction products. The intrinsic intermediate phase has a low energy barrier because the Li-ion mobility facilitates (de)lithiation, whereas the nucleation energy of the decomposition products can be large depending on the compositional and structural complexity of the material. For solid solution materials, the Li (de)insertion potential c",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    376.3
+   ],
+   "w": 2151,
+   "h": 1305,
+   "dpi": 300,
+   "src": "7. FirstPrinciples_prediction_ESW_reaction_mechanisms_SSE_MAIN.pdf",
+   "blank": 0.811
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1 Formation energies per formula unit for x in LixPS4. The most stable configurations are shown with an orange cicle and form the convex hull.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    525.5,
+    289.4
+   ],
+   "w": 1920,
+   "h": 937,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2 Formation energies per formula unit for x in LixPS5Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    327.1,
+    379.2,
+    551.7
+   ],
+   "w": 1310,
+   "h": 937,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3 Formation energies per formula unit for x in LixBH4.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    372.5,
+    289.6
+   ],
+   "w": 1283,
+   "h": 937,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4 Formation energies per formula unit for x in LixYBr4.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    311.2,
+    377.7,
+    536.0
+   ],
+   "w": 1304,
+   "h": 938,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5 Formation energies per formula unit for x in LixOCl4.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    375.4,
+    289.6
+   ],
+   "w": 1295,
+   "h": 937,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6 Formation energies per formula unit for x in LixPO2N.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    311.2,
+    380.3,
+    536.0
+   ],
+   "w": 1315,
+   "h": 938,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7 Formation energies per formula unit for x in LixPO2N.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    380.3,
+    289.4
+   ],
+   "w": 1315,
+   "h": 937,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 8,
+   "file": "fig_S8.png",
+   "caption": "Figure S8 Flow diagram for calculating the voltages to corresponding decomposition route of a solid material.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    310.8,
+    530.2,
+    643.6
+   ],
+   "w": 1940,
+   "h": 1387,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 9,
+   "file": "fig_S9.png",
+   "caption": "Figure S9 Radial distribution function (RDF) of S-S bonds in Li4GeP2S12, Li10GeP2S12 and Li18GeP2S12 calculated from ab-initio molecular dynamics simulations. During delithiation an increase in intensity around 2 Å is shown, representing formation of S-S bonds formed during oxidation of S in the Li10GeP2S12 structure.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    529.4,
+    310.6
+   ],
+   "w": 1936,
+   "h": 1025,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 9,
+   "file": "fig_S10.png",
+   "caption": "Figure S10 Radial distribution function (RDF) of Ti-P bonds in Al0.5Ti1.5(PO4)3, Li1.5Al0.5Ti1.5(PO4)3 and Li3Al0.5Ti1.5(PO4)3 calculated from ab-initio molecular dynamics simulations. Minor strucural changes are shown representing the relative stable structure of LATP during lithiation and delithiation.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    379.2,
+    526.1,
+    624.9
+   ],
+   "w": 1923,
+   "h": 1025,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11.png",
+   "caption": "Figure 11 Formation energies per formula unit for x in LixPS4, the most stable configurations are shown with an orange cicle and form the convex hull here the most favourable decomposition products are depicted with a black cross. The phases on the convex hull have a relatively higher energy in respect to the endmembers compared to the decomposition products. The slope between Li3PS4 (x = 3) and the phases on the convex the voltage can be determined. The difference in slope between the decomposition products and Li3PS4 is smaller as the difference in slope between the most favorable (de)lithiated phases on the convex indicating a wider voltage window for the (de)lithiated phases.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.2,
+    300.4
+   ],
+   "w": 1952,
+   "h": 982,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1. Investigated Solid Electrolytes, Including the Redox Element(s) on Oxidation and Reduction and the Theoretical Capacities Associated with Decomposition material acronym redox element oxidation ox. capacity (mAh/g) redox element reduction red. capacity (mAh/g) Li3PS4 LPS S2− 96.23 P5+ 1190.78 Li6PS5Br LPSB S2−/Br− 514.01 P5+ 685.35 Li6PS5Cl LPSC S2−/Cl− 599.14 P5+ 798.85 Li10GeP2S12 LGPS S2− 455.20 P5+/Ge4+ 1081.11 LiBH4 LBH B5− 1230.55 H+ 4922.22 Li3YBr6 LYB Br− 136.48 Y3+ 136.48 Li3OCl LOC O2−/Cl− 1112.40 Li2PO2N LIPON N3−/ O2− 589.95 P5+ 2359.80 Li7La3Zr2O12 LLZO O2− 223.41 Zr4+/ La3+ 255.33 Li0.33La0.56TiO3 LLTO O2− 50.27 Ti4+/La3+ 559.03 Li1.5Al0.5Ti1.5(PO4)3 LATP O2− 105.62 P5+/Al3+ / Ti4+ 2147.69 Li1.5Al0.5Ge1.5(PO4)3 LAGP O2− 96.23 Ge4+/P5+/Al3+ 1812.34",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    64.0,
+    569.5,
+    245.5
+   ],
+   "w": 2142,
+   "h": 758,
+   "dpi": 300,
+   "src": "7. FirstPrinciples_prediction_ESW_reaction_mechanisms_SSE_MAIN.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2. Calculated Decomposition Electrochemical Stability Window, Assuming Direct Decomposition to the Most Stable Decomposition Products (Values in Agreement with the Calculations in Literature8), and the Calculated Intrinsic Electrochemical Stability Window Based on the Oxidation and Reduction Potentials for (De)inserting Lithium for Diﬀerent Solid Electrolytes material decomposition ox/red (V) intrinsic ox/red (V) LPS 1.72−2.30 1.24−2.47 LPSB 1.72−2.01 1.09−2.23 LPSC 1.72−2.01 1.11−2.19 LGPS 1.63−2.14 1.19−2.38 LBH 0.54−2.10 0.00−3.43 LYB 0.67−3.06 0.00−3.43 LOC 0.00−2.68 0.00−3.17 LIPON 0.68−2.64 0.00−4.12 LLZO 0.05−2.68 0.00−3.61 LLTO 1.71−3.36 2.10−3.68 LATP 2.17−3.86 2.74−3.77 LAGP 2.71−3.98 2.31−4.30",
+   "rotated_deg": 0,
+   "bbox": [
+    319.5,
+    363.0,
+    569.5,
+    598.7
+   ],
+   "w": 1042,
+   "h": 983,
+   "dpi": 300,
+   "src": "7. FirstPrinciples_prediction_ESW_reaction_mechanisms_SSE_MAIN.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Materials, structures and parameters used in the density functional theory (DFT) simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    223.3,
+    532.2,
+    467.8
+   ],
+   "w": 1944,
+   "h": 1020,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 1,
+   "file": "tab_S2.png",
+   "caption": "Table S2 Metastable phases and corresponding volume, band gap and ionic conductivity calculated by density functional theory (DFT) simulations of Li3PS4. Li3PS4 Phase Volume (Å3) Band gap (eV) Ionic conductivity (S/m, 1000K) Li3PS4 660.68 2.675 203.61 Delithiated Li1PS4 588.60 2.611 67.43 Lithiated Li8PS4 762.92 1.422 302.82",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    480.7,
+    532.2,
+    588.8
+   ],
+   "w": 1944,
+   "h": 452,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 1,
+   "file": "tab_S3.png",
+   "caption": "Table S3 Metastable phases and corresponding volume, band gap and ionic conductivity calculated by density functional theory (DFT) simulations of Li6PS5Br. Li6PS5Br Phase Volume (Å3) Band gap (eV) Ionic conductivity (S/m, 600K) Li6PS5Br 1001.00 2.093 65.80 Delithiated Li4PS5Br 988.54 2.173 18.36 Lithiated Li10PS5Br 1174.62 1.391 33.57",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    597.6,
+    506.9,
+    708.1
+   ],
+   "w": 1839,
+   "h": 461,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 3,
+   "file": "tab_S4.png",
+   "caption": "Table S4 Metastable phases and corresponding volume, band gap and ionic conductivity calculated by density functional theory (DFT) simulations of Li6PS5Br. Li6PS5Cl Phase Volume (Å3) Band gap (eV) Ionic conductivity (S/m, 600K) Li6PS5Cl 965.21 1.984 95.78 Delithiated Li4PS5Cl 935.80 2.391 43.83 Lithiated Li11PS5Cl 1168.50 1.219 59.53",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.9,
+    506.9,
+    176.3
+   ],
+   "w": 1839,
+   "h": 461,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 3,
+   "file": "tab_S5.png",
+   "caption": "Table S5 Metastable phases and corresponding volume, band gap and ionic conductivity calculated by density functional theory (DFT) simulations of Li10GeP2S12.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    190.4,
+    506.9,
+    300.8
+   ],
+   "w": 1839,
+   "h": 461,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 3,
+   "file": "tab_S6.png",
+   "caption": "Table S6 Metastable phases and corresponding volume, band gap and ionic conductivity calculated by density functional theory (DFT) simulations of LiBH4. LiBH4 Phase Volume (Å3) Band gap (eV) Ionic conductivity (S/m, 1000K) LiBH4 400.29 6.930 233.39 Delithiated Li0.88BH4 316.35 6.763 243.08 Lithiated Li1BH4 602.58 0 260.49",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    309.6,
+    506.9,
+    420.1
+   ],
+   "w": 1839,
+   "h": 461,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 3,
+   "file": "tab_S7.png",
+   "caption": "Table S7 Metastable phases and corresponding volume, band gap and ionic conductivity calculated by density functional theory (DFT) simulations of Li3YBr6. Li3YBr6 Phase Volume (Å3) Band gap (eV) Ionic conductivity (S/m, 1000K) Li3YBr6 553.48 3.723 142.26 Delithiated LiYBr6 578.99 1.745 22.71 Lithiated Li7YBr6 711.29 0 248.49",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    434.1,
+    506.9,
+    544.6
+   ],
+   "w": 1839,
+   "h": 462,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 3,
+   "file": "tab_S8.png",
+   "caption": "Table S8 Metastable phases and corresponding volume, band gap and ionic conductivity calculated by density functional theory (DFT) simulations of Li3OCl. Li3OCl Phase Volume (Å3) Band gap (eV) Ionic conductivity (S/m, 1000K) Li3OCl 469.20 4.764 55.25 Delithiated LiOCl 406.88 0 58.55",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    558.7,
+    506.9,
+    658.8
+   ],
+   "w": 1839,
+   "h": 419,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 4,
+   "file": "tab_S9.png",
+   "caption": "Table S9 Metastable phases and corresponding volume, band gap and ionic conductivity calculated by density functional theory (DFT) simulations of Li2PO2N. Li2PO2N Phase Volume (Å3) Band gap (eV) Ionic conductivity (S/m, 1000K) Li2PO2N 942.68 5.536 5.75 Delithiated LiPO2N 1025.14 3.037 18.21 Lithiated Li4PO2N 1330.15 0.8731 128.84",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.9,
+    506.9,
+    176.3
+   ],
+   "w": 1839,
+   "h": 461,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 4,
+   "file": "tab_S10.png",
+   "caption": "Table S10 Metastable phases and corresponding volume, band gap and ionic conductivity calculated by density functional theory (DFT) simulations of Li7La3Zr2O12. Li7La3Zr2O12 Phase Volume (Å3) Band gap (eV) Ionic conductivity (S/m, 1000K) Li7La3Zr2O12 2217.17 4.113 52.85 Delithiated Li7La3Zr2O12 2211.57 3.920 0.81",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    185.1,
+    513.0,
+    285.3
+   ],
+   "w": 1864,
+   "h": 418,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 4,
+   "file": "tab_S11.png",
+   "caption": "Table S11 Metastable phases and corresponding volume, band gap and ionic conductivity calculated by density functional theory (DFT) simulations of Li0.33La0.56TiO3. Li0.33La0.56TiO3 Phase Volume (Å3) Band gap (eV) Ionic conductivity (S/m, 1000K) Li0.1875La0.56TiO3 948.47 1.793 4.04 Delithiated Li0.33La0.56TiO3 953.69 1.921 0.20 Lithiated Li0.375La0.56TiO3 933.45 0 0.86",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    294.1,
+    513.0,
+    404.5
+   ],
+   "w": 1864,
+   "h": 461,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "tS12",
+   "kind": "table",
+   "label": "S12",
+   "page": 4,
+   "file": "tab_S12.png",
+   "caption": "Table S12 Metastable phases and corresponding volume, band gap and ionic conductivity calculated by density functional theory (DFT) simulations of Li1.5Al0.5Ti1.5(PO4)3. Li1.5Al0.5Ti1.5(PO4)3 Phase Volume (Å3) Band gap (eV) Ionic conductivity (S/m, 1000K) Li1.5Al0.5Ti1.5(PO4)3 1404.34 2.4735 104.46 Delithiated Al0.5Ti1.5(PO4)3 1403.86 2.1290 * Lithiated Li3Al0.5Ti1.5(PO4)3 1351.52 2.0490 30.06",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    413.3,
+    513.0,
+    523.8
+   ],
+   "w": 1864,
+   "h": 461,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "tS13",
+   "kind": "table",
+   "label": "S13",
+   "page": 4,
+   "file": "tab_S13.png",
+   "caption": "Table S13 Metastable phases and corresponding volume, band gap and ionic conductivity calculated by density functional theory (DFT) simulations of Li1.5Al0.5Ge1.5(PO4)3. Li1.5Al0.5Ge1.5(PO4)3 Phase Volume (Å3) Band gap (eV) Ionic conductivity (S/m, 1000K) Li1.5Al0.5Ge1.5(PO4)3 1278.20 2.547 70.96 Delithiated Li1.33Al0.5Ge1.5(PO4)3 1272.84 3.318 53.98 Lithiated Li3.5Al0.5Ge1.5(PO4)3 1392.24 2.625 8.49",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    532.6,
+    513.0,
+    643.0
+   ],
+   "w": 1864,
+   "h": 461,
+   "dpi": 300,
+   "src": "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf",
+   "blank": 0.887
+  }
+ ]
+}

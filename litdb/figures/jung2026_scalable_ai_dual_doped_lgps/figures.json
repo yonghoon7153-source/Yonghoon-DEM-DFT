@@ -1,0 +1,212 @@
+{
+ "slug": "jung2026_scalable_ai_dual_doped_lgps",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.docx",
+  "14. eTransportation_2026_Jung_Scalable_AI_dual_doped_LGPS_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic workflow of the high-throughput computational screening process for identifying promising dual-doped sulfide-based solid-state electrolytes. release stress and minimize internal strain. reports demonstrating their structural and electrochemical ben­ efits in LGPS-type materials. (3) P sites- 13 dopants (Sb, Zn, Nb, Cu, Mn, As, Cr, V, Bi, Mo, Ge, Si, 2.2. Ground atomic configurations of doped structures and Sn) [26,37,60–62] were included, chosen from elements previously reported to substitute P in LGPS or analogous SSEs, with potential to improve transport or stability. (4) S sites- Halogen and chalcogen elements were considered in this Fig. 2(b) shows the list of 40 dopants. Dopant selection was informed by a comprehensive literature survey of elements previously reported to substitute lithium (Li), germanium (Ge), phosphorus (P), or sulfur (S) sites in LGPS. The selec",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    511.0
+   ],
+   "w": 2228,
+   "h": 1925,
+   "dpi": 300,
+   "src": "14. eTransportation_2026_Jung_Scalable_AI_dual_doped_LGPS_MAIN.pdf",
+   "blank": 0.583
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Overview of the high-throughput dual-doping screening strategy for LGPS-based solid-state electrolytes. (a) Screening workflow: A total of 2,550 dual-doped LGPS candidates were sequentially screened based on thermodynamic stability (Eform, Ehull), bandgap (Egap), elastic properties (GVRH, KVRH), electrochemical stability window (ECW), and ionic conductivity, leading to the identification of four promising sulfide-based SSEs. (b) The list of 40 dopant elements, highlighted in the periodic table: yellow (Li site), light blue (Ge and P site), and gray (S site) in the periodic table. (c) Atomic configuration of LGPS and corresponding doping ratios. imbalance was compensated by adding Li, adjusting the composition from Li10GeP2S12 to Li10.5Ge0.5Co0.5P2S12. employed was KNNAsymmetricUnitCell in KGCNN, an open-source Python framework for building and training crystal graph neural net­ w",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    334.7
+   ],
+   "w": 2228,
+   "h": 1190,
+   "dpi": 300,
+   "src": "14. eTransportation_2026_Jung_Scalable_AI_dual_doped_LGPS_MAIN.pdf",
+   "blank": 0.52
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Distributions and cumulative percentages of key material properties predicted by ML models (Ehull, Egap, GVRH, and GVRH/KVRH ratio) for 873 pre-screened structures. (b) Distribution of electrochemical stability windows (ECWs) for the 873 candidates, calculated using DFT and grand potential phase diagram analysis. (c) Representative compounds from each ECW category: high ECW (HECW, ECW ≥3.0 V), medium ECW (MECW, 1.5 V ≤ECW <3.0 V), and low ECW (LECW, ECW <1.5 V), along with their corresponding ECW values. Blue, red, and green bars denote HECW, MECW, and LECW groups, respectively. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    381.5,
+    565.8,
+    702.1
+   ],
+   "w": 2227,
+   "h": 1337,
+   "dpi": 300,
+   "src": "14. eTransportation_2026_Jung_Scalable_AI_dual_doped_LGPS_MAIN.pdf",
+   "blank": 0.727
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) Sorted bar chart of ECW values for the 21 selected compounds, (b) Comparison of ECW - Egap and (c) ECW - GVRH/KVRH for the 21 screened materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    563.7,
+    322.7
+   ],
+   "w": 2218,
+   "h": 1140,
+   "dpi": 300,
+   "src": "14. eTransportation_2026_Jung_Scalable_AI_dual_doped_LGPS_MAIN.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) MSD plots, (b) Li-ion diffusivity plot, (c) Activation energy, ionic conductivity and ionic conductivity error of four representative materials (Li9P3OS11, Li9GaP2Cl2S10, Li9GaP2I2S10, and Li9YP2Cl2S10). Li9P3OS11 exhibited an ionic conductivity of 17.28 mS cm−1 at RT, approximately twice that of LGPS. Structural analysis attributed this improvement to partial substitution of S by O, forming PS2O2 polyhedral that facilitates lithium-ion migration through local lattice distortions without severely compromising the host framework. Importantly, the dopant elements investigated in this work have been previously studied in sulfide solid electrolytes [109,110]. Therefore, the identified candi­ dates lie within an experimentally explored compositional space, sup­ porting the practical relevance of the proposed doping strategies. Beyond bulk transport properties, the current screenin",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    498.9
+   ],
+   "w": 2228,
+   "h": 1874,
+   "dpi": 300,
+   "src": "14. eTransportation_2026_Jung_Scalable_AI_dual_doped_LGPS_MAIN.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "Table 1 Average material properties of each group: HECW, MECW, and LECW.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    749.3
+   ],
+   "w": 2213,
+   "h": 2992,
+   "dpi": 300,
+   "src": "14. eTransportation_2026_Jung_Scalable_AI_dual_doped_LGPS_MAIN.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2 Properties for the four selected materials and LGPS. Material Eform (eV/atom) Egap (eV)",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    747.7
+   ],
+   "w": 2213,
+   "h": 2985,
+   "dpi": 300,
+   "src": "14. eTransportation_2026_Jung_Scalable_AI_dual_doped_LGPS_MAIN.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Performance comparison of coGN and coNGN models trained on the Matbench benchmark. The evaluation metrics include the mean absolute error averaged over five folds in cross- validation (MAE_mean), the standard deviation of MAE across folds (MAE_std), the root mean squared error (RMSE), and the largest maximum error among the five folds (Max_error) for predicting Eform, Egap, GVRH, and KVRH.",
+   "rotated_deg": 0,
+   "bbox": [
+    28.0,
+    28.9,
+    367.5,
+    558.1
+   ],
+   "w": 1416,
+   "h": 2206,
+   "dpi": 300,
+   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.docx",
+   "blank": 0.935
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 6,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Summary of prediction errors (MAE, RMSE, R2) for Eform, Egap, GVRH and KVRH obtained by the coGN and coNGN model for the candidate structures analyzed in Figure S2.",
+   "rotated_deg": 0,
+   "bbox": [
+    28.0,
+    28.9,
+    357.2,
+    547.1
+   ],
+   "w": 1373,
+   "h": 2160,
+   "dpi": 300,
+   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.docx",
+   "blank": 0.94
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 8,
+   "file": "tab_S3.png",
+   "caption": "Table S3. ML-predicted and DFT-calculated Ehull values for the 20 screened materials (excluding LGPS), along with other screening properties.",
+   "rotated_deg": 0,
+   "bbox": [
+    28.0,
+    61.9,
+    363.0,
+    537.0
+   ],
+   "w": 1397,
+   "h": 1981,
+   "dpi": 300,
+   "src": "14. Sup) eTransportation_2026_Jung_dual_doped_LGPS_SI.docx",
+   "blank": 0.927
+  }
+ ]
+}

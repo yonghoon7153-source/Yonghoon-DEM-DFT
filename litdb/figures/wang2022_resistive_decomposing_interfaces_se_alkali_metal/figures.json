@@ -1,0 +1,532 @@
+{
+ "slug": "wang2022_resistive_decomposing_interfaces_se_alkali_metal",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "3. JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_interfaces_SE_alkali_metal_MAIN.pdf",
+  "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Computed Wulﬀshapes of binary compounds Li2S (panel a), Li3P (b), Li2O (c), LiCl (d), Na2S (e), Na3P (f), Na2O (g), and Li3N (h), with their corresponding surface energies (in J m\u00022). The chemical nature of the surface terminations (term.) are also indicated. Wulﬀpolygons are constructed using stoichiometric, non-polar, and symmetric surfaces (including an inversion symmetry).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    325.5
+   ],
+   "w": 2177,
+   "h": 1172,
+   "dpi": 300,
+   "src": "3. JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_interfaces_SE_alkali_metal_MAIN.pdf",
+   "blank": 0.596
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Computed interfacial quantities (in J m\u00022) for (a) Li-based interfaces and (b) Na-based interfaces. Atomic structures of representative interfaces, namely (c) Li(110)kLi2S(110), (d) Na(110)kNa2S(110) (e) Li(100)kLi3P(001) and (f) Na(100)kNa3P(001). The interface regions are indicated by the shaded areas. The non-periodic direction of the interface is indicated by the “out-of-plane” vectors.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    331.3
+   ],
+   "w": 2177,
+   "h": 1196,
+   "dpi": 300,
+   "src": "3. JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_interfaces_SE_alkali_metal_MAIN.pdf",
+   "blank": 0.785
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Arrhenius plots of Li+ D* (in cm2 s\u00021) of bulk binary compounds from MTP-MD simulations. The activation energies, calculated from eqn (7), and the related error bars are provided as text annotations. Vac. stands for structures with a Li vacancy.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    44.6,
+    558.8,
+    292.6
+   ],
+   "w": 1091,
+   "h": 1034,
+   "dpi": 300,
+   "src": "3. JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_interfaces_SE_alkali_metal_MAIN.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Snapshots of (a, c) Li(100)kLi3P(001) and (b, d) Li(110)kLi2S(110) interfaces at 0 ns (a and b), and 5 ns (c and d), respectively, at 400 K. The in- plane and out-of-plane components of Li+-D* in the Li-metal and Li3P regions (e) of the Li(100)kLi3P(001) interface and Li2S regions (f) of the Li(110)kLi2S(110) interface at 400 K. Dark blue spheres: Li+ (binary), green spheres: Li+ (metal), orange spheres: P and yellow spheres: S.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    345.3
+   ],
+   "w": 2177,
+   "h": 1254,
+   "dpi": 300,
+   "src": "3. JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_interfaces_SE_alkali_metal_MAIN.pdf",
+   "blank": 0.701
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Schematic illustration of a possible structure of the interface between Li metal and argyrodite-Li6PS5Cl, as inferred from the inter- facial energetics and Li-ion transport simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.1,
+    209.8
+   ],
+   "w": 1090,
+   "h": 690,
+   "dpi": 300,
+   "src": "3. JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_interfaces_SE_alkali_metal_MAIN.pdf",
+   "blank": 0.313
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 11,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Atomic structures of fully relaxed interfaces, (a) Li(100)||Li2S(111), (b) Li(100)||Li3P(001), (c) Na(100)||Na2S(111) and (d) Na(100)||Na3P(001). The interface regions are indicated by violet shaded areas. The non-periodic direction of the interface is indicated by the \"out-of-plane\" vectors.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    64.5,
+    546.0,
+    365.5
+   ],
+   "w": 2001,
+   "h": 1256,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.711
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 12,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Atomic structures of fully relaxed interfaces, (a) Li(110)||LiCl(100), (b) Li(100)||LiCl(100), (c) Li(110)||LiCl(110) and (d) Li(100)||LiCl(110). The interface regions are indicated by violet shaded areas. The non-periodic direction of the interface is indicated by the \"out-of-plane\" vectors.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    228.4,
+    545.9,
+    495.8
+   ],
+   "w": 2000,
+   "h": 1116,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.784
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 13,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Atomic structures of fully relaxed interfaces, (a) Li(110)||Li3N(100), (b) Li(100)||Li3N(100), (c) Li(110)||Li3N(110) and (d) Li(100)||Li3N(110). The interface regions are indicated by violet shaded areas. The non-periodic direction of the interface is indicated by the \"out-of-plane\" vectors.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    227.2,
+    546.0,
+    497.0
+   ],
+   "w": 2001,
+   "h": 1125,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.692
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 14,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Atomic structures of fully relaxed interfaces, (a) Li(110)||Li2O(111), (b) Li(100)||Li2O(111), (c) Li(110)||Li2O(110) and (d) Li(100)||Li2O(110). The interface regions are indicated by violet shaded areas. The non-periodic direction of the interface is indicated by the \"out-of-plane\" vectors.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    95.7,
+    546.0,
+    363.4
+   ],
+   "w": 2001,
+   "h": 1117,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.69
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 14,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Atomic structures of fully relaxed interfaces, (a) Na(100)||Na2O(110) and (b) Na(110)||Na2O(110). The interface regions are indicated by violet shaded areas. The non-periodic direction of the interface is indicated by the \"out-of- plane\" vectors.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    488.6,
+    546.0,
+    628.5
+   ],
+   "w": 2001,
+   "h": 584,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.801
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 15,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: The calculated interface formation energy, Ef (J m−2) using diﬀer- ent methods. Fully-relaxed: fully relaxation for interface structure; Fix-metal: constrained relaxation for interface structure using the in-plane lattice constants of binary compound, ﬁx the middle layers of the Li(or Na) metal; Fix-binary: constrained relaxation for interface structure using the in-plane lattice constants of binary compound, ﬁx the middle layers of the binary compound.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    142.5,
+    546.0,
+    552.8
+   ],
+   "w": 2001,
+   "h": 1711,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.806
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 16,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: The calculated interfacial energetics (in J m−2) for Li-based interfaces. The values of work of adhesion are calculated by using Eq. 5 of the main text.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    180.8,
+    546.0,
+    572.4
+   ],
+   "w": 2004,
+   "h": 1632,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.826
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 17,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: The calculated interfacial energetics (in J m−2) for Na-based inter- faces. The values of work of adhesion are calculated by using Eq. 5 of the main text.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    180.3,
+    546.0,
+    558.4
+   ],
+   "w": 2001,
+   "h": 1576,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.83
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 18,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Snapshots of Li(110)||LiCl(100) interface (400 K) at (a) 0 ns and (b) 5 ns. (c) The in-plane and out-of-plane components of Li ion tracer diﬀusivity in the Li metal and LiCl regions at 400 K. Dark blue spheres: Li(binary), green spheres: Li(metal) and cyan spheres: Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    225.1,
+    546.0,
+    499.2
+   ],
+   "w": 2001,
+   "h": 1143,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.811
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 20,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: The MSD plots calculated from MTP-MD for Li(100)||Li3P(001) interface at 400 K. (a) MSD of Li+ in Li metal (b) MSD of Li+ in Li3P.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    212.9,
+    546.0,
+    540.1
+   ],
+   "w": 2000,
+   "h": 1364,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 21,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: The MSD plots calculated from MTP-MD for Li(110)||Li2S(110) interface at 400 K. (a) MSD of Li+ in Li metal (b) MSD of Li+ in Li2S.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    212.9,
+    546.0,
+    540.1
+   ],
+   "w": 2000,
+   "h": 1364,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 22,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: The MSD plots calculated from MTP-MD for Li(110)||LiCl(100) interface at 400 K. (a) MSD of Li+ in Li metal (b) MSD of Li+ in LiCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    212.9,
+    545.9,
+    540.1
+   ],
+   "w": 2000,
+   "h": 1364,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Lattice parameters (in Å) as computed using the PBE functional and experimental (Exp.) measurements of alkali metals and their binary compounds.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    65.5,
+    544.9,
+    488.5
+   ],
+   "w": 1992,
+   "h": 1764,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Computed low-indexed surface energies (in J m−2) of lithium binary compounds. Selected low-indexed surfaces are non-polar, containing symmetry (at least an inversion symmetry element) and stoichiometric. The termination of the surface is also shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    65.5,
+    545.0,
+    622.2
+   ],
+   "w": 1992,
+   "h": 2321,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 5,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Computed low-indexed surface energies (in J m−2) of sodium binary compounds. Selected low-indexed surfaces are non-polar, containing symmetry (at least an inversion symmetry element) and stoichiometric. The termination of the surface is also shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    215.6,
+    545.0,
+    570.5
+   ],
+   "w": 1993,
+   "h": 1479,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 6,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Computed interfacial energy quantitites and other parame- ters of selected interfaces. Upon construction of heterogeneous inter- faces, in models Li(100)||Li2S(111), Li(100)||Li2O(111), Li(110)||Li2O(111) and Na(100)||Na2S(111) the lattice misﬁt is in the binary compound, while in the remaining surfaces the lattice misﬁt appears in Li or Na metal. The calculated interface formation energy Ef (Eq. 2 in the main manuscript), the interfacial energy σ (Eq. 3), and the work of adhesion Wadhesion (Eq. 4) of the interfaces are expressed in J m−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    65.5,
+    545.0,
+    576.9
+   ],
+   "w": 1992,
+   "h": 2132,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 7,
+   "file": "tab_S5.png",
+   "caption": "Table S5: Comparison between the Li-anion bond length in binary compounds, a (Å) and the bond length formed by Li(or Na) atoms within the ﬁrst few layers of Li(or Na)-metal with anion species in the relaxed interfaces, b(Å)",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    65.5,
+    544.9,
+    506.5
+   ],
+   "w": 1992,
+   "h": 1839,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 8,
+   "file": "tab_S6.png",
+   "caption": "Table S6: The ﬁtting and validation mean absolute errors (MAE) on energies (in meV/atom) and forces (in meV/Å) for the trained moment tensor potentials (MTPs) of the systems in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    65.5,
+    545.2,
+    481.7
+   ],
+   "w": 1993,
+   "h": 1735,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 9,
+   "file": "tab_S7.png",
+   "caption": "Table S7: Computed activation energies Ea with the estimated standard errors (stderr) for the binary compounds in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    65.5,
+    556.0,
+    556.5
+   ],
+   "w": 2038,
+   "h": 2047,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 9,
+   "file": "tab_S8.png",
+   "caption": "Table S8: MTP-MD calculated tracer diﬀusivity (cm2/s) for Li+ in Li(100)||Li3P(001), Li(110)||Li2S(110) and Li(110)||LiCl(100) interfaces. T(K) Li(100)||Li3P(001) Li(110)||Li2S(110) Li(110)||LiCl(100) Li+(metal) Li+(binary)Li+(metal) Li+(binary)Li+(metal) Li+(binary) 1000 9.80×10−5 7.70×10−5 – – 1.28×10−4 1.15×10−4 900 7.49×10−5 6.26×10−5 8.74×10−5 9.71×10−5 9.07×10−5 1.00×10−4 800 5.64×10−5 5.40×10−5 5.93×10−5 5.46×10−5 7.12×10−5 4.36×10−5 700 3.90×10−5 2.98×10−5 4.49×10−5 3.98×10−5 5.58×10−5 3.66×10−5 600 2.27×10−5 2.13×10−5 3.73×10−5 2.17×10−5 2.44×10−5 9.13×10−6 500 1.25×10−5 1.12×10−5 2.79×10−5 8.08×10−6 7.60×10−6 9.26×10−8 400 3.76×10−6 3.03×10−6 1.89×10−7 4.86×10−8 1.15×10−6 1.81×10−9 300 5.11×10−7 2.49×10−7 4.08×10−8 3.19×10−9 2.99×10−10 2.94×10−10",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    65.5,
+    556.0,
+    556.5
+   ],
+   "w": 2038,
+   "h": 2047,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 10,
+   "file": "tab_S9.png",
+   "caption": "Table S9: AIMD calculated tracer diﬀusivity (cm2/s) for Li+ in Li(100)||Li3P(001), Li(110)||Li2S(110) and Li(110)||LiCl(100) interfaces. T (K) Li(100)||Li3P(001) Li(110)||Li2S(110) Li(110)||LiCl(100) 1000 1.02×10−4 1.41×10−4 1.73×10−4 900 7.78×10−5 1.16×10−4 1.23×10−4 800 6.07×10−5 1.02×10−4 1.19×10−4",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    65.5,
+    545.0,
+    216.2
+   ],
+   "w": 1992,
+   "h": 629,
+   "dpi": 300,
+   "src": "3. Sup) JMaterChemA_2022_Wang_Canepa_Resistive_decomposing_SI.pdf",
+   "blank": 0.903
+  }
+ ]
+}
