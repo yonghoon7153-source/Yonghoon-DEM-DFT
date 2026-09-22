@@ -50,7 +50,11 @@ def _receipt(**over):
     #   64자리 자리표시가 드러나지 않았다). typed 완전성 검사를 넣자 fixture 가 먼저 깨졌다.
     base = dict(head=head, tree=_tree(head), instrument={"reviews/evidence_gate.py": "0" * 40},
                 package_digest="1" * 64, materialized={"mode": "sparse detached worktree"},
-                runtime={"python": "3.12.3"})
+                # ⚠ R17 후속 2차 F2-06 — 전 판은 `{"python": ...}` 하나였다. 실제 발행자
+                #   (`replay_codex_r11.py:356`)는 `{python, platform}` 둘을 쓰고, 소비자가
+                #   "비지 않은 객체" 만 보던 자리를 그 계약으로 조이자 **이 fixture 가 먼저
+                #   깨졌다** — 위 R17 후속 P2-02 의 `"0"*64` 와 같은 종류의 자리표시였다.
+                runtime={"python": "3.12.3", "platform": "linux"})
     base.update(over)
     return g, g.run_receipt(**base)
 

@@ -11,8 +11,10 @@
 
   ① **기본이 dry-run 이다.** 지우는 도구의 기본값이 "지운다" 이면 사고를 되돌릴 수 없다.
   ② **canonical 을 절대 안 건드린다.** 이 도구는 `<root>/partial/` 아래만 본다 — 과학 산출은 그 밖이다.
-  ③ **모르면 안 지운다.** index 에 없는 디렉터리를 만나면 rc 2 로 멈춘다. 지우고 나서 "몰랐다" 는
-     되돌릴 수 없다 (fail-closed — 이 저장소의 "부재는 안전값이 아니다" 와 같은 결).
+  ③ **모르면 안 지운다.** index 에 없는 디렉터리 **또는 파일**을 만나면 rc 2 로 멈춘다. 지우고 나서
+     "몰랐다" 는 되돌릴 수 없다 (fail-closed — 이 저장소의 "부재는 안전값이 아니다" 와 같은 결).
+  ④ **삭제 범위는 검증한 파일 하나뿐이다** (R17 후속 2차 F2-01). 재귀 삭제를 쓰지 않는다 — 검증한
+     파일만 지우고 **빈 디렉터리만** `rmdir` 한다. 그러면 범위가 정의상 넓어질 수 없다.
 
 종료 코드: 0 정상(dry-run 포함) · 2 입력 문제 또는 **index 와 디스크가 어긋남**.
 """
@@ -21,7 +23,6 @@ from __future__ import annotations
 import argparse
 import json
 import pathlib
-import shutil
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -75,8 +76,22 @@ def main(argv=None) -> int:
                 print(f"! index 항목 {i} 의 `{k}` 가 경로 성분이 아니다 ({v!r}) — "
                       f"이 값으로 디렉터리를 만들어 지우면 partial 밖이 사라진다", file=sys.stderr)
                 return 2
+        # ⚠ Codex R17 후속 2차 F2-01 A: 성분이 전부 평범하고 `path` 도 partial 안인데 **둘이 서로 다른
+        #   자리를 가리키는** index 가 통과했다 — 항목이 `kind/attempt = matrix/C` 라고 선언하면서
+        #   `path = matrix/A/matrix_200.csv` 를 가리키면, `retained_dirs` 는 C 로 만들어지고
+        #   `rmtree(A)` 가 **보존 항목의 payload** 를 지웠다 (리뷰어 실측 rc 0 · index 는 그대로 남았다).
+        #   `record_partial` 은 언제나 `path = kind/attempt/artifact` 로 쓴다 (`verify.py` 의
+        #   `dest.relative_to(root)`), 그러므로 이 관계는 **생산자의 불변식**이고 어긋난 index 는
+        #   손상된 것이다. 손상된 index 를 해석해 주지 않는다 — 첫 삭제 전에 rc 2.
+        want = pathlib.PurePosixPath(e["kind"]) / e["attempt"] / e["artifact"]
+        got = pathlib.PurePath(e["path"].replace("\\", "/"))
+        if got.as_posix() != want.as_posix():
+            print(f"! index 항목 {i} 의 `path` 가 선언한 (kind, attempt, artifact) 와 다른 자리다 "
+                  f"(path {e['path']!r} ≠ {want.as_posix()!r}) — 어느 쪽이 그 항목의 payload 인지 "
+                  f"말할 수 없으므로 지우지 않는다", file=sys.stderr)
+            return 2
 
-    # ③ index 와 디스크를 먼저 댄다 — 모르는 디렉터리가 있으면 **아무것도 지우지 않는다**
+    # ③ index 와 디스크를 먼저 댄다 — 모르는 것이 있으면 **아무것도 지우지 않는다**
     known = {(e["kind"], e["attempt"]) for e in idx["attempts"]}
     on_disk = {(k.name, att.name) for k in root.iterdir() if k.is_dir()
                for att in k.iterdir() if att.is_dir()}
@@ -86,6 +101,22 @@ def main(argv=None) -> int:
               f"'몰랐다' 는 되돌릴 수 없다):", file=sys.stderr)
         for k, att in unknown[:20]:
             print(f"    {k}/{att}", file=sys.stderr)
+        return 2
+
+    # ⚠ Codex R17 후속 2차 F2-01 B: ③ 은 시도 **디렉터리**만 열거해 그 안의 파일을 보지 않았고,
+    #   `rmtree` 는 봤다 — 정상 index 의 A 디렉터리에 미등록 파일 하나를 넣으면 rc 0 으로 같이
+    #   지워졌다 (리뷰어 실측). 우리가 회신 §5 에 적은 "원장에 없는 파일도 rc 2" 는 **사실이 아니었다.**
+    #   `③ 모르면 안 지운다` 를 파일 단위까지 내린다 — `atomic_write_csv` 의 임시 파일이 남은 트리도
+    #   여기서 멈추는데, 그것이 fail-closed 의 뜻이다 (지우고 나서 "몰랐다" 는 되돌릴 수 없다).
+    indexed_files = {(root / e["path"]).resolve() for e in idx["attempts"]}
+    stray = sorted(str(f) for k in root.iterdir() if k.is_dir()
+                   for att in k.iterdir() if att.is_dir()
+                   for f in att.rglob("*") if f.is_file() and f.resolve() not in indexed_files)
+    if stray:
+        print(f"! index 에 없는 파일 {len(stray)} 개가 시도 디렉터리 안에 있다 — 지우지 않는다 "
+              f"(디렉터리째 지우면 이 바이트가 같이 사라진다):", file=sys.stderr)
+        for f in stray[:20]:
+            print(f"    {f}", file=sys.stderr)
         return 2
 
     # (종류, 산출)마다 index 순서(=기록 순서)의 뒤쪽 keep 개를 남긴다
@@ -148,13 +179,16 @@ def main(argv=None) -> int:
         print(f"  → {verb}")
         return 0
 
+    # ⚠ Codex R17 후속 2차 F2-01: `rmtree` 를 **버렸다.** 재귀 삭제는 "이 항목의 payload" 보다 넓고,
+    #   그 넓이를 검사하는 것보다 **검증한 개별 파일만 지우고 빈 디렉터리만 `rmdir`** 하는 편이
+    #   범위를 증명하기 쉽다 (리뷰어가 제시한 최소 구현). `rmdir` 은 비어 있지 않으면 실패하므로
+    #   미등록 파일·보존 payload 가 남아 있는 디렉터리는 **정의상** 지워지지 않는다.
     for (e, f), (_, att) in zip(targets, doomed_dirs):
         if f.is_file():
             f.unlink()
-        # 위에서 정규 경로를 확인한 **그 디렉터리**를 지운다 (다시 만들지 않는다 — R17 후속 P1-01)
         if (e["kind"], e["attempt"]) not in retained_attempts and att not in retained_dirs \
-                and att.is_dir():
-            shutil.rmtree(att)                       # 이 시도의 산출이 전부 버려졌을 때만
+                and att.is_dir() and not any(att.iterdir()):
+            att.rmdir()                              # 이 시도의 파일이 전부 사라졌을 때만
         parent = (root / e["kind"]).resolve()
         if parent.is_relative_to(root_r) and parent != root_r and parent.is_dir() \
                 and not any(parent.iterdir()):

@@ -456,9 +456,16 @@ def _fake_widths_csv(d, name, *, w_dqdv, seed=0, spans=(1.0, 5.0, 2.0), objectiv
         r.update(cell="syn", cycle=str(k), C_cell="1", x_cell="1", a_PE="1.1", b_PE="0", a_NE="1.1",
                  b_NE="0", gamma_Si="0.25", c_lit="1", obj="1", rmse_pocv="1", rmse_dvdq="1", rmse_dqdv="1",
                  n_starts="4", n_accepted="4", scale_seed="0", scale_pocv="1", scale_dvdq="1", scale_dqdv="1",
-                 bounds="-", run_id="r", inputs_sha=S.inputs_digest(_FAKE_CONSUMED),
-                 consumed_inputs=_j.dumps(_FAKE_CONSUMED), objective_version=objective_version,
+                 bounds="-", run_id="r", objective_version=objective_version,
                  width_status="measured", width_tol="0.01", width_is_lower_bound="True")
+        # ⚠ Codex R17 후속 2차 F2-04: 전 판은 **모든 행에 같은 공통 receipt** 를 넣었다 — 그래서
+        #   "행의 receipt 가 sidecar 와 통째로 같아야 한다" 는 reader 의 요구가 여기서는 성립했고,
+        #   **정상 producer 가 그것을 만족할 수 없다는 사실이 가려졌다** (producer 는 행마다
+        #   `full_cell.cycle=k` 를 붙인다). fixture 를 실제 producer 계약으로 맞춘다 —
+        #   producer·reader·fixture 가 같은 `schema.per_cycle_receipt` 를 쓴다.
+        _rec = S.per_cycle_receipt(_FAKE_CONSUMED, k)
+        r.update(inputs_sha=S.inputs_digest(_rec),
+                 consumed_inputs=_j.dumps(_rec, ensure_ascii=False, sort_keys=True))
         for m, sp in zip(("LAM_PE", "LAM_NE", "LLI"), spans):
             r[m] = str(k * 0.01)
             r[f"{m}_lo"] = str(k * 0.01 - sp / 200.0)      # 폭 = sp %p (행 단위는 분수)
@@ -477,7 +484,11 @@ def _fake_widths_csv(d, name, *, w_dqdv, seed=0, spans=(1.0, 5.0, 2.0), objectiv
             "run_id": "r", "sha256": _h.sha256(art.read_bytes()).hexdigest(),
             "git_commit": "0" * 40, "env": {"python": "3.11", "numpy": "1", "scipy": "1", "pandas": "1",
                                             "openpyxl": "3", "platform": "Linux"},
-            "consumed_inputs": _FAKE_CONSUMED, "dataset_manifest": {"id": "fake-manifest"}}
+            # ⚠ R17 후속 2차 F2-03: `{"id": ...}` 는 **발행자가 내는 모양이 아니다** —
+            #   `data.half_cell_manifest_identity()` 는 {version, dataset_id, sha256} 를 낸다.
+            #   validator 를 그 계약에 맞추자 이 fixture 가 먼저 깨졌다 (정상 신호다).
+            "consumed_inputs": _FAKE_CONSUMED,
+            "dataset_manifest": {"version": 1, "dataset_id": "fake-manifest", "sha256": "f" * 64}}
     art.with_name(art.name + ".meta.json").write_text(
         _j.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return art

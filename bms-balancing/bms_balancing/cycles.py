@@ -17,7 +17,7 @@ import pandas as pd
 
 from . import data as D
 from .model import LB5, UB5, Blend, HalfCell, Objective, _extract, degradation_modes, fit_gamma_si
-from .schema import inputs_digest
+from .schema import inputs_digest, per_cycle_receipt
 from .verify import active_bounds, mode_profile_extrema, multistart, near_optimal_extrema
 
 #: main_blend_final.m:45 — 원본은 γ 를 Track B 로 대체하고 나머지 넷을 시작점으로 쓴다. 여기서는 seed 시작점들에 이 점 하나를 더한다.
@@ -203,8 +203,10 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, objecti
     for k in want:
         o, p, val, st = fits[k]
         m = degradation_modes(p0, o0.c_cell, p, o.c_cell)
-        rec = {"half_cell": consumed["half_cell"], "full_cell": dict(consumed["full_cell"], cycle=k),
-               "literature": consumed["literature"]}
+        # ⚠ R17 후속 2차 F2-04: 이 줄이 손으로 쓰는 dict 였고, reader 는 공통 receipt 와 통째로
+        #   같기를 요구했다 — 정본 계약이 두 자리에 따로 있었다. 이제 `schema.per_cycle_receipt`
+        #   하나를 producer 와 reader 가 같이 부른다 (바이트는 그대로다).
+        rec = per_cycle_receipt(consumed, k)
         rows.append({
             "cell": cell, "cycle": k, "C_cell": o.c_cell, "x_cell": o.c_cell / o0.c_cell,
             "a_PE": p[0], "b_PE": p[1], "a_NE": p[2], "b_NE": p[3], "gamma_Si": p[4],

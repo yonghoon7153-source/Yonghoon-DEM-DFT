@@ -71,11 +71,12 @@ def _typed_problems(r: dict) -> list:
     if isinstance(pkg, dict) and not _is_hex(pkg.get("digest"), _HEX64):
         p.append(f"package.digest 가 64자리 hex 내용 주소가 아니다 ({pkg.get('digest')!r}) — "
                  f"검사 상태 문자열을 내용 주소 자리에 넣지 않는다")
-    if "materialized" in r and not (r.get("materialized") is None or isinstance(r.get("materialized"), dict)):
-        p.append(f"materialized 가 객체도 null 도 아니다 ({r.get('materialized')!r})")
-    rt = r.get("runtime")
-    if not isinstance(rt, dict) or not rt:
-        p.append(f"runtime 이 비지 않은 객체가 아니다 ({rt!r}) — 못 잰 실행환경은 증거가 아니다")
+    # ⚠ R17 후속 2차 F2-06: 전 판은 **바깥 컨테이너에서 멈췄다** — `materialized` 는 `isinstance(dict)`,
+    #   `runtime` 은 `bool(dict)` 만 봤다. 내부 필드의 계약은 `evidence_gate` 에 한 벌로 적고
+    #   **생산자와 소비자가 같은 함수**를 부른다 (규칙이 두 벌이면 절반만 구현된다).
+    if "materialized" in r:
+        p += gate.materialized_problems(r.get("materialized"))
+    p += gate.runtime_problems(r.get("runtime"))
     ts = r.get("produced_utc")
     ok_ts = isinstance(ts, str) and bool(ts.strip())
     if ok_ts:
@@ -193,6 +194,9 @@ def main(argv=None) -> int:
     verdict = {"verified": not failed, "checks": checks, "failed": failed,
                # 부분 상태 — 코드 참조(서명·ancestry·tree·instrument)만 맞은 객체는 **이것**이고 verified 가 아니다
                "code_reference_verified": code_ref_ok,
+               # ⚠ R17 후속 2차 F2-06: 실행환경을 **부분/unknown 으로 적은 것**을 complete 와 구분해 드러낸다
+               #   (리뷰어: "부분·unknown 기록을 허용한다면 complete/verified 와 구분한다").
+               "runtime_partial": bool(gate.runtime_problems(r.get("runtime"))),
                "receipt": str(a.receipt), "receipt_version": r.get("receipt_version"),
                "code": r.get("code"), "skipped_instrument": bool(a.skip_instrument),
                "verifier": me}

@@ -73,8 +73,18 @@ def package_content_digest(pkg: pathlib.Path, sums: pathlib.Path) -> str:
       똑같이 `{'one.txt': 'ok'}` 를 갖는다 — 내용 주소가 아니다 (리뷰어 실측). 상태는 상태로
       두고, 내용은 여기서 따로 발행한다.
 
-    정규화: 이름으로 정렬한 `sha256(bytes)  이름` 줄을 이어 붙여 다시 해시한다. 파일이 없거나
-    읽을 수 없으면 그 자리를 `<missing>` 으로 적는다 — 빠진 것도 내용의 일부다 (ok 로 접지 않는다).
+    정규화: `sha256(bytes)  이름` 줄을 만든 뒤 **줄 전체를 정렬**해 이어 붙여 다시 해시한다.
+    파일이 없거나 읽을 수 없으면 그 자리를 `<missing>` 으로 적는다 — 빠진 것도 내용의 일부다
+    (ok 로 접지 않는다).
+
+    ⚠ R17 후속 2차 §7-4 정정: 전 판 문서는 "**이름**으로 정렬" 이라고 적었는데 구현은 줄 전체를
+      정렬한다 (해시가 앞이므로 사실상 해시 순이다). 리뷰어가 "결정성은 있으므로 새 버그로 세지
+      않는다" 고 한 그것이며, **문서를 구현에 맞췄다.**
+
+    ⚠ 이 값이 **말하지 않는 것**: 실제 실행·독립 replay·디렉터리의 *모든* 파일·`SHA256SUMS`
+      원문. 이것은 **그 목록이 이름 붙인 파일들의 내용 주소**일 뿐이다. 목록에 없는 파일, 목록의
+      중복·범위 밖 이름을 어떻게 다룰지는 **아직 계약으로 정하지 않았다** — 정하지 않았다고 적는다.
+      `<missing>` 이 섞인 내용 주소가 만들어졌다는 사실 자체는 완전한 패키지의 증명이 아니다.
     """
     lines = []
     for ln in sums.read_text(encoding="utf-8").splitlines():
@@ -287,6 +297,61 @@ EXCLUSION_KINDS = ("전제 변경", "환경상 불가", "우리 코드 밖", "�
 RUN_RECEIPT_VERSION = "r16.1"
 
 
+#: ⚠ Codex R17 후속 2차 F2-06: receipt 의 nested schema 가 **바깥 컨테이너에서 멈췄다** —
+#:   소비자는 `runtime` 을 `bool(dict)` 로, `materialized` 를 `isinstance(dict)` 로만 봤고,
+#:   그래서 `runtime={"python":null,"platform":null}` · `{"irrelevant":true}` ·
+#:   `materialized={"mode":17}` 가 실제 commit/tree/blob 과 올바른 공개 checksum 위에서
+#:   `complete=true · verified=true · rc 0` 이었다 (리뷰어 실측 — 암호학적 위조가 아니라
+#:   **입력 schema** 의 문제다).
+#:
+#:   계약을 **여기 한 곳**에 적고 생산자(`run_receipt`)와 소비자(`scripts/verify_run_receipt.py`)가
+#:   같은 함수를 부른다. 소비자만 조이면 "발행은 되는데 아무도 못 읽는" 영수증이 생긴다.
+RUN_RECEIPT_RUNTIME_KEYS = ("python", "platform")
+
+
+def _nonblank(v) -> bool:
+    return isinstance(v, str) and bool(v.strip())
+
+
+def runtime_problems(rt, where: str = "runtime") -> list:
+    """실행환경 기록의 계약 — `{python: 비공백 문자열, platform: 비공백 문자열}`.
+
+    못 잰 실행환경은 증거가 아니다. **부분/unknown 은 `complete` 가 아니라 부분 상태**이고,
+    이 함수는 그것을 문제로 센다 (소비자가 `runtime_partial` 로 따로 드러낸다).
+    """
+    if not isinstance(rt, dict) or not rt:
+        return [f"{where} 이 비지 않은 객체가 아니다 ({rt!r}) — 못 잰 실행환경은 증거가 아니다"]
+    p = []
+    for k in RUN_RECEIPT_RUNTIME_KEYS:
+        if k not in rt:
+            p.append(f"{where}.{k} 가 없다 — 이 축을 기록하지 않은 영수증은 완전하지 않다")
+        elif not _nonblank(rt[k]):
+            p.append(f"{where}.{k} 가 비지 않은 문자열이 아니다 ({rt[k]!r}) — null·공백은 기록이 아니다")
+    extra = [k for k in rt if k not in RUN_RECEIPT_RUNTIME_KEYS]
+    if extra:
+        p.append(f"{where} 에 계약 밖의 키 {sorted(extra)} 가 있다 — 모르는 축은 부분 상태다")
+    return p
+
+
+def materialized_problems(m, where: str = "materialized") -> list:
+    """`None` **또는** `{mode: 비공백 문자열}`. `None` 은 생산자가 실제로 내는 합법 상태다
+    (`replay_codex_r11.py`: snapshot 이 없으면 `None`) — 금지하지 않는다.
+    금지하는 것은 **뜻을 알 수 없는 값**이다: `17` 은 "무엇이 materialize 됐다" 를 말하지 않는다.
+    """
+    if m is None:
+        return []
+    if not isinstance(m, dict) or not m:
+        return [f"{where} 가 객체도 null 도 아니다 ({m!r})"]
+    p = []
+    if not _nonblank(m.get("mode")):
+        p.append(f"{where}.mode 가 비지 않은 문자열이 아니다 ({m.get('mode')!r}) — "
+                 f"materialize 방식의 이름이 없으면 그 기록은 뜻이 없다")
+    extra = [k for k in m if k != "mode"]
+    if extra:
+        p.append(f"{where} 에 계약 밖의 키 {sorted(extra)} 가 있다")
+    return p
+
+
 def _canonical(obj) -> str:
     """서명이 덮는 **정규 직렬화** — 키 순서·공백이 서명을 바꾸면 그 서명은 내용을 말하지 않는다."""
     return json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str)
@@ -310,6 +375,11 @@ def run_receipt(*, head: str, tree: str, instrument: dict, package_digest: str,
       그래서 소비자가 ancestry 와 tree 짝을 따로 본다 (`scripts/verify_run_receipt.py`).
     """
     import datetime as _dt
+    # ⚠ R17 후속 2차 F2-06: **생산자가 먼저 거부한다.** 소비자만 조이면 발행은 되는데 아무도 못 읽는
+    #   영수증이 생기고, 그때 무엇이 틀렸는지는 발행 한참 뒤에야 안다.
+    bad = runtime_problems(runtime if runtime is not None else {}) + materialized_problems(materialized)
+    if bad:
+        raise ValueError("run receipt 를 서명할 수 없다 — " + " · ".join(bad))
     r = {"receipt_version": RUN_RECEIPT_VERSION,
          "code": {"commit": str(head), "tree": str(tree)},
          "instrument": dict(instrument or {}),

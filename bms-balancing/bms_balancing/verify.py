@@ -440,9 +440,20 @@ def near_optimal_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
     limit = best_val * (1.0 + tol)
     lo, hi = resolve_box(lb, ub)                     # ⚠ W-02: 상자는 인자다 (적합이 쓴 그것과 같아야 한다)
     _b = np.asarray(best, float)
-    if _b.shape != lo.shape or np.any(_b < lo - 1e-12) or np.any(_b > hi + 1e-12):
+    # ⚠ Codex R17 후속 2차 F2-05: 부등식 둘은 `NaN` 에 대해 **모두 false** 라 `best[0]=NaN` 이
+    #   상자 검사를 통과했다 — `_in_box` 는 유한성을 보는데 `best` 만 그 술어를 안 거쳤고, 결과는
+    #   예외 없이 NaN min/max/span + `is_lower_bound=true` 였다 (리뷰어 실측). 유한성을 **먼저** 본다:
+    #   "모든 후보에 같은 술어" 는 best 도 후보라는 뜻이다.
+    if _b.shape != lo.shape or not np.all(np.isfinite(_b)):
+        raise ValueError(f"best 가 5개의 유한한 수가 아니다 (best {_b.tolist()}) — 비유한 기준점으로는 "
+                         f"근최적 집합도 폭도 정의되지 않는다 (R17 후속 2차 F2-05)")
+    if np.any(_b < lo - 1e-12) or np.any(_b > hi + 1e-12):
         raise ValueError(f"best 가 상자 밖이다 (best {_b.tolist()}, lb {lo.tolist()}, ub {hi.tolist()}) — "
                          f"적합이 쓴 상자와 폭의 상자가 다르다 (R17 P2-01 · W-02)")
+    if not (np.all(np.isfinite(np.asarray(ref_p, float))) and np.isfinite(float(ref_c))
+            and np.isfinite(float(c_cell))):
+        raise ValueError(f"mode 계산의 기준이 비유한이다 (ref_p {np.asarray(ref_p, float).tolist()} · "
+                         f"ref_c {ref_c!r} · c_cell {c_cell!r}) — 끝점을 지어내지 않는다 (F2-05)")
     # ⚠ Codex R17 후속 P2-01: **전달된 `best_val` 이 `best` 의 목적값인지 확인한다.** 전 판은
     #   그것을 믿고 한계를 정한 뒤, 아래에서 `best` 를 witness 로 **무조건** 다시 넣었다 — stale
     #   `best_val` 이면 허용집합 **밖**의 점이 하한을 정했다 (리뷰어 실측: 참 min +8.33 %p 인데
@@ -527,6 +538,13 @@ def near_optimal_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
                 if obj(np.asarray(r.x, float)) <= limit * (1 + 1e-9):
                     vals.append(mode_of(r.x, key))
         v = np.array(vals, dtype=float) * 100.0
+        # ⚠ Codex R17 후속 2차 F2-05: **끝점도 같은 검증 경로에 묶는다.** 후보가 상자 안이고 제약을
+        #   지켜도 `mode_of` 가 비유한을 낼 수 있고 (기준 용량이 0 이면 나눗셈), 전 판은 그것을 그대로
+        #   min/max 로 내보내며 `is_lower_bound=true` 를 붙였다. 비유한 끝점은 폭이 **없는 것**이다.
+        if not np.all(np.isfinite(v)):
+            raise RuntimeError(f"{key} 의 후보 mode 값에 비유한이 있다 "
+                               f"(유한 {int(np.isfinite(v).sum())}/{v.size}) — 끝점을 지어내지 않는다 "
+                               f"(R17 후속 2차 F2-05)")
         out[key] = {"min": float(v.min()), "max": float(v.max()),
                     "span": float(v.max() - v.min()), "n_points": int(v.size),
                     "is_lower_bound": True}

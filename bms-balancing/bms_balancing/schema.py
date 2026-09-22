@@ -527,6 +527,35 @@ def locator_problems(old, new) -> tuple:
     return info, bad
 
 
+#: cycle 별 receipt 가 **공통 receipt 와 다른 유일한 자리** — 이 한 줄이 계약의 정본이다.
+PER_CYCLE_RECEIPT_ROLE = "full_cell"
+PER_CYCLE_RECEIPT_KEY = "cycle"
+
+
+def per_cycle_receipt(common: dict, cycle) -> dict:
+    """공통 receipt + 그 행의 cycle → **그 행의 receipt**.
+
+    ⚠ Codex R17 후속 2차 F2-04: producer 는 행마다 `full_cell.cycle=k` 를 붙인 receipt 를 쓰고
+      sidecar 에는 **공통** receipt 를 넣는데, reader 는 둘이 통째로 같기를 요구했다 — 그래서
+      **정상 생산자의 산출이 rc 2** 였다 (리뷰어 실측). 합성 fixture 는 모든 행에 같은 receipt 를
+      넣어 그 충돌을 가리고 있었다.
+
+      공통과 사이클별은 **다른 것**이고, 그 차이는 이 함수 하나가 정한다. producer 와 reader 가
+      같은 함수를 부르므로 "기대 receipt" 를 양쪽이 따로 적을 일이 없다 (R14 P2-2 의 교훈 —
+      규칙이 두 벌이면 절반만 구현된다).
+
+    `cycle` 은 정수여야 한다 — 소수 cycle 은 `cycles_key` 가 접기 전에 reader 가 이미 거부한다.
+    """
+    if not isinstance(common, dict) or not common:
+        raise ValueError(f"공통 receipt 가 비지 않은 객체가 아니다 ({common!r})")
+    leaf = common.get(PER_CYCLE_RECEIPT_ROLE)
+    if not isinstance(leaf, dict) or not leaf:
+        raise ValueError(f"공통 receipt 에 `{PER_CYCLE_RECEIPT_ROLE}` 객체가 없다 — "
+                         f"어느 입력에 cycle 을 붙일지 말할 수 없다 ({common.get(PER_CYCLE_RECEIPT_ROLE)!r})")
+    k = int(cycle)
+    return dict(common, **{PER_CYCLE_RECEIPT_ROLE: dict(leaf, **{PER_CYCLE_RECEIPT_KEY: k})})
+
+
 def inputs_digest(consumed: dict) -> str:
     """소비한 입력의 **역할별** identity 를 묶은 digest 앞 12 자리.
 

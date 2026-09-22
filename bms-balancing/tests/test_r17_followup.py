@@ -139,7 +139,10 @@ _CONSUMED = {"full_cell": {"path": "cell.xlsx", "sha256": "a" * 64},
 def _base_row():
     base = {k: "1" for k in S.CYCLES_ROW}
     base.update(cell="syn", cycle="0", width_status="measured", width_tol="0.01",
-                width_is_lower_bound="True", objective_version="legacy_matlab")
+                width_is_lower_bound="True", objective_version="legacy_matlab",
+                # ⚠ R17 후속 2차 F2-02: 이 둘도 sidecar 와 결속된다 — 채움값 "1" 로 두면
+                #   fixture 가 본문↔sidecar 모순을 숨긴다 (`run_id`·`cell` 과 같은 이유).
+                n_starts="20", scale_seed="0")
     base.update(consumed_inputs=json.dumps(_CONSUMED), inputs_sha=S.inputs_digest(_CONSUMED))
     for m in ("LAM_PE", "LAM_NE", "LLI"):
         base.update({m: "0", m + "_lo": "-0.01", m + "_hi": "0.01"})
@@ -157,7 +160,9 @@ def _meta(i):
             "consumed_inputs": copy.deepcopy(_CONSUMED),
             "env": {"python": "3.11", "numpy": "1", "scipy": "1", "pandas": "1",
                     "openpyxl": "3", "platform": "Linux"},
-            "git_commit": "0" * 40, "run_id": f"r{i}", "dataset_manifest": {"id": "fake-manifest"}}
+            "git_commit": "0" * 40, "run_id": f"r{i}",
+            # ⚠ R17 후속 2차 F2-03: 발행자(`data.half_cell_manifest_identity`)가 내는 모양이다
+            "dataset_manifest": {"version": 1, "dataset_id": "fake-manifest", "sha256": "f" * 64}}
 
 
 def _width_pair(tmp_path, name, row_change=None, meta_change=None, both_meta=None):
@@ -178,8 +183,11 @@ def _width_pair(tmp_path, name, row_change=None, meta_change=None, both_meta=Non
         if both_meta:
             both_meta(meta)
         for row in rows:
-            row.update(consumed_inputs=json.dumps(meta["consumed_inputs"]),
-                       inputs_sha=S.inputs_digest(meta["consumed_inputs"]))
+            # ⚠ R17 후속 2차 F2-04: 공통 receipt 를 그대로 넣던 자리 — 실제 producer 는 행마다
+            #   `full_cell.cycle=k` 를 붙인다. producer·reader 와 **같은 함수**를 쓴다.
+            _rec = S.per_cycle_receipt(meta["consumed_inputs"], int(float(row["cycle"])))
+            row.update(consumed_inputs=json.dumps(_rec, ensure_ascii=False, sort_keys=True),
+                       inputs_sha=S.inputs_digest(_rec))
         p = d / f"{i}.csv"; _writecsv(p, rows)
         meta["sha256"] = hashlib.sha256(p.read_bytes()).hexdigest()   # ← 정확하게 갱신
         p.with_name(p.name + ".meta.json").write_text(json.dumps(meta), encoding="utf-8")
