@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -284,6 +284,43 @@ evolution of electrode-electrolyte interfaces" 로 꼽는다 — **1 번이 접�
   물음(오독)의 반대편, **무감**. 그것을 보는 관측이 `F(∂E/∂P)_T`(−18 %)다.
 - ⚠ 모집단: 50 사이클 · 조건당 셀 1 · 2 점 · 0.5C · 10–20 MPa. 그리고 두 셀의 **초기 용량이
   다르다**(`[도표]` 138 ↔ 144 mAh g⁻¹) — 20 MPa 셀이 처음부터 더 컸다.
+
+## ★★★★ 2026-09-22 (`assb` 17호 Yanev 2024, **실험 · 3전극**) — **네 번째 항이 필요하다: 컷오프가 상대극의 함수다**
+
+`raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md`.
+이 페이지의 세 항은 전부 **양극 안**의 것이었다. 17호가 보이는 것은 **양극 밖**에서
+`Q_apparent` 를 깎는 통로이고, **세 항 중 어느 것도 아니다.**
+
+```
+Q_apparent = θ_AM · Q_material( E_cut^eff ) · η(i)
+             E_cut^eff = E_cell,min + E_CE( i, x_Li, 제조법 )
+```
+
+★★★ **실측** (같은 양극·같은 프로토콜·0.1 C, 셀 둘):
+`[도표]` 방전 용량 **198 ↔ 185 mAh g⁻¹ (−6.6 %)** · `[재현]` **양극 임피던스는 같다**
+(≈31 ↔ ≈32.5 Ω, 5 % 차) · `[도표]` `E_CE` 가 방전 끝에 **0.62 → ≈1.0 V** ⇒
+`[재현]` **양극이 3.0 V 가 아니라 ≈3.4 V 에서 멈춘다.**
+⇒ **`θ_AM` 도 `Q_material` 도 `η` 도 변하지 않았는데 `Q_apparent` 가 6.6 % 줄었다.**
+
+### ★★★ 이것이 이 페이지의 **분리 시험을 깬다**
+
+이 페이지의 핵심 처방은 **"율을 낮추면 `η(i) → 1` 이 되어 동역학 성분이 지워진다"**
+였다. **기준 전위 이동은 지워지지 않는다** — `η` 가 아니라 **축의 원점**이기 때문이다.
+
+`[재현]` 17호에서 `i → 0` 극한(CA 종료 기준 **0.02 C**)에서도 `ΔE_CE` 가 **+0.73 V**
+로 남는다. 옴 몫은 **0.2 %**(≈1.8 mV). 그리고 율 의존성은 **있지만 0 으로 안 간다**:
+0.1 C 에서 **6.6 %**, CA(초기 ≈5.7 C)에서 **≈35 %**.
+
+`[해석]` ⇒ **저율 쌍 처방(`i → 0` 두 점)은 `η` 를 지우되 `E_cut^eff` 이동을 `θ_AM` 이나
+`Q_material` 쪽으로 밀어 넣는다.** 이 항을 빼려면 **상대극 전위를 따로 재야 한다**
+(= 세 번째 전극), 또는 **상대극이 정말 평탄함을 독립으로 보여야 한다**.
+
+### ⚠ 모집단
+
+Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않는다.**
+그리고 17호는 **최대 5 사이클 · 신품 · 압력 한 점 · 조건당 셀 1 개**다 —
+**`E_CE(N)` 은 0 편**이라 이 항이 **사이클에 따라 어떻게 커지는지 모른다.**
+자세히는 [[assb-li-in-reference-potential-window]].
 
 ## 이 페이지가 주장하지 않는 것
 

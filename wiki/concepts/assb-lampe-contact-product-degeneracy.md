@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md]
+sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -322,6 +322,75 @@ R_CT^meas = R_CT^true / θ         C^meas = θ · C^true
 **다른 모델족 · 다른 관측 · 다른 그룹 · 다른 나라**인데 **같은 자리에서 축퇴한다.**
 ⚠ `confidence` 는 **medium 유지**다 — **두 편 다 축퇴를 재지 않았고**(`identifiab*` 0/0),
 우리도 아직 폭을 재지 않았다. 근거 폭이 늘었을 뿐 **측정은 여전히 0 편**이다.
+
+## ★★ 처방의 첫 적용 (2026-09-22, `assb` 17호) — **적용 불가, 그리고 그 이유가 정보다**
+
+`raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md`
+(Yanev et al. 2024, *JES* 171, 020512, Editors' Choice — 3전극 Li-In/NCM811).
+
+### 판정: 입력이 없다
+
+| 처방 입력 | 17호에 있나 |
+|---|---|
+| `R_CT` | **없다** (`fit*` **0 회**) |
+| `C_dl` / `Q_DL` / `CPE` | **없다** (`capacitance`·`CPE` **0 회**) |
+| 등가회로 | **없다** (`equivalent circuit`·`ECM`·`DRT` **0 회**) |
+| 면적 인자 `a_V` / `θ` | **없다** (기하 계산 0) |
+
+> `[인쇄]` "Detailed quantitative analyses and **modelling of the impedance spectra are
+> beyond the scope of this study**."
+
+⇒ **세 편의 실패 양식이 전부 다르다**:
+**9호 = 곱을 적합했다** · **16호 = 곱 위에 서서 한쪽 끝을 골랐다(`θ ≡ 1`)** ·
+**17호 = 곱을 만들지 않았다.**
+`[해석]` **역설적으로 17호가 가장 안전하다** — 배정하지 않았으므로 잘못 배정할 수 없고,
+그 편의 결론은 적합이 아니라 **세 번째 전극의 전압계 판독**에서 나온다.
+대신 **정량이 0 이라 이 페이지가 가져갈 숫자도 없다.**
+
+### ★★ 그래도 17호에 곱 축퇴가 있다 — 다른 자리에서, 문장으로
+
+논문의 인과 주장이 **같은 조작을 두 이름으로** 부른다:
+
+> ① `[인쇄]` "the Li depletion is primarily a function of the **contact surface between
+>    the SE and LiIn**"
+> ② `[인쇄]` "a … well-percolated composite anode with **high effective contact area**
+>    to the separator"
+> ③ `[인쇄]` "By increasing the sulfide content from 20 wt% to 40 wt% a further slight
+>    performance increase is observed, which **confirms that the effective ionic
+>    conductivity of the Li-In anode plays an important role**"
+
+**SE 분말을 넣는 조작 하나가 (i) LiIn↔SE 접촉 면적과 (ii) 음극 유효 이온전도도를 동시에
+올린다.** 둘을 따로 움직인 실험이 **없다.** 곱은 아니지만 **공변(co-varying) 두 인자**이고
+데이터는 그 둘의 어떤 조합만 본다 — **이 페이지의 구조와 같다.**
+
+★★★ **그리고 그 배정이 숫자로도 안 받쳐진다** `[재현]`:
+- 2전극 총 임피던스 `[도표]` SE **20 % ≈36 Ω → 40 % ≈27 Ω**, **Δ ≈9 Ω (−25 %)**
+- 그런데 `[도표]` Fig. 5b 에서 **40 % SE 복합 음극의 임피던스 전체가 ≈6 Ω** 이다
+⇒ **Δ 9 Ω 을 음극에 다 줄 수 없고, 3전극은 40 % 쪽만 쟀다.**
+남는 통로는 **양극/분리막의 셀 간 산포**인데, 같은 논문의 두 3전극 셀에서
+`[재현]` **분리막 저항 배분이 30.5 : 69.5 ↔ 69.4 : 30.6 으로 뒤집힌다**
+(총합은 41–43 Ω 로 5 % 안에서 같다 — RE 를 `[인쇄]` "roughly through the middle" 에
+두었다는 진술의 실측값이다). ⇒ ③의 "confirms" 는 **전극 분해 근거가 0 이다.**
+
+### ★★★ 17호가 이 페이지에 더하는 항 — **음극 오염**
+
+> `[인쇄]` "**the deconvolution of half-cell impedance spectra** e.g., when
+> characterizing **cathodic charge transfer phenomena**, could be **severely
+> complicated by overlapping anode impedance**."
+
+★★★ `[해석]` **이것은 9호·16호의 양극 적합이 딛는 자리에 대한 직접 경고다.**
+16호가 `j₀ · ε_CAM / r_CAM` 를 **양극의 것**으로 읽을 때, 그 스펙트럼에 음극이 얼마나
+섞였는지는 **16호도 우리도 모른다.** 17호가 보여 주는 크기는 작지 않다 —
+`[재현]` **foil 셀에서 음극의 실축 기여가 ≥58 Ω 이고 양극 전체(≈31 Ω)의 2 배 가까이**이며,
+**2전극 스펙트럼에서 그 둘은 한 곡선이다.**
+⇒ **처방표에 한 줄 더**: **다중 SOC EIS 를 쓰려면 3전극(또는 상보 대칭셀)으로 음극
+기여를 먼저 빼야 한다.** 16호는 3전극이었고(✔), **9호는 2전극이었다**(✗).
+⚠ 단 3전극에도 값이 있다 — 17호 `[재현]` 합산 검사가 **2 Hz 에서 1 % 안**으로 맞지만
+**고주파 절편은 foil 셀에서 7 % 어긋난다**(음극 임피던스가 거대할수록 아티팩트가 크다).
+
+★ **그리고 그 음극이 얼마나 움직이는가는 이제 별도 페이지가 있다** —
+[[assb-li-in-reference-potential-window]] (같은 공칭 조성의 두 Li-In 음극이 전류 ≈0 에서
+`E_CE` 0.61 ↔ 1.35 V). **음극 임피던스뿐 아니라 음극 전위도 배정을 오염시킨다.**
 
 ## 이 페이지가 주장하지 않는 것
 

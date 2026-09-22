@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md]
+sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -474,6 +474,58 @@ volumetry 가 보는 양은 **압력 여기에 대해 가장 둔한 채널**일 
 단락 기구가 없다) · **열화 0**. **창의 위 벽·아래 벽 값은 하나도 움직이지 않았다.**
 움직인 것은 **창의 폭**(운전 압력 최댓값이 75 → **389 MPa**, ⚠ 화학이 다르다)과
 **압력 → 용량 감도의 구간 의존성**이다.
+
+## ⚠ 2026-09-22 (`assb` 17호 Yanev 2024, **실험 · 3전극**) — 한 점, 그리고 **압력이 데이터 없이 설명 변수로 쓰인 첫 사례**
+
+`raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md`.
+제작 `[인쇄]` **500 MPa / 1 min**(2전극 분리막·음극·양극 전부; 3전극 분리막만 **375 MPa**),
+운전 `[인쇄]` **ca. 50 MPa**(2전극, 30 °C) / **50 MPa**(3전극, 실온, rhd CompreDrive).
+`pressure` **7 회** · `MPa` **13** · `stack pressure` **2** · **`hysteres*` 0**.
+**스윕 0 · 이력 0 · 계측 0 · 압력 → 용량 0 · `E_CE(P)` 0.**
+
+### 1. ⚠ 이 페이지에 **값을 더하지 않는다** — 그러나 새 경고를 준다
+
+★ 17호는 **자기와 정반대 결론의 논문**(ref 28, Wang 2023, `[인쇄]` **14.3 at% Li 가 최적**)
+과의 불일치를 이렇게 넘긴다:
+
+> `[인쇄]` "We **suspect** that methodic differences could explain the differing
+> findings, since our study was done with **considerably higher rates and lower stack
+> and assembly pressure**."
+
+⚠⚠ **상대의 압력값을 적지 않고, 자기 압력은 한 점이다.**
+`[해석]` **`assb` 계보에서 압력이 설명 변수로 동원되면서 데이터가 0 인 첫 사례다.**
+(4·5·6·11·14·16호는 최소한 2 점 이상을 갖고 말했다.)
+⇒ **이 페이지의 규율 하나**: 문헌이 불일치를 "압력 차이" 로 넘길 때 **그 압력값이
+인쇄돼 있는지 먼저 본다.** 17호에서는 없다.
+
+### 2. ★★★ 그래도 **16호와의 대질**이 하나 생긴다 (`[해석]`, 미검증)
+
+**두 편이 같은 In 계 음극을 쓰는데 음극 임피던스가 한 자릿수 다르다**:
+
+| | **16호** (Ramanayagam 2026) | **17호** (Yanev 2024, foil) |
+|---|---|---|
+| 운전 압력 | **97 / 389 MPa** | **50 MPa** |
+| 음극 출발 | **순수 In 박** → 셀 안에서 리튬화 | **Li 박 + In 박 압착**(기계적) |
+| LiIn 이 생기는 곳 | **분리막 쪽** (Li 가 거기서 들어온다) | **집전체 쪽** (`[인쇄]` "do not reach the separator side") |
+| `x_Li` | **0.05–0.28** | 0.40 |
+| 음극 임피던스 | `[인쇄]` **4 ↔ 9 Ω cm²** | `[재현]` **≥66 Ω cm²**, 100 mHz 미폐 |
+
+`[해석]` **두 설명이 경쟁한다**:
+① **압력**(2–8 배) — 이 페이지의 축 ·
+② **LiIn 상의 위치**(17호의 논지) — 압력과 무관한 제조 기하.
+**17호는 압력을 안 흔들었고 16호는 제조법을 안 흔들었으므로 둘을 가를 수 없다.**
+⚠ SE·조성·전류·SOC·전극 두께도 전부 다르다.
+⇒ **이 페이지에 새 빈칸**: **`Z_anode(P)` 를 제조법 고정하고 재는 편이 0 편이다.**
+(16호가 2 점을 줬지만 **다른 셀**이고 **둘 다 389 MPa 제작 뒤**라 하강 분기다.)
+
+### 3. ⚠ 압력이 아닌 축 하나가 여기서 새로 걸린다 — **기준 전위**
+
+17호가 보인 것은 **압력이 아니라 제조법만으로 음극 전위가 0.74 V 움직인다**는 것이다
+([[assb-li-in-reference-potential-window]]). 그리고 이 페이지에는 **`E(P)` 가 하나 있다** —
+14호의 `[인쇄]` 2.2 mV / 5 MPa (Li 금속).
+`[해석]` **두 크기가 300 배 차이다.** 압력이 전위에 주는 영향(mV 자릿수)은 제조법이
+주는 영향(수백 mV)에 묻힌다. ⇒ **`E_CE(P)` 를 재려면 제조법을 고정해야 하고,
+그것이 위 §2 의 실험이다.**
 
 ## 경고 (전부 원문이 준 한계에서 나온다)
 

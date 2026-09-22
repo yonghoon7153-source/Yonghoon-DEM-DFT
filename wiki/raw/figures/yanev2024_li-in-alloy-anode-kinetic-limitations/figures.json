@@ -1,0 +1,132 @@
+{
+ "slug": "yanev2024_li-in-alloy-anode-kinetic-limitations",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "6ddb0ed8-16._Editors__Choice_Alleviating_the_Kinetic_Limitations_of_the_Li-In_Alloy_Anode_in_All-Solid-State_Batteries.pdf",
+  "32366693-16._Sup_Editors__Choice_Alleviating_the_Kinetic_Limitations_of_the_Li-In_Alloy_Anode_in_All-Solid-State_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a)–(c): Charge and discharge curves of the initial two CCCV cycles of Li-In/NCM811 ASSBs with various Li-In anode types and Li content. (d)–(f): Discharge rate performance of the ASSBs recorded via chronoamperometry (three cycles). (g)–(i): Impedance spectra of the ASSBs at 3.2 V vs Li-In, corresponding to ca. 50% SOC. degradation. At a lithium content of 45%, the rate performance worsens further, and the degradation effects become more severe. Figure 1g shows the impedance spectra recorded at 3.2 V which represents ca. 50% state of charge of the CAM ASSBs with anodes with higher lithium content show a single semicircle in the high frequency region (ca. 1 kHz), whereas anodes with lower Li content show a high frequency contribution and an additional semicircle in the low frequency region (1–10 Hz). Prior impedance studies on sulﬁde ASSBs have established that higher frequencie",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    511.0
+   ],
+   "w": 2202,
+   "h": 1877,
+   "dpi": 300,
+   "src": "6ddb0ed8-16._Editors__Choice_Alleviating_the_Kinetic_Limitations_of_the_Li-In_Alloy_Anode_in_All-Solid-State_Batteries.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Schematic of ASSBs with differing Li-In anode types and Li depletion during fast discharge conditions. The target LiIn phase is shown in purple.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    480.3,
+    558.0,
+    744.9
+   ],
+   "w": 2201,
+   "h": 1103,
+   "dpi": 300,
+   "src": "6ddb0ed8-16._Editors__Choice_Alleviating_the_Kinetic_Limitations_of_the_Li-In_Alloy_Anode_in_All-Solid-State_Batteries.pdf",
+   "blank": 0.778
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Charge and discharge curves of the initial two CCCV cycles of Li-In/NCM811 three-electrode ASSBs with Li reference electrode and foil- and composite-type anode. (b): Discharge rate performance of the three-electrode ASSBs recorded via chronoamperometry (three cycles). (c): Time dependence of the WE, CE and cell potential and current density during the second CCCV cycle. (d): Time dependence of the WE, CE and cell potential and current density during the ﬁrst chronoamperometric discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    418.4
+   ],
+   "w": 2201,
+   "h": 1491,
+   "dpi": 300,
+   "src": "6ddb0ed8-16._Editors__Choice_Alleviating_the_Kinetic_Limitations_of_the_Li-In_Alloy_Anode_in_All-Solid-State_Batteries.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Impedance spectra at a cell voltage of 3.2 V of the three-electrode Li-In/NCM811 cells with (a) foil and (b) composite-type anode. 0.3 Hz predominantly blocking behavior is observed as the ima- ginary component of the impedance increases, and at very low frequencies >0.3 Hz additional resistance is observed. These im- pedance contributions likely describe the formation of an In-rich depletion layer and the sluggish Li+-ion transport through it, respectively. In contrast, the cell with Li-In-SE composite (Fig. 5b) shows purely resistive and overall insigniﬁcant CE contribution to the impedance spectrum. The obtained three- electrode impedance data is consistent with the generation of In- rich Li-depletion layers when using Li-In metal anodes, and their limiting nature at high current densities. Conclusions The Li-In alloy is widely used as a counter electrode in two- electrode h",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    467.0,
+    558.0,
+    647.4
+   ],
+   "w": 2201,
+   "h": 753,
+   "dpi": 300,
+   "src": "6ddb0ed8-16._Editors__Choice_Alleviating_the_Kinetic_Limitations_of_the_Li-In_Alloy_Anode_in_All-Solid-State_Batteries.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Field-emission scanning electron microscopy images of the LiIn alloy. The images were taken using a Carl Zeiss Crossbeam 550 microscope with a backscatter electron detector. The lighter colors are associated with a higher backscatter intensity i.e. In-rich phases.",
+   "rotated_deg": 0,
+   "bbox": [
+    63.6,
+    199.9,
+    533.0,
+    507.9
+   ],
+   "w": 1957,
+   "h": 1285,
+   "dpi": 300,
+   "src": "32366693-16._Sup_Editors__Choice_Alleviating_the_Kinetic_Limitations_of_the_Li-In_Alloy_Anode_in_All-Solid-State_Batteries.pdf",
+   "blank": 0.084
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. a) Scheme and connection of the two-electrode cell. b) Scheme and connection of the three- electrode cell during in-situ Li-Plating before the main experiment (left) and during the main experiment (right) Table S1. First-cycle coulombic efficiencies for the studied Li-In/NCM811 ASSBs with various Li-In anode types and Li content. Anode type First cycle CE Foil – 45 at% 85.3 Foil – 47 at% 85.0 Foil – 49 at% 84.8 Foil – 50 at% 81.8 Powder – 36 at% 85.0 Powder – 40 at% 84.9 Powder – 44 at% 84.4 Powder – 47 at% 82.0 Composite – 40 at% + 20% SE 82.7 Composite – 40 at% + 40% SE 84.9",
+   "rotated_deg": 0,
+   "bbox": [
+    55.8,
+    64.8,
+    536.2,
+    278.4
+   ],
+   "w": 2003,
+   "h": 891,
+   "dpi": 300,
+   "src": "32366693-16._Sup_Editors__Choice_Alleviating_the_Kinetic_Limitations_of_the_Li-In_Alloy_Anode_in_All-Solid-State_Batteries.pdf",
+   "blank": 0.8
+  }
+ ]
+}
