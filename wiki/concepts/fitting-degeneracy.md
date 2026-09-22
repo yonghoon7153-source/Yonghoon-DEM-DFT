@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-22
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -320,6 +320,17 @@ parameter identification"(실무 곤란)이며, **모델 차수에 대해 정반
 parameter**" ↔ §3.1.3 `[인쇄]` "**the more parameters** … **the higher the accuracy**".
 → "안 쟀다(1–7호)" 상태가 **PHM 문헌 쪽에서 2022 년에 어떤 어휘였는가**의 표본.
 **"쟀다" 는 `assb` 0 / 12 편.** 상세는 [[assb-contact-loss-vs-lampe]] Evidence 아홉 번째.
+
+**2026 년 두 번째 표본 (2026-09-22, `assb` 13호 Zheng 2026 *Energy* — 그리드 appraisal,
+1차 측정 0)**: 8호와 **같은 해**인데 `identifiab*` **0** 이고, 대신 역문제를 **워크플로로
+처방**한다 — `[인쇄]` "short-term operational data and direct sensor readings calibrate
+high-fidelity, cell-level models of chemo-mechanical stress evolution. These models
+**inversely estimate the current state of interfacial contact and material properties**."
+유일성·정규화·불확실성 어휘 전수 0. ★ 역추정 대상이 "접촉 상태 **와** 재료 물성" 둘인데,
+[[assb-lampe-contact-product-degeneracy]] 의 곱 `A_eff · ε_p / R_s` 가 정확히 그 둘 사이에
+있다 — 즉 **이 처방은 이미 문헌(9호)에 인쇄된 축퇴 위에 놓여 있고 그것을 모른다.**
+→ "2026 년 문헌은 식별 가능성이라는 이름을 안다" 는 8호 **한 편**의 일이지 연도의 일이
+아니다. **"쟀다" 는 `assb` 0 / 13 편.** 상세는 [[assb-contact-loss-vs-lampe]] Evidence 열 번째.
 
 ## 모양이 같고 물리량이 다른 이웃 — 팩 결함 검출 (2026-09-22)
 

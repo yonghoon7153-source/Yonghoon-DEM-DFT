@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -296,6 +296,66 @@ modelling**."
 요구한 것과 **같은 요구가 측정 방법론 쪽에서도 나온다.**
 
 ⚠ **압력 → 용량 곡선은 `assb` 10/10 편이 여전히 0 이다.**
+
+## ★★ 2026-09-22 (`assb` 13호 Zheng 2026, **그리드 appraisal · Perspective, 1차 측정 0**) — 위 벽이 **둘**이 되고, 압력이 **제어변수**가 된다
+
+`raw/papers/zheng2026_assb-grid-realistic-appraisal.md` (*Energy* 345, 140229). 수요 측(전력
+연구원 + 전지 제조사) 저자들이 **그리드 용도의 압력 요구**를 적은 첫 편. 데이터 0 — 전부
+`[인쇄]` "이 지면에 이렇게 적혀 있다".
+
+### 1. 요구치 — 세 번째 독립 인쇄, 원전은 셋 다 다르다
+
+| 편 | 요구치 | 근거 층위 | 원전 |
+|---|---|---|---|
+| 8호 Li 2026 | `<≈1 MPa` | 재인용 (산업 요구) | Xu 2024 (미수령) |
+| 12호 Kouhestani 2022 | `0.4–1 MPa` | 재인용 (모델 최적) | Tian & Qi 2017 / Shao 2022 (중복 번호, 미확정) |
+| **13호 Zheng 2026** | **`<5 MPa`** ×2 | **1 차 주장** — §3 "finite expansion [Si] drastically reduces the required stack pressure (<5 MPa)" [35] · §5 "A low-pressure threshold of <5 MPa enables simplified, passive mechanical constraints" [45] | [35] Li Menglin *AFM* 2025 · [45] Zhang *Nat. Commun.* 2025 (둘 다 미수령; **"5" 를 주는지 미확인**) |
+
+⇒ **≈1–5 MPa 가 세 종설·세 원전에서 독립 수렴**. 이 페이지의 실측 창(5호 5–75 MPa · 6호
+운전 2–4 MPa · 11호 20 MPa · 4호 ~2 MPa) 중 **6호·4호만** 그 안에 있다.
+
+★ 그리고 `[도표]` **Fig. 2 가 본문에 없는 클래스별 창 다섯을 준다** (레이더 축 라벨):
+**Oxides ≥30 MPa · Sulfides 5–20 · Halides 2–10 · Polymers "No or compliant" · Composites
+1–10 MPa**. ⚠ 산정 규칙·출처 0 (13호 G8). ⚠⚠ 본문이 권하는 두 클래스(Halides·Composites)의
+**상단 10 MPa 가 본문 문턱 `<5` 의 2 배** — 논문은 조정하지 않는다 (13호 D4). 이 다섯 값은
+`[도표]` 로만 두고 **창의 값으로 쓰지 않는다.**
+
+### 2. ★★ 위 벽의 두 번째 형태 — 단락이 아니라 **피로**
+
+이 페이지의 위 벽은 5호(Doux)의 **단락**이었다: Li 크리프가 전해질 공극으로 밀려 들어가
+`[인쇄]` 75 MPa 에서 도금 전에 단락 — 시간 스케일 **시간(h)**.
+13호가 다른 위 벽을 적는다 (§5, 1 차 주장, 데이터 0):
+`[인쇄]` "high, constant stack pressure can induce detrimental long-term effects: **creep and
+stress relaxation** in softer components (e.g., polymer binders) and **fatigue-driven micro-crack
+initiation** in brittle ceramics, gradually degrading interfacial contact, increase impedance,
+and accelerate overall cell degradation."
+— 시간 스케일 **년**, 기구 **기계 피로**, 대상 **바인더·세라믹 전해질**(Li 금속 아님).
+`[해석]` 두 위 벽은 **다른 축**이다: 5호 것은 "지금 단락하는가", 13호 것은 "20 년 뒤 접촉이
+남는가". 한 숫자로 합치지 않는다. 13호는 `[인쇄]` "dearth of data on the 'mechanical fatigue'
+of solid electrolytes" 라 스스로 적는다 — **이 벽의 위치는 아무도 모른다.**
+
+### 3. ★★ 압력이 관측 + 제어변수가 된다 — 그리고 정책까지
+
+- **관측**: `[인쇄]` "piezoelectric or thin-film pressure sensors within the cell stack to monitor
+  the distribution and **decay of interfacial contact pressure** over time" + `[인쇄]` "decay of
+  interfacial contact pressure — **a primary driver of impedance growth**". 인과 방향이 명시됐다:
+  `P(t) ↓ → R(t) ↑`. (9호 Huo 2025 가 힘 시계열을 **재고도 모델에 안 넣은** 자리다.)
+- **제어**: `[인쇄]` "**active stress management** … the BMS would not merely monitor but act …
+  apply **higher pressure during high-rate cycling** to maintain electrical contact and then
+  deliberately **reduce pressure during extended rest periods or as the cell ages** to minimize
+  the creep of soft components and the mechanical fatigue of brittle electrolytes".
+  8호의 `[인쇄]` "coupled state/control variable" 에 **정책(율↑→P↑ · 휴지/노화→P↓)** 이 붙었다.
+  인용 0 · 데이터 0.
+- `[해석]` 이 정책은 이 페이지 §"이력" 과 정면으로 만난다: `θ(P)` 가 **경로 의존**이면
+  (5호: 처녀 5 MPa 110 Ω ↔ 25 MPa 를 찍고 내려온 5 MPa 50 Ω) 압력을 오르내리는 제어는
+  **상태를 매번 다른 가지에 올린다**. 13호는 이력을 모른다 (`hysteresis` 1 회는 전압 이력).
+  → [[assb-pressure-reapplication-separation-test]] 의 분리 연산자를 **BMS 가 주기적으로
+  실행하는 것**과 같은 조작이 되고, 그 조작이 상태를 바꾼다.
+
+### 4. 이 편이 이 페이지에 **안 준 것**
+압력 → 용량 (**11/11 → 12/12 편 0** — 13호는 데이터 0) · 스윕 0 · 이력 0 · 계측 0 ·
+`MPa` 본문 2 회. **창의 값은 하나도 움직이지 않았다.** 움직인 것은 **창의 구조**(위 벽 둘,
+압력 = 제어변수)와 **요구치의 자릿수 수렴**이다.
 
 ## 경고 (전부 원문이 준 한계에서 나온다)
 

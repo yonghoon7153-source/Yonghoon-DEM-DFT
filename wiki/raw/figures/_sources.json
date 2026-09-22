@@ -249,5 +249,12 @@
    "518492c0-9IDENT1.PDF",
    "4ec72e7c-9SUPI1.PDF"
   ]
+ },
+ "zheng2026_assb-grid-realistic-appraisal": {
+  "figures": 7,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "3d36f9f9-12._All-solid-state_batteries_for_the_grid_A_realistic_appraisal_of_challenges_and_opportunities.pdf"
+  ]
  }
 }

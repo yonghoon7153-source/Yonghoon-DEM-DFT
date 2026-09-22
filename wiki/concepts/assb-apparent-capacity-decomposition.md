@@ -2,10 +2,10 @@
 title: ASSB 겉보기 용량의 3항 분해 — 재료 · 기하 · 동역학
 description: "Q_apparent = θ_AM · η(i) · Q_material — ASSB 복합양극에서 겉보기 LAM_PE 로 보이는 것의 세 기원과, 율(rate)이 그중 하나만 지우는 성질 (Clausnitzer 2023 + Bielefeld 2019)"
 created: 2026-09-16
-updated: 2026-09-16
+updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md]
+sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -231,6 +231,36 @@ Q_apparent = θ_AM(N) · η(i, P, T) · Q_material
   결과를 지배한다** — 문턱 근처에서는 `η` 가 사실상 발산한다.
 - ⚠ **모집단**: Ag–흑연 무음극 중간층 / 반쪽전지 / 1 사이클 / 셀 수 미상.
   양극 축으로 옮기지 않는다.
+
+## ★ 2026-09-22 (`assb` 13호 Zheng 2026, **그리드 appraisal · Perspective, 1차 측정 0**) — 수요 측이 요구한 분해는 **2 항**이고, `θ_AM` 이 빠져 있다
+
+`raw/papers/zheng2026_assb-grid-realistic-appraisal.md` (*Energy* 345, 140229; 전력연구원 +
+전지 제조사 공저). 그리드 BMS 가 갈라야 할 것을 §4 가 이렇게 적는다:
+
+`[인쇄]` "The BMS must instead **distinguish between true active material loss and a reduction in
+'useable capacity' caused by rising impedance or increasing overpotentials** that effectively
+shrink the operational voltage window at practical power rates. This requires the development of
+new, **multi-parameter SOH models** … to provide a nuanced assessment of **degradation root causes**."
+
+이 페이지 어휘로 옮기면 **`Q_material` ↔ `η(i)`** 두 항이다. **`θ_AM` 이 없다.** 그런데
+같은 절 첫 문단이 ASSB 의 지배 실패 모드를 `[인쇄]` "the gradual **loss of interfacial
+contact**, the propagation of cracks within brittle solid electrolytes, and the chemo-mechanical
+evolution of electrode-electrolyte interfaces" 로 꼽는다 — **1 번이 접촉 손실**이다.
+
+`[해석]` 세 가지:
+1. **수요 측 요구서가 3 항 중 두 항만 적었다.** 접촉 손실이 "true active material loss" 인지
+   "rising impedance" 인지 논문은 말하지 않는다 — 우리 분해에서는 **어느 쪽도 아닌 세 번째
+   항**이고, 4호(Shi 2020)의 재가압 회복(≈60 %p)이 그것이 `η` 로 환원되지 않음을 보였다.
+2. 12호(Kouhestani 2022)는 `LAM ⊃ 접촉 손실` 로 **정의에 흡수**, 13호는 **정의에서 누락** —
+   **두 종설이 다른 방식으로 같은 결과**(분리 물음이 없는 분류)에 이른다. 분류 체계가
+   셋(12호·13호·이 페이지)이라는 것 자체가 실측이다.
+3. ★ 13호의 운전 조건이 이 분해의 **관측 가능성**을 바꾼다: `[인쇄]` "20–80 % SOC …
+   impossible to obtain a full OCV curve" + LFP 평탄 + "voltage hysteresis arising from mechanical
+   stresses". `η(i)` 는 율 연산자로, `θ_AM` 은 압력 연산자로 지울 수 있지만 **`Q_material`
+   은 OCV 전 구간이 있어야 잰다** — 그리드 창에서는 그 항이 **가장 안 보이는 항**이 된다.
+   → [[data-window-identifiability]] 의 ASSB 판이 필요한 자리.
+
+⚠ 13호는 데이터 0 이다. 이 절이 더한 것은 **요구서의 형태**이지 분해의 근거가 아니다.
 
 ## 이 페이지가 주장하지 않는 것
 
