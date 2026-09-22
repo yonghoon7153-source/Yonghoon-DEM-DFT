@@ -3213,7 +3213,14 @@ server_unreachable_help() {
           # 갈래로 간다.  실측 2026-08-26: 그래서 아무도 터널을 의심 안 했다.
           say "    ${B}'공유 주소' 가 경고${OFF}   ${DIM}터널이 죽었습니다. 중추 서버에서${OFF} ${GREEN}bml share${OFF} ${DIM}한 번이면${OFF}"
           say "    ${B}(또는 아예 없다)${OFF}      ${DIM}닫고 다시 엽니다.${OFF}"
-          say "                          ${DIM}주소가 바뀌므로 여기서${OFF} ${GREEN}bmlout <새 주소>${OFF} ${DIM}를 다시 칩니다.${OFF}"
+          # **이 기계가 아는 만큼만 말한다.**  도메인을 아는 것은 터널을 여는
+          # 기계 하나뿐이라 (아래 갈래의 주석), 여기서 "바뀐다" 를 단정하면
+          # 고정 주소를 쓰는 랩에 헛일을 시킨다.
+          if tunnel_address_is_fixed; then
+            say "                          ${DIM}이름이 고정이라 여기서 다시 칠 것은 없습니다.${OFF}"
+          else
+            say "                          ${DIM}주소가 바뀔 수 있으므로 여기서${OFF} ${GREEN}bmlout <새 주소>${OFF} ${DIM}를 다시 칩니다.${OFF}"
+          fi
           say ""
           say "  ${DIM}지금 이 기계만의 데이터로 띄우려면${OFF}  ${GREEN}bml use off${OFF} ${DIM}후${OFF} ${GREEN}bml${OFF}"
           return 0
@@ -4032,6 +4039,22 @@ done
 KEEPALIVE
   chmod +x "$path" 2>/dev/null || true
   printf '%s' "$path"
+}
+
+#: 다음 `bml share` 가 **같은 주소**로 열리는가.
+#:
+#: 이름과 그 이름을 지킬 자격이 **둘 다** 있어야 고정이다.
+#:
+#: 이 판정이 두 군데에 따로 적혀 있어서 한 화면이 스스로를 반박했다 (실측
+#: 2026-09-22).  위에서는 `터널 이름 https://test.bmlwork.kr (고정 — 열어도 안
+#: 바뀝니다 · 우리 VPS …)` 라고 하고, **두 줄 밑에서** "주소가 바뀌므로 다른
+#: 기계에서 bmlout <새 주소>" 를 시켰다.  죽은 터널 쪽 조건이 Cloudflare 토큰만
+#: 세고 VPS(ADR 0034)를 안 봤기 때문인데, 주소가 안 바뀌는 것이 바로 VPS 를
+#: 세운 이유다.  그 안내를 따르면 멀쩡한 다른 기계의 설정을 헛되게 고친다.
+tunnel_address_is_fixed() {
+  local d; d="$(tunnel_domain 2>/dev/null || true)"
+  [ -n "$d" ] || return 1
+  [ "$(domain_credential)" != "none" ]
 }
 
 #: 우리 VPS.  `.bml/env` 의 `WORKBENCH_VPS` — `사용자@호스트[:포트]`.
@@ -5659,7 +5682,7 @@ cmd_status() {
   # 열어 보기 전에는 안 보이므로 여기서 말한다.
   local cf_dom=""; cf_dom="$(tunnel_domain 2>/dev/null || true)"
   local cred; cred="$(domain_credential)"
-  if [ -n "$cf_dom" ] && [ "$cred" != "none" ]; then
+  if tunnel_address_is_fixed; then
     local how
     case "$cred" in
       vps) how="우리 VPS $(tunnel_vps 2>/dev/null)" ;;
@@ -5699,7 +5722,9 @@ cmd_status() {
   fi
   if ! tunnel_running && [ -n "$(tunnel_url)" ]; then
     warn "공유 주소   $(tunnel_url) — ${B}터널이 죽어 있습니다${OFF} ${DIM}(주소 기록만 남았습니다)${OFF}"
-    if tunnel_cf_token >/dev/null && [ -n "$cf_dom" ]; then
+    # 위의 `터널 이름` 줄과 **같은 판정**을 쓴다 (`tunnel_address_is_fixed`).
+    # 따로 적어 두었던 동안 한 화면이 두 줄 차이로 정반대를 말했다.
+    if tunnel_address_is_fixed; then
       say "  ${GREEN}bml share${OFF} ${DIM}로 다시 엽니다 — 이름이 고정이라 다른 기계는 그대로 둬도 됩니다.${OFF}"
     else
       say "  ${GREEN}bml share${OFF} ${DIM}로 다시 엽니다 — 주소가 바뀌므로 다른 기계에서${OFF} ${GREEN}bmlout <새 주소>${OFF}"

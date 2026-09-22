@@ -1598,6 +1598,33 @@ check "남의 주소는 우리 터널이 아니다"   "$(vps_says 'ubuntu@193.12
 check "VPS 를 안 적어 뒀으면 모른다"   "$(vps_says '' 'https://193-123-161-75.sslip.io')" "no"
 
 echo
+echo "한 화면이 스스로를 반박하지 않는다 — 고정 주소 판정은 한 군데"
+#: 실측 2026-09-22 의 `bml status`:
+#:
+#:   터널 이름   https://test.bmlwork.kr  (고정 — 열어도 안 바뀝니다 · 우리 VPS …)
+#:   ! 공유 주소 https://test.bmlwork.kr — 터널이 죽어 있습니다
+#:     bml share 로 다시 엽니다 — 주소가 바뀌므로 다른 기계에서 bmlout <새 주소>
+#:
+#: 두 줄 차이로 정반대를 말한다.  죽은 터널 쪽 조건이 Cloudflare 토큰만 세고
+#: VPS(ADR 0034)를 안 봤기 때문인데, **주소가 안 바뀌는 것이 VPS 를 세운
+#: 이유다**.  그 안내를 따르면 멀쩡한 다른 기계의 설정을 헛되게 고친다.
+fixed_says() {
+  (
+    BML_SOURCE_ONLY=1 . "$BML"
+    WORKBENCH_TUNNEL_DOMAIN="$1"
+    WORKBENCH_VPS="$2"
+    WORKBENCH_CF_TOKEN="${3:-}"
+    if tunnel_address_is_fixed; then printf 'fixed'; else printf 'random'; fi
+  ) 2>/dev/null
+}
+check "이름 + VPS 면 고정이다 (예전에는 VPS 를 안 셌다)" \
+  "$(fixed_says 'test.bmlwork.kr' 'bml-tunnel@193.123.161.75')" "fixed"
+check "이름만 있고 자격이 없으면 랜덤" \
+  "$(fixed_says 'test.bmlwork.kr' '')" "random"
+check "자격만 있고 이름이 없으면 랜덤 (지킬 이름이 없다)" \
+  "$(fixed_says '' 'bml-tunnel@193.123.161.75')" "random"
+
+echo
 if [ "$fail" -eq 0 ]; then
   printf '결과: %d개 통과\n' "$pass"
   exit 0
