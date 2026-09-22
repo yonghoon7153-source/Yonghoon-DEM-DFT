@@ -1,71 +1,72 @@
 {
-  "baseline": "modelc",
-  "open_element": "Li",
-  "window_V": [
-    "3.50",
-    "4.50"
-  ],
-  "n_unreadable_reactions": 0,
-  "by_electrolyte": {
-    "comp1": {
-      "n_cells": 18,
-      "slope_dDelta_dV": -0.064343,
-      "d_released_per_atom": 0.031871,
-      "predictor_minus_dn": -0.031871
-    },
-    "lpsocl": {
-      "n_cells": 23,
-      "slope_dDelta_dV": 4.8e-05,
-      "d_released_per_atom": -0.000726,
-      "predictor_minus_dn": 0.000726
-    },
-    "modelc_nd": {
-      "n_cells": 23,
-      "slope_dDelta_dV": 0.060412,
-      "d_released_per_atom": -0.026977,
-      "predictor_minus_dn": 0.026977
-    },
-    "nd_li_002": {
-      "n_cells": 23,
-      "slope_dDelta_dV": 0.005124,
-      "d_released_per_atom": -0.002842,
-      "predictor_minus_dn": 0.002842
-    },
-    "nd_only": {
-      "n_cells": 23,
-      "slope_dDelta_dV": 0.056453,
-      "d_released_per_atom": -0.026447,
-      "predictor_minus_dn": 0.026447
-    },
-    "nd_p_002": {
-      "n_cells": 22,
-      "slope_dDelta_dV": -0.007295,
-      "d_released_per_atom": 0.002568,
-      "predictor_minus_dn": -0.002568
-    },
-    "nd_p_002_asused": {
-      "n_cells": 23,
-      "slope_dDelta_dV": -0.007348,
-      "d_released_per_atom": 0.003483,
-      "predictor_minus_dn": -0.003483
-    },
-    "nd_p_020": {
-      "n_cells": 20,
-      "slope_dDelta_dV": -0.068245,
-      "d_released_per_atom": 0.037893,
-      "predictor_minus_dn": -0.037893
-    },
-    "o_only_03": {
-      "n_cells": 23,
-      "slope_dDelta_dV": 0.000684,
-      "d_released_per_atom": -0.001721,
-      "predictor_minus_dn": 0.001721
-    }
+ "baseline": "modelc",
+ "open_element": "Li",
+ "window_V": [
+  "3.50",
+  "4.50"
+ ],
+ "n_unreadable_reactions": 0,
+ "by_electrolyte": {
+  "comp1": {
+   "n_cells": 18,
+   "slope_dDelta_dV": -0.064343,
+   "d_released_per_atom": 0.031871,
+   "predictor_minus_dn": -0.031871
   },
-  "fit": {
-    "n": 9,
-    "beta": 2.0051,
-    "r2": 0.9926,
-    "note": "beta 는 **실측 전치인자**다. 1.0 을 기대하지 않는다 — pymatgen per-atom 정규화 관례를 우리가 유도하지 않았다. 판정에 쓰는 것은 **부호와 R²**다."
+  "lpsocl": {
+   "n_cells": 23,
+   "slope_dDelta_dV": 4.8e-05,
+   "d_released_per_atom": -0.000726,
+   "predictor_minus_dn": 0.000726
+  },
+  "modelc_nd": {
+   "n_cells": 23,
+   "slope_dDelta_dV": 0.060412,
+   "d_released_per_atom": -0.026977,
+   "predictor_minus_dn": 0.026977
+  },
+  "nd_li_002": {
+   "n_cells": 23,
+   "slope_dDelta_dV": 0.005124,
+   "d_released_per_atom": -0.002842,
+   "predictor_minus_dn": 0.002842
+  },
+  "nd_only": {
+   "n_cells": 23,
+   "slope_dDelta_dV": 0.056453,
+   "d_released_per_atom": -0.026447,
+   "predictor_minus_dn": 0.026447
+  },
+  "nd_p_002": {
+   "n_cells": 22,
+   "slope_dDelta_dV": -0.007295,
+   "d_released_per_atom": 0.002568,
+   "predictor_minus_dn": -0.002568
+  },
+  "nd_p_002_asused": {
+   "n_cells": 23,
+   "slope_dDelta_dV": -0.007348,
+   "d_released_per_atom": 0.003483,
+   "predictor_minus_dn": -0.003483
+  },
+  "nd_p_020": {
+   "n_cells": 20,
+   "slope_dDelta_dV": -0.068245,
+   "d_released_per_atom": 0.037893,
+   "predictor_minus_dn": -0.037893
+  },
+  "o_only_03": {
+   "n_cells": 23,
+   "slope_dDelta_dV": 0.000684,
+   "d_released_per_atom": -0.001721,
+   "predictor_minus_dn": 0.001721
   }
+ },
+ "fit": {
+  "n": 9,
+  "beta": 2.0051,
+  "r2": 0.9926,
+  "note": "beta 는 **실측 전치인자**다. 1.0 을 기대하지 않는다 — pymatgen per-atom 정규화 관례를 우리가 유도하지 않았다. 판정에 쓰는 것은 **부호와 R²**다."
+ },
+ "⛔_window_V_2026_09_22": "이 파일의 `window_V`·`reduction_limit_V` 는 **계통적으로 넓다** — 환원 가장자리를 한 계단 아래로 잡는 옛 식에서 나왔다. **재유도하지 않았다**(이 파일은 정본이 아니거나 superseded 다: status = 미표기). 정본은 `oxidation_stability_cascade_v3_pinned.json` 이고 거기만 재유도했다. 원장 `HZ-esw-reduction-limit-label`(BLOCKED)."
 }

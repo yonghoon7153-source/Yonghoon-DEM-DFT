@@ -5047,5 +5047,6 @@
   "ZrCl4",
   "ZrF4",
   "ZrO2"
- ]
+ ],
+ "⛔_window_V_2026_09_22": "이 파일의 `window_V`·`reduction_limit_V` 는 **계통적으로 넓다** — 환원 가장자리를 한 계단 아래로 잡는 옛 식에서 나왔다. **재유도하지 않았다**(이 파일은 정본이 아니거나 superseded 다: status = recovered_unvalidated_diagnostic). 정본은 `oxidation_stability_cascade_v3_pinned.json` 이고 거기만 재유도했다. 원장 `HZ-esw-reduction-limit-label`(BLOCKED)."
 }

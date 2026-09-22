@@ -57,6 +57,7 @@ except Exception:
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__))), "cascade"))
 from cascade_ids import base_species          # noqa: E402  — 그룹핑 정본
+from constrained_esw import esw_window_edges  # noqa: E402  — 가장자리 판정 **정본 한 곳**
 
 def fnum(s):
     try: return float(s)
@@ -414,12 +415,14 @@ def main():
                 steps = [{"V": round(muref - float(p["chempot"]), 3),
                           "evo": round(float(p["evolution"]), 4),
                           "rxn": str(p["reaction"])} for p in prof]
-                pos = [s for s in steps if s["evo"] > 1e-6]
-                neg = [s for s in steps if s["evo"] < -1e-6]
-                neu = [s for s in steps if abs(s["evo"]) <= 1e-6]
-                red = max((s["V"] for s in pos), default=None)
-                ox = min((s["V"] for s in neg), default=None)
-                ocv = min((s["V"] for s in neu), default=None)
+                # ⛔ 2026-09-22 정정 — 가장자리 판정을 `constrained_esw.esw_window_edges()`
+                #   **한 곳**으로 모았다. 종전엔 이 파일과 그 파일이 똑같은 식을 각자 갖고
+                #   있었고(`red = max(V | evo > 0)`), 둘 다 **한 계단 아래**를 잡았다.
+                edges = esw_window_edges(steps)
+                red = edges["reduction_limit_V"]        # 교환 0 의 최저 V (= 진짜 가장자리)
+                ox = edges["oxidation_limit_V"]
+                ocv = red                               # 옛 `ocv_self_decomposition_V` 와 같은 값
+                first_red = edges["first_reduction_plateau_V"]   # 옛 `reduction_limit_V` 가 담던 값
                 def rxn_at(v): return min(steps, key=lambda s: abs(s["V"]-v))["rxn"] if v is not None else None
                 # ⚠ els 는 **합집합** chemsys 다. 원래 조성 원소를 따로 남겨야
                 #   "합집합으로 쟀다" 를 사후에 판별할 수 있다 (2026-08-16 실측: 안 남겨서
@@ -430,8 +433,16 @@ def main():
                     "phase_set_id": psid, "n_entries": len(entries), "db_version": db_version,
                     "reduction_limit_V": red, "oxidation_limit_V": ox,
                     "ocv_self_decomposition_V": ocv,
+                    # ⛔ 2026-09-22: 옛 `reduction_limit_V` 가 담던 값을 **이름을 사실대로 바꿔**
+                    #   남긴다. 지우면 옛 원고 숫자의 출처가 끊긴다(이력 보존).
+                    "first_reduction_plateau_V": first_red,
+                    "legacy_window_V_2026_09_22": (round(ox - first_red, 3)
+                                                   if (ox is not None and first_red is not None)
+                                                   else None),
+                    "edge_note": edges.get("note"),
+                    "n_neutral_steps": edges.get("n_neutral_steps"),
                     "oxidation_onset_rxn": rxn_at(ox), "ocv_rxn": rxn_at(ocv),
-                    "window_V": (round(ox-red,3) if (ox is not None and red is not None) else None),
+                    "window_V": edges["window_V"],
                     "n_breakpoints": len(steps)}
             except Exception as e:
                 results[name] = {"dopant": dop, "phase_set_id": psid, "error": str(e)[:120]}
@@ -497,6 +508,47 @@ def main():
         if "error" in d: print(f"{name:18s} ERROR {d['error'][:50]}"); continue
         print(f"{name:18s} {str(d['oxidation_limit_V']):>6s} {str(d['reduction_limit_V']):>6s} "
               f"{str(d['ocv_self_decomposition_V']):>6s} {str(d['window_V']):>6s}")
+
+def _selftest_edges(chk):
+    """ESW 가장자리 판정 — **2026-09-22 정정을 시험으로 고정한다.**
+
+    픽스처는 지어낸 게 아니라 **우리 `esw_lis4excluded.json` comp1 의 실측 사다리**다.
+    옛 판(`max(V | evo>0)`)은 1.242 를 줬고 새 판은 1.717 을 준다 — 그 차이를 시험이 잡는다.
+    """
+    COMP1 = [                    # V, evo(=Li 교환, 양수면 흡수)
+        {"V": 0.000, "evo": 8.000}, {"V": 0.870, "evo": 6.000},
+        {"V": 0.932, "evo": 5.429}, {"V": 1.177, "evo": 5.143},
+        {"V": 1.242, "evo": 5.000},          # ← 옛 판이 '환원 한계' 라 부르던 자리
+        {"V": 1.717, "evo": 0.000},          # ← 교환 0 = **진짜 가장자리**
+        {"V": 2.256, "evo": -2.000}, {"V": 2.385, "evo": -5.000},
+        {"V": 3.326, "evo": -6.000},
+    ]
+    e = esw_window_edges(COMP1)
+    chk("가장자리: 환원 한계 = **교환 0 의 최저 V** (1.717) — 1.242 가 아니다",
+        e["reduction_limit_V"] == 1.717)
+    chk("가장자리: 산화 한계 = Li 방출 최저 V (2.256)", e["oxidation_limit_V"] == 2.256)
+    chk("가장자리: window_V = 0.539 (옛 1.014 가 아니다)", e["window_V"] == 0.539)
+    chk("[음성·핵심] 옛 값 1.242 를 **버리지 않고** 이름을 사실대로 바꿔 남긴다",
+        e["first_reduction_plateau_V"] == 1.242)
+    chk("[음성] **1.242 에서 계는 아직 Li 을 5 개 흡수한다** — 가장자리일 수 없다는 근거",
+        [x for x in COMP1 if x["V"] == 1.242][0]["evo"] == 5.0)
+    chk("[음성] 교환 0 이 하나뿐이면 경고를 달지 않는다 (없는 경고를 만들지 않는다)",
+        e["n_neutral_steps"] == 1 and e["note"] is None)
+    two = COMP1 + [{"V": 2.900, "evo": 0.000}]
+    e2 = esw_window_edges(two)
+    chk("[음성] 교환 0 이 **둘 이상이면 경고한다** — 구간 연결성을 이 함수는 모른다",
+        e2["n_neutral_steps"] == 2 and e2["note"] and "이어져 있는지" in e2["note"])
+    chk("[음성] 그래도 가장자리는 **가장 낮은 것**을 쓴다 (조용히 포기하지 않는다)",
+        e2["reduction_limit_V"] == 1.717)
+    e3 = esw_window_edges([x for x in COMP1 if x["evo"] != 0.0])
+    chk("[음성] 교환 0 이 **하나도 없으면** 창을 None 으로 하고 이유를 적는다",
+        e3["reduction_limit_V"] is None and e3["window_V"] is None
+        and "정의할 수 없다" in (e3["note"] or ""))
+    chk("[음성] Li 방출 단계가 없으면 산화 한계도 None",
+        esw_window_edges([x for x in COMP1 if x["evo"] >= 0.0])["oxidation_limit_V"] is None)
+    chk("[음성] 입력 순서가 뒤섞여도 같은 답 (정렬에 기대지 않는다)",
+        esw_window_edges(list(reversed(COMP1)))["window_V"] == 0.539)
+
 
 def selftest():
     """조성족 분류·감사 자가시험. **음성 경로 포함** — 틀린 입력을 잡아내는지 본다."""
@@ -666,6 +718,8 @@ def selftest():
     csvn = write_csv([("A_x020", "X2O3", "compound_set")])
     an = annotate_families({"A_x020": {"oxidation_limit_V": None, "delta_ox_vs_host_V": None}}, csvn)
     chk("음성: delta None 은 초과 아님", an["onset_raise_rate"]["plain"]["n_raises_onset"] == 0)
+
+    _selftest_edges(chk)          # ⛔ ESW 가장자리 정정(2026-09-22) — 실측 comp1 사다리 픽스처
 
     try: print(f"\nselftest: {ok} passed, {fail} failed")
     except Exception: print(f"\nselftest: {ok} passed, {fail} failed")

@@ -3835,5 +3835,6 @@
   "confidence": "high",
   "note": "결정론적 재빌드 가능(2회 md5 동일)",
   "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
- }
+ },
+ "⛔_window_V_2026_09_22": "이 파일의 `window_V`·`reduction_limit_V` 는 **계통적으로 넓다** — 환원 가장자리를 한 계단 아래로 잡는 옛 식에서 나왔다. **재유도하지 않았다**(이 파일은 정본이 아니거나 superseded 다: status = superseded_47species). 정본은 `oxidation_stability_cascade_v3_pinned.json` 이고 거기만 재유도했다. 원장 `HZ-esw-reduction-limit-label`(BLOCKED)."
 }

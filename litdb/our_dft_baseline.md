@@ -17,16 +17,16 @@
 | D(600 K) | 3.09×10⁻⁶ cm²/s | **7.90×10⁻⁶ cm²/s** | **MLIP-MD** (UMA-s-1p1), MSD 2–50 ps |
 | ICOHP(Li–Cl) | −1.86 | −2.10 | LOBSTER |
 | 산화 onset (grand-potential) | **2.256 V** (LiS4 포함 시 2.14) | **2.256 V** (LiS4 포함 시 2.14) | get_element_profile, LiS4/SCl3/Li5PS4Cl2 제외 = GG set |
-| 환원 한계 / OCV | 1.242 V / 1.717 V | 1.242 V / 1.717 V | grand-potential |
+| **환원 한계** / 첫 환원 평탄 | **1.717 V** / ~~1.242 V~~ | **1.717 V** / ~~1.242 V~~ | grand-potential |
 
-> 🔴 **⛔ 2026-09-22: `reduction_V` 라벨 오류로 폭이 계통적으로 넓다.** 위 두 줄로 만든 창 `1.242–2.256 = 1.014 V` 는 쓰지 않는다 — `[Schw21]`(*JACS Au* **1**, 1488 · `papers/schwietert2021_intrinsic_vs_decomposition_window_sse.md` §7-2·§7-3) 의 정의(*"the decomposition potential closest to the stable solid electrolyte phase"*)로 우리 프로파일을 다시 읽으면 **1.717–2.256 = 0.539 V** 이고, **1.242 V 는 *두 번째* 환원 평탄**(P → `LiP₇`)이다. 원장 `HZ-esw-reduction-limit-label`(BLOCKED) · **1저자 결정 전까지 폭 인용 금지**. ⚠ 값은 **이력 보존을 위해 지우지 않는다** (틀린 것은 값이 아니라 *이름*과 *빼는 방식*이다).
+> ✅ **2026-09-22 정정 완료 — 라벨을 바꿨다.** 종전 이 줄은 `1.242` 를 *환원 한계*, `1.717` 을 *OCV* 라 불렀다. **뒤바뀌어 있었다**: 1.242 V 에서 이 계는 아직 **Li 을 5 개 흡수**하므로(`+5Li → 5Li₂S + LiCl + P`) 안정창의 가장자리일 수 없고, **교환이 0 인 1.717 V 가 가장자리**다. ⇒ 창은 **1.717–2.256 = 0.539 V** 이고 종전 인쇄값 **1.014 V 는 쓰지 않는다.** 우리 1.717 은 `[Zhu15]`·`[Schw21]` 의 환원한계 **1.72 와 0.003 V** 차다 — 라벨만 고치면 환원 쪽은 일치한다. 값은 **취소선으로 남긴다**(이력 보존). 근거: `papers/schwietert2021_…md` §7-2·§7-3 · 원장 `HZ-esw-reduction-limit-label`(**CONDITIONAL** 로 하향) · 코드 `tools/oxidation/constrained_esw.py:esw_window_edges()`. ⚠ **산화 한 변은 아직 열려 있다** — 우리 2.256 vs 문헌 2.01 의 **0.246 V** 는 이 정정과 무관하고 원인 미확정이다(상 배제 ≈0.116 V + MP 판본). **창 절대값이 문헌과 맞는다고 쓰지 않는다.**
 
 ### ESW 상세 (LiS4 제외, 2026-06-23 gabia 재계산 — `esw_lis4excluded.json`)
 > LiS4(현 MP id `mp-aaaceqmj`)·SCl3·Li5PS4Cl2 제외(Gil-González 2022 phase set). **두 조성 onset 동일 2.256 V (S²⁻-limited).**
 - **comp1 onset (2.256 V)**: `Li6PS5Cl → Li3PS4 + LiCl + S + 2 Li⁺ + 2 e⁻` ← **Zuo Eq1과 정확히 일치** (원소 S, 2 e⁻)
 - **modelc onset (2.256 V)**: `Li5.4PS4.4Cl1.6 → Li3PS4 + 1.6 LiCl + 0.4 S + 0.8 Li⁺ + 0.8 e⁻` (Cl-rich: 전자 적게·LiCl 많이 = Zuo Eq2 거동)
 - 이후 단계: 2.385 V(P₂S₇+S), 3.326 V(SCl); modelc만 3.388 V(PCl₅).
-- GG K_eff=0 anodic 2.40 V와 격차 **0.14 V**(LiS4 포함 시 0.26). 환원/OCV(1.242/1.717) 불변.
+- GG K_eff=0 anodic 2.40 V와 격차 **0.14 V**(LiS4 포함 시 0.26). 환원 한계 **1.717 V** 불변 (⛔ 2026-09-22 라벨 정정: 종전 표기 "환원/OCV 1.242/1.717" 에서 **1.717 이 환원 한계**이고 1.242 는 첫 환원 평탄이다 — 위 주석).
 
 ## 핵심 발산 (comp1 → modelc, Cl 증가 효과)
 - **이온전도**: D↑(2.6×), Ea↓ — Cl-rich가 더 빠름 (disorder·vacancy)

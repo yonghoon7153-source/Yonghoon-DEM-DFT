@@ -77,6 +77,58 @@ def vol_per_atom_table(entries):
     return vpa
 
 
+def esw_window_edges(steps):
+    """`steps` → 안정창의 두 가장자리. **이 파일과 `esw_cascade_batch.py` 가 공유한다.**
+
+    `steps` = [{"V": float, "evo": float}, …]  (`evo` = 부호 있는 Li 교환량)
+    → `{"reduction_limit_V", "oxidation_limit_V", "window_V",
+        "first_reduction_plateau_V", "n_neutral_steps", "neutral_V", "note"}`
+
+    ⛔⛔ **2026-09-22 정정 — 종전 판은 환원 가장자리를 한 계단 아래로 잡았다.**
+      옛 코드는 두 도구가 똑같이 `red = max(V | evo > 0)` 을 썼다. 그건 **Li 을 아직
+      흡수하는 단계 중 가장 높은 전압**이지 안정창의 가장자리가 아니다.
+      `evo == 0` 행(= Li 교환이 없는 구간) 이 필터에서 통째로 빠졌다.
+      실측(comp1): 1.242 V 에서 아직 **Li 5 개를 흡수**하고(`+5Li → 5Li₂S+LiCl+P`),
+      교환 0 은 **1.717 V** 다 ⇒ 창은 **1.717–2.256 = 0.539 V** 이지 1.014 V 가 아니다.
+      cascade 356 행 전수 재유도에서 **0 행을 빼고 전부 넓었다**(중앙 +0.475 · 최대 +0.676 V).
+      게다가 어긋남이 **계마다 다르다**(할라이드 Na 7 종 실측 0.11–1.10 V) ⇒ **순위도 흔든다.**
+
+    ⭐ 문헌 관례가 이쪽이다 — `[Schw21]` *"the decomposition potential **closest to the
+      stable solid electrolyte phase**"* · `[Sjolin23]` *"hull 위에 머무는 μ 구간"* ·
+      `[Jang26Na]` 은 아예 그림 축을 `Na uptake` 로 놓아 **교환 0 구간**을 눈에 보이게 한다.
+      우리 1.717 은 `[Zhu15]`·`[Schw21]` 의 1.72 와 **0.003 V** 차다.
+
+    ⛔ **이 함수가 못 하는 것**: 교환-0 행이 **둘 이상**일 때 그 구간들이 이어져 있는지
+      모른다. `steps` 만으로는 구간 연결성을 확정할 수 없어서, 그럴 때는 가장 낮은 것을
+      쓰되 `note` 에 **몇 개였는지 적고 경고**한다. 판단은 사람이 한다 — 조용히 고르지 않는다.
+    """
+    s = sorted(steps, key=lambda x: float(x["V"]))
+    EPS = 1e-6
+    pos = [x for x in s if float(x["evo"]) > EPS]     # Li 흡수 (환원)
+    neg = [x for x in s if float(x["evo"]) < -EPS]    # Li 방출 (산화)
+    neu = [x for x in s if abs(float(x["evo"])) <= EPS]
+    red = min((float(x["V"]) for x in neu), default=None)   # ← 가장자리는 **교환 0** 의 최저
+    ox = min((float(x["V"]) for x in neg), default=None)
+    out = {
+        "reduction_limit_V": red,
+        "oxidation_limit_V": ox,
+        "window_V": (round(ox - red, 3) if (ox is not None and red is not None) else None),
+        # 옛 `reduction_limit_V` 가 담던 값 — **이름을 사실대로 바꿔 남긴다**(이력 보존)
+        "first_reduction_plateau_V": max((float(x["V"]) for x in pos), default=None),
+        "n_neutral_steps": len(neu),
+        "neutral_V": [float(x["V"]) for x in neu],
+        "note": None,
+    }
+    if not neu:
+        out["note"] = ("교환 0 인 단계가 **없다** — 이 계는 모든 전압에서 Li 을 주고받는다. "
+                       "안정창을 정의할 수 없다(`reduction_limit_V = None`).")
+    elif len(neu) > 1:
+        out["note"] = (f"교환 0 단계가 **{len(neu)} 개**다 ({out['neutral_V']}). "
+                       "가장 낮은 것을 가장자리로 썼지만, 그 구간들이 **이어져 있는지 "
+                       "이 함수는 모른다.** 사람이 `steps` 를 열어 확인해야 한다.")
+    return out
+
+
 def onset_reactions(pd, comp, mu_Li_ref):
     """K_eff=0: return (red_limit_V, red_rxn, ox_limit_V, ox_rxn, full_steps)."""
     from pymatgen.core import Element
@@ -87,11 +139,16 @@ def onset_reactions(pd, comp, mu_Li_ref):
         steps.append({"V": round(mu_Li_ref - float(p["chempot"]), 3),
                       "evo": round(float(p["evolution"]), 4),
                       "rxn": p["reaction"]})
+    # ⛔ 2026-09-22 정정: 종전 판은 `red = max(V | evo > 0)` 이었다 — Li 을 **아직 흡수하는**
+    #   단계 중 최고 전압이라 안정창의 가장자리가 아니다. 가장자리는 **교환 0** 의 최저 V 다.
+    #   판정은 `esw_window_edges()` 한 곳에서만 한다 (두 도구가 갈라지지 못하게).
     s = sorted(steps, key=lambda x: x["V"])
-    pos = [x for x in s if x["evo"] > 1e-6]   # reduction (Li uptake)
-    neg = [x for x in s if x["evo"] < -1e-6]  # oxidation (Li release)
-    red = max(pos, key=lambda x: x["V"]) if pos else None
-    ox = min(neg, key=lambda x: x["V"]) if neg else None
+    edges = esw_window_edges(s)
+    red = next((x for x in s if x["V"] == edges["reduction_limit_V"]), None)
+    ox = next((x for x in s if x["V"] == edges["oxidation_limit_V"]), None)
+    for r in (red, ox):
+        if r is not None:
+            r["edges"] = edges          # 가장자리 판정 근거를 행에 붙여 둔다
     return red, ox, steps
 
 
