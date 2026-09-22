@@ -44,17 +44,16 @@
 
 고정 소스 6개를 읽기 전용 API로 받아 별도 증거 폴더에 보존했다. 로컬 복사본의 Git blob SHA-1이 API의 각 blob SHA와 일치한다.
 
-- 소스 목록과 커밋 봉인: `fam_r3v2_evidence_20260922/SOURCE_MANIFEST.json` (저자 기계)
-- 재현 스크립트: `fam_r3v2_evidence_20260922/reproduce_prereg_checks.py` (저자 기계)
-- 재현 출력 전문: `fam_r3v2_evidence_20260922/reproduction_output.txt` (저자 기계)
+⚠ 아래 셋은 **저자 기계(Windows)의 증거 폴더** 안이고 이 리포에 없다 — 리포 경로로 읽지 말 것.
+증거 폴더 이름 `fam_r3v2_evidence_20260922` 안에: 소스 목록·커밋 봉인 (SOURCE_MANIFEST, JSON) ·
+재현 스크립트 (reproduce_prereg_checks, PY) · 재현 출력 전문 (reproduction_output, TXT).
 - 검토 대상 §12: `docs/reviews/fam_platen_prereg_20260812.md#L433` @ `57e438e98d34137982233e6845e90c996e32d1fb`
 - 관측량·문턱의 실행 소스: `scripts/mpm3d_compaction.py` @ 같은 커밋
 
 재현 명령, 증거 폴더의 상위 디렉터리에서:
 
-```bash
-python3 fam_r3v2_evidence_20260922/reproduce_prereg_checks.py
-```
+> 재현 명령은 그 증거 폴더의 상위에서 재현 스크립트를 python3 로 실행하는 것이다
+> (경로는 저자 기계 기준이라 여기 적지 않는다).
 
 **실행한 것:** 현재 소스 AST에서 꺼낸 Lamé 함수, Mach 산술문, f/floor 분기, unload_verdict 순수 함수; 판정표 논리와 부피 산술.
 **실행하지 않은 것:** MPM 초기화·시간적분·GPU·DEM. 전체 CLI 실행 검증도 아니다. 예시 f=0.675/0.794는 규칙 반례용이며, real_14의 새 측정값으로 승인하지 않았다.
