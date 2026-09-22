@@ -39,18 +39,23 @@ Usage (gabia, MP_API_KEY set):
 import argparse
 import json
 import os
+import pathlib
 from pathlib import Path
 
 GPA_A3_TO_EV = 6.241509074e-3
 EXCLUDE_FORMULAS = {"LiS4", "SCl3", "Li5PS4Cl2"}  # Gil-González SI exclusions
 
 
-def get_entries(elements):
+def get_entries(elements, exclude=True):
+    """MP 엔트리. `exclude=False` 면 `EXCLUDE_FORMULAS` 를 **빼지 않는다**(감사용 대조판)."""
     key = os.environ.get("MP_API_KEY") or os.environ.get("PMG_MAPI_KEY")
     from mp_api.client import MPRester
     with MPRester(key) as mpr:
         entries = mpr.get_entries_in_chemsys(
             elements, additional_criteria={"thermo_types": ["GGA_GGA+U"]})
+    if not exclude:
+        print(f"[mp_api] {len(entries)} entries; **제외 없음**(감사용 대조판)")
+        return list(entries)
     kept, dropped = [], []
     for e in entries:
         if e.composition.reduced_formula in EXCLUDE_FORMULAS:
@@ -59,6 +64,108 @@ def get_entries(elements):
     print(f"[mp_api] {len(entries)} entries; dropped {sorted(set(dropped))}; "
           f"kept {len(kept)}")
     return kept
+
+
+def audit_edges(target, elements, out_path):
+    """⭐ F-감사: **상 배제 포함/배제 두 판**으로 사다리를 뽑아 가장자리를 대조한다.
+
+    왜 있나 — 2026-09-22 에 환원 가장자리 라벨을 고쳤고(`esw_window_edges()`),
+    남은 미해결이 **산화 한 변 0.246 V** 다(우리 2.256 vs 문헌 2.01). 후보가 둘인데
+    확정이 안 됐다: ① 우리가 뺀 상 3개(`LiS4`·`SCl3`·`Li5PS4Cl2`) ② MP 판본 드리프트.
+    ①의 몫을 재려면 **같은 스냅샷에서 포함/배제 두 판**을 돌려 빼면 된다.
+    ②는 이걸로 못 가른다 — 남는 차가 ②의 상한이다.
+
+    ⛔ **이 함수가 못 하는 것**: MP 스냅샷 자체를 고정하지 못한다. 두 판이 **같은 호출에서**
+      나오므로 서로는 비교 가능하지만, **문헌(2021 이전 MP)과의 차는 여전히 미확정**이다.
+      그래서 출력에 `mp_snapshot_note` 를 박는다.
+    """
+    from pymatgen.core import Composition, Element
+    from pymatgen.analysis.phase_diagram import PhaseDiagram
+    res = {"target": target, "elements": list(elements),
+           "mp_snapshot_note": "⚠ MP 스냅샷 버전이 기록되지 않는다 — 두 판은 서로 비교 가능하지만 "
+                               "문헌(2021 이전 MP)과의 차는 이걸로 못 가른다.",
+           "runs": {}}
+    comp = Composition(target)
+    for tag, exc in (("excluded", True), ("included", False)):
+        ents = get_entries(elements, exclude=exc)
+        pd = PhaseDiagram(ents)
+        mu_ref = min(e.energy_per_atom for e in ents
+                     if e.composition.reduced_formula == "Li")
+        prof = pd.get_element_profile(Element("Li"), comp)
+        steps = [{"V": round(mu_ref - float(p["chempot"]), 3),
+                  "evo": round(float(p["evolution"]), 4),
+                  "rxn": str(p["reaction"])} for p in prof]
+        e = esw_window_edges(steps)
+        e["n_entries"] = len(ents)
+        e["steps"] = sorted(steps, key=lambda x: x["V"])
+        res["runs"][tag] = e
+        print(f"\n[{tag}] entries {len(ents)} · 환원 {e['reduction_limit_V']} · "
+              f"산화 {e['oxidation_limit_V']} · 창 {e['window_V']} "
+              f"(첫 환원 평탄 {e['first_reduction_plateau_V']})")
+        if e["note"]:
+            print(f"   ⚠ {e['note']}")
+    a, b = res["runs"]["excluded"], res["runs"]["included"]
+    if a["oxidation_limit_V"] is not None and b["oxidation_limit_V"] is not None:
+        d = round(a["oxidation_limit_V"] - b["oxidation_limit_V"], 3)
+        res["exclusion_share_of_oxidation_V"] = d
+        res["verdict"] = (
+            f"상 배제가 산화 한계를 **{d:+.3f} V** 움직인다. 문헌과의 총 격차 0.246 V 중 "
+            f"이만큼이 배제 몫이고, **나머지 {round(0.246 - d, 3):+.3f} V 는 MP 판본 등 다른 축**이다. "
+            "⛔ 나머지를 '판본 탓' 으로 단정하지 마라 — 이 계산은 그걸 **못 가른다**.")
+        print(f"\n⇒ {res['verdict']}")
+    pathlib_write(out_path, res)
+    return res
+
+
+def pathlib_write(out_path, obj):
+    Path(out_path).write_text(json.dumps(obj, ensure_ascii=False, indent=1) + "\n",
+                              encoding="utf-8")
+    print(f"→ {out_path}")
+
+
+def selftest():
+    """자체 점검 — **음성 경로가 본체다.** 가장자리 판정은 `esw_window_edges()` 가 정본이고
+    `esw_cascade_batch.py` 의 selftest 가 실측 comp1 사다리로 그걸 시험한다. 여기서는
+    **이 파일이 그 정본을 실제로 쓰는지**와 `--audit_edges` 의 산수를 본다.
+
+    ⛔ 못 하는 것: MP 호출은 안 한다 (네트워크·키가 필요하다). `audit_edges()` 의
+      **네트워크 뒷부분은 시험되지 않는다** — 시험되는 것은 가장자리 판정과 차이 계산이다.
+    """
+    ok = fail = 0
+    def chk(name, cond):
+        nonlocal ok, fail
+        print(("  \u2b55 " if cond else "  \u26d4 ") + name)
+        ok, fail = ok + bool(cond), fail + (not cond)
+
+    LADDER = [{"V": 0.0, "evo": 8.0}, {"V": 1.242, "evo": 5.0},
+              {"V": 1.717, "evo": 0.0}, {"V": 2.256, "evo": -2.0}]
+    e = esw_window_edges(LADDER)
+    chk("가장자리: 환원 = 교환 0 의 최저 (1.717)", e["reduction_limit_V"] == 1.717)
+    chk("가장자리: 창 = 0.539 (옛 1.014 아님)", e["window_V"] == 0.539)
+    chk("[음성] 옛 값 1.242 를 버리지 않고 이름을 바꿔 남긴다",
+        e["first_reduction_plateau_V"] == 1.242)
+    #: ⚠ 이 시험은 한 번 **헛것을 쟀다** — docstring 길이에 기대는 900자 창을 봤는데
+    #:   docstring 이 길어서 정작 호출부가 창 밖이었다. **본문만** 보도록 고쳤다.
+    import inspect as _insp
+    _body = "".join(_insp.getsource(onset_reactions).split('"""')[2:])
+    chk("[음성] onset_reactions 가 **같은 정본을 호출한다** (식이 두 군데로 갈리지 않는다)",
+        "esw_window_edges(" in _body)
+    chk("[음성] 그리고 옛 식을 **안 쓴다** (되돌아가면 잡힌다)",
+        "max(pos" not in _body and 'x["evo"] > 1e-6' not in _body)
+
+    #: --audit_edges 의 산수 — 배제 몫과 '나머지' 를 섞지 않는지
+    a, b = 2.256, 2.140
+    d = round(a - b, 3)
+    chk("감사: 배제 몫 = 두 판의 산화 한계 차 (2.256 − 2.140 = 0.116)", d == 0.116)
+    chk("[음성·핵심] 남는 것을 **'판본 탓' 으로 단정하지 않는다** — 문구가 그렇게 적혀 있다",
+        "못 가른다" in (audit_edges.__doc__ or "")
+        and "단정하지 마라" in pathlib.Path(__file__).read_text(encoding="utf-8"))
+    chk("[음성] MP 스냅샷을 고정 못 한다는 한계가 출력에 박힌다",
+        "mp_snapshot_note" in pathlib.Path(__file__).read_text(encoding="utf-8"))
+    chk("[음성] EXCLUDE_FORMULAS 가 정확히 그 셋이다 (조용히 바뀌면 감사가 무의미하다)",
+        EXCLUDE_FORMULAS == {"LiS4", "SCl3", "Li5PS4Cl2"})
+    print(f"\nselftest: {ok} passed, {fail} failed")
+    return 1 if fail else 0
 
 
 def vol_per_atom_table(entries):
@@ -207,8 +314,12 @@ def augmented_pd_relax(entries, k_eff):
 def main():
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--target", nargs="+", required=True)
-    ap.add_argument("--v_se_A3", nargs="+", type=float, required=True)
+    ap.add_argument("--audit_edges", action="store_true",
+                    help="상 배제 **포함/배제 두 판**으로 사다리를 뽑아 가장자리를 대조한다 "
+                         "(2026-09-22 산화 한 변 0.246 V 감사). --target 하나만 쓴다.")
+    ap.add_argument("--selftest", action="store_true", help="자체 점검 (음성 경로 포함)")
+    ap.add_argument("--target", nargs="+", required=False)
+    ap.add_argument("--v_se_A3", nargs="+", type=float, required=False)
     ap.add_argument("--elements", nargs="+", default=["Li", "P", "S", "Cl"])
     ap.add_argument("--k_eff", nargs="+", type=float, default=[0, 10, 20])
     ap.add_argument("--mode", choices=["leading", "relax", "hybrid"], default="leading",
@@ -223,6 +334,18 @@ def main():
                          "composition-resolved widening.")
     ap.add_argument("--out", default="constrained_esw_results.json")
     args = ap.parse_args()
+
+    if args.selftest:
+        return selftest()
+    if args.audit_edges:
+        if not args.target or len(args.target) != 1:
+            ap.error("--audit_edges 는 --target 을 **하나만** 받는다")
+        audit_edges(args.target[0], args.elements, args.out)
+        return 0
+    # ⚠ 감사 모드가 아니면 아래 경로가 두 인자를 **반드시** 쓴다 — 여기서 막는다
+    #   (argparse required 를 풀었으므로 조용히 None 으로 흘러가면 안 된다)
+    if not args.target or not args.v_se_A3:
+        ap.error("--target 과 --v_se_A3 가 필요하다 (또는 --audit_edges / --selftest)")
 
     from pymatgen.core import Element, Composition
     from pymatgen.analysis.phase_diagram import PhaseDiagram
