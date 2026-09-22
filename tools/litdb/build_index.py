@@ -12,9 +12,25 @@
   · `INDEX_DEM.md`        = DEM·MPM 축 (이 도구가 생성)
   · `--check`             = 두 인덱스 어디에도 없는 digest 보고 (CI/점검용, 0=깨끗)
 
+표 셀수 검사 (2026-09-22 추가)
+  ⛔⛔ **마크다운 표는 헤더보다 칸이 많으면 넘치는 칸을 *조용히 버린다*.** 파일엔 글자가
+  있는데 렌더된 화면에는 안 나온다 — 웹앱이 `litdb/` 를 라이브로 읽으므로 실제로 사라진다.
+  칸이 **모자라면** 반대로 셀이 밀려 엉뚱한 열에 붙는다. 둘 다 오류를 안 낸다.
+  2026-09-22 실측: `comparison_vs_ours.md` 에 **30행**이 이 상태였고 원인은 둘뿐이었다 —
+  ① 절댓값 `|x|` 표기의 파이프 미이스케이프(`\\|` 로 써야 한다) ② 칸을 하나 더/덜 쓴 행.
+  ⇒ `--check` 가 **항상** 같이 돈다. 침묵하지 않는다.
+
 usage
-  python3 tools/litdb/build_index.py            # INDEX_DEM.md 생성 + 정합 점검
+  python3 tools/litdb/build_index.py            # INDEX_DEM.md 생성 + 정합 점검 + 표 검사
   python3 tools/litdb/build_index.py --check    # 점검만 (파일 안 씀)
+  python3 tools/litdb/build_index.py --selftest # 자체 점검 (양성 + 음성 경로)
+
+⛔ 이 도구가 **못 하는 것**
+  · digest 내용이 맞는지 — 인덱스에 *있나 없나*만 본다.
+  · 표 안의 값이 옳은지 · 열 순서가 의미상 맞는지 — **셀 개수**만 센다.
+    (2026-09-22 실측: `[Jain26Rev]` 행은 논문/digest 칸이 **뒤바뀐 채** 칸 수만 맞을 수도 있었다.)
+  · 여러 줄에 걸친 표 셀(마크다운이 지원 안 함)과 HTML `<table>` — 인식하지 않는다.
+  · 편입률의 **질** — 한 줄 언급도 '편입'으로 센다.
 """
 import argparse
 import re
@@ -60,6 +76,17 @@ def group_of(pid, title):
     return "기타"
 
 
+def cell(s):
+    """생성 표의 한 칸으로 안전하게 만든다.
+
+    ⛔⛔ **digest 본문에서 온 글자에 `|` 가 있으면 표가 조용히 깨진다** (2026-09-22 실측).
+      `⏳ 문서 대기 (exp|DFT|AIMD|MLIP|DEM|MPM|FEM|mixed)` 한 칸이 **8 칸으로 쪼개져**
+      `INDEX_DEM.md` 70 행이 12 칸이 됐고, 렌더에서는 넘친 칸이 **버려져** 안 보였다.
+      오류도 안 났다 — 조용히 틀린 경로다. ⇒ 생성하는 모든 칸은 여기를 통과한다.
+    """
+    return re.sub(r"\s*[\r\n]+\s*", " ", str(s)).replace("|", r"\|")
+
+
 def rows(papers, track):
     out = []
     for p in papers:
@@ -99,8 +126,8 @@ def build(dry=False):
               "| slug | 논문 | 유형 | digest | 그림 |", "|---|---|---|---|---|"]
         for r in sorted(rs, key=lambda x: x["id"]):
             n = figs.get(r["id"], 0)
-            L.append(f"| `{r['id']}` | {r['title']} | {r['type']} | "
-                     f"{r['digested'] or '—'} | {('🖼 ' + str(n)) if n else '—'} |")
+            L.append(f"| `{cell(r['id'])}` | {cell(r['title'])} | {cell(r['type'])} | "
+                     f"{cell(r['digested'] or '—')} | {('🖼 ' + str(n)) if n else '—'} |")
         L.append("")
 
     # ── 발표 덱 (litdb/talks) ────────────────────────────────────────────
@@ -115,8 +142,9 @@ def build(dry=False):
               "", "| slug | 발표자 | 주제 | 발표 | 그림 |", "|---|---|---|---|---|"]
         for t in sorted(talks, key=lambda x: x["id"]):
             n = figs.get(t["id"], 0)
-            L.append(f"| `{t['id']}` | {t.get('speaker') or '—'} | {t['title'][:150]} | "
-                     f"{t.get('session') or t.get('digested') or '—'} | "
+            L.append(f"| `{cell(t['id'])}` | {cell(t.get('speaker') or '—')} | "
+                     f"{cell(t['title'][:150])} | "
+                     f"{cell(t.get('session') or t.get('digested') or '—')} | "
                      f"{('🖼 ' + str(n)) if n else '—'} |")
         L.append("")
 
@@ -206,6 +234,40 @@ def selftest():
         finally:
             LITDB = keep
 
+    # ── check_tables — **음성 경로가 본체다** (양성만 있으면 아무것도 보증 못 한다) ──
+    H = "| 주장 | 출처 | 우리 |\n|---|---|---|\n"
+    chk("표 양성: 헤더와 행이 같으면 0건",
+        check_tables(H + "| a | b | c |\n| d | e | f |\n") == [])
+    chk("표 음성①: 칸이 **남으면** 잡는다 (렌더에서 조용히 버려지는 쪽)",
+        [b[1:3] for b in check_tables(H + "| a | b | c | d |\n")] == [(4, 3)])
+    chk("표 음성②: 칸이 **모자라면** 잡는다 (셀이 밀려 엉뚱한 열에 붙는 쪽)",
+        [b[1:3] for b in check_tables(H + "| a | b |\n")] == [(2, 3)])
+    chk("표 음성③: **이스케이프된 `\\|` 는 경계가 아니다** — 절댓값 표기는 통과해야 한다",
+        check_tables(H + r"| \|E_d\| < 0.05 | b | c |" + "\n") == [])
+    chk("표 음성④: **이스케이프 안 한 `|x|` 는 잡는다** (2026-09-22 실제 버그 30건의 원인)",
+        [b[1:3] for b in check_tables(H + "| |E_d| < 0.05 | b | c |\n")] == [(5, 3)])
+    # ⚠ 아래 둘은 **한 번 헛것을 쟀다** (2026-09-22). 구분자 요구를 빼도 `j = i+2` 가 그 줄을
+    #   어차피 건너뛰어서 옛 음성⑤는 깨진 판에서도 초록이었고, 구분자 줄은 칸 수가 헤더와
+    #   **항상 같아서** 옛 음성⑥은 세어도 안 걸렸다. ⇒ **판별하는 입력으로 바꿨다.**
+    chk("표 음성⑤: 구분자 줄이 없으면 **표가 아니다** — 산문의 `|` 를 표로 오인하지 않는다",
+        check_tables("| a | b |\n| c |\n| d | e | f |\n") == [])
+    chk("표 음성⑥: 행번호는 **1-기준 실제 행**을 가리킨다 (사람이 그 줄을 열어야 한다)",
+        [b[0] for b in check_tables("머리말\n\n| x | y |\n|---|---|\n| 1 | 2 |\n| 3 |\n")] == [6])
+    chk("표 음성⑦: 표가 끝나면 다음 표의 헤더를 새로 잡는다 (분모를 섞지 않는다)",
+        [b[1:3] for b in check_tables(H + "| a | b | c |\n\n| p | q |\n|---|---|\n| 1 |\n")] == [(1, 2)])
+    chk("표 음성⑧: 실물 정본이 지금 깨끗하다 (회귀 탐지)",
+        (not CMP_DFT.exists()) or check_tables(CMP_DFT.read_text(encoding="utf-8")) == [])
+    # ── cell() — 생성 경로의 이스케이프. **이게 없어서 INDEX_DEM 70행이 12칸이었다** ──
+    chk("cell 음성①: `|` 를 이스케이프한다 (안 하면 한 칸이 8칸으로 쪼개진다)",
+        cell("⏳ 문서 대기 (exp|DFT|AIMD|MLIP|DEM|MPM|FEM|mixed)")
+        == r"⏳ 문서 대기 (exp\|DFT\|AIMD\|MLIP\|DEM\|MPM\|FEM\|mixed)")
+    chk("cell 음성②: 줄바꿈을 접는다 (표 셀은 여러 줄을 못 담는다)",
+        cell("가\n  나\r\n다") == "가 나 다")
+    chk("cell 음성③: 이스케이프한 칸은 검사를 **통과**한다 (양·음성이 맞물린다)",
+        check_tables("| a | b |\n|---|---|\n| " + cell("x|y|z") + " | c |\n") == [])
+    chk("cell 음성④: 이스케이프를 안 하면 **잡힌다** (위 ③이 헛것이 아님을 보인다)",
+        [b[1:3] for b in check_tables("| a | b |\n|---|---|\n| x|y|z | c |\n")] == [(4, 2)])
+
     print(f"\nselftest: {ok} 통과 / {fail} 실패")
     return 1 if fail else 0
 
@@ -243,6 +305,40 @@ def check_comparison(papers):
     return out
 
 
+def _row_cells(line):
+    """표 행을 셀로 쪼갠다. ⛔ **이스케이프된 `\\|` 는 셀 경계가 아니다** — 절댓값 `|x|`
+    표기가 여기서 갈린다. 표 행이 아니면 None."""
+    s = line.strip()
+    if not s.startswith("|"):
+        return None
+    return re.split(r"(?<!\\)\|", s)[1:-1]
+
+
+def check_tables(md_text):
+    """헤더와 칸 수가 다른 행을 찾는다. 반환 = [(행번호, 얻은칸, 헤더칸, 행앞머리)].
+
+    표의 시작은 **구분자 줄**(`|---|---|`)로 판정한다 — 그게 마크다운이 표를 표로 보는
+    조건이고, 본문에 우연히 섞인 `|` 줄을 표로 오인하지 않는 유일한 기준이다.
+    ⚠ 다수결로 헤더를 고치지 않는다. 헤더가 정본이고 행이 따라간다 — 어느 쪽이 맞는지는
+      사람이 정할 일이지 개수가 정할 일이 아니다.
+    """
+    lines = md_text.split("\n")
+    bad, i = [], 0
+    while i < len(lines):
+        hdr = _row_cells(lines[i])
+        if hdr is not None and i + 1 < len(lines) and re.match(r"^\|[\s:\-|]+\|\s*$", lines[i + 1]):
+            n_hdr, j = len(hdr), i + 2
+            while j < len(lines) and _row_cells(lines[j]) is not None:
+                cs = _row_cells(lines[j])
+                if len(cs) != n_hdr:
+                    bad.append((j + 1, len(cs), n_hdr, cs[0].strip()[:60] if cs else ""))
+                j += 1
+            i = j
+        else:
+            i += 1
+    return bad
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true", help="점검만 (파일 안 씀)")
@@ -273,7 +369,21 @@ def main():
             print(f"        {p['id']}")
         if len(r["miss"]) > 12:
             print(f"        … 외 {len(r['miss'])-12}편")
-    return 1 if missing else 0
+
+    # ── 표 셀수 (넘치는 칸은 렌더에서 **조용히 사라진다**) ──────────────────
+    print("\n=== 표 셀수 점검 (헤더 ≠ 행 → 렌더에서 칸이 버려지거나 밀린다)")
+    n_tbl_bad = 0
+    for doc in (CMP_DFT, CMP_DEM, SE_INDEX, DEM_INDEX):
+        if not doc.exists():
+            continue
+        bad = check_tables(doc.read_text(encoding="utf-8"))
+        n_tbl_bad += len(bad)
+        print(f"   {doc.name:28} {'✅ 0건' if not bad else f'⛔ {len(bad)}건'}")
+        for ln, got, want, head in bad[:12]:
+            print(f"        {ln}행  {got}칸 → 헤더 {want}칸   {head}")
+        if len(bad) > 12:
+            print(f"        … 외 {len(bad)-12}행")
+    return 1 if (missing or n_tbl_bad) else 0
 
 
 if __name__ == "__main__":
