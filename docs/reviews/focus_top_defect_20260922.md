@@ -974,3 +974,108 @@ echo "PID=$!"
   면적이 커지면 줄어야 하므로 σ 는 **올라야** 한다.  게다가 같은 표의 면적 행
   (`A_AM-SE` · `cov_AM_P`)은 두 열이 **완전히 같다**(Δ 0 %).  ⇒ 라벨 문제인지 계산 방향
   문제인지 **화면만으로 못 가린다.  SELF-45 와 무관한 별건이므로 따로 연다.**
+
+---
+
+# K. 회신문 **최종판** (2026-09-22 밤, 두 케이스 재실행 완료 후)
+
+⚠ §H 를 **대체한다**.  §H 는 재실행 전에 쓴 것이라 ⓐ 상한만 제시하고 ⓑ 이온 문장을
+철회하며 ⓒ 백분위 규약을 99.9 % 로 바꾸자고 제안했다.  재실행으로 **셋 다 불필요**해졌다:
+정확값이 있고, 이온을 답할 수 있고, **99.8 % 를 그대로 쓸 수 있다** (결과를 본 뒤 규약을
+바꾸지 않아도 된다 — 이것이 재실행의 가장 큰 이득이다).
+
+```
+Thank you — the inequality was right, and following it up found a real error. Three things
+changed, and we have now re-run both electrodes end-to-end rather than bounding them.
+
+1. The denominator was mislabelled. What we printed as "x mean" was normalised by the applied
+   through-plane current density J_app = I/A = sigma_eff*dV/L, averaged over the FULL electrode
+   cross-section (pores and solid electrolyte included), whereas the numerator is a percentile
+   of |J| over electronically conducting voxels only. Different populations, so Markov's
+   inequality never applied to that ratio -- which is why it could exceed 500 without being
+   impossible. Note this also means the corrected value being below 500 proves nothing by
+   itself; the quantity Markov does bound is the within-network one in point 2.
+
+2. We have changed the reported denominator, for the reason you gave. J_app carries the
+   conducting-phase area fraction, so it mixes "the current is spread more evenly" with "there
+   is more conducting phase". We now measure that mixing directly, per electrode:
+
+       <|J|>_cond / J_app  =  5.472 (SBE)   5.259 (DBE)      electronic
+                              3.054 (SBE)   2.997 (DBE)      ionic
+
+   and we report the within-network quantity J_99.8 / <|J|>_cond, renamed the
+   current-focusing factor. For the electronic channel it is 79.5 (SBE) and 71.45 (DBE) --
+   comfortably inside the Markov bound of 500, as it must be.
+
+3. The numerator was also wrong, and this was the substantive error. The percentile had been
+   evaluated on the point cloud we store for the field figures rather than on the field itself.
+   That cloud deliberately keeps the hottest 35 % of its budget so the conduction backbone
+   survives in the rendering, which makes it a biased sample for a percentile: on a reference
+   bed the reported value moves from x201 to x53 as the plotting budget grows. The estimator
+   now computes all field statistics on the complete field before any subsampling, and a
+   regression test pins them to be invariant to the plotting budget.
+
+   Re-running both manuscript cases with the corrected estimator and otherwise byte-identical
+   inputs and settings:
+
+       J_99.8 / J_app        published 1447 (SBE)  1189 (DBE)
+                             corrected  435.1      375.8        -> overstated 3.33x and 3.16x
+
+   The re-runs reproduce sigma_e to 8.2e-13 and 6.2e-12 relative, and the input digests and
+   degrees of freedom match the archived manifests exactly, so these are the same beds and the
+   same physics, with only the statistic changed.
+
+On the ordering, which was your main question: it survives.
+
+       quantity                         SBE      DBE     SBE/DBE
+       J_99.8 / J_app                  435.1    375.8     1.158
+       J_99.8 / <|J|>_cond              79.5    71.45     1.113     <- within-network
+       <|J|>_cond / J_app               5.472    5.259     1.041     <- conducting area
+
+   1.113 x 1.041 = 1.158, so the published advantage decomposes cleanly into a real
+   within-network part and the conducting-area part you identified. The direction of the claim
+   holds; the magnitude does not: +21.7 % as published becomes +15.8 % on the like-for-like
+   ratio and +11.3 % on the within-network measure. We will quote the within-network number in
+   the text and give both in the table.
+
+On the ionic channel, which we could not answer from the archives: we can now.
+
+       ionic focusing factor  J_99.8 / <|J|>_cond  =  3.800 (SBE)   3.789 (DBE)
+
+   The two electrodes are the same to 0.3 %, while the electronic factors differ by 11 %. The
+   electronic channel is 19-21x more focused than the ionic one in both electrodes. So the
+   original sentence about the ionic distributions being comparable is, as it happens,
+   supported -- but it was not supported by the number we had published, and we are replacing
+   that number rather than keeping it.
+
+Figures rendered from these fields are regenerated with the corrected normalisation. The
+colour scale is now set by the full-field percentile, so panels are comparable to each other;
+previously each panel carried its own sampling bias.
+
+We have kept the 99.8th percentile throughout. We considered moving to 99.9 % while we were
+still working from archived fields, but the re-run makes the original convention exact, and we
+would rather not change a reporting convention after seeing results.
+```
+
+## K-1. 원고에서 갈아야 하는 것 (체크리스트)
+
+- [ ] 본문 인용값 `1447` · `1189` → **`435.1`** · **`375.8`** (그리고 이름을
+      *current-focusing factor* 로)
+- [ ] 이득 문장 `+21.7 %`(또는 −17.8 % 계열) → **망 내부 +11.3 %** 를 본문에,
+      like-for-like **+15.8 %** 를 표에 병기
+- [ ] 표에 `⟨|J|⟩_cond / J_app` 전극별 값 추가 (전자 5.472/5.259 · 이온 3.054/2.997)
+      ← 리뷰어 요청 ③
+- [ ] 이온 문장: 문구는 유지 가능하나 **근거 수치를 교체** (3.800 / 3.789, 0.3 % 차)
+- [ ] 필드 그림 전수 재생성 — ⚠ **어느 그림인지 목록을 먼저 확정할 것** (§K-2)
+
+## K-2. ⬜ 어느 그림을 바꿔야 하나 — **목록이 아직 확정되지 않았다**
+
+이 문서는 `S14/S15` 만 적어 왔는데 저자가 **S16·S17** 도 물었다.  ⛔ 번호로 추측하지 않는다.
+**판별 규칙은 하나다**:
+
+> payload 의 `field_scale_e` / `field_scale_ion` / joule·thermal 필드 스케일을 **색 정규화에
+> 쓰는 그림은 전부 바뀐다.**  점군 자체(점의 위치)는 안 바뀌고 **스케일만** 바뀌므로,
+> 같은 그림이 색만 달라진다.
+
+⇒ SI 그림 캡션·생성 스크립트에서 `field_scale` · `focus_top` · `p99` 를 소비하는 자리를
+전수로 뽑아 목록을 만들고, 그 목록으로 재생성한다.  **다음 세션 첫 작업 중 하나.**
