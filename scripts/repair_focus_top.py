@@ -93,7 +93,9 @@ def _p998_from_cloud(vals_desc, n_total):
 
 
 _WANT = ('field_scale_e', 'field_scale_ion', 'electronic_field', 'ionic_field',
-         'n_dof', 'ion_n_dof')
+         'n_dof', 'ion_n_dof',
+         #  ★ 케이스 동정용 (어느 것이 SBE/DBE 인가) — 값만 읽고 고치지 않는다
+         'sigma_e_eff_S_cm', 'sigma_ion_eff_S_cm', 'vox_um', 'thickness_um')
 
 
 def find_key_paths(obj, keys=_WANT, path='', out=None, _depth=0):
@@ -165,9 +167,27 @@ def repair_channel(step3, fs_key, field_key, ndof_key, payload=None):
     hot_kept = int(n_cloud * HOT_BUDGET_FRAC) if subsampled else n_cloud
     need = _rank_for(n_total)
     if need > hot_kept:
-        out['reason'] = (f'복원 불가 — 참 p99.8 은 상위 {need:,} 번째인데 점군이 보존한 상위는 '
-                         f'{hot_kept:,} 개뿐이다 (N {n_total:,} · 점군 {n_cloud:,}).  재실행 필요')
-        out.update(n_total=n_total, n_cloud=n_cloud, rank_needed=need, hot_kept=hot_kept)
+        #  ★★ 점 추정은 못 해도 **엄밀한 상한**은 낸다 (2026-09-22, N=26.4 M 실물에서).
+        #    보존된 꼬리는 장의 상위 `hot_kept` 개와 **정확히 같다**.  값이 rank 에 대해
+        #    단조 비증가이므로  참 p99.8 (rank need) ≤ 값(rank hot_kept)  이 성립한다.
+        #    ⇒ 외삽이 아니라 **부등식**이다.  보고된 값이 그 상한보다 크면 그 차이는
+        #      "적어도 이만큼 과대" 라고 말할 수 있다 (그 자체로 인용 가능한 문장).
+        #    ⛔ 이 상한을 값으로 쓰지 말 것 — 여전히 상한이다 (rank 가 1.68 배 얕다).
+        _b_norm = vals[hot_kept - 1]
+        _b_A = _b_norm * float(j_top)
+        _b_focus = _b_A / float(j_app)
+        _pub = float(fs.get('focus_top') or 0.0)
+        out['reason'] = (
+            f'복원 불가 — 참 p99.8 은 상위 {need:,} 번째인데 점군이 보존한 상위는 '
+            f'{hot_kept:,} 개뿐이다 (N {n_total:,} · 점군 {n_cloud:,}).  재실행 필요.\n'
+            f'                    ★ 그래도 **엄밀한 상한**은 나온다 (외삽 아님, 단조성):\n'
+            f'                      참 focus_top ≤ {_b_focus:.4g}  '
+            f'(= 상위 {hot_kept:,} 번째, 백분위 {100.0 * (1 - hot_kept / n_total):.4f} %)\n'
+            f'                      ⇒ 보고값 {_pub:.4g} 는 **최소 {_pub / max(_b_focus, 1e-30):.2f}× 과대**')
+        out.update(n_total=n_total, n_cloud=n_cloud, rank_needed=need, hot_kept=hot_kept,
+                   focus_top_as_published=_pub, focus_top_upper_bound=_b_focus,
+                   overstatement_at_least=_pub / max(_b_focus, 1e-30),
+                   j_app_A_cm2_per_V=float(j_app))
         return out
 
     p998_norm = _p998_from_cloud(vals, n_total)
@@ -246,7 +266,11 @@ def run(paths, write=False, csv_out=None):
             print('      찾은 것: ' + (', '.join(f'{k}@{v[0]}' for k, v in _hits.items()) or '없음'))
             continue
         for _k, _v in sorted(_hits.items()):
-            print(f'   · {_k:<17} {_v[0]}' + (f'   (+{len(_v) - 1} 곳 더)' if len(_v) > 1 else ''))
+            _val = found[_k][0][1].get(_k)
+            _shown = ('' if isinstance(_val, (dict, list))
+                      else f'  = {_val}')
+            print(f'   · {_k:<19} {_v[0]}{_shown}'
+                  + (f'   (+{len(_v) - 1} 곳 더)' if len(_v) > 1 else ''))
         res = []
         for _, fsk, fk, nk in _CH:
             _fs_hits = found.get(fsk) or []
@@ -271,6 +295,9 @@ def run(paths, write=False, csv_out=None):
         for r in res:
             if not r['ok']:
                 print(f"   {r['channel']:<16} ⛔ {r['reason']}")
+                if 'focus_top_upper_bound' in r:      # 점 추정은 없어도 상한은 남긴다
+                    rows.append({'payload': p, **{k: v for k, v in r.items()
+                                                  if k != 'reason'}})
                 continue
             if r.get('noop'):
                 print(f"   {r['channel']:<16} ✅ {r['reason']}")
