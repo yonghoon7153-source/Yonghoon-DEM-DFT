@@ -6021,11 +6021,11 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
           ✨<input type="checkbox" id="cmp-glow" checked>glow</label>
         <span id="cmp-fldops-wrap" style="display:none;font-size:11.5px;color:#e5e7eb;align-items:center;gap:8px">
           <label style="display:flex;align-items:center;gap:3px"
-            title="공동스케일: 두 필드를 같은 눈금으로 정렬 → 절대 세기 차이가 색으로 (끄면 자기 정규화=패턴만).  드롭다운으로 프레임 선택: σ-max=@1V 수송(σ_eff 정렬, σ 큰쪽 밝음) / @1C-peak=운전 핫스팟(focus×j_1C 정렬, 피크 큰쪽=천장 273)">
+            title="공동스케일: 두 필드를 같은 눈금으로 정렬 → 절대 세기 차이가 색으로 (끄면 자기 정규화=패턴만).  프레임: p99.8-max=두 패널 실측 p99.8 의 max(★기본, 클리핑 없음) / σ-max=σ_eff 비례 근사(⚠ 이온에서 깨진다 — σ 큰 쪽이 p99.8 큰 쪽이 아니다) / @1C-peak=운전 핫스팟">
             <input type="checkbox" id="cmp-joint">공동스케일</label>
           <select id="cmp-joint-ref" title="공동 스케일 기준(프레임·컬러 상단 앵커) — σ-max=@1V 수송(σ_eff, 클리핑없음) / @1C-peak=운전 핫스팟(focus×j_1C, 273 천장·SBE) / A·B=그 케이스 기준(반대쪽 넘치면 포화-클립)"
             style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;font-size:11px;padding:1px 2px">
-            <option value="max">기준 σ-max (@1V 수송)</option><option value="1C">기준 @1C-peak (핫스팟)</option><option value="A">기준 A</option><option value="B">기준 B</option></select>
+            <option value="p998">기준 p99.8-max (실측 천장 ★)</option><option value="max">기준 σ-max (@1V 수송 · 근사)</option><option value="1C">기준 @1C-peak (핫스팟)</option><option value="A">기준 A</option><option value="B">기준 B</option></select>
           <label style="display:flex;align-items:center;gap:3px"
             title="백본을 점 대신 복셀 큐브로 — 인접 복셀이 붙어 연속 통로로 보임 (COMSOL 볼륨 문법)">
             <input type="checkbox" id="cmp-cube" checked>이어짐</label>
@@ -6852,13 +6852,22 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       // σ비율만큼 눌러 절대 세기 차이가 색으로 보이게.  근사임을 legend에 명시 (★).
       const sgA = ionic ? sA.sigma_ion_eff_S_cm : sA.sigma_e_eff_S_cm;
       const sgB = ionic ? sB.sigma_ion_eff_S_cm : sB.sigma_e_eff_S_cm;
-      const refSel = ($('cmp-joint-ref') || {}).value || 'max';
+      const refSel = ($('cmp-joint-ref') || {}).value || 'p998';
       // 정렬 프레임: '1C' = 운전 국소 피크(focus×j_1C, 핫스팟 — 피크 큰 SBE가 천장 273) ·
       //             else = σ_eff(@1V 수송 — σ-max=DBE가 천장).  두 프레임은 밝기 순서가 반대일 수 있음.
       const _fjA = ionic ? sA.field_scale_ion : sA.field_scale_e;
       const _fjB = ionic ? sB.field_scale_ion : sB.field_scale_e;
       const is1C = refSel === '1C';
-      const _met = (f, sg) => is1C ? ((f && f.focus_top && f.j_1C_mA_cm2) ? f.focus_top * f.j_1C_mA_cm2 : 0) : (sg || 0);
+      //  ★ 2026-09-22 — 공동 천장을 **σ-max 케이스**가 아니라 **두 패널 p99.8 의 max** 로.
+      //    옛 'max' 프레임은 |J| 의 자릿수가 σ_eff 에 비례한다는 **근사**였는데, 실측이 그것을
+      //    깼다: 이온 채널에서 σ_ion 은 DBE 가 크지만(5.580e-4 > 5.534e-4) p99.8 은 **SBE** 가
+      //    크다 (0.886 vs 0.873 A/cm²@1V) ⇒ σ-max(DBE)를 천장으로 잡으면 SBE 상단이 1.5 %
+      //    **잘린다**.  전자 채널은 우연히 순서가 같아 안 드러났다 (SBE 3.27e3 < DBE 3.70e3).
+      //    payload 가 `j_top_A_cm2_per_V`(= 전수 p99.8 절대값)를 실으므로 근사가 필요 없다.
+      const isP = refSel === 'p998';
+      const _met = (f, sg) => is1C ? ((f && f.focus_top && f.j_1C_mA_cm2) ? f.focus_top * f.j_1C_mA_cm2 : 0)
+                            : isP  ? ((f && f.j_top_A_cm2_per_V) ? f.j_top_A_cm2_per_V : (sg || 0))
+                            : (sg || 0);
       const mA2 = _met(_fjA, sgA), mB2 = _met(_fjB, sgB);
       const smx = Math.max(mA2, mB2) || 1;
       // 앵커: max(1C면 @1C-peak-max=핫스팟천장 / σ면 σ-max)=클리핑없음 · A·B=그 케이스(반대쪽 넘치면 클립)
@@ -6872,7 +6881,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         return (r.n ? `${r.n.toLocaleString()}점` : 'FIELD 없음 (payload 재생성 필요)') + r.bbTxt
           + ' · ' + (ionic ? 'σ_ion ' + fmtQ(s3x.sigma_ion_eff_S_cm) : 'σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)) + ' S/cm'
           + (fscX ? ` · p99.8 = ×${Number(fscX.focus_top).toPrecision(2)} ⟨J_z⟩ (${Number(fscX.j_top_A_cm2_per_V).toPrecision(2)} A/cm²@1V)` : '')
-          + (jointOn ? ` · ${is1C ? '@1C-공동' : 'σ-공동'} ×${k2.toFixed(2)}${k2 > 1.001 ? ' ⚠상단 클립' : ''} (기준 ${refSel === 'max' ? 'σ-max(@1V)' : refSel === '1C' ? '@1C-peak(핫스팟)' : refSel} · ${is1C ? '운전 국소전류 비례 ★핫스팟' : '@1V σ 비례 근사 ★색비교'})`
+          + (jointOn ? ` · ${is1C ? '@1C-공동' : 'σ-공동'} ×${k2.toFixed(2)}${k2 > 1.001 ? ' ⚠상단 클립' : ''} (기준 ${refSel === 'p998' ? 'p99.8-max(실측)' : refSel === 'max' ? 'σ-max(@1V·근사)' : refSel === '1C' ? '@1C-peak(핫스팟)' : refSel} · ${is1C ? '운전 국소전류 비례 ★핫스팟' : isP ? '전수 p99.8 절대값 ★클리핑 없음' : '@1V σ 비례 근사 ★색비교'})`
                      : ' · 자기 p99.8 정규화 — 패턴 비교용(절대는 σ)');
       };
       $('cmp-leg-a').innerHTML = cap(rA2, sA, kA2);
