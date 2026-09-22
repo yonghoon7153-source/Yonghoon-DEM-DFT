@@ -392,6 +392,27 @@
    "dpi": 300,
    "src": "6. Sup) NatMater_2020_Schwietert_Clarifying_redox_SI.pdf",
    "blank": 0.914
+  },
+  {
+   "key": "fS2b",
+   "kind": "figure",
+   "label": "S2b",
+   "page": 11,
+   "file": "fig_S2b.png",
+   "caption": "Supplementary Figure 2 Calculated theoretical voltage profile, vs. Li/Li+, of LixPS5Cl in the compositional range of 0 < x < 14 and the theoretical voltage profile calculated at thermal equilibrium. The voltage window calculated in this work determines the initial voltage window achieving metastable decomposition (de)lithiated phases of LixPS5Cl. The decomposition products i.e. P can follow the thermodynamic equilibrium voltages to lithiate further towards Li3P.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    40.0,
+    560.0,
+    470.0
+   ],
+   "w": 2168,
+   "h": 1793,
+   "dpi": 300,
+   "src": "6. Sup) NatMater_2020_Schwietert_Clarifying_redox_SI.pdf",
+   "blank": null,
+   "note": "MANUAL 2026-09-22. This is **Supplementary Figure 2 of the SI**, NOT 'Fig. S2'. The label S2 is already taken by Extended Data Fig. 2 (main PDF) because extract_figures.py folds both series into one S-numbering; the SI's Supplementary Fig. 1 and 2 were dropped as 'duplicates'. Load-bearing for digest S7-4 (the authors' own 'Therm. equilibrium' curve ~2.32 V)."
   }
  ],
  "manual_additions": "fig_1, fig_3, fig_4, fig_6 manually cropped 2026-09-22 (extract_figures.py dropped them: Nature layout puts caption below a full-width vector figure)"
