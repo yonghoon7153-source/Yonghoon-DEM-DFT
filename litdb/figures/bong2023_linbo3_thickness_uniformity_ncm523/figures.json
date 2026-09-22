@@ -1,0 +1,191 @@
+{
+ "slug": "bong2023_linbo3_thickness_uniformity_ncm523",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "130. JPowerSources_2023_Bong_LiNbO3_thickness_uniformity_NCM523_sulfide_ASSB_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) HAADF-STEM images, (b) TEM images and TEM-EDX mapping images of Nb and Ni (the void at the lower right part of the Nb-3 images is caused by the detachment of the coating layer while thinning down the thin section during FIB milling), (c) SEM images, (d) AES elemental distribution mapping images, and (e) proposed schematic illustrations for Nb-1, Nb-2, and Nb-3 samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    683.0
+   ],
+   "w": 2227,
+   "h": 2641,
+   "dpi": 300,
+   "src": "130. JPowerSources_2023_Bong_LiNbO3_thickness_uniformity_NCM523_sulfide_ASSB_MAIN.pdf",
+   "blank": 0.504
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Illustration of the electron-conducting and lithium-ion-blocking stainless steel electrodes, (b) Nyquist plot showing electronic resistance, and (c) calculated electronic conductivity measured at 40 ◦C, 25 ◦C, and 0 ◦C of the pristine NCM523 and Nb-1–3 electrode pellets. The inset shows the magnified plots of Nb- 1–3 samples. the samples. Similar trends can also be observed for the second cycle, with Nb-3 delivering the optimal value (99.1%), followed by Nb-2 (98.9%) and Nb-1 (98.3%), whereas pristine NCM523 displays the lowest value (97.5%). It is worth noting that the Type-III (Nb-3) coating improves the coulombic efficiency more than the Type-I (Nb-1) and Type-II (Nb-2) coatings do. This is probably because the Type-III coating shows a lower electronic conductivity than the Type-I and Type-II coatings (Table 1), suggesting that the interface reaction can be inhibited and f",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    264.6
+   ],
+   "w": 2228,
+   "h": 898,
+   "dpi": 300,
+   "src": "130. JPowerSources_2023_Bong_LiNbO3_thickness_uniformity_NCM523_sulfide_ASSB_MAIN.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) Initial and second cycle voltage profiles; (b) corresponding coulombic efficiency of the pristine NCM523, Nb-1, Nb-2, and Nb-3 samples. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    54.1,
+    456.1,
+    545.4,
+    730.8
+   ],
+   "w": 2048,
+   "h": 1145,
+   "dpi": 300,
+   "src": "130. JPowerSources_2023_Bong_LiNbO3_thickness_uniformity_NCM523_sulfide_ASSB_MAIN.pdf",
+   "blank": 0.793
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) Cycling voltage profiles of 1, 2, 3, 4, 5, 10, 50, 100, 200, and 300 cycles; (b) cycling performance at 1 C rate and 60 ◦C of the pristine NCM523, Nb-1, Nb-2, and Nb-3 samples. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    392.0,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1373,
+   "dpi": 300,
+   "src": "130. JPowerSources_2023_Bong_LiNbO3_thickness_uniformity_NCM523_sulfide_ASSB_MAIN.pdf",
+   "blank": 0.833
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Nyquist plots of electrochemical impedance spectra of samples (a) before and (b) after cycling. Bode plots of samples (c) before and (d) after cycling. (e) The R3 values before and after cycling, together with the R3 increase ratio (R3 increase ratio = R3 after cycling/R3 before cycling), of the pristine NCM523, Nb-1, Nb-2, and Nb-3 samples. P 2p core levels, both before and after cycling (Fig. 6). To identify the changes in the decomposition products at the interface after cycling, all the composite cathodes were first examined before cycling, and the re­ sults are shown in Fig. 6(a, c). For the samples before cycling, a char­ acteristic single doublet with peaks at the binding energies of approximately 161.4 eV and 162.9 eV, corresponding to the PS4 from other components are detected in the XPS spectra for any of the samples before cycling, except for a noticeable amount of P2S",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    587.5
+   ],
+   "w": 2228,
+   "h": 2242,
+   "dpi": 300,
+   "src": "130. JPowerSources_2023_Bong_LiNbO3_thickness_uniformity_NCM523_sulfide_ASSB_MAIN.pdf",
+   "blank": 0.731
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Detailed XPS spectra of S 2p and P 2p core-level regions and their relevant semi-quantitative results of corresponding species for composite cathodes using pristine NCM523, Nb-1, Nb-2, and Nb-3, (a, b) before and (c, d) after 300 cycles (Abbreviation: udl = under detection limit).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    667.4
+   ],
+   "w": 2227,
+   "h": 2576,
+   "dpi": 300,
+   "src": "130. JPowerSources_2023_Bong_LiNbO3_thickness_uniformity_NCM523_sulfide_ASSB_MAIN.pdf",
+   "blank": 0.744
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Cross-sectional STEM image and the EDX line profiles for S, Cl, P, Ni, Co, and Mn elements at the CAM/SE interface of (a) pristine NCM523 before cycling, (b) pristine NCM523 after cycling, (c) Nb-1 sample after cycling, and (d) Nb-3 sample after cycling (Abbreviation: CL = LiNbO3 coating layer).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    565.7,
+    666.4
+   ],
+   "w": 2227,
+   "h": 2572,
+   "dpi": 300,
+   "src": "130. JPowerSources_2023_Bong_LiNbO3_thickness_uniformity_NCM523_sulfide_ASSB_MAIN.pdf",
+   "blank": 0.652
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Schematic illustration of the different interfacial reactivity (a) during and (b) after cycling when using the pristine and Nb-1–3 cells. The formulas of possible reactions are given with SE and O, which denote atomic species in the SE and CAM, respectively. 11",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    274.3,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1863,
+   "dpi": 300,
+   "src": "130. JPowerSources_2023_Bong_LiNbO3_thickness_uniformity_NCM523_sulfide_ASSB_MAIN.pdf",
+   "blank": 0.599
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1 Details and electronic conductivity of the pristine NCM523 and Nb-1–3 elec­ trode pellets measured at 25 ◦C. Sample name Thickness (μm) Electronic resistance (Ω cm2) Electronic conductivity (S cm−1) Pristine 363 736.6 4.9 × 10−5 Nb-1 362 2180 1.7 × 10−5 Nb-2 361 3195 1.1 × 10−5 Nb-3 364 7069 0.5 × 10−5",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.3
+   ],
+   "w": 2213,
+   "h": 2987,
+   "dpi": 300,
+   "src": "130. JPowerSources_2023_Bong_LiNbO3_thickness_uniformity_NCM523_sulfide_ASSB_MAIN.pdf",
+   "blank": 0.864
+  }
+ ]
+}

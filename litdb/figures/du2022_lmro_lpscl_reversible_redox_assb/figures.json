@@ -209,6 +209,14 @@
    "blank": 0.907
   },
   {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 15,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Comparison of the electrochemical performance of LRCo10@yLN cathodes in liquid batteries and ASSLIBs. a) Initial charge-discharge curves of LRCo10@yLN cathodes in liquid batteries. b) Discharge specific capacities of LRCo10@yLN cathodes obtained from figure a. c) Cycling performance of the LRCo10@5LN cathode in a liquid battery and an ASSLIB at 0.5C. d) Cycling performance of the LRCo10@10LN cathode in a liquid battery and an ASSLIB at 0.5C."
+  },
+  {
    "key": "fS8",
    "kind": "figure",
    "label": "S8",
@@ -328,5 +336,6 @@
    "src": "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf",
    "blank": 0.938
   }
- ]
+ ],
+ "note_manual": "fig_S7.png 는 도구가 '그래픽 없음'으로 오탐 제외해 사람이 수동 크롭(SI p15, 캡션 위 전 영역). fig_S10.png 도 자동 크롭이 패널 e,f 만 잡아 a–f 전 패널로 다시 잘랐다. 2026-09-22."
 }
