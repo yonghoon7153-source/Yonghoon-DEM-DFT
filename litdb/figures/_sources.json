@@ -1289,6 +1289,14 @@
    "DEM 논문/24. Minnmann_2024_J._Electrochem._Soc._171_060514 Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance.pdf"
   ]
  },
+ "morgan2021_anion_disorder_superionic_mechanism_li6ps5x": {
+  "figures": 18,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "9. Mechanistic_origin_superionic_Li_diffusion_anion_disordered_Li6PS5X_MAIN.pdf",
+   "9. Sup) Mechanistic_origin_superionic_Li6PS5X_SI.pdf"
+  ]
+ },
  "mulks2024_hard_soft_electrons_holes": {
   "figures": 51,
   "generated": "2026-08-05",
@@ -1581,7 +1589,7 @@
   ]
  },
  "schwietert2020_redox_activity_vs_electrochemical_stability": {
-  "figures": 19,
+  "figures": 20,
   "generated": "2026-09-22",
   "pdfs": [
    "6. NatMater_2020_Schwietert_Clarifying_redox_activity_vs_ESW_MAIN.pdf",
