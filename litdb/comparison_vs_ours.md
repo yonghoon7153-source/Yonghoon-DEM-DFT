@@ -129,6 +129,7 @@
 | **[Fang22PW]** ★★Haven 외부앵커·⚠조성 반대 | **Hong Fang\*** & **Puru Jena\*** 2022 ***Nat. Commun.* 13, 2078** (Virginia Commonwealth Univ. 물리, 2인) — "Argyrodite-type advanced lithium conductors and transport mechanisms **beyond paddle-wheel effect**", DOI `10.1038/s41467-022-29769-5`. **순수 계산**(CALYPSO PSO + VASP PBE/HSE06 + AIMD + NEB, 실험 0). 계: **Li₆POS₄(SH)** · **Li₆PS₅(BH₄)** · **Li₆.₂₅PS₅.₂₅(BH₄)₀.₇₅** · 기준 **Li₆.₂₅PS₅.₂₅Cl₀.₇₅**. digest `papers/fang2022_argyrodite_transport_beyond_paddlewheel.md` | ✅ `papers/fang2022_argyrodite_transport_beyond_paddlewheel.md` (2026-09-13 병합) | **[외부]** 계산(AIMD) · 자체 실험 0 · ⚠ 3·4열은 병합자 기입 |
 | **[Jeon26Con]** | `jeon2026_concerted_li_motion_argyrodite_assi` — **argyrodite 협동 이동 + tracer/charge D 분리** (*JMCA* 2026, DOI 10.1039/d6ta04898f). 계 = **Li₆₊ₓAs₁₋ₓSiₓS₅I (As/Si + I, anion-ordered)** ⇒ 우리 comp1/modelc 와 **양이온·음이온·무질서 상태가 전부 다르다**. **값 이식 금지, 기전·방법만.** Haven 비는 **§J-7 방법 원전** 으로 간다 | ✅ `papers/jeon2026_concerted_li_motion_argyrodite_assi.md` (2026-09-13 병합) | **[외부]** 계산(AIMD/MLIP) · ⚠ 3·4열은 병합자 기입 |
 | **[Wu26TMD]** ⛔⛔ **우리 축 아님 — 기각 기록** · 물성 4축 진입 금지 | **Na Wu**/K.Cui/Z.-Y.Wang/Z.-Y.Zou/J.-C.Bai/**D. Legut**(IT4Innovations·VSB)/**H.-Z. Tian\***(北航)/**Z.-J. Cao\***(西安交通大)/**T.-S. Wang\***(西北工业大·HKUST) 2026 ***Tungsten*** in press (DOI `10.1007/s42864-026-00404-w`; refs 113 · 22 pp · SI 없음) — "**Recent progress in intercalation engineering of transition metal dichalcogenides for energy storage and conversion**". **층상 vdW TMD 의 갭에 게스트를 끼워 넣는 전극·전기촉매 리뷰. 자체 계산 0 · 자체 실험 0**(저자 명시). `solid electrolyte`·`argyrodite`·`all-solid`·`NCM`·`hull`·`CoS2`/`NiS2` **전부 0회**, `VASP`/`PBE`/`k-point`/`cut-off` **0회**(DFT 12회 인용하고도 재현 불가) | ✅ `papers/wu2026_tmd_intercalation_engineering_review.md` · **§J-7 기각 기록** | 리뷰(2차) |
+| **[Xu26XLS]** 🖥️ **HPC 방법 원전 · ⛔ 우리 기계로 불가 · 물성 4축 진입 금지(값 0건)** | **Qimen Xu\***/**Yu Zhang\***(공동1)/D.Ni/L.Gao/G.Feng/Q.Zheng/J.Liu/H.Lu/Z.Jia/W.Xue/S.Chandran/**T. Hoefler**(ETH Zurich)/**H. Fu**(칭화)/**Y. Lu**(중산) 2026 **arXiv:2609.13115v1 [cs.CE]** (NSCC-SZ; **미査読·DOI 없음**), "Extreme-Scale Linear-Scaling Kohn-Sham DFT at 100 Million Atoms: Bridging Quantum Simulations and Experiments" — **XLSDFT** = 밀도행렬 근시안성 + divide-and-conquer(코어+버퍼) + CheFSI 의 **O(N) 실공간 FD KS-DFT**. Si **1억/2억 원자** · **Li\|LGPS\|Li 계면 11,325,600 원자**(57×44×90 nm) 단일점 SCF + **XPS 깊이프로파일 대조** | `papers/xu2026_xlsdft_linear_scaling_100m_atoms.md` ✅ (2026-09-22) | **HPC/방법 (성능논문)** — 물성값 **0 건**. §J-7 🔧 방법 원전으로만. ⛔ **정확도 검증이 전문에 0 건**이라 "O(N) = 무손실" 근거로 인용 금지 |
 
 ---
 
@@ -2685,6 +2686,99 @@ energy" 를 잘못 부른 것**). ⇒ **2026년 계면 전문 종설이 슬랩 �
 
 <sub>> 📎 2026-09-22 신설 — `litdb/papers/ziemke2026_li3ocl_substitutional_defects.md` §7·§10·§11 요약. 그림 3/3 실독.</sub>
 
+
+**[Xu26XLS] `xu2026_xlsdft_linear_scaling_100m_atoms` — O(N) KS-DFT 의 *조건과 대가* · ⛔ 우리 기계로 불가** (2026-09-22 신설)
+
+> **arXiv:2609.13115v1 [cs.CE]** (2026-09-11, **미査読·DOI 없음**) · Qimen Xu\*/Yu Zhang\*(공동1) … **T. Hoefler**(ETH)/**H. Fu**(칭화)/**Y. Lu**(중산) · NSCC-SZ.
+> ⛔ **물성 4축 진입 금지 — 사유 (i) 값이 0 건이다.** σ·Ea·ESW·C_ij·밴드갭 전부 `n/a`. DOS/PDOS 를 계산하고도 **갭 값을 보고하지 않는다**.
+> ⛔ **축 E(환원/Li 금속 계면)에도 행을 만들지 않는다** — 계면 환원이라는 *현상*은 우리 축과 같지만 **물질이 LGPS(Ge⁴⁺ 중심)** 라 우리 argyrodite 와 다르고, 결과가 **정성 관찰 + 오차막대 없는 `figure-read` 2 % 차이**뿐이다.
+> 여기 두는 이유는 하나 — **1저자가 던진 네 질문("O(N) 이 언제 성립하나 · 정확도 대가가 뭔가 · 실험 대조 프로토콜이 옮겨오나 · SE 계를 썼나")에 근거로 답하는 편**이기 때문이다.
+
+**a. 우리 스택 대조 — 규모·방법·관측량**
+
+| 항목 | [Xu26XLS] | 우리 | 판정 |
+|---|---|---|---|
+| 계 크기 | Si **1억/2억** · Li\|LGPS\|Li **11,325,600**(57×44×90 nm) | 120–400 원자, **생산 상한 160** | 🔴 10⁴–10⁵ 배 |
+| 기계 | LineShine **20,480 노드** (노드당 ARMv9 LX2 ×2 = **608 코어** + HBM 64 GB / DDR 512 GB) | RTX3090 1대(kgy) · A6000 1대(gabia), **HPC 없음** | 🔴 **재현 불가** |
+| **실제로 대각화하는 국소 문제** | 부분영역 **N_s^α ≈ 640 상태 · N_d^α ≈ 200,000 격자점** ⇒ **O(10²) 원자** (Si 환산 320(상태) / 185(격자) — 논문이 코어크기를 안 적어 1.7× 이상 못 좁힘) | **120–160 원자** | ⭕⭕ **같은 자리다.** 큰 계는 이 단위를 *많이* 푸는 것이지 *크게* 푸는 것이 아니다 ⇒ **우리 셀 크기를 방어하는 근거** |
+| 처리량 | **노드당 5,120 원자 / SCF 71.2 s** (`Fig. 5` 캡션) | — | 코어수만으로 gabia 환산 **≈170 원자**. ⚠ 그들 코어는 SME 행렬유닛 + HBM 이라 실제 우리 쪽은 **더 낮다** |
+| 이산화 | 실공간 **FD 12차**, h ≈ 0.5(Si)/0.4(LGPS) Bohr, **ONCV**, **Γ점만**, **스핀 무시** | QE **평면파** ecutwfc 70/560, k-격자, PAW/USPP | 🔴 수렴 손잡이가 다르다 (**h ↔ ecut 환산식 없음**) |
+| 범함수 | **"GGA" 라고만** (PBE 인지 PBEsol 인지 **미기재**) | PBE | ⚠ 대조 불가 |
+| 스미어링 σ = k_BT | **값 미기재** | — | 🔴 금속계 버퍼 적정성을 **독자가 판정할 수 없다** |
+| SCF 문턱 | 상대 밀도잔차 **5×10⁻⁴** (두 계 공통) | — | ⚠ 느슨한 편 + 근거 없음 |
+| XLSDFT 로 한 일 | **단일점 SCF 1회.** 구조최적화 0 · MD 0 · NEB 0 · **힘 값 보고 0** | — | 구조는 전부 **DeePMD MLFF-MD** 가 만들었다 |
+
+**b. ★ O(N) 이 성립하는 조건 — 갭은 필요조건이 아니다 (1저자 질문 ①의 답)**
+
+- 원문 §V-A1: *"for insulating **as well as metallic** systems **at finite temperature** [32],[33], the density matrix decays exponentially, `|D(x,x′)| ≲ exp(−|x−x′|/ξ)`, whereas the individual KS orbitals ψₙ may be fully delocalized."*
+- ⇒ 조건은 **"갭이 있을 것"이 아니라 "밀도행렬 감쇠길이 ξ 가 버퍼 반경보다 짧을 것"**. 넓은 갭 → ξ 짧음(유리) · 금속 → σ 가 작을수록 ξ 길어짐(불리).
+- **우리 계(PBE gap 2.066 / 2.099 eV)는 이 방법이 가장 잘 듣는 쪽 끝에 있다** — 이 논문이 다룬 Si(≈1 eV급)·Li 금속(0)보다 유리하다. 🔴 **그런데 그게 우리에게 이득이 아니다** — 이유는 c·d.
+- ⚠ **ξ 값도 σ 값도 버퍼 수렴시험도 이 논문에 없다** ⇒ *"우리 계면 버퍼 얼마면 되나"* 를 여기서 못 가져온다. (그 답은 인용 [35] Suryanarayana, *CPL* **679**, 146 (2017) *"On nearsightedness in metallic systems …aluminum"* 쪽으로 보이나 **우리는 그 논문을 읽지 않았다 — 서지만 확인**.)
+
+**c. 🔴🔴 정확도 대가 — 이 논문은 그 질문에 답하지 않는다 (1저자 질문 ②의 답)**
+
+- 전문 검색: `benchmark` **0회**, 3차 스케일링 코드와의 대조 **0건**, 오차 보고 표·그림 **0개**, **R_buffer 수렴시험 0건**. *"retaining DFT accuracy"*(초록)는 **주장이지 측정이 아니다.**
+- 🔴 더 나쁜 것: **금속 포함계(Li/LGPS)에 더 *작은* 버퍼 8.0 Bohr**, **순수 반도체 Si 에 더 큰 9.2 Bohr** — 근시안성 이론이 요구하는 방향과 **반대**이고, 논문은 설명하지 않는다(정황상 h=0.4 Bohr 의 비용 제약).
+- **구조적으로 무엇이 없어지는지는 정식화에서 읽힌다** (이게 우리에게 진짜 중요한 부분):
+
+| 양 | 이 정식화에서의 지위 | 우리 영향 |
+|---|---|---|
+| **ICOHP / COHP / COBI** | 🔴 **자리가 없다.** COHP 는 두 원자 궤도쌍의 **비대각 `H_μν`** 를 요구하는데, 이 정식화는 부분영역 고유값 `λ^α_n` + **대각** 투영가중치 `c^α_n`·`P^α_{n,I,lm}` 만 조립한다 (Eq. 13–16). LOBSTER 가 필요로 하는 것을 이 코드는 만들지 않는다 | 🔴🔴 **우리 전자구조 축의 중심 지표가 통째로 빠진다** (`comp1 ICOHP(Li–Cl) −1.86` / `modelc −2.10` 같은 값을 이 노선으론 못 낸다) |
+| **밴드갭** | DOS 는 **전역 H 의 스펙트럼이 아니라 부분영역 H^α 고유값 모음**이다. 논문은 갭을 보고하지도 않는다 | 🔴 우리 규율(**fixed-occ nscf VBM/CBM 고유값**)로 정의할 방법이 없다 |
+| 밴드분산 / k-분해 | **없다** (Γ점만, Eq. 1 명시) | 🔴 원리적 불가 |
+| 스핀 분해 | **없다** (스핀 무시, Eq. 1 명시) | 🔴 열린껍질·라디칼·자성계 불가 |
+| PDOS | ⭕ 있다 (Eq. 14–16) — 이 논문이 실제로 낸 **유일한** 전자구조 관측량 | ⭕ |
+| Bader · 정전기퍼텐셜 | §III 이 *"native 로 계산"* 한다고 **주장만** 하고 **결과가 없다** | ⚠ 미확인 (그래서 digest `methods:` 태그에서 Bader 제외) |
+
+⇒ **판정: 우리가 DFT 를 쓰는 이유(ICOHP·밴드갭·PDOS 성격) 중 둘이 이 노선에서 사라진다. 우리 기계가 작아서가 아니라 방법의 성질이다.**
+
+**d. 🔴 "Bridging … Experiments" 는 추세 일치까지다 (1저자 질문 ③의 답)**
+
+| | 실험 | 계산 |
+|---|---|---|
+| 양 | Ge 3d · P 2p **XPS 결합에너지** (eV) | **E_F 이하 점유 PDOS 적분** (무차원) |
+| 공간축 | Ar⁺ **스퍼터 시간** 0/20/50 분 | **x (nm)** 25–65.5 |
+| 겹쳐 그림 / 맞춘 숫자 | **없음 / 없음** | |
+
+- 초록 *"in **quantitative** agreement"* ↔ 본문 *"The consistent interface-to-bulk **trend** validates…"* — **강도가 다르다**. 대조된 것은 **부호/추세**다.
+- **스퍼터시간 → 깊이(nm) 환산이 없다** ⇒ 두 축이 원리적으로 안 만난다. **XPS 엔 `O 2s` 가 뚜렷한데 모델 LGPS 엔 O 가 없다**(조성 불일치).
+- 신호 크기 `figure-read ≈`: Ge 벌크 **8.06** → 계면 **8.22** (Δ ≈ **2.0 %**) · P **3.41 → 3.47** (Δ ≈ **1.8 %**), **산점 퍼짐이 Δ 의 4–5배**, **오차막대·통계 없음**.
+- ⛔ **우리 XPS anchor 논증(`Li₂S 160.2 / PS₄³⁻ 161.6 / Li₂SO₄ 168.0 eV`)의 근거로 이 편을 쓰면 안 된다** — 그쪽은 결합에너지끼리 맞춘 것이고 이쪽은 아니다.
+- ⭕ **옮겨올 것은 구조 하나**: *"실험이 주는 축(깊이 프로파일)이 무엇인지 먼저 정하고, 계산도 그 축으로 낸다."* 진짜 정량 대조를 하려면 **core-level 결합에너지/화학적 이동을 계산**해야 하고 그건 이 논문이 **하지 않은** 일이다.
+
+**e. ⭕ 이 편에서 실제로 가져오는 것 3개**
+
+| # | 가져오는 것 | 등급 |
+|---|---|---|
+| 1 | **MLIP(구조) → DFT(전자구조) 분업의 최대규모 선례.** §IV-A: *"MLFFs … provide near-DFT accuracy for atomic forces and energies at millions of atoms **but yield no electronic-structure observables**: band alignment, charge transfer, and projected DOS are entirely inaccessible."* ⇒ 우리 **UMA-MD + QE** 노선의 외부 정당화 | ⭕⭕ **인용 1문장** (계산 0회) |
+| 2 | **물질-마스크 SCF 전처리** `(−∇²+κ²(x))R̃ₖ = −∇²Rₖ`, **κ²(x)=s(x)·k²_TF,Li** — 금속(Li) 영역에서만 Thomas–Fermi 스크리닝 ON, 절연 LGPS 에서 OFF. 우리 CLAUDE.md 의 *"local-TF/저β 믹싱"* 의 **공간 마스크판** | ⭕ **T2 (개념만)** — ⚠ 새로 구현할 것이 아니라 **QE `mixing_mode='local-TF'` 를 이미 켜고 있는지 입력파일에서 확인**(계산 0회, 규율 사다리 ③) |
+| 3 | **면내 불균일성** (`Fig. 6d` xy 맵) — 같은 계면거리에서 y 방향으로 값이 크게 흔들린다 | ⭕ **§H 에 등재 완료** (2026-09-22). **우리가 못 하는 것이고 얼버무리지 않는다** |
+
+**f. 🔴 우리 검산 — 논문에 없는 수 (⚠ 소환값이 아니라 우리가 나눈 파생값이다)**
+
+| 검산 | 값 | 무엇을 말하나 |
+|---|---|---|
+| 200M/100M **s/SCF 비** | 143.7 / 71.2 = **2.018** | 같은 20,480 노드에서 원자 2× → 시간 2.02× ⇒ **진짜 O(N) 이다.** 이 편에서 제일 깨끗한 증거 |
+| 헤드라인 지속성능의 **피크 대비** | 157.9 / 2,470 Pflop/s = **6.4 %** (노드 피크 = 2×60.3 Tflop/s) | dense-LA 만 48 %(proj)·53 %(rot). **체비셰프 필터링(0.97 flop/byte, 메모리대역 한계)가 전체를 끌어내린다** |
+| Li/LGPS 지속 HBM 대역 / 피크 | 0.186 / 5.74 = **3.2 %** (Si 는 **50.7 %**) | **16배 차.** 실제 재료 문제는 벤치마크 결정보다 훨씬 나쁘게 돈다 — 논문은 표에 넣고 **한 문장도 논의하지 않는다** |
+| **원자당 비용** LGPS vs Si | (36.4/11.33)/(71.2/104.86) = **4.7×** | 화학 복잡도·금속성·미세격자(h 0.4 vs 0.5)의 대가 |
+| Li/LGPS **단일점 SCF 1회 비용** | 20,480 × 6,936.2 s ≈ **39,500 node-h ≈ 2.4×10⁷ core-h** | ⚠ **노드수가 논문에 없다** — §VII-B 의 대역 외삽이 20,480 을 쓰므로 그렇게 가정. 재현·비용비교가 원천적으로 막혀 있다 |
+| Si 런의 초기화+I/O 비중 | 100M **54 %**(584 s) · 200M **56 %**(1,275 s) | 기록 런은 wall time 절반 이상이 계산이 아니다 |
+| **버퍼 오버헤드** | `Fig. 3` figure-read **푸는 부피 / 보관 부피 ≈ 40×**; 숫자로도 코어가 부분영역의 **5.1 %(Si) / 3.2 %(LGPS)** (정육면체 가정) | **O(N) 은 공짜가 아니라 큰 상수를 내고 산 지수다** |
+
+**g. ⛔ 이 축에서 인용하면 안 되는 것**
+
+| 금지 | 사유 |
+|---|---|
+| *"O(N) DFT 는 정확도 손실 없이 3차 스케일링과 같다"* | 🔴 **이 논문에 정확도 수치가 0 건**이다 (c) |
+| *"DFT 가 XPS 와 정량 일치했다"* | 🔴 축·단위가 다르고 겹쳐 그린 적이 없다. 본문 자신이 *"trend"* 라 쓴다 (d) |
+| **157.9 Pflop/s** 를 "DFT 가 이만큼 빨라졌다" 로 슬라이드에 쓰는 것 | 20,480 노드 **피크의 6.4 %**. 노드수 없이 쓰면 오도 (f) |
+| "저원자가 Ge/P 농축" 을 **우리 argyrodite** 환원 서술의 근거로 대는 것 | **물질이 다르다** (LGPS 의 Ge⁴⁺ ↔ 우리는 Ge 없음). *중심 양이온이 환원된다*는 일반 서술까지만 |
+| 이 편의 DOS/PDOS 를 **우리 LOBSTER/ICOHP 축과 같은 것**으로 다루는 것 | 정식화가 다르다 — 비대각 `H_μν` 부재 (c) |
+| 그들의 **MLFF 정확도**를 우리 UMA 논의에 끌어오는 것 | **검증 수치가 0 건**이다 (학습 프레임수·힘 RMSE·앙상블·dt·길이 전부 미기재). 우리는 `mlip_bench_li3ps4_uma.json` 힘 MAE **30.0 meV/Å** 를 갖고 있다 — **이 축은 우리가 낫다** |
+| "LGPS" 관련 구조·조성 수치를 이 편에서 가져오는 것 | **화학식(Li₁₀GeP₂S₁₂)조차 전문에 한 번도 안 나온다.** 공간군·격자상수·원소별 원자수·Li 무질서 처리 전부 미기재 |
+
+<sub>> 📎 2026-09-22 신설 — `litdb/papers/xu2026_xlsdft_linear_scaling_100m_atoms.md` §4·§9·§12·§15 요약. 크로핑 6장 중 5장 실독(`Fig. 4` 는 LX2 다이 배치도라 의도적 미독, `Fig. 5` 는 자동크롭 실패 → 수동 bbox). ⛔ **당장 할 계산 없음** — 이식 가능한 것은 인용 1문장 + 계산 0회 점검 2줄뿐.</sub>
 
 
 

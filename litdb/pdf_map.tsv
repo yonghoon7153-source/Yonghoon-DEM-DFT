@@ -85,3 +85,11 @@ xu2026_ndo_codoping_argyrodite	ndo_lpscl1.7
 shapeev2016_moment_tensor_potentials	shapeev2016_moment_tensor_potentials
 cronk2026_lis_cathode_interphase_chemistry	bai2026_a_highly_utilized_and_practical_lis_cathode
 lynch2026_greenkubo_mlip_conductivity_thesis	paper9_computational_se_firstprinciples_ml
+
+# ── XLSDFT (EXTERNAL · HPC 방법 원전) ──────────────
+# 가드: xu2026_xlsdft_linear_scaling_100m_atoms 의 `fig_5.png` 는 **수동 bbox** 다.
+#   자동 크로퍼가 p9 의 Fig. 5 를 '영역 없음' 으로 제외한다(2단 조판 위쪽 전폭 벡터 그림).
+#   손으로 넣은 값: page 9(0-based 8) · clip (40, 45, 572, 262) pt @300 dpi → 2218x905.
+#   [!] '--slug xu2026_xlsdft_linear_scaling_100m_atoms --clean' 을 돌리면 fig_5 가 사라진다.
+#       ('--inbox --run --skip-done' 은 안전.) 재생성이 필요하면 위 bbox 를 그대로 다시 쓴다.
+#   본문 PDF 만 있고 SI 는 없다(논문에 SI 자체가 없음). 자동 매칭은 제목으로 붙는다.
