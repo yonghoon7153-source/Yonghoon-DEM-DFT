@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 131편 · 생성 2026-09-19
+> digest 134편 · 생성 2026-09-22
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -53,7 +53,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM (Experimentally validated DEM for large deformation powder compaction: mechanically-derived contact model and screening of non-physical contacts) — Zunker, Dunatun | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-08-25 | — |
 
-## 복합양극 미세구조 · percolation (22편)
+## 복합양극 미세구조 · percolation (23편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -63,6 +63,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `cronk2026_lis_positive_electrode_geometry_fem` | 확률적 voxel 기하 생성(MATLAB) + TauFactor τ + FEM 팽창응력으로 설계한 Li–S 전환형 양극 (LPSCl 촉매전해질) — 11 mAh cm⁻² · 10 MPa anode-free 파우치 — Cronk (Nat. Commun. 2026) | FEM (COMSOL 6.1, 선형탄성+등방 eigenstrain) + 확률적 voxel 기하생성(MATLA | 2026-09-03 | 🖼 50 |
 | `duquesnoy2020_calendering_ml_mesostructure_generator` | 캘린더링(압연)을 "porosity 를 입력으로 받는" 확률적 전극 생성기 + TauFactor + SISSO 로 — 실험 54셀 → 8,800 in-silico 전극 → 해석식 — Duquesnoy (J. Power Sources 2020) | hybrid (exp 54-electrode 다항회귀 → MATLAB voxel 확률생성기 → TauFact | 2026-09-03 | 🖼 12 |
 | `galvezaranda2024_time_dependent_dl_calendering_microstructure` | 압연(calendering) DEM 궤적을 1D-CNN 시간-surrogate 로 대체하다 — 3 프레임 lag → 다음 프레임 3D 복셀 미세구조, NMC111 96 % / CBD 4 %, CD 20–50 % — Galvez-Aranda / Le Dinh / Vijay / Zanotto / Franco (Advanced | DL 시간-surrogate(1D-CNN, TensorFlow/Keras) on DEM 압연 궤적 + Geo | 2026-09-11 | 🖼 13 |
+| `islam2026_microstructure_resolved_impedance_lpscl_symmetric_cell` | Microstructure-Resolved Impedance Modeling of Solid-State Batteries — Li/Li₆PS₅Cl/Li 대칭셀의 phase-field 소결·SEI 미세구조를 COMSOL 옴익-전도 + Butler–Volmer + C_dl 임피던스 모델로 — Islam, Katsube, Ji | FEM (COMSOL Multiphysics 2D 옴익 전도 + Butler-Volmer + C_dl, 1  | 2026-09-22 | 🖼 9 |
 | `jung2023_single_crystal_ncm_morphology` | 필독 / 우리-랩 — Customizing the Morphology and Microstructure of Single-Crystalline Ni-rich Layered Cathode Materials for All-Solid-State Batteries — Jung et al. (Chem. Eng. J. 2023) | exp (morphology / electrochemistry / mechanical) | 2026-06-26 | 🖼 7 |
 | `kim2024_carbon_volumetric_occupation_se_domain` | 필독 / 우리-랩 — Accelerated Degradation of ASSBs Induced through Volumetric Occupation of the Carbon Additive in the SE Domain — Kim, Park, Kang, …, Lee, Sun, Cho (Adv. Funct. Mater. 2 | exp | 2026-06-26 | 🖼 5 |
 | `kim2026_a3d_air_electrode_microstructure_transport` | Kim 2026 (Journal of Power Sources 686, 240471) — 디지털트윈 미세구조(GeoDict) → 유효물성 → 1D 전기화학(COMSOL)으로 A3D 공기극 수송 설계 | FEM·digital-twin | 2026-07-28 | — |
@@ -80,7 +81,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yoo2026_porosity_gradient_dry_electrode` | Yoo 2026 (Energy Storage Materials, ENSM 105331) — Porosity-구배 건식 흑연 전극 + 변형성 Primer Layer | MPM | 2026-07-28 | 🖼 7 |
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (34편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (35편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -96,6 +97,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `hare2026_dem_pept_dry_mixing_nmc622_eirich` | NMC 622 건식 혼합(dry mixing) 의 3D 유동을 PEPT 로 실측하고 그것으로 DEM 을 검증 — Eirich EL1 집약믹서, rotor tip-speed 10/20/30 m/s — Hare (Powder Technology 2026) | DEM (EDEM 2023, coarse-grained Hertz–Mindlin + JKR) + PEPT 실 | 2026-09-19 | 🖼 19 |
 | `hong2026_sulfide_cathode_binder_digitaltwin` | Hong 2026 (Energy Storage Materials 86, 104930) — 황화물 복합양극 열화 메커니즘 (디지털트윈): Dry(PTFE) vs Wet(NBR) 바인더 ★우리 소재계(LPSCl+NCM) | FEM·digital-twin | 2026-07-28 | — |
 | `jadidi2023_dem_batch_solid_mixers_review` | 배치(batch) 고체 믹서의 DEM 적용 종합 리뷰 — 믹서 분류 · 혼합/분리 기전 · 혼합지수(mixing index) 8종 전수 · 접촉·점착모델 표준 · 보정 · coarse-graining · 미해결 목록 — Jadidi, Ebrahimi, Ein-Mozaffari, Lohi (Reviews in Chemica | DEM (REVIEW — 배치 고체 믹싱; 7개 믹서족 문헌표 + 혼합지수 카탈로그) | 2026-09-19 | 🖼 3 |
+| `jeong2025_tough_adhesive_binder_shield_ncm811` | A Tough, Adhesive, and Protective Binder Shield for Stabilizing High-Nickel Cathodes in Lithium-Ion Batteries — Jeong et al. (Adv. Energy Mater. 2025, 15, e02765) | exp 주도 + 보조 DFT 9점(Gaussian 16 분자계산 — 고체 DFT 아님) | 2026-09-22 | 🖼 19 |
 | `jun2026_ppma_econductive_binder_si_lowpressure_assb` | Electron-conductive binder for silicon negative electrode enabling low-pressure all-solid-state batteries — Jun & Jeong et al. (Nat. Commun. 2026) | exp (계산 0) | 2026-07-15 | 🖼 5 |
 | `kang2025_bollard_anchored_binder_dry_electrode` | Bollard-Anchored Binder System for High-Loading Cathodes Fabricated via Dry Electrode Process — Kang, Jihyeon (Adv. Mater. 2025) | exp + NNP(PFP) 흡착/MD + Gaussian16 DFT(IR) | 2026-09-03 | 🖼 42 |
 | `kim2026_charge_engineered_cnf_binder` | Kim 2026 (Nature Communications, DOI 10.1038/s41467-026-73909-0) — 전하조작(charge-engineered) 셀룰로오스 나노피브릴 바인더로 PFAS-free 고로딩 양극 | experiment | 2026-07-28 | 🖼 43 |
@@ -119,7 +121,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `wet_processing_resolved_am_ssb_cathode_manufacturing` | ASSB 양극을 습식공정(슬러리→건조→압연)으로 — 실제 형상(resolved, multisphere) AM 입자를 nano-CT에서 추출해 DEM 제조 시뮬 + GeoDict로 σ_ionic·σ_e 산출 — Weitze / Franco (Energy Storage Materials 2024) | DEM (LAMMPS, multisphere resolved-AM; wet-process slurry→dry | 2026-06-26 | 🖼 8 |
 | `xu2023_realistic_am_shape_cgmd_calendering` | XCT 로 뜬 실제 3D 형상의 NMC 2차입자로 LIB 전극 제조(슬러리→건조→압연)를 다시 돌리다 — Franco 그룹 ARTISTIC 의 "구(球) 근사 탈출" 1호 — Xu (J. Power Sources 2023) | CGMD/DEM (LAMMPS, Lennard-Jones + JKR; 슬러리·건조·압연) + µ-XCT 실험 | 2026-09-11 | 🖼 7 |
 
-## 화학-기계 열화 · 계면 (10편)
+## 화학-기계 열화 · 계면 (11편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -131,6 +133,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `kang2025_toughened_bimodal_nca_lzo` | 필독 / 우리-랩 — Toughened Bimodal Cathodes for ASSBs via Controlled Interfacial Heterogeneity — Kang & Shin (ACS Appl. Mater. Interfaces 2025) | exp + FEM (electrochemo-mechanical) | 2026-06-26 | 🖼 6 |
 | `kim2023_chemomech_failure_highstrain_anode` | 필독 / 우리-랩 — Chemo-mechanical Failure of Solid Composite Cathodes Accelerated by High-Strain Anodes — Kang & Shin (Energy Storage Materials 2023) | exp + FEM (electrochemo-mechanical) | 2026-06-26 | 🖼 6 |
 | `kim2025_impedance_decoupling_tlm_assb` | 필독 / 우리-랩 — Multiple-reaction kinetics of composite electrodes for sulfide-based ASSBs: Impedance decoupling (modified TLM) — Kim, Kang, Park, Lee (Electrochimica Acta 2025) | exp + equivalent-circuit modeling (modified TLM) | 2026-06-26 | 🖼 6 |
+| `lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging` | 우리-랩 (Jong-Won Lee 그룹) — Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries — 3D 전기화학-역학 시뮬레이션이 지목한 "분리막 쪽 큰 다결정(LPC, ~12 µm) 입자의 균열" 을 소 | exp (LIB 액체계 CR2032 풀셀·반쪽셀 + FIB-SEM·nanoindentation·XRD·XPS | 2026-09-22 | 🖼 29 |
 | `so2021_dem_fabrication_degradation_ductile_particles` | frame[5] 사이클 열화 DEM — Simulation of Fabrication and Degradation of All-Solid-State Batteries with Ductile Particles — So, Inoue, Hirate, Nunoshita, Ishikawa, Tsuge (J. Electrochem. | DEM (소성 ductile-particle contact model + 2-step fabrication→ | 2026-06-26 | 🖼 10 |
 | `yun2023_deciphering_degradation_halide_vs_sulfide` | 필독 / 우리-랩 / ★최애 — Deciphering the critical degradation factors of solid composite electrodes with halide electrolytes: Interfacial reaction versus ionic transport — Yun, Shin, Hoan | exp (impedance decoupling, SSRM/FS local mapping) + FEM (vol | 2026-06-26 | 🖼 5 |
 

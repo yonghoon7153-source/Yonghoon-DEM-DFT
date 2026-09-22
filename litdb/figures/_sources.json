@@ -484,6 +484,13 @@
    "DFT 먹인 논문/11. Cooperative Ion Conduction Enabled by Site Percolation in Random Substitutional Crystals.pdf"
   ]
  },
+ "islam2026_microstructure_resolved_impedance_lpscl_symmetric_cell": {
+  "figures": 9,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "/root/.claude/uploads/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/79b422f7-5._Microstructure-Resolved_Impedance_Modeling_of_Solid-State_Batteries.pdf"
+  ]
+ },
  "jacksongreen2005_fem_elastoplastic_hemispherical_contact": {
   "figures": 13,
   "generated": "2026-08-05",
@@ -830,6 +837,14 @@
   "pdfs": [
    "60. Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf",
    "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf"
+  ]
+ },
+ "lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging": {
+  "figures": 29,
+  "generated": "2026-09-22",
+  "pdfs": [
+   "6. Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.pdf",
+   "6. Sup) Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.docx"
   ]
  },
  "lee2026_skku_mlip_materials_design": {

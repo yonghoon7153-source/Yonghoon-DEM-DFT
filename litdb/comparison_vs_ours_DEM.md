@@ -18,6 +18,12 @@
 >   CSV `docs/data/kim2025_tlm_kinetics_anchors.csv`.
 > ★ **두 자매 논문의 연결:** 같은 황화물-계면 산화분해가 *역학*(균열, Kang)과 *kinetics*(R_ct↑ ~20×, Kim) 양쪽으로
 > 나타나며, 우리 DEM+MPM 은 그 *구조→수송 σ* 를 채운다 → **structure-σ(우리) / mechanics(Kang) / kinetics(Kim) 3자 분업.**
+> - ⭐ **2026-09-22 추가 — 세 번째 자매편 = Lee, Kim, Yang, Kim, Park, Lee 2026 (Energy Storage Mater. 86, 104985) = *급속충전 균열 · ⚠ 액체계 LIB*.**
+>   NCM92 bimodal(LPC 12 µm 다결정 : SSC 3 µm 단결정 = 6:4) 의 3C 열화를 **입자-해상 3D 전기화학-역학 모델 + FIB-SEM** 으로
+>   "분리막 쪽 LPC 균열"(면적분율 **3.4 vs 1.2 %**) 로 지목하고, **SSC-only 10 µm 상층 bilayer(BLE-10)** 로 LPC 표면응력 ~300 → <150 MPa,
+>   유지율 **62.4 → 76.2 %**(3C·300 cyc). ⛔ **황화물 아님 — 값 전이 금지**, 자리 = **C**(입자 내부 응력장·z-분포) / **F**(층상 설계·f_broken(z)).
+>   digest `papers/lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging.md`. **Siwon Kim(Kim 2025 의 1저자)이 2저자** =
+>   같은 그룹의 세 렌즈: 임피던스(Kim) · 역학/균열(Kang) · **급속충전 균열·층상 설계(Lee)**.
 >
 > 현재 digest: **⭐Kang&Shin2025(랩 자체논문, NCA+LPSCl)**, Varkey2026·So2021·Martin-Bouvard2003·Bouvard2000(압밀), Bazzoun2026(전달),
 > **★★★Zunker&Kamrin 2024 I·II + 2025(MDR 접촉모델 3부작 — *우리 18× 연화의 가장 강한 반례 후보* + 층(2.75) 신설; §A·§C·§F)**,
@@ -857,6 +863,24 @@
 
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
 
+> ⭐⭐ **2026-09-22 추가 — [Islam26]: 연속체 임피던스 모델이 우리 CL-81 결손(계면항)을 *상(phase)으로* 넣었다가 0 을 얻었다.**
+> (`papers/islam2026_microstructure_resolved_impedance_lpscl_symmetric_cell.md` §6·§7·§10; ⚠ **Li/Li₆PS₅Cl/Li 대칭셀 · 2D · 시뮬 전용(실험 0) · manuscript(DOI 없음)**)
+> - **같은 층위**: phase map(grain/GB/pore/SEI) 에 상별 σ 를 주고 COMSOL 옴 전도를 푼다 = 우리 STEP3 복셀 FV 와 동형 — 즉 **`CONTACT_FREE` 가지의 연속체판**
+>   (접촉 단위 Holm 항 없음). σ_SE 입력 **3.19 mS/cm** = 우리 σ_grain 3.0 급(단결정, Zhao 2022) — 펠릿 1.02(Bazzoun)·1.6(Kim 2025) 이 아니다.
+> - **살아 있는 관측 ① (neck = 협착)**: ~20 % 기공 시료를 소결 진행시키면 **기공률은 0.20 → 0.22 로 늘면서** 고주파 절편이 **40.0 → 34.5 Ω cm² (−14 %, digitized)**
+>   — 입자 간 neck 성장이 R 을 정한다 = 우리 Holm `R = 1/(2σa)` 의 `a` 가 커지는 것의 연속체 관측. **방향 교차검증(frame[4]), 값 아님.**
+> - **살아 있는 관측 ② (기공 → 계면 접촉)**: 12/20 % 기공에서 고주파 절편 +48/+73 % (Bruggeman (1−ε)^1.5 예측의 1.23×) 이고 **호 폭(≈2 R_ct) 이 9.2 → 11.6/11.3 (+26 %)**
+>   — 기공이 Li/SE 계면 접촉분율을 ≈0.8 로 깎는다는 뜻 (`derived(ours)`, TREND). 우리 `eis_drt_ica.py` 의 R_ct = RT/(F i₀ a_spec) 배선과 같은 방향.
+> - ⛔ **"GB 는 minor" 인용 금지**: 그들은 GB 를 **두께 ≥ dx = 3.75 µm 의 상**으로 해상하고 σ_GB = 0.01 σ 를 줬는데 임피던스가 **단결정과 구별 불가**(둘 다 22.0→31.2 Ω cm²).
+>   `derived(ours)`: GB 분율 3 % 가 연속 막이면 직렬 ASR ≈ f_GB·L/σ_GB ≈ **66 Ω cm²** 가 나와야 한다 ⇒ Fig 3c 의 임계화된 GB 맵이 **끊긴 선분**이라 전류가 우회한 것
+>   = **표현 규약의 결론**이지 재료 성질이 아니다. 우리 랩 실측(Kim 2025: R_i,gb **25.6** vs R_i,bulk **9.3** Ω cm², 62 wt%) 이 정본이고 Cronau(r_SE) GB 인자는 그대로.
+> - ★ **CL-81 에 주는 것**: "계면을 해상된 얇은 상으로 넣는다" 는 처방의 **실패 사례** — 격자가 GB(nm) 를 못 풀고 임계화가 망을 끊으면 항을 넣고도 0 이 된다.
+>   ⇒ STEP3 에 계면 저항을 넣으려면 **SE–SE 면(face) 컨덕턴스 g = 2σa 형**(접촉망과 같은 층위) 이 격자-독립적이다. 해상-상 방식은 vox 0.4 → 0.15 µm 에서 원리적으로 불가.
+> - **앵커 후보(Li 쪽 칸)**: i₀(Li|LPSCl) **4.97 mA/cm²** → R_ct 5.17 Ω cm²/계면, C_dl **0.22 F/m² = 22 µF/cm²**, f_ct ≈ 1.4 kHz (`derived`).
+>   STEP4 half-cell 이 비워 둔 Li counter 과전압 칸. ⚠ i₀ "Exp" 출처 미기재 · C_dl 은 2차 인용([7]) → `rint_eis_anchors.csv` 등재 시 등급을 명시할 것 (pdf_verified 아님).
+> - ⛔ 크기 전이 금지 3중: 2D·실현 1개·시드 0 · 입자 반경 60 µm(실 LPSCl D50 1.5 µm 의 40 배 = 스케일 카툰) · SEI 존 150 µm(저자 명시 "exaggerated"; 586–599 Ω cm² 는 시연값).
+
+
 > ⭐⭐ **2026-09-11 추가 — [Xu23]: τ 가 갈리는 두 번째 축은 "측정 경로"가 아니라 "전도상 정의"다.**
 > (`papers/xu2023_realistic_am_shape_cgmd_calendering.md` §6-A; ⚠ **액체계 LIB · pore 전도** — 위상 반대, 대조용)
 > 바로 아래 [Ngandjong21] 블록은 *"같은 구조, 두 측정 경로(GeoDict Fick ↔ EIS-TLM)가 11–33 % 발산"* 이었다.
@@ -1654,6 +1678,21 @@
 
 
 ## C. 역학 / morphology — MPM 고유 (문헌 DEM은 형상 못 바꿈)
+
+> ⭐⭐ **2026-09-22 추가 — [Lee26-ESM] (우리 랩): 입자 *내부* 응력장이 균열 위치를 정한다 — 우리 A10 이 갖지 않은 절반.**
+> (`papers/lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging.md` §3·§7; ⚠ **액체계 LIB, NCM92 — 값 전이 금지, 형태·설계논리만**)
+> - **체인 (전부 stated)**: 3C 충전 → 분리막 쪽 우선 탈리튬(액체 c_e 구배 + 이온 옴) → LPC(12 µm 다결정) 의 Δc = c_center − c_surface **1.5 (분리막 쪽) vs 0.2 mmol cm⁻³ (집전체 쪽)**
+>   → 표면 von Mises **~300 vs ~60 MPa** → FIB-SEM 균열 면적분율 **3.4 vs 1.2 %**. SSC(3 µm 단결정) 는 무균열.
+> - **우리 층위 지도에서의 자리**: 그들 = **입자 내부 연속 응력장(Δc 구동), 접촉·소성·파괴·층간 계면 없음(선형탄성·이상 계면)**; 우리 A10 = **접촉 박리(Bucci CZM)** 만, 입자 내부 응력 없음;
+>   DEM Auerbach = 압밀 시 파괴. ⇒ 정확히 **상보** — "균열 위치(그들) + 접촉 손실(우리)" 를 합쳐야 R_ct(N) 이 닫힌다. STEP4 의 per-particle c(r) 로 Δc 프록시는 지금도 계산 가능(§G 축).
+> - ★ **설계 결론이 조성이 아니라 배치**: 같은 SSC 함량의 단층(5:5) 은 무효, 2:8 은 악화, **SSC-only 10 µm 상층(BLE-10)** 만 LPC 표면응력 <150 MPa · 유지율 62.4 → 76.2 % · 균열 ~1 %.
+>   SPC(소형 *다결정*) 상층은 실패 = 크기만으로 부족, **단결정성** 이 필요 (`jung2023_single_crystal_ncm_morphology`·`trevisanello2021` 의 ASSB SC-유리 방향과 일치).
+> - ⚠ **ASSB 로 옮길 때 바뀌는 것**: (i) 분리막 쪽 집중의 원인 항 — 액체 농도분극(Fig 2e) vs 우리 SE 망 옴(STEP4 2C: 이온 84–90 mV 지배, 전자 0.01–0.03 mV);
+>   (ii) 그들 D_s LPC 5×10⁻¹³ / SSC 1×10⁻¹⁴ m² s⁻¹(SSC 는 **가정**), i₀ 20 / 2 mA cm⁻²(SSC 는 **가정**) 는 액체 PC-빠름 밴드 — `docs/ncm_sc_poly_electrochem_anchors.md` §1 대로 ASSB 에선 역전, 이식 금지;
+>   (iii) AM 300 MPa 옆의 SE 는 항복(σ_y 0.15–0.30 GPa)해 하중을 재분배 — 액체계엔 없는 완화 경로(정성).
+> - ⛔ nanoindentation E_IT 5.17 / 6.02 GPa · H_IT 0.086 / 0.18 GPa(Fig S9, "cathodes") 는 **전극/입자 유효값** — 모델 E 191 GPa(NMC333 문헌값) 와 다른 양. E_AM 앵커로 쓰지 말 것;
+>   SSC/LPC 경도비 ≈2.1 만 ASSUMED 파괴문턱 비 후보. (우리 E_AM 140 / NCA 175 / 이 논문 191 = 출처-방법 산포, 결론 무영향 — AM 강체.)
+
 
 > ⭐⭐ **2026-09-11 추가 — [Xu23]: 이 축에 *제3 범주*가 생겼다.  "형상이 바뀌는 이산 입자계"**
 > (`papers/xu2023_realistic_am_shape_cgmd_calendering.md` §4-B; ⚠ 액체계 LIB, NMC111 AM)
@@ -3317,6 +3356,27 @@
     2. **Chouchane, Yao, Cronk, Zhang, Meng, *ACS Energy Lett.* 9 (2024) 4** — 이미 이 문서 §🎤 에
        "확보 1순위"로 등재돼 있던 그 논문.  Cronk 2026 의 모델링 절이 그것의 **ASSB Li–S 판**이다
        (같은 저자·같은 생성기·같은 FEM 골격) ⇒ **둘을 같이 보면 이 파이프라인이 닫힌다.**
+
+
+- **★★ 2026-09-22 — [Islam26] 이 열어 준 것 / 우리가 아직 못 하는 것** (`papers/islam2026_microstructure_resolved_impedance_lpscl_symmetric_cell.md`)
+  - **못 하는 것 ①: SE 층 *자체*의 미세구조(소결 neck · GB · SEI 상) 를 σ 에 넣는 것.** 우리 σ_ionic 은 복합양극 안의 SE 망만 다루고 SE 분리막 층은 균질 상수다.
+    그들은 phase-field 로 neck 성장을 만들고 그 효과(고주파 절편 −14 %) 를 옴 모델로 읽는다. ⇒ 흡수 후보: 우리 MPM 소성유동 침대(SE 형상변화) 위에 STEP3 를 돌려
+    **"neck(접촉면적) → σ" 의 우리 판**을 내는 것 — MPM 이 이미 가진 자유도이고, CL-81 의 "협착 미포함 상한" 라벨을 좁히는 길이다.
+  - **못 하는 것 ②: 계면 kinetics 를 σ 솔브에 붙여 EIS 를 통째로 계산하는 것.** 그들 옴 + BV + C_dl 은 Nyquist 를 직접 낸다; 우리는 STEP3(σ) · STEP4(BV) · `eis_drt_ica`(회로) 가
+    분리돼 있다. 통합 = **STEP3 격자 위에 BV 면 + C_dl 을 얹은 주파수 스윕** — STEP4 의 면 조립을 재사용하면 된다(새 물리 없음).
+  - **못 하는 것 ③: SEI 상.** STEP3/4 에 SEI 상이 없다. Li₂S 1e-3 / Li₃P 1e-2 / LiCl 3.54e-4 S/m(2차 인용값) 와 "Li₂S 부피분율 +1.2 %p → +3.4 Ω cm²" 는 SE 트랙 축 E 의 원장 후보(§F1).
+  - ⛔ 흡수하지 말 것: "GB minor"(§B 블록 — 표현 규약 산물) · 2D 스케일 카툰의 절대값 · ChatGPT 픽셀 분할(재현 불가).
+- **★★ 2026-09-22 — [Lee26-ESM] 이 열어 준 것 / 우리가 아직 못 하는 것** (`papers/lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging.md`)
+  - **못 하는 것 ①: 층상(z-배치) 설계 변수.** 우리 DEM/MPM bimodal 은 균질 혼합(P:S · AM%) 이고 A7 graded-z 는 기공률 구배뿐. 그들 실증: **같은 조성 단층은 무효, 상층 10 µm 배치가 효과.**
+    ⇒ **Phase 5(층상 복합양극) 의 첫 문제**로 채택 — STEP1 층별 조성 침대 → STEP3 σ 삼중항 → STEP4 3C 반응분포·CC 분율을 상층 두께 {5, 10, 15, 20 µm} 로 스윕.
+    ⚠ ASSB 에선 소립 SC 층이 SE 망 CN·percolation 을 바꾸므로 액체계의 "굴곡도 병목(BLE-15/20)" 과 다른 병목이 나올 수 있다 — 그 차이가 결과다(사전 예측으로 등록할 것).
+  - **못 하는 것 ②: 균열의 z-프로파일.** A10 `scripts/cycle_contact_ledger.py` 는 f_broken(N) · A_rel(N) 을 전체 합으로만 낸다. 흡수 = **z-빈 출력** → "분리막 쪽 / 집전체 쪽" 비
+    (그들 3.4 / 1.2 ≈ 2.9 는 액체계 — 형태 대조만, 표적 아님).
+  - **못 하는 것 ③: 입자 내부 응력장.** §C 블록 — STEP4 per-particle c(r) 에서 Δc 프록시는 지금 가능; 응력은 `--am-eigenstrain`(Cronk U1) 이 생겨야.
+  - **방법 훅**: Dubarry dV/dQ 열화모드 분해(SI Note 1, 전극 SOC = α·SOC_cell + β) 를 `eis_drt_ica.py` ICA 뒤에; R1–R4 등가회로(Table S3/S4: 300 cyc 후 R3+R4 SLE 21.6 vs BLE-10 13.8 Ω cm²) 는
+    `rint_cycle_traj` 의 LIB **형태** 앵커. `cycling_data_ingest.py` 게이트상 **liquid = FORM/METHOD-ONLY** — 절대값 학습 금지.
+  - **★ 문헌 확보 요청**: **C. Yuan, W. Lu, J. Xu, *Energy Storage Mater.* 60 (2023) 102834** (= 이 논문 [S3]/[49], 역학 정식화 ε = ε_el + ε_ch 의 원출처이며 제목이
+    **"Electrochemical-mechanical coupling failure mechanism of composite cathode in all-solid-state batteries"** = 우리 축 정면).
 
 
 ## G. AM 입자 **내부**(sub-particle) 미세구조 — 우리 축 **아래 한 칸**, 접점은 방법론뿐 (2026-08-25 신설)
