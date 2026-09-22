@@ -2,10 +2,10 @@
 title: Fitting Degeneracy (LLI/LAM 분리가능성)
 description: "full-cell 곡선 하나로 LLI·LAM_PE·LAM_NE 를 가를 수 있는가 — flat valley(데이터 한계)와 multimodal(최적화 난이도)의 구분"
 created: 2026-08-11
-updated: 2026-09-03
+updated: 2026-09-22
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -242,6 +242,45 @@ flat 방향의 비율이 "LAM_PE ≈ LAM_NE 는 수학" 가설의 직접 증거 
 이 페이지의 최악 축퇴가 사라진다.** 대신 `LAM_PE ↔ 접촉 손실`이 그 자리를 차지한다.
 물음과 수집 지침은 [[assb-contact-loss-vs-lampe]], 실측은
 `bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §1.
+
+## ★★ 다른 관측 영역에서 같은 축퇴가 **분야의 공식 문장**으로 인쇄돼 있다 (2026-09-22)
+
+이 페이지의 계보(OCV·용량 영역)는 [[mode-identifiability-unmeasured-lineage]] 가
+정리했듯 **축퇴를 세 번 인쇄하고도 한 번도 null 을 풀지 않았다.**
+**EIS 영역은 다르다** — `assb` 10호(Vadhva et al. 2021, *ChemElectroChem* 8, 1930,
+`raw/papers/vadhva2021_eis-for-assb-theory-methods.md`)는 그 분야의 **방법론 리뷰**
+이고, **비유일성을 명제로 적어 둔다** (전부 `[인쇄]`):
+
+> "**As no solution to an EIS spectrum is unique**, and **the inclusion of more
+> elements will tend to improve the fit** of the equivalent circuit model (ECM),
+> standard scientific modelling practice should be adhered to, i.e., **using the
+> simplest ECM with the fewest elements possible** and ensuring that physical and
+> chemical meaning is maintained."
+
+> "it is often challenging to **decipher how many time constants are present** in
+> a given dataset and their assignment can be **highly subjective**."
+
+> "**The non-uniqueness of an ECM solution** to an impedance spectrum means that
+> **information theory** can be used to rank various ECMs against each other, for
+> example, by the **Akaike information criterion (AIC)**."
+
+★ **세 가지가 이 페이지의 어휘와 정확히 대응한다**:
+
+| 이 페이지의 개념 | EIS 쪽의 같은 것 |
+|---|---|
+| **flat valley** (데이터가 방향을 구속 못 함) | **중첩된 시상수** — 원호 하나에 `R_b + R_gb`, 또는 `R_MF` 에 접촉 손실 + 계면상 |
+| **null 방향을 그려서 보인다** | **DRT** — 단 `[인쇄]` "mathematically **ill-posed**, requiring **regularization**" |
+| **모델 선택을 잔차로 하지 않는다** | `[인쇄]` "more elements **will tend to improve the fit**" → **AIC** |
+| **여기(excitation)를 늘려 깬다** | **저온으로 시상수 벌리기 · 가압으로 큰 항 제거 · 대칭셀 쌍 · 다변수(온도·압력·SoC) 시험** |
+
+`[해석]` **그러므로 "축퇴를 문헌이 아예 모른다" 는 진술은 영역 의존이다.**
+용량·OCV 영역(이 페이지, 액체셀 17/17 편)에서는 아무도 쓰지 않았지만,
+**EIS 영역에서는 표준 문장이 있다 — 다만 거기서도 누구도 재지 않았다**
+(10호에 `identifiab*`·`uncertaint*`·`confidence`·`condition number`·`error bar`
+**전수 0 회**, `assb` **10/10 편이 0**). ★ **AIC 조차 `[인쇄]` "only recently been
+applied to simulated immittance data" 이고 ASB 실험 적용은 0 이다.**
+→ 축퇴를 어디에서 어떻게 깨는지는 [[assb-lampe-contact-product-degeneracy]] ·
+[[assb-contact-loss-vs-lampe]].
 
 ## 이 개념이 속한 논지
 

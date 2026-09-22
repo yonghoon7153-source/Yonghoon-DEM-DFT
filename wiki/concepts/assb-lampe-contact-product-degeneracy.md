@@ -147,6 +147,58 @@ physical significance** of the parameters" 라고 쓴다.
 ★ **마지막 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
 
+## ⚠⚠ EIS 는 대가를 받는다 — 두 번째 축퇴가 따라 들어온다 (2026-09-22, `assb` 10호)
+
+위 처방표의 "다중 SOC EIS" 는 **곱을 주파수로 가르자**는 것이었다. 그런데
+`assb` 10호(Vadhva et al. 2021, *ChemElectroChem* 8, 1930 — 이 분야 **유일한 EIS
+방법론 리뷰**)를 넣고 보면 **그 통로에 다른 축퇴가 이미 앉아 있다.**
+
+**(가) 같은 저항에 두 기구가 귀속된다.** In|LGPS|LCO 완전지의 SoC 분해 EIS 에서
+중주파 **양극 계면 저항**의 증가를 원전이 이렇게 설명하고 리뷰가 그대로 옮긴다:
+
+> `[인쇄]` "attributed to **loss of interfacial contact in the composite cathode
+> due to volumetric expansion** **and** the **formation of a decomposition layer
+> on exposed LCO**"
+
+`[해석]` **접촉 손실**(우리의 `θ_AM`)과 **계면상 성장**(진짜 화학 열화)이
+**하나의 `R_MF` 안에서 합쳐진다.** 가르는 관측은 원전에도 리뷰에도 없다.
+
+**(나) 그리고 EIS 의 역문제도 유일하지 않다.** 같은 리뷰 §2.3 (`[인쇄]`):
+- "**As no solution to an EIS spectrum is unique**"
+- "**the inclusion of more elements will tend to improve the fit** of the
+  equivalent circuit model" → **적합 잔차는 모델 선택의 근거가 못 된다**
+- "it is often challenging to **decipher how many time constants are present** …
+  their assignment can be **highly subjective**"
+- DRT 로 개수를 정하려 해도 `[인쇄]` "data inversion is **mathematically
+  ill-posed, requiring regularization methods**" 이고 "**very sensitive to
+  experimental errors**"
+
+**(다) 분해 가능한 원소의 개수 자체가 조건의 함수다.** 같은 리뷰가 다섯 곳에서
+따로 보인다 — `[도표]` 황화물 5 종 중 **3 종만** 입계가 분해되고(같은 −130 °C),
+LGPS 는 **실온에서 원호가 0 개**이며, Li|LLZO|Li 는 **400 MPa 에서 `R_int` 가
+사라져야 `GB` 가 보이고**, 폴리머는 **60 °C 위에서 상경계 임피던스가 소멸**하며,
+`[인쇄]` LiPON 박막은 **노화가 RQ 를 3 → 4 개로 바꾼다**(새 RQ 의 귀속은
+`[인쇄]` "Li|LiPON interface **and/or** in the LCO bulk").
+
+```
+        시간·용량 영역 축퇴  ×  주파수 영역 축퇴  =  실제로 풀어야 할 문제
+        (A_eff·ε_p/R_s)         (R_MF = 접촉 + 계면상)
+```
+
+★ **그러므로 처방표의 EIS 항목은 이렇게 고쳐 읽는다**: **EIS 단독으로는 안 되고,
+"한 기구만 되돌리는 개입" 과 짝지어야 한다** — [[assb-pressure-reapplication-separation-test]]
+의 `P↑`(접촉만 복원) 또는 상보 **대칭셀 쌍**(전극별 분리). 10호가 드는 유일한
+"전극 귀속을 실제로 확정한" 사례도 주파수 추론이 아니라 **대칭셀 둘을 같은 조건으로
+잰 것**이다(He 2017, LFP|PEM|LFP ↔ Li|PEM|Li).
+
+★★ **보너스 — `P↑` 는 분해능 연산자이기도 하다.** `[도표]` 400 MPa 에서 `R_int` 가
+사라지자 그 뒤에 숨어 있던 `GB` 원호가 드러난다. **압력은 `θ_AM` 을 되돌릴 뿐
+아니라 관측 가능한 시상수의 개수를 바꾼다** → [[assb-stack-pressure-operating-window]].
+
+⚠ **10호는 리뷰다** — 1차 측정 0, `contact loss` 0 회(위 인용구가 전부),
+`identifiab*`·`uncertaint*` 전수 0 회. **재지 않았다.** 위에서 쓰는 것은 수치가
+아니라 **방법론적 주장**이다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **원전의 결론(양극 활물질 손실이 지배적)이 틀렸다고 주장하지 않는다.**
@@ -158,3 +210,7 @@ physical significance** of the parameters" 라고 쓴다.
 - **이 관계가 다른 ASSB 모델에도 있다고 주장하지 않는다.** 근거는 **1 편**이다
   (`evidenceScope: single-source`). 다만 `a_s = 3ε/R` 과 `j = i/(a_s·A·L)` 은
   P2D 계열의 표준형이라 **같은 구조가 널리 반복될 가능성이 높다** — 확인 안 됨.
+- ★ **2026-09-22 추가**: 위 §"EIS 는 대가를 받는다" 는 **10호가 이 곱 축퇴를
+  확인했다는 뜻이 아니다.** 10호는 `A_eff`·`ε_p`·`R_s` 를 언급조차 하지 않는다.
+  주장하는 것은 **"주파수 영역에 별개의 축퇴가 하나 더 있고, 그것이 이 페이지의
+  처방 중 한 줄을 약화시킨다"** 는 것뿐이다. 두 축퇴는 **독립이다.**

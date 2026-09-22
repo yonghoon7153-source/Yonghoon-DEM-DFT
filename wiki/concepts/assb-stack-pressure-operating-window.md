@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md]
+sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -245,6 +245,57 @@ short-circuiting increased upon application of high pressures exceeding 4 MPa" �
 "**conical spring**" 이라고 적어 **정하중 쪽**임을 시사하지만 계측값이 없다.
 
 `[해석]` **압력→용량 곡선은 `assb` 7/7 편이 여전히 0 이다.**
+
+## ★★ 2026-09-22 (`assb` 10호 Vadhva 2021, **방법론 리뷰**) — 이력의 **독립 재현**과 **새 역할**
+
+`raw/papers/vadhva2021_eis-for-assb-theory-methods.md` 는 압력을 **본체로 다루지
+않는다** (`MPa` 본문 **2 회**). 그런데 재인용 두 자리가 이 페이지에 정확히 걸린다.
+
+**(가) 이력(hysteresis)의 산화물 독립 재현.** Krauskopf 2019 (*ACS AMI* 11, 14463)
+의 Li|LLZO|Li 대칭셀에 대해 `[인쇄]`:
+> "with careful surface preparation and handling under inert gas to avoid Li₂CO₃
+> formation, **sufficient applied pressure reduced the interfacial impedance to a
+> negligible value (<1 Ω cm²)**, **which remained after the pressure was removed**."
+
+`[해석]` 5호(Doux 2020)가 **황화물**에서 잡은 "처녀 5 MPa 110 Ω ↔ 25 MPa 를 찍고
+내려온 5 MPa ≈50 Ω" 과 **같은 현상이 산화물에서 나온다.** 서로 다른 전해질 계·
+다른 연구실이므로 **`θ(P)` 가 함수가 아니라 경로 의존 상태**라는 이 페이지의 결론
+②가 **단일 출처에서 벗어난다.** ⚠ 단 10호는 **재인용**이고 원전(ref. 28)을 받아야
+한다 — 이 페이지의 수치로 `<1 Ω cm²` 를 쓰지 않는다.
+
+**(나) ★★★ 압력의 세 번째 역할: 관측 분해능 연산자.**
+`[도표]` Fig. 11a (Krauskopf 재수록, Li|LLZO|Li, 축 Ω cm²): 저압에서는
+**Bulk 원호(0 → ≈400)** 와 **Int 원호(≈400 → ≈950, 즉 `R_int` ≈550 Ω cm²)** 둘만
+보인다. "Increasing force" 화살표를 따라 Int 가 줄고, **인셋의 400 MPa 에서는
+`R_int` 가 사실상 사라지면서 그 뒤에 숨어 있던 `GB` 원호(≈410 → 437, 약 27 Ω cm²)가
+드러난다.**
+
+```
+   저압:   [ Bulk ][      Int (거대)      ]        → 분해되는 RC 2 개
+   400 MPa:[ Bulk ][GB]                           → 분해되는 RC 2 개, 그러나 GB 가 새로 보인다
+```
+
+`[해석]` **압력은 `θ_AM` 을 되돌릴 뿐 아니라 관측 가능한 시상수의 개수를 바꾼다.**
+→ [[assb-pressure-reapplication-separation-test]] 의 `P↑` 연산자에 **두 번째 용법**이
+붙는다: 큰 시상수를 지워서 **그 뒤의 것을 식별 가능하게 만든다.**
+이것은 10호가 다른 곳에서 든 "저온으로 `R_gb` 를 벌려 동정한 뒤 실온 적합의 구속으로
+되가져온다"(Bron 2016)와 **같은 조작의 압력 판**이고,
+[[assb-lampe-contact-product-degeneracy]] 가 요구하는 "여기를 늘려 축퇴를 깬다" 의
+실물 사례다.
+
+**(다) ⚠ 상한은 여전히 재료의 함수다.** Fig. 11a 의 **400 MPa** 는 5호의
+`[인쇄]` "75 MPa 도금 전 기계적 단락"(Li|황화물)의 **5.3 배**다. **LLZO 는 강성
+세라믹**이고 5호는 **무른 황화물**이다 — 이 페이지의 기존 경고("상한은 음극·전해질
+재료의 함수")와 **일치**하며, 두 숫자를 같은 축에 놓고 비교하면 안 된다.
+
+**(라) 그리고 리뷰가 압력을 ECM 구축의 표준 축으로 올린다.** `[인쇄]` 제언 2:
+"Further development and consistent adoption of DRT analysis, **in addition to
+multi-variable (temperature, pressure and SoC) testing for equivalent circuit
+modelling**."
+`[해석]` 8호(Li 2026)가 BMS 쪽에서 `[인쇄]` "pressure-dependent impedance models" 을
+요구한 것과 **같은 요구가 측정 방법론 쪽에서도 나온다.**
+
+⚠ **압력 → 용량 곡선은 `assb` 10/10 편이 여전히 0 이다.**
 
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
