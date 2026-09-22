@@ -1416,6 +1416,7 @@ def _activation_out(result) -> ActivationEnergyOut:
         activation_energy_ev=result.activation_energy_ev,
         stderr_ev=result.stderr_ev, basis=result.basis,
         points_used=result.points_used, reason=result.reason,
+        warnings=list(result.warnings),
         fit=fit, inverse_temperature=inverse, log_sigma=logs)
 
 

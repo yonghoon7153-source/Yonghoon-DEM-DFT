@@ -208,18 +208,48 @@ def test_the_crossing_is_found_by_interpolating_between_two_points():
     assert got == pytest.approx(5.0, rel=1e-12)
 
 
-def test_only_the_upward_crossing_counts_so_the_wiring_is_not_read_as_cell():
-    """고주파의 유도성 구간에서 내려가는 교차를 잡으면 배선을 전해질로 읽는다.
+def test_the_crossing_is_the_end_of_the_leading_inductive_run():
+    """배선 인덕턴스는 **주파수 맨 위**에 있다.  거기서 올라오는 자리가 교점이다.
 
-    실측 파일의 7 MHz 에서 ``-Im`` 은 -82.9 Ω 다 -- 배선 인덕턴스이지 셀이
-    아니다.
+    실측 파일의 7 MHz 에서 ``-Im`` 은 -82.9 Ω 다 -- 배선이지 셀이 아니다.
     """
     frequency = np.array([7e6, 1e6, 1e5, 1e4])
-    stored_im = np.array([5.0, -3.0, 1.0, 8.0])    # 내려갔다가 다시 올라간다
+    stored_im = np.array([-5.0, -3.0, 1.0, 8.0])   # 유도성으로 시작해 올라간다
     real = np.array([1.0, 3.0, 5.0, 9.0])
     got = real_axis_crossing(frequency, real, -stored_im)
-    # 내려가는 교차(1→-3, Re≈2.25)가 아니라 올라가는 교차(-3→1, Re=4.5).
+    # -3 에서 1 로 지나므로 3 과 5 사이의 3/4 자리 = 4.5.
     assert got == pytest.approx(4.5, rel=1e-12)
+
+
+def test_noise_in_the_blocking_tail_is_not_a_crossing():
+    """이 시험이 2026-09-22 의 실측 사고를 막는다.
+
+    블로킹 대칭셀의 스윕은 유도성 구간이 안 찍히는 일이 잦다 (고주파 끝에서
+    이미 ``-Im > 0``).  그런데 예전 코드는 스윕 **전체**에서 올라가는 교차를
+    찾아서, 꼬리 깊숙한 곳의 잡음 점 하나를 전해질 저항으로 읽었다.
+
+    실측 `B11_activationE_C01` 의 0 °C 스윕에서 **111400 Ω** 이 나왔고 (아크가
+    아니라 꼬리다), 그 때문에 저항이 온도에 대해 거꾸로 갔다 -- 20 °C 79.89 Ω
+    인데 10 °C 25.19 Ω.  Arrhenius 직선의 R² 가 0.27 이었다.
+    """
+    frequency = np.logspace(np.log10(7e6), 1.0, 40)
+    real = np.linspace(15.5, 120000.0, 40)
+    stored_im = np.linspace(1.0, 60000.0, 40)      # 처음부터 용량성이다
+    stored_im[25] = -0.4                           # 꼬리 한복판의 잡음 하나
+    # 예전에는 여기서 76928 Ω 이 나왔다.
+    assert real_axis_crossing(frequency, real, -stored_im) is None
+
+
+def test_a_sweep_that_starts_capacitive_has_no_visible_crossing():
+    """유도성 구간이 안 찍혔으면 교점은 **볼 수 없다**.
+
+    없는 것을 지어내느니 비운다 (§0.4).  비어 있으면 사람이 ZView 에서 읽어
+    적지만, 잘못된 수가 적혀 있으면 아무도 다시 안 본다.
+    """
+    frequency = np.array([7e6, 1e6, 1e5, 1e4])
+    real = np.array([15.6, 15.8, 16.1, 16.4])
+    stored_im = np.array([0.98, 2.12, 3.31, 4.58])   # 전부 양수
+    assert real_axis_crossing(frequency, real, -stored_im) is None
 
 
 def test_no_crossing_is_none_rather_than_an_end_point():
@@ -238,3 +268,58 @@ def test_the_points_may_arrive_in_either_frequency_order():
     descending = real_axis_crossing(frequency, real, -stored_im)
     ascending = real_axis_crossing(frequency[::-1], real[::-1], -stored_im[::-1])
     assert descending == pytest.approx(ascending, rel=1e-12)
+
+
+# --- 값은 나왔는데 먼저 봐야 할 것 (2026-09-22) -----------------------------
+
+#: 실측 `B11_activationE_C01`.  교점 검출이 꼬리의 잡음을 집어서 나온 저항들.
+#: 이 표가 화면에서 `0.415 eV` 라는 결과로 보였다.
+BAD_READING_C = [60, 50, 40, 30, 20, 10, 0, -10, -20]
+BAD_READING_OHM = [7.372, 7.285, 8.824, 15.44, 79.89, 25.19, 111400, 56.93, 84.40]
+
+
+def bad_sigmas():
+    return [conductivity_ms_cm(r, thickness_mm=0.79, area_cm2=0.7854)
+            for r in BAD_READING_OHM]
+
+
+def test_a_series_that_goes_backwards_in_temperature_is_called_out():
+    """온도가 내려가면 이온전도도는 **반드시** 내려간다.
+
+    거꾸로 가는 구간이 있으면 그 줄의 저항을 잘못 읽은 것이다.  Arrhenius
+    직선은 그래도 그려지고 R² 만 조용히 낮아진다 -- 그 침묵이 0.415 eV 를
+    결과로 만들었다.
+    """
+    got = activation_energy(BAD_READING_C, bad_sigmas())
+    assert got.activation_energy_ev is not None      # 값을 감추지는 않는다
+    backwards = [one for one in got.warnings if "안 내려가는" in one]
+    assert len(backwards) == 1
+    # 어느 구간인지 짚어야 다시 읽을 수 있다.
+    assert "20→10 °C" in backwards[0]
+    assert "0→-10 °C" in backwards[0]
+
+
+def test_a_line_that_does_not_explain_the_points_says_so():
+    got = activation_energy(BAD_READING_C, bad_sigmas())
+    assert got.fit is not None and got.fit.r_squared < 0.3
+    weak = [one for one in got.warnings if "R²" in one]
+    assert len(weak) == 1
+    assert "값으로 쓸 수 없습니다" in weak[0]
+
+
+def test_a_good_table_says_nothing_at_all():
+    """할 일이 없다는 문장은 소음이다 — 멀쩡하면 조용해야 한다."""
+    temperatures, sigmas = lab_columns()
+    got = activation_energy(temperatures, sigmas)
+    assert got.warnings == ()
+    assert got.fit is not None and got.fit.r_squared > 0.99
+
+
+def test_one_backwards_step_alone_is_enough_to_say_it():
+    """R² 가 멀쩡해도 거꾸로 간 구간은 말한다 — 둘은 다른 증상이다."""
+    temperatures, sigmas = lab_columns()
+    nudged = list(sigmas)
+    nudged[1] = nudged[0] + 0.01          # 50 °C 가 60 °C 보다 높다
+    got = activation_energy(temperatures, nudged)
+    assert any("안 내려가는" in one for one in got.warnings)
+    assert got.fit is not None and got.fit.r_squared > 0.9

@@ -29,6 +29,7 @@ import {
   compareCyclesWideTsv,
   dqdvWideTsv,
   pseudoOcvWideTsv,
+  seriesWideTsv,
   tsvColumns,
   skippedDiffusionPoints,
   skippedForCopy,
@@ -575,7 +576,7 @@ const ROW = (over: Partial<ConductivityRow> = {}): ConductivityRow => ({
 
 const ACTIVATION: ActivationEnergy = {
   activation_energy_ev: 0.328, stderr_ev: 0.0103, basis: 'sigma',
-  points_used: 2, reason: '', fit: null,
+  points_used: 2, reason: '', warnings: [], fit: null,
   inverse_temperature: [3.0017, 3.9502], log_sigma: [-4.6473, -8.0788],
 }
 
@@ -619,5 +620,49 @@ describe('Arrhenius 직선 클립보드', () => {
   it('기준이 σT 면 머리글도 그렇게 적는다', () => {
     const tsv = arrheniusTsv({ ...ACTIVATION, basis: 'sigma_t' })
     expect(tsv.split('\n')[0]).toBe('1000/T(1/K)\tln sigma*T')
+  })
+})
+
+//: 온도 스윕은 60 °C 에서 내려가며 재기도 하고 -20 °C 에서 올라가며 재기도
+//  하는데, 논문 그림의 범례 차례는 그것과 따로 정해진다.  Origin 에서 열을
+//  손으로 옮겨 담는 것이 그 화면의 제일 잦은 잔일이라 뒤집은 판을 함께 준다.
+describe('스윕 차례를 뒤집어 내보내기', () => {
+  const pair = (label: string, x: number[], y: number[]) => ({ label, x, y })
+
+  it('열 묶음의 차례만 뒤집히고 각 열의 내용은 그대로다', () => {
+    const series = [
+      pair('#1', [1, 2], [10, 20]),
+      pair('#2', [3, 4], [30, 40]),
+      pair('#3', [5, 6], [50, 60]),
+    ]
+    const head = { x: 'Z′ (Ohm)', y: '-Z″ (Ohm)' }
+    const forward = seriesWideTsv(series, head).split('\n')
+    const backward = seriesWideTsv([...series].reverse(), head).split('\n')
+
+    // 같은 줄이 열 묶음만 뒤집힌 채로 있어야 한다.
+    expect(forward).toContain('1\t10\t3\t30\t5\t50')
+    expect(backward).toContain('5\t50\t3\t30\t1\t10')
+    expect(forward).toContain('2\t20\t4\t40\t6\t60')
+    expect(backward).toContain('6\t60\t4\t40\t2\t20')
+    // 줄 수는 같다 — 뒤집는 것이 점을 더하거나 빼지 않는다.
+    expect(backward.length).toBe(forward.length)
+  })
+
+  it('뒤집어도 이름 줄이 열과 같이 따라간다', () => {
+    const series = [pair('60 °C', [1], [10]), pair('-20 °C', [2], [20])]
+    // `seriesWideTsv` 가 각 곡선의 `label` 로 이름 줄을 만든다.
+    const lines = seriesWideTsv([...series].reverse(),
+                                { x: 'Z′', y: '-Z″' }).split('\n')
+    // 이름 줄이 있으면 뒤집힌 차례와 같아야 한다 — 어긋나면 그림의 범례가
+    // 다른 곡선을 가리킨다.
+    const named = lines.find((one) => one.includes('-20 °C'))
+    if (named) expect(named.indexOf('-20 °C')).toBeLessThan(named.indexOf('60 °C'))
+  })
+
+  it('원본 배열을 건드리지 않는다 — 화면은 그대로 있어야 한다', () => {
+    const series = [pair('#1', [1], [10]), pair('#2', [2], [20])]
+    const before = series.map((one) => one.label)
+    seriesWideTsv([...series].reverse(), { x: 'x', y: 'y' })
+    expect(series.map((one) => one.label)).toEqual(before)
   })
 })

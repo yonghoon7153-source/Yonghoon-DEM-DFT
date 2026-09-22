@@ -116,12 +116,17 @@ export function SymCellDetail() {
 
       <MetricBand>
         <Metric label="스윕" value={head.sweeps} />
+        {/* **경고가 있으면 흐리게 적는다.**  R² 0.27 짜리 직선에서 나온
+            0.415 eV 가 여기 또렷하게 앉아 있으면 그냥 답으로 읽히고, 그대로
+            슬라이드로 넘어간다 (§0.4).  값을 감추지는 않는다 — 감추면 화면이
+            고장 난 줄 안다. */}
         <Metric
           label="활성화에너지"
           value={activation.activation_energy_ev === null
             ? '—'
             : `${ev(activation.activation_energy_ev)} eV`}
-          muted={activation.activation_energy_ev === null}
+          muted={activation.activation_energy_ev === null
+                 || activation.warnings.length > 0}
         />
         <Metric
           label="직선에 쓴 점"
@@ -257,6 +262,11 @@ export function SymCellDetail() {
           {activation.reason ? (
             <Alert kind="warn">{activation.reason}</Alert>
           ) : null}
+          {/* 값은 나왔는데 먼저 봐야 할 것.  그림 **위**에 둔다 — 밑에 두면
+              그림을 보고 수긍한 뒤에 읽게 된다. */}
+          {activation.warnings.map((one) => (
+            <Alert kind="warn" key={one}>{one}</Alert>
+          ))}
           <div className="tiny dim" style={{ marginBottom: 8 }}>
             {basisLabel(activation.basis)} · 기울기에 −1000·k<sub>B</sub> 를 곱한 것이
             활성화에너지입니다. 같은 점을 다른 기준으로 맞추면 다른 수가 나오므로

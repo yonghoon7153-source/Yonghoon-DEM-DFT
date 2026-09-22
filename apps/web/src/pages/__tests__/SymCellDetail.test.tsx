@@ -44,7 +44,7 @@ function conductivity(over: Partial<ScanConductivity> = {}): ScanConductivity {
     activation: {
       activation_energy_ev: null, stderr_ev: null, basis: 'sigma',
       points_used: 0, reason: '온도와 이온전도도가 모두 적힌 스윕이 둘 이상이어야 합니다',
-      fit: null, inverse_temperature: [], log_sigma: [],
+      warnings: [], fit: null, inverse_temperature: [], log_sigma: [],
     },
     ...over,
   }
@@ -193,7 +193,7 @@ describe('대칭셀 상세', () => {
                       resistance_source: 'typed' })],
       activation: {
         activation_energy_ev: 0.3284, stderr_ev: 0.0103, basis: 'sigma',
-        points_used: 3, reason: '',
+        points_used: 3, reason: '', warnings: [],
         fit: { slope: -3.80724, intercept: 7.01784, slope_stderr: 0.11916,
                intercept_stderr: 0.4115, n_points: 3, dof: 1, rss: 0.0837,
                pearson_r: -0.99659, r_squared: 0.99319, adj_r_squared: 0.99222,
@@ -214,5 +214,70 @@ describe('대칭셀 상세', () => {
     // 저항이 어디서 왔는지는 **줄마다** 적힌다 — 한 열에 섞이면 나중에
     // 그 표를 보는 사람이 손으로 읽은 것과 맞춘 것을 가를 수 없다.
     expect(screen.getAllByText('적음')).toHaveLength(3)
+  })
+})
+
+//: 실측 2026-09-22 의 화면.  R² 0.27 짜리 직선에서 나온 0.415 eV 가 맨 위에
+//  또렷하게 앉아 있었고, R² 는 다른 칸에 따로 적혀 있어서 둘을 이어 보지 않으면
+//  그냥 답으로 읽혔다 — 그리고 그 숫자가 슬라이드로 넘어간다.
+describe('대칭셀 상세 — 값은 나왔는데 먼저 봐야 할 것', () => {
+  beforeEach(() => window.localStorage.clear())
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
+  const withWarnings = conductivity({
+    missing: [],
+    activation: {
+      activation_energy_ev: 0.4149, stderr_ev: 0.25, basis: 'sigma',
+      points_used: 9, reason: '',
+      warnings: [
+        '온도가 내려가는데 이온전도도가 안 내려가는 구간이 3개 있습니다 '
+        + '(60→50 °C, 20→10 °C, 0→-10 °C) — 그 온도의 저항을 다시 읽어 주세요',
+        '직선이 점들을 설명하지 못합니다 (R² = 0.270) — 이 활성화에너지는 '
+        + '아직 값으로 쓸 수 없습니다',
+      ],
+      fit: { slope: -4.81, intercept: 10.2, slope_stderr: 2.9,
+             intercept_stderr: 9.9, n_points: 9, dof: 7, rss: 12.9,
+             pearson_r: -0.52, r_squared: 0.270226, adj_r_squared: 0.166,
+             slope_t: -1.6, slope_p: 0.15, intercept_t: 1.0,
+             intercept_p: 0.34, f_value: 2.6, f_p: 0.15 },
+      inverse_temperature: [3.0, 3.2, 3.4], log_sigma: [-4.3, -5.1, -6.0],
+    },
+  })
+
+  it('경고를 그림 위에 적는다', async () => {
+    draw(withWarnings)
+    expect(await screen.findByText(/안 내려가는 구간이 3개/)).toBeInTheDocument()
+    expect(screen.getByText(/값으로 쓸 수 없습니다/)).toBeInTheDocument()
+  })
+
+  //: 값을 감추지는 않는다 — 감추면 화면이 고장 난 줄 안다.  다만 결과처럼
+  //  또렷하게 두지 않는다.
+  it('값은 그대로 적되 결과처럼 또렷하게 두지 않는다', async () => {
+    draw(withWarnings)
+    // 글자는 span 안에 있고 `muted` 는 그 부모(`.value`)에 붙는다.
+    const value = await screen.findByText('0.415 eV')
+    expect(value).toBeInTheDocument()
+    expect(value.parentElement?.className).toMatch(/muted/)
+  })
+
+  it('경고가 없으면 또렷하게 둔다', async () => {
+    draw(conductivity({
+      missing: [],
+      activation: {
+        activation_energy_ev: 0.3284, stderr_ev: 0.0103, basis: 'sigma',
+        points_used: 9, reason: '', warnings: [],
+        fit: { slope: -3.81, intercept: 7.0, slope_stderr: 0.12,
+               intercept_stderr: 0.41, n_points: 9, dof: 7, rss: 0.084,
+               pearson_r: -0.997, r_squared: 0.99318, adj_r_squared: 0.992,
+               slope_t: -31.9, slope_p: 7.6e-9, intercept_t: 17.1,
+               intercept_p: 5.8e-7, f_value: 1019, f_p: 7.6e-9 },
+        inverse_temperature: [3.0, 3.2, 3.4], log_sigma: [-4.6, -5.1, -5.9],
+      },
+    }))
+    const value = await screen.findByText('0.328 eV')
+    expect(value.parentElement?.className ?? '').not.toMatch(/muted/)
   })
 })

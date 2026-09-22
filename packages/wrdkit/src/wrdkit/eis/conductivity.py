@@ -110,6 +110,14 @@ class ActivationEnergy:
     #: 직선에 실제로 들어간 점의 수.
     points_used: int
     reason: str = ""
+    #: 값은 나왔지만 **믿을 근거가 약한** 자리들.  `reason` 과 다르다: 저쪽은
+    #: "값이 없다" 이고 이쪽은 "값은 있는데 이것부터 보라" 다.
+    #:
+    #: 이 칸이 생긴 이유 (실측 2026-09-22): R² 가 0.27 인 직선에서 나온
+    #: 0.415 eV 가 화면 맨 위에 결과처럼 앉아 있었다.  R² 는 다른 칸에 따로
+    #: 적혀 있어서, 둘을 이어 보지 않으면 그냥 답으로 읽힌다 -- 그리고 그
+    #: 숫자가 슬라이드로 넘어간다 (§0.4).
+    warnings: tuple[str, ...] = ()
     #: 직선을 그린 두 열 — x = 1000/T (K⁻¹), y = ln σ (또는 ln σT).  화면이
     #: 다시 계산하지 않게 함께 낸다: 계산이 두 군데 있으면 언젠가 갈라진다.
     x: tuple[float, ...] = ()
@@ -189,8 +197,52 @@ def activation_energy(temperature_c, sigma_ms_cm, *,
         reason="" if fit.slope < 0 else
                "기울기가 양수입니다 — 온도가 높을수록 전도도가 낮게 적혀 "
                "있습니다. 온도 순서를 확인해 주세요",
+        warnings=_activation_warnings(temperatures, sigmas, fit),
         x=tuple(x), y=tuple(y),
     )
+
+
+#: 직선이 점들을 설명한다고 보기 어려운 R².
+#:
+#: 실측 전해질은 0.99 위에서 논다 (랩 슬라이드가 0.993).  0.9 는 넉넉히 잡은
+#: 값이고, 그 아래로 내려가면 그것은 "조금 흩어졌다" 가 아니라 **점들이 직선이
+#: 아니다** 이다 -- 보통 저항을 잘못 읽은 스윕이 섞인 것이다.
+_WEAK_R_SQUARED = 0.9
+
+
+def _activation_warnings(temperature_c, sigma_ms_cm,
+                         fit: LinearFit) -> tuple[str, ...]:
+    """값은 나왔는데 **먼저 봐야 할 것**이 있으면 그것을 적는다.
+
+    둘 다 값싸고 결정적인 검사다.  둘 다 통과하면 조용하다 -- 할 일이 없다는
+    문장은 소음이다.
+    """
+    out: list[str] = []
+
+    # 1) 온도가 내려가면 전도도는 **반드시** 내려간다.  거꾸로 가는 구간이
+    #    있으면 그 줄의 저항을 잘못 읽은 것이다 (실측 2026-09-22: 20 °C 에서
+    #    79.89 Ω 인데 10 °C 에서 25.19 Ω 이었다 -- 교점 검출이 꼬리의 잡음을
+    #    집었다).  Arrhenius 직선은 그래도 그려지고 R² 만 조용히 낮아진다.
+    pairs = [(float(t), float(s))
+             for t, s in zip(temperature_c, sigma_ms_cm, strict=True)
+             if t is not None and s is not None and s > 0]
+    pairs.sort(key=lambda one: one[0], reverse=True)      # 높은 온도부터
+    backwards = [(pairs[i - 1][0], pairs[i][0])
+                 for i in range(1, len(pairs))
+                 if pairs[i][1] >= pairs[i - 1][1]]
+    if backwards:
+        where = ", ".join(f"{high:g}→{low:g} °C" for high, low in backwards[:4])
+        out.append(
+            f"온도가 내려가는데 이온전도도가 안 내려가는 구간이 "
+            f"{len(backwards)}개 있습니다 ({where}) — 그 온도의 저항을 다시 "
+            f"읽어 주세요")
+
+    # 2) 직선이 점들을 설명하는가.
+    if fit.r_squared is not None and fit.r_squared < _WEAK_R_SQUARED:
+        out.append(
+            f"직선이 점들을 설명하지 못합니다 (R² = {fit.r_squared:.3f}) — "
+            f"이 활성화에너지는 아직 값으로 쓸 수 없습니다")
+    return tuple(out)
 
 
 def real_axis_crossing(frequency_hz, z_re, z_im) -> float | None:
@@ -216,8 +268,29 @@ def real_axis_crossing(frequency_hz, z_re, z_im) -> float | None:
     ``-Im`` 을 음수로 끌고 내려가 있다가 (실측 7 MHz 에서 -82.9 Ω) 아크가 시작
     되며 위로 지난다.  내려가는 교차를 잡으면 배선을 전해질로 읽게 된다.
 
-    보간은 두 점 사이 선형이다.  교차가 없으면 (스윕 전체가 유도성이거나 전체가
-    용량성이면) ``None``.
+    **그 교차는 주파수 맨 위의 연속된 유도성 구간 끝에만 있다.**  그 뒤로는
+    아무리 0 을 지나도 전해질 저항이 아니다 -- 블로킹 꼬리의 잡음이다.
+    처음에는 스윕 **전체**에서 올라가는 교차를 찾았고, 그래서 이런 일이 났다
+    (실측 2026-09-22, `B11_activationE_C01`):
+
+    ======  ====  ==========  ===============================================
+    스윕    온도  낸 값       실제
+    ======  ====  ==========  ===============================================
+    5       20 °C   79.89 Ω   앞쪽 점들로 외삽하면 15.4 Ω (5배)
+    7        0 °C  111400 Ω   꼬리 깊숙한 곳의 잡음 점 하나
+    ======  ====  ==========  ===============================================
+
+    그 결과 저항이 온도에 대해 **거꾸로** 갔다 (20 °C 79.89 Ω 인데 10 °C 25.19 Ω).
+    합성으로 재현하면, 꼬리 한복판에 ``-Im`` 이 0 아래로 내려간 점 **하나**만
+    있어도 76928 Ω 이 나온다.
+
+    그래서 이제 **맨 위부터 이어진 유도성 구간**만 본다.  가장 높은 주파수의
+    점이 이미 용량성이면 (``-Im > 0``) 유도성 구간이 이 스윕에 안 찍힌 것이고,
+    교점은 **볼 수 없다** -- 그때는 ``None`` 이다.  없는 것을 지어내느니 비우는
+    편이 낫다 (§0.4): 비어 있으면 사람이 ZView 에서 읽어 적지만, 잘못된 수가
+    적혀 있으면 아무도 다시 안 본다.
+
+    보간은 두 점 사이 선형이다.
     """
     frequency = np.asarray(frequency_hz, dtype=np.float64).ravel()
     stored_im = -np.asarray(z_im, dtype=np.float64).ravel()   # 파일이 담는 -Im
@@ -226,14 +299,28 @@ def real_axis_crossing(frequency_hz, z_re, z_im) -> float | None:
         return None
     order = np.argsort(-frequency)          # 높은 주파수부터 — 측정 순서다
     stored_im, real = stored_im[order], real[order]
+
+    usable = np.flatnonzero(np.isfinite(stored_im) & np.isfinite(real))
+    if len(usable) < 2:
+        return None
+    stored_im, real = stored_im[usable], real[usable]
+
+    # 맨 위(가장 높은 주파수)가 이미 용량성이면 유도성 구간이 안 찍힌 것이다.
+    # 이 스윕으로는 교점을 볼 수 없다.
+    if not stored_im[0] < 0:
+        return None
+
+    # 이어진 유도성 구간이 끝나는 자리 — 거기가 교점이고, 그 뒤는 안 본다.
     for i in range(1, len(stored_im)):
         before, after = stored_im[i - 1], stored_im[i]
-        if not (np.isfinite(before) and np.isfinite(after)):
-            continue
         if before < 0 <= after:
             span = after - before
             if span <= 0:
                 return float(real[i])
             weight = -before / span
             return float(real[i - 1] + weight * (real[i] - real[i - 1]))
+        if before >= 0:
+            # 유도성 구간이 이미 끝났는데 교차를 못 만났다 -- 여기서 멈춘다.
+            # 계속 가면 꼬리의 잡음을 교점으로 읽는다.
+            return None
     return None

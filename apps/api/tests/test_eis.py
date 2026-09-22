@@ -1912,3 +1912,43 @@ def test_a_scan_that_is_not_symmetric_is_counted_not_silently_dropped(client):
 def test_the_sym_dashboard_refuses_an_unknown_basis(client):
     assert client.get("/api/eis/sym/dashboard",
                       params={"basis": "nope"}).status_code == 422
+
+
+def test_a_bad_reading_reaches_the_screen_as_a_warning_not_a_result(client):
+    """실측 `B11_activationE_C01` 이 화면에서 `0.415 eV` 로 보이던 자리.
+
+    저항을 잘못 읽으면 Arrhenius 직선은 그래도 그려지고 R² 만 조용히 낮아진다.
+    값을 감추지는 않되 (감추면 화면이 고장 난 줄 안다), 먼저 봐야 할 것을
+    함께 낸다 (§0.4).
+    """
+    bad = [7.372, 7.285, 8.824, 15.44, 79.89, 25.19, 111400.0, 56.93, 84.40]
+    sha = upload_mpt_scan(client, bad)
+    client.put(f"/api/eis/scans/{sha}/temperature",
+               json={"temperature_c": [60, 50, 40, 30, 20, 10, 0, -10, -20]})
+    client.put(f"/api/eis/scans/{sha}/resistance", json={"resistance_ohm": bad})
+    first = client.get("/api/eis/spectra").json()[0]
+    client.patch(f"/api/eis/spectra/{first['id']}",
+                 json={"thickness_um": 790.0, "area_cm2": 0.7854})
+
+    activation = client.get(f"/api/eis/scans/{sha}/conductivity").json()["activation"]
+    assert activation["activation_energy_ev"] is not None
+    assert activation["fit"]["r_squared"] < 0.3
+    joined = " ".join(activation["warnings"])
+    assert "안 내려가는" in joined          # 어느 구간이 거꾸로 갔는지
+    assert "20→10 °C" in joined
+    assert "값으로 쓸 수 없습니다" in joined  # 이 수는 아직 값이 아니다
+
+
+def test_a_good_table_carries_no_warnings(client):
+    """멀쩡하면 조용하다 — 할 일이 없다는 문장은 소음이다."""
+    good = [9.69, 10.21, 14.56, 22.0, 34.66, 55.88, 94.3, 171.0, 300.0]
+    sha = upload_mpt_scan(client, good)
+    client.put(f"/api/eis/scans/{sha}/temperature",
+               json={"temperature_c": [60, 50, 40, 30, 20, 10, 0, -10, -20]})
+    client.put(f"/api/eis/scans/{sha}/resistance", json={"resistance_ohm": good})
+    first = client.get("/api/eis/spectra").json()[0]
+    client.patch(f"/api/eis/spectra/{first['id']}",
+                 json={"thickness_um": 790.0, "area_cm2": 0.8501})
+
+    activation = client.get(f"/api/eis/scans/{sha}/conductivity").json()["activation"]
+    assert activation["warnings"] == []

@@ -1019,6 +1019,10 @@ class ActivationEnergyOut(BaseModel):
     basis: str = "sigma"
     points_used: int = 0
     reason: str = ""
+    #: 값은 나왔지만 **먼저 봐야 할 것**.  `reason` 과 다르다: 저쪽은 "값이
+    #: 없다" 이고 이쪽은 "값은 있는데 이것부터 보라" 다.  R² 0.27 짜리
+    #: 직선에서 나온 0.415 eV 가 화면 맨 위에 결과처럼 앉아 있던 자리다.
+    warnings: list[str] = []
     fit: LinearFitOut | None = None
     #: 직선을 그리는 데 쓴 두 열 — x = 1000/T, y = ln σ.  화면이 다시 계산하지
     #: 않게 그대로 보낸다 (계산이 두 군데 있으면 언젠가 갈라진다).

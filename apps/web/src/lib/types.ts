@@ -831,6 +831,10 @@ export interface ActivationEnergy {
   basis: string
   points_used: number
   reason: string
+  /** 값은 나왔지만 **먼저 봐야 할 것** — 온도에 대해 거꾸로 간 구간, 약한 R².
+   *  `reason` 과 다르다: 저쪽은 "값이 없다" 이고 이쪽은 "값은 있는데 이것부터
+   *  보라" 다. */
+  warnings: string[]
   fit: LinearFitReport | null
   /** 직선을 그린 두 열 — x = 1000/T, y = ln σ.  화면이 다시 계산하지 않는다. */
   inverse_temperature: number[]
