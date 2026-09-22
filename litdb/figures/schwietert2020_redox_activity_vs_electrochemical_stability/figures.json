@@ -4,9 +4,7 @@
  "maxpx": 3000,
  "generated": "2026-09-22",
  "sources": [
-  "6. Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.pdf",
   "6. NatMater_2020_Schwietert_Clarifying_redox_activity_vs_ESW_MAIN.pdf",
-  "6. Sup) Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.docx",
   "6. Sup) NatMater_2020_Schwietert_Clarifying_redox_SI.pdf"
  ],
  "figures": [
@@ -14,121 +12,126 @@
    "key": "f1",
    "kind": "figure",
    "label": "1",
-   "page": 3,
+   "page": 2,
    "file": "fig_1.png",
-   "caption": "Fig. 1. (a) 3D full-cell model employing the SLE architecture. (b) Simulated Li-concentration distributions and (c) corresponding von Mises stress distributions at the end of 0.33C and 3C charging. (d) Schematic illustration of Li-concentration gradients within an LPC particle, where Δc denotes the concentration difference between the particle center and surface. (e) Δc values of representative particles under 3C charging conditions, extracted from the distributions in Fig. 1b (f) Radial profiles of von Mises stress within LPC particles located near the separator and the current collector. Voltage profiles of the SLE cathode during cycling under (g) 0.33C and (h) 3C charging conditions. (i) Cycling performance of the SLE cathode. (j) Top-view and cross-sectional SEM images of the SLE cathode, and (k) enlarged cross-sectional SEM images after 300 cycles under 3C charging conditions. full-",
+   "caption": "Fig. 1 | Voltage profiles and differential capacity curve of the LPSC-C electrode. a–c, Voltage profile of the first, second, fifth and tenth cycles of: In|LPSC|LPSC-C ASSB starting from charge and on galvanostatic oxidation, where the LPSC-C electrode shows a voltage plateau at 2.5 V, reaching a total charge capacity of 264 mAh gLPSC",
    "rotated_deg": 0,
    "bbox": [
     31.6,
-    49.4,
+    46.0,
     566.0,
-    496.5
+    396.3
    ],
    "w": 2228,
-   "h": 1864,
+   "h": 1461,
    "dpi": 300,
-   "src": "6. Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.pdf",
-   "blank": 0.682
+   "src": "6. NatMater_2020_Schwietert_Clarifying_redox_activity_vs_ESW_MAIN.pdf",
+   "blank": null,
+   "note": "manual crop (tool dropped: caption-below layout)"
   },
   {
    "key": "f2",
    "kind": "figure",
    "label": "2",
-   "page": 4,
+   "page": 3,
    "file": "fig_2.png",
-   "caption": "Fig. 2. (a) Schematic illustration of the BLE design. (b) Simulated voltage profiles, (c) the fractions of CC and CV charging capacities upon 3C charging. (d) Simulated Li-concentration distributions, (e) Li⁺ concentration distributions in the electrolyte phase, and (f) von Mises stress distributions for BLE-5, BLE-10, BLE-15, and BLE-20 at the end of the CC charging step. reactions. In contrast, 3C charging induced pronounced heterogeneity with significantly lower Li concentrations near the separator. This arises from the low porosity and tortuous Li+ pathways of the cathode, where sluggish Li+ transport in the electrolyte phase cannot keep pace with the fast interfacial reactions [50]. As a result, a steep Li-concentration gradient developed across the electrode thickness: particles adjacent to the separator underwent preferential delithiation, while particles close to the current coll",
+   "caption": "Fig. 2 | Formation energies of Li-vacancy configurations of argyrodite LixPS5Cl and comparison of experimental and calculated voltage profiles. a, Formation energies per formula unit for all Li configurations within one unit cell versus the composition x in LixPS5Cl. The formation energy of the combination of Li3PS4, Li2S and LiCl is shown below the convex hull at x = 6. At x = 4 and x = 11, the formation energies of the decomposition products on oxidation (S, Li3PS4, LiCl) and on reduction (P, Li2S and LiCl), respectively, are shown, in line with the decomposition products previously reported14. b, Calculated theoretical voltage profile, versus Li/Li+, of LixPS5Cl in the compositional range of 0 < x < 12. Reduction and oxidation are expected to occur at 1.08 V and 2.24 V versus Li/Li+, respectively. The black crosses indicate the voltages at which the argyrodite is expected to decompose",
    "rotated_deg": 0,
    "bbox": [
-    31.6,
-    49.4,
-    566.0,
-    617.9
+    36.5,
+    67.9,
+    552.5,
+    490.3
    ],
-   "w": 2228,
-   "h": 2370,
+   "w": 2151,
+   "h": 1761,
    "dpi": 300,
-   "src": "6. Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.pdf",
-   "blank": 0.639
+   "src": "6. NatMater_2020_Schwietert_Clarifying_redox_activity_vs_ESW_MAIN.pdf",
+   "blank": 0.833
   },
   {
    "key": "f3",
    "kind": "figure",
    "label": "3",
-   "page": 5,
+   "page": 4,
    "file": "fig_3.png",
-   "caption": "Fig. 3. (a) Schematic illustration of the BLE fabrication process. (b) Cross-sectional and (c) top-view SEM images of the BLE-10 cathode. (d) pOCV curves, (e) Nyquist plots with fitted curves, and (f) rate capability of the SLE and BLE-10 cathodes in a half-cell configuration. heterogeneity by calculating the Li-concentration difference (Δc = cLi, exhibited negligible capacity loss, whereas 3C charging resulted in se­ vere degradation, with only ~62.4 % of the initial capacity retained after 300 cycles (Fig. 1g–1i). Cross-sectional and surface SEM analyses confirmed that rapid capacity fading observed under fast-charging conditions was associated with microcrack formation in the cathode (Fig. 1j). Following 3C charging, pronounced intergranular cracking was observed in LPC particles near the separator, while particles near the current collector exhibited only slight cracking, and SSC par",
+   "caption": "Fig. 3 | XRD patterns and fits of the LPSC-C electrodes before and after cycling. All the patterns are fit with the Rietveld method as implemented in GSAS41, and the resulting structural parameters are provided in Supplementary Tables 2–7. a, XRD patterns for the In|LPSC|LPSC-C battery after first charge to 3.63 V versus Li/Li+, after subsequent discharge to 0.63 V versus Li/Li+ and after 18 full cycles. b, XRD patterns for the Li-In|LPSC|LPSC-C battery after first discharge to 0.63 V versus Li/Li+, after subsequent charge to 1.63 V versus Li/Li+ and after 18 full cycles. A growing peak at around 27° reflects the formation of the Li2S phase, which is consistent with the predicted decomposition reaction of lithiated (reduced) argyrodite (Li11PS5Cl → P + 5 Li2S+LiCl). The amount of the Li2S phase that is formed increases dramatically as a function of cycle number, also indicating the continued decomposition of the argyrodite for low potential cycling. After the first half cycle, both on ",
    "rotated_deg": 0,
    "bbox": [
     31.6,
-    49.4,
+    46.0,
     566.0,
-    456.9
+    372.9
    ],
    "w": 2228,
-   "h": 1699,
+   "h": 1363,
    "dpi": 300,
-   "src": "6. Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.pdf",
-   "blank": 0.762
+   "src": "6. NatMater_2020_Schwietert_Clarifying_redox_activity_vs_ESW_MAIN.pdf",
+   "blank": null,
+   "note": "manual crop (tool dropped: caption-below layout)"
   },
   {
    "key": "f4",
    "kind": "figure",
    "label": "4",
-   "page": 6,
+   "page": 5,
    "file": "fig_4.png",
-   "caption": "Fig. 4. Voltage profiles of the BLE-10 cathode at the 1st, 100th, 200th, and 300th cycles during cycling under (a) 0.33C and (b) 3C charging conditions. (c) Cycling performance of the BLE-10 cathode. dQ/dV curves of (d) the SLE cathode and (e) the BLE-10 cathode obtained during cycling under 3C charging conditions. (f) Quantification of degradation modes in the SLE and BLE-10 cathodes. (g) Nyquist plots with fitted curves of the cycled SLE and BLE-10 cathodes. Rate capability of full-cells with (h) the SLE and (i) BLE-10 cathodes, measured before and after 300 cycles. composed exclusively of SSC particles. Nanoindentation measurements further revealed that SSC particles possess a higher intrinsic mechanical strength than LPC particles (Fig. S9). Due to their small particle size and intrinsic mechanical robustness, SSC particles are expected to exhibit reduced Li-concentration gradients a",
+   "caption": "Fig. 4 | Solid-state 31P NMR spectra of pristine, oxidized and reduced LPSC-C. a–f, 31P MAS NMR of oxidative (a–c) and reductive (d–f) activity of LPSC in In|LPSC|LPSC-C and Li-In|LPSC|LPSC-C ASSBs, respectively. Pristine LPSC (a,d). After the first charge (b), P2S7",
    "rotated_deg": 0,
    "bbox": [
     31.6,
-    49.4,
+    46.0,
     566.0,
-    395.1
+    388.7
    ],
    "w": 2228,
-   "h": 1442,
+   "h": 1429,
    "dpi": 300,
-   "src": "6. Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.pdf",
-   "blank": 0.849
+   "src": "6. NatMater_2020_Schwietert_Clarifying_redox_activity_vs_ESW_MAIN.pdf",
+   "blank": null,
+   "note": "manual crop (tool dropped: caption-below layout)"
   },
   {
    "key": "f5",
    "kind": "figure",
    "label": "5",
-   "page": 7,
+   "page": 6,
    "file": "fig_5.png",
-   "caption": "Fig. 5. (a) Top-view and cross-sectional SEM images of the BLE-10 cathode after 300 cycles under 3C charging conditions. (b) XRD patterns of the SLE and BLE-10 cathodes before cycling and after 300 cycles, with magnified views of the (c) (003) peak and (d) (104) peak. XPS spectra of (e) C 1s , (f) O 1s , (g) F 1s , and (h) Ni 2p for the cycled SLE cathode and BLE-10 cathode after removing the top SSC layer. mechanical stress mitigation (Fig. S12). It should be noted that me­ chanical simulation results assumed an ideal bilayer interface and therefore may not fully represent the actual stress distribution in real electrodes; future studies employing advanced techniques to probe local Li concentration and stress distributions would enable more direct validation of the proposed stress-buffering mechanism. the BLE-10 cathode was evaluated in comparison with the SLE cathode in a half-cell con",
+   "caption": "Fig. 5 | Schematic of the electrochemical activity of argyrodite LPSC on oxidation (delithiation) and reduction (lithiation). The electrochemical stability window is determined by the oxidation and reduction potentials of Li4PS5Cl (S/S2− redox, at 2.24 V) and Li11PS5Cl (through the P/P5+ redox, at 1.08 V), respectively, here shown schematically, where the activation barriers to form these compositions are expected to be very low based on the high Li-ion conductivity. These redox potentials of the argyrodite solid electrolyte determine the practical electrochemical stability window, as expressed by the first oxidation and reduction reactions observed in the cycling (Fig. 1a,b), and in the differential capacity (Fig. 1d), consistent with the predicted redox activity (Fig. 2). The unstable argyrodite phases rapidly decompose into the expected stable Li3PS4, S and LiCl species after oxidatio",
    "rotated_deg": 0,
    "bbox": [
-    31.6,
-    49.4,
+    300.0,
+    46.0,
     566.0,
-    506.7
+    329.2
    ],
-   "w": 2228,
-   "h": 1907,
+   "w": 1109,
+   "h": 1181,
    "dpi": 300,
-   "src": "6. Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.pdf",
-   "blank": 0.723
+   "src": "6. NatMater_2020_Schwietert_Clarifying_redox_activity_vs_ESW_MAIN.pdf",
+   "blank": 0.612,
+   "note": "re-cropped 2026-09-22 (tool crop clipped the top of the delithiation panel)"
   },
   {
    "key": "f6",
    "kind": "figure",
    "label": "6",
-   "page": 9,
+   "page": 7,
    "file": "fig_6.png",
-   "caption": "Fig. 6. Schematic illustration of the degradation mechanism in the SLE and its mitigation by the BLE design during fast-charge cycling. suppresses electrolyte penetration and interfacial degradation and thereby enhances cycling stability under fast-charging conditions. improved cycling stability with 76.2 % capacity retention after 300 cycles at 3C—substantially higher than the 62.4 % observed for con­ ventional bimodal cathodes. This study establishes a practical and scalable electrode-level design principle, guided by the mechanically driven degradation mechanism under fast-charging conditions, for developing durable, high-energy, fast-charging LIBs. For practical in­ dustrial implementation, the proposed bilayer electrode design is ex­ pected to be applicable to dual-slot die coating (wet-on-wet) processes used in industrial battery manufacturing. Fig. 6 schematically illustrates the ",
+   "caption": "Fig. 6 | Formation energies of Li-vacancy configurations of garnet LLZO and NASICON LAGP solid electrolytes, and comparison of experimental and calculated oxidation potentials. a,d, Formation energies per formula unit of LixLa3Zr2O12 for 0 ≤ x ≤ 7 (a) and for LixAl0.5Ge1.5(PO4)3 0 ≤ x ≤ 5 (d). The formation energies of the decomposition products are indicated with a black cross. It is unlikely that oxidation will proceed to Li1La3Zr2O12 as suggested by the convex hull, because several compositions between x = 7 and x = 6 (in LixLa3Zr2O12) are located marginally above the convex hull. This suggests that in the presence of slightly higher potentials (>3.54 V), oxidation will lead to indirect decomposition via x = 6.5, towards the predicted stable decomposition products Li2O2, La2O3 and Li6Zr2O7 (ref. 14). b,e, The calculated voltage based on the convex hull of LixLa3Zr2O12 (b) and LixAl0.5Ge1.5(PO4)3 (e). The blue line represents the redox potentials of the solid electrolytes, and the po",
    "rotated_deg": 0,
    "bbox": [
     31.6,
-    49.4,
+    46.0,
     566.0,
-    351.2
+    354.8
    ],
    "w": 2228,
-   "h": 1259,
+   "h": 1288,
    "dpi": 300,
-   "src": "6. Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.pdf",
-   "blank": 0.739
+   "src": "6. NatMater_2020_Schwietert_Clarifying_redox_activity_vs_ESW_MAIN.pdf",
+   "blank": null,
+   "note": "manual crop (tool dropped: caption-below layout)"
   },
   {
    "key": "fS1",
@@ -390,5 +393,6 @@
    "src": "6. Sup) NatMater_2020_Schwietert_Clarifying_redox_SI.pdf",
    "blank": 0.914
   }
- ]
+ ],
+ "manual_additions": "fig_1, fig_3, fig_4, fig_6 manually cropped 2026-09-22 (extract_figures.py dropped them: Nature layout puts caption below a full-width vector figure)"
 }

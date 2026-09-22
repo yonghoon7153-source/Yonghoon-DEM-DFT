@@ -5,7 +5,6 @@
  "generated": "2026-09-22",
  "sources": [
   "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
-  "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
   "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf"
  ],
  "figures": [
@@ -33,41 +32,41 @@
    "key": "f2",
    "kind": "figure",
    "label": "2",
-   "page": 8,
+   "page": 4,
    "file": "fig_2.png",
-   "caption": "Fig. 2. Phase-field-generated SE microstructure evolution over a 700×350 μm domain and the corresponding predicted impedance. (a) Simulated microstructure with an initial porosity of ~12% at the initial and final stages of sintering. (b) Simulated microstructure with an initial porosity of ~20% at the initial and final stages of sintering. (c) Predicted impedance spectra for a single-crystal SE and the SE microstructures with porosities of ~12% and ~20% at step 1000 respectively. To examine how impedance evolves as sintering proceeds, the ~20% porosity microstructure was advanced through five simulated sintering steps (step 1, 500, 1000, 10,000, and 20,000), tracking the progressive coarsening of grains and the coalescence of pores into fewer, larger voids (Fig. 3a). The porosity and GB maps in Fig. 3b and 3c use a 0/1 grayscale convention (0 = pore, 1 = dense SE in (b); 0 = grain interi",
+   "caption": "Figure 2. Calculated interface structures with the lowest energies of (a) LCO(104)/LPS(010) and (b) LCO(110)/LPS(010). The insets show the detailed atomic structures at the interface. CoO6 and PS4 complexes are represented by blue and green polyhedrons. LCO(104)/LPS(010) and LCO(110)/LPS(010) interfaces. For the LCO(104)/LPS(010) interface, almost half of the outermost Co cations in the LCO side attract S anions to form CoO5S octahedrons, and the remaining outermost Co, not in close proximity to S anions, form CoO5 quadrangular cones. Li ions in the LPS side are electrostatically attracted to O atoms in the LCO side and are located on the top position of O atoms. The estimated adhesion energy of the LCO(104)/ LPS(010) interface is 0.025 eV/Å2, where the deﬁnition of adhesion energy60 of solid−solid interface is given in the Supporting Information. On the boundary of the LCO(110)/ LPS(010",
    "rotated_deg": 0,
    "bbox": [
-    66.0,
-    64.3,
-    549.0,
-    375.8
+    54.5,
+    342.8,
+    306.5,
+    555.6
    ],
-   "w": 2013,
-   "h": 1298,
+   "w": 1051,
+   "h": 888,
    "dpi": 300,
-   "src": "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
-   "blank": 0.664
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.764
   },
   {
    "key": "f3",
    "kind": "figure",
    "label": "3",
-   "page": 9,
+   "page": 4,
    "file": "fig_3.png",
-   "caption": "Fig. 3. Simulated microstructure evolution during sintering and the corresponding impedance response of the SE at ~20% porosity. (a) Simulated microstructure at steps 1, 500, 1000, 10,000 and 20,000 over a 700×350 μm domain. (b) Corresponding porosity evolution maps at each step. (c) Corresponding grain- boundary (GB) evolution maps at each step. (d) Predicted Nyquist impedance spectra at steps 1, 500, 1000, 10,000, and 20,000 showing the impedance change that accompanies the microstructural changes. (e) Porosity fraction as a function of simulation steps during sintering. (f) GB fraction as a function of simulation steps during sintering.",
+   "caption": "Figure 3. PDOS of the calculated lowest energy interface of LCO(104)/LPS(010). Red line: total DOS; green line: LCO atoms; blue line: LPS atoms; brown line: LCO atoms facing the vacuum; light blue line: the ﬁrst LCO layer facing the LPS slab. We set zero reference energy as the center of the band gap. LCO vac and LCO 1st correspond to the LCO layer facing the vacuum and the interface with LPS, respectively.",
    "rotated_deg": 0,
    "bbox": [
-    56.5,
-    100.2,
-    574.2,
-    593.5
+    318.5,
+    173.7,
+    570.5,
+    355.6
    ],
-   "w": 2158,
-   "h": 2057,
+   "w": 1052,
+   "h": 759,
    "dpi": 300,
-   "src": "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
-   "blank": 0.63
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.903
   },
   {
    "key": "f4",
@@ -113,41 +112,41 @@
    "key": "f6",
    "kind": "figure",
    "label": "6",
-   "page": 11,
+   "page": 6,
    "file": "fig_6.png",
-   "caption": "Fig. 6. Effect of SEI (Li2S) volume fraction on predicted impedance. Simulated microstructures for (a) 8.8%, (b) 8%, and (c) 7.6% Li2S volume fraction. (d) Corresponding predicted impedance, showing the impedance increases with increasing Li2S content relative to the single-crystal baseline. Because the SEI is a multi-phase layer, the individual conductivities of its three decomposition products Li2S, Li3P, and LiCl were then varied independently at a fixed SEI volume fraction of 8.8% (Fig. 7). Among the three assigned phase conductivities (one of which was set to",
+   "caption": "Figure 6. Optimized interface structures of (a) LCO(104)/ LPO(010) and (b) LCO(104)/LPO(001). The insets show the detailed atomic structures at the interface. CoO6 and PO4 complexes are represented by blue and gray polyhedrons.",
    "rotated_deg": 0,
    "bbox": [
-    66.0,
-    386.9,
-    549.0,
-    612.4
+    54.5,
+    404.7,
+    306.5,
+    601.7
    ],
-   "w": 2014,
-   "h": 940,
+   "w": 1051,
+   "h": 821,
    "dpi": 300,
-   "src": "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
-   "blank": 0.636
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.833
   },
   {
    "key": "f7",
    "kind": "figure",
    "label": "7",
-   "page": 12,
+   "page": 6,
    "file": "fig_7.png",
-   "caption": "Fig. 7. Effect of individual SEI-phase conductivity on predicted impedance where SEI volume fraction is 8.8%. (a) simulated microstructure. (b) Predicted impedance obtained by independently assigning the conductivity of LiCl, Li3P, and Li2S, showing that impedance increases as the assigned phase conductivity decreases. Finally, all three SEI decomposition products (Li2S, Li3P, and LiCl) were considered together, alongside the grain and grain-boundary structure, in a single simulation (Fig. 8). Relative to the grain-boundary-only baseline (real(Z) ≈ 22–32 Ωcm², Fig. 5), the combined multi-phase SEI shifts the predicted impedance to real(Z) ≈ 586–599 Ωcm². Much of this change appears as an increased ohmic offset, and it can become the primary microstructural feature responsible for degrading Li/SE interfacial performance during interphase formation. Note that the SEI layer thickness used h",
+   "caption": "Figure 7. PDOS of the optimized interfaces of LCO(104)/ LPO(001). Red line: total DOS; green line: PDOS from LCO atoms; blue line: PDOS from LPO atoms; brown line: PDOS from LCO atoms facing the vacuum; light blue line: PDOS from ﬁrst LCO layer facing the LPO slab. We set zero reference energy as the band gap center. of the sulﬁde SE, the VBM is composed of LCO orbitals, and the contribution of LPO to the valence band lies ∼1 eV lower than the VBM. The CBM consists of LCO components, and the in-gap state around 0.7 eV originated from Co’s d-orbital at the interfacial LCO.",
    "rotated_deg": 0,
    "bbox": [
-    66.0,
-    184.0,
-    549.0,
-    320.2
+    318.5,
+    96.7,
+    570.5,
+    280.7
    ],
-   "w": 2013,
-   "h": 569,
+   "w": 1051,
+   "h": 768,
    "dpi": 300,
-   "src": "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
-   "blank": 0.78
+   "src": "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
+   "blank": 0.909
   },
   {
    "key": "f8",
@@ -788,46 +787,6 @@
    "dpi": 300,
    "src": "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf",
    "blank": 0.726
-  },
-  {
-   "key": "t1",
-   "kind": "table",
-   "label": "1",
-   "page": 6,
-   "file": "tab_1.png",
-   "caption": "Table 1. Parameters for phase-field sintering simulations Parameters Values A 16 B 1 𝜅𝜅𝜌𝜌 4 𝜅𝜅𝜂𝜂 4 𝑀𝑀𝑠𝑠 0.01 𝑀𝑀𝑝𝑝 0.001 𝑀𝑀𝑠𝑠𝑠𝑠𝑠𝑠𝑠𝑠 1 𝑀𝑀𝑔𝑔𝑔𝑔 0.1 L 10 To further generate the SEI microstructure, we set ρ=1 and assign η1, η2, and η3 to be the three SEI phases, while the rest non-conserved order parameters( ) 4 10 ~ η η are assigned to be Li6PS5Cl grains. This treatment effectively reduces the sintering model to a grain growth model. Initially, small circular particles of 1 3 ~ η η are put randomly within the left 150 μm region, while large circular particles of η4~η10 are put in the right region; the rest regions are hypothetical liquid phases with( ) ( ) 1 2 10 , ,..., 0,0,...,0 η η η = . Simulations are performed until no hypothetical liquid regions left. 3. Results and Discussion The EIS of the symmetric cell is simulated using the parameters tabulated in Table 2.",
-   "rotated_deg": 0,
-   "bbox": [
-    67.0,
-    70.4,
-    548.0,
-    761.7
-   ],
-   "w": 2005,
-   "h": 2881,
-   "dpi": 300,
-   "src": "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
-   "blank": 0.934
-  },
-  {
-   "key": "t2",
-   "kind": "table",
-   "label": "2",
-   "page": 6,
-   "file": "tab_2.png",
-   "caption": "Table 2. Material properties used in the modelling. Parameters Name Symbol Value Unit Ref Electrochemical Temperature T 298 K 0i 4.97 mA/cm2 Exp Exchange current density",
-   "rotated_deg": 0,
-   "bbox": [
-    67.0,
-    70.4,
-    545.1,
-    761.7
-   ],
-   "w": 1993,
-   "h": 2881,
-   "dpi": 300,
-   "src": "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
-   "blank": 0.933
   },
   {
    "key": "tS1",

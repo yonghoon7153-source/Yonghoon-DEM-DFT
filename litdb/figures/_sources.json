@@ -1217,12 +1217,10 @@
   ]
  },
  "marcolongo_ionic_correlations_failure_nernst_einstein": {
-  "figures": 14,
+  "figures": 6,
   "generated": "2026-09-22",
   "pdfs": [
-   "10. ACSAMI_2017_Haruyama_Cation_mixing_Co_diffusion_LCO_LPS_MAIN.pdf",
    "10. Ionic_correlations_failure_Nernst_Einstein_SSE_MAIN.pdf",
-   "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf",
    "10. Sup) Ionic_correlations_failure_NE_SI.pdf"
   ]
  },
@@ -1390,11 +1388,10 @@
   ]
  },
  "okuno2020_sulfide_vs_oxide_electrolyte_cathode_interfaces": {
-  "figures": 54,
+  "figures": 52,
   "generated": "2026-09-22",
   "pdfs": [
    "5. ACSAEM_2020_Okuno_Haruyama_Tateyama_Sulfide_vs_oxide_interfaces_cathodes_MAIN.pdf",
-   "5. Microstructure-Resolved_Impedance_Modeling_SSB_MAIN.pdf",
    "5. Sup) ACSAEM_2020_Okuno_Sulfide_vs_oxide_SI.pdf"
   ]
  },
@@ -1587,9 +1584,7 @@
   "figures": 19,
   "generated": "2026-09-22",
   "pdfs": [
-   "6. Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.pdf",
    "6. NatMater_2020_Schwietert_Clarifying_redox_activity_vs_ESW_MAIN.pdf",
-   "6. Sup) Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries.docx",
    "6. Sup) NatMater_2020_Schwietert_Clarifying_redox_SI.pdf"
   ]
  },
