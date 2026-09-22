@@ -782,7 +782,7 @@ ref 22 는 **MACE-MP-0 원판**(arXiv:2401.00096, MPtrj 학습)이다. 검증은
 |---|---|---|
 | 🔴 **1** | **ref 7 — Haruyama, Sodeyama, Han, Takada, Tateyama, "Space–charge layer effect at interface between oxide cathode and sulfide electrolyte in ASSB", *Chem. Mater.* 26, 4248 (2014)** | **Li 고갈/공간전하의 원전**이다. Guo 의 기전 ② 는 이 논문의 재발견이고, `wu2026…` §4.6 이 *"ref 를 안 붙였다"* 고 우리가 표시해 둔 **Δμ_Li↔공간전하 원전 자리**가 바로 여기일 가능성이 높다 |
 | 🔴 **2** | **ref 11 — Tateyama, Gao, Jalem, Haruyama, "Theoretical picture of positive electrode–solid electrolyte interface … from electrochemistry and semiconductor physics viewpoints", *Curr. Opin. Electrochem.* 17, 149 (2019)** | 공간전하 + 반도체물리 관점의 **리뷰**. 우리가 "Li 예산" 을 공간전하와 분리해 이름 붙이려면(§J-20-5) 이 편이 기준선 |
-| 🟠 **3** | **ref 42 — Haruyama, Sodeyama, Tateyama, "Cation mixing properties toward Co diffusion at the LiCoO₂/sulfide interface", *ACS AMI* 9, 286 (2017)** | 양이온 상호확산의 **정량 원전**. ⭐ **이미 inbox 에 있다**: `8de8d802-10._Cation_Mixing_Properties…pdf` — **digest 미작성**. 우선 처리 대상 |
+| ✅ ~~**3**~~ | **ref 42 — Haruyama, Sodeyama, Tateyama, "Cation mixing properties toward Co diffusion at the LiCoO₂/sulfide interface", *ACS AMI* 9, 286 (2017)** | 양이온 상호확산의 **정량 원전**. ✅ **2026-09-22 같은 날 digest 완료** → `papers/haruyama2017_cation_mixing_co_diffusion_lco_lps.md`. ⇒ **Guo 의 기전 ③ 은 그 편이 정량 원전**이고, Guo 는 정성 재확인이다 |
 | 🟠 **4** | **ref 12 — Swift & Qi, "First-principles prediction of potentials and space-charge layers in ASSB", *PRL* 122, 167701 (2019)** | 공간전하를 **제1원리로 계산하는 방법**의 원전. 우리가 이 축을 열 때의 방법 사양 |
 | 🟡 **5** | **ref 26 — Xie et al., "InterOptimus", *J. Energy Chem.* 106, 631 (2025)** | Guo 의 MACE 계면 정확도 주장(0.79 J m⁻²)의 출처이자, `wu2026…` `Fig. 11` 의 원전. **두 인용이 서로 다른 값을 말한다** — 원전에서 확정해야 한다 |
 | 🟡 **6** | **ref 43 — Takahashi et al., *J. Power Sources* 226, 61 (2013)** | Li₃PO₄ 가 *"전자절연 + 이온전도"* 라는 §10-① 근거의 원전 |
@@ -800,7 +800,7 @@ ref 22 는 **MACE-MP-0 원판**(arXiv:2401.00096, MPtrj 학습)이다. 검증은
 | `richards2016_interface_stability_pseudobinary` · `zhu2015_esw_grand_potential_origin` | **우리 §B 방법의 원전.** Guo 가 refs 10·9 로 **인용하고 추인**한다 (§3d) |
 | `wang2026_interface_stability_kinetics_sulfide_assb` | 같은 해의 **대규모 hull 스크리닝 + AIMD 1계**. Guo 와 정반대 배분(열역학 다수 + 운동학 1계) |
 | `kim2025_impedance_decoupling_tlm_assb` | **임피던스를 실제로 분해하는 편**(TLM). Guo 가 못 하는 축이 여기 있다 |
-| `haruyama 2017` (inbox `10.` , **미digest**) | ref 42 원전 — §13d-3 |
+| `haruyama2017_cation_mixing_co_diffusion_lco_lps` ✅ | **ref 42 원전** — Guo 의 기전 ③(Co 상호확산)을 **정량**으로 낸 편. Guo 는 그것을 MLIP-MD 로 **정성 재확인**한다 |
 
 ---
 
