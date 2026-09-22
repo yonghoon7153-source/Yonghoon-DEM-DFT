@@ -1,5 +1,26 @@
 # R17 회신 — Codex 17차 (대상 `dfc1fc78`) NO-GO · P1 5 · P2 2 — 코드 6 건 닫음 · 과학 문장 좁힘 · chain rule 은 계약 제안
 
+> ## ★ 발송 전 갱신 (2026-09-22) — ⑥ chain rule 계약은 **제안이 아니라 구현**이다
+>
+> 아래 본문은 작성 시점(계약 제안 단계) 그대로 둔다. 그 뒤 사용자 승인이 나와 같은 날
+> 구현했으므로, 바뀐 사실만 여기 적는다 — 본문의 "제안" 표현은 지우지 않는다.
+>
+> | 항목 | 갱신 값 |
+> |---|---|
+> | **이 회신의 코드** | **`7c8f61f9`** — 이 커밋이 판정 대상이다. 이후 `bms-balancing/` 의 **파이썬 변경 0건** (`git diff --name-only 7c8f61f9..HEAD -- bms-balancing \| grep '\.py$'` → 빈 출력, 문서만 바뀌었다) |
+> | §4 chain rule | **구현 완료.** `Objective(..., *, objective_version)` 기본값 없음 · `schema.OBJECTIVE_VERSIONS` 검증 · `cycles.fit_cycles` 와 `scripts/fit_cycles.py --objective-version` 필수(choices 고정, 빠뜨리면 rc 2) · 행·sidecar·`COMPARED_SETTINGS` 에 기록 · 파이프라인은 **명시적으로** `legacy_matlab` 을 넘긴다(호출 16곳 전부) |
+> | §5 표의 "chain rule / 계약 제안" 줄 | **"구현 완료"** 로 읽어 달라. 단 같은 줄의 **"실데이터 A/B 는 사용자 승인 뒤"** 는 **그대로 유효**하다 — 실데이터 재계산은 **여전히 하지 않았다** |
+> | §7 전수 회귀 | 본문의 `1 failed · 416 passed` → (그 실패는 개수 계약 갱신) → 이후 ⑥ 이 시험 9 건을 더해 **`426 passed in 638.13s (0:10:38)` · EXIT=0** (`python3 -m pytest tests/ -q -p no:cacheprovider`, `7c8f61f9` 트리에서 방금 실행). 개수 계약도 417 → **426** 으로 갱신했다 |
+> | 회수 실측 (부수 관찰, 계약 아님) | LAM_NE 오차 — legacy `−3.39 / −7.49 / −3.12 %p` vs chain_rule_v2 `−0.0171 / −0.0577 / +0.68 %p` (합성 truth 3종, `tests/test_chain_rule_contract.py` cr_04). 리뷰어 ②를 그대로 받아 **"200 배" 를 계약 회귀로 못 박지 않았다** — 회귀는 analytic 항등식 + `a=1` 대조군이다 |
+>
+> 새 시험 9 건(cr_01~07)은 계약 부재 시 **9 failed → 구현 뒤 9 passed**. cr_07 은 첫 판에서
+> 두 fixture 의 `w_dqdv` 가 같아 "축이 같다" guard 에 먼저 걸렸다 — A(legacy,w0)·B(v2,w1)·
+> C(v2,w0) 세 fixture 로 고쳤다. validator 가 조여지면서 `test_widths` 의 W-16~21 fixture(자리표시
+> 영수증)와 w15(점이 구간 밖)가 먼저 깨졌고, 의도를 유지하며 진짜 바인딩 키로 채웠다.
+>
+> RUN_SCOPE 밖(`bms-balancing/`)이므로 degradation-degeneracy 의 `source_digest` 는 움직이지
+> 않았다 — 게이트 트랙과 섞지 않는다는 경계는 그대로다.
+
 > 기계용 회신. 리뷰 원본은 `reviews/r17_repros/codex/pkg/R17_REVIEW.md` (패키지 zip sha256
 > `ef14d6a82693266c6a89e6dd17152020ca96970f152a95f2c68cb5db85fedf2d`, 48,525 B, 28 파일).
 > 리뷰어가 인용한 식별을 **우리 쪽에서 확인**했다: 요청문 `git show dfc1fc78:bms-balancing/reviews/R17_REQUEST.md | sha256sum`
