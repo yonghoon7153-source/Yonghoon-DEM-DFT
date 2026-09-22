@@ -9,7 +9,7 @@
 |---|---|---|---|
 | **P1** | **OMat24 본문 PDF**<br>*Nat. Comput. Sci.* (2026) `10.1038/s43588-026-00996-w` · arXiv **2410.12771** | 사용자 다운로드 실패. SI(16 pp)와 보충 데이터만 확보 → `db/external/omat24/` | ① **softening 정의식** — 우리는 CSV 값만 있고 `force_softening = ?` 의 식을 모른다<br>② `eqv2/OAM` 포논 중앙값 **0.2565** 이상치 — 같은 이름 힘 softening 은 1.0015 로 모순<br>③ **UMA 와의 관계** — UMA-S 가 표의 어느 행에도 없다 |
 | **P2** | **[30]** `Deciphering Surface Hydrolysis Mechanism in Argyrodite via Large-Scale Machine Learning Potential Simulations`<br>Ji Hoon Kim & Sang Uck Lee, ***Adv. Funct. Mater.* 2026** | **accepted · production 대기** (권·쪽·DOI 미발급, 2026-08-26 랩 발표목록 기준). 색인도 아직 안 됐다 | ① **Q4** — H₂S **발생량 정량**(우리 db 의 Taklu 1.07→0.49 cm³/g 와 대조 가능한가)<br>② **T2** — guided MD **유도좌표 정의**(D_S–H · D_O–P)와 ICOHP 기술자 방법 원본<br>③ MD 조건 전부(온도·앙상블·물층 두께·초기배치) — 데이터셋만으론 모른다 |
-| **P3** | **He, X.; Zhu, Y.; Epstein, A.; Mo, Y.** *"Statistical variances of diffusional properties from ab initio molecular dynamics simulations"*, **npj Comput. Mater. 4, 18 (2018)** · DOI `10.1038/s41524-018-0074-y` | 웹 접근이 프록시에 막힘(nature.com · semanticscholar · arxiv · ADS 전부 403). 서베이도 **⚠ PDF 미보유** 딱지 | **β 문턱 0.8 의 대안 근거.** 이 논문이 *확산 이벤트 수*로 분산을 정량하는 원전인데 **구체적 수치 기준을 우리가 못 봤다.** `kb/concepts/beta-gate.md` §7-5 가 이것에 걸려 있다 |
+| ~~**P3**~~ | ~~He, Zhu, Epstein, Mo 2018 (npj Comput. Mater. **4**, 18)~~ | — | ✅ **2026-09-22 확보·판독 완료 → 아래 §✅ 로 옮겼다** |
 
 **대체 경로 (지금 하고 있는 것)**
 - P1 → **보충 데이터로 갈 수 있는 데까지 갔다**(`db/external/omat24/README.md`). 정의식 없이도
@@ -23,6 +23,14 @@
 
 **저자 직접 요청 (P2)** — 세션에서 질문한 이력이 있어 명분이 있다. 교신저자 주소는
 `suleechem@skku.edu` (SSRN 6772406 표지에 인쇄돼 있다).
+
+---
+
+## ✅ 닫힌 것 (이력 — 여기 남겨야 다음 사람이 "왜 없어졌나" 를 안 묻는다)
+
+| # | 무엇 | 언제·어떻게 | 막혀 있던 것은 어떻게 됐나 |
+|---|---|---|---|
+| **P3** | **He, X.; Zhu, Y.; Epstein, A.; Mo, Y.** *"Statistical variances of diffusional properties from ab initio molecular dynamics simulations"*, *npj Comput. Mater.* **4**, 18 (2018) · DOI `10.1038/s41524-018-0074-y` | **2026-09-22.** 본문 + SI + `pymatgen-analysis-diffusion` 코드까지 읽고 digest 작성 → `litdb/papers/he2018_statistical_variances_diffusional_aimd.md`. 종전 사유(프록시 403)는 해소됐다 | ⛔ **막혀 있던 것이 풀리면서 우리 원장 한 줄이 틀렸음이 드러났다** — `kb/concepts/beta-gate.md` §7-3 이 *"He 2018 은 원칙만 말하고 창을 고정하지 않는다"* 라고 적고 있었는데, 논문은 `0.5a²`·`<0.7 t_tot` 을 주고 코드는 `4.5 Å²`·`0.5 t_tot` 을 박아 놨다. 같은 날 정정했다. β 문턱 0.8 판정 자체는 안 바뀐다(He 가 고정한 건 **적합 창**이지 β 문턱이 아니다) |
 
 ---
 
