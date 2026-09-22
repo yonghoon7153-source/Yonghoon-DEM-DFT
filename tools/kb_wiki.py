@@ -546,8 +546,14 @@ def selftest_env():
 #: 그래서 파일명으로 짝을 추측하지 않는다. 본문의 `요청:` 역링크가 정본이고,
 #: 없으면 주제 slug 일치를 쓴다.
 #: ⚠ 파일명 날짜는 `2026_08_31` — **밑줄**이다 (frontmatter 의 `2026-08-31` 과 다르다)
-REV_PROMPT = re.compile(r"^codex_([A-Z]{1,2}\d?)_prompt_(.+)_(\d{4}_\d{2}_\d{2})\.md$")
-REV_REPLY = re.compile(r"^codex_([A-Z]{1,2}\d?)_(?:reply_)?(.+?)(?:_reply)?_(\d{4}_\d{2}_\d{2})\.md$")
+#: ⛔ 2026-09-22 — 접두어를 `codex_` 로 **하드코딩**하고 있었다. 사슬이 codex 하나뿐이라
+#:   그동안 안 드러났는데, 다른 상대와의 왕복(`li2s1a_BS_*`)을 넣자마자 **색인에서 조용히
+#:   빠졌다**. 파일은 있는데 INDEX 에 안 나오는 종류의 침묵이라 다음 사람이 "회신 안 했네"
+#:   로 읽는다. ⇒ 접두어를 **채널 이름**으로 일반화한다 (소문자·숫자, 예: codex · li2s1a).
+#:   ⚠ 라벨(A–BS)은 **채널마다 독립**이다 — 같은 라벨이 두 채널에 있을 수 있다.
+REV_CHAN = r"(?P<chan>[a-z][a-z0-9]*)"
+REV_PROMPT = re.compile(r"^" + REV_CHAN + r"_([A-Z]{1,2}\d?)_prompt_(.+)_(\d{4}_\d{2}_\d{2})\.md$")
+REV_REPLY = re.compile(r"^" + REV_CHAN + r"_([A-Z]{1,2}\d?)_(?:reply_)?(.+?)(?:_reply)?_(\d{4}_\d{2}_\d{2})\.md$")
 #: status 가 이 꼴이면 '아직 안 보냈다' 는 주장이다
 REV_WAITING = re.compile(r"발송\s*(대기|전)|미발송")
 #: 회신 본문이 프롬프트를 가리키는 역링크
@@ -574,8 +580,9 @@ def review_chain():
         m = REV_PROMPT.match(p.name)
         if m:
             fm, _ = parse_fm(p.read_text(errors="ignore"))
-            prompts[p.name] = {"label": m.group(1), "slug": m.group(2),
-                               "date": m.group(3).replace("_", "-"), "path": p,
+            prompts[p.name] = {"label": m.group(2), "slug": m.group(3),
+                               "date": m.group(4).replace("_", "-"), "path": p,
+                               "chan": m.group("chan"),
                                "status": (fm or {}).get("status", "(frontmatter 없음)")}
             continue
         if "_reply" in p.name:
@@ -583,8 +590,9 @@ def review_chain():
             t = p.read_text(errors="ignore")
             bl = REV_BACKLINK.search(t)
             replies.append({"path": p, "name": p.name,
-                            "label": m2.group(1) if m2 else "?",
-                            "slug": m2.group(2) if m2 else "",
+                            "label": m2.group(2) if m2 else "?",
+                            "slug": m2.group(3) if m2 else "",
+                            "chan": m2.group("chan") if m2 else "?",
                             "backlink": bl.group(1) if bl else None})
     # 판정 인용 (보조 증거) — repo 전체에서
     cited = {}
@@ -744,6 +752,28 @@ def selftest_reviews():
         "[음성] '회신 수령' 은 대기로 세지 않는다")
     chk(bool(REV_WAITING.search("발송전")) and bool(REV_WAITING.search("발송 대기")),
         "'발송전'·'발송 대기' 두 표기를 다 잡는다 (실물에 둘 다 있다)")
+    # ── 채널 접두어 (2026-09-22) — **`codex_` 를 하드코딩하고 있었다** ────────────
+    #   사슬이 codex 하나뿐이라 안 드러났는데, `li2s1a_BS_*` 를 넣자마자 색인에서
+    #   **조용히 빠졌다**. 파일은 있는데 INDEX 에 안 나오는 침묵이라 다음 사람이
+    #   "회신 안 했네" 로 읽는다. 그리고 그 버그가 `internal_*` 회신도 통째로 가리고
+    #   있었다 — 고치자마자 codex_W·codex_X 의 '대기인데 회신 있음' 모순 2건이 새로 떴다.
+    _pm = lambda n: REV_PROMPT.match(n)
+    _rm = lambda n: REV_REPLY.match(n)
+    chk(bool(_pm("codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md")),
+        "채널: 기존 `codex_` 는 그대로 읽는다 (회귀 방지)")
+    chk(bool(_pm("li2s1a_BS_prompt_li2s_relax_provenance_2026_09_22.md")),
+        "[음성] 다른 채널 `li2s1a_` 프롬프트도 읽는다 (이게 안 되면 색인에서 사라진다)")
+    chk(bool(_rm("li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md")),
+        "[음성] 다른 채널 회신도 읽는다")
+    chk(bool(_rm("internal_Z2_reply_polaron_S0_2026_09_03.md")),
+        "[음성] `internal_` 회신도 읽는다 — 이걸 놓쳐서 모순 2건이 가려져 있었다")
+    _m = _pm("li2s1a_BS_prompt_li2s_relax_provenance_2026_09_22.md")
+    chk(_m and _m.group("chan") == "li2s1a" and _m.group(2) == "BS",
+        "[음성] 채널과 라벨을 **따로** 뽑는다 (chan=li2s1a · label=BS)")
+    chk(not _pm("Codex_BS_prompt_x_2026_09_22.md"),
+        "[음성] 대문자로 시작하는 접두어는 채널이 아니다 (라벨과 섞이면 안 된다)")
+    chk(not _pm("codex_BS_prompt_x_2026-09-22.md"),
+        "[음성] 날짜가 하이픈이면 안 받는다 — 파일명은 **밑줄** 규약이다")
     # ⛔음성: 파일명으로 짝을 추측하면 틀리는 실물 사례 (AV_reply ← AU_prompt)
     _au = [r for n, r in prompts.items() if n.startswith("codex_AU_prompt")]
     if _au:

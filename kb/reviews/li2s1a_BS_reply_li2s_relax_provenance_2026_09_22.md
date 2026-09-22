@@ -4,6 +4,7 @@ tags: [review, codex, li2s, lpscl_smallcell, md, provenance, correction]
 letter: BS
 date: 2026-09-22
 track: li2s / lpscl_smallcell_glass
+channel: li2s1a
 kind: reply
 status: 회신문-작성됨
 관련: >

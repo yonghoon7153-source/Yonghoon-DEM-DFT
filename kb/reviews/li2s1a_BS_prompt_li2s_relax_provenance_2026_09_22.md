@@ -7,7 +7,8 @@ kind: prompt
 tags: [review, codex, li2s, lpscl_smallcell, md, provenance]
 status: 수신됨-회신함
 direction: ⚠ 역방향
-관련: kb/reviews/codex_BS_reply_li2s_relax_provenance_2026_09_22.md
+channel: li2s1a
+관련: kb/reviews/li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md
 ---
 
 # BS — 수신 원문 (1저자 → 우리)
@@ -16,6 +17,10 @@ direction: ⚠ 역방향
 > 검토자가 reply 를 준다*. 이번 BS 는 **1저자가 먼저 보냈고 우리가 답했다.**
 > INDEX 생성기가 prompt↔reply 짝으로 돌기 때문에 **수신 원문을 prompt 자리에** 둔다.
 > 파일 이름의 `prompt` 를 *"우리가 보낸 것"* 으로 읽지 마라.
+>
+> ⚠ **채널이 `codex` 가 아니라 `li2s1a` 다** (1저자 지정 2026-09-22). kb/reviews 의
+> 나머지 118 건은 codex 사슬이고 **이 왕복은 다른 상대**다. 라벨 `BS` 는 채널마다
+> 독립이므로 codex 의 BS 와 혼동하지 마라 (codex 는 BR 까지다).
 >
 > ⛔ **아래는 원문 그대로다. 고치지 않는다.** (회신 원문을 개서하면 이력이 깨진다 —
 > CLAUDE.md §계산 규율.) 우리 답·정정은 짝 파일에 있다.

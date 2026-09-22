@@ -8,8 +8,8 @@
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 231건)
 - 2026-09-22 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
-- 2026-09-22 · `kb/reviews/codex_BS_prompt_li2s_relax_provenance_2026_09_22.md` — BS 수신 원문 — li2s relax 계보·E_hull 분해·−38.4 읽는 방향·600 K 문구 · 수신됨-회신함
-- 2026-09-22 · `kb/reviews/codex_BS_reply_li2s_relax_provenance_2026_09_22.md` — BS 회신 — relax 프레임 동정 불가 · E_hull 분해 · −38.4 상한 읽기 · 600 K 문구 정정 · 회신문-작성됨
+- 2026-09-22 · `kb/reviews/li2s1a_BS_prompt_li2s_relax_provenance_2026_09_22.md` — BS 수신 원문 — li2s relax 계보·E_hull 분해·−38.4 읽는 방향·600 K 문구 · 수신됨-회신함
+- 2026-09-22 · `kb/reviews/li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md` — BS 회신 — relax 프레임 동정 불가 · E_hull 분해 · −38.4 상한 읽기 · 600 K 문구 정정 · 회신문-작성됨
 - 2026-09-20 · `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안) · 완료 (2026-09-20 · 다음 주 문서는 새 파일)
 - 2026-09-19 · `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적) · open
 - 2026-09-18 · `kb/methodology/amorphous_overlap_gate_lessons_2026_09_18.md` — 비정질 겹침 게이트 — 다음 캠페인 설계로 넘기는 것 셋 · 제안 (다음 캠페인 설계용 · 이번 판정 재해석 금지)
@@ -287,8 +287,6 @@
 - `kb/reviews/codex_BQ_reply_eos_v0_disordered_2026_09_13.md` — 회신 BQ — 예비 판정 (원문)
 - `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나  (2026-09-14 · 발송됨)
 - `kb/reviews/codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 회신 — G4 는 합격선이 아니라 경보. '셀 문제 배제' 는 받아들일 수 없다  (2026-09-14 · 회신됨)
-- `kb/reviews/codex_BS_prompt_li2s_relax_provenance_2026_09_22.md` — BS 수신 원문 — li2s relax 계보·E_hull 분해·−38.4 읽는 방향·600 K 문구  (2026-09-22 · 수신됨-회신함)
-- `kb/reviews/codex_BS_reply_li2s_relax_provenance_2026_09_22.md` — BS 회신 — relax 프레임 동정 불가 · E_hull 분해 · −38.4 상한 읽기 · 600 K 문구 정정  (2026-09-22 · 회신문-작성됨)
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서)  (2026-08-20 · 리뷰대기)
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
@@ -342,6 +340,8 @@
 - `kb/reviews/internal_Z_reply_polaron_S0_2026_09_03.md` — 회신 Z — 폴라론 S0 내부 적대적 리뷰 (NO-GO · P0 4 · P1 12)  (2026-09-03 · 회신반영)
 - `kb/reviews/internal_lens_review_c12_v34_2026_09_03.md` — 내부 6렌즈 리뷰 — C-12 v34 (발송 전 마지막 리뷰) · NO-GO → v35 ✔읽음  (2026-09-03 · 진행)
 - `kb/reviews/internal_review_AX_lpsocl_600K_2026_09_04.md` — 내부 리뷰 AX — LPSOCl 600 K 개정 (Codex 대체 · 자체 적대적 리뷰)  (2026-09-04 · 판정 완료)
+- `kb/reviews/li2s1a_BS_prompt_li2s_relax_provenance_2026_09_22.md` — BS 수신 원문 — li2s relax 계보·E_hull 분해·−38.4 읽는 방향·600 K 문구  (2026-09-22 · 수신됨-회신함)
+- `kb/reviews/li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md` — BS 회신 — relax 프레임 동정 불가 · E_hull 분해 · −38.4 상한 읽기 · 600 K 문구 정정  (2026-09-22 · 회신문-작성됨)
 - `kb/reviews/litdb_dopant_sota_2026_09_09.md` — litdb_dopant_sota_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/section3_review_candidates.md` — 📋 §3 리뷰 코멘트 후보 — 소거법 작업용 (ECER-D-26-00097)
 - `kb/reviews/section3_review_comments_compressed.md` — Comments on Section 3 (Intrinsic Stability of Sulfide SEs) — 압축판 v2
