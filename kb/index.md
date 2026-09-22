@@ -1,17 +1,19 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-22 · managed-files: 434
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-22 · managed-files: 436
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 233건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 235건)
 - 2026-09-22 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-22 · `kb/reviews/li2s1a_BS_prompt_li2s_relax_provenance_2026_09_22.md` — BS 수신 원문 — li2s relax 계보·E_hull 분해·−38.4 읽는 방향·600 K 문구 · 수신됨-회신함
 - 2026-09-22 · `kb/reviews/li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md` — BS 회신 — relax 프레임 동정 불가 · E_hull 분해 · −38.4 상한 읽기 · 600 K 문구 정정 · 회신문-작성됨
 - 2026-09-22 · `kb/reviews/li2s1a_BT_prompt_neff_window_bootstrap_2026_09_22.md` — BT 수신 원문 — 정확값 지문 · N_eff 창 불일치 지적 · 부트스트랩 제안 · 수신됨-회신함
 - 2026-09-22 · `kb/reviews/li2s1a_BT_reply_neff_window_bootstrap_2026_09_22.md` — BT 회신 — relax 프레임은 36 중에 없다 · §6 N_eff 철회 · 부트스트랩 전환 · 회신문-작성됨
+- 2026-09-22 · `kb/reviews/li2s1a_BU_prompt_variance_ratio_rule_2026_09_22.md` — BU 수신 원문 — 정확값 대조 다음 수 · 분산비 판정 규칙 · 블록 규칙 선박기 · 수신됨-회신함
+- 2026-09-22 · `kb/reviews/li2s1a_BU_reply_variance_ratio_rule_2026_09_22.md` — BU 회신 — 판정 규칙을 분산비로 교체 · 내 IQR 초안은 두 번 틀렸다 · 블록 규칙 선박기 · 회신문-작성됨
 - 2026-09-20 · `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안) · 완료 (2026-09-20 · 다음 주 문서는 새 파일)
 - 2026-09-19 · `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적) · open
 - 2026-09-18 · `kb/methodology/amorphous_overlap_gate_lessons_2026_09_18.md` — 비정질 겹침 게이트 — 다음 캠페인 설계로 넘기는 것 셋 · 제안 (다음 캠페인 설계용 · 이번 판정 재해석 금지)
@@ -25,8 +27,6 @@
 - 2026-09-14 · `kb/syntheses/sdcp_eads_revision_defense_2026_08_23.md` — SDCP E_ads — 리비전 방어 카드 (원고 v5, SI 미기재분) · 확정 — 2026-08-23 사용자 결정: 이 두 항목은 SI 에 넣…
 - 2026-09-14 · `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 일곱과 순서 · 완료
 - 2026-09-13 · `kb/methodology/silent_wrong_path_2026_09_13.md` — 조용히 틀린 경로 — 하루에 여섯 번 나온 한 부류 · 채택
-- 2026-09-13 · `kb/reviews/codex_BP_prompt_static_pair_result_2026_09_13.md` — 회신 BP 요청 — 정적대조 2 SCF 실행 결과 (BO 조건 1 이행) · 파일럿 보고량 재질의 · 발송대기
-- 2026-09-13 · `kb/reviews/codex_BP_reply_static_pair_result_2026_09_13.md` — 회신 BP 접수 — 조건 1 이행 인정 · 파일럿 조건부 GO (셀 정책 구현 불일치로 즉시 실행 승인은 아님) · 접수
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -210,7 +210,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (145)
+## reviews/ (147)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-22 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -344,6 +344,8 @@
 - `kb/reviews/li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md` — BS 회신 — relax 프레임 동정 불가 · E_hull 분해 · −38.4 상한 읽기 · 600 K 문구 정정  (2026-09-22 · 회신문-작성됨)
 - `kb/reviews/li2s1a_BT_prompt_neff_window_bootstrap_2026_09_22.md` — BT 수신 원문 — 정확값 지문 · N_eff 창 불일치 지적 · 부트스트랩 제안  (2026-09-22 · 수신됨-회신함)
 - `kb/reviews/li2s1a_BT_reply_neff_window_bootstrap_2026_09_22.md` — BT 회신 — relax 프레임은 36 중에 없다 · §6 N_eff 철회 · 부트스트랩 전환  (2026-09-22 · 회신문-작성됨)
+- `kb/reviews/li2s1a_BU_prompt_variance_ratio_rule_2026_09_22.md` — BU 수신 원문 — 정확값 대조 다음 수 · 분산비 판정 규칙 · 블록 규칙 선박기  (2026-09-22 · 수신됨-회신함)
+- `kb/reviews/li2s1a_BU_reply_variance_ratio_rule_2026_09_22.md` — BU 회신 — 판정 규칙을 분산비로 교체 · 내 IQR 초안은 두 번 틀렸다 · 블록 규칙 선박기  (2026-09-22 · 회신문-작성됨)
 - `kb/reviews/litdb_dopant_sota_2026_09_09.md` — litdb_dopant_sota_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/section3_review_candidates.md` — 📋 §3 리뷰 코멘트 후보 — 소거법 작업용 (ECER-D-26-00097)
 - `kb/reviews/section3_review_comments_compressed.md` — Comments on Section 3 (Intrinsic Stability of Sulfide SEs) — 압축판 v2
