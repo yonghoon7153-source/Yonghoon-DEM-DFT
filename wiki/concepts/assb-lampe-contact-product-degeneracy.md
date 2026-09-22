@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-22
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
+sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -140,7 +140,7 @@ physical significance** of the parameters" 라고 쓴다.
 |---|---|---|
 | **율 스윕** (최소 2 율, `i → 0` 포함) | `η(i)` 를 지워 `θ_AM·Q_material` 만 남긴다 | ★ 2호 논지의 재사용 |
 | **HPPC / 펄스** | 과전압을 용량과 독립으로 읽는다 → `A_eff·ε_p/R_s` 를 직접 | ★★ **원전이 수집하고 버렸다** |
-| **다중 SOC EIS** | 같은 곱의 주파수 분해 | ★ 원전이 100/50/0 % 를 재고 100 % 만 썼다 |
+| **다중 SOC EIS** | 같은 곱의 주파수 분해 | ★ 원전이 100/50/0 % 를 재고 100 % 만 썼다. ⚠⚠ **단독으로는 못 쓴다 — 아래 §"EIS 는 대가를 받는다"** |
 | **압력 되돌림** | `θ_AM` 만 (부분) 복원 → 진짜 재료 손실과 분리 | [[assb-pressure-reapplication-separation-test]] |
 | **`J^T J` 최소 고유벡터** | 이 곱이 실제로 null 방향인지 수치 확인 | [[fitting-degeneracy]] 의 "그리는 법" |
 

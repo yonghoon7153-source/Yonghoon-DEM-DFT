@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-22
 type: research-question
 tags: [battery, degradation, research, assb]
-sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md]
+sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -198,7 +198,20 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 
 | **★★ Huo et al. 2025 (`assb` 9호 — 첫 **실험 + 파라미터 식별 동시** · 첫 **결합 전기화학-노화 모델** · 상하이교통대)** | **부분 — 그리고 자기 모순이다.** `[인쇄]` `A^p_eff = 0.4938` (무차원, 양극, BV 분모에 정의) = 이 계보 최초의 **모델 파라미터로서의 양극 접촉 면적비**. ⚠ (a) **적합값**, (b) **노화 중 고정** → `θ(N)` 0, (c) `[재현]` 자기 SEM 의 입자 반경(≈1.05 µm)을 쓰면 **0.055 로 9 배 움직인다**. `contact loss` 3 회는 전부 **남의 논문 인용**(refs 17,18,21) | **부분.** SEM(표면, 정성, 노화 1 + 신품 1) · EIS(2-전극, 등가회로) · **압력 센서 연속 시계열(★ 계보 최초)**. **XRD·XPS·TEM·ICP·적정·3-전극·반쪽전지(노화품) 전부 0.** `LAM_PE` 를 **적합 밖에서** 확인한 관측 **0 건** | ★★ **새 층위: `fitted-single-parameter`.** 노화 라벨 = **1-파라미터 PSO 적합**(`ε_p`)이고 정답축이 **자기 자신의 방전곡선**이다. 오차막대 0 · 셀 **2** · 반복 0 · `n =` 0 회. ★ **Table 3 에 provenance 열이 없고 6 개 값이 비공개**(`[인쇄]` "not disclosed") | **0 (9/9 편).** `uncertaint*`·`identifiab*`·`sensitiv*`·`confidence`·`Fisher`·`condition number`·`bootstrap`·`initial guess`·`multi-start`·`error bar`·`regulariz*`·`objective function` **전수 0 회**. ★★★ **성질이 또 바뀐다** — 8호가 "이름을 실패 모드 목록에 올렸다" 였다면 **9호는 자기 표 안에 축퇴의 지문 셋을 인쇄해 놓고 다르게 부른다**: ① `R_SEI` 분해가 동일 공정 두 셀에서 **+37 % / −80 %** 인데 `[인쇄]` "장비 정확도·**적합 오차**·열평형" 탓으로 지나간다 ② `A_eff·ε_p/R_s` **곱 축퇴** ③ `k_LAM` 셀 간 **2.15 배**를 `[인쇄]` "slightly different" | **해당 없음 → 그러나 새 형태로 열린다.** `indium`·`Li-In` 0 회. ★ **계보 최초의 합금(Li-Si) 음극**이고 모델은 `U^n_ocp(θn)` 를 **비평탄 보간 함수**로 둔다. `[재현]` 모델 N/P ≈ **3.14** → 사이클당 음극 화학량론 스윙 **31.8 %**. → **이 카드의 "전고체 음극은 평탄 → 5→3 붕괴" 가 이 셀에는 성립하지 않는다.** ⚠ N/P 는 SI 가 제출 거부한 값이고 **우리가 Table 3 에서 계산했다** | ★★ **있다 — 계보 최초의 `in operando` 연속 힘 시계열.** `[도표]` Fig. 6 이 12 사이클의 힘을 `Kg` 로 기록(고점 296.6 · 저점 294.0 · 스윙 2.6). `[재현]` 면적 7.854e−5 m² 환산 → **평균 ≈36.9 MPa · 주기 변조 ≈0.32 MPa**. ⚠ **`MPa` 0 회 · 제작 압력값 0 · 교정 0 · 스윕 0 · 노화 전 구간 추세 0**. ★★ **압력이 모델에 들어가지 않는다** — Eq. (2) 는 사이클 수만의 함수다 | **해당 없음** (Li-Si 합금 음극). `dead li`·`isolated` 0 회. ⚠ 그리고 **CE 를 SI 에서 명시적으로 제출 거부**한다 → `LLI` 의 전하 수지 채널이 닫힌다 | **있다(CC).** **단결정 NCM811 + H₃BO₃ 코팅**(★ 계보 최초의 붕산 코팅) : Li₆PS₅Cl : VGCF = **56:40:4 wt%**, `[재현]` **10.7 mg cm⁻²**, `[도표]` **2.0–4.3 V**, 전 구간 기울기 있음. ★ `[도표]` Fig. A.1(a) = **NCM811 반쪽전지 dV/dQ vs SOC** (계보 최초의 양극 반쪽셀 미분곡선) ⚠ **측정조건 전무**. **OCV·GITT 0 회** — 모델의 `U_ocp` 두 곡선은 출처가 없다 |
 
-**1호 단독 1.5 → 2편 ≈2.5 → 3편 ≈3.0 → 4편 ≈5.5 → 5편 ≈6.5 → 6편 ≈7.0 → 7편 ≈7.0 → 8편 ≈7.0 → 9편 누적 ≈7.5 칸이다.**
+| **★★★ Vadhva, Hu, Johnson (3인 공동 1저자), Stocker, Braglia, Brett, Rettie 2021 (`assb` 10호 — 첫 **방법론 리뷰** · UCL + **HORIBA MIRA**(기업) · ⚠ **1차 측정 0**)** | **없다 (10/10 편).** `contact loss`·`percolat*`·`θ` **0 회**. 유일한 접점 = `[인쇄]` Fig. 9 본문 "**loss of interfacial contact in the composite cathode due to volumetric expansion**" — ★★ 그런데 그 문장이 **분해층 형성과 `and` 로 한 저항(`R_MF`)에 묶여 있다**. 가장 가까운 정량 채널은 **TLM + 전자차단 대칭셀의 유효 이온 굴곡도**(ref. 57 Kaiser) — `θ_AM` 과 같은 양이 아니다 | **★★ 있다 — 그러나 "가르는 관측" 이 아니라 "가르는 절차" 다.** ① **상보 대칭셀 쌍**(차단/가역) ② **저온으로 시상수 벌리기**(ref. 82 Bron — `R_gb` 를 −130 °C 에서 동정해 **실온 적합의 구속으로 되가져온다**) ③ **가압으로 큰 시상수 제거**(ref. 28, `[도표]` 400 MPa 에서 `R_int` 가 사라지자 `GB` 가 드러난다) ④ **DRT 로 개수를 먼저 정하기**(ref. 62) ⑤ **4 단자**(ref. 21) ⑥ **K–K / Lin-KK 사전 검증**(ref. 41–43). ⚠ **전부 재인용 · ASB 복합양극에 `LAM_PE` ↔ 접촉 손실로 적용된 사례 0** | **해당 없음 — 리뷰다** (1차 측정 0, 열화 라벨 0: `LLI`·`LAM`·`degradation mode`·`half-cell` 전수 0 회). ★ **새 층위 하나**: `[인쇄]` **기관 간 라운드로빈 산포** — `>1 mS cm⁻¹` 에서 상대 중앙값 오차 **22 %**, `<1` 에서 **~10 %** (⚠ 재인용, ⚠⚠ 인용 번호가 틀렸다 — D5). **"같은 양을 여러 기관이 재면 얼마나 벌어지는가" 의 첫 숫자** + `[인쇄]` **삼중 측정 권고** | **★★★ 0 이 깨진다 — 단 "쟀다" 가 아니라 "일반 현상임을 인쇄했다".** `[인쇄]` "**As no solution to an EIS spectrum is unique**" · "**The non-uniqueness of an ECM solution**" · "**the inclusion of more elements will tend to improve the fit**" · "how many time constants … **highly subjective**" · "Physical features **may not be visible**" · **AIC 로 회로 순위 매기기**(ref. 51,52; `[인쇄]` "only recently applied to **simulated** data") · **DRT 는 `ill-posed`, `regularization` 필요**. ★★ 그리고 **"분해 가능한 RC 개수 = 실험 조건의 함수" 를 다섯 사례로 보인다**(황화물 5 중 3 만 입계 분해 · LGPS 실온 원호 0 개 · 400 MPa 에서 GB 등장 · 폴리머 60 °C 에서 상경계 소멸 · **노화가 RQ 를 3→4 로**). ⚠ **측정 0** — `identifiab*`·`uncertaint*`·`confidence`·`condition number`·`error bar` **전수 0 회** | **★★ 부분 — 새 경고 둘.** `indium` 2 · `Li-In` 2 회. ① Li 금속이 비이상적이라 **Li-In 을 기준극 대안**으로 제시 ② ★★ `[인쇄]` **방전 중 In 음극 계면 저항이 리튬화도(In-rich 화)로 크게 증가** ⇒ **`R_anode(N)` 에서 노화분과 SoC 분이 안 갈린다** (4호 `R_LF` ≈157 배 해석에 직접 걸린다) ③ ★★★ `[인쇄]` **In–Li 음극 셀은 LMA 셀과 전극↔주파수 귀속이 반대다** ⇒ **"저주파=양극" 같은 보편 규칙이 없다**. ⚠ 전위 오프셋 안정성은 여전히 0 | **부분 — 값 3 개.** `[인쇄]` **~120 MPa**(σ 포화, 단 그것이 인가 최대압) · `[인쇄]` **~400 MPa**(Li₆PS₅Cl σ 는 거기까지 계속 증가, ref. 84 = **Doux JMCA 2020**, 우리 5호의 자매) · `[도표]` **400 MPa**(Fig. 11a, Li\|LLZO\|Li). ★★ **개념 기여가 값보다 크다**: ① `[인쇄]` "**<1 Ω cm², remained after the pressure was removed**" = **5호의 이력을 산화물에서 독립 재현** ② **압력이 분해능 연산자다** ③ `[인쇄]` 제언 2 가 **다변수(온도·압력·SoC) 시험**을 ECM 구축의 표준 처방으로 올린다. ⚠ **압력→용량 곡선 0 (10/10 편)** | **없다.** `dead li`·`isolated` 0 회. ★ 인접 둘: ① `[인쇄]` **soft short**(LLZO 내부 Li 석출)를 **`R_leak` ECM 원소**로 잡고 `R_b`·`R_gb` 안정성으로 부재 확인 ② `[인쇄]` **NLEIS 가 상용 LiB 에서 Li 도금 검출**(ref. 184). 둘 다 **석출**이지 **고립**이 아니다 | **없다.** `OCV` **1 회**(⚠ 그것도 `[인쇄]` "**OCV variation due to small capacity changes can affect the low-frequency range**" — 즉 **OCV 드리프트가 EIS 저주파를 오염시킨다**는 경고다). `GITT`·`half-cell` 0 회, **V–Q 곡선 0 장**. ★ 대신 `[도표]` Fig. 9b/9c = **SoC 축 위 EIS 10+10 점**(충전 3.305–3.599 V / 방전 3.442–2.000 V, LCO) — **전압축은 있고 용량축이 없다** |
+
+**1호 단독 1.5 → 2편 ≈2.5 → 3편 ≈3.0 → 4편 ≈5.5 → 5편 ≈6.5 → 6편 ≈7.0 → 7편 ≈7.0 → 8편 ≈7.0 → 9편 ≈7.5 → 10편 누적 ≈8.0 칸이다.**
+★★★ **10호가 `Q4` 의 0 을 처음으로 깼다 — 그리고 깬 방식을 정확히 적어야 한다.**
+**"쟀다" 가 아니다**(측정 0, 10/10 편 그대로). **"축퇴가 일반 현상임을 방법론으로
+인쇄했다"** 이다: `[인쇄]` "**no solution to an EIS spectrum is unique**" ·
+"**the inclusion of more elements will tend to improve the fit**" ·
+"how many time constants … **highly subjective**", 그리고 모델 선택을 **AIC** 라는
+통계 문제로 명명한 뒤 `[인쇄]` "**thorough validation against experiment in the
+context of ASBs is desirable**" 로 **열린 문제로 등록**한다.
+→ **Q4 의 성질이 네 번째로 바뀌었다**: 안 쟀다(1–7호) → 이름이 로드맵 실패 모드에
+올랐다(8호) → 지문이 자기 표 안에 있고 다르게 불린다(9호) →
+**방법 자체가 비유일하다는 것이 분야의 공식 문장이 됐다(10호).**
+⚠ **`Q1` 은 10/10 편이 여전히 0 이다.**
 ★ **9호가 반 칸을 늘렸다** — **Q6 이 "점·스윕" 에서 "시계열" 로** 바뀐 것과 **Q3 의 새 층위**(`fitted-single-parameter`)다.
 ★★★ **그리고 Q4 의 성질이 세 번째로 바뀌었다**: 1–7호 "안 쟀다" → 8호 "이름이 로드맵의
 실패 모드 목록에 올랐다" → **9호 "지문이 자기 표 안에 있고 다르게 불린다".**
@@ -528,6 +541,93 @@ Q3 에 새 층위(**measured-but-ML-thresholded**)를 추가했다.
 
 ★ 구조 유도는 [[assb-lampe-contact-product-degeneracy]] 에 있다.
 
+### ★★★ 일곱 번째 — **방법론 쪽의 정식 근거** (2026-09-22, Vadhva et al. 2021 · ⚠ Review, 1차 측정 0)
+
+9호가 **축퇴의 지문을 자기 표 안에 남기고 다르게 불렀다**면, 10호는 **그 지문이
+지문이라는 것을 분야의 방법론 리뷰가 이미 인쇄해 두었다**는 것을 보인다.
+⚠ **이것은 재인용 수치가 아니라 저자들의 1차 방법론적 주장이다** — 8호에서 세운
+"리뷰 수치는 근거가 아니다" 규율의 **바깥에 있는 종류**다 (digest §12 참조).
+
+**(가) 9호 §5.1 "하나의 원호에서 두 시상수" 에 대한 판정 — 다섯 문장** (전부 `[인쇄]`):
+
+| # | 문장 | 9호에 대한 함의 |
+|---|---|---|
+| ① | "**As no solution to an EIS spectrum is unique**" | `R_SEI` 점추정에 근거가 없다 |
+| ② | "**the inclusion of more elements will tend to improve the fit** of the equivalent circuit model" | **적합이 잘 맞는 것은 모델 선택의 증거가 아니다** |
+| ③ | "using the **simplest ECM with the fewest elements possible** and ensuring that **physical and chemical meaning is maintained**" | 원호 1 개에 RQ 2 개 + W 는 이 원칙의 반대쪽 |
+| ④ | "it is often challenging to **decipher how many time constants are present** in a given dataset and their assignment can be **highly subjective**" | "두 시상수" 라는 전제 자체가 주관이다 |
+| ⑤ | "Physical features in the cell **may not be visible in the EIS spectra**" | 반대 방향(있는데 안 보임)도 동시에 열려 있다 |
+
+`[재현]` 9호의 회로(`R_b` + RQ + RQ + `W`)는 자유 파라미터가 **1 + 3 + 3 + 2 = 9 개**
+다(CPE 하나가 R·Q·α 셋). **원호 하나에 9 개를 맞춘 것이다** — 9호는 이 개수를 세지
+않는다.
+
+**(나) ★ 처방 — 그리고 9호는 넷 중 하나도 쓰지 않았다** (9호에 `Kramers`·`Kronig`·
+`DRT`·`symmetric cell`·`AIC` **전수 0 회**):
+
+| 처방 | 원전 사례 | 무엇을 하나 |
+|---|---|---|
+| **K–K / Lin-KK 사전 검증** | ref. 41–43 (Boukamp; **Schönleber Lin-KK**, KIT 2015 — 소프트웨어) | 적합 **전에** 데이터가 선형·정상·인과인지 판정 |
+| **DRT 로 시상수 개수를 먼저 정한다** | ref. 62 Pang 2019 — `[인쇄]` "**unambiguously identified three semicircles**" | 개수를 **데이터가** 정하게 한다 |
+| **조건을 바꿔 시상수를 벌린 뒤 구속으로 되가져온다** | ★ ref. 82 Bron (−130 °C 에서 `R_gb` 동정 → 실온 추적) · ref. 28 Krauskopf (400 MPa 로 `R_int` 제거 → `GB` 노출) | **여기(excitation)를 늘려 축퇴를 깬다** |
+| **상보 대칭셀 쌍으로 전극을 귀속** | ref. 70 Iriyama · ref. 126 Ohta · ★ ref. 161 He (LFP 대칭셀 + Li 대칭셀 두 개로 **어느 계면이 변했는지 확정**) | 주파수 추론 대신 **직접 분리** |
+| **AIC 로 회로를 순위 매긴다** | ref. 51,52 (Akaike 1974; **Ingdal 2019**) | 과적합을 **정보량 기준**으로 벌한다. ⚠ **실험 적용 0** |
+
+**(다) ★★★ 새 명제 — "분해 가능한 RC 의 개수는 실험 조건의 함수다"**
+리뷰가 다섯 곳에서 따로 서술하고 **한 명제로 모으지는 않는다. 우리가 모은다**:
+
+| 사례 | 조건 | 개수 변화 |
+|---|---|---|
+| `[도표]` Fig. 8 (Bron, 황화물 5 종) | 동일 −130 °C | **5 중 3 만** `R_gb` 가 분해된다 — 입계는 **5 개 모두에 존재**한다 |
+| `[도표]` Fig. 7 아래 인셋 (LGPS) | 27 °C | **원호 0 개** — 절편뿐인데 σ = 12 mS cm⁻¹ 가 거기서 나온다 |
+| `[도표]` Fig. 11a (Krauskopf, LLZO) | 1 → 400 MPa | `R_int` 가 사라지자 **`GB` 원호가 나타난다** |
+| `[인쇄]` Aziz (PEO) | 60 °C 초과 | **상경계 임피던스가 완전히 소멸** |
+| ★ `[인쇄]` Larfaillou (LiPON) | **60 h / 60 °C 보관 노화** | **RQ 3 개 → 4 개**, 새 RQ 의 귀속은 `[인쇄]` "Li\|LiPON interface **and/or** in the LCO bulk" |
+
+`[해석]` **마지막 줄이 우리 축에 가장 무겁다**: ① **모델 차수가 상태변수다** — 고정
+회로로 노화 시계열을 적합하면(9호가 한 일) 모델이 틀린 구간이 생긴다 ②
+**새로 생긴 저항이 음극 계면인지 양극 벌크인지 가르지 못한 채 출판된다.**
+
+**(라) ★★ EIS 자체가 접촉 손실과 계면상 성장을 한 저항에 합친다** — 이 카드의 핵심:
+
+> `[인쇄]` (Fig. 9 본문, In\|LGPS\|LCO): 충전 중 중주파 양극 계면 저항의 증가는
+> "**loss of interfacial contact in the composite cathode due to volumetric
+> expansion** **and** the **formation of a decomposition layer on exposed LCO**"
+> 때문이다.
+
+`[해석]` **두 기구가 하나의 `R_MF` 에 귀속되고, 가르는 관측은 이 논문에도 리뷰에도
+없다.** [[assb-lampe-contact-product-degeneracy]] 가 **방전 V–Q 영역**에서 보인 곱
+축퇴와 **같은 구조가 주파수 영역에서 반복된다** — 그리고 **두 축퇴는 독립이라 곱해진다**
+(그 페이지의 처방표에서 "다중 SOC EIS" 에 ⚠ 가 붙는 이유).
+
+**(마) ⚠ 관측의 자기 반증 사례 — 이 계보 최초**
+> `[인쇄]` Itagaki 는 Li 기준극으로 in-situ EIS 를 분해해 **흑연 음극의 저주파
+> 인덕턴스**를 추적했다. "**However**, a study using pulsed charge/discharge
+> conditions on a similar cell set-up, concluded that this inductance feature was
+> **measurement artefact, due to the violation of the QSS condition** at low
+> frequencies."
+
+`[해석]` **3 전극 · 기준극 · 전극 분해를 다 갖춘 측정에서도 저주파 특징이 물리가
+아니라 아티팩트였다.** 우리 위키에 이만큼 직접적인 "관측에 붙은 물리 이름이 취소된"
+사례가 없었다. **그리고 같은 논문 Table 1 은 여전히 저주파 인덕턴스를
+`[인쇄]` "degradation processes" 로 적는다** (digest D6).
+
+**(바) ⚠ 문헌의 EIS 수치가 전제 위반 상태로 쌓여 있다**
+`[인쇄]` §2.1 기준은 섭동 **<50 mV**. 그런데 LGPS 를 발견한 *Nature Materials* 논문
+(Kamaya 2011)에 대해 이 리뷰가 적는다 — `[인쇄]` "these EIS measurements were taken
+with **large perturbation voltages of 100 to 500 mV, which may enter the non-linear
+regime** and data were **not explicitly checked using K–K tests**."
+`[해석]` **기준의 2–10 배**다. 분야 정초 수치가 선형성 검증 없이 인용되고 있다.
+
+**(사) 재현성의 첫 숫자** — `[인쇄]` 5 화합물 기관 간 라운드로빈: 상대 **중앙값**
+오차가 `>1 mS cm⁻¹` 재료에서 **22 %**, `<1 mS cm⁻¹` 에서 **~10 %**. 원인으로
+`[인쇄]` "the **fitting of limited EIS data** and microstructural relaxation".
+★ **재료가 좋을수록 산포가 커진다** — 시상수가 주파수창 밖으로 밀려 적합할 데이터가
+줄기 때문이다. ⚠⚠ **재인용이고 인용 번호가 틀렸다**(본문 ref. [85] ↔ 실제 ref. [191]
+Ohno *ACS Energy Lett.* 2020) — 원전을 받기 전까지 **방향만** 쓴다.
+⚠⚠⚠ 그리고 이것은 **단일 파라미터 `σ_ion`** 의 산포다. `[해석]` **다중 RC 적합
+파라미터의 산포는 이것보다 클 수밖에 없다** — 리뷰는 그 말을 하지 않는다.
+
 ### Against / 단서 — "독립 관측이 존재할 수 있다" 쪽
 
 - **ex situ XRD 의 inactive AM 분율** = 원리적으로 `1 − θ_AM` 의 **measured 라벨**
@@ -820,6 +920,50 @@ Q3 에 새 층위(**measured-but-ML-thresholded**)를 추가했다.
    폭. 우리 폭 측정기는 화학 무관이다. 필요한 입력은 **반쪽전지 OCP 두 곡선**(원전이
    출처를 안 적었다)과 **비공개 6 개 파라미터**뿐이다. ⇒ 후속 후보 1 순위가
    원전의 ref [27](같은 연구실의 모델 논문)인 이유다.
+
+### 새 제약 (2026-09-22, Vadhva 2021 — 방법론 리뷰가 들어오면서 붙은 것)
+
+1. **★ 주파수 대역으로 전극을 지목하는 모든 문장에 화학 꼬리표를 단다.**
+   `[인쇄]` "full devices using a **LMA** and an intercalation cathode typically
+   assign the **SE\|cathode interface as the lowest frequency arc**, while those
+   utilising an **In–Li anode assign this to the SE\|anode interface**."
+   ⇒ **우리 계보 4호(In 음극)와 9호(Li-Si 합금 음극)는 서로 다른 화학인데 둘 다
+   주파수로 전극을 지목했다.** 9호의 `R_SEI`(중주파) ↔ `R_ct`(저주파) 귀속은
+   **Li-Si 합금 완전지의 귀속을 확립한 연구가 리뷰에 없으므로 무보증**이다.
+2. **★★ `R_anode(N)` 의 증가를 노화로 읽기 전에 SoC 를 고정했는지 확인한다.**
+   `[인쇄]` In 음극 계면 저항이 **한 번의 방전 안에서도** 리튬화도(In-rich 화)에
+   따라 크게 증가한다. ⇒ 4호의 `[도표]` `R_LF` ≈0.7 → ≈110 kΩ(≈157 배)에서
+   **노화분과 SoC 분이 갈리지 않는다** — 4호는 사이클마다 같은 SoC 에서 쟀는지
+   적지 않았다. **이 카드의 "모르는 것 2" 에 붙는 경고다.**
+3. **★★★ EIS 를 `θ_AM` 의 독립 관측으로 쓰려는 계획에 조건을 단다.**
+   `[인쇄]` 같은 `R_MF` 에 **접촉 손실**과 **분해층 성장**이 함께 귀속된다.
+   ⇒ **EIS 는 [[assb-lampe-contact-product-degeneracy]] 의 곱 축퇴를 깨는 대가로
+   새 축퇴를 들여온다.** 그 페이지 처방표의 "다중 SOC EIS" 는 **단독으로는 못 쓴다** —
+   **압력 되돌림 또는 대칭셀 쌍과 반드시 짝지어야 한다.**
+4. **모델 차수를 시간에 대해 고정하지 않는다.** `[인쇄]` Larfaillou: 신품 **3 RQ**
+   → 60 h/60 °C 노화품 **4 RQ**, 새 RQ 의 귀속은 `[인쇄]` "Li\|LiPON interface
+   **and/or** in the LCO bulk". ⇒ **노화 시계열을 고정 회로로 적합하는 절차(9호)에
+   구조적 결함이 있다.** 그리고 **"and/or" 는 우리가 찾던 형태의 증거다** — 저항
+   하나가 어느 전극 것인지 모르는 채 열화 서사에 들어간다.
+5. **역문제를 풀기 전에 데이터가 그것을 감당하는지 먼저 판정한다 (실행 가능).**
+   **Lin-KK**(ref. 43, KIT 소프트웨어)는 모델 없이 선형·정상·인과를 검사한다.
+   ⇒ 우리가 언젠가 ASSB EIS 를 다루면 **첫 단계**이고, 문헌 EIS 를 인용할 때
+   **"K–K 검증을 했는가" 가 라벨 출처 검사의 새 항목**이 된다
+   (`[인쇄]` Kamaya 2011 은 100–500 mV 섭동에 K–K 검증 0 — 기준의 2–10 배).
+6. **압력이 분해능 연산자이기도 하다 (새 축).**
+   `[도표]` Fig. 11a: **400 MPa 에서 `R_int` 가 사라져야 `GB` 원호가 보인다.**
+   ⇒ [[assb-pressure-reapplication-separation-test]] 의 `P↑` 는 **용량을 되돌리는
+   연산자**일 뿐 아니라 **관측 가능한 시상수 개수를 바꾸는 연산자**다.
+   그리고 `[인쇄]` "**<1 Ω cm², which remained after the pressure was removed**" 는
+   [[assb-stack-pressure-operating-window]] 가 5호에서 잡은 **이력**의 **산화물
+   독립 재현**이다. ⚠ 400 MPa 는 5호의 Li\|황화물 상한(75 MPa)의 **5.3 배** —
+   **창은 전해질 재료의 함수**라는 기존 단서와 일치한다.
+7. **⚠ 우리 위키가 이 리뷰보다 한 칸 앞서 있는 자리가 하나 있다.**
+   리뷰는 `[인쇄]` ML+EIS 의 예로 **ref. 174 = Zhang et al. *Nat. Commun.* 2020**
+   을 든다. **그 논문은 우리가 이미 가지고 있다** ([[zhang2020-eis-aging-dataset]]):
+   `state I~IX` 중 **넷이 DC 전류 중** 측정이라 리뷰 자신의 `stability` 요건을
+   위반하고, **모드 라벨이 없으며**, ARD 가 고른 두 주파수가 **비식별**이다.
+   ⇒ **리뷰의 "ASB 로 옮기자" 는 권고에 우리가 붙일 단서가 이미 검증돼 있다.**
 
 ## Status Log
 
@@ -1214,6 +1358,77 @@ Q3 에 새 층위(**measured-but-ML-thresholded**)를 추가했다.
   (9호 스스로 "정량한 몇 안 되는 문헌" 으로 지목하고 `[인쇄]` "오차가 비교적 크다" 로
   기각한다 — **그 오차의 크기를 우리가 직접 봐야 한다**, 방법이 **relaxed OCP + EIS-PSD**
   라 우리 축과 직결), 3 순위 = **ref [21] Yu 2024 DRT**(§5.1 의 병합 원호를 가르는 도구).
+
+- **2026-09-22 (ingest 10)** — `assb` 10호 논문 흡수:
+  `raw/papers/vadhva2021_eis-for-assb-theory-methods.md`
+  (Vadhva, Hu, Johnson [3인 공동 1저자], Stocker, Braglia, Brett, **Rettie**(교신),
+  *ChemElectroChem* **2021**, *8*, 1930–1947, doi `10.1002/celc.202100108`,
+  **Reviews**, CC-BY open access; 본문 **18 쪽**, **SI 없음**(업로드 큐에 `10._Sup_*`
+  부재 + 본문에 supporting/supplementary 0 회), sha256 봉인).
+  소속: **UCL Electrochemical Innovation Lab** + **The Faraday Institution** +
+  **HORIBA MIRA Ltd.**(기업 — Stocker·Braglia, 확인 완료).
+  자금 **Faraday Institution LiSTAR** + **HORIBA-MIRA/UCL/EPSRC CASE studentship**.
+  컴파일: **새 개념 페이지 없음** (이 논문의 명제는 기존 두 페이지의 같은 축이고,
+  새로 만들면 "EIS 일반 설명" 으로 흐른다 — SCHEMA Page Thresholds). 대신
+  [[assb-lampe-contact-product-degeneracy]] · [[fitting-degeneracy]] ·
+  [[assb-stack-pressure-operating-window]] 보강.
+  **Q1~Q8: 9편 ≈7.5 → 10편 누적 ≈8.0 칸.**
+  ★★★ **`Q4` 의 0 이 처음으로 깨졌다 — 그리고 깬 방식이 중요하다.**
+  **"우리 대신 쟀다" 가 아니다**(측정 0; `identifiab*`·`uncertaint*`·`confidence`·
+  `condition number`·`error bar` **전수 0 회** — 10/10 편이 여전히 안 쟀다).
+  **"축퇴가 일반 현상임을 방법론으로 인쇄했다"** 이다: `[인쇄]` "**no solution to an
+  EIS spectrum is unique**" · "**the inclusion of more elements will tend to improve
+  the fit**" · "how many time constants … **highly subjective**" · DRT 는
+  **`ill-posed`, regularization 필요** · 모델 선택을 **AIC** 로 명명하고
+  `[인쇄]` "**validation against experiment in the context of ASBs is desirable**"
+  로 **열린 문제 등록**. ⇒ Q4 의 성질이 **네 번째로** 바뀌었다.
+  ★★★ **9호 §5.1(하나의 원호에서 두 시상수)에 정식 근거를 준다** — 판정 5 문장 +
+  처방 5 개(K–K/Lin-KK · DRT 로 개수 결정 · **저온·가압으로 시상수 벌리기** ·
+  **대칭셀 쌍** · AIC). **9호는 그중 하나도 쓰지 않았다**(`Kramers`·`DRT`·
+  `symmetric cell`·`AIC` 전수 0 회). `[재현]` 9호 회로의 자유 파라미터는 **9 개**
+  (`R_b`1 + RQ3 + RQ3 + W2)이고 **원호는 1 개**다.
+  ★★ **DRT 를 다룬다 — 그리고 비판적으로 다룬다**(`DRT` 13 회). 8호의 "ill-posed
+  inversion needs regularization" 처방이 여기서 EIS 쪽 1차 진술로 확인되고,
+  개선 경로 3 개(**일반화 DRT** Danzer / **Bayesian DRT** Huang / **2D DRT** Mertens)
+  와 원전이 붙는다. ⚠ 자기 DRT 계산은 0(Fig. 6d 는 재인용).
+  ★★ **새 명제 하나**: **"분해 가능한 RC 의 개수는 실험 조건의 함수다"** — 다섯 사례
+  (황화물 5 중 3 만 입계 분해 · LGPS 실온 원호 0 개 · **400 MPa 에서 GB 등장** ·
+  폴리머 60 °C 에서 상경계 소멸 · **노화가 RQ 를 3→4 로, 새 RQ 귀속은 `and/or`**).
+  ★ **이 카드의 Q2 에 직격**: `[인쇄]` Fig. 9 본문이 **접촉 손실과 분해층 성장을
+  한 `R_MF` 에 함께 귀속**한다 ⇒ **EIS 는 곱 축퇴를 깨는 대가로 새 축퇴를 들여온다.**
+  어긋남 **6 건**(D1 위상각 식 역전 · D2 Eq.3 차원 불일치 · D3 "~10⁹ orders of
+  magnitude" · D4 본문↔캡션 패널 글자 한 칸 어긋남 · D5 라운드로빈 인용 번호 오류
+  [85]↔[191] · D6 저주파 인덕턴스에 두 이름) + 공백 8 건. **방법론적 주장 자체에는
+  어긋남을 못 찾았다.**
+  크로퍼: **15 장 = Fig. 1–14 + Table 1, 누락 0**(⚠ `fig_7.png`/`fig_8.png` 가 같은
+  두 단 영역을 **중복** 크롭 — 누락은 아니다). **실제로 본 것 8 장**
+  (Fig. 2·5·6·7·8·9·11·12) + 본문 4 곳 페이지 렌더(Eq. 3 · Eq. 5 · "10⁹" · `μAh`).
+  ✅ **µ 탈락 없음** — 이 PDF 는 `μAh`·`μm` 를 정상 추출하고 렌더로 재확인했다.
+  후속 후보 1 순위 = **ref [52] Ingdal, Johnsen, Harrington** *Electrochim. Acta*
+  **2019**, *317*, 648–653 (**AIC 로 등가회로 순위 — Q4 의 계산기**),
+  2 순위 = **ref [191] Ohno et al.** *ACS Energy Lett.* **2020** (라운드로빈 원전,
+  **22 % / ~10 %** 의 출처 — D5 때문에 더더욱 필요, **Q3**),
+  3 순위 = **ref [82] Bron, Dehnen, Roling** *J. Power Sources* **2016**, *329*, 530
+  (저온으로 축퇴를 깨는 실물, **Q4·Q2**),
+  4 순위 = **ref [97] Zhang, Weber, …, Zeier, Janek** *ACS AMI* **2017**, *9*, 17835
+  (In\|LGPS\|LCO SoC 분해 EIS — **접촉 손실 + 분해층이 한 저항에 묶인 원전**,
+  **Q1·Q2·Q5**; 4호의 `R_LF`/`R_MF` 해석을 검증할 유일한 편),
+  5 순위 = **ref [28] Krauskopf et al.** *ACS AMI* **2019**, *11*, 14463 (**Q6**,
+  압력 이력의 산화물 판),
+  6 순위 = **ref [84] Doux et al.** *J. Mater. Chem. A* **2020**, *8*, 5049
+  (우리 5호의 **자매 논문**, Li₆PS₅Cl σ 가 ~400 MPa 까지 증가, **Q6**),
+  7 순위 = **ref [57] Kaiser et al.** *J. Power Sources* **2018**, *396*, 175
+  (**TLM + 전자차단 대칭셀로 복합전극 이온 굴곡도 정량** — `θ_AM` 에 가장 가까운
+  실측 채널, **Q1**),
+  8 순위 = **ref [172] Huang, Papac, O'Hayre** *Electrochim. Acta* **2020**, *367*
+  (**Bayesian DRT** — 봉우리에 사후분포를 붙이는 경로, 8호의 "calibrated
+  uncertainty" 요구와 직결),
+  9 순위 = **ref [73] Larfaillou et al.** *J. Power Sources* **2016**, *319*, 139
+  (**노화가 RQ 를 3→4 로 바꾼다** — "모델 차수가 상태변수" 의 원전).
+  도구 후보: **ref [43] Schönleber, Lin-KK**(KIT 2015).
+  ⚠ **정정 하나**: ref [190] 의 **Bielefeld, Weber, Janek** *ACS AMI* **2020**, *12*,
+  12821 은 우리 **1호(Bielefeld 2019, *J. Phys. Chem. C*)와 다른 논문**이다(후속).
+
 ## 이 페이지가 주장하지 않는 것
 
 - ASSB 실셀 자료를 **본 적이 없다.**
@@ -1230,3 +1445,13 @@ Q3 에 새 층위(**measured-but-ML-thresholded**)를 추가했다.
   "리뷰가 이렇게 적었다" 이상으로 쓰지 않는다.
 - ★ **Q4 가 깨졌다고 주장하지 않는다.** 8호도 **유일성을 재지 않았다** — 이름을
   실패 모드 목록에 올렸을 뿐이다. `assb` **8 / 8 편 0** 이다.
+- ★★ **2026-09-22 정정·확장 (10호)**: **Q4 의 칸은 채워졌으나 "쟀다" 는 여전히
+  0 이다.** 10호가 깬 것은 **"아무도 이 문제를 이름 붙이지 않았다" 는 상태**이지
+  **"아무도 재지 않았다" 는 상태**가 아니다. **유일성·식별성을 수치로 잰 `assb`
+  논문은 10 / 10 편 중 0 편이다** — 조건수 · 프로파일 가능도 · 근최적 폭 ·
+  Fisher/CRB 가 전부 0 이다. 이 구분을 흐리지 않는다.
+- ★ **10호의 재인용 수치를 이 카드의 근거로 삼지 않는다.** `22 % / ~10 %` ·
+  `~120 MPa` · `~400 MPa` · `<1 Ω cm²` 는 전부 남의 논문 값이고, 그중 하나는
+  **인용 번호가 틀렸다**(digest D5). 원전을 받기 전까지 **방향만** 쓴다.
+  ⚠ 단 **방법론적 주장**(비유일성 · 최소 원소 · ill-posedness · 주관적 귀속)은
+  **저자들의 1차 주장**이므로 이 규율의 바깥이다 — 그렇게 구분해서 인용한다.
