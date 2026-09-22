@@ -1,0 +1,180 @@
+{
+  "env": {
+    "DD_SMOOTH_CACHE": "",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "PATH": "C:\\Users\\Administrator\\.codex\\tmp\\arg0\\codex-arg0YEGgDy;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\libheif\\libheif\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\jxrlib\\jxrlib\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\poppler\\Library\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\override;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\MATLAB\\R2026a\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\fallback;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd;C:\\Users\\Administrator\\AppData\\Local\\OpenAI\\Codex\\bin\\73fd6465d9c76545;C:\\Users\\Administrator\\AppData\\Local\\OpenAI\\Codex\\bin\\247581e40ee272fb",
+    "PYTHONHASHSEED": "0",
+    "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate66_review_20260922\\startup_cases\\cwd_only_candidate\\other",
+    "SYSTEMROOT": "C:\\Windows",
+    "TEMP": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp",
+    "TMP": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp"
+  },
+  "inputs": {
+    "files": {},
+    "status": "measured"
+  },
+  "interpreter": "3.12.14",
+  "packages": {
+    "dists": {
+      "annotated-types": "0.8.0",
+      "artifact_tool_v2": "2.8.59",
+      "cffi": "2.1.1",
+      "charset-normalizer": "3.5.1",
+      "colorama": "0.4.6",
+      "cryptography": "50.0.1",
+      "et_xmlfile": "2.0.0",
+      "iniconfig": "2.3.0",
+      "lxml": "6.1.1",
+      "numpy": "2.3.5",
+      "openpyxl": "3.1.5",
+      "packaging": "26.3",
+      "pandas": "3.0.1",
+      "pdf2image": "1.17.0",
+      "pdfminer.six": "20251230",
+      "pdfplumber": "0.11.9",
+      "pillow": "12.3.0",
+      "pip": "25.0.1",
+      "pluggy": "1.6.0",
+      "pycparser": "3.0",
+      "pydantic": "2.13.5",
+      "pydantic_core": "2.46.5",
+      "pygments": "2.21.0",
+      "pyhumps": "3.8.0",
+      "pypdf": "6.10.0",
+      "pypdfium2": "5.13.0",
+      "pytest": "9.1.1",
+      "pytest-json-report": "1.5.0",
+      "pytest-metadata": "3.1.1",
+      "python-dateutil": "2.9.0.post0",
+      "python-docx": "1.2.0",
+      "python-pptx": "1.0.2",
+      "pyyaml": "6.0.3",
+      "reportlab": "4.4.9",
+      "setuptools": "84.0.0",
+      "six": "1.17.0",
+      "typing-inspection": "0.4.4",
+      "typing_extensions": "4.16.0",
+      "tzdata": "2026.3",
+      "wheel": "0.48.0",
+      "xlsxwriter": "3.2.9"
+    },
+    "positions": {
+      "annotated-types": 8,
+      "artifact_tool_v2": 8,
+      "cffi": 8,
+      "charset-normalizer": 8,
+      "colorama": 7,
+      "cryptography": 8,
+      "et_xmlfile": 8,
+      "iniconfig": 7,
+      "lxml": 8,
+      "numpy": 8,
+      "openpyxl": 8,
+      "packaging": 8,
+      "pandas": 8,
+      "pdf2image": 8,
+      "pdfminer.six": 8,
+      "pdfplumber": 8,
+      "pillow": 8,
+      "pip": 7,
+      "pluggy": 7,
+      "pycparser": 8,
+      "pydantic": 8,
+      "pydantic_core": 8,
+      "pygments": 7,
+      "pyhumps": 8,
+      "pypdf": 8,
+      "pypdfium2": 8,
+      "pytest": 7,
+      "pytest-json-report": 7,
+      "pytest-metadata": 7,
+      "python-dateutil": 8,
+      "python-docx": 8,
+      "python-pptx": 8,
+      "pyyaml": 7,
+      "reportlab": 8,
+      "setuptools": 8,
+      "six": 8,
+      "typing-inspection": 8,
+      "typing_extensions": 8,
+      "tzdata": 8,
+      "wheel": 8,
+      "xlsxwriter": 8
+    },
+    "shadowed": [
+      [
+        "pip",
+        8,
+        "26.2.1"
+      ]
+    ],
+    "status": "measured"
+  },
+  "startup": {
+    "customization": {
+      "site": "b39ab288cc7a6d0c",
+      "sitecustomize": "<absent>",
+      "usercustomize": "<absent>"
+    },
+    "env": {
+      "DD_SMOOTH_CACHE": "",
+      "LANG": "C.UTF-8",
+      "LC_ALL": "C.UTF-8",
+      "PATH": "C:\\Users\\Administrator\\.codex\\tmp\\arg0\\codex-arg0YEGgDy;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\libheif\\libheif\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\jxrlib\\jxrlib\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\poppler\\Library\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\override;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\MATLAB\\R2026a\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\fallback;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd;C:\\Users\\Administrator\\AppData\\Local\\OpenAI\\Codex\\bin\\73fd6465d9c76545;C:\\Users\\Administrator\\AppData\\Local\\OpenAI\\Codex\\bin\\247581e40ee272fb",
+      "PYTHONHASHSEED": "0",
+      "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate66_review_20260922\\startup_cases\\cwd_only_candidate\\other",
+      "SYSTEMROOT": "C:\\Windows",
+      "TEMP": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp",
+      "TMP": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp"
+    },
+    "executable_sha256": "9f91cee2e1b13d97",
+    "importable_roots": {},
+    "pth": [
+      [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\site-packages\\distutils-precedence.pth",
+        "2638ce9e2500e572"
+      ]
+    ],
+    "startup_history": {
+      "attempted_not_loaded": [
+        "sitecustomize",
+        "usercustomize"
+      ],
+      "modules": {
+        "_distutils_hack": "ced72e54431ecf2d",
+        "encodings": "78c4744d407690f3",
+        "encodings.aliases": "6fdcc49ba23a0203",
+        "encodings.cp949": "950a7d29467ce059",
+        "encodings.utf_8": "ba0cac0602695835",
+        "encodings.utf_8_sig": "1ef3da8d8aa08149"
+      },
+      "status": "measured",
+      "unfiled": 29
+    },
+    "startup_modules": {
+      "_collections_abc": "d4945c8410c4bab3",
+      "_distutils_hack": "ced72e54431ecf2d",
+      "_frozen_importlib": "d112d54b7831cf4a",
+      "_frozen_importlib_external": "e6ad72f3f0f9b65c",
+      "_sitebuiltins": "b9388bc1d6d12ed6",
+      "abc": "e558702a95cdce3f",
+      "codecs": "7b7839e53a779611",
+      "encodings": "78c4744d407690f3",
+      "encodings.aliases": "6fdcc49ba23a0203",
+      "encodings.cp949": "950a7d29467ce059",
+      "encodings.utf_8": "ba0cac0602695835",
+      "encodings.utf_8_sig": "1ef3da8d8aa08149",
+      "genericpath": "2b0b35d2206778af",
+      "io": "7cec3cb8ac004058",
+      "ntpath": "6c0d55ee892f98ef",
+      "os": "54c43a1fc69c979c",
+      "os.path": "6c0d55ee892f98ef",
+      "site": "b39ab288cc7a6d0c",
+      "stat": "052af0327eae6941",
+      "zipimport": "a96f1d7a7b6aaf42"
+    },
+    "status": "measured",
+    "version": "3.12.14"
+  }
+}

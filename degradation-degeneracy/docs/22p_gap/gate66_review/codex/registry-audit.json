@@ -1,0 +1,2123 @@
+{
+  "old": "5e4cf1038f0f26a6a624d9984386cfd046657ac3",
+  "new": "fa947cc9b17cdbeffbb39447c99159bc2c831e6e",
+  "old_count": 541,
+  "new_count": 366,
+  "deleted_count": 175,
+  "added_count": 0,
+  "changed_survivors": [],
+  "deleted_sealed": {
+    "True": 175
+  },
+  "deleted_class": {
+    "canonical": 175
+  },
+  "deleted_evidence": {
+    "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다": 87,
+    "산출 완료 시점 등록 · leg=L phase=grid class=canonical": 88
+  },
+  "deletion_commits": "d60f25391f9e7a08c210ef559efa0d58589171be bms: Codex R17 NO-GO 대응 — 코드 6건 RED→GREEN, 과학 문장 좁힘, chain rule 은 명시 objective 계약 제안\n",
+  "deleted": [
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/00a930c91c401390273cfd6a45fb7dc1c6331e90d30614f3d464a6d7ed19bf24.json",
+      "bytes": 246,
+      "sha256": "5fc13e989af9cbb5690aeee27a60b369933b07fe8c9216e7810673fbac9a908c",
+      "record": {
+        "content_id": "00a930c91c401390273cfd6a45fb7dc1c6331e90d30614f3d464a6d7ed19bf24",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:49Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/015f73c16b561c3addcf26036710536adc57fe54f7651799c688a453d3fdc429.json",
+      "bytes": 240,
+      "sha256": "3c6ce4d100faf87ddf5c75d740dc617e844b10bb187d5274c97f55a3e2335583",
+      "record": {
+        "content_id": "015f73c16b561c3addcf26036710536adc57fe54f7651799c688a453d3fdc429",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:47Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/01a8b33342d74dba09f71caa393dc87edb49ad67fc6a686c178d3e8955e1b6db.json",
+      "bytes": 246,
+      "sha256": "7d231c07afa725b7d66092d8d509bec2735e956bec2bcef17eba615c1da61409",
+      "record": {
+        "content_id": "01a8b33342d74dba09f71caa393dc87edb49ad67fc6a686c178d3e8955e1b6db",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:31Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/01f00866671751fb18ca7c0597828ff14558f425204d9724651b4503ccedbcba.json",
+      "bytes": 246,
+      "sha256": "f5315bbea61a9848b899823494cad8799d2a65d22d5b9585a80f23929d793f7f",
+      "record": {
+        "content_id": "01f00866671751fb18ca7c0597828ff14558f425204d9724651b4503ccedbcba",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:57Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/0510f4e7891730ffb36d52e769f1ff617c26bfc72a19430ebf6995aa8bfa56d5.json",
+      "bytes": 240,
+      "sha256": "5d0288ee18ce96cffb2f2071b6ab53c263f647756a637959bce1e363655c83d0",
+      "record": {
+        "content_id": "0510f4e7891730ffb36d52e769f1ff617c26bfc72a19430ebf6995aa8bfa56d5",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:25Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/0591c7beb41fee7f7ee98656ba81188d1f1b6997b706c760ff962a54f68fe562.json",
+      "bytes": 240,
+      "sha256": "7ccd24d1a32251631755bc214f96c53f69d986fdbe9d03d42361f4b198ca890d",
+      "record": {
+        "content_id": "0591c7beb41fee7f7ee98656ba81188d1f1b6997b706c760ff962a54f68fe562",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:39Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/06fcd1b4132208051426fca9f1c549e70077524902136b06bdbc196ba3f5b716.json",
+      "bytes": 240,
+      "sha256": "7d1553de4c9cbca7ea560fc7dfc296b23f886f041cdc5130a7ff7e0535605c7f",
+      "record": {
+        "content_id": "06fcd1b4132208051426fca9f1c549e70077524902136b06bdbc196ba3f5b716",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:59Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/0a676b5d13476aa1d2970da43d22b7b86b518dfdb158adc4001938bf879c752d.json",
+      "bytes": 240,
+      "sha256": "468561f8db90753e403bb15e2a65fcaecef2ead4a4ad9d7a12d06abc77d19ebb",
+      "record": {
+        "content_id": "0a676b5d13476aa1d2970da43d22b7b86b518dfdb158adc4001938bf879c752d",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:39Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/0b090f3e31aaa287e65581c49840bc4f0758ddcf509f8c1fb9e0518878c9a0c4.json",
+      "bytes": 246,
+      "sha256": "41a5fb238b00958f4eb73dc0b3e384451107c4fd5a653624ccfa24cf6f21c747",
+      "record": {
+        "content_id": "0b090f3e31aaa287e65581c49840bc4f0758ddcf509f8c1fb9e0518878c9a0c4",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:31Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/0c185b27f88eb3cdd14ac4765ceb0cb8d1d7f8712f46b66e73e5d6562f9b6a33.json",
+      "bytes": 246,
+      "sha256": "eea88fcedbf53931828896bf89980e58c090341c6f5d0d6383909df9e7c9850c",
+      "record": {
+        "content_id": "0c185b27f88eb3cdd14ac4765ceb0cb8d1d7f8712f46b66e73e5d6562f9b6a33",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:05Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/0c89102af0db28612fdcab332ffaed929544399a42e00071b45452be975ca66e.json",
+      "bytes": 246,
+      "sha256": "5584650891a67be5c45c638c9072eb6ef5f14bcb8b904bc74a5b359b6e023df8",
+      "record": {
+        "content_id": "0c89102af0db28612fdcab332ffaed929544399a42e00071b45452be975ca66e",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:59Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/0cde18e1cbefe13ede24bd99fca77216b3a2921123271629424bf6f289088535.json",
+      "bytes": 240,
+      "sha256": "b80aee99ae22487c82837cf708b534613bb417f17367e7583dfbc8a785d0ae0f",
+      "record": {
+        "content_id": "0cde18e1cbefe13ede24bd99fca77216b3a2921123271629424bf6f289088535",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:57Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/0ced98a5ba8db3e091232b7522342ab79018e0a9c410e2d9662a4a71e6933e8a.json",
+      "bytes": 240,
+      "sha256": "5226a92685aa0dc3fe05078808e996b36b7a8153a803a870cf29d9f5385b5935",
+      "record": {
+        "content_id": "0ced98a5ba8db3e091232b7522342ab79018e0a9c410e2d9662a4a71e6933e8a",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:44Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/0de17a914a6942d305d2fd8e0b5f60228b45dd7a1ab5fd1ae4a093aa73a2664a.json",
+      "bytes": 240,
+      "sha256": "9a3c23ec3ac5daf46dd623406403766a231781f701235e6f9bc9a770d9fdd24e",
+      "record": {
+        "content_id": "0de17a914a6942d305d2fd8e0b5f60228b45dd7a1ab5fd1ae4a093aa73a2664a",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:32Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/0fa4a41f16ce240a0a5dc86c0dbe4ae8494bef166957e68a2e5ff3a727fad2b5.json",
+      "bytes": 240,
+      "sha256": "8f650812922329c0790992349f61c0957bb143ccf8f2c0f852f63435ecf414af",
+      "record": {
+        "content_id": "0fa4a41f16ce240a0a5dc86c0dbe4ae8494bef166957e68a2e5ff3a727fad2b5",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:57Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/0ff09974e3d5b22c8d7276d92443b836f8b7d22a873e5479e8e34cd087ffda91.json",
+      "bytes": 240,
+      "sha256": "06e439691aaa09a11499f0db523ffcd97a18e5e51aa44751ade0cf698895891a",
+      "record": {
+        "content_id": "0ff09974e3d5b22c8d7276d92443b836f8b7d22a873e5479e8e34cd087ffda91",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:20Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/10a6bf4be26528ef7d93dc053e65ffafa1fe5bd7aa9e5da9e83d40b92a18ea55.json",
+      "bytes": 246,
+      "sha256": "a60e365deb78b716b42441e6759724f762625dc04a016d06060f32a69cbd1d5b",
+      "record": {
+        "content_id": "10a6bf4be26528ef7d93dc053e65ffafa1fe5bd7aa9e5da9e83d40b92a18ea55",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:22Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/138ee043d0a6bc6c5fedf74a9f83e94397d537c1a824b52a021b7b2ac928a14e.json",
+      "bytes": 240,
+      "sha256": "80e4e64adf33b6b60cb7bea1edb1ea28e3707618c638381d5b91e422a0fefedb",
+      "record": {
+        "content_id": "138ee043d0a6bc6c5fedf74a9f83e94397d537c1a824b52a021b7b2ac928a14e",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:19Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/13cec2d6ede6066d55174ee10b12723fd65c78827399cd4cebd45a86e7bd09d5.json",
+      "bytes": 246,
+      "sha256": "9bed532fe18f39b4115ce93fbce25d76978ed41d5387775b7e806a5a0d0bb97f",
+      "record": {
+        "content_id": "13cec2d6ede6066d55174ee10b12723fd65c78827399cd4cebd45a86e7bd09d5",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:47Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/149f6abc63bf1b171e78fd80d71db5a2de843b0ae0f2d9b2a10aace1d366bc93.json",
+      "bytes": 246,
+      "sha256": "238a32c2d87bd766700b03ac8f225ae95e7da8d9476d53243fe5e0fe6c86b738",
+      "record": {
+        "content_id": "149f6abc63bf1b171e78fd80d71db5a2de843b0ae0f2d9b2a10aace1d366bc93",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:43Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/16123ef9d7fac1d3e2badbe05ef613c719d8688f3bdd1eca0f456ee1862fa778.json",
+      "bytes": 240,
+      "sha256": "df778585ce0efb5cfbbb27a6eaf25d6ce193d34faaa6096e321234a9ae20d1e9",
+      "record": {
+        "content_id": "16123ef9d7fac1d3e2badbe05ef613c719d8688f3bdd1eca0f456ee1862fa778",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:36Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/1a5f5ef6ba52e48006897cbb5b2696cc32c9d4e51354e67828cd0ba4ba1e685b.json",
+      "bytes": 240,
+      "sha256": "be265c771b2b303ae271978f5c25ec2aaf85c31eaa3febb62a5b8e6cf59c879a",
+      "record": {
+        "content_id": "1a5f5ef6ba52e48006897cbb5b2696cc32c9d4e51354e67828cd0ba4ba1e685b",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:28Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/1cc23dfda8ac1e8b08aa1fffeb53c738ff8c56ea9034a12d4a3246ef036a2ab1.json",
+      "bytes": 246,
+      "sha256": "bd7902de648349b32defd650834f8d7bcbe6cb73eb1ae3f4d748adabed450efa",
+      "record": {
+        "content_id": "1cc23dfda8ac1e8b08aa1fffeb53c738ff8c56ea9034a12d4a3246ef036a2ab1",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:25Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/1d0dbfa47d4c9f5093e5cf164ab6b2314ba8f658921e7cce18bb55dce8155e51.json",
+      "bytes": 240,
+      "sha256": "406904021f89154bafd981ace2dd17ffa7594be5c4a1932510fc9f8e8f5fd179",
+      "record": {
+        "content_id": "1d0dbfa47d4c9f5093e5cf164ab6b2314ba8f658921e7cce18bb55dce8155e51",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:31Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/1efecc0ce09c18f41391277f524c669797d2e901ed207134b06bb007c68fef71.json",
+      "bytes": 240,
+      "sha256": "cec6b1a07da01f30bdd0db02dfbbe2411ab7a30cd3fec7e3a982332955479943",
+      "record": {
+        "content_id": "1efecc0ce09c18f41391277f524c669797d2e901ed207134b06bb007c68fef71",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:48Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/1f594d0fca29082dd52ca3c43d98800771862e6f80b9aa01677456df2eb16010.json",
+      "bytes": 246,
+      "sha256": "cfcc0426fe5d5ff478f186ac613260d2ad1bff464760a4940ebf179fd363c489",
+      "record": {
+        "content_id": "1f594d0fca29082dd52ca3c43d98800771862e6f80b9aa01677456df2eb16010",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:06Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/2005f7773bb45f2c4eb917b0575505aa7848720c6b2a230c02eac1c9618c0a06.json",
+      "bytes": 246,
+      "sha256": "06bcccb51d62f57837ecaa172a4e94a48a8cfcde3d8c623f338823f09a17c8ba",
+      "record": {
+        "content_id": "2005f7773bb45f2c4eb917b0575505aa7848720c6b2a230c02eac1c9618c0a06",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:08Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/20208e2418c964f55de6f2733af1d42a23133ef395719e85db6b4625eea017f1.json",
+      "bytes": 240,
+      "sha256": "43c472a8e00e0794bf416920dd44df3539099223920ad24bd189935d99d29438",
+      "record": {
+        "content_id": "20208e2418c964f55de6f2733af1d42a23133ef395719e85db6b4625eea017f1",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:08Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/20f7874631d0f47f0f94c7067b4cb9da707b28dbb7ec5606ce37173cc628f947.json",
+      "bytes": 240,
+      "sha256": "7b133c77e7fe1242a3a08b4399477fa39b82c3af0b703901769bdd13e5046828",
+      "record": {
+        "content_id": "20f7874631d0f47f0f94c7067b4cb9da707b28dbb7ec5606ce37173cc628f947",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:58Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/2153499e3f5e7470b9684793bace68c9cd58f8d38112fdca78e2264d50932e13.json",
+      "bytes": 246,
+      "sha256": "9347227137ee049931c6109312a5f0ddeda01acd63fa89c024e2ecf0a927ed84",
+      "record": {
+        "content_id": "2153499e3f5e7470b9684793bace68c9cd58f8d38112fdca78e2264d50932e13",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:56Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/27095a69bfee4b2ee1ebf8b2e29865d89b188711cb6625565867fb2b0217409e.json",
+      "bytes": 246,
+      "sha256": "a2c0876b66514f1b97365162657b6d834b388e3a889f8694dea5d1a92de7d6da",
+      "record": {
+        "content_id": "27095a69bfee4b2ee1ebf8b2e29865d89b188711cb6625565867fb2b0217409e",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:11Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/289898bcd196203479bdd9a0c7c6c5df516f0f557426668ca7ebf2e82abc54cf.json",
+      "bytes": 246,
+      "sha256": "ab3544a14b2f2dd391f12babaf65d109c8c24ff35be204300743126fd0314ff4",
+      "record": {
+        "content_id": "289898bcd196203479bdd9a0c7c6c5df516f0f557426668ca7ebf2e82abc54cf",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:21Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/28c8a5811e4724155f4f837b8dfd3a666ece024ada565edc8800c41eaaa61de3.json",
+      "bytes": 246,
+      "sha256": "e4f8e2030b55c9ba4c805b8cfd3119951c1f0aecb1b4bba9f872482578fc48cb",
+      "record": {
+        "content_id": "28c8a5811e4724155f4f837b8dfd3a666ece024ada565edc8800c41eaaa61de3",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:09Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/28ed24993647d315dea258c24846189f3a7a90ae13a114c3f9795d1430953be0.json",
+      "bytes": 240,
+      "sha256": "6f8ef6eddd54298c7660a5f2b421b7d96867392f68f511972200873879db7224",
+      "record": {
+        "content_id": "28ed24993647d315dea258c24846189f3a7a90ae13a114c3f9795d1430953be0",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:06Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/291c95629e29352a5d95ccb23a19e05a67e7d34537d62e11a2e1593adf5dee16.json",
+      "bytes": 240,
+      "sha256": "bd4bb56b51f4407655a06a2f29e26a9b7cae30e478ee1fa8da43cbd75f730c16",
+      "record": {
+        "content_id": "291c95629e29352a5d95ccb23a19e05a67e7d34537d62e11a2e1593adf5dee16",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:07Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/2ac5a1cac09120fb1d7be4b26b13862125523dc3db4ab76ab87f62c5e53348c9.json",
+      "bytes": 246,
+      "sha256": "64cb9e159d4ba282c3c45a0c54be886b5d8b0e292d801669b099d015fc67cafa",
+      "record": {
+        "content_id": "2ac5a1cac09120fb1d7be4b26b13862125523dc3db4ab76ab87f62c5e53348c9",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:09Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/2ae9731648b8aeb2d5d3e09cdee8b8884dd33248a35c9c3954986babf5031f36.json",
+      "bytes": 246,
+      "sha256": "9702b1db4beeb52cdcc0c58656e1d23e741f950d13738e57ec9a7127f8c22398",
+      "record": {
+        "content_id": "2ae9731648b8aeb2d5d3e09cdee8b8884dd33248a35c9c3954986babf5031f36",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:27Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/2b67a0244dc043c679bc383531a322414c6ebae354ff6e33e17ead02769f4d05.json",
+      "bytes": 240,
+      "sha256": "7592180b97edfcff185e338a5e30766fd816248d34951f80539142bade187bd6",
+      "record": {
+        "content_id": "2b67a0244dc043c679bc383531a322414c6ebae354ff6e33e17ead02769f4d05",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:09Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/2b9a0ded43b8dfbe8987edac614b357977b6aceeb947af37398f1eb3c6d0f826.json",
+      "bytes": 246,
+      "sha256": "516c10783aed61de151a413a614e4e07607b5ca987d50f166b36da46e5870303",
+      "record": {
+        "content_id": "2b9a0ded43b8dfbe8987edac614b357977b6aceeb947af37398f1eb3c6d0f826",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:29Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/2d5f68c80a4b00a1d451ce03e85029c36353331fe5e0a3b9f9f76924b227071d.json",
+      "bytes": 240,
+      "sha256": "c629519c542485cbc52167f3300d71dd110c782f6be464a64b96ed1496f16982",
+      "record": {
+        "content_id": "2d5f68c80a4b00a1d451ce03e85029c36353331fe5e0a3b9f9f76924b227071d",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:55Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/2d8109c19ac8516fecccac9c050a837bbab505ce1ae15a7cdd45c1588519d482.json",
+      "bytes": 240,
+      "sha256": "01c182d5dde49313e382a60b3f809915a760f722b76c051ab37ed5c45b380433",
+      "record": {
+        "content_id": "2d8109c19ac8516fecccac9c050a837bbab505ce1ae15a7cdd45c1588519d482",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:22Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/2e0a5071f0f33085c50825fd25b82141892c6c911c29f6fec44fe1d2e1f85ff6.json",
+      "bytes": 240,
+      "sha256": "cd452b3288909f411aaf568e2cc08b6636604f9a8ed38c2ca2d2053c5e43c9aa",
+      "record": {
+        "content_id": "2e0a5071f0f33085c50825fd25b82141892c6c911c29f6fec44fe1d2e1f85ff6",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:25Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/2f4d340ed11bf38b70a6b961cbf7e319f8aa674682184b1b6200939f20ed153e.json",
+      "bytes": 246,
+      "sha256": "87573f11b5cdedaaf46a7fceaaf6e5141c8408cebf5011a54ede65895001ae4a",
+      "record": {
+        "content_id": "2f4d340ed11bf38b70a6b961cbf7e319f8aa674682184b1b6200939f20ed153e",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:33Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/2f81d2bd047107a5c391aa90b89e50373aa09eb83faff4ef4b941a35eb197eb1.json",
+      "bytes": 246,
+      "sha256": "88df26366a9ac2da9430a0abd6bec02fb2f429afca6a5e291d30d7cffa192b97",
+      "record": {
+        "content_id": "2f81d2bd047107a5c391aa90b89e50373aa09eb83faff4ef4b941a35eb197eb1",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:30Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/2f95f4d051abda10163c8e9b18a4170f3da62a77d3d766552b713902849d7dbc.json",
+      "bytes": 246,
+      "sha256": "ed6b75cd8408be9393481bfdcd1635c7c611fd394f81100ba287e2beeea63631",
+      "record": {
+        "content_id": "2f95f4d051abda10163c8e9b18a4170f3da62a77d3d766552b713902849d7dbc",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:10Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/321e39b1c2b03a081defa7336083a45af1a08c3589805a8cf06140b7ad20e767.json",
+      "bytes": 240,
+      "sha256": "da11ec0202bf6cf49949c12da94077f1a32c6beb671af06047e99a93e639630d",
+      "record": {
+        "content_id": "321e39b1c2b03a081defa7336083a45af1a08c3589805a8cf06140b7ad20e767",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:55Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/33df314483e64902ddcf706d5f441566f5f6564956c085dbba04e519edd32f46.json",
+      "bytes": 246,
+      "sha256": "a673e3506d447dd8b61609a272398a86c4dfbf4bd5b25d31ef3b9525bc941fd9",
+      "record": {
+        "content_id": "33df314483e64902ddcf706d5f441566f5f6564956c085dbba04e519edd32f46",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:02Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/33ed595a82618d6e18173d4da32d7140d48a229bce8027783df1d5406a8d9403.json",
+      "bytes": 240,
+      "sha256": "6dc3c49f146f3f4d4b166ca5c28b27430665d4bada474daf83a760374c5c28d8",
+      "record": {
+        "content_id": "33ed595a82618d6e18173d4da32d7140d48a229bce8027783df1d5406a8d9403",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:20Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/34ace0908cc4ef3e3b920c718b524d69ccf57b435ee2b59e4ee16b3c7f330742.json",
+      "bytes": 240,
+      "sha256": "541c4280fc1081818c63387978342fd50a5d74e3d0499219cf2ba9e8f6893bb4",
+      "record": {
+        "content_id": "34ace0908cc4ef3e3b920c718b524d69ccf57b435ee2b59e4ee16b3c7f330742",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:33Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/390e432dbab39e16fc248c8add6844bffb24240664b51eaa0c0ddbdd860bad73.json",
+      "bytes": 240,
+      "sha256": "a40f58648b245d06d8f57ede329691d97bbd08c913513d3730a347b283f3ad8e",
+      "record": {
+        "content_id": "390e432dbab39e16fc248c8add6844bffb24240664b51eaa0c0ddbdd860bad73",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:58Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/398a635232d572204430be13f7a8043d42f295025b1a260e574c38dab3c15d65.json",
+      "bytes": 240,
+      "sha256": "2f5a339049a4da2c23194028b0e8e81b7cd5eff1e7f40f18bd903502e7eca0e2",
+      "record": {
+        "content_id": "398a635232d572204430be13f7a8043d42f295025b1a260e574c38dab3c15d65",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:19Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/3a80730d445d5275d7498b4919ec91d4f28daa48b77b4d1691fbb1ab63120744.json",
+      "bytes": 240,
+      "sha256": "a0567a7ac157163f2e56b2ffe6482393fbdb7c797fe9ee867b174f49806721e0",
+      "record": {
+        "content_id": "3a80730d445d5275d7498b4919ec91d4f28daa48b77b4d1691fbb1ab63120744",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:36Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/3a963bd828a9660eb5d54d915456f5a327e6ec745f6758fce44d67891c439a68.json",
+      "bytes": 246,
+      "sha256": "b5711e34d503d347c0ffaf78f9f0cd8eda0f7de1f967b4658eb409e407bd9bfc",
+      "record": {
+        "content_id": "3a963bd828a9660eb5d54d915456f5a327e6ec745f6758fce44d67891c439a68",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:33Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/3ab84782ff5c08b4878438a77ae0f7ec94393c3dc63d69a1b38775c3f0a89162.json",
+      "bytes": 240,
+      "sha256": "45d60fcdf80f09f9f44ad346274deee90360b1851a2110b2f13c10d6932ef3fb",
+      "record": {
+        "content_id": "3ab84782ff5c08b4878438a77ae0f7ec94393c3dc63d69a1b38775c3f0a89162",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:41Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/3b0caa8fb1ac580b52bce63c475c8022f1f1f34aa3b120186d30773e455d114a.json",
+      "bytes": 240,
+      "sha256": "9bfb1593c1fc513e50161957f813e6015e3f15b6c52b86cfe7f380989b636d2b",
+      "record": {
+        "content_id": "3b0caa8fb1ac580b52bce63c475c8022f1f1f34aa3b120186d30773e455d114a",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:20Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/3d75d1e054e09f846174cd6909c27f96a1d6101ad166eb899fde302da9b41fbe.json",
+      "bytes": 246,
+      "sha256": "31b0dbec5ed3dbfc2e6be2f1d9aac899a856d035e8bad5a254f64dd97d0d871b",
+      "record": {
+        "content_id": "3d75d1e054e09f846174cd6909c27f96a1d6101ad166eb899fde302da9b41fbe",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:12Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/44483f30e522786ec5d2a1e96b8b1e18f66715f007f91aa67bb890446a023354.json",
+      "bytes": 246,
+      "sha256": "7724b83647eee42c6ea8be17963cb63239b82c9a148700c7ad241ef91893cc4c",
+      "record": {
+        "content_id": "44483f30e522786ec5d2a1e96b8b1e18f66715f007f91aa67bb890446a023354",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:44Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/464858fad14c81dff399eefeabb0824a5fd833340bb817017ac931119c87590a.json",
+      "bytes": 240,
+      "sha256": "8eac701f1192a008efd5fa976e39e9a000a9841d9bb9147d17c5c9a72d75305f",
+      "record": {
+        "content_id": "464858fad14c81dff399eefeabb0824a5fd833340bb817017ac931119c87590a",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:31Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/491b765207d23d8a0fd5ec9c9f17a14d15ae940e31d654e660a93224b2d2bcff.json",
+      "bytes": 240,
+      "sha256": "d48f4e0cad6ad9f9880d67bfee3d903dffd1b5b45d4875786c018799b1d567b1",
+      "record": {
+        "content_id": "491b765207d23d8a0fd5ec9c9f17a14d15ae940e31d654e660a93224b2d2bcff",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:49Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/4a1684c091035020c87fe96d0be6e62c8d3fd7e2073a4e3755722d693826bd18.json",
+      "bytes": 246,
+      "sha256": "af7add978161ce721c7207945fa062122d6d3efd5663bae863a16eb46264dcc5",
+      "record": {
+        "content_id": "4a1684c091035020c87fe96d0be6e62c8d3fd7e2073a4e3755722d693826bd18",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:52Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/4a52c2cf4fd7f8b7386cb69ce91a560f20fadb334b65654aac7db9eb8d9bf169.json",
+      "bytes": 240,
+      "sha256": "b88454a35507c749284e234f8bc674cd5d46657d84d09d4d5e7a81619b3a7cd6",
+      "record": {
+        "content_id": "4a52c2cf4fd7f8b7386cb69ce91a560f20fadb334b65654aac7db9eb8d9bf169",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:44Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/4cad9160a38c57182561079865d66dc59999bec6a56f794c09d730a0cbabae36.json",
+      "bytes": 246,
+      "sha256": "7540243bac674d41c11c6960748c0fbbe9f453202b8d6414c040108744db8b64",
+      "record": {
+        "content_id": "4cad9160a38c57182561079865d66dc59999bec6a56f794c09d730a0cbabae36",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:50Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/4ec55d89af8381c6d61465a7abfd733d2861781a66f66baa617be1c51cf1f001.json",
+      "bytes": 246,
+      "sha256": "ab3b3a2f93a4773eae76a8694f88e950500d611b437a53d55cbcf1adced34fa0",
+      "record": {
+        "content_id": "4ec55d89af8381c6d61465a7abfd733d2861781a66f66baa617be1c51cf1f001",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:31Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/5066e7c8691d841cbbfbb4bc6d58891c9302270dadbe8e71233e63e215bb3f40.json",
+      "bytes": 246,
+      "sha256": "2a28175e85fd466d94fa1eacd78555c30d308dd743cf60e079749fcdead23996",
+      "record": {
+        "content_id": "5066e7c8691d841cbbfbb4bc6d58891c9302270dadbe8e71233e63e215bb3f40",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:19Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/518e0ba9f4378e494930611b70aea1dec6f4766167370ce38cfc0f6684e27b76.json",
+      "bytes": 246,
+      "sha256": "8d340bab5431dcb77d144bd80bdba8bf6a805a25cc13421545cc5e3a2165fb21",
+      "record": {
+        "content_id": "518e0ba9f4378e494930611b70aea1dec6f4766167370ce38cfc0f6684e27b76",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:03Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/557e255a627ec866e39154bf7727239a0a3b8d8ccac76ddaf57cb8d567737d8c.json",
+      "bytes": 246,
+      "sha256": "15208cf1d266621c235e1e85f0c658b55781cdb81472882fcc18ce4ebaf37aee",
+      "record": {
+        "content_id": "557e255a627ec866e39154bf7727239a0a3b8d8ccac76ddaf57cb8d567737d8c",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:12Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/570a5fc8e546db922f6da350906d4f4ec6c2278ab77ea7dddb824684c0e5bc61.json",
+      "bytes": 246,
+      "sha256": "d15fb4a929d6593e229f3ce52c936a1f65a42a4d4bacb8ea84d0ed638739f254",
+      "record": {
+        "content_id": "570a5fc8e546db922f6da350906d4f4ec6c2278ab77ea7dddb824684c0e5bc61",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:35Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/5b9dd34008fa6fe394baa0787e29d4cf465564ffc7282d0bc5333d1ccfb74997.json",
+      "bytes": 240,
+      "sha256": "1b848d03f4a8b921c6536d9de18415b9a62841c18096361fd9118ce442a4b368",
+      "record": {
+        "content_id": "5b9dd34008fa6fe394baa0787e29d4cf465564ffc7282d0bc5333d1ccfb74997",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:09Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/5e68807019d242aee5e433c2ebb55776ee98ea58e72131a6989a910a25c2d204.json",
+      "bytes": 246,
+      "sha256": "fd54dec80fa7e77f4bd888a31a79d6a0ece150e4c27dbb714e38ce237643ad25",
+      "record": {
+        "content_id": "5e68807019d242aee5e433c2ebb55776ee98ea58e72131a6989a910a25c2d204",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:19Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/5e72c6c37ba28932c8ca445d545e11c95a789f20f130cde4ebec0b55613b336b.json",
+      "bytes": 240,
+      "sha256": "88c142840a9cc51017ee5e82e580f09a69afd44e38a8bcd72b039bd23e80cd7f",
+      "record": {
+        "content_id": "5e72c6c37ba28932c8ca445d545e11c95a789f20f130cde4ebec0b55613b336b",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:11Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/5edb7ffd3145f215b25fa9bf79d4e861203603763beac8fd89ac69a678d59e2e.json",
+      "bytes": 246,
+      "sha256": "d5c00ae2e117d0a37947aebb9e90d6669868876ead83499668821443a3c1bc61",
+      "record": {
+        "content_id": "5edb7ffd3145f215b25fa9bf79d4e861203603763beac8fd89ac69a678d59e2e",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:19Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/61ffdbe6f95cc9d96b98784ca90d383b93773df2107c5384774db465f045bca9.json",
+      "bytes": 240,
+      "sha256": "0f3c5599637499c8e3a6b76a6b6d2d2cc428b56640a951e9efaf52b1f2ed0c23",
+      "record": {
+        "content_id": "61ffdbe6f95cc9d96b98784ca90d383b93773df2107c5384774db465f045bca9",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:28Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/624e0921825ba2cb140a03ca4d09d353c001d2f47648effe15eb561d7c227178.json",
+      "bytes": 240,
+      "sha256": "42f85ca32f4e544dd7549282820316dc593352dfa3961b478fb01cbf7edc6ad3",
+      "record": {
+        "content_id": "624e0921825ba2cb140a03ca4d09d353c001d2f47648effe15eb561d7c227178",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:30Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/6297ab2f68a2f422b4481167712fb6d0a45db451d8a1a33560f1b5a7e9e72e58.json",
+      "bytes": 240,
+      "sha256": "73b2215bda2ac6b34be9d9a2e6314b54d921501351e782f30a065ad6cf950a14",
+      "record": {
+        "content_id": "6297ab2f68a2f422b4481167712fb6d0a45db451d8a1a33560f1b5a7e9e72e58",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:10Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/62f2a2c8e97a0d3f154786406659cf834d9d2d648563fb601f9e5fd7a098ae5f.json",
+      "bytes": 240,
+      "sha256": "93ccaf1fb86559617028e7e89665d0ceeeaafd778c29a32afe30481d574dc9b5",
+      "record": {
+        "content_id": "62f2a2c8e97a0d3f154786406659cf834d9d2d648563fb601f9e5fd7a098ae5f",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:12Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/63a4d26175f318efbf4e71870cbcc4b1442491c520c647c01f87281f96d9a1f0.json",
+      "bytes": 246,
+      "sha256": "3749b71ca7a8b7193a71cc19910e71263c966d89dc9d548d9c3894579885f61c",
+      "record": {
+        "content_id": "63a4d26175f318efbf4e71870cbcc4b1442491c520c647c01f87281f96d9a1f0",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:04Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/65b307b972a32d7c8e71ac78695ba1e6f292118ab0f2e14bb5b2011aecc38430.json",
+      "bytes": 240,
+      "sha256": "de6d53d3287fc830b6bfd3f24c221c4b0c7ca50d3639d2af2fc4b387c732c7e9",
+      "record": {
+        "content_id": "65b307b972a32d7c8e71ac78695ba1e6f292118ab0f2e14bb5b2011aecc38430",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:06Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/67ab872c9b9947fe41a8f496548b18ba5fcc4d93490bcaf44b0d638502c42e85.json",
+      "bytes": 246,
+      "sha256": "6fcd8cafdceedcb7458c8123594b4b70d27d780487a3eec2dc9138d64546bee9",
+      "record": {
+        "content_id": "67ab872c9b9947fe41a8f496548b18ba5fcc4d93490bcaf44b0d638502c42e85",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:09Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/69ec0900b4da81574c0eb3d16116aefb293203f40ea829ab960c2bdfa011f70d.json",
+      "bytes": 246,
+      "sha256": "0947712e2cd363cc41b57ffe324a990cb8db572d16fddddfaac3c0b42fb03759",
+      "record": {
+        "content_id": "69ec0900b4da81574c0eb3d16116aefb293203f40ea829ab960c2bdfa011f70d",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:36Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/6a25cae284eac7ab8b5c095202a53a4e0cc9cdfe2b695a887b8a939ba440f549.json",
+      "bytes": 246,
+      "sha256": "f7d7f21e7ca504c784350d4e60b204e0cd27528610c4da616ce3fb76e09383fb",
+      "record": {
+        "content_id": "6a25cae284eac7ab8b5c095202a53a4e0cc9cdfe2b695a887b8a939ba440f549",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:58Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/6a91cb790fbc7176960a7e21c6a8dadb92e97672463e8a434d231da60a255ba6.json",
+      "bytes": 240,
+      "sha256": "f3148683b63ab80592477d0ea8438028480e76e4f24bc1fb41286dc8dc9a064f",
+      "record": {
+        "content_id": "6a91cb790fbc7176960a7e21c6a8dadb92e97672463e8a434d231da60a255ba6",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:11Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/6adb4c82d4bee8bddc66619965cfb0751cb729bad7d94d1294695171630b0226.json",
+      "bytes": 240,
+      "sha256": "b4a5f2c876d2a6c6e302a1c84818f346be3ff0f2c63177169f6af81f94d69bb8",
+      "record": {
+        "content_id": "6adb4c82d4bee8bddc66619965cfb0751cb729bad7d94d1294695171630b0226",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:53Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/6c3ea66925ad59734ebfdd95f6b3830094883fbe0f8967b9a0b4fb1c2fad039c.json",
+      "bytes": 240,
+      "sha256": "0f6d1c061712ec04c8fca3a527ed2bd6f9dea3b6514d63df7c92265d9d7f824f",
+      "record": {
+        "content_id": "6c3ea66925ad59734ebfdd95f6b3830094883fbe0f8967b9a0b4fb1c2fad039c",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:27Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/6f63b826113b023be84a1095a4a146fb0bfc5c4b24873ddcdf10d2d3494dd56c.json",
+      "bytes": 240,
+      "sha256": "15747d8f4c44071e28350b08bff70d6b5c61171506fa5d78446f97dbfe31200d",
+      "record": {
+        "content_id": "6f63b826113b023be84a1095a4a146fb0bfc5c4b24873ddcdf10d2d3494dd56c",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:42Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/6f92025cbfb7fb26ec239f29658193bf11ab520ea287e28ca946a1bf4c2ed825.json",
+      "bytes": 240,
+      "sha256": "2c7c707a93c918ec17f846c1b24992339151e95a99d1c7477f9a90013df481fd",
+      "record": {
+        "content_id": "6f92025cbfb7fb26ec239f29658193bf11ab520ea287e28ca946a1bf4c2ed825",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:30Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/716ab877695716d43cec470db970351bb364f65a67b1f6b0d24868c6a236feea.json",
+      "bytes": 240,
+      "sha256": "279d7a00e11f3ad0e545983944e8e27788cc28ca12b9a378e7fb4afa1c414de1",
+      "record": {
+        "content_id": "716ab877695716d43cec470db970351bb364f65a67b1f6b0d24868c6a236feea",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:31Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/736fbabfcc754b8b6f42bf4835f846c095f9de41daa6f6030e42e8f79a579f2c.json",
+      "bytes": 246,
+      "sha256": "56c237d9ee22d1abb5580f46334be8c51351e26a9a64f798fcf13583a2a4d451",
+      "record": {
+        "content_id": "736fbabfcc754b8b6f42bf4835f846c095f9de41daa6f6030e42e8f79a579f2c",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:39Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/73e2409adfb534e2ba052597b4bb0da1c83aac3e01aa5ba3e68b02723a3d4c20.json",
+      "bytes": 246,
+      "sha256": "7c6662985d3c7a63a6fc6a272d2a98835e3cda7176b2ff6b850e4a24edca4456",
+      "record": {
+        "content_id": "73e2409adfb534e2ba052597b4bb0da1c83aac3e01aa5ba3e68b02723a3d4c20",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:20Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/775b3ab78182a11f886249ec95382fe5c3cfdcb58eb8b23e7f73793a909a1bfc.json",
+      "bytes": 240,
+      "sha256": "4f5e09b76bf6d67408e66e28d406ac668b51b65e4733c0bf639f76f78591f9d1",
+      "record": {
+        "content_id": "775b3ab78182a11f886249ec95382fe5c3cfdcb58eb8b23e7f73793a909a1bfc",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:09Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/7bd5719bee5a924dc8b96abf687fe21458f9a9bfc85a38b121b5809ac73c167c.json",
+      "bytes": 240,
+      "sha256": "698e8051525382589782080466978bd6a72605b7a946e27eb877c3c4f6dddc2f",
+      "record": {
+        "content_id": "7bd5719bee5a924dc8b96abf687fe21458f9a9bfc85a38b121b5809ac73c167c",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:49Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/7d3423a62b13f53b5a99e9e372d90f647012eda87430a1882e16baad73fa376e.json",
+      "bytes": 240,
+      "sha256": "ddc80400285f14baaf6a55a92a487f198edc30ed9f4e2ae6c6865dfd4b789d60",
+      "record": {
+        "content_id": "7d3423a62b13f53b5a99e9e372d90f647012eda87430a1882e16baad73fa376e",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:56Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/7ef6d08ab262c0c3d9bb9bafb6e4846f38a687ba944f40382c9c4b50185b7a41.json",
+      "bytes": 246,
+      "sha256": "2a765863e746d2952cb1f14383f489e573c7bae8324bed9d5b223c0a64190b02",
+      "record": {
+        "content_id": "7ef6d08ab262c0c3d9bb9bafb6e4846f38a687ba944f40382c9c4b50185b7a41",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:33Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/7efa51f518619ba0d280ac64c8341676d34594ba1e4481b2ea6006df8ab5212f.json",
+      "bytes": 240,
+      "sha256": "f891ad1126e1d9157fb49c6b4e47de993e2669cd0a0b04c9b6a8e9306cad17fe",
+      "record": {
+        "content_id": "7efa51f518619ba0d280ac64c8341676d34594ba1e4481b2ea6006df8ab5212f",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:35Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/7f6f6cffad04b4f138f92969e3f86054f88e2cdc316a50c171aeb767c98a9cc0.json",
+      "bytes": 240,
+      "sha256": "e1506d80cb9828db6c2120a4ebded494ed3e81b46cb2ec801396510d45ee3128",
+      "record": {
+        "content_id": "7f6f6cffad04b4f138f92969e3f86054f88e2cdc316a50c171aeb767c98a9cc0",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:33Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/81d96556f3611938ddbe2554284ec2d750f0d2c999cee6169556eeda19ee9fad.json",
+      "bytes": 246,
+      "sha256": "a95f7a886c4fd6c9977cccc1f9103dba6ad6f2611a10d9e35c49082b8a4fba35",
+      "record": {
+        "content_id": "81d96556f3611938ddbe2554284ec2d750f0d2c999cee6169556eeda19ee9fad",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:34Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/840b34ba4f1859f7efbec7f41be5e89d4a0b2f5089182229b04c0185adacdcf3.json",
+      "bytes": 246,
+      "sha256": "9318a445f2fb1701b7a1323c485f39e3947e1a3ceec0d82904dfaf519ab5d4b9",
+      "record": {
+        "content_id": "840b34ba4f1859f7efbec7f41be5e89d4a0b2f5089182229b04c0185adacdcf3",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:20Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/85468afd4ff1d2b83bb540904c1ee9631b0d474a7115c8d0744dc1c4719b7675.json",
+      "bytes": 240,
+      "sha256": "bdc4159a5ad5b4ed1f8f660e4917a7d5d4a534aa1db560cbd8fb58fb2e4a82e7",
+      "record": {
+        "content_id": "85468afd4ff1d2b83bb540904c1ee9631b0d474a7115c8d0744dc1c4719b7675",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:05Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/87c9b8b59ac333d3f7c3fbbc5d4cfb14d5db7b318af2bb2930959d8eb6059982.json",
+      "bytes": 240,
+      "sha256": "d1e87a41760ca2424157a7146830d23f1cdf86416f5cb2509f281be08a8efd73",
+      "record": {
+        "content_id": "87c9b8b59ac333d3f7c3fbbc5d4cfb14d5db7b318af2bb2930959d8eb6059982",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:08Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/87d0c2e9e428bea309b85b3ced6ea5fa764124e739601254d214502266f1ff76.json",
+      "bytes": 240,
+      "sha256": "88af325dae645e3d887f3a0e797e78fef13645fa94e28b1aa11ff01ef3bf883d",
+      "record": {
+        "content_id": "87d0c2e9e428bea309b85b3ced6ea5fa764124e739601254d214502266f1ff76",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:52Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/891b2b4b66d7fe9ee25e265c2bce670b4da03f28d5fa9d9a1f8328e82c41de21.json",
+      "bytes": 246,
+      "sha256": "5b26436eb6f1acd7c682f57348fbfebcd77a9690026cfed6cb5da43d1d693291",
+      "record": {
+        "content_id": "891b2b4b66d7fe9ee25e265c2bce670b4da03f28d5fa9d9a1f8328e82c41de21",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:08Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/8c01b1064cc241ebc8244c10a220105f1fa38b13e2e5caf9b490544bec526457.json",
+      "bytes": 246,
+      "sha256": "125e8cc8e778c2772ce376ba161b4e57399e4d0a48c976eca129f2a4d8891931",
+      "record": {
+        "content_id": "8c01b1064cc241ebc8244c10a220105f1fa38b13e2e5caf9b490544bec526457",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:39Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/8cc2667b23db6da52219c941917ade4106c8e57cac37aaefed9d7e6a067528bc.json",
+      "bytes": 246,
+      "sha256": "b0cdf75c3d0e28abcc30b5cfc499aa41a7ba86a5111726735069aa8a3f8bfdb7",
+      "record": {
+        "content_id": "8cc2667b23db6da52219c941917ade4106c8e57cac37aaefed9d7e6a067528bc",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:55Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/8d6d497678d592c9fc04aa8e290f52db5bc2ab6e3bd29eb80a99505f44297ff8.json",
+      "bytes": 246,
+      "sha256": "fc7d29f0578bad0ac763e0370a8420c2ba432bb77f598885e21ee9a7737f97c4",
+      "record": {
+        "content_id": "8d6d497678d592c9fc04aa8e290f52db5bc2ab6e3bd29eb80a99505f44297ff8",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:05Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/8f0c34ae134f5062843572640d4e0411e1522f3655b4d5e83364415f668cd1c4.json",
+      "bytes": 246,
+      "sha256": "2cfcaf8bd5e51cc6ec75480b1497766c3c0c24496e347d7007a00cecb59497f0",
+      "record": {
+        "content_id": "8f0c34ae134f5062843572640d4e0411e1522f3655b4d5e83364415f668cd1c4",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:44Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/8f32915e74d9a60a8ac409de8a524e5913e478488c69a038ae0c3524935a8dc7.json",
+      "bytes": 246,
+      "sha256": "40b4673437399cb12b2c0260a0f64b505b16aaf4d7977fc0f0aaf404be2be200",
+      "record": {
+        "content_id": "8f32915e74d9a60a8ac409de8a524e5913e478488c69a038ae0c3524935a8dc7",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:32Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/8fc356508b096cc6bba925ad9ec2c070962322391a928f0ea434f8f4be3145b7.json",
+      "bytes": 246,
+      "sha256": "9ced7baa2cb5471c5aeee0c6119a8a6bf3f2b124d8fe2c978be698f2c0cf0038",
+      "record": {
+        "content_id": "8fc356508b096cc6bba925ad9ec2c070962322391a928f0ea434f8f4be3145b7",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:48Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/932dd0c91d0ae3a9c34e4352d554fd7616e6605de4910ef1d821ff3ede5d0a12.json",
+      "bytes": 240,
+      "sha256": "c35015a7bd3e45b450e6c619f3be2d0ee82cafbd079b1140f094f96f73ff75d5",
+      "record": {
+        "content_id": "932dd0c91d0ae3a9c34e4352d554fd7616e6605de4910ef1d821ff3ede5d0a12",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:07Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/9384c87b622f7eb9da332babfcce610f131e62e4592f0a07329a7e6ae3650ce6.json",
+      "bytes": 246,
+      "sha256": "a62313db0613ea2575d3e1eae00f260dc5999578f18b9e99791a721b8e6e8472",
+      "record": {
+        "content_id": "9384c87b622f7eb9da332babfcce610f131e62e4592f0a07329a7e6ae3650ce6",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:07Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/93d87aedf92511481a81873824947b7cc68b2730d9b0db36a53856349a58d509.json",
+      "bytes": 246,
+      "sha256": "f74b18143ef26e6a3843c667b1d58be7e7b10c4f931cf76a41b88d529f364dfb",
+      "record": {
+        "content_id": "93d87aedf92511481a81873824947b7cc68b2730d9b0db36a53856349a58d509",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:20Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/97898ff8ce50e5682505613dd3078a0c24628c4294d7c61e556439d44057d608.json",
+      "bytes": 246,
+      "sha256": "7222271f875ab202d0c80ceb1d484d6695d9812aca3435ec6d4418d0ad5241c9",
+      "record": {
+        "content_id": "97898ff8ce50e5682505613dd3078a0c24628c4294d7c61e556439d44057d608",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:25Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/9b393376973bd504017af55525e4939416d7661aec7e38ea8bb887c4b829a4cf.json",
+      "bytes": 246,
+      "sha256": "21e2226e4b9c9bec5a16d2475d837124c0bd15cff7ff1fbdb3373366137b38a4",
+      "record": {
+        "content_id": "9b393376973bd504017af55525e4939416d7661aec7e38ea8bb887c4b829a4cf",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:30Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/9dd7453fdbbf290f32b0771fe5d60ad1ebcbaca8001ac582ee194ff0d74e8de8.json",
+      "bytes": 246,
+      "sha256": "2ae89871c7a3735cbb4d353d639d99d955dd2b435f8152b85b44d85e8099d270",
+      "record": {
+        "content_id": "9dd7453fdbbf290f32b0771fe5d60ad1ebcbaca8001ac582ee194ff0d74e8de8",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:44Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/9fe33b8c7685bc19a81e9a7ee1a90e3a7aacaf5d8e0c25474a5ba3538bea4000.json",
+      "bytes": 240,
+      "sha256": "6b7aace3d5fb4834aa2f30bcceb41419311b68e022f3b8668b1fb09d57b95dad",
+      "record": {
+        "content_id": "9fe33b8c7685bc19a81e9a7ee1a90e3a7aacaf5d8e0c25474a5ba3538bea4000",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:35Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/a22ede042977942ecc7f38a52db15a839bf45b5d60c841fe195320f511bdf60d.json",
+      "bytes": 246,
+      "sha256": "d9d3d9d02b52cd5f69299214228c87d55c8cc6f83223e37332e16503a4b3d6c4",
+      "record": {
+        "content_id": "a22ede042977942ecc7f38a52db15a839bf45b5d60c841fe195320f511bdf60d",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:55Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/a3896a8396a8d8b9d959f52dfe8e6032437ef096738cb3b3dcf6fdb75b276927.json",
+      "bytes": 246,
+      "sha256": "9d5ffb4cadcdf2516c2623d3e77b7bb38dfb4ece5c621dfce53f72e6fbfcd360",
+      "record": {
+        "content_id": "a3896a8396a8d8b9d959f52dfe8e6032437ef096738cb3b3dcf6fdb75b276927",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:22Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/a4817d9f6eeba712b044871a8c464e72ee2d78dcf7c329d0886e8a29ff8fd307.json",
+      "bytes": 246,
+      "sha256": "e566f408bb52d9fdb065e19c3f5ff25b696441a408d1395936eeacf6db2eb151",
+      "record": {
+        "content_id": "a4817d9f6eeba712b044871a8c464e72ee2d78dcf7c329d0886e8a29ff8fd307",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:41Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/a54cecd12f2b5c59a7e2128341c294a88ea0963c33bd8ddf0be669ab76dc2740.json",
+      "bytes": 246,
+      "sha256": "2d770ae17a4100390448e8b7b3d219502ee4c945e19744957e2c10d041732cf0",
+      "record": {
+        "content_id": "a54cecd12f2b5c59a7e2128341c294a88ea0963c33bd8ddf0be669ab76dc2740",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:35Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/a947b1f348ae60aa0423ff6820be5dfd1a768ce1988e7c9b4fa7ad11c4c80af5.json",
+      "bytes": 246,
+      "sha256": "5d5e37dc667985c606d85b7e8c97bcb13cb1e340a3152ef5fd40ce0379c65129",
+      "record": {
+        "content_id": "a947b1f348ae60aa0423ff6820be5dfd1a768ce1988e7c9b4fa7ad11c4c80af5",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:29Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/ab24877e02dfdd94aa59a635fe627f8951421bad963e7a38842dcad521154f10.json",
+      "bytes": 246,
+      "sha256": "a4a4bdaed64fc6e5630d2472bc11510dd2e4d93b917d973bc0c41066bbf99a36",
+      "record": {
+        "content_id": "ab24877e02dfdd94aa59a635fe627f8951421bad963e7a38842dcad521154f10",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:50Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/ad46ebebc24e33982a068bf551ec55afc9bf3dd1aab579502e84fc69c9343088.json",
+      "bytes": 246,
+      "sha256": "21e839ac067c0caf55b587f9dbca507f1e7d3a639b9abfe8ab282fdc5bde30fe",
+      "record": {
+        "content_id": "ad46ebebc24e33982a068bf551ec55afc9bf3dd1aab579502e84fc69c9343088",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:44Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/af68f9c5899bc37c3e4c29eecadfda41e72a86e64022d97271f17f8f278d09bd.json",
+      "bytes": 240,
+      "sha256": "25dd1809bba170d9d7c55225377356bbcc6c7dd583e2c11aebd1915604bf6321",
+      "record": {
+        "content_id": "af68f9c5899bc37c3e4c29eecadfda41e72a86e64022d97271f17f8f278d09bd",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:31Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/b024963d19fbe426e46904d1e8bbce5414053be54a4a1cf887d5976a011c8919.json",
+      "bytes": 246,
+      "sha256": "bcc34f03de1b721ea37129934a9e2a72bb708b202e6aa0dcb909b25d5a149639",
+      "record": {
+        "content_id": "b024963d19fbe426e46904d1e8bbce5414053be54a4a1cf887d5976a011c8919",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:02Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/b0b3810e00655b878b2aa62ce36eadf195b5035f7985cbb5528992affa7f3b47.json",
+      "bytes": 246,
+      "sha256": "b5c5fa2d0ca0a989d5cbd39e14196ecb0d480ebf5c29fed1c32b12b119f76b6f",
+      "record": {
+        "content_id": "b0b3810e00655b878b2aa62ce36eadf195b5035f7985cbb5528992affa7f3b47",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:30Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/b0f13ced96fa60bc7314afb367c16d22545dee78a8f4328409bfe11ba7a82b4f.json",
+      "bytes": 240,
+      "sha256": "dcd84d52531389dfd4c6af9da25315b15da9537ec929530c13088054f051d4ec",
+      "record": {
+        "content_id": "b0f13ced96fa60bc7314afb367c16d22545dee78a8f4328409bfe11ba7a82b4f",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:34Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/b14698ba0d6cafb761f6b8e945713d39e8c69e93d2fd1df1a4afc03c390f579c.json",
+      "bytes": 240,
+      "sha256": "81654714415f47b8b211372c29f8e3ff12ba41efc8a5ba01a76ad497ef7798f6",
+      "record": {
+        "content_id": "b14698ba0d6cafb761f6b8e945713d39e8c69e93d2fd1df1a4afc03c390f579c",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:48Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/b230153a763abb3b80f6a59e66166492aed342425682b61f7446fdfdf5b4f151.json",
+      "bytes": 240,
+      "sha256": "7f29f85ef32f558878a019b173b89a4a73de8ad314bf60f43bf0b05c20b7c548",
+      "record": {
+        "content_id": "b230153a763abb3b80f6a59e66166492aed342425682b61f7446fdfdf5b4f151",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:34Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/b62fce636fbd36da38da668f5e6e926b4982f293df5d5a1dd424356798a2b63b.json",
+      "bytes": 240,
+      "sha256": "78c0103e819b72a637427907ba4d48a982911b26c11562843933ac750635437f",
+      "record": {
+        "content_id": "b62fce636fbd36da38da668f5e6e926b4982f293df5d5a1dd424356798a2b63b",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:30Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/b954ef8257bdeeb73e7dde5dd261c4702dd853f7edb36e08630d8e8f1afed2d4.json",
+      "bytes": 240,
+      "sha256": "75bbd8c3f93fee5979e3d493c018d9d5867f6880f3c0a108a8281a30c36faeea",
+      "record": {
+        "content_id": "b954ef8257bdeeb73e7dde5dd261c4702dd853f7edb36e08630d8e8f1afed2d4",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:09Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/b98d914b2783a68cb38085f8480eca00cd47c86185fb43a4ff6880bf99aaaba7.json",
+      "bytes": 246,
+      "sha256": "8e1a1cc3ac08156f73b64d0744ef94ad56decbdf38264bae33066e3b7a90d0cc",
+      "record": {
+        "content_id": "b98d914b2783a68cb38085f8480eca00cd47c86185fb43a4ff6880bf99aaaba7",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:32Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/c08321d8e803c2c096e924de5b7a30c0ccc67168515a639df89868c1e2793eec.json",
+      "bytes": 246,
+      "sha256": "17c3ff581c9e11359542ef856e79ca37731a0983c9e075fd799d03866d66708f",
+      "record": {
+        "content_id": "c08321d8e803c2c096e924de5b7a30c0ccc67168515a639df89868c1e2793eec",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:58Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/c0eed286979055383d2780d7ea0f19d6c087a2d79ae0f15e5404b67d0623f378.json",
+      "bytes": 246,
+      "sha256": "230f1f45a898f74c3bcb3f24eb5c415d25de5f28eb991d4fc02d6a73635915d7",
+      "record": {
+        "content_id": "c0eed286979055383d2780d7ea0f19d6c087a2d79ae0f15e5404b67d0623f378",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:31Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/c331a9b7891ecce33a2e376f34e2d4d8c6595e677a808fa574d2a420c5bad21b.json",
+      "bytes": 246,
+      "sha256": "a5e07f5aa1db613fbd4a50d3d00b6d9b6cc139e16a67fef10832c7efac2d2d6c",
+      "record": {
+        "content_id": "c331a9b7891ecce33a2e376f34e2d4d8c6595e677a808fa574d2a420c5bad21b",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:36Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/c34aae265125cbe89e931ad0eea78b5fff58bb65c271cb1a6b8556be670b55ad.json",
+      "bytes": 246,
+      "sha256": "08d2b714c03f5bbe72360b57af69a5cb57ebbeabb225be32d668cf520e23d019",
+      "record": {
+        "content_id": "c34aae265125cbe89e931ad0eea78b5fff58bb65c271cb1a6b8556be670b55ad",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:48Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/c35b41b9c84c9f41410162912ac56fb285df3ebad477810130cc29bd1f82ec94.json",
+      "bytes": 240,
+      "sha256": "b045eb4a87bfc4b932a25ccd5244458b3c77e1a9eec3b435019eea24d25fe32a",
+      "record": {
+        "content_id": "c35b41b9c84c9f41410162912ac56fb285df3ebad477810130cc29bd1f82ec94",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:34Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/c5ed25e0115ed6221ff8b988b8fcd85355c88e71cef2ce0b12980d5866588a4e.json",
+      "bytes": 246,
+      "sha256": "40cf40b156b31b4af7604399ac0a581423f22ea43aff0b6ce7e9a5829248f044",
+      "record": {
+        "content_id": "c5ed25e0115ed6221ff8b988b8fcd85355c88e71cef2ce0b12980d5866588a4e",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:07Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/c787ff3fb30699640c49e51403b02ba9eb2f0b40909380dda6c0fa354ee6a6a6.json",
+      "bytes": 246,
+      "sha256": "5d4c6d82e7f4c973d68a08d3d312c00795822334240997c88b932e33e1667397",
+      "record": {
+        "content_id": "c787ff3fb30699640c49e51403b02ba9eb2f0b40909380dda6c0fa354ee6a6a6",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:19Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/c79c5a012e6120944678c79c451f742a73df1c272bc8ee892fd77cc9f19b04f6.json",
+      "bytes": 240,
+      "sha256": "6e42a83472958647d0c88ef5824ef894959e856121f23edddcc200395debaf60",
+      "record": {
+        "content_id": "c79c5a012e6120944678c79c451f742a73df1c272bc8ee892fd77cc9f19b04f6",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:20Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/c7e2476e3a9cb572ffdea02666b3bbd6c2421b4895ebf40ba18094a44033b29e.json",
+      "bytes": 240,
+      "sha256": "a26d430a82d07c88fdbca61a2d9eb593cf57b0e113fa98ad96aaac51ef4fc515",
+      "record": {
+        "content_id": "c7e2476e3a9cb572ffdea02666b3bbd6c2421b4895ebf40ba18094a44033b29e",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:22Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/c8ebfc90b5a3e08abfc4b7601320e1470948669b65a4e61f141b31e31f3ee606.json",
+      "bytes": 240,
+      "sha256": "eb14cfd816bf1515ebfc985d1a287a3955cb981f1fd8d800b10b6345f81d5b74",
+      "record": {
+        "content_id": "c8ebfc90b5a3e08abfc4b7601320e1470948669b65a4e61f141b31e31f3ee606",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:56Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/c96efcbdee682cb74281548efd5f5f80d3a3e4e9decfdb6fbe91b9e7a78a13ca.json",
+      "bytes": 246,
+      "sha256": "9ef39496cfbb730112157d47128f81901cebde1fef6946f9bf24a099fb648826",
+      "record": {
+        "content_id": "c96efcbdee682cb74281548efd5f5f80d3a3e4e9decfdb6fbe91b9e7a78a13ca",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:34Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/cac0bf39e352a15ad266c731cc77866a9299acc917feed8d21635773e30e659c.json",
+      "bytes": 240,
+      "sha256": "92c9245de6440a77f8c60b9334edd0dff03371dfdc9e9da6d1e6180b3ecc165b",
+      "record": {
+        "content_id": "cac0bf39e352a15ad266c731cc77866a9299acc917feed8d21635773e30e659c",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:44Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/cd256a1050b18a993d9a411e8194b9ecadd55eb23073a3d6a906d128c4c17d78.json",
+      "bytes": 246,
+      "sha256": "d3f9bed83589542e2d451ec19be96c5c116c9a2e2cbab2e6d2661a80da15aba7",
+      "record": {
+        "content_id": "cd256a1050b18a993d9a411e8194b9ecadd55eb23073a3d6a906d128c4c17d78",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:47Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/cd881ca391ae680db9f72627a1add4fd709c668166c60e639200c59e9618046f.json",
+      "bytes": 246,
+      "sha256": "8695cc04551d1d4c851d9537230ab0017c63accef1cf5673fddde9ece9639e92",
+      "record": {
+        "content_id": "cd881ca391ae680db9f72627a1add4fd709c668166c60e639200c59e9618046f",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:28Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/d059358aa67ac860bb8ac8a861c8eac7d7bb7d2528871caaec07b764c8ce307b.json",
+      "bytes": 246,
+      "sha256": "6849549636021cd053c55126980120a195e1b412d4d63c448bdffc1cb75ee9b0",
+      "record": {
+        "content_id": "d059358aa67ac860bb8ac8a861c8eac7d7bb7d2528871caaec07b764c8ce307b",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:11Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/d06a9ad3c3c04a1861565dcac6f392d895bd245059144e2ad22ecf19b4caeba6.json",
+      "bytes": 240,
+      "sha256": "b06333a697094f7bb2ab95656791dc11c34a4d76110daf97bf7f47ea4b7295c6",
+      "record": {
+        "content_id": "d06a9ad3c3c04a1861565dcac6f392d895bd245059144e2ad22ecf19b4caeba6",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:47Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/d1d3fb6cd5c6c00395e99aabee00f6537450f7a8f4a5430109fd99d5b20b0a7e.json",
+      "bytes": 240,
+      "sha256": "a2fdd745ce52595f32b9404313a7d34b658bcd19a3d810854fac7b2f8353767f",
+      "record": {
+        "content_id": "d1d3fb6cd5c6c00395e99aabee00f6537450f7a8f4a5430109fd99d5b20b0a7e",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:20Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/d2bf07252ac68fcade47daee51f3e1e38c53cc8ea83c9ef52bacce636286a3aa.json",
+      "bytes": 246,
+      "sha256": "986cf008154f7ab996858f2ab1f05953e21a547298f77d1713e26cb63369fec1",
+      "record": {
+        "content_id": "d2bf07252ac68fcade47daee51f3e1e38c53cc8ea83c9ef52bacce636286a3aa",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:34Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/d445aa55348f5af86540d94c082219019882a36bbe12f099b843049f6a1ad25c.json",
+      "bytes": 240,
+      "sha256": "f7c978b4385a715aa65d0e86552af9fa6b359b8bf7bd6ccd02b00949014ff86b",
+      "record": {
+        "content_id": "d445aa55348f5af86540d94c082219019882a36bbe12f099b843049f6a1ad25c",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:50Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/d529b8c2648fdbf03cb256bcacdfbbc5867c7fca83c73513c91e08868c610d36.json",
+      "bytes": 240,
+      "sha256": "5a2588eccab85235b4665d2bb2477c850da659608174d4fe929daabbedd5809c",
+      "record": {
+        "content_id": "d529b8c2648fdbf03cb256bcacdfbbc5867c7fca83c73513c91e08868c610d36",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:19Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/db2398131a6e55b14397e166cb05ea8c48a796e51f3be6545e08b234981e0025.json",
+      "bytes": 246,
+      "sha256": "48515e55d46627cb38a29ebd6d4350a55099dba80a37ca24c2b9755b36c6b9a2",
+      "record": {
+        "content_id": "db2398131a6e55b14397e166cb05ea8c48a796e51f3be6545e08b234981e0025",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:06Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/db36e4484da3d38947a4bf737021aae9ea00a6fd965f72c5154d74ace96ae412.json",
+      "bytes": 246,
+      "sha256": "78e11c1761cf2e5b50b0d4da195930a587a713a136e3e72a6dc686630f56ea57",
+      "record": {
+        "content_id": "db36e4484da3d38947a4bf737021aae9ea00a6fd965f72c5154d74ace96ae412",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:56Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/db43fc2e488fb37b1a42dba6fe998149d63b95fcb600e5cb601152a4732b0ee9.json",
+      "bytes": 240,
+      "sha256": "73bad452bbeb392408369fcc697d878c0f3d1299827c208342720340d5d21914",
+      "record": {
+        "content_id": "db43fc2e488fb37b1a42dba6fe998149d63b95fcb600e5cb601152a4732b0ee9",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:47Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/dc37122d8decefef9561d6a83f3e0a1513827539316174c0f5c890c585da74b8.json",
+      "bytes": 240,
+      "sha256": "141d08f4111cec009fb229bc3ddfd2902bfffca927c8881e87413f76fdc97f79",
+      "record": {
+        "content_id": "dc37122d8decefef9561d6a83f3e0a1513827539316174c0f5c890c585da74b8",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:03Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/dc45d4b17ee80294c4273e2f10f17d7cf38ea084b7d082172f497af23e9df112.json",
+      "bytes": 240,
+      "sha256": "d6567e21f6d41110a270e65ba0d1c65be5994f765f19e92840d5627906878ab1",
+      "record": {
+        "content_id": "dc45d4b17ee80294c4273e2f10f17d7cf38ea084b7d082172f497af23e9df112",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:35Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/dd4b03312eabe843a68415adaf8038eea0a2b31f481f6b24305c003459df217a.json",
+      "bytes": 246,
+      "sha256": "6ccc99ed9c0f5c8758c998a9b044f488503869af60603a2785f8d47626731d6f",
+      "record": {
+        "content_id": "dd4b03312eabe843a68415adaf8038eea0a2b31f481f6b24305c003459df217a",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:57Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/de0965b45dcdf0bbc2818dba62fe914b4c456cb3fa8eee5f192b2d838f0ffc7d.json",
+      "bytes": 240,
+      "sha256": "128be6e200a432814fecf50ecf8b76cc9cf374e9abb6035237d82929f7887007",
+      "record": {
+        "content_id": "de0965b45dcdf0bbc2818dba62fe914b4c456cb3fa8eee5f192b2d838f0ffc7d",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:05Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/dfccddbe596659764e0c885b698a6154a41fffd2fe9e9391ccde2e9d45447eb7.json",
+      "bytes": 240,
+      "sha256": "85e31a73bcbe9cf1c626549d58390abf16684bed79b5341e2caa5b77ca694227",
+      "record": {
+        "content_id": "dfccddbe596659764e0c885b698a6154a41fffd2fe9e9391ccde2e9d45447eb7",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:29Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/e3cb9d68985b381588fd124ef8656d30eb6ce21f3d443234376c957fd1f07eec.json",
+      "bytes": 240,
+      "sha256": "439a990e5356afb049ee09e8d407fbf54d85fe63194a92490622faf676ae9039",
+      "record": {
+        "content_id": "e3cb9d68985b381588fd124ef8656d30eb6ce21f3d443234376c957fd1f07eec",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:03Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/e5a3f7f7edc5475fb49f1ebb1dd5c72c6621891ff81db57d13ce3689a319f8ba.json",
+      "bytes": 240,
+      "sha256": "f895424fc4d2a1e8cdb928b7a57be03f47ec841ae1585765ccdff79757e6c02c",
+      "record": {
+        "content_id": "e5a3f7f7edc5475fb49f1ebb1dd5c72c6621891ff81db57d13ce3689a319f8ba",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:31Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/e76beaa79ba8832f2f0c137a48bebcfe87544497b345a0f3b8175326289fe2a2.json",
+      "bytes": 240,
+      "sha256": "3372a200e5f2260d983202ca32a4d6be69fae22070fb1fc6e7021aa81c4fe30d",
+      "record": {
+        "content_id": "e76beaa79ba8832f2f0c137a48bebcfe87544497b345a0f3b8175326289fe2a2",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:02Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/e79dde1d6851511725f0f879a3b82c4d7b65e3f0118cde3d4bdd427ce0819897.json",
+      "bytes": 240,
+      "sha256": "3fb312f7cdc015a3159615a468a5116823b15574e3c5b5ea22eda4bcc79ec8ba",
+      "record": {
+        "content_id": "e79dde1d6851511725f0f879a3b82c4d7b65e3f0118cde3d4bdd427ce0819897",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:48Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/e9124ef4f4bb961758d89658f0565c068ec4fd409bdd88ddf38b7c9902da19e0.json",
+      "bytes": 240,
+      "sha256": "b599d3171125b0ab0b3c6695b8e424fa990c94b264251e22f1b5c35196871364",
+      "record": {
+        "content_id": "e9124ef4f4bb961758d89658f0565c068ec4fd409bdd88ddf38b7c9902da19e0",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:44Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/ed7301a1a8193f3c44d5ad000d772d13f580c0a9ca987146808ec05c12fb7d53.json",
+      "bytes": 246,
+      "sha256": "338c2108ac24e3462b3e37230e834a616750174f0123b2e8a62d27f65fb265db",
+      "record": {
+        "content_id": "ed7301a1a8193f3c44d5ad000d772d13f580c0a9ca987146808ec05c12fb7d53",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:08:09Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/ed91a844b0c1b5a06aa8851b256fe34d1bf20b997907fdc81e8a8f2a69c18976.json",
+      "bytes": 240,
+      "sha256": "e69fda2272ae8b729aa965c488fcaceec0b5caf9b7c1391fc3e85f412eca0242",
+      "record": {
+        "content_id": "ed91a844b0c1b5a06aa8851b256fe34d1bf20b997907fdc81e8a8f2a69c18976",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:43Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/ee4a3b670d72a8333d6e405ec83e559f01eaddef8839a7937350f0cc00677009.json",
+      "bytes": 246,
+      "sha256": "53705651267dd577057b827d4830258a187b3f4049a59186b9d4b60d768a5363",
+      "record": {
+        "content_id": "ee4a3b670d72a8333d6e405ec83e559f01eaddef8839a7937350f0cc00677009",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:47Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/ee7d245e685ee606dcc20b23c6ea1bf11466b409165208355bdd01ae8a07e7ec.json",
+      "bytes": 246,
+      "sha256": "21eb636ff7184848287f23d577a85747f764ac6242ae112cca20fda6136bf6e5",
+      "record": {
+        "content_id": "ee7d245e685ee606dcc20b23c6ea1bf11466b409165208355bdd01ae8a07e7ec",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:36Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/f0a4423537c6fab87fa09ebe872faeb19a8f409b06b075deeebccddb71ec5868.json",
+      "bytes": 246,
+      "sha256": "a40ed7845663f4d822d01eedb4f254db0396fe798d37f712566cfbb76ca42926",
+      "record": {
+        "content_id": "f0a4423537c6fab87fa09ebe872faeb19a8f409b06b075deeebccddb71ec5868",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:42Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/f1ec2196b2edc656fb8a350a94dd447d56a00100bda09db7cea1b8f263e822b0.json",
+      "bytes": 246,
+      "sha256": "296d091b847475b87a47af9771d226f9f922f159f917a585333aa142017884b6",
+      "record": {
+        "content_id": "f1ec2196b2edc656fb8a350a94dd447d56a00100bda09db7cea1b8f263e822b0",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:53Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/f47ec608ade4d7d4e51d0830ecce9da7cbdefc133a0f0740248c0187d07164f9.json",
+      "bytes": 246,
+      "sha256": "477b50b6f16f7ed8e9ca93e111fa3a362635c7de6748407805ff1705a004ad4b",
+      "record": {
+        "content_id": "f47ec608ade4d7d4e51d0830ecce9da7cbdefc133a0f0740248c0187d07164f9",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:06:49Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/f4d7255b5e0c3e11e5c3719666cddd30987be9ae9830be1f7fbc039bcfbcc620.json",
+      "bytes": 246,
+      "sha256": "a9df4dcf8693c54683bb10ec499fed10f4d23073140ec5a50de2989f9c4a47f1",
+      "record": {
+        "content_id": "f4d7255b5e0c3e11e5c3719666cddd30987be9ae9830be1f7fbc039bcfbcc620",
+        "evidence": "시험 fixture `_complete_artifact` 가 정본 산출로 합성했다",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:20Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/f60fe32a8650c303c240818210c8c38a7cde0cf84f478337d528b50373575489.json",
+      "bytes": 240,
+      "sha256": "c7e770c8ca10155a6398c03481961ef8e40cb735d6346156d24b82452206231f",
+      "record": {
+        "content_id": "f60fe32a8650c303c240818210c8c38a7cde0cf84f478337d528b50373575489",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:12Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/f7609c7004432622cfe3715761ec6e5b0d8586cb9545eb8257933f05f0605d02.json",
+      "bytes": 240,
+      "sha256": "0bbbaeec26a19023ef84a53a87013d82da7d1d4a06262f45c2ad0d62cda79158",
+      "record": {
+        "content_id": "f7609c7004432622cfe3715761ec6e5b0d8586cb9545eb8257933f05f0605d02",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:02Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/f9ea35127777f34fd4f0cc3b66c45977b7419e102a9e1c8ba57302172e02c537.json",
+      "bytes": 240,
+      "sha256": "12c19e80bcf6b08a5118eb723ddc2ae877e8ae4fe7bb1d08e5d538f8da90c9ca",
+      "record": {
+        "content_id": "f9ea35127777f34fd4f0cc3b66c45977b7419e102a9e1c8ba57302172e02c537",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:09:32Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/fa08965e21a7dcd5380e625f3c10dce81b62d0db9b3376777a3cb6fdd3cba704.json",
+      "bytes": 240,
+      "sha256": "82da4b4ceee85c5870ae0d57af13ea95921543d47d752b10c49e111ebe06157e",
+      "record": {
+        "content_id": "fa08965e21a7dcd5380e625f3c10dce81b62d0db9b3376777a3cb6fdd3cba704",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:30Z",
+        "sealed": true
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/_exec_class/fec564f84458172324d30af4b2b49c4f66122a74be618527a399711085de94a8.json",
+      "bytes": 240,
+      "sha256": "f472eca058f4c0dba37bdd8ffd7643fd4bf81a9e04971fd3fa5fb67d7cd2064c",
+      "record": {
+        "content_id": "fec564f84458172324d30af4b2b49c4f66122a74be618527a399711085de94a8",
+        "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+        "execution_class": "canonical",
+        "recorded_at": "2026-09-22T01:07:19Z",
+        "sealed": true
+      }
+    }
+  ],
+  "added": []
+}

@@ -1,0 +1,73 @@
+{
+  "case": "reorder_loaded_path",
+  "ROOT": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate66-head\\degradation-degeneracy",
+  "sandbox": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate66_review_20260922\\startup_cases\\reorder_loaded_path\\replay",
+  "pythonpath": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate66_review_20260922\\startup_cases\\reorder_loaded_path\\startup",
+  "native_control": {
+    "rc": 0,
+    "stdout": "{\"loaded\": true, \"origin\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\gate66_review_20260922\\\\startup_cases\\\\reorder_loaded_path\\\\startup\\\\sitecustomize.py\", \"sys_path\": [\"\", \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\gate66_review_20260922\\\\startup_cases\\\\reorder_loaded_path\\\\other\", \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\gate66_review_20260922\\\\startup_cases\\\\reorder_loaded_path\\\\startup\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\python312.zip\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\DLLs\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\Lib\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\", \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\work\\\\gate65-venv\", \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\work\\\\gate65-venv\\\\Lib\\\\site-packages\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\Lib\\\\site-packages\"]}\r\n",
+    "stderr": ""
+  },
+  "customization": {
+    "site": "b39ab288cc7a6d0c",
+    "sitecustomize": "cc383292e18ff589",
+    "usercustomize": "3f107fe0e2bb9e78"
+  },
+  "history": {
+    "attempted_not_loaded": [],
+    "modules": {
+      "_distutils_hack": "ced72e54431ecf2d",
+      "encodings": "78c4744d407690f3",
+      "encodings.aliases": "6fdcc49ba23a0203",
+      "encodings.cp949": "950a7d29467ce059",
+      "encodings.utf_8": "ba0cac0602695835",
+      "encodings.utf_8_sig": "1ef3da8d8aa08149",
+      "sitecustomize": "cc383292e18ff589",
+      "usercustomize": "3f107fe0e2bb9e78"
+    },
+    "status": "measured",
+    "unfiled": 29
+  },
+  "complete": true,
+  "context": {
+    "executable": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+    "argv": [
+      "-c"
+    ],
+    "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate66_review_20260922\\startup_cases\\reorder_loaded_path\\replay",
+    "env": {
+      "DD_SMOOTH_CACHE": "",
+      "LANG": "C.UTF-8",
+      "LC_ALL": "C.UTF-8",
+      "PATH": "C:\\Users\\Administrator\\.codex\\tmp\\arg0\\codex-arg0YEGgDy;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\libheif\\libheif\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\jxrlib\\jxrlib\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\poppler\\Library\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\override;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\MATLAB\\R2026a\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell;C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\bin\\fallback;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin;C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd;C:\\Users\\Administrator\\AppData\\Local\\OpenAI\\Codex\\bin\\73fd6465d9c76545;C:\\Users\\Administrator\\AppData\\Local\\OpenAI\\Codex\\bin\\247581e40ee272fb",
+      "PYTHONHASHSEED": "0",
+      "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate66_review_20260922\\startup_cases\\reorder_loaded_path\\startup",
+      "SYSTEMROOT": "C:\\Windows",
+      "TEMP": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp",
+      "TMP": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp"
+    },
+    "user_site": true,
+    "search_path": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate66_review_20260922\\startup_cases\\reorder_loaded_path\\replay",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate66_review_20260922\\startup_cases\\reorder_loaded_path\\other",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate66_review_20260922\\startup_cases\\reorder_loaded_path\\startup",
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python312.zip",
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\DLLs",
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib",
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Lib\\site-packages",
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\site-packages"
+    ],
+    "site_file": "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\site.py"
+  },
+  "parent": {
+    "site": "b39ab288cc7a6d0c",
+    "sitecustomize": "3d4c0e115a180f72",
+    "usercustomize": "3f107fe0e2bb9e78"
+  },
+  "comparison": "REJECTED",
+  "comparison_error": "_ReplayError: 환경 영수증의 customization 이 부모가 본 것과 양립하지 않는다: sitecustomize: child='cc383292e18ff589' parent='3d4c0e115a180f72' — startup 코드가 자기 파일을 세탁했거나 검색 순서가 어긋났다. 못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 F1 · 65차 N1a)",
+  "entry": "REJECTED",
+  "entry_error": "_ReplayError: 환경 영수증의 customization 이 부모가 본 것과 양립하지 않는다: sitecustomize: child='cc383292e18ff589' parent='3d4c0e115a180f72' — startup 코드가 자기 파일을 세탁했거나 검색 순서가 어긋났다. 못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 F1 · 65차 N1a)"
+}

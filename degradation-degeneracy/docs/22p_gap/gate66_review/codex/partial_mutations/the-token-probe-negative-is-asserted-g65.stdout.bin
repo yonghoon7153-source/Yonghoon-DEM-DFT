@@ -1,0 +1,65 @@
+sFF                                                                      [100%]
+================================== FAILURES ===================================
+_________ test_the_committed_control_asserts_the_token_probe_negative _________
+
+    def test_the_committed_control_asserts_the_token_probe_negative():
+        """정적 대조 — 커밋된 대조군에 `_kernel_lock_held(tok) is False` 가 **있다**.
+        64차 AST 시험은 `is True`/`is False` 의 존재만 봤고 어느 탐침의 것인지는 안 봤다."""
+        src = (REPO / "tests" / "test_gate63_defensive.py").read_text(encoding="utf-8")
+        fn = next((n for n in ast.walk(ast.parse(src))
+                   if isinstance(n, ast.FunctionDef)
+                   and n.name == "test_the_kernel_lock_probe_itself_is_not_vacuous"), None)
+        assert fn is not None
+        token_outcomes = []
+        for node in ast.walk(fn):
+            if (isinstance(node, ast.Compare) and isinstance(node.ops[0], ast.Is)
+                    and isinstance(node.left, ast.Call)
+                    and isinstance(node.left.func, ast.Name)
+                    and node.left.func.id == "_kernel_lock_held"):
+                c = node.comparators[0]
+                if isinstance(c, ast.Constant) and isinstance(c.value, bool):
+                    token_outcomes.append(c.value)
+>       assert False in token_outcomes, (
+            "커밋된 대조군이 token 탐침의 음성을 고정하지 않는다 (E2-R 후속)", token_outcomes)
+E       AssertionError: ('커밋된 대조군이 token 탐침의 음성을 고정하지 않는다 (E2-R 후속)', [True, True])
+E       assert False in [True, True]
+
+tests\test_gate65_defensive.py:445: AssertionError
+__________ test_the_committed_probe_control_asserts_both_directions ___________
+
+    def test_the_committed_probe_control_asserts_both_directions():
+        """★ E2-R — 원장은 "잡으면 True · 놓으면 False" 라고 적었는데 커밋된 시험에는
+        True 만 있었다. 리뷰어의 정적 대조를 그대로 회귀로 고정한다 — 구현의 False 분기가
+        이 기계에서 동작하는 것과 **커밋된 회귀가 그것을 강제하는 것**은 다른 문제다."""
+        import ast
+    
+        src = (REPO / "tests" / "test_gate63_defensive.py").read_text(encoding="utf-8")
+        tree = ast.parse(src)
+        fn = next((n for n in ast.walk(tree)
+                   if isinstance(n, ast.FunctionDef)
+                   and n.name == "test_the_kernel_lock_probe_itself_is_not_vacuous"), None)
+        assert fn is not None, "탐침 대조군 시험이 없다"
+        # ★ 65차 E2-R 후속 — "어느 탐침의" 음성인지 본다. 64차 판은 `is True`/`is False` 의
+        #   존재만 세어서, 한 탐침(경로 판)의 음성이 다른 탐침(token 판)의 음성 부재를 가렸다
+        #   (리뷰어: 실제 lifecycle 이 쓰는 것은 token 판이다). 두 탐침 각각에 True·False 가 있어야
+        #   한다 — 어느 쪽 음성을 지워도 이 시험이 그 이름을 대며 빨개진다.
+        outcomes: dict = {"_kernel_lock_held": set(), "_kernel_lock_held_at": set()}
+        for node in ast.walk(fn):
+            if (isinstance(node, ast.Compare) and isinstance(node.ops[0], ast.Is)
+                    and isinstance(node.left, ast.Call)
+                    and isinstance(node.left.func, ast.Name)
+                    and node.left.func.id in outcomes):
+                c = node.comparators[0]
+                if isinstance(c, ast.Constant) and isinstance(c.value, bool):
+                    outcomes[node.left.func.id].add(c.value)
+        missing = sorted(name for name, seen in outcomes.items() if seen != {True, False})
+>       assert not missing, (
+            "커밋된 대조군이 한쪽만 고정한다 — 원장 문구가 시험보다 강하다 (E2-R)", missing)
+E       AssertionError: ('커밋된 대조군이 한쪽만 고정한다 — 원장 문구가 시험보다 강하다 (E2-R)', ['_kernel_lock_held'])
+E       assert not ['_kernel_lock_held']
+
+tests\test_gate64_defensive.py:259: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_gate65_defensive.py::test_the_committed_control_asserts_the_token_probe_negative
+FAILED tests/test_gate64_defensive.py::test_the_committed_probe_control_asserts_both_directions
+2 failed, 1 skipped, 24 deselected in 0.28s

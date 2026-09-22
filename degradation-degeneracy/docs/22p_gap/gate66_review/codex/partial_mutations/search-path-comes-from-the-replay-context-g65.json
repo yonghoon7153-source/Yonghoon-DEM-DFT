@@ -1,0 +1,58 @@
+{
+  "name": "search-path-comes-from-the-replay-context-g65",
+  "cwd": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\mutation_replay_1r9cwq0j\\degradation-degeneracy",
+  "command": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_gate65_defensive.py",
+    "tests/test_gate64_defensive.py",
+    "--noconftest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-k",
+    "a_relative_pythonpath_is_resolved_in_the_replay_cwd or the_parents_sys_path_is_not_the_childs_search_path",
+    "--json-report",
+    "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate66_review_20260922\\partial_mutations\\search-path-comes-from-the-replay-context-g65.pytest.json"
+  ],
+  "rc": 1,
+  "seconds": 2.875,
+  "registered_expected": {
+    "fail": [
+      "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd",
+      "tests/test_gate65_defensive.py::test_the_parents_sys_path_is_not_the_childs_search_path"
+    ],
+    "witness": {
+      "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd": "AssertionError: 부모가 상대 PYTHONPATH 를 호출자 cwd 로 풀었다 — 재생 문맥이 둘이다 (G65-N1b)",
+      "tests/test_gate65_defensive.py::test_the_parents_sys_path_is_not_the_childs_search_path": "AssertionError: 부모가 자기 sys.path 의 usercustomize 를 child 것으로 기대했다 (G65-N1b)"
+    }
+  },
+  "observed_failed": [
+    "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd",
+    "tests/test_gate65_defensive.py::test_the_parents_sys_path_is_not_the_childs_search_path"
+  ],
+  "skipped": [],
+  "summary": {
+    "failed": 2,
+    "total": 2,
+    "collected": 27,
+    "deselected": 25
+  },
+  "expected_failure_set_matches": true,
+  "observed_call_witness_matches": {
+    "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd": true,
+    "tests/test_gate65_defensive.py::test_the_parents_sys_path_is_not_the_childs_search_path": true
+  },
+  "fail_phases": {
+    "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd": [
+      "call"
+    ],
+    "tests/test_gate65_defensive.py::test_the_parents_sys_path_is_not_the_childs_search_path": [
+      "call"
+    ]
+  },
+  "mutation_sha256": "732215b9605065a1c919c84763c6685bc9a63aaaa66f2786521112fb2420771b",
+  "target_unchanged": true,
+  "limitation": "--noconftest supplemental check; no official replay/coverage certification; Linux skips remain unmeasured"
+}

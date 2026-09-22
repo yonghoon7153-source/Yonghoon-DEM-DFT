@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="71" time="65.986" timestamp="2026-09-22T20:05:43.329595+09:00" hostname="DESKTOP-IK8J81H"><testcase classname="tests.test_r17_followup" name="test_fu_01_gc_refuses_an_index_whose_attempt_escapes_partial" time="2.140" /><testcase classname="tests.test_r17_followup" name="test_fu_02_gc_does_not_unlink_a_payload_a_retained_entry_still_references" time="2.211" /><testcase classname="tests.test_r17_followup" name="test_fu_03_gc_still_keeps_the_reviewer_original_case" time="0.017"><failure message="ModuleNotFoundError: No module named 'fcntl'">tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r17_followup2_a4c311ef/pytest-focused_scoped-dcf28dfc/test_fu_03_gc_still_keeps_the_0')
+
+    def test_fu_03_gc_still_keeps_the_reviewer_original_case(tmp_path):
+        """대조군 — 리뷰어가 **닫혔다고 인정한** 원 반례(A/100 · A/200 · B/100)는 계속 통과해야 한다.
+        이번 수정이 그것을 되돌리면 여기서 잡힌다."""
+        out = tmp_path / "gc-safe"; out.mkdir()
+        for name, rid, body in [("matrix_100.csv", "A", "100-old"), ("matrix_200.csv", "A", "200-only"),
+                                ("matrix_100.csv", "B", "100-new")]:
+            canonical = out / name
+            d = V.publish_target(canonical, "partial", run_id=rid)
+            d.write_text(body, encoding="utf-8")
+&gt;           V.record_partial(canonical, d, status="partial", run_id=rid)
+
+tests\test_r17_followup.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+bms_balancing\verify.py:1394: in record_partial
+    atomic_write_json(idx_path, idx)
+bms_balancing\verify.py:132: in atomic_write_json
+    _publish_or_keep(fh.name, out)
+bms_balancing\verify.py:139: in _publish_or_keep
+    with publish_lock(out):
+         ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;bms_balancing.verify.publish_lock object at 0x00000276D45B5730&gt;
+
+    def __enter__(self):
+&gt;       import fcntl
+E       ModuleNotFoundError: No module named 'fcntl'
+
+bms_balancing\verify.py:87: ModuleNotFoundError</failure></testcase><testcase classname="tests.test_r17_followup" name="test_fu_04_width_positive_control_still_passes" time="0.194" /><testcase classname="tests.test_r17_followup" name="test_fu_05_width_negative_control_still_rejects_a_second_axis" time="0.202" /><testcase classname="tests.test_r17_followup" name="test_fu_06_width_rejects_a_body_that_contradicts_its_sidecar[body_version-&lt;lambda&gt;]" time="0.196" /><testcase classname="tests.test_r17_followup" name="test_fu_06_width_rejects_a_body_that_contradicts_its_sidecar[body_mixed_version-&lt;lambda&gt;]" time="0.179" /><testcase classname="tests.test_r17_followup" name="test_fu_06_width_rejects_a_body_that_contradicts_its_sidecar[body_tol-&lt;lambda&gt;]" time="0.191" /><testcase classname="tests.test_r17_followup" name="test_fu_06_width_rejects_a_body_that_contradicts_its_sidecar[body_cell-&lt;lambda&gt;]" time="0.183" /><testcase classname="tests.test_r17_followup" name="test_fu_07_width_rejects_a_fractional_cycle" time="0.187" /><testcase classname="tests.test_r17_followup" name="test_fu_08_width_rejects_a_body_run_id_that_is_not_the_declared_run" time="0.193" /><testcase classname="tests.test_r17_followup" name="test_fu_09_width_rejects_null_filled_required_meta[null_identity-keys0]" time="0.180" /><testcase classname="tests.test_r17_followup" name="test_fu_09_width_rejects_null_filled_required_meta[null_settings-keys1]" time="0.183" /><testcase classname="tests.test_r17_followup" name="test_fu_10_width_keeps_a_legitimate_nullable_field" time="0.179" /><testcase classname="tests.test_r17_followup" name="test_fu_11_a_seed_outside_the_box_can_not_become_a_witness" time="0.117" /><testcase classname="tests.test_r17_followup" name="test_fu_12_a_best_outside_the_feasible_set_is_not_reinserted" time="0.001" /><testcase classname="tests.test_r17_followup" name="test_fu_13_a_consistent_best_still_works" time="0.290" /><testcase classname="tests.test_r17_followup" name="test_fu_14_width_fields_marks_an_invalid_call_failed_not_measured" time="0.003" /><testcase classname="tests.test_r17_followup" name="test_fu_15_receipt_positive_control" time="0.690" /><testcase classname="tests.test_r17_followup" name="test_fu_16_receipt_rejects_wrong_types[null_runtime-over0]" time="0.698" /><testcase classname="tests.test_r17_followup" name="test_fu_16_receipt_rejects_wrong_types[bad_runtime-over1]" time="0.719" /><testcase classname="tests.test_r17_followup" name="test_fu_16_receipt_rejects_wrong_types[bad_materialized-over2]" time="0.681" /><testcase classname="tests.test_r17_followup" name="test_fu_16_receipt_rejects_wrong_types[bad_date-over3]" time="0.702" /><testcase classname="tests.test_r17_followup" name="test_fu_16_receipt_rejects_wrong_types[non_digest-over4]" time="0.709" /><testcase classname="tests.test_r17_followup" name="test_fu_17_package_status_is_not_a_content_address" time="0.017" /><testcase classname="tests.test_r17_followup" name="test_fu_18_a_package_content_digest_separates_different_bytes" time="0.015" /><testcase classname="tests.test_r17_codex" name="test_r17_01_gc_keeps_an_attempt_dir_that_a_retained_artifact_still_references" time="0.012"><failure message="ModuleNotFoundError: No module named 'fcntl'">tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r17_followup2_a4c311ef/pytest-focused_scoped-dcf28dfc/test_r17_01_gc_keeps_an_attemp0')
+
+    def test_r17_01_gc_keeps_an_attempt_dir_that_a_retained_artifact_still_references(tmp_path):
+        """[P1-01] `--keep 1 --apply` 는 100 의 A 만 버려야 하고 **200 의 유일한 결과(A)는 남아야 한다**."""
+&gt;       out = _gc_fixture(tmp_path)
+              ^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_r17_codex.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_r17_codex.py:58: in _gc_fixture
+    V.record_partial(canonical, d, status="partial", run_id=rid)
+bms_balancing\verify.py:1394: in record_partial
+    atomic_write_json(idx_path, idx)
+bms_balancing\verify.py:132: in atomic_write_json
+    _publish_or_keep(fh.name, out)
+bms_balancing\verify.py:139: in _publish_or_keep
+    with publish_lock(out):
+         ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;bms_balancing.verify.publish_lock object at 0x00000276B657B860&gt;
+
+    def __enter__(self):
+&gt;       import fcntl
+E       ModuleNotFoundError: No module named 'fcntl'
+
+bms_balancing\verify.py:87: ModuleNotFoundError</failure></testcase><testcase classname="tests.test_r17_codex" name="test_r17_02_gc_dry_run_names_files_not_whole_attempts" time="0.012"><failure message="ModuleNotFoundError: No module named 'fcntl'">tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r17_followup2_a4c311ef/pytest-focused_scoped-dcf28dfc/test_r17_02_gc_dry_run_names_f0')
+
+    def test_r17_02_gc_dry_run_names_files_not_whole_attempts(tmp_path):
+        """[P1-01 · 대조군] dry-run 도 같은 모델을 말해야 한다 — 지울 것은 `matrix/A/matrix_100.csv` 하나다."""
+&gt;       out = _gc_fixture(tmp_path)
+              ^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_r17_codex.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_r17_codex.py:58: in _gc_fixture
+    V.record_partial(canonical, d, status="partial", run_id=rid)
+bms_balancing\verify.py:1394: in record_partial
+    atomic_write_json(idx_path, idx)
+bms_balancing\verify.py:132: in atomic_write_json
+    _publish_or_keep(fh.name, out)
+bms_balancing\verify.py:139: in _publish_or_keep
+    with publish_lock(out):
+         ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;bms_balancing.verify.publish_lock object at 0x00000276B657B590&gt;
+
+    def __enter__(self):
+&gt;       import fcntl
+E       ModuleNotFoundError: No module named 'fcntl'
+
+bms_balancing\verify.py:87: ModuleNotFoundError</failure></testcase><testcase classname="tests.test_r17_codex" name="test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[absolute-path]" time="0.004" /><testcase classname="tests.test_r17_codex" name="test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[parent-traversal]" time="0.003" /><testcase classname="tests.test_r17_codex" name="test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[separator]" time="0.004" /><testcase classname="tests.test_r17_codex" name="test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[empty]" time="0.003" /><testcase classname="tests.test_r17_codex" name="test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[dot]" time="0.004" /><testcase classname="tests.test_r17_codex" name="test_r17_03_publish_target_rejects_non_simple_attempt_ids_before_touching_disk[dotdot]" time="0.003" /><testcase classname="tests.test_r17_codex" name="test_r17_04_publish_target_never_resolves_onto_canonical" time="0.003" /><testcase classname="tests.test_r17_codex" name="test_r17_05_legacy_transition_needs_a_recorded_old_revision_not_a_wildcard" time="0.028" /><testcase classname="tests.test_r17_codex" name="test_r17_06_check_u14_old_directory_without_identity_gets_no_legacy_approval" time="2.679" /><testcase classname="tests.test_r17_codex" name="test_r17_07_width_report_positive_and_negative_controls" time="0.375" /><testcase classname="tests.test_r17_codex" name="test_r17_08_width_report_refuses_input_roster_and_finite_violations[input-sha-changed]" time="0.199" /><testcase classname="tests.test_r17_codex" name="test_r17_08_width_report_refuses_input_roster_and_finite_violations[cycle-dropped]" time="0.189" /><testcase classname="tests.test_r17_codex" name="test_r17_08_width_report_refuses_input_roster_and_finite_violations[duplicate-cycle]" time="0.168" /><testcase classname="tests.test_r17_codex" name="test_r17_08_width_report_refuses_input_roster_and_finite_violations[nan-endpoint]" time="0.193" /><testcase classname="tests.test_r17_codex" name="test_r17_08_width_report_refuses_input_roster_and_finite_violations[blank-tol]" time="0.188" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[lower-bound-False]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[lower-bound-garbage]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[negative-tol]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[nan-tol]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[inverted-interval]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[nan-endpoint]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_09_width_union_closes_semantics_not_just_presence[point-outside-interval]" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_10_width_producer_refuses_an_empty_feasible_set_instead_of_measured_zero" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_11_near_optimal_extrema_does_not_fall_back_to_best_when_nothing_is_feasible" time="0.001" /><testcase classname="tests.test_r17_codex" name="test_r17_12_incomplete_run_receipt_is_not_reported_as_fully_verified" time="0.689" /><testcase classname="tests.test_r16_run_receipt" name="test_r16_61_the_pieces_are_bound_into_one_signed_object" time="0.202" /><testcase classname="tests.test_r16_run_receipt" name="test_r16_62_a_receipt_from_this_history_verifies" time="0.593" /><testcase classname="tests.test_r16_run_receipt" name="test_r16_63_an_edited_receipt_is_rejected" time="0.575" /><testcase classname="tests.test_r16_run_receipt" name="test_r16_64_a_commit_outside_this_history_is_rejected" time="0.449" /><testcase classname="tests.test_r16_run_receipt" name="test_r16_65_a_wrong_tree_for_a_real_commit_is_rejected" time="0.584" /><testcase classname="tests.test_r16_run_receipt" name="test_r16_66_the_consumer_declares_itself_instead_of_certifying_itself" time="0.650" /><testcase classname="tests.test_r16_run_receipt" name="test_r16_67_the_runner_emits_the_bound_receipt" time="0.001" /><testcase classname="tests.test_r16_run_receipt" name="test_r16_68_the_receipt_carries_digests_not_status_words" time="0.069" /><testcase classname="tests.test_r16_run_receipt" name="test_r16_69_the_verifier_resolves_paths_relative_to_the_target_not_the_repo_root" time="0.001" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_01_objective_version_is_a_required_keyword_with_no_default" time="0.001" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_02_unknown_version_is_rejected_before_any_fit" time="2.093" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_03_v2_matches_the_derivative_of_E_cell_and_legacy_does_not_when_a_is_not_one" time="0.001" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_05_the_version_rides_in_row_schema_controls_and_is_validated" time="0.001" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_06_cli_requires_the_flag" time="2.125" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_07_width_report_compares_the_version_like_any_other_setting" time="0.434" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_04_v2_recovers_injected_modes_within_tolerance_legacy_error_is_recorded_only[truth-A-noiseless]" time="14.487" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_04_v2_recovers_injected_modes_within_tolerance_legacy_error_is_recorded_only[truth-B-noiseless]" time="12.879" /><testcase classname="tests.test_chain_rule_contract" name="test_cr_04_v2_recovers_injected_modes_within_tolerance_legacy_error_is_recorded_only[truth-A-1mV-noise]" time="11.386" /></testsuite></testsuites>

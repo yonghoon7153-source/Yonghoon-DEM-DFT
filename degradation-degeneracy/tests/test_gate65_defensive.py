@@ -98,6 +98,10 @@ def test_the_interpreter_fixture_measures_its_own_premise(tmp_path, user_site):
     "못 만들었다" 를 가리지 않게. venv 의 활성 조건(`--system-site-packages`)을 빼먹는
     변이는 [True] 가 `assert False is True` 로 빨개진다."""
     py = build_interpreter(tmp_path, user_site=user_site)
+    # ★ G66-T1 — 측정은 **통제 env**(바깥 `PYTHONNOUSERSITE` 를 걷은 것)에서 한다. 전 판은
+    #   바깥 env 를 물려받아, 환경이 user site 를 끈 기계에서 이 시험이 **실패**했다 — 그것은
+    #   fixture 가 활성 옵션을 빠뜨린 것과 다른 사유다. 통제 뒤에도 기대와 다르면 그때는
+    #   fixture 결함이므로 여기서 실패하는 것이 맞다 (활성 옵션 제거 변이가 그 경로다).
     assert measured_user_site(py) is user_site
 
 

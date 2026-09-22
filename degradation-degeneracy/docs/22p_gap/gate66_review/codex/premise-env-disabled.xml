@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="2" time="0.655" timestamp="2026-09-22T17:55:46.521059+09:00" hostname="DESKTOP-IK8J81H"><testcase classname="tests.test_gate65_defensive" name="test_the_interpreter_fixture_measures_its_own_premise[True]" time="0.264"><failure message="AssertionError: assert False is True&#10; +  where False = measured_user_site(WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/gate66_review_20260922/pytest-premise-disabled/test_the_interpreter_fixture_m0/venv-user-site-on/Scripts/python.exe'))">tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/gate66_review_20260922/pytest-premise-disabled/test_the_interpreter_fixture_m0')
+user_site = True
+
+    @pytest.mark.parametrize("user_site", [True, False])
+    def test_the_interpreter_fixture_measures_its_own_premise(tmp_path, user_site):
+        """★ T1 — fixture 가 **만든** 인터프리터의 `ENABLE_USER_SITE` 가 **실측으로** 기대와
+        같다. 여기서는 검증 없는 `build_interpreter` 를 쓴다 — `make_interpreter` 의 skip 이
+        "못 만들었다" 를 가리지 않게. venv 의 활성 조건(`--system-site-packages`)을 빼먹는
+        변이는 [True] 가 `assert False is True` 로 빨개진다."""
+        py = build_interpreter(tmp_path, user_site=user_site)
+&gt;       assert measured_user_site(py) is user_site
+E       AssertionError: assert False is True
+E        +  where False = measured_user_site(WindowsPath('C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/gate66_review_20260922/pytest-premise-disabled/test_the_interpreter_fixture_m0/venv-user-site-on/Scripts/python.exe'))
+
+tests\test_gate65_defensive.py:101: AssertionError</failure></testcase><testcase classname="tests.test_gate65_defensive" name="test_the_interpreter_fixture_measures_its_own_premise[False]" time="0.258" /></testsuite></testsuites>

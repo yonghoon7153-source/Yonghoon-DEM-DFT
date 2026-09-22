@@ -1,0 +1,87 @@
+{
+  "verified_utc": "2026-09-22T09:06:57.641058+00:00",
+  "head": "fa947cc9b17cdbeffbb39447c99159bc2c831e6e",
+  "previous_review": "5e4cf1038f0f26a6a624d9984386cfd046657ac3",
+  "scientific_reference": "743f65bead671bf353ce38027c2e8e457738ec08",
+  "source_digest_observed": "e9ee7475dea7de1d",
+  "source_digest_command_record": "identity.json",
+  "source_digest_raw_stdout": "identity.stdout.bin",
+  "final_status_porcelain": "",
+  "scientific_scope_log": "",
+  "reviewed_files": [
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/GATE66_REQUEST.md",
+      "bytes": 24645,
+      "sha256": "f5c2e6f59bf57d172d03d39090330892ac8f507ba543b86f1886b59956b5b21f",
+      "git_blob": "729a0616f5911b620e69ddac3416c1a4700699a1"
+    },
+    {
+      "path": "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+      "bytes": 483786,
+      "sha256": "2c7d3acc2197ee6996d923fbc42c06fd58dd2ae19cc5dae0f640b2cfdd1835f7",
+      "git_blob": "5eca39207d7287ff11eada5c9cb143c97f94f953"
+    },
+    {
+      "path": "degradation-degeneracy/docs/GATE65_WORKING_STATE.md",
+      "bytes": 11727,
+      "sha256": "3b2cc79a1e3301c87f9ce29df51a52bd10b2a30fc025cc573132114ca07143a3",
+      "git_blob": "d7c5d9a34bf02d52039b5bc0a8f5dd754f2d028d"
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/mutation_replay.py",
+      "bytes": 404740,
+      "sha256": "873537aab10e9411e287e7bfb26afa186638205e72646f5f0cf156fe3f39ae90",
+      "git_blob": "4fa1ec02faf1c3eab2a4d122b162ed6a237977d7"
+    },
+    {
+      "path": "degradation-degeneracy/tests/test_gate65_defensive.py",
+      "bytes": 23467,
+      "sha256": "aa851cf3982aa5dbb4734994a9c17d6ab3cfe82cc1c8d238f9dd9edc2bd41ed3",
+      "git_blob": "ba04a9b08b4b130c1819e1280b6b4b51032896d8"
+    },
+    {
+      "path": "degradation-degeneracy/tests/interpreter_fixture.py",
+      "bytes": 3673,
+      "sha256": "b35c2a79403f71f067b90dd94ac07ee33ad2e053a612788a7107b1b4143706e9",
+      "git_blob": "ea998bdd8ecfbd260432f436c86488b6fff2dd19"
+    },
+    {
+      "path": "degradation-degeneracy/tests/test_gate64_defensive.py",
+      "bytes": 16293,
+      "sha256": "42815852dd2acacb0f1c27e76dd5bdf8d68e49717bc572aa3a6d21883ccb118e",
+      "git_blob": "5aa047eaf7c163f99fe2aeafd62cfd3748db2d2c"
+    },
+    {
+      "path": "degradation-degeneracy/tests/test_gate63_defensive.py",
+      "bytes": 26157,
+      "sha256": "77034237a0714d04727bae34d75242ef7120cdef12a52eef3e9a9120d5b2b8eb",
+      "git_blob": "81ef3f40720f646b5abcef873fc1006535bc3f62"
+    },
+    {
+      "path": "degradation-degeneracy/tests/receipt_fixture.py",
+      "bytes": 2731,
+      "sha256": "d2d112c57e877aa8f38b19a2aef98faeb32cc173621e12a1dff950247d70a30f",
+      "git_blob": "404618f56fbc864172592bfe39b199efdd9c680e"
+    },
+    {
+      "path": "degradation-degeneracy/tests/conftest.py",
+      "bytes": 9025,
+      "sha256": "89b3bcafb8ca06ef21dea0b40609ad2646257fbd5b5a4e27d2944ad67a1a27ff",
+      "git_blob": "7111a435da320ad3b84cfbaa07f8a730664aeb0d"
+    },
+    {
+      "path": "degradation-degeneracy/src/io.py",
+      "bytes": 102881,
+      "sha256": "b9412281a69685c6cfdf71717041e3416319618d3ed67c5e1f8f5029c2f2ac80",
+      "git_blob": "e01509c4b1a8fb3e501d2505eb9185bd8f038c2e"
+    },
+    {
+      "path": "degradation-degeneracy/src/fitting.py",
+      "bytes": 99176,
+      "sha256": "7b852ce9fa67fe4eec0e7f382420ae5d449698104395211f3c71bb92d82c01e4",
+      "git_blob": "faefaf5957ba7892c745613539520c3e2b499527"
+    }
+  ],
+  "target_changes_by_reviewer": "none; sandbox copies only",
+  "registry_change_detection": "read-only Git objects"
+}

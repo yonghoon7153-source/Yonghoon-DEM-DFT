@@ -1,0 +1,119 @@
+{
+  "artifact": "cycles_syn_Li.csv",
+  "run_id": "synthetic-production",
+  "sha256": "7ad0f4e65a1e8053e09068c4d12a3fec45955d56f4a7990eac374f5d608e09eb",
+  "roster": {
+    "kind": "cycles",
+    "rows": 2,
+    "cell": [
+      "syn"
+    ],
+    "cycles": [
+      0,
+      1
+    ],
+    "gamma_Si": [
+      0.0,
+      0.0,
+      2
+    ]
+  },
+  "git_commit": "a4c311eff898615932ae6f333bbb26b605abf762",
+  "git_dirty": false,
+  "git_modified_outputs": [],
+  "git_modified_code": [],
+  "git_commit_at_start": "a4c311eff898615932ae6f333bbb26b605abf762",
+  "git_dirty_at_start": false,
+  "git_modified_code_at_start": [],
+  "git_state_changed_during_run": false,
+  "started_utc": "2026-09-22T11:22:48.231454+00:00",
+  "env": {
+    "python": "3.12.14",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pandas": "3.0.6",
+    "openpyxl": "3.1.5",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "argv": [
+    "synthetic API fixture"
+  ],
+  "created_utc": "2026-09-22T11:22:48.308173+00:00",
+  "cell": "syn",
+  "si_source": "Li",
+  "starts": 1,
+  "seed": 0,
+  "scale_seed": 0,
+  "w_dqdv": 0.0,
+  "cycles": [
+    0,
+    1
+  ],
+  "status": "complete",
+  "dataset_manifest": {
+    "version": 1,
+    "dataset_id": "regime-team/electrode_balancing_blend/half_cell",
+    "sha256": "2d4a4893d3c90c632d28d3203fe04764e70dff5dfc9ae0e14767cc5609379e4d"
+  },
+  "consumed_inputs": {
+    "half_cell": {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup2_a4c311ef\\producer-0tg0h1wd\\src\\data\\half_cell\\GITT\\pristine.xlsx",
+      "sha256": "64b18af69134993cd1127e6bd634c2eb2636a0c02d2cad502a7f11e8e4207750"
+    },
+    "full_cell": {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup2_a4c311ef\\producer-0tg0h1wd\\syn.xlsx",
+      "sha256": "dacc7d9a0870d7fb1eace9de08df1b816af2593382bb2e5fe8ca13d3374ea80c"
+    },
+    "literature": {
+      "gr": {
+        "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup2_a4c311ef\\producer-0tg0h1wd\\src\\data\\literature\\Si_Gr_literature_OCP.xlsx",
+        "sha256": "35efb7c899cac1f9f9b69d4aff6b579f35092997ebb168b668575658801ef51a"
+      },
+      "si": {
+        "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_followup2_a4c311ef\\producer-0tg0h1wd\\src\\data\\literature\\Si_OCP_sources\\Li.csv",
+        "sha256": "a921f8ffbc17a4647f9ce711823c1a96c62e1aeb05c16f7089397fb1d4130c1c"
+      }
+    }
+  },
+  "lb": [
+    1.0,
+    -0.5,
+    1.0,
+    -0.5,
+    0.0
+  ],
+  "ub": [
+    1.4,
+    0.0,
+    1.4,
+    0.1,
+    0.5
+  ],
+  "initial": [
+    1.08,
+    -0.04,
+    1.05,
+    -0.03,
+    0.25
+  ],
+  "gamma_prefit": false,
+  "gamma_init": null,
+  "gamma_lb": null,
+  "widths": true,
+  "width_tol": 0.01,
+  "width_starts": 0,
+  "width_grid": 0,
+  "width_method": "near_optimal_extrema",
+  "free": [
+    "a_PE",
+    "b_PE",
+    "a_NE",
+    "b_NE",
+    "gamma_Si"
+  ],
+  "n_multistart": 1,
+  "w_pocv": 1.0,
+  "w_dvdq": 1.0,
+  "objective_version": "legacy_matlab",
+  "optimizer": "L-BFGS-B (scipy)"
+}

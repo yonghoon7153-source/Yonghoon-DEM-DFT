@@ -1618,9 +1618,11 @@ MUTANTS = [
      '                            "\u0075nfiled": int, "attempted_not_loaded": _Seq(str)},',
      '                            "unfiled": int},',
      "the_schema_carries_the_attempted_list or a_full_receipt_matches_the_schema"),
+    #   66차 G66-N1 로 부모가 사후 탐색을 그만두고 **로드 시점 origin 의 바이트를 읽는다** —
+    #   이 축이 지키는 성질(부모가 정상 package 를 child 와 같게 본다)은 그대로이고 자리만 옮겼다.
     ("parent-customization-uses-the-path-finder-g63", MR,                    # F3
-     '        spec = _\u0050F.find_spec(n, dirs)',
-     '        spec = None',
+     '            out[n] = _\u0064(origin)               # **부모가 그 자리의 바이트를 직접 읽는다**',
+     '            out[n] = "<absent>"',
      "parent_customization_lookup_supports_a_normal_package or "
      "the_real_probe_agrees_with_the_parent_view"),
     ("hex16-is-a-fullmatch-g63", MR,                                         # F4
@@ -1640,11 +1642,14 @@ MUTANTS = [
     #   65차: N1 의 지점은 `_parent_customization_view` 의 조건 분기에서 판정 함수의
     #   `auto` 로 옮겨 갔다 (조건은 재생 문맥의 필드가 됐다). 변이는 "조건을 무시하고
     #   항상 자동 import 를 기대한다" — 비활성+미로드 정상 영수증이 다시 거부된다.
+    #   66차 G66-N1 로 부모가 **실제 로드 여부**를 재므로, `auto` 가 지키던 성질(자동 import
+    #   대상이 아닌 이름을 기대하지 않는다)은 이제 측정이 지킨다. 그래서 이 축의 자리를
+    #   **"부모가 올렸다고 본 것을 child 가 <absent> 라 적으면 거부한다"** 로 옮긴다 —
+    #   비활성+미로드 정상 영수증이 거부되던 N1 의 반대쪽이자 살아 있는 보호다.
     ("usercustomize-follows-the-startup-activation-g64", MR,                 # N1
-     '        auto = n == "sitecustomize" or bool(ctx["\u0075ser_site"])   # startup 이 자동 import 하는가',
-     '        auto = True   # startup 이 자동 import 하는가',
-     "a_child_with_user_site_disabled_matches_the_parent or "
-     "a_disabled_user_site_receipt_passes_the_parent_assertion"),
+     '            elif auto and cand != "<\u0061bsent>":',
+     '            elif False:',
+     "a_forged_absent_namespace_is_still_rejected"),
     ("customization-reads-origins-like-the-rest-g64", MR,                    # N2
      '            cust[n] = _\u0068ash_origin(\n'
      '                f, getattr(_spec, "loader", None) or getattr(m, "__loader__", None))',
@@ -1665,11 +1670,15 @@ MUTANTS = [
      '            elif not loaded_file or not auto:\n'
      '                bad.append(f"{n}: child 가 바이트를 냈는데 startup 이력에 없다")',
      "a_disabled_interpreter_with_an_explicit_import_is_accepted"),
+    #   66차: 부모 탐색이 없어졌으므로 이 축의 자리는 **문맥을 어느 cwd 에서 재는가** 로 옮겼다.
     ("search-path-comes-from-the-replay-context-g65", MR,                    # N1b
-     '    dirs = list(ctx["\u0073earch_path"])',
-     '    dirs = [p for p in sys.path if p]',
+     '    r = subprocess.run([sys.executable, "-c", src], cwd=str(\u0063wd), env=replay_env(),',
+     '    r = subprocess.run([sys.executable, "-c", src], cwd=str(ROOT), env=replay_env(),',
+     # 66차: 부모가 사후 탐색을 그만뒀으므로 `the_parents_sys_path_is_not_the_childs_search_path`
+     # 는 cwd 를 바꿔도 안 빨개진다 (그 성질은 이제 origin 대조가 지킨다). 이 축이 실제로 무는
+     # 것은 **상대 경로를 어느 cwd 로 푸느냐** 이므로 거기로 좁힌다.
      "a_relative_pythonpath_is_resolved_in_the_replay_cwd or "
-     "the_parents_sys_path_is_not_the_childs_search_path"),
+     "the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd"),
     ("namespace-is-loaded-code-free-not-absent-g65", MR,                     # N2b
      '        elif _locs is not None:\n'
      '            cust[n] = "<namespace>:" + _\u006eamespace_identity(list(_locs))',
@@ -1683,6 +1692,34 @@ MUTANTS = [
      '        pass      # 활성 조건을 만들지 않는다 (64차 대조군의 가정)',
      "the_interpreter_fixture_measures_its_own_premise"),
     #   token 음성을 지우면 g64 의 AST 대조군도 같이 빨개진다 (65차부터 탐침별로 센다).
+    # ── 66차 (G66-N1 · T1 · 문맥 1회 측정) ──────────────────────────────────
+    #   사후 resolver 후보로 과거 import 를 판정하던 등식을 되돌리는 변이다.
+    ("parent-compares-the-loaded-origin-g66", MR,                            # G66-N1
+     '        rec = _\u006deasured.get(n) or {"loaded": False, "origin": None, "locations": None}\n'
+     '        if not rec.get("loaded"):\n'
+     '            out[n] = "<absent>"               # 그 이름은 startup 이 올리지 않았다\n'
+     '            continue\n'
+     '        origin, locs = rec.get("origin"), rec.get("locations")',
+     '        spec = _PF.find_spec(n, list(ctx["search_path"]))\n'
+     '        if spec is None:\n'
+     '            out[n] = "<absent>"\n'
+     '            continue\n'
+     '        origin, locs = spec.origin, spec.submodule_search_locations',
+     "a_cwd_file_that_startup_never_imported_is_not_expected or "
+     "a_startup_that_cleans_its_own_path_is_still_accepted or "
+     "a_startup_that_prepends_another_candidate_is_still_accepted"),
+    ("the-premise-uses-a-controlled-env-g66", IF,                            # G66-T1
+     '    env = dict(os.environ)\n'
+     '    for k in _\u0045NV_KILLSWITCHES:\n'
+     '        env.pop(k, None)',
+     '    env = dict(os.environ)',
+     "the_premise_test_does_not_fail_on_an_inherited_env"),
+    ("the-replay-context-is-measured-once-g66", MR,                          # 정적 관측
+     '    ctx = ctx if ctx is not None else _\u0072eplay_context()\n'
+     '    want = _parent_customization_view(ctx)',
+     '    want = _parent_customization_view(ctx)\n'
+     '    ctx = ctx if ctx is not None else _replay_context()',
+     "the_replay_context_is_measured_once"),
     ("the-token-probe-negative-is-asserted-g65", G63T,                       # E2-R 후속
      "        assert _kernel_lock_held(tok) is False       # ★ token 판의 음성 (65차)",
      "        assert _kernel_lock_held(tok) in (True, False)  # 음성 축을 지운다",
@@ -5016,14 +5053,11 @@ EXPECT: dict = {
     },
     "usercustomize-follows-the-startup-activation-g64": {
         "fail": [
-            "tests/test_gate64_defensive.py::test_a_child_with_user_site_disabled_matches_the_parent",
-            "tests/test_gate64_defensive.py::test_a_disabled_user_site_receipt_passes_the_parent_assertion",
+            "tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected",
         ],
         "witness": {
-            "tests/test_gate64_defensive.py::test_a_child_with_user_site_disabled_matches_the_parent":
-                "AssertionError: 부모가 startup 이 실행하지 않는 모듈의 digest 를 기대해 정상 영수증을 거부했다 (N1)",
-            "tests/test_gate64_defensive.py::test_a_disabled_user_site_receipt_passes_the_parent_assertion":
-                "AssertionError: user site 가 꺼졌는데 부모가 usercustomize 를 기대해 정상 영수증이 거부됐다 (N1)",
+            "tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected":
+                "Failed: DID NOT RAISE _ReplayError",
         }
     },
 
@@ -5051,13 +5085,13 @@ EXPECT: dict = {
     "search-path-comes-from-the-replay-context-g65": {
         "fail": [
             "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd",
-            "tests/test_gate65_defensive.py::test_the_parents_sys_path_is_not_the_childs_search_path",
+            "tests/test_gate65_defensive.py::test_the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd",
         ],
         "witness": {
             "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd":
                 "AssertionError: 부모가 상대 PYTHONPATH 를 호출자 cwd 로 풀었다 — 재생 문맥이 둘이다 (G65-N1b)",
-            "tests/test_gate65_defensive.py::test_the_parents_sys_path_is_not_the_childs_search_path":
-                "AssertionError: 부모가 자기 sys.path 의 usercustomize 를 child 것으로 기대했다 (G65-N1b)",
+            "tests/test_gate65_defensive.py::test_the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd":
+                "AssertionError: 실제 진입점이 상대 PYTHONPATH 의 정상 영수증을 거부했다 (G65-N1b)",
         }
     },
     "the-fixture-measures-its-premise-g65": {
@@ -5082,6 +5116,42 @@ EXPECT: dict = {
                 "Failed: DID NOT RAISE AssertionError",
             "tests/test_gate65_defensive.py::test_the_committed_control_asserts_the_token_probe_negative":
                 "AssertionError: ('커밋된 대조군이 token 탐침의 음성을 고정하지 않는다 (E2-R 후속)', [True, True])",
+        }
+    },
+
+    # ── 66차 (G66-N1 · T1 · 문맥 1회 측정) ─────────────────────────────────
+    #   증인은 전부 시험의 **고정 문구**다 — production reason·digest·경로를 담지 않는다.
+    "parent-compares-the-loaded-origin-g66": {
+        "fail": [
+            "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected",
+            "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted",
+            "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted",
+        ],
+        "witness": {
+            "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected":
+                "AssertionError: startup 이 읽지 않은 cwd 파일을 부모가 기대해 정상 영수증을 거부했다 (G66-N1 A)",
+            "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted":
+                "AssertionError: 자기 검색 경로를 정리한 정상 startup 의 영수증을 거부했다 (G66-N1 B)",
+            "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted":
+                "AssertionError: startup 이 앞에 넣은 다른 후보를 부모가 로드된 것으로 봤다 (G66-N1 C)",
+        }
+    },
+    "the-premise-uses-a-controlled-env-g66": {
+        "fail": [
+            "tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]",
+        ],
+        "witness": {
+            "tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]":
+                "AssertionError: ('물려받은 env 때문에 전제 시험이 실패했다 — 환경의 비활성을 fixture 구현 실패로 오판한다 (G66-T1)', '도 기대와 다르면 그때는",
+        }
+    },
+    "the-replay-context-is-measured-once-g66": {
+        "fail": [
+            "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once",
+        ],
+        "witness": {
+            "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once":
+                "AssertionError: ('한 번의 진입점 호출이 재생 문맥을 여러 번 쟀다', 2)",
         }
     },
 }
@@ -5741,10 +5811,29 @@ def _replay_context(cwd=None) -> dict:
     """
     cwd = pathlib.Path(cwd) if cwd is not None else _sandboxed(ROOT)
     frame = _new_frame()
+    # ★ 66차 G66-N1 — **로드 시점의 origin 을 여기서 같이 잰다.** 65차 판은 `sys.path` 만 받고
+    #   부모가 거기서 `PathFinder.find_spec()` 를 다시 했다. 그런데 `python -c` 의
+    #   `sys.path[0]=''`(cwd)는 **초기화가 끝난 뒤** 붙으므로(CPython `main.c` 의 path0 추가),
+    #   startup 이 한 줄도 읽지 않은 cwd 파일이 "읽었어야 하는 후보" 로 소급됐다. 정상
+    #   `sitecustomize` 가 자기 경로를 지우거나 다른 후보를 앞에 넣어도 같은 거부가 났다
+    #   (리뷰어 실측 3건, 우리 Linux 재현). **찾을 수 있는 후보와 올렸던 origin 은 다른 자료다.**
     src = ("import json, os, site, sys\n"
+           "def _cust():\n"
+           "    out = {}\n"
+           "    for n in ('site', 'sitecustomize', 'usercustomize'):\n"
+           "        m = sys.modules.get(n)\n"
+           "        if m is None:\n"
+           "            out[n] = {'loaded': False, 'origin': None, 'locations': None}\n"
+           "            continue\n"
+           "        sp = getattr(m, '__spec__', None)\n"
+           "        locs = getattr(sp, 'submodule_search_locations', None)\n"
+           "        out[n] = {'loaded': True,\n"
+           "                  'origin': getattr(m, '__file__', None) or getattr(sp, 'origin', None),\n"
+           "                  'locations': ([str(x) for x in locs] if locs is not None else None)}\n"
+           "    return out\n"
            f"print({frame!r} + json.dumps({{'enabled': bool(site.ENABLE_USER_SITE), "
            "'path': [p for p in sys.path if isinstance(p, str)], 'cwd': os.getcwd(), "
-           "'site_file': getattr(site, '__file__', None)}) "
+           "'site_file': getattr(site, '__file__', None), 'customization': _cust()}) "
            f"+ {frame!r})\n")
     r = subprocess.run([sys.executable, "-c", src], cwd=str(cwd), env=replay_env(),
                        capture_output=True, text=True, timeout=300)
@@ -5757,6 +5846,7 @@ def _replay_context(cwd=None) -> dict:
         got = _parse_framed_receipt(r.stdout, frame)       # noqa: F821
         enabled, path, child_cwd, site_file = (
             bool(got["enabled"]), list(got["path"]), str(got["cwd"]), got["site_file"])
+        cust = dict(got["customization"])
     except (ValueError, KeyError, TypeError) as exc:
         raise _ReplayError(
             f"재생 문맥의 출력을 받을 수 없다: {exc} (64차 N1 · 65차 N1b)") from None
@@ -5770,7 +5860,7 @@ def _replay_context(cwd=None) -> dict:
         search.append(os.path.normpath(q))
     return {"executable": sys.executable, "argv": ["-c"], "cwd": child_cwd,
             "env": replay_env(), "user_site": enabled, "search_path": search,
-            "site_file": site_file}
+            "site_file": site_file, "customization": cust}
 
 
 def _parent_user_site_enabled() -> bool:
@@ -5818,22 +5908,32 @@ def _parent_customization_view(ctx: dict | None = None) -> dict:
     from importlib.machinery import PathFinder as _PF
 
     ctx = ctx if ctx is not None else _replay_context()
-    dirs = list(ctx["search_path"])
+    # ★ 66차 G66-N1 — **사후 후보로 과거 import 를 판정하지 않는다.** 이제 기준은 문맥 탐침이
+    #   잰 **로드 시점의 origin** 이고, 부모는 그 origin 의 **바이트를 직접 읽는다**. 탐침은
+    #   64차부터 선언한 그 신뢰 경계(같은 startup 코드를 도는 보조 인터프리터) 안에 있고,
+    #   부모가 독립적으로 믿는 것은 여전히 **자기가 읽은 바이트**다 — 바이트가 바뀌면 거부된다.
+    #   `PathFinder` 탐색은 더 이상 판정의 근거가 아니다 (사후 `sys.path` 는 startup 이 본 것이
+    #   아니다). 아래 `_measured` 가 그 자료이고, `search_path` 는 진단용으로만 남긴다.
     importlib.invalidate_caches()             # 방금 생긴 디렉터리도 본다
+    _measured = dict(ctx.get("customization") or {})
     out = {"site": _d(ctx["site_file"])}      # child 인터프리터의 site — 부모가 바이트를 읽는다
     for n in ("sitecustomize", "usercustomize"):
-        spec = _PF.find_spec(n, dirs)
-        if spec is None:
-            out[n] = "<absent>"
+        rec = _measured.get(n) or {"loaded": False, "origin": None, "locations": None}
+        if not rec.get("loaded"):
+            out[n] = "<absent>"               # 그 이름은 startup 이 올리지 않았다
             continue
-        origin = getattr(spec, "origin", None)
-        locs = getattr(spec, "submodule_search_locations", None)
+        origin, locs = rec.get("origin"), rec.get("locations")
+        if origin in ("built-in", "frozen"):
+            out[n] = "<%s>" % origin          # 대조할 바이트가 없다 — 판정 함수가 거부한다
+            continue
         if origin and os.path.isfile(origin):
-            out[n] = _d(origin)
+            out[n] = _d(origin)               # **부모가 그 자리의 바이트를 직접 읽는다**
             continue
         if origin:
+            # 파일이 아닌 origin(zip 등) — 그 origin 을 담은 실제 파일을 찾아 loader 에게 묻는다.
+            spec = _PF.find_spec(n, [os.path.dirname(origin)] + list(ctx["search_path"]))
             get_data = getattr(getattr(spec, "loader", None), "get_data", None)
-            if get_data is None:
+            if get_data is None or getattr(spec, "origin", None) != origin:
                 raise _ReplayError(
                     f"부모가 {n} 의 origin {origin!r} 을 읽을 수 없다 — 파일이 아니고 "
                     "loader 가 바이트를 못 준다. 지원하지 않는 loader 로는 child 와 "
@@ -5844,8 +5944,8 @@ def _parent_customization_view(ctx: dict | None = None) -> dict:
             out[n] = "<namespace>:" + _namespace_identity(list(locs))    # noqa: F821
             continue
         raise _ReplayError(
-            f"부모가 {n} 의 spec 을 받았는데 origin 도 검색 위치도 없다 ({spec!r}) — "
-            "무엇과 대조할지 정할 수 없다 (65차 N2b)")
+            f"부모가 잰 {n} 은 올라와 있는데 origin 도 검색 위치도 없다 — 무엇과 대조할지 "
+            f"정할 수 없다 (65차 N2b · 66차 G66-N1)")
     return out
 
 
@@ -5874,8 +5974,11 @@ def _assert_customization_matches_parent(receipt: dict, ctx: dict | None = None)
     child 가 준 digest 를 정답으로 쓰지 않는다 — 후보와 같아야만 받고, 이력과 어긋나면
     `<absent>` 도 받지 않는다 ("비활성 = absent" 등식을 다른 등식으로 바꾸는 것이 아니다).
     """
-    want = _parent_customization_view(ctx)
+    # ★ 66차 (리뷰어 정적 관측) — 문맥은 **한 번만** 잰다. 전 판은 `ctx=None` 경로에서
+    #   `_parent_customization_view(None)` 가 한 번, 바로 다음 줄이 또 한 번 보조 인터프리터를
+    #   띄웠다 — "한 번 측정한 하나의 문맥" 이라고 적어 놓고 둘을 쟀다.
     ctx = ctx if ctx is not None else _replay_context()
+    want = _parent_customization_view(ctx)
     st = (receipt.get("startup") or {}) if isinstance(receipt, dict) else {}
     got = st.get("customization") or {}
     hist = ((st.get("startup_history") or {}).get("modules") or {})

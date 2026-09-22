@@ -1,0 +1,21 @@
+{
+  "previous_triage_sha256": "129507f1191db0630864e462eea65b10145e2dc8c00290636007b5aad3f8c02c",
+  "previous_failures": 108,
+  "current_failures": 108,
+  "newly_failing": [
+    "tests.test_r17_followup::test_fu_03_gc_still_keeps_the_reviewer_original_case"
+  ],
+  "no_longer_failing_this_run": [
+    "tests.test_r11_codex::test_e11_10_the_gate_is_isolated_before_it_is_imported_and_the_snapshot_bytes_are_checked"
+  ],
+  "remaining_unresolved": [
+    "tests.test_r10_codex::test_d10_12_closure_runners_fail_closed_when_assertions_are_off",
+    "tests.test_r10_codex::test_d10_13_closure_runners_seal_the_bytes_they_execute",
+    "tests.test_r10_codex::test_d10_14_package_byte_corruption_stops_the_runner_and_the_regression_sees_it",
+    "tests.test_r11_codex::test_e11_17_skip_worktree_is_detected",
+    "tests.test_r11_codex::test_e11_18_expected_head_must_be_the_full_object_id",
+    "tests.test_r8_codex::test_d8_07_r7_closure_runner_records_whether_each_probe_reached_its_counterexample_assertion",
+    "tests.test_r9_codex::test_d9_08_r7_runner_rejects_unknown_empty_or_duplicate_probes_and_wrong_head",
+    "tests.test_review_findings::test_r4_06_concurrent_profiles_publish_their_own_rows_with_run_ids"
+  ]
+}

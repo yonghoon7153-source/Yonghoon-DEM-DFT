@@ -1,0 +1,18 @@
+sandbox: C:\Users\ADMINI~1\AppData\Local\Temp\mutation_replay_sn1n48l4\degradation-degeneracy
+
+★ 실행오류     explicit-import-is-an-ordinary-import-g65 수집 rc 가 0 이 아니다 (3): 
+★ 실행오류     search-path-comes-from-the-replay-context-g65 수집 rc 가 0 이 아니다 (3): 
+★ 실행오류     namespace-is-loaded-code-free-not-absent-g65 수집 rc 가 0 이 아니다 (3): 
+★ 실행오류     the-fixture-measures-its-premise-g65 수집 rc 가 0 이 아니다 (3): 
+★ 실행오류     the-token-probe-negative-is-asserted-g65 수집 rc 가 0 이 아니다 (3): 
+
+scenario_total 5 · scenario_executable 5 · scenario_declared 0 · site_total 5 · site_executable 5 · site_declared 0 · ran 0
+
+=== 문제 ===
+explicit-import-is-an-ordinary-import-g65: 수집 rc 가 0 이 아니다 (3): 
+search-path-comes-from-the-replay-context-g65: 수집 rc 가 0 이 아니다 (3): 
+namespace-is-loaded-code-free-not-absent-g65: 수집 rc 가 0 이 아니다 (3): 
+the-fixture-measures-its-premise-g65: 수집 rc 가 0 이 아니다 (3): 
+the-token-probe-negative-is-asserted-g65: 수집 rc 가 0 이 아니다 (3): 
+
+sandbox 를 남긴다: C:\Users\ADMINI~1\AppData\Local\Temp\mutation_replay_sn1n48l4\degradation-degeneracy

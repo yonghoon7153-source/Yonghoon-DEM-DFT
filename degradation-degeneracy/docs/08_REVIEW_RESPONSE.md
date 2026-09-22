@@ -7479,3 +7479,95 @@ production reason·digest·경로를 담지 않는다 (64차 ① 회차의 교�
 ⑩ 등록부 격리(별도 계약, 기존 class/삭제 계약 변경은 별도 승인) · Q4 의 `error_code` 매트릭스 ·
 §0 의 독립 GO 전제. `source_digest` 는 `e9ee7475dea7de1d` 그대로 — 이번 고침도 전부 RUN_SCOPE
 밖이다. **본 실행 GO 는 요청하지 않는다.**
+
+## §83 66차 접수 — 부분 수용 · NO-GO (P1 1 · P2 2)
+
+2026-09-22 접수 (`GATE66_REVIEW_20260922.zip`, 보존: `docs/22p_gap/gate66_review/`, zip sha256
+`aa2cde592d28c4cfd0654e1f968dc3ad66fca452388ded5acc4cc62978c0a0ec`). 리뷰어가 고정한 HEAD
+`fa947cc9b17cdbeffbb39447c99159bc2c831e6e` · 직전 리뷰 `5e4cf103…` · 과학 정본 `743f65be…` ·
+`source_digest e9ee7475dea7de1d` — 우리 쪽 실측과 일치. 리뷰 환경 Windows / CPython 3.12.14.
+
+**받아들인 것.** G65-N1a(명시 import) · N1b(상대 cwd) · N2b(namespace) 의 **원 반례는 닫혔다**.
+G65+64 선택 시험 24 passed · 2 skipped · 1 deselected. 별도 sandbox 의 등록 변이 네 축
+(N1a·N1b·N2b·T1)은 선언한 실패 node 집합·call 단계·witness 가 각각 일치했다. E2-R 의 구조
+수정도 수용됐다 (native Linux 확인은 리뷰어 환경에서 미실행).
+
+**받아들이지 않은 것.** "보완을 전부 종결" 로 볼 수 없다.
+
+| ID | 등급 | 무엇이 틀렸나 |
+|---|---|---|
+| G66-N1 | P1 | **사후 resolver 후보 ≠ startup 이 실제로 올린 origin.** `_replay_context()` 는 초기화가 끝난 뒤의 `sys.path` 를 주고, 부모는 거기서 `PathFinder.find_spec()` 를 다시 해 **과거의 import 를 판정**한다. `python -c` 는 본문 실행 직전에 `sys.path[0]=''`(cwd)를 붙이므로 startup 이 한 줄도 읽지 않은 cwd 파일이 "읽었어야 하는 후보" 가 된다(A). 정상 `sitecustomize` 가 자기 디렉터리를 `sys.path` 에서 지워도(B), 다른 후보를 앞에 넣어도(C) 같은 거부가 난다. **셋은 한 원인이라 P1 하나로 센다** |
+| G66-T1 | P2 | 전제 시험이 `make_interpreter()` 의 skip 을 우회해 `build_interpreter()` 뒤 바로 assert 하고, 생성·측정 subprocess 가 **외부 env 를 물려받는다**. `PYTHONNOUSERSITE=1` 이면 skip 이 아니라 **실패**(1 failed · 1 passed) — 환경의 비활성을 fixture 구현 실패로 오판한다 |
+| G66-R1 | P2 | 직전 리뷰 SHA → 이번 HEAD 에서 **기존 sealed 기록 175건이 실제로 삭제**됐는데 "기존 기록 무변경" 설명에 빠져 있다. tracked 541 → 366, 추가 0, 생존 JSON 내용 변경 0, 삭제 175 전부 `sealed: true`·`canonical` |
+
+**리뷰어가 스스로 좁힌 범위.** 전체 pytest · strict smoke · 원래 Linux replay · Linux flock ·
+실제 planned grid→fit 은 완료했다고 주장하지 않는다. 우리 쪽 `1759 passed / 3 failed` 와 smoke
+rc 0 은 "제출자 측 주장" 으로 적었다. 원래 conftest 수집은 `/proc/self/mountinfo` 부재로 rc 3,
+원래 `-k g65 --keep-sandbox` 는 rc 1(scenario 5 / ran 0) — **변이가 죽었다고 세지 않았다**.
+E2-R 보조 변이는 정적 2 실패 · native 1 skip 이라 full EXPECT 일치로 세지 않았다.
+**본 실행 승인 없음.**
+
+## §84 66차 대응 — 찾을 수 있는 후보와 올렸던 origin은 다른 자료다
+
+리뷰어 재현기(`repro_startup.py`)를 이 Linux 에서 **수정 없이** 먼저 돌려 둘을 재현했다:
+
+```
+수정 전   plain               child df1b7ec0… · parent df1b7ec0…   ACCEPTED
+         cwd_on_pythonpath   child cb4c3880… · parent cb4c3880…   ACCEPTED
+         cwd_only_candidate  child e3b0c442… · parent cb4c3880…   REJECTED   ← G66-N1 A
+         remove_loaded_path  child e4d83544… · parent e3b0c442…   REJECTED   ← G66-N1 B
+수정 후   네 경우 모두 parent = child, 전부 ACCEPTED
+```
+
+RED 관측: `tests/test_gate66_defensive.py` 첫 실행 **5 failed · 5 passed** (통과한 다섯은
+대조군 — 바이트 변경 거부 · 세탁 `<absent>` 거부 · origin 없는 ModuleType `failed` · 깨끗한
+env 의 전제 시험 · 활성 옵션 제거 변이 검출). 수정 뒤 **10 passed**.
+
+### G66-N1 — 부모가 **로드 시점의 origin** 을 읽는다
+
+`[고침]` `_replay_context()` 가 `sys.path` 만이 아니라 **그 순간 올라와 있는 customization 의
+origin**(`{loaded, origin, locations}`)을 같이 잰다. `_parent_customization_view(ctx)` 는
+`PathFinder` 탐색을 **더 이상 판정 근거로 쓰지 않고**, 측정된 origin 의 **바이트를 부모가 직접
+읽는다**. 올라오지 않은 이름은 `<absent>` 이고, 그것이 정상이다.
+
+신뢰 경계는 64차부터 선언한 그대로다 — 문맥 탐침도 같은 startup 코드를 도는 보조 인터프리터다.
+부모가 독립적으로 믿는 것은 **자기가 읽은 바이트**이고, 그래서 실행 뒤에 파일을 갈아 끼우면
+여전히 거부된다(대조군). `search_path` 는 진단용으로만 남겼다.
+
+### G66-T1 — 전제의 env 를 통제하고, 못 만든 이유를 가른다
+
+`[고침]` `interpreter_fixture.controlled_env()` 가 `PYTHONNOUSERSITE` 를 걷은 env 를 만들고
+venv 생성·측정이 **그것**을 쓴다. 통제 뒤에도 기대와 다르면 그때는 이 기계의 정책이므로
+`pytest.skip` 사유에 실측값과 (있다면) 바깥 변수 이름까지 적는다. **활성 옵션(`--system-site-packages`)을
+빼는 변이는 여전히 실패**한다 — "전부 skip" 으로 숨기지 않았다(대조군 `test_g66_09`).
+
+### 정적 관측 — 문맥을 두 번 쟀다
+
+`[고침]` `_assert_customization_matches_parent` 의 `ctx=None` 경로가 보조 인터프리터를 두 번
+띄우고 있었다. 한 번만 재도록 순서를 바꿨고 회귀(`test_g66_07`)로 고정했다. 리뷰어가 별도
+finding 으로 세지 않겠다고 한 항목이다.
+
+### G66-R1 — 삭제는 사실이고, 우리 문장이 틀렸다
+
+`[수용]` **리뷰어 관측이 맞고 원인은 우리 커밋 둘이다.** git 객체로 직접 확인했다:
+
+| 커밋 | 제목 | `_exec_class` 에 한 일 |
+|---|---|---|
+| `01695bbe` (01:07) | "실행 class 등록부가 회귀 1회마다 ~175 항목 자란다 — GATE65 요청문에 ⑩ 으로 신고" | **211건 추가** — 오염을 신고하면서 그 오염물을 같이 커밋했다 (그 커밋의 다른 파일은 요청문 1개뿐이다) |
+| `d60f2539` (02:01) | "bms: Codex R17 NO-GO 대응 …" | 그중 **175건 삭제** — 제목과 무관한 변경이고 어느 문서에도 적지 않았다 |
+
+삭제된 175건은 전부 `sealed: true` · `execution_class: canonical` 이고 evidence 분포는
+`산출 완료 시점 등록 · leg=L phase=grid class=canonical` **88** + `시험 fixture
+_complete_artifact 가 정본 산출로 합성했다` **87** 이다 — 리뷰어 집계와 같다.
+
+그러므로 `GATE66_REQUEST.md` §2-6 의 **"기존 sealed 기록은 하나도 건드리지 않았다"** 는
+**틀렸다.** 그 문장이 참인 범위는 *이 세션에서 새로 생긴 미추적 파일* 뿐이고, **라운드 간
+(직전 리뷰 SHA → HEAD)** 에는 해당하지 않는다. 그 구분을 요청문이 하지 않았다.
+
+`conftest` 의 세션 말 정리는 **세션 시작 때 없던 파일만** 지운다(`tests/conftest.py:180–188`
+실측) — 이 삭제의 원인이 아니다. 원인은 우리 커밋이다.
+
+**하지 않은 것**: 삭제본을 복원하지 않았다. 리뷰어가 "리뷰어가 삭제본을 자동 복원하거나 class 를
+바꾸라고 승인하지 않는다" 고 명시했고, 등록부의 class·삭제 계약 변경은 **별도 승인 대상**이다.
+여기 적은 것은 **사실과 명부**이고, 복원 여부·근거·권한 영향의 판단은 승인 뒤에 한다.
+삭제 전 바이트는 `5e4cf103` 트리에 그대로 있으므로 복원은 언제든 가능하다.
