@@ -517,18 +517,32 @@ def choose_block_plateau(curve, tol=BLOCK_PLATEAU_TOL, run=BLOCK_PLATEAU_RUN, n_
          모자라면 **고르지 않는다**(필요한 B 를 같이 알려 준다).
       ② **사다리 간격.** 상대변화는 이웃 b 의 **간격에 비례**한다. 성긴 사다리는 변화를
          부풀리고 촘촘한 사다리는 줄인다 — 천천히 오르기만 하는 곡선도 사다리를 촘촘히
-         하면 언젠가 통과한다. 합의한 규칙은 *"b 를 1 부터 키우며"*, 즉 **연속 정수**다.
-         ⇒ plateau 삼각의 b 가 연속이 아니면 **고르지 않는다.**
-      두 가드는 규칙을 **바꾸지 않는다** — 규칙이 안 통하는 자리에서 **기권**할 뿐이다.
-      (합의한 규칙을 조용히 고치는 것이 더 나쁘다.)
+         하면 언젠가 통과한다.
+
+    ⭐ **개정 2026-09-22 — 판정량을 `b 당` 으로 정규화한다** (가드 ② 를 대체한다).
+
+        rel_per_b = |σ(b_{j+1}) − σ(b_j)| / σ(b_j) / (b_{j+1} − b_j)
+
+      ⇒ 문턱 `tol` 은 그대로 5 % 이고, 이제 **"b 1 칸당 5 %"** 를 뜻한다.
+      **왜 이게 안전한가**: `Δb == 1` 이면 `rel_per_b == rel` 이라 **원 규칙과 수식이 같다.**
+      합의한 규칙은 *"b 를 1 부터 키우며"* = 연속 정수이므로, **원 규칙이 맞게 돌던 경우의
+      답은 하나도 안 바뀐다.** 성긴 사다리에서만 달라진다 — 거기가 원래 틀리던 자리다.
+      종전 가드 ② 는 그 자리에서 **기권**했는데, 정규화하면 **판정할 수 있으므로**
+      기권 대신 **`confirm_at_spacing_1` 주의**를 단다(국소 선형성 가정이 남아 있어서다).
+      ⚠ 이건 **규칙 개정**이라 원장에 적는다 — 조용히 바꾸지 않는다.
+
+      가드 ① 은 그대로다 — MC 바닥은 사다리 간격과 **무관한 별개 문제**다.
 
     ⛔ 이 함수가 **못 하는 것**: 곡선이 단조 증가만 하는 **원인**(상관시간이 창보다 긴가?)
     을 말하지 못한다. 못 골랐다는 사실만 말한다.
     """
     c = sorted(curve, key=lambda p: p[0])
     rule = {"tol": float(tol), "run": int(run),
-            "definition": "연속 run 개 b 의 이웃 간 상대변화가 모두 ≤ tol",
-            "guards": ["MC 바닥 tol ≥ 3/√(2B)", "plateau 삼각의 b 는 연속 정수"]}
+            "definition": "연속 run 개 b 의 이웃 간 상대변화(**b 당 정규화**)가 모두 ≤ tol",
+            "normalization": "rel_per_b = |Δσ|/σ/Δb  (개정 2026-09-22)",
+            "equivalent_when": "Δb == 1 이면 원 규칙과 **수식이 동일**하다 — "
+                               "연속 정수 사다리의 답은 안 바뀐다",
+            "guards": ["MC 바닥 tol ≥ 3/√(2B)"]}
     base = {"block": None, "sigma": None, "curve": c, "rule": rule}
     if n_boot:
         floor = 1.0 / math.sqrt(2.0 * float(n_boot))
@@ -544,24 +558,38 @@ def choose_block_plateau(curve, tol=BLOCK_PLATEAU_TOL, run=BLOCK_PLATEAU_RUN, n_
         return {**base,
                 "why": f"곡선의 점이 {len(c)} 개 — 연속 {run} 개를 볼 수 없다. "
                        "**b 를 고르지 않는다**(판정 보류)."}
+    def _per_b(j):
+        """이웃 한 쌍의 **b 당** 상대변화. Δb == 1 이면 원 규칙의 값과 같다."""
+        db = c[j + 1][0] - c[j][0]
+        if db <= 0:                       # b 가 중복이거나 거꾸로면 판정 불가
+            return None
+        return abs(c[j + 1][1] - c[j][1]) / c[j][1] / db
+
     for i in range(len(c) - run + 1):
-        rels = [abs(c[j + 1][1] - c[j][1]) / c[j][1] for j in range(i, i + run - 1)]
-        if not all(r <= tol for r in rels):
+        pers = [_per_b(j) for j in range(i, i + run - 1)]
+        if any(p is None for p in pers):
+            continue
+        if not all(p <= tol for p in pers):
             continue
         gaps = [c[j + 1][0] - c[j][0] for j in range(i, i + run - 1)]
+        rels = [abs(c[j + 1][1] - c[j][1]) / c[j][1] for j in range(i, i + run - 1)]
+        out = {"block": c[i][0], "sigma": c[i][1], "curve": c, "rule": rule,
+               "rel_per_b": pers, "rel_changes": rels, "gaps": gaps,
+               "why": f"b = {c[i][0]} 부터 연속 {run} 점의 **b 당** 상대변화가 "
+                      f"{max(pers):.3f} ≤ {tol} — plateau 최소 b."}
         if any(g != 1 for g in gaps):
-            return {**base, "rel_changes": rels, "gaps": gaps,
-                    "why": f"b = {c[i][0]} 에서 문턱은 넘었지만 사다리 간격이 {gaps} 다 — "
-                           "합의 규칙은 **연속 정수 b** 에 대한 것이고, 성긴 간격은 "
-                           "상대변화를 부풀린다(= 문턱을 쉽게 만든다). "
-                           f"b = {c[i][0]} 부근을 **1 간격으로 다시 재라.** 지금은 안 고른다."}
-        return {"block": c[i][0], "sigma": c[i][1], "curve": c, "rule": rule,
-                "rel_changes": rels, "gaps": gaps,
-                "why": f"b = {c[i][0]} 부터 연속 {run} 점의 상대변화가 "
-                       f"{max(rels):.3f} ≤ {tol} — plateau 최소 b."}
-    best = min(abs(c[j + 1][1] - c[j][1]) / c[j][1] for j in range(len(c) - 1))
+            out["confirm_at_spacing_1"] = (
+                f"사다리 간격이 {gaps} 다. b 당 정규화로 **판정은 했지만**, 정규화는 "
+                f"그 구간에서 σ(b) 가 국소적으로 선형이라고 **가정**한다. "
+                f"b = {c[i][0]} 부근을 **1 간격으로 다시 재서 확인해라.**")
+            out["why"] += "  ⚠ 사다리가 성기다 — `confirm_at_spacing_1` 참조."
+        return out
+    cand = [p for p in (_per_b(j) for j in range(len(c) - 1)) if p is not None]
+    if not cand:
+        return {**base, "why": "b 사다리가 단조 증가가 아니다(중복·역순) — 판정 불가."}
+    best = min(cand)
     return {**base,
-            "why": f"plateau 없음 — 최선의 이웃 상대변화가 {best:.3f} > {tol}. "
+            "why": f"plateau 없음 — 최선의 이웃 **b 당** 상대변화가 {best:.3f} > {tol}. "
                    "**b 를 고르지 않는다.** σ_within 은 '못 구했다' 로 적고 판정을 보류한다."}
 
 
@@ -2609,10 +2637,23 @@ def selftest():
         "[음성] 복제가 적으면 **고르지 않는다** — tol 이 MC 바닥에 잠기면 잡음이 통과한다")
     chk(choose_block_plateau(_cur, n_boot=10000)["block"] == 4,
         "[음성] 복제가 충분하면 같은 곡선에서 정상적으로 b 를 고른다")
-    #: 가드 ② 사다리 간격 — 성긴 사다리는 상대변화를 부풀려 문턱을 쉽게 만든다
+    #: ⭐ 개정 2026-09-22 — b 당 정규화. **개정의 안전성 주장을 시험이 직접 검사한다.**
     _gap = choose_block_plateau([(1, 1.0), (2, 1.6), (4, 2.50), (6, 2.52), (8, 2.53)])
-    chk(_gap["block"] is None and "사다리 간격" in _gap["why"] and _gap["gaps"] == [2, 2],
-        "[음성] plateau 삼각의 b 가 연속이 아니면 **고르지 않는다** (1 간격으로 다시 재라)")
+    chk(_gap["block"] == 4 and _gap["gaps"] == [2, 2] and "confirm_at_spacing_1" in _gap,
+        "[개정] 성긴 사다리도 **b 당 정규화로 판정한다** — 기권 대신 주의를 단다")
+    chk(all(abs(p - r / 2.0) < 1e-12 for p, r in zip(_gap["rel_per_b"], _gap["rel_changes"])),
+        "[개정] Δb=2 면 b 당 값이 원 상대변화의 **정확히 1/2** 이다 (정규화가 실제로 돈다)")
+    #: ⭐⭐ 개정의 **핵심 주장**: Δb == 1 이면 원 규칙과 수식이 같다 ⇒ 답이 안 바뀐다.
+    #:    이 줄이 없으면 "안전하다" 는 말이 시험되지 않은 주장으로 남는다.
+    chk(all(abs(p - r) < 1e-12 for p, r in zip(_pl["rel_per_b"], _pl["rel_changes"]))
+        and _pl["block"] == 4,
+        "[개정·핵심] **연속 정수 사다리에서는 정규화판과 원 규칙이 동일하다** (답 불변)")
+    #: 성겨도 진짜로 안 평평하면 여전히 안 고른다 — 정규화가 문턱을 헐겁게 만들지 않는다
+    _gap_rise = choose_block_plateau([(1, 1.0), (3, 1.5), (5, 2.2), (7, 3.1)])
+    chk(_gap_rise["block"] is None and "plateau 없음" in _gap_rise["why"],
+        "[음성] 성긴 사다리라도 **실제로 오르면 안 고른다** (정규화 ≠ 문턱 완화)")
+    chk(choose_block_plateau([(2, 1.0), (2, 1.0), (3, 1.0)])["block"] is None,
+        "[음성] b 가 중복이면 Δb=0 이라 **나눗셈을 하지 않고** 판정을 포기한다")
     _sc = block_sigma_curve(lambda b: None if b == 3 else float(b), [2, 3, 4])
     chk(_sc == [(2, 2.0), (4, 4.0)],
         "[음성] σ 를 못 낸 b 는 곡선에서 **빠진다** (0 으로 안 채운다)")
