@@ -2,10 +2,10 @@
 title: PVS·SEV 는 LLI 와 LAM_PE 를 가르는가
 description: "Do the two physics-inspired features add an independent direction separating LLI from LAM_PE, or do they share one contrast"
 created: 2026-09-03
-updated: 2026-09-11
+updated: 2026-09-22
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -551,6 +551,44 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
     같은 관측(full-cell OCV)을 유지한 채 LAM 을 하위 분할하면 식별성이
     무너진다는 것이 이미 한 번 문서화된 셈이다. Si/Gr 분할이 다른 결과를
     내려면 **새 독립 관측**이 필요하다는 이 카드의 논지를 지지한다.
+  - **[2026-09-22] ★ 이 귀결의 첫 야생 징후 — 같은 발표자의 후속 덱이 그 분할을
+    실행했고, 첫 궤적이 음수를 포함한다.** 2026-09-21 주간 보고
+    (`raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md`, p.6) 는
+    `LAM_Si` 를 도입해 knee 이후 셀 1개를 정량한다. `[도표]` 결과(`figure-read ≈`):
+    `LAM_Si` **0 → −20.5 → −23 → −9 → +50 %**, 같은 시점 `γ_Si` 20.5 → 25.3 → 11.4 %,
+    `LAM_Gr` +6 → −0.5 %, `LAM_PE` 가 한 점에서 −0.2 %. 덱의 문장은 "정량화 결과가
+    LAM_Si 반영" 이고 음수에 대한 언급은 없다. 오차 막대 · 초기값 민감도 ·
+    목적함수 값 전부 **0**. `[해석]` Si 활물질이 20 % 늘었다는 값은 물리가 아니라
+    **데이터가 말하지 않는 방향 위에서 추정기가 고른 값**으로 읽히고, 그 방향은
+    [[halfcell-ocp-shape-invariance]] 가 Schmitt 2022 처방 ③ 의 대가로 적어 둔
+    `(γ_Si, α_NE)` 축퇴다 — 단 판정 수단이 덱에 없으므로 **가설**이다. 이 5개 곡선이
+    차주 랜덤 포레스트의 **정답 축**이 된다 (덱 p.1) — 09-02 의 "Fitted LAM_PE"
+    축이 "Fitted LAM_Si" 까지 넓어졌고, 그 첫 공개 궤적이 불가능한 값을 포함한다.
+    **이 항목은 H1/H2 에 무게를 싣지 않는다** — 관측(PVS·SEV)이 아니라 라벨 쪽
+    사건이다. 위 Gap "라벨의 불확실성" 의 무게를 올리는 실측이다.
+- **[2026-09-22] ★ 0.5C dQ/dV 에서 뽑은 PVS 가 fitted 모드와 "선형성 X" — 그리고
+  그것이 feature 탓인지 라벨 탓인지 이 데이터로는 가를 수 없다.** 같은 덱 p.8:
+  `[인쇄]` "0.5C dQ/dV curve 에서 PVS 추출 · 열화모드와 선형성 X". 근거 그림은
+  dQ/dV 겹침(셀 `#8`, rpt 0–700) 하나이고 **상관 산점도는 인쇄돼 있지 않다.**
+  `[도표]` 그 겹침에서 읽은 것: rpt 0 만 형상이 다르고(3.63 V 봉우리 ≈4.8 → rpt 50
+  이후 ≈3.3 Ah/V, 3.9 V 둔덕 소멸) rpt 50–700 14곡선은 촘촘히 겹친다; 4.23 V 컷오프
+  스파이크 위에 peak 마커가 세로로 줄지어 찍힌다(검출기가 스파이크를 봉우리로
+  잡는다). `[해석]` **판정: Evidence For/Against 어느 쪽도 아니다.** (a) "선형이
+  아니다" ≠ "정보가 없다"; (b) x 축이 되는 모드는 위 항목의 fitted 라벨이라 라벨
+  잡음과 feature 비선형성이 분리되지 않는다; (c) 0.5C 에서는 봉우리 개수·순서가
+  rpt 0 과 그 이후에서 달라 "두 번째 봉우리/골" 정의가 다른 것을 잴 수 있다
+  ([[rate-independent-li-plating-signature]] 의 정의 취약성이 **C-rate 변화로**
+  재현). → Gap 으로 등재. **이 판정 불가 자체가 이 카드가 요구해 온 라벨 불확실성이
+  실무에서 처음 필요해진 자리다.**
+- **[2026-09-22] Status Log (10) 의 Gap 하나가 닫힌다 — PVS 는 Ah 축에서 계산된다.**
+  09-21 덱 p.8 의 y 축 라벨이 `[도표-인쇄]` `dQ/dV (Ah/V)` 이고, 09-02 덱 p.7 도
+  0–8 Ah/V 였다. 즉 PVS 는 **SOC 정규화 곡선이 아니라 절대 용량 축**의 dQ/dV 에서
+  계산된다. `[해석]` 결과: [[np-lip-ocv-reparametrization]] 2 자유도 따름정리의
+  엄밀형("정규화 곡선의 임의 함수는 rank 를 못 늘린다")은 그대로 적용되지 않고
+  총용량 정보가 PVS 에 섞인다 — 다만 그 셋째 숫자는 ML 입력에 이미 `SOH` 로 들어가
+  있으므로, PVS 가 SOH 를 넘어서는 새 정보를 싣는지는 여전히 (7) 의 agnostic
+  기준선 paired 비교로만 판정된다. 한편 이 덱 p.5 의 **fitting 은 정규화 용량
+  축**(x 0–1)에서 돈다 — 라벨 생성기는 정규화 좌표, feature 는 절대 좌표다.
 - **[2026-09-11] 새 봉우리의 출현이 순서 기반 feature 를 깨고, 2 mV 동역학 하강이
   SEV 축에 걸린다 — 둘 다 미정량** (Wang (Xiong) 2025,
   `raw/papers/wang2025_aging-induced-rate-independent-li-plating.md`).
@@ -937,6 +975,27 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   이 위키의 유도) + Gap 1건(부호표에 LAM_PE 열 부재, 정답 축 적합값). 이 카드의 두
   후보 중 **PVS(ICA 유래) 쪽에만** 걸린다. 가져올 것 하나: 원문은 단독 스윕과 **복합
   스윕을 같은 그림에** 그려 de/li 상쇄를 드러냈다 — 우리 부호표에는 복합 스윕이 없다.
+
+- [2026-09-22] open 유지 — **같은 발표자의 후속 덱(2026-09-21 주간 보고, 8쪽)** 을
+  흡수 (`raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md`, 8장 전부
+  직접 봄). 09-02 p.15 의 discussion point 3개가 **전부 착수**됐다 — ① fitting
+  quality: ub/lb/initial 수정 + **Euclidean distance loss**(식 인쇄, 비교 수치 없음)
+  ② LAM_NE → **LAM_Si / LAM_Gr**(γ_Si 자유 파라미터) ③ **0.5C dQ/dV 에서 PVS**.
+  이 카드에 준 것 셋 — **Evidence For/Against 어느 쪽에도 붙지 않았다**:
+  - **Gap 2건 추가**: (1) Si/Gr 분할의 첫 야생 궤적이 `LAM_Si ≈ −23 %` 를 포함하고
+    오차 막대가 0 — 라벨 불확실성 Gap 의 무게 상향, 그리고 그 라벨이 차주 RF 의
+    정답 축; (2) 0.5C PVS "선형성 X" 는 feature 탓과 라벨 탓이 분리되지 않아
+    판정 불가.
+  - **Gap 1건 닫힘**: PVS 는 **Ah 축** dQ/dV 에서 계산된다 (두 덱 모두 `Ah/V`).
+    Lin 따름정리의 엄밀형은 적용되지 않고 총용량 정보가 섞인다 — 그 정보는 이미
+    입력 SOH 다.
+  - **이 카드 밖으로 간 것**: Si OCP 의 **방향 의존**(충/방전 GITT-OCV 의 최적 fit
+    OCP 가 다르다, γ_Si 25.7 ↔ 30.5 %) 은 관측이 아니라 라벨 생성기의 전제 문제라
+    [[halfcell-ocp-shape-invariance]] 에 "세 번째 파괴 방식" 으로 붙였고,
+    `(γ_Si, α_NE)` 축퇴 지도의 실행 동기는 [[22p-physics-or-degeneracy]] 에 적었다.
+  - **SEV 는 이 덱에 한 번도 나오지 않는다.** 두 후보 중 PVS 쪽만 움직였다.
+  - **어휘**: 8쪽 전체에 `uncertainty`·`identifiab*`·`unique`·`error bar` **0** —
+    이 계보의 발표 두 편 모두 0 이다.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

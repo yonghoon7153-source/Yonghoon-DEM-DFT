@@ -2,10 +2,10 @@
 title: 반쪽전지 OCP 형상 불변 가정과 그 파괴 (blend 전극)
 description: "The α·β affine-rescaling premise behind every electrode-balancing diagnostic, where it breaks for Si/graphite blends, and the directional bias it leaves in LLI/LAM"
 created: 2026-09-10
-updated: 2026-09-16
+updated: 2026-09-22
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md]
+sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -165,6 +165,51 @@ Spencer-Jolly 2023 (`assb` 7호)은 **한 사이클 안에서** 같은 가정을
   방전용 OCP 가 따로** 있어야 한다는 뜻이고, 이는 α·β 아핀 재척도 전제의
   **형상 고정**보다 앞단에서 깨진다.
 ⚠ 정량은 없다 (상 분율·Rietveld 0) — **방향만** 읽고 크기는 읽지 않는다.
+
+## ★ 세 번째 파괴 방식 — 액체셀 Si/graphite 에서 **한 사이클 안**의 방향 의존 (2026-09-22)
+
+위 ASSB 반례는 모집단이 달랐다. **같은 모집단(NCM811 ‖ Si–graphite, 이 페이지
+본문의 셀 계열)에서 같은 종류의 파괴**가 2026-09-21 BML 주간 보고
+(`raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md`, 김시원; 그림 8장
+직접 봄)에 나왔다. 발표자는 이것을 "이력" 이라 부르지 않는다 — `[인쇄]` 는
+"**충/방전 GITT-OCV 의 최적 fit OCP 가 다름**" 한 줄이다.
+
+| 자리 | 덱이 보인 것 |
+|---|---|
+| p.2 음극 GITT-OCV (준평형) | `[도표]` Si-graphite 와 graphite 의 차이가 **delithiation 가지에서 ≈0.3 V(SOC_NE 35–100 %)**, lithiation 가지에서 ≈0.05–0.1 V — `[인쇄]` "방전(delithiation) 그래프에서 Si 기여도 두드러짐" |
+| p.3 Si OCP 문헌 8종 | `[도표]` **8종 모두 닫힌 루프**(위 가지 = delith., 아래 = lith.), 중간 용량에서 가지 간격 ≈0.1–0.3 V. Li 는 위 가지가 ≈0.4 V 평탄, Lu 는 단조, Jiang 은 계단 |
+| p.4 방전 GITT-OCV 적합 | `[도표-인쇄]` **Lu OCP: γ_Si 30.5 %, RMSE 20.36 mV ("Lithiation fitting 시 최적")** ↔ **Li OCP: γ_Si 25.7 %, RMSE 15.23 mV** — 방전 데이터에는 Li 가 맞고, 충전 데이터에는 Lu 가 맞는다 |
+
+`[해석]` 세 가지가 이 페이지에 붙는다.
+1. **파괴의 층위가 하나 더 앞이다.** 본문(Schmitt)은 *사이클에 따라* 형상이
+   바뀐다는 것, ASSB 반례는 *한 사이클 안에서* 충·방전 곡선이 다르다는 것이었다.
+   이 덱은 후자를 **액체셀 Si 음극의 GITT(준평형) 데이터**로 보인다 — 그리고
+   문헌 Si OCP 8종이 예외 없이 두 가지를 갖는다는 것은, "고정 OCP 함수 하나" 라는
+   전제가 **문헌 입력 단계에서** 이미 성립하지 않았다는 뜻이다. Si 의 이력은
+   `i→0` 으로 지워지지 않는 것으로 널리 알려져 있으나, 그 문헌 확인은 이 위키에
+   아직 없다 (후속 후보: 덱이 성만 적은 8종의 서지 확정).
+2. **라벨이 OCP 출처에 ≈5 %p 민감하다.** 같은 방전 데이터에서 Si OCP 를 바꾸면
+   γ_Si 가 25.7 ↔ 30.5 %. 이것은 잡음이 아니라 **모델 입력 선택에 대한 라벨
+   민감도**이며, 본문의 "Si OCP 가 남의 논문에서 왔다" 는 데이터 공백이 수치를
+   얻은 것이다. 두 RMSE(15–20 mV)는 어느 쪽도 Schmitt 의 "좋은 재구성" 12 mV
+   (full-cell 좌표라 직접 비교는 아니다) 위다.
+3. **처방 ③ 의 대가가 야생에서 처음 보였다.** 같은 덱 p.6 이 처방 ③(γ_Si 를
+   자유 파라미터로) 을 실제로 돌린 첫 궤적을 보인다 — knee 이후 셀 1개, `[도표]`
+   `LAM_Si` **0 → −20.5 → −23 → −9 → +50 %**, `γ_Si` 20.5 → 25.3 → 11.4 %,
+   `LAM_Gr` +6 → −0.5 %. 덱은 "정량화 결과가 LAM_Si 반영" 이라고만 적고
+   음수를 언급하지 않는다. `[해석]` Si 활물질이 20 % 늘었다는 값은, 본문 표
+   "처방 ③ · 대가" 칸의 **`γ_Si ↔ α_an` 새 축퇴(저자 미검사)** 가 실물에서
+   나타난 모양으로 읽힌다 — 오차 막대·초기값 민감도·목적함수 값이 0 이라
+   확정은 아니다. 이 페이지 "적용" 4번 체크리스트 (c) `γ_Si ↔ α_NE` 상관을 뽑은
+   논문은 여전히 없고, 이 덱도 뽑지 않았다.
+4. **덱은 full-cell 적합(p.5·p.6)에 어느 방향의 음극 OCP 를 넣었는지 적지
+   않는다.** 방향 의존을 보인 뒤 한 함수로 적합했다면 그 오설정이 모드 편향으로
+   간다 — 본문 편향표(LAM_an +2.4 pp 등)와 **같은 종류, 다른 원인**이다.
+
+⚠ 셀 화학·모델명이 이 덱에 인쇄돼 있지 않다 (09-02 덱의 MJ1 연속선상으로
+추정). 그리고 half-cell 적합의 γ_Si(25.7–30.5 %)와 full-cell 적합 Cycle 0 의
+γ_Si(≈20.5 %), Schmitt 의 MJ1 pristine 9.52 % 가 서로 다르다 — 정의·OCP 출처·셀이
+다를 수 있어 직접 비교하지 않는다 (raw digest 공백 11).
 
 ## 관련
 - [[fitting-degeneracy]] — 같은 증상(적합도 불변, 파라미터 이동)의 다른 원인

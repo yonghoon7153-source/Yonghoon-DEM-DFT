@@ -2,10 +2,10 @@
 title: 22p 결과는 물리인가 fitting degeneracy 인가
 description: "Is the seminar 22p LLI/LAM decomposition (LAM_PE=LAM_NE=13%, LLI=17%) real physics or an artifact of non-identifiability"
 created: 2026-08-11
-updated: 2026-09-11
+updated: 2026-09-22
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -1010,6 +1010,30 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   - **정답 축의 층위**: IC 직접 진단의 "1.79 % / 1.62 %" 는 **OCV 적합값 대비**다.
     재료 라벨은 OCV 법에만(4+4 셀) 대조됐다. 인용 시 반드시 축을 붙인다.
   [[mode-identifiability-unmeasured-lineage]] §9 신설, 계보 16 → 17편.
+
+- **[2026-09-22] 2026-09-21 BML 주간 보고(김시원) 흡수 — 2026-09-10 의 "미실행"
+  항목에 실행 동기가 붙었다.** `active` 유지, Evidence 변동 없음
+  (`raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md`, 8장 직접 봄).
+  - **`(γ_Si, α_NE)` 축퇴 지도가 더는 학술적 호기심이 아니다.** 같은 시스템의
+    정량화 코드가 γ_Si 를 5번째 파라미터로 열었고(우리 `(a_PE, b_PE, a_NE, b_NE,
+    γ_Si)` 와 같은 구조 — [[fitting-degeneracy]]), 그 첫 궤적이 `[도표]`
+    `LAM_Si ≈ −20.5 → −23 → −9 → +50 %` 다. 음수 세 점이 축퇴 방향 위의 추정기
+    선택인지 물리인지는 **우리 합성 truth 격자에서만 가를 수 있다** — 참값이 있고,
+    같은 좌표이고, 값이 싸다 (기존 artifact 재집계 + γ_Si 축 스윕). 이 결과가 차주
+    랜덤 포레스트의 정답 축이 되므로 시급성도 붙었다.
+  - **목적함수 대조군이 하나 생겼다.** 덱 p.7 이 `L_euc = (1/N) Σ min_j sqrt((Q_i −
+    Q̂_j)² + ((V_i − V̂_j)/s)²)` (점-대-곡선 거리, dV/dQ 판도 동형) 를 인쇄하고
+    "fitting quality 향상" 이라 적는다 — 비교 수치 없이. `[해석]` 가로(Q) 어긋남을
+    싸게 만드는 손실은 dV/dQ 특징점의 **가로 위치**(= Birkl·Natterer 가 모드를 읽는
+    바로 그 신호)에 무뎌지므로, 곡선 일치는 좋아지고 **근최적 폭은 넓어진다**는
+    예측이 선다. 우리 2026-08-20 "dQ/dV 항을 더했더니 나빠졌다" 와 **paired** 로 같은
+    격자에서 `L_MSE` vs `L_euc` 의 (곡선 RMSE, 복원 오차, 폭) 세 축을 재 볼 수 있다
+    (미실행; `s`·`w` 는 덱에 없어 스윕해야 한다).
+  - **유효범위 표기가 한 단계 더 좁아진다.** 2026-09-10 에 "우리 축퇴는 형상 불변이
+    참인 이상적 하한" 이라 적었는데, 이 덱은 Si OCP 가 **충/방전 방향에 따라 다른
+    함수**임을 GITT 로 보인다(γ_Si 25.7 ↔ 30.5 %, OCP 출처만 바꿔서) →
+    [[halfcell-ocp-shape-invariance]] 세 번째 파괴 방식. 우리 PyBaMM truth 는 방향
+    의존 OCP 를 갖지 않으므로 하한 진술에 "**단일 방향 OCP 가정 하**" 를 덧붙인다.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

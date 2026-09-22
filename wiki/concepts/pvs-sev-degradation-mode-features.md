@@ -2,10 +2,10 @@
 title: PVS·SEV — 열화 모드 진단용 physics-inspired feature 2종
 description: "ICA 할선 기울기(PVS)와 스케일링된 충전종료 전압강하(SEV)의 정의, 물리 귀속, 그리고 모드별 부호 구조"
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-22
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/rhyu2025_systematic-feature-design-formation.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/rhyu2025_systematic-feature-design-formation.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -147,6 +147,30 @@ P2D 시뮬레이션(PVS, 원문 p.8)과 stoichiometric-window 모식도(SEV, 원
 - 원문 p.15 의 discussion point 3종이 모두 우리 축과 겹친다: fitting quality
   개선 · LAM_NE 를 Si/Gr 로 분리 · dQ/dV 계산 방식에 따른 PVS 변화. 세 번째는
   우리 쪽 평활화 민감도 작업과 같은 축이다.
+
+## PVS 를 0.5C 로 옮기면 (2026-09-22, 같은 발표자의 후속 덱)
+
+2026-09-21 주간 보고 (`raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md`,
+p.8) 가 discussion point ③ 을 실행했다 — PVS 를 **0.05C pOCV ICA 가 아니라 0.5C
+충전 dQ/dV** 에서 뽑고, `[인쇄]` "**열화모드와 선형성 X**" 로 결론지었다. 상관
+그림은 없고 dQ/dV 겹침(셀 `#8`, rpt 0–700) 하나만 있다. 그 그림에서 읽은 것
+(`[도표]`, 직접 봄):
+
+| 항목 | 0.05C (09-02 p.7) | 0.5C (09-21 p.8) |
+|---|---|---|
+| y 축 | 0–8 Ah/V | 0–14 **Ah/V** (둘 다 절대 용량 축) |
+| Peak2/Valley2 창 | 3.55–3.9 V 로 인쇄 | 미인쇄. 마커: peak ≈3.65–3.68 · **3.81(주봉우리)** · 4.13–4.15 V, valley ≈3.73 · 4.0–4.05 · 4.22 V |
+| 봉우리 개수·순서 | 고정 전제 | **rpt 0 만 다르다** (3.63 V 봉우리 ≈4.8 → 이후 ≈3.3; 3.9 V 둔덕 소멸) — 이후 14곡선은 촘촘히 겹침 |
+| 컷오프 | — | 4.23 V 스파이크(≈14 Ah/V) 위에 **peak 마커가 세로로 줄지어** 찍힘 = 검출기가 스파이크를 봉우리로 잡는다 |
+
+`[해석]` 셋. (a) 0.5C 에서 "두 번째 봉우리/골" 은 rpt 0 과 그 이후에서 다른
+것을 가리킬 수 있다 — [[rate-independent-li-plating-signature]] 가 새 봉우리
+출현으로 적어 둔 **순서 기반 feature 의 정의 취약성**이 C-rate 변화로 재현된다.
+(b) "선형성 X" 의 x 축은 같은 덱 p.6 의 **fitted 라벨**(`LAM_Si ≈ −23 %` 를
+포함)이라, PVS 가 비선형인지 라벨이 흔들리는지 이 데이터로는 가를 수 없다.
+(c) 두 덱 모두 PVS 를 **Ah 축**에서 계산한다 → [[pvs-sev-lli-lampe-separability]]
+Status Log (10) 의 Gap 이 닫혔다 (총용량 정보가 섞이며, 그것은 이미 입력 SOH 다).
+**SEV 는 이 덱에 나오지 않는다.**
 
 ## 불확실성
 
