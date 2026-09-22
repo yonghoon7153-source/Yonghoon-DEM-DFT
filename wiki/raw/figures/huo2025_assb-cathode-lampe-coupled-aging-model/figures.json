@@ -1,0 +1,231 @@
+{
+ "slug": "huo2025_assb-cathode-lampe-coupled-aging-model",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-22",
+ "sources": [
+  "31130dd1-09._Characterization_of_cathode_degradation_and_development_of_a_coupled_electrochemical-aging_model_for_sulfide-based_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Structural schematic diagram of composite cathode ASSBs under discharging conditions. 3",
+   "rotated_deg": 0,
+   "bbox": [
+    121.0,
+    533.2,
+    474.3,
+    730.8
+   ],
+   "w": 1473,
+   "h": 824,
+   "dpi": 300,
+   "src": "31130dd1-09._Characterization_of_cathode_degradation_and_development_of_a_coupled_electrochemical-aging_model_for_sulfide-based_all-solid-state_batteries.pdf",
+   "blank": 0.58
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Flowchart of aging experiment of the sulfide-based ASSBs. 4",
+   "rotated_deg": 0,
+   "bbox": [
+    120.9,
+    592.9,
+    474.4,
+    730.8
+   ],
+   "w": 1474,
+   "h": 575,
+   "dpi": 300,
+   "src": "31130dd1-09._Characterization_of_cathode_degradation_and_development_of_a_coupled_electrochemical-aging_model_for_sulfide-based_all-solid-state_batteries.pdf",
+   "blank": 0.48
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. IC curves at different battery aging stages. (a) Battery A, (b) Battery B. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    121.0,
+    599.7,
+    474.3,
+    730.8
+   ],
+   "w": 1473,
+   "h": 547,
+   "dpi": 300,
+   "src": "31130dd1-09._Characterization_of_cathode_degradation_and_development_of_a_coupled_electrochemical-aging_model_for_sulfide-based_all-solid-state_batteries.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. EIS analysis. (a) Equivalent circuit schematic, (b) Nyquist chart of Battey A, (c) Nyquist chart of Battey B. volume during charging and discharging produce stress buildup on the solid electrolyte, resulting in the extension of grain boundary cracks. Yadav et al. [43] concluded that since sulfide solid electrolytes have defects in their initial state, these initial defects can be further exacer- bated during battery cycling due to electrochemical-mechanical stresses induced by volume changes resulting from the embedding and de-embedding of lithium ions into the active material during charging and discharging. Therefore, these findings are consistent with our investigation that periodic pressure changes are a significant cause of cracking of the sulfide electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    108.7,
+    49.4,
+    563.7,
+    230.2
+   ],
+   "w": 1897,
+   "h": 755,
+   "dpi": 300,
+   "src": "31130dd1-09._Characterization_of_cathode_degradation_and_development_of_a_coupled_electrochemical-aging_model_for_sulfide-based_all-solid-state_batteries.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Surface morphology of the composite cathode. (a) aged (NCM particles in green box, cracks in sulfide electrolyte indicated by orange arrows), (b) fresh. (For interpretation of the references to colour in this figure legend, the reader is referred to the Web version of this article.) 6",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    553.1,
+    563.6,
+    721.3
+   ],
+   "w": 2218,
+   "h": 702,
+   "dpi": 300,
+   "src": "31130dd1-09._Characterization_of_cathode_degradation_and_development_of_a_coupled_electrochemical-aging_model_for_sulfide-based_all-solid-state_batteries.pdf",
+   "blank": 0.274
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Variation of pressure during battery charging and discharging cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    419.1,
+    562.4,
+    525.9
+   ],
+   "w": 1084,
+   "h": 446,
+   "dpi": 300,
+   "src": "31130dd1-09._Characterization_of_cathode_degradation_and_development_of_a_coupled_electrochemical-aging_model_for_sulfide-based_all-solid-state_batteries.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Electrochemical-aging model simulation results of battery A. (a) Parameter identification results at different SOH, (b) Changing law of εp during aging process, solid line is the linear fitting value, (c) SOH estimation.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    563.6,
+    331.6
+   ],
+   "w": 2218,
+   "h": 1177,
+   "dpi": 300,
+   "src": "31130dd1-09._Characterization_of_cathode_degradation_and_development_of_a_coupled_electrochemical-aging_model_for_sulfide-based_all-solid-state_batteries.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Electrochemical-aging model simulation results of battery B. (a) Parameter identification results at different SOH, (b) Changing law of εp during aging process, solid line is the linear fitting value, (c) SOH estimation. under diverse operating conditions. For instance, for batteries with other aging pathways, we can follow the approach outlined in this paper to qualitatively investigate the aging mechanisms through characterization methods and data analysis, and subsequently quantitatively analyze the changes in aging parameters via parameter identification. Finally, the results of these findings can be applied to predict battery SOH. CRediT authorship contribution statement Dexin Huo: Writing – review & editing, Writing – original draft, Visualization, Validation, Software, Project administration, Methodol- ogy, Investigation, Formal analysis, Data curation, Conceptualization. ",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    369.3,
+    563.7,
+    645.0
+   ],
+   "w": 2218,
+   "h": 1150,
+   "dpi": 300,
+   "src": "31130dd1-09._Characterization_of_cathode_degradation_and_development_of_a_coupled_electrochemical-aging_model_for_sulfide-based_all-solid-state_batteries.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Governing equations, boundary conditions and initial conditions for electrochemical modeling of ASSB. Governing equations Boundary conditions and initial conditions Cathode ∂cp(r, t) ( ) ∂t = Dp r2∂cp(r, t) ∂cp(r, t) ∂cp(r, t)",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    768.8
+   ],
+   "w": 2161,
+   "h": 3001,
+   "dpi": 293,
+   "src": "31130dd1-09._Characterization_of_cathode_degradation_and_development_of_a_coupled_electrochemical-aging_model_for_sulfide-based_all-solid-state_batteries.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2 Results of EIS analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.3
+   ],
+   "w": 2213,
+   "h": 2987,
+   "dpi": 300,
+   "src": "31130dd1-09._Characterization_of_cathode_degradation_and_development_of_a_coupled_electrochemical-aging_model_for_sulfide-based_all-solid-state_batteries.pdf",
+   "blank": 0.75
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3 (continued)",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    31.6,
+    563.3,
+    739.7
+   ],
+   "w": 2019,
+   "h": 2952,
+   "dpi": 300,
+   "src": "31130dd1-09._Characterization_of_cathode_degradation_and_development_of_a_coupled_electrochemical-aging_model_for_sulfide-based_all-solid-state_batteries.pdf",
+   "blank": 0.896
+  }
+ ]
+}
