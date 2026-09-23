@@ -1,0 +1,111 @@
+{
+ "slug": "park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "17e91076-29._Unraveling_Asymmetric_Electrochemical_Kinetics_in_Low-Mass-Loading_LiNi13Mn13Co13O2_NMC111_Li-Metal_All-Solid-State_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Schematic representation of a Li-metal NMC111 ASSB CR2032 cell. (b) The X-ray diffraction (XRD) pattern of the NMC111 electrode coated on Al foil. (c) The Nyquist plot of a Li/LATP/Li cell configuration. (d) The cyclic voltammetry (CV) curves recorded at a scan rate of 0.1 mV·s−1. We assessed the electrochemical performance of the NMC111 electrode, utilizing Li- metal as both the counter and reference electrodes. CV was performed at a scan rate of 0.1 mV/s within a potential window of 3.0 to 4.3 V vs. Li/Li+. Figure 1d presents the CV profiles, revealing a distinct pair of sharp anodic and cathodic peaks corresponding to the Li-ion deintercalation and intercalation processes in the NMC111 structure. The redox peaks, appearing at 3.8 V for oxidation and 3.6 V for reduction, are associated with the Ni2+/Ni4+ redox couple, confirming stable Li-ion cycling within the NMC111 lat",
+   "rotated_deg": 0,
+   "bbox": [
+    160.1,
+    282.7,
+    566.9,
+    562.1
+   ],
+   "w": 1696,
+   "h": 1166,
+   "dpi": 300,
+   "src": "17e91076-29._Unraveling_Asymmetric_Electrochemical_Kinetics_in_Low-Mass-Loading_LiNi13Mn13Co13O2_NMC111_Li-Metal_All-Solid-State_Batteries.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Rate capability of the Li-metal NMC111 ASSB at varying C-rates. (b) Charge/discharge potential profiles. (c) Differential capacity (dQ/dV) versus voltage plots over multiple cycles. The potential profile in Figure 2b does not display the distinct voltage plateaus typ- ically associated with phase transitions during Li-ion intercalation and deintercalation. In materials like NMC111, these plateaus arise from two-phase coexistence during ion insertion and removal. However, in the low-mass-loading NMC111 ASSB configuration, this two-phase behavior appears less pronounced due to the limited active material volume. As a result, the voltage changes more smoothly, in contrast to bulk electrodes with higher mass loading, where two-phase transitions are more dominant and lead to more distinct voltage plateaus. Figure 2c displays the differential capacity versus voltage plot over mul",
+   "rotated_deg": 0,
+   "bbox": [
+    39.9,
+    177.0,
+    567.0,
+    324.4
+   ],
+   "w": 2197,
+   "h": 615,
+   "dpi": 300,
+   "src": "17e91076-29._Unraveling_Asymmetric_Electrochemical_Kinetics_in_Low-Mass-Loading_LiNi13Mn13Co13O2_NMC111_Li-Metal_All-Solid-State_Batteries.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) CV curves of the Li-metal NMC111 ASSB at varying scan rates. (b) The logarithmic plot of current versus scan rate used for b-value determination. (c) Peak current plotted as a function of the square root of the scan rate to calculate the Li-ion diffusion coefficient. The calculated b-values were 0.76 (anodic) and 0.58 (cathodic), and the Li-ion diffusion coefficient was determined to be 1.5 × 10−9 cm2·s−1 (anodic) and 7.6 × 10−10 cm2·s−1 (cathodic). The diffusion coefficient of Li-ions in the low-mass-loading NMC111 ASSB was deter- mined using the CV data across different scan rates applying the Randles–Sevcik equation: 1 2 Ip = 0.4463nFACLi(nFνDLi RT ) where Ip is the peak current, n the number of electrons transferred, F the Faraday constant (96,485 C·mol−1), CLi the initial concentration of Li+ ions, A the electrode surface area, DLi the diffusion coefficient, R the gas ",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    227.2,
+    567.6,
+    362.8
+   ],
+   "w": 2191,
+   "h": 566,
+   "dpi": 300,
+   "src": "17e91076-29._Unraveling_Asymmetric_Electrochemical_Kinetics_in_Low-Mass-Loading_LiNi13Mn13Co13O2_NMC111_Li-Metal_All-Solid-State_Batteries.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a–c) Comparative analysis of diffusion-controlled and surface capacitive contributions at varying scan rates. (d) Contribution of charge storage mechanisms at different scan rates, with surface capacitive effects increasing at higher scan rates. We compared the rate capability, charge storage mechanisms, and Li-ion diffusivity between the low-mass-loading NMC111 ASSB and a liquid electrolyte system with a com- parable NMC111 loading mass density, as summarized in Table 1. When investigating the low-mass-loading NMC111, which is ideal for probing the electrode/electrolyte interface in both liquid and solid electrolyte cases, a large difference in Li-ion diffusivity was observed. Notably, the Li-ion diffusion coefficient in the liquid electrolyte system was significantly higher than that in the solid electrolyte. Additionally, in the low-mass-loading NMC111 ASSB, the b-values va",
+   "rotated_deg": 0,
+   "bbox": [
+    160.0,
+    83.5,
+    567.0,
+    363.2
+   ],
+   "w": 1697,
+   "h": 1167,
+   "dpi": 300,
+   "src": "17e91076-29._Unraveling_Asymmetric_Electrochemical_Kinetics_in_Low-Mass-Loading_LiNi13Mn13Co13O2_NMC111_Li-Metal_All-Solid-State_Batteries.pdf",
+   "blank": 0.863
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 7,
+   "file": "tab_1.png",
+   "caption": "Table 1. Comparative summary of low-mass-loading NMC111 batteries with solid and liquid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    47.0,
+    564.8,
+    780.6
+   ],
+   "w": 2135,
+   "h": 2997,
+   "dpi": 294,
+   "src": "17e91076-29._Unraveling_Asymmetric_Electrochemical_Kinetics_in_Low-Mass-Loading_LiNi13Mn13Co13O2_NMC111_Li-Metal_All-Solid-State_Batteries.pdf",
+   "blank": 0.902
+  }
+ ]
+}

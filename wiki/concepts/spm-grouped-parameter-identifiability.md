@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
+sources: [raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -59,6 +59,8 @@ evidenceScope: multi-source-primary
 | 29호 Yanev 2024 (ASSB 실험) | GITT `D_app` (식 3, `A` = BET) | `D_app ∝ 1/A²` 라 데이터가 보는 것은 `D·(A_eff/V)²` = **`1/τ_d`**(`L = V/A`). 29호는 **`D_LIB` 수입**으로 `D` 와 면적을 쪼개 "피복률 `φ`" 를 만든다 — 묶음을 푸는 것은 가정이다 |
 | 29호 | 율 곡선 `Q_M` ↔ `α` | `Q_M` 은 `Q_th` 자리(용량 스케일)를 **적합**했다. 저율 평탄이 창 밖이면 `Q_M·α⁻ⁿ` 한 조합 — `[인쇄]` dependency ≈1. 28호의 비식별 조건(`β = 0`)과 같은 부류: **여기(excitation)가 그 방향을 안 건드린다** |
 | 29호 | 표면 피복 `φ` | 이 표의 "표면 일부 접촉 → `R_ct`" 를 29호는 **확산 묶음의 면적**으로 읽는다 — 같은 물리량이 모델에 따라 다른 묶음에 배정된다 |
+| 30호 Park 2024 (ASSB 실험, LATP 펠릿) | CV Randles–Ševčík `D` | 기울기 `I_p/ν^½ ∝ A·C·√D` ⇒ `D_app ∝ 1/(A·C)²` — 29호 GITT 와 **같은 `τ_d` 부류 묶음의 CV 판**. `A`·`C_Li` 미인쇄라 재현되는 것은 방향 간 비뿐(`[재현]` 기울기 비² 1.94 ↔ 인쇄 1.97). 액체 대비 10.9 배를 **전부 `D`** 에 배정 — 29호(면적에 배정)와 **반대 방향으로 같은 묶음을 쪼갰다** |
+| 30호 | Dunn `k₁ν + k₂ν^½` | 용량성/확산 비 `∝ c_s/(C√D)` — **면적이 약분되는 조합**(이 표의 `R_ct·C_dl` 류). 묶음을 푸는 도구가 아니라 묶음 **밖**의 비교 축 후보 |
 
 ## 한계 (이 페이지가 주장하지 않는 것)
 

@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -119,6 +119,19 @@ evidenceScope: multi-source-primary
 **Q4 는 ASSB 첫 반 칸(0/28 → 0.5).** 이 페이지 표의 둘째 줄 정의("`J` 의 열이 평행하거나 0 이면 비식별 **후보** — 절반")와 같은 무게로 셌다.
 ⇒ **세 줄 표에 더하는 것**: 둘째 줄은 "후보" 로만 남는 것이 아니라 **적합 소프트웨어가 기본으로 내놓는 dependency/상관 행렬**로 수치가 된다 — 추정 논문이 그 표를 SI 에 싣는지 먼저 본다(처방 8).
 
+## ★★ 30호 — 세 줄 어디에도 없는 편: 교과서 선형화 추출
+
+`raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md` (Park 2024, *Materials* 17, 5014 — LATP 펠릿 Li 금속 셀, 주사율 CV).
+
+| 물음 | 30호 |
+|---|---|
+| 어느 줄인가 | **어느 줄도 아니다.** 파라미터를 흔들지도(첫 줄), 적합 근방 `J` 를 보지도(둘째 줄), 식별성을 재지도(셋째 줄) 않는다. 값은 **교과서 식의 선형화 회귀**(log–log 기울기 b · `I_p`–`ν^½` 기울기 · Dunn 전위별 회귀)에서 나온다 — `fit`·`regression` 낱말 0 |
+| 무엇이 먼저 깨지나 | **모형 전제.** 같은 봉우리 전류에서 b ≠ 0.5(멱법칙)를 보인 뒤 b = 0.5 를 전제하는 Randles–Ševčík 로 `D` 를 뽑는다 · `[재현]` 회귀 절편 ≠ 0 |
+| 그보다 먼저 깨지는 것 | ★ **라벨.** `[재현]` 그림에서 다시 구한 b 는 산화 ≈0.58 · 환원 ≈0.73, 인쇄는 0.76 · 0.58 |
+| 묶음 | `D_app ∝ 1/(A·C)²` — 29호 GITT 와 같은 부류([[spm-grouped-parameter-identifiability]]) |
+
+⇒ **처방 9**(아래)를 붙였다. 식별성 이전에 **전제와 라벨**을 검사하는 층이 있고, ASSB 실험 문헌의 상당수가 그 층에서 끝날 수 있다(표본 1 — 일반화하지 않는다).
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -137,6 +150,7 @@ evidenceScope: multi-source-primary
 7. (28호) **식별성을 한 논문이면 식별 집합의 목록을 먼저 적는다.** 용량 스케일(`Q_th`) · 정렬(`x⁰`) · OCV 곡선이 **입력**이면 그 논문은 모드 분해의 유일성을 말하지 않는다.
    그리고 사후 보정 손잡이(28호 ×0.78)가 **어느 묶음**에 걸리는지 본다 — 식별 집합에서 뺀 축이면 그 보정이 그 축의 추정이다.
 8. (29호) **적합 논문이면 파라미터 dependency/상관 행렬을 SI 에서 찾는다** — 둘째 줄의 수치다. 찾았으면 **진단이 경고한 셀이 결론에 쓰였는지** 추적한다(29호는 sc90 을 빼고 같은 문제의 sc84 로 결론을 냈다).
+9. (30호) **교과서 선형화 추출(b 값 · Randles–Ševčík · Dunn)이면 식별성 이전에 두 가지를 본다** — ① 같은 데이터가 식의 전제(b = 0.5 · 원점 통과)를 만족하는가 ② 인쇄된 값과 **라벨**(산화/환원 · 계)이 그 논문 자기 그림에서 다시 구한 값과 맞는가. 30호는 ② 에서 뒤집혀 있었다.
 
 ## 이 페이지가 주장하지 않는 것
 

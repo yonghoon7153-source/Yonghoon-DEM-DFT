@@ -2130,3 +2130,16 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - ⚠ 어긋남 15 건(D1 "175 and 195" 순서 반대 · D3 sc84 `D` 표↔그림 · D4 sc73-BM 두 칸 · D6 `Q_M` < 실측 저율 · D7 sc84 외삽 해석 · D9 sc90 무표시 작도 외).
 - 그림: **7 장 전부 봤다, 안 본 것 0 장** (+ 식 1–5 렌더 · Fig. 2c/2d 확대). SI 그림 8 · 표 2 못 봄.
 - 후속 후보: ★★★★ 1 **Tian 2020 *J. Power Sources* 468, 228220** (ref 19, 식 (2) · `n` 배정 원전) · ★★★ 2 **Yanev 2022 *JES* 169, 090519** (ref 20) · ★★★ 3 **이 편의 SI** (Table S2) · ★★ 4 **Kaiser 2018 *JPS* 396, 175** (ref 22).
+
+## [2026-09-23] ingest | assb 30호 — Park 2024, Unraveling Asymmetric Electrochemical Kinetics in Low-Mass-Loading NMC111 Li-Metal All-Solid-State Batteries (Materials 17, 5014)
+
+- `raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md` (sha256 봉인). 큐 **29번**("Q8 보조"). 홍익대 단독 저자, CC BY, SI 없음. Li \| 소결 LATP 펠릿(150 µm) \| NMC111 슬러리 전극(0.57 mg cm⁻², **SE 없음**) 2전극 CR2032 + 액체 대조(표만). 주사율 CV(b · Randles–Ševčík · Dunn) + 율 스윕.
+- 큐 낱말 지문 재집계(NFKC 전/후) — `identifiab` 0/0 · `uniqu` 1/1 · `sensitiv` 1/1 · `GITT` 0/0 · `OCV` 0/0: **큐 지문이 정규화 전후 모두 맞다.** 합자 0, 정규화가 바꾼 문자 `µ` → `μ` 3 개. ⚠ 대소문자 무시 오검출 `ICI` 21 · `MPa` 20 · `LLI` 2.
+- ★★★★ **Q4 0 (ASSB 누적 0.5 유지) — 스물두 번째 성질 "라벨이 자기 그림을 거스른다"**: `[재현]` Fig. 3 교차 판독 b 산화 ≈0.58 · 환원 ≈0.73 ↔ 인쇄 0.76 · 0.58. 전제가 배타인 두 모형 병치.
+- ★★★★ **Q5 열두 번째 형태 "방향 비대칭의 일방 배정"**: Li 금속 "reference and counter", 상대극 석출/박리 언급 0, Li/LATP/Li 대칭셀은 σ 한 값으로 소진. `[재현]` σ 는 호 포함 · 직렬 ≈0.5–0.86 kΩ ↔ CV 봉우리 이동 ≈0.54–0.65 kΩ.
+- ★★★ `[재현]` Table 1 "고체" 용량 행 ≠ Fig. 2a = "액체" 행 · 액체/고체 `D` 10.9 = 유효 면적 ≈3.3 배로도 설명(29호와 반대 배정) · 29호 식 적용 `Q_M` ≈63 은 −26 % 표류 뒤 값(율 스윕 두 번째 실패 조건).
+- **채움표 30호 행 — 누적 ≈16.0 → ≈16.0 (새 칸 0).** Q1 `θ(N)` 0/30 · Q3 층 둘(label-contradicts-own-figure · textbook-equation-with-unprinted-inputs).
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · For 스물여섯 번째 · 새 제약 6 · Status Log) · [[assb-lampe-contact-product-degeneracy]](열세 번째 적용 · 처방 표 3 행) · [[spm-grouped-parameter-identifiability]](Randles–Ševčík · Dunn 행) · [[assb-sensitivity-sweep-vs-identifiability]](세 줄 밖 표본 · 처방 9).
+- ⚠ 어긋남 17 건(D1 b 배정 반대 · D2 Table 1 용량 행 · D5 "activation" ↔ 봉우리 −62 % · D6 dQ/dV 손실 전 · D7 고율 귀속 · D9 전제 위반 · D11 σ 인용 없음 외).
+- 그림: **크로퍼 4 장 전부 봤다, 안 본 것 0 장** (+ Fig. 2a 확대 · Table 1 쪽 렌더).
+- 후속 후보: 1 **큐 30 ICI (*Nat. Commun.* 2023)** · 2 **Nomura 2019 *Angew. Chem.* 131, 5346** (ref 33) · 3 **Yu … Wagemaker 2017 *Nat. Commun.* 8, 1086** (ref 6).
