@@ -104,6 +104,23 @@ evidenceScope: multi-source-mixed
 - **작은 대조 계산 2개 후보**: ① Xe/Ag(111) (√3×√3)R30° 19원자 — 이 논문에서 실험값이 확실한 유일한 계 (0.18–0.23 eV · 3.45–3.68 Å, `Table I`) ② 그래핀 2×2/Ag(111) 26원자 — `Table III` 에 D3(BJ) 한 행을 보탠다.
 - ⚠ Maurer 는 registry 1개다 — registry ≥ 4 의 허용 폭 근거가 못 된다. 작은 셀에서 대칭 비등가 registry 가 4개 미만일 수 있으니 **봉인 때 센다**.
 
+### 문헌 반영 — Giovannetti 2008 (`litdb/papers/giovannetti2008_doping_graphene_metal_contacts.md` · 메인이 PDF `Table I`·각주 [18] 로 재대조)
+- **가설을 둘로 나눈다**: *"Ag 는 그래핀에 약결합하는 금속군"* = ✅ 원문(`Table I`: Al·Cu·Ag·Au·Pt d_eq 3.26–3.41 Å · 0.027–0.043 eV/C · Ag 3.33 Å · 0.043 eV/C). *"분산 없는 계산기로는 기하가 안 잡힌다"* = ❌ **이 논문에 없다** (LSDA 단독 · 범함수 비교 0). ⇒ 단계 4 의 E(d) 에서 **D3 를 뺀 W^PBE 곡선이 3.2–3.5 Å 에서 결합을 주는지**를 진단 항목으로 넣는다 (ΔD3 분해라 추가 비용 없음).
+- **"크기 구간 ≠ 기전" 의 문헌 반례**: 같은 LSDA 에서 *화학흡착* Pd 가 ≈ 0.52 J/m² (우리 환산, 논문 격자 0.3863 C/Å²). 구간 라벨에는 방법을 붙인다 (*"PBE+D3(BJ) 에서 저접착 구간"*). DEM 회신에서도 요청서의 "물리흡착 급/화학결합 급" 을 **"구간"** 으로 바꿔 답한다.
+- **쌍극자 보정 — 우리 QE 경로에 0 건** (`tefield`/`dipfield` 를 쓰는 QE 도구 없음 · VASP 번들만 `LDIPOL`). 논문(비대칭 슬랩)과 DEM 요청서 규약 둘 다 요구한다 ⇒ QE 입력에 `tefield=.true. · dipfield=.true. · edir=3 · eamp=0` 을 넣고, ⚠ `emaxpos`/`eopreg` 는 **셀 분율**이라 *"셀 +30 Å"* 로 늘릴 때 **다시 계산**한다 (안 하면 오류 없이 쌍극자층이 분리 틈 안으로 들어간다). 시험표에 *"쌍극자 보정 켬/끔 ΔW ≤ 0.01 J/m²"* 한 줄.
+- **보고 항목**: W 와 함께 d_eq · 양쪽 일함수 · ΔV · Δn(z). 도핑 부호가 거리에 민감하다(Ag 는 d ≳ 3.7 Å 에서 n → p, `Fig. 5` figure-read) — 참고선일 뿐 게이트가 아니다.
+- **P1-b 셀 — Ag 격자상수에 따라 답이 뒤집힌다** (흑연 a 2.46 고정 · Ag 를 맞출 때, 메인 재계산):
+
+  | 셀 (그래핀 / Ag) | C · Ag/층 | 회전 | Ag 변형 @ a 4.086 | @ a 4.16 (PBE) |
+  |---|---|---|---|---|
+  | (2,0) / (√3×√3)R30° | 8 · 3 | 30° | **−1.68 %** | −3.43 % (요청서 3 % 초과) |
+  | (3,1) / (3,0) | 26 · 9 | 13.9° | +2.33 % | **+0.51 %** |
+  | (3,3) / (3,2) | 54 · 19 | 6.6° | +1.50 % | **−0.31 %** |
+  | (6,0) / (5,0) | 72 · 25 | 0° | +2.17 % | **+0.35 %** |
+
+  ⇒ **DFT 단계(PBE+D3)의 Ag 격자상수를 먼저 재고** 셀을 고른다. 변형 관례도 정한다 — Giovannetti 는 그래핀 고정·금속 변형, Maurer 는 그래핀 +3.1 % 인장 → J/m² 환산 밀도가 0.3863 vs 0.3593 C/Å² 로 7.5 % 갈린다.
+- **k 점**: 도핑 진단 nscf 는 Γ-중심 n×n 에 **n 을 3 의 배수**로 (그래핀 K 점 표본).
+
 ### ⛔ D3 표기 — QE 기본값은 3체(ATM) 포함이다 (2026-09-23 원문 확인)
 - QE 7.4.1 `PW/Doc/INPUT_PW.def`: `dftd3_version = 4` = *"Grimme-D3 (BJ damping)"* · **`dftd3_threebody` 기본값 `TRUE`** (*"Turn three-body terms in Grimme-D3 on"*).
 - repo 의 QE 생성기는 `dftd3_threebody` 를 **한 번도 적지 않는다** (`tools/vgcf_hbn/make_qe_inputs.py` · `tools/sdcp/phaseB_v7c_dft_binding.py` · `tools/sdcp/make_slab_relax.py`) ⇒ 우리 QE "D3(BJ)" 는 실제로 **D3(BJ)+ATM** 이었다. `vgcf_hbn_*.json` 은 "D3BJ" 로 적혀 있다.
