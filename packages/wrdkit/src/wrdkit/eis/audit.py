@@ -175,6 +175,10 @@ class Finding:
     severity: str
     code: str
     message: str
+    #: 다시 맞추면 **이 판정이 풀리는** 회로, 권하는 순서 (ADR 0045).  문장에
+    #: 적힌 회로라도 판정을 못 푸는 것(이름이 다시 "벌크" 가 되는 아크 하나짜리)
+    #: 은 담지 않는다.  `bml refit` 이 문장을 긁지 않고 이것을 읽는다.
+    circuits: tuple[str, ...] = ()
 
     @property
     def label(self) -> str:
@@ -566,10 +570,19 @@ def _has_line(model: Circuit) -> bool:
     return any(re.match(r"TLR?\d", name) for name in model.parameter_names)
 
 
+def _offer(candidates: Iterable[str], limit: int = 3) -> tuple[str, ...]:
+    """The circuits to offer -- at most ``limit``, first come first, no repeats."""
+    return tuple(dict.fromkeys(c for c in candidates if c))[:limit]
+
+
+def _quote(circuits: Iterable[str]) -> str:
+    """```a` 또는 `b```."""
+    return " 또는 ".join(f"`{c}`" for c in circuits)
+
+
 def _suggest(candidates: Iterable[str], limit: int = 3) -> str:
     """```a` 또는 `b``` -- at most ``limit``, first come first."""
-    unique = list(dict.fromkeys(c for c in candidates if c))[:limit]
-    return " 또는 ".join(f"`{c}`" for c in unique)
+    return _quote(_offer(candidates, limit))
 
 
 def _intercept_taker(circuit: str, values: dict[str, float], ohmic: str,
@@ -768,9 +781,10 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
     if blocking is False and blockers:
         # 실수축으로 돌아오는 끝만 권한다 — 반무한 W 도 -45° 로 끝없이 발산해
         # 돌아오지 않는다 (``LASIA1999.semi-infinite-warburg``).
-        suggestion = _suggest([_suggest_without(fit.circuit, blockers)]
-                              + _compatible(alternatives, {"resistive"}, fit.circuit,
-                                            arcs=len(arcs)))
+        offered = _offer([_suggest_without(fit.circuit, blockers)]
+                         + _compatible(alternatives, {"resistive"}, fit.circuit,
+                                       arcs=len(arcs)))
+        suggestion = _quote(offered)
         # 끝이 30° 아래로 완만하게 오르면 판정은 위상으로 났다 (ADR 0044) — 그
         # 끝을 "내려온다" 고 하면 헤더의 꼬리 각도와 어긋난다 (실측 하프셀 #38:
         # 위상 -6°, 꼬리 26°).
@@ -782,7 +796,8 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
             f"스펙트럼은 저주파에서 {end} "
             f"회로 끝에 막는 소자 {', '.join(blockers)} 가 있습니다 — 맞춤이 그 "
             f"소자를 지우려고 경계로 갑니다"
-            + (f". {suggestion} 로 다시 맞추세요" if suggestion else "")))
+            + (f". {suggestion} 로 다시 맞추세요" if suggestion else ""),
+            circuits=offered))
         # 그 소자의 경계 붙음은 이 한 줄이 설명한다.
         quiet.update(name for name in model.parameter_names
                      if name.partition("_")[0] in blockers)
@@ -790,11 +805,12 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
     if blocking is True and out.end == "resistive":
         tail = _tail_arc(arcs, low_edge, railed)
         # 꼬리를 흉내 낸 아크는 아크가 아니다 — 권하는 회로는 그만큼 아크가 적다.
-        suggestion = _suggest(_compatible(
+        offered = _offer(_compatible(
             alternatives, {"blocking"}, fit.circuit,
             arcs=_arcs_to_keep(arcs, claims, statuses,
                                {arc.resistor for arc in vanished}
                                | ({tail.resistor} if tail is not None else set()))))
+        suggestion = _quote(offered)
         if tail is not None:
             explained.add(tail.resistor)
             quiet.update({tail.resistor, f"{tail.element}_Q", f"{tail.element}_n",
@@ -818,14 +834,16 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
                 + f" 은 반원이 아니라 블로킹 꼬리(위상 {_deg(phase)})를 흉내 낸 "
                 f"것입니다 — {where}{size}{electrolyte}"
                 + (f". {suggestion} 로 다시 맞추세요" if suggestion
-                   else ". 끝에 CPE 를 달아 다시 맞추세요")))
+                   else ". 끝에 CPE 를 달아 다시 맞추세요"),
+                circuits=offered))
         else:
             out.findings.append(Finding(
                 CHECK, "open_end_on_blocking_cell",
                 f"스펙트럼은 저주파에서 수직으로 서는데 (위상 {_deg(phase)}) 회로의 "
                 f"저주파 끝이 실수축으로 닫힙니다 — 마지막 아크가 꼬리를 흉내 "
                 f"냅니다" + (f". {suggestion} 로 다시 맞추세요" if suggestion
-                             else ". 끝에 CPE 를 달아 보세요")))
+                             else ". 끝에 CPE 를 달아 보세요"),
+                circuits=offered))
 
     # 막는 대칭셀에서 벌크·입계라 부른 아크 중 **벌크 크기가 하나도 없으면**
     # 벌크 반원은 잰 주파수 위에 있고 그 저항은 고주파 절편에 들어 있다 —
@@ -847,8 +865,8 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
             # 아크 하나짜리를 따로 적는다.
             out.findings.append(_hidden_bulk_finding(
                 face, boundary, labels, r0, crossing,
-                _suggest(_compatible(alternatives, {"blocking"}, fit.circuit,
-                                     arcs=0, exact=True)),
+                _offer(_compatible(alternatives, {"blocking"}, fit.circuit,
+                                   arcs=0, exact=True)),
                 _suggest(_compatible(alternatives, {"blocking"}, fit.circuit,
                                      arcs=1, exact=True), limit=1)))
 
@@ -905,11 +923,20 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
                                     "가 같은 회로로 다시 맞춥니다"))
 
     # -- 아크 하나하나 -----------------------------------------------------------
+    # 벌크·입계라 부른 아크 하나가 전극 크기면 무엇으로 다시 맞출지도 말한다
+    # (ADR 0045).  `arcs_are_electrode` 와 같은 까닭으로 아크 없는 회로다 —
+    # 막는 대칭셀이거나, 판정이 애매해도 사람이 막는 끝을 골랐을 때.  실측 열넷
+    # (B11 #8·#9, B7 #2–#8 …) 은 한 아크가 미결정·열린 가지라 묶음 판정을
+    # 비껴가, 이름이 틀렸다고만 하고 처방이 없었다.
+    face_offer: tuple[str, ...] = ()
+    if sym_solid and (blocking is True or (blocking is None and out.end == "blocking")):
+        face_offer = _offer(_compatible(alternatives, {"blocking"}, fit.circuit,
+                                        arcs=0, exact=True))
     for arc in arcs:
         if arc.resistor in explained:
             continue
         _arc_findings(out, arc, labels.get(arc.resistor, ""), claims.get(arc.resistor),
-                      statuses, railed, low_edge, high_edge)
+                      statuses, railed, low_edge, high_edge, offer=face_offer)
 
     # -- 전도도의 크기 ----------------------------------------------------------
     total = (conductivity or {}).get("total_s_cm")
@@ -1119,8 +1146,9 @@ def _hidden_bulk(arcs: list[ArcCapacitance], claims: dict[str, str | None],
 
 def _hidden_bulk_finding(face: list[ArcCapacitance], boundary: list[ArcCapacitance],
                          labels: dict[str, str], r0: float | None,
-                         crossing: float | None, suggestion: str,
+                         crossing: float | None, offered: tuple[str, ...],
                          with_arc: str = "") -> Finding:
+    suggestion = _quote(offered)
     def named(arc: ArcCapacitance) -> str:
         label = labels.get(arc.resistor, "")
         return f"{arc.resistor}" + (f" ({label})" if label else "")
@@ -1139,7 +1167,8 @@ def _hidden_bulk_finding(face: list[ArcCapacitance], boundary: list[ArcCapacitan
                else "")
             + (f". 꼬리 앞에 아크가 정말 보여 그것으로 안 그려지면 {with_arc} — "
                f"그 아크는 전극 계면입니다 (화면의 σ 는 이미 R0 로 냅니다)"
-               if suggestion and with_arc else ""))
+               if suggestion and with_arc else ""),
+            circuits=offered)
     sides = ([f"{named(arc)} 는 입계 쪽(C·l/A {_fmt(arc.per_length, 'F/cm')})"
               for arc in boundary]
              + [f"{named(arc)} 는 전극 쪽(C/A {_fmt(arc.per_area, 'F/cm²')})"
@@ -1174,7 +1203,7 @@ def _arc_row(arc: ArcCapacitance, label: str, claim: str | None) -> dict:
 def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
                   claim: str | None, statuses: dict[str, str],
                   railed: dict[str, str], low: float | None,
-                  high: float | None) -> None:
+                  high: float | None, *, offer: tuple[str, ...] = ()) -> None:
     # 경계에 붙은 아크의 꼭지는 뜻이 없다 — 경계 붙음이 이미 그 말을 했다
     # (실측: R2 = 1e9 Ω 인 아크마다 "꼭지가 1e-5 Hz" 가 한 줄 더 붙었다).
     # 반원이 아닌 것(n < 0.6)의 꼭지도 없다 — 목록이 이미 "판정 안 함" 이라
@@ -1214,6 +1243,11 @@ def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
     permittivity = (f" — 겉보기 εr ≈ {arc.per_length / EPS0_F_PER_CM:.2g} (벌크라면 "
                     f"~10, 10³–10⁵ 는 강유전체뿐입니다)"
                     if claim == "bulk" and arc.per_length is not None else "")
+    # 전극 쪽 아크는 전해질이 아니다 — 아크 없는 회로로 맞추면 이름이 맞는다.
+    # 쪽이 흔들리면(미결정·겹치는 범위) 처방하지 않는다 (``size_class``).
+    undetermined = {name for name, status in statuses.items() if status == "undetermined"}
+    remedy = (offer if offer and claim in ("bulk", "grain_boundary")
+              and size_class(arc, spread=spread_for(arc, undetermined)) == FACE else ())
     out.findings.append(Finding(
         PROBLEM, "label_contradicts_capacitance",
         f"{arc.resistor} ({label}) 의 커패시턴스 {_fmt(arc.capacitance_f, 'F')} "
@@ -1221,7 +1255,10 @@ def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
         f"{process(claim).label}일 수 없습니다 — "
         + (f"{allowed}의 크기입니다" if allowed else "표의 어느 범위에도 안 듭니다")
         + permittivity
-        + (" (미결정 값이지만 범위에서 한 자릿수 넘게 벗어납니다)" if shaky else "")))
+        + (" (미결정 값이지만 범위에서 한 자릿수 넘게 벗어납니다)" if shaky else "")
+        + (f". 전해질이 아니므로 {_quote(remedy)} 로 다시 맞추면 이름이 맞습니다"
+           if remedy else ""),
+        circuits=remedy))
 
 
 # --------------------------------------------------------------------------

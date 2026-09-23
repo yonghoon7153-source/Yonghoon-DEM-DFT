@@ -7,6 +7,7 @@ audit is just noise.
 """
 
 import math
+import re
 from dataclasses import dataclass
 
 import numpy as np
@@ -1041,3 +1042,67 @@ def test_wrong_way_steps_are_said_once_and_measured_ones_are_to_be_measured_agai
     (wrong,) = [f for f in audit_conductivity_scan(b17, **backwards_of(b17))
                 if f.code == "conductivity_goes_backwards"]
     assert wrong.message.endswith("그 온도의 저항을 다시 읽어 주세요")
+
+
+# -- ADR 0045: 판정이 "이 회로로 맞추면 풀린다" 를 싣는다 --------------------------
+
+def quoted(message):
+    return re.findall(r"`([^`]+)`", message)
+
+
+def test_the_tail_and_open_cell_findings_carry_the_circuits_they_quote():
+    """`bml refit` 은 문장을 긁지 않고 `circuits` 를 읽는다 — 둘이 같아야 한다."""
+    fit = Fit("R0-p(R1,CPE1)", [P("R0", 7.89), P("R1", 1.37e5), P("CPE1_Q", 1.95e-6),
+                                P("CPE1_n", 0.856)])
+    audit = audit_fit(fit, sulfide_pellet(), kind=SOLID, config=SYMMETRIC,
+                      thickness_cm=PELLET_CM, area_cm2=AREA_CM2, band=SULFIDE_BAND,
+                      alternatives=PRESETS)
+    (tail,) = [f for f in audit.findings if f.code == "tail_mimicked_by_arc"]
+    assert tail.circuits and tail.circuits[0] == "L1-R0-CPE1"
+    assert list(tail.circuits) == quoted(tail.message)
+
+    audit = audit_user(alternatives=["R0-TL1", "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3",
+                                     "L1-R0-CPE1", "R0-p(R1,CPE1)-p(R2,CPE2)"])
+    (open_,) = [f for f in audit.findings if f.code == "blocking_element_on_open_cell"]
+    assert open_.circuits == ("R0-p(R1,CPE1)-p(R2,CPE2)",)
+
+
+def test_the_one_arc_circuit_is_quoted_but_not_carried():
+    """아크 하나짜리로 맞추면 그 아크가 다시 "벌크" 라 불려 같은 판정이 뜬다
+    (ADR 0041) — 문장에는 남기되, 판정을 푸는 회로로는 싣지 않는다."""
+    audit = audit_fit(Fit(B14_CIRCUIT, B14), b14_spectrum(), kind=SOLID,
+                      config=SYMMETRIC, thickness_cm=850e-4, area_cm2=AREA_CM2,
+                      band=(10.0, 1.71e5), alternatives=PRESETS)
+    (merged,) = [f for f in audit.findings if f.code == "arcs_are_electrode"]
+    assert merged.circuits == ("L1-R0-CPE1",)
+    assert "L1-R0-p(R1,CPE1)-CPE2" in quoted(merged.message)
+
+
+#: 실측 B11 #8 (-10 °C, 790 µm): R1 은 전극 크기, R2 는 미결정 — 묶음 판정을 비껴가
+#: "벌크일 수 없습니다" 만 남았다.
+B11_8 = [P("R0", 52.9), P("R1", 7.35e3), P("CPE1_Q", 4.69e-6), P("CPE1_n", 0.759),
+         P("R2", 4.49e5, "undetermined", "seed_spread"),
+         P("CPE2_Q", 5.02e-7, "undetermined", "seed_spread"),
+         P("CPE2_n", 0.997, "undetermined", "at_upper_bound"),
+         P("CPE3_Q", 2.54e-3, "undetermined", "seed_spread"),
+         P("CPE3_n", 0.3, "undetermined", "at_lower_bound")]
+
+
+def test_an_electrode_sized_arc_named_bulk_is_told_what_to_refit_with():
+    """이름만 틀렸다고 하고 무엇으로 다시 맞출지 말하지 않았다 — 실측 열넷."""
+    values = {p.name: p.value for p in B11_8}
+    spectrum = spectrum_of_at(B14_CIRCUIT, values, SULFIDE_FREQUENCY)
+    audit = audit_fit(Fit(B14_CIRCUIT, B11_8), spectrum, kind=SOLID, config=SYMMETRIC,
+                      thickness_cm=790e-4, area_cm2=AREA_CM2, band=SULFIDE_BAND,
+                      alternatives=PRESETS)
+    assert audit.blocking["blocking"] is True
+    (wrong,) = [f for f in audit.findings if f.code == "label_contradicts_capacitance"]
+    assert wrong.circuits == ("L1-R0-CPE1",)
+    assert wrong.message.endswith("전해질이 아니므로 `L1-R0-CPE1` 로 다시 맞추면 이름이 "
+                                  "맞습니다")
+
+    # 셀 구성을 모르면 이름이 없고, 처방도 없다.
+    blind = audit_fit(Fit(B14_CIRCUIT, B11_8), spectrum, kind=SOLID, config="",
+                      thickness_cm=790e-4, area_cm2=AREA_CM2, band=SULFIDE_BAND,
+                      alternatives=PRESETS)
+    assert not [f for f in blind.findings if f.circuits]
