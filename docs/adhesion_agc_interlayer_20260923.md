@@ -25,6 +25,14 @@ DFT 팀 요청 원문: `docs/dft_request_adhesion_agc_20260923.md`.
   `G_c,eff(P) ≈ W_ad · A_real(P)/A_nom (+ 소산)`.  이것은 리포가 이미 가진 접촉 면적 축(Tabor A=F/H ·
   JKR/DMT · MPM coverage)과 같은 축이다 ⇒ **구동압은 DEM 층에 넣는다.**
 
+## 2-1. ★ 이미 있는 것 — 팀의 LPSCl↔NCM 점착 워크플로 (litdb 정본 브랜치)
+
+정본 브랜치 claude/friendly-meitner-lldvar 에 **LPSCl↔NCM W_ad 계산 체계가 이미 있다**:
+kb/methodology/adhesion_energy.md (isolated slab 정의 · v1~v5 MLIP 계면 제작 프로토콜 · 셀 정합표) ·
+db/properties/adhesion.json (표면에너지 · v2/v5 결과 · 진공 민감도 · 디버그 이력) · db/inputs/adhesion_templates/.
+⇒ DFT 요청은 **그 정의·프로토콜을 그대로 쓰라고** 적었다 (LPSCl|Ag 를 기존 LPSCl|NCM 과 나란히 놓기 위해).
+⚠ 이 브랜치(stoic-knuth)에는 그 파일들이 없다 — 읽을 때는 `git show origin/claude/friendly-meitner-lldvar:<경로>`.
+
 ## 3. 분업과 파이프라인
 
 | 단 | 무엇 | 누가 | 산출 |
