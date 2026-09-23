@@ -36,6 +36,7 @@ from wrdkit.eis.audit import (
 )
 from wrdkit.eis.conductivity import (
     activation_energy,
+    backwards_steps,
     conductivity_ms_cm,
     real_axis_crossing,
 )
@@ -332,7 +333,9 @@ def _audit_scan(session: Session, records: list[SpectrumRecord],
                          else None)
         findings += audit_conductivity_scan(out.rows, warnings=result.warnings,
                                             reason=result.reason or "",
-                                            without_first=without_first)
+                                            without_first=without_first,
+                                            backwards=backwards_steps(temperatures,
+                                                                      sigmas))
     elif all(record.soc_percent is None for record in records) \
             and "SOC" in (head.purpose or "").upper():
         findings.append(Finding(NOTE, "soc_missing",

@@ -52,7 +52,7 @@ from .circuit import (
     parse_circuit,
     series_parts,
 )
-from .conductivity import BOLTZMANN_EV_PER_K, real_axis_crossing
+from .conductivity import BOLTZMANN_EV_PER_K, backwards_warning, real_axis_crossing
 from .derive import SOLID, SYMMETRIC, blocking_verdict, label_arcs
 from .fit import edge_misfit
 from .kk import KKResult, lin_kk
@@ -1326,16 +1326,20 @@ def _kk_findings(result: KKResult, summary: dict,
 def audit_conductivity_scan(sweeps: Sequence[dict], *,
                             warnings: Sequence[str] = (),
                             reason: str = "",
-                            without_first: tuple[float, float] | None = None
+                            without_first: tuple[float, float] | None = None,
+                            backwards: Sequence[tuple[float, float]] = ()
                             ) -> list[Finding]:
     """The per-sweep numbers a conductivity scan rests on.
 
     ``sweeps`` items: ``{"index", "temperature_c", "typed_ohm", "re_min_ohm",
-    "re_max_ohm"}`` and, when known, ``"blocking"`` / ``"phase_deg"`` (the
-    sweep's low-frequency verdict) and ``"start_s"`` / ``"end_s"`` (when it
-    was measured, seconds from the start of the record).  ``warnings`` /
-    ``reason`` are the activation energy's own (ADR 0039); ``without_first``
-    is ``(Ea eV, R²)`` of the same fit with the first sweep left out.
+    "re_max_ohm"}`` and, when known, ``"crossing_ohm"``, ``"blocking"`` /
+    ``"phase_deg"`` (the sweep's low-frequency verdict) and ``"start_s"`` /
+    ``"end_s"`` (when it was measured, seconds from the start of the record).
+    ``warnings`` / ``reason`` are the activation energy's own (ADR 0039);
+    ``without_first`` is ``(Ea eV, R²)`` of the same fit with the first sweep
+    left out; ``backwards`` the steps it found going the wrong way
+    (``conductivity.backwards_steps``) -- said here instead of in its warning,
+    without the steps a sweep named below already explains.
     """
     out: list[Finding] = []
     blank = [str(one["index"]) for one in sweeps if one.get("temperature_c") is None]
@@ -1364,13 +1368,17 @@ def audit_conductivity_scan(sweeps: Sequence[dict], *,
                 f"스윕 {one['index']}: 적은 저항 {typed:.4g} Ω 이 그 스윕의 Re(Z) "
                 f"범위({low:.4g}–{high:.4g} Ω) 밖입니다 — 곡선 위에 없는 값입니다. "
                 f"소수점이나 다른 스윕의 값을 적었는지 보세요"))
-    out += _blocking_outliers(sweeps)
-    off = _off_the_line(sweeps)
+    odd, named = _blocking_outliers(sweeps)
+    out += odd
+    off, far = _off_the_line(sweeps)
     if off is not None:
         out.append(off)
+        named |= far
     out += _short_rests(sweeps)
+    told = backwards_warning(backwards) if backwards else None
     for warning in warnings:
-        out.append(Finding(CHECK, "activation_warning", warning))
+        if warning != told:
+            out.append(Finding(CHECK, "activation_warning", warning))
     if without_first is not None and _first_step_goes_up(sweeps):
         ea, r_squared = without_first
         out.append(Finding(
@@ -1378,6 +1386,10 @@ def audit_conductivity_scan(sweeps: Sequence[dict], *,
             f"첫 스윕만 온도와 거꾸로 갑니다 — 첫 가열에서 펠릿이 자리를 잡거나 "
             f"(접촉·치밀화) 평형 전에 잰 경우에 흔합니다. 첫 스윕을 빼면 Ea = "
             f"{ea:.3f} eV (R² = {r_squared:.3f})"))
+        named.add(min(one["index"] for one in sweeps))
+    wrong_way = _backwards_finding(sweeps, backwards, named)
+    if wrong_way is not None:
+        out.append(wrong_way)
     if reason:
         out.append(Finding(NOTE, "activation_missing", f"활성화에너지 없음 — {reason}"))
     return sort_findings(out)
@@ -1387,8 +1399,43 @@ def audit_conductivity_scan(sweeps: Sequence[dict], *,
 PHASE_OUTLIER_DEG = 30.0
 
 
-def _blocking_outliers(sweeps: Sequence[dict]) -> list[Finding]:
-    """Sweeps whose low-frequency phase is far from the rest of the scan.
+def _backwards_finding(sweeps: Sequence[dict], backwards: Sequence[tuple[float, float]],
+                       named: set[int]) -> Finding | None:
+    """The steps where the conductivity does not fall on cooling, less the
+    ones a named sweep explains.
+
+    The first version said it next to the finding that explained it --
+    실측 B13·B15·B18: "60→50 °C 가 거꾸로 — 저항을 다시 읽어 주세요" (확인) 옆에
+    "첫 스윕만 거꾸로 갑니다 — 첫 가열에서 흔합니다" (참고).  And "read it again"
+    is wrong when the typed value is where the spectrum crosses the axis: the
+    reading is right, the measurement moved (B17: 모든 스윕이 교점 그대로).
+    """
+    at: dict[float, list[dict]] = {}
+    for one in sweeps:
+        if one.get("temperature_c") is not None:
+            at.setdefault(float(one["temperature_c"]), []).append(one)
+    left = [(high, low) for high, low in backwards
+            if not any(one["index"] in named
+                       for one in at.get(float(high), []) + at.get(float(low), []))]
+    if not left:
+        return None
+    involved = [one for high, low in left for one in at.get(float(high), [])
+                + at.get(float(low), [])]
+    measured = involved and all(
+        one.get("typed_ohm") and one.get("crossing_ohm")
+        and abs(one["crossing_ohm"] / one["typed_ohm"] - 1) < 0.1 for one in involved)
+    where = ", ".join(f"{high:g}→{low:g} °C" for high, low in left[:4])
+    advice = ("적은 저항은 그 스윕들의 실수축 교점과 같습니다 — 읽기가 아니라 측정이 "
+              "벗어났으니 그 온도를 다시 재세요" if measured
+              else "그 온도의 저항을 다시 읽어 주세요")
+    return Finding(CHECK, "conductivity_goes_backwards",
+                   f"온도가 내려가는데 이온전도도가 안 내려가는 구간이 {len(left)}개 "
+                   f"있습니다 ({where}) — {advice}")
+
+
+def _blocking_outliers(sweeps: Sequence[dict]) -> tuple[list[Finding], set[int]]:
+    """Sweeps whose low-frequency phase is far from the rest of the scan, and
+    their indices.
 
     A blocking pellet stays blocking from 60 °C to -20 °C; one sweep that
     suddenly passes DC is a measurement that went wrong (a contact, frost in
@@ -1402,11 +1449,11 @@ def _blocking_outliers(sweeps: Sequence[dict]) -> list[Finding]:
     """
     phased = [one for one in sweeps if one.get("phase_deg") is not None]
     if len(phased) < 3:
-        return []
+        return [], set()
     usual = float(np.median([one["phase_deg"] for one in phased]))
     odd = [one for one in phased if abs(one["phase_deg"] - usual) > PHASE_OUTLIER_DEG]
     if not odd or len(odd) * 3 > len(phased):
-        return []
+        return [], set()
     names = ", ".join(
         f"스윕 {one['index']}"
         + (f" ({one['temperature_c']:g} °C)" if one.get("temperature_c") is not None
@@ -1417,7 +1464,7 @@ def _blocking_outliers(sweeps: Sequence[dict]) -> list[Finding]:
         CHECK, "sweep_unlike_its_neighbours",
         f"{names} 만 저주파 위상이 나머지({_deg(usual)} 안팎)와 딴판입니다 — 같은 "
         f"펠릿이 한 온도에서만 달라질 이유는 없습니다. 그 측정 자체(접촉·결로·"
-        f"온도)를 의심하고, 그 스윕의 저항은 쓰지 마세요")]
+        f"온도)를 의심하고, 그 스윕의 저항은 쓰지 마세요")], {one["index"] for one in odd}
 
 
 #: Arrhenius 직선에서 ln R 로 이만큼(1.5 배) 넘게 떨어진 스윕을 짚는다.
@@ -1436,9 +1483,9 @@ def _line(x: np.ndarray, y: np.ndarray) -> tuple[float, float, float]:
     return float(slope), float(intercept), r_squared
 
 
-def _off_the_line(sweeps: Sequence[dict]) -> Finding | None:
+def _off_the_line(sweeps: Sequence[dict]) -> tuple[Finding | None, set[int]]:
     """Sweeps whose typed resistance sits far off the Arrhenius line the others
-    draw -- named, with the value the line expects.
+    draw -- named, with the value the line expects, and their indices.
 
     One point at a time: the one furthest from the line fitted **without it**
     goes, while it is more than 1.5 times off and more than four robust
@@ -1455,7 +1502,7 @@ def _off_the_line(sweeps: Sequence[dict]) -> Finding | None:
     rows = [one for one in sweeps if one.get("temperature_c") is not None
             and one.get("typed_ohm") and one["typed_ohm"] > 0]
     if len(rows) < 5 or len({one["temperature_c"] for one in rows}) < 3:
-        return None                  # 온도가 셋은 되어야 직선이 있다
+        return None, set()           # 온도가 셋은 되어야 직선이 있다
     x = np.array([1.0 / (one["temperature_c"] + 273.15) for one in rows])
     y = np.log([float(one["typed_ohm"]) for one in rows])
     keep = np.ones(len(rows), dtype=bool)
@@ -1479,7 +1526,7 @@ def _off_the_line(sweeps: Sequence[dict]) -> Finding | None:
         removed.append(worst)
     first = min(range(len(rows)), key=lambda i: rows[i]["index"])
     if not removed or removed == [first]:
-        return None                  # 첫 스윕만이면 first_sweep_suspect 가 말한다
+        return None, set()           # 첫 스윕만이면 first_sweep_suspect 가 말한다
     slope, intercept, r_squared = _line(x[keep], y[keep])
     named = sorted(removed, key=lambda i: rows[i]["index"])
     listed = ", ".join(
@@ -1499,7 +1546,8 @@ def _off_the_line(sweeps: Sequence[dict]) -> Finding | None:
         CHECK, "sweep_off_the_line",
         f"{listed} 가 나머지 {int(keep.sum())}개가 그리는 Arrhenius 직선에서 "
         f"멉니다 — 직선이 말하는 값은 {expected} 입니다. {advice}. 빼면 "
-        f"Ea = {slope * BOLTZMANN_EV_PER_K:.3f} eV (R² = {r_squared:.3f})")
+        f"Ea = {slope * BOLTZMANN_EV_PER_K:.3f} eV (R² = {r_squared:.3f})"), \
+        {rows[i]["index"] for i in named}
 
 
 #: 앞 스윕 뒤에 쉰 시간이 다른 스윕들의 이만큼(비율)도 안 되면 평형 전일 수 있다.

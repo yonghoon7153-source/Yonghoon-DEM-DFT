@@ -250,6 +250,22 @@ def test_reading_the_arc_end_in_a_temperature_scan_is_not_a_slip(client):
     assert "typed_outside_spectrum" not in [f["code"] for f in scan["findings"]]
 
 
+def test_a_wrong_way_first_step_is_said_once_in_a_scan(client):
+    """실측 B13·B15·B18: 60→50 °C 만 거꾸로인 스캔에 "다시 읽어 주세요" (확인) 와
+    "첫 스윕만 거꾸로 갑니다" (참고) 가 같은 사실로 함께 떴다 — 이제 참고 하나."""
+    typed = [9.0, 8.5, 14.56, 34.66, 94.30]
+    sha = upload_scan(client, typed)
+    for point in client.get(f"/api/eis/scans/{sha}").json()["points"]:
+        client.patch(f"/api/eis/spectra/{point['spectrum_id']}",
+                     json={"thickness_um": 700.0, "diameter_mm": 10.0})
+    client.put(f"/api/eis/scans/{sha}/temperature",
+               json={"temperature_c": [60, 50, 40, 20, 0]})
+    client.put(f"/api/eis/scans/{sha}/resistance", json={"resistance_ohm": typed})
+    (scan,) = [one for one in audit(client)["scans"] if one["sha256"] == sha]
+    assert "first_sweep_suspect" in codes(scan)
+    assert not [f for f in scan["findings"] if "안 내려가는 구간" in f["message"]]
+
+
 # -- 재파싱 -------------------------------------------------------------------------
 
 def test_reparse_rewrites_stale_points_and_names_them(client):

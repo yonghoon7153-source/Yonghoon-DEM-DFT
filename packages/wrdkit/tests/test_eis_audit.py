@@ -27,6 +27,7 @@ from wrdkit.eis.audit import (
     worst,
 )
 from wrdkit.eis.circuit import parse_circuit
+from wrdkit.eis.conductivity import backwards_steps, backwards_warning
 from wrdkit.eis.derive import FULL, LIQUID, SOLID, SYMMETRIC
 from wrdkit.eis.fit import fit_circuit
 from wrdkit.eis.spectrum import Spectrum
@@ -865,3 +866,51 @@ def test_only_the_first_step_going_the_wrong_way_is_explained():
     rows[3]["typed_ohm"] = 4.0
     assert "first_sweep_suspect" not in [
         f.code for f in audit_conductivity_scan(rows, without_first=(0.3, 0.9))]
+
+
+def backwards_of(rows):
+    """What the API hands over: `activation_energy` 의 거꾸로 간 걸음과 그 경고."""
+    steps = backwards_steps([one["temperature_c"] for one in rows],
+                            [1.0 / one["typed_ohm"] for one in rows])
+    return {"backwards": steps, "warnings": [backwards_warning(steps)] if steps else []}
+
+
+def test_a_wrong_way_step_the_first_sweep_explains_is_not_a_second_check():
+    """실측 B13·B15·B18: "60→50 °C 가 거꾸로 — 저항을 다시 읽어 주세요" (확인) 가
+    "첫 스윕만 거꾸로 갑니다" (참고) 옆에 같은 사실로 붙었다."""
+    rows = [{"index": i, "temperature_c": t, "typed_ohm": r, "crossing_ohm": r}
+            for i, (t, r) in enumerate(zip([60, 50, 40, 30, 20],
+                                           [5.136, 4.782, 5.899, 7.87, 11.13],
+                                           strict=True), start=1)]
+    found = [f.code for f in audit_conductivity_scan(rows, without_first=(0.293, 0.994),
+                                                     **backwards_of(rows))]
+    assert found == ["first_sweep_suspect"]
+
+
+def test_wrong_way_steps_are_said_once_and_measured_ones_are_to_be_measured_again():
+    """실측 B11: 거꾸로 간 세 걸음 중 20→10·0→-10 °C 는 직선에서 먼 스윕 5·7 의
+    것이다 — 남는 것은 60→50 °C 하나.  적은 값이 모두 실수축 교점이라 "다시 읽어
+    주세요" 는 틀린 처방이다: 다시 잴 일이다."""
+    rows = b11_like()
+    found = audit_conductivity_scan(rows, **backwards_of(rows))
+    assert "activation_warning" not in [f.code for f in found]
+    (wrong,) = [f for f in found if f.code == "conductivity_goes_backwards"]
+    assert "구간이 1개 있습니다 (60→50 °C)" in wrong.message
+    assert "실수축 교점과 같습니다" in wrong.message and "다시 재세요" in wrong.message
+
+    # B17: 아무도 못 짚는 스캔은 두 걸음 그대로 — 교점과 같으니 역시 다시 잴 일.
+    b17 = [{"index": i, "temperature_c": t, "typed_ohm": r, "crossing_ohm": r}
+           for i, (t, r) in enumerate(zip([60, 50, 40, 30, 20, 10, 0, -10, -20],
+                                          [11, 6.181, 8.214, 25.72, 45.87, 49.66,
+                                           28.14, 47.91, 78.65], strict=True), start=1)]
+    (wrong,) = [f for f in audit_conductivity_scan(b17, **backwards_of(b17))
+                if f.code == "conductivity_goes_backwards"]
+    assert "구간이 2개 있습니다 (60→50 °C, 10→0 °C)" in wrong.message
+    assert "다시 재세요" in wrong.message
+
+    # 교점을 모르면(또는 다르면) 읽기부터 본다.
+    for one in b17:
+        one.pop("crossing_ohm")
+    (wrong,) = [f for f in audit_conductivity_scan(b17, **backwards_of(b17))
+                if f.code == "conductivity_goes_backwards"]
+    assert wrong.message.endswith("그 온도의 저항을 다시 읽어 주세요")

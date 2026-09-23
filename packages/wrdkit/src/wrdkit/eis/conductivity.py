@@ -30,8 +30,9 @@ import numpy as np
 from ..linfit import LinearFit, linear_fit
 
 __all__ = ["ACTIVATION_BASES", "BOLTZMANN_EV_PER_K", "ActivationEnergy",
-           "ConductivityPoint", "activation_energy", "conductivity_ms_cm",
-           "kelvin", "real_axis_crossing"]
+           "ConductivityPoint", "activation_energy", "backwards_steps",
+           "backwards_warning", "conductivity_ms_cm", "kelvin",
+           "real_axis_crossing"]
 
 #: 볼츠만 상수, eV/K.  SI 의 정의상수 둘의 몫이라 반올림이 아니라 정의값이다
 #: (k = 1.380649e-23 J/K, e = 1.602176634e-19 C).
@@ -223,19 +224,9 @@ def _activation_warnings(temperature_c, sigma_ms_cm,
     #    있으면 그 줄의 저항을 잘못 읽은 것이다 (실측 2026-09-22: 20 °C 에서
     #    79.89 Ω 인데 10 °C 에서 25.19 Ω 이었다 -- 교점 검출이 꼬리의 잡음을
     #    집었다).  Arrhenius 직선은 그래도 그려지고 R² 만 조용히 낮아진다.
-    pairs = [(float(t), float(s))
-             for t, s in zip(temperature_c, sigma_ms_cm, strict=True)
-             if t is not None and s is not None and s > 0]
-    pairs.sort(key=lambda one: one[0], reverse=True)      # 높은 온도부터
-    backwards = [(pairs[i - 1][0], pairs[i][0])
-                 for i in range(1, len(pairs))
-                 if pairs[i][1] >= pairs[i - 1][1]]
+    backwards = backwards_steps(temperature_c, sigma_ms_cm)
     if backwards:
-        where = ", ".join(f"{high:g}→{low:g} °C" for high, low in backwards[:4])
-        out.append(
-            f"온도가 내려가는데 이온전도도가 안 내려가는 구간이 "
-            f"{len(backwards)}개 있습니다 ({where}) — 그 온도의 저항을 다시 "
-            f"읽어 주세요")
+        out.append(backwards_warning(backwards))
 
     # 2) 직선이 점들을 설명하는가.
     if fit.r_squared is not None and fit.r_squared < _WEAK_R_SQUARED:
@@ -243,6 +234,26 @@ def _activation_warnings(temperature_c, sigma_ms_cm,
             f"직선이 점들을 설명하지 못합니다 (R² = {fit.r_squared:.3f}) — "
             f"이 활성화에너지는 아직 값으로 쓸 수 없습니다")
     return tuple(out)
+
+
+def backwards_steps(temperature_c, sigma_ms_cm) -> tuple[tuple[float, float], ...]:
+    """Neighbouring temperatures ``(higher, lower)`` where the conductivity does
+    not fall on cooling -- impossible for one electrolyte, so one of the two
+    rows is wrong (or the sweep behind it)."""
+    pairs = [(float(t), float(s))
+             for t, s in zip(temperature_c, sigma_ms_cm, strict=True)
+             if t is not None and s is not None and s > 0]
+    pairs.sort(key=lambda one: one[0], reverse=True)      # 높은 온도부터
+    return tuple((pairs[i - 1][0], pairs[i][0]) for i in range(1, len(pairs))
+                 if pairs[i][1] >= pairs[i - 1][1])
+
+
+def backwards_warning(steps) -> str:
+    """The sentence `activation_energy` warns with -- one place, so the audit
+    can tell it apart from the other warnings."""
+    where = ", ".join(f"{high:g}→{low:g} °C" for high, low in steps[:4])
+    return (f"온도가 내려가는데 이온전도도가 안 내려가는 구간이 {len(steps)}개 "
+            f"있습니다 ({where}) — 그 온도의 저항을 다시 읽어 주세요")
 
 
 def real_axis_crossing(frequency_hz, z_re, z_im) -> float | None:
