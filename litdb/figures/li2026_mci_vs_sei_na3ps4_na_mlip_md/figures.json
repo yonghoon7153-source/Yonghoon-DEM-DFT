@@ -1,0 +1,512 @@
+{
+ "slug": "li2026_mci_vs_sei_na3ps4_na_mlip_md",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "132. MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_Na3PS4_Na_MAIN.pdf",
+  "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Machine learning interatomic potential training workflow. Workflow begins by sampling representative interfacial, dis- ordered, glassy amorphous, and crystalline structures from AIMD. Active learning loop begins with r2SCAN database generation extracted from sampled structure, model training, and validation of prediction accuracy, stability performance, and dynamic properties.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.4,
+    56.9,
+    557.1,
+    282.7
+   ],
+   "w": 1850,
+   "h": 941,
+   "dpi": 300,
+   "src": "132. MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_Na3PS4_Na_MAIN.pdf",
+   "blank": 0.68
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Spatiotemporal evolution of local bonding environments at the Na3PS4/Na interface from the NpT ML-MD simula- tion, capturing the coordination numbers of (a) P–P, (b) Na–S, (c) Na–P, and (d) P–Na. Each pair denotes a central atom (first element) coordinated with neighboring atoms (second element). Each pixel represents the mean coordination number averaged over all central atoms of the given species within that time and relative-z bin. As a result, values below unity do not indicate frac- tional bonds on individual atoms but rather that only a fraction of the central atoms in that region have a neighbor of the paired species. Blue dashed lines indicate interphase boundaries from the Li7P3S11/Li system [19] for growth rate comparison.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.4,
+    56.9,
+    557.1,
+    351.3
+   ],
+   "w": 1850,
+   "h": 1227,
+   "dpi": 300,
+   "src": "132. MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_Na3PS4_Na_MAIN.pdf",
+   "blank": 0.617
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Structural comparison of sulfide-rich layer regions in the (a) Na3PS4/Na and (b) Li7P3S11/Li. The red circles show the identified nanocrystalline domains which exhibits crystal symmetry of the Na2S or Li2S structures. Reprinted with permission from [19]. Copyright (2025) American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.4,
+    56.9,
+    557.1,
+    253.5
+   ],
+   "w": 1850,
+   "h": 820,
+   "dpi": 300,
+   "src": "132. MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_Na3PS4_Na_MAIN.pdf",
+   "blank": 0.341
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Ionic flux of P calculated from the Onsager transport coefficients for (a) Na–P–S and (b) Li-P-S. Positive flux is in the direction of the metal anode, whereas negative flux is directed towards the solid state electrolyte. (c), (d) maps the magnitude of the Onsager transport coefficients responsible for calculating the ionic fluxes, for Na and Li respectively. (b) and (d) Reprinted with permission from [19]. Copyright (2025) American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.4,
+    56.9,
+    557.1,
+    348.8
+   ],
+   "w": 1850,
+   "h": 1217,
+   "dpi": 300,
+   "src": "132. MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_Na3PS4_Na_MAIN.pdf",
+   "blank": 0.659
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Na–P connectivity pathway analysis of the Na3PS4/Na interphase at 10 ns. (a) Three-dimensional visualization of the Na–P network within the interphase region, whereby highlighted regions demonstrates clusters that span from the SSE layer to the metal anode layer. Red points indicate P atoms belonging to the connective cluster; blue points indicate Na atoms in the cluster; gray points indicate atoms not connected to the cluster. (b) X–Z projection showing lateral extent of the percolating network. (c) Z-distribution of atoms showing percolation spanning from the Na3PS4 solid electrolyte to the Na metal anode. The connected cluster forms immediately upon interface contact and persists throughout the 10 ns simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.4,
+    56.9,
+    557.1,
+    433.0
+   ],
+   "w": 1850,
+   "h": 1568,
+   "dpi": 300,
+   "src": "132. MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_Na3PS4_Na_MAIN.pdf",
+   "blank": 0.727
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Schematic of the layered interphase structure at the Na3PS4/Na interface after 10 ns of ML-MD simulation. Three com- positionally distinct regions are identified: a Na–S-rich layer adjacent to the Na metal anode, a mixed Na–S–P interphase layer, and a Na–P-rich layer extending toward the Na3PS4 solid electrolyte. A continuous Na–P bond connectivity network (high- lighted) spans the full interphase thickness from the Na metal to the Na3PS4 side, providing a topological basis for electronic percolation through the semiconducting Na–P phases.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.4,
+    56.9,
+    557.1,
+    348.0
+   ],
+   "w": 1850,
+   "h": 1214,
+   "dpi": 300,
+   "src": "132. MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_Na3PS4_Na_MAIN.pdf",
+   "blank": 0.627
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Energy and forces data distributions for the training set (top) and test set (bottom).",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    112.1,
+    564.5,
+    377.3
+   ],
+   "w": 1858,
+   "h": 1105,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.818
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Parity plots for MLIP validation. Dashed lines indicate perfect agreement.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    514.7,
+    564.5,
+    705.5
+   ],
+   "w": 1858,
+   "h": 796,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Equation of state validation for crystalline phases. Points: r2SCAN DFT. Lines: MLIP predictions. The MLIP accurately reproduces equilibrium volumes and bulk moduli, with shifts observed in certain equilibrium energy.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    119.0,
+    564.5,
+    331.5
+   ],
+   "w": 1858,
+   "h": 887,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Dimer dissociation curves for all pairwise interactions. Points: r2SCAN DFT. Lines: MLIP predictions. (a) Na-Na, (b) Na-P, (c) Na-S, (d) P-P, (e) P-S, (f) S-S.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    506.6,
+    564.5,
+    686.6
+   ],
+   "w": 1858,
+   "h": 751,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Dimers forces for all pairwise interactions.",
+   "rotated_deg": 0,
+   "bbox": [
+    162.2,
+    100.1,
+    521.1,
+    291.2
+   ],
+   "w": 1497,
+   "h": 797,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Composition- and force-resolved validation errors. (left) Energy RMSE and (right) force RMSE for each composition class, split into near-equilibrium (|F|max < 3 eV/˚A, blue) and reactive (|F|max ≥3 eV/˚A, orange) conﬁgurations. Errors are largest for reactive S-containing and ternary environments but remain bounded across all chemical regimes.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    347.1,
+    564.5,
+    667.3
+   ],
+   "w": 1858,
+   "h": 1335,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 7,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Ternary phase diagram for the Na-P-S system at 0 K from r2SCAN calculations from Materials Project. Stable phases are shown as ﬁlled circles; metastable phases within 50 meV/atom of the hull are shown as diamonds. The pink cross denotes the location of the phase Na3PS4. Tie lines connect phases in equilibrium.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    413.1,
+    564.5,
+    604.3
+   ],
+   "w": 1858,
+   "h": 797,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 8,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Chemical potential phase diagram for the Na-P-S system at 0 K from r2SCAN calculations from Materials Project. Stable phases are shown as facets on the convex hull. Tie lines connect phases in relative to one another.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    52.4,
+    564.5,
+    295.5
+   ],
+   "w": 1858,
+   "h": 1014,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.965
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 8,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: Interfacial reaction of Na3PS4/Na at 0 K from r2SCAN calculations from Materials Project. Table S3 lists all thermodynamically accessible reaction products at the Na3PS4/Na interface and the corresponding reaction energies for the overall conversion Na3PS4 + Na to their respective decomposition products.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    466.5,
+    564.5,
+    662.5
+   ],
+   "w": 1858,
+   "h": 818,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Ionic ﬂuxes calculated from Onsager transport coeﬃcients. (top) P ﬂux, (middle) Na ﬂux, (bottom) S ﬂux across Na-P-S compositions. Positive ﬂux indicates transport toward the Na metal anode; negative ﬂux indicates transport toward the solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    270.1,
+    564.5,
+    727.8
+   ],
+   "w": 1858,
+   "h": 1908,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 11,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: Na–S partial radial distribution function of the interphase Na2S-rich region (blue, aver- aged over the ﬁnal ﬁve frames at 10.5 ns) compared with crystalline antiﬂuorite Na2S (red). Both share a sharp ﬁrst coordination shell at ∼2.8 ˚A (intact Na–S bonding), but the interphase RDF decays to g(r) ≈1 beyond the ﬁrst shell, whereas the crystalline reference retains sharp peaks throughout the long-range-order region (r > 4 ˚A, shaded). The translational-order parameter τ and the relative second/third-shell peak heights (inset) are suppressed ∼5-fold in the interphase, quantifying its amorphous character.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    339.2,
+    564.5,
+    571.6
+   ],
+   "w": 1858,
+   "h": 969,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.645
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 12,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: Percolation probability as a function of bond cutoﬀdistance, computed over frames sampled across the 10 ns trajectory. (left) P–P-only network as a function of the P–P cutoﬀ: no percolation occurs at any cutoﬀ. (center) Mixed Na–P network as the P–P cutoﬀis varied with the Na–P cutoﬀﬁxed at 3.2 ˚A: percolation is constant (∼90%) and independent of the P–P cutoﬀ. (right) Mixed Na–P network as the Na–P cutoﬀis varied with the P–P cutoﬀﬁxed at 2.5 ˚A: percolation plateaus for cutoﬀs ≥3.1 ˚A and collapses only below the Na–P bond distance (∼3.0 ˚A). Dashed lines indicate the cutoﬀvalues used in this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    112.1,
+    564.5,
+    255.2
+   ],
+   "w": 1858,
+   "h": 597,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 13,
+   "file": "fig_S14.png",
+   "caption": "Figure S14: Temporal evolution of interphase connectivity over the 10 ns trajectory (P–P cutoﬀ2.5 ˚A, Na–P cutoﬀ3.2 ˚A). (top) Percolation status per frame: the mixed Na–P network ﬁrst percolates at 0.23 ns and remains percolating in 99.8% of subsequent frames (1035/1060 frames overall, 97.6%), whereas the P–P-only network never percolates. (second) Fractional z-span of the largest connected cluster, which grows to approach the full interphase thickness. (third) Size of the largest connected component, reaching ∼5000 atoms for the Na–P network versus ∼10 for P–P. (bottom) Total number of bond edges in each network, increasing monotonically as the interphase grows.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.8,
+    150.0,
+    564.5,
+    595.7
+   ],
+   "w": 1858,
+   "h": 1858,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1. Electronic properties of interphase products based on literature. Phase Bandgap (eV) Characteristic Na2S 3.22 [43], 2.99 [44] Wide-gap insulator [45] NaP ∼0.74 [46]a Semiconducting Na3P ∼0.4 [43], 0.8a [46] Semiconducting Na3P11 1.66 [46] Wide-gap semiconductor NaP7 2.0 [47] Semiconductor Li2S 3.24–5.08 [48, 49]a Wide-gap insulator Li3P 3.6 (direct), 2.03 (indirect) [50]a Wide-gap semiconductor a Computational predictions",
+   "rotated_deg": 0,
+   "bbox": [
+    114.1,
+    23.1,
+    549.4,
+    802.0
+   ],
+   "w": 1676,
+   "h": 2997,
+   "dpi": 277,
+   "src": "132. MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_Na3PS4_Na_MAIN.pdf",
+   "blank": 0.819
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Training dataset composition for the Na-P-S MLIP. Structure Type Number of Structures Interfacial conﬁgurations 3,097 Amorphous/disordered (MPMorph) 9,031 Crystalline phases (thermal) 7,986 Total 20,114",
+   "rotated_deg": 0,
+   "bbox": [
+    43.3,
+    13.7,
+    561.7,
+    788.7
+   ],
+   "w": 2002,
+   "h": 2994,
+   "dpi": 278,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 6,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Composition- and force-resolved errors over the 20,114-structure training dataset. N is the number of conﬁgurations; energy errors are per-atom mean-absolute (MAE) and root-mean- square (RMSE) errors after per-element reference alignment; force errors are per-component MAE and RMSE. The near-equilibrium/reactive split is by maximum atomic force (3 eV/˚A).",
+   "rotated_deg": 0,
+   "bbox": [
+    119.8,
+    116.2,
+    563.5,
+    723.0
+   ],
+   "w": 1849,
+   "h": 2529,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 9,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Reaction products at the Na3PS4/Na interface from r2SCAN convex hull analysis. Erxn is the energy of the overall conversion reaction normalized per atom. Stability refers to whether the Na-P product phase lies on the convex hull (ground state) or above it (metastable). Na-P Product Phase Erxn (eV/atom) Reaction Likelihood NaP −0.465 Yes Na3P11 −0.456 No NaP7 −0.451 No Na3P −0.443 No Na2PS3 −0.137 No",
+   "rotated_deg": 0,
+   "bbox": [
+    119.8,
+    51.3,
+    563.5,
+    785.1
+   ],
+   "w": 1812,
+   "h": 2997,
+   "dpi": 294,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 9,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Chemical potential gradients ∆µi (eV/atom) for Na, P, and S used to model the Na3PS4/Na interfacial reaction across temperatures. Values are computed as ∆µi = µNa side i − µNa3PS4 side i , deﬁning the driving force for species transport across the interface. T (K) ∆µNa (eV) ∆µP (eV) ∆µS (eV) 0 +1.232 −0.920 −2.465 500 +1.158 −0.382 −2.218 900 +1.074 +0.121 −2.148 1200 +0.977 +0.479 −1.954 1500 +0.720 +0.989 −1.439",
+   "rotated_deg": 0,
+   "bbox": [
+    119.8,
+    52.7,
+    563.5,
+    785.1
+   ],
+   "w": 1812,
+   "h": 2991,
+   "dpi": 294,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 14,
+   "file": "tab_S5.png",
+   "caption": "Table S5: Comparison of simulation conditions, interphase deﬁnitions, connectivity criteria, and Onsager-analysis protocols between the present Na3PS4/Na study and the Li7P3S11/Li study of Li et al. [5].",
+   "rotated_deg": 0,
+   "bbox": [
+    119.8,
+    173.0,
+    563.5,
+    663.4
+   ],
+   "w": 1849,
+   "h": 2045,
+   "dpi": 300,
+   "src": "132. Sup) MLST_2026_Li_Jeon_Persson_Distinguishing_mixed_conduction_interphase_SI.pdf",
+   "blank": 0.929
+  }
+ ]
+}
