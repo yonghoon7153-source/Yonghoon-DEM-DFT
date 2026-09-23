@@ -6,6 +6,7 @@
  *  삼킨 파라미터는 숫자처럼 보일 뿐이다 (ADR 0019 §7).
  */
 
+import { AuditPanel } from '../components/AuditPanel'
 import { OtherMeasurements } from '../components/OtherMeasurements'
 import { RelatedCellCard } from '../components/RelatedCell'
 import { useEffect, useMemo, useState } from 'react'
@@ -525,6 +526,12 @@ export function SpectrumDetail() {
             <Spinner />
           )}
         </Card>
+      </div>
+
+      {/* 측정의 사정(KK · 잡음)이 먼저 — 맞추기 전에 이 점들을 믿을 만한지
+          (ADR 0046).  맞추거나 쓰는 맞춤을 고르면 다시 읽는다. */}
+      <div style={{ marginTop: 14 }}>
+        <AuditPanel spectrumId={id} refresh={reloadKey} />
       </div>
 
       <div className="fit-row" style={{ marginTop: 14 }}>

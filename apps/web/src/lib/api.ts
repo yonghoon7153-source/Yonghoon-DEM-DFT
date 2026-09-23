@@ -14,7 +14,7 @@ import type {
   FeedbackKind, FeedbackNote,
   EisDashboard, GittDashboard, GittRun, Group, Measurements, Meta, Pocv,
   ProfileResponse, Report, Run, Sample, Scan, ScanConductivity,
-  Spectrum, SpectrumDetail,
+  Spectrum, SpectrumAuditDetail, SpectrumDetail,
   SpectrumFit, SpectrumPoints, SymDashboard,
 } from './types'
 
@@ -258,6 +258,9 @@ export const api = {
   fitSpectrum: (id: number, params?: Params) =>
     request<SpectrumFit>(`/api/eis/spectra/${id}/fit${query(params)}`,
       { method: 'POST' }),
+  /** 이 스펙트럼의 검수 — `bml audit` 과 같은 판정, 점마다의 잔차와 (ADR 0046). */
+  spectrumAudit: (id: number) =>
+    request<SpectrumAuditDetail>(`/api/eis/spectra/${id}/audit`),
   spectrumDrt: (id: number, params?: Params) =>
     request<Drt>(`/api/eis/spectra/${id}/drt${query(params)}`),
   spectrumDrtSweep: (id: number, params?: Params) =>

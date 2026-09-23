@@ -1087,6 +1087,68 @@ export interface Drt {
   dropped_inductive: number
 }
 
+// -- 스펙트럼 하나의 검수 (ADR 0046) ------------------------------------------
+
+/** 판정 하나 — `bml audit` 이 적는 그 줄. */
+export interface AuditFinding {
+  severity: 'problem' | 'check' | 'note'
+  /** 문제 · 확인 · 참고 */
+  label: string
+  code: string
+  message: string
+  refs: string[]
+  circuits: string[]
+  /** 무엇에 대한 판정인가: 점 자체(측정) · 쓰는 맞춤 · 기록. */
+  scope: 'points' | 'fit' | 'record' | ''
+}
+
+/** 판정이 기대는 논문 기록 (ADR 0042). */
+export interface AuditReference {
+  id: string
+  citation: string
+  claim_ko: string
+  quote: string
+}
+
+/** 점마다 얼마나 어긋났나 — `|ΔZ| / |Z|` (비율), 낮은 주파수부터. */
+export interface AuditResiduals {
+  frequency_hz: number[]
+  /** 선형 KK 모델이 못 그린 몫 — 점 자체의 사정. */
+  kk: number[]
+  fit_frequency_hz: number[]
+  /** 쓰는 맞춤이 맞춘 구간에서 못 그린 몫. */
+  fit: number[]
+  sigma: number | null
+  /** 이 선을 넘은 점을 KK 어긋남으로 본다 — max(2 %, 6σ). */
+  limit: number | null
+}
+
+export interface SpectrumAuditDetail {
+  audit: {
+    id: number
+    circuit: string
+    misfit_mean: number | null
+    misfit_max: number | null
+    misfit_at_hz: number | null
+    /** 선형 KK 검사의 수 — `judged` 가 거짓이면 `reason`. */
+    kk: {
+      judged?: boolean
+      reason?: string
+      max_residual?: number | null
+      at_hz?: number | null
+      sigma?: number
+      m?: number
+      per_decade?: number
+      dropped_inductive?: number
+      range_switches_hz?: number[]
+    }
+    findings: AuditFinding[]
+    worst: 'problem' | 'check' | 'note' | null
+  }
+  references: AuditReference[]
+  residuals: AuditResiduals
+}
+
 export interface DrtSweep {
   spectrum_id: number
   results: Drt[]
