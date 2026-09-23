@@ -836,7 +836,10 @@ def test_the_sweeps_off_the_arrhenius_line_are_named_with_the_expected_value():
     assert "스윕 7 (0 °C, 1.11e+05 Ω)" in off.message
     assert "직선이 말하는 값은 19 Ω, 37.7 Ω" in off.message
     # 20 °C 는 스펙트럼도 80 Ω 에서 실수축을 건넜다 — 다시 읽을 것이 아니라 다시 잴 것.
-    assert "스윕 5 는 스펙트럼의 실수축 교점도 그 값입니다" in off.message
+    # 어느 값인지 수로 적는다: "교점도 그 값" 은 직선의 19 Ω 을 가리키는 것으로 읽혔다.
+    assert ("적은 값 중 스윕 5 의 79.9 Ω 은 스펙트럼의 실수축 교점 그대로입니다"
+            in off.message)
+    assert "그 값" not in off.message
     assert "Ea = 0.236 eV" in off.message and "R² = 0.986" in off.message
 
 

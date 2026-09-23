@@ -1822,12 +1822,15 @@ def _off_the_line(sweeps: Sequence[dict]) -> tuple[Finding | None, set[int]]:
         f"{rows[i]['typed_ohm']:.3g} Ω)" for i in named)
     expected = ", ".join(f"{math.exp(slope * x[i] + intercept):.3g} Ω" for i in named)
     # 적은 값이 그 스윕의 실수축 교점과 같으면 읽기 실수가 아니다 (실측 B11 20 °C).
+    # 어느 값인지 수로 적는다 — "교점도 그 값입니다" 는 바로 앞 "직선이 말하는 값은
+    # 19 Ω" 을 가리키는 것으로 읽혀, 읽기 실수라는 뜻이 되었다 (열두 번째 검수).
     measured = [rows[i] for i in named if rows[i].get("crossing_ohm")
                 and abs(rows[i]["crossing_ohm"] / rows[i]["typed_ohm"] - 1) < 0.1]
     if measured:
-        who = ", ".join(f"스윕 {one['index']}" for one in measured)
-        advice = (f"{who} 는 스펙트럼의 실수축 교점도 그 값입니다 — 읽기 실수가 "
-                  f"아니라 측정이 벗어났으니 그 온도를 다시 재세요")
+        who = ", ".join(f"스윕 {one['index']} 의 {one['typed_ohm']:.3g} Ω"
+                        for one in measured)
+        advice = (f"적은 값 중 {who} 은 스펙트럼의 실수축 교점 그대로입니다 — 읽기 "
+                  f"실수가 아니라 측정이 벗어났으니 그 온도를 다시 재세요")
     else:
         advice = "그 스윕을 다시 읽거나 다시 재세요"
     return Finding(
