@@ -340,3 +340,35 @@ def test_the_low_end_is_the_lowest_point_not_half_a_decade():
     result, summary = _residuals(f, {80.7: 0.03, 102: 0.035})
     (finding,) = _kk_findings(result, summary, switches=[95.0])
     assert finding.code == "kk_range_switch"
+
+
+# -- 네 번째 실측 검수(2026-09-23 05:38) 뒤에 고친 것 ---------------------------------
+
+def test_a_wide_low_end_drift_is_not_put_on_one_range_switch():
+    """실측 풀셀 #15·#33·#34·#49: 저주파 끝 0.01–1.6 Hz (두 decade) 가 어긋났고
+    그 안 0.14 Hz 에서 전류 범위가 바뀌었다.  이 기기는 전류가 한 decade 바뀔
+    때마다 범위를 바꿔 넓은 구간 안에는 거의 늘 전환이 있다 — 전환 하나로 두
+    decade 를 "기기 탓" (참고) 으로 돌리지 않는다.  확인으로 남기고 전환은 곁들인다."""
+    f = sweep(7e6, 0.01)
+    result, summary = _residuals(f, dict.fromkeys(f[f < 1.7], 0.05))
+    (finding,) = _kk_findings(result, summary, switches=[0.141])
+    assert finding.code == "kk_violation" and finding.severity == CHECK
+    assert finding.message.startswith("저주파 끝 0.01")
+    assert "그 근처 0.141 Hz 에서 기기의 전류 범위도 바뀌었습니다" in finding.message
+
+    # 가운데라도 두 decade 넓이면 전환 하나의 흔적이 아니다.
+    result, summary = _residuals(f, dict.fromkeys(f[(f > 1) & (f < 100)], 0.04))
+    (finding,) = _kk_findings(result, summary, switches=[9.0])
+    assert finding.code == "kk_violation" and "셀·접촉이 바뀌었거나" in finding.message
+    assert "그 근처 9 Hz 에서 기기의 전류 범위도 바뀌었습니다" in finding.message
+
+    # 저주파 끝의 점 하나는 원래대로 참고 — 옆의 전환을 함께 적는다.
+    result, summary = _residuals(f, {0.01: 0.03})
+    (finding,) = _kk_findings(result, summary, switches=[0.0112])
+    assert finding.code == "kk_outlier" and finding.severity == NOTE
+    assert "바로 옆 0.0112 Hz 에서" in finding.message
+
+    # 한 decade 안의 가운데 구간은 그대로 전환의 흔적이다 (실측 #106: 80.7–410 Hz).
+    result, summary = _residuals(f, dict.fromkeys(f[(f > 80) & (f < 420)], 0.03))
+    (finding,) = _kk_findings(result, summary, switches=[90.6])
+    assert finding.code == "kk_range_switch" and finding.severity == NOTE

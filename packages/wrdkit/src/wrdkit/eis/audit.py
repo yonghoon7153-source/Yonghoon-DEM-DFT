@@ -1064,6 +1064,12 @@ KK_EDGE_DECADES = 0.5
 #: 전류 범위가 바뀐 자리에서 이만큼(배) 안에 어긋난 구간이 닿으면 그 전환의
 #: 흔적으로 본다 — decade 당 10 점이면 이웃 한 점까지다.
 RANGE_SWITCH_REACH = 10.0 ** 0.15
+#: 전환은 한 자리의 계단이다 — 어긋난 구간이 이보다(배) 넓거나 저주파 끝이면
+#: 전환 하나로 설명하지 않는다.  실측 풀셀의 저주파 끝 0.01–1.6 Hz (두 decade)
+#: 가 그 안의 전환(0.14 Hz) 때문에 "기기 탓" 참고로 내려갔다 — 드리프트일 수
+#: 있는 것을.  이 기기는 전류가 한 decade 바뀔 때마다 범위를 바꿔, 넓은 구간
+#: 안에는 거의 늘 전환이 하나 있다.
+RANGE_SWITCH_SPAN = 10.0
 #: 저주파 끝의 +Im 은 |Z| 의 이만큼은 넘어야 센다 — 실수축으로 내려온 셀의
 #: 마지막 점들은 잡음만으로도 축 위에 설 수 있다.
 LOW_FREQUENCY_INDUCTIVE_SHARE = 0.01
@@ -1238,7 +1244,10 @@ def _kk_findings(result: KKResult, summary: dict,
     switch = next((one for one in switches
                    if f_low / RANGE_SWITCH_REACH <= one <= f_high * RANGE_SWITCH_REACH),
                   None)
-    if switch is not None:
+    also = (f". {'바로 옆' if low == high else '그 근처'} {switch:.3g} Hz 에서 기기의 "
+            f"전류 범위도 바뀌었습니다 — 드리프트인지 범위 전환인지는 범위를 고정하고 "
+            f"다시 재면 가려집니다" if switch is not None else "")
+    if switch is not None and not at_bottom and f_high / f_low <= RANGE_SWITCH_SPAN:
         return [Finding(NOTE, "kk_range_switch",
                         f"{span} 가 Kramers–Kronig 를 어깁니다 ({size}) — 기기의 전류 "
                         f"범위가 {switch:.3g} Hz 에서 바뀐 자리입니다. 셀이 변한 것이 "
@@ -1250,7 +1259,7 @@ def _kk_findings(result: KKResult, summary: dict,
             return [Finding(NOTE, "kk_outlier",
                             f"가장 낮은 점 {span} 하나가 Kramers–Kronig 를 어깁니다 "
                             f"({size}) — 측정 끝에서 셀이 변하기 시작했거나 튄 "
-                            f"점입니다. 맞춤에서 빼 보세요")]
+                            f"점입니다. 맞춤에서 빼 보세요{also}")]
         return [Finding(NOTE, "kk_outlier",
                         f"{span} 의 점 하나가 Kramers–Kronig 를 어깁니다 ({size}) — "
                         f"튄 점입니다. 맞춤에서 빼 보세요")]
@@ -1260,12 +1269,12 @@ def _kk_findings(result: KKResult, summary: dict,
                         f"저주파 끝 {span} 가 Kramers–Kronig 를 어깁니다 ({size}) — "
                         f"측정 중에 셀이 변했습니다 (온도가 덜 올라왔거나, 쉬지 않은 "
                         f"셀). 그 점들로 정한 꼬리·저항은 믿지 말고, 하한을 "
-                        f"{above:.3g} Hz 로 두고 다시 맞추세요")]
+                        f"{above:.3g} Hz 로 두고 다시 맞추세요{also}")]
     return [Finding(CHECK, "kk_violation",
                     f"{span} 에서 Kramers–Kronig 를 어깁니다 ({size}) — 그 사이에 "
                     f"셀·접촉이 바뀌었거나 그 주파수에서 측정이 흔들렸습니다 (기기의 "
                     f"전류 범위 전환, 전원 잡음). 그 구간을 지나는 아크의 값은 믿지 "
-                    f"마세요")]
+                    f"마세요{also}")]
 
 
 # --------------------------------------------------------------------------
