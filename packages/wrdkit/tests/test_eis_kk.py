@@ -546,15 +546,48 @@ def test_the_noise_bar_is_the_kk_sigma_not_the_mean_residual():
 
 def test_one_point_inside_the_noise_is_not_the_circuits():
     """실측 B11 0 °C (#65, σ 4.8 %): 평균이 잡음이라 빠지자, 10 % 한 점이 "그 주파수의
-    모양을 회로가 못 그립니다" 로 나왔다.  잡음이 σ 면 한 점은 KK 처럼 6σ 를 넘어야 한다."""
+    모양을 회로가 못 그립니다" 로 나왔다.  잡음이 σ 면 한 점은 KK 처럼 6σ 를 넘어야 한다.
+    열두 번째 검수 뒤로 σ 가 3 % 를 넘는 스펙트럼(#65 도)은 맞춤을 아예 판정하지 않는다
+    (`test_a_spectrum_noisier_than_the_misfit_limit_is_not_judged`) — 이 규칙은 그
+    아래에서 일한다: 한 점 11.5 % 는 σ 2 % 에서 잡음(6σ = 12 % 안), 1 % 에서 회로 탓."""
+    f = sweep(7e6, 0.01)
+    z = build(*ARC, f)
+    z[np.argsort(f)[f.size // 2]] *= 1.13
+    points = spectrum(f, z)
+    fit = fitted(*ARC)
+    quiet = np.zeros(f.size)
+
+    def blamed(sigma):
+        return [x.code for x in fit_findings(points, fit,
+                                             reference=KKReference(f, quiet, sigma=sigma))
+                if x.code.startswith(("misfit", "inductance"))]
+
+    assert blamed(0.02) == []
+    assert blamed(0.01) == ["misfit_somewhere"]
+
+
+def test_a_spectrum_noisier_than_the_misfit_limit_is_not_judged():
+    """열두 번째 검수: B17_ACTI E 일곱은 KK 잔차의 σ 가 4.4–9.5 % (보통 0.1–0.5 %),
+    B11 0 °C (#65) 는 4.8 % 였다 — 측정이 문제인데 이름 판정이 문제로, 맞춤 오차가
+    확인으로 올라왔다.  잡음이 회로를 판정하는 문턱(평균 오차 3 %)을 넘으면 맞춤에서
+    나온 문제·확인은 내리고 그 까닭 한 줄을 둔다.  참고(미결정 등)는 남는다."""
     f = sweep(7e6, 0.01)
     points = spectrum(f, noisy(build(*ARC, f), 0.045, 3))
-    fit = fitted(*ARC)
     kk = audit_spectrum(points)
-    assert audit_fit(fit, points, kind=LIQUID, band=(float(f.min()), float(f.max()))
-                     ).misfit.max >= 0.10
-    assert not [x for x in fit_findings(points, fit, reference=kk.reference)
-                if x.code.startswith(("misfit", "inductance"))]
+    assert kk.reference.sigma >= 0.03
+    railed = _Fit(ARC[0], [_P(name, value) for name, value in ARC[1].items()
+                           if name != "R1"] + [_P("R1", 1e9, "undetermined",
+                                                  "at_upper_bound")])
+    judged = fit_findings(points, railed, reference=KKReference(f, np.zeros(f.size),
+                                                                sigma=0.029))
+    assert "branch_open" in [x.code for x in judged]               # 문턱 아래는 판정한다
+
+    found = fit_findings(points, railed, reference=kk.reference)
+    assert {x.severity for x in found} == {NOTE}
+    (gate,) = [x for x in found if x.code == "too_noisy_to_judge"]
+    assert gate.message.startswith(f"잡음(KK 잔차의 σ ≈ {kk.reference.sigma * 100:.1f} %)")
+    assert "평균 오차 3 %" in gate.message
+    assert "undetermined" in [x.code for x in found]              # 사실은 남는다
 
 
 # -- 아홉 번째 실측 검수(2026-09-23 11:55) 뒤에 고친 것 ---------------------------------

@@ -158,6 +158,8 @@ REFERENCES: dict[str, tuple[str, ...]] = {
     "kk_outlier": ("LASIA1999.kk-linear-voigt-test", "SCHOENLEBER2014.residuals"),
     "kk_high_frequency": ("LASIA1999.impedance-range-artefacts",
                           "SCHOENLEBER2014.optional-series-c-l"),
+    "too_noisy_to_judge": ("SCHOENLEBER2014.residuals",
+                           "SCHOENLEBER2014.no-numeric-residual-threshold"),
     "kk_noisy": ("SCHOENLEBER2014.residuals",
                  "SCHOENLEBER2014.no-numeric-residual-threshold"),
     "low_frequency_inductive": ("VADHVA2021.qss-low-frequency-cutoff",
@@ -1005,6 +1007,19 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
             continue
         _arc_findings(out, arc, labels.get(arc.resistor, ""), claims.get(arc.resistor),
                       statuses, railed, low_edge, high_edge, offer=face_offer)
+
+    # -- 잡음이 판정보다 크면 ---------------------------------------------------
+    # 점 자체의 잡음(KK 잔차의 σ)이 회로를 판정하는 문턱보다 크면, 회로가 틀린 것과
+    # 잡음을 가를 수 없다 — 맞춤에서 나온 문제·확인은 내리고 그 까닭 한 줄만 둔다.
+    # 참고는 남긴다 (미결정 등, 판정이 아니라 사실이다).  실측 B17_ACTI E 일곱
+    # (σ 4.4–9.5 %)과 B11 0 °C (#65, 4.8 %): 측정이 문제인데 이름 판정이 문제로,
+    # 맞춤 오차가 확인으로 올라왔다 (열두 번째 검수, 랩: "문제에서 빼도 된다").
+    if reference is not None and reference.sigma >= MEAN_MISFIT_LIMIT:
+        out.findings = [one for one in out.findings if one.severity == NOTE] + [Finding(
+            NOTE, "too_noisy_to_judge",
+            f"잡음(KK 잔차의 σ ≈ {reference.sigma * 100:.1f} %)이 회로를 판정하는 문턱"
+            f"(평균 오차 {MEAN_MISFIT_LIMIT * 100:.0f} %)보다 커서 맞춤은 판정하지 "
+            f"않았습니다 — 회로가 틀린 것과 잡음을 가릴 수 없습니다")]
 
     # -- 전도도의 크기 ----------------------------------------------------------
     total = (conductivity or {}).get("total_s_cm")
