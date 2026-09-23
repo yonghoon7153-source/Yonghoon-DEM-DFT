@@ -2170,3 +2170,16 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: 크로퍼 20 장 — **4 장 봤다(Fig. 1 · 3 · 4 · 6), 그중 3 장이 본문과 어긋남**; 안 본 것 Fig. 2 · 5 · 7–12, 표 8 장은 텍스트 대조.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 스물여덟 번째 · 제약 5 · Status Log) · [[assb-lampe-contact-product-degeneracy]](열다섯 번째 적용).
 - 후속: 160 편 중 Q1 · Q4 · 곱 분리 · 기준극 누설 1차 후보 **0**(제목 기준). 약한 후보 Celen 2021 IEEE SysCon (ref 11, ASSB-ECM) · Kan 2024 *ESM* 68 (ref 124, 온도). 압력 값은 큐 32.
+
+## [2026-09-23] ingest | assb 33호 — Zhang et al. 2025, Challenges and Strategies of Low-Pressure All-Solid-State Batteries (Adv. Mater. 37, 2413499)
+- raw: `raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md` (sha256 봉인) · 그림 `raw/figures/zhang2025_low-pressure-assb-challenges-strategies-review/` 9 장. 큐 **32번**("Q6 주축 · 24 번과 짝"). EIT Ningbo + USTC + UWO, CC BY-NC-ND. ⚠ **Review — 1차 측정 0**, 그림 8 장 전부 모식 · 재수록.
+- 큐 낱말 지문 재집계(NFKC 뒤 · 대소문자 구분 · 낱말): **11 열 전부 일치**(`contact loss` 4 · `MPa` 50). NFKC 변경 204 자(합자 193) — 지문 열은 전후 동일, 열 밖에서 `effect` 0 → 30 · `identif` 0 → 2(식별성과 무관).
+- ★★★ **판정**: Q6 · Q1 칸 이동 없음 — 압력 수치 50 개 중 압력의 **함수** 0, `θ(N)` 0/33 · `θ(P)` 0. **Sakka 2022 = [120] 인용, 단 "3D 접촉 · 압력 방향" 명제에 · 수치 0** · **Xu 2024 = [11] 인용, 단 "hundreds of MPa" 에만 · "<≈1 MPa" 없음**. 제조 ↔ 운전 압력 명시 분리 ✅(종설 계보 첫).
+- ★★★ **귀속 검사**: 8호 "pressure reduction = commercialization problem" ✅ 선다 · 25호 "짝, 인용 아님" ✅(양방향 시점상 불가) · 25호 "≤5 MPa" 는 이 편에서 오지 않음 · 요구치 계보 **다섯 번째 값 < 2 / ≤ 2 MPa, 출처 없음**(5 편 · 4 값 · 원전 0).
+- ★★★ **23호 대조 ❌**: 유일한 양극 접촉 손실 문단이 Koerver 2017 의 "첫 충전 = 접촉 / 이후 = 계면상" 배정을 뒤집고, "압력으로 재활성" 은 인용 번호 없이 인쇄(D1 · G4) — 분류 체계 다섯 번째 표본.
+- **채움표 33호 행 — 누적 ≈16.0 → ≈16.0 (새 칸 0).** Q4 ASSB 0 — 스물다섯 번째 성질 "용량은 전략의 성적표" · Q3 층(재수록 그림 출처 갈림 3/8) · Q6 층 둘 · Q8 입력 하나(Fig. 3A/B 부피 곡선).
+- 곱 축퇴 처방 **열여섯 번째 적용 — 대상 없음**. `[해석]` 재수록 상대극 압력 진동 0.7–2.3 MPa/사이클 ≈ 산업 운전 압력(양극만 ≈0.05–0.07).
+- ⚠ 어긋남 12 건: D1 23호 배정 뒤집음 · D2 Fig. 3I 출처 [63] ↔ [78] · D3 Fig. 2D 본문 ↔ 그림 · D4 "most labs 50–600 MPa" 출처 0 · D5 Fig. 5 A/B 뒤바뀜 외.
+- 그림: 크로퍼 9 장 — **6 장 봤다(Fig. 1 · 2 · 3 · 4 · 5 · 7), 그중 4 장이 본문과 어긋남**; 안 본 것 Fig. 6 · 8, Table 1 은 텍스트 전사.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 스물아홉 번째 · 제약 5 · Status Log) · [[assb-lampe-contact-product-degeneracy]](열여섯 번째 적용) · [[assb-stack-pressure-operating-window]](제조/운전 분리 · 요구치 다섯 번째 · 압력 진동).
+- 후속: Sakka 2022(지목 2 회) · Xu 2024(승격 제안) · Koerver 2018 *EES*(지목 2 회) · Gao 2022 *Joule* · Cronau 2021(DEM SE 압분) · Zhang 2017 *JMCA*(지목 3 회). Q1 · Q4 · 곱 분리 · 기준극 누설 1차 후보 0.

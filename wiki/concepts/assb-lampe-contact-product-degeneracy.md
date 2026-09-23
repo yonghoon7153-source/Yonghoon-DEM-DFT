@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -1075,6 +1075,31 @@ ASSB 에 식별성 도구를 들여올 때 **반원을 버리지 않는 판**(�
 
 처방 네 단계 중 두 단계(1 · 3-a)와 압력 축의 **센서는 BMS 요구 목록에 이미 있다.** 빠진 것은 "그 채널로 무엇을 가를지" 의 물음이고, 셋째 줄(압력)은 **유지 제어가 진단 채널을 닫는 방향**으로 설계돼 있다. 번역은 우리가 한 것이다 — 이 편은 곱도, 모드도, 면적도 말하지 않는다.
 
+## ★★ 처방의 열여섯 번째 적용 (2026-09-23, `assb` 33호) — **적용 불가, 대상 없음 · 대신 압력 축에 상대극 교란의 크기가 붙는다**
+
+`raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md` (Zhang et al. 2025, *Adv. Mater.* 37, 2413499 — ⚠ **Review 22 쪽, 1차 측정 0**, 식 1 개 = Li/Cu 계면 응력).
+곱이 설 모델도, 가를 데이터도 없다. 32호처럼 **"대상 없음" 도 한 번으로 센다.** 기록하는 이유는 이 편이 **압력 축**(처방이 아니라 [[assb-pressure-reapplication-separation-test]] 의 조작 변수)에 붙는 교란의 크기를 재수록 원자료로 준다는 것이다.
+
+### 입력 점검
+
+| 단계 | 요구 | 이 편 | 판정 |
+|---|---|---|---|
+| **1단계** (16호) | `R` 과 `C` 를 같이 | `EIS` 0 회 · 무음극 `R_tot`(Fig. 5A 재수록)는 저항만 | ❌ |
+| **2단계** (18·25호) | + 면적을 아는 대조군 | Sakka 2022 [120] 를 인용하되 "3D 접촉 · 압력 방향" 명제로, 면적값 0 | ❌ |
+| **3단계-a/b** (19호) | `Ea` · `C` 상한 | `Arrhenius` 0 — 온도는 "80 °C 면 2 MPa" 한 문장(출처 번호 둘로 갈림) | ❌ |
+| **4단계** (20호) | 시간 영역 동일 검사 | 0 | ❌ |
+
+### ★★ `[해석]` 압력 축의 교란 — 상대극 ΔP 가 조작 변수와 같은 크기
+
+| 재수록 원자료 (33호 그림, `[도표]`) | 사이클당 ΔP | 기저 |
+|---|---|---|
+| [58] LCO · NCM · 혼합 양극 (Fig. 7A) | ≈0.05–0.07 MPa | 미기재 |
+| [59] 흑연 ± LGPS (Fig. 3D) | ≈0.7–0.8 MPa | 미기재 |
+| [88] μ-Si ‖ LTO (Fig. 4D) | ≈0.5–1.0 MPa | ≈45 MPa |
+| [90] Sb ‖ Li (Fig. 4G) | ≈1.2–2.3 MPa | ≈20 MPa |
+
+곱 `A_eff·ε_p/R_s` 의 `A_eff` 를 **압력으로 흔들어** 가르려면(되돌림 시험), 양극 `A_eff(P)` 에 들어가는 압력은 **지그 압력 + 상대극 ΔP(SOC)** 다. 산업 운전 압력(이 편 `[인쇄]` ≤2 MPa)에서 상대극 ΔP 는 **조작 변수와 같은 자릿수**이고, 양극 자신의 ΔP 는 두 자릿수 작다. ⇒ 되돌림 시험의 설계 입력에 **"상대극 ΔP(SOC) 를 먼저 재거나 정압 지그로 누른다"** 가 붙는다. ⚠ 진동은 고압 기저 · 정변위 지그에서 잰 것이다(저압 기저에서 크기 미상). 이 편은 곱도 분리도 말하지 않는다 — 번역은 우리 것.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -1128,3 +1153,4 @@ ASSB 에 식별성 도구를 들여올 때 **반원을 버리지 않는 판**(�
 - ★ **2026-09-23 (30호)**: **"30호의 `D` 차는 면적이다" 라고 주장하지 않는다** — 유효 면적 ≈3.3 배는 **같은 `D` 가 가능하다**는 크기 검산이고, 측정이 아니다. Dunn 비의 4.3 배도 면적당 표면 용량을 계 사이에서 비교할 수 있다는 약한 전제 위다. 주장은 **"이 대조로는 `D` 와 면적이 안 갈린다"** 까지다. 그리고 `Q_M` ≈63 · `n` ≈2.5 는 **그림 판독 블록 평균에 우리가 건 적합**이지 원전 명제가 아니다.
 - ★ **2026-09-23 (31호)**: **"ICI `R/k` 가 면적을 가른다" 고 주장하지 않는다** — 식에서 읽은 후보이고, 31호 지면에는 계산 재료(사이클별 `k`)가 없으며 `R` 에는 면적 무관 항이 섞인다. 그리고 **"`D_app` 은 LAM 에 불변" 은 식 19 위의 대수**(반무한 · 균질 모집단 · 액체 쪽 확산 무시)이지 원문 명제가 아니다.
 - ★ **2026-09-23 (32호)**: **"BMS 센서만 있으면 곱이 갈린다" 고 주장하지 않는다** — 위 대응표는 32호가 요구한 센서 이름과 처방 단계의 입력을 **나란히 놓은 것**이다. 32호는 그 채널로 무엇도 가르지 않았고, 실셀 BMS 가 `C` 를 보고할 만큼 EIS 대역·정밀도를 갖는지는 확인되지 않았다.
+- ★ **2026-09-23 (33호)**: **"상대극 ΔP 가 `A_eff(P)` 를 오염시킨다" 를 측정으로 주장하지 않는다** — 표의 ΔP 는 33호에 재수록된 네 원전의 그림 판독이고, 기저 20–45 MPa · 정변위 지그다. 주장은 **"재수록 원자료에서 상대극 ΔP 가 이 편 자신의 산업 운전 압력과 같은 자릿수다"** 까지다.

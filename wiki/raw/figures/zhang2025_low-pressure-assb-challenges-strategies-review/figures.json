@@ -1,0 +1,191 @@
+{
+ "slug": "zhang2025_low-pressure-assb-challenges-strategies-review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "4c52a7e8-32._Challenges_and_strategies_of_low-pressure_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic of the categories and origins of pressure-related challenges of ASSBs. A) Fabrication pressure refers to the externally applied pressure during compressing, densifying, and calendaring. B) Operation pressure signiﬁes externally applied pressure during the battery cycling. Lower middle parts: Adapted with permission.[21] Copyright 2021, Elsevier. Upper middle part: Adapted with permission.[22] Copyright 2016, The Royal Society of Chemistry. The operation pressure of ASSBs in most labs is 50–600 MPa, but the target pressure for industry is less than 2 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.8,
+    550.0,
+    513.7
+   ],
+   "w": 2118,
+   "h": 1847,
+   "dpi": 300,
+   "src": "4c52a7e8-32._Challenges_and_strategies_of_low-pressure_all-solid-state_batteries.pdf",
+   "blank": 0.677
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Fabrication pressure for electrolytes, cathodes, and anodes in ASSBs. A) Young’s modulus of diﬀerent electrolytes, data obtained from ref. [22–36] B) Simulating the surface stress distribution of the pristine garnet solid-state electrolyte pellet. C) Simulating the surface stress distribution of the polished garnet solid-state electrolyte pellet. B,C) Adapted with permission.[39] Copyright 2022, The Authors. Published by Elsevier. D) The eﬀects of fabrication pressure on the ionic conductivity of diﬀerent solid electrolytes, adapted with permission.[50] Copyright 2021, American Chemical Society. E) The response of diﬀerent crystal types of NCM to fabrication pressure, was reproduced with permission.[51] Copyright 2021, Wiley-VCH GmbH. F) Sil- icon electrodes with/without a protective coating under high fabrication pressure, reproduced with permission.[52] Copyright 2018, Americ",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.2,
+    552.9,
+    479.7
+   ],
+   "w": 2118,
+   "h": 1707,
+   "dpi": 300,
+   "src": "4c52a7e8-32._Challenges_and_strategies_of_low-pressure_all-solid-state_batteries.pdf",
+   "blank": 0.612
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Operation pressure eﬀect at the sulﬁde-based, oxide-based, and polymer-based cathode. A) The volume changes of LCO and NCM cathode ma- terials with varying nickel content. B) The lithiated molar volume for homogenous materials and the apparent lithiated molar volume for two-phase mate- rials. A,B) reproduced with permission.[58] Copyright 2018, The Royal Society of Chemistry. C) Schematic illustrated electrodes with/without Li10GeP2S12. D) The electrochemical-mechanical behavior of NCM/Gr full cells with/without reduction-unstable Li10GeP2S12. C,D) reproduced with permission.[59] Copyright 2020, Wiley-VCH GmbH. E) A material with clay-like characteristics for modifying the oxide-based cathode, reproduced with permission.[60] Copyright 2021, American Chemical Society. F) Winding membranes of inorganic glass electrolytes with polymer-like viscoelasticity, reproduced with permissi",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.7,
+    550.0,
+    627.5
+   ],
+   "w": 2118,
+   "h": 2321,
+   "dpi": 300,
+   "src": "4c52a7e8-32._Challenges_and_strategies_of_low-pressure_all-solid-state_batteries.pdf",
+   "blank": 0.75
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Operating pressure eﬀect at lithium metal anode and nonlithium metal anode. A) The electroplating/stripping process of lithium metal symmetric cells under diﬀerent operating pressures, reproduced with permission.[85] Copyright 2019, WILEY-VCH GmbH. B) The inﬂuence of applied pressure on the generation and propagation of lithium dendrites, is reproduced with permission.[86] Copyright 2023, Springer Nature. C) Distributions of elements along the depth of the Mg16Bi84 to the Li anode, reproduced with permission.[87] Copyright 2023, Springer Nature. D) The pressure variation during the full cell cycling process. E) The dQ/dV curve during the cycle and the stress changes corresponding to lithium extraction and insertion. D,E) reproduced with permission.[88] Copyright 2022, Elsevier. F) X-ray computed tomography (CT) scans on LCO/SSE/LiIn batteries before and after charge, reproduced",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.1,
+    552.9,
+    629.7
+   ],
+   "w": 2118,
+   "h": 2328,
+   "dpi": 300,
+   "src": "4c52a7e8-32._Challenges_and_strategies_of_low-pressure_all-solid-state_batteries.pdf",
+   "blank": 0.661
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 11,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Operating pressure of anode-free ASSBs. A) Li plating on the bare current collector, Mg ﬁlm, and Mg/ MXene double-layer, reproduced with permission.[98] Copyright 2024, Springer Nature. B) Total resistance measured over ﬁve cycles for Cu, Ag, and Au electrodes, reproduced with permission.[103] Copyright 2023, WILEY-VCH GmbH. C) Schematic illustration of anode-free ASSBs with self-regulated pressure during cycling, repro- duced with permission.[18] Copyright 2023, American Chemical Society. D) A graphic illustration of the elastic recovery of Ag particles during lithia- tion/delithiation, reproduced with permission.[104] Copyright 2022, American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.8,
+    552.9,
+    576.7
+   ],
+   "w": 2118,
+   "h": 2109,
+   "dpi": 300,
+   "src": "4c52a7e8-32._Challenges_and_strategies_of_low-pressure_all-solid-state_batteries.pdf",
+   "blank": 0.383
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 13,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Advanced Characterization and Simulation about Pressure-Induced Behavior in ASSBs. A) A millimeter-sized battery designed for in situ XCT characterization, reproduced with permission.[107] Copyright 2022, American Chemical Society. B) The 2D/3D stress map from the Raman spectrum. Adapted with permission.[39] Copyright 2022, The Authors. Published by Elsevier. C) The model of predicting the stress in copper as the strain changes, is reproduced with permission.[108] Copyright 2023, Springer Nature.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.9,
+    552.9,
+    672.7
+   ],
+   "w": 2118,
+   "h": 2509,
+   "dpi": 300,
+   "src": "4c52a7e8-32._Challenges_and_strategies_of_low-pressure_all-solid-state_batteries.pdf",
+   "blank": 0.59
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 15,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Eﬀective strategies to reduce the operating pressure of ASSBs. A) The pressure changes of LCO, NCM, and LCO/NCM composite cathode during cycling, reproduced with permission.[58] Copyright 2018, The Royal Society of Chemistry. B) The capacity retention of the battery after reducing the charge cut-oﬀvoltage from 4.4 to 4.2 V, reproduced under the terms of the CC-BY Creative Commons Attribution 4.0 International license (https: //creativecommons.org/licenses/by/4.0).[20] Copyright 2022, The Authors. Published by Elsevier. C) Critical current density tests from the conventional testing molds with installed springs, adapted with permission. [119] Copyright 2024, The Authors. Published by Elsevier.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.6,
+    552.9,
+    618.7
+   ],
+   "w": 2118,
+   "h": 2285,
+   "dpi": 300,
+   "src": "4c52a7e8-32._Challenges_and_strategies_of_low-pressure_all-solid-state_batteries.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 16,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Summary of strategies to reduce the operating pressure of ASSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.3,
+    482.0,
+    326.7
+   ],
+   "w": 1835,
+   "h": 1070,
+   "dpi": 300,
+   "src": "4c52a7e8-32._Challenges_and_strategies_of_low-pressure_all-solid-state_batteries.pdf",
+   "blank": 0.368
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 14,
+   "file": "tab_1.png",
+   "caption": "Table 1. State-of-the-art strategies to reduce operating pressure in ASSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    11.9,
+    589.2,
+    771.8
+   ],
+   "w": 2156,
+   "h": 2999,
+   "dpi": 284,
+   "src": "4c52a7e8-32._Challenges_and_strategies_of_low-pressure_all-solid-state_batteries.pdf",
+   "blank": 0.888
+  }
+ ]
+}

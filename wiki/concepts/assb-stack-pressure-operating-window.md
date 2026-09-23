@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -596,6 +596,34 @@ NCM811–Li₆PS₅Cl 복합양극을 **SE 입도만** 바꿔(coarse ↔ fine) *
 압력 계측·장치 · 압력 이력 · 조건당 반복(같은 지면의 다른 셀이 2 MPa fine 에서 ≈30 mAh g⁻¹ 더 준다 — 효과와 같은 크기) · 접촉 분율의 압력 함수(SEM 한 시야, 정성) ·
 2 MPa "1 사이클 뒤" EIS 기준점(`[재현]` 그 두 스펙트럼이 30 MPa "100 사이클 뒤" 와 ≤0.8 Ω 로 같다).
 
+## ⚠ 2026-09-23 (`assb` 33호 Zhang 2025, **저압 종설 · 1차 측정 0**) — 제조 ↔ 운전 분리는 종설이 받아 적었고, **요구치는 다섯 번째 값**, 압력의 함수는 0
+
+`raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md` (*Adv. Mater.* 37, 2413499, EIT Ningbo + USTC + UWO; 22 쪽, 참고문헌 124). 큐 32 — 8호가 "pressure reduction = central commercialization problem" 을 매단 편(그 명제는 선다).
+
+### 1. 이 페이지의 두 축(제작 ↔ 운전)을 종설이 명시적으로 가른다 — 계보 종설 첫
+
+`[인쇄]` §2.1 "fabrication pressure and operation pressure" 두 범주 + Table 1 이 **두 열을 따로** 인쇄(10 행). `[재현]` 제조가 인쇄된 8 행 중 7 행 **360–500 MPa**, 운전 10 행 중 9 행 **≤5 MPa**(예외 [58] Koerver 2018: 445 / 70). ⇒ 종설이 모은 **"저압 ASSB" 는 전부 "고압 제조 · 저압 운전"** 이다 — 6호(490 / 2) · 25호(375 / 2–30)와 같은 모양, 16호(제작 = 운전)가 예외로 남는다. ⚠ 각 행은 **압력 한 점 · 용량 한 점**이고 같은 전극의 압력 스윕은 **0 행**이다.
+
+### 2. 요구치 — 다섯 번째 인쇄값, 원전 0
+
+| 편 | 요구치 | 원전 |
+|---|---|---|
+| 8호 | < ≈1 MPa | Xu 2024 (재인용, **확인 편 0**) |
+| 12호 | 0.4–1 MPa | Tian & Qi 2017 / Shao 2022 (미확정) |
+| 13호 | < 5 MPa | [35] |
+| 25호 | ≤ 5 MPa | 없음 |
+| **33호** | **< 2 MPa**(Fig. 1) · **≤ 2 MPa, OEM 마다 약간 다름**(p.4) | **없음** — `[인쇄]` "To our knowledge" |
+
+33호는 Xu 2024 를 [11] 로 인용하되 `[인쇄]` "often reaching hundreds of megapascals" 에만 붙이고 **"<≈1 MPa" 를 옮기지 않는다.** ⇒ 이 페이지 머리의 "산업 요구치 < ≈1 MPa" 는 **0.4–5 MPa 띠 · 원전 0** 으로 읽는다. 그리고 33호 Fig. 1 의 `[인쇄]` "most labs 50–600 MPa"(운전)는 출처가 없고, 이 페이지가 모은 운전 압력 표본(대부분 ≤30 MPa, ≥50 MPa 는 16 · 17 · 23호 + 5호 75 MPa 점)과 맞지 않는다 — 600 MPa 는 **제조** 대역이다.
+
+### 3. ★★ `[해석]` 사이클당 압력 진동 ≈ 요구치 — 운전 압력은 상수가 아니다
+
+33호에 재수록된 정변위 지그 원자료(`[도표]`): 흑연 ± LGPS [59] ≈0.7–0.8 MPa · μ-Si ‖ LTO [88] ≈0.5–1.0 MPa(기저 ≈45) · Sb ‖ Li [90] ≈1.2–2.3 MPa(기저 ≈20) ↔ LCO/NCM 양극 [58] ≈0.05–0.07 MPa · 스프링(정압) 지그 [19] ≈5 → 5.21 MPa(+4 %). ⇒ **상대극 호흡의 ΔP 가 요구치(≤2 MPa)와 같은 자릿수**다 — 산업 조건에서 스택 압력은 사이클 안에서 ≈100 % 움직이는 **상태변수**(8호 "coupled state/control variable" 의 숫자판). §"세 개의 결과" 3 의 `P↑` 연산자에 **"양극에 걸리는 압력 = 지그 + 상대극 ΔP(SOC)"** 조건이 붙는다. ⚠ 기저가 고압(20–45 MPa)이라 저압 기저의 진동 크기는 미상.
+
+### 4. 이 편이 이 페이지에 **안 준 것**
+
+압력의 함수 — `θ(P)` · `R(P)` · 용량(P) · 감쇠(P) 어느 것도 원전 서술로 없다. 가장 가까운 재수록은 Fig. 3I(70 / 7 / 2 MPa 첫 사이클 곡선, 캡션 [63] ↔ 본문 [78] 로 출처 갈림, `figure-read` 2 MPa Pristine ≈−10 %)와 Fig. 7B(2 MPa 한 점, 컷오프만 바꿈). **Sakka 2022**(`θ(P)` CT 측정 후보)는 [120] 으로 인용되지만 "3D 접촉 · 압력 방향" 명제에만 붙는다 — 25호가 같은 원전에서 옮긴 "50 ↔ ≤12 MPa 접촉 면적 분율" 은 이 지면에 없다.
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -627,6 +655,7 @@ NCM811–Li₆PS₅Cl 복합양극을 **SE 입도만** 바꿔(coarse ↔ fine) *
   (그리고 적층셀은 0.05 C)에서만 보였다. 같은 논문이 `[인쇄]` "pressurization is
   **unavoidable for high-current operations**" 라고 적는다.
 - **"5 MPa 가 최적" 을 받아들이지 않는다** (경고 3).
+- **산업 요구치를 한 값으로 옮기지 않는다** (2026-09-23, 33호) — 계보 다섯 편이 ≈1 · 0.4–1 · 2 · 5 MPa 를 인쇄했고 확인된 원전은 0 이다.
 - **압력이 `LAM_PE` 와 접촉 손실을 가른다고 주장하지 않는다.** Doux 는 양극 열화를
   다루지 않는다 — 이 페이지의 기여는 **연산자의 사용 조건**이지 분리 자체가 아니다.
 - **Doux 의 저밀도 토모그래피 구조가 Li 금속이라고 단정하지 않는다** — 같은 논문이
