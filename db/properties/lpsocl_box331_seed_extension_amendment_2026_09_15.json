@@ -2,7 +2,7 @@
  "schema": "closure_amendment/v1",
  "date": "2026-09-15",
  "citable": false,
- "results_seen": false,
+ "results_seen": true,
  "record_kind": "amendment",
  "제목": "lpsocl 3×3×1 마감 개정문 — 시드 확장을 재개 사유에 **추가**한다 (R5 신설)",
  "개정_대상": "db/properties/lpsocl_box331_closed_2026_09_11.json (**비준됨**)",
@@ -89,6 +89,12 @@
    "state": "active",
    "by": "agent",
    "note": "런타임 실측 기입 — modelc 런당 8.3 h(turbo). ⚠ lpsocl 은 default 라 ≈1.9배로 6런 95 h 전망 → 합계 144 h. 앞선 114 h 추정을 정정한다(실행모드 차이를 안 넣었었다)."
+  },
+  {
+   "at": "2026-09-23",
+   "state": "active",
+   "by": "agent",
+   "note": "**결과 봄.** C1·C2: 600 K 새 시드 s5(11 %)·s6(15 %) 탈락 → 600 K 자격은 s2·s3 그대로 · 800/1000 K 5/5. C3 compatible (ΔEa CI95 [−0.0390, −0.0167]) · Ea3 0.1809 [0.1790, 0.1829]. §4 규칙 **A 해당** — 단 새 시드 C2b·C6 미실행이라 **적용 보류**. 기록: lpsocl_box331_c2_mto_5seed_2026_09_23.json · lpsocl_box331_c3_result_5seed_2026_09_23.json"
   }
  ],
  "ratification": {

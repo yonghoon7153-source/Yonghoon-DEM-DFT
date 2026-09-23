@@ -144,7 +144,7 @@ for S in $SEEDS; do
   fi
   echo "===================== $SYS box331 seed ${S} ====================="
   "$PY" "$DRIVER" \
-    --v0_xyz "$V0XYZ" --label modelc \
+    --v0_xyz "$V0XYZ" --label "$SYS" \
     --temperatures 600 800 1000 \
     --disorder_levels 0.0 --n_configs 1 \
     --equilib_ps 5 --prod_ps 400 \
