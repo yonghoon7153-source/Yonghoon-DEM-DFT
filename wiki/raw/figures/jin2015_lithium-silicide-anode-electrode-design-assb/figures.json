@@ -1,0 +1,251 @@
+{
+ "slug": "jin2015_lithium-silicide-anode-electrode-design-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "78506a21-6._Effect_of_electrode_design_on_electrochemical_performance_of_all-solid-state_lithium_secondary_batteries_using_lithium-silicide_anodes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic diagram of test die used for conductivity measurement of solid electrolyte and battery cycling test.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    523.1,
+    299.6,
+    725.4
+   ],
+   "w": 1097,
+   "h": 844,
+   "dpi": 300,
+   "src": "78506a21-6._Effect_of_electrode_design_on_electrochemical_performance_of_all-solid-state_lithium_secondary_batteries_using_lithium-silicide_anodes.pdf",
+   "blank": 0.704
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Schematic diagram of full cells for (a) Case 1, (b) Case 2, (c) Case 3, (d) Case 4, (e) Case 5, (f) Case 6, and (g) Case 7, showing the weight of cathode, solid electrolyte and anode materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    249.5,
+    568.6,
+    716.8
+   ],
+   "w": 1097,
+   "h": 1948,
+   "dpi": 300,
+   "src": "78506a21-6._Effect_of_electrode_design_on_electrochemical_performance_of_all-solid-state_lithium_secondary_batteries_using_lithium-silicide_anodes.pdf",
+   "blank": 0.708
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Conceptual diagrams of lithium ion and electron transport across the solid electrolyte, composite anode, and current collector for (a) Conventional structured anode and (b) Gradient structured anode.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    86.9,
+    559.8,
+    421.6
+   ],
+   "w": 2218,
+   "h": 1396,
+   "dpi": 300,
+   "src": "78506a21-6._Effect_of_electrode_design_on_electrochemical_performance_of_all-solid-state_lithium_secondary_batteries_using_lithium-silicide_anodes.pdf",
+   "blank": 0.783
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. BET isotherms for lithium silicide powders before and after secondary milling.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.7,
+    520.2,
+    559.8,
+    718.8
+   ],
+   "w": 1097,
+   "h": 828,
+   "dpi": 300,
+   "src": "78506a21-6._Effect_of_electrode_design_on_electrochemical_performance_of_all-solid-state_lithium_secondary_batteries_using_lithium-silicide_anodes.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Impedance spectra of a 70Li2S\u000530P2S5 (mol%) pellet at room temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.6,
+    53.2,
+    299.6,
+    301.0
+   ],
+   "w": 1097,
+   "h": 1034,
+   "dpi": 300,
+   "src": "78506a21-6._Effect_of_electrode_design_on_electrochemical_performance_of_all-solid-state_lithium_secondary_batteries_using_lithium-silicide_anodes.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. GITT curves in relation to time for Case 1 and 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    131.7,
+    53.2,
+    455.9,
+    263.2
+   ],
+   "w": 1352,
+   "h": 876,
+   "dpi": 300,
+   "src": "78506a21-6._Effect_of_electrode_design_on_electrochemical_performance_of_all-solid-state_lithium_secondary_batteries_using_lithium-silicide_anodes.pdf",
+   "blank": 0.642
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 5,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. SEM micrographs of the cross section of Case 4 before cycling tests.",
+   "rotated_deg": 0,
+   "bbox": [
+    107.7,
+    514.6,
+    479.7,
+    730.4
+   ],
+   "w": 1551,
+   "h": 901,
+   "dpi": 300,
+   "src": "78506a21-6._Effect_of_electrode_design_on_electrochemical_performance_of_all-solid-state_lithium_secondary_batteries_using_lithium-silicide_anodes.pdf",
+   "blank": 0.094
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Galvanostatic charge/discharge voltage curves of (a) Case 3, and (b) Case 4, at 200 mA. [17]. It is well known that the conventional electrode fabrication procedure for lithium ion batteries, such as slurry coating on metallic foil, is carefully carried out to achieve a good contact between electrode and current collector. From this point of view, we can understand that the contact resistance between the powder-compacted electrode layer, and the current collecting layer (stainless steel rod used in the present work), is also critical for cell performance. The cell design with the composite layer is advantageous for an increase in the number of electrochemical reaction sites (decreasing the interfacial resistance), while this design can be disadvantageous with respect to electron transport between the composite layer and the rigid metallic rod or foil (depending upon the electroni",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    53.7,
+    568.6,
+    235.6
+   ],
+   "w": 2218,
+   "h": 759,
+   "dpi": 300,
+   "src": "78506a21-6._Effect_of_electrode_design_on_electrochemical_performance_of_all-solid-state_lithium_secondary_batteries_using_lithium-silicide_anodes.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 6,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. (a) Galvanostatic charge/discharge voltage curves of Case 5 at 200 mA; (b) Impedance spectra of Case 5 and 6 before charge/discharge tests; (c) Galvanostatic charge/ discharge voltage curves of Case 6 at 200 mA.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    345.8,
+    568.6,
+    725.4
+   ],
+   "w": 2218,
+   "h": 1583,
+   "dpi": 300,
+   "src": "78506a21-6._Effect_of_electrode_design_on_electrochemical_performance_of_all-solid-state_lithium_secondary_batteries_using_lithium-silicide_anodes.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 7,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Differential charge-discharge capacity curves of Case 3, 4, and 6 corre- sponding to the second cycling tests. structured anode consisting of the composite layer (for easy lithium ion transport from the silicide to the solid electrolyte, and vice versa) and with the lithium silicide layer having higher electron conductivity than the composite layer (for easy electron transport from lithium silicide to the current collector). The corresponding design is shown in Fig. 2(f). Impedance spectra were measured in the frequency range of 7 MHz–0.1 Hz for Case 5 and 6 cells before charge/discharge tests, as shown in Fig. 9(b). The real axis intercept at high frequency (\u00013.2 MHz) reﬂects the ohmic resistance of the cell, and this value was about the same for both Case 5 and 6. On the other hand, the smaller non-ohmic resistance (related to interfacial resistance between electrolyte and ele",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    53.2,
+    290.8,
+    249.9
+   ],
+   "w": 1097,
+   "h": 821,
+   "dpi": 300,
+   "src": "78506a21-6._Effect_of_electrode_design_on_electrochemical_performance_of_all-solid-state_lithium_secondary_batteries_using_lithium-silicide_anodes.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 7,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Galvanostatic charge/discharge voltage curves of (a) Case 3 and (b) Case 7, at 400 mA.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.7,
+    554.2,
+    527.9,
+    734.0
+   ],
+   "w": 1952,
+   "h": 750,
+   "dpi": 300,
+   "src": "78506a21-6._Effect_of_electrode_design_on_electrochemical_performance_of_all-solid-state_lithium_secondary_batteries_using_lithium-silicide_anodes.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2 Case 1 and 2, DES and DEt for the ﬁrst three steps (in Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    50.8,
+    567.7,
+    741.9
+   ],
+   "w": 2210,
+   "h": 2881,
+   "dpi": 300,
+   "src": "78506a21-6._Effect_of_electrode_design_on_electrochemical_performance_of_all-solid-state_lithium_secondary_batteries_using_lithium-silicide_anodes.pdf",
+   "blank": 0.861
+  }
+ ]
+}

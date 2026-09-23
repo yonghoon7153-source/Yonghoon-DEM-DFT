@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md, raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
+sources: [raw/papers/jin2015_lithium-silicide-anode-electrode-design-assb.md, raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md, raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -537,6 +537,17 @@ shift less than 3 mV"*. `[추론]` WE·CE 가 **둘 다 2상 평탄에 고정**�
 - **⑤ 부호 오기, 계보 세 번째.** 2전극 입도 셀 컷오프 `[인쇄]` "0.60 and −0.40 V vs the Li−In counter electrode (0 and 1.00 V vs Li/Li⁺)" ↔ SI Fig. S4 축은 흑연 − Li-In(바닥 ≈−0.58) ⇒ −0.60 · +0.40 이어야 한다(40호 D1 "−0.60" · 41호 D2 컷오프 부호에 이어).
 - **⑥ 평탄 조건 대조**: (1) Li-In 치수가 18호와 같다 — `[재현]` x_Li ≈37.7 at%, 흑연 0.6 mg 이론 0.22 mAh ↔ Li ≈4.0 mAh(재고 ≈18 배) ✓ · (4) 상대극 분극: `[도표]` Li-In 히스테리시스 ≈5 → ≈17 mV(가속 뒤), SI Fig. S2(f) Li-In 호 ×≈4 — **상대극도 열화했다**(원문 무언급) · 누설 · `drift` 낱말 0 — **누설 직접 측정 0/43**.
 - ⇒ 계보: … → 상호 증언(40호) → 기준극 교체 대조(41호) → 다른 전해질의 원전(42호) → **공통 모드 표류 판독(43호)**. `[해석]` R-LTO 가지는 **값(1.55)을 한 번도 재지 않은 채 표류(≈10 mV)를 먼저 얻었다** — 증인 둘이 같이 움직이면 표류는 보이지만, 증인 값 자체(0.60 ↔ 0.62)가 ≈20 mV 흔들려 절대값은 여전히 못 정한다.
+
+### ★★ `assb` 44호 (Jin et al. 2015) — **스무 번째 형태: GITT `ΔE_s` 분자 안의 상대극 평탄 가정** (20호 셀의 원전, 같은 연구실 4 년 전)
+
+`raw/papers/jin2015_lithium-silicide-anode-electrode-design-assb.md`
+(*Electrochim. Acta* **185** (2015) 242, 창원대 Lim — 20호의 ref [12]; Li₄.₄Si \| 70Li₂S·30P₂S₅ \| **In 박 상대극**(반쪽 Case 1 · 2), 30 MPa 제조, GITT).
+
+- **① 상대극 전위를 한 번도 말하지 않는다.** `0.62` · `plateau` · `flat` · `assum*` **0 회**, `indium` 4 회는 전부 "indium (foil)" 이름뿐. 질량 · 두께 · 조립 리튬화 상태도 없다 — 조립 시 **비리튬화 In**(20호가 4 년 뒤 `[재현]` 부유 전위 ≈1.8–1.9 V 를 남긴 상태).
+- **② 가정이 들어간 자리 = 식의 입력.** GITT 계단당 평형 전압 변화 `ΔE_s` 를 **전부 Li-Si 의 것**으로 Weppner–Huggins 식에 넣는다 ⇒ 상대극 평탄이 가정된다. `D ∝ ΔE_s²` 라 `[재현]` 상대극이 계단당 1 mV 만 움직여도 셋째 계단 `D` 가 ×0.72–1.35. 18호 "문장 속 가정" → 20호 "그림 축 속 가정" → **44호 "식 입력 속 가정"**.
+- **③ `[도표]` 같은 화학 두 셀의 이완 전압이 ≈95 mV 다르다.** Fig. 6(원본 래스터 화소 판독, `ΔE_s` 인쇄값과 1 mV 안 검증): 첫 휴지 끝 (In − Li-Si) Case 1 **0.434 V** ↔ Case 2 **0.529 V** — Li-Si 조성이 같고 상대극이 평탄하면 같아야 한다. 원문 언급 0.
+- **④ Li-Si 는 평탄 상대극이 아니다.** `[도표]` 이완 봉투 Case 2 ≈0.53 → ≈0.33 V(Li₄.₄Si 이론의 ≈5.7 % 참여 동안) · Case 1 ≈0.43 → ≈0.35 V(≈2.1 %). ⚠ "참여 분율이 작다 ↔ 곡선이 가파르다" 의 곱이라(20호 §5-4 (a)/(b)) 기울기 값 자체는 못 정한다 — 그러나 **α · β 이식 전제의 "평탄 음극" 후보에서 Li-Si 는 빠진다**. 20호 완전지에서 Li-Si 가 상대극일 때 그 전위 궤적을 따로 재야 하는 이유다.
+- ⇒ 계보: … → 다른 전해질의 원전(42호) → 공통 모드 표류 판독(43호) → **GITT `ΔE_s` 안의 가정(44호, 시점으로는 41호보다 이르다 — 2015)**. 칸은 안 움직인다(논문의 명제 · 측정이 아니라 우리 판독).
 
 ## ★★ 평탄이 유지되는 조건 (현재까지의 정리)
 

@@ -2309,3 +2309,15 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **13 장 중 9 장 봤다(Fig. 1 · 2 · 4 · 5 · S2 · S4 · S5 · S7 · S8)**, 화소 판독 1b · 4a · 4b · 4d · S7a; fig_S7 은 크로퍼가 띠만 잘라 SI 8 쪽을 따로 렌더. 안 본 것 Fig. 3 · S1 · S3 · S6.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른아홉 번째 · 새 제약 · Status Log) · [[assb-li-in-reference-potential-window]](43호 절) · [[assb-lampe-contact-product-degeneracy]](스물여섯 번째 적용 · 처방 표 새 줄 · 주장하지 않는 것). 큐 문서 §6-3-g 44 행 · 지문 행 · 각주 ⁹.
 - 후속(서지 기준, 미열람 — 큐 45–59 인용 0): Kuratani … Kobayashi 2020 *ACS AEM* 3, 5472 (ref 24) · Otoyama … Tatsumisago 2018 *SSI* 323, 123 (ref 25) · Lee … Ahn 2022 *ACS AEM* 5, 5227 (ref 26) · Höltschi … Novák 2020 *JES* 167, 110558 (ref 27) · Yu … Fukutsuka 2022 *Electrochemistry* 90, 037003 (ref 30).
+
+## [2026-09-23] ingest | assb 44호 — Jin et al. 2015, Effect of electrode design on electrochemical performance of all-solid-state lithium secondary batteries using lithium-silicide anodes (Electrochim. Acta 185, 242)
+- raw: `raw/papers/jin2015_lithium-silicide-anode-electrode-design-assb.md` (sha256 봉인 — 본문 PDF 해시 frontmatter `pdf_sha256`) · 그림 `raw/figures/jin2015_lithium-silicide-anode-electrode-design-assb/` (12 장). 큐 45번(2차 묶음 여섯째 편) — 원장 "20호 셀의 원전"(20호 ref [12]).
+- ★★★★ **20호 공백 대조**: G1 ✅ 양극 TiS₂ : SE : 탄소 = 50 : 50 : 0 wt%, `0.06 g` = 활물질(20호 N/P 8.4 선다) · G2 ✅ σ 1.8 × 10⁻⁴ = 30 MPa 펠릿 · SS 차단 · 1 kHz–7 MHz · 실온 · 절편 판독(두께 · 온도 · n 미인쇄) · G3 ⚠ 제조 30 MPa 인쇄, 운전은 Fig. 1 그림에만. **같은 셀 아님 — 같은 레시피**(SE 0.36 ↔ 1240 µm, 기준극 없음). `[재현]` 20호 음극 = 단층 Li-Si · 20호 R17 → 362 Ω 의 46–69 %.
+- ★★★★ GITT "effective contact area" = `√D·S/θ` 곱을 대조 셀 가정으로 쪼갬(Case 2 도 전해질 없음) · 인쇄값 = 셋째 계단 · BET ×8.7 ↔ ×2.07 · Table 2 `ΔE_t` ↔ Fig. 6 ×≈2. `[재현]` **Li 재고 수지 위반**(Case 6 x ≈1.37) — "탈합금화가 빠르다" 와 모순.
+- **채움표 44호 행 — 누적 ≈19.0 → ≈19.0 (새 칸 0).** Q4 0/44 서른여섯 번째 성질 "대조 셀 가정으로 곱을 쪼갰다" · Q5 스무 번째 형태 "GITT `ΔE_s` 안의 상대극 평탄 가정"(우리 판독) · Q3 층 하나.
+- 곱 축퇴 처방 **스물일곱 번째 적용**: 2단계 ✅ 부분(계보 가장 이른 면적 대조군 + BET, 면적 가설 반증) · 새 줄 "외부 기준 네 번째 배정 — 같은 계의 면적 기지 대조 셀(GITT)".
+- 카드: Evidence 마흔 번째 절 · 새 제약 5 · Status Log.
+- 낱말 지문: `MPa` 2 외 10 열 전부 0 · `0.62` · `assum*` · `leak` · `drift` 0.
+- 그림: **11 장 전부 봤다**, 화소 판독 Fig. 6 인셋.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-lampe-contact-product-degeneracy]] · [[assb-li-in-reference-potential-window]] · 큐 문서 §6-3-g 45 행 + 지문 ¹⁰.
+- 후속(서지 기준, 미열람 — 큐 46–59 인용 0): Park … Lim 2014 *JJAP* 53, 08NK02 (ref 20) · Liu … Wu 2005 *JPS* 140, 149 (ref 30) · Shen … 2013 *JES* 160, A1842 (ref 29) · Hayashi … Minami 2001 *J. Am. Ceram. Soc.* 84, 477 (ref 28) · Asl … Kim 2012 *Electrochim. Acta* 79, 8 (ref 17).
