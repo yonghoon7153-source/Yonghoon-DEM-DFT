@@ -60,9 +60,13 @@ SY_SECTIONS = ["Thesis", "Counter-arguments", "Gap"]
 #   2026-09-09 실측: 이게 없어서 `…_90.jsonl` 이 `…_90.json` 으로 잘려 나가
 #   **실재하는 파일을 "깨진 경로" 로 error 를 냈다.** 검사기가 틀린 답을 확신 있게
 #   말한 것이라, 오탐 1건이 아니라 부류다 (`.mdx`·`.inp`·`.csvz` 도 같은 자리).
+#: ⚠ 2026-09-23 같은 부류 두 번째: `…_52atoms.cif.BROKEN_PS4_dissociated` (실재 파일) 가
+#:   `.cif` 에서 잘려 "깨진 경로" error. 뒤에 `.단어` 가 이어지면 확장자가 아니라 **이름 중간**이다
+#:   ⇒ `(?!\.\w)` 도 단다. 목록에 없는 꼬리 확장자(.gz · .bak · .BROKEN_…)는 검사 대상이 아니게 된다.
+#:   문장 끝 마침표(`db/x.json.`)는 뒤가 단어가 아니라 그대로 잡힌다 — selftest_paths 가 둘 다 본다.
 PATH_RE = re.compile(
     r"(?<![\w/])((?:db|tools|kb|docs|litdb|webapp|runs)/[\w][\w./-]*"
-    r"\.(?:py|jsonl|json|md|csv|sh|vasp|xyz|cif|png|txt|yaml|yml|tsv|in|UPF|upf))(?![\w])")
+    r"\.(?:py|jsonl|json|md|csv|sh|vasp|xyz|cif|png|txt|yaml|yml|tsv|in|UPF|upf))(?![\w])(?!\.\w)")
 #: 스킵: 글롭·플레이스홀더가 섞인 토큰
 SKIP_TOKEN = re.compile(r"[*{}<>]")
 STALE_STATUS = re.compile(r"대기|HOLD|진행|보류|pending", re.I)
@@ -819,9 +823,37 @@ def selftest_reviews():
     return 0 if ok[0] else 1
 
 
+def selftest_paths(pat=None):
+    """PATH_RE 가 인용 경로를 **제 길이로** 자르는지 — 양성·음성 둘 다.
+
+    ⛔ 이 시험이 못 하는 것: 파일 존재 여부는 안 본다 (그건 lint 가 한다).
+    """
+    pat = pat or PATH_RE
+    ok = [True]
+
+    def chk(c, m):
+        print(("  ✓ " if c else "  ✗ ") + m)
+        ok[0] &= bool(c)
+
+    cases = [  # (본문, 기대 토큰 목록)
+        ("`db/x.json`.", ["db/x.json"]),                      # 문장 끝 마침표
+        ("see db/x.json, then", ["db/x.json"]),
+        ("`kb/a_90.jsonl`", ["kb/a_90.jsonl"]),               # 2026-09-09 선례: .json 으로 잘리면 안 된다
+        ("(tools/run.sh)", ["tools/run.sh"]),
+        # ⛔ 음성: 이름 중간의 `.cif` 에서 자르면 안 된다 (2026-09-23 선례)
+        ("`db/structures/l_52atoms.cif.BROKEN_PS4_dissociated`", []),
+        ("db/x.json.gz", []),
+    ]
+    for text, want in cases:
+        got = pat.findall(text)
+        chk(got == want, "%-58s → %s" % (text, got))
+    print("paths selftest %s" % ("PASS" if ok[0] else "FAIL"))
+    return 0 if ok[0] else 1
+
+
 def main():
     if "--selftest" in sys.argv:
-        return selftest_env() or selftest_reviews()
+        return selftest_env() or selftest_reviews() or selftest_paths()
     if len(sys.argv) < 2 or sys.argv[1] not in ("lint", "index", "new", "env",
                                                 "reviews"):
         print(__doc__)

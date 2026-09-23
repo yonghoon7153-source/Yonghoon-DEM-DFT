@@ -50,11 +50,17 @@
     `SYS=modelc_2x → b2o3` — 그대로 뒀어도 modelc_2x 영률은 시작되지 않았다(조용히 틀린 경로). 상태 저장 `/root/logs/elastic_runner_saved_0923.txt`.
     ⏭ b2o3 끝나면(≈5–6일) **`SYS=modelc_2x`** 를 명시해 재개한다 (수렴한 strain 은 러너가 건너뛴다).
 - ⏭ **새 캠페인: LPSCl | Ag–C | VGCF 점착일 (DEM 쪽 요청 · 트랙 = 우리 DFT → 1저자 = 사용자)** — **계산 0, 리뷰 대기.**
-  계획·카드 초안 `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` · Codex 프롬프트 **BV**(`kb/reviews/codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md`, 발송대기)
-  · 내부 Fable 리뷰 병행. 1저자 지시: **두 리뷰 받기 전에 파이프라인을 걸지 않는다.**
-  · ⚠ 리뷰 프롬프트 쓰다가 찾은 것: comp1|NCM 한 계면에 원장 숫자가 **넷**(0.075 출판식 · 0.194 "paper exp" · 0.962 v5 UMA · 45–80 v6) —
-    "LPSCl|NCM 과 나란히" 가 어느 숫자냐에 따라 자릿수 등급이 바뀐다. DEM 에 넘길 절대값 방식이 새 결정(계획 §6-4 · BV Q10).
-  · 요청서의 *"Fan 2026 K_IC → G_c 는 CLAUDE.md 에 이미 반영"* 은 **repo 의 어느 CLAUDE.md 에도 없다** (litdb 에 논문은 있다).
+  계획·카드 **v2** `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` · Codex 프롬프트 **BV v2**(`kb/reviews/codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md`, **발송대기** — 1저자가 보낸다).
+  1저자 지시: **두 리뷰 받기 전에 파이프라인을 걸지 않는다.**
+  · 내부 리뷰(Fable) = **NO-GO (v1)** → `kb/reviews/internal_review_wad_agc_fable_2026_09_23.md`. P0 4건 원문 대조 확인 · v2 반영:
+    ① 기준값은 **이완만 · uma-s-1p1** (v1 은 800 K MQA 로 읽었다 — 결과 문서 `kb/results/adhesion_final.md` 를 안 봤다)
+    ② SE 는 **정방 20.11 Å** 인데 계면 셀은 육방 351.5 Å² — 빌더가 **wrap** (추정, 원본 유실) ⇒ 기준값 숫자 재사용 안 함, 정방 셀에서 NCM 부터 재계산
+    ③ 검증 짝 = UMA ↔ **PBE(D3 없음)** · 물리흡착 짝은 DFT+D3 직접 ④ 옛 숫자 병합 금지 (출판 1.277 = 20 중 5 seeds 선별).
+  · ⛔ **내 오류 정정**: 커밋 `b27dd3b8e` 에서 실험값을 *"0.194 J/m²"* 로 옮겼다 — **AFM aJ** 다(원장 오독 승계). `adhesion.json` 에 정오표 블록
+    (`⛔_정정_2026_09_23_실험값_단위_aJ`). *"v5 는 실험의 5배 · 0.19 → 물리흡착 급"* 철회.
+  · ⛔ repo 금지 규칙 *"MLIP 절대값 인용 금지 (σ · W_ad)"* (`webapp/fairchem.py`) — DEM 에 UMA 절대값은 못 넘긴다 → 결정 §6-1 (DFT 값 or 같은 프로토콜 비).
+  · ⏭ 1저자 결정 5건 (계획 §6) · V100 백업 슬랩 셀 확인(wrap 가설, 선택) · Codex 회신 오면 v3 → 카드 봉인 → decisions.json proposed.
+  · 요청서의 *"Fan 2026 K_IC → G_c 는 CLAUDE.md 에 이미 반영"* 은 **repo 의 어느 CLAUDE.md 에도 없다** (litdb digest 에 K_IC 0.2–0.4 MPa·m½ 은 있다 — 리뷰 논문의 2차 인용).
 - ✅ `webapp/tests/test_v3_records.py::test_gallery_carries_hazard_and_policy` — 테스트가 정책 접두어를 **둘만 복사**해 두고
   정책은 셋이라(`oxidation_stability_cascade` 누락) 정상적으로 막힌 파일을 "평범한데 막혔다" 로 읽었다 →
   `artifact_policy.is_governed()` 를 직접 쓰게 고침 · 음성(평범한 파일에 policy 주입 → 잡힘) 확인.

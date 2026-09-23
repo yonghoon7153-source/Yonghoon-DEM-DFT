@@ -1,9 +1,9 @@
 ---
-title: LPSCl | Ag–C | VGCF 점착일(W_ad) — 기존 LPSCl|NCM 워크플로 재사용 계획 · 보고량 카드 초안 (리뷰 전)
+title: LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v2 (내부 리뷰 NO-GO 반영) · 보고량 카드 초안
 date: 2026-09-23
 updated: 2026-09-23
 tags: [adhesion, wad, interface, lpscl, silver, graphite, vgcf, anode, dem-input, estimand, review-pending]
-status: 계획 — Codex 리뷰 + 내부(Fable) 리뷰 **전**. 계산 0. 파이프라인은 두 리뷰 뒤에 건다 (1저자 2026-09-23)
+status: 계획 v2 — 내부(Fable) 리뷰 NO-GO(v1) 반영 끝 · Codex BV 발송 전 · 계산 0. 파이프라인은 두 리뷰 뒤에 건다 (1저자 2026-09-23)
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -13,7 +13,7 @@ claimType: prescriptive
 evidenceScope: multi-source-mixed
 ---
 
-# LPSCl | Ag–C | VGCF 점착일(W_ad) — 기존 LPSCl|NCM 워크플로 재사용 계획 · 보고량 카드 초안
+# LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v2 · 보고량 카드 초안
 
 > **요청** (DEM 쪽, 1저자 전달 2026-09-23 · **수정본 반영**): 음극 적층 LPSCl | Ag–C | VGCF 의 두 계면
 > ① LPSCl↔Ag–C ② Ag–C↔VGCF 를 구성 쌍으로 나눠(P1: **LPSCl↔Ag · Ag↔흑연**) DEM 박리 시험의 입력 점착일을 달라.
@@ -21,134 +21,180 @@ evidenceScope: multi-source-mixed
 > **수정본의 핵심**: 주값 정의를 **기존 LPSCl|NCM 워크플로의 isolated slab W_ad** 에 맞춘다 · W_sep 도 같이 ·
 > 계면 제작 프로토콜 **v5** 와 **SE 슬랩 재사용** · **MLIP 값은 DFT 단일점으로 검증** ⇒ LPSCl|Ag 를 LPSCl|NCM 과 바로 나란히 비교.
 > 1저자: *"파이프라인 걸기 전에 Codex 랑 우리 자기 Fable 리뷰도 받고 하자."*
+> **트랙**: 우리 DFT → **1저자 = 사용자** (결정이 그 자리에서 난다).
 
-> ⛔ **정정 (같은 날 초판)**: 초판은 *"DFT 급 LPSCl 슬랩·워크플로가 없다 · 옛 파이프라인을 물려받지 않는다"* 로 썼다.
-> **틀렸다** — `kb/methodology/adhesion_energy.md` · `db/inputs/adhesion_templates/` · `db/properties/adhesion.json` 에
-> 워크플로·템플릿·SE 슬랩 규약·기준값이 다 있었다. 첫 검색 결과가 60개에서 잘렸는데 확인하지 않았다.
+## 개정 이력 (위가 최신)
+
+- **v2 (같은 날 오후)** — 내부 리뷰(Fable) **NO-GO** (`kb/reviews/internal_review_wad_agc_fable_2026_09_23.md`). P0 4건을 원문에 대 보고 전부 맞아서 반영했다. 바뀐 것:
+  1. **기준값을 낸 방법을 잘못 읽었다.** v1 은 v5 = *800 K 표면 MQA* 로 적었다 — `surface_mqa_v5.yaml` 템플릿만 보고 결과 문서 `kb/results/adhesion_final.md` 를 안 봤다.
+     실제 기준값은 **이완만(MQA 없음) · `uma-s-1p1` · 20 seeds** 다. 800 K MQA 는 시도했다가 Li 섞임으로 계면이 망가져 **버린 방법**이다.
+  2. **기준 계면의 셀이 맞지 않는다** (§1 ⚠1). SE 는 **정방 20.11 Å** 인데 계면 셀은 NCM 의 **육방 20.146 Å** 이고, 빌더가 변형이 아니라 wrap 을 했다.
+     ⇒ v1 의 *"SE 측면 육방 20.13 Å 에 Ag(111) 7×7"* 설계와 변형률 표는 **폐기**. 기준값 **숫자도 재사용하지 않고** 같은 파이프라인에서 다시 낸다.
+  3. **검증 짝을 바꾼다.** UMA(omat) 는 **분산 없는 PBE(+U)** 를 배운 모델이라 짝은 **PBE(D3 없음)** 이다. v1 은 PBE+D3 와 붙여서 D3 몫이 "MLIP 오차" 로 읽힐 뻔했다.
+     물리흡착 짝(Ag|흑연 · 흑연 층간)은 MLIP 를 건너 **DFT+D3 로 직접** 간다.
+  4. ⛔ **v1 §1 ⚠4 의 "paper exp 0.194 J/m²" 는 단위 오독이었다.** 실험값은 AFM 의 **aJ**(에너지)다 — 원장 `adhesion.json` 의 오독을 내가 그대로 옮겼다(커밋 `b27dd3b8e`).
+     원장에는 정오표를 달았다(`⛔_정정_2026_09_23_실험값_단위_aJ`). ⇒ *"v5 기준값은 실험의 약 5배"* · *"0.19 → 물리흡착 급"* 은 **철회**.
+  5. **repo 금지 규칙을 카드에 넣는다**: *"MLIP 절대값을 인용하지 않는다 (σ · W_ad)"* (`webapp/fairchem.py` `OUR_BANS`) ⇒ DEM 에 **UMA 절대값은 못 넘긴다** (§6-1).
+- **v1 (같은 날 오전)** — 초판. 그 안에서 한 번 정정: 초판의 *"DFT 급 LPSCl 슬랩·워크플로가 없다"* 는 **틀렸다**(첫 검색 결과가 60개에서 잘렸는데 확인하지 않았다).
 
 ---
 
-## 0. 한 줄 요약
+## 0. 한 줄 요약 (v2)
 
-- **재사용한다**: v5 SE 슬랩(comp1 prim 2×2×3 · 624원자 · 두께 30 Å · 면적 351 Å²) · v5 제작 프로토콜 · 진공 30 Å · xy-shift 시드 · 분리 단일점.
-- **Ag(111) 7×7 이 그 SE 측면 셀에 그대로 맞는다** (Ag 변형 −0.5 ~ −0.8 %, PBE 격자면 −2.2 %) — Ag 4층 196원자 + SE 624 ≈ **820원자**.
-- 비교 기준값: **comp1 | NCM v5 xy-shift 20 seeds — 평균 1.153 · 중앙값 0.962 · 범위 0.555–1.85 J/m²** (UMA).
-- ⚠ 결정할 것 셋: ① **v5 인가 v6 인가**(UMA 판도 다르다) ② 워크플로의 "isolated slab W_ad" 는 **조작상 W_sep** 이다 — 이름을 맞춘다
-  ③ **DFT 단일점 검증을 NCM 기준값에도** 걸어야 공정하다.
+- **재사용하는 것 = 조작과 규약**: xy-shift 시드 · **이완만** · 분리 +30 Å(셀도 +30 Å) 단일점 · 진공 30 Å · SE 슬랩 규약(comp1 **관용 입방셀 2×2×3**, 624원자, 30 Å) · 계산기 `uma-s-1p1`/omat.
+- **재사용하지 않는 것 = 기준값 숫자**(1.153 등). 셀이 wrap 으로 지어졌고 스크립트·슬랩 파일이 유실됐다 ⇒ **NCM 기준값부터 같은 파이프라인에서 다시 낸다.**
+- **셀**: 전부 SE 고유 **정방 20.11 × 20.11 Å (A 404 Å²)** 위 — LiNiO₂ 1L 직사각 7×4(224원자) · Ag(111) 직사각 7×4 × 4층(224원자). 두 계면 모두 **848원자**.
+- **검증**: 같은 기하에서 UMA ↔ **PBE(D3 없음)**. 헤드라인 후보는 PBE+D3 = PBE + ΔD3.
+- **DEM 에 넘길 것**: UMA 절대값은 금지 규칙에 걸린다 → **같은 프로토콜 안의 Ag/NCM 비** 또는 **DFT 값** — 1저자 결정 (§6-1).
 
 ---
 
-## 1. 재사용할 워크플로 — 무엇이 있나 (repo 실측)
+## 1. 워크플로 — 무엇이 있나 (repo 실측 · v2 에서 정정)
 
 | 자산 | 내용 |
 |---|---|
-| `kb/methodology/adhesion_energy.md` | 정의 `Wad = (E_SE_iso + E_NCM_iso − E_int)/A` · v5 = 결정질 슬랩 + surface-only MQA · **xy-shift**(z-cut 폐기) · **UMA 진공 30 Å 규칙**(60 Å 면 10배 과대) · `v5_working`: **분리 후 이완 없이 단일점** · 계산기 표기 `uma-s-1p2` |
-| `db/inputs/adhesion_templates/surface_mqa_v5.yaml` | v5 설정: `uma-s-1p2` · SE 2×2×1 · NCM 5×5×1 · gap 2.5 Å · MQA 800 K 2 ps → 300 K 2 ps → 500 K(Li) 3 ps → 100 K 2 ps + 이완 |
-| `db/inputs/adhesion_templates/adhesion_v6_anneal_test.py` | v6: **`uma-s-1p1` · omat** · 1L NCM 고정 → SE 500 K 5 ps → 100 K 2 ps → 이완 → 분리 단일점 · 시드 42–46 |
-| `tools/doping/run_cathode_interface.py` | v6 를 감싼 러너 — docstring 이 v6 를 *"verified production"* 이라 부른다 |
-| `db/properties/adhesion.json` `adhesion_v5_crystalline_slab.xy_shift` | **기준값** — comp1 20 seeds: 평균 1.153 · 표준편차 0.392 · 중앙값 0.962 · 범위 0.555–1.850 J/m² · SE 624원자·30 Å·A 351 Å²(`Li6_v5_xyshift_FIX`: SE prim 2×2×3 · NCM 7×7×1 · 변형 0.2 %) |
+| `kb/results/adhesion_final.md` | **기준값을 낸 방법의 정본** — 결정질 슬랩 · xy-shift · **LBFGS 이완만(MQA 없음 — Li 섞임 방지)** · `W = (E_sep − E_int)/A`, 분리 30 Å + 셀 확장 · **`uma-s-1p1`** · 20 seeds · Li6 셀: NCM 7×7×1 · SE 2×2×3 · 624원자 · 30 Å · **A 351.5 Å²**. ⚠ 출판 표(comp1 **1.277**)는 20 중 **5 seeds 를 골랐다** (*"5 selected per family to match experimental ratios"*) |
+| `kb/results/adhesion_100seeds_analysis.md` | 100 seeds: comp1 1.151 ± 0.245 · **5L NCM** comp1 2.674 ± 0.882 (12/20 유효) |
+| `kb/methodology/adhesion_energy.md` | 정의 줄은 isolated slab · `v5_working` = 분리 후 **이완 없이 단일점** · 247줄 *"엄밀히는 무이완 분리라 work of separation 계열"* · Protocol 4 *"Relax only (MQA 없음)"* · 진공 30 Å 규칙 · 실험값은 **AFM aJ** (*"r≈10nm 접촉 πr² 환산 1 J/m² ↔ ~314 aJ; 절대 스케일은 순위·상관으로만"*) |
+| `kb/methodology/adhesion_methods_comparison.md` | 800 K MQA → *"Li interdiffusion destroyed interface (58/248 atoms migrated)"* · 500 K 도 Li 횡단 ⇒ **이완만 채택** |
+| `db/inputs/adhesion_templates/surface_mqa_v5.yaml` | ⚠ **기준값의 설정이 아니다** — 800 K MQA · `uma-s-1p2` · SE 2×2×1 (버린 방법의 템플릿) |
+| `db/inputs/adhesion_templates/adhesion_v6_anneal_test.py` | v6 (NCM 고정 · SE 500 K) + 계면 빌더 `build_interface` — **wrap 빌더** (§1 ⚠1) |
+| `tools/doping/run_cathode_interface.py` | v6 러너 · `build_ncm_1L` = LiNiO₂ **1층**, 육방 a 2.878 Å |
+| `webapp/fairchem.py` `OUR_PINNED` · `OUR_BANS` | 핀 `uma-s-1p1`/omat · ⛔ **MLIP 절대값 인용 금지 (σ · W_ad)** — *"같은 프로토콜 안의 순서·비율만, 비율도 멀티시드로"* · 버전 올리면 **전부 다시 뽑는다** · omat 기준계 = **PBE/PBE+U** |
+| `db/properties/adhesion.json` | 기록 — `xy_shift` 20 seeds · `cell_matching` · anomalies · ⛔ 정오표(실험값 aJ) |
 
-### ⚠ 워크플로 안에서 서로 어긋나는 세 곳 (리뷰에 올린다)
-1. **v5 vs v6.** 요청 수정본은 v5 를 쓰라 하는데, 러너는 v6 을 "verified production" 이라 부른다. 둘은 MQA(800 K 표면 연화 vs NCM 고정 500 K)와 **UMA 판(1p2 vs 1p1)** 이 다르다. ⇒ **기준값(comp1 v5 xy-shift 20 seeds)을 낸 바로 그 판**을 써야 비교가 선다. adhesion.json 에는 UMA 판 문자열이 **한 번도** 적혀 있지 않다.
-2. **"isolated slab W_ad" 의 실제 조작.** 정의 줄은 "isolated slab" 이지만 `v5_working` 은 *"No relax after separation — single point only"* 이다. 같은 문서 247줄: *"엄밀히는 무이완 분리라 work of separation 계열 (W_ad 의 상계)"*. ⇒ 요청서 용어로 **이 값은 W_sep** 이다. 이완 슬랩 W_ad 는 워크플로에 없고 새로 낸다.
-3. **슬랩 규격 표기.** yaml 은 Li6 를 `prim_2x2x1` (52원자, 변형 3.3 %)로 적었지만, 실제 기준값은 `Li6_v5_xyshift_FIX` = **prim 2×2×3 (624원자, 30 Å)** · NCM 7×7×1 · 변형 0.2 % 에서 나왔다(`prim_2x2x1` 13.6 Å 판은 *"too thin · overlap"* 으로 폐기). ⇒ **FIX 판을 재사용**한다.
+### ⚠1 기준 계면의 셀이 맞지 않는다 (내부 리뷰 P0-1 · 원문 대조 확인)
+- **SE**: `db/structures/comp1_V0_k444.cif` 는 입방 a = 10.055 Å → 관용셀 2×2 = **20.11 × 20.11 Å, 90°, 404 Å²**.
+  원장의 *"prim 2×2×3"* 은 오기다 — 13원자 원시셀이면 156원자이고, 624원자는 52원자 관용셀 × 12 다.
+- **계면 셀**: LiNiO₂ 육방 7×7 = **20.146 Å, 120°, 351.5 Å²**. 기록된 A = 351.5 와 *"변형 0.2 %"* 는 **변 길이만** 비교한 값이다(각도 90° → 120° 는 어디에도 없다).
+- **빌더** `build_interface`: `se_frac = se_cart @ inv(ncm_cell)` → xy 이동 → `% 1.0` → `@ ncm_cell`. 주석은 *"applies xy strain"* 인데
+  데카르트 좌표를 NCM 기저로 옮겼다 되돌리므로 **좌표는 안 변한다** — 변형이 아니라 **wrap** 이다. 404 Å² 정방 조각을 351.5 Å² 육방 셀에 접어 넣으면
+  **13 % 과밀**(원장이 쓴 *"1.78 at/Å²"* = 624/351.5 · 정방이면 1.54) + 경계에서 원자가 겹친다.
+  원장 스스로 적어 뒀다: *"d_min=1.0-1.1 Å … possible cubic SE + hex NCM PBC artifact"* (최근접 원자간 거리 ~1 Å).
+- ⚠ 기준값 20 seeds 를 낸 **v5 원본 빌더는 유실**됐다. 증거가 전부 같은 방향이지만 **추정**이다 — V100 백업 슬랩의 셀·최근접 거리로 갈린다 (§6-3).
+- ⇒ 기준값 숫자는 **재사용하지 않는다.** 올바른 셀에서 NCM 기준값부터 다시 낸다 (§3 단계 1).
+  (comp3–5 는 육방축 슬랩이라 육방–육방이다 — 이 문제가 작다. 이 캠페인과 무관하지만 기록.)
 
-### ⚠ 넷째 — "LPSCl|NCM 값" 이 하나가 아니다: 프로토콜마다 자릿수가 다르다 (같은 날 추가 · repo 실측)
-리뷰 프롬프트를 쓰다가 원장에서 찾았다. **comp1(Li₆PS₅Cl)|NCM 한 계면**에 원장이 가진 숫자가 넷이다:
+### ⚠2 "isolated slab W_ad" 는 조작상 W_sep 이다 (v1 유지)
+정의 줄은 isolated slab 이지만 실제 조작은 **분리 후 이완 없는 단일점**이고, 방법론 문서 247줄이 스스로 *"work of separation 계열 (W_ad 의 상계)"* 라 적었다.
+⇒ 요청서 용어로 **이 값은 W_sep** 이다. 이완 슬랩 W_ad 는 워크플로에 없고 새로 낸다.
 
-| 무엇 | comp1 | 근거 |
-|---|---|---|
-| 원장이 *"paper exp"* 로 부르는 기준 | **0.194 J/m²** (comp1–5 = 0.180–0.316) | `tools/adhesion_v30u/alpha_sensitivity_FINAL.py` 의 `PAPER` 상수(mJ/m²) · `adhesion.json` 1369줄 *"Experimental Wad is +0.18-0.32"* |
-| v5 xy-shift · UMA · 분리 단일점 (= 우리가 재사용하려는 기준값) | 중앙값 **0.962** · 평균 1.153 (0.555–1.850) | `adhesion.json` 165–205줄 |
-| paper #1 출판식 `WELLS_RAW − α·ΔW_strain` (α=1) | **0.075** (= 2.708 − 2.633) · comp2 **−0.064** | `db/properties/alpha_sensitivity_FINAL.json` `uniform` α=1.0 |
-| v6 (`run_cathode_interface.py`, 러너가 *"verified production"* 이라 부르는 것) | **45–80** (5 seeds) | `adhesion.json` 1486–1498줄 — 원장 스스로 *"100–1000× over … rigid separation creates artificial dangling-bond energy"* |
+### ⚠3 comp1|NCM 에 원장 숫자가 여럿이다 (v2 정정 — v1 표는 aJ 오독 포함)
 
-- ⇒ **v5 기준값은 "paper exp" 의 약 5배**다. 출판식 comp1 값은 2.7 J/m² 두 개의 차라 0 근처에서 부호까지 흔들린다(comp2 음수). v6 은 절대값으로 **못 쓴다** — 1번 ⚠ 의 "v5 인가 v6 인가" 는 사실상 답이 나와 있다.
-- ⇒ 요청서의 자릿수 판정(≲ 0.3 물리흡착 · ≳ 1 화학결합)에 NCM 을 넣으면 **어느 숫자를 쓰느냐에 따라 등급이 바뀐다** (0.19 → 물리흡착 급 · 0.96 → 경계). DEM 에 넘길 **절대값**을 무엇으로 할지가 새 결정이다 (§6-4).
-- ⚠ **"paper exp" 의 측정 방식·출처는 repo 에서 확인하지 못했다.** `adhesion.json` 1498줄은 *"Sundar 2025: 0.2-0.4 J/m²"* 라고 적었는데 litdb 의 Sundar 2025 digest 에는 점착 값이 **없다** (`adhes|W_ad|J/m` grep 0건). 인용하지 않고 리뷰에 묻는다.
-
----
-
-## 2. 계면별 셀 (재사용 SE 슬랩 기준)
-
-| 계면 | 셀 | 변형 | 원자 |
+| 무엇 | comp1 (J/m²) | 조작 | 근거 |
 |---|---|---|---|
-| **P1-a LPSCl↔Ag** | SE prim 2×2×3 (측면 육방 20.13 Å · A 351 Å²) + **Ag(111) 7×7 · 4층** | Ag −0.46 %(a 4.086) · −0.80 %(4.10) · −2.23 %(PBE 4.16) — **Ag 를 맞춘다**(NCM 워크플로는 SE 를 NCM 에 맞췄다 — 리뷰 질문) | 624 + 196 = **820** |
-| **P1-b Ag↔흑연** | Ag(111) × 흑연(0001) — 기존 워크플로 밖이라 **새로** 고른다 | (√3×√3)R30° / 흑연 2×2: −1.7 %(a 4.086) · PBE 격자면 3×3 류 68 Å² +0.5 % | 36–114 (작다) |
-| P2 LPSCl↔탄소 | SE 슬랩 + 흑연 — P1 뒤 | — | — |
-| P2 흑연 층간 | 문헌 대조용 기준값 | — | — |
+| 20 seeds (골라내지 않은 통계) | 평균 1.153 · 중앙값 0.962 · 0.555–1.850 | 이완만 · 분리 단일점 · UMA 1p1 · **wrap 셀** | `adhesion.json` `xy_shift` |
+| 100 seeds | 1.151 ± 0.245 | 같음 | `adhesion_100seeds_analysis.md` |
+| 출판 표 | 1.277 | **20 중 5 seeds 선별** — ⛔ 기준값 아님 | `adhesion_final.md` |
+| 2L NCM811 | ~2.0 (+74 %) | 두께 2층 | `adhesion_final.md` |
+| 5L NCM | 2.674 ± 0.882 (12/20) | 두께 5층 | `adhesion_100seeds_analysis.md` |
+| paper #1 출판식 | 0.075 (= 2.708 − 2.633) | `WELLS_RAW − α·ΔW_strain`, α = 1 | `db/properties/alpha_sensitivity_FINAL.json` |
+| v6 stage 11 | 45–80 | NCM 고정 500 K + 분리 — 원장 자진단 *"artificial dangling-bond energy"* | `adhesion.json` `paper2_stage11…` |
 
-⚠ Ag 격자상수는 **UMA 이완값**(MLIP 단계)과 **PBE+D3(BJ) 값**(DFT 검증 단계)이 다를 수 있다 → 두 단계에서 **같은 셀을 쓰도록** 변형률을 표에 적는다.
+- **실험(paper #1, AFM)**: comp1 **194 aJ** (comp1–5 = 180–316 aJ). **면적당 에너지가 아니다** — J/m² 로 바꾸려면 접촉 반경을 가정해야 한다(방법론 문서 가정 r ≈ 10 nm → 1 J/m² ≈ 314 aJ).
+  원장이 인용한 *"Sundar 2025: 0.2–0.4 J/m²"* 는 litdb 의 그 digest 에 점착 값이 없다 — **귀속 미확인**.
+- ⇒ 같은 comp1|NCM 이 **두께와 조작에 따라 1–2.7 J/m²** 를 움직인다 (출판식·v6 은 별개의 양). DEM 두께수렴 기준(ΔW < 0.05)은 기준 쪽이 못 넘는다 → 새 기준값은 **"1L LiNiO₂ 시트 · 두께 미수렴"** 으로 라벨한다 (내부 리뷰 P1-6).
 
 ---
 
-## 3. 단계와 비용 어림 (⚠ 규모 감각 — 약속 아님)
+## 2. 계면별 셀 (v2 — SE 고유 정방셀 20.11 Å 위)
+
+| 계면 | 셀 | 변형 (SE 에 맞춤) | 원자 |
+|---|---|---|---|
+| **기준 LPSCl↔NCM** | SE 관용 2×2×3 (정방 20.11 Å · 30 Å · 624) + **LiNiO₂(001) 1L 직사각 7×4** (2.878 × 4.985 → 20.146 × 19.939 Å) | NCM −0.18 % / +0.86 % | 624 + 224 = **848** |
+| **P1-a LPSCl↔Ag** | 같은 SE + **Ag(111) 직사각 7×4 · 4층** (a 4.086: 2.889 × 5.004 → 20.225 × 20.017 Å) | Ag −0.57 % / +0.46 % (a 4.086) · −0.91 % / +0.12 % (4.10) · **−2.33 % / −1.32 % (PBE 4.16)** | 624 + 224 = **848** |
+| **P1-b Ag↔흑연** | Ag(111) × 흑연(0001) 작은 초격자 — 워크플로 밖 · **DFT+D3 직접** | (√3×√3)R30° Ag / 흑연 2×2 류 — 셀은 봉인 때 다시 계산 | 36–114 |
+| P2 LPSCl↔탄소 | ⚠ **미해결** — 정방 20.11 Å 에 그래핀 직사각이 잘 안 맞는다 (8×5: −2.1 / +5.9 %) | — | — |
+| P2 흑연 층간 | **DFT 세팅 대조 잡** (문헌 소환값 ~0.37 J/m² 와 비교 — litdb 원문 확보 전 봉인 금지) | — | 4–8 |
+
+- **면·종단**: F-43m 은 반전대칭이 없어 두 (001) 면이 다르다 → comp1 **face 'A'** (v30u 선례, `tools/adhesion_v30u/run_li_migration_FINAL_combo.py`)로 고정하고 NCM·Ag 에 **같은 면**을 쓴다.
+- **SE 원본**: repo 에 있는 것은 `db/structures/comp1_V0_k444.cif` (a 10.055). 옛 슬랩이 쓴 원격 `comp1_V0.cif` 와 같은지는 **확인 전** — 어차피 재생성이라 새 기준값·Ag 가 같은 파일을 쓰면 된다.
+- ⚠ UMA 이완 격자와 PBE 격자가 다르다(Ag 4.086 → 4.16) → 두 단계에서 **같은 셀**을 쓰고 변형률을 표에 적는다.
+
+---
+
+## 3. 단계와 비용 (⚠ 규모 감각 — 약속 아님)
 
 | 단계 | 내용 | 어림 |
 |---|---|---|
-| 0-a | SE 슬랩 재생성/회수 (repo 에 **파일은 없다** — 템플릿으로 `comp1_V0_k444.xyz` 에서 다시 만들거나 V100 백업 회수) · Ag·흑연 벌크 | 수 시간 |
-| 0-b | **MP 반응에너지 사전검사** — LPSCl+Ag · LPSCl+LiAg · LPSCl+C · Ag+C (gabia `uma` env 의 mp_api) | 계산 0 |
-| 1 | **UMA 단계 (기준값과 같은 판)** — P1-a xy-shift **20 seeds** (기준과 같은 수) · P1-b 시드 8 · v5 MQA · 분리 단일점 · 이완 슬랩 W_ad(추가) · UBER 강체 z-스캔 | GPU 수 시간–1일 |
-| 2 | **DFT 단일점 검증** (PBE+D3(BJ), D3 끔 = 같은 기하에서 D3 항 분해) — E_int·E_sep 를 **P1-a 5 seeds + P1-b 4 seeds + NCM 기준값 5 seeds** | ≈ 820원자 단일점 × ~30회 — **가장 비싼 단계**. CPU 클러스터(KISTI) 권장 |
-| 3 | 두께 점검 — Ag 4층 → 6층 1 seed · SE 는 30 Å(기준과 동일) | 소 |
+| 0 | **불변성 대조 잡 (UMA)** — 같은 슬랩을 진공 20/30/40/60 Å 에 놓고 E 가 **1 meV/atom** 안에서 같은지 · UBER E(8 Å) ≈ E_sep(30 Å) (**0.02 J/m²** 안). 어기면 **정지** (원장의 *"60 Å 에서 10배"* 는 국소 MLIP 로는 설명이 안 된다 — 진단 전에는 어떤 값도 못 쓴다) | GPU 분 단위 |
+| 0-a | **wrap 가설 확인** — 옛 빌더로 기준 계면 1개를 재생성해 최근접 거리·밀도·PS₄ 무결성 (+ 가능하면 V100 백업 슬랩 셀, §6-3) | 분 |
+| 0-b | MP 반응에너지 사전검사 (gabia `uma` env) — **참고용**: 벌크 반응에너지는 접촉면 Ag–S 화학·Li/Ag 교환을 못 잡는다 | 0 |
+| 1 | **NCM 기준값 재계산** — UMA 1p1/omat · 이완만 · 848원자 · 시드 **42–61 사전 고정 (20)** · W_sep + W_ad + UBER(2 seeds) | GPU ~3 h (820원자 MQA+이완 8 min/seed 실측 기준 — 이완만이면 더 짧다) |
+| 2 | **P1-a LPSCl↔Ag** — 같은 조건 20 seeds + W_ad + UBER | GPU ~3 h |
+| 3 | **DFT 검증** — ① 프로브 1건(시드 1개: E_int + **분리 슬랩 둘**)으로 시간 실측 → 예산 ② 적응형: UMA 최저·중앙값 **2 seeds** 먼저, 게이트 실패 시 5 ③ **NCM 먼저**(상태선택 정책 선언 뒤) → Ag | 848원자 단일점 — repo 견적 **계면 1건 ~48 h KISTI**. 실측 전 약속 안 함 |
+| 4 | **P1-b Ag↔흑연 · 흑연 층간** — DFT+D3 직접, E(d) 스캔 포함 | 작다 (36–114원자) |
+| 5 | 두께 — Ag 4 → 6층 1 seed · NCM 은 1L 라벨 (3L 은 §6-4) | 소 |
 
-GPU: gabia = b2o3 사건 빈도(≈5–6일) → modelc_2x 탄성 · kgy = cascade v6 + li2s. ⇒ UMA 단계는 GPU 가 비는 대로, DFT 단일점은 **KISTI**.
+GPU: gabia = b2o3 사건 빈도 MD (≈5–6일) → 끝나면 modelc_2x 탄성 · kgy = 공유. DFT 는 **KISTI**. DFT 설정(금속 슬랩 k-점 · 스미어링 · PAW/USPP 혼용 · 계면 쌍극자)은 프로브에서 정한다.
 
 ---
 
-## 4. 보고량 카드 초안 (proposed — 비준 전)
+## 4. 보고량 카드 초안 v2 (proposed — 비준 전)
 
 ### §1 무엇을 원하는가
-> 기존 LPSCl|NCM 과 **같은 조작**으로 낸 LPSCl|Ag · Ag|흑연 의 분리일이, NCM 기준값과 나란히 놓았을 때 물리흡착 급인지 화학결합 급인지 — **DFT 단일점으로 검증된** 값으로.
+> **같은 조작 · 같은 SE 셀 규약 · 같은 계산기**로 낸 LPSCl|Ag 와 (다시 낸) LPSCl|NCM 의 **W 분포**를 나란히 놓고, 그 **비**와 자릿수 급을 —
+> 같은 기하의 **DFT(PBE) 로 검증된** 짝으로 — 말한다. 헤드라인 절대값은 DFT(PBE+D3) 에서만.
 
 ### §1-c 답하지 않는 것
-> 반응 **후** 계면(Ag–S 화합물 · LiAg 합금 뒤)의 점착 · 실험 박리강도 · 실접촉면적·구동압 효과(DEM 층의 몫) · 출판 관례(`α·ΔW_strain` 보정)와의 비교.
+> 반응 **후** 계면(Ag–S 화합물 · LiAg 합금 뒤) · 실험 박리강도 · 실접촉면적·구동압(DEM 층의 몫) · `α·ΔW_strain` 보정값과의 비교 ·
+> **두께 수렴된** NCM 값 (1L 라벨) · **UMA 절대값** (repo 금지 규칙) · AFM aJ 와의 절대 비교.
 
-### §2 재는 양 (이름을 요청서 용어로 맞춘다)
+### §2 재는 양
 ```
-W_sep(s)  = [E_sep(s) − E_int(s)] / A        # 워크플로 v5_working 과 같은 조작 — 분리 +30 Å, 셀 +30 Å, 이완 없음
-W_ad(s)   = [E_A^rel + E_B^rel − E_int(s)] / A   # 각 슬랩을 같은 셀·같은 변형에서 이완 (워크플로에 없던 값)
-W^DFT     = 같은 식, E 를 PBE+D3(BJ) 단일점으로 (UMA 기하 위) · W^noD3 = D3 항을 뺀 값 (같은 기하)
-UBER E(d) = 이완 계면을 강체로 0.2–0.5 Å 간격, 평형 + 8 Å (UMA, 최저 시드 2개는 DFT 로)
+W_sep(s)  = [E_sep(s) − E_int(s)] / A            # 분리 +30 Å · 셀 +30 Å · 이완 없음 (워크플로와 같은 조작)
+W_ad(s)   = [E_A^rel + E_B^rel − E_int(s)] / A   # 각 슬랩을 같은 셀에서 이완 (워크플로에 없던 값) — 항상 W_ad ≤ W_sep
+W^PBE     = 같은 식 · PBE(+U: NCM 쪽) 단일점 · UMA 기하 위 · D3 없음      ← UMA 의 검증 짝
+W^PBE+D3  = W^PBE + ΔD3(같은 기하 · D3(BJ) 가산항 — 고정 기하에서 정확히 분해)   ← 헤드라인 후보
+UBER E(d) = 이완 계면을 강체로 z-스캔, 평형 + 8 Å
 ```
-s = xy-shift 시드(registry). A = 351 Å²(P1-a). ⛔ 출판 관례의 `− α·ΔW_strain` 보정은 **넣지 않는다** (실험 순위로 맞춘 항이고 Ag 에 대응물이 없다).
+s = xy-shift 시드. A = 404 Å² (정방 20.11²). *"D3 끈 값"* = **W^PBE** (같은 기하에서 D3 항 제외) — *D3 끄고 이완한 값*이 **아니다** (물리흡착 계면은 D3 없이 이완하면 떨어진다).
+⛔ `− α·ΔW_strain` 보정은 넣지 않는다 (실험 순위로 맞춘 항이고 Ag 에 대응물이 없다. 같은 셀의 W_sep·W_ad 에서 변형에너지는 상쇄된다).
 
 ### §3 잘 정의되는가
 | 물음 | 답 | 처리 |
 |---|---|---|
-| 상태가 하나인가 | 아니다 — xy registry 20개 · MQA 경로 의존 | 스칼라로 뭉치지 않는다: **W(s) 전부 + 평균·중앙값·범위** (기준값과 같은 요약) |
-| 반응성 계면인가 | LPSCl↔Ag **그럴 수 있다** — 800 K 표면 연화에서 Ag–S 결합이 생길 수 있다 | 0-b 반응에너지가 음이면 값을 **"급격 계면·반응 전"** 으로 이름 붙인다. MQA 뒤 Ag–S 결합 수·원소 이동을 시드마다 센다 |
-| MLIP 가 이 계에서 믿을 만한가 | **모른다** — UMA 는 진공에 민감했고(60 Å 10배), Ag–황화물 계면 검증 기록이 없다 | DFT 단일점 검증이 **판정의 조건**이다. UMA–DFT 차가 크면 UMA 값을 쓰지 않는다 (문턱은 리뷰 뒤 봉인) |
-| 기준값과 같은 조건인가 | UMA 판 · v5/v6 · 시드 수가 **확인 전** | 기준값을 낸 판을 먼저 확정한다 (§1 ⚠1) |
-| 기준값이 하나인가 | **아니다** — comp1|NCM 에 0.075 · 0.194 · 0.962 · 45–80 J/m² 넷 (§1 ⚠4) | 비교는 **같은 프로토콜 안에서만**. DEM 절대값은 §6-4 결정 전까지 **내지 않는다** |
-| 참조 상태가 같은 전자 상태인가 | Ag 금속 · LPSCl 절연 — 스미어링을 모든 항에 같게 (DFT) | — |
+| 상태가 하나인가 | 아니다 — xy registry 20개 | 스칼라로 뭉치지 않는다: **W(s) 전부 + 중앙값·IQR** (평균 아님) |
+| 반응성 계면인가 | 이완만으로도 Ag–S 접촉 · Li/Ag 교환이 생길 수 있다 (Ag-argyrodite 가 존재) · UMA 이완이 PS₄ 를 깬 선례 (`lpscl_relaxed_conv_52atoms.cif.BROKEN_PS4_dissociated`) | 시드별 관측량·문턱 **사전 선언**: Ag–S < 2.5 Å 개수/Å² (접촉 플래그) · SE 안 Ag / Ag 안 S·Li (**반응 플래그** → 급격 계면 통계에서 빼고 따로 보고) · P–S 4배위 유지 |
+| NCM 쪽 DFT 상태가 하나인가 | **아니다** — LiNiO₂ 1L: +U · 스핀 · 자기 basin 여럿 (SDCP 가 여덟 번 반려된 그 종류) | U 값 · 스핀 초기화 · **상태선택 규칙**을 카드에 선언 → **NCM 을 Ag 보다 먼저** (기준값이 존재하는지를 이게 정한다) |
+| DFT 급이 같은가 | NCM PBE+U vs Ag PBE | U 를 명시하고 표에 급을 같이 적는다 |
+| MLIP 가 믿을 만한가 | 모른다 — 진공 민감도(미진단) · 이 계열에서 UMA 순위 역전 기록(R −0.76) | 단계 0 불변성 대조 + DFT 게이트 (§4) |
+| 기준값이 하나인가 | 아니다 (§1 ⚠3) · 셀 wrap 의심 (§1 ⚠1) | **같은 파이프라인 재계산 20 seeds**, 옛 100-seed 세트와 중앙값·IQR 로 1회 대조만 (병합 금지) |
+| 참조 상태가 같은 전자 상태인가 | Ag 금속 · LPSCl 절연 · NCM +U | 스미어링을 모든 항에 같게 · 분리 슬랩 둘도 같은 설정 |
 
-### §4 게이트 (리뷰 뒤 봉인)
-- 두께: Ag 4→6층에서 W 변화 < 0.05 J/m² (요청서) · SE 30 Å 는 기준과 동일
-- DFT 검증: 시드별 |W^DFT − W^UMA| 의 허용 폭 — **리뷰에서 정한다**
-- 판정: 시드 분포 **전체**가 ≲ 0.3 → 물리흡착 급 · ≳ 1 → 화학결합 급 · **0.3–1 을 걸치면 판정 보류**
-- 기준값과의 비교는 **같은 조작(W_sep)·같은 검증 수준(DFT 단일점)** 끼리만
+### §4 게이트 (proposed — Codex 뒤 봉인)
+- **불변성**: 진공 20/30/40/60 Å E 차 ≤ 1 meV/atom · UBER E(8 Å) vs E_sep ≤ 0.02 J/m² · 시드별 W_ad ≤ W_sep. **하나라도 어기면 정지.**
+- **DFT 검증** (내부 리뷰 제안값): 시드별 |W^PBE − W^UMA| ≤ **max(0.15 J/m², 25 %)** **그리고** 급(< 0.3 / 중간 / > 1) 일치 **그리고** 부호 일치.
+  실패 → **DFT 값이 보고값**이 되고 UMA 는 기하 표본기로 격하.
+- **두께**: Ag 4 → 6층 ΔW < 0.05 J/m² (요청서) · NCM 은 1L 라벨.
+- **분포 비교**: 중앙값 + IQR · Mann–Whitney. 시드 목록 사전 고정(42–61). 제외는 **사전 선언 게이트만** (LBFGS 미수렴 · 반응 플래그 · PS₄ 무결성).
 
 ### §5 주장 / 비주장
-- ✅ "기존 LPSCl|NCM 과 같은 조작(v5·xy-shift·분리 단일점)·같은 SE 슬랩에서, LPSCl|Ag 의 W_sep 분포는 … (DFT 단일점 검증 n seeds)"
-- ⛔ 출판 관례 보정값과 비교 · ⛔ 계산 안 한 칸을 문헌으로 채우기 · ⛔ 시드 하나로 결론
+- ✅ *"같은 조작(xy-shift · 이완만 · 분리 단일점) · 같은 SE 셀 · 같은 계산기(uma-s-1p1/omat)에서 LPSCl|Ag 와 LPSCl|NCM(1L LiNiO₂ · 두께 미수렴)의 W_sep 비는 … ; DFT(PBE) 검증 n seeds 통과"*
+- ✅ (DFT 게이트 통과 시) *"PBE+D3 단일점 W_sep(Ag) = … (n seeds, 중앙값·IQR)"*
+- ⛔ UMA 절대값 인용 · ⛔ 옛 기준값 숫자(1.153 · 1.277 등)와 새 값 병합 · ⛔ `α·ΔW_strain` 보정값과 비교 · ⛔ AFM aJ 를 J/m² 로 · ⛔ 시드 하나로 결론 · ⛔ 계산 안 한 칸을 문헌으로 채우기
 
 ---
 
-## 5. 리뷰 계획 (1저자 지시)
+## 5. 리뷰 (1저자 지시)
 
-1. **내부 리뷰 (Fable)** — 이 문서 + 워크플로 원문을 적대적으로 검토: 정의·재사용 정합·MLIP 검증 설계·반응성·통계.
-2. **Codex 리뷰** — 프롬프트 `kb/reviews/` 에 작성해 1저자가 보낸다. §1–§4 가 대상.
-3. 두 리뷰 반영 → 카드 봉인 → 결정 원장 proposed → 1저자 비준 → 파이프라인.
+1. **내부 (Fable)** — **NO-GO (v1)** → `kb/reviews/internal_review_wad_agc_fable_2026_09_23.md`. P0 4건 원문 대조 확인 · 이 v2 에 반영.
+2. **Codex BV** — v2 기준으로 개정해서 보낸다 (`kb/reviews/codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md`).
+3. 두 리뷰 반영 → 카드 봉인 → `decisions.json` proposed (**NCM 기준값과 Ag 보고량을 함께 정의** — 지금 adhesion 결정은 0건) → 1저자 비준 → 파이프라인.
 
-## 6. 결정 필요 (1저자) — 리뷰 전에도 답할 수 있는 것
-1. **v5 인가 v6 인가** — 기준값(comp1 v5 xy-shift 20 seeds)을 낸 판을 알면 그걸 쓴다. UMA 판(1p1 · 1p2)도 같이.
-2. **NCM 기준값도 DFT 단일점 검증**에 넣을지 (권고: 넣는다 — 안 넣으면 한쪽만 검증된 비교가 된다).
-3. **기계** — UMA 단계(GPU) · DFT 단일점(KISTI 권고).
-4. **DEM 에 넘길 절대값** (§1 ⚠4) — (a) 우리 프로토콜의 절대값 그대로(UMA 또는 DFT 단일점) · (b) 같은 프로토콜의 **Ag/NCM 비** 만 넘기고 NCM 절대 기준은 DEM 쪽이 고른다 · (c) 비 × "paper exp" NCM 값 (원장 paper #2 Option A 의 보정비 방식). (c) 는 금속(Ag) 과 산화물(NCM) 사이에 프로토콜 오차가 **같은 배수**라는 가정이라 리뷰에 묻는다(BV Q10).
+## 6. 결정 필요 (1저자 — 이 트랙의 1저자는 사용자)
+
+1. **DEM 에 무엇을 넘기나** — UMA 절대값은 금지 규칙에 걸린다. 남는 것:
+   (a) **DFT 값** (PBE+D3 헤드라인 · PBE 짝) · (b) **같은 프로토콜의 Ag/NCM 비** (NCM 절대 기준은 DEM 쪽이 고른다) ·
+   (c) 비 × 실험 NCM — 실험이 **aJ** 라 J/m² 기준이 없다(접촉 반경 가정 필요) → 권하지 않는다.
+2. **DEM 쪽에 대응표(§1 ⚠3)를 보여 주고** 그쪽이 말한 "isolated slab W_ad" 가 어느 것이었는지 **고르게 할지** — 권고: 보여 준다. 그걸 모르면 "나란히" 가 성립하지 않는다.
+3. **V100 백업 확인** (wrap 가설) — `comp*_v5xy_s52.xyz` 의 셀과 최근접 거리. 1저자 쪽 실행. 안 해도 계획은 안 바뀐다(어차피 재계산) — 원장 정오표의 **확정도**만 바뀐다.
+4. **NCM 두께** — 1L 라벨로 갈지, 3L 까지 볼지 (비용).
+5. **기계** — UMA 단계 GPU (gabia 는 b2o3 뒤 탄성 대기) · DFT 는 KISTI.
 
 ## 출처
-- `kb/methodology/adhesion_energy.md` · `db/inputs/adhesion_templates/{surface_mqa_v5.yaml, adhesion_v6_anneal_test.py}` · `tools/doping/run_cathode_interface.py`
-- `db/properties/adhesion.json` (`adhesion_v5_crystalline_slab.xy_shift`, `cell_matching.Li6_v5_xyshift_FIX`)
-- `kb/papers/adhesion_literature_review.md` · litdb: bucci2017 · bucci2018 · choi2025 · doux2020 · cronau2021 · dmt1975 · thorntonning1998 · pasha2014 · thakur2014 · luding2008 · fan2026
-- 초격자 어림: 세션 scratchpad `zsl.py` (repo 도구 아님)
+- 정본: `kb/results/adhesion_final.md` · `kb/results/adhesion_100seeds_analysis.md` · `kb/methodology/adhesion_energy.md` · `kb/methodology/adhesion_methods_comparison.md` · `kb/methodology/adhesion_calibration_decision_2026_05_17.md`
+- 코드: `db/inputs/adhesion_templates/{surface_mqa_v5.yaml, adhesion_v6_anneal_test.py}` · `tools/doping/run_cathode_interface.py` · `tools/adhesion_v30u/` · `webapp/fairchem.py` · `tools/vgcf_hbn/make_qe_inputs.py` (QE D3(BJ))
+- 원장: `db/properties/adhesion.json` (`xy_shift` · `cell_matching` · anomalies · ⛔ 정오표) · `db/properties/alpha_sensitivity_FINAL.json` · `db/structures/comp1_V0_k444.cif`
+- 리뷰: `kb/reviews/internal_review_wad_agc_fable_2026_09_23.md` (내부 · NO-GO v1) · `kb/reviews/codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md`
+- 문헌: `kb/papers/adhesion_literature_review.md` · litdb: bucci2017 · bucci2018 · choi2025 · doux2020 · cronau2021 · dmt1975 · thorntonning1998 · pasha2014 · thakur2014 · luding2008 · fan2026
