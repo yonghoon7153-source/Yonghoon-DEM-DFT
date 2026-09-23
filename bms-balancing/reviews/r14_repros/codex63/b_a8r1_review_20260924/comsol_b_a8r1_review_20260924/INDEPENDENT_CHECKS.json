@@ -1,0 +1,550 @@
+{
+  "scope": "AST-selected reviewed pure consumers; received top levels/suites/native controls never run",
+  "selected_definitions": [
+    {
+      "file": "offline_clock_contract.py",
+      "sha256": "5e5725e58e33f724d09e0f7489fad5222487f719239a40bc1639a80cf0a93f49",
+      "definitions": [
+        "ClockError",
+        "encoded",
+        "digest",
+        "ref",
+        "read_json",
+        "anchor_and_seal",
+        "bound_context",
+        "context_errors",
+        "snapshot_at",
+        "clock_errors"
+      ]
+    },
+    {
+      "file": "completion_contract.py",
+      "sha256": "5807fb2c10d4f8e0c36270aa66b2a560c2dcee5deb6ed215712ff19cb2ed7048",
+      "definitions": [
+        "encoded",
+        "digest",
+        "reference",
+        "strict_json",
+        "snapshot_errors",
+        "consume_completion",
+        "final_return_decision"
+      ]
+    },
+    {
+      "file": "path_binding.py",
+      "sha256": "5c2971424507944163babdb799ae5caa6a771d942dc98e702b1a48e432e16a3d",
+      "definitions": [
+        "canonical_target",
+        "argv_errors",
+        "PathBindingError",
+        "norm",
+        "literal",
+        "validate_binding"
+      ]
+    },
+    {
+      "file": "deployment_verify.py",
+      "sha256": "5912ce15da97790e710f8e2ad47cf1b5b8f8c4e495f9fc18d34d6341ec528bc7",
+      "definitions": [
+        "VerificationError",
+        "strict",
+        "digest",
+        "same_typed",
+        "make_view",
+        "binding_decision",
+        "report_errors",
+        "consume_deployment"
+      ]
+    }
+  ],
+  "independent_probes": [
+    {
+      "id": "C1_actual_57_and_completion",
+      "expected": "PASS",
+      "actual_codes": [],
+      "result": "PASS"
+    },
+    {
+      "id": "C1_empty",
+      "expected": "DEPLOYMENT_ID_SET",
+      "actual_codes": [
+        "DEPLOYMENT_ID_SET",
+        "DEPLOYMENT_CASE_COUNT"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C1_missing",
+      "expected": "DEPLOYMENT_ID_SET",
+      "actual_codes": [
+        "DEPLOYMENT_ID_SET",
+        "DEPLOYMENT_CASE_COUNT"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C1_duplicate",
+      "expected": "DEPLOYMENT_ID_SET",
+      "actual_codes": [
+        "DEPLOYMENT_ID_SET",
+        "DEPLOYMENT_CASE_COUNT"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C1_unknown",
+      "expected": "DEPLOYMENT_ID_SET",
+      "actual_codes": [
+        "DEPLOYMENT_ID_SET",
+        "DEPLOYMENT_CASE_COUNT"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C1_failed",
+      "expected": "DEPLOYMENT_ID_FAILED",
+      "actual_codes": [
+        "DEPLOYMENT_ID_FAILED"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C1_skip",
+      "expected": "DEPLOYMENT_CASE_FAILED",
+      "actual_codes": [
+        "DEPLOYMENT_CASE_FAILED"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C1_positive_missing",
+      "expected": "DEPLOYMENT_CASE_SET",
+      "actual_codes": [
+        "DEPLOYMENT_CASE_SET",
+        "DEPLOYMENT_CASE_COUNT"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C1_wrong_phase",
+      "expected": "DEPLOYMENT_CASE_PHASE",
+      "actual_codes": [
+        "DEPLOYMENT_CASE_PHASE"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C1_wrong_reason",
+      "expected": "DEPLOYMENT_CASE_REASON",
+      "actual_codes": [
+        "DEPLOYMENT_CASE_REASON"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C1_absent_observation",
+      "expected": "DEPLOYMENT_CASE_REASON",
+      "actual_codes": [
+        "DEPLOYMENT_CASE_REASON"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C1_count_bool",
+      "expected": "DEPLOYMENT_CASE_FAILED",
+      "actual_codes": [
+        "DEPLOYMENT_CASE_FAILED",
+        "DEPLOYMENT_CASE_COUNT"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C1_wrong_total",
+      "expected": "DEPLOYMENT_CASE_COUNT",
+      "actual_codes": [
+        "DEPLOYMENT_CASE_COUNT"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C1_hidden_failure",
+      "expected": "DEPLOYMENT_REPORT_FAILED",
+      "actual_codes": [
+        "DEPLOYMENT_REPORT_FAILED"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C3_original",
+      "expected": "PASS",
+      "actual_codes": [],
+      "result": "PASS"
+    },
+    {
+      "id": "C3_permitted_view",
+      "expected": "PASS",
+      "actual_codes": [],
+      "result": "PASS"
+    },
+    {
+      "id": "C3_hidden_field",
+      "expected": "VIEW_DIFF",
+      "actual_codes": [
+        "VIEW_DIFF"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C3_boolean_as_int",
+      "expected": "VIEW_DIFF",
+      "actual_codes": [
+        "VIEW_DIFF"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C3_approved_true",
+      "expected": "RAW_CONTRACT_FLAGS",
+      "actual_codes": [
+        "RAW_CONTRACT_FLAGS"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C3_changed_raw_spacing",
+      "expected": "RAW_CONTRACT_IDENTITY",
+      "actual_codes": [
+        "RAW_CONTRACT_IDENTITY"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "N7_both_wrong_compile",
+      "expected": "ARGV_COMPILE_SOURCE",
+      "actual_codes": [
+        "ARGV_COMPILE_SOURCE"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "N7_both_wrong_apply",
+      "expected": "ARGV_PREFSDIR",
+      "actual_codes": [
+        "ARGV_PREFSDIR"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "N7_both_wrong_batch",
+      "expected": "ARGV_BATCH_INPUT",
+      "actual_codes": [
+        "ARGV_BATCH_INPUT"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "C3_nonpath_java",
+      "expected": "JAVA_NONPATH_CHANGED",
+      "actual_codes": [
+        "JAVA_NONPATH_CHANGED",
+        "JAVA_SOURCE_IDENTITY"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "N5_external_rc1",
+      "expected": "EXTERNAL_FAILED",
+      "actual_codes": [
+        "EXTERNAL_FAILED"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "N5_external_missing",
+      "expected": "MISSING_EXTERNAL",
+      "actual_codes": [
+        "MISSING_EXTERNAL"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "N5_actual_delivery_completion",
+      "expected": "PASS",
+      "actual_codes": [],
+      "result": "PASS"
+    },
+    {
+      "id": "N6_actual_final_boundary",
+      "expected": "PASS",
+      "actual_codes": [],
+      "result": "PASS"
+    },
+    {
+      "id": "N6_failed_final_rc",
+      "expected": "FINAL_CALL_FAILED",
+      "actual_codes": [
+        "FINAL_CALL_FAILED"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "N6_absent_final_rc",
+      "expected": "FINAL_CALL_FAILED",
+      "actual_codes": [
+        "FINAL_CALL_FAILED"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "N6_false_elapsed",
+      "expected": "CLOCK_ELAPSED_MISMATCH",
+      "actual_codes": [
+        "CLOCK_ELAPSED_MISMATCH"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "N6_601_seconds",
+      "expected": "STAGE_BUDGET_EXCEEDED",
+      "actual_codes": [
+        "STAGE_BUDGET",
+        "STAGE_BUDGET_EXCEEDED"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "N6_time_reverse",
+      "expected": "FINAL_CLOCK_REVERSED",
+      "actual_codes": [
+        "FINAL_CLOCK_REVERSED"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "probe_count": 33,
+  "case_counts": {
+    "D01": 1,
+    "D02": 2,
+    "D03": 2,
+    "D04": 2,
+    "D05": 3,
+    "D06": 2,
+    "D07": 2,
+    "D08": 2,
+    "D09": 3,
+    "D10": 5,
+    "D11": 8,
+    "D12": 11,
+    "D13": 2,
+    "D14": 4,
+    "D15": 4,
+    "D16": 4
+  },
+  "reported_suite": "16 IDs / 57 invocations / 16 positive / 41 reject",
+  "suite_report_matches_16_per_ID_files": true,
+  "preseal_final_code_crosscheck": "PACKAGE_VERIFICATION.json",
+  "host_suite_call": {
+    "chunk_id": "e9e84e",
+    "wall_time_seconds": 9.3102872,
+    "exit_code": 0,
+    "original_token_count": 402
+  },
+  "final_host_call": {
+    "chunk_id": "de1ab7",
+    "wall_time_seconds": 1.3463208,
+    "exit_code": 0,
+    "original_token_count": 471
+  },
+  "final_budget_recalculated": {
+    "stage": "delivery",
+    "now_ns": 679945609000000,
+    "clock": {
+      "id": "deployment_A8R1_20260924_monotonic",
+      "unit": "ns",
+      "source": "time.monotonic_ns",
+      "monotonic": true
+    },
+    "work_id": "deployment_A8R1_20260924",
+    "context_sha256": "2c7c29bcad3b2597d013daeec95650b9286342d13250c1ea9f60d144d1cd2721",
+    "stage_elapsed_seconds": 23.547,
+    "stage_limit_seconds": 600,
+    "overall_elapsed_seconds": 1697.797,
+    "overall_limit_seconds": 7200,
+    "cooperative_only": true
+  },
+  "preservation_224_record_consistency": true,
+  "prior_A8_received_bytes_available": 168,
+  "prior_A8_received_paths": [
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/A2_java_body.txt",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/A_STAGE_AUTHORIZATION.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/analyzer.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/approval_review/LOCAL_CODEX_APPROVAL_DRAFT.md",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/approval_review/REVIEW_KO.md",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/approval_review/REVIEW_PACKAGE_MANIFEST.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/APPROVED_PLAN_KO.md",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/B_EXECUTION_APPROVAL_DRAFT.md",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/B_PATH_BINDING.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/class_artifacts.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/completion_contract.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/contract.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/evidence_metrics.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/execution_records.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/expected_solver.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/F_REUSE.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/file_observation.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/IMPLEMENTATION_COMPLETED.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/IMPLEMENTATION_NOTES.md",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/launcher.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/LEGACY_ASSERTIONS.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n5_recipient/STATIC_BUDGET_CASES.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n5_recipient/static_cases/F_post_write_timeout.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n5_recipient/static_cases/positive_control.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n5_recipient/static_cases/synthetic_after_completion_timeout.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n5_recipient/static_cases/synthetic_completion_not_consumed.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n6n7_recipient/DECISION_PROBES_ORIGINAL.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n6n7_recipient/REPRO_README.md",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/numerical_contract.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/offline_clock_contract.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/offline_observation.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/path_binding.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prepare_revision.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/PRESERVATION_BEFORE.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/A7_ORIGINAL_PLAN.md",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/CODE_MANIFEST.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/contract.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/DELIVERY_RECEIPT.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-00_observation.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-01_observation.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-02_observation.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-03_observation.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-04_observation.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-05_observation.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-06_observation.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-07_observation.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-08_observation.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio.reservation.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/FILEIO_COMPLETION.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/FILEIO_EXTERNAL_OBSERVATION.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/FILEIO_RESULTS.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/collision/evidence/events/000001.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/collision/evidence/events/000001.pending",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/event_case/evidence/events/000001.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/exception_read.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-00_old.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-01_new.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-01_old.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-02_new.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-02_old.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-03_new.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-03_old.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/flush_or_fsync/evidence/events/000001.pending",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/partial/evidence/events/000001.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/readback/evidence/events/000001.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/readback/evidence/events/000001.pending",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/StoredSolutionRecoveryA.java",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A7/CODE_MANIFEST.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A7/delivery.reservation.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A7/DELIVERY_RECEIPT_ORIGINAL.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A7/FINAL_TOOL_RETURN_TRANSCRIPT.txt",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A7/START_AND_RESOURCES.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A7/test_run_01.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/PYTHON_RUNTIME_IDENTITY.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/READONLY_RECEPTION.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/A6_PLAN_REVIEW_KO.md",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/LOCAL_CODEX_REPLY.md",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/REVIEW_KO.md",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/batch_authorized.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/compile/StoredSolutionRecoveryA.class",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/compile/StoredSolutionRecoveryA.java",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/class_artifacts.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000001.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000002.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000003.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000004.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000005.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000006.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000007.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000008.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000009.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000010.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000011.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000012.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000013.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000014.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000015.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000016.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000017.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000018.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000019.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000020.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/execution_context.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/policy_after.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/policy_applied.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/prior_pending_reconciliation.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/process_journal.jsonl",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/protected_after.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/protected_before.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/logs/apply_console.log",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/logs/batch.log",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/logs/batch_console.log",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/logs/compile_console.log",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/logs/restore_console.log",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/permission_token.txt",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/prefs/comsol.prefs",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/state.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/static_cases/restore_before_work.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/static_cases/success_without_resume.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/static_cases/wrong_reservation_cwd.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/STATIC_CASES_INDEX.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/STATIC_REPRO_REQUESTS.md",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/run_fileio_tests.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/run_tests.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/seal_preparation.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/START_AND_RESOURCES.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/STATIC_AUDIT.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/static_audit.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/static_contract_audit.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/STATIC_FAILURE_01.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/static_history/F_REUSE.json.01.previous",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/static_history/LEGACY_ASSERTIONS.json.01.previous",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/static_history/STATIC_AUDIT.json.01.previous",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/STATIC_INVOCATIONS.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/STATIC_PARSE_01.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/status_reader.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/StoredSolutionRecoveryA.java",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A3.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A4.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A5_class.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A5_cleanup.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A5_metrics.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A5_records.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A6.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A7.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A8.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_offline.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/axes_profile_N.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/axes_profile_P.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/axes_runtime_settings.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/equations_pce1_per1_Constraint.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/equations_pce1_per1_Expression.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/equations_pce1_per1_Weak.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/equations_pce2_per1_Constraint.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/equations_pce2_per1_Expression.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/equations_pce2_per1_Weak.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/preflight_boundary1.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/preflight_boundary4.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/preflight_global.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/preflight_MaxLine_ce.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/preflight_MinLine_ce.csv",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/historical_b003_main.class.bin",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_revision.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/VALIDATION_TARGET.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/winjob.py",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/WORK_CONTRACT.md",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/CODE_MANIFEST.json",
+    "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/PRE_TEST_SEAL.json"
+  ],
+  "remote_current_files_directly_observed": 0,
+  "new_B_or_COMSOL_or_received_suite_runs": 0,
+  "B_approved": false
+}

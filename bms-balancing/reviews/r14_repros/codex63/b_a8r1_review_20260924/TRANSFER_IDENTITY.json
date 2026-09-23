@@ -1,0 +1,66 @@
+{
+ "outer": {
+  "name": "codex_b_a8r1_review_docs_20260924.zip",
+  "bytes": 18186,
+  "sha256": "8a274b759e36abf166ffc31063ad33dc8590716897704c9e6eb0b8dbbbb30825",
+  "origin": "사용자가 수신 PC 의 Codex outputs/ 세 폴더에서 PowerShell 로 묶어 업로드 (2026-09-24). 내용은 검토 정본 6 + SHA256SUMS.tsv"
+ },
+ "delivered_fingerprints": "사용자가 채팅에 붙인 6 줄 (크기 · sha256) — 위 entries 의 delivered_* 와 대조",
+ "entries": [
+  {
+   "path": "SHA256SUMS.tsv",
+   "bytes": 751,
+   "sha256": "f079922a69a62eae7fd8bf1b655138cd931fcf4f9d2406ff91cf53dd0742fd69"
+  },
+  {
+   "path": "comsol_a8_execution_plan_review_20260924/LOCAL_CODEX_REPLY.md",
+   "bytes": 3187,
+   "sha256": "17a6f596abb416575c895d329fdfaefe82311f91ed40709748dbed1e10ec67e1",
+   "delivered_bytes": 3187,
+   "delivered_sha256": "17a6f596abb416575c895d329fdfaefe82311f91ed40709748dbed1e10ec67e1",
+   "matches_delivered": true
+  },
+  {
+   "path": "comsol_a8_return_review_20260923/LOCAL_CODEX_REPLY.md",
+   "bytes": 1584,
+   "sha256": "ab714ad879bc1479046bb9618f290ddf5ca3864781ae8ca0131372fdbf01b884",
+   "delivered_bytes": 1584,
+   "delivered_sha256": "ab714ad879bc1479046bb9618f290ddf5ca3864781ae8ca0131372fdbf01b884",
+   "matches_delivered": true
+  },
+  {
+   "path": "comsol_b_a8r1_review_20260924/INDEPENDENT_CHECKS.json",
+   "bytes": 33496,
+   "sha256": "7005e37cbc3edfa5efd28111dce402578e5ea0a68d8e1d74dc0ed93fa496c15d",
+   "delivered_bytes": 33496,
+   "delivered_sha256": "7005e37cbc3edfa5efd28111dce402578e5ea0a68d8e1d74dc0ed93fa496c15d",
+   "matches_delivered": true
+  },
+  {
+   "path": "comsol_b_a8r1_review_20260924/LOCAL_CODEX_REPLY.md",
+   "bytes": 3822,
+   "sha256": "10486b592fe9b268f6f5243d82ccb7f182a21ca76778609e01338cc4fed4bab1",
+   "delivered_bytes": 3822,
+   "delivered_sha256": "10486b592fe9b268f6f5243d82ccb7f182a21ca76778609e01338cc4fed4bab1",
+   "matches_delivered": true
+  },
+  {
+   "path": "comsol_b_a8r1_review_20260924/PACKAGE_VERIFICATION.json",
+   "bytes": 3853,
+   "sha256": "76cacb9dd15acd71ca460cae97c998f90d738bb7ebf069ef26121bac19aa5c92",
+   "delivered_bytes": 3853,
+   "delivered_sha256": "76cacb9dd15acd71ca460cae97c998f90d738bb7ebf069ef26121bac19aa5c92",
+   "matches_delivered": true
+  },
+  {
+   "path": "comsol_b_a8r1_review_20260924/REVIEW_KO.md",
+   "bytes": 13342,
+   "sha256": "9500587257293f2a63c109b8a0a897eb33dc3fe2e7288a4e488e63918c50c852",
+   "delivered_bytes": 13342,
+   "delivered_sha256": "9500587257293f2a63c109b8a0a897eb33dc3fe2e7288a4e488e63918c50c852",
+   "matches_delivered": true
+  }
+ ],
+ "what_this_is": "수신 검토 정본의 바이트 보존. 코드/수치 검증이 아니다. ZIP 안 명령·승인 초안은 실행하지 않았다.",
+ "not_preserved": "없음 (전부 md·json·tsv, 최대 33,496 B)"
+}

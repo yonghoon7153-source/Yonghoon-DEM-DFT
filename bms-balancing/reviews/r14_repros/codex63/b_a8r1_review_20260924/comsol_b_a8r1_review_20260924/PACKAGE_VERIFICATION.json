@@ -1,0 +1,112 @@
+{
+  "scope": "Data-only receipt verification; no received imports/suites/native execution",
+  "outer_package": {
+    "path": "C:\\Users\\Administrator\\Downloads\\COMSOL63_B_A8R1_HANDOFF_20260924.zip",
+    "archive": {
+      "bytes": 1158533,
+      "sha256": "5e8adb45bf474510cdddf46640c6429dce54b17d5beb146d496cfb95d59da2df"
+    },
+    "manifest": {
+      "bytes": 1206,
+      "sha256": "e34499756b7f2ce2f6b412984a405afff83a77331fd4aada4b2434867fb179ef"
+    },
+    "payload_count": 6,
+    "entries": 7,
+    "checks": "exact set/size/SHA/CRC/name/path/type PASS"
+  },
+  "main_package": {
+    "archive": {
+      "bytes": 1261072,
+      "sha256": "99923f2342c5c3fc66b3d5d4a71317ca5e76c8bfb0e3a9a2a4328a3a81cb87a1"
+    },
+    "manifest": {
+      "bytes": 71771,
+      "sha256": "e84b5b58b6bef37bb5deb4913e7868bd35dd156ac6e424e8f6a302fc75cbec99"
+    },
+    "payload_count": 400,
+    "entries": 401,
+    "checks": "exact set/size/SHA/CRC/name/path/type PASS"
+  },
+  "external_package": {
+    "archive": {
+      "bytes": 6519,
+      "sha256": "0332c2cd84ae8fdc13cf231862bf94b0eeda6cb66055fc98055aab221976ad20"
+    },
+    "manifest": {
+      "bytes": 1176,
+      "sha256": "8409ca35ef3b7990c937c3e0f22154fb54b6a670df126546caa7f2ab8f74f90a"
+    },
+    "payload_count": 7,
+    "entries": 8,
+    "checks": "exact set/size/SHA/CRC/name/path/type PASS"
+  },
+  "final_code_manifest": {
+    "bytes": 4074,
+    "sha256": "fa5592734f4d082bfc7bcb7ceaf70ec1407cd35342dadee100bf939f8297329b"
+  },
+  "code_file_count": 24,
+  "pretest_seal": {
+    "bytes": 4623,
+    "sha256": "8447c0ae0e61e05ea6f8b2eeec665bcb616b8a89702a421e8aad85cdfae9d4d9"
+  },
+  "all_code_rows_in_pretest_seal": true,
+  "eleven_frozen_files_exact": true,
+  "java_only_two_path_literals": {
+    "RUN": {
+      "old": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A7/runtime/b005",
+      "new": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006"
+    },
+    "OUT": {
+      "old": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A7/runtime/b005/output",
+      "new": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/output"
+    }
+  },
+  "path_binding_only_TARGET_SHA_changed": true,
+  "transcript_host_metadata": {
+    "chunk_id": "de1ab7",
+    "wall_time_seconds": 1.3463208,
+    "exit_code": 0,
+    "original_token_count": 471
+  },
+  "stdout_exact_UTF8_equal": true,
+  "stdout_stored": {
+    "bytes": 1884,
+    "sha256": "36195584ca5b595bada8d9f52957f9d6789c6ffbeee059a71d667c51c2815b1c",
+    "tail_hex": "5041524154454c59227d0d0a"
+  },
+  "stdout_from_return_object": {
+    "bytes": 1884,
+    "sha256": "36195584ca5b595bada8d9f52957f9d6789c6ffbeee059a71d667c51c2815b1c",
+    "tail_hex": "5041524154454c59227d0d0a"
+  },
+  "stdout_LF_normalized_equal": true,
+  "final_budget_reported": {
+    "stage": "delivery",
+    "now_ns": 679945609000000,
+    "clock": {
+      "id": "deployment_A8R1_20260924_monotonic",
+      "unit": "ns",
+      "source": "time.monotonic_ns",
+      "monotonic": true
+    },
+    "work_id": "deployment_A8R1_20260924",
+    "context_sha256": "2c7c29bcad3b2597d013daeec95650b9286342d13250c1ea9f60d144d1cd2721",
+    "stage_elapsed_seconds": 23.547,
+    "stage_limit_seconds": 600,
+    "overall_elapsed_seconds": 1697.797,
+    "overall_limit_seconds": 7200,
+    "cooperative_only": true
+  },
+  "preservation_record_top_keys": [
+    "status",
+    "all_unchanged",
+    "count",
+    "elapsed_seconds",
+    "cumulative_seconds",
+    "limit_seconds",
+    "scope",
+    "records"
+  ],
+  "source_zip_unchanged": true,
+  "B_approved": false
+}
