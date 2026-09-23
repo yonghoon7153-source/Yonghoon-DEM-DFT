@@ -93,6 +93,7 @@ def test_a_blocking_tail_on_a_cell_that_does_not_block_is_a_problem():
                   if f.code == "blocking_element_on_open_cell"]
     assert finding.severity == PROBLEM
     assert "CPE3" in finding.message
+    assert finding.message.startswith("스펙트럼은 저주파에서 실수축으로 내려오는데 (위상 ")
     # 무엇으로 다시 맞출지까지 — 꼬리를 뺀 같은 회로.
     assert "`R0-p(R1,CPE1)-p(R2,CPE2)`" in finding.message
     assert audit.blocking["blocking"] is False
@@ -938,6 +939,26 @@ def test_a_parameter_on_its_bound_shows_the_bound_not_itself():
     (low,) = [f for f in audit_fit(fit, spectrum_of(circuit, values), kind=LIQUID,
                                    band=BAND).findings if f.code == "at_bound"]
     assert low.message.startswith("CPE1 의 n 이 하한(0.3)에 붙었습니다 (값 0.3001) — ")
+
+
+def test_an_end_that_still_rises_gently_is_not_said_to_come_down():
+    """실측 하프셀 #38: 끝이 26° 로 완만하게 오르는데 "실수축으로 내려오는데" 라고
+    했다 — 헤더는 "꼬리 26°" 다.  30° 아래는 위상으로 판정하니 (ADR 0044) "안 막음"
+    은 그대로고, 문장만 끝이 어떻게 생겼는지 말한다."""
+    circuit = "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"
+    values = {"R0": 13.3, "R1": 43.5, "CPE1_Q": 4.91e-4, "CPE1_n": 0.391,
+              "R2": 9.99e8, "CPE2_Q": 0.104, "CPE2_n": 0.3, "CPE3_Q": 1e3,
+              "CPE3_n": 0.3}
+    rails = {"R2": "at_upper_bound", "CPE2_n": "at_lower_bound",
+             "CPE3_Q": "at_upper_bound", "CPE3_n": "at_lower_bound"}
+    fit = Fit(circuit, [P(n, v, reason=rails.get(n, "")) for n, v in values.items()])
+    audit = audit_fit(fit, spectrum_of(circuit, values), kind=SOLID, band=BAND)
+    assert audit.blocking["blocking"] is False
+    (finding,) = [f for f in audit.findings
+                  if f.code == "blocking_element_on_open_cell"]
+    assert finding.message.startswith(
+        "스펙트럼은 저주파에서 끝이 완만하게만 오르는데 (위상 -7°, 꼬리 26°) 회로 끝에 "
+        "막는 소자 CPE3 가 있습니다")
 
 
 def test_noise_just_above_the_axis_at_the_end_is_not_drift():

@@ -771,9 +771,15 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
         suggestion = _suggest([_suggest_without(fit.circuit, blockers)]
                               + _compatible(alternatives, {"resistive"}, fit.circuit,
                                             arcs=len(arcs)))
+        # 끝이 30° 아래로 완만하게 오르면 판정은 위상으로 났다 (ADR 0044) — 그
+        # 끝을 "내려온다" 고 하면 헤더의 꼬리 각도와 어긋난다 (실측 하프셀 #38:
+        # 위상 -6°, 꼬리 26°).
+        rise = verdict.get("tail_deg")
+        end = (f"끝이 완만하게만 오르는데 (위상 {_deg(phase)}, 꼬리 {round(rise)}°)"
+               if rise is not None else f"실수축으로 내려오는데 (위상 {_deg(phase)})")
         out.findings.append(Finding(
             PROBLEM, "blocking_element_on_open_cell",
-            f"스펙트럼은 저주파에서 실수축으로 내려오는데 (위상 {_deg(phase)}) "
+            f"스펙트럼은 저주파에서 {end} "
             f"회로 끝에 막는 소자 {', '.join(blockers)} 가 있습니다 — 맞춤이 그 "
             f"소자를 지우려고 경계로 갑니다"
             + (f". {suggestion} 로 다시 맞추세요" if suggestion else "")))
