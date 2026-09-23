@@ -3,7 +3,7 @@
 > 세션이 바뀌어도 유지되는 미결 사항 추적. 닫을 때 날짜+근거를 남기고 ✅로 옮긴다.
 > 등록: 2026-07-27 (MAX 감사 후속).
 
-## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-23 — ⏭-NOW-w 가 최신 (SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면 fail-closed · box331 시드확장 규칙 A · b2o3 사건율 MD 발사 · 새 W_ad(LPSCl|Ag–C) 리뷰 대기). 앞 블록 ⏭-NOW-v 는 09-22 낮(논문 4편 · 원장 정정 3건), ⏭-NOW-u 는 같은 날 오전**)
+## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-23 저녁 — ⏭-NOW-w 가 최신 (SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면 fail-closed · box331 시드확장 규칙 A · b2o3 사건율 MD 발사 · W_ad(LPSCl|Ag–C) 두 리뷰 NO-GO → 계획 v3 · 문헌 3편 · DEM 회신 초안 · Nd LOBSTER 실행 중). 앞 블록 ⏭-NOW-v 는 09-22 낮(논문 4편 · 원장 정정 3건), ⏭-NOW-u 는 같은 날 오전**)
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 >
@@ -49,6 +49,12 @@
     기본값 `comp2` 로 대기 중이었다** (cwd /data/work/runs/elastic_comp2 · MINFREE 6000 · 로그 이름만 el_modelc2x.log). 9/10 원래 계획은
     `SYS=modelc_2x → b2o3` — 그대로 뒀어도 modelc_2x 영률은 시작되지 않았다(조용히 틀린 경로). 상태 저장 `/root/logs/elastic_runner_saved_0923.txt`.
     ⏭ b2o3 끝나면(≈5–6일) **`SYS=modelc_2x`** 를 명시해 재개한다 (수렴한 strain 은 러너가 건너뛴다).
+- 🟢 **gabia Nd frozen-4f LOBSTER** (`/data/work/runs/nd_ppswap_2026_09_16/lobster_frozen4f`) — nscf **JOB DONE 14:33** (2 d 0 h 36 m · k 4 · nbnd 920 · wfc 09-23 확인) →
+  LOBSTER 5.1.1 **PID 3337949** (14:44 KST 발사 · OMP 8 · 래퍼가 끝나면 `lobster_scf.in` 을 `.orig` 로 되돌린다).
+  · 판정량은 **결과 전에** 카드에 고정: Nd79 의 가장 가까운 S 5개 평균 (C1 < −2.0 / C2 > −1.0 eV) — `nd_icohp_pp_swap_card_2026_09_16.json` §2b.
+  · 실측(결과 전 기록 §2c): 실제 기저 **546 함수**(P/S/Cl 3d 미사용) → 밴드 547+ 무시 · 사면체법 불가로 Gaussian smearing. **nbnd 920 은 과다** — 다음 LOBSTER 는 실제 기저 수로 잡는다.
+  · ⏭ `rc=` 가 찍히면 완료 블록(원복 확인 · spilling · 원소쌍 평균 · Nd 원자별 이웃) → C1/C2/C3 판정 → enforcement ③ 한계 기록 → ④ k-탐침(SCF 10.5 h 급이라 k 값·실행 여부 1저자).
+  · ⚠ q_watch 의 *"LOBSTER CPU 0 % ← 700 미만이면 seed4 중단"* 은 **끝난 nscf(pw.x)** 를 보는 문턱이다 — LOBSTER 프로그램과 무관하니 seed4 를 죽이지 않는다.
 - ⏭ **새 캠페인: LPSCl | Ag–C | VGCF 점착일 (DEM 쪽 요청 · 트랙 = 우리 DFT → 1저자 = 사용자)** — **계산 0, 리뷰 대기.**
   계획·카드 **v3** `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` (**§0′ 이 유효판**) · Codex **BV 회신 수령 = NO-GO** (`kb/reviews/codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md`).
   1저자 지시: **두 리뷰 받기 전에 파이프라인을 걸지 않는다** → 두 리뷰 다 왔고 둘 다 NO-GO. 본 계산은 Codex 재개 조건 5묶음 뒤.
@@ -56,6 +62,13 @@
     정상은 1.973 Å · 6) — v6 stage 11 이 이 빌더를 썼다. 러너 docstring ⛔ · `adhesion.json` 발견 블록 ② SE 단순 z 절단은 PS₄ 8/48 을 끊는다 —
     PS₄ 보존 창 z = 1.26–3.78 · 6.28–8.80 Å 가 있으나 비대칭(Li 면 vs S 면) 슬랩이 된다.
   · ⏭ **다음**: 구조 빌더·검증기(재개 조건 1) · 1저자 결정 4건(계획 §0′: SE 종결 · LiNiO₂ 종결·두께 · 상태 정책/U · DEM 접촉법칙 문의) — Codex 잘린 두 칸은 받음(≤ 0.10 J/m² 표본별 · registry ≥ 4).
+  · ✅ **문헌 3편 인입·병합** (1저자 제공 PDF · 수치는 메인이 PDF 텍스트로 재대조): `pustorino2025_…`(LPSCl 파괴에너지 = 2γ · (100) 화학량론 벽개 ≈ 0.47 · (110) 0.37 J/m²) ·
+    `maurer2015_…`(Ag|그래핀 분산 7방법 0.19–0.45 J/m² — 0.3 경계를 가로지른다) · `giovannetti2008_…`(Ag 약결합군 · LSDA · 화학흡착 Pd ≈ 0.52 J/m² = "구간 ≠ 기전").
+    ⚠ 05:38 턴 중단 때 첫 실행 셋이 **같이 취소**됐다(그림만 남음) → 재실행. 도는 동안 Esc 금지.
+  · ✅ **comp1 SE 종결 재계산**: PS₄ 보존 창 = Li 8 + free S 2 · Cl 0 → Li 2|6 틈 두 곳만 +2/+2 (Tasker 보상) · 4|4 는 극성. DEM 의 "Cl 쪽" 은 comp1 절단으로 불가.
+  · ✅ **QE D3 3체 기본값 = TRUE** (7.4.1 INPUT_PW.def) — repo QE 생성기 어디도 `dftd3_threebody` 를 안 적는다 ⇒ `vgcf_hbn` "D3BJ" 는 실제 D3(BJ)+ATM. 표기 정정 여부 = 1저자.
+  · ⏭ **DEM 회신 초안** `kb/projects/wad_dem_reply_draft_2026_09_23.md` — 1저자 검토 후 DEM 세션(`claude/stoic-knuth-NObVQ`)에 붙여 넣기. 그쪽 트랙 §6 의 두 오류(Maurer "mJ/J 판별 영향 없음" · Pustorino 0.20 = 벽개) 정정 포함.
+  · ⏭ **1저자 결정**: SE 종결 (가 대칭 두 장 / 나 비대칭 한 장) · "Cl 쪽" 처리 · D3 ATM 끄기 · `vgcf_hbn` 표기 정정 · NCM 상태 정책/U · (DEM 답 오면) 헤드라인 W_sep 수용 여부.
   · 내부 리뷰(Fable) = **NO-GO (v1)** → `kb/reviews/internal_review_wad_agc_fable_2026_09_23.md`. P0 4건 원문 대조 확인 · v2 반영:
     ① 기준값은 **이완만 · uma-s-1p1** (v1 은 800 K MQA 로 읽었다 — 결과 문서 `kb/results/adhesion_final.md` 를 안 봤다)
     ② SE 는 **정방 20.11 Å** 인데 계면 셀은 육방 351.5 Å² — 빌더가 **wrap** (추정, 원본 유실) ⇒ 기준값 숫자 재사용 안 함, 정방 셀에서 NCM 부터 재계산
