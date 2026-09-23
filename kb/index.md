@@ -1,20 +1,21 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-23 · managed-files: 444
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-23 · managed-files: 445
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 243건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 244건)
 - 2026-09-23 · `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다)
 - 2026-09-23 · `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응 · 진단 정리 — 값은 citable:false (사전등록 게이트 미통과…
 - 2026-09-23 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-23 · `kb/reviews/codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md` — 리뷰 BV 프롬프트 — LPSCl | Ag–C | VGCF 점착일: 기존 LPSCl|NCM 워크플로를 재사용해도 같은 양을 재는가 (v2) · 발송됨 · 회신 수령 (NO-GO) → codex_BV_reply_w…
 - 2026-09-23 · `kb/reviews/codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md` — 리뷰 BV 회신 (Codex) — LPSCl | Ag–C | VGCF 점착일 계획 v2: NO-GO · 구조 검증부터 · 수신됨 — NO-GO (v2 대상 · 5687c4fa7). 새 P0 …
+- 2026-09-23 · `kb/reviews/codex_BW_prompt_wad_validation_without_cluster_2026_09_23.md` — 리뷰 BW 프롬프트 — W_ad: 클러스터 없이(단일 노드 48 GB) 무엇을 검증할 수 있나 · MLIP+D3 본계산 + 작은 모델 DFT 검증으로 바꿔도 되는가 · 작성 — 1저자 검토 후 발송
 - 2026-09-23 · `kb/reviews/internal_review_wad_agc_fable_2026_09_23.md` — 내부 리뷰 (Fable) — LPSCl | Ag–C | VGCF 점착일 계획: NO-GO (현재 판) · 수신됨 — NO-GO(현재 판) · P0 4건 원문 대조 확인 끝 ·…
-- 2026-09-23 · `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청 · 초안 — 1저자 검토 후 DEM 세션(claude/stoic-knut…
-- 2026-09-23 · `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v3 (Fable · Codex BV 두 리뷰 NO-GO 반영) · 보고량 카드 초안 · 계획 v3 — 두 리뷰 모두 NO-GO. 계산 0. 다음은 구조 검증…
+- 2026-09-23 · `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청 · 1차 발송 완료 · DEM 회신 수령(2026-09-23 저녁) · …
+- 2026-09-23 · `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v3 (Fable · Codex BV 두 리뷰 NO-GO 반영) · 보고량 카드 초안 · 계획 v3 — 두 리뷰 NO-GO 반영. SE 슬랩 빌더 완료 · S…
 - 2026-09-22 · `kb/reviews/li2s1a_BS_prompt_li2s_relax_provenance_2026_09_22.md` — BS 수신 원문 — li2s relax 계보·E_hull 분해·−38.4 읽는 방향·600 K 문구 · 수신됨-회신함
 - 2026-09-22 · `kb/reviews/li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md` — BS 회신 — relax 프레임 동정 불가 · E_hull 분해 · −38.4 상한 읽기 · 600 K 문구 정정 · 회신문-작성됨
 - 2026-09-22 · `kb/reviews/li2s1a_BT_prompt_neff_window_bootstrap_2026_09_22.md` — BT 수신 원문 — 정확값 지문 · N_eff 창 불일치 지적 · 부트스트랩 제안 · 수신됨-회신함
@@ -26,7 +27,6 @@
 - 2026-09-19 · `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적) · open
 - 2026-09-18 · `kb/methodology/amorphous_overlap_gate_lessons_2026_09_18.md` — 비정질 겹침 게이트 — 다음 캠페인 설계로 넘기는 것 셋 · 제안 (다음 캠페인 설계용 · 이번 판정 재해석 금지)
 - 2026-09-18 · `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 을 "고전압 양극 계면 열화 억제" 로 · proposed — 1저자 승인 대기
-- 2026-09-16 · `kb/methodology/cei_model_transfer_to_cascade_2026_09_16.md` — CEI 모델을 캐스케이드로 옮기기 — 무엇이 이미 배선됐고 무엇이 안 됐나 · 진행
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -212,7 +212,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (151)
+## reviews/ (152)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-23 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -291,6 +291,7 @@
 - `kb/reviews/codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 회신 — G4 는 합격선이 아니라 경보. '셀 문제 배제' 는 받아들일 수 없다  (2026-09-14 · 회신됨)
 - `kb/reviews/codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md` — 리뷰 BV 프롬프트 — LPSCl | Ag–C | VGCF 점착일: 기존 LPSCl|NCM 워크플로를 재사용해도 같은 양을 재는가 (v2)  (2026-09-23 · 발송됨 · 회신 수령 (NO-GO) → codex_BV_reply_w…)
 - `kb/reviews/codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md` — 리뷰 BV 회신 (Codex) — LPSCl | Ag–C | VGCF 점착일 계획 v2: NO-GO · 구조 검증부터  (2026-09-23 · 수신됨 — NO-GO (v2 대상 · 5687c4fa7). 새 P0 …)
+- `kb/reviews/codex_BW_prompt_wad_validation_without_cluster_2026_09_23.md` — 리뷰 BW 프롬프트 — W_ad: 클러스터 없이(단일 노드 48 GB) 무엇을 검증할 수 있나 · MLIP+D3 본계산 + 작은 모델 DFT 검증으로 바꿔도 되는가  (2026-09-23 · 작성 — 1저자 검토 후 발송)
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서)  (2026-08-20 · 리뷰대기)
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
@@ -398,8 +399,8 @@
 - `kb/projects/sdcp_v7c_structure_spectroscopy_report_2026_07_10.md` — SDCP v7c — 구조·분광 판정 보고 (입문자용 완전판)
 - `kb/projects/sei_products_2026_08_06.md` — SEI 분해상 6종 캠페인 — 확산장벽 · 형성전위 · 밴드갭
 - `kb/projects/symposium_2026_competitive_analysis.md` — 전지기술 심포지엄 2026 — 경쟁 좌표 분석 (이상욱 / 문장혁)
-- `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청  (2026-09-23 · 초안 — 1저자 검토 후 DEM 세션(claude/stoic-knut…)
-- `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v3 (Fable · Codex BV 두 리뷰 NO-GO 반영) · 보고량 카드 초안  (2026-09-23 · 계획 v3 — 두 리뷰 모두 NO-GO. 계산 0. 다음은 구조 검증…)
+- `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청  (2026-09-23 · 1차 발송 완료 · DEM 회신 수령(2026-09-23 저녁) · …)
+- `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v3 (Fable · Codex BV 두 리뷰 NO-GO 반영) · 보고량 카드 초안  (2026-09-23 · 계획 v3 — 두 리뷰 NO-GO 반영. SE 슬랩 빌더 완료 · S…)
 - `kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` — Zn ALZIB 세미나(2026-09-02) — 우리가 DFT/MD 로 기여할 수 있는 지점  (2026-09-03 · 진행)
 
 ## questions/ (12)
