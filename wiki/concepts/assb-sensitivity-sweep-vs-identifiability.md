@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -175,6 +175,16 @@ evidenceScope: multi-source-primary
 그리고 이 편의 적합은 **율마다 다시 정하는 `D_p,ref(C-rate)`** 를 가진다 — 둘째 줄(추정 데이터 위 `J`)을 계산한다면 율 축의 정보가 먼저 그 파라미터 열로 간다.
 ⇒ 처방 목록에 한 줄: **OAT 스윕에서 "둔감" 을 보면 (i) 출력이 용량인지 전압인지 (ii) 그 파라미터와 곱으로만 들어가는 짝이 있는지를 식에서 먼저 찾는다.**
 
+## ★★ 49호 — 31호 줄의 원전형: **총량이 한 곡선에 모인다 ≠ 성분이 식별된다**, 그리고 대역 끝이 파라미터 값을 정한다
+
+`raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md` (Barai et al. 2018, ⚠ **액체셀**, 상용 20 Ah LFP/흑연 파우치 한 상태).
+이 편의 검증도 **교차 방법 일치**다 — DC 펄스 · 1 kHz · EIS · 펄스-다중사인의 저항이 "timescales match" 하면 한 곡선(EIS \|Z\|, 가로축 t = 1/f)에 모인다(`[재현]` 5 C: −6 … +11 %). 31호보다 5 년 이르고, 모이는 것은 **총량**이다.
+`[해석]` 세 가지를 더한다.
+1. **성분은 모이지 않는다** — 같은 이름이 방법마다 `R₀` ×2.0 · `R_CT` ×2.9 · `R_p` ×13, EIS 에서 경계만 0.1 → 0.01 Hz 로 옮겨 `R_p` ×3.9. 원문도 `R_p` 를 "pre-defined" 로 적었다. ⇒ 총량 일치는 **창 차분(성분)** 의 식별을 보증하지 않는다(31호: 같은 묶음을 보는 방법끼리의 일치는 인자 식별이 아니다 — 같은 범주).
+2. **일치의 분해능** — 규약을 t = 1/(2πf) 로 옮기면 일치가 −13 … −23 % 로 벌어진다(그림 판독). 스펙트럼이 decade 당 ≈15–19 % 변하는 평탄한 셀에서 "timescales match" 는 시간 척도를 ≈1 decade 로만 가른다.
+3. **대역 끝 흡수** — 다중사인 ECM 직렬 `R₀` 1.62 = \|Z\|(1 Hz)(여기 최고 1 Hz) · DC 0.1 s = \|Z\|(10 Hz)(장비 10 Hz). 적합된 직렬 파라미터는 **관측 대역 위쪽 끝의 임피던스**를 가져간다 — 스윕 · `J` · FIM 표 어느 줄도 아닌, **여기 설계가 파라미터의 뜻을 정하는** 경우다. 원문은 ECM 비유일성("not uniquely identifiable" · "ambiguities … Ro and RCT" · "judged solely on closeness of fit")을 인쇄하고, 결론에서는 "EIS can accurately provide separation and identification of all the individual resistance components" 로 지웠다.
+⇒ 처방 목록에 한 줄(13).
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -197,6 +207,7 @@ evidenceScope: multi-source-primary
 10. (35호) **"calibrated uncertainty" · "confidence interval" 을 보면 대상이 예측(스칼라 목표의 오차)인지 파라미터(해 집합)인지 먼저 적는다.** 예측이면 Q4 근거가 아니다. 그리고 적중률 점수(`C_score`)는 **목표와의 거리**로 읽는다 — 90 % 목표에서 100 은 과소 확신이다. 이름도 대조한다: "α-accuracy · β"(예측 지표) ≠ 우리 α·β(전극 스케일 · 오프셋).
 11. (36호) **"posterior" · "parameter uncertainty" · "epistemic" 을 보면 ① 무엇의 파라미터인지(물리 ↔ ML 가중치) ② 데이터를 늘리면 줄어드는 폭인지(실제적) 아닌지(구조적) ③ 공분산을 보고했는지(평균장 근사면 상관이 지워진다)를 적는다.** 셋 다 아니면 Q4 근거가 아니다.
 12. (37호) **OAT 스윕의 "둔감 · minimal" 을 보면 ① 출력이 용량(설계 KPI)인지 전압(데이터)인지 ② 그 파라미터와 곱으로만 들어가는 짝이 식에 있는지 ③ 짝이 적합에서 풀렸는지를 적는다.** 짝이 풀렸고 스윕 대상이 출처 없이 고정됐으면 그 값은 데이터가 정한 것이 아니다(37호 `A_eff` 0.4938 ↔ `k_p`).
+13. (49호) **"방법들이 시간 척도를 맞추면 일치한다" 를 보면 ① 일치하는 것이 총량인지 성분인지 ② 시간 ↔ 주파수 대응 규약과 그 대역의 \|Z\| 기울기(분해능) ③ 진폭이 같은지 ④ 적합된 직렬 파라미터가 여기 대역 위쪽 끝의 \|Z\| 와 같은지를 적는다.** 같으면 그 파라미터는 물리 성분이 아니라 대역 끝의 이름이다.
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -206,6 +217,7 @@ evidenceScope: multi-source-primary
 - **27호의 큰 `κ` 오프셋이 전부 접촉 손실이라고 단정하지 않는다** — 0.068 ↔ 0.07 일치와 바닥을 뺀 연결 입자 SOC 0.044 ↔ P2D 0.043 까지가 사실이고, `u` 가 부피 분율인지 · P2D 면적 과대(≈1.5 배)가 같은 자리에서 상쇄되는지는 모른다.
 - **35호의 보정된 구간이 쓸모없다고 하지 않는다** — 스칼라 SOH 를 운용하는 데는 이 계보에서 가장 정직한 불확실성 보고다. 주장은 **그것이 파라미터 식별성과 다른 물음에 답한다**는 것까지다.
 - **36호의 분류가 틀렸다고 하지 않는다** — aleatory/epistemic 은 예측 불확실성을 나누는 표준 분류이고 그 목적에는 맞다. 주장은 **그 분류에 데이터량 불변의 파라미터 폭이 들어갈 칸이 없다**는 것까지이며, 분류 원전(Der Kiureghian 2009)이 그 자리를 어떻게 두는지는 미확인이다.
+- **49호의 "대역 끝 흡수" 를 일반 정리로 주장하지 않는다** — 한 셀(평탄한 스펙트럼)에서 두 사례가 맞은 것이다. 가파른 호가 대역 끝에 걸리면 적합 직렬 R 과 끝점 \|Z\| 는 다를 수 있다.
 
 ## 관련
 

@@ -2377,3 +2377,17 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **10 장 다 봤다**, 화소 판독 Fig. 3a · 5c · 7 · 9a · 10a.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-li-in-reference-potential-window]](48호 절 · 조건 (11) · P8 · P11) · [[assb-lampe-contact-product-degeneracy]](서른한 번째 적용 · 처방 표 새 줄) · 큐 문서 §6-3-g 49 행 + 지문 ¹⁴.
 - 후속(서지 기준, 미열람 — 큐 50–59 인용 0): Costard … Ivers-Tiffée 2017 *JES* 164, A80 (ref 15, 두 번째 지목) · Ender, Illig, Ivers-Tiffée 2017 *JES* 164, A71 (ref 6) · Kasemchainan … Bruce 2019 *Nat. Mater.* 18, 1105 (ref 8) · Marchini … Tarascon 2020 *ACS AMI* 12, 15145 (ref 18) · Kaiser … Roling 2018 *JPS* 396, 175 (ref 23).
+
+## [2026-09-23] ingest | assb 49호 — Barai et al. 2018, A study of the influence of measurement timescale on internal resistance characterisation methodologies for lithium-ion cells (Sci. Rep. 8, 21)
+- raw: `raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md` (sha256 봉인 — PDF 해시 frontmatter `pdf_sha256`, SI 없음) · 그림 `raw/figures/barai2018_measurement-timescale-internal-resistance-methods/` (7 장). 큐 50번(2차 묶음 열한째 편) — 20호 ref [24]. ⚠ 액체셀(상용 20 Ah LFP/흑연 파우치) — 도구 칸.
+- ★★★★ **판정**: 총량은 **같은 양의 다른 창**(`[재현]` 5 C 펄스 ↔ EIS |Z|(t = 1/f) −6 … +11 %) · 성분 이름(`R₀`/`R_CT`/`R_p`)은 **창 경계의 규약**(방법 간 ×2.0 · ×2.9 · ×13, EIS `R_p` 경계만 ×3.9) · 옳은 창은 `R₀` 에만("after 4ms") · 10 Hz 장비 `R₀` +43 % = |Z|(10 Hz).
+- ★★★ **식별**: 비유일성 두 곳(ECM · DC 분해) 인쇄 → 결론이 지움 — Q4 마흔한 번째 성질. `[해석]` 적합된 직렬 R = 여기 대역 위쪽 끝의 |Z|.
+- ★★★ **20호 대조**: 모양 규칙(원전 Fig. 1 모식의 선형 외삽 · "shallow, linear")은 가져갔고 시간 규약(0.1 · 2 · 10 s, 5 C, 50 % SoC, 4 h 휴지)은 두고 왔다 — `R_CT` 창 ×10³, 원전 규약으로 ≈0.28 mHz. "작도다" 판정은 원전에서도 선다. 규약 출처 = 원전 ref 8 Waag 2013(20호 [25]).
+- ⚠ 결론 긴장: "not the non-linearity" ↔ 10 s 창 진폭 ×1.46 · 대진폭 다중사인 −24 % @ ≈0.017 Hz · 다중사인 총 2.83 = ω→0 외삽.
+- **채움표 49호 행 — 누적 ≈20.0 → ≈20.0 (새 칸 0).** Q4 0/49 마흔한 번째 성질 · Q3 층 둘 · Q2 해당 없음(도구 칸).
+- **곱 축퇴 처방 서른두 번째 적용**: 4단계 ✅ 총량 · 3-b 판정 불가 · 새 줄 "창 규약".
+- ⚠ 어긋남 15 건(D4 Re ↔ |Z| 혼용 · D5 결론 "separation and identification" ↔ "not well-defined" · D6 진폭 · D10 0.01 ↔ ≈0.017 Hz 외).
+- 낱말 지문: `identifiab` 3(파라미터 뜻 2) · `uncertaint` 1 · 나머지 9 열 0 · `timescale` 20 · `window` 0.
+- 그림: **7 장 다 봤다**, 화소 판독 Fig. 5a · 5b · 6a · 7b.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-lampe-contact-product-degeneracy]](서른두 번째 적용 · 처방 표 새 줄) · [[assb-sensitivity-sweep-vs-identifiability]](49호 절 · 처방 13) · 큐 문서 §6-3-g 50 행 + 지문 ¹⁵.
+- 후속(서지 기준, 미열람 — 큐 51–59 인용 0): **Waag, Käbitz, Sauer 2013 *Applied Energy* 102, 885** (ref 8, 두 번째 지목) · Schweiger et al. 2010 *Sensors* 10, 5604 (ref 22) · Widanage et al. 2016 *JPS* 324, 61 · 70 (refs 21 · 20) · Barai et al. 2015 *JPS* 280, 74 (ref 18) · Smith & Wang 2006 *JPS* 161, 628 (ref 28).

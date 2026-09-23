@@ -1,0 +1,151 @@
+{
+ "slug": "barai2018_measurement-timescale-internal-resistance-methods",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "20fd9a7a-11._A_study_of_the_influence_of_measurement_timescale_on_internal_resistance_characterisation_methodologies_for_lithium-ion_cells.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Cell voltage response to a pulse current.",
+   "rotated_deg": 0,
+   "bbox": [
+    149.6,
+    40.5,
+    401.6,
+    368.1
+   ],
+   "w": 1051,
+   "h": 1366,
+   "dpi": 300,
+   "src": "20fd9a7a-11._A_study_of_the_influence_of_measurement_timescale_on_internal_resistance_characterisation_methodologies_for_lithium-ion_cells.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Typical Nyquist plot of a new li-ion battery cell (a), and an mth order ECM (b). The series resistor R0 denotes the internal resistance and the m RC pairs denote the dynamic model parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    149.6,
+    40.5,
+    555.1,
+    266.7
+   ],
+   "w": 1690,
+   "h": 944,
+   "dpi": 300,
+   "src": "20fd9a7a-11._A_study_of_the_influence_of_measurement_timescale_on_internal_resistance_characterisation_methodologies_for_lithium-ion_cells.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Voltage response to 18 second (a) discharge pulse and (b) charge pulse. Resistance calculated for pulse duration are shown in (c) for discharge and (d) for charge. In subplots (c) and (d), (i), (ii) and (iii) refer to pure Ohmic resistance R0, charge transfer resistance RCT and polarization resistance Rp, respectively. The overlap between (ii) and (iii) is indicative of the inability, within this technique, of precisely discerning each contribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    149.6,
+    40.5,
+    557.6,
+    320.6
+   ],
+   "w": 1701,
+   "h": 1168,
+   "dpi": 300,
+   "src": "20fd9a7a-11._A_study_of_the_influence_of_measurement_timescale_on_internal_resistance_characterisation_methodologies_for_lithium-ion_cells.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Voltage response to switching current from (a) 5 C discharge to 5 C charge, (b) 1 C discharge to 5 C discharge, (c) 1 C charge to 5 C charge, and (d) pure Ohmic resistance calculated from switching edge.",
+   "rotated_deg": 0,
+   "bbox": [
+    149.6,
+    40.5,
+    557.6,
+    315.3
+   ],
+   "w": 1701,
+   "h": 1146,
+   "dpi": 300,
+   "src": "20fd9a7a-11._A_study_of_the_influence_of_measurement_timescale_on_internal_resistance_characterisation_methodologies_for_lithium-ion_cells.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. EIS results from 100 kHz to 10 mHz with different signal amplitudes (a) Nyquist plot and (b) Bode plot of same data. Inset (a) a zoomed view of the central part is shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    149.6,
+    40.5,
+    550.6,
+    329.1
+   ],
+   "w": 1672,
+   "h": 1204,
+   "dpi": 300,
+   "src": "20fd9a7a-11._A_study_of_the_influence_of_measurement_timescale_on_internal_resistance_characterisation_methodologies_for_lithium-ion_cells.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a) Magnitude and (b) phase response of the estimated resistance via the LPM using a pulse-multisine signal and a fitted 2nd order ECM model.",
+   "rotated_deg": 0,
+   "bbox": [
+    149.6,
+    376.5,
+    562.6,
+    518.3
+   ],
+   "w": 1722,
+   "h": 592,
+   "dpi": 300,
+   "src": "20fd9a7a-11._A_study_of_the_influence_of_measurement_timescale_on_internal_resistance_characterisation_methodologies_for_lithium-ion_cells.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Figure 7. (a) Comparison of resistance values measured by different techniques. (b) Total resistance vs timescale plot showing resistance values agree when timescales match, irrespective to the measurement technique employed.",
+   "rotated_deg": 0,
+   "bbox": [
+    149.6,
+    40.5,
+    530.6,
+    264.7
+   ],
+   "w": 1588,
+   "h": 935,
+   "dpi": 300,
+   "src": "20fd9a7a-11._A_study_of_the_influence_of_measurement_timescale_on_internal_resistance_characterisation_methodologies_for_lithium-ion_cells.pdf",
+   "blank": 0.941
+  }
+ ]
+}
