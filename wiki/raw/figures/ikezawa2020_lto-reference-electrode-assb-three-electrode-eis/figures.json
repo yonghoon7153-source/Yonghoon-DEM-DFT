@@ -1,0 +1,71 @@
+{
+ "slug": "ikezawa2020_lto-reference-electrode-assb-three-electrode-eis",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "ddad3c1a-2._Performance_of_Li4Ti5O12-based_reference_electrode_for_the_electrochemical_analysis_of_all-solid-state_lithium-ion_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) A schematic illustration of the electrochemical three-electrode cell with the R-LTO reference electrode. Charge-discharge curves for (b) cell voltage and potential of (c) LiCoO2 and (d) Li-In at various C-rates. material-free reference electrode, which can be used in a variety of solid-electrolyte systems. For the shapes and locations of the reference electrodes, we chose mesh-type reference electrodes and located them between the positive and the negative electrode to weaken the artifacts in the EIS data [10,11] though this configuration has the disadvantages of difficulty in the application to the cells with thin solid electrolyte layers and possibility of hindering ion current. reference electrodes were prepared by manual dip-coating on a current collector. For the current collector, Ni mesh (3Ni7-3/0, Taiyo Wire Cloth, aperture ratio: 90–91%, thickness: 0.08 mm) were sele",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.7,
+    511.6
+   ],
+   "w": 2218,
+   "h": 1920,
+   "dpi": 300,
+   "src": "ddad3c1a-2._Performance_of_Li4Ti5O12-based_reference_electrode_for_the_electrochemical_analysis_of_all-solid-state_lithium-ion_batteries.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Nyquist plots of LiCoO2 and Li-In impedances measured with the reference electrode and cell impedance measured with two-electrode configuration and combined impedance of LiCoO2 and Li-In impedances after charge at 0.1C. (b) Enlarged view of Nyquist plots of the cell impedance and the combined impedance. (c) Nyquist plots of the LiCoO2 impedance (symbols) and the cell impedance (symbols) with fitted curves (lines) and the equivalent circuit used for the curve fittings (R: Resistor, CPE: constant phase element). (d) R2 and R3 values calculated from the LiCoO2 impedance and the cell impedance. electrode was achieved by the Ni wire passed through the pinhole of the PET tube (Fig. 1(a)). The masses of the Li10GeP2S12 powder layers were 50 mg and 160 mg for the LiCoO2 electrode side and the Li-In electrode side, respectively (Fig. 1(a)). 3. Results and discussions Fig. 1(b)–(d) sho",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.7,
+    504.5
+   ],
+   "w": 2218,
+   "h": 1891,
+   "dpi": 300,
+   "src": "ddad3c1a-2._Performance_of_Li4Ti5O12-based_reference_electrode_for_the_electrochemical_analysis_of_all-solid-state_lithium-ion_batteries.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. SOC dependences of (a) LiCoO2 impedance (symbols: measured data, lines: fitted data) and (b) R3. Temperature dependences of (c) LiCoO2 impedance (symbols: measured data, lines: fitted data) at SOC = 100% and the equivalent circuit used for the curve fittings. (d) Arrhenius plots for R2 and R3 and their activation energy calculated from the slopes. The equivalent circuits used for the curve fittings are shown in the insets of (a) and (b) (W: Warburg impedance). electrode in the strict evaluation of the single electrode potential, especially at high rate. impedance and the LiCoO2 impedance in the frequency range above 1 kHz using the equivalent circuit shown in the inset of Fig. 2(c) and a modeling program (Z-view, Scribner Associates). Calculated resistances were shown in Fig. 2(d). Larger values of R2 and R3 in the cell im- pedance indicated that the LiCoO2 impedance was overesti",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.3,
+    563.7,
+    462.8
+   ],
+   "w": 2218,
+   "h": 1716,
+   "dpi": 300,
+   "src": "ddad3c1a-2._Performance_of_Li4Ti5O12-based_reference_electrode_for_the_electrochemical_analysis_of_all-solid-state_lithium-ion_batteries.pdf",
+   "blank": 0.957
+  }
+ ]
+}

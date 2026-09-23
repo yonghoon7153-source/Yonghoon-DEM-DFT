@@ -45,7 +45,7 @@
 |---|---|---|
 | F1 | 본진 명제 "LLI 와 LAM 이 같은 곡선을 만든다" · 팩 "ISC ↔ 자기방전 산포 ↔ 용량 편차" | `degradation-degeneracy/` · `wiki/questions/isc-detection-vs-balancing-masking.md` |
 | F2 | T-계열 규칙 "각 시험은 **어느 원인을 가르는가**로만 정당화된다" | `docs/NEW_MODEL_REQUIREMENTS.md` §4 |
-| F3 | 규진팀 MSC 실험 설계 자체 (Fe 삽입 액체셀) — 우리 쪽에서는 외부 저항 토글(§3 P10)과 MSC COMSOL 모델 재구축의 σ_short 를 켜고 끄는 사전 검사(§5)가 같은 자리 | `docs/COMSOL_REBUILD_SPEC.md` · `docs/MICROSHORT_MPH_REVIEW.md` |
+| F3 | 규진팀 MSC 실험 설계 자체 (Fe 삽입 액체셀) — 우리 쪽에서는 외부 저항 토글(§3 P10)과 MSC COMSOL 모델 재구축의 σ_short 를 켜고 끄는 사전 검사(§4)가 같은 자리 | `docs/COMSOL_REBUILD_SPEC.md` · `docs/MICROSHORT_MPH_REVIEW.md` |
 
 **발표 내용 자체에 이미 축퇴 표본이 넷 있다.** 모두 정성 인용이다.
 

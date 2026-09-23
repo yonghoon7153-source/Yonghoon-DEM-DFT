@@ -2253,3 +2253,15 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **15 장 봤다(Fig. 1–6 · S1–S4 · S7 · S13–S16)**; 안 본 것 Fig. 7 · S5 · S6 · S8–S12.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른다섯 번째 · Against 단서 · 새 제약 6 · Status Log) · [[assb-lampe-contact-product-degeneracy]](스물두 번째 적용 · 표 한 줄) · [[assb-stack-pressure-operating-window]](39호 절 · 요구치 여섯 번째 인쇄 · 25호 오귀속 정정) · [[assb-pressure-reapplication-separation-test]](39호 절). 큐 `bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §6-3-g 신설(40 행).
 - 후속(서지 기준, 큐 41–59 에 없음): Wang · Kazyak · Dasgupta · Sakamoto 2021 *Joule* 5, 1371 (ref 22, "1 MPa practically") · Ohashi … Hirai 2020 *JPS* 470, 228437 (ref 24) · Ohashi … Hirai 2021 *JPS* 483, 229212 (ref 25) · Fathiannasab 2021 *JPS* 483, 229028 (ref 18) · Doux 2020 *JMCA* 8, 5049 (ref 15).
+
+## [2026-09-23] ingest | assb 40호 — Ikezawa et al. 2020, Performance of Li4Ti5O12-based reference electrode for the electrochemical analysis of all-solid-state lithium-ion batteries (Electrochem. Commun. 116, 106743)
+- raw: `raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md` (sha256 봉인 — PDF 해시 frontmatter) · 그림 `raw/figures/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis/` (크로퍼 3). 큐 **41번** — 2차 묶음 둘째 편, 지목 5 회(16 · 17 · 18 · 19 · 21호). CC BY, SI 없음.
+- ★★★★ **Q5 판정**: (a) R-LTO 전위의 **누설 · 드리프트 · 안정성을 재지 않았다**(`leak` · `drift` · `assum*` 0) — 원장 구조적 공백 3 그대로, 누설 직접 측정 0/40 · (b) 1.55 V = ref [11] Costard 2017(액체셀) 수입, 검증은 환산한 두 평탄 ↔ 문헌 [5,17] "coincident" = P6 순환의 원전 확인 · (c) 19호 ±30 mV 의 근거 없음 · (d) 두 가지가 만난다 — 인용([5] Nam 2018 · [6] = 20호 Chang) · 기각(Li-In 은 기준극 부적합) · 한 셀(Li-In 문헌값이 증인) ⇒ **열여섯 번째 형태 "상호 증언"** · (e) `[재현]` 증인 0.62 V 면 R-LTO 1.5745 V — 1.55 ↔ 1.57 불가분 · (f) 부호 오기 "−0.60 V vs Li".
+- **채움표 40호 행 — 누적 ≈17.5 → ≈17.5 (새 칸 0).** Q5 · Q2 반 칸 검토 후 접음 · Q4 0/40 서른두 번째 성질 "통과가 보장된 검사로 분리를 검증했다" · Q3 층 하나(같은 상태 R3 세 값 ×1.49).
+- ★★★ 다른 편의 인용 교정: 21호 `[인쇄]` "∼40 mV ∼110 Ω cm²" → 원전 인쇄 0, `[도표]` C/2 충–방 폭 42.8 mV; 탈리튬만 21–23 mV ⇒ `[재현]` ≈58–63 Ω cm² · 20호 "뿌리 둘" → R-LTO 원전이 In 가지의 두 뿌리를 인용 · 17호 요약 "Li-In 병목" → 원문 "relatively large overpotential at the end of the discharges".
+- 곱 축퇴 처방 **스물세 번째 적용**: 3-a ✅(재료만, `[재현]` 55.4 · 37.2) · 3-b R2 귀속 긴장(`C₂` ≈23 nF) · 4단계 ✅(Li-In DC ↔ EIS) · 표 새 줄 "3전극 옴 몫은 기준극 위치가 정한다".
+- ⚠ 어긋남 6 건: D1 부호 · D2 [6] 은 LTO 를 안 쓴다 · **D3 R3 세 값** · D4 "Li₁₀GeP₂S₅" · D5 서지 · D6 "직선 이탈".
+- 낱말 지문(NFKC · 대소문자 구분 · 낱말 경계 · 본문): 11 열 중 `MPa` 1 외 전부 0. NFKC 변경 0 · 줄끝 하이픈 이음 열 변화 0. 보조 `leak` 0 · `drift` 0 · `1.55` 1 · `30 mV` 0.
+- 그림: **3 장 다 봤다**(Fig. 1–3, 화소 판독 1c · 1d · 2a · 2d · 3b · 3d).
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른여섯 번째 · Status Log) · [[assb-li-in-reference-potential-window]](40호 절 · P6 원전 판정 · 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]](스물세 번째 적용 · 표 한 줄). 큐 `bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §6-3-g 41 행 · 지문 행.
+- 후속: Costard · Ender · Weiss · Ivers-Tiffée 2017 *JES* 164, A80 (ref 11 — 1.55 V 의 유일한 근거, 큐 없음) · Nam 2018 *JMCA* 6, 14867 (ref 5 — 큐 42) · Ender · Illig · Ivers-Tiffée 2017 *JES* 164, A71 (ref 10) · Braun 2018 *JPS* 393, 119 (ref 28).

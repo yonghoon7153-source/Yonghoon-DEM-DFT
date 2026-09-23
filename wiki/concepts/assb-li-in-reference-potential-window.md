@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
+sources: [raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -470,6 +470,23 @@ shift less than 3 mV"*. `[추론]` WE·CE 가 **둘 다 2상 평탄에 고정**�
 - ★ **이 형태의 비용을 수로**: `[재현]` 3.77 V 기울기(`∂E/∂x` 0.38 V, 인쇄)로 환산하면 **기준 ±10 mV(① 평탄 폭 상한) ≈ 활성 질량 ±3.8–4.4 %** — 38호 SC 의 40 사이클 신호(≈9–10 %)의 절반 크기, PC(≈37 %)에는 작다. 끝점 기울기가 달라 자릿수만.
 - 부수: Li 재고 / 이동 전하 **×2.75** — 이 설계에서 `LLI` 는 용량에 안 보인다(기준 과잉 = 재고 과잉).
 
+### ★★★★ `assb` 40호 (Ikezawa et al. 2020) — **열여섯 번째 형태: 상호 증언** (R-LTO 가지의 원전, 시점으로는 18호 앞)
+
+`raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md`
+(*Electrochem. Commun.* **116** (2020) 106743, CC BY, Tokyo Tech). LiNbO₃-LCO | LGPS | **R-LTO 메시**(화학 환원, Li₇ : Li₄ = 2 : 1 mol, SE · 도전재 없음) | LGPS | Li-In, 210 MPa, 신품. 16 · 17 · 18 · 19 · 21호가 지목한 원전.
+
+- **① 1.55 V 는 측정이 아니라 수입이다.** `[인쇄]` "With reported redox potential of Li₇Ti₅O₁₂|Li₄Ti₅O₁₂ (1.55 V vs. Li|Li⁺) [11], these potentials can be calculated to be 3.90 and −0.60 V vs. Li|Li⁺, which are coincident with reported values [5,17]." — [11] = Costard 2017 *JES*(액체셀 3전극, 미열람). Li 금속은 LGPS 에 불안정하다고 서론이 적어 **셀 안 Li 대비 교정이 설계상 막혀 있다.** ⇒ **처방 P6 가 18호에서 추정한 "인용 + 순환 논증" 이 원전에서 그대로다.**
+  ★ 1.55 V 의 수입 경로가 읽은 범위에서 **셋**이다: 23호 → Zaghib 1999 · **40호 → Costard 2017** · 18호 → Colbow 1989 + Ohzuku 1995. 같은 연구실의 원전과 후속이 다른 문헌을 단다.
+- **② 누설 0 · 드리프트 0.** `leak` · `drift` · `assum*` **0 회**, `stab*` 3 회는 기대 서술("can contribute to good stability and reproducibility") 또는 타 재료. **19호의 "ca. ±30 mV" 근거도 없다**(`30 mV` 0 회) — 19호 절 ②의 사슬이 원전에서 비어 끝난다. **누설 직접 측정 0/40.**
+  `[재현]` 암묵적 상한: Fig. 1d 충·방전 평탄 중점(화소 판독) **−0.9545 / −0.9524 / −0.9530 / −0.9515 V**(0.1 / 0.2 / 0.5 / 1 C, ≈3 mV 안) · 2 C −0.9452. ⚠ **(R-LTO − Li-In) 차**라 공통 모드 — 20호 ⑤ 사각 그대로, 순서 · 시간 미인쇄.
+- **③ ★★★★ 두 가지가 만나는 방식 — 상호 증언.** (i) **인용**: "few examples … [5,6]" — [5] Nam 2018 · [6] = **20호 Chang**(In 가지의 두 뿌리). 20호 절의 "뿌리가 둘" 은 **R-LTO 원전이 In 가지를 인용한다**로 고쳐 읽는다. (ii) **기각**: `[인쇄]` "lithium metal and Li-In alloy seem not suitable"(기계 강도 서술뿐). (iii) **한 셀**: 상대극 Li-In 의 문헌값(≈0.6 V, [5])이 R-LTO 1.55 V 의 **증인**이고, 그렇게 선 기준이 18호에서 다시 Li-In ≈0.6 V 를 보고한다.
+  측정된 것은 `E_LCO − E_RLTO` · `E_LiIn − E_RLTO` 두 차이고, 오프셋 하나를 증인 둘에 맞췄다 — 과잉결정이라 원리상 검사는 되지만 **분해능이 문제**다:
+  `[재현]` 증인을 **0.62 V**(Santhosha, 21호 `[인쇄]`)로 두면 R-LTO = **1.5745 V**(16호의 Zhang 1.57 V) — 인쇄 "around 2.35 / −0.95" 로는 **1.55 ↔ 1.575 를 못 가른다**(평탄 폭 ① ±10 mV 의 2.5 배).
+- **④ 부호 오기**: 본문 "**−0.60** V vs. Li|Li⁺" ↔ `[도표]` Fig. 1d 오른쪽 축은 **+0.60**. 두 축(vs R-LTO / vs Li)이 **같이 인쇄**돼 오기를 그림에서 바로 잡을 수 있다 — P11 "측정 축 병기" 의 계보 첫 표본(21호보다 이르다).
+- **⑤ 평탄 조건 대조**: (1) Li · In 박 두께만 인쇄(0.1 mm 씩) — `[재현]` 지름이 같으면 **≈55 at%**(2상역 밖), 관측 평탄의 0.62 V 대비 −25 mV 는 **조성 이탈 ②와 R-LTO 오프셋이 같은 방향 · 같은 크기**라 안 갈린다 · (2) `[도표]` Fig. 1a 는 **In 박이 분리막 쪽**(21호 InLi-(In) — 9 초에 끊긴 조립)인데 이 편은 **먼저 충전**해 분리막 면에 전기화학 LiIn 을 만든다(③-a 경로) — 1 · 2 C 방전 끝 +10–15 mV 꺾임이 양립 · (4) Li-In 쪽 분리막 옴 `[재현]` ≈33–35 Ω(고주파 끝, LGPS 질량 160/210 쪽) — 0.5 C 에서 ≈10 mV, 보상 0 · (5′) `[재현]` R-LTO 재고는 메시 1 mm² 당 **17–34 µAh**(21호 GWRE 3 µAh 의 5–10 배 이상) — **누설 예산이 설계상 크다**, 단 셀 안 면적 미인쇄.
+- **⑥ 21호의 인용 교정**: 21호 `[인쇄]` "Ikezawa … report a delithiation overpotential … ∼40 mV … ∼110 Ω cm²" — 원전에 그 수는 없고 `[도표]` C/2 **충–방 폭 42.8 mV** 가 40 mV 다. 탈리튬만 21–23 mV ⇒ `[재현]` **≈58–63 Ω cm²**(그중 분리막 ≈26–27) — `[재현]` EIS Li-In `Z′(1 Hz)` ≈82.6 Ω × 0.288 mA = 24 mV 와 맞는다. 21호의 비교 방향은 더 강해진다.
+- ⇒ 계보: … → 교정 이식(21호) → … → 영점(38호) → 흡수(39호) → **상호 증언(40호 — 원전)**. `[해석]` 18호 "제3물질로 가정" 은 **원전에서 이미 "제3물질을 제1물질(In 가지)의 문헌값으로 검증"** 이었다.
+
 ## ★★ 평탄이 유지되는 조건 (현재까지의 정리)
 
 > **Li-In 기준 전위가 ±10 mV 안에서 평탄한 것은 다음 넷이 동시에 성립할 때뿐이다.**
@@ -519,7 +536,7 @@ shift less than 3 mV"*. `[추론]` WE·CE 가 **둘 다 2상 평탄에 고정**�
 | **P3** | **`i·R(CE–RE)` 보상** — CE/RE 고주파 절편을 같은 셀에서 재서 빼기 | 17호에서 0.1 C 편차의 **전부**가 여기였다. 이것 없이 "과전압 10 mV" 는 무의미 |
 | **P4** ✅ (2026-09-23, **21호가 실행**) | **Li 박 방향 뒤집기** (분리막 쪽 ↔ 집전체 쪽) + 3전극 | ③(국소 고갈)의 기원이 **제조**인지 **방전**인지 가른다. 17호 `[인쇄]` Sedlmeier(ref 21)가 시도했다. ★ **답: 둘 다** — Li 박 뒷면 조립은 **제조 시점부터** 분리막 면에 꺼낼 Li 가 없고(9 초), 방전은 **전기화학으로 넣은 몫**(98 % 가역)을 다 쓰는 순간 전위를 올린다. ⚠ 20 MPa 파우치 한 조건, 펠릿·압력 축은 미시험 |
 | **P5** | **`E_CE(P)`** — 같은 셀에서 압력 스윕 | 0 편. 16호와 17호의 음극 임피던스가 **한 자릿수 다른** 이유의 후보 |
-| **P6** ★ (2026-09-22, 18호에서) | **제 3 물질 기준극의 전위를 같은 셀에서 Li 금속 대비 실측** | 18호가 보인 **탈출로**(Li-In 을 기준에서 빼기)가 성립하려면 R-LTO 의 **1.55 V 가정**이 실측이어야 한다. 현재 근거는 **인용 2 건 + 순환 논증**(가정한 값으로 얻은 두 평탄값이 문헌과 맞는다 ⇒ 가정이 맞다) |
+| **P6** ★ (2026-09-22, 18호에서) | **제 3 물질 기준극의 전위를 같은 셀에서 Li 금속 대비 실측** | 18호가 보인 **탈출로**(Li-In 을 기준에서 빼기)가 성립하려면 R-LTO 의 **1.55 V 가정**이 실측이어야 한다. 현재 근거는 **인용 2 건 + 순환 논증**(가정한 값으로 얻은 두 평탄값이 문헌과 맞는다 ⇒ 가정이 맞다) ★★★★ **2026-09-23 (40호 — 원전 확인)**: 원전의 근거가 정확히 이 순환이다 — 1.55 V 는 ref [11](액체) 수입, 검증은 두 평탄 ↔ 문헌 [5,17] "coincident". Li 대비 0 · 누설 0 · 시간 0. **LGPS 계에서는 Li 가 불안정해 셀 안 교정이 막힌다**(원전 서론) ⇒ P6 는 **Li 에 안정한 SE 를 쓴 교정 셀**(21호 식 이식) 또는 **알려진 2상 평탄 둘 이상에 대한 과잉결정 대조를 mV 분해능으로**(이 편의 구조를 ±10 mV 로) 가 현실적 경로다 |
 | **P7** ★ | **재고비 · 전류밀도를 각각 독립으로 스윕** | 위 (1)–(6) 중 **무엇이 평탄을 지키는가**. 17 ↔ 18 ↔ 19호는 축이 전부 같이 움직인 세 표본이다. ★ 19호가 **(6)만 깬 점**을 주어 **재고비 축이 지배적이라는 가설**이 생겼다 — 그것을 가르는 실험이 P7 |
 | **P8** ★★ (2026-09-22, 19호에서) | **기준극의 위치·개수·재료를 바꿔 스펙트럼·전위가 불변인지** | ★ **같은 그룹이 기준극 검증에 범주 오류를 두 번 썼다**: 18호 **K–K 잔차**(스펙트럼의 선형·인과·정상성 ≠ RE 의 DC 전위), 19호 **진폭 비의존성**(선형성 ≠ 기원 — 선형 artifact 는 진폭 무관). **올바른 검사는 섭동이고, 네 편 중 아무도 안 했다** |
 | **P10** ★★★★ (2026-09-22, 20호에서) | **기준극 누설 전류를 재거나, 재고 예산을 보고하기** — 그리고 **기준극 표류를 볼 수 있는 배선으로 옮기기** | `[재현]` 20호의 매립 In 은 Li 재고가 셀의 **1/675**, 190 h 실험에서 **누설 < 10 nA** 를 요구한다. **3전극은 표류를 공통 모드로 상쇄해 원리적으로 못 본다** ⇒ 4전극(19호) 또는 **알려진 2상 평탄에 대한 주기적 개방회로 대조**가 필요하다. **20/20 편이 안 했다** |
@@ -571,6 +588,8 @@ Li 박 뒷면(= 17호 foil) 은 **9 초 · 0.39 µAh cm⁻²**, Li 박 면이 �
 - ★ **2026-09-23 (21호)**: **③-a/③-b 구분을 17호 셀에 적용했다고 주장하지 않는다** — 21호의 복귀 관측은 **다른
   셀·압력(20 MPa)·전류(0.2 mA cm⁻²)** 이다. 17호 P1 은 여전히 17호 셀에서 해야 닫힌다. **누설 < 4.3 nA 는 상한**이지
   측정이 아니고, **16호 0.11 V 의 금선 설명은 후보**다. **21호의 InLi 0.62 V 는 옮긴 0.31 V 위에 있다.**
+
+- ★ **2026-09-23 (40호)**: **R-LTO 가 1.575 V 라고 주장하지 않는다** — 증인 0.62 V 를 넣은 우리 계산이고, 주장은 "원전의 검증이 25 mV 를 못 가른다" 까지다. **≈3 mV 중점 안정은 드리프트 상한이 아니다**(두 전극의 차 · 순서 미인쇄). **Li-In 55 at% 는 박 지름이 같다는 모식도 가정 위**다. 17–34 µAh 재고는 누설 측정이 아니라 설계 여유의 계산이다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻. 이 페이지는 그 카드의 **Q5** 와 "아직 모르는 것 2"
