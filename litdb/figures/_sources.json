@@ -436,6 +436,13 @@
    "DFT 먹인 논문/02. Synergistic effects of chlorine substitution in sulfide electrolyte solid state batteries.pdf"
   ]
  },
+ "giovannetti2008_doping_graphene_metal_contacts": {
+  "figures": 5,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "6. PRL_2008_Giovannetti_Doping_graphene_with_metal_contacts_MAIN.pdf"
+  ]
+ },
  "grasselli2025_uncertainty_era_ml_atomistic": {
   "figures": 8,
   "generated": "2026-09-09",
@@ -1248,6 +1255,13 @@
    "18480bfb-fenrg111336344.pdf"
   ]
  },
+ "maurer2015_mbd_adsorbates_metal_surfaces": {
+  "figures": 7,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "5. JCP_2015_Maurer_Many-body_dispersion_effects_in_the_binding_of_adsorbates_on_metal_surfaces_MAIN.pdf"
+  ]
+ },
  "mccluskey2025_accurate_diffusion_coefficients_uncertainties": {
   "figures": 12,
   "generated": "2026-09-09",
@@ -1503,6 +1517,14 @@
    "cb320579-83._sup_Estimating_Error_in_Diffusion_Coefficients_Derived_from_Molecular_Dynamics_Simulations.pdf"
   ]
  },
+ "pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament": {
+  "figures": 11,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "4. ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_of_Bulk_and_Surface_Li6PS5Cl_Argyrodite_Li-Filament_Resistance_MAIN.pdf",
+   "4. Sup) ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_Li6PS5Cl_Li-Filament_SI.pdf"
+  ]
+ },
  "qian2025_lipo2f2_coating_stable_cei": {
   "figures": 15,
   "generated": "2026-09-08",
@@ -1702,6 +1724,13 @@
    "DFT 먹인 논문/27. Five-volt-class high-capacity all-solid-state lithium batteries.pdf"
   ]
  },
+ "song2025_porous_argyrodite_modulus_fracture_toughness": {
+  "figures": 3,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "852c4bbf-3._Investigation_of_the_Mechanical_Properties_of_Porous_Argyrodite_Sulfide_Electrolytes_for_All-Solid-State_Batteries.pdf"
+  ]
+ },
  "spencer2022_review_tco_band_structure_oxides": {
   "figures": 33,
   "generated": "2026-08-05",
@@ -1738,7 +1767,7 @@
   ]
  },
  "tabakovic2026_mechanical_stress_eis_ica_drt_dfn": {
-  "figures": 7,
+  "figures": 10,
   "generated": "2026-09-23",
   "pdfs": [
    "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf"
