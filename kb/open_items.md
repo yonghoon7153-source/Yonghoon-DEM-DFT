@@ -3,7 +3,7 @@
 > 세션이 바뀌어도 유지되는 미결 사항 추적. 닫을 때 날짜+근거를 남기고 ✅로 옮긴다.
 > 등록: 2026-07-27 (MAX 감사 후속).
 
-## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-23 저녁 — ⏭-NOW-w 가 최신 (SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면 fail-closed · box331 시드확장 규칙 A · b2o3 사건율 MD 발사 · W_ad(LPSCl|Ag–C) 두 리뷰 NO-GO → 계획 v3 · 문헌 3편 · DEM 회신 초안 · Nd LOBSTER 실행 중). 앞 블록 ⏭-NOW-v 는 09-22 낮(논문 4편 · 원장 정정 3건), ⏭-NOW-u 는 같은 날 오전**)
+## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-23 저녁 — ⏭-NOW-w 가 최신 (SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면 fail-closed · box331 시드확장 규칙 A · b2o3 사건율 MD 발사 · W_ad 리뷰 NO-GO → 계획 v3 · 문헌 3편 · DEM 회신 · Nd LOBSTER · 밤: BW 결정 3건). 앞 블록 ⏭-NOW-v 는 09-22 낮(논문 4편 · 원장 정정 3건), ⏭-NOW-u 는 같은 날 오전**)
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 >
@@ -91,14 +91,16 @@
     ⚠ 발견: comp1_V0_k444 는 **−4 축이 없다** (Li 정렬이 입방 대칭을 깬다 — 벌크에서 z 를 뒤집는 연산은 C2x 하나). 계획 §0′ 의 *"−4 회전반전이 z → −z"* 는 이 구조에 안 맞는다.
   · ✅ **SE|SE 대조 입력 5잡** `db/inputs/wad_sese_control_2026_09_23/` (벌크 SCF · 두 슬랩 SCF = 무이완 W_sep PBE/PBE+D3 2체 · 두 슬랩 PBE 이완 = Pustorino 대조)
     — comp1 정본 설정(GBRV Li/S/Cl + P rrkjus · 52/520 · 슬랩 k 4 4 1 · 벌크 k 4 4 4). 식은 결과 전에 코드로 고정: `se_sym_slab.py --collect <RUN>`
-    (W = [E_s + E_li − 6·E_bulk]/2A, μ 상쇄). ✅ **경보 운영값 봉인 (결과 전 · 1저자 "너가 권장하는대로")** `D-2026-09-23-wad-sese-alarm-band`
+    (W = [E_s + E_li − n·E_bulk]/2A, n = P 합/4, μ 상쇄). ✅ **경보 운영값 봉인 (결과 전 · 1저자 "너가 권장하는대로")** `D-2026-09-23-wad-sese-alarm-band`
+    → **v2 로 대체 (2026-09-23 밤 · "ㄱㄱ")** `D-2026-09-23-wad-sese-alarm-band-v2` — 구간 그대로, 결정문 벽개식 계수만 일반형 (6층 6 · 4층 4)
     — 이완 PBE W_cleave 0.3–0.7 J/m² 밖 = 원인 미분류 경보 · > 1 = PS₄ 절단·wrap 먼저 점검 · 무이완 < 이완 = 경보. **합격선 아님**. `--collect` 가 출력.
-  · 🟢 **gabia 러너 대기 중 (17:23:58 발사)** tmux `wad_sese` · worktree `/data/work/repo_wad` @265faeff · 로그 `/data/work/runs/wad_sese_2026_09_23/runner.log`
+  · ⏸ **gabia 러너 — 잡 0 확인 (1저자 붙여넣기 2026-09-23 밤: 로그가 17:23:58 시작 대기 줄에서 끝남 · 실행 폴더에 runner.log 뿐)** · ⏳ **프로세스 정지 확인 대기** (대기 루프는 로그를 안 남겨서 로그로는 생사를 모른다) · tmux `wad_sese` · worktree `/data/work/repo_wad` @265faeff · 로그 `/data/work/runs/wad_sese_2026_09_23/runner.log`
     · `WAIT_PIDS` 3207227·3210946 (li2s 담금질 seed 3·4) · `ONLY_PIDS` 3322562 (b2o3) · 시작 때 GPU 15.3 GB · 호스트 27 GB.
     ⛔ 도는 동안 `/data/work/repo_wad` 를 갱신하지 않는다. 집계는 다른 clone 에서 `se_sym_slab.py --collect`.
-  · ✅ **gabia GPU 예외 (1저자 "이거 하돼")** `D-2026-09-23-gabia-gpu-exception-sese` — 러너 `tools/wad/run_sese_gpu.sh`: li2s 시드 종료 대기(PID·cmdline) ·
+  · ⛔ **gabia GPU 예외 — 실행 전 철회 · 미사용 종료 (2026-09-23 밤 · 1저자 "ㄱㄱ" · BW Q8 네 가지 기록 · 비준 revoked)**. 러너에 ⑧ 게이트: `ALLOW_UMA_COEXIST=1` 이어도 원장 active 결정 ID 가 아니면 시작 안 함.
+    (옛 기록) **gabia GPU 예외 (1저자 "이거 하돼")** `D-2026-09-23-gabia-gpu-exception-sese` — 러너 `tools/wad/run_sese_gpu.sh`: li2s 시드 종료 대기(PID·cmdline) ·
     합계 VRAM < 40 GB 시작 · > 44 GB 즉시 중단(우리 PID 만) · 호스트 여유 ≥ 16 GB 시작 · < 4 GB 중단 · `ALLOW_UMA_COEXIST=1` 필수. CLAUDE.md gabia 절에 한 줄.
-    ⏭ gabia: worktree `/data/work/repo_wad` → `DRY_RUN=1` 로 li2s 시드 PID 확인 → tmux 발사 (`WAIT_PIDS=…`).
+    ~~⏭ gabia: worktree → DRY_RUN → tmux 발사~~ (발사는 했고 잡은 0 개 — 예외 철회로 끝)
   · 📨 **DEM 회신 수령 (2026-09-23 저녁)** — 정정 넷 전부 수용 · w = W · 헤드라인 = 고정기하 W_sep (+ DFT@UMA 값도 → G_c 띠) · 종결 두 면 그대로 ·
     🆕 **P2 LPSCl|graphite(0001) 을 P1 우선순위로** 요청(Ag 5.7 vol% · 16배 규칙) · 같은 SE 슬랩 요구 · 848원자 5점 비용 요청.
     원문·읽기·**회신 2 초안** `kb/projects/wad_dem_reply_draft_2026_09_23.md`. ✅ **P2 수용 (1저자 "ㅇㅇ 그러자")** → `D-2026-09-23-wad-p2-lpscl-graphite-scope`.
@@ -113,7 +115,9 @@
   · 📨 **Codex BW 회신 수령 (2026-09-23 밤)** `kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md` — (A) 를 *검증된 전체 계면 절대 W* 로 넘기는 것 **NO-GO** ·
     제한 파일럿 **조건부 GO** · CP2K 필수 아님 · 권고 경로 **A′** (작은 주기 모델 DFT 값 ↔ 전체 계면 UMA+D3 예측 분리 · 큰 계면 값은 DEM 민감도 시나리오로만).
     V3·V4 조각형은 **진단용**(eV/조각 · J/m² 문턱 이전 불허) · SE|SE 4층 식 계수 **4** · 분리 참조는 두 끝점 같은 셀 · 대표 registry E(d) 대조 · 보고량 이름 *"SE 에 정합되도록 변형된 박막의 고정기하 분리일"*.
-    반영: 계획 §0′ *BW 회신 반영* · DEM 발송판 **회신 2‴** (2·2′ 폐기). ⏳ **1저자**: A′ 채택 · SE|SE 경보 결정문 개정(계수) · gabia 예외 미사용 종료 · 회신 2‴ 발송.
+    반영: 계획 §0′ *BW 회신 반영* · DEM 발송판 **회신 2‴** (2·2′ 폐기). ✅ **1저자 "ㄱㄱ" (2026-09-23 밤)** → `D-2026-09-23-wad-a-prime-scope` (active) ·
+    `D-2026-09-23-wad-sese-alarm-band-v2` (active · v1 superseded) · gabia 예외 retracted · 회신 2‴ 발송 승인 (근거 줄 ID 만 v2·A′ 로) — ⏳ **발송 확인 대기**.
+    ⏭ **A′ 파일럿 사전등록** (작은 주기 모델 5점 · 운영 기준 ≤0.10/|MSE|≤0.05/수치≤0.02 J/m² · 분리 참조 같은 셀) → **4층 SE|SE 입력 + CPU 추정** (새 잡 = 자원 적합성 별도 확인).
     (러너에 NP · PSEUDO_DIR · NO_LOCK 추가, GPU 사용량은 장별 최댓값). gabia 예외는 **한 번도 발동하지 않은 채** 소멸.
   · ✅ **문헌 3편 인입·병합** (1저자 제공 PDF · 수치는 메인이 PDF 텍스트로 재대조): `pustorino2025_…`(LPSCl 파괴에너지 = 2γ · (100) 화학량론 벽개 ≈ 0.47 · (110) 0.37 J/m²) ·
     `maurer2015_…`(Ag|그래핀 분산 7방법 0.19–0.45 J/m² — 0.3 경계를 가로지른다) · `giovannetti2008_…`(Ag 약결합군 · LSDA · 화학흡착 Pd ≈ 0.52 J/m² = "구간 ≠ 기전").

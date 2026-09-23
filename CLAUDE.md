@@ -119,10 +119,11 @@
     **CPU 줄**: LOBSTER SCF/nscf 등 `qe-7.4.1-cpu` 빌드.
     ⇒ **CPU pw.x 와 UMA 는 공존한다**(2026-09-22 실측: LOBSTER 8랭크 CPU 799 %·RSS 39.6 GB 가
       UMA 담금질 시작 전후로 **불변**). 금지는 **GPU pw.x ↔ UMA** 에만 걸린다.
-  · ⚠ **예외 1건 (2026-09-23 · 1저자)**: SE|SE 대조 DFT 잡 5개만 — `D-2026-09-23-gabia-gpu-exception-sese`.
-    조건은 러너 `tools/wad/run_sese_gpu.sh` 가 기계로 건다 (li2s 시드 종료 대기 · 합계 VRAM < 40 GB 에서 시작 ·
-    > 44 GB 면 우리 pw.x 만 PID 로 중단 · 호스트 RAM 가드 · `ALLOW_UMA_COEXIST=1` 을 켜야만).
-    **다른 GPU pw.x 잡에는 예외가 없다.** 가드가 한 번이라도 발동하면 예외는 닫힌다.
+  · ⛔ **지금 예외는 없다.** 2026-09-23 에 준 예외 1건(SE|SE 대조 DFT 5잡 · `D-2026-09-23-gabia-gpu-exception-sese`)은
+    **실행 전에 철회했고 쓰인 적이 없다** (1저자 · 같은 날). 6층 슬랩의 CPU 추정치가 50–56 GB 로 48 GB 를 넘었다
+    (GPU OOM 실측이 아니다). 4층 SE|SE · CP2K · 다른 GPU pw.x 잡에 **자동으로 넘어가지 않는다** — 필요하면 새 결정을 받는다.
+    러너 `tools/wad/run_sese_gpu.sh` 는 `ALLOW_UMA_COEXIST=1` 을 줘도, 원장에서 **active** 인 결정 ID 가 아니면
+    시작하지 않는다 (⑧ 게이트 · 철회된 이 ID 가 기본값이라 그대로 켜면 막힌다).
   · 📏 **VRAM 실측**: **탄성 41 GB** (`kb/projects/cascade_rebuild_log_2026_09.md` §3-1 —
     그것 때문에 **V100 서버를 새로 세웠다**) · **UMA 담금질 120원자 1.5 GB**(호스트 RSS 2 GB).
     ⇒ 탄성 + UMA = 42.5/49 GB 로 **들어는 가지만** 여유 6.5 GB 다. 47/48 사례의 재현이라 **안 한다**.

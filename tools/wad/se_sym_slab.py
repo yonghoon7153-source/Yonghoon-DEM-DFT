@@ -591,8 +591,9 @@ def parse_pw(out_path, calc, d3):
             "mTS_Ry": float(TS[-1]) if TS else None, "nat": int(nat[-1]) if nat else None}
 
 
-#: SE|SE 경보 운영값 — D-2026-09-23-wad-sese-alarm-band (1저자 봉인 · **결과 전** · 합격선이 아니다)
-ALARM = {"decision": "D-2026-09-23-wad-sese-alarm-band", "band_J_m2": (0.3, 0.7), "cut_suspect_above_J_m2": 1.0}
+#: SE|SE 경보 운영값 — D-2026-09-23-wad-sese-alarm-band-v2 (1저자 봉인 · **결과 전** · 합격선이 아니다)
+#:   v2 (2026-09-23): 구간은 v1 그대로, 결정문의 벽개식 계수만 일반형 n = (P_s + P_li)/4 로 (4층이면 4 · Codex BW Q5).
+ALARM = {"decision": "D-2026-09-23-wad-sese-alarm-band-v2", "band_J_m2": (0.3, 0.7), "cut_suspect_above_J_m2": 1.0}
 
 
 def sese_alarms(w):

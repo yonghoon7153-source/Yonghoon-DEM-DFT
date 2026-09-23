@@ -6,6 +6,8 @@
 #   결정: D-2026-09-23-wad-se-termination-symmetric · D-2026-09-23-wad-d3-twobody-atm-separate
 #         D-2026-09-23-gabia-gpu-exception-sese — gabia 의 *"GPU pw.x ↔ UMA 동시 실행 금지"* 에
 #         1저자가 준 **범위 한정 예외**. 아래 가드 조건이 곧 예외의 범위다.
+#         ⛔ 2026-09-23 **실행 전 철회 · 미사용 종료** (6층 슬랩 추정 50–56 GB > 48 GB · Codex BW Q8).
+#         이제 ALLOW_UMA_COEXIST=1 은 원장에서 **active** 인 결정 ID 를 EXCEPTION_ID 로 줄 때만 켜진다 (⑧).
 #
 # 실행 (gabia · tmux 안에서):
 #   RUN=/data/work/runs/wad_sese_2026_09_23
@@ -36,6 +38,11 @@
 #      예외 조건 *"li2s 시드가 끝나고 b2o3 만 남았을 때"* 를 기계로 건다. WAIT_PIDS 만으로는
 #      그 사이 새 UMA 잡(예: li2s seed 5)이 떠도 모른다 (2026-09-23 DRY_RUN 뒤 보강). 목록 밖이 있으면
 #      시작하지 않고 ② 와 같이 기다린다. 목록 안 프로세스가 **끝나는 것**은 막지 않는다.
+#   ⑧ ALLOW_UMA_COEXIST=1 은 예외를 **쓰겠다**는 선언이다 — EXCEPTION_ID 가 결정 ID(D-…)면
+#      db/governance/decisions.json 에서 decision_state 가 **active** 여야 시작한다. 철회·대체·반려·없는 ID·
+#      원장을 못 읽음 → 시작하지 않는다 (exit 3). 결정 ID 가 아닌 근거(다른 기계의 승인 문구)는 경고만 남긴다.
+#      2026-09-23 예외 철회 뒤 추가: 기본 EXCEPTION_ID 가 철회된 그 결정이라, 이 게이트가 없으면
+#      공존 스위치 하나로 **철회된 예외가 조용히 다시 쓰인다**.
 #
 # ⛔ 이 스크립트가 **못 하는 것**
 #   · VRAM 이 표본 간격(SAMPLE_S)보다 빨리 치솟으면 못 막는다 — 가드는 확률적 보호다.
@@ -98,6 +105,24 @@ _unexpected() {  # $1 = 지금 GPU PID 들 · $2 = 허용 PID 들 → 허용 밖
   for p in $1; do ok=0; for q in $2; do [ "$p" = "$q" ] && ok=1; done; [ "$ok" = 1 ] || echo "$p"; done
 }
 
+# ── ⑧ 공존 예외의 근거 결정 상태 ───────────────────────────────────────
+_exception_state() {  # $1 = 결정 ID · $2 = decisions.json → 상태 한 단어 (없는 ID = missing · 못 읽음 = unreadable)
+  python3 - "$1" "$2" 2>/dev/null <<'PY' || echo unreadable
+import json, sys
+try:
+    ds = json.load(open(sys.argv[2], encoding="utf-8"))["decisions"]
+except Exception:
+    print("unreadable"); sys.exit(0)
+print(next((d.get("decision_state") or d.get("status") or "unknown" for d in ds if d.get("id") == sys.argv[1]), "missing"))
+PY
+}
+_coexist_gate() {  # $1 = EXCEPTION_ID · $2 = decisions.json → 0 = 결정 active · 1 = 거부 · 2 = 결정 ID 아님(경고만)
+  case "$1" in
+    D-*) [ "$(_exception_state "$1" "$2")" = active ];;
+    *)   return 2;;
+  esac
+}
+
 if [ "$IN" = "--selftest" ]; then
   T=$(mktemp -d); n=0; f=0
   ck() { if eval "$2"; then n=$((n+1)); else f=$((f+1)); echo "  ✗ $1"; fi; }
@@ -139,6 +164,14 @@ if [ "$IN" = "--selftest" ]; then
   ck "pseudo_dir 교체"                     "grep -q \"pseudo_dir = '/scratch/k/pseudo'\" $T/ps.in"
   ck "⛔교체가 다른 줄을 건드리지 않음"      "grep -q \"prefix = 'x'\" $T/ps.in && [ \$(grep -c /data/work/pseudo $T/ps.in) = 0 ]"
   ck "⛔섞여 오면 숫자 줄만"               '[ "$(printf "No running processes found\n12, pw.x, 900\n" | _apps_filter | wc -l)" = 1 ]'
+  printf '{"decisions":[{"id":"D-a","decision_state":"active"},{"id":"D-r","decision_state":"retracted"},{"id":"D-s","decision_state":"superseded"}]}' > "$T/dec.json"
+  ck "공존 근거 결정이 active → 통과"          "_coexist_gate D-a $T/dec.json"
+  ck "⛔철회된 예외로 공존 → 거부"              "! _coexist_gate D-r $T/dec.json"
+  ck "⛔대체된 결정으로 공존 → 거부"            "! _coexist_gate D-s $T/dec.json"
+  ck "⛔원장에 없는 ID → 거부"                  "! _coexist_gate D-없음 $T/dec.json"
+  ck "⛔원장을 못 읽음 → 거부"                  "! _coexist_gate D-a $T/없음.json && [ \"\$(_exception_state D-a $T/없음.json)\" = unreadable ]"
+  ck "결정 ID 아닌 근거 → 경고 갈래(2)"          '_coexist_gate "kgy 1저자 승인 문구" '"$T/dec.json"'; [ $? = 2 ]'
+  ck "실제 원장: gabia 공존 예외는 철회됨"       "[ \"\$(_exception_state D-2026-09-23-gabia-gpu-exception-sese $HERE/../../db/governance/decisions.json)\" = retracted ]"
   rm -rf "$T"; echo "run_sese_gpu selftest: $n 통과 · $f 실패"; [ "$f" = 0 ]; exit $?
 fi
 
@@ -178,6 +211,16 @@ host_avail() { awk '/^MemAvailable:/{printf "%d", $2/1024}' /proc/meminfo; }
 
 say "════ run_sese_gpu · IN=$IN · RUN=$RUN · JOBS=[$JOBS]"
 say "공존 근거: ${EXCEPTION_ID} · START<${START_MAX_MIB} MiB · KILL>${KILL_MIB} MiB · 표본 ${SAMPLE_S}s · UMA 공존 허용=${ALLOW_UMA_COEXIST} · 허용 PID=[${ONLY_PIDS:-제한 없음}]"
+DECISIONS=${DECISIONS:-$HERE/../../db/governance/decisions.json}
+if [ "$ALLOW_UMA_COEXIST" = 1 ]; then
+  _coexist_gate "$EXCEPTION_ID" "$DECISIONS"; rc=$?
+  case $rc in
+    0) say "공존 근거 ${EXCEPTION_ID} — 원장에서 active" ;;
+    2) say "⚠ 공존 근거가 결정 ID 가 아니다 ('${EXCEPTION_ID}') — 원장으로 확인하지 못한다. 사람이 확인한 근거일 때만 쓴다" ;;
+    *) say "⛔ UMA 공존 예외의 근거 ${EXCEPTION_ID} 가 원장에서 '$(_exception_state "$EXCEPTION_ID" "$DECISIONS")' 다 (active 아님) — 시작하지 않는다"
+       exit 3 ;;
+  esac
+fi
 if [ "$ALLOW_UMA_COEXIST" = 1 ] && [ -z "$ONLY_PIDS" ]; then
   say "⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)"
 fi

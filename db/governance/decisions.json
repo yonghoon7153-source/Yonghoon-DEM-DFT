@@ -3697,25 +3697,39 @@
    ],
    "amends_note": "그 결정의 enforcement '… gabia GPU pw.x 와 동시 실행 금지' 에 이 잡 5개만 예외를 둔다. 그 결정의 본문·무효 조건은 바꾸지 않는다.",
    "schema_version": 2,
-   "decision_state": "active",
+   "decision_state": "retracted",
    "results_seen": false,
    "proposed_by": "claude-session-2026-09-23",
-   "status": "active",
+   "status": "retracted",
    "status_history": [
     {
      "at": "2026-09-23",
      "state": "active",
      "note": "1저자 — (나) 선택 인용 뒤 '이거 하돼 한번 대칭셀 이렇게 규약 넣고 한번 넣어봐'. 제안자는 'b2o3 가 도는 동안은 권하지 않는다' 고 적었다. 트랙 = 우리 DFT → 1저자 = 사용자, 통지할 제3자 없음."
+    },
+    {
+     "at": "2026-09-23",
+     "state": "retracted",
+     "by": "1저자",
+     "note": "⛔ **실행 전 철회 · 미사용 종료** (2026-09-23 밤 · 1저자 'ㄱㄱ' · Codex BW Q8). ① 이 예외로 GPU pw.x 가 **한 번도 뜨지 않았다** — 1저자 붙여넣기(2026-09-23): 러너 로그가 17:23:58 시작 줄(GPU 15260 MiB · 호스트 27067 MiB · 대기 대상 li2s seed 3 PID 3207227 · seed 4 PID 3210946)에서 끝나고 'PID … 끝남' 줄이 없다 · 실행 폴더 /data/work/runs/wad_sese_2026_09_23/ 에 runner.log 뿐이다 (잡 폴더 0). 러너 프로세스 정지는 별도 확인. ② 허가 대상이었던 원래 5잡: db/inputs/wad_sese_control_2026_09_23/jobs.json — 01_bulk_scf(nat 52 · pw.in sha256 e459c2cbd1a90d17); 02_s_outer_scf(nat 162 · pw.in sha256 03907955fa4e1ccd); 02_li_outer_scf(nat 150 · pw.in sha256 6be849db475a2233); 03_s_outer_relax_pbe(nat 162 · pw.in sha256 6ce8649eed3ae97c); 03_li_outer_relax_pbe(nat 150 · pw.in sha256 e2a822dcb87323b3). ③ 종료 사유: gabia **CPU** pw.x(qe-7.4.1-cpu) 1랭크 스크래치 프로브(`/data/work/scratch/sese_memprobe` · ESPRESSO_TMPDIR · PID 로 수 초 안에 죽임)의 QE `Estimated max dynamical RAM` 이 벌크 6.69 GB(k 30) · S 바깥 6층 슬랩 55.78 GB(k 9) · Li 바깥 6층 슬랩 50.18 GB(k 9) — **추정치이지 GPU VRAM 피크 실측이 아니고, GPU OOM 도 일어나지 않았다.** 전체 계산을 현재 자원·위험 정책에서 추진하지 않기로 했다. ④ 이 예외는 **자동 승계되지 않는다** — 새 4층 SE|SE 잡 · CP2K · 다른 어떤 GPU pw.x 잡도 gabia 의 'GPU pw.x ↔ UMA 동시 금지' 를 새로 따른다."
     }
    ],
    "ratification": {
-    "state": "ratified",
+    "state": "revoked",
     "role": "scientific_owner",
     "actor_id": "yonghoon7153@gmail.com",
-    "timestamp": "2026-09-23T08:20:00Z",
-    "commit": "c8f0f2dbf542d3c2b11899f4a36af6df771cac2c",
-    "decision_digest": "sha256:da9fc08048b305340afbe393226d665a5336a408c5a3379b3ec4f0a170cd2b5b",
-    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+    "timestamp": "2026-09-23T14:30:00Z",
+    "commit": "98ac93bcbaaf92e5aab0003c2cd11227fa104e22",
+    "_원본_비준": {
+     "state": "ratified",
+     "role": "scientific_owner",
+     "actor_id": "yonghoon7153@gmail.com",
+     "timestamp": "2026-09-23T08:20:00Z",
+     "commit": "c8f0f2dbf542d3c2b11899f4a36af6df771cac2c",
+     "decision_digest": "sha256:da9fc08048b305340afbe393226d665a5336a408c5a3379b3ec4f0a170cd2b5b",
+     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+    },
+    "_철회_사유": "실행 전 철회 · 미사용 종료 (status_history 마지막 항목). 승인이 쓰인 적이 없으므로 승인을 거둔다 — 다른 잡이 이 비준을 근거로 삼지 못하게."
    }
   },
   {
@@ -3743,7 +3757,7 @@
    "title": "SE|SE 대조 — 이완 PBE W_cleave 경보 운영값 0.3–0.7 J/m² (합격선 아님) · 1 J/m² 초과면 PS₄ 절단·wrap 을 먼저 본다 · 무이완 ≥ 이완",
    "statement": "보고량은 W_cleave(Li 2|6, (001)) = γ(s_outer) + γ(li_outer) = [E(s_outer) + E(li_outer) − 6·E(벌크 52원자 셀)]/(2A) 이다 (Li₂S 과부족 +2/−2 상쇄 · μ 불요). 경보 운영값: 이완 PBE W_cleave 가 [0.3, 0.7] J/m² 밖이면 **원인 미분류 경보**, 1.0 J/m² 초과면 PS₄ 절단·wrap 을 **먼저 점검**(원인 확정 아님), 무이완 W_sep(PBE) < 이완 W_cleave(PBE) 면 경보. 구간 안이어도 물리적 타당성이 입증되지 않는다. 문헌 대응값 Pustorino 2025 의 (0.74 + 0.20)/2 ≈ 0.47 J/m² 는 우리 산술(μ 무관)이다.",
    "rationale": "계획 §0′ 제안 운영값을 1저자가 그대로 봉인했다. 합격선이 아니라 경보인 이유: 비교 문헌은 한 편이고(Pustorino 2025 · VASP PAW · ENCUT 650 eV) 우리 설정(QE · USPP GBRV + P rrkjus · 52/520 Ry)과 코드·PP 가 달라 일치를 요구할 근거가 없다. 1 J/m² 는 PS₄ 절단 슬랩이 'very high' 라는 문헌 서술과 v6 러너 45–80 J/m² 사고를 걸러내는 선이다.",
-   "decision_state": "active",
+   "decision_state": "superseded",
    "record_kind": "prospective",
    "results_seen": false,
    "card": "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md",
@@ -3758,12 +3772,18 @@
    ],
    "enforcement": "`se_sym_slab.py --collect` 가 경보 문장을 출력하고 원인을 지정하지 않는다. 결과 기록·DEM 회신에서 '통과/합격' 표현을 쓰지 않는다.",
    "proposed_by": "claude-session-2026-09-23",
-   "status": "active",
+   "status": "superseded",
    "status_history": [
     {
      "at": "2026-09-23",
      "state": "active",
      "note": "1저자 봉인 — '너가 권장하는대로 하고'. 러너는 li2s 시드 대기 중이라 SE|SE DFT 결과 0 건(results_seen: false). 트랙 = 우리 DFT → 1저자 = 사용자."
+    },
+    {
+     "at": "2026-09-23",
+     "state": "superseded",
+     "by": "1저자",
+     "note": "v2 로 대체 — 결정문의 벽개식 계수 6(6층 전용)을 일반형 n = (P 합)/4 로. 경보 구간·판정 문장은 그대로 (Codex BW Q5 · 1저자 'ㄱㄱ')."
     }
    ],
    "ratification": {
@@ -3772,9 +3792,20 @@
     "actor_id": "yonghoon7153@gmail.com",
     "timestamp": "2026-09-23T08:35:00Z",
     "commit": "265faeff80ed21322d98c798788bdd9646153ea5",
-    "decision_digest": "sha256:63f6f7fc417ea540bddeb88c45ea9e417d9e4956bdd38f9060ebe76dd44b0f4f",
-    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
-   }
+    "decision_digest": "sha256:50f14cf8fbad706b3e3ae1c9a4b82f26b37aedf2644a7e083b54c6a225e62008",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "_원본_비준": {
+     "state": "ratified",
+     "role": "scientific_owner",
+     "actor_id": "yonghoon7153@gmail.com",
+     "timestamp": "2026-09-23T08:35:00Z",
+     "commit": "265faeff80ed21322d98c798788bdd9646153ea5",
+     "decision_digest": "sha256:63f6f7fc417ea540bddeb88c45ea9e417d9e4956bdd38f9060ebe76dd44b0f4f",
+     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+    },
+    "_재봉인_사유": "2026-09-23 v2 supersede 반영으로 **본문이 바뀌어** decision_digest 를 다시 계산했다. 사람이 승인한 내용 자체는 v1 그대로이고, 바뀐 것은 decision_state·status·superseded_by·status_history 뿐이다. 원본 비준 기록은 `_원본_비준` 에 있다. v1 의 경보 구간이 틀린 것이 아니라 결정문의 벽개식 계수 6 이 6층 전용이었다."
+   },
+   "superseded_by": "D-2026-09-23-wad-sese-alarm-band-v2"
   },
   {
    "id": "D-2026-09-23-wad-p2-lpscl-graphite-scope",
@@ -3888,6 +3919,131 @@
      "note": "⛔ 제안자 철회 — **KISTI 접근은 2026-09-15 에 종료됐다** (1저자 · lpscl_li2s_layer1_closed_2026_09_15.json). 제안자가 CLAUDE.md 계산 자원 절(09-08 판 · KISTI 살아 있음)과 W_ad 계획서의 'DFT 는 KISTI' 를 믿고 확인하지 않았다. 1저자: \"kisti가 이제 못쓴다니까\". 대안 = 슬랩 축소(4층 · 진공 15 Å) 로 gabia GPU."
     }
    ]
+  },
+  {
+   "id": "D-2026-09-23-wad-a-prime-scope",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "adhesion.wad_lpscl_agc.claim_scope",
+   "slot": "wad_claim_scope_a_prime",
+   "applies_to": {
+    "systems": [
+     "comp1",
+     "ag",
+     "graphite"
+    ],
+    "tasks": [
+     "wad_lpscl_ag",
+     "wad_lpscl_graphite",
+     "wad_ag_graphite",
+     "wad_se_se_control"
+    ],
+    "methods": [
+     "qe_pbe_d3bj",
+     "uma-s-1p1-omat"
+    ],
+    "use_cases": [
+     "internal",
+     "dem_input"
+    ]
+   },
+   "title": "W_ad 주장 범위 A′ — 작은 주기 모델의 DFT 값과 전체 계면의 UMA+D3 예측을 분리한다 · MLIP 예외는 탐색·DEM 민감도 시나리오로만",
+   "statement": "① 작은 주기 계면은 그 모델 자체의 DFT(PBE+D3(BJ) 2체) 값을 보고한다. ② 전체 계면(P1 LPSCl|Ag ~436 · P2 LPSCl|흑연 ~820원자)은 UMA+D3 **예측**으로 따로 보관한다. ③ DEM 이 전체 계면 값을 쓰려면 **미검증 예측을 넣은 민감도 시나리오**로만 쓰며, '검증된 물성값'·'오차가 보증된 입력' 이라고 부르지 않는다 — 그 결과의 G_c 범위는 신뢰구간이나 물리적 상·하한이 아니다. ④ 전체 계면의 검증된 절대값이 꼭 필요할 때만 같은 보고 대상을 검증할 계산 경로를 다시 확보한다. ⑤ 'MLIP 절대값을 인용하지 않는다 (σ · W_ad)' 규칙의 예외는 **탐색과 DEM 민감도 시나리오 용도로만** 열린다. ⑥ 작은 주기 모델의 통과 문장은 '이 작은 주기 모델의 지정 표본에서 운영 기준을 충족했다' 까지이고 전체 계면의 오차 보증으로 확대하지 않는다. ⑦ Ag·그래핀 조각-위-슬랩(V3·V4)은 진단용이다 — eV/조각으로 보고하고 면적으로 나눠 J/m² 문턱을 옮기지 않는다.",
+   "rationale": "Codex BW: 작은 모델로 바꾸는 것 자체는 잘못이 아니지만 작아진 검증 대상을 전체 계면과 동일시하면 안 된다 — Ag 조각↔연속 금속막 차폐, 그래핀 조각 가장자리↔흑연 기저면, 유한 두께·피복률, UMA 조성 라우팅 차이가 남는다. 클러스터 접근 종료(2026-09-15)·큰 계산은 GPU 한 장(gabia 48 GB)이라 전체 계면 평면파 DFT 는 현재 자원·위험 정책에서 추진하지 않는다.",
+   "decision_state": "active",
+   "record_kind": "scope_declaration",
+   "results_seen": false,
+   "card": "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md",
+   "record": "kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md",
+   "evidence": [
+    "kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md",
+    "kb/reviews/codex_BW_prompt_wad_validation_without_cluster_2026_09_23.md"
+   ],
+   "method_ref": "계획 §0′ 'BW 회신 반영' — 작은 주기 계면 운영 기준(표본마다 |ΔW| ≤ 0.10 · 평균 부호오차 ≤ 0.05 · 수치 ≤ 0.02 J/m² · 사전 선택 5점) · 분리 참조 규칙 · UMA+D3 E(d) 대조",
+   "reopen_criteria": [
+    "같은 보고 대상(전체 계면)을 검증할 계산 경로가 확보되면 다시 연다"
+   ],
+   "enforcement": "DEM 전달물에 전체 계면 UMA+D3 값을 넣을 때 '미검증 예측 · 민감도 시나리오' 이름표가 없으면 보내지 않는다. 작은 모델 통과 문장을 전체 계면 문장으로 바꿔 쓰지 않는다.",
+   "proposed_by": "claude-session-2026-09-23",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-23",
+     "state": "active",
+     "note": "1저자 비준 — Codex BW 회신 뒤 제안 네 가지에 'ㄱㄱ' (2026-09-23 밤). 트랙 = 우리 DFT → 1저자 = 사용자, 통지할 제3자 없음."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-23T14:30:00Z",
+    "commit": "98ac93bcbaaf92e5aab0003c2cd11227fa104e22",
+    "decision_digest": "sha256:5dbeb4b2fe9b4c4fb6af11ca192c10128aa3561cc4ede4351f01f5355edc1088",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
+  },
+  {
+   "id": "D-2026-09-23-wad-sese-alarm-band-v2",
+   "schema_version": 2,
+   "kind": "gate",
+   "scope": "adhesion.wad_lpscl_agc.se_se_control.cleavage",
+   "slot": "wad_sese_cleavage_alarm_band",
+   "applies_to": {
+    "systems": [
+     "comp1"
+    ],
+    "tasks": [
+     "wad_se_se_control"
+    ],
+    "methods": [
+     "qe_pbe",
+     "qe_pbe_d3bj"
+    ],
+    "use_cases": [
+     "internal",
+     "diagnostic"
+    ]
+   },
+   "title": "SE|SE 대조 — 이완 PBE W_cleave 경보 운영값 0.3–0.7 J/m² (합격선 아님) · 1 J/m² 초과면 PS₄ 절단·wrap 을 먼저 본다 · 무이완 ≥ 이완 — 벽개식 계수를 두께에 맞춘 일반형 (v2)",
+   "statement": "보고량은 W_cleave(Li 2|6, (001)) = γ(s_outer) + γ(li_outer) = [E(s_outer) + E(li_outer) − n·E(벌크 52원자 셀)]/(2A), **n = (P_s_outer + P_li_outer) / 4** (벌크 셀의 P 4개 기준 · 6층 n = 6 · **4층 n = 4**: (E_110 + E_98 − 4·E_bulk,52)/(2A)) 이다 (Li₂S 과부족 +2/−2 상쇄 · μ 불요). 경보 운영값은 v1 그대로: 이완 PBE W_cleave 가 [0.3, 0.7] J/m² 밖이면 **원인 미분류 경보**, 1.0 J/m² 초과면 PS₄ 절단·wrap 을 **먼저 점검**(원인 확정 아님), 무이완 W_sep(PBE) < 이완 W_cleave(PBE) 면 경보. 구간 안이어도 물리적 타당성이 입증되지 않고, Ag–SE·탄소–SE 상호작용을 검증한 것도 아니다 (Codex BW Q2). 진공 15 Å · k 3×3×1 은 출발값이지 수렴 판정이 아니다. 문헌 대응값 Pustorino 2025 (0.74 + 0.20)/2 ≈ 0.47 J/m² 는 우리 산술(μ 무관)이고, 그 논문의 3층 0.22 vs 6층 0.20 은 얇은 경보 모델을 고르는 근거로만 쓴다.",
+   "rationale": "계획 §0′ 제안 운영값을 1저자가 그대로 봉인했다. 합격선이 아니라 경보인 이유: 비교 문헌은 한 편이고(Pustorino 2025 · VASP PAW · ENCUT 650 eV) 우리 설정(QE · USPP GBRV + P rrkjus · 52/520 Ry)과 코드·PP 가 달라 일치를 요구할 근거가 없다. 1 J/m² 는 PS₄ 절단 슬랩이 'very high' 라는 문헌 서술과 v6 러너 45–80 J/m² 사고를 걸러내는 선이다. · v2 개정 사유 (Codex BW Q5): v1 결정문에 6층 식의 계수 6 이 박혀 있었다 — 4층 SE|SE 로 줄이면 계수가 4 다. 집계기는 P 개수로 계수를 내지만 결정문·입력 명세도 조성과 맞아야 한다.",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": false,
+   "card": "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md",
+   "record": "tools/wad/se_sym_slab.py",
+   "evidence": [
+    "litdb/papers/pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament.md",
+    "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md",
+    "kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md"
+   ],
+   "method_ref": "tools/wad/se_sym_slab.py --collect (ALARM · sese_alarms · n = (P_s + P_li)/P_bulk)",
+   "reopen_criteria": [
+    "결과를 본 뒤에는 구간을 바꾸지 않는다 — 바꿀 근거가 생기면 **별도 ID** 로 새로 등록한다 (이 결정을 고쳐 쓰지 않는다)"
+   ],
+   "enforcement": "`se_sym_slab.py --collect` 가 경보 문장을 출력하고 원인을 지정하지 않는다. 결과 기록·DEM 회신에서 '통과/합격' 표현을 쓰지 않는다.",
+   "proposed_by": "claude-session-2026-09-23",
+   "status": "active",
+   "supersedes": [
+    "D-2026-09-23-wad-sese-alarm-band"
+   ],
+   "status_history": [
+    {
+     "at": "2026-09-23",
+     "state": "active",
+     "note": "1저자 비준 — Codex BW 회신 뒤 제안 네 가지에 'ㄱㄱ' (2026-09-23 밤). 트랙 = 우리 DFT → 1저자 = 사용자, 통지할 제3자 없음. 경보 구간은 v1 그대로, 벽개식 계수만 일반형으로."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-23T14:30:00Z",
+    "commit": "98ac93bcbaaf92e5aab0003c2cd11227fa104e22",
+    "decision_digest": "sha256:2feaea322a4a350625688be9fdc9fbe07c7ce7ba11caccda2eb35d4fb357b4fc",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }

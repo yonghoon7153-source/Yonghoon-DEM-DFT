@@ -3,7 +3,7 @@ title: "DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3�
 date: 2026-09-23
 updated: 2026-09-23
 tags: [adhesion, wad, dem-input, reply-draft, lpscl, silver, graphite]
-status: 1차 발송 완료 · DEM 회신 수령(2026-09-23 저녁) · 회신 2 초안 — 1저자 검토 후 전달
+status: 1차 발송 완료 · DEM 회신 수령(2026-09-23 저녁) · 회신 2‴ 1저자 발송 승인(2026-09-23 밤) — 발송 확인 대기
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -190,6 +190,8 @@ evidenceScope: multi-source-primary
 
 ## 회신 2‴ (DFT → DEM · Codex BW 반영 발송판 · 1저자 검토 후 발송) — ⛔ 위의 회신 2 · 2′ 는 쓰지 않는다
 
+> ✅ **1저자 발송 승인 (2026-09-23 밤 "ㄱㄱ")** · 발송은 1저자가 한다 — **발송 확인 대기**. 승인과 같은 때 근거 줄의 결정 ID 만 바꿨다 (경보 v1 → `…-alarm-band-v2` · A′ `D-2026-09-23-wad-a-prime-scope` 추가) — 본문 1–6 은 그대로다.
+
 > 2′ 에서 과했던 두 표현 (BW Q7): *"작은 모델에서 검증된 MLIP"* → 검증 대상과 전체 계면 예측을 **분리** · *"면적당 값이라 면적 가중 합산이 된다"* → 면적 가중은 **DEM 의 혼합 가정**이지 원자 계산이 보인 법칙이 아니다.
 > 전체 초안 4번(*전달 값 둘: DFT W_sep · DFT@UMA*)도 틀이 틀렸다 — 같은 기하·끝점이면 **같은 값**이다.
 
@@ -209,4 +211,4 @@ evidenceScope: multi-source-primary
 
 6. SE 값 사다리 정리와 *"상한 = 약한 쪽"* 철회, 잘 받았습니다. 우리 SE|SE 앵커 0.47 J/m² 는 합격선이 아닌 경보로만 씁니다.
 
-근거(정본 브랜치 `claude/friendly-meitner-lldvar`): 외부 리뷰 `kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md` · 결정 `D-2026-09-23-wad-p2-lpscl-graphite-scope` · `D-2026-09-23-wad-se-termination-symmetric` · `D-2026-09-23-wad-sese-alarm-band` · 계획 `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` §0′ *BW 회신 반영*.
+근거(정본 브랜치 `claude/friendly-meitner-lldvar`): 외부 리뷰 `kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md` · 결정 `D-2026-09-23-wad-a-prime-scope` · `D-2026-09-23-wad-p2-lpscl-graphite-scope` · `D-2026-09-23-wad-se-termination-symmetric` · `D-2026-09-23-wad-sese-alarm-band-v2` · 계획 `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` §0′ *BW 회신 반영*.
