@@ -99,6 +99,7 @@ test-tools: ## tools/ 회귀 테스트 (포트 소유 판정, lint 게이트, do
 	bash tools/tests/test_vps_setup.sh
 	bash tools/tests/test_bml_ssh.sh
 	bash tools/tests/test_bml_audit.sh
+	bash tools/tests/test_bml_refit.sh
 	$(PY) tools/tests/test_bml_relay.py
 	$(PY) tools/tests/test_wiki_lint.py
 	$(PY) tools/tests/test_backup.py

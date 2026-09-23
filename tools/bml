@@ -16,6 +16,8 @@
 #   bml data off   저장소 안의 data/ 로 되돌린다 (원본은 그 드라이브에 그대로)
 #   bml reparse    올려 둔 파일을 전부 다시 읽는다 (계산이 바뀌었을 때 — 원본은 그대로)
 #   bml audit      EIS 전부를 검수해 글로 찍는다 (읽기만 — 붙여 넣으면 된다)
+#   bml refit      검수가 권한 회로로 한꺼번에 다시 맞춘다 (옛 맞춤은 남긴다)
+#   bml refit --dry-run  맞춰 보기만 한다 — `--undo` 는 마지막 묶음을 되돌린다
 #   bml host open  이 서버를 네트워크에 연다 (다른 기계가 보게) — `bml host local` 로 닫는다
 #   bml password <암호>  바깥에 열 때 쓸 공유 암호를 정한다
 #   bml share      임시 터널을 열어 다른 공유기에서도 접속하게 한다
@@ -5473,13 +5475,9 @@ cmd_audit() {
   # 만든다 — 판정을 고친 커밋을 받은 바로 그때 `bml audit` 만 치면 옛 판정이
   # 찍히고, 사람은 고친 것이 안 먹힌 줄 안다.  서버를 띄운 bml 이 적어 둔
   # 커밋과 대 본다.  모르면(옛 bml 이 띄운 서버, 중추 서버) 막지 않는다.
-  if [ -z "${SERVER:-}" ]; then
-    local serving head_now
-    serving="$(cat "$HEAD_FILE" 2>/dev/null)"
-    head_now="$(git -C "$REPO" rev-parse HEAD 2>/dev/null)"
-    if [ -n "$serving" ] && [ -n "$head_now" ] && [ "$serving" != "$head_now" ]; then
-      die "떠 있는 서버가 이전 커밋(${serving:0:8})의 것입니다 — 저장소는 ${head_now:0:8} 입니다. 이대로 검수하면 옛 판정이 나옵니다: ${GREEN}bml${OFF} 로 새로 띄운 뒤 다시 ${GREEN}bml audit${OFF}."
-    fi
+  local stale
+  if stale="$(stale_server)"; then
+    die "떠 있는 서버가 이전 커밋(${stale% *})의 것입니다 — 저장소는 ${stale#* } 입니다. 이대로 검수하면 옛 판정이 나옵니다: ${GREEN}bml${OFF} 로 새로 띄운 뒤 다시 ${GREEN}bml audit${OFF}."
   fi
   if [ -n "${WORKBENCH_PASSWORD:-}" ] && ! hold_gate_jar "$url"; then
     die "문을 통과하지 못했습니다 — 이 기계에 적힌 암호가 그 서버의 것과 다릅니다 (${GREEN}bml password${OFF})."
@@ -5523,7 +5521,182 @@ cmd_audit() {
   else
     warn "파일로는 못 남겼습니다 (${dir}) — 위 글을 그대로 복사해 쓰세요."
   fi
-  say "  ${DIM}이 글을 통째로 붙여 넣으면 됩니다. 고치는 길: 파서 →${OFF} ${GREEN}bml reparse${OFF}${DIM}, 회로 → 그 스펙트럼 화면에서 다시 맞추기.${OFF}"
+  say "  ${DIM}이 글을 통째로 붙여 넣으면 됩니다. 고치는 길: 파서 →${OFF} ${GREEN}bml reparse${OFF}${DIM}, 회로 →${OFF} ${GREEN}bml refit${OFF} ${DIM}(권한 대로 한꺼번에) 또는 그 스펙트럼 화면.${OFF}"
+}
+
+#: 떠 있는 서버를 띄운 커밋이 저장소와 다르면 ``<서버 커밋> <저장소 커밋>``
+#: (앞 여덟 자리씩)을 찍고 0 을 돌려준다.  모르면(옛 bml 이 띄운 서버, 중추
+#: 서버) 1 — 막지 않는다.
+#:
+#: 검수 글도 다시 맞추기도 **서버**가 판정한다.  판정을 고친 커밋을 받은 바로
+#: 그때 옛 서버에 물으면 옛 판정이 나오고, 사람은 고친 것이 안 먹힌 줄 안다.
+stale_server() {
+  [ -z "${SERVER:-}" ] || return 1
+  local serving head_now
+  serving="$(cat "$HEAD_FILE" 2>/dev/null)"
+  head_now="$(git -C "$REPO" rev-parse HEAD 2>/dev/null)"
+  [ -n "$serving" ] && [ -n "$head_now" ] && [ "$serving" != "$head_now" ] || return 1
+  printf '%s %s\n' "${serving:0:8}" "${head_now:0:8}"
+}
+
+#: 서버가 흘려 보내는 글을 **받는 대로** 찍는다 — `bml refit` 은 십수 분이 걸린다.
+#:
+#: curl 은 뒤에서 파일로 받고, 여기서는 완성된 줄만 1 초마다 찍는다.  **첫 줄이
+#: 기대한 머리로 시작할 때만** 찍는다 — 옛 서버의 404 본문이나 문의 로그인
+#: 페이지를 결과처럼 흘리지 않는다.  HTTP 코드는 curl 이 끝나야 안다:
+#: `STREAM_CODE` 에 남기고, 찍었는지는 `STREAM_SHOWN` 에 남긴다.
+#:
+#: **Ctrl-C 는 여기서 받는다.**  스크립트의 백그라운드 명령은 SIGINT 를 무시하므로,
+#: 그냥 두면 curl 이 계속 받고 이 고리도 안 끝난다.  끊으면 서버는 끝낸
+#: 스펙트럼까지 저장한 채 멈춘다 — 그렇게 말하고 나간다.
+#:
+#: 쓰기: stream_post <주소> <본문 파일> <머리> <최대 초> [curl 인자…]
+STREAM_CODE=""
+STREAM_SHOWN=""
+stream_post() {
+  local endpoint="$1" body="$2" head="$3" limit="$4" codefile pid shown=0 lines running
+  shift 4
+  STREAM_CODE="000"; STREAM_SHOWN=""
+  codefile="$(mktemp "${TMPDIR:-/tmp}/bml-code.XXXXXX")" || return 1
+  curl -sS -N -m "$limit" -X POST "$@" -o "$body" -w '%{http_code}' "$endpoint" \
+    >"$codefile" 2>/dev/null &
+  pid=$!
+  # shellcheck disable=SC2064  # 지금의 pid·파일을 박아 둔다
+  trap "kill $pid 2>/dev/null; rm -f '$codefile'; printf '\n'; warn '멈췄습니다 — 서버는 끝낸 스펙트럼까지 저장했습니다. 이어서: ${GREEN}bml refit${OFF} (남은 것만) · 무르기: ${GREEN}bml refit --undo${OFF} (묶음마다 한 번).'; drop_gate_jar; exit 130" INT TERM
+  while :; do
+    running=1
+    kill -0 "$pid" 2>/dev/null || running=0
+    lines="$(wc -l < "$body" 2>/dev/null | tr -d ' ')"
+    lines="${lines:-0}"
+    if [ -z "$STREAM_SHOWN" ] && [ "$lines" -gt 0 ]; then
+      case "$(head -n 1 "$body")" in
+        "$head"*) STREAM_SHOWN=yes ;;
+        *) STREAM_SHOWN=no ;;
+      esac
+    fi
+    if [ "$STREAM_SHOWN" = yes ] && [ "$lines" -gt "$shown" ]; then
+      sed -n "$((shown + 1)),${lines}p" "$body"
+      shown="$lines"
+    fi
+    [ "$running" = 1 ] || break
+    sleep 1
+  done
+  wait "$pid" 2>/dev/null
+  trap - INT TERM
+  # 문을 지나는 쿠키를 들고 있으면 그 정리를 되살린다 (`hold_gate_jar`).
+  [ -n "$GATE_JAR" ] && trap 'drop_gate_jar' EXIT INT TERM
+  STREAM_CODE="$(tr -dc '0-9' < "$codefile" | tail -c 3)"
+  STREAM_CODE="${STREAM_CODE:-000}"
+  rm -f "$codefile"
+  [ "$STREAM_SHOWN" = yes ] || STREAM_SHOWN=""
+  return 0
+}
+
+#: `bml refit [--dry-run | --undo]` — 검수가 권한 회로로 한꺼번에 다시 맞춘다
+#: (ADR 0045).
+#:
+#: 회로를 실은 **문제** 판정이 있는 스펙트럼만 맞춘다.  검수가 받아들인 새
+#: 맞춤을 더하고 그것을 쓴다 — **옛 맞춤은 지우지 않는다.**  `--dry-run` 은 맞춰
+#: 보기만 하고, `--undo` 는 마지막 묶음의 맞춤만 지운다 (옛 맞춤으로 돌아간다).
+#:
+#: 글은 서버가 만들고 한 줄씩 흘려 보낸다 (`stream_post`).  끝나면 `bml audit`
+#: 처럼 데이터 폴더에 남긴다 — 그 글을 붙여 넣어 받는 쪽이 있다.
+cmd_refit() {
+  local url="${SERVER:-$URL}" mode endpoint body dir file stale code label
+  local -a auth=()
+  case "${1:-}" in
+    "")                          mode=apply ;;
+    --dry-run|dry-run|-n|미리보기) mode=dry ;;
+    --undo|undo|되돌리기)         mode=undo ;;
+    *) die "모르는 선택입니다: $1 — ${GREEN}bml refit${OFF} [--dry-run | --undo]" ;;
+  esac
+  if ! server_alive "$url" 8; then
+    die "서버가 응답하지 않습니다: $url — 먼저 ${GREEN}bml${OFF} 로 띄우세요."
+  fi
+  if stale="$(stale_server)"; then
+    die "떠 있는 서버가 이전 커밋(${stale% *})의 것입니다 — 저장소는 ${stale#* } 입니다. 옛 판정으로 맞추게 됩니다: ${GREEN}bml${OFF} 로 새로 띄운 뒤 다시 ${GREEN}bml refit${OFF}."
+  fi
+  if [ -n "${WORKBENCH_PASSWORD:-}" ] && ! hold_gate_jar "$url"; then
+    die "문을 통과하지 못했습니다 — 이 기계에 적힌 암호가 그 서버의 것과 다릅니다 (${GREEN}bml password${OFF})."
+  fi
+  [ -n "$GATE_JAR" ] && auth=(-b "$GATE_JAR")
+  body="$(mktemp "${TMPDIR:-/tmp}/bml-refit.XXXXXX")" || die "임시 파일을 만들지 못했습니다."
+
+  if [ "$mode" = undo ]; then
+    step "마지막 묶음을 되돌리는 중 ${DIM}(그 묶음의 맞춤만 지웁니다 — 옛 맞춤은 그대로)${OFF}"
+    code="$(curl -sS -m 300 -X POST ${auth[@]+"${auth[@]}"} -o "$body" -w '%{http_code}' \
+            "$url/api/eis/audit/refit/undo?format=text" 2>/dev/null)" || code="000"
+    STREAM_CODE="$code"
+    [ "$code" = 200 ] && { say ""; cat "$body"; }
+  else
+    if [ "$mode" = dry ]; then
+      step "권한 회로로 맞춰 보는 중 ${DIM}(맞춰 보기만 — 아무것도 저장하지 않습니다)${OFF}"
+      endpoint="$url/api/eis/audit/refit?format=text&dry_run=true"
+    else
+      step "검수가 권한 회로로 다시 맞추는 중 ${DIM}(옛 맞춤은 그대로 둡니다)${OFF}"
+      endpoint="$url/api/eis/audit/refit?format=text"
+    fi
+    say "  ${DIM}먼저 전부 검수하고, 대상마다 한 줄씩 찍습니다. 수 분에서 십수 분 걸립니다.${OFF}"
+    say ""
+    stream_post "$endpoint" "$body" "EIS 다시 맞추기" 7200 ${auth[@]+"${auth[@]}"}
+  fi
+
+  case "$STREAM_CODE" in
+    200) ;;
+    404|405)
+      rm -f "$body"
+      die "서버가 다시 맞추기를 모릅니다 (${STREAM_CODE}) — 옛 코드로 떠 있습니다. ${GREEN}bml restart${OFF} 로 새 코드를 띄운 뒤 다시."
+      ;;
+    401)
+      rm -f "$body"
+      die "문에 막혔습니다 — 이 기계에 공유 암호가 안 적혀 있습니다: ${GREEN}bml password <암호>${OFF}"
+      ;;
+    000)
+      # 받은 것이 있으면 도중에 끊긴 것이고, 서버는 거기까지 저장했다.  하나도
+      # 없으면 닿지도 못한 것이다 — 둘을 같은 말로 하면 무를 것이 없는데 무르라고
+      # 하게 된다.
+      if [ -s "$body" ]; then
+        rm -f "$body"
+        die "연결이 끊겼습니다 — 서버는 끝낸 스펙트럼까지 저장했습니다. 이어서: ${GREEN}bml refit${OFF} (남은 것만) · 무르기: ${GREEN}bml refit --undo${OFF}."
+      fi
+      rm -f "$body"
+      die "서버에 닿지 못했습니다: $url — 아무것도 맞추지 않았습니다."
+      ;;
+    *)
+      printf '%s✕%s 다시 맞추지 못했습니다 (HTTP %s).\n' "$RED" "$OFF" "$STREAM_CODE" >&2
+      [ -n "$STREAM_SHOWN" ] || head -c 600 "$body" 2>/dev/null | sed 's/^/  /' >&2
+      rm -f "$body"
+      exit 1
+      ;;
+  esac
+  # 흘려 보낸 줄은 이미 찍혔다.  머리가 안 맞아 못 흘렸으면 여기서 통째로.
+  if [ "$mode" != undo ] && [ -z "$STREAM_SHOWN" ]; then
+    cat "$body"
+  fi
+
+  # 되돌리기는 남기지 않는다 — 한 줄짜리이고, 남길 것은 묶음의 글이다.
+  file=""
+  if [ "$mode" != undo ]; then
+    label="eis-refit"; [ "$mode" = dry ] && label="eis-refit-dry"
+    dir="$DATA_DIR/audit"
+    file="$dir/$label-$(date +%Y%m%d-%H%M%S).txt"
+    if ! { mkdir -p "$dir" && cp "$body" "$file"; } 2>/dev/null; then
+      file=""
+    fi
+  fi
+  rm -f "$body"
+  drop_gate_jar
+  say ""
+  if [ "$mode" = undo ]; then
+    say "  ${DIM}다시 검수:${OFF} ${GREEN}bml audit${OFF}"
+    return 0
+  fi
+  if [ -n "$file" ]; then
+    ok "결과를 남겼습니다: ${B}${file}${OFF}"
+  else
+    warn "파일로는 못 남겼습니다 (${DATA_DIR}/audit) — 위 글을 그대로 복사해 쓰세요."
+  fi
+  say "  ${DIM}이 글을 통째로 붙여 넣으면 됩니다. 확인:${OFF} ${GREEN}bml audit${OFF}"
 }
 
 #: `bml relay [stop]` -- 중계기를 보거나 내린다.
@@ -6593,6 +6766,7 @@ main() {
     relay)             shift; cmd_relay "${1:-}" ;;
     reparse|재파싱)    shift; sync_repo; cmd_reparse ;;
     audit|검수)        shift; sync_repo; cmd_audit ;;
+    refit|다시맞춤)    shift; sync_repo; cmd_refit "${1:-}" ;;
     password|passwd)   shift; cmd_password "${1:-}" ;;
     share|tunnel)
       shift
