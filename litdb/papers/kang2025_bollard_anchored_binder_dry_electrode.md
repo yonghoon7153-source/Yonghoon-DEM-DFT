@@ -241,7 +241,14 @@ SI p.7–8:
 
 - **최적화**: **ASE 라이브러리의 L-BFGS**, `fmax_threshold = 0.01` (SI는 단위를 **"0.01 eV"** 로 적었다 — force의 단위는 eV/Å 이므로 **단위 오기**).
 - **최적화 대상 단일종 5개**: `PAA dimer` · `CMC monomer` · **`PAA dimer grafted CMC (PC)`** · `PTFE dimer` · **`PTFE long chain (n = 48)`**.
-- **흡착에너지 정의**: `E_ads = E_slab-binder − (E_slab + E_binder)` — 표준 부호(음수 = 안정). 분산·ZPE·엔트로피 보정 없음(NNP라 vdW는 포텐셜에 내재).
+- **흡착에너지 정의**: `E_ads = E_slab-binder − (E_slab + E_binder)` — 표준 부호(음수 = 안정). 분산·ZPE·엔트로피 보정 **언급 없음**.
+  - ⛔ **정정 2026-09-23**: 종전 괄호 *"(NNP라 vdW는 포텐셜에 내재)"* 는 **틀렸다.** PFP 의 결정계 모드는
+    PBE(+U) 학습이고, D3 분산은 **별도 모드**(`CRYSTAL_U0_PLUS_D3` ↔ 없는 쪽 `CRYSTAL_U0`)를 골라야
+    **따로 계산해 덧붙는다** (Preferred Networks, *"Benchmark surface energies with PFP"* 블로그).
+    SI 가 calc_mode 를 안 적었으므로 **분산 포함 여부는 미상**이다 ⇒ `PTFE dimer −0.09 eV` 는
+    **분산이 빠진 값일 수 있다.** 우리 C-12 에서 PTFE C₁₀F₂₂ 의 분산을 뺀 나머지가 **+0.03 eV**
+    (`db/properties/sdcp_c12_v41_eads_ungated_2026_09_21.json` §9) 라 그 경우와 모순이 없다.
+    크기도 다르다(dimer 탄소 4 vs C₁₀) — **이 −0.09 를 "PTFE 의 vdW 흡착 세기" 로 인용하지 않는다.**
 
 **샘플링과 집계 — 이 논문 계산의 핵심 설계** (본문 p.7):
 > *"Following the construction of the NMC surface model, the **PC molecule was rotated through 15 different configurations**, and the corresponding adsorption energies were calculated. **The adsorption states were classified into three primary categories**: 1) two Na atoms from PC adsorbed onto the O atoms of the NMC surface (PC_2Na), 2) one Na atom adsorbed (PC_1Na), and 3) long distance interactions … (PC_0Na). … **The average adsorption energy values for each of the corresponding adsorption states were calculated** and used for further analysis (Figure S15)."*
