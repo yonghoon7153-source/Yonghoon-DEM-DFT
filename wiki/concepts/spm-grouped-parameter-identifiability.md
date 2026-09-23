@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
+sources: [raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -66,6 +66,8 @@ evidenceScope: multi-source-primary
 | 31호 | ICI `R` ↔ `k` | `R` = EIS `R0+R1+R2`(이 표 선형화 행의 `R_ct` + `R0` 합) · `k ∝ 1/(A√D)`. `[해석]` 표면형 `R ∝ 1/(A·j₀)` 라 **`R/k` 에서 면적 약분** — 묶음 밖 비교 축 후보(30호 Dunn 비와 같은 부류) |
 | 37호 Li 2024 (ASSB 복합양극 P2D/SPM 혼성, 9호의 원형) | `A_eff ↔ k_p` | `[해석]` 원형 모델 식 (8) 에서 `A_eff` 는 BV 분모에만 있어 **`k·A_eff` 가 이 표 `τ_k`(`R_ct`) 묶음의 한 인자**로만 산다 — 이 표 "표면 일부 접촉 → `R_ct`" 행이 ASSB 모델에 **정확한 항등**으로 선다. 이 모델은 확산 BC(식 15)에 `A_eff` 를 넣지 않는다(29 · 31호 "확산 판" 과 다른 배정) |
 | 37호 | `R_s` ("Measured with SEM" 9.315 µm ↔ SI SEM ≈0.5–1.5 µm) | 확산에서는 `τ_d = R_s²/D_p`, 동역학에서는 `k·ε/R_s` 로만 보인다 ⇒ `D_p` · `k_p` 를 PSO 로 풀면 **틀린 `R_s` 를 둘이 흡수**하고 적합은 안 깨진다. 이 표의 묶음이 "반경 오기 검출 불가" 를 예측한다 |
+| 38호 Conforto 2021 (ASSB 실험, NCM811 PC/SC · In/InLi, 40 사이클) | 이완 OCP 두 점 활성 질량 `m_act = ΔQ/(Δx·q)` | 이 표의 **용량 스케일(`Q_th` 자리)을 측정**했다 — 평탄 상대극이라 음극 곡선 · 오프셋이 없어 두 점으로 정해진다. 그러나 `[인쇄]` "disconnected … cannot contribute to the OCP … inactive" ⇒ 이 표 "입자 통째 비연결 → `Q_th`" 행 그대로 **`ε`·`θ` 한 묶음**. 이완 1 h 가 `τ_d` 보다 짧으면(`[재현]` PC 후반 ≈13–17 h) `τ_d` 묶음이 이 값으로 샌다(`[추론]`) |
+| 38호 | EIS-PSD 유한공간 꼬리 `L_diff`(원통 앙상블, 빈 16 개) | 빈마다 `τ_d = L²/D̃` 묶음 — `L` 은 `D̃`(신품 Warburg + BET 면적) 고정으로만 나온다. 반무한 영역(`ωτ ≫ 1`, 저자 한계 `√(D̃/f_min)` = 1.8 µm @ 25 °C 밖)에서는 `L/(C_diff√D̃)` 하나 — `C_diff` 를 위 행(OCP 질량)에서 **고정 입력**으로 받아 두 행이 곱으로 묶인다. 용량성 극한에 닿으면 `C_diff` 단독이 위 행의 **독립 교차 검사**(이 편은 안 닿았다) |
 
 ## 한계 (이 페이지가 주장하지 않는 것)
 

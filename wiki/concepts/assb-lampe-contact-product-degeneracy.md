@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -168,6 +168,8 @@ physical significance** of the parameters" 라고 쓴다.
 | ↳ ⚠ **경고 — 목표 주도 특징 선택은 처방 입력을 버린다** (2026-09-23, **35호에서**, `[해석]`) | 용량(SOH)을 목표로 한 특징 선택(RFE · 중요도)은 **용량과 직교하는 채널**(저항 · 용량성 · 시상수)을 먼저 버린다 — 곱의 두 인자를 가르는 정보가 바로 그 방향이다 | 35호: 30 특징 중 유일한 저항 채널 `Lagged Pseudo Resistance`(`ΔV/I`)가 세 그룹 **모두** 탈락(`[인쇄]` SI Tables 3–5). 데이터 기반 BMS 에서 처방 입력을 찾을 때는 **선택 전 특징 목록**을 본다. 34호(사상이 지운다)에 이은 두 번째 경로 |
 | ↳ **율 스윕 줄의 세 번째 실패 조건** (2026-09-23, **37호에서**) | 모델이 **율마다 다시 정하는 파라미터**를 가지면(37호 `D_p = D_p,ref(C-rate)·trD_p(x)`), 율에 따른 잔여 손실 — 계면 · 접촉 · SE 수송 — 이 그 파라미터로 먼저 들어간다. 29호(종료 율 평탄) · 30호(스윕 중 표류)와 **별개** | ⚠ **37호**: `[도표]` `D_p,ref` 0.4 → 2 C ≈4.3 배, 검증 율(0.6 · 1.6 C)에도 꺾임 — 7 율이 있는데도 곱을 가를 정보가 `D_p,ref` 에 쓰였다. 율 스윕을 처방으로 쓸 때 **모델의 율 무관 파라미터 목록**을 먼저 확인한다 |
 | ★★★ **`A_eff ↔ k` 항등 — 표면 접촉 손실의 쌍둥이는 `LAM` 이 아니라 반응 상수** (2026-09-23, **37호 — 원형 모델의 식에서**) | 원형 모델에서 `A_eff` 는 BV 분모에만 있다(`[인쇄]` 균일 표면 전류 가정 — 용량 · 확산에 없다) ⇒ `η_ct` 는 `A_eff·k·ε_p/R_s` 로만 보고 `A_eff → cA_eff, k → k/c` 가 **모든 출력에서** 같다. 1단계(`R·C`)가 가르려는 쌍이 바로 이것이다 | ⚠ **37호 모델은 `c_dl` 을 F(전극 전체)로 고정해 면적과 떼어 놓았다** — 이 모델로 truth 를 만들면 `A_eff` 변화가 `R·C` 를 바꾸고 `C` 는 그대로다(처방 전제의 반대). 처방을 채점할 truth 에는 **면적에 비례하는 이중층**이 먼저 필요하다 |
+| ★★★ **이완 OCP 두 점 = 연결 질량 (`ΔQ/Δx`)** (2026-09-23 신설, **38호에서**) | 평탄 상대극 셀에서 방전 전후 **이완 OCP** 를 기준 OCP–x 에 대 `Δx` 를 얻고 `m_act = Q/q(Δx)` — 곱에서 **`η` 를 율과 무관하게** 뗀다(율 스윕 줄의 대체). **`θ` 와 `ε_p` 는 한 칸으로 남는다** | ★★★ **38호**: 40 사이클 × 4 조건, `[도표]` PC N = 40 ≈0.63 · SC ≈0.91. ⚠ 조건 셋 — (i) 이완 ≥ `L²/D̃`(38호 1 h ↔ `[재현]` PC 후반 ≈13–17 h ✗, 편향 방향 `[추론]` 질량 손실 과대) (ii) 상대극 평탄 폭 ≪ 분해능(±10 mV ≈ ±4 %) (iii) 기준 곡선이 같은 계면계(38호는 액체셀에서 수입) |
+| ↳ ⚠ **저주파 꼬리의 반무한 곱 `L/(C_diff·√D̃)`** (2026-09-23, **38호에서**, `[해석]`) | 유한공간 Warburg 가 용량성 극한에 닿지 않으면(`ωτ ≫ 1`) 꼬리가 정하는 것은 `L/(C_diff√D̃)` 하나 — `C_diff/L ∝` 접촉 면적이므로 **면적 × √D̃** 이다. `C_diff` 를 다른 채널(OCP 질량)에서 고정하면 두 채널이 곱으로 거래한다. 용량성 극한에 닿으면 `C_diff` 단독 = **OCV 독립 활성 질량** | ⚠ **38호**: 저자 신뢰 한계 `√(D̃/f_min)` = 1.8 µm(25 °C) ↔ `[도표]` PC `L_diff,50` 4.8–5.6 µm · `C_diff` 를 OCP 질량으로 **고정**. 37호 `A_eff ↔ k` 의 확산 판, 30호 Randles–Ševčík · 31호 ICI 와 같은 부류의 **사이클 해상판** |
 
 ★ **`R_CT·C_dl` 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -1219,6 +1221,36 @@ RF-RFE-CV 의 점수는 **용량 예측 MSE** 다. 곱의 두 인자(면적 ↔ 
 ### ⚠ 이것이 곱을 푼 것은 아니다
 
 신품 데이터뿐이고 `A_eff` 도 `k_p` 도 흔들어 적합하지 않았다. 기여는 **곱의 원형 식**(`A_eff·k_p·ε_p/R_s`)과 **그 곱의 한쪽이 출처 없이 운반되었다는 사실**(9호와 네 자리 일치)이다.
+
+## ★★★ 처방의 스물한 번째 적용 (2026-09-23, `assb` 38호) — **사이클마다 두 채널로 잰 첫 편: 곱을 `θ·ε_p` ↔ `η_diff` 로 가르고, 카드의 곱은 한 채널 안에 남긴다**
+
+`raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md` (Conforto, Ruess, … Janek 2021, *JES* 168, 070546 — 9호 ref [30], 큐의 마지막 편). NCM811 PC/SC | Li₆PS₅Cl | In/InLi, ≈70 MPa, 40 사이클 × 4 조건, 조건당 셀 1 개.
+
+### 입력 점검
+
+- **1단계 `R_CT·C_dl`** — ⚠ 재료는 있고 값이 없다: 회로(Fig. 7a)에 `R_int ∥ C_int` 가 있고 매 사이클 적합됐으나 **인쇄 0**.
+- **2단계 면적 대조군** — SC ↔ PC 가 입도(면적)를 바꾸지만 BET 는 PC 만(0.2 m² g⁻¹), SC 는 재소성(750 °C O₂) 시편 ❌.
+- **3단계 `Ea`** — 25 · 60 °C 가 **신품 `D̃`** 에만(10⁻¹¹ ↔ 6 × 10⁻¹¹ cm² s⁻¹) ❌.
+- **4단계 `C` 상한** — `C_diff/m` 520 mAh V⁻¹ g⁻¹(`[재현]` 자기 정의로는 725, ×0.72), `C_dl` 0 ❌.
+- **율 스윕 줄** — 0.1 C ↔ 0.3 C 가 컷오프(4.25 ↔ 4.5 V)와 교락 ❌. 대신 **이완 OCP 두 점** 이 율 무관 게이지(위 표 새 줄).
+- **SOC 추종 상 분율(22호 줄)** — `[인쇄]` 대안으로 **언급만**(ref 47 operando XRD, "requires expensive … equipment") ❌.
+- **외부 액체 기준 줄** — 곱의 인자가 아니라 **게이지의 눈금**(OCP–x 기준 곡선)을 액체셀에서 수입 — 29호(`D_LIB`) · 30호(액체 대비 `D`) 와 다른 자리의 수입.
+
+### ★★★ 두 채널이 가르는 것과 못 가르는 것
+
+`[인쇄]` 식 (7) `m_act = Q_meas/q_act` + "disconnected … cannot contribute to the OCP any longer and can be considered inactive" · EIS-PSD `L_diff`(식 5, GA) · Fig. 9 "loss of active mass" + "increased length of the pathway".
+`[해석]` ⇒ 채널 ① 은 `θ·ε_p`(카드의 곱 **그 자체**), 채널 ② 는 `L²/D̃`(유한공간) 또는 `L/(C_diff√D̃)`(반무한). 이 편은 곱을 **`θ·ε_p` ↔ `η_diff`** 로 가르고 — 그것이 채움표 Q2 반 칸이다 — **`θ` ↔ `ε_p` 는 채널 ① 안에 그대로 둔다.**
+그리고 두 채널은 독립이 아니다: EIS 적합이 `C_diff ∝ m_act` 를 **고정 입력**으로 받고, 반무한 영역에서 `L ∝ C_diff` 이므로 질량 손실을 과대로 읽으면 `L` 이 작게 맞는다(§위 표 경고 줄).
+
+### ⇒ 이 적용이 처방에 더하는 것
+
+1. **이완 OCP 두 점 줄**(위 표) — 율 스윕 없이 `η` 를 떼는 두 번째 싼 채널(첫째는 29호 율 외삽 `Q_M`). 둘 다 `θ`+LAM 한 칸을 준다.
+2. **반무한 꼬리 곱 경고**(위 표) — 저주파 EIS 로 면적 · 경로를 읽는 모든 편에 거는 전제 검사: 용량성 극한 도달 여부.
+3. `[해석]` **평탄 상대극 설계의 의미** — 이 설계는 우리 degeneracy(음극 곡선 · 오프셋)를 지워 `α_PE` 를 두 점으로 식별하게 하지만, **카드의 곱은 `α_PE` 안**이라 그대로 남는다. "우리 축퇴가 없는 셀에서도 카드의 축퇴는 있다" 의 첫 실측 표본이다.
+
+### ⚠ 이것이 곱을 푼 것은 아니다
+
+조건당 셀 1 개 · SI 미열람 · 닫힘이 두 패널에서 15–30 % 어긋난다(`[도표]` Fig. 9a +12…+27 · 9d −14…−28 mAh g⁻¹). 기여는 **두 채널의 설계**와 **그 설계의 조건(이완 시간 · 용량성 극한)** 이다.
 
 ## 이 페이지가 주장하지 않는 것
 

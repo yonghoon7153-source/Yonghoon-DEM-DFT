@@ -2228,3 +2228,15 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **8 장 + 표 1 봤다(Fig. 2 · 4 · 5 · 6 · 8 · 9 · 11 · S1 + Table 1 상단)**; 어긋난 것 Fig. 4b · 5c · 5d · 8a · 9c/f · 11b/e · 11f · S1. 안 본 것 Fig. 1 · 3 · 7 · 10 · Table 2 이미지 · SI 수식 WMF.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른세 번째 · 새 제약 5 · Status Log) · [[assb-lampe-contact-product-degeneracy]](스무 번째 적용 · 9호 `A_eff` 정정 · 표 두 줄) · [[assb-sensitivity-sweep-vs-identifiability]](37호 절 · 처방 12) · [[spm-grouped-parameter-identifiability]](37호 두 행).
 - 후속(제목 기준): Raijmakers 2020 *Electrochim. Acta* 330 (ref 14) · Deng 2021 *IEEE TTE* 7 (ref 29) · Kim 2019 *Electrochim. Acta* 317 (ref 21) · Froboese 2019 *JES* 166 (ref 30). 큐 37 · 38 인용 0.
+
+## [2026-09-23] ingest | assb 38호 — Conforto et al. 2021, Quantification of the Impact of Chemo-Mechanical Degradation on NCM-Based Cathodes in Solid-State Li-Ion Batteries (J. Electrochem. Soc. 168, 070546)
+- raw: `raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md` (sha256 봉인 — PDF 해시 frontmatter) · 그림 `raw/figures/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd/` (크로퍼 9). 큐 **37번**("Q1 을 깰 1 순위") — **큐의 마지막 편**. OA CC BY, SI 미수령.
+- ★★★★ **판정**: (a) 사이클마다 **이완 OCP 두 점 → 활성 질량**(식 7) · **저주파 EIS → 확산 경로 분포**(EIS-PSD) — 활성 질량은 `θ·ε_p` 합, 용량 역산, 전부를 "We suggest" 로 접촉 손실에 배정(합 측정 + 이름 붙이기) · (b) 접촉 ↔ `LAM_PE` 실험 분리 0(보유 리튬 0 자 · 재가압 0 · LLI 는 Li 과잉 ×2.75 로 설계상 안 보임) · (c) SC ↔ PC(입도 · 재소성 교락) · (d) 전자 비연결 → `C_diff` 질량(= `ε_p`), SE 접촉 · 균열 → `L_diff`; 반무한 꼬리는 `L/(C_diff√D̃)` 곱.
+- **채움표 38호 행 — 누적 ≈16.0 → ≈16.5 (Q2 +0.5).** Q1 `θ(N)` 0/38(첫 `θ·(1−LAM)` 합 계열 1/38) · Q4 0/38 서른 번째 성질("식별 한계를 식으로 인쇄하고, 결론의 수를 그 한계 밖에 두었다") · Q5 열네 번째 형태("고정 전위가 게이지의 영점이다").
+- ★★★ 9호 기각("error … relatively large") ↔ 본문 "good agreement for all" ↔ `[도표]` Fig. 9 (a) +12…+27 · (d) −14…−28 mAh g⁻¹ — 9호가 그림에 맞다.
+- 곱 축퇴 처방 **스물한 번째 적용**: 표 새 줄 "이완 OCP 두 점 = 연결 질량" + 경고 줄 "반무한 꼬리 곱 `L/(C_diff√D̃)`".
+- ⚠ 어긋남 11 건: D1 닫힘 · D2 Fig. 9 가는 선 ↔ Fig. 6 · D3 SC "<2" ↔ 2.0 · D4 Fig. 5d ↔ 9a 같은 조건 ≈37 mAh g⁻¹ · D6 `C_diff/m` ×0.72 · D7 질량 > 1 외.
+- 낱말 지문(NFKC · 대소문자 구분 · 낱말 경계 · 본문): `identifiab` 0 · `uncertaint` 2 · `LLI` 0 · `LAM` 0 · `degradation mode` 0 · `contact loss` 13 · `MPa` 2. NFKC 변경 121 자 — 열 변화 0. 소프트 하이픈 0.
+- 그림: **6 장 봤다(Fig. 4 · 5 · 6 · 7 · 8 · 9, Fig. 9 패널 확대)**; 안 본 것 Fig. 1 · 2 · 3(모식 · 모사).
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른네 번째 · Against 단서 · 새 제약 7 · Status Log · 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]](스물한 번째 적용 · 표 두 줄) · [[spm-grouped-parameter-identifiability]](38호 두 행) · [[assb-li-in-reference-potential-window]](열네 번째 형태).
+- 후속(제목 기준, 큐 밖): Bartsch 2019 *Chem. Commun.* 55, 11223 (ref 47, operando XRD 활성 질량) · Ruess 2020 *JES* 167, 100532 (ref 19) · Fantin 2021 *Chem. Mater.* 33, 2624 (ref 41) · Lin 2014 *Nat. Commun.* 5, 3529 (ref 14) · Schönleber 2015/2017 (refs 32 · 31).

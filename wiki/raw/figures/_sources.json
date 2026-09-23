@@ -64,6 +64,13 @@
    "71121952-02._Sup_Optimizing_the_Composite_Cathode_Microstructure_in_AllSolid-State_Batteries_by_Structure-Resolved_Simulations.pdf"
   ]
  },
+ "conforto2021_chemo-mechanical-ncm-active-mass-eis-psd": {
+  "figures": 9,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "ebf71e6c-37._Editors__Choice_Quantification_of_the_Impact_of_Chemo-Mechanical_Degradation_on_the_Performance_and_Cycling_Stability_of_NCM-Based_Cathodes_in_Solid-State_Li-Ion_Batteries.pdf"
+  ]
+ },
  "cui2024_electrode-utilization-formation-cycle-life": {
   "figures": 37,
   "generated": "2026-09-03",
@@ -162,10 +169,11 @@
   ]
  },
  "li2024_assb-composite-cathode-model-contact-area-edl": {
-  "figures": 13,
+  "figures": 14,
   "generated": "2026-09-23",
   "pdfs": [
-   "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf"
+   "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "09b7d18d-36._Sup_Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.docx"
   ]
  },
  "li2026_safety-aware-bms-active-intelligence": {

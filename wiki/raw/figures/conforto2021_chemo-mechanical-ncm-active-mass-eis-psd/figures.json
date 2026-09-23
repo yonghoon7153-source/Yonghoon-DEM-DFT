@@ -1,0 +1,191 @@
+{
+ "slug": "conforto2021_chemo-mechanical-ncm-active-mass-eis-psd",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "ebf71e6c-37._Editors__Choice_Quantification_of_the_Impact_of_Chemo-Mechanical_Degradation_on_the_Performance_and_Cycling_Stability_of_NCM-Based_Cathodes_in_Solid-State_Li-Ion_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic of a pristine and cycled SSB cathode with PC-NCM, conductive carbon and SE. When cycled, cracking and contact loss occurs and eventually leaves NCM particles disconnected from the electronic network (red marks) and/or the ionic network (blue marks). (DDC) introduced by Schönleber et al., which they developed to analyze the lithium diffusion inside an ensemble of electrode particles with different sizes.32 A distribution of nano-sized elec- trode particles was successfully described by Song et al. utilizing the DDC approach.33 For a reliable analysis, knowledge of the cell impedance at all frequencies is a strict requirement. Unfortunately, diffusion inside μm-sized active material particles is often a very slow process, taking place in the timescale of some hours, where the classical EIS technique reaches its limit since frequencies in the μHz-regime are needed for th",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    290.0,
+    184.7
+   ],
+   "w": 1085,
+   "h": 517,
+   "dpi": 300,
+   "src": "ebf71e6c-37._Editors__Choice_Quantification_of_the_Impact_of_Chemo-Mechanical_Degradation_on_the_Performance_and_Cycling_Stability_of_NCM-Based_Cathodes_in_Solid-State_Li-Ion_Batteries.pdf",
+   "blank": 0.567
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Sketch of lithium diffusion inside a (a) planar (cylindrical) particle and a (b) spherical particle as described in Eqs. 2 and 3, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    594.3,
+    289.1,
+    735.9
+   ],
+   "w": 1080,
+   "h": 591,
+   "dpi": 300,
+   "src": "ebf71e6c-37._Editors__Choice_Quantification_of_the_Impact_of_Chemo-Mechanical_Degradation_on_the_Performance_and_Cycling_Stability_of_NCM-Based_Cathodes_in_Solid-State_Li-Ion_Batteries.pdf",
+   "blank": 0.733
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Impedance representing solid-state diffusion inside a (1) planar particle, (2) spherical particle, (3) distribution of spherical particles with different sizes. (b) Simulated impedance of solid-state diffusion inside a spherical NCM particle with radius 4 μm (blue) or a distribution of cylindrical NCM particles (red) with the corresponding size distribution depicted in (c). (d) Schematic illustration of one spherical particle constituted by multiple cylindrical particles with different sizes. the NCM which has a ﬁnite volume (ﬁnite space).35 For the assessment of diffusion limitations, it is important to characterize the thickness of the diffusion layer, i.e. how far the concentration gradient progressed, given a certain time of polarization. Therefore, the characteristic time constant of lithium diffusion τi indicates the time which is needed to extend the concentration gr",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    60.9,
+    558.8,
+    547.9
+   ],
+   "w": 1088,
+   "h": 2030,
+   "dpi": 300,
+   "src": "ebf71e6c-37._Editors__Choice_Quantification_of_the_Impact_of_Chemo-Mechanical_Degradation_on_the_Performance_and_Cycling_Stability_of_NCM-Based_Cathodes_in_Solid-State_Li-Ion_Batteries.pdf",
+   "blank": 0.839
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. SEM images of PC-NCM and SC-NCM powders (top row). Cross-sectional SEM images of pristine (mid row) and cycled (bottom row) PC-NCM and SC-NCM cathodes. Red arrows indicate electronic contact loss between individual NCM particles, blue arrows indicate contact loss between NCM and SE and black arrows indicate cracks within NCM. Experimental Materials.—Commercial Li-ion battery grade polycrystalline and single crystalline LiNi0.8Co0.1Mn0.1O2 cathode active materials, further only termed PC-NCM and SC-NCM, respectively, were provided by Volkswagen AG. Because commercial SC-NCM powders are typically highly agglomerated, as-received SC-NCM was subjected to an ethanol treatment before use to properly separate the single crystals as described in detail elsewhere.41 In short, the as- received powders were dispersed in ethanol and ultrasonicated for 2 h, followed by centrifugation for 3 ",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    290.0,
+    424.9
+   ],
+   "w": 1085,
+   "h": 1518,
+   "dpi": 300,
+   "src": "ebf71e6c-37._Editors__Choice_Quantification_of_the_Impact_of_Chemo-Mechanical_Degradation_on_the_Performance_and_Cycling_Stability_of_NCM-Based_Cathodes_in_Solid-State_Li-Ion_Batteries.pdf",
+   "blank": 0.219
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. First charge-discharge cycle with 0.05C at 25 °C in the potential range 2.6–4.25 V vs Li+/Li of an (a) SSB and (b) LEB cell with either PC-NCM (red/ orange) or SC-NCM (blue/teal) as CAM. (c) Discharge capacity of the cells shown above. (d) Discharge capacity of SSB cells with either PC-NCM (red) or SC- NCM (blue) over 100 charge-discharge cycles at 0.1C at 25 °C in the potential range 2.6–4.25 V vs Li+/Li. (e) and (f) Differential capacities of the cells shown in (d). the associated loss of active mass can be considered as low.14 TEM investigations have shown that even after 20 cycles only a 2 nm thin surface layer of these inactive phases has formed while the bulk of the material remains as active NCM.14 cathode (NCM disintegration), is the main cause. NCM particles that are disconnected from the electronic network cannot contribute to the OCP any longer and can be considered ",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    624.5
+   ],
+   "w": 2201,
+   "h": 2350,
+   "dpi": 300,
+   "src": "ebf71e6c-37._Editors__Choice_Quantification_of_the_Impact_of_Chemo-Mechanical_Degradation_on_the_Performance_and_Cycling_Stability_of_NCM-Based_Cathodes_in_Solid-State_Li-Ion_Batteries.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Evolution of the active mass during cycling of a PC-NCM-based (red) and SC-NCM-based (blue) cathode. The active mass was normalized to its nominal value before the electrochemical experiments. Filled symbols represent cells that were charged up to 4.25 V vs Li+/Li at 0.1C (low-V) and empty symbols cells that were charged up to 4.5 V vs Li+/Li at 0.3C (high- V). NCM particles such strain can cause crack propagation along the grain boundaries.16 Similarly, a higher C-rate causes a steeper concentration gradient of lithium in the NCM, which can also lead to increased strain within the NCM particles and lead to more pronounced cracking.51 We note that the loss of active mass in PC- NCM would lead to an increased current density under the given cycling conditions and thus even steeper concentration gradients. Further, the electronic connection between individual particles can deteri",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    290.0,
+    272.7
+   ],
+   "w": 1085,
+   "h": 884,
+   "dpi": 300,
+   "src": "ebf71e6c-37._Editors__Choice_Quantification_of_the_Impact_of_Chemo-Mechanical_Degradation_on_the_Performance_and_Cycling_Stability_of_NCM-Based_Cathodes_in_Solid-State_Li-Ion_Batteries.pdf",
+   "blank": 0.803
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. (a) Equivalent circuit used for the EIS-PSD ﬁt. Nyquist-plots of impedance measurements of SSB cells with PC-NCM conducted at (b) 60 °C and (c) 25 °C. Blue circles represent the data points while the line represents the ﬁt with the red dots being the ﬁtted points at the same frequency as the data points. (d) Resulting distribution of particle sizes as obtained from ﬁtting the impedance at 60 °C (blue) and 25 °C (red). The bold line shows the median over 25 different ﬁts and the shaded area indicates the maximum deviation from the median. determined above for each cycle, as ﬁxed input parameter for the ﬁtting, to properly account for the mass loss. As also discussed in the Methods section, we now treat the geometry as cylindrical particles rather than spheres as this does not restrict the geometry to be perfect",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    678.8
+   ],
+   "w": 2201,
+   "h": 2576,
+   "dpi": 300,
+   "src": "ebf71e6c-37._Editors__Choice_Quantification_of_the_Impact_of_Chemo-Mechanical_Degradation_on_the_Performance_and_Cycling_Stability_of_NCM-Based_Cathodes_in_Solid-State_Li-Ion_Batteries.pdf",
+   "blank": 0.798
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Evolution of the length of the pathway for lithium diffusion Ldiff in (a), (b) PC-NCM and (c), (d) SC-NCM. Ldiff was determined by ﬁtting the impedance data by the use of Eq. 5 of SSB cells that were cycled with (a), (c) 0.1C in the potential range 2.6–4.25 V vs Li+/Li (low-V) or with (b), (d) 0.3C in the potential range 2.6–4.5 V vs Li+/Li (high-V). The ﬁrst 40 cycles are shown with color changing gradually from black (1st cycle) to yellow (40th cycle).",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    345.3,
+    558.0,
+    726.6
+   ],
+   "w": 2200,
+   "h": 1590,
+   "dpi": 300,
+   "src": "ebf71e6c-37._Editors__Choice_Quantification_of_the_Impact_of_Chemo-Mechanical_Degradation_on_the_Performance_and_Cycling_Stability_of_NCM-Based_Cathodes_in_Solid-State_Li-Ion_Batteries.pdf",
+   "blank": 0.829
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 11,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Speciﬁc capacity of SSB cells with (a), (b) PC-NCM and (c), (d) SC-NCM as CAM. The cells were cycled with (a), (c) 0.1C in the potential range 2.6–4.25 V vs Li+/Li (low-V) or with (b), (d) 0.3C in the potential range 2.6–4.5 V vs Li+/Li (high-V) over 40 cycles. The total measured capacity is shown as a bold line. Individual contributions to the capacity fading, such as the loss of active mass (obtained from OCP relaxation) and the increased length of the pathway of lithium diffusion (obtained from EIS-PSD), are depicted as a thin line and symbols, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    358.8,
+    558.0,
+    717.6
+   ],
+   "w": 2201,
+   "h": 1496,
+   "dpi": 300,
+   "src": "ebf71e6c-37._Editors__Choice_Quantification_of_the_Impact_of_Chemo-Mechanical_Degradation_on_the_Performance_and_Cycling_Stability_of_NCM-Based_Cathodes_in_Solid-State_Li-Ion_Batteries.pdf",
+   "blank": 0.856
+  }
+ ]
+}

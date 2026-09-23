@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
+sources: [raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -459,6 +459,16 @@ shift less than 3 mV"*. `[추론]` WE·CE 가 **둘 다 2상 평탄에 고정**�
 - ★★ **조건 (5)·(6) 을 설계에서 깬다**: 무 Li 조립이라 방전 끝 재고비 `[재현]` ≈Q_ch/Q_dis ≈1.4(≥10 요구의 1/7), 음극 면 전류밀도 **0.59 mA cm⁻²**(∅6 mm, (6) 의 ≈6 배).
 - ⇒ 계보: 안 쟀다(4호) → 설치·미검증(16호) → 실측(17호) → 제3물질로 가정(18호) → 차분으로 소거(19호) → 깨지는 모습을 남김(20호) → 교정 이식(21호) →
   대조군 전압창을 정함(22호) → **명시하고 깨지는 곳을 "활성화"·"음극 동역학" 으로 덮음(23호)**.
+
+### ★★★ `assb` 38호 (Conforto et al. 2021) — **열네 번째 형태: 고정 전위가 게이지의 영점이다**
+
+`raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md`. NCM811 | Li₆PS₅Cl | In/InLi, ≈70 MPa, 40 사이클.
+
+- `[인쇄]` "the equilibrium OCP of a cell with an NCM cathode (**and an In/InLi anode with fixed potential**) follows a well determined OCP function vs x" — 기준 전위 상수(−0.62 V vs In/InLi, ref 42)가 **활성 질량 측정 원리의 전제**로 인쇄된다. 지금까지의 형태(환산 상수 · 차감 · 무시 · 소거)와 달리 **측정값 자체의 영점**이다.
+- 조건 (1) 2상역: `[재현]` Li 1.335 mg(0.192 mmol) + In 46.8 mg(0.407 mmol) → **32.1 at%**(인쇄 ≈33 ✓), 첫 충전 뒤 **≈39.1 at%** — 17호(40) · 18호(37.7–40) 와 같은 대역, 2상역 안 ✓.
+- 조건 (2) 분리막 쪽 LiIn 국소 고갈: 판정 불가 — **Li 박 12.5 mm² 가 In 박 64 mm² 의 1/5 면적**이고 합금 균질화 확인 0.
+- ★ **이 형태의 비용을 수로**: `[재현]` 3.77 V 기울기(`∂E/∂x` 0.38 V, 인쇄)로 환산하면 **기준 ±10 mV(① 평탄 폭 상한) ≈ 활성 질량 ±3.8–4.4 %** — 38호 SC 의 40 사이클 신호(≈9–10 %)의 절반 크기, PC(≈37 %)에는 작다. 끝점 기울기가 달라 자릿수만.
+- 부수: Li 재고 / 이동 전하 **×2.75** — 이 설계에서 `LLI` 는 용량에 안 보인다(기준 과잉 = 재고 과잉).
 
 ## ★★ 평탄이 유지되는 조건 (현재까지의 정리)
 
