@@ -165,3 +165,25 @@ evidenceScope: multi-source-primary
 6. SE 값 사다리 정리와 "상한 = 약한 쪽" 철회, 잘 받았습니다. 우리 SE|SE 앵커 0.47 은 합격선이 아닌 경보로 봉인했습니다.
 
 근거(정본 브랜치 `claude/friendly-meitner-lldvar`): 결정 `D-2026-09-23-wad-p2-lpscl-graphite-scope` · `D-2026-09-23-wad-se-termination-symmetric` · `D-2026-09-23-wad-sese-alarm-band` · 계획 `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` §0′ *P2 격자 정합 후보* 표 · 슬랩 빌더 `tools/wad/se_sym_slab.py` · 메모리 근거 gabia CPU 추정(슬랩 55.8 / 50.2 GB) · `db/properties/li2s_cellconv_card_2026_09_01.json` §3b.
+
+## 회신 2′ (중간 · DFT → DEM · 확정된 것만 · 방식·헤드라인은 Codex BW 리뷰 뒤) — 1저자 발송용
+
+> 왜 두 판인가: 전체 초안의 3번(전체 계면 평면파 DFT 불가 → (a)/(b) 중 택1)과 4번(*헤드라인 = W_sep(DFT · 고정기하)*)이 **서로 모순**이다 — (a) 로 가면 전체 계면 DFT 값이 없다.
+> 방식이 BV 의 검증 조건을 바꾸는 일이라 **Codex BW** (`kb/reviews/codex_BW_prompt_wad_validation_without_cluster_2026_09_23.md`) 뒤에 약속한다.
+
+**[DFT → DEM] 회신 잘 받았습니다 — 확정된 것 먼저, 계산 방식·비용은 외부 리뷰 뒤에 드립니다**
+
+1. **같은 SE 슬랩입니다.** P1(LPSCl|Ag) · P2(LPSCl|C) 모두 정본 `db/structures/wad_se_slabs_2026_09_23/` 의 대칭 슬랩 두 장(S 바깥 Li₇₆P₁₂S₆₂Cl₁₂ 162원자 · Li·PS₄ 바깥 Li₆₈P₁₂S₅₈Cl₁₂ 150원자 · 단면 10.055 Å · PS₄ 12/12 · 양면 C2 대칭)을 씁니다. 계면 셀은 이 단면의 정수배(후보: P1 1×2 · P2 1×3)이고 W 는 면적당 값이라 면적 가중 합산이 됩니다.
+
+2. **P2 를 P1 과 같은 우선순위로 넣습니다** (LPSCl|graphite(0001) 먼저, 비정질은 뒤). 정합 후보:
+   - P2: SE 1×3 (10.06 × 30.17 Å) 위에 흑연 직사각 셀 9.84 × 29.83 Å — 흑연 변형 +2.2 % / +1.1 %
+   - P1: SE 1×2 (10.06 × 20.11 Å) 위에 Ag(111) 직사각 셀 10.01 × 20.22 Å — Ag 변형 +0.5 % / −0.6 % (a 4.086 실험값 기준 · PBE 격자상수로 다시 잽니다)
+   registry ≥ 4 · D3 2체 필수 · P3 은 범위 밖입니다.
+
+3. **계산 방식·비용은 외부 리뷰 뒤에 드립니다.** 우리 계산기는 전부 단일 노드(가장 큰 것이 GPU 48 GB)이고 클러스터 접근은 끝났습니다. 그래서 P1(~436원자)·P2(~820원자) **전체 계면의 평면파 DFT 는 우리 쪽에서 돌릴 수 없습니다** (150–162원자 SE 슬랩 SCF 도 QE 추정 50–56 GB). 방식 후보는 (a) 작은 모델에서 DFT 로 검증한 MLIP+D3 값, (b) 가우스 기저 DFT 로 전체 계면 단일점입니다. **헤드라인이 DFT 값인지, 검증된 MLIP+D3 값인지도 그때 확정합니다** — 확정 전에는 어느 쪽도 약속하지 않겠습니다.
+
+4. 16배 규칙(면적비 ≈ 부피비)은 DEM 조합식의 가정으로 이해합니다 — 우리는 쌍마다 W 만 냅니다.
+
+5. SE 값 사다리 정리와 "상한 = 약한 쪽" 철회, 잘 받았습니다. 우리 SE|SE 앵커 0.47 J/m² 는 합격선이 아닌 경보로 봉인했습니다.
+
+근거(정본 브랜치 `claude/friendly-meitner-lldvar`): 결정 `D-2026-09-23-wad-p2-lpscl-graphite-scope` · `D-2026-09-23-wad-se-termination-symmetric` · `D-2026-09-23-wad-sese-alarm-band` · 계획 `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` §0′ *P2 격자 정합 후보* · *KISTI 없이*.
