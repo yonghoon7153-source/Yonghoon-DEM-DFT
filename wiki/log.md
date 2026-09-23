@@ -2206,3 +2206,14 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **9 장 봤다**(본문 Fig. 1–5 · SI Fig. 4 · 8 · 10 · SI Table 2 쪽); 안 본 것 SI Fig. 1 · 2 · 5 · 6 · 7 · 9 · 11 · 12 · 14 · 15 · 17 · 18.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른한 번째 · 제약 5 · Status Log · 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]](열여덟 번째 적용 · 처방 표 경고 줄) · [[assb-sensitivity-sweep-vs-identifiability]](예측 보정 줄 · 처방 10).
 - 후속(제목 기준): Kuleshov 2018 (ref 62) · Richardson 2018 *IEEE TII* (ref 32) · Birkl 2017 박사논문 (SI ref 22) · Saxena 2008 (ref 64). Q1 · Q4 · 곱 분리 1차 후보 0.
+
+## [2026-09-23] ingest | assb 36호 — Thelen et al. 2024, Probabilistic machine learning for battery health diagnostics and prognostics — review and perspectives (npj Mater. Sustain. 2, 14)
+- raw: `raw/papers/thelen2024_probabilistic-ml-battery-health-review.md` (sha256 봉인) · 그림 `raw/figures/thelen2024_probabilistic-ml-battery-health-review/` (크로퍼 18 장, Fig. 2 · 9 제외; Fig. 3 · 4 전체 수동 재렌더). 큐 **35번**("Q3·Q4 — 불확실성 보정"). Review 33 쪽, CC BY, 1차 측정 0, ASSB 0.
+- ★★★ **판정**: (a) aleatory/epistemic(→ model-form · parameter) 은 가르고 식별성은 없다 — 사후 폭 = 예측 분포 또는 ML 가중치, 근최적 폭과 다른 대상 · (b) **확률적 모드 진단 1차 원전 0/13** — Fig. 4 도 Problem 4 만 점, 사후 상관에 가장 가까운 것은 Ruan 2022 의 "상관된 모드"(학습 사전) · (c) CI ⊂ PI ⊂ TI 정의(35호 `μ ± 2σ` = PI) · (d) ASSB 0 → 도구 칸.
+- **채움표 36호 행 — 누적 ≈16.0 → ≈16.0 (새 칸 0).** Q4 ASSB 0 — 스물여덟 번째 성질 "불확실성의 분류학을 세웠는데, 데이터를 더 모아도 줄지 않는 파라미터 불확실성의 칸이 없다" · Q3 층 하나 · Q1 분류 체계 여섯 번째 표본(Fig. 3 재작도가 접촉 손실의 모드 연결을 지웠다).
+- 큐 낱말 지문 재집계(NFKC · 대소문자 구분 · 낱말 경계): NFKC 변경 684 자(`ﬁ` 481). 정정 — `uncertaint` 205 → 180 · `Bayes` 53 → 35 · `posterior` 28 → 26 · `calibrat` 8 → 7(큐 값 = 공백 소실로 붙은 낱말 포함 부분문자열 · 문서 전체) · `confidence interval` 6 확인 · `LAM` 5 는 가림(`LAMPE`/`LAMNE` 13).
+- 곱 축퇴 처방 **열아홉 번째 적용 — 대상 없음**, 경고: 확률적 추정이 곱을 가리는 세 번째 경로(평균장 VI · 상관된 학습 사전).
+- ⚠ 어긋남 12 건: D1 Fig. 3 캡션 "connections" ↔ 연결선 0 · D2 Severson 2021 ↔ 2019 · D3 절 교차참조 5 곳 · D7 Roman "RF lowest accuracy" 그룹 의존 · D8 CI 문단 내부 긴장 · D9 부트스트랩 반복 수 외.
+- 그림: **5 장 봤다(Fig. 3 · 4 · 7 · 13 · 15)**; 어긋난 것 Fig. 3 · Fig. 7. 안 본 것 Fig. 1 · 2 · 5 · 6 · 8 · 9 · 10 · 11 · 12 · 14 · 16–20.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른두 번째 · 제약 6 · Status Log · 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]](열아홉 번째 적용) · [[assb-sensitivity-sweep-vs-identifiability]](불확실성 분류 ≠ 식별성 줄 · 처방 11).
+- 후속(제목 기준): Gasper 2021 *JES* 168 (ref 52) · Gasper 2022 (ref 169) · Thelen 2022 *ESM* 50 (ref 81) · Ruan 2022 *Energy AI* 9 (ref 196) · Schmitt 2023 (ref 192). 확률적 모드 진단 · Q1 · 곱 분리 1차 후보 0. 큐 36 · 37 인용 0.

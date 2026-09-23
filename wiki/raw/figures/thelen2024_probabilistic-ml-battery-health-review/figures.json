@@ -1,0 +1,371 @@
+{
+ "slug": "thelen2024_probabilistic-ml-battery-health-review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | An illustrative ﬂowchart showing essential functions of a BMS that manages the power and health of a battery pack. This battery pack comprises SE serially connected strings, each of which is composed of PL cells connected in parallel.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    61.5,
+    566.7,
+    207.6
+   ],
+   "w": 1112,
+   "h": 610,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.392
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Cause and effect of Li-ion battery capacity and power fade. Figure modiﬁed from Thelen et al.81 and based on the original ﬁgure in Birkl et al.71 showing the relationship between cell use/environment (Level 4), the corresponding degradation",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    71.9,
+    492.4,
+    219.8
+   ],
+   "w": 1912,
+   "h": 617,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.223
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | An overview of six general problems relevant to battery health diagnostics and prognostics. Here, V, I, T, and Q denote voltage, current, temperature, and capacity, respectively, and ^θd denotes an estimated vector of three degradation parameters deﬁned to quantify three degradation modes.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    573.4,
+    567.2,
+    719.9
+   ],
+   "w": 2224,
+   "h": 611,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | A high-level comparison between traditional ML and deep learning. Here, a typical traditional ML pipeline requires engineers to manually identify D0 features from a D-dimensional raw input, also known as feature extraction. In contrast, a typical deep learning pipeline does not need manual feature extraction and can automatically learn features with predictive power from data.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    68.2,
+    567.2,
+    190.5
+   ],
+   "w": 1114,
+   "h": 510,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.845
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | A probabilistic ML pipeline for battery state estimation. Among the probabilistic ML algorithms listed here, “GPR” stands for Gaussian process regression (the section “Gaussian process regression''); “RVM” stands for relevance vector machine (the section “Relevance vector machine''); “sampling stands for sampling methods (the section “Sampling methods''); “BNN” stands for Bayesian neural network (the section “Bayesian neural network''); “MC dropout” stands for Monte Carlo dropout (the section “Bayesian neural network''); and “NN ensemble” stands for neural network ensemble (the section “Neural network ensemble”).",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    66.6,
+    300.8,
+    206.5
+   ],
+   "w": 1114,
+   "h": 584,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 | An illustration of distance-aware uncertainty estimation by GPR on a 1D regression example. Here, the 95% prediction interval (denoted as “PI” in the legend) represented by the shaded area is computed as μ* ± 2σ*.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    68.9,
+    567.2,
+    210.9
+   ],
+   "w": 1114,
+   "h": 592,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.842
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 | Probabilistic capacity forecasting by GPR at a speciﬁc cycle. Here, the GPR model is ﬁt to available data and extrpolated to forecast capacity and EOL.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    71.1,
+    300.8,
+    202.7
+   ],
+   "w": 1114,
+   "h": 549,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 12,
+   "file": "fig_10.png",
+   "caption": "Fig. 10 | Probabilistic capacity estimation by RVM using partial charge curves. Example ML pipeline for capacity estimation using RVM trained on voltage-time and current-time data during cell charging. Figure adapted from Fig. 2 in Hu et al.13",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    89.2,
+    566.5,
+    296.2
+   ],
+   "w": 2221,
+   "h": 864,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 14,
+   "file": "fig_11.png",
+   "caption": "Fig. 11 | A ﬂowchart illustrating the process of constructing a neural network ensemble. In this ﬂowchart, simple averaging is used to combine the Gaussian-distributed predictions by four independently trained neural networks into an ensemble prediction.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    68.2,
+    567.2,
+    236.5
+   ],
+   "w": 2224,
+   "h": 702,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 16,
+   "file": "fig_12.png",
+   "caption": "Fig. 12 | Sampling-based ML approach to battery capacity estimation. Example ML pipeline for battery capacity estimation using random and stratiﬁed sampling bagging methods.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    67.1,
+    567.3,
+    310.6
+   ],
+   "w": 2224,
+   "h": 1016,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 18,
+   "file": "fig_13.png",
+   "caption": "Fig. 13 | Regression illustrating various forms of model uncertainty. Example illustrating conﬁdence, prediction, and tolerance intervals calculated for an ordinary least squares regressor with a single input feature (x) and target value (y).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    68.3,
+    567.2,
+    184.4
+   ],
+   "w": 1114,
+   "h": 485,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 21,
+   "file": "fig_14.png",
+   "caption": "Fig. 14 | A schematic illustrating battery life prediction from preliminary current and voltage information. “QOI” in Step 4 stands for quantity of interest. Figure elements borrowed from Paulson et al.87",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    43.7,
+    558.5,
+    395.9
+   ],
+   "w": 2188,
+   "h": 1468,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.754
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 22,
+   "file": "fig_15.png",
+   "caption": "Fig. 15 | Example of a physics-based approach to battery capacity estimation. Cell degradation parameters (see the section “Battery degradation -- modes and mechanisms'') are estimated and used in a physics-based model to estimate full-cell capacity fade. Based on work of Lui et al.202",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    65.1,
+    300.8,
+    170.4
+   ],
+   "w": 1114,
+   "h": 439,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.604
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 23,
+   "file": "fig_16.png",
+   "caption": "Fig. 16 | High-level assessment of Li-ion batteries for second-life applications. Cell SOH assessment for second-life applications.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    62.2,
+    562.5,
+    233.9
+   ],
+   "w": 1094,
+   "h": 717,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.699
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 24,
+   "file": "fig_17.png",
+   "caption": "Fig. 17 | Overview of battery usage and capacity fade in ﬁrst- and second-life applications. An illustration of an aging trajectory over two lives and a knee point in the second life.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    72.1,
+    300.8,
+    288.6
+   ],
+   "w": 1114,
+   "h": 903,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.425
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 25,
+   "file": "fig_18.png",
+   "caption": "Fig. 18 | A comparison between two adaptive-discharge battery aging control strategies. With standard control strategies, power draw is not limited, and run time is uncontrolled (blue curves). With the adaptive discharge control strategy (orange curves), the maximum discharge power is limited to a safe range to extend the run time and reduce cycle-driven battery aging due to high C-rates.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    68.3,
+    300.8,
+    284.6
+   ],
+   "w": 1114,
+   "h": 902,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 26,
+   "file": "fig_19.png",
+   "caption": "Fig. 19 | Top, illustration of a voltage-based lithium-plating boundary that decreases in voltage as the cell ages due to the increased likelihood of lithium- plating in aged battery cells. The OCV of an NMC/Gr cell is shown for reference. Bottom, example optimal fast charging proﬁles for various battery SOHs and designed to charge the cell as fast as possible without the cell voltage exceeding the corresponding lithium-plating voltage limits. Figure based on work by Konz et al.229.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    68.3,
+    300.8,
+    284.6
+   ],
+   "w": 1114,
+   "h": 902,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 27,
+   "file": "fig_20.png",
+   "caption": "Fig. 20 | Top, approximate Li-ion battery cycle life as a function of temperature with regions highlighted for typical operation in portable electronics and EVs. Bottom, an example battery pack cooling strategy that uses liquid coolant to pull heat away from the pack and a heat exchanger to reject the heat to the environment.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    68.3,
+    300.8,
+    284.6
+   ],
+   "w": 1114,
+   "h": 902,
+   "dpi": 300,
+   "src": "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf",
+   "blank": 0.881
+  }
+ ]
+}

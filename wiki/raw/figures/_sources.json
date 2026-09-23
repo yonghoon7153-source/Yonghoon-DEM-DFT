@@ -256,7 +256,7 @@
   ]
  },
  "roman2021_ml-pipeline-soh-estimation-uncertainty": {
-  "figures": 29,
+  "figures": 33,
   "generated": "2026-09-23",
   "pdfs": [
    "2488b853-34._Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
@@ -337,6 +337,13 @@
   "pdfs": [
    "0ff584d6-10._Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
    "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf"
+  ]
+ },
+ "thelen2024_probabilistic-ml-battery-health-review": {
+  "figures": 18,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "b8e64f97-35._Probabilistic_machine_learning_for_battery_health_diagnostics_and_prognostics_review_and_perspectives.pdf"
   ]
  },
  "vadhva2021_eis-for-assb-theory-methods": {

@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -1162,6 +1162,26 @@ RF-RFE-CV 의 점수는 **용량 예측 MSE** 다. 곱의 두 인자(면적 ↔ 
 예측 구간은 그 방향의 폭을 볼 수 없다. **"보정된 SOH 구간이 좁다" 는 곱이 갈렸다는 근거가 되지 않는다** — 근최적 집합의 폭은 따로 잰다
 ([[near-optimal-set-width-measurement]]).
 
+## ★★ 처방의 열아홉 번째 적용 (2026-09-23, `assb` 36호) — **적용 불가 · 대상 없음(종설) · 대신 확률 도구가 곱 방향의 폭을 지우는 두 경로**
+
+`raw/papers/thelen2024_probabilistic-ml-battery-health-review.md` (Thelen et al. 2024, *npj Mater. Sustain.* 2, 14 — ⚠ **Review 33 쪽, 1차 측정 0, 액체셀 중심, ASSB 0** — 도구 칸).
+확률적 ML(GPR · RVM · BNN · 앙상블 · 배깅) 종설이고 `A_eff·ε_p/R_s` 가 들어갈 식이 없다. 입력 채널은 전부 ❌(EIS 특징은 입력으로만 · `C` · τ 0 · 면적 대조군 0 · 온도는 조건 인식 입력 · `R/k` 0).
+
+### ★★ `[해석]` 곱 방향의 폭은 이 편의 분류에 없다
+
+이 편은 불확실성을 aleatory(비가역) ↔ epistemic(`[인쇄]` "reducible" — 데이터를 더 모으면 준다)으로 가르고, CI 는 `[인쇄]` "collapses to the true value" 로 정의한다.
+곱 축퇴에서는 FIM 이 **모든 데이터량에서** 특이하므로 곱 방향의 폭은 데이터를 늘려도 줄지 않는다 — 사후가 점이 아니라 **능선**으로 수렴한다. 이 폭을 이 편의 분류로 읽으면
+"데이터 부족(epistemic)" 으로 오독되고, 처방은 "더 모아라" 가 된다. 처방 표의 답은 **다른 종류의 관측**(1–4단계)이다.
+
+### ★★ 확률적 추정이 곱을 가리는 두 경로
+
+| 경로 | 이 편의 `[인쇄]` | 곱에 미치는 것 (`[해석]`) |
+|---|---|---|
+| **평균장 VI** | "a mean-field approach cannot capture parameter correlations and tends to under-predict the uncertainty" (BNN 맥락) | 곱 축퇴는 사후의 **음의 상관(능선)**으로 나타난다. 평균장은 그 상관을 지우고 좁은 주변분포 둘을 낸다 — 곱이 갈린 것처럼 보인다 |
+| **상관된 학습 사전** | Ruan 2022 재인용: "the degradation modes are inherently correlated, and these correlations can be exploited to improve diagnostic accuracy" | 데이터가 못 가르는 방향을 사전의 상관이 정한다 — 같은 분포의 시험 셀에서는 정확도가 오르고, 다른 노화 경로에서는 그 몫이 사전이었음이 드러난다 |
+
+→ 처방 표에 더하는 경고 한 줄: **"확률적 추정 결과를 처방의 입력으로 받을 때는 공분산(또는 능선)을 먼저 요구한다 — 주변분포만 좁으면 곱이 갈렸다는 근거가 아니다."** 34호(사상이 지운다) · 35호(선택이 버린다)에 이어 **세 번째 경로(추론 근사 · 사전이 가린다)** 다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -1218,3 +1238,4 @@ RF-RFE-CV 의 점수는 **용량 예측 MSE** 다. 곱의 두 인자(면적 ↔ 
 - ★ **2026-09-23 (33호)**: **"상대극 ΔP 가 `A_eff(P)` 를 오염시킨다" 를 측정으로 주장하지 않는다** — 표의 ΔP 는 33호에 재수록된 네 원전의 그림 판독이고, 기저 20–45 MPa · 정변위 지그다. 주장은 **"재수록 원자료에서 상대극 ΔP 가 이 편 자신의 산업 운전 압력과 같은 자릿수다"** 까지다.
 - ★ **2026-09-23 (34호)**: **"능동 펄스 BMS 가 곱을 가른다" 고 주장하지 않는다** — 한 펄스의 약분표는 단일 RC + 반무한 확산 근사 위의 **우리 대수**이고, 34호는 `C` · 시상수 · 조합을 쓰지 않았다. 실셀 단자 펄스는 양극 + 상대극(+ SE) 호의 합이고, `C ∝ A` 전제는 18·19호에서 깨졌다. "OED 가 구조적 곱을 못 푼다" 는 FIM 의 정의에서 나오는 일반 명제이지 34호가 인쇄한 것이 아니다.
 - ★ **2026-09-23 (35호)**: **"용량 목표 특징 선택이 언제나 분리 채널을 버린다" 를 정리로 주장하지 않는다** — 근거는 35호 한 편에서 저항 채널 하나가 세 그룹 모두 탈락한 것과, 목표와 직교하는 정보는 목표 점수에 기여하지 않는다는 **일반 논리**다. 저항이 용량과 상관된 데이터(예: 같은 기구가 둘 다 움직이는 셀)에서는 선택될 수 있다. 그리고 35호는 액체 셀이라 접촉 손실 채널은 애초에 대상이 아니다.
+- ★ **2026-09-23 (36호)**: **"평균장 VI 나 상관된 사전이 실제 모드 진단 문헌에서 곱을 가렸다" 고 주장하지 않는다** — 36호는 종설이고 두 문장 모두 재인용이다(평균장 경고는 BNN 가중치 맥락, Ruan 문장은 원전 미열람). 주장은 **두 경로가 구조상 곱 방향의 폭을 지울 수 있다**는 것까지이고, 확인은 원전(Ruan 2022 · Thelen 2022)에서 한다.

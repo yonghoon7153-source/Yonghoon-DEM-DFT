@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -30,6 +30,7 @@ evidenceScope: multi-source-primary
 | **모델 불일치 민감도** (27호, 새 줄) | 두 모델(상위 충실도 ↔ 축약)에 같은 입력 | `d = Y_hi − Y_lo` 의 기울기 `|∇d|` | **아니다** — **모델 적합성**(model adequacy)의 도구. `|∇d| ≈ 0` 은 "차이가 상수라 보정이 흡수한다" 는 뜻 |
 | ↳ 셋째 줄의 **입력 설계판** (34호, 새 줄 · ⚠ 처방만) | **입력 `u`**(펄스 진폭 · 폭 · 순서)를, 파라미터는 고정 | `det FIM(u)`(D-optimality) · PE 조건 | **절반** — **실제적** 비식별(FIM 정칙, 조건수 큼)만 줄인다. **구조적** 비식별(모든 `u` 에서 FIM 특이 — 곱 축퇴)에서는 D-optimality = 0. 그리고 FIM 은 국소라 설계 뒤 **전역 폭**을 다시 재야 한다 — 근최적 폭 측정이 사후 검증 |
 | **예측 보정** (35호, 새 줄 · 표 밖) | 모델 출력 분포를 **보정 전용 셀**에 맞춰 재보정(isotonic) | 스칼라 예측의 적중률(`C_score` @90 %) · 날카로움 | **아니다** — 대상이 **예측**이지 파라미터가 아니다. 축퇴 방향에서 예측이 변하지 않으면 그 폭은 보정된 구간에 **안 보인다**. 모드 분해가 없는 목표(SOH 스칼라) 위에서만 정의된다 |
+| **불확실성 분류** (36호, 새 줄 · 표 밖) | 총 예측 불확실성을 aleatory(비가역) ↔ epistemic(가역: model-form · parameter)으로 **분류**, 구간을 CI ⊂ PI ⊂ TI 로 정의 | 어휘와 정의 — 계산 대상은 예측 분포 · ML 가중치 사후 | **아니다** — 그리고 **자리를 막는다**: epistemic = "reducible" · CI 는 참값으로 붕괴로 정의되므로, 데이터량 불변인 **구조적 비식별**이 들어갈 칸이 없다 |
 
 `[해석]` 26호(Iwakiri 2024, `raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md`)의 제목 "sensitivity analysis" 는 **첫 줄**이다.
 그 편의 Table 1(ASSB 모델 10 편 비교)에서 "Sensitivity Analysis" 열의 값이 **Several / Temperature / Current / Diffusion / Conductivity** — **무엇을 스윕했나의 목록**이다.
@@ -154,6 +155,16 @@ evidenceScope: multi-source-primary
 그리고 적중률은 **그룹 평균**이다 — `figure-read ≈` 한 시험 셀(Group II 셀 1)은 재보정 뒤 90 % 목표에서 ≈74 % 로 오히려 멀어졌다(Fig. 4b).
 ⇒ 처방 목록에 한 줄: **"calibrated uncertainty" 를 보면 대상이 예측인지 파라미터인지부터 적는다 — 예측이면 식별성의 증거로 세지 않는다.**
 
+## ★★ 36호 — 표 밖의 여섯 번째 도구: **불확실성 분류 ≠ 식별성**
+
+`raw/papers/thelen2024_probabilistic-ml-battery-health-review.md` (Thelen et al. 2024, *npj Mater. Sustain.* 2, 14, ⚠ **Review · 1차 측정 0 · ASSB 0**).
+확률적 ML 종설 — `uncertaint` 180 · `posterior` 26 · `epistemic` 11 인데 `identifiab` 0. 불확실성은 첫 쪽에서 `[인쇄]` "the predictive uncertainty of an ML model … for a training/test sample point" 로 정의되고,
+사후는 전부 **ML 가중치**의 사후다. 이 편이 보태는 것은 도구가 아니라 **분류**다: aleatory(`[인쇄]` "irreducible") ↔ epistemic(`[인쇄]` "reducible", model-form · parameter) · CI ⊂ PI ⊂ TI.
+`[해석]` 식별성의 폭은 이 두 칸 어디에도 안 맞는다 — **데이터량에 따라 줄지 않는 파라미터 불확실성**이다. 그래서 이 분류는 식별성의 증거를 못 줄 뿐 아니라, 폭을 "데이터 부족" 으로 **오독하게 만든다**.
+가장 가까운 것은 이 편이 재인용한 Gasper 2021(`[인쇄]` "model parameter uncertainty can be very large when … too many fittable parameters are included") — **부트스트랩 파라미터 분포**는 우리 폭과 같은 종류의 대상이다(원전 미열람, 액체 · 수명 모델 계수).
+그리고 `[인쇄]` "This would require the probing … of posterior results (not just posterior-predictive results and not just looking at RMSE)" — 이 편에서 우리 입장에 가장 가까운 문장이지만 대상은 가중치다.
+⇒ 처방 목록에 한 줄: **불확실성 문헌의 "parameter uncertainty" 를 보면 무엇의 파라미터인지(물리 ↔ ML 가중치)와 데이터를 늘리면 줄어드는지를 먼저 적는다.**
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -174,6 +185,7 @@ evidenceScope: multi-source-primary
 8. (29호) **적합 논문이면 파라미터 dependency/상관 행렬을 SI 에서 찾는다** — 둘째 줄의 수치다. 찾았으면 **진단이 경고한 셀이 결론에 쓰였는지** 추적한다(29호는 sc90 을 빼고 같은 문제의 sc84 로 결론을 냈다).
 9. (30호) **교과서 선형화 추출(b 값 · Randles–Ševčík · Dunn)이면 식별성 이전에 두 가지를 본다** — ① 같은 데이터가 식의 전제(b = 0.5 · 원점 통과)를 만족하는가 ② 인쇄된 값과 **라벨**(산화/환원 · 계)이 그 논문 자기 그림에서 다시 구한 값과 맞는가. 30호는 ② 에서 뒤집혀 있었다.
 10. (35호) **"calibrated uncertainty" · "confidence interval" 을 보면 대상이 예측(스칼라 목표의 오차)인지 파라미터(해 집합)인지 먼저 적는다.** 예측이면 Q4 근거가 아니다. 그리고 적중률 점수(`C_score`)는 **목표와의 거리**로 읽는다 — 90 % 목표에서 100 은 과소 확신이다. 이름도 대조한다: "α-accuracy · β"(예측 지표) ≠ 우리 α·β(전극 스케일 · 오프셋).
+11. (36호) **"posterior" · "parameter uncertainty" · "epistemic" 을 보면 ① 무엇의 파라미터인지(물리 ↔ ML 가중치) ② 데이터를 늘리면 줄어드는 폭인지(실제적) 아닌지(구조적) ③ 공분산을 보고했는지(평균장 근사면 상관이 지워진다)를 적는다.** 셋 다 아니면 Q4 근거가 아니다.
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -182,6 +194,7 @@ evidenceScope: multi-source-primary
 - **"sensitivity = sweep" 이 ASSB 문헌 전체의 관행이라고 하지 않는다** — 26호 Table 1 한 표 근거다. 27호는 반례(전역 Sobol)이지만 역시 첫 줄이다.
 - **27호의 큰 `κ` 오프셋이 전부 접촉 손실이라고 단정하지 않는다** — 0.068 ↔ 0.07 일치와 바닥을 뺀 연결 입자 SOC 0.044 ↔ P2D 0.043 까지가 사실이고, `u` 가 부피 분율인지 · P2D 면적 과대(≈1.5 배)가 같은 자리에서 상쇄되는지는 모른다.
 - **35호의 보정된 구간이 쓸모없다고 하지 않는다** — 스칼라 SOH 를 운용하는 데는 이 계보에서 가장 정직한 불확실성 보고다. 주장은 **그것이 파라미터 식별성과 다른 물음에 답한다**는 것까지다.
+- **36호의 분류가 틀렸다고 하지 않는다** — aleatory/epistemic 은 예측 불확실성을 나누는 표준 분류이고 그 목적에는 맞다. 주장은 **그 분류에 데이터량 불변의 파라미터 폭이 들어갈 칸이 없다**는 것까지이며, 분류 원전(Der Kiureghian 2009)이 그 자리를 어떻게 두는지는 미확인이다.
 
 ## 관련
 
