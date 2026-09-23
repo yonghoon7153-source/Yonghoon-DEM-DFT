@@ -2093,6 +2093,10 @@ Python 3.12.14 · Windows. 최초 경로 문제는 짧은 경로의 **동일 코
   범위는 오프라인 보완이다 — COMSOL 실행 횟수도, 새 물리 검증 수도 아니다.
 - **A8 실행본 계획**의 조건부 수용 — C1(새 단계에서 16 개 결과의 정확 집합 소비) · C2(실제 호출 경로의 TTY/현지
   입력 사전조건) · C3(실제 raw 계약과 검사용 view 의 구분)을 조건으로, **제한 오프라인 준비 범위**에서만.
+- 두 회신의 정본은 25-9 에 보존했다. 거기서 읽은 식별(사본): A8 보충본 수신 ZIP 375,193 B · `7198da44…` · 10 payload + manifest,
+  `ebe6e9` 반환 전사 전달 147.438/600 s · 전체 1,814.938/7,200 s (호출 자체 2.1797632 s 와 구분), 선택 11 개 보존 기록 일치 ·
+  `B_path_ready=false` 당시. 실행본 확정안 수신 ZIP 54,175 B · `696de7ad…` · 11 payload + manifest, A8 166 개 코드 식별 ·
+  불변 복사 11 개 · 새 네 phase argv/cwd · 224 개 보존 기록. 두 회신 모두 "실행 승인이 아니다" 를 명시했다.
 
 ### 25-3. 층 2 — 이번 수신 수용 (2026-09-24, B_A8R1 제한 배치 · 전달 증거)
 
@@ -2136,7 +2140,7 @@ seal 과 동일. 11 개 불변 파일 · Java 두 literal 역치환 · `TARGET_S
 
 | 항목 | 상태 | 왜 아직인가 |
 |---|---|---|
-| **C2 — 실제 호출 경로의 TTY/현지 입력 사전조건** | **미완** | 기존 launcher 는 apply Desktop 실행 **뒤에** observe → timed_attest → isatty 를 검사한다. 그러므로 "TTY 미제공을 첫 Desktop 이전에 차단한다" 고 말할 수 없다. 이번 배치도 launcher/transport 를 바꾸거나 실제 TTY 를 시험하지 않았다. 단순 화면 관측이나 **다른 셸의 TTY 로 대신하지 않는다.** 확인 방법·범위는 별도 승인. 선행 코드 gate 가 필요하면 그 최소 변경도 별도 승인 |
+| **C2 — 실제 호출 경로의 TTY/현지 입력 사전조건** | **미완** | 기존 launcher 는 apply Desktop 실행 **뒤에** observe → timed_attest → isatty 를 검사한다. 그러므로 "TTY 미제공을 첫 Desktop 이전에 차단한다" 고 말할 수 없다. 이번 배치도 launcher/transport 를 바꾸거나 실제 TTY 를 시험하지 않았다. 단순 화면 관측이나 **다른 셸의 TTY 로 대신하지 않는다.** 확인 방법·범위는 별도 승인. 선행 코드 gate 가 필요하면 그 최소 변경도 별도 승인. 검토 정본(REVIEW_KO §8)의 자리: `launcher.py:118` 의 isatty 가 `execute` 안 apply Desktop 뒤 `:306` observe 에서 불린다. 확인 1 건에 담을 것: Python/호출 방식/계정/cwd/stdin 과 Windows 콘솔 입력의 관계 · 현지 사용자 응답 · timeout/실패 시 Desktop 을 시작하지 않는 경계. 출력 TTY 만으로 `msvcrt.getwch()` 입력 가능을 증명하지 않는다 |
 | 실제 B 승인 · 앱의 정식 명령 허용 | 미완 | 확정된 코드/manifest/run/입력/새 예산에 대한 사용자의 **별도** 승인. 오프라인 PASS 나 `B_path_ready=true` 는 이를 대신하지 않는다 |
 | API 수치 회수 (241 좌표 표면 · Li 수지 · 정상 전체 판정) | 미완 | §20 부분 회수 그대로 |
 | process 정리 · 정책 원복 | 미완 | 각각 판정하고 독립 검토 |
@@ -2178,7 +2182,7 @@ seal 과 동일. 11 개 불변 파일 · Java 두 literal 역치환 · `TARGET_S
 - 게이트 리뷰(`degradation-degeneracy`) · BML 열화모드 정량화 · α·β 하네스와 **무관**하다 — 판정을 합산하지 않는다.
 - 이 절만으로 이미 수용된 A8 시험을 반복하거나 범위를 넓히지 않는다.
 
-### 25-7. 출처 (수신 PC 경로 — 이 중 ZIP 세 겹은 25-8 로 저장소에 보존했다)
+### 25-7. 출처 (수신 PC 경로 — ZIP 세 겹은 25-8, 검토 정본 6 개는 25-9 로 저장소에 보존했다)
 
 - 이번 현지 보고 원문: `…/.codex/attachments/db827121-983d-42fb-91fd-f78dab956181/붙여넣은 텍스트.txt` 및 사용자 메시지.
 - 앞선 수신 검토: `…/outputs/comsol_a8_return_review_20260923/LOCAL_CODEX_REPLY.md` ·
@@ -2187,7 +2191,7 @@ seal 과 동일. 11 개 불변 파일 · Java 두 literal 역치환 · `TARGET_S
   `PACKAGE_VERIFICATION.json` · `INDEPENDENT_CHECKS.json`.
 - 검토자 33 건에서 쓴 것은 검토한 순수 함수의 AST 분리본이다. 수신 suite / 모듈 최상위 / launcher / native 제어는
   실행하지 않았다.
-- 이들 정본을 `reviews/` 아래에 보존할지는 별도 결정이었고, **2026-09-24 사용자 결정으로 보존했다** (25-8).
+- 이들 정본을 `reviews/` 아래에 보존할지는 별도 결정이었고, **2026-09-24 사용자 결정으로 보존했다** (25-8 · 25-9).
 
 ### 25-8. 저장소 보존 — ZIP 세 겹의 **바이트 대조** (2026-09-24, 우리 실측 · 코드/수치 검증이 아니다)
 
@@ -2214,3 +2218,28 @@ seal 과 동일. 11 개 불변 파일 · Java 두 literal 역치환 · `TARGET_S
 - 보존한 md·json 안에서 §24 의 P1-R1/R2/R3 닫힘을 말하는 문장은 **찾지 못했다** (`991`·`1143`·`CRLF`·`mmol`·`P1-R` 검색 —
   `HANDOFF_README_KO.md` 의 "끝 CRLF 전사" 한 줄뿐이고 무관). 25-1 ⚠ 유지.
 - 이 표는 **바이트 대조 기록**이다. 25-3 의 "수신 독립 33 건" · "현지 57 개" · C1/C3 판정과 합치지 않는다.
+
+### 25-9. 검토 정본 6 개의 보존 (2026-09-24, 우리 실측 · 바이트 대조)
+
+사용자가 수신 PC 의 Codex `outputs/` 세 폴더에서 PowerShell 로 묶어 올린 ZIP (`codex_b_a8r1_review_docs_20260924.zip`,
+18,186 B · `8a274b75…`) 을 풀어 **bytes 그대로** `reviews/r14_repros/codex63/b_a8r1_review_20260924/` 에 두었다.
+`.gitattributes` `-text` 규칙을 먼저 커밋했고, `TRANSFER_IDENTITY.json` 이 겉 ZIP · 항목별 크기/sha · 전달값 대조를 적는다.
+
+| 파일 | 크기 | 사용자가 붙인 sha 와 | 커밋 뒤 재대조 |
+|---|---:|---|---|
+| `comsol_b_a8r1_review_20260924/REVIEW_KO.md` | 13,342 | 일치 (`95005872…`) | 일치 |
+| `comsol_b_a8r1_review_20260924/LOCAL_CODEX_REPLY.md` | 3,822 | 일치 (`10486b59…`) | 일치 |
+| `comsol_b_a8r1_review_20260924/PACKAGE_VERIFICATION.json` | 3,853 | 일치 (`76cacb9d…`) | 일치 |
+| `comsol_b_a8r1_review_20260924/INDEPENDENT_CHECKS.json` | 33,496 | 일치 (`7005e37c…`) | 일치 |
+| `comsol_a8_return_review_20260923/LOCAL_CODEX_REPLY.md` | 1,584 | 일치 (`ab714ad8…`) | 일치 |
+| `comsol_a8_execution_plan_review_20260924/LOCAL_CODEX_REPLY.md` | 3,187 | 일치 (`17a6f596…`) | 일치 |
+
+- 동봉 `SHA256SUMS.tsv` 6 줄도 우리 계산과 일치. 커밋 뒤 `git show HEAD:` 바이트 재대조 **7/7**.
+- `PACKAGE_VERIFICATION.json` 의 세 겹 archive/manifest 식별은 25-8 의 우리 실측과 **전부 같다** (5e8adb45 / e3449975 · 99923f23 / e84b5b58 ·
+  0332c2cd / 8409ca35, payload 6/400/7). 곧 수신 측과 우리가 같은 바이트를 봤다.
+- `INDEPENDENT_CHECKS.json`: 범위 "AST-selected reviewed pure consumers; received top levels/suites/native controls never run" ·
+  probe 33 · case_counts D01–D16 = 1·2·2·2·3·2·2·2·3·5·8·11·2·4·4·4 (합 57) · reported_suite "16 IDs / 57 invocations / 16 positive / 41 reject".
+- **§24 의 P1-R1/R2/R3 닫힘 문장은 이 6 개에도 없다** (`P1-R`·`991`·`1143`·`newLine`·`lineSeparator`·`mmol` 검색 — CRLF 언급은 전사 바이트 얘기뿐).
+  25-1 ⚠ 를 **유지한다.** 사용자도 그 근거를 모른다고 했다(2026-09-24). 닫힘 근거는 A5→A8 회신 원문(수신 PC) 이나 현지 보고에서
+  따로 찾아야 한다 — 이 절은 그것을 추측으로 메우지 않는다.
+- 여기 적은 것도 **바이트 대조와 옮겨 적기**다. 검토자 33 건이나 현지 suite 를 우리가 다시 돌리지 않았다.
