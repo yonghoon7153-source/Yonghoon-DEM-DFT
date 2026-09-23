@@ -2,7 +2,7 @@
 
 압축 후 이어받은 순서 (1저자): **Lee STEP3 16팔 → FAMV2-01 C→A→B → §12 개정 → 믹서 진단 → 04b**.
 
-## ① Lee STEP3 16팔 — 발사 명령 전달 (⬜ 발사 확인)
+## ① Lee STEP3 16팔 — ✅ 발사됨 (09-23 약 10:31 KST, 러너 PID 501405, v100)
 
 - 러너 = Phase A 0.15 팔을 돌린 **그 러너** `scripts/sdcp_gain_vox015_8arm.sh` (새 명령을 짓지 않는다).
   v100 `/home/ubuntu/runyourai/1/pa/kits` 에서
@@ -22,6 +22,9 @@
   ⇒ 즉시 처방 = v100 에 `pip install pyflakes` 후 재발사 · 근본 수정 = 대체 경로를 스코프-근사로 고치고 selftest
   ④⑤⑤b⑥⑦ 이 `with_ast()` 를 **직접** 시험 (먼저 빨간불 129 확인 → 수정 후 0).  옛 selftest ①~③ 은 작은 픽스처라
   이 부류를 못 봤다.
+- ✅ **재발사 (09-23 약 10:31)** — v100 conda env 에 `pip install pyflakes` 후 (리포 pull 없이) 같은 인자로.  게이트 RC=0 · OUT 에 영수증 하나 · 관문 3/3 · `σ_VGCF 100 → 78.5398` · 첫 팔 payload 가 복셀화 중 (CPU 99.8 % · RSS 7.7 GB) 확인.
+- ⚠ **헛경보 교훈 (감시)**: 대화형 셸에서 `setsid nohup … &` 의 `$!` 는 **곧 끝나는 부모 PID** 다 — `setsid` 가 프로세스 그룹 리더면 fork 하고 부모는 바로 나간다 (실측: `$!`=501404, 러너=501405).  그 PID 로 감시하면 "⛔ 종료됨" 헛경보가 난다 ⇒ 감시는 **이름으로** (`pgrep -f sdcp_gain_vox015_8arm\.sh` — 조회 전용).
+- ⚠ **pull 금지 이유 하나 더**: 러너 영수증(`run_receipt.json`)에 `code_sha` 가 들어간다 — 발사 뒤 pull 하면 영수증이 달라져 러너가 **거부**한다 (재발사 때 pull 하지 않은 이유).
 - ⚠ 16팔이 끝날 때까지 v100 리포에서 `git pull` 금지 — 팔마다 새 파이썬이 뜨므로 중간 pull 은 팔마다 `code_sha` 를 가른다.
 - 로그의 *"진단 팔 … 생산 규약 아님 (CDXR2-6)"* 은 SDCP 캠페인 기준의 **옛 배너**다 (09-10 기록과 같음) — Phase A 에서는
   centerline + σ_ptfe 0 이 **등록된 규약**이다 (CL-60).  동작은 봉인 그대로.
@@ -60,3 +63,7 @@
 04b · 기준 상태 지문 · R2 argv · 동률 폭 · 재시도 규칙 (`codex_fam_r3v2_verdicts_20260922.md` §F-3).
 
 ## ⑤ SELF-45 — 회신 **발송됨** (사용자, 수치로) · 완성본은 사용자가 후속 전달.  S14·S15 컬러바 값 제공 완료.
+
+## ⑥ 독립 연구 트랙 개설 — Ag–C 인터레이어 점착 (DFT 팀 협업)
+
+`docs/adhesion_agc_interlayer_20260923.md` (우리 쪽 설계·분업) · `docs/dft_request_adhesion_agc_20260923.md` (DFT 팀 전달 원문).  핵심: DEM 은 점착에너지를 **입력**으로 받으므로 W_ad 는 DFT, 구동압 의존 G_c,eff(P) 는 DEM 박리(하한).  ⬜ 계면 정의·범위·자원 저자 결정 대기.
