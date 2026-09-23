@@ -2117,3 +2117,16 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **9 장 전부 봤다, 안 본 것 0 장** (+ Table II 쪽 렌더 · Fig. 9 벡터 추출).
 - 후속 후보: ★★★★ 1 **Forman 2012 *J. Power Sources* 210, 263** (ref 18, DFN Fisher 식별성) · ★★★ 2 **Alavi 2016 arXiv 1505.00153** (ref 33, Randles 회로 식별성) · ★★★ 3 **Santhanagopalan 2007 *JES* 154, A198** (ref 30, 모델 판별). 26·27호 모두 이 편 인용 0.
 
+
+## [2026-09-23] ingest | assb 29호 — Yanev et al. 2024, Quantifying Resistive and Diffusive Kinetic Limitations of Thiophosphate Composite Cathodes (J. Electrochem. Soc. 171, 050530)
+
+- `raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md` (sha256 봉인). 큐 **28번**("`η(i)` 항 그 자체 + OCV 곡선 최유력"). Fraunhofer IKTS — 17호와 같은 연구실(17호 = ref 21). 14 복합체 CA + 대칭 셀 EIS/TLM + GITT, 신품, 2전극 Li-In. **SI 미열람**(업로드 없음, IOP 접근 정책상 차단).
+- 큐 낱말 지문 재집계(NFKC 전/후) — `identifiab` 0/0 · `uniqu` 0/0 · `GITT` 20/20 · `OCV` 0/0: **큐 지문이 정규화 전후 모두 맞다.** 정규화가 바꾼 것 `fit` 0 → 20 · `identif*` 1 → 4. `ﬁ` 99 · `ﬂ` 17. 식별성 신호는 지문 열 밖 `dependenc*` 2.
+- ★★★★ **Q4 +0.5 — ASSB 계보 첫.** `Q(R) = Q_M/(1+2(Rα)ⁿ)` 적합에서 `[인쇄]` sc90 `Q_M`·`α` "high dependencies close to unity in Table S2" = 저자의 공분산 진단 + 비식별 명제, 식별 집합에 용량 스케일 포함. `[재현]` 고율 극한이 `Q_M·α⁻ⁿ` 한 조합 — 정합. 반 칸: SI 미열람 · 국소 · 축이 정적↔동적 · 진단 미전파(sc84 외삽 ≈236 이 "LIB 초과 이용률" 결론).
+- ★★★ `[재현]` GITT `D_app` = `D·(A_eff/V)²` = 28호 `τ_d` 묶음 — "확산성 한계" 와 "작은 접촉 면적(φ)" 은 같은 숫자 · `σ_eff`–`D` Spearman 0.94 · Table I `ε` 역산 = 공칭 · sc73-BM 행 전사 오류 둘. `[해석]` `n` = CA 누적 전하 시간 지수 → TLM √t 대안(판별 안 함).
+- **곱 축퇴 처방 열두 번째 적용** — 2단계 부분 ✅ · 4단계 자릿수 양립 · 1·3단계 ❌. 처방 첫 줄(율 스윕 `i → 0`)의 계보 첫 실적용 + 실패 조건.
+- **채움표 29호 행 — 누적 ≈15.5 → ≈16.0 (Q4 +0.5).** Q1 이동 없음(역산 둘, `θ(N)` 0/29) · Q2 반 칸 검토 후 접음 · Q5 열한 번째 형태 "검증 이식" · Q3 층 둘.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · For 스물다섯 번째 · Against 단서 · 새 제약 7 · Status Log) · [[assb-sensitivity-sweep-vs-identifiability]](29호 절 · 처방 8) · [[spm-grouped-parameter-identifiability]](29호 세 줄) · [[assb-lampe-contact-product-degeneracy]](열두 번째 적용 · 새 줄 둘) · [[assb-tortuosity-factor-effective-conductivity-split]](네 번째 표본) · [[assb-apparent-capacity-decomposition]](29호 절).
+- ⚠ 어긋남 15 건(D1 "175 and 195" 순서 반대 · D3 sc84 `D` 표↔그림 · D4 sc73-BM 두 칸 · D6 `Q_M` < 실측 저율 · D7 sc84 외삽 해석 · D9 sc90 무표시 작도 외).
+- 그림: **7 장 전부 봤다, 안 본 것 0 장** (+ 식 1–5 렌더 · Fig. 2c/2d 확대). SI 그림 8 · 표 2 못 봄.
+- 후속 후보: ★★★★ 1 **Tian 2020 *J. Power Sources* 468, 228220** (ref 19, 식 (2) · `n` 배정 원전) · ★★★ 2 **Yanev 2022 *JES* 169, 090519** (ref 20) · ★★★ 3 **이 편의 SI** (Table S2) · ★★ 4 **Kaiser 2018 *JPS* 396, 175** (ref 22).

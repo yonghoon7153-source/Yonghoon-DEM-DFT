@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -121,6 +121,14 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - **P2D 에서 `κ` 는 `(ε_el/τ_el)κ` 로만 들어간다**(`[인쇄]` 식 10 · Table III). 이 편의 Sobol "ion. cond." 지수는 **`κ_eff` 의 지수**이고 `κ` ×1000 은 `ε/τ` ×1000 과 같다 — 곱의 짝을 흔들지 않아 곱이 드러나지 않는다.
 - `[인쇄]` "While a constant difference could still be corrected by an update of the homogenization parameters" — 저자는 **`ε/τ` 재보정이 모델 구조 오차를 흡수할 수 있다**고 쓴다. 이 페이지의 요지(분할은 가정이 정한다)의 모델 판: **보정된 `τ` 는 물성이 아니라 "구조 오차 + 물성" 이 될 수 있다.**
   ⚠ 단 `[재현]` 이 편에서 그 "상수 차이" 의 크기는 수송이 아니라 **비연결 입자 몫 `1 − u` = 0.07** 과 맞는다 — [[assb-sensitivity-sweep-vs-identifiability]] §27호.
+
+## ★★ 네 번째 표본 — 측정 `σ_eff` ÷ **공칭** `ε`, 공극은 `τ` 로 (2026-09-23, `assb` 29호)
+
+`raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md` (Yanev 외 2024, *JES* 171, 050530 — 14 복합체).
+`[인쇄]` 식 (4) `τ = (σ₀/σ_eff)·ε` (ref 22 Kaiser 2018) — 이름은 `τ` 지만 **굴곡도 인자**(24호의 `τ²`, 27호의 `τ` 와 같은 양). `σ_eff` 는 대칭 셀 EIS 의 **TLM 적합**, `σ₀` 는 SE 펠릿 차단 EIS(3.13 · BM 1.62 mS cm⁻¹).
+- `[재현]` `ε = τ·σ_eff/σ₀` 로 역산하면 조성마다 하나(**0.57 / 0.37 / 0.234 / 0.153**)이고 gran·sc·BM 에 공통 ⇒ **공칭 catholyte 분율**이다. 공극은 측정되지 않았고 **`τ` 로 들어간다** — 저자도 `τ` 를 "geometric and porosity-related effects" 로 부른다(24호 D1 과 달리 규약이 서술과 맞는다).
+- ⚠ sc73-BM 행만 `ε` 0.326 — `τ` 2.6 ↔ 정합값 2.9(같은 행 `φ` 도 불일치, 29호 D4).
+- `τ` 1.5 → 54.2 (한 자릿수 반). 29호는 `τ` 를 결론에 쓰지 않는다(SI Fig. S8 로만) — 병목 판정은 `σ_eff`·`D` 로 한다.
 
 ## 이 페이지가 주장하지 않는 것
 

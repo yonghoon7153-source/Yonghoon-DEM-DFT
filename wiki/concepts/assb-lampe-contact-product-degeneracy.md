@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -152,6 +152,8 @@ physical significance** of the parameters" 라고 쓴다.
 | ★★ **두 영역 대조(4단계)의 시편 조건** (2026-09-23, **24호에서**) | 주파수 영역(EIS) 값과 시간 영역(operando/DC) 값을 비교할 때 두 시편은 **같은 제조 압력·같은 두께**여야 한다 | ⚠ **24호**: EIS 차단 셀 50 / 150 MPa ↔ operando 100 MPa — "굴곡도 진화" 가 압력 이력과 교락 |
 | ★★★ **SE 입도 쌍 + 분말 BET = 한쪽 상의 면적 대조** (2026-09-23 신설, **25호에서**) | 계면의 **SE 쪽 비표면적만** 바꾼 쌍(CAM·조성·공정 고정)에 **독립 면적 측정(BET)** 을 붙인다 ⇒ 면적 가설의 예측(`C` 비 = 1/`R` 비 ≈ BET 비)을 **자기 데이터 밖에서** 검사 | ★★★ **25호 신품 P4**: `R_ct` ×0.57 · τ ×1.41 ⇒ `C` ×1.7–2.5 ↔ 1/`R` 1.75 · BET 1.53 — **방향·자릿수 통과**(18호 검사 A 의 **CAM** 입도 쌍은 실패). ⚠ BET 는 SE **분말** 면적이지 CAM\|SE 접촉 면적이 아니다 · 25호는 SE 벌크 σ ×0.66 · 밀도 0.77 → 0.90 가 같이 변했다(고주파 호 교락) |
 | ★★ **추정 논문의 스윕 그림 겹치기 = 공짜 `J^T J`** (2026-09-23 신설, **26호에서**) | 적합과 OAT 스윕을 같이 인쇄한 모델 편에서 **같은 모양의 스윕 그림 쌍(평행 열) · 반응 없는 그림(0 열)** 을 찾고, 그 파라미터의 **적합값 ÷ 문헌값**을 본다 — 위 "`J^T J` 최소 고유벡터" 줄의 비용 0 판 | ★★★ **26호**: Fig. 5a `D_e⁻` 0 열 → 적합값 **10 자릿수** 표류 · Fig. 12a≡b `k₁`↔`k₂` · Fig. 3≡15 `D_M⊕`↔`a_max`. ⚠ 대역·단일 율 스윕이라 방향 **후보**일 뿐 폭은 안 준다 ([[assb-sensitivity-sweep-vs-identifiability]]) |
+| ★★★ **외부 액체 기준 수입** (2026-09-23 신설, **29호에서**) | 곱의 한 인자를 **같은 분말의 액체 반쪽전지**로 고정한다 — GITT `D·(A_eff/V)²` 에서 `D_LIB` 를 들여와 나머지를 접촉 면적(피복률 `φ = √(D/D_LIB)`)으로 | ★★★ **29호**: `φ` 53.3 → 18.0 %(gran) · 85.2 → 3.1 %(sc). ⚠ **기준도 곱을 진다** — 같은 조성인데 `D_LIB` gran/sc **2.7 배**(액체가 균열 내면을 적신다, 저자 서술). 22호의 "LIB 대조" 와 같은 부류 |
+| ↳ **율 스윕 줄의 실패 조건** (2026-09-23, **29호에서**) | 첫 줄("`i → 0` 포함")은 **종료 율에서 곡선이 평탄할 때만** `θ·Q` 를 `η` 에서 뗀다. 평탄이 창 밖이면 외삽 용량 `Q_M` 과 동역학 시간척도 `α` 가 한 조합(`Q_M·α⁻ⁿ`) | ★★★★ **29호 저자 진단**: `[인쇄]` sc90 dependency ≈1. ⚠ 같은 문제의 sc84 는 외삽 ≈236 ↔ 실측 177 로 해석에 쓰였다 |
 
 ★ **`R_CT·C_dl` 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -963,6 +965,33 @@ P1 에서는 방향이 반대다. 같은 추론을 **P4(양극 전하이동)** �
 `[해석]` **식별성 원전의 파이프라인을 그대로 ASSB 에 옮기면 1단계가 설계로 막힌다** — 이 처방이 가장 많이 쓴 채널(`R_CT · C_dl`, 16·18·19·21·23·25호)을 원전은 입구에서 버린다.
 ASSB 에 식별성 도구를 들여올 때 **반원을 버리지 않는 판**(이중층을 모델에 넣은 SPM/P2D 임피던스)이 필요하다. 원전 참고문헌의 [33] Alavi 2016(Randles 회로 식별성)이 그 방향의 후보다.
 
+## ★★★★ 처방의 열두 번째 적용 (2026-09-23, `assb` 29호) — **율 스윕 줄의 첫 실적용 · GITT 가 곱 자체 · 2단계 부분 통과**
+
+`raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md` (Yanev et al. 2024, *JES* 171, 050530 — NCM811 gran/sc × LPSCl/BM × AM 51–90 wt%, 14 복합체, 신품, 2전극 Li-In).
+
+### 입력 점검
+
+| 단계 | 요구 | 이 편 | 판정 |
+|---|---|---|---|
+| **1단계** (16호) | `R` 과 `C` 를 같이 | 대칭 셀 EIS 를 TLM 으로 적합했으나 **인쇄는 `σ_eff` 뿐**(계면 요소 · `C` 는 SI Fig. S1, 미열람) | ❌ |
+| **2단계** (18호·25호) | + 면적을 아는 대조군 | SE 입도 쌍(BET 2.25 ↔ 8.36 m² g⁻¹, ×3.7) · CAM 형상 쌍(0.570 ↔ 0.696) · 같은 분말 LIB | ✅ **부분** — `[재현]` BM/비BM `φ` 비 **1.02–2.29** < BET 비 3.7: 방향 통과 · 크기는 상한 안. 25호 "SE 입도 쌍 + BET" 줄의 **두 번째 표본** |
+| **3단계-a/b** (19호) | `Ea` · `C` 상한 | 30 °C 한 점 · `C` 없음 | ❌ |
+| **4단계** (20호) | 시간 영역에도 같은 검사 | CA `α`(h) ↔ GITT `L²/D`(`L = V/A_BET`) | ✅ **자릿수 양립**(`[재현]` gran51 0.06 ↔ 0.05 h · 나머지 ×1.6–16) — 단 둘이 **같은 곱**을 보므로 검사가 아니라 일관성 |
+
+### ★★★★ 이 편의 GITT 가 곱 자체다
+
+`[인쇄]` 식 (3) `D = (4/π)(m·V_M/(M·A))²·(ΔE_S/(t·dE/d√t))²` — `A` 가 **제곱**. 진짜 활성 면적이 `φ·A_BET` 이면 `D_app = D·φ²`. `[인쇄]` "The knowledge or assumption of A is necessary when quantifying diffusive phenomena."
+⇒ 이 페이지의 곱 `A_eff·ε_p/R_s` 와 **같은 부류의 곱**(면적 × 수송)이 **확산 쪽**에 선다. 저자는 `D_LIB` 수입(위 새 줄)으로 풀고, 남는 차이를 전부 면적(`φ`)으로 배정한다 — 이 편의 결론 "확산성 한계는 작은 접촉 면적에서 온다" 는 **그 배정의 다른 이름**이다(`φ ≡ √(D_app/D_LIB)`).
+
+### ★★★★ 처방 첫 줄의 실적용 — 그리고 그 줄이 언제 실패하는지
+
+이 페이지 처방 표 첫 줄("율 스윕, `i → 0` 포함 — `η(i)` 를 지워 `θ_AM·Q_material` 만 남긴다")을 **계보에서 처음 실제로 한 편**이다: CA 한 번을 `Q(R) = Q_M/(1+2(Rα)ⁿ)` 로 적합해 `Q_M`(= `θ·Q`) 을 외삽한다.
+`[재현]` 고율 극한 `(Q_M/2)(Rα)⁻ⁿ` ⇒ 저율 평탄이 창 밖이면 `Q_M·α⁻ⁿ` 한 조합 — `[인쇄]` sc90 dependency ≈1 과 정합. `[도표]` 그런데 **어느 셀도 0.02 C 에서 평탄하지 않고**, `Q_M` 은 평탄이 보이면 과소(gran51 ≈185 ↔ 194) · 안 보이면 과대(sc84 ≈236 ↔ 177)다.
+⇒ 첫 줄에 조건을 붙였다(위 표 "↳ 율 스윕 줄의 실패 조건").
+
+### 원인 배정도 곱 위에 있다
+균열이 **두 칸에 동시에** 배정된다 — `[인쇄]` "detach from the electronic percolation network and remain unutilized" (→ `Q_M`, 용량) · "particle delamination and contact loss, which is purely detrimental to the AM-SE surface area and diffusive kinetics" (→ `φ`, 동역학). 몫을 가르는 관측은 없다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -1012,3 +1041,4 @@ ASSB 에 식별성 도구를 들여올 때 **반원을 버리지 않는 판**(�
   주장은 **"면적 설명이 같은 지면의 독립 면적 측정과 방향·자릿수에서 양립한다"** 까지다. 그리고 **P1 벽돌층 반론은 모형 위의 추론**이다(P1 이 분리막 입계인지 미기재).
 - ★ **2026-09-23 (26호)**: **박막 모델의 `D_M⊕·a_max` 대칭을 복합양극 P2D 로 옮기지 않는다** — 입자 차원이 없는 1차원 평판의 `x` 좌표 안의 구조다. 주장은 "같은 두 자리(동역학 면적 · 용량 스케일)에 조합이 선다" 까지다.
 - ★ **2026-09-23 (27호)**: **`A` 의 세 겹 짐을 "접촉 손실은 원리적으로 못 가른다" 로 일반화하지 않는다** — 균질화 P2D 한 형식의 구조다. 연결 분율을 `A` 와 독립된 자리로 가진 축약 모델이 있을 수 있다(확인 안 됨).
+- ★ **2026-09-23 (29호)**: **`φ` 를 측정된 피복률로 쓰지 않는다** — `D_true` 공통 · LIB 100 % 두 가정 위의 비이고, 기준(`D_LIB`) 자체가 형상에 따라 2.7 배 다르다. 그리고 **"`n` ≈0.5 는 고체 확산이 아니다" 라고 주장하지 않는다** — TLM √t 가 같은 지수를 줄 수 있다는 **대안**까지이고, 판별하지 않았다(CA 원자료 · TLM 파라미터 없음).

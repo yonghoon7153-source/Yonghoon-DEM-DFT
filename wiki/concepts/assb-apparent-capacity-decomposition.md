@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -391,6 +391,19 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
   이 페이지의 "율이 `η(i)` 만 지운다" 의 **실험 적용 예**다(4 점 · 셀 한 쌍).
 - **공통 모드** — 30 → 2 MPa 2 사이클 방전 손해 coarse −26.5 ↔ fine −30.7: **미세구조 무관 손해**는 복합양극의 `θ`·`η` 어느 쪽으로도 배정하면 안 된다(두 셀이 공유하는 Li 음극 · 분리막이 후보) —
   17호의 **네 번째 항(상대극 컷오프)** 자리. 저자 적합(S19)에서도 Li 계면이 가장 큰 항이다.
+
+## ★★★★ 2026-09-23 (`assb` 29호 Yanev 2024, **실험 · 2전극 CA · 14 복합체 · 신품**) — **율 극한을 적합으로 실행한 첫 편, 그리고 그 극한이 언제 안 보이는지를 저자가 인쇄했다**
+
+`raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md`. 17호와 같은 연구실.
+
+- **이 페이지 "율이 세 항 중 하나만 지운다" 의 계보 첫 체계적 실행.** CA 방전 한 번(0.02 C 종료)을 `R = I/∫I dt` 로 바꿔 `Q(R) = Q_M/(1+2(Rα)ⁿ)` 로 적합 — `Q_M` = `[인쇄]` "maximum capacity which can be discharged at an infinitely low rate" = 이 페이지의 **`θ_AM·Q_material`**, `α`·`n` = **`η(i)`**.
+  `Q_material` 은 같은 분말의 LIB 반쪽전지(0.1 C, gran 193 · sc 213 mAh g⁻¹)로 떼어 `Q_M/Q_LIB` = 이용률 — **3항이 신품에서 셋 다 이름을 얻는다**.
+- ★★★★ **극한이 안 보이면 `θ·Q` 와 `η` 는 한 조합이다.** `[인쇄]` sc90 "not enough information … to accurately fit the Q_M and α … high dependencies close to unity"; `[재현]` 고율 극한 `(Q_M/2)(Rα)⁻ⁿ` 는 `Q_M·α⁻ⁿ` 만 본다.
+  `[도표]` 실제로 **어느 셀도 0.02 C 에서 평탄하지 않다** — `Q_M` 은 평탄이 보이는 셀에서 실측보다 낮고(gran51 ≈185 ↔ 194) 안 보이는 셀에서 높다(sc84 ≈236 ↔ 177 · LIB 213 초과).
+  ⇒ 위 처방("최소 두 율, `i → 0` 포함")에 **조건**이 붙는다: **최저 율이 평탄 안에 있어야** 극한이 `η` 를 지운다. 곡선이 로그 축 끝까지 기울어 있으면 외삽 용량은 식 모양의 산물이다.
+- ⚠ 3호(Liu)가 좁힌 처방(`Q_material` 도 율 의존)과는 **독립인 두 번째 좁힘**이다 — 3호는 고율이 재료를 깎는 문제, 29호는 저율이 창 밖인 문제.
+- **동역학 항 안에서** 29호는 저항성(SE, `n` → 1) ↔ 확산성(AM, `n` → 0.5)을 가르고, 확산성 결손을 **AM|SE 피복률 `φ`**(`√(D_app/D_LIB)`, 53 → 18 % · 85 → 3 %)로 돌린다 — 표면 일부 접촉 손실이 **용량이 아니라 `η`** 로 간다는 이 페이지 [[assb-tortuosity-factor-effective-conductivity-split]] 표 셋째 줄의 실측 판. ⚠ `φ` 는 가정 위의 비이고, `n` ≈0.5 는 catholyte 전송선(TLM)의 √t 와도 양립한다(판별 안 함).
+- 2전극 — 17호의 **네 번째 항(상대극 컷오프·과도)** 은 빠져 있다. 같은 음극 조성에서 17호가 CA 시작 `E_CE` ca. 0.9 V 를 인쇄했고, `n` 은 바로 그 첫 구간의 기울기다.
 
 ## 이 페이지가 주장하지 않는 것
 

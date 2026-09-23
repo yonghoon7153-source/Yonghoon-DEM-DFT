@@ -1,0 +1,151 @@
+{
+ "slug": "yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "11a89f5d-28._Quantifying_Resistive_and_Diffusive_Kinetic_Limitations_of_Thiophosphate_Composite_Cathodes_in_All-Solid-State_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. FESEM images of polycrystalline granulated NCM811 (gran), single crystalline NCM811 (sc), LPSCl solid electrolyte as received and ball-milled LPSCl (LPSCl-BM). be 0.570 m2 g−1 and 0.696 m2 g−1 respectively based on the Brunauer–Emmett–Teller (BET) method. capacity is observed, as the cell is in a kinetically limited regime due to bottlenecks in the Li+ transport within the composite cathode. The granulated AM series (gran51—gran90 in Fig. 2a) shows a clear decline of the rate performance with increasing AM%, as evidenced by the steep portion of the CA curve shifting to lower rates. The loss of rate capability is very signiﬁcant for gran90, where the available capacity at 2 C is close to zero. All CA curves show visible low-rate plateaus, whereby the low-rate capacity shows a trend depending on the AM ratio: 51% > 73% ≈84% > 90%. The LPSCl as provided by the supplier shows a bro",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    330.2
+   ],
+   "w": 2202,
+   "h": 1123,
+   "dpi": 300,
+   "src": "11a89f5d-28._Quantifying_Resistive_and_Diffusive_Kinetic_Limitations_of_Thiophosphate_Composite_Cathodes_in_All-Solid-State_Batteries.pdf",
+   "blank": 0.35
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Rate performance data of the studied cathode composites recorded via chronoamperometry. gran90 series to Eq. 2 are shown as an example in Fig. 3 and the rest of the ﬁtted data is shown in Fig. S7. Generally, the typical features of cathode limited cells can be seen i.e. a low-rate plateau as well as a power law-like decay of the capacity beyond a certain critical rate. The purpose of the ﬁt is to quantify the rate performance via the kinetic parameters Q , M α and n, which quantify the maximum value, onset of decay and decay slope of the capacity-R curve, respectively. The ﬁt results are plotted in Fig. 4. All parameter values and their dependencies are additionally shown in Table S2. The latter are a measure for the model suitability for the dataset, where a depen- dency approaching unity indicates that several parameters cannot be reasonably ﬁtted independent of each other. W",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    548.4,
+    493.3
+   ],
+   "w": 2161,
+   "h": 1803,
+   "dpi": 300,
+   "src": "11a89f5d-28._Quantifying_Resistive_and_Diffusive_Kinetic_Limitations_of_Thiophosphate_Composite_Cathodes_in_All-Solid-State_Batteries.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Exemplary capacity vs R chronoamperometric data for the gran51 – gran90 series and ﬁts according to Eq. 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.6,
+    60.9,
+    557.0,
+    718.4
+   ],
+   "w": 2158,
+   "h": 2741,
+   "dpi": 300,
+   "src": "11a89f5d-28._Quantifying_Resistive_and_Diffusive_Kinetic_Limitations_of_Thiophosphate_Composite_Cathodes_in_All-Solid-State_Batteries.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Fit parameters of the chronoamperometric rate performance data of the studied cathodes. other datasets, however it is still considered sufﬁcient for interpreta- tion. QM is the maximum capacity value at the low-rate plateau and is in essence the extrapolated capacity obtainable from the cathode at inﬁnitely low rates (Fig. 4). QM is therefore suitable to quantify the AM utilization. In the case of ideal electronic percolation, one would expect that the QM value equals the nominal capacity of the AM. Measurements in reference LIBs resulted in 193 mAh g−1 for gran and 213 mAh g−1 for sc at 0.1 C, respectively. This discrepancy reﬂects intrinsic differences in the AMs which might come from differing production process or postproduction treatment by the suppliers. This is consistent with the generally higher QM of sc in the ASSBs (Fig. 4). However, the trend in QM depending on AM r",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    290.0,
+    299.8
+   ],
+   "w": 1085,
+   "h": 997,
+   "dpi": 300,
+   "src": "11a89f5d-28._Quantifying_Resistive_and_Diffusive_Kinetic_Limitations_of_Thiophosphate_Composite_Cathodes_in_All-Solid-State_Batteries.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Schematic representation of Li+ transport within the ASSB during discharge. The dominant transport mechanism within the SE is electrically driven conduction. The dominant transport mechanism within the AM is gradient driven solid-state diffusion.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    585.7,
+    558.0,
+    735.6
+   ],
+   "w": 2200,
+   "h": 626,
+   "dpi": 300,
+   "src": "11a89f5d-28._Quantifying_Resistive_and_Diffusive_Kinetic_Limitations_of_Thiophosphate_Composite_Cathodes_in_All-Solid-State_Batteries.pdf",
+   "blank": 0.685
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a) Effective ionic conductivity eff σ determined by impedance measurements and (b) diffusion coeffcient DLi+determined by GITT measurements for the studied composite cathodes. LIB + for the granulate was almost three times higher than DLi We note that in the reference LIB, the apparent DLi Table I. Effective ionic conductivity , eff σ tortuosity factor ,τ mea- sured diffusion coefﬁcient DLi+ and calculated relative surface coverage of the AM by SE . φ The value for sc90 could not be accurately determined due to the high impedance of the cathode composite. LIB + of the single crystal AM. Since the AMs have the same chemical composition, this apparent difference must be caused by morphological effects. Even in LIBs, assuming A (Eq. 3) as equal to the BET surface does not accurately describe the effective surface area available for diffusion. On one hand, the gran particles are s",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.1,
+    265.6
+   ],
+   "w": 2201,
+   "h": 854,
+   "dpi": 300,
+   "src": "11a89f5d-28._Quantifying_Resistive_and_Diffusive_Kinetic_Limitations_of_Thiophosphate_Composite_Cathodes_in_All-Solid-State_Batteries.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Relationship between the kinetic ﬁt parameters of the chronoamperometric data, α and n, and the measured effective ionic conductivity eff σ and diffusion coefﬁcient D . Li+ The blue lines are a guide to the eye only.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    315.2,
+    558.0,
+    735.4
+   ],
+   "w": 2201,
+   "h": 1752,
+   "dpi": 300,
+   "src": "11a89f5d-28._Quantifying_Resistive_and_Diffusive_Kinetic_Limitations_of_Thiophosphate_Composite_Cathodes_in_All-Solid-State_Batteries.pdf",
+   "blank": 0.904
+  }
+ ]
+}

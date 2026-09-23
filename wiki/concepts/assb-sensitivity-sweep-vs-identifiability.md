@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -56,7 +56,7 @@ evidenceScope: multi-source-primary
 
 ## 왜 중요한가 — Q4 의 0 과 이 페이지의 관계
 
-- 카드의 Q4 는 **"유일성·식별성을 쟀나"** 다. 스윕은 재지 않은 것이다 — **26호 이후에도 Q4 는 0/26**, 전역 Sobol 을 제대로 한 27호 이후에도 **0/27**.
+- 카드의 Q4 는 **"유일성·식별성을 쟀나"** 다. 스윕은 재지 않은 것이다 — **26호 이후에도 Q4 는 0/26**, 전역 Sobol 을 제대로 한 27호 이후에도 **0/27**. → **29호에서 처음 반 칸**(둘째 줄의 수치 진단, 아래 절).
 - 그러나 26호는 **추정과 스윕이 같은 모델 · 같은 지면**에 있는 계보 첫 편이라, **원전 수치만으로 비식별을 재현할 수 있었다.** 24호(열일곱 번째 성질)의 재료가
   "측정 ÷ 가정"([[assb-tortuosity-factor-effective-conductivity-split]]), 25호(열여덟 번째)가 "손잡이의 폭" 이었다면 26호의 재료는 **저자 자신의 계산**이다.
 - ~~큐 26(P2D 유효성)은 둘째 줄 너머(전역 분산 분해)를 할 것으로 보인다~~ → **2026-09-23 흡수(27호) 결과: 첫 줄의 전역판이었다** — 아래 절. Sobol 지수는 분산 기여이지 조합의 null 방향이 아니라는 예고는 맞았다.
@@ -104,6 +104,21 @@ evidenceScope: multi-source-primary
 
 ⚠ **합자 맹점이 IEEE 에도 있다** — 큐 지문의 `identifiab` 9 는 전부 대문자 쪽 머리글이었고 본문 출현은 합자 속에 있었다(NFKC 뒤 54). 처방 1 의 지문은 **NFKC 뒤에** 센다.
 
+## ★★★★ 29호 — 둘째 줄에 처음 붙은 수치, 그리고 **대상에 용량 스케일이 있다**
+
+`raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md` (Yanev et al. 2024, *JES* 171, 050530 — ASSB 실험, 14 복합체, 신품).
+
+| 물음 | 29호 |
+|---|---|
+| 어느 줄인가 | **둘째 줄(추정 민감도)** — 추정 데이터(CA 율 곡선) 위의 적합에서 OriginPro **"dependency"**(파라미터 공분산에서 나오는 공선 지표, 1 에 가까우면 다른 파라미터와 독립으로 못 정함)를 계산 |
+| 식별 집합 | `(Q_M, α, n)` — **`Q_M` = 무한 저율 용량(용량 스케일)** 이 들어 있다. 28호는 이 축을 입력으로 뺐다 |
+| 비식별 명제 | `[인쇄]` sc90 "not enough information in the measured data to accurately fit the Q_M and α … high dependencies close to unity in Table S2. Only the fit parameter n can be reasonably interpreted" |
+| 구조 | `[재현]` `Q(R) = Q_M/(1+2(Rα)ⁿ)` 의 고율 극한 `(Q_M/2)(Rα)⁻ⁿ` ⇒ 평탄이 창 밖이면 `Q_M·α⁻ⁿ` 한 조합 · `n` 은 기울기라 조합 밖 — 저자 판정과 정확히 맞다 |
+| 약점 | 수치는 SI(미열람) · 국소 공분산 하나 · **진단을 해석에 전파 안 함**(sc90 무표시 작도, 같은 문제의 sc84 외삽값으로 "LIB 초과 이용률") |
+
+**Q4 는 ASSB 첫 반 칸(0/28 → 0.5).** 이 페이지 표의 둘째 줄 정의("`J` 의 열이 평행하거나 0 이면 비식별 **후보** — 절반")와 같은 무게로 셌다.
+⇒ **세 줄 표에 더하는 것**: 둘째 줄은 "후보" 로만 남는 것이 아니라 **적합 소프트웨어가 기본으로 내놓는 dependency/상관 행렬**로 수치가 된다 — 추정 논문이 그 표를 SI 에 싣는지 먼저 본다(처방 8).
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -121,6 +136,7 @@ evidenceScope: multi-source-primary
 6. (27호) **모델 비교 논문의 "상수 차이 = 보정 가능" 은 구조 오차가 파라미터로 흡수되는 자리다.** 그 상수의 크기를 **알려진 구조량**(연결 분율 `1 − u` 등)과 대조한다.
 7. (28호) **식별성을 한 논문이면 식별 집합의 목록을 먼저 적는다.** 용량 스케일(`Q_th`) · 정렬(`x⁰`) · OCV 곡선이 **입력**이면 그 논문은 모드 분해의 유일성을 말하지 않는다.
    그리고 사후 보정 손잡이(28호 ×0.78)가 **어느 묶음**에 걸리는지 본다 — 식별 집합에서 뺀 축이면 그 보정이 그 축의 추정이다.
+8. (29호) **적합 논문이면 파라미터 dependency/상관 행렬을 SI 에서 찾는다** — 둘째 줄의 수치다. 찾았으면 **진단이 경고한 셀이 결론에 쓰였는지** 추적한다(29호는 sc90 을 빼고 같은 문제의 sc84 로 결론을 냈다).
 
 ## 이 페이지가 주장하지 않는 것
 
