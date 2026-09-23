@@ -139,8 +139,12 @@
     ```
     pw.x = /data/apps/qe-7.4.1-cpu/PW/src/pw.x   (libmpi = /lib/x86_64-linux-gnu, GNU OpenMP)
     mpirun = hpcx (PATH 앞단) + **--allow-run-as-root 필수** (root 계정이라 가드에 막힌다)
-    mpirun --allow-run-as-root --bind-to none -np 8 pw.x -nk 2 -inp x.in
+    mpirun --allow-run-as-root --bind-to none --mca btl self,vader -np 8 pw.x -nk 2 -inp x.in
     ```
+    · ⛔ **`--mca btl self,vader` 를 빼지 마라** — 안 주면 단일 노드인데도 OpenMPI 가 TCP 를 쓴다. 2026-08-31 modelc nscf 는
+      `btl_tcp … recv failed: Connection reset by peer` 한 줄 뒤 10랭크 중 9개가 CPU 0 으로 **31 h 좀비**였다
+      (`run_gap_nscf_gabia.sh`·`run_sese_gpu.sh` 는 이미 기본값). 2026-09-23 Nd k-탐침이 이 예시대로 떠서 같은 줄을 1번 찍었다 —
+      이번엔 오류 뒤에도 out 이 자랐다(무해). 판별은 CPU 합계가 아니라 **오류 뒤 out 이 자라는가 · 랭크별 CPU** 다.
     · **랭크를 올려도 총 메모리가 안 는다** — 실측 `Estimated max dynamical RAM` 총계가
       np 2/4/8 에서 전부 **~33 GB** (16.65 / 8.33 / 4.17 GB per process). 메모리 걱정 말고 올려라.
     · **OMP 는 여기서 거의 일을 안 한다** (8 스레드에 118 %). `OMP_NUM_THREADS=1` + 랭크로 간다.

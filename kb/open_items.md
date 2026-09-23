@@ -73,6 +73,9 @@
   · 09-24 00:08 — 8/8 랭크 · CPU 800 % · 경과 07:26 · SCF iteration 8 · 오차 0.0118 → 0.00112 → 0.000298 Ry.
     ⚠ `kprobe.err` 끝에 `btl_tcp … recv(24) failed: Connection reset by peer (104)` (rank 1) — MPI 가 멈춰도 CPU 는 100 % 라
     **CPU 로는 못 가른다**. 판별 = err 이후에도 out 이 자라는가 (붙여넣기 블록 전달 · 결과 전 판정: 한 반복 ≈55 분 넘게 out 정지면 멈춤 의심 → 1저자 결정).
+    ✅ **판별 00:23 — 무해**: err 23:21:40 (그 1줄뿐) · out 00:03:39 (**err 뒤**) · 누적 cpu 18635 → 22174 → 26478 s = 반복당 59–72 분 ·
+    iteration 8 (≈22:52 시작)이 오류를 지나 00:03 에 끝났다 · mpirun 3364444 `btl 지정 없음`. 08-31 좀비(9/10 랭크 CPU 0)와 다르다.
+    ⏭ watch CPU 가 800 → ≈100 % 로 떨어지면 그게 좀비 신호 → PID 로 끊고 `--mca btl self,vader` 재시작(1저자 결정). 다음 반복 끝 ≈01:05–01:15.
 - ⏭ **kgy Li₂S P1 탐침 (li2s 셀수렴 카드 §3 · 공유 GPU 라 벽시계는 상한)** — worktree `~/lldvar_p1` @c8f0f2db ·
   GBRV 해시 kgy = gabia (Li `02cc4b38…` · S `84ad7318…`) · kgy `~/work/pseudo` 의 Li·S 는 GBRV 뿐(PAW 없음 → 전용 폴더 불요).
   ⛔ kgy 에 Li₂S 이완본이 없어 빌더가 멈췄다 → gabia `sei_dft/li2s*/01_vcrelax.out` (sha `0bcb294b19b23c24`, v2 NEB 가 쓴 것)을 rsync 로 옮겼다
