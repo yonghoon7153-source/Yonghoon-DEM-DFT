@@ -2070,3 +2070,19 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 컴파일: **새 개념 0**. 갱신 — 닻 [[assb-contact-loss-vs-lampe]] (채움표 25호 행 + 누적 줄 + For 스물한 번째 + Against 새 첫 두 항목 + 새 제약 5개 + Status Log + 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]] (아홉 번째 적용 + 처방 표 한 줄) · [[assb-stack-pressure-operating-window]] (요인 설계 · 5호 대질 · 요구치) · [[composite-cathode-percolation-utilization]] (계산 `θ` 손잡이 · 첫 충전 시험) · [[assb-apparent-capacity-decomposition]] (충전 ↔ 방전 · 율 극한 · 공통 모드) · [[assb-tortuosity-factor-effective-conductivity-split]] (기하 τ, `σ_eff` 미측정).
 - ⚠ 어긋남 22 건(D1–D3 그림 겹침·제목 반전 · D4–D7 인쇄 ↔ 그림 · D9 온도 30 ↔ 23–25 °C · D11 σ "very close" ↔ ×0.66 · D16 음극 없는 셀의 "음극" 봉우리 · D17 이용률 정의 둘 · D19 "Tan et al." = Shi, T. · D20 이론밀도 1.64 ↔ 1.86).
 - 후속 후보: ★★★★ 1 **Sakka 2022 *JMCA* 10, 16602** (ref 12, CT 압력별 접촉 면적 분율) · ★★★★ 2 **Shi 2020 *AEM* 10, 1902881** (ref 14, DEM 이용률 방법 원전, 원장에 있음) · ★★★ 3 **Xu 2024 *AEM* 14, 2303539** (ref 11, 요구치) · ★★★ 4 **Schlautmann 2023 *AEM* 13, 2302309** (ref 13, SE 입도 분포) · ★★★ 5 **Jiao 2023 *ESM* 61, 102864** (SI ref 3, DEM 연결성 후처리) · 큐 **32번**(저압 종설)과 짝.
+
+## [2026-09-23] ingest | `assb` 26호 — Iwakiri, Delgado, Nogueira 2024, Introducing a new model for solid-state batteries: Parameter estimation and sensitivity analysis on diffusion, concentration, and electrochemical kinetics (*Electrochim. Acta* 508, 145202, CC BY)
+
+- `raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md` (sha256 봉인). 큐 **25번**("Q4 확인용"). NTNU + Simoldes Plásticos. **모델 편** — 데이터는 Raijmakers 2020 박막 Li/LiPON/LCO 4 율 방전곡선(98 점)을 빌림, 열화 0. 크로퍼가 본문 그림 21 + 표 3 을 잡았다(SI 없음); Table 3 은 p7 300 dpi 수동 렌더로 `D_e⁻` 지수 확인.
+- 큐 표 낱말 지문 재집계 — 같다(`identifiab` 0 · `uniqu` 0 · `sensitiv` 3 · `OCV` 0); `sensitiv` 3 = 제목 · Table 1 열 머리 · "less sensitive to air". 본문 이름은 "parametric study"(16 회).
+- ★★★★ **Q4 0/26 — 움직이지 않는다.** "sensitivity analysis" = 1C 전방 모델의 OAT 대역 스윕(×0.1–500 · 동역학 ×5e-7–1e5) + 설계 KPI. FIM · 조건수 · 프로파일 · CI 전수 0, Nelder–Mead 점추정.
+- ★★★★ **그러나 추정 + 스윕이 같은 지면인 계보 첫 편** — 저자 그림에 비식별 방향 셋: Fig. 5a(`D_e⁻` 0 열) · Fig. 12a≡b(`k₁`↔`k₂`) · Fig. 3≡15(`D_M⊕`↔`a_max`, `[재현]` `x` 좌표 스케일 대칭). `[인쇄]` Table 3 `D_e⁻` 5.24e-3 ↔ 문헌 5.06e-13(10 자릿수); `[재현]` 식 (30) 으로 문헌값이면 Fig. 5a·5b 가 성립 안 함 ⇒ 스윕은 표류한 적합점에서 돌았고 그 둔감이 결론의 "느린 종 지배" 가 됐다.
+- ★★★ `[재현]` 적합 변수 10 중 **7 이 정확히 문헌 ×1.0500** ↔ `[인쇄]` "not fed into the optimization algorithm"; 문헌값의 출처 = 데이터 출처(ref 10). ★★ 모델 1C = 1.23 mA(Fig. 4·9·13 검산) ↔ 셀 0.7 mAh.
+- **Q4 열아홉 번째 성질 = "평탄을 스스로 계산해 놓고, 평탄 위의 점을 값으로 인쇄하고, 그 점에서 본 둔감을 물리로 읽었다"** — 반 칸 검토 후 접음(보인 것은 우리 `[재현]`).
+- **곱 축퇴 처방 열 번째 적용** — 1–4단계 전부 ❌(이중층 가정 배제 · EIS 0 · 한 온도 · 펄스 0). 처방 표에 한 줄("추정 논문의 스윕 그림 겹치기 = 공짜 `J^T J`").
+- **채움표 26호 행 — 누적 ≈15.5 → ≈15.5 (새 칸 0).** 안 움직인 칸: 전부. Q3 층 하나(문헌 대조의 순환).
+- 컴파일: **새 개념 [[assb-sensitivity-sweep-vs-identifiability]]**. 갱신 — 닻 [[assb-contact-loss-vs-lampe]] (채움표 26호 행 + 누적 줄 + For 스물두 번째 + 새 제약 4개 + Status Log + 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]] (열 번째 적용 + 처방 표 한 줄) · `index.md` 등록.
+- ⚠ 어긋남 14 건(D1 `D_e⁻` · D2 ×1.0500 · D3 식 36 부피 누락 · D4 0.7 ↔ 1.23 mAh · D5 Fig. 5 ↔ 식 30 · D6–D7 캡션 ↔ 본문 · D8 Fig. 16 ↔ 15 · D9 Fig. 21 "Case 1.0" = Case 1.5).
+- 그림: **21장 전부 봤다, 안 본 것 0장.**
+- 후속 후보: ★★★★ 1 **Raijmakers 2020 *Electrochim. Acta* 330, 135147** (ref 10) · ★★★ 2 **Firouz 2020 *J. Energy Storage* 28, 101184** (ref 17, "system identification") · ★★★ 3 **Deng 2021 *IEEE TTE* 7, 464** (ref 16) · ★★★ 4 **Danilov 2011 *JES* 158, A215** (ref 15). Bizeray 2019(큐 27) 인용 0.
+- lint: **0 errors · 0 warnings**.

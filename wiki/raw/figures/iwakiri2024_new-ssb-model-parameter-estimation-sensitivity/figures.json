@@ -1,0 +1,491 @@
+{
+ "slug": "iwakiri2024_new-ssb-model-parameter-estimation-sensitivity",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Scheme of the battery system considered in this study. Notice that, despite in practice there are also Electrolyte particles inside the Cathode Zone, in this study the whole Cathode Zone will be considered composed of a pseudo-homogeneous material with properties described in Table 3 (Hypothesis 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    563.7,
+    264.5
+   ],
+   "w": 2218,
+   "h": 897,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.56
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 8,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Comparison between simulated results with parameters from literature (dashed line) vs. simulated results with estimated parameters (continuous line) vs. experimental results presented by Raijmakers et al. [10] (dots). (b) Parity Plot between simulated (with estimated parameters) and experimental results. The inputs used in the simulations are the ones displayed in Table 3. Average RMSD = 0.06 V for the optimized parameters and 0.11 V for the parameters from the literature. sake of convenience, the term ‘‘cathode diffusion’’ will refer to the equivalent diffusion coefficient unless stated otherwise. It is possible to observe from Fig. 3 how the cathode diffusion can drastically affect the battery overpotential. As a reference, Case 0.2 presented a voltaic efficiency of ca. 92.7%, compared with the Nernst Curve — which, despite being the lowest value for this set of tests, is s",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    563.7,
+    253.1
+   ],
+   "w": 2218,
+   "h": 849,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Variation analysis of diffusion of both species (𝐷M⊕and 𝐷e−) in the Cathode Zone. The standard values of such parameters (cf. Table 3) were multiplied by a factor ranging from 0.2 to 500. The Nernst Curve is also displayed in a dashed curve. Simulations were generated for C-Rate = −1.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    291.9,
+    563.7,
+    456.9
+   ],
+   "w": 1097,
+   "h": 688,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Concentration profile in the Cathode Zone and Overpotential Profile for (a- c) Case 500.0, (d- f) Case 1.0, (g -i) Case 0.2. All the simulation parameters were the ones stated in Table 3 except for the diffusion of both species (𝐷M⊕and 𝐷e−) that were multiplied by a factor of 500, 1 and 0.2 respectively. Simulations were generated for C-Rate = −1.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    70.3,
+    563.7,
+    421.4
+   ],
+   "w": 2218,
+   "h": 1463,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Variation analysis of only Electron Diffusion (𝐷e−) or Ion Diffusion (𝐷M⊕). The standard values of such parameters (cf. Table 3) were individually multiplied by a factor ranging from 0.2 to 500. The Nernst Curve is also displayed in a dashed curve. Simulations were generated for C-Rate = −1. Finally, to study the individual contributions of the ion diffusion and electron diffusion in such a model, a similar parametric study was performed, this time changing only 𝐷M⊕or 𝐷e−. The results are presented in Fig. 5.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    502.1,
+    563.7,
+    672.1
+   ],
+   "w": 2218,
+   "h": 710,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Variation analysis of diffusion of both species (𝐷M+ and 𝐷n−) in the Electrolyte Zone. The standard values of such parameters (cf. Table 3) were multiplied by a factor ranging from 0.2 to 500. The Nernst Curve is also displayed in a dashed curve. Simulations were generated for C-Rate = −1.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    49.5,
+    563.7,
+    214.7
+   ],
+   "w": 1097,
+   "h": 689,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Analysis of overpotential sources for Case 500.0. All the simulation parameters were the ones stated in Table 3 except for the diffusion of both species (𝐷M+ and 𝐷n−) in the Electrolyte Zone that were multiplied by a factor of 500.0. Simulations were generated for C-Rate = −1.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    279.7,
+    563.7,
+    429.9
+   ],
+   "w": 1097,
+   "h": 627,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Variation analysis of only Vacancy Diffusion (𝐷n−) or Ion Diffusion (𝐷M+ ). The standard values of such parameters (cf. Table 3) were individually multiplied by a factor ranging from 0.2 to 500. The Nernst Curve is also displayed in a dashed curve. Simulations were generated for C-Rate = −1.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    563.7,
+    219.5
+   ],
+   "w": 2218,
+   "h": 709,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 11,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Analysis of overpotential sources for (a) Case 500.0 𝑥Vacancy Diffusion (𝐷n−) and (b) Case 500.0 𝑥Ion Diffusion (𝐷M+ ). All the simulation parameters were the ones stated in Table 3 except for the diffusion of each species) in the Electrolyte Zone that were multiplied by a factor of 500.0. Simulations were generated for C-Rate = −1. 97.36% in Case 500.0 (a), and 93.05% in Case 0.2 (b) to 97.7% in Case 500.0 (b). Another notable difference is that, in the case of Electrolyte Zone, the boundary conditions are based only on the Ion Diffusion (cf. Eq. (23b) and Eq. (23c)), which is in agreement with the fact that there is no electron transfer in any of its surfaces (differently, for example, to the surface Cathode/Current-Collector). This means that for an Ion Diffusion sufficiently high, the concentration immediately at the surface will present higher values, potentially impacting o",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    250.4,
+    563.7,
+    420.9
+   ],
+   "w": 2218,
+   "h": 711,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 11,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Variation analysis of diffusion parameters of all four species: ion and electron (𝐷M⊕and 𝐷e−) in the Cathode Zone and ion and vacancy (𝐷M+ and 𝐷n−) in the Electrolyte Zone. The standard values of such parameters (cf. Table 3) were multiplied by a factor ranging from 0.2 to 500. The Nernst Curve is also displayed in a dashed curve. Simulations were generated for C-Rate = −1.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    464.9,
+    563.7,
+    637.4
+   ],
+   "w": 1097,
+   "h": 719,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 12,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Analysis of overpotential sources for Case 500.0. All the simulation parameters were the ones stated in Table 3 except for the diffusion of the four species: ion and electron (𝐷M+ and 𝐷e−) in the Cathode Zone and ion and vacancy (𝐷M+ and 𝐷n−) in the Electrolyte Zone that were multiplied by a factor of 500.0. Simulations were generated for C-Rate = −1.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    294.7,
+    213.9
+   ],
+   "w": 1097,
+   "h": 686,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 13,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Simultaneous variation analysis of the (a) positive kinetic constant (𝑘1) in the Cathode/Electrolyte interface and (b) negative kinetic constant (𝑘2) in the Electrolyte/Anode interface. The standard values of such parameters (cf. Table 3) were multiplied, in each case, by a factor ranging from 5 ⋅10−7 to 1 ⋅105. The Nernst Curve is also displayed in a green dashed curve. Simulations were generated for C-Rate = −1. A lower boundary curve at 3.0 V was traced to represent a potential case where the charge–discharge cycle would be interrupted after reaching such potential.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    66.3,
+    563.7,
+    236.6
+   ],
+   "w": 2218,
+   "h": 710,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 13,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Overpotential Profile for (a) Case 100,000 of Positive Kinetic Constant, (b) Case 0.01 of Positive Kinetic Constant, (c) Case 100,000 of Negative Kinetic Constant, and (d) Case 0.01 of Negative Kinetic Constant. All the simulation parameters were the ones stated in Table 3 with the exception of the kinetic constants (𝑘1 and 𝑘2) in the Cathode/Electrolyte interface that were multiplied by a factor ranging from 0.01 to 100,000. Simulations were generated for C-Rate = −1. multiplied by a factor from 1/0.2 to 1/500. The results are presented in Fig. 15. However, in this case, this would also imply that the C-Rate would be decreased, reducing the usefulness of a device able to store such a high amount of energy (both due to higher theoretical capacity and Extraction Efficiency) without being able to charge it at an acceptable rate. We can see in Fig. 15 that the Energy Efficiency inc",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    309.6,
+    563.7,
+    568.7
+   ],
+   "w": 2218,
+   "h": 1080,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 14,
+   "file": "fig_14.png",
+   "caption": "Fig. 14. Variation analysis of initial concentration of vacancy sites (𝑎0) in the Electrolyte Zone. The standard values of such parameters (cf. Table 3) were multiplied by a factor ranging from 0.35 to 500. The Nernst Curve is also displayed in a dashed curve. Simulations were generated for C-Rate = −1.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    294.7,
+    214.9
+   ],
+   "w": 1097,
+   "h": 690,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 14,
+   "file": "fig_15.png",
+   "caption": "Fig. 15. Variation analysis of maximum ion concentration (𝑎max M⊕) in the Cathode Zone. The standard values of such parameters (cf. Table 3) were multiplied by a factor ranging from 0.2 to 500. The Nernst Curve is also displayed in a dashed curve. Simulations were generated for C-Rate = [-5.000; −2.000; −1.333; −1.000; −0.666; −0.500; −0.200; −0.100; −0.050; −0.010; −0.002] for Cases [0.2; 0.5; 0.75; 1; 1.5; 2; 5; 10; 20; 100; 500] respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    263.0,
+    294.7,
+    427.6
+   ],
+   "w": 1097,
+   "h": 687,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 14,
+   "file": "fig_16.png",
+   "caption": "Fig. 16. Variation analysis of maximum ion concentration (𝑎max M⊕) in the Cathode Zone. The standard values of such parameters (cf. Table 3) were multiplied by a factor ranging from 0.2 to 5. The Nernst Curve is also displayed in a dashed curve. Simulations were generated for C-Rate = −1.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    507.8,
+    294.7,
+    672.5
+   ],
+   "w": 1097,
+   "h": 687,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 15,
+   "file": "fig_17.png",
+   "caption": "Fig. 17. Concentration profile in the Cathode Zone and Overpotential Profile for (a–c) Case 5.0, (d–f) Case 1.0, (g–i) Case 0.2. All the simulation parameters were the ones stated in Table 3 except for the maximum ion concentration in the Cathode Zone (𝑎max M⊕) were multiplied by a factor of 5, 1 and 0.2 respectively. Simulations were generated for C-Rate = −1.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    563.7,
+    400.8
+   ],
+   "w": 2218,
+   "h": 1464,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 15,
+   "file": "fig_18.png",
+   "caption": "Fig. 18. Simultaneous variation analysis of maximum ion concentration (𝑎max M⊕) in the Cathode Zone and initial concentration of vacancy sites (𝑎0) in the Electrolyte Zone. The standard values of such parameters (cf. Table 3) were multiplied by a factor ranging from 0.1 to 10. The Nernst Curve is also displayed in a dashed curve. Simulations were generated for C-Rate = −1.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    473.9,
+    563.7,
+    638.8
+   ],
+   "w": 1097,
+   "h": 688,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 16,
+   "file": "fig_19.png",
+   "caption": "Fig. 19. Overpotential Profile for (a) Case 0.1, (b) Case 1, (c) Case 10. All the simulation parameters were the ones stated in Table 3 except for the maximum ion concentration (𝑎max M⊕) in the Cathode Zone and initial concentration of vacancy sites (𝑎0) in the Electrolyte Zone that were multiplied by a factor of [0.1; 1.0; 10.0] respectively. Simulations were generated for C-Rate = −1. agreement with the previous discussion about such parameter. Also, for low concentrations (i.e. Case 0.1), the lower amount of compounds in the surface between the Cathode and Electrolyte Zones jeopar- dized the kinetic reactions and therefore increased the charge-transfer overpotential (cf. its definition in Eq. (3)). Thus, by increasing both concentrations as in Case 1.0, the positive charge-transfer overpotential decreased and the voltaic losses from Electrolyte and Cathode Zones kept a similar pattern",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    563.7,
+    171.7
+   ],
+   "w": 2218,
+   "h": 510,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 16,
+   "file": "fig_20.png",
+   "caption": "Fig. 20. Simultaneous variation analysis of all the parameters studied in this work (𝐷M⊕, 𝐷e−, 𝐷M+ , 𝐷n−, 𝑘1, 𝑘2, 𝑎max M⊕, 𝑎0), that were multiplied by a factor ranging from 0.5 to 500. All the other parameters were kept constant as in Table 3. The Nernst Curve is also displayed in a dashed curve. As discussed in the Concentration Section, to keep the absolute current constant, simulations were generated for C-Rate = [-2.000; −1.333; −1.000; −0.666; −0.500; −0.200; −0.100; −0.050; −0.010; −0.002] for Cases [0.5; 0.75; 1; 1.5; 2; 5; 10; 20; 100; 500] respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    210.4,
+    563.7,
+    375.8
+   ],
+   "w": 1097,
+   "h": 690,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "f21",
+   "kind": "figure",
+   "label": "21",
+   "page": 17,
+   "file": "fig_21.png",
+   "caption": "Fig. 21. Concentration profile in the Cathode Zone and Overpotential Profile for (a–c) Case 20.0, (d–f) Case 1.0, (g–i) Case 0.5. All the simulation parameters were the ones stated in Table 3 except for the parameters to be studied ((𝐷M⊕, 𝐷e−, 𝐷M+ , 𝐷n−, 𝑘1, 𝑘2, 𝑎max M⊕, 𝑎0)), that were multiplied by a factor of 20, 1 and 0.5 respectively. As discussed in the Concentration Section, to keep the absolute current constant, simulations were generated for C-Rate = [-2.000; −1.333; −1.000; −0.666; −0.500; −0.200; −0.100; −0.050; −0.010; −0.002] for Cases [0.5; 0.75; 1; 1.5; 2; 5; 10; 20; 100; 500] respectively. to the combined effects of 𝐷M+, 𝐷n−and 𝑎0 enhancements, in a similar fashion to what was demonstrated in Fig. 9 and Fig. 14, respectively. We applied the model to estimate the material properties of a Li/LiPON/LiCoO2 battery dataset, which includes data from four dis- charge curves at d",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    70.3,
+    563.7,
+    421.4
+   ],
+   "w": 2218,
+   "h": 1463,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 Some SSB Models proposed and their characteristics. Paper Basis Dependency of Diffusion",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.0,
+    563.3,
+    746.9
+   ],
+   "w": 2212,
+   "h": 2983,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2 Some examples of cathode material to illustrate the nomenclature proposed.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.0,
+    563.3,
+    752.5
+   ],
+   "w": 2205,
+   "h": 2997,
+   "dpi": 299,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.801
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 7,
+   "file": "tab_3.png",
+   "caption": "Table 3 Model parameter values. The values displayed with ‘‘*’’ were not submitted to the optimization routine, since they were already known and determined by the experimental conditions in which the four discharge curves were generated. The ‘‘Literature Values’’ used as reference were taken from [10]. Symbol Literature value Optimized value Dimension T 293 293 ∗ K J 3.62 3.62 ∗ μm H 8.08 8.08 ∗ μm A 3.36 3.36 ∗ cm2 𝑘r 8.00 ⋅10−7 8.4000 ⋅10−7 m3 mol−1 s−1 s 1.53 ⋅10−11 1.6000 ⋅10−11 m2.5 mol0.5 s−1 𝑘1 s 1.09 ⋅10−9 1.1445 ⋅10−9 m s−1 𝑘2",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.0,
+    563.3,
+    746.9
+   ],
+   "w": 2212,
+   "h": 2983,
+   "dpi": 300,
+   "src": "20450e5a-25._Introducing_a_new_model_for_solid-state_batteries_Parameter_estimation_and_sensitivity_analysis_on_diffusion_concentration_and_electrochemical_kinetics.pdf",
+   "blank": 0.869
+  }
+ ]
+}

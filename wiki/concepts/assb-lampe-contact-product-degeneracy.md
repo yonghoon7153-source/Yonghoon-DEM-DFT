@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -151,6 +151,7 @@ physical significance** of the parameters" 라고 쓴다.
 | ★★★ **코팅 유무 쌍 = 화학 대조** (2026-09-23 신설, **24호에서**) | 계면 **화학만** 바꾸고(코팅이 계면층 경로를 막는다) 수축·접촉·수송은 그대로 둔 쌍 ⇒ 코팅으로 **안 변하는 몫**이 면적·수송·상대극 쪽의 상한 — **면적 대조(2단계)의 여집합** | ★★★ **24호**(70 %, LLSTO 15–20 nm): 첫 사이클 비가역 `[도표]` **−14 %** 만 · 충전 1 구배 `[인쇄]` "did not change the nature" · 이봉 약화. ⚠ n = 1 씩, 코팅 행이 표끼리 안 맞는다(24호 D17) — 코팅이 접촉 형태를 안 바꾼다는 전제 위 |
 | ★★ **두 영역 대조(4단계)의 시편 조건** (2026-09-23, **24호에서**) | 주파수 영역(EIS) 값과 시간 영역(operando/DC) 값을 비교할 때 두 시편은 **같은 제조 압력·같은 두께**여야 한다 | ⚠ **24호**: EIS 차단 셀 50 / 150 MPa ↔ operando 100 MPa — "굴곡도 진화" 가 압력 이력과 교락 |
 | ★★★ **SE 입도 쌍 + 분말 BET = 한쪽 상의 면적 대조** (2026-09-23 신설, **25호에서**) | 계면의 **SE 쪽 비표면적만** 바꾼 쌍(CAM·조성·공정 고정)에 **독립 면적 측정(BET)** 을 붙인다 ⇒ 면적 가설의 예측(`C` 비 = 1/`R` 비 ≈ BET 비)을 **자기 데이터 밖에서** 검사 | ★★★ **25호 신품 P4**: `R_ct` ×0.57 · τ ×1.41 ⇒ `C` ×1.7–2.5 ↔ 1/`R` 1.75 · BET 1.53 — **방향·자릿수 통과**(18호 검사 A 의 **CAM** 입도 쌍은 실패). ⚠ BET 는 SE **분말** 면적이지 CAM\|SE 접촉 면적이 아니다 · 25호는 SE 벌크 σ ×0.66 · 밀도 0.77 → 0.90 가 같이 변했다(고주파 호 교락) |
+| ★★ **추정 논문의 스윕 그림 겹치기 = 공짜 `J^T J`** (2026-09-23 신설, **26호에서**) | 적합과 OAT 스윕을 같이 인쇄한 모델 편에서 **같은 모양의 스윕 그림 쌍(평행 열) · 반응 없는 그림(0 열)** 을 찾고, 그 파라미터의 **적합값 ÷ 문헌값**을 본다 — 위 "`J^T J` 최소 고유벡터" 줄의 비용 0 판 | ★★★ **26호**: Fig. 5a `D_e⁻` 0 열 → 적합값 **10 자릿수** 표류 · Fig. 12a≡b `k₁`↔`k₂` · Fig. 3≡15 `D_M⊕`↔`a_max`. ⚠ 대역·단일 율 스윕이라 방향 **후보**일 뿐 폭은 안 준다 ([[assb-sensitivity-sweep-vs-identifiability]]) |
 
 ★ **`R_CT·C_dl` 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -897,6 +898,34 @@ P1 에서는 방향이 반대다. 같은 추론을 **P4(양극 전하이동)** �
 
 **"SE 입도 쌍 + 분말 BET"**(위 표). 조건: SE 벌크 전도도·밀도가 같이 변하면 고주파 호가 교락된다 — 25호는 둘 다 변했다.
 
+## ★★★ 처방의 열 번째 적용 (2026-09-23, `assb` 26호) — **모델 편 · 빌린 데이터: 1–4단계 전부 막히고, 곱은 다른 모양으로 나타난다**
+
+`raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md` (Iwakiri 외 2024, *Electrochim. Acta* 508, 145202). 박막 Li/LiPON/LCO 1차원 모델을
+**남의 4 율 방전곡선**(Raijmakers 2020)에 Nelder–Mead 로 맞춘 편. 실험 데이터가 있으므로(빌린 것) 처방을 적용한다.
+
+### 입력 점검
+
+| 처방 단계 | 필요한 입력 | 26호 | 판정 |
+|---|---|---|---|
+| **1단계** (16호 · 23호) | 같은 상태축 위 `R`·`C` | EIS 0 · **모델이 이중층을 가정으로 배제**(`[인쇄]` 가정 2) | ❌ 모델 수준 봉쇄 |
+| **2단계** (18호) | + 면적 대조군 | 셀 1 개 | ❌ |
+| **3단계-a** (19호) | `Ea` | 293 K | ❌ |
+| **3단계-b** (19호) | `C` 물리 상한 | `C` 없음 | ❌ |
+| **4단계** (20호) | 시간 영역 | CC 방전만 | ❌ |
+| 표 "율 스윕" | 여러 율 | **0.2 · 2 · 4 · 6 C** | ⚠ 데이터는 있고 손실 하나에 합쳤다 |
+| 표 "`J^T J`" | 적합점 야코비안 | 스윕 곡선(열)은 인쇄 — 대역 · 1C | ⚠ 곱은 안 만들었다 → 위 표 새 줄 |
+
+### ★★★ 이 모델에서 곱이 서는 자리 — `A_eff·ε_p/R_s` 가 아니라
+
+박막이라 `ε_p`·`R_s`·`a_s` 가 **없다**(확산 길이 = 측정된 막 두께). 그래도 같은 두 자리에 조합이 선다(`[재현]`/`[추론]`, 상세 digest §5-2):
+- **동역학 면적**: 식 (3)–(6) 의 전류는 기하 `A`(고정)로 나눈 밀도 ⇒ **실제 계면 면적 비는 `k¹_s` 에 흡수** — `A_eff·j₀` 의 박막판. `[도표]` Fig. 12a≡b 로 `k₁`·`k₂` 는 몸통에서 합만 보인다.
+- **용량 스케일 ↔ 수송**: `x` 좌표에서 양극 부분계가 `D_M⊕·a_max/I` 한 조합만 본다 — `[도표]` Fig. 3(확산 ×K) ≡ Fig. 15(`a_max` ×K, 전류 고정). 9호의 ① 채널(용량이 `ε_p` 를 단독으로 고정)이
+  **정규화 용량 축에서는 사라진다** — 절대 용량 축과 `I⁺₀ ∝ a_max` 만 남는다.
+
+### ⚠ 이것이 곱을 푼 것은 아니다
+
+26호는 열화 · 접촉을 다루지 않는다. 기여는 **처방 표의 새 줄 하나**와 **"모델 편에서도 같은 두 자리에 조합이 선다"** 는 두 번째 모델 표본(9호 P2D 다음)이다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -944,3 +973,4 @@ P1 에서는 방향이 반대다. 같은 추론을 **P4(양극 전하이동)** �
   펠릿이다. 주장은 **"`τ²` 대신 `σ_eff` 로 비교하면 '두 조성 모두 증가' 가 '80 % 셀 하나의 ≈3 배' 로 줄어든다"** 까지다.
 - ★ **2026-09-23 (25호)**: **2단계 통과를 "`R_ct` 차는 면적이다" 로 옮기지 않는다** — P4 τ 는 래스터 판독(×1.41), ECM ↔ DRT 의 `R` 비가 0.57 ↔ 0.84 로 다르고, BET 는 SE 분말 면적이다.
   주장은 **"면적 설명이 같은 지면의 독립 면적 측정과 방향·자릿수에서 양립한다"** 까지다. 그리고 **P1 벽돌층 반론은 모형 위의 추론**이다(P1 이 분리막 입계인지 미기재).
+- ★ **2026-09-23 (26호)**: **박막 모델의 `D_M⊕·a_max` 대칭을 복합양극 P2D 로 옮기지 않는다** — 입자 차원이 없는 1차원 평판의 `x` 좌표 안의 구조다. 주장은 "같은 두 자리(동역학 면적 · 용량 스케일)에 조합이 선다" 까지다.
