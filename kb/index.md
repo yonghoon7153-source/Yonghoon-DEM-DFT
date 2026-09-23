@@ -509,4 +509,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 325개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 328개 (정본 목록: litdb/INDEX.md)

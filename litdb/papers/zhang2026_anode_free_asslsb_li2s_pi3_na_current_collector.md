@@ -304,7 +304,8 @@ PI₃ 를 Li₂S 에 8 mol% 섞어 2 h 고에너지 밀링하면 LiI + 비정질
 
 - **계산은 Li₂S–PI₃ 벌크 AIMD 1건이다.** 정적 DFT 없음 · Na·Li 계면 계산 없음 · 핵생성 계산 없음.
 - **"DFT and mesoscale calculations provide complementary insight regarding nucleation-growth" — 이 논문의 문장이 아니다.** 본문·SI 텍스트층 전체에 *mesoscale* · *complementary* · *nucleation-growth* 가 **0건**이다(2026-09-23 pymupdf 전문 검색, 줄바꿈 하이픈을 지운 뒤에도 0). 같은 세미나 0923-2·0923-3 의 본문·SI 에도 없다. 이 논문에서 Na 위 Li 핵생성에 관한 서술은 **전부 실험**(과전압 ≈10 vs ≈22 mV, 핵생성 딥 유무)이고, 해석은 ref 54(Wang et al., *Nat. Commun.* 11, 5201 (2020) — in situ plating)를 **인용**한 것이다. Cu 위 두 번째 반원(*"Li nucleation and growth processes on Cu"*)도 ref 14 인용이다.
-  · 출처 후보(✎ 추정 — 원문을 litdb 에 갖고 있지 않아 문장 대조는 못 했다): 이 논문 참고문헌 중 **B. S. Vishnugopi 공저 4편**(P. P. Mukherjee 그룹 — "mesoscale" 을 쓰는 쪽) — ref 10 Sandoval 2025 *Nat. Mater.* 24, 673 · ref 14 Sandoval 2023 *Joule* 7, 2054 · ref 16 Park 2025 *Adv. Energy Mater.* 15, 2405129 · ref 55 Yoon 2025 *Science* 388, 1062. 저자 목록은 이 논문 참고문헌에서 확인했다.
+  · ✅ **출처 확정 (메인 2026-09-23)**: 이 문장은 1저자가 처음 준 **docx SI** 파일 안의 **인용 관리 메타데이터**(CSL-JSON `abstract` 필드 — 화면에 안 보이는 숨은 필드)에 박혀 있던 **SI 참고문헌 [5] 의 초록**이다 — Y. Wang, …, B. S. Vishnugopi, …, P. P. Mukherjee, …, G. Henkelman, …, D. Mitlin, *Adv. Mater.* **35**, 2206762 (2023), DOI 10.1002/adma.202206762 (Li₂Te 친리튬 Cu 집전체 AF-ASSB). 출판 PDF(본문·SI)에는 없다. 메인의 첫 문장 추출(`docx_text`)이 `word/document.xml` 의 태그만 지워서 숨은 필드를 본문으로 읽었다 — ⚠ **docx 는 인용 메타데이터를 본문과 섞어 낸다**: docx 에서 뽑은 문장은 출판 PDF 로 다시 확인한다.
+  · (위 확정 전의 추정 — 기록으로 둔다) 출처 후보(✎ 추정 — 원문을 litdb 에 갖고 있지 않아 문장 대조는 못 했다): 이 논문 참고문헌 중 **B. S. Vishnugopi 공저 4편**(P. P. Mukherjee 그룹 — "mesoscale" 을 쓰는 쪽) — ref 10 Sandoval 2025 *Nat. Mater.* 24, 673 · ref 14 Sandoval 2023 *Joule* 7, 2054 · ref 16 Park 2025 *Adv. Energy Mater.* 15, 2405129 · ref 55 Yoon 2025 *Science* 388, 1062. 저자 목록은 이 논문 참고문헌에서 확인했다.
 
 ### 7b. li2s 소셀 유리 트랙과의 대조 — ⚠ 외부 1저자 트랙: 참고·주의로만
 
@@ -391,7 +392,7 @@ PI₃ 를 Li₂S 에 8 mol% 섞어 2 h 고에너지 밀링하면 LiI + 비정질
 | D 절대값 | 2.36×10⁻⁵ cm² s⁻¹ @800 K | 절대값 인용 금지 | ⛔ 같은 표 금지 |
 | 종분화 (P₂S₆/P₂S₇/PS₄) | RDF 로 주장 (P 6 개) | 소셀은 "종분화 분율" 을 말하지 않음 (P 12 개도 부족하다고 선언) | 우리가 더 보수적 |
 | CP2K 설정 | 520/60 Ry · MOLOPT(수준 미기재) · D3(BJ) | W_ad (B) 안 → BW 회신 A′ | 근거 안 됨 (§7d) |
-| 산화 창 | 활성화 3.0–3.65 V (SE 40 wt% 포함) | onset 2.256 V (LPSCl, 축 ①) | 활성화 전압이 onset 위 — SE 기여 미분리 |
+| 산화 창 | 활성화 3.0–3.65 V (SE 40 wt% 포함) | onset 2.256 V (LPSCl, 축 ①, LiS₄ 제외 phase set — 기본판 2.140 V 와 섞지 않는다) | 활성화 전압이 onset 위 — SE 기여 미분리 |
 | 환원 / Na | "Na 가 분해 구동력을 줄인다" | 환원 한계 ~1.7 V 급 (교환-0 가장자리 1.717 V) | Na(+0.33 V)도 한계 한참 아래 — 크기 서술일 뿐 |
 | 전자 누설 | σ_e ×3800, 환원 P | SEI gap 사다리 — 환원 P 쪽이 최소 | 방향만 같음 |
 | 적층압 | 0/1/4 MPa (정간극, 실측 띠) | DEM 하중 제어 | 경계조건 반대 — 판독 띠로 대조 |
@@ -427,7 +428,7 @@ PI₃ 를 Li₂S 에 8 mol% 섞어 2 h 고에너지 밀링하면 LiI + 비정질
 | 2f | Raman 8 % vs Li₂S | 380 cm⁻¹ P₂S₆⁴⁻ 배정이 Li₂S ≈372 와 겹침 — 배정 주의 |
 | 2g–i | TEM(나노결정 + 비정질) · SAED(Li₂S + LiI 링) · HRTEM Li₂S(200) 0.28 nm | 나노결정은 수 nm (`figure-read`) — **AIMD 셀에 없는 성분** |
 | 3a | σ_ion 막대 1×10⁻⁸ → 7.3×10⁻⁵ S cm⁻¹ | ✎ 재계산 정합(8·10 %) · 6 % 는 `Fig. S5b` 라벨 오기 · 1×10⁻⁸ 은 측정 미제시 |
-| 3b | LSV: 봉우리 ≈3.06 → ≈2.84 V, 개시는 둘 다 ≈2.45 V | **활성화 전압이 argyrodite onset(우리 2.256 V, 축 ①) 위** — SE 기여 미분리 (§7e) |
+| 3b | LSV: 봉우리 ≈3.06 → ≈2.84 V, 개시는 둘 다 ≈2.45 V | **활성화 전압이 argyrodite onset(우리 2.256 V, 축 ①, LiS₄ 제외 phase set) 위** — SE 기여 미분리 (§7e) |
 | 3c | CV 1.7–3.0 V: 8 % 산화 ≈2.45 / ≈2.82 V, 환원 ≈1.97 V | — |
 | 3d–f | SOC/DOD 별 EIS + DRT, 8 % 가 전 구간 낮음 | ⚠ DRT 최대 봉우리 τ ≈10–50 s 가 측정 하한(0.2 Hz ⇔ τ 0.8 s) 밖 |
 | 4a,b | Li 석출·탈리: Na 10 mV vs Cu 22 mV · Cu 핵생성 딥 ≈30 mV · CE 85.57 vs 76.49 % | "핵생성 장벽이 작다" 의 **실험** 근거 — 계산 아님 (§7a) |
@@ -514,7 +515,7 @@ PI₃ 를 Li₂S 에 8 mol% 섞어 2 h 고에너지 밀링하면 LiI + 비정질
 | 온도 창 | 800 K | 400/465/550 K (550 K = 120 원자 감김 상한) — `db/properties/lpscl_smallcell_quench_scan_2026_09_21.json` | 상한은 우리 셀의 성질 |
 | 종분화 표본 | P 6 개 | "P 12 개도 부족" 선언 — `db/properties/lpscl_smallcell_production_scope_2026_09_18.json` §3 | 우리가 더 보수적 |
 | CP2K 설정 | 520/60 Ry · MOLOPT · D3(BJ) | W_ad BW 회신: CP2K 필수 아님(A′) — `kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md` | 새 정보 없음 |
-| 산화 창 | 활성화 3.0–3.65 V | onset 2.256 V (LPSCl, 축 ①) — `litdb/our_dft_baseline.md` | onset 위에서 활성화 |
+| 산화 창 | 활성화 3.0–3.65 V | onset 2.256 V (LPSCl, 축 ①, LiS₄ 제외 phase set — 기본판 2.140 V 와 섞지 않는다) — `litdb/our_dft_baseline.md` | onset 위에서 활성화 |
 | 환원 | Na +0.33 V vs Li | 환원 한계 교환-0 가장자리 1.717 V — `db/properties/citation_hazards.json` `HZ-esw-reduction-limit-facet-convention` | Na 도 한계 아래 |
 | σ_e | ×3800 | SEI gap 사다리 (`comparison_vs_ours.md` §E) | 방향만 |
 

@@ -18,6 +18,20 @@
   수치 정본은 `db/properties/sdcp_c12_v41_eads_ungated_2026_09_21.json` §9 (D3 독립재현 0.5/2.6 meV · 분산모델 4종
   PTFE −0.66~−0.79 · D 부호 불변). 값은 여전히 `citable: false` — **v42 mirae 회신 대기**(1단계 5잡 → 2단계 7잡).
   ⚠ 1저자가 9/23 내부 연구세미나 슬라이드에 −0.96(TOTEN F)/−0.79 를 쓰려 했다 — 정본은 −0.955, Preliminary 각주 권고.
+- ✅ **세미나 3편 (Li₂S · Li–S ASSB · 2026-09-23 밤)** — litdb-curator 3 + **메인 PDF 재대조 통과**. digest ·
+  INDEX · comparison §J-44/45/46 · DEM §I-7/8. 트랙별 판정 (값을 섞지 않는다):
+  · [Zhang26PI3] CP2K AIMD 231원자 · 800 K 1점 · 40 ps · 궤적 1 · **담금질 램프 없음** → li2s 유리 트랙엔 *정반대 규율 사례*로만
+    (외부 1저자 트랙 — 판단은 그쪽 몫) · W_ad BW (B) 근거 **안 됨** (자원·기저 수준 미기재 · 벌크 · A′ 판정 불변).
+  · [Wang25MIEC] 계산은 LPS·MIEC 유리 4셀뿐 (Li₂S 계산 없음). 🔴 figshare 구조를 **메인이 독립 재현**: PS₄ 0/13 · 0/12 · 2/10 · 0/9
+    (NMR 84–100 %) · 형식전하 +1/+4/0/+2 — P–S 문턱 2.4→3.0 Å 불변 ⇒ 갭·ICOHP·AIMD Ea 는 **비교 금지**. UMA↔DFT 시험세트 **부적합**.
+  · [Liu26Sn] "Li⁺ 추출 장벽" **계산 안 됨** (Tafel 상대 Ea · 본문 10.46 vs `Fig. 3f` 25 kJ/mol) · Bader *"1.32 e⁻ S→Sn"* =
+    `Fig. S6` 의 **Sn 원자 라벨** 오독 (메인 그림 확인: 옆 S +1.65 vs 벌크 +1.68) · 그래핀 흡착 −0.46 eV/분자는 **W_ad P2 기준점 아님**.
+    ⭐ 살아남는 한 줄: *"양이온–S 가 센 S 자리에서 Li–S 가 약하다"* 는 **우리 comp1 per-site ICOHP 에 이미 있다**
+    (Li–S(PS₄) −1.3438 vs Li–S(4d) −2.5677 eV · `per_bond_json/bonds_comp1_k444.json`) → Nd·O·B 근처로 **계산 0** 확장 가능 (제안 · 결정 아님).
+  · 🔧 문장 출처: *"DFT and mesoscale … nucleation-growth"* 는 첫 docx SI 의 **숨은 인용 메타데이터** 안의 SI ref [5] 초록
+    (Adv. Mater. 2023, 2206762) — 출판 PDF 엔 없다. ⚠ docx 에서 뽑은 문장은 PDF 로 다시 확인한다.
+  · 🔴 **도구 결함** `tools/litdb/extract_figures.py` `_side_rect` — 2단 조판(Nature 식)에서 그림을 **캡션 단 폭으로만** 자른다
+    (Wang Fig. 1–5 잘림 · Fig. 3i 갭 패널 · 5a–c 누락). 에이전트가 이 논문만 손으로 다시 잘랐고 **도구는 그대로** — `--refresh` 하면 다시 잘린다.
 - ✅ **[Li26MCI] (Li·Jeon·Persson 2026 MLST, Na₃PS₄‖Na)** digest·그림 25·병합(INDEX · Ref key · §E · §H · §J-42) 완료.
   `kb/concepts/cv_vs_dqdv_and_two_windows.md` §8-4 부분 정정(kim2026·lomeli2024 누락, "분야 전체의 공백" 과장).
   🔎 확보 1순위 = **ref 19 Li et al. *J. Phys. Chem. C* 129, 16043 (2025)** (Li₇P₃S₁₁‖Li — "평탄" 의 원전).
