@@ -195,3 +195,86 @@ def test_a_third_arc_is_kept_out_of_the_ionic_total_and_named():
     assert out["total_s_cm"] == pytest.approx(expected, rel=0.1)
     assert len(out["excluded"]) == 1
     assert "R3" in out["excluded"][0]
+
+
+# --- 대칭셀이 정말로 이온을 막는가 (2026-09-23) -----------------------------
+#
+# 대칭셀에는 막는 것(SS|전해질|SS)과 안 막는 것(Li|전해질|Li)이 있다.  벌크·
+# 입계로 나눠 전도도를 낼 수 있는 것은 앞쪽뿐인데 셀 구성 "대칭셀" 은 둘을 안
+# 가른다.  실측 `2600922_No1_55_sym_60um_#1_C01` 이 안 막는 쪽이었는데 화면이
+# 두 아크를 벌크·입계라 부르며 σ 를 냈다.
+
+
+from wrdkit.eis.derive import blocking_verdict  # noqa: E402
+
+_F = np.logspace(-2, 6, 60)
+_W = 2 * np.pi * _F
+
+
+def _zarc(r, q, n):
+    return r / (1 + r * q * (1j * _W) ** n)
+
+
+#: 그 셀의 맞춤값 그대로 — 끝에 블로킹이 없다.
+_USER_CELL = 4.897 + _zarc(10.42, 3.06e-5, 0.658) + _zarc(6.635, 1.36e-3, 0.757)
+
+
+def test_a_cell_that_passes_dc_is_not_blocking():
+    """저주파 위상이 0° 로 돌아오고 스펙트럼이 실수축 위에서 끝난다."""
+    got = blocking_verdict(_F, _USER_CELL.real, _USER_CELL.imag)
+    assert got["blocking"] is False
+    assert abs(got["phase_deg"]) < 5
+    # 그 셀의 보드 그림과 같은 수 — R0+R1+R2 에서 끝난다.
+    assert abs(_USER_CELL[0]) == pytest.approx(21.95, abs=0.05)
+    assert "막지 않습니다" in got["reason"]
+
+
+def test_a_blocking_cell_is_blocking():
+    blocked = _USER_CELL + 1 / (1e-5 * (1j * _W) ** 0.9)
+    got = blocking_verdict(_F, blocked.real, blocked.imag)
+    assert got["blocking"] is True
+    assert got["phase_deg"] < -60
+
+
+def test_in_between_is_said_to_be_unclear_rather_than_guessed():
+    """-60° 와 -30° 사이는 애매하다 — 막는다고도 안 막는다고도 안 한다 (§0.4)."""
+    f = np.array([1e-2, 2e-2, 5e-2])
+    z = 10.0 * np.exp(1j * np.radians(-45.0)) * np.ones(3)
+    got = blocking_verdict(f, z.real, z.imag)
+    assert got["blocking"] is None
+    assert "애매" in got["reason"]
+
+
+def test_too_few_points_is_none_with_a_reason():
+    got = blocking_verdict([1.0, 2.0], [1.0, 1.0], [0.0, 0.0])
+    assert got["blocking"] is None and got["reason"]
+
+
+def test_the_order_of_points_does_not_matter():
+    """EC-Lab 은 내려가며 쓸고 `.mpr` 에 따라 올라가며 쓰는 것도 있다."""
+    a = blocking_verdict(_F, _USER_CELL.real, _USER_CELL.imag)
+    b = blocking_verdict(_F[::-1], _USER_CELL.real[::-1], _USER_CELL.imag[::-1])
+    assert a["blocking"] == b["blocking"]
+    assert a["phase_deg"] == pytest.approx(b["phase_deg"])
+
+
+def test_conductivity_is_refused_when_the_cell_does_not_block():
+    """셀 구성이 대칭셀이어도 스펙트럼이 안 막으면 벌크·입계 σ 를 안 낸다."""
+    from wrdkit.eis.derive import ionic_conductivity
+    from wrdkit.eis.fit import fit_circuit
+    from wrdkit.eis.spectrum import Spectrum
+
+    spectrum = Spectrum(frequency_hz=_F, z_re=_USER_CELL.real, z_im=_USER_CELL.imag)
+    result = fit_circuit(spectrum, "R0-p(R1,CPE1)-p(R2,CPE2)")
+    verdict = blocking_verdict(_F, _USER_CELL.real, _USER_CELL.imag)
+
+    got = ionic_conductivity(result, thickness_cm=0.006, area_cm2=0.785,
+                             config="sym", blocking=verdict)
+    assert got["bulk_s_cm"] is None and got["total_s_cm"] is None
+    assert got.get("not_blocking") is True
+    assert any("막지 않습니다" in one for one in got["missing"])
+
+    # 판정을 안 주면 예전처럼 셀 구성만 본다 — 되돌아가는 길이 남아 있다.
+    old = ionic_conductivity(result, thickness_cm=0.006, area_cm2=0.785,
+                             config="sym")
+    assert old.get("not_blocking") is None

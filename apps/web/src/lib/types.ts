@@ -973,6 +973,16 @@ export interface SpectrumFit {
     missing?: string[]
     /** σ 합계에서 뺀 아크들 (세 번째부터 — 전극 계면일 수 있어서). */
     excluded?: string[]
+    /** 스펙트럼이 저주파에서 이온을 막지 않아서 σ 를 안 냈다. */
+    not_blocking?: boolean
+  }
+  /** 이 셀이 저주파에서 정말로 이온을 막는가 — 저주파 위상으로 본다.
+   *  "대칭셀" 은 막는 셀(SS|전해질|SS)과 안 막는 셀(Li|전해질|Li)을 가르지
+   *  않는다.  비어 있으면 판단하지 않은 것이다. */
+  blocking?: {
+    blocking?: boolean | null
+    phase_deg?: number | null
+    reason?: string
   }
   dropped_inductive: number
   dropped_out_of_range: number

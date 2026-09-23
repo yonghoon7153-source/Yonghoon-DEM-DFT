@@ -849,6 +849,23 @@ function FitReport({ fit, kind, area }: {
 
 function Conductivity({ fit }: { fit: SpectrumFit }) {
   const value = fit.conductivity ?? {}
+  // **안 막는 셀이면 그것부터 말한다.**  "무엇이 필요합니다" 로 적으면 두께나
+  // 면적을 더 적으면 될 것처럼 읽힌다 — 실제로는 이 측정에서 벌크·입계 σ 가
+  // 나올 수 없다.  실측 2026-09-23: 저주파 위상 0° 인 셀에서 두 아크를
+  // 벌크·입계라 부르며 σ 를 냈는데, 커패시턴스로 보면 "벌크" 는 입계 범위,
+  // "입계" 는 전극 계면 범위였다.
+  if (value.not_blocking) {
+    return (
+      <Alert kind="warn">
+        {fit.blocking?.reason ?? '저주파에서 블로킹이 아닙니다'}
+        <div className="tiny" style={{ marginTop: 4 }}>
+          그래서 두 아크를 벌크·입계로 읽지 않고 전도도도 내지 않습니다 —
+          회로는 <code>R0-p(R1,CPE1)-p(R2,CPE2)</code> (블로킹 없이) 가 맞습니다.
+          전도도는 이온을 막는 전극(SS 등)으로 잰 대칭셀에서 냅니다.
+        </div>
+      </Alert>
+    )
+  }
   if (value.missing?.length) {
     return (
       <Alert kind="info">

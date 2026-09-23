@@ -15,6 +15,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+import numpy as np
+
 from .circuit import CircuitError, parse_circuit
 from .fit import FitResult
 
@@ -206,8 +208,80 @@ def conductivity(resistance_ohm: float, *, thickness_cm: float | None,
     return thickness_cm / (resistance_ohm * area_cm2)
 
 
+#: 저주파 끝의 위상이 이보다 **깊으면** 블로킹이다 (순수 커패시터는 -90°).
+BLOCKING_PHASE_DEG = -60.0
+#: 이보다 **얕으면** 블로킹이 아니다 — 스펙트럼이 실수축 위에서 끝난다.
+RESISTIVE_PHASE_DEG = -30.0
+
+
+def blocking_verdict(frequency_hz, z_re, z_im, *, lowest: int = 3) -> dict:
+    """이 셀이 저주파에서 **정말로 이온을 막는가** — 스펙트럼이 스스로 말한다.
+
+    `(SOLID, SYMMETRIC)` 이라는 셀 구성만으로는 모른다.  대칭셀에는 두 종류가
+    있다: SS|전해질|SS 처럼 이온을 막는 것과, Li|전해질|Li 처럼 막지 않는 것.
+    전도도를 벌크·입계로 나눠 낼 수 있는 것은 **앞쪽뿐**인데, 화면의 "대칭셀"
+    은 둘을 가르지 않는다.
+
+    가르는 것은 저주파 끝의 위상이다.
+
+    * 막으면 전류가 결국 멈추므로 커패시터처럼 보인다 — 위상이 -90° 로 가고
+      ``|Z|`` 가 끝없이 커진다.
+    * 안 막으면 DC 가 흐른다 — 위상이 0° 로 돌아오고 스펙트럼이 **실수축
+      위에서 끝난다**.
+
+    실측 2026-09-23 (`2600922_No1_55_sym_60um_#1_C01`): 10 mHz 에서 위상이
+    약 0° 이고 ``|Z|`` 가 약 20 Ω 로 평평했다 — 맞춘 R0+R1+R2 = 21.95 Ω 과
+    같다.  그런데 기본 회로 `R0-p(R1,CPE1)-p(R2,CPE2)-CPE3` 가 끝에 블로킹
+    CPE 를 달고 있어서, 맞춤은 그것을 **지우는** 쪽으로 갔다 (Q=1000, n=1.00
+    둘 다 경계에 붙음 — 10 mHz 에서 0.016 Ω, 전체의 0.07 %).  화면은 그것을
+    "물리적 한계에 붙은 파라미터" 로만 적었고, 두 아크를 벌크·입계라 부르며
+    σ 를 냈다.
+
+    ``z_im`` 은 **물리 규약의** Im(Z) 다 (용량성이면 음수).  가장 낮은 주파수
+    ``lowest`` 개의 위상 중앙값으로 본다 — 한 점은 잡음에 흔들린다.
+
+    돌려주는 것::
+
+        {"blocking": True | False | None, "phase_deg": float | None,
+         "reason": str}
+
+    ``None`` 은 **애매하다**는 뜻이다 (-60° 와 -30° 사이).  그때는 막는다고도
+    안 막는다고도 하지 않는다 (§0.4).
+    """
+    frequency = np.asarray(frequency_hz, dtype=np.float64).ravel()
+    real = np.asarray(z_re, dtype=np.float64).ravel()
+    imag = np.asarray(z_im, dtype=np.float64).ravel()
+    if not (frequency.size == real.size == imag.size) or frequency.size == 0:
+        return {"blocking": None, "phase_deg": None,
+                "reason": "점이 없어 저주파 끝을 볼 수 없습니다"}
+    good = np.isfinite(frequency) & np.isfinite(real) & np.isfinite(imag)
+    frequency, real, imag = frequency[good], real[good], imag[good]
+    if frequency.size < lowest:
+        return {"blocking": None, "phase_deg": None,
+                "reason": f"저주파 점이 {frequency.size}개뿐이라 판단할 수 없습니다"}
+
+    order = np.argsort(frequency)[:lowest]          # 가장 낮은 주파수부터
+    phase = float(np.median(np.degrees(np.arctan2(imag[order], real[order]))))
+    lowest_hz = float(frequency[order[0]])
+
+    if phase <= BLOCKING_PHASE_DEG:
+        return {"blocking": True, "phase_deg": phase,
+                "reason": f"{lowest_hz:.3g} Hz 에서 위상 {phase:.0f}° — 블로킹입니다"}
+    if phase >= RESISTIVE_PHASE_DEG:
+        return {"blocking": False, "phase_deg": phase,
+                "reason": (f"{lowest_hz:.3g} Hz 에서 위상 {phase:.0f}° — 스펙트럼이 "
+                           f"실수축 위에서 끝납니다. 이 셀은 저주파에서 **이온을 "
+                           f"막지 않습니다** (DC 가 흐릅니다). Li|전해질|Li 처럼 "
+                           f"막지 않는 전극이거나, 막는 셀에 전자가 새는 길이 "
+                           f"있습니다")}
+    return {"blocking": None, "phase_deg": phase,
+            "reason": (f"{lowest_hz:.3g} Hz 에서 위상 {phase:.0f}° — 블로킹인지 "
+                       f"애매합니다 (더 낮은 주파수까지 재면 갈립니다)")}
+
+
 def ionic_conductivity(result: FitResult, *, thickness_cm: float | None,
-                       area_cm2: float | None, config: str = SYMMETRIC) -> dict:
+                       area_cm2: float | None, config: str = SYMMETRIC,
+                       blocking: dict | None = None) -> dict:
     """Bulk, boundary and total ionic conductivity of a solid electrolyte.
 
     The total is what the lecture calls for, and it is **not** the sum of the
@@ -233,6 +307,17 @@ def ionic_conductivity(result: FitResult, *, thickness_cm: float | None,
         # 단위는 S/cm 이고 뜻은 전도도가 아니다.
         out["missing"].append("이온 블로킹 대칭셀" if config
                               else "셀 구성 (대칭셀이어야 전도도를 냅니다)")
+        return out
+    # **셀 구성이 대칭셀이어도 스펙트럼이 블로킹이 아니면 내지 않는다.**
+    # 대칭셀에는 막는 것(SS|전해질|SS)과 안 막는 것(Li|전해질|Li)이 있는데
+    # 벌크·입계로 나눌 수 있는 것은 앞쪽뿐이다.  실측 2026-09-23: 저주파
+    # 위상이 0° 인 셀에서 두 아크를 벌크·입계라 부르고 σ 를 냈는데, 커패시턴스
+    # 로 보면 "벌크" 는 입계 범위, "입계" 는 전극 계면 범위였다 (Irvine–Sinclair–
+    # West).  모르면 내지 않는다 -- `blocking` 을 안 주면 예전처럼 셀 구성만 본다.
+    if blocking is not None and blocking.get("blocking") is False:
+        out["missing"].append(blocking.get("reason")
+                              or "저주파에서 블로킹이 아닙니다")
+        out["not_blocking"] = True
         return out
     if not thickness_cm or thickness_cm <= 0:
         out["missing"].append("두께")

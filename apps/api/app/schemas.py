@@ -828,6 +828,10 @@ class SpectrumFitOut(BaseModel):
     suggested_high_hz: float | None = None
     #: 전고체일 때의 전도도.  두께·면적이 없으면 무엇이 없는지 말한다.
     conductivity: dict[str, Any] = {}
+    #: 이 셀이 저주파에서 이온을 막는가 — 스펙트럼의 저주파 위상으로 본다
+    #: (`blocking_verdict`).  ``{"blocking": True|False|None, "phase_deg",
+    #: "reason"}``.  셀 구성 "대칭셀" 은 막는 셀과 안 막는 셀을 가르지 않는다.
+    blocking: dict[str, Any] = {}
     dropped_inductive: int = 0
     dropped_out_of_range: int = 0
     frequency_low_hz: float | None = None

@@ -293,9 +293,16 @@ def test_an_unknown_cell_configuration_is_refused(client):
 
 
 def test_conductivity_needs_a_thickness_and_says_so(client):
-    out = upload(client, kind="solid")
+    """σ 를 내려면 두께가 있어야 하고, 없으면 그렇게 말한다.
+
+    **픽스처가 블로킹 셀이어야 한다** (2026-09-23 에 고침).  예전에는 블로킹
+    없는 두 아크(실수축 위에서 끝나는 스펙트럼)를 대칭셀로 올리고 벌크·입계
+    σ 를 기대했다 -- 그것이 바로 실측에서 사람을 물린 실수다.  그 모양은 이온을
+    막지 않는 셀(Li|전해질|Li)이고, 거기서는 두 아크가 벌크·입계가 아니다.
+    """
+    out = upload(client, kind="solid", q_block=1e-2)
     fit = client.post(f"/api/eis/spectra/{out['id']}/fit",
-                      params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)"}).json()
+                      params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"}).json()
     assert fit["conductivity"]["total_s_cm"] is None
     assert "두께" in fit["conductivity"]["missing"]
 
@@ -1952,3 +1959,48 @@ def test_a_good_table_carries_no_warnings(client):
 
     activation = client.get(f"/api/eis/scans/{sha}/conductivity").json()["activation"]
     assert activation["warnings"] == []
+
+
+
+def test_a_symmetric_cell_that_does_not_block_gets_no_bulk_conductivity(client):
+    """실측 2026-09-23 의 자리.
+
+    저주파 위상이 0° 로 돌아오는 대칭셀에서 두 아크를 벌크·입계라 부르며 σ 를
+    냈다.  커패시턴스로 보면 "벌크" 는 입계 범위, "입계" 는 전극 계면 범위였다
+    (Irvine–Sinclair–West).  두께·면적이 다 있어도 이 측정에서는 벌크·입계 σ 가
+    나올 수 없으므로 **그것부터** 말한다.
+    """
+    out = upload(client, kind="solid")                 # 블로킹 없음
+    client.patch(f"/api/eis/spectra/{out['id']}",
+                 json={"thickness_um": 60, "area_cm2": 0.785})
+    fit = client.post(f"/api/eis/spectra/{out['id']}/fit",
+                      params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)"}).json()
+
+    assert fit["blocking"]["blocking"] is False
+    assert abs(fit["blocking"]["phase_deg"]) < 10
+    assert fit["conductivity"].get("not_blocking") is True
+    assert fit["conductivity"]["total_s_cm"] is None
+    assert fit["conductivity"]["bulk_s_cm"] is None
+
+
+def test_a_blocking_symmetric_cell_is_recognised_as_such(client):
+    out = upload(client, kind="solid", q_block=1e-2)
+    fit = client.post(f"/api/eis/spectra/{out['id']}/fit",
+                      params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"}).json()
+    assert fit["blocking"]["blocking"] is True
+    assert fit["blocking"]["phase_deg"] < -60
+
+
+def test_the_non_blocking_circuit_is_offered_for_solid_symmetric_cells(client):
+    """없으면 `auto` 가 그 셀에 맞는 답을 고를 수 없다 — 블로킹 CPE 를 억지로
+    달고 맞춰서 Q=1000·n=1.00 으로 경계에 붙인다 (실측 2026-09-23)."""
+    body = client.get("/api/eis/circuits").json()
+    # **(전고체, 대칭셀) 조합의 목록만** 본다.  `kinds` 전체를 훑으면 액체
+    # 프리셋에 같은 회로가 있어서 이 시험이 아무것도 안 보고 통과한다 --
+    # 처음 쓴 판이 실제로 그랬다.
+    [combo] = [one for one in body["combinations"]
+               if one["kind"] == "solid" and one["cell_config"] == "sym"]
+    circuits = [one["circuit"] for one in combo["presets"]]
+    assert "R0-p(R1,CPE1)-p(R2,CPE2)" in circuits
+    # 블로킹 회로도 그대로 남는다 — 막는 셀은 여전히 그것이 맞다.
+    assert "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3" in circuits

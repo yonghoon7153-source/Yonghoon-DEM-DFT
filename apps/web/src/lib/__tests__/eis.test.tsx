@@ -681,6 +681,35 @@ describe('스펙트럼 상세', () => {
     await waitFor(() => expect(sent).toEqual({ clear: ['thickness_um'] }))
   })
 
+  //: 실측 2026-09-23.  저주파 위상이 0° 인 대칭셀(=이온을 안 막는 셀)에서
+  //  두 아크를 벌크·입계라 부르며 σ 를 냈다.  "무엇이 필요합니다" 로 적으면
+  //  두께나 면적을 더 적으면 될 것처럼 읽히는데, 이 측정에서는 벌크·입계 σ 가
+  //  **나올 수 없다**.
+  it('대칭셀이어도 저주파에서 안 막으면 그것부터 말하고 σ 를 안 낸다', async () => {
+    installFetch(detailHandler((url) => {
+      if (path(url) === '/api/eis/spectra/1') {
+        return detail({ kind: 'solid', cell_config: 'sym',
+                        fits: [fit({
+                          conductivity: { not_blocking: true,
+                                          missing: ['저주파에서 블로킹이 아닙니다'] },
+                          blocking: { blocking: false, phase_deg: -0.4,
+                                      reason: '0.01 Hz 에서 위상 -0° — 이 셀은 '
+                                        + '저주파에서 이온을 막지 않습니다' },
+                        })] })
+      }
+      return undefined
+    }))
+
+    renderDetail()
+    const said = await screen.findByText(/이온을 막지 않습니다/)
+    const box = said.closest('.alert') as HTMLElement
+    expect(within(box).getByText(/벌크·입계로 읽지 않고/)).toBeInTheDocument()
+    // 무엇으로 바꾸면 되는지까지 그 안에 적는다 (회로 이름은 화면 여기저기에도
+    // 있으므로 경고 안에서만 찾는다).
+    expect(within(box).getByText('R0-p(R1,CPE1)-p(R2,CPE2)')).toBeInTheDocument()
+    expect(screen.queryByText('벌크 σ')).toBeNull()
+  })
+
   it('전고체 풀셀이면 전도도를 안 낸다고 미리 말한다', async () => {
     installFetch(detailHandler((url) =>
       path(url) === '/api/eis/spectra/1'

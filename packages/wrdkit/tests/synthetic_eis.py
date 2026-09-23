@@ -79,17 +79,26 @@ def build_mpr(columns: dict[str, np.ndarray], *, with_log: bool = True,
 
 def randles(frequency_hz: np.ndarray, *, rs: float = 5.0, r1: float = 20.0,
             q1: float = 1e-5, n1: float = 0.9, r2: float = 40.0,
-            q2: float = 1e-3, n2: float = 0.8) -> np.ndarray:
+            q2: float = 1e-3, n2: float = 0.8,
+            q_block: float | None = None, n_block: float = 0.9) -> np.ndarray:
     """``Rs - p(R1,CPE1) - p(R2,CPE2)`` -- the circuit the lab fits.
 
     Written out longhand rather than driven by the fitting code so a fit test
     is measuring the fitter, not comparing a function against itself.
+
+    ``q_block`` 를 주면 끝에 **블로킹 CPE** 를 단다 (``…-CPE3``).  이온을 막는
+    대칭셀(SS|전해질|SS)의 모양이다 — 저주파에서 위상이 -90° 로 가고 ``|Z|``
+    가 끝없이 커진다.  안 주면 스펙트럼이 실수축 위(Rs+R1+R2)에서 끝나는데,
+    그것은 **막지 않는** 셀(Li|전해질|Li)의 모양이다 (2026-09-23 이후 둘을
+    가른다 — 벌크·입계 σ 는 앞쪽에서만 나온다).
     """
     w = 2 * np.pi * frequency_hz
     z = np.full_like(w, rs, dtype=complex)
     for r, q, n in ((r1, q1, n1), (r2, q2, n2)):
         y_cpe = q * (1j * w) ** n
         z = z + 1.0 / (1.0 / r + y_cpe)
+    if q_block is not None:
+        z = z + 1.0 / (q_block * (1j * w) ** n_block)
     return z
 
 

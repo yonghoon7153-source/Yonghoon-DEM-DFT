@@ -42,7 +42,13 @@ from wrdkit.eis.conductivity import (
     conductivity_ms_cm,
     real_axis_crossing,
 )
-from wrdkit.eis.derive import CONFIGS, FULL, HALF, SYMMETRIC
+from wrdkit.eis.derive import (
+    CONFIGS,
+    FULL,
+    HALF,
+    SYMMETRIC,
+    blocking_verdict,
+)
 
 from .. import storage
 from ..db import get_session
@@ -214,6 +220,17 @@ PRESETS_BY_CONFIG: dict[tuple[str, str], list[dict]] = {
          "note": "이온 블로킹 대칭셀 — 전도도를 내는 그 측정이다. 반응이 "
                  "일어나지 않으므로 복합전극 모델이 아니라 아크 둘(벌크·입계)과 "
                  "수직으로 서는 블로킹 꼬리로 읽는다."},
+        # 막지 않는 대칭셀 (Li|전해질|Li).  실측 2026-09-23: 저주파 위상이 0° 인
+        # 셀을 위 회로로 맞추면 끝의 CPE3 가 Q=1000·n=1.00 으로 경계에 붙는다 —
+        # 맞춤이 **있지도 않은 블로킹을 지우려는** 모습이다.  이 회로가 있어야
+        # `auto` 가 그 셀에 맞는 답을 고를 수 있다.
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)",
+         "label": "두 아크 — 블로킹 없이",
+         "note": "저주파 끝이 수직으로 서지 않고 실수축으로 내려올 때 (위상이 "
+                 "0° 로 돌아온다). Li|전해질|Li 처럼 이온을 막지 않는 전극이면 "
+                 "이것이다. 이때 두 아크는 벌크·입계가 아닐 수 있다 — 벌크 "
+                 "아크는 보통 MHz 위에 있어서 R0 에 섞인다. 전도도는 막는 셀에서 "
+                 "잰다."},
     ],
     # 전고체는 랩의 실제 모델을 쓴다 (ADR 0028).  아크 회로는 뺐다 -- 복합전극의
     # 저주파는 계면 하나가 아니라 두께 전체에 퍼진 반응이고, R-CPE 는 그것을
@@ -1924,6 +1941,7 @@ def _fit_out(session: Session, record: SpectrumRecord,
             fitted_note = f"회로를 읽지 못해 곡선이 없습니다: {exc}"
     arcs: list[dict] = []
     conductivity: dict = {}
+    blocking: dict | None = None
     if parameters:
         stub = _FitStub(circuit=fit.circuit, parameters=[
             *_stub_parameters(fit.circuit, parameters)])
@@ -1932,9 +1950,16 @@ def _fit_out(session: Session, record: SpectrumRecord,
                          "note": meaning.note, "value_ohm": meaning.value_ohm,
                          "determined": meaning.determined})
         if record.kind == SOLID:
+            # 셀 구성만으로는 막는지 모른다 — 스펙트럼의 저주파 끝에 묻는다.
+            # 점을 못 읽으면 `None` 이고, 그때는 예전처럼 셀 구성만 본다.
+            points = storage.load_spectrum(record.id, record.sha256)
+            if points is not None:
+                blocking = blocking_verdict(points.frequency_hz, points.z_re,
+                                            points.z_im)
             conductivity = ionic_conductivity(stub, thickness_cm=thickness_cm,
                                               area_cm2=area,
-                                              config=record.cell_config)
+                                              config=record.cell_config,
+                                              blocking=blocking)
         total = total_resistance(stub)
         if total is not None:
             conductivity.setdefault("total_ohm", total)
@@ -1943,6 +1968,7 @@ def _fit_out(session: Session, record: SpectrumRecord,
         parameters=parameters,
         arcs=arcs,
         conductivity=conductivity,
+        blocking=blocking or {},
         kind_now=record.kind,
         fitted_frequency_hz=fitted_frequency,
         fitted_z_re=fitted_re,
