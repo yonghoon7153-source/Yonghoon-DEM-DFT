@@ -146,6 +146,8 @@
     🔧 **V100 컨테이너가 다시 만들어져 QE-GPU·NVHPC·pseudo 가 없었다 (09-24)** → kgy 에서 NVHPC 13 GB·QE 소스·pseudo rsync ·
     makelocalrc · configure ✓ (`-D__CUDA` · GPU_ARCH=70). ⏭ build → **빌드 검증** (static_ab/a 09-13 값 −1022.94654233 Ry · |ΔE| ≤ 1e-5)
     → DRY_RUN (⑨ PP 해시 ×4) → tmux `wad4l` 실행 + 30 분 $STORE 백업. 레시피 `kb/platforms/v100_uma_setup_2026_09_14.md` 함정 ⑨.
+    ⚠ 1차 빌드 실패 (09-24): 내가 rsync 에서 cc86 산출물을 거른 탓에 devXlib 이 반쪽(`install/libcuda_devxlib` 표시만) →
+    `device_fbuff_m.mod` 없음. 처방 = `make clean` (upstream 이 표시·FoX·MBD 까지 지운다) 뒤 재빌드.
     (러너에 NP · PSEUDO_DIR · NO_LOCK 추가, GPU 사용량은 장별 최댓값). gabia 예외는 **한 번도 발동하지 않은 채** 소멸.
   · ✅ **문헌 3편 인입·병합** (1저자 제공 PDF · 수치는 메인이 PDF 텍스트로 재대조): `pustorino2025_…`(LPSCl 파괴에너지 = 2γ · (100) 화학량론 벽개 ≈ 0.47 · (110) 0.37 J/m²) ·
     `maurer2015_…`(Ag|그래핀 분산 7방법 0.19–0.45 J/m² — 0.3 경계를 가로지른다) · `giovannetti2008_…`(Ag 약결합군 · LSDA · 화학흡착 Pd ≈ 0.52 J/m² = "구간 ≠ 기전").

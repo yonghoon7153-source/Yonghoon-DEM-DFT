@@ -61,6 +61,14 @@ _derive_nvroot() {
   [ -n "$o" ] && printf '%s' "${o%/}"
 }
 
+# 빌드 로그 → **진짜** 컴파일러·링커 오류 줄만.
+# ⛔ 2026-09-24 V100 실측: 옛 요약(grep -i 'error|cannot|…')은 `la_error.f90`·`upf_error.o` 같은 **파일 이름**만
+#   15줄 찍고, 정작 원인 `NVFORTRAN-F-0004-Unable to open MODULE file device_fbuff_m.mod` 는 놓쳤다
+#   (nvfortran 의 오류 문장에는 'error' 라는 단어가 없다).
+_build_errors() {  # $1 = 로그 · $2 = 줄 수(기본 15)
+  grep -anE 'NVFORTRAN-[SF]-|nvfortran-Fatal|NVC(\+\+)?-[SF]-|Fatal Error|fatal error|undefined reference|No rule to make|[Uu]nable to open|cannot open|\*\*\* \[' "$1" 2>/dev/null | tail -"${2:-15}"
+}
+
 # ── --selftest : 유도의 양성·음성 경로 ───────────────────────────────────────
 if [ "${1:-configure}" = "--selftest" ]; then
   _T=$(mktemp -d); _n=0; _f=0
@@ -88,6 +96,15 @@ if [ "${1:-configure}" = "--selftest" ]; then
   _eq "명시가 이긴다(NVROOT)"   "$(_nvr "$_T/opt/Linux_x86_64/24.11" "$_T/opt" "$_T/h")" "$_T/opt/Linux_x86_64/24.11"
   _eq "⛔ 명시했는데 없으면 빈값" "$(_nvr "$_T/없는경로" "$_T/opt" "$_T/h")" ""
   _eq "⛔ 아무데도 없으면 빈값"   "$(_nvr "" "$_T/빈곳" "$_T/nohome")"      ""
+  # 빌드 오류 요약 (2026-09-24 V100 로그 모양 그대로)
+  printf '%s\n' "mpif90 -fast -c la_error.f90 -o la_error.o" "a - upf_error.o" \
+    "NVFORTRAN-F-0004-Unable to open MODULE file device_fbuff_m.mod (rdiaghg.f90: 214)" \
+    "make[1]: *** [../make.inc:16: rdiaghg.o] Error 2" > "$_T/b.log"
+  _eq "진짜 원인(NVFORTRAN-F) 을 잡는다" "$(_build_errors "$_T/b.log" | grep -c NVFORTRAN-F-0004)" "1"
+  _eq "make 실패 줄을 잡는다"            "$(_build_errors "$_T/b.log" | grep -c "rdiaghg.o\] Error")" "1"
+  _eq "⛔ 파일 이름의 error 는 안 잡는다" "$(_build_errors "$_T/b.log" | grep -c "_error\.[of]")" "0"
+  printf '%s\n' "mpif90 -c ok.f90" > "$_T/ok.log"
+  _eq "⛔ 깨끗한 로그는 빈 결과"         "$(_build_errors "$_T/ok.log")" ""
   rm -rf "$_T"; echo "selftest: $_n 통과 · $_f 실패"; [ "$_f" = 0 ]; exit $?
 fi
 
@@ -173,7 +190,7 @@ elif [ "$PHASE" = build ]; then
   make -j"$JOBS" pw > "$HOME/qe_pw_build.log" 2>&1; pw_rc=$?
   echo "  pw rc=$pw_rc  (tail:)"; tail -4 "$HOME/qe_pw_build.log"
   [ "$pw_rc" = 0 ] && [ -f "$SRC/bin/pw.x" ] || {
-    echo "!! pw 빌드 실패 — 에러:"; grep -inE "error|cannot|undefined|No rule|Stop|fatal" "$HOME/qe_pw_build.log" | tail -15; exit 1; }
+    echo "!! pw 빌드 실패 — 진짜 오류 줄 (전체 ~/qe_pw_build.log):"; _build_errors "$HOME/qe_pw_build.log" 15; exit 1; }
   mkdir -p "$GPUBIN"; cp "$SRC/bin/pw.x" "$GPUBIN/" && echo "pw.x -> $GPUBIN/"
   echo "── pw.x GPU 링크 확인 (여기가 근거다) ──"
   ldd "$GPUBIN/pw.x" 2>/dev/null | grep -iE "cufft|cudart|cuda|libmpi|libnvomp|libgomp" | head -8
@@ -185,7 +202,7 @@ elif [ "$PHASE" = build ]; then
       cp "$SRC/bin/neb.x" "$GPUBIN/" && echo "neb.x -> $GPUBIN/ (배치완료)"; ls -la "$GPUBIN/neb.x"
       ldd "$GPUBIN/neb.x" 2>/dev/null | grep -iE "cufft|cudart|cuda" | head -4
     else
-      echo "!! neb.x 생성 실패 — 에러:"; grep -inE "error|cannot|undefined|Stop" "$HOME/qe_neb_build.log" | tail -15
+      echo "!! neb.x 생성 실패 — 진짜 오류 줄:"; _build_errors "$HOME/qe_neb_build.log" 15
     fi
   else
     echo "(WANT_NEB=0 — neb 는 건너뛴다)"
