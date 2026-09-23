@@ -28,6 +28,10 @@
 #      HOST_START_MIB (기본 16384), 도는 중 < HOST_KILL_MIB (기본 4096) 면 우리 잡만 멈춘다
 #      (OOM 킬러는 우리가 아니라 **가장 큰 잡**을 고른다 — 그게 k-탐침이나 b2o3 일 수 있다).
 #   ⑤ 잡마다 피크 합계 VRAM · 우리 pw.x 자기 사용량(읽히면) · 벽시계를 jobs_run.tsv 에 남긴다.
+#   ⑦ KISTI 등 여러 GPU: NP=<랭크 수> (≤ 보이는 GPU 수 · 평면파를 랭크에 나눠 GPU 한 장당 메모리를 줄인다 —
+#      tools/sdcp/sbatch_phaseB_v3_kisti.sh 와 같은 방식) · PSEUDO_DIR=<그 기계 경로> (실행 폴더 복사본에서만
+#      바꾼다 — 원본 입력 해시는 그대로) · NO_LOCK=1 (Lustre 는 flock 이 안 될 수 있다 — 그러면 '이미 도는 중' 으로
+#      오판해 조용히 끝난다. Slurm 체인이 단일 실행을 보장할 때만 쓴다).
 #   ⑥ ONLY_PIDS (예: b2o3 드라이버 PID) — 잡 시작 직전 GPU 위 프로세스가 **이 목록 안**이어야 한다.
 #      예외 조건 *"li2s 시드가 끝나고 b2o3 만 남았을 때"* 를 기계로 건다. WAIT_PIDS 만으로는
 #      그 사이 새 UMA 잡(예: li2s seed 5)이 떠도 모른다 (2026-09-23 DRY_RUN 뒤 보강). 목록 밖이 있으면
@@ -77,6 +81,17 @@ _d3_ok() {  # grimme-d3 를 켠 입력이면 dftd3_threebody 가 적혀 있어�
 # ── nvidia-smi 프로세스 목록에서 **진짜 프로세스 줄**만 (첫 칸이 PID 숫자) ─────────
 _apps_filter() { awk -F', *' '$1 ~ /^[0-9]+$/'; }
 
+# ── ⑦ 랭크 수 ≤ GPU 수 (한 GPU 에 랭크 여럿 = 2026-09-09 gabia np 8 즉사) ──────────
+_np_ok() {  # $1 = NP · $2 = 보이는 GPU 수
+  case "$1" in ''|*[!0-9]*) return 1;; esac
+  case "$2" in ''|*[!0-9]*) return 1;; esac
+  [ "$1" -ge 1 ] && [ "$1" -le "$2" ]
+}
+# ── pseudo_dir 교체 (실행 폴더 복사본에서만) ───────────────────────────────
+_sub_pseudo() {  # $1 = pw.in · $2 = 새 경로
+  sed -i -E "s#^( *pseudo_dir *= *)'[^']*'#\1'$2'#" "$1"
+}
+
 # ── ⑥ 허용 목록 밖 GPU 프로세스 ─────────────────────────────────────────
 _unexpected() {  # $1 = 지금 GPU PID 들 · $2 = 허용 PID 들 → 허용 밖 PID 를 한 줄씩
   local p q ok
@@ -116,6 +131,13 @@ if [ "$IN" = "--selftest" ]; then
   ck "⛔허용 목록이 비면 전부 밖"          '[ "$(_unexpected "10" "" | wc -l)" = 1 ]'
   ck "⛔kgy 막힘 문장은 프로세스가 아니다"  '[ -z "$(echo "Process-level GPU information is restricted." | _apps_filter)" ]'
   ck "진짜 프로세스 줄은 남긴다"           '[ "$(printf "3322562, python, 9338\n" | _apps_filter)" = "3322562, python, 9338" ]'
+  ck "NP 4 · GPU 4 → 허용"                  '_np_ok 4 4'
+  ck "⛔NP 8 · GPU 1 → 거부 (한 GPU 에 랭크 여럿)" '! _np_ok 8 1'
+  ck "⛔NP 0 · 빈 값 · 문자 → 거부"          '! _np_ok 0 4 && ! _np_ok "" 4 && ! _np_ok x 4'
+  printf "&CONTROL\n  pseudo_dir = '/data/work/pseudo'\n  prefix = 'x'\n/\n" > "$T/ps.in"
+  _sub_pseudo "$T/ps.in" /scratch/k/pseudo
+  ck "pseudo_dir 교체"                     "grep -q \"pseudo_dir = '/scratch/k/pseudo'\" $T/ps.in"
+  ck "⛔교체가 다른 줄을 건드리지 않음"      "grep -q \"prefix = 'x'\" $T/ps.in && [ \$(grep -c /data/work/pseudo $T/ps.in) = 0 ]"
   ck "⛔섞여 오면 숫자 줄만"               '[ "$(printf "No running processes found\n12, pw.x, 900\n" | _apps_filter | wc -l)" = 1 ]'
   rm -rf "$T"; echo "run_sese_gpu selftest: $n 통과 · $f 실패"; [ "$f" = 0 ]; exit $?
 fi
@@ -128,6 +150,7 @@ START_MAX_MIB=${START_MAX_MIB:-40960}; KILL_MIB=${KILL_MIB:-45056}
 SAMPLE_S=${SAMPLE_S:-2}; START_WAIT_S=${START_WAIT_S:-3600}
 ALLOW_UMA_COEXIST=${ALLOW_UMA_COEXIST:-0}; DRY_RUN=${DRY_RUN:-0}; WAIT_PIDS=${WAIT_PIDS:-}
 HOST_START_MIB=${HOST_START_MIB:-16384}; HOST_KILL_MIB=${HOST_KILL_MIB:-4096}
+NP=${NP:-1}; PSEUDO_DIR=${PSEUDO_DIR:-}; NO_LOCK=${NO_LOCK:-0}
 ONLY_PIDS=${ONLY_PIDS:-}
 # 공존 근거 — 기본은 gabia 예외 결정. 다른 기계에서 쓰면 그 근거를 적어 넘긴다 (예: kgy 1저자 승인 문구)
 EXCEPTION_ID=${EXCEPTION_ID:-D-2026-09-23-gabia-gpu-exception-sese}
@@ -135,12 +158,15 @@ EXCEPTION_ID=${EXCEPTION_ID:-D-2026-09-23-gabia-gpu-exception-sese}
 JOBS=${JOBS:-$(python3 -c "import json;print(' '.join(j['dir'] for j in json.load(open('$IN/jobs.json'))['jobs']))")}
 
 mkdir -p "$RUN"; RUN=$(cd "$RUN" && pwd)
-exec 9>"$RUN/.lock"
-flock -n 9 || { echo "이미 도는 중이다 ($RUN/.lock) — 중복 실행 안 한다"; exit 0; }
+if [ "$NO_LOCK" != 1 ]; then
+  exec 9>"$RUN/.lock"
+  flock -n 9 || { echo "이미 도는 중이다 ($RUN/.lock) — 중복 실행 안 한다 (Lustre 면 flock 미지원일 수 있다 → NO_LOCK=1)"; exit 0; }
+fi
 LOG=$RUN/runner.log; TSV=$RUN/jobs_run.tsv
 ts() { date '+%F %T'; }
 say() { echo "[$(ts)] $*" | tee -a "$LOG"; }
-gpu_used() { nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits 2>/dev/null | head -1 | tr -d ' '; }
+# 여러 장이면 **장별 최댓값** — 가드는 한 장의 한도를 지키는 것이다 (첫 장만 보면 나머지가 넘쳐도 모른다)
+gpu_used() { nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits 2>/dev/null | tr -d ' ' | sort -n | tail -1; }
 gpu_apps_raw() { nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader,nounits 2>&1; }
 # ⛔ 2026-09-23 kgy 실측: 프로세스별 정보가 막힌 기계는 목록 대신 문장
 #   "Process-level GPU information is restricted." 을 돌려준다 — 비어 오지 않는다.
@@ -166,13 +192,16 @@ for J in $JOBS; do
   got=$(sha256sum "$P" | cut -d' ' -f1)
   [ "$want" = "$got" ] || { say "⛔ $J/pw.in 해시가 jobs.json 과 다르다 (입력이 고쳐졌다) — $got"; bad=1; }
   _d3_ok "$P" || { say "⛔ $J: grimme-d3 인데 dftd3_threebody 가 명시되지 않았다 (결정 enforcement)"; bad=1; }
-  PD=$(grep -aE "pseudo_dir" "$P" | head -1 | sed -E "s/.*'([^']+)'.*/\1/")
+  PD=${PSEUDO_DIR:-$(grep -aE "pseudo_dir" "$P" | head -1 | sed -E "s/.*'([^']+)'.*/\1/")}
   for U in $(awk '/ATOMIC_SPECIES/{f=1;next} f&&NF==0{exit} f{print $3}' "$P"); do
     [ -f "$PD/$U" ] || { say "⛔ $J: PP 없음 $PD/$U"; bad=1; }
   done
 done
 [ "$bad" = 0 ] || { say "⛔ 입력 점검 실패 — 시작하지 않는다"; exit 1; }
-PD=$(grep -aE "pseudo_dir" "$IN/$(echo $JOBS | awk '{print $1}')/pw.in" | head -1 | sed -E "s/.*'([^']+)'.*/\1/")
+PD=${PSEUDO_DIR:-$(grep -aE "pseudo_dir" "$IN/$(echo $JOBS | awk '{print $1}')/pw.in" | head -1 | sed -E "s/.*'([^']+)'.*/\1/")}
+NGPU=$(nvidia-smi -L 2>/dev/null | grep -c '^GPU')
+_np_ok "$NP" "$NGPU" || { say "⛔ NP=$NP 인데 보이는 GPU 는 $NGPU 장 — 한 GPU 에 랭크 여럿은 안 된다. 시작하지 않는다"; exit 2; }
+say "랭크 NP=$NP · GPU $NGPU 장 · pseudo=$PD${PSEUDO_DIR:+ (PSEUDO_DIR 로 교체)}"
 for U in $(cat "$IN"/*/pw.in | awk '/ATOMIC_SPECIES/{f=1;next} f&&NF==0{f=0} f{print $3}' | sort -u); do
   say "PP $U sha256 $(sha256sum "$PD/$U" | cut -c1-16)"
 done
@@ -238,6 +267,7 @@ for J in $JOBS; do
   D=$RUN/$J; mkdir -p "$D"
   if _done "$D/pw.out" "$CALC"; then say "⏭ $J 이미 완료 — 건너뛴다"; continue; fi
   cp "$IN/$J/pw.in" "$D/pw.in"
+  [ -n "$PSEUDO_DIR" ] && _sub_pseudo "$D/pw.in" "$PSEUDO_DIR"
 
   # ② 시작 문턱
   waited=0
@@ -253,7 +283,7 @@ for J in $JOBS; do
   say "▶ $J ($CALC) 시작 · GPU 합계 ${U} MiB · 호스트 여유 ${H} MiB"
   t0=$(date +%s); start=$(ts)
   # shellcheck disable=SC2086
-  ( cd "$D" && exec "$QE_GPU_MPIRUN" $ROOTFLAG $MPI_MCA -np 1 "$PWX" -nk 1 -in pw.in > pw.out 2> pw.err ) &
+  ( cd "$D" && exec "$QE_GPU_MPIRUN" $ROOTFLAG $MPI_MCA -np "$NP" "$PWX" -nk 1 -in pw.in > pw.out 2> pw.err ) &
   MP=$!
   PW=""
   for _ in $(seq 60); do PW=$(pgrep -P "$MP" | head -1); [ -n "$PW" ] && break; kill -0 "$MP" 2>/dev/null || break; sleep 1; done

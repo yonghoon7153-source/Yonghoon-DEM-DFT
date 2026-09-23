@@ -3835,6 +3835,54 @@
     "decision_digest": "sha256:18a85ad8bb8fac966671c3a13b2fe76bbf39c298f9f0941ad4f4f58ada4e45e3",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-23-wad-sese-move-kisti",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "adhesion.wad_lpscl_agc.se_se_control.compute_site",
+   "slot": "wad_sese_compute_site",
+   "applies_to": {
+    "systems": [
+     "comp1"
+    ],
+    "tasks": [
+     "wad_se_se_control"
+    ],
+    "methods": [
+     "qe_pbe_d3bj"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "SE|SE 대조를 gabia GPU 에서 KISTI A100 4장(평면파 분산)으로 옮기고, gabia 예외는 쓰지 않은 채 닫는다",
+   "statement": "SE|SE 대조 5잡을 KISTI amd_a100nv_8 에서 tools/wad/sbatch_sese_kisti.sh (run_sese_gpu.sh · NP=4 · -nk 1 · PSEUDO_DIR=KISTI) 로 돌린다. 입력은 db/inputs/wad_sese_control_2026_09_23 그대로(해시 고정)이고 pseudo_dir 만 실행 폴더 복사본에서 바꾼다. D-2026-09-23-gabia-gpu-exception-sese 는 한 번도 발동하지 않은 채 소멸한다 (그 결정의 reopen_criteria '잡 5개가 끝나면 소멸' 의 앞당김).",
+   "rationale": "gabia CPU 1랭크 추정(2026-09-23, QE Estimated max dynamical RAM): 벌크 6.7 GB · S 바깥 슬랩 55.8 GB · Li 바깥 슬랩 50.2 GB — A6000 48 GB 한 장에 슬랩이 들어가지 않는다(혼자여도). 그대로 두면 러너가 슬랩을 띄우는 순간 수십 GB 를 수 초에 잡아 2 s 표본 가드보다 빨리 b2o3 UMA 를 OOM 으로 죽일 수 있다 (b2o3 카드는 16번째 런 금지). KISTI 는 계획 §0′ 의 DFT 기본 기계이고 4랭크 평면파 분산으로 226원자 DFT+U 를 돌린 선례가 있다 (tools/sdcp/sbatch_phaseB_v3_kisti.sh).",
+   "decision_state": "proposed",
+   "record_kind": "scope_declaration",
+   "results_seen": false,
+   "card": "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md",
+   "record": "tools/wad/sbatch_sese_kisti.sh",
+   "evidence": [
+    "tools/wad/sbatch_sese_kisti.sh",
+    "tools/wad/run_sese_gpu.sh",
+    "tools/sdcp/sbatch_phaseB_v3_kisti.sh"
+   ],
+   "method_ref": "KISTI amd_a100nv_8 · 1노드 · GPU 4 · mpirun -np 4 pw.x -nk 1 · 기본 JOBS = SCF 3잡 (이완은 SCF 벽시계 뒤)",
+   "reopen_criteria": [
+    "KISTI 에서도 OOM(NP=8 까지)이면 슬랩 크기·진공·k 를 카드 개정으로 다시 정한다"
+   ],
+   "enforcement": "gabia 러너(tmux wad_sese)는 띄운 잡 없이 멈춘다. KISTI 입력 해시가 jobs.json 과 다르면 러너가 시작하지 않는다.",
+   "proposed_by": "claude-session-2026-09-23",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-09-23",
+     "state": "proposed",
+     "note": "gabia CPU 메모리 추정 뒤 제안. 1저자 비준 대기 (트랙 = 우리 DFT → 1저자 = 사용자)."
+    }
+   ]
   }
  ]
 }

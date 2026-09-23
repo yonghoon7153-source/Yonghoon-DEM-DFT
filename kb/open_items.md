@@ -100,8 +100,10 @@
     원문·읽기·**회신 2 초안** `kb/projects/wad_dem_reply_draft_2026_09_23.md`. ✅ **P2 수용 (1저자 "ㅇㅇ 그러자")** → `D-2026-09-23-wad-p2-lpscl-graphite-scope`.
     격자 정합 후보(메인 재계산): **P2 = SE 1×3 + 흑연 직사각 4×7 (+2.19/+1.14 %) ≈ 820원자** · **P1 = SE 1×2 + Ag(111) 2×7 (a 4.086: +0.46/−0.57 %) ≈ 436원자**.
     ⏳ 회신 2 발송(사용자 · **정정본** — Ag 셀 표기·층수 가정·820원자는 GPU 불가 → KISTI) · 결정 7 격자 정합 규칙(어느 쪽을 변형) 봉인.
-    ⚠ **SE|SE 슬랩의 gabia VRAM 적합성 미확인** — 162원자·진공 20 Å 상자는 191원자 Li₂S(QE 추정 45 GB)와 규모가 비슷하다.
-    gabia CPU 1랭크 스크래치 프로브로 `Estimated max dynamical RAM` 만 읽는 중 (`/data/work/scratch/sese_memprobe`). ~30 GB 초과면 러너를 벌크만으로 줄인다.
+    ⛔ **SE|SE 슬랩은 gabia GPU 에 안 들어간다 (CPU 1랭크 추정 · 2026-09-23 밤)**: 벌크 6.7 GB · **S 바깥 슬랩 55.8 GB · Li 바깥 50.2 GB** (k 9) > A6000 48 GB.
+    그대로 두면 슬랩 pw.x 가 수 초에 수십 GB 를 잡아 2 s 가드보다 빨리 b2o3 UMA 를 칠 수 있다 → gabia 러너(tmux wad_sese) 정지 블록 전달.
+    → **KISTI A100 4장 평면파 분산**으로 이전 제안 `D-2026-09-23-wad-sese-move-kisti` (**proposed · 1저자 비준 대기**) · 제출 스크립트 `tools/wad/sbatch_sese_kisti.sh`
+    (러너에 NP · PSEUDO_DIR · NO_LOCK 추가, GPU 사용량은 장별 최댓값). gabia 예외는 **한 번도 발동하지 않은 채** 소멸.
   · ✅ **문헌 3편 인입·병합** (1저자 제공 PDF · 수치는 메인이 PDF 텍스트로 재대조): `pustorino2025_…`(LPSCl 파괴에너지 = 2γ · (100) 화학량론 벽개 ≈ 0.47 · (110) 0.37 J/m²) ·
     `maurer2015_…`(Ag|그래핀 분산 7방법 0.19–0.45 J/m² — 0.3 경계를 가로지른다) · `giovannetti2008_…`(Ag 약결합군 · LSDA · 화학흡착 Pd ≈ 0.52 J/m² = "구간 ≠ 기전").
     ⚠ 05:38 턴 중단 때 첫 실행 셋이 **같이 취소**됐다(그림만 남음) → 재실행. 도는 동안 Esc 금지.

@@ -145,7 +145,7 @@ evidenceScope: multi-source-primary
 
 ## 회신 2 (DFT → DEM · 2026-09-23 밤 · 발송 전 정정본 — 1저자 검토)
 
-> 정정 이유 (첫 판 대비): ① Ag 셀 "2×7" 표기가 방향이 모호해 거꾸로 읽으면 5.8 × 35.0 Å 가 된다 → Å 치수로 ② 원자 수는 흑연 3층·Ag 4층 **가정** ③ **3번 — 820원자급은 GPU 한 장에 안 들어간다**(191원자 Li₂S 가 QE 추정 45 GB) → KISTI. SE|SE 벽시계를 비용 근거로 약속하지 않는다 (SE|SE 슬랩 자체의 gabia 적합성도 CPU 추정으로 확인 중).
+> 정정 이유 (첫 판 대비): ① Ag 셀 "2×7" 표기가 방향이 모호해 거꾸로 읽으면 5.8 × 35.0 Å 가 된다 → Å 치수로 ② 원자 수는 흑연 3층·Ag 4층 **가정** ③ **3번 — GPU 한 장에 안 들어간다**: gabia CPU 추정으로 SE 슬랩 SCF 가 **55.8 / 50.2 GB** (벌크 6.7) → SE|SE 대조부터 KISTI A100 4장으로 (`D-2026-09-23-wad-sese-move-kisti` 제안).
 
 **[DFT → DEM] 회신 감사합니다 — 같은 SE 슬랩 확인 · P2 수용 · 비용은 첫 실측 뒤**
 
@@ -156,7 +156,7 @@ evidenceScope: multi-source-primary
    - P1: SE 1×2 (10.06 × 20.11 Å) 위에 Ag(111) 직사각 셀 10.01 × 20.22 Å — Ag 변형 +0.5 % / −0.6 % (a 4.086 실험값 기준 · PBE 격자상수로 다시 잽니다) · Ag 4층 가정 시 ≈ 436원자
    registry ≥ 4 · D3 2체 필수 · P3 은 범위 밖입니다.
 
-3. **비용은 첫 실측 뒤에 드립니다.** 이 크기(436 · 820원자)는 GPU 한 장(48 GB)에 들어가지 않습니다 — 191원자 Li₂S 계산이 이미 QE 추정 45 GB 였습니다. 그래서 P1·P2 DFT 단일점은 KISTI(CPU)에서 프로브 1점부터 재고, 그 실측으로 5점 예산을 드립니다. 지금 gabia 에 줄 선 SE|SE 대조(150–162원자)는 슬랩 기준 검산용이고 비용 외삽의 근거로 쓰지 않습니다.
+3. **비용은 첫 실측 뒤에 드립니다.** P1(~436원자)·P2(~820원자) DFT 단일점은 GPU 한 장(48 GB)에 들어가지 않습니다 — 150–162원자 SE 슬랩 SCF 도 QE 추정 50–56 GB 였습니다. 그래서 SE|SE 대조부터 KISTI A100 4장(평면파 분산)으로 옮겨 돌리고, 그 벽시계와 메모리로 P1·P2 프로브 크기를 잡은 뒤 5점 예산을 드립니다.
 
 4. **전달 값은 둘** — `W_sep(DFT · 고정기하)` 헤드라인과 `W(DFT@UMA-이완 슬랩 단일점)`. 후자에는 "하한 보장 아님"을 붙입니다.
 
@@ -164,4 +164,4 @@ evidenceScope: multi-source-primary
 
 6. SE 값 사다리 정리와 "상한 = 약한 쪽" 철회, 잘 받았습니다. 우리 SE|SE 앵커 0.47 은 합격선이 아닌 경보로 봉인했습니다.
 
-근거(정본 브랜치 `claude/friendly-meitner-lldvar`): 결정 `D-2026-09-23-wad-p2-lpscl-graphite-scope` · `D-2026-09-23-wad-se-termination-symmetric` · `D-2026-09-23-wad-sese-alarm-band` · 계획 `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` §0′ *P2 격자 정합 후보* 표 · 슬랩 빌더 `tools/wad/se_sym_slab.py` · 메모리 근거 `db/properties/li2s_cellconv_card_2026_09_01.json` §3b.
+근거(정본 브랜치 `claude/friendly-meitner-lldvar`): 결정 `D-2026-09-23-wad-p2-lpscl-graphite-scope` · `D-2026-09-23-wad-se-termination-symmetric` · `D-2026-09-23-wad-sese-alarm-band` · 계획 `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` §0′ *P2 격자 정합 후보* 표 · 슬랩 빌더 `tools/wad/se_sym_slab.py` · 메모리 근거 gabia CPU 추정(슬랩 55.8 / 50.2 GB) · `db/properties/li2s_cellconv_card_2026_09_01.json` §3b.
