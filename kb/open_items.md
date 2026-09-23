@@ -48,9 +48,10 @@
   · **modelc** — 5시드 C3(09-18, A: compatible)의 C2b·C6 빈칸이 닫혔다. ⏳ **HOLD 해제·canonical 승격은 1저자 비준 대기**(사전등록 §3 A).
   · 러너 `--label modelc` 하드코딩 → `$SYS` (lpsocl s5·s6 run_meta label 이 'modelc' — 원본 보존, 원장에 정정 기록).
 - ⏭ **b2o3 MD — 전도도는 닫힌 채로, 질문을 바꿔 두 가지** (1저자 2026-09-23 "우선 해보자"):
-  · ⏳ **kgy 분할 제안 (09-24 · 1저자 "kgy에서도 같이 해도 될 거 같은데")** — 카드가 기계를 gabia A6000 으로 봉인했다 →
-    개정 필요. 권장 = **s6 만 kgy** (시드 통째 · turbo 동일 · 16번째 런 없음 유지). gabia 루프는 그대로 두고 kgy s6 결과를
-    gabia `s6/` 로 옮겨 **gabia 가 s6 에 닿기 전(≈09-27 저녁)** 건너뛰게 한다 — 안 옮기면 중복 런. 1저자 확인 대기.
+  · ✅ **kgy 분할 = s6 만 (1저자 09-24 선택)** → 개정문 `db/properties/b2o3_framework_event_rate_amendment_2026_09_24.json`
+    (카드 원문·원결정 불변 · 카드 지문 e40a5ee5 를 가리킨다) + 결정 `D-2026-09-24-b2o3-eventrate-machine-amend`.
+    s6 정본 = kgy 런 · 세 온도 끝나 `ensemble_results.json` 이 생기면 통째로 gabia `/root/work/runs/b2o3_221_eventrate_400ps/s6/` 로.
+    ⏰ **옮김 마감 ≈ 09-27 18:00** (gabia 가 s6 에 닿는 시각) — 넘기면 gabia 의 s6 을 결과 열람 없이 PID 로 멈춘다.
   ① ✅ **완료** — `b2o3_c6_census_512_2026_09_23.json`: 4/4 **framework_mobile**, 런당 사건 30–56 (200 ps) vs modelc·lpsocl 30런 0.
     PS₄ 는 안 깨지고(P결합 음이온 이탈 0) P 중심이 통째로 옮기며(3.7–6.5 Å) 자유 S·Cl 이 흐른다(최대 10.6·16.0 Å). 진단. ⚠ census 는 P 중심 규칙이라
     **B 를 안 세고** BS₃ 의 S 는 '자유 S'(2.0 Å)로 분류된다 — 결과와 같이 적는다.

@@ -1,0 +1,53 @@
+{
+ "schema": "prereg_amendment/1",
+ "record_kind": "prospective",
+ "date": "2026-09-24",
+ "amends": "db/properties/b2o3_framework_event_rate_prereg_2026_09_23.json",
+ "amends_card_content_digest": "e40a5ee5b9507034f208a2bc6c5682696c5467de24b2a4fb781966626fab02a1",
+ "amends_decision": "D-2026-09-23-b2o3-framework-event-rate",
+ "results_seen": false,
+ "결과_열람_상태": "census 0회 — 끝난 런은 s2/600 K 하나다 (완료 표지만 봤고 사건 수는 열람하지 않았다)",
+ "제목": "b2o3 사건빈도 — 기계 개정: 시드 6 을 kgy RTX 3090 에서 돈다 (카드 원문 보존)",
+ "무엇이_바뀌나": {
+  "카드_원문_설계.기계": "gabia A6000",
+  "개정": "시드 2–5 = gabia A6000 (지금 도는 루프 그대로) · **시드 6 = kgy RTX 3090**"
+ },
+ "무엇이_안_바뀌나": [
+  "총 15런 · **16번째 런 없음**",
+  "512원자 2×2×1 · 600/650/700 K · 400 ps · turbo · uma-s-1p1 omat · save_traj",
+  "보고량 · 도구·문턱 · 판정 문구 · 무효 조건 — 카드 원문 그대로"
+ ],
+ "왜": "gabia 직렬이면 ≈ 5–6일이다. 시드 하나를 병렬로 돌려 약 하루 줄인다. s5 까지 옮기면 gabia 루프가 s5 에 닿는 시각과 경합한다.",
+ "교란_방지": "시드 **통째로** 나눈다 — 온도마다 두 기계가 섞여 온도 ↔ 기계 교란이 없다. 두 기계 모두 Ampere · 같은 turbo 모드.",
+ "중복_방지_규약": {
+  "정본": "s6 의 정본은 **kgy 런**이다.",
+  "옮김": "kgy s6 의 세 온도가 다 끝나 `ensemble_results.json` 이 생기면 gabia `OUTROOT/s6/` 로 옮긴다 — gabia 루프가 그 표지를 보고 s6 을 건너뛴다.",
+  "마감": "gabia 가 s6 에 닿기 전 — ≈ 2026-09-27 18:00 (s2 끝 ≈ 09-24 15:00 + 시드당 ≈ 25 h × 3)",
+  "마감을_넘기면": "gabia 가 s6 을 시작하는 즉시 잡 고유 인자(`--seed 6 --out_root …/s6`)로 PID 를 확인해 멈춘다 — 그 런의 결과는 열람하지 않고 버린다.",
+  "금지": "s6 의 온도를 두 기계에 나눠 섞지 않는다 — `ensemble_results.json` 이 있을 때만 통째로 옮긴다."
+ },
+ "분석에_붙는_것": "런마다 기계(gabia · kgy)를 기록한다. 기계 층화 표는 **점검용**이지 게이트가 아니다 — 판정은 카드 원문 문구 그대로.",
+ "이_개정문이_못_하는_것": [
+  "kgy 런이 gabia 런과 수치적으로 같음을 보증하지 않는다 (같은 모델·모드·설정일 뿐 — 궤적은 어차피 시드마다 다르다)",
+  "옮김을 자동으로 하지 않는다 — 사람이 마감 전에 한다"
+ ],
+ "status_history": [
+  {
+   "at": "2026-09-24",
+   "state": "ratified",
+   "note": "1저자 결정 2026-09-24 — 'kgy에서도 같이 해도 될 거 같은데' → 선택지 중 's6 만 kgy (Recommended)'. 트랙 = b2o3 (우리 MLIP 기준선) → 1저자 = 사용자."
+  }
+ ],
+ "status": "ratified",
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "at": "2026-09-24",
+  "by": "1저자",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-24T05:30:00Z",
+  "commit": "e19b6a880268d6dc93fe508e24299da867577f31",
+  "content_digest": "78d21c9fa58ee94ecd7d2d5720c76777e7b5a97f458e1328818527ad137ffeb0",
+  "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다 (원 카드와 같은 규칙)."
+ }
+}
