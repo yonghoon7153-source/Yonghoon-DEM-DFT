@@ -1,0 +1,211 @@
+{
+ "slug": "dugas2021_engineered-three-electrode-cell-assb-li-in-reference-layer",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "7dc0b8f1-10._Engineered_three-electrode_cells_for_improving_solid_state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. The 3 electrodes cell hardware: (a) body; (b) complete cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    285.8,
+    336.9
+   ],
+   "w": 1066,
+   "h": 1151,
+   "dpi": 300,
+   "src": "7dc0b8f1-10._Engineered_three-electrode_cells_for_improving_solid_state_batteries.pdf",
+   "blank": 0.683
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Assembly procedure of the 3 electrodes all solid state cell: (a) assembly of the reference layer with a solid electrolyte pellet; (b) addition of a 2nd electrolyte layer; (c) addition of working and counter electrodes; (d) cell ready to cycle. Blue arrows indicate the displacement of mobile pistons w./respect to the cell body at each step.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    513.9
+   ],
+   "w": 1080,
+   "h": 1889,
+   "dpi": 300,
+   "src": "7dc0b8f1-10._Engineered_three-electrode_cells_for_improving_solid_state_batteries.pdf",
+   "blank": 0.657
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Complex resistivity of solid electrolyte pellets: (a) b-Li3PS4 and (b) Li6PS5Cl. The high frequency response is ﬁtted with the impedance of a parallel R-CPE circuit (solid lines) and extrapolated until Z = 0 at inﬁnite frequency (dashed line).",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    359.5
+   ],
+   "w": 1080,
+   "h": 1246,
+   "dpi": 300,
+   "src": "7dc0b8f1-10._Engineered_three-electrode_cells_for_improving_solid_state_batteries.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Voltage proﬁle of LTFS vs Li0.5In anode for hand ground composite (a) and ball-milled composite (b) at C/25; reversible capacity and coulombic efﬁciency of both cells (c). solid electrolyte and active material in the WE composite, with possibly some contribution from Li+ conduction in the cathode composite.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    60.9,
+    558.0,
+    422.2
+   ],
+   "w": 1085,
+   "h": 1507,
+   "dpi": 300,
+   "src": "7dc0b8f1-10._Engineered_three-electrode_cells_for_improving_solid_state_batteries.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Galvanostatic voltage proﬁles of WE and Li0.5In CE for the ﬁrst 2 cycles in 3 electrodes conﬁguration. WE active material is LTFS (a) or NMC622 (c)–(d); WE composites are prepared by high-energy ball milling (a)–(b) or hand grinding (c)–(d); electrolyte is β-Li3PS4 (a–c) or Li6PS5Cl argyrodite (d).",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    542.8
+   ],
+   "w": 1080,
+   "h": 2009,
+   "dpi": 300,
+   "src": "7dc0b8f1-10._Engineered_three-electrode_cells_for_improving_solid_state_batteries.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Impedance of the various WE composites recorded at the middle of 2nd reduction: (a) ball-milled LTFS:β-LPS; (b) ball-milled NMC622: β-LPS; (c) hand ground NMC622:β-LPS; (d) hand ground NMC622:Li6PS5Cl. A black line indicates the ﬁt of the spectra with a series of parallel R-CPE elements depicted in each subﬁgure. The impedances of their constitutive elements are plotted with their respective colour. In (c) and (d) Z? is a series of two R-CPE elements.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    60.9,
+    557.1,
+    493.0
+   ],
+   "w": 1081,
+   "h": 1802,
+   "dpi": 300,
+   "src": "7dc0b8f1-10._Engineered_three-electrode_cells_for_improving_solid_state_batteries.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. (a) impedance of partially lithiated LTFS recorded in the middle of 2nd discharge (open symbols); (b) impedance of the Li0.5In counter electrode simultaneously recorded; (c) impedance of a 2 electrodes LTFS:Li0.5In cell as reconstructed from the spectra in (a) and (b). The spectra in (a) and (c) are ﬁtted using the equivalent circuit displayed in (a) (solid lines).",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    343.8
+   ],
+   "w": 1081,
+   "h": 1180,
+   "dpi": 300,
+   "src": "7dc0b8f1-10._Engineered_three-electrode_cells_for_improving_solid_state_batteries.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Figure 8. 2nd cycle and variations of RCT during cycling for LTFS ( a) and (b), respectively) and TiS2 (c) and (d). Insets in (a) and (c) report the impedance spectra of LTFS and TiS2 at various states of charge during oxidation and reduction. Li0.5In:β-LPS RE layer. Figures 9b–9e report the impedance of the Li0.5In:β-LPS anode during cycling (Fig. 9a). In each subﬁgure the impedance spectra are plotted with a regular time interval for a given sequence, lithiation or delithiation. The electrolyte resistance, Rel, is well identiﬁed in all spectra. Since it varies by ±17% during the 1st cycle and ±3% during the 2nd one, the spectra were centered on Rel to emphasize the variations at lower frequencies. During ﬁrst lithiation (Fig. 9b), the impedance of the anode increases and the growth of a loop is observed at low frequencies (apex at 540 mHz end of LTFS charge). This process keeps growing",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    511.4
+   ],
+   "w": 2202,
+   "h": 1878,
+   "dpi": 300,
+   "src": "7dc0b8f1-10._Engineered_three-electrode_cells_for_improving_solid_state_batteries.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Galvanostatic voltage proﬁles of LTFS WE and Li0.5In CE under 1 t cm−2 (a) for the ﬁrst 2 cycles; impedance of the Li-In alloy CE (b)–(e) for each charge and discharge sequence. Blue arrows indicate the evolution of the impedance at each sequence.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    480.1
+   ],
+   "w": 1081,
+   "h": 1748,
+   "dpi": 300,
+   "src": "7dc0b8f1-10._Engineered_three-electrode_cells_for_improving_solid_state_batteries.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Galvanostatic voltage proﬁles of LTFS WE and Li CE (a) under 45 kg cm−2 for the ﬁrst 2 cycles; impedance of the Li metal CE (b)–(e) for each charge and discharge sequence. Blue arrows indicate the evolution of the impedance at each sequence.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    60.9,
+    557.1,
+    480.1
+   ],
+   "w": 1081,
+   "h": 1748,
+   "dpi": 300,
+   "src": "7dc0b8f1-10._Engineered_three-electrode_cells_for_improving_solid_state_batteries.pdf",
+   "blank": 0.895
+  }
+ ]
+}

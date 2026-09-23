@@ -2363,3 +2363,17 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **8 장 다 봤다**, 화소 판독 Fig. 2b · 2c · 5 · 6a.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-li-in-reference-potential-window]](47호 절 · 조건 (10)) · [[assb-lampe-contact-product-degeneracy]](서른 번째 적용 · 처방 표 새 줄) · 큐 문서 §6-3-g 48 행 + 지문 ¹³.
 - 후속(서지 기준, 미열람 — 큐 49–59 인용은 52 Illig 2012 하나): Bach … Renner 2015 *Electrochim. Acta* 164, 81 (ref 25) · Bach … Renner 2016 *Chem. Mater.* 28, 2941 (ref 30) · Ender, Weber, Ivers-Tiffée 2012 *JES* 159, A128 (ref 14) · Dees, Jansen, Abraham 2007 *JPS* 174, 1001 (ref 15) · Victoria, Ramanathan 2011 *Electrochim. Acta* 56, 2606 (ref 17).
+
+## [2026-09-23] ingest | assb 48호 — Dugas et al. 2021, Engineered Three-Electrode Cells for Improving Solid State Batteries (J. Electrochem. Soc. 168, 090508)
+- raw: `raw/papers/dugas2021_engineered-three-electrode-cell-assb-li-in-reference-layer.md` (sha256 봉인 — 본문 PDF 해시 frontmatter `pdf_sha256`, SI 없음) · 그림 `raw/figures/dugas2021_engineered-three-electrode-cell-assb-li-in-reference-layer/` (10 장). 큐 49번(2차 묶음 열째 편) — 21호 ref 16.
+- ★★★★ **기하 정정**: 기준극은 링이 아니라 **WE 와 CE 사이 단면 전체를 덮는 Li₀.₅In : SE 60 : 40 복합층** — 링은 15 µm Al 집전체. 21호 "circular … around the outer perimeter" · 원장 "원형 InLi 기준극" 은 집전체를 읽었다. `[해석]` 기준극이 전류 경로 안 → 쌍극 교환 가능성(조건 (11), 크기 C/20 급 mV 이하 추정).
+- ★★★ **Q5 판정 — 스물네 번째 형태**: 영점 = 인용 622 mV(42호)를 2전극 귀속 전제로 한 번 · 3전극 축은 끝까지 "vs LiIn/In"(환산 0) · 기준극 33.3 at%(창 안) · `[인쇄]` CE 창 ±160 → ±20 mV + "20 mV ↔ ⩽2 mA h g⁻¹ … 2 electrodes … can safely be employed" = 계보 첫 "상대극 창 → 용량 오차 → 2전극 허용" 규칙 · 안정성 "hundreds of hours"(수 0) · 누설 0/48 · `[도표]` Fig. 10a Li 박 상대극 휴지 끝 −0.62 ± ≈0.01 V vs LiIn/In(우리 판독, 본문 미판독).
+- ★★★ **21호 인용 셋**: 기하 ❌ · 저주파 변화 "expected" ⚠ 약한 판(Li-In = 시간 단조 성장, 방향 의존은 Li 금속) · 음극 저주파 호 = 전하이동 ❌.
+- ★★★ **2전극 재구성 = 비식별성 시연**(WE 모형이 합을 "satisfactory" 적합, 중간 호 139 → 307 Ω cm², "cannot be decorrelated") · 호 제거 검정 문장. 검증은 양의 Im 호 부재 한 기준, 기준극 없는 셀 EIS 대조 0.
+- **채움표 48호 행 — 누적 ≈19.5 → ≈20.0 (Q5 +0.5).** Q4 0/48 마흔 번째 성질 · Q3 층 하나 · Q6 층 하나 · Q1 `θ(N)` 0/48.
+- **곱 축퇴 처방 서른한 번째 적용**: 3-b 느린 "전하이동" 두 호 실패(여섯 번째 계열) · 4단계 부분(Li CE) · 새 줄 "호 제거 검정 + 2전극 합 재구성".
+- ⚠ 어긋남 15 건(D1 1.9 ↔ ≈0.2 mS cm⁻¹ · D2 33 ↔ 23 % · D4 Fig. 6c = 8c · D7 540 ↔ 670 mHz · D8 압력 단정 교락 · D9 겹침 ↔ 다른 패널 · D12–D15 교차 편 외).
+- 낱말 지문: `calibrat` 1(토크 ↔ 압력) 외 10 열 0 · `leak` · `drift` · `assum*` 0 · `expect*` 4 · `622` 1.
+- 그림: **10 장 다 봤다**, 화소 판독 Fig. 3a · 5c · 7 · 9a · 10a.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-li-in-reference-potential-window]](48호 절 · 조건 (11) · P8 · P11) · [[assb-lampe-contact-product-degeneracy]](서른한 번째 적용 · 처방 표 새 줄) · 큐 문서 §6-3-g 49 행 + 지문 ¹⁴.
+- 후속(서지 기준, 미열람 — 큐 50–59 인용 0): Costard … Ivers-Tiffée 2017 *JES* 164, A80 (ref 15, 두 번째 지목) · Ender, Illig, Ivers-Tiffée 2017 *JES* 164, A71 (ref 6) · Kasemchainan … Bruce 2019 *Nat. Mater.* 18, 1105 (ref 8) · Marchini … Tarascon 2020 *ACS AMI* 12, 15145 (ref 18) · Kaiser … Roling 2018 *JPS* 396, 175 (ref 23).
