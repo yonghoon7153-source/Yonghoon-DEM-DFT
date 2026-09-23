@@ -1,0 +1,1112 @@
+{
+ "slug": "wang2025_miec_tis2_lps_three_phase_interface_lis_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "0923-3. NatMater_2025_Wang_MIEC_three-phase_interface_LiS_ASSB_MAIN.pdf",
+  "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Illustration of the sulfur cathode using MIEC. a, The configuration of a conventional Li–S ASSB, in which the ion-conducting electron-insulating SE is employed in both the sulfur cathode and the separator. Upon lithiation, the sulfur isolated from the three-phase boundaries and disconnected with carbon cannot gain electrons and becomes electrochemically inactive. b, The configuration of the dual-phased Li–S ASSB, in which the MIEC is used",
+   "rotated_deg": 0,
+   "bbox": [
+    34.6,
+    62.9,
+    567.0,
+    306.5
+   ],
+   "w": 2220,
+   "h": 1017,
+   "dpi": 300,
+   "src": "0923-3. NatMater_2025_Wang_MIEC_three-phase_interface_LiS_ASSB_MAIN.pdf",
+   "blank": 0.44
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | The origin of the low sulfur utilization. a, The changes of the initial discharge specific capacity and the specific energy (based on the cathode weight) as the sulfur content is increased at 0.1C and 60 °C. The areal sulfur loading is around 4 mgS cm–2. Data are presented as mean ± standard deviation (s.d.). Four cells were tested for each cathode. b, SEM and EDS mapping images of the top surface of sulfur cathodes with 30 wt% and 50 wt% sulfur. Scale bars, 20 μm. c,d, Raman spectral mapping images (20 μm × 20 μm) of the lithiated sulfur electrode (50 wt% sulfur) surface, showing the distribution of sulfur (210–230 cm–1) to carbon (D band, 1,300–1,400 cm–1) intensity ratio (c) and LPS (PS4 3–,",
+   "rotated_deg": 0,
+   "bbox": [
+    35.1,
+    57.0,
+    569.0,
+    470.8
+   ],
+   "w": 2225,
+   "h": 1725,
+   "dpi": 300,
+   "src": "0923-3. NatMater_2025_Wang_MIEC_three-phase_interface_LiS_ASSB_MAIN.pdf",
+   "blank": 0.7
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Materials characterization. a, An SEM image of MIEC20 powder. b, A TEM image and SAED pattern of a MIEC20 particle. The scale bar for the SAED pattern is 5 nm−1. c, STEM and EDS mapping images of an MIEC20 particle. Scale bars, 500 nm. d, XRD patterns of LPS and MIECs. e, Solid-state 31P MAS NMR of",
+   "rotated_deg": 0,
+   "bbox": [
+    35.0,
+    52.6,
+    567.5,
+    460.0
+   ],
+   "w": 2220,
+   "h": 1698,
+   "dpi": 300,
+   "src": "0923-3. NatMater_2025_Wang_MIEC_three-phase_interface_LiS_ASSB_MAIN.pdf",
+   "blank": 0.747
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Electrochemical evaluation of Li–S ASSBs at 60 °C. a,b, Galvanostatic discharge–charge curves of sulfur cathodes using LPS or MIEC at the first cycle (a) and corresponding differential capacity (dQ/dV) curves (b). c, The rate capability of different sulfur cathodes. The dashed lines separate the cycles with different current rates. d, The cycling performance of the S-C-MIEC20 cathode at 2C (CCCV mode, cutoff current rate of 0.1C at 2.5 V). e, The GITT and OCV curves of the cells with S-C-LPS and S-C-MIEC20 (current pulses of 0.05C for 60 min, resting time of 4 h). f, The quantified active sulfur ratio and estimated conversion",
+   "rotated_deg": 0,
+   "bbox": [
+    35.5,
+    58.9,
+    567.6,
+    460.5
+   ],
+   "w": 2218,
+   "h": 1674,
+   "dpi": 300,
+   "src": "0923-3. NatMater_2025_Wang_MIEC_three-phase_interface_LiS_ASSB_MAIN.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Post-characterization of S-C-MIEC20 cathodes. a, Ti 2p XPS spectra of S-C-MIEC20 electrodes during the initial cycle. b,c, Ti K-edge XAS spectra of S-C-MIEC20 electrodes during the first charge–discharge process (b) and corresponding phase-corrected FT-EXAFS spectra (c). d, STEM and",
+   "rotated_deg": 0,
+   "bbox": [
+    34.6,
+    55.2,
+    567.0,
+    525.2
+   ],
+   "w": 2219,
+   "h": 1960,
+   "dpi": 300,
+   "src": "0923-3. NatMater_2025_Wang_MIEC_three-phase_interface_LiS_ASSB_MAIN.pdf",
+   "blank": 0.613
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Fig. 1 | Estimation of the gravimetric and volumetric energy density of lithium–sulfur all-solid-state batteries (Li–S ASSBs) with different sulfur contents, sulfur utilization, and areal loadings. a,b, Estimated volumetric (a) and gravimetric (b) energy density of Li–S ASSBs (based on the volume/weight of sulfur cathodes) with different sulfur contents and sulfur utilization. c–f Estimated volumetric (c,e) and gravimetric (d,f) energy density of Li–S ASSBs (based on the volume/mass of the cathode, membrane, anode, and current collectors) with areal sulfur loading of 4 (c,d) or 6 (e,f) mg cm–2 at different sulfur contents and sulfur utilization. Supplementary Table 7 summarizes cell configurations, testing conditions, and performance of the selected literature-reported Li–S ASSBs1–9. The volumetric energy density of state-of-the-art Li- ion batteries is above 650 Wh L–1. 2",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.7,
+    553.4,
+    550.6
+   ],
+   "w": 2031,
+   "h": 2017,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Fig. 2 | Origin of the low sulfur utilization. a, Configuration of the cell used for electrochemical testing. b, Galvanistic charge-discharge curves of sulfur cathodes with different sulfur contents at the first cycle under 0.1 C at 60 oC. The areal sulfur loading is around 4 mgS cm– 2. c, Scanning electron microscopy (SEM) and energy-dispersive X-ray spectroscopy (EDS) mapping images of the top surface of the sulfur cathode containing 40 wt% sulfur. d, Raman spectral mapping images of the pristine sulfur cathode (50 wt% sulfur) surface showing the distribution of carbon, sulfur, 75Li2S·25P2S5 (LPS), and carbon to sulfur intensity ratio. e, Raman spectra of the pristine sulfur electrode surface at two different sites. f, The optical image of the sulfur cathode surface. The Raman spectral mapping region is marked in the white square.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    68.2,
+    553.3,
+    450.2
+   ],
+   "w": 2031,
+   "h": 1593,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.574
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Fig. 3 | Observation of inactive sulfur. a, SEM-EDS mapping images of the lithiated sulfur cathode (50 wt% sulfur). b, Raman spectral mapping images of the lithiated sulfur cathode (50 wt% sulfur) surface showing the distribution of carbon and sulfur. c, The optical image of the lithiated sulfur cathode surface. The Raman spectral mapping region is marked in the white square. d, X-ray diffraction (XRD) patterns of sulfur cathodes (50 wt% sulfur) before and after lithiation. High-intensity crystalline sulfur peaks were observed in the lithiated cathode, indicating the presence of inactive sulfur and reduced sulfur utilization.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    72.6,
+    553.3,
+    332.2
+   ],
+   "w": 2031,
+   "h": 1083,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.63
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Fig. 4 | Quantification of inactive sulfur. a, Schematic illustration of the evolution of sulfur and SE after the first discharge. b, Ultraviolet-visible (UV-vis) absorption spectra of an extracted dead sulfur-cyclohexane sample solution and standard sulfur-cyclohexane solution (3 mM) in comparison to that of two reference samples (reference sample 1: cyclohexane solution after soaking with Li7P2S8Br0.5I0.5 (LPSBI) SE, Li2S, Ketjenblack carbon (KB) and LPS SE; reference sample 2: cyclohexane solution after soaking with LPSBI SE, Li2S, KB and mixed ion-electron conductor (MIEC). c, UV-vis absorption spectra of 0.5, 1, 2, 3, and 4 mM sulfur cyclohexane solutions.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.6,
+    553.3,
+    337.8
+   ],
+   "w": 2031,
+   "h": 1131,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Fig. 5 | Morphological characterization of LPS and MIECs. a–c, SEM, and d– c, transmission electron microscopy (TEM) images and corresponding selected electron diffraction patterns of LPS (a,d), MIEC10 (b,e), and MIEC30 (c,f). g–i, Scanning transmission electron microscopy (STEM) images and corresponding EDS mapping of LPS (g), MIEC10 (h), and MIEC30 (i).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    67.4,
+    553.3,
+    419.0
+   ],
+   "w": 2031,
+   "h": 1466,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.307
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Fig. 6 | Spectroscopic characterization of LPS and MIECs. a, 31P magic angle spinning nuclear magnetic resonance (MAS NMR) spectra of LPS and MIEC glass SEs. b, c, High- resolution Ti 2p X-ray photoelectron spectroscopy (XPS) spectra of MIEC10 (b) and MIEC30 (c).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    70.8,
+    553.4,
+    219.9
+   ],
+   "w": 2031,
+   "h": 622,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 11,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Fig. 7 | Ionic and electronic conductivity measurement of LPS and MIECs. a, Current-time curves of Li|LPSC|conductor|LPSC|Li symmetric cells (LPSC denotes Li6PS5Cl) using LPS or MIEC at 25 oC. b, Current-time curves of Cu|MIEC20|Cu symmetric cells at different temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    73.9,
+    553.4,
+    249.4
+   ],
+   "w": 2031,
+   "h": 733,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 13,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Fig. 8 | Ionic conductivity of LPS and MIECs. a–d, Arrhenius plots of LPS (a), MIEC10 (b), MIEC20 (c), and MIEC30 (d) from 25 to 100 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    71.5,
+    549.0,
+    398.2
+   ],
+   "w": 2013,
+   "h": 1363,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 14,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Fig. 9 | Density of states of LPS and MIECs. a–d, Atom-projected density of states of LPS (a), MIEC10 (b), MIEC20 (c), and MIEC30 (d). The zero on the x-axis represents the Fermi energy.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    73.2,
+    553.3,
+    347.9
+   ],
+   "w": 2031,
+   "h": 1145,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 15,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Fig. 10 | Study of the Li-ion mobility in LPS and MIECs via AIMD. a, Arrhenius plots for AIMD simulated Li-ion diffusivity in LPS, MIEC10, MIEC20, and MIEC30 over the temperature range 500–900 K. b, Simulated structures of LPS and MIEC10. The circles represent pairs of Li–S (black) and Li–P (red) that have been taken to calculate the integrated crystalline orbital Hamiltonian population (ICOHP), defining the strength of the nearest neighbor covalent bond for LPS and MIEC10. Specifically, for MIECs, two cases were considered: in Case I, we assumed no Ti ion is near Li–S and Li–P pairs; in Case II, we assumed that there are Ti ions next to the Li–S and Li–P pairs.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    73.4,
+    549.1,
+    429.2
+   ],
+   "w": 2013,
+   "h": 1484,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 16,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Fig. 11 | Practical electrochemical stability window and redox activity of MIEC. a, Cycling performance of Li-In||S cells with S-C-LPS and S-C-MIEC20 cathodes between 0.5 and 2.5 V at 0.1 C. b, Galvanostatic discharge-charge curves of the cells at the 1st cycle and the 5th cycle, and c, corresponding differential capacity (dQ/dV) curves at the 1st cycle. d, Cycling performance of Li-In||C-LPS/MIEC batteries between 0.5 and 2.5 V. The inset figure shows the voltage profiles of the cell at the 1st, 10th, and 100th cycles. C-LPS and C-MIEC denotes composites composed of Super C (MTI corporation) and LPS/MIEC. They were prepared by mixing the materials at a weight ratio of 30:70 and ball-milled at 350 rpm for 6 hours in an Argon-filled glovebox. e, Cycling performance of Li-In||C-LPS/MIEC batteries between 0.8 and 2.5 V at 0.5 mA cm–2 with areal cathode loading of ~8 mg cm–2, i",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    67.2,
+    553.4,
+    435.4
+   ],
+   "w": 2031,
+   "h": 1535,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.842
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 17,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Fig. 12 | Capacity contribution from LPS and MIEC in the subsequent cycles. a, Enlarged dQ/dV curves of the Li-In||S-C-LPS/MIEC cells during the charging process at the initial cycle above 1.9 V. b, Galvanostatic discharge-charge curves of the cell with S-C-LPS cathode at the first cycle, and c, corresponding dQ/dV curves at the second and third cycles. d-f, dQ/dV curves of the cells with S-C-MIEC10 (d), S-C-MIEC20 (e) and S-C-MIEC30 (f) cathodes at the second and third cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    73.4,
+    549.1,
+    331.4
+   ],
+   "w": 2013,
+   "h": 1076,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 18,
+   "file": "fig_S13.png",
+   "caption": "Supplementary Fig. 13 | Rate capability of sulfur cathodes at 60 oC. a,b, Voltage profiles of the S-C-LPS (a) and S-C-MIEC20 (b) cathodes at different current rates. c, XPS spectra of S-C- MIEC20 and S-C-MIEC30 cathodes after the first cycle. After the first cycle, while the valence of Ti remained unchanged, peaks associated with P-Sx- P, P0, and Li2S were observed in the XPS P 2p and S 2p spectra of S-C-MIEC30, respectively. In contrast, in the S-C-MIEC20 cathode, only the doublet peaks of P-Sx-P, the oxidation products of MIEC20, emerged. Such discovery suggests two key points: First, it suggests a larger amount of MIEC30 underwent irreversible reduction compared to MIEC20 in sulfur cathodes, forming inert P0. Distinct from P-Sx-P, P0 is electrochemically inert within the designated voltage window of 0.8-2.5 V, impeding ion transport and causing capacity fading. Second, the observation",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    72.1,
+    553.3,
+    397.9
+   ],
+   "w": 2031,
+   "h": 1358,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 19,
+   "file": "fig_S14.png",
+   "caption": "Supplementary Fig. 14 | Advantages of using MIEC over adding more carbon. a, Voltage profiles of the S-C-MIEC20 cathode at different current rates. b,c, Initial galvanostatic discharge- charge curves (b) and rate performance (c) of a Li–S ASSB with the S-C-LPS-H cathode (S/KB/LPS=50/19.5/30.5, w/w/w) at 0.1 C. The cell was tested under 60 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    70.3,
+    553.3,
+    236.7
+   ],
+   "w": 2031,
+   "h": 695,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 20,
+   "file": "fig_S15.png",
+   "caption": "Supplementary Fig. 15 | Advantages of the MIEC strategy over the using TiS2 as an additive. a–c, Schematic illustration of redox reaction behavior in sulfur cathodes using conventional solid electrolyte (a), MIEC (b), or TiS2 additive with conventional solid electrolyte (c). d, Galvanostatic discharge-charge curves of sulfur cathodes (50 wt% sulfur) using LPS, MIEC20, or LPS with TiS2 additive at the first cycle, and e, corresponding differential capacity (dQ/dV) curves. f, Rate capability of different sulfur cathodes with an areal sulfur content of ~50 wt%. g, X-ray diffraction patterns of sulfur cathodes using MIEC20 or LPS with TiS2 additive. h, Galvanostatic discharge- charge curves of sulfur cathodes (40 wt% sulfur) using MIEC20 or LPS with TiS2 additive at the first cycle. i, Rate capability of different sulfur cathodes with an areal sulfur content of ~40 wt%. All cells were tested",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    71.9,
+    549.1,
+    463.0
+   ],
+   "w": 2013,
+   "h": 1631,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.819
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 21,
+   "file": "fig_S16.png",
+   "caption": "Supplementary Fig. 16 | Electrochemical performance of Li–S ASSBs. a, Cycling performance of the S-C-LPS, S-C-MIEC10, and S-C-MIEC30 cathodes at 2 C (CCCV mode, cutoff current rate of 0.1 C at 2.5 V). b, Galvanostatic discharge-charge curves of the cell with the S-C-MIEC20 cathode at the 100th, 500th, 750th, and 1000th cycle corresponding to Fig. 4d in the manuscript. c, Cycling performance of the S-C-MIEC20 cathode with an areal sulfur loading of 5.505 mg cm–2 at 0.5-C discharge rate (4.611 mA cm–2) and 0.1-C charge rate (0.923 mA cm–2) under a fixed discharge/charge areal capacity of ~ 5.303 mAh cm–2 (equivalent to a discharge capacity of 963.5 mAh g–1) at 60 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    69.1,
+    553.4,
+    384.6
+   ],
+   "w": 2031,
+   "h": 1315,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 22,
+   "file": "fig_S17.png",
+   "caption": "Supplementary Fig. 17 | Electrochemical evaluation of Li–S ASSBs at room temperature. a, Galvanostatic discharge-charge curves of sulfur cathodes at the first cycle, and b, corresponding differential capacity (dQ/dV) curves. c, Rate capability of different sulfur cathodes. d, Galvanostatic discharge-charge curves of the S-C-MIEC20 cathode at different current rates. e, Cycling performance of the S-C-MIEC20 cathode at 0.3 C (CCCV mode, cutoff current rate of 0.1 C at 2.5 V), and corresponding voltage profiles at the 1st, 50th, 200th, and 400th cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.7,
+    549.1,
+    321.8
+   ],
+   "w": 2013,
+   "h": 1063,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 24,
+   "file": "fig_S18.png",
+   "caption": "Supplementary Fig. 18 | Electrochemical evaluation of Li–S ASSBs with Li anode under low stacking pressure of 8 MPa. a, Cycling performance of Li–S ASSBs with S-C-LPS and S-C- MIEC20 cathodes. b, Galvanostatic discharge-charge curves of Li–S ASSBs with the S-C- MIEC20 cathode at the 10th, 50th, and 100th cycles. c, Galvanostatic discharge-charge curves of Li–S ASSBs with the S-C-LPS cathode at the 10th and 30th cycles. The failure of the cell is caused by the short circuit. The cells were tested under 60 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    71.2,
+    549.0,
+    202.5
+   ],
+   "w": 2013,
+   "h": 548,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 25,
+   "file": "fig_S19.png",
+   "caption": "Supplementary Fig. 19 | Characterization of sulfur cathodes with LPS and MIEC20. a, Schematic illustration of galvanostatic intermittent titration technique (GITT) curves at the selected steps during the discharging process. b,c, Overpotential profiles (b) and IR drop profiles (c) of the cells with S-C-LPS and S-C-MIEC20 cathodes from the GITT curves in Fig. 4e. d, Changes of initial discharge specific capacity and specific energy (based on cathode weight) of S-C-LPS and S-C-MIEC20 cathodes as the ball milling duration prolongs. The areal sulfur loading is around 4 mgS cm–2, and four cells with each cathode were tested under 0.1 C and 60 oC for the analysis. Data are presented as mean values +/– SD.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.2,
+    553.4,
+    371.2
+   ],
+   "w": 2031,
+   "h": 1272,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.84
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 26,
+   "file": "fig_S20.png",
+   "caption": "Supplementary Fig. 20 | Electrochemical evaluation of ASSBs with other conversion cathodes. a–c, Galavanstic charge-discharge curves of PSD (a), FeS2 (b), and FeF3 cathodes (c) using MIEC20 or LPS at the first cycle under different cathode loadings. d–f, Rate performance of PSD (d), FeS2 (e), and FeF3 cathodes (f). All cells were tested at 60 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    74.2,
+    549.1,
+    330.0
+   ],
+   "w": 2013,
+   "h": 1067,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.843
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 27,
+   "file": "fig_S21.png",
+   "caption": "Supplementary Fig. 21 | Electrochemical performance of sulfur cathodes using MIEC prepared by MoS2 (MIEC-20MoS2). a, XRD patterns of the 80%75Li2S·25P2S5–20%MoS2 (molar ratios, MIEC-20MoS2) SE. b, Galvanostatic discharge-charge curves of the cell with the sulfur cathode using the MIEC-20MoS2 SE (S/KB/MIEC-20MoS2=50/10/40, w/w/w) at 0.1 C. c, Rate performance of the sulfur cathode using MIEC-20MoS2 SE at different current rates. Areal sulfur loading of the cathode is ~2 mg cm–2, and the cells were tested at 60 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.7,
+    553.4,
+    207.0
+   ],
+   "w": 2031,
+   "h": 586,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 28,
+   "file": "fig_S22.png",
+   "caption": "Supplementary Fig. 22 | Redox reaction products of MIEC20. a,b, Voltage profiles of Li- In||MIEC20 cells for characterization at the first cycle cycled between 0.8 and 4 V (a) and discharged to 0 V (b). c, XRD profiles of MIEC20 at different potentials. d, XPS C 1s, P 2p, S 2p, and Ti 2p spectra of MIEC20 different potentials.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    71.5,
+    549.1,
+    381.6
+   ],
+   "w": 2013,
+   "h": 1294,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 29,
+   "file": "fig_S23.png",
+   "caption": "Supplementary Fig. 23 | XRD patterns of MIEC20 and S-C-MIEC20 before and after cycling. a, XRD patterns of MIEC20 at its pristine state and after 50 cycles in Li-In||MIEC20 cells. b, XRD patterns of S-C-MIEC20 at its pristine state and after 5 cycles in Li-In||S-C-MIEC20 cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    70.6,
+    552.0,
+    234.0
+   ],
+   "w": 2026,
+   "h": 681,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 30,
+   "file": "fig_S24.png",
+   "caption": "Supplementary Fig. 24 | Redox reaction products of LPS-TiS2 composites. a,b, Voltage profiles of Li-In||LPS-TiS2 cells for characterization at the first cycle cycled between 0.8 and 4 V (a) and discharged to 0 V (b). c, XRD profiles of LPS-TiS2 composites at different potentials. d, XPS C 1s, P 2p, S 2p, and Ti 2p spectra of LPS-TiS2 composites different potentials.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    67.1,
+    549.1,
+    368.0
+   ],
+   "w": 2013,
+   "h": 1255,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 31,
+   "file": "fig_S25.png",
+   "caption": "Supplementary Fig. 25 | Characterization of MIEC20 using X-ray absorption spectroscopy (XAS). a, Ti K-edge XAS spectra of the MIEC20, and b, corresponding phase-corrected Fourier- transformed curves of the extended X-ray absorption fine structure (FT-EXAFS) spectra. c, Fitted FT-EXAFS curves of MIEC20 and S-C-MIEC20 cathodes during the initial cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    72.1,
+    553.3,
+    381.6
+   ],
+   "w": 2031,
+   "h": 1290,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 32,
+   "file": "fig_S26.png",
+   "caption": "Supplementary Fig. 26 | Evolution of ionic and electronic conductivity of MIEC20 during charge-discharge. a, Voltage profiles of the Li-In||MIEC20 cell for characterization at the first cycle cycled between 0.8 and 2.5 V at 60 oC under 0.1 A g–1. The areal loading of MIEC20 is ~8 mg cm–2. b,c, The EIS impedance spectra of the cell at different discharge (b) and charge (c) states. d,e, The DRT analysis results of the impedance spectra at different discharge (d) and charge (e) states.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    68.5,
+    549.1,
+    333.9
+   ],
+   "w": 2013,
+   "h": 1107,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 33,
+   "file": "fig_S27.png",
+   "caption": "Supplementary Fig. 27 | Characterization of carbon-sulfur composites and sulfur cathodes. a, Thermal gravimetric analysis (TGA) of carbon-sulfur composite powders. b,c, XRD patterns of carbon-sulfur composite powders (b) and the S-C-MIEC20 cathode (c).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    68.9,
+    553.4,
+    205.3
+   ],
+   "w": 2031,
+   "h": 569,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 34,
+   "file": "fig_S28.png",
+   "caption": "Supplementary Fig. 28 | Morphology and element distribution analysis of cathode powders at the micrometer scale vis SEM-EDS. a-d, SEM, and EDS mapping images of S-C-LPS (a), S-C- MIEC10 (b), S-C-MIEC20 (c), and S-C-MIEC30 (d) cathode powders.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    68.5,
+    553.2,
+    466.6
+   ],
+   "w": 2031,
+   "h": 1660,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.287
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 35,
+   "file": "fig_S29.png",
+   "caption": "Supplementary Fig. 29 | Morphology and elemental distribution analysis of pristine electrodes at the micrometer scale via SEM-EDS. a, SEM-EDS maps of the top surface of pristine S-C- MIEC20 cathode. b, SEM image and EDS line scan results of the pristine S-C-MIEC20 cathode surface. The regions corresponding to the sulfur with limited interfacial contact against both carbon and SE (red; regions with high sulfur content but low phosphorous, carbon, and titanium content) and against carbon only (blue; regions with high sulfur content, moderate phosphorous, and titanium content, and low to zero carbon content) are noticed.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    73.8,
+    553.4,
+    445.0
+   ],
+   "w": 2031,
+   "h": 1548,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.646
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 36,
+   "file": "fig_S30.png",
+   "caption": "Supplementary Fig. 30 | Distribution analysis of sulfur, SE, and carbon on the pristine S-C- MIEC20 catohde surface using Raman spectral imaging. a, Raman spectral mapping of the pristine S-C-LPS electrode surface showing the distribution of carbon, sulfur, MIEC20, and sulfur/carbon ratio (based on intensity). b, The corresponding optical image of the pristine S-C- MIEC20 cathode surface. The Raman mapping region is marked in the white square. c, Raman spectra of the pristine S-C-MIEC20 cathode at two different sites on the surface.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    69.9,
+    553.3,
+    302.1
+   ],
+   "w": 2031,
+   "h": 968,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.545
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 37,
+   "file": "fig_S31.png",
+   "caption": "Supplementary Fig. 31 | Morphology and element distribution analysis of the lithiated S-C- MIEC20 electrode at the micrometer scale via SEM-EDS and Raman spectral imaging. a,b, SEM, and corresponding EDS mapping images of the top surface (a) and cross sections (b) of the S-C-MIEC20 cathode after the initial discharge at 0.1 C and 60 oC. c, Raman spectral imaging of the lithiated S-C-MIEC20 cathode surface. d, Raman spectra of the pristine S-C-MIEC20 cathode at a selected site on the surface. e, The corresponding optical image of the lithiated S-C-MIEC20 cathode surface. The Raman mapping region is marked in the white square.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    67.1,
+    553.4,
+    484.4
+   ],
+   "w": 2031,
+   "h": 1740,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.466
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 38,
+   "file": "fig_S32.png",
+   "caption": "Supplementary Fig. 32 | XPS analysis of lithiated S-C-LPS and S-C-MIEC20 electrodes. a, XPS survey spectra of lithiated S-C-LPS and S-C-MIEC20 cathodes. b, Distribution of Li/S ratios in the active material species at different sites on S-C-LPS and S-C-MIEC20 electrode surfaces. c, High-resolution S 2p spectra of two sites on S-C-LPS electrode surfaces.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    73.8,
+    553.4,
+    379.3
+   ],
+   "w": 2031,
+   "h": 1274,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 40,
+   "file": "fig_S33.png",
+   "caption": "Supplementary Fig. 33 | Elemental distribution analysis of cathode powders at the sub- micrometer scale via STEM-EDS. a–c, STEM, and corresponding EDS maps of pristine S-C-LPS (a), S-C-MIEC10 (b), and S-C-MIEC30 (c) cathode powders.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.1,
+    553.3,
+    305.5
+   ],
+   "w": 2031,
+   "h": 998,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.297
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": 41,
+   "file": "fig_S34.png",
+   "caption": "Supplementary Fig. 34 | Element distribution analysis of S-C-MIEC20 cathode powders at the sub-micrometer scale via STEM-EDS. a, STEM images and corresponding EDS mapping images of the pristine S-C-MIEC20 cathode powder. b, Schematic illustration of the distribution of different elements (i.e., carbon, sulfur, phosphorous, and titanium).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.7,
+    553.3,
+    272.9
+   ],
+   "w": 2031,
+   "h": 859,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.443
+  },
+  {
+   "key": "fS35",
+   "kind": "figure",
+   "label": "S35",
+   "page": 42,
+   "file": "fig_S35.png",
+   "caption": "Supplementary Fig. 35 | Element distribution analysis of the lithiated S-C-MIEC20 electrode at the sub-micrometer scale via STEM-EDS. a–e, STEM (a) and corresponding EDS mapping images of carbon (b), phosphorus (c), sulfur (d), and titanium (e) in the lithiated S-C-MIEC20 electrode after the first discharge at 0.1 C and 60 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    68.2,
+    553.4,
+    304.0
+   ],
+   "w": 2031,
+   "h": 983,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.483
+  },
+  {
+   "key": "fS36",
+   "kind": "figure",
+   "label": "S36",
+   "page": 43,
+   "file": "fig_S36.png",
+   "caption": "Supplementary Fig. 36 | Element distribution analysis of the lithiated S-C-MIEC20 electrode at the nanometer scale via atomic probe tomography (APT). a,b, Lateral elemental distribution maps of carbon, sulfur, phosphorus, and titanium at layer 1 (a) and layer 2 (b) in the lithiated S-C- MIEC20 cathode after first discharge at 0.1 C. c, Overlayed 3D reconstructed APT maps of carbon (brown) and sulfur (green). The lateral elemental distribution maps shown in Fig. 5f correspond to layer 3. d, Schematic illustration of the distribution of MIEC20, carbon, sulfur, Ti-rich P-lean mixed conducting domains at the three-phase boundary.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    72.2,
+    553.3,
+    397.7
+   ],
+   "w": 2031,
+   "h": 1357,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.54
+  },
+  {
+   "key": "fS37",
+   "kind": "figure",
+   "label": "S37",
+   "page": 44,
+   "file": "fig_S37.png",
+   "caption": "Supplementary Fig. 37 | Electronic and ionic conductivity assessment of cathode composites. a, Current-time curves of SS|cathode composite|SS cells using S-C-LPS and S-C-MIEC20 at 25 oC. b, Current-time curves of Li|LPSC|cathode composites|LPSC|Li cells using S-C-LPS and S-C- MIEC20 at 25 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    67.9,
+    549.0,
+    239.1
+   ],
+   "w": 2013,
+   "h": 714,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "fS38",
+   "kind": "figure",
+   "label": "S38",
+   "page": 45,
+   "file": "fig_S38.png",
+   "caption": "Supplementary Fig. 38 | Elechemical impedance spectroscopy (EIS) and the distribution of relaxation times (DRT) analysis of the S-C-MIEC20 cathodes at 60 oC. a, The discharge- charge capacity curve of the cell with the S-C-MIEC20 cathode at the 1st cycle. b, EIS spectra of the cell with the S-C-MIEC20 cathode at different discharge/charge states, and c,d, corresponding the distribution of relaxation times (DRT) analysis at different discharge (c) and charge states (d). e, EIS spectra of the cell with the S-C-MIEC20 cathode at different cycles under the charge state, and f, corresponding DRT analysis results. g, The discharge-charge capacity curve of the cell with the S-C-LPS cathode at the initial cycle. h, EIS spectra of the cell with the S-C-MIEC20 cathode",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    71.9,
+    549.1,
+    577.2
+   ],
+   "w": 2013,
+   "h": 2106,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "fS39",
+   "kind": "figure",
+   "label": "S39",
+   "page": 47,
+   "file": "fig_S39.png",
+   "caption": "Supplementary Fig. 39 | EIS and DRT analysis of the sulfur cathodes at room temperature. a, The EIS spectra of the cell with the S-C-MIEC20 cathode at different discharge/charge states, and b,c, corresponding DRT analysis at different discharge (b) and charge states (c). d, The EIS spectra of the cell with the S-C-LPS cathode at different discharge/charge states, and e,f, corresponding DRT analysis at different discharge (e) and charge states (f). The areal sulfur loading of the cathodes is ~2.5 mgs cm–2, and the current rate is 0.1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    73.4,
+    549.1,
+    330.8
+   ],
+   "w": 2013,
+   "h": 1074,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 48,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1 | Summary of peak deconvolution of the 31P NMR spectra of LPS and MIECs. Solid electrolytes Peak (ppm) FWHM (ppm) Area (%) PS43– 83.09 8.83 88.91 P2S74– - - - LPS P2S64– 104.77 11.79 11.09 PS43– 82.80 9.85 84.14 P2S74– 93.56 7.47 5.05 MIEC10 P2S64– 105.23 10.89 10.81 PS43– 82.93 10.42 85.73 P2S74– 93.64 6.99 5.72 MIEC20 P2S64– 102.84 13.23 8.55 PS43– 82.60 12.99 100.00 P2S74– - - - MIEC30 P2S64– - - -",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    90.7,
+    552.3,
+    425.6
+   ],
+   "w": 2023,
+   "h": 1397,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 49,
+   "file": "tab_S2.png",
+   "caption": "Supplementary Table 2 | Summary of ionic conductivity and activation energy of LPS and MIECs. Ionic conductivity (S cm–1) Activation energy (eV) 25 oC 40 oC 60 oC 80 oC 100 oC LPS 2.6×10–4 4.9×10–4 1.12×10–3 1.99×10–3 4.02×10–3 0.347 MIEC10 3.0×10–4 5.2×10–4 1.12×10–3 1.83×10–3 2.98×10–3 0.295 MIEC20 3.1×10–4 5.4×10–4 1.05×10–3 1.9×10–3 3.56×10–3 0.309 MIEC30 2.2×10–4 4.7×10–4 1.06×10–3 1.93×10–3 3.23×10–3 0.341",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.8,
+    552.1,
+    250.3
+   ],
+   "w": 2022,
+   "h": 757,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 50,
+   "file": "tab_S3.png",
+   "caption": "Supplementary Table 3 | Summary of electronic conductivity of LPS and MIECs. Electronic conductivity (S cm–1) 25 oC 40 oC 60 oC 80 oC 100 oC LPS 5.67×10–8 1.98×10–7 5.12×10–7 1.23×10–6 2.77×10–6 MIEC10 2.45×10–6 2.55×10–6 3.36×10–6 1.68×10–5 3.51×10–5 MIEC20 2.95×10–4 3.76×10–4 4.56×10–4 5.96×10–4 7.61×10–4 MIEC30 6.52×10–3 8.72×10–3 1.26×10–2 1.48×10–2 1.77×10–2",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.8,
+    536.1,
+    225.6
+   ],
+   "w": 1955,
+   "h": 654,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 51,
+   "file": "tab_S4.png",
+   "caption": "Supplementary Table 4 | ICOHPs per bond for LPS and MIECs for nearest neighbors of S– P, Ti–S, Ti–P, and Ti–Li. ICOHP (eV/bond) Case I Case II SE S–P Ti–S Ti–P Ti–Li Li–P Li–S Li–P Li–S LPS 7.35 0.39 1.15 MIEC10 7.71 4.18 2.56 0.16 0.2 1.25 0.05 1 MIEC20 7.58 4.96 1.95 0.12 0.93 0.95 0.24 0.93 MIEC30 7.04 5.15 2.65 0.14 0.69 1.02 0.22 1.11",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.3,
+    545.1,
+    259.4
+   ],
+   "w": 1993,
+   "h": 797,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 52,
+   "file": "tab_S5.png",
+   "caption": "Supplementary Table 5 | Summary of electrochemically estimated respective capacity contribution from sulfur and SE lithiation reactions in different cathodes. Specific capacity U (V vs. Li- Cathode Conductor (𝑚𝐴ℎ 𝑔𝐶𝑜𝑛𝑑𝑢𝑐𝑡𝑜𝑟 Cathode (𝑚𝐴ℎ 𝑔𝑆 Sulfur (𝑚𝐴ℎ 𝑔𝑆 Condutor (𝑚𝐴ℎ 𝑔𝑆 In/Li+) −1 ) −1) −1) −1) S-C-LPS 838.6 823.1 15.5 19.4 S-C-MIEC10 946.8 920.0 26.8 33.5 0.88 S-C-MIEC20 1281.6 1228.7 52.9 66.1 S-C-MIEC30 1343.2 1243.7 99.5 124.4 S-C-LPS 838.6 803.3 35.3 44.1 S-C-MIEC10 946.8 892.6 54.2 67.8 0.98 S-C-MIEC20 1281.6 1196.6 85.0 106.3 S-C-MIEC30 1343.2 1205.1 138.1 172.6 S-C-LPS 838.6 778.4 60.2 75.3 S-C-MIEC10 946.8 864.1 82.7 103.4 1.08 S-C-MIEC20 1281.6 1167.1 114.5 143.1 S-C-MIEC30 1343.2 1178.9 164.3 205.4 S-C-LPS 838.6 821.9 16.7 20.9 S-C-MIEC10 946.8 886.8 60.0 75.0 Fixed capacity* S-C-MIEC20 1281.6 1174.4 107.2 134.0 S-C-MIEC30 1343.2 1170.6 172.6 215.8 *The values of the capacity",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.8,
+    554.4,
+    565.0
+   ],
+   "w": 2031,
+   "h": 2069,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 53,
+   "file": "tab_S6.png",
+   "caption": "Supplementary Table 6 | Summary of estimated capacity contribution from sulfur and LPS/MIEC in sulfur cathode in subsequent cycles according to differential capacity curves. Specific capacity First cycle Second cycle Third cycle SE (mAh gS Cathode Process U (V) SE (mAh gSE SE (mAh gS SE (mAh gSE SE (mAh gS SE (mAh gSE –1 ) –1 ) –1 ) –1) –1) –1) Charge 2.08 123.2 154.0 94.0 117.5 93.3 116.7 1.54 117.3 146.7 108.3 135.4 1.98 37.4 46.7 37.2 46.5 Total 154.7 193.4 145.5 181.9 S-C-LPS Discharge Charge 2.08 118.72 148.4 146.3 146.3 110.1 137.6 1.54 161.7 202.2 134.6 168.3 1.98 53.7 67.1 59.5 74.3 Total 215.4 269.3 194.1 242.6 S-C-MIEC10 Discharge Charge 2.08 53.6 67.0 92.6 115.8 74.6 93.3 1.54 112.6 140.7 110.2 137.8 1.98 76.5 95.6 81.1 101.4 Total 189.1 236.3 191.3 239.1 S-C-MIEC20 Discharge Charge 2.08 34.2 42.7 36.7 45.9 40.7 50.9 1.54 96.1 120.2 94.4 118.0 1.98 101.0 126.2 91.9 114.9 Total",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    72.9,
+    732.3,
+    431.5
+   ],
+   "w": 2773,
+   "h": 1495,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 54,
+   "file": "tab_S7.png",
+   "caption": "Supplementary Table 7 | Summary of estimated capacity contribution from sulfur and LPS/MIEC in sulfur cathode in subsequent cycles according to evaluation results of Li-In||C- LPS/MIEC cells. Specific capacity Second cycle Third cycle SE (mAh gS Cathode SE (mAh gSE SE (mAh gS SE (mAh gSE –1 ) S-C-LPS 330 264 347.1 277.7 S-C-MIEC10 315 252 309.3 247.4 S-C-MIEC20 283.4 226.7 272 217.6 S-C-MIEC30 410.8 328.6 398.9 319.1 –1 ) –1) –1)",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    72.9,
+    552.3,
+    286.6
+   ],
+   "w": 2023,
+   "h": 891,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 55,
+   "file": "tab_S8.png",
+   "caption": "Supplementary Table 8 | Comparison of electrochemical performance of Li–S ASSBs using sulfide-based solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    28.3,
+    32.8,
+    763.8,
+    452.5
+   ],
+   "w": 2994,
+   "h": 1709,
+   "dpi": 293,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 56,
+   "file": "tab_S9.png",
+   "caption": "Supplementary Table 9 | Estimation of conversion degree from active sulfur to Li2S.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    32.8,
+    754.3,
+    540.2
+   ],
+   "w": 2995,
+   "h": 2101,
+   "dpi": 298,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 58,
+   "file": "tab_S10.png",
+   "caption": "Supplementary Table 10 | EXAFS fitting parameters",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.8,
+    441.9,
+    276.0
+   ],
+   "w": 1563,
+   "h": 865,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 59,
+   "file": "tab_S11.png",
+   "caption": "Supplementary Table 11 | Electronic and ionic conductivities of cathode composites. T ( oC) S-C-LPS S-C-MIEC10 S-C-MIEC20 S-C-MIEC30 25 40.8 49.3 54.1 97.9 𝜎𝑒− (mS cm–1) 60 42.4 57.6 58.1 99.1 25 0.0026 0.0028 0.0042 0.0048 𝜎𝐿𝑖+ (mS cm–1) 60 0.0217 0.0224 0.0243 0.0271",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    68.8,
+    536.6,
+    219.1
+   ],
+   "w": 1957,
+   "h": 627,
+   "dpi": 300,
+   "src": "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf",
+   "blank": 0.917
+  }
+ ]
+}

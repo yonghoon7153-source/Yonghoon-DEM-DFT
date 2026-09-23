@@ -1913,6 +1913,14 @@
    "DFT 먹인 논문/52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf"
   ]
  },
+ "wang2025_miec_tis2_lps_three_phase_interface_lis_assb": {
+  "figures": 55,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "0923-3. NatMater_2025_Wang_MIEC_three-phase_interface_LiS_ASSB_MAIN.pdf",
+   "0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf"
+  ]
+ },
  "wang2025_pretrained_deep_potential_sulfide_sse": {
   "figures": 19,
   "generated": "2026-09-09",
