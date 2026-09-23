@@ -157,7 +157,7 @@
    "kind": "gate",
    "claim_ref": "value:MD_Ea_eV/lpsocl_box331_cell_conditioned",
    "gate": "C6_framework_rigid_per_temperature",
-   "state": "active",
+   "state": "superseded",
    "binding": "diagnostic_unbound",
    "result": "pass",
    "supersedes_assessment_id": "A-2026-09-11-lpsocl-box331-C6-framework",
@@ -183,7 +183,9 @@
     "D-2026-09-08-lpsocl-box331-closure-conditions"
    ],
    "created": "2026-09-11",
-   "source": "db/properties/lpsocl_box331_c6_census_2026_09_11.json"
+   "source": "db/properties/lpsocl_box331_c6_census_2026_09_11.json",
+   "superseded_by": "A-2026-09-23-lpsocl-box331-C6-census-seedext",
+   "superseded_why": "2026-09-23 시드 확장(R5)으로 표본이 9런 → 15런이 됐다. 판정 자체는 그대로 참(9런 이벤트 0) — 새 레코드가 15런 전건으로 덮는다."
   },
   {
    "assessment_id": "A-2026-09-11-b2o3-uma-force-contrast",
@@ -245,6 +247,43 @@
    ],
    "created": "2026-09-11",
    "source": "db/properties/b2o3_uma_vs_dft_force_result_2026_09_11.json"
+  },
+  {
+   "assessment_id": "A-2026-09-23-lpsocl-box331-C6-census-seedext",
+   "kind": "gate",
+   "claim_ref": "value:MD_Ea_eV/lpsocl_box331_cell_conditioned",
+   "gate": "C6_framework_rigid_per_temperature",
+   "state": "active",
+   "binding": "diagnostic_unbound",
+   "result": "pass",
+   "reason": "site_escape_census_zero_events_15_of_15",
+   "why": "09-11 census 9런(s2·s3·s4, 이벤트 0) + 2026-09-23 개정문 R5 로 들어온 s5·s6 6런(같은 도구·같은 카드 문턱, 이벤트 0) = **15런 전건 framework_rigid** → 600·800·1000 K 모두 통과. 09-11 레코드를 대체한다(판정 방향은 같다). β 경보 3칸 보존 규칙은 그대로.",
+   "content": {
+    "events": {
+     "600": 0,
+     "800": 0,
+     "1000": 0
+    },
+    "runs": "s2–s6 × 600/800/1000 (15런)",
+    "records": [
+     "db/properties/lpsocl_box331_c6_census_2026_09_11.json",
+     "db/properties/box331_seedext_c2b_c6_2026_09_23.json"
+    ],
+    "beta_alarm_cells_preserved": [
+     "s2/800",
+     "s4/800",
+     "s4/1000"
+    ]
+   },
+   "measured_on": "kgy 2026-09-11 (s2–s4) + 2026-09-23 (s5·s6) · framework_site_census.py · traj.xyz 400 ps × 15",
+   "method_id": "framework-site-census-v1",
+   "decision_ids": [
+    "D-2026-09-15-lpsocl-box331-seed-extension-r5",
+    "D-2026-09-11-lpsocl-box331-closure-amendment"
+   ],
+   "created": "2026-09-23",
+   "source": "db/properties/box331_seedext_c2b_c6_2026_09_23.json",
+   "supersedes_assessment_id": "A-2026-09-11-lpsocl-box331-C6-census"
   }
  ]
 }

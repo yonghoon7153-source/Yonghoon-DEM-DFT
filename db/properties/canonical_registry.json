@@ -1295,13 +1295,13 @@
   {
    "system": "lpsocl_box331_cell_conditioned",
    "metric": "MD_Ea_eV",
-   "value": 0.18042710692807962,
-   "uncertainty": 0.0018261821868722078,
+   "value": 0.18087682837057065,
+   "uncertainty": 0.0019569891044558113,
    "unit": "eV",
-   "source_path": "db/properties/lpsocl_box331_c3_result_2026_09_11.json",
-   "source_key": "/Ea3/point_eV",
-   "n_seed": "2·3·3 (600 K 는 s4 no_value 로 2시드 — 09-01 R1)",
-   "method_id": "uma-s-1p1-omat__lpsocl_relaxV0_3x3x1_558atoms__langevin-nvt-2fs-f0.02__prod400ps__mto-msd2-50ps-free-intercept__3pt-unweighted-lnD__seed-resample-2916",
+   "source_path": "db/properties/lpsocl_box331_c3_result_5seed_2026_09_23.json",
+   "source_key": "/도구_출력_원문/Ea3/point_eV",
+   "n_seed": "2·5·5 (600 K 는 s4·s5·s6 no_value 로 2시드 — 09-01 R1 · 개정문 R5 2026-09-23)",
+   "method_id": "uma-s-1p1-omat__lpsocl_relaxV0_3x3x1_558atoms__langevin-nvt-2fs-f0.02__prod400ps__mto-msd2-50ps-free-intercept__3pt-unweighted-lnD__seed-resample-mc20000",
    "comparison_group": "md-ea-lpsocl-box331-400ps-gen2",
    "protocol_generation": "gen2_400ps_4window",
    "status": "canonical",
@@ -1314,17 +1314,21 @@
     "exact_single_arrhenius_claim__segments_differ_within_tolerance",
     "cell_level_claims"
    ],
-   "allowed_sentence": "Ea(3×3×1 cell-conditioned) = 0.180 ± 0.002 eV; the three temperatures are compatible with one Arrhenius regime within the pre-registered ±0.050 eV equivalence margin (segment difference −0.024 eV, CI95 [−0.039, −0.008]).",
-   "uncertainty_kind": "seed-resampling CI95 half-width — 온도별 시드 복원추출 전수(2·3·3 → 2916), 800 K 평균 공유. n=2–3 이라 꼬리가 거칠다. 장시간 극한 오차가 아니다.",
+   "allowed_sentence": "Ea(3×3×1 cell-conditioned) = 0.181 ± 0.002 eV; the three temperatures are compatible with one Arrhenius regime within the pre-registered ±0.050 eV equivalence margin (segment difference −0.029 eV, CI95 [−0.039, −0.017]).",
+   "uncertainty_kind": "seed-resampling CI95 half-width — 온도별 자격 시드 복원추출(2·5·5 → 전수 39,062,500 은 상한 초과라 고정 시드 MC 20000), 800 K 평균 공유. 600 K 가 n=2 라 꼬리가 거칠다. 장시간 극한 오차가 아니다.",
    "required_assessment_refs": [
-    "A-2026-09-11-lpsocl-box331-C6-census"
+    "A-2026-09-11-lpsocl-box331-C6-census",
+    "A-2026-09-23-lpsocl-box331-C6-census-seedext"
    ],
    "blocking_gate": "C6_framework_rigid_per_temperature",
    "gate_records": [
     "db/properties/lpsocl_box331_c2_mto_2026_09_11.json",
     "db/properties/lpsocl_box331_c2b_hops_2026_09_11.json",
     "db/properties/lpsocl_box331_c3_result_2026_09_11.json",
-    "db/properties/lpsocl_box331_c6_census_2026_09_11.json"
+    "db/properties/lpsocl_box331_c6_census_2026_09_11.json",
+    "db/properties/lpsocl_box331_c2_mto_5seed_2026_09_23.json",
+    "db/properties/box331_seedext_c2b_c6_2026_09_23.json",
+    "db/properties/lpsocl_box331_c3_result_5seed_2026_09_23.json"
    ],
    "closure": "db/properties/lpsocl_box331_closed_2026_09_11.json",
    "finite_duration": {
@@ -1332,8 +1336,8 @@
     "label": "gen2 · 400 ps · 4창 plateau",
     "wording": "400 ps 독립 초기화 2·3·3 개의 finite-duration 추정치. 제시한 구간은 시드 간 재표본이며 단일궤적 block CI 도 장시간 극한도 아니다."
    },
-   "note": "⚠ 관측 후 개정(post-hoc) 뒤의 마감이다 — 개정안 §4 에 관측 의존 항목 표시. 62원자 정본 0.287 과 셀을 넘어 나란히 놓지 않는다 (t13: 셀이 D 를 1.79배 움직인다). STO Ea 열람 가능성은 C3 결과 파일 ③ 에 적혀 있다.",
-   "updated": "2026-09-11"
+   "note": "⚠ 관측 후 개정(post-hoc) 뒤의 마감이다 — 개정안 §4 에 관측 의존 항목 표시. 62원자 정본 0.287 과 셀을 넘어 나란히 놓지 않는다 (t13: 셀이 D 를 1.79배 움직인다). STO Ea 열람 가능성은 C3 결과 파일 ③ 에 적혀 있다. ⊕ 2026-09-23 개정문 R5 규칙 A 적용: 3시드 0.1804 [0.1786, 0.1822] → 5시드 0.1809 [0.1790, 0.1829] (새 시드 C1·C2·C2b·C6 전건 · C3·C4·C5 충족). 옛 값·옛 게이트 기록은 gate_records 에 남긴다.",
+   "updated": "2026-09-23"
   },
   {
    "system": "modelc_box331_cell_conditioned",

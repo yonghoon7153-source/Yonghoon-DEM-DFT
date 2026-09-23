@@ -1,0 +1,93 @@
+{
+ "schema": "gate_record/v1",
+ "date": "2026-09-23",
+ "citable": false,
+ "제목": "box331 시드 확장 새 시드(s5·s6) — C2b 독립 홉 · C6 골격 census (modelc + lpsocl · 12런)",
+ "측정": "kgy 2026-09-23 11:10–11:13 · tmux seedext_gates · /home/kgy/apps/miniforge3/envs/uma/bin/python · aimd_jump_stats.py --hop_smooth_ps 2.0 --hop_min_dist 2.5 · framework_site_census.py --card db/properties/lpsocl_box331_closure_amendment_2026_09_11.json — 옛 9런(09-11 lpsocl · 09-15 modelc)과 **같은 도구·같은 설정** · rc=0 24/24",
+ "결과": {
+  "modelc": {
+   "s5": {
+    "600": {
+     "C2b_홉_per_Li": 23.3,
+     "C6": "framework_rigid",
+     "C6_이벤트": 0
+    },
+    "800": {
+     "C2b_홉_per_Li": 58.3,
+     "C6": "framework_rigid",
+     "C6_이벤트": 0
+    },
+    "1000": {
+     "C2b_홉_per_Li": 99.6,
+     "C6": "framework_rigid",
+     "C6_이벤트": 0
+    }
+   },
+   "s6": {
+    "600": {
+     "C2b_홉_per_Li": 23.5,
+     "C6": "framework_rigid",
+     "C6_이벤트": 0
+    },
+    "800": {
+     "C2b_홉_per_Li": 58.0,
+     "C6": "framework_rigid",
+     "C6_이벤트": 0
+    },
+    "1000": {
+     "C2b_홉_per_Li": 95.3,
+     "C6": "framework_rigid",
+     "C6_이벤트": 0
+    }
+   }
+  },
+  "lpsocl": {
+   "s5": {
+    "600": {
+     "C2b_홉_per_Li": 20.1,
+     "C6": "framework_rigid",
+     "C6_이벤트": 0
+    },
+    "800": {
+     "C2b_홉_per_Li": 54.1,
+     "C6": "framework_rigid",
+     "C6_이벤트": 0
+    },
+    "1000": {
+     "C2b_홉_per_Li": 93.8,
+     "C6": "framework_rigid",
+     "C6_이벤트": 0
+    }
+   },
+   "s6": {
+    "600": {
+     "C2b_홉_per_Li": 20.9,
+     "C6": "framework_rigid",
+     "C6_이벤트": 0
+    },
+    "800": {
+     "C2b_홉_per_Li": 55.1,
+     "C6": "framework_rigid",
+     "C6_이벤트": 0
+    },
+    "1000": {
+     "C2b_홉_per_Li": 95.6,
+     "C6": "framework_rigid",
+     "C6_이벤트": 0
+    }
+   }
+  }
+ },
+ "판정": {
+  "C2b": "12/12 ≥ 3.0/이온 (최저 20.1 — lpsocl s5/600)",
+  "C6": "12/12 framework_rigid · 이벤트 0 → 새 시드도 온도 전건 통과"
+ },
+ "옛_기록과_대조": "modelc s2–s4 C2b 600/800/1000 = 23.6–24.7 / 56.9–59.4 / 95.5–98.3 · lpsocl s2–s4 20.1–94.0 — 새 시드가 같은 범위",
+ "⚠_화면값과_다르다": "msd_diffusive_check 화면의 '홉 x/이온' 은 다른 추정량이다. C2b 게이트 값은 이 파일 값이다.",
+ "⚠_600K_탈락_셀": "modelc s5/600 · lpsocl s5/600 · s6/600 은 C2 에서 이미 빠졌다 — 여기 C2b·C6 값은 기록일 뿐 C3 에 안 들어간다.",
+ "원자료": "kgy ~/work/runs/{modelc,lpsocl}_box331_400ps/jump/s{5,6}_T{600,800,1000}/*_jumpstats.json · census/s{5,6}_T*.json",
+ "쓰는_곳": [
+  "lpsocl → 개정문 R5 규칙 A 적용 (확정값 갱신)",
+  "modelc → 5시드 C3(2026-09-18)의 C2b·C6 빈칸을 닫는다"
+ ]
+}

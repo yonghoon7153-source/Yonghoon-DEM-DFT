@@ -27,6 +27,17 @@
   ⛔ **원장 해시만 다시 박지 않는다** — `rebuild_pool_inputs.py:119` 가 `window_V` 를 읽어 퍼널 게이트로 넘기므로
   **풀 입력 → `build_screening_funnel.py` → 감사 그림 → `build_cascade_audit_manifest.py`** 순서로 다시 만들어야 하고,
   **퍼널 통과 목록이 바뀔 수 있다**(ESW 트랙 = 1저자 사용자 결정). 세미나 뒤 따로 한다.
+- ✅ **box331 시드 확장 끝 (2026-09-23 낮)** — 새 시드 s5·s6 12런 C1·C2·C2b·C6 전건 기록
+  (`box331_seedext_c2b_c6_2026_09_23.json` · C2b 20.1–99.6/이온 · C6 12/12 rigid).
+  · **lpsocl** — 600 K 새 시드 둘 다 C2 탈락(11·15 %) · C3 compatible → 개정문 R5 **규칙 A 적용**:
+    레지스트리 Ea **0.1804 → 0.1809 [0.1790, 0.1829]** · 허용문 0.180 → **0.181 ± 0.002** · 평가 A-09-11 → A-09-23(15런) 대체.
+  · **modelc** — 5시드 C3(09-18, A: compatible)의 C2b·C6 빈칸이 닫혔다. ⏳ **HOLD 해제·canonical 승격은 1저자 비준 대기**(사전등록 §3 A).
+  · 러너 `--label modelc` 하드코딩 → `$SYS` (lpsocl s5·s6 run_meta label 이 'modelc' — 원본 보존, 원장에 정정 기록).
+- ⏭ **b2o3 MD — 전도도는 닫힌 채로, 질문을 바꿔 두 가지** (1저자 2026-09-23 "우선 해보자"):
+  ① gabia `highT_reseed_221/b2o3` 512원자 4런 궤적에 **C6 census**(같은 카드) — 계산 0 · 진단. ⚠ census 는 P 중심 규칙이라
+    **B 를 안 세고** BS₃ 의 S 는 '자유 S'(2.0 Å)로 분류된다 — 결과와 같이 적는다.
+  ② 보고량을 **골격 붕괴 사건 빈도(ns 당)** 로 바꾼 **새 사전등록 카드** — ①을 파일럿으로 쓰되 사건 정의·문턱은 비준된 census 그대로.
+    ⛔ 카드 비준 전에는 안 던진다 (마감 `b2o3_md_closed_retrospective` 재개 규칙).
 - ✅ `webapp/tests/test_v3_records.py::test_gallery_carries_hazard_and_policy` — 테스트가 정책 접두어를 **둘만 복사**해 두고
   정책은 셋이라(`oxidation_stability_cascade` 누락) 정상적으로 막힌 파일을 "평범한데 막혔다" 로 읽었다 →
   `artifact_policy.is_governed()` 를 직접 쓰게 고침 · 음성(평범한 파일에 policy 주입 → 잡힘) 확인.
