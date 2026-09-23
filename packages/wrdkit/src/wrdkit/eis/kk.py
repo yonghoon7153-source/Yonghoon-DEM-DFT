@@ -157,15 +157,21 @@ def _mu(resistances: np.ndarray) -> float:
 
 
 def _diverges_capacitively(frequency: np.ndarray, z_im: np.ndarray) -> bool:
-    """The lowest points climb: ``−Im Z`` grows as the frequency falls.
+    """The lowest point climbs: its ``−Im Z`` is above the next three's median.
 
     Not the phase: a blocking cell with a large resistance still has a shallow
     phase at the last point, but its ``−Im Z`` keeps rising (a closed arc's
-    falls back to the axis).
+    falls back to the axis).  Not "each of the lowest three above the next"
+    either -- that was the first rule, and 0.4 % noise broke it on a tail that
+    rose by 30 % over those points: the capacitor was left out and the test
+    reported 6 % where the capacitor gives 2.6 %.  A capacitor the spectrum
+    does not need costs nothing (its ``1/C`` fits to about zero).
     """
-    order = np.argsort(frequency)[:3]           # 가장 낮은 셋, 낮은 것부터
+    order = np.argsort(frequency)[:4]           # 가장 낮은 넷, 낮은 것부터
     minus_im = -z_im[order]
-    return bool(np.all(minus_im > 0) and np.all(np.diff(minus_im) < 0))
+    if minus_im.size < 4 or not minus_im[0] > 0:
+        return False
+    return bool(minus_im[0] > np.median(minus_im[1:]))
 
 
 def _inductive_run(frequency: np.ndarray, imag: np.ndarray) -> np.ndarray:
@@ -183,7 +189,7 @@ def _inductive_run(frequency: np.ndarray, imag: np.ndarray) -> np.ndarray:
 def lin_kk(frequency_hz, z_re, z_im, *, mu_limit: float = MU_LIMIT,
            capacitance: bool | None = None, inductance: bool | None = None,
            max_per_decade: float = 12.0, drop_inductive: bool = True,
-           m: int | None = None) -> KKResult:
+           m: int | None = None, extend: float = 0.0) -> KKResult:
     """The linear Kramers–Kronig test, sized by μ.
 
     ``capacitance`` / ``inductance``: add a series C / L to the model; ``None``
@@ -193,8 +199,17 @@ def lin_kk(frequency_hz, z_re, z_im, *, mu_limit: float = MU_LIMIT,
     (``SCHOENLEBER2014``, p. 26); the cap is also never above the number of
     equations.  ``drop_inductive`` leaves out the cable-inductive run at the
     top (and keeps the inductor for the points below it).  ``m`` fits that
-    many elements instead of searching -- the audit's second look when μ
-    stops too early.
+    many elements instead of searching -- the audit's second look.
+
+    ``extend`` puts the outermost time constants that many decades beyond the
+    band on each side.  The paper keeps them inside
+    (``SCHOENLEBER2014.tau-distribution``), and so does the μ search here: with
+    them outside, μ stopped at 0.8–1.0 per decade on full cells.  With ``m``
+    fixed it is safe, and it lets a CPE tail that goes on below the band be
+    drawn -- inside the band, the lowest point of a sulfide pellet's tail
+    (n ≈ 0.88) was off by 2 % on a spectrum built to satisfy KK.  Discrepancies
+    at the ends of a finite band are a known KK artefact
+    (``LASIA1999.kk-finite-frequency-range``).
     """
     frequency = np.asarray(frequency_hz, dtype=np.float64).ravel()
     real = np.asarray(z_re, dtype=np.float64).ravel()
@@ -230,8 +245,10 @@ def lin_kk(frequency_hz, z_re, z_im, *, mu_limit: float = MU_LIMIT,
     cap = max(1, min(int(math.ceil(max_per_decade * decades)),
                      2 * frequency.size - extra - 1))
 
+    widen = 10.0 ** float(extend)
+
     def solve(count: int):
-        tau = _time_constants(omega.min(), omega.max(), count)
+        tau = _time_constants(omega.min() / widen, omega.max() * widen, count)
         design = _design(omega, tau, weight, with_capacitance=with_c,
                          with_inductance=with_l)
         solution, *_ = np.linalg.lstsq(design, target, rcond=None)

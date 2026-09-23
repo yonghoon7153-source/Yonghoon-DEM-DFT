@@ -415,7 +415,8 @@
     ]
    },
    "conditions": "Direct numerical KK integration.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "The discrepancies that arise may be attributed to errors of integration or to failure to satisfy the four above conditions."
   },
   {
    "id": "LASIA1999.kk-linear-voigt-test",

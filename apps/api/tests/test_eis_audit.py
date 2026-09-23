@@ -120,6 +120,39 @@ def test_a_real_blocking_cell_fitted_right_has_no_problem(client):
     assert not [f for f in item["findings"] if f["code"].startswith("kk_")]
 
 
+def test_a_current_range_switch_is_named_on_the_kk_line(client):
+    """EC-Lab 의 ``I Range`` 가 스윕 중에 바뀐 자리에서 이득이 4 % 뛴 펠릿 —
+    검수가 그 주파수를 적고, 옆의 KK 어긋남을 셀이 아니라 기기 쪽으로 읽는다
+    (실측 두 번째 검수: 황화물 펠릿 11 개가 64–410 Hz 에서 함께 어긋났다)."""
+    frequency = S.log_sweep(1e6, 1e-2, 12)
+    z = S.randles(frequency, q_block=1e-6, rs=2.0, r1=1e4, q1=6.3e-11, n1=0.95,
+                  r2=2e4, q2=1.3e-8, n2=0.85)
+    below = frequency < 90
+    columns = S.spectrum_columns(frequency, np.where(below, z * 1.04, z))
+    columns["I Range"] = np.where(below, 36, 37)
+    out = upload(client, S.build_mpr(columns), "SS_LLZO_SS_sym_700um.mpr")
+    client.patch(f"/api/eis/spectra/{out['id']}",
+                 json={"thickness_um": 700.0, "diameter_mm": 10.0})
+    fit(client, out["id"], BLOCKING_TAIL)
+    item = entry(audit(client), out["id"])
+    edge = int(np.argmax(below))
+    expected = float(np.sqrt(frequency[edge] * frequency[edge - 1]))
+    assert item["kk"]["range_switches_hz"] == [pytest.approx(expected, rel=1e-4)]
+    assert "kk_range_switch" in codes(item, "note")
+    assert "kk_violation" not in codes(item)
+    text = client.get("/api/eis/audit", params={"format": "text"}).text
+    assert f"전류 범위가 {expected:.3g} Hz 에서 바뀐 자리" in text
+
+    # 자세히 적는 스펙트럼(확인·문제)은 KK 줄에도 그 자리를 적는다 — 셀 구성을
+    # 비워 둔 전고체 스펙트럼은 확인이다 (실측 B18).
+    columns["time/s"] = columns["time/s"] + 1.0        # 다른 파일 (sha256 이 같으면 같은 기록)
+    blank = upload(client, S.build_mpr(columns), "B18_like.mpr", cell_config="")
+    assert blank["id"] != out["id"]
+    assert "config_missing" in codes(entry(audit(client), blank["id"]), "check")
+    text = client.get("/api/eis/audit", params={"format": "text"}).text
+    assert f"· 전류 범위 바뀜 {expected:.3g} Hz" in text
+
+
 def test_the_audit_writes_nothing(client):
     """캐시가 없으면 원본에서 읽되 **쓰지 않는다** — 검수가 고치면 무엇이
     틀려 있었는지가 지워진다."""

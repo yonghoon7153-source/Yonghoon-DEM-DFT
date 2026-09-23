@@ -109,7 +109,8 @@
    "where": "Sec. 2.2, Eqs. (10)-(12)",
    "math": "tau_min = tau_1 = 1/omega_max ;  tau_max = tau_M = 1/omega_min ;  tau_k = 10^( log10(tau_min) + (k−1)/(M−1) · log10(tau_max/tau_min) ),  k = 2..M−1 ;  omega = 2·pi·f",
    "conditions": "ω = 2πf (the text says angular frequencies). log is base 10 (the formula raises 10 to it). For M = 1 the equations are undefined (τ_1 cannot equal both 1/ω_max and 1/ω_min; Eq. 12 divides by M−1), although the procedure starts at M = 1.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "The M time-constants τk are distributed logarithmically equal over the inverse range of angular frequencies of the impedance spectrum to be tested."
   },
   {
    "id": "SCHOENLEBER2014.cost-real-fit",
@@ -470,7 +471,8 @@
     "residuals_read_from_fig3": "under-fit: beyond ±10 % over mid/high frequencies; over-fit: Δ_Im beyond ±10 % at both ends of the range, ≈0 in between (approximate)"
    },
    "conditions": "Frequency-point density not stated. The M ≈ 37 reading lies about 3 elements per decade over 13 decades, consistent with Fig. 8.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "Residuals in the case of under-fitting (M = 6). (bottom right) Residuals in the case of over-fitting (M = 104)."
   },
   {
    "id": "SCHOENLEBER2014.example-measured-li-ion",
@@ -568,7 +570,8 @@
     "note": "approximate figure readings"
    },
    "conditions": "One example (temperature ramp 25 -> 15 °C over a 13.5 h sweep); the paper states no general rule for where drift appears. The thinning of low-frequency points is stated on p. 23.",
-   "confidence": "medium"
+   "confidence": "medium",
+   "quote": "Due to the induced time-variance, large residuals are expected."
   }
  ]
 }

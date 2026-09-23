@@ -480,6 +480,9 @@ def _block(one: AuditSpectrumOut, numbers: _Numbers) -> list[str]:
     kk = one.kk or {}
     cables = (f" · 꼭대기 배선 유도 {kk['dropped_inductive']}점 뺌"
               if kk.get("dropped_inductive") else "")
+    if kk.get("range_switches_hz"):
+        cables += " · 전류 범위 바뀜 " + ", ".join(
+            f"{_g(value)} Hz" for value in kk["range_switches_hz"])
     if kk.get("judged"):
         lines.append(f"    KK 잔차 최대 {kk['max_residual'] * 100:.2g} % "
                      f"({_g(kk['at_hz'])} Hz) · 잡음 σ {kk['sigma'] * 100:.2g} % · "
