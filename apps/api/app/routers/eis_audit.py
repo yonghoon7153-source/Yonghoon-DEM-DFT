@@ -27,6 +27,7 @@ from wrdkit.eis.audit import (
     SEVERITIES,
     SEVERITY_LABELS,
     Finding,
+    FitAudit,
     audit_conductivity_scan,
     audit_fit,
     audit_record,
@@ -74,7 +75,8 @@ router = APIRouter(prefix="/api/eis", tags=["eis"])
 
 def _finding_out(one: Finding) -> AuditFindingOut:
     return AuditFindingOut(severity=one.severity, label=one.label, code=one.code,
-                           message=one.message, refs=list(one.refs))
+                           message=one.message, refs=list(one.refs),
+                           circuits=list(one.circuits))
 
 
 def _references(findings) -> list[AuditReferenceOut]:
@@ -223,25 +225,8 @@ def _audit_spectrum(session: Session, record: SpectrumRecord,
             out.blocking = blocking_verdict(spectrum.frequency_hz, spectrum.z_re,
                                             spectrum.z_im)
     else:
-        parameters = apply_exchangeable(
-            best.circuit, json.loads(best.parameters_json) if best.parameters_json
-            else [])
-        stub = _FitStub(circuit=best.circuit,
-                        parameters=_stub_parameters(best.circuit, parameters))
-        conductivity = None
-        if record.kind == SOLID and spectrum is not None:
-            verdict = blocking_verdict(spectrum.frequency_hz, spectrum.z_re,
-                                       spectrum.z_im)
-            conductivity = ionic_conductivity(stub, thickness_cm=thickness_cm,
-                                              area_cm2=area,
-                                              config=record.cell_config,
-                                              blocking=verdict)
-        audit = audit_fit(stub, spectrum, kind=record.kind, config=record.cell_config,
-                          thickness_cm=thickness_cm, area_cm2=area,
-                          band=(best.frequency_low_hz, best.frequency_high_hz),
-                          conductivity=conductivity,
-                          alternatives=_offered(record),
-                          reference=points.reference)
+        audit, parameters = audit_of_fit(session, record, spectrum, best,
+                                         points.reference)
         findings += audit.findings
         out.circuit = best.circuit
         out.chi_squared = best.chi_squared
@@ -257,6 +242,33 @@ def _audit_spectrum(session: Session, record: SpectrumRecord,
     out.findings = [_finding_out(one) for one in ordered]
     out.worst = worst(ordered)
     return out
+
+
+def audit_of_fit(session: Session, record: SpectrumRecord, spectrum: Spectrum | None,
+                 fit: SpectrumFit, reference) -> tuple[FitAudit, list[dict]]:
+    """맞춤 하나 — 저장된 것이든 아직 안 된 것이든 — 을 검수가 읽는 대로.
+
+    검수 글과 `bml refit` 이 같은 길을 지나야 "검수가 받아들인다" 가 같은 뜻이다
+    (ADR 0045): 교환 대칭 정리, 전도도, 맞춘 주파수 창, 권할 회로, 점의 KK.
+    돌려주는 파라미터는 교환 대칭을 정리한 것이다 (글의 표가 쓴다).
+    """
+    thickness_cm, area = _geometry(session, record)
+    parameters = apply_exchangeable(
+        fit.circuit, json.loads(fit.parameters_json) if fit.parameters_json else [])
+    stub = _FitStub(circuit=fit.circuit,
+                    parameters=_stub_parameters(fit.circuit, parameters))
+    conductivity = None
+    if record.kind == SOLID and spectrum is not None:
+        verdict = blocking_verdict(spectrum.frequency_hz, spectrum.z_re, spectrum.z_im)
+        conductivity = ionic_conductivity(stub, thickness_cm=thickness_cm,
+                                          area_cm2=area, config=record.cell_config,
+                                          blocking=verdict)
+    audit = audit_fit(stub, spectrum, kind=record.kind, config=record.cell_config,
+                      thickness_cm=thickness_cm, area_cm2=area,
+                      band=(fit.frequency_low_hz, fit.frequency_high_hz),
+                      conductivity=conductivity, alternatives=_offered(record),
+                      reference=reference)
+    return audit, parameters
 
 
 def _offered(record: SpectrumRecord) -> list[str]:

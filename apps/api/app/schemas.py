@@ -1548,6 +1548,9 @@ class AuditFindingOut(BaseModel):
     message: str
     #: 이 판정이 기대는 논문 기록의 id (ADR 0042) — 내용은 ``references`` 에.
     refs: list[str] = []
+    #: 다시 맞추면 이 판정이 풀리는 회로, 권하는 순서로 (ADR 0045).  `bml refit`
+    #: 이 이것을 맞춰 본다 — 문장에서 회로를 긁어내지 않는다.
+    circuits: list[str] = []
 
 
 class AuditReferenceOut(BaseModel):
@@ -1617,6 +1620,85 @@ class EisAuditOut(BaseModel):
     scans: list[AuditScanOut] = []
     #: 판정들이 인용한 논문 기록, 처음 나온 순서로.
     references: list[AuditReferenceOut] = []
+
+
+class RefitTryOut(BaseModel):
+    """권한 회로 하나를 한 시작점에서 맞춰 본 것 (ADR 0045)."""
+
+    circuit: str
+    #: ``seeded`` = 쓰던 맞춤의 값에서, ``default`` = 화면과 같은 기본 시작점에서.
+    start: str
+    converged: bool
+    chi_squared: float | None = None
+    misfit_mean: float | None = None
+    accepted: bool = False
+    #: 받아들이지 않은 까닭 — 검수의 문장 그대로.
+    reason: str = ""
+    #: 받아들였을 때 남은 문제 판정의 수.
+    problems_left: int | None = None
+
+
+class RefitSpectrumOut(BaseModel):
+    """스펙트럼 하나를 권한 회로로 다시 맞춰 본 결과."""
+
+    id: int
+    name: str
+    old_fit_id: int
+    old_circuit: str
+    old_chi_squared: float | None = None
+    old_misfit_mean: float | None = None
+    #: 이 스펙트럼을 대상으로 만든 문제 판정 — 회로를 실은 것.
+    problems: list[AuditFindingOut] = []
+    tries: list[RefitTryOut] = []
+    #: 고른 새 맞춤.  비면 아무것도 받아들여지지 않아 그대로 뒀다.
+    new_circuit: str = ""
+    #: 저장된 새 맞춤의 id.  맞춰 보기만 했으면(``dry_run``) 비었다.
+    new_fit_id: int | None = None
+    new_chi_squared: float | None = None
+    new_misfit_mean: float | None = None
+    #: 새 맞춤에 남은 문제 판정.
+    new_problems: list[AuditFindingOut] = []
+
+
+class RefitSkipOut(BaseModel):
+    id: int
+    name: str
+    reason: str
+
+
+class EisRefitOut(BaseModel):
+    """`bml refit` 한 번 — 검수가 권한 회로로 한꺼번에 다시 맞춘 결과 (ADR 0045)."""
+
+    #: 이 묶음의 이름 (``refit-…``).  저장된 새 맞춤의 ``origin`` 이다.
+    origin: str
+    dry_run: bool
+    generated_at: datetime
+    #: 쓰는 맞춤이 있는 스펙트럼 수 — 본 것.
+    total: int
+    #: 회로를 실은 문제 판정이 있는 것 — 맞춰 본 것.
+    targets: int
+    changed: int = 0
+    kept: int = 0
+    spectra: list[RefitSpectrumOut] = []
+    #: 점을 못 읽어 검수도 못 한 것.
+    skipped: list[RefitSkipOut] = []
+
+
+class RefitUndoneOut(BaseModel):
+    id: int
+    name: str
+    #: 지운 묶음의 회로.
+    removed_circuit: str
+    #: 이제 쓰는 맞춤의 회로 — 비면 쓸 맞춤이 없다.
+    now_circuit: str = ""
+
+
+class EisRefitUndoOut(BaseModel):
+    """마지막 묶음을 지운 결과.  묶음이 없으면 ``origin`` 이 비었다."""
+
+    origin: str = ""
+    removed: int = 0
+    spectra: list[RefitUndoneOut] = []
 
 
 class EisReparseChange(BaseModel):

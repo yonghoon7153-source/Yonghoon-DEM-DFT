@@ -2182,6 +2182,25 @@ def _run_fit(session: Session, spectrum_id: int, *, circuit: str | None,
         window = (frequency_low_hz or 0.0,
                   frequency_high_hz or float(np.max(spectrum.frequency_hz)))
 
+    fit = _fit_row(record, spectrum, text, drop_inductive=drop_inductive,
+                   window=window, restarts=restarts)
+    session.add(fit)
+    record.last_circuit = fit.circuit
+    session.add(record)
+    session.commit()
+    session.refresh(fit)
+    return _fit_out(session, record, fit)
+
+
+def _fit_row(record: SpectrumRecord, spectrum, circuit: str, *, drop_inductive: bool,
+             window: tuple[float, float] | None, restarts: int | None = None,
+             start_from: dict[str, float] | None = None) -> SpectrumFit:
+    """Fit and build the row -- **not added to the session**.
+
+    `bml refit` audits a fit before deciding to keep it (ADR 0045), so the
+    fitting and the saving are two steps.  ``start_from`` is the old fit's
+    values moved onto this circuit (``wrdkit.eis.refit.seed_values``).
+    """
     try:
         from wrdkit.eis import fit_circuit
         from wrdkit.eis.circuit import CircuitError
@@ -2189,14 +2208,15 @@ def _run_fit(session: Session, spectrum_id: int, *, circuit: str | None,
         raise HTTPException(503, str(exc)) from exc
 
     try:
-        result = fit_circuit(spectrum, text, drop_inductive=drop_inductive,
-                             frequency_range=window, restarts=restarts)
+        result = fit_circuit(spectrum, circuit, drop_inductive=drop_inductive,
+                             frequency_range=window, restarts=restarts,
+                             start_from=start_from)
     except CircuitError as exc:
         raise HTTPException(422, f"회로를 읽지 못했습니다: {exc}") from exc
 
     used = result.frequency_hz
-    fit = SpectrumFit(
-        spectrum_id=spectrum_id,
+    return SpectrumFit(
+        spectrum_id=record.id or 0,
         circuit=result.circuit,
         kind=record.kind,
         converged=result.converged,
@@ -2221,12 +2241,6 @@ def _run_fit(session: Session, spectrum_id: int, *, circuit: str | None,
         starts=result.starts,
         starts_converged=result.starts_converged,
     )
-    session.add(fit)
-    record.last_circuit = result.circuit
-    session.add(record)
-    session.commit()
-    session.refresh(fit)
-    return _fit_out(session, record, fit)
 
 
 def _run_auto(session: Session, record: SpectrumRecord, spectrum, *,

@@ -53,6 +53,7 @@ from .routers import (  # noqa: E402
     changelog,
     eis,
     eis_audit,
+    eis_refit,
     exports,
     feedback,
     gitt,
@@ -227,6 +228,7 @@ app.include_router(runs.router)
 app.include_router(analysis.router)
 app.include_router(eis.router)
 app.include_router(eis_audit.router)
+app.include_router(eis_refit.router)
 app.include_router(gitt.router)
 app.include_router(exports.router)
 app.include_router(presets.router)
