@@ -1551,6 +1551,10 @@ class AuditFindingOut(BaseModel):
     #: 다시 맞추면 이 판정이 풀리는 회로, 권하는 순서로 (ADR 0045).  `bml refit`
     #: 이 이것을 맞춰 본다 — 문장에서 회로를 긁어내지 않는다.
     circuits: list[str] = []
+    #: 무엇에 대한 판정인가 (ADR 0046): ``points`` 는 점 자체(Kramers–Kronig ·
+    #: 잡음 · 저주파 유도성 — 측정의 사정), ``fit`` 은 쓰는 맞춤, ``record`` 는
+    #: 기록(두께·면적·원본).  스펙트럼 화면이 이것으로 칸을 나눈다.
+    scope: str = ""
 
 
 class AuditReferenceOut(BaseModel):
@@ -1593,6 +1597,32 @@ class AuditSpectrumOut(BaseModel):
     findings: list[AuditFindingOut] = []
     #: 가장 무거운 판정 (``problem`` / ``check`` / ``note``), 없으면 ``None``.
     worst: str | None = None
+
+
+class AuditResidualsOut(BaseModel):
+    """점마다 얼마나 어긋났나 — ``|ΔZ| / |Z|`` (비율), 낮은 주파수부터.
+
+    ``kk`` 는 선형 KK 모델이 못 그린 몫이다: 회로와 상관없이 **점 자체**가 선형·
+    시불변 계와 안 맞는 정도.  ``fit`` 은 쓰는 맞춤이 맞춘 구간에서 못 그린 몫이다.
+    둘을 한 그림에 놓으면 어긋남이 측정 탓인지 회로 탓인지가 보인다 (ADR 0043).
+    """
+
+    frequency_hz: list[float] = []
+    kk: list[float] = []
+    fit_frequency_hz: list[float] = []
+    fit: list[float] = []
+    #: KK 잔차의 잡음 (1.4826 × 중앙 절댓값).
+    sigma: float | None = None
+    #: 이 선을 넘은 점을 KK 어긋남으로 본다 — ``max(2 %, 6σ)``.
+    limit: float | None = None
+
+
+class SpectrumAuditDetailOut(BaseModel):
+    """스펙트럼 화면의 검수 칸 — `bml audit` 이 그 스펙트럼에 대해 하는 말 그대로."""
+
+    audit: AuditSpectrumOut
+    references: list[AuditReferenceOut] = []
+    residuals: AuditResidualsOut = AuditResidualsOut()
 
 
 class AuditScanOut(BaseModel):

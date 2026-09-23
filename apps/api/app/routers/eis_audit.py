@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 
 import numpy as np
@@ -22,16 +23,20 @@ from sqlmodel import Session, select
 from wrdkit.eis import SOLID, Spectrum, UnknownColumn, ionic_conductivity, knowledge
 from wrdkit.eis.audit import (
     CHECK,
+    KK_LIMIT,
+    KK_NOISE_MULTIPLE,
     NOTE,
     PROBLEM,
     SEVERITIES,
     SEVERITY_LABELS,
     Finding,
     FitAudit,
+    SpectrumAudit,
     audit_conductivity_scan,
     audit_fit,
     audit_record,
     audit_spectrum,
+    misfit,
     sort_findings,
     worst,
 )
@@ -49,11 +54,13 @@ from ..models import SpectrumFit, SpectrumRecord
 from ..schemas import (
     AuditFindingOut,
     AuditReferenceOut,
+    AuditResidualsOut,
     AuditScanOut,
     AuditSpectrumOut,
     EisAuditOut,
     EisReparseChange,
     EisReparseOut,
+    SpectrumAuditDetailOut,
 )
 from .eis import (
     MIN_SCAN_SWEEPS,
@@ -73,10 +80,14 @@ from .eis import (
 router = APIRouter(prefix="/api/eis", tags=["eis"])
 
 
-def _finding_out(one: Finding) -> AuditFindingOut:
+#: 판정이 무엇에 대한 것인가 (ADR 0046) — 점 자체, 쓰는 맞춤, 기록.
+POINTS, FIT, RECORD = "points", "fit", "record"
+
+
+def _finding_out(one: Finding, scope: str = "") -> AuditFindingOut:
     return AuditFindingOut(severity=one.severity, label=one.label, code=one.code,
                            message=one.message, refs=list(one.refs),
-                           circuits=list(one.circuits))
+                           circuits=list(one.circuits), scope=scope)
 
 
 def _references(findings) -> list[AuditReferenceOut]:
@@ -187,17 +198,35 @@ def _parameter_rows(parameters: list[dict]) -> list[dict]:
             for one in parameters]
 
 
+@dataclass
+class _Audited:
+    """한 스펙트럼의 검수와, 그 검수가 읽은 것 — 화면의 잔차 그림이 다시 쓴다."""
+
+    out: AuditSpectrumOut
+    spectrum: Spectrum | None
+    points: SpectrumAudit
+    fit: SpectrumFit | None = None
+    #: 쓰는 맞춤의 파라미터, 교환 대칭을 정리한 것.
+    parameters: list[dict] = field(default_factory=list)
+
+
 def _audit_spectrum(session: Session, record: SpectrumRecord,
                     originals: _Originals) -> AuditSpectrumOut:
-    spectrum, findings = _points(record, originals)
+    return _audit_parts(session, record, originals).out
+
+
+def _audit_parts(session: Session, record: SpectrumRecord,
+                 originals: _Originals) -> _Audited:
+    spectrum, found = _points(record, originals)
+    tagged: list[tuple[Finding, str]] = [(one, RECORD) for one in found]
     thickness_cm, area = _geometry(session, record)
-    findings += audit_record(
+    tagged += [(one, RECORD) for one in audit_record(
         name=record.name or record.original_name, kind=record.kind,
         config=record.cell_config,
         thickness_um=thickness_cm * 1e4 if thickness_cm else None, area_cm2=area,
         n_points=len(spectrum) if spectrum is not None else record.n_points,
         file_name=record.original_name if record.original_name != record.name
-        else "", amplitude_mv=record.amplitude_mv)
+        else "", amplitude_mv=record.amplitude_mv)]
 
     out = AuditSpectrumOut(
         id=record.id or 0, name=record.name or record.original_name,
@@ -208,26 +237,28 @@ def _audit_spectrum(session: Session, record: SpectrumRecord,
         thickness_um=thickness_cm * 1e4 if thickness_cm else None, area_cm2=area)
     # 점 자체 — 회로와 무관한 Kramers–Kronig 검사 (ADR 0043).
     points = audit_spectrum(spectrum)
-    findings += points.findings
+    tagged += [(one, POINTS) for one in points.findings]
     out.kk = points.kk
+    audited = _Audited(out=out, spectrum=spectrum, points=points)
 
     best = _best_fit(session, record.id or 0)
     if best is None:
         tried = session.exec(select(SpectrumFit).where(
             SpectrumFit.spectrum_id == record.id)).first()
         if tried is not None:
-            findings.append(Finding(CHECK, "fit_never_converged",
-                                    "맞춤이 있지만 하나도 수렴하지 않았습니다 — 값이 "
-                                    "하나도 없습니다"))
+            tagged.append((Finding(CHECK, "fit_never_converged",
+                                   "맞춤이 있지만 하나도 수렴하지 않았습니다 — 값이 "
+                                   "하나도 없습니다"), FIT))
         else:
-            findings.append(Finding(NOTE, "not_fitted", "아직 맞추지 않았습니다"))
+            tagged.append((Finding(NOTE, "not_fitted", "아직 맞추지 않았습니다"), FIT))
         if spectrum is not None:
             out.blocking = blocking_verdict(spectrum.frequency_hz, spectrum.z_re,
                                             spectrum.z_im)
     else:
         audit, parameters, _ = audit_of_fit(session, record, spectrum, best,
                                             points.reference)
-        findings += audit.findings
+        tagged += [(one, FIT) for one in audit.findings]
+        audited.fit, audited.parameters = best, parameters
         out.circuit = best.circuit
         out.chi_squared = best.chi_squared
         out.parameters = _parameter_rows(parameters)
@@ -238,9 +269,38 @@ def _audit_spectrum(session: Session, record: SpectrumRecord,
             out.misfit_max = audit.misfit.max
             out.misfit_at_hz = audit.misfit.at_hz
 
-    ordered = sort_findings(findings)
-    out.findings = [_finding_out(one) for one in ordered]
-    out.worst = worst(ordered)
+    # `sort_findings` 와 같은 순서 — 무거운 것부터, 같으면 찾은 순서.
+    rank = {severity: i for i, severity in enumerate(SEVERITIES)}
+    ordered = sorted(tagged, key=lambda pair: rank.get(pair[0].severity, len(rank)))
+    out.findings = [_finding_out(one, scope) for one, scope in ordered]
+    out.worst = worst([one for one, _ in ordered])
+    return audited
+
+
+def _residuals(audited: _Audited) -> AuditResidualsOut:
+    """점마다의 ``|ΔZ| / |Z|`` — KK 모델의 것과 쓰는 맞춤의 것 (ADR 0046)."""
+    out = AuditResidualsOut()
+    reference = audited.points.reference
+    if reference is not None and reference.frequency_hz.size:
+        keep = np.isfinite(reference.frequency_hz) & np.isfinite(reference.residual)
+        f, r = reference.frequency_hz[keep], reference.residual[keep]
+        order = np.argsort(f)
+        out.frequency_hz, out.kk = f[order].tolist(), r[order].tolist()
+        out.sigma = float(reference.sigma)
+        out.limit = max(KK_LIMIT, KK_NOISE_MULTIPLE * float(reference.sigma))
+    fit, spectrum = audited.fit, audited.spectrum
+    if fit is not None and spectrum is not None and audited.parameters:
+        values = {one["name"]: float(one["value"]) for one in audited.parameters
+                  if one.get("value") is not None}
+        _, fitted, used = misfit(spectrum, fit.circuit, values,
+                                 (fit.frequency_low_hz, fit.frequency_high_hz))
+        if fitted is not None:
+            magnitude = np.abs(used.z)
+            good = np.isfinite(fitted) & np.isfinite(used.z) & (magnitude > 0)
+            f = used.frequency_hz[good]
+            r = np.abs(fitted[good] - used.z[good]) / magnitude[good]
+            order = np.argsort(f)
+            out.fit_frequency_hz, out.fit = f[order].tolist(), r[order].tolist()
     return out
 
 
@@ -395,6 +455,25 @@ def build_report(session: Session) -> EisAuditOut:
     return EisAuditOut(generated_at=datetime.now(timezone.utc), total=len(spectra),
                        counts=counts, spectra=spectra, scans=scans,
                        references=_references(every))
+
+
+@router.get("/spectra/{spectrum_id}/audit", response_model=SpectrumAuditDetailOut)
+def spectrum_audit(spectrum_id: int,
+                   session: Session = Depends(get_session)) -> SpectrumAuditDetailOut:
+    """스펙트럼 하나의 검수 — `bml audit` 이 이 스펙트럼에 대해 하는 말 그대로,
+    점마다의 잔차와 함께 (ADR 0046).
+
+    랩은 KK 어긋남과 잡음을 "문제" 로 세지 말고, 그 스펙트럼 화면에서 확실히
+    보이게 해 달라고 했다.  판정마다 ``scope`` 가 붙어 화면이 점 자체(측정)·맞춤·
+    기록을 나눠 보인다.  읽기만 한다 (ADR 0040).
+    """
+    record = session.get(SpectrumRecord, spectrum_id)
+    if record is None:
+        raise HTTPException(404, f"스펙트럼 {spectrum_id} 을 찾을 수 없습니다")
+    audited = _audit_parts(session, record, _Originals())
+    return SpectrumAuditDetailOut(audit=audited.out,
+                                  references=_references(audited.out.findings),
+                                  residuals=_residuals(audited))
 
 
 @router.get("/audit", response_model=EisAuditOut)

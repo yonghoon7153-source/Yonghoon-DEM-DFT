@@ -169,6 +169,48 @@ def test_a_point_the_kk_test_cannot_draw_is_not_held_against_the_circuit(client)
     assert not [one for one in codes(item) if one.startswith("misfit")]
 
 
+def test_one_spectrum_audit_names_what_each_finding_is_about(client):
+    """스펙트럼 화면의 검수 칸 (ADR 0046): `bml audit` 과 같은 판정을 그 스펙트럼만,
+    판정마다 무엇에 대한 것인지(점 자체·맞춤·기록)와 점마다의 잔차를 붙여서.  랩은
+    KK 어긋남과 잡음을 문제로 세지 말고 스펙트럼 화면에서 확실히 보이게 해 달라고
+    했다.  튄 점 하나(33 Hz, +14 %)는 점 자체의 판정이고, 그 점의 KK 잔차가 선을
+    넘는다."""
+    frequency = S.log_sweep(1e6, 1e-2, 12)
+    z = S.randles(frequency, **USER)
+    at = int(np.argmin(np.abs(frequency - 33)))
+    z[at] *= 1.14
+    out = upload(client, S.build_mpr(S.spectrum_columns(frequency, z)),
+                 "flying_point_sym_60um.mpr")
+    fit(client, out["id"], "R0-p(R1,CPE1)-p(R2,CPE2)")
+
+    response = client.get(f"/api/eis/spectra/{out['id']}/audit")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    item = body["audit"]
+    assert codes(item) == codes(entry(audit(client), out["id"]))    # 보고서와 같은 판정
+    assert {f["scope"] for f in item["findings"]} <= {"points", "fit", "record"}
+    kk = [f for f in item["findings"] if f["code"].startswith("kk_")]
+    assert kk and {f["scope"] for f in kk} == {"points"}
+    cited = {ref for f in item["findings"] for ref in f["refs"]}
+    assert {one["id"] for one in body["references"]} == cited
+
+    residuals = body["residuals"]
+    assert len(residuals["frequency_hz"]) == len(residuals["kk"]) > 0
+    assert residuals["frequency_hz"] == sorted(residuals["frequency_hz"])
+    worst = int(np.argmax(residuals["kk"]))
+    assert residuals["frequency_hz"][worst] == pytest.approx(frequency[at], rel=1e-6)  # float32
+    assert residuals["kk"][worst] > residuals["limit"] >= 0.02
+    assert len(residuals["fit"]) == len(residuals["fit_frequency_hz"]) > 0
+    assert max(residuals["fit"]) == pytest.approx(item["misfit_max"])
+
+    # 안 맞춘 스펙트럼은 맞춤 잔차가 없고, "아직 안 맞췄다" 는 맞춤의 판정이다.
+    bare = upload(client, mpr(**USER), "bare_sym_60um.mpr")
+    body = client.get(f"/api/eis/spectra/{bare['id']}/audit").json()
+    assert body["residuals"]["fit"] == [] and body["residuals"]["kk"]
+    assert {f["code"]: f["scope"] for f in body["audit"]["findings"]}["not_fitted"] == "fit"
+    assert client.get("/api/eis/spectra/999999/audit").status_code == 404
+
+
 def test_the_audit_writes_nothing(client):
     """캐시가 없으면 원본에서 읽되 **쓰지 않는다** — 검수가 고치면 무엇이
     틀려 있었는지가 지워진다."""
