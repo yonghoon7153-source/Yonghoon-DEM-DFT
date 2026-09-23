@@ -2417,3 +2417,15 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: 크롭 Read 8 장(Fig. 9 · 10 · 12 · 13 · 14 · 15 · 16 · Table I), 쪽 미리보기만 Fig. 5–8 · Table II, 안 봄 Fig. 1–4 · 11.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-lampe-contact-product-degeneracy]](서른네 번째 적용 · 처방 표 새 줄) · 큐 문서 §6-3-g 52 행 + 지문 ¹⁷.
 - 후속(서지 기준, 미열람 — 큐 53–59 인용 0): **Gaberscek … Jamnik 2008 *ESSL* 11, A170** (ref 11) · Schmidt … Ivers-Tiffée *JPS* 196, 5342 (ref 19) · Illig … Ivers-Tiffée 2010 *ECS Trans.* 28(30), 3 (ref 17) · Levi & Aurbach 1997 *J. Phys. Chem. B* 101, 4630 (ref 23).
+
+## [2026-09-23] ingest | assb 52호 — Oh, Kwon, Choi, Lee, Sohn, Lee, Lee, Kim, Bae, Choi 2025, All-Solid-State Batteries with Extremely Low N/P Ratio Operating at Low Stack Pressure (Adv. Energy Mater. 15, 2404817)
+- raw: `raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md` (sha256 봉인 — `pdf_sha256` · `si_sha256`) · 그림 `raw/figures/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb/` (본문 7 + SI 25 + 표 2). 큐 53번(2차 묶음 열넷째 편) — 13호 [34] · 14호 [10], 14호와 같은 연구실(서울대 + HMG-SNU JBRC + 현대차).
+- ★★★★ **Q6 판정**: 운전 20 · 3 MPa(스프링, 상수 · 계측 0) · 파우치 3 MPa(볼트 3.5 N·m, 변환 0) ↔ 제조 150 · 380 · WIP 450 MPa 명시 — **압력 비교 없음**: 두 점이 양극 적재 20 ↔ 6 mg cm⁻² · N/P 0.15 ↔ 0.66 과 교락, 반쪽 압력 미인쇄. 저압 "most critical factor"(음극 계면)는 3 MPa 고정 음극 교체로만, MgSiGr 저압 감쇠 원인은 해석 한 줄, 양극 관측 0. 제목의 두 조건은 한 셀에서 안 만난다.
+- ★★★★ **용량 제한 전극 · 배정 없음**(2전극, `LLI` · `LAM` 0, 방전 끝 판정 불가). `[재현]` **CE ≠ `LLI`**: 20 MPa 평균 99.2 % ↔ 83.7 %(결손 ≈95 ↔ 손실 ≈27) · 3 MPa `[도표]` CE ≈85–97 %(본문 0), 누적 결손 ≈575 mAh g⁻¹ > NCM811 재고 ≈275 · 면적당 ×≈1.8.
+- **채움표 52호 행 — 누적 ≈20.0 → ≈20.0 (새 칸 0).** Q6 반 칸 검토 후 접음 · Q4 0/52 마흔네 번째 성질 · Q3 층 하나.
+- **곱 축퇴 처방 서른다섯 번째 적용**: 1–4단계 ❌ · 새 줄 "누적 충–방 결손 ↔ Li 재고 상한".
+- ⚠ 어긋남 14 건(D1 제목 두 조건 · D2 완전지 N/P 재현 불가 · D3 `R_B` "tolerance" · D5 3 MPa CE · D6 99.2 ↔ 83.7 · D8 압력 제어 근거 0 외).
+- 낱말 지문: `LLI` · `LAM` · `identifiab` · `calibrat` 0 · `contact loss` 1(음극) · `MPa` 13(SI 2) · `dead` · `reservoir` · `leak` 0.
+- 그림: 34 장 중 14 장 Read(Fig. 1–6 · S11 · S15 · S17 · S19 · S23 · S25 · 표 S1 · S2), 화소 판독 Fig. 4D · 6D, 안 봄 20 장.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 52편 · Evidence 마흔일곱 번째 · 새 제약 · Status Log) · [[assb-lampe-contact-product-degeneracy]](서른다섯 번째 적용 · 처방 표 새 줄) · [[assb-stack-pressure-operating-window]](52호 절) · [[anode-free-li-inventory-accounting]](52호 절) · 큐 문서 §6-3-g 53 행 + 지문 ¹⁸.
+- 후속(서지 기준, 미열람 — 큐 54–59 인용 0): Oh … Choi 2024 *ESM* 71, 103606 (ref 12b) · Oh … Choi 2023 *AEM* 13, 2301508 (ref 12c) · Menkin … Grey 2024 *Faraday Discuss.* 248, 277 (ref 23) · Chen … Li 2021 *ACS AEM* 4, 4879 (ref 16a) · Yan … Chen 2022 *AEM* 12, 2102283 (ref 16b).

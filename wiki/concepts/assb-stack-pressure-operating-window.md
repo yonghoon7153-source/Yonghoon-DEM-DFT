@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -660,6 +660,40 @@ NCM811–Li₆PS₅Cl 복합양극을 **SE 입도만** 바꿔(coarse ↔ fine) *
 ### 5. 이 편이 이 페이지에 **안 준 것**
 
 운전 압력(되돌림) 의 함수 · 위 벽(단락 · Li 금속 0) · 사이클 뒤 구조 · 반복(점당 n = 1, 같은 조건 다른 셀의 첫 방전 ≈27 ↔ ≈35 mAh g⁻¹) · 전극별 저항(2전극 — 상대극 In–Li 계면도 같은 나사 압력을 받는다). 같은 셀 단계 가압(SI S3, 6 → 12 → 25 → 50 → 100 MPa, 두 사이클씩)의 "용량 향상" 은 **사이클 번호와 교락**되고 절대 방전은 12 → 100 MPa 에서 준다(≈21 → ≈14 mAh g⁻¹).
+
+## ★★ 2026-09-23 (`assb` 52호 Oh 2025, **실험 · N/P < 1 과충전 음극 · 운전 20 · 3 MPa + 파우치 3 MPa**) — **운전값은 명시, 비교는 교락: 저압의 "지배 인자" 는 압력이 아니라 음극을 바꿔서 얻었다**
+
+`raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md` (*Adv. Energy Mater.* 15, 2404817, 서울대 + HMG-SNU JBRC + 현대차 — **14호와 같은 연구실**).
+LiNbO₃-NCM811 \| LPSCl \| MgSiGr(Mg 200 nm 위 SiGr, 과충전 Li 도금) · 25 °C · 2전극.
+
+### 1. 제조 ↔ 운전 — 이 페이지의 두 축이 다시 갈린다
+
+| | 값 (`[인쇄]`) | 장치 |
+|---|---|---|
+| 제조 | SE 150 · 셀 380 MPa(펠릿) · **WIP 450 MPa · 75 °C · 15 min**(파우치) | 프레스 · 등방압 |
+| 운전 — 펠릿 | **20 MPa**(N/P 0.15 · 양극 20 mg cm⁻²) · **3 MPa**(N/P 0.66 · 6 mg cm⁻²) | 스프링 — "specific spring constant", **상수 · 변위 · 계측 0** |
+| 운전 — 파우치 20 × 20 mm² | **3 MPa**(N/P 0.6) | PEEK 판 + 볼트 넷 3.5 N·m — 변환 0 |
+| 운전 — 반쪽전지 | **미인쇄** | — |
+
+`[재현]` 표준 체결식(K ≈ 0.2)이면 M6–M10 볼트 넷의 체결력은 전극 면적 4 cm² 기준 **≈17–29 MPa** — 3 MPa 는 판 전체 면적 기준이거나 따로 교정했어야 한다(볼트 규격 · 판 면적 미인쇄, 우리 계산). 5호(로드셀)와 대비되는 **압력 계측 0** 편이다.
+
+### 2. ★★★ 두 압력은 교락된다 — 압력 → 용량의 표본이 아니다
+
+20 → 3 MPa 에서 양극 적재 ×1/3.3 · N/P ×4.4 · 음극 Li 몫 0.85 → 0.34 가 같이 바뀐다. `[도표]` 0.2C 첫 방전 ≈170 → ≈115 mAh g⁻¹(−32 %) — 양극이 얇아졌는데도 준다는 방향은 25호(30 → 2 MPa 공통 −26.5 ↔ −30.7)와 같다. 그러나 **같은 3 MPa · 같은 양극에서 Li 10 µm 가 ≈140** 을 내므로 비용의 일부는 MgSiGr 음극 자신이다. 유지율 83.7 %(20 MPa) ↔ 64.7 %(3 MPa)도 같은 교락 위에 있다.
+⇒ **저자의 "most critical factor" = 음극 계면 안정성은 3 MPa 고정 음극 교체(SiGr · Li · MgSiGr)로 얻은 명제다** — 압력을 움직인 측정이 아니다. MgSiGr 저압 감쇠의 원인 문장("volume changes during overcharging, especially under low stack pressure")은 측정 0.
+
+### 3. ★★ 아래 벽의 증상이 CE 로 나타난다 — 그리고 CE 는 적재로 정규화해야 한다
+
+`[도표]` 3 MPa MgSiGr CE ≈85–97 %(본문 무언급) ↔ 20 MPa 평균 99.2 %(`[인쇄]`). `[재현]` 면적당 결손으로 바꾸면 ≈0.046 ↔ ≈0.025 mAh cm⁻² 사이클⁻¹ — **×≈1.8**; CE 로 본 ×≈7 의 대부분은 양극 적재 차다. 3 MPa 누적 결손(≈575 mAh g⁻¹)은 양극 Li 재고의 ≈2 배라 **Li 손실이 아니다** — 저압 쪽 결손은 누설(저자 S17 의 연성 단락 병렬 경로) · 부반응 쪽이다([[anode-free-li-inventory-accounting]] 52호 절). `[해석]` 저압이 아래 벽(접촉 손실)만이 아니라 **단락 누설**로도 나타날 수 있다는 후보 — 5호가 위 벽(고압)에서 본 단락과 다른 자리.
+
+### 4. 요구치 · 이력
+
+- 3 MPa 는 33호 띠(0.4–5 MPa) 안 · 33호 산업 "< 2 MPa" 위 · 25호 2 MPa 보다 위 — **띠의 아래 끝을 새로 내리지 않는다.** 요구치 인쇄는 없다("impractically high stack pressure" · "practically viable conditions" — 값 0).
+- 380 MPa 제조 → 운전으로 내린 절차 미기재 — 25호와 같은 **하강 분기**.
+
+### 5. 이 편이 이 페이지에 **안 준 것**
+
+압력 스윕 · 압력 계측 · 사이클 중 압력(20 MPa 셀은 `[재현]` 사이클당 도금 ≈15 µm) · 반쪽전지 압력 · 양극 쪽 어떤 관측 · 조건당 반복.
 
 ## 경고 (전부 원문이 준 한계에서 나온다)
 

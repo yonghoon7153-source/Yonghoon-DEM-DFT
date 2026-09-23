@@ -2,10 +2,10 @@
 title: 무음극 ASSB 의 Li 인벤토리 계정 — 무엇으로 세고, 어디까지 갈리나
 description: "In an anode-free ASSB there is no Li reservoir, so LLI must be read off charge balance alone. Lee 2020 gives exactly two estimators (first-cycle irreversible capacity and per-cycle Coulombic efficiency) plus three Li-specific observation channels (SEM absence, EELS Li map, XRD of Li9Ag4) — and the two estimators disagree by 10x in the same paper"
 created: 2026-09-16
-updated: 2026-09-16
+updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md]
+sources: [raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -181,6 +181,25 @@ observed" → 층 **안에** 저장된 Li(LiC_x + Li_xAg)는 **전부 돌아왔�
 Li 는 **셀 용량의 0.89 % 이하**다 (Ag 8–16 mg Ah⁻¹, 2.25 Li/Ag).
 → **첫 사이클 비가역 8.2 % 중 Ag 합금이 설명하는 것은 최대 1/9.**
 나머지는 SEI + dead Li + LiC_x 이고, **이 논문은 그 셋을 가르지 않는다.**
+
+## ★★★ 네 번째 표본 — N/P < 1 과충전 셀: CE 결손이 Li 재고를 **넘는다** (2026-09-23, 52호)
+
+`raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md` (Oh … Choi 2025, *Adv. Energy Mater.* 15, 2404817).
+⚠ **모집단**: 무음극이 아니라 **"무음극형"** — SiGr 소량(0.8 mg cm⁻²) 아래 Mg 200 nm, 용량의 85 %(N/P 0.15) · 34 %(N/P 0.66)가 Li 도금. LiNbO₃-NCM811 \| LPSCl · **25 °C** · 20 · 3 MPa · 조건당 셀 1.
+
+| 셀 | CE | 유지율 (`[인쇄]`) | `[재현]` 누적 충–방 결손 | 관측 손실 | 맞나 |
+|---|---:|---:|---:|---:|:--:|
+| 20 MPa · N/P 0.15 | 평균 **99.2 %**(`[인쇄]`) | 83.7 % @75 | ≈**95** mAh g⁻¹ | ≈27 | ❌ ≈3.5 배 |
+| 3 MPa · N/P 0.66 | `[도표]` **≈85–97 %**(본문 무언급) | 64.7 % @75 | ≈**575** | ≈40 | ❌ **재고(≈275)의 ≈2 배** |
+
+Lee 2020(6호)의 어긋남은 **해석 ①(CE 계측 바닥)** 이 압도적이었다. 여기서는 그 해석이 **안 선다** — 3 MPa CE 는 85–97 % 로 바닥과 거리가 멀다. 남는 해석(`[해석]`): **누설 전자**(저자 자신이 SI S17 에 그린 연성 단락 병렬 `r_SS` — 충전 중 Li 이동 없이 전하가 흐른다) 또는 **SE 분해가 재고를 보충**(양극 쪽 LPSCl 산화가 Li⁺ 를 내고 음극에 도금 — 그 자체가 부반응). 어느 쪽이든 **이 셀에서 CE 는 `LLI` 의 추정자가 아니다.**
+
+★ **완충 방향이 하나 더**: `η` 완충(위 §) 말고 **끝 전극 모드**가 있다 — 양극이 방전 끝을 내면 음극에 남은 Li 가 손실을 흡수해 **CE ≈1 인 채로 재고가 준다**; 음극이 끝을 내면 `LLI` 가 곧 용량이다. 이 편은 어느 모드인지 가를 재료(3전극 · dV/dQ)가 없다. 형성 때 음극에 남은 Li(`[도표]` 20 MPa 충전 ≈200 − 방전 185 ≈15 mAh g⁻¹)가 저장소 상한이다.
+★ **조건 간 비교는 면적당으로**: `[재현]` 두 압력의 결손은 ≈0.025 ↔ ≈0.046 mAh cm⁻² 사이클⁻¹(×≈1.8) — CE 차 ×≈7 의 대부분은 양극 적재 20 ↔ 6 mg cm⁻² 다.
+
+> ★★★ **우리에게 남는 명제(6호 명제의 짝)**: CE 가 `LLI` 추정자가 되려면 분해능(6호)만이 아니라 **누설이 0 이라는 것과 끝 전극 모드**가 먼저 서야 한다. 누적 결손이 재고를 넘는지는 한 줄로 검사된다 — [[assb-lampe-contact-product-degeneracy]] 처방 표 "누적 충–방 결손 ↔ Li 재고 상한".
+
+Q7(dead Li ↔ SEI Li): 이 편도 **0** — `dead` · 적정 · 재고 수지 낱말 0, SEI 는 SiGr 반쪽 Nyquist 의 새 반원 이름뿐.
 
 ## 이 페이지가 주장하지 않는 것
 

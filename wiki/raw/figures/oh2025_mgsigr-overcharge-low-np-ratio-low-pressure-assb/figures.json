@@ -1,0 +1,692 @@
+{
+ "slug": "oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "a19c9e1c-14._All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+  "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Voltage proﬁles of the all-solid-state half-cells with overcharging: A) SiGr and B) MgSiGr anode at a current density of 1 mA cm−2 and capacity of 1 mAh cm−2. C) Voltage versus time proﬁles (modiﬁed N/P ratio = 0.22).",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.2,
+    552.9,
+    533.0
+   ],
+   "w": 2118,
+   "h": 1929,
+   "dpi": 300,
+   "src": "a19c9e1c-14._All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.828
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Cross-sectional SEM-EDS images of the (Mg)SiGr anode after overcharging. Morphologies after overcharging the A) SiGr and B) MgSiGr anodes (modiﬁed N/P ratio = 0.06). In the case of simple SiGr, Li precipitates between the active materials. However, with the underlying Mg layer, the Li is neatly stacked beneath the SiGr active material.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.1,
+    257.7
+   ],
+   "w": 2118,
+   "h": 781,
+   "dpi": 300,
+   "src": "a19c9e1c-14._All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.279
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. A) Voltage proﬁles of the ﬁrst cycle in the Li plating-stripping test in the half-cell, at a current density of 1 mA cm−2 and capacity of 3.5 mAh cm−2 (modiﬁed N/P ratio = 0.06 at the given current density). B) CEs at a current density of 1 mA cm−2 and diﬀerent capacities. EIS Nyquist plots after cycling with the C) SiGr and D) MgSiGr anodes at a current density of 1 mA cm−2 and a capacity of 1 mAh cm−2 (modiﬁed N/P ratio = 0.22).",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.2,
+    552.9,
+    340.0
+   ],
+   "w": 2118,
+   "h": 1121,
+   "dpi": 300,
+   "src": "a19c9e1c-14._All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Full-cell evaluations of the (Mg)SiGr anodes in pairing with a LiNbO3-coated NCM811 cathode (N/P ratio = 0.15). A) The ﬁrst formation voltage proﬁles of the (Mg)SiGr anodes at a current density of 0.1C (1C = 3.6 mA cm−2). Voltage proﬁles of the B) MgSiGr and C) SiGr anodes during cycling at 0.2C. D) Cycling performance of the corresponding 0.2C (dis)charge evaluation. E,F) The rate capability of the MgSiGr anode at various charging rates and a ﬁxed discharging rate of 0.1C. E) Voltage proﬁles and F) discharging capacities.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.0,
+    506.7
+   ],
+   "w": 2118,
+   "h": 1819,
+   "dpi": 300,
+   "src": "a19c9e1c-14._All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. X-ray microscopy (XRM) with micro-computed tomography (μ-CT) results of the anode-SE interfaces after the ﬁrst overcharge–discharge cycle. A–C) XRM images of the SiGr anode: A) 3D image at the anode-SE interface, B) pore mapping of the corresponding 3D image, and C) x-y 2D image at the anode-SE interface. D–F) XRM images of the MgSiGr anode: D) 3D image at the anode-SE interface, E) pore mapping of the corresponding 3D image, and F) x-y 2D image at the anode-SE interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.6,
+    552.9,
+    307.7
+   ],
+   "w": 2118,
+   "h": 988,
+   "dpi": 300,
+   "src": "a19c9e1c-14._All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.114
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Full-cell evaluation under practical conditions at room temperature (25 °C) and low stack pressure (3 MPa). Voltage proﬁles of the A) SiGr, B) Li metal (10 μm-thick), and C) MgSiGr anodes at 0.2C for both charge and discharge (N/P ratio = 0.66). D) Cycling performance at 0.2C for both charge and discharge. E) Pouch-cell performance of the MgSiGr full-cell (N/P ratio = 0.6).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.0,
+    550.1,
+    526.7
+   ],
+   "w": 2118,
+   "h": 1900,
+   "dpi": 300,
+   "src": "a19c9e1c-14._All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Comparative illustration of charging processes in SiGr, Li metal, and MgSiGr anodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.0,
+    484.8,
+    372.7
+   ],
+   "w": 1835,
+   "h": 1259,
+   "dpi": 300,
+   "src": "a19c9e1c-14._All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.71
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Schematic illustrations of overcharging. (A) Si-graphite (SiGr) composite anode with uneven Li deposition during overcharging, which leads to the growth of Li dendrites. (B) The presence of the Mg layer underneath the SiGr layer enables stable Li deposition beneath this layer by exploiting Li−Mg alloy formation.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    533.5,
+    316.7
+   ],
+   "w": 1953,
+   "h": 1168,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.572
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Theoretical energy density comparison between SiGr and MgSiGr anodes at 3 mAh cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    530.4,
+    232.5
+   ],
+   "w": 1940,
+   "h": 817,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Top-view SEM image of the Mg-coated SUS anode current collector.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    530.4,
+    263.8
+   ],
+   "w": 1940,
+   "h": 948,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.57
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Cross-sectional SEM-EDS images of the Mg-coated SUS anode current collector.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    530.4,
+    206.1
+   ],
+   "w": 1940,
+   "h": 707,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.361
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. (A) Voltage versus time profiles and (B) CEs of half-cell plating-stripping test at a current density of 1 mA cm−2 and a capacity of 1 mAh cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    531.8,
+    371.4
+   ],
+   "w": 1946,
+   "h": 1396,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. SEM images of the SiGr active material.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    532.4,
+    228.3
+   ],
+   "w": 1949,
+   "h": 800,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.235
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. XRD pattern of the SiGr active material.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    530.4,
+    279.7
+   ],
+   "w": 1940,
+   "h": 1014,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 11,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Cross-sectional SEM-EDS images of the MgSiGr anode.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    531.0,
+    295.6
+   ],
+   "w": 1943,
+   "h": 1080,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.274
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 12,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Ionic conductivity and SEM image of LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    69.2,
+    400.6,
+    335.6
+   ],
+   "w": 1400,
+   "h": 1111,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.768
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 13,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. (A) XRD and (B) Raman results of LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    531.5,
+    214.1
+   ],
+   "w": 1945,
+   "h": 741,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 14,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Half-cell evaluation of the SiGr anodes without overcharging. Half-cell voltage profiles of the SiGr anode (loading = 0.8 mg cm−2) at current densities of (A) 0.1C (0.05 mA cm−2) and (B) 1 mA cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    533.5,
+    227.1
+   ],
+   "w": 1953,
+   "h": 795,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 15,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. CV profiles of the first cycle of the (A) SiGr and (B) MgSiGr anodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    530.4,
+    214.1
+   ],
+   "w": 1940,
+   "h": 741,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 16,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Voltage versus time profiles of the (A) MgSiGr and (B) SiGr anodes at a current density of 1 mA cm−2 and capacity of 3.5 mAh cm−2 (modified N/P ratio = 0.06).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    533.5,
+    394.2
+   ],
+   "w": 1953,
+   "h": 1491,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 17,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Cross-sectional SEM-EDS images of the MgSiGr anode after the 51st overcharge cycle (modified N/P ratio = 0.06).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    531.2,
+    148.7
+   ],
+   "w": 1944,
+   "h": 468,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.374
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 18,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Half-cell plating-stripping test of the (Mg)SiGr anodes at various N/P ratios. CE and voltage versus time profiles at a current density of 1 mA cm−2 and capacity of 1 mAh cm– 2. Tests were conducted with modified N/P ratios of (A and B) 0.05, (C and D) 0.11, (E and F) 0.33 and (G and H) 0.44 by varying the SiGr loading.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    533.5,
+    610.7
+   ],
+   "w": 1953,
+   "h": 2393,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.849
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 19,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Equivalent circuit for the EIS Nyquist plot (ZW: Warburg impedance).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    530.4,
+    209.6
+   ],
+   "w": 1940,
+   "h": 722,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 20,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Half-cell short-circuiting behavior during EIS analysis. (A−C) Schematic illustrations of the SiGr half-cells under (A) normal (short-circuit-free), (B) soft short-circuit, and (C) hard short-circuit conditions. (D−F) Corresponding Nyquist plots. (G−I) Corresponding equivalent circuits for the EIS measurements. rB: the bulk electrolyte resistance, rCT: charge transfer resistance, C: electric double layer capacitance, rSS: resistance during the soft short circuit, rHS: resistance during the hard short circuit, RB: bulk electrolyte resistance in reflection of the short-circuit resistance if any, and RCT: charge transfer resistance in reflection of the short-circuit resistance if any.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    533.5,
+    442.2
+   ],
+   "w": 1953,
+   "h": 1691,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.771
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 21,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. In situ EIS measurements of the (Mg)SiGr half-cells. (A and B) First Li plating voltage versus time profiles of the in situ EIS measurements with the (A) SiGr and (B) MgSiGr anodes. Measurements were conducted at a current density of 1 mA cm−2 and capacity of 1 mAh cm−2 (modified N/P ratio = 0.32), with EIS analysis in intervals of 0.1 mAh cm−2. (C and D) Nyquist plots of the (C) SiGr and (D) MgSiGr anodes corresponding to these measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    533.5,
+    597.8
+   ],
+   "w": 1953,
+   "h": 2339,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 22,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. RB and RCT of the (A) SiGr and (B) MgSiGr anodes retrieved from the in situ EIS measurements throughout charge. The first three points are from the SiGr charging stage and the remaining points are from the Li plating stage.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    533.5,
+    251.6
+   ],
+   "w": 1953,
+   "h": 897,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 23,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Half-cell tests of the (Mg)SiGr anodes with a stripping cutoff voltage of 1.5 V. (A) Voltage profiles of the first cycle of the (Mg)SiGr half-cell plating-stripping test, at a current density of 1 mA cm−2 and capacity of 1 mAh cm−2. (B and C) Cycling data with (Mg)SiGr anodes for the corresponding test. (B) CE and (C) voltage versus time profiles (modified N/P ratio = 0.22).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    533.5,
+    352.6
+   ],
+   "w": 1953,
+   "h": 1318,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 24,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. SEM image of LiNbO3-coated NCM811 particles (diameter of 5 µm).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    530.4,
+    272.8
+   ],
+   "w": 1940,
+   "h": 985,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.614
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 25,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. XRM cross-sectional images of the (Mg)SiGr anodes. x-z 2D image of the anode-SE interface of the (A) SiGr and (B) MgSiGr anodes after the initial overcharge- discharge cycle with the modified N/P ratio of 0.22.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    533.5,
+    185.6
+   ],
+   "w": 1953,
+   "h": 622,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.464
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 26,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Schematic illustration of the spring-based pellet-cell structure for low stack pressure evaluations.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    533.4,
+    262.2
+   ],
+   "w": 1953,
+   "h": 941,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 27,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. Voltage profile (21st cycle) of the full-cell with the plain SiGr anode at low stack pressure (3 MPa). Infinite charging behavior is reflective of short-circuiting.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    533.5,
+    291.2
+   ],
+   "w": 1953,
+   "h": 1062,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 28,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. Voltage profiles of the pouch-cells operating at room temperature and low stack pressure (3 MPa). (A) First formation voltage profiles of the (Mg)SiGr pouch-cells at a current density of 0.1C. (B) Voltage profiles of the MgSiGr pouch-cell during cycling at a current density of 0.5C (N/P ratio = 0.6).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    36.6,
+    533.5,
+    248.1
+   ],
+   "w": 1953,
+   "h": 882,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Theoretical volumetric energy density of a conventional SiGr anode cell (N/P ratio = 1.1) along with detailed cell specifications.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    116.6,
+    528.2,
+    798.4
+   ],
+   "w": 1932,
+   "h": 2842,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.973
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Theoretical volumetric energy density of the MgSiGr anode cell with overcharging (N/P ratio = 0.5) along with detailed cell specifications.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    116.6,
+    529.4,
+    798.4
+   ],
+   "w": 1936,
+   "h": 2842,
+   "dpi": 300,
+   "src": "324048fe-14._Sup_All_Solid_State_Batteries_With_Extremely_Low_NP_Ratio_Operating_at_Low_Stack_Pressure.pdf",
+   "blank": 0.978
+  }
+ ]
+}
