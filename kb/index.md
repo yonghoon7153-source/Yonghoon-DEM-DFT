@@ -1,13 +1,14 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-23 · managed-files: 438
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-23 · managed-files: 439
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 237건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 238건)
 - 2026-09-23 · `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다)
+- 2026-09-23 · `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응 · 진단 정리 — 값은 citable:false (사전등록 게이트 미통과…
 - 2026-09-22 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-22 · `kb/reviews/li2s1a_BS_prompt_li2s_relax_provenance_2026_09_22.md` — BS 수신 원문 — li2s relax 계보·E_hull 분해·−38.4 읽는 방향·600 K 문구 · 수신됨-회신함
 - 2026-09-22 · `kb/reviews/li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md` — BS 회신 — relax 프레임 동정 불가 · E_hull 분해 · −38.4 상한 읽기 · 600 K 문구 정정 · 회신문-작성됨
@@ -26,7 +27,6 @@
 - 2026-09-14 · `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나 · 발송됨
 - 2026-09-14 · `kb/reviews/codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 회신 — G4 는 합격선이 아니라 경보. '셀 문제 배제' 는 받아들일 수 없다 · 회신됨
 - 2026-09-14 · `kb/reports/weekly_2026_09_14.md` — 주간 정리 2026-09-07 ~ 09-13 (주간보고 초안) · 완료 (2026-09-14 · 다음 주 문서는 새 파일)
-- 2026-09-14 · `kb/syntheses/sdcp_eads_revision_defense_2026_08_23.md` — SDCP E_ads — 리비전 방어 카드 (원고 v5, SI 미기재분) · 확정 — 2026-08-23 사용자 결정: 이 두 항목은 SI 에 넣…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -114,7 +114,7 @@
 - `kb/methodology/windows_reinstall_backup_2026_08_24.md` — Windows 재설치 전 백업 — C: 오판 정정과 실제 위험처  (2026-08-24 · 진행 — 스크린샷 판독은 확정, C: 실사는 미실시)
 - `kb/methodology/zn_cu_hull_estimand_2026_09_03.md` — 보고량 카드 — Cu–Zn convex hull (Zn ALZIB C1 후속)  (2026-09-03 · 제안)
 
-## results/ (95)
+## results/ (96)
 - `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
 - `kb/results/README.md` — kb/results 지도 — 계별로 지금 유효한 것 / 마감 근거 / 접힌 역사  (2026-09-09 · 운영중)
 - `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
@@ -192,6 +192,7 @@
 - `kb/results/screen_volume_vs_energy_2026_08_18.md` — 부피로 떨어뜨린 100개가 "에너지로는 멀쩡한" 진짜 이유 — 조성 섞임이지 구조가 아니다  (2026-08-19 · 확정)
 - `kb/results/sdcp_linio2_binding_report.md` — SDCP Binder Anchoring on LiNiO₂ (104)  (2026-08-11 · 역사 문서 — 계면 결합값 전면 재계산 대상 (2026-08-03 슬…)
 - `kb/results/sdcp_master_summary_2026_07_16.md` — SDCP 종합 정리 — 오비탈 · 작용기 · DFT (마스터)  (2026-07-16 · phaseB-5of5-DONE_verdict-PENDING-v2 (d…)
+- `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응  (2026-09-23 · 진단 정리 — 값은 citable:false (사전등록 게이트 미통과…)
 - `kb/results/sdcp_ptfe_site_screen_summary_2026_08_11.md` — 자리 선호 스크리닝 — UMA 로 무엇을 봤고, 왜 값이 안 나왔고, VASP 에 무엇을 넘겼나  (2026-08-11 · UMA 단계 완료 · DFT+U 인계 준비 완료)
 - `kb/results/sdcp_slab_plateau_broken_2026_08_03.md` — SDCP 슬랩 plateau 를 깼다 — 원인은 계가 아니라 Broyden 이력 (2026-08-03)
 - `kb/results/sdcp_wave1_citable_2026_08_25.md` — SDCP wave1 인용 확정본 — 논문에 쓰는 값 한 장 (basin 일치분)  (2026-08-25 · 인용확정)

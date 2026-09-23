@@ -191,9 +191,14 @@ def test_gallery_carries_hazard_and_policy():
     blocked = {f["rel"] for f in fs if f.get("policy")}
     assert blocked, "artifact_policy 가 막는 파일이 갤러리에 표시되지 않는다"
     # ⛔음성: 정책이 허용하는 평범한 파일에는 policy 가 붙지 않는다
-    plain = [f for f in fs if not f["rel"].startswith(("db/properties/cascade_",
-                                                       "docs/figures/cascade/"))]
-    assert plain and all(f["policy"] is None for f in plain[:50])
+    # "평범한 파일" 의 경계는 정책 모듈 자신의 판정(`is_governed`)을 쓴다. 2026-09-23 까지는
+    # 접두어 두 개를 여기 복사해 두었는데 정책 쪽 `GOVERNED_PREFIXES` 는 셋이었다
+    # (`db/properties/oxidation_stability_cascade` 누락). 그 파일들이 최근 수정돼 갤러리 앞 50개에
+    # 들어오자, **정상적으로 막힌** cascade 파일을 "평범한데 막혔다" 로 읽어 빨간불이 났다.
+    import artifact_policy as AP
+    plain = [f for f in fs if not AP.is_governed(f["rel"])]
+    assert plain and all(f["policy"] is None for f in plain[:50]), \
+        [f["rel"] for f in plain[:50] if f["policy"] is not None]
 
 
 def test_hazard_badge_reaches_the_screen(cl):

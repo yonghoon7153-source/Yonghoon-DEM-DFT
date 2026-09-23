@@ -3,13 +3,33 @@
 > 세션이 바뀌어도 유지되는 미결 사항 추적. 닫을 때 날짜+근거를 남기고 ✅로 옮긴다.
 > 등록: 2026-07-27 (MAX 감사 후속).
 
-## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-22 — ⏭-NOW-v 가 최신 (논문 4편 인입 · 원장 정정 3건 · 🔴 음극 반응식 BLOCKED). 앞 블록 ⏭-NOW-u 는 같은 날 오전(li2s BS·BT·BU), ⏭-NOW-t 는 09-21 심야**)
+## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-23 — ⏭-NOW-w 가 최신 (SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면 fail-closed). 앞 블록 ⏭-NOW-v 는 09-22 낮(논문 4편 · 원장 정정 3건), ⏭-NOW-u 는 같은 날 오전**)
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 >
 > ⚠ **이 절의 상태 문장은 실측으로만 쓴다.** 2026-09-07 까지 여기 머리가 "ORCA 8잡 실행 중"
 > 이었는데 같은 날 실측은 **프로세스 0개**였다 — 워처·기억이 아니라 `ps`·receipt·git log 로
 > 받친다(`kb/projects/restart_runbook_2026_09_07.md`). 세션을 닫을 때 이 절을 갱신한다.
+
+### ⏭-NOW-w. 2026-09-23 새벽 — **SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면이 어제부터 닫혀 있다**
+
+- ✅ **SDCP/PTFE (C-12 v41, 1저자 = 사용자)** — 사람용 정리 `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md`
+  (숫자의 지위 · 1.83/2.54 Å 와 DFT 힘 · PTFE −0.79 크기 검증 · Kang 2025 대비 · 대기 12잡 · 세미나 멘트·예상 질문).
+  수치 정본은 `db/properties/sdcp_c12_v41_eads_ungated_2026_09_21.json` §9 (D3 독립재현 0.5/2.6 meV · 분산모델 4종
+  PTFE −0.66~−0.79 · D 부호 불변). 값은 여전히 `citable: false` — **v42 mirae 회신 대기**(1단계 5잡 → 2단계 7잡).
+  ⚠ 1저자가 9/23 내부 연구세미나 슬라이드에 −0.96(TOTEN F)/−0.79 를 쓰려 했다 — 정본은 −0.955, Preliminary 각주 권고.
+- ✅ **[Li26MCI] (Li·Jeon·Persson 2026 MLST, Na₃PS₄‖Na)** digest·그림 25·병합(INDEX · Ref key · §E · §H · §J-42) 완료.
+  `kb/concepts/cv_vs_dqdv_and_two_windows.md` §8-4 부분 정정(kim2026·lomeli2024 누락, "분야 전체의 공백" 과장).
+  🔎 확보 1순위 = **ref 19 Li et al. *J. Phys. Chem. C* 129, 16043 (2025)** (Li₇P₃S₁₁‖Li — "평탄" 의 원전).
+- 🔴 **웹앱 cascade 화면이 fail-closed 다 (2026-09-22 ESW 가장자리 수정의 부작용).** `cascade_audit_manifest.json` 이
+  해시를 박은 4파일(`oxidation_stability_cascade_v3_pinned.json` · `b2o3_esw.json` · `cascade_screening_funnel{,_v2}.json`)을
+  어제 고쳐서 불일치 → 헤드라인 타일·감사 그림 0개. `webapp/tests/test_webapp.py` 3건 빨간불(정상 경보다).
+  ⛔ **원장 해시만 다시 박지 않는다** — `rebuild_pool_inputs.py:119` 가 `window_V` 를 읽어 퍼널 게이트로 넘기므로
+  **풀 입력 → `build_screening_funnel.py` → 감사 그림 → `build_cascade_audit_manifest.py`** 순서로 다시 만들어야 하고,
+  **퍼널 통과 목록이 바뀔 수 있다**(ESW 트랙 = 1저자 사용자 결정). 세미나 뒤 따로 한다.
+- ✅ `webapp/tests/test_v3_records.py::test_gallery_carries_hazard_and_policy` — 테스트가 정책 접두어를 **둘만 복사**해 두고
+  정책은 셋이라(`oxidation_stability_cascade` 누락) 정상적으로 막힌 파일을 "평범한데 막혔다" 로 읽었다 →
+  `artifact_policy.is_governed()` 를 직접 쓰게 고침 · 음성(평범한 파일에 policy 주입 → 잡힘) 확인.
 
 ### ⏭-NOW-v. 2026-09-22 낮 — **논문 4편이 우리 원장을 세 군데 고쳤다**
 
