@@ -71,8 +71,10 @@ SI_PRE = r"(?:Supplementary|Supplemental|Supporting|Extended\s+Data|Extended|Onl
 CAP_RE = re.compile(
     r"^\s*(?P<si>" + SI_PRE + r")?"
     r"(?P<kind>F[i1l][gq9](?:ure|s)?[.:]?|Tab[l1]e[.:]?|Sche[mn]e[.:]?)\s*"
-    r"(?P<label>S?\d+)(?![a-z0-9])\s*(?P<sep>[.|:,–—]|\s)\s*(?P<rest>.*)",
+    r"(?P<label>(?:ST|S)?\d+)(?![a-z0-9])\s*(?P<sep>[.|:,–—]|\s)\s*(?P<rest>.*)",
     re.S | re.I)
+#   ⚠ `Table ST1:` 양식 (2026-09-24 schlautmann2023 SI 실측) — 라벨이 `S?\d+` 뿐이라 **SI 표 4장이
+#     통째로** 안 나왔다.  ST 를 받고 is_caption 에서 S 로 정규화한다 (파일명은 여전히 tab_S1).
 # 본문 문단이 흔히 쓰는 동사 — 구두점이 없을 때 최종 판별
 VERBS = re.compile(
     r"^(shows?|displays?|presents?|illustrates?|summari[sz]es?|gives?|depicts?|compares?|"
@@ -102,7 +104,10 @@ def is_caption(text):
         return None                            # "Figure 3 shows ..." → 본문
     if len(t) < 12:                            # "Figure 1" 만 있는 상호참조 조각
         return None
-    return kind, m.group("label"), bool(m.group("si"))
+    label = m.group("label")
+    if label[:2].upper() == "ST":              # "Table ST1" → S1 (위 CAP_RE 주석)
+        label = "S" + label[2:]
+    return kind, label, bool(m.group("si"))
 
 
 def caption_rotation(page, cap_bbox):
@@ -236,6 +241,50 @@ def is_prose(b, pr=None):
     return False
 
 
+def _up_limit(cap, blocks, pr):
+    """캡션 **위** 영역의 위쪽 경계 y — 같은 단에서 가장 가까운 경계 블록(산문·캡션·머리글)의 아래 끝.
+
+    PDF 없이 시험할 수 있게 `_side_rect` 에서 떼어냈다 (blocks 는 `text_blocks` 형식 튜플,
+    pr 은 쪽 사각형).
+    """
+    x0, y0, x1, y1 = cap[:4]
+    band = (x0, x1)
+    lim = pr.y0 + 24
+    for b in blocks:
+        if b[3] <= y0 + 1 and band_overlap(band, (b[0], b[2])) > 0.45 and is_prose(b, pr):
+            yb = b[3]
+            if is_caption(b[4]):
+                yb = max(yb, min(_caption_tail_y1(blocks, b), y0 + 1))
+            lim = max(lim, yb)
+    return lim
+
+
+def _caption_tail_y1(blocks, cap):
+    """위 그림 캡션 블록의 **이어진 한 줄짜리 블록들**까지 포함한 아래 끝 y.
+
+    ⚠ 2026-09-24 (schlautmann2023 SI S2·S5·S7·S9 실측): 캡션이 **줄마다 다른 블록**이면 짧은 마지막
+      줄("3.4 µm.")이 is_prose 를 못 넘어 경계에서 빠지고, 크롭 맨 위에 딸려 들어왔다.
+    ⛔ merge_caption(14 pt 안이면 무엇이든)을 쓰면 **안 된다** — 첫 수정이 그랬다가 캡션 뒤 본문 문단과
+      다음 그림의 패널 라벨 "(a) (b)" 까지 삼켜 Fig. 8 머리를 잘랐다 (79b422f7 임피던스 논문 p12 실측,
+      --selftest 음성 검사).  쪼개진 캡션의 이음줄만 받는다: **한 줄짜리** · 캡션과 **왼쪽 끝이 맞음**
+      (±3 pt) · 간격 ≤ 한 줄 높이 · 캡션이 아님.  가운데 정렬 캡션의 꼬리는 못 잡는다 (예전 동작 그대로).
+    """
+    txt = (cap[4] or "").strip()
+    lh = (cap[3] - cap[1]) / max(1, txt.count("\n") + 1)       # 캡션 한 줄 높이
+    y1 = cap[3]
+    for c in sorted(blocks, key=lambda c: (c[1], c[0])):
+        if c[1] < y1 - 0.5:
+            continue
+        if band_overlap((cap[0], cap[2]), (c[0], c[2])) < 0.5:
+            continue                                            # 다른 단
+        ct = (c[4] or "").strip()
+        if (c[1] - y1 > lh or is_caption(ct) or "\n" in ct
+                or c[3] - c[1] > 1.5 * lh or abs(c[0] - cap[0]) > 3):
+            break
+        y1 = c[3]
+    return y1
+
+
 def _side_rect(page, cap, blocks, up, margin=6.0):
     """캡션 기준 위(up=True)/아래 영역 → (rect, 이미지수, 벡터수).
 
@@ -245,10 +294,7 @@ def _side_rect(page, cap, blocks, up, margin=6.0):
     x0, y0, x1, y1 = cap[:4]
     band, pr = (x0, x1), page.rect
     if up:
-        lim = pr.y0 + 24
-        for b in blocks:
-            if b[3] <= y0 + 1 and band_overlap(band, (b[0], b[2])) > 0.45 and is_prose(b, pr):
-                lim = max(lim, b[3])
+        lim = _up_limit(cap, blocks, pr)
         rect = fitz.Rect(x0, lim + 2, x1, y0 - 2)
     else:
         lim = pr.y1 - 24
@@ -354,6 +400,9 @@ def _shrink(path):
         if cols is None or len(cols) > 3500:
             im.save(path, "PNG", optimize=True)
         else:
+            # ⛔ 2026-09-24 — 위 수정(08-25) 때 이 줄이 **같이 지워져** `q` 가 미정의였다.  NameError 를
+            #   아래 `except: pass` 가 삼켜 선화 재압축이 한 달 동안 **한 번도** 안 돌았다 (--selftest (c)).
+            q = im.quantize(colors=256, method=Image.MEDIANCUT)
             q.save(path, "PNG", optimize=True)
     except Exception:
         pass
@@ -1418,6 +1467,60 @@ def selftest():
         idx.write_text("{ 깨진 json", encoding="utf-8")
         chk("⛔음성: 색인이 깨져도 죽지 않는다", orphans_if_cleaned("slg", [], root) == [])
         chk("⛔음성: 색인이 아예 없으면 빈 목록", orphans_if_cleaned("없는슬러그", [], root) == [])
+
+    # ── 2026-09-24 schlautmann2023 SI 실측 — 결함 셋의 재현 ─────────────────────────
+    # (a) `Table ST1:` 양식.  라벨 정규식이 `S?\d+` 라 ST 를 못 받아 SI 표 4장이 통째로 빠졌다.
+    h = is_caption("Table ST1: Microstructure model parameters. Void space of the composite")
+    chk("★ST 표 라벨 → table · S1 로 정규화 (schlautmann2023 SI 실측 — 종전엔 0장)",
+        h is not None and h[0] == "table" and h[1] == "S1")
+    chk("⛔음성: ST 라벨이어도 본문은 본문 (shows)",
+        is_caption("Table ST2 shows the statistical input for the particle sizes") is None)
+    # (b) 위 그림의 캡션이 **줄마다 다른 블록**이면 짧은 마지막 줄이 산문 판정을 못 넘어
+    #     경계에서 빠진다 → 크롭 맨 위에 그 줄이 딸려 들어왔다 (S2·S5·S7·S9).  좌표는 실측.
+    pr = fitz.Rect(0, 0, 595, 842)
+    prev1 = (72, 246.3, 523, 261.0, "Figure S1: Scanning electron microscopy of "
+             "LiNi0.83Co0.11Mn0.06O2 particles with a D50vol value of", 0, 0)
+    prev2 = (72, 268.4, 140, 283.1, "3.4 µm.", 1, 0)
+    cur = (72, 647.1, 523, 661.8, "Figure S2: Scanning electron microscopy of Li6PS5Cl", 2, 0)
+    chk("★위 캡션의 짧은 마지막 줄까지 경계로 (S2 실측 283.1 — 종전 261.0)",
+        abs(_up_limit(cur, [prev1, prev2, cur], pr) - 283.1) < 1e-3)
+    lbl = (80, 300.0, 95, 310.0, "a)", 3, 0)
+    chk("⛔음성: 캡션과 떨어진 그림 속 라벨은 경계를 끌어내리지 않는다",
+        abs(_up_limit(cur, [prev1, prev2, lbl, cur], pr) - 283.1) < 1e-3)
+    # 첫 수정(merge_caption 재사용)의 회귀를 고정 — 79b422f7 임피던스 논문 p12 실측 좌표.
+    #   Fig. 7 캡션(4줄) 뒤 본문 문단(8줄)과 Fig. 8 패널 라벨 "(a) (b)" 를 삼켜 경계가 552.0 이 됐다.
+    cap7 = (72, 330.9, 542.8, 384.0, "Fig. 7. Effect of individual SEI-phase conductivity on\n"
+            "predicted impedance\nline three\nline four", 0, 0)
+    para = (72, 393.6, 543.0, 520.9, "\n".join(["Finally, all three SEI decomposition products "
+            "(Li2S, Li3P, and LiCl) were considered together"] * 8), 1, 0)
+    ab = (84.4, 532.6, 339.0, 552.0, "(a)\n(b)", 2, 0)
+    cur8 = (72, 662.0, 543.0, 690.0, "Fig. 8. Impedance of the full cell with all SEI phases", 3, 0)
+    chk("⛔음성: 캡션 뒤 **본문 문단·다음 그림 라벨**은 캡션 꼬리가 아니다 (경계 = 문단 끝 520.9, 첫 수정은 552.0)",
+        abs(_up_limit(cur8, [cap7, para, ab, cur8], pr) - 520.9) < 1e-3)
+    # (c) `_shrink` 팔레트 분기.  2026-08-25 수정 때 `q = im.quantize(...)` 한 줄이 빠져
+    #     NameError 를 `except: pass` 가 삼켰다 → 선화 재압축이 **한 번도** 안 돌았다.
+    try:
+        from PIL import Image as _Im
+    except Exception:
+        _Im = None
+    if _Im is None:
+        chk("PIL 없음 — _shrink 검사 건너뜀 (도구도 PIL 없으면 재압축을 안 한다)", True)
+    else:
+        import random as _rnd
+        with tempfile.TemporaryDirectory() as td:
+            p1 = Path(td) / "line.png"
+            im = _Im.new("RGB", (64, 64), "white")
+            im.paste((0, 0, 0), (10, 10, 50, 12))
+            im.save(p1)
+            _shrink(p1)
+            chk("★선화(색 2개)는 팔레트(P)로 저장된다 — 종전엔 조용히 RGB 그대로", _Im.open(p1).mode == "P")
+            p2 = Path(td) / "rich.png"
+            g = _rnd.Random(0)
+            im2 = _Im.new("RGB", (80, 80))
+            im2.putdata([(g.randrange(256), g.randrange(256), g.randrange(256)) for _ in range(6400)])
+            im2.save(p2)
+            _shrink(p2)
+            chk("⛔음성: 색이 많은 그림(4096 초과)은 RGB 로 남는다 (양자화 금지)", _Im.open(p2).mode == "RGB")
 
     print(f"\nselftest: {ok} 통과 / {fail} 실패")
     return 1 if fail else 0
