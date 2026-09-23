@@ -4597,6 +4597,20 @@
    ]
   },
   {
+   "id": "LHS-11",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (LHS 인계 판단 — 수확기 ↔ 웹앱 비교 준비 중, 2026-09-24)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "130 중 **97** 건의 플래튼 위치가 원자 덤프보다 **평균 150만 step 이른** 메시에서 나왔다 — 압축 중인 플래튼이라 porosity 가 부풀었다 (중앙 38.5 % vs 같은 step 11.0 %)",
+   "note": "`lhs_harvest_batch.pick_mesh` 가 같은 step 메시가 없으면 원자 step 이하의 최신 메시를 쓴다 (`latest_le`, 97 건).  step 차이 중앙 150만 · 최대 290.5만, LHS 런은 290만 step 에서도 압축 중이다.  벽 기준 porosity: `exact` 33 건 중앙 11.0 % · `latest_le` 97 건 중앙 38.5 % — 겹치지 않음, 메시 step 과 상관 −0.95.  `LHS-10` (분모 바닥 10 µm) 보다 크고, 판단 J5 (벽 기준으로도 높은 porosity) 의 주원인.  처방: 같은 step 메시를 원본에서 찾아 재수확 · 없으면 thermo 나 고체 윗면으로 대체하고 라벨 · `latest_le` 를 거부나 step 한도로 · `scripts/lhs_phi_crosscheck.py` 의 `plate_gap` 으로 실측 확인.",
+   "evidence_tests": [
+    "docs/data/lhs_descriptors_20260919/_batch_summary.json",
+    "scripts/lhs_phi_crosscheck.py"
+   ]
+  },
+  {
    "id": "MIX-01",
    "severity": "P1",
    "status": "claimed_fixed",
