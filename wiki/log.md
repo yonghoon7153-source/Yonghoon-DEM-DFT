@@ -2102,3 +2102,18 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **15장 전부 봤다, 안 본 것 0장** (+ 쪽 렌더 26장 · 벡터 추출 Fig. 3b·7·9a·11a·14b).
 - 후속 후보: ★★★★ 1 **Khalik 2021 *J. Power Sources* 499, 229901** (ref 27) · ★★★★ 2 **Lu, Trimboli, Fan, Wang, Plett 2022 *JES* 169, 080504** (ref 28) · ★★★ 3 **Schmidt, Sinzig, Wall 2024 *JES* 171, 100502** (ref 18, 박리).
 - lint: **0 errors · 0 warnings**.
+
+## [2026-09-23] ingest | `assb` 28호 — Bizeray, Kim, Duncan, Howey 2019, Identifiability and Parameter Estimation of the Single Particle Lithium-Ion Battery Model (IEEE TCST 27(5), 1862) — ⚠ 액체셀
+
+- `raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md` (sha256 봉인). 큐 **27번**("방법론 원전 (액체셀)"). Oxford + SAIT. 선형화 SPM 의 구조적(전달함수 유일성) · 실제적(손실 등고선) 식별성, 합성 LCO + 실험 Kokam NMC 740 mAh EIS. ASSB 아님 — Q4 방법 원전이라 `assb` 번호.
+- 큐 표 낱말 지문 재집계 — `identifiab` 추출 그대로 9 는 **전부 대문자 쪽 머리글**, **NFKC 뒤 54**(본문 42 · 머리글 9 · 참고문헌 3). `ﬁ` 182 · `ﬂ` 16. `OCV` 67 · `GITT` 2 · `sensitiv` 7 · `Sobol` 0 · `fit` 0 → 14. **합자 맹점이 IEEE 에도 있다.**
+- ★★★★ **Q4 ASSB 0/28 — 도구 칸만.** 계보 첫 셋째 줄(식별성)이지만 식별 집합 `(τ_d⁺, τ_d⁻, R_ct)` 에 용량이 없다 — `Q_th` 는 `β = dU/dQ`(기준극 입력)로, `x⁰` 는 가정. 보편 범위 명제("any lithium-ion battery model … flat OCV")는 동역학 파라미터 ⇒ 반 칸 검토 후 접음. **스물한 번째 성질 "도구는 있고 대상이 없다".**
+- ★★★ `[해석]` 묶음 대조 — 26호 `k₁≡k₂` = 식 50 같은 구조 · `D_e⁻` 0 열 = 예외 1(`β = 0`) 같은 부류 · 다른 기구 · 27호 `1 − u` = `Q_th` 손잡이. **SPM 에서 입자 통째 비연결 ≡ LAM**(ε 는 `Q_th` 에만 있다), 표면 일부 접촉은 `R0` 로 사라진다.
+- ★★★ `[재현]` Fig. 9 벡터: "max 20 mV" 는 양의 최대 — 적색 최소 −42.9 mV, RMS 10.3 ✓, 순 방전 72.5 mAh(9.8 %) ✓. ×0.78 사후 보정(양극 OCV 기울기 ≡ `Q_th⁺` ×1.28)은 검증과 같은 데이터. Table I `D₊` 는 그림과 10³ 불일치(Fig. 1 저주파 점근선으로 판정).
+- **곱 축퇴 처방 열한 번째 적용** — 1–4단계 전부 ❌(고주파 반원을 설계상 버림). 곱의 액체 SPM 원형(식 18 · 26)은 있다.
+- **채움표 28호 행 — 누적 ≈15.5 → ≈15.5 (새 칸 0).** Q3 층 하나(합성 참값 복원 — 같은 모델 · 무잡음).
+- 컴파일: **새 개념 [[spm-grouped-parameter-identifiability]]**(도구 페이지, `assb` 태그 없음) · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · For 스물네 번째 · 새 제약 6 · Status Log · 주장하지 않는 것) · [[assb-sensitivity-sweep-vs-identifiability]](28호 절 · 처방 7) · [[assb-lampe-contact-product-degeneracy]](열한 번째 적용) · [[22p-physics-or-degeneracy]](전극 맞바꿈 대칭, 형식 유비) · `index.md` 등록.
+- ⚠ 어긋남 8 건(D1 `D₊` ×10³ · D2 `τ_d⁻` 2841 ↔ ≈4000 · D3 `A` 이름·단위 · D4 max 20 ↔ −42.9 mV · D5 60000 ↔ 50 147 s · D6 둘째 최소 확인 불가 · D7 비독립 검증 · D8 `R_ct(DoD)` 를 비용으로 읽음).
+- 그림: **9 장 전부 봤다, 안 본 것 0 장** (+ Table II 쪽 렌더 · Fig. 9 벡터 추출).
+- 후속 후보: ★★★★ 1 **Forman 2012 *J. Power Sources* 210, 263** (ref 18, DFN Fisher 식별성) · ★★★ 2 **Alavi 2016 arXiv 1505.00153** (ref 33, Randles 회로 식별성) · ★★★ 3 **Santhanagopalan 2007 *JES* 154, A198** (ref 30, 모델 판별). 26·27호 모두 이 편 인용 0.
+

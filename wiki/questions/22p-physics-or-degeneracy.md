@@ -2,10 +2,10 @@
 title: 22p 결과는 물리인가 fitting degeneracy 인가
 description: "Is the seminar 22p LLI/LAM decomposition (LAM_PE=LAM_NE=13%, LLI=17%) real physics or an artifact of non-identifiability"
 created: 2026-08-11
-updated: 2026-09-22
+updated: 2026-09-23
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -184,6 +184,16 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   재지 않았다. (c) 재료 라벨도 오차 막대 0·SOH 당 1 셀·교차 셀 보간(XRD 보정용
   LAM_NE 를 다른 셀의 코인셀에서 선형 보간)이다. 개념 페이지
   [[ic-peak-area-direct-mode-readout-lfp]].
+- **[2026-09-23, Bizeray et al. 2019 — 액체셀 SPM 식별성 원전, 형식 유비만]** 2전극 측정에는
+  **전극 맞바꿈 대칭**이 있다는 것이 식으로 인쇄돼 있다: 선형화 SPM 전달함수
+  `β₊ f(s, τ_d⁺) − β₋ f(s, τ_d⁻) − R_ct` 는 `β₊ = −β₋` 일 때 두 전극의 확산 시간상수를
+  맞바꿔도 같고(`[인쇄]` "the anode and cathode dynamics cannot be distinguished … the measured
+  voltage is the difference between the anode and cathode OCV"), 합성 데이터 75 % DoD 손실
+  등고선에 **참값과 맞바꾼 점의 두 최소**가 그대로 보인다(Fig. 2). 처방은 전극마다 기울기가
+  번갈아 큰 **상보적 작동점을 합치는 것**. **범위 한정 2개**: (a) 대상은 **동역학**(`τ_d`)이지
+  모드 축이 아니다 — 이 편은 전극 용량 `Q_th`(LAM)와 정렬 `x⁰`(LLI)을 **기준극 입력으로 가정**했다.
+  (b) 22p 의 `LAM_PE ≈ LAM_NE` 와 같은 대칭이라는 것은 `[해석]` 이다(같은 것은 "차 측정 → 전극 배정의
+  대칭" 이라는 형식). 개념 페이지 [[spm-grouped-parameter-identifiability]].
 
 ## Evidence Against
 - (방향성 관측, 인용 금지 등급) half-cell 기준(Case 1)과 dQ/dV 항 추가가 복원
@@ -1034,6 +1044,10 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
     함수**임을 GITT 로 보인다(γ_Si 25.7 ↔ 30.5 %, OCP 출처만 바꿔서) →
     [[halfcell-ocp-shape-invariance]] 세 번째 파괴 방식. 우리 PyBaMM truth 는 방향
     의존 OCP 를 갖지 않으므로 하한 진술에 "**단일 방향 OCP 가정 하**" 를 덧붙인다.
+- **[2026-09-23] Bizeray 2019 흡수(액체셀 SPM 식별성, `assb` 28호로 번호) — 이 카드에는 형식 유비 하나.**
+  2전극 차 측정의 전극 맞바꿈 대칭이 전달함수 수준에서 인쇄돼 있다(Evidence For). 그리고 반대쪽
+  사실 하나: 식별성을 **잰** 원전도 모드 축(`Q_th` · `x⁰`)은 입력으로 뺐다 —
+  [[mode-identifiability-unmeasured-lineage]] 의 "분해의 유일성을 잰 편 0" 과 충돌하지 않는다.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

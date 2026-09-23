@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -941,6 +941,27 @@ P1 에서는 방향이 반대다. 같은 추론을 **P4(양극 전하이동)** �
 
 데이터가 없고 `i₀` 를 흔들지 않았다. 기여는 **"축약 모델에는 `θ` 의 독립된 자리가 없다"** 는 구조 사실과, 그것을 `[재현]` 한 크기(비연결 7 % → `SOC_end` 바닥 0.07 ↔ 큰 `κ` 오프셋 0.068)다.
 **ASSB 판 합성 truth 를 P2D 로 만들면 접촉 손실과 `LAM_PE` 가 truth 단계에서 같은 파라미터가 된다** — 시험이 동어반복이 된다(`[추론]`, 27호 digest §7).
+
+## ★★★ 처방의 열한 번째 적용 (2026-09-23, `assb` 28호) — **액체셀 식별성 원전: 1–4단계가 파이프라인 입구에서 막히고, 대신 곱의 구조적 원형이 식으로 있다**
+
+`raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md` (Bizeray, Kim, Duncan, Howey 2019, *IEEE TCST* 27(5) 1862 — **액체셀 SPM**, ASSB 아님). 묶음 표는 [[spm-grouped-parameter-identifiability]].
+
+### 입력 점검 — 데이터는 있다, 채널은 버렸다
+
+실험 EIS(Kokam NMC 740 mAh, 9 DoD, 5 kHz–200 µHz) · 기준극 전극 OCV · 시간 영역 한 구간이 있다. 그러나:
+- **1단계** ❌ — `[인쇄]` 고주파 반원(`R_ct ∥ C_dl`)은 "ignored", 이중층은 "beyond the scope". **`C` 가 설계로 없다.** `R0(DoD)` 9 점(`[도표]` ≈62 → ≈123 mΩ, 신품)은 있으나 `R_ct` · 옴 · **접촉** · 피막의 합이다.
+- **2단계** ❌ 셀 하나 · 면적 변화 없음 · **3단계** ❌ 20 °C 한 온도(`Ea` 없음) · **4단계** ❌ 시간 영역 성분 분해 없음.
+
+### ★★★ 곱의 원형 — `a = 3ε/R` 과 `k` 는 한 묶음 안에서만 만난다
+
+`[인쇄]` 식 (4) `j = I/(aδFA)`, `a = 3ε/R` · 식 (18) `τ_k = R/(2k√c_e)` · 식 (26) `θ₃ = τ_k⁺/(3Q_th⁺)`. `[해석]` 표면 일부 접촉 손실을 `a_eff = A_eff·a` 로 넣으면 `θ₃ ∝ 1/(k·A_eff·ε δ c_max A)` —
+**`k·A_eff` 가 이 페이지의 곱(`A_eff·ε_p/R_s` 의 동역학 쪽)과 같은 모양**이다. 그리고 `θ₃` 는 선형화에서 `θ₆`(음극)와 `R_ct` 하나로 합쳐지고(`[인쇄]` "infinite number of pairs"), `R_ct` 는 다시 `R0` 로 합쳐진다.
+**입자 통째 비연결은 `ε` 에만 곱해져 `Q_th` 로 가고, 그것은 LAM 과 같은 묶음이다**(`[해석]`).
+
+### ⇒ 이 적용이 처방에 더하는 것
+
+`[해석]` **식별성 원전의 파이프라인을 그대로 ASSB 에 옮기면 1단계가 설계로 막힌다** — 이 처방이 가장 많이 쓴 채널(`R_CT · C_dl`, 16·18·19·21·23·25호)을 원전은 입구에서 버린다.
+ASSB 에 식별성 도구를 들여올 때 **반원을 버리지 않는 판**(이중층을 모델에 넣은 SPM/P2D 임피던스)이 필요하다. 원전 참고문헌의 [33] Alavi 2016(Randles 회로 식별성)이 그 방향의 후보다.
 
 ## 이 페이지가 주장하지 않는 것
 

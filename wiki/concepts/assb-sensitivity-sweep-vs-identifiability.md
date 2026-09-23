@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -60,7 +60,7 @@ evidenceScope: multi-source-primary
 - 그러나 26호는 **추정과 스윕이 같은 모델 · 같은 지면**에 있는 계보 첫 편이라, **원전 수치만으로 비식별을 재현할 수 있었다.** 24호(열일곱 번째 성질)의 재료가
   "측정 ÷ 가정"([[assb-tortuosity-factor-effective-conductivity-split]]), 25호(열여덟 번째)가 "손잡이의 폭" 이었다면 26호의 재료는 **저자 자신의 계산**이다.
 - ~~큐 26(P2D 유효성)은 둘째 줄 너머(전역 분산 분해)를 할 것으로 보인다~~ → **2026-09-23 흡수(27호) 결과: 첫 줄의 전역판이었다** — 아래 절. Sobol 지수는 분산 기여이지 조합의 null 방향이 아니라는 예고는 맞았다.
-  큐 27(Bizeray 2019, 액체셀 SPM)이 **셋째 줄**의 원전이다.
+  큐 27(Bizeray 2019, 액체셀 SPM)이 **셋째 줄**의 원전이다. → **2026-09-23 흡수(28호) 결과: 맞다 — 단 액체셀이고, 식별 집합에 용량 스케일이 없다** (아래 절).
 
 
 ## ★★★★ 27호 — 전역으로 제대로 해도 첫 줄이다, 그리고 **적합성 ≠ 식별성**
@@ -84,6 +84,26 @@ evidenceScope: multi-source-primary
 
 **Q4 는 0/27.** 데이터가 없고(두 모델의 무잡음 출력), ① 은 단일 파라미터 · 대리모형 · 저자가 적합성으로 읽음, ③ 은 명제이며 그 계산(Fig. 3b "dashed line")이 그림에서 빠졌다.
 
+## ★★★★ 28호 — 셋째 줄의 원전, 그러나 **대상이 액체셀이고 용량은 입력이다**
+
+`raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md` (Bizeray, Kim, Duncan, Howey 2019, *IEEE TCST* 27(5), 1862). 묶음 표 전체는 [[spm-grouped-parameter-identifiability]].
+
+| 물음 | 28호 |
+|---|---|
+| 어느 줄인가 | **셋째 줄 — 계보 첫 편.** 구조적 식별성(전달함수 유일성, Bellman–Åström 정의) + 실제적 식별성(합성·실험 EIS 의 손실 등고선) |
+| 정량 도구 | **0** — FIM · CI · 프로파일 · 조건수 없음. 등고선 **그림**을 읽는다(= 2 차원 근최적 집합의 그림) |
+| 식별 집합 | `θ̃ = (τ_d⁺, τ_d⁻, R_ct)` — **전극 용량 `Q_th` 와 초기 화학량론 `x⁰` 은 입력**(`β = dU/dQ` 를 기준극으로 잰다) |
+| 비식별 조건 | `[인쇄]` 평탄 OCV(`β = 0`) → 그 전극 `τ_d` · `β₊ = −β₋` → 전극 맞바꿈 · 한 DoD 에서 두 전극 동역학은 `R_ct` 하나 |
+| ASSB 인가 | **아니다** — 액체(LCO 합성 · Kokam NMC 740 mAh 실험). 26·27호 **둘 다 인용 0** |
+
+**세 줄 표에 더하는 것**: 셋째 줄에도 **두 층**이 있다 — "무엇을 식별 집합에 넣었나". 28호는 동역학 축을 식별하고 **모드 축(용량 스케일 · 정렬)을 입력으로 뺐다**.
+카드 Q4 가 묻는 것은 모드 축의 유일성이므로 **셋째 줄에 서 있어도 Q4 의 대상이 아닐 수 있다.** 논문을 읽을 때 "식별성을 했다" 다음에 **"식별 집합에 무엇이 있나"** 를 적는다(처방 7).
+
+**Q4 는 ASSB 0/28** (스물한 번째 성질 "도구는 있고 대상이 없다"). 26호의 `k₁≡k₂` 는 28호 식 (50) 과 같은 구조, 26호 `D_e⁻` 0 열은 28호 예외 1(`β = 0`)과 같은 부류 · 다른 기구
+(관측 이득 0 은 작동점으로 풀리고, 모델 구조의 포화는 안 풀린다), 27호의 오프셋 `1 − u` 는 28호 `Q_th` 손잡이와 같은 자리 — 전부 우리 `[해석]` 이다.
+
+⚠ **합자 맹점이 IEEE 에도 있다** — 큐 지문의 `identifiab` 9 는 전부 대문자 쪽 머리글이었고 본문 출현은 합자 속에 있었다(NFKC 뒤 54). 처방 1 의 지문은 **NFKC 뒤에** 센다.
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -99,6 +119,8 @@ evidenceScope: multi-source-primary
 5. (27호) **Sobol 을 보면 출력이 데이터인지 설계 KPI 인지 먼저 적는다.** 전차 지수 ≈0 은 그 출력에 대한 비식별의 충분조건으로 쓰되, 대리모형 검증 · CI 출처를 확인한다.
    그리고 **Sobol 의 교호작용 지수는 보상(compensation)을 재지 않는다** — 곱 쌍의 짝을 흔들지 않았으면 곱은 아예 나타나지 않는다(27호는 `κ` 만 흔들고 `ε/τ` 는 고정).
 6. (27호) **모델 비교 논문의 "상수 차이 = 보정 가능" 은 구조 오차가 파라미터로 흡수되는 자리다.** 그 상수의 크기를 **알려진 구조량**(연결 분율 `1 − u` 등)과 대조한다.
+7. (28호) **식별성을 한 논문이면 식별 집합의 목록을 먼저 적는다.** 용량 스케일(`Q_th`) · 정렬(`x⁰`) · OCV 곡선이 **입력**이면 그 논문은 모드 분해의 유일성을 말하지 않는다.
+   그리고 사후 보정 손잡이(28호 ×0.78)가 **어느 묶음**에 걸리는지 본다 — 식별 집합에서 뺀 축이면 그 보정이 그 축의 추정이다.
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -110,6 +132,7 @@ evidenceScope: multi-source-primary
 ## 관련
 
 - [[assb-contact-loss-vs-lampe]] — 닻(Q4).
+- [[spm-grouped-parameter-identifiability]] — 셋째 줄 원전(28호, 액체셀)의 묶음 표. 26·27호 방향 대조.
 - [[constrained-crb-identifiability]] — 셋째 줄의 이론. "민감도 ≠ 식별성" 의 원래 자리.
 - [[fitting-degeneracy]] — flat valley 의 일반형.
 - [[near-optimal-set-width-measurement]] — 폭을 재는 기계.

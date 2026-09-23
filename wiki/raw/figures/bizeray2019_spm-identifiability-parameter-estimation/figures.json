@@ -1,0 +1,191 @@
+{
+ "slug": "bizeray2019_spm-identifiability-parameter-estimation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "e96ae4fb-27._Identifiability_and_Parameter_Estimation_of_the_Single_Particle_Lithium-Ion_Battery_Model.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 7,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Comparison of the Nyquist frequency response predicted by the transfer function (58) using the reference parameters given in Table I with (left) the cathode diffusion time constant τd + and (right) the anode diffusion time constant τd −varied by ±50% from their nominal values. The OCV slope values β0 i corresponding to the chosen linearization point (DoD = 25%) are indicated on the graph for each electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    135.2,
+    84.0,
+    569.0,
+    474.6
+   ],
+   "w": 1808,
+   "h": 1628,
+   "dpi": 300,
+   "src": "e96ae4fb-27._Identifiability_and_Parameter_Estimation_of_the_Single_Particle_Lithium-Ion_Battery_Model.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 10,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Contour plots of ln L j ( ˜θ) against (τd",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    51.8,
+    512.0,
+    332.8
+   ],
+   "w": 1955,
+   "h": 1172,
+   "dpi": 300,
+   "src": "e96ae4fb-27._Identifiability_and_Parameter_Estimation_of_the_Single_Particle_Lithium-Ion_Battery_Model.pdf",
+   "blank": 0.645
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 10,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Contour plots of ln L( ˜θ) against (τd",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    367.7,
+    580.8,
+    541.2
+   ],
+   "w": 1146,
+   "h": 723,
+   "dpi": 300,
+   "src": "e96ae4fb-27._Identifiability_and_Parameter_Estimation_of_the_Single_Particle_Lithium-Ion_Battery_Model.pdf",
+   "blank": 0.582
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 11,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Nyquist plot of the electrochemical impedance of a Kokam SLPB533459H4 740-mAh NMC cell measured at 20 ◦C and several DoDs in the frequency range 5 kHz to 200 μHz.",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    52.9,
+    569.0,
+    387.1
+   ],
+   "w": 1096,
+   "h": 1393,
+   "dpi": 300,
+   "src": "e96ae4fb-27._Identifiability_and_Parameter_Estimation_of_the_Single_Particle_Lithium-Ion_Battery_Model.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 12,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Natural logarithm of the individual DoD loss function L j( ˜θ) based on experimental EIS data at (a) 10%, (b) 50%, and (c) 80% DoD. (d) Cathode, anode, and cell OCV of the Kokam cell as a function of DoD measured by the GITT technique using a minimally invasive reference electrode. Cell impedance experimentally measured (circles) and predicted (solid lines and crosses) by the linearized SPM transfer function model ﬁt by minimizing the individual DoD loss function L j ( ˜θ) at (e) 10%, (f) 50%, and (g) 80% DoD.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    51.3,
+    569.1,
+    464.1
+   ],
+   "w": 2194,
+   "h": 1721,
+   "dpi": 300,
+   "src": "e96ae4fb-27._Identifiability_and_Parameter_Estimation_of_the_Single_Particle_Lithium-Ion_Battery_Model.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 13,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Linear regression of the purely resistive term R0 from experimental EIS data at 10% DoD. The high-frequency data points (crosses) are discarded. The ﬁrst linear regression (dashed line) is performed on all data points (circles). Low-frequency data points (empty circles), corresponding to the pseudocapacitive effect arising from DoD variations, are iteratively removed until the ﬁnal remaining set of data points (ﬁlled circles) enables a linear regression with a coefﬁcient of determination R2 greater than 0.98 (the three lowest frequency data points are not shown on this graph for readability).",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    53.1,
+    305.9,
+    309.2
+   ],
+   "w": 1096,
+   "h": 1068,
+   "dpi": 300,
+   "src": "e96ae4fb-27._Identifiability_and_Parameter_Estimation_of_the_Single_Particle_Lithium-Ion_Battery_Model.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 13,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Purely resistive term R0, accounting for charge-transfer, passivation layer, and contact resistance at high frequencies, against DoD estimated from experimental data by linear regression.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    402.0,
+    306.0,
+    594.8
+   ],
+   "w": 1096,
+   "h": 804,
+   "dpi": 300,
+   "src": "e96ae4fb-27._Identifiability_and_Parameter_Estimation_of_the_Single_Particle_Lithium-Ion_Battery_Model.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 13,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Contour plot of the loss function ln L( ˜θ), (66), based on experimental impedance data at 10% and 80% DoD. Yellow square: parameter estimated by the PE algorithm at τd + = 2880 s and τd −= 9033 s.",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    52.3,
+    568.7,
+    229.2
+   ],
+   "w": 1096,
+   "h": 738,
+   "dpi": 300,
+   "src": "e96ae4fb-27._Identifiability_and_Parameter_Estimation_of_the_Single_Particle_Lithium-Ion_Battery_Model.pdf",
+   "blank": 0.521
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 14,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Time domain comparison of SPM against measured data. Start point is 10% DoD and endpoint is 20% DoD.",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    52.8,
+    568.9,
+    299.1
+   ],
+   "w": 1096,
+   "h": 1027,
+   "dpi": 300,
+   "src": "e96ae4fb-27._Identifiability_and_Parameter_Estimation_of_the_Single_Particle_Lithium-Ion_Battery_Model.pdf",
+   "blank": 0.893
+  }
+ ]
+}
