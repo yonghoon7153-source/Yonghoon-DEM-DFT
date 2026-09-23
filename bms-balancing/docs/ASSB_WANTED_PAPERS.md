@@ -25,7 +25,7 @@
 | ★★ | **Dugas 외 2021** — *J. Electrochem. Soc.* **168**, 090508 | 21 | 1 | Q5·Q2 | 원형 InLi 기준극으로 EIS + In₁Li₀.₅/SE 복합 CE — **리튬화에 따른 저주파 변화**. 21호가 "expected" 의 근거로 인용 |
 | ★★ | **Barai·Uddin·Widanage·McGordon·Jennings 2018** — "Study of the influence of measurement timescale on internal resistance characterisation methodologies for Lithium-ion cells", *Sci. Rep.* **8**, 21 (20호 ref 24 인쇄) | 20 | 1 | Q2 | `R₀`/`R_ct`/`R_p` **작도법 원전**. 제목이 *measurement timescale* — 20호에서 "분해가 적합조차 아니다 — 작도다" 가 나온 자리 |
 | ★★ | **Miß·Ramanayagam·Roling 2022** — "Which Exchange Current Densities Can Be Achieved in Composite Cathodes of Bulk-Type All-Solid-State Batteries? A Comparative Case Study", *ACS Appl. Mater. Interfaces* **14**, 38246 (16호 ref [30] 인쇄) | 16 | 1 | Q2 | TLM(전송선 모델) 원본 — 16호의 곱 축퇴 실측 표본이 기대는 모형 |
-| ★★ | **Illig 외 2012** — *J. Electrochem. Soc.* | 18 | 1 | Q1·Q2 | "전하이동과 **접촉저항**의 분리" — 곱 축퇴(`θ`↔`j₀`)를 가르는 방법의 액체셀 원형 |
+| ★★ | **Illig·Ender·Chrobak·Schmidt·Klotz·Ivers-Tiffée 2012** — "Separation of charge transfer and contact resistance in LiFePO₄-cathodes by impedance modeling", *J. Electrochem. Soc.* **159**, A952–A960, doi `10.1149/2.030207jes` (18호 ref [29] · 11호 ref [9] 인쇄; 18호는 저자명을 "Chroal" 로 오기) | 11 · 18 | **2** | Q1·Q2 | "전하이동과 **접촉저항**의 분리" — 곱 축퇴(`θ`↔`j₀`)를 가르는 방법의 액체셀 원형 |
 | ★★ | **Oh … Choi 2025** — *Adv. Energy Mater.* | 14 | 1 | Q3·Q4 | 14호(Maxwell Protocol)와 같은 연구실의 후속 — "1순위 승격" 으로 적혔다 |
 | ★★ | **Ren·Danner·Finsterbusch·Latz 외 2022** — *Adv. Energy Mater.* 2201939 | 02 (ref 17) | 1 | **Q1 시간축** | **`θ(N)` 시간축의 입구** — 1·2호가 동역학을 안 줬다 |
 | ★★★ | **Neumann 외 2021** — *ACS Appl. Energy Mater.* **4**, 4786 | 02 (ref 38) · 27 | **2** | Q2 | GB 저항 모형 원전 + **EIS 로 파라미터화된 measured 라벨** |
