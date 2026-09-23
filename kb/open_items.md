@@ -51,7 +51,14 @@
     ⏭ b2o3 끝나면(≈5–6일) **`SYS=modelc_2x`** 를 명시해 재개한다 (수렴한 strain 은 러너가 건너뛴다).
 - ✅ **Nd ICOHP 판정 = C1 (PP 가 원인)** — Nd79 가장 가까운 S 5개 **−3.779 eV** (6월 −0.481 · 문턱 −2.0) · 대조군 P–S −5.669/Li–S −1.658 은 6월과 같다 · spilling 1.19 %.
   기록 `db/properties/nd_icohp_frozen4f_result_2026_09_23.json` · 6월 Nd–S **영구 비인용**(`nd_icohp.json` 표시 · `HZ-nd-icohp-june-nds-pp`).
-  ⏭ k-탐침(enforcement ④, gabia CPU 비어 있음) — k 값·실행 1저자 · 원자료(ICOHPLIST · ICOBILIST · lobsterout) 회수 → `db/raw/nd_lobster_frozen4f_2026_09_23/`.
+  ⏭ 원자료(ICOHPLIST · ICOBILIST · lobsterout) 회수 → `db/raw/nd_lobster_frozen4f_2026_09_23/`.
+  🟢 **k-탐침 도는 중 (enforcement ④ · 1저자 "이것도 진행하고" · k 3 3 1)** — gabia CPU `/data/work/runs/nd_ppswap_2026_09_16/kprobe_k331`
+  · 16:42 KST 발사 · 8랭크 npool 2 · k 5개 · 총 RAM 34.2 GB (원 SCF 32.5) · pw.x PID 3364447–3364453·3364457 · 원본과 다른 줄 3줄(prefix·outdir·K_POINTS).
+  · watch `kprobe_k331/kprobe_watch.sh` (PID 고정 · CPU 는 직전 표본 대비). 판정: 원 SCF **−6399.18597654 Ry** 대비 |ΔE| ≤ **0.0088 Ry (1 meV/atom · nat 120)**
+    → 넘으면 C1 판정의 한계에 *"k 2 2 1 → 조밀 k LOBSTER 필요"* 를 단다. 원 SCF 10 h 33 m.
+- ⏭ **kgy Li₂S P1 탐침 (li2s 셀수렴 카드 §3 · 공유 GPU 라 벽시계는 상한)** — worktree `~/lldvar_p1` @c8f0f2db ·
+  GBRV 해시 kgy = gabia (Li `02cc4b38…` · S `84ad7318…`) · kgy `~/work/pseudo` 의 Li·S 는 GBRV 뿐(PAW 없음 → 전용 폴더 불요).
+  ⛔ kgy 에 Li₂S 이완본이 없어 빌더가 멈췄다 → gabia `sei_dft/li2s*/01_vcrelax.out` (sha `0bcb294b19b23c24`, v2 NEB 가 쓴 것)을 Windows 경유로 옮기는 중.
 - ✅ **결정 3건 비준** (`97edeb233` · 형식 복원 뒤 172줄 추가만): W_ad SE 대칭 두 장 · D3 2체 + ATM 따로 · QE D3 3체 표기. `vgcf_hbn_*.json` 표기 정정 · QE 생성기 4곳 `dftd3_threebody = .true.` 명시(결과 불변).
   ⏭ SDCP 옛 QE 기록(phaseB · wave1.5 — 닫힌 캠페인)의 같은 표기 정정은 **아직** (우선순위 낮음).
   ⚠ 내 실수: `decisions.json` 을 indent 2 로 다시 써서 7146줄 diff 를 냈다 → 원래 형식(indent 1)으로 복원. JSON 원장을 고칠 때는 **원래 형식을 먼저 재현**하고 쓴다.
@@ -68,6 +75,16 @@
     정상은 1.973 Å · 6) — v6 stage 11 이 이 빌더를 썼다. 러너 docstring ⛔ · `adhesion.json` 발견 블록 ② SE 단순 z 절단은 PS₄ 8/48 을 끊는다 —
     PS₄ 보존 창 z = 1.26–3.78 · 6.28–8.80 Å 가 있으나 비대칭(Li 면 vs S 면) 슬랩이 된다.
   · ⏭ **다음**: 구조 빌더·검증기(재개 조건 1) · 1저자 결정 4건(계획 §0′: SE 종결 · LiNiO₂ 종결·두께 · 상태 정책/U · DEM 접촉법칙 문의) — Codex 잘린 두 칸은 받음(≤ 0.10 J/m² 표본별 · registry ≥ 4).
+  · ✅ **SE 대칭 슬랩 빌더·검증기 (재개 조건 1 의 SE 절반)** `tools/wad/se_sym_slab.py` — selftest 45 (음성 포함 · 돌연변이 11종 전부 빨간불 확인).
+    구조 `db/structures/wad_se_slabs_2026_09_23/` (.vasp + .xyz + manifest): **s_outer Li₇₆P₁₂S₆₂Cl₁₂ 162원자 · li_outer Li₆₈P₁₂S₅₈Cl₁₂ 150원자**
+    (= Pustorino 6층 조성) · PS₄ 12/12 부모 S 일치 · 전하 0 · 양면 동일 = **x 축 C2 (편차 9e-5 Å)**.
+    ⚠ 발견: comp1_V0_k444 는 **−4 축이 없다** (Li 정렬이 입방 대칭을 깬다 — 벌크에서 z 를 뒤집는 연산은 C2x 하나). 계획 §0′ 의 *"−4 회전반전이 z → −z"* 는 이 구조에 안 맞는다.
+  · ✅ **SE|SE 대조 입력 5잡** `db/inputs/wad_sese_control_2026_09_23/` (벌크 SCF · 두 슬랩 SCF = 무이완 W_sep PBE/PBE+D3 2체 · 두 슬랩 PBE 이완 = Pustorino 대조)
+    — comp1 정본 설정(GBRV Li/S/Cl + P rrkjus · 52/520 · 슬랩 k 4 4 1 · 벌크 k 4 4 4). 식은 결과 전에 코드로 고정: `se_sym_slab.py --collect <RUN>`
+    (W = [E_s + E_li − 6·E_bulk]/2A, μ 상쇄). ⏳ **경보 운영값 0.3–0.7 J/m² 봉인 = 1저자 (결과 전에)**.
+  · ✅ **gabia GPU 예외 (1저자 "이거 하돼")** `D-2026-09-23-gabia-gpu-exception-sese` — 러너 `tools/wad/run_sese_gpu.sh`: li2s 시드 종료 대기(PID·cmdline) ·
+    합계 VRAM < 40 GB 시작 · > 44 GB 즉시 중단(우리 PID 만) · 호스트 여유 ≥ 16 GB 시작 · < 4 GB 중단 · `ALLOW_UMA_COEXIST=1` 필수. CLAUDE.md gabia 절에 한 줄.
+    ⏭ gabia: worktree `/data/work/repo_wad` → `DRY_RUN=1` 로 li2s 시드 PID 확인 → tmux 발사 (`WAIT_PIDS=…`).
   · ✅ **문헌 3편 인입·병합** (1저자 제공 PDF · 수치는 메인이 PDF 텍스트로 재대조): `pustorino2025_…`(LPSCl 파괴에너지 = 2γ · (100) 화학량론 벽개 ≈ 0.47 · (110) 0.37 J/m²) ·
     `maurer2015_…`(Ag|그래핀 분산 7방법 0.19–0.45 J/m² — 0.3 경계를 가로지른다) · `giovannetti2008_…`(Ag 약결합군 · LSDA · 화학흡착 Pd ≈ 0.52 J/m² = "구간 ≠ 기전").
     ⚠ 05:38 턴 중단 때 첫 실행 셋이 **같이 취소**됐다(그림만 남음) → 재실행. 도는 동안 Esc 금지.

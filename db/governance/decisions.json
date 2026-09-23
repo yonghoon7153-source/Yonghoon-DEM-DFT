@@ -3658,6 +3658,65 @@
     "decision_digest": "sha256:963e9d1f61616e9eec936d403987ac025d06a64dc5ee72d9aed94288dfd00834",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-23-gabia-gpu-exception-sese",
+   "kind": "policy",
+   "scope": "ops.gabia.gpu.concurrency",
+   "slot": "gabia_gpu_pwx_uma_coexist_exception",
+   "applies_to": {
+    "systems": [
+     "comp1"
+    ],
+    "tasks": [
+     "wad_se_se_control"
+    ],
+    "methods": [
+     "qe_pbe_d3bj"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "gabia GPU — 'pw.x ↔ UMA 동시 실행 금지' 의 범위 한정 예외: SE|SE 대조 DFT 만, VRAM·호스트 RAM 가드 안에서",
+   "statement": "SE|SE 대조 DFT(db/inputs/wad_sese_control_2026_09_23 의 잡 5개)에 한해, li2s 시드 MD 가 끝나고 b2o3 사건빈도 MD 만 GPU 에 남은 상태에서 GPU pw.x 를 UMA 와 같이 돌려도 된다. 조건은 러너 tools/wad/run_sese_gpu.sh 가 기계로 건다: ① WAIT_PIDS(li2s 시드)가 전부 끝날 때까지 대기 ② 시작 직전 GPU 합계 사용량 < 40 GB 이고 호스트 MemAvailable ≥ 16 GB ③ 도는 동안 합계 > 44 GB 또는 호스트 여유 < 4 GB 면 **우리 pw.x 만 PID 로** 즉시 중단 ④ ALLOW_UMA_COEXIST=1 을 켜야만 공존한다(기본값은 금지 그대로). 다른 GPU pw.x 잡(탄성·NEB·G1·PP-swap 등)에는 적용하지 않는다.",
+   "rationale": "규칙을 만든 사람이 1저자라 예외도 1저자가 정한다. 규칙의 근거는 VRAM 47/48 GB 사례(탄성 41 GB + UMA)이고, SE|SE 슬랩(150–162원자)은 탄성보다 작다 — 합계 문턱으로 그 사례의 재현을 막는다. 권고는 '비권장'(b2o3 가 도는 동안)이었고 1저자가 가드를 조건으로 진행을 택했다. 호스트 RAM 가드는 같은 기계의 CPU 잡(Nd k-탐침 34 GB)을 OOM 킬러에서 지키려고 더했다.",
+   "record_kind": "scope_declaration",
+   "card": "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md",
+   "record": "tools/wad/run_sese_gpu.sh",
+   "evidence": [
+    "tools/wad/run_sese_gpu.sh",
+    "tools/wad/se_sym_slab.py",
+    "db/inputs/wad_sese_control_2026_09_23/jobs.json"
+   ],
+   "method_ref": "tools/wad/run_sese_gpu.sh (START_MAX_MIB 40960 · KILL_MIB 45056 · HOST_START_MIB 16384 · HOST_KILL_MIB 4096 · SAMPLE_S 2 · ALLOW_UMA_COEXIST=1)",
+   "reopen_criteria": "가드가 한 번이라도 발동하거나 UMA 쪽에 CUDA OOM 이 나면 예외를 닫고 원 규칙으로 돌아간다. SE|SE 잡 5개가 끝나면 예외는 소멸한다.",
+   "enforcement": "러너가 ALLOW_UMA_COEXIST=1 없이는 UMA 공존 상태에서 시작하지 않는다 · 입력 해시가 jobs.json 과 다르면 시작하지 않는다. ⚠ 가드는 확률적 보호다(표본 간격 2 s) — UMA OOM 을 줄일 뿐 막지 못하며, b2o3 런이 죽으면 D-2026-09-23-b2o3-framework-event-rate(16번째 런 없음)의 판정이 먼저다.",
+   "amends": [
+    "D-2026-09-23-b2o3-framework-event-rate"
+   ],
+   "amends_note": "그 결정의 enforcement '… gabia GPU pw.x 와 동시 실행 금지' 에 이 잡 5개만 예외를 둔다. 그 결정의 본문·무효 조건은 바꾸지 않는다.",
+   "schema_version": 2,
+   "decision_state": "active",
+   "results_seen": false,
+   "proposed_by": "claude-session-2026-09-23",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-23",
+     "state": "active",
+     "note": "1저자 — (나) 선택 인용 뒤 '이거 하돼 한번 대칭셀 이렇게 규약 넣고 한번 넣어봐'. 제안자는 'b2o3 가 도는 동안은 권하지 않는다' 고 적었다. 트랙 = 우리 DFT → 1저자 = 사용자, 통지할 제3자 없음."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-23T08:20:00Z",
+    "commit": "c8f0f2dbf542d3c2b11899f4a36af6df771cac2c",
+    "decision_digest": "sha256:da9fc08048b305340afbe393226d665a5336a408c5a3379b3ec4f0a170cd2b5b",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }

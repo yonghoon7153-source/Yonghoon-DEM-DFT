@@ -1,0 +1,92 @@
+{
+ "decisions": [
+  "D-2026-09-23-wad-se-termination-symmetric",
+  "D-2026-09-23-wad-d3-twobody-atm-separate"
+ ],
+ "structures_manifest_sha256": null,
+ "settings": {
+  "pp": {
+   "Li": "li_pbe_v1.4.uspp.F.UPF",
+   "P": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "S": "s_pbe_v1.4.uspp.F.UPF",
+   "Cl": "cl_pbe_v1.4.uspp.F.UPF"
+  },
+  "ecutwfc_Ry": 52.0,
+  "ecutrho_Ry": 520.0,
+  "smearing": "gaussian 0.005 Ry",
+  "k_slab": [
+   4,
+   4,
+   1
+  ],
+  "k_bulk": [
+   4,
+   4,
+   4
+  ],
+  "d3": "scf: grimme-d3 · dftd3_version=4 (BJ) · dftd3_threebody=.false. (2체) · relax: vdw_corr='none' (PBE — Pustorino 조건)",
+  "why_52_520": "comp1_V0_k444 구조를 낸 정본 설정 (computational_methods_canonical.md 472행)"
+ },
+ "jobs": [
+  {
+   "dir": "01_bulk_scf",
+   "kind": "bulk",
+   "calc": "scf",
+   "nat": 52,
+   "kpts": [
+    4,
+    4,
+    4
+   ],
+   "pw_in_sha256": "e459c2cbd1a90d1727350a88480255db124f0bab4bff98059eebc67ddd8d2c42"
+  },
+  {
+   "dir": "02_s_outer_scf",
+   "kind": "slab",
+   "calc": "scf",
+   "nat": 162,
+   "kpts": [
+    4,
+    4,
+    1
+   ],
+   "pw_in_sha256": "03907955fa4e1ccd18d35319d431a820ea3441a77b4226fe43f9bca1b3254070"
+  },
+  {
+   "dir": "02_li_outer_scf",
+   "kind": "slab",
+   "calc": "scf",
+   "nat": 150,
+   "kpts": [
+    4,
+    4,
+    1
+   ],
+   "pw_in_sha256": "6be849db475a2233795e7c421e1a6066f3e100cfc33cd11df9461285e50eae4d"
+  },
+  {
+   "dir": "03_s_outer_relax_pbe",
+   "kind": "slab",
+   "calc": "relax",
+   "nat": 162,
+   "kpts": [
+    4,
+    4,
+    1
+   ],
+   "pw_in_sha256": "6ce8649eed3ae97ce2300475545105cd9c271f5b2f427779955d45a05007e5c4"
+  },
+  {
+   "dir": "03_li_outer_relax_pbe",
+   "kind": "slab",
+   "calc": "relax",
+   "nat": 150,
+   "kpts": [
+    4,
+    4,
+    1
+   ],
+   "pw_in_sha256": "e2a822dcb87323b3def51ca7d2591e5b79c6106e26812116f34703fc8032564e"
+  }
+ ]
+}
