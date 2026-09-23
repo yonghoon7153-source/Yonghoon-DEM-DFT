@@ -96,7 +96,7 @@ evidenceScope: multi-source-primary
 | BT | 2026-09-22 | `li2s1a_BT_prompt_neff_window_bootstrap_2026_09_22.md` | `li2s1a_BT_reply_neff_window_bootstrap_2026_09_22.md` | 수신됨-회신함 | 같은 라벨 · 주제 토큰 일치 ['bootstrap', 'neff', 'window'] |
 | BU | 2026-09-22 | `li2s1a_BU_prompt_variance_ratio_rule_2026_09_22.md` | `li2s1a_BU_reply_variance_ratio_rule_2026_09_22.md` | 수신됨-회신함 | 같은 라벨 · 주제 토큰 일치 ['ratio', 'rule', 'variance'] |
 | BV | 2026-09-23 | `codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md` | `codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md` | 발송됨 · 회신 수령 (NO-GO) → codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md | 회신 본문의 `요청:` 역링크 |
-| BW | 2026-09-23 | `codex_BW_prompt_wad_validation_without_cluster_2026_09_23.md` | — | 작성 — 1저자 검토 후 발송 | — |
+| BW | 2026-09-23 | `codex_BW_prompt_wad_validation_without_cluster_2026_09_23.md` | `codex_BW_reply_wad_validation_without_cluster_2026_09_23.md` | 발송됨 · 회신 수령 (NO-GO · 제한 파일럿 조건부 GO) → codex_BW_reply_wad_validation_without_cluster_2026_09_23.md | 회신 본문의 `요청:` 역링크 |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
