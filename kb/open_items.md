@@ -40,6 +40,7 @@
   ② ✅ **카드 비준·발사 준비 (2026-09-23)** — `b2o3_framework_event_rate_prereg_2026_09_23.json` · 결정 `D-2026-09-23-b2o3-framework-event-rate`
     (active·ratified). 512원자 · 600/650/700 K · 400 ps · 시드 2–6 · **turbo** · **gabia**(탄성은 이 뒤로). 보고량 = 원소군별 사건 수·움직인 원자 수·첫 사건 시각.
     러너 `run_box331_seed_extension.sh SYS=b2o3`(가드 0 음성 2건 통과). ⏳ 발사 후 run_meta 무효조건 즉시 확인 → 끝나면 census 15런.
+    ⛔ **발사 취소 (1저자 2026-09-23 "gpu여야 된다니까 취소취소")** — gabia 블록 실행 보류. 카드·결정은 봉인된 채 그대로(기계를 바꾸면 개정문+재비준).
 - ✅ `webapp/tests/test_v3_records.py::test_gallery_carries_hazard_and_policy` — 테스트가 정책 접두어를 **둘만 복사**해 두고
   정책은 셋이라(`oxidation_stability_cascade` 누락) 정상적으로 막힌 파일을 "평범한데 막혔다" 로 읽었다 →
   `artifact_policy.is_governed()` 를 직접 쓰게 고침 · 음성(평범한 파일에 policy 주입 → 잡힘) 확인.
