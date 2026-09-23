@@ -1,0 +1,32 @@
+{
+ "slug": "liang2026_pulse-excitation-active-bms-comment",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "1d323a69-33._Pulse_excitation_for_active_battery_management_systems.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1_manual_p2.png",
+   "caption": "Fig. 1 | Concept of active battery management systems (ABMS). a Conventional passive battery management systems (BMS) rely on long-term acquisition of external signals (voltage, current, and temperature), resulting in low time efficiency, limited diagnostic accuracy, and poor model generalization due to constrained observability. In contrast, ABMS introduce controlled pulse excitation to actively stimulate multi-scale electrochemical dynamics, enabling high information-density sensing within milliseconds to seconds and fundamentally improving information efficiency, quality, and consistency. b The ABMS framework addresses three core bottlenecks: improving temporal efficiency via rapid pulse-based diagnostics, enhancing accuracy through information reconstruction from transient responses, and enabling cross-domain generalization via invariant feature mapping under varying operating conditions. c A unified closed-loop application architecture is envisaged, integrating adaptive pulse design, physics-consistent mapping, and diagnosis-restoration synergy. This architecture forms an energy-information co-optimization loop (pulse-sensing-inference-control-feedback), supporting seamless deployment in smart charging and vehicle-to-grid (V2G) applications. Icons in this figure were sourced from Flaticon (www.flaticon.com).",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    112.0,
+    548.0,
+    563.0
+   ],
+   "w": 2043,
+   "h": 1880,
+   "dpi": 300,
+   "src": "1d323a69-33._Pulse_excitation_for_active_battery_management_systems.pdf",
+   "manual": true,
+   "note": "크로퍼가 벡터 그림이라 영역을 못 잡음('영역 없음', 0장 추출) — 300 dpi 수동 크롭"
+  }
+ ]
+}

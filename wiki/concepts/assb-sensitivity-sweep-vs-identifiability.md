@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -28,10 +28,13 @@ evidenceScope: multi-source-primary
 | **식별성** | `J^T J`(FIM) · 조건수 · 프로파일 가능도 · 근최적 폭 | 추정 불확실성 · 조합의 null 방향 | **예** |
 | ↳ 첫 줄의 **전역판** (27호) | 사전 상자 전체에서 입력 여럿을 동시에 (Sobol 1·2·전차 + CI, 대리모형) | 설계 KPI 의 분산 분해 | **아니다** — 대상이 데이터가 아니다. 단 전차 지수 ≈0 은 그 출력에 대한 비식별의 **충분조건** |
 | **모델 불일치 민감도** (27호, 새 줄) | 두 모델(상위 충실도 ↔ 축약)에 같은 입력 | `d = Y_hi − Y_lo` 의 기울기 `|∇d|` | **아니다** — **모델 적합성**(model adequacy)의 도구. `|∇d| ≈ 0` 은 "차이가 상수라 보정이 흡수한다" 는 뜻 |
+| ↳ 셋째 줄의 **입력 설계판** (34호, 새 줄 · ⚠ 처방만) | **입력 `u`**(펄스 진폭 · 폭 · 순서)를, 파라미터는 고정 | `det FIM(u)`(D-optimality) · PE 조건 | **절반** — **실제적** 비식별(FIM 정칙, 조건수 큼)만 줄인다. **구조적** 비식별(모든 `u` 에서 FIM 특이 — 곱 축퇴)에서는 D-optimality = 0. 그리고 FIM 은 국소라 설계 뒤 **전역 폭**을 다시 재야 한다 — 근최적 폭 측정이 사후 검증 |
 
 `[해석]` 26호(Iwakiri 2024, `raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md`)의 제목 "sensitivity analysis" 는 **첫 줄**이다.
 그 편의 Table 1(ASSB 모델 10 편 비교)에서 "Sensitivity Analysis" 열의 값이 **Several / Temperature / Current / Diffusion / Conductivity** — **무엇을 스윕했나의 목록**이다.
 ⇒ 이 문헌에서 "sensitivity analysis" 를 보면 **스윕**으로 읽고, 식별성의 증거로 세지 않는다. (근거 한 편의 표 하나 — `single-source`.)
+
+`[해석]` 34호(Liang et al. 2026, `raw/papers/liang2026_pulse-excitation-active-bms-comment.md`, ⚠ Comment · 데이터 0 · ASSB 0)는 BMS 쪽에서 **입력 설계판**을 처방한다 — `[인쇄]` "FIM or D-optimality … ensures maximum parameter identifiability" · "observability is redefined as a controllable resource". 계산은 0 이고, **구조적 ↔ 실제적 비식별을 가르지 않는다**(`[인쇄]` "CRLB, which is the inverse of the FIM" — 특이 FIM 무언급). ⇒ "입력을 설계해 식별성을 높인다" 는 명제를 보면 **곱 축퇴처럼 모든 입력에서 null 인 방향이 있는지를 먼저** 묻는다. 그 방향은 입력이 아니라 모델 구조(곱과 다르게 반응하는 항)와 그 항의 대역 샘플링이 가른다([[assb-lampe-contact-product-degeneracy]] 열일곱 번째 적용).
 
 ## ★★★★ 그래도 스윕 그림은 공짜 야코비안이다 — 겹쳐 본다
 

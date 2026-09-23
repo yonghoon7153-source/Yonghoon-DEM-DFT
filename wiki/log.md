@@ -2183,3 +2183,14 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: 크로퍼 9 장 — **6 장 봤다(Fig. 1 · 2 · 3 · 4 · 5 · 7), 그중 4 장이 본문과 어긋남**; 안 본 것 Fig. 6 · 8, Table 1 은 텍스트 전사.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 스물아홉 번째 · 제약 5 · Status Log) · [[assb-lampe-contact-product-degeneracy]](열여섯 번째 적용) · [[assb-stack-pressure-operating-window]](제조/운전 분리 · 요구치 다섯 번째 · 압력 진동).
 - 후속: Sakka 2022(지목 2 회) · Xu 2024(승격 제안) · Koerver 2018 *EES*(지목 2 회) · Gao 2022 *Joule* · Cronau 2021(DEM SE 압분) · Zhang 2017 *JMCA*(지목 3 회). Q1 · Q4 · 곱 분리 · 기준극 누설 1차 후보 0.
+
+## [2026-09-23] ingest | assb 34호 — Liang et al. 2026, Pulse excitation for active battery management systems (npj Clean Energy 2, 16)
+- raw: `raw/papers/liang2026_pulse-excitation-active-bms-comment.md` (sha256 봉인) · 그림 `raw/figures/liang2026_pulse-excitation-active-bms-comment/` 1 장(크로퍼 0 장 — 벡터 그림, 300 dpi 수동 크롭). 큐 **33번**("Q4 설계 축 — 우리 폭 측정기의 역방향"). UNSW + Chalmers + UTS, CC BY-NC-ND. ⚠ **Comment 5 쪽 — 1차 측정 0 · 데이터 0 · ASSB 0**(도구 칸).
+- 큐 낱말 지문 재집계(NFKC 뒤 · 대소문자 구분 · 낱말): **11 열 중 9 열 일치, 2 열 불일치** — `identifiab` 0 → **3** · `confidence interval` 0 → **1**, 둘 다 정규화 전 0(합자 `ﬁ` 67 자). 같은 검사로 큐 35 번 `confidence interval` 0 → 6. 텍스트 층이 `10⁻¹ Hz` 의 음부호를 잃는다(렌더로 확인).
+- ★★★ **판정**: 펄스가 곱 축퇴 처방의 **어느 단계도 명제로 실현하지 않는다** — 세 대역 이름(옴 > 10³ · 계면 분극 10⁰–10³ · 확산 개시 < 10⁻¹ Hz) + 신경망 재구성, `capacitan*` · `time constant` · `relaxation` 0(31호 `R_ICI` 보다 한 층 아래). `[해석]` 한 펄스 이완 = 1단계 τ 형 · 4단계 · `R/k` 의 공통 입력(kHz 급 샘플링 · 2전극 합 · `C ∝ A` 전제 · √t 창 조건). OCV 분해는 **대체 쪽**(IC/DV "정보 밀도 부족" → 재구성) + 불변량 "active material stoichiometric limits"(α·β 의 양, 근거 0).
+- **채움표 34호 행 — 누적 ≈16.0 → ≈16.0 (새 칸 0).** Q4 ASSB 0 — 스물여섯 번째 성질 "식별성을 입력 설계로 살 수 있는 자원으로 인쇄했다"(FIM · CRLB · D-optimality · PE 처방, 계산 0, 구조적 ↔ 실제적 구분 0) · Q3 층 하나(learned-reconstruction features, 제안형).
+- 곱 축퇴 처방 **열일곱 번째 적용 — 적용 불가 · 온보드 번역 한 줄**(한 펄스 이완 = 처방 공통 입력; 재구성 · 온도 불변 학습은 그 입력을 지우는 방향). `[해석]` D-optimality 는 구조적 곱 축퇴에 0 — OED 는 우리 폭 측정기의 짝이되 사후 전역 검증이 필요.
+- ⚠ 어긋남 8 건: D1 반복 문장 셋 · D2 확산 대역 ↔ "ms–s" 창 · D3 화학량론 "불변" ↔ Fig. 1b 열화 도메인 · D4 그림 ↔ 캡션 라벨 · D5 "CRLB = FIM⁻¹" · D6 ref 28 문맥 · D7 기간 표기 · D8 OED 시제.
+- 그림: **1/1 장 봤다**(Fig. 1, 수동 크롭). 본문과 어긋난 것: 라벨 2(D4) · 기간(D7).
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른 번째 · 제약 5 · Status Log) · [[assb-lampe-contact-product-degeneracy]](열일곱 번째 적용 · 처방 표 온보드 줄) · [[assb-sensitivity-sweep-vs-identifiability]](입력 설계판 줄).
+- 후속(제목 기준): Jiang·Tao·Lee·Moura 2026 *Joule*(ref 19, CRLB 한계) · Li·West·Preindl 2023 *JPS*(ref 24, 펄스 열화 특성화) · Tang 2023 *iScience*(ref 21, 10 Hz 재구성 EIS) · Yang 2024 *Science*(ref 29, 접촉 복원 펄스). 큐 34 · 35 는 인용되지 않는다.
