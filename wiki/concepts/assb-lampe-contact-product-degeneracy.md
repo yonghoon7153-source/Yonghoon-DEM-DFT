@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -1336,6 +1336,34 @@ RF-RFE-CV 의 점수는 **용량 예측 MSE** 다. 곱의 두 인자(면적 ↔ 
 ### ⚠ 이것이 곱을 푼 것은 아니다
 
 양극 용량 손실 분석 0 · EIS 0 · 면적 0 · n 0. 기여는 **3전극 분해가 곱 앞에 끼워 넣는 배정 오염의 크기 둘**(≈0.10 · ≈0.20 V 계단 절반)과 항등식 하나다.
+
+## ★★ 처방의 스물다섯 번째 적용 (2026-09-23, `assb` 42호) — **상대극 쪽 표본: 액체 EIS 의 R·C 가 저자의 면적 설명을 20 % 만 받치고, 고체 대칭셀의 4단계가 SE 옴 하한에서 먼저 떨어진다**
+
+`raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md` (Santhosha … Adelhelm 2019, *Batteries & Supercaps* 2, 524). In 원판 | LiTFSI DOL/DME | Li 액체 3전극(적정 + EIS 0 · 45 · 52 at%) · In–Li | β-Li₃PS₄ | In–Li 대칭 2전극(DC 만) · 양극 없음(CuS 2전극 곡선 둘).
+
+### 입력 점검
+
+| 단계 | 입력 | 판정 |
+|---|---|---|
+| **1단계** `R`·`C` | **액체** In 전극 R_CT · CPE_CT 세 조성(SI 표 1–3, CPE 지수 미인쇄 · 단위 µF) | ⚠ **부분** — 저자가 `[인쇄]` "the low remaining amount of In might be responsible for higher charge transfer resistance"(면적 설명). 0 → 45 at%: R_CT ×4.61 · CPE_CT ×0.73 ⇒ `[재현]` R·C ×3.38, **면적 몫 ≈20 %** · 45 → 52 at%: R ×0.153 · C ×3.87 ⇒ 면적 방향 몫 ≈72 % |
+| **2단계** 면적 대조군 | XRD 잔류 In(정성, "minor amount") | ❌ |
+| **3단계-a** `Ea` | 실온 한 점(Arrhenius 는 SE 벌크뿐) | ❌ |
+| **3단계-b** `C` 물리 상한 | CPE_CT ≈14–54 µF cm⁻²(이중층 대역) · CPE_SL ≈6.4 µF cm⁻²(`[재현]` ε_r 5–10 이면 ≈0.7–1.4 nm) | ✅ 자릿수만 — ⚠ CPE_SL 이 두 표에서 7.2 ± 0.6 µF 로 동일 |
+| **4단계** 시간 영역 | 액체: 펄스 분극 ↔ EIS 합 · 고체: 대칭셀 DC ↔ SE 벌크 옴 | 액체 ✅(45 at% `[재현]` 361.7 Ω × ≈0.28 mA ≈101 mV ↔ 인쇄 "about 0.10 V") · **고체 ❌** — 셀 12 Ω cm² ↔ SE ≈400–570 Ω cm²(`[재현]`, SI 자기 격자 · 전도도) |
+
+### ★★★ 4단계의 하한 — SE 벌크 옴
+
+2전극 셀의 전압을 전극 · 계면 몫으로 가르기 전에 **SE 벌크 옴(두께 ÷ 전도도)이 하한**이다. 42호 대칭셀은 그 하한의 **1/25–1/47** 이다 — 곱(`A_eff·k`)의 어느 인자를 말하기 전에 **전류가 이온 경로로 흘렀는지**가 서지 않는다(`[추론]` 전자 경로 · 전도도 오기 · SE 양 오기). 이 편의 "In–Li 조성이 계면 저항을 ×15 바꾼다" 는 그 위에 있다.
+
+### ⇒ 이 적용이 처방에 더하는 것
+
+1. **새 줄 "4단계를 SE 벌크 옴 하한과 먼저 대조한다 — 2전극 · 대칭셀 저항이 그보다 작으면 곱을 가르기 전에 전자 경로를 의심한다."** 41호 "배면형 기준극 → 분리막 옴 전부 상대극 채널" 과 짝: 옴을 **어느 채널에 싣는가**(40 · 41호) 앞에 **옴이 있는가**(42호).
+2. **면적 설명 → R·C 검사의 둘째 표본**(39호 `R_ct·φ` ×13 다음): 저자가 "남은 In 양"(면적)으로 설명한 R 증가를 C 가 ≈20 % 만 받친다 — **상대극 쪽**, 액체, CPE 지수 미상.
+3. **상대극 조성이 계면 저항 인자를 움직인다** — 44 ↔ ≈75 at% 에서 대칭셀 저항 ×15 이상(Li-rich 셀은 ±0.2 V 한계에 눌려 하한). 2전극 완전지 적합에서 이 몫은 양극 `R` 로 들어간다(40호 "2전극 양극 호의 ≈절반이 상대극" 과 같은 방향).
+
+### ⚠ 이것이 곱을 푼 것은 아니다
+
+양극 없음 · 액체 EIS · 셀 1 개 · CPE 지수 미상 · 고체 EIS 0. 기여는 **검사 순서 하나(SE 옴 하한)** 와 **상대극 쪽 R·C 표본 하나**다.
 
 ## 이 페이지가 주장하지 않는 것
 

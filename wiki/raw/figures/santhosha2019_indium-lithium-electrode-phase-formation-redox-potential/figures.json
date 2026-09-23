@@ -1,0 +1,192 @@
+{
+ "slug": "santhosha2019_indium-lithium-electrode-phase-formation-redox-potential",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "d667584d-4._The_indium__lithium_electrode_in_solid_state_lithium_ion_batteries_phase_formation_redox_potentials_and_interface_stability.pdf",
+  "0140f31a-4._Sup_The_indium__lithium_electrode_in_solid_state_lithium_ion_batteries_phase_formation_redox_potentials_and_interface_stability.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Top: Binary In\u0002Li phase diagram (redrawn from reference [9a]). Bottom: Results from a coulometric titration experiment at room temper- ature. The graph shows the electrochemically determined open circuit voltage (OCV) over the lithiation of In until the phase In2Li3. Note that the scale of the x-axis (lithium content) is identical for both graphs.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    26.0,
+    286.5,
+    372.7
+   ],
+   "w": 1083,
+   "h": 1445,
+   "dpi": 300,
+   "src": "d667584d-4._The_indium__lithium_electrode_in_solid_state_lithium_ion_batteries_phase_formation_redox_potentials_and_interface_stability.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Potential profile during lithiation on indium over time for consecutive current (200 mA/cm2 or 2350 mA/g) and relaxation steps. The graph shows the equilibrium potentials for the different plateaus. b) The circles indicate the position at which impedance spectra were collected, electrochemical impedance spectra (1 MHz–100 mHz) at different degrees of lithiation. Fitting results are available in supporting information Table S1–S3. c) XRD patterns of indium metal and after reaching the end of the first plateau. The XRD patterns are in accordance with the reference patterns (In: pdf 98-006-3091, InLi: pdf 98- 005-1959).",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    59.7,
+    552.0,
+    347.2
+   ],
+   "w": 2190,
+   "h": 1199,
+   "dpi": 300,
+   "src": "d667584d-4._The_indium__lithium_electrode_in_solid_state_lithium_ion_batteries_phase_formation_redox_potentials_and_interface_stability.pdf",
+   "blank": 0.863
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Symmetrical solid-state cells with In\u0002Li electrodes of different stoichiometry and Li3PS4 as solid electrolyte. For In\u0002Li compositions within the two-phase region (In)\u0002InLi, Li+ can be reversibly inserted/deinserted into the electrodes at low overpotentials for many cycles (stable interface, black curve). On the other hand, too high lithium contents (red curve) lead to poor interface stability and hence large polarization and increasing resistance.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    556.2,
+    295.3,
+    680.5
+   ],
+   "w": 1120,
+   "h": 519,
+   "dpi": 300,
+   "src": "d667584d-4._The_indium__lithium_electrode_in_solid_state_lithium_ion_batteries_phase_formation_redox_potentials_and_interface_stability.pdf",
+   "blank": 0.802
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Left: XRD pattern of synthesized β-Li3PS4 and reference pattern (JCPDS file number 98-003-5018) Right: Arrhenius plots for β-Li3PS4. The data was obtained by subsequently measuring the impedance in a temperature range from 25°C to 65°C. For the determination of the activation energy, we used the linear part starting from 35°C. 2. Symmetrical solid state cell with In-Li electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    88.6,
+    526.4,
+    295.4
+   ],
+   "w": 1919,
+   "h": 862,
+   "dpi": 300,
+   "src": "0140f31a-4._Sup_The_indium__lithium_electrode_in_solid_state_lithium_ion_batteries_phase_formation_redox_potentials_and_interface_stability.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Symmetrical solid-state cells with In-Li electrodes (In:Li 1.23:1) and Li3PS4 as solid electrolyte. The metal composition ends up in 2nd plateau region (InLi + In4Li5) of phase diagram (Figure 1) and major instabilities in terms of a quickly increasing resistance have been observed.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    414.0,
+    532.3,
+    656.2
+   ],
+   "w": 1944,
+   "h": 1010,
+   "dpi": 300,
+   "src": "0140f31a-4._Sup_The_indium__lithium_electrode_in_solid_state_lithium_ion_batteries_phase_formation_redox_potentials_and_interface_stability.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Voltage profiles of solid state cells based on a CuS composite as positive electrode (60:30:10 CuS: Li3PS4: carbon with qth = 560 mAh/g), Li3PS4 as solid electrolyte and In1.27Li1.00 (right) and In0.34Li1.00 (left) as negative electrodes. Excess lithium in the negative electrode leads to a much larger voltage hysteresis. Voltage window: 0.7-3.0V vs Li+/ In1.27Li1.00 or Li+/ In0.34Li1.00. Current density 250 µA cm−2. All measurements were done at room temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    105.7,
+    533.6,
+    292.0
+   ],
+   "w": 1949,
+   "h": 777,
+   "dpi": 300,
+   "src": "0140f31a-4._Sup_The_indium__lithium_electrode_in_solid_state_lithium_ion_batteries_phase_formation_redox_potentials_and_interface_stability.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table 1: Impedance fit results for pure In electrode (0 at.% Li). No surface layer contribution is considered. RE RCT CPECT 13.6 Ω ± 0.2 Ω 61.6 Ω ± 1.1 Ω 21.7 µF ± 2.0 µF",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    445.1,
+    528.1,
+    542.1
+   ],
+   "w": 1922,
+   "h": 405,
+   "dpi": 300,
+   "src": "0140f31a-4._Sup_The_indium__lithium_electrode_in_solid_state_lithium_ion_batteries_phase_formation_redox_potentials_and_interface_stability.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table 2: Impedance fit results for 45 at.% Li content. RE RSL CPESL RCT CPECT 7.1 Ω ± 0.2 Ω 70.6 Ω ± 15.8 Ω 7.2 µF ± 0.6 µF 284 Ω ± 16 Ω 15.9 µF ± 1.6 µF",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    539.8,
+    528.1,
+    623.1
+   ],
+   "w": 1922,
+   "h": 348,
+   "dpi": 300,
+   "src": "0140f31a-4._Sup_The_indium__lithium_electrode_in_solid_state_lithium_ion_batteries_phase_formation_redox_potentials_and_interface_stability.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 4,
+   "file": "tab_S3.png",
+   "caption": "Table 3: Impedance fit results for 52 at.% Li content. RE RSL CPESL RCT CPECT 7.0 Ω ± 0.1 Ω 49.2 Ω ± 4.8 Ω 7.2 µF ± 0.6 µF 43.4 Ω ± 5.0 Ω 61.6 µF ± 5.1 µF References:",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    620.7,
+    528.1,
+    733.1
+   ],
+   "w": 1922,
+   "h": 469,
+   "dpi": 300,
+   "src": "0140f31a-4._Sup_The_indium__lithium_electrode_in_solid_state_lithium_ion_batteries_phase_formation_redox_potentials_and_interface_stability.pdf",
+   "blank": 0.942
+  }
+ ]
+}

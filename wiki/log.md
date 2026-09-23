@@ -2283,3 +2283,16 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **8 장 봤다(Fig. 2–6 · S2 · S4 · S10)**, 화소 판독 S2 인셋 · 4a · 5b · S10b; 안 본 것 Fig. 1 · S1 · S3 · S5–S7 · S9 · S11–S14.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른일곱 번째 · 새 제약 · Status Log) · [[assb-li-in-reference-potential-window]](41호 절 · P8 원전 실행 · 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]](스물네 번째 적용). 큐 §6-3-g 42 행 · 지문 표 · 각주 ⁷.
 - 후속(서지 기준, 미열람 — 큐 43–59 인용 0): Jung, Lee, Kim, Kwon, Oh 2008 *AFM* 18, 3010 (ref 33) · Jung, Oh, Nam, Park 2015 *Isr. J. Chem.* 55, 472 (ref 9) · Zhang … Janek 2017 *ACS AMI* 9, 17835 (ref 34) · Yu, Bates, Jellison, Hart 1997 *JES* 144, 524 (ref 37).
+
+## [2026-09-23] ingest | assb 42호 — Santhosha et al. 2019, The Indium–Lithium Electrode in Solid-State Lithium-Ion Batteries: Phase Formation, Redox Potentials, and Interface Stability (Batteries & Supercaps 2, 524)
+- raw: `raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md` (sha256 봉인 — 본문 · SI PDF 해시 frontmatter `pdf_sha256` · `si_sha256`) · 그림 `raw/figures/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential/` (크로퍼 9 = 그림 6 · 표 3). 큐 **43번** — 2차 묶음 넷째 편, 지목 3 회(17 · 20 · 21호), 인용 6 편.
+- ★★★★ **Q5 판정**: Li 금속 대비로 쟀다 — **액체셀**(1 M LiTFSI DOL/DME, Swagelok 3전극, 1 h 펄스 + 0.5 h 이완, 실온, 곡선 1 개, "experimental data scatters"). ASSB 안 Li 대비 0. 평탄 0.622 V · `[도표]` ≈1–47 at% · 평탄 안 ≈15 mV 처짐 · InLi 단상 1.9 at% / −280 mV · 0.339 · 0.122 V. **열여덟 번째 형태 "다른 전해질의 원전"** — 두 가지 영점(R-LTO · In)이 둘 다 액체셀 측정.
+- ★★★★ **21호 어긋남**: 대칭셀은 InLi-(In) 조립 · 1 mAh cm⁻² 반주기 × 100 — `[재현]` 셀 12 Ω cm² 가 SE 벌크 옴 ≈400–570 Ω cm² 의 1/25–1/47(이온 경로 미입증; creep 강한 판과 양립) · 전기화학 리튬화분 대안은 첫 반주기에 적용 불가(그림은 ≈7 h 부터).
+- **채움표 42호 행 — 누적 ≈18.0 → ≈18.5 (Q5 +0.5).** Q2 반 칸 검토 후 접음 · Q4 0/42 서른네 번째 성질 "산포를 문장으로 인정하고 대표값을 세 자리로 인쇄했다" · Q3 층 하나(charge-derived composition axis).
+- 곱 축퇴 처방 **스물다섯 번째 적용**: 액체 EIS R·C 가 저자 면적 설명을 ≈20 % 만 받침 · 새 줄 "4단계를 SE 벌크 옴 하한과 먼저 대조한다".
+- 카드 새 제약 6(원전 전해질 · 이완 · 창을 같이 인용 · 공칭 창은 필요조건 · 조성 질량 ↔ 치수 검산 · SE 옴 하한 · 같은 축 이름 다른 기준 · 상대극의 곱).
+- ⚠ 어긋남 13 건: D1 전류 세 값 · D2 대칭셀 < SE 옴 · D3 SI 비 뒤집힘 · D4 CPE_SL 동일 · D5 ΔrG · D6 질량 ↔ 치수(44.1 ↔ 49.6 at%) · D7 상도 참조 · D8 SI · D9 12 mV · D10 CuS 창 · D11–D13 교차 편.
+- 낱말 지문(NFKC · 대소문자 구분 · 낱말 경계 · 본문): 11 열 전부 0(`MPa` 0, SI 0). NFKC 변경 4 자 — 열 변화 0 · `µ` · 반각 대시 · 음수 부호 추출 소실 · 줄끝 하이픈 34 곳 이음 열 변화 0.
+- 그림: **6 장 전부 봤다(Fig. 1–3 · S1–S3)**, 원본 래스터 화소 판독 Fig. 1 · 2a · 3; 표 3 장은 텍스트로.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른여덟 번째 · 새 제약 · Status Log) · [[assb-li-in-reference-potential-window]](42호 절 · 정의표 ② · 조건 (1) · P11 · 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]](스물다섯 번째 적용). 큐 §6-3-g 43 행 · 지문 표 · 각주 ⁸.
+- 후속(서지 기준, 미열람 — 큐 44–59 인용 0): Takada, Aotani, Iwamoto, Kondo 1996 *SSI* 86–88, 877 (ref 18) · Wen, Huggins 1980 *Mater. Res. Bull.* 15, 1225 (ref 17) · Webb, Baggetto, Bridges, Veith 2014 *JPS* 248, 1105 (ref 19) · Sangster, Pelton 1991 *J. Phase Equilib.* 12, 37 (ref 12a).
