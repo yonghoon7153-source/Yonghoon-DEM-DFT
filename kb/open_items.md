@@ -61,7 +61,10 @@
   ⛔ kgy 에 Li₂S 이완본이 없어 빌더가 멈췄다 → gabia `sei_dft/li2s*/01_vcrelax.out` (sha `0bcb294b19b23c24`, v2 NEB 가 쓴 것)을 rsync 로 옮겼다
   (`~/work/runs/sei_dft/li2s_mp-1153/`). ✅ 입력 생성 `~/work/runs/li2s_p1_probe_2026_09_23/li2s/scf_probe/scf_probe.in` —
   4×4×4 · **191원자** · λ₁ 16.14 Å · 전자 766 · q −1 · k 2×2×2 · 60/480 · maxstep 3 · GBRV Li/S.
-  ⏭ 러너 `run_sese_gpu.sh` 를 `calc=probe` 로 재사용 (kgy 는 프로세스별 GPU 정보가 막혀 UMA 판정이 무력 — 합계 VRAM 가드만 남는다) → peak VRAM·벽시계를 카드 §3 에.
+  ⛔ **P1 불통과 (17:38)** — 러너 `calc=probe`: QE 추정 **45.15 GB/랭크** · 15 s 만에 합계 23 964 MiB → KILL 23 000 가드가 우리 PID 만 멈춤
+  (VRAM 하한 21.1 GB · 벽시계 못 잼). UMA MD 1392411(cascade eprime_P2_Al2S3_B) **생존**(2902 MiB · 92 %). 카드 §3b 기록.
+  ⚠ 러너 버그 1건 발견·수정 `c6d120d01`: kgy nvidia-smi 는 프로세스 목록 대신 *"Process-level GPU information is restricted."* 문장을 준다 → PID 로 읽던 것.
+  ⏭ **1저자 결정**: 기계(gabia 단독 · KISTI · 보류)와 메모리 손잡이(ppcg/paro — 재프로브 필요).
 - ✅ **결정 3건 비준** (`97edeb233` · 형식 복원 뒤 172줄 추가만): W_ad SE 대칭 두 장 · D3 2체 + ATM 따로 · QE D3 3체 표기. `vgcf_hbn_*.json` 표기 정정 · QE 생성기 4곳 `dftd3_threebody = .true.` 명시(결과 불변).
   ⏭ SDCP 옛 QE 기록(phaseB · wave1.5 — 닫힌 캠페인)의 같은 표기 정정은 **아직** (우선순위 낮음).
   ⚠ 내 실수: `decisions.json` 을 indent 2 로 다시 써서 7146줄 diff 를 냈다 → 원래 형식(indent 1)으로 복원. JSON 원장을 고칠 때는 **원래 형식을 먼저 재현**하고 쓴다.
@@ -903,6 +906,8 @@ repo 사본에는 lobsterout 이 없어 k 를 읽을 수도 없다. **'못 찾�
   ⚠ **아직 착수 조건이 다 안 찼다** — 카드의 게이트는 *"1저자 승인 **+ 메모리 실측 통과**"*
   두 개다. 승인 쪽은 이 발언으로 찼고 **메모리 실측(P1)은 아직 안 했다.**
   그걸 하기 전에 던지지 않는다. 기계는 카드대로 kgy.
+  ⛔ **2026-09-23 P1 불통과** (카드 §3b): QE 추정 **45.15 GB** · kgy 에서 15 s 만에 VRAM ≥ 21.1 GB(하한) → 가드 중단.
+  kgy 3090 에는 공유 여부와 무관하게 안 들어가고, gabia 48 GB 도 45/48 이라 그대로는 비권장. **기계·손잡이는 1저자 결정.**
 - ⬇ **필요성 하 — CEI 모델을 캐스케이드로 옮기기**. 1저자 2026-09-16:
   *"지금 발전시키고 있는 이 모델을 나중에 cascade 에도 잘 적용하면 좋겠다."*
   계획 카드: `kb/methodology/cei_model_transfer_to_cascade_2026_09_16.md`.
