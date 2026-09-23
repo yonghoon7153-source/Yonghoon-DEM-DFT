@@ -51,6 +51,7 @@ trap 'rm -rf "$TMP"; [ -n "${SERVER_PID:-}" ] && kill "$SERVER_PID" 2>/dev/null'
 BML_SOURCE_ONLY=1 . "$BML"
 unset WORKBENCH_PASSWORD SERVER
 REPO="$TMP/repo"; RUN_DIR="$REPO/.bml"; mkdir -p "$RUN_DIR"
+HEAD_FILE="$RUN_DIR/server.head"      # 진짜 저장소의 표식을 건드리지 않는다
 
 # GET 도 POST 도 파일 하나로 답하는 서버.  경로 → `www/<경로>`, 쿼리는 떼고,
 # 파일이 없으면 404.  POST 로 부른 경로는 `posted` 에 적는다 (순서 확인용).
@@ -128,6 +129,21 @@ OUT="$( DATA_DIR="$TMP/not-a-dir" cmd_audit 2>&1 )"; rc=$?
 check "못 남겨도 성공으로 끝난다" "$rc" "0"
 has "글은 그대로 찍는다" "$OUT" "스펙트럼 8개"
 has "못 남겼다고 말한다" "$OUT" "파일로는 못 남겼습니다"
+
+# 저장소는 방금 새 커밋을 받았는데 서버는 옛 커밋으로 떠 있다 — 판정을 고친
+# 커밋을 받은 바로 그때다.  옛 판정을 찍으면 고친 것이 안 먹힌 줄 안다.
+git -C "$REPO" init -q
+git -C "$REPO" -c user.name=t -c user.email=t@example.com commit -q --allow-empty -m one
+printf '0123456789abcdef0123456789abcdef01234567\n' > "$HEAD_FILE"
+OUT="$( DATA_DIR="$TMP/data" cmd_audit 2>&1 )"; rc=$?
+check "옛 커밋의 서버면 실패로 끝난다" "$rc" "1"
+has "어느 커밋이 떠 있는지 말한다" "$OUT" "이전 커밋(01234567)"
+has "새로 띄운 뒤 다시 하라고 한다" "$OUT" "bml audit"
+hasnt "옛 판정을 찍지 않는다" "$OUT" "스펙트럼 8개"
+git -C "$REPO" rev-parse HEAD > "$HEAD_FILE"
+OUT="$( DATA_DIR="$TMP/data" cmd_audit 2>&1 )"; rc=$?
+check "지금 커밋의 서버면 그대로 검수한다" "$rc" "0"
+rm -f "$HEAD_FILE"
 
 # 옛 코드로 떠 있는 서버 — 창구가 없다.
 rm -f "$TMP/www/api/eis/audit"
