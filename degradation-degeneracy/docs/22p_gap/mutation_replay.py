@@ -1750,6 +1750,17 @@ MUTANTS = [
      '    assert junit.is_file(), (\n'
      '        "child pytest 가 결과 파일을 남기지 않았다 — 무엇이 돌았는지 말할 수 없다 (G67-T1)", tail)',
      "the_premise_regression_refuses_an_unrun_child"),
+    # ── 68차 (G68-T1) ─────────────────────────────────────────────────────
+    #   T1: 단계 증거에서 **call 기록이 없는 node 를 통과로 읽는다** — JUnit 만 보던 전 판의 뜻이다.
+    #   그러면 `--setup-only` child(rc 0 · 정확한 두 testcase · 자식 없음 · call 0개)가 다시 ACCEPTED 되고,
+    #   실제 child 반례 둘(g68_01 · g68_03[setup_only])과 합성 반례(g68_04)가 한꺼번에 빨개진다.
+    #   변이는 판정 함수 `_call_evidence` 의 한 분기만 바꾼다 — 소비자의 다른 검사(중복·setup 오류·skip)는 그대로.
+    ("the-premise-checks-the-call-phase-g68", G66T,                           # G68-T1
+     '        elif not calls:\n'
+     '            verdict[node] = "unrun"',
+     '        elif not calls:\n'
+     '            verdict[node] = "passed"',
+     "refuses_a_setup_only_child or three_unrun_shapes_are_all_refused or without_a_call_record"),
     ("the-replay-context-is-measured-once-g66", MR,                          # 정적 관측
      '    ctx = ctx if ctx is not None else _\u0072eplay_context()\n'
      '    want = _parent_customization_view(ctx)',
@@ -5212,6 +5223,21 @@ EXPECT: dict = {
             "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[collect_only]":
                 "Failed: DID NOT RAISE AssertionError",
             "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[usage_error]":
+                "Failed: DID NOT RAISE AssertionError",
+        }
+    },
+    "the-premise-checks-the-call-phase-g68": {
+        "fail": [
+            "tests/test_gate68_defensive.py::test_g68_01_the_premise_regression_refuses_a_setup_only_child",
+            "tests/test_gate68_defensive.py::test_g68_03_the_three_unrun_shapes_are_all_refused_with_a_reason[setup_only]",
+            "tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun",
+        ],
+        "witness": {
+            "tests/test_gate68_defensive.py::test_g68_01_the_premise_regression_refuses_a_setup_only_child":
+                "Failed: DID NOT RAISE AssertionError",
+            "tests/test_gate68_defensive.py::test_g68_03_the_three_unrun_shapes_are_all_refused_with_a_reason[setup_only]":
+                "Failed: DID NOT RAISE AssertionError",
+            "tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun":
                 "Failed: DID NOT RAISE AssertionError",
         }
     },

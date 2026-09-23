@@ -256,11 +256,67 @@ def _premise_run(python, env_extra: dict, junit: Path | None = None) -> subproce
         env.pop(k, None)
     env.update(env_extra)
     cmd = [str(python), "-m", "pytest", str(REPO / "tests" / "test_gate65_defensive.py"),
-           "--noconftest", "-q", "-p", "no:cacheprovider",
+           "--noconftest", "-q", "-p", "no:cacheprovider", f"--rootdir={REPO}",
            "-k", "the_interpreter_fixture_measures_its_own_premise"]
     if junit is not None:
-        cmd.append(f"--junitxml={junit}")
+        # ★ 68차 G68-T1 — JUnit 만으로는 `--setup-only`(call 생략) child 를 못 가른다. 내장 hook 으로 단계별
+        #   증거를 같이 남긴다 (`tests/phase_witness.py`, 외부 plugin 아님). `--rootdir` 를 고정하는 이유:
+        #   nodeid 가 rootdir 기준 상대경로라, 소비자가 **exact full node id** 를 비교하려면 뿌리가 같아야 한다.
+        cmd += [f"--junitxml={junit}", "-p", "tests.phase_witness",
+                f"--phase-witness={_phase_witness_path(junit)}"]
     return subprocess.run(cmd, cwd=REPO, env=env, capture_output=True, text=True, timeout=900)
+
+
+#: 전제 node 의 **exact full node id** (rootdir=REPO 기준). 이름만 같은 다른 파일의 node 는 다른 것이다.
+_PREMISE_NODE_IDS = frozenset(f"tests/test_gate65_defensive.py::{n}" for n in _PREMISE_NODES)
+
+
+def _phase_witness_path(junit: Path) -> Path:
+    """JUnit 옆의 단계 증거 파일. 인자를 늘리지 않고 JUnit 경로에서 **유도**한다 — 리뷰어 재현기는
+    `_premise_run(python, env, junit)` · `assert_premise_actually_ran(r, junit)` 두 서명으로 부르고,
+    그 통로에서 그대로 거부돼야 수정의 증거가 된다 (서명 `TypeError` 는 증거가 아니다 — 67차 교훈)."""
+    return junit.with_name(junit.name + ".phases.jsonl")
+
+
+def _phase_records(path: Path) -> list:
+    """JSON Lines → `[{"nodeid","when","outcome"}]`. 한 줄이라도 모양이 틀리면 AssertionError (추측하지 않는다)."""
+    out = []
+    for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            rec = json.loads(line)
+        except ValueError as exc:                                          # noqa: PERF203
+            raise AssertionError(("단계 증거 파일의 줄이 JSON 이 아니다 (G68-T1)", n, str(exc)[:80]))
+        assert isinstance(rec, dict) and {"nodeid", "when", "outcome"} <= set(rec), (
+            "단계 증거 줄에 nodeid/when/outcome 이 없다 (G68-T1)", n, rec)
+        out.append(rec)
+    return out
+
+
+def _call_evidence(records: list) -> dict:
+    """node id → 판정. `passed`(측정) · `skipped`(미측정) · `failed` · `error`(setup/teardown 실패) ·
+    `unrun`(call 기록 없음 — `--setup-only` 가 이 모양) · `duplicate`(call 이 둘 이상).
+
+    ★ 68차 G68-T1 — 기준은 **`when=call` 기록의 존재와 그 결말**이다. rc 0 · JUnit testcase 수 · 요약의 passed
+      수 · 특정 옵션 문자열 차단으로 대체하지 않는다 (리뷰어 조건 그대로).
+    """
+    by_node: dict = {}
+    for r in records:
+        by_node.setdefault(r["nodeid"], []).append(r)
+    verdict = {}
+    for node, recs in by_node.items():
+        calls = [r for r in recs if r["when"] == "call"]
+        side_failed = any(r["when"] in ("setup", "teardown") and r["outcome"] != "passed" for r in recs)
+        if len(calls) > 1:
+            verdict[node] = "duplicate"
+        elif side_failed:
+            verdict[node] = "error"
+        elif not calls:
+            verdict[node] = "unrun"
+        else:
+            verdict[node] = calls[0]["outcome"]                             # passed / skipped / failed
+    return verdict
 
 
 def _premise_outcomes(junit: Path) -> dict:
@@ -308,10 +364,32 @@ def assert_premise_actually_ran(r: subprocess.CompletedProcess, junit: Path) -> 
     assert set(outcomes) == set(_PREMISE_NODES), (
         "기대한 두 전제 node 가 실제로 돌지 않았다 — 수집만 했거나 선택이 어긋났다 (G67-T1)",
         sorted(outcomes), sorted(_PREMISE_NODES))
+    # ★ 68차 G68-T1 — 여기까지는 `--setup-only` child 도 통과한다: rc 0 · 정확한 두 testcase · 자식 없음.
+    #   JUnit 은 "call 이 돌았다" 를 말하지 않는다. **단계 증거**에서 node 마다 `when=call` 을 요구한다.
+    phases = _phase_witness_path(junit)
+    assert phases.is_file(), (
+        "child 가 단계 증거를 남기지 않았다 — call 이 돌았는지 말할 수 없다 (G68-T1)", tail)
+    evidence = _call_evidence(_phase_records(phases))
+    assert set(evidence) == _PREMISE_NODE_IDS, (
+        "단계 증거의 node id 가 기대한 두 전제 node(exact full id)와 다르다 — 선택이 어긋났다 (G68-T1)",
+        sorted(evidence), sorted(_PREMISE_NODE_IDS))
+    unrun = sorted(k for k, v in evidence.items() if v == "unrun")
+    assert not unrun, (
+        "전제 node 가 call 단계를 지나지 않았다 — setup/teardown 만 돌았다 (`--setup-only` 모양) (G68-T1)", unrun)
+    dup = sorted(k for k, v in evidence.items() if v == "duplicate")
+    assert not dup, ("한 node 에 call 기록이 둘 이상이다 — 어느 것이 측정인지 알 수 없다 (G68-T1)", dup)
+    side = {k: v for k, v in evidence.items() if v == "error"}
+    assert not side, ("전제 node 의 setup/teardown 이 실패했다 — call 결말과 무관하게 측정이 아니다 (G68-T1)", side, tail)
     broken = {k: v for k, v in outcomes.items() if v not in ("passed", "skipped")}
+    broken.update({k: v for k, v in evidence.items() if v not in ("passed", "skipped")})
     assert not broken, (
         "물려받은 env 때문에 전제 시험이 실패했다 — 환경의 비활성을 fixture 구현 실패로 오판한다 "
         "(G66-T1)", broken, tail)
+    # 두 증거는 **같은 child 의 같은 node** 를 말해야 한다 — 어긋나면 어느 쪽이 진실인지 모른다.
+    for node, v in evidence.items():
+        name = node.split("::", 1)[1]
+        assert outcomes[name] == v, (
+            "JUnit 과 단계 증거의 결말이 어긋난다 (G68-T1)", node, {"junit": outcomes[name], "call": v})
     assert r.returncode == 0, (
         "전제 시험을 돌린 child pytest 가 정상 종료하지 않았다 — 사용법·수집·setup 오류는 "
         "통과가 아니다 (G67-T1)", r.returncode, tail)
