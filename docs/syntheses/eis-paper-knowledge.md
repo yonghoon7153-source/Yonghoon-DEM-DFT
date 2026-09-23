@@ -54,6 +54,7 @@ EIS 검수(`bml audit`, [[bml-command]])의 판정은 논문 몇 편에 기댄�
 | docstring: n > 1 CPE 는 음의 저항, 가중은 모듈러스 가중, 전송선의 R_ion/3 은 막는 극한 | LASIA1999 | `circuit.py`, `fit.py` |
 | 회로보다 먼저 점을 본다 — lin-KK, M 은 μ < 0.85 에서 멈춘다. 잔차 기준(2 %, 잡음 6σ)은 우리 것이다. μ 가 일찍 멈추면(날카로운 아크) 판정하지 않는다 | SCHOENLEBER2014, VADHVA2021, LASIA1999 | `kk.lin_kk`, `audit.audit_spectrum` (ADR 0043) |
 | 꼭대기의 배선 유도 구간(+Im)은 KK 에서 뺀다 — 논문도 유도성 점을 버렸다. μ 가 일찍 멈추면 decade 당 3 개로 한 번 더 본다 | SCHOENLEBER2014 (실측 셀 예) | `kk.lin_kk(drop_inductive, m)`, `audit._kk_summary` (ADR 0043 보완) |
+| 온도 스캔은 Arrhenius 직선으로 본다. 벌크와 입계는 기울기가 달라 합은 완만히 휜다 — 1.5 배 벗어난 한 점은 그것이 아니다 | ISW1990 (그림 1b), LASIA1999 (반복 측정) | `audit._off_the_line` (`sweep_off_the_line`, ADR 0041 보완) |
 
 ## 아직 안 한 것
 

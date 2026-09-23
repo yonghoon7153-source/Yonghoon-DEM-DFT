@@ -328,7 +328,8 @@
    "where": "Sect. 2.2 Applications; Fig. 1b axis label",
    "math": "log10(sigma*T) vs 1000/T  (Fig. 1b);   log R vs 1000/T  (Figs. 6d, 6e)",
    "conditions": "The paper prints no activation-energy formula, no Ea values and no sigma = l/(R*A); the sigma*T form is visible only in the Fig. 1b axis label. Linearity is used qualitatively (a leakage or single-RC resistance 'gives a linear Arrhenius plot', pp. 137-138).",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "The temperature dependence of resistance is usually plotted in Arrhenius format, as shown in Figure 1b"
   },
   {
    "id": "ISW1990.bulk-and-gb-have-different-activation",
@@ -352,7 +353,8 @@
     }
    ],
    "conditions": "Read from the figure (the grain-boundary line is the steeper one); the text does not comment on the crossing.",
-   "confidence": "medium"
+   "confidence": "medium",
+   "quote": "b) Temperature dependence of bulk and grain boundary conductivities for Ca₁₂Al₁₄O₃₃."
   },
   {
    "id": "ISW1990.ferroelectric-overlap-caveat",

@@ -52,7 +52,7 @@ from .circuit import (
     parse_circuit,
     series_parts,
 )
-from .conductivity import real_axis_crossing
+from .conductivity import BOLTZMANN_EV_PER_K, real_axis_crossing
 from .derive import SOLID, SYMMETRIC, blocking_verdict, label_arcs
 from .fit import edge_misfit
 from .kk import KKResult, lin_kk
@@ -140,6 +140,9 @@ REFERENCES: dict[str, tuple[str, ...]] = {
     "short_rest_before_sweep": ("VADHVA2021.relax-to-ocp-before-eis",
                                 "LASIA1999.stationarity-repeat-and-up-down-scans"),
     "first_sweep_suspect": ("LASIA1999.stationarity-repeat-and-up-down-scans",),
+    "sweep_off_the_line": ("ISW1990.arrhenius-format",
+                           "ISW1990.bulk-and-gb-have-different-activation",
+                           "LASIA1999.stationarity-repeat-and-up-down-scans"),
     # 스펙트럼 자체 — Kramers–Kronig (ADR 0043)
     "kk_violation": ("VADHVA2021.kk-validation-before-modelling",
                      "SCHOENLEBER2014.residuals",
@@ -1186,6 +1189,9 @@ def audit_conductivity_scan(sweeps: Sequence[dict], *,
                 f"범위({low:.4g}–{high:.4g} Ω) 밖입니다 — 곡선 위에 없는 값입니다. "
                 f"소수점이나 다른 스윕의 값을 적었는지 보세요"))
     out += _blocking_outliers(sweeps)
+    off = _off_the_line(sweeps)
+    if off is not None:
+        out.append(off)
     out += _short_rests(sweeps)
     for warning in warnings:
         out.append(Finding(CHECK, "activation_warning", warning))
@@ -1201,38 +1207,123 @@ def audit_conductivity_scan(sweeps: Sequence[dict], *,
     return sort_findings(out)
 
 
+#: 한 스윕의 저주파 위상이 스캔의 나머지(중앙값)에서 이만큼(도) 떨어지면 튄다.
+PHASE_OUTLIER_DEG = 30.0
+
+
 def _blocking_outliers(sweeps: Sequence[dict]) -> list[Finding]:
-    """Sweeps whose low-frequency verdict disagrees with the rest of the scan.
+    """Sweeps whose low-frequency phase is far from the rest of the scan.
 
     A blocking pellet stays blocking from 60 °C to -20 °C; one sweep that
     suddenly passes DC is a measurement that went wrong (a contact, frost in
     the chamber), not a new material.  실측 B11 의 0 °C 스윕: 나머지 여덟은
     -70°대였는데 그것만 -12° 였고, 실수축 교점도 없었다.
+
+    **The phase, not the verdict.**  The first version compared verdicts, and
+    once the verdict learned to say "unclear" (ADR 0044) that sweep became
+    unclear instead of open -- and dropped out of the comparison.  What differs
+    is the phase itself.
     """
-    decided = [one for one in sweeps if one.get("blocking") in (True, False)]
-    if len(decided) < 3:
+    phased = [one for one in sweeps if one.get("phase_deg") is not None]
+    if len(phased) < 3:
         return []
-    blocking = sum(1 for one in decided if one["blocking"])
-    majority = blocking * 2 > len(decided)
-    odd = [one for one in decided if one["blocking"] is not majority]
-    if not odd or len(odd) * 3 > len(decided):
+    usual = float(np.median([one["phase_deg"] for one in phased]))
+    odd = [one for one in phased if abs(one["phase_deg"] - usual) > PHASE_OUTLIER_DEG]
+    if not odd or len(odd) * 3 > len(phased):
         return []
-    typical = [one["phase_deg"] for one in decided
-               if one["blocking"] is majority and one.get("phase_deg") is not None]
-    usual = f" (나머지는 {_deg(float(np.median(typical)))} 안팎)" if typical else ""
     names = ", ".join(
         f"스윕 {one['index']}"
         + (f" ({one['temperature_c']:g} °C)" if one.get("temperature_c") is not None
            else "")
-        + (f" 위상 {_deg(one.get('phase_deg'))}" if one.get("phase_deg") is not None
-           else "")
+        + f" 위상 {_deg(one.get('phase_deg'))}"
         for one in odd)
-    what = "막지 않습니다" if majority else "막습니다"
     return [Finding(
         CHECK, "sweep_unlike_its_neighbours",
-        f"{names} 만 저주파에서 {what}{usual} — 같은 펠릿이 한 온도에서만 달라질 "
-        f"이유는 없습니다. 그 측정 자체(접촉·결로·온도)를 의심하고, 그 스윕의 "
-        f"저항은 쓰지 마세요")]
+        f"{names} 만 저주파 위상이 나머지({_deg(usual)} 안팎)와 딴판입니다 — 같은 "
+        f"펠릿이 한 온도에서만 달라질 이유는 없습니다. 그 측정 자체(접촉·결로·"
+        f"온도)를 의심하고, 그 스윕의 저항은 쓰지 마세요")]
+
+
+#: Arrhenius 직선에서 ln R 로 이만큼(1.5 배) 넘게 떨어진 스윕을 짚는다.
+OFF_THE_LINE = math.log(1.5)
+
+
+def _line(x: np.ndarray, y: np.ndarray) -> tuple[float, float, float]:
+    """Least squares ``y = slope·x + intercept`` and its R² (flat when every
+    ``x`` is the same -- there is no line to draw)."""
+    if float(np.ptp(x)) == 0.0:
+        return 0.0, float(np.mean(y)), 0.0
+    slope, intercept = np.polyfit(x, y, 1)
+    residual = y - (slope * x + intercept)
+    spread = float(np.sum((y - y.mean()) ** 2))
+    r_squared = 1.0 - float(np.sum(residual ** 2)) / spread if spread > 0 else 1.0
+    return float(slope), float(intercept), r_squared
+
+
+def _off_the_line(sweeps: Sequence[dict]) -> Finding | None:
+    """Sweeps whose typed resistance sits far off the Arrhenius line the others
+    draw -- named, with the value the line expects.
+
+    One point at a time: the one furthest from the line fitted **without it**
+    goes, while it is more than 1.5 times off and more than four robust
+    spreads of the rest, and never more than a third of the sweeps.  A scan
+    that is scattered everywhere names nobody -- the R² warning speaks for it.
+    A gentle bend is not an outlier: bulk and grain boundary have their own
+    slopes (``ISW1990.bulk-and-gb-have-different-activation``), so a summed R
+    curves -- 1.5 times off one point is not that.
+    The expected values come from the final line, both outliers out.
+    실측 B11: 0 °C (1.11e5 Ω, 직선은 37.7 Ω)와 20 °C (79.9 Ω, 직선은 19 Ω)를 빼면
+    R² 0.270 → 0.986.  따로 잰 0 °C 스펙트럼(#68)의 R0 는 36 Ω 이었다 — 직선이 맞다.
+    B17 은 넷이 흩어져 아무도 짚지 않는다.
+    """
+    rows = [one for one in sweeps if one.get("temperature_c") is not None
+            and one.get("typed_ohm") and one["typed_ohm"] > 0]
+    if len(rows) < 5 or len({one["temperature_c"] for one in rows}) < 3:
+        return None                  # 온도가 셋은 되어야 직선이 있다
+    x = np.array([1.0 / (one["temperature_c"] + 273.15) for one in rows])
+    y = np.log([float(one["typed_ohm"]) for one in rows])
+    keep = np.ones(len(rows), dtype=bool)
+    removed: list[int] = []
+    while keep.sum() > 4 and len(removed) < len(rows) // 3:
+        worst, worst_off = -1, 0.0
+        for index in np.flatnonzero(keep):
+            others = keep.copy()
+            others[index] = False
+            slope, intercept, _ = _line(x[others], y[others])
+            off = abs(y[index] - (slope * x[index] + intercept))
+            if off > worst_off:
+                worst, worst_off = int(index), off
+        others = keep.copy()
+        others[worst] = False
+        slope, intercept, _ = _line(x[others], y[others])
+        rest = np.abs(y[others] - (slope * x[others] + intercept))
+        if worst_off < max(OFF_THE_LINE, 4.0 * 1.4826 * float(np.median(rest))):
+            break
+        keep[worst] = False
+        removed.append(worst)
+    first = min(range(len(rows)), key=lambda i: rows[i]["index"])
+    if not removed or removed == [first]:
+        return None                  # 첫 스윕만이면 first_sweep_suspect 가 말한다
+    slope, intercept, r_squared = _line(x[keep], y[keep])
+    named = sorted(removed, key=lambda i: rows[i]["index"])
+    listed = ", ".join(
+        f"스윕 {rows[i]['index']} ({rows[i]['temperature_c']:g} °C, "
+        f"{rows[i]['typed_ohm']:.3g} Ω)" for i in named)
+    expected = ", ".join(f"{math.exp(slope * x[i] + intercept):.3g} Ω" for i in named)
+    # 적은 값이 그 스윕의 실수축 교점과 같으면 읽기 실수가 아니다 (실측 B11 20 °C).
+    measured = [rows[i] for i in named if rows[i].get("crossing_ohm")
+                and abs(rows[i]["crossing_ohm"] / rows[i]["typed_ohm"] - 1) < 0.1]
+    if measured:
+        who = ", ".join(f"스윕 {one['index']}" for one in measured)
+        advice = (f"{who} 는 스펙트럼의 실수축 교점도 그 값입니다 — 읽기 실수가 "
+                  f"아니라 측정이 벗어났으니 그 온도를 다시 재세요")
+    else:
+        advice = "그 스윕을 다시 읽거나 다시 재세요"
+    return Finding(
+        CHECK, "sweep_off_the_line",
+        f"{listed} 가 나머지 {int(keep.sum())}개가 그리는 Arrhenius 직선에서 "
+        f"멉니다 — 직선이 말하는 값은 {expected} 입니다. {advice}. 빼면 "
+        f"Ea = {slope * BOLTZMANN_EV_PER_K:.3f} eV (R² = {r_squared:.3f})")
 
 
 #: 앞 스윕 뒤에 쉰 시간이 다른 스윕들의 이만큼(비율)도 안 되면 평형 전일 수 있다.

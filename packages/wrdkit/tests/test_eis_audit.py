@@ -688,10 +688,10 @@ def b11_like(**change):
     rows = []
     for index, (t, r) in enumerate(zip(temperatures, typed, strict=True), start=1):
         rows.append({"index": index, "temperature_c": t, "typed_ohm": r,
-                     "re_min_ohm": r * 0.6, "re_max_ohm": 5000.0,
+                     "crossing_ohm": r, "re_min_ohm": r * 0.6, "re_max_ohm": 5000.0,
                      "blocking": True, "phase_deg": -75.0,
                      "start_s": 7200.0 * index, "end_s": 7200.0 * index + 90})
-    rows[6].update(blocking=False, phase_deg=-12.0)          # 0 °C
+    rows[6].update(blocking=False, phase_deg=-12.0, crossing_ohm=None)   # 0 °C
     for key, value in change.items():
         rows[int(key[1:]) - 1].update(value)
     return rows
@@ -702,6 +702,54 @@ def test_the_one_sweep_that_stops_blocking_is_named():
     (odd,) = [f for f in found if f.code == "sweep_unlike_its_neighbours"]
     assert "스윕 7 (0 °C)" in odd.message and "-12°" in odd.message
     assert "-75°" in odd.message
+
+
+def test_a_sweep_whose_verdict_is_only_unclear_is_still_named():
+    """ADR 0044 뒤로 B11 0 °C 스윕(-12°)의 판정이 "안 막음" 에서 "애매" 로
+    바뀌었고, 판정끼리 비교하던 검사에서 빠졌다.  다른 것은 위상이다."""
+    rows = b11_like()
+    rows[6].update(blocking=None)
+    (odd,) = [f for f in audit_conductivity_scan(rows)
+              if f.code == "sweep_unlike_its_neighbours"]
+    assert "스윕 7 (0 °C)" in odd.message and "-12°" in odd.message
+
+
+def test_the_sweeps_off_the_arrhenius_line_are_named_with_the_expected_value():
+    """실측 B11: 20 °C 79.9 Ω 과 0 °C 1.11e5 Ω.  둘을 빼면 R² 0.270 → 0.986, 직선이
+    말하는 0 °C 값 37.7 Ω 은 따로 잰 0 °C 스펙트럼(#68)의 R0 36 Ω 과 맞는다."""
+    (off,) = [f for f in audit_conductivity_scan(b11_like())
+              if f.code == "sweep_off_the_line"]
+    assert "스윕 5 (20 °C, 79.9 Ω)" in off.message
+    assert "스윕 7 (0 °C, 1.11e+05 Ω)" in off.message
+    assert "직선이 말하는 값은 19 Ω, 37.7 Ω" in off.message
+    # 20 °C 는 스펙트럼도 80 Ω 에서 실수축을 건넜다 — 다시 읽을 것이 아니라 다시 잴 것.
+    assert "스윕 5 는 스펙트럼의 실수축 교점도 그 값입니다" in off.message
+    assert "Ea = 0.236 eV" in off.message and "R² = 0.986" in off.message
+
+
+def test_a_scattered_scan_or_a_first_sweep_alone_names_nobody_off_the_line():
+    """B17 은 넷이 흩어져 누구를 짚을 수 없다 (R² 경고가 말한다).  B15 는 첫
+    스윕만 벗어난다 — 그것은 first_sweep_suspect 가 말한다."""
+    def rows(values):
+        return [{"index": i, "temperature_c": t, "typed_ohm": r}
+                for i, (t, r) in enumerate(zip([60, 50, 40, 30, 20, 10, 0, -10, -20],
+                                               values, strict=True), start=1)]
+    b17 = [11, 6.181, 8.214, 25.72, 45.87, 49.66, 28.14, 47.91, 78.65]
+    b15 = [8.586, 8.311, 10.48, 14.02, 19.75, 30.38, 47.9, 81.01, 114.9]
+    for values in (b17, b15):
+        assert "sweep_off_the_line" not in [
+            f.code for f in audit_conductivity_scan(rows(values))]
+
+
+def test_a_scan_at_one_temperature_draws_no_line():
+    """SOC 스캔처럼 온도가 하나뿐이면 Arrhenius 직선은 없다 — 조용히 넘어간다."""
+    rows = [{"index": i, "temperature_c": 25.0, "typed_ohm": r}
+            for i, r in enumerate([10.0, 11.0, 30.0, 10.5, 9.8, 10.2], start=1)]
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        found = audit_conductivity_scan(rows)
+    assert "sweep_off_the_line" not in [f.code for f in found]
 
 
 def test_noise_just_above_the_axis_at_the_end_is_not_drift():
