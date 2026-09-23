@@ -289,7 +289,8 @@
     "Nd-bearing MP gaps are LOWER BOUNDS (4f mis-placement); pure-O phases (Li3PO4 5.73, Li2O 5.24, LiCl 6.65) are reliable -> the O message is independent of Nd-4f uncertainty.",
     "Roles/sides and the GB electron-blocking mechanism are an INFERENCE from product gaps + the bulk-opposite-direction logic; GB/interface electron transport and SEI morphology were NOT computed directly -> needs XPS depth / ToF-SIMS / SSRM validation.",
     "Interface reactivity is thermodynamic (zero/grand-potential), kinetic CEI passivation not captured; LiCoO2 proxy (experiment may use NCM).",
-    "DFT doping x=0.2 (10x the experimental x=0.02) -> trends/mechanism robust, absolute values approximate."
+    "DFT doping x=0.2 (10x the experimental x=0.02) -> trends/mechanism robust, absolute values approximate.",
+    "External literature tables classify Li3P as a 'wide-gap semiconductor' (3.6 eV direct / 2.03 eV indirect; [Li26MCI] Li, Jeon, Persson, Mach. Learn.: Sci. Technol. 7, 055011 (2026), Table 1, citing a 1991 ab initio study). Different method from ours: do NOT place it next to our PBE value (sei_electronic.json, 0.7092 eV) and do NOT use it to reclassify Li3P as non-leaky. With method-consistent (PBE-family) gaps, Li3P falls in the same 'semiconducting' bin as Na3P (~0.4 / 0.8 eV) in that paper's own scheme. (added 2026-09-23)"
   ],
   "cross_refs": [
     "kb/results/nd2o3_master_findings_2026_06_18.md (section 3: SEI passivation anode vs cathode)",

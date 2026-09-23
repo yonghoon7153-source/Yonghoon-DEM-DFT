@@ -1,13 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-22 · managed-files: 438
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-23 · managed-files: 438
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 237건)
-- 2026-09-22 · `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다)
+- 2026-09-23 · `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다)
 - 2026-09-22 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-22 · `kb/reviews/li2s1a_BS_prompt_li2s_relax_provenance_2026_09_22.md` — BS 수신 원문 — li2s relax 계보·E_hull 분해·−38.4 읽는 방향·600 K 문구 · 수신됨-회신함
 - 2026-09-22 · `kb/reviews/li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md` — BS 회신 — relax 프레임 동정 불가 · E_hull 분해 · −38.4 상한 읽기 · 600 K 문구 정정 · 회신문-작성됨
@@ -35,7 +35,7 @@
 - `kb/concepts/beta-gate.md` — β 게이트 — 확산영역 판정 (diffusive-regime gate)
 - `kb/concepts/bvse.md` — BVSE — Bond Valence Site Energy (결합가 자리 에너지)
 - `kb/concepts/cohp.md` — COHP / ICOHP / ICOBI — 결합 분석 (Crystal Orbital 재투영)
-- `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리  (2026-09-22 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다))
+- `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리  (2026-09-23 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다))
 - `kb/concepts/dft.md` — DFT — Density Functional Theory (밀도범함수이론)
 - `kb/concepts/elastic.md` — Elastic constants — 탄성상수 $C_{ij}$ 와 VRH 평균
 - `kb/concepts/md.md` — MD (MLIP) / MSD / Arrhenius — 분자동역학 이온수송
@@ -501,4 +501,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 317개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 318개 (정본 목록: litdb/INDEX.md)

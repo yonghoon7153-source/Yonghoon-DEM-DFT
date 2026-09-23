@@ -1,7 +1,7 @@
 ---
 title: CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리
 date: 2026-09-22
-updated: 2026-09-22
+updated: 2026-09-23
 tags: [electrochemistry, CV, dQdV, ESW, passivation, 개념정리]
 status: 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다)
 confidence: medium
@@ -231,11 +231,32 @@ C–SE 복합(계면적을 키워 신호를 크게)으로 OCV 에서 시작해 *
 
 | | 계산으로 되는 것 | 실험이 필요한 것 |
 |---|---|---|
-| 분해산물이 절연인가 | ✅ 밴드갭 | — |
-| 층이 **실제로 막는가** | ⛔ 안 됨 | **stepwise CV 2회차 전류 감쇠** |
+| 분해산물이 절연인가 | ✅ 밴드갭 (**필요조건일 뿐**) | — |
+| 반응 전선에서 **원자가 더 이상 안 움직이나** | 🟡 반응 MD 로 **관찰은 된다** — 단 원료가 바닥난 것(작은 셀)·짧은 시간창과 구별해야 한다 | — |
+| 층이 **전자를 실제로 막는가** | ⛔ 안 됨 — MD 퍼텐셜에는 **전자가 없다** | **stepwise CV 2회차 전류 감쇠** |
 
-⚠ **분야 전체의 공백이기도 하다** — 2026-09-22 기준, 자기제한을 **동역학으로 증명한** 문헌을 우리 litdb 안에서 못 찾았다
-(`[[litdb/papers/chaney2024_two_step_sei_growth_argyrodite_li_metal|Chaney 2024]]` 는 `self-limiting` 이라는 말이 0회이고, 그 계산의 6런이 전부 100 % 환원으로 끝난다).
+> [!warning] "동역학으로 보였다" 에는 두 층이 있다 — 우리 litdb 에는 **어느 쪽의 증명도 없다**
+> *(2026-09-23 정정 — 이전 판은 "분야 전체의 공백" 이라 쓰고 근거로 Chaney 2024 하나만 들었다.
+> 그때 이미 litdb 에 있던 Kim 2026 · Lomeli 2024 를 빠뜨렸다.)*
+>
+> **① 원자 이동이 멈춘다 — *주장*은 있지만 깨끗한 증명은 없다.**
+> - `[[litdb/papers/kim2026_li_argyrodite_sei_reactive_md|Kim 2026]]` (⛔ 프리프린트, 미심사) — PS₄ 분해가
+>   약 11 ns 에 20층 → 6층에서 멈춘다며 *"self-passivating"* 이라 주장한다. 원료 고갈·단일 시드를 배제하지 못한다.
+> - `[[litdb/papers/li2026_mci_vs_sei_na3ps4_na_mlip_md|Li 2026]]` (Na₃PS₄‖Na) — 비교 대상인 Li₇P₃S₁₁‖Li 의
+>   "평탄" 은 **다른 논문(Li 2025 *J. Phys. Chem. C*)에서 가져와 겹쳐 그린 선**이고, 그 선도
+>   1 → 10 ns 에 약 8 % 더 자란다 (figure-read ≈, 우리 판독).
+> - `[[litdb/papers/chaney2024_two_step_sei_growth_argyrodite_li_metal|Chaney 2024]]` — `self-limiting` 이라는
+>   말이 0회이고, 큰 계산 6런이 전부 100 % 환원으로 끝난다.
+> - `[[litdb/papers/lomeli2024_predicting_reactivity_passivation_ssb_interfaces|Lomeli 2024]]` — 40 ps AIMD 를
+>   **눈으로 보고** "passivating" 라벨을 붙였다.
+>
+> **② 전자가 막혀서 멈춘다 (§8-2 의 기전) — 증거가 없다.**
+> - MD 퍼텐셜에는 전자가 없다. Li 2026 스스로 *"the interatomic potential is not charge-aware"* 라 쓰고,
+>   판정에는 *"direct electronic conductivity measurements"* 가 필요하다고 적는다.
+> - Lomeli 2024 는 부동태 층이 전자절연인지 계산으로 확인하려다 **못 했다** (본 10개가 전부 금속성).
+>
+> ⇒ 계산이 줄 수 있는 것은 **①까지**이고, 그것도 조건부다. **②는 stepwise CV 같은 실험이 답한다** —
+> 이 절의 결론은 그대로이고, 오히려 더 강해진다.
 
 ---
 
@@ -265,11 +286,17 @@ C–SE 복합(계면적을 키워 신호를 크게)으로 OCV 에서 시작해 *
   인용 가능 여부는 `db/properties/citation_hazards.json` 이 정한다. 여기 옮겨 적으면 두 곳이 갈린다.
 - **어느 쪽이 "맞는" 창인지 판정하지 않는다.** 둘 다 각자의 질문에 맞다. 틀리는 것은 **섞을 때**다.
 - **실험 프로토콜을 주지 않는다.** 스캔속도·계면적·탄소비 같은 실제 조건은 이 문서 밖이다.
-- ⚠ `confidence: medium` 인 이유 — 개념 정의는 표준 교과서 수준이지만, **§8 의 "자기제한을
-  증명한 문헌이 없다"** 는 우리 litdb 범위 안에서의 관찰이다. 더 넓게 보면 있을 수 있다.
+- ⚠ `confidence: medium` 인 이유 — 개념 정의는 표준 교과서 수준이지만, **§8-4 의 판정**
+  (원자 이동 정지는 주장만 있고, 전자 차단 정지는 증거가 없다)은 우리 litdb 4편
+  (Chaney 2024 · Kim 2026 · Lomeli 2024 · Li 2026) 범위의 관찰이다. 그 판정의 원전 하나 —
+  **Li, Karan, Kaplan, Wen, Persson, *J. Phys. Chem. C* 129, 16043 (2025)** (Li₇P₃S₁₁‖Li MLIP-MD) — 는
+  아직 읽지 않았다.
 
 ## 관련 문서
 - `[[kb/concepts/beta-gate|β 게이트]]` — 계산 쪽에서 *"이게 진짜 확산인가"* 를 가르는 같은 성격의 게이트
 - `[[litdb/papers/banik2022_substitutions_oxidative_stability_argyrodite|Banik 2022]]` — stepwise CV 실제 사용례
 - `[[litdb/papers/schwietert2021_intrinsic_vs_decomposition_window_sse|Schwietert 2021]]` — 열역학 창 안에서 **또 두 층**(분해 창 / intrinsic 창)을 가르는 논문
 - `db/properties/ndo_passivation_argument_2026_09_14.json` — *"CV 가 좋아지는 것을 무엇으로 설명하나"* 해석 카드 (⚠ `citable: false`, 1저자 검토 전)
+- `[[litdb/papers/li2026_mci_vs_sei_na3ps4_na_mlip_md|Li 2026 (Na₃PS₄‖Na)]]` — SEI 와 MCI 를 MLIP-MD 로 가르려는 시도. "멈춤" 의 정의가 없고, 전자 쪽 계산이 왜 빠질 수밖에 없는지 보여 주는 사례
+- `[[litdb/papers/kim2026_li_argyrodite_sei_reactive_md|Kim 2026]]` — *"self-passivating"* 을 주장한 반응 MD (⛔ 프리프린트 · 구조적 격리일 뿐 전자 차단 아님)
+- `[[litdb/papers/lomeli2024_predicting_reactivity_passivation_ssb_interfaces|Lomeli 2024]]` — AIMD 로 부동태 라벨을 붙인 스크리닝. 전자절연 확인은 실패

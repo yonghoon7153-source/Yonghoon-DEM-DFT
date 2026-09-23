@@ -2297,6 +2297,32 @@
         "DFT-adsorption"
       ],
       "added_in_session": "2026-05-22"
+    },
+    {
+      "id": "li2026_mci",
+      "authors": "Li, B. Y.; Jeon, H.; Persson, K. A.",
+      "title": "Distinguishing the mixed conduction interphase: a machine learning molecular dynamics study on the Na3PS4/Na battery interface",
+      "journal": "Mach. Learn.: Sci. Technol.",
+      "volume": 7,
+      "pages": "055011",
+      "year": 2026,
+      "DOI": "10.1088/2632-2153/aea2f0",
+      "title_verified": "2026-09-23 (PDF)",
+      "url": "https://github.com/BryantLi-BLI/naps-mic (code @ 85557efd5bf6ef62fb23fa584e11e2b79012c625; Onsager core in private py_oats)",
+      "key_content": "Self-trained ACE MLIP (Na, P, S only; r2SCAN labels; 20,114 configs). Na3PS4/Na ~500,000 atoms, 10.5 ns, 300 K, NpT Nose-Hoover. Interphase keeps growing (log-like slowdown); three markers (Onsager L_PP dominance, amorphous Na2S, Na-P bond-graph percolation) called consistent with MCI and 'necessary but not sufficient'. No electronic-structure or conductivity calculation; the Li7P3S11/Li comparison is reprinted from Li et al., J. Phys. Chem. C 129, 16043 (2025). Our audit: Na Onsager matrix violates momentum-conservation mass ratios while the Li matrix satisfies them; SI Table S2 contains 4,592 configs with max force >= 3 eV/A despite the stated 80 meV/A filter. Digest: litdb/papers/li2026_mci_vs_sei_na3ps4_na_mlip_md.md",
+      "tags": [
+        "Na3PS4",
+        "Na-metal anode",
+        "interphase",
+        "MCI",
+        "SEI",
+        "MLIP",
+        "ACE",
+        "MD",
+        "Onsager",
+        "percolation"
+      ],
+      "added_in_session": "2026-09-23"
     }
   ]
 }
