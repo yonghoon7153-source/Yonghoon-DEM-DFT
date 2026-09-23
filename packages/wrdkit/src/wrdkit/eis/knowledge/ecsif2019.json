@@ -876,7 +876,8 @@
     "lowest_frequency_hz": 0.1
    },
    "conditions": "Points digitised by eye from 500-dpi renders of the printed figures; exact frequencies of the points are not printed (the sweep ends at 100 mHz), and the verdict uses only their order. Verdicts from running wrdkit.eis.derive.blocking_verdict on the digitised points.",
-   "confidence": "medium"
+   "confidence": "medium",
+   "quote": "two distinct frequency-dependent phenomena represented by the two semicircles and a capacitive tail representing the blocking behavior of the Au electrodes"
   }
  ]
 }

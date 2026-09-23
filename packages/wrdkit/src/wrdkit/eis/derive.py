@@ -216,6 +216,13 @@ def conductivity(resistance_ohm: float, *, thickness_cm: float | None,
 BLOCKING_PHASE_DEG = -60.0
 #: 이보다 **얕으면** 블로킹이 아니다 — 스펙트럼이 실수축 위에서 끝난다.
 RESISTIVE_PHASE_DEG = -30.0
+#: 위상이 얕아도 저주파 끝의 **꼬리**가 나이퀴스트에서 이보다 가파르게 서면
+#: 막는다.  직렬 CPE 의 꼬리는 n·90° 로 서므로 (``LASIA1999.cpe-definition``)
+#: 60° 는 위상 기준 -60° 와 같은 n = 0.67 이다.
+BLOCKING_TAIL_DEG = 60.0
+#: 이보다 완만하게라도 **오르는** 끝은 아직 실수축으로 안 내려왔다 — 45° 확산
+#: 꼬리가 여기다.  안 막는다고 하지 않는다.
+RISING_TAIL_DEG = 30.0
 
 
 def blocking_verdict(frequency_hz, z_re, z_im, *, lowest: int = 3) -> dict:
@@ -244,10 +251,24 @@ def blocking_verdict(frequency_hz, z_re, z_im, *, lowest: int = 3) -> dict:
     ``z_im`` 은 **물리 규약의** Im(Z) 다 (용량성이면 음수).  가장 낮은 주파수
     ``lowest`` 개의 위상 중앙값으로 본다 — 한 점은 잡음에 흔들린다.
 
+    **위상만으로는 모자란다.**  저항이 크면 막는 셀도 마지막 점의 위상이 얕다
+    — 꼬리가 섰지만 그 높이가 아직 저항을 못 넘었다.  Gupta·Sakamoto (2019)
+    의 막는 셀 다섯 중 셋이 최저 주파수에서 -22 ~ -28° 였고 꼬리는 72–77° 로
+    섰다 (``GUPTA2019.blocking-tail-shallow-absolute-phase``, 그림에서 읽은
+    값).  그래서 같은 세 점이 나이퀴스트에서 **어디로 가는지**도 본다.
+
+    * 위상 ≤ -60° 이거나, 세 점이 계속 오르며 꼬리가 ≥ 60° 로 서면 막는다.
+    * 위상 ≥ -30° 이고 끝이 오르지 않으면 (실수축으로 내려오거나 평평하면)
+      안 막는다.
+    * 위상은 얕은데 끝이 30–60° 로 오르면 (확산 꼬리, 덜 닫힌 아크) 모른다.
+
     돌려주는 것::
 
         {"blocking": True | False | None, "phase_deg": float | None,
-         "reason": str}
+         "tail_deg": float | None, "reason": str}
+
+    ``tail_deg`` 는 세 점이 계속 오를 때만 있다 (가장 낮은 셋의 처음과 끝을 이은
+    방향, 실수축에서 잰 각).
 
     ``None`` 은 **애매하다**는 뜻이다 (-60° 와 -30° 사이).  그때는 막는다고도
     안 막는다고도 하지 않는다 (§0.4).
@@ -267,20 +288,49 @@ def blocking_verdict(frequency_hz, z_re, z_im, *, lowest: int = 3) -> dict:
     order = np.argsort(frequency)[:lowest]          # 가장 낮은 주파수부터
     phase = float(np.median(np.degrees(np.arctan2(imag[order], real[order]))))
     lowest_hz = float(frequency[order[0]])
+    tail = _rising_tail_deg(real[order], imag[order])
 
     if phase <= BLOCKING_PHASE_DEG:
-        return {"blocking": True, "phase_deg": phase,
+        return {"blocking": True, "phase_deg": phase, "tail_deg": tail,
                 "reason": f"{lowest_hz:.3g} Hz 에서 위상 {phase:.0f}° — 블로킹입니다"}
+    if tail is not None and BLOCKING_TAIL_DEG <= tail <= 180.0 - BLOCKING_TAIL_DEG:
+        return {"blocking": True, "phase_deg": phase, "tail_deg": tail,
+                "reason": (f"{lowest_hz:.3g} Hz 에서 위상은 {phase:.0f}° 로 얕지만 "
+                           f"꼬리가 {tail:.0f}° 로 섭니다 — 저항이 커서 꼬리가 아직 "
+                           f"위상을 끌어내리지 못한 블로킹입니다")}
     if phase >= RESISTIVE_PHASE_DEG:
-        return {"blocking": False, "phase_deg": phase,
+        if tail is not None and tail >= RISING_TAIL_DEG:
+            return {"blocking": None, "phase_deg": phase, "tail_deg": tail,
+                    "reason": (f"{lowest_hz:.3g} Hz 에서 위상 {phase:.0f}° 이지만 끝이 "
+                               f"아직 {tail:.0f}° 로 오릅니다 — 실수축으로 내려오지 "
+                               f"않았습니다. 막는지 애매합니다 (더 낮은 주파수까지 "
+                               f"재면 갈립니다)")}
+        return {"blocking": False, "phase_deg": phase, "tail_deg": tail,
                 "reason": (f"{lowest_hz:.3g} Hz 에서 위상 {phase:.0f}° — 스펙트럼이 "
                            f"실수축 위에서 끝납니다. 이 셀은 저주파에서 **이온을 "
                            f"막지 않습니다** (DC 가 흐릅니다). Li|전해질|Li 처럼 "
                            f"막지 않는 전극이거나, 막는 셀에 전자가 새는 길이 "
                            f"있습니다")}
-    return {"blocking": None, "phase_deg": phase,
+    return {"blocking": None, "phase_deg": phase, "tail_deg": tail,
             "reason": (f"{lowest_hz:.3g} Hz 에서 위상 {phase:.0f}° — 블로킹인지 "
                        f"애매합니다 (더 낮은 주파수까지 재면 갈립니다)")}
+
+
+def _rising_tail_deg(real: np.ndarray, imag: np.ndarray) -> float | None:
+    """The Nyquist direction of the lowest points, lowest frequency first --
+    when ``−Im Z`` keeps rising as the frequency falls; else ``None``.
+
+    The angle is of the line from the highest of them to the lowest, measured
+    from the real axis: 90° is a pure capacitor, ``n·90°`` a series CPE, 45°
+    semi-infinite diffusion.
+    """
+    minus_im = -imag
+    rises = np.diff(minus_im[::-1])                  # 주파수가 내려가는 쪽으로
+    if minus_im.size < 2 or not np.all(rises > 0):
+        return None
+    d_re = float(real[0] - real[-1])
+    d_im = float(minus_im[0] - minus_im[-1])
+    return float(np.degrees(np.arctan2(d_im, d_re)))
 
 
 def ionic_conductivity(result: FitResult, *, thickness_cm: float | None,

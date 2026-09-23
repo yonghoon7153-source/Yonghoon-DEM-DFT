@@ -475,7 +475,8 @@
     "T_units": "F cm^-2 s^(phi-1)"
    },
    "conditions": "Section V.2; distributed time constants on solid electrodes.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "and it represents a “leaking” capacitor, which has nonzero real and imaginary components."
   },
   {
    "id": "LASIA1999.cpe-exponent-limits",

@@ -256,6 +256,33 @@ def test_a_blocking_cell_is_blocking():
     assert got["phase_deg"] < -60
 
 
+def test_a_blocking_cell_with_a_large_resistance_is_still_blocking():
+    """Gupta·Sakamoto (2019) 꼴: 저항이 커서 0.1 Hz 에서도 위상이 -16° 지만
+    꼬리는 거의 수직으로 선다.  위상만 보면 "안 막음" 이라 σ 를 가리고, 막는
+    회로를 쓴 사람에게 틀렸다고 한다."""
+    f = np.logspace(6, -1, 71)
+    w = 2 * np.pi * f
+    z = (100 + 5e4 / (1 + 5e4 * 1e-9 * (1j * w) ** 0.9)
+         + 5e4 / (1 + 5e4 * 1e-7 * (1j * w) ** 0.8) + 1 / (5e-5 * (1j * w) ** 0.9))
+    got = blocking_verdict(f, z.real, z.imag)
+    assert got["phase_deg"] > -30                     # 위상만으로는 "안 막음"
+    assert got["blocking"] is True
+    assert got["tail_deg"] == pytest.approx(81, abs=4)  # n·90°
+    assert "꼬리가" in got["reason"]
+
+
+def test_a_tail_rising_like_diffusion_is_unclear_not_open():
+    """45° 로 오르는 끝 — 확산인지 막는지 모른다.  위상이 얕다고 "DC 가
+    흐른다" 고 하지 않는다."""
+    f = np.logspace(3, -2, 51)
+    w = 2 * np.pi * f
+    z = 200 + 1 / (2e-2 * np.sqrt(1j * w))
+    got = blocking_verdict(f, z.real, z.imag)
+    assert got["phase_deg"] > -30
+    assert got["blocking"] is None
+    assert got["tail_deg"] == pytest.approx(45, abs=2)
+
+
 def test_in_between_is_said_to_be_unclear_rather_than_guessed():
     """-60° 와 -30° 사이는 애매하다 — 막는다고도 안 막는다고도 안 한다 (§0.4)."""
     f = np.array([1e-2, 2e-2, 5e-2])
