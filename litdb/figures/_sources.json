@@ -1144,6 +1144,14 @@
    "d32d0af1-93._Finetuning_universal_machinelearned_interatomic_potentials_A_Tutorial_on_methods_and_applications.pdf"
   ]
  },
+ "liu2026_li4sns4_mediator_low_barrier_li2s": {
+  "figures": 30,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "0923-2. AdvFunctMater_2026_Liu_Li4SnS4_mediator_Li2S_MAIN.pdf",
+   "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf"
+  ]
+ },
  "liyaru_gaf3_codoping_argyrodite": {
   "figures": 35,
   "generated": "2026-08-05",
@@ -2107,6 +2115,14 @@
   "pdfs": [
    "f6cbcf21-61_Coupling_of_multiscale_imaging_analysis_and_computational_modeling_for_understanding_thick_cathode_degradation_mechanisms.pdf",
    "43193ec8-1s2.0S2542435122005724mmc1.pdf"
+  ]
+ },
+ "zhang2026_anode_free_asslsb_li2s_pi3_na_current_collector": {
+  "figures": 22,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "0923-1. AdvEnergyMater_Zhang_AnodeFree_ASSLSB_Li2S-PI3_Na_CC_MAIN.pdf",
+   "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf"
   ]
  },
  "zhang2026_dryprocess_electrode_architecture_cell_level": {

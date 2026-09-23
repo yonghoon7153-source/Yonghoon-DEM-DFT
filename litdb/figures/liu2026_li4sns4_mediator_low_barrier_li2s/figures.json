@@ -1,0 +1,612 @@
+{
+ "slug": "liu2026_li4sns4_mediator_low_barrier_li2s",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "0923-2. AdvFunctMater_2026_Liu_Li4SnS4_mediator_Li2S_MAIN.pdf",
+  "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Electronic structure analysis of Li2S. (a) Schematic diagram of bonding model and orbital energy level between lattice sulfur and Li+ in Li2S. (b) Schematic diagram of Li2S decomposition. (c) Schematic illustration of how the coordination competition between tetrahedral cations and Li overlaps with S 3p orbitals; inset: changes in the bonding and antibonding states of M─S and S─Li. (d) The binding energy between graphene, Li4SnS4, and sulfur-based molecules (S8, Li2S2, and Li2S). (e) The adsorption model of Li4SnS4 with sulfur-based molecules (S8, Li2S2, and Li2S) and the corresponding differential charge density distributions (yellow regions indicate charge-rich areas, while blue regions indicate charge-depleted areas).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.6,
+    564.2,
+    518.3
+   ],
+   "w": 2153,
+   "h": 2012,
+   "dpi": 300,
+   "src": "0923-2. AdvFunctMater_2026_Liu_Li4SnS4_mediator_Li2S_MAIN.pdf",
+   "blank": 0.838
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Structural characterization. (a) Schematic diagram of the growth design for Li4SnS4 molecules. (b) XRD patterns of Li2S and Li2S@Li4SnS4. (c) Rietveld refinement results of the XRD patterns and (d) TEM image for Li2S and Li2S@Li4SnS4. (e) Raman and (f) 7Li NMR spectra of Li2S, Li2S@SnS2 and Li2S@Li4SnS4.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    564.2,
+    492.3
+   ],
+   "w": 2153,
+   "h": 1905,
+   "dpi": 300,
+   "src": "0923-2. AdvFunctMater_2026_Liu_Li4SnS4_mediator_Li2S_MAIN.pdf",
+   "blank": 0.752
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Reaction kinetics analysis of the cathode. (a) Ionic conductivity of Li2S and Li2S@Li4SnS4 cathode; Insert: schematic diagram of the electronic blocking structure. Contour plots of CV patterns for (b) Li2S and (c) Li2S@Li4SnS4 cathode with different scan rates. (d) Variation of the oxidation peak current in CV as a function of scan rate. (e) Tafel slope of Li2S and Li2S@Li4SnS4 cathode. (f) The relative activation energy of Li2S and Li2S@Li4SnS4 cathodes. The DRT curves are plotted and calculated from in situ EIS results, and the corresponding 2D intensity mapping of (g) Li2S and (h) Li2S@Li4SnS4 cathodes during the initial charge process. (i) Corresponding charge transfer impedance of the Li2S and Li2S@Li4SnS4 cathode. cm−1 reappears (Figure 4b). Consequently, although sulfur gains electrons overall, part of the electron density at the interfacial sulfur sites is polarized towa",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    564.2,
+    466.3
+   ],
+   "w": 2153,
+   "h": 1798,
+   "dpi": 300,
+   "src": "0923-2. AdvFunctMater_2026_Liu_Li4SnS4_mediator_Li2S_MAIN.pdf",
+   "blank": 0.717
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Reversibility analysis of reaction products. (a) Charge-discharge profiles of Li2S@Li4SnS4 cathode. (b) Raman, (c) S 2p, and (d) Sn 3d XPS spectra of the Li2S@Li4SnS4 cathode with different states of charge and discharge. (e) Schematic illustration of the enhanced reaction kinetics of Li2S@Li4SnS4 cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.7,
+    564.2,
+    470.3
+   ],
+   "w": 2153,
+   "h": 1812,
+   "dpi": 300,
+   "src": "0923-2. AdvFunctMater_2026_Liu_Li4SnS4_mediator_Li2S_MAIN.pdf",
+   "blank": 0.71
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Electrochemical performance of ASSLSBs. Initial charge profiles of (a) Li2S and Li2S@Li4SnS4 cathode. (b) Comparison of the initial activation potential of the Li2S@Li4SnS4 cathode with that of the all-solid-state Li2S cathode reported in recent literature. (c) Rate performance of the Li2S@Li4SnS4 cathode with a Li2S loading of 1.2 mg cm−2. (d) Long-term cycling performance of Li2S and Li2S@Li4SnS4 cathodes with a Li2S loading of 3 mg cm−2. (e) Long-term cycling performance of Li2S and Li2S@Li4SnS4 cathode with a Li2S loading of 5 mg cm−2 at 60◦C. (f) Long-term cycling performance comparison between this work and previously reported ASSLSBs. (g) Long-term cycling performance of all-solid-state pouch cell; inset: optical photograph of the pouch cell assembly process and powering an LED light.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    564.2,
+    456.3
+   ],
+   "w": 2153,
+   "h": 1755,
+   "dpi": 300,
+   "src": "0923-2. AdvFunctMater_2026_Liu_Li4SnS4_mediator_Li2S_MAIN.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 6,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Structural model of (a) Li3PS4, (b) Li4GeS4, (c) Li4SnS4, (d) Li3SbS4, and (e) Li4SiS4",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    532.5,
+    347.8
+   ],
+   "w": 1949,
+   "h": 1328,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Density of states of (a) Li2S, (b) Li2S@Li3PS4, (c) Li2S@Li4GeS4, (d)",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.5,
+    317.9
+   ],
+   "w": 1953,
+   "h": 1203,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. The Li-S and M-S bong length of Li2S@Li3PS4, Li2S@Li4GeS4, Li2S@Li4SnS4,",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.5,
+    318.8
+   ],
+   "w": 1953,
+   "h": 1207,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. The iCOHP value for M-S and Li-S of Li2S@Li3PS4, Li2S@Li4GeS4, Li2S@Li4SnS4,",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    536.5,
+    320.7
+   ],
+   "w": 1966,
+   "h": 1215,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 10,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. The adsorption model of graphene with sulfur-based molecules (S8, Li2S2, and Li2S)",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.5,
+    207.1
+   ],
+   "w": 1953,
+   "h": 742,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.725
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 11,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Bader charge of Li2S and Li2S@Li4SnS4.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    498.5,
+    303.6
+   ],
+   "w": 1808,
+   "h": 995,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.826
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Electron localization function maps of Li2S and Li2S@Li4SnS4.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    303.6
+   ],
+   "w": 1941,
+   "h": 1143,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.666
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 13,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. XRD pattern of Li2S@SnS2.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    423.8,
+    303.6
+   ],
+   "w": 1496,
+   "h": 995,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 14,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. The (a) S 2p and (b) Sn 3d XPS spectra of Li2S, Li2S@SnS2, Li2S@Li4SnS4.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    253.2
+   ],
+   "w": 1941,
+   "h": 933,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.838
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 15,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. XRD patterns and EIS curve of Li5.5PS4.5Cl0.8Br0.7 sulfide electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    262.8
+   ],
+   "w": 1941,
+   "h": 973,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 16,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. DC polarization measurements under (a-c) ionic and (d-f) electronic blocking",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.4,
+    303.6
+   ],
+   "w": 1953,
+   "h": 1143,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 17,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Electronic conductivity of Li2S and Li2S@Li4SnS4 cathode; Insert: schematic",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    284.1
+   ],
+   "w": 1941,
+   "h": 1062,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 18,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. CV curves of (a) Li2S and (b) Li2S@Li4SnS4 cathodes at different scan rates.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    258.5
+   ],
+   "w": 1941,
+   "h": 956,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 19,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Variation of the reduction peak current in CV as a function of scan rate.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    303.6
+   ],
+   "w": 1941,
+   "h": 1143,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 20,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. The DRT curves plotted calculated from in-situ EIS results of (a) Li2S and (b)",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.5,
+    270.3
+   ],
+   "w": 1953,
+   "h": 1005,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 21,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Percentage of each peak area in the S 2p XPS spectrum of the Li2S@Li4SnS4",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.5,
+    390.4
+   ],
+   "w": 1953,
+   "h": 1505,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.802
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 22,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. TEM image of the Li2S@Li4SnS4 cathode after 1 cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    530.5,
+    332.0
+   ],
+   "w": 1941,
+   "h": 1114,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.25
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 23,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Charge-discharge profiles of (a) Li2S and (b) Li2S@Li4SnS4 cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    271.2
+   ],
+   "w": 1941,
+   "h": 1009,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 24,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Long-term cycling performance of Li2S@Li4SnS4 cathode with a Li2S loading of 1.2 mg cm–2.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.5,
+    251.8
+   ],
+   "w": 1953,
+   "h": 928,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 25,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. (a) Long-term cycling performance of Li2S and Li2S@Li4SnS4 cathode with a Li2S loading of 5 mg cm–2. The capacity-voltage curves of (b) Li2S and (c) Li2S@Li4SnS4 cathode",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.5,
+    404.6
+   ],
+   "w": 1953,
+   "h": 1565,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 26,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Schematic diagram of the preparation of a cathode–electrolyte bilayer membrane",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.4,
+    260.3
+   ],
+   "w": 1953,
+   "h": 963,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.244
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 27,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. The charge-discharge curves of all-solid-state pouch cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    440.9,
+    303.6
+   ],
+   "w": 1567,
+   "h": 995,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 28,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Summary of DRT Peaks and Their Possible Ascriptions in ASSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.3,
+    543.8,
+    300.1
+   ],
+   "w": 1992,
+   "h": 975,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.6
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 29,
+   "file": "tab_S2.png",
+   "caption": "Table S2. A comparison of high current density cycling performance with reported ASSLSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.3,
+    532.5,
+    412.8
+   ],
+   "w": 1945,
+   "h": 1444,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.571
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 30,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Key parameters of the all-solid-state pouch cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.3,
+    529.5,
+    217.3
+   ],
+   "w": 1933,
+   "h": 630,
+   "dpi": 300,
+   "src": "0923-2. Sup) AdvFunctMater_2026_Liu_Li4SnS4_mediator_SI.pdf",
+   "blank": 0.586
+  }
+ ]
+}

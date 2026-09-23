@@ -1,0 +1,452 @@
+{
+ "slug": "zhang2026_anode_free_asslsb_li2s_pi3_na_current_collector",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "0923-1. AdvEnergyMater_Zhang_AnodeFree_ASSLSB_Li2S-PI3_Na_CC_MAIN.pdf",
+  "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 New configuration enables stable cycling of low-external-pressure anode-free ASSLSBs. (a) Schematic illustration of the anode-free solid-state cell configuration. (b) MSD plots of Li, I, S, and P atoms in Li2S-PI3 8% composite obtained by AIMD at 800 K. (c) Radial distribution functions (RDF) of P–S, P–P, and Li–I pairs in Li2S-PI3 8% composite. (d,e) Snapshots of the equilibrium Li2S-PI3 8% structures obtained after AIMD simulations with different thermal protocols.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    564.2,
+    464.3
+   ],
+   "w": 2153,
+   "h": 1789,
+   "dpi": 300,
+   "src": "0923-1. AdvEnergyMater_Zhang_AnodeFree_ASSLSB_Li2S-PI3_Na_CC_MAIN.pdf",
+   "blank": 0.333
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Structural and chemical evolution of the Li2S-PI3 composites. (a) XRD patterns of Li2S-PI3 composites with different PI3 contents. (b) Rietveld refinement of the XRD pattern for the Li2S-PI3 8% composite. (c) MAS NMR spectra for 7Li and 31P of the Li2S-PI3 8% sample. XPS spectra of the P 2p (d) and S 2p (e) regions of the Li2S-PI3 8% sample. (f) Raman spectra of pristine Li2S and Li2S-PI3 8% composite. (g) TEM image of the Li2S-PI3 8% sample, and the inset figure is the corresponding FFT analysis. (h) Selected-area electron diffraction patterns of the Li2S-PI3 8% sample. (i) HRTEM image of the Li2S-PI3 8% sample.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.2,
+    564.2,
+    385.3
+   ],
+   "w": 2153,
+   "h": 1460,
+   "dpi": 300,
+   "src": "0923-1. AdvEnergyMater_Zhang_AnodeFree_ASSLSB_Li2S-PI3_Na_CC_MAIN.pdf",
+   "blank": 0.646
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Enhanced ionic transport and reaction kinetics in Li2S-PI3 8% cathodes. (a) Ionic conductivities of Li2S and Li2S-PI3 samples with different PI3 contents. Linear sweep voltammetry profiles (b) and CV curves (c) of pristine Li2S and Li2S-PI3 8% cathodes. (d) Schematic illustration of the selected electrochemical states for impedance analysis during charge and discharge. Nyquist plots and corresponding DRT spectra of Li2S-PI3 8% cathode (e) and pristine Li2S cathode (f).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    564.2,
+    353.3
+   ],
+   "w": 2153,
+   "h": 1326,
+   "dpi": 300,
+   "src": "0923-1. AdvEnergyMater_Zhang_AnodeFree_ASSLSB_Li2S-PI3_Na_CC_MAIN.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Electrochemical performance of half-cells. Voltage-capacity curve for Li plating (a) and stripping (b) in the initial cycle of Li–Cu and Li– Na half-cells. The Nyquist plots during the first three cycles of the Li–Cu half-cell (c) and Li–Na half-cell (d). Half-cell long-term cycling test: coulombic efficiency during cycling (e), and corresponding voltage–time curves (f). Cross-section SEM image of a Li–Na half-cell after 1 mAh cm−2 Li plating (g) and followed by stripping up to a 15 mV cutoff (h).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.6,
+    564.2,
+    385.3
+   ],
+   "w": 2153,
+   "h": 1458,
+   "dpi": 300,
+   "src": "0923-1. AdvEnergyMater_Zhang_AnodeFree_ASSLSB_Li2S-PI3_Na_CC_MAIN.pdf",
+   "blank": 0.681
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Electrochemical performance of Li2S-PI3 X% cathode. (a) Initial charge/discharge curves for Li2S-PI3 X% cathode at 0.05 C. (b) Rate performance of the full-cell (color scheme matches Figure 5a). (c) Galvanostatic charge/discharge curves at different rates for the Li2S-PI3 8% cathode. Long-term electrochemical performance for the Li2S-PI3 8% cathode: (d) Charge/discharge curves from 1st to 200th cycles at 0.5 C, (e) cycling performance at 0.5 C, and (f) cycling performance at moderate loading (2.52 mg cm−2). (g) Comparison of the current work with previous reports on anode-free batteries.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.8,
+    564.2,
+    365.3
+   ],
+   "w": 2153,
+   "h": 1377,
+   "dpi": 300,
+   "src": "0923-1. AdvEnergyMater_Zhang_AnodeFree_ASSLSB_Li2S-PI3_Na_CC_MAIN.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 Pressure measurement of Li2S-PI3/LPSCBr/Na full-cell. (a) Schematic diagram of a battery pressure testing device and battery structure. (b) First-cycle discharge capacity of activated full cell at 0, 1, and 4 MPa. (c) Long-term cycle performance of full-cell under different pressures. (d) External pressure evolution during full-cell cycling at 4 MPa, the inset figure shows the voltage curve corresponding to the pressure changes during specific time intervals. (e) Impedance spectra of the full cell after 10 cycles at different pressures.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.9,
+    564.4,
+    315.3
+   ],
+   "w": 2154,
+   "h": 1169,
+   "dpi": 300,
+   "src": "0923-1. AdvEnergyMater_Zhang_AnodeFree_ASSLSB_Li2S-PI3_Na_CC_MAIN.pdf",
+   "blank": 0.83
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 8,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Fig. 1| XPS spectra of the I 3d peak in the Li2S-PI3 8% sample.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.2,
+    484.4,
+    309.8
+   ],
+   "w": 1669,
+   "h": 987,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 8,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Fig.2| XPS spectra of the S 2p peak in Li2S.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    333.4,
+    443.3,
+    543.8
+   ],
+   "w": 1498,
+   "h": 877,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 9,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Fig.3| SEM images at different magnifications of (a,b) Li2S and (c,d)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.2,
+    514.4,
+    278.6
+   ],
+   "w": 1794,
+   "h": 877,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.449
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Fig.4| Morphological characterization of Li2S-PI3 8%. (a) SEM image.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    309.3,
+    514.4,
+    543.8
+   ],
+   "w": 1794,
+   "h": 978,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.508
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 10,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Fig.5| Characterization of ionic conductivity. (a) The inset shows the",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.2,
+    514.4,
+    243.4
+   ],
+   "w": 1794,
+   "h": 715,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 11,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Fig.6| Characterization of electronic conductivity. (a) Schematic",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.6,
+    514.2,
+    371.8
+   ],
+   "w": 1793,
+   "h": 1265,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Fig.7| GITT profiles of (a) Li2S and (b) Li2S-PI3 8% cathode at a",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.7,
+    514.3,
+    241.9
+   ],
+   "w": 1794,
+   "h": 701,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 12,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Fig.8| Li-Na binary phase diagram.[1]",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    333.4,
+    430.4,
+    543.8
+   ],
+   "w": 1444,
+   "h": 877,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 13,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Fig.9| CV curves of Li-Li, Li-Na, and Li-Cu cells with LPSCBr under",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.2,
+    514.4,
+    278.6
+   ],
+   "w": 1794,
+   "h": 877,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.973
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 13,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Fig.10| Nyquist plots of Li-Li, Cu-Cu, and Na-Na symmetric cells",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    402.9,
+    514.3,
+    637.4
+   ],
+   "w": 1793,
+   "h": 978,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 14,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Fig.11| Galvanostatic discharge data from a Na current collector",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.0,
+    514.3,
+    230.8
+   ],
+   "w": 1794,
+   "h": 675,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 14,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Fig.12| Long-term cycle performance of the Li2S-PI3 8% cathode and",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    293.7,
+    514.4,
+    589.4
+   ],
+   "w": 1794,
+   "h": 1233,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 15,
+   "file": "fig_S13.png",
+   "caption": "Supplementary Fig.13| In-situ pressure curves during long-term cycling of the Li2S-",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.1,
+    511.6,
+    293.3
+   ],
+   "w": 1782,
+   "h": 934,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.817
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 15,
+   "file": "fig_S14.png",
+   "caption": "Supplementary Fig.14| Initial impedance spectra of the full cell at different pressures.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    324.9,
+    520.5,
+    621.6
+   ],
+   "w": 1819,
+   "h": 1238,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 16,
+   "file": "fig_S15.png",
+   "caption": "Supplementary Fig.15| Cycling performance of the full cell under changing pressure",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.6,
+    514.3,
+    308.4
+   ],
+   "w": 1793,
+   "h": 995,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 17,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1| Rietveld refinement results of the Li2S-PI3 8% composite.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    109.0,
+    513.3,
+    745.0
+   ],
+   "w": 1785,
+   "h": 2651,
+   "dpi": 300,
+   "src": "0923-1. Sup) AdvEnergyMater_Zhang_AnodeFree_ASSLSB_SI.pdf",
+   "blank": 0.944
+  }
+ ]
+}
