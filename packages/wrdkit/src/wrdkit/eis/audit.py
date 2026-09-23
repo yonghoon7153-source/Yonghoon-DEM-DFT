@@ -1667,14 +1667,22 @@ def audit_conductivity_scan(sweeps: Sequence[dict], *,
     for warning in warnings:
         if warning != told:
             out.append(Finding(CHECK, "activation_warning", warning))
-    if without_first is not None and _first_step_goes_up(sweeps):
-        ea, r_squared = without_first
+    if without_first is not None and _first_step_goes_up(sweeps, skip=named):
+        first = min(one["index"] for one in sweeps)
+        others = sorted(named)
+        lead, ea = "", f"첫 스윕을 빼면 Ea = {without_first[0]:.3f} eV (R² = " \
+                        f"{without_first[1]:.3f})"
+        if others:
+            # 부르는 쪽의 "첫 스윕을 뺀 Ea" 에는 짚은 스윕이 들어 있다 — 같이 뺀다.
+            lead = f"따로 짚은 스윕 {', '.join(map(str, others))} 말고는 "
+            line = _ea_leaving_out(sweeps, {first, *others})
+            ea = (f"첫 스윕까지 {len(others) + 1}개를 빼면 Ea = {line[0]:.3f} eV "
+                  f"(R² = {line[1]:.3f})" if line is not None else "")
         out.append(Finding(
             NOTE, "first_sweep_suspect",
-            f"첫 스윕만 온도와 거꾸로 갑니다 — 첫 가열에서 펠릿이 자리를 잡거나 "
-            f"(접촉·치밀화) 평형 전에 잰 경우에 흔합니다. 첫 스윕을 빼면 Ea = "
-            f"{ea:.3f} eV (R² = {r_squared:.3f})"))
-        named.add(min(one["index"] for one in sweeps))
+            f"{lead}첫 스윕만 온도와 거꾸로 갑니다 — 첫 가열에서 펠릿이 자리를 잡거나 "
+            f"(접촉·치밀화) 평형 전에 잰 경우에 흔합니다" + (f". {ea}" if ea else "")))
+        named.add(first)
     wrong_way = _backwards_finding(sweeps, backwards, named)
     if wrong_way is not None:
         out.append(wrong_way)
@@ -1769,6 +1777,23 @@ def _line(x: np.ndarray, y: np.ndarray) -> tuple[float, float, float]:
     spread = float(np.sum((y - y.mean()) ** 2))
     r_squared = 1.0 - float(np.sum(residual ** 2)) / spread if spread > 0 else 1.0
     return float(slope), float(intercept), r_squared
+
+
+def _ea_leaving_out(sweeps: Sequence[dict],
+                    leave_out: set[int]) -> tuple[float, float] | None:
+    """``(Ea eV, R²)`` of the typed resistances without the ``leave_out``
+    sweeps -- the line `_off_the_line` draws (``ln R`` against ``1/T``: the
+    screen's ``ln σ`` basis upside down, same slope and R²), or ``None`` below
+    three sweeps at two temperatures."""
+    rows = [one for one in sweeps if one.get("temperature_c") is not None
+            and one.get("typed_ohm") and one["typed_ohm"] > 0
+            and one["index"] not in leave_out]
+    if len(rows) < 3 or len({one["temperature_c"] for one in rows}) < 2:
+        return None
+    x = np.array([1.0 / (one["temperature_c"] + 273.15) for one in rows])
+    y = np.log([float(one["typed_ohm"]) for one in rows])
+    slope, _, r_squared = _line(x, y)
+    return slope * BOLTZMANN_EV_PER_K, r_squared
 
 
 def _off_the_line(sweeps: Sequence[dict]) -> tuple[Finding | None, set[int]]:
@@ -1884,13 +1909,22 @@ def _hours(seconds: float) -> str:
     return f"{seconds / 60:.0f} min"
 
 
-def _first_step_goes_up(sweeps: Sequence[dict]) -> bool:
+def _first_step_goes_up(sweeps: Sequence[dict], skip: Iterable[int] = ()) -> bool:
     """The first two sweeps go the wrong way (resistance up as the temperature
-    goes down... the other way round) and nothing after them does."""
+    goes down... the other way round) and nothing after them does.
+
+    ``skip``: sweeps another finding already named -- their steps are theirs.
+    실측 B11 (열두 번째 검수): 60→50 °C 가 1.2 % 거꾸로 갔는데, 직선에서 먼 스윕
+    5·7 이 만든 걸음(20→10, 0→-10 °C) 때문에 첫 스윕 이야기를 못 하고 "그 온도를
+    다시 재세요" (확인) 가 붙었다.  B13·B15·B18 의 같은 걸음은 참고였다.
+    """
+    skipped = set(skip)
+    first = min((one["index"] for one in sweeps), default=None)
     rows = [one for one in sweeps
-            if one.get("temperature_c") is not None and one.get("typed_ohm")]
-    if len(rows) < 4:
-        return False
+            if one.get("temperature_c") is not None and one.get("typed_ohm")
+            and one["index"] not in skipped]
+    if len(rows) < 4 or rows[0]["index"] != first:
+        return False                 # 첫 스윕이 없거나 이미 짚혔다
 
     def wrong(a: dict, b: dict) -> bool:
         cooler_b = b["temperature_c"] < a["temperature_c"]

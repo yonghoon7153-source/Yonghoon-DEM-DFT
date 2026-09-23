@@ -1021,7 +1021,8 @@ def test_a_wrong_way_step_the_first_sweep_explains_is_not_a_second_check():
 def test_wrong_way_steps_are_said_once_and_measured_ones_are_to_be_measured_again():
     """실측 B11: 거꾸로 간 세 걸음 중 20→10·0→-10 °C 는 직선에서 먼 스윕 5·7 의
     것이다 — 남는 것은 60→50 °C 하나.  적은 값이 모두 실수축 교점이라 "다시 읽어
-    주세요" 는 틀린 처방이다: 다시 잴 일이다."""
+    주세요" 는 틀린 처방이다: 다시 잴 일이다.  (첫 스윕을 뺀 Ea 가 없을 때 —
+    두께·면적이 없는 스캔.  있으면 그 걸음은 첫 스윕 이야기다: 아래 시험.)"""
     rows = b11_like()
     found = audit_conductivity_scan(rows, **backwards_of(rows))
     assert "activation_warning" not in [f.code for f in found]
@@ -1045,6 +1046,37 @@ def test_wrong_way_steps_are_said_once_and_measured_ones_are_to_be_measured_agai
     (wrong,) = [f for f in audit_conductivity_scan(b17, **backwards_of(b17))
                 if f.code == "conductivity_goes_backwards"]
     assert wrong.message.endswith("그 온도의 저항을 다시 읽어 주세요")
+
+
+def test_the_first_sweep_is_explained_even_when_other_sweeps_are_off_the_line():
+    """실측 B11 (열두 번째 검수): 60→50 °C 는 1.2 % 거꾸로 — B13·B15·B18 과 같은
+    첫 가열 걸음인데, 직선에서 먼 스윕 5·7 의 걸음 때문에 첫 스윕 이야기를 못
+    하고 "그 온도를 다시 재세요" (확인) 가 붙었다.  짚은 스윕을 빼고 보면 첫 걸음
+    하나다.  Ea 는 부르는 쪽 것(짚은 스윕이 든 0.417 eV, R² 0.218)이 아니라 셋을
+    다 뺀 것이다."""
+    rows = b11_like()
+    found = audit_conductivity_scan(rows, without_first=(0.417, 0.218),
+                                    **backwards_of(rows))
+    assert "conductivity_goes_backwards" not in [f.code for f in found]
+    (note,) = [f for f in found if f.code == "first_sweep_suspect"]
+    assert note.message.startswith("따로 짚은 스윕 5, 7 말고는 첫 스윕만 온도와 거꾸로")
+    assert "첫 스윕까지 3개를 빼면 Ea = 0.248 eV (R² = 0.993)" in note.message
+    assert "0.417" not in note.message
+
+    # 짚은 스윕이 없으면 전과 같다 — 부르는 쪽의 수를 그대로 쓴다 (B13·B15·B18).
+    plain = [{"index": i, "temperature_c": t, "typed_ohm": r}
+             for i, (t, r) in enumerate(zip([60, 50, 40, 30, 20],
+                                            [5.136, 4.782, 5.899, 7.87, 11.13],
+                                            strict=True), start=1)]
+    (note,) = [f for f in audit_conductivity_scan(plain, without_first=(0.301, 0.998))
+               if f.code == "first_sweep_suspect"]
+    assert note.message.startswith("첫 스윕만")
+    assert note.message.endswith("첫 스윕을 빼면 Ea = 0.301 eV (R² = 0.998)")
+
+    # 첫 스윕 자신이 짚혔으면 첫 스윕 이야기를 하지 않는다 — 그 판정이 말한다.
+    rows = b11_like(s1={"phase_deg": -12.0})
+    assert "first_sweep_suspect" not in [
+        f.code for f in audit_conductivity_scan(rows, without_first=(0.417, 0.218))]
 
 
 # -- ADR 0045: 판정이 "이 회로로 맞추면 풀린다" 를 싣는다 --------------------------
