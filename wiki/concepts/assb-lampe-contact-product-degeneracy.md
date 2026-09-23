@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md]
+sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -926,6 +926,22 @@ P1 에서는 방향이 반대다. 같은 추론을 **P4(양극 전하이동)** �
 
 26호는 열화 · 접촉을 다루지 않는다. 기여는 **처방 표의 새 줄 하나**와 **"모델 편에서도 같은 두 자리에 조합이 선다"** 는 두 번째 모델 표본(9호 P2D 다음)이다.
 
+## ★★★ 27호 — **처방 적용 대상 아님(모델 편, 데이터 0)** · 그러나 곱의 모델 쪽 세 번째 표본: **`A_el-c` 한 손잡이가 면적 · 용량 · 연결 분율을 함께 진다** (2026-09-23, `assb` 27호)
+
+`raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md` (Sinzig, Schmidt, Wall 2024, *JES* 171, 120519). 3차원 입자 분해 모델 ↔ 균질화 P2D, NMC622/LPS/Li. **실험 · 빌린 데이터 모두 0** ⇒ 1–4단계를 걸 입력이 없다.
+
+**이 편이 주는 것** (`[인쇄]` + `[재현]`):
+- P2D 반응원 `A_el-c N̄_q`(식 10–11) + BV `i₀` 상수 ⇒ **`A·i₀` 는 정확한 곱**(9호 `A_eff·j₀` 의 같은 자리).
+- 그런데 `A` 가 **세 겹 짐**을 진다: 면적 `6ε_c/d̄` = 0.329 → **용량을 맞추려** 0.344(`[인쇄]` "such that the capacity … is exactly the same") → **연결 분율 `u` = 0.93 을 넣으려** 0.320(`[재현]` 0.320/0.344 = 0.930).
+  `[인쇄]` "The utilization could be included within the P2D model by artificially reducing the available capacity of the cathode by a modification of the specific interface area".
+- ⇒ **P2D 에서 접촉(연결) 손실이 들어갈 곳은 용량(= `LAM_PE` 의 자리)과 면적을 함께 깎는 손잡이 하나뿐**이다 — 이 페이지의 곱이 모델 설계 수준에서 **처방으로 인쇄**된 첫 편.
+- `[재현]` 로그정규 구의 실제 비표면적 `6ε_c/d₃₂` = 0.216 ⇒ P2D 의 `A` 는 그 ≈1.5 배(개수 평균 `d̄` 를 썼기 때문). 면적 과대가 곱 안에 숨어 있다.
+
+### ⚠ 이것이 곱을 푼 것은 아니다
+
+데이터가 없고 `i₀` 를 흔들지 않았다. 기여는 **"축약 모델에는 `θ` 의 독립된 자리가 없다"** 는 구조 사실과, 그것을 `[재현]` 한 크기(비연결 7 % → `SOC_end` 바닥 0.07 ↔ 큰 `κ` 오프셋 0.068)다.
+**ASSB 판 합성 truth 를 P2D 로 만들면 접촉 손실과 `LAM_PE` 가 truth 단계에서 같은 파라미터가 된다** — 시험이 동어반복이 된다(`[추론]`, 27호 digest §7).
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -974,3 +990,4 @@ P1 에서는 방향이 반대다. 같은 추론을 **P4(양극 전하이동)** �
 - ★ **2026-09-23 (25호)**: **2단계 통과를 "`R_ct` 차는 면적이다" 로 옮기지 않는다** — P4 τ 는 래스터 판독(×1.41), ECM ↔ DRT 의 `R` 비가 0.57 ↔ 0.84 로 다르고, BET 는 SE 분말 면적이다.
   주장은 **"면적 설명이 같은 지면의 독립 면적 측정과 방향·자릿수에서 양립한다"** 까지다. 그리고 **P1 벽돌층 반론은 모형 위의 추론**이다(P1 이 분리막 입계인지 미기재).
 - ★ **2026-09-23 (26호)**: **박막 모델의 `D_M⊕·a_max` 대칭을 복합양극 P2D 로 옮기지 않는다** — 입자 차원이 없는 1차원 평판의 `x` 좌표 안의 구조다. 주장은 "같은 두 자리(동역학 면적 · 용량 스케일)에 조합이 선다" 까지다.
+- ★ **2026-09-23 (27호)**: **`A` 의 세 겹 짐을 "접촉 손실은 원리적으로 못 가른다" 로 일반화하지 않는다** — 균질화 P2D 한 형식의 구조다. 연결 분율을 `A` 와 독립된 자리로 가진 축약 모델이 있을 수 있다(확인 안 됨).

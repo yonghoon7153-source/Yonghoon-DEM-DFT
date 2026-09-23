@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -110,6 +110,17 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 
 ⇒ 25호의 "굴곡도 감소로 이온 수송 향상" 은 **계산 하나 + 제목 반전** 위에 있고, 같은 지면의 관측은 오히려 반대다 — `[도표]` 신품 고주파 절편 fine ≈54 > coarse ≈49.5 Ω, SE 벌크 σ `[도표]` ×0.66.
 이 페이지의 처방 1("못 재면 `σ_eff` 를 보고")이 한 단계 앞에서 걸린다: **`σ_eff` 를 재지 않으면 굴곡도는 수송 주장의 근거가 되지 않는다.**
+
+## ★★ 이름 충돌 — 27호의 `τ` 는 24호의 `τ²` 다 (2026-09-23, `assb` 27호)
+
+`raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md` (Sinzig 외 2024, *JES* 171, 120519 — 3D 입자 분해 ↔ P2D 비교 모델 편).
+`[인쇄]` 균질화 유속 `N̄ = N/τ`, `τ = ε^b`, `b = −0.5` ⇒ `σ_eff = (ε/τ)σ = ε^1.5 σ`. `[재현]` `τ_el = 0.424^−0.5 = 1.54` ✓ · `τ_c = 0.376^−0.5 = 1.63` ✓.
+⇒ 이 편이 `τ` 라 부르는 것은 **굴곡도 인자**(24호 식 (3) 의 `τ²`)다. 두 편을 나란히 읽을 때 **`τ` 값을 그대로 비교하면 제곱만큼 틀린다.**
+
+- **측정 0 · 전부 Bruggeman** — 24호(측정 ÷ 가정) · 25호(기하 계산만)보다 한 단계 더 가정 쪽이다.
+- **P2D 에서 `κ` 는 `(ε_el/τ_el)κ` 로만 들어간다**(`[인쇄]` 식 10 · Table III). 이 편의 Sobol "ion. cond." 지수는 **`κ_eff` 의 지수**이고 `κ` ×1000 은 `ε/τ` ×1000 과 같다 — 곱의 짝을 흔들지 않아 곱이 드러나지 않는다.
+- `[인쇄]` "While a constant difference could still be corrected by an update of the homogenization parameters" — 저자는 **`ε/τ` 재보정이 모델 구조 오차를 흡수할 수 있다**고 쓴다. 이 페이지의 요지(분할은 가정이 정한다)의 모델 판: **보정된 `τ` 는 물성이 아니라 "구조 오차 + 물성" 이 될 수 있다.**
+  ⚠ 단 `[재현]` 이 편에서 그 "상수 차이" 의 크기는 수송이 아니라 **비연결 입자 몫 `1 − u` = 0.07** 과 맞는다 — [[assb-sensitivity-sweep-vs-identifiability]] §27호.
 
 ## 이 페이지가 주장하지 않는 것
 

@@ -1,0 +1,311 @@
+{
+ "slug": "sinzig2024_p2d-validity-ssb-global-sensitivity",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic sketch of the components Ωi of an SSB cell, boundaries Γi and interfaces between the components Γi−j.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    583.9,
+    454.9,
+    744.6
+   ],
+   "w": 1771,
+   "h": 671,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Three-dimensional representation of the computational domain of the SSB cell. The cathode active material is approximated by spherical particles, the anode as a planar metal anode, and the current collectors as a planar foil. The solid electrolyte ﬁlls the voids.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.0,
+    165.4,
+    558.0,
+    372.2
+   ],
+   "w": 1080,
+   "h": 862,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Comparison of global electrochemical quantities of the resolved model (red) and the P2D model (blue) over time. concentration is deﬁned as Table III. Homogenized material parameters used within the composite cathode of the P2D model. ∫∫",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    61.0,
+    488.4,
+    282.6
+   ],
+   "w": 1910,
+   "h": 924,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Comparison of the concentration in the cathode at the end of discharge. Note that the end of discharge in this Fig. is determined by the resolved model which is considered as the more accurate model throughout the entire study.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    61.2,
+    562.5,
+    278.3
+   ],
+   "w": 2219,
+   "h": 905,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Comparison of axial stress computed with the resolved model (red) and the P2D model (blue).",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    311.0,
+    289.1,
+    468.5
+   ],
+   "w": 1080,
+   "h": 658,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.965
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Analysis of the inﬂuence of different representations of the microstructure of the resolved model with different arrangements of the active material particles but with almost identical values of the porosity. The red line represents an evaluation of the resolved model, and the blue line of the P2D model. The three yellow lines denote the results of the resolved model with three different representations of the microstructure.",
+   "rotated_deg": 0,
+   "bbox": [
+    254.4,
+    299.4,
+    585.4,
+    469.7
+   ],
+   "w": 1380,
+   "h": 711,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.965
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Comparison of the SOC at the end of discharge computed with the resolved model and the P2D model for 150 sets of parameters. A mark on the diagonal line indicates that the SOC at the end of discharge is equal, computed with both models for one set of parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    61.0,
+    289.1,
+    213.8
+   ],
+   "w": 1080,
+   "h": 637,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Figure 8. The Sobol indexes including a 95% conﬁdence interval. The bars on the left-hand side of each column indicate the computation based on the resolved model, and the bars on the right-hand side indicate the computation based on the P2D model.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    49.9,
+    585.4,
+    338.8
+   ],
+   "w": 2315,
+   "h": 1204,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Comparison of the SOC at the end of discharge for different values of the diffusion coefﬁcient. increase of the diffusion coefﬁcient does not lead to more transpor- tation by diffusion through the cathode instead of conduction through the solid electrolyte from a certain point on. In this case, other transport phenomena like conduction are the limiting factors. In the resolved model, the large diffusion results in inter-particle diffusion, which could bypass the limits in the electrolyte conduc- tion. This reduces the total cell impedance and, thus, the lower cell voltage is reached later. The different diffusion paths are visualized in Fig. 10 where the ﬂux by diffusion in the cathode, i.e.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    360.1,
+    585.4,
+    589.0
+   ],
+   "w": 2314,
+   "h": 955,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Comparison of the effect of fast and slow diffusion within the resolved model at the end of discharge. The orange circles denote the fundamentally different diffusion paths within the same particle. Note the different ranges of the color bars. concentration on the surface and, therefore, smaller gradients in the concentration. These aspects reduce the transport resistance origi- nating from diffusion, and thus, the overall cell impedance is underestimated compared to the resolved model. Therefore, the lower cell voltage is reached later, and the SOC at the end of discharge is smaller. A visual quantiﬁcation of the deviation between both models and an identiﬁcation of regions where the P2D model over- or underestimates the SOC is given in Fig. 9b. There, one cross represents one value of the diffusion coefﬁcient. Again, the SOC at the end of discharge computed with the resolved",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    249.0
+   ],
+   "w": 2202,
+   "h": 785,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.706
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 10,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Comparison of the SOC at the end of discharge for different values of the ionic conductivity in the solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    535.0,
+    518.4,
+    744.9
+   ],
+   "w": 2035,
+   "h": 875,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 11,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Results for SOCend for different values of the ionic conductivity and the diffusion coefﬁcient. the P2D model overestimates the SOC (i.e. at small ionic conductiv- ities) and regions where it underestimates the SOC (i.e. at large ionic conductivities), as discussed before. For another study, the electronic conductivity σ = 0.32 S m, and the current = ρ N 6.27 A m2 are ﬁxed, while the ionic conductivity and the diffusion coefﬁcient are varied within the bounds given in Table IV. The results computed with the resolved model are shown in Fig. 12a by representing the computed SOC at the end of discharge as a plane depending on both parameters. The difference in the SOC between the models = − d SOC SOC SOC end,res end,P2D is shown in Fig. 12b. Differences of ∣dSOC∣≈0.15 become visible. These deviations are local over- as well as underestimations. While a constant difference could s",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    91.5,
+    524.2,
+    341.1
+   ],
+   "w": 2061,
+   "h": 1041,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 11,
+   "file": "fig_13.png",
+   "caption": "Figure 13. Derivative of the difference in the SOC at the end of discharge for different values of the diffusion coefﬁcient and the ionic conductivity.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    61.0,
+    557.1,
+    565.9
+   ],
+   "w": 1081,
+   "h": 2104,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.84
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 13,
+   "file": "fig_14.png",
+   "caption": "Figure 14. Lithiation dependent material parameters of NMC.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    68.8,
+    278.6,
+    305.6
+   ],
+   "w": 1036,
+   "h": 988,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 13,
+   "file": "fig_15.png",
+   "caption": "Figure 15. Probability density function of the particle diameter of NMC-62250 particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.9,
+    321.0,
+    290.0,
+    516.6
+   ],
+   "w": 1081,
+   "h": 816,
+   "dpi": 300,
+   "src": "178f593e-26._Analysis_of_the_Validity_of_P2D_Models_for_Solid-State_Batteries_in_a_Large_Parameter_Range.pdf",
+   "blank": 0.964
+  }
+ ]
+}

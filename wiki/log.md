@@ -2086,3 +2086,19 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **21장 전부 봤다, 안 본 것 0장.**
 - 후속 후보: ★★★★ 1 **Raijmakers 2020 *Electrochim. Acta* 330, 135147** (ref 10) · ★★★ 2 **Firouz 2020 *J. Energy Storage* 28, 101184** (ref 17, "system identification") · ★★★ 3 **Deng 2021 *IEEE TTE* 7, 464** (ref 16) · ★★★ 4 **Danilov 2011 *JES* 158, A215** (ref 15). Bizeray 2019(큐 27) 인용 0.
 - lint: **0 errors · 0 warnings**.
+
+## [2026-09-23] ingest | `assb` 27호 — Sinzig, Schmidt, Wall 2024, Analysis of the Validity of P2D Models for Solid-State Batteries in a Large Parameter Range (J. Electrochem. Soc. 171, 120519)
+
+- `raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md` (sha256 봉인). 큐 **26번**("Q4 확인용"). TUM 계산역학 + TUMint.Energy. **모델 편** — 3D 입자 분해 FEM ↔ 균질화 P2D (NMC622/LPS/Li), 실험 0 · 빌린 데이터 0 · 열화 0.
+- 큐 표 낱말 지문 재집계 — 합자 그대로는 같다(`identifiab` 0 · `sensitiv` 26 · `Sobol` 29 · `OCV` 0). **NFKC 정규화 뒤 `identifiab` 1**("phenomena … identifiable", 파라미터 뜻 아님) — 지문 도구 맹점 = `ﬁ` 합자.
+- ★★★★ **Q4 0/27 — 움직이지 않는다.** 전역 민감도는 제대로(Sobol 1·2·전차 + 95 % CI · GP 대리 · 150 표본 · 2¹⁴ MC) — 그러나 출력은 설계 KPI `SOC_end` 하나, 데이터 0. 26호 표로 **첫 줄의 전역판** + 새 줄 "모델 불일치 민감도" `|∇d_SOC|`. 묻는 것은 **모델 적합성**.
+- ★★★★ 비식별 재료 셋(`S_T(D │ P2D) ≈ 0` · 두 모델 일치 영역 · `[인쇄]` "a constant difference could still be corrected by an update of the homogenization parameters")을 저자는 전부 적합성으로 읽었다.
+- ★★★★ `[재현]` 벡터 좌표 — 그 상수(큰 `κ` 오프셋 0.068 · Fig. 7 150 점 평균 차 0.072)는 **비연결 몫 `1 − u` = 0.07**(접촉 손실). 저자 배정은 "insufficient homogenization strategy"; `u` 처방은 `A_el-c` 로 용량 깎기; 그 곡선(Fig. 3b "dashed line")은 **그림에 없다**.
+- **Q4 스무 번째 성질 = "적합성을 전역으로 재고, 그 안의 비식별 재료 셋을 전부 모델 적합성으로만 읽었다. 그리고 상수의 정체는 접촉 손실이었다"** — 반 칸 검토 후 접음.
+- **곱 축퇴 처방 — 적용 대상 아님(모델 편).** 모델 쪽 세 번째 표본: `A_el-c` 가 면적 · 용량 · 연결 분율을 함께 진다(`[재현]` 실제 비표면적의 ≈1.5 배). `τ` = 24호의 `τ²`(이름 충돌). `D/d²`: `d̄` 개수 평균 ↔ `d₄₃` (시간척도 ≈3.5 배).
+- **채움표 27호 행 — 누적 ≈15.5 → ≈15.5 (새 칸 0).** 안 움직인 칸: 전부. Q3 층 하나(모델 대 모델 참값 + CI 붙은 민감도).
+- 컴파일: 새 개념 0. 갱신 — 닻 [[assb-contact-loss-vs-lampe]] (채움표 27호 행 + 누적 줄 + For 스물세 번째 + 새 제약 6개 + Status Log + 주장하지 않는 것) · [[assb-sensitivity-sweep-vs-identifiability]] (전역판 · 모델 불일치 민감도 줄 · 적합성 ≠ 식별성 · 처방 5–6) · [[assb-lampe-contact-product-degeneracy]] (27호 절) · [[assb-tortuosity-factor-effective-conductivity-split]] (이름 충돌 절) · index 개념 줄.
+- ⚠ 어긋남 15 건(**D1 Fig. 3b 점선 없음** · **D2 Fig. 13 ≈0 영역의 `D` 방향** · D3 `m_SOC` 선형 ↔ `lg` · D4–D6 Sobol 서술 ↔ 그림 · **D7 Fig. 14a 점선 색 뒤바뀜** · D8 · D9 AM 비 0.4 ↔ 0.47 · D15 "factor five" ↔ 6.4).
+- 그림: **15장 전부 봤다, 안 본 것 0장** (+ 쪽 렌더 26장 · 벡터 추출 Fig. 3b·7·9a·11a·14b).
+- 후속 후보: ★★★★ 1 **Khalik 2021 *J. Power Sources* 499, 229901** (ref 27) · ★★★★ 2 **Lu, Trimboli, Fan, Wang, Plett 2022 *JES* 169, 080504** (ref 28) · ★★★ 3 **Schmidt, Sinzig, Wall 2024 *JES* 171, 100502** (ref 18, 박리).
+- lint: **0 errors · 0 warnings**.
