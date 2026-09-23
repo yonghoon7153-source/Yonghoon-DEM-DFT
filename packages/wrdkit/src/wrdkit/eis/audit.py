@@ -672,6 +672,14 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
             if row["resistor"] == arc.resistor:
                 row.update(candidates=None, candidate_labels=None,
                            reason="저항이 0 이라 아크가 아닙니다")
+    # 하나뿐인 직렬 저항도 같은 잣대다.  실측 풀셀 #13 R0 = 3.7e-4 Ω (전송선의 두
+    # 레일 25 ∥ 80 Ω 이 절편 19 Ω 을 가져갔다), B17 0 °C (#150) R0 = 2.4e-9 Ω 이
+    # 경계 판정을 비껴가 아무 말이 없었다.
+    if len(series_r) == 1:
+        (ohmic,) = series_r
+        if railed.get(ohmic) != "lower" and values[ohmic] < floor:
+            out.findings.append(_rail_finding(ohmic, values[ohmic], "lower",
+                                              in_series=True, ohmic=True))
 
     # -- 곡선이 점을 지나가나 --------------------------------------------------
     verdict: dict = {}

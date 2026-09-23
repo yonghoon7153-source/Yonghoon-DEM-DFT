@@ -272,6 +272,30 @@ def test_the_only_series_resistor_at_zero_is_not_to_be_left_out():
     assert spare.code == "element_vanishing" and "없어도 되는 소자" in spare.message
 
 
+def test_a_series_resistor_too_small_to_see_is_at_zero_too():
+    """실측 풀셀 #13: R0 = 3.7e-4 Ω — 경계(1e-9)의 1 % 밖이라 경계 판정을 비껴가
+    아무 말이 없었다.  전송선의 두 레일(25 ∥ 80 Ω = 19 Ω)이 고주파 절편을
+    가져갔다.  B17 0 °C (#150) 의 R0 = 2.4e-9 Ω 도 같았다."""
+    circuit = "L1-R0-p(R1,CPE1)-TL1"
+    values = {"L1": 4.22e-7, "R0": 3.72e-4, "R1": 258.0, "CPE1_Q": 3.01e-5,
+              "CPE1_n": 0.748, "TL1_Ri": 25.1, "TL1_Re": 80.1, "TL1_Rct": 30.1,
+              "TL1_Q": 1.73e-5, "TL1_n": 0.688, "TL1_Wr": 335.0, "TL1_Wn": 0.276,
+              "TL1_Wt": 6.94e3}
+
+    def audited(values):
+        fit = Fit(circuit, [P(n, v) for n, v in values.items()])
+        return audit_fit(fit, spectrum_of(circuit, values), kind=SOLID, config=FULL,
+                         band=BAND)
+
+    (gone,) = [f for f in audited(values).findings
+               if f.code == "series_resistance_gone"]
+    assert gone.message.startswith("R0 이 0") and "0.000372 Ω" in gone.message
+
+    # 절편을 정말 나눠 가진 작은 R0 은 그대로 둔다 — 실측 #12: 0.42 Ω, 절편 3 Ω.
+    values.update(R0=0.416, TL1_Ri=1.6e3, TL1_Re=2.64)
+    assert "series_resistance_gone" not in codes(audited(values))
+
+
 def test_an_element_that_is_not_an_arc_has_no_apex():
     """실측 풀셀 #5: CPE1 의 n 이 하한 0.3 — 목록은 "반원이 아니라 확산" 이라
     판정하지 않는데, 꼭지 1e8 Hz 가 "맞춘 구간 위 — 반원의 꼭대기를 못 보고 정한
