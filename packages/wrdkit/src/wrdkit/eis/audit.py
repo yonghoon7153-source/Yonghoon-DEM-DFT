@@ -127,6 +127,7 @@ REFERENCES: dict[str, tuple[str, ...]] = {
                              "HIRSCHORN2010.brug-surface-blocking-eq12"),
     "open_end_on_blocking_cell": ("ISW1990.blocking-electrode-spike",
                                   "VADHVA2021.blocking-cell-circuit-r0-offset"),
+    "series_resistance_gone": ("VADHVA2021.blocking-cell-circuit-r0-offset",),
     "blocking_element_on_open_cell": ("ISW1990.no-spike-means-electronic",
                                       "VADHVA2021.electrode-types"),
     "symmetric_cell_does_not_block": ("ISW1990.no-spike-means-electronic",
@@ -406,12 +407,13 @@ def _railed(parameter, model: Circuit) -> str:
 
 
 def _rail_finding(name: str, value: float, side: str, *,
-                  in_series: bool) -> Finding:
+                  in_series: bool, ohmic: bool = False) -> Finding:
     """What a parameter on its bound means, element by element.
 
     ``in_series``: the element sits in the top-level series path.  A vanishing
     series element can simply be left out; a vanishing element inside
-    ``p(R,CPE)`` takes its whole arc with it.
+    ``p(R,CPE)`` takes its whole arc with it.  ``ohmic``: the circuit's only
+    series resistor -- the cell's ohmic resistance, which cannot be left out.
     """
     element, _, suffix = name.partition("_")
     kind = re.match(r"[A-Za-z]+", element).group(0) if element else ""
@@ -427,6 +429,15 @@ def _rail_finding(name: str, value: float, side: str, *,
                        + ("이 소자 없이 맞춰 보세요" if in_series
                           else "그 아크 전체가 없어지려 합니다 — 아크 하나를 빼고 "
                                "맞춰 보세요"))
+    # 셀의 직렬 저항(배선·전해질)은 0 이 될 수 없다 — 0 이면 고주파 절편을 다른
+    # 소자가 가져간 것이다.  실측 하프셀 여섯 건(#28 #40 #42 #44 #45 #47)에
+    # "이 저항은 없어도 되는 소자입니다" 가 붙었다: #28 은 n = 0.40 인 첫 아크가
+    # 고주파에서 5–6 Ω 을 그리고 있었다.
+    if kind == "R" and side == "lower" and ohmic:
+        return Finding(CHECK, "series_resistance_gone",
+                       f"{name} 이 0 에 붙었습니다 ({shown} Ω) — 셀의 직렬 저항(배선·"
+                       f"전해질)은 0 이 될 수 없습니다. 고주파 절편을 다른 소자(n 이 낮은 "
+                       f"CPE 의 아크 등)가 가져갔으니, 그 소자를 고쳐 다시 맞추세요")
     if kind == "R" and side == "lower":
         return Finding(CHECK, "element_vanishing",
                        f"{name} 이 0 에 붙었습니다 ({shown} Ω) — "
@@ -783,7 +794,8 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
             continue
         out.findings.append(_rail_finding(
             parameter.name, float(parameter.value), side,
-            in_series=element in in_series))
+            in_series=element in in_series,
+            ohmic=series_r == {element}))
     for name in model.parameter_names:
         element, _, suffix = name.partition("_")
         if suffix != "n" or not element.startswith("CPE") or element in vanishing \

@@ -248,6 +248,30 @@ def test_an_arc_whose_apex_is_above_the_sweep_is_extrapolated():
     assert finding.severity == CHECK and "R1" in finding.message
 
 
+def test_the_only_series_resistor_at_zero_is_not_to_be_left_out():
+    """실측 하프셀 #28: R0 = 1e-9 Ω 에 "이 저항은 없어도 되는 소자입니다" 가 붙었다.
+    셀의 직렬 저항(배선·전해질)은 0 이 될 수 없다 — n = 0.40 인 첫 아크가 고주파
+    절편을 그리고 있었다."""
+    circuit = "R0-p(R1,CPE1)-CPE2"
+    values = {"R0": 1e-9, "R1": 9.94, "CPE1_Q": 2.42e-4, "CPE1_n": 0.397,
+              "CPE2_Q": 1e-3, "CPE2_n": 0.85}
+    fit = Fit(circuit, [P(n, v, reason="at_lower_bound" if n == "R0" else "")
+                        for n, v in values.items()])
+    (gone,) = [f for f in audit_fit(fit, spectrum_of(circuit, values), kind=LIQUID,
+                                    band=BAND).findings if f.message.startswith("R0 이 0")]
+    assert gone.code == "series_resistance_gone"
+    assert "직렬 저항" in gone.message and "없어도 되는" not in gone.message
+
+    # 직렬 저항이 둘이면 0 이 된 쪽은 정말 없어도 된다.
+    circuit = "R0-R1-p(R2,CPE2)"
+    values = {"R0": 5.0, "R1": 1e-9, "R2": 20.0, "CPE2_Q": 1e-5, "CPE2_n": 0.9}
+    fit = Fit(circuit, [P(n, v, reason="at_lower_bound" if n == "R1" else "")
+                        for n, v in values.items()])
+    (spare,) = [f for f in audit_fit(fit, spectrum_of(circuit, values), kind=LIQUID,
+                                     band=BAND).findings if f.message.startswith("R1 이 0")]
+    assert spare.code == "element_vanishing" and "없어도 되는 소자" in spare.message
+
+
 def test_an_element_that_is_not_an_arc_has_no_apex():
     """실측 풀셀 #5: CPE1 의 n 이 하한 0.3 — 목록은 "반원이 아니라 확산" 이라
     판정하지 않는데, 꼭지 1e8 Hz 가 "맞춘 구간 위 — 반원의 꼭대기를 못 보고 정한
@@ -350,8 +374,9 @@ def test_bounds_are_found_from_the_circuit_when_the_row_is_old():
                                 P("CPE1_Q", 1e-5, "legacy_unknown"),
                                 P("CPE1_n", 0.9, "legacy_unknown")])
     audit = audit_fit(fit, None, kind=LIQUID)
-    (finding,) = [f for f in audit.findings if f.code == "element_vanishing"]
-    assert "R0" in finding.message and "없어도" in finding.message
+    # 하나뿐인 직렬 저항이라 "없어도 된다" 가 아니다 (셀의 직렬 저항은 0 이 될 수 없다).
+    (finding,) = [f for f in audit.findings if f.code == "series_resistance_gone"]
+    assert "R0" in finding.message and "직렬 저항" in finding.message
     assert "legacy_fit" in codes(audit, NOTE)
 
 
