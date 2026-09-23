@@ -74,6 +74,9 @@ _d3_ok() {  # grimme-d3 를 켠 입력이면 dftd3_threebody 가 적혀 있어�
   return 0
 }
 
+# ── nvidia-smi 프로세스 목록에서 **진짜 프로세스 줄**만 (첫 칸이 PID 숫자) ─────────
+_apps_filter() { awk -F', *' '$1 ~ /^[0-9]+$/'; }
+
 # ── ⑥ 허용 목록 밖 GPU 프로세스 ─────────────────────────────────────────
 _unexpected() {  # $1 = 지금 GPU PID 들 · $2 = 허용 PID 들 → 허용 밖 PID 를 한 줄씩
   local p q ok
@@ -111,6 +114,9 @@ if [ "$IN" = "--selftest" ]; then
   ck "⛔새 GPU 프로세스 → 잡힌다"          '[ "$(_unexpected "10 20 30" "10 20")" = 30 ]'
   ck "허용 프로세스가 끝난 것은 막지 않음" '[ -z "$(_unexpected "" "10")" ]'
   ck "⛔허용 목록이 비면 전부 밖"          '[ "$(_unexpected "10" "" | wc -l)" = 1 ]'
+  ck "⛔kgy 막힘 문장은 프로세스가 아니다"  '[ -z "$(echo "Process-level GPU information is restricted." | _apps_filter)" ]'
+  ck "진짜 프로세스 줄은 남긴다"           '[ "$(printf "3322562, python, 9338\n" | _apps_filter)" = "3322562, python, 9338" ]'
+  ck "⛔섞여 오면 숫자 줄만"               '[ "$(printf "No running processes found\n12, pw.x, 900\n" | _apps_filter | wc -l)" = 1 ]'
   rm -rf "$T"; echo "run_sese_gpu selftest: $n 통과 · $f 실패"; [ "$f" = 0 ]; exit $?
 fi
 
@@ -135,14 +141,19 @@ LOG=$RUN/runner.log; TSV=$RUN/jobs_run.tsv
 ts() { date '+%F %T'; }
 say() { echo "[$(ts)] $*" | tee -a "$LOG"; }
 gpu_used() { nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits 2>/dev/null | head -1 | tr -d ' '; }
-gpu_apps() { nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader,nounits 2>/dev/null; }
+gpu_apps_raw() { nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader,nounits 2>&1; }
+# ⛔ 2026-09-23 kgy 실측: 프로세스별 정보가 막힌 기계는 목록 대신 문장
+#   "Process-level GPU information is restricted." 을 돌려준다 — 비어 오지 않는다.
+#   그 문장을 PID 로 읽어 `/proc/$p/cmdline: ambiguous redirect` 가 났고, ONLY_PIDS 를 켰다면
+#   단어들을 '허용 밖 프로세스' 로 읽어 영원히 기다렸다. ⇒ 첫 칸이 숫자인 줄만 프로세스다.
+gpu_apps() { gpu_apps_raw | _apps_filter; }
 self_mib() { gpu_apps | awk -F', *' -v p="$1" '$1==p{print $3}' | head -1; }
 host_avail() { awk '/^MemAvailable:/{printf "%d", $2/1024}' /proc/meminfo; }
 
 say "════ run_sese_gpu · IN=$IN · RUN=$RUN · JOBS=[$JOBS]"
 say "공존 근거: ${EXCEPTION_ID} · START<${START_MAX_MIB} MiB · KILL>${KILL_MIB} MiB · 표본 ${SAMPLE_S}s · UMA 공존 허용=${ALLOW_UMA_COEXIST} · 허용 PID=[${ONLY_PIDS:-제한 없음}]"
 if [ "$ALLOW_UMA_COEXIST" = 1 ] && [ -z "$ONLY_PIDS" ]; then
-  say "⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 'b2o3 만 남았을 때' 조건을 기계로 못 건다 (새 UMA 잡이 떠도 시작한다)"
+  say "⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)"
 fi
 command -v nvidia-smi >/dev/null 2>&1 || { say "⛔ nvidia-smi 없음 — GPU 가드를 못 건다. 시작하지 않는다"; exit 2; }
 
@@ -185,6 +196,7 @@ fi
 #   ONLY_PIDS 는 **말없이 무력**하다. 사용량이 있는데 목록이 비면 그 사실을 드러낸다.
 if [ -z "$(gpu_apps)" ] && [ "$(gpu_used)" -gt 500 ] 2>/dev/null; then
   say "⚠ GPU 사용량 $(gpu_used) MiB 인데 프로세스 목록이 비었다 — 프로세스별 정보가 막힌 기계다."
+  say "   nvidia-smi 원문: $(gpu_apps_raw | head -1 | cut -c1-100)"
   say "   UMA 판정·ONLY_PIDS 가 여기서는 **작동하지 않는다**. 남는 가드는 합계 VRAM·호스트 RAM 뿐이다."
 fi
 say "GPU 합계 사용량 지금 $(gpu_used) MiB · 호스트 MemAvailable $(host_avail) MiB (시작 문턱 ${HOST_START_MIB} · 중단 ${HOST_KILL_MIB})"
