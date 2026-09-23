@@ -24,6 +24,8 @@ DFT 팀 요청 원문: `docs/dft_request_adhesion_agc_20260923.md`.
 - 구동압이 바꾸는 것은 **실접촉 면적**이다 (거칠기 눌림 · Ag·LPSCl 소성 conform) ⇒
   `G_c,eff(P) ≈ W_ad · A_real(P)/A_nom (+ 소산)`.  이것은 리포가 이미 가진 접촉 면적 축(Tabor A=F/H ·
   JKR/DMT · MPM coverage)과 같은 축이다 ⇒ **구동압은 DEM 층에 넣는다.**
+- ⚠ (09-23) 문헌의 *"압력 ↑ → 점착 ↑"* (Liao · Shozib) 는 **제조 압착압**(100–530 MPa) 축이다 — 운전 적층압 축이 아니다.
+  기전(실접촉 면적)은 같은 쪽을 가리킨다: Liao PFIB 단면이 100 MPa 에서 계면 공동, 400 MPa 에서 conformal (§6).
 
 ## 2-1. ★ 이미 있는 것 — 팀의 LPSCl↔NCM 점착 워크플로 (litdb 정본 브랜치)
 
@@ -64,6 +66,8 @@ db/properties/adhesion.json (표면에너지 · v2/v5 결과 · 진공 민감도
    pristine 인가 리튬화인가
 2. 범위 — DFT 1 단만(권고 시작점) / 1 + 3 / 전부
 3. 자원 — v100 은 Lee 16팔 중 (~20 h).  MLIP(1′)를 쓸지, 쓴다면 어느 기계.
+4. (09-23 추가) **DEM 박리의 압력 축** — 문헌 대조가 있는 것은 **제조 압착압**뿐이다 (Liao lamination 100–400 MPa ·
+   Shozib 조립 350–530 MPa).  **운전 적층압(수 MPa) 의존은 대조 표적이 없다** (Liao 는 5 MPa 고정).  어느 축부터 할지.
 
 ## 6. 문헌 후보 — 웹 검색으로 서지 확인 (2026-09-23, 조사 에이전트)
 
@@ -71,16 +75,23 @@ db/properties/adhesion.json (표면에너지 · v2/v5 결과 · 진공 민감도
 카드는 정본 litdb 로 (규칙 그대로).  정본에 이미 있는 것: Bucci 2017 (G_c ≥ 4 J/m² 균열 방지) · Bucci 2018 (γ > 5 J/m²) ·
 Choi 2025 (MLIP W_ad) · Doux 2020 · Cronau 2021 · DMT · Thornton–Ning · Pasha · Thakur(EEPA) · Luding · Fan 2026.
 
+✅ **원문 PDF 확인 → 정본 litdb 카드 (09-23, 사용자 제공 4편)** — 아래 표에서 ✅ 표시한 행.  수치의 정본은 카드다:
+`liao2025_interfacial_adhesion_li_plating_carbon_interlayer` · `song2025_porous_argyrodite_modulus_fracture_toughness` ·
+`spencerjolly2023_ag_graphite_interlayer_operando_xrd` · `tabakovic2026_mechanical_stress_eis_ica_drt_dfn` (표에 없던 1편).
+✅ 가 없는 행은 여전히 **검색 결과 값**이다 — 특히 **Shozib 2024** (Ag–C/SE 점착 수치가 있는 유일한 후보) · **Pustorino 2025**
+(LPSCl 벽개) 는 원문 미확인.
+
 | 묶음 | 논문 (DOI) | 이 트랙에 쓸 내용 |
 |---|---|---|
-| ★ 실험 앵커 | Liao … Thouless, Dasgupta, *Adv. Mater.* 37, 2502114 (2025) — 10.1002/adma.202502114 | **박리 시험**: 탄소 인터레이어/SE 계면 인성이 적층압 100 → 400 MPa 에서 **4배**.  문턱 인성 위에서 Li 석출 위치가 SE 쪽 → 집전체 쪽으로 이동 |
-| ★ 실험 앵커 | Shozib … (Tu), *JES* 171, 090524 (2024) — 10.1149/1945-7111/ad7c82 | **Ag–C/SE 점착**이 조립압 350 → 530 MPa 에서 증가 · 초기용량 +50 % 이상 · 530 MPa 초과에서 SE 분리막 균열 |
-| LPSCl 인성 | Song … Guduru, *ACS AEM* 8, 5636 (2025) — 10.1021/acsaem.4c03143 | 다공 Li6PS5Cl **E = 4.7±1.1 GPa · K_IC = 0.17±0.03 MPa·m^½** |
+| ★ 실험 앵커 ✅ | Liao … Thouless, Dasgupta, *Adv. Mater.* 37, 2502114 (2025) — 10.1002/adma.202502114 | **180° 박리 시험**: 탄소 인터레이어/LPSCl 계면 인성 Γ 가 **lamination(제조 압착)압** 100 → 400 MPa 에서 **9 ± 2 → 41 ± 5 J/m² (≈4.6배)**.  ⚠ 사이클 중 적층압은 **5 MPa · 60 °C 고정** — 적층압(구동압) 곡선이 **아니다**.  Γ ≈ 10 J/m² 문턱 위에서 Li 석출 위치가 SE 쪽 → 집전체 쪽으로 이동.  Ag 없음 (카본블랙·hard carbon + PVDF).  (⛔ 09-23 정정 — 옛 표기 *"적층압 100 → 400 MPa 에서 4배"* 는 틀렸다) |
+| ★ 실험 앵커 (원문 미확인) | Shozib … (Tu), *JES* 171, 090524 (2024) — 10.1149/1945-7111/ad7c82 | **Ag–C/SE 점착**이 조립압 350 → 530 MPa 에서 증가 · 초기용량 +50 % 이상 · 530 MPa 초과에서 SE 분리막 균열.  ⚠ 이것도 **제조 압착(조립)압** 축 |
+| LPSCl 인성 ✅ | Song … Guduru, *ACS AEM* 8, 5636 (2025) — 10.1021/acsaem.4c03143 | 다공(13 ± 2 %) Li6PS5Cl 펠릿 **E = 4.7 ± 1.1 GPa · K_IC = 0.17 ± 0.03 MPa·m^½** (mm 외팔보 굽힘 + CT 시편, 시편별 FE).  G_c: 논문 K²/E = 6.15 J/m² · 평면변형 ν 0.37 → 5.31.  나노압입값(28 GPa · 0.69)의 ¼–⅙.  경도·기공률 의존은 **측정 안 됨** (기공률 하나) |
 | LPSCl 벽개 | Pustorino … Qi, *Chem. Mater.* 37, 313 (2025) — 10.1021/acs.chemmater.4c02577 | DFT (100) Li2S 결핍면 **벽개 에너지 0.20 J/m²** (정본 INDEX 에 행만 있고 카드 없음) |
 | Ag–흑연 | Giovannetti … *PRL* 101, 026803 (2008) — 10.1103/PhysRevLett.101.026803 | **Ag 는 그래핀에 약하게(물리흡착) 붙는 쪽** (Al·Cu·Au·Pt 와 같은 군) — §4 가설 확인 |
 | Ag–흑연 | Maurer, Ruiz, Tkatchenko, *JCP* 143, 102808 (2015) — 10.1063/1.4922688 | Ag(111) 위 그래핀 **45 meV/C 원자 @ 3.23 Å** (PBE+MBD) — 쌍별 vdW 대비 38 % 이상 낮다 = **vdW 방법 의존** |
 | Ag–C 기전 | Lee … *Nat. Energy* 5, 299 (2020) — 10.1038/s41560-020-0575-z | Ag–C 무과잉 Li 음극 원조 (점착 수치 없음) |
-| Ag–C 기전 | Spencer-Jolly … *Joule* 7, 503 (2023) — 10.1016/j.joule.2023.02.001 | 충전 시 Li → 흑연 삽입 후 **Ag 와 반응해 Li–Ag 합금**; 방전은 역경로가 아니다 (⇒ DFT 요청 P3 리튬화 계면의 근거) |
+| Ag–C 기전 ✅ | Spencer-Jolly … *Joule* 7, 503 (2023) — 10.1016/j.joule.2023.02.001 | Ag 5.7 vol% · 5 ± 1 µm 층을 LPSCl 에 400 MPa 로 압착, 2 MPa 에서 사이클.  operando XRD: 충전 시 Li → 흑연 삽입 후 **Ag 와 반응해 Li_xAg → LiAg → Li₉Ag₄ → Li₁₀Ag₃** — LiAg 를 만들 만큼 반응성 있는 것은 **LiC₆ 뿐**.  방전은 역경로가 아니다.  Li 금속은 인터레이어와 **집전체 사이**에 쌓인다.  임계전류 2.0 안정 · 2.5 mA/cm² 단락 (60 °C) = Ag 없는 흑연과 같음.  **점착·응력 수치 없음** (⇒ DFT 요청 P3 리튬화 계면의 근거 · 세 번째 계면 = 인터레이어/집전체) |
+| 압력–EIS ✅ (preprint) | Tabakovic … SSRN (2026) — 동료심사 전 | 흑연/NMC **액체** 파우치의 응력 결합 DFN (PyBaMM · 탄성 · 정수압 0 · 1 · 10 MPa · 접촉저항 없음).  남는 것: **접촉이 아닌 압력 효과는 mV 급 전압 오프셋이지 저항이 아니다** · 압력-EIS 비교는 SoC 고정인지 전압 고정인지 밝힌다.  ⛔ 수치 인용 금지 — 그림의 곡선 이동이 논문 자신의 식 44 값의 정확히 10배 (카드) |
 | W_ad 방법 | Siegel, Hector, Adams, *PRB* 65, 085415 (2002) — 10.1103/PhysRevB.65.085415 | DFT W_ad 표준 예: **종단에 따라 약 10배** (O 종단 9.73–10.70 · Al 종단 ≈1 J/m², 실험 1.13) ⇒ 종단 두 가지 요구의 근거 |
 | W_ad 방법 | Lepley, Holzwarth, *PRB* 92, 214201 (2015) — 10.1103/PhysRevB.92.214201 | 격자 변형까지 넣은 계면 에너지 체계 (Li/Li3PS4 등) |
 | W_ad→σ_max | Rose, Ferrante, Smith, *PRL* 47, 675 (1981) · Rose, Smith, Ferrante, *PRB* 28, 1835 (1983) | **UBER** — W_ad 와 길이 척도에서 견인–분리 곡선 (DFT 요청 6번 분리 스캔의 해석 틀) |
@@ -90,10 +101,19 @@ Choi 2025 (MLIP W_ad) · Doux 2020 · Cronau 2021 · DMT · Thornton–Ning · P
 | (확인 필요) | McGrogan … Van Vliet, *AEM* 7, 1602011 (2017) — 10.1002/aenm.201602011 | Li2S–P2S5 K_IC — 초록에 숫자 없음.  정본 bucci2017 카드가 인용한 0.23±0.04 는 **원문 확인 전 인용 금지** |
 
 ★ 이 표가 준 **설계상 결론 셋** (계산 전 — 판정 아님):
-1. **실효 박리값은 계면 W_ad 와 SE 자체 벽개 중 약한 쪽이 상한**이다.  LPSCl 벽개는 DFT 0.20 J/m² 인데 LPSCl|Ag 가 화학결합
-   (J/m² 급)이면 파괴는 **계면이 아니라 LPSCl 안에서** 난다 ⇒ DFT 요청의 γ(LPSCl) 가 W_ad 만큼 중요하다.
+1. ~~**실효 박리값은 계면 W_ad 와 SE 자체 벽개 중 약한 쪽이 상한**이다.  LPSCl 벽개는 DFT 0.20 J/m² 인데 LPSCl|Ag 가 화학결합
+   (J/m² 급)이면 파괴는 **계면이 아니라 LPSCl 안에서** 난다~~ ⇒ DFT 요청의 γ(LPSCl) 가 W_ad 만큼 중요하다.
+   ⛔ **정정 09-23 (원문 확인 후) — 취소선 부분은 실측과 맞지 않는다.**  Liao 2025 의 박리 인성 **9–41 J/m²** 는 이상 벽개
+   0.20 J/m² 의 약 45–200 배이고, LPSCl 파괴인성 환산 G_c 3–6 J/m² (결론 2 · Song 논문 자신의 K²/E 6.15) 보다도 크다.
+   그런데도 300 MPa 시편은 **계면에서** 떨어졌다 (탄소층이 tape 로 통째 전사 — Liao 카드 Fig. 2b·c).  ⇒ 실측 박리값의
+   크기는 원자 값이 아니라 **소산**이 정하고, 균열이 어느 면으로 가는지도 약한 쪽 비교만으로는 정해지지 않는다
+   (기하·모드 혼합 — Hutchinson–Suo).  **남는 것**: γ(LPSCl) 과 W_ad 는 둘 다 원자 규모 **입력**으로 필요하다 —
+   박리값의 상한으로 쓰지 않는다.
 2. **같은 LPSCl 이 이상 벽개 0.20 J/m² vs 파괴인성 환산 G_c ≈ 3–5 J/m²** (K²(1−ν²)/E, ν 0.37: K 0.3·E 24 GPa → 3.2 ·
    K 0.17·E 4.7 GPa → 5.3 — 산술은 이 문서) — 원자 값과 실효 값이 **한 자릿수 이상** 다르다 = §1 을 섞지 말아야 하는 실례.
 3. Ag|그래핀 45 meV/C 원자 ≈ **0.28 J/m²** (그래핀 0.382 원자/Å² 로 환산 — 산술은 이 문서) = 물리흡착 급 (§4 가설과 정합).
    vdW 방법에 따라 38 % 이상 흔들리지만 **mJ/J 판별에는 영향 없음**.
-⇒ 우리 DEM G_c,eff(P) 의 **독립 대조 표적** = Liao 2025 (4배 @ 100→400 MPa) · Shozib 2024 (350→530 MPa).  ⛔ 보정용이 아니다.
+⇒ 우리 DEM G_c,eff(P) 의 **독립 대조 표적** = Liao 2025 (**lamination** 100→400 MPa 에서 9→41 J/m², ≈4.6배) ·
+Shozib 2024 (조립 350→530 MPa, 원문 미확인).  ⛔ 보정용이 아니다.
+⚠ **둘 다 제조 압착압 축**이다 — 운전 적층압(구동압, 수 MPa) 축의 대조 표적은 아직 없다 (Liao 는 사이클을 5 MPa 로
+고정했다).  DEM 3 단의 "P 로 누른 뒤 당김" 은 제조 압착에 해당하므로 이 두 논문과 같은 축이다 (§5-4).

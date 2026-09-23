@@ -67,3 +67,14 @@
 ## ⑥ 독립 연구 트랙 개설 — Ag–C 인터레이어 점착 (DFT 팀 협업)
 
 `docs/adhesion_agc_interlayer_20260923.md` (우리 쪽 설계·분업) · `docs/dft_request_adhesion_agc_20260923.md` (DFT 팀 전달 원문).  핵심: DEM 은 점착에너지를 **입력**으로 받으므로 W_ad 는 DFT, 구동압 의존 G_c,eff(P) 는 DEM 박리(하한).  ⬜ 계면 정의·범위·자원 저자 결정 대기.
+DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 세션에서는 요청 원문까지.
+
+- ✅ **문헌 4편 원문 → 정본 litdb 카드** (정본 `62993f64d`; litdb-curator 가 쓰고 내가 정본에서 따로 검증):
+  `liao2025_interfacial_adhesion_li_plating_carbon_interlayer` 크롭 17 · `tabakovic2026_mechanical_stress_eis_ica_drt_dfn` 10 ·
+  `song2025_porous_argyrodite_modulus_fracture_toughness` 3 · `spencerjolly2023_ag_graphite_interlayer_operando_xrd` 11
+  = **41 장, 전부 그림·표 영역** (접촉 시트로 육안 확인 — 페이지 통째 렌더 0) · INDEX 등록 (tabakovic 은 argyrodite
+  논문이 아니라 INDEX_DEM 만) · DOI 중복 0.  사용자의 "7번" (후보 표 7번째 줄, 파일명 `7._…`) = Spencer-Jolly 는
+  정본에 **없었다** → 새 카드 (Spencer · DOI · "silver-carbon" 으로 papers/ 전수 grep).
+- ⛔ 우리 §6 의 *"Liao 적층압 100→400 MPa 에서 4배"* 는 틀렸다 → **lamination(제조 압착)압** (사이클 적층압은 5 MPa 고정).
+  결론 1 (*"약한 쪽이 상한"*) 도 실측 9–41 J/m² ≫ 0.20 J/m² 와 맞지 않아 정정.  ⬜ §5-4 압력 축 결정 추가.
+- ⚠ Song SI zip 은 macOS 메타데이터(`__MACOSX/`)뿐이다 — 영상 2개(외팔보·파괴 시험) 본체가 없다.  카드는 본문으로 작성.
