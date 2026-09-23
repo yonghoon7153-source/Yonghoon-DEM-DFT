@@ -4555,6 +4555,20 @@
    "claimed_fixed_sha": "e6c10c0967f951b757be6ef24b0bd655926e0755"
   },
   {
+   "id": "SELF-46",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "claude (중단된 Schlautmann 논문 에이전트의 흔적을 추적하다 발견, 2026-09-23)",
+   "opened_in": "docs/session_20260923_progress.md",
+   "title": "게이트가 부르는 `litdb_promote.py --selftest` 가 공유 워크트리 `../litdb-canon` · 브랜치 `tmp-litdb-promote` · 상태 파일 `.litdb_promote_state.json` 을 강제 재생성하고 지웠다 — 논문 에이전트 작업 중에 게이트를 돌리면 그 작업이 사라진다",
+   "note": "`_selftest()` 가 `cmd_open(force=True)` 로 시작해 `cmd_cleanup` 으로 끝났고, 둘 다 모듈 전역 `WT_DIR` · `TMP_BRANCH` · `STATE` (= litdb-curator 가 `--open` 으로 쓰는 바로 그 이름) 를 대상으로 한다 — 기존 워크트리 `git worktree remove --force` + `rmtree` · 브랜치 `-D` · 상태 파일 삭제.  `check_all.sh` fast 레인이 이 selftest 를 돌리므로 **게이트 한 번 = 진행 중인 litdb 작업 삭제**.\n실사고: Schlautmann 에이전트가 21:06 KST 에 중단된 뒤 그 워크트리 (크롭만 있었다 — 카드 Write 0 건) 가 다음 게이트에서 지워졌다.  크롭은 PDF 에서 재생성되므로 실손은 없다.\n수리 (c9b1e4203): 본문을 `_selftest_private` 가 전용 임시 이름 (저장소 옆 mkdtemp · pid 붙은 브랜치) 으로 돌리고 되돌린다 + 새 검사 (0) 이 공유 이름 자리에 미끼 셋 (SENTINEL 디렉터리 · 브랜치 · 상태 파일) 을 앉혀 본문 뒤 살아남는지 본다.  재현 먼저 (규율 ②): 전환 없이 (0) FAIL → 전환 후 9/9 PASS.  두 번 모두 실행 중인 에이전트의 워크트리 · 브랜치 · 상태 파일 sha256 불변.  그 뒤 전체 게이트를 에이전트 작업 **중에** 돌려 통과했고 에이전트 워크트리 · 브랜치가 무사했다.\n덤: (5) INDEX 미등재 차단을 `dry_run=True` 로 — INDEX 검사가 dry-run 분기보다 앞이라 판정은 같고, 검사가 뚫려도 selftest 가 정본에 푸시 못 한다.\n★ 규율 ⑤ 의 친척 — 검사기가 **자기가 지키는 작업의 작업장**을 공유하고 있었다.",
+   "evidence_tests": [
+    "scripts/litdb_promote.py"
+   ],
+   "claimed_fixed_sha": "c9b1e420317ac0a06e663ecaa7ba9b25e0f553ac"
+  },
+  {
    "id": "LHS-09",
    "severity": "P2",
    "status": "open",
