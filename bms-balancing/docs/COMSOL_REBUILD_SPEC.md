@@ -2178,7 +2178,7 @@ seal 과 동일. 11 개 불변 파일 · Java 두 literal 역치환 · `TARGET_S
 - 게이트 리뷰(`degradation-degeneracy`) · BML 열화모드 정량화 · α·β 하네스와 **무관**하다 — 판정을 합산하지 않는다.
 - 이 절만으로 이미 수용된 A8 시험을 반복하거나 범위를 넓히지 않는다.
 
-### 25-7. 출처 (전부 수신 PC 경로 — 이 저장소에는 없다)
+### 25-7. 출처 (수신 PC 경로 — 이 중 ZIP 세 겹은 25-8 로 저장소에 보존했다)
 
 - 이번 현지 보고 원문: `…/.codex/attachments/db827121-983d-42fb-91fd-f78dab956181/붙여넣은 텍스트.txt` 및 사용자 메시지.
 - 앞선 수신 검토: `…/outputs/comsol_a8_return_review_20260923/LOCAL_CODEX_REPLY.md` ·
@@ -2187,5 +2187,30 @@ seal 과 동일. 11 개 불변 파일 · Java 두 literal 역치환 · `TARGET_S
   `PACKAGE_VERIFICATION.json` · `INDEPENDENT_CHECKS.json`.
 - 검토자 33 건에서 쓴 것은 검토한 순수 함수의 AST 분리본이다. 수신 suite / 모듈 최상위 / launcher / native 제어는
   실행하지 않았다.
-- 이 저장소에 반영할 때 이들 정본(ZIP 바이트 · REVIEW_KO · JSON 둘)을 `reviews/` 아래에 **보존**할지는 별도 결정이다
-  (§24 는 그렇게 했다 — `preserve_handoff.sh`, fail-closed). 이 문안은 그 보존을 전제하지 않는다.
+- 이들 정본을 `reviews/` 아래에 보존할지는 별도 결정이었고, **2026-09-24 사용자 결정으로 보존했다** (25-8).
+
+### 25-8. 저장소 보존 — ZIP 세 겹의 **바이트 대조** (2026-09-24, 우리 실측 · 코드/수치 검증이 아니다)
+
+수신 문서의 지시대로 **ZIP 무결성 확인은 코드·수치 검증과 따로 적는다.** 아래는 우리가 직접 한 것이고, 한 일은
+읽기·해시·복사뿐이다. ZIP 안의 스크립트 · Java · 승인 초안 · `fake_approval` 은 **실행하지 않았다.**
+`scripts/preserve_handoff.sh` (fail-closed: 크기·SHA·manifest 해시가 전달값과 다르면 멈춘다) 로 세 겹을 각각 보존했다.
+
+| 겹 | 수신 파일 | 크기 · SHA-256 | manifest (해시로 골랐다) | 명세 · ZIP 안 sha 일치 | 보존 · 제외 |
+|---|---|---|---|---|---|
+| wrapper | `COMSOL63_B_A8R1_HANDOFF_20260924.zip` (사용자 업로드) | 1,158,533 B · `5e8adb45…` — **전달값과 일치** | `HANDOFF_MANIFEST.json` `e3449975…` | 6 · 6 | 4 · 2 (중첩 ZIP 둘 — 아래 두 겹으로 따로) |
+| offline deployment | wrapper 안 `COMSOL63_B_A8R1_OFFLINE_DEPLOYMENT_20260924.zip` | 1,261,072 B · `99923f23…` — wrapper manifest 값과 일치 | `PACKAGE_MANIFEST.json` `e84b5b58…` | 400 · 400 | 264 · 136 (py 126 · java 9 · patch 1 — 정책상 미보존) |
+| external finalization | wrapper 안 `COMSOL63_B_A8R1_EXTERNAL_FINALIZATION_20260924.zip` | 6,519 B · `0332c2cd…` — wrapper manifest 값과 일치 | `EXTERNAL_PACKAGE_MANIFEST.json` `8409ca35…` | 7 · 7 | 7 · 0 |
+
+- 자리: `reviews/r14_repros/codex63/b_a8r1_handoff/` · `b_a8r1_deployment/` · `b_a8r1_finalization/` (각각 `FULL_LISTING.tsv` ·
+  `ZIP_SHA256.txt` · manifest 자신 포함). `.gitattributes` 의 `-text` 규칙을 **묶기 전에** 커밋했다(r320_timecap 교훈).
+- 커밋 뒤 `git show HEAD:<경로>` 바이트를 manifest 와 다시 대조했다: **4/4 · 264/264 · 7/7 일치, 불일치 0.**
+- 25-3 의 식별 가운데 우리가 바이트로 확인한 것: `CODE_MANIFEST.json` (24 파일) sha `fa559273…` — 수신 문서 값과 **일치**.
+  raw contract · Java · 독립 target · seal · `CASE_SPEC` 의 SHA 는 그 manifest 들에 적힌 값이고, 우리가 그 파일들의 sha 를
+  하나하나 다시 잰 것은 `preserve_handoff.sh` 의 명세 전수 대조(400/400)에 포함된다 — 다만 그것은 "manifest 가 말한 바이트가
+  들어 있다" 이지 "그 코드가 옳다" 가 아니다.
+- **보존 스크립트를 두 자리 넓혔다** (RED 먼저, `tests/test_r15_open_items.py` +2): manifest 이름 후보에 세 겹의 이름을
+  더했고(`CODE_MANIFEST.json` 은 부분 목록이라 후보 아님), 항목 키 `file` 을 `path` 의 별칭으로 받아 `path` 로 정규화한다.
+  고르는 규칙(`--expect-manifest-sha`)과 fail-closed 는 그대로다.
+- 보존한 md·json 안에서 §24 의 P1-R1/R2/R3 닫힘을 말하는 문장은 **찾지 못했다** (`991`·`1143`·`CRLF`·`mmol`·`P1-R` 검색 —
+  `HANDOFF_README_KO.md` 의 "끝 CRLF 전사" 한 줄뿐이고 무관). 25-1 ⚠ 유지.
+- 이 표는 **바이트 대조 기록**이다. 25-3 의 "수신 독립 33 건" · "현지 57 개" · C1/C3 판정과 합치지 않는다.

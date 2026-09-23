@@ -148,7 +148,7 @@ AND) 수용 · **C3**(시험 전 raw 계약 seal, `B_path_ready` 한 필드만 �
 정리/원복 · 정상 전체 gate · 전체 수렴, 장시간 운전 보류. `contract.approved=false` · `B_path_ready=true` ·
 `usable=false` — **B_path_ready 는 승인이 아니다.** §24 의 P1-R1/R2/R3 가 어디서 닫혔는지는 수신 문서에
 명시되지 않아 닫힌 것으로 적지 않았다. 우리 쪽 COMSOL 호출 0 · 코드 수정 0 · 승인 JSON 변경 0 · 시험 실행 0 ·
-ZIP 무결성 직접 확인 0(정본은 수신 PC 의 `comsol_b_a8r1_review_20260924/`). 게이트 · BML · α·β 판정과 합산하지 않는다.
+ZIP 무결성 직접 확인은 **따로 적는다**(§25-8): ZIP 세 겹을 `preserve_handoff.sh` 로 보존했고 크기·SHA·manifest 전수 대조 6/6 · 400/400 · 7/7, 커밋 뒤 재대조 4/264/7 일치 — 바이트 대조이지 코드/수치 검증이 아니다. 검토 정본(REVIEW_KO · JSON 둘)은 수신 PC 의 `comsol_b_a8r1_review_20260924/`. 게이트 · BML · α·β 판정과 합산하지 않는다.
 
 `COMSOL_REBUILD_SPEC.md` 에 §20~§25 를 더했다 — §20 Desktop 부분 회수(우리 재계산) ·
 §21 그 앞 이야기(정상 guard 가 후처리에서 죽고 API 복구가 파일 읽기에서 막힌 것) ·
