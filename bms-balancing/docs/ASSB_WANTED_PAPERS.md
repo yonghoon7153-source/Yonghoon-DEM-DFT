@@ -8,7 +8,7 @@
 - 큐에 이미 있으면 그 번호를 적고 **"큐 안"** 으로 표시한다 (중복 요청을 막는다).
 - 서지가 불완전하면 불완전한 채로 적는다 — 추측으로 채우지 않는다.
 
-갱신: 2026-09-23 (26호까지 반영 — 큐 20~37 흡수가 끝날 때마다 덧붙인다).
+갱신: 2026-09-23 (27호까지 반영 — 큐 20~37 흡수가 끝날 때마다 덧붙인다).
 
 ## 1. 큐 밖 — 요청 대상
 
@@ -28,7 +28,7 @@
 | ★★ | **Illig 외 2012** — *J. Electrochem. Soc.* | 18 | 1 | Q1·Q2 | "전하이동과 **접촉저항**의 분리" — 곱 축퇴(`θ`↔`j₀`)를 가르는 방법의 액체셀 원형 |
 | ★★ | **Oh … Choi 2025** — *Adv. Energy Mater.* | 14 | 1 | Q3·Q4 | 14호(Maxwell Protocol)와 같은 연구실의 후속 — "1순위 승격" 으로 적혔다 |
 | ★★ | **Ren·Danner·Finsterbusch·Latz 외 2022** — *Adv. Energy Mater.* 2201939 | 02 (ref 17) | 1 | **Q1 시간축** | **`θ(N)` 시간축의 입구** — 1·2호가 동역학을 안 줬다 |
-| ★★ | **Neumann 외 2021** — *ACS Appl. Energy Mater.* **4**, 4786 | 02 (ref 38) | 1 | Q2 | GB 저항 모형 원전 + **EIS 로 파라미터화된 measured 라벨** |
+| ★★★ | **Neumann 외 2021** — *ACS Appl. Energy Mater.* **4**, 4786 | 02 (ref 38) · 27 | **2** | Q2 | GB 저항 모형 원전 + **EIS 로 파라미터화된 measured 라벨** |
 | ★ | **Hlushkou 외 2018** — *J. Power Sources* **396**, 363−370 | 01 (ref 16) | 1 | Q1 | FIB-SEM **실측** 미시구조 — 합성 기하와 대조 |
 | ★ | **Bielefeld 외 2022** — *J. Electrochem. Soc.* | 14 | 1 | Q1 | pore 문턱 → 1호 `p_c` 의 실험판 |
 | ★★★ | **Bielefeld·Weber·Janek 2020** — *ACS Appl. Mater. Interfaces* **12**, 12821−12833 | 15 · 24 | **2** | Q1·Q4 | 1호 직계 속편. 24호의 **14 % void 가정과 τ 정의의 출처** — 01호와 24호를 잇는 유일한 고리 |
@@ -66,17 +66,29 @@
 | ★★★ | **Firouz·Goutam·Soult·…·Van den Bossche 2020** — *J. Energy Storage* **28**, 101184 | 26 | 1 | **Q4** | 26호 인용 24편 중 **유일하게 제목에 "system identification"** 이 있는 ASSB 논문 (경험 모델) — **구조적 공백 1번 후보** |
 | ★★ | **Kim·Lin·Abbasalinejad·Kim·Chung 2019** — *Electrochim. Acta* **317**, 663 | 12 | 1 | **Q4** | 같은 Danilov 모델 위의 **상태추정** — 12호가 Q4 후보로 지목했는데 26호는 인용하지 않는다. **구조적 공백 1번 후보** |
 | ★★ | **Deng·Hu·Lin·Xu·Li·Guo 2021** — *IEEE Trans. Transp. Electrif.* **7**(2), 464 | 26 | 1 | Q4 | 축약 ASSB 모델 — 식별 대상이 되는 형태. 식별성을 다루는지 미확인 (공백 1번 후보) |
-| ★★ | **Bielefeld 2023** — *Batteries & Supercaps* **6**(9), e202300180 | 26 | 1 | Q4 | 1호 저자의 모델 방법론 의견 ("plea for simplicity") |
+| ★★★ | **Bielefeld 2023** — *Batteries & Supercaps* **6**(9), e202300180 | 26 · 27 | **2** | Q4 | 1호 저자의 모델 방법론 의견 ("plea for simplicity") |
 | ★ | **Danilov·Notten 2008** — *Electrochim. Acta* **53**, 5569 | 26 | 1 | 모델 | 해리 전해질 수송(이온+공공) 원전 — "SE 에 농도 구배" 가정의 출처 |
 | ★ | **Xie·Imanishi·…·Yamamoto 2008** — *Solid State Ionics* **179**, 362 | 26 | 1 | Q3 | LCO 박막 확산계수를 GITT·EIS 로 **측정** — 적합된 `D_M⊕` 의 독립 대조 |
 | ★ | **Shao·Shao·Sang·Liu 2022** — *J. Electrochem. Soc.* **169**, 080529 | 26 | 1 | Q1 | 12호가 재인용한 "Shao — 접촉 면적 파라미터" 와 같은 편인지 **미확인** |
 | ★ | **Ansah·Shin·Lee·Cho 2021** — *Electron. Mater. Lett.* **17**, 532 | 26 | 1 | Q4 | 같은 "sensitivity = sweep" 관행의 표본 |
+| ★★★ | **Schmidt·Sinzig·Wall 2024** — *J. Electrochem. Soc.* **171**, 100502 | 27 | 1 | **Q1** | resolved 모델의 **박리 = 접촉 손실 기구**. 27호가 재 보인 **P2D 대비 상수 오프셋 0.07 이 바로 비연결 입자 몫 `1−u`** 였다 — 그 기구의 모델 원전 |
+| ★★★ | **Khalik·Donkers·Sturm·Bergveld 2021** — *J. Power Sources* **499**, 229901 | 27 | 1 | **Q4** | "P2D 파라미터를 실험에 맞춘다" 의 두 인용 중 하나 — DFN **파라미터 그룹화** 도구 후보 (공백 1번 후보, 액체셀) |
+| ★★★ | **Lu·Trimboli·Fan·Wang·Plett 2022** — *J. Electrochem. Soc.* **169**, 080504 | 27 | 1 | **Q4** | 같은 문장의 두 번째 인용 — **집약(lumped) 파라미터 추정** (공백 1번 후보) |
+| ★★ | **Koerver 외 2018** — *Energy Environ. Sci.* **11**, 2142 | 27 | 1 | Q1 | NMC 부피 변화 **측정** — 23호가 정량 원전이 아니었던 자리의 후속. ⚠ 큐 22 Koerver 2017 *Chem. Mater.* 와 **다른 논문** |
+| ★★ | **Ramadesigan 외 2012** — *J. Electrochem. Soc.* **159**, R31 | 27 | 1 | Q4 | 시스템 공학 리뷰 — 파라미터 추정·불확실성 |
+| ★★ | **Krewer 외 2018** — *J. Electrochem. Soc.* **165**, A3656 | 27 | 1 | Q4 | 진단용 동역학 모델 리뷰 — 파라미터화 |
+| ★★ | **Kirk·Please·Chapman 2021** — *J. Electrochem. Soc.* **168**, 060554 | 27 | 1 | Q4 | P2D 에 **입자 크기 분포** — 27호의 `D/d²` (개수평균 vs d₄₃ 로 ≈3.5배) 교정 수단 |
+| ★ | **Goldin 외 2012** — *Electrochim. Acta* **64**, 118 | 27 | 1 | Q1·Q3 | 3D 로 Bruggeman 을 평가한 원전 |
+| ★ | **Neumann 외 2020** — *ACS Appl. Mater. Interfaces* **12**, 9277 | 27 | 1 | Q3·Q8 | NMC622 `D(χ)`·`σ(χ)` 출처 · sandwich 리튬화 |
+| ★ | **Kremer 외 2020** — *Energy Technol.* **8**, 1900167 | 27 | 1 | Q8 | NMC622 OCV 출처 |
+| ★ | **An·Zhou·Li 2021** — *Electrochim. Acta* **370**, 137775 · **A. Schmidt 외 2021** — *Energy Technol.* **9** | 27 | 1 | Q3 | P2D 적합성 비판 계보 |
+| ★ | **Wirthl 외 2023** — *IJNMBE* **39** · **Saltelli 외 2010** — *Comput. Phys. Commun.* **181**, 259 · **Sobol 2001** — *Math. Comput. Simul.* **55**, 271 | 27 | 1 | Q4 방법 | GP+Sobol 방법·추정기·지수의 원전 — 27호의 대리모형 검증·CI 출처 공백 |
 
 ## 2. 구조적 공백 — "그 한 편" 이 아니라 **목록에 없는 종류**
 
 | 공백 | 처음 지적 | 왜 |
 |---|---|---|
-| **역문제·식별성을 다루는 ASSB 논문** | 01·02 (6-3-b) | 흡수분이 전부 forward 전용이면 **Q4 는 원리적으로 안 채워진다**. 26호까지 Q4 **0/26** — 이 공백이 그 숫자의 원인이다. ⚠ 26호(제목에 "sensitivity analysis")도 식별성이 아니라 **one-at-a-time 스윕**이었다 — 다만 그 스윕 그림에 비식별 방향 셋이 드러나 **원전 수치만으로 재현 가능한 첫 편**이 됐다. 후보: **Firouz 2020** (system identification) · **Kim 2019** (Danilov 모델 상태추정) · Deng 2021 · Naik 2022 · 큐 27 Bizeray (방법론 원전, 액체셀) |
+| **역문제·식별성을 다루는 ASSB 논문** | 01·02 (6-3-b) | 흡수분이 전부 forward 전용이면 **Q4 는 원리적으로 안 채워진다**. 26호까지 Q4 **0/26** — 이 공백이 그 숫자의 원인이다. ⚠ 26호(제목에 "sensitivity analysis")도 식별성이 아니라 **one-at-a-time 스윕**이었다 — 다만 그 스윕 그림에 비식별 방향 셋이 드러나 **원전 수치만으로 재현 가능한 첫 편**이 됐다. 후보: **Firouz 2020** (system identification) · **Kim 2019** (Danilov 모델 상태추정) · **Khalik 2021 · Lu 2022** (27호, 파라미터 그룹화·집약 추정) · Deng 2021 · Naik 2022 · 큐 27 Bizeray (방법론 원전, 액체셀). ⚠ 27호(전역 Sobol + CI)도 **설계 KPI 의 모델 적합성**이었지 식별성이 아니다 |
 | **ASSB 의 pOCV / 저율 OCV 곡선** | 02 (6-3-b) | 02 의 전압축은 전부 1 mA/cm² 부하 곡선이고 **OCV 곡선은 0 편**이었다 |
 | **기준극 누설·드리프트를 잰 ASSB 3전극 논문** | 20 | 계보 20/20 편이 누설을 안 쟀다. 3전극은 기준극 표류를 공통 모드로 상쇄해 **원리적으로 못 본다** (20호). ⚠ **절반 채워짐 (21호)**: 드리프트는 28일 < 3 mV 로 **쟀다** — 두 전극이 평탄 전위에 고정돼 표류가 보이는 구조였다. 그래서 20호 명제는 "**고정된 전극이 없으면** 못 본다" 로 좁혀졌다. **누설은 여전히 0/21** (21호도 간접 상한 < ~4.3 nA 만) |
 
@@ -88,7 +100,7 @@
 | Koerver 외 2017 — *Chem. Mater.* 29, 5574 | 18 ("큐 22번 당기기") · 21 (ref 29) · 22 (ref 9, 본문 4회) | **22** (✅ 23호 `492c1ff1`) — ⚠ "접촉 손실의 **실험** 원전" 은 맞지만 **정량** 원전은 아니다 (틈 치수·분율·용량 몫 0) |
 | Fukunishi 외 2023 — *JPS* 564 (NCM523 3전극) | 16 (ref 39) | 17 (✅ 18호) |
 | Zhang·Fu·Lu·…·Wang·Sun 2025 — *Adv. Mater.* **37**, 2413499 (저압 종설) | 25 (짝으로 지목 — **인용은 아님**) | **32** |
-| Bizeray·Kim·Duncan·Howey 2019 — *IEEE TCST* **27**(5), 1862 (SPM 식별성) | 26 (**인용 0** — 식별성 방법론 원전인데 안 가리킨다) | **27** (다음 차례) |
+| Bizeray·Kim·Duncan·Howey 2019 — *IEEE TCST* **27**(5), 1862 (SPM 식별성) | 26·27 (**둘 다 인용 0** — 식별성 방법론 원전인데 ASSB 모델 두 편이 안 가리킨다) | **27** (다음 차례) |
 
 ## 4. 갱신 기록
 
@@ -101,3 +113,4 @@
 | 2026-09-23 | 24호 (큐 23 Stavola) | Zhang 2017 *ACS AMI* 3회 · Bielefeld 2020 2회(★★★ 승격, 01↔24 유일 고리) · 신규 8 — Minnmann 2021 (TLM 원전, **Q4**) · Park 2021 *Nat. Mater.* (가짜 상분리) · **Naik 2022 (Q4 입구 후보)** · Davis 2021 · Shi 2020 *AEM* (≠ 4호) · Buchberger 2015 · Li Z 2020 · Okasinski 2020 |
 | 2026-09-23 | 25호 (큐 24 Zhou) | ★ **Sakka 2022 *JMCA* 신규 최상위** (X선 CT 압력별 접촉 면적 — `θ(P)` 측정 후보) · Shi 2020 *AEM* 2회 · 신규 7 — Xu 2024 · Schlautmann 2023 · Jiao 2023 (DEM 직결) · Orue Mendizabal 2023 · Wang 2024 · Kim J.T. 2023 · Minnmann 2022 (≠ 2021) · 큐 32 저압 종설 짝 표시 |
 | 2026-09-23 | 26호 (큐 25 Iwakiri) | Danilov 2011 2회 · 신규 9 — **Raijmakers 2020 (26호 데이터·문헌값의 단일 출처)** · **Firouz 2020 · Kim 2019 (Q4 공백 후보)** · Deng 2021 · Bielefeld 2023 · Danilov 2008 · Xie 2008 · Shao 2022 · Ansah 2021. 구조적 공백 1번에 후보 5 명시 |
+| 2026-09-23 | 27호 (큐 26 Sinzig) | Bielefeld 2023 · Neumann 2021 각 2회 · 신규 14 — **Schmidt 2024 *JES* (박리 = 27호 상수 오프셋 0.07 의 기구)** · **Khalik 2021 · Lu 2022 (Q4 공백 후보)** · Koerver 2018 *EES* (≠ 2017) · Ramadesigan 2012 · Krewer 2018 · Kirk 2021 · Goldin 2012 · Neumann 2020 · Kremer 2020 · An 2021/Schmidt 2021 · Wirthl/Saltelli/Sobol (방법) |
