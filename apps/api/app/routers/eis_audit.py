@@ -478,12 +478,16 @@ def _block(one: AuditSpectrumOut, numbers: _Numbers) -> list[str]:
         lines.append("    값 " + " ".join(shown) + ("   (?=미결정)" if any(
             s.endswith("?") for s in shown) else ""))
     kk = one.kk or {}
+    cables = (f" · 꼭대기 배선 유도 {kk['dropped_inductive']}점 뺌"
+              if kk.get("dropped_inductive") else "")
     if kk.get("judged"):
         lines.append(f"    KK 잔차 최대 {kk['max_residual'] * 100:.2g} % "
                      f"({_g(kk['at_hz'])} Hz) · 잡음 σ {kk['sigma'] * 100:.2g} % · "
-                     f"Voigt {kk['m']}개 (decade 당 {kk['per_decade']:.1f})")
+                     f"Voigt {kk['m']}개 (decade 당 {kk['per_decade']:.1f}){cables}")
+        if kk.get("reason"):
+            lines.append(f"      ({kk['reason']})")
     elif kk.get("reason"):
-        lines.append(f"    KK 판정 안 함 — {kk['reason']}")
+        lines.append(f"    KK 판정 안 함 — {kk['reason']}{cables}")
     for arc in one.arcs:
         where = ("→ " + " 또는 ".join(arc["candidate_labels"])
                  if arc.get("candidate_labels") else

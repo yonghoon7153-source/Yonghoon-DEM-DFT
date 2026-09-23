@@ -989,6 +989,17 @@ KK_NOISE_MULTIPLE = 6.0
 KK_EARLY_STOP_PER_DECADE = 1.5
 #: 잡음 자체가 이만큼이면 따로 적는다 — 파라미터의 오차 막대가 그만큼 크다.
 KK_NOISY = 0.01
+#: μ 가 일찍 멈추면 이 밀도(decade 당)로 한 번 더 본다 — 논문의 IS1a 에서 μ 가
+#: 고른 밀도(그림 8 에서 읽은 decade 당 2–4 개)의 가운데다.  거기서도 잔차가 크면
+#: 날카로운 아크 탓이 아니라 점이 틀린 것이다.
+KK_SECOND_LOOK_PER_DECADE = 3.0
+#: 어긋난 구간이 시험한 대역의 위·아래 끝에서 이만큼(decade) 안이면 "끝" 이다.
+#: 끝 점 하나를 포함하느냐로 가르면 안 된다 — 실측에서 1.7–4.4 MHz (꼭대기
+#: 7 MHz 의 바로 아래)가 "가운데" 로 읽혀 "접촉이 바뀌었다" 가 떴다.
+KK_EDGE_DECADES = 0.5
+#: 저주파 끝의 +Im 은 |Z| 의 이만큼은 넘어야 센다 — 실수축으로 내려온 셀의
+#: 마지막 점들은 잡음만으로도 축 위에 설 수 있다.
+LOW_FREQUENCY_INDUCTIVE_SHARE = 0.01
 
 
 @dataclass
@@ -1020,9 +1031,9 @@ def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
             f"있습니다 — 측정 중에 셀이 변했거나(쉬지 않은 셀, 드리프트), 흡착 "
             f"중간체의 느린 루프입니다. 이온을 막는 셀이면 앞의 것입니다"))
     result = lin_kk(spectrum.frequency_hz, spectrum.z_re, spectrum.z_im)
-    out.kk = _kk_summary(result)
+    out.kk, chosen = _kk_summary(result, spectrum)
     if out.kk["judged"]:
-        out.findings += _kk_findings(result, out.kk)
+        out.findings += _kk_findings(chosen, out.kk)
     out.findings = sort_findings(out.findings)
     return out
 
@@ -1033,34 +1044,50 @@ def _low_frequency_inductive(spectrum: Spectrum) -> tuple[int, float] | None:
     somewhere above them (not a sweep that is inductive all the way)."""
     order = np.argsort(spectrum.frequency_hz)      # 낮은 주파수부터
     imag = spectrum.z_im[order]
+    magnitude = np.hypot(spectrum.z_re[order], imag)
     count = 0
-    while count < len(imag) and imag[count] > 0:
+    while count < len(imag) and imag[count] > LOW_FREQUENCY_INDUCTIVE_SHARE * magnitude[count]:
         count += 1
     if count < 2 or count == len(imag) or not np.any(imag[count:] < 0):
         return None
     return count, float(spectrum.frequency_hz[order[count - 1]])
 
 
-def _kk_summary(result: KKResult) -> dict:
+def _kk_summary(result: KKResult, spectrum: Spectrum) -> tuple[dict, KKResult]:
+    """The numbers to print, and the result the findings are read from --
+    the μ-optimum, or the second look when μ stopped too early."""
     if not result.judged:
-        return {"judged": False, "reason": result.reason}
-    parts = np.concatenate([result.residual_re, result.residual_im])
-    sigma = float(1.4826 * np.median(np.abs(parts)))
-    summary = {
-        "judged": True, "reason": "", "m": result.m,
-        "per_decade": result.per_decade, "mu": result.mu,
-        "max_residual": result.max_residual, "at_hz": result.at_hz,
-        "rms": result.rms, "sigma": sigma,
-        "with_capacitance": result.with_capacitance,
-        "with_inductance": result.with_inductance, "capped": result.capped,
-    }
+        return {"judged": False, "reason": result.reason}, result
+    chosen = result
+    reason = ""
     if result.per_decade < KK_EARLY_STOP_PER_DECADE and result.rms >= KK_LIMIT:
-        summary["judged"] = False
-        summary["reason"] = (
-            f"μ 기준이 decade 당 {result.per_decade:.1f}개에서 멈췄는데 잔차가 "
-            f"{result.rms * 100:.0f} % 입니다 — 날카로운 아크나 저주파 유도성 "
-            f"루프에서 이 기준이 일찍 멈춥니다. 판정하지 않았습니다")
-    return summary
+        # μ 기준이 일찍 멈췄다 — 날카로운 아크, 참 유도성 루프, 또는 틀린 점.
+        # decade 당 3 개로 한 번 더 본다: 거기서 잡음 수준이면 앞의 둘이다.
+        second = lin_kk(spectrum.frequency_hz, spectrum.z_re, spectrum.z_im,
+                        m=math.ceil(KK_SECOND_LOOK_PER_DECADE * result.decades))
+        if second.judged and second.max_residual < KK_LIMIT:
+            return ({"judged": False, "dropped_inductive": result.dropped_inductive,
+                     "reason": (f"μ 기준이 decade 당 {result.per_decade:.1f}개에서 "
+                                f"멈췄습니다 — 날카로운 아크나 저주파 유도성 루프에서 "
+                                f"이 기준이 일찍 멈춥니다. decade 당 "
+                                f"{second.per_decade:.1f}개로 보면 잔차가 "
+                                f"{second.max_residual * 100:.1f} % 라 어긋남은 없습니다")},
+                    result)
+        if second.judged:
+            chosen = second
+            reason = (f"μ 기준이 decade 당 {result.per_decade:.1f}개에서 멈춰 "
+                      f"{second.per_decade:.1f}개로 다시 봤습니다")
+    parts = np.concatenate([chosen.residual_re, chosen.residual_im])
+    sigma = float(1.4826 * np.median(np.abs(parts)))
+    return ({
+        "judged": True, "reason": reason, "m": chosen.m,
+        "per_decade": chosen.per_decade, "mu": chosen.mu,
+        "max_residual": chosen.max_residual, "at_hz": chosen.at_hz,
+        "rms": chosen.rms, "sigma": sigma,
+        "with_capacitance": chosen.with_capacitance,
+        "with_inductance": chosen.with_inductance, "capped": chosen.capped,
+        "dropped_inductive": chosen.dropped_inductive,
+    }, chosen)
 
 
 def _kk_findings(result: KKResult, summary: dict) -> list[Finding]:
@@ -1084,20 +1111,23 @@ def _kk_findings(result: KKResult, summary: dict) -> list[Finding]:
     while high < len(order) - 1 and residual[order[high + 1]] > floor:
         high += 1
     f_low, f_high = float(frequency[order[low]]), float(frequency[order[high]])
+    edge = 10.0 ** KK_EDGE_DECADES
+    at_top = f_high * edge >= float(frequency.max())
+    at_bottom = f_low <= float(frequency.min()) * edge
     size = f"최대 {worst * 100:.1f} %, 잡음 σ ≈ {sigma * 100:.2f} %"
-    if low == high:
-        return [Finding(NOTE, "kk_outlier",
-                        f"{summary['at_hz']:.3g} Hz 의 점 하나가 Kramers–Kronig 를 "
-                        f"어깁니다 ({size}) — 튄 점입니다. 맞춤에서 빼 보세요")]
-    span = f"{f_low:.3g}–{f_high:.3g} Hz"
-    if high == len(order) - 1:
+    span = f"{f_low:.3g}–{f_high:.3g} Hz" if low != high else f"{f_low:.3g} Hz"
+    if at_top and not at_bottom:
         if result.capped:
             return []
         return [Finding(NOTE, "kk_high_frequency",
                         f"고주파 끝 {span} 가 Kramers–Kronig 를 어깁니다 ({size}) — "
                         f"배선·기기의 한계입니다. 맞춤의 상한을 {f_low:.3g} Hz 아래로 "
                         f"두세요")]
-    if low == 0:
+    if low == high:
+        return [Finding(NOTE, "kk_outlier",
+                        f"{span} 의 점 하나가 Kramers–Kronig 를 어깁니다 ({size}) — "
+                        f"튄 점입니다. 맞춤에서 빼 보세요")]
+    if at_bottom:
         above = float(frequency[order[high + 1]]) if high + 1 < len(order) else f_high
         return [Finding(CHECK, "kk_violation",
                         f"저주파 끝 {span} 가 Kramers–Kronig 를 어깁니다 ({size}) — "

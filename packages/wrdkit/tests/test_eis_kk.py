@@ -6,6 +6,8 @@ Anchors: the paper's own synthetic spectrum (Schönleber et al. 2014, IS1:
 seed -- a KK verdict that depends on the draw is not a test.
 """
 
+import re
+
 import numpy as np
 import pytest
 
@@ -159,3 +161,59 @@ def test_where_mu_stops_too_early_nothing_is_judged():
 
 def test_no_points_no_verdict():
     assert audit_spectrum(None).kk == {"judged": False, "reason": "점이 없습니다"}
+
+
+# -- 실측 검수(2026-09-23 04:13) 뒤에 고친 것 ---------------------------------------
+
+def test_the_cable_run_at_the_top_is_left_out_like_the_fit_leaves_it():
+    """배선 L 이 7 MHz 부터 수백 kHz 까지를 축 위로 올린다.  그 점들은 셀이
+    아니다 — 실측에서 거의 모든 스윕이 1.7–7 MHz 에서 "어긴다" 가 떴다."""
+    f = sweep(7e6, 10)
+    z = noisy(sulfide(f), 2e-3, 3)
+    bent = z.copy()
+    cables = (f > 1.5e6) & (f < 5e6)
+    bent[cables] = bent[cables] * (1 + 0.06j)        # L 하나로는 안 그려지는 배선
+    result = lin_kk(f, bent.real, bent.imag)
+    assert result.dropped_inductive > 0
+    assert result.frequency_hz.max() < 1.5e6
+    assert result.with_inductance                     # 아래 점에는 아직 L 이 걸린다
+    assert audit_spectrum(spectrum(f, bent)).findings == []
+
+
+def test_a_band_just_under_the_top_is_the_top_not_the_middle():
+    """꼭대기 7 MHz 바로 아래 2–5 MHz 가 어긋나도 "고주파 끝" 이다.  실측에서
+    이것이 "셀이나 접촉이 바뀌었습니다" (확인) 로 읽혔다."""
+    f = sweep(7e6, 0.01)
+    z = noisy(oxide(f), 1e-3, 2)
+    band = (f > 2e6) & (f < 5e6)
+    z[band] = z[band] * 1.05
+    (finding,) = audit_spectrum(spectrum(f, z)).findings
+    assert finding.code == "kk_high_frequency" and finding.severity == NOTE
+
+
+def test_where_mu_stops_early_a_second_look_tells_sharp_from_broken():
+    """μ 가 일찍 멈추면 decade 당 3 개로 한 번 더 본다.  날카로운 아크뿐이면
+    거기서 잡음 수준이라 판정하지 않고, 점이 틀렸으면 거기서도 어긋난다."""
+    f = sweep(7e6, 0.1)
+    w = 2 * np.pi * f
+
+    def sharp(k=1.0):
+        return (5 + par(2e4 * k, 1 / (1j * w * 1e-10)) + par(4e4 * k, 1 / (1j * w * 3e-8))
+                + 1 / (1j * w * 1e-6))
+
+    clean = audit_spectrum(spectrum(f, noisy(sharp(), 2e-3, 5)))
+    assert clean.kk["judged"] is False and "어긋남은 없습니다" in clean.kk["reason"]
+    # 1.95 % 를 "2 %" 로 반올림하면 기준(2 %)과 모순으로 읽힌다 — 소수 한 자리.
+    assert re.search(r"잔차가 \d+\.\d % 라", clean.kk["reason"])
+
+    broken = audit_spectrum(spectrum(f, noisy(np.where(f < 100, sharp(1.2), sharp()),
+                                              2e-3, 5)))
+    assert broken.kk["judged"] is True and "다시 봤습니다" in broken.kk["reason"]
+    (finding,) = broken.findings
+    assert finding.code == "kk_violation"
+
+
+def test_a_fixed_count_is_fitted_as_asked():
+    f, z = is1()
+    result = lin_kk(f, z.real, z.imag, m=20)
+    assert result.m == 20 and result.forced and len(result.mu_trace) == 1

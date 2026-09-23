@@ -31,6 +31,14 @@ is inductive (cables) -- both as the paper does for its measured cells.  A
 blocking spectrum without the capacitor cannot be matched by elements whose
 resistances all return to the axis (``LASIA1999.kk-blocking-systems``).
 
+**The cable-inductive run at the top is left out**, the way the fit leaves it
+out (`guess.inductive_mask`) and the way the paper dropped its inductive points
+above 3 kHz.  Those points are the wiring, not the cell, and a lone series L
+does not describe them: on the lab's 131 spectra (2026-09-23) nearly every
+sweep "failed" KK between 1.7 and 7 MHz, and one rule read that band as the
+cell changing under the sweep.  The inductor stays in the model -- the cable
+still acts on the points below the run.
+
 **What the paper does not give is a threshold on the residuals**
 (``SCHOENLEBER2014.no-numeric-residual-threshold``).  The verdicts built on
 this in `audit` use our own numbers and say so.
@@ -79,6 +87,10 @@ class KKResult:
     with_inductance: bool = False
     #: μ never fell below the limit before ``M`` reached its cap.
     capped: bool = False
+    #: Points of the cable-inductive run at the top that were left out.
+    dropped_inductive: int = 0
+    #: ``M`` was given, not found by μ.
+    forced: bool = False
 
     @property
     def residual(self) -> np.ndarray:
@@ -156,9 +168,22 @@ def _diverges_capacitively(frequency: np.ndarray, z_im: np.ndarray) -> bool:
     return bool(np.all(minus_im > 0) and np.all(np.diff(minus_im) < 0))
 
 
+def _inductive_run(frequency: np.ndarray, imag: np.ndarray) -> np.ndarray:
+    """The run of points above the axis that starts at the top of the sweep --
+    the same rule as `guess.inductive_mask`, kept here so this module needs
+    nothing but numpy."""
+    mask = np.zeros(frequency.size, dtype=bool)
+    for index in np.argsort(frequency)[::-1]:       # 높은 주파수부터
+        if not imag[index] > 0:
+            break
+        mask[index] = True
+    return mask
+
+
 def lin_kk(frequency_hz, z_re, z_im, *, mu_limit: float = MU_LIMIT,
            capacitance: bool | None = None, inductance: bool | None = None,
-           max_per_decade: float = 12.0) -> KKResult:
+           max_per_decade: float = 12.0, drop_inductive: bool = True,
+           m: int | None = None) -> KKResult:
     """The linear Kramers–Kronig test, sized by μ.
 
     ``capacitance`` / ``inductance``: add a series C / L to the model; ``None``
@@ -166,7 +191,10 @@ def lin_kk(frequency_hz, z_re, z_im, *, mu_limit: float = MU_LIMIT,
     when the top of the sweep is above the axis).  ``max_per_decade`` caps
     ``M`` -- above the point density it is over-fitting by construction
     (``SCHOENLEBER2014``, p. 26); the cap is also never above the number of
-    equations.
+    equations.  ``drop_inductive`` leaves out the cable-inductive run at the
+    top (and keeps the inductor for the points below it).  ``m`` fits that
+    many elements instead of searching -- the audit's second look when μ
+    stops too early.
     """
     frequency = np.asarray(frequency_hz, dtype=np.float64).ravel()
     real = np.asarray(z_re, dtype=np.float64).ravel()
@@ -176,10 +204,19 @@ def lin_kk(frequency_hz, z_re, z_im, *, mu_limit: float = MU_LIMIT,
     good = (np.isfinite(frequency) & np.isfinite(real) & np.isfinite(imag)
             & (frequency > 0) & (np.hypot(real, imag) > 0))
     frequency, real, imag = frequency[good], real[good], imag[good]
+    top = np.argsort(frequency)[::-1][:3]
+    cables = bool(np.any(imag[top] > 0))
+    dropped = 0
+    if drop_inductive:
+        run = _inductive_run(frequency, imag)
+        dropped = int(run.sum())
+        frequency, real, imag = frequency[~run], real[~run], imag[~run]
     if frequency.size < FEWEST_POINTS:
-        return KKResult(False, f"점이 {frequency.size}개뿐이라 KK 를 볼 수 없습니다")
+        return KKResult(False, f"점이 {frequency.size}개뿐이라 KK 를 볼 수 없습니다",
+                        dropped_inductive=dropped)
     if frequency.max() / frequency.min() < 10:
-        return KKResult(False, "측정 대역이 한 decade 가 안 됩니다")
+        return KKResult(False, "측정 대역이 한 decade 가 안 됩니다",
+                        dropped_inductive=dropped)
 
     z = real + 1j * imag
     omega = 2.0 * np.pi * frequency
@@ -187,27 +224,33 @@ def lin_kk(frequency_hz, z_re, z_im, *, mu_limit: float = MU_LIMIT,
     target = np.concatenate([real * weight, imag * weight])
     with_c = (_diverges_capacitively(frequency, imag) if capacitance is None
               else bool(capacitance))
-    top = np.argsort(frequency)[::-1][:3]
-    with_l = bool(np.any(imag[top] > 0)) if inductance is None else bool(inductance)
+    with_l = cables if inductance is None else bool(inductance)
     extra = 1 + int(with_c) + int(with_l)
     decades = math.log10(frequency.max() / frequency.min())
     cap = max(1, min(int(math.ceil(max_per_decade * decades)),
                      2 * frequency.size - extra - 1))
 
-    trace: list[float] = []
-    chosen = None
-    for m in range(1, cap + 1):
-        tau = _time_constants(omega.min(), omega.max(), m)
+    def solve(count: int):
+        tau = _time_constants(omega.min(), omega.max(), count)
         design = _design(omega, tau, weight, with_capacitance=with_c,
                          with_inductance=with_l)
         solution, *_ = np.linalg.lstsq(design, target, rcond=None)
-        mu = _mu(solution[1:1 + m])
-        trace.append(mu)
-        chosen = (m, tau, solution)
-        if mu < mu_limit:
-            break
-    m, tau, solution = chosen
-    capped = trace[-1] >= mu_limit
+        return tau, solution
+
+    trace: list[float] = []
+    forced = m is not None
+    if forced:
+        count = max(1, min(int(m), cap))
+        tau, solution = solve(count)
+        trace.append(_mu(solution[1:1 + count]))
+    else:
+        for count in range(1, cap + 1):
+            tau, solution = solve(count)
+            trace.append(_mu(solution[1:1 + count]))
+            if trace[-1] < mu_limit:
+                break
+    m = count
+    capped = not forced and trace[-1] >= mu_limit
 
     wt = omega[:, None] * tau[None, :]
     resistances = solution[1:1 + m]
@@ -225,4 +268,5 @@ def lin_kk(frequency_hz, z_re, z_im, *, mu_limit: float = MU_LIMIT,
         residual_im=(imag - fitted.imag) / magnitude,
         fitted=fitted, m=m, per_decade=m / decades if decades > 0 else float(m),
         mu=trace[-1], mu_trace=tuple(trace), with_capacitance=with_c,
-        with_inductance=with_l, capped=capped)
+        with_inductance=with_l, capped=capped, dropped_inductive=dropped,
+        forced=forced)

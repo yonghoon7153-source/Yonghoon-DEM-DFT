@@ -53,6 +53,7 @@ EIS 검수(`bml audit`, [[bml-command]])의 판정은 논문 몇 편에 기댄�
 | 안 막는 셀에 반무한 W 회로를 권하지 않는다 — W 도 발산한다 | LASIA1999 | `blocking_element_on_open_cell` 의 권고 |
 | docstring: n > 1 CPE 는 음의 저항, 가중은 모듈러스 가중, 전송선의 R_ion/3 은 막는 극한 | LASIA1999 | `circuit.py`, `fit.py` |
 | 회로보다 먼저 점을 본다 — lin-KK, M 은 μ < 0.85 에서 멈춘다. 잔차 기준(2 %, 잡음 6σ)은 우리 것이다. μ 가 일찍 멈추면(날카로운 아크) 판정하지 않는다 | SCHOENLEBER2014, VADHVA2021, LASIA1999 | `kk.lin_kk`, `audit.audit_spectrum` (ADR 0043) |
+| 꼭대기의 배선 유도 구간(+Im)은 KK 에서 뺀다 — 논문도 유도성 점을 버렸다. μ 가 일찍 멈추면 decade 당 3 개로 한 번 더 본다 | SCHOENLEBER2014 (실측 셀 예) | `kk.lin_kk(drop_inductive, m)`, `audit._kk_summary` (ADR 0043 보완) |
 
 ## 아직 안 한 것
 
@@ -63,7 +64,9 @@ EIS 검수(`bml audit`, [[bml-command]])의 판정은 논문 몇 편에 기댄�
 2. **전기 모듈러스 M″** (ISW1990). 맞춤 없이 벌크의 C·l/A 를 준다 (M″ 피크 높이 =
    ε0/2C). M″ 가 꼭대기 주파수에서도 오르고 있으면 벌크가 창 위에 있다는 증거다.
 3. **실측으로 다시 맞출 기준.** KK 의 2 %·6σ·decade 당 1.5 개, 크기 판정의 ×3·×10 은
-   합성 데이터로 정했다. `bml audit` 결과로 다시 본다.
+   합성 데이터로 정했다. 두 번째 실측 검수(131 스펙트럼)에서 KK 지적 73 건이 배선
+   대역이었고, 그것을 고쳤다 (ADR 0043 보완). 2 %·6σ 자체는 아직 그대로다 — 배선을 뺀
+   다음 검수가 말한다.
 
 **랩이 정할 것 — Arrhenius 의 세로축.** VADHVA2021 (식 7) 은 전지수의 1/T 을 넣은
 ln(σT) 가 Ea 를 맞게 준다고 한다. 우리 `activation_energy` 는 두 기준을 다 내고

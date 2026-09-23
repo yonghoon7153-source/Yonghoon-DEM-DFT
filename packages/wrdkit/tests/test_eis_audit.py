@@ -704,6 +704,17 @@ def test_the_one_sweep_that_stops_blocking_is_named():
     assert "-75°" in odd.message
 
 
+def test_noise_just_above_the_axis_at_the_end_is_not_drift():
+    """실수축으로 내려온 셀의 마지막 점들은 잡음만으로도 축 위에 선다 — |Z| 의
+    1 % 는 넘어야 센다."""
+    from wrdkit.eis.audit import audit_spectrum
+    z = USER_SPECTRUM.z.copy()
+    order = np.argsort(USER_SPECTRUM.frequency_hz)
+    z[order[:3]] = z[order[:3]].real + 1j * 0.002 * np.abs(z[order[:3]])
+    grazing = Spectrum(USER_SPECTRUM.frequency_hz, z.real, z.imag)
+    assert "low_frequency_inductive" not in codes(audit_spectrum(grazing))
+
+
 def test_a_sweep_taken_before_the_chamber_settled_is_named():
     rows = b11_like(s1={"start_s": 600.0, "end_s": 690.0})   # 10 분 만에 첫 스윕
     found = audit_conductivity_scan(rows)
