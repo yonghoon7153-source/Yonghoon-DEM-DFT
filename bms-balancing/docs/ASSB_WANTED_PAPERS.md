@@ -8,12 +8,13 @@
 - 큐에 이미 있으면 그 번호를 적고 **"큐 안"** 으로 표시한다 (중복 요청을 막는다).
 - 서지가 불완전하면 불완전한 채로 적는다 — 추측으로 채우지 않는다.
 
-갱신: 2026-09-23 (24호까지 반영 — 큐 20~37 흡수가 끝날 때마다 덧붙인다).
+갱신: 2026-09-23 (25호까지 반영 — 큐 20~37 흡수가 끝날 때마다 덧붙인다).
 
 ## 1. 큐 밖 — 요청 대상
 
 | 우선 | 논문 | 지목 (assb 호) | 수 | 축 | 왜 필요한가 |
 |---|---|---|---|---|---|
+| ★★★★ | **Sakka·Yamashige·Watanabe·Takeuchi·Uesugi·Uesugi·Orikasa 2022** — *J. Mater. Chem. A* **10**, 16602−16609 | 25 | 1 | **Q1**·Q6 | ★ **X선 CT 로 압력별 CAM–SE 접촉 면적 분율을 쟀다** (50 ↔ ≤12 MPa) — **`θ(P)` 측정 후보.** Q1 이 25편 동안 측정량을 한 번(22호 XRD 상한)밖에 못 받았다. 지목 1회지만 **측정 종류의 희소성**으로 최상위에 둔다 |
 | ★★★★ | **Ikezawa 외 2020** — *Electrochem. Commun.* **116**, 106743 | 16 · 17 · 18 · 19 · 21 | **5** | Q5 | **R-LTO 기준극의 원전.** 18호가 "Assuming 1.55 V" 로 쓴 전위, 19호의 기준극 쌍 불일치 ±30 mV 의 근거. 21호는 이것을 **InLi-(In) 조립의 예로도** 인용한다 — **두 Q5 가지(R-LTO · In)가 만나는 자리**. 3배 압착에서 110 Ω cm² |
 | ★★★★ | **Nam 외 2018** — *J. Mater. Chem. A* **6**, 14867 | 17 · 20 · 21 | **3** | Q5·Q7 | **In-rich depletion layer 원전.** 17호의 국소 고갈(+680~780 mV)과 20호의 Li 도금 전위 도달을 잇는 자리. 21호는 "탈리튬 후 계면 Li 고갈을 실험으로 봤다" 로 인용 — 21호 조립 방향 판정의 원전 |
 | ★★★★ | **Santhosha 외 2019** — *Batteries & Supercaps* **2**, 524 | 17 · 20 · 21 | **3** | Q5 | **0.62 V 의 출생지.** 그리고 InLi-(In) 형이 탈리튬 전류를 냈다는 보고가 **21호와 어긋난다** — creep 인가 전기화학 리튬화분인가 |
@@ -49,10 +50,17 @@
 | ★★★ | **Park·Zhao·Kang·…·Chueh 2021** — *Nat. Mater.* **20**, 991−999 | 24 | 1 | Q1·Q2 | **동역학이 만드는 가짜 상분리** — 24호 Fig. S17 의 θ 형 봉우리의 대안 설명이자 `i₀(x)` 의 출처. θ 와 η 를 가르는 판정에 직접 걸린다 |
 | ★★ | **Naik·Vishnugopi·Mukherjee 2022** — *ACS Appl. Mater. Interfaces* **14**, 29754−29765 | 24 | 1 | **Q4** | 24호 "not kinetically limited" 판정의 근거 — **민감도 분석이 있는지** 확인 대상 (Q4 입구 후보) |
 | ★★ | **Davis·Goel·Liao·…·Dasgupta 2021** — *ACS Energy Lett.* **6**, 2993−3003 | 24 | 1 | Q2 | 황화물 복합전극의 **operando 광학 η(z)** — EDXRD 와 독립인 깊이 채널 |
-| ★★ | **Shi·Tu·Tian·…·Ceder 2020** — *Adv. Energy Mater.* **10**, 1902881 | 24 | 1 | Q1 | 입도비 → 이온 수송 — 24호 "굴곡도가 진화했다" 기구의 원전. ⚠ 4호 Shi 2020(기계 열화)과 **다른 논문** |
+| ★★★ | **Shi·Tu·Tian·…·Ceder 2020** — *Adv. Energy Mater.* **10**, 1902881 | 24 · 25 | **2** | Q1 | 입도비 → 이온 수송 — 24호 "굴곡도가 진화했다" 기구의 원전 · 25호 **DEM 이용률의 방법 원전**. ⚠ 4호 Shi 2020(기계 열화)과 **다른 논문** |
 | ★ | **Buchberger·…·Gasteiger 2015** — *J. Electrochem. Soc.* **162**, A2737 | 24 | 1 | Q3·Q8 | c/a → x 교정식 (x < 0.5) — Li 함량이 1 을 넘는 교정 오프셋 점검용 |
 | ★ | **Li Z.·Yin·…·Liu P. 2020** — *Chem. Mater.* **32**, 6358−6364 | 24 | 1 | Q2 | 액체셀 두꺼운 전극 깊이 프로파일 · 전류 역전 · 가중평균 관행의 선례 |
 | ★ | **Okasinski·Shkrob·Chuang·…·Abraham 2020** — *Phys. Chem. Chem. Phys.* **22**, 21977 | 24 | 1 | Q3·Q6 | 가압 불균일과 측면 구배 — 조각 정렬 문제 점검용 |
+| ★★ | **Xu·Yang·Li 2024** — *Adv. Energy Mater.* **14**, 2303539 | 25 | 1 | Q6 | 압력 종설 — 8호가 인용한 "<≈1 MPa" 의 출처로 보인다. 25호의 출처 없는 "≤5 MPa" 와 대조 |
+| ★★ | **Schlautmann·Weiß·Maus·…·Bielefeld 2023** — *Adv. Energy Mater.* **13**, 2302309 | 25 | 1 | Q1·Q2 | 같은 변수(SE 입도 분포)의 **독립 표본** — 25호의 셀 1개·교락을 가를 입력 |
+| ★★ | **Jiao·Wang·Chen·…·Liu 2023** — *Energy Storage Mater.* **61**, 102864 | 25 | 1 | Q1 | DEM 연결성·굴곡도 후처리의 방법 원전 — **DEM 브랜치에 직결** |
+| ★★ | **Orue Mendizabal 외 2023** — *ACS Appl. Energy Mater.* **6**, 11030 | 25 | 1 | Q2·Q5 | 양극·음극 계면 EIS 배정(`R_SSE/anode` ↔ `R_SSE/NCM`)의 근거 — 17호 함정 판정 |
+| ★ | **Wang·Li 2024** — *Adv. Mater.* **36**, 2309306 | 25 | 1 | Q1 | 계층형 SE → 낮은 굴곡도 주장의 선행 |
+| ★ | **Kim J.T.·…·Sun Y.-K. 2023** — *J. Mater. Chem. A* **11**, 20549 | 25 | 1 | Q6 | argyrodite 코팅 NCM 의 **상압 운전** — 저압 대조군 |
+| ★ | **Minnmann·…·Janek 2022** — *Adv. Energy Mater.* **12**, 2201425 | 25 | 1 | — | 종설. ⚠ 위 Minnmann 2021 *JES*(TLM 원전)와 **다른 논문** |
 
 ## 2. 구조적 공백 — "그 한 편" 이 아니라 **목록에 없는 종류**
 
@@ -69,6 +77,7 @@
 | Sedlmeier 외 2023 — *JES* **170**, 030536 (μ-RE, In-Li) | 17 ("Li 박 방향 뒤집기 = 16↔17호 대질") | **20** (✅ 21호 `ac961cde`) |
 | Koerver 외 2017 — *Chem. Mater.* 29, 5574 | 18 ("큐 22번 당기기") · 21 (ref 29) · 22 (ref 9, 본문 4회) | **22** (✅ 23호 `492c1ff1`) — ⚠ "접촉 손실의 **실험** 원전" 은 맞지만 **정량** 원전은 아니다 (틈 치수·분율·용량 몫 0) |
 | Fukunishi 외 2023 — *JPS* 564 (NCM523 3전극) | 16 (ref 39) | 17 (✅ 18호) |
+| Zhang·Fu·Lu·…·Wang·Sun 2025 — *Adv. Mater.* **37**, 2413499 (저압 종설) | 25 (짝으로 지목 — **인용은 아님**) | **32** |
 
 ## 4. 갱신 기록
 
@@ -79,3 +88,4 @@
 | 2026-09-23 | 22호 (큐 21 Strauss) | 신규 7 — Zhang 2017 *JMCA* (부피 수축→접촉) · Zhang 2017 *ACS AMI* (토모그래피·공극률) · Koerver 2017 *JMCA* (산화 계면층) · Nam 2018 *JPS* (≠ *JMCA*) · de Biasi/Kondrakov 2017 · Chen 2013. 큐 22 Koerver *Chem. Mater.* 지목 3회. 22호는 2018-03 게재라 Ikezawa·Nam *JMCA*·Santhosha·Sedlmeier 를 **인용할 수 없다** (지목 0 은 부재가 아니라 시점) |
 | 2026-09-23 | 23호 (큐 22 Koerver) | Zhang 2017 *JMCA*·*ACS AMI* 각 2회 (후자는 23호 방법 원전으로 ★★★★ 승격) · 신규 5 — Kondrakov 2017 *JPCC* 121 3286 (NCM811 부피 수축 원전) · Zaghib 1999 (LTO 1.55 V 뿌리) · Jung 2015 (In 0.6 V 근거) · Ishidzu 2016 · Auvergniot 2017. 23호는 2017-06 게재라 Ikezawa·Nam·Santhosha·Koerver *JMCA* 인용 불가 (시점) |
 | 2026-09-23 | 24호 (큐 23 Stavola) | Zhang 2017 *ACS AMI* 3회 · Bielefeld 2020 2회(★★★ 승격, 01↔24 유일 고리) · 신규 8 — Minnmann 2021 (TLM 원전, **Q4**) · Park 2021 *Nat. Mater.* (가짜 상분리) · **Naik 2022 (Q4 입구 후보)** · Davis 2021 · Shi 2020 *AEM* (≠ 4호) · Buchberger 2015 · Li Z 2020 · Okasinski 2020 |
+| 2026-09-23 | 25호 (큐 24 Zhou) | ★ **Sakka 2022 *JMCA* 신규 최상위** (X선 CT 압력별 접촉 면적 — `θ(P)` 측정 후보) · Shi 2020 *AEM* 2회 · 신규 7 — Xu 2024 · Schlautmann 2023 · Jiao 2023 (DEM 직결) · Orue Mendizabal 2023 · Wang 2024 · Kim J.T. 2023 · Minnmann 2022 (≠ 2021) · 큐 32 저압 종설 짝 표시 |
