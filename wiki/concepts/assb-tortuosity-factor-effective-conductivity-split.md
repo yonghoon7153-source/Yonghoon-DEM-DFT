@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -149,6 +149,17 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - **두 경로 사이에서는 안 풀린다**: EIS 쪽 `ε` **미인쇄** — `[재현]`(관 내경 9.8 mm · σ⁰ 0.7 mS cm⁻¹) 관측 곱 **0.406 ± 0.013**, `τ_cond` 1.6 은 `ε` ≈0.65 에서 나온다(공칭 0.62 → 1.53 · 영상 0.537 → 1.32). **곱으로 비교하면** EIS 0.406 ↔ 모의 0.309(×1.31) · 무공극 0.527. EIS 시편의 void 는 재지 않았고 두 시편은 수지 · 충전 상태 · 압착 · 두께가 다르다 — 원문은 차를 "수지" 하나에 배정(24호가 "진화" 에 배정한 것과 같은 구조).
 - ⇒ 이 페이지 요지의 다섯 번째 판: **구조가 곱을 푸는 것은 그 구조의 시편에 대해서다.** 측정과 구조를 대조할 때는 `τ` 가 아니라 `σ_eff/σ⁰` 를, 같은 시편 · 같은 `ε` 로 비교한다(처방 1 의 강화). 측정 0.406 은 "void 13 % + Bruggeman"(`[재현]` 0.394)과도 맞아 분할이 서지 않는다.
 - **표의 둘째 줄에 수가 붙었다**: 위 "왜 중요한가" 표의 "경로가 좁아짐 → `σ_eff` ↓" — 이 편은 void 13.2 %(수지 포함)의 경로 효과를 ×0.59 로 계산했다. 셋째 줄(면적 `A_eff`/`φ`)은 모의에 계면이 없어 **구성상 0** 이다.
+
+## ★★★ 일곱 번째 표본 — 구조 계산이 곱을 풀고, `τ²` 는 그 몫을 다시 쓴 것이며, 검증은 가정 `ε` 위의 한 점이다 (2026-09-23, `assb` 57호)
+
+`raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md` (Bielefeld · Weber · Janek 2020, *ACS AMI* 12, 12821 — 01호 저자 셋의 속편, GeoDict 합성 구조 + EJ-heat 정상 전도). 24호가 `τ²` 정의를 가져왔다고 인용한 편이다(24호 ref 41).
+
+- **정의**: `[인쇄]` 식 (3) `σ_eff = ε_SE/τ² · σ⁰` · 식 (11) `τ² = σ⁰·ε_SE/σ_eff` · `ε_SE = (1 − φ_void)·v_SE`(void 포함 전체 부피 기준) — 이 페이지의 `τ²` 와 같은 양, **24호 D1(CAM 분율로 나눔)과 다른 규약**. ⇒ 24호가 이 정의를 가져왔다면 따르지 않은 것이다.
+- **경로 B(구조) 한 가지만, 그러나 스윕으로**: `σ⁰` 2.7 입력 · 구조 `ε` · 계산 `σ_eff` → `τ²` 는 이름표(`[재현]` Fig. 4 `τ²` 가 재현된다). 조성(40–68 vol%) · AM 크기(3–15 µm) · 다봉 분포 · **void 5 · 10 · 20 %** · 바인더 0 · 0.05 · 0.10 을 돌렸다 — 계보에서 `τ²` 의 **구조 의존을 스윕으로 준 첫 편**.
+- **void 의 로그 분할**(`[재현]`, 50:50 · d 5 µm): `σ_eff` 5 → 20 % 비 1.81 = `ε` ×1.19 · `τ²` ×1.52 → `τ²` 몫 **70 %**(55호 실측 구조의 가상 치환 59 %와 같은 방향). **void 축 문턱 0** — 세 점 단조, 급변은 AM 분율 축(60 → 66 vol% 한 칸 보간)과 바인더에서만.
+- **Bruggeman**: `[인쇄]` "significantly underestimates … 4-fold" · 수정식 α 2.02–1.21 · γ 0.32–0.67 — `[재현]` 전도도 지수(`σ_eff/σ⁰ ∝ ε^(1+α)`) **3.02 · 2.21**(55호 함의 1.89 · 고전 1.5). 저자 "these parameters do not offer any further scientific insight".
+- **바인더**: `τ²` 는 **순수 SE `ε`** 로 나눈다(`[재현]` ε_AM 68 · 0.10: 835 ↔ SE+바인더 1391, `[도표]` ≈800) ⇒ 바인더 `τ²` 증가(70:30 에서 4.2 → 10)는 SE 부피 손실이 아니라 **경로 차단** 몫. 그러나 같은 편 전류 추정은 SE+바인더 `v_SE` 로 곱해 ×1.15–1.30 과대(D4) — 규약이 한 지면 안에서 바뀐다.
+- **경로 A(측정)와의 대조는 한 점, 가정 `ε` 로**: Kato 2018 `σ_eff` 0.73 ↔ 모의 0.68(void **15 % 가정** — 시편 void 미보고); `τ²` 2.29 ↔ 2.47 의 차는 `ε` 규약(`[재현]` 2.28 · 2.50). ⇒ 여섯 번째 표본(55호)의 교훈 "같은 시편 · 같은 `ε`" 의 **실패형**: 시편 `ε` 를 모르면 구조 계산은 곱을 예측하지 않고 맞춘다 — 같은 지면의 void 손잡이(×2)가 일치 폭(7 %)보다 크다.
 
 ## 이 페이지가 주장하지 않는 것
 

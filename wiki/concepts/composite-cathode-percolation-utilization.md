@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -437,6 +437,16 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - `[해석]` 이 페이지의 규율에 붙는 것 둘: (1) **`p_c` 는 무작위 단분산 구 가정의 값이다** — 실물은 그보다 낮은 부피분율에서 연결됐다(원인 후보: 비구형 · 넓은 분포(55호 `k_LCO` 3.64) · 압착 중 재배열 · 1호 유한 크기 폭). 어느 쪽인지 이 편은 묻지 않는다. (2) **합성 truth 에서 `θ` 를 퍼콜레이션 모델 하나의 출력으로 정하지 않는다** — 같은 연구실이 자기 모델을 실험 앞에서 손으로 덮었다.
 - 원장 · 14호가 이 편에 붙인 "pore(void) 문턱 → 저항 급증" 은 **이 편에 없다**(`threshold` · `surpass` 0 · void 부피 스윕 0). 이 편이 `p_c` 와 닿는 곳은 위 한 단락뿐이다 — 큐 58(Bielefeld 2020)에서 다시 찾는다.
 - void 는 **접촉(`φ`)으로만** 들어갔다(1-입자 모델 표면 반구) — `θ` · 경로와 다른 축이다. 55호(경로만)와 56호(접촉만)가 또 한 번 서로의 빈 칸이다.
+
+## ★★★ `p_c` 의 계보 — 01 에서 태어나고, 57호에서 말없이 실려 가고, 56호에서 손으로 덮인다 · "pore 문턱" 귀속 판정 (2026-09-23 추가, `assb` 57호)
+
+`raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md` (Bielefeld · Weber · Janek 2020 — 1호 저자 셋의 속편, 1호 AM 배열 재사용 · 바인더 추가 · 유효 전도도 계산).
+
+- **상속**: `[인쇄]` "We use the AM microstructures generated in our previous work". `[도표]` Fig. 5b AM 이용률(d 5 µm · void 15 %)은 ε_AM **49 → 50 vol%** 에서 ≈22 → ≈63 %(40 vol% ≈3 %) — `[재현]` 1호 식 (8) `p_c(5 µm)` = 49.3 vol% 자리. 이 편은 그것을 **말하지 않는다**(`threshold` 0 · `p_c` 0).
+- **모순 하나**: `[인쇄]` "we suppose that electronic conduction is not the limiting factor because conductive carbon will be introduced" ↔ `A_spec,a`(Fig. 5c)는 **탄소 없는 AM 클러스터**로 계산돼 `p_c` 아래에서 ≈0 이다. 그 자리(ε_AM ≈41)에 C65 가 든 Nam 2018 전극의 GITT 면적 비를 대조하고 "match quite well" 이라 썼다 — ≈0 ÷ ≈0 의 비다(57호 D7 · D8).
+- **이온 쪽 새 무릎**: 바인더 0.10 에서 **`θ_SE`** 가 ε_AM > ≈61 vol% 부터 떨어져 68 vol% 에서 ≈55 %(무바인더 ≈98 %) — 1호가 공극으로 본 "ionic limitation" 의 바인더 판. `θ_AM` 은 구성상 불변(바인더를 기존 AM 배열 위에 얹었다).
+- **"pore 문턱 → 저항 급증"(14호가 56호에 붙인 문장) 귀속 판정: 출처 불명.** 세 요소(void 축 · 문턱 · 저항 급증)가 한 편에 같이 있는 곳이 없다 — **1호** Fig. 9: 공극률 43 → 3 % 에서 `[인쇄]` "above 34 %" 고립 · "Down to 21 %" 전자 제한(이용률 판정 · 전도도 0) · **57호** Fig. 4: void 5 · 10 · 20 % 에서 `σ_eff` ×≈2 단조(문턱 0) · **56호**: 둘 다 0. 14호는 1호 · 57호를 인용하지 않는다(PDF 검색 — `Bielefeld` 는 [69] = 56호 한 번).
+- ⇒ 계보 요약: **1호 `p_c(d)` 출력(무작위 단분산 구) → 57호 무언 상속 + 이온 쪽 바인더 무릎 → 56호 반례(42 vol% 실셀 연결) · 고립 입자 수작업 이동으로 `θ = 1`**. `p_c` 는 이 연구실 안에서 한 번도 실측과 맞춰진 적이 없고, 맞지 않았을 때 모델이 아니라 구조를 고쳤다. 합성 truth 에서 `θ` · `p_c` 를 이 계보 한 모델의 출력으로 정하지 않는다(56호 절과 같은 결론, 한 편 더).
 
 ## 이 페이지가 주장하지 않는 것
 

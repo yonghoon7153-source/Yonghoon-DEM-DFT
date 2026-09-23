@@ -2479,3 +2479,14 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: Read 11 장(Fig. 2 · 4 · 5 · 6 · 7 · 8 · 9 · 10 · S3 · S2 · S7) + S5 쪽 렌더, 안 봄 Fig. 1 · 3 · 11 · S1 · S4 · S6 · S8.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 56편 · Evidence 쉰한 번째 · 새 제약 · Status Log) · [[assb-lampe-contact-product-degeneracy]](서른아홉 번째 적용 · 처방 표 새 줄) · [[composite-cathode-percolation-utilization]](01호 `p_c` 반례 · 수작업 강제) · [[assb-apparent-capacity-decomposition]](`η(i)` 모델 표본) · 큐 문서 §6-3-g 57 행 + 지문 ²².
 - 후속(서지 기준, 미열람): Ruess … Janek 2020 *JES* 167, 100532 ([10] — 모든 입력의 원전) · Bielefeld · Weber · Janek 2020 *ACS AMI* 12, 12821 ([25] = 큐 58) · Minnmann … Janek 2021 *JES* 168, 040537 ([27]) · Neumann … Latz 2020 *ACS AMI* 12, 9277 ([38]) · Trevisanello … Janek 2021 *AEM* 11, 2003400 ([11]).
+
+## [2026-09-23] ingest | assb 57호 — Bielefeld, Weber, Janek 2020, Modeling Effective Ionic Conductivity and Binder Influence in Composite Cathodes for All-Solid-State Batteries (ACS Appl. Mater. Interfaces 12, 12821–12833)
+- raw: `raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md` (sha256 봉인 — `pdf_sha256` · `si_sha256`) · 그림 `raw/figures/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode/` (자동 13, 제외 1). 큐 58번(2차 묶음 열아홉째 편), 지목 3 회(15 · 24 · 53호) + 56호 ref 25. ⚠ 모델 편(GeoDict + EJ-heat 정상 전도) — 새 측정 0.
+- ★★★★ **판정**: "pore(void) 문턱 → 저항 급증"(14호 [69] 가 56호에 붙인 문장)은 **이 편에도 없다** — void 스윕은 5 · 10 · 20 % 세 점 단조(`σ_eff` ×≈2), `threshold` 0, 급변은 AM 분율 축뿐. 01 · 56 · 58 어디에도 세 요소가 함께 없다 ⇒ **귀속 출처 불명**.
+- ★★★★ **유효 전도도**: 곱 `σ⁰·ε/τ²` 는 구성상 풀림 · `τ²` = `σ⁰ε/σ_eff` 이름표 · Bruggeman ×4 과소 · 검증은 Kato 2018 한 점(void 15 % 가정, 곱 비 1.07 ↔ void 손잡이 ×2). **바인더** = `θ_AM` 불변(구성상) · `A_spec,a` ↓ 17–82 % · `σ_eff` ↓ · `θ_SE` ↓ — `A_eff·k` · `κ_eff` 두 자리를 한 손잡이로(모델 명제). **`p_c` 계보** 01 → 58(무언 재현, 49 → 50 vol%) → 56(반례 · 수작업).
+- **채움표 57호 행 — 누적 ≈20.0 → ≈20.0 (새 칸 0).** Q1 층 하나(모델 명제) · Q3 층 하나 · Q4 0/57 마흔아홉 번째 성질.
+- **곱 축퇴 처방 마흔 번째 적용**: 새 줄 "한 공정 손잡이가 두 곱을 같이 깎을 때 — 면적 비와 수송 비를 같은 모델에서 따로, GITT '면적' 은 곱으로".
+- ⚠ 어긋남 13 건(D1 극한식 d → 0 = 6.40 · D3 표 1 고출력 `τ²` 1.7 ↔ 1.50 · D4 바인더 전류 규약 · D6–D8 Nam 대조 · 탄소 가정 · D10 55호 13.2 % · D12 14호 [69] · D13 24호 "14 %" · "point contacts" 외).
+- 그림: Read 6 장(Fig. 1 · 2 · 4 · 5 · 6 · S4) + 5b · 5d 확대 + 극한식 쪽 렌더, 안 봄 Fig. 3 · S2 · S3 · S5.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 57편 · Evidence 쉰두 번째 · 새 제약 · Status Log) · [[assb-lampe-contact-product-degeneracy]](마흔 번째 적용 · 처방 표 새 줄) · [[assb-tortuosity-factor-effective-conductivity-split]](일곱 번째 표본) · [[composite-cathode-percolation-utilization]](`p_c` 계보 · "pore 문턱" 귀속) · 큐 문서 §6-3-g 58 행 + 지문 ²³.
+- 후속(서지 기준, 미열람): Nam · Oh · Jung · Jung 2018 *JPS* 375, 93 ([25]) · Kato … Kanno 2018 *JPCL* 9, 607 ([44]) · Froboese … Kwade 2019 *JES* 166, A318 ([27]) · Shi … Ceder 2020 *AEM* 10, 1902881 ([28]) · Braun … Ivers-Tiffée 2018 *JPS* 393, 119 ([52]).
