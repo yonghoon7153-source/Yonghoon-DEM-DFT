@@ -1,0 +1,402 @@
+{
+ "slug": "illig2012_charge-transfer-contact-resistance-lfp-drt-ecm",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Concept of the distribution function of relaxation times method (DRT). a) Ideal system with two discrete relaxation times, b) “real system” with processes showing a distribution of relaxation times.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    603.8,
+    289.0,
+    723.2
+   ],
+   "w": 1081,
+   "h": 499,
+   "dpi": 300,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Comparison of impedance curves of a) solid-oxide fuel cell 15 and b) LiFePO4/Lithium-cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    62.4,
+    288.2,
+    281.6
+   ],
+   "w": 1080,
+   "h": 915,
+   "dpi": 300,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) LiFePO4/Lithium-cell impedance curve (open circles) and a ﬁt of the capacitive branch (blue dotted line) by an appropriate diffusion model22; (b) measured (open circles) and pre-processed (blue line) LiFePO4/Lithium- cell impedance curve.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    492.1,
+    288.2,
+    713.7
+   ],
+   "w": 1080,
+   "h": 924,
+   "dpi": 300,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Impedance curves of a LiFePO4/Lithium-cell with 100% SOC for temperatures of 0, 10, 20, 23 and 30◦C and (b) zoomed in ohmic resistance.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    62.4,
+    555.2,
+    246.6
+   ],
+   "w": 1081,
+   "h": 768,
+   "dpi": 300,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Relative Kramers Kronig residuals of LiFePO4/Lithium-cell with 100% SOC for temperatures of 0, 10, 20, 23 and 30◦C.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    61.4,
+    289.0,
+    181.1
+   ],
+   "w": 1081,
+   "h": 500,
+   "dpi": 300,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 5,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Pre-processed impedance curves for temperatures from 0◦C to 30◦C at SOC 100% (a) LiFePO4/Lithium-cell, (b) symmetrical LiFePO4-cathode cell and (c) symmetrical lithium-metal cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    488.1,
+    556.0,
+    722.0
+   ],
+   "w": 1080,
+   "h": 976,
+   "dpi": 300,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 6,
+   "file": "fig_9.png",
+   "caption": "Figure 9. DRT for temperatures from 0◦C to 30◦C at SOC 100% (a) LiFePO4/Lithium-cell, (b) symmetrical LiFePO4-cathode cell and (c) sym- metrical lithium-metal cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    62.3,
+    288.2,
+    257.1
+   ],
+   "w": 1080,
+   "h": 813,
+   "dpi": 300,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 6,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Equivalent circuit model for LiFePO4/Lithium-cell, measured impedance curve for 100% SOC at 0◦C and corresponding CNLS-ﬁt. The red and blue line show the separately simulated losses of anode and cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    93.4,
+    555.2,
+    161.6
+   ],
+   "w": 1081,
+   "h": 285,
+   "dpi": 300,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "blank": 0.636,
+   "note": "⚠ 자동 크롭이 그림 아래쪽(Nyquist 하단)만 잘랐다 — 전체는 fig_10_manual_p6.png"
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 8,
+   "file": "fig_15.png",
+   "caption": "Figure 15. Left: Cathode as prepared and right: Cathode after a calender- ing process. Two RQ-elements representing charge transfer, P1C, and con- tact resistance, P2C. LiFePO4: blue; carbon black: gray, current collector: light gray, contact area cathode /current collector: red, electrolyte: green, lithium-metal anode: orange. Calendering decreases thickness and open poros- ity of the cathode layer, while contact area cathode /current collector is increased.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    61.9,
+    555.2,
+    158.1
+   ],
+   "w": 1081,
+   "h": 402,
+   "dpi": 300,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "blank": 0.532
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6_manual_p5.png",
+   "caption": "Figure 6. LiFePO4/Lithium-cell at 20°C and SOC 100%: measured impedance curve (Zmeas, black line) and impedance corresponding to the calculated DRT (Zmeas,DRT, black squares), pre-processed impedance curve (Zpre, gray line) and impedance corresponding to the calculated DRT (Zpre,DRT, gray squares).",
+   "rotated_deg": 0,
+   "bbox": [
+    30,
+    500,
+    290,
+    706
+   ],
+   "w": 1446,
+   "h": 1146,
+   "dpi": 400,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "manual": true,
+   "note": "크로퍼가 놓친 벡터 그림/표(영역 없음 판정) — 400 dpi 수동 크롭."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 5,
+   "file": "fig_7_manual_p5.png",
+   "caption": "Figure 7. LiFePO4/Lithium-cell at 20°C and SOC 100%: (a) Pre-processed impedance curve and (b) corresponding DRT.",
+   "rotated_deg": 0,
+   "bbox": [
+    298,
+    55,
+    560,
+    278
+   ],
+   "w": 1457,
+   "h": 1240,
+   "dpi": 400,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "manual": true,
+   "note": "크로퍼가 놓친 벡터 그림/표(영역 없음 판정) — 400 dpi 수동 크롭."
+  },
+  {
+   "key": "f10m",
+   "kind": "figure",
+   "label": "10",
+   "page": 6,
+   "file": "fig_10_manual_p6.png",
+   "caption": "Figure 10. Equivalent circuit model for LiFePO4/Lithium-cell, measured impedance curve for 100% SOC at 0°C and corresponding CNLS-fit. The red and blue line show the separately simulated losses of anode and cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    298,
+    40,
+    560,
+    166
+   ],
+   "w": 1457,
+   "h": 701,
+   "dpi": 400,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "manual": true,
+   "note": "크로퍼가 놓친 벡터 그림/표(영역 없음 판정) — 400 dpi 수동 크롭."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 6,
+   "file": "fig_11_manual_p6.png",
+   "caption": "Figure 11. LiFePO4/Lithium-cell for 100% SOC and 0°C: Real part and imaginary part of CNLS-fit residuals.",
+   "rotated_deg": 0,
+   "bbox": [
+    298,
+    560,
+    560,
+    733
+   ],
+   "w": 1457,
+   "h": 962,
+   "dpi": 400,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "manual": true,
+   "note": "크로퍼가 놓친 벡터 그림/표(영역 없음 판정) — 400 dpi 수동 크롭."
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 7,
+   "file": "fig_12_manual_p7.png",
+   "caption": "Figure 12. Area specific resistance (ASR)-values of polarization processes P1A, P1C, P2C, Pdiff,C and ohmic loss contribution R0 versus 1/T and corresponding Arrhenius fits.",
+   "rotated_deg": 0,
+   "bbox": [
+    30,
+    38,
+    290,
+    240
+   ],
+   "w": 1446,
+   "h": 1123,
+   "dpi": 400,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "manual": true,
+   "note": "크로퍼가 놓친 벡터 그림/표(영역 없음 판정) — 400 dpi 수동 크롭."
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 7,
+   "file": "fig_13_manual_p7.png",
+   "caption": "Figure 13. LiFePO4/Lithium-cell from 10 to 100% SOC at 0°C: (a) Pre-processed impedance curves and (b) corresponding DRTs.",
+   "rotated_deg": 0,
+   "bbox": [
+    298,
+    505,
+    560,
+    733
+   ],
+   "w": 1457,
+   "h": 1268,
+   "dpi": 400,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "manual": true,
+   "note": "크로퍼가 놓친 벡터 그림/표(영역 없음 판정) — 400 dpi 수동 크롭."
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 8,
+   "file": "fig_14_manual_p8.png",
+   "caption": "Figure 14. Area specific resistance (ASR)-values of a LiFePO4 cathode (a) charge transfer cathode/electrolyte (P1C), contact resistance cathode/current collector (P2C) and (b) solid state diffusion (Pdiff,C) for a variation in state of charge (SOC) from 10 to 100% and in temperature (T) from 0 to 30°C, derived by a CNLS-fit of the equivalent circuit model.",
+   "rotated_deg": 0,
+   "bbox": [
+    30,
+    55,
+    290,
+    370
+   ],
+   "w": 1446,
+   "h": 1751,
+   "dpi": 400,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "manual": true,
+   "note": "크로퍼가 놓친 벡터 그림/표(영역 없음 판정) — 400 dpi 수동 크롭."
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 9,
+   "file": "fig_16_manual_p9.png",
+   "caption": "Figure 16. (a) Impedance and (b) DRT of a LiFePO4/Lithium-cell at 0°C and 100% SOC. The porosity, surface area and thickness of the LiFePO4 cathode sheet was changed from as prepared (dashed line) by a calendering process (straight line), see also Fig. 15.",
+   "rotated_deg": 0,
+   "bbox": [
+    30,
+    460,
+    290,
+    716
+   ],
+   "w": 1446,
+   "h": 1423,
+   "dpi": 400,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "manual": true,
+   "note": "크로퍼가 놓친 벡터 그림/표(영역 없음 판정) — 400 dpi 수동 크롭."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "fig_T1_manual_p8.png",
+   "caption": "Table I. Temperature dependence of relaxation frequency FR, area specific resistance ASR and activation energy Eact for the five equivalent circuit model elements of the investigated LiFePO4/Lithium-cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    585,
+    548,
+    758
+   ],
+   "w": 2823,
+   "h": 962,
+   "dpi": 400,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "manual": true,
+   "note": "크로퍼가 놓친 벡터 그림/표(영역 없음 판정) — 400 dpi 수동 크롭."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 9,
+   "file": "fig_T2_manual_p9.png",
+   "caption": "Table II. Area specific resistance ASR of LiFePO4 cathode impedance and physical origin.",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    62,
+    560,
+    142
+   ],
+   "w": 2890,
+   "h": 445,
+   "dpi": 400,
+   "src": "b0554549-13._Separation_of_Charge_Transfer_and_Contact_Resistance_in_LiFePO4-Cathodes_by_Impedance_Modeling.pdf",
+   "manual": true,
+   "note": "크로퍼가 놓친 벡터 그림/표(영역 없음 판정) — 400 dpi 수동 크롭."
+  }
+ ]
+}

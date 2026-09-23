@@ -2404,3 +2404,16 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: 15 장 중 **12 장 봤다**(Fig. 2–8 · S2 · S3 · S5 · S6 · S7), 안 본 것 Fig. 1 · S1 · S4 · 식은 쪽 렌더.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-lampe-contact-product-degeneracy]](서른세 번째 적용 · 처방 표 새 줄) · [[spm-grouped-parameter-identifiability]](50호 두 행) · 큐 문서 §6-3-g 51 행 + 지문 ¹⁶.
 - 후속(서지 기준, 미열람 — 큐 52–59 인용: 57 Bielefeld 2022 만): Kaiser … Roling 2018 *JPS* 396, 175 (ref 24) · Cronau … Roling 2020 *Batter. Supercaps* 3, 611 (ref 36) · Hess … Cuniberti 2015 *JPS* 299, 156 (ref 31) · Minnmann … Janek 2021 *JES* 168, 040537 (SI ref 4) · Morasch … Suthar 2021 *JES* 168, 080519 (ref 34).
+
+## [2026-09-23] ingest | assb 51호 — Illig, Ender, Chrobak, Schmidt, Klotz, Ivers-Tiffée 2012, Separation of Charge Transfer and Contact Resistance in LiFePO4-Cathodes by Impedance Modeling (J. Electrochem. Soc. 159, A952)
+- raw: `raw/papers/illig2012_charge-transfer-contact-resistance-lfp-drt-ecm.md` (sha256 봉인 — `pdf_sha256`) · 그림 `raw/figures/illig2012_charge-transfer-contact-resistance-lfp-drt-ecm/` (자동 9 + 수동 7 + 표 2). 큐 52번(2차 묶음 열셋째 편) — 18호 [29] · 11호 [9] · 47호 [35]. ⚠ 액체셀(도구 칸).
+- ★★★★ **판정**: "접촉 저항" = 양극층 | Al 집전체(전자 접촉) — 카드의 CAM|SE `θ` 와 다른 물리. 가른 것은 한 호 안의 곱이 아니라 **직렬 두 호(P1C ↔ P2C)의 이름**: DRT 대역 · 대칭셀 · `Ea` 0.45 ↔ 0.06 eV(주 판별자) · SOC = 측정, 이름 = 가정("always temperature activated") + 소거 + 문헌. 캘린더링 한 쌍은 방향만(네 원인 동시).
+- ★★★ `[재현]` Table I → `C` P2C ≈1 µF · P1C ≈3 mF cm⁻²(×≈3,000; 표 주파수 열 순서 뒤집어야, D1) · `[도표]` 캘린더링 τ P1C ×≈3.5 · P2C ×≈1/6 · Fig. 15 도식 P2C CPE → 비접촉 집전체 ⇒ 전자 접촉 호의 `C` 는 여집합(1단계 전제 부호 반전).
+- ★★★ **ASSB 이식**: 방법 형태 ✅ · 판별값 ❌ — 18호 R2(Al|복합체) `Ea` 41–70 kJ mol⁻¹ ↔ R3 49–63 겹침. **가져간 것**: 18호 DRT 참고문헌만 · 11호 대역만(정체 근거인 온도는 두고 옴) · 47호 R‖CPE 하나로 두 호를 다시 합침.
+- **채움표 51호 행 — 누적 ≈20.0 → ≈20.0 (새 칸 0).** Q4 0/51 마흔세 번째 성질 · Q3 DRT-seeded ECM.
+- **곱 축퇴 처방 서른네 번째 적용**: 1단계 부분 · 3-a ✅ · 3-b ✅ · 새 줄 "`C` 의 자리 · `Ea` 판별값은 계 고유".
+- ⚠ 어긋남 11 건(D1 F_R 순서 · D2 Pdiff `Ea` 미인쇄 · D3 "± 50" = 범위 · D4 질량수지 ×0.83 · D7 "without any a priori settings" · D9 DRT 정규화 외).
+- 낱말 지문: 11 열 전부 0 · `contact` 20(전부 집전체) · `capacit*` 21(RQ 커패시턴스 0) · `double layer` 0.
+- 그림: 크롭 Read 8 장(Fig. 9 · 10 · 12 · 13 · 14 · 15 · 16 · Table I), 쪽 미리보기만 Fig. 5–8 · Table II, 안 봄 Fig. 1–4 · 11.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-lampe-contact-product-degeneracy]](서른네 번째 적용 · 처방 표 새 줄) · 큐 문서 §6-3-g 52 행 + 지문 ¹⁷.
+- 후속(서지 기준, 미열람 — 큐 53–59 인용 0): **Gaberscek … Jamnik 2008 *ESSL* 11, A170** (ref 11) · Schmidt … Ivers-Tiffée *JPS* 196, 5342 (ref 19) · Illig … Ivers-Tiffée 2010 *ECS Trans.* 28(30), 3 (ref 17) · Levi & Aurbach 1997 *J. Phys. Chem. B* 101, 4630 (ref 23).
