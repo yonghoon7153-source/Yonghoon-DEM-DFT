@@ -1,0 +1,287 @@
+{
+ "slug": "li2024_assb-composite-cathode-model-contact-area-edl",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+  "09b7d18d-36._Sup_Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.docx"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Overall flow chart of this work.. (For interpretation of the abbreviations in this figure, the reader is referred to Table 1.) 3",
+   "rotated_deg": 0,
+   "bbox": [
+    71.4,
+    440.6,
+    523.9,
+    730.8
+   ],
+   "w": 1886,
+   "h": 1210,
+   "dpi": 300,
+   "src": "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "blank": 0.524
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Schematic representation of an all-solid-state Li-ion battery under discharge condition. ct + ηdc (3)",
+   "rotated_deg": 0,
+   "bbox": [
+    121.0,
+    49.4,
+    474.2,
+    287.5
+   ],
+   "w": 1472,
+   "h": 993,
+   "dpi": 300,
+   "src": "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "blank": 0.474
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Schematic diagram (left) and object (right) of an all-solid-state solid-state pressure cell. The pressure data for the above preparation process are shown in Table S1 in the supplementary material. It is noted that all aforemen­ tioned procedures are conducted within an argon-rich environment. Before performing characterization to obtain the required data, five activation cycles are applied. Both the positive and negative half-cells, along with symmetric cells, are prepared employing an analogous methodology as outlined above. in Fig. 4(c): 3.3. Diffusion coefficient of NCM811 To determine the diffusion coefficient of the positive material, a GITT test is conducted on the positive half-cell. The simplified formula (51) can be used to calculate diffusion coef­ ficient of the material [31]: The pressure cell is schematically shown in Fig. 3. It is important to note that under labor",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    568.4,
+    269.9
+   ],
+   "w": 2238,
+   "h": 920,
+   "dpi": 300,
+   "src": "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "blank": 0.696
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Results of open-circuit potential test and input of dynamic testing cycles (a) Open circuit voltage curve as a function of SOC, including OCV (black), OCP (red) and OCN (blue)(vs Li). (b) The dQ/dV curves of the full cell and positive half-cell. (c) Crate changes in a single cycle of dynamic operation, and the corresponding SOC changes. 8",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    599.3,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 470,
+   "dpi": 300,
+   "src": "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Test results for some parameters acquisition. (a)Galvanostatic Intermittent Titration Curve. (b)The Dp curves in GITT test. (c) ln (Δ(V)) as a function of time during the relaxation process of symmetric batteries after constant current polarization. (d) The parameter kp varies as a function of SOC. ln(△(V)) = π2DSE t + const (52) η = RT αcF (ln(j0) −ln(−j)) (54) L2 SE The test curve is shown in Fig. 5(c). In order to obtain the κSE, a blocking cell is fabricated for EIS testing (frequency range 10–105 Hz, perturbation signal of 10 mV) [34]. The test results are shown in Fig. 5(d). 4. Results and discussion 3.5. Reaction rate constant The parameters are identified in Matlab to obtain the optimal set of parameters. In order to determine the electrochemical parameters of the ASSBs through particle swarm optimization (PSO), the algorithm is initialized using the parameter set obtaine",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    568.4,
+    386.6
+   ],
+   "w": 2238,
+   "h": 1406,
+   "dpi": 300,
+   "src": "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Measured (lines) and simulated (symbols) voltage curves as a function of capacity at various C-rates. (a) Discharging conditions, (b) Charging conditions. can be used is nearly one-third of that at 0.4C. Notably, higher C-rate data could not be obtained due to the instability of the produced pres­ sure cells. the parameter identification process. In Fig. 9(a) and (d) the OCV curve of the full cell (Up ocp (cp avg)- Un ocn: upper black line) and the various overpotential contributions (colored areas) are shown for 0.4 and 2 C-rate discharging, respectively. It is important to note that Up Fig. 7 displays voltage profiles with measured curves (lines) and simulated trends (symbols), covering discharge, charge, and relaxation sequences at various C-rates. The voltage discharge/charge curves (left half) are graphically presented as a function of capacity, while the relaxation curves (",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    567.2,
+    200.7
+   ],
+   "w": 2233,
+   "h": 632,
+   "dpi": 300,
+   "src": "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "blank": 0.879
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Measured (lines) and simulated (symbols) voltage discharge/charge and relaxation curves at various C-rates: 0.4C (a, b), 0.6C (c, d), 0.8C (e, f), 1.0C (g, h), 1.2C (i, j),1.6C (k, l), and 2C (m, n). Note that the voltage discharge/charge curves are shown as a function of capacity and the relaxation periods after current interruption as a function of time.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    691.9
+   ],
+   "w": 2227,
+   "h": 2678,
+   "dpi": 300,
+   "src": "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Optimization results for diffusion coefficients: Dp = Dp,ref(Crate) ∗trDp(x). (a) Reference diffusion coefficients (Dp,ref) for different Crates. (b) Trends of diffusion coefficients as a function of lithium stoichiometry.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    287.2,
+    565.7,
+    456.9
+   ],
+   "w": 2227,
+   "h": 708,
+   "dpi": 300,
+   "src": "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 12,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. (a, d) Comparative analysis of discharge curves, including the various simulated overpotential contributions; (b, e) Trends of different overpotentials during discharge; (c, f) all overpotentials during relaxation after discharge. Fig. 9(a), (b) and (c) represent the 0.4 C-rate discharge condition, and Fig. 9(d), (e) and (f) represent the 2 C-rate discharge condition. 12",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    493.7,
+    565.8,
+    711.7
+   ],
+   "w": 2227,
+   "h": 909,
+   "dpi": 300,
+   "src": "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 13,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. (a)Measured (red) and simulated (blue) voltage discharge and relaxation curves under dynamic testing cycles. (b) Trends of different overpotentials during discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    565.7,
+    197.1
+   ],
+   "w": 2227,
+   "h": 616,
+   "dpi": 300,
+   "src": "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 13,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. (a, d) The influence of Rs of the active material on battery performance. (b, e) The influence of the contact area on battery performance. (c) The influence of LSE on battery performance. (f) The influence of εp on battery performance. The simulations are conducted at a C-rate of 0.4. overpotential, making its impact more significant under high Crate conditions. electrolyte, and the intricate diffusion of lithium ions within the parti­ cles of the composite positive active material. Additionally, the elec­ trical double layer and ratio of the solid-solid contact area are introduced to describe the interface characteristics. Meanwhile, to improve computational efficiency without sacrificing accuracy, Laplace transform and Pad´e approximation method are introduced to reduce order of the transfer function transformation. Furthermore, Fig. 11(c) indicates that a decrease in electrol",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    234.7,
+    566.0,
+    455.7
+   ],
+   "w": 2228,
+   "h": 921,
+   "dpi": 300,
+   "src": "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1 Sets of model parameters used for simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    562.7,
+    731.6
+   ],
+   "w": 2210,
+   "h": 2918,
+   "dpi": 300,
+   "src": "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 12,
+   "file": "tab_2.png",
+   "caption": "Table 2 Summary of model simulation results under different operating conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.3
+   ],
+   "w": 2213,
+   "h": 2987,
+   "dpi": 300,
+   "src": "fcbbcd3c-36._Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": null,
+   "file": "fig_s1.png",
+   "caption": "Fig. S1 SEM image of NCM811",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 595,
+   "h": 446,
+   "dpi": null,
+   "src": "09b7d18d-36._Sup_Modeling_of_an_all-solid-state_battery_with_a_composite_positive_electrode.docx",
+   "note": "docx word/media/image1.png 에서 직접 추출 (zipfile). 크로퍼는 .docx 를 읽지 못한다. SI 의 나머지 media(image2~5.wmf)는 식 S.1–S.4 의 OLE 수식 그림이다."
+  }
+ ]
+}

@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -32,6 +32,11 @@ Huo et al. 2025 (*J. Power Sources* **627**, 235830, raw:
 **실험과 파라미터 식별을 한 논문 안에서 잇는 첫 편**이고, 그래서 처음으로
 **열화 모드의 지분 자체를 적합으로 정한다** (`ε_p` 하나를 푼다).
 그 논문의 Table 1 · Table 3 만으로 아래가 나온다.
+
+> ★ **2026-09-23 정정 (37호 — 9호가 위임한 원전)**: 9호의 모델 · PSO · `A_eff` 정의는 Li et al. 2024 (*eTransportation* 20, 100315,
+> `raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md`) 에서 왔다. 그 편 Table 1 의 `A^p_eff` 0.4938 · `A^n_eff` 0.4095 는 **출처 각주가 없고**
+> 복합양극 조성이 다른(38 ↔ 56 wt%) 9호 값과 **네 자리 같다** — 아래 "`A^p_eff` 는 적합값" 은 **"출처 없는 상속값"** 으로 읽는다.
+> 그리고 아래 "9 배" 의 `R_s` ≈9.4 µm 도 두 편에 공통이다(37호 SI SEM 도 입자 반경 ≈0.5–1.5 µm). 원형 모델의 식으로는 곱이 **`A_eff · k_p · ε_p / R_s`** 이고 그중 `A_eff ↔ k_p` 는 정확한 항등이다(아래 §스무 번째 적용).
 
 ## 정의 — 데이터가 보는 조합
 
@@ -161,6 +166,8 @@ physical significance** of the parameters" 라고 쓴다.
 | ★★ **ICI `R/k` — 한 차단의 면적 소거 조합** (2026-09-23 후보, **31호에서**) | 정전류 중 짧은 차단의 절편 `R`(표면형 `∝ 1/A`) 과 √t 기울기 `k`(`∝ 1/(A√D)`) ⇒ `R/k ∝ √D/j₀` — **`A` 약분**. 면적 손실 = `R`·`k` 동배수(`R/k` 불변) · `D` 손실 = `k` 만 · `j₀` 손실 = `R` 만. 16호 `R·C` 의 **시간 영역 · 확산 판**, 처방 1단계를 `C` 없이 | ⚠ **31호는 비를 만들지 않았고 사이클 추적(Fig. 7·8)에 `k` 를 인쇄하지 않았다** — 지면에서 계산 불가(zenodo 원자료에는 있음). 조건: `R` 에서 면적 무관 `R0` 제거(31호 액체 ≈4–5 Ω ≪ 50 Ω; ASSB 는 SE 벌크 + 상대극이라 크다 → 3전극 전제) · 반무한 창 유효(31호 `[재현]` 창이 경계). **후보** |
 | ↳ **온보드 번역 — 한 펄스 이완이 1·4단계 + `R/k` 의 공통 입력** (2026-09-23, **34호에서**, `[해석]`) | 전류 계단 한 번의 응답 `R₀ + R_p(1−e^{−t/τ}) + k√t` 에서 `τ ∝ c_dl/j₀`(면적 약분) · `C = τ/R_p ∝ A`(면적 서명, 1단계 τ 형 = 21호) · `C` 상한 검사(4단계 = 20호) · `R_p/k ∝ √D/j₀`(31호). 능동 펄스 BMS 는 이 처방의 **자연 하드웨어** | ⚠ **34호(Comment)는 이것을 쓰지 않는다** — 대역 이름표 셋만, `C`·시상수 0, 등가 EIS 는 신경망 재구성. 조건 넷: τ ≫ 샘플 간격(계면 대역 τ ≈0.16 ms–0.16 s → kHz 급) · 단자 = 양극 + 상대극 합(17·20·25호) · `C ∝ A` 전제(18·19호에서 깨짐) · √t 창 분리(31호). **재구성 · 온도 불변 학습은 1단계 `C` 와 3-a `Ea` 를 지우는 방향** |
 | ↳ ⚠ **경고 — 목표 주도 특징 선택은 처방 입력을 버린다** (2026-09-23, **35호에서**, `[해석]`) | 용량(SOH)을 목표로 한 특징 선택(RFE · 중요도)은 **용량과 직교하는 채널**(저항 · 용량성 · 시상수)을 먼저 버린다 — 곱의 두 인자를 가르는 정보가 바로 그 방향이다 | 35호: 30 특징 중 유일한 저항 채널 `Lagged Pseudo Resistance`(`ΔV/I`)가 세 그룹 **모두** 탈락(`[인쇄]` SI Tables 3–5). 데이터 기반 BMS 에서 처방 입력을 찾을 때는 **선택 전 특징 목록**을 본다. 34호(사상이 지운다)에 이은 두 번째 경로 |
+| ↳ **율 스윕 줄의 세 번째 실패 조건** (2026-09-23, **37호에서**) | 모델이 **율마다 다시 정하는 파라미터**를 가지면(37호 `D_p = D_p,ref(C-rate)·trD_p(x)`), 율에 따른 잔여 손실 — 계면 · 접촉 · SE 수송 — 이 그 파라미터로 먼저 들어간다. 29호(종료 율 평탄) · 30호(스윕 중 표류)와 **별개** | ⚠ **37호**: `[도표]` `D_p,ref` 0.4 → 2 C ≈4.3 배, 검증 율(0.6 · 1.6 C)에도 꺾임 — 7 율이 있는데도 곱을 가를 정보가 `D_p,ref` 에 쓰였다. 율 스윕을 처방으로 쓸 때 **모델의 율 무관 파라미터 목록**을 먼저 확인한다 |
+| ★★★ **`A_eff ↔ k` 항등 — 표면 접촉 손실의 쌍둥이는 `LAM` 이 아니라 반응 상수** (2026-09-23, **37호 — 원형 모델의 식에서**) | 원형 모델에서 `A_eff` 는 BV 분모에만 있다(`[인쇄]` 균일 표면 전류 가정 — 용량 · 확산에 없다) ⇒ `η_ct` 는 `A_eff·k·ε_p/R_s` 로만 보고 `A_eff → cA_eff, k → k/c` 가 **모든 출력에서** 같다. 1단계(`R·C`)가 가르려는 쌍이 바로 이것이다 | ⚠ **37호 모델은 `c_dl` 을 F(전극 전체)로 고정해 면적과 떼어 놓았다** — 이 모델로 truth 를 만들면 `A_eff` 변화가 `R·C` 를 바꾸고 `C` 는 그대로다(처방 전제의 반대). 처방을 채점할 truth 에는 **면적에 비례하는 이중층**이 먼저 필요하다 |
 
 ★ **`R_CT·C_dl` 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -1182,6 +1189,37 @@ RF-RFE-CV 의 점수는 **용량 예측 MSE** 다. 곱의 두 인자(면적 ↔ 
 
 → 처방 표에 더하는 경고 한 줄: **"확률적 추정 결과를 처방의 입력으로 받을 때는 공분산(또는 능선)을 먼저 요구한다 — 주변분포만 좁으면 곱이 갈렸다는 근거가 아니다."** 34호(사상이 지운다) · 35호(선택이 버린다)에 이어 **세 번째 경로(추론 근사 · 사전이 가린다)** 다.
 
+## ★★★★ 처방의 스무 번째 적용 (2026-09-23, `assb` 37호) — **처방의 원천 모델에 처방을 건다: 곱은 `A_eff·k_p·ε_p/R_s` 이고, 모델 구조가 1단계를 막는다**
+
+`raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md` (Li, Fan, Zhang et al. 2024, *eTransportation* 20, 100315 — 9호가 해법을 위임한 [27]). NCM811/LPSCl/Li₄.₄Si, 신품만, 7 율 + 동적 사이클, PSO.
+
+### 입력 점검
+
+- **1단계 `R_CT·C_dl`** — ⚠ **모델 구조가 막는다.** `[인쇄]` `c^p_dl` = 5.1×10⁻⁶ **F**(각주 없음, 면적 무관 상수). `R_ct` 미인쇄 — `[재현]` 인쇄 파라미터로 중간 SOC **285 Ω**, `τ` = **1.5 ms**(x 0.99 에서 7 ms). 이 모델에서 `A_eff` 를 바꾸면 `R_ct ∝ 1/A_eff`, `C` 불변 ⇒ `τ` 가 **움직인다** — 처방 전제(면적 변화 ⇒ `R·C` 불변)의 반대가 모델에 박혀 있다. 실측 EIS 0(차단 셀만).
+- **2단계 면적 대조군** — 모델 안에서만: `[도표]` Fig. 11b/e(`A_eff` 1.0 ↔ 0.3) = "면적만 바꾼 쌍" 의 모델판 ⇒ **용량 끝점 불변 · 전압 평행 이동**(`[재현]` +61 / −37 mV, 0.4 C). 실측 대조군 0.
+- **3단계 `Ea`** ❌ 301.15 K 한 점.
+- **4단계 `C` 상한** — `[재현]` `c^p_dl` ÷ 모델 접촉 면적(1.81 cm²) = **2.8 µF cm⁻²** ✓ 통과. ⚠ 그러나 `[도표]` Fig. 9c/f 의 `η^p_ct` 이완은 ≈**10² s** — 이 `C` 로 나올 수 없는 시상수(4–5 자릿수). **4단계를 거꾸로 건 첫 표본**: 파라미터는 상한 안인데 그 파라미터가 만들었다는 그림이 상한 밖이다(원인 미상 — `Ts` 1 s 이산화 · 다른 파라미터 · 다른 정의).
+- **율 스윕 줄** — 7 율(0.4–2 C)이 있다. 그러나 `D_p,ref(C-rate)` 가 율마다 다시 정해진다 ⇒ **세 번째 실패 조건**(위 표).
+- **외부 기준 줄** — GITT 식 (51) `D_p ∝ (V/S)²` 의 `S` = `[인쇄]` "total contact area between the electrolyte and the electrode"(값 미인쇄) — 31호 "상수 입력" 부류. ★ 모델은 `A_eff` 를 확산에서 빼는데 모델에 넣을 `D_p` 는 접촉 면적의 **제곱**을 품은 측정에서 온다 — 곱의 면적 인자가 **측정(확산)과 모델(BV)에서 다른 자리**에 있다.
+
+### ★★★★ 원형 모델의 곱 — `A_eff` 는 `LAM` 이 아니라 `k` 의 쌍둥이
+
+`[인쇄]` 식 (8) `j^p_ct = (I − I^p_dl)/(A^p_eff·a_{s,p}·A·L_p)` · (9) `a_{s,p} = 3ε_p/R_s` · (15) 표면 플럭스에 `A_eff` 없음 · (5) `j^p_0 = k_p F √c_SE √(c_max − c_sur) √c_sur`.
+`[해석]` ⇒ `η^p_ct` 가 보는 것은 **`A^p_eff · k_p · ε_p / R_s`**. 9호 절(위 §정의)의 곱에 `k_p` 가 붙은 형이고, **`A_eff ↔ k_p` 는 정확한 스케일 대칭**이다(용량 · 확산 · 전해질 · 이중층 어디에도 `A_eff` 가 없다).
+`ε_p` 는 용량(식 18 의 적분 극 `1/(ε_pAL_pF)`)과 확산에서 따로 붙잡힌다 — 그래서 **표면 피복형 접촉 손실은 이 모델에서 `LAM_PE` 와 구별되는 손잡이이지만, 계면 화학(`k_p`)과는 구별되지 않는다.** 18호가 `[인쇄]` "the chemical composition at the interface **or** the contact area" 로 남긴 선택지가 **식의 항등**이다.
+그리고 **입자 통째 비연결에는 `ε_p` 말고 자리가 없다** — 27호(`A_el-c` 세 겹 짐) · 28호(`ε` 는 `Q_th` 에만)의 결론을 원형 모델이 그대로 갖는다.
+`[재현]` 부수: 인쇄된 `k_p` 2.263×10⁻¹² 는 `[도표]` Fig. 5d 측정 11 점(≈0.7–7.2×10⁻¹¹) **밖**이다 — 항등 쌍의 한쪽(`A_eff`)을 출처 없이 고정하고 다른 쪽(`k_p`)을 PSO 로 풀면, `k_p` 가 측정과 어긋나는 만큼을 `A_eff` 의 선택이 정한다.
+
+### ⇒ 이 적용이 처방에 더하는 것
+
+1. **`A_eff ↔ k` 항등** (위 표 새 줄) — 처방 1단계가 가르려는 쌍이 원형 모델에서 정확한 항등이고, 그 모델은 `C` 를 면적과 떼어 놓아 1단계의 신호를 truth 에서 지운다.
+2. **율 스윕 줄의 세 번째 실패 조건** (위 표 새 줄) — 율별 재적합 파라미터.
+3. `[추론]` **ASSB 합성 truth 의 요구** — 이 모델로 truth 를 만들면 접촉 손실은 `A_eff(N)`(OCV 에 안 보이고 `k_p(N)` 와 같다) 또는 `ε_p(N)`(정의상 `LAM_PE`) 둘 중 하나다. 어느 쪽이든 카드 물음을 **시험하지 못하고 미리 답한다** — 27호 경고의 원형이 이 편이다. 요구 목록은 [[assb-contact-loss-vs-lampe]] §새 제약(37호).
+
+### ⚠ 이것이 곱을 푼 것은 아니다
+
+신품 데이터뿐이고 `A_eff` 도 `k_p` 도 흔들어 적합하지 않았다. 기여는 **곱의 원형 식**(`A_eff·k_p·ε_p/R_s`)과 **그 곱의 한쪽이 출처 없이 운반되었다는 사실**(9호와 네 자리 일치)이다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -1239,3 +1277,4 @@ RF-RFE-CV 의 점수는 **용량 예측 MSE** 다. 곱의 두 인자(면적 ↔ 
 - ★ **2026-09-23 (34호)**: **"능동 펄스 BMS 가 곱을 가른다" 고 주장하지 않는다** — 한 펄스의 약분표는 단일 RC + 반무한 확산 근사 위의 **우리 대수**이고, 34호는 `C` · 시상수 · 조합을 쓰지 않았다. 실셀 단자 펄스는 양극 + 상대극(+ SE) 호의 합이고, `C ∝ A` 전제는 18·19호에서 깨졌다. "OED 가 구조적 곱을 못 푼다" 는 FIM 의 정의에서 나오는 일반 명제이지 34호가 인쇄한 것이 아니다.
 - ★ **2026-09-23 (35호)**: **"용량 목표 특징 선택이 언제나 분리 채널을 버린다" 를 정리로 주장하지 않는다** — 근거는 35호 한 편에서 저항 채널 하나가 세 그룹 모두 탈락한 것과, 목표와 직교하는 정보는 목표 점수에 기여하지 않는다는 **일반 논리**다. 저항이 용량과 상관된 데이터(예: 같은 기구가 둘 다 움직이는 셀)에서는 선택될 수 있다. 그리고 35호는 액체 셀이라 접촉 손실 채널은 애초에 대상이 아니다.
 - ★ **2026-09-23 (36호)**: **"평균장 VI 나 상관된 사전이 실제 모드 진단 문헌에서 곱을 가렸다" 고 주장하지 않는다** — 36호는 종설이고 두 문장 모두 재인용이다(평균장 경고는 BNN 가중치 맥락, Ruan 문장은 원전 미열람). 주장은 **두 경로가 구조상 곱 방향의 폭을 지울 수 있다**는 것까지이고, 확인은 원전(Ruan 2022 · Thelen 2022)에서 한다.
+- ★ **2026-09-23 (37호)**: **"`A_eff` 는 원리적으로 `k` 와 못 가른다" 고 일반화하지 않는다** — 37호 · 9호의 식(균일 표면 전류 가정, `c_dl` 면적 무관)에서의 항등이다. 이중층을 면적에 비례시키거나 `A_eff` 를 확산에도 넣는 모델에서는 갈라질 수 있다. 그리고 **37호의 `k_p` · `R_s` 가 틀렸다고 단정하지 않는다** — `k_p` 는 LSV 환산 면적이 미인쇄라 측정과 "같은 양" 인지 모르고, `R_s` ↔ SEM 은 분말 투영 사진 한 장과의 대조다. 이완 시상수 불일치(4–5 자릿수)도 코드 없이 원인을 가르지 않는다.

@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -165,6 +165,16 @@ evidenceScope: multi-source-primary
 그리고 `[인쇄]` "This would require the probing … of posterior results (not just posterior-predictive results and not just looking at RMSE)" — 이 편에서 우리 입장에 가장 가까운 문장이지만 대상은 가중치다.
 ⇒ 처방 목록에 한 줄: **불확실성 문헌의 "parameter uncertainty" 를 보면 무엇의 파라미터인지(물리 ↔ ML 가중치)와 데이터를 늘리면 줄어드는지를 먼저 적는다.**
 
+## ★★★ 37호 — 첫 줄 스윕이 **항등 쌍의 한쪽만** 흔든다, 그리고 "minimal" 이 무엇의 minimal 인가
+
+`raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md` (Li et al. 2024, *eTransportation* 20, 100315 — 9호가 위임한 원형 모델).
+`[인쇄]` "through a parameter sensitivity analysis, we offer strategic guidelines for optimizing battery performance" — Fig. 11, **0.4 C 한 율 · OAT 6 판**(`R_s` ×0.5/×1.5 · `A_eff` 1.0/0.3 · `L_SE` ×0.1 · `ε_p` 0.32). 첫 줄(설계)이다. `identifiab` 0.
+`[해석]` 이 편에서 스윕 그림이 공짜 야코비안으로 주는 것은 둘이다:
+1. **`A_eff` 판은 짝(`k_p`)을 흔들지 않았다** — 식 (8) · (5) 에서 `A_eff ↔ k_p` 는 정확한 스케일 대칭이라 두 열은 **정확히 평행**하다. 짝을 흔들지 않은 스윕은 그 평행을 보여 줄 수 없다(27호 처방 5 의 "보상은 교호작용 지수로 안 보인다" 와 같은 맹점, OAT 판).
+2. **"minimal deviation" 은 용량 끝점의 말이다** — `[재현]` 인쇄 파라미터로 0.4 C 중간 SOC 전압은 `A_eff` 1.0 에서 +61 mV · 0.3 에서 −37 mV(`[도표]` Fig. 11b/e ≈60 · ≈35 mV) = 그 율 RMSE(11.5 mV)의 3–5 배. **데이터(전압)에 대한 열은 0 이 아니다** — 다만 `k_p` 열과 평행이다. 설계 KPI(용량)로 읽은 "둔감" 을 식별성의 0 열로 옮기면 틀린다.
+그리고 이 편의 적합은 **율마다 다시 정하는 `D_p,ref(C-rate)`** 를 가진다 — 둘째 줄(추정 데이터 위 `J`)을 계산한다면 율 축의 정보가 먼저 그 파라미터 열로 간다.
+⇒ 처방 목록에 한 줄: **OAT 스윕에서 "둔감" 을 보면 (i) 출력이 용량인지 전압인지 (ii) 그 파라미터와 곱으로만 들어가는 짝이 있는지를 식에서 먼저 찾는다.**
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -186,6 +196,7 @@ evidenceScope: multi-source-primary
 9. (30호) **교과서 선형화 추출(b 값 · Randles–Ševčík · Dunn)이면 식별성 이전에 두 가지를 본다** — ① 같은 데이터가 식의 전제(b = 0.5 · 원점 통과)를 만족하는가 ② 인쇄된 값과 **라벨**(산화/환원 · 계)이 그 논문 자기 그림에서 다시 구한 값과 맞는가. 30호는 ② 에서 뒤집혀 있었다.
 10. (35호) **"calibrated uncertainty" · "confidence interval" 을 보면 대상이 예측(스칼라 목표의 오차)인지 파라미터(해 집합)인지 먼저 적는다.** 예측이면 Q4 근거가 아니다. 그리고 적중률 점수(`C_score`)는 **목표와의 거리**로 읽는다 — 90 % 목표에서 100 은 과소 확신이다. 이름도 대조한다: "α-accuracy · β"(예측 지표) ≠ 우리 α·β(전극 스케일 · 오프셋).
 11. (36호) **"posterior" · "parameter uncertainty" · "epistemic" 을 보면 ① 무엇의 파라미터인지(물리 ↔ ML 가중치) ② 데이터를 늘리면 줄어드는 폭인지(실제적) 아닌지(구조적) ③ 공분산을 보고했는지(평균장 근사면 상관이 지워진다)를 적는다.** 셋 다 아니면 Q4 근거가 아니다.
+12. (37호) **OAT 스윕의 "둔감 · minimal" 을 보면 ① 출력이 용량(설계 KPI)인지 전압(데이터)인지 ② 그 파라미터와 곱으로만 들어가는 짝이 식에 있는지 ③ 짝이 적합에서 풀렸는지를 적는다.** 짝이 풀렸고 스윕 대상이 출처 없이 고정됐으면 그 값은 데이터가 정한 것이 아니다(37호 `A_eff` 0.4938 ↔ `k_p`).
 
 ## 이 페이지가 주장하지 않는 것
 

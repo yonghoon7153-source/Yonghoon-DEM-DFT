@@ -2217,3 +2217,14 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **5 장 봤다(Fig. 3 · 4 · 7 · 13 · 15)**; 어긋난 것 Fig. 3 · Fig. 7. 안 본 것 Fig. 1 · 2 · 5 · 6 · 8 · 9 · 10 · 11 · 12 · 14 · 16–20.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른두 번째 · 제약 6 · Status Log · 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]](열아홉 번째 적용) · [[assb-sensitivity-sweep-vs-identifiability]](불확실성 분류 ≠ 식별성 줄 · 처방 11).
 - 후속(제목 기준): Gasper 2021 *JES* 168 (ref 52) · Gasper 2022 (ref 169) · Thelen 2022 *ESM* 50 (ref 81) · Ruan 2022 *Energy AI* 9 (ref 196) · Schmitt 2023 (ref 192). 확률적 모드 진단 · Q1 · 곱 분리 1차 후보 0. 큐 36 · 37 인용 0.
+
+## [2026-09-23] ingest | assb 37호 — Li et al. 2024, Modeling of an all-solid-state battery with a composite positive electrode (eTransportation 20, 100315)
+- raw: `raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md` (sha256 봉인 — 본문 PDF · SI .docx 해시 각각 frontmatter) · 그림 `raw/figures/li2024_assb-composite-cathode-model-contact-area-edl/` (크로퍼 13 + SI SEM `fig_s1.png` zipfile 추출). 큐 **36번**("9호가 모델 · PSO · `A_eff` 정의를 위임한 곳"). 모델 + 신품 실험, 노화 0.
+- ★★★★ **판정**: (a) 표면 접촉 손실 `A_eff` 는 `LAM_PE` 와 다른 손잡이 — 용량 · 확산에 없고 BV 분모에서 `k_p` 와 **정확한 곱**(접촉 ↔ 계면 화학 항등); 입자 통째 비연결의 자리는 `ε_p`(= `LAM_PE`) 뿐 · (b) Table 1 각주 5 종, `A_eff` · `ε_p` · `c_dl` 무표기, **`A_eff` 두 값이 9호와 네 자리 같다(상속)**, `k_p` 인쇄값은 측정 범위 밖 · (c) 식별성 명제 0, "sensitivity" = 0.4 C OAT · (d) 합성 truth 로 쓰면 두 갈래 동어반복(`A_eff(N)` → OCV 에 안 보임 · `k` 와 같음 / `ε_p(N)` → 정의상 `LAM_PE`).
+- **채움표 37호 행 — 누적 ≈16.0 → ≈16.0 (새 칸 0).** Q1 `θ(N)` 0/37 · Q4 ASSB 0 스물아홉 번째 성질 · Q3 층 하나(footnote-typed table — the contact knob is the unmarked row) · Q5 열세 번째 형태 "차감 흡수".
+- 곱 축퇴 처방 **스무 번째 적용 — 원천 모델에 건다**: 처방 표 새 줄 둘(`A_eff ↔ k` 항등 · 율 스윕 줄 세 번째 실패 조건 = 율별 재적합 `D_p,ref`).
+- ⚠ 어긋남 14 건: D1 `R_s` 9.315 µm ↔ SI SEM ≈0.5–1.5 µm(9호 "9 배" 의 원천) · D2 `A_eff` 상속 · D3 `k_p` 범위 밖 · D6 "minimal" ↔ ±40–60 mV · D7 이완 ≈10² s ↔ `R·C` 1.5–7 ms 외.
+- 낱말 지문(NFKC · 대소문자 구분 · 낱말 경계 · 본문): `identifiab` 0 · `LAM` 0(접두 포함) · `contact loss` 0 · `MPa` 0(SI 1). NFKC 변경 8 자(`´`) — 열 변화 0. 소프트 하이픈 81 은 NFKC 가 안 지운다.
+- 그림: **8 장 + 표 1 봤다(Fig. 2 · 4 · 5 · 6 · 8 · 9 · 11 · S1 + Table 1 상단)**; 어긋난 것 Fig. 4b · 5c · 5d · 8a · 9c/f · 11b/e · 11f · S1. 안 본 것 Fig. 1 · 3 · 7 · 10 · Table 2 이미지 · SI 수식 WMF.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른세 번째 · 새 제약 5 · Status Log) · [[assb-lampe-contact-product-degeneracy]](스무 번째 적용 · 9호 `A_eff` 정정 · 표 두 줄) · [[assb-sensitivity-sweep-vs-identifiability]](37호 절 · 처방 12) · [[spm-grouped-parameter-identifiability]](37호 두 행).
+- 후속(제목 기준): Raijmakers 2020 *Electrochim. Acta* 330 (ref 14) · Deng 2021 *IEEE TTE* 7 (ref 29) · Kim 2019 *Electrochim. Acta* 317 (ref 21) · Froboese 2019 *JES* 166 (ref 30). 큐 37 · 38 인용 0.

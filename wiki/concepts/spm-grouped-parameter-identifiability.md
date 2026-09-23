@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
+sources: [raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -64,6 +64,8 @@ evidenceScope: multi-source-primary
 | 31호 Chien 2023 (⚠ 액체, ICI 방법 원전) | ICI `D` (식 19, `A` = BET 상수) | 관측 비 `k·I/(dE_OC/dt) ∝ (V/A)/√D` = **`1/√τ_d` 묶음 그 자체**(`L = V/A`). GITT 와 같은 묶음을 1–5 s 차단창에서 본다 — 묶음을 푸는 것은 **상수 입력**이고 저자가 그것을 고지(`[인쇄]` "BET … may differ from the electrochemically active surface area") |
 | 31호 | 입자 통째 비연결 `u` · 표면 피복 `φ` | `[해석]` `u` 는 `V`·`A` 를 같이 줄여 **약분**(이 표의 "통째 비연결 → `Q_th`" 와 정합 — `τ_d` 묶음에는 안 들어간다) · `φ` 는 `D_app = φ²D` 로 `τ_d` 묶음에 들어간다. 이 표 "표면 일부 접촉 → `R_ct`" 행의 **확산 판** |
 | 31호 | ICI `R` ↔ `k` | `R` = EIS `R0+R1+R2`(이 표 선형화 행의 `R_ct` + `R0` 합) · `k ∝ 1/(A√D)`. `[해석]` 표면형 `R ∝ 1/(A·j₀)` 라 **`R/k` 에서 면적 약분** — 묶음 밖 비교 축 후보(30호 Dunn 비와 같은 부류) |
+| 37호 Li 2024 (ASSB 복합양극 P2D/SPM 혼성, 9호의 원형) | `A_eff ↔ k_p` | `[해석]` 원형 모델 식 (8) 에서 `A_eff` 는 BV 분모에만 있어 **`k·A_eff` 가 이 표 `τ_k`(`R_ct`) 묶음의 한 인자**로만 산다 — 이 표 "표면 일부 접촉 → `R_ct`" 행이 ASSB 모델에 **정확한 항등**으로 선다. 이 모델은 확산 BC(식 15)에 `A_eff` 를 넣지 않는다(29 · 31호 "확산 판" 과 다른 배정) |
+| 37호 | `R_s` ("Measured with SEM" 9.315 µm ↔ SI SEM ≈0.5–1.5 µm) | 확산에서는 `τ_d = R_s²/D_p`, 동역학에서는 `k·ε/R_s` 로만 보인다 ⇒ `D_p` · `k_p` 를 PSO 로 풀면 **틀린 `R_s` 를 둘이 흡수**하고 적합은 안 깨진다. 이 표의 묶음이 "반경 오기 검출 불가" 를 예측한다 |
 
 ## 한계 (이 페이지가 주장하지 않는 것)
 
