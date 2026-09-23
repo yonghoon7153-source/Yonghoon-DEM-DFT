@@ -28,6 +28,10 @@
 #      HOST_START_MIB (기본 16384), 도는 중 < HOST_KILL_MIB (기본 4096) 면 우리 잡만 멈춘다
 #      (OOM 킬러는 우리가 아니라 **가장 큰 잡**을 고른다 — 그게 k-탐침이나 b2o3 일 수 있다).
 #   ⑤ 잡마다 피크 합계 VRAM · 우리 pw.x 자기 사용량(읽히면) · 벽시계를 jobs_run.tsv 에 남긴다.
+#   ⑥ ONLY_PIDS (예: b2o3 드라이버 PID) — 잡 시작 직전 GPU 위 프로세스가 **이 목록 안**이어야 한다.
+#      예외 조건 *"li2s 시드가 끝나고 b2o3 만 남았을 때"* 를 기계로 건다. WAIT_PIDS 만으로는
+#      그 사이 새 UMA 잡(예: li2s seed 5)이 떠도 모른다 (2026-09-23 DRY_RUN 뒤 보강). 목록 밖이 있으면
+#      시작하지 않고 ② 와 같이 기다린다. 목록 안 프로세스가 **끝나는 것**은 막지 않는다.
 #
 # ⛔ 이 스크립트가 **못 하는 것**
 #   · VRAM 이 표본 간격(SAMPLE_S)보다 빨리 치솟으면 못 막는다 — 가드는 확률적 보호다.
@@ -62,6 +66,12 @@ _d3_ok() {  # grimme-d3 를 켠 입력이면 dftd3_threebody 가 적혀 있어�
   return 0
 }
 
+# ── ⑥ 허용 목록 밖 GPU 프로세스 ─────────────────────────────────────────
+_unexpected() {  # $1 = 지금 GPU PID 들 · $2 = 허용 PID 들 → 허용 밖 PID 를 한 줄씩
+  local p q ok
+  for p in $1; do ok=0; for q in $2; do [ "$p" = "$q" ] && ok=1; done; [ "$ok" = 1 ] || echo "$p"; done
+}
+
 if [ "$IN" = "--selftest" ]; then
   T=$(mktemp -d); n=0; f=0
   ck() { if eval "$2"; then n=$((n+1)); else f=$((f+1)); echo "  ✗ $1"; fi; }
@@ -81,6 +91,10 @@ if [ "$IN" = "--selftest" ]; then
   ck "⛔D3 인데 threebody 없음 → 거부"    "! _d3_ok $T/b.in"
   printf "  vdw_corr = 'none'\n" > "$T/c.in"
   ck "분산 끔 → threebody 불요구"         "_d3_ok $T/c.in"
+  ck "허용 목록 안 → 밖 없음"             '[ -z "$(_unexpected "10 20" "20 10")" ]'
+  ck "⛔새 GPU 프로세스 → 잡힌다"          '[ "$(_unexpected "10 20 30" "10 20")" = 30 ]'
+  ck "허용 프로세스가 끝난 것은 막지 않음" '[ -z "$(_unexpected "" "10")" ]'
+  ck "⛔허용 목록이 비면 전부 밖"          '[ "$(_unexpected "10" "" | wc -l)" = 1 ]'
   rm -rf "$T"; echo "run_sese_gpu selftest: $n 통과 · $f 실패"; [ "$f" = 0 ]; exit $?
 fi
 
@@ -92,6 +106,7 @@ START_MAX_MIB=${START_MAX_MIB:-40960}; KILL_MIB=${KILL_MIB:-45056}
 SAMPLE_S=${SAMPLE_S:-2}; START_WAIT_S=${START_WAIT_S:-3600}
 ALLOW_UMA_COEXIST=${ALLOW_UMA_COEXIST:-0}; DRY_RUN=${DRY_RUN:-0}; WAIT_PIDS=${WAIT_PIDS:-}
 HOST_START_MIB=${HOST_START_MIB:-16384}; HOST_KILL_MIB=${HOST_KILL_MIB:-4096}
+ONLY_PIDS=${ONLY_PIDS:-}
 [ "$KILL_MIB" -gt "$START_MAX_MIB" ] || { echo "⛔ KILL_MIB($KILL_MIB) 는 START_MAX_MIB($START_MAX_MIB) 보다 커야 한다"; exit 1; }
 JOBS=${JOBS:-$(python3 -c "import json;print(' '.join(j['dir'] for j in json.load(open('$IN/jobs.json'))['jobs']))")}
 
@@ -107,7 +122,10 @@ self_mib() { gpu_apps | awk -F', *' -v p="$1" '$1==p{print $3}' | head -1; }
 host_avail() { awk '/^MemAvailable:/{printf "%d", $2/1024}' /proc/meminfo; }
 
 say "════ run_sese_gpu · IN=$IN · RUN=$RUN · JOBS=[$JOBS]"
-say "예외: D-2026-09-23-gabia-gpu-exception-sese · START<${START_MAX_MIB} MiB · KILL>${KILL_MIB} MiB · 표본 ${SAMPLE_S}s · UMA 공존 허용=${ALLOW_UMA_COEXIST}"
+say "예외: D-2026-09-23-gabia-gpu-exception-sese · START<${START_MAX_MIB} MiB · KILL>${KILL_MIB} MiB · 표본 ${SAMPLE_S}s · UMA 공존 허용=${ALLOW_UMA_COEXIST} · 허용 PID=[${ONLY_PIDS:-제한 없음}]"
+if [ "$ALLOW_UMA_COEXIST" = 1 ] && [ -z "$ONLY_PIDS" ]; then
+  say "⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 'b2o3 만 남았을 때' 조건을 기계로 못 건다 (새 UMA 잡이 떠도 시작한다)"
+fi
 command -v nvidia-smi >/dev/null 2>&1 || { say "⛔ nvidia-smi 없음 — GPU 가드를 못 건다. 시작하지 않는다"; exit 2; }
 
 # ── 입력 점검: 해시 고정 · D3 명시 · PP 실재·해시 ────────────────────────────
@@ -188,10 +206,12 @@ for J in $JOBS; do
   # ② 시작 문턱
   waited=0
   while :; do
-    U=$(gpu_used); H=$(host_avail)
-    [ -n "$U" ] && [ "$U" -lt "$START_MAX_MIB" ] && [ "${H:-0}" -ge "$HOST_START_MIB" ] && break
-    [ "$waited" -ge "$START_WAIT_S" ] && { say "⛔ $J: GPU 합계 ${U} MiB (문턱 ${START_MAX_MIB}) · 호스트 ${H} MiB (문턱 ${HOST_START_MIB}) 가 ${START_WAIT_S}s 지속 — 시작하지 않는다"; exit 4; }
-    say "… $J: GPU 합계 ${U} MiB · 호스트 여유 ${H} MiB — 문턱 밖, 60초 뒤 다시"
+    U=$(gpu_used); H=$(host_avail); X=""
+    [ -n "$ONLY_PIDS" ] && X=$(_unexpected "$(gpu_apps | awk -F', *' '{print $1}')" "$ONLY_PIDS" | tr '\n' ' ')
+    [ -n "$U" ] && [ "$U" -lt "$START_MAX_MIB" ] && [ "${H:-0}" -ge "$HOST_START_MIB" ] && [ -z "${X// /}" ] && break
+    [ "$waited" -ge "$START_WAIT_S" ] && { say "⛔ $J: GPU 합계 ${U} MiB (문턱 ${START_MAX_MIB}) · 호스트 ${H} MiB (문턱 ${HOST_START_MIB}) · 허용 밖 PID [${X}] 가 ${START_WAIT_S}s 지속 — 시작하지 않는다"; exit 4; }
+    for x in $X; do say "… 허용 밖 GPU 프로세스 PID $x · $(tr '\0' ' ' < /proc/$x/cmdline 2>/dev/null | cut -c1-120)"; done
+    say "… $J: GPU 합계 ${U} MiB · 호스트 여유 ${H} MiB · 허용 밖 [${X}] — 조건 밖, 60초 뒤 다시"
     sleep 60; waited=$((waited+60))
   done
   say "▶ $J ($CALC) 시작 · GPU 합계 ${U} MiB · 호스트 여유 ${H} MiB"
