@@ -1,0 +1,331 @@
+{
+ "slug": "asheri2023_data-driven-multiscale-ssb-delamination-surrogate",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Outline of the framework. (a) Lithium battery pouch cell, (b) SEM image of a possible microstructure of ASSB with the delamination between AM and SE, (c) the configuration of our simulation framework. Source: The image in (b) is reprinted with permission from [4]. © 2017 American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    329.8
+   ],
+   "w": 2218,
+   "h": 1168,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.792
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Flowchart of the ANN-assisted multiscale method.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.6,
+    49.8,
+    507.6,
+    372.8
+   ],
+   "w": 1751,
+   "h": 1347,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Structure of an ANN with 𝑁hidden layers and 𝑛nodes in each hidden layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    108.7,
+    395.2,
+    486.7,
+    606.6
+   ],
+   "w": 1576,
+   "h": 882,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) Schematic illustration of the microscale, and (b) cell performance results from the FE2 simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    105.7,
+    49.8,
+    489.7,
+    240.6
+   ],
+   "w": 1601,
+   "h": 796,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Cell potential and surface concentration evolution for ANN-assisted and FE2 frameworks.",
+   "rotated_deg": 0,
+   "bbox": [
+    69.7,
+    49.8,
+    525.7,
+    225.0
+   ],
+   "w": 1901,
+   "h": 731,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Discretized geometry of the microscale problem and its boundary conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.6,
+    247.4,
+    507.6,
+    449.0
+   ],
+   "w": 1751,
+   "h": 841,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.463
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 11,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. AM concentration and damage at the beginning (a and b), the middle (c and d) and at the end (e and f) of the simulation with 𝐺𝑐= 5.97 J/m2 and 𝐽𝑠= 783 mol/(m2 s). (c)) are related to the first case (𝐺𝑐= 5 J/m2, 𝐽𝑠= 261 mol/(m2 s)) and the second row (sub-figures (d),(e) and (f)) shows the results for the second case (𝐺𝑐= 10 J/m2, 𝐽𝑠= 183 mol/(m2 s)). As shown in Fig. 8, surrogate model predictions are in good agreement with the finite element simulation results even for unseen fracture energies. Similar to the previous study, the 1D battery cell consists of a separator and a composite cathode with the lengths of 𝐿𝑠= 40 μm and 𝐿𝑐= 60 μm, respectively. The applied discharge current density is 𝐼= 11.7 A/m2 which corresponds to 1 C. In the first study the damage evolution and its effect on the cell performance is investigated. The interfacial fracture energy of the active material/so",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    621.8
+   ],
+   "w": 2218,
+   "h": 2384,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.495
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Validation of the surrogate model predictions for unseen fracture energies: (a), (b) and (c) correspond to 𝐺𝑐= 5 J/m2, 𝐽𝑠= 261 mol/(m2 s). (d), (e) and (f) are related to 𝐺𝑐= 10 J/m2, 𝐽𝑠= 183 mol/(m2 s).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    301.1
+   ],
+   "w": 2218,
+   "h": 1048,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 13,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Cell performance with and without the effect of damage and the damage evolution for a cell with 𝐺𝑐= 5.97 J/m2.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.6,
+    49.8,
+    519.6,
+    217.3
+   ],
+   "w": 1851,
+   "h": 699,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 13,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Effect of C-rate on damage evolution.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.6,
+    239.9,
+    519.6,
+    407.4
+   ],
+   "w": 1851,
+   "h": 699,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 13,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Effect of fracture energy on cell performance and damage evolution.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.6,
+    429.8,
+    519.6,
+    599.5
+   ],
+   "w": 1851,
+   "h": 708,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1 Electrochemical model at the macroscale.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    751.9
+   ],
+   "w": 2205,
+   "h": 2994,
+   "dpi": 299,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2 Parameters used in the microscale simulations, taken from [17,68–70].",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.2
+   ],
+   "w": 2213,
+   "h": 2984,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3 Parameters used in the macroscale simulations, taken from [27,71–73]. Parameters for the model at the macroscale Unit Value Young’s modulus of electrolyte 𝐸2 [GPa] 150 Maximum concentration of electrolyte 𝑐2, max [mol/m3] 5433 Initial concentration of electrolyte 𝑐0",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.2
+   ],
+   "w": 2213,
+   "h": 2984,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 9,
+   "file": "tab_4.png",
+   "caption": "Table 4 Performance of the surrogate model used in benchmarking.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.6
+   ],
+   "w": 2213,
+   "h": 2985,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 10,
+   "file": "tab_5.png",
+   "caption": "Table 5 Performance of the chemo-mechanically coupled surrogate model. 1(𝑷in) 𝑅2 2(𝑷in) 𝑅2 3(𝑷in) MSE1(𝑷in) MSE2(𝑷in) MSE3(𝑷in) 𝑅2 0.99184 0.99556 0.99316 0.00001 0.00006 0.00006",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.2
+   ],
+   "w": 2213,
+   "h": 2984,
+   "dpi": 300,
+   "src": "79b6106b-20._Data-driven_multiscale_simulation_of_solid-state_batteries_via_machine_learning.pdf",
+   "blank": 0.806
+  }
+ ]
+}

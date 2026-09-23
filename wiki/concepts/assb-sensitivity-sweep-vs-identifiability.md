@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -202,6 +202,15 @@ evidenceScope: multi-source-primary
 - 이 페이지 처방 2("스윕 그림끼리 겹친다")를 **저자 자신이 문장으로 한** 표본 — 26호 · 53호와 달리 결론에서 지우지 않았다.
 - ⚠ 그러나 두 스윕은 **공동 적합 · 상관 · 폭 0** 이고, 최적 보정량이 시편마다 비단조(`i₀₀` × 0.50 ↔ × 0.75) — 저자는 편석 경로로 설명하지만 검증 0. 본문은 SI 스윕을 "by 25%" 로 옮긴다(× 0.75 = 저항 +33 %).
 - 교정 단계에서는 같은 벌크 ↔ 입계 분할을 **입력 `σ⁰`** 로 정했다 — 비식별 인쇄가 적용 단계에만 걸린다(카드 Q4 마흔여섯 번째 성질).
+
+## ★★ 58호 — 대리모형 위의 OAT 두 줄(C-율 · `G_c`): **축을 바꾸면 효과가 사라지거나 뒤집힌다**
+
+`raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md` (Asheri 2023 — 신경망 대리 + FE² 두 단계, 실험 0). Fig. 10(1 · 2 · 5 C, `G_c` 5.97) · Fig. 11(`G_c` 13.92 · 9 · 5.97 · 5 · 4.21, 1 C) — 둘 다 **한 번에 한 손잡이**, 시간 축 그림.
+`[해석]` 세 가지:
+1. **축 선택이 결론을 정한다** — `[인쇄]` "At higher C-rates damage starts earlier and evolves faster" 는 시간 축 명제다. `[재현]` 학습 자료(미세 FE)에서 손상은 SOC 의 함수이고(`|j|` ≤ 0.03 에서 곡선 겹침 ≈1 %), 그림의 끝 `⟨d⟩` 도 세 율이 ≈0.19–0.205 로 같다. 전하 축으로 옮기면 효과는 대부분 시간 압축이다.
+2. **그림이 서술의 순서를 어긴다** — `[도표]`+`[재현]` 전달 전하 2 C ≈3780 > 5 C ≈3575 > 1 C ≈3450(1 C·s) ↔ "the delivered capacity is smaller"; `G_c` 13.92 가 무손상보다 늦게 끝난다. 대리 위 OAT 에서는 **망 전환 · 학습 분포 밖** 이 스윕 축과 교락할 수 있다(세 율이 서로 다른 망에 걸린다, `[재현]` 추정).
+3. **스윕한 손잡이의 식 속 자리를 먼저 본다** — `G_c` 는 `⟨d⟩` 를 거쳐 `a·(1−⟨d⟩)` 한 곳으로 들어가고 그 결합은 `ε_p` 와 같다 → `G_c` 스윕 곡선은 **초기 활물질 분율 스윕과 같은 모양 부류**다(곱 축퇴 페이지 마흔한 번째 적용).
+⇒ 처방 목록에 덧붙임: **대리모형 위 스윕은 (i) 원 모델 기준해가 있는 점인지 (ii) 스윕 축이 학습 격자 · 망 경계를 가로지르는지 (iii) 효과를 시간 축이 아니라 전하 · 상태 축으로도 적었는지** 본다.
 
 ## 우리 쪽 연결
 
