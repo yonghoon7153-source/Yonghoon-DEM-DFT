@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md]
+sources: [raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -439,6 +439,27 @@ shift less than 3 mV"*. `[추론]` WE·CE 가 **둘 다 2상 평탄에 고정**�
 **⑥ 조건 (6) 의 눈금**: `[인쇄]` InLi-(Li) 는 **0.2 mA cm⁻²** 에서 탈리튬 **≈0.16 V**, 리튬화 **≈0.1 V** —
 `[재현]` 그중 **≈49 mV 는 CE–RE 분리막 절반의 IR**(P3). 전극만은 **≈50–110 mV**.
 
+### ★★★ `assb` 23호 (Koerver et al. 2017) — **여덟 번째 형태: 가정을 명시하고, 깨지는 곳을 이름표로 덮었다** (그리고 1.55 V 가정의 이른 뿌리)
+
+`raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md`. NCM811 | β-Li₃PS₄ | **순수 In 박 ∅6 mm(양극의 0.36 배, 무 Li)**, 대조 LTO 복합체(무 Li, 여유 5 %).
+기준극 없음.
+
+- **낱말**: `[인쇄]` "The potential of the negative anode was **assumed** to be **0.6 V** vs Li/Li⁺ … for indium foil and **1.55 V** … for lithium titanate" (refs 16 · 44).
+  ★ **R-LTO 의 1.55 V 가정은 18호(2023)보다 6 년 이르게, 액체셀 LTO 논문(Zaghib 1999)을 근거로 황화물 ASSB 에 들어와 있었다.**
+- **축**: Fig. 1 · S1 "V vs Li/Li⁺"(환산) ↔ Fig. 2 · 4 · S2 "OCV vs Li⁺/**InLi**"(원) — 조립 직후의 순수 In 에도 "InLi" 이름.
+- ★★★ **깨지는 곳 셋, 셋 다 데이터에 남았다.**
+  1. `[도표]` 첫 충전 0 · 1 · 2 h 휴지에서 셀 OCV **≈0.9 → ≈1.35 → ≈2.1 V**(LTO ≈0.4 → 0.75 → 1.4 V). `[인쇄]` "initial OCV ≈0.6 V" 가 In = 0.6 V 와 양립하려면
+     양극이 ≈1.2 V vs Li 여야 한다(`[추론]` 불가) ⇒ **조립 직후 상대극은 짝이 없다**(20호 ③ 과 같은 현상). 저자는 `[인쇄]` "activation" 으로 부르고 이 구간 EIS 를 **잘라 냈다**.
+  2. `[도표]` 환산 축의 SSB 첫 충전이 Q ≈10 mAh g⁻¹ 에서 **LIB 보다 ≈60 mV 낮다**. `[재현]` 분리막 옴만 463 Ω × 0.168 mA = 78 mV 이므로 SSB 가 ≥78 mV 위여야 한다
+     ⇒ 그 구간 **E_In ≥ ≈0.71 V**(LIB 분극 ≤30 mV 가정의 하한). Q ≈150 에서는 SSB 가 ≈+100 mV 위 — 평탄에 들어간 뒤에만 가정이 맞는다.
+  3. `[도표]` 방전 끝 `C_SE/Anode` **≈1.8 mF → ≈20 µF(≈90 배)** · LTO **≈10 → ≈0.1 mF**. `[인쇄]` "In is fully delithiated" · `R_SE/Anode` "up to 2000%" — 저자는 "kinetic
+     hindrance" 로 **음극 저항에 배정**한다.
+- ★★★ **새 진단 — 2전극에서 평탄 이탈을 보는 법**: 2상 평탄 전극의 저주파 **화학 용량은 크고, 단상역으로 나가면 두 자릿수 떨어진다**(`[추론]`). 23호에서
+  **두 상대극 모두** 방전 끝에 이 붕괴를 보인다 ⇒ **기준극 없이 RPT EIS 로 상대극이 평탄을 떠났는지 표시할 수 있다**(P13).
+- ★★ **조건 (5)·(6) 을 설계에서 깬다**: 무 Li 조립이라 방전 끝 재고비 `[재현]` ≈Q_ch/Q_dis ≈1.4(≥10 요구의 1/7), 음극 면 전류밀도 **0.59 mA cm⁻²**(∅6 mm, (6) 의 ≈6 배).
+- ⇒ 계보: 안 쟀다(4호) → 설치·미검증(16호) → 실측(17호) → 제3물질로 가정(18호) → 차분으로 소거(19호) → 깨지는 모습을 남김(20호) → 교정 이식(21호) →
+  대조군 전압창을 정함(22호) → **명시하고 깨지는 곳을 "활성화"·"음극 동역학" 으로 덮음(23호)**.
+
 ## ★★ 평탄이 유지되는 조건 (현재까지의 정리)
 
 > **Li-In 기준 전위가 ±10 mV 안에서 평탄한 것은 다음 넷이 동시에 성립할 때뿐이다.**
@@ -495,6 +516,7 @@ shift less than 3 mV"*. `[추론]` WE·CE 가 **둘 다 2상 평탄에 고정**�
 | **P11** ★★★ (2026-09-23, 21호에서) | **기준 전위를 측정 셀 안에서 Li 금속 대비로 교정하고, 측정 축을 같이 인쇄하기** — 환산 축만 있는 그림 금지, 축 이름과 숫자 대조 | 21호는 Li\|Li 교정 셀(3 MPa, 2 h)의 0.31 V 를 20 MPa InLi 셀로 **옮겼고**, 유일한 셀 내 기록(Fig. A·1)은 축 이름과 숫자가 **0.62 V** 어긋난다. 낱말 지문에 **"calculated/converted based on"** 을 더한다 |
 | **P12** ★★★ (2026-09-23, 21호에서) | **상대극의 원천 역할을 전류 펄스로 따로 검사하기** — 조립 방향 기록 + 짧은 정전류 탈리튬(예: 0.2 mA cm⁻² × 15 분) | 개방회로 0.62 V 는 기준 역할만 보증한다. 21호에서 같은 0.62 V 가 **0.39 µAh cm⁻² ↔ 3.0 mAh cm⁻²**. 없으면 `LLI` 가 상대극을 거쳐 `LAM_PE` 로 샌다 |
 | **P9** ★ (2026-09-22, 19호에서) | **4전극 배선을 전극 셀로 옮기기** — RE 를 양극 쪽·음극 쪽에 하나씩 | 19호가 보인 소거는 **SE\|SE** 계면에서만 실증됐다. 완전지에서 **양극 RE ↔ 음극 RE** 차분을 쓰면 **상대극 분극을 구조적으로 제거**할 수 있는가. ⚠ 전극 셀에서는 RE 가 전류 경로를 막는 문제가 더 크다 |
+| **P13** ★★★ (2026-09-23, 23호에서) | **2전극 EIS 의 저주파 `C` 를 상태축 위로 같이 인쇄하고, 두 자릿수 붕괴를 평탄 이탈 표시로 쓰기** | 기준극 없이 된다. 23호에서 In · LTO 두 무 Li 상대극 모두 방전 끝 `C_anode` ≈90–100 배 붕괴 — 그 구간의 컷오프는 상대극이 끊는다(17호 함정). ⚠ 판정 문턱은 아직 없다(표본 2) |
 
 ## ★ 16호 ↔ 17호 대질 — 같은 "In 박 음극" 인데 반대다 (`[해석]` → **2026-09-23 21호 P4 로 지지**)
 

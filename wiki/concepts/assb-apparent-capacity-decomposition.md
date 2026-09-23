@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md]
+sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -344,6 +344,24 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
   그러나 `η` 의 분모(무엇이 "완전 충전" 인가)와 ASSB 컷오프는 **0.6 V 가정** 위에 있다.
 - ⚠ 모집단: NCM622/β-Li₃PS₄ 무탄소 · In 음극 · 55 MPa · 신품 첫 충전 · 집전체 면 표층(정보 깊이 ≈3–15 µm).
 
+## ★★★ 2026-09-23 (`assb` 23호 Koerver 2017, **실험 · EIS + XPS + SEM**) — **"접촉 손실의 원전" 의 첫 사이클 손실을 원전 숫자로 나눠 보면 대부분이 미배정이다**
+
+`raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md`. NCM811/β-Li₃PS₄ 무탄소 | In 박(무 Li). 첫 사이클 `[인쇄]` **176 → 124 mAh g⁻¹**
+(손실 52 = 0.437 mAh). 원전은 이것을 `[인쇄]` "combination"(계면층 + 수축 접촉 손실)이라 하고 **나누지 않는다.** 원전이 준 숫자로 나눌 수 있는 것만 나누면 (`[재현]`):
+
+| 경로 | 3항 분해의 자리 | 크기 | 근거 |
+|---|---|---|---|
+| 계면층의 **패러데이 전하**(SE 산화) | 충전 용량에만 들어가는 비가역 전하 | **≈0.016 mAh ≈ 4 %** | `[인쇄]` "≈1 % of the solid electrolyte" 를 양극 SE 3.6 mg · 3 e⁻/PS₄ 상한으로 (셀 전체 SE 기준이면 65 % — 기준 미기재) |
+| 계면층의 **옴 이동**(ΔR 140 Ω = 23.5 mV · DC 100 mV) | `η(i)` | **≲1–2 mAh g⁻¹ ≈ ≲3 %** | `[도표]` 방전 무릎 기울기 ≈12 mAh g⁻¹ V⁻¹ (컷오프 부근) |
+| **미배정** | `θ`(접촉·절연 고립) · `η(i)` 의 나머지 · **상대극 고갈(네 번째 항 `E_CE`)** | **≳85 %** | — |
+
+- ★★ **`η(i)` 가 크다는 신호는 원전에 있다**: `[인쇄]` 0.25 C 에서 66, 0.5 C 에서 4 mAh g⁻¹ — 0.1 C 도 `i → 0` 극한이 아니다. 그런데 **0.1 C 아래 율이 없다**
+  (율 연산자로 `η` 를 지울 수 없다).
+- ★★★ **네 번째 항이 이 셀에서 구조적으로 켜져 있다**: 상대극이 **Li 없이** 조립돼 방전 끝 재고비가 ≈Q_ch/Q_dis ≈1.4 이고, `[도표]` 방전 끝 `C_SE/Anode` 가
+  ≈90 배 무너진다(평탄 이탈 서명). LTO 대조도 같다. ⇒ 17호에서 세운 `E_cut^eff = E_cell,min + E_CE(i, x_Li, 제조법)` 의 `x_Li` 항이 **방전 끝에서 0 이 아니다.**
+- ⚠ **`θ` 는 여기서도 값이 없다.** SEM 틈은 존재만, 그리고 원전 SI 의 양극 호 `C` 궤적은 EIS 창 안의 접촉 면적 변화를 보지 못한다
+  ([[assb-interphase-vs-contact-loss-attribution]]). 이 표는 **"접촉 손실이 크다"** 의 근거가 아니라 **"원전이 정량한 경로로는 손실이 안 닫힌다"** 의 근거다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **3항 분해가 논문의 식이라고 주장하지 않는다.** 우리 해석이고, 위 G1 때문에 `C_norm` 이
@@ -372,6 +390,7 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
   방전 1 회 · 구조 실현 1 개**라는 한 모집단의 것이다.
 
 ## 관련
+- [[assb-interphase-vs-contact-loss-attribution]] — 계면층 ↔ 접촉 손실(둘 다 `θ`·`η` 에 들어간다)의 분리. 23호 손실 예산의 근거.
 - [[assb-contact-loss-vs-lampe]] — 닻 질문. 이 페이지가 그 미결 항목 1 의 **세 번째 항**을 추가한다.
 - [[composite-cathode-percolation-utilization]] — `θ_AM` 의 정의와 곱셈 축퇴. 이 페이지가 그 위에 `η` 를 얹는다.
 - [[assb-pressure-reapplication-separation-test]] — **두 번째 분리 연산자.** 율이 `η` 를

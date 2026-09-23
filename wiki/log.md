@@ -2027,3 +2027,15 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - **채움표 22호 행 — 누적 ≈13.5 → ≈14.5** (**Q1 +0.5 · Q2 +0.5**). 안 움직인 칸: Q4 · Q5 · Q6 · Q8(칸 이동 없음) · Q7(해당 없음). Q3 층 하나(방법 오차 예산을 인쇄한 첫 편).
 - 컴파일: **새 개념 0**. 갱신 — 닻 [[assb-contact-loss-vs-lampe]] (채움표 22호 행 + 누적 줄 + Against 새 첫 항목 + 새 제약 5개 + Status Log + 주장하지 않는 것) · [[composite-cathode-percolation-utilization]] (measured 라벨 + 1호 식 (8) 대질) · [[assb-apparent-capacity-decomposition]] (θ·η 첫 실측 분리) · [[assb-lampe-contact-product-degeneracy]] (여섯 번째 적용 + 처방 표 새 줄).
 - 후속 후보: ★★★★ 1 **Koerver 2017 *Chem. Mater.* 29, 5574** (큐 22, 이 편 ref 9, 본문 4 회) · ★★★ 2 **Zhang 2017 *JMCA* 5, 9929** (ref 18, 셀 장치·부피 수축→접촉 감소) · ★★★ 3 **Zhang 2017 *ACS AMI* 9, 17835** (ref 16, 같은 연구망 복합체 토모그래피 — 공극률 후보) · ★★ 4 **Nam, Oh, Jung, Jung 2018 *JPS* 375, 93** (ref 17, 건식/슬러리 혼합 — 원장의 Nam 2018 *JMCA* 와 다른 논문).
+
+## [2026-09-23] ingest | `assb` 23호 — Koerver, Aygün, Leichtweiß, Dietrich, Zhang, Binder, Hartmann, Zeier, Janek 2017, Capacity Fade in Solid-State Batteries: Interphase Formation and Chemomechanical Processes in Nickel-Rich Layered Oxide Cathodes and Lithium Thiophosphate Solid Electrolytes (*Chem. Mater.* 29, 5574−5582) + SI
+
+- `raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md` (sha256 봉인). 큐 **22번**. JLU Giessen + KIT BELLA + BASF — **1호 ref 7 · 22호 ref 9 · 21호 ref 29 · 18호 [23] · 9호 [17]**. 크로퍼가 본문 그림 6 + SI 그림 8 을 전부 잡았고 **14장 전부 직접 봤다 — 안 본 것 0장** (+ Fig. 6 원본 SEM 픽셀 계측).
+- ★★★★ **원전은 계면층 ↔ 접촉 손실을 가르지 않는다** — XPS ↔ SEM 채널 분담으로 **존재**만 보이고 몫은 시간 분할(첫 사이클 "combination" · 이후 CEI 소거법)로 배정; 초록 ↔ 결론이 `ΔR` 을 다르게 배정.
+- ★★★★ **SI 가 가른다(우리 조합)**: `R_SE/Cathode` ×1.5–2.45 동안 `C_SE/Cathode` ×0.96–1.05 (면적 가설 ×0.41–0.66) — 두 셀(In · LTO) 다섯 구간 ⇒ `R` 증가분은 **화학 형**. S3 무전류 이완이 전제 `C ∝ 면적` 의 부분 양성 대조(한 호 `R·C` +5 %).
+- ★★★ `[재현]` **손실 예산**: 계면층 패러데이 ≈4 % + 옴 ≲3 % ⇒ 첫 사이클 손실 52 mAh g⁻¹ 의 **≳85 % 미배정**(`θ` · `η(i)` · 상대극).
+- ★★★★ **17호 함정 노출 + 대조군 공유**: 두 상대극 모두 무 Li 조립, 방전 끝 `C_anode` ≈90–100 배 붕괴(평탄 이탈 서명), 재고비 ≈1.4. **Q5 여덟 번째 형태** = "가정 명시 + 깨지는 곳을 '활성화'·'음극 동역학' 으로 덮음"; 1.55 V(LTO) 가정이 18호보다 6 년 이르다.
+- ★★★ **인용 대질**: 숫자 오기 0. 22호 ref 9 네 문장 · 21호 ref 29 두 문장은 원문과 맞다. **18호 [23] "space charge layer" — 원전에 0 회(기구 치환)** · 1호 "throughout"(강도 과장) · 1호 탄소 분해(원전은 회피) · 9호 초록 채택.
+- **채움표 23호 행 — 누적 ≈14.5 → ≈15.0** (**Q2 +0.5**). 안 움직인 칸: Q1(이름표 + 정성, `θ(N)` 측정량 0/23 — 대리량 N = 1→2 불변이 첫 입력) · Q4 0/23(열여섯 번째 성질 "채널 분담 + 시간 분할 배정") · Q5 · Q6 · Q8 · Q7(해당 없음). Q3 층 하나.
+- 컴파일: **새 개념 [[assb-interphase-vs-contact-loss-attribution]]**. 갱신 — 닻 [[assb-contact-loss-vs-lampe]] (채움표 23호 행 + 누적 줄 + For 열아홉 번째 + Against 새 첫 항목 + 새 제약 5개 + Status Log + 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]] (일곱 번째 적용 + 처방 표 두 줄) · [[assb-apparent-capacity-decomposition]] (손실 예산) · [[assb-li-in-reference-potential-window]] (여덟 번째 형태 + P13). index 에 새 개념 등록.
+- 후속 후보: ★★★★ 1 **Zhang 2017 *ACS AMI* 9, 17835** (ref 29, 본문 8 회 — 방법 원전) · ★★★★ 2 **Kondrakov 2017 *JPCC* 121, 3286** (ref 41, NCM811 ΔV) · ★★★ 3 **Ishidzu 2016 *SSI* 288, 176** (ref 48) · ★★★ 4 **Zhang 2017 *JMCA* 5, 9929** (ref 40).

@@ -1,0 +1,292 @@
+{
+ "slug": "koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "c35d2cb0-22._Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+  "93917790-22._Sup_Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Representative charge and discharge proﬁles for the ﬁrst, second, and 50th cycle (blue). The SSBs were cycled between 2.7 and 4.3 V vs Li+/Li. The orange curve shows the ﬁrst charge and discharge cycle of a liquid electrolyte cell using NCM-811, showing the electrochemical behavior of the SSB in comparison to the liquid electrolyte cell. The current density for all cycles corresponds to 0.1 C. (b) Rate test and long-term cyclability for the SSB: 0.1 C, 0.25 C, 0.5 C, 1 C, followed by open end cycling at 0.1 C. Red triangles indicate the charge; blue circles represent the discharge capacity. A large ﬁrst cycle capacity loss was observed in the SSB, which does not occur in the liquid electrolyte cell. polyhedral unit. On the basis of the total sulfur quantiﬁcation, about 96 atom % is present in binding energies associated with the PS4 test procedure includes a staircase incre",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    255.6
+   ],
+   "w": 2151,
+   "h": 803,
+   "dpi": 300,
+   "src": "c35d2cb0-22._Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Impedance spectra recorded intermittently during galvanostatic battery cycling. Left: (a) First cycle charge and discharge proﬁle of a Li−In | β- Li3PS4 | NCM811 /β-Li3PS4 cell at 0.1 C showing current interruption corresponding to the periods of impedance measurement. Right: Impedance spectra during charge (c) and discharge periods (b). Measurements were conducted after 1 h of charging or discharging, respectively. Spectra are stacked with an oﬀset of 40 Ω in the −Z(Im) direction. Red points indicate selected frequencies in the spectra. (∼100 mV, see Supporting Information Figure S1a) between the ﬁrst and second cycle was also observed, indicating an increase in the IR drop between the electrodes of the SSB. In order to understand the underlying reasons and evaluate the origin of this capacity loss in the ﬁrst cycle, in situ electrochemical impedance spectroscopy was applied d",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    277.0
+   ],
+   "w": 2150,
+   "h": 892,
+   "dpi": 300,
+   "src": "c35d2cb0-22._Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.798
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Bode plot of the NCM811/β-Li3PS4 | β-Li3PS4 | Li−In cell during charge (OCV = 3.00 V). Open circles indicate the measured data; solid lines represent the ﬁt result using the shown equivalent circuit. (b) Nyquist plot of the impedance spectrum. Gray circles represent the measured data. and the black solid line indicates the ﬁt of the data. The diﬀerent resistances are illustrated as colored semicircles. RSE,bulk = volume resistance of the solid electrolyte, RSE,gb = grain boundary resistance of the SE, RSE,Cathode = interfacial resistance between the SE and the positive electrode, and RSE,Anode = interfacial resistance between the SE and the negative electrode. The colored semicircles represent a guide-to-the-eye.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    326.2,
+    570.5,
+    600.0
+   ],
+   "w": 1052,
+   "h": 1142,
+   "dpi": 300,
+   "src": "c35d2cb0-22._Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Evolution of the four resistances obtained by ﬁtting the impedance spectra, in the ﬁrst and second cycle plotted versus the measured OCV of the Li−In | β-Li3PS4 | NCM-811 /β-Li3PS4 cell. The dotted black arrows indicate the irreversible resistance growth of the cathode/electrolyte interface in the ﬁrst cycle (a) compared to the reversible increase in the second charge (b). Color code: light blue = RSE,bulk; orange = RSE,gb; dark red = RSE,Cathode; and dark blue = RSE,Anode.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    175.7,
+    306.5,
+    374.6
+   ],
+   "w": 1051,
+   "h": 829,
+   "dpi": 300,
+   "src": "c35d2cb0-22._Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Peak deconvolution of the S 2p and P 2p spectra of (a) pristine β-Li3PS4, (b) the pristine mixture of NCM811 and β-Li3PS4 without any application of current or potential, (c) the cathode composite of NCM811 and β-Li3PS4 after the ﬁrst charge (0.1 C), and (d) the cathode composite of NCM811 and β-Li3PS4 after 50 cycles. Blue peaks are attributed to equivalent Pδ+−Sδ−bonds. Orange peaks were correlated to bridged P−S−P in P2S7 4−units. The red and green peaks are assigned to more oxidized sulfur and phosphorus species. While no reaction appears to take place just upon mixing the SE and the active material, the spectra of the charged cathodes show evidence for oxidation of the thiophosphate solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    404.2
+   ],
+   "w": 1050,
+   "h": 1421,
+   "dpi": 300,
+   "src": "c35d2cb0-22._Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.783
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Scanning electron micrographs of the cathode composite of NCM811 and β-Li3PS4 (a,b) as prepared in a solid-state cell but without the application of current or potential. (c,d) SEMs of a Li−In | β-Li3PS4 | NCM-811 /β-Li3PS4 cell after single charging to 4.3 V vs Li/Li+ at 0.1 C. (e,f) SEMs of a given cell after 50 full battery cycles in the discharged state. The NCM-811 particles shrink during delithiation (charge) and lose contact with the SE. The remaining imprint of the NCM morphology on the electrolyte shows the initially intimate contact between the active material and the electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    399.8,
+    306.5,
+    663.2
+   ],
+   "w": 1051,
+   "h": 1099,
+   "dpi": 300,
+   "src": "c35d2cb0-22._Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.131
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure S1: a) Normalized charge and discharge profiles for the first, second and 50th cycle of the Li-In | β-Li3PS4 | NCM-811 / β-Li3PS4 cell to underline the development of the overvoltage. b) Evolution of the average charge and discharge voltages over 50 cycles. The solid-state batteries were cycled between 2.7 and 4.3 V vs. Li+/Li. An increase in overpotential of ~100 mV can be observed at a current density of 2.14 A/cm² (0.1 C).",
+   "rotated_deg": 0,
+   "bbox": [
+    104.4,
+    65.6,
+    537.9,
+    229.9
+   ],
+   "w": 1807,
+   "h": 686,
+   "dpi": 300,
+   "src": "93917790-22._Sup_Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.834
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure S2: Evolution of the capacitances obtained from fitting the measured impedance spectra, in the first and second cycle versus the open circuit voltage of the Li-In | β-Li3PS4 | NCM-811 / β-Li3PS4 cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.5,
+    332.9,
+    509.5,
+    638.0
+   ],
+   "w": 1688,
+   "h": 1272,
+   "dpi": 300,
+   "src": "93917790-22._Sup_Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure S3: a) Evolution of the Nyquist plot and fit for a mixture of NCM-811 and β-Li3PS4 without any applications of current or potential in a house made press cell over time. Two RQ elements were identified. b) Bode plot. Dotted points indicate the measured data, solid lines the applied fitting model using the shown equivalent circuit R (RQ)(RQ).c) Evolution of resistances R1, R2, and R3 with time (Rtotal = R1 + R2 + R3). d) Evolution of the capacitances of both (RQ) elements obtained by fitting impedance spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.4,
+    63.5,
+    553.3,
+    320.1
+   ],
+   "w": 1871,
+   "h": 1070,
+   "dpi": 300,
+   "src": "93917790-22._Sup_Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure S4: Peak de-convolution of the S 2p and P 2p x-ray photoelectron spectra of a) a mixture of NCM-811 and β-Li3PS4 without any applications of current or potential, b) the same mixture after 175 h of relaxation time in a house made battery cell. Blue peaks are attributed to the P-S bonds in PS4 3- tetrahedral units. Orange peaks were correlated to bridged P2S7 4- units. No indication for a chemical reaction between the two components is evident.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.5,
+    68.0,
+    488.4,
+    360.5
+   ],
+   "w": 1600,
+   "h": 1220,
+   "dpi": 300,
+   "src": "93917790-22._Sup_Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.832
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure 5: In situ impedance spectra recorded intermittently during galvanostatic battery cycling. Left: a) First cycle charge and discharge profile of a Li4Ti5O12 / β-Li3PS4 | β-Li3PS4 | NCM-811 / β-Li3PS4 cell at 0.1 C. Right: Impedance spectra recorded during charge (c) and discharge periods (b). Measurements were conducted after 1 hour of application of charge or discharge current respectively. Spectra are stacked along the –Z(Im) axis with an offset of 30 Ohms. Red points indicate selected frequencies in the spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.4,
+    98.2,
+    519.0,
+    316.3
+   ],
+   "w": 1728,
+   "h": 909,
+   "dpi": 300,
+   "src": "93917790-22._Sup_Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.722
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure S6: Evolution of the resistances obtained by fitting impedance spectra, in the first and second cycle versus the measured open circuit voltage of the Li4Ti5O12 / β-Li3PS4 | β-Li3PS4 | NCM-811 / β-Li3PS4 cell. Color coded: light blue = RSE,bulk; orange = RSE,gb , dark red = RSE,Cathode and dark blue = RSE,Anode.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.4,
+    62.6,
+    509.5,
+    365.1
+   ],
+   "w": 1688,
+   "h": 1261,
+   "dpi": 300,
+   "src": "93917790-22._Sup_Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 7,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Figure S7: Evolution of the capacitances obtained by fitting impedance spectra, in the first and second cycle versus the measured open circuit voltage of the Li4Ti5O12 / β-Li3PS4 | β-Li3PS4 | NCM-811 / β-Li3PS4 cell. Color coded: light blue = RSE,bulk; orange = RSE,gb , dark red = RSE,Cathode and dark blue = RSE,Anode.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.4,
+    66.8,
+    509.5,
+    376.3
+   ],
+   "w": 1688,
+   "h": 1290,
+   "dpi": 300,
+   "src": "93917790-22._Sup_Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 7,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Figure S8: Nyquist plot of the β-Li3PS4 solid electrolyte (60 mg) without attaching the battery electrodes. The volume resistance of the solid electrolyte (RSE,bulk) is illustrated as a colored semi-circle as a guide-to-the-eye. The spectrum was fitted using the equivalent circuit (RQ)(RQ).",
+   "rotated_deg": 0,
+   "bbox": [
+    104.5,
+    464.2,
+    509.5,
+    612.3
+   ],
+   "w": 1688,
+   "h": 618,
+   "dpi": 300,
+   "src": "93917790-22._Sup_Capacity_Fade_in_Solid-State_Batteries_Interphase_Formation_and_Chemomechanical_Processes_in_Nickel-Rich_Layered_Oxide_Cathodes_and_Lithium_Thiophosphate_Solid_Electrolytes.pdf",
+   "blank": 0.872
+  }
+ ]
+}

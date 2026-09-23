@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md]
+sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -146,6 +146,8 @@ physical significance** of the parameters" 라고 쓴다.
 | ★★★ **`R_CT · C_dl` 짝** (2026-09-22 신설, 16호에서) | **`R_CT·C` 는 접촉 면적이 소거되는 조합**(고유 시상수), **`C` 단독은 접촉 면적에 비례** ⇒ **둘을 같이 보면 `θ` 와 `j₀` 가 갈린다** | ★★ **16호가 두 값을 다 인쇄해 놓고 조합을 안 만든다** (아래 §16호) · ★★★★ **18호에서 실제로 갈렸다 — 단, 전제 `C∝θ` 를 먼저 검증해야 한다** (아래 §18호) · ❌ **19호에서 전제가 두 번째로 깨졌다** (아래 §19호) |
 | ★★★★ **`Ea`(노화 전후) — 면적-불변 채널** (2026-09-22 신설, **19호에서**) | `R(T) = A(θ)·exp(Ea/RT)` 에서 **`Ea` 는 접촉 면적과 직교한다** ⇒ **`Ea` 불변 + `R` 증가 = 면적 쪽과 양립 · `Ea` 증가 = 화학/장벽 쪽**. ★ **`C_dl ∝ θ` 라는 (두 번 깨진) 전제를 쓰지 않는다** | ★★★★ **19호가 실측으로 준다**: `[도표]` 압력 560→840 kPa 에서 `R₂` **−26 %** 인데 `[인쇄]` "the **physical state of the interface does not affect the Ea** but the resistance values … **Ea as the essential parameter**". ⚠ **충분조건은 아니다**(`A` 에 면적 외 항) — 19호 자신이 반례다(아래 §19호 검사 B). ★ **18호가 `Ea(노화 전후)` 를 쟀다면 검사 B 가 `C` 없이 독립 확인됐을 것이다** |
 | ★★★ **SOC 추종 상 분율** (2026-09-23 신설, **22호에서**) | 회절 2상 정련으로 **쓰이지 않은 부피(`θ·ε_p`)를 구조로** 잰다 ⇒ 곱에서 `ε_p·θ` 를 떼고 `A_eff·j₀` 만 남긴다 | ★★★ **22호가 신품에서 준다**: `[인쇄]` 불활성 2 / 27 / 31 %, 용량 독립 대조 ±7 %. ⚠ 반사 기하 = 한쪽 면 표층(`[재현]` ≈3–15 µm) · 열화 판은 **두 SOC** 가 필요 · `A_eff` ↔ `j₀` 는 여전히 안 갈린다 (아래 §22호) |
+| ★★★ **무전류 이완 = 전제 양성 대조** (2026-09-23 신설, **23호에서**) | 같은 셀·같은 복합체에서 **전류 없이** 기계 이완만 일어날 때(화학 불변을 XPS 로 확인) `R·C` 가 보존되는지 본다 ⇒ 보존되면 **그 호에 대해서는 `C ∝ 면적` 이 이 복합체에서 작동**한다 | ★★★ **23호 SI Fig. S3**: `[도표]` (`R₂`,`C₂`) ×1.6 ↔ ×0.65, `R₂·C₂` **+5 %** (면적 서명 통과) · (`R₃`,`C₃`) ×2.4 ↔ ×1.35 (실패). ⚠ 호 정체·셀 조건 미상, 판 a↔c 크기 ≈8 배 불일치 (아래 §23호) |
+| ★★ **상대극 교체 대조의 조건** (2026-09-23, **23호에서**) | In ↔ LTO 처럼 상대극을 바꿔 호의 전극 배정을 검사할 때 **두 상대극이 같은 결함(무 Li 조립 · 방전 끝 평탄 이탈)을 공유하지 않아야** 용량 배정까지 대조가 된다 | ⚠ **23호는 저항 배정만 검사** — 두 상대극 모두 방전 끝 `C_anode` 두 자릿수 붕괴 |
 
 ★ **`R_CT·C_dl` 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -780,6 +782,47 @@ ex situ XRD 2상 Rietveld 가 **`ε_p` 쪽(쓰이는 부피)을 구조로 직접
 σ_e/σ_ion ≈550 / ≈50 / ≈1.5 인데 불활성은 M ≈ L; L 에서 σ_e ≈ σ_ion. ⇒ **전자 ↔ 이온 고립도 이 자료로 갈리지 않는다** —
 그리고 Fig. 4 의 두 y 축 자릿수 간격이 달라(5 ↔ 3) **그림 인상이 값과 반대**다.
 
+## ★★★★ 처방의 일곱 번째 적용 (2026-09-23, `assb` 23호) — **1단계가 상태축 위 연속 곡선으로 완전 적용된다 · 결과는 화학 형**
+
+`raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md` (Koerver 외 2017, *Chem. Mater.* 29, 5574−5582 — "접촉 손실의
+실험 원전"). 원전은 **계면층(CEI)** 과 **탈리튬 수축 접촉 손실**을 둘 다 주장하고 **가르지 않는다** — 그런데 SI 가 양극 호의 `R` 과 `C` 를
+**두 셀(In · LTO 상대극) × 네 구간(1·2 차 충·방전)** 으로 인쇄한다. 이 곱의 두 인자(`A_eff` ↔ `j₀`)가 바로 두 기구다
+([[assb-interphase-vs-contact-loss-attribution]]).
+
+### 입력 점검
+
+| 처방 단계 | 필요한 입력 | 23호 | 판정 |
+|---|---|---|---|
+| **1단계** (16호) | `R` 과 `C` 를 같이 | Fig. 4 + **S2**(In) · S6 + **S7**(LTO) — OCV 위 연속 | ✅ **계보 첫 연속 곡선** |
+| **2단계** (18호) | + 면적을 아는 대조군 | 면적 대조 없음. **S3 무전류 기계 이완**(S4 XPS 로 화학 불변) | ⚠ **전제 양성 대조 — 한 호 통과, 한 호 실패** |
+| **3단계-a** (19호) | `Ea` | 25 °C 한 점 | ❌ |
+| **3단계-b** (19호) | `C` 물리 상한 | 양극 호 기하 2.3–3.3 µF cm⁻² · `[추론]` 실면적(입자 ∅6–9 µm `[도표]`) ≈0.10–0.15 µF cm⁻² | ✅ **양극 호 통과(DL 의 ≈1–2 %)** — 19·20·21호 연속 실패와 다르다 |
+| 〃 | 〃 | 음극 호 0.5–6.4 mF cm⁻² | ❌ **DL 의 50–640 배** — "R_SE/Anode" 는 합금 화학 용량 (`[추론]`) |
+| **4단계** (20호) | 시간 영역 | DC 과전압 ~100 mV ↔ EIS 25 mV | ⚠ 4 배 불일치, 그리고 **충전만 이동**(S1a) ⇒ DC 쪽은 옴이 아니라 **창 이동** (`[추론]`) |
+
+### ★★★★ 1단계 결과 — 여섯 비교 중 다섯이 동역학 끝
+
+| 셀 · 구간 | `R` 비 | 면적 예측 `C` 비 | 관측 `C` 비 `[도표]` |
+|---|---|---|---|
+| In · 첫 충전 3.25 → 3.53 V | ×2.45 | ×0.41 | **×1.05** |
+| In · 둘째 충전 | ×1.5 | ×0.66 | **×1.0** |
+| LTO · 첫 충전 | ×1.7 | ×0.59 | **×1.0** |
+| LTO · 첫 방전 | ×1.8 | ×0.54 | **×0.96** |
+| In · 첫 충전 전체 3.00 → 3.53 V | ×3.0 | ×0.33 | ×1.7 (면적과 반대 방향) |
+| In · 첫 방전 끝 | ×1.65 | ×0.61 | ×3.0 — ⚠ **호 혼합**(같은 구간 `C_anode` ≈20 µF 로 붕괴, 두 호 주파수 비 ≈6 배) |
+
+⇒ **EIS 창 안의 양극 저항 증가는 `j₀`(화학) 형**이다. 원전 **본문**의 CEI 배정은 원전 SI 로 지지되고, **초록**의 "contact loss … further
+increasing the interfacial resistance" 는 지지되지 않는다. 16호(한쪽 끝을 골랐다) · 18호(`or` 를 남겼다)와 달리 23호는 **양쪽을 다 주장했고,
+SI 가 한쪽만 남긴다.**
+
+### ⚠ 이것이 곱을 푼 것은 아니다
+
+- 푼 것은 **`R` 의 변화분**이다. **용량**의 분할(`θ` ↔ `η` ↔ `Q_material` ↔ 상대극)은 **0** 이다 — `[재현]` 원전 숫자로 계면층의 패러데이 몫 ≈4 %,
+  옴 몫 ≲3 % 이고 나머지 ≳85 % 는 미배정([[assb-apparent-capacity-decomposition]] §23호).
+- **완전히 고립된 입자는 호에서 빠진다.** 고립 분율 `f` 는 `R/(1−f)`, `C(1−f)` 로 역시 면적 서명을 내야 하므로 `C` 평탄은 **첫 충전 중 새 고립이
+  ≲10–20 %** 라는 **약한 상한**이다(`[추론]`, 판독 분해능).
+- 전제 `C ∝ 면적` 은 **18·19호에서 깨졌고** 23호 양성 대조는 **한 호**뿐이다. 그리고 CPE → C 환산식이 인쇄되지 않았다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -821,3 +864,5 @@ ex situ XRD 2상 Rietveld 가 **`ε_p` 쪽(쓰이는 부피)을 구조로 직접
   가정 + 그림 판독(1 Hz 에서 Im ≈ 0)** 이다. 주장은 **"면적 가설이 예측하는 0.28 과 방향이 반대다"** 까지다.
   그리고 **3단계-b 의 21호 판정이 기준값에 걸린다**는 것을 숨기지 않는다 — 20호 절 표의 "≈10⁻² F cm⁻²" 는 이 절에서
   정리했고, **고치지 않고 남겨 둔다**(그 절의 결론은 어느 기준으로도 같다).
+- ★ **2026-09-23 (23호)**: **23호의 `C` 비를 측정값으로 쓰지 않는다** — 로그 축 판독 · CPE 환산식 미상 · 호가 위상 ≤4° 에서 겹친다. 주장은
+  **"여섯 비교 중 다섯에서 `C` 가 `R` 을 따라가지 않는다"** 까지이고, **"접촉 손실이 용량에 없었다"** 가 아니다.
