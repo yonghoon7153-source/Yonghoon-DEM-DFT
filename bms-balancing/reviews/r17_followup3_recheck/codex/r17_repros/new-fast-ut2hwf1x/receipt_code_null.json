@@ -1,0 +1,17 @@
+{
+  "receipt_version": "r16.1",
+  "code": null,
+  "instrument": {
+    "reviews/evidence_gate.py": "6fca0a100c1a45481d0406508a7f83f983b6df0b"
+  },
+  "package": {
+    "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "materialized": null,
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "win32"
+  },
+  "produced_utc": "2026-09-23T17:36:45.085670+00:00",
+  "signature": "d6224f9fc9c17559c6cc7ee77f5f0da6f9e86a7e54f3d9428c25a5bc3e92cce3"
+}

@@ -1,0 +1,31 @@
+diff --git a/bms-balancing/reviews/R17_FOLLOWUP3_RESPONSE.md b/bms-balancing/reviews/R17_FOLLOWUP3_RESPONSE.md
+index 6cd616b..1bf7d51 100644
+--- a/bms-balancing/reviews/R17_FOLLOWUP3_RESPONSE.md
++++ b/bms-balancing/reviews/R17_FOLLOWUP3_RESPONSE.md
+@@ -13,6 +13,26 @@
+ 리뷰 패키지 원본은 `reviews/r17_followup3/` (zip 바이트 그대로 + `codex/` 풀어 둔 것, zip
+ sha256 `01f829e9e9f56204cee447c1b2bd2a2735c067768ca6736171230c4c0dce31bd`).
+ 
++### 발송 전 재확인 (2026-09-23 — 이 대응문은 2026-09-22 `fcb54da3` 에서 쓰고 보류했다)
++
++보류하는 동안 `bms-balancing/` 에 **MSC(마이크로 쇼츠) 모델 검사** 작업이 들어갔다. 이 라운드의 대상 코드
++(`bms_balancing/` 패키지 · `reviews/`)는 **움직이지 않았다.** 아래는 발송 직전에 다시 잰 것이다.
++
++| 검사 | 명령 | 실측 |
++|---|---|---|
++| 대응문 커밋 이후 bms 코드 변경 | `git diff --stat fcb54da3..HEAD -- bms-balancing/bms_balancing bms-balancing/reviews` | **빈 출력** |
++| 그 밖의 bms 변경 (docs·out 제외) | `git diff --stat fcb54da3..HEAD -- bms-balancing ':!bms-balancing/docs' ':!bms-balancing/out'` | `WORKING_STATE.md` 1 줄 · `scripts/msc_p6_synthetic.py` (신규) · `scripts/msc_sign_table.py` (신규) · `tests/test_msc_sign_table.py` (신규, 4 건) |
++| 전체 회귀 | `python3 -m pytest tests/ -q -p no:cacheprovider` (`7627b61a`, bms 트리 clean) | **523 passed** (695.90 s) EXIT=0 |
++| 문서 계약 (R6 내부 DF-04) | `WORKING_STATE.md` 의 "N passed 기대" | **523** (519 + MSC 4). 이 줄만 고쳤다 |
++
++- §6 의 "519 passed" 는 `fcb54da3` 시점의 실측이고 그대로 둔다. **지금 HEAD 에서 돌리면 523 이다** — 차이 4 는
++  전부 `tests/test_msc_sign_table.py` 이고 이 라운드의 F3-01/02/03 과 무관하다 (PyBaMM 사용자 정의 단계 식별 회귀).
++- 새 스크립트 둘은 `scripts/` 에 있지만 `bms_balancing/` 패키지를 **가져다 쓰기만** 한다(`model` · `verify` 의 공개 함수).
++  패키지·검증 경로·계약은 바이트 그대로다.
++- 전체 회귀 뒤에 바뀐 것은 문서뿐이다: `docs/COMSOL_REBUILD_SPEC.md` §25 · `WORKING_STATE.md` 의 COMSOL 문단(카운트 줄 아님) ·
++  이 블록. 회귀 도중 bms 트리는 움직이지 않았다(시작·끝 HEAD `7627b61a`).
++- **리뷰어가 고정할 HEAD** 는 이 블록을 담은 커밋이다. 발송 메시지에 SHA 를 적는다.
++
+ ## 0. 한 줄
+ 
+ **경로를 아는 것과 그 바이트·존재를 아는 것은 다르다** (F3-01) · **한 의미를 두 이름으로 세면

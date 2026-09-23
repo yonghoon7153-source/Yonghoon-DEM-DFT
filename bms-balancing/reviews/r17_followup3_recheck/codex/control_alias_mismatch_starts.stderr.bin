@@ -1,0 +1,2 @@
+! sidecar 의 필수 값이 타입·형식을 어긴다 (cycles_syn_Li.csv.meta.json) — 키 존재는 완전성이 아니다:
+    cycles_syn_Li.csv.meta.json: `starts` 3 와 `n_multistart` 2 가 다르다 — 같은 실행의 시작점 수를 두 번 적는 자리다

@@ -1,0 +1,86 @@
+[
+  {
+    "path": "CLAUDE.md",
+    "bytes": 8256,
+    "sha256": "4f6eecf1a173b34056612a9562d88c852bacb39cbee68ff1da7034d1eddeee8c",
+    "short_identical": false
+  },
+  {
+    "path": "bms-balancing/reviews/R17_FOLLOWUP3_RESPONSE.md",
+    "bytes": 15802,
+    "sha256": "bc863761056a7bf0a33c3c19d4322b88579fb03d948aebc4e8233671bc8686d0",
+    "short_identical": true
+  },
+  {
+    "path": "bms-balancing/scripts/gc_partial.py",
+    "bytes": 15796,
+    "sha256": "9e80518a9822314509d00d73cc1722dd36ab806bbc98c79a2a1fab27dc99b686",
+    "short_identical": true
+  },
+  {
+    "path": "bms-balancing/scripts/width_report.py",
+    "bytes": 28384,
+    "sha256": "99583cda7e1cf4a8606639e6149a4deb4a7aeaaad6d15b8e6fc0bbba94ddf336",
+    "short_identical": true
+  },
+  {
+    "path": "bms-balancing/scripts/verify_run_receipt.py",
+    "bytes": 15728,
+    "sha256": "d2f82a0eaeca16f7a6a300a6da2ee9723f6301b6eca8d6ea1d9f81786b4efba8",
+    "short_identical": true
+  },
+  {
+    "path": "bms-balancing/bms_balancing/schema.py",
+    "bytes": 72706,
+    "sha256": "ce502f511a97b35e989c986af11de3587400e1f6680ed0b7515677431258d763",
+    "short_identical": true
+  },
+  {
+    "path": "bms-balancing/bms_balancing/verify.py",
+    "bytes": 135600,
+    "sha256": "066ad71109a42863121922de363b667b9449d52dfe3f635a27a68290b9ba177f",
+    "short_identical": true
+  },
+  {
+    "path": "bms-balancing/tests/test_r17_followup3.py",
+    "bytes": 28172,
+    "sha256": "6539ff221b7dc3a5083a64ffc9624e9494982f855bd3f0c564837e56d0d1192b",
+    "short_identical": true
+  },
+  {
+    "path": "degradation-degeneracy/docs/22p_gap/GATE68_REQUEST.md",
+    "bytes": 19672,
+    "sha256": "a793f6555b1a6b94405585baa94684b317d7be55547ae4297fc4824aa2864ed0",
+    "short_identical": true
+  },
+  {
+    "path": "degradation-degeneracy/docs/22p_gap/mutation_replay.py",
+    "bytes": 422201,
+    "sha256": "f9947544ca787e3f6c26f37ab59dd12adeacfc15473cbc4fe16642651f0cc2c0",
+    "short_identical": true
+  },
+  {
+    "path": "degradation-degeneracy/tests/test_gate64_defensive.py",
+    "bytes": 16293,
+    "sha256": "42815852dd2acacb0f1c27e76dd5bdf8d68e49717bc572aa3a6d21883ccb118e",
+    "short_identical": true
+  },
+  {
+    "path": "degradation-degeneracy/tests/test_gate65_defensive.py",
+    "bytes": 23939,
+    "sha256": "b40516e543af5ea028cc1fe43dba7e61fc945f7afea26d5780a544fcd4ee1b94",
+    "short_identical": true
+  },
+  {
+    "path": "degradation-degeneracy/tests/test_gate66_defensive.py",
+    "bytes": 19679,
+    "sha256": "2d127f55b94d9c7cc559e375933b25871c3e5f137317b450a90d55837d3e7552",
+    "short_identical": true
+  },
+  {
+    "path": "degradation-degeneracy/tests/test_gate67_defensive.py",
+    "bytes": 22128,
+    "sha256": "6bb251bc8ca913a860b1f858bb22ede86056a4d320c55c5a18cd87f77231602d",
+    "short_identical": true
+  }
+]

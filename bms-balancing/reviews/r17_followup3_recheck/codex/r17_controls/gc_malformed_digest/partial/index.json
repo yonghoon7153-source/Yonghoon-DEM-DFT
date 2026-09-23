@@ -1,0 +1,20 @@
+{
+  "attempts": [
+    {
+      "kind": "matrix",
+      "attempt": "A",
+      "artifact": "matrix_100.csv",
+      "path": "matrix/A/matrix_100.csv",
+      "status": "partial",
+      "sha256": "not-a-sha"
+    },
+    {
+      "kind": "matrix",
+      "attempt": "B",
+      "artifact": "matrix_100.csv",
+      "path": "matrix/B/matrix_100.csv",
+      "status": "partial",
+      "sha256": "11507a0e2f5e69d5dfa40a62a1bd7b6ee57e6bcd85c67c9b8431b36fff21c437"
+    }
+  ]
+}

@@ -28,7 +28,27 @@
 
 ---
 
-## 지금 상태 — **Codex R17 NO-GO (대상 `dfc1fc78`) · 코드 6 건 닫음 · 과학 문장 좁힘 · chain rule 은 계약 제안 (2026-09-22)**
+## 지금 상태 — **Codex R17 후속 3차 수용·종결 (고정 HEAD `a1979cdf`, 2026-09-24) · F3-01/02/03 닫힘 · 실데이터·package·GATE68 은 별개**
+
+R17 → 후속 1 · 2 · 3 차의 NO-GO 를 전부 닫았다. 수신 재검토가 **F3-01(GC 가 다른 바이트/사라진 보존 대상을 무시) · F3-02(starts/
+n_multistart 를 독립 축으로 오인) · F3-03(code=null/instrument=list 소비 중 crash)** 의 수정을 범위 한정 **수용·종결**했고, 부수
+결정 셋(공통 receipt cycle 금지 · instrument blob 전용 · SLSQP 최종 후보 상자 검사)도 수용했다. 추가 코드 차단 결함 없음.
+리뷰어 근거: 이전 fast/producer 재현기 재실행 · 추가 width 10 + GC 4 대조 · `test_r17_followup3.py` 선택 12 passed (Windows).
+패키지 원본 `reviews/r17_followup3_recheck/` (zip `0a90a733…` · 184 payload sha 184/184). 회신·정정은 `reviews/R17_FOLLOWUP3_RESPONSE.md` §8.
+
+**정정 하나를 받았다 — 문서 동일성 문장.** 발송 블록의 "`bms_balancing`+`reviews` diff 빈 출력" 은 블록을 쓰기 전 tree 의 실측이라
+고정 HEAD 에서는 틀렸다(블록 자체가 대응문 20 줄). 정확히는 **실행 코드 불변 · 발송 머리말 20 줄 추가** (재실측: 실행 코드 넷
+`fcb54da3..a1979cdf` rc 0, 지금 HEAD 까지 rc 0). 원문은 취소선으로 두고 정정을 붙였다. **교훈: 발송 블록은 커밋 뒤에 잰다.**
+
+**이 종결이 아닌 것:** 실데이터 정량 결과 승인 · package 독립 실행 인증 · Windows 전체 회귀 PASS · **GATE68 GO** · 동시 GC 안전성 ·
+schema 완전성 · 다음 본실행 승인. 우리 Linux 523 passed(`7627b61a`)/525 passed(`bfbab62d`, 회귀 도중 HEAD 가 문서 커밋으로 움직여
+기록용) 는 제출 측 수치다. GATE68 은 같은 날 "부분 수용 · 종결 NO-GO · 잔여 P2 1 건" 으로 **예고**만 받았고 정본은 미수신.
+
+**남은 것:** 실데이터 A/B(사용자 승인 뒤, 사용자 기계) · package 독립 실행 · `UNKNOWN_BLOCKERS` 기계 정본화. 아래는 R17 원 라운드 기록.
+
+---
+
+## 이전 상태 — **Codex R17 NO-GO (대상 `dfc1fc78`) · 코드 6 건 닫음 · 과학 문장 좁힘 · chain rule 은 계약 제안 (2026-09-22)**
 
 R17 은 R14 이후 첫 코덱스 라운드다 (내부 작업 라운드 R15·R16 이 라벨을 먼저 써서 R17 로 이었다). 판정 **NO-GO —
 P1 5 · P2 2**, 전부 인정. 리뷰 원문·반례 스크립트·우리 BAD 재현은 `reviews/r17_repros/`, 회신은 `reviews/R17_RESPONSE.md`.

@@ -1,0 +1,20 @@
+{
+  "receipt_version": "r16.1",
+  "code": {
+    "commit": "a1979cdf5b9f04234b6a441150e161bd4f0a3ced",
+    "tree": "9276c598aec48c4c5d901f3e96184ee76dee7880"
+  },
+  "instrument": [
+    "not-a-map"
+  ],
+  "package": {
+    "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "materialized": null,
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "win32"
+  },
+  "produced_utc": "2026-09-23T17:36:45.085670+00:00",
+  "signature": "5c7f6dc8e46611127930d1084a7f0bcf531ecbd8091b40419ff94e9c5ee23f01"
+}

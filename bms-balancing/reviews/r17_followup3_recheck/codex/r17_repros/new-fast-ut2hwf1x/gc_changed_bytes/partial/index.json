@@ -1,0 +1,23 @@
+{
+  "index_version": 1,
+  "attempts": [
+    {
+      "attempt": "A",
+      "kind": "matrix",
+      "artifact": "matrix_100.csv",
+      "status": "partial",
+      "path": "matrix/A/matrix_100.csv",
+      "sha256": "21c51485029154c544a40105e0bb5c35a38e4efa1fccbe24f35cf56d4102660b",
+      "recorded_utc": "A"
+    },
+    {
+      "attempt": "B",
+      "kind": "matrix",
+      "artifact": "matrix_100.csv",
+      "status": "partial",
+      "path": "matrix/B/matrix_100.csv",
+      "sha256": "fdb65a1c07494adbe366dac64a1ae136d668208a52aeb35f207cf7ce048261d5",
+      "recorded_utc": "B"
+    }
+  ]
+}

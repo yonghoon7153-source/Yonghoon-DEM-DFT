@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\r17_repros\\repro_followup3.py",
+    "--target",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-gate68-a1979cdf\\bms-balancing",
+    "--part",
+    "producer"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924",
+  "rc": 0,
+  "timeout": false,
+  "seconds": 45.687000000005355,
+  "stdout_sha256": "3e4e650c88b7dea6ee2483ff22fd4de5a48bd04bdbe904c07b6f03d317535daf",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

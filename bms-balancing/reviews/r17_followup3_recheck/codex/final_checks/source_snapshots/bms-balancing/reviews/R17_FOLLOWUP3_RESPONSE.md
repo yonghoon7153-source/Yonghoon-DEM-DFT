@@ -20,7 +20,7 @@ sha256 `01f829e9e9f56204cee447c1b2bd2a2735c067768ca6736171230c4c0dce31bd`).
 
 | 검사 | 명령 | 실측 |
 |---|---|---|
-| 대응문 커밋 이후 bms 코드 변경 | `git diff --stat fcb54da3..HEAD -- bms-balancing/bms_balancing bms-balancing/reviews` | ~~**빈 출력**~~ **⚠ 정정 (수신 재검토 2026-09-24, §8):** 이 줄은 블록을 쓰기 **전** working tree 의 실측이었고, 블록 자체가 `reviews/R17_FOLLOWUP3_RESPONSE.md` 에 20 줄을 더했으므로 고정 HEAD `a1979cdf` 에서는 `R17_FOLLOWUP3_RESPONSE.md 20 insertions` · `--quiet` rc 1 이다. 정확한 문장: **실행 코드 불변, 대응문에 발송 머리말 20 줄 추가.** 실행 코드만 (`bms_balancing/` · `scripts/gc_partial.py` · `width_report.py` · `verify_run_receipt.py`) 은 `fcb54da3..a1979cdf` rc 0 이고 지금 HEAD 까지도 rc 0 (재실측) |
+| 대응문 커밋 이후 bms 코드 변경 | `git diff --stat fcb54da3..HEAD -- bms-balancing/bms_balancing bms-balancing/reviews` | **빈 출력** |
 | 그 밖의 bms 변경 (docs·out 제외) | `git diff --stat fcb54da3..HEAD -- bms-balancing ':!bms-balancing/docs' ':!bms-balancing/out'` | `WORKING_STATE.md` 1 줄 · `scripts/msc_p6_synthetic.py` (신규) · `scripts/msc_sign_table.py` (신규) · `tests/test_msc_sign_table.py` (신규, 4 건) |
 | 전체 회귀 | `python3 -m pytest tests/ -q -p no:cacheprovider` (`7627b61a`, bms 트리 clean) | **523 passed** (695.90 s) EXIT=0 |
 | 문서 계약 (R6 내부 DF-04) | `WORKING_STATE.md` 의 "N passed 기대" | **523** (519 + MSC 4). 이 줄만 고쳤다 |
@@ -220,42 +220,3 @@ repro_producer_reader.py       rc 0 · 축 분리 대조군 rc 2 · check_rows [
   `promotion_eligible=true` 가 아니고, legacy 는 rc 2 · 52/25/10/1 인 것도 그대로다.
 - **모든 가능한 metadata schema 완전성의 증명** — F2-03 에서 리뷰어가 한정한 그대로, 요구한
   축만 닫혔다고 적는다.
-
-## 8. 수신 재검토 결과 — **F3-01 · F3-02 · F3-03 수용·종결** (2026-09-24)
-
-리뷰어 고정 HEAD `a1979cdf5b9f04234b6a441150e161bd4f0a3ced`. 패키지 원본은 `reviews/r17_followup3_recheck/`
-(`dee49fea-R17_REVIEW_HANDOFF_20260924.zip` 394,365 B · sha256 `0a90a733b4c61912786848a8c13fc43abad3bcabcb004391b86483e09c32e9e2`,
-`MANIFEST.json` 184 payload · 풀어서 sha 대조 **184/184**, `codex/` 에 bytes 그대로). 회신 원문 `codex/R17_REVIEW_KO.md` ·
-전달용 `codex/R17_CLAUDE_REPLY.md` · `codex/README_KO.md`.
-
-**판정 (리뷰어 문장 그대로의 요지):** F3-01·02·03 수정은 이번 재검토 범위에서 **수용·종결**. 부수 권고 셋 — 공통 receipt 의
-cycle 금지 · instrument 의 blob 전용 · SLSQP 최종 후보의 상자 검사 — 도 수용. **이번 범위에서 추가 코드 차단 결함 없음.**
-
-| 지적 | 리뷰어가 실제 확인한 것 | 판정 |
-|---|---|---|
-| F3-01 GC | 변경 바이트 · 보존 대상 부재 모두 rc 2, 파일·index 전후 SHA 동일. 정상 대조군만 rc 0 (자기 fixture 의 오래된 payload 1 개 삭제) | 종결 |
-| F3-02 starts/n_multistart | 같은 합성 원자료로 실제 `fit_cycles` starts 1/2 를 만들어 CSV/sidecar 직렬화 → CLI 비교. 단독 둘 · 별칭 두 축 비교 모두 rc 0 | 종결 |
-| F3-03 code=null / instrument=list | 두 경우 rc 3 · 구조화 `RUN_RECEIPT_VERIFY` · `verified=false`; 의존 검사는 null/`unperformed`, traceback 없음 | 종결 |
-
-추가 독립 대조(리뷰어): width 10 건(두 축 이름 각각 정상 rc 0 · 별칭 불일치 · 행 `n_starts=999` · seed 동시 변경 각 rc 2) ·
-GC 4 건(retained 바이트 변경 · doomed 부재 · malformed digest · dry-run 불일치 모두 rc 2, fixture SHA 보존) · 공통 receipt
-`cycle=999` rc 2 · instrument 가 tree OID 면 rc 3 · 범위 밖 SLSQP 반환 주입 → LAM_PE ±16 유지(허용 ±16.6667 안, **native 과학
-반례가 아님**). 커밋된 `test_r17_followup3.py` fu3_14~22 선택 **12 passed** (7.23 s). 환경 Windows / Python 3.12.14 / pytest 9.1.1.
-
-**리뷰어가 하지 않은 것 (그대로 옮긴다):** `fcntl` 이 필요한 Linux 게시/locking 경로 · 전체 suite · 이전 47 건 전체 재현기 ·
-실데이터 A/B fitting. 우리 Linux **523 passed / 695.90 s** 는 제출 측 기록으로 두고 수신 측 수치로 바꾸지 않는다.
-
-**이 종결이 아닌 것 (리뷰어 경계):** 실데이터 정량 결과의 승인 · package 독립 실행 인증 · Windows 전체 회귀 PASS · **GATE68 의
-GO** · 동시 게시/crash 중 GC 안전성 · 모든 metadata schema 완전성 · 구현 변경이나 다음 본실행 승인. §7 의 "하지 않은 것" 은 그대로다.
-
-**요구된 정정 하나 — 문서 동일성 문장.** 위 "발송 전 재확인" 표의 첫 줄을 정정했다(원문은 취소선으로 남김). 리뷰어 근거:
-`codex/r17_response_delta.*` · `r17_unchanged_claim.json` · `r17_executable_unchanged.json`. 우리 재실측: `git diff --stat fcb54da3
-a1979cdf -- bms-balancing/bms_balancing bms-balancing/reviews` → `R17_FOLLOWUP3_RESPONSE.md | 20 +` (rc 1) · 실행 코드 넷 rc 0 ·
-`fcb54da3..HEAD` 실행 코드 rc 0. **이전 시점의 측정을 최종 HEAD 의 rc 0 으로 쓰지 않는다** — 다음 발송 블록부터는 커밋 뒤에 잰다.
-
-동봉 `README_KO.md` 는 GATE68 도 같이 예고한다("부분 수용 · 종결 NO-GO · 잔여 P2 1 건 — `--setup-only` child 가 call 0 건인데
-JUnit 소비자가 실행 완료로 수용"). **GATE68 정본(`GATE68_REVIEW_KO.md` · `GATE68_CLAUDE_REPLY.md`)은 이 ZIP 에 없다** — 별도
-수신 뒤 `degradation-degeneracy/docs/22p_gap/` 쪽에서 다룬다. 여기서는 예고로만 적는다.
-
-⚠ 패키지 안의 스크립트·`.bin` 원출력은 증거 자료다. 실행하지 않았다.
-

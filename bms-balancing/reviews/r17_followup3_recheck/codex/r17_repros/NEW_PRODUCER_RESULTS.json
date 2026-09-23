@@ -1,0 +1,56 @@
+{
+  "head": "a1979cdf5b9f04234b6a441150e161bd4f0a3ced",
+  "fixture": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\r17_repros\\new-producer-bx9xn0x2",
+  "cases": {
+    "starts1_single": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-gate68-a1979cdf\\bms-balancing\\scripts\\width_report.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\r17_repros\\new-producer-bx9xn0x2\\n1\\cycles_syn_Li.csv"
+      ],
+      "rc": 0,
+      "stdout": "\n══ cycles_syn_Li.csv  (허용 0.01 · w_dqdv 0.0 · seed 0 · starts 1) ══\n cyc              LAM_PE                        LAM_NE                         LLI              \n            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]      \n   0     0.00 [  -0.79,   2.14]    0.00 [  -3.38,   1.10]    0.00 [  -2.14,   2.18] \n   1     4.86 [   4.86,   5.61]    2.14 [  -3.16,   5.71]    5.04 [   3.44,   6.16] \n   폭          최대    2.94 %p         최대    8.87 %p         최대    4.32 %p \n  ⚠ 이 폭은 **하한**이다 (국소 해법 + 격자). 참 폭은 이보다 넓을 수 있다.\n  ⚠ **모델 고정 축**의 폭이다 — 문헌 곡선 선택이 만드는 폭은 여기 안 들어간다.\n",
+      "stderr": "",
+      "seconds": 18.328000000008615,
+      "scope": "real fit_cycles synthetic inputs; review serialization; NOT production publication CLI"
+    },
+    "starts2_single": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-gate68-a1979cdf\\bms-balancing\\scripts\\width_report.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\r17_repros\\new-producer-bx9xn0x2\\n2\\cycles_syn_Li.csv"
+      ],
+      "rc": 0,
+      "stdout": "\n══ cycles_syn_Li.csv  (허용 0.01 · w_dqdv 0.0 · seed 0 · starts 2) ══\n cyc              LAM_PE                        LAM_NE                         LLI              \n            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]      \n   0     0.00 [  -0.79,   2.14]    0.00 [  -3.38,   1.10]    0.00 [  -2.14,   2.18] \n   1     4.86 [   4.86,   5.61]    2.14 [  -3.16,   5.71]    5.04 [   3.44,   6.16] \n   폭          최대    2.94 %p         최대    8.87 %p         최대    4.32 %p \n  ⚠ 이 폭은 **하한**이다 (국소 해법 + 격자). 참 폭은 이보다 넓을 수 있다.\n  ⚠ **모델 고정 축**의 폭이다 — 문헌 곡선 선택이 만드는 폭은 여기 안 들어간다.\n",
+      "stderr": "",
+      "seconds": 18.719000000011874,
+      "scope": "real fit_cycles synthetic inputs; review serialization; NOT production publication CLI"
+    },
+    "starts_axis_compare": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-gate68-a1979cdf\\bms-balancing\\scripts\\width_report.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\r17_repros\\new-producer-bx9xn0x2\\n1\\cycles_syn_Li.csv",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\r17_repros\\new-producer-bx9xn0x2\\n2\\cycles_syn_Li.csv",
+        "--axis",
+        "starts"
+      ],
+      "rc": 0,
+      "stdout": "\n══ cycles_syn_Li.csv  (허용 0.01 · w_dqdv 0.0 · seed 0 · starts 1) ══\n cyc              LAM_PE                        LAM_NE                         LLI              \n            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]      \n   0     0.00 [  -0.79,   2.14]    0.00 [  -3.38,   1.10]    0.00 [  -2.14,   2.18] \n   1     4.86 [   4.86,   5.61]    2.14 [  -3.16,   5.71]    5.04 [   3.44,   6.16] \n   폭          최대    2.94 %p         최대    8.87 %p         최대    4.32 %p \n  ⚠ 이 폭은 **하한**이다 (국소 해법 + 격자). 참 폭은 이보다 넓을 수 있다.\n  ⚠ **모델 고정 축**의 폭이다 — 문헌 곡선 선택이 만드는 폭은 여기 안 들어간다.\n\n══ cycles_syn_Li.csv  (허용 0.01 · w_dqdv 0.0 · seed 0 · starts 2) ══\n cyc              LAM_PE                        LAM_NE                         LLI              \n            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]      \n   0     0.00 [  -0.79,   2.14]    0.00 [  -3.38,   1.10]    0.00 [  -2.14,   2.18] \n   1     4.86 [   4.86,   5.61]    2.14 [  -3.16,   5.71]    5.04 [   3.44,   6.16] \n   폭          최대    2.94 %p         최대    8.87 %p         최대    4.32 %p \n  ⚠ 이 폭은 **하한**이다 (국소 해법 + 격자). 참 폭은 이보다 넓을 수 있다.\n  ⚠ **모델 고정 축**의 폭이다 — 문헌 곡선 선택이 만드는 폭은 여기 안 들어간다.\n\n══ 폭 비교 — 축 `starts`: 1 → 2  (cycle 2 · 코드·환경·입력·모집단 동일 확인) ══\n       축        A 최대 폭        B 최대 폭       B/A   판정\n  LAM_PE      2.937 %p      2.937 %p     1.000   거의 그대로\n  LAM_NE      8.869 %p      8.869 %p     1.000   거의 그대로\n     LLI      4.316 %p      4.316 %p     1.000   거의 그대로\n\n  ⚠ 이것은 **이 셀·이 사이클 집합·이 허용**에서의 비교다. 다른 셀로 일반화하지 않는다.\n  ⚠ 폭이 좁아졌다고 그 설정이 '옳다' 는 뜻은 아니다 — 좁은 답이 참에 가깝다는 근거가 따로 필요하다.\n",
+      "stderr": ""
+    },
+    "n_multistart_axis_compare": {
+      "command": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-gate68-a1979cdf\\bms-balancing\\scripts\\width_report.py",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\r17_repros\\new-producer-bx9xn0x2\\n1\\cycles_syn_Li.csv",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\r17_repros\\new-producer-bx9xn0x2\\n2\\cycles_syn_Li.csv",
+        "--axis",
+        "n_multistart"
+      ],
+      "rc": 0,
+      "stdout": "\n══ cycles_syn_Li.csv  (허용 0.01 · w_dqdv 0.0 · seed 0 · starts 1) ══\n cyc              LAM_PE                        LAM_NE                         LLI              \n            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]      \n   0     0.00 [  -0.79,   2.14]    0.00 [  -3.38,   1.10]    0.00 [  -2.14,   2.18] \n   1     4.86 [   4.86,   5.61]    2.14 [  -3.16,   5.71]    5.04 [   3.44,   6.16] \n   폭          최대    2.94 %p         최대    8.87 %p         최대    4.32 %p \n  ⚠ 이 폭은 **하한**이다 (국소 해법 + 격자). 참 폭은 이보다 넓을 수 있다.\n  ⚠ **모델 고정 축**의 폭이다 — 문헌 곡선 선택이 만드는 폭은 여기 안 들어간다.\n\n══ cycles_syn_Li.csv  (허용 0.01 · w_dqdv 0.0 · seed 0 · starts 2) ══\n cyc              LAM_PE                        LAM_NE                         LLI              \n            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]            점추정   [ 하한 ,  상한 ]      \n   0     0.00 [  -0.79,   2.14]    0.00 [  -3.38,   1.10]    0.00 [  -2.14,   2.18] \n   1     4.86 [   4.86,   5.61]    2.14 [  -3.16,   5.71]    5.04 [   3.44,   6.16] \n   폭          최대    2.94 %p         최대    8.87 %p         최대    4.32 %p \n  ⚠ 이 폭은 **하한**이다 (국소 해법 + 격자). 참 폭은 이보다 넓을 수 있다.\n  ⚠ **모델 고정 축**의 폭이다 — 문헌 곡선 선택이 만드는 폭은 여기 안 들어간다.\n\n══ 폭 비교 — 축 `n_multistart`: 1 → 2  (cycle 2 · 코드·환경·입력·모집단 동일 확인) ══\n       축        A 최대 폭        B 최대 폭       B/A   판정\n  LAM_PE      2.937 %p      2.937 %p     1.000   거의 그대로\n  LAM_NE      8.869 %p      8.869 %p     1.000   거의 그대로\n     LLI      4.316 %p      4.316 %p     1.000   거의 그대로\n\n  ⚠ 이것은 **이 셀·이 사이클 집합·이 허용**에서의 비교다. 다른 셀로 일반화하지 않는다.\n  ⚠ 폭이 좁아졌다고 그 설정이 '옳다' 는 뜻은 아니다 — 좁은 답이 참에 가깝다는 근거가 따로 필요하다.\n",
+      "stderr": ""
+    }
+  }
+}

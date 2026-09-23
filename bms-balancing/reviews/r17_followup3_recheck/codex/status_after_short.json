@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "git",
+    "status",
+    "--porcelain"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\r68_20260924",
+  "rc": 0,
+  "timeout": false,
+  "seconds": 0.5789999999979045,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "git",
+    "rev-parse",
+    "HEAD"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\r68_20260924",
+  "rc": 0,
+  "timeout": false,
+  "seconds": 0.046000000002095476,
+  "stdout_sha256": "6f24c4a8c8a4bc294a211068cd71516014dc4d74284d98abdfd09a8134c55f31",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

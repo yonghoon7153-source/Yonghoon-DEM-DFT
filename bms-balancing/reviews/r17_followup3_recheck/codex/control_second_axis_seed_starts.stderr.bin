@@ -1,0 +1,2 @@
+! 축(starts) 말고 다른 설정이 다르다 — 비교하지 않는다:
+    seed: cycles_syn_Li.csv 0  ↔  cycles_syn_Li.csv 7

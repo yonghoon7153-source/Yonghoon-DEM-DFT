@@ -1,0 +1,267 @@
+diff --git a/bms-balancing/bms_balancing/schema.py b/bms-balancing/bms_balancing/schema.py
+index ab94fbf..b335395 100644
+--- a/bms-balancing/bms_balancing/schema.py
++++ b/bms-balancing/bms_balancing/schema.py
+@@ -552,6 +552,15 @@ def per_cycle_receipt(common: dict, cycle) -> dict:
+     if not isinstance(leaf, dict) or not leaf:
+         raise ValueError(f"공통 receipt 에 `{PER_CYCLE_RECEIPT_ROLE}` 객체가 없다 — "
+                          f"어느 입력에 cycle 을 붙일지 말할 수 없다 ({common.get(PER_CYCLE_RECEIPT_ROLE)!r})")
++    # ⚠ Codex R17 후속 3차 §5-1 (리뷰어의 별도 권고 — "금지할지 무시 가능으로 명시할지 정하라"):
++    #   **금지한다.** 공통 receipt 는 정의상 cycle 이 없는 것이고(그것이 "공통" 의 뜻이다),
++    #   거기 cycle 이 적혀 있으면 생산자와 sidecar 중 하나가 틀린 것이다. 전 판은 그것을 행의
++    #   cycle 로 **조용히 덮어썼다** — 덮어쓰면 틀린 선언이 사라져 아무도 못 본다.
++    if PER_CYCLE_RECEIPT_KEY in leaf:
++        raise ValueError(
++            f"공통 receipt 의 `{PER_CYCLE_RECEIPT_ROLE}` 에 이미 `{PER_CYCLE_RECEIPT_KEY}` 가 있다 "
++            f"({leaf[PER_CYCLE_RECEIPT_KEY]!r}) — 공통은 cycle 을 말하지 않는다. 덮어쓰지 않고 거부한다 "
++            f"(R17 후속 3차 §5-1)")
+     k = int(cycle)
+     return dict(common, **{PER_CYCLE_RECEIPT_ROLE: dict(leaf, **{PER_CYCLE_RECEIPT_KEY: k})})
+ 
+diff --git a/bms-balancing/bms_balancing/verify.py b/bms-balancing/bms_balancing/verify.py
+index 473ecb5..0f2d097 100644
+--- a/bms-balancing/bms_balancing/verify.py
++++ b/bms-balancing/bms_balancing/verify.py
+@@ -535,7 +535,13 @@ def near_optimal_extrema(obj: Objective, ref_p, ref_c, c_cell, best, best_val,
+                 if not np.isfinite(r.fun):
+                     continue
+                 # 제약을 실제로 지키는지 직접 확인한다 (SLSQP 는 살짝 넘길 수 있다)
+-                if obj(np.asarray(r.x, float)) <= limit * (1 + 1e-9):
++                # ⚠ R17 후속 3차 §5-3 (리뷰어의 별도 권고): 전 판은 **최종 반환점에 `_in_box` 를
++                #   적용하지 않았다.** 리뷰어가 solver 반환을 명시적으로 주입하자 참 상자 범위
++                #   ±16.6667 %p 대신 −733.3333 %p 가 나왔다 (실제 SciPy 가 그 값을 만들었다는
++                #   native 반례는 아니다 — 의존 solver 의 비정상 반환까지 방어한다는 계약을
++                #   유지하려면 같은 술어를 여기에도 걸어야 한다는 뜻이다).
++                #   "모든 후보에 같은 술어" 는 **solver 가 돌려준 점도 후보**라는 뜻이다.
++                if _in_box(r.x) and obj(np.asarray(r.x, float)) <= limit * (1 + 1e-9):
+                     vals.append(mode_of(r.x, key))
+         v = np.array(vals, dtype=float) * 100.0
+         # ⚠ Codex R17 후속 2차 F2-05: **끝점도 같은 검증 경로에 묶는다.** 후보가 상자 안이고 제약을
+diff --git a/bms-balancing/scripts/gc_partial.py b/bms-balancing/scripts/gc_partial.py
+index 5280f3c..17697b4 100644
+--- a/bms-balancing/scripts/gc_partial.py
++++ b/bms-balancing/scripts/gc_partial.py
+@@ -21,14 +21,19 @@
+ from __future__ import annotations
+ 
+ import argparse
++import hashlib
+ import json
+ import pathlib
++import re
+ import sys
+ 
+ HERE = pathlib.Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE.parent))
+ from bms_balancing.verify import PARTIAL_INDEX      # noqa: E402
+ 
++#: 기록된 digest 의 모양 — 댈 수 없는 값은 대조가 아니다 (R17 후속 3차 F3-01).
++_HEX64 = re.compile(r"[0-9a-f]{64}")
++
+ 
+ def load_index(root: pathlib.Path) -> dict:
+     p = root / PARTIAL_INDEX
+@@ -119,6 +124,44 @@ def main(argv=None) -> int:
+             print(f"    {f}", file=sys.stderr)
+         return 2
+ 
++    # ⚠ Codex R17 후속 3차 F3-01: **대조가 단방향이었다.** 전 판은 `on_disk - known`(모르는
++    #   디렉터리)과 미등록 파일만 봤다 — 즉 "디스크에 있는데 index 가 모르는 것" 만. 반대 방향,
++    #   **"index 가 안다고 한 것이 실제로 있는가 · 그 바이트가 index 가 지목한 것인가"** 는 아무도
++    #   안 봤다. 그래서 둘이 실측으로 뚫렸다 (리뷰어, 동시성 가정 없이 정적 상태로 재현):
++    #
++    #     ① 버릴 항목의 경로에 **다른 바이트**가 들어 있어도 rc 0 으로 지웠다 — 로그에는 index 의
++    #        **원래 SHA** 를 인쇄하면서.
++    #     ② **최신 보존 파일이 없어도** rc 0 으로 유일하게 남은 이전 파일을 지웠다 — 결과 payload
++    #        0 개, 남은 index 는 없는 파일을 가리킨다.
++    #
++    #   `rmtree` 를 버린 것(F2-01)은 옳았지만 **삭제 단위를 파일로 줄이는 것과 그 파일의 동일성을
++    #   검증하는 것은 다르다.** 경로 집합은 파일 동일성이 아니다.
++    #   그래서 **삭제·보존을 가르기 전에, 전체 항목**에 대해 일반 파일 존재와 digest 를 댄다.
++    #   하나라도 어긋나면 **삭제 0 · index 쓰기 0 · rc 2** — dry-run 도 마찬가지다 (dry-run 의
++    #   출력은 *무엇을 지울지*의 예고이고, 예고가 틀린 바이트를 가리키면 사람이 그것을 믿는다).
++    bad: list = []
++    for i, e in enumerate(idx["attempts"]):
++        want = str(e["sha256"])
++        if not _HEX64.fullmatch(want):
++            bad.append(f"항목 {i} ({e['path']}): 기록된 sha256 이 64자리 hex 가 아니다 ({want!r}) — "
++                       f"댈 수 없는 digest 는 통과가 아니다")
++            continue
++        f = (root / e["path"]).resolve()
++        if not f.is_file():
++            bad.append(f"항목 {i} ({e['path']}): index 가 아는 payload 가 **없다** — "
++                       f"등록된 파일의 부재도 '모르는 상태' 다")
++            continue
++        got = hashlib.sha256(f.read_bytes()).hexdigest()
++        if got != want:
++            bad.append(f"항목 {i} ({e['path']}): 바이트가 index 가 지목한 것이 아니다 "
++                       f"(index {want[:12]} ≠ 실제 {got[:12]})")
++    if bad:
++        print(f"! index 와 디스크가 어긋난다 {len(bad)} 건 — 아무것도 지우지 않고 index 도 "
++              f"건드리지 않는다 (삭제의 근거가 없다):", file=sys.stderr)
++        for b in bad[:20]:
++            print(f"    {b}", file=sys.stderr)
++        return 2
++
+     # (종류, 산출)마다 index 순서(=기록 순서)의 뒤쪽 keep 개를 남긴다
+     groups: dict = {}
+     for e in idx["attempts"]:
+diff --git a/bms-balancing/scripts/verify_run_receipt.py b/bms-balancing/scripts/verify_run_receipt.py
+index 742419e..ae090ab 100644
+--- a/bms-balancing/scripts/verify_run_receipt.py
++++ b/bms-balancing/scripts/verify_run_receipt.py
+@@ -157,25 +157,46 @@ def main(argv=None) -> int:
+     if not checks["signature"]:
+         failed.append(f"서명이 내용과 다르다 — 사후 편집이다 (계산 {want_sig[:12]} ≠ 적힌 {str(r['signature'])[:12]})")
+ 
+-    commit, tree = str(r["code"].get("commit", "")), str(r["code"].get("tree", ""))
+-    ok_anc = (len(commit) == _HEX40
+-              and _git(a.target, "cat-file", "-e", f"{commit}^{{commit}}").returncode == 0
+-              and _git(a.target, "merge-base", "--is-ancestor", commit, base).returncode == 0)
+-    checks["ancestry"] = ok_anc
+-    if not ok_anc:
+-        failed.append(f"ancestry — receipt 의 커밋 {commit[:12] or '(없음)'} 이 {base[:12]} 의 조상이 아니다 "
+-                      f"(이 저장소의 역사에 없는 커밋의 증거는 받지 않는다)")
+-
+-    ok_tree = False
+-    if ok_anc:
+-        got = _git(a.target, "rev-parse", f"{commit}^{{tree}}")
+-        ok_tree = got.returncode == 0 and got.stdout.strip() == tree
+-    checks["tree"] = ok_tree
+-    if ok_anc and not ok_tree:
+-        failed.append(f"tree 가 그 커밋의 것이 아니다 (적힌 {tree[:12] or '(없음)'})")
++    # ⚠ Codex R17 후속 3차 F3-03: **검사한 것과 소비하는 것이 또 갈라졌다.** `_typed_problems` 는
++    #   `code=null`·`instrument=["not-a-map"]` 을 **찾아 놓고**, 바로 아래가 같은 객체에
++    #   `.get(...)`·`.items()` 를 불렀다 → `AttributeError` · rc 1 · 판정 객체 없음 (리뷰어 실측).
++    #   verified=true 로 수용한 것이 아니라 **구조화 실패 경로**가 없었던 것이다.
++    #   그래서 ① 구조가 틀린 필드에 기대는 검사는 **수행하지 않고** ② 수행하지 못한 검사를
++    #   **성공으로 채우지 않는다** (`None` = 안 함, 사유는 `unperformed` 로 드러낸다).
++    unperformed: dict = {}
++    code_shaped = isinstance(r.get("code"), dict)
++    inst_shaped = isinstance(r.get("instrument"), dict)
++
++    if not code_shaped:
++        checks["ancestry"] = checks["tree"] = None
++        unperformed["ancestry"] = unperformed["tree"] = (
++            f"code 가 객체가 아니라 커밋·tree 를 읽을 수 없다 ({r.get('code')!r})")
++    else:
++        commit, tree = str(r["code"].get("commit", "")), str(r["code"].get("tree", ""))
++        ok_anc = (len(commit) == _HEX40
++                  and _git(a.target, "cat-file", "-e", f"{commit}^{{commit}}").returncode == 0
++                  and _git(a.target, "merge-base", "--is-ancestor", commit, base).returncode == 0)
++        checks["ancestry"] = ok_anc
++        if not ok_anc:
++            failed.append(f"ancestry — receipt 의 커밋 {commit[:12] or '(없음)'} 이 {base[:12]} 의 조상이 아니다 "
++                          f"(이 저장소의 역사에 없는 커밋의 증거는 받지 않는다)")
++
++        ok_tree = False
++        if ok_anc:
++            got = _git(a.target, "rev-parse", f"{commit}^{{tree}}")
++            ok_tree = got.returncode == 0 and got.stdout.strip() == tree
++        checks["tree"] = ok_tree
++        if ok_anc and not ok_tree:
++            failed.append(f"tree 가 그 커밋의 것이 아니다 (적힌 {tree[:12] or '(없음)'})")
+ 
+     if a.skip_instrument:
+         checks["instrument"] = None
++        unperformed["instrument"] = "`--skip-instrument` 로 뺐다 (뺐다는 사실이 출력에 남는다)"
++    elif not (code_shaped and inst_shaped):
++        checks["instrument"] = None
++        unperformed["instrument"] = (
++            "code 또는 instrument 가 객체가 아니라 blob 을 댈 수 없다 "
++            f"(code {type(r.get('code')).__name__} · instrument {type(r.get('instrument')).__name__})")
+     else:
+         detail = {}
+         for rel, want in (r.get("instrument") or {}).items():
+@@ -183,17 +204,32 @@ def main(argv=None) -> int:
+             #   `./` 를 붙여야 `-C target` 의 cwd 기준이 된다 (gate 의 `instrument_sealed` 가 쓰는 그 형식).
+             #   빠뜨렸더니 깨끗한 트리에서도 언제나 "다름" 이었다.
+             got = _git(a.target, "rev-parse", f"{commit}:./{rel}")
+-            detail[rel] = "ok" if (got.returncode == 0 and got.stdout.strip() == str(want)) else "다름"
++            # ⚠ R17 후속 3차 §5-2 (리뷰어의 별도 권고 — "파일 전용인지 tree 도 허용하는지 계약을
++            #   맞추라"): **파일 blob 전용이다.** `rev-parse <commit>:./<rel>` 은 그 자리에 있는
++            #   객체의 OID 를 주므로 디렉터리를 적으면 **tree OID** 가 나오고 전 판은 그것도
++            #   "ok" 로 받았다 (리뷰어 실측 rc 0). 무결성 우회는 아니지만 문서는 blob 이라고
++            #   적고 있었다 — 도구는 파일이므로 계약을 문서 쪽에 맞춘다.
++            kind = _git(a.target, "cat-file", "-t", got.stdout.strip() or "0" * 40)
++            detail[rel] = "ok" if (got.returncode == 0 and got.stdout.strip() == str(want)
++                                   and kind.stdout.strip() == "blob") else (
++                "tree (파일이 아니다)" if kind.stdout.strip() == "tree" else "다름")
+         checks["instrument"] = bool(detail) and all(v == "ok" for v in detail.values())
+         if not checks["instrument"]:
+             failed.append(f"instrument digest 가 그 커밋의 blob 과 다르다: "
+                           f"{sorted(k for k, v in detail.items() if v != 'ok')}")
+ 
+-    code_ref_ok = bool(checks["signature"] and checks["ancestry"] and checks["tree"]
+-                       and (checks["instrument"] in (True, None)))
++    # ⚠ F3-03 — **안 한 검사를 성공으로 세지 않는다.** `ancestry`/`tree` 가 `None`(안 함)이면
++    #   코드 참조는 확인된 것이 아니다. `instrument` 의 `None` 은 두 뜻이 있어 `unperformed` 가
++    #   가른다 — 명시적으로 뺀 것(합법)과 구조가 틀려 못 한 것(확인 아님).
++    inst_ok = checks["instrument"] is True or (
++        checks["instrument"] is None and a.skip_instrument)
++    code_ref_ok = bool(checks["signature"] and checks["ancestry"] is True
++                       and checks["tree"] is True and inst_ok)
+     verdict = {"verified": not failed, "checks": checks, "failed": failed,
+                # 부분 상태 — 코드 참조(서명·ancestry·tree·instrument)만 맞은 객체는 **이것**이고 verified 가 아니다
+                "code_reference_verified": code_ref_ok,
++               # ⚠ R17 후속 3차 F3-03: 수행하지 **못한** 검사와 그 사유 — 성공도 실패도 아니다
++               "unperformed": unperformed,
+                # ⚠ R17 후속 2차 F2-06: 실행환경을 **부분/unknown 으로 적은 것**을 complete 와 구분해 드러낸다
+                #   (리뷰어: "부분·unknown 기록을 허용한다면 complete/verified 와 구분한다").
+                "runtime_partial": bool(gate.runtime_problems(r.get("runtime"))),
+diff --git a/bms-balancing/scripts/width_report.py b/bms-balancing/scripts/width_report.py
+index a444936..b37d269 100755
+--- a/bms-balancing/scripts/width_report.py
++++ b/bms-balancing/scripts/width_report.py
+@@ -60,6 +60,22 @@ COMPARED_SETTINGS = ("lb", "ub", "initial", "gamma_prefit", "gamma_lb", "n_multi
+ #:   전 판은 행 enum 이 "각각 유효한 값인가" 만 보고, 비교 조건은 sidecar 에서만 읽었다 — 그래서
+ #:   행만 `chain_rule_v2` 로 바꾸거나(한 파일 안에서 섞어도) `width_tol`·`cell` 을 어긋나게 해도
+ #:   rc 0 이었다 (본문 sha256 과 입력 receipt 는 정확한 채로). 왼쪽이 행의 열, 오른쪽이 sidecar 키다.
++#: ⚠ R17 후속 3차 F3-02: **같은 실행 축의 두 이름**. `fit_cycles.py` 는 `--starts` 하나를 받아
++#:   sidecar 에 `starts` 와 `n_multistart` 로 **두 번** 적는다. 단일 파일 안에서 둘의 일치를
++#:   요구한 것(F2-02)은 옳지만, 비교에서 **독립 축 둘로 세면** 정상 변경이 표현 불가능해진다 —
++#:   `--axis starts` 면 `n_multistart` 가, `--axis n_multistart` 면 `starts` 가 남아 **둘 다 rc 2**
++#:   였다 (리뷰어가 실제 producer 산출 두 벌로 실측). 축을 고르면 그 **무리 전체**를 뺀다.
++SETTING_ALIASES = (("starts", "n_multistart"),)
++
++
++def alias_group(key: str) -> tuple:
++    """`key` 와 같은 의미 축의 이름들 — 무리에 없으면 자기 자신 하나."""
++    for group in SETTING_ALIASES:
++        if key in group:
++            return group
++    return (key,)
++
++
+ #: ⚠ R17 후속 2차 F2-02: 행에만 남아 있던 실행 조건 둘이 **결속 목록에 없었다** — 한쪽 파일의 행만
+ #:   `scale_seed=99`/`n_starts=999` 로 바꾸고 본문 sha256 을 정확히 갱신하면 rc 0 · "동일 확인" 이었다.
+ #:   둘 다 생산자가 행에 적는 값이고(`cycles.py` 의 `scale_seed`·`n_starts` 열), sidecar 의 짝은
+@@ -348,13 +364,23 @@ def table(rows, meta, path):
+ 
+ 
+ def guard_same_except(axis, ma, mb, pa, pb):
+-    """축 하나 말고 다른 설정이 다르면 **비교를 거부한다.**"""
+-    diff = [k for k in COMPARED_SETTINGS
+-            if k != axis and json.dumps(ma.get(k), sort_keys=True) != json.dumps(mb.get(k), sort_keys=True)]
++    """축 하나 말고 다른 설정이 다르면 **비교를 거부한다.**
++
++    ⚠ R17 후속 3차 F3-02 — 고른 축의 **별칭 무리 전체**를 뺀다. 한 의미를 두 이름으로 세면
++      정상 변경이 어느 이름으로도 표현되지 않는다. 무리 안의 일치는 파일마다 이미
++      `_typed_meta_problems` 가 요구하므로(`starts == n_multistart`), 무리를 통째로 빼도
++      "축 하나만 다르다" 는 약해지지 않는다 — 무리 밖 설정은 전부 그대로 본다.
++    """
+     if axis not in COMPARED_SETTINGS:
+         print(f"! `--axis {axis}` 는 견주는 설정 목록에 없다: {COMPARED_SETTINGS}", file=sys.stderr); raise SystemExit(2)
+-    if json.dumps(ma.get(axis)) == json.dumps(mb.get(axis)):
+-        print(f"! 두 실행의 {axis} 가 같다 ({ma.get(axis)!r}) — 이 비교는 그 축의 것이 아니다",
++    group = alias_group(axis)
++    diff = [k for k in COMPARED_SETTINGS
++            if k not in group and json.dumps(ma.get(k), sort_keys=True) != json.dumps(mb.get(k), sort_keys=True)]
++    moved = [k for k in group
++             if json.dumps(ma.get(k), sort_keys=True) != json.dumps(mb.get(k), sort_keys=True)]
++    if not moved:
++        print(f"! 두 실행의 {axis} 가 같다 ({ma.get(axis)!r}) — 이 비교는 그 축의 것이 아니다"
++              + (f" (같은 축의 이름 {list(group)} 도 전부 같다)" if len(group) > 1 else ""),
+               file=sys.stderr); raise SystemExit(2)
+     if diff:
+         print(f"! 축({axis}) 말고 다른 설정이 다르다 — 비교하지 않는다:", file=sys.stderr)

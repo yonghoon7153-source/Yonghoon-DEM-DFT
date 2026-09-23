@@ -1,0 +1,13 @@
+{
+  "gc_valid_control": 0,
+  "gc_changed_bytes": 2,
+  "gc_missing_retained": 2,
+  "gc_unindexed_control": 2,
+  "common_cycle_control": 0,
+  "common_cycle_999": 2,
+  "receipt_valid_control": 0,
+  "receipt_code_null": 3,
+  "receipt_instrument_list": 3,
+  "receipt_tree_instead_of_blob": 3,
+  "optimizer_out_of_box_fault": "observed"
+}

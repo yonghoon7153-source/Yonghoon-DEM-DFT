@@ -1,0 +1,13 @@
+ bms-balancing/WORKING_STATE.md                     |   24 +-
+ bms-balancing/docs/ASSB_TRANSFER_NOTE.md           |  182 ++-
+ bms-balancing/docs/ASSB_WANTED_PAPERS.md           |  275 ++++
+ bms-balancing/docs/COMSOL_REBUILD_SPEC.md          |  139 ++
+ .../docs/MSC_SEMINAR_2026-09-23_APPLICATION.md     |  502 ++++++
+ bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md       |   11 +
+ bms-balancing/out/msc_p6/result.json               |  341 ++++
+ bms-balancing/out/msc_sign/result.json             | 1672 ++++++++++++++++++++
+ bms-balancing/reviews/R17_FOLLOWUP3_RESPONSE.md    |   20 +
+ bms-balancing/scripts/msc_p6_synthetic.py          |  206 +++
+ bms-balancing/scripts/msc_sign_table.py            |  335 ++++
+ bms-balancing/tests/test_msc_sign_table.py         |   42 +
+ 12 files changed, 3716 insertions(+), 33 deletions(-)

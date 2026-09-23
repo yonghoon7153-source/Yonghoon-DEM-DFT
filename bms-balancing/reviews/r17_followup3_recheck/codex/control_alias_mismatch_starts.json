@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-gate68-a1979cdf\\bms-balancing\\scripts\\width_report.py",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\r17_repros\\new-producer-bx9xn0x2\\n1\\cycles_syn_Li.csv",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\r17_controls\\alias_mismatch\\cycles_syn_Li.csv",
+    "--axis",
+    "starts"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-gate68-a1979cdf\\bms-balancing",
+  "rc": 2,
+  "timeout": false,
+  "seconds": 2.1570000000065193,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "bb87ca6e27951be6b4b67a531e37ecc51a9bcabd0d1d3f496d8a7a07a5697ad6"
+}

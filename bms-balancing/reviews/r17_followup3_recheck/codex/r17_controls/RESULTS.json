@@ -1,0 +1,124 @@
+[
+  {
+    "case": "valid_control",
+    "axis": "starts",
+    "rc": 0,
+    "expected": 0
+  },
+  {
+    "case": "valid_control",
+    "axis": "n_multistart",
+    "rc": 0,
+    "expected": 0
+  },
+  {
+    "case": "unchanged_axis",
+    "axis": "starts",
+    "rc": 2,
+    "expected": 2
+  },
+  {
+    "case": "unchanged_axis",
+    "axis": "n_multistart",
+    "rc": 2,
+    "expected": 2
+  },
+  {
+    "case": "alias_mismatch",
+    "axis": "starts",
+    "rc": 2,
+    "expected": 2
+  },
+  {
+    "case": "alias_mismatch",
+    "axis": "n_multistart",
+    "rc": 2,
+    "expected": 2
+  },
+  {
+    "case": "row_starts_mismatch",
+    "axis": "starts",
+    "rc": 2,
+    "expected": 2
+  },
+  {
+    "case": "row_starts_mismatch",
+    "axis": "n_multistart",
+    "rc": 2,
+    "expected": 2
+  },
+  {
+    "case": "second_axis_seed",
+    "axis": "starts",
+    "rc": 2,
+    "expected": 2
+  },
+  {
+    "case": "second_axis_seed",
+    "axis": "n_multistart",
+    "rc": 2,
+    "expected": 2
+  },
+  {
+    "case": "gc_retained_changed",
+    "rc": 2,
+    "expected": 2,
+    "before": {
+      "partial/index.json": "74eea45093bb158fb4bf794e716c367599af19eb0f3e1469800a4fa9e12819a6",
+      "partial/matrix/A/matrix_100.csv": "cba06b5736faf67e54b07b561eae94395e774c517a7d910a54369e1263ccfbd4",
+      "partial/matrix/B/matrix_100.csv": "d67e2e944994496c8d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed"
+    },
+    "after": {
+      "partial/index.json": "74eea45093bb158fb4bf794e716c367599af19eb0f3e1469800a4fa9e12819a6",
+      "partial/matrix/A/matrix_100.csv": "cba06b5736faf67e54b07b561eae94395e774c517a7d910a54369e1263ccfbd4",
+      "partial/matrix/B/matrix_100.csv": "d67e2e944994496c8d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed"
+    },
+    "unchanged": true
+  },
+  {
+    "case": "gc_doomed_missing",
+    "rc": 2,
+    "expected": 2,
+    "before": {
+      "partial/index.json": "74eea45093bb158fb4bf794e716c367599af19eb0f3e1469800a4fa9e12819a6",
+      "partial/matrix/B/matrix_100.csv": "11507a0e2f5e69d5dfa40a62a1bd7b6ee57e6bcd85c67c9b8431b36fff21c437"
+    },
+    "after": {
+      "partial/index.json": "74eea45093bb158fb4bf794e716c367599af19eb0f3e1469800a4fa9e12819a6",
+      "partial/matrix/B/matrix_100.csv": "11507a0e2f5e69d5dfa40a62a1bd7b6ee57e6bcd85c67c9b8431b36fff21c437"
+    },
+    "unchanged": true
+  },
+  {
+    "case": "gc_malformed_digest",
+    "rc": 2,
+    "expected": 2,
+    "before": {
+      "partial/index.json": "343aff6935d2f3cb403a2bffff3f49910e31ace68412a77063db12b1b8312ccc",
+      "partial/matrix/A/matrix_100.csv": "cba06b5736faf67e54b07b561eae94395e774c517a7d910a54369e1263ccfbd4",
+      "partial/matrix/B/matrix_100.csv": "11507a0e2f5e69d5dfa40a62a1bd7b6ee57e6bcd85c67c9b8431b36fff21c437"
+    },
+    "after": {
+      "partial/index.json": "343aff6935d2f3cb403a2bffff3f49910e31ace68412a77063db12b1b8312ccc",
+      "partial/matrix/A/matrix_100.csv": "cba06b5736faf67e54b07b561eae94395e774c517a7d910a54369e1263ccfbd4",
+      "partial/matrix/B/matrix_100.csv": "11507a0e2f5e69d5dfa40a62a1bd7b6ee57e6bcd85c67c9b8431b36fff21c437"
+    },
+    "unchanged": true
+  },
+  {
+    "case": "gc_dryrun_changed",
+    "rc": 2,
+    "expected": 2,
+    "before": {
+      "partial/index.json": "74eea45093bb158fb4bf794e716c367599af19eb0f3e1469800a4fa9e12819a6",
+      "partial/matrix/A/matrix_100.csv": "d67e2e944994496c8d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed",
+      "partial/matrix/B/matrix_100.csv": "11507a0e2f5e69d5dfa40a62a1bd7b6ee57e6bcd85c67c9b8431b36fff21c437"
+    },
+    "after": {
+      "partial/index.json": "74eea45093bb158fb4bf794e716c367599af19eb0f3e1469800a4fa9e12819a6",
+      "partial/matrix/A/matrix_100.csv": "d67e2e944994496c8d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed",
+      "partial/matrix/B/matrix_100.csv": "11507a0e2f5e69d5dfa40a62a1bd7b6ee57e6bcd85c67c9b8431b36fff21c437"
+    },
+    "unchanged": true
+  }
+]
