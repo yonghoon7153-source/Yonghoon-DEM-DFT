@@ -292,6 +292,14 @@ def test_an_unknown_cell_configuration_is_refused(client):
     assert response.status_code == 422
 
 
+#: 물리적으로 맞는 블로킹 펠릿 (700 µm, 10 mm) — 벌크 5e-11 F, 입계 1e-8 F.
+#: 전에는 기본 픽스처(아크 Q 1e-5·1e-3)로 σ 를 기대했는데, 70 µm 펠릿에서 그
+#: 커패시턴스는 전극 이중층의 크기다 — 실측 검수가 연구실 데이터에서 잡은 바로
+#: 그 오류다 (2026-09-23, ADR 0041).
+PELLET = {"rs": 5.0, "r1": 2e4, "q1": 1.0e-10, "n1": 0.95,
+          "r2": 4e4, "q2": 3.23e-8, "n2": 0.85, "q_block": 1e-6}
+
+
 def test_conductivity_needs_a_thickness_and_says_so(client):
     """σ 를 내려면 두께가 있어야 하고, 없으면 그렇게 말한다.
 
@@ -300,19 +308,46 @@ def test_conductivity_needs_a_thickness_and_says_so(client):
     σ 를 기대했다 -- 그것이 바로 실측에서 사람을 물린 실수다.  그 모양은 이온을
     막지 않는 셀(Li|전해질|Li)이고, 거기서는 두 아크가 벌크·입계가 아니다.
     """
-    out = upload(client, kind="solid", q_block=1e-2)
+    out = upload(client, kind="solid", **PELLET)
     fit = client.post(f"/api/eis/spectra/{out['id']}/fit",
-                      params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"}).json()
+                      params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3",
+                              "restarts": 24}).json()
     assert fit["conductivity"]["total_s_cm"] is None
     assert "두께" in fit["conductivity"]["missing"]
 
     client.patch(f"/api/eis/spectra/{out['id']}",
-                 json={"thickness_um": 70, "area_cm2": 0.785})
+                 json={"thickness_um": 700, "area_cm2": 0.785})
     detail = client.get(f"/api/eis/spectra/{out['id']}").json()
     conductivity = detail["fits"][0]["conductivity"]
     assert conductivity["missing"] == []
-    expected = 0.007 / ((20.0 + 40.0) * 0.785)
+    assert conductivity["total_from"] == "arcs"
+    expected = 0.07 / ((2e4 + 4e4) * 0.785)
     assert conductivity["total_s_cm"] == pytest.approx(expected, rel=0.02)
+
+
+def test_electrode_sized_arcs_send_the_conductivity_to_the_intercept(client):
+    """벌크·입계라 부른 아크가 µF 대(전극 이중층)면 그 아크로 σ 를 내지 않고,
+    막는 셀이면 고주파 절편 R0 로 낸다 — 랩이 실수축 교점으로 읽는 그 값."""
+    out = upload(client, kind="solid", q_block=1e-2)      # 아크 Q 1e-5·1e-3
+    client.patch(f"/api/eis/spectra/{out['id']}",
+                 json={"thickness_um": 70, "area_cm2": 0.785})
+    fit = client.post(f"/api/eis/spectra/{out['id']}/fit",
+                      params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"}).json()
+    conductivity = fit["conductivity"]
+    assert conductivity["total_from"] == "series"
+    assert conductivity["electrode_arcs"] == ["R1", "R2"]
+    assert conductivity["total_s_cm"] == pytest.approx(0.007 / (5.0 * 0.785),
+                                                       rel=0.02)
+    assert conductivity["bulk_s_cm"] is None
+
+
+def test_the_blocking_pellet_presets_are_offered(client):
+    presets = client.get("/api/eis/circuits").json()["combinations"]
+    (sym,) = [one for one in presets if one["kind"] == "solid"
+              and one["cell_config"] == "sym"]
+    circuits = [one["circuit"] for one in sym["presets"]]
+    assert "L1-R0-CPE1" in circuits and "L1-R0-p(R1,CPE1)-CPE2" in circuits
+    assert circuits[0] == "R0-TL1"          # 기본값은 그대로 — 복합전극 대칭셀
 
 
 def test_a_circuit_that_cannot_be_read_is_a_422_not_a_500(client):

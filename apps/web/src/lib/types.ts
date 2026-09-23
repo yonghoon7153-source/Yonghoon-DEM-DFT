@@ -975,6 +975,18 @@ export interface SpectrumFit {
     excluded?: string[]
     /** 스펙트럼이 저주파에서 이온을 막지 않아서 σ 를 안 냈다. */
     not_blocking?: boolean
+    /** 전체 σ 를 무엇으로 냈나 (ADR 0041) — 아크만(`arcs`), 고주파 절편 R0
+     *  만(`series`), R0 + 입계 크기 아크(`series_and_arcs`).  벌크 크기의
+     *  아크가 없으면 벌크는 잰 주파수 위, R0 에 있다. */
+    total_from?: 'arcs' | 'series' | 'series_and_arcs'
+    /** 전체 σ 에 더한 저항들의 이름 — `["R0", "R1"]`. */
+    total_parts?: string[]
+    /** R0 가 들어갔을 때 그 근거 한 문장. */
+    total_note?: string
+    /** 커패시턴스가 전극 쪽이라 전해질에서 뺀 아크. */
+    electrode_arcs?: string[]
+    /** 이름과 커패시턴스가 안 맞아 그 이름의 σ 를 비운 까닭. */
+    notes?: string[]
   }
   /** 이 셀이 저주파에서 정말로 이온을 막는가 — 저주파 위상으로 본다.
    *  "대칭셀" 은 막는 셀(SS|전해질|SS)과 안 막는 셀(Li|전해질|Li)을 가르지

@@ -13,10 +13,12 @@ every sigma without re-reading a single file.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 import numpy as np
 
+from .capacitance import BULK, FACE
 from .circuit import CircuitError, parse_circuit
 from .fit import FitResult
 
@@ -62,7 +64,9 @@ KINDS: dict[str, dict] = {
     },
     SOLID: {
         "label": "전고체",
-        "series": ("직렬 저항", "배선·접촉 저항 — 전해질 저항이 아닙니다"),
+        "series": ("직렬 저항", "고주파 절편 — 배선·접촉 저항에, 잰 주파수 위에 "
+                               "있는 전해질 반원(황화물이면 벌크·입계)의 저항까지 "
+                               "들어 있습니다"),
         "arcs": [
             ("고주파 아크", "이온 블로킹 대칭셀이면 벌크입니다 — 셀 구성을 정해 주세요"),
             ("저주파 아크", "이온 블로킹 대칭셀이면 입계입니다 — 셀 구성을 정해 주세요"),
@@ -293,9 +297,27 @@ def ionic_conductivity(result: FitResult, *, thickness_cm: float | None,
     Adding sigmas instead would over-state the total by the ratio of the two
     resistances, and it is the kind of mistake that looks right.
 
-    The series element is excluded on purpose: wiring and contact resistance
-    are not ionic transport, and dividing a cell thickness by them produces a
-    number with the units of a conductivity and the meaning of nothing.
+    **Which resistances are the electrolyte is the capacitances' call** (ADR
+    0041).  실측 2026-09-23: 연구실 온도 스캔 70여 스윕에서 "벌크"·"입계" 로
+    불린 아크가 전부 µF 대 — 전극 이중층의 크기였다.  황화물 펠릿의 벌크
+    반원은 σ/(2π·εr·ε0) ≈ 10⁸ Hz 에 있어 (Irvine–Sinclair–West 식 2·3) 잰
+    주파수 위이고, 그 저항은 **고주파 절편 R0** 에 들어 있다 — 랩이 실수축
+    교점으로 읽는 값이고 (B15 50 °C: R0 7.89 Ω ↔ 교점 8.31 Ω), Vadhva 외
+    (2021) 가 황화물 셀에서 R_SE,bulk 라 부르는 저항이다.  그래서 두께·면적이
+    있으면 첫 두 아크를 커패시턴스로 가른다 (`capacitance.size_class`):
+
+    * **면 쪽**(표면층·전극 계면·반응뿐)인 아크는 전해질이 아니다 — 빼고
+      ``excluded`` · ``electrode_arcs`` 에 적는다.
+    * 벌크 크기의 아크가 **하나도 없으면** 벌크는 R0 에 있다 — Irvine 외
+      그림 4b 의 읽기다: 고주파 절편이 벌크, 다음 아크가 입계.  전체 σ 는
+      ``R0 + 입계 크기 아크`` 로 낸다 (``total_from`` 이 ``"series"`` 또는
+      ``"series_and_arcs"``, 근거는 ``total_note``).  막는 셀에서만 —
+      안 막으면 R0 뒤에 무엇이 있는지 모른다.
+    * 벌크 크기 아크가 보이면 R0 는 배선·접촉이다 — 예전처럼 뺀다.
+
+    가르지 못하는 아크(표의 경계 근처, 또는 미결정이라 경계를 넘나드는
+    값)가 있으면 예전처럼 이름대로 읽는다.  이름이 커패시턴스와 어긋나는
+    아크는 그 이름의 σ 만 비우고(``notes``) 합계에는 넣는다.
     """
     series = _series_resistor_names(result)
     arcs = [meaning for meaning in label_arcs(result, SOLID, config)
@@ -324,29 +346,168 @@ def ionic_conductivity(result: FitResult, *, thickness_cm: float | None,
         out["missing"].append("두께")
     if not area_cm2 or area_cm2 <= 0:
         out["missing"].append("면적")
-    if not arcs:
-        out["missing"].append("아크")
     if out["missing"]:
         return out
-    if not all(meaning.determined for meaning in arcs):
-        out["missing"].append("결정되지 않은 저항")
+    if _has_transmission_line(result):
+        # 복합전극 대칭셀(`R0-TL1`)의 전송선은 전극 안의 이온 레일이다.  R0 는
+        # 전해질 층이지만 적힌 두께가 그 층의 두께라는 보장이 없다.
+        out["missing"].append("전해질만의 회로 (전송선이 든 회로는 복합전극 "
+                              "셀이라 적힌 두께가 전해질 층의 두께인지 모릅니다)")
         return out
 
-    # 전해질은 벌크와 입계, 두 아크다.  세 번째 아크는 자기 라벨부터
-    # "전극 계면일 수 있습니다" 인데 σ 합계에 넣으면 전해질 전도도가 그만큼
-    # 과소평가된다 -- 리뷰 재현에서 100 Ω 계면 아크 하나가 σ_total 을 2.7배
-    # 깎았다, 아무 표시 없이.  넣지 않고, 뺐다는 사실을 함께 낸다.
-    electrolyte = arcs[:2]
-    out["excluded"] = [f"{meaning.parameter} ({meaning.label}, "
-                       f"{meaning.value_ohm:.4g} Ω)" for meaning in arcs[2:]]
-    for key, meaning in zip(("bulk_s_cm", "grain_boundary_s_cm"), electrolyte,
-                            strict=False):
+    # 전해질은 앞의 두 아크까지다.  세 번째 아크는 자기 라벨부터 "전극 계면일
+    # 수 있습니다" 인데 σ 합계에 넣으면 전해질 전도도가 그만큼 과소평가된다
+    # -- 리뷰 재현에서 100 Ω 계면 아크 하나가 σ_total 을 2.7배 깎았다, 아무
+    # 표시 없이.  넣지 않고, 뺐다는 사실을 함께 낸다.
+    named = arcs[:2]
+    sized = _sized_arcs(result, named, thickness_cm, area_cm2)
+    sides = {name: side for name, (_, side) in sized.items()}
+    face = [meaning for meaning in named if sides.get(meaning.parameter) == FACE]
+    electrolyte = [meaning for meaning in named if meaning not in face]
+    hidden_bulk = not named or (all(sides.get(m.parameter) for m in named)
+                                and BULK not in sides.values())
+    out["excluded"] = (
+        [f"{meaning.parameter} ({meaning.label}, {meaning.value_ohm:.4g} Ω) — "
+         f"커패시턴스가 면 쪽(전극 계면·표면층) 크기" for meaning in face]
+        + [f"{meaning.parameter} ({meaning.label}, {meaning.value_ohm:.4g} Ω)"
+           for meaning in arcs[2:]])
+    if face:
+        out["electrode_arcs"] = [meaning.parameter for meaning in face]
+    if hidden_bulk and not _blocks(result, blocking):
+        out["missing"].append("블로킹 (막는 셀이어야 고주파 절편이 전해질 저항입니다)"
+                              if named or series else "아크")
+        return out
+    if not all(meaning.determined for meaning in electrolyte):
+        out["missing"].append("결정되지 않은 저항")
+        return out
+    intercept = 0.0
+    if hidden_bulk:
+        found = _determined_series(result, series)
+        if found is None:
+            out["missing"].append("결정된 직렬 저항 (고주파 절편)")
+            return out
+        intercept = found
+
+    misnamed = _misnamed(named, sized)
+    for key, meaning in zip(("bulk_s_cm", "grain_boundary_s_cm"), named, strict=False):
+        if meaning in face:
+            continue
+        if meaning.parameter in misnamed:
+            # 합계에는 들어간다 (전해질 쪽 크기이므로) — 그 이름으로 따로 내지만
+            # 않는다.  `missing` 에 넣지 않는 이유: 화면이 missing 을 "무엇이
+            # 필요합니다" 로 읽어 전체 σ 까지 가린다.
+            out.setdefault("notes", []).append(misnamed[meaning.parameter])
+            continue
         out[key] = conductivity(meaning.value_ohm, thickness_cm=thickness_cm,
                                 area_cm2=area_cm2)
-    total_ohm = sum(meaning.value_ohm for meaning in electrolyte)
+    total_ohm = intercept + sum(meaning.value_ohm for meaning in electrolyte)
     out["total_s_cm"] = conductivity(total_ohm, thickness_cm=thickness_cm,
                                      area_cm2=area_cm2)
     out["total_ohm"] = total_ohm
+    out["total_parts"] = ((sorted(series) if hidden_bulk else [])
+                          + [meaning.parameter for meaning in electrolyte])
+    if not hidden_bulk:
+        out["total_from"] = "arcs"
+        return out
+    out["total_from"] = "series_and_arcs" if electrolyte else "series"
+    out["total_note"] = _intercept_note(out["total_parts"], electrolyte, face)
     return out
 
 
+def _sized_arcs(result, arcs: list[ArcMeaning], thickness_cm: float,
+                area_cm2: float) -> dict[str, tuple]:
+    """``{R 이름: (ArcCapacitance, 쪽)}`` for the named arcs -- the side is
+    ``None`` where the capacitance cannot decide it."""
+    from .capacitance import arc_capacitances, size_class, spread_for
+
+    if not arcs:
+        return {}
+    values = {p.name: float(p.value) for p in result.parameters}
+    undetermined = {p.name for p in result.parameters if not p.determined}
+    try:
+        found = {arc.resistor: arc for arc in arc_capacitances(
+            result.circuit, values, thickness_cm=thickness_cm, area_cm2=area_cm2)}
+    except CircuitError:
+        return {}
+    out: dict[str, tuple] = {}
+    for meaning in arcs:
+        arc = found.get(meaning.parameter)
+        if arc is not None:
+            out[meaning.parameter] = (
+                arc, size_class(arc, spread=spread_for(arc, undetermined)))
+    return out
+
+
+def _misnamed(arcs: list[ArcMeaning], sized: dict[str, tuple]) -> dict[str, str]:
+    """Arcs whose capacitance rules out the name they were given (bulk, then
+    grain boundary), with the sentence that says so."""
+    from .capacitance import process
+
+    out: dict[str, str] = {}
+    for claim, meaning in zip(("bulk", "grain_boundary"), arcs, strict=False):
+        arc = sized.get(meaning.parameter, (None, None))[0]
+        if arc is None or arc.candidates is None or claim in arc.candidates:
+            continue
+        allowed = " 또는 ".join(process(key).label for key in arc.candidates)
+        out[meaning.parameter] = (
+            f"{meaning.parameter} ({meaning.label}) 의 커패시턴스가 "
+            f"{process(claim).label} 크기가 아닙니다"
+            + (f" — {allowed} 쪽입니다" if allowed else ""))
+    return out
+
+
+def _intercept_note(parts: list[str], electrolyte: list[ArcMeaning],
+                    face: list[ArcMeaning]) -> str:
+    what = " + ".join(parts)
+    if electrolyte:
+        note = (f"{what} 로 낸 전체 σ 입니다 — 벌크 크기의 아크가 없어 벌크는 잰 "
+                f"주파수 위, 고주파 절편 R0 에 들어 있습니다 (Irvine–Sinclair–West "
+                f"그림 4b 의 읽기, 배선·접촉 저항 포함). "
+                f"{', '.join(m.parameter for m in electrolyte)} 은 커패시턴스가 "
+                f"전해질(입계) 쪽이라 더했습니다")
+    else:
+        note = (f"고주파 절편 {what} 로 낸 전체 σ 입니다 — 벌크·입계 아크가 잰 "
+                f"주파수 위에 있어 R0 에 들어 있습니다 (실수축 교점과 같은 값, "
+                f"배선·접촉 저항 포함)")
+    if face:
+        note += (f". {', '.join(m.parameter for m in face)} 은 커패시턴스가 "
+                 f"전극 쪽이라 전해질에서 뺐습니다")
+    return note
+
+
+def _determined_series(result, series: set[str]) -> float | None:
+    """R0 (the series resistances added up), or ``None`` when there is none
+    or any of it is undetermined."""
+    parameters = {p.name: p for p in result.parameters}
+    if not series or any(not parameters[name].determined for name in series
+                         if name in parameters):
+        return None
+    return float(sum(parameters[name].value for name in series
+                     if name in parameters))
+
+
+def _blocks(result, blocking: dict | None) -> bool:
+    """The spectrum's verdict (ADR 0040); without one, how the circuit ends --
+    whoever chose a blocking circuit said the cell blocks."""
+    if blocking is not None and blocking.get("blocking") is not None:
+        return blocking.get("blocking") is True
+    return _ends_blocking(result)
+
+
+def _has_transmission_line(result) -> bool:
+    try:
+        model = parse_circuit(result.circuit)
+    except CircuitError:
+        return False
+    kinds = {re.match(r"[A-Za-z]+", name).group(0)
+             for name in model.parameter_names}
+    return bool(kinds & {"TL", "TLR"})
+
+
+def _ends_blocking(result) -> bool:
+    from .circuit import circuit_end
+
+    try:
+        return circuit_end(result.circuit) == "blocking"
+    except CircuitError:
+        return False

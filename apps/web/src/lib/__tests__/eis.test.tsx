@@ -710,6 +710,50 @@ describe('스펙트럼 상세', () => {
     expect(screen.queryByText('벌크 σ')).toBeNull()
   })
 
+  //: 실측 2026-09-23 검수.  황화물 블로킹 펠릿은 벌크·입계 반원이 잰 주파수
+  //  위에 있고, 전해질 저항은 고주파 절편 R0 에 있다.  그 σ 를 "전체 σ" 칸에
+  //  아무 표시 없이 두면 아크로 낸 σ 와 구별되지 않는다.
+  it('R0 로 낸 전체 σ 는 그렇다고 이름과 근거를 단다', async () => {
+    installFetch(detailHandler((url) => {
+      if (path(url) === '/api/eis/spectra/1') {
+        return detail({ kind: 'solid', cell_config: 'sym',
+                        fits: [fit({
+                          conductivity: { total_s_cm: 0.0108, total_ohm: 8.3,
+                                          total_from: 'series', missing: [],
+                                          total_note: '고주파 절편 R0 로 낸 전체 σ 입니다',
+                                          electrode_arcs: [] },
+                        })] })
+      }
+      return undefined
+    }))
+
+    renderDetail()
+    expect(await screen.findByText('전체 σ (고주파 절편 R0)')).toBeInTheDocument()
+    expect(screen.getByText('고주파 절편 R0 로 낸 전체 σ 입니다')).toBeInTheDocument()
+    expect(screen.getByText('1.080e-2 S/cm')).toBeInTheDocument()
+  })
+
+  //: 벌크는 절편에, 입계는 아크로 보일 때 (Irvine–Sinclair–West 그림 4b) —
+  //  무엇을 더했는지가 칸 이름에 있어야 R0 만 쓴 값과 구별된다.
+  it('R0 와 입계 아크를 더한 전체 σ 는 더한 것을 이름에 적는다', async () => {
+    installFetch(detailHandler((url) => {
+      if (path(url) === '/api/eis/spectra/1') {
+        return detail({ kind: 'solid', cell_config: 'sym',
+                        fits: [fit({
+                          conductivity: { total_s_cm: 0.00686, total_ohm: 13,
+                                          total_from: 'series_and_arcs',
+                                          total_parts: ['R0', 'R1'], missing: [],
+                                          total_note: 'R0 + R1 로 낸 전체 σ 입니다' },
+                        })] })
+      }
+      return undefined
+    }))
+
+    renderDetail()
+    expect(await screen.findByText('전체 σ (R0 + R1)')).toBeInTheDocument()
+    expect(screen.getByText('R0 + R1 로 낸 전체 σ 입니다')).toBeInTheDocument()
+  })
+
   it('전고체 풀셀이면 전도도를 안 낸다고 미리 말한다', async () => {
     installFetch(detailHandler((url) =>
       path(url) === '/api/eis/spectra/1'

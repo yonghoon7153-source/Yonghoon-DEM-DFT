@@ -861,6 +861,7 @@ function Conductivity({ fit }: { fit: SpectrumFit }) {
         <div className="tiny" style={{ marginTop: 4 }}>
           그래서 두 아크를 벌크·입계로 읽지 않고 전도도도 내지 않습니다 —
           회로는 <code>R0-p(R1,CPE1)-p(R2,CPE2)</code> (블로킹 없이) 가 맞습니다.
+          복합전극 대칭셀이면 <code>R0-TL1</code> 입니다.
           전도도는 이온을 막는 전극(SS 등)으로 잰 대칭셀에서 냅니다.
         </div>
       </Alert>
@@ -881,9 +882,17 @@ function Conductivity({ fit }: { fit: SpectrumFit }) {
           ['벌크 σ', value.bulk_s_cm ? `${value.bulk_s_cm.toExponential(3)} S/cm` : '—'],
           ['입계 σ', value.grain_boundary_s_cm ? `${value.grain_boundary_s_cm.toExponential(3)} S/cm` : '—'],
           // 두 σ 의 합이 아니다 — 저항이 직렬이므로 저항을 더해서 나눈다.
-          ['전체 σ', value.total_s_cm ? `${value.total_s_cm.toExponential(3)} S/cm` : '—'],
+          // R0 로 낸 것이면 그렇다고 이름에 적는다 (ADR 0041) — 같은 칸에 다른
+          // 근거의 수가 오면 표만 봐서는 어느 쪽인지 모른다.
+          [totalLabel(value), value.total_s_cm ? `${value.total_s_cm.toExponential(3)} S/cm` : '—'],
         ]}
       />
+      {value.total_from && value.total_from !== 'arcs' && value.total_note ? (
+        <div className="tiny faint">{value.total_note}</div>
+      ) : null}
+      {value.notes?.length ? (
+        <div className="tiny faint">{value.notes.join(' · ')}</div>
+      ) : null}
       {value.excluded?.length ? (
         // 세 번째 아크는 전극 계면일 수 있어 전해질 σ 에 넣지 않는다.
         // 조용히 빼면 회로를 바꿨을 때 σ 가 왜 움직였는지 알 수 없다.
@@ -891,6 +900,15 @@ function Conductivity({ fit }: { fit: SpectrumFit }) {
       ) : null}
     </div>
   )
+}
+
+/** 전체 σ 칸의 이름 — R0 가 들어갔으면 무엇을 더했는지 적는다 (ADR 0041). */
+function totalLabel(value: NonNullable<SpectrumFit['conductivity']>): string {
+  if (value.total_from === 'series') return '전체 σ (고주파 절편 R0)'
+  if (value.total_from === 'series_and_arcs' && value.total_parts?.length) {
+    return `전체 σ (${value.total_parts.join(' + ')})`
+  }
+  return '전체 σ'
 }
 
 const CONFIG_OPTIONS: { value: CellConfig | ''; label: string }[] = [
