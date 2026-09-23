@@ -140,8 +140,14 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 - ⚠ 그 크롭이 있던 ../litdb-canon 워크트리는 **다음 게이트가 지웠다** — `scripts/check_all.sh` 가 부르는
   `scripts/litdb_promote.py` `--selftest` 가 `cmd_open(force=True)` 로 **공유 경로를 강제 재생성**하고 끝에 `cmd_cleanup` 한다.
   크롭은 업로드 PDF 에서 다시 뽑히므로 실손은 없다.
-- ⛔ 위험: litdb 에이전트가 ../litdb-canon 에서 일하는 동안 게이트를 돌리면 **그 작업을 지운다**.  ⬜ 수정안 (비준 대기):
-  selftest 를 전용 임시 경로에서 돌린다 (`WT_DIR` · `TMP_BRANCH` · `STATE` 분리).  그 전까지는 **에이전트 작업 중 게이트 금지**.
+- ⛔ 위험: litdb 에이전트가 ../litdb-canon 에서 일하는 동안 게이트를 돌리면 **그 작업을 지운다** — 워크트리만이 아니라
+  브랜치 `tmp-litdb-promote` 와 에이전트의 `--close` 가 읽는 상태 파일 `.litdb_promote_state.json` 까지 셋 다 공유였다.
+- ✅ **수정 (사용자 비준 09-23 밤)** — `scripts/litdb_promote.py`: selftest 본문이 **전용 임시 이름**으로만 돈다
+  (`_selftest_private`) + 새 검사 **(0)**: 공유 이름 자리에 미끼 (워크트리 · 브랜치 · 상태 파일) 를 앉혀 두고 본문 뒤 셋이
+  그대로여야 PASS.  재현 먼저 — 전용 이름 전환 없이 (0) **FAIL** (미끼 셋 다 삭제) 확인 → 전환을 넣어 **PASS** (9/9).
+  두 번 모두 **실행 중인** Schlautmann 에이전트의 워크트리 · 브랜치 (8ac5c7a3f) · 상태 파일 sha256 불변을 대조했다.
+  덤: (5) 를 `dry_run=True` 로 — INDEX 검사가 dry-run 분기보다 앞이라 판정은 같고, 검사가 뚫려도 selftest 가 정본에 푸시 못 한다.
+  ⇒ *"에이전트 작업 중 게이트 금지"* **해제**.
 - 같은 밤 게이트 실패 1 건 = 그 selftest 의 180 s 시간초과 — 컨테이너 재부팅 직후 부하.  단독 실행 37 s 통과.
 
 ## ⑨ v100(uma) 인스턴스 — 반납 검토 → **유지** (사용자 결정, 09-23 밤)

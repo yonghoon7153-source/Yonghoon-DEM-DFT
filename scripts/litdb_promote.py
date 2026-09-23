@@ -26,6 +26,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CANON_BRANCH = 'claude/friendly-meitner-lldvar'
@@ -268,6 +269,58 @@ def cmd_cleanup(quiet=False):
 
 
 def _selftest():
+    """(0) 격리 검사로 감싼 selftest.
+
+    ★ 2026-09-23 실사고: 옛 selftest 는 공유 이름 셋 (`../litdb-canon` 워크트리 ·
+      `tmp-litdb-promote` 브랜치 · `.litdb_promote_state.json`) 을 `cmd_open(force=True)` 로
+      강제 재생성하고 끝에 지웠다.  `check_all.sh` 가 이걸 부르므로 논문 에이전트가 그
+      이름으로 일하는 중에 게이트를 돌리면 **작업이 통째로 사라졌다** (Schlautmann
+      에이전트의 크롭).  그래서 공유 이름 자리에 **미끼**를 앉혀 두고 본문을 돌린 뒤,
+      미끼 셋이 그대로인지 본다.
+    """
+    global WT_DIR, TMP_BRANCH, STATE
+    real = (WT_DIR, TMP_BRANCH, STATE)
+    root = tempfile.mkdtemp(prefix='litdb-promote-selftest-', dir=os.path.dirname(REPO))
+    decoy = (os.path.join(root, 'decoy-wt'), f'tmp-litdb-promote-decoy-{os.getpid()}',
+             os.path.join(root, 'decoy-state.json'))
+    os.makedirs(decoy[0])
+    open(os.path.join(decoy[0], 'SENTINEL'), 'w').write('in use\n')
+    open(decoy[2], 'w').write('{"in_use": true}\n')
+    _run(['git', 'branch', decoy[1], 'HEAD'])
+    head = _run(['git', 'rev-parse', decoy[1]]).stdout.strip()
+    WT_DIR, TMP_BRANCH, STATE = decoy
+    try:
+        ok = _selftest_private(root)
+    finally:
+        WT_DIR, TMP_BRANCH, STATE = real
+        o0 = (os.path.exists(os.path.join(decoy[0], 'SENTINEL'))
+              and os.path.exists(decoy[2])
+              and open(decoy[2]).read() == '{"in_use": true}\n'
+              and _run(['git', 'rev-parse', '--verify', '--quiet', decoy[1]],
+                       check=False, quiet=True).stdout.strip() == head)
+        _run(['git', 'branch', '-D', decoy[1]], check=False, quiet=True)
+        shutil.rmtree(root, ignore_errors=True)
+    print(f'  (0) 공유 워크트리·브랜치·상태 파일 불가침: {"OK" if o0 else "FAIL"}')
+    ok = ok and o0
+    print('LITDB-PROMOTE SELFTEST', 'PASS' if ok else 'FAIL')
+    return ok
+
+
+def _selftest_private(root):
+    """본문을 **전용 이름**으로 돌린다 — 지금 공유 이름 자리에 무엇이 있든 건드리지 않는다."""
+    global WT_DIR, TMP_BRANCH, STATE
+    shared = (WT_DIR, TMP_BRANCH, STATE)
+    WT_DIR = os.path.join(root, 'wt')
+    TMP_BRANCH = f'tmp-litdb-promote-selftest-{os.getpid()}'
+    STATE = os.path.join(root, 'state.json')
+    try:
+        return _selftest_body()
+    finally:
+        cmd_cleanup(quiet=True)
+        WT_DIR, TMP_BRANCH, STATE = shared
+
+
+def _selftest_body():
     ok = True
     print('litdb_promote selftest')
     wt = cmd_open(force=True)
@@ -323,16 +376,16 @@ def _selftest():
     ok &= o8
     os.remove(os.path.join(wt, 'litdb', 'papers', 'zz_selftest_good2.md'))
     print(f'  (8) --pdf 대상 모호하면 거부: {"OK" if o8 else "FAIL"}')
-    # (5) INDEX 미등재는 --close 가 막아야 한다
+    # (5) INDEX 미등재는 --close 가 막아야 한다.  ★ dry_run=True — INDEX 검사가 dry-run 분기보다
+    #     **앞**이라 판정은 같고, 검사가 뚫리는 날에도 selftest 가 정본에 푸시하지 못한다.
     try:
-        cmd_close(message='selftest', dry_run=False)
+        cmd_close(message='selftest', dry_run=True)
         o5 = False
     except SystemExit as e:
         o5 = 'INDEX' in str(e)
     ok &= o5
     print(f'  (5) INDEX 미등재 차단: {"OK" if o5 else "FAIL"}')
     cmd_cleanup(quiet=True)
-    print('LITDB-PROMOTE SELFTEST', 'PASS' if ok else 'FAIL')
     return ok
 
 
