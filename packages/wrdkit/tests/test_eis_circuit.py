@@ -73,6 +73,23 @@ def test_the_two_finite_warburgs_are_not_the_same_element():
     assert abs(wo[0]) > 1e3
 
 
+def test_the_line_with_particle_diffusion_ends_like_a_capacitor():
+    """``TL`` 의 계면은 ``CPE ∥ (Rct + Wr·coth(x)/x)`` — ``Wo`` 와 같은 반사
+    경계라, 저주파에서 전극 전체가 입자에 리튬을 쌓는 축전기가 된다.  ``TLR``
+    (계면 ``Rct ∥ CPE``) 은 실수축으로 돌아온다.  검수는 한때 ``TL`` 을 돌아오는
+    끝으로 셌다."""
+    low = [1e-6]
+    tl = parse_circuit("TL1").impedance(
+        [40.0, 1e-9, 5.0, 1e-3, 0.9, 20.0, 0.5, 10.0], low)
+    tlr = parse_circuit("TLR1").impedance([40.0, 1e-9, 5.0, 1e-3, 0.9], low)
+    assert np.degrees(np.angle(tl[0])) < -80.0
+    assert abs(tl[0]) > 1e4
+    # 막지 않는 짝은 de Levie 의 DC 값 √(Ri·Rct)·coth√(Ri/Rct) 에서 실수축에 선다.
+    assert np.degrees(np.angle(tlr[0])) > -1.0
+    assert tlr.real[0] == pytest.approx(np.sqrt(40.0 * 5.0) / np.tanh(np.sqrt(8.0)),
+                                        rel=1e-3)
+
+
 def test_an_unknown_element_is_named_in_the_error():
     with pytest.raises(CircuitError, match="Zed"):
         parse_circuit("R0-Zed1")

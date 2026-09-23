@@ -500,7 +500,18 @@ def _compatible(alternatives: Iterable[str], ends: set[str], current: str, *,
     ``arcs`` (the arcs worth keeping), then the smaller circuit.  ``exact``
     keeps only that many arcs.  In offered order the first blocking circuit had
     no inductor: 27 of the lab's tail-mimicking fits were told to go to it.
+
+    **A lumped circuit is not swapped for a transmission line, nor back.**  The
+    line says the electrode is a composite with the reaction spread through
+    it; neither the cell configuration (the lab's "symmetric cell" holds
+    pellets and composite cells alike) nor the spectrum says that.  Once the
+    line's end was read right (it blocks), the B11–B17 pellets would have been
+    told `R0-TL1` gives their arcs the right names.
     """
+    try:
+        line = _has_line(parse_circuit(current))
+    except CircuitError:
+        line = False
     ranked: list[tuple[tuple, int, str]] = []
     for position, alternative in enumerate(alternatives):
         try:
@@ -508,8 +519,8 @@ def _compatible(alternatives: Iterable[str], ends: set[str], current: str, *,
             end = circuit_end(model)
         except CircuitError:
             continue
-        if end not in ends or alternative == current or \
-                alternative in [one for _, _, one in ranked]:
+        if end not in ends or alternative == current or _has_line(model) != line \
+                or alternative in [one for _, _, one in ranked]:
             continue
         kinds = {name.partition("_")[0].rstrip("0123456789")
                  for name in model.parameter_names}
@@ -537,6 +548,11 @@ def _arcs_to_keep(arcs: Sequence[ArcCapacitance], claims: dict[str, str | None],
             continue
         keep += 1
     return keep
+
+
+def _has_line(model: Circuit) -> bool:
+    """The circuit holds a transmission line (``TL`` or ``TLR``)."""
+    return any(re.match(r"TLR?\d", name) for name in model.parameter_names)
 
 
 def _suggest(candidates: Iterable[str], limit: int = 3) -> str:

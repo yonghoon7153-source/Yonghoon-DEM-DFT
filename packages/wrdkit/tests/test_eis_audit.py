@@ -484,6 +484,9 @@ def test_a_fresh_fit_result_is_audited_by_the_same_code():
     ("R0-p(R1,CPE1)-Wo2", "blocking"),              # 반사 경계
     ("R0-p(R1,CPE1)-Ws2", "resistive"),             # 투과 경계
     ("R0-p(R1,CPE1)-W2", "diffusive"),
+    ("R0-TL1", "blocking"),                         # 입자 확산이 반사 경계
+    ("L1-R0-p(R1,CPE1)-TL1", "blocking"),
+    ("L1-R0-p(R1,CPE1)-TLR1", "resistive"),         # 계면이 Rct ∥ CPE
     ("L1-R0-p(R1,CPE1)-p(R2,CPE2)", "resistive"),
     ("R0-p(R1,CPE1,C1)", "resistive"),
 ])
@@ -712,14 +715,16 @@ def test_a_real_bulk_arc_is_not_swept_into_the_electrode_verdict():
 
 
 def test_suggestions_come_from_the_offered_circuits_that_fit_the_ending():
-    """안 막는 복합전극 대칭셀 — 블로킹 꼬리를 뺀 회로와, 보기 중 막지 않는
-    끝을 가진 것 (전송선 포함)을 권한다."""
+    """안 막는 셀 — 블로킹 꼬리를 뺀 회로와, 보기 중 실수축으로 돌아오는 끝을
+    가진 것만 권한다.  `R0-TL1` 은 아니다: 입자에 리튬을 쌓는 확산(coth)이라
+    저주파에서 `Z_계면 + R_ion/3` 의 수직 꼬리로 끝난다.  처음 판은 이것을
+    돌아오는 끝으로 세어 실측 여섯 셀(#31 #32 #104 #142 #143 #38)에 권했다."""
     audit = audit_user(alternatives=["R0-TL1", "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3",
-                                     "L1-R0-CPE1"])
+                                     "L1-R0-CPE1", "R0-p(R1,CPE1)-p(R2,CPE2)"])
     (finding,) = [f for f in audit.findings
                   if f.code == "blocking_element_on_open_cell"]
-    assert "`R0-p(R1,CPE1)-p(R2,CPE2)` 또는 `R0-TL1`" in finding.message
-    assert "L1-R0-CPE1" not in finding.message
+    assert finding.message.endswith("`R0-p(R1,CPE1)-p(R2,CPE2)` 로 다시 맞추세요")
+    assert "TL1" not in finding.message and "L1-R0-CPE1" not in finding.message
 
 
 def test_a_transmission_line_fit_is_not_told_about_bulk_sigma():
@@ -733,13 +738,12 @@ def test_a_transmission_line_fit_is_not_told_about_bulk_sigma():
 
 
 def test_an_open_cell_is_not_offered_a_diffusion_ending():
-    """반무한 W 도 실수축으로 돌아오지 않는다 (Lasia 1999) — 안 막는 셀에
-    권하지 않는다."""
+    """반무한 W 도, 입자에 전하를 쌓는 전송선도 실수축으로 돌아오지 않는다
+    (Lasia 1999) — 안 막는 셀에 권하지 않는다."""
     audit = audit_user(alternatives=["R0-p(R1,CPE1)-W2", "R0-TL1"])
     (finding,) = [f for f in audit.findings
                   if f.code == "blocking_element_on_open_cell"]
-    assert "`R0-TL1`" in finding.message
-    assert "W2" not in finding.message
+    assert "W2" not in finding.message and "TL1" not in finding.message
 
 
 def test_a_large_amplitude_is_noted():
@@ -885,6 +889,27 @@ def test_the_refit_offered_first_has_the_cable_and_the_arcs_worth_keeping():
                       alternatives=PRESETS)
     (tail,) = [f for f in audit.findings if f.code == "tail_mimicked_by_arc"]
     assert ". `L1-R0-CPE1` 또는" in tail.message      # 꼬리는 아크가 아니다
+    # 전송선의 끝도 막지만 펠릿에 권하지 않는다 — 복합전극이라는 주장은 셀
+    # 구성(대칭셀)도 스펙트럼도 하지 않는다.
+    assert "TL1" not in merged.message and "TL1" not in tail.message
+
+
+def test_a_transmission_line_is_not_told_its_end_closes():
+    """실측 B17 재측정 (#144 #150) 과 풀셀 #7: 전송선으로 맞춘 막는 스펙트럼에
+    "회로의 저주파 끝이 실수축으로 닫힙니다 — 마지막 아크가 꼬리를 흉내
+    냅니다" 가 붙었다.  아크는 없고, `TL` 의 계면 확산(`Wr·coth(x)/x`)은
+    `Wo` 와 같은 반사 경계라 끝이 막힌다 — #144 는 Wr 가 1e9 Ω 이라 구간 안에서
+    이미 -63° 꼬리였다."""
+    values = {"R0": 13.9, "TL1_Ri": 39.2, "TL1_Re": 39.3, "TL1_Rct": 1.13e3,
+              "TL1_Q": 3.96e-7, "TL1_n": 0.996, "TL1_Wr": 9.98e8, "TL1_Wn": 0.704,
+              "TL1_Wt": 4.46e4}
+    fit = Fit("R0-TL1", [P(n, v) for n, v in values.items()])
+    audit = audit_fit(fit, sulfide_pellet(), kind=SOLID, config=SYMMETRIC,
+                      thickness_cm=PELLET_CM, area_cm2=AREA_CM2, band=SULFIDE_BAND,
+                      alternatives=PRESETS)
+    assert audit.blocking["blocking"] is True and audit.end == "blocking"
+    assert not {"open_end_on_blocking_cell", "tail_mimicked_by_arc",
+                "blocking_element_on_open_cell"} & set(codes(audit))
 
 
 def test_noise_just_above_the_axis_at_the_end_is_not_drift():

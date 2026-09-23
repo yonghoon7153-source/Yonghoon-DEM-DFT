@@ -407,13 +407,19 @@ def test_a_scan_row_carries_its_verdict_and_when_it_was_measured(client):
 
 
 def test_the_offered_circuits_reach_the_suggestion(client):
-    """대칭셀 보기에는 복합전극 모델 `R0-TL1` 이 있다 — 안 막는 셀에 블로킹
-    꼬리를 단 맞춤에는 그것도 권한다."""
-    out = user_cell(client)
+    """대칭셀 보기의 배선 L 이 든 블로킹 회로가 권하는 회로로 온다 — 꼬리를
+    아크로 흉내 낸 펠릿에 `L1-R0-CPE1` 은 보기에만 있는 회로다.  보기의 첫 줄
+    `R0-TL1` 은 끝이 막아도 권하지 않는다 (펠릿에 복합전극 모델)."""
+    out = upload(client, mpr(q_block=2e-6, rs=8.0, r1=1e-3, q1=1e-12, n1=0.9,
+                             r2=1e-3, q2=1e-12, n2=0.9),
+                 "SS_sulfide_SS_sym_700um.mpr")
+    client.patch(f"/api/eis/spectra/{out['id']}",
+                 json={"thickness_um": 700.0, "diameter_mm": 10.0})
+    fit(client, out["id"], "R0-p(R1,CPE1)")
     item = entry(audit(client), out["id"])
-    (finding,) = [f for f in item["findings"]
-                  if f["code"] == "blocking_element_on_open_cell"]
-    assert "`R0-TL1`" in finding["message"]
+    (finding,) = [f for f in item["findings"] if f["code"] == "tail_mimicked_by_arc"]
+    assert "`L1-R0-CPE1`" in finding["message"]
+    assert "TL1" not in finding["message"]
 
 
 def test_the_file_name_is_not_taken_for_the_shown_name(client):

@@ -20,8 +20,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
-__all__ = ["BLOCKING_KINDS", "Circuit", "Element", "ELEMENTS", "parse_circuit",
-           "CircuitError", "circuit_end", "series_parts"]
+__all__ = ["BLOCKING_INSIDE", "BLOCKING_KINDS", "Circuit", "Element", "ELEMENTS",
+           "parse_circuit", "CircuitError", "circuit_end", "series_parts"]
 
 
 class CircuitError(ValueError):
@@ -515,19 +515,30 @@ def series_blocks(circuit: Circuit) -> list[tuple[str, tuple[int, ...]]]:
 #: 직렬 경로에 있으면 **DC 를 막는** 소자.  `Wo` 는 반사 경계라 저주파에서
 #: 축전기가 된다 (`Ws` 는 투과 경계라 실수축으로 돌아온다 — 반대다).
 BLOCKING_KINDS = frozenset({"C", "CPE", "Wo"})
+#: 안에서 DC 를 막는 소자.  `TL` 의 계면 확산 ``Wr·coth(x)/x`` 는 `Wo` 와 같은
+#: 반사 경계라, 저주파에서 ``Z → Z_계면 + R_ion/3`` 이 입자에 리튬을 쌓는
+#: 축전기로 선다.  `TLR` (계면 ``Rct ∥ CPE``) 은 실수축으로 돌아온다.  직렬 CPE
+#: 처럼 맞춤이 지우러 경계로 가는 소자는 아니라 `BLOCKING_KINDS` 와 따로 둔다.
+BLOCKING_INSIDE = frozenset({"TL"})
 
 
 def circuit_end(circuit: str | Circuit) -> str:
     """How the circuit's low-frequency end closes.
 
-    ``blocking``  a ``C``/``CPE``/``Wo`` in the series path: ``|Z| -> inf``,
-                  phase towards -90°.  Position does not matter.
+    ``blocking``  a ``C``/``CPE``/``Wo`` in the series path, or a ``TL``
+                  whose particles store the charge: ``|Z| -> inf``, phase
+                  towards -90°.  Position does not matter.
     ``diffusive`` a semi-infinite ``W`` and nothing blocking: -45° for ever.
     ``resistive`` everything else: the spectrum returns to the real axis.
+
+    The line was once counted as ``resistive`` -- it has no blocking leaf of
+    its own.  Real fits with it were told "the circuit closes on the real axis,
+    the last arc mimics the tail" with no arc in them (B17 re-measure #144
+    #150, full cell #7), and cells that do close were offered it.
     """
     model = parse_circuit(circuit) if isinstance(circuit, str) else circuit
     kinds = {kind for _, kind in model.series_element_kinds()}
-    if kinds & BLOCKING_KINDS:
+    if kinds & (BLOCKING_KINDS | BLOCKING_INSIDE):
         return "blocking"
     if "W" in kinds:
         return "diffusive"
