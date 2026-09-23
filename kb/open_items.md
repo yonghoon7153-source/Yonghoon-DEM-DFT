@@ -149,7 +149,12 @@
     ⚠ 1차 빌드 실패 (09-24): 내가 rsync 에서 cc86 산출물을 거른 탓에 devXlib 이 반쪽(`install/libcuda_devxlib` 표시만) →
     `device_fbuff_m.mod` 없음. 처방 = `make clean` (upstream 이 표시·FoX·MBD 까지 지운다) 뒤 재빌드.
     ✅ **재빌드 성공 (09-24 01:29)** — pw.x sha256 `912d8c8fdbfb3a8a` · hpcx-2.20 · CUDA 12.6 · libnvomp 만 · STORE 백업.
-    ✅ **빌드 검증 통과** — static_ab/a −1022.94654233 Ry = 09-13 값 (|ΔE| < 1e-8 · 봉인 1e-5) · 6m14s. ⏭ DRY_RUN → tmux `wad4l` 실행.
+    ✅ **빌드 검증 통과** — static_ab/a −1022.94654233 Ry = 09-13 값 (|ΔE| < 1e-8 · 봉인 1e-5) · 6m14s.
+    🟢 **V100 tmux `wad4l` 실행 중 (09-24 01:44~)** · DRY_RUN ✓ (PP ⑨ ×4 기준과 같음). 잡별 (wall · 피크 VRAM 합계):
+    벌크 SCF 104 s · 10.4 GB · **S 바깥 SCF 693 s · 32.0 GB (한도 32.77 — 여유 0.7 GB, 힘 계산 포함 통과)** · Li 바깥 SCF 556 s · 29.7 GB ·
+    S 바깥 PBE 이완 02:07 시작 → Li 바깥 이완. 이완 도중 OOM 이면 diagonalization 만 ppcg 로 (물리 설정 불변).
+    📊 **중간값 (판정 보류 · 인용 금지)** `--collect`: 무이완 W_sep PBE **1.103** · PBE+D3(BJ) 2체 **1.518** J/m² (A 101.10 Å² · n 4.0) ·
+    −TS 경고 없음. ⚠ 경보 v2 는 **이완 PBE W_cleave** 에만 건다 — 무이완 1.1 은 경보 대상 아님 (무이완 ≥ 이완 이 정상).
     (러너에 NP · PSEUDO_DIR · NO_LOCK 추가, GPU 사용량은 장별 최댓값). gabia 예외는 **한 번도 발동하지 않은 채** 소멸.
   · ✅ **문헌 3편 인입·병합** (1저자 제공 PDF · 수치는 메인이 PDF 텍스트로 재대조): `pustorino2025_…`(LPSCl 파괴에너지 = 2γ · (100) 화학량론 벽개 ≈ 0.47 · (110) 0.37 J/m²) ·
     `maurer2015_…`(Ag|그래핀 분산 7방법 0.19–0.45 J/m² — 0.3 경계를 가로지른다) · `giovannetti2008_…`(Ag 약결합군 · LSDA · 화학흡착 Pd ≈ 0.52 J/m² = "구간 ≠ 기전").
