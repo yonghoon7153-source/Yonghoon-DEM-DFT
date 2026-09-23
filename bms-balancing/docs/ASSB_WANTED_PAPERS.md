@@ -20,7 +20,7 @@
 | ★★★★ | **Santhosha 외 2019** — *Batteries & Supercaps* **2**, 524 | 17 · 20 · 21 | **3** | Q5 | **0.62 V 의 출생지.** 그리고 InLi-(In) 형이 탈리튬 전류를 냈다는 보고가 **21호와 어긋난다** — creep 인가 전기화학 리튬화분인가 |
 | ★★★ | **Fukunishi 외 2023** — *ACS Appl. Energy Mater.* **6**, 10908 | 19 | 1 | Q1·Q2 | 흑연 3전극 + **cyclability** → `θ(N)`·`Ea(N)` 가능성이 계보 최고. 곱 축퇴 처방 3단계(`Ea` 면적-불변 채널)를 시간축으로 검증할 입력 |
 | ★★★ | **Jin·Park·Park·Lim 2015** — *Electrochim. Acta* **185**, 242 | 20 | 1 | Q2·Q6 | 20호 셀의 원전 — 그 편이 비운 G1 복합체 조성 · G2 σ · G3 압력 |
-| ★★★ | **Hertle 외 2023** — *J. Electrochem. Soc.* · **Schlenker 외 2020** | 16 · 21 | 2 | **Q5** | **μ-RE 원본 — Q5 최대 공백** (16호 판단). 21호: **"0 V 로 놓은 리튬화 금선" 관례의 출처** — 16호 셀 간 0.11 V 어긋남 가설 검증 |
+| ★★★ | **Hertle·Walther·Mogwitz 외 2023** — "Miniaturization of Reference Electrodes for Solid-State Lithium-Ion Batteries", *J. Electrochem. Soc.* **170**, 040519 (16호 ref [24] 인쇄) · **Schlenker·Stępień·Koch·Hupfer·Indris·Roling·Miß·Fuchs·Wilhelmi·Ehrenberg 2020** — *ACS Appl. Mater. Interfaces* **12**, 20012 (21호 ref 17 인쇄 — ACS 형식이라 제목 없음; 제목은 원문 확인 필요) | 16 · 21 | 2 | **Q5** | **μ-RE 원본 — Q5 최대 공백** (16호 판단). 21호: **"0 V 로 놓은 리튬화 금선" 관례의 출처** — 16호 셀 간 0.11 V 어긋남 가설 검증 |
 | ★★★ | **Solchenbach 외 2016** — *J. Electrochem. Soc.* **163**, A2265 | 21 | 1 | Q5 | **금선 기준극(GWRE) 원전 (액체셀)** — 0.31 V 와 "CE 거칠어짐" 가설의 출처. 21호가 액체셀에서 잰 값을 ASSB 셀로 옮겨 쓴 **교정 이식의 뿌리** |
 | ★★ | **Dugas 외 2021** — *J. Electrochem. Soc.* **168**, 090508 | 21 | 1 | Q5·Q2 | 원형 InLi 기준극으로 EIS + In₁Li₀.₅/SE 복합 CE — **리튬화에 따른 저주파 변화**. 21호가 "expected" 의 근거로 인용 |
 | ★★ | **Barai 외 2018** — *Sci. Rep.* **8**, 21 | 20 | 1 | Q2 | `R₀`/`R_ct`/`R_p` **작도법 원전**. 제목이 *measurement timescale* — 20호에서 "분해가 적합조차 아니다 — 작도다" 가 나온 자리 |
