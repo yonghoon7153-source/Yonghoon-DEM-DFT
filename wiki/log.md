@@ -2501,3 +2501,11 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: Read 6 장(Fig. 5 · 7 · 8 · 9 · 10 · 11) + Fig. 9–11 원본 래스터 픽셀 판독 + 식 (26)(32)(45) 렌더, 안 봄 Fig. 1 · 2 · 3 · 4 · 6.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 58편 · Evidence 쉰세 번째 · 새 제약 · Status Log) · [[assb-lampe-contact-product-degeneracy]](마흔한 번째 적용 · 처방 표 새 줄) · [[assb-sensitivity-sweep-vs-identifiability]](대리 위 OAT 두 줄) · `bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §6-3-g 59 행 + 지문 ²⁴.
 - 후속(서지 기준, 미열람, 큐 밖): Rezaei · Asheri · Xu 2021 *JMPS* 157, 104612 ([11]) · Bai · Zhao · Liu · Xu 2019 *JPS* 422, 92 ([31]) · Sultanova & Figiel 2021 *Comput. Mater. Sci.* 186, 109990 ([19]) · Bucci … Carter 2017 *JMCA* 5, 19422 ([16]) · Fathiannasab … Chen 2020 *JES* 167, 100558 ([33]) · Wolff · Röder · Krewer 2018 *Electrochim. Acta* 284, 639 ([29]).
+
+## [2026-09-23] decision | 2차 묶음 뒤 사용자 결정 — 보류 결정 (라)(마)(바)(사) 반영
+
+- (마) 새 개념 [[assb-synthetic-truth-contact-loss-requirements]] — 카드 '새 제약'(37호)의 ASSB truth 5조건을 분리하고 38·39·53·55–58호 추가분을 합쳐 R1–R8. 전부 `[추론]`, 코드 검증 0. 카드에 분리 표시 링크.
+- (바) [[assb-pressure-reapplication-separation-test]] 에 설계 조건 D1–D5 (사이클 해상 압력 계측 · 기준셀 이중차분 · 압력만 바꾸기 · 제조/운전 압력 분리 · 채널별 신고) — 33·39·52·11호 근거.
+- (사) [[assb-li-in-reference-potential-window]] P12 를 이식판 입력 메타데이터 요구로 격상 — `bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §2-1 M1–M3 (조립 방향 · 상대극 Li 재고 · 원천 역할 검사).
+- (라) `ASSB_TRANSFER_NOTE.md` §2 에 A4 양극성 스택(셀별 OCV 비관측) 추가 — wiki 밖.
+- 나머지 (가)(나)(다)(아)(자)(차)(타) 는 사용자 지시로 논문 추가 흡수 뒤 판단 (원장 §3-b).

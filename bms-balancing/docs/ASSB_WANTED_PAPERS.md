@@ -213,17 +213,17 @@
 
 ## 3-b. 보류 결정 — 추가 논문을 흡수한 뒤 사용자와 최종 확인 (2026-09-23 사용자 지시)
 
-큐 20~37 흡수 뒤 추린 판단 11건. 사용자가 원장 목록을 받아 논문을 더 올려 주기로 했으므로, 판정은 **그 논문들을 흡수한 뒤** 한꺼번에 한다. 괄호 안은 판정에 직접 닿는 원장 항목이다.
+큐 20~37 흡수 뒤 추린 판단 11건. 사용자가 원장 목록을 받아 논문을 더 올려 주기로 했으므로, 판정은 **그 논문들을 흡수한 뒤** 한꺼번에 한다. **2026-09-23 (2차 묶음 뒤) 사용자 결정: 라·마·바·사 처리, 나머지는 논문을 더 흡수한 뒤.** 괄호 안은 판정에 직접 닿는 원장 항목이다.
 
 | # | 결정 | 닿는 논문 |
 |---|---|---|
 | 가 | 29호 Q4 +0.5 유지 여부 (축이 LAM↔접촉이 아니라 정적↔동적) | Yanev 2024 SI (Table S2) · Tian 2020 · Yanev 2022 |
 | 나 | 38호 Q2 +0.5 유지 여부 (두 채널이 설계상 결합) | Conforto SI (S3·S8·S9) · Bartsch 2019 |
 | 다 | 28호 Bizeray(액체셀 도구)를 ASSB Q4 분모에 넣을지 | Forman 2012 · Khalik 2021 · Lu 2022 · Firouz 2020 |
-| 라 | 32호 양극성 스택 → `ASSB_TRANSFER_NOTE` §2 제약으로 올릴지 | Celen 2021 |
-| 마 | 37호 "ASSB truth 5조건" 개념 페이지 분리 여부 | Schmidt 2024 · Raijmakers 2020 · Deng 2021 |
-| 바 | 33호 상대극 압력 진동 ≈ 운전 압력 → 압력 되돌림 분리 시험 설계 조건으로 | Sakka 2022 · Koerver 2018 *EES* · Gao 2022 |
-| 사 | 21호 P12 조립 방향 메타데이터를 입력 요구로 격상 | Ikezawa 2020 · Nam 2018 |
+| 라 | 32호 양극성 스택 → `ASSB_TRANSFER_NOTE` §2 제약으로 올릴지 | Celen 2021 · **✅ 결정·반영 (2026-09-23)** — `ASSB_TRANSFER_NOTE.md` §2 A4 |
+| 마 | 37호 "ASSB truth 5조건" 개념 페이지 분리 여부 | Schmidt 2024 · Raijmakers 2020 · Deng 2021 · **✅ 결정·반영 (2026-09-23)** — `wiki/concepts/assb-synthetic-truth-contact-loss-requirements.md` (R1–R8) |
+| 바 | 33호 상대극 압력 진동 ≈ 운전 압력 → 압력 되돌림 분리 시험 설계 조건으로 | Sakka 2022 · Koerver 2018 *EES* · Gao 2022 · **✅ 결정·반영 (2026-09-23)** — `assb-pressure-reapplication-separation-test` 설계 조건 D1–D5 |
+| 사 | 21호 P12 조립 방향 메타데이터를 입력 요구로 격상 | Ikezawa 2020 · Nam 2018 · **✅ 결정·반영 (2026-09-23)** — `ASSB_TRANSFER_NOTE.md` §2-1 M1–M3 |
 | 아 | 35호 합성 쌍(PyBaMM) → Roman 특징 30개 재계산 여부 | Birkl 2017 |
 | 자 | 31호 ICI zenodo R/k 면적 소거 검사 여부 | Geng 2022 · Chouchane 2020 |
 | 차 | 23호 PyBaMM 면적 노브 / j₀ 노브 분리 forward 여부 | Orue Mendizabal 2023 |
