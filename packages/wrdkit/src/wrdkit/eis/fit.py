@@ -27,6 +27,7 @@ this modulus weighting and notes it may suit real instruments better than
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -419,6 +420,7 @@ def _staged_start(model: Circuit, frequency: np.ndarray, z: np.ndarray,
 
 def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
                 guess: np.ndarray | None = None,
+                start_from: Mapping[str, float] | None = None,
                 drop_inductive: bool = True,
                 frequency_range: tuple[float, float] | None = None,
                 restarts: int | None = None,
@@ -428,6 +430,11 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
     ``drop_inductive`` removes the points above the real axis.  They are wiring,
     not cell, and no cell circuit reproduces them -- but the count comes back in
     the result so the screen can say how many went.
+
+    ``start_from`` overrides the data-driven guess for the parameters it names and
+    leaves the rest to it -- how `bml refit` starts a new circuit from the old
+    fit's values (``wrdkit.eis.refit.seed_values``, ADR 0045).  The scattered
+    starts below then scatter around the seeded point.
 
     ``restarts`` scatters extra starting points around the data-driven guess
     (a factor of a few on each parameter, log-uniform).  Left unset it depends
@@ -490,6 +497,12 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
 
     start = np.asarray(guess, dtype=float) if guess is not None else \
         initial_guess(working, model)
+    if start_from:
+        start = start.astype(float, copy=True)
+        for i, name in enumerate(model.parameter_names):
+            value = start_from.get(name)
+            if value is not None and np.isfinite(value):
+                start[i] = float(value)
     start = np.clip(start, model.lower * 1.0001, model.upper * 0.9999)
 
     rng = np.random.default_rng(seed)
