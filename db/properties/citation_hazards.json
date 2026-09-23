@@ -607,6 +607,17 @@
    "id": "HZ-nd-icohp-june-nds-pp",
    "binding_scope": "partial",
    "binding_scope_why": "6월 Nd–S 값은 레지스트리에 없다(등록 0건) — `claim` 을 걸 자리가 없다. 화면은 id 로 이름만 댄다."
+  },
+  {
+   "file": "db/properties/cascade_product_gaps.json",
+   "level": "HOLD",
+   "what": "cascade 산물 밴드갭 352종 · 반응 693개 병목 (2026-08-19 생성) 과 그 위의 통계 — '693 반응 중 481개(69 %)가 금속 산물' · 주범 CoS₂/MnS₂/NiS₂ · 반응별 최소 갭. 같은 mp-id 를 쓰는 db/properties/cascade_product_bvse.json 도 포함",
+   "why": "생성 도구 tools/oxidation/sei_product_gaps.py 의 `e_above_hull or 9e9` 정렬 버그(바닥상 0.0 이 거짓으로 밀림)가 **2026-09-13 에 고쳐졌지만 이 파일은 그 전에 만들어진 뒤 재생성되지 않았다**. 2026-09-23 실측: 산물 352종 중 **241종이 E_hull > 0 항목**(전부 is_stable false) — Li₂S mp-1125 Pnma(0.0615 · 갭 3.895, 바닥상 mp-1153 Fm-3m 3.39) · LiCl · LiF · Li · Li₃PS₄ 도 비바닥 다형 · AlCl₃ 0.0 eV(E_hull 0.91) · NiO 0.0 eV(E_hull 1.31) 처럼 갭이 크게 틀린 줄이 있다. 기존 HZ-sei-gaps-pre-20260913-nonground-polymorph 는 sei_products.json(10종)만 덮었다.",
+   "fix": "고쳐진 sei_product_gaps.py 로 재생성한다 (tools/oxidation/run_cascade_extras.sh — MP API · gabia uma env) → 693 반응 병목과 금속 산물 비율을 다시 낸다 → cascade_product_bvse.json 도 새 mp-id 로. 재생성 전에는 **개별 갭·69 % 통계·주범 목록을 인용하지 않는다**. 역할(금속/절연) 분류가 바뀌는지는 재생성 전까지 모른다 — 그래서 CONDITIONAL 이 아니라 HOLD.",
+   "id": "HZ-cascade-product-gaps-nonground-polymorph",
+   "binding_scope": "partial",
+   "binding_scope_why": "이 값들은 레지스트리 claim 이 아니다 (원장 파일 자체 + kb 결과 문서 kb/results/interface_axes_90_2026_08_19.md · kb/reviews/litdb_dopant_sota_2026_09_09.md 의 문장). 덮을 claim 이 없어 id 로 이름만 댄다.",
+   "found": "2026-09-23 · Li₂S 문헌 대조용 Explore 조사 중 발견 (Li₂S 가 mp-1125 로 남아 있었다) → 메인이 전체 352종을 실측"
   }
  ],
  "_history": [

@@ -15,6 +15,8 @@ claimType: empirical
 evidenceScope: single-source
 ---
 
+> ⛔ **HOLD (2026-09-23)** — 이 문서의 산물 갭·*"693 반응 중 481개(69 %)가 금속 산물"*·주범 목록은 `db/properties/cascade_product_gaps.json` 에서 나왔는데, 그 파일은 **바닥상이 아닌 다형**을 골랐다 (352종 중 241종이 E_hull > 0 — `e_above_hull or 9e9` 버그가 09-13 에 도구에서 고쳐졌지만 이 파일은 재생성되지 않았다). 재생성 전에는 이 수치를 인용하지 않는다 → 인용위험 `HZ-cascade-product-gaps-nonground-polymorph`.
+
 # 계면 축 4종을 90종에 붙였다
 
 1저자 질문("계면 지금이라도 하면 되는 거 아니야 / MP 가 아니고 DFT 인가")에서 시작.

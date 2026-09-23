@@ -65,6 +65,10 @@
   (VRAM 하한 21.1 GB · 벽시계 못 잼). UMA MD 1392411(cascade eprime_P2_Al2S3_B) **생존**(2902 MiB · 92 %). 카드 §3b 기록.
   ⚠ 러너 버그 1건 발견·수정 `c6d120d01`: kgy nvidia-smi 는 프로세스 목록 대신 *"Process-level GPU information is restricted."* 문장을 준다 → PID 로 읽던 것.
   ✅ 1저자 결정 **"영률 끝내고 li2S 끝내자 나중에"** → gabia 탄성(modelc_2x) 뒤 단독 재프로브(ppcg/paro) → 통과 시 NEB. kgy 는 이 입력에 불가.
+- 🔴 **cascade 산물 갭 원장이 비바닥 다형 (2026-09-23 발견 · cascade 트랙 = 사용자 1저자)** — `db/properties/cascade_product_gaps.json`(08-19 생성)의 산물 **352종 중 241종이 E_hull > 0 항목**
+  (Li₂S mp-1125 Pnma · LiCl · LiF · Li₃PS₄ · AlCl₃ 0.0 eV/E_hull 0.91 · NiO 0.0 eV/E_hull 1.31 …). 생성 도구 `sei_product_gaps.py` 의 `or 9e9` 버그는 09-13 에 고쳤는데 **이 파일은 재생성 안 됨**.
+  위에 선 문장: *"693 반응 중 481개(69 %) 금속 산물"* (`kb/results/interface_axes_90_2026_08_19.md` — 머리에 ⛔ 달았다). 인용위험 **HOLD** `HZ-cascade-product-gaps-nonground-polymorph`.
+  ⏭ gabia: `bash tools/oxidation/run_cascade_extras.sh` (MP API · uma env) 로 재생성 → 693 반응 병목·금속 비율·주범 재계산 → `cascade_product_bvse.json` 도 새 mp-id 로. 결과 보고 전 역할 분류가 바뀌는지 먼저 본다.
 - ✅ **결정 3건 비준** (`97edeb233` · 형식 복원 뒤 172줄 추가만): W_ad SE 대칭 두 장 · D3 2체 + ATM 따로 · QE D3 3체 표기. `vgcf_hbn_*.json` 표기 정정 · QE 생성기 4곳 `dftd3_threebody = .true.` 명시(결과 불변).
   ⏭ SDCP 옛 QE 기록(phaseB · wave1.5 — 닫힌 캠페인)의 같은 표기 정정은 **아직** (우선순위 낮음).
   ⚠ 내 실수: `decisions.json` 을 indent 2 로 다시 써서 7146줄 diff 를 냈다 → 원래 형식(indent 1)으로 복원. JSON 원장을 고칠 때는 **원래 형식을 먼저 재현**하고 쓴다.
