@@ -15,7 +15,7 @@ evidenceScope: multi-source-primary
 
 # DEM 쪽 회신 초안 — Ag–C 점착일 요청
 
-> 받는 곳: DEM 트랙 (`claude/stoic-knuth-NObVQ` · `docs/adhesion_agc_interlayer_20260923.md` · 요청 원문 `docs/dft_request_adhesion_agc_20260923.md`)
+> 받는 곳: DEM 트랙 (`claude/stoic-knuth-NObVQ` · `docs/adhesion_agc_interlayer_20260923.md` · 요청 원문 `docs/dft_request_adhesion_agc_20260923.md`) <!-- lint-skip-path: 다른 브랜치(claude/stoic-knuth-NObVQ)의 경로 -->
 > 근거는 전부 정본 브랜치 `claude/friendly-meitner-lldvar` 에 있다 — 계획 `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` §0′ ·
 > 리뷰 `kb/reviews/{internal_review_wad_agc_fable, codex_BV_reply_wad_lpscl_ag_c_vgcf}_2026_09_23.md` · litdb 카드 `pustorino2025_…` · `maurer2015_…` · `giovannetti2008_…`
 
