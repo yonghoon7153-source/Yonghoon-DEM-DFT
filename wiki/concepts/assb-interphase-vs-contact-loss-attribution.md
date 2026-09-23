@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md]
+sources: [raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -68,6 +68,7 @@ evidenceScope: multi-source-primary
 | **9호 Huo 2025** | 원전 **초록**의 "contact loss … increased resistance" 를 인용하고 `A_eff` 하나로 적합 | ❌ 적합 파라미터 하나 |
 | **1호 Bielefeld 2019** | 원전을 "contact loss **throughout** the composite cathode" 로 강화 인용 | — (모델) |
 | **24호 Stavola 2023** | 이봉은 **계면층**(`[인쇄]` "decomposition products … a higher i₀ … less bifurcation"), 수송 저하는 **접촉**(`[인쇄]` "rearrangement of particle contacts")을 기구로 대고 **이름은 `τ`** 로 — 세 번째 이름 **"굴곡도 진화"** | ⚠ **코팅 쌍**(화학 대조, 계보 첫) — 이봉의 코팅 의존분은 화학 형; 첫 사이클 비가역은 코팅으로 ≈14 % 만 줄어듦(`[도표]`, n = 1) |
+| **53호 Ren · Danner 2023** (⚠ Perspective, **산화물** LLZO) | **시간 배정을 뒤집어 인용**: `[인쇄]` 첫 사이클 = "electrochemical oxidation of the interface"(인용 [56a,103]) · 이후 = "fatigue failure of the CAM/SE interface and loss of electrochemically active surface area"(**인용 0**) — 두 영역 문장의 [103] 이 23호. 같은 편 §5.2(황화물)는 23호를 원문대로("irreversible resistance increase in the first cycle"). 33호(2025)에 앞선 **첫 역전 표본**(발행 2022) | ⚠ 공정 대조만 재인용 — FAST/SPS 치밀 셀 "cracking … ruled out" → 전기화학([105]); 근거 채널 · n 0 |
 
 ⇒ `[해석]` **원전이 "expected · suspect · suggests" 로 쓴 접촉 손실이 인용을 거치며 평서문이 되고, 원전 자신의 SI 는 EIS 창 안에서
 그 면적 변화를 보지 못한다.** 계면층 쪽은 XPS 라는 화학 증거가 있고 SI 궤적도 그쪽이다.

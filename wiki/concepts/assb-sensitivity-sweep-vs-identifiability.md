@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -184,6 +184,16 @@ evidenceScope: multi-source-primary
 2. **일치의 분해능** — 규약을 t = 1/(2πf) 로 옮기면 일치가 −13 … −23 % 로 벌어진다(그림 판독). 스펙트럼이 decade 당 ≈15–19 % 변하는 평탄한 셀에서 "timescales match" 는 시간 척도를 ≈1 decade 로만 가른다.
 3. **대역 끝 흡수** — 다중사인 ECM 직렬 `R₀` 1.62 = \|Z\|(1 Hz)(여기 최고 1 Hz) · DC 0.1 s = \|Z\|(10 Hz)(장비 10 Hz). 적합된 직렬 파라미터는 **관측 대역 위쪽 끝의 임피던스**를 가져간다 — 스윕 · `J` · FIM 표 어느 줄도 아닌, **여기 설계가 파라미터의 뜻을 정하는** 경우다. 원문은 ECM 비유일성("not uniquely identifiable" · "ambiguities … Ro and RCT" · "judged solely on closeness of fit")을 인쇄하고, 결론에서는 "EIS can accurately provide separation and identification of all the individual resistance components" 로 지웠다.
 ⇒ 처방 목록에 한 줄(13).
+
+## ★★ 53호 — 스파이더 그림: 묶음 OAT · **순서 의존을 인쇄** · 한 손잡이가 두 물리를 움직인다
+
+`raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md` (Ren · Danner 2023, ⚠ Perspective — P2D 사례 계산 Fig. 9).
+`[인쇄]` "we perform a **sensitivity analysis** of the virtual cells to determine the limiting processes" — 모든 파라미터를 improved 로 두고 **묶음 하나씩**(σ⁰·β_tort · σ⁰·β_SP·β_tort · `R_IP`·`R_CT` · `R_CT` · `D_Li`·`d50` · κ⁰) state-of-the-art 로 되돌린 비에너지 스파이더(1 · 10 mA × 50 · 100 µm), 그다음 누적 막대(Fig. 9D).
+`[해석]` 세 가지:
+1. **묶음이 겹친다** — "Resistive Interphases (`R_IP`, `R_CT`)" 와 "Charge Transfer (`R_CT`)" 가 `R_CT` 를 공유한다. `[도표]` `R_CT` 단독 가지는 두 두께 · 두 전류에서 손실 ≈0 이라, 앞 묶음의 손실은 사실상 `R_IP`(= 표의 `R_SP`) 몫이다 — 본문 "charge transfer kinetics … prominent effect" 와 어긋난다(53호 D10).
+2. **비가법성을 인쇄하고 재지 않는다** — `[인쇄]` "the order of the improvements is also crucial and has a significant influence" — OAT 가 교호작용을 못 본다는 것을 저자가 알고, 누적 막대의 순서를 **전략**으로 제시한다. 순서를 바꾼 막대는 없다.
+3. **"CAM Li Diffusion Length (`D_Li`, `d50`)"** — `a`(비계면 면적)가 SI 에 정의되지 않았지만 구 기하(`3ε/r`)라면 `d50` 은 확산 길이와 계면 면적을 **같이** 움직인다. 이름표는 확산인데 이득의 일부는 면적이다(곱 축퇴 페이지 서른여섯 번째 적용).
+⇒ 처방 목록에 덧붙임: **스파이더 · 토네이도 그림은 (i) 묶음이 파라미터를 공유하는지 (ii) 한 손잡이가 식에서 몇 군데에 들어가는지 (iii) 순서 의존을 인쇄했는지** 먼저 본다.
 
 ## 우리 쪽 연결
 

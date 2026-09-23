@@ -1,0 +1,312 @@
+{
+ "slug": "ren2023_oxide-ssb-composite-cathode-architecture-perspective",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+  "5db1b65e-15._Sup_Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Overview of homo- and heteroionic interfaces in an oxide SSB and the phenomena that accompany the evolution of chemical, electrochemical, structural, morphological, and mechanical properties of the interfaces during processing and operation. White circles symbolize the pores.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    64.9,
+    555.1,
+    358.8
+   ],
+   "w": 2126,
+   "h": 1226,
+   "dpi": 300,
+   "src": "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "blank": 0.536
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Internal interfaces cross-cutting relationships between experimental and theoretical techniques across multiple length scales. From top left, clockwise: Diffraction techniques to analyze atomic positions; Reproduced with permission.[9] Copyright 2020, ACS. Transmission electron microscopy of LLZO grain boundary triple points; Reproduced with permission.[10] Copyright 2021, Springer Nature. Electrochemical impedance spectroscopy of LLZO with lithium indium and lithium cobalt oxide electrodes; Reproduced with permission.[11] Copyright 2022, ACS. Virtual cell with lithium and LLZO/LCO composite electrodes for continuum simulations; Reproduced with permission.[12] Copyright 2018, ACS. Grain and phase field modeling of LLZO; Reproduced with permission.[13] Copyright 2021, Springer Nature. And atomic level modeling of LLZO and LLZO/electrode interfaces.[14] batch processes and theref",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    64.9,
+    552.5,
+    373.1
+   ],
+   "w": 2128,
+   "h": 1285,
+   "dpi": 300,
+   "src": "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "blank": 0.364
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 9,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Cross-sectional TEM image of an LLZO/LCO thin film interface and the EDS line profile obtained from the region indicated by the red arrow in the direction A–B. The broken red lines indicate the reaction layer at the LLZO/LCO interface. Reproduced with permission.[60] Copyright 2011, Elsevier. b) Optical micrographs and photos (inset) of LLZTO(1)+LCO(2) powder mixture pellets annealed at different temperatures. Reproduced with permission.[57] Copyright 2011, Elsevier. (c) Variation of the lattice constants of Al-LLZO and LCO in the powder mixtures after annealing at different temperatures, plotted based on the data in Table 1 of the reference.[63] d) TOF-SIMS-enabled 3D Al elemental mapping of the 700 °C annealed LCO/ LLZO interface that is shown in the SEM image. Reproduced with permission.[62] Copyright 2016, American Chemical Society. (e) Illustration of the crystal struct",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    65.0,
+    555.2,
+    303.2
+   ],
+   "w": 2127,
+   "h": 994,
+   "dpi": 300,
+   "src": "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "blank": 0.458
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 13,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) Galvanostatic charge/discharge curves (first 60 cycles) of an all inorganic cell made via FAST/SPS featuring a LCO+LLZO cathode composite|LLZO separator and Li metal anode, and TEM images with EDX profiles of the LCO/LLZO interface before cycling b) and after cycling c) showing the interfacial degradation. Reproduced with permission.[11] Copyright 2022, American Chemical Society. d) Pseudo-binary phase dia- gram of the possible decomposition products of LLZO for various degrees of lithiation in LCO (state of charge). Reproduced with permission.[11] Copyright 2022, American Chemical Society. e) Volume change as function of SOC for various cathode active materials; Reproduced with ­permission.[107] Royal Society of Chemistry. f) calculated stresses for the expected volume expansion of LCO in a cathode composite based on LLZO, taking the ­anisotropic expansion into account. Rep",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    395.6,
+    556.4,
+    648.7
+   ],
+   "w": 2132,
+   "h": 1055,
+   "dpi": 300,
+   "src": "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "blank": 0.515
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 16,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a,b) SEM images in different magnifications of the contact loss between β-Li3PS4 and NCM811 after 50 cycles. Reaction byproducts formed between CAM, SE and a carbon fiber additive are mapped using ToF-SIMS as shown in (c). Reproduced with permission.[103,142b] Copyright 2017, ACS. Copyright 2020, ACS.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    477.4,
+    552.2,
+    686.7
+   ],
+   "w": 2127,
+   "h": 873,
+   "dpi": 300,
+   "src": "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "blank": 0.343
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 18,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) Schematic representation of a Li metal anode and NMC cathode cell, which consists of a soft catholyte in the cathode composite to enable contact between the LLZO and NMC. b) Schematic representation of a portion of the LLZO/NMC interface with soft catholyte in between. Also highlighted are the various chemical, electrochemical and transport limitations that can occur within the LLZO/catholyte/NMC interfaces. c) Comparison between the increase in interfacial resistance at LLZTO/LiPF6 and LLZTO/LiTFSI interface. It is evident that LiTFSI salt is more compat- ible with LLZTO. Reproduced with permission.[156] Copyright 2022, Elsevier. d) High-resolution TEM image of Li2CO3 and LiF layer on top of LLZTO while operating with liquid electrolytes containing EC/DMC solvent and LiPF6 salt. Reproduced with permission.[157] Copyright 2020, Elsevier. e) DFT calculations demonstrating the",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    64.9,
+    552.5,
+    418.7
+   ],
+   "w": 2128,
+   "h": 1475,
+   "dpi": 300,
+   "src": "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "blank": 0.398
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 21,
+   "file": "fig_7.png",
+   "caption": "Figure 7. a) Trilayer LLZO structure with Li-metal and sulfur electrodes infiltrated into the porous layers. Bilayer structures with b) Li-metal infil- trated into the porous layer and NMC-coated foil attached to the dense layer; Reproduced with permission.[194] Copyright 2022, Elsevier. or c) Sulfur infiltrated into the porous layer and Li-metal deposited on the dense layer; Reproduced with permission.[129a] Royal Society of Chemistry. d) Electrochemical performance of free-standing, dense, co sintered LLZO+LCO mixed cathodes with uniform distribution (thick and thin) and with a gradient, transitioning from a 2:1 ratio of LLZO:LCO at the separator to an 1:2 ratio at the current collector. (LLZO: white/yellow, LCO: dark gray). Reproduced with permission.[104] Royal Society of Chemistry.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    64.9,
+    300.0,
+    265.0
+   ],
+   "w": 1063,
+   "h": 835,
+   "dpi": 300,
+   "src": "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "blank": 0.645
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 24,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Cell designs with lithium metal anodes attached to the LLZO dense layer and cathodes co-sintered (A) or infiltrated (B) into the porous LLZO layer. C) Gravimetric cell energy densities and D) volumetric cell energy densities calculated for LLZO bilayer cell designs. The upper bounds represent cells with only electrolyte and active electrode materials (Figure 8A).[216] The lower bounds represent cells with the active cathode materials partially replaced by electronically conductive additives (Figure 8B). in fact be game changing for conversion cathode materials, real batteries are also kinetically limited by the accessible cathode thickness for a desired current density/C-rate. During opera- tion, transport losses and kinetic losses will reduce the attain- able capacity of the cathode and the overall specific energy of the cell. The challenges of LLZO-type SSBs and strategies to",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    64.9,
+    552.5,
+    261.0
+   ],
+   "w": 2128,
+   "h": 818,
+   "dpi": 300,
+   "src": "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "blank": 0.631
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 26,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Case study predicting the development of specific energy for the cell design shown in Figure 8a. Spider plots in A,B) present the sensitivity of NMC811/LLZO/Li cells towards various material and design parameters indicated by the loss in specific energy compared to improved materials (see right column in Table 3). A) Composite electrode thickness of 50 µm and B) composite electrode thickness of 100 µm. Red and blue lines rep- resent current densities of 1 and 10 mA cm−2, respectively. The corresponding model parameters are shown next to each case and are set to the left column of Table 3 representing state-of-the-art materials. The continuum model setup is represented by the schematic equivalent circuit shown in C). The sensitivity provides the basis for the development strategy presented in Figure 9D). Gray bars indicate the specific energy of electrodes made of state-of-the-a",
+   "rotated_deg": 0,
+   "bbox": [
+    42.1,
+    64.0,
+    552.5,
+    532.2
+   ],
+   "w": 2128,
+   "h": 1952,
+   "dpi": 300,
+   "src": "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "blank": 0.731
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1. Summary of experimental investigations on the thermal stability of garnet-type SEs and cathode active materials. Cathode active material (CAM) Garnet composition Interface formation Onset reaction Detection method Reaction products (secondary phases)",
+   "rotated_deg": 0,
+   "bbox": [
+    43.2,
+    11.9,
+    589.2,
+    771.8
+   ],
+   "w": 2155,
+   "h": 2999,
+   "dpi": 284,
+   "src": "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 16,
+   "file": "tab_2.png",
+   "caption": "Table 2. List of mechanical properties as well as ionic conductivity of selected battery materials. Material Young’s modulus E[GPa] Bulk modulus K [ GPa] Shear modulus S [GPa] Conductivity σion [ S cm−1] Refs. NCM111 199 78 132 – [81] LLZO:Al 163 65 112 ≈10−4 [136] Li6PS5Cl 22 8 28 ≈10−2 [137] LiPON 77 31 51 ≈10−6 [138] theoretical-experimental study of β-Li3PS4 in which the micro- structure (porosity, particle size and shape) was varied, a large contribution of the grain boundary resistance to the overall resistance was found.[131] the two main degradation phenomena during operation for soft and glassy SEs, being morphological degradation and chemical reactions leading to interfacial degradation. Regarding the morphological degradation, sulfides (thiophosphates) and polymers generally are softer and have a lower fracture toughness than their oxide counterparts.[107] As an overview, Tabl",
+   "rotated_deg": 0,
+   "bbox": [
+    43.2,
+    11.9,
+    589.2,
+    771.8
+   ],
+   "w": 2155,
+   "h": 2999,
+   "dpi": 284,
+   "src": "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "blank": 0.754
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 25,
+   "file": "tab_3.png",
+   "caption": "Table 3. Parameters and material properties in dynamic calculations.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.9,
+    11.9,
+    589.2,
+    771.8
+   ],
+   "w": 2145,
+   "h": 2999,
+   "dpi": 284,
+   "src": "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 10,
+   "file": "tab_S1.png",
+   "caption": "Table 1 - Model equations of pseudo-2D model adopted for the simulation of LLZO based cells CAM LLZO Li Charge 𝜕 𝜕 𝜕 𝜕 Balance 𝑎𝑖𝑠𝑒= 𝜕𝑥(𝜅𝑒𝑓𝑓 𝜕𝑥Φ𝑠) (1) −𝑎𝑖𝑠𝑒= 𝜕𝑥(𝜎𝐿𝑖,𝑒𝑓𝑓 𝜕𝑥Φ𝑒) (2) - 𝜕𝑟(𝑟2 (−𝐷𝐿𝑖 𝜕𝑐𝑠 1 𝜕 𝐶𝐴𝑀𝜕𝑐𝑠 𝜕𝑡+ 𝜕𝑟)) = - 𝑟2 - Mass Balance 0 (3) 𝐹 𝐶𝐴𝑀⋅√𝑐𝑆𝑜⋅𝑠𝑖𝑛ℎ( 𝑖𝑠𝑒= 2 ⋅𝑖00 2𝑅𝑇𝜂) (4) Interface condition 𝐶𝐴𝑀(𝑐𝑆) −𝑖𝑠𝑒⋅𝑅𝑆𝑃 (5) 𝜂= Φ𝑆−Φ𝐸−𝑈0 Interface 𝐹 𝐿𝑖⋅𝑠𝑖𝑛ℎ( condition 𝑖𝐿𝑖= 2 ⋅𝑖00 2𝑅𝑇(Φ𝐿𝑖−Φ𝐸)) (6)",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    415.9,
+    566.1,
+    673.6
+   ],
+   "w": 2080,
+   "h": 1075,
+   "dpi": 300,
+   "src": "5db1b65e-15._Sup_Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "fS1m",
+   "kind": "figure",
+   "label": "S1",
+   "page": 12,
+   "file": "fig_S1_manual_p12.png",
+   "caption": "Figure SI-1 – Correlations of material properties as function of lithium content. a) Open circuit voltage of NMC811 [2] b) Chemical diffusion coefficient of Li in NMC811 [5]. c) Electronic conductivity of NMC811 [8,9]. (수동 크롭 — 크로퍼가 p12 를 그래픽 없음으로 제외)",
+   "rotated_deg": 0,
+   "bbox": [
+    70,
+    300,
+    545,
+    432
+   ],
+   "w": 1650,
+   "h": 459,
+   "dpi": 250,
+   "src": "5db1b65e-15._Sup_Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "manual": true
+  },
+  {
+   "key": "fS2m",
+   "kind": "figure",
+   "label": "S2",
+   "page": 13,
+   "file": "fig_S2_manual_p13.png",
+   "caption": "Figure SI-2: Overview of the theoretical and simulated specific energies for different composite electrode designs using the state-of-the-art scenario. (수동 크롭)",
+   "rotated_deg": 0,
+   "bbox": [
+    70,
+    190,
+    545,
+    345
+   ],
+   "w": 1650,
+   "h": 539,
+   "dpi": 250,
+   "src": "5db1b65e-15._Sup_Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",
+   "manual": true
+  }
+ ]
+}

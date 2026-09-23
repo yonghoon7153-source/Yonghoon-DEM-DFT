@@ -2429,3 +2429,16 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: 34 장 중 14 장 Read(Fig. 1–6 · S11 · S15 · S17 · S19 · S23 · S25 · 표 S1 · S2), 화소 판독 Fig. 4D · 6D, 안 봄 20 장.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 52편 · Evidence 마흔일곱 번째 · 새 제약 · Status Log) · [[assb-lampe-contact-product-degeneracy]](서른다섯 번째 적용 · 처방 표 새 줄) · [[assb-stack-pressure-operating-window]](52호 절) · [[anode-free-li-inventory-accounting]](52호 절) · 큐 문서 §6-3-g 53 행 + 지문 ¹⁸.
 - 후속(서지 기준, 미열람 — 큐 54–59 인용 0): Oh … Choi 2024 *ESM* 71, 103606 (ref 12b) · Oh … Choi 2023 *AEM* 13, 2301508 (ref 12c) · Menkin … Grey 2024 *Faraday Discuss.* 248, 277 (ref 23) · Chen … Li 2021 *ACS AEM* 4, 4879 (ref 16a) · Yan … Chen 2022 *AEM* 12, 2102283 (ref 16b).
+
+## [2026-09-23] ingest | assb 53호 — Ren, Danner, Moy, Finsterbusch, … Latz, Srinivasan, Janek, Sakamoto, Wachsman, Fattakhova-Rohlfing 2023, Oxide-Based Solid-State Batteries: A Perspective on Composite Cathode Architecture (Adv. Energy Mater. 13, 2201939)
+- raw: `raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md` (sha256 봉인 — `pdf_sha256` · `si_sha256`) · 그림 `raw/figures/ren2023_oxide-ssb-composite-cathode-architecture-perspective/` (크로퍼 13 + 수동 SI-1 · SI-2). 큐 54번(2차 묶음 열다섯째 편) — 02호 ref 17. ⚠ Perspective, 1차 기여는 P2D 사례 계산 하나.
+- ★★★★ **Q1 판정**: `θ(N)` 0/53 — 자기 P2D `θ ≡ 1`(퍼콜레이션 · 치밀 · 열화 무시 인쇄) · 공백을 인쇄("There is yet no experimental study that incorporates percolation theory and its influence on mechanical degradation"). "시간축의 입구" 뒤 = Barai 2021 [127] 사이클 축 박리 모델 하나 + 산화물 용량 곡선 재인용 넷(접촉 분율 0).
+- ★★★★ **산화물 시점**: 제조(냉각 응력 모의 ≈1 GPa ↔ LLZO 100–150 MPa, "possible") → `θ₀` 공정 변수 · 운전("fatigue", 인용 0). ★★★ 시간 배정 역전(인용 [103] = 23호 반대) — 33호에 앞선 첫 역전. [105] FAST/SPS 치밀 셀 = 기계 기구 배제 대조(재인용).
+- ★★★ **모델 대조(37호)**: `a` 미정의 · `ε_CAM` 고정 · 접촉 자리 = `a·i₀₀` + `a/R_SP`(세 번째 곱). `[재현]` improved 체제에서 면적형 접촉 손실 전압 비가시(≈0.7 mV).
+- **채움표 53호 행 — 누적 ≈20.0 → ≈20.0 (새 칸 0).** Q4 0/53 마흔다섯 번째 성질 · Q3 층 하나(계 간 이식) · Q2 반 칸 검토 후 접음.
+- **곱 축퇴 처방 서른여섯 번째 적용**: 1–4단계 ❌ · 새 줄 "전류 진폭 — 직렬 `R_SP` ↔ `R_CT`".
+- ⚠ 어긋남 15 건(D1 state-of-the-art 24 · 15 ↔ 그림 ≈120 · ≈115 ↔ SI ≈112 · D2 시간 배정 · D4 Fig. 7d 사이클 0 · D8 In-Li ↔ Li · D9 κ_eff ×10 · D14 결론 "cracks" 외).
+- 낱말 지문: 11 열 중 `contact loss` 5(황화물 4) · `MPa` 7(응력 6) 외 0.
+- 그림: 15 장 중 Read 7(Fig. 1 · 4 · 5 · 7 · 9 · SI-1 · SI-2), 안 봄 Fig. 2 · 3 · 6 · 8, 표는 텍스트.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 53편 · Evidence 마흔여덟 번째 · 새 제약 · Status Log) · [[assb-lampe-contact-product-degeneracy]](서른여섯 번째 적용 · 처방 표 새 줄) · [[assb-interphase-vs-contact-loss-attribution]](계보 표 53호 행) · [[assb-sensitivity-sweep-vs-identifiability]](53호 절) · 큐 문서 §6-3-g 54 행 + 지문 ¹⁹.
+- 후속(서지 기준, 미열람 — 큐 55 · 57 · 58 인용, 56 · 59 0): Barai … Srinivasan 2021 *Chem. Mater.* 33, 5527 ([127]) · Ihrig … Guillon 2021 *JPS* 482, 228905 ([105]) · Tsai … Guillon 2019 *Sustain. Energy Fuels* 3, 280 ([83]) · Neumann … Latz 2020 *ACS AMI* 12, 9277 ([32]) · Finsterbusch, Danner … 2018 *ACS AMI* 10, 22329 ([12]).
