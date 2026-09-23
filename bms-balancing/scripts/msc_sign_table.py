@@ -1,4 +1,4 @@
-"""MSC 부호표 — P1 · P7 · P8 에서 '정상 열화(저항 증가)' 와 'MSC(누설)' 가 반대로 움직이는가.
+"""MSC 부호표 — P1 · P5 · P7 · P8 에서 '정상 열화(저항 증가)' 와 'MSC(누설)' 가 반대로 움직이는가.
 
 `docs/MSC_SEMINAR_2026-09-23_APPLICATION.md` §3 의 구분 원리 중 모델로 미리 볼 수 있는 셋을 PyBaMM 으로 잰다.
 
@@ -7,18 +7,20 @@
   P7  CV 유지 전류를 지수 + 상수로 적합 — 가설: 저항 증가는 τ 를, MSC 는 점근값 I_∞ 를 올린다.
   P2  (부록) 평형 누설 휴지의 ΔV 와 ΔQ 를 SOC 별로 — ΔV 의 SOC 모양이 dV/dQ 에서 오는지.
   P8  부분 고리(±ΔSOC) 폐합 오차를 고리 주기 두 개로 — 가설: MSC 는 주기에 비례해 하향 이동.
+  P5  C-rate 계단(올렸다 내림) — ΔV–I 기울기(R)와 전압 기반 전하 결손의 시간 비례분을 분리한다.
 
 셀: PyBaMM `Chen2020` (LG M50, ≈5 Ah), 모델 SPMe. 공개 파라미터만 쓴다(규진팀 원자료 없음).
   base   : 그대로
   R_up   : 정상 열화의 '저항' 판 — 접촉 저항 0.03 Ω 추가 + 두 전극 교환전류 ×0.5
   MSC    : base + 외부 병렬 옴 누설 R_s (셀 전류 = 외부 전류 + V/R_s, 휴지 중에도 흐른다)
   D_down : 정상 열화의 '확산' 판 — 두 전극 입자 확산계수 ×0.3 (휴지 이완을 느리게 하는 쪽)
+  SEI    : 부반응 대조군 — reaction-limited SEI, 교환전류 ×400 (누설과 같은 크기의 시간 비례 Li 손실을 만들려는 인위 설정)
   R_up+MSC · D_down+MSC: 열화 + 누설
 
 누설은 `pybamm.step.CustomStepImplicit`(대수 제약 I_cell − (I_ext + V/R_s) = 0)로 넣는다. CV 단계는 전압 제어이고,
 외부에서 재는 전류는 I_ext = I_cell − V/R_s 로 사후 계산한다. 부호: PyBaMM 은 방전 전류가 양수다.
 
-⚠ 모델 명제다. OCV 히스테리시스 없음(P8 의 '열역학 고리' 는 없다 — 동역학 이완만), 부반응 없음, 누설은 옴.
+⚠ 모델 명제다. OCV 히스테리시스 없음(P8 의 '열역학 고리' 는 없다 — 동역학 이완만), 부반응은 SEI 대조군 하나뿐, 누설은 옴.
 RUN_SCOPE 밖(bms-balancing).
 
 실행:  python3 -m scripts.msc_sign_table --out out/msc_sign/result.json
@@ -45,6 +47,11 @@ def params(kind: str):
         for key in ("Negative particle diffusivity [m2.s-1]", "Positive particle diffusivity [m2.s-1]"):
             f = pv[key]
             pv[key] = (lambda f: (lambda *a: 0.3 * f(*a)))(f) if callable(f) else 0.3 * f
+    if kind == "SEI":
+        # 부반응 대조군: reaction-limited SEI, 교환전류 ×400 → 휴지 중 LLI ≈ 36 mAh/h (100 Ω 누설 ≈ 37 mA 와 같은 크기).
+        # 실셀 속도가 아니라 '누설과 같은 크기의 시간 비례 손실' 을 만들려고 인위적으로 키운 것이다.
+        opts["SEI"] = "reaction limited"
+        pv["SEI reaction exchange current density [A.m-2]"] = 400 * pv["SEI reaction exchange current density [A.m-2]"]
     if kind in ("R_up", "R_up+MSC"):
         opts["contact resistance"] = "true"
         pv.update({"Contact resistance [Ohm]": 0.03}, check_already_exists=False)
@@ -159,6 +166,58 @@ def p2(R_s, socs=(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9), rest_s=7200):
     return rows
 
 
+# ── P5 ────────────────────────────────────────────────────────────────
+def dvdq_calibration(dq_Ah=0.1, I=0.5, soc=0.5):
+    """base 셀 SOC(기본 0.5) 에서 저율 충전 ΔQ 뒤 1 h 휴지 → 셀 OCV 기울기 dV/dQ [V/Ah] (충전 방향 +)."""
+    sol = simulate("base", [cc(0.0, 1800, None), cc(-I, dq_Ah / I * 3600, None), cc(0.0, 3600, None)], soc)
+    v_before = cycle_arrays(sol, 0)[1][-1]
+    v_after = cycle_arrays(sol, 2)[1][-1]
+    return float((v_after - v_before) / dq_Ah)
+
+
+def p5(kind, R_s, dvdq_V_per_Ah, levels=(0.25, 0.5, 1.0, 2.5, 5.0, 5.0, 2.5, 1.0, 0.5, 0.25),
+       dq_Ah=0.2, rest_s=1800, t_R=10.0, soc=0.5):
+    """C-rate 계단(올렸다 내림). 단계마다 [충전 ΔQ → 방전 ΔQ → 휴지] (외부 전하는 0 으로 맞춤).
+
+    관측량 두 개 (실험에서 잴 수 있는 것만 쓴다):
+      ΔV–I 기울기  : 충전 시작 t_R 초 뒤 전압 − 직전 휴지 끝 전압, 을 I 에 대해 직선 적합 → R_fit [Ω]
+      전하 결손    : 휴지 끝 전압의 단계 간 변화 ÷ dV/dQ → 결손 [mAh], 을 단계 경과 시간에 대해 직선 적합
+                     → 기울기 [mA] = 시간 비례분, 절편 [mAh] = 시간 무관분
+    truth(관측 불가, 대조용): MSC 는 ∫V/R_s dt, SEI 는 음극 SEI 로 잃은 Li.
+    """
+    steps = [cc(0.0, rest_s, R_s, period=30)]
+    for I in levels:
+        d = dq_Ah / I * 3600
+        steps += [cc(-I, d, R_s, period=2), cc(+I, d, R_s, period=2), cc(0.0, rest_s, R_s, period=30)]
+    sol = simulate(kind, steps, soc)
+    rows = []
+    for k, I in enumerate(levels):
+        t_prev, v_prev, _ = cycle_arrays(sol, 3 * k)
+        t_c, v_c, _ = cycle_arrays(sol, 3 * k + 1)
+        t_end, v_end, _ = cycle_arrays(sol, 3 * k + 3)
+        dv_R = float(np.interp(t_c[0] + t_R, t_c, v_c) - v_prev[-1])
+        closure = float(v_end[-1] - v_prev[-1])
+        rows.append(dict(I_A=I, dV_at_tR_mV=1e3 * dv_R, R_mOhm=1e3 * dv_R / I,
+                         elapsed_h=float(t_end[-1] - t_prev[-1]) / 3600, closure_mV=1e3 * closure,
+                         deficit_mAh=-1e3 * closure / dvdq_V_per_Ah))
+    I_arr = np.array([r["I_A"] for r in rows])
+    dv_arr = np.array([r["dV_at_tR_mV"] for r in rows])
+    el = np.array([r["elapsed_h"] for r in rows])
+    de = np.array([r["deficit_mAh"] for r in rows])
+    R_slope, _ = np.polyfit(I_arr, dv_arr, 1)
+    d_slope, d_icpt = np.polyfit(el, de, 1)
+    total_h = float(sol["Time [s]"].entries[-1] - sol["Time [s]"].entries[0]) / 3600
+    truth = None
+    if R_s is not None:
+        t_all, v_all = sol["Time [s]"].entries, sol["Voltage [V]"].entries
+        truth = float(np.trapezoid(v_all / R_s, t_all)) / 3.6 / total_h            # mA
+    elif kind == "SEI":
+        lli = sol["Loss of lithium to negative SEI [mol]"].entries
+        truth = float(lli[-1] - lli[0]) * 96485 / 3.6 / total_h                     # mA
+    return dict(R_fit_mOhm=float(R_slope), deficit_slope_mA=float(d_slope), deficit_intercept_mAh=float(d_icpt),
+                truth_loss_mA=truth, dvdq_V_per_Ah=dvdq_V_per_Ah, soc=soc, rows=rows)
+
+
 # ── P8 ────────────────────────────────────────────────────────────────
 def p8(kind, R_s, dsoc=0.05, cap_Ah=5.0, loops=3, rest_s=1800):
     out = {}
@@ -182,19 +241,26 @@ def main(argv=None):
     ap.add_argument("--Rs", type=float, default=100.0)
     args = ap.parse_args(argv)
     R = args.Rs
-    cells = [("base", None), ("R_up", None), ("D_down", None), ("MSC", R), ("R_up+MSC", R), ("D_down+MSC", R)]
+    cells = [("base", None), ("R_up", None), ("D_down", None), ("SEI", None),
+             ("MSC", R), ("R_up+MSC", R), ("D_down+MSC", R)]
     res = {}
+    dvdq = {soc: dvdq_calibration(soc=soc) for soc in (0.2, 0.5, 0.8)}
     for kind, R_s in cells:
         # params() 는 R_up·D_down 계열만 바꾼다 — "MSC" 는 base 파라미터 + 누설
         # P7_6h: 1 h 창의 '점근값' 이 참 점근값인지(확산 꼬리는 0 으로, 누설은 V/R_s 로) 보려는 긴 유지
         res[kind] = dict(P1=p1(kind, R_s), P7=p7(kind, R_s), P7_6h=p7(kind, R_s, cv_s=6 * 3600),
-                         P8=p8(kind, R_s))
+                         P8=p8(kind, R_s), P5=p5(kind, R_s, dvdq[0.5]))
         print(kind, json.dumps(res[kind], ensure_ascii=False))
     res["P2_MSC_rest_vs_soc"] = p2(R)
+    # P5 의 SOC 의존: 전압 기반 결손이 MSC 와 SEI 를 각각 얼마나 잡는가 (흑연 평탄부 ↔ 기울기 구간)
+    res["P5_soc_scan"] = {f"{kind}@{soc}": p5(kind, R_s, dvdq[soc], soc=soc)
+                          for soc in (0.2, 0.8) for kind, R_s in (("MSC", R), ("SEI", None))}
     out = dict(script="bms-balancing/scripts/msc_sign_table.py", model="PyBaMM SPMe", params="Chen2020 (public)",
                pybamm_version=pybamm.__version__, R_s_ohm=R,
                R_up="contact resistance 0.03 Ohm + exchange-current x0.5 (both electrodes)",
-               D_down="particle diffusivity x0.3 (both electrodes)", results=res)
+               D_down="particle diffusivity x0.3 (both electrodes)",
+               SEI="reaction-limited SEI, exchange current x400 (artificial: matches the 100 Ohm leak rate)",
+               dvdq_V_per_Ah=dvdq, results=res)
     p = Path(args.out)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(out, indent=1, ensure_ascii=False))
