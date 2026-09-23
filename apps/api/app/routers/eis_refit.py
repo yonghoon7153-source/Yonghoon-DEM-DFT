@@ -23,6 +23,7 @@ from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
+from anyio import from_thread
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import PlainTextResponse, StreamingResponse
 from sqlmodel import Session, select
@@ -108,6 +109,23 @@ class _Progress:
 
 def _name(record: SpectrumRecord) -> str:
     return record.name or record.original_name
+
+
+def _announce() -> None:
+    """저장한 것이 있다고 열린 화면들에 알린다 — **이벤트 루프에서**.
+
+    이 생성기는 일꾼 스레드에서 돈다 (흘려 보낼 때는 `iterate_in_threadpool`,
+    JSON 이면 동기 창구의 스레드).  `revision.bump` 는 `asyncio.Event` 를 켜는데,
+    asyncio 의 것은 스레드에 안전하지 않다.  일꾼 스레드에서 바로 켜 보니, 루프의
+    디버그 모드에서는 ``RuntimeError: Non-thread-safe operation`` 이 났고 기다리던
+    쪽(화면의 이벤트 흐름)은 제 시간 제한(2 초)이 지나도 영영 안 깼다.  디버그가
+    아니면 깨긴 했지만 그것은 보장이 아니다.  루프 밖에서 직접 부른 경우(일꾼
+    스레드가 아니다)에만 그 자리에서 올린다.
+    """
+    try:
+        from_thread.run_sync(revision.bump)
+    except RuntimeError:
+        revision.bump()
 
 
 def _targets(session: Session) -> tuple[int, list[_Target], list[RefitSkipOut]]:
@@ -233,7 +251,7 @@ def _run(dry_run: bool) -> Iterator[_Started | _Progress | EisRefitOut]:
         changed = sum(1 for one in spectra if one.new_circuit)
         if changed and not dry_run:
             # 요청이 시작될 때 한 번 올렸지만 그때는 저장한 것이 없었다.
-            revision.bump()
+            _announce()
         yield EisRefitOut(origin=origin, dry_run=dry_run, generated_at=started,
                           total=total, targets=len(targets), changed=changed,
                           kept=len(spectra) - changed, spectra=spectra,

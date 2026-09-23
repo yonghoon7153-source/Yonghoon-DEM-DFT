@@ -162,3 +162,56 @@ def test_one_spectrum_that_breaks_does_not_stop_the_batch(client, monkeypatch):
     (skip,) = body["skipped"]
     assert skip["id"] == first
     assert skip["reason"] == "다시 맞추다 멈췄습니다 — LinAlgError: SVD did not converge"
+
+
+def test_open_screens_hear_about_the_saved_fits_when_the_batch_ends(client):
+    """흘려 보내는 창구는 요청 머리에서 한 번 알린다 — 그때는 저장한 것이 없다.
+    끝에 한 번 더 알려야 열린 화면이 새 맞춤을 다시 읽는다.  맞춰 보기만 했으면
+    알릴 것이 없다."""
+    pellet(client, "B15_pellet.mpr", BLOCKING, "R0-p(R1,CPE1)")
+
+    def revision():
+        return client.get("/api/revision").json()["revision"]
+
+    before = revision()
+    client.post("/api/eis/audit/refit", params={"dry_run": True, "format": "text"})
+    assert revision() == before + 1
+    before = revision()
+    client.post("/api/eis/audit/refit", params={"format": "text"})
+    assert revision() == before + 2
+
+
+def test_the_announcement_is_made_on_the_event_loop_not_the_worker_thread():
+    """묶음은 일꾼 스레드에서 돈다.  거기서 `revision.bump` 를 바로 부르면 asyncio 의
+    Event 를 남의 스레드에서 켜게 된다 — 디버그 모드에서 예외가 나고, 기다리던
+    화면은 제 시간 제한도 못 지키고 멈췄다.  시나리오를 따로 스레드에서 돌려,
+    되돌아가면 시험이 멈추는 대신 실패하게 한다."""
+    import threading
+
+    import anyio
+
+    from app.live import revision
+    from app.routers.eis_refit import _announce
+
+    async def scenario():
+        revision.bump()                  # 앞의 시험의 루프에 묶이지 않은 새 Event
+        seen = revision.value
+        woke: list[int] = []
+
+        async def screen():
+            woke.append(await revision.wait_past(seen, timeout=2))
+
+        async with anyio.create_task_group() as group:
+            group.start_soon(screen)
+            await anyio.sleep(0.05)
+            await anyio.to_thread.run_sync(_announce)
+        return seen, woke
+
+    result: dict = {}
+    runner = threading.Thread(daemon=True, target=lambda: result.update(
+        out=anyio.run(scenario, backend_options={"debug": True})))
+    runner.start()
+    runner.join(10)
+    assert not runner.is_alive(), "기다리던 화면이 안 깼다 — 루프 밖에서 알렸다"
+    seen, woke = result["out"]
+    assert woke == [seen + 1]
