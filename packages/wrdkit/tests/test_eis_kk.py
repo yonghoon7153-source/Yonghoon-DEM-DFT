@@ -555,3 +555,47 @@ def test_one_point_inside_the_noise_is_not_the_circuits():
                      ).misfit.max >= 0.10
     assert not [x for x in fit_findings(points, fit, reference=kk.reference)
                 if x.code.startswith(("misfit", "inductance"))]
+
+
+# -- 아홉 번째 실측 검수(2026-09-23 11:55) 뒤에 고친 것 ---------------------------------
+
+def test_a_middle_deviation_names_only_the_causes_the_file_leaves_open():
+    """실측: 펠릿 #83·#124·#138 의 102–258 Hz 어긋남에 "기기의 전류 범위 전환" 이
+    붙었는데, 그 파일들의 ``I Range`` 는 그 근처에서 안 바뀌었다 (가장 가까운 전환
+    71.9·57·114 Hz).  풀셀 #29 의 0.02–0.101 Hz 에는 "전원 잡음" 이 붙었다 —
+    분석기는 잰 주파수로 한 주기씩 적분해 50/60 Hz 를 거기서 거른다."""
+    f = sweep(7e6, 0.01)
+    middle = dict.fromkeys(f[(f > 100) & (f < 260)], 0.03)
+    result, summary = _residuals(f, middle)
+    (unknown,) = _kk_findings(result, summary)           # 범위를 안 적는 파일
+    assert "(기기의 전류 범위 전환, 전원 잡음)" in unknown.message
+
+    (quiet,) = _kk_findings(result, summary, switches=[71.9, 732.0])
+    assert quiet.code == "kk_violation" and quiet.severity == CHECK
+    assert "전류 범위 전환" not in quiet.message
+    assert "(전원 잡음 — 이 파일의 전류 범위는 그 근처에서 안 바뀌었습니다)" in quiet.message
+
+    low = dict.fromkeys(f[(f > 0.019) & (f < 0.11)], 0.022)
+    result, summary = _residuals(f, low)
+    (slow,) = _kk_findings(result, summary, switches=[4.77e3, 29.4, 1.15])
+    assert slow.code == "kk_violation" and not slow.message.startswith("저주파 끝")
+    assert "전원 잡음" not in slow.message.replace("전원 잡음은", "")
+    assert "전류 범위 전환" not in slow.message
+    assert "측정 중에 셀·접촉이 바뀌었을 가능성이 큽니다" in slow.message
+    (blind,) = _kk_findings(result, summary)             # 범위를 모르면 그것만 남는다
+    assert "(기기의 전류 범위 전환)" in blind.message
+
+
+def test_a_file_that_records_its_range_rules_the_switch_out_by_itself():
+    """``I Range`` 가 한 번도 안 바뀐 파일과 그 열이 없는 파일은 다르다 — 앞의 것은
+    전류 범위 전환을 스스로 배제한다."""
+    f = sweep(1e6, 0.01)
+    z = noisy(oxide(f), 1e-3, 0)
+    z = np.where(f < 100, z * 1.04, z)
+    steady = Spectrum(f, z.real, z.imag, columns={"I Range": np.full(f.size, 4)})
+    (recorded,) = audit_spectrum(steady).findings
+    assert recorded.code == "kk_violation"
+    assert "이 파일의 전류 범위는 그 근처에서 안 바뀌었습니다" in recorded.message
+    assert "range_switches_hz" not in audit_spectrum(steady).kk
+    (unrecorded,) = audit_spectrum(spectrum(f, z)).findings
+    assert "기기의 전류 범위 전환" in unrecorded.message

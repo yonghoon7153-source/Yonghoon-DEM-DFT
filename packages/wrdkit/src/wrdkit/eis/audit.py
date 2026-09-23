@@ -1251,6 +1251,11 @@ RANGE_SWITCH_REACH = 10.0 ** 0.15
 #: 있는 것을.  이 기기는 전류가 한 decade 바뀔 때마다 범위를 바꿔, 넓은 구간
 #: 안에는 거의 늘 전환이 하나 있다.
 RANGE_SWITCH_SPAN = 10.0
+#: 전원 주파수(Hz) — 여기는 60 Hz 지만 50 Hz 도 있으니 낮은 쪽.  분석기는 잰
+#: 주파수의 사인과 곱해 한 주기씩 적분하므로 다른 주파수의 간섭은 평균에서
+#: 빠진다 — 잰 주파수가 전원 주파수나 그 배수 가까이일 때만 남는다.  어긋난
+#: 구간이 (이웃 한 점까지) 여기에 못 닿으면 전원 잡음을 원인으로 적지 않는다.
+MAINS_HZ = 50.0
 #: 저주파 끝의 +Im 은 |Z| 의 이만큼은 넘어야 센다 — 실수축으로 내려온 셀의
 #: 마지막 점들은 잡음만으로도 축 위에 설 수 있다.
 LOW_FREQUENCY_INDUCTIVE_SHARE = 0.01
@@ -1325,10 +1330,11 @@ def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
     return out
 
 
-def _range_switches(spectrum: Spectrum) -> list[float]:
+def _range_switches(spectrum: Spectrum) -> list[float] | None:
     """Where the instrument changed its current range during the sweep -- the
     geometric mean of the two neighbouring frequencies, from EC-Lab's
-    ``I Range`` column when the file carries it.
+    ``I Range`` column when the file carries it.  ``None`` when it does not:
+    then no switch is ruled out, where an empty list rules them all out.
 
     A range change is a step in the gain and phase of the measurement, not of
     the cell, and it lands where ``|I| = amplitude / |Z|`` crosses a range
@@ -1338,7 +1344,7 @@ def _range_switches(spectrum: Spectrum) -> list[float]:
     """
     codes = (spectrum.columns or {}).get("I Range")
     if codes is None or len(codes) != len(spectrum):
-        return []
+        return None
     codes = np.asarray(codes)
     frequency = spectrum.frequency_hz
     return [float(np.sqrt(frequency[i] * frequency[i - 1]))
@@ -1471,7 +1477,9 @@ def _kk_region(result: KKResult, summary: dict) -> _KKRegion | None:
 
 
 def _kk_findings(result: KKResult, summary: dict,
-                 switches: Sequence[float] = ()) -> list[Finding]:
+                 switches: Sequence[float] | None = None) -> list[Finding]:
+    """``switches``: where the current range changed (`_range_switches`) --
+    ``None`` when the file does not record the range."""
     worst = summary["max_residual"]
     sigma = summary["sigma"]
     noisy = (Finding(NOTE, "kk_noisy",
@@ -1493,7 +1501,7 @@ def _kk_findings(result: KKResult, summary: dict,
                         f"고주파 끝 {span} 가 Kramers–Kronig 를 어깁니다 ({size}) — "
                         f"배선·기기의 한계입니다. 맞춤의 상한을 {f_low:.3g} Hz 아래로 "
                         f"두세요")]
-    switch = next((one for one in switches
+    switch = next((one for one in switches or ()
                    if f_low / RANGE_SWITCH_REACH <= one <= f_high * RANGE_SWITCH_REACH),
                   None)
     also = (f". {'바로 옆' if single else '그 근처'} {switch:.3g} Hz 에서 기기의 "
@@ -1521,11 +1529,25 @@ def _kk_findings(result: KKResult, summary: dict,
                         f"측정 중에 셀이 변했습니다 (온도가 덜 올라왔거나, 쉬지 않은 "
                         f"셀). 그 점들로 정한 꼬리·저항은 믿지 말고, 하한을 "
                         f"{region.above:.3g} Hz 로 두고 다시 맞추세요{also}")]
+    # 측정 쪽 원인은 이 파일이 배제하지 못한 것만 적는다.  실측 아홉 번째 검수:
+    # 펠릿 #83·#124·#138 의 102–258 Hz 에 "전류 범위 전환" 이 붙었는데 그 파일들의
+    # `I Range` 는 그 근처에서 안 바뀌었고, 풀셀 #29 의 0.02–0.101 Hz 에 "전원
+    # 잡음" 이 붙었다 — 전원 주파수의 500분의 1 아래다.
+    causes = [cause for cause, open_ in (
+        ("기기의 전류 범위 전환", switches is None),
+        ("전원 잡음", f_high * RANGE_SWITCH_REACH >= MAINS_HZ)) if open_]
+    steady = switches is not None and switch is None
+    if causes or switch is not None:
+        kept = " — 이 파일의 전류 범위는 그 근처에서 안 바뀌었습니다" if steady else ""
+        why = ("그 사이에 셀·접촉이 바뀌었거나 그 주파수에서 측정이 흔들렸습니다"
+               + (f" ({', '.join(causes)}{kept})" if causes else ""))
+    else:
+        why = ("측정 중에 셀·접촉이 바뀌었을 가능성이 큽니다 (이 파일의 전류 범위는 "
+               "그 근처에서 안 바뀌었고, 전원 주파수(50/60 Hz) 아래라 전원 잡음은 "
+               "분석기가 거릅니다)")
     return [Finding(CHECK, "kk_violation",
-                    f"{span} 에서 Kramers–Kronig 를 어깁니다 ({size}) — 그 사이에 "
-                    f"셀·접촉이 바뀌었거나 그 주파수에서 측정이 흔들렸습니다 (기기의 "
-                    f"전류 범위 전환, 전원 잡음). 그 구간을 지나는 아크의 값은 믿지 "
-                    f"마세요{also}")]
+                    f"{span} 에서 Kramers–Kronig 를 어깁니다 ({size}) — {why}. 그 "
+                    f"구간을 지나는 아크의 값은 믿지 마세요{also}")]
 
 
 # --------------------------------------------------------------------------
