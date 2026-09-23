@@ -1,0 +1,411 @@
+{
+ "slug": "bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Advantage and disadvantages of solid-state batteries. Li-ion batteries have been known to offer a range of advantageous properties, includ- ing long cycle life, high power density, low self-discharge rates, and high gravimetric and volumetric energy densities. However, these systems are confronted with several chal- lenges, such as the unavailability of crucial raw materials, inherent safety risks involved in using flammable solvents, and constraints on increasing energy storage capacity further. Much of the issues with conventional Li-ion batteries stem from the liquid electrolytes employed in their design. Organic solvents in such electrolytes are flammable and pose severe safety concerns, and side reactions between the conductive salt and other elements cause capacity degradation and long-term battery aging. In contrast, all-solid-state batteries (ASSBs) inherently possess s",
+   "rotated_deg": 0,
+   "bbox": [
+    57.6,
+    240.1,
+    567.0,
+    395.2
+   ],
+   "w": 2124,
+   "h": 647,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.786
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. How a Li-ion battery (LIB) works [13].",
+   "rotated_deg": 0,
+   "bbox": [
+    156.5,
+    60.0,
+    475.2,
+    291.0
+   ],
+   "w": 1330,
+   "h": 964,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.778
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Diagram of (A) Li-ion battery and (B) all-solid-state battery [13]. Finding a solid material with sufficient conductivity for large batteries, whether poly- mer or ceramic (requiring high ionic conductivity in solid electrolytes), is crucial. Superionic materials are utilized to achieve this conductivity, allowing ions to move swiftly through their crystal structure, making them suitable for solid electrolyte creation. However, their ionic conductivity is typically low, hindering rapid charge and discharge rates. Establishing a stable conductive interface between the solid electrolyte and electrode poses a significant challenge. High resistance at the solid electrolyte–electrode interface results in low power output. Additionally, poor electronic conductivity can lead to damage from electron beam radiation. Research into solid electrolytes is expanding primarily due to safety c",
+   "rotated_deg": 0,
+   "bbox": [
+    149.5,
+    313.1,
+    567.0,
+    494.1
+   ],
+   "w": 1741,
+   "h": 755,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.684
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 30,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Comparison of decomposition temperatures of some solid-state electrolytes and commercial liquid electrolytes [135]. Morphological changes within the interface usually facilitate decomposition. Further, ASSB performance behaviors can be compromised by high-impedance impurities that develop as a result of interfacial reactions at increasing temperatures. Numerous other chain reactions can be triggered by the heat and gas evolved, potentially resulting in thermal runaway. To significantly design a thermally more stable system, structural compatibility, elemental composition, and chemical stability concerning the gas and heat generated based on previous studies should be researched. Extensive research on the thermal safety of all",
+   "rotated_deg": 0,
+   "bbox": [
+    160.0,
+    290.5,
+    566.5,
+    643.9
+   ],
+   "w": 1695,
+   "h": 1474,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.789
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 31,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Schematic of the internal thermal runaway path and heat generation analysis of components in traditional liquid Li-ion batteries for various active materials [136].",
+   "rotated_deg": 0,
+   "bbox": [
+    160.4,
+    282.8,
+    565.3,
+    472.4
+   ],
+   "w": 1688,
+   "h": 791,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.682
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 32,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (A) Two-cell type [137] composition and DSC curves (B) Heat flux of Li|LiFePO4 with (a) liquid, (b) PEO100/LiTFSI, and (c) PEO-PTFE30PEO70/LiTFSI electrolyte [138] (C) DSC curves of AQ cathode with liquid and polymer electrolyte [139] (D) Accelerating rate calorimeter (ARC) data of the Li|LiFePO4 half-cells with solid and liquid electrolytes [140] (E) Scheme of AIM and DSC curves of ASSB-AIM (a) DSC profile of Li0.43CoO2 (LCO) with LLZNO (b) DSC profile of Li1.95[Li1/3Ti5/3]O4 (LTO) with LLZNO (c) DSC profile of LiC6 (AG) with LLZNO (d) DSC profile of Li metal with LLZNO (e) DSC profile of the ALIB-AIM for LCO/LLZNO/LTO (f) DSC profile of the ALIB-AIM for LCO/LLZNO/AG (g) DSC profile of the ALIB-AIM for LCO/LLZNO/Li (h) DSC profile of the ALIB-AIM for LCO + Ketjenblack (KB)/LLZNO/Li [141].",
+   "rotated_deg": 0,
+   "bbox": [
+    160.0,
+    114.5,
+    565.3,
+    662.9
+   ],
+   "w": 1690,
+   "h": 2286,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.783
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 34,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Battery pack results for NMC 811 battery [151].",
+   "rotated_deg": 0,
+   "bbox": [
+    53.4,
+    115.1,
+    537.4,
+    388.6
+   ],
+   "w": 2018,
+   "h": 1141,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 34,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Battery pack results for LFP battery [151]. Figure 9 displays the environmental impacts of the two battery packs, NMC 811 and LFP. They represent the impact of each component of the battery on the associated impact category. This presentation helps us to understand which component contributes the most to a particular impact category. For instance, it is possible to observe that the battery cell has the highest environmental impact in the global warming category for both battery packs. The percentages were calculated by considering the total impact of each component in all impact categories. Thus, it is possible to see that 69.74% of the impacts come from",
+   "rotated_deg": 0,
+   "bbox": [
+    63.6,
+    401.7,
+    565.7,
+    659.7
+   ],
+   "w": 2092,
+   "h": 1076,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 35,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Impacts of both battery pack chemistries. Figure 9 also compares the environmental impacts of two batteries by showing their total impact in each category. By analyzing the graph, it is possible to identify which category has the highest impact in each battery pack and compare the overall impact of both batteries to see which one has a higher impact. In Figure 10, it is possible to see the results for the battery cell of the two packs. The graphs should be interpreted in the same way as Figures 7 and 8, which show the component with the highest impact in a specific impact category, and the percentages of the total impact associated with each component. Within the NMC battery cell, Figure 10 shows that 52.73% of the impacts come from the cathode and 32.86% from the anode, proving these are the components with higher environmental impacts.",
+   "rotated_deg": 0,
+   "bbox": [
+    92.3,
+    133.7,
+    565.5,
+    356.0
+   ],
+   "w": 1973,
+   "h": 928,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.807
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 35,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Battery cell results for the NMC 811 battery.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.8,
+    520.2,
+    524.4,
+    769.0
+   ],
+   "w": 1854,
+   "h": 1038,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 36,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Battery cell results for the LFP battery.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    100.6,
+    527.5,
+    352.1
+   ],
+   "w": 1925,
+   "h": 1049,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 37,
+   "file": "fig_12.png",
+   "caption": "Figure 12. GWP comparison of SSBs and lithium-ion batteries [155–160].",
+   "rotated_deg": 0,
+   "bbox": [
+    154.2,
+    493.6,
+    483.4,
+    755.4
+   ],
+   "w": 1373,
+   "h": 1092,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. Comparison of cathode chemistry and solid-state batteries. LFP NMC LTO Solid-State Battery Carbon, titanates, and MetLi alloys (metallic lithium) Anode Graphite Graphite Titanate Cathode LiFePO4 NMC LMO or NMC LCO, NCA, LFP, and vanadium oxide (LiCF3SO2)2N (LiTFSI) have the conductive salts PEO, LiPON, Li10GeP2S12, or Li2S-P2S5 Nominal Voltage 3.2 V 3.60–3.70 V 2.3–2.4 V Bulk type 2.5 V Thin film type 4.6 V Liquid consisting of lithium salts dissolved in water or other solvents. Liquid consisting of lithium salts dissolved in water or other solvents. Liquid consisting of lithium salts dissolved in water or other solvents. Electrolyte Capacity (Ah) 2.200 mAh/340 Ah 1.950 mAh/94.5 Ah 1.8 mAh/30 Ah Nominal Energy 7.040 mWh/1.088 Wh 7.215 mWh/344 Wh 4.32 mWh/69 Wh Energy Density 90–180 Wh·kg−1 150–240 Wh·kg−1 60–110 Wh·kg−1 Bulk type 250–500 Wh·kg−1 Thin film type 300–900 Wh·kg−1 Li",
+   "rotated_deg": 0,
+   "bbox": [
+    36.3,
+    32.0,
+    564.7,
+    756.1
+   ],
+   "w": 2188,
+   "h": 2998,
+   "dpi": 298,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2. Grain conductivities and overall conductivities of LLTO at different sintering tempera- tures [19]. Sample No. Sintering Temp. (◦C) Grain Conductivity Overall Conductivity (S·cm−1) (S·cm−1) 1 1000 4.75 × 10−5 1.06 × 10−7 2 1100 2.96 × 10−4 2.30 × 10−6 3 1200 3.03 × 10−4 8.52 × 10−6 4 1300 3.67 × 10−4 1.52 × 10−5",
+   "rotated_deg": 0,
+   "bbox": [
+    161.1,
+    32.0,
+    566.0,
+    766.0
+   ],
+   "w": 1655,
+   "h": 2998,
+   "dpi": 294,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 10,
+   "file": "tab_3.png",
+   "caption": "Table 3. Comparison of solid inorganic electrolytes for solid-state batteries.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.4,
+    69.6,
+    564.3,
+    780.7
+   ],
+   "w": 2201,
+   "h": 2964,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 12,
+   "file": "tab_4.png",
+   "caption": "Table 4. Some aspects of solid polymer electrolytes. Solid Polymer Electrolytes Polyacryllonitrile (PAN) It has high thermal stability and low ionic conductivity (10−8 S/cm). Different additives are used to increase the conductivity. It is thermally stable, has low conductivity in terms of ionic conductivity, but conductivity can be increased by doping with different additives and polymers. Polyvinylidene fluoride (PVdF) Poly methyl methacrylate (PMMA) It is relatively stable thermally and has a low ionic conductivity. Polyethylene oxide (PEO) Ionic conductivity may change depending on temperature; at high temperatures, ionic conductivity increases but thermal stability decreases.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    32.0,
+    566.0,
+    775.0
+   ],
+   "w": 2133,
+   "h": 2994,
+   "dpi": 290,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 17,
+   "file": "tab_5.png",
+   "caption": "Table 5. Comparison of solid-state battery production techniques. Method Scalability Cost Efficiency Environmental Impact Notes Solvent use raises environmental concerns",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    32.0,
+    565.9,
+    782.8
+   ],
+   "w": 2110,
+   "h": 2994,
+   "dpi": 287,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "t6",
+   "kind": "table",
+   "label": "6",
+   "page": 29,
+   "file": "tab_6.png",
+   "caption": "Table 6. Cont.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.3,
+    32.0,
+    566.0,
+    766.6
+   ],
+   "w": 2164,
+   "h": 3001,
+   "dpi": 294,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "t7",
+   "kind": "table",
+   "label": "7",
+   "page": 37,
+   "file": "tab_7.png",
+   "caption": "Table 7. Environmental impact assessment results per kWh battery pack (comparative sustainability assessment of Li-ion, Li-S, and all-solid-state traction batteries) [154].",
+   "rotated_deg": 0,
+   "bbox": [
+    153.9,
+    136.9,
+    564.6,
+    295.7
+   ],
+   "w": 1712,
+   "h": 663,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.362
+  },
+  {
+   "key": "t8",
+   "kind": "table",
+   "label": "8",
+   "page": 42,
+   "file": "tab_8.png",
+   "caption": "Table 8. Technical challenges and corresponding research strategies.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    69.3,
+    551.5,
+    765.8
+   ],
+   "w": 2146,
+   "h": 2903,
+   "dpi": 300,
+   "src": "89f6e446-31._Solid-state_batteries_chemistry_battery_and_thermal_management_system_battery_assembly_and_applications_a_critical_review.pdf",
+   "blank": 0.905
+  }
+ ]
+}

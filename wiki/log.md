@@ -2156,3 +2156,17 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - ⚠ 어긋남 20 건(D1·D3·D4 SI 그림 번호 오지시 · D2 SD 0.086 ↔ 0.076 · D8 체계 편차 · D9 Fig. 1 (c)↔(e) · D12 극값 시각 · D13 "uniformly" · D15 표준 ICI 무대조 · D19 단상 가정 ↔ 두 상 외).
 - 그림: 크로퍼 26 장 — **15 장 직접 봤다**(본문 8 전부 + SI 8·10·12·13·15·16·18), **안 본 것 11 장**(SI 1–7 · 9 · 11 · 14 · 17).
 - 후속 후보: 1 **Geng … Brandell 2022 *Electrochim. Acta* 404, 139727** (ref 19) · 2 **Chouchane 2020 *JPCL* 11, 2775** (ref 24) · 3 **zenodo 원자료로 `R/k`** · 4 **Xu 2021 *Nat. Mater.* 20, 84** (ref 31).
+
+## [2026-09-23] ingest | assb 32호 — Biçer et al. 2025, Solid-State Batteries: Chemistry, Battery, and Thermal Management System, Battery Assembly, and Applications — A Critical Review (Batteries 11, 212)
+
+- `raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md` (sha256 봉인, 49 쪽 = 본문 42 + 참고문헌 160 편, SI 없음). 큐 **31번**("08 의 '접촉 손실 ↔ 보통 노화 분리 진단' 요구가 매단 유일한 인용"). Sivas + Kayseri + Siro(셀 제조사) + Bozankaya + TechConcepts + INEGI, EU Horizon "EXTENDED", CC BY. ⚠ **Review — 전기화학 1차 측정 0**.
+- 큐 낱말 지문 재집계(NFKC 뒤 · 대소문자 구분 · 낱말): **11 열 전부 일치**. NFKC 변경 31 자(터키어 결합 부호 · `µ`), 합자 0 → 정규화 전후 수 동일. 대소문자 무시 오검출 `LLI` 42 · `LAM` 28 · `MPa` 142.
+- ★★★ **8호 인용 대조**: 8호 §6.1 이 이 편에 매단 3 요소 중 압력 센서 ✅ · 압력 의존 임피던스 ⚠ 절반 · **"contact loss ↔ ordinary aging 진단" ❌ 없음** — 요구 명제의 첫 인쇄는 8호 자신.
+- ★★ 축 판정: (a) BMS — 관측 V·I·T + 권고(압력 센서 · EIS · 서브셀), **구별 0**, 접촉 = 임피던스(용량 몫 없음; 분류 체계 네 번째 표본) · (b) 온도 — **0**(`Arrhenius` 0, 열관리 = 열폭주 안전) · (c) 압력 — `MPa` 0, 제조 ↔ 운전 미구분.
+- ★★ `[해석]` BMS 어휘의 전제: OCV–SoC "well-established linear"(p.23, p.24 "nonlinear" 와 모순) · SoC 분모 = 정격 용량 · SEI = interface 재정의 · Fig. 3 bipolar 스택이 셀별 OCV 관측 가능성을 지운다.
+- **채움표 32호 행 — 누적 ≈16.0 → ≈16.0 (새 칸 0).** Q4 ASSB 0 — 스물네 번째 성질 "선형 OCV 전제가 물음을 지운다" · Q1 `θ(N)` 0/32 · Q3 층 하나(정의 없는 SoH + 정격 분모 SoC).
+- 곱 축퇴 처방 **열다섯 번째 적용 — 대상 없음**, 대신 BMS 센서 ↔ 처방 단계 대응표(우리 번역).
+- ⚠ 어긋남 13 건 + 사소: **D2 Fig. 6B 5.473 kJ/g → 본문 5473 kJ g⁻¹(×1000)** · D3 OCV 선형/비선형 · D4 산화물 전도도 · **D6 "replacing SSEs with organic liquid electrolytes"** · **D8 인용 불일치 12 건(제목 기준)** 외.
+- 그림: 크로퍼 20 장 — **4 장 봤다(Fig. 1 · 3 · 4 · 6), 그중 3 장이 본문과 어긋남**; 안 본 것 Fig. 2 · 5 · 7–12, 표 8 장은 텍스트 대조.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 스물여덟 번째 · 제약 5 · Status Log) · [[assb-lampe-contact-product-degeneracy]](열다섯 번째 적용).
+- 후속: 160 편 중 Q1 · Q4 · 곱 분리 · 기준극 누설 1차 후보 **0**(제목 기준). 약한 후보 Celen 2021 IEEE SysCon (ref 11, ASSB-ECM) · Kan 2024 *ESM* 68 (ref 124, 온도). 압력 값은 큐 32.

@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -1050,6 +1050,31 @@ ASSB 에 식별성 도구를 들여올 때 **반원을 버리지 않는 판**(�
 
 사이클 `D` 감소 · `R` 증가를 저자는 c 격자 비가역성 · 두 상(fatigued) 분리에 배정한다. `[재현]` operando 극값에서 한 면적 인자는 충전 끝(`R` ×3.3 ↔ `D` ×≈0.17, 예측 ×0.09)에서만 자릿수 양립하고 방전 4.1 h(`R` ×1.7 ↔ `D` ×0.075)에서는 어긋난다. 그리고 그 구간은 `[인쇄]` 상속 가정 "single-phase solid solution" 이 자기 XRD(두 상)로 깨진 곳이다. 가를 `k` 는 인쇄되지 않았다.
 
+## ★★ 처방의 열다섯 번째 적용 (2026-09-23, `assb` 32호) — **적용 불가, 대상 없음 · 대신 BMS 센서 목록이 처방 단계의 입력 채널과 겹친다**
+
+`raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md` (Biçer et al. 2025, *Batteries* 11, 212 — ⚠ **Review 49 쪽, 1차 측정 0, 식 0 개**).
+곱이 설 모델도, 가를 데이터도 없다. 기록하는 이유는 둘이다: 계보에서 **"대상 없음" 도 한 번의 적용으로 센다**는 원칙, 그리고 이 편이 **SSB BMS 에 요구하는 센서 목록**이 처방의 입력 채널과 겹친다는 관찰.
+
+### 입력 점검
+
+| 단계 | 요구 | 이 편 | 판정 |
+|---|---|---|---|
+| **1단계** (16호) | `R` 과 `C` 를 같이 | EIS 를 `[인쇄]` "tracking dynamic internal resistance changes" 로만 권고 — **`C` 는 낱말로도 없다** | ❌ |
+| **2단계** (18·25호) | + 면적을 아는 대조군 | 0 | ❌ |
+| **3단계-a/b** (19호) | `Ea` · `C` 상한 | `Arrhenius` 0 · 열화 `Ea` 0 — 온도는 안전 감시(DSC/ARC) 와 BMS 입력뿐 | ❌ |
+| **4단계** (20호) | 시간 영역에도 같은 검사 | 0 | ❌ |
+
+### ★★ `[해석]` BMS 센서 ↔ 처방 단계 — 채널은 있고 물음이 없다
+
+| 이 편이 SSB BMS 에 요구하는 것 (`[인쇄]`) | 처방의 자리 | 빠진 것 |
+|---|---|---|
+| "impedance-based diagnostics (e.g., EIS)" | 1단계 | `R` 만 추적 — **`C` 를 같이 보고**해야 면적 서명이 선다 |
+| "thermal sensors" · "localized temperature sensing" | 3단계-a | 운전 온도 분포 위의 `R(T)` 를 모으면 `Ea` — **안전 감시가 아니라 진단으로** 써야 |
+| "pressure sensors and feedback control ... maintain optimal stack pressure" | [[assb-pressure-reapplication-separation-test]] 의 `P` 축 | 압력을 **일정하게 유지**하면 그 축은 닫힌다 — 되돌림 시험은 **압력을 바꿔야** 한다 |
+| "high-resolution current ... monitoring at the cell and sub-cell levels" | (처방 표 밖) | 면적 분포의 대리량 후보 — 확인 안 됨 |
+
+처방 네 단계 중 두 단계(1 · 3-a)와 압력 축의 **센서는 BMS 요구 목록에 이미 있다.** 빠진 것은 "그 채널로 무엇을 가를지" 의 물음이고, 셋째 줄(압력)은 **유지 제어가 진단 채널을 닫는 방향**으로 설계돼 있다. 번역은 우리가 한 것이다 — 이 편은 곱도, 모드도, 면적도 말하지 않는다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -1102,3 +1127,4 @@ ASSB 에 식별성 도구를 들여올 때 **반원을 버리지 않는 판**(�
 - ★ **2026-09-23 (29호)**: **`φ` 를 측정된 피복률로 쓰지 않는다** — `D_true` 공통 · LIB 100 % 두 가정 위의 비이고, 기준(`D_LIB`) 자체가 형상에 따라 2.7 배 다르다. 그리고 **"`n` ≈0.5 는 고체 확산이 아니다" 라고 주장하지 않는다** — TLM √t 가 같은 지수를 줄 수 있다는 **대안**까지이고, 판별하지 않았다(CA 원자료 · TLM 파라미터 없음).
 - ★ **2026-09-23 (30호)**: **"30호의 `D` 차는 면적이다" 라고 주장하지 않는다** — 유효 면적 ≈3.3 배는 **같은 `D` 가 가능하다**는 크기 검산이고, 측정이 아니다. Dunn 비의 4.3 배도 면적당 표면 용량을 계 사이에서 비교할 수 있다는 약한 전제 위다. 주장은 **"이 대조로는 `D` 와 면적이 안 갈린다"** 까지다. 그리고 `Q_M` ≈63 · `n` ≈2.5 는 **그림 판독 블록 평균에 우리가 건 적합**이지 원전 명제가 아니다.
 - ★ **2026-09-23 (31호)**: **"ICI `R/k` 가 면적을 가른다" 고 주장하지 않는다** — 식에서 읽은 후보이고, 31호 지면에는 계산 재료(사이클별 `k`)가 없으며 `R` 에는 면적 무관 항이 섞인다. 그리고 **"`D_app` 은 LAM 에 불변" 은 식 19 위의 대수**(반무한 · 균질 모집단 · 액체 쪽 확산 무시)이지 원문 명제가 아니다.
+- ★ **2026-09-23 (32호)**: **"BMS 센서만 있으면 곱이 갈린다" 고 주장하지 않는다** — 위 대응표는 32호가 요구한 센서 이름과 처방 단계의 입력을 **나란히 놓은 것**이다. 32호는 그 채널로 무엇도 가르지 않았고, 실셀 BMS 가 `C` 를 보고할 만큼 EIS 대역·정밀도를 갖는지는 확인되지 않았다.
