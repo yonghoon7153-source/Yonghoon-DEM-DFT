@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -624,6 +624,43 @@ NCM811–Li₆PS₅Cl 복합양극을 **SE 입도만** 바꿔(coarse ↔ fine) *
 
 압력의 함수 — `θ(P)` · `R(P)` · 용량(P) · 감쇠(P) 어느 것도 원전 서술로 없다. 가장 가까운 재수록은 Fig. 3I(70 / 7 / 2 MPa 첫 사이클 곡선, 캡션 [63] ↔ 본문 [78] 로 출처 갈림, `figure-read` 2 MPa Pristine ≈−10 %)와 Fig. 7B(2 MPa 한 점, 컷오프만 바꿈). **Sakka 2022**(`θ(P)` CT 측정 후보)는 [120] 으로 인용되지만 "3D 접촉 · 압력 방향" 명제에만 붙는다 — 25호가 같은 원전에서 옮긴 "50 ↔ ≤12 MPa 접촉 면적 분율" 은 이 지면에 없다.
 
+## ★★★ 2026-09-23 (`assb` 39호 Sakka 2022, **실험 · CT + 동시 EIS · 제조 가압 0 → 단조 0–100 MPa**) — **아래 벽의 구조판: 압력 → 공극률 · 접촉 피복 · `R_ct` 가 한 장치에서, 단 그 압력은 제조 압력이다**
+
+`raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md` (*J. Mater. Chem. A* 10, 16602, 리쓰메이칸 + Toyota + SPring-8). NCM111(LiNbO₃)/LGPS/In–Li, Ø 1 mm, 로드 트랜스듀서 감시 · 나사 가압.
+33호 절이 "이 페이지에 안 준 것 — 압력의 함수" 로 남긴 빈칸을 **1차 원전으로** 채우는 첫 편이다(원장 최상위였던 이유).
+
+### 1. ★★★ 압력의 함수 — 같은 장치, 5 점 (`[인쇄]` 라벨 / `[도표]` 판독)
+
+| P / MPa | 0 | 6 | 12 | 50 | 100 |
+|---|---:|---:|---:|---:|---:|
+| 복합층 공극률 % (인쇄 라벨) | 44 | 42 | 39 | 31 | 23 |
+| SE 층 공극률 % (`[도표]`) | ≈53 | ≈41 | ≈39 | ≈15 | ≈4.3 |
+| 접촉 피복 `φ` % (`[도표]`) | ≈78.3 | ≈74.9 | ≈77.9 | ≈84.3 | ≈82.7 |
+| `R_ct` ×10⁵ Ω (`[도표]`, 2전극) | — | ≈8.7 | ≈4.1 | ≈1.6 | ≈0.62 |
+| 겉보기 전도도 ×10⁻⁵ S cm⁻¹ (`[도표]`) | — | ≈7.8 | ≈8.0 | ≈9.1 | ≈9.7 |
+| 첫 방전 mAh g⁻¹ (다른 셀, `[도표]`) | — | ≈27 | — | ≈39 | ≈44 |
+
+⇒ **아래 벽의 문턱이 12–50 MPa 사이**로 읽힌다(`φ` · 공극률 차이가 ≤12 ↔ ≥50 로 갈린다; `[인쇄]` "improvement in the contact area fraction stopped when the pressure reached 50 MPa"). 25호의 "2–10 MPa"(운전 압력, 375 MPa 제조 뒤)와 **다른 양의 문턱**이다 — 아래 2.
+
+### 2. ★★★★ 그 압력은 제조 압력이다 — 이 페이지의 두 축 중 어느 쪽인가
+
+`[인쇄]` 서론이 두 양을 정의로 가르고("The former is the fabrication pressure and the latter is the stack pressure"), 결과에서 **자기 실험은 제조 가압이 없으므로 "the pressure shown in this study corresponds to the previously reported fabrication pressure"** 라고 적는다.
+`[인쇄]` SI Fig. S14: 50 MPa → 0 MPa 로 풀어도 "No clear changes … with respect to the void"(정성 1 장).
+⇒ 이 편의 표는 **최대 압력(= 제조 압력)의 함수**다. 16호(제작 = 운전)와 같은 부류이고, 25 · 33호가 모은 "고압 제조 · 저압 운전" 의 **운전 압력 문턱으로 옮기면 안 된다.** 제조 뒤 되돌림의 전기화학(`R_ct` · 용량)은 0 점이다.
+
+### 3. 요구치 — 여섯 번째 인쇄, **처음으로 원전이 지목된다**
+
+`[인쇄]` "Based on the literature, the upper limit of the stack pressure is suggested to be **1 MPa practically**,[22]" — ref 22 = **Wang, Kazyak, Dasgupta, Sakamoto, *Joule* 2021, 5, 1371–1390**.
+위 33호 절 표(8호 <≈1 · 12호 0.4–1 · 13호 <5 · 25호 ≤5 · 33호 <2 MPa, **확인된 원전 0**)에 여섯 번째 값이 붙고, **원전 지목이 하나 생긴다**(미열람 — 확인 편 여전히 0).
+
+### 4. ⚠ 정정 — 25호 digest 의 "모델상 25 MPa" 는 이 편의 명제가 아니다
+
+25호 digest(`raw/`, 불변)가 "Sakka 2022 — … 모델상 **25 MPa 면 안정 접촉**" 으로 적었다. Sakka 에는 **모델이 없고** "25 MPa" 는 SI Fig. S3 범례의 가압 단계뿐이다. Zhou 원문에서 그 문장은 ref 12 **다음 문장이며 인용 번호가 없다** — 인접 문장을 우리가 붙였다. 이 페이지의 25호 절은 그 문장을 쓰지 않았으므로 결론 변화는 없다.
+
+### 5. 이 편이 이 페이지에 **안 준 것**
+
+운전 압력(되돌림) 의 함수 · 위 벽(단락 · Li 금속 0) · 사이클 뒤 구조 · 반복(점당 n = 1, 같은 조건 다른 셀의 첫 방전 ≈27 ↔ ≈35 mAh g⁻¹) · 전극별 저항(2전극 — 상대극 In–Li 계면도 같은 나사 압력을 받는다). 같은 셀 단계 가압(SI S3, 6 → 12 → 25 → 50 → 100 MPa, 두 사이클씩)의 "용량 향상" 은 **사이클 번호와 교락**되고 절대 방전은 12 → 100 MPa 에서 준다(≈21 → ≈14 mAh g⁻¹).
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -656,6 +693,7 @@ NCM811–Li₆PS₅Cl 복합양극을 **SE 입도만** 바꿔(coarse ↔ fine) *
   **unavoidable for high-current operations**" 라고 적는다.
 - **"5 MPa 가 최적" 을 받아들이지 않는다** (경고 3).
 - **산업 요구치를 한 값으로 옮기지 않는다** (2026-09-23, 33호) — 계보 다섯 편이 ≈1 · 0.4–1 · 2 · 5 MPa 를 인쇄했고 확인된 원전은 0 이다.
+- **39호의 제조 압력 5 점을 운전 압력 문턱으로 옮기지 않는다** (2026-09-23) — 제조 가압이 없는 셀의 단조 가압이고, 되돌림 뒤 전기화학은 0 점이다. 그리고 `φ` 판독값은 CT 0.5 µm 화소 판정 · 분할 문턱 미인쇄 위의 값이다.
 - **압력이 `LAM_PE` 와 접촉 손실을 가른다고 주장하지 않는다.** Doux 는 양극 열화를
   다루지 않는다 — 이 페이지의 기여는 **연산자의 사용 조건**이지 분리 자체가 아니다.
 - **Doux 의 저밀도 토모그래피 구조가 Li 금속이라고 단정하지 않는다** — 같은 논문이

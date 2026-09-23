@@ -1,0 +1,472 @@
+{
+ "slug": "sakka2022_pressure-3d-structure-composite-cathode-xct",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "1bdae65d-1._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+  "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Illustration of the X-ray CT measurement and an all-solid-state battery cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    590.9,
+    558.8,
+    706.7
+   ],
+   "w": 1091,
+   "h": 483,
+   "dpi": 300,
+   "src": "1bdae65d-1._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.648
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 (a) Charge/discharge cycle curves of an In–LijLGPSjNCM all- solid-state battery using a laboratory-built measurement cell at a rate of 0.01C and stack pressure of 6 MPa. (b) Initial charge/discharge curves at a rate of 0.01C under various pressures.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    327.3
+   ],
+   "w": 1090,
+   "h": 1179,
+   "dpi": 300,
+   "src": "1bdae65d-1._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 (a) Pressure dependence on the porosity of the composite electrode and SE layer. (b) Volume fraction of NCM, LGPS, and voids in the composite electrode layer for various pressures. (c) Change in the NCM/LGPS contact area fraction as a function of pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    257.0,
+    558.8,
+    686.8
+   ],
+   "w": 1091,
+   "h": 1792,
+   "dpi": 300,
+   "src": "1bdae65d-1._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.84
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 (a) XY, YZ, and XZ slices highlighting only the contact surfaces of the NCM particles at various pressures. Green and blue lines indicate the NMC/LGPS contacted interface and the NCM/void interface, respectively. (b) XYZ axis and pressure direction. (c) Reconstructed three-dimensional image of the composite electrodes at stack pres- sures of 6 MPa and 100 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    325.6,
+    558.8,
+    666.8
+   ],
+   "w": 1091,
+   "h": 1423,
+   "dpi": 300,
+   "src": "1bdae65d-1._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.472
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 (a) Cropped part of the obtained three-dimensional composite electrode images used to calculate the tortuosity. (b) Two-dimen- sional schematic view used to calculate the tortuosity. (c) Histogram of tortuosity for various pressures.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    281.0,
+    298.0,
+    686.8
+   ],
+   "w": 1090,
+   "h": 1692,
+   "dpi": 300,
+   "src": "1bdae65d-1._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.632
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 (a) Apparent conductivity and (b) charge transfer resistance estimated by AC impedance as a function of pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    405.5,
+    558.8,
+    706.7
+   ],
+   "w": 1091,
+   "h": 1256,
+   "dpi": 300,
+   "src": "1bdae65d-1._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 Schematic illustration of morphological structural changes in a composite electrode by pressure application.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    502.5,
+    195.5
+   ],
+   "w": 1942,
+   "h": 630,
+   "dpi": 300,
+   "src": "1bdae65d-1._Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.496
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. SEM image of NCM particles. The observation was operated with a Hitachi SU6600 at 15 kV.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    126.1,
+    550.0,
+    434.1
+   ],
+   "w": 2092,
+   "h": 1284,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.211
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. SEM image of LGPS particles. The observation was operated with a Hitachi S-4800 at 1.5 kV without air exposure.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    67.9,
+    550.4,
+    363.5
+   ],
+   "w": 2094,
+   "h": 1232,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.174
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. (a) Charge/discharge cycle curves of an In-Li | LGPS | NCM all-solid-state battery using the laboratory-built measurement cell at a rate of 0.01C under various pressures. (b) Capacity improvement versus the applied pressure compared with 6 MPa as a baseline. Two cycles of charge/discharge measurements at 6 MPa are first performed, and then two cycles are performed at a pressure of 12 MPa. The discharge capacity of the latter measurements is divided by that of the former at the same cycle, which gives the increased capacity deriving from the change in pressures. A rate of 100% means that there is no change in the capacity at the same number of cycles for the constant pressure condition, and 200% indicates that the capacity is twice the baseline rate (6 MPa) at the increased pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    123.9,
+    550.4,
+    541.6
+   ],
+   "w": 2094,
+   "h": 1741,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Reconstructed X-ray CT images of cathode layers in In-Li | LGPS | NCM cell at various pressures of (a) 0, (b) 6, (c) 12, (d) 50 and (e) 100 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    109.1,
+    550.3,
+    448.8
+   ],
+   "w": 2094,
+   "h": 1417,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.425
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Reconstructed X-ray CT images of electrolyte layers in In-Li | LGPS | NCM cell at various pressures of (a) 0, (b) 6, (c) 12, (d) 50 and (e) 100 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    70.5,
+    550.3,
+    397.1
+   ],
+   "w": 2093,
+   "h": 1362,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.391
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Reconstructed cross-sectional image from X-ray CT in In-Li | LGPS | NCM cell at various pressures of (a) 0, (b) 6, (c) 12, (d) 50 and (e) 100 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    71.0,
+    550.3,
+    414.9
+   ],
+   "w": 2093,
+   "h": 1433,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.427
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. The raw data of the reconstructed gray-scale image of cathode layers in In-Li | LGPS | NCM cell at pressures of 0 MPa with (a) x-y (b) y-z and (c) z-x axes. Their three-phase segmentation result with (d) x-y (e) y-z and (f) z-x axes (purple: active material; green: electrolyte; blue: pore).",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    90.1,
+    550.3,
+    417.5
+   ],
+   "w": 2094,
+   "h": 1365,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.047
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. The raw data of the reconstructed gray-scale image of cathode layers in In-Li | LGPS | NCM cell at pressures of 6 MPa with (a) x-y (b) y-z and (c) z-x axes. Their three-phase segmentation result with (d) x-y (e) y-z and (f) z-x axes (purple: active material; green: electrolyte; blue: pore).",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    73.9,
+    550.3,
+    412.1
+   ],
+   "w": 2094,
+   "h": 1411,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.079
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. The raw data of the reconstructed gray-scale image of cathode layers in In-Li | LGPS | NCM cell at pressures of 12 MPa with (a) x-y (b) y-z and (c) z-x axes. Their three-phase segmentation result with (d) x-y (e) y-z and (f) z-x axes (purple: active material; green: electrolyte; blue: pore).",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    71.0,
+    550.3,
+    414.9
+   ],
+   "w": 2094,
+   "h": 1434,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.071
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. The raw data of the reconstructed gray-scale image of cathode layers in In-Li | LGPS | NCM cell at pressures of 50 MPa with (a) x-y (b) y-z and (c) z-x axes. Their three-phase segmentation result with (d) x-y (e) y-z and (f) z-x axes (purple: active material; green: electrolyte; blue: pore).",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    70.5,
+    550.3,
+    397.1
+   ],
+   "w": 2094,
+   "h": 1362,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.068
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. The raw data of the reconstructed gray-scale image of cathode layers in In-Li | LGPS | NCM cell at pressures of 100 MPa with (a) x-y (b) y-z and (c) z-x axes. Their three-phase segmentation result with (d) x-y (e) y-z and (f) z-x axes (purple: active material; green: electrolyte; blue: pore).",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    68.7,
+    550.3,
+    398.8
+   ],
+   "w": 2094,
+   "h": 1376,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.066
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 13,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Void ratio using small particle active materials. (a) SEM image of LiFePO4 particles. The observation was operated with a Hitachi SU6600 at 15 kV. (b) Reconstructed X-ray CT image of LiFePO4 cathode layer at 50 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    66.7,
+    550.3,
+    274.7
+   ],
+   "w": 2093,
+   "h": 867,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.395
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 14,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. XZ slices highlighting NCM particles and the contact surfaces of the NCM particles at various pressures of (a) 0, (b) 6, (c) 12, (d) 50 and (e) 100 MPa. (green lines : the NMC/LGPS contacted interface; blue lines : the NCM/void interface; purple : NCM particles.)",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    73.3,
+    549.9,
+    340.7
+   ],
+   "w": 2092,
+   "h": 1115,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.22
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 15,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Reconstructed X-ray CT image of cathode layers in In-Li | LGPS | NCM cell (a) at pressures of 50 MPa and (b) after releasing the pressure to 0 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    74.2,
+    550.2,
+    303.7
+   ],
+   "w": 2093,
+   "h": 957,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.393
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 16,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Nyquist plot of electrochemical impedance measurements at pressure of (a) 6 and 12 MPa and (b) 50 and 100 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    68.8,
+    557.9,
+    328.4
+   ],
+   "w": 2125,
+   "h": 1083,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 16,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Equivalent circuit for the fitting of the Nyquist plot.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.0,
+    398.2,
+    446.5,
+    519.2
+   ],
+   "w": 1661,
+   "h": 505,
+   "dpi": 300,
+   "src": "3ca3cbdb-1._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf",
+   "blank": 0.956
+  }
+ ]
+}

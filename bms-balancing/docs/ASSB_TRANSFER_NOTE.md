@@ -389,6 +389,44 @@ mothership 특칙). **셋이 안 모이면 태그를 만들지 말고 닻 한 �
 그리고 **공개 데이터셋의 `165_passive.xlsx` 가 깨져 있다**는 우리 실측을 논문
 서술과 대조하게 한다 — 논문이 그 조건을 쓴다면 **재현 불가**다.
 
+### 6-3-g. 2차 묶음 40~59 (2026-09-23) — **원장 §1 상단 순서 그대로**
+
+사용자가 원장(`ASSB_WANTED_PAPERS.md` §1)을 보고 **상단부터 20 편**을 올렸다. 번호 40~59 는 **원장 §1 상단 순서**와 같고,
+6-3 · 6-4 와 같은 규칙(먹인 순서 = 처리 순서)으로 정본이다. 이 묶음은 01~38 과 달리 **흡수한 편들이 스스로 가리킨 원전**이다 — 재인용 지도가 아니라 원전 추적.
+
+| # | 논문 | 종류·쪽 | sha256(앞 32) | 겨냥 |
+|---|---|---|---|---|
+| **40** | **Sakka·Yamashige·Watanabe·Takeuchi·Uesugi·Uesugi·Orikasa** — Pressure dependence on the three-dimensional structure of a composite electrode in an all-solid-state battery (*J. Mater. Chem. A* 2022, **10**, 16602–16609, `10.1039/d2ta02378d`, CC-BY 4.0) · 리쓰메이칸 + **Toyota**(셀 설계) + SPring-8 | **Article** 8p **+ SI 16p** | 본문 `58852a218b768472288e22f2f93fbe27` / SI `356bee3bd41d20ad23f5839e5e8bb9b7` · ✅ **흡수 완료** (assb 39호) — **≈16.5 → ≈17.5 (Q1 +0.5 · Q6 +0.5)**. ★★★★ **판정**: (a) **X선 CT 로 접촉 면적 분율을 쟀다 — 단 표면 피복 `φ`**(`[인쇄]` "with respect to the surface area of the NCM particles"), `θ`(연결 분율) · `u`(통째 비연결) **아님** → 37호 기준 **`A_eff` 쪽 손잡이**(`k_p` 와 항등, `LAM_PE` 쪽 아님) · (b) **압력 축뿐**(0 · 6 · 12 · 50 · 100 MPa, 신품) — **`θ(N)` 0/39 · `θ(P)` 아님 → `φ(P)`**, `[도표]` 78.3 / 74.9 / 77.9 / 84.3 / 82.7 %(비단조) · 그 압력은 **제조 압력**(`[인쇄]` "no pressure was added during fabrication … corresponds to … fabrication pressure") · (c) 화소 0.5 µm · 분할 문턱 미인쇄 · `[재현]` **분할이 고정 혼합물의 NCM/LGPS 부피비를 0.47 → 0.97 로 흔든다**(효과 ×1.10 보다 큼) · 0 MPa(공극률 44 %)에서도 `φ` ≈0.78 · (d) ★★★★ 같은 지면 `R_ct` ×14 ↔ `φ` ×1.10 ⇒ `[재현]` **`R_ct·φ` ×13** — CT 면적은 `R_ct` 로그 변화의 ≈4 % 만 설명(곱 축퇴 처방 **스물두 번째 적용**, 새 줄 "영상 면적 → `R·φ` 검사"). ★★★ **25호 ↔ 33호 인용 판정: 둘 다 선다** — 25호 = 본문 결과(Fig. 3c · 6b), 33호 = 결론 제언("3D manner … even at low pressures", 원문 "it is expected"); 갈린 것이 아니라 나눈 것. ⚠ **원장 Sakka 행의 "+ '25 MPa 면 안정' 모델" 은 Sakka 에 없다** — Zhou 원문의 ref 12 **다음 무인용 문장**을 25호 digest 가 붙였다(모델 0, "25 MPa" 는 SI S3 가압 단계뿐). ★★★ **DEM 보정 목표: 조건부** — 1순위 복합층 공극률(P) 5 점(인쇄 44 → 23 %) · 2순위 3 상 부피분율(질량수지 결함 알고) · `φ(P)` 는 "0.5 µm 판정에서 0.75–0.85" 범위 제약 · 비등방성 정성(방향별 수치 0) · 입도 SEM 한 장씩(NCM ≈5–18 µm 구형 · LGPS ≈1–8 µm 부정형) · 1 : 1 : 0.1 wt · Ø 1 mm · 제조 가압 0. DEM/MPM 파일 손대지 않음. Q2 반 칸 검토 후 접음(신품) · Q4 서른한 번째 성질 · Q5 열다섯 번째 형태 "상대극 계면을 양극 접촉 면적에 흡수". 요구치 **여섯 번째 인쇄 "1 MPa practically"[22] — 원전 지목 Wang·Kazyak·Dasgupta·Sakamoto 2021 *Joule* 5, 1371**(계보 첫 원전 지목, 미열람). 어긋남 12 건(D3 결론 방향 어휘 반전 · D4 "≈10 %" ↔ 비단조 · D6 질량수지 · D7 S3 절대 ↔ 정규화 · D8 고압 `R_ct` ↔ Nyquist ×2–3 · D11 ref 23 = 41 외). 그림 23 장 중 15 장 봤다(Fig. 1–6 · S1–S4 · S7 · S13–S16). 후속: Wang 2021 *Joule*(ref 22) · Ohashi…Hirai 2020 *JPS* 470(ref 24) · 2021 *JPS* 483(ref 25) · Fathiannasab 2021 *JPS* 483(ref 18) · Doux 2020 *JMCA* 8, 5049(ref 15 — 5호와 다른 논문). 큐 41–59 인용 0 | **Q1**·Q6·DEM — 원장 최상위 |
+| 41 | Ikezawa 외 2020 — *Electrochem. Commun.* 116, 106743 | | | 대기 |
+| 42 | Nam 외 2018 — *J. Mater. Chem. A* 6, 14867 | | | 대기 |
+| 43 | Santhosha 외 2019 — *Batteries & Supercaps* 2, 524 | | | 대기 |
+| 44 | Fukunishi 외 2023 — *ACS Appl. Energy Mater.* 6, 10908 | | | 대기 |
+| 45 | Jin·Park·Park·Lim 2015 — *Electrochim. Acta* 185, 242 | | | 대기 |
+| 46 | Hertle·Walther·Mogwitz 외 2023 — *J. Electrochem. Soc.* 170, 040519 | | | 대기 |
+| 47 | Schlenker 외 2020 — *ACS Appl. Mater. Interfaces* 12, 20012 | | | 대기 |
+| 48 | Solchenbach 외 2016 — *J. Electrochem. Soc.* 163, A2265 | | | 대기 |
+| 49 | Dugas 외 2021 — *J. Electrochem. Soc.* 168, 090508 | | | 대기 |
+| 50 | Barai 외 2018 — *Sci. Rep.* 8, 21 | | | 대기 |
+| 51 | Miß·Ramanayagam·Roling 2022 — *ACS Appl. Mater. Interfaces* 14, 38246 | | | 대기 |
+| 52 | Illig 외 2012 — *J. Electrochem. Soc.* 159, A952 | | | 대기 |
+| 53 | Oh…Choi 2025 — *Adv. Energy Mater.* 15, 2404817 | | | 대기 |
+| 54 | Ren 외 2023 — *Adv. Energy Mater.* 13, 2201939 | | | 대기 |
+| 55 | Neumann 외 2021 — *ACS Appl. Energy Mater.* 4, 4786 | | | 대기 |
+| 56 | Hlushkou 외 2018 — *J. Power Sources* 396, 363 | | | 대기 |
+| 57 | Bielefeld 외 2022 — *J. Electrochem. Soc.* 169, 020539 | | | 대기 |
+| 58 | Bielefeld·Weber·Janek 2020 — *ACS Appl. Mater. Interfaces* 12, 12821 | | | 대기 |
+| 59 | Asheri 외 2023 — *Comput. Mater. Sci.* 226, 112186 | | | 대기 |
+
+서지는 원장 §1 행의 것을 옮겼다(원장이 정본 — 확인되지 않은 서지는 각 편 흡수 때 PDF 로 확정).
+
+**★ 단어 지문** (규칙: NFKC 뒤 · 대소문자 구분 · 낱말 경계 · 본문(참고문헌 전); SI 는 괄호):
+
+| | `identifiab` | `uncertaint` | `conf.interval` | `Bayes` | `posterior` | `calibrat` | `LLI` | `LAM` | `degradation mode` | `contact loss` | `MPa` |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **40** | **0** | **0** | **0** | 0 | 0 | **0** | 0 | 0 | 0 | **0** | **30** (SI 22) |
+
+⁵ **40 번 (39호 digest)**: NFKC 변경 본문 38 자(`ﬀ` 30 · `ﬃ` 7 · `ﬂ` 1) — **열 변화 0**. ⚠ 이 RSC 조판은 `fi` 합자가 NFKC 대상 문자로 남지 않고 **추출에서 글리프째 빠진다**("rst" · "quantied") — `identifiab` 는 `identiab` 로 떨어질 수 있어 따로 검사: `identi*` 1(무관). `µ` 도 빠진다("0.5 mm" = 0.5 µm, 렌더링으로 확인). 소프트 하이픈 0 · 줄끝 하이픈 이음 `stack pressure` 10 → 11(지문 열 변화 0). `contact area` 13 · `contact loss` 0 — **접촉을 형성(압력)으로만 다룬다.**
+
 ### 6-3-c. ⚠ 30 번의 보충 데이터 ZIP — **30 번 에이전트에게 반드시 넘길 것**
 
 사용자 기계 `C:\Users\Administrator\Downloads\30. Sup) …zip` (82 MB, **이중 압축** —

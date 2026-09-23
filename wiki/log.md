@@ -2240,3 +2240,16 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **6 장 봤다(Fig. 4 · 5 · 6 · 7 · 8 · 9, Fig. 9 패널 확대)**; 안 본 것 Fig. 1 · 2 · 3(모식 · 모사).
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른네 번째 · Against 단서 · 새 제약 7 · Status Log · 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]](스물한 번째 적용 · 표 두 줄) · [[spm-grouped-parameter-identifiability]](38호 두 행) · [[assb-li-in-reference-potential-window]](열네 번째 형태).
 - 후속(제목 기준, 큐 밖): Bartsch 2019 *Chem. Commun.* 55, 11223 (ref 47, operando XRD 활성 질량) · Ruess 2020 *JES* 167, 100532 (ref 19) · Fantin 2021 *Chem. Mater.* 33, 2624 (ref 41) · Lin 2014 *Nat. Commun.* 5, 3529 (ref 14) · Schönleber 2015/2017 (refs 32 · 31).
+
+## [2026-09-23] ingest | assb 39호 — Sakka et al. 2022, Pressure dependence on the three-dimensional structure of a composite electrode in an all-solid-state battery (J. Mater. Chem. A 10, 16602)
+- raw: `raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md` (sha256 봉인 — 본문 · SI PDF 해시 frontmatter) · 그림 `raw/figures/sakka2022_pressure-3d-structure-composite-cathode-xct/` (크로퍼 23). 큐 **40번** — **2차 묶음 40~59 의 첫 편**(원장 최상위). CC-BY 4.0, SI 16 쪽.
+- ★★★★ **판정**: (a) X선 CT(SPring-8, 화소 0.5 µm)로 **접촉 면적 분율을 쟀다 — 표면 피복 `φ`**(NCM 표면 중 LGPS 와 닿은 몫), `θ` · `u` 아님 → 37호 기준 **`A_eff` 쪽 손잡이** · (b) 압력 축뿐(0 · 6 · 12 · 50 · 100 MPa, 신품) — **`θ(N)` 0/39**, `φ(P)` 는 **제조 압력**의 함수 · (c) 분할 문턱 미인쇄 · `[재현]` 분할이 고정 혼합물의 NCM/LGPS 부피비를 0.47 → 0.97 로 흔든다 · (d) `R_ct` ×14 ↔ `φ` ×1.10 ⇒ `R_ct·φ` ×13.
+- **채움표 39호 행 — 누적 ≈16.5 → ≈17.5 (Q1 +0.5 · Q6 +0.5).** Q2 반 칸 검토 후 접음(신품) · Q4 0/39 서른한 번째 성질 · Q5 열다섯 번째 형태("상대극 계면을 양극 접촉 면적에 흡수한다").
+- ★★★ **25호 ↔ 33호 인용 판정**: 둘 다 선다(결과 ↔ 제언). ⚠ 25호 digest 의 "모델상 25 MPa 면 안정" 은 Sakka 에 없다 — Zhou 원문의 무인용 인접 문장(우리 오귀속, 컴파일 페이지에서 정정).
+- ★★★ DEM 보정 목표: 조건부 — 1순위 복합층 공극률(P) 5 점 · `φ(P)` 는 해상도 판정의 범위 제약으로만. DEM/MPM 파일 손대지 않음.
+- 곱 축퇴 처방 **스물두 번째 적용**: 표 새 줄 "영상 면적 → `R·φ` 검사" — 2단계를 측정된 면적으로 건 첫 표본, 면적 가설이 CT 척도에서 기각.
+- ⚠ 어긋남 12 건: D3 결론 방향 어휘 반전 · D4 "≈10 %" ↔ 비단조 · D6 질량수지 · D7 S3 절대 ↔ 정규화 · D8 고압 `R_ct` ↔ Nyquist ×2–3 · D11 ref 23 = 41 외.
+- 낱말 지문(NFKC · 대소문자 구분 · 낱말 경계 · 본문): 11 열 중 `MPa` 30 외 전부 0(`contact loss` 0 · `contact area` 13). NFKC 변경 38 자 — 열 변화 0. `fi` · `µ` 글리프 추출 소실(단위는 렌더링으로 확인).
+- 그림: **15 장 봤다(Fig. 1–6 · S1–S4 · S7 · S13–S16)**; 안 본 것 Fig. 7 · S5 · S6 · S8–S12.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른다섯 번째 · Against 단서 · 새 제약 6 · Status Log) · [[assb-lampe-contact-product-degeneracy]](스물두 번째 적용 · 표 한 줄) · [[assb-stack-pressure-operating-window]](39호 절 · 요구치 여섯 번째 인쇄 · 25호 오귀속 정정) · [[assb-pressure-reapplication-separation-test]](39호 절). 큐 `bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §6-3-g 신설(40 행).
+- 후속(서지 기준, 큐 41–59 에 없음): Wang · Kazyak · Dasgupta · Sakamoto 2021 *Joule* 5, 1371 (ref 22, "1 MPa practically") · Ohashi … Hirai 2020 *JPS* 470, 228437 (ref 24) · Ohashi … Hirai 2021 *JPS* 483, 229212 (ref 25) · Fathiannasab 2021 *JPS* 483, 229028 (ref 18) · Doux 2020 *JMCA* 8, 5049 (ref 15).

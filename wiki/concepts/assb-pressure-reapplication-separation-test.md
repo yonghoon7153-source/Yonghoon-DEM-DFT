@@ -2,10 +2,10 @@
 title: 압력 재인가 분리 시험 — ASSB 겉보기 용량 손실의 가역/비가역 가르기
 description: "Pressure re-application as the second separation operator in ASSB: rate erases the kinetic term η(i), stack pressure (partially) restores the geometric term θ_AM, and what is left is true LAM_PE (Shi 2020 measured instance)"
 created: 2026-09-16
-updated: 2026-09-22
+updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -261,6 +261,15 @@ constant at 20 MPa**". `[해석]` **볼트·너트는 정변위 구속이지 정
 void 는 소신호로만 보인다. 4호(60 %p)와 14호(0)가 사상의 양 끝이다.
 ⚠ 14호는 ">300 MPa recondition" 을 **처방만 하고 수행하지 않는다**, 그리고 4호를 인용하지
 않는다.
+
+## ★★★ 39호(Sakka 2022)가 붙인 것 — **가압 분기의 구조 측정, 그리고 연산자가 곱의 여러 인자를 같이 움직인다는 실측** (2026-09-23)
+
+`raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md` — SPring-8 CT(화소 0.5 µm) + 동시 EIS, NCM111(LiNbO₃)/LGPS/In–Li, **제조 가압 0 → 단조 0 · 6 · 12 · 50 · 100 MPa**, 신품.
+
+1. **`θ_AM(P)` 가 아니라 `φ(P)` 다.** `[인쇄]` 접촉 면적 분율 = NCM 표면 중 LGPS 와 닿은 몫(표면 피복). `[도표]` ≈0.75–0.78(≤12 MPa) → ≈0.83–0.84(≥50 MPa). 위 식의 `θ_AM`(용량에 곱해지는 연결 분율)과 다른 양이고, 37호 원형 모델에서는 **용량에 없다**(`A_eff` 쪽). ⇒ `ΔQ_mech` 가 되돌리는 것을 이 측정으로 **직접 대응시킬 수 없다**.
+2. ★★ **연산자가 곱의 인자 넷을 같이 움직인다**(`[도표]`, 6 → 100 MPa): 공극률 42 → 23 % · 겉보기 전도도 +24 % · `φ_CT` ×1.10 · `R_ct` ×14(2전극 — 상대극 계면 포함) · 첫 방전 ×1.6(다른 셀). 11호가 붙인 "연산자가 직교하지 않는다" 의 **구조 측정판**이다.
+3. **가압 분기뿐이다 — 되돌림은 정성 한 장.** `[인쇄]` SI Fig. S14: 50 → 0 MPa 로 풀어도 "No clear changes … with respect to the void". `[해석]` µm 척도에서 구조가 **최대 압력을 기억**한다(5호 이력 · 14호 재가압 오프셋과 같은 방향). 그러나 `R_ct` · 용량의 되돌림은 0 점이고, 0.5 µm 아래 틈은 이 방법에 안 보인다 — **되돌림 연산자의 가역성 문제를 이 편은 풀지 않는다.**
+4. 이 편의 "압력" 은 `[인쇄]` **제조 압력에 해당**한다 — `P_high` 를 "제조 압력 이하의 재가압" 으로 설계하는 이 페이지의 연산자에는 **위쪽 끝(≥50 MPa 에서 `φ` 포화)** 만 참고가 된다.
 
 ## 이 페이지가 주장하지 않는 것
 

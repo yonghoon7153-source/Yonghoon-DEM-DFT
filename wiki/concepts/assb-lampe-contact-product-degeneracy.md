@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -170,6 +170,7 @@ physical significance** of the parameters" 라고 쓴다.
 | ★★★ **`A_eff ↔ k` 항등 — 표면 접촉 손실의 쌍둥이는 `LAM` 이 아니라 반응 상수** (2026-09-23, **37호 — 원형 모델의 식에서**) | 원형 모델에서 `A_eff` 는 BV 분모에만 있다(`[인쇄]` 균일 표면 전류 가정 — 용량 · 확산에 없다) ⇒ `η_ct` 는 `A_eff·k·ε_p/R_s` 로만 보고 `A_eff → cA_eff, k → k/c` 가 **모든 출력에서** 같다. 1단계(`R·C`)가 가르려는 쌍이 바로 이것이다 | ⚠ **37호 모델은 `c_dl` 을 F(전극 전체)로 고정해 면적과 떼어 놓았다** — 이 모델로 truth 를 만들면 `A_eff` 변화가 `R·C` 를 바꾸고 `C` 는 그대로다(처방 전제의 반대). 처방을 채점할 truth 에는 **면적에 비례하는 이중층**이 먼저 필요하다 |
 | ★★★ **이완 OCP 두 점 = 연결 질량 (`ΔQ/Δx`)** (2026-09-23 신설, **38호에서**) | 평탄 상대극 셀에서 방전 전후 **이완 OCP** 를 기준 OCP–x 에 대 `Δx` 를 얻고 `m_act = Q/q(Δx)` — 곱에서 **`η` 를 율과 무관하게** 뗀다(율 스윕 줄의 대체). **`θ` 와 `ε_p` 는 한 칸으로 남는다** | ★★★ **38호**: 40 사이클 × 4 조건, `[도표]` PC N = 40 ≈0.63 · SC ≈0.91. ⚠ 조건 셋 — (i) 이완 ≥ `L²/D̃`(38호 1 h ↔ `[재현]` PC 후반 ≈13–17 h ✗, 편향 방향 `[추론]` 질량 손실 과대) (ii) 상대극 평탄 폭 ≪ 분해능(±10 mV ≈ ±4 %) (iii) 기준 곡선이 같은 계면계(38호는 액체셀에서 수입) |
 | ↳ ⚠ **저주파 꼬리의 반무한 곱 `L/(C_diff·√D̃)`** (2026-09-23, **38호에서**, `[해석]`) | 유한공간 Warburg 가 용량성 극한에 닿지 않으면(`ωτ ≫ 1`) 꼬리가 정하는 것은 `L/(C_diff√D̃)` 하나 — `C_diff/L ∝` 접촉 면적이므로 **면적 × √D̃** 이다. `C_diff` 를 다른 채널(OCP 질량)에서 고정하면 두 채널이 곱으로 거래한다. 용량성 극한에 닿으면 `C_diff` 단독 = **OCV 독립 활성 질량** | ⚠ **38호**: 저자 신뢰 한계 `√(D̃/f_min)` = 1.8 µm(25 °C) ↔ `[도표]` PC `L_diff,50` 4.8–5.6 µm · `C_diff` 를 OCP 질량으로 **고정**. 37호 `A_eff ↔ k` 의 확산 판, 30호 Randles–Ševčík · 31호 ICI 와 같은 부류의 **사이클 해상판** |
+| ★★★ **영상 면적 → `R·φ` 검사 — 면적을 재고도 곱이 남는가** (2026-09-23 신설, **39호에서**) | 압력 · 공정 등으로 면적이 바뀐 상태들에서 **영상으로 잰 피복 `φ`** 와 **`R_ct`** 를 같이 얻으면 `R_ct·φ` 를 본다 ⇒ 일정하면 면적 채널, 변하면 **곱의 나머지**(`k_p` · 영상 해상도 아래 실접촉 · 상대극)가 그만큼을 가져간다. **영상의 길이 척도(화소)를 같이 적는다** — `A_eff = φ_영상 × (해상도 아래 실접촉 몫)` | ★★★★ **39호**(CT 0.5 µm, 신품, 압력 4 점): `[도표]` `φ` ×1.10 ↔ `R_ct` ×14 ⇒ `[재현]` `R_ct·φ` **×13** — **2단계를 측정된 면적으로 건 첫 표본이고, 면적 가설이 CT 척도에서 기각된다**(로그 변화의 ≈4 % 만 면적). ⚠ 2전극 · n = 1 · 분할 질량수지 ×2 · 고압 `R_ct` 가 Nyquist 호와 ×2–3 |
 
 ★ **`R_CT·C_dl` 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -1252,6 +1253,32 @@ RF-RFE-CV 의 점수는 **용량 예측 MSE** 다. 곱의 두 인자(면적 ↔ 
 
 조건당 셀 1 개 · SI 미열람 · 닫힘이 두 패널에서 15–30 % 어긋난다(`[도표]` Fig. 9a +12…+27 · 9d −14…−28 mAh g⁻¹). 기여는 **두 채널의 설계**와 **그 설계의 조건(이완 시간 · 용량성 극한)** 이다.
 
+## ★★★★ 처방의 스물두 번째 적용 (2026-09-23, `assb` 39호) — **곱의 한 인자를 영상으로 직접 쟀다: 면적은 ×1.10, `R_ct` 는 ×14 — 곱의 나머지가 ×13 을 가져간다**
+
+`raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md` (Sakka, Yamashige, … Orikasa 2022, *J. Mater. Chem. A* 10, 16602 — 원장 최상위, 25호 ref 12 · 33호 ref [120]). NCM111(LiNbO₃) | LGPS | In–Li, 신품, **제조 가압 0 → 단조 가압 0 · 6 · 12 · 50 · 100 MPa**, SPring-8 CT(화소 0.5 µm) + 동시 EIS, 2전극.
+
+### 입력 점검
+
+- **1단계 `R_CT·C_dl`** — 회로(SI Fig. S16)에 C 둘, **값 인쇄 0**, Nyquist 주파수 표지 0 ❌.
+- **2단계 면적 대조군** — ★ **측정된 면적을 가진 첫 대조군.** `[인쇄]` "contact area fraction … with respect to the surface area of the NCM particles" = **표면 피복 `φ`**(37호 기준 `A_eff` 쪽 손잡이). `[도표]` `φ` 0.749 / 0.779 / 0.843 / 0.827 ↔ `R_ct` 8.7 / 4.1 / 1.6 / 0.62 ×10⁵ Ω (6 / 12 / 50 / 100 MPa).
+- **3단계 `Ea`** ❌ 298 K. **4단계 `C` 상한** ❌. **율 스윕 줄** ❌ 0.01 C 한 율.
+
+### ★★★★ 면적 가설의 실측 기각 — CT 척도에서
+
+`[재현]` `R_ct·φ` = 6.5 → 3.2 → 1.4 → 0.51 ×10⁵ Ω ⇒ 면적당 전도도 **×13**. `ln 1.10 / ln 14` ≈ 0.04 — **CT 로 잰 접촉 면적은 `R_ct` 로그 변화의 ≈4 % 만 설명한다.**
+원문은 `[인쇄]` "This corresponds to the increase of the contact area fraction" · "The enhanced contact area fraction … led to an order of magnitude reduction in charge transfer resistance" 로 **상관을 귀속으로 읽는다**.
+`[해석]` ⇒ 37호 항등(`A_eff ↔ k_p`)에 **세 번째 인자가 붙는다**: `A_eff = φ_CT × (0.5 µm 아래 실접촉 몫)`. `R_ct` 가 보는 것은 `φ_CT × (실접촉 몫) × k_p` (+ 2전극이라 상대극 In–Li 계면). 이 편은 뒤의 셋을 가르지 않는다.
+
+### ⇒ 이 적용이 처방에 더하는 것
+
+1. **"영상 면적 → `R·φ` 검사" 줄**(위 표 새 줄) — 면적을 **재고도** 곱이 안 풀릴 수 있고, 그 크기가 `R·φ` 의 변화로 바로 보인다.
+2. **2단계의 전제 조건** — 면적 대조군의 "면적" 은 측정 방법의 **길이 척도**를 달고 있어야 한다. 18 · 25호의 BET · 입자 기하 면적, 39호의 CT 피복은 서로 다른 척도의 면적이다.
+3. `[해석]` **압력 연산자는 곱의 여러 인자를 같이 움직인다** — 공극률(→ 겉보기 전도도 +24 %) · `φ_CT`(+10 %) · 나머지(×13) · 상대극. 압력 되돌림 분리 시험([[assb-pressure-reapplication-separation-test]])의 비직교성(11호)에 실측 하나.
+
+### ⚠ 이것이 곱을 푼 것은 아니다
+
+점당 n = 1 · 오차 0 · 분할 문턱 미인쇄 · **분할이 질량을 보존하지 않는다**(`[재현]` NCM/LGPS 부피비 0.47 → 0.97, 고정 혼합물) · 고압 두 `R_ct` 가 Nyquist 호 지름과 ×2–3 어긋남 · 2전극. 기여는 **"면적을 영상으로 재도 안 풀린다" 는 형태와 그 크기(×13)** 다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -1310,3 +1337,4 @@ RF-RFE-CV 의 점수는 **용량 예측 MSE** 다. 곱의 두 인자(면적 ↔ 
 - ★ **2026-09-23 (35호)**: **"용량 목표 특징 선택이 언제나 분리 채널을 버린다" 를 정리로 주장하지 않는다** — 근거는 35호 한 편에서 저항 채널 하나가 세 그룹 모두 탈락한 것과, 목표와 직교하는 정보는 목표 점수에 기여하지 않는다는 **일반 논리**다. 저항이 용량과 상관된 데이터(예: 같은 기구가 둘 다 움직이는 셀)에서는 선택될 수 있다. 그리고 35호는 액체 셀이라 접촉 손실 채널은 애초에 대상이 아니다.
 - ★ **2026-09-23 (36호)**: **"평균장 VI 나 상관된 사전이 실제 모드 진단 문헌에서 곱을 가렸다" 고 주장하지 않는다** — 36호는 종설이고 두 문장 모두 재인용이다(평균장 경고는 BNN 가중치 맥락, Ruan 문장은 원전 미열람). 주장은 **두 경로가 구조상 곱 방향의 폭을 지울 수 있다**는 것까지이고, 확인은 원전(Ruan 2022 · Thelen 2022)에서 한다.
 - ★ **2026-09-23 (37호)**: **"`A_eff` 는 원리적으로 `k` 와 못 가른다" 고 일반화하지 않는다** — 37호 · 9호의 식(균일 표면 전류 가정, `c_dl` 면적 무관)에서의 항등이다. 이중층을 면적에 비례시키거나 `A_eff` 를 확산에도 넣는 모델에서는 갈라질 수 있다. 그리고 **37호의 `k_p` · `R_s` 가 틀렸다고 단정하지 않는다** — `k_p` 는 LSV 환산 면적이 미인쇄라 측정과 "같은 양" 인지 모르고, `R_s` ↔ SEM 은 분말 투영 사진 한 장과의 대조다. 이완 시상수 불일치(4–5 자릿수)도 코드 없이 원인을 가르지 않는다.
+- ★ **2026-09-23 (39호)**: **"`R_ct` 의 ×13 이 `k_p` 다" 라고 주장하지 않는다** — 후보는 셋(0.5 µm 아래 실접촉 · 계면 화학 `k_p` · 2전극의 상대극 In–Li 계면)이고 39호는 아무것도 가르지 않았다. 그리고 **`φ(P)` 추세 자체를 확정값으로 쓰지 않는다** — 같은 분할이 고정 혼합물의 부피비를 ×2 흔든다. 주장은 **"CT 로 잰 면적이 `R_ct` 변화의 작은 몫만 설명한다 — 그 분할을 믿는 한"** 까지다.
