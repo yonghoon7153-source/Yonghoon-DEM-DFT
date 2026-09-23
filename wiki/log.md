@@ -2265,3 +2265,7 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **3 장 다 봤다**(Fig. 1–3, 화소 판독 1c · 1d · 2a · 2d · 3b · 3d).
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른여섯 번째 · Status Log) · [[assb-li-in-reference-potential-window]](40호 절 · P6 원전 판정 · 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]](스물세 번째 적용 · 표 한 줄). 큐 `bms-balancing/docs/ASSB_TRANSFER_NOTE.md` §6-3-g 41 행 · 지문 행.
 - 후속: Costard · Ender · Weiss · Ivers-Tiffée 2017 *JES* 164, A80 (ref 11 — 1.55 V 의 유일한 근거, 큐 없음) · Nam 2018 *JMCA* 6, 14867 (ref 5 — 큐 42) · Ender · Illig · Ivers-Tiffée 2017 *JES* 164, A71 (ref 10) · Braun 2018 *JPS* 393, 119 (ref 28).
+
+## [2026-09-23] update | assb 40호 흡수 커밋 추적 — 내용은 `804cf4cf` 에 들어갔다
+- assb 40호(Ikezawa 2020) ingest 의 스테이징된 변경 전부(digest · 그림 3 · 채움표 · 개념 2 · 큐 41 행 · log)가 **동시 세션의 커밋 `804cf4cf`**("docs(bms): MSC 세미나 적용 — 절 번호 바뀐 뒤 남은 교차참조(§5→§4) 수정")에 함께 들어갔다. 그 커밋은 이미 origin 에 있어 이력을 고치지 않는다. 이 항목과 큐 §6-3-g 41 행의 SHA 표기가 추적 기록이다.
+- digest 봉인은 그대로다(`sha256 182057355a5b3762…` — 커밋된 파일에서 재계산 일치).
