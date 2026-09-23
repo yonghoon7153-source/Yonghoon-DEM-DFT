@@ -2,10 +2,10 @@
 title: ASSB 스택 압력의 작동 창 — 아래는 접촉 손실, 위는 단락
 description: "Stack pressure in ASSBs is a two-sided constraint: too low gives interfacial contact loss, too high drives Li creep into electrolyte pores and shorts the cell. Doux 2020 gives the first measured pressure sweeps (P→impedance, P→time-to-short, P→overpotential) and a hard upper bound"
 created: 2026-09-16
-updated: 2026-09-22
+updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md]
+sources: [raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -559,6 +559,42 @@ volumetry 가 보는 양은 **압력 여기에 대해 가장 둔한 채널**일 
 ⚠ 그리고 **제작 압력 축에는 값이 하나 더 붙는다**: **110 MPa**(3전극 셀) ·
 **150 MPa**(대칭셀). ⚠ **같은 논문 안에서 두 셀의 제작 압력이 36 % 다르고**,
 그 대칭셀이 **`R2`(집전체 전자 접촉) 귀속의 유일한 독립 근거**다.
+
+## ★★★ 2026-09-23 (`assb` 25호 Zhou 2025, **실험 · 2전극 Li 금속 · 운전 압력 3 점 × SE 입도 2**) — **양극 쪽 첫 요인 설계, 그리고 위 벽의 반례 후보**
+
+`raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md` (*ACS Energy Lett.* 10, 966−974, UCSD + LG Energy Solution — **5호와 같은 캠퍼스, 5호 인용 0**).
+NCM811–Li₆PS₅Cl 복합양극을 **SE 입도만** 바꿔(coarse ↔ fine) **운전 30 · 10 · 2 MPa** 에서 100 사이클. 18호 절의 빈칸 "**같은 셀을 다른 압력에서 늙혔을 때 무엇이 다른가를 물은 편이 0 편**"
+을 채우는 **첫 편**이다(셀은 조건마다 다르다).
+
+### 1. ★★★★ 압력 × 미세구조 — 초기는 공통 모드, 상호작용은 감쇠에만 (`[재현]` Fig. 2c 벡터 판독)
+
+| | coarse | fine |
+|---|---|---|
+| 30 → 2 MPa, 2 사이클 방전 손해 | −26.5 mAh g⁻¹ | −30.7 |
+| 2 → 100 사이클 감쇠 @30 / 10 / 2 MPa | −33 / −38 / **−64** | −26 / −27 / **−22** |
+| `R_SSE/NCM` 1 사이클 뒤 @30 / 10 / 2 (`[도표]`) | ≈65 / 110 / 125 Ω | ≈62 / 105 / 115 |
+| `R_SSE/anode` 1 사이클 뒤 | ≈210 / 350 / 380 | ≈208 / 345 / 355 |
+
+⇒ **압력은 1 사이클까지 두 미세구조를 같이 깎는다**(용량·양극 계면·Li 계면 셋 다). 미세구조가 바꾸는 것은 **감쇠의 압력 의존**뿐이고, fine 의 감쇠는 **압력에 무관**하다.
+30 ↔ 10 MPa 초기 용량은 거의 같다 ⇒ **아래 벽의 문턱이 2–10 MPa 사이**(5호의 "정보는 저압에" 와 같은 모양).
+⚠ "저압 장수명" 은 **유지율**의 참이다 — fine 도 2 MPa 에서 30 MPa 대비 ≈26 mAh g⁻¹(−17 %)를 100 사이클 내내 잃는다.
+
+### 2. ★★★ 위 벽 — 5호와 맞지 않는다
+
+5호: Li 금속 대칭셀 **25 MPa 에서 ≈48 h 단락** · Li 금속 완전지 **25 MPa 2 사이클째 실패**. 25호: Li 금속 완전지 **30 MPa 100 사이클 ≈1500–1700 h**(`[재현]`, 1C ≡ 200 mAh g⁻¹ 가정)
+단락 보고 0, 평균 CE 99.86 %(`[도표·벡터]`); 전류(≈0.106 ↔ 0.075 mA cm⁻²)·도금 두께(≈4.9 ↔ 0.36 µm/스텝)는 25호가 더 가혹하다.
+화해 후보(`[추론]`, 전부 지면 밖): 분리막 ≈1.4 mm ↔ ≈1 mm · **압력 장치 미기재**(정변위면 실제 압력이 이완했을 수 있다) · Li 부착 30 ↔ 25 MPa.
+⇒ **위 벽(≥25 MPa 단락)은 모집단 경계가 있는 결론이다 — 반례 후보 하나.** 검증 불가: 25호는 로드셀·토크·스프링이 **0 회**다.
+
+### 3. 이력 · 요구치
+
+- 모든 셀이 **양극 375 MPa · Li 30 MPa** 제조 뒤 운전 압력으로 간다(내린 절차 미기재) ⇒ 10 · 2 MPa 셀은 §이력의 **하강 분기**. "저압" 은 **저압 운전 · 고압 제조**다.
+- `[인쇄]` "industry generally aims to operate at or below **5 MPa**" — **출처 없음**. 8호의 Xu 2024 "<≈1 MPa" 와 다른 **네 번째 인쇄 요구치**.
+
+### 4. 이 편이 이 페이지에 **안 준 것**
+
+압력 계측·장치 · 압력 이력 · 조건당 반복(같은 지면의 다른 셀이 2 MPa fine 에서 ≈30 mAh g⁻¹ 더 준다 — 효과와 같은 크기) · 접촉 분율의 압력 함수(SEM 한 시야, 정성) ·
+2 MPa "1 사이클 뒤" EIS 기준점(`[재현]` 그 두 스펙트럼이 30 MPa "100 사이클 뒤" 와 ≤0.8 Ω 로 같다).
 
 ## 경고 (전부 원문이 준 한계에서 나온다)
 

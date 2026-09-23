@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md]
+sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -150,6 +150,7 @@ physical significance** of the parameters" 라고 쓴다.
 | ★★ **상대극 교체 대조의 조건** (2026-09-23, **23호에서**) | In ↔ LTO 처럼 상대극을 바꿔 호의 전극 배정을 검사할 때 **두 상대극이 같은 결함(무 Li 조립 · 방전 끝 평탄 이탈)을 공유하지 않아야** 용량 배정까지 대조가 된다 | ⚠ **23호는 저항 배정만 검사** — 두 상대극 모두 방전 끝 `C_anode` 두 자릿수 붕괴 |
 | ★★★ **코팅 유무 쌍 = 화학 대조** (2026-09-23 신설, **24호에서**) | 계면 **화학만** 바꾸고(코팅이 계면층 경로를 막는다) 수축·접촉·수송은 그대로 둔 쌍 ⇒ 코팅으로 **안 변하는 몫**이 면적·수송·상대극 쪽의 상한 — **면적 대조(2단계)의 여집합** | ★★★ **24호**(70 %, LLSTO 15–20 nm): 첫 사이클 비가역 `[도표]` **−14 %** 만 · 충전 1 구배 `[인쇄]` "did not change the nature" · 이봉 약화. ⚠ n = 1 씩, 코팅 행이 표끼리 안 맞는다(24호 D17) — 코팅이 접촉 형태를 안 바꾼다는 전제 위 |
 | ★★ **두 영역 대조(4단계)의 시편 조건** (2026-09-23, **24호에서**) | 주파수 영역(EIS) 값과 시간 영역(operando/DC) 값을 비교할 때 두 시편은 **같은 제조 압력·같은 두께**여야 한다 | ⚠ **24호**: EIS 차단 셀 50 / 150 MPa ↔ operando 100 MPa — "굴곡도 진화" 가 압력 이력과 교락 |
+| ★★★ **SE 입도 쌍 + 분말 BET = 한쪽 상의 면적 대조** (2026-09-23 신설, **25호에서**) | 계면의 **SE 쪽 비표면적만** 바꾼 쌍(CAM·조성·공정 고정)에 **독립 면적 측정(BET)** 을 붙인다 ⇒ 면적 가설의 예측(`C` 비 = 1/`R` 비 ≈ BET 비)을 **자기 데이터 밖에서** 검사 | ★★★ **25호 신품 P4**: `R_ct` ×0.57 · τ ×1.41 ⇒ `C` ×1.7–2.5 ↔ 1/`R` 1.75 · BET 1.53 — **방향·자릿수 통과**(18호 검사 A 의 **CAM** 입도 쌍은 실패). ⚠ BET 는 SE **분말** 면적이지 CAM\|SE 접촉 면적이 아니다 · 25호는 SE 벌크 σ ×0.66 · 밀도 0.77 → 0.90 가 같이 변했다(고주파 호 교락) |
 
 ★ **`R_CT·C_dl` 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -858,6 +859,44 @@ SI 가 한쪽만 남긴다.**
 - 동역학 곱(`A_eff·j₀`)은 이봉 해석에서 **코팅 의존분만** 화학으로 가고, 나머지는 안 갈린다.
 - 용량의 분할(`θ` ↔ `η` ↔ `Q_material` ↔ 상대극)도 0 — 첫 사이클 비가역 ≈0.2 Δx 는 깊이 균일이라 `η(z)` 는 아니라는 것까지다.
 
+## ★★★★ 처방의 아홉 번째 적용 (2026-09-23, `assb` 25호) — **신품 쌍의 2단계가 처음 통과하고, 열화 쪽 1단계는 그림 자료 때문에 막힌다**
+
+`raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md` (Zhou 외 2025, *ACS Energy Lett.* 10, 966−974). NCM811–Li₆PS₅Cl–VGCF 복합양극에서 **SE 입도만** 바꾼 쌍(coarse ↔ fine)을
+운전 압력 30 · 10 · 2 MPa 에서 100 사이클 — 2전극, Li 금속.
+
+### 입력 점검
+
+| 처방 단계 | 필요한 입력 | 25호 | 판정 |
+|---|---|---|---|
+| **1단계** (16호 · 23호) | 같은 상태축 위 `R`·`C` | `R` 은 1·100 사이클 × 3 압력 × 2 조성(S19 막대) · **`C`(CPE) 미인쇄** · τ 대리(DRT 회색 창)는 **12 곡선 중 5 개가 2 개의 곡선**(`[재현]` ≤0.21 Ω) | ❌ 깨끗한 1↔100 짝은 10 MPa 하나이고, 그 짝의 조성 배정이 범례 모순에 걸려 `C` ×**0.77**(면적 형) ↔ ×**1.20**(화학 형)으로 **판정이 뒤집힌다** |
+| **2단계** (18호) | + 면적을 아는 대조군 | ★ **SE 입도 쌍 + BET**(6.02 → 9.24 m² g⁻¹) | ✅(부분) — 아래 |
+| **3단계-a** (19호) | `Ea` | 온도 한 점 | ❌ |
+| **3단계-b** (19호) | `C` 물리 상한 | 신품 P4 `C` = τ/`R` | ✅ CAM 면적당 ≈2–27 µF cm⁻² (입도 1–5 µm 가정) |
+| **4단계** (20호) | 시간 영역 | GITT(100 뒤) — 펄스·휴지 미기재 | ❌ |
+
+### ★★★ 2단계 — 신품 쌍에서 면적 서명이 통과한다
+
+`[인쇄]` `R_ct` 17.3 → 9.9 Ω(×0.572), `[도표]` Fig. 1f P4 τ ≈2.9 → ≈4.1 ms(×1.41) ⇒ `[재현]` `C` ×**2.47**(DRT 높이 비 0.84 를 `R` 비로 쓰면 ×**1.68**).
+면적만 바뀌었다면 `C` 비 = 1/`R` 비 = **1.75**, 독립 측정 BET 비 = **1.53**. ⇒ **방향과 자릿수가 맞는다.** 18호 검사 A(**CAM** 입도 쌍)에서는 `C` 가 면적 설명을 따르지 않았다 —
+`[추론]` **어느 상의 입도를 바꾸느냐**가 전제 `C ∝ 면적` 의 성립을 가른다(CAM 을 바꾸면 2차 입자 내부 호가 같이 바뀐다 — 18호 R4).
+⚠ ECM 과 DRT 가 `R` 비를 다르게 준다(0.57 ↔ 0.84) · BET 는 SE 분말 면적 · SE 벌크 σ(×0.66)·밀도가 같이 변했다.
+
+### ★★★ 저자가 `C ∝ 면적` 을 스스로 인쇄했다 — 그러나 다른 봉우리에
+
+`[인쇄]` P1(입계) "the increase in time constant indicates a rise in the capacitance … **capacitance is positively correlated with the electrochemical surface area** … attributed to the increased
+interfacial area". **계보 첫 저자 자신의 `C ∝ 면적` 추론**이다. ⚠ `[추론]` 직렬 입계(벽돌층 모형)의 용량은 **결정립 크기에 비례**(`C_gb ∝ D/δ`)해 입자가 작아지면 **줄어야** 한다 —
+P1 에서는 방향이 반대다. 같은 추론을 **P4(양극 전하이동)** 에 걸면 위처럼 양립한다 ⇒ **맞는 추론을 틀린 봉우리에 걸었다.**
+
+### ⚠ 열화 쪽 — 원전이 스스로 "못 가른다" 고 적는다
+
+`[인쇄]` "`R_SSE/NCM` contains both the charge transfer resistance … and the CEI resistance … **indistinguishable because there is only one semicircle**". 우리도 가를 입력(`C(N)`)이 없다.
+그리고 그 위에 **17호 함정**이 얹힌다 — `[도표]` S19 에서 `ΔR_anode` 가 `ΔR_NCM` 의 ≈4 배(2 MPa coarse 2020 ↔ 535 Ω), `[재현]` 방전 전압 하강 ≈0.30–0.37 V 의 ≈80 % 가 Li 계면.
+⇒ **양극 곱을 풀기 전에 상대극 몫을 빼야 한다** — 2전극에서는 뺄 수 없다.
+
+### 처방 표에 한 줄
+
+**"SE 입도 쌍 + 분말 BET"**(위 표). 조건: SE 벌크 전도도·밀도가 같이 변하면 고주파 호가 교락된다 — 25호는 둘 다 변했다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -903,3 +942,5 @@ SI 가 한쪽만 남긴다.**
   **"여섯 비교 중 다섯에서 `C` 가 `R` 을 따라가지 않는다"** 까지이고, **"접촉 손실이 용량에 없었다"** 가 아니다.
 - ★ **2026-09-23 (24호)**: **σ_eff 비 0.93 / 0.34 를 측정값으로 쓰지 않는다** — COMSOL 쪽은 `ε` 14 % · `σ_bulk` 2e-3 가정 위의 모델 입력값이고 EIS 쪽은 다른 제조 압력의
   펠릿이다. 주장은 **"`τ²` 대신 `σ_eff` 로 비교하면 '두 조성 모두 증가' 가 '80 % 셀 하나의 ≈3 배' 로 줄어든다"** 까지다.
+- ★ **2026-09-23 (25호)**: **2단계 통과를 "`R_ct` 차는 면적이다" 로 옮기지 않는다** — P4 τ 는 래스터 판독(×1.41), ECM ↔ DRT 의 `R` 비가 0.57 ↔ 0.84 로 다르고, BET 는 SE 분말 면적이다.
+  주장은 **"면적 설명이 같은 지면의 독립 면적 측정과 방향·자릿수에서 양립한다"** 까지다. 그리고 **P1 벽돌층 반론은 모형 위의 추론**이다(P1 이 분리막 입계인지 미기재).

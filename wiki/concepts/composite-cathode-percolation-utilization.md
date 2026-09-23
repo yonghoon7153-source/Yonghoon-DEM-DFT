@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md]
+sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -397,6 +397,26 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 ([[assb-tortuosity-factor-effective-conductivity-split]]). 방향은 1호 논리와 맞는다(`[추론]`): 전자 퍼콜레이션이 약한 조성(24호 40 % = 20 vol% CAM)에서 **집전체에서 먼
 분리막 쪽**이 뒤처진다. ⚠ 24호는 1호를 인용하지 않는다(인용된 것은 **Bielefeld 2020 *ACS AMI* 12, 12821**).
 → DEM 도메인 크기 수렴 시험(§13-5 의 규율)은 **그대로 필요**하고, 거기에 **"연결된 경로의 폭"** 을 내는 산출(유효 전도도)이 하나 더 필요하다.
+
+## ★★★★ 실험 논문이 스스로 DEM `θ` 를 돌렸다 — 연결 기준 하나에 94 → 20 % (2026-09-23 추가, `assb` 25호)
+
+`raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md` (Zhou 2025, *ACS Energy Lett.* 10, 966). LAMMPS granular Hertz 로 375 MPa 캘린더링을 흉내 내고 **CAM 이용률**을 계산한다 —
+이 계보에서 **계산 `θ` 가 실험과 같은 지면(같은 복합체)에 놓인 첫 편**이고, DEM 브랜치의 앵커 후보다.
+
+| 1호 `θ` | 25호 "CAM utilization" |
+|---|---|
+| 전도 클러스터(전자·이온)에 속한 **부피** 분율 | `[인쇄]` 본문 "percentage of NCM811 **particles** in contact with LPSC" ↔ SI "percentage of CAM … overlap with the connected mass of SSE in contact with the **current collector**" — 정의 둘, 개수/부피 미기재, 이온 경계가 집전체(⚠) |
+| 연결 = 접촉 | 연결 = **겹침 ≥ 반지름 합의 x %**(탄성 Hertz 라 소성 보정) |
+| 전자망 포함 | 탄소 **제외**(`[인쇄]` "would not change the utilization") — 이온 반쪽만 |
+
+★★★★ `[인쇄]` Table 1: 겹침 **0 / 2 / 5 / 10 %** 에서 coarse **94 / 83 / 56 / 20 %**, fine **100 / 100 / 94 / 28 %** ⇒ **미측정 기준 하나가 `θ` 를 한 자릿수 가까이 움직인다**(비는 0.94 / 0.83 / 0.60 / 0.71, 비단조).
+원전은 2 % 를 골라 "83 % ↔ 용량 ≈85 %" 로 맞추고 어긋남을 `[인쇄]` "further refinement of particle overlap is needed for the specific C-rate" 로 **같은 손잡이에 돌린다**.
+
+★★★★ **첫 충전 비로 부정 시험** — 이온 경로 밖 CAM 은 충전·방전을 같이 깎는다. `[재현]` Fig. 2c 벡터 판독: 30 · 10 MPa 첫 충전 비(coarse/fine) **1.03** ⇒ 2 % 기준의 "17 % 불활성" 과 모순;
+2 MPa 에서만 0.86. 방전 비(0.91–0.95)와 율 극한(`i→0` ≈0.89)은 **0 % 기준(0.94)** 쪽이다. 그리고 DEM 에는 **운전 압력이 없어**(캘린더링 한 시점) 압력 의존을 원리적으로 못 낸다.
+
+⇒ 이 페이지의 규율 셋이 실물로 확인된다: **(1) `θ` 는 점이 아니라 연결 기준 구간 위의 띠로 보고한다**(§"이 양 자체가 폭을 갖는다" — 원전은 폭을 인쇄하고 한 점을 골랐다)
+**(2) 도메인 크기** — `[도표]` coarse 상자 20 × 20 × 70 µm 의 최대 구 ≈8 µm ↔ 같은 편 FIB-SEM 의 LPSC 영역 30–40 µm(상자보다 크다) **(3) 운전 압력 단계**가 없으면 압력 실험과 대질할 수 없다.
 
 ## 이 페이지가 주장하지 않는 것
 

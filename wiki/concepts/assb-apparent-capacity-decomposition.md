@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md]
+sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -380,6 +380,17 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
 - ★★ 쿨롱 ↔ XRD 폐합 여섯 중 다섯이 ±7 %(`[재현]`) — 그러나 **둘 다 전 CAM 질량으로 나누므로 `θ` 를 못 본다.** 22호의 "용량 독립 대조" 도 같은 한계다.
 - ⚠ 모집단: 신품 2 사이클 · 셀 1 개/조건 · In–Li(조성 미상) · 기준극 0 · 율 C/10 한 점(율 연산자와 교차 불가). 수송 쪽 곱(`σ_eff = σ_bulk·ε/τ²`)은
   [[assb-tortuosity-factor-effective-conductivity-split]].
+
+## ★★★ 2026-09-23 (`assb` 25호 Zhou 2025, **실험 · 2전극 · 압력 × 미세구조**) — **충전 쪽은 같고 방전 쪽이 다르다; 초기 압력 손해는 공통 모드**
+
+`raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md`. 값은 전부 `[도표·벡터]`(Fig. 2c 표식 좌표) 또는 그것으로 한 `[재현]`.
+
+- **`θ` 항의 부정 시험 — 첫 충전.** `θ` 는 충전·방전을 같이 깎는다. 30 · 10 MPa 첫 충전 coarse 216.1 / 213.2 ↔ fine 210.3 / 206.7 mAh g⁻¹(비 1.03) — **`θ` 차 0**. 차이는 첫 방전(비가역 42.6 ↔ 19.9)에 있다
+  ⇒ 이 셀들의 초기 차는 `η`(리튬화 쪽) 또는 계면층 형이다(23호 손실 예산과 같은 자리).
+- **율 극한**(S18, 2 MPa, `[도표]`): coarse/fine 비 0.84 / 0.80 / 0.73 / 0.66(0.1 / 0.2 / 0.3 / 0.5 C) → `i→0` ≈**0.89** ⇒ 0.1 C 결손 ≈16 % 중 ≈11 %p 만 율 무관(`θ`·`LLI` 후보).
+  이 페이지의 "율이 `η(i)` 만 지운다" 의 **실험 적용 예**다(4 점 · 셀 한 쌍).
+- **공통 모드** — 30 → 2 MPa 2 사이클 방전 손해 coarse −26.5 ↔ fine −30.7: **미세구조 무관 손해**는 복합양극의 `θ`·`η` 어느 쪽으로도 배정하면 안 된다(두 셀이 공유하는 Li 음극 · 분리막이 후보) —
+  17호의 **네 번째 항(상대극 컷오프)** 자리. 저자 적합(S19)에서도 Li 계면이 가장 큰 항이다.
 
 ## 이 페이지가 주장하지 않는 것
 

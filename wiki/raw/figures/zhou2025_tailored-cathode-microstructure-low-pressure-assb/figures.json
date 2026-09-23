@@ -1,0 +1,573 @@
+{
+ "slug": "zhou2025_tailored-cathode-microstructure-low-pressure-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "a564e591-24._Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+  "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Characterizations of the cathode composites. FIB-SEM cross-sectional images for the coarse-LPSC cathode composite (a) and the fine-LPSC cathode composite (b). Schematic diagram of the cathode composite and Li+ ion tortuosity for the coarse-LPSC cathode composite (c) and the fine-LPSC cathode composite (d). (e) Nyquist plots of the coarse-LPSC and fine-LPSC cathode composites, along with the equivalent circuit model. (f) Corresponding DRT plots for both cathode composites. between CAM and SSE, leading to improved performance.15 A hierarchical composite structure that combines small (∼300 nm to 4 μm) and large (∼20 μm) Li5.5PS4.5Cl1.5 particles with CAM was shown to result in a lower tortuosity and faster lithium (Li) ion transport.16 Research has shown that coating an SSE layer onto the surface of CAM particles can establish intimate interfacial contact, leading to improved perf",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    448.0
+   ],
+   "w": 2151,
+   "h": 1641,
+   "dpi": 300,
+   "src": "a564e591-24._Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.766
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electrochemical performance of ASSBs employing the coarse-LPSC cathode composite and fine-LPSC cathode composite at 0.1 C, 30 °C, and different pressures. Charge−discharge voltage profiles for the coarse-LPSC cathode composite (a) and the fine-LPSC cathode composite (b) under 30, 10, and 2 MPa. (c) Cycling performance of the coarse-LPSC cathode composite and fine-LPSC cathode composite under 30, 10, and 2 MPa. are shown in Figure 1f. Figure S16 provides a detailed analysis of the seven peaks, labeled P1−P7, with a focus on the changes observed in peaks P1 to P4. Notably, the grain boundary resistance at P1 decreases, while its time constant increases from 0.5 to 1.4 μs for the fine-LPSC cathode composite. Since the time constant (τ) is the product of resistance (R) and capacitance (C), the increase in time constant indicates a rise in the capacitance at the grain boundaries, wh",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    51.4,
+    594.9,
+    392.4
+   ],
+   "w": 2479,
+   "h": 1421,
+   "dpi": 300,
+   "src": "a564e591-24._Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. GITT curves of the coarse-LPSC cathode composite and fine-LPSC cathode composite at 30 (a), 10 (b), and 2 MPa (c) after 100 cycles. Nyquist and corresponding DRT plots for the coarse-LPSC cathode composite and fine-LPSC cathode composite at 30 MPa (d, g), 10 MPa (e, h), and 2 MPa (f, i) after 1 and 100 cycles. 85.6% capacity, a significant improvement of 35.2%. The rate capability was also evaluated by cycling the cells at various current densities (0.1, 0.2, 0.3, and 0.5 C) for five cycles, as shown in Figure S18. The fine-LPSC cathode composite exhibited 40% and 50% higher capacity than the coarse-LPSC cathode composite at 0.3 and 0.5 C, respectively. These results demonstrate that the fine-LPSC cathode composite signifi- cantly enhances the long-term cycling stability and rate performance of NCM811 in ASSBs, particularly at lower stack pressures (2 MPa). finding supports the",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    51.4,
+    607.4,
+    475.4
+   ],
+   "w": 2531,
+   "h": 1767,
+   "dpi": 300,
+   "src": "a564e591-24._Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Structural stability. (a−f) FIB-SEM cross-sectional image of the coarse-LPSC cathode composite and fine-LPSC cathode composite after 100 cycles at 30, 10, and 2 MPa. (g−i) XRD patterns of the coarse-LPSC cathode composite and fine-LPSC cathode composite after 100 cycles at 30, 10, and 2 MPa. implying severe decay of the crystal structure and interface. Specifically, at 2 MPa, the resistance of the coarse-LPSC cathode composite increases by 545 Ω, while the fine-LPSC cathode composite sees an increase of only 34 Ω. We attribute this to a more uniform stress exerted by the NCM811/LPSC composite during cycling. The effect of pressure in mitigating degradation is thus more pronounced with coarse-LPSC composites. Finally, we note that the Li/SSE interface also deteriorates with cycling at all pressures. However, the fine- LPSC composite cells experience a smaller increase in the Li/",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    441.1
+   ],
+   "w": 2151,
+   "h": 1612,
+   "dpi": 300,
+   "src": "a564e591-24._Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.565
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 6,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Schematic of various synthesis methods employed to produce fine-LPSCl",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.5,
+    514.3,
+    388.9
+   ],
+   "w": 1793,
+   "h": 1344,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. SEM images of the coarse LPSC (a), LPSC ball-milling (b), LPSC rolling",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    489.8
+   ],
+   "w": 1793,
+   "h": 1766,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.441
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Statistical report of the particle size and distribution for LPSC@To ball-",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    511.3,
+    250.0
+   ],
+   "w": 1781,
+   "h": 767,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. XRD patterns of the coarse-LPSC, LPSC ball-milling, LPSC@To ball-",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    86.7,
+    511.3,
+    335.2
+   ],
+   "w": 1781,
+   "h": 1036,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 10,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. (a) Configuration of cell for using EIS to measure conductivity. (b) Nyquist",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    272.2
+   ],
+   "w": 1793,
+   "h": 859,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 11,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. TGA curves for the coarse-LPSC and the fine-LPSC electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    511.3,
+    320.6
+   ],
+   "w": 1781,
+   "h": 1061,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Cross-sectional SEM images showing residual porosities in the coarse-LPSC",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    211.0
+   ],
+   "w": 1793,
+   "h": 604,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.44
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 13,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Relative densities of the coarse-LPSC (a) and the fine-LPSC pellets. The",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    104.7,
+    521.4,
+    267.5
+   ],
+   "w": 1823,
+   "h": 679,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 14,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Surface area measurement by BET of the coarse-LPSC electrolyte and the fine-LPSC electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    410.6
+   ],
+   "w": 1793,
+   "h": 1436,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 15,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Schematic diagram of the preparation of cathode composite.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    511.3,
+    280.4
+   ],
+   "w": 1781,
+   "h": 894,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 16,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. The configuration of cell for the FIB cross-sectional SEM measurement.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    511.3,
+    163.2
+   ],
+   "w": 1781,
+   "h": 405,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.819
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 17,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. (a) SEM image of the coarse-LPSC cathode composite. (b) EDX mapping",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    421.1
+   ],
+   "w": 1793,
+   "h": 1480,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.429
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 18,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. (a) SEM image of the coarse-LPSC cathode composite. (b) EDX mapping",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    422.8
+   ],
+   "w": 1793,
+   "h": 1487,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.431
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 19,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Model of the cathode composite. Blue particles represent CAM, and yellow",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.0,
+    514.3,
+    277.1
+   ],
+   "w": 1793,
+   "h": 851,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.652
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 20,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. (a) Frequency-tortuosity plot for the coarse-LPSC microstructure, and a",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    397.4
+   ],
+   "w": 1793,
+   "h": 1381,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 21,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. (a) The configuration of Li/LPSC/Li symmetric cell. (b) EIS result of",
+   "rotated_deg": 0,
+   "bbox": [
+    64.4,
+    80.2,
+    522.4,
+    373.0
+   ],
+   "w": 1909,
+   "h": 1221,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 23,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. The specific capacities of the coarse-LPSC cathode composite and the fine-",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    511.3,
+    426.0
+   ],
+   "w": 1781,
+   "h": 1501,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 24,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Rate capabilities for the coarse-LPSC cathode composite and fine-LPSC",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    214.0
+   ],
+   "w": 1793,
+   "h": 617,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 25,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. The calculated resistance by fitting the EIS spectra using an equivalent",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    421.0
+   ],
+   "w": 1793,
+   "h": 1480,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 27,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. S 2p XPS spectra of the cathode composite electrodes for the coarse-LPSC",
+   "rotated_deg": 0,
+   "bbox": [
+    62.2,
+    95.3,
+    541.2,
+    294.5
+   ],
+   "w": 1996,
+   "h": 831,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 28,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. High-resolution scanning transmission electron microscopy (STEM)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    309.0
+   ],
+   "w": 1793,
+   "h": 1013,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.417
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Summary of the CAM utilization Configuration Minimum Overlap CAM Utilization Coarse-LPSC 0% 94% 2% 83% 5% 56% 10% 20% Fine-LPSC 0% 100% 2% 100% 5% 94% 10% 28%",
+   "rotated_deg": 0,
+   "bbox": [
+    310.4,
+    276.2,
+    560.5,
+    402.0
+   ],
+   "w": 1043,
+   "h": 525,
+   "dpi": 300,
+   "src": "a564e591-24._Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 29,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Summary of DRT peaks for the ASSLB.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    67.5,
+    457.3,
+    784.0
+   ],
+   "w": 1552,
+   "h": 2986,
+   "dpi": 300,
+   "src": "9a0d5e18-24._Sup_Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "blank": 0.977
+  },
+  {
+   "key": "fTOC",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC_manual_p1.png",
+   "caption": "Table-of-contents graphic (no caption): schematic of coarse-LPSC vs fine-LPSC cathode composite; \"Poor LPSC-NCM contact / Nonuniform Li+ flux\" vs \"Good LPSC-NCM contact / Uniform Li+ flux\".",
+   "rotated_deg": 0,
+   "bbox": [
+    133.4,
+    292.3,
+    433.4,
+    417.8
+   ],
+   "w": 1674,
+   "h": 701,
+   "dpi": 400,
+   "src": "a564e591-24._Tailored_Cathode_Composite_Microstructure_Enables_Long_Cycle_Life_at_Low_Pressure_for_All-Solid-State_Batteries.pdf",
+   "manual": true,
+   "note": "크로퍼가 놓친 초록 그래픽(캡션 없음) — 400 dpi 수동 크롭. 모식도이며 데이터 아님"
+  }
+ ]
+}

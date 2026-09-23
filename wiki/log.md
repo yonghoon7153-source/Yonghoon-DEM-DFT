@@ -2055,3 +2055,18 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - ⚠ 어긋남 17 건(D1 ε 규약 · D2 가중 전제 · D3 "<0.02" ↔ ≈0.04–0.07 · D4 Δx 인쇄 ↔ 그림 · D5 Li 함량 >1 · D9 모델 10 h ↔ 실험 6.6/7.5 h · D11 얇은 셀 두께 · D13 void 14 % 출처 · D17 코팅 행 불일치).
 - 후속 후보: ★★★★ 1 **Bielefeld 2020 *ACS AMI* 12, 12821** (ref 41 · SI 5, 원장에 있음) · ★★★★ 2 **Minnmann 2021 *JES* 168, 040537** (ref 42 · SI 18, 원장에 있음) · ★★★ 3 **Davis 2021 *ACS Energy Lett.* 6, 2993** (ref 39) · ★★★ 4 **Park 2021 *Nat. Mater.* 20, 991** (ref 51 · SI 12) · ★★★ 5 **Naik 2022 *ACS AMI* 14, 29754** (ref 54).
 - lint: **0 errors · 0 warnings**.
+
+## [2026-09-23] ingest | `assb` 25호 — Zhou, Lu, Mish, Chen, Feng, Kim, Song, Kim, Liu 2025, Tailored Cathode Composite Microstructure Enables Long Cycle Life at Low Pressure for All-Solid-State Batteries (*ACS Energy Lett.* 10, 966−974)
+
+- `raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md` (sha256 봉인). 큐 **24번**. UCSD + LG Energy Solution. 크로퍼가 본문 그림 4 + SI 그림 21 + 표 2 를 잡고 **초록(TOC) 그래픽을 놓쳐** p1 을 400 dpi 수동 크롭(`fig_TOC_manual_p1.png`, figures.json 에 `manual: true`). **Fig. 2 · Fig. 3 은 PDF 벡터 경로에서 좌표를 추출**했다. **26장 전부 봤다, 안 본 것 0장.** DEM 브랜치 앵커 CSV 는 읽지 않았다(하드룰 1).
+- ★★★★ **압력 × 미세구조 요인 설계(운전 30 · 10 · 2 MPa × SE 입도 2)** — `[재현]` 초기 압력 손해는 공통 모드(c2 −26.5 ↔ −30.7 mAh g⁻¹), 미세구조는 감쇠의 압력 의존만 바꾼다(fine −26/−27/−22 ↔ coarse −33/−38/−64). 1 사이클 뒤 `R_NCM`·`R_anode` 도 두 조성 같이 ×1.7–1.9.
+- ★★★★ **DEM `θ`(LAMMPS Hertz)는 겹침 기준 0–10 % 에서 94 → 20 %** — 원전은 2 % 를 골라 "83 % ↔ ≈85 %" 로 맞춤. `[재현]` 30/10 MPa 첫 충전 비 coarse/fine **1.03** ⇒ "17 % 불활성" 과 모순; 데이터는 0 % 쪽.
+- ★★★★ **그림 무결성**: Fig. 3 DRT 12 곡선 중 5 개가 2 개(≤0.21 Ω) · Nyquist "2 MPa 1 뒤" = "30 MPa 100 뒤"(≤0.8 Ω) · S15 굴곡도 히스토그램 제목 반전 · 인쇄 유지율 6 중 2 만 재현 · 18/20/22 는 V–Q 판에서만(2 MPa 는 coarse 2 사이클 ↔ fine 1 사이클) · fine 30 ↔ 10 MPa 라벨이 그림마다 다름. DRT 면적 +8/+26/+115 % ↔ 판독 0/+57/+171 %.
+- ★★★★ **17호 함정 노출** — S19 에서 `R_SSE/anode` 가 모든 조건에서 가장 큰 항, 2 MPa coarse `[재현]` 방전 전압 하강 ≈0.30–0.37 V 의 ≈80 % 가 Li 계면. **Q5 열 번째 형태** = "Li 금속이라 기준을 문제 삼지 않는다 — 자기 적합이 상대극을 가장 큰 항으로 인쇄".
+- ★★★ **5호 Doux 대질** — 같은 UCSD, 인용 0. 음극 계면 저항의 압력 방향은 같다; **위 벽 반례 후보**(Li 금속 30 MPa ≈1500–1700 h, 5호 25 MPa ≈48 h 단락); 모든 셀이 하강 분기(375/30 MPa 제조).
+- ★★★ **곱 축퇴 처방 아홉 번째 적용**: 1단계 ❌(`C` 미인쇄, τ 대리는 겹침·범례에 걸려 `C` ×0.77 ↔ ×1.20) · **2단계 ✅(부분) SE 입도 쌍 + BET — C 비 1.7–2.5 ↔ 면적 예측 1.75 · BET 1.53** · 3-a ❌ · 3-b ✅ · 4단계 ❌. 저자가 `C ∝ 면적` 을 스스로 인쇄한 첫 편 — P1(입계)에 걸어 벽돌층 모형과 방향 반대(`[추론]`). 처방 표에 한 줄.
+- **Q4 0/25 — 열여덟 번째 성질 "민감도를 인쇄하고 그 손잡이로 검증을 맞췄다".**
+- **채움표 25호 행 — 누적 ≈15.0 → ≈15.5 (Q6 +0.5).** 안 움직인 칸: Q1(측정 0 · 계산 `θ` 손잡이 · `θ(N)` 0/25 · 23호 대리량 적용 불가) · Q2(층) · Q4 · Q5 · Q8 · Q7(해당 없음). Q3 층 둘(그림 자료 정체 불확실 · 암묵적 반복 ≈20 %).
+- 컴파일: **새 개념 0**. 갱신 — 닻 [[assb-contact-loss-vs-lampe]] (채움표 25호 행 + 누적 줄 + For 스물한 번째 + Against 새 첫 두 항목 + 새 제약 5개 + Status Log + 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]] (아홉 번째 적용 + 처방 표 한 줄) · [[assb-stack-pressure-operating-window]] (요인 설계 · 5호 대질 · 요구치) · [[composite-cathode-percolation-utilization]] (계산 `θ` 손잡이 · 첫 충전 시험) · [[assb-apparent-capacity-decomposition]] (충전 ↔ 방전 · 율 극한 · 공통 모드) · [[assb-tortuosity-factor-effective-conductivity-split]] (기하 τ, `σ_eff` 미측정).
+- ⚠ 어긋남 22 건(D1–D3 그림 겹침·제목 반전 · D4–D7 인쇄 ↔ 그림 · D9 온도 30 ↔ 23–25 °C · D11 σ "very close" ↔ ×0.66 · D16 음극 없는 셀의 "음극" 봉우리 · D17 이용률 정의 둘 · D19 "Tan et al." = Shi, T. · D20 이론밀도 1.64 ↔ 1.86).
+- 후속 후보: ★★★★ 1 **Sakka 2022 *JMCA* 10, 16602** (ref 12, CT 압력별 접촉 면적 분율) · ★★★★ 2 **Shi 2020 *AEM* 10, 1902881** (ref 14, DEM 이용률 방법 원전, 원장에 있음) · ★★★ 3 **Xu 2024 *AEM* 14, 2303539** (ref 11, 요구치) · ★★★ 4 **Schlautmann 2023 *AEM* 13, 2302309** (ref 13, SE 입도 분포) · ★★★ 5 **Jiao 2023 *ESM* 61, 102864** (SI ref 3, DEM 연결성 후처리) · 큐 **32번**(저압 종설)과 짝.

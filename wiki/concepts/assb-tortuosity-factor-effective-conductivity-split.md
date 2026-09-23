@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md]
+sources: [raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -96,6 +96,20 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 3. **같은 셀에서 첫 충전 전·후 차단 측정** — "진화" 는 두 시점의 측정으로만 주장할 수 있다.
 4. **역적합에서 `ε` 를 자유로 두고 `a` 와의 프로파일을 그린다** — `ε^(1+a) = const` 곡선이 평탄 계곡으로 나오면 분할은 비식별이다([[near-optimal-set-width-measurement]]).
 5. **모델에 OCP 를 넣는다** — 구배 크기는 `Δφ/(dU/dx)` 로 정해진다. OCP 없는 역적합은 무엇과 무엇이 교환됐는지 재현할 수 없다.
+
+## ★★ 세 번째 종류의 "굴곡도" — 계산만 있고 `σ_eff` 는 없다 (2026-09-23, `assb` 25호)
+
+`raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md` (Zhou 2025) 는 DEM 입자 그래프에서 **기하 굴곡도 τ = 경로 길이 / 직선 거리**를 계산한다 — `[인쇄]` 중앙값 fine **1.21** ↔ coarse **1.84**.
+
+| | 24호 | 25호 |
+|---|---|---|
+| 양 | 굴곡도 **인자** `τ² = ε·σ_bulk/σ_eff` | **기하** τ (경로 길이비, 무차원) |
+| 측정 | `σ_eff` 를 **잰다**(차단 셀 TLM) | `σ_eff` 를 **안 잰다**(차단 셀 0) |
+| 가정 | `ε` 14 % | DEM 입도·연결 기준 |
+| 함정 | 측정 ÷ 가정 | **계산만** — 그리고 SI Fig. S15 히스토그램 **제목이 본문 중앙값과 반대**(`[도표]` "Coarse" 판 ≈1.19, "Fine" 판 1.35–2.45) |
+
+⇒ 25호의 "굴곡도 감소로 이온 수송 향상" 은 **계산 하나 + 제목 반전** 위에 있고, 같은 지면의 관측은 오히려 반대다 — `[도표]` 신품 고주파 절편 fine ≈54 > coarse ≈49.5 Ω, SE 벌크 σ `[도표]` ×0.66.
+이 페이지의 처방 1("못 재면 `σ_eff` 를 보고")이 한 단계 앞에서 걸린다: **`σ_eff` 를 재지 않으면 굴곡도는 수송 주장의 근거가 되지 않는다.**
 
 ## 이 페이지가 주장하지 않는 것
 
