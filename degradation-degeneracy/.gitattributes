@@ -35,6 +35,6 @@
 #   git 문서상 `eol` 지정은 **text 를 사실상 켜는** 효과가 있다.
 #   `-text` 가 이기지만 그 의존은 미묘하므로 `!eol` 로 명시 해제한다.
 artifacts/** -text !eol
-docs/22p_gap/gate66_review/** -text
-docs/22p_gap/gate67_review/** -text
-docs/22p_gap/gate68_review/** -text
+docs/22p_gap/gate66_review/** -text !eol
+docs/22p_gap/gate67_review/** -text !eol
+docs/22p_gap/gate68_review/** -text !eol
