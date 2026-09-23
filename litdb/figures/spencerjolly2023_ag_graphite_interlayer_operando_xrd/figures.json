@@ -1,0 +1,243 @@
+{
+ "slug": "spencerjolly2023_ag_graphite_interlayer_operando_xrd",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "0f713812-7._Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf",
+  "a4550f43-7._Sup1_Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Operando powder X-ray diffraction patterns collected on charging an Ag-graphite composite layer at the anode of a cell with Li6PS5Cl electrolyte at a current density of 30 mA$cm\u00012 Regions of PXRD where peaks occur are shown on the left, with yellow indicating intensity. Diffraction peaks corresponding to the cell body and Li6PS5Cl are indicated with red marks. The center-right panel shows the corresponding charging proﬁle vs. a Li+/Li counter electrode. The pink background indicates the region of interphase formation, and the blue background indicates the region of Li intercalation into graphite and chemical reactivity with Ag to form Li-Ag alloys, accompanied by Li metal deposition. The far right shows a visual key indicating the phase behavior of Li-graphite (gold), Li-Ag (green), and Li metal (gray). as discussed below. There are no voltage features indicative of electrochem",
+   "rotated_deg": 0,
+   "bbox": [
+    111.0,
+    101.6,
+    491.5,
+    296.7
+   ],
+   "w": 1586,
+   "h": 814,
+   "dpi": 300,
+   "src": "0f713812-7._Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf",
+   "blank": 0.371,
+   "recrop": "re-cropped to the embedded figure image bounds (journal header logo / SI header band excluded)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Powder X-ray diffraction patterns showing chemical reaction between lithiated graphite phases and Ag Darker colors show the lithiated graphite phases before reaction with Ag; LiC24 (dark teal), LiC18 (dark pink), LiC12 (dark blue), and LiC6 (dark purple). Lighter colors show the result of mixing lithiated graphite phases with Ag nanoparticles; LiC24 + Ag (light teal), LiC18 + Ag (light pink), LiC12 + Ag (light blue), and LiC6 + Ag (light purple).",
+   "rotated_deg": 0,
+   "bbox": [
+    155.3,
+    101.6,
+    278.8,
+    313.8
+   ],
+   "w": 515,
+   "h": 885,
+   "dpi": 300,
+   "src": "0f713812-7._Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf",
+   "blank": 0.898,
+   "recrop": "re-cropped to the embedded figure image bounds (journal header logo / SI header band excluded)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Operando powder X-ray diffraction patterns during discharge of an Ag-graphite composite layer cell carried out at a current density of 30 mA$cm\u00012 Regions of PXRD where peaks occur are shown on the left, with yellow indicating intensity. Diffraction peaks corresponding to the cell body and Li6PS5Cl are indicated with red marks. The center-right panel shows the corresponding charging proﬁle vs. a Li+/Li counter electrode. The far right shows a visual key indicating the phase behavior of Li-graphite (gold), Li-Ag (green), and Li metal (gray).",
+   "rotated_deg": 0,
+   "bbox": [
+    111.0,
+    101.6,
+    491.5,
+    304.3
+   ],
+   "w": 1586,
+   "h": 845,
+   "dpi": 300,
+   "src": "0f713812-7._Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf",
+   "blank": 0.635,
+   "recrop": "re-cropped to the embedded figure image bounds (journal header logo / SI header band excluded)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Operando powder X-ray diffraction color maps with corresponding electrochemistry (A and B) Phase changes within the Ag-graphite composite layer during charge at 60\u0004C at (A) 2 mA$cm\u00012 and (B) 4 mA$cm\u00012. When charging at 4 mA$cm\u00012, a sudden drop in cell potential to approximately 0 V is observed, indicating short circuit of the cell due to Li dendrite penetration of the solid electrolyte. Diffraction peaks corresponding to the cell body and Li6PS5Cl electrolyte are indicated with red marks.",
+   "rotated_deg": 0,
+   "bbox": [
+    97.9,
+    101.6,
+    336.4,
+    483.9
+   ],
+   "w": 995,
+   "h": 1594,
+   "dpi": 300,
+   "src": "0f713812-7._Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf",
+   "blank": 0.639,
+   "recrop": "re-cropped to the embedded figure image bounds (journal header logo / SI header band excluded)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Voltage proﬁles showing charge of graphite and Ag-graphite composite layers, moving 2.0 mA$h$cm\u00012 capacity at 60\u0004C (A–C) (A) Charge of the Ag-graphite layer at 2.5 mA$cm\u00012 showing failure due to dendrite growth (magniﬁed region); (B) charge of the graphite layer at 2.0 mA$cm\u00012 showing dendrite-free charge; and (C) charge of the silver-graphite layer at 2.0 mA$cm\u00012 showing dendrite-free charge.",
+   "rotated_deg": 0,
+   "bbox": [
+    97.9,
+    101.6,
+    336.4,
+    256.7
+   ],
+   "w": 995,
+   "h": 647,
+   "dpi": 300,
+   "src": "0f713812-7._Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf",
+   "blank": 0.923,
+   "recrop": "re-cropped to the embedded figure image bounds (journal header logo / SI header band excluded)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Scanning electron micrographs and energy dispersive X-ray spectroscopy color maps of graphite and Ag-graphite layer surfaces after removal of the current collector (A–F) In (A–C), graphite only and in (D–F), Ag-graphite. Graphite (A) when pristine, (B) after charging, and (C) after discharging, showing the uneven deposition of Li against the current collector on charge, and Li remaining at the interlayer/current collector interface after discharge. Ag-graphite (D) when pristine, (E) after charging, and (F) after discharging, revealing homogeneous Li-Ag alloy formation at the interlayer/current collector following charge, and a return to a near- pristine state following discharge. The carbon energy dispersive X-ray spectroscopy color map is shown in orange and that of silver is shown in teal. Cells were cycled at 0.1 mA$cm\u00012 current density at 60\u0004C, moving 2 mA$h$cm\u00012 capacity. ",
+   "rotated_deg": 0,
+   "bbox": [
+    98.5,
+    101.6,
+    335.8,
+    367.0
+   ],
+   "w": 990,
+   "h": 1107,
+   "dpi": 300,
+   "src": "0f713812-7._Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf",
+   "blank": 0.19,
+   "recrop": "re-cropped to the embedded figure image bounds (journal header logo / SI header band excluded)"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1: Charging voltage profiles of cells with Ag-only and graphite-only anode layers. Top (pink) shows charging of a silver layer, and bottom (blue) shows charging of a graphite layer. Charge was passed at a rate of 30 µA·cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.8,
+    109.4,
+    377.6,
+    296.0
+   ],
+   "w": 1350,
+   "h": 779,
+   "dpi": 300,
+   "src": "a4550f43-7._Sup1_Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf",
+   "blank": 0.949,
+   "recrop": "re-cropped to the embedded figure image bounds (SI header band and caption excluded)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2: Evidence for Li deposition during charge at 30 µA·cm-2. a) PXRD showing the absence of a Li peak in the pristine cell (teal), and the presence of the Li peak after passing 2 mA·h·cm-2 capacity (pink); b) SEM and EDX map of Ag signal of Ag- graphite layer surface after charging to reach the final voltage plateau. Top view images after removal of the current collector. Left shows an SEM after charging, and right shows the corresponding EDX map of Ag signal (teal). Darker in colour deposits are observed which correspond with regions of poor or negligible Ag signal (yellow arrows).",
+   "rotated_deg": 0,
+   "bbox": [
+    69.1,
+    97.1,
+    362.5,
+    510.0
+   ],
+   "w": 1224,
+   "h": 1721,
+   "dpi": 300,
+   "src": "a4550f43-7._Sup1_Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf",
+   "blank": 0.707,
+   "recrop": "re-cropped to the embedded figure image bounds (journal header logo / SI header band excluded)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3: Cross-sectional SEM and EDX showing failure of Ag- graphite composite layer cell at 4 mA·cm-2 charge rate after moving 6 mA·h·cm-2 capacity at 60 °C a) Secondary electron image showing Li metal nucleation and Li-Ag alloying at the interface between the composite layer and Li6PS5Cl solid electrolyte; b) C signal mapped by EDX, helping identify the position of the composite interlayer; c) S signal mapped by EDX, helping identify the position of Li6PS5Cl; and d) Ag signal mapped by EDX, helping identify the position of Li-Ag alloy and Ag nanoparticles.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.2,
+    96.7,
+    377.9,
+    387.0
+   ],
+   "w": 1350,
+   "h": 1211,
+   "dpi": 300,
+   "src": "a4550f43-7._Sup1_Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf",
+   "blank": 0.192,
+   "recrop": "re-cropped to the embedded figure image bounds (SI header band and caption excluded)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4: Cross-sectional SEM/EDX of a Ag-graphite composite layer and a graphite-only layer with Li6PS5Cl electrolyte. Figures show a) pristine Ag-graphite composite layer with Li6PS5Cl; b) after charging to a capacity of 2 mA·h·cm-2; c) pristine graphite layer with Li6PS5Cl; and d) after charging to a capacity of 2 mA·h·cm-2. Each shows secondary electron scanning electron micrographs and EDX maps showing silver (teal), carbon (orange), and sulfur (blue). For the Ag-graphite composite layer, after charge, a Ag-containing layer can be observed to form between the interlayer and the current collector. For the graphite layer, a layer with no EDX signal (Li metal) can be observed to form between the interlayer and the current collector. Note that the current collectors have been carefully removed prior to imaging. In Figures a and c the layer above the graphite interlayer is ",
+   "rotated_deg": 0,
+   "bbox": [
+    54.2,
+    96.7,
+    377.8,
+    313.1
+   ],
+   "w": 1350,
+   "h": 903,
+   "dpi": 300,
+   "src": "a4550f43-7._Sup1_Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf",
+   "blank": 0.302,
+   "recrop": "re-cropped to the embedded figure image bounds (journal header logo / SI header band excluded)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure 5: Schematic showing set-up for the PXRD used in reflection.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.3,
+    96.9,
+    378.0,
+    249.8
+   ],
+   "w": 1349,
+   "h": 638,
+   "dpi": 300,
+   "src": "a4550f43-7._Sup1_Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf",
+   "blank": 0.639,
+   "recrop": "re-cropped to the embedded figure image bounds (journal header logo / SI header band excluded)"
+  }
+ ]
+}
