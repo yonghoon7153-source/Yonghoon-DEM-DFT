@@ -252,3 +252,23 @@ def test_reparse_names_a_missing_original(client):
     body = client.post("/api/eis/reparse").json()
     assert body["reparsed"] == 0
     assert body["failed"][0]["reason"] == "원본 파일이 없습니다"
+
+
+def test_reparse_speaks_text_for_bml(client):
+    """`bml reparse` 는 이 글을 그대로 찍는다 — 셸에서 JSON 을 깎지 않는다."""
+    from app import storage
+    from wrdkit.eis import Spectrum
+    out = upload(client, mpr(**USER), "stale.mpr")
+    good = storage.load_spectrum(out["id"], out["sha256"])
+    storage.cache_spectrum(out["id"], Spectrum(good.frequency_hz, good.z_re * 1.5,
+                                               good.z_im), out["sha256"])
+    gone = upload(client, mpr(**dict(USER, rs=7.0)), "gone.mpr")
+    storage.spectrum_upload_path(gone["sha256"], "mpr").unlink()
+
+    response = client.post("/api/eis/reparse", params={"format": "text"})
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/plain")
+    lines = response.text.splitlines()
+    assert lines[0] == "EIS 원본 1/2 개를 다시 읽었습니다."
+    assert any(line.startswith(f"    #{out['id']} stale") for line in lines)
+    assert any("원본 파일이 없습니다" in line for line in lines)

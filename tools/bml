@@ -15,6 +15,7 @@
 #   bml data       데이터가 어느 폴더에 있는지 (외장하드 등) — `bml data <경로>` 로 옮긴다
 #   bml data off   저장소 안의 data/ 로 되돌린다 (원본은 그 드라이브에 그대로)
 #   bml reparse    올려 둔 파일을 전부 다시 읽는다 (계산이 바뀌었을 때 — 원본은 그대로)
+#   bml audit      EIS 전부를 검수해 글로 찍는다 (읽기만 — 붙여 넣으면 된다)
 #   bml host open  이 서버를 네트워크에 연다 (다른 기계가 보게) — `bml host local` 로 닫는다
 #   bml password <암호>  바깥에 열 때 쓸 공유 암호를 정한다
 #   bml share      임시 터널을 열어 다른 공유기에서도 접속하게 한다
@@ -5403,6 +5404,27 @@ cmd_reparse() {
     printf '%s' "$out" | tr ',' '\n' | sed -n 's/.*"name":"\([^"]*\)".*/    \1/p'
   fi
 
+  # **EIS 원본도 다시 읽는다** (ADR 0040) — 맞춤보다 **먼저**.  맞춤은 점
+  # 위에서 하므로, 점을 안 바꾸고 다시 맞추면 고친 파서가 소용없다.  전에는
+  # 캐시된 점으로 다시 맞추기만 해서 파서를 고쳐도 옛 점이 남았다.
+  #
+  # 글은 서버가 만든다 (`?format=text`) — 여기서 JSON 을 깎지 않는다.  옛
+  # 서버면 이 창구가 없다(404/405): 그때는 알리고 하던 대로 맞춤으로 간다.
+  step "EIS 원본을 다시 읽는 중 ${DIM}(점만 새로 씁니다 · 원본은 그대로)${OFF}"
+  out="$(curl "${curlargs[@]}" -w '\n%{http_code}' "$url/api/eis/reparse?format=text" 2>&1)" \
+    || out=$'\n000'
+  case "${out##*$'\n'}" in
+    200) printf '%s\n' "${out%$'\n'*}" | sed 's/^/  /' ;;
+    404|405)
+      warn "서버가 EIS 재파싱을 모릅니다 — 옛 코드로 떠 있습니다 (${GREEN}bml restart${OFF})."
+      say "  ${DIM}맞춤은 옛 점으로 다시 합니다.${OFF}"
+      ;;
+    *)
+      warn "EIS 원본은 다시 읽지 못했습니다 — 맞춤은 옛 점으로 다시 합니다."
+      say "  ${DIM}${out%$'\n'*}${OFF}"
+      ;;
+  esac
+
   # **EIS 맞춤도 같이 다시 한다.**  충방전은 파싱이 결정적이라 다시 읽으면
   # 끝이지만, EIS 는 판정 규칙(무엇을 "쟀다" 고 부르는가)이 맞춤 안에 들어
   # 있다.  규칙이 바뀌면 저장된 행은 옛 규칙의 것이라 화면에서 강등되는데,
@@ -5430,6 +5452,66 @@ cmd_reparse() {
 
   drop_gate_jar
   say "  ${DIM}화면을 새로고침하면 새 값이 보입니다.${OFF}"
+}
+
+#: `bml audit` — 저장된 EIS 스펙트럼 전부를 검수해 글로 찍는다 (ADR 0040).
+#:
+#: **읽기만 한다.**  맞춤도 라벨도 캐시도 안 바꾼다 — 고치면서 보고하면 무엇이
+#: 틀려 있었는지가 지워진다.  고치는 길은 따로다: 파서는 `bml reparse`, 회로는
+#: 그 스펙트럼 화면.
+#:
+#: 글의 모양은 서버(Python)가 만든다 (`?format=text`).  여기서 JSON 을 깎으면
+#: 판정 문장이 두 군데에 산다.  여기서 하는 일은 찍고 **파일로 남기는 것**
+#: 뿐이다 — 그 글을 통째로 붙여 넣어 받는 쪽이 있다.
+cmd_audit() {
+  local url="${SERVER:-$URL}" code body dir file
+  local -a curlargs
+  if ! server_alive "$url" 8; then
+    die "서버가 응답하지 않습니다: $url — 먼저 ${GREEN}bml${OFF} 로 띄우세요."
+  fi
+  if [ -n "${WORKBENCH_PASSWORD:-}" ] && ! hold_gate_jar "$url"; then
+    die "문을 통과하지 못했습니다 — 이 기계에 적힌 암호가 그 서버의 것과 다릅니다 (${GREEN}bml password${OFF})."
+  fi
+  step "EIS 를 전부 검수하는 중 ${DIM}(읽기만 합니다 — 아무것도 바꾸지 않습니다)${OFF}"
+  body="$(mktemp "${TMPDIR:-/tmp}/bml-audit.XXXXXX")" || die "임시 파일을 만들지 못했습니다."
+  curlargs=(-sS -m 1800 -o "$body" -w '%{http_code}')
+  [ -n "$GATE_JAR" ] && curlargs+=(-b "$GATE_JAR")
+  code="$(curl "${curlargs[@]}" "$url/api/eis/audit?format=text" 2>/dev/null)" || code="000"
+  case "$code" in
+    200) ;;
+    404)
+      rm -f "$body"
+      die "서버가 검수를 모릅니다 (404) — 옛 코드로 떠 있습니다. ${GREEN}bml restart${OFF} 로 새 코드를 띄운 뒤 다시."
+      ;;
+    401)
+      rm -f "$body"
+      die "문에 막혔습니다 — 이 기계에 공유 암호가 안 적혀 있습니다: ${GREEN}bml password <암호>${OFF}"
+      ;;
+    *)
+      printf '%s✕%s 검수를 받지 못했습니다 (HTTP %s).\n' "$RED" "$OFF" "${code:-000}" >&2
+      head -c 600 "$body" 2>/dev/null | sed 's/^/  /' >&2
+      rm -f "$body"
+      exit 1
+      ;;
+  esac
+  # 남기는 곳은 데이터 폴더다 — 외장 드라이브면 Windows 에서도 바로 열린다.
+  # 못 남겨도 멈추지 않는다: 화면에 찍힌 글이 본체다.
+  dir="$DATA_DIR/audit"
+  file="$dir/eis-audit-$(date +%Y%m%d-%H%M%S).txt"
+  if ! { mkdir -p "$dir" && cp "$body" "$file"; } 2>/dev/null; then
+    file=""
+  fi
+  say ""
+  cat "$body"
+  rm -f "$body"
+  drop_gate_jar
+  say ""
+  if [ -n "$file" ]; then
+    ok "검수 결과를 남겼습니다: ${B}${file}${OFF}"
+  else
+    warn "파일로는 못 남겼습니다 (${dir}) — 위 글을 그대로 복사해 쓰세요."
+  fi
+  say "  ${DIM}이 글을 통째로 붙여 넣으면 됩니다. 고치는 길: 파서 →${OFF} ${GREEN}bml reparse${OFF}${DIM}, 회로 → 그 스펙트럼 화면에서 다시 맞추기.${OFF}"
 }
 
 #: `bml relay [stop]` -- 중계기를 보거나 내린다.
@@ -6498,6 +6580,7 @@ main() {
     only)              shift; sync_repo; cmd_only "$@"; cmd_connect ;;
     relay)             shift; cmd_relay "${1:-}" ;;
     reparse|재파싱)    shift; sync_repo; cmd_reparse ;;
+    audit|검수)        shift; sync_repo; cmd_audit ;;
     password|passwd)   shift; cmd_password "${1:-}" ;;
     share|tunnel)
       shift

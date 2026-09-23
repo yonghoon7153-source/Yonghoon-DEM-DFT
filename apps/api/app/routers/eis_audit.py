@@ -482,7 +482,8 @@ def _difference(old: Spectrum | None, new: Spectrum) -> str:
 
 
 @router.post("/reparse", response_model=EisReparseOut)
-def reparse_all(session: Session = Depends(get_session)):
+def reparse_all(format: str = Query("json", pattern="^(json|text)$"),
+                session: Session = Depends(get_session)):
     """EIS 원본을 전부 다시 읽어 점 캐시를 새로 쓴다 (ADR 0040).
 
     지금까지 `bml reparse` 는 충방전만 원본에서 다시 읽고, EIS 는 **캐시된 점**
@@ -543,5 +544,21 @@ def reparse_all(session: Session = Depends(get_session)):
             session.add(record)
             done += 1
     session.commit()
-    return EisReparseOut(total=len(records), reparsed=done, changed=changed,
-                         failed=failed)
+    out = EisReparseOut(total=len(records), reparsed=done, changed=changed,
+                        failed=failed)
+    if format == "text":
+        # `bml reparse` 가 그대로 찍는다 — 셸에서 JSON 을 깎지 않는다.
+        return PlainTextResponse(render_reparse_text(out))
+    return out
+
+
+def render_reparse_text(out: EisReparseOut) -> str:
+    lines = [f"EIS 원본 {out.reparsed}/{out.total} 개를 다시 읽었습니다."]
+    if out.changed:
+        lines.append(f"점이 달라진 스펙트럼 {len(out.changed)}개 — 그 맞춤은 옛 점으로 "
+                     f"한 것입니다:")
+        lines += [f"    #{one.id} {one.name} — {one.detail}" for one in out.changed]
+    if out.failed:
+        lines.append(f"못 읽은 것 {len(out.failed)}개 — 점은 그대로 두었습니다:")
+        lines += [f"    #{one.run_id} {one.name} — {one.reason}" for one in out.failed]
+    return "\n".join(lines) + "\n"
