@@ -247,6 +247,59 @@ def test_an_arc_whose_apex_is_above_the_sweep_is_extrapolated():
     assert finding.severity == CHECK and "R1" in finding.message
 
 
+def test_an_element_that_is_not_an_arc_has_no_apex():
+    """실측 풀셀 #5: CPE1 의 n 이 하한 0.3 — 목록은 "반원이 아니라 확산" 이라
+    판정하지 않는데, 꼭지 1e8 Hz 가 "맞춘 구간 위 — 반원의 꼭대기를 못 보고 정한
+    저항" 으로 한 줄 더 붙었다 (실측 여덟 건)."""
+    values = {"R0": 5.0, "R1": 8.0, "CPE1_Q": 2.8e-4, "CPE1_n": 0.3,
+              "CPE2_Q": 1e-5, "CPE2_n": 0.9}
+    spectrum = spectrum_of("R0-p(R1,CPE1)-CPE2", values)
+    fit = Fit("R0-p(R1,CPE1)-CPE2",
+              [P(n, v, reason="at_lower_bound" if n == "CPE1_n" else "")
+               for n, v in values.items()])
+    audit = audit_fit(fit, spectrum, kind=LIQUID, band=BAND)
+    assert not [c for c in codes(audit) if c.startswith("arc_apex")]
+    assert "at_bound" in codes(audit, CHECK)          # n 의 경계 붙음은 그대로
+
+
+def test_an_arc_whose_resistance_went_to_zero_is_one_finding():
+    """실측 하프셀 #39: R1 = 1.13e-9 Ω — 경계(1e-9)의 1 % 밖이라 경계 판정을
+    비껴갔고, 꼭지 3.6e19 Hz 가 "맞춘 구간 위" 로 적혔다.  0 Ω 인 아크는 아크가
+    아니다: "R1 이 0" 한 줄만 적고, 그 CPE 의 n·꼭지·이름은 말하지 않는다."""
+    values = {"R0": 6.68, "R1": 1.13e-9, "CPE1_Q": 3.96e-12, "CPE1_n": 1.0,
+              "R2": 37.0, "CPE2_Q": 7.64e-4, "CPE2_n": 0.62,
+              "CPE3_Q": 0.2, "CPE3_n": 0.8}
+    circuit = "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"
+    spectrum = spectrum_of(circuit, values)
+    fit = Fit(circuit, [P(n, v, reason="at_upper_bound" if n == "CPE1_n" else "")
+                        for n, v in values.items()])
+    audit = audit_fit(fit, spectrum, kind=LIQUID, band=BAND)
+    (gone,) = [f for f in audit.findings if f.code == "element_vanishing"]
+    assert gone.message.startswith("R1 이 0 에 붙었습니다 (1.13e-09 Ω)")
+    assert not [c for c in codes(audit) if c.startswith("arc_apex")]
+    assert "cpe_ideal" not in codes(audit)            # CPE1 의 n = 1 은 그 아크의 일
+    (row,) = [one for one in audit.arcs if one["resistor"] == "R1"]
+    assert row["candidates"] is None and "아크가 아닙니다" in row["reason"]
+
+    # 경계에 딱 붙은 저항도 같다 — 그 옆 CPE 의 n 이 하한에 붙은 것은 따로 적지 않는다.
+    values.update(R1=1e-9, CPE1_n=0.3)
+    fit = Fit(circuit, [P(n, v, reason={"R1": "at_lower_bound",
+                                         "CPE1_n": "at_lower_bound"}.get(n, ""))
+                        for n, v in values.items()])
+    found = audit_fit(fit, spectrum, kind=LIQUID, band=BAND).findings
+    assert [f.message.split(" —")[0] for f in found if "CPE1" in f.message
+            or f.code == "element_vanishing"] == ["R1 이 0 에 붙었습니다 (1e-09 Ω)"]
+
+    # 옆 Q 가 하한에 붙어도 원인은 0 Ω 이다 (실측 #47: R1 = 1.07e-9, CPE1_Q = 1e-15).
+    values.update(R1=1.07e-9, CPE1_Q=1e-15, CPE1_n=0.3)
+    fit = Fit(circuit, [P(n, v, reason={"CPE1_Q": "at_lower_bound",
+                                         "CPE1_n": "at_lower_bound"}.get(n, ""))
+                        for n, v in values.items()])
+    found = audit_fit(fit, spectrum, kind=LIQUID, band=BAND).findings
+    assert [f.message.split(" —")[0] for f in found if "CPE1" in f.message
+            or f.code == "element_vanishing"] == ["R1 이 0 에 붙었습니다 (1.07e-09 Ω)"]
+
+
 # -- 곡선이 점을 못 지나갈 때 -------------------------------------------------------
 
 def test_a_circuit_that_misses_everywhere_says_so():

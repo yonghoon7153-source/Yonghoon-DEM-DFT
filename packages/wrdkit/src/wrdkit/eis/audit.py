@@ -95,6 +95,9 @@ NAME_THICKNESS_TOLERANCE = 0.05
 TYPED_OUTSIDE_SPAN_MARGIN = 0.10
 #: 점이 이보다 적으면 무엇을 맞춰도 파라미터보다 점이 모자란다.
 FEWEST_POINTS = 10
+#: 아크의 저항이 맞춘 구간의 가장 작은 |Z| 의 이만큼(비율)도 안 되면 그 아크는
+#: 스펙트럼에 아무것도 그리지 않는다 — 좋은 스윕의 잡음(0.1 %)보다 작다.
+VANISHED_ARC_SHARE = 1e-3
 
 #: 셀 구성이 아크에 붙이는 이름이 **어느 과정**을 말하는가.  고주파부터.
 #: 여기 없는 조합은 이름이 과정을 주장하지 않으므로 판정하지 않는다
@@ -632,6 +635,30 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
     #: 한 원인으로 설명된 파라미터 — 경계에 붙은 것을 따로 적지 않는다.
     quiet: set[str] = set()
 
+    # -- 사라진 아크 -------------------------------------------------------------
+    # 저항이 0 인 아크는 아크가 아니다: 꼭지(f₀ = 1/2πRC)도, 커패시턴스의 이름도,
+    # 옆 CPE 의 n 도 뜻이 없다 — "R 이 0" 한 줄이 전부다.  맞춤의 경계 판정(1 %)을
+    # 비껴간 것까지: 실측 R1 = 1.13e-9 Ω 인 아크에 "꼭지 3.6e19 Hz 가 맞춘 구간
+    # 위 — 반원의 꼭대기를 못 보고 정한 저항" 이 붙었다.
+    floor = 0.0
+    if spectrum is not None and len(spectrum):
+        magnitude = np.abs(_band(spectrum, band).z)
+        magnitude = magnitude[np.isfinite(magnitude) & (magnitude > 0)]
+        floor = VANISHED_ARC_SHARE * float(magnitude.min()) if magnitude.size else 0.0
+    # 옆 CPE 의 Q 가 경계에 붙은 것은 그 결과다 — 0 Ω 이 가린 소자는 어디로든 간다.
+    vanished = [arc for arc in arcs if railed.get(arc.resistor) == "lower"
+                or arc.resistance_ohm < floor]
+    for arc in vanished:
+        explained.add(arc.resistor)
+        quiet.update({f"{arc.element}_Q", f"{arc.element}_n", arc.element})
+        if railed.get(arc.resistor) != "lower":
+            out.findings.append(_rail_finding(arc.resistor, arc.resistance_ohm,
+                                              "lower", in_series=False))
+        for row in out.arcs:
+            if row["resistor"] == arc.resistor:
+                row.update(candidates=None, candidate_labels=None,
+                           reason="저항이 0 이라 아크가 아닙니다")
+
     # -- 곡선이 점을 지나가나 --------------------------------------------------
     verdict: dict = {}
     if spectrum is not None and len(spectrum):
@@ -672,7 +699,8 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
         suggestion = _suggest(_compatible(
             alternatives, {"blocking"}, fit.circuit,
             arcs=_arcs_to_keep(arcs, claims, statuses,
-                               {tail.resistor} if tail is not None else set())))
+                               {arc.resistor for arc in vanished}
+                               | ({tail.resistor} if tail is not None else set()))))
         if tail is not None:
             explained.add(tail.resistor)
             quiet.update({tail.resistor, f"{tail.element}_Q", f"{tail.element}_n",
@@ -979,7 +1007,10 @@ def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
                   high: float | None) -> None:
     # 경계에 붙은 아크의 꼭지는 뜻이 없다 — 경계 붙음이 이미 그 말을 했다
     # (실측: R2 = 1e9 Ω 인 아크마다 "꼭지가 1e-5 Hz" 가 한 줄 더 붙었다).
-    if arc.peak_hz is not None and not _is_railed_arc(arc, railed):
+    # 반원이 아닌 것(n < 0.6)의 꼭지도 없다 — 목록이 이미 "판정 안 함" 이라
+    # 적는 소자에 실측 여덟 건이 "반원의 꼭대기를 못 보고" 를 달았다.
+    if arc.peak_hz is not None and arc.n >= LOWEST_N \
+            and not _is_railed_arc(arc, railed):
         if high is not None and arc.peak_hz > high:
             out.findings.append(Finding(
                 CHECK, "arc_apex_above_window",
