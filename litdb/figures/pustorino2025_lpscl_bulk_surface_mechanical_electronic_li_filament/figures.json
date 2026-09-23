@@ -1,0 +1,232 @@
+{
+ "slug": "pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "4. ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_of_Bulk_and_Surface_Li6PS5Cl_Argyrodite_Li-Filament_Resistance_MAIN.pdf",
+  "4. Sup) ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_Li6PS5Cl_Li-Filament_SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Li+ and Cl−/S2−site distribution and inversion in Li6[PS4]SCl. Green, violet, yellow, orange, and blue represent Li+, P5+, [PS4]3− coordinated S2−, non [PS4]3−coordinated S2−, and Cl−, respectively. (a) Site inversion between the Cl−(4a sites) and S2−(4d sites). (b) The 48h- 24g-48h trigonal bipyramidal complex inside a structure with no S2−/Cl−inversion, with all sites occupied. (c) Actual filing of Li+ in a structure with no S2−/Cl−inversion.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    213.4
+   ],
+   "w": 2151,
+   "h": 664,
+   "dpi": 300,
+   "src": "4. ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_of_Bulk_and_Surface_Li6PS5Cl_Argyrodite_Li-Filament_Resistance_MAIN.pdf",
+   "blank": 0.826
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Top, side, and bottom view of surfaces constructed from the (100)-direction of bulk LPSC: (a) (100)-Li2S-rich Li76P12S62Cl12 and (b) (100)-Li2S-deficient Li68P12S58Cl12 are cleaved from 48H. (c) (100)-LiCl-rich Li74P12S60Cl14 and (d) (100)-LiCl-deficient Li70P12S60Cl10 are cleaved from 48Hinv. The color scheme is Li, green; P, violet; S, yellow; Cl, blue.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    309.5,
+    297.5,
+    468.6
+   ],
+   "w": 1051,
+   "h": 664,
+   "dpi": 300,
+   "src": "4. ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_of_Bulk_and_Surface_Li6PS5Cl_Argyrodite_Li-Filament_Resistance_MAIN.pdf",
+   "blank": 0.748
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. DOS for each surface termination, with the bulk bandgaps shown by black dashed lines and the surface bandgaps shown by red dashed lines. inversion as necessary for fast Li+ conduction in argyrodites using first-principles calculations. Overall, with and without S2−/Cl−inversion, we observed that LPSC prefers to have a majority of Li+ on the 48h sites, which in line with experiments30 and recent DFT sampling.28 We stress the importance of structure sampling in order to determine the low-energy bulk structure. bulk LPSC structures analyzed in this work have a low Young’s modulus indicating a low resistance to tensile stress. Experimentally,49 the Young’s modulus of sulfide electrolytes (LPS, Li2S−P2S5) are in the range of 10−20 GPa, while LLZO is about 150 GPa and LATP is in the 100−150 GPa range. D’Amore et al.50 also calculated the elastic properties of LPSC with no S2−/Cl−inve",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    393.8
+   ],
+   "w": 2151,
+   "h": 1415,
+   "dpi": 300,
+   "src": "4. ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_of_Bulk_and_Surface_Li6PS5Cl_Argyrodite_Li-Filament_Resistance_MAIN.pdf",
+   "blank": 0.772
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Excess electrons, shown as yellow volumes, for each surface termination were calculated by taking the difference in charge density before and after inserting an extra electron density of 0.0046 Å−2. The isosurface level is set to 0.0001 Å−2, (a) Li2S-rich, (b) Li2S-deficient, (c) LiCl-rich, and (d) LiCl-deficient.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    297.5,
+    335.4
+   ],
+   "w": 1051,
+   "h": 1172,
+   "dpi": 300,
+   "src": "4. ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_of_Bulk_and_Surface_Li6PS5Cl_Argyrodite_Li-Filament_Resistance_MAIN.pdf",
+   "blank": 0.832
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Experimentally observed Li-filament growth patterns in (a) LPSC and (b) LLZO. Li-filaments are shown in dark blue and are within a grain for LPSC and in the grain boundaries (yellow lines) for LLZO. For LPSC, Li is behind the crack tip as shown by the white regions, while for LLZO Li appears ahead of the crack tip. reduction (1.56 eV lower) in its surface bandgap. Figure S1 in the Supporting Information shows the layered DOS for all four slabs. The LiCl-rich slab is the only structure that has an increased DOS corresponding to Cl−near the conduction band at its surface. The undercoordinated Cl−on the surface is likely the cause of the reduced surface bandgap in the LiCl-rich slab. mechanical cracks open first and Li-filaments flow in afterward. This is shown schematically in Figure 5a. This forms a contrast with the Li-filament growth and propagation in LLZO.52−55 As previously",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    227.0
+   ],
+   "w": 2151,
+   "h": 720,
+   "dpi": 300,
+   "src": "4. ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_of_Bulk_and_Surface_Li6PS5Cl_Argyrodite_Li-Filament_Resistance_MAIN.pdf",
+   "blank": 0.477
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Layered DOS for a) Li2S-rich, b) Li2S-deficent, c) LiCl-rich, and d) LiCl-deficient slabs.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    236.2,
+    549.0,
+    550.7
+   ],
+   "w": 2013,
+   "h": 1311,
+   "dpi": 300,
+   "src": "4. Sup) ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_Li6PS5Cl_Li-Filament_SI.pdf",
+   "blank": 0.649
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Chemical Potentials (μi) Used to Calculate the Fracture Energy of Nonstoichiometric Slabs element Li P Cl S μi (eV/atom) −1.905 −8.251 −5.532 −8.186",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    55.0,
+    296.5,
+    117.5
+   ],
+   "w": 1043,
+   "h": 261,
+   "dpi": 300,
+   "src": "4. ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_of_Bulk_and_Surface_Li6PS5Cl_Argyrodite_Li-Filament_Resistance_MAIN.pdf",
+   "blank": 0.714
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2. Energetic Stability (ΔE) with Respect to Structure 24G (All Li+ Start on the 24g Site and No S2−/Cl−Inversion) in a {(100), (010), and (001)} Cella initial Li-site occupancy final Li-site occupancy name S2−/Cl−inversion number (%) on 24g number (%) on 48h number (%) on 24g number (%) on 48h volume (Å3/f.u.) ΔE (eV/f.u.) 24Gsuper rand random 96 (100%) 0 (0%) 28 (30%) 68 (70%) 283.06 +0.05 24G no 24 (100%) 0 24 (100%) 0 269.34 0.00 24Gsuper no 96 (100%) 0 96 (100%) 0 269.25 0.00 24Ginv 50% 24 (100%) 0 16 (67%) 8 (33%) 257.66 −0.32 48Hsuper rand random 0 96 (100%) 11 (12%) 85 (88%) 253.19 −0.42 48Hinv 50% 0 24 (100%) 0 24 (100%) 247.47 −0.62 24Gsuper inv 50% 96 (100%) 0 16 (17%) 80 (83%) 246.25 −0.63 48Hsuper inv 50% 0 96 (100%) 8 (8) 88 (92%) 247.80 −0.69 48H no 0 24 (100%) 8 (33%) 16 (67%) 248.41 −0.72 48HRinv 50% 0 random 24 (100%) 0 24 (100%) 241.77 −0.73 48Hsuper no 0 96 (100%",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    529.7,
+    560.5,
+    783.4
+   ],
+   "w": 2143,
+   "h": 1058,
+   "dpi": 300,
+   "src": "4. ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_of_Bulk_and_Surface_Li6PS5Cl_Argyrodite_Li-Filament_Resistance_MAIN.pdf",
+   "blank": 0.844
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 4,
+   "file": "tab_3.png",
+   "caption": "Table 3. Elastic Properties of Bulk LPSC Structures structure elastic tensor (GPa) bulk modulus (GPa) shear modulus (GPa) Young’s modulus (GPa) Poisson’s ratio 24G Ä É ÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅ ÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑ 42.5 23.2 23.2 23.2 42.4 23.1 23.2 23.1 42.3 10.8 10.9 10.9 29.6 10.3 27.8 0.34 Ç Ö 48H Ä É ÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅ ÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑ 44.0 21.9 20.6 21.9 47.0 22.3 20.6 22.3 44.8 10.3 13.2 7.9 29.5 10.8 29.0 0.33 Ç Ö 48Hinv Ä É ÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅ ÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑ 21.9 8.5 8.3 8.5 39.1 5.7 8.3 5.7 20.8 7.2 9.1 9.5 13.7 8.8 21.7 0.23 Ç Ö 48HR Ä É ÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅÅ ÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑÑ 31.7 17.2 15.6 17.2 30.8 11.7 15.6 11.4 36.7 12.3 12.3 15.2 19.9 12.0 29.9 0.25",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    55.7,
+    560.5,
+    267.3
+   ],
+   "w": 2143,
+   "h": 882,
+   "dpi": 300,
+   "src": "4. ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_of_Bulk_and_Surface_Li6PS5Cl_Argyrodite_Li-Filament_Resistance_MAIN.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 4,
+   "file": "tab_4.png",
+   "caption": "Table 4. Fracture Energies for Slabs with Different Terminations layers 50% S2−/Cl− inversion",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    538.7,
+    296.5,
+    604.4
+   ],
+   "w": 1043,
+   "h": 275,
+   "dpi": 300,
+   "src": "4. ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_of_Bulk_and_Surface_Li6PS5Cl_Argyrodite_Li-Filament_Resistance_MAIN.pdf",
+   "blank": 0.534
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 6,
+   "file": "tab_5.png",
+   "caption": "Table 5. Comparison of the Mechanical and Electronic Properties of the Most Stable Li2S-Deficient Surface and Other Promising SEsa shear modulus fracture energy reduction potential bulk bandgap surface bandgap location of excess (J/m2) solid electrolyte (GPa) (V) (eV) (eV) electrons Li2PO2N* 30 0.92 0.87 5.98 4.35 bulk-O β-Li3PS4* 6 0.38 1.71 2.82 2.67 bulk-S, P LATP* 58 0.88 2.16 2.36 2.20 bulk-Ti LLZO* 59 1.72 0.05 4.30 2.24 surface-La LPSC(Li2S-deficient) 3.4 0.20 1.48 2.33 2.31 bulk-S, P a* indicates values obtained from Tian et al.17 Chem. Mater. 2025, 37, 313−321 318 https://doi.org/10.1021/acs.chemmater.4c02577",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    627.0,
+    560.5,
+    783.4
+   ],
+   "w": 2143,
+   "h": 653,
+   "dpi": 300,
+   "src": "4. ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_of_Bulk_and_Surface_Li6PS5Cl_Argyrodite_Li-Filament_Resistance_MAIN.pdf",
+   "blank": 0.831
+  }
+ ]
+}

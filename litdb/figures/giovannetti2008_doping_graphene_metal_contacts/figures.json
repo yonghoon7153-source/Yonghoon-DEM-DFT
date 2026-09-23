@@ -1,0 +1,112 @@
+{
+ "slug": "giovannetti2008_doping_graphene_metal_contacts",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "6. PRL_2008_Giovannetti_Doping_graphene_with_metal_contacts_MAIN.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIG. 1 (color online). The most stable conﬁgurations of gra- phene (a) on Cu, Ni, and Co (111) with one carbon atom on top of a metal atom (A site), and the second carbon on a hollow site (C site) and (b) on Al, Au, Pd, and Pt(111) in a unit cell with 8 carbon atoms and 3 metal atoms per layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.9,
+    42.0,
+    303.0,
+    206.9
+   ],
+   "w": 1072,
+   "h": 689,
+   "dpi": 300,
+   "src": "6. PRL_2008_Giovannetti_Doping_graphene_with_metal_contacts_MAIN.pdf",
+   "blank": 0.648
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "FIG. 2 (color online). Band structures of graphene absorbed upon Al, Pt, and Co (111) substrates. The bottom left and right panels correspond, respectively, to majority and minority spin band structures. The Fermi level is at zero energy. The amount of carbon pz character is indicated by the blackness of the bands. The conical point corresponds to the crossing of predominantly pz bands at K. Note that on doubling the lattice vectors (for Al and Pt), the K point is folded down onto the K point of the smaller Brillouin zone.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.0,
+    42.0,
+    566.1,
+    225.0
+   ],
+   "w": 1072,
+   "h": 763,
+   "dpi": 300,
+   "src": "6. PRL_2008_Giovannetti_Doping_graphene_with_metal_contacts_MAIN.pdf",
+   "blank": 0.792
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "FIG. 3 (color online). Calculated Fermi energy shift with respect to the conical point, \u0002EF (dots), and change in the work function W \u0003 WG (triangles) as a function of WM \u0003 WG, the difference between the clean metal and graphene work functions. The lower (black) and the upper [gray (green)] results are for the equilibrium (\u00023:3 \u0001A) and a larger (5.0 A˚ ) separation of graphene and the metal surfaces, respectively. The solid line and the dashed line follow from the model of Eq. (1) with \u0002c \u0005 0 for d \u0005 5:0 \u0001A. The insets illustrate the position of the Fermi level with respect to the conical point.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.9,
+    47.0,
+    303.1,
+    198.3
+   ],
+   "w": 1072,
+   "h": 632,
+   "dpi": 300,
+   "src": "6. PRL_2008_Giovannetti_Doping_graphene_with_metal_contacts_MAIN.pdf",
+   "blank": 0.943,
+   "bbox_note": "manual re-crop 2026-09-23: auto bbox top y=67.1 cut the 0.6 tick and the Al/Ag/Cu/Au/Pt top labels (vector text at y~54-65 read as body text); top extended to y=47.0 (page header ends above y~45)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "FIG. 4 (color online). Left: Schematic illustration of the pa- rameters used in modeling the interface dipole and potential step formation at the graphene-metal interface. Right: Plane-averaged difference electron density \u0002n\u0006z\u0007 \u0005 nMjG\u0006z\u0007 \u0003 nM\u0006z\u0007 \u0003 nG\u0006z\u0007 showing the charge displacement upon formation of the graphene-Pt(111) interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.9,
+    530.0,
+    303.0,
+    647.4
+   ],
+   "w": 1072,
+   "h": 490,
+   "dpi": 300,
+   "src": "6. PRL_2008_Giovannetti_Doping_graphene_with_metal_contacts_MAIN.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 3,
+   "file": "fig_5.png",
+   "caption": "FIG. 5 (color online). Fermi level shifts \u0002EF\u0006d\u0007 as a function of the graphene-metal surface distance. The dots give the calcu- lated DFT results, the solid lines give the results obtained from the model, Eq. (1) [23].",
+   "rotated_deg": 0,
+   "bbox": [
+    309.0,
+    509.5,
+    566.0,
+    670.6
+   ],
+   "w": 1072,
+   "h": 673,
+   "dpi": 300,
+   "src": "6. PRL_2008_Giovannetti_Doping_graphene_with_metal_contacts_MAIN.pdf",
+   "blank": 0.934
+  }
+ ]
+}
