@@ -61,7 +61,8 @@
    "where": "Section VII.2(ii), pp. 237-238",
    "math": "proportional (as printed): w_i = 1/Z_i^2 or w_i = 1/Z_i,calc^2; modulus: w_i = 1/(Z'_i^2 + Z''_i^2) = 1/|Z_i|^2 for both parts",
    "conditions": "Weight choice when replicate-based variances are unavailable (pp. 237-238).",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "therefore a better weighting procedure may be the use of modulus weighting"
   },
   {
    "id": "LASIA1999.error-structure-equal-real-imag",
@@ -241,7 +242,8 @@
     }
    },
    "conditions": "Faradaic reaction with one adsorbed species and B > 0 (Section IV.2, pp. 194-195); two adsorbed species on p. 199.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "conditions under which such a low-frequency pseudo-inductive loop may be found"
   },
   {
    "id": "LASIA1999.impedance-range-artefacts",
@@ -353,7 +355,8 @@
    "where": "Section VI.1",
    "math": "Z(s) real for real s; Re[Z(s)] >= 0 for nu >= 0, s = nu + jw",
    "conditions": "Passive, stable electrochemical systems.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "This last condition ensures that there are no negative resistances in the system."
   },
   {
    "id": "LASIA1999.linearity-amplitude-limit",
@@ -373,7 +376,8 @@
     "n": "number of electrons exchanged in the reaction"
    },
    "conditions": "Derived for a faradaic redox reaction with exponential rate-potential dependence (Section III.2); the value is attributed to the chapter's Ref. 6.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "This linearization is a fundamental property of EIS; therefore the amplitudes applied must be small"
   },
   {
    "id": "LASIA1999.kk-relations",
@@ -588,7 +592,8 @@
     "phase_deg": -45
    },
    "conditions": "Semi-infinite planar diffusion of both redox forms with Nernstian surface concentrations.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "where σ is the mass-transfer coefficient equal to the sum of the contributions of the forms Ox and Red"
   },
   {
    "id": "LASIA1999.finite-transmissive-warburg",
@@ -657,7 +662,8 @@
    "where": "Eqs. (194)-(200), pp. 212-215",
    "math": "Z_por = sqrt(R*Z)*coth(sqrt(R/Z)*l) = (R_Omega,p/Lambda^(1/2))*coth(Lambda^(1/2));  R_Omega,p = rho*l/(pi*r^2);  Lambda = (2*rho*l^2/r)/Z_el;  lambda = (r*Z_el/(2*rho))^(1/2);  lambda >> l: Z_por = Z_el/(2*pi*r*l);  lambda << l: Z = (rho/(2*pi^2*r^3))^(1/2)*Z_el^(1/2);  w = 0: R_p = sqrt(rho*Rct/(2*pi^2*r^3))*coth(sqrt(2*rho/(r*Rct))*l)",
    "conditions": "Pore-wall impedance independent of depth (no net dc current), excess supporting electrolyte. As printed, 'Lambda = l/lambda'; with the chapter's own definitions the consistent relation is Lambda^(1/2) = l/lambda.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "Equation (195) predicts the observation of a straight line at 45° at high frequencies, followed by a semicircle"
   },
   {
    "id": "LASIA1999.de-levie-cpe-hides-inadequacy",

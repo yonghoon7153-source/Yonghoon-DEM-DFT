@@ -151,7 +151,10 @@ def test_where_mu_stops_too_early_nothing_is_judged():
     loop = 4.9 + par(10.4, cpe(3.06e-5, 0.658, w)) + par(6.6, cpe(1.36e-3, 0.757, w)) \
         + par(2.0, 1j * w * 20.0)
     audit = audit_spectrum(spectrum(f, noisy(loop, 2e-3, 6)))
-    assert audit.findings == [] and audit.kk["judged"] is False
+    assert audit.kk["judged"] is False
+    assert not [one for one in audit.findings if one.code.startswith("kk_")]
+    # 끝이 축 위라는 것은 KK 와 별개로 말한다 — 드리프트인지 루프인지는 사람이.
+    assert [one.code for one in audit.findings] == ["low_frequency_inductive"]
 
 
 def test_no_points_no_verdict():

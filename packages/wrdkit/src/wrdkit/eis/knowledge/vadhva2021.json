@@ -31,7 +31,8 @@
     "amplitude_typical_max_mV": 50
    },
    "conditions": "Any PEIS measurement; stated generally, not per material. The review separately notes that the original LGPS data were taken at 100–500 mV, which may be non-linear and were not K–K checked (p. 1938).",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "A small amplitude perturbation (typically (<50 mV) means two important assumptions hold"
   },
   {
    "id": "VADHVA2021.blocking-cell-circuit-r0-offset",
@@ -753,7 +754,8 @@
    "page": 1944,
    "where": "Section 7 Emerging EIS-related Techniques",
    "conditions": "Cells that change during the sweep (drift, current flow, not yet equilibrated); the stability statement is on p. 1943.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "the low-frequency cut-off must be carefully considered relative to the rate of change of the system"
   },
   {
    "id": "VADHVA2021.arc-order-and-lowest-arc-rule",

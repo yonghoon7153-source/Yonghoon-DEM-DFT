@@ -7,8 +7,10 @@ series, ``p(a,b,...)`` puts them in parallel.
 
 Elements carry their own parameter count and their own physical bounds.  That
 matters more than it looks: a CPE exponent above 1 is not a slightly odd
-capacitor, it is an inductor wearing a capacitor's name, and a fitter allowed
-to go there will happily "fit" a spectrum with a shape it cannot have.
+capacitor -- its real part turns negative, a **negative resistance**, which a
+stable passive cell cannot have (``LASIA1999.stability-no-negative-resistance``;
+the inductor is the exponent −1, ``LASIA1999.cpe-exponent-limits``).  A fitter
+allowed to go there will happily "fit" a spectrum with a shape it cannot have.
 """
 
 from __future__ import annotations
@@ -158,7 +160,11 @@ def transmission_line(r_ion: float, r_electron: float,
     the reaction happens *along the way*, distributed over the thickness.  The
     45-degree stub at high frequency and the ``R_ion/3`` offset at low
     frequency both come out of this geometry -- an R-CPE circuit can only
-    imitate them with numbers that mean nothing.
+    imitate them with numbers that mean nothing.  The ``R_ion/3`` is the
+    blocking limit (or ``R_ct ≫ R_ion``).  With a fast reaction the DC end is
+    ``√(R_ion·R_ct)·coth√(R_ion/R_ct)`` instead -- 15.9 Ω, not
+    ``R_ion/3 + R_ct`` = 21.7 Ω, for 50 Ω and 5 Ω (de Levie,
+    ``LASIA1999.de-levie-porous-electrode``; this function gives 15.87 Ω).
 
     Rails are given as **totals** (Ω), which is the same as PyEIS's per-length
     values with the thickness set to 1: only the products enter the formula, and

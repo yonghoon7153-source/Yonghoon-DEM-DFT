@@ -167,9 +167,13 @@ def test_both_names_are_ruled_out_by_the_capacitances():
     assert "입계 또는 전극 계면의 크기" in bulk.message   # 무엇일 수는 있는지
     assert "R2" in boundary.message and "입계일 수 없습니다" in boundary.message
     assert "전기화학 반응" in boundary.message
+    # 벌크라는 이름에는 누구나 확인할 수 있는 수가 하나 더 — 겉보기 εr (ISW 1990).
+    assert "겉보기 εr ≈ 4e+04" in bulk.message
+    assert "εr" not in boundary.message
     rows = {row["resistor"]: row for row in audit.arcs}
     assert rows["R1"]["claims"] == "bulk"
     assert rows["R1"]["capacitance_f"] == pytest.approx(4.66e-7, rel=0.01)
+    assert rows["R1"]["permittivity"] == pytest.approx(4.0e4, rel=0.02)
     assert rows["R2"]["candidates"] == ["reaction"]
 
 
@@ -619,6 +623,44 @@ def test_a_transmission_line_fit_is_not_told_about_bulk_sigma():
                          P("TL1_Wr", 0.026), P("TL1_Wn", 0.17), P("TL1_Wt", 8e5)])
     audit = audit_fit(fit, USER_SPECTRUM, kind=SOLID, config=SYMMETRIC, band=BAND)
     assert "symmetric_cell_does_not_block" not in codes(audit)
+
+
+def test_an_open_cell_is_not_offered_a_diffusion_ending():
+    """반무한 W 도 실수축으로 돌아오지 않는다 (Lasia 1999) — 안 막는 셀에
+    권하지 않는다."""
+    audit = audit_user(alternatives=["R0-p(R1,CPE1)-W2", "R0-TL1"])
+    (finding,) = [f for f in audit.findings
+                  if f.code == "blocking_element_on_open_cell"]
+    assert "`R0-TL1`" in finding.message
+    assert "W2" not in finding.message
+
+
+def test_a_large_amplitude_is_noted():
+    found = audit_record(name="cell", kind=SOLID, config=SYMMETRIC,
+                         thickness_um=700.0, area_cm2=0.785, amplitude_mv=100.0)
+    (note,) = [f for f in found if f.code == "amplitude_large"]
+    assert note.severity == NOTE and "100 mV" in note.message
+    assert "VADHVA2021.small-amplitude-linearity" in note.refs
+    quiet = audit_record(name="cell", kind=SOLID, config=SYMMETRIC,
+                         thickness_um=700.0, area_cm2=0.785, amplitude_mv=10.0)
+    assert "amplitude_large" not in [f.code for f in quiet]
+
+
+def test_a_low_frequency_end_above_the_axis_is_asked_about():
+    """저주파 끝의 +Im — 쉬지 않은 셀의 드리프트거나 흡착의 느린 루프.  고주파의
+    배선 인덕턴스와는 다르다 (그것은 말하지 않는다)."""
+    from wrdkit.eis.audit import audit_spectrum
+    z = USER_SPECTRUM.z.copy()
+    order = np.argsort(USER_SPECTRUM.frequency_hz)
+    z[order[:4]] = z[order[:4]].real + 0.3j            # 가장 낮은 넷이 축 위
+    drifted = Spectrum(USER_SPECTRUM.frequency_hz, z.real, z.imag)
+    (finding,) = [f for f in audit_spectrum(drifted).findings
+                  if f.code == "low_frequency_inductive"]
+    assert finding.severity == CHECK and "가장 낮은 4개 점" in finding.message
+
+    pellet = sulfide_pellet()
+    assert np.any(pellet.z_im > 0)                     # 고주파는 배선으로 축 위다
+    assert "low_frequency_inductive" not in codes(audit_spectrum(pellet))
 
 
 def test_the_file_name_is_named_when_it_is_the_one_that_disagrees():

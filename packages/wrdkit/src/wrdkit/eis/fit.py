@@ -15,10 +15,14 @@ optimiser does not:
   moves the series resistance and a number that moved silently is worse than no
   number.
 
-Weighting is proportional (each residual divided by |Z|).  Impedance spans
-decades within one spectrum -- ohms at high frequency, kiloohms at low -- so
-unweighted least squares fits the low-frequency end and ignores everything
-else.  This is what ZView calls "Calc-Modulus" and what its chi-square means.
+Weighting is by the **modulus**: the real and the imaginary residual alike are
+divided by the *measured* ``|Z|``.  Impedance spans decades within one
+spectrum -- ohms at high frequency, kiloohms at low -- so unweighted least
+squares fits the low-frequency end and ignores everything else.  Lasia calls
+this modulus weighting and notes it may suit real instruments better than
+"proportional" weighting, which divides each part by its own size
+(``LASIA1999.proportional-vs-modulus-weighting``); in ZView it is
+"Data-Modulus" (the measured modulus, not the calculated one).
 """
 
 from __future__ import annotations
@@ -220,10 +224,10 @@ class Parameter:
 class FitResult:
     circuit: str
     parameters: list[Parameter]
-    #: Sum of squared proportional residuals, divided by degrees of freedom.
+    #: Sum of squared modulus-weighted residuals, divided by degrees of freedom.
     #: Comparable between spectra, which the raw sum is not.
     chi_squared: float
-    #: Per-point proportional residuals, real and imaginary interleaved.
+    #: Per-point modulus-weighted residuals, real and imaginary interleaved.
     residuals: np.ndarray = field(repr=False)
     #: Frequencies the fit was computed on, after any trimming.
     frequency_hz: np.ndarray = field(repr=False)

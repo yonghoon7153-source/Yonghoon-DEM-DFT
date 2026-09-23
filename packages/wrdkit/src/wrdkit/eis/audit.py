@@ -111,6 +111,7 @@ REFERENCES: dict[str, tuple[str, ...]] = {
     # 아크의 이름과 커패시턴스
     "label_contradicts_capacitance": ("ISW1990.table1-capacitance-interpretation",
                                       "ISW1990.assign-by-capacitance-magnitude",
+                                      "ISW1990.bulk-capacitance-unit-cell-constant",
                                       "HIRSCHORN2010.hsu-mansfeld-normal-eq18"),
     "arcs_are_electrode": ("ISW1990.table1-capacitance-interpretation",
                            "ISW1990.bulk-arc-off-scale",
@@ -148,7 +149,18 @@ REFERENCES: dict[str, tuple[str, ...]] = {
                           "SCHOENLEBER2014.optional-series-c-l"),
     "kk_noisy": ("SCHOENLEBER2014.residuals",
                  "SCHOENLEBER2014.no-numeric-residual-threshold"),
+    "low_frequency_inductive": ("VADHVA2021.qss-low-frequency-cutoff",
+                                "LASIA1999.low-frequency-pseudo-inductive-loop"),
+    # 기록
+    "amplitude_large": ("VADHVA2021.small-amplitude-linearity",
+                        "LASIA1999.linearity-amplitude-limit"),
 }
+
+#: 진공의 유전율 (F/cm) — 겉보기 εr = C·l/(A·ε0) (``ISW1990.bulk-capacitance-unit-cell-constant``).
+EPS0_F_PER_CM = 8.8541878128e-14
+#: 교류 진폭이 이보다 크면 선형 범위를 의심한다 — "typically <50 mV"
+#: (``VADHVA2021.small-amplitude-linearity``).
+AMPLITUDE_LIMIT_MV = 50.0
 
 
 @dataclass(frozen=True)
@@ -229,7 +241,8 @@ LARGE_AREA_CM2 = 5.0
 
 def audit_record(*, name: str, kind: str, config: str = "",
                  thickness_um: float | None = None, area_cm2: float | None = None,
-                 n_points: int | None = None, file_name: str = "") -> list[Finding]:
+                 n_points: int | None = None, file_name: str = "",
+                 amplitude_mv: float | None = None) -> list[Finding]:
     """What was written about the measurement, before any fit is looked at.
 
     ``name`` is what the screen shows, ``file_name`` what was uploaded.  A
@@ -240,6 +253,11 @@ def audit_record(*, name: str, kind: str, config: str = "",
     (실측 2026-09-23: 화면 이름은 ``…_sym_#01`` 인데 "이름은 풀셀" 이 떴다).
     """
     out: list[Finding] = []
+    if amplitude_mv is not None and amplitude_mv > AMPLITUDE_LIMIT_MV:
+        out.append(Finding(NOTE, "amplitude_large",
+                           f"교류 진폭이 {amplitude_mv:g} mV 입니다 — 보통 "
+                           f"{AMPLITUDE_LIMIT_MV:g} mV 미만으로 잰다 (선형 범위). KK 잔차가 "
+                           f"크면 이것부터 의심하세요"))
     if n_points is not None and n_points < FEWEST_POINTS:
         out.append(Finding(CHECK, "few_points",
                            f"점이 {n_points}개뿐입니다 — 회로 파라미터보다 점이 "
@@ -595,9 +613,10 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
     blockers = [name for name, element_kind in series_kinds
                 if element_kind in BLOCKING_KINDS]
     if blocking is False and blockers:
+        # 실수축으로 돌아오는 끝만 권한다 — 반무한 W 도 -45° 로 끝없이 발산해
+        # 돌아오지 않는다 (``LASIA1999.semi-infinite-warburg``).
         suggestion = _suggest([_suggest_without(fit.circuit, blockers)]
-                              + _compatible(alternatives, {"resistive", "diffusive"},
-                                            fit.circuit))
+                              + _compatible(alternatives, {"resistive"}, fit.circuit))
         out.findings.append(Finding(
             PROBLEM, "blocking_element_on_open_cell",
             f"스펙트럼은 저주파에서 실수축으로 내려오는데 (위상 {_deg(phase)}) "
@@ -892,6 +911,8 @@ def _arc_row(arc: ArcCapacitance, label: str, claim: str | None) -> dict:
         "resistance_ohm": arc.resistance_ohm, "q": arc.q, "n": arc.n,
         "capacitance_f": arc.capacitance_f, "peak_hz": arc.peak_hz,
         "per_length": arc.per_length, "per_area": arc.per_area,
+        "permittivity": (arc.per_length / EPS0_F_PER_CM
+                         if arc.per_length is not None else None),
         "candidates": list(arc.candidates) if arc.candidates is not None else None,
         "candidate_labels": ([process(key).label for key in arc.candidates]
                              if arc.candidates is not None else None),
@@ -934,12 +955,18 @@ def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
             f"이름을 검사하지 않았습니다"))
         return
     allowed = " 또는 ".join(process(key).label for key in arc.candidates)
+    # 벌크라는 이름에는 누구나 확인할 수 있는 수가 하나 더 있다: 겉보기 유전율.
+    # 비강유전체 벌크는 ~10, 10³–10⁵ 는 강유전체뿐이다 (Irvine–Sinclair–West).
+    permittivity = (f" — 겉보기 εr ≈ {arc.per_length / EPS0_F_PER_CM:.2g} (벌크라면 "
+                    f"~10, 10³–10⁵ 는 강유전체뿐입니다)"
+                    if claim == "bulk" and arc.per_length is not None else "")
     out.findings.append(Finding(
         PROBLEM, "label_contradicts_capacitance",
         f"{arc.resistor} ({label}) 의 커패시턴스 {_fmt(arc.capacitance_f, 'F')} "
         f"(C·l/A {_fmt(arc.per_length)}, C/A {_fmt(arc.per_area, 'F/cm²')}) 는 "
         f"{process(claim).label}일 수 없습니다 — "
         + (f"{allowed}의 크기입니다" if allowed else "표의 어느 범위에도 안 듭니다")
+        + permittivity
         + (" (미결정 값이지만 범위에서 한 자릿수 넘게 벗어납니다)" if shaky else "")))
 
 
@@ -984,13 +1011,34 @@ def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
     if spectrum is None or not len(spectrum):
         out.kk = {"judged": False, "reason": "점이 없습니다"}
         return out
+    inductive = _low_frequency_inductive(spectrum)
+    if inductive is not None:
+        count, below = inductive
+        out.findings.append(Finding(
+            CHECK, "low_frequency_inductive",
+            f"가장 낮은 {count}개 점({below:.3g} Hz 아래)이 실수축 위(유도성)에 "
+            f"있습니다 — 측정 중에 셀이 변했거나(쉬지 않은 셀, 드리프트), 흡착 "
+            f"중간체의 느린 루프입니다. 이온을 막는 셀이면 앞의 것입니다"))
     result = lin_kk(spectrum.frequency_hz, spectrum.z_re, spectrum.z_im)
     out.kk = _kk_summary(result)
-    if not out.kk["judged"]:
-        return out
-    out.findings = _kk_findings(result, out.kk)
+    if out.kk["judged"]:
+        out.findings += _kk_findings(result, out.kk)
     out.findings = sort_findings(out.findings)
     return out
+
+
+def _low_frequency_inductive(spectrum: Spectrum) -> tuple[int, float] | None:
+    """``(몇 개, 그 위 주파수)`` -- the run of points **above** the real axis at the
+    low-frequency end, when there are at least two and the spectrum is capacitive
+    somewhere above them (not a sweep that is inductive all the way)."""
+    order = np.argsort(spectrum.frequency_hz)      # 낮은 주파수부터
+    imag = spectrum.z_im[order]
+    count = 0
+    while count < len(imag) and imag[count] > 0:
+        count += 1
+    if count < 2 or count == len(imag) or not np.any(imag[count:] < 0):
+        return None
+    return count, float(spectrum.frequency_hz[order[count - 1]])
 
 
 def _kk_summary(result: KKResult) -> dict:

@@ -148,7 +148,8 @@
     }
    ],
    "conditions": "This is the only sentence in the paper that states a cell constant, and it is attached to the bulk estimate, not to Table 1 as a whole. Non-ferroelectric material.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "unit cell constant (i.e. l/A = 1 cm⁻¹) and a typical permittivity of ~10, a capacitance value of ~1 × 10⁻¹² F is expected"
   },
   {
    "id": "ISW1990.table1-capacitance-interpretation",

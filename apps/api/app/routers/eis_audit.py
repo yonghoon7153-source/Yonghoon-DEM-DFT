@@ -194,7 +194,7 @@ def _audit_spectrum(session: Session, record: SpectrumRecord,
         thickness_um=thickness_cm * 1e4 if thickness_cm else None, area_cm2=area,
         n_points=len(spectrum) if spectrum is not None else record.n_points,
         file_name=record.original_name if record.original_name != record.name
-        else "")
+        else "", amplitude_mv=record.amplitude_mv)
 
     out = AuditSpectrumOut(
         id=record.id or 0, name=record.name or record.original_name,
@@ -488,9 +488,11 @@ def _block(one: AuditSpectrumOut, numbers: _Numbers) -> list[str]:
         where = ("→ " + " 또는 ".join(arc["candidate_labels"])
                  if arc.get("candidate_labels") else
                  (f"→ 판정 안 함 ({arc['reason']})" if arc.get("reason") else ""))
+        permittivity = (f" · εr ≈ {arc['permittivity']:.2g}"
+                        if arc.get("permittivity") else "")
         lines.append(f"    아크 {arc['resistor']} ({arc['label'] or '—'}) "
                      f"{_g(arc['resistance_ohm'])} Ω · C {_e(arc['capacitance_f'])} F"
-                     f" · f₀ {_e(arc['peak_hz'])} Hz {where}".rstrip())
+                     f"{permittivity} · f₀ {_e(arc['peak_hz'])} Hz {where}".rstrip())
     for finding in one.findings:
         lines.append(f"    [{finding.label}] {finding.message}{numbers.suffix(finding)}")
     return lines
