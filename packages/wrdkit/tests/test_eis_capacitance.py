@@ -10,12 +10,19 @@ import numpy as np
 import pytest
 
 from wrdkit.eis.capacitance import (
+    BOUNDARY,
+    BULK,
+    DETERMINED_SPREAD,
+    FACE,
     LOWEST_N,
     PROCESSES,
+    UNDETERMINED_SPREAD,
     arc_capacitances,
     candidate_processes,
     effective_capacitance,
     peak_frequency,
+    size_class,
+    spread_for,
 )
 from wrdkit.eis.circuit import parse_circuit
 
@@ -177,3 +184,56 @@ def test_the_table_is_ordered_high_frequency_first():
     process to the slow one -- the order arcs appear in a sweep."""
     assert [one.key for one in PROCESSES] == [
         "bulk", "grain_boundary", "surface_layer", "interface", "reaction"]
+
+
+# -- 어느 쪽인가: 벌크 / 입계 / 면 (ADR 0041) -----------------------------------------
+
+PELLET_CM, PELLET_AREA = 0.07, math.pi / 4          # 700 µm, 10 mm — l/A 0.0891
+
+
+def one_arc(capacitance_f, thickness_cm=PELLET_CM, area_cm2=PELLET_AREA):
+    (arc,) = arc_capacitances("p(R1,C1)", {"R1": 10.0, "C1": capacitance_f},
+                              thickness_cm=thickness_cm, area_cm2=area_cm2)
+    return arc
+
+
+@pytest.mark.parametrize(("capacitance_f", "side"), [
+    (1e-11, BULK),              # C·l/A 8.9e-13
+    (5e-9, BOUNDARY),           # C·l/A 4.5e-10 (C/A 6.4e-9 은 표면층이기도)
+    (2e-6, FACE),               # C/A 2.5e-6 — 이중층
+    (5e-4, FACE),               # C/A 6.4e-4 — 반응
+])
+def test_the_side_of_a_clear_capacitance(capacitance_f, side):
+    assert size_class(one_arc(capacitance_f), spread=DETERMINED_SPREAD) == side
+
+
+def test_a_capacitance_near_a_boundary_of_the_table_is_not_judged():
+    """C·l/A 2e-11 은 벌크 상한의 두 배 — 식이 분포 가정에 따라 0.3–2 배
+    흔들리므로 (Hirschorn 2010) 벌크가 아니라고 못 한다."""
+    near = one_arc(2.24e-10)
+    assert size_class(near) == BOUNDARY                      # 흔들림 없이는
+    assert size_class(near, spread=DETERMINED_SPREAD) is None
+
+
+def test_a_thin_pellets_double_layer_is_a_boundary_too_and_kept():
+    """60 µm 펠릿의 1 µF/cm² 는 입계이자 전극 계면 — 모르는 아크를 전해질에서
+    빼지 않는다."""
+    arc = one_arc(0.785e-6, thickness_cm=60e-4)
+    assert set(arc.candidates) >= {"grain_boundary", "interface"}
+    assert size_class(arc) == BOUNDARY
+
+
+def test_only_an_undetermined_r_or_q_widens_the_spread():
+    arc = one_arc(5e-9)
+    assert spread_for(arc, set()) == DETERMINED_SPREAD
+    assert spread_for(arc, {"C1"}) == UNDETERMINED_SPREAD
+    assert spread_for(arc, {"R1"}) == UNDETERMINED_SPREAD
+    (cpe,) = arc_capacitances("p(R1,CPE1)", {"R1": 10.0, "CPE1_Q": 5e-9,
+                                             "CPE1_n": 1.0})
+    assert spread_for(cpe, {"CPE1_n"}) == DETERMINED_SPREAD  # 이상적 축전기
+    assert spread_for(cpe, {"CPE1_Q"}) == UNDETERMINED_SPREAD
+
+
+def test_no_geometry_no_side():
+    arc = one_arc(2e-6, thickness_cm=None, area_cm2=None)
+    assert size_class(arc) is None

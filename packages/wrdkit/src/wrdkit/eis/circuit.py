@@ -18,8 +18,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
-__all__ = ["Circuit", "Element", "ELEMENTS", "parse_circuit", "CircuitError",
-           "series_parts"]
+__all__ = ["BLOCKING_KINDS", "Circuit", "Element", "ELEMENTS", "parse_circuit",
+           "CircuitError", "circuit_end", "series_parts"]
 
 
 class CircuitError(ValueError):
@@ -504,6 +504,28 @@ def series_blocks(circuit: Circuit) -> list[tuple[str, tuple[int, ...]]]:
         out.append((label, tuple(range(at, at + size))))
         at += size
     return out
+
+
+#: 직렬 경로에 있으면 **DC 를 막는** 소자.  `Wo` 는 반사 경계라 저주파에서
+#: 축전기가 된다 (`Ws` 는 투과 경계라 실수축으로 돌아온다 — 반대다).
+BLOCKING_KINDS = frozenset({"C", "CPE", "Wo"})
+
+
+def circuit_end(circuit: str | Circuit) -> str:
+    """How the circuit's low-frequency end closes.
+
+    ``blocking``  a ``C``/``CPE``/``Wo`` in the series path: ``|Z| -> inf``,
+                  phase towards -90°.  Position does not matter.
+    ``diffusive`` a semi-infinite ``W`` and nothing blocking: -45° for ever.
+    ``resistive`` everything else: the spectrum returns to the real axis.
+    """
+    model = parse_circuit(circuit) if isinstance(circuit, str) else circuit
+    kinds = {kind for _, kind in model.series_element_kinds()}
+    if kinds & BLOCKING_KINDS:
+        return "blocking"
+    if "W" in kinds:
+        return "diffusive"
+    return "resistive"
 
 
 def series_parts(text: str) -> list[str]:

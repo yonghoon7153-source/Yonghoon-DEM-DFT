@@ -32,8 +32,27 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from .capacitance import LOWEST_N, ArcCapacitance, arc_capacitances, process
-from .circuit import Circuit, CircuitError, parse_circuit, series_parts
+from .capacitance import (
+    BULK,
+    FACE,
+    LOWEST_N,
+    UNDETERMINED_SPREAD,
+    ArcCapacitance,
+    arc_capacitances,
+    effective_capacitance,
+    process,
+    size_class,
+    spread_for,
+)
+from .circuit import (
+    BLOCKING_KINDS,
+    Circuit,
+    CircuitError,
+    circuit_end,
+    parse_circuit,
+    series_parts,
+)
+from .conductivity import real_axis_crossing
 from .derive import SOLID, SYMMETRIC, blocking_verdict, label_arcs
 from .fit import edge_misfit
 from .spectrum import Spectrum
@@ -75,10 +94,6 @@ NAME_THICKNESS_TOLERANCE = 0.05
 TYPED_OUTSIDE_SPAN_MARGIN = 0.10
 #: 점이 이보다 적으면 무엇을 맞춰도 파라미터보다 점이 모자란다.
 FEWEST_POINTS = 10
-
-#: 직렬 경로에 있으면 **DC 를 막는** 소자.  `Wo` 는 반사 경계라 저주파에서
-#: 축전기가 된다 (`Ws` 는 투과 경계라 실수축으로 돌아온다 — 반대다).
-BLOCKING_KINDS = frozenset({"C", "CPE", "Wo"})
 
 #: 셀 구성이 아크에 붙이는 이름이 **어느 과정**을 말하는가.  고주파부터.
 #: 여기 없는 조합은 이름이 과정을 주장하지 않으므로 판정하지 않는다
@@ -153,10 +168,24 @@ def config_from_name(name: str | None) -> str | None:
 _CONFIG_WORDS = {"sym": "대칭셀", "full": "풀셀", "half": "하프셀", "": "비어 있음"}
 
 
+#: 펠릿·코인 셀의 면적이 이만큼(cm²) 넘으면 지름(mm)을 면적 칸에 적었는지
+#: 묻는다.  실측: 같은 조건의 두 셀 중 하나만 "면적 10 cm²" 였다 (10 mm 셀 —
+#: 옳게 적은 짝은 0.785 cm²).  20 cm² 를 넘으면 셀의 면적이 아니다.
+LARGE_AREA_CM2 = 5.0
+
+
 def audit_record(*, name: str, kind: str, config: str = "",
                  thickness_um: float | None = None, area_cm2: float | None = None,
-                 n_points: int | None = None) -> list[Finding]:
-    """What was written about the measurement, before any fit is looked at."""
+                 n_points: int | None = None, file_name: str = "") -> list[Finding]:
+    """What was written about the measurement, before any fit is looked at.
+
+    ``name`` is what the screen shows, ``file_name`` what was uploaded.  A
+    hint in the shown name that disagrees with the record is worth a look; a
+    hint only in the file name is usually a file named before the cell was
+    re-labelled, so it is only noted -- **with the file name**, because "the
+    name says full" next to a name that says ``sym`` reads like a bug
+    (실측 2026-09-23: 화면 이름은 ``…_sym_#01`` 인데 "이름은 풀셀" 이 떴다).
+    """
     out: list[Finding] = []
     if n_points is not None and n_points < FEWEST_POINTS:
         out.append(Finding(CHECK, "few_points",
@@ -172,12 +201,24 @@ def audit_record(*, name: str, kind: str, config: str = "",
         out.append(Finding(NOTE, "geometry_missing",
                            f"대칭셀인데 {missing} 없습니다 — σ 도, 커패시턴스로 아크 "
                            f"이름을 검사하는 것도 안 나옵니다"))
-    hinted = config_from_name(name)
-    if hinted and hinted != (config or ""):
+    shown_config = config_from_name(name)
+    file_config = config_from_name(file_name) if file_name else None
+    now = _CONFIG_WORDS.get(config or "", config)
+    if shown_config and shown_config != (config or ""):
         out.append(Finding(CHECK, "config_differs_from_name",
-                           f"이름은 {_CONFIG_WORDS[hinted]}인데 셀 구성은 "
-                           f"{_CONFIG_WORDS.get(config or '', config)}입니다"))
-    named = thickness_from_name(name)
+                           f"이름은 {_CONFIG_WORDS[shown_config]}인데 셀 구성은 "
+                           f"{now}입니다"))
+    elif file_config and file_config != (config or "") and not shown_config:
+        out.append(Finding(CHECK, "config_differs_from_name",
+                           f"원본 파일 이름({file_name})은 {_CONFIG_WORDS[file_config]}"
+                           f"인데 셀 구성은 {now}입니다"))
+    elif file_config and file_config != (config or ""):
+        out.append(Finding(NOTE, "file_name_differs",
+                           f"원본 파일 이름({file_name})은 "
+                           f"{_CONFIG_WORDS[file_config]}입니다 — 이름을 고쳐 둔 "
+                           f"것이면 그대로 두세요"))
+    named = thickness_from_name(name) or (thickness_from_name(file_name)
+                                          if file_name else None)
     if named and thickness_um and \
             abs(thickness_um - named) > NAME_THICKNESS_TOLERANCE * named:
         out.append(Finding(CHECK, "thickness_differs_from_name",
@@ -189,33 +230,20 @@ def audit_record(*, name: str, kind: str, config: str = "",
                            f"두께 {thickness_um:g} µm 는 펠릿이나 전극의 두께가 "
                            f"아닙니다 — mm 와 µm 를 바꿔 적었는지 보세요"))
     low, high = AREA_RANGE_CM2
-    if area_cm2 is not None and not low <= area_cm2 <= high:
-        out.append(Finding(CHECK, "area_out_of_range",
-                           f"면적 {area_cm2:g} cm² 는 셀의 면적이 아닙니다 — "
-                           f"mm² 로 적었거나 지름을 넣었는지 보세요"))
+    if area_cm2 is not None and (area_cm2 < low or area_cm2 >= LARGE_AREA_CM2):
+        as_diameter = math.pi * (area_cm2 / 10.0) ** 2 / 4.0
+        hint = (f" — 지름 {area_cm2:g} mm 를 적은 것이면 {as_diameter:.3g} cm² 입니다"
+                if area_cm2 >= LARGE_AREA_CM2 else " — mm² 로 적었는지 보세요")
+        out.append(Finding(CHECK, "area_out_of_range" if not low <= area_cm2 <= high
+                           else "area_looks_like_diameter",
+                           f"면적 {area_cm2:g} cm² 는 펠릿·코인 셀의 면적으로 "
+                           f"{'맞지 않습니다' if area_cm2 < low else '큽니다'}{hint}"))
     return out
 
 
 # --------------------------------------------------------------------------
 # the fit
 # --------------------------------------------------------------------------
-
-def circuit_end(circuit: str | Circuit) -> str:
-    """How the circuit's low-frequency end closes.
-
-    ``blocking``  a ``C``/``CPE``/``Wo`` in the series path: ``|Z| -> inf``,
-                  phase towards -90°.  Position does not matter.
-    ``diffusive`` a semi-infinite ``W`` and nothing blocking: -45° for ever.
-    ``resistive`` everything else: the spectrum returns to the real axis.
-    """
-    model = parse_circuit(circuit) if isinstance(circuit, str) else circuit
-    kinds = {kind for _, kind in model.series_element_kinds()}
-    if kinds & BLOCKING_KINDS:
-        return "blocking"
-    if "W" in kinds:
-        return "diffusive"
-    return "resistive"
-
 
 @dataclass(frozen=True)
 class Misfit:
@@ -369,15 +397,81 @@ def _suggest_without(circuit: str, names: Sequence[str]) -> str:
     return "-".join(parts)
 
 
+def _compatible(alternatives: Iterable[str], ends: set[str], current: str) -> list[str]:
+    """The offered circuits whose low-frequency end is one of ``ends``."""
+    out: list[str] = []
+    for alternative in alternatives:
+        try:
+            end = circuit_end(alternative)
+        except CircuitError:
+            continue
+        if end in ends and alternative != current and alternative not in out:
+            out.append(alternative)
+    return out
+
+
+def _suggest(candidates: Iterable[str], limit: int = 3) -> str:
+    """```a` 또는 `b``` -- at most ``limit``, first come first."""
+    unique = list(dict.fromkeys(c for c in candidates if c))[:limit]
+    return " 또는 ".join(f"`{c}`" for c in unique)
+
+
+def _series_resistance(model: Circuit, values: dict[str, float]) -> float | None:
+    """The plain resistances in the top-level series path, added up."""
+    names = [name for name, kind in model.series_element_kinds() if kind == "R"]
+    if not names:
+        return None
+    return float(sum(values[name] for name in names))
+
+
+#: 미결정 파라미터로 만든 커패시턴스라도 이름이 말하는 범위에서 이만큼(배)
+#: 넘게 떨어져 있으면 판정한다.  미결정의 문턱은 값이 세 배 흔들리거나 오차
+#: 막대가 50 % 인 것이다 — Q 가 세 배 흔들리면 C_eff 는 3^{1/n} 배(n=0.87
+#: 에서 3.5 배)라 한 자릿수면 그 흔들림을 넉넉히 넘는다.  실측 B11 스캔의
+#: "벌크" 들은 벌크 상한의 수만 배였고 전부 미결정이라 판정에서 빠졌었다.
+FAR_OUTSIDE = UNDETERMINED_SPREAD
+
+
+def _distance_outside(arc: ArcCapacitance, claim: str) -> float | None:
+    """How many times outside the claimed process's range the arc sits
+    (``1.0`` = on the boundary), or ``None`` when it cannot be said."""
+    row = process(claim)
+    value = arc.per_length if row.scaling == "thickness" else arc.per_area
+    if value is None or value <= 0:
+        return None
+    if row.high is not None and value >= row.high:
+        return value / row.high
+    if row.low is not None and value < row.low:
+        return row.low / value
+    return 1.0
+
+
+def _is_railed_arc(arc: ArcCapacitance, railed: dict[str, str]) -> bool:
+    names = [arc.resistor, f"{arc.element}_Q", f"{arc.element}_n", arc.element]
+    return any(railed.get(name) in ("lower", "upper") for name in names
+               if not name.endswith("_n"))
+
+
 def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
               thickness_cm: float | None = None, area_cm2: float | None = None,
               band: tuple[float, float] | None = None,
-              conductivity: dict | None = None) -> FitAudit:
+              conductivity: dict | None = None,
+              alternatives: Sequence[str] = ()) -> FitAudit:
     """Every check one stored fit can be put through.
 
     ``band`` is the frequency window the fit used (its misfit is measured
     there, and an arc apex outside it was extrapolated).  ``conductivity`` is
     what ``ionic_conductivity`` gave for it, when it was asked.
+    ``alternatives`` are the circuits offered for this kind of cell (the API's
+    presets); a finding that says "use another circuit" picks from them the
+    ones whose low-frequency end matches what the spectrum does.
+
+    **One cause, one finding.**  The first version reported the lab's blocking
+    pellets three times over -- "the circuit closes on the real axis", "R1
+    cannot be bulk", "R1's apex is below the window" -- for one fact: the arc
+    was the blocking tail in disguise.  131 real spectra produced 90 checks
+    that way (2026-09-23).  Causes that explain several symptoms are named
+    once, and the symptoms they explain are not repeated.
     """
     out = FitAudit()
     try:
@@ -396,68 +490,133 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
                                     + ", ".join(missing)))
         return out
     out.end = circuit_end(model)
+    series_kinds = model.series_element_kinds()
+    in_series = {name for name, _ in series_kinds}
+    railed = {p.name: _railed(p, model) for p in parameters}
+    r0 = _series_resistance(model, values)
+    low_edge = band[0] if band is not None and band[0] is not None else None
+    high_edge = band[1] if band is not None and band[1] is not None else None
+
+    # -- 아크와 그 이름 ---------------------------------------------------------
+    arcs = arc_capacitances(model, values, thickness_cm=thickness_cm,
+                            area_cm2=area_cm2)
+    try:
+        labels = {meaning.parameter: meaning.label
+                  for meaning in label_arcs(fit, kind, config)}
+    except ValueError:
+        # 모르는 종류·구성 — 이름이 없으면 이름을 검사할 것도 없다.
+        labels = {}
+    series_r = {name for name, element_kind in series_kinds if element_kind == "R"}
+    arc_order = [name for name in labels if name not in series_r]
+    expected = EXPECTED_PROCESSES.get((kind, config))
+    claims: dict[str, str | None] = {}
+    for arc in arcs:
+        position = arc_order.index(arc.resistor) if arc.resistor in arc_order else None
+        claim = None
+        if expected is not None and position is not None:
+            claim = expected[min(position, len(expected) - 1)]
+        claims[arc.resistor] = claim
+        out.arcs.append(_arc_row(arc, labels.get(arc.resistor, ""), claim))
+
+    #: 한 원인으로 묶인 아크 — 그 아크의 증상은 따로 적지 않는다.
+    explained: set[str] = set()
+    #: 한 원인으로 설명된 파라미터 — 경계에 붙은 것을 따로 적지 않는다.
+    quiet: set[str] = set()
 
     # -- 곡선이 점을 지나가나 --------------------------------------------------
+    verdict: dict = {}
     if spectrum is not None and len(spectrum):
         summary, fitted, used = misfit(spectrum, model, values, band)
         out.misfit = summary
-        if summary is not None:
-            edge = edge_misfit(used.frequency_hz, used.z, fitted,
-                               len(model.parameter_names))
-            if summary.mean >= MEAN_MISFIT_LIMIT:
-                out.findings.append(Finding(
-                    CHECK, "misfit_everywhere",
-                    f"맞춤이 평균 {summary.mean * 100:.1f} % 어긋납니다 — 회로가 이 "
-                    f"스펙트럼의 모양을 못 그립니다 (최대 {summary.max * 100:.0f} %, "
-                    f"{summary.at_hz:.3g} Hz)"))
-            # 오차가 **몰렸다**는 것만으로는 적지 않는다.  거의 완벽한 맞춤도
-            # 가장 작은 오차들이 어딘가에는 몰려 있다 — 실측 셀의 합성 쌍둥이
-            # (최대 0.07 %)에서 "98 % 가 저주파에" 가 떴다.
-            if edge is not None and summary.max >= EDGE_MISFIT_FLOOR:
-                out.findings.append(Finding(
-                    CHECK if summary.max >= MAX_MISFIT_LIMIT else NOTE,
-                    "misfit_at_edge",
-                    f"오차의 {edge.share * 100:.0f} % 가 가장 낮은 {edge.count}개 "
-                    f"점(≤ {edge.upper_hz:.3g} Hz)에 몰려 있습니다 (최대 "
-                    f"{summary.max * 100:.0f} %) — 하한을 {edge.threshold_hz:.3g} Hz "
-                    f"로 두고 다시 맞춰 보세요"))
-            elif summary.mean < MEAN_MISFIT_LIMIT and summary.max >= MAX_MISFIT_LIMIT:
-                out.findings.append(Finding(
-                    CHECK, "misfit_somewhere",
-                    f"{summary.at_hz:.3g} Hz 에서 {summary.max * 100:.0f} % 어긋납니다 "
-                    f"(평균 {summary.mean * 100:.1f} %) — 그 주파수의 모양을 회로가 "
-                    f"못 그립니다"))
-
-        # -- 막는 셀인가, 회로도 그렇게 말하나 ---------------------------------
         verdict = blocking_verdict(spectrum.frequency_hz, spectrum.z_re, spectrum.z_im)
         out.blocking = verdict
-        blockers = [name for name, element_kind in model.series_element_kinds()
-                    if element_kind in BLOCKING_KINDS]
-        phase = verdict.get("phase_deg")
-        if verdict.get("blocking") is False and blockers:
-            suggestion = _suggest_without(fit.circuit, blockers)
+        if summary is not None:
+            _misfit_findings(out, summary, used, fitted, model, series_kinds,
+                             high_edge)
+
+    blocking = verdict.get("blocking")
+    phase = verdict.get("phase_deg")
+    sym_solid = (kind, config) == (SOLID, SYMMETRIC)
+
+    # -- 막는 셀인가, 회로도 그렇게 말하나 -------------------------------------
+    blockers = [name for name, element_kind in series_kinds
+                if element_kind in BLOCKING_KINDS]
+    if blocking is False and blockers:
+        suggestion = _suggest([_suggest_without(fit.circuit, blockers)]
+                              + _compatible(alternatives, {"resistive", "diffusive"},
+                                            fit.circuit))
+        out.findings.append(Finding(
+            PROBLEM, "blocking_element_on_open_cell",
+            f"스펙트럼은 저주파에서 실수축으로 내려오는데 (위상 {_deg(phase)}) "
+            f"회로 끝에 막는 소자 {', '.join(blockers)} 가 있습니다 — 맞춤이 그 "
+            f"소자를 지우려고 경계로 갑니다"
+            + (f". {suggestion} 로 다시 맞추세요" if suggestion else "")))
+        # 그 소자의 경계 붙음은 이 한 줄이 설명한다.
+        quiet.update(name for name in model.parameter_names
+                     if name.partition("_")[0] in blockers)
+
+    if blocking is True and out.end == "resistive":
+        tail = _tail_arc(arcs, low_edge, railed)
+        suggestion = _suggest(_compatible(alternatives, {"blocking"}, fit.circuit))
+        if tail is not None:
+            explained.add(tail.resistor)
+            quiet.update({tail.resistor, f"{tail.element}_Q", f"{tail.element}_n",
+                          tail.element})
+            label = labels.get(tail.resistor, "")
+            where = (f"꼭지 {tail.peak_hz:.3g} Hz 가 맞춘 구간(≥ {low_edge:.3g} Hz) "
+                     f"아래이고" if tail.peak_hz is not None and low_edge is not None
+                     and tail.peak_hz < low_edge else
+                     f"저항이 상한({tail.resistance_ohm:.3g} Ω)에 붙었고")
+            double_layer = _blocking_capacitance(tail, arcs, r0, railed)
+            per_area = (double_layer / area_cm2 if double_layer is not None
+                        and area_cm2 and area_cm2 > 0 else None)
+            size = (f", 막는 계면의 커패시턴스 {_fmt(double_layer, 'F')} (C/A "
+                    f"{_fmt(per_area, 'F/cm²')}) 는 전극 이중층의 크기입니다"
+                    if per_area is not None and per_area >= 1e-7 else "")
+            electrolyte = (f". 이 셀의 전해질 저항은 고주파 절편 R0 = {r0:.4g} Ω 입니다"
+                           if sym_solid and r0 is not None else "")
             out.findings.append(Finding(
-                PROBLEM, "blocking_element_on_open_cell",
-                f"스펙트럼은 저주파에서 실수축으로 내려오는데 (위상 {_deg(phase)}) "
-                f"회로 끝에 막는 소자 {', '.join(blockers)} 가 있습니다 — 맞춤이 그 "
-                f"소자를 지우려고 경계로 갑니다"
-                + (f". `{suggestion}` 로 다시 맞추세요" if suggestion else "")))
-        if verdict.get("blocking") is True and out.end == "resistive":
+                PROBLEM, "tail_mimicked_by_arc",
+                f"{tail.resistor}" + (f" ({label})" if label else "")
+                + f" 은 반원이 아니라 블로킹 꼬리(위상 {_deg(phase)})를 흉내 낸 "
+                f"것입니다 — {where}{size}{electrolyte}"
+                + (f". {suggestion} 로 다시 맞추세요" if suggestion
+                   else ". 끝에 CPE 를 달아 다시 맞추세요")))
+        else:
             out.findings.append(Finding(
                 CHECK, "open_end_on_blocking_cell",
                 f"스펙트럼은 저주파에서 수직으로 서는데 (위상 {_deg(phase)}) 회로의 "
                 f"저주파 끝이 실수축으로 닫힙니다 — 마지막 아크가 꼬리를 흉내 "
-                f"냅니다. 끝에 CPE 를 달아 보세요"))
-        if (kind, config) == (SOLID, SYMMETRIC) and verdict.get("blocking") is False:
-            out.findings.append(Finding(
-                CHECK, "symmetric_cell_does_not_block",
-                "이 대칭셀은 이온을 막지 않습니다 — 벌크·입계 σ 가 나올 수 없는 "
-                "측정입니다. 2026-09-23 전 화면은 σ 를 냈으므로, 슬라이드에 옮긴 "
-                "값이 있으면 다시 보세요"))
+                f"냅니다" + (f". {suggestion} 로 다시 맞추세요" if suggestion
+                             else ". 끝에 CPE 를 달아 보세요")))
+
+    # 막는 대칭셀에서 벌크·입계라 부른 아크 중 **벌크 크기가 하나도 없으면**
+    # 벌크 반원은 잰 주파수 위에 있고 그 저항은 고주파 절편에 들어 있다 —
+    # Irvine–Sinclair–West 그림 4b 의 읽기다.  황화물 펠릿에서 흔하다: 실측
+    # B11–B14·B7 스캔 44개 스윕은 두 아크가 모두 전극 쪽(이중층) 크기였다.
+    if sym_solid and blocking is True:
+        hidden = _hidden_bulk(arcs, claims, statuses, railed, explained)
+        if hidden is not None:
+            face, boundary = hidden
+            for arc in face + boundary:
+                explained.add(arc.resistor)
+                quiet.update({arc.resistor, f"{arc.element}_Q", f"{arc.element}_n",
+                              arc.element})
+            crossing = (real_axis_crossing(spectrum.frequency_hz, spectrum.z_re,
+                                           spectrum.z_im)
+                        if spectrum is not None and len(spectrum) else None)
+            out.findings.append(_hidden_bulk_finding(
+                face, boundary, labels, r0, crossing,
+                _suggest(_compatible(alternatives, {"blocking"}, fit.circuit))))
+
+    if sym_solid and blocking is False and arcs:
+        out.findings.append(Finding(
+            CHECK, "symmetric_cell_does_not_block",
+            "이 대칭셀은 이온을 막지 않습니다 — 벌크·입계 σ 가 나올 수 없는 "
+            "측정입니다. 2026-09-23 전 화면은 σ 를 냈으므로, 슬라이드에 옮긴 "
+            "값이 있으면 다시 보세요"))
 
     # -- 경계에 붙은 것, 미결정, 옛 행 -----------------------------------------
-    in_series = {name for name, _ in model.series_element_kinds()}
-    railed = {p.name: _railed(p, model) for p in parameters}
     # **사라지려는 소자의 나머지 파라미터는 말하지 않는다.**  CPE 의 Q 가
     # 상한에 붙으면 그 임피던스는 n 과 상관없이 0 이고, n 은 아무 데나 떠서
     # 경계에 붙는다 — 그것을 따로 적으면 한 가지 사실이 세 줄이 된다 (합성
@@ -467,17 +626,19 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
     for parameter in parameters:
         side = railed.get(parameter.name, "")
         element, _, suffix = parameter.name.partition("_")
-        if not side or (element in vanishing and suffix != "Q"):
+        if not side or parameter.name in quiet or (element in vanishing
+                                                   and suffix != "Q"):
             continue
         out.findings.append(_rail_finding(
             parameter.name, float(parameter.value), side,
             in_series=element in in_series))
     for name in model.parameter_names:
         element, _, suffix = name.partition("_")
-        if suffix != "n" or not element.startswith("CPE") or element in vanishing:
+        if suffix != "n" or not element.startswith("CPE") or element in vanishing \
+                or name in quiet or values[name] > LOWEST_N:
             continue
-        if values[name] > LOWEST_N:
-            continue
+        if railed.get(name) == "lower":
+            continue            # 경계 붙음이 이미 같은 말을 했다
         if element in in_series:
             message = (f"{element} 의 n = {values[name]:.2f} — 막는 꼬리(수직)가 아니라 "
                        f"확산 꼬리(45°)에 가깝습니다")
@@ -487,7 +648,7 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
                        f"어렵습니다")
         out.findings.append(Finding(CHECK, "cpe_like_diffusion", message))
     undetermined = [name for name in model.parameter_names
-                    if statuses.get(name) == "undetermined"]
+                    if statuses.get(name) == "undetermined" and name not in quiet]
     if undetermined:
         out.findings.append(Finding(NOTE, "undetermined",
                                     "미결정 파라미터: " + ", ".join(undetermined)))
@@ -496,26 +657,12 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
                                     "판정 기록이 없는 옛 맞춤입니다 — `bml reparse` "
                                     "가 같은 회로로 다시 맞춥니다"))
 
-    # -- 아크의 커패시턴스 ------------------------------------------------------
-    arcs = arc_capacitances(model, values, thickness_cm=thickness_cm,
-                            area_cm2=area_cm2)
-    try:
-        labels = {meaning.parameter: meaning.label
-                  for meaning in label_arcs(fit, kind, config)}
-    except ValueError:
-        # 모르는 종류·구성 — 이름이 없으면 이름을 검사할 것도 없다.
-        labels = {}
-    series = {name for name, element_kind in model.series_element_kinds()
-              if element_kind == "R"}
-    arc_order = [name for name in labels if name not in series]
-    expected = EXPECTED_PROCESSES.get((kind, config))
+    # -- 아크 하나하나 -----------------------------------------------------------
     for arc in arcs:
-        position = arc_order.index(arc.resistor) if arc.resistor in arc_order else None
-        claim = None
-        if expected is not None and position is not None:
-            claim = expected[min(position, len(expected) - 1)]
-        out.arcs.append(_arc_row(arc, labels.get(arc.resistor, ""), claim))
-        _arc_findings(out, arc, labels.get(arc.resistor, ""), claim, statuses, band)
+        if arc.resistor in explained:
+            continue
+        _arc_findings(out, arc, labels.get(arc.resistor, ""), claims.get(arc.resistor),
+                      statuses, railed, low_edge, high_edge)
 
     # -- 전도도의 크기 ----------------------------------------------------------
     total = (conductivity or {}).get("total_s_cm")
@@ -527,6 +674,163 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
             f"두께(µm)·면적(cm²) 단위를 먼저 보세요"))
     out.findings = sort_findings(out.findings)
     return out
+
+
+#: 가장 크게 어긋난 점이 맞춘 구간의 꼭대기 이만큼(비율) 안에 있으면 "고주파
+#: 끝에서" 어긋난 것으로 본다 — 한 칸(10 점/decade 면 1.26 배)보다 넉넉히.
+_TOP_OF_BAND = 0.5
+
+
+def _misfit_findings(out: FitAudit, summary: Misfit, used: Spectrum,
+                     fitted: np.ndarray, model: Circuit,
+                     series_kinds: list[tuple[str, str]],
+                     high_edge: float | None) -> None:
+    edge = edge_misfit(used.frequency_hz, used.z, fitted, len(model.parameter_names))
+    top = float(np.max(used.frequency_hz)) if len(used) else high_edge
+    at_top = top is not None and summary.at_hz >= _TOP_OF_BAND * top
+    has_l = any(kind == "L" for _, kind in series_kinds)
+    if summary.mean >= MEAN_MISFIT_LIMIT:
+        out.findings.append(Finding(
+            CHECK, "misfit_everywhere",
+            f"맞춤이 평균 {summary.mean * 100:.1f} % 어긋납니다 — 회로가 이 "
+            f"스펙트럼의 모양을 못 그립니다 (최대 {summary.max * 100:.0f} %, "
+            f"{summary.at_hz:.3g} Hz)"))
+    # 가장 크게 어긋난 곳이 **고주파 끝**이고 회로에 인덕턴스가 없으면 원인이
+    # 거의 정해져 있다: 케이블·셀 홀더의 인덕턴스가 그 점들을 휘게 하고, 빼낸
+    # 유도성 점 바로 아래가 이미 휘어 있다.  실측: 같은 스캔의 L1 있는 첫 스윕은
+    # 최대 1.4–3.7 %, 없는 나머지는 11–30 % 였다 (B15–B17, 2026-09-23).
+    if at_top and not has_l and summary.max >= MAX_MISFIT_LIMIT:
+        out.findings.append(Finding(
+            CHECK, "inductance_missing",
+            f"가장 크게 어긋난 곳({summary.max * 100:.0f} %)이 맞춘 구간의 고주파 "
+            f"끝 {summary.at_hz:.3g} Hz 입니다 — 회로에 배선 인덕턴스가 없습니다. "
+            f"앞에 `L1-` 를 붙여 다시 맞춰 보세요"))
+        return
+    # 오차가 **몰렸다**는 것만으로는 적지 않는다.  거의 완벽한 맞춤도 가장 작은
+    # 오차들이 어딘가에는 몰려 있다 — 실측 셀의 합성 쌍둥이(최대 0.07 %)에서
+    # "98 % 가 저주파에" 가 떴다.
+    if edge is not None and summary.max >= EDGE_MISFIT_FLOOR:
+        out.findings.append(Finding(
+            CHECK if summary.max >= MAX_MISFIT_LIMIT else NOTE,
+            "misfit_at_edge",
+            f"오차의 {edge.share * 100:.0f} % 가 가장 낮은 {edge.count}개 "
+            f"점(≤ {edge.upper_hz:.3g} Hz)에 몰려 있습니다 (최대 "
+            f"{summary.max * 100:.0f} %) — 하한을 {edge.threshold_hz:.3g} Hz "
+            f"로 두고 다시 맞춰 보세요"))
+    elif summary.mean < MEAN_MISFIT_LIMIT and summary.max >= MAX_MISFIT_LIMIT:
+        out.findings.append(Finding(
+            CHECK, "misfit_somewhere",
+            f"{summary.at_hz:.3g} Hz 에서 {summary.max * 100:.0f} % 어긋납니다 "
+            f"(평균 {summary.mean * 100:.1f} %) — 그 주파수의 모양을 회로가 "
+            f"못 그립니다"))
+
+
+def _tail_arc(arcs: list[ArcCapacitance], low_edge: float | None,
+              railed: dict[str, str]) -> ArcCapacitance | None:
+    """The arc that is really the blocking tail: the slowest one, when its
+    apex is below the fitted window or its resistance went to the bound.
+
+    Inside the window an interface-sized arc can be a real interphase with the
+    tail simply missing from the circuit -- that is ``open_end_on_blocking_cell``,
+    not this.
+    """
+    if not arcs:
+        return None
+    slowest = min(arcs, key=lambda arc: arc.peak_hz if arc.peak_hz is not None
+                  else math.inf)
+    below = (slowest.peak_hz is not None and low_edge is not None
+             and slowest.peak_hz < low_edge)
+    open_branch = railed.get(slowest.resistor) == "upper"
+    return slowest if (below or open_branch) else None
+
+
+def _blocking_capacitance(tail: ArcCapacitance, arcs: list[ArcCapacitance],
+                          r0: float | None, railed: dict[str, str]) -> float | None:
+    """The capacitance of the blocking interface an arc was mimicking, in F.
+
+    A blocking interface is an ohmic resistance in series with a CPE, and its
+    capacitance is Brug's -- Hirschorn et al., *Electrochim. Acta* 55, 6218
+    (2010), Eq. (12): ``C = Q^{1/n} · R_e^{(1-n)/n}`` with the **ohmic**
+    resistance ``R_e``.  The arc's own resistance is the wrong one: it is the
+    fit's bound or an extrapolation, and with ``n < 1`` the number follows it
+    (17 times too large at ``n = 0.85`` for 1e9 Ω against 100 Ω).  ``R_e`` is
+    what is in series before the tail -- R0 and the faster arcs, which are
+    plain resistors at the tail's frequencies.  That sum is our reading; the
+    paper's circuit has a single ``R_e``.
+    """
+    if tail.n < LOWEST_N:
+        return None
+    faster = sum(arc.resistance_ohm for arc in arcs
+                 if arc is not tail and railed.get(arc.resistor) != "upper")
+    r_e = (r0 or 0.0) + faster
+    return effective_capacitance(r_e, tail.q, tail.n) if r_e > 0 else None
+
+
+def _hidden_bulk(arcs: list[ArcCapacitance], claims: dict[str, str | None],
+                 statuses: dict[str, str], railed: dict[str, str],
+                 explained: set[str]
+                 ) -> tuple[list[ArcCapacitance], list[ArcCapacitance]] | None:
+    """``(face, boundary)`` -- the arcs named bulk / grain boundary, split by
+    what their capacitance says, when **none** of them can be the bulk;
+    otherwise ``None`` (the names are then checked arc by arc).
+
+    Each arc's side has to hold when its capacitance moves by the formula's
+    own uncertainty, or by an undetermined value's (``size_class`` /
+    ``spread_for``) -- the same rule `ionic_conductivity` uses to put R0 into
+    the electrolyte, so the report and the number say the same thing.  실측
+    B14 #9: "입계" 아크는 n 만 미결정(상한)인 이상적 축전기로 입계 상한의
+    9.9 배, "벌크" 는 4 만 배 — 둘 다 전극 쪽이다.
+    """
+    claimed = [arc for arc in arcs if claims.get(arc.resistor) in ("bulk", "grain_boundary")
+               and arc.resistor not in explained]
+    if not claimed:
+        return None
+    undetermined = {name for name, status in statuses.items() if status == "undetermined"}
+    face: list[ArcCapacitance] = []
+    boundary: list[ArcCapacitance] = []
+    for arc in claimed:
+        if railed.get(arc.resistor) == "upper":
+            return None
+        side = size_class(arc, spread=spread_for(arc, undetermined))
+        if side is None or side == BULK:
+            return None
+        (face if side == FACE else boundary).append(arc)
+    return face, boundary
+
+
+def _hidden_bulk_finding(face: list[ArcCapacitance], boundary: list[ArcCapacitance],
+                         labels: dict[str, str], r0: float | None,
+                         crossing: float | None, suggestion: str) -> Finding:
+    def named(arc: ArcCapacitance) -> str:
+        label = labels.get(arc.resistor, "")
+        return f"{arc.resistor}" + (f" ({label})" if label else "")
+
+    where = (f" (실수축 교점 {crossing:.4g} Ω)" if crossing is not None else "")
+    if not boundary:
+        listed = ", ".join(f"{named(arc)} C/A {_fmt(arc.per_area, 'F/cm²')}"
+                           for arc in face)
+        return Finding(
+            PROBLEM, "arcs_are_electrode",
+            f"벌크·입계라 부른 아크가 모두 전극 쪽 크기입니다 — {listed}. "
+            f"벌크·입계 아크는 잰 주파수 위에 있어 고주파 절편에 들어 있습니다"
+            + (f": 전해질 저항 ≈ R0 = {r0:.4g} Ω" if r0 is not None else "")
+            + where + ". 이 아크들로 낸 벌크·입계 σ 는 쓰지 마세요"
+            + (f"; {suggestion} 로 다시 맞추면 이름이 맞습니다" if suggestion
+               else ""))
+    sides = ([f"{named(arc)} 는 입계 쪽(C·l/A {_fmt(arc.per_length, 'F/cm')})"
+              for arc in boundary]
+             + [f"{named(arc)} 는 전극 쪽(C/A {_fmt(arc.per_area, 'F/cm²')})"
+                for arc in face])
+    total = (r0 + sum(arc.resistance_ohm for arc in boundary)
+             if r0 is not None else None)
+    parts = " + ".join(["R0"] + [arc.resistor for arc in boundary])
+    return Finding(
+        PROBLEM, "bulk_above_window",
+        "벌크 크기의 아크가 없습니다 — 벌크 반원은 잰 주파수 위에 있어 고주파 "
+        "절편 R0 에 들어 있습니다 (Irvine–Sinclair–West 그림 4b 의 읽기). "
+        + ", ".join(sides)
+        + (f": 전해질 저항 ≈ {parts} = {total:.4g} Ω" if total is not None else "")
+        + where + ". 이름대로 낸 벌크 σ 는 쓰지 마세요")
 
 
 def _arc_row(arc: ArcCapacitance, label: str, claim: str | None) -> dict:
@@ -544,35 +848,37 @@ def _arc_row(arc: ArcCapacitance, label: str, claim: str | None) -> dict:
 
 def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
                   claim: str | None, statuses: dict[str, str],
-                  band: tuple[float, float] | None) -> None:
-    if arc.peak_hz is not None and band is not None \
-            and band[0] is not None and band[1] is not None:
-        low, high = band
-        if arc.peak_hz > high:
+                  railed: dict[str, str], low: float | None,
+                  high: float | None) -> None:
+    # 경계에 붙은 아크의 꼭지는 뜻이 없다 — 경계 붙음이 이미 그 말을 했다
+    # (실측: R2 = 1e9 Ω 인 아크마다 "꼭지가 1e-5 Hz" 가 한 줄 더 붙었다).
+    if arc.peak_hz is not None and not _is_railed_arc(arc, railed):
+        if high is not None and arc.peak_hz > high:
             out.findings.append(Finding(
                 CHECK, "arc_apex_above_window",
                 f"{arc.resistor} 아크의 꼭지(f₀ = {arc.peak_hz:.3g} Hz)가 맞춘 구간 "
                 f"위(≤ {high:.3g} Hz)에 있습니다 — 반원의 꼭대기를 못 보고 정한 "
                 f"저항입니다"))
-        elif arc.peak_hz < low:
+        elif low is not None and arc.peak_hz < low:
             out.findings.append(Finding(
                 CHECK, "arc_apex_below_window",
                 f"{arc.resistor} 아크의 꼭지(f₀ = {arc.peak_hz:.3g} Hz)가 맞춘 구간 "
                 f"아래(≥ {low:.3g} Hz)에 있습니다 — 반원이 닫히는 것을 못 보고 정한 "
                 f"저항입니다"))
-    if claim is None or arc.candidates is None:
+    if claim is None or arc.candidates is None or _is_railed_arc(arc, railed):
+        return
+    if claim in arc.candidates:
         return
     names = [arc.resistor]
     names += ([f"{arc.element}_Q", f"{arc.element}_n"] if arc.element_kind == "CPE"
               else [arc.element])
     shaky = [name for name in names if statuses.get(name) == "undetermined"]
-    if shaky:
+    distance = _distance_outside(arc, claim)
+    if shaky and (distance is None or distance < FAR_OUTSIDE):
         out.findings.append(Finding(
             NOTE, "capacitance_not_judged",
             f"{arc.resistor} 아크는 {', '.join(shaky)} 가 미결정이라 커패시턴스로 "
             f"이름을 검사하지 않았습니다"))
-        return
-    if claim in arc.candidates:
         return
     allowed = " 또는 ".join(process(key).label for key in arc.candidates)
     out.findings.append(Finding(
@@ -580,7 +886,8 @@ def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
         f"{arc.resistor} ({label}) 의 커패시턴스 {_fmt(arc.capacitance_f, 'F')} "
         f"(C·l/A {_fmt(arc.per_length)}, C/A {_fmt(arc.per_area, 'F/cm²')}) 는 "
         f"{process(claim).label}일 수 없습니다 — "
-        + (f"{allowed}의 크기입니다" if allowed else "표의 어느 범위에도 안 듭니다")))
+        + (f"{allowed}의 크기입니다" if allowed else "표의 어느 범위에도 안 듭니다")
+        + (" (미결정 값이지만 범위에서 한 자릿수 넘게 벗어납니다)" if shaky else "")))
 
 
 # --------------------------------------------------------------------------
@@ -589,13 +896,17 @@ def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
 
 def audit_conductivity_scan(sweeps: Sequence[dict], *,
                             warnings: Sequence[str] = (),
-                            reason: str = "") -> list[Finding]:
+                            reason: str = "",
+                            without_first: tuple[float, float] | None = None
+                            ) -> list[Finding]:
     """The per-sweep numbers a conductivity scan rests on.
 
     ``sweeps`` items: ``{"index", "temperature_c", "typed_ohm", "re_min_ohm",
-    "re_max_ohm"}`` -- the last two are the range ``Re(Z)`` covered in that
-    sweep.  ``warnings`` / ``reason`` are the activation energy's own
-    (ADR 0039), repeated here so the report has them in one place.
+    "re_max_ohm"}`` and, when known, ``"blocking"`` / ``"phase_deg"`` (the
+    sweep's low-frequency verdict) and ``"start_s"`` / ``"end_s"`` (when it
+    was measured, seconds from the start of the record).  ``warnings`` /
+    ``reason`` are the activation energy's own (ADR 0039); ``without_first``
+    is ``(Ea eV, R²)`` of the same fit with the first sweep left out.
     """
     out: list[Finding] = []
     blank = [str(one["index"]) for one in sweeps if one.get("temperature_c") is None]
@@ -624,9 +935,111 @@ def audit_conductivity_scan(sweeps: Sequence[dict], *,
                 f"스윕 {one['index']}: 적은 저항 {typed:.4g} Ω 이 그 스윕의 Re(Z) "
                 f"범위({low:.4g}–{high:.4g} Ω) 밖입니다 — 곡선 위에 없는 값입니다. "
                 f"소수점이나 다른 스윕의 값을 적었는지 보세요"))
+    out += _blocking_outliers(sweeps)
+    out += _short_rests(sweeps)
     for warning in warnings:
         out.append(Finding(CHECK, "activation_warning", warning))
+    if without_first is not None and _first_step_goes_up(sweeps):
+        ea, r_squared = without_first
+        out.append(Finding(
+            NOTE, "first_sweep_suspect",
+            f"첫 스윕만 온도와 거꾸로 갑니다 — 첫 가열에서 펠릿이 자리를 잡거나 "
+            f"(접촉·치밀화) 평형 전에 잰 경우에 흔합니다. 첫 스윕을 빼면 Ea = "
+            f"{ea:.3f} eV (R² = {r_squared:.3f})"))
     if reason:
         out.append(Finding(NOTE, "activation_missing", f"활성화에너지 없음 — {reason}"))
     return sort_findings(out)
 
+
+def _blocking_outliers(sweeps: Sequence[dict]) -> list[Finding]:
+    """Sweeps whose low-frequency verdict disagrees with the rest of the scan.
+
+    A blocking pellet stays blocking from 60 °C to -20 °C; one sweep that
+    suddenly passes DC is a measurement that went wrong (a contact, frost in
+    the chamber), not a new material.  실측 B11 의 0 °C 스윕: 나머지 여덟은
+    -70°대였는데 그것만 -12° 였고, 실수축 교점도 없었다.
+    """
+    decided = [one for one in sweeps if one.get("blocking") in (True, False)]
+    if len(decided) < 3:
+        return []
+    blocking = sum(1 for one in decided if one["blocking"])
+    majority = blocking * 2 > len(decided)
+    odd = [one for one in decided if one["blocking"] is not majority]
+    if not odd or len(odd) * 3 > len(decided):
+        return []
+    typical = [one["phase_deg"] for one in decided
+               if one["blocking"] is majority and one.get("phase_deg") is not None]
+    usual = f" (나머지는 {_deg(float(np.median(typical)))} 안팎)" if typical else ""
+    names = ", ".join(
+        f"스윕 {one['index']}"
+        + (f" ({one['temperature_c']:g} °C)" if one.get("temperature_c") is not None
+           else "")
+        + (f" 위상 {_deg(one.get('phase_deg'))}" if one.get("phase_deg") is not None
+           else "")
+        for one in odd)
+    what = "막지 않습니다" if majority else "막습니다"
+    return [Finding(
+        CHECK, "sweep_unlike_its_neighbours",
+        f"{names} 만 저주파에서 {what}{usual} — 같은 펠릿이 한 온도에서만 달라질 "
+        f"이유는 없습니다. 그 측정 자체(접촉·결로·온도)를 의심하고, 그 스윕의 "
+        f"저항은 쓰지 마세요")]
+
+
+#: 앞 스윕 뒤에 쉰 시간이 다른 스윕들의 이만큼(비율)도 안 되면 평형 전일 수 있다.
+_SHORT_REST = 0.5
+
+
+def _short_rests(sweeps: Sequence[dict]) -> list[Finding]:
+    """Sweeps measured after a much shorter rest than the others.
+
+    The rest *is* the temperature equilibration: the chamber moves, the pellet
+    follows with a delay, and a sweep taken too early reads a temperature the
+    pellet is not at yet.  The first sweep's rest is counted from the start of
+    the record.
+    """
+    timed = [one for one in sweeps
+             if one.get("start_s") is not None and one.get("end_s") is not None]
+    if len(timed) < 3:
+        return []
+    timed = sorted(timed, key=lambda one: one["start_s"])
+    rests = [float(timed[0]["start_s"])]
+    rests += [float(b["start_s"]) - float(a["end_s"]) for a, b in zip(timed, timed[1:],
+                                                                      strict=False)]
+    others = sorted(rests[1:])
+    usual = float(np.median(others)) if others else 0.0
+    if usual <= 0:
+        return []
+    short = [(one, rest) for one, rest in zip(timed, rests, strict=True)
+             if rest < _SHORT_REST * usual]
+    if not short:
+        return []
+    listed = ", ".join(
+        f"스윕 {one['index']} ({_hours(rest)})" for one, rest in short)
+    return [Finding(
+        CHECK, "short_rest_before_sweep",
+        f"{listed} 은 앞 스윕 뒤(첫 스윕은 기록 시작 뒤) 쉰 시간이 다른 스윕들"
+        f"({_hours(usual)}) 보다 한참 짧습니다 — 온도가 평형에 닿기 전에 잰 것일 수 "
+        f"있습니다")]
+
+
+def _hours(seconds: float) -> str:
+    if seconds >= 3600:
+        return f"{seconds / 3600:.1f} h"
+    return f"{seconds / 60:.0f} min"
+
+
+def _first_step_goes_up(sweeps: Sequence[dict]) -> bool:
+    """The first two sweeps go the wrong way (resistance up as the temperature
+    goes down... the other way round) and nothing after them does."""
+    rows = [one for one in sweeps
+            if one.get("temperature_c") is not None and one.get("typed_ohm")]
+    if len(rows) < 4:
+        return False
+
+    def wrong(a: dict, b: dict) -> bool:
+        cooler_b = b["temperature_c"] < a["temperature_c"]
+        return (b["typed_ohm"] < a["typed_ohm"]) if cooler_b else (
+            b["typed_ohm"] > a["typed_ohm"])
+
+    steps = [wrong(a, b) for a, b in zip(rows, rows[1:], strict=False)]
+    return steps[0] and not any(steps[1:])

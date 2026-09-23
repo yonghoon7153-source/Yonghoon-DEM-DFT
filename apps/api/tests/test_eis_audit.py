@@ -299,3 +299,38 @@ def test_a_scan_without_caches_is_read_from_its_original_once(client, monkeypatc
         assert "cache_missing" in codes(entry(report, row["id"]), "note")
     (scan,) = [one for one in report["scans"] if one["sha256"] == sha]
     assert all(line["crossing_ohm"] is not None for line in scan["rows"])
+
+
+def test_a_scan_row_carries_its_verdict_and_when_it_was_measured(client):
+    """온도 스캔의 첫 스윕 문제(실측 9개 중 5개)를 가르려면 각 스윕이 언제
+    쟀는지, 앞에서 얼마나 쉬었는지가 보여야 한다 — 캐시의 `time/s` 에서."""
+    sha = upload_scan(client, [9.69, 14.56, 34.66])
+    (scan,) = [one for one in audit(client)["scans"] if one["sha256"] == sha]
+    first, second = scan["rows"][:2]
+    assert first["blocking"] is not None and first["phase_deg"] is not None
+    # 합성 파일: 스윕마다 앞에 1 h 휴지 네 줄 — 두 번째 스윕은 앞 스윕 끝에서
+    # 네 시간 뒤에 시작한다.
+    assert second["start_s"] - first["end_s"] == pytest.approx(4 * 3600, rel=0.01)
+    text = client.get("/api/eis/audit", params={"format": "text"}).text
+    assert "앞에서 쉰 시간" in text and "4.0 h" in text
+
+
+def test_the_offered_circuits_reach_the_suggestion(client):
+    """대칭셀 보기에는 복합전극 모델 `R0-TL1` 이 있다 — 안 막는 셀에 블로킹
+    꼬리를 단 맞춤에는 그것도 권한다."""
+    out = user_cell(client)
+    item = entry(audit(client), out["id"])
+    (finding,) = [f for f in item["findings"]
+                  if f["code"] == "blocking_element_on_open_cell"]
+    assert "`R0-TL1`" in finding["message"]
+
+
+def test_the_file_name_is_not_taken_for_the_shown_name(client):
+    """화면 이름은 대칭셀인데 파일 이름이 풀셀 — "이름은 풀셀" 이라고 하면 틀린
+    말이다 (실측 260831_Poly(L&F)_60um_sym 두 셀)."""
+    out = upload(client, mpr(**dict(USER, rs=5.5)), "Poly_60um_full_01.mpr")
+    client.patch(f"/api/eis/spectra/{out['id']}", json={"name": "Poly_60um_sym_01"})
+    item = entry(audit(client), out["id"])
+    notes = [f for f in item["findings"] if f["code"] == "file_name_differs"]
+    assert notes and "Poly_60um_full_01.mpr" in notes[0]["message"]
+    assert "config_differs_from_name" not in codes(item)

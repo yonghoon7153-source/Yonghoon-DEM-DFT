@@ -63,6 +63,7 @@ from .eis import (
     _stub_parameters,
     _sweep_resistance,
     apply_exchangeable,
+    presets_for,
 )
 
 router = APIRouter(prefix="/api/eis", tags=["eis"])
@@ -172,10 +173,12 @@ def _audit_spectrum(session: Session, record: SpectrumRecord,
     spectrum, findings = _points(record, originals)
     thickness_cm, area = _geometry(session, record)
     findings += audit_record(
-        name=record.original_name or record.name, kind=record.kind,
+        name=record.name or record.original_name, kind=record.kind,
         config=record.cell_config,
         thickness_um=thickness_cm * 1e4 if thickness_cm else None, area_cm2=area,
-        n_points=len(spectrum) if spectrum is not None else record.n_points)
+        n_points=len(spectrum) if spectrum is not None else record.n_points,
+        file_name=record.original_name if record.original_name != record.name
+        else "")
 
     out = AuditSpectrumOut(
         id=record.id or 0, name=record.name or record.original_name,
@@ -215,7 +218,8 @@ def _audit_spectrum(session: Session, record: SpectrumRecord,
         audit = audit_fit(stub, spectrum, kind=record.kind, config=record.cell_config,
                           thickness_cm=thickness_cm, area_cm2=area,
                           band=(best.frequency_low_hz, best.frequency_high_hz),
-                          conductivity=conductivity)
+                          conductivity=conductivity,
+                          alternatives=_offered(record))
         findings += audit.findings
         out.circuit = best.circuit
         out.chi_squared = best.chi_squared
@@ -231,6 +235,30 @@ def _audit_spectrum(session: Session, record: SpectrumRecord,
     out.findings = [_finding_out(one) for one in ordered]
     out.worst = worst(ordered)
     return out
+
+
+def _offered(record: SpectrumRecord) -> list[str]:
+    """The circuits this kind of cell is offered — the audit recommends from these."""
+    try:
+        return [one["circuit"] for one in presets_for(record.kind, record.cell_config)]
+    except KeyError:
+        return []
+
+
+def _sweep_times(spectrum: Spectrum) -> tuple[float | None, float | None]:
+    """When the sweep ran, seconds from the start of the record.
+
+    The cache keeps every column the file had; ``time/s`` is the same name in
+    ``.mpr`` and ``.mpt``.  Missing means missing — no guess from the order.
+    """
+    times = spectrum.columns.get("time/s") if spectrum.columns else None
+    if times is None:
+        return None, None
+    finite = np.asarray(times, dtype=float)
+    finite = finite[np.isfinite(finite)]
+    if not finite.size:
+        return None, None
+    return float(finite.min()), float(finite.max())
 
 
 def _audit_scan(session: Session, records: list[SpectrumRecord],
@@ -252,24 +280,39 @@ def _audit_scan(session: Session, records: list[SpectrumRecord],
                 except (HTTPException, UnknownColumn, ValueError, OSError):
                     spectrum = None
             crossing = re_min = re_max = None
+            verdict: dict = {}
+            start = end = None
             if spectrum is not None:
                 crossing = real_axis_crossing(spectrum.frequency_hz, spectrum.z_re,
                                               spectrum.z_im)
                 real = spectrum.z_re[np.isfinite(spectrum.z_re)]
                 if real.size:
                     re_min, re_max = float(real.min()), float(real.max())
+                verdict = blocking_verdict(spectrum.frequency_hz, spectrum.z_re,
+                                           spectrum.z_im)
+                start, end = _sweep_times(spectrum)
             thickness_cm, area = _geometry(session, record)
             out.rows.append({"index": record.sweep_index,
                              "temperature_c": record.temperature_c,
                              "typed_ohm": typed, "crossing_ohm": crossing,
-                             "re_min_ohm": re_min, "re_max_ohm": re_max})
+                             "re_min_ohm": re_min, "re_max_ohm": re_max,
+                             "blocking": verdict.get("blocking"),
+                             "phase_deg": verdict.get("phase_deg"),
+                             "start_s": start, "end_s": end})
             temperatures.append(record.temperature_c)
             sigmas.append(conductivity_ms_cm(
                 typed, thickness_mm=thickness_cm * 10.0 if thickness_cm else None,
                 area_cm2=area))
         result = activation_energy(temperatures, sigmas)
+        # 첫 스윕을 뺀 Ea — 첫 걸음만 거꾸로 갈 때 무엇이 달라지는지 같이 낸다
+        # (실측 9개 스캔 중 5개가 60 °C 저항이 50 °C 보다 컸다).
+        rest = activation_energy(temperatures[1:], sigmas[1:])
+        without_first = ((rest.activation_energy_ev, rest.fit.r_squared)
+                         if rest.activation_energy_ev is not None and rest.fit
+                         else None)
         findings += audit_conductivity_scan(out.rows, warnings=result.warnings,
-                                            reason=result.reason or "")
+                                            reason=result.reason or "",
+                                            without_first=without_first)
     elif all(record.soc_percent is None for record in records) \
             and "SOC" in (head.purpose or "").upper():
         findings.append(Finding(NOTE, "soc_missing",
@@ -411,13 +454,22 @@ def _scan_block(scan: AuditScanOut) -> list[str]:
     lines = [f"{scan.name}  ({kind} · 스윕 {scan.sweeps}"
              + (f" · {scan.purpose}" if scan.purpose else "") + ")"]
     if scan.rows:
-        lines.append("    스윕  온도(°C)  적은 R(Ω)  실수축 교점(Ω)  Re(Z) 범위(Ω)")
+        lines.append("    스윕  온도(°C)  적은 R(Ω)  실수축 교점(Ω)  Re(Z) 범위(Ω)"
+                     "  저주파 위상  앞에서 쉰 시간")
+        previous_end = 0.0
         for row in scan.rows:
             span = (f"{_g(row.get('re_min_ohm'), 4)}–{_g(row.get('re_max_ohm'), 4)}"
                     if row.get("re_min_ohm") is not None else "—")
+            phase = row.get("phase_deg")
+            shown_phase = f"{round(phase)}°" if phase is not None else "—"
+            rest = "—"
+            if row.get("start_s") is not None:
+                gap = float(row["start_s"]) - previous_end
+                rest = (f"{gap / 3600:.1f} h" if gap >= 3600 else f"{gap / 60:.0f} min")
+                previous_end = float(row.get("end_s") or row["start_s"])
             lines.append(f"    {row['index']:>4}  {_g(row['temperature_c']):>8}  "
                          f"{_g(row['typed_ohm'], 4):>9}  {_g(row['crossing_ohm'], 4):>14}"
-                         f"  {span}")
+                         f"  {span:<16} {shown_phase:>6}  {rest:>8}")
     for finding in scan.findings:
         lines.append(f"    [{finding.label}] {finding.message}")
     return lines

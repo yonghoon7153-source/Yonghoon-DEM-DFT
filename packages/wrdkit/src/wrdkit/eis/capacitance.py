@@ -40,14 +40,16 @@ a single answer.  What it can say firmly is what an arc **cannot** be.
 from __future__ import annotations
 
 import math
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
 from .circuit import Circuit, parse_circuit
 
-__all__ = ["AREA", "ArcCapacitance", "LOWEST_N", "PROCESSES", "Process",
-           "THICKNESS", "arc_capacitances", "candidate_processes",
-           "effective_capacitance", "peak_frequency", "process"]
+__all__ = ["AREA", "ArcCapacitance", "BOUNDARY", "BULK", "DETERMINED_SPREAD",
+           "FACE", "LOWEST_N", "PROCESSES", "Process", "THICKNESS",
+           "UNDETERMINED_SPREAD", "arc_capacitances", "candidate_processes",
+           "effective_capacitance", "peak_frequency", "process", "size_class",
+           "spread_for"]
 
 #: ``C · l/A`` -- a capacitor across the whole thickness (bulk, boundary).
 THICKNESS = "thickness"
@@ -216,3 +218,72 @@ def arc_capacitances(circuit: str | Circuit, values: Mapping[str, float], *,
             peak_hz=peak, per_length=per_length, per_area=per_area,
             candidates=candidates, reason=reason))
     return out
+
+
+# --------------------------------------------------------------------------
+# which side of the pellet
+# --------------------------------------------------------------------------
+
+#: 두께를 가로지르는 과정 — 벌크.
+BULK = "bulk"
+#: 두께를 가로지르는 과정 — 입계.  면 위의 과정과 크기를 나눠 가질 수 있다
+#: (얇은 펠릿의 1 µF/cm² 는 입계이자 전극 계면이다) — 그때도 이쪽이다: 모르는
+#: 아크를 전해질에서 빼지 않는다 (ADR 0041).
+BOUNDARY = "boundary"
+#: 면 위의 과정**뿐** — 표면층, 전극 계면, 전기화학 반응.
+FACE = "face"
+
+#: 결정된 값도 표의 경계에서 이 배수 안쪽이면 어느 쪽인지 가르지 않는다.
+#: 유효 커패시턴스 식 자체가 분포 가정이 틀리면 0.3–2 배 틀리고 (Hirschorn
+#: 외, 2010: 표면 분포에 식 (18) 을 쓰면 −70 % ~ +100 %), 표의 범위는 자릿수
+#: 규칙이다 (Irvine–Sinclair–West 의 표 1 은 "possible interpretation").
+DETERMINED_SPREAD = 3.0
+#: R 이나 Q 가 미결정이면 값이 몇 배 흔들린다 — Q 가 세 배면 C 는 3^{1/n} 배
+#: (n = 0.87 에서 3.5 배).  식의 흔들림까지 더해 한 자릿수.
+UNDETERMINED_SPREAD = 10.0
+
+
+def _side(per_length: float, per_area: float) -> str | None:
+    keys = {one.key for one in PROCESSES
+            if one.holds(per_length if one.scaling == THICKNESS else per_area)}
+    if "bulk" in keys:
+        return BULK
+    if "grain_boundary" in keys:
+        return BOUNDARY
+    return FACE if keys else None
+
+
+def size_class(arc: ArcCapacitance, *, spread: float = 1.0) -> str | None:
+    """Which side of the pellet an arc's capacitance puts it on.
+
+    :data:`BULK` / :data:`BOUNDARY` -- across the thickness, the electrolyte;
+    :data:`FACE` -- only processes on a face (surface layer, electrode
+    interface, reaction), not the electrolyte.  ``None`` is *not judged*: no
+    candidates, or the side changes when the capacitance moves ``spread``
+    times either way (:func:`spread_for`).
+
+    Coarser than :func:`candidate_processes` on purpose.  What a conductivity
+    needs is not "grain boundary or interface" but "is this arc the
+    electrolyte, and can it be the bulk" -- and those answers survive
+    overlapping ranges that the name does not.
+    """
+    if arc.candidates is None or arc.per_length is None or arc.per_area is None:
+        return None
+    sides = {_side(arc.per_length * k, arc.per_area * k)
+             for k in (1.0 / spread, 1.0, spread)}
+    side = sides.pop()
+    return side if not sides else None
+
+
+def spread_for(arc: ArcCapacitance, undetermined: Iterable[str]) -> float:
+    """:data:`UNDETERMINED_SPREAD` when the arc's ``R`` or ``Q`` (``C``) was
+    not determined, else :data:`DETERMINED_SPREAD`.
+
+    An undetermined ``n`` alone does not widen it: at the upper bound it is an
+    ideal capacitor (``C = Q``), and ±0.05 on ``n`` moves ``C`` by at most
+    about two times.  실측 B14 #9: "입계" 아크는 n 만 미결정(상한)인 이상적
+    축전기였다.
+    """
+    shaky = set(undetermined)
+    names = (arc.resistor, f"{arc.element}_Q", arc.element)
+    return UNDETERMINED_SPREAD if shaky.intersection(names) else DETERMINED_SPREAD

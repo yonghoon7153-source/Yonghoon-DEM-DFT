@@ -102,15 +102,28 @@ def test_a_blocking_tail_on_a_cell_that_does_not_block_is_a_problem():
 
 def test_a_vanishing_cpe_is_one_finding_not_three():
     """Q 가 상한이면 n 은 무엇이든 상관없다 — 합성 쌍둥이를 맞추면 n 이 하한
-    0.3 에 붙었고, "Q 상한" · "n 하한" · "n = 0.30 확산" 이 함께 떴다."""
+    0.3 에 붙었고, "Q 상한" · "n 하한" · "n = 0.30 확산" 이 함께 떴다.
+
+    스펙트럼이 없으면(무엇이 그 소자를 지우는지 모르면) 사라지는 것 한 줄만."""
+    parameters = [P(name, value) for name, value in USER.items()] + [
+        P("CPE3_Q", 1000.0, "undetermined", "at_upper_bound"),
+        P("CPE3_n", 0.3, "undetermined", "at_lower_bound")]
+    audit = audit_fit(Fit(USER_FIT.circuit, parameters), None, kind=SOLID,
+                      config=SYMMETRIC, band=BAND)
+    about_cpe3 = [f.code for f in audit.findings if "CPE3" in f.message]
+    assert about_cpe3 == ["element_vanishing", "undetermined"]
+
+
+def test_the_cause_explains_the_vanishing_element_once():
+    """안 막는 셀에 막는 꼬리를 단 회로 — 그 꼬리가 경계로 가는 **이유**가 이미
+    적혔으므로, 경계에 붙은 것·미결정인 것을 다시 적지 않는다."""
     parameters = [P(name, value) for name, value in USER.items()] + [
         P("CPE3_Q", 1000.0, "undetermined", "at_upper_bound"),
         P("CPE3_n", 0.3, "undetermined", "at_lower_bound")]
     audit = audit_fit(Fit(USER_FIT.circuit, parameters), USER_SPECTRUM, kind=SOLID,
                       config=SYMMETRIC, band=BAND)
-    about_cpe3 = [f.code for f in audit.findings
-                  if "CPE3" in f.message and f.code != "blocking_element_on_open_cell"]
-    assert about_cpe3 == ["element_vanishing", "undetermined"]
+    about_cpe3 = [f.code for f in audit.findings if "CPE3" in f.message]
+    assert about_cpe3 == ["blocking_element_on_open_cell"]
 
 
 def test_a_series_cpe_with_a_low_n_is_a_diffusion_tail_not_an_arc():
@@ -123,7 +136,8 @@ def test_a_series_cpe_with_a_low_n_is_a_diffusion_tail_not_an_arc():
 
 
 def test_the_vanishing_cpe_is_named_for_what_it_is_doing():
-    audit = audit_user()
+    """스펙트럼 없이 맞춤만 보면 — 직렬 CPE 가 사라지려 한다는 한 줄."""
+    audit = audit_fit(USER_FIT, None, kind=SOLID, config=SYMMETRIC)
     vanishing = [f for f in audit.findings if f.code == "element_vanishing"]
     assert [f.severity for f in vanishing] == [CHECK]
     assert "CPE3" in vanishing[0].message and "없이" in vanishing[0].message
@@ -297,16 +311,31 @@ def test_a_cpe_that_is_really_a_diffusion_line_is_not_read_as_an_arc():
         f.code for f in audit.findings if "R2" in f.message]
 
 
-def test_an_undetermined_arc_is_reported_but_not_judged():
+def test_an_undetermined_arc_far_outside_is_still_judged():
+    """미결정 값은 몇 배 흔들리지, 벌크와 이중층 사이의 네 자릿수를 건너지
+    않는다.  실측 B11 스캔의 "벌크" 들은 벌크 상한의 수만 배였는데 전부
+    미결정이라 판정에서 빠졌었다."""
     parameters = [P(name, value) for name, value in USER.items()]
     parameters[1] = P("R1", USER["R1"], "undetermined", "seed_spread")
     fit = Fit("R0-p(R1,CPE1)-p(R2,CPE2)", parameters)
     audit = audit_fit(fit, USER_SPECTRUM, kind=SOLID, config=SYMMETRIC,
                       thickness_cm=THICKNESS_CM, area_cm2=AREA_CM2, band=BAND)
-    assert "capacitance_not_judged" in codes(audit, NOTE)
     judged = [f for f in audit.findings if f.code == "label_contradicts_capacitance"]
-    assert ["R2" in f.message for f in judged] == [True]
-    assert "undetermined" in codes(audit, NOTE)
+    assert [("R1" in f.message, "미결정" in f.message) for f in judged] == [
+        (True, True), (False, False)]
+    assert "capacitance_not_judged" not in codes(audit)
+
+
+def test_an_undetermined_arc_near_its_range_is_not_judged():
+    """벌크 상한(C·l/A 1e-11)을 세 배만 넘는 미결정 아크 — 흔들림 안이다."""
+    per_length = 3e-11
+    capacitance = per_length * AREA_CM2 / THICKNESS_CM
+    fit = Fit("R0-p(R1,C1)", [P("R0", 2.0), P("R1", 50.0, "undetermined", "seed_spread"),
+                              P("C1", capacitance)])
+    audit = audit_fit(fit, None, kind=SOLID, config=SYMMETRIC,
+                      thickness_cm=THICKNESS_CM, area_cm2=AREA_CM2)
+    assert "label_contradicts_capacitance" not in codes(audit)
+    assert "capacitance_not_judged" in codes(audit, NOTE)
 
 
 def test_a_conductivity_no_electrolyte_can_have_points_at_the_units():
@@ -444,3 +473,213 @@ def test_findings_sort_worst_first():
     mixed = [Finding(NOTE, "a", ""), Finding(PROBLEM, "b", ""), Finding(CHECK, "c", "")]
     assert [f.code for f in sort_findings(mixed)] == ["b", "c", "a"]
     assert worst([]) is None
+
+
+# -- 실측 2026-09-23 검수에서 나온 모양들 ------------------------------------------
+#
+# 연구실 PC 의 131 스펙트럼을 검수했더니 한 원인이 여러 줄로 반복됐다.  아래는
+# 그 보고서의 맞춤값을 그대로 옮긴 것이다 — 스펙트럼은 그 셀이 실제로 어떻게
+# 생겼을지를 합성했다 (황화물 블로킹 펠릿: 배선 L + 전해질 R + 이중층 CPE).
+
+SULFIDE_FREQUENCY = S.log_sweep(7e6, 10.0, 10)
+SULFIDE_BAND = (10.0, 2.15e5)            # 보고서의 맞춘 구간
+
+
+def sulfide_pellet(r0=8.3, q=1.9e-6, n=0.86, inductance=1.73e-6):
+    w = 2 * np.pi * SULFIDE_FREQUENCY
+    z = r0 + 1j * w * inductance + 1.0 / (q * (1j * w) ** n)
+    return Spectrum(SULFIDE_FREQUENCY, z.real, z.imag)
+
+
+PELLET_CM = 700e-4                       # B15: 700 µm, 10 mm
+
+
+def test_an_arc_that_is_the_blocking_tail_is_said_once():
+    """B15 #2 (50 °C): `R0-p(R1,CPE1)` 로 맞춘 블로킹 펠릿.  보고서는 한 원인을
+    셋으로 적었다 — 회로가 실수축으로 닫힌다 · R1 은 벌크일 수 없다 · R1 의
+    꼭지가 구간 아래.  R1 은 반원이 아니라 꼬리이고, 전해질은 R0 다."""
+    fit = Fit("R0-p(R1,CPE1)", [P("R0", 7.89), P("R1", 1.37e5), P("CPE1_Q", 1.95e-6),
+                                P("CPE1_n", 0.856)])
+    audit = audit_fit(fit, sulfide_pellet(), kind=SOLID, config=SYMMETRIC,
+                      thickness_cm=PELLET_CM, area_cm2=AREA_CM2, band=SULFIDE_BAND,
+                      alternatives=["R0-TL1", "L1-R0-CPE1", "R0-p(R1,CPE1)-CPE2"])
+    (tail,) = [f for f in audit.findings if f.code == "tail_mimicked_by_arc"]
+    assert tail.severity == PROBLEM
+    assert "R1 (벌크 저항)" in tail.message
+    assert "R0 = 7.89 Ω" in tail.message                 # 전해질이 어디 있는지
+    # 막는 계면의 커패시턴스는 Brug 의 식(Hirschorn 2010 식 12)에 옴 저항 R0 를
+    # 넣어 낸다.  R1 (꼬리의 높이, 외삽값) 로 낸 1.56e-6 F 는 그 경계를 따라간다.
+    assert "3.02e-07 F" in tail.message
+    assert "1.56e-06" not in tail.message
+    assert "`L1-R0-CPE1`" in tail.message                # 막는 끝을 가진 대안만
+    assert "`R0-TL1`" not in tail.message
+    for repeated in ("open_end_on_blocking_cell", "label_contradicts_capacitance",
+                     "arc_apex_below_window"):
+        assert repeated not in codes(audit)
+
+
+def test_a_missing_inductance_is_named_as_the_cause_of_the_top_misfit():
+    """같은 스캔에서 L1 을 단 첫 스윕은 최대 1.4–3.7 %, 나머지는 11–30 % 였다 —
+    전부 맞춘 구간의 꼭대기에서."""
+    fit = Fit("R0-p(R1,CPE1)", [P("R0", 7.89), P("R1", 1.37e5), P("CPE1_Q", 1.95e-6),
+                                P("CPE1_n", 0.856)])
+    audit = audit_fit(fit, sulfide_pellet(), kind=SOLID, config=SYMMETRIC,
+                      band=SULFIDE_BAND)
+    (hint,) = [f for f in audit.findings if f.code == "inductance_missing"]
+    assert "`L1-`" in hint.message
+    assert "misfit_somewhere" not in codes(audit)
+
+    with_l = Fit("L1-R0-CPE1", [P("L1", 1.73e-6), P("R0", 8.3), P("CPE1_Q", 1.9e-6),
+                                P("CPE1_n", 0.86)])
+    clean = audit_fit(with_l, sulfide_pellet(), kind=SOLID, config=SYMMETRIC,
+                      thickness_cm=PELLET_CM, area_cm2=AREA_CM2, band=SULFIDE_BAND)
+    assert clean.findings == []
+
+
+B14_CIRCUIT = "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"
+#: B14 #9 (-20 °C), 850 µm.  ? 가 붙었던 것은 미결정으로.
+B14 = [P("R0", 84.3), P("R1", 2.92e3, "undetermined", "seed_spread"),
+       P("CPE1_Q", 7.47e-6), P("CPE1_n", 0.851), P("R2", 2.6e5),
+       P("CPE2_Q", 9.18e-7), P("CPE2_n", 1.0, "undetermined", "at_upper_bound"),
+       P("CPE3_Q", 2.68e-5, "undetermined", "seed_spread"), P("CPE3_n", 0.663)]
+
+
+def b14_spectrum():
+    values = {p.name: p.value for p in B14}
+    return spectrum_of_at(B14_CIRCUIT, values, SULFIDE_FREQUENCY)
+
+
+def spectrum_of_at(circuit, values, frequency):
+    model = parse_circuit(circuit)
+    z = model.impedance([values[name] for name in model.parameter_names], frequency)
+    return Spectrum(frequency, z.real, z.imag)
+
+
+def test_arcs_that_are_all_electrode_sized_point_at_r0():
+    """B11–B14·B7: 벌크·입계라 부른 두 아크가 모두 µF 대 — 전극 계면.  벌크·입계
+    아크는 7 MHz 위에 있어 R0 에 들어 있다 (R0 84.3 Ω ≈ 적은 저항 78.1 Ω)."""
+    audit = audit_fit(Fit(B14_CIRCUIT, B14), b14_spectrum(), kind=SOLID,
+                      config=SYMMETRIC, thickness_cm=850e-4, area_cm2=AREA_CM2,
+                      band=(10.0, 1.71e5), alternatives=["L1-R0-CPE1"])
+    (merged,) = [f for f in audit.findings if f.code == "arcs_are_electrode"]
+    assert merged.severity == PROBLEM
+    assert "R1 (벌크 저항)" in merged.message and "R2 (입계 저항)" in merged.message
+    assert "R0 = 84.3 Ω" in merged.message
+    assert "`L1-R0-CPE1`" in merged.message
+    # 묶인 아크의 증상은 다시 적지 않는다.
+    for repeated in ("label_contradicts_capacitance", "capacitance_not_judged",
+                     "arc_apex_below_window"):
+        assert repeated not in codes(audit)
+
+
+def test_a_boundary_arc_with_the_bulk_above_the_window_is_said_once():
+    """벌크 반원은 10⁸ Hz 에 있어 안 보이고, 보이는 첫 아크는 입계 크기 —
+    Irvine–Sinclair–West 그림 4b 의 읽기로 전해질은 R0 + R1 이다.  아크마다
+    "벌크일 수 없다" 를 따로 적지 않고 원인 하나로."""
+    values = {"R0": 8.0, "R1": 5.0, "CPE1_Q": 5e-9, "CPE1_n": 1.0,
+              "CPE2_Q": 2e-6, "CPE2_n": 0.9}
+    spectrum = spectrum_of_at("R0-p(R1,CPE1)-CPE2", values, SULFIDE_FREQUENCY)
+    fit = Fit("R0-p(R1,CPE1)-CPE2", [P(n, v) for n, v in values.items()])
+    audit = audit_fit(fit, spectrum, kind=SOLID, config=SYMMETRIC,
+                      thickness_cm=PELLET_CM, area_cm2=AREA_CM2,
+                      band=(10.0, 7e6))
+    (merged,) = [f for f in audit.findings if f.code == "bulk_above_window"]
+    assert merged.severity == PROBLEM
+    assert "R1 (벌크 저항) 는 입계 쪽(C·l/A 4.46e-10 F/cm)" in merged.message
+    assert "R0 + R1 = 13 Ω" in merged.message
+    assert "arcs_are_electrode" not in codes(audit)
+    assert "label_contradicts_capacitance" not in codes(audit)
+
+
+def test_a_real_bulk_arc_is_not_swept_into_the_electrode_verdict():
+    """벌크가 벌크 크기인 셀 — 묶음 판정이 나오면 안 된다."""
+    spectrum = spectrum_of(BLOCKING_CIRCUIT, BLOCKING)
+    fit = Fit(BLOCKING_CIRCUIT, [P(n, v) for n, v in BLOCKING.items()])
+    audit = audit_fit(fit, spectrum, kind=SOLID, config=SYMMETRIC,
+                      thickness_cm=THICKNESS_CM, area_cm2=AREA_CM2, band=BAND)
+    assert "arcs_are_electrode" not in codes(audit)
+
+
+def test_suggestions_come_from_the_offered_circuits_that_fit_the_ending():
+    """안 막는 복합전극 대칭셀 — 블로킹 꼬리를 뺀 회로와, 보기 중 막지 않는
+    끝을 가진 것 (전송선 포함)을 권한다."""
+    audit = audit_user(alternatives=["R0-TL1", "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3",
+                                     "L1-R0-CPE1"])
+    (finding,) = [f for f in audit.findings
+                  if f.code == "blocking_element_on_open_cell"]
+    assert "`R0-p(R1,CPE1)-p(R2,CPE2)` 또는 `R0-TL1`" in finding.message
+    assert "L1-R0-CPE1" not in finding.message
+
+
+def test_a_transmission_line_fit_is_not_told_about_bulk_sigma():
+    """`R0-TL1` 로 맞춘 복합전극 대칭셀은 벌크·입계 σ 를 낸 적이 없다 — 그
+    경고는 소음이다 (실측 Poly(L&F)_vgcf2_sym 두 셀)."""
+    fit = Fit("R0-TL1", [P("R0", 1.8), P("TL1_Ri", 0.06), P("TL1_Re", 1e-9),
+                         P("TL1_Rct", 0.016), P("TL1_Q", 0.23), P("TL1_n", 0.87),
+                         P("TL1_Wr", 0.026), P("TL1_Wn", 0.17), P("TL1_Wt", 8e5)])
+    audit = audit_fit(fit, USER_SPECTRUM, kind=SOLID, config=SYMMETRIC, band=BAND)
+    assert "symmetric_cell_does_not_block" not in codes(audit)
+
+
+def test_the_file_name_is_named_when_it_is_the_one_that_disagrees():
+    found = audit_record(name="260831_Poly(L&F)_60um_sym_#01_C01", kind=SOLID,
+                         config=SYMMETRIC, thickness_um=60.0, area_cm2=0.785,
+                         file_name="260831_Poly(L&F)_60um_full_#01_C01.mpr")
+    (note,) = [f for f in found if f.code == "file_name_differs"]
+    assert note.severity == NOTE and "_full_" in note.message
+    assert "config_differs_from_name" not in [f.code for f in found]
+
+
+def test_an_area_that_reads_like_a_diameter_is_asked_about():
+    """실측: 같은 조건의 두 셀 중 하나만 면적 10 cm² 였다 (짝은 0.785 cm²)."""
+    found = audit_record(name="260913_Poly(L&F)_vgcf2_sym_70um_#02", kind=SOLID,
+                         config=SYMMETRIC, thickness_um=70.0, area_cm2=10.0)
+    (finding,) = [f for f in found if f.code == "area_looks_like_diameter"]
+    assert "0.785 cm²" in finding.message
+
+
+# -- 온도 스캔 (실측 B11·B13) ---------------------------------------------------------
+
+def b11_like(**change):
+    temperatures = [60, 50, 40, 30, 20, 10, 0, -10, -20]
+    typed = [7.372, 7.285, 8.824, 15.44, 79.89, 25.19, 1.114e5, 56.93, 84.4]
+    rows = []
+    for index, (t, r) in enumerate(zip(temperatures, typed, strict=True), start=1):
+        rows.append({"index": index, "temperature_c": t, "typed_ohm": r,
+                     "re_min_ohm": r * 0.6, "re_max_ohm": 5000.0,
+                     "blocking": True, "phase_deg": -75.0,
+                     "start_s": 7200.0 * index, "end_s": 7200.0 * index + 90})
+    rows[6].update(blocking=False, phase_deg=-12.0)          # 0 °C
+    for key, value in change.items():
+        rows[int(key[1:]) - 1].update(value)
+    return rows
+
+
+def test_the_one_sweep_that_stops_blocking_is_named():
+    found = audit_conductivity_scan(b11_like())
+    (odd,) = [f for f in found if f.code == "sweep_unlike_its_neighbours"]
+    assert "스윕 7 (0 °C)" in odd.message and "-12°" in odd.message
+    assert "-75°" in odd.message
+
+
+def test_a_sweep_taken_before_the_chamber_settled_is_named():
+    rows = b11_like(s1={"start_s": 600.0, "end_s": 690.0})   # 10 분 만에 첫 스윕
+    found = audit_conductivity_scan(rows)
+    (short,) = [f for f in found if f.code == "short_rest_before_sweep"]
+    assert "스윕 1 (10 min)" in short.message and "2.0 h" in short.message
+
+
+def test_only_the_first_step_going_the_wrong_way_is_explained():
+    """실측 9개 스캔 중 5개가 60 °C 저항이 50 °C 보다 컸다.  나머지 걸음이
+    멀쩡하면 첫 스윕 탓이고, 빼고 맞춘 Ea 를 같이 낸다."""
+    rows = [{"index": i, "temperature_c": t, "typed_ohm": r}
+            for i, (t, r) in enumerate(zip([60, 50, 40, 30, 20],
+                                           [5.136, 4.782, 5.899, 7.87, 11.13],
+                                           strict=True), start=1)]
+    found = audit_conductivity_scan(rows, without_first=(0.301, 0.998))
+    (note,) = [f for f in found if f.code == "first_sweep_suspect"]
+    assert "0.301 eV" in note.message and "0.998" in note.message
+    # 다른 걸음도 거꾸로면 첫 스윕 탓이라고 하지 않는다.
+    rows[3]["typed_ohm"] = 4.0
+    assert "first_sweep_suspect" not in [
+        f.code for f in audit_conductivity_scan(rows, without_first=(0.3, 0.9))]
