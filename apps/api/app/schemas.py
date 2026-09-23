@@ -1649,6 +1649,8 @@ class RefitSpectrumOut(BaseModel):
     old_misfit_mean: float | None = None
     #: 이 스펙트럼을 대상으로 만든 문제 판정 — 회로를 실은 것.
     problems: list[AuditFindingOut] = []
+    #: 옛 맞춤의 문제 판정 **전부** (회로를 안 실은 것까지) — 새 것과 견주는 수.
+    old_problems: list[AuditFindingOut] = []
     tries: list[RefitTryOut] = []
     #: 고른 새 맞춤.  비면 아무것도 받아들여지지 않아 그대로 뒀다.
     new_circuit: str = ""

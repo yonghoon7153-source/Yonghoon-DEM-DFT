@@ -19,6 +19,7 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -178,7 +179,9 @@ def _refit_one(session: Session, target: _Target, origin: str,
         old_circuit=best.circuit, old_chi_squared=best.chi_squared,
         old_misfit_mean=target.audit.misfit.mean if target.audit.misfit else None,
         problems=[_finding_out(one) for one in target.audit.findings
-                  if one.severity == PROBLEM and one.circuits])
+                  if one.severity == PROBLEM and one.circuits],
+        old_problems=[_finding_out(one) for one in target.audit.findings
+                      if one.severity == PROBLEM])
 
     chosen: tuple[int, SpectrumFit, FitAudit] | None = None
     for candidate in target.candidates:
@@ -346,6 +349,18 @@ def _clip(text: str, limit: int = 110) -> str:
     return text if len(text) <= limit else text[:limit - 1] + "…"
 
 
+def _resolved(one: RefitSpectrumOut) -> list[str]:
+    """실제로 풀린 문제의 코드 — 새 맞춤에서 그 코드의 수가 줄었다.
+
+    회로를 실은 판정 전부가 아니다: 꼬리 흉내만 풀고 전극 크기 아크는 남는
+    맞춤이 받아들여질 수 있다 (실측 B17_ACTI E C01 #2 #3).
+    """
+    before = Counter(p.code for p in one.old_problems)
+    after = Counter(p.code for p in one.new_problems)
+    return [code for code in dict.fromkeys(p.code for p in one.problems)
+            if after[code] < before[code]]
+
+
 def _try_line(one: RefitTryOut) -> str:
     head = f"{one.circuit} · {_START_WORDS.get(one.start, one.start)}"
     if one.accepted:
@@ -360,8 +375,11 @@ def _progress_line(event: _Progress) -> str:
         return f"{head} #{event.skip.id}  {event.skip.name}  건너뜀 — {event.skip.reason}"
     one = event.spectrum
     if one.new_circuit:
+        # 문제는 **전부** 센다 — 회로를 실은 것만 세면 원래 있던 이름 판정이
+        # 새로 생긴 것처럼 읽힌다 (실측 첫 맞춰 보기: "문제 1 → 2" 가 사실 3 → 2).
         return (f"{head} #{one.id}  {one.name}  바꿈  {one.old_circuit} → "
-                f"{one.new_circuit} · 문제 {len(one.problems)} → {len(one.new_problems)}")
+                f"{one.new_circuit} · 문제 {len(one.old_problems)} → "
+                f"{len(one.new_problems)}")
     last = one.tries[-1] if one.tries else None
     why = _clip(_try_line(last)) if last is not None else "맞춰 볼 회로가 없습니다"
     return f"{head} #{one.id}  {one.name}  그대로  ({why})"
@@ -403,8 +421,7 @@ def render_refit_summary(out: EisRefitOut) -> str:
                       f"    {one.old_circuit} → {one.new_circuit}{start} · χ² "
                       f"{_e(one.old_chi_squared)} → {_e(one.new_chi_squared)} · 오차 평균 "
                       f"{_percent(one.old_misfit_mean)} → {_percent(one.new_misfit_mean)}",
-                      "    풀린 문제: " + ", ".join(
-                          dict.fromkeys(_words(p.code) for p in one.problems))]
+                      "    풀린 문제: " + ", ".join(_words(code) for code in _resolved(one))]
             lines += [f"    남은 문제: {_words(p.code)} — {p.message}"
                       for p in one.new_problems]
         lines.append("")

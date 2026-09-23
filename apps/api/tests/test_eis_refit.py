@@ -228,3 +228,57 @@ def test_a_problem_with_no_circuit_to_offer_is_counted_not_touched(client, monke
     text = client.post("/api/eis/audit/refit", params={"format": "text"}).text
     assert "권할 회로가 없는 1개는 건드리지 않습니다" in text
     assert len(fits_of(client, spectrum_id)) == 1
+
+
+def test_an_open_cell_counts_every_problem_not_only_the_one_that_offered_a_circuit(client):
+    """실측 #31 의 쌍둥이 — 막지 않는 대칭셀에 쓸데없는 막는 CPE3, 그리고 이름이
+    커패시턴스와 어긋난 두 아크.  첫 맞춰 보기는 "문제 1 → 2" 라고 적었다:
+    회로를 실은 판정 하나만 세고, 원래 있던 이름 판정 둘은 새로 생긴 것처럼
+    셌다.  사실은 3 → 2 다."""
+    frequency = S.log_sweep(1e6, 1e-2, 12)
+    created = client.post("/api/eis/spectra/upload",
+                          params={"kind": "solid", "cell_config": "sym"},
+                          files={"file": ("260831_sym_#01.mpr",
+                                          S.build_mpr(S.spectrum_columns(
+                                              frequency, S.randles(frequency))),
+                                          "application/octet-stream")}).json()
+    client.patch(f"/api/eis/spectra/{created['id']}",
+                 json={"thickness_um": 60, "area_cm2": 0.785})
+    client.post(f"/api/eis/spectra/{created['id']}/fit",
+                params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"})
+
+    text = client.post("/api/eis/audit/refit", params={"dry_run": True, "format": "text"}).text
+    assert ("바꿈  R0-p(R1,CPE1)-p(R2,CPE2)-CPE3 → R0-p(R1,CPE1)-p(R2,CPE2) · 문제 3 → 2"
+            in text)
+    assert "    풀린 문제: 안 막는 셀에 막는 소자\n" in text
+    assert text.count("    남은 문제: 이름과 커패시턴스가 어긋남 — ") == 2
+    # 막지 않는 셀은 σ 를 안 낸다 — 적을 저항이 없다.
+    assert "σ 저항" not in text
+
+
+def test_only_the_problems_that_went_away_are_called_solved():
+    """실측 B17_ACTI E C01 #2 #3: 꼬리 흉내만 풀고 전극 크기 아크는 남은 맞춤이
+    받아들여졌는데, 글은 둘 다 "풀린 문제" 에 적고 하나를 다시 "남은 문제" 에 적었다."""
+    from datetime import datetime, timezone
+
+    from app.routers.eis_refit import render_refit_summary
+    from app.schemas import AuditFindingOut, EisRefitOut, RefitSpectrumOut
+
+    def finding(code, circuits=()):
+        return AuditFindingOut(severity="problem", label="문제", code=code,
+                               message=f"{code} 의 문장", circuits=list(circuits))
+
+    tail = finding("tail_mimicked_by_arc", ["L1-R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"])
+    electrode = finding("arcs_are_electrode", ["L1-R0-CPE1"])
+    one = RefitSpectrumOut(
+        id=145, name="B17_ACTI E_C01 #2", old_fit_id=1,
+        old_circuit="R0-p(R1,CPE1)-p(R2,CPE2)", problems=[tail, electrode],
+        old_problems=[tail, electrode],
+        new_circuit="L1-R0-p(R1,CPE1)-p(R2,CPE2)-CPE3",
+        new_problems=[finding("arcs_are_electrode")])
+    text = render_refit_summary(EisRefitOut(
+        origin="refit-20260923T163007", dry_run=True,
+        generated_at=datetime.now(timezone.utc), total=1, targets=1, changed=1,
+        spectra=[one]))
+    assert "    풀린 문제: 꼬리를 흉내 낸 아크\n" in text
+    assert "    남은 문제: 전극 크기 아크를 벌크·입계로 부름 — arcs_are_electrode 의 문장" in text
