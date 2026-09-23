@@ -1,0 +1,321 @@
+{
+ "schema": "adhesion_pipeline/1",
+ "title": "점착 파이프라인 — DFT → DEM (→ COMSOL)",
+ "updated": "2026-09-24",
+ "purpose": "Ag–C 인터레이어·SE 계면의 점착일(W)을 DFT 에서 재서 DEM(JKR 접촉)으로 넘기는 흐름을 **한 곳에 누적**한다. 새 사실은 `log` 에 한 줄씩 덧붙이고, 상태가 바뀌면 해당 항목만 고친다.",
+ "⛔_이_원장이_하지_않는_것": [
+  "판정 전 물리값(W·γ)은 싣지 않는다 — 결과는 판정이 끝난 뒤 기록 파일에 따로 남기고 여기서는 경로만 건다 (인용 방지).",
+  "판정하지 않는다 — 판정은 `db/governance/decisions.json` 이 한다. 화면은 scope `adhesion.` 결정을 원장에서 실시간으로 읽는다.",
+  "COMSOL 단계는 이름으로만 둔다 — 우리 관할이 아니다 (1저자 2026-09-24)."
+ ],
+ "stages": [
+  {
+   "key": "dft",
+   "label": "DFT",
+   "title": "DFT — 점착일 W (J/m²)",
+   "scope": "ours",
+   "owner": "DFT 트랙 · 1저자 = 사용자 (이 브랜치 `claude/friendly-meitner-lldvar`)",
+   "consumes": "DEM 요청서의 계면 목록 (P1 · P2 · P3 선택)",
+   "produces": "고정기하 **W_sep** (헤드라인) · W_ad · D3 끈 값 · (요청) E(d) 곡선",
+   "state": "run",
+   "state_text": "SE|SE 대조 실행 중 (V100) · P1·P2 계면은 입력 전 — 격자 정합 규칙 봉인 대기"
+  },
+  {
+   "key": "dem",
+   "label": "DEM",
+   "title": "DEM — JKR 점착 접촉 (LIGGGHTS)",
+   "scope": "partner",
+   "owner": "DEM 트랙 (브랜치 `claude/stoic-knuth-NObVQ`)",
+   "consumes": "W (J/m²) → JKR pull-off `F = 1.5πR*·w` 의 **w = W**",
+   "produces": "G_c,eff(P) **띠** — DFT 값 둘로 돌리는 민감도 시나리오",
+   "state": "wait",
+   "state_text": "DFT 값 대기 · 계면 면적 가중(혼합)은 DEM 쪽 모델 가정"
+  },
+  {
+   "key": "comsol",
+   "label": "COMSOL",
+   "title": "COMSOL — 셀·스택 연속체",
+   "scope": "outside",
+   "owner": "관할 밖",
+   "consumes": "—",
+   "produces": "—",
+   "state": "outside",
+   "state_text": "하류 단계 — 이 화면은 추적하지 않는다"
+  }
+ ],
+ "contracts": [
+  {
+   "from": "DFT",
+   "to": "DEM",
+   "what": "점착일 W → JKR 의 w",
+   "unit": "J/m²",
+   "rule": "w = **W** (γ 아님 — 같은 면이면 W = 2γ). 헤드라인은 **고정기하 W_sep**.",
+   "state": "합의",
+   "since": "2026-09-23",
+   "record": "kb/projects/wad_dem_reply_draft_2026_09_23.md"
+  },
+  {
+   "from": "DFT",
+   "to": "DEM",
+   "what": "값 두 개 → G_c 띠",
+   "unit": "J/m²",
+   "rule": "작은 주기 모델의 **DFT 값**과 전체 계면의 **UMA+D3 예측**을 따로 넘긴다. 그 띠는 **민감도 시나리오**이지 신뢰구간·물리적 상하한이 아니다 (A′).",
+   "state": "결정",
+   "since": "2026-09-23",
+   "record": "db/governance/decisions.json"
+  },
+  {
+   "from": "DFT",
+   "to": "DEM",
+   "what": "E(d) 분리 곡선 → 최대 결합력·임계 분리",
+   "unit": "J/m² · Å",
+   "rule": "DEM 요청서의 선택 항목 — 계산 계획 미정.",
+   "state": "요청됨",
+   "since": "2026-09-23",
+   "record": "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md"
+  }
+ ],
+ "systems": [
+  {
+   "id": "sese",
+   "title": "SE|SE 대조 — comp1 (001) 대칭 슬랩 두 장",
+   "role": "**경보 대조** (합격선 아님 · 경보 v2) — 벽개일 W_cleave = γ(S 바깥) + γ(Li 바깥), μ 상쇄",
+   "cell": "4층 · S 바깥 110 / Li 바깥 98 원자 · 진공 15 Å · 슬랩 k 3×3×1 · 벌크 52 원자 k 3×3×3",
+   "machine": "V100",
+   "state": "run",
+   "state_text": "실행 중 — SCF 3/5 끝 · PBE 이완 진행 · 판정 보류",
+   "records": [
+    "db/inputs/wad_sese_control_4L_2026_09_24/jobs.json",
+    "db/structures/wad_se_slabs_4L_2026_09_24/manifest.json",
+    "tools/wad/se_sym_slab.py"
+   ]
+  },
+  {
+   "id": "P1a",
+   "title": "LPSCl | Ag(111)",
+   "role": "DEM P1 · SE 종결 두 가지 (S 바깥 · Li·PS₄ 바깥 — 대칭 슬랩 결정)",
+   "cell": "후보: SE 1×2 + Ag(111) 직사각 (Ag 층수 미정 — 원자 수는 가정값)",
+   "machine": "—",
+   "state": "todo",
+   "state_text": "입력 전 — 격자 정합 규칙(결정 필요 7) 봉인 뒤",
+   "records": [
+    "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md"
+   ]
+  },
+  {
+   "id": "P1b",
+   "title": "Ag(111) | graphite(0001)",
+   "role": "DEM P1 — 인터레이어 안쪽 계면",
+   "cell": "미정",
+   "machine": "—",
+   "state": "todo",
+   "state_text": "입력 전",
+   "records": [
+    "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md"
+   ]
+  },
+  {
+   "id": "P2",
+   "title": "LPSCl | graphite(0001)",
+   "role": "P1 과 **같은 우선순위** (결정 p2 · DEM 요청 수용) · 같은 SE 슬랩 · 흑연 먼저",
+   "cell": "후보: SE 1×3 + 흑연 직사각 (흑연 층수 미정 — 원자 수는 가정값)",
+   "machine": "—",
+   "state": "todo",
+   "state_text": "입력 전 — 격자 정합 규칙 봉인 뒤",
+   "records": [
+    "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md"
+   ]
+  },
+  {
+   "id": "P3",
+   "title": "LiAg 합금 · 결함 흑연 (선택)",
+   "role": "DEM 선택 항목",
+   "cell": "—",
+   "machine": "—",
+   "state": "out",
+   "state_text": "범위 밖 — 한다면 LiAg | LPSCl 먼저",
+   "records": []
+  }
+ ],
+ "runs": [
+  {
+   "id": "sese_4L_v100_2026_09_24",
+   "system": "sese",
+   "machine": "V100 (Tesla V100-PCIE-32GB) · QE 7.4.1 GPU 재빌드 (NVHPC 24.11 · cc70)",
+   "check": "빌드 검증 통과 — 09-13 같은 기계의 static_ab/a SCF 에너지를 인쇄 자릿수까지 재현",
+   "started": "2026-09-24 01:44",
+   "jobs": [
+    {
+     "dir": "01_bulk_scf",
+     "state": "done",
+     "wall_s": 104,
+     "peak_vram_mib": 10350
+    },
+    {
+     "dir": "02_s_outer_scf",
+     "state": "done",
+     "wall_s": 693,
+     "peak_vram_mib": 32038
+    },
+    {
+     "dir": "02_li_outer_scf",
+     "state": "done",
+     "wall_s": 556,
+     "peak_vram_mib": 29724
+    },
+    {
+     "dir": "03_s_outer_relax_pbe",
+     "state": "run",
+     "wall_s": null,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "03_li_outer_relax_pbe",
+     "state": "todo",
+     "wall_s": null,
+     "peak_vram_mib": null
+    }
+   ],
+   "vram_total_mib": 32768,
+   "verdict": "판정 보류 — 경보 v2 는 **이완 PBE W_cleave** 에만 건다 (이완 미완)",
+   "values_policy": "무이완 중간값은 `kb/open_items.md` ⏭-NOW-w 에만 ‘중간 · 인용 금지’ 로 적었다 — 이 원장·화면에는 싣지 않는다",
+   "records": [
+    "kb/platforms/v100_uma_setup_2026_09_14.md",
+    "tools/wad/run_sese_gpu.sh"
+   ],
+   "vram_note": "VRAM 은 nvidia-smi 의 MiB 그대로 적는다 (GB 로 바꾸면 1000·1024 가 섞인다 — 2026-09-24 실측 혼동)"
+  }
+ ],
+ "reviews": [
+  {
+   "who": "내부 리뷰 (Fable)",
+   "target": "계획 v1",
+   "verdict": "NO-GO",
+   "one_line": "셀·기준 프로토콜·옛 숫자 재사용·검증 짝 — P0 넷",
+   "record": "kb/reviews/internal_review_wad_agc_fable_2026_09_23.md"
+  },
+  {
+   "who": "Codex BV",
+   "target": "계획 v2",
+   "verdict": "NO-GO",
+   "one_line": "구조 검증부터 — PS₄ 보존 슬랩이 정의되지 않았다",
+   "record": "kb/reviews/codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md"
+  },
+  {
+   "who": "Codex BW",
+   "target": "클러스터 없는 검증",
+   "verdict": "조건부 GO (A′)",
+   "one_line": "전체 계면 절대 W 로 넘기기는 NO-GO · 작은 주기 모델 파일럿은 조건부 GO · 4층 식 계수 4",
+   "record": "kb/reviews/codex_BW_reply_wad_validation_without_cluster_2026_09_23.md"
+  }
+ ],
+ "hazards": [
+  {
+   "id": "HZ-wad-0p8-misattributed",
+   "level": "BLOCKED",
+   "text": "황화물 점착의 문헌 귀속값 — 원전을 확인하니 다른 값이다. 문헌값으로 인용하지 않는다.",
+   "record": "db/properties/citation_hazards.json"
+  },
+  {
+   "id": "adhesion-aJ-errata",
+   "level": "정오표",
+   "text": "옛 SE|NCM `adhesion.json` 은 AFM 실험값(aJ, 에너지)을 J/m² 로 읽은 자리가 있었다 — **J/m² 실험 기준값은 repo 에 없다**.",
+   "record": "db/properties/adhesion.json"
+  },
+  {
+   "id": "mlip-wad-absolute-ban",
+   "level": "금지",
+   "text": "MLIP 절대 W_ad 는 인용하지 않는다 — 같은 프로토콜의 순위·비만 (A′ 예외는 탐색·DEM 민감도 시나리오 용도로만).",
+   "record": "db/governance/decisions.json"
+  },
+  {
+   "id": "old-numbers-no-reuse",
+   "level": "금지",
+   "text": "옛 SE|NCM 캠페인 숫자를 이 캠페인의 기준값으로 재사용하지 않는다 (계획 §1 ⚠3).",
+   "record": "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md"
+  }
+ ],
+ "open": [
+  {
+   "text": "격자 정합 규칙 (P1·P2 공통 · 결과 전 봉인) — 어느 쪽을 변형하나 · 변형률 보고 형식",
+   "state": "결정 필요"
+  },
+  {
+   "text": "A′ 파일럿 사전등록 — 작은 주기 모델 표본 · 운영 기준 · 분리 참조 규칙",
+   "state": "대기"
+  },
+  {
+   "text": "D3 3체(ATM) 후처리 — 같은 기하에서 따로 보고",
+   "state": "미계산"
+  },
+  {
+   "text": "DEM 회신 2‴ — 1저자 발송 승인 · 발송 확인 대기",
+   "state": "대기"
+  }
+ ],
+ "log": [
+  {
+   "date": "2026-09-23",
+   "stage": "dem",
+   "text": "DEM 트랙이 Ag–C 인터레이어 점착을 요청 — P1 LPSCl↔Ag · Ag↔흑연, P2 LPSCl↔탄소, P3 선택."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "review",
+   "text": "계획 v1 내부 리뷰 **NO-GO** → v2 Codex BV **NO-GO** (구조 검증부터) → 계획 v3."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "decision",
+   "text": "SE 종결 = **대칭 슬랩 두 장** · 분산 헤드라인 = D3(BJ) 2체, ATM 은 따로 — 1저자 비준."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "dft",
+   "text": "대칭 슬랩 빌더·검증기 (`tools/wad/se_sym_slab.py`) — comp1 에는 −4 축이 없고 양면은 C2x 로 같다."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "dem",
+   "text": "DEM 회신 — JKR 의 **w = W** · 헤드라인 고정기하 W_sep · G_c 는 띠. P2(LPSCl|흑연)를 P1 과 같은 우선순위로 수용."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "ops",
+   "text": "6층 SE|SE 가 CPU 추정으로 gabia 48 GB 를 넘었다 — KISTI 는 09-15 에 종료돼 이전 제안은 반려."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "review",
+   "text": "Codex BW — 전체 계면 절대 W 로 넘기기 **NO-GO**, 작은 주기 모델 파일럿 **조건부 GO (A′)**, 4층 식 계수 4."
+  },
+  {
+   "date": "2026-09-23",
+   "stage": "decision",
+   "text": "**A′ 채택** · SE|SE 경보 v2 (계수 일반형) · gabia GPU 공존 예외는 **실행 전 철회** · DEM 회신 2‴ 발송 승인."
+  },
+  {
+   "date": "2026-09-24",
+   "stage": "dft",
+   "text": "4층 SE|SE 입력 — 110/98 원자 · 진공 15 Å · 벌크 k 를 슬랩 면내 밀도에 맞춤 · 러너에 PP **내용** 해시 게이트."
+  },
+  {
+   "date": "2026-09-24",
+   "stage": "ops",
+   "text": "V100 컨테이너가 다시 만들어져 QE-GPU 가 사라졌다 → kgy 에서 NVHPC 를 옮겨 재빌드 · 09-13 기준 에너지 재현으로 빌드 검증."
+  },
+  {
+   "date": "2026-09-24",
+   "stage": "dft",
+   "text": "V100 실행 — SCF 3/5 완료 (피크 VRAM 32,038 / 32,768 MiB = 98 %) · PBE 이완 진행 · 판정 보류."
+  },
+  {
+   "date": "2026-09-24",
+   "stage": "webapp",
+   "text": "`/adhesion` 섹션 신설 — 이 원장을 읽는다. 앞으로 사실은 `log` 에 덧붙인다."
+  }
+ ],
+ "related_decisions": [
+  "D-2026-09-23-gabia-gpu-exception-sese"
+ ]
+}

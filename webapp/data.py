@@ -5291,6 +5291,9 @@ def dashboard_highlights() -> list:
 
     hi += _closure_and_prereg_cards()
     hi += _nd_anneal_card()
+    # 2026-09-24 — 원장에서 **파생**하는 카드 (기록이 없거나 조건이 풀리면 카드도 사라진다)
+    hi += _adhesion_card() + _b2o3_eventrate_card() + _nd_icohp_c1_card()
+    hi += _cascade_closed_card() + _seminar_0923_card()
 
     # ── 최신순 정렬 (1저자 요청 2026-08-20) ────────────────────────────────
     #   대시보드는 훑는 화면이라 **새로 안 것이 위**에 있어야 한다. 날짜가 없는 카드는
@@ -5318,6 +5321,7 @@ def dashboard_highlights() -> list:
 #:   낱말로 고를 뿐이다. 틀리면 카드 dict 에 `"axis": "<축>"` 을 직접 박으면
 #:   그게 이긴다(setdefault).
 HIGHLIGHT_AXES = [
+    ("adhesion", "점착 · 계면", "🔗", r"점착|W_ad|W_sep|adhesion|SE\|SE"),
     ("closure", "마감 · 계약", "🔒",
      r"마감|닫힘\s*조건|보고량|사전등록|재개\s*조건|봉인|estimand|prereg"),
     ("screening", "스크리닝 · 순위", "🎯",
@@ -5592,6 +5596,117 @@ def _closure_and_prereg_cards() -> list:
                  + "출처: db/properties/modelc_box331_closed_2026_09_15.json · "
                    "레지스트리 `modelc_box331_cell_conditioned` (그때 provisional · citable false)"})
     return out
+
+
+def _adhesion_card() -> list:
+    """점착 파이프라인 원장의 **최신 세 줄** (2026-09-24) — `/adhesion` 으로 가는 입구.
+
+    ⛔ 못 하는 것: 판정하지 않는다 · 원장에 없는 줄을 만들지 않는다 — 원장이 없거나
+      로그가 비면 카드를 만들지 않는다. 판정 전 물리값은 원장 규약상 애초에 없다.
+    """
+    p = adhesion_pipeline()
+    if not p.get("ok") or not p.get("log"):
+        return []
+    top = p["log"][:3]
+    run = (p.get("runs") or [None])[0] or {}
+    prog = (f"SE|SE 대조 {run.get('n_done')}/{run.get('n_jobs')} 잡"
+            if run.get("n_jobs") else "")
+    return [{
+        "key": "adhesion_pipeline",
+        "d": str(top[0].get("date") or "") or None,
+        "t": "점착 파이프라인 (DFT → DEM) — **원장 최신 줄**",
+        "v": "\n".join(f"· {e.get('date')} — {e.get('text')}" for e in top),
+        "n": " · ".join(x for x in (f"원장 {len(p['log'])}줄", prog,
+                                    "판정 전 물리값은 싣지 않는다", "`/adhesion`") if x),
+    }]
+
+
+def _b2o3_eventrate_card() -> list:
+    """b2o3 골격 자리 이탈 사건빈도 — **결과 보기 전에 봉인된** 15런 (2026-09-23).
+
+    ⛔ 못 하는 것: 사건 수를 세지 않는다(결과는 census 기록의 몫) · 카드나 결정이 없거나
+      결정이 active 가 아니면 카드를 만들지 않는다.
+    """
+    pre = _load_json(DB / "properties" / "b2o3_framework_event_rate_prereg_2026_09_23.json")
+    try:
+        import canonical as _C
+        dec = (_C.decisions() or {}).get("D-2026-09-23-b2o3-framework-event-rate")
+        live = dec is not None and _C.decision_state(dec) == "active"
+    except Exception:                                            # noqa: BLE001
+        live = False
+    if not pre or not live:
+        return []
+    return [{
+        "key": "b2o3_eventrate",
+        "d": "2026-09-23",
+        "t": "⭐ b2o3 골격 이탈 **사건빈도** — 15런을 결과 보기 전에 봉인",
+        "v": "600 / 650 / 700 K × 시드 2–6 × 400 ps · turbo — 세는 양이라 정의가 선다 "
+             "(전도도 축은 Li D 가 정의되지 않아 닫혔다)",
+        "n": "⛔ **16번째 런 없음** — 결과가 애매해도 시드·온도를 더하지 않는다 (추가는 새 카드). "
+             "b2o3 전도도 인용 불가는 어느 결과든 그대로.",
+    }]
+
+
+def _nd_icohp_c1_card() -> list:
+    """Nd ICOHP 원인 판정 **C1** (2026-09-23) — 기록의 판정 문자열을 옮긴다.
+
+    ⛔ 못 하는 것: 판정하지 않는다 · 정본 물성을 만들지 않는다 (기록이 `citable: false`) ·
+      파일이 없으면 카드를 만들지 않는다.
+    """
+    r = _load_json(DB / "properties" / "nd_icohp_frozen4f_result_2026_09_23.json")
+    if not r or not r.get("★_판정"):
+        return []
+    lim = r.get("한계_판정문에_붙는다") or []
+    return [{
+        "key": "nd_icohp_c1",
+        "d": str(r.get("date") or "") or None,
+        "t": "Nd ICOHP 원인 판정 — **C1: PP 가 원인** (6월 Nd–S 값은 영구 비인용)",
+        "v": str(r.get("★_판정")),
+        "n": "⚠ 인용 불가 — " + str(r.get("why_not_citable") or "원인 규명 측정")
+             + (f" · 한계: {lim[0]}" if lim else ""),
+    }]
+
+
+def _cascade_closed_card() -> list:
+    """cascade 화면이 **닫혀 있다**는 경고 — manifest 검사 결과에서 파생 (고쳐지면 사라진다).
+
+    ⛔ 못 하는 것: 어떻게 고칠지 정하지 않는다 — 재생성 순서와 퍼널 통과 목록 변화는
+      ESW 트랙 1저자 결정이다. manifest 가 멀쩡하면 카드를 만들지 않는다.
+    """
+    m = load_cascade_manifest()
+    if m.get("ok"):
+        return []
+    stale = [str(a) for a, _ in (m.get("_stale") or [])]
+    probs = m.get("_problems") or []
+    what = (f"해시 불일치 {len(stale)}건: " + " · ".join(f"`{x.rsplit('/', 1)[-1]}`" for x in stale)
+            if stale else f"manifest 문제 {len(probs)}건")
+    return [{
+        "key": "cascade_fail_closed",
+        # 2026-09-22 ESW 가장자리 수정이 해시 박힌 파일 넷을 고친 날 (kb/open_items.md ⏭-NOW-w)
+        "d": "2026-09-22",
+        "t": "⚠ cascade 화면이 **fail-closed** — 헤드라인 타일·감사 그림이 꺼져 있다",
+        "v": what,
+        "n": "원장 해시만 다시 박지 않는다 — 풀 입력 → 퍼널 → 감사 그림 → manifest 순서로 다시 만든다. "
+             "퍼널 통과 목록이 바뀔 수 있다 (ESW 트랙 · 1저자 결정).",
+    }]
+
+
+def _seminar_0923_card() -> list:
+    """세미나 3편 (Li₂S · Li–S ASSB · 2026-09-23) — litdb 요약본이 있을 때만."""
+    slugs = ("zhang2026_anode_free_asslsb_li2s_pi3_na_current_collector",
+             "liu2026_li4sns4_mediator_low_barrier_li2s",
+             "wang2025_miec_tis2_lps_three_phase_interface_lis_assb")
+    if not all((ROOT / "litdb" / "papers" / f"{s}.md").exists() for s in slugs):
+        return []
+    return [{
+        "key": "seminar_0923_li2s",
+        "d": "2026-09-23",
+        "t": "세미나 3편 (Li₂S · Li–S ASSB) — **가져다 쓸 숫자는 없다**",
+        "v": "Wang: 공개 계산 구조에 PS₄ 가 거의 없다 (NMR 과 모순) → 그 갭·ICOHP 는 비교 금지 · "
+             "Liu: '추출 장벽' 은 계산이 아니다 · Zhang: 800 K 단일 궤적 AIMD",
+        "n": "살아남은 한 줄 — 양이온–S 가 센 S 자리에서 Li–S 가 약하다: 우리 comp1 사이트별 ICOHP 에 "
+             "이미 있다 (`litdb/comparison_vs_ours.md` §J-44~46)",
+    }]
 
 
 def _nd_anneal_card() -> list:
@@ -7660,4 +7775,79 @@ def li2s_closure_card() -> dict:
         "reopen": reopen, "reopen_only": only, "reopen_warn": warn,
         "keeps": d.get("5_⚠_이_마감이_취소하지_않는_것") or [],
         "record": f"db/properties/{LI2S_CLOSED_JSON}",
+    }
+
+
+# ─────────────────────────────────────────────────────────────
+# 점착 파이프라인 (/adhesion) — 2026-09-24
+#
+# 왜 별도 화면인가: W_ad 캠페인의 기록이 계획·DEM 회신·결정·입력·런북·리뷰로 흩어져 있다.
+#   "DFT → DEM 인계가 어디까지 왔나" 를 한 곳에 **누적**하려고 원장 하나를 둔다 —
+#   `db/pipelines/adhesion_pipeline.json`. 새 사실은 원장의 `log` 에 한 줄씩 덧붙인다.
+#
+# ⛔ 이 함수가 **못 하는 것**
+#   · 판정하지 않는다. 판정은 decisions.json 이 하고, 화면은 scope `adhesion.` 을 따로 읽는다.
+#   · 판정 전 물리값(W·γ)을 싣지 않는다 — 원장 규약이다. 원장에 값이 들어오면 막지는 못한다
+#     (그건 원장을 고치는 사람의 몫 · 시험이 원장 규약 문장을 확인한다).
+#   · 원장이 없거나 깨지면 **빈 화면이 아니라 경고**를 돌려준다 (`ok=False`).
+#   · 원장이 가리키는 기록 경로가 죽었으면 `dead_refs` 로 **드러낸다** (조용히 빼지 않는다).
+# ─────────────────────────────────────────────────────────────
+ADHESION_LEDGER = DB / "pipelines" / "adhesion_pipeline.json"
+
+
+def _repo_path_ok(rel) -> bool:
+    """repo 안의 실재 경로인가 (밖으로 나가는 경로는 거짓)."""
+    try:
+        p = (ROOT / str(rel)).resolve()
+        return p.is_relative_to(ROOT.resolve()) and p.exists()
+    except Exception:
+        return False
+
+
+def _adhesion_refs(o):
+    """원장 안의 `record` · `records` 경로를 전부 모은다."""
+    if isinstance(o, dict):
+        for k, v in o.items():
+            if k == "record" and isinstance(v, str) and v:
+                yield v
+            elif k == "records" and isinstance(v, list):
+                yield from (x for x in v if isinstance(x, str) and x)
+            else:
+                yield from _adhesion_refs(v)
+    elif isinstance(o, list):
+        for v in o:
+            yield from _adhesion_refs(v)
+
+
+def adhesion_pipeline() -> dict:
+    """/adhesion 화면이 읽는 전부 — 원장 하나에서만 온다."""
+    rel = ADHESION_LEDGER.relative_to(ROOT).as_posix()
+    d = _load_json(ADHESION_LEDGER)
+    if not isinstance(d, dict):
+        return {"ok": False, "ledger": rel,
+                "why": "원장을 못 읽었다 (없음 또는 손상) — 화면이 비어 보이는 것과 기록이 없는 것은 다르다"}
+    # 로그는 **최신이 위** — 같은 날짜 안에서는 원장에 나중에 적힌 것이 위로 온다.
+    log = [e for e in (d.get("log") or []) if isinstance(e, dict)]
+    log = [e for _, e in sorted(enumerate(log), key=lambda t: (str(t[1].get("date") or ""), t[0]),
+                               reverse=True)]
+    runs = []
+    for r in d.get("runs") or []:
+        jobs = [j for j in (r.get("jobs") or []) if isinstance(j, dict)]
+        total = r.get("vram_total_mib")
+        for j in jobs:
+            pk = j.get("peak_vram_mib")
+            # ⛔ 없는 값을 0 으로 그리지 않는다 — 비율도 둘 다 있을 때만.
+            j["vram_frac"] = (pk / total) if isinstance(pk, (int, float)) and isinstance(total, (int, float)) and total else None
+        runs.append({**r, "jobs": jobs,
+                     "n_done": sum(1 for j in jobs if j.get("state") == "done"), "n_jobs": len(jobs)})
+    return {
+        "ok": True, "ledger": rel,
+        "title": d.get("title"), "updated": d.get("updated"), "purpose": d.get("purpose"),
+        "donts": d.get("⛔_이_원장이_하지_않는_것") or [],
+        "stages": d.get("stages") or [], "contracts": d.get("contracts") or [],
+        "systems": d.get("systems") or [], "runs": runs,
+        "reviews": d.get("reviews") or [], "hazards": d.get("hazards") or [],
+        "open": d.get("open") or [], "log": log,
+        "related_decisions": d.get("related_decisions") or [],
+        "dead_refs": sorted({x for x in _adhesion_refs(d) if not _repo_path_ok(x)}),
     }

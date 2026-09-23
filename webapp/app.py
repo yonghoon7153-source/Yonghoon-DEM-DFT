@@ -1448,6 +1448,25 @@ def li2s_pipeline_page():
                            nb=D.li2s_neb_branch())
 
 
+@app.route("/adhesion")
+def adhesion_pipeline_page():
+    """점착 파이프라인 — DFT → DEM (→ COMSOL) 을 **원장 하나로 누적**한다.
+
+    왜 필요한가: W_ad 기록이 계획 · DEM 회신 · 결정 · 입력 · 런북 · 리뷰로 흩어져 있다.
+      DEM 이 무엇을 기다리고 DFT 가 어디까지 왔는지를 한 화면에서 못 보면, 사람은 가장
+      최근 숫자만 옮겨 간다. 원장 = `db/pipelines/adhesion_pipeline.json` (새 사실은 `log` 에).
+
+    ⛔ 이 페이지가 **하지 않는 것**
+      · 판정하지 않는다 — 결정은 decisions.json 에서 scope `adhesion.` 으로 읽는다.
+      · 판정 전 물리값(W·γ)을 싣지 않는다 (원장 규약). 운영 수치(벽시계 · VRAM)만 싣는다.
+      · COMSOL 은 이름만 둔다 — 관할 밖 (1저자 2026-09-24).
+    """
+    import decisions_view as V
+    p = D.adhesion_pipeline()
+    dec = V.decisions_by_scope("adhesion.", extra_ids=p.get("related_decisions") or ())
+    return render_template("adhesion.html", active="adhesion", p=p, dec=dec)
+
+
 @app.route("/benchmarks")
 def benchmarks():
     """외부 재현 표적 + 덱 정정 원장. 우리 값과 **섞이지 않게** 별도 페이지로 분리한다."""
@@ -2048,7 +2067,9 @@ def _handoffs():
 #: journal 이 비어 있는 구간에 무엇이 있었는지 — **여기서 지어내지 않는다.**
 #: 커밋 수는 조사 실측(`git log --since=2026-08-26 --until=2026-09-08 --oneline | wc -l`)
 #: 이고, 다른 구간이 생기면 그 구간은 "기록 없음" 만 찍힌다(수를 만들지 않는다).
-JOURNAL_GAPS = {("2026-08-26", "2026-09-07"): "커밋 806개"}
+JOURNAL_GAPS = {("2026-08-26", "2026-09-07"): "커밋 806개",
+                # 2026-09-24 실측: git log --since=2026-09-15 --until=2026-09-22T23:59:59 --oneline | wc -l
+                ("2026-09-15", "2026-09-22"): "커밋 340개 — 그 주의 흐름은 kb/open_items.md ⏭-NOW-p~w"}
 
 
 @app.route("/log")

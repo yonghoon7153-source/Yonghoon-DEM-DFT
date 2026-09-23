@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block title %}점착 파이프라인 — DFT → DEM{% endblock %}
+{% block content %}
+{# 상태 → (배지 클래스, 글자) — 원장의 state 어휘를 한 곳에서 번역한다 #}
+{% set SB = {"done": ("ok", "끝"), "run": ("b-prov", "진행 중"), "wait": ("b-todo", "대기"),
+             "todo": ("b-todo", "입력 전"), "out": ("err", "범위 밖"), "outside": ("b-todo", "관할 밖")} %}
+{% set SC = {"done": "#16a34a", "run": "#d97706", "wait": "#64748b", "todo": "#64748b",
+             "out": "#94a3b8", "outside": "#94a3b8"} %}
+{% macro reflink(path) -%}
+  {%- if path and path.startswith('kb/') and path.endswith('.md') -%}
+    <a class="mono" href="/kb?path={{ path|urlencode }}">{{ path }}</a>
+  {%- elif path and path.endswith('decisions.json') -%}
+    <a class="mono" href="/governance">{{ path }}</a>
+  {%- elif path -%}
+    <span class="mono">{{ path }}</span>
+  {%- else -%}—{%- endif -%}
+{%- endmacro %}
+
+<div class="page-header">
+  <div><h1>🔗 {{ (p.title or "점착 파이프라인 — DFT → DEM (→ COMSOL)")|mdlite }}</h1>
+    <div class="sub">W_ad 캠페인을 <b>원장 하나</b>에 누적한다 — <span class="mono">{{ p.ledger }}</span>{% if p.updated %} · 갱신 {{ p.updated }}{% endif %}.
+      이 화면은 그 원장과 결정 원장을 <b>읽기만</b> 한다. 새 사실은 원장의 <span class="mono">log</span> 에 한 줄씩 덧붙인다.</div></div>
+</div>
+
+{% if not p.ok %}
+<div class="callout cal-danger"><b>⛔ 원장을 못 읽었다</b> — {{ p.why }} (<span class="mono">{{ p.ledger }}</span>)</div>
+{% else %}
+
+{% if p.dead_refs %}
+<div class="callout cal-danger"><b>⛔ 원장이 가리키는 기록이 repo 에 없다</b> — 링크가 죽은 것과 기록이 없는 것은 다르다:
+  <span class="mono">{{ p.dead_refs|join(', ') }}</span></div>
+{% endif %}
+
+<div class="callout cal-warn">
+  <b>⚠ 이 화면이 하지 않는 것</b>
+  <ul style="margin:6px 0 0;padding-left:20px;font-size:.82rem">
+    {% for x in p.donts %}<li style="margin-top:3px">{{ x|mdlite }}</li>{% endfor %}
+  </ul>
+</div>
+{% if p.purpose %}<p class="muted" style="font-size:.84rem;margin-top:10px">{{ p.purpose|mdlite }}</p>{% endif %}
+
+<h2 style="margin-top:18px">단계</h2>
+<div class="grid grid-3">
+{% for st in p.stages %}{% set b = SB.get(st.state, ("b-todo", st.state)) %}
+  <div class="card" style="padding:14px 16px;border-left:4px solid {{ SC.get(st.state, '#64748b') }}">
+    <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline">
+      <b>{{ st.title|mdlite }}</b><span class="badge {{ b[0] }}">{{ b[1] }}</span>
+    </div>
+    <div class="muted" style="font-size:.76rem;margin-top:4px">{{ st.owner|mdlite }}</div>
+    {% if st.scope != 'outside' %}
+    <div style="font-size:.8rem;margin-top:8px"><b>받는 것</b> — {{ st.consumes|mdlite }}</div>
+    <div style="font-size:.8rem;margin-top:4px"><b>내는 것</b> — {{ st.produces|mdlite }}</div>
+    {% endif %}
+    <div style="font-size:.8rem;margin-top:8px">{{ st.state_text|mdlite }}</div>
+  </div>
+{% endfor %}
+</div>
+
+<h2 style="margin-top:22px">DFT → DEM 인계 규약</h2>
+<div class="tbl-scroll"><table class="tbl">
+  <thead><tr><th>무엇</th><th>단위</th><th>규칙</th><th>상태</th><th>근거</th></tr></thead>
+  <tbody>
+  {% for c in p.contracts %}
+    <tr><td><b>{{ c['from'] }} → {{ c.to }}</b><br>{{ c.what|mdlite }}</td>
+        <td class="mono">{{ c.unit }}</td>
+        <td>{{ c.rule|mdlite }}</td>
+        <td><span class="badge {{ 'ok' if c.state in ('합의', '결정') else 'b-todo' }}">{{ c.state }}</span>
+            <div class="muted mono" style="font-size:.7rem">{{ c.since }}</div></td>
+        <td>{{ reflink(c.record) }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+
+<h2 style="margin-top:22px">계 (계면)</h2>
+<div class="tbl-scroll"><table class="tbl">
+  <thead><tr><th>계</th><th>역할</th><th>셀</th><th>기계</th><th>상태</th><th>기록</th></tr></thead>
+  <tbody>
+  {% for s in p.systems %}{% set b = SB.get(s.state, ("b-todo", s.state)) %}
+    <tr><td><b>{{ s.title|mdlite }}</b><div class="muted mono" style="font-size:.7rem">{{ s.id }}</div></td>
+        <td>{{ s.role|mdlite }}</td>
+        <td style="font-size:.8rem">{{ s.cell|mdlite }}</td>
+        <td>{{ s.machine|mdlite }}</td>
+        <td><span class="badge {{ b[0] }}">{{ b[1] }}</span><div style="font-size:.76rem;margin-top:3px">{{ s.state_text|mdlite }}</div></td>
+        <td style="font-size:.74rem">{% for r in s.records %}<div>{{ reflink(r) }}</div>{% else %}—{% endfor %}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+
+{% for r in p.runs %}
+<h2 style="margin-top:22px">실행 — <span class="mono" style="font-size:.85em">{{ r.id }}</span></h2>
+<div class="card" style="padding:14px 16px">
+  <div style="font-size:.82rem"><b>기계</b> — {{ r.machine|mdlite }} · <b>시작</b> <span class="mono">{{ r.started }}</span>
+    · <b>진행</b> {{ r.n_done }}/{{ r.n_jobs }} 잡</div>
+  {% if r.check %}<div class="muted" style="font-size:.78rem;margin-top:4px">✔ {{ r.check|mdlite }}</div>{% endif %}
+  <div class="tbl-scroll" style="margin-top:10px"><table class="tbl">
+    <thead><tr><th>잡</th><th>상태</th><th>벽시계</th><th>피크 VRAM (GPU 합계 · nvidia-smi MiB)</th></tr></thead>
+    <tbody>
+    {% for j in r.jobs %}{% set b = SB.get(j.state, ("b-todo", j.state)) %}
+      <tr><td class="mono">{{ j.dir }}</td>
+          <td><span class="badge {{ b[0] }}">{{ b[1] }}</span></td>
+          <td class="mono">{{ '%d s'|format(j.wall_s) if j.wall_s is number else '—' }}</td>
+          <td class="mono">{% if j.peak_vram_mib is number %}{{ '{:,}'.format(j.peak_vram_mib) }} MiB{% if j.vram_frac is number %} ({{ '%.0f'|format(100 * j.vram_frac) }} %){% endif %}{% else %}—{% endif %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  <div class="callout cal-info" style="margin-top:10px"><b>판정</b> — {{ r.verdict|mdlite }}</div>
+  {% if r.values_policy %}<div class="muted" style="font-size:.76rem;margin-top:6px">⚠ {{ r.values_policy|mdlite }}</div>{% endif %}
+  <div style="font-size:.74rem;margin-top:6px">{% for x in r.records %}{{ reflink(x) }}{% if not loop.last %} · {% endif %}{% endfor %}</div>
+</div>
+{% endfor %}
+
+<h2 style="margin-top:22px">결정 <span class="muted" style="font-size:.7em">— decisions.json 에서 실시간 (scope <span class="mono">adhesion.</span>)</span></h2>
+{% if dec.live %}
+<div class="tbl-scroll"><table class="tbl">
+  <thead><tr><th>날짜</th><th>결정</th><th>상태</th></tr></thead>
+  <tbody>
+  {% for d in dec.live %}
+    <tr><td class="mono" style="white-space:nowrap">{{ d.date }}</td>
+        <td>{{ d.title|mdlite }}<div class="muted mono" style="font-size:.7rem">{{ d.id }}</div></td>
+        <td><span class="badge ok">{{ d.state }}</span></td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% else %}
+<div class="callout cal-warn">살아 있는 결정을 못 찾았다 — scope <span class="mono">adhesion.</span> 로 등록된 결정이 없거나 원장을 못 읽었다.</div>
+{% endif %}
+{% if dec.folded %}
+<details style="margin-top:8px"><summary class="muted" style="font-size:.82rem">접힌 결정 {{ dec.folded|length }}건 (대체 · 철회 · 반려) — 이력으로 남긴다</summary>
+  <ul style="font-size:.8rem;margin:6px 0 0;padding-left:20px">
+  {% for d in dec.folded %}<li style="margin-top:4px"><span class="badge {{ 'err' if d.state in ('retracted', 'rejected') else 'b-stale' }}">{{ d.state }}</span>
+      {{ d.title|mdlite }} <span class="muted mono" style="font-size:.7rem">{{ d.id }}</span></li>{% endfor %}
+  </ul>
+</details>
+{% endif %}
+
+<div class="grid grid-2" style="margin-top:22px">
+  <div>
+    <h2>리뷰</h2>
+    <ul style="font-size:.82rem;padding-left:20px">
+    {% for v in p.reviews %}<li style="margin-top:6px"><b>{{ v.who|mdlite }}</b> · {{ v.target|mdlite }} —
+      <span class="badge {{ 'err' if v.verdict == 'NO-GO' else 'b-prov' }}">{{ v.verdict }}</span>
+      <div>{{ v.one_line|mdlite }}</div><div style="font-size:.72rem">{{ reflink(v.record) }}</div></li>{% endfor %}
+    </ul>
+  </div>
+  <div>
+    <h2>인용 위험 · 금지</h2>
+    <ul style="font-size:.82rem;padding-left:20px">
+    {% for h in p.hazards %}<li style="margin-top:6px"><span class="badge err">{{ h.level }}</span> <span class="mono" style="font-size:.72rem">{{ h.id }}</span>
+      <div>{{ h.text|mdlite }}</div><div style="font-size:.72rem">{{ reflink(h.record) }}</div></li>{% endfor %}
+    </ul>
+  </div>
+</div>
+
+<h2 style="margin-top:22px">열린 것</h2>
+<ul style="font-size:.84rem;padding-left:20px">
+  {% for o in p.open %}<li style="margin-top:4px"><span class="badge b-todo">{{ o.state }}</span> {{ o.text|mdlite }}</li>{% endfor %}
+</ul>
+
+<h2 style="margin-top:22px">누적 로그 <span class="muted" style="font-size:.7em">— 최신이 위 · {{ p.log|length }}줄</span></h2>
+<div class="tbl-scroll"><table class="tbl">
+  <tbody>
+  {% for e in p.log %}
+    <tr><td class="mono" style="white-space:nowrap;width:1%">{{ e.date }}</td>
+        <td style="white-space:nowrap;width:1%"><span class="badge b-todo">{{ e.stage }}</span></td>
+        <td>{{ e.text|mdlite }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+
+{% endif %}
+{% endblock %}

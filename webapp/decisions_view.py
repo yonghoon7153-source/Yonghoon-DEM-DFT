@@ -112,6 +112,35 @@ def decisions_for(cid: str, root=None) -> dict:
     return {"live": live, "folded": folded, "n_global": n_global}
 
 
+def decisions_by_scope(prefix: str, extra_ids=(), root=None) -> dict:
+    """`scope` 가 prefix 로 시작하는 판정 (+ 원장이 이름으로 댄 관련 결정) — `{"live", "folded"}`.
+
+    항목 모양은 `decisions_for` 와 같다. 조성 기준이 아니라 **캠페인 기준**으로 모을 때 쓴다
+    (/adhesion — W_ad 결정은 scope `adhesion.wad_lpscl_agc.*` 를 쓴다).
+
+    ⛔ 못 하는 것: scope 가 비었거나 다른 접두어인 결정은 못 잡는다 — 그런 결정은 원장이
+      `extra_ids` 로 **이름을 대야** 걸린다 (추측으로 끌어오지 않는다).
+    """
+    rows = list((C.decisions(root=root) or {}).values())
+    extra = {str(x) for x in (extra_ids or ())}
+    live, folded = [], []
+    for d in rows:
+        sc = str(d.get("scope") or "")
+        if not ((prefix and sc.startswith(prefix)) or d.get("id") in extra):
+            continue
+        state = C.decision_state(d)
+        rec = {"id": d.get("id"), "title": d.get("title") or d.get("id"),
+               "state": state, "kind": d.get("kind"),
+               "date": _date_of(d.get("id")),
+               "statement": (d.get("statement") or "")[:400],
+               "reopen": [_clip(x) for x in reopen_items(d)],
+               "card": d.get("card")}
+        (live if state in LIVE_STATES else folded).append(rec)
+    live.sort(key=lambda r: (r["date"], r["id"] or ""), reverse=True)
+    folded.sort(key=lambda r: (r["date"], r["id"] or ""), reverse=True)
+    return {"live": live, "folded": folded}
+
+
 #: 결정 id 는 `-`, 카드 파일명은 `_` 로 날짜를 쓴다. 둘 다 읽고 표기는 `-` 로 통일한다.
 _DATE = re.compile(r"(\d{4})[-_](\d{2})[-_](\d{2})")
 
