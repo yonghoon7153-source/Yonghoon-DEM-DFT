@@ -652,6 +652,64 @@ def test_a_missing_inductance_is_named_as_the_cause_of_the_top_misfit():
     assert clean.findings == []
 
 
+def cold_pellet():
+    """B15 #9 (-20 °C) 처럼 식은 펠릿: 배선 L 2 µH, 90 Ω 뒤에 잰 주파수 안으로
+    내려온 전해질 아크 (46 Ω, 꼭지 300 kHz), 그 뒤 블로킹 꼬리.  전해질 저항은
+    90 + 46 = 136 Ω 이다."""
+    w = 2 * np.pi * SULFIDE_FREQUENCY
+    tau = 1 / (2 * np.pi * 3e5)
+    z = (2e-6j * w + 90.0 + 46.0 / (1 + (1j * w * tau) ** 0.9)
+         + 1 / (6.3e-7 * (1j * w) ** 0.87))
+    return Spectrum(SULFIDE_FREQUENCY, z.real, z.imag)
+
+
+def test_an_inductor_on_zero_with_r0_above_the_crossing_is_an_arc_above_the_window():
+    """실측 B15 #9 (-20 °C, 열두 번째 검수): `L1-R0-CPE1` 의 L1 = 1e-12, R0 136 Ω,
+    실수축 교점 115 Ω, 꼭대기 유도 5점 — 그 5점 옆에 "이 파일에는 배선 인덕턴스가
+    안 보입니다" 가 적혔다.  R0 에 CPE 를 이은 회로는 R0 아래의 실수부를 못
+    그린다 — 교점이 R0 아래면 구간 위에 회로에 없는 아크가 있다.  합성하면 같은
+    모양이 나온다: L1 은 0, 가장 크게 어긋난 곳은 171 kHz (실측도 171 kHz)."""
+    spectrum = cold_pellet()
+    result = fit_circuit(spectrum, "L1-R0-CPE1", frequency_range=SULFIDE_BAND)
+    values = result.values()
+    assert values["L1"] < 1e-9                              # 인덕턴스를 버렸다
+    audit = audit_fit(result, spectrum, kind=SOLID, config=SYMMETRIC,
+                      thickness_cm=PELLET_CM, area_cm2=AREA_CM2, band=SULFIDE_BAND,
+                      alternatives=PRESETS)
+    (arc,) = [f for f in audit.findings if f.code == "arc_above_window"]
+    assert arc.severity == CHECK
+    assert "L1 이 0 에 붙었는데 꼭대기 9점은 유도성입니다" in arc.message
+    assert "R0 130.9 Ω 이 실수축 교점 96.04 Ω 보다 36 % 큽니다" in arc.message
+    assert "`L1-R0-p(R1,CPE1)-CPE2`" in arc.message
+    assert arc.circuits == ()                               # 확인이다 — refit 은 안 건드린다
+    assert "no_inductance" not in codes(audit)
+    assert not any("안 보입니다" in f.message for f in audit.findings)
+    # "R0 도 모자랄 수 있습니다": 교점 < R0 < 참값.  아크 하나를 더한 회로가 참값을 낸다.
+    assert 96.0 < values["R0"] < 136.0
+    one_arc = fit_circuit(spectrum, "L1-R0-p(R1,CPE1)-CPE2",
+                          frequency_range=SULFIDE_BAND).values()
+    assert one_arc["R0"] + one_arc["R1"] == pytest.approx(136.0, rel=0.01)
+
+
+def test_an_inductor_on_zero_says_what_the_sweep_shows():
+    """꼭대기에 유도성 점이 없으면 그 파일에는 인덕턴스가 안 보인다.  있으면 인덕턴스는
+    있다 — R0 가 교점과 같으면(5 % 안) 맞춘 구간이 그것을 쓰지 않았을 뿐이다."""
+    stub = [P("L1", 1e-12, "undetermined", "at_lower_bound"), P("R0", 136.0),
+            P("CPE1_Q", 6.3e-7), P("CPE1_n", 0.87)]
+    fit = Fit("L1-R0-CPE1", stub)
+    bare = audit_fit(fit, sulfide_pellet(r0=136.0, q=6.3e-7, n=0.87, inductance=0.0),
+                     kind=SOLID, config=SYMMETRIC, band=SULFIDE_BAND)
+    (note,) = [f for f in bare.findings if f.code == "no_inductance"]
+    assert note.severity == NOTE
+    assert note.message == "L1 이 0 에 붙었습니다 — 이 파일에는 배선 인덕턴스가 안 보입니다"
+
+    wired = audit_fit(fit, sulfide_pellet(r0=136.0, q=6.3e-7, n=0.87, inductance=2e-6),
+                      kind=SOLID, config=SYMMETRIC, band=SULFIDE_BAND)
+    (note,) = [f for f in wired.findings if f.code == "no_inductance"]
+    assert "꼭대기 13점이 유도성이라 배선 인덕턴스는 있지만" in note.message
+    assert "arc_above_window" not in codes(wired)
+
+
 B14_CIRCUIT = "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"
 #: B14 #9 (-20 °C), 850 µm.  ? 가 붙었던 것은 미결정으로.
 B14 = [P("R0", 84.3), P("R1", 2.92e3, "undetermined", "seed_spread"),

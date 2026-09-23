@@ -55,6 +55,7 @@ from .circuit import (
 from .conductivity import BOLTZMANN_EV_PER_K, backwards_warning, real_axis_crossing
 from .derive import SOLID, SYMMETRIC, blocking_verdict, label_arcs
 from .fit import edge_misfit
+from .guess import inductive_mask
 from .kk import KKResult, lin_kk
 from .spectrum import Spectrum
 
@@ -119,6 +120,9 @@ REFERENCES: dict[str, tuple[str, ...]] = {
     "arcs_are_electrode": ("ISW1990.table1-capacitance-interpretation",
                            "ISW1990.bulk-arc-off-scale",
                            "VADHVA2021.sulfide-bulk-gb-overlap"),
+    "arc_above_window": ("ISW1990.bulk-arc-off-scale",
+                         "VADHVA2021.sulfide-bulk-gb-overlap",
+                         "LASIA1999.impedance-range-artefacts"),
     "bulk_above_window": ("ISW1990.bulk-arc-off-scale",
                           "ISW1990.table1-capacitance-interpretation",
                           "VADHVA2021.in-li-full-cell-assignment"),
@@ -473,14 +477,63 @@ def _rail_finding(name: str, value: float, side: str, *,
         return Finding(CHECK, "at_bound",
                        f"{element} 의 n 이 {on('하한')} — 반원도 꼬리도 "
                        f"아닌, 모양이 정해지지 않은 소자입니다")
-    if kind == "L" and side == "lower":
-        return Finding(NOTE, "no_inductance",
-                       f"{name} 이 0 에 붙었습니다 — 이 파일에는 배선 인덕턴스가 "
-                       f"안 보입니다")
     where = "하한" if side == "lower" else "상한"
     return Finding(CHECK, "at_bound",
                    f"{name} 이 {on(where)} — 경계가 물리적으로 "
                    f"맞는 값인지 보세요")
+
+
+#: 맞춤의 직렬 저항이 실수축 교점보다 이만큼(비율) 넘게 크면 교점 위에 회로에 없는
+#: 아크가 있다고 본다.  `bml refit` 이 σ 의 저항이 움직였다고 보는 크기
+#: (`refit.RESISTANCE_SHIFT_LIMIT`)와 같다 — 이보다 작으면 σ 가 할 말이 없다.
+ARC_ABOVE_SHARE = 0.05
+
+
+def _inductor_at_zero(name: str, *, inductive_top: int, series: str | None,
+                      series_ohm: float | None, crossing: float | None,
+                      blocking_end: bool, suggestion: str = "") -> Finding:
+    """What an inductor on its lower bound says -- it depends on the sweep.
+
+    No point above the axis at the top of the sweep: the file shows no cable
+    inductance.  Points above the axis there (the fit leaves them out): the
+    cables are there, and the window did not need the inductor -- **unless the
+    series resistance sits above where the sweep crosses the axis.**  A series
+    R with arcs, CPEs and inductors in series never draws a real part below
+    that R, so the sweep has something above the window that the circuit
+    lacks: an arc.  A cooled pellet does this -- its electrolyte arcs come down
+    into the measured range (``ISW1990.bulk-arc-off-scale``) -- and the
+    inductor goes to zero because that arc is capacitive right where the
+    inductor would pull the other way.  The crossing then sits partway along
+    the arc, and the series R of a circuit without the arc falls short too.
+
+    실측 B15 #9 (-20 °C, `L1-R0-CPE1`): L1 = 1e-12, R0 136 Ω, 교점 115 Ω, 꼭대기
+    유도 5점 — 그 5점 옆에 "이 파일에는 배선 인덕턴스가 안 보입니다" 가 적혔다.
+    합성 (L 2 µH, 90 Ω + 46 Ω ∥ 10 nF 아크 300 kHz, 꼬리 n 0.87): 같은 회로가
+    L1 = 1e-12, R0 118 Ω, 교점 96 Ω — 참값 136 Ω 은 아크 하나를 더한 회로의
+    R0 + R1 (135.8 Ω) 만 맞혔다.  아크를 빼면 같은 회로가 L 1.9 µH, R0 136 Ω 을
+    그대로 찾는다.
+    """
+    if inductive_top <= 0:
+        return Finding(NOTE, "no_inductance",
+                       f"{name} 이 0 에 붙었습니다 — 이 파일에는 배선 인덕턴스가 "
+                       f"안 보입니다")
+    if (blocking_end and series and series_ohm and crossing
+            and series_ohm > crossing * (1.0 + ARC_ABOVE_SHARE)):
+        more = (series_ohm / crossing - 1.0) * 100.0
+        return Finding(
+            CHECK, "arc_above_window",
+            f"{name} 이 0 에 붙었는데 꼭대기 {inductive_top}점은 유도성입니다 — 배선 "
+            f"인덕턴스가 없는 것이 아닙니다. {series} {series_ohm:.4g} Ω 이 실수축 교점 "
+            f"{crossing:.4g} Ω 보다 {more:.0f} % 큽니다: 이 회로는 {series} 보다 작은 "
+            f"실수부를 그리지 못하니, 맞춘 구간 위에 회로에 없는 아크가 걸쳐 있습니다 "
+            f"(펠릿이 식으면 전해질 아크가 이렇게 잰 주파수 안으로 내려옵니다). 교점은 "
+            f"그 아크 도중이라 전해질 저항을 작게 읽고, {series} 도 모자랄 수 있습니다"
+            + (f" — 아크를 하나 더한 {suggestion} 로 맞추면 그 아크까지 전해질 저항에 "
+               f"들어갑니다" if suggestion else ""))
+    return Finding(NOTE, "no_inductance",
+                   f"{name} 이 0 에 붙었습니다 — 꼭대기 {inductive_top}점이 유도성이라 "
+                   f"배선 인덕턴스는 있지만, 그 점들을 뺀 맞춘 구간에서는 드러나지 "
+                   f"않습니다")
 
 
 def _fmt(value: float | None, unit: str = "") -> str:
@@ -695,6 +748,13 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
     r0 = _series_resistance(model, values)
     low_edge = band[0] if band is not None and band[0] is not None else None
     high_edge = band[1] if band is not None and band[1] is not None else None
+    # 스펙트럼이 실수축을 건너는 자리와, 맞춤 전에 뺀 꼭대기 유도성 점의 수.
+    crossing: float | None = None
+    inductive_top = 0
+    if spectrum is not None and len(spectrum):
+        crossing = real_axis_crossing(spectrum.frequency_hz, spectrum.z_re,
+                                      spectrum.z_im)
+        inductive_top = int(np.count_nonzero(inductive_mask(spectrum)))
 
     # -- 아크와 그 이름 ---------------------------------------------------------
     arcs = arc_capacitances(model, values, thickness_cm=thickness_cm,
@@ -857,9 +917,6 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
                 explained.add(arc.resistor)
                 quiet.update({arc.resistor, f"{arc.element}_Q", f"{arc.element}_n",
                               arc.element})
-            crossing = (real_axis_crossing(spectrum.frequency_hz, spectrum.z_re,
-                                           spectrum.z_im)
-                        if spectrum is not None and len(spectrum) else None)
             # 전극 쪽 아크를 남기면 다시 맞춰도 같은 이름(벌크·입계)이 붙는다 —
             # 이름이 맞는 것은 아크가 없는 회로다.  아크가 정말 보이는 셀에는
             # 아크 하나짜리를 따로 적는다.
@@ -889,6 +946,17 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
         element, _, suffix = parameter.name.partition("_")
         if not side or parameter.name in quiet or (element in vanishing
                                                    and suffix != "Q"):
+            continue
+        if side == "lower" and not suffix and re.fullmatch(r"L\d*", element):
+            steady = ohmic is not None and statuses.get(ohmic) != "undetermined"
+            out.findings.append(_inductor_at_zero(
+                parameter.name, inductive_top=inductive_top,
+                series=ohmic if steady else None,
+                series_ohm=values[ohmic] if steady else None, crossing=crossing,
+                blocking_end=out.end == "blocking",
+                suggestion=_suggest(_compatible(alternatives, {"blocking"},
+                                                fit.circuit, arcs=len(arcs) + 1,
+                                                exact=True), limit=1)))
             continue
         edges = model.lower if side == "lower" else model.upper
         bound = (float(edges[model.parameter_names.index(parameter.name)])
