@@ -34,7 +34,8 @@
   · **modelc** — 5시드 C3(09-18, A: compatible)의 C2b·C6 빈칸이 닫혔다. ⏳ **HOLD 해제·canonical 승격은 1저자 비준 대기**(사전등록 §3 A).
   · 러너 `--label modelc` 하드코딩 → `$SYS` (lpsocl s5·s6 run_meta label 이 'modelc' — 원본 보존, 원장에 정정 기록).
 - ⏭ **b2o3 MD — 전도도는 닫힌 채로, 질문을 바꿔 두 가지** (1저자 2026-09-23 "우선 해보자"):
-  ① gabia `highT_reseed_221/b2o3` 512원자 4런 궤적에 **C6 census**(같은 카드) — 계산 0 · 진단. ⚠ census 는 P 중심 규칙이라
+  ① ✅ **완료** — `b2o3_c6_census_512_2026_09_23.json`: 4/4 **framework_mobile**, 런당 사건 30–56 (200 ps) vs modelc·lpsocl 30런 0.
+    PS₄ 는 안 깨지고(P결합 음이온 이탈 0) P 중심이 통째로 옮기며(3.7–6.5 Å) 자유 S·Cl 이 흐른다(최대 10.6·16.0 Å). 진단. ⚠ census 는 P 중심 규칙이라
     **B 를 안 세고** BS₃ 의 S 는 '자유 S'(2.0 Å)로 분류된다 — 결과와 같이 적는다.
   ② 보고량을 **골격 붕괴 사건 빈도(ns 당)** 로 바꾼 **새 사전등록 카드** — ①을 파일럿으로 쓰되 사건 정의·문턱은 비준된 census 그대로.
     ⛔ 카드 비준 전에는 안 던진다 (마감 `b2o3_md_closed_retrospective` 재개 규칙).

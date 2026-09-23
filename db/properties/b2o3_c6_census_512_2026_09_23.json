@@ -1,0 +1,100 @@
+{
+ "schema": "diagnostic_record/v1",
+ "date": "2026-09-23",
+ "citable": false,
+ "제목": "b2o3 512원자(2×2×1) 4런 — C6 자리 이탈 census (modelc·lpsocl 과 같은 자)",
+ "⛔_지위": "**진단.** b2o3 UMA-MD 전도도 축의 인용 불가(D-2026-09-07-b2o3-md-closure-retrospective)는 그대로다. 이 기록은 '왜 죽었나' 를 같은 자로 다시 잰 것이지 값을 되살리지 않는다.",
+ "측정": "gabia 2026-09-23 · /root/Yonghoon-DEM-DFT @0feeabb62 · /data/apps/miniforge3/envs/uma/bin/python tools/ionic/framework_site_census.py --card db/properties/lpsocl_box331_closure_amendment_2026_09_11.json (modelc·lpsocl C6 와 같은 도구·같은 문턱) · 궤적 /root/work/runs/highT_reseed_221/b2o3/s{2,3}/d0.00_cfg0/T{800,1000}/traj.xyz (103 MB · 200 ps · save 100 fs) · rc=0 4/4",
+ "분류_검산": {
+  "P결합_음이온": "128 = O 12 + S 116 (PS₄형 32단위 × 4)",
+  "자유": "144 = P 32 + Cl 64 + S 48",
+  "⚠_자유_S_48_의_정체": "B 8개 × 3 = **24 가 BS₃ 에 붙은 S**, 24 가 진짜 자유 S²⁻ (조성 산술 — census 는 둘을 못 가른다)"
+ },
+ "결과": {
+  "s2/800": {
+   "verdict": "framework_mobile",
+   "이벤트": 30,
+   "원소별": {
+    "S": 23,
+    "Cl": 4,
+    "P": 3
+   },
+   "최대이동_A": {
+    "S/P-bonded": 2.55,
+    "O/P-bonded": 1.8,
+    "P/free": 3.68,
+    "S/free": 10.57,
+    "Cl/free": 9.18
+   }
+  },
+  "s2/1000": {
+   "verdict": "framework_mobile",
+   "이벤트": 51,
+   "원소별": {
+    "P": 9,
+    "S": 24,
+    "Cl": 18
+   },
+   "최대이동_A": {
+    "S/P-bonded": 2.73,
+    "O/P-bonded": 1.85,
+    "P/free": 6.47,
+    "S/free": 9.4,
+    "Cl/free": 15.96
+   }
+  },
+  "s3/800": {
+   "verdict": "framework_mobile",
+   "이벤트": 56,
+   "원소별": {
+    "P": 4,
+    "S": 36,
+    "Cl": 16
+   },
+   "최대이동_A": {
+    "S/P-bonded": 2.58,
+    "O/P-bonded": 1.87,
+    "P/free": 4.34,
+    "S/free": 7.51,
+    "Cl/free": 11.85
+   }
+  },
+  "s3/1000": {
+   "verdict": "framework_mobile",
+   "이벤트": 44,
+   "원소별": {
+    "P": 8,
+    "S": 20,
+    "Cl": 16
+   },
+   "최대이동_A": {
+    "S/P-bonded": 2.62,
+    "O/P-bonded": 1.83,
+    "P/free": 5.48,
+    "S/free": 6.36,
+    "Cl/free": 7.26
+   }
+  }
+ },
+ "★_읽히는_것": {
+  "①_PS4_는_안_깨진다": "P 결합 음이온은 한 번도 자기 P 를 떠나지 않았다 — 최대 S 2.55–2.73 Å (< 3.0) · O 1.80–1.87 Å (< 2.5). 공유결합 유지(P–O 3→3)와 맞다.",
+  "②_PS4_단위가_통째로_자리를_옮긴다": "그런데 P 중심 자체가 2 Å 넘게 10 ps 이상 옮겨 간 사건이 런마다 3–9 개(최대 3.7–6.5 Å). 회전은 P 를 안 움직이므로 **단위 병진/재배치**다.",
+  "③_자유_음이온이_흐른다": "자유 S(20–36)·Cl(4–18) 사건이 대부분이고 최대 이동 S 10.6 Å · Cl 16.0 Å — 음이온 부격자가 움직인다.",
+  "④_같은_자의_대조": "modelc·lpsocl 558원자 400 ps 30런(600–1000 K)은 **이벤트 0**. b2o3 는 **절반 길이(200 ps)** 에서도 런당 30–56 — 비교는 b2o3 에 오히려 유리하게 짜였는데도 갈린다.",
+  "⑤_온도_단조성_없음": "s2 30→51 이지만 s3 56→44 (800→1000 K). 09-10 공정성 감사의 '간헐적 사건' 관찰과 같은 방향. n=2 라 통계 아님."
+ },
+ "⚠_한계": [
+  "census 는 P 중심 규칙이라 **B 를 세지 않는다** · BS₃ 의 S 는 '자유 S' 로 분류된다 → S 사건 중 BS₃ 몫을 못 가른다",
+  "b2o3 200 ps vs 대조 400 ps · 셀 512 vs 558원자 — 길이·크기가 같지 않다",
+  "실물리 vs MLIP 공통오류는 여전히 못 가른다 (힘 대조 R 0.951 은 '조성 특이 결함' 가설만 약화)",
+  "사건 '수' 는 같은 원자의 반복 사건을 포함할 수 있다 — 원자 수(by_elem.n_atoms)는 아직 안 뽑았다"
+ ],
+ "②_설계에_주는_것_파일럿": "800–1000 K 에서는 200 ps 에 사건이 수십 개라 빈도 추정이 쉽다. 정보가 있는 곳은 **사건이 드물어지는 600–700 K(개시 구간)** 이다. 대조군(modelc·lpsocl)은 이미 30런 × 400 ps = 12 ns 에서 0 → 95 % 상한 ≈ 0.25 /ns/셀.",
+ "관련": [
+  "db/properties/b2o3_md_closed_retrospective_2026_08_25.json",
+  "db/properties/b2o3_cell_expansion_result_2026_09_10.json",
+  "db/properties/b2o3_vs_modelc_framework_fair_2026_09_10.json",
+  "db/properties/b2o3_uma_vs_dft_force_result_2026_09_11.json",
+  "db/properties/box331_seedext_c2b_c6_2026_09_23.json"
+ ]
+}
