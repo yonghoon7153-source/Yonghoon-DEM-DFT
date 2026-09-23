@@ -50,6 +50,7 @@ def namelists(calc, pfx, nat, ntyp, has_li):
     degauss         = 0.01
 {spin}    vdw_corr        = 'grimme-d3'
     dftd3_version   = 4
+    dftd3_threebody = .true.
 /
 &ELECTRONS
     conv_thr        = 1.0d-6

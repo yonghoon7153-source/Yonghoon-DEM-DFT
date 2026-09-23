@@ -49,7 +49,13 @@
     기본값 `comp2` 로 대기 중이었다** (cwd /data/work/runs/elastic_comp2 · MINFREE 6000 · 로그 이름만 el_modelc2x.log). 9/10 원래 계획은
     `SYS=modelc_2x → b2o3` — 그대로 뒀어도 modelc_2x 영률은 시작되지 않았다(조용히 틀린 경로). 상태 저장 `/root/logs/elastic_runner_saved_0923.txt`.
     ⏭ b2o3 끝나면(≈5–6일) **`SYS=modelc_2x`** 를 명시해 재개한다 (수렴한 strain 은 러너가 건너뛴다).
-- 🟢 **gabia Nd frozen-4f LOBSTER** (`/data/work/runs/nd_ppswap_2026_09_16/lobster_frozen4f`) — nscf **JOB DONE 14:33** (2 d 0 h 36 m · k 4 · nbnd 920 · wfc 09-23 확인) →
+- ✅ **Nd ICOHP 판정 = C1 (PP 가 원인)** — Nd79 가장 가까운 S 5개 **−3.779 eV** (6월 −0.481 · 문턱 −2.0) · 대조군 P–S −5.669/Li–S −1.658 은 6월과 같다 · spilling 1.19 %.
+  기록 `db/properties/nd_icohp_frozen4f_result_2026_09_23.json` · 6월 Nd–S **영구 비인용**(`nd_icohp.json` 표시 · `HZ-nd-icohp-june-nds-pp`).
+  ⏭ k-탐침(enforcement ④, gabia CPU 비어 있음) — k 값·실행 1저자 · 원자료(ICOHPLIST · ICOBILIST · lobsterout) 회수 → `db/raw/nd_lobster_frozen4f_2026_09_23/`.
+- ✅ **결정 3건 비준** (`97edeb233` · 형식 복원 뒤 172줄 추가만): W_ad SE 대칭 두 장 · D3 2체 + ATM 따로 · QE D3 3체 표기. `vgcf_hbn_*.json` 표기 정정 · QE 생성기 4곳 `dftd3_threebody = .true.` 명시(결과 불변).
+  ⏭ SDCP 옛 QE 기록(phaseB · wave1.5 — 닫힌 캠페인)의 같은 표기 정정은 **아직** (우선순위 낮음).
+  ⚠ 내 실수: `decisions.json` 을 indent 2 로 다시 써서 7146줄 diff 를 냈다 → 원래 형식(indent 1)으로 복원. JSON 원장을 고칠 때는 **원래 형식을 먼저 재현**하고 쓴다.
+- 🟢 (끝남 — 위 판정) **gabia Nd frozen-4f LOBSTER** (`/data/work/runs/nd_ppswap_2026_09_16/lobster_frozen4f`) — nscf **JOB DONE 14:33** (2 d 0 h 36 m · k 4 · nbnd 920 · wfc 09-23 확인) →
   LOBSTER 5.1.1 **PID 3337949** (14:44 KST 발사 · OMP 8 · 래퍼가 끝나면 `lobster_scf.in` 을 `.orig` 로 되돌린다).
   · 판정량은 **결과 전에** 카드에 고정: Nd79 의 가장 가까운 S 5개 평균 (C1 < −2.0 / C2 > −1.0 eV) — `nd_icohp_pp_swap_card_2026_09_16.json` §2b.
   · 실측(결과 전 기록 §2c): 실제 기저 **546 함수**(P/S/Cl 3d 미사용) → 밴드 547+ 무시 · 사면체법 불가로 Gaussian smearing. **nbnd 920 은 과다** — 다음 LOBSTER 는 실제 기저 수로 잡는다.

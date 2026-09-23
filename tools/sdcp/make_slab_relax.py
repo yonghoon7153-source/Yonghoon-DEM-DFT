@@ -104,7 +104,9 @@ def write_relax(path, at, lab, fixed, kpts, prefix,
          # ⚠ **분산 보정 (2026-08-03 리뷰 지적).** repo 전체에 vdw_corr 가 한 줄도 없었다.
          #   맨 슬랩엔 영향이 작지만, 흡착 단계와 **같은 범함수를 써야** E_bind 가 성립하므로
          #   여기서부터 켠다.
-         "    vdw_corr        = 'grimme-d3'"]
+         "    vdw_corr        = 'grimme-d3'",
+         # 2026-09-23 (D-2026-09-23-qe-d3-threebody-labeling): QE 기본 3체(ATM) 켬을 **명시**만 한다 (결과 불변)
+         "    dftd3_threebody = .true."]
     for k, sp in enumerate(present, 1):
         if sp == 'Ni1':
             L.append(f"    starting_magnetization({k}) = +0.300")

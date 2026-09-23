@@ -2,7 +2,7 @@
   "schema": "measurement_card/v1",
   "record_kind": "measurement_card",
   "date": "2026-09-16",
-  "results_seen": false,
+  "results_seen": true,
   "citable": false,
   "status": "⏳ **제안 — 1저자 지시로 작성. 벽시계 실측(P1) 통과 후 본실행.**",
   "system": "modelc_nd_doped",
@@ -119,6 +119,11 @@
       "date": "2026-09-23",
       "by": "claude",
       "note": "LOBSTER 실행 중 실측(결과 전): 실제 기저 546 함수 — P/S/Cl 3d 미사용 · 사면체법 불가로 Gaussian smearing. nbnd 920 과다 교훈."
+    },
+    {
+      "date": "2026-09-23",
+      "by": "claude",
+      "note": "결과 봄 → C1. 판정량(§2b)·문턱(§2) 모두 결과 전 고정대로 적용. results_seen=true."
     }
   ],
   "ratification": {
@@ -146,5 +151,10 @@
     ],
     "k_적분": "LOBSTER WARNING: 사면체법 불가 → Gaussian smearing 으로 대체 (gaussianSmearingWidth 0.02). k 2×2×1 · nosym 조건. 판정량(ICOHP 적분)의 정의는 바뀌지 않지만 한계로 적는다.",
     "판정에_주는_영향": "C1/C2/C3 문턱(−2.0/−1.0 eV)은 자릿수 판정이라 3d 분극 기저 유무보다 크다고 보지만, 그 크기를 잰 것은 아니다 — 판정문에 '3d 미사용 기저' 를 조건으로 적는다."
+  },
+  "7_결과_2026_09_23": {
+    "판정": "C1 — PP 가 원인 (Nd79 −3.779 eV vs 문턱 −2.0)",
+    "기록": "db/properties/nd_icohp_frozen4f_result_2026_09_23.json",
+    "후속": "6월 Nd–S 영구 비인용 (nd_icohp.json 표시 · HZ-nd-icohp-june-nds-pp)"
   }
 }

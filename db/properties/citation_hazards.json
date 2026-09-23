@@ -597,6 +597,16 @@
      "축합될수록 갭이 넓어진다": "3 파일 — 보고서 §6 카드는 이미 data-claim 결속, §9 항목과 kb 두 문서는 미결속"
     }
    }
+  },
+  {
+   "file": "db/properties/nd_icohp.json",
+   "level": "BLOCKED",
+   "what": "6월 Nd–S ICOHP −0.436 (평균) · Nd79 −0.481 · Nd2 −0.361 eV 와 그 그림",
+   "why": "PP 원인 확정 (C1): Nd PP 만 바꾸자 Nd79 가 −3.779 eV — 대조군 P–S·Li–S 는 그대로 (nd_icohp_frozen4f_result_2026_09_23.json)",
+   "fix": "Nd–S 결합 세기는 frozen-4f 측정(원인 규명, citable=false)의 비율·방향 서술로만. 절대값 인용 금지",
+   "id": "HZ-nd-icohp-june-nds-pp",
+   "binding_scope": "partial",
+   "binding_scope_why": "6월 Nd–S 값은 레지스트리에 없다(등록 0건) — `claim` 을 걸 자리가 없다. 화면은 id 로 이름만 댄다."
   }
  ],
  "_history": [

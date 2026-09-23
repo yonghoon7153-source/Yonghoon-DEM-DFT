@@ -48,6 +48,7 @@ def build(atoms, tag):
     degauss         = 0.01
 {spin}    vdw_corr        = 'grimme-d3'
     dftd3_version   = 4
+    dftd3_threebody = .true.
 /
 &ELECTRONS
     conv_thr        = 1.0d-6

@@ -349,6 +349,10 @@ def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
     if OPT["vdw"] and OPT["vdw"] != "none":
         # 다섯 입력 전부 동일 — 한 항이라도 빠지면 E_bind 차분에서 상쇄가 깨진다 (§1-2)
         sys_lines.append(f"    vdw_corr        = '{OPT['vdw']}'")
+        # 2026-09-23 (D-2026-09-23-qe-d3-threebody-labeling): QE 7.4.1 은 3체(ATM)가 기본 켜짐이다.
+        #   종전 입력은 이 키를 안 적어 조용히 D3+ATM 이었다 — 같은 값을 **명시**만 한다 (결과 불변).
+        if OPT['vdw'] == 'grimme-d3':
+            sys_lines.append("    dftd3_threebody = .true.")
     # ⚠⚠ **report 를 안 켜면 미수렴 런에서 per-site 자화를 못 건진다.**
     #   QE 의 'Magnetic moment per site' 블록은 기본적으로 **수렴 시점에만** 찍힌다
     #   (total/absolute magnetization 은 매 반복 찍히지만 그건 셀 전체값이라 시드로 못 쓴다).
