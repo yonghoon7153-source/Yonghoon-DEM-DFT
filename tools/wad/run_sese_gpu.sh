@@ -105,6 +105,15 @@ _unexpected() {  # $1 = 지금 GPU PID 들 · $2 = 허용 PID 들 → 허용 밖
   for p in $1; do ok=0; for q in $2; do [ "$p" = "$q" ] && ok=1; done; [ "$ok" = 1 ] || echo "$p"; done
 }
 
+# ── ⑨ PP 내용 해시 (jobs.json settings.pp_sha256 — 없으면 경고만) ──────────────────
+#   이름이 같아도 내용이 다른 PP 가 있다 (P rrkjus v6.3 ≠ v5.1). 기계를 옮기면 **내용**으로 대조한다.
+_pp_want() {  # $1 = jobs.json · $2 = PP 파일명 → 기준 sha256 (없으면 빈 줄)
+  python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('settings',{}).get('pp_sha256',{}).get(sys.argv[2],''))" "$1" "$2" 2>/dev/null
+}
+_pp_ok() {    # $1 = PP 파일 경로 · $2 = 기준 sha256 → 0 = 같음
+  [ -f "$1" ] && [ -n "$2" ] && [ "$(sha256sum "$1" | cut -d' ' -f1)" = "$2" ]
+}
+
 # ── ⑧ 공존 예외의 근거 결정 상태 ───────────────────────────────────────
 _exception_state() {  # $1 = 결정 ID · $2 = decisions.json → 상태 한 단어 (없는 ID = missing · 못 읽음 = unreadable)
   python3 - "$1" "$2" 2>/dev/null <<'PY' || echo unreadable
@@ -164,6 +173,15 @@ if [ "$IN" = "--selftest" ]; then
   ck "pseudo_dir 교체"                     "grep -q \"pseudo_dir = '/scratch/k/pseudo'\" $T/ps.in"
   ck "⛔교체가 다른 줄을 건드리지 않음"      "grep -q \"prefix = 'x'\" $T/ps.in && [ \$(grep -c /data/work/pseudo $T/ps.in) = 0 ]"
   ck "⛔섞여 오면 숫자 줄만"               '[ "$(printf "No running processes found\n12, pw.x, 900\n" | _apps_filter | wc -l)" = 1 ]'
+  printf 'PPDATA\n' > "$T/pp.UPF"; H=$(sha256sum "$T/pp.UPF" | cut -d" " -f1)
+  printf '{"settings":{"pp_sha256":{"pp.UPF":"%s"}}}' "$H" > "$T/jobs.json"
+  ck "PP 기준 해시 읽기"                     "[ \"\$(_pp_want $T/jobs.json pp.UPF)\" = \"$H\" ]"
+  ck "PP 내용이 기준과 같음 → 통과"           "_pp_ok $T/pp.UPF $H"
+  printf 'PPDATA-v6.3\n' > "$T/pp2.UPF"
+  ck "⛔이름만 같고 내용이 다른 PP → 거부"     "! _pp_ok $T/pp2.UPF $H"
+  ck "⛔PP 파일 없음 → 거부"                  "! _pp_ok $T/없음.UPF $H"
+  ck "⛔기준 해시가 비면 → 통과시키지 않는다" "! _pp_ok $T/pp.UPF \"\""
+  ck "기준 없는 파일명 → 빈 값(경고 갈래)"    "[ -z \"\$(_pp_want $T/jobs.json 다른.UPF)\" ]"
   printf '{"decisions":[{"id":"D-a","decision_state":"active"},{"id":"D-r","decision_state":"retracted"},{"id":"D-s","decision_state":"superseded"}]}' > "$T/dec.json"
   ck "공존 근거 결정이 active → 통과"          "_coexist_gate D-a $T/dec.json"
   ck "⛔철회된 예외로 공존 → 거부"              "! _coexist_gate D-r $T/dec.json"
@@ -246,8 +264,16 @@ NGPU=$(nvidia-smi -L 2>/dev/null | grep -c '^GPU')
 _np_ok "$NP" "$NGPU" || { say "⛔ NP=$NP 인데 보이는 GPU 는 $NGPU 장 — 한 GPU 에 랭크 여럿은 안 된다. 시작하지 않는다"; exit 2; }
 say "랭크 NP=$NP · GPU $NGPU 장 · pseudo=$PD${PSEUDO_DIR:+ (PSEUDO_DIR 로 교체)}"
 for U in $(cat "$IN"/*/pw.in | awk '/ATOMIC_SPECIES/{f=1;next} f&&NF==0{f=0} f{print $3}' | sort -u); do
-  say "PP $U sha256 $(sha256sum "$PD/$U" | cut -c1-16)"
+  W=$(_pp_want "$IN/jobs.json" "$U")
+  if [ -z "$W" ]; then
+    say "PP $U sha256 $(sha256sum "$PD/$U" | cut -c1-16) · ⚠ 기준 해시 없음 (jobs.json) — 사람이 대조한다"
+  elif _pp_ok "$PD/$U" "$W"; then
+    say "PP $U sha256 $(sha256sum "$PD/$U" | cut -c1-16) · 기준과 같음 ✓"
+  else
+    say "⛔ PP $U 내용이 기준과 다르다 — 지금 $(sha256sum "$PD/$U" 2>/dev/null | cut -c1-16) · 기준 ${W:0:16} (이름만 같은 다른 파일일 수 있다)"; bad=1
+  fi
 done
+[ "$bad" = 0 ] || { say "⛔ PP 해시 불일치 — 시작하지 않는다"; exit 1; }
 say "디스크 $(df -h "$RUN" | awk 'NR==2{print $4" 남음 ("$5" 사용)"}')"
 
 # ── GPU 위의 다른 프로세스 (UMA 판정) ──────────────────────────────────────

@@ -65,6 +65,15 @@ TERMS = {             # 종결 → (아래 면 틈, 위 면 틈, Li₂S 과부�
 # comp1 정본 DFT 설정 (kb/methodology/computational_methods_canonical.md §2 · 472행)
 QE_PP = {"Li": (6.941, "li_pbe_v1.4.uspp.F.UPF"), "P": (30.974, "P.pbe-n-rrkjus_psl.1.0.0.UPF"),
          "S": (32.06, "s_pbe_v1.4.uspp.F.UPF"), "Cl": (35.45, "cl_pbe_v1.4.uspp.F.UPF")}
+#: PP **내용** 해시 (comp1 정본 세트 — runs/static_ab/manifest.json · b2o3_uma_vs_dft_force_prereg 와 같은 값).
+#:   이름이 같아도 다른 파일이 있다 (P rrkjus: QE 사이트판 atomic v6.3 ≠ 우리 v5.1 — cascade_rebuild_log §3-2).
+#:   jobs.json 에 적고 러너(run_sese_gpu.sh)가 실행 기계의 파일과 **대조한다** — 다르면 시작하지 않는다.
+PP_SHA256 = {
+    "li_pbe_v1.4.uspp.F.UPF": "02cc4b3810e28a43b570277840d9631ca24f634d922928200c047b72c0a86bf5",
+    "P.pbe-n-rrkjus_psl.1.0.0.UPF": "2d112dfec2e2d9b75a971574d9116aa92249988177791659bbcd2ba15f23c20c",
+    "s_pbe_v1.4.uspp.F.UPF": "84ad731864187f416f714e961c3ad2f04dcbf811618e724d277885c18cb470df",
+    "cl_pbe_v1.4.uspp.F.UPF": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655",
+}
 ECUTWFC, ECUTRHO = 52.0, 520.0
 
 
@@ -518,12 +527,18 @@ def write_outputs(out, bulk_path, n_layers, vacuum, tol_sym, qe_out=None, pseudo
     with open(mp, "w", encoding="utf-8") as f:
         json.dump(man, f, ensure_ascii=False, indent=1)
     if qe_out:
-        write_qe_set(qe_out, built, bulk, man, pseudo_dir, kslab, kbulk)
+        write_qe_set(qe_out, built, bulk, man, pseudo_dir, kslab, kbulk, n_layers=n_layers, vacuum=vacuum,
+                     manifest_path=mp)
     return man
 
 
-def write_qe_set(qe_out, built, bulk, man, pseudo_dir, kslab, kbulk):
-    """SE|SE 대조 잡 5개: 벌크 SCF · 두 슬랩 SCF(무이완 W_sep) · 두 슬랩 PBE 이완."""
+def write_qe_set(qe_out, built, bulk, man, pseudo_dir, kslab, kbulk, n_layers=None, vacuum=None,
+                 manifest_path=None):
+    """SE|SE 대조 잡 5개: 벌크 SCF · 두 슬랩 SCF(무이완 W_sep) · 두 슬랩 PBE 이완.
+
+    jobs.json 의 decisions 에 경보 결정(ALARM — 집계기와 같은 ID)과 주장 범위(A′)를 같이 적는다
+    (2026-09-24 · 4층 세트부터. 6층 세트의 jobs.json 은 옛 두 ID 그대로 둔다 — 입력 해시와 무관한 메타다).
+    """
     os.makedirs(qe_out, exist_ok=True)
     jobs = [("01_bulk_scf", bulk, "bulk", "scf", kbulk)]
     for term in TERMS:
@@ -531,9 +546,13 @@ def write_qe_set(qe_out, built, bulk, man, pseudo_dir, kslab, kbulk):
     for term in TERMS:
         jobs.append((f"03_{term}_relax_pbe", built[term], "slab", "relax", kslab))
     idx = {"decisions": ["D-2026-09-23-wad-se-termination-symmetric",
-                         "D-2026-09-23-wad-d3-twobody-atm-separate"],
-           "structures_manifest_sha256": None, "settings": {
+                         "D-2026-09-23-wad-d3-twobody-atm-separate",
+                         ALARM["decision"], "D-2026-09-23-wad-a-prime-scope"],
+           "structures_manifest_sha256": sha256(manifest_path) if manifest_path else None, "settings": {
+               "n_layers": n_layers, "vacuum_total_A": vacuum,
+               "k_and_vacuum_status": "출발값 — 수렴 판정이 아니다 (Codex BW Q5). 벌크 k 는 슬랩 면내 밀도와 맞춘다",
                "pp": {e: v[1] for e, v in QE_PP.items()}, "ecutwfc_Ry": ECUTWFC, "ecutrho_Ry": ECUTRHO,
+               "pp_sha256": {v[1]: PP_SHA256[v[1]] for v in QE_PP.values()},
                "smearing": "gaussian 0.005 Ry", "k_slab": list(kslab), "k_bulk": list(kbulk),
                "d3": "scf: grimme-d3 · dftd3_version=4 (BJ) · dftd3_threebody=.false. (2체) · "
                      "relax: vdw_corr='none' (PBE — Pustorino 조건)",
