@@ -12,6 +12,15 @@ install rather than an ImportError from three frames down.
 
 from . import drt
 from .biologic import UnknownColumn, read_mpr_bytes, read_mps_text, read_mpt_text
+from .capacitance import (
+    PROCESSES,
+    ArcCapacitance,
+    Process,
+    arc_capacitances,
+    candidate_processes,
+    effective_capacitance,
+    peak_frequency,
+)
 from .circuit import Circuit, CircuitError, parse_circuit
 from .conductivity import (
     ACTIVATION_BASES,
@@ -38,15 +47,17 @@ from .fit import EdgeMisfit, FitResult, Parameter, edge_misfit, fit_circuit
 from .guess import Arc, find_arcs, inductive_mask, initial_guess
 from .spectrum import Spectrum
 
-__all__ = ["ACTIVATION_BASES", "Arc", "ActivationEnergy",
+__all__ = ["ACTIVATION_BASES", "Arc", "ArcCapacitance", "ActivationEnergy",
            "BOLTZMANN_EV_PER_K", "CONFIGS", "Circuit", "CircuitError",
            "ConductivityPoint", "DrtPeak", "DrtResult",
-           "EdgeMisfit", "FULL", "FitResult", "HALF", "LIQUID", "Parameter",
-           "SOLID",
+           "EdgeMisfit", "FULL", "FitResult", "HALF", "LIQUID", "PROCESSES",
+           "Parameter", "Process", "SOLID",
            "SYMMETRIC", "Spectrum", "UnknownColumn", "activation_energy",
+           "arc_capacitances", "candidate_processes",
            "conductivity", "conductivity_ms_cm", "drt",
-           "edge_misfit", "find_arcs", "fit_circuit", "inductive_mask",
+           "edge_misfit", "effective_capacitance", "find_arcs", "fit_circuit", "inductive_mask",
            "initial_guess",
            "ionic_conductivity", "label_arcs", "lcurve_corner", "parse_circuit",
+           "peak_frequency",
            "read_mpr_bytes", "read_mps_text", "read_mpt_text",
            "total_resistance"]

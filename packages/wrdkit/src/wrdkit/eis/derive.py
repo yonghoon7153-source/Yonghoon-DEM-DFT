@@ -312,8 +312,9 @@ def ionic_conductivity(result: FitResult, *, thickness_cm: float | None,
     # 대칭셀에는 막는 것(SS|전해질|SS)과 안 막는 것(Li|전해질|Li)이 있는데
     # 벌크·입계로 나눌 수 있는 것은 앞쪽뿐이다.  실측 2026-09-23: 저주파
     # 위상이 0° 인 셀에서 두 아크를 벌크·입계라 부르고 σ 를 냈는데, 커패시턴스
-    # 로 보면 "벌크" 는 입계 범위, "입계" 는 전극 계면 범위였다 (Irvine–Sinclair–
-    # West).  모르면 내지 않는다 -- `blocking` 을 안 주면 예전처럼 셀 구성만 본다.
+    # 로 보면 "벌크" 는 벌크일 수 없는 크기(입계 또는 전극 계면), "입계" 는 전극
+    # 쪽(전기화학 반응) 크기였다 (Irvine–Sinclair–West, `capacitance.py`).
+    # 모르면 내지 않는다 -- `blocking` 을 안 주면 예전처럼 셀 구성만 본다.
     if blocking is not None and blocking.get("blocking") is False:
         out["missing"].append(blocking.get("reason")
                               or "저주파에서 블로킹이 아닙니다")

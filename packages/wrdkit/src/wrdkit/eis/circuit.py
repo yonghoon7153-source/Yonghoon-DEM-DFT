@@ -18,7 +18,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
-__all__ = ["Circuit", "Element", "ELEMENTS", "parse_circuit", "CircuitError"]
+__all__ = ["Circuit", "Element", "ELEMENTS", "parse_circuit", "CircuitError",
+           "series_parts"]
 
 
 class CircuitError(ValueError):
@@ -395,6 +396,42 @@ class Circuit:
         walk(self._root)
         return out
 
+    def capacitive_arcs(self) -> list[tuple[str, str, str]]:
+        """(R 이름, 축전 소자 이름, 그 소자 종류) — ``p(R,CPE)`` 와 ``p(R,C)``.
+
+        `parallel_rc_branches` 와 같은 규칙으로 괄호에서 짝을 읽되 이상적인
+        축전기(``C``)도 받는다.  커패시턴스로 아크가 무엇인지 볼 때는 둘 다
+        아크다 (ADR 0040) — 분기 정렬은 CPE 만 다루므로 그쪽은 그대로 둔다.
+        """
+        out: list[tuple[str, str, str]] = []
+
+        def walk(node) -> None:
+            if isinstance(node, _Leaf):
+                return
+            if isinstance(node, _Parallel):
+                leaves = [part for part in node.parts if isinstance(part, _Leaf)]
+                resistors = [leaf.name for leaf in leaves if leaf.kind == "R"]
+                storing = [leaf for leaf in leaves if leaf.kind in ("CPE", "C")]
+                if (len(resistors) == 1 and len(storing) == 1
+                        and len(leaves) == len(node.parts) == 2):
+                    out.append((resistors[0], storing[0].name, storing[0].kind))
+            for part in getattr(node, "parts", ()):
+                walk(part)
+
+        walk(self._root)
+        return out
+
+    def series_element_kinds(self) -> list[tuple[str, str]]:
+        """최상위 직렬 경로의 소자들, ``(이름, 종류)`` 로.
+
+        저주파 끝이 **어떻게 닫히는지**는 이것이 정한다: 직렬 경로 어디에든
+        ``C``·``CPE``·``Wo`` 가 하나라도 있으면 DC 가 막힌다 — 위치는 상관이
+        없다.  `series_element_names` 는 이름만 주므로 종류를 다시 읽어야 했다.
+        """
+        root = self._root
+        parts = root.parts if isinstance(root, _Series) else (root,)
+        return [(part.name, part.kind) for part in parts if isinstance(part, _Leaf)]
+
     def series_element_names(self) -> list[str]:
         """최상위 직렬 경로에 그대로 놓인 소자들의 이름.
 
@@ -467,6 +504,17 @@ def series_blocks(circuit: Circuit) -> list[tuple[str, tuple[int, ...]]]:
         out.append((label, tuple(range(at, at + size))))
         at += size
     return out
+
+
+def series_parts(text: str) -> list[str]:
+    """최상위 직렬 조각을 **쓴 그대로** — ``R0-p(R1,CPE1)-CPE3`` →
+    ``['R0', 'p(R1,CPE1)', 'CPE3']``.
+
+    조각을 빼서 다른 회로를 **제안**할 때 쓴다 (ADR 0040: 안 막는 셀에
+    블로킹 꼬리를 단 회로 → 그 꼬리를 뺀 회로).  읽지 못하는 회로는
+    `parse_circuit` 과 같은 `CircuitError` 를 낸다.
+    """
+    return [part.strip() for part in _split_top(text.strip(), "-")]
 
 
 def parse_circuit(text: str) -> Circuit:
