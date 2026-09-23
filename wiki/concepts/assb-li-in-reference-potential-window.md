@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/hertle2023_micro-reference-electrode-lithiated-gold-wire-assb.md, raw/papers/jin2015_lithium-silicide-anode-electrode-design-assb.md, raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md, raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
+sources: [raw/papers/solchenbach2016_gold-wire-micro-reference-electrode-liquid-t-cell.md, raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/hertle2023_micro-reference-electrode-lithiated-gold-wire-assb.md, raw/papers/jin2015_lithium-silicide-anode-electrode-design-assb.md, raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md, raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -575,6 +575,21 @@ shift less than 3 mV"*. `[추론]` WE·CE 가 **둘 다 2상 평탄에 고정**�
 - **④ ★★★★ 계보 최종 판정 — 21호 `[추론]` "Schlenker → Hertle → 16호" 는 두 줄의 합류다.** (a) 인용: Hertle 참고문헌에 이 편 0(45호) ❌ · (b) 영점: 이 편 0 V 문장 · 값 0 ❌ — **0 V 의 원전은 Hertle(Giessen) 하나** · (c) 하드웨어: Au 도금 W 선 · 매립 · 제자리 Li 도금 — 이 편 · Hertle(∅10 µm) · 16호(∅25 µm) ✅, 이 편이 계보상 가장 이른 ASSB 사용 · (d) 저자: 이 편 Roling · Miß = 16호 Miß · Roling ✅(16호가 이 편을 인용했는지는 우리 16호 digest 에 기록 없음). ⇒ **하드웨어 · 저자 줄(Marburg) 과 영점 줄(Giessen) 이 16호에서 처음 만난다.** `[해석]` 16호는 영점이 필요 없던 자리(같은 금속 · AC)의 선을 영점이 필요한 자리(NMC 상대 리튬화 · DC 전위 축)로 옮기며 영점을 다른 연구실에서 빌렸다 — 45호 ⑥("16호 이식 = 조건 밖")의 **출처 쪽 절반**이다.
 - ⇒ 계보: … → GITT `ΔE_s` 안의 가정(44호) → 셀 안 도금 Li · 소모품 기준극(45호) → **영점이 들어가지 않는 자리(46호)**. 칸 이동 없음(반 칸 검토 후 접음) — 기준 전위에 관한 측정 · 명제가 0 이고 계보 판정은 우리 대조다.
 
+### ★★★ `assb` 47호 (Solchenbach et al. 2016) — **스물세 번째 형태: 원전 측정 — 영점을 Li 대비 개방회로로 수백 시간 추적하고, 그 영점을 쓸 조건을 같이 인쇄했다** (⚠ **액체셀** · 0.31 V 관례의 조상)
+
+`raw/papers/solchenbach2016_gold-wire-micro-reference-electrode-liquid-t-cell.md`
+(*J. Electrochem. Soc.* **163** (2016) A2265, TUM Gasteiger, CC BY — 21호 ref 11 · 45호 ref [20]; Swagelok T-셀 · LP57 · Au ∅50 µm + 폴리이미드 7 µm, **절단면만 노출**, 150 nA × 1 h = 150 nAh).
+
+- **① 0.311 V 는 측정이다 — Li 금속 대비, 액체 Li\|Li 셀에서.** `[인쇄]` "shoots up to 0.318 V and then quickly relaxes to ∼0.311 V vs. Li/Li⁺, which corresponds to the OCV potential of a LixAu alloy with 0 < x < ∼1.2" — **Au-풍부 첫 단(2상)** 의 개방회로. 리튬화 중 ≈0.2 V(도금 칸에 닿지 않음). `[재현]` 단면 7.6 mA cm⁻² · 7.6 mAh cm⁻²; 평균 x ≤ 1.2 에는 끝에서 ≥ ≈24 µm 축 확산이 필요 — 저자의 "축 확산은 충분히 느리다" 와 크기 긴장(측정 0).
+- **② 안정성에 수와 그림이 있다 — 계보 첫 Li 대비 장기 추적(단, 액체 · 셀 1 개).** `[인쇄]` "> 500 h, varying by less than 2 mV after the initial 20 h" · `[도표]` 2 h 317.7 → 21 h 314.3 → 200–300 h 311.3 → 545 h 311.8 mV — **20 h 뒤 ≈3 mV**, < 2 mV 는 ≈50 h 뒤부터.
+- **③ ★★★ 영점의 사용 조건 넷이 인쇄된다.** (a) **초기 창 제외** — `[인쇄]` "might not be suitable for highly accurate potential measurements during initial cycles" (b) **리튬화 온도 = 운전 온도** — 25 °C 리튬화 → 40 °C 는 `[도표]` ≈60 h 에 +35 mV 이탈, 40 °C 리튬화는 안정하되 **−1–2 mV** (c) **절단면만 노출**(안정성의 일부를 여기에 돌림, "we further believe") (d) **재리튬화로 복원**(`[인쇄]` "restored a stable GWRE potential of 0.311 V") · 고전압(>4.7 V) 양극에서 수명 제한(ref 33, in prep.).
+- **④ 누설 0/47** — 자기 탈리튬은 기구 서술. `[재현]` 25 °C 150 nAh ≈550 h → **< ≈0.27 nA**(단면당 < ≈14 µA cm⁻²; 21호 < 4.3 nA · 45호 ≈39 nA 와 면적당 같은 자릿수) · (5′) ≥ 10 을 550 h 에 보증하려면 < ≈0.03 nA — 지면에 없다 · 40 °C 이탈을 전량 소진으로 읽으면 ≈2.5 nA.
+- **⑤ 사이클 중 확인 = LFP 2상 평탄 내부 표준** — `[인쇄]` 3.11 V vs GWRE 가 200 사이클 동안 일정 → 3.42 V vs Li ↔ 문헌 LFP. `[도표]` 분해능 ≈±20 mV(네 사이클 한 띠). **P10 의 액체 원형**(수 미인쇄) + Fig. 6 이 GWRE 축과 Li 축(+0.311 V)을 **병기** — P11 "측정 축 병기" 의 이른 표본.
+- **⑥ ★★★ 0.31 V ↔ 0 V: 같은 선의 다른 칸.** 0.31 V = 사다리 **맨 위 칸**(약간 리튬화된 Au), 0 V = **맨 아래 칸**(AuLi₃ 넘어 도금 Li, 45호). 이 편은 도금 칸 · 0 V 를 논하지 않는다(`plat*` 7 회 전부 선행 연구). ⇒ 45호 ⑥ 의 "21호 0.31 V 는 사다리 어느 칸도 아니다" 는 **원전 사다리로 풀린다**(21호 `[재현]` x̄ ≈1.16 은 원전 창 0 < x < ∼1.2 안). ⚠ 두 편이 같은 원전(Bach 2015)에서 칸 값을 다르게 옮긴다 — 이 편 "첫 단 ∼0.3 · 둘째 단 ∼0.2 V" ↔ 45호 "215 / 134 mV", 45호가 [20](이 편)을 단 인용은 지면에서 지지되지 않는다(`134` · `215` 0 회). 16호 0.11 V 의 "한 칸 − 23 mV" 후보는 칸 값 표가 둘이라 판정 보류.
+- **⑦ ★★★ 21호 "교정 이식" 판정.** 21호가 가져간 것은 **값(0.31, 두 자리) + 절차**이지 안정성 명제가 아니다(장기 안정성은 21호 자기 공통 모드 < 3 mV / 28 일). 원전 조건 넷 중 **둘을 벗어났다** — 노출 ×40(0.5 mm 원통) · **리튬화 2 h 뒤 판독**(원전이 뺀 초기 창 안; 원전 곡선의 2 h 값 0.318 = 장기값 +6–7 mV, 두 자리 반올림 안). 이완 방향도 반대(원전 0.318 → 0.311 위에서 · 21호 0.25 → 0.31 아래에서), 21호 리튬화 중 ≈−5 mV(도금 칸 문턱). ⇒ **이식이 틀렸다는 증거는 없고, 원전 조건이 ASSB 에서 검사되지 않았다.** ⚠ 21호의 교정 이식은 **ASSB 안**(3 MPa Li\|Li → 20 MPa InLi)이고 액체는 값의 조상이다.
+- **⑧ "CE 거칠어짐" 은 추론이다** — `[인쇄]` "We believe", 셀 1 개 · 표면 관찰 0 · 대조군 0. `[재현]` 뺀 Li 균일 두께 ≈0.77 nm. `[도표]` 두 호 모두 꼭짓점 주파수 공통 → τ 보존 → **면적 서명**(`C` 비 ≈1.6)과는 양립.
+- ⇒ 계보: … → 셀 안 도금 Li · 소모품(45호) → 영점이 들어가지 않는 자리(46호) → **원전 측정 + 사용 조건, 액체(47호)**. 칸 이동 없음(반 칸 검토 후 접음) — 측정 · 명제가 전부 액체, ASSB 로 옮긴 근거 0(28 · 31호 도구 칸 선례).
+
 ## ★★ 평탄이 유지되는 조건 (현재까지의 정리)
 
 > **Li-In 기준 전위가 ±10 mV 안에서 평탄한 것은 다음 넷이 동시에 성립할 때뿐이다.**
@@ -616,6 +631,10 @@ shift less than 3 mV"*. `[추론]` WE·CE 가 **둘 다 2상 평탄에 고정**�
 > 영점 0 V 는 **도금 Li 의 상 정체**로만 성립한다(원전 Hertle 2023). 조건: 리튬화 곡선에서 사다리(Au/AuLi → AuLi/AuLi₃ → 도금 평탄) 도달을 보이고,
 > **여분 전하 / (소비율 × 실험시간) ≥ 10** — (5′) 의 Li 금속 기준극 판. 원전 처방(∅10 µm · 8 µAh · 2.55 mAh cm⁻²)은 `[재현]` ≤ ≈19 h 까지만 보증하고,
 > 원전은 "refresh"(실험 사이 재리튬화)로 메운다. **깨지면 기준은 칸 단위(+0.133 · ≈+0.215–0.25 V)로 옮겨 간다.** 16호(∅25 µm · 0.27 mAh cm⁻² · NMC 상대)는 조건 밖.
+
+> ★★★ **2026-09-23 추가 (47호, ⚠ 액체셀 원전) — (10) 2상 칸 영점(리튬화 금선 0.31 V)은 원전이 인쇄한 사용 조건 안에서만.**
+> (a) 리튬화 뒤 **초기 이완 창을 뺀다**(원전 "initial 20 h", `[도표]` < 2 mV 는 ≈50 h 뒤) (b) **리튬화 온도 = 운전 온도**(어기면 수십 시간에 이탈, 지키면 영점이 1–2 mV 옮는다)
+> (c) **노출은 절단면만**(원전이 안정성 일부를 여기에 돌림) (d) 소진되면 **재리튬화**. 누설 간접 상한 < ≈0.27 nA(150 nAh / 550 h). ⚠ 전부 **액체 LP57** 에서다 — ASSB 판은 21호(Li\|Li 2 h, 조건 (a) · (c) 밖)뿐이다.
 
 ⚠ **압력은 아직 이 목록에 없다.** 17호는 **50 MPa 한 점**, 16호는 **두 점(97/389 MPa,
 다른 셀)** 이다. `E_CE(P)` 를 잰 편이 **0 편**이다.
@@ -686,6 +705,8 @@ Li 박 뒷면(= 17호 foil) 은 **9 초 · 0.39 µAh cm⁻²**, Li 박 면이 �
 - ★ **2026-09-23 (40호)**: **R-LTO 가 1.575 V 라고 주장하지 않는다** — 증인 0.62 V 를 넣은 우리 계산이고, 주장은 "원전의 검증이 25 mV 를 못 가른다" 까지다. **≈3 mV 중점 안정은 드리프트 상한이 아니다**(두 전극의 차 · 순서 미인쇄). **Li-In 55 at% 는 박 지름이 같다는 모식도 가정 위**다. 17–34 µAh 재고는 누설 측정이 아니라 설계 여유의 계산이다.
 
 - ★ **2026-09-23 (41호)**: **"Li-In = 0.621 V" 를 이 편의 인쇄값으로 쓰지 않는다** — Fig. S2 인셋의 **우리 화소 판독**(JPEG 래스터, 1 화소 ≈1 mV, 전류 중 · 셀 간 · 조건 미인쇄)이다. 이 편이 인쇄한 것은 "0.62 V(ref 33)" 와 "marginal difference" 다. **고갈층 두께 50 µm · "insulating" 을 측정 강도로 쓰지 않는다**(대조군 · 정량 · 반복 0). **CE 종단 전위(Fig. 3c)를 CE 과전압으로 쓰지 않는다**(컷오프 항등식).
+
+- ★ **2026-09-23 (47호)**: **"0.31 V 가 ASSB 에서 틀렸다" 고 하지 않는다** — 21호 ASSB Li\|Li 값과 두 자리에서 맞는다. 주장은 **원전 사용 조건 넷 중 둘(초기 창 · 단면 노출)이 21호에서 검사되지 않았다**는 것까지다. 20 h 뒤 ≈3 mV 는 셀 1 개 · 래스터 판독, 누설 < 0.27 nA 는 상한이다. **45호 134 / 215 mV 가 틀렸다고 하지 않는다** — [20] 인용이 이 지면에서 지지되지 않는다는 것까지(값은 Bach 원전에 있을 수 있다).
 
 - ★ **2026-09-23 (42호)**: **"0.62 V 가 ASSB 에서 틀렸다" 고 하지 않는다** — 액체 원전(0.622)과 41호 ASSB 판독(≈0.621)이 ≈1 mV 안이다. 주장은 **원전 측정이 액체셀이고 ASSB 안 Li 대비 인쇄 측정이 0** 이라는 것까지다. **≈15 mV 평탄 처짐을 열역학 폭으로 쓰지 않는다**(3 화소, 잔여 분극 방향). **대칭셀이 단락됐다고 단정하지 않는다** — 옴 수지 ×1/25–1/47 은 `[재현]` 이고 설명 후보 셋 중 하나다. **CuS 중점 비교로 상대극 전위를 추정하지 않는다**(곡선 쌍 하나).
 

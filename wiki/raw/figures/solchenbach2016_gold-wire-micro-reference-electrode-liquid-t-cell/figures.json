@@ -1,0 +1,171 @@
+{
+ "slug": "solchenbach2016_gold-wire-micro-reference-electrode-liquid-t-cell",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "solchenbach2016.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Conventional Swagelok T-cell design, b) modiﬁed T-cell design with gold wire reference electrode (GWRE), c) SEM image of the cut cross- section of gold wire tip prior to lithiation.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    60.8,
+    289.0,
+    563.1
+   ],
+   "w": 1081,
+   "h": 2094,
+   "dpi": 300,
+   "src": "solchenbach2016.pdf",
+   "blank": 0.376
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Potential of two GWREs during lithiation at 25◦C (black and orange lines) and of one GWRE during lithiation at 40◦C (green line) with 150 nA for 1 h. b) Potential of GWREs lithiated at 25◦C during subsequent OCV at 25◦C (black line) or at 40◦C (orange line) as well as of the GWRE lithiated at 40◦C during subsequent OCV at 40◦C (green line). c) Nyquist plot of the lithium electrodes in a lithium/lithium cell at OCV at 25◦C after lithiation of the GWRE at 25◦C (PEIS, 100 kHz to 0.1 Hz, 5 mV AC perturbation). All potentials are given vs. Li/Li+ and experiments were conducted in LP57 electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    60.9,
+    556.0,
+    410.1
+   ],
+   "w": 1080,
+   "h": 1456,
+   "dpi": 300,
+   "src": "solchenbach2016.pdf",
+   "blank": 0.849
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Comparison of voltage drift and impedance quality for a lithiated GWRE and a non-litiated pseudo-GWRE in LFP/graphite full-cells. a) Mea- sured potential between the LFP working electrode (WE) and either the non- lithiated pseudo-GWRE (black line) or the lithiated GWRE (green line). b) Nyquist plot of an LFP/graphite full-cell obtained with a non-lithiated pseudo- GWRE before lithiation. c) Nyquist plot of an LFP/graphite full-cell obtained with a lithiated GWRE. Conditions: 25◦C, LP57 electrolyte, PEIS with 5 mV amplitude at OCV (100 kHz–0.1 Hz).",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    61.3,
+    555.2,
+    405.1
+   ],
+   "w": 1081,
+   "h": 1434,
+   "dpi": 300,
+   "src": "solchenbach2016.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Systematic scheme of impedance measurements modes. a) Potential-controlled impedance spectroscopy (PEIS): The potential perturba- tion is controlled between WE and RE (black solid line), while current and potential between WE - CE are measured (gray dotted lines). A drift of the RE will lead to bias current between WE and CE. b) Current-controlled impedance spectroscopy (GEIS): The current perturbation is applied between WE and CE (black solid line), while potentials between WE - RE and CE - RE are mea- sured. c) Modiﬁed potential-controlled impedance spectroscopy (PEIS): The potential perturbation is controlled between WE and CE (black solid line), while current between WE - CE and potential between RE - CE are measured (gray dotted lines).",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    61.1,
+    289.0,
+    291.1
+   ],
+   "w": 1081,
+   "h": 960,
+   "dpi": 300,
+   "src": "solchenbach2016.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Impedance measurements on LFP and graphite electrodes after one C/10 formation cycle at 25◦C and subsequent charge to 50% SOC. a) Nyquist plot of the graphite electrode of an LFP/graphite full-cell with lithiated GWRE (blue line) and of a symmetrical graphite/graphite cell divided by 2 (dark blue). b) Nyquist plot of the LFP electrode of an LFP/graphite full-cell with lithiated GWRE (red line) and of a symmetrical LFP/LFP cell divided by 2 (dark red). c) Comparison of the impedance response (100 kHz–0.1 Hz) of graphite and LFP electrodes under potential-controlled (PEIS at 5 mV amplitude, straight lines) and current-controlled (GEIS at 0.5 mA amplitude, dotted lines) conditions. All impedance measurements were conducted at 25◦C.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    61.6,
+    556.0,
+    405.1
+   ],
+   "w": 1080,
+   "h": 1433,
+   "dpi": 300,
+   "src": "solchenbach2016.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Charge/discharge of an LFP/graphite full-cell with a lithiated GWRE at a rate of 1C after two initial formation cycles at C/10 (LP57 elec- trolyte, 25◦C). a) Cathode potential vs. the lithiated GWRE of cycles 10, 50, 100 and 200. b) Anode potential vs. the lithiated GWRE of cycles 10, 50, 100 and 200. The conversion to the Li/Li+ scale (right axis in a and b) was done by adding 0.311 V to the GWRE potential. c) Nyquist plot of the PEIS (5 mV amplitude, 25◦C) at 50% SOC of both the graphite anode (shown in the range from 100 kHz to 0.1 Hz) and the LFP cathode (shown in the range from 100 kHz to 0.3 Hz) after cycle number 10, 50, 100 and 200.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    61.5,
+    555.2,
+    401.1
+   ],
+   "w": 1081,
+   "h": 1416,
+   "dpi": 300,
+   "src": "solchenbach2016.pdf",
+   "blank": 0.845
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Nyquist plot of the graphite anode impedance after one formation cycle and recharge to 50% SOC at 40◦C of LFP/graphite full-cells with a lithiated GWRE in LP57 electrolyte containing 0%, 0.17%, and 0.52% VC in the electrolyte. PEIS was measured at 10◦C between 100 kHz–0.1 Hz with an amplitude of 5 mV.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    60.9,
+    289.0,
+    188.1
+   ],
+   "w": 1081,
+   "h": 531,
+   "dpi": 300,
+   "src": "solchenbach2016.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Rct of the graphite anode and the LFP cathode after formation in LFP/graphite full-cells with different VC amounts added to LP57 electrolyte. Impedance data were obtained with a lithiated GWRE (PEIS at 5 mV am- plitude and 10◦C between 100 kHz and 0.1 Hz) and ﬁtted by an equivalent circuit consisting of a resistor for the electrolyte, an RQ-element for the elec- trolyte/electrode interface resistance, and a Warburg element for solid-state diffusion. Note that the upper x-axis and the right y-axis display the VC con- tent and charge transfer resistance normalized to the graphite BET surface area.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    61.2,
+    556.0,
+    213.1
+   ],
+   "w": 1080,
+   "h": 634,
+   "dpi": 300,
+   "src": "solchenbach2016.pdf",
+   "blank": 0.884
+  }
+ ]
+}

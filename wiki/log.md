@@ -2348,3 +2348,18 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **11 장 중 7 장 봤다**(Fig. 1 · 2 · 3 · 4 · 6 · 7 · 8), 안 본 것 Fig. 5 · 9 · 10 · 11.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-li-in-reference-potential-window]](46호 절 · 계보 판정) · [[assb-lampe-contact-product-degeneracy]](스물아홉 번째 적용 · 처방 표 새 줄) · 큐 문서 §6-3-g 47 행 + 지문 ¹².
 - 후속(서지 기준, 미열람 — 큐 48–59 인용 0): Kasemchainan … Bruce 2019 *Nat. Mater.* 18, 1105 (ref 13) · Krauskopf … Janek 2019 *ACS AMI* 11, 14463 (ref 14) · Bron, Roling, Dehnen 2017 *JPS* 352, 127 (ref 45) · Wenzel … Janek 2018 *SSI* 318, 102 (ref 38) · Wang, Sakamoto 2018 *JPS* 377, 7 (ref 51) · Xu … Greer 2017 *PNAS* 114, 57 (ref 54).
+
+## [2026-09-23] ingest | assb 47호 — Solchenbach et al. 2016, A Gold Micro-Reference Electrode for Impedance and Potential Measurements in Lithium Ion Batteries (J. Electrochem. Soc. 163, A2265)
+- raw: `raw/papers/solchenbach2016_gold-wire-micro-reference-electrode-liquid-t-cell.md` (sha256 봉인 — 본문 PDF 해시 frontmatter `pdf_sha256`, SI 없음) · 그림 `raw/figures/solchenbach2016_gold-wire-micro-reference-electrode-liquid-t-cell/` (8 장). 큐 48번(2차 묶음 아홉째 편) — 21호 ref 11 · 45호 ref [20]. ⚠ **액체셀**(LP57, Swagelok T-셀).
+- ★★★ **Q5 판정**: 0.311 V = **Li 금속 대비 측정**(액체 Li\|Li) · LixAu(0 < x < ∼1.2) 첫 단 OCV · 150 nAh 절단면 리튬화 · >500 h 추적 `[도표]` 20 h 뒤 ≈3 mV(인쇄 < 2 mV) · 40 °C 리튬화 −1–2 mV · 25 → 40 °C ≈60 h 이탈 · 재리튬화 복원 · 누설 0/47(`[재현]` < ≈0.27 nA) — 스물세 번째 형태 "원전 측정 + 영점 사용 조건". 칸 반 칸 검토 후 접음(액체).
+- ★★★★ **0.31 V ↔ 0 V = 같은 선의 맨 위 · 맨 아래 칸.** 45호 "21호 0.31 V 는 어느 칸도 아니다" 는 원전 사다리로 풀림. 45호가 [20] 에 단 134 / 215 mV 는 지면에 없음 — 칸 값 표가 둘(0.3 / 0.2 ↔ 0.215 / 0.134 V).
+- ★★★★ **21호 교정 이식**: 가져간 것 = 값(두 자리) + 절차, 원전 조건 둘(노출 ×40 · 2 h 판독 = 초기 창 안) 이탈, 장기 안정성은 21호 자기 측정. 원장 "액체 값 → ASSB" 표현은 정밀하지 않음(21호 이식은 ASSB 안). "CE 거칠어짐" = "We believe"(셀 1, `[재현]` 0.77 nm).
+- ★★ 3전극 아티팩트: 원전 기구 = 표류(≲1 Hz, PEIS 에서 완전지까지) + 위치 — 45호 >10 kHz 원인 후보 추가 0.
+- **채움표 47호 행 — 누적 ≈19.5 → ≈19.5 (새 칸 0).** Q4 0/47 서른아홉 번째 성질 · Q3 층 하나 · Q2 해당 없음(도구 칸).
+- 곱 축퇴 처방 **서른 번째 적용**(액체, 도구 칸): 1단계 τ 형 면적 서명 · 3-b "전하이동" ×700–1000(다섯 번째, 첫 액체) · 새 줄 "외부 기준 줄의 다섯 번째 배정 — 연구 간 비교".
+- 카드: 채움표 행 · 47편 문단 · Evidence 마흔세 번째 절 · 새 제약 4 · Status Log.
+- ⚠ 어긋남 12 건(D1 20 h ↔ ≈3 mV · D2 "quickly" · D4 대칭셀 −9/−21 % · D5 같은 상태 흑연 호 ×0.63 · D6 134/215 교차 편 · D7 "∼5-fold" ↔ 4.2 · D11 x ≤ 1.2 ↔ 축 확산 외).
+- 낱말 지문: `MPa` 1(압연) 외 10 열 전부 0 · `calibrat` · `leak` · `pressure` 0 · `drift` 11.
+- 그림: **8 장 다 봤다**, 화소 판독 Fig. 2b · 2c · 5 · 6a.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-li-in-reference-potential-window]](47호 절 · 조건 (10)) · [[assb-lampe-contact-product-degeneracy]](서른 번째 적용 · 처방 표 새 줄) · 큐 문서 §6-3-g 48 행 + 지문 ¹³.
+- 후속(서지 기준, 미열람 — 큐 49–59 인용은 52 Illig 2012 하나): Bach … Renner 2015 *Electrochim. Acta* 164, 81 (ref 25) · Bach … Renner 2016 *Chem. Mater.* 28, 2941 (ref 30) · Ender, Weber, Ivers-Tiffée 2012 *JES* 159, A128 (ref 14) · Dees, Jansen, Abraham 2007 *JPS* 174, 1001 (ref 15) · Victoria, Ramanathan 2011 *Electrochim. Acta* 56, 2606 (ref 17).
