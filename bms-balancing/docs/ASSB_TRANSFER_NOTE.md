@@ -126,11 +126,11 @@ OCV 만으로 부족하고 미시구조 관측이 필요하다"** 가 **측정�
 |---|---|---|---|
 | 01 | Bielefeld·Weber·Janek 2019 — Microstructural Modeling | Q1 | ✅ **흡수 완료** (`81aa240`) |
 | 02 | Clausnitzer 외 2023 — Structure-Resolved Simulations (+SI) | Q1·**Q8** | ✅ **흡수 완료** (`2a2975ca`) |
-| 03 | Role of grain-level chemo-mechanics 2024 (+SI) — **DAMASK v2.0.2** | Q1 | ⏸ 수령·대기 |
-| 04 | Shi·Zhang·Tu 외 — Characterization of mechanical degradation (+SI) | Q1 | ⏸ 수령·대기 |
-| 05 | **Doux 2020** — Stack Pressure Considerations (Adv. Energy Mater., DOI `10.1002/aenm.201903253`) · 본문 6p `f1fc5062a6e259cd` · SI 8p `daa3b7a141c2f571` | **Q6** | ⏸ 수령·대기 |
-| 06 | **Lee 외 2020** — Ag–C 무음극 (**Samsung SAIT**, Nature Energy `10.1038/s41560-020-0575-z`) · 본문 10p `3452770465c31f45` · SI 18p `120d136d99668016` | **Q7** | ⏸ 수령·대기 |
-| 07 | **Spencer-Jolly 외** — Structural changes in the Ag–C composite anode interlayer (**Joule** vol. 7) · 본문 13p `a59c7405b40a1f42` · SI 6p `28eddf6139c1b529` | Q7 | ⏸ 수령·대기 |
+| 03 | Role of grain-level chemo-mechanics 2024 (+SI) — **DAMASK v2.0.2** | Q1 | ✅ **흡수 완료** (`3b671b47`, assb 3호) — 상태 칸만 뒤늦게 갱신 (2026-09-23 최종 정리; 흡수 당시 이 칸을 안 고쳤다) |
+| 04 | Shi·Zhang·Tu 외 — Characterization of mechanical degradation (+SI) | Q1 | ✅ **흡수 완료** (`92cb4b3e`, assb 4호) — 상태 칸만 뒤늦게 갱신 (2026-09-23 최종 정리; 흡수 당시 이 칸을 안 고쳤다) |
+| 05 | **Doux 2020** — Stack Pressure Considerations (Adv. Energy Mater., DOI `10.1002/aenm.201903253`) · 본문 6p `f1fc5062a6e259cd` · SI 8p `daa3b7a141c2f571` | **Q6** | ✅ **흡수 완료** (`4bc97a33`, assb 5호) — 상태 칸만 뒤늦게 갱신 (2026-09-23 최종 정리; 흡수 당시 이 칸을 안 고쳤다) |
+| 06 | **Lee 외 2020** — Ag–C 무음극 (**Samsung SAIT**, Nature Energy `10.1038/s41560-020-0575-z`) · 본문 10p `3452770465c31f45` · SI 18p `120d136d99668016` | **Q7** | ✅ **흡수 완료** (`98f27390`, assb 6호) — 상태 칸만 뒤늦게 갱신 (2026-09-23 최종 정리; 흡수 당시 이 칸을 안 고쳤다) |
+| 07 | **Spencer-Jolly 외** — Structural changes in the Ag–C composite anode interlayer (**Joule** vol. 7) · 본문 13p `a59c7405b40a1f42` · SI 6p `28eddf6139c1b529` | Q7 | ✅ **흡수 완료** (`41198055`, assb 7호) — 상태 칸만 뒤늦게 갱신 (2026-09-23 최종 정리; 흡수 당시 이 칸을 안 고쳤다) |
 | 08 | From state estimation to active intelligence (**Frontiers in Chemistry**, `10.3389/fchem.2026.1960882`, Mini Review, 2026-09-15 게재) · 12p `a54b551671eea230` | Q3·Q4 | ✅ **흡수 완료** (`c90b7f67`) — 칸 0 추가. 실익은 **원 논문 후보 5편**(→ 31~35) 과 **종설 숫자가 우리 원전과 어긋난 실측**(Su 2024) |
 | 09 | **Huo 외** — Characterization of cathode degradation + **결합 전기화학-노화 모델** (sulfide ASSB, *JPS*) · 11p `9f2496907f7e65a0` · SI(.docx) `cee297a20e00d37e` | **Q2 · 전압축** | ✅ **흡수 완료** (`dfc1fc78`) — **누적 ≈7.0 → ≈7.5 칸** (Q6 반 칸 + Q3 새 층위 `fitted-single-parameter`). **Q1·Q4 는 여전히 0** 이나 **Q4 의 성질이 세 번째로 바뀌었다**(지문이 자기 표 안에 있다). 새 개념 페이지 `assb-lampe-contact-product-degeneracy`. 후속 후보 1·2·3 순위 → **36·37·38** |
 
