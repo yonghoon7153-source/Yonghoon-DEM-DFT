@@ -1,0 +1,214 @@
+{
+ "slug": "tabakovic2026_mechanical_stress_eis_ica_drt_dfn",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 8,
+   "file": "fig_1.png",
+   "caption": "Figure 1: Bidirectional coupling of stress fields and electrochemical processes on particle- and electrode-scale in the DFN framework.",
+   "rotated_deg": 0,
+   "bbox": [
+    100.4,
+    242.5,
+    494.9,
+    375.5
+   ],
+   "w": 1645,
+   "h": 555,
+   "dpi": 300,
+   "src": "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf",
+   "blank": 0.796
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 13,
+   "file": "fig_2.png",
+   "caption": "Figure 2: Incremental capacity analysis at three different hydrostatic stress levels, illustrating the influence of stress fields on the equilibrium potential of the electrode reactions.",
+   "rotated_deg": 0,
+   "bbox": [
+    100.4,
+    205.6,
+    494.9,
+    397.6
+   ],
+   "w": 1645,
+   "h": 801,
+   "dpi": 300,
+   "src": "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 15,
+   "file": "fig_3.png",
+   "caption": "Figure 3: Nyquist plots at operating voltages of (a) 3.64 V, (b) 3.72 V, and (c) 3.98 V under three different stress fields, showing the voltage dependence of stress-induced changes in cell’s impedance.",
+   "rotated_deg": 0,
+   "bbox": [
+    100.4,
+    244.2,
+    494.9,
+    566.5
+   ],
+   "w": 1645,
+   "h": 1344,
+   "dpi": 300,
+   "src": "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 17,
+   "file": "fig_4.png",
+   "caption": "Figure 4: DRT analysis at operating voltages of (a) 3.64 V, (b) 3.72 V, and (c) 3.98 V under three different stress fields, showing the voltage dependence of stress-induced changes in the cell’s electrochemical response.",
+   "rotated_deg": 0,
+   "bbox": [
+    100.4,
+    242.0,
+    494.9,
+    569.7
+   ],
+   "w": 1645,
+   "h": 1366,
+   "dpi": 300,
+   "src": "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 9,
+   "file": "tab_1.png",
+   "caption": "Table 1: Governing equations and boundary conditions in a P2D model. [2]",
+   "rotated_deg": 0,
+   "bbox": [
+    101.4,
+    140.4,
+    493.9,
+    731.1
+   ],
+   "w": 1637,
+   "h": 2463,
+   "dpi": 300,
+   "src": "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 10,
+   "file": "tab_2.png",
+   "caption": "Table 2: Governing equations and boundary conditions in a mechanical model.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.4,
+    213.2,
+    493.9,
+    839.1
+   ],
+   "w": 1637,
+   "h": 2609,
+   "dpi": 300,
+   "src": "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 11,
+   "file": "tab_3.png",
+   "caption": "Table 3: List of model parameters for graphite/NMC pouch cell [56]. Parameter Cathode (NMC) Separator Anode (graphite) Thickness Li [µm] 67 12 62 Particle radius Ri [µm] 3.5 - 2.5 Active material fraction εs [-] 0.445 - 0.610 Porosity εe [-] 0.3 0.4 0.3 Bruggeman’s coefficient brugg [-] - 1.5 - Maximum concentration cs,max [mol m−3] 35380 - 28746 Reaction rate constant k [mol m−2 5.0·10−11 - 1.1·10−11 s−1 (mol m−3)−1.5] Electrode conductivity σ [S m−1] 100 - 100 Double layer capacity ˜CDL [F m−2] 0.2 - 0.2 Charge transfer coefficient α [-] 0.5 - 0.5 Stoichiometric coefficients [SoC = 1] [-] 0.033 - 0.8332 Stoichiometric coefficients [SoC = 0] [-] 0.890 - 0.002 Solid diffusivity Ds [m2 s−1] 8·10−15 - 5·10−15 Young’s modulus Ep [GPa] 199 [57] - 15 [58] Poisson’s ratio ν [-] 0.25 [57] - 0.3 [58] Partial molar volume Ω[cm3 1.25·10−5 3.1·10−6 [58] mol−1] Electrolyte Initial electrolyte concen",
+   "rotated_deg": 0,
+   "bbox": [
+    108.6,
+    200.1,
+    484.2,
+    839.1
+   ],
+   "w": 1566,
+   "h": 2664,
+   "dpi": 300,
+   "src": "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "fA5",
+   "kind": "figure",
+   "label": "A5",
+   "page": 20,
+   "file": "fig_A5.png",
+   "caption": "Figure A.5: Quasi-equilibrium discharge profiles of the NMC/graphite cell at a C/1000 rate under different hydrostatic stress levels, highlighting the influence of external mechanical loading on the full-cell voltage.",
+   "rotated_deg": 0,
+   "bbox": [
+    138.0,
+    150.0,
+    454.0,
+    400.0
+   ],
+   "w": 1317,
+   "h": 1042,
+   "dpi": 300,
+   "src": "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf",
+   "blank": 0.922,
+   "manual_crop": "clip-rect render (caption not parseable by extract_figures.py)"
+  },
+  {
+   "key": "fA6",
+   "kind": "figure",
+   "label": "A6",
+   "page": 20,
+   "file": "fig_A6.png",
+   "caption": "Figure A.6: Pressure-induced changes in the internal state of the NMC/graphite cell at 3.64 V, showing electrolyte concentration and potential, together with solid surface concentration and solid potential.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.0,
+    457.0,
+    491.0,
+    661.0
+   ],
+   "w": 1613,
+   "h": 851,
+   "dpi": 300,
+   "src": "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf",
+   "blank": 0.803,
+   "manual_crop": "clip-rect render (caption not parseable by extract_figures.py)"
+  },
+  {
+   "key": "fB7",
+   "kind": "figure",
+   "label": "B7",
+   "page": 21,
+   "file": "fig_B7.png",
+   "caption": "Figure B.7: Cathode solid surface concentration profiles along the electrode thickness at three states of charge under applied mechanical stress of 0 Pa, 1 MPa, and 10 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.0,
+    170.0,
+    491.0,
+    298.0
+   ],
+   "w": 1613,
+   "h": 534,
+   "dpi": 300,
+   "src": "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf",
+   "blank": 0.89,
+   "manual_crop": "clip-rect render (caption not parseable by extract_figures.py)"
+  }
+ ]
+}
