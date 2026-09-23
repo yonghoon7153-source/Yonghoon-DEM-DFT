@@ -7630,3 +7630,59 @@ Q6 F50b (여전히 (b)). **본 실행 GO 를 요청하지 않는다.**
 ⚠ **한 번은 거부가 증거가 아니었다** — 첫 재실행에서 리뷰어 스크립트의 T1 칸이 REJECTED 였으나
 사유가 `TypeError`(내가 시험 함수 서명을 깼다)였다. 서명을 되돌리고 `AssertionError` 로 거부되는
 것을 확인하고서야 닫혔다고 적었다. 이 관측도 원장에 남긴다.
+
+## §87 68차 접수 — 부분 수용 / 종결 NO-GO (P2 1)
+
+2026-09-24 접수. 리뷰어가 고정한 HEAD `a1979cdf5b9f04234b6a441150e161bd4f0a3ced` · 과학 정본 `743f65be` ·
+`source_digest e9ee7475dea7de1d` (리뷰어가 **직접 재계산**, 우리 실측과 같다). 리뷰 플랫폼 Windows / Python 3.12.14 /
+pytest 9.1.1. 패키지 원본은 `docs/22p_gap/gate68_review/` (zip sha256 `6679445165c2fba82b1dacf5b3dd24228d23bbce512306e6248d8e5fd7f096eb`,
+`MANIFEST.json` 141 payload · 풀어서 141/141).
+
+**닫혔다고 인정받은 것** (되돌리지 않는다): **G67-N1** · **G67-N2** · **G67-T1-b**(네 등록 변이의 baseline rc 0 · mutant rc 1 ·
+정확 실패 집합 · call · 고정 witness — Windows 독립 국소 대조) · G67-T1 의 usage error / collect-only / 상속 옵션 경계.
+gate64~67 portable 선택 suite 52 passed · 2 skipped(`fcntl.flock`) · 1 deselected(kernel lock probe), `--check-preimages` rc 0.
+
+| ID | 심각도 | 리뷰어가 실행으로 확인한 반례 | 무효화되는 주장 |
+|---|---|---|---|
+| G68-T1 | P2 | 원본 `_premise_run` 의 명시 `env_extra` 로 `PYTEST_ADDOPTS=--setup-only` → child rc 0, 정확한 두 JUnit testcase 에 failure/error/skipped 없음, 실제 단계는 setup/teardown 뿐 **call 0 개** — `assert_premise_actually_ran` 이 **ACCEPTED / 미측정 []** | "시험 본문을 수행하지 않은 child 를 실행 증거 소비자가 거부한다" 는 G67-T1 종결 주장 |
+
+리뷰어가 스스로 한정한 것: 제출자가 실제로 돌린 깨끗한 회귀를 실패로 소급 분류하지 않는다 · 상속 옵션 제거가 다시 뚫렸다는
+주장이 아니다 · 특정 외부 plugin 을 필수화하라는 뜻이 아니다 · 전체 41 분 회귀 · strict smoke · Linux `fcntl`/`/proc`/native locking ·
+본실행은 그 기계에서 미수행이고 우리 Linux 수치(77 passed/1 xfailed · 1789 passed/1 failed)를 수신 측 수치로 바꾸지 않는다 ·
+기존 P0-1/P0-4·등록부 격리 미착수를 새 결함으로 세지 않는다.
+
+**문서 정정 셋** (새 코드 결함과 구분): D1 `a31be7a9→HEAD` dd diff 는 rc 1 (요청문 머리 20 줄) — "실행 코드 불변 · 요청문 머리
+추가" 로 · D2 발송문의 "본실행 GO 요청" 은 정본 요청문(§0/§5 가 두 번 부인)과 모순 — 발송문이 틀렸다 · D3 "지운 고아 175 건은
+재실행으로 되돌릴 수 있다" 는 바이트/역사 복원이 아니다. 다섯 질문의 답은 `codex/GATE68_REVIEW_KO.md` §5.
+
+## §88 68차 대응 — JUnit 은 "돌았다" 를 말하지 않는다
+
+작업 상태 정본은 `docs/GATE68_WORKING_STATE.md`, 요청문은 `docs/22p_gap/GATE69_REQUEST.md`.
+`source_digest` 는 `e9ee7475dea7de1d` 그대로 — 이번 고침도 전부 RUN_SCOPE 밖이다.
+
+**한 줄**: 67차가 증거를 stdout 문자열에서 JUnit 으로 옮겼지만, JUnit 도 **단계**를 모른다 — testcase 가 있고 자식이 없다는
+것과 call 을 지났다는 것은 다른 명제다.
+
+- **G68-T1** — pytest **내장 hook** 만 쓰는 작은 plugin(`tests/phase_witness.py`)이 보고서마다 `{nodeid, when, outcome}` 을
+  즉시 append 한다. `_premise_run` 이 `-p tests.phase_witness --rootdir=REPO` 로 싣고, 증거 경로는 JUnit 경로에서 **유도**한다
+  (리뷰어 통로의 두 서명 불변). `assert_premise_actually_ran` 은 JUnit 검사 뒤에 **exact full node id** 마다 `when=call` 이
+  **정확히 하나**이고 결말이 passed(측정)/skipped(미측정)인지 본다 — unrun(`--setup-only` 모양) · duplicate · setup/teardown
+  error · node 집합 불일치 · JUnit↔단계 불일치를 **각각의 사유**로 거부한다. rc 0 · testcase 수 · 요약 passed 수로 대체하지
+  않고 옵션 문자열을 차단하지도 않는다.
+- **회귀** `tests/test_gate68_defensive.py` 13 node — 실제 child 셋(setup-only · collect-only · usage error) · clean 대조군 둘 ·
+  **실제 clean child 의 산출을 고쳐서** 묻는 합성 여섯 · 내장 hook 확인. RED: `g68_01` · `g68_03[setup_only]` · `g68_04` 가
+  수정 전 실패. GREEN: gate66+67+68 **41 passed**.
+- **변이** `the-premise-checks-the-call-phase-g68` (`_call_evidence` unrun→passed) 등록 — 관측 EXPECT = 선언 (3 node, 증인
+  `Failed: DID NOT RAISE AssertionError`). `--check-preimages` 모든 지점 1 회. `-k premise` 재생 4 건 통과.
+- **문서 정정 셋** 반영 — D1 · D3 은 `GATE68_REQUEST.md` 에 원문 취소선 + 정정, D2 는 발송문(저장소 밖)의 오류라 여기와 작업
+  상태 문서에 기록하고 69차 발송문에서 "GO 를 요청하지 않는다" 를 머리에 둔다.
+- **스스로 찾은 것** — 리뷰 패키지를 풀어 둔 트리에 git 이 CRLF→LF 정규화를 걸어 68차 64/141 · 67차 174/350 · 66차 트리의
+  커밋 바이트가 manifest sha 와 어긋나 있었다 (zip 은 온전). `docs/22p_gap/gate6{6,7,8}_review/** -text !eol` 규칙을 먼저 커밋한
+  뒤 원본 바이트로 다시 넣었다 — 커밋 뒤 재대조 141/141 · 350/350 · 107/107.
+
+**실측 (이 커밋 직전, clean tree · HEAD `b1710532`)**: 전체 `pytest tests/ -q` → **1 failed · 1803 passed · 2 xfailed  in 2504.15s (0:41:44)   EXIT=1  (실패 1 = tests/test_docs_lint.py::test_a_smoke_run_cannot_be_promoted_to_a_canonical_report — 67·68차 요청문과 같은 기존 환경 실패: 이 컨테이너에 results/grid_fit_v4 가 없다)** · `./scripts/smoke_e2e.sh` → **✅ pipeline smoke 통과  EXIT=0  (시작 HEAD = 끝 HEAD = b1710532)**.
+등록부: tracked **367** · 디스크 **367** · 미추적 **0** · 삭제 **0**.
+
+**하지 않은 것**: 본실행 (요청하지 않는다, F50b (b)) · N1/N2/T1-b 재설계 · P0-1/P0-4/등록부 격리/trusted launcher (Q5 순서대로
+읽기 전용 영향 확인 먼저) · 등록부 복원·class 변경.
+
