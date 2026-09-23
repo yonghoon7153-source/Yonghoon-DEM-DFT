@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/hertle2023_micro-reference-electrode-lithiated-gold-wire-assb.md, raw/papers/jin2015_lithium-silicide-anode-electrode-design-assb.md, raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md, raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
+sources: [raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/hertle2023_micro-reference-electrode-lithiated-gold-wire-assb.md, raw/papers/jin2015_lithium-silicide-anode-electrode-design-assb.md, raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md, raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -563,6 +563,17 @@ shift less than 3 mV"*. `[추론]` WE·CE 가 **둘 다 2상 평탄에 고정**�
 - **⑦ 합 일치의 자리.** `[인쇄]` 반쪽 합 ↔ 2E 잔차 "below 1% … real part … below 10% … imaginary" 로 "validating the results of the reference electrode concept and construction". `[해석]` 같은 셀이면 항등식 — **DC 전위 · 위치 artifact(재분배) 둘 다 합에서 안 보인다**(20 · 40 · 43호 계열). >10 kHz 편차 원인은 원문 0, 위치 artifact 는 합에서 상쇄되므로 후보에서 빠진다. `[재현]` 검증 셀(Fig. 10, 고주파 ≈49 Ω cm²) ≠ 분석 셀(Fig. 5 · 11 · S7, ≈97 Ω cm²).
 - **⑧ 부수: LTO 평탄 vs 도금 Li** `[도표]` Fig. 13 0.1 C 충 · 방 모두 1.55 V 안내선 위(±≈10 mV) — R-LTO 가지 1.55 V 의 **ASSB 안 Li 금속 대비 첫 그림**, 그러나 **1.55 ↔ 1.57 을 못 가른다**(선 두께 수준).
 - ⇒ 계보: … → 공통 모드 표류 판독(43호) → GITT `ΔE_s` 안의 가정(44호) → **셀 안 도금 Li · 소모품 기준극(45호)**. 칸 +0.5(Q5): 근거가 논문의 측정(Fig. 7 측정 축) + 명제(수명 · 실패 기구 · 유지 절차)다. 반 칸인 이유 — 표류 수 0 · 누설 0 · n 미기재 · 618 의 문장 지위 · 8 µAh 처방 곡선이 Fig. 7 어느 패널인지 불명.
+
+### ★★★ `assb` 46호 (Schlenker et al. 2020) — **스물두 번째 형태: 영점이 들어가지 않는 자리 — 같은 금속 대칭셀의 AC 분할 전용** (그리고 "리튬화 금선" 계보의 최종 판정)
+
+`raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md`
+(*ACS Appl. Mater. Interfaces* **12** (2020) 20012, KIT IAM + Bosch + **Marburg(Roling · Miß)**, 2019-12 투고 — 21호 ref 17; Li\|Li₆PS₅Cl\|Li 대칭셀, Au 도금 W 선을 SE 분말에 묻어 540 MPa 공동 압착, 운전 0.1 kN("about 6 MPa")).
+
+- **① 기준극은 있다 — 영점은 없다.** `[인쇄]` "Initially, the reference wire is plated with lithium from both electrolytes [sic] to reach a constant potential of the reference". 리튬화 전하 · 전류 · 선 지름 · Au 두께 · 도달 전위 **전부 미인쇄**, 기준극 대비 전위 축 그림 0, `leak` · `drift` · `calibrat` 0 — **누설 0/46**. 기준극은 **EIS 분할(WE–RE)에만** 쓰였다.
+- **② 왜 영점이 필요 없었나** (`[해석]`). WE · CE · RE 가 모두 Li 금속(도금 Li) 이고 측정량이 AC 임피던스라 기준극의 DC 값이 결과에 안 들어간다. 19호(4전극 — 두 기준극 차로 영점 **소거**)와 결과는 닮았고 기구가 다르다: 19호는 설계로 상쇄, 이 편은 측정량이 애초에 DC 를 안 본다. 대가는 같다 — **기준극 자신에 대한 정보가 0**. 이 자리에서는 P11 이 공짜였다: RE–WE · RE–CE 개방회로 ≈0 V 두 숫자.
+- **③ 남은 흔적.** 도금 쪽 반쪽(Fig. 4c)에만 유도성 — `[인쇄]` "makes a separation of these resistances impossible". 기하가 대칭(선이 가운데)인데 한 반쪽에만 있다 → `[해석]` 45호 줄 "반쪽에만 있는 특징은 기준극 채널 artifact 부터" 의 후보, 원문 원인 무언급.
+- **④ ★★★★ 계보 최종 판정 — 21호 `[추론]` "Schlenker → Hertle → 16호" 는 두 줄의 합류다.** (a) 인용: Hertle 참고문헌에 이 편 0(45호) ❌ · (b) 영점: 이 편 0 V 문장 · 값 0 ❌ — **0 V 의 원전은 Hertle(Giessen) 하나** · (c) 하드웨어: Au 도금 W 선 · 매립 · 제자리 Li 도금 — 이 편 · Hertle(∅10 µm) · 16호(∅25 µm) ✅, 이 편이 계보상 가장 이른 ASSB 사용 · (d) 저자: 이 편 Roling · Miß = 16호 Miß · Roling ✅(16호가 이 편을 인용했는지는 우리 16호 digest 에 기록 없음). ⇒ **하드웨어 · 저자 줄(Marburg) 과 영점 줄(Giessen) 이 16호에서 처음 만난다.** `[해석]` 16호는 영점이 필요 없던 자리(같은 금속 · AC)의 선을 영점이 필요한 자리(NMC 상대 리튬화 · DC 전위 축)로 옮기며 영점을 다른 연구실에서 빌렸다 — 45호 ⑥("16호 이식 = 조건 밖")의 **출처 쪽 절반**이다.
+- ⇒ 계보: … → GITT `ΔE_s` 안의 가정(44호) → 셀 안 도금 Li · 소모품 기준극(45호) → **영점이 들어가지 않는 자리(46호)**. 칸 이동 없음(반 칸 검토 후 접음) — 기준 전위에 관한 측정 · 명제가 0 이고 계보 판정은 우리 대조다.
 
 ## ★★ 평탄이 유지되는 조건 (현재까지의 정리)
 

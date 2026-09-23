@@ -1,0 +1,231 @@
+{
+ "slug": "schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "a0265914-8._Understanding_the_Lifetime_of_Battery_Cells_Based_on_Solid-State_Li6PS5Cl_Electrolyte_Paired_with_Lithium_Metal_Electrode.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Voltage curves of Li|Li6PS5Cl|Li cells during application of a constant current. (a) and (b) show identical cells with J = 0.30 mA/cm2 for 5 min during stripping and plating. In (c) and (d) a current density J = 0.15 mA/cm2 was applied to two identical cells for 60 min. An OCV step of 10 min was inserted between the positive and negative constant currents. (e) demonstrates the correlation between overpotential and total lithium amount moved until a short circuit occurs. (f) explains graphically the deﬁnition of overpotential used in this work. and growth) mechanism on Cu electrode in liquid electrolytes with ex situ SEM. They obtained results on lithium nuclei size, areal density, and shape consistent with the general nucleation The initial start of any lithium growth is the recombination of Li+ and e−, resulting in a lithium nucleation process. Bai et al.7 and Sano et al.22 st",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    673.2
+   ],
+   "w": 2151,
+   "h": 2543,
+   "dpi": 300,
+   "src": "a0265914-8._Understanding_the_Lifetime_of_Battery_Cells_Based_on_Solid-State_Li6PS5Cl_Electrolyte_Paired_with_Lithium_Metal_Electrode.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Stripping and plating at J = 0.15 mA/cm2 for 30 min for each step followed by a continuous constant current step until most of the lithium is moved to the other side. This enables the removal of the lithium from the solid electrolyte. (b) demonstrates graphically the stripping and plating steps and the measurement positions for XPS analysis. “ref.” corresponds to a spot that has not been in contact with lithium, and “electr.” refers to the area where lithium was in contact with the electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    232.8
+   ],
+   "w": 2151,
+   "h": 708,
+   "dpi": 300,
+   "src": "a0265914-8._Understanding_the_Lifetime_of_Battery_Cells_Based_on_Solid-State_Li6PS5Cl_Electrolyte_Paired_with_Lithium_Metal_Electrode.pdf",
+   "blank": 0.845
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. XPS spectra of (a) electrolyte, former interface between lithium electrode and electrolyte, which is identical to the reference, and (b) remaining lithium on the current collector, (c) quantiﬁcation of the depth proﬁle of reference and the former interface between electrolyte and lithium, and (d) quantiﬁcation of the depth proﬁle of residual lithium on the current collector. For the elemental quantiﬁcation of S 2p an inelastic background subtraction of a fourth-order polynomial was used to account for the additional sulfate emission which is situated on a step rise of the plasmon loss feature. For all other emission lines, a Shirley background correction was applied.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    284.2,
+    570.5,
+    657.4
+   ],
+   "w": 2151,
+   "h": 1556,
+   "dpi": 300,
+   "src": "a0265914-8._Understanding_the_Lifetime_of_Battery_Cells_Based_on_Solid-State_Li6PS5Cl_Electrolyte_Paired_with_Lithium_Metal_Electrode.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Impedance spectra of the interface between lithium stripping side and reference wire during the application of a constant current of 0.30 mA/cm2 over time. The amount of stripped lithium is calculated according to Faraday’s law and indicated in the legend. (b) Derived evolution of bulk and grain boundary resistance and interface resistance during stripping, obtained by ﬁtting the spectra to the equivalent circuit displayed in the inset of (a). (c) Impedance spectra of the lithium plating electrode are displayed. The overall resistance decreases during plating which indicates a better interface contact between lithium metal and electrolyte. Kasemchainan et al.13 The formation of voids corresponds to a reduced interface area between lithium metal and electrolyte. In addition to the increasing interface resistance, the chemical capacities and Warburg short contributions increa",
+   "rotated_deg": 0,
+   "bbox": [
+    296.4,
+    63.2,
+    570.5,
+    579.4
+   ],
+   "w": 1143,
+   "h": 2152,
+   "dpi": 300,
+   "src": "a0265914-8._Understanding_the_Lifetime_of_Battery_Cells_Based_on_Solid-State_Li6PS5Cl_Electrolyte_Paired_with_Lithium_Metal_Electrode.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Illustration of lithium vacancy gradient. Initially, the lithium vacancies are homogeneously distributed in the lithium electrode. During stripping, lithium ions migrate toward the other side, and lithium vacancies arise around the spot where the lithium ions migrate away from. The lithium vacancies cannot diﬀuse fast enough away, which leads to a lithium vacancy diﬀusion gradient. On the opposite side, i.e., the plating side, lithium ions recombine with electrons, and the amount of lithium vacancies decreases around the plated spots. The diﬀusion of lithium vacancies is again not fast enough, which also leads to a lithium vacancy diﬀusion gradient. hydroxide, and lithium carbonate on surface of lithium foil, colored in blue layer) and (ii) a laterally inhomogeneous contact between SEI and the solid electrolyte. From the local contact spots through which the current ﬂows, the L",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    263.8
+   ],
+   "w": 2151,
+   "h": 837,
+   "dpi": 300,
+   "src": "a0265914-8._Understanding_the_Lifetime_of_Battery_Cells_Based_on_Solid-State_Li6PS5Cl_Electrolyte_Paired_with_Lithium_Metal_Electrode.pdf",
+   "blank": 0.647
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Pressure-dependent impedance spectra of a symmetrical Li|solid electrolyte|Li cell, with the amorphous solid electrolyte 0.33 LiI + 0.67 Li3PS4 exhibiting an ionic conductivity of 0.8 mS/cm. (a) Impedance spectra taken with increasing pressure from 8.8 to 44.2 MPa. (b) Impedance spectra taken during releasing the pressure from 44.2 to 4.4 MPa. (c) Warburg short resistance obtained from the ﬁt of the spectra in (b). (d) Warburg exponent obtained from the ﬁt of the spectra in (b). signiﬁcantly lower than the Vickers hardness, implying only local contact spots between Li metal and solid electrolyte. In the literature, the spread of reported Vickers hardness values for Li metal is quite large. In Wang,51 a yield strength of Li metal of 2 MPa was reported. Because the Vickers hardness of many materials is typically 3 times the yield strength,52 this suggest a Vickers hardness around",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    412.8
+   ],
+   "w": 2151,
+   "h": 1458,
+   "dpi": 300,
+   "src": "a0265914-8._Understanding_the_Lifetime_of_Battery_Cells_Based_on_Solid-State_Li6PS5Cl_Electrolyte_Paired_with_Lithium_Metal_Electrode.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Voltage response of a Li|Li6PS5Cl|Li cell with lithium contact area variation for diﬀerent directions of stripping and platting. Blue: lithium is stripped from a large contact and plated to a small lithium area. Orange: lithium is stripped from a small contact area and plated at a large lithium contact area.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    246.5
+   ],
+   "w": 1052,
+   "h": 765,
+   "dpi": 300,
+   "src": "a0265914-8._Understanding_the_Lifetime_of_Battery_Cells_Based_on_Solid-State_Li6PS5Cl_Electrolyte_Paired_with_Lithium_Metal_Electrode.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Variation of deposited lithium amount for diﬀerent current densities of 0.15 and 0.30 mA/cm2 until cell failure. A similar lifetime behavior, independent of the capacity, is observed for both current densities. Within one current density individual small, medium, and large amounts of lithium are cycled during each half-cycle. Cell failure depends on current density and amount of lithium stripped and plated per cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    256.1
+   ],
+   "w": 1051,
+   "h": 804,
+   "dpi": 300,
+   "src": "a0265914-8._Understanding_the_Lifetime_of_Battery_Cells_Based_on_Solid-State_Li6PS5Cl_Electrolyte_Paired_with_Lithium_Metal_Electrode.pdf",
+   "blank": 0.79
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 10,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Microscopic images of three diﬀerent lithium amounts plated onto a steel plate with a constant current density of 0.30 mA/ cm2: (a) 0.6, (b) 1.0, and (c) 2.0 μg.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    118.7,
+    570.5,
+    202.9
+   ],
+   "w": 1052,
+   "h": 352,
+   "dpi": 300,
+   "src": "a0265914-8._Understanding_the_Lifetime_of_Battery_Cells_Based_on_Solid-State_Li6PS5Cl_Electrolyte_Paired_with_Lithium_Metal_Electrode.pdf",
+   "blank": 0.373
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 11,
+   "file": "fig_10.png",
+   "caption": "Figure 10. ToF-SIMS analysis of 1.0 μg of lithium seed plating on a steel current collector at a constant current of 0.30 mA/cm2: (a) SE image, (b) sketch illustrating the topography of the plating mechanism, and (c) Fe distribution on ToF-SIMS image to demonstrate the matrix eﬀect.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.4,
+    203.3
+   ],
+   "w": 2150,
+   "h": 585,
+   "dpi": 300,
+   "src": "a0265914-8._Understanding_the_Lifetime_of_Battery_Cells_Based_on_Solid-State_Li6PS5Cl_Electrolyte_Paired_with_Lithium_Metal_Electrode.pdf",
+   "blank": 0.515
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 11,
+   "file": "fig_11.png",
+   "caption": "Figure 11. ToF-SIMS area scans of Li (upper row) and Cl signals (lower row) at lithium seeds plated onto a steel plate: (a + b) small lithium amount (0.6 μg), (c + d) medium lithium amount (1.0 μg), and (e + f) large lithium amount (2.0 μg). Lithium seeds plate on top of previously plated lithium. SIMS analysis cannot be correlated to the concentration as the intensity depends on the ionization probability which depends on its matrix. In these area scans, at least three matrices can be distinguished. The ﬁrst one is the iron on the outer fringe part, the second is the lithium in the middle part, and the third matrix consists of the electrolyte material that still sticks to the inner circle and represents the connection to the electrolyte. believe that the chlorine containing parts in the area of the inner circle represent the connection to the solid electrolyte Li6PS5Cl as some of its re",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    232.2,
+    570.6,
+    518.7
+   ],
+   "w": 2151,
+   "h": 1195,
+   "dpi": 300,
+   "src": "a0265914-8._Understanding_the_Lifetime_of_Battery_Cells_Based_on_Solid-State_Li6PS5Cl_Electrolyte_Paired_with_Lithium_Metal_Electrode.pdf",
+   "blank": 0.433
+  }
+ ]
+}

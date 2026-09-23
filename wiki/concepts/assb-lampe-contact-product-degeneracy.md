@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/hertle2023_micro-reference-electrode-lithiated-gold-wire-assb.md, raw/papers/jin2015_lithium-silicide-anode-electrode-design-assb.md, raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md, raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/hertle2023_micro-reference-electrode-lithiated-gold-wire-assb.md, raw/papers/jin2015_lithium-silicide-anode-electrode-design-assb.md, raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md, raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -175,6 +175,7 @@ physical significance** of the parameters" 라고 쓴다.
 | ★★★ **면적 서명 ↔ 저율 용량 비 대조 — 반쪽전지 음극** (2026-09-23 신설, **43호에서**) | 1단계가 어떤 호에 면적 서명(`C` 비 ≈ 1/`R` 비, τ 불변)을 주면 그 면적 비를 **같은 셀 저율 용량 비**와 댄다. 반쪽전지(Li 저장소 상대극)는 `LLI` 를 지워 WE 용량을 `(1−LAM)(1−u)` 한 곱으로 만든다 ⇒ **면적 비 < 용량 비 이면 면적 손실의 일부는 연결된 입자의 피복(`A_eff`, 37호 `k` 쌍둥이)이지 통째 고립(`u`)이 아니다.** `LAM` ↔ `u` 는 여전히 한 곱 | ★★★ **43호**(흑연\|LPSI, 333 K 가속): `[재현]` `R_CT` `C_eff` ×0.43 ± 0.2 ≈ 1/`R` ×0.47 · τ ×0.92 ↔ 0.05 C 용량 `[도표]` ×0.75–0.78. ⚠ 같은 호의 `C_eff`(20–46 mF)가 이중층 상한의 ×270–3,200 라 `C ∝ A` 전제가 약하고, 3-a(`Ea` 22 → 27.5)는 반대 방향 · n = 1 |
 | ↳ **외부 기준 줄의 네 번째 배정 — 같은 계의 "면적 기지" 대조 셀 (GITT Weppner–Huggins)** (2026-09-23, **44호에서**) | GITT 식이 주는 것은 `√D · S / θ` 한 조합이다(θ = 참여 분율, 식의 `m_B` 에 숨어 있다). 한 셀에서 `S`(또는 `D`)를 고정하는 **근거를 적고, 그 근거가 비교 셀에도 참인지** 본다 — 참이면 쪼개기는 결과가 아니라 선택이다. 그리고 (i) **계단별 값**을 다 적고 (ii) 참여 용량 비로 **`θ` 민감도**를 적고 (iii) 입자 `r²/D` 를 펄스 길이와 댄다 | ⚠ **44호**(Li₄.₄Si 단층, 신품, 2015 — 29 · 30 · 31호보다 이르다): Case 1 "전해질 없음 → `S` 기하" 로 `D` 를 뽑고 Case 2 차이를 전부 `S` 에 — Case 2 도 전해질 없음. `[재현]` 인쇄 `S` 3.19 = 셋째 계단(4.13 / 3.67 / 3.18) · BET ×8.7 ↔ ×2.07 · `θ` 를 GITT 참여 비(≈×2.75)로 두면 ×4.7–5.7 · r²/D ≈9 s ≪ 600 s |
 | ★★ **합 일치는 분배를 검증하지 않는다 — 반쪽에만 있는 고주파 호는 3-b(`C` 상한)로 먼저 거른다** (2026-09-23 신설, **45호에서**) | 3전극 반쪽 합 = 완전지(`Z_CR + Z_RA = Z_CA`)는 같은 셀이면 항등식이라 **기준극 위치 artifact(재분배)가 상쇄**되고 DC 전위도 안 보인다. 그러므로 곱을 가르기 전에 (i) **두 반쪽의 분배**는 합이 아니라 기준극 위치 · 분리막 질량비(40호 줄)로 검사하고 (ii) **반쪽 하나에만 있는 호**는 `C = τ/R` 를 분리막 기하 용량과 대 넘치면 물리 성분으로 적합하지 않는다. 부수: **2전극 적합의 전극 간 비유일성은 같은 셀 3전극 반쪽이 고른다** — 곱 앞에 분배를 고정하는 순서 | ★★ **45호**(NCM851005\|Li₆PS₅Cl\|In/InLi, μ-RE ∅10 µm, 신품): `[인쇄]` 합 잔차 Re <1 % · Im <10 % 로 "validating … concept and construction" · 양극 반쪽 호 #1("SE separator") `[재현]` τ ≈0.6 µs · R ≈57 Ω(가정) ⇒ **C ≈10 nF ↔ 기하 10–100 pF(×100–1000)** · 2E 두 적합(`R_Anode` 14 ↔ 3.9 Ω cm², `[인쇄]` "equally well") ↔ S7 음극 반쪽 호 ≈12–13 ⇒ Fit 1(우리 판독). ⚠ 반쪽 · 전체 주파수 끝점 미인쇄 · 검증 셀 ≠ 분석 셀 |
+| ★★ **역방향 반쪽 짝 — 한 셀 두 반쪽에서 박리 · 도금(양극이면 충 · 방)을 동시에** (2026-09-23 후보, **46호에서**, `[해석]`) | 면적(형태) 가설은 두 반쪽 계면 저항의 **부호가 반대**, 단조 계면층 성장은 **같은 부호**를 예측한다 — 곱 `A_geom × f_pass` 의 두 인자를 방향으로 가른다 | ⚠ **46호**: 박리 쪽 R3 ↑(`[도표]` ≈1.5 → 8.8 Ω) · 도금 쪽 전체 ↓ — 그러나 도금 쪽은 유도성으로 성분 분리 실패(`[인쇄]` "separation … impossible"), 짝이 반쪽만 남았다. 한 반쪽에만 이상 특징이 있으면 45호 3-b 거름망부터 |
 
 ★ **`R_CT·C_dl` 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -1458,6 +1459,33 @@ n = 1 · 신품 · 표–그림 `ΔE_t` ×2 · 상대극(비리튬화 In 박, �
 
 신품 · 한 상태 · `C` 미인쇄 · 열화 0 · n 미기재. 3-b 판정은 R · ε_r · 호 모양 가정 위다. 기여는 **곱 앞 단계(전극 간 분배)의 검증 한계**와 그 거름망이다.
 
+## ★★ 처방의 스물아홉 번째 적용 (2026-09-23, `assb` 46호) — **Li 음극 계면: 저자가 "면적 또는 절연 SEI" 를 인쇄하고 두 갈래를 "활성 접촉 면적 감소" 로 합쳤다 — 4단계만 부분 적용, 판별 설계(역방향 반쪽 짝)는 반쪽이 막혔다**
+
+`raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md` (Schlenker … Ehrenberg 2020, *ACS AMI* 12, 20012). Li\|Li₆PS₅Cl\|Li 대칭셀 · Au 도금 W 매립 기준극 · 0.30 mA cm⁻² 박리 중 EIS 10⁶–10⁻¹ Hz · 운전 "about 6 MPa" · 온도 미인쇄. 양극 없음 — **곱의 Li 음극 판**.
+
+### 입력 점검
+
+| 단계 | 입력 | 판정 |
+|---|---|---|
+| **1단계** `R`·`C` | R3(계면) 5 상태 `[도표]` ≈1.5 · 4.1 · 5.9 · 7.8 · 8.8 Ω · C3 는 대표값 하나(10⁻⁷ F cm⁻²) | ❌ |
+| **2단계** 면적 대조군 | 면적 비대칭 셀(Fig. 7 — 크기 · 전류 미인쇄, 전압만) · 압력 스윕(Fig. 6 — **다른 SE**, R_Ws · α 만 적합) | ⚠ 손잡이 둘, 판독이 R·C 가 아니다 |
+| **3단계-a** `Ea` | 온도 미인쇄 | ❌ |
+| **3단계-b** `C` 상한 | C3 10⁻⁷ · C2 "10^10"(부호 오기) — **규격화 면적 미인쇄** | ⚠ 판정 불가 |
+| **4단계** 시간 영역 | `[재현]` DC 면적저항 77–117 Ω cm²(Fig. 1a,b, 캡션 J) ↔ 3E 반쪽 합(0.1 Hz 끝, 다른 셀) ≈24 Ω cm²(면적 ≈0.16 cm²) | ✅ 부분 — **≥2/3 가 0.1 Hz 아래**(저자 공공 확산 서사와 방향 일치, 저자는 대조하지 않음) |
+
+### ★★★ 곱이 저자 문장 안에서 한 이름이 된다
+
+`[인쇄]` "either with a decreasing interface area … as R ∼1/A or an ionically insulating SEI formation at the interface, leading to a decreasing active contact area" — 두 갈래의 끝이 같은 말이다. `[해석]` 계면 저항은 `A_geom × f_pass`(기하 접촉 × 화학적 통과 분율)의 역수만 본다 — 37호 `A_eff ↔ k` 항등의 음극 판. 저자의 배정(면적 쪽)은 **XPS 음성**(S 2p ≤6 at%) · **가역성 논증**(반주기마다 되풀이되는 상승) · **도금 쪽 반대 부호** 세 논증이고, 스스로 "open question" 이라 적었다.
+
+### ⇒ 이 적용이 처방에 더하는 것
+
+1. **새 줄 후보 "역방향 반쪽 짝"**(위 표). 면적 ↔ 계면층을 **방향**으로 가르는 설계 — 이 편이 반쪽만 실행했다.
+2. **4단계의 대역 밖 몫** — DC 와 EIS 대역(여기 0.1 Hz 하한)의 차는 곱의 어느 인자가 아니라 **대역 밖 과정**(여기 공공 확산 후보)의 크기다. 4단계를 쓰기 전에 EIS 하한 주파수와 DC 시간 척도를 맞춘다.
+
+### ⚠ 이것이 곱을 푼 것은 아니다
+
+양극 없음 · 상태별 `C` 없음 · 셀 수 미인쇄 · DC ↔ EIS 는 다른 셀. 기여는 **곱이 저자 문장 안에서 한 이름으로 합쳐지는 표본**과 **역방향 짝**이라는 판별 설계다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -1519,3 +1547,4 @@ n = 1 · 신품 · 표–그림 `ΔE_t` ×2 · 상대극(비리튬화 In 박, �
 - ★ **2026-09-23 (39호)**: **"`R_ct` 의 ×13 이 `k_p` 다" 라고 주장하지 않는다** — 후보는 셋(0.5 µm 아래 실접촉 · 계면 화학 `k_p` · 2전극의 상대극 In–Li 계면)이고 39호는 아무것도 가르지 않았다. 그리고 **`φ(P)` 추세 자체를 확정값으로 쓰지 않는다** — 같은 분할이 고정 혼합물의 부피비를 ×2 흔든다. 주장은 **"CT 로 잰 면적이 `R_ct` 변화의 작은 몫만 설명한다 — 그 분할을 믿는 한"** 까지다.
 - ★ **2026-09-23 (40호)**: **R2 가 기준극 artifact 라고 주장하지 않는다** — `C₂` 가 표면 산화물 층 귀속과 두 자릿수 긴장한다는 것은 `ε_r` · `d` 가정 위이고, 꼭짓점 주파수는 인쇄된 "around" 다. **R3 세 값의 원인을 안다고 주장하지 않는다**(셀 · 시점 · 회로 중 무엇인지 지면이 말하지 않는다). 옴 몫 1 : 2.7 ↔ 1 : 3.2 는 LGPS 밀도 · 균질 분리막 가정 없이 질량비만 쓴 대조다.
 - ★ **2026-09-23 (43호)**: **"`R_CT` 배증은 면적 손실이다" 도 "면적 손실이 아니다" 도 주장하지 않는다** — 1단계는 면적 서명, 3-a 는 반대, 3-b 는 1단계의 전제를 약화한다. 주장은 **"같은 호의 두 면적-불변 채널이 충돌하고, 1단계를 믿는 한 면적 손실이 용량 손실보다 크다"** 까지다. 그리고 **`(1−u)·φ` · `(1−u)(1−LAM)` 두 식은 우리 대수**이고 원전 명제가 아니다(원전은 두 채널을 대조하지 않았다). 흑연 0.6 mg 읽기는 4단계 일치(판독 한계 근처)로 고른 것이다.
+- ★ **2026-09-23 (46호)**: **"Li 금속 계면 저항 증가는 면적 손실이다" 도 "SEI 다" 도 주장하지 않는다** — 원전이 논증으로 배정했고 가르지 않았다는 것까지다. 4단계의 "≥2/3 가 0.1 Hz 아래" 는 **다른 셀 사이** 비교이고, 면적 ≈0.16 cm² 는 지면의 세 수를 맞추는 우리 추정이다. 역방향 짝은 후보 설계이고 이 편에서 판별에 성공하지 않았다.

@@ -2335,3 +2335,16 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **20 장 중 15 장 봤다**(Fig. 1 · 3–13 · S1 · S5 · S7), 화소 판독 Fig. 7 · 10 · 13. 안 본 것 Fig. 2 · S2 · S3 · S4 · S6.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-li-in-reference-potential-window]](45호 절 · 조건 (9) · P10 · P11) · [[assb-lampe-contact-product-degeneracy]](스물여덟 번째 적용 · 처방 표 새 줄) · 큐 문서 §6-3-g 46 행 + 지문 ¹¹.
 - 후속(서지 기준, 미열람 — 큐 47–59 인용은 48 하나): Solchenbach … Gasteiger 2016 *JES* 163, A2265 (ref 20, 큐 48) · Bach … Renner 2015 *Electrochim. Acta* 164, 81 (ref 33) · Braun … Ivers-Tiffée 2018 *JPS* 393, 119 (ref 38) · Klink … La Mantia 2012 *Electrochem. Commun.* 22, 120 (ref 19).
+
+## [2026-09-23] ingest | assb 46호 — Schlenker et al. 2020, Understanding the Lifetime of Battery Cells Based on Solid-State Li6PS5Cl Electrolyte Paired with Lithium Metal Electrode (ACS Appl. Mater. Interfaces 12, 20012)
+- raw: `raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md` (sha256 봉인 — 본문 PDF 해시 frontmatter `pdf_sha256`, SI 없음) · 그림 `raw/figures/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode/` (11 장). 큐 47번(2차 묶음 여덟째 편) — 21호 ref 17, 원장 Hertle 행 병합("'0 V 리튬화 금선' 관례의 출처" 후보). KIT IAM + Bosch + Marburg(Roling · Miß — 16호 공저자).
+- ★★★★ **Q5 판정**: Au 도금 W 선 매립 기준극을 **썼다**(Li\|Li₆PS₅Cl\|Li 대칭셀 EIS 분할 전용) · 영점 · 리튬화 전하 · 선 지름 · 검증 · 표류 · 누설 전부 0 — 스물두 번째 형태 "영점이 들어가지 않는 자리". **계보 최종 판정**: 21호 "Schlenker → Hertle → 16호" = 하드웨어 · 저자 줄(Marburg) + 영점 줄(Giessen, Hertle → 16호 [24]) 의 16호 합류 — 이 편은 0 V 의 출처가 아니다.
+- ★★★★ **Q7 판정**: 저자 기구 = 계면 면적 손실(void · Li 공공 확산) + 씨앗형 도금 → 국소 전류 → 덴드라이트, SEI 보류(XPS S 2p ≤6 at%), Li 소모 무관(`[재현]` ≤3 %). 단락 = "sudden voltage drop" 한 기준 · `[도표]` 붕괴 여러 계단 · 단락 전 계단 ×≈0.7 — 연성 단락 배제 0, 대칭셀은 OCV ≡ 0 이라 개방회로 서명 없음 · CE 통로 없음.
+- **채움표 46호 행 — 누적 ≈19.5 → ≈19.5 (새 칸 0).** Q5 · Q2 반 칸 검토 후 접음 · Q4 0/46 서른여덟 번째 성질 · Q6 층 하나(감압 이력) · Q3 층 하나.
+- 곱 축퇴 처방 **스물아홉 번째 적용**(Li 음극 계면): 4단계 ✅ 부분(`[재현]` DC 77–117 ↔ EIS 합 ≈24 Ω cm²) · 새 줄 후보 "역방향 반쪽 짝".
+- 카드: Evidence 마흔두 번째 절 · 새 제약 4 · Status Log.
+- ⚠ 어긋남 16 건(D1 Fig. 1 J·t 본문 ↔ 캡션 · D2 Fig. 4b 축 "µm" = 분 · D3 Li 면적 ≈0.16 cm² · D4 "10^10 F/cm²" · D6 Fig. 1e ↔ Fig. 8 · D9 Fig. 6 외).
+- 낱말 지문: `contact loss` 1(Li 음극) · `MPa` 14 외 9 열 전부 0 · `leak` · `drift` · `calibrat` · `Coulomb*` · `soft` 0.
+- 그림: **11 장 중 7 장 봤다**(Fig. 1 · 2 · 3 · 4 · 6 · 7 · 8), 안 본 것 Fig. 5 · 9 · 10 · 11.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-li-in-reference-potential-window]](46호 절 · 계보 판정) · [[assb-lampe-contact-product-degeneracy]](스물아홉 번째 적용 · 처방 표 새 줄) · 큐 문서 §6-3-g 47 행 + 지문 ¹².
+- 후속(서지 기준, 미열람 — 큐 48–59 인용 0): Kasemchainan … Bruce 2019 *Nat. Mater.* 18, 1105 (ref 13) · Krauskopf … Janek 2019 *ACS AMI* 11, 14463 (ref 14) · Bron, Roling, Dehnen 2017 *JPS* 352, 127 (ref 45) · Wenzel … Janek 2018 *SSI* 318, 102 (ref 38) · Wang, Sakamoto 2018 *JPS* 377, 7 (ref 51) · Xu … Greer 2017 *PNAS* 114, 57 (ref 54).
