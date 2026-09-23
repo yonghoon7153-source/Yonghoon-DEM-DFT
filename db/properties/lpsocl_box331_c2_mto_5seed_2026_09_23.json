@@ -98,7 +98,7 @@
  "⏳_남은_게이트": "새 시드 6런(s5·s6 × 600/800/1000)의 **C2b**(궤적 기반 inter-cage 홉 ≥ 3/이온 · aimd_jump_stats.py)와 **C6**(framework_site_census.py --card lpsocl_box331_closure_amendment_2026_09_11.json) 미실행. ⚠ 화면의 '홉 x/이온' 은 C2b 값이 **아니다** — 다른 추정량이다(modelc 600 K: 화면 18.4 vs C2b 기록 23.6–24.7).",
  "β_경보_판정아님": "β 0.80–0.93 — 경보이고 판정축이 아니다 (kb/concepts/beta-gate.md §7-5).",
  "전_라운드": "db/properties/lpsocl_box331_c3_input_d_2026_09_11.json (3시드) — **덮지 않는다**",
- "⚠_라벨_메타데이터": "s5·s6 은 러너 `run_box331_seed_extension.sh:147` 이 `--label modelc` 를 **하드코딩**해서, lpsocl 런인데도 run_meta·ensemble_results 의 `label` 이 'modelc' 로 찍혔을 것이다(kgy 실물 미확인). 드라이버는 label 을 출력·메타에만 쓴다(disorder_ensemble_diffusion.py:484·490·501·592·617) — **물리 무관**. 계의 정체는 `v0_xyz`(lpsocl_relaxV0_3x3x1.xyz)와 출력 경로가 증명한다. 러너는 2026-09-23 `--label \"$SYS\"` 로 고쳤다.",
+ "⚠_라벨_메타데이터": "s5·s6 은 러너 `run_box331_seed_extension.sh:147` 이 `--label modelc` 를 **하드코딩**해서, lpsocl 런인데도 run_meta·ensemble_results 의 `label` 이 'modelc' 로 찍혔다 — **kgy 실물 확인 2026-09-23**: run_meta `label` = s2·s3·s4 \"lpsocl\" · s5·s6 \"modelc\". 드라이버는 label 을 출력·메타에만 쓴다(disorder_ensemble_diffusion.py:484·490·501·592·617) — **물리 무관**. 계의 정체는 `v0_xyz`(lpsocl_relaxV0_3x3x1.xyz)와 출력 경로가 증명한다. 러너는 2026-09-23 `--label \"$SYS\"` 로 고쳤다. 원본 run_meta 는 **고치지 않는다**(원자료 보존) — 이 기록이 정정이다.",
  "런_파라미터_러너_그대로": {
   "구조": "db/structures/lpsocl_relaxV0_3x3x1.xyz — 558원자 (Li 243 · P 45 · S 189 · O 9 · Cl 72) · 62원자 셀 × 3×3×1 · |a| 20.84 |b| 20.82 |c| 35.17 Å",
   "포텐셜": "UMA uma-s-1p1 · task omat · 실행모드 default (modelc 는 turbo)",
@@ -114,5 +114,6 @@
   ],
   "배열": "disorder_levels 0.0 · n_configs 1",
   "실측_런시간": "20.9 h/런 (kgy RTX 3090) — modelc turbo 9.2 h/런"
- }
+ },
+ "같이_돈_잡_2026_09_23_실측": "kgy GPU: cascade v6 MD(PID 1195371, ~/lldvar 체크아웃의 disorder_ensemble_diffusion.py · cascade_v6_40run_0921) + li2s 담금질 seed2(PID 442769, melt_quench_uma.py, 1일 18 h) — 시드 확장 대기열과 무관. watch 의 '드라이버 1개' 는 cascade MD 였다."
 }
