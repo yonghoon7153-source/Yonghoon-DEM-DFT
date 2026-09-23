@@ -215,3 +215,16 @@ def test_the_announcement_is_made_on_the_event_loop_not_the_worker_thread():
     assert not runner.is_alive(), "기다리던 화면이 안 깼다 — 루프 밖에서 알렸다"
     seen, woke = result["out"]
     assert woke == [seen + 1]
+
+
+def test_a_problem_with_no_circuit_to_offer_is_counted_not_touched(client, monkeypatch):
+    """검수의 "문제" 수와 여기의 "대상" 수가 왜 다른지 글 머리가 말한다."""
+    from app.routers import eis_refit
+
+    spectrum_id, _ = pellet(client, "B15_pellet.mpr", BLOCKING, "R0-p(R1,CPE1)")
+    monkeypatch.setattr(eis_refit, "refit_candidates", lambda findings: [])
+    body = client.post("/api/eis/audit/refit").json()
+    assert (body["targets"], body["unoffered"]) == (0, 1)
+    text = client.post("/api/eis/audit/refit", params={"format": "text"}).text
+    assert "권할 회로가 없는 1개는 건드리지 않습니다" in text
+    assert len(fits_of(client, spectrum_id)) == 1

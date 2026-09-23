@@ -97,6 +97,7 @@ class _Started:
     total: int
     targets: int
     skipped: list[RefitSkipOut]
+    unoffered: int = 0
 
 
 @dataclass
@@ -128,9 +129,14 @@ def _announce() -> None:
         revision.bump()
 
 
-def _targets(session: Session) -> tuple[int, list[_Target], list[RefitSkipOut]]:
-    """쓰는 맞춤을 전부 검수해, 회로를 실은 문제 판정이 있는 것만 고른다."""
+def _targets(session: Session) -> tuple[int, list[_Target], list[RefitSkipOut], int]:
+    """쓰는 맞춤을 전부 검수해, 회로를 실은 문제 판정이 있는 것만 고른다.
+
+    넷째 값은 맞춤 판정에 문제가 있는데 **권할 회로가 없는** 스펙트럼의 수다.
+    글 머리에 적는다 — 검수의 "문제 82" 와 여기의 "대상" 이 왜 다른지 묻지 않게.
+    """
     total = 0
+    unoffered = 0
     targets: list[_Target] = []
     skipped: list[RefitSkipOut] = []
     records = session.exec(select(SpectrumRecord).order_by(SpectrumRecord.id)).all()
@@ -150,7 +156,9 @@ def _targets(session: Session) -> tuple[int, list[_Target], list[RefitSkipOut]]:
         candidates = refit_candidates(audit.findings)
         if candidates:
             targets.append(_Target(record, best, spectrum, audit, reference, candidates))
-    return total, targets, skipped
+        elif any(one.severity == PROBLEM for one in audit.findings):
+            unoffered += 1
+    return total, targets, skipped, unoffered
 
 
 def _refit_one(session: Session, target: _Target, origin: str,
@@ -232,8 +240,8 @@ def _run(dry_run: bool) -> Iterator[_Started | _Progress | EisRefitOut]:
     started = _now()
     origin = batch_name(started)
     with Session(engine) as session:
-        total, targets, skipped = _targets(session)
-        yield _Started(origin, started, total, len(targets), list(skipped))
+        total, targets, skipped, unoffered = _targets(session)
+        yield _Started(origin, started, total, len(targets), list(skipped), unoffered)
         spectra: list[RefitSpectrumOut] = []
         for index, target in enumerate(targets, start=1):
             try:
@@ -253,9 +261,9 @@ def _run(dry_run: bool) -> Iterator[_Started | _Progress | EisRefitOut]:
             # 요청이 시작될 때 한 번 올렸지만 그때는 저장한 것이 없었다.
             _announce()
         yield EisRefitOut(origin=origin, dry_run=dry_run, generated_at=started,
-                          total=total, targets=len(targets), changed=changed,
-                          kept=len(spectra) - changed, spectra=spectra,
-                          skipped=skipped)
+                          total=total, targets=len(targets), unoffered=unoffered,
+                          changed=changed, kept=len(spectra) - changed,
+                          spectra=spectra, skipped=skipped)
 
 
 @router.post("/audit/refit", response_model=EisRefitOut)
@@ -366,9 +374,12 @@ def _render(events: Iterable[_Started | _Progress | EisRefitOut]) -> Iterator[st
             when = event.generated_at.strftime("%Y-%m-%d %H:%M UTC")
             lines = [f"EIS 다시 맞추기 — {when} · 묶음 {event.origin}",
                      f"맞춘 스펙트럼 {event.total}개 중 대상 {event.targets}개 — 회로를 "
-                     f"권한 문제 판정이 있는 것",
-                     "옛 맞춤은 지우지 않습니다. 검수가 받아들인 새 맞춤만 더하고, 그것을 "
-                     "씁니다."]
+                     f"권한 문제 판정이 있는 것"]
+            if event.unoffered:
+                lines.append(f"맞춤 판정에 문제가 있지만 권할 회로가 없는 {event.unoffered}개는 "
+                             f"건드리지 않습니다 — `bml audit` 에 그대로 남습니다")
+            lines.append("옛 맞춤은 지우지 않습니다. 검수가 받아들인 새 맞춤만 더하고, "
+                         "그것을 씁니다.")
             yield "\n".join(lines) + "\n\n"
         elif isinstance(event, _Progress):
             yield _progress_line(event) + "\n"

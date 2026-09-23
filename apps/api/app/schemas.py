@@ -1677,6 +1677,8 @@ class EisRefitOut(BaseModel):
     total: int
     #: 회로를 실은 문제 판정이 있는 것 — 맞춰 본 것.
     targets: int
+    #: 맞춤 판정에 문제가 있지만 권할 회로가 없는 것 — 건드리지 않았다.
+    unoffered: int = 0
     changed: int = 0
     kept: int = 0
     spectra: list[RefitSpectrumOut] = []
