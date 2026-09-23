@@ -240,7 +240,8 @@ def _audit_spectrum(session: Session, record: SpectrumRecord,
                           thickness_cm=thickness_cm, area_cm2=area,
                           band=(best.frequency_low_hz, best.frequency_high_hz),
                           conductivity=conductivity,
-                          alternatives=_offered(record))
+                          alternatives=_offered(record),
+                          reference=points.reference)
         findings += audit.findings
         out.circuit = best.circuit
         out.chi_squared = best.chi_squared

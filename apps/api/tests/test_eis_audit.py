@@ -153,6 +153,22 @@ def test_a_current_range_switch_is_named_on_the_kk_line(client):
     assert f"· 전류 범위 바뀜 {expected:.3g} Hz" in text
 
 
+def test_a_point_the_kk_test_cannot_draw_is_not_held_against_the_circuit(client):
+    """맞춤 검수가 같은 스펙트럼의 KK 결과를 받는다 — 맞는 회로로 맞춘 셀에서 튄
+    점 하나(33 Hz, +14 %)를 "그 주파수의 모양을 회로가 못 그립니다" 로 적지 않는다
+    (실측 mid_Ni #37)."""
+    frequency = S.log_sweep(1e6, 1e-2, 12)
+    z = S.randles(frequency, **USER)
+    z[int(np.argmin(np.abs(frequency - 33)))] *= 1.14
+    out = upload(client, S.build_mpr(S.spectrum_columns(frequency, z)),
+                 "flying_point_sym_60um.mpr")
+    fit(client, out["id"], "R0-p(R1,CPE1)-p(R2,CPE2)")
+    item = entry(audit(client), out["id"])
+    assert item["misfit_max"] > 0.10                   # 맞춤은 그 점에서 10 % 넘게 빗나간다
+    assert [one for one in codes(item) if one.startswith("kk_")]
+    assert not [one for one in codes(item) if one.startswith("misfit")]
+
+
 def test_the_audit_writes_nothing(client):
     """캐시가 없으면 원본에서 읽되 **쓰지 않는다** — 검수가 고치면 무엇이
     틀려 있었는지가 지워진다."""

@@ -7,12 +7,21 @@ seed -- a KK verdict that depends on the draw is not a test.
 """
 
 import re
+from dataclasses import dataclass
 
 import numpy as np
 import pytest
 
-from wrdkit.eis.audit import CHECK, NOTE, _kk_findings, audit_spectrum
+from wrdkit.eis.audit import (
+    CHECK,
+    NOTE,
+    KKReference,
+    _kk_findings,
+    audit_fit,
+    audit_spectrum,
+)
 from wrdkit.eis.circuit import parse_circuit
+from wrdkit.eis.derive import FULL, LIQUID, SOLID
 from wrdkit.eis.kk import MU_LIMIT, KKResult, _mu, lin_kk
 from wrdkit.eis.spectrum import Spectrum
 
@@ -388,3 +397,109 @@ def test_a_second_look_within_the_noise_does_not_say_there_is_no_deviation():
     assert "어긋남은 없습니다" not in reason
     assert re.search(r"잔차가 \d+\.\d % 지만 잡음\(σ ≈ \d\.\d\d %\)의 여섯 배 안이라 "
                      r"어긋남으로 보지 않습니다", reason)
+
+
+# -- 다섯 번째 실측 검수(2026-09-23 06:10) 뒤에 고친 것 ---------------------------------
+# KK 모델(Voigt 급수)은 KK 를 만족하는 어떤 스펙트럼도 그린다 — 회로는 그중 하나다.
+# 그 모델도 못 그리는 것을 회로 탓으로 적지 않는다.
+
+@dataclass
+class _P:
+    name: str
+    value: float
+    status: str = "determined"
+    reason: str = ""
+
+    @property
+    def determined(self) -> bool:
+        return self.status == "determined"
+
+
+@dataclass
+class _Fit:
+    circuit: str
+    parameters: list
+
+
+ARC = ("R0-p(R1,CPE1)-CPE2",
+       {"R0": 5.0, "R1": 20.0, "CPE1_Q": 1e-5, "CPE1_n": 0.9, "CPE2_Q": 1e-3, "CPE2_n": 0.85})
+
+
+def fitted(circuit, values):
+    return _Fit(circuit, [_P(name, value) for name, value in values.items()])
+
+
+def fit_findings(points, fit, *, reference, kind=LIQUID, config=""):
+    band = (float(points.frequency_hz.min()), float(points.frequency_hz.max()))
+    return audit_fit(fit, points, kind=kind, config=config, band=band,
+                     reference=reference).findings
+
+
+def test_a_point_no_model_draws_is_not_the_circuits():
+    """실측 mid_Ni #37: 33 Hz 에서 회로 11 %, KK 9.8 % — "그 주파수의 모양을 회로가
+    못 그립니다" 가 KK 의 "튄 점입니다" 옆에 붙었다."""
+    f = sweep(7e6, 0.01)
+    z = build(*ARC, f)
+    z[int(np.argmin(np.abs(f - 33)))] *= 1.14
+    points = spectrum(f, noisy(z, 1e-3, 1))
+    fit = fitted(*ARC)
+    assert "misfit_somewhere" in [x.code for x in fit_findings(points, fit, reference=None)]
+    after = fit_findings(points, fit, reference=audit_spectrum(points).reference)
+    assert not [x for x in after if x.code.startswith("misfit")]
+
+
+def test_a_glitch_does_not_hide_the_missing_cable():
+    """실측 B7 60 °C (#96): 전류 범위가 바뀐 80.7 Hz (회로 22 %, KK 21 %) 가 가장
+    크게 어긋난 곳이 되어, 형제 스윕마다 뜬 "배선 인덕턴스가 없습니다" 를 가렸다."""
+    circuit, values = ARC
+    f = sweep(1e6, 0.01)
+    z = build("L1-" + circuit, dict(values, L1=1.2e-7), f)
+    z[int(np.argmin(np.abs(f - 80)))] *= 1.25
+    points = spectrum(f, noisy(z, 1e-3, 2))
+    fit = fitted(circuit, values)
+    assert "inductance_missing" not in [
+        x.code for x in fit_findings(points, fit, reference=None)]
+    (cable,) = [x for x in fit_findings(points, fit,
+                                        reference=audit_spectrum(points).reference)
+                if x.code == "inductance_missing"]
+    assert cable.message.startswith("KK 도 못 그리는 79.4 Hz 를 빼면 가장 크게")
+
+
+def test_a_mean_at_the_noise_is_not_the_circuits():
+    """실측 B7 -10 °C (#103): 평균 3.2 % 로 "회로가 모양을 못 그립니다" — 그 스윕의
+    KK 잔차 σ 가 2.3 % 였다.  잡음만 있으면 회로의 평균 오차와 KK 의 것이 같다."""
+    f = sweep(7e6, 0.01)
+    points = spectrum(f, noisy(build(*ARC, f), 0.026, 3))
+    fit = fitted(*ARC)
+    assert "misfit_everywhere" in [x.code for x in fit_findings(points, fit, reference=None)]
+    kk = audit_spectrum(points)
+    assert "kk_noisy" in [x.code for x in kk.findings]
+    assert "misfit_everywhere" not in [
+        x.code for x in fit_findings(points, fit, reference=kk.reference)]
+    # 잡음 위에 회로가 정말 못 그리는 모양이 있으면 그대로 말한다.
+    wrong = fitted(ARC[0], dict(ARC[1], R1=40.0))
+    assert "misfit_everywhere" in [
+        x.code for x in fit_findings(points, wrong, reference=kk.reference)]
+
+
+def test_one_spectrum_gets_one_lower_bound():
+    """실측 풀셀 #10·#11·#13: KK 는 "하한을 0.255 Hz 로", 맞춤은 "하한을 0.0567 Hz
+    로" — 한 스펙트럼에 두 하한.  KK 의 하한이 더 높으면 그것이 이 점들까지 뺀다."""
+    f = sweep(7e6, 0.01)
+    ramp = np.clip(np.log10(0.1 / f), 0, None) * 0.20
+    points = spectrum(f, noisy(build(*FULL_33, f) * (1 + ramp), 2.9e-3, 1))
+    fit = fitted(*FULL_33)
+
+    def edge(reference):
+        return [x for x in fit_findings(points, fit, reference=reference, kind=SOLID,
+                                        config=FULL) if x.code == "misfit_at_edge"]
+
+    assert edge(None)
+    kk = audit_spectrum(points)
+    assert kk.reference.low_limit_hz is not None
+    assert edge(kk.reference) == []
+    # KK 의 하한이 더 낮으면 맞춤의 하한을 두고, 왜 더 높은지 말한다.
+    lower = KKReference(kk.reference.frequency_hz,
+                        np.zeros_like(kk.reference.residual), low_limit_hz=0.02)
+    (kept,) = edge(lower)
+    assert "KK 가 권한 하한(0.02 Hz)보다 높습니다" in kept.message
