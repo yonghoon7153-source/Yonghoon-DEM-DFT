@@ -10,6 +10,8 @@
 #SBATCH -e /scratch/x3430a02/kgy/wad_sese_2026_09_23/logs/sese_%j.err
 #SBATCH --comment qe
 # =============================================================================
+# ⛔⛔ 쓰지 않는다 — KISTI 접근은 2026-09-15 에 종료됐다 (lpscl_li2s_layer1_closed_2026_09_15.json).
+#     2026-09-23 에 그걸 모르고 만들었다 (D-2026-09-23-wad-sese-move-kisti · rejected). 기록으로만 둔다.
 # sbatch_sese_kisti.sh — SE|SE 대조 잡을 KISTI A100 **4장**에 평면파 분산으로 돌린다
 #                        (tools/wad/run_sese_gpu.sh 를 감싼다 — 판정·해시·D3 검사는 러너 것 그대로)
 #
