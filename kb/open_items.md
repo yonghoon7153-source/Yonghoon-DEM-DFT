@@ -70,6 +70,9 @@
   · 16:42 KST 발사 · 8랭크 npool 2 · k 5개 · 총 RAM 34.2 GB (원 SCF 32.5) · pw.x PID 3364447–3364453·3364457 · 원본과 다른 줄 3줄(prefix·outdir·K_POINTS).
   · watch `kprobe_k331/kprobe_watch.sh` (PID 고정 · CPU 는 직전 표본 대비). 판정: 원 SCF **−6399.18597654 Ry** 대비 |ΔE| ≤ **0.0088 Ry (1 meV/atom · nat 120)**
     → 넘으면 C1 판정의 한계에 *"k 2 2 1 → 조밀 k LOBSTER 필요"* 를 단다. 원 SCF 10 h 33 m.
+  · 09-24 00:08 — 8/8 랭크 · CPU 800 % · 경과 07:26 · SCF iteration 8 · 오차 0.0118 → 0.00112 → 0.000298 Ry.
+    ⚠ `kprobe.err` 끝에 `btl_tcp … recv(24) failed: Connection reset by peer (104)` (rank 1) — MPI 가 멈춰도 CPU 는 100 % 라
+    **CPU 로는 못 가른다**. 판별 = err 이후에도 out 이 자라는가 (붙여넣기 블록 전달 · 결과 전 판정: 한 반복 ≈55 분 넘게 out 정지면 멈춤 의심 → 1저자 결정).
 - ⏭ **kgy Li₂S P1 탐침 (li2s 셀수렴 카드 §3 · 공유 GPU 라 벽시계는 상한)** — worktree `~/lldvar_p1` @c8f0f2db ·
   GBRV 해시 kgy = gabia (Li `02cc4b38…` · S `84ad7318…`) · kgy `~/work/pseudo` 의 Li·S 는 GBRV 뿐(PAW 없음 → 전용 폴더 불요).
   ⛔ kgy 에 Li₂S 이완본이 없어 빌더가 멈췄다 → gabia `sei_dft/li2s*/01_vcrelax.out` (sha `0bcb294b19b23c24`, v2 NEB 가 쓴 것)을 rsync 로 옮겼다
@@ -108,7 +111,7 @@
     (W = [E_s + E_li − n·E_bulk]/2A, n = P 합/4, μ 상쇄). ✅ **경보 운영값 봉인 (결과 전 · 1저자 "너가 권장하는대로")** `D-2026-09-23-wad-sese-alarm-band`
     → **v2 로 대체 (2026-09-23 밤 · "ㄱㄱ")** `D-2026-09-23-wad-sese-alarm-band-v2` — 구간 그대로, 결정문 벽개식 계수만 일반형 (6층 6 · 4층 4)
     — 이완 PBE W_cleave 0.3–0.7 J/m² 밖 = 원인 미분류 경보 · > 1 = PS₄ 절단·wrap 먼저 점검 · 무이완 < 이완 = 경보. **합격선 아님**. `--collect` 가 출력.
-  · ⏸ **gabia 러너 — 잡 0 확인 (1저자 붙여넣기 2026-09-23 밤: 로그가 17:23:58 시작 대기 줄에서 끝남 · 실행 폴더에 runner.log 뿐)** · ⏳ **프로세스 정지 확인 대기** (대기 루프는 로그를 안 남겨서 로그로는 생사를 모른다) · tmux `wad_sese` · worktree `/data/work/repo_wad` @265faeff · 로그 `/data/work/runs/wad_sese_2026_09_23/runner.log`
+  · ⏸ **gabia 러너 — 잡 0 확인 (1저자 붙여넣기 2026-09-23 밤: 로그가 17:23:58 시작 대기 줄에서 끝남 · 실행 폴더에 runner.log 뿐)** · ✅ **러너 정지 확인 (2026-09-24 00:08 · PID 3374935 · tmux `wad_sese` 닫음 · 남은 bash 없음)** · tmux `wad_sese` · worktree `/data/work/repo_wad` @265faeff · 로그 `/data/work/runs/wad_sese_2026_09_23/runner.log`
     · `WAIT_PIDS` 3207227·3210946 (li2s 담금질 seed 3·4) · `ONLY_PIDS` 3322562 (b2o3) · 시작 때 GPU 15.3 GB · 호스트 27 GB.
     ⛔ 도는 동안 `/data/work/repo_wad` 를 갱신하지 않는다. 집계는 다른 clone 에서 `se_sym_slab.py --collect`.
   · ⛔ **gabia GPU 예외 — 실행 전 철회 · 미사용 종료 (2026-09-23 밤 · 1저자 "ㄱㄱ" · BW Q8 네 가지 기록 · 비준 revoked)**. 러너에 ⑧ 게이트: `ALLOW_UMA_COEXIST=1` 이어도 원장 active 결정 ID 가 아니면 시작 안 함.

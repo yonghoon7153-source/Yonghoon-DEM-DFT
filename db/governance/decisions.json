@@ -3712,6 +3712,12 @@
      "state": "retracted",
      "by": "1저자",
      "note": "⛔ **실행 전 철회 · 미사용 종료** (2026-09-23 밤 · 1저자 'ㄱㄱ' · Codex BW Q8). ① 이 예외로 GPU pw.x 가 **한 번도 뜨지 않았다** — 1저자 붙여넣기(2026-09-23): 러너 로그가 17:23:58 시작 줄(GPU 15260 MiB · 호스트 27067 MiB · 대기 대상 li2s seed 3 PID 3207227 · seed 4 PID 3210946)에서 끝나고 'PID … 끝남' 줄이 없다 · 실행 폴더 /data/work/runs/wad_sese_2026_09_23/ 에 runner.log 뿐이다 (잡 폴더 0). 러너 프로세스 정지는 별도 확인. ② 허가 대상이었던 원래 5잡: db/inputs/wad_sese_control_2026_09_23/jobs.json — 01_bulk_scf(nat 52 · pw.in sha256 e459c2cbd1a90d17); 02_s_outer_scf(nat 162 · pw.in sha256 03907955fa4e1ccd); 02_li_outer_scf(nat 150 · pw.in sha256 6be849db475a2233); 03_s_outer_relax_pbe(nat 162 · pw.in sha256 6ce8649eed3ae97c); 03_li_outer_relax_pbe(nat 150 · pw.in sha256 e2a822dcb87323b3). ③ 종료 사유: gabia **CPU** pw.x(qe-7.4.1-cpu) 1랭크 스크래치 프로브(`/data/work/scratch/sese_memprobe` · ESPRESSO_TMPDIR · PID 로 수 초 안에 죽임)의 QE `Estimated max dynamical RAM` 이 벌크 6.69 GB(k 30) · S 바깥 6층 슬랩 55.78 GB(k 9) · Li 바깥 6층 슬랩 50.18 GB(k 9) — **추정치이지 GPU VRAM 피크 실측이 아니고, GPU OOM 도 일어나지 않았다.** 전체 계산을 현재 자원·위험 정책에서 추진하지 않기로 했다. ④ 이 예외는 **자동 승계되지 않는다** — 새 4층 SE|SE 잡 · CP2K · 다른 어떤 GPU pw.x 잡도 gabia 의 'GPU pw.x ↔ UMA 동시 금지' 를 새로 따른다."
+    },
+    {
+     "at": "2026-09-24",
+     "state": "retracted",
+     "by": "1저자",
+     "note": "러너 정지 확인 — tmux wad_sese (17:23:58 생성) · 러너 PID 3374935 (`bash tools/wad/run_sese_gpu.sh db/inputs/wad_sese_control_2026_09_23 /data/work/runs/wad_sese_2026_09_23`) · tmux 세션을 이름으로 닫은 뒤 남은 bash 없음 · 실행 폴더에 runner.log 뿐 (1저자 붙여넣기 2026-09-24 00:08 KST). 위 철회 항목의 '러너 프로세스 정지는 별도 확인' 을 이것으로 채운다."
     }
    ],
    "ratification": {
