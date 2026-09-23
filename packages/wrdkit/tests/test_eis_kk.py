@@ -372,3 +372,19 @@ def test_a_wide_low_end_drift_is_not_put_on_one_range_switch():
     result, summary = _residuals(f, dict.fromkeys(f[(f > 80) & (f < 420)], 0.03))
     (finding,) = _kk_findings(result, summary, switches=[90.6])
     assert finding.code == "kk_range_switch" and finding.severity == NOTE
+
+
+def test_a_second_look_within_the_noise_does_not_say_there_is_no_deviation():
+    """실측 B11 0 °C: "잔차가 25.0 % 라 어긋남은 없습니다".  25 % 가 기준(2 %) 을
+    넘는데 판정이 안 난 것은 잡음(σ) 의 여섯 배 안이라서다 — 그렇게 말한다."""
+    f = sweep(7e6, 0.1)
+    w = 2 * np.pi * f
+    sharp = 5 + par(2e4, 1 / (1j * w * 1e-10)) + par(4e4, 1 / (1j * w * 3e-8)) \
+        + 1 / (1j * w * 1e-6)
+    audit = audit_spectrum(spectrum(f, noisy(sharp, 1e-2, 0)))
+    assert audit.kk["max_residual"] >= 0.02
+    assert not [one for one in audit.findings if one.code.startswith("kk_v")]
+    reason = audit.kk["reason"]
+    assert "어긋남은 없습니다" not in reason
+    assert re.search(r"잔차가 \d+\.\d % 지만 잡음\(σ ≈ \d\.\d\d %\)의 여섯 배 안이라 "
+                     r"어긋남으로 보지 않습니다", reason)

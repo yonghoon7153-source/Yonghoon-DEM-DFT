@@ -1150,14 +1150,18 @@ def _low_frequency_inductive(spectrum: Spectrum) -> tuple[int, float] | None:
     return count, float(spectrum.frequency_hz[order[count - 1]])
 
 
+def _kk_sigma(result: KKResult) -> float:
+    """The noise of the residuals -- 1.4826 × their median absolute value."""
+    parts = np.concatenate([result.residual_re, result.residual_im])
+    return float(1.4826 * np.median(np.abs(parts)))
+
+
 def _would_flag(result: KKResult) -> bool:
     """The findings would say the spectrum breaks KK (not only that it is noisy)."""
     if not result.judged or not result.residual.size:
         return False
-    parts = np.concatenate([result.residual_re, result.residual_im])
-    sigma = float(1.4826 * np.median(np.abs(parts)))
     worst = float(result.max_residual)
-    return worst >= KK_LIMIT and worst >= KK_NOISE_MULTIPLE * sigma
+    return worst >= KK_LIMIT and worst >= KK_NOISE_MULTIPLE * _kk_sigma(result)
 
 
 def _kk_summary(result: KKResult, spectrum: Spectrum) -> tuple[dict, KKResult]:
@@ -1193,10 +1197,17 @@ def _kk_summary(result: KKResult, spectrum: Spectrum) -> tuple[dict, KKResult]:
             again = (f"decade 당 {second.per_decade:.1f}개, 대역 밖 1/4 decade "
                      f"까지 시정수를 두고 다시 보니 잔차가 "
                      f"{second.max_residual * 100:.1f} %")
-            reason = (f"{where}. {again} 라 어긋남은 없습니다"
-                      if not _would_flag(second) else f"{where}. {again} 입니다")
-    parts = np.concatenate([chosen.residual_re, chosen.residual_im])
-    sigma = float(1.4826 * np.median(np.abs(parts)))
+            if _would_flag(second):
+                reason = f"{where}. {again} 입니다"
+            elif second.max_residual < KK_LIMIT:
+                reason = f"{where}. {again} 라 어긋남은 없습니다"
+            else:
+                # 실측 B11 0 °C: "잔차가 25 % 라 어긋남은 없습니다" 로 읽혔다 —
+                # 어긋남이 없는 것이 아니라 잡음이 그만큼 크다.
+                reason = (f"{where}. {again} 지만 잡음(σ ≈ "
+                          f"{_kk_sigma(second) * 100:.2f} %)의 여섯 배 안이라 "
+                          f"어긋남으로 보지 않습니다")
+    sigma = _kk_sigma(chosen)
     return ({
         "judged": True, "reason": reason, "m": chosen.m,
         "per_decade": chosen.per_decade, "mu": chosen.mu,
