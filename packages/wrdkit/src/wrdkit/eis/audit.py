@@ -835,9 +835,12 @@ _TOP_OF_BAND = 0.5
 #: 탓이 아니다.  반은 넉넉한 쪽이다: 소자가 훨씬 많은 KK 모델이 회로보다 절반도
 #: 못 줄이면, 회로를 바꿔서 얻을 것은 그보다 적다.
 _UNDRAWABLE_SHARE = 0.5
-#: 회로의 평균 오차가 같은 점들의 KK 평균 잔차의 이만큼(배)도 안 되면 잡음이다.
-#: 잡음만 있을 때 둘은 거의 같다 (소자가 많은 KK 가 몇 % 덜 남긴다).
+#: 회로의 평균 오차가 잡음만으로 나올 평균의 이만큼(배)도 안 되면 잡음이다.
+#: 실부·허부에 σ 씩인 잡음의 |잔차| 평균은 σ·√(π/2) ≈ 1.25 σ 다.  KK 잔차의
+#: 평균이 아니라 σ(중앙값에서 낸 것)에 댄다 — 평균은 튄 점에 끌려 올라가, 실측
+#: B7 60·50 °C (#96·#97) 의 고주파를 못 그린 맞춤까지 "잡음" 으로 지웠다.
 _NOISE_BENCHMARK = 1.5
+_RAYLEIGH_MEAN = math.sqrt(math.pi / 2)
 
 
 def _misfit_findings(out: FitAudit, summary: Misfit, used: Spectrum,
@@ -848,13 +851,19 @@ def _misfit_findings(out: FitAudit, summary: Misfit, used: Spectrum,
     """What the circuit's misfit says -- measured against what the KK test
     leaves, when there is one.
 
-    **A point no model draws is not the circuit's.**  Where the KK residual is
-    over the limit and at least half the circuit's there, the point goes out of
-    the worst-point verdicts.  실측: mid_Ni #37 의 33 Hz (회로 11 %, KK 9.8 %) 가
-    "그 주파수의 모양을 회로가 못 그립니다" 로, B7 60 °C (#96) 의 전류 범위 전환 점
-    80.7 Hz (22 %, KK 21 %) 가 가장 크게 어긋난 곳이 되어 "배선 L 이 없습니다" 를
-    가렸다.  **A mean at the noise is not the circuit's either**: B7 -10 °C (#103)
-    는 평균 3.2 % 로 "모양을 못 그립니다" 였는데 KK 잔차 σ 가 2.3 % 였다.
+    - **A point no model draws is not the circuit's.**  Where the KK residual
+      is over the limit and at least half the circuit's there, the point goes
+      out of the worst-point verdicts.  실측: mid_Ni #37 의 33 Hz (회로 11 %,
+      KK 9.8 %) 가 "그 주파수의 모양을 회로가 못 그립니다" 로, B7 60 °C (#96) 의
+      전류 범위 전환 점 80.7 Hz (22 %, KK 21 %) 가 가장 크게 어긋난 곳이 되어
+      "배선 L 이 없습니다" 를 가렸다.
+    - **Below the lower bound the KK finding asks for, nothing is the
+      circuit's** -- that finding already says to cut it.  실측 풀셀 #11: KK 가
+      0.01–0.0401 Hz 를 드리프트로 보고 0.0505 Hz 를 권했는데 그 안의
+      0.0126 Hz 가 "회로가 못 그립니다" 로 떴다.
+    - **Noise is not the circuit's.**  The mean is judged against the noise
+      (σ), and a single point only past six σ -- the KK test's own bar.  실측:
+      B7 -10 °C (#103) 평균 3.2 % 에 σ 2.3 %, B11 0 °C (#65) 한 점 10 % 에 σ 4.8 %.
     """
     measured = used.z
     magnitude = np.abs(measured)
@@ -862,71 +871,81 @@ def _misfit_findings(out: FitAudit, summary: Misfit, used: Spectrum,
     relative = np.full(len(used), np.nan)
     relative[good] = np.abs(fitted[good] - measured[good]) / magnitude[good]
     kk_at = np.full(len(used), np.nan)
-    if reference is not None and reference.frequency_hz.size:
-        lookup = dict(zip(reference.frequency_hz.tolist(), reference.residual.tolist(),
-                          strict=True))
-        kk_at = np.array([lookup.get(float(f), np.nan) for f in used.frequency_hz])
+    sigma, cut = 0.0, None
+    if reference is not None:
+        sigma, cut = float(reference.sigma), reference.low_limit_hz
+        if reference.frequency_hz.size:
+            lookup = dict(zip(reference.frequency_hz.tolist(),
+                              reference.residual.tolist(), strict=True))
+            kk_at = np.array([lookup.get(float(f), np.nan) for f in used.frequency_hz])
+    kept = (used.frequency_hz >= cut) if cut is not None else np.ones(len(used), bool)
     with np.errstate(invalid="ignore"):
         undrawable = good & (kk_at >= KK_LIMIT) & (kk_at >= _UNDRAWABLE_SHARE * relative)
-    drawable = good & ~undrawable
+    judged = good & kept & ~undrawable
     worst, worst_hz = summary.max, summary.at_hz
-    if drawable.any():
-        at = int(np.flatnonzero(drawable)[np.argmax(relative[drawable])])
+    if judged.any():
+        at = int(np.flatnonzero(judged)[np.argmax(relative[judged])])
         worst, worst_hz = float(relative[at]), float(used.frequency_hz[at])
-    dropped = bool(undrawable.any()) and worst_hz != summary.at_hz
-    matched = good & np.isfinite(kk_at)
-    noise_limited = (matched.sum() * 2 >= good.sum() and matched.any()
-                     and summary.mean < _NOISE_BENCHMARK * float(np.mean(kk_at[matched])))
+    # 맞춤이 가장 크게 어긋난 점이 회로 탓에서 빠졌으면 왜 빠졌는지 적는다.
+    left_out = why = ""
+    if worst_hz != summary.at_hz:
+        under = cut is not None and summary.at_hz < cut
+        left_out = "KK 가 권한 하한 아래인" if under else "KK 도 못 그리는"
+        why = "KK 가 권한 하한 아래" if under else "KK 도 못 그리는 점"
+    counted = good & kept
+    mean = float(np.mean(relative[counted])) if counted.any() else summary.mean
+    below = f"하한 {cut:.3g} Hz 위에서 " if cut is not None and not kept[good].all() else ""
+    noise_limited = sigma > 0 and mean < _NOISE_BENCHMARK * _RAYLEIGH_MEAN * sigma
+    limit = max(MAX_MISFIT_LIMIT, KK_NOISE_MULTIPLE * sigma)
+    floor = max(EDGE_MISFIT_FLOOR, KK_NOISE_MULTIPLE * sigma)
 
-    edge = edge_misfit(used.frequency_hz, used.z, np.where(undrawable, used.z, fitted),
-                       len(model.parameter_names))
+    edge = (edge_misfit(used.frequency_hz[kept], used.z[kept],
+                        np.where(undrawable, used.z, fitted)[kept],
+                        len(model.parameter_names)) if kept.any() else None)
     top = float(np.max(used.frequency_hz)) if len(used) else high_edge
     at_top = top is not None and worst_hz >= _TOP_OF_BAND * top
     has_l = any(kind == "L" for _, kind in series_kinds)
-    everywhere = summary.mean >= MEAN_MISFIT_LIMIT and not noise_limited
+    everywhere = mean >= MEAN_MISFIT_LIMIT and not noise_limited
     if everywhere:
-        beside = (f" · {summary.at_hz:.3g} Hz 의 {summary.max * 100:.0f} % 는 KK 도 못 "
-                  f"그리는 점입니다" if dropped else "")
+        beside = (f" · {summary.at_hz:.3g} Hz 의 {summary.max * 100:.0f} % 는 "
+                  f"{why}입니다" if why else "")
         out.findings.append(Finding(
             CHECK, "misfit_everywhere",
-            f"맞춤이 평균 {summary.mean * 100:.1f} % 어긋납니다 — 회로가 이 "
+            f"맞춤이 {below}평균 {mean * 100:.1f} % 어긋납니다 — 회로가 이 "
             f"스펙트럼의 모양을 못 그립니다 (최대 {worst * 100:.0f} %, "
             f"{worst_hz:.3g} Hz{beside})"))
     # 가장 크게 어긋난 곳이 **고주파 끝**이고 회로에 인덕턴스가 없으면 원인이
     # 거의 정해져 있다: 케이블·셀 홀더의 인덕턴스가 그 점들을 휘게 하고, 빼낸
     # 유도성 점 바로 아래가 이미 휘어 있다.  실측: 같은 스캔의 L1 있는 첫 스윕은
     # 최대 1.4–3.7 %, 없는 나머지는 11–30 % 였다 (B15–B17, 2026-09-23).
-    if at_top and not has_l and worst >= MAX_MISFIT_LIMIT:
+    if at_top and not has_l and worst >= limit:
         out.findings.append(Finding(
             CHECK, "inductance_missing",
-            (f"KK 도 못 그리는 {summary.at_hz:.3g} Hz 를 빼면 " if dropped else "")
+            (f"{left_out} {summary.at_hz:.3g} Hz 를 빼면 " if left_out else "")
             + f"가장 크게 어긋난 곳({worst * 100:.0f} %)이 맞춘 구간의 고주파 "
             f"끝 {worst_hz:.3g} Hz 입니다 — 회로에 배선 인덕턴스가 없습니다. "
             f"앞에 `L1-` 를 붙여 다시 맞춰 보세요"))
         return
     # 오차가 **몰렸다**는 것만으로는 적지 않는다.  거의 완벽한 맞춤도 가장 작은
     # 오차들이 어딘가에는 몰려 있다 — 실측 셀의 합성 쌍둥이(최대 0.07 %)에서
-    # "98 % 가 저주파에" 가 떴다.
-    if edge is not None and worst >= EDGE_MISFIT_FLOOR:
-        # 한 스펙트럼에 하한은 하나다.  KK 가 저주파 끝을 어긋난 점으로 보고 더
-        # 높은 하한을 권했으면 그것이 이 점들까지 뺀다 — 실측 풀셀 #10·#11·#13 에
-        # 두 하한(예: KK 0.255 Hz, 맞춤 0.0567 Hz)이 따로 떴다.
-        kk_low = reference.low_limit_hz if reference is not None else None
-        if kk_low is None or kk_low < edge.threshold_hz:
-            out.findings.append(Finding(
-                CHECK if worst >= MAX_MISFIT_LIMIT else NOTE,
-                "misfit_at_edge",
-                f"오차의 {edge.share * 100:.0f} % 가 가장 낮은 {edge.count}개 "
-                f"점(≤ {edge.upper_hz:.3g} Hz)에 몰려 있습니다 (최대 "
-                f"{worst * 100:.0f} %) — 하한을 {edge.threshold_hz:.3g} Hz "
-                f"로 두고 다시 맞춰 보세요"
-                + (f". KK 가 권한 하한({kk_low:.3g} Hz)보다 높습니다 — 그 사이 점들도 "
-                   f"이 회로가 못 그립니다" if kk_low is not None else "")))
-    elif not everywhere and worst >= MAX_MISFIT_LIMIT:
+    # "98 % 가 저주파에" 가 떴다.  KK 가 하한을 권했으면 그 위의 점들로만 본다 —
+    # 한 스펙트럼에 하한은 하나다 (실측 풀셀 #10·#13: KK 0.0803·0.255 Hz, 맞춤
+    # 0.0567 Hz 가 따로 떴다).
+    if edge is not None and worst >= floor:
+        out.findings.append(Finding(
+            CHECK if worst >= limit else NOTE,
+            "misfit_at_edge",
+            f"오차의 {edge.share * 100:.0f} % 가 가장 낮은 {edge.count}개 "
+            f"점(≤ {edge.upper_hz:.3g} Hz)에 몰려 있습니다 (최대 "
+            f"{worst * 100:.0f} %) — 하한을 {edge.threshold_hz:.3g} Hz "
+            f"로 두고 다시 맞춰 보세요"
+            + (f". KK 가 권한 하한({cut:.3g} Hz)보다 높습니다 — 그 사이 점들도 "
+               f"이 회로가 못 그립니다" if cut is not None else "")))
+    elif not everywhere and worst >= limit:
         out.findings.append(Finding(
             CHECK, "misfit_somewhere",
             f"{worst_hz:.3g} Hz 에서 {worst * 100:.0f} % 어긋납니다 "
-            f"(평균 {summary.mean * 100:.1f} %) — 그 주파수의 모양을 회로가 "
+            f"(평균 {mean * 100:.1f} %) — 그 주파수의 모양을 회로가 "
             f"못 그립니다"))
 
 
@@ -1179,6 +1198,8 @@ class KKReference:
     #: The lower bound the KK finding asks for when the low end broke -- one
     #: spectrum, one lower bound to type.
     low_limit_hz: float | None = None
+    #: The noise of the KK residuals (1.4826 × their median absolute value).
+    sigma: float = 0.0
 
 
 @dataclass
@@ -1223,7 +1244,8 @@ def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
             frequency_hz=np.array(chosen.frequency_hz, dtype=float),
             residual=np.array(chosen.residual, dtype=float),
             low_limit_hz=(region.above if region is not None and region.at_bottom
-                          and region.points > 1 else None))
+                          and region.points > 1 else None),
+            sigma=float(out.kk["sigma"]))
     out.findings = sort_findings(out.findings)
     return out
 

@@ -503,3 +503,55 @@ def test_one_spectrum_gets_one_lower_bound():
                         np.zeros_like(kk.reference.residual), low_limit_hz=0.02)
     (kept,) = edge(lower)
     assert "KK 가 권한 하한(0.02 Hz)보다 높습니다" in kept.message
+
+
+# -- 여섯 번째 실측 검수(2026-09-23 07:16) 뒤에 고친 것 ---------------------------------
+
+def test_what_the_kk_cut_leaves_out_is_not_the_circuits():
+    """실측 풀셀 #11: KK 가 0.01–0.0401 Hz 를 드리프트로 보고 하한 0.0505 Hz 를
+    권했는데, 맞춤 검수는 그 안의 0.0126 Hz (회로 11 %) 를 "그 주파수의 모양을 회로가
+    못 그립니다" 로 적었다 — KK 도 못 그리는 가장 낮은 점을 뺀 바로 다음 점이었다."""
+    f = sweep(7e6, 0.01)
+    order = np.argsort(f)
+    z = build(*FULL_33, f)
+    z[order[0]] *= 1.2
+    z[order[1]] *= 1.2                              # 드리프트가 가장 늦게 잰 두 점에
+    points = spectrum(f, z)
+    fit = fitted(FULL_33[0], dict(FULL_33[1], R1=FULL_33[1]["R1"] * 1.08))
+    lowest = np.zeros(f.size)
+    lowest[order[0]] = 0.15                         # KK 도 못 그리는 가장 낮은 점
+
+    def said(cut):
+        return [x for x in fit_findings(points, fit, reference=KKReference(
+            f, lowest, low_limit_hz=cut), kind=SOLID, config=FULL)
+            if x.code.startswith("misfit")]
+
+    (blamed,) = said(None)
+    assert blamed.code == "misfit_somewhere" and blamed.message.startswith("0.0126 Hz")
+    assert said(0.0255) == []
+
+
+def test_the_noise_bar_is_the_kk_sigma_not_the_mean_residual():
+    """잡음 판정을 KK 잔차의 **평균**에 대면 튄 점에 끌려 올라간다 — 실측 B7 60·50 °C
+    (#96·#97, σ 2.3·1.6 %) 의 고주파를 못 그린 맞춤(평균 5.5·4.2 %)까지 "잡음" 으로
+    지웠다.  σ 는 중앙값에서 낸다: 평균 |잔차| 가 σ 의 1.5 × 1.25 배를 넘어야 회로 탓."""
+    f = sweep(7e6, 0.01)
+    points = spectrum(f, noisy(build(*ARC, f), 0.026, 3))        # 평균 3.3 %
+    fit = fitted(*ARC)
+    quiet = np.zeros(f.size)
+    assert fit_findings(points, fit, reference=KKReference(f, quiet, sigma=0.02)) == []
+    assert [x.code for x in fit_findings(
+        points, fit, reference=KKReference(f, quiet, sigma=0.01))] == ["misfit_everywhere"]
+
+
+def test_one_point_inside_the_noise_is_not_the_circuits():
+    """실측 B11 0 °C (#65, σ 4.8 %): 평균이 잡음이라 빠지자, 10 % 한 점이 "그 주파수의
+    모양을 회로가 못 그립니다" 로 나왔다.  잡음이 σ 면 한 점은 KK 처럼 6σ 를 넘어야 한다."""
+    f = sweep(7e6, 0.01)
+    points = spectrum(f, noisy(build(*ARC, f), 0.045, 3))
+    fit = fitted(*ARC)
+    kk = audit_spectrum(points)
+    assert audit_fit(fit, points, kind=LIQUID, band=(float(f.min()), float(f.max()))
+                     ).misfit.max >= 0.10
+    assert not [x for x in fit_findings(points, fit, reference=kk.reference)
+                if x.code.startswith(("misfit", "inductance"))]
