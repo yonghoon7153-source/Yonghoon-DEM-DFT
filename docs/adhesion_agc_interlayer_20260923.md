@@ -60,7 +60,7 @@ db/properties/adhesion.json (표면에너지 · v2/v5 결과 · 진공 민감도
 - ✅ (09-23 DFT 회신 ① 확인) 그 식의 **w = W (면적당 점착일, J/m²)** 이지 γ 가 아니다 — 같은 두 면이면 W = 2γ.  DFT 가 주는
   헤드라인은 **고정기하 W_sep** (UMA 로 만든 기하 위 DFT PBE+D3(BJ) 단일점) 이고 848원자급 이완 열역학 W_ad 는 규모상 못 낸다.
   ⇒ 권고 (§5-5): W_sep 을 받고, "UMA 이완 슬랩 + DFT 단일점" 값을 그 이름표대로 같이 받아 **두 값에서 DEM 을 돌려 G_c 를 띠**로 낸다.
-  요청서 6번의 강체 분리 스캔 E(d) 의 면적이 곧 W_sep 이라 견인–분리 곡선과 헤드라인의 정의가 같다.  ⚠ 아래 끝은 하한 보장이
+  요청서 6번 강체 분리 스캔에서 E(d) 의 끝값 차이 (= 견인–분리 곡선 아래 면적) 가 곧 W_sep 이라 곡선과 헤드라인의 정의가 같다.  ⚠ 아래 끝은 하한 보장이
   아니다 — DFT@UMA 에서는 W_ad ≤ W_sep 가 게이트가 아니다 (같은 에너지 함수 안에서만 성립; 정본 계획 문서 §0′).
 - 접착 접촉 모델 문헌은 litdb 에 있다 (DMT 1975 · Thornton–Ning 1998 · Pasha 2014 · Thakur 2014 EEPA) — ⚠ 이
   브랜치의 litdb 는 동결 스냅샷이라 **정본 브랜치에서 확인**한다.
@@ -90,9 +90,10 @@ db/properties/adhesion.json (표면에너지 · v2/v5 결과 · 진공 민감도
 6. (09-23 DFT 회신 ②) **LPSCl 종결** — "Cl 쪽" 은 comp1 절단창에 Cl 이 없어 못 만든다.  권고 = **"S 바깥" + "Li·PS₄ 바깥"**
    두 면 (같은 절단의 두 조각; Cl 은 2층) 으로 받고, 음이온 자리바꿈 변형은 **지금 만들지 않는다**.  슬랩 방식은 DFT 쪽 비용 판단이
    우선이나 우리 선호는 **(가) 대칭 슬랩 두 장** — 우리가 받는 것은 W 뿐이고 γ 의 화학퍼텐셜 항은 W 에 안 들어가므로 비화학량론이
-   문제가 안 되며 쌍극자 보정이 빠진다.
+   문제가 안 되며 SE 슬랩 자체의 쌍극자가 없다.
 7. (09-23 DFT 회신 ③) **P2·P3 범위** — 권고 = **P2 (LPSCl↔탄소) 를 P1 과 같은 우선순위로 지금 넣는다**.  Ag–C 의 Ag 는
-   **5.7 vol%** (Spencer-Jolly, 정본 카드) 라 LPSCl 이 닿는 면적의 대부분이 탄소다 — §3 의 면적 가중 조합에서 LPSCl|Ag 가
+   **5.7 vol%** (Spencer-Jolly, 정본 카드; 22.5 wt%) 라 LPSCl 이 닿는 면적의 대부분이 탄소다 — 원문도 *"Ag 는 부피의 5.7 %
+   라 SE 와 직접 접촉이 거의 없다"* 고 적는다 — §3 의 면적 가중 조합에서 LPSCl|Ag 가
    LPSCl|C 의 약 16배 이상 강하지 않으면 탄소 항이 지배한다 (면적 비율 ≈ 부피 비율 가정).  유일한 실험 앵커 Liao 2025 도 Ag 없는
    탄소/LPSCl 계면이다.  P3 (리튬화) 는 뒤로 — 하게 되면 LiAg|LPSCl 부터 (LiAg 를 만드는 것은 LiC₆ 뿐).
 
@@ -114,7 +115,7 @@ Choi 2025 (MLIP W_ad) · Doux 2020 · Cronau 2021 · DMT · Thornton–Ning · P
 | ★ 실험 앵커 (원문 미확인) | Shozib … (Tu), *JES* 171, 090524 (2024) — 10.1149/1945-7111/ad7c82 | **Ag–C/SE 점착**이 조립압 350 → 530 MPa 에서 증가 · 초기용량 +50 % 이상 · 530 MPa 초과에서 SE 분리막 균열.  ⚠ 이것도 **제조 압착(조립)압** 축 |
 | LPSCl 인성 ✅ | Song … Guduru, *ACS AEM* 8, 5636 (2025) — 10.1021/acsaem.4c03143 | 다공(13 ± 2 %) Li6PS5Cl 펠릿 **E = 4.7 ± 1.1 GPa · K_IC = 0.17 ± 0.03 MPa·m^½** (mm 외팔보 굽힘 + CT 시편, 시편별 FE).  G_c: 논문 K²/E = 6.15 J/m² · 평면변형 ν 0.37 → 5.31.  나노압입값(28 GPa · 0.69)의 ¼–⅙.  경도·기공률 의존은 **측정 안 됨** (기공률 하나) |
 | LPSCl 벽개 ✅ (정본 카드 `pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament`, DFT 세션 작성) | Pustorino … Qi, *Chem. Mater.* 37, 313 (2025) — 10.1021/acs.chemmater.4c02577 | ⛔ 옛 표기 *"(100) Li2S 결핍면 벽개 에너지 0.20 J/m²"* 는 틀렸다 — **0.20 은 두 면 다 PS₄ 종결인 대칭 비화학량론 슬랩의 2γ** (화학퍼텐셜 조건값, F_def 의 상한).  **화학량론 벽개** = (100) **≈ 0.47** (6층; 0.50 3층) · (110) **0.37 J/m²** (PBE · vdW 없음 · 이완).  기준 벌크 선택만으로 +0.16 J/m² 움직인다.  DFT 쪽 SE\|SE 대조 앵커 = **0.47** (경보용; 0.3–0.7 정상 · 1 초과면 PS₄ 훼손 의심) |
-| Ag–흑연 ✅ (정본 카드 `giovannetti2008_doping_graphene_metal_contacts`) | Giovannetti … *PRL* 101, 026803 (2008) — 10.1103/PhysRevLett.101.026803 | Ag 는 **weak bonding 군** (Al·Cu·Ag n-도핑 · Au·Pt p-도핑; 원문 용어 "weak bonding / weak adsorption" — **"physisorption" 은 본문에 없다**).  LSDA 환산 (논문 격자 0.3863 C/Å²): **Ag 0.27 J/m²**, 같은 계산의 화학흡착 **Pd 0.52 · Ni 0.99 · Co 0.77** ⇒ 크기로 기전을 가르지 못한다 |
+| Ag–흑연 ✅ (정본 카드 `giovannetti2008_doping_graphene_metal_contacts`) | Giovannetti … *PRL* 101, 026803 (2008) — 10.1103/PhysRevLett.101.026803 | Ag 는 **weak bonding 군** (Al·Cu·Ag n-도핑 · Au·Pt p-도핑; 원문 용어 "weak bonding / weak adsorption" — **"physisorption" 은 본문에 없다**).  LSDA 환산 (논문 격자 0.3863 C/Å²): **Ag 0.27 J/m²**, 같은 계산의 화학흡착 **Ni 0.77 · Co 0.99 · Pd 0.52** ⇒ 크기로 기전을 가르지 못한다 |
 | Ag–흑연 ✅ (정본 카드 `maurer2015_mbd_adsorbates_metal_surfaces`) | Maurer, Ruiz, Tkatchenko, *JCP* 143, 102808 (2015) — 10.1063/1.4922688 | Ag(111) 위 그래핀 **45 meV/C @ 3.23 Å (PBE+MBD)** · pairwise PBE+vdW^surf 72 meV/C @ 3.05 Å ("over 38 %" 는 이 한 쌍의 상대 감소).  논문 셀 밀도 0.3593 C/Å² (그래핀 +3.1 % 늘린 정합셀) 로 **0.26 J/m²** (⛔ 옛 0.28 은 평형 그래핀 밀도로 환산한 값).  `Table III` 분산 방법 7개 = **0.19–0.45 J/m²** (5개가 0.3 위) ⇒ **0.3 경계가 방법 산포 한가운데**.  실험값 없음 |
 | Ag–C 기전 | Lee … *Nat. Energy* 5, 299 (2020) — 10.1038/s41560-020-0575-z | Ag–C 무과잉 Li 음극 원조 (점착 수치 없음) |
 | Ag–C 기전 ✅ | Spencer-Jolly … *Joule* 7, 503 (2023) — 10.1016/j.joule.2023.02.001 | Ag 5.7 vol% · 5 ± 1 µm 층을 LPSCl 에 400 MPa 로 압착, 2 MPa 에서 사이클.  operando XRD: 충전 시 Li → 흑연 삽입 후 **Ag 와 반응해 Li_xAg → LiAg → Li₉Ag₄ → Li₁₀Ag₃** — LiAg 를 만들 만큼 반응성 있는 것은 **LiC₆ 뿐**.  방전은 역경로가 아니다.  Li 금속은 인터레이어와 **집전체 사이**에 쌓인다.  임계전류 2.0 안정 · 2.5 mA/cm² 단락 (60 °C) = Ag 없는 흑연과 같음.  **점착·응력 수치 없음** (⇒ DFT 요청 P3 리튬화 계면의 근거 · 세 번째 계면 = 인터레이어/집전체) |

@@ -7,7 +7,8 @@
 > 근거: 트랙 문서 09-23 정정판 · 정본 litdb 카드 `liao2025_interfacial_adhesion_li_plating_carbon_interlayer` ·
 > `song2025_porous_argyrodite_modulus_fracture_toughness` · `spencerjolly2023_ag_graphite_interlayer_operando_xrd` ·
 > `pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament` · `maurer2015_mbd_adsorbates_metal_surfaces` ·
-> `giovannetti2008_doping_graphene_metal_contacts`.  DFT 쪽이 든 수치는 전부 그 카드에서 다시 확인했다.
+> `giovannetti2008_doping_graphene_metal_contacts`.  DFT 쪽이 우리 문서에 든 정정 수치는 그 카드에서 다시 확인했다
+> (셀 격자 불일치 · 흑연 기준값 등 DFT 쪽 설계 수치는 확인 대상 밖).
 
 ---
 
@@ -29,33 +30,33 @@
 
 **① DEM 입력 연결**
 - 맞습니다.  JKR pull-off `F = 1.5πR*·w` 의 w 는 **W (면적당 점착일, J/m²)** 입니다.  γ 가 아니고, 같은 면이면 W = 2γ.
-- 헤드라인은 **고정기하 W_sep 으로 받겠습니다** (권고 · 1저자 비준 대기).  이유 둘 — 목표가 자릿수이고, 요청서 6번의 강체 분리
-  스캔 E(d) 의 면적이 곧 W_sep 이라 견인–분리 곡선과 헤드라인의 정의가 같아집니다.
+- 헤드라인은 **고정기하 W_sep 으로 받겠습니다**.  이유 둘 — 목표가 자릿수이고, 요청서 6번 강체 분리 스캔에서 E(d) 의 끝값 차이
+  (= 견인–분리 곡선 아래 면적) 가 곧 W_sep 이라 곡선과 헤드라인의 정의가 같아집니다.
 - "UMA 이완 슬랩 + DFT 단일점" 값도 그 이름표 그대로 주십시오.  DEM 을 두 값에서 돌려 G_c 를 **띠**로 냅니다.  아래 끝이 하한 보장이
   아니라는 점 (DFT@UMA 에서는 W_ad ≤ W_sep 가 게이트가 아님) 은 그대로 라벨합니다.
 
 **② LPSCl 종결**
-- **"S 바깥" + "Li·PS₄ 바깥"** 두 면으로 받겠습니다 (권고).  음이온 자리바꿈 변형은 지금 만들지 마십시오 — "Cl 쪽" 요청의 뜻은
+- **"S 바깥" + "Li·PS₄ 바깥"** 두 면으로 받겠습니다.  음이온 자리바꿈 변형은 지금 만들지 마십시오 — "Cl 쪽" 요청의 뜻은
   Ag–S 와 Ag–Cl 화학의 차이를 보자는 것이었는데 Li·PS₄ 면 2층의 Cl 로 일단 충분하고, 자리바꿈은 별개 축입니다.
 - (가)/(나) 는 DFT 쪽 비용 판단이 우선입니다만 우리 선호는 **(가) 대칭 슬랩 두 장**입니다: 우리가 받는 것은 W 뿐이고 γ 의
-  화학퍼텐셜 항은 W 에 안 들어가므로 비화학량론이 문제가 안 되고, 쌍극자 보정이 빠집니다.
+  화학퍼텐셜 항은 W 에 안 들어가므로 비화학량론이 문제가 안 되고, SE 슬랩 자체의 쌍극자가 없습니다.
 
 **③ P2 · P3**
-- **P2 (LPSCl↔탄소) 는 P1 과 같은 우선순위로 지금 넣어 주십시오** (권고).  Ag–C 인터레이어의 Ag 는 **5.7 vol%** (Spencer-Jolly
-  2023, 정본 카드) 라 LPSCl 이 닿는 면적의 대부분이 탄소입니다.  우리 조합식 (구성 쌍 W × 접촉 면적 비율) 에서는 LPSCl|Ag 가
-  LPSCl|C 의 약 16배 이상 강하지 않으면 탄소 항이 지배합니다 (면적 비율 ≈ 부피 비율 가정).  유일한 실험 앵커 (Liao 2025) 도
-  Ag 없는 탄소/LPSCl 계면입니다.
-- 탄소 모델은 **LPSCl|graphite(0001) 먼저**, 비정질은 뒤로 가도 됩니다 (Liao 의 탄소는 카본블랙, VGCF 외벽은 흑연질).
-- P3 (리튬화) 는 뒤로.  합금 순서는 LiC₆ → LiAg → Li₉Ag₄ → Li₁₀Ag₃ 이고 LiAg 를 만드는 것은 LiC₆ 뿐입니다 (Spencer-Jolly) —
-  하게 되면 LiAg|LPSCl 부터.
+- **P2 (LPSCl↔탄소) 는 P1 과 같은 우선순위로 지금 넣어 주십시오**.  Ag–C 인터레이어의 Ag 는 **5.7 vol%** (22.5 wt%,
+  Spencer-Jolly 2023, 정본 카드) 라 LPSCl 이 닿는 면적의 대부분이 탄소입니다 — 원문도 Ag 가 SE 와 직접 접촉이 거의 없다고
+  적습니다.  우리 조합식 (구성 쌍 W × 접촉 면적 비율) 에서는 LPSCl|Ag 가 LPSCl|C 의 약 16배 이상 강하지 않으면 탄소 항이
+  지배합니다 (면적 비율 ≈ 부피 비율 가정).  유일한 실험 앵커 (Liao 2025) 도 Ag 없는 탄소/LPSCl 계면입니다.
+- 탄소 모델은 **LPSCl|graphite(0001) 먼저**, 비정질은 뒤로 가도 됩니다 (Liao 의 탄소는 카본블랙·하드카본, VGCF 외벽은 흑연질).
+- P3 (리튬화) 는 뒤로.  흑연이 먼저 리튬화된 뒤 Ag 가 Li_xAg → LiAg → Li₉Ag₄ → Li₁₀Ag₃ 순으로 합금화하고, LiAg 를 만들 만큼
+  반응성 있는 것은 LiC₆ 뿐입니다 (Spencer-Jolly) — 하게 되면 LiAg|LPSCl 부터.
 
 **우리 쪽에서 드리는 정보**
 - 정본에 카드 넷을 넣었습니다: `liao2025_…` (탄소/LPSCl 180° 박리 · lamination 100→400 MPa 에서 Γ 9→41 J/m² · Ag 없음 ·
   사이클 적층압 5 MPa 고정), `song2025_…` (다공 13 % LPSCl E 4.7 GPa · K_IC 0.17 → G_c 5.3–6.2 J/m²), `spencerjolly2023_…`,
   `tabakovic2026_…` (SSRN 프리프린트 — 수치 인용 금지).
 - SE 자체 값의 자리: 화학량론 벽개 0.37–0.47 (Pustorino) ↔ 파괴인성 환산 G_c 3–6 (Song · Fan) ↔ 실측 박리 Γ 9–41 (Liao).
-  층마다 한 자릿수씩 다릅니다.  우리 문서는 "W_ad 가 박리값의 상한" 이라던 결론을 철회했습니다 — Γ 가 SE 의 G_c 보다 큰데도
-  300 MPa 시편은 계면에서 떨어졌습니다.
+  층마다 대략 한 자릿수씩 다릅니다.  우리 문서는 *"박리값의 상한은 W_ad 와 SE 벽개 중 약한 쪽"* 이라던 결론을 철회했습니다 —
+  Γ 가 SE 의 G_c 보다 큰데도 300 MPa 시편은 계면에서 떨어졌습니다.
 - 압력 축: 문헌의 압력 효과는 전부 제조 압착 (lamination · 조립) 압 축이고 운전 적층압 축은 대조가 없습니다.  DFT 쪽엔 영향이
   없습니다 (요청서대로 압력은 걸지 않습니다).
 
