@@ -41,6 +41,14 @@
     (active·ratified). 512원자 · 600/650/700 K · 400 ps · 시드 2–6 · **turbo** · **gabia**(탄성은 이 뒤로). 보고량 = 원소군별 사건 수·움직인 원자 수·첫 사건 시각.
     러너 `run_box331_seed_extension.sh SYS=b2o3`(가드 0 음성 2건 통과). ⏳ 발사 후 run_meta 무효조건 즉시 확인 → 끝나면 census 15런.
     ⛔ **발사 취소 (1저자 2026-09-23 "gpu여야 된다니까 취소취소")** — gabia 블록 실행 보류. 카드·결정은 봉인된 채 그대로(기계를 바꾸면 개정문+재비준).
+    ✅ **재발사 2026-09-23 13:29 (1저자 "다시 gpu로 수정해서 돌리자")** — 취소 원인은 CPU 가 아니었다: 내 블록의 안전장치가 repo 셸
+    스크립트(탄성 러너) 실행 중이라 pull 을 건너뛰었고 옛 러너가 b2o3 를 몰랐다. ⇒ **새 worktree** `/root/work/repo_b2o3_evt` @aac448854 에서
+    발사 · tmux `b2o3_evt` · 드라이버 PID 3322562 · GPU 5.6 GB(컴파일 중) · 로그 `/root/logs/b2o3_221_eventrate.log`.
+    run_meta ✓ 512 · [2,2,1] · [600,650,700] · 400 ps · save_traj · turbo · label b2o3 (save_fs 는 run_meta 필드가 아니다 — 명령줄로 확인).
+  · 🔴 **탄성 러너를 멈췄다 (PID 3014241, 대기 45 h)** — b2o3 UMA 와 GPU pw.x 동시 금지(1저자 선택 '탄성 뒤로'). ⚠ **발견: 그 러너는 SYS 가 없어
+    기본값 `comp2` 로 대기 중이었다** (cwd /data/work/runs/elastic_comp2 · MINFREE 6000 · 로그 이름만 el_modelc2x.log). 9/10 원래 계획은
+    `SYS=modelc_2x → b2o3` — 그대로 뒀어도 modelc_2x 영률은 시작되지 않았다(조용히 틀린 경로). 상태 저장 `/root/logs/elastic_runner_saved_0923.txt`.
+    ⏭ b2o3 끝나면(≈5–6일) **`SYS=modelc_2x`** 를 명시해 재개한다 (수렴한 strain 은 러너가 건너뛴다).
 - ✅ `webapp/tests/test_v3_records.py::test_gallery_carries_hazard_and_policy` — 테스트가 정책 접두어를 **둘만 복사**해 두고
   정책은 셋이라(`oxidation_stability_cascade` 누락) 정상적으로 막힌 파일을 "평범한데 막혔다" 로 읽었다 →
   `artifact_policy.is_governed()` 를 직접 쓰게 고침 · 음성(평범한 파일에 policy 주입 → 잡힘) 확인.
