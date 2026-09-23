@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -417,6 +417,15 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 
 ⇒ 이 페이지의 규율 셋이 실물로 확인된다: **(1) `θ` 는 점이 아니라 연결 기준 구간 위의 띠로 보고한다**(§"이 양 자체가 폭을 갖는다" — 원전은 폭을 인쇄하고 한 점을 골랐다)
 **(2) 도메인 크기** — `[도표]` coarse 상자 20 × 20 × 70 µm 의 최대 구 ≈8 µm ↔ 같은 편 FIB-SEM 의 LPSC 영역 30–40 µm(상자보다 크다) **(3) 운전 압력 단계**가 없으면 압력 실험과 대질할 수 없다.
+
+## ★★ 1호가 ref 16 으로 가리킨 "실측 미시구조" — `θ` 는 없고, 1호가 뺀 굴곡도가 있다 (2026-09-23 추가, `assb` 55호)
+
+`raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md` (Hlushkou … Roling · Tallarek 2018 — 1호 ref 16, 원장 "FIB-SEM 실측 미시구조 — 합성 기하와 대조"). 1호와 같은 **탄소 없는 LCO/황화물(LPSI)** 복합양극이다.
+
+- **잰 것**: FIB-SEM(화소 35.6 nm · 절편 100 nm · 55.9 × 38.9 × 58.1 µm) 부피분율 LCO 33.1 · SE 53.7 · void 13.2 %(void = 안정화 수지 + 잔류 void) · CLD 형태(μ/k). 분할이 조성비를 보존(0.616 ↔ 0.613).
+- **안 잰 것 — 이 페이지의 양 전부**: `θ_AM` · `θ_SE`(연결 분율) · `A_Spec`(계면 면적) · `p_c` · 고립 분율 **0**(`percolat*` · `connect*` · `surface area` 0). ⇒ 1호와 **같은 양의 대조는 불가능**하다.
+- **대조되는 것**: (a) **입자 형태** — `[인쇄]` `k_LCO` 3.64 ↔ 15 % RSD 구형이면 ≈12 → 1호의 단분산 구 가정과 어긋난다(평균 현은 `[재현]` 5 µm 구의 2d/3 = 3.33 ↔ 3.3 µm 로 크기는 맞는다) (b) **SE 는 입자가 아니라 연속 기질** — `[도표]` Fig. 4D · 6B, μ_SE 5.2 µm · k 1.54 (1호 SE 는 3 µm 구) (c) **굴곡도** — 1호가 `[인쇄]` "not explicitly treated" 로 뺀 항을 이 편이 준다(`τ` 1.74 실제 · 1.27 무공극, 굴곡도 인자).
+- ⇒ `[해석]` 1호와 55호는 대조 관계가 아니라 **서로의 빈 칸을 채우는 관계**다 — 1호는 연결(`θ`)만, 55호는 경로 폭(`τ`)만. 둘을 한 구조에서 같이 계산한 편은 아직 없다(큐 57 Bielefeld 2022 흡수 때 확인).
 
 ## 이 페이지가 주장하지 않는 것
 

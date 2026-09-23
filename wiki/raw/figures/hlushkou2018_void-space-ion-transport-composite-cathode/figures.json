@@ -1,0 +1,235 @@
+{
+ "slug": "hlushkou2018_void-space-ion-transport-composite-cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "261a7d7a-17._The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf",
+  "db972313-17._Sup_The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Determination of the ion transport resistance of a composite electrode using a symmetrical cell Li metal | electrolyte | composite electrode | electrolyte | Li metal. (A) Charge transport at high frequencies. (B) Charge transport at low frequencies.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    412.9,
+    563.6,
+    705.7
+   ],
+   "w": 1097,
+   "h": 1221,
+   "dpi": 300,
+   "src": "261a7d7a-17._The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf",
+   "blank": 0.511
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Selected sample after preparation for FIB-SEM tomography, just before acquisition of the image stack (scale bar: 40 μm).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    513.3,
+    294.7,
+    724.8
+   ],
+   "w": 1097,
+   "h": 882,
+   "dpi": 300,
+   "src": "261a7d7a-17._The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf",
+   "blank": 0.302
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Distribution of the LCO phase (highlighted in blue) in the reconstructed volume of the composite cathode. (For interpretation of the references to colour in this ﬁgure legend, the reader is referred to the Web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.6,
+    413.4,
+    473.7
+   ],
+   "w": 1592,
+   "h": 1764,
+   "dpi": 300,
+   "src": "261a7d7a-17._The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf",
+   "blank": 0.513
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Simulated transient diﬀusion coeﬃcient D(t) in the reconstructed composite cathode (normalized by the ion diﬀusion coeﬃcient in the bulk SE, Dion,electrolyte) against the dimensionless diﬀusion time tD = 2Dion,electrolytet/ (dLCO)2; dLCO = 5 μm is the mean size of the LCO particles. The black solid line represents results for the actual composition of the three-phase system (LCO, SE, void) in the reconstruction. The red solid line represents results for a ﬁc- titious composition, where all void space has been replaced by SE. Dashed lines indicate the asymptotic (long-time) values of D(t)/Dion,electrolyte, which are used to extract corresponding diﬀusive tortuosities τdiﬀ. (For interpretation of the references to colour in this ﬁgure legend, the reader is referred to the Web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    51.0,
+    563.7,
+    247.6
+   ],
+   "w": 1097,
+   "h": 820,
+   "dpi": 300,
+   "src": "261a7d7a-17._The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (Top) Generation of chords for the LCO phase (blue vectors) and the combined interparticle phase (green vectors): 26 vectors are projected in angularly equispaced directions from random seed points until they hit an interface (the figure shows exemplarily vectors in the xy-plane). A pair of opposing vectors is combined to one chord. Chords hitting the image border (cf. dashed red line) are rejected. (Bottom) µ- and k-values for LCO, SE, and void phases as well as the combined interparticle phase from CLD analysis, with stepwise increase of the investigated sample volume to address finite-size effects.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    533.5,
+    438.4
+   ],
+   "w": 1953,
+   "h": 1557,
+   "dpi": 300,
+   "src": "db972313-17._Sup_The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf",
+   "blank": 0.749
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Cathode composition. Compound ρ [g cm−3] wt [%] Volume fraction [%]",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    32.1,
+    562.7,
+    752.3
+   ],
+   "w": 2202,
+   "h": 2992,
+   "dpi": 299,
+   "src": "261a7d7a-17._The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2 Anode composition. Compound ρ [g cm−3] wt [%] Volume fraction [%] Li4Ti5O12 3.5 30 21 Solid electrolyte 2.2 60 66 Super C 65 1.9 10 13",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    32.1,
+    562.7,
+    752.3
+   ],
+   "w": 2202,
+   "h": 2992,
+   "dpi": 299,
+   "src": "261a7d7a-17._The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 5,
+   "file": "tab_3.png",
+   "caption": "Table 3 Morphological parameters for the reconstructed composite cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    32.1,
+    562.7,
+    751.9
+   ],
+   "w": 2210,
+   "h": 3001,
+   "dpi": 300,
+   "src": "261a7d7a-17._The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf",
+   "blank": 0.723
+  },
+  {
+   "key": "f2m",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2_manual_p4.png",
+   "caption": "Fig. 2. Impedance spectrum for a symmetrical cell Li metal | LPSI electrolyte | composite cathode | LPSI electrolyte | Li metal. The spectrum was recorded in the frequency range from 1 MHz to 0.3 mHz. The cross-sectional optical microscopy image shows the composite cathode (II) between the SE layers (I). The average thickness of the composite cathode (II) was (208 ± 5) μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    54,
+    410,
+    178
+   ],
+   "w": 1559,
+   "h": 517,
+   "dpi": 300,
+   "src": "261a7d7a-17._The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf",
+   "blank": null,
+   "note": "수동 크롭 — 캡션이 그림 오른쪽(측면 캡션)이라 크로퍼가 '그래픽 없음'으로 제외"
+  },
+  {
+   "key": "f4m",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4_manual_p5.png",
+   "caption": "Fig. 4. Reconstruction process for a single slice of the composite cathode (all scale bars: 15 μm). (A) Image after restoration process. (B) LCO phase (white) after finished reconstruction. (C) Void space (white) combining the resin-filled volume and residual void volume. (D) Final image combining the three reconstructed phases: blue – LCO particles; red – SE; black – void space. SE was assigned as volume neither occupied by LCO nor void phase.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    54,
+    410,
+    316
+   ],
+   "w": 1559,
+   "h": 1092,
+   "dpi": 300,
+   "src": "261a7d7a-17._The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf",
+   "blank": null,
+   "note": "수동 크롭 — 캡션이 그림 오른쪽(측면 캡션)이라 크로퍼가 '그래픽 없음'으로 제외"
+  },
+  {
+   "key": "f6m",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6_manual_p6.png",
+   "caption": "Fig. 6. (A) Phase distribution in an individual slice of the reconstructed cathode. SE is shown in red. Black represents LCO particles and void space, which are both unavailable for diffusion of ions. The SE volume fraction is 53.7% (cf. Table 3). (B) Same slice, but voids are now filled with SE. Therefore, black represents only the LCO particles (cf. Fig. 4B) and the SE volume fraction has increased to 66.9%. Scale bar: 15 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    36,
+    628,
+    358,
+    741
+   ],
+   "w": 1342,
+   "h": 472,
+   "dpi": 300,
+   "src": "261a7d7a-17._The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf",
+   "blank": null,
+   "note": "수동 크롭 — 캡션이 그림 오른쪽(측면 캡션)이라 크로퍼가 '그래픽 없음'으로 제외"
+  }
+ ]
+}

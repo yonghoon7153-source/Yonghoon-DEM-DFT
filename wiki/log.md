@@ -2454,3 +2454,15 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: 27 장 중 Read 9(Fig. 4 · 5 · 6 · 7 · 8 · S1 · S4 · S5 + 표 S4), 안 봄 Fig. 1–3 · 9–12 · S2 · S3 · S6–S9, 나머지 표는 텍스트.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 54편 · Evidence 마흔아홉 번째 · 새 제약 · Status Log) · [[assb-lampe-contact-product-degeneracy]](서른일곱 번째 적용 · 처방 표 새 줄) · [[assb-tortuosity-factor-effective-conductivity-split]](다섯 번째 표본) · [[assb-sensitivity-sweep-vs-identifiability]](54호 절 · 처방 14) · 큐 문서 §6-3-g 55 행 + 지문 ²⁰.
 - 후속(서지 기준, 미열람 — 큐 56–59 인용 0): Hamann … Wachsman 2020 *Adv. Funct. Mater.* 30, 1910362 ([30]) · Han … Hu 2016 *Nat. Mater.* 16, 572 ([9]) · Fleig & Maier 1999 *J. Eur. Ceram. Soc.* 19, 693 ([63]) · Irvine 1990 *Adv. Mater.* 2, 132 ([61]) · Hein … Latz 2020 *JES* 167, 013546 ([34]).
+
+## [2026-09-23] ingest | assb 55호 — Hlushkou, Reising, Kaiser, Spannenberger, Schlabach, Kato, Roling, Tallarek 2018, The influence of void space on ion transport in a composite cathode for all-solid-state batteries (J. Power Sources 396, 363)
+- raw: `raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md` (sha256 봉인 — `pdf_sha256` · `si_sha256`) · 그림 `raw/figures/hlushkou2018_void-space-ion-transport-composite-cathode/` (자동 8 + 측면 캡션 수동 3). 큐 56번(2차 묶음 열일곱째 편) — 01호 ref 16 지목. LCO(LiNbO₃)/비정질 LPSI, 탄소 없음 · Marburg(Roling · Tallarek) + KIT KNMF + Toyota.
+- ★★★★ **판정**: 부피분율 측정(FIB-SEM 35.6 nm × 100 nm — LCO 33.1 · SE 53.7 · void 13.2 %, ⚠ void = 수지 + 잔류 void) · 연결성 · 접촉 면적 0(`θ` · `φ` · `u` 아님) · void 의 경로 효과만 가상 치환으로 계산(`τ` 1.74 → 1.27, `[재현]` `ε/τ` ×1.71, 로그 몫 `τ` 59 %).
+- ★★★★ **실측 대조는 `τ` 로** — `τ_cond` 1.6 ± 0.1 ↔ `τ_diff` 1.74 "close"; EIS 쪽 `ε` 미인쇄, `[재현]` 관측 곱 0.406 ↔ 모의 0.309(×1.31), EIS 시편 void 미측정 · 시편 차 넷 중 "수지" 하나에 배정 ⇒ 구조가 곱을 푸는 것은 같은 시편일 때. 01호 기대 절반(같은 양 대조 불가).
+- **채움표 55호 행 — 누적 ≈20.0 → ≈20.0 (새 칸 0).** Q3 층 하나 · Q4 0/55 마흔일곱 번째 성질.
+- **곱 축퇴 처방 서른여덟 번째 적용**: 2단계 부분(디지털 치환 = 대조군의 계산판, 수송만) · 4단계 ❌ · 새 줄 "두 경로 대조는 관측 곱 `σ_eff/σ⁰` 로, 같은 시편 · 같은 `ε` 로".
+- ⚠ 어긋남 9 건(D5 `τ_cond` ↔ `[재현]` 1.53 · D7 "void" = 수지 + void · D2 "relative 13%" ↔ +24.6 % · D3 Bruggeman 1.34 ↔ 1.365 · D6 유한 크기 "all phases" ↔ SI 예외 외).
+- 낱말 지문: 11 열 중 `MPa` 1(SE 펠릿) 외 0 · `void*` 43/6 · `percolat*` · `connect*` · `surface area` 0 · `manual*` 0/3(SI 만).
+- 그림: 그림 8 장 전부 Read(Fig. 1 은 쪽 렌더), 표는 텍스트.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 55편 · Evidence 쉰 번째 · 새 제약 · Status Log · 비주장) · [[assb-lampe-contact-product-degeneracy]](서른여덟 번째 적용 · 처방 표 새 줄) · [[assb-tortuosity-factor-effective-conductivity-split]](여섯 번째 표본) · [[composite-cathode-percolation-utilization]](1호 ref 16 기대 판정) · 큐 문서 §6-3-g 56 행 + 지문 ²¹.
+- 후속(서지 기준, 미열람 — 큐 57–59 는 이 편보다 늦어 인용 0): Thorat … Wheeler 2009 *JPS* 188, 592 ([22]) · Landesfeind … Gasteiger 2016 *JES* 163, A1373 ([13]) · Siroma … Ioroi 2016 *JPS* 316, 215 ([19]) · Asano … Tatsumisago 2017 *JES* 164, A3960 ([20]) · Müllner … Tallarek 2014 *Mater. Today* 17, 404 ([31]) · 같은 권 Kaiser … Roling 2018 *JPS* 396, 175 (인용 0).

@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -139,12 +139,24 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - **하류에서 지수가 된다**: 53호(Ren 2023)가 `σ_eff = σ⁰·ε^(β_GB+β_tort)`, `β_tort` 2.31 · `β_GB` 1.39 를 이 편 출처로 적었는데 이 편에 지수는 없다. `[재현]` 점별 구조-만 지수 2.54 · 2.23 · **2.31**(56 % 한 점) · 치밀 전 모형 정규화 입계 초과 지수 1.36 · 0.70 · 1.46 — **단일 멱법칙이 서지 않는다**(24호 "형태 자체가 안 선다" 와 같은 결론을 다른 경로로). 그 정규화면 곱하는 `σ⁰` 는 치밀 전 모형 2.1e-4 여야 하는데 53호는 8e-4 를 썼다(`[재현]` ×≈0.27 차 — 우리 재구성).
 - ⇒ 이 페이지 요지의 네 번째 판: **`σ_eff` 는 재거나 계산하고, `ε·τ²` 분할은 가정(24호)이거나 구조(54호)이며, 그 위에 얹히는 입계 · 2차상 인자는 EIS 로 벌크와 갈리지 않는다.** 펠릿 지수를 복합양극으로 옮길 때 `ε` 범위(0.43–0.75 → 0.25) · 입도(공극률과 교락) · `σ⁰` 의 뜻을 같이 옮긴다.
 
+## ★★★ 여섯 번째 표본 — 한 편이 두 경로(EIS · 구조)를 다 냈고, 비교는 `τ` 로 했다 (2026-09-23, `assb` 55호)
+
+`raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md` (Hlushkou · … · Roling · Tallarek 2018, *JPS* 396, 363 — LCO/비정질 LPSI, 탄소 없음 · 01호 ref 16).
+앞 다섯 표본은 한 경로씩이었다(24 · 29호 측정 ÷ `ε`, 25 · 27호 계산 · 가정, 54호 구조 계산 + 재사용 EIS). 이 편은 **같은 연구에서 두 경로를 다 낸다** — 대칭셀 EIS(`τ_cond`)와 FIB-SEM 재구성 위 추적자 확산(`τ_diff`).
+
+- **이름**: `[인쇄]` 식 (3) `τ_cond = (σ⁰/σ_comp)·ε` · 식 (9) `τ_diff = D⁰/D_eff` · Bruggeman `τ_B = ε^−0.5` ⇒ 이 편의 `τ` 는 **굴곡도 인자**(이 페이지의 `τ²`, 27 · 29호의 `τ`). 54호의 기하 `τ` 와 섞지 않는다.
+- **경로 B 안에서는 곱이 풀린다**: 영상 `ε`(SE 53.7 %) · 모의 `τ` 1.74 각각. 같은 구조의 void 를 SE 로 채운 가상 구조에서 `τ` 1.27 · `ε` 66.9 % — `[재현]` `ε/τ` 0.309 → 0.527(×1.71), 로그 몫 `ε` 41 · `τ` **59 %**. 공극은 `ε` 만이 아니라 기하를 바꾼다: `[인쇄]` Bruggeman 은 무공극에서만 맞는다(1.22 ↔ 1.27), 실제는 `[재현]` 1.365 ↔ 1.74(인쇄 1.34, 55호 D3). 함의 지수 `ε^a`: a 1.59 → **1.89**.
+- **두 경로 사이에서는 안 풀린다**: EIS 쪽 `ε` **미인쇄** — `[재현]`(관 내경 9.8 mm · σ⁰ 0.7 mS cm⁻¹) 관측 곱 **0.406 ± 0.013**, `τ_cond` 1.6 은 `ε` ≈0.65 에서 나온다(공칭 0.62 → 1.53 · 영상 0.537 → 1.32). **곱으로 비교하면** EIS 0.406 ↔ 모의 0.309(×1.31) · 무공극 0.527. EIS 시편의 void 는 재지 않았고 두 시편은 수지 · 충전 상태 · 압착 · 두께가 다르다 — 원문은 차를 "수지" 하나에 배정(24호가 "진화" 에 배정한 것과 같은 구조).
+- ⇒ 이 페이지 요지의 다섯 번째 판: **구조가 곱을 푸는 것은 그 구조의 시편에 대해서다.** 측정과 구조를 대조할 때는 `τ` 가 아니라 `σ_eff/σ⁰` 를, 같은 시편 · 같은 `ε` 로 비교한다(처방 1 의 강화). 측정 0.406 은 "void 13 % + Bruggeman"(`[재현]` 0.394)과도 맞아 분할이 서지 않는다.
+- **표의 둘째 줄에 수가 붙었다**: 위 "왜 중요한가" 표의 "경로가 좁아짐 → `σ_eff` ↓" — 이 편은 void 13.2 %(수지 포함)의 경로 효과를 ×0.59 로 계산했다. 셋째 줄(면적 `A_eff`/`φ`)은 모의에 계면이 없어 **구성상 0** 이다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **"굴곡도가 진화하지 않았다" 고 하지 않는다** — `σ_eff` 로 보면 70 % 는 변화 없음, 80 % 는 ≈3 배이고, 그 3 배의 배정이 안 갈린다는 것까지다.
 - **D1(ε 규약)을 저자의 의도된 다른 정의로 볼 가능성을 배제하지 않는다** — 다만 본문 식 (3)의 `ε_i`(재료 i)와 모순된다.
 - **옴 강하 추정을 측정값으로 쓰지 않는다** — OCP 기울기는 우리 가정이고 1차원 균일 반응 근사다.
 - 근거 편수: **수송 곱을 숫자로 준 편은 24호 하나**다. 9호는 같은 식을 모델에 두고 값을 적합했을 뿐 `σ_eff` 를 재지 않았다. 1호는 이 항을 뺐다.
+- ★ **2026-09-23 (55호)**: 위 "근거 편수" 줄은 24호 시점의 기록이다 — 그 뒤 29호(측정 ÷ 공칭 `ε`) · 54호(구조 계산) · 55호(두 경로)가 수를 줬다. 55호 EIS 쪽 `ε` ≈0.65 는 **우리 역산**이고 저자 값이 아니다.
 
 ## 관련
 
