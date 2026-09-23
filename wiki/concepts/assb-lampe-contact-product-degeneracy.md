@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -1307,6 +1307,35 @@ RF-RFE-CV 의 점수는 **용량 예측 MSE** 다. 곱의 두 인자(면적 ↔ 
 ### ⚠ 이것이 곱을 푼 것은 아니다
 
 신품 · 열화 0 · 면적 대조 0 · CPE 미인쇄 · n 미기재 · R3 세 값. 기여는 **3전극 분해 자체가 곱 앞에 두 가지(기준극 위치 몫 · 상대극 오염)를 끼워 넣는다는 크기 둘**이다.
+
+## ★★★ 처방의 스물네 번째 적용 (2026-09-23, `assb` 41호) — **적용 불가(EIS 0) · 대신 3전극 옴 배정의 극단 표본: 배면형 기준극은 분리막 옴 전부를 상대극 채널에 싣는다**
+
+`raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md` (Nam … Jung 2018, *J. Mater. Chem. A* 6, 14867). Sn | Li₆PS₅Cl | Li₀.₅In 반쪽전지 · NCM622 | Li₆PS₅Cl(50–60 / 730 µm) | Gr · Si–C 완전지, RE 는 **WE 뒷면**에 추가 SE 층, 3전극 DC 곡선만(EIS 0), 74 MPa 운전.
+
+### 입력 점검
+
+| 단계 | 입력 | 판정 |
+|---|---|---|
+| **1단계** `R`·`C` | **EIS 0**(`impedance` 는 서론 인용뿐) | ❌ |
+| **2단계** 면적 대조군 | 없음(양극 건전성은 SEM 정성 부정 한 줄) | ❌ |
+| **3단계-a** `Ea` | 30 °C 한 점 | ❌ |
+| **3단계-b** `C` 물리 상한 | 없음 | ❌ |
+| **4단계** 시간 영역 | 3전극 DC — 전류 반전 계단(Fig. 5b · S10b) · 컷오프 항등식(Fig. 2d · 3c) | ⚠ 옴 몫의 **상한**만, 보상 0 |
+
+### ★★★ 파생 채널에 옴이 몰린다
+
+`[인쇄]` "applying the current between the WE and CE while the open-circuit voltage of the WE/RE was measured" — RE 가 WE 뒷면이라 **WE/RE 에는 분리막 옴이 안 들어가고**, CE 전위(= WE/RE − WE/CE 파생)에 **분리막 전부 + WE 층 이온 경로**가 들어간다. 20호 `[인쇄]` "ohmic resistances were not incorporated into the voltage measurements"(이 배치를 두고)는 **WE 채널에서만 참**이다.
+`[도표]`/`[재현]` 전류 반전 계단 절반(옴 + 빠른 분극의 상한): **1 C · 50–60 µm SE ≈0.10 V**(Gr 최저 ≈−0.02 V) · **2 C · 730 µm SE ≈0.20 V**(Gr 최저 ≈−0.15 V) ⇒ 원전의 "Gr 이 0 V 아래로 간다" 는 **파생 채널의 부호 판정이 계단 안에 있다** — 도금 자체는 ⁷Li NMR · Ni-NW 감지극이 따로 세운다.
+
+### ⇒ 이 적용이 처방에 더하는 것
+
+1. **새 줄 "배면형 기준극은 분리막 옴 전부를 상대극 채널에 싣는다 — 파생 채널의 부호 판정은 전류 반전 계단 절반과 먼저 비교한다."** 40호 "3전극 옴 몫은 기준극 위치가 정한다"(1 : 3.2)의 **극단(0 : 1)** 이다. 우리 α · β 이식판이 3전극 자료를 받을 때 **어느 채널이 측정이고 어느 채널이 파생인지**를 입력 명세에 넣는다.
+2. **컷오프 항등식**: 컷오프가 WE/CE 에 걸리면 상대극 "종단 전위" = WE 종단 + 오프셋이다 — 상대극의 `R` 이나 과전압으로 쓰지 않는다.
+3. **2전극 두 서명이 다른 이름의 것**: 적재 의존 용량 부족(`LAM` 서명 → 상대극 표면 접근성) · 쿨롱 효율 저하(`LLI` 서명 → 연성 단락 누설). 곱을 가르기 **전에** 두 오염을 배제하는 3전극 한 번이 필요하다.
+
+### ⚠ 이것이 곱을 푼 것은 아니다
+
+양극 용량 손실 분석 0 · EIS 0 · 면적 0 · n 0. 기여는 **3전극 분해가 곱 앞에 끼워 넣는 배정 오염의 크기 둘**(≈0.10 · ≈0.20 V 계단 절반)과 항등식 하나다.
 
 ## 이 페이지가 주장하지 않는 것
 

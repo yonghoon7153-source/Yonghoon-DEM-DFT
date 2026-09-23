@@ -2269,3 +2269,17 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 ## [2026-09-23] update | assb 40호 흡수 커밋 추적 — 내용은 `804cf4cf` 에 들어갔다
 - assb 40호(Ikezawa 2020) ingest 의 스테이징된 변경 전부(digest · 그림 3 · 채움표 · 개념 2 · 큐 41 행 · log)가 **동시 세션의 커밋 `804cf4cf`**("docs(bms): MSC 세미나 적용 — 절 번호 바뀐 뒤 남은 교차참조(§5→§4) 수정")에 함께 들어갔다. 그 커밋은 이미 origin 에 있어 이력을 고치지 않는다. 이 항목과 큐 §6-3-g 41 행의 SHA 표기가 추적 기록이다.
 - digest 봉인은 그대로다(`sha256 182057355a5b3762…` — 커밋된 파일에서 재계산 일치).
+
+## [2026-09-23] ingest | assb 41호 — Nam et al. 2018, Diagnosis of failure modes for all-solid-state Li-ion batteries enabled by three-electrode cells (J. Mater. Chem. A 6, 14867)
+- raw: `raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md` (sha256 봉인 — 본문 · SI PDF 해시 frontmatter `pdf_sha256` · `si_sha256`) · 그림 `raw/figures/nam2018_three-electrode-assb-failure-modes-li-in-depletion/` (크로퍼 20, S8 누락). 큐 **42번** — 2차 묶음 셋째 편, 지목 4 회(17 · 20 · 21 · 40호). **In 가지에서 가장 이른 편(2018-07).**
+- ★★★★ **Q5 판정**: (a) 본문 0.62 V = ref 33 Jung 2008 *AFM* 18, 3010 수입(Santhosha 2019 이전 경로) · (b) **SI Fig. S2 = 같은 설계 셀의 기준극 재료 교체(Li₀.₅In ↔ Li 금속)**, `[인쇄]` "marginal difference", `[도표]` Li 대비 CE 중점 ≈0.621 V · 두 셀 차 ≈2 mV — **P8 재료 축의 원전 실행, 수 미인쇄** · (c) 40호 "상호 증언" 의 In 쪽 끝 — 순환 밖 고리가 SI 에 하나 · (d) **열일곱 번째 형태 "기준극 교체 대조"**.
+- ★★★★ **고갈층**: TOF-SIMS Li⁺ 단면 지도로 봤다(정성) — 반값 깊이 ≈49 µm(인쇄 "≈50 µm") · 대조군 0 · 정량 0 · `In-rich` 0 회 · "insulating" 측정 0. 21호 인용 선다, 조립 방향은 미시험(분말 CE).
+- **채움표 41호 행 — 누적 ≈17.5 → ≈18.0 (Q5 +0.5).** Q2 반 칸 검토 후 접음 · Q4 0/41 서른세 번째 성질 "전극 분해를 '진단' 으로 인쇄했다 — 분해가 분리막 옴을 어느 전극 채널에 싣는지 묻지 않고" · Q3 층 하나(cutoff-identity terminal value).
+- ★★★ `[재현]` 배면형 RE → 분리막 옴 전부가 CE(파생) 채널: "Gr < 0 V" 1 C ≈−0.02 ↔ 반전 계단 절반 ≈0.10 V · 2 C(730 µm) ≈−0.15 ↔ ≈0.20 V. Fig. 3c CE 종단 전위 = WE 종단 + 0.62 V 항등식.
+- 곱 축퇴 처방 **스물네 번째 적용**: 1–3단계 ❌(EIS 0) · 새 줄 "배면형 기준극은 분리막 옴 전부를 상대극 채널에 싣는다".
+- 카드 새 제약 5(측정 ↔ 파생 채널 · 컷오프 항등식 · 쿨롱 효율의 연성 단락 오염 · 기준 전위는 수를 인쇄 · 방전 끝을 양극이 낼 수 있다).
+- ⚠ 어긋남 10 건: D1 Table 1 행 이름 뒤바뀜 · D2 컷오프 부호 · D3 Mo ↔ Ti · D4 항등식 · D5 계단 · D6 CE 양 · D7 ref 35/36 · D8–D10 교차 편.
+- 낱말 지문(NFKC · 대소문자 구분 · 낱말 경계 · 본문): `calibrat` 1(Q5 문장) · `MPa` 6(SI 0) 외 전부 0. NFKC 변경 57 자 — 열 변화 0 · 줄끝 하이픈 53 곳 이음 열 변화 0.
+- 그림: **8 장 봤다(Fig. 2–6 · S2 · S4 · S10)**, 화소 판독 S2 인셋 · 4a · 5b · S10b; 안 본 것 Fig. 1 · S1 · S3 · S5–S7 · S9 · S11–S14.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른일곱 번째 · 새 제약 · Status Log) · [[assb-li-in-reference-potential-window]](41호 절 · P8 원전 실행 · 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]](스물네 번째 적용). 큐 §6-3-g 42 행 · 지문 표 · 각주 ⁷.
+- 후속(서지 기준, 미열람 — 큐 43–59 인용 0): Jung, Lee, Kim, Kwon, Oh 2008 *AFM* 18, 3010 (ref 33) · Jung, Oh, Nam, Park 2015 *Isr. J. Chem.* 55, 472 (ref 9) · Zhang … Janek 2017 *ACS AMI* 9, 17835 (ref 34) · Yu, Bates, Jellison, Hart 1997 *JES* 144, 524 (ref 37).

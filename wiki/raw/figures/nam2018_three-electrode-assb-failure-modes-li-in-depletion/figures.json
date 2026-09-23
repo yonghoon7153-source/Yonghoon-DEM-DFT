@@ -1,0 +1,412 @@
+{
+ "slug": "nam2018_three-electrode-assb-failure-modes-li-in-depletion",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "3fc9c12f-3._Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+  "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 First-cycle discharge–charge voltage proﬁles for Sn/Li–In all- solid-state cells with two diﬀerent electrode mass loadings.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    44.6,
+    558.8,
+    197.8
+   ],
+   "w": 1091,
+   "h": 640,
+   "dpi": 300,
+   "src": "3fc9c12f-3._Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Results for two diﬀerent types of all-solid-state three-electrode cells. Schematics of all-solid-state three-electrode cells of (a) type 1 (referred to as “cell-1”) and (b) type 2 (referred to as “cell-2”). Polymeric binders (NBR) and carbon additives (Super C65) are not shown in the diagram (WE and CE) for simplicity (b). (c) Discharge–charge voltage proﬁles for Sn/Li–In all-solid-state three-electrode cells at diﬀerent current densities. (d) Discharge–charge voltage proﬁles of each electrode for Sn/Li–In all-solid-state three-electrode cells at 0.045 mA cm\u00012.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    359.1
+   ],
+   "w": 2177,
+   "h": 1312,
+   "dpi": 300,
+   "src": "3fc9c12f-3._Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.83
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Electrochemical results for Sn/Li–In(-SE) all-solid-state three-electrode cells with diﬀerent CEs (counter electrodes). (a) Discharge– charge voltage proﬁles (WE vs. CE) for the cells with diﬀerent CEs where three diﬀerent weight ratios of Li0.5In/SE were used. The numbers indicate the current density in mA cm\u00012. (b) Discharge–charge voltage proﬁles for each electrode at 0.11 mA cm\u00012. The arrows indicate the terminal voltage of CEs (Li0.5In or Li0.5In-SE) upon discharge (delithiation for CEs). (c) Terminal voltage for CEs (Li0.5In or Li0.5In-SE) upon discharge (delithiation for CEs) as a function of current density, which is plotted from the data in (b) and Fig. S3, ESI†.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    308.6
+   ],
+   "w": 2177,
+   "h": 1101,
+   "dpi": 300,
+   "src": "3fc9c12f-3._Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Results for the concentration of Li+ ions in cross-sectioned CEs (Li0.5In or Li0.5In-SE with 80 : 20 weight ratio) for Sn/Li–In(-SE) all- solid-state cells. Cross-sectional TOF-SIMS maps of Li+ ions for (a) Li0.5In and (b) Li0.5In-SE CEs. The dashed lines indicate the outer surface of CEs. A scale bar with the maximum ion counts in a.u. is displayed in the right of (b). Schematics showing the concentration of Li+ ions in cross-sectioned (c) Li0.5In and (d) Li0.5In-SE CEs.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    407.5,
+    298.0,
+    633.5
+   ],
+   "w": 1090,
+   "h": 943,
+   "dpi": 300,
+   "src": "3fc9c12f-3._Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.284
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Results for NCM/Gr all-solid-state three-electrode cells employing thin SE layers (50–60 mm), suﬀering from ISC by penetrating growth of Li metal. (a) Charge–discharge voltage proﬁles and the corresponding diﬀerential capacity plots at diﬀerent C-rates. Note the abnormal plateaus plotted in red during charge at high C-rates. (b) Transient charge–discharge voltage proﬁles for each electrode at diﬀerent C-rates. Note the voltage region of Gr, which is lower than 0 V (vs. Li/Li+) at high C-rate, 1C, shown by a thick red line. (c) 7Li MAS-NMR spectra for the mixtures of SE layers and Gr electrodes collected from the Gr electrodes after lithiation at 0.1C or 2C. The corresponding voltage proﬁles are provided in Fig. S9, ESI†. (d) Schematic illustrating Gr/Ni-NW/Li–In all-solid-state three-electrode cells and (e) the corresponding transient charge– discharge voltage proﬁles at 2C for Gr",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    361.1
+   ],
+   "w": 2177,
+   "h": 1320,
+   "dpi": 300,
+   "src": "3fc9c12f-3._Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Results for NCM/Gr and NCM/Si–C all-solid-state three- electrode cells discharged to 0 V. Transient charge–discharge voltage proﬁles for each electrode for (a) NCM/Gr and (b) NCM/Si–C cells during discharge to 0 V. Note the higher cutoﬀvoltage for the Si–C electrode in (b) than that for the Gr electrode in (a) (indicated by ‘*’) during normal discharge. Also note the lower terminal voltage for the NCM electrode in the NCM/Gr cell (indicated by an arrow) in (a) than that for the NCM electrode in the NCM/Si–C cell in (b) upon discharge to 0 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    316.8,
+    558.8,
+    636.9
+   ],
+   "w": 1091,
+   "h": 1334,
+   "dpi": 300,
+   "src": "3fc9c12f-3._Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1 First two-cycle discharge-charge voltage profiles Sn/Li cells using liquid electrolytes at 0.054 and 0.27 mA cm-2 at the first and second cycle, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    229.2,
+    561.5,
+    497.7
+   ],
+   "w": 2188,
+   "h": 1119,
+   "dpi": 300,
+   "src": "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2 Comparison of the discharge-charge voltage profiles of each electrode for Sn/Li-In all-solid-state three- electrode cells using Li0.5In or Li metal as REs.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    166.4,
+    558.8,
+    549.6
+   ],
+   "w": 2177,
+   "h": 1598,
+   "dpi": 300,
+   "src": "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3 Discharge-charge voltage profiles of each electrode for Sn/Li-In all-solid-state three-electrodes with different CEs using three different weight ratios of Li0.5In/SE. The results of cycling at four different current densities are shown. Fig. 3b corresponds with (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    162.5,
+    561.3,
+    586.3
+   ],
+   "w": 2187,
+   "h": 1766,
+   "dpi": 300,
+   "src": "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4 Cross-sectional FESEM images for a) Li0.5In and b) Li0.5In-SE (20 wt% of SE) CEs and their corresponding EDXS elemental maps.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    111.6,
+    561.3,
+    628.4
+   ],
+   "w": 2187,
+   "h": 2154,
+   "dpi": 300,
+   "src": "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.465
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5 Cross-sectional FESEM images and the corresponding EDXS elemental maps for NCM/Gr all-solid-state full- cells using thin SE layer (50–60 m).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    213.4,
+    558.8,
+    482.7
+   ],
+   "w": 2177,
+   "h": 1123,
+   "dpi": 300,
+   "src": "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.393
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6 Electrochemical performances of NCM/Li-In, Gr/Li-In-SE, and Si-C/Li-In-SE all-solid-state cells. First two-cycle voltage profiles of a) NCM/Li-In, c) Gr/Li-In-SE, and e) Si-C/Li-In-SE all-solid-state cells at 0.1C, 0.1C, and 0.11 mA cm-2, respectively. The corresponding rate capabilities for a) NCM/Li-In, c) Gr/Li-In-SE, and e) Si-C/Li-In-SE all-solid- state cells are shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    111.6,
+    561.3,
+    594.6
+   ],
+   "w": 2187,
+   "h": 2013,
+   "dpi": 300,
+   "src": "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7 Transient charge-discharge voltage profiles of each electrode for NCM/Gr all-solid-state three-electrode cells at different current densities. Note the voltage region of Gr, which is lower than 0 V (vs. Li/Li+) at high C-rate, 1C, shown in bold red line.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    111.6,
+    561.3,
+    603.6
+   ],
+   "w": 2187,
+   "h": 2051,
+   "dpi": 300,
+   "src": "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 11,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9 First-cycle discharge (lithiation) voltage profiles for Gr/Li-In all-solid-state cells at different C-rates, which were used for 7Li MAS NMR spectroscopy measurements (Fig. 5c). After the discharge, the mixtures of SE layers and Gr electrodes, collected from the disassembled cells, were subjected to the 7Li MAS NMR spectroscopy measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    213.4,
+    561.3,
+    468.4
+   ],
+   "w": 2187,
+   "h": 1063,
+   "dpi": 300,
+   "src": "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 12,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10 Results for NCM/Gr all-solid-state three-electrode cells employing thick SE layers (730 m), being free from ISC. a) Charge-discharge voltage profiles and the corresponding differential capacity plots at different C-rates. b) Charge-discharge voltage profiles for each electrode at different C-rates. Note the voltage region of Gr which is lower than 0 V (vs. Li/Li+) at high C-rate, 1C, shown in bold red line.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    56.8,
+    561.3,
+    649.5
+   ],
+   "w": 2187,
+   "h": 2471,
+   "dpi": 300,
+   "src": "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 13,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11 Cross-sectional FESEM images and their corresponding EDXS elemental maps for a) NCM and b) Gr electrodes of NCM/Gr all-solid-state full-cells using thin SE layer (50–60 m) before cycling and after 10 cycles at 0.2C.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    93.1,
+    561.3,
+    523.1
+   ],
+   "w": 2187,
+   "h": 1793,
+   "dpi": 300,
+   "src": "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.423
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 14,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12 Transient charge-discharge voltage profiles of each electrode for a) NCM/Gr and b) NCM/Si-C all-solid-state three-electrode cells during discharge to 0 V. Fig. 6 is the enlarged view in x-axis.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    111.6,
+    561.2,
+    590.9
+   ],
+   "w": 2187,
+   "h": 1998,
+   "dpi": 300,
+   "src": "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 15,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13 Charge-discharge voltage profiles of a, c) NCM electrodes, b) Gr electrode, and d) Si-C electrode for NCM/Gr or NCM/Si-C all-solid-state three-electrode cells during discharge to 0 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    162.5,
+    561.3,
+    523.3
+   ],
+   "w": 2187,
+   "h": 1504,
+   "dpi": 300,
+   "src": "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 16,
+   "file": "fig_S14.png",
+   "caption": "Fig. S14 Cycling performances of NCM/Gr and NCM/Si-C all-solid-state cells during discharge to 0 V. The corresponding charge-discharge voltage profiles are shown in Fig. 6, S12, S13.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    213.4,
+    561.3,
+    469.9
+   ],
+   "w": 2187,
+   "h": 1069,
+   "dpi": 300,
+   "src": "60ed3f71-3._Sup_Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1 Coulombic eﬃciency for NCM/Gr all-solid-state full-cells Thickness of the SE layer [mm] Characteristics 0.1C (1st) 0.1C (2nd) 0.2C (4th) 0.5C (9th) 1C (14th) 2C (19th) 50–60 Discharge capacity [mA h g\u00011] 177 141 124 115 102 61 Charge capacity [mA h g\u00011] 137 137 123 102 82 50 Coulombic eﬃciency [%] 77.3 97.5 99.0 88.7 80.3 82.5 730 Discharge capacity [mA h g\u00011] 184 145 130 103 76 42 Charge capacity [mA h g\u00011] 146 145 130 103 76 42 Coulombic eﬃciency [%] 79.2 99.8 100.0 99.8 99.7 99.5",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    19.9,
+    557.8,
+    765.1
+   ],
+   "w": 2090,
+   "h": 2993,
+   "dpi": 289,
+   "src": "3fc9c12f-3._Diagnosis_of_failure_modes_for_all-solid-state_Li-ion_batteries_enabled_by_three-electrode_cells.pdf",
+   "blank": 0.883
+  }
+ ]
+}
