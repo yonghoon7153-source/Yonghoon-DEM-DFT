@@ -3431,6 +3431,61 @@
     "decision_digest": "sha256:3ede68fe3a2c183a44f92bbb80bb3a9b5f7973ffd284508851a631b08f28e572",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-23-b2o3-framework-event-rate",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "b2o3.uma_md.framework_site_escape.event_rate",
+   "slot": "framework_event_rate_onset",
+   "applies_to": {
+    "systems": [
+     "b2o3"
+    ],
+    "tasks": [
+     "framework_site_escape_census"
+    ],
+    "methods": [
+     "uma-s-1p1-omat__langevin-nvt"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "b2o3 골격 자리 이탈 사건 빈도 — 개시 구간 600/650/700 K (결과 보기 전 봉인)",
+   "statement": "보고량은 (온도, 시드, 원소군 {P 중심·자유 S·Cl}) 별 census 사건 수 · 움직인 원자 수 · 첫 사건 시각(없으면 '> 400 ps' 절단)이고, 온도별로 사건 빈도(/ns/셀, 정확 포아송 95 % CI)·사건 난 런 비율로 집계한다. 512원자(2×2×1) · 600/650/700 K · 시드 2–6 · 400 ps · turbo. 사건 정의·문턱은 lpsocl_box331_closure_amendment_2026_09_11.json §2 그대로다.",
+   "rationale": "b2o3 전도도 축은 Li D 가 정의되지 않아 닫혔다. 사건 빈도는 세는 양이라 정의가 서고 시드로 정밀해진다. 파일럿(800/1000 K)이 포화라 개시 구간을 잰다. 대조군 modelc·lpsocl 은 같은 자로 30런 0 사건.",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": false,
+   "card": "db/properties/b2o3_framework_event_rate_prereg_2026_09_23.json",
+   "record": "db/properties/b2o3_framework_event_rate_prereg_2026_09_23.json",
+   "evidence": [
+    "db/properties/b2o3_c6_census_512_2026_09_23.json",
+    "db/properties/box331_seedext_c2b_c6_2026_09_23.json",
+    "db/properties/b2o3_vs_modelc_framework_fair_2026_09_10.json"
+   ],
+   "method_ref": "tools/modelc_v3/run_box331_seed_extension.sh SYS=b2o3 → tools/modelc_v3/disorder_ensemble_diffusion.py --supercell 2 2 1 → tools/ionic/framework_site_census.py",
+   "reopen_criteria": "판정 문구는 카드에 봉인. 어느 결과든 D-2026-09-07-b2o3-md-closure-retrospective 의 전도도 인용 불가는 바뀌지 않는다. 16번째 런 없음.",
+   "enforcement": "⛔ 이 결정이 active·ratified 가 아니면 러너 가드 0 이 멈춘다. 무효 조건(run_meta 512원자·[2,2,1]·조성·온도·400 ps·save_traj·turbo)을 런 시작 즉시 확인한다. gabia GPU pw.x 와 동시 실행 금지.",
+   "proposed_by": "claude-session-2026-09-23",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-23",
+     "state": "active",
+     "note": "1저자 비준 — '이거 돌리자' · 'gabia 지금 (탄성 뒤로)' · 'turbo' · 'gabia로 지금 바로 돌리면 될듯'. results_seen: false."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-23T04:13:07Z",
+    "commit": "22266171056d813f4d2001e22ebbbdca6fa7bd98",
+    "decision_digest": "sha256:963e3cfdab5354341f763cf808514928dfafb21d71c58075a1e6b84a0c871df9",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }

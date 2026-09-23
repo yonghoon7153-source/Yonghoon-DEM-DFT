@@ -37,8 +37,9 @@
   ① ✅ **완료** — `b2o3_c6_census_512_2026_09_23.json`: 4/4 **framework_mobile**, 런당 사건 30–56 (200 ps) vs modelc·lpsocl 30런 0.
     PS₄ 는 안 깨지고(P결합 음이온 이탈 0) P 중심이 통째로 옮기며(3.7–6.5 Å) 자유 S·Cl 이 흐른다(최대 10.6·16.0 Å). 진단. ⚠ census 는 P 중심 규칙이라
     **B 를 안 세고** BS₃ 의 S 는 '자유 S'(2.0 Å)로 분류된다 — 결과와 같이 적는다.
-  ② 보고량을 **골격 붕괴 사건 빈도(ns 당)** 로 바꾼 **새 사전등록 카드** — ①을 파일럿으로 쓰되 사건 정의·문턱은 비준된 census 그대로.
-    ⛔ 카드 비준 전에는 안 던진다 (마감 `b2o3_md_closed_retrospective` 재개 규칙).
+  ② ✅ **카드 비준·발사 준비 (2026-09-23)** — `b2o3_framework_event_rate_prereg_2026_09_23.json` · 결정 `D-2026-09-23-b2o3-framework-event-rate`
+    (active·ratified). 512원자 · 600/650/700 K · 400 ps · 시드 2–6 · **turbo** · **gabia**(탄성은 이 뒤로). 보고량 = 원소군별 사건 수·움직인 원자 수·첫 사건 시각.
+    러너 `run_box331_seed_extension.sh SYS=b2o3`(가드 0 음성 2건 통과). ⏳ 발사 후 run_meta 무효조건 즉시 확인 → 끝나면 census 15런.
 - ✅ `webapp/tests/test_v3_records.py::test_gallery_carries_hazard_and_policy` — 테스트가 정책 접두어를 **둘만 복사**해 두고
   정책은 셋이라(`oxidation_stability_cascade` 누락) 정상적으로 막힌 파일을 "평범한데 막혔다" 로 읽었다 →
   `artifact_policy.is_governed()` 를 직접 쓰게 고침 · 음성(평범한 파일에 policy 주입 → 잡힘) 확인.

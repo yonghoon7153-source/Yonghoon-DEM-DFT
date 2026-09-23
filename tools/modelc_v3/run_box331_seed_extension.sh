@@ -37,17 +37,28 @@
 # =============================================================================
 set -euo pipefail
 
-# SYS=modelc (기본) | lpsocl
+# SYS=modelc (기본) | lpsocl | b2o3
 #   ⛔ **lpsocl 은 1저자 비준 전에 돌리지 않는다** — 비준된 마감을 여는 것이라 개정문이 필요하다
 #      (db/properties/lpsocl_box331_seed_extension_amendment_2026_09_15.json · R5 신설, proposed).
 #      아래 가드가 `LPSOCL_RATIFIED=1` 없이는 멈춘다.
+#   ⭐ 2026-09-23 **b2o3** 추가 — 시드 확장이 아니라 **새 캠페인**(골격 사건 빈도 · 사전등록
+#      db/properties/b2o3_framework_event_rate_prereg_2026_09_23.json). 128원자 V0 를 드라이버가
+#      `--supercell 2 2 1` 로 512원자로 키우고(파일럿과 같은 셀), 온도 600/650/700 K · 시드 2–6 ·
+#      turbo 다. modelc·lpsocl 의 기본값(온도 600/800/1000 · 시드 5 6 · 확장 없음)은 그대로다.
+#      가드 ③(기존 s2 와 대조)은 **건너뛴다** — 한 번의 러너 호출이 같은 인자로 다섯 시드를
+#      모두 던지므로 대조할 옛 런이 없고, check_seed_ext_meta.py 는 온도 600/800/1000 을 전제한다.
+#      대신 카드의 무효 조건(run_meta 512원자·[2,2,1]·온도·turbo)을 **런 시작 즉시** 사람이 본다.
 SYS=${SYS:-modelc}
 REPO=${REPO:-$HOME/work/Yonghoon-DEM-DFT}
 case "$SYS" in
   modelc) _XYZ=modelc_relaxV0_3x3x1.xyz; _NAT=558; _ROOT=modelc_box331_400ps; _TURBO=--turbo ;;
   lpsocl) _XYZ=lpsocl_relaxV0_3x3x1.xyz; _NAT="";  _ROOT=lpsocl_box331_400ps; _TURBO=""      ;;
-  *) echo "⛔ SYS 는 modelc | lpsocl 이다 (받은 값: $SYS)"; exit 1 ;;
+  b2o3)   _XYZ=b2o3_relaxV0.xyz; _NAT=128; _ROOT=b2o3_221_eventrate_400ps; _TURBO=--turbo
+          _SC="--supercell 2 2 1"; _TEMPS_DEF="600 650 700"; _SEEDS_DEF="2 3 4 5 6" ;;
+  *) echo "⛔ SYS 는 modelc | lpsocl | b2o3 이다 (받은 값: $SYS)"; exit 1 ;;
 esac
+: "${_SC:=}"; : "${_TEMPS_DEF:=600 800 1000}"; : "${_SEEDS_DEF:=5 6}"
+TEMPS=${TEMPS:-$_TEMPS_DEF}
 # ⚠ 실행모드가 계마다 **다르다** — modelc 9런은 turbo, lpsocl 9런은 기본 모드다.
 #   섞으면 그 묶음을 한 표에 못 쓴다. 그래서 계별로 고정하고, 아래 가드 ③ 이 기존 런과 대조한다.
 # ── 가드 0: **원장이 허락했나** (fail-closed) ────────────────────────────────
@@ -58,6 +69,7 @@ esac
 _DEC_ID=$(case "$SYS" in
   modelc) echo D-2026-09-15-modelc-box331-seed-extension ;;
   lpsocl) echo D-2026-09-15-lpsocl-box331-seed-extension-r5 ;;
+  b2o3)   echo D-2026-09-23-b2o3-framework-event-rate ;;
 esac)
 python3 - "$REPO/db/governance/decisions.json" "$_DEC_ID" <<'PY' || exit 1
 import json, sys
@@ -79,7 +91,7 @@ if st != "active" or rat != "ratified":
 print(f"  ✓ 원장 허가 {did} (active · ratified {(d.get('ratification') or {}).get('timestamp','')})")
 PY
 OUTROOT=${OUTROOT:-$HOME/work/runs/$_ROOT}
-SEEDS=${SEEDS:-"5 6"}
+SEEDS=${SEEDS:-$_SEEDS_DEF}
 V0XYZ=${V0XYZ:-$REPO/db/structures/$_XYZ}
 DRIVER=$REPO/tools/modelc_v3/disorder_ensemble_diffusion.py
 # ⛔ 2026-09-21 실측 — 맨 `python3` 가 `(base)` 인터프리터로 풀려 `ModuleNotFoundError: ase`
@@ -91,12 +103,13 @@ PY=${PY:-/home/kgy/apps/miniforge3/envs/uma/bin/python}
   echo "⛔ $PY 에 ase/fairchem 이 없다 — uma env 가 아니다. PY=<uma python 절대경로> 로 지정하라"
   echo "   (실측 경로: /home/kgy/apps/miniforge3/envs/uma/bin/python · 확인: readlink -f /proc/<pid>/exe)"
   exit 1; }
+if [ "$SYS" = b2o3 ]; then _TAG=b2o3_221_eventrate; else _TAG=${SYS}_box331_seed_ext; fi
 LOG=${LOG:-$HOME/logs/${SYS}_box331_seed_extension.log}
 
 # ── 가드 1: 중복 실행 (flock — pgrep 은 tmux 래퍼까지 세서 자기 자신에 걸린다) ──
 # ⚠ 락은 **(계 × 시드집합)** 단위다. 같은 계라도 `SEEDS=5` 와 `SEEDS=6` 을 따로 띄울 수 있게
 #   이름에 시드를 넣는다 — 계 단위로만 잠그면 병렬화를 스크립트가 막아 버린다.
-LOCK=${LOCK:-/tmp/${SYS}_box331_seed_ext_$(echo "$SEEDS" | tr -d " ").lock}
+LOCK=${LOCK:-/tmp/${_TAG}_$(echo "$SEEDS" | tr -d " ").lock}
 exec 9>"$LOCK" || { echo "⛔ 락 파일을 못 연다: $LOCK"; exit 1; }
 command -v flock >/dev/null 2>&1 && { flock -n 9 || {
   echo "⛔ 이미 도는 것이 있다 (flock $LOCK) — 중복 실행 중단"; exit 0; }; }
@@ -108,7 +121,7 @@ command -v flock >/dev/null 2>&1 && { flock -n 9 || {
 [ -f "$V0XYZ" ]  || { echo "⛔ 구조가 없다: $V0XYZ"; exit 1; }
 NAT=$(head -1 "$V0XYZ" | tr -d '[:space:]')
 if [ -n "$_NAT" ]; then
-  [ "$NAT" = "$_NAT" ] || { echo "⛔ 원자 수가 $_NAT 이 아니다($NAT) — 3×3×1 셀이 아니다"; exit 1; }
+  [ "$NAT" = "$_NAT" ] || { echo "⛔ 원자 수가 $_NAT 이 아니다($NAT) — $SYS 의 기준 구조가 아니다"; exit 1; }
 else
   echo "  ⚠ $SYS 의 기준 원자 수를 스크립트가 모른다($NAT 로 진행) — 가드 ③ 이 기존 런과 대조한다"
 fi
@@ -117,7 +130,9 @@ fi
 #   기존 s2 의 run_meta.json 을 읽어 구조·온도·길이·창·실행모드를 대조한다.
 #   못 읽으면 경고만 하고 계속 간다(첫 실행일 수 있다). 읽었는데 **다르면 멈춘다**.
 REF=$OUTROOT/s2/run_meta.json
-if [ -f "$REF" ]; then
+if [ "$SYS" = b2o3 ]; then
+  echo "  ⚠ b2o3 는 새 캠페인이라 가드 ③(기존 s2 대조)을 건너뛴다 — 무효 조건은 run_meta 로 런 직후 확인"
+elif [ -f "$REF" ]; then
   # ⭐ 2026-09-18 — 가드를 **파일로 뺐다**. heredoc 안에서는 시험을 칠 수 없고,
   #   이 가드에 예외조항(옛 판본 run_meta)을 넣게 되어 음성 시험이 필수가 됐다.
   python3 "$REPO/tools/modelc_v3/check_seed_ext_meta.py" \
@@ -130,10 +145,15 @@ mkdir -p "$(dirname "$LOG")"
 echo "SYS    = $SYS   (실행모드 ${_TURBO:-default})"
 echo "REPO   = $REPO"
 echo "PY     = $PY"
-echo "V0     = $V0XYZ  ($NAT atoms)"
+echo "V0     = $V0XYZ  ($NAT atoms)${_SC:+  → $_SC}"
+echo "T      = $TEMPS K"
 echo "OUT    = $OUTROOT/s{$SEEDS}"
 echo "seeds  = $SEEDS   (드라이버가 온도별로 base+int(T) 로 갈라 쓴다)"
-echo "예산   = 6런 × ~9.5 h ≈ 57 h  ⛔ 7번째 시드는 없다"
+if [ "$SYS" = b2o3 ]; then
+  echo "예산   = 15런 × ~8–9 h (turbo · 512원자 어림) ≈ 5–6일  ⛔ 16번째 런은 없다 (카드 §설계)"
+else
+  echo "예산   = 6런 × ~9.5 h ≈ 57 h  ⛔ 7번째 시드는 없다"
+fi
 echo ""
 
 cd "$REPO"                       # 드라이버가 상대경로를 부른다
@@ -144,8 +164,8 @@ for S in $SEEDS; do
   fi
   echo "===================== $SYS box331 seed ${S} ====================="
   "$PY" "$DRIVER" \
-    --v0_xyz "$V0XYZ" --label "$SYS" \
-    --temperatures 600 800 1000 \
+    --v0_xyz "$V0XYZ" --label "$SYS" $_SC \
+    --temperatures $TEMPS \
     --disorder_levels 0.0 --n_configs 1 \
     --equilib_ps 5 --prod_ps 400 \
     --timestep_fs 2 --friction 0.02 \
@@ -156,6 +176,16 @@ done
 
 echo ""
 echo "===================== 끝난 뒤 (분석은 별도) ====================="
+if [ "$SYS" = b2o3 ]; then
+  echo "  # ① 무효 조건 — run_meta 512원자·[2,2,1]·온도·400 ps·turbo (카드 §무효조건)"
+  echo "  grep -ah uma_inference_mode $OUTROOT/s*/ensemble_results.json"
+  echo "  # ② 보고량 — 런마다 census (카드 §도구·문턱 · 같은 카드 문턱)"
+  echo "  for d in $OUTROOT/s*/d0.00_cfg0/T*; do $PY tools/ionic/framework_site_census.py \\"
+  echo "      --traj \$d/traj.xyz --card db/properties/lpsocl_box331_closure_amendment_2026_09_11.json \\"
+  echo "      --out \$d/site_census.json; done"
+  echo "  ⛔ 판정 문구는 카드 §판정문구_봉인 에 있다 — 결과를 보고 고르지 않는다. 16번째 런 없음."
+  exit 0
+fi
 echo "  # ① 실행모드가 정말 turbo 였나 — 섞이면 이 묶음을 한 표에 못 쓴다"
 echo "  grep -ah uma_inference_mode $OUTROOT/s*/ensemble_results.json"
 echo "  # ② 새 시드의 자격 (C1·C2) — 새 시드라고 봐주지 않는다"
