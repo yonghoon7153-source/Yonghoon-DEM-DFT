@@ -27,7 +27,6 @@ from ..models import (
     GittRun,
     Run,
     Sample,
-    SpectrumFit,
     SpectrumRecord,
 )
 from ..schemas import (
@@ -45,7 +44,7 @@ from ..services import (
     sample_formation,
     sample_reference_cycle,
 )
-from .eis import _FitStub, _ParameterStub
+from .eis import _best_fit, _FitStub, _ParameterStub
 
 router = APIRouter(prefix="/api/samples", tags=["samples"])
 
@@ -60,7 +59,10 @@ def _impedance(session: Session, sample_id: int | None) -> tuple[int, float | No
     스펙트럼 수가 0 이면 아직 안 쟀고, 0 이 아닌데 저항이 없으면 잰 것이
     아직 안 맞았다는 뜻이다 — 그 둘은 다른 다음 행동을 부른다.
 
-    "가장 잘 맞은" 은 화면의 그것과 같은 뜻이다: 수렴한 것 중 χ² 최소.
+    피팅은 화면과 같은 것 — 스펙트럼마다 **쓰는 맞춤** (`_best_fit`: 고른 것,
+    없으면 χ² 최소, ADR 0045) — 이고, 그중 χ² 가 작은 스펙트럼부터 본다.  전에는
+    모든 피팅을 χ² 로 줄 세워, 사람이 고른 맞춤 대신 옛 맞춤의 저항이 나올 수
+    있었다.
     """
     if sample_id is None:
         return 0, None
@@ -68,14 +70,9 @@ def _impedance(session: Session, sample_id: int | None) -> tuple[int, float | No
         select(SpectrumRecord.id).where(SpectrumRecord.sample_id == sample_id)).all()
     if not spectra:
         return 0, None
-    fits = session.exec(
-        select(SpectrumFit)
-        .where(SpectrumFit.spectrum_id.in_(spectra))      # type: ignore[attr-defined]
-        .where(SpectrumFit.converged)
-        .where(SpectrumFit.chi_squared.is_not(None))      # type: ignore[attr-defined]
-        .order_by(SpectrumFit.chi_squared)                # type: ignore[arg-type]
-    ).all()
-    for fit in fits:
+    in_use = [fit for fit in (_best_fit(session, spectrum_id) for spectrum_id in spectra)
+              if fit is not None]
+    for fit in sorted(in_use, key=lambda f: f.chi_squared):
         stub = _FitStub(circuit=fit.circuit, parameters=[
             _ParameterStub(**p) for p in json.loads(fit.parameters_json or "[]")])
         total = total_resistance(stub)

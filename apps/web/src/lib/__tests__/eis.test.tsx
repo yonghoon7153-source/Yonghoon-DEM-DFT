@@ -619,6 +619,57 @@ describe('스펙트럼 상세', () => {
     expect(screen.getByText('시작점 9/9')).toBeInTheDocument()
   })
 
+  it('쓰는 맞춤을 먼저 보여 주고, 다른 맞춤은 골라 쓸 수 있다 (ADR 0045)', async () => {
+    // 목록·σ·검수가 읽는 것은 쓰는 맞춤이다.  가장 최근 것(맨 앞)을 먼저
+    // 보여 주면, 시험 삼아 맞춘 회로가 쓰이는 값처럼 보인다.
+    const recent = fit({ id: 12, circuit: 'L1-R0-CPE1', chi_squared: 0.02, in_use: false,
+                         origin: 'refit-20260923T150000' })
+    const old = fit({ id: 11, in_use: true })
+    let fits = [recent, old]
+    let chosen: string | null = null
+    installFetch(detailHandler((url, init) => {
+      if (path(url) === '/api/eis/fits/12/use' && init?.method === 'POST') {
+        chosen = path(url)
+        fits = [{ ...recent, in_use: true, chosen_at: '2026-09-23T15:00:00' },
+                { ...old, in_use: false }]
+        return fits[0]
+      }
+      return path(url) === '/api/eis/spectra/1' ? detail({ fits }) : undefined
+    }))
+
+    renderDetail()
+    const picker = await screen.findByLabelText('지난 fitting') as HTMLSelectElement
+    expect(picker.value).toBe('11')
+    expect(screen.getByText('사용 중')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: '이 맞춤 쓰기' })).toBeNull()
+    // 묶음으로 다시 맞춘 것은 그렇다고 적는다 — 누가 언제 넣었는지 모르는 맞춤이
+    // 되지 않게.
+    expect(within(picker).getByRole('option', { name: /L1-R0-CPE1.*검수로 다시 맞춤/ }))
+      .toBeInTheDocument()
+
+    await userEvent.selectOptions(picker, '12')
+    expect(screen.queryByText('사용 중')).toBeNull()
+    await userEvent.click(screen.getByRole('button', { name: '이 맞춤 쓰기' }))
+
+    await waitFor(() => expect(chosen).toBe('/api/eis/fits/12/use'))
+    expect(await screen.findByText('사용 중')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: '이 맞춤 쓰기' })).toBeNull()
+  })
+
+  it('수렴하지 않은 맞춤은 고를 수 없다 — 값이 없다', async () => {
+    const stalled = fit({ id: 12, converged: false, chi_squared: null, in_use: false,
+                          parameters: [], arcs: [], reason: '수렴하지 않았다' })
+    installFetch(detailHandler((url) =>
+      path(url) === '/api/eis/spectra/1'
+        ? detail({ fits: [stalled, fit({ id: 11, in_use: true })] })
+        : undefined))
+
+    renderDetail()
+    const picker = await screen.findByLabelText('지난 fitting') as HTMLSelectElement
+    await userEvent.selectOptions(picker, '12')
+    expect(screen.queryByRole('button', { name: '이 맞춤 쓰기' })).toBeNull()
+  })
+
   it('측정 구성 하나로 종류와 셀 구성을 함께 정한다', async () => {
     // 둘을 따로 고르게 두면 "액체 · 미정" 같은 반쯤 정해진 상태가 남는데,
     // 아크의 이름도 기본 회로도 두 축이 함께 정해져야 나온다.

@@ -477,6 +477,14 @@ class SpectrumFit(SQLModel, table=True):
 
     created_at: datetime = Field(default_factory=_now)
     created_by: str = ""
+    #: 사람이 (또는 `bml refit` 이) **이 맞춤을 쓴다** 고 고른 때 (ADR 0045).  고른
+    #: 것 중 가장 최근 것이 쓰는 맞춤이고, 고른 것이 없으면 예전처럼 수렴한 것 중
+    #: χ² 최소다.  χ² 는 파라미터 수가 다른 회로를 견주지 못한다 — 검수가 권한
+    #: 단순한 회로(파라미터 넷)가 옛 회로(아홉)에 늘 밀려, 다시 맞춰도 안 쓰였다.
+    chosen_at: datetime | None = None
+    #: 어디서 왔나.  비면 화면·API 이고, ``refit-…`` 면 그 묶음의 `bml refit` 이다.
+    #: 되돌리기가 이것으로 묶음을 찾는다.
+    origin: str = ""
 
 
 class GittRun(SQLModel, table=True):

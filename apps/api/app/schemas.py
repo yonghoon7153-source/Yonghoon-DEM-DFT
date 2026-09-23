@@ -796,6 +796,12 @@ class SpectrumFitOut(BaseModel):
     id: int
     spectrum_id: int
     circuit: str
+    #: 이것이 그 스펙트럼의 **쓰는 맞춤**인가 — σ·스캔·검수가 읽는 것 (ADR 0045).
+    in_use: bool = False
+    #: 누가 이것을 쓰기로 고른 때.  비면 고른 적 없다 (χ² 최소로 쓰일 수는 있다).
+    chosen_at: datetime | None = None
+    #: 비면 화면·API, ``refit-…`` 면 그 묶음의 `bml refit`.
+    origin: str = ""
     #: 피팅 당시의 종류.  스펙트럼의 현재 종류(``kind_now``)와 다를 수 있고,
     #: 다르면 화면이 그렇게 말해야 한다 — 이름이 달라진다는 뜻이므로.
     kind: str

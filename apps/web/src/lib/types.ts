@@ -957,6 +957,13 @@ export interface SpectrumFit {
   id: number
   spectrum_id: number
   circuit: string
+  /** 이것이 그 스펙트럼의 **쓰는 맞춤**인가 — 목록·σ·스캔·검수가 읽는 것.
+   *  고른 것 중 가장 최근 것, 고른 것이 없으면 χ² 최소 (ADR 0045). */
+  in_use?: boolean
+  /** 누가 이것을 쓰기로 고른 때.  비면 고른 적 없다. */
+  chosen_at?: string | null
+  /** 비면 화면·API, `refit-…` 면 그 묶음의 `bml refit`. */
+  origin?: string
   /** 피팅 당시의 종류. `kind_now` 와 다르면 이름이 달라졌다는 뜻이다. */
   kind: EisKind
   kind_now: EisKind

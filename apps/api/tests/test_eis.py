@@ -462,6 +462,109 @@ def test_many_fits_returns_the_best_one_and_stays_quiet_about_the_unfitted(clien
                       params={"ids": ",".join("1" * 13)}).status_code == 422
 
 
+def test_a_chosen_fit_is_used_even_when_a_bigger_circuit_fits_closer(client, sample_id):
+    """χ² 는 파라미터 수가 다른 회로를 견주지 못한다 (ADR 0045).
+
+    검수가 권하는 회로는 옛 회로보다 단순해서 χ² 가 거의 늘 더 크다.  "수렴한 것
+    중 χ² 최소" 만 쓰면 권한 대로 다시 맞춰도 옛 맞춤이 계속 쓰인다 — 상세만
+    새 맞춤을 먼저 보여 주고, 목록·겹쳐 그리기·셀 저항은 옛 것을 읽는다.
+    고른 것이 이기고, 가장 최근에 고른 것이 이기고, 옛 맞춤은 지우지 않는다.
+    """
+    out = upload(client, kind="liquid", sample_id=sample_id)
+    rough = client.post(f"/api/eis/spectra/{out['id']}/fit",
+                        params={"circuit": "R0-p(R1,CPE1)"}).json()
+    good = client.post(f"/api/eis/spectra/{out['id']}/fit",
+                       params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)"}).json()
+    assert good["chi_squared"] < rough["chi_squared"]
+
+    def in_use():
+        fits = client.get(f"/api/eis/spectra/{out['id']}").json()["fits"]
+        assert len(fits) == 2, "고른다고 다른 맞춤이 지워지면 안 된다"
+        return [fit["id"] for fit in fits if fit["in_use"]]
+
+    def listed():
+        return client.get("/api/eis/spectra").json()[0]["best_circuit"]
+
+    def overlaid():
+        return client.get("/api/eis/fits", params={"ids": str(out["id"])}).json()[0]["id"]
+
+    def cell_ohm():
+        rows = client.get("/api/samples").json()
+        return next(row for row in rows if row["id"] == sample_id)["impedance_ohm"]
+
+    # 아무도 안 골랐으면 예전 그대로 — χ² 최소.
+    assert in_use() == [good["id"]]
+    assert good["in_use"] is True and good["chosen_at"] is None
+
+    chosen = client.post(f"/api/eis/fits/{rough['id']}/use")
+    assert chosen.status_code == 200, chosen.text
+    assert chosen.json()["in_use"] is True
+    assert chosen.json()["chosen_at"] is not None
+    # 화면마다 같은 맞춤을 읽는다.  하나라도 옛 것을 읽으면 같은 셀의 저항이
+    # 화면마다 다르다 (R0+R1 = 66.9 Ω 대 65.0 Ω).
+    assert in_use() == [rough["id"]]
+    assert listed() == rough["circuit"]
+    assert overlaid() == rough["id"]
+    assert cell_ohm() == pytest.approx(rough["conductivity"]["total_ohm"], rel=1e-9)
+
+    # 가장 최근에 고른 것이 이긴다 — 돌아가는 길이 따로 없어도 된다.
+    client.post(f"/api/eis/fits/{good['id']}/use")
+    assert in_use() == [good["id"]]
+    assert listed() == good["circuit"]
+    assert cell_ohm() == pytest.approx(65.0, rel=0.02)
+
+
+def test_a_fit_without_values_cannot_be_chosen(client):
+    """수렴하지 않은 맞춤을 고르면 σ·스캔이 통째로 비고, 그 까닭이 화면에 없다."""
+    from sqlmodel import Session as DbSession
+
+    from app.db import engine
+    from app.models import SpectrumFit
+
+    out = upload(client, kind="liquid")
+    with DbSession(engine) as session:
+        stalled = SpectrumFit(spectrum_id=out["id"], circuit="R0-p(R1,CPE1)",
+                              kind="liquid", converged=False, chi_squared=None,
+                              reason="최적화가 수렴하지 않았다")
+        session.add(stalled)
+        session.commit()
+        session.refresh(stalled)
+        stalled_id = stalled.id
+
+    refused = client.post(f"/api/eis/fits/{stalled_id}/use")
+    assert refused.status_code == 422
+    assert "수렴" in refused.json()["detail"]
+    assert client.post("/api/eis/fits/9999/use").status_code == 404
+
+
+def test_refitting_everything_keeps_the_choice(client):
+    """`bml reparse` 는 옛 맞춤을 지우고 쓰는 맞춤의 회로로 다시 맞춘다.
+
+    고른 표시를 새 맞춤으로 옮기지 않으면, 다음에 화면에서 χ² 가 더 작은
+    맞춤이 나오는 순간 사람이 고른 회로에서 조용히 넘어간다.  묶음
+    이름(``origin``)은 옮기지 않는다: 옛 행이 지워졌으니 `bml refit --undo` 가
+    이것을 지우면 그 셀에 맞춤이 하나도 안 남는다.
+    """
+    out = upload(client, kind="liquid")
+    rough = client.post(f"/api/eis/spectra/{out['id']}/fit",
+                        params={"circuit": "R0-p(R1,CPE1)"}).json()
+    client.post(f"/api/eis/spectra/{out['id']}/fit",
+                params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)"})
+    client.post(f"/api/eis/fits/{rough['id']}/use")
+
+    assert client.post("/api/eis/refit").json()["refitted"] == 1
+    fits = client.get(f"/api/eis/spectra/{out['id']}").json()["fits"]
+    assert [fit["circuit"] for fit in fits] == [rough["circuit"]]
+    assert fits[0]["in_use"] is True
+    assert fits[0]["chosen_at"] is not None
+    assert fits[0]["origin"] == ""
+
+    closer = client.post(f"/api/eis/spectra/{out['id']}/fit",
+                         params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)"}).json()
+    assert closer["chi_squared"] < fits[0]["chi_squared"]
+    assert closer["in_use"] is False
+
+
 # --- 정리 ------------------------------------------------------------------
 
 def test_a_spectrum_can_be_attached_to_a_cell(client, sample_id):

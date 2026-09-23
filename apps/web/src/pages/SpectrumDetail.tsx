@@ -75,8 +75,12 @@ export function SpectrumDetail() {
   // `record?.fits ?? []` 를 그대로 두면 매 렌더마다 새 배열이라 아래 useMemo 가
   // 절대 재사용되지 않는다 — 그래프가 마우스를 움직일 때마다 다시 그려진다.
   const fits = useMemo(() => record?.fits ?? [], [record])
+  // 처음 열면 **쓰는 맞춤**을 보여 준다 (ADR 0045) — 목록·σ·스캔·검수가 읽는
+  // 것이다.  가장 최근 것을 먼저 보여 주면, 시험 삼아 맞춰 본 것이 쓰이는 값처럼
+  // 보인다.  방금 맞춘 것은 `showFit` 으로 그대로 보여 준다 (쓰지는 않는다).
   const fit = useMemo(
-    () => fits.find((item) => item.id === showFit) ?? fits[0] ?? null,
+    () => fits.find((item) => item.id === showFit)
+      ?? fits.find((item) => item.in_use) ?? fits[0] ?? null,
     [fits, showFit],
   )
 
@@ -189,15 +193,13 @@ export function SpectrumDetail() {
   // 추천 하한·상한.  **마지막으로 맞춘 결과**에서 나온다 — 저주파 끝에
   // 오차가 몰렸는지는 맞춰 봐야 알 수 있는 것이라, 첫 피팅 전에는 하한 추천이
   // 없다 (상한은 유도성 점만 보면 되므로 늘 있다).
-  const suggestion = useMemo(() => {
-    const seen = (record?.fits ?? []).find((item) => item.id === showFit)
-      ?? (record?.fits ?? [])[0]
-    return {
-      low: seen?.suggested_low_hz ?? null,
-      drops: seen?.suggested_low_drops ?? 0,
-      high: seen?.suggested_high_hz ?? null,
-    }
-  }, [record?.fits, showFit])
+  // 보이는 맞춤의 것이다 — 파라미터 카드와 같은 맞춤이라야 추천이 무엇에서
+  // 나왔는지 화면에 보인다.
+  const suggestion = useMemo(() => ({
+    low: fit?.suggested_low_hz ?? null,
+    drops: fit?.suggested_low_drops ?? 0,
+    high: fit?.suggested_high_hz ?? null,
+  }), [fit])
 
   /** 이 스펙트럼이 SOC 스캔의 한 스윕인가.  그렇다면 맞추기는 **스캔 단위**가
    *  기본이다 — 한 파일이고 한 셀이라 1번에 맞는 회로가 나머지에도 맞는
@@ -270,6 +272,25 @@ export function SpectrumDetail() {
   useEffect(() => {
     if (!touchedHigh && suggestion.high !== null) setFitHigh(String(suggestion.high))
   }, [suggestion.high, touchedHigh])
+
+  /** 이 맞춤을 쓰는 맞춤으로 고른다 (ADR 0045).
+   *
+   *  χ² 는 파라미터 수가 다른 회로를 견주지 못한다 — 단순한 회로로 다시 맞춘
+   *  것은 거의 늘 χ² 가 더 커서, 고르지 않으면 옛 회로가 계속 쓰인다.  다른
+   *  맞춤은 지우지 않으므로 다시 고르면 돌아간다. */
+  async function chooseThisFit(target: SpectrumFit) {
+    setBusy(true)
+    setError(null)
+    try {
+      await api.chooseFit(target.id)
+      setShowFit(target.id)
+      bumpReload((value) => !value)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause))
+    } finally {
+      setBusy(false)
+    }
+  }
 
   async function runFit(mode?: 'auto') {
     if (!record) return
@@ -701,9 +722,28 @@ export function SpectrumDetail() {
                   {fits.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.circuit} · χ² {item.chi_squared === null ? '—' : num(item.chi_squared, 3)}
+                      {item.origin?.startsWith('refit-') ? ' · 검수로 다시 맞춤' : ''}
+                      {item.in_use ? ' · 사용 중' : ''}
                     </option>
                   ))}
                 </select>
+              ) : null}
+              {/* 맞춤이 여럿이면 어느 것이 쓰이는지 말한다.  목록의 χ²·σ·검수가
+                  이것을 읽는다 — 보이는 것과 쓰이는 것이 다르면 그렇다고 적고,
+                  고르는 단추를 둔다. */}
+              {fits.length > 1 && fit ? (
+                fit.in_use ? (
+                  <span className="tiny faint"
+                        title="목록·전도도·스캔·검수가 이 맞춤을 읽습니다">
+                    사용 중
+                  </span>
+                ) : fit.converged && fit.chi_squared !== null ? (
+                  <button type="button" disabled={busy}
+                          title="목록·전도도·스캔·검수가 이 맞춤을 읽게 합니다 · 다른 맞춤은 지우지 않습니다"
+                          onClick={() => void chooseThisFit(fit)}>
+                    이 맞춤 쓰기
+                  </button>
+                ) : null
               ) : null}
             </div>
           </div>

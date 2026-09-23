@@ -330,8 +330,7 @@ def _out(session: Session, record: SpectrumRecord, *,
         sample_name = sample.name if sample else None
     fits = session.exec(
         select(SpectrumFit).where(SpectrumFit.spectrum_id == record.id)).all()
-    best = min((f for f in fits if f.converged and f.chi_squared is not None),
-               key=lambda f: f.chi_squared, default=None)
+    best = _in_use(fits)
     return SpectrumOut(
         **record.model_dump(exclude={"settings_json"}),
         **resolve_conditions(session, record),
@@ -822,17 +821,33 @@ MIN_SCAN_SWEEPS = 3
 
 
 def _best_fit(session: Session, spectrum_id: int) -> SpectrumFit | None:
-    """수렴한 것 중 χ² 가 가장 작은 피팅.  없으면 ``None``.
+    """그 스펙트럼의 **쓰는 맞춤**.  수렴한 것이 없으면 ``None``.
 
-    가장 최근 것이 아니라 가장 잘 맞은 것을 고른다: SOC 스캔은 스물을 한꺼번에
-    피팅하고, 그중 몇은 회로를 바꿔 다시 맞춘다.  추세선에는 각 SOC 에서 **가장
-    잘 맞은** 값이 놓여야 서로 비교가 된다.
+    고른 것(``chosen_at``)이 있으면 가장 최근에 고른 것이다 (ADR 0045).  없으면
+    수렴한 것 중 χ² 가 가장 작은 것 — 가장 최근 것이 아니다: SOC 스캔은 스물을
+    한꺼번에 피팅하고, 그중 몇은 회로를 바꿔 다시 맞춘다.  추세선에는 각 SOC 에서
+    **가장 잘 맞은** 값이 놓여야 서로 비교가 된다.
+
+    χ² 최소만으로는 모자랐다: 파라미터가 많은 회로일수록 χ² 가 작아서, 검수가
+    권한 단순한 회로로 다시 맞춰도 옛 회로가 계속 쓰였다.  그래서 사람이 (또는
+    `bml refit` 이) 고른 것이 이긴다.
     """
-    fits = session.exec(
-        select(SpectrumFit).where(SpectrumFit.spectrum_id == spectrum_id)).all()
+    return _in_use(session.exec(
+        select(SpectrumFit).where(SpectrumFit.spectrum_id == spectrum_id)).all())
+
+
+def _in_use(fits) -> SpectrumFit | None:
+    """`_best_fit` 의 규칙 — 이미 읽어 둔 한 스펙트럼의 맞춤들에서 고른다.
+
+    목록(`_out` 의 ``best_circuit``)과 상세가 서로 다른 맞춤을 가리키지 않게
+    규칙을 한 곳에 둔다.
+    """
     usable = [f for f in fits if f.converged and f.chi_squared is not None]
     if not usable:
         return None
+    chosen = [f for f in usable if f.chosen_at is not None]
+    if chosen:
+        return max(chosen, key=lambda f: (f.chosen_at, f.id or 0))
     return min(usable, key=lambda f: f.chi_squared)
 
 
@@ -2007,8 +2022,10 @@ def _fit_out(session: Session, record: SpectrumRecord,
         total = total_resistance(stub)
         if total is not None:
             conductivity.setdefault("total_ohm", total)
+    in_use = _best_fit(session, fit.spectrum_id)
     return SpectrumFitOut(
         **fit.model_dump(exclude={"parameters_json"}),
+        in_use=in_use is not None and in_use.id == fit.id,
         parameters=parameters,
         arcs=arcs,
         conductivity=conductivity,
@@ -2257,8 +2274,9 @@ def refit_all(session: Session = Depends(get_session)):
     (`apply_exchangeable`).  강등만 하고 끝내면 올려 둔 셀의 전도도·추세가
     통째로 비므로, **되돌리는 길**이 같이 있어야 한다.  이것이 그 길이다.
 
-    회로와 주파수창은 **그 스펙트럼에서 가장 잘 맞은 맞춤의 것**을 쓴다.
-    사람이 골라 둔 것을 여기서 바꾸지 않는다.
+    회로와 주파수창은 **그 스펙트럼의 쓰는 맞춤**(`_best_fit`)의 것을 쓴다.
+    사람이 골라 둔 것을 여기서 바꾸지 않는다 — 고른 표시(``chosen_at``)도 새
+    맞춤으로 옮긴다 (ADR 0045).
 
     한 스펙트럼이 실패해도 멈추지 않는다 (`/runs/reparse` 와 같은 규칙).
     그리고 **수렴하지 않으면 옛 행을 지우지 않는다** — 새 맞춤이 답을 못 냈는데
@@ -2293,6 +2311,15 @@ def refit_all(session: Session = Depends(get_session)):
             # 이지만, 있던 값까지 지우면 그 셀이 화면에서 사라진다.
             stalled += 1
             continue
+        if best.chosen_at is not None:
+            # 사람이 고른 맞춤을 다시 한 것이면 새 것도 고른 것이다.  안 그러면
+            # 다음에 화면에서 더 작은 χ² 가 나오는 순간 그쪽으로 넘어간다.
+            # 묶음 이름(``origin``)은 옮기지 않는다 — 옛 행이 지워졌으니
+            # `bml refit --undo` 가 이것을 지우면 그 셀에 맞춤이 하나도 없다.
+            row = session.get(SpectrumFit, fresh.id)
+            if row is not None:
+                row.chosen_at = best.chosen_at
+                session.add(row)
         for fit_id in old_ids:
             stale = session.get(SpectrumFit, fit_id)
             if stale is not None:
@@ -2338,6 +2365,26 @@ def fit_batch(spectrum_ids: list[int],
     return {"fitted": done, "failed": failed,
             "requested": len(spectrum_ids),
             "converged": sum(1 for out in done if out.converged)}
+
+
+@router.post("/fits/{fit_id}/use", response_model=SpectrumFitOut)
+def use_fit(fit_id: int, session: Session = Depends(get_session)):
+    """이 맞춤을 그 스펙트럼의 **쓰는 맞춤**으로 고른다 (ADR 0045).
+
+    다른 맞춤은 지우지 않는다 — 다시 고르면 돌아간다.  수렴하지 않은 맞춤은
+    값이 없어 고를 수 없다: 고르면 σ·스캔이 통째로 비고, 그 까닭이 화면에
+    안 보인다.
+    """
+    fit = session.get(SpectrumFit, fit_id)
+    if fit is None:
+        raise HTTPException(404, f"fit {fit_id} not found")
+    if not fit.converged or fit.chi_squared is None:
+        raise HTTPException(422, "수렴하지 않은 맞춤은 쓸 수 없습니다 — 값이 없습니다")
+    fit.chosen_at = datetime.now(timezone.utc).replace(tzinfo=None)
+    session.add(fit)
+    session.commit()
+    session.refresh(fit)
+    return _fit_out(session, _get(session, fit.spectrum_id), fit)
 
 
 @router.delete("/fits/{fit_id}", status_code=204)
