@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -157,6 +157,8 @@ physical significance** of the parameters" 라고 쓴다.
 | ↳ **율 스윕 줄의 두 번째 실패 조건** (2026-09-23, **30호에서**) | 외삽 용량은 **스윕 시간 동안 정적 용량이 움직이지 않을 때만** 정적이다 — 블록당 수십 사이클의 율 시험은 표류와 율을 섞는다. 29호 조건(종료 율 평탄)과 **별개** | ★★★ **30호**: `[재현]` 29호 식을 Fig. 2a 에 걸면 평탄이 창 안이라 `Q_M` ≈63 이 식별(`Q_M`–`α` 상관 0.24–0.34)되지만, 그 값은 0.1 C 블록에서만 85 → 63(−26 %) 표류한 **뒤**의 용량 · `n` ≈2.5(29호 해석 범위 밖) |
 | ↳ **외부 액체 기준 줄의 경고** (2026-09-23, **30호에서**) | 액체 기준은 곱의 **어느 인자를 고정할지 정하지 않는다** — 저자가 고른다 | ⚠ **30호**: CV Randles–Ševčík `D_app ∝ 1/(A·C)²` 의 고체/액체 10.9 배를 **전부 `D` 에** 배정(29호는 같은 구조를 **면적**에). 30호의 액체 대조는 다공 전극 전체가 젖고 고체는 펠릿 한 면만 닿는 **면적이 정의상 다른 대조** — `[재현]` 유효 면적 ≈3.3 배면 `D` 가 같아도 된다 |
 | ★★ **Dunn 비 `k₁/k₂` — CV 의 면적 소거 조합** (2026-09-23 후보, **30호에서**) | `k₁ = A·c_s` · `k₂ ∝ A·C·√D` ⇒ 용량성/확산 비 `∝ c_s/(C√D)` — **`A` 약분**. 16호 `R·C` 의 CV 판 | ⚠ **30호**: 1.0 mV s⁻¹ 비 액체 1.78 ↔ 고체 1.38 ⇒ 저자 `D` 배정이 맞으려면 면적당 표면 용량이 액체에서 **≈4.3 배**여야 한다(`[재현]`). 전제(두 성분이 같은 면적을 본다 · 면적당 `c_s` 비교 가능)가 약해 **후보**만 |
+| ↳ **외부 기준 줄의 세 번째 배정 — 상수 입력** (2026-09-23, **31호에서**) | 기준 없이 `A` 를 **BET 상수**로 넣어 곱 전체를 `D` 에 준다. ★ 저자가 **고지**하고 비교 주장(두 방법 일치)을 `A` 약분 형태로 한정한 첫 표본 | ⚠ **31호**: 봉인은 사이클 추적 · operando 의 절대 주장에서 풀린다. `[재현]` BET ↔ D50 구 선택만으로 `D` ×2.52 — 방법 간 불일치 SD 0.56 보다 크다. 29호 `D_LIB` 가 바로 이런 액체 측정이다 ⇒ 29호 `φ` 는 **두 유효 면적의 비** |
+| ★★ **ICI `R/k` — 한 차단의 면적 소거 조합** (2026-09-23 후보, **31호에서**) | 정전류 중 짧은 차단의 절편 `R`(표면형 `∝ 1/A`) 과 √t 기울기 `k`(`∝ 1/(A√D)`) ⇒ `R/k ∝ √D/j₀` — **`A` 약분**. 면적 손실 = `R`·`k` 동배수(`R/k` 불변) · `D` 손실 = `k` 만 · `j₀` 손실 = `R` 만. 16호 `R·C` 의 **시간 영역 · 확산 판**, 처방 1단계를 `C` 없이 | ⚠ **31호는 비를 만들지 않았고 사이클 추적(Fig. 7·8)에 `k` 를 인쇄하지 않았다** — 지면에서 계산 불가(zenodo 원자료에는 있음). 조건: `R` 에서 면적 무관 `R0` 제거(31호 액체 ≈4–5 Ω ≪ 50 Ω; ASSB 는 SE 벌크 + 상대극이라 크다 → 3전극 전제) · 반무한 창 유효(31호 `[재현]` 창이 경계). **후보** |
 
 ★ **`R_CT·C_dl` 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -1021,6 +1023,33 @@ ASSB 에 식별성 도구를 들여올 때 **반원을 버리지 않는 판**(�
 ### 원인 배정도 곱 위에 있다
 "율 한계" 는 `[인쇄]` 낮은 `D` 에, "비대칭" 은 LATP/NMC111 공간전하층에 배정된다. 둘 다 **상대극 Li\|LATP 계면 + SE 직렬 저항**(`[재현]` 대칭셀 호 기반 ≈0.5–0.86 kΩ ↔ CV 봉우리 이동 ≈0.54–0.65 kΩ)과 양립하고, 이를 가를 관측은 없다.
 
+## ★★★ 처방의 열네 번째 적용 (2026-09-23, `assb` 31호) — **액체셀 방법 원전: 곱을 가르지 않고, 가를 재료 반쪽을 같은 차단에서 이미 뽑는다**
+
+`raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md` (Chien et al. 2023, *Nat. Commun.* 14, 2289 — NMC811 | Li 링 기준극 | Li, 1 M LiPF₆ 3전극 파우치 ×2, ⚠ **액체셀**).
+⚠ **이 셀에는 접촉 손실의 자리가 없다**(액체가 적신다). 곱은 `A_eff·ε_p/R_s` 가 아니라 **확산 쪽 곱 `D·(A/V)²`**(29호 GITT 와 같은 자리)로 선다.
+
+### 입력 점검
+
+| 단계 | 요구 | 이 편 | 판정 |
+|---|---|---|---|
+| **1단계** (16호) | `R` 과 `C` 를 같이 | EIS 등가회로(R0 · R1‖CPE1 · R2‖CPE2 · W0) 적합 — **값 미인쇄**. ICI 는 `R` · `k` | ❌ (`C`) · ★ 대체 후보 `R/k` (위 표 새 줄) |
+| **2단계** (18·25호) | + 면적을 아는 대조군 | BET 한 값(공급사), 면적을 바꾼 쌍 0 | ❌ |
+| **3단계-a/b** (19호) | `Ea` · `C` 상한 | 온도 미통제 한 점 · `C` 없음 | ❌ |
+| **4단계** (20호) | 시간 영역에도 같은 검사 | ICI(시간) ↔ EIS(주파수): `k = σ√(8/π)` · `R_ICI ≈ R0+R1+R2` 가 3.8 V 위에서 일치 | ✅ **양립** — `σ ∝ 1/(A√D)` 도 같은 곱이라 **일관성**이지 검사가 아니다(29호와 같은 성질) |
+
+### ★★★ 같은 곱, 세 번째 배정 — 그리고 첫 고지
+
+`[인쇄]` 식 (19) `D = (4/π)(V/A)²((ΔE_OC/Δt_I)/(Ik))²` · `A` = BET 1.5 m² g⁻¹ · `[인쇄]` "The BET-surface area may differ from the electrochemically active surface area. However, … both of which are equally affected by this factor."
+29호(차이 → 면적) · 30호(차이 → `D`) 에 이어 31호는 **상수 입력 → 전부 `D`**. 셋 중 유일하게 저자가 **자기 주장의 어느 부분이 배정에 기대는지를 적었다** — "ICI ≈ GITT" 는 `A` 가 약분되는 비라 배정과 무관하다. ⚠ 그러나 같은 논문의 **사이클 `D` 감소(Fig. 7) · operando "한 자릿수 급락"(Fig. 8) · 결론**은 절대값이고 신품 BET 를 55 사이클 뒤에도 쓴다 — 거기서는 29·30호와 같은 무고지 배정이다.
+
+### ★★★ `[해석]` 확산 곱은 LAM 형 손실에 눈멀었다
+
+식 19 의 관측 비는 `(V/A)/√D` 이다. 입자 통째 비연결(활성 분율 `u`)은 `V`·`A` 를 같이 줄여 **약분**되고, 표면 피복 `φ` 는 `A` 만 줄여 `D_app = φ²D`. ⇒ **이 페이지의 곱이 확산 쪽에 설 때, 그 곱은 `ε_p`(LAM 형)를 보지 않고 `A_eff`(피복형)만 본다** — 용량 축과 `D_app` 축이 두 접촉 손실을 **나눠 받는다**(29호 `Q_M` ↔ `φ`). 곱 안에서 `A_eff` ↔ `D` 는 여전히 한 조합이다.
+
+### 원인 배정도 곱 위에 있다
+
+사이클 `D` 감소 · `R` 증가를 저자는 c 격자 비가역성 · 두 상(fatigued) 분리에 배정한다. `[재현]` operando 극값에서 한 면적 인자는 충전 끝(`R` ×3.3 ↔ `D` ×≈0.17, 예측 ×0.09)에서만 자릿수 양립하고 방전 4.1 h(`R` ×1.7 ↔ `D` ×0.075)에서는 어긋난다. 그리고 그 구간은 `[인쇄]` 상속 가정 "single-phase solid solution" 이 자기 XRD(두 상)로 깨진 곳이다. 가를 `k` 는 인쇄되지 않았다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -1072,3 +1101,4 @@ ASSB 에 식별성 도구를 들여올 때 **반원을 버리지 않는 판**(�
 - ★ **2026-09-23 (27호)**: **`A` 의 세 겹 짐을 "접촉 손실은 원리적으로 못 가른다" 로 일반화하지 않는다** — 균질화 P2D 한 형식의 구조다. 연결 분율을 `A` 와 독립된 자리로 가진 축약 모델이 있을 수 있다(확인 안 됨).
 - ★ **2026-09-23 (29호)**: **`φ` 를 측정된 피복률로 쓰지 않는다** — `D_true` 공통 · LIB 100 % 두 가정 위의 비이고, 기준(`D_LIB`) 자체가 형상에 따라 2.7 배 다르다. 그리고 **"`n` ≈0.5 는 고체 확산이 아니다" 라고 주장하지 않는다** — TLM √t 가 같은 지수를 줄 수 있다는 **대안**까지이고, 판별하지 않았다(CA 원자료 · TLM 파라미터 없음).
 - ★ **2026-09-23 (30호)**: **"30호의 `D` 차는 면적이다" 라고 주장하지 않는다** — 유효 면적 ≈3.3 배는 **같은 `D` 가 가능하다**는 크기 검산이고, 측정이 아니다. Dunn 비의 4.3 배도 면적당 표면 용량을 계 사이에서 비교할 수 있다는 약한 전제 위다. 주장은 **"이 대조로는 `D` 와 면적이 안 갈린다"** 까지다. 그리고 `Q_M` ≈63 · `n` ≈2.5 는 **그림 판독 블록 평균에 우리가 건 적합**이지 원전 명제가 아니다.
+- ★ **2026-09-23 (31호)**: **"ICI `R/k` 가 면적을 가른다" 고 주장하지 않는다** — 식에서 읽은 후보이고, 31호 지면에는 계산 재료(사이클별 `k`)가 없으며 `R` 에는 면적 무관 항이 섞인다. 그리고 **"`D_app` 은 LAM 에 불변" 은 식 19 위의 대수**(반무한 · 균질 모집단 · 액체 쪽 확산 무시)이지 원문 명제가 아니다.

@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -131,6 +131,14 @@ evidenceScope: multi-source-primary
 | 묶음 | `D_app ∝ 1/(A·C)²` — 29호 GITT 와 같은 부류([[spm-grouped-parameter-identifiability]]) |
 
 ⇒ **처방 9**(아래)를 붙였다. 식별성 이전에 **전제와 라벨**을 검사하는 층이 있고, ASSB 실험 문헌의 상당수가 그 층에서 끝날 수 있다(표본 1 — 일반화하지 않는다).
+
+## ★★ 31호 — 세 줄 밖의 네 번째 도구: **방법 간 일치 ≠ 인자 식별**
+
+`raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md` (Chien et al. 2023, ⚠ **액체셀**, ICI 방법 원전).
+이 편의 검증은 **세 방법(GITT · ICI · EIS)이 같은 값을 낸다**는 것이다 — `k` 상대차 평균 0.013 · SD 0.26, OCP 기울기 SD 0.076, `D` 평균 0.15 · SD 0.56(SI Fig. 9 · 11 · 12). 이것은 위 표 어느 줄도 아니다: **스윕도, 추정 데이터 위 `J` 도, FIM 도 아니고 교차 방법 일치(cross-method agreement)** 다.
+`[해석]` 세 방법이 **같은 묶음**(`D·(A/V)²`, EIS 도 `σ ∝ 1/(A√D)`)을 보면 일치는 **묶음 측정의 재현성**을 보이지 묶음 **안의 인자**(`D` ↔ 면적)를 식별하지 않는다. 저자는 이를 알고 비교를 `A` 약분 형태로 한정했다(`[인쇄]` "both of which are equally affected by this factor") — **교차 방법 일치가 무엇을 보증하지 않는지를 인쇄한** 계보 첫 문장이다. 그러나 그 한정은 논문 후반의 절대 주장(사이클 `D` 감소)으로 이어지지 않는다.
+`[재현]` `D` 불일치 SD 는 `2·√(0.26² + 0.076²) = 0.54` 로 거의 전부 `k`(√t 기울기) 불일치에서 오고, 그림 오차막대(회귀 SD)는 그 1/2–1/5 이다 — **회귀 SD 는 분석창 · 프로토콜 · 상수 선택을 안 본다.** 상수 선택(BET ↔ D50 구) 하나가 `D` 를 ×2.5 움직인다.
+⇒ 처방 목록에 한 줄: **"방법들이 일치한다" 를 보면 두 방법이 같은 묶음을 보는지부터 확인한다 — 같은 묶음이면 일치는 식별의 증거가 아니다.**
 
 ## 우리 쪽 연결
 

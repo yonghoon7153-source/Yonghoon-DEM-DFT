@@ -2143,3 +2143,16 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - ⚠ 어긋남 17 건(D1 b 배정 반대 · D2 Table 1 용량 행 · D5 "activation" ↔ 봉우리 −62 % · D6 dQ/dV 손실 전 · D7 고율 귀속 · D9 전제 위반 · D11 σ 인용 없음 외).
 - 그림: **크로퍼 4 장 전부 봤다, 안 본 것 0 장** (+ Fig. 2a 확대 · Table 1 쪽 렌더).
 - 후속 후보: 1 **큐 30 ICI (*Nat. Commun.* 2023)** · 2 **Nomura 2019 *Angew. Chem.* 131, 5346** (ref 33) · 3 **Yu … Wagemaker 2017 *Nat. Commun.* 8, 1086** (ref 6).
+
+## [2026-09-23] ingest | assb 31호 — Chien et al. 2023, Rapid determination of solid-state diffusion coefficients in Li-based batteries via intermittent current interruption method (Nat. Commun. 14, 2289)
+
+- `raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md` (sha256 봉인, 본문 9 쪽 + SI 26 쪽). 큐 **30번**("이 곡선이 얼마나 평형인가"). Uppsala + Scania, CC BY, zenodo 원자료 공개(미열람). ⚠ **액체셀** — NMC811 | Li 링 기준극 | Li, 1 M LiPF₆ 3전극 파우치 ×2. 수정 GITT 로 GITT ↔ ICI ↔ EIS 대조 + 표준 ICI 55 사이클 + operando XRD.
+- 큐 낱말 지문 재집계(NFKC 뒤 · 대소문자 구분 · 낱말): `GITT` 94 → **92**(부분문자열 `GITTin`·`GITT5`) · `ICI` 100 → **99**(대소문자 무시였다) · `open circuit` 5 ✓ · `equilibri*` 4 ✓. ★ 대소문자 무시 `ici` 는 NFKC 뒤 **162** — 합자가 `coefficient` 오검출 62 를 가리고 있었다(27·28호와 반대 방향).
+- ★★★★ **핵심 판정 — ICI 는 곱 `D·(A/V)²` 을 가르지 않는다**: 식 19 에 `A` 제곱 입력, `A` = BET 상수 → 전부 `D` = **세 번째 배정, 첫 고지된 배정**(`[인쇄]` "BET-surface area may differ from the electrochemically active surface area … both … equally affected"). 비교는 봉인, 사이클 · operando 절대 주장에서 봉인 해제.
+- ★★★ `[해석]` `D_app` 은 입자 통째 비연결(`u`)에 불변 · 표면 피복에 `φ²` — 두 접촉 손실이 다른 축으로 간다 · ICI `R/k` 는 면적 소거 조합(처방 새 줄 **후보**, 지면에 사이클별 `k` 없음).
+- ★★★ `[재현]` SI Note 1·2 한계 37.7 · 26.8 · 12.8 s 재현 · BET ↔ D50 구 선택만으로 `D` ×2.52 > 방법 간 SD 0.56 · SD 0.56 = 2·√(0.26²+0.076²) · 신품 4.18 V `D` 골은 OCP 기울기(×0.36)가 만들고 `k` 는 준다 · operando `D` 급락 구간 = 상속 가정 "single-phase" 가 자기 XRD 로 깨진 곳.
+- **채움표 31호 행 — 누적 ≈16.0 → ≈16.0 (새 칸 0).** Q4 ASSB 0 — 스물세 번째 성질 "공통 인자로 비교를 봉인하고, 절대 주장에서 봉인을 뗐다" · Q1 `θ(N)` 0/31 · Q3 층 둘(measured-bundle-with-declared-constant · regression-SD-only error bars).
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · For 스물일곱 번째 · 제약 4 · Status Log) · [[assb-lampe-contact-product-degeneracy]](열네 번째 적용 · 처방 표 2 행) · [[spm-grouped-parameter-identifiability]](ICI 3 행) · [[assb-sensitivity-sweep-vs-identifiability]](방법 간 일치 ≠ 인자 식별).
+- ⚠ 어긋남 20 건(D1·D3·D4 SI 그림 번호 오지시 · D2 SD 0.086 ↔ 0.076 · D8 체계 편차 · D9 Fig. 1 (c)↔(e) · D12 극값 시각 · D13 "uniformly" · D15 표준 ICI 무대조 · D19 단상 가정 ↔ 두 상 외).
+- 그림: 크로퍼 26 장 — **15 장 직접 봤다**(본문 8 전부 + SI 8·10·12·13·15·16·18), **안 본 것 11 장**(SI 1–7 · 9 · 11 · 14 · 17).
+- 후속 후보: 1 **Geng … Brandell 2022 *Electrochim. Acta* 404, 139727** (ref 19) · 2 **Chouchane 2020 *JPCL* 11, 2775** (ref 24) · 3 **zenodo 원자료로 `R/k`** · 4 **Xu 2021 *Nat. Mater.* 20, 84** (ref 31).

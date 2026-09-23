@@ -1,0 +1,532 @@
+{
+ "slug": "chien2023_ici-rapid-solid-state-diffusion-coefficient",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "f3c3030c-30._Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+  "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Comparison between the ICI and the GITT methods. a, b How the current is controlled in the ICI method and the GITTin thiswork on the same test time scale. c, d Electrode potential (E) versus step time (t) as a response from the current input in the dashed-line box in a and b, respectively. The blue dashed line indicates where the slope of open-circuit potential against current-passing time (ΔEOC/ΔtI) is obtained. e, f Electrode potential (E) plotted against the square root of step time",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    63.8,
+    552.5,
+    366.2
+   ],
+   "w": 2163,
+   "h": 1261,
+   "dpi": 300,
+   "src": "f3c3030c-30._Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.754
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Modiﬁed GITT protocol designed to compare the results from the GITT, ICI method and EIS. Electrode potential (E) plotted against time (t) during a ‘current on’ step (I = 20 mA g−1) and a ‘current off’ step (I = 0) of the modiﬁed GITT program used in this work for the comparison of the results from the GITT, ICI method and EIS. Note that the long rest period is not necessary for the ICI method. It is done in this manner here for the comparison between the three methods.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    439.0,
+    300.9,
+    566.6
+   ],
+   "w": 1114,
+   "h": 532,
+   "dpi": 300,
+   "src": "f3c3030c-30._Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Comparison between the diffusion resistance coefﬁcient derived from the GITT, ICI method and EIS. The diffusion resistance coefﬁcient (k) in NMC811 in Cell 1 during charging and discharging are plotted against the OCP of the electrode (E) in a, b, respectively. The GITT data were ﬁtted with data selection interval 5–40 s. The EIS results are derived from the linear relationship between k and the coefﬁcient of the Warburg element (σ, k = σ",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    73.1,
+    300.9,
+    192.3
+   ],
+   "w": 1114,
+   "h": 498,
+   "dpi": 300,
+   "src": "f3c3030c-30._Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Comparison between the slope of OCP derived from the GITT and ICI method. The slope of the OCP (ΔEOC/ΔtI) obtained from the relaxed potentials at the end of each rest period (GITT) is compared with the slope of the potential under constant-current load subtracting the iR-drop derived from the ICI method (Δ[E(Δt = 0)]/ΔtI, marked as ICI). The values are obtained from Cell 1 in the ﬁrst cycles and the positive and negative during charging and discharging, respectively. The analysis of the difference between the values derived from the GITT and ICI methods can be found in Supplementary Fig. 12.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    321.2,
+    300.8,
+    493.9
+   ],
+   "w": 1114,
+   "h": 721,
+   "dpi": 300,
+   "src": "f3c3030c-30._Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Comparison between the Li-ion diffusion coefﬁcient derived from the GITT and ICI method. The Li-ion diffusion coefﬁcient in NMC811 (D) in Cell 1 at various OCP of the electrode (E) derived from the GITT with data selection interval 5–40 s and the ICI method during charging and discharging are plotted in a, b, respectively. The minimum of the y-axis is set to 10−13 cm2 s−1 to show the differences of the data above 3.7 V. The analysis of the difference between the values derived from the GITT and ICI methods can be found in Supplementary Fig. 5. The error bars originate from the errors in k, as shown in Fig. 3, which stem from the standard deviation of linear regression.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    73.1,
+    567.3,
+    192.3
+   ],
+   "w": 1114,
+   "h": 498,
+   "dpi": 300,
+   "src": "f3c3030c-30._Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Comparison between the internal resistance derived from the GITT, ICI method and EIS. The internal resistance (R) of NMC811 in Cell 1 at various OCP of the electrode (E) derived from the GITT with data selection interval 5–40 s, the ICI method and the EIS ﬁtting (R0 + R1 + R2 in the equivalent circuit model in Sup- plementary Fig. 13) during charging and discharging are plotted in a, b, respec- tively. The maximum of y-axis is set to 200 Ω to show the differences of the data above 3.7 V. The error bars originate from the standard deviation of the linear regression.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    42.8,
+    300.9,
+    198.8
+   ],
+   "w": 1114,
+   "h": 651,
+   "dpi": 300,
+   "src": "f3c3030c-30._Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 5,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 | Continuous measurements of diffusion coefﬁcient and internal resis- tance using the ICI method during long-term cycling. In cycles 6, 15, 25, 35 and 55, the Li-ion diffusion coefﬁcient in NMC811 (D) of Cell 1 derived by the ICI method is plotted against the speciﬁc capacity (Q) during charging and discharging are plotted in a, b, respectively, while the internal resistance (R) from the same ICI measurements during charging and discharging are plotted in c, d, respectively. Only values with E ≥3.7 V, where the ICI method is applicable as discussed above, are shown. The error bars originate from the standard deviation of linear regression.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    295.6,
+    300.8,
+    574.6
+   ],
+   "w": 1114,
+   "h": 1164,
+   "dpi": 300,
+   "src": "f3c3030c-30._Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.846
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 5,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 | Results from operando X-ray diffraction combined with the ICI method. The evolution of the 003 (ﬁrst panel) reﬂections (Cu-Kα1) as a heat map, electrode potential (E), Li-ion diffusion coefﬁcient in NMC811 (D) and the internal resistance (R) from the combination of operando XRD and the ICI method conducted on Cell 1 after 56galvanostatic cycles between 3.0 and 4.3 V and the 57th charge to 4.0 V. The incomplete cycle does not affect the observation of the correlation between the Li- ion diffusivity and the structural change above 4.2 V. The error bars of D and R originate from the standard deviation of linear regression.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    65.1,
+    567.4,
+    311.1
+   ],
+   "w": 1114,
+   "h": 1026,
+   "dpi": 300,
+   "src": "f3c3030c-30._Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.732
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1. Comparison between the Li-ion diffusion coefficient derived from the GITT, ICI method and EIS with the data of Cell 1. The Li-ion diffusion coefficient in NMC811(D) in Cell 1 at various OCP of the electrode (E) against Li/Li+ derived from the GITT with data selection interval 5–40 s and 50–150 s, the ICI method with data selection interval 1–5 s.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    78.0,
+    532.1,
+    412.8
+   ],
+   "w": 1943,
+   "h": 1396,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2. Comparison between the diffusion resistance coefficient derived from the GITT, ICI method and EIS with the data of Cell 1. The diffusion resistance coefficient (k) in NMC811(D) in Cell 1 at various OCP of the electrode (E) against Li/Li+ derived from the GITT with data selection interval 5–40 s and 50–150 s, the ICI method with data selection interval 1–5 s and the EIS fitting (𝑘= 𝜎$8/𝜋, σ: Warburg coefficient).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.1,
+    400.8
+   ],
+   "w": 1943,
+   "h": 1396,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.844
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3. Comparison between the internal resistance derived from the GITT, ICI method and EIS with the data of Cell 1. The internal resistance (R) of NMC811in cell 1 at various OCP of the electrode (E) against Li/Li+ derived from the GITT with data selection interval 5–40 s and 50–150 s, the ICI method with data selection interval 1–5 s and the EIS fitting (R0+R1+R2 in Supplementary Fig. 13).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.1,
+    400.8
+   ],
+   "w": 1943,
+   "h": 1396,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4. Comparison between the slope of OCP derived from the GITT and ICI method with data from both Cell 1 and 2 in both cycles. Two sources of the OCP slope (∆EOC/∆tI), relaxed potentials of the GITT (GITT) and iR-corrected pseudo-OCP provided by the ICI method (ICI), are plotted versus OCP of the electrode (E) against Li/Li+.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.1,
+    400.8
+   ],
+   "w": 1943,
+   "h": 1396,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure 5. Comparison between the Li-ion diffusion coefficient derived from the GITT, ICI method and EIS with the data of Cell 2. The Li-ion diffusion coefficient in NMC811(D) in Cell 1 at various OCP of the electrode (E) against Li/Li+ derived from the GITT with data selection interval 5–40 s and 50–150 s, the ICI method with data selection interval 1–5 s.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.1,
+    400.8
+   ],
+   "w": 1943,
+   "h": 1396,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.863
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure 6. Comparison between the diffusion resistance coefficient derived from the GITT, ICI method and EIS with the data of Cell 2. The diffusion resistance coefficient (k) in NMC811(D) in Cell 1 at various OCP of the electrode (E) against Li/Li+ derived from the GITT with data selection interval 5–40 s and 50–150 s, the ICI method with data selection interval 1–5 s and the EIS fitting (𝑘= 𝜎$8/𝜋, σ: Warburg coefficient).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.1,
+    400.8
+   ],
+   "w": 1943,
+   "h": 1396,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.844
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Figure 7. Comparison between the internal resistance derived from the GITT, ICI method and EIS with the data of Cell 2. The internal resistance (R) of NMC811in cell 1 at various OCP of the electrode (E) against Li/Li+ derived from the GITT with data selection interval 5–40 s and 50–150 s, the ICI method with data selection interval 1–5 s and the EIS fitting (R0+R1+R2 in Supplementary Fig. 13).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.1,
+    400.8
+   ],
+   "w": 1943,
+   "h": 1396,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Figure 8. Examples of GITT and ICI measurements The electrode potential (E) is plotted against the step time (t) in the square root scale for all subplots. In the two examples of GITT measurements a below 3.7 V and b above 3.7 V, results from linear regression of potential against the square root of step time with datapoints in 5–40 s and 50–150 s intervals are also plotted as red and orange lines, respectively. c is an example of an ICI measurement, which took place after the GITT measurement in b. The red line shows the result from linear regression of potential against the square root of step time with datapoints in 1–5 s interval. t / s t / s t / s",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.1,
+    196.8
+   ],
+   "w": 1943,
+   "h": 546,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Figure 9. Statistical analysis on the relative difference between the k values from the GITT and ICI methods. The relative difference between the k values from the GITT and ICI methods (kGITT and kICI, respectively) above 3.7 V in Figure 3 in the main text (Cell1 in cycle 1) plotted against the OCP of the electrode (E) against Li/Li+. The average, 0.013, is shown by the horizontal line and the standard deviation, 0.26, is shown by the height of the shaded area above and below the average value.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.1,
+    287.8
+   ],
+   "w": 1943,
+   "h": 925,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Figure 10. Selected impedance spectra from the first discharge of Cell 1. The impedance spectra measured when the working electrode potential is above and below 3.7 V are presented in Nyquist plots in panels a and b, respectively. Z’ and Z’’ are the real and imaginary parts of the impedance.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    35.8,
+    532.3,
+    425.1
+   ],
+   "w": 1943,
+   "h": 1623,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 12,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Figure 11. Statistical analysis on the relative difference between the slopes of OCP from the GITT and ICI methods. The relative difference between the slope of the OCP (denoted as dEOC/dtI in Figure 4 in the main text) from the GITT and ICI methods (slopeGITT and slopeICI, respectively) above 3.65 V in Figure 4 (Cell1 in cycle 1) plotted against the OCP of the electrode (E) against Li/Li+. The average, 0.00021, is shown by the horizontal line and the standard deviation, 0.076, is shown by the height of the shaded area above and below the average value.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.2,
+    287.8
+   ],
+   "w": 1943,
+   "h": 925,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 13,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Figure 12. Statistical analysis on the relative difference between the diffusion coefficients from the GITT and ICI methods. The relative difference between the Li-ion diffusion coefficient in NMC811 from the GITT and ICI methods (DGITT and DICI, respectively) above 3.7 V in Figure 5 (Cell1 in cycle 1) plotted against the OCP of the electrode (E) against Li/Li+. The average, 0.15, is shown by the horizontal line and the standard deviation, 0.56, is shown by the height of the shaded area above and below the average value.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.1,
+    287.8
+   ],
+   "w": 1943,
+   "h": 925,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.842
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 14,
+   "file": "fig_S13.png",
+   "caption": "Supplementary Figure 13. Equivalent circuit model used to fit the impedance spectra above 3.7 V. Details of the interpretation of the model are stated in the source of the model.1",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    522.3,
+    129.9
+   ],
+   "w": 1902,
+   "h": 267,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 15,
+   "file": "fig_S14.png",
+   "caption": "Supplementary Figure 14. Information on the experimental setup of the operando X-ray diffraction (XRD). a XRD patterns at the beginning (pattern number 1 in b) and end (pattern number 41 in b) of the operando run. Peaks from NMC811 (star), pouch cell/separators (circles), Li metal (triangles), Al from the tabs and the pouch (squares), Be discs (pentagons) and Cu tabs (hexagon) are highlighted. b The electrode potential (E) against Li/Li+ is plotted versus the XRD pattern number (Pattern No.), showing the potential measured at the midpoint of the duration of each XRD measurement.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.1,
+    215.5
+   ],
+   "w": 1943,
+   "h": 624,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 16,
+   "file": "fig_S15.png",
+   "caption": "Supplementary Figure 15. Results from the sequential refinements with a single R3)m NMC811 phase and selected XRD patterns near the end of charging and the beginning of discharging. a R-weighted pattern (Rwp) and goodness of fit (GoF) values (top) and c lattice parameters (bottom) from the sequential refinements. Note that, in certain cases, the estimated standard deviation is large due to the poor fit of the model to the data. b Two patterns at the end of charge (pattern 13 and 14) are compared to ones before (pattern 10) and after (pattern 17). It is clearly seen that patterns 13 and 14 are composed of more than one phase.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.1,
+    313.7
+   ],
+   "w": 1943,
+   "h": 1033,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 17,
+   "file": "fig_S16.png",
+   "caption": "Supplementary Figure 16. Results from the sequential refinements with two R3)m phases as reported by Xu et al.2 R-weighted pattern (Rwp) and goodness of fit (GoF) values (top) and c lattice parameters of the active and fatigued R3)m phases (bottom) from the sequential refinements.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    88.0,
+    532.1,
+    355.0
+   ],
+   "w": 1942,
+   "h": 1114,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.976
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 18,
+   "file": "fig_S17.png",
+   "caption": "Supplementary Figure 17. Rietveld refinement plots at the end of charging and the beginning of discharging. Panels a to h correspond to XRD patterns with pattern numbers 10 to 17, of which the refinement results with two R3)m phases are shown in Supplementary Fig. 16. The measured values, fitted values, residuals and the peak positions of the model are plotted in green dots, black line, blue line and gray rods, respectively. The electrode potential measured at the midpoint of the collection time of each pattern is shown at the top-left corner.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    532.2,
+    568.6
+   ],
+   "w": 1943,
+   "h": 2095,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 19,
+   "file": "fig_S18.png",
+   "caption": "Supplementary Figure 18. Top and side views of schematic illustration of the cell setup. WE, CE and RE denote working, counter and reference electrodes, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    475.2,
+    173.8
+   ],
+   "w": 1706,
+   "h": 450,
+   "dpi": 300,
+   "src": "abfff8f3-30._Sup_Rapid_determination_of_solid-state_diffusion_coefficients_in_Li-based_batteries_via_intermittent_current_interruption_method.pdf",
+   "blank": 0.819
+  }
+ ]
+}
