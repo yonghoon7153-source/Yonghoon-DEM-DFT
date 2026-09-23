@@ -96,6 +96,19 @@ evidenceScope: multi-source-mixed
 - 같은 SE · 같은 (dx, dy) 로 짠 설계면 **짝 비교** (시드별 차 · paired bootstrap) 우선. 시드 번호만 같고 난수 소비가 다르면 짝이 아니다.
 - 20개 전부의 범주(정상 · 미수렴 · intermixed · PS₄ 변화)를 보고하고, 통계는 *"미혼합·PS₄ 보존 조건부"* 로 적는다. 양쪽 탈락 집합의 차이도 드러낸다.
 
+### 문헌 반영 — Maurer 2015 (`litdb/papers/maurer2015_mbd_adsorbates_metal_surfaces.md` · 메인이 PDF 로 수치 재대조)
+- **분산 모델만 바꿔도 Ag|그래핀 결합이 크게 움직인다**: 같은 셀에서 vdW^surf 72 → MBD 45 meV/C (`Table III`) = 논문 셀 밀도(0.3593 C/Å²)로 **0.41 → 0.26 J/m²**. 분산 포함 7방법이 **33–78 meV/C ≈ 0.19–0.45 J/m²**. 그래핀/Ag 실험값은 **없다**.
+  ⇒ 이 폭(0.16–0.26 J/m²)은 우리 수치 문턱(0.01 / 0.02 / 0.10)보다 **한 자릿수 크다** — Ag|흑연 헤드라인은 **"PBE+D3(BJ) 조건부"** 로 적고 모델 불확도를 따로 한 줄로 단다. 0.3 J/m² 구간 경계가 이 산포 **안**에 있다.
+- **흑연 대조 실패 원인 목록**에 *"분산 모델 계통 편차"* 를 수치 설정 실수와 **따로** 둔다 — PBE+MBD 흑연 층간 48 meV/C(≈ 0.29 J/m² @ a 2.46)는 우리 운영 허용대 0.31–0.47 **밖**이다 (기준 0.39 ± 0.02 J/m² ≡ 63.8 ± 3.3 meV/C).
+- **P1-b 셀** = Maurer 셀과 같은 류(그래핀 2×2 / Ag(111) (√3×√3)R30°). a_Ag 4.16 이면 그래핀 **+3.56 %(밀도 −6.7 %)**, 4.086 이면 +1.71 % → **원자당·면적당 둘 다 + 밀도** 를 적고, 참조 그래핀 시트는 **같은 변형 격자**로 명시한다.
+- **작은 대조 계산 2개 후보**: ① Xe/Ag(111) (√3×√3)R30° 19원자 — 이 논문에서 실험값이 확실한 유일한 계 (0.18–0.23 eV · 3.45–3.68 Å, `Table I`) ② 그래핀 2×2/Ag(111) 26원자 — `Table III` 에 D3(BJ) 한 행을 보탠다.
+- ⚠ Maurer 는 registry 1개다 — registry ≥ 4 의 허용 폭 근거가 못 된다. 작은 셀에서 대칭 비등가 registry 가 4개 미만일 수 있으니 **봉인 때 센다**.
+
+### ⛔ D3 표기 — QE 기본값은 3체(ATM) 포함이다 (2026-09-23 원문 확인)
+- QE 7.4.1 `PW/Doc/INPUT_PW.def`: `dftd3_version = 4` = *"Grimme-D3 (BJ damping)"* · **`dftd3_threebody` 기본값 `TRUE`** (*"Turn three-body terms in Grimme-D3 on"*).
+- repo 의 QE 생성기는 `dftd3_threebody` 를 **한 번도 적지 않는다** (`tools/vgcf_hbn/make_qe_inputs.py` · `tools/sdcp/phaseB_v7c_dft_binding.py` · `tools/sdcp/make_slab_relax.py`) ⇒ 우리 QE "D3(BJ)" 는 실제로 **D3(BJ)+ATM** 이었다. `vgcf_hbn_*.json` 은 "D3BJ" 로 적혀 있다.
+- ⇒ W_ad 카드는 `dftd3_threebody` 를 **명시**한다. DEM 요청서의 "PBE + D3(BJ)" 는 보통 2체만(VASP IVDW = 12 관례)이라 **`.false.` 로 맞추고 ATM 을 별도 보고**하는 쪽을 제안한다 — 1저자 결정.
+
 ### 흑연 대조
 - 기준 = **이상적 ABAB 벽개에너지 0.39 ± 0.02 J/m²** (0.37 ± 0.01 은 비정합 쌍결정 — **다른 양**). 운영 허용대 **0.31–0.47 J/m²** (Codex 제안 파일럿 허용오차 — 측정 불확도 아님). 밖이면 D3 계수를 만지지 않고 원인 진단.
 - k 출발 간격 ≤ 0.20 Å⁻¹ (2π 포함) → 조밀화로 확인 · k · cutoff · smearing 각각 ΔW ≤ 0.01 · 흑연 벽개 모델 두께 ΔW ≤ 0.02 J/m².

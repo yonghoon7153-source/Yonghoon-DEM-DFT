@@ -157,6 +157,7 @@
 | **[Liao25]** ⚙ **점착 트랙 첫 정량 실험 앵커 (2026-09-23)** · ⛔⛔ **실용 박리 인성 Γ(G_c 부류) — W_ad 아님 → A–D 물성 4축 진입 금지** · ⚠ **압력 축 = lamination(제조 압착), 운전 적층압 아님** | **Daniel W. Liao**/D. Zeng/M. Mulla/A. Madanchi/H. Kawakami/Y. Aihara/K. Aotani (Nissan)/**M. D. Thouless**/**Neil P. Dasgupta\*** (Univ. Michigan) 2025 ***Adv. Mater.* 37, 2502114** (DOI 10.1002/adma.202502114 · SI 14 pp, Table S1) — "Effects of Interfacial Adhesion on Lithium Plating Location in Solid-State Batteries with Carbon Interlayers" | ✅ `papers/liao2025_interfacial_adhesion_li_plating_carbon_interlayer.md` — 판정은 **§E 1행** + `comparison_vs_ours_DEM.md` **§I-1** | 실험 전용 (180° 박리 + 박리 팔 소성굽힘 보정 · PFIB-SEM · 계산 0) |
 | **[Song25Mech]** ⭐⭐ **다공 LPSCl 벌크 E · K_Ic 실측 (mm 스케일)** · ⛔ **조밀 결정 DFT E 와 같은 물리량 아님 — 13 % 다공 냉간압착 펠릿** · ⚠ **경도 미측정** | **Siyuan Song**/**Changmin Shi**/**Akshay Pakhare**/**Brian W. Sheldon\***/**Pradeep R. Guduru\*** (Brown Univ.; 자금 ONR + SK On) 2025 ***ACS Appl. Energy Mater.* 8, 5636** (DOI 10.1021/acsaem.4c03143) — "Investigation of the Mechanical Properties of Porous Argyrodite Sulfide Electrolytes for All-Solid-State Batteries" | ✅ `papers/song2025_porous_argyrodite_modulus_fracture_toughness.md` — 판정은 **§C 1행** + `comparison_vs_ours_DEM.md` **§I-3** | 실험 (외팔보 굽힘 + CT, 시편별 Abaqus FE · ν 0.37 은 Deng 2016 DFT 인용 · 계산 0) |
 | **[SJ23AgC]** ⭐⭐⭐ **Ag–C 인터레이어 기전 원전 (operando PXRD)** · ⛔ **점착·응력 미측정 → 물성 4축 수치 진입 금지** · ⚠ 탄소 = 흑연(Samsung 원조는 카본블랙) | **Dominic Spencer-Jolly**/**Varnika Agarwal**/…/**Patrick S. Grant**/**Robert A. House**/**Peter G. Bruce\*** (Oxford + Diamond) 2023 ***Joule* 7, 503** (DOI 10.1016/j.joule.2023.02.001, OA) — "Structural changes in the silver-carbon composite anode interlayer of solid-state batteries" | ✅ `papers/spencerjolly2023_ag_graphite_interlayer_operando_xrd.md` — 판정은 **§E 1행** + `comparison_vs_ours_DEM.md` **§I-4** | 실험 (operando PXRD 실험실 Cu Kα + Diamond I12 · SEM/EDX · 계산 0) |
+| **[Maurer15MBD]** 🔧 **방법 원전 · 점착 트랙 Ag\|탄소 분산 모델 폭** · ⛔ **물성 4축 아님 · D3 수치 0건** | **R. J. Maurer**/V. G. Ruiz/**A. Tkatchenko\*** (Yale · FHI Berlin) 2015 ***J. Chem. Phys.* 143, 102808** (DOI 10.1063/1.4922688) — "Many-body dispersion effects in the binding of adsorbates on metal surfaces" | ✅ `papers/maurer2015_mbd_adsorbates_metal_surfaces.md` (2026-09-23, 그림 **7/7 실독**) | **[외부]** DFT 방법 검증 · 금속 흡착 · **§J-43 전용** |
 
 ---
 
@@ -5797,6 +5798,25 @@ A–D 4축 행 금지. 아래는 **판정**과 **우리 위치**뿐이다.
 ① **Li 대조군은 ref 19 의 결과**다(다른 포텐셜·Langevin) ② **전자 쪽은 계산 0**, 위상 + 문헌 결정상 갭 ③ **Onsager 수치는 운동량보존 불일치**로 인용 보류 ④ **Na 계 · 포텐셜 Na·P·S** — Li₆PS₅Cl 불가.
 
 **상호참조**: **§J-37 `[Chaney24SEI]`**(같은 축 — Li 아르지로다이트, 결정화 후에도 대형 런 100 % 환원) · **§J-41 `[Lomeli24]`**(부동태 라벨 = 공간 국소성, 전자 판정 실패) · **§J-31 `[Marc17NE]`**(교차상관의 기준틀) · **§J-36 `[Wang22Res]`**(MLIP 학습창 밖 300 K 1709× 발산 — 이 편은 생산 MD 에 γ 감시를 **걸었다고 명시**하나 통계 0). 네 편을 합친 판정은 **§E 첫 행**(SEI↔MCI) 에 있다.
+
+### J-43. 🔧 **방법 원전 — [Maurer15MBD] 분산 모델만 바꿔도 Ag|탄소 결합이 0.16 J/m² 움직인다 · 점착 트랙 허용 폭과 C-12 PTFE 의 다체 부호** (2026-09-23 신설)
+
+📎 **출처: `papers/maurer2015_mbd_adsorbates_metal_surfaces.md`** (그림 7/7 실독 · 핵심 수치는 메인이 PDF 텍스트로 재대조: `Table III` 72/3.05 · 45/3.23 · 7방법 33–78 · 본문 "over 38%" · 흑연 48 meV/C · 그래핀 2.54 Å · Ag 4.14 Å · "D3" 0회)
+
+⛔ **A–D 물성 4축 표에 행을 만들지 않는다** — 계가 Xe · PTCDA · 그래핀 / Ag(111) 금속 흡착이라 우리 물성값과 겹치는 칸이 0 이다. 옮기는 것은 **분산 모델 민감도의 크기와 부호**뿐이다.
+⛔ 문헌 결합에너지를 우리 C-12 E_ads(고정기하 · 한 자세 · 게이트 미통과)와 **같은 표에 두지 않는다** (C-12 사전등록 금지 조항).
+
+| 항목 | [Maurer15MBD] | 우리 | 판정 |
+|---|---|---|---|
+| 분산 모델 | PBE/HSE + vdW^surf(차폐 pairwise) vs **MBD@vdW^surf** (FHI-aims 전전자) | W_ad 계획: QE PBE+D3(BJ) (`dftd3_version=4`, 3체 키 미기재) · C-12: VASP PBE+U+D3 zero | 🔴 **D3 수치 0건** — 직접 비교 불가. vdW^surf → MBD 만 −23 / −29 / −37.5 % |
+| Ag\|그래핀 결합 | vdW^surf 72 · MBD 45 meV/C (d 3.05 / 3.23 Å, `Table III`) ≈ 0.41 / 0.26 J/m² (요약자 환산, 논문 셀 0.3593 C/Å²) · 7방법 33–78 meV/C ≈ 0.19–0.45 · **실험 없음** | P1-b Ag\|흑연 DFT+D3(BJ) — 미계산 | ⭕ **허용 폭 근거**: 모델 폭(0.16–0.26 J/m²)이 계획 수치 문턱(0.01–0.10)보다 한 자릿수 큼 → 헤드라인은 **모델 조건부**. 0.3 J/m² 구간 경계가 산포 안 |
+| 셀 | 그래핀 2×2 / Ag(111) (√3×√3)R30°, 그래핀 +3.06 % (a_Ag 4.14) · registry 1개 | P1-b 같은 셀 류 · a_Ag 4.16 이면 +3.56 %(밀도 −6.7 %) · registry ≥ 4 | ⭕ 셀 이식 · 원자당·면적당 둘 다 보고 · ⚠ registry 허용 폭은 이 논문에 없음 |
+| 흑연 대조 | PBE+MBD 층간 48 meV/C (ref 39 인용) ≈ 0.29 J/m² (a 2.46) | 기준 0.39 ± 0.02 J/m² (≡ 63.8 ± 3.3 meV/C) · 운영 허용대 0.31–0.47 | 🔴 MBD 값은 허용대 하단 밖 → 대조 실패 원인 목록에 **"분산 모델 계통 편차"** 를 수치 설정 실수와 따로 둔다 |
+| 실험 검산계 | Xe/Ag(111): 0.18–0.23 eV · 3.45–3.68 Å (`Table I`) | 없음 | ⭕ **이식 후보** — Xe/Ag(111) (√3×√3)R30° 19원자 D3(BJ) 대조 계산 |
+| 다체 부호 | 세 계 모두 pairwise → 다체에서 결합 감소 · 높이 증가 | C-12 브리프 §3-5 D4 → D4+ATM: PTFE −12 % | ✅ 부호 일치 · ⛔ 크기 이식 금지 (금속 vs LiNiO₂ 산화물) |
+
+**J-43-a. 인용 규율** — "38 %" 는 **"vdW^surf 대비"** 를 붙인다 (표 산술 37.5 %, 결론 절 "~25 %" 로 자기모순). 결론의 "PTCDA +0.1 Å" 도 표(+0.05)와 다르다 → **표에서 인용**. 45 meV/C 를 J/m² 로 옮길 때 밀도 **0.3593**(논문 셀)을 쓴다 — 0.3816(평형 그래핀)이면 0.28 로 6 % 부푼다.
+**상호참조**: DEM 쪽 점착 트랙 서술은 `comparison_vs_ours_DEM.md` §I · 계획 `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` §0′.
 
 ---
 
