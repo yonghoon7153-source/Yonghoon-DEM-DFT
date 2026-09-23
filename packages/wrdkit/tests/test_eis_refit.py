@@ -165,6 +165,25 @@ def test_a_circuit_that_cannot_draw_the_shape_is_refused_whatever_it_fixes():
     assert remaining_problems([TAIL, LABEL, misfit]) == 2
 
 
+def test_a_shape_the_old_fit_could_not_draw_either_does_not_block_the_same_model():
+    """실측 B15 #9 · B16 #9: 옛 `R0-p(R1,CPE1)` 는 R1 이 10⁹ Ω 로 가 곧 `R0-CPE1`
+    이었다.  새 `L1-R0-CPE1` 도 같은 3.2 % 로 못 그린다 — 같은 모양을 이름만 바로
+    그린 것이다.  모양 판정은 **새로 생기거나 더 나빠질 때만** 막는다."""
+    misfit = Finding(CHECK, "misfit_everywhere",
+                     "맞춤이 평균 3.2 % 어긋납니다 — 회로가 이 스펙트럼의 모양을 못 그립니다")
+    old = [TAIL, misfit]
+    triggers = ("tail_mimicked_by_arc",)
+    assert accept_refit(old, [misfit], triggers, converged=True,
+                        old_misfit=0.032, new_misfit=0.032).accepted
+    assert accept_refit(old, [misfit], triggers, converged=True,
+                        old_misfit=0.032, new_misfit=0.036).accepted       # 0.5 안
+    worse = accept_refit(old, [misfit], triggers, converged=True,
+                         old_misfit=0.032, new_misfit=0.045)
+    assert not worse.accepted and worse.reason == misfit.message
+    # 오차를 모르면 막는다 — 모르는 것을 받아들이지 않는다.
+    assert not accept_refit(old, [misfit], triggers, converged=True).accepted
+
+
 # -- 끝에서 끝까지 ----------------------------------------------------------------
 
 def pellet():
@@ -223,6 +242,8 @@ def test_a_worse_drawing_does_not_get_to_move_the_number():
     assert "오차 평균 < 0.01 → 1 %" in moved
     assert moved_number(8.0, 9.34, 0.037, 0.0092) == ""        # 더 잘 그린다
     assert moved_number(8.0, 8.3, 0.0, 0.01) == ""             # 4 % — 안 옮겼다
+    # 실측 B12 #4: −7 % 지만 1.9 → 2.0 % 는 같은 그림이다 (옛 맞춤엔 배선 L 이 없었다).
+    assert moved_number(9.43, 8.815, 0.019, 0.020) == ""
     assert moved_number(None, 9.34, 0.0, 0.01) == ""           # σ 를 못 내는 셀
     assert moved_number(8.0, 9.34, None, 0.01) == ""
 

@@ -224,7 +224,8 @@ def _refit_one(session: Session, target: _Target, origin: str,
             misfit = audit.misfit.mean if audit.misfit else None
             sigma = _sigma_ohm(conductivity)
             verdict = accept_refit(target.audit.findings, audit.findings,
-                                   candidate.triggers, converged=True)
+                                   candidate.triggers, converged=True,
+                                   old_misfit=old_misfit, new_misfit=misfit)
             accepted, reason = verdict.accepted, verdict.reason
             if accepted:
                 reason = moved_number(old_sigma, sigma, old_misfit, misfit)
@@ -380,7 +381,10 @@ def _sigma_change(old: float | None, new: float | None) -> str:
     if old is None or new is None or old <= 0:
         return (f"σ 저항 {'—' if old is None else f'{old:.4g} Ω'} → "
                 f"{'—' if new is None else f'{new:.4g} Ω'}")
-    return f"σ 저항 {old:.4g} → {new:.4g} Ω ({(new - old) / old * 100:+.1f} %)"
+    shift = (new - old) / old * 100
+    # 반올림하면 0 인 변화에 부호를 달면 "−0.0 %" 가 된다 (실측 B15 #7 #8).
+    return (f"σ 저항 {old:.4g} → {new:.4g} Ω "
+            f"({'0.0' if abs(shift) < 0.05 else f'{shift:+.1f}'} %)")
 
 
 def _resolved(one: RefitSpectrumOut) -> list[str]:

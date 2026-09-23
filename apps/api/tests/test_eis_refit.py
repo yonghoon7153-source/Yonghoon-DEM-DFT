@@ -305,3 +305,24 @@ def test_only_the_problems_that_went_away_are_called_solved():
         spectra=[one]))
     assert "    풀린 문제: 꼬리를 흉내 낸 아크\n" in text
     assert "    남은 문제: 전극 크기 아크를 벌크·입계로 부름 — arcs_are_electrode 의 문장" in text
+
+
+def test_the_same_model_named_right_is_not_refused_for_a_shape_the_old_fit_missed_too(client):
+    """실측 B15 #9 · B16 #9 의 쌍둥이 — 꼬리가 CPE 하나로 안 그려지는 막는 펠릿.
+    `R0-p(R1,CPE1)` 로 맞추면 R1 이 10⁹ Ω 로 가 곧 `R0-CPE1` 이고 모양을 못
+    그린다 (3.7 %).  새 `L1-R0-CPE1` 도 못 그리지만 (3.4 %) 같은 모양을 이름만 바로
+    그린 것이다.  첫 적용은 이것을 모양 탓으로 막아, 꼬리 흉내가 그대로 남았다."""
+    truth = ("L1-R0-CPE1-CPE2", {"L1": 1.7e-6, "R0": 120.0, "CPE1_Q": 6e-7, "CPE1_n": 0.92,
+                                   "CPE2_Q": 1e-6, "CPE2_n": 0.65})
+    spectrum_id, old = pellet(client, "B15_cold.mpr", truth, "R0-p(R1,CPE1)")
+    assert old["parameters"][1]["value"] > 1e8                 # R1 이 벽에 붙었다
+    before, codes = audit_codes(client, spectrum_id)
+    assert {"tail_mimicked_by_arc", "misfit_everywhere"} <= set(codes)
+
+    (one,) = client.post("/api/eis/audit/refit").json()["spectra"]
+    assert one["new_circuit"] == "L1-R0-CPE1"
+    assert one["old_misfit_mean"] > 0.03 and one["new_misfit_mean"] > 0.03
+    assert one["new_misfit_mean"] <= one["old_misfit_mean"]
+    after, codes = audit_codes(client, spectrum_id)
+    assert "tail_mimicked_by_arc" not in codes
+    assert "misfit_everywhere" in codes                          # 그대로 적는다
