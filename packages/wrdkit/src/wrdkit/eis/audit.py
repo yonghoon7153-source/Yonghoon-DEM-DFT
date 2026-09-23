@@ -407,13 +407,15 @@ def _railed(parameter, model: Circuit) -> str:
 
 
 def _rail_finding(name: str, value: float, side: str, *,
-                  in_series: bool, ohmic: bool = False) -> Finding:
+                  in_series: bool, ohmic: bool = False,
+                  taken_by: tuple[str, float, float] | None = None) -> Finding:
     """What a parameter on its bound means, element by element.
 
     ``in_series``: the element sits in the top-level series path.  A vanishing
     series element can simply be left out; a vanishing element inside
     ``p(R,CPE)`` takes its whole arc with it.  ``ohmic``: the circuit's only
     series resistor -- the cell's ohmic resistance, which cannot be left out.
+    ``taken_by``: what ``_intercept_taker`` found drawing its intercept.
     """
     element, _, suffix = name.partition("_")
     kind = re.match(r"[A-Za-z]+", element).group(0) if element else ""
@@ -434,10 +436,14 @@ def _rail_finding(name: str, value: float, side: str, *,
     # "이 저항은 없어도 되는 소자입니다" 가 붙었다: #28 은 n = 0.40 인 첫 아크가
     # 고주파에서 5–6 Ω 을 그리고 있었다.
     if kind == "R" and side == "lower" and ohmic:
+        taker = (f"고주파 절편을 가져간 것은 `{taken_by[0]}` 입니다 (맞춘 구간 꼭대기 "
+                 f"{taken_by[2]:.3g} Hz 에서 실수부 {taken_by[1]:.3g} Ω) — 그 소자를 "
+                 f"고쳐 다시 맞추세요" if taken_by is not None else
+                 "고주파 절편을 다른 소자(n 이 낮은 CPE 의 아크 등)가 가져갔으니, 그 "
+                 "소자를 고쳐 다시 맞추세요")
         return Finding(CHECK, "series_resistance_gone",
                        f"{name} 이 0 에 붙었습니다 ({shown} Ω) — 셀의 직렬 저항(배선·"
-                       f"전해질)은 0 이 될 수 없습니다. 고주파 절편을 다른 소자(n 이 낮은 "
-                       f"CPE 의 아크 등)가 가져갔으니, 그 소자를 고쳐 다시 맞추세요")
+                       f"전해질)은 0 이 될 수 없습니다. {taker}")
     if kind == "R" and side == "lower":
         return Finding(CHECK, "element_vanishing",
                        f"{name} 이 0 에 붙었습니다 ({shown} Ω) — "
@@ -537,6 +543,33 @@ def _suggest(candidates: Iterable[str], limit: int = 3) -> str:
     """```a` 또는 `b``` -- at most ``limit``, first come first."""
     unique = list(dict.fromkeys(c for c in candidates if c))[:limit]
     return " 또는 ".join(f"`{c}`" for c in unique)
+
+
+def _intercept_taker(circuit: str, values: dict[str, float], ohmic: str,
+                     at_hz: float | None) -> tuple[str, float, float] | None:
+    """What draws the high-frequency intercept the ohmic resistor gave up:
+    ``(the series part as written, its real part in Ω, at Hz)`` at the top of
+    the band, or ``None`` when no part has a real part there.
+
+    With R0 at zero the real part at the top of the band is someone else's --
+    an arc with a low n (half cell #28, n = 0.40: 5–6 Ω), an arc whose apex is
+    above the band, or the two rails of a transmission line, which end in
+    ``Ri ∥ Re`` (full cell #13: 25 ∥ 80 Ω = 19 Ω).  The first text said "an
+    arc with a low n, and the like" to all of them; for the lines it sent
+    people looking for an n that was not low.
+    """
+    if at_hz is None or not at_hz > 0:
+        return None
+    best: tuple[str, float, float] | None = None
+    for part in series_parts(circuit):
+        if part == ohmic:
+            continue
+        piece = parse_circuit(part)
+        z = piece.impedance([values[name] for name in piece.parameter_names], [at_hz])
+        real = float(z[0].real)
+        if math.isfinite(real) and real > 0 and (best is None or real > best[1]):
+            best = (part, real, float(at_hz))
+    return best
 
 
 def _series_resistance(model: Circuit, values: dict[str, float]) -> float | None:
@@ -675,11 +708,17 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
     # 하나뿐인 직렬 저항도 같은 잣대다.  실측 풀셀 #13 R0 = 3.7e-4 Ω (전송선의 두
     # 레일 25 ∥ 80 Ω 이 절편 19 Ω 을 가져갔다), B17 0 °C (#150) R0 = 2.4e-9 Ω 이
     # 경계 판정을 비껴가 아무 말이 없었다.
-    if len(series_r) == 1:
-        (ohmic,) = series_r
-        if railed.get(ohmic) != "lower" and values[ohmic] < floor:
+    ohmic = next(iter(series_r)) if len(series_r) == 1 else None
+    taken_by = None
+    if ohmic is not None and (railed.get(ohmic) == "lower" or values[ohmic] < floor):
+        top_hz = (high_edge if high_edge is not None else
+                  float(np.max(spectrum.frequency_hz))
+                  if spectrum is not None and len(spectrum) else None)
+        taken_by = _intercept_taker(fit.circuit, values, ohmic, top_hz)
+        if railed.get(ohmic) != "lower":
             out.findings.append(_rail_finding(ohmic, values[ohmic], "lower",
-                                              in_series=True, ohmic=True))
+                                              in_series=True, ohmic=True,
+                                              taken_by=taken_by))
 
     # -- 곡선이 점을 지나가나 --------------------------------------------------
     verdict: dict = {}
@@ -803,7 +842,7 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
         out.findings.append(_rail_finding(
             parameter.name, float(parameter.value), side,
             in_series=element in in_series,
-            ohmic=series_r == {element}))
+            ohmic=series_r == {element}, taken_by=taken_by))
     for name in model.parameter_names:
         element, _, suffix = name.partition("_")
         if suffix != "n" or not element.startswith("CPE") or element in vanishing \

@@ -261,6 +261,8 @@ def test_the_only_series_resistor_at_zero_is_not_to_be_left_out():
                                     band=BAND).findings if f.message.startswith("R0 이 0")]
     assert gone.code == "series_resistance_gone"
     assert "직렬 저항" in gone.message and "없어도 되는" not in gone.message
+    # 절편을 가져간 소자를 이름으로 — 그 아크가 고주파에서 실수부를 그린다.
+    assert "가져간 것은 `p(R1,CPE1)`" in gone.message
 
     # 직렬 저항이 둘이면 0 이 된 쪽은 정말 없어도 된다.
     circuit = "R0-R1-p(R2,CPE2)"
@@ -290,6 +292,8 @@ def test_a_series_resistor_too_small_to_see_is_at_zero_too():
     (gone,) = [f for f in audited(values).findings
                if f.code == "series_resistance_gone"]
     assert gone.message.startswith("R0 이 0") and "0.000372 Ω" in gone.message
+    # 아크가 아니라 전송선의 두 레일(25 ∥ 80 Ω = 19 Ω)이다 — "n 이 낮은 CPE" 가 아니다.
+    assert "가져간 것은 `TL1`" in gone.message and "n 이 낮은" not in gone.message
 
     # 절편을 정말 나눠 가진 작은 R0 은 그대로 둔다 — 실측 #12: 0.42 Ω, 절편 3 Ω.
     values.update(R0=0.416, TL1_Ri=1.6e3, TL1_Re=2.64)
