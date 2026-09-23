@@ -3,7 +3,7 @@
 > 세션이 바뀌어도 유지되는 미결 사항 추적. 닫을 때 날짜+근거를 남기고 ✅로 옮긴다.
 > 등록: 2026-07-27 (MAX 감사 후속).
 
-## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-23 — ⏭-NOW-w 가 최신 (SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면 fail-closed). 앞 블록 ⏭-NOW-v 는 09-22 낮(논문 4편 · 원장 정정 3건), ⏭-NOW-u 는 같은 날 오전**)
+## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-23 — ⏭-NOW-w 가 최신 (SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면 fail-closed · box331 시드확장 규칙 A · b2o3 사건율 MD 발사 · 새 W_ad(LPSCl|Ag–C) 리뷰 대기). 앞 블록 ⏭-NOW-v 는 09-22 낮(논문 4편 · 원장 정정 3건), ⏭-NOW-u 는 같은 날 오전**)
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 >
@@ -49,6 +49,12 @@
     기본값 `comp2` 로 대기 중이었다** (cwd /data/work/runs/elastic_comp2 · MINFREE 6000 · 로그 이름만 el_modelc2x.log). 9/10 원래 계획은
     `SYS=modelc_2x → b2o3` — 그대로 뒀어도 modelc_2x 영률은 시작되지 않았다(조용히 틀린 경로). 상태 저장 `/root/logs/elastic_runner_saved_0923.txt`.
     ⏭ b2o3 끝나면(≈5–6일) **`SYS=modelc_2x`** 를 명시해 재개한다 (수렴한 strain 은 러너가 건너뛴다).
+- ⏭ **새 캠페인: LPSCl | Ag–C | VGCF 점착일 (DEM 쪽 요청 · 트랙 = 우리 DFT → 1저자 = 사용자)** — **계산 0, 리뷰 대기.**
+  계획·카드 초안 `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` · Codex 프롬프트 **BV**(`kb/reviews/codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md`, 발송대기)
+  · 내부 Fable 리뷰 병행. 1저자 지시: **두 리뷰 받기 전에 파이프라인을 걸지 않는다.**
+  · ⚠ 리뷰 프롬프트 쓰다가 찾은 것: comp1|NCM 한 계면에 원장 숫자가 **넷**(0.075 출판식 · 0.194 "paper exp" · 0.962 v5 UMA · 45–80 v6) —
+    "LPSCl|NCM 과 나란히" 가 어느 숫자냐에 따라 자릿수 등급이 바뀐다. DEM 에 넘길 절대값 방식이 새 결정(계획 §6-4 · BV Q10).
+  · 요청서의 *"Fan 2026 K_IC → G_c 는 CLAUDE.md 에 이미 반영"* 은 **repo 의 어느 CLAUDE.md 에도 없다** (litdb 에 논문은 있다).
 - ✅ `webapp/tests/test_v3_records.py::test_gallery_carries_hazard_and_policy` — 테스트가 정책 접두어를 **둘만 복사**해 두고
   정책은 셋이라(`oxidation_stability_cascade` 누락) 정상적으로 막힌 파일을 "평범한데 막혔다" 로 읽었다 →
   `artifact_policy.is_governed()` 를 직접 쓰게 고침 · 음성(평범한 파일에 policy 주입 → 잡힘) 확인.

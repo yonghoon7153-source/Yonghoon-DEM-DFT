@@ -1,16 +1,17 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-23 · managed-files: 440
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-23 · managed-files: 441
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 239건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 240건)
 - 2026-09-23 · `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다)
 - 2026-09-23 · `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응 · 진단 정리 — 값은 citable:false (사전등록 게이트 미통과…
+- 2026-09-23 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-09-23 · `kb/reviews/codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md` — 리뷰 BV 프롬프트 — LPSCl | Ag–C | VGCF 점착일: 기존 LPSCl|NCM 워크플로를 재사용해도 같은 양을 재는가 · 발송대기 — 1저자가 보낸다. 내부 Fable 리뷰와 병행
 - 2026-09-23 · `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 기존 LPSCl|NCM 워크플로 재사용 계획 · 보고량 카드 초안 (리뷰 전) · 계획 — Codex 리뷰 + 내부(Fable) 리뷰 **전**. 계산…
-- 2026-09-22 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-22 · `kb/reviews/li2s1a_BS_prompt_li2s_relax_provenance_2026_09_22.md` — BS 수신 원문 — li2s relax 계보·E_hull 분해·−38.4 읽는 방향·600 K 문구 · 수신됨-회신함
 - 2026-09-22 · `kb/reviews/li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md` — BS 회신 — relax 프레임 동정 불가 · E_hull 분해 · −38.4 상한 읽기 · 600 K 문구 정정 · 회신문-작성됨
 - 2026-09-22 · `kb/reviews/li2s1a_BT_prompt_neff_window_bootstrap_2026_09_22.md` — BT 수신 원문 — 정확값 지문 · N_eff 창 불일치 지적 · 부트스트랩 제안 · 수신됨-회신함
@@ -26,7 +27,6 @@
 - 2026-09-16 · `kb/projects/handoff_2026_09_16_cathode_cei.md` — 인수인계 — 2026-09-16 세션 (양극 CEI §A–§E · 도펀트 스크리닝 · dual compatibility) · 진행
 - 2026-09-15 · `kb/papers/self_doping_dft_paragraph_2026_09_08.md` — 원고 자가도핑 DFT 문단 — 스핀 하나로 좁힌 5문단 (2·3·6 계열) · 1저자 승인 — 삽입 위치 대기
 - 2026-09-14 · `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나 · 발송됨
-- 2026-09-14 · `kb/reviews/codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 회신 — G4 는 합격선이 아니라 경보. '셀 문제 배제' 는 받아들일 수 없다 · 회신됨
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -212,9 +212,9 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (148)
+## reviews/ (149)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
-- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-22 · 자동생성)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-23 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
 - `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
@@ -289,6 +289,7 @@
 - `kb/reviews/codex_BQ_reply_eos_v0_disordered_2026_09_13.md` — 회신 BQ — 예비 판정 (원문)
 - `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나  (2026-09-14 · 발송됨)
 - `kb/reviews/codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 회신 — G4 는 합격선이 아니라 경보. '셀 문제 배제' 는 받아들일 수 없다  (2026-09-14 · 회신됨)
+- `kb/reviews/codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md` — 리뷰 BV 프롬프트 — LPSCl | Ag–C | VGCF 점착일: 기존 LPSCl|NCM 워크플로를 재사용해도 같은 양을 재는가  (2026-09-23 · 발송대기 — 1저자가 보낸다. 내부 Fable 리뷰와 병행)
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서)  (2026-08-20 · 리뷰대기)
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)

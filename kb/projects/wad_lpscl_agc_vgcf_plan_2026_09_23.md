@@ -53,6 +53,20 @@ evidenceScope: multi-source-mixed
 2. **"isolated slab W_ad" 의 실제 조작.** 정의 줄은 "isolated slab" 이지만 `v5_working` 은 *"No relax after separation — single point only"* 이다. 같은 문서 247줄: *"엄밀히는 무이완 분리라 work of separation 계열 (W_ad 의 상계)"*. ⇒ 요청서 용어로 **이 값은 W_sep** 이다. 이완 슬랩 W_ad 는 워크플로에 없고 새로 낸다.
 3. **슬랩 규격 표기.** yaml 은 Li6 를 `prim_2x2x1` (52원자, 변형 3.3 %)로 적었지만, 실제 기준값은 `Li6_v5_xyshift_FIX` = **prim 2×2×3 (624원자, 30 Å)** · NCM 7×7×1 · 변형 0.2 % 에서 나왔다(`prim_2x2x1` 13.6 Å 판은 *"too thin · overlap"* 으로 폐기). ⇒ **FIX 판을 재사용**한다.
 
+### ⚠ 넷째 — "LPSCl|NCM 값" 이 하나가 아니다: 프로토콜마다 자릿수가 다르다 (같은 날 추가 · repo 실측)
+리뷰 프롬프트를 쓰다가 원장에서 찾았다. **comp1(Li₆PS₅Cl)|NCM 한 계면**에 원장이 가진 숫자가 넷이다:
+
+| 무엇 | comp1 | 근거 |
+|---|---|---|
+| 원장이 *"paper exp"* 로 부르는 기준 | **0.194 J/m²** (comp1–5 = 0.180–0.316) | `tools/adhesion_v30u/alpha_sensitivity_FINAL.py` 의 `PAPER` 상수(mJ/m²) · `adhesion.json` 1369줄 *"Experimental Wad is +0.18-0.32"* |
+| v5 xy-shift · UMA · 분리 단일점 (= 우리가 재사용하려는 기준값) | 중앙값 **0.962** · 평균 1.153 (0.555–1.850) | `adhesion.json` 165–205줄 |
+| paper #1 출판식 `WELLS_RAW − α·ΔW_strain` (α=1) | **0.075** (= 2.708 − 2.633) · comp2 **−0.064** | `db/properties/alpha_sensitivity_FINAL.json` `uniform` α=1.0 |
+| v6 (`run_cathode_interface.py`, 러너가 *"verified production"* 이라 부르는 것) | **45–80** (5 seeds) | `adhesion.json` 1486–1498줄 — 원장 스스로 *"100–1000× over … rigid separation creates artificial dangling-bond energy"* |
+
+- ⇒ **v5 기준값은 "paper exp" 의 약 5배**다. 출판식 comp1 값은 2.7 J/m² 두 개의 차라 0 근처에서 부호까지 흔들린다(comp2 음수). v6 은 절대값으로 **못 쓴다** — 1번 ⚠ 의 "v5 인가 v6 인가" 는 사실상 답이 나와 있다.
+- ⇒ 요청서의 자릿수 판정(≲ 0.3 물리흡착 · ≳ 1 화학결합)에 NCM 을 넣으면 **어느 숫자를 쓰느냐에 따라 등급이 바뀐다** (0.19 → 물리흡착 급 · 0.96 → 경계). DEM 에 넘길 **절대값**을 무엇으로 할지가 새 결정이다 (§6-4).
+- ⚠ **"paper exp" 의 측정 방식·출처는 repo 에서 확인하지 못했다.** `adhesion.json` 1498줄은 *"Sundar 2025: 0.2-0.4 J/m²"* 라고 적었는데 litdb 의 Sundar 2025 digest 에는 점착 값이 **없다** (`adhes|W_ad|J/m` grep 0건). 인용하지 않고 리뷰에 묻는다.
+
 ---
 
 ## 2. 계면별 셀 (재사용 SE 슬랩 기준)
@@ -106,6 +120,7 @@ s = xy-shift 시드(registry). A = 351 Å²(P1-a). ⛔ 출판 관례의 `− α�
 | 반응성 계면인가 | LPSCl↔Ag **그럴 수 있다** — 800 K 표면 연화에서 Ag–S 결합이 생길 수 있다 | 0-b 반응에너지가 음이면 값을 **"급격 계면·반응 전"** 으로 이름 붙인다. MQA 뒤 Ag–S 결합 수·원소 이동을 시드마다 센다 |
 | MLIP 가 이 계에서 믿을 만한가 | **모른다** — UMA 는 진공에 민감했고(60 Å 10배), Ag–황화물 계면 검증 기록이 없다 | DFT 단일점 검증이 **판정의 조건**이다. UMA–DFT 차가 크면 UMA 값을 쓰지 않는다 (문턱은 리뷰 뒤 봉인) |
 | 기준값과 같은 조건인가 | UMA 판 · v5/v6 · 시드 수가 **확인 전** | 기준값을 낸 판을 먼저 확정한다 (§1 ⚠1) |
+| 기준값이 하나인가 | **아니다** — comp1|NCM 에 0.075 · 0.194 · 0.962 · 45–80 J/m² 넷 (§1 ⚠4) | 비교는 **같은 프로토콜 안에서만**. DEM 절대값은 §6-4 결정 전까지 **내지 않는다** |
 | 참조 상태가 같은 전자 상태인가 | Ag 금속 · LPSCl 절연 — 스미어링을 모든 항에 같게 (DFT) | — |
 
 ### §4 게이트 (리뷰 뒤 봉인)
@@ -130,6 +145,7 @@ s = xy-shift 시드(registry). A = 351 Å²(P1-a). ⛔ 출판 관례의 `− α�
 1. **v5 인가 v6 인가** — 기준값(comp1 v5 xy-shift 20 seeds)을 낸 판을 알면 그걸 쓴다. UMA 판(1p1 · 1p2)도 같이.
 2. **NCM 기준값도 DFT 단일점 검증**에 넣을지 (권고: 넣는다 — 안 넣으면 한쪽만 검증된 비교가 된다).
 3. **기계** — UMA 단계(GPU) · DFT 단일점(KISTI 권고).
+4. **DEM 에 넘길 절대값** (§1 ⚠4) — (a) 우리 프로토콜의 절대값 그대로(UMA 또는 DFT 단일점) · (b) 같은 프로토콜의 **Ag/NCM 비** 만 넘기고 NCM 절대 기준은 DEM 쪽이 고른다 · (c) 비 × "paper exp" NCM 값 (원장 paper #2 Option A 의 보정비 방식). (c) 는 금속(Ag) 과 산화물(NCM) 사이에 프로토콜 오차가 **같은 배수**라는 가정이라 리뷰에 묻는다(BV Q10).
 
 ## 출처
 - `kb/methodology/adhesion_energy.md` · `db/inputs/adhesion_templates/{surface_mqa_v5.yaml, adhesion_v6_anneal_test.py}` · `tools/doping/run_cathode_interface.py`

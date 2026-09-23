@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-09-22
-updated: 2026-09-22
+date: 2026-09-23
+updated: 2026-09-23
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-09-22
+verifiedAt: 2026-09-23
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -95,6 +95,7 @@ evidenceScope: multi-source-primary
 | BS | 2026-09-22 | `li2s1a_BS_prompt_li2s_relax_provenance_2026_09_22.md` | `li2s1a_BS_reply_li2s_relax_provenance_2026_09_22.md` | 수신됨-회신함 | 같은 라벨 · 주제 토큰 일치 ['li2s', 'provenance', 'relax'] |
 | BT | 2026-09-22 | `li2s1a_BT_prompt_neff_window_bootstrap_2026_09_22.md` | `li2s1a_BT_reply_neff_window_bootstrap_2026_09_22.md` | 수신됨-회신함 | 같은 라벨 · 주제 토큰 일치 ['bootstrap', 'neff', 'window'] |
 | BU | 2026-09-22 | `li2s1a_BU_prompt_variance_ratio_rule_2026_09_22.md` | `li2s1a_BU_reply_variance_ratio_rule_2026_09_22.md` | 수신됨-회신함 | 같은 라벨 · 주제 토큰 일치 ['ratio', 'rule', 'variance'] |
+| BV | 2026-09-23 | `codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md` | — | 발송대기 — 1저자가 보낸다. 내부 Fable 리뷰와 병행 | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
