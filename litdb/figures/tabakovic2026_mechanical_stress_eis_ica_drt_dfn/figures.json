@@ -148,9 +148,9 @@
    "blank": 0.915
   },
   {
-   "key": "fA5",
+   "key": "f5",
    "kind": "figure",
-   "label": "A5",
+   "label": "A.5",
    "page": 20,
    "file": "fig_A5.png",
    "caption": "Figure A.5: Quasi-equilibrium discharge profiles of the NMC/graphite cell at a C/1000 rate under different hydrostatic stress levels, highlighting the influence of external mechanical loading on the full-cell voltage.",
@@ -166,12 +166,13 @@
    "dpi": 300,
    "src": "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf",
    "blank": 0.922,
-   "manual_crop": "clip-rect render (caption not parseable by extract_figures.py)"
+   "manual_crop": "clip-rect render (caption not parseable by extract_figures.py)",
+   "key_note": "appendix figures are numbered continuously after Fig. 4 (A.5, A.6, B.7) -> keys f5/f6/f7 so the card Figure-set rows link"
   },
   {
-   "key": "fA6",
+   "key": "f6",
    "kind": "figure",
-   "label": "A6",
+   "label": "A.6",
    "page": 20,
    "file": "fig_A6.png",
    "caption": "Figure A.6: Pressure-induced changes in the internal state of the NMC/graphite cell at 3.64 V, showing electrolyte concentration and potential, together with solid surface concentration and solid potential.",
@@ -187,12 +188,13 @@
    "dpi": 300,
    "src": "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf",
    "blank": 0.803,
-   "manual_crop": "clip-rect render (caption not parseable by extract_figures.py)"
+   "manual_crop": "clip-rect render (caption not parseable by extract_figures.py)",
+   "key_note": "appendix figures are numbered continuously after Fig. 4 (A.5, A.6, B.7) -> keys f5/f6/f7 so the card Figure-set rows link"
   },
   {
-   "key": "fB7",
+   "key": "f7",
    "kind": "figure",
-   "label": "B7",
+   "label": "B.7",
    "page": 21,
    "file": "fig_B7.png",
    "caption": "Figure B.7: Cathode solid surface concentration profiles along the electrode thickness at three states of charge under applied mechanical stress of 0 Pa, 1 MPa, and 10 MPa.",
@@ -208,7 +210,8 @@
    "dpi": 300,
    "src": "0e142df6-2._Impact_of_Mechanical_Stress_on_Electrochemical_Impedance_Spectra_and_Incremental_Capacity_of_the_Lithium-Ion_Battery.pdf",
    "blank": 0.89,
-   "manual_crop": "clip-rect render (caption not parseable by extract_figures.py)"
+   "manual_crop": "clip-rect render (caption not parseable by extract_figures.py)",
+   "key_note": "appendix figures are numbered continuously after Fig. 4 (A.5, A.6, B.7) -> keys f5/f6/f7 so the card Figure-set rows link"
   }
  ]
 }
