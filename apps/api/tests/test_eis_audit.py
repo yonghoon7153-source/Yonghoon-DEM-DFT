@@ -272,3 +272,30 @@ def test_reparse_speaks_text_for_bml(client):
     assert lines[0] == "EIS 원본 1/2 개를 다시 읽었습니다."
     assert any(line.startswith(f"    #{out['id']} stale") for line in lines)
     assert any("원본 파일이 없습니다" in line for line in lines)
+
+
+def test_a_scan_without_caches_is_read_from_its_original_once(client, monkeypatch):
+    """스윕 셋이 한 원본이다 — 캐시가 다 사라져도 원본은 **한 번만** 파싱한다.
+    바이트를 들고 있지도 않는다: 52 MB `.mpt` 열 개가 검수 내내 메모리에
+    남으면 랩 PC 의 WSL 이 먼저 지친다."""
+    from app import storage
+    from app.routers import eis_audit
+    sha = upload_scan(client, [9.69, 14.56, 34.66])
+    rows = [row for row in client.get("/api/eis/spectra").json()
+            if row["sha256"] == sha]
+    for row in rows:
+        storage.drop_spectrum_cache(row["id"])
+    calls = []
+    real = eis_audit._parse_sweeps
+
+    def counting(content, name):
+        calls.append(name)
+        return real(content, name)
+
+    monkeypatch.setattr(eis_audit, "_parse_sweeps", counting)
+    report = audit(client)
+    assert len(calls) == 1
+    for row in rows:
+        assert "cache_missing" in codes(entry(report, row["id"]), "note")
+    (scan,) = [one for one in report["scans"] if one["sha256"] == sha]
+    assert all(line["crossing_ohm"] is not None for line in scan["rows"])

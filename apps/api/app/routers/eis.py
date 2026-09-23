@@ -483,11 +483,20 @@ def _sweep_spectrum(record: SpectrumRecord, content: bytes) -> Spectrum:
     이름으로 들어간다.
     """
     sweeps, _ = _parse_sweeps(content, record.original_name or record.name)
+    return _pick_sweep(record, sweeps)
+
+
+def _pick_sweep(record: SpectrumRecord, sweeps: list) -> Spectrum:
+    """읽어 둔 스윕들에서 이 기록의 것을 고른다 — 스윕 수가 기록과 같을 때만.
+
+    `_sweep_spectrum` 과 나눈 이유: 검수는 한 원본을 한 번만 파싱해 스윕
+    스물이 나눠 쓴다 (ADR 0040).  고르는 규칙은 한 곳에만 둔다.
+    """
     declared = record.sweep_count or 1
     if len(sweeps) != declared:
         raise ValueError(
             f"원본에서 스윕이 {len(sweeps)}개 읽히는데 기록은 {declared}개입니다 — "
-            f"어느 스윕인지 확신할 수 없어 되살리지 않습니다")
+            f"어느 스윕인지 확신할 수 없어 고르지 않습니다")
     index = (record.sweep_index or 1) - 1
     if not 0 <= index < len(sweeps):
         raise ValueError(f"스윕 번호 {record.sweep_index} 가 파일에 없습니다")

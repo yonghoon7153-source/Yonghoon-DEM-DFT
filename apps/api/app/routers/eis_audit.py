@@ -58,10 +58,10 @@ from .eis import (
     _geometry,
     _is_symmetric,
     _parse_sweeps,
+    _pick_sweep,
     _scan_display_name,
     _stub_parameters,
     _sweep_resistance,
-    _sweep_spectrum,
     apply_exchangeable,
 )
 
@@ -74,35 +74,62 @@ def _finding_out(one: Finding) -> AuditFindingOut:
 
 
 class _Originals:
-    """원본 파일 상태 — sha 하나에 한 번만 읽는다.
+    """원본 파일의 상태와 점 — 파일 하나를 **한 번만** 해시하고 한 번만 파싱한다.
 
-    스캔 하나가 스윕 스물을 한 원본에서 나눠 가지므로, 스윕마다 52 MB 를 다시
-    해시하면 같은 일을 스무 번 한다.
+    스캔 하나가 스윕 스물을 한 원본에서 나눠 가지므로, 스윕마다 하면 같은 일을
+    스무 번 한다.  그렇다고 **바이트를 들고 있지는 않는다** — 52 MB `.mpt` 열 개가
+    검수 내내 메모리에 남는다.  해시는 조각으로 읽어 내고, 점이 필요할 때(캐시가
+    없을 때)만 한 번 읽어 파싱한 **스윕들**(작은 배열)만 기억한다.
     """
 
     def __init__(self) -> None:
-        self._state: dict[tuple[str, str], tuple[str, bytes | None]] = {}
+        self._state: dict[tuple[str, str], str] = {}
+        self._parsed: dict[tuple[str, str], list | Exception] = {}
 
-    def get(self, record: SpectrumRecord) -> tuple[str, bytes | None]:
-        """``("ok" | "missing" | "mismatch", 내용)``."""
-        key = (record.sha256, record.source_format)
+    @staticmethod
+    def _key(record: SpectrumRecord) -> tuple[str, str]:
+        return (record.sha256, record.source_format)
+
+    def state(self, record: SpectrumRecord) -> str:
+        """``"ok"`` | ``"missing"`` | ``"mismatch"``."""
+        key = self._key(record)
         if key not in self._state:
             path = storage.spectrum_upload_path(record.sha256, record.source_format)
+            digest = hashlib.sha256()
             try:
-                content = path.read_bytes()
+                with path.open("rb") as handle:
+                    for chunk in iter(lambda: handle.read(1 << 20), b""):
+                        digest.update(chunk)
             except OSError:
-                self._state[key] = ("missing", None)
+                self._state[key] = "missing"
             else:
-                ok = hashlib.sha256(content).hexdigest() == record.sha256
-                self._state[key] = ("ok" if ok else "mismatch", content if ok else None)
+                self._state[key] = ("ok" if digest.hexdigest() == record.sha256
+                                    else "mismatch")
         return self._state[key]
+
+    def spectrum(self, record: SpectrumRecord) -> Spectrum:
+        """이 기록의 스윕을 원본에서.  `_sweep_spectrum` 과 같은 예외를 낸다."""
+        key = self._key(record)
+        if key not in self._parsed:
+            if self.state(record) != "ok":
+                raise ValueError("원본이 없거나 기록과 다릅니다")
+            path = storage.spectrum_upload_path(record.sha256, record.source_format)
+            try:
+                self._parsed[key] = _parse_sweeps(
+                    path.read_bytes(), record.original_name or record.name)[0]
+            except (HTTPException, UnknownColumn, ValueError, OSError) as exc:
+                self._parsed[key] = exc
+        parsed = self._parsed[key]
+        if isinstance(parsed, Exception):
+            raise parsed
+        return _pick_sweep(record, parsed)
 
 
 def _points(record: SpectrumRecord, originals: _Originals
             ) -> tuple[Spectrum | None, list[Finding]]:
     """검수가 볼 점과, 원본·캐시에 대한 판정.  **캐시를 쓰지 않는다.**"""
     findings: list[Finding] = []
-    state, content = originals.get(record)
+    state = originals.state(record)
     if state == "missing":
         findings.append(Finding(PROBLEM, "original_missing",
                                 "원본 파일이 없습니다 — 점을 되살릴 수도, 파서를 고쳐 "
@@ -115,10 +142,10 @@ def _points(record: SpectrumRecord, originals: _Originals
         findings.append(Finding(PROBLEM, "parse_error",
                                 f"올릴 때 읽기 오류가 있었습니다: {record.parse_error}"))
     spectrum = storage.load_spectrum(record.id, record.sha256)
-    if spectrum is None and content is not None:
+    if spectrum is None and state == "ok":
         try:
-            spectrum = _sweep_spectrum(record, content)
-        except (HTTPException, UnknownColumn, ValueError) as exc:
+            spectrum = originals.spectrum(record)
+        except (HTTPException, UnknownColumn, ValueError, OSError) as exc:
             detail = exc.detail if isinstance(exc, HTTPException) else str(exc)
             findings.append(Finding(PROBLEM, "original_unreadable",
                                     f"원본을 읽지 못했습니다 — {detail}"))
@@ -219,13 +246,11 @@ def _audit_scan(session: Session, records: list[SpectrumRecord],
         for record in records:
             typed, _ = _sweep_resistance(record)
             spectrum = storage.load_spectrum(record.id, record.sha256)
-            if spectrum is None:
-                _, content = originals.get(record)
-                if content is not None:
-                    try:
-                        spectrum = _sweep_spectrum(record, content)
-                    except (HTTPException, UnknownColumn, ValueError):
-                        spectrum = None
+            if spectrum is None and originals.state(record) == "ok":
+                try:
+                    spectrum = originals.spectrum(record)
+                except (HTTPException, UnknownColumn, ValueError, OSError):
+                    spectrum = None
             crossing = re_min = re_max = None
             if spectrum is not None:
                 crossing = real_axis_crossing(spectrum.frequency_hz, spectrum.z_re,
@@ -522,15 +547,12 @@ def reparse_all(format: str = Query("json", pattern="^(json|text)$"),
                        for one in group]
             continue
         for record in group:
-            declared = record.sweep_count or 1
-            index = (record.sweep_index or 1) - 1
-            if len(sweeps) != declared or not 0 <= index < len(sweeps):
+            try:
+                fresh = _pick_sweep(record, sweeps)
+            except ValueError as exc:
                 failed.append({"run_id": record.id, "name": record.name,
-                               "reason": f"원본에서 스윕이 {len(sweeps)}개 읽히는데 "
-                                         f"기록은 {declared}개입니다 — 어느 스윕인지 "
-                                         f"확신할 수 없어 건드리지 않았습니다"})
+                               "reason": f"{exc} — 점은 그대로 두었습니다"})
                 continue
-            fresh = sweeps[index].spectrum
             old = storage.load_spectrum(record.id, record.sha256)
             detail = _difference(old, fresh)
             storage.cache_spectrum(record.id, fresh, record.sha256)
