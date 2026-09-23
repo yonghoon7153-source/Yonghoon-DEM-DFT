@@ -8,13 +8,15 @@
   P2  (부록) 평형 누설 휴지의 ΔV 와 ΔQ 를 SOC 별로 — ΔV 의 SOC 모양이 dV/dQ 에서 오는지.
   P8  부분 고리(±ΔSOC) 폐합 오차를 고리 주기 두 개로 — 가설: MSC 는 주기에 비례해 하향 이동.
   P5  C-rate 계단(올렸다 내림) — ΔV–I 기울기(R)와 전압 기반 전하 결손의 시간 비례분을 분리한다.
+  두 장부  같은 추가 보관 구간의 전하 손실을 전압 복귀(pOCV 환산) 와 쿨롱 계수(Q_in − Q_out, 컷오프–컷오프) 로 잰다.
+      가설: MSC 는 두 장부가 같고, SEI(음극만의 리튬 손실) 는 전압 장부 ≪ 쿨롱 장부.
 
 셀: PyBaMM `Chen2020` (LG M50, ≈5 Ah), 모델 SPMe. 공개 파라미터만 쓴다(규진팀 원자료 없음).
   base   : 그대로
   R_up   : 정상 열화의 '저항' 판 — 접촉 저항 0.03 Ω 추가 + 두 전극 교환전류 ×0.5
   MSC    : base + 외부 병렬 옴 누설 R_s (셀 전류 = 외부 전류 + V/R_s, 휴지 중에도 흐른다)
   D_down : 정상 열화의 '확산' 판 — 두 전극 입자 확산계수 ×0.3 (휴지 이완을 느리게 하는 쪽)
-  SEI    : 부반응 대조군 — reaction-limited SEI, 교환전류 ×400 (누설과 같은 크기의 시간 비례 Li 손실을 만들려는 인위 설정)
+  SEI · SEI+MSC : 부반응 대조군 — reaction-limited SEI, 교환전류 ×400 (누설과 같은 크기의 시간 비례 Li 손실을 만들려는 인위 설정)
   R_up+MSC · D_down+MSC: 열화 + 누설
 
 누설은 `pybamm.step.CustomStepImplicit`(대수 제약 I_cell − (I_ext + V/R_s) = 0)로 넣는다. CV 단계는 전압 제어이고,
@@ -47,7 +49,7 @@ def params(kind: str):
         for key in ("Negative particle diffusivity [m2.s-1]", "Positive particle diffusivity [m2.s-1]"):
             f = pv[key]
             pv[key] = (lambda f: (lambda *a: 0.3 * f(*a)))(f) if callable(f) else 0.3 * f
-    if kind == "SEI":
+    if kind in ("SEI", "SEI+MSC"):
         # 부반응 대조군: reaction-limited SEI, 교환전류 ×400 → 휴지 중 LLI ≈ 36 mAh/h (100 Ω 누설 ≈ 37 mA 와 같은 크기).
         # 실셀 속도가 아니라 '누설과 같은 크기의 시간 비례 손실' 을 만들려고 인위적으로 키운 것이다.
         opts["SEI"] = "reaction limited"
@@ -218,6 +220,63 @@ def p5(kind, R_s, dvdq_V_per_Ah, levels=(0.25, 0.5, 1.0, 2.5, 5.0, 5.0, 2.5, 1.0
                 truth_loss_mA=truth, dvdq_V_per_Ah=dvdq_V_per_Ah, soc=soc, rows=rows)
 
 
+# ── 두 장부 비교 ─────────────────────────────────────────────────────
+def pseudo_ocv_table(I=0.1):
+    """base 셀 C/50 방전·충전 곡선의 평균 → (V, Q_from_bottom[Ah]) 표. 전압 장부의 환산에 쓴다 (실험의 pOCV 역할)."""
+    dis = simulate("base", [pybamm.step.current(I, duration=60 * 3600, period=60, termination="2.5 V")], 1.0)
+    chg = simulate("base", [pybamm.step.current(-I, duration=60 * 3600, period=60, termination="4.2 V")], 0.0)
+    td, vd = dis["Time [s]"].entries, dis["Voltage [V]"].entries
+    tc, vc = chg["Time [s]"].entries, chg["Voltage [V]"].entries
+    qd = I * (td[-1] - td) / 3600                        # 바닥에서 잰 전하 (방전 곡선)
+    qc = I * (tc - tc[0]) / 3600
+    q = np.linspace(max(qd.min(), qc.min()), min(qd.max(), qc.max()), 2000)
+    v = 0.5 * (np.interp(q, qd[::-1], vd[::-1]) + np.interp(q, qc, vc))
+    return v, q
+
+
+def two_ledgers(kind, R_s, ocv, soc=0.5, T1_h=1.0, T2_h=5.0, I=1.0, cap_Ah=5.0):
+    """같은 '추가 보관 구간'(T2 − T1) 의 전하 손실을 두 장부로 잰다.
+
+    한 번의 실행: [방전 → 2.5 V] → 휴지 1 h → [충전 Q_in = soc·cap] → 휴지 1 h(이완) → 보관 T → [방전 → 2.5 V]
+      전압 장부  : 보관 시작 전압(이완 뒤) 과 끝 전압을 pOCV 표로 전하로 바꾼 차이
+      쿨롱 장부  : Q_in − Q_out (외부 계측 전하. 넣었는데 컷오프까지 못 꺼낸 전하)
+    T1 · T2 두 실행의 차분이 추가 보관 구간만 남긴다 (충·방전 중 누설·분극·SEI 몫은 상쇄).
+    """
+    v_tab, q_tab = ocv
+    q_of_v = lambda v: float(np.interp(v, v_tab, q_tab))  # noqa: E731
+    lo = "2.5 V" if R_s is None else pybamm.step.VoltageTermination(2.5, operator="<")
+    runs = {}
+    for T in (T1_h, T2_h):
+        q_in = soc * cap_Ah
+        steps = [cc(+I, 10 * 3600, R_s, termination=lo), cc(0.0, 3600, R_s, period=60),
+                 cc(-I, q_in / I * 3600, R_s, period=30), cc(0.0, 3600, R_s, period=60),
+                 cc(0.0, T * 3600, R_s, period=60), cc(+I, 10 * 3600, R_s, termination=lo)]
+        sol = simulate(kind, steps, 0.5)
+        _, v_relax, _ = cycle_arrays(sol, 3)
+        _, v_store, _ = cycle_arrays(sol, 4)
+        t_out, _, _ = cycle_arrays(sol, 5)
+        q_out = I * float(t_out[-1] - t_out[0]) / 3600
+        leak = sei = 0.0                                  # 대조용 실제 손실 (관측 불가) — 누설 몫과 SEI 몫을 따로
+        if R_s is not None:
+            leak = float(np.trapezoid(sol["Voltage [V]"].entries / R_s, sol["Time [s]"].entries)) / 3600
+        if kind in ("SEI", "SEI+MSC"):
+            lli = sol["Loss of lithium to negative SEI [mol]"].entries
+            sei = float(lli[-1] - lli[0]) * 96485 / 3600
+        runs[T] = dict(q_in_Ah=q_in, q_out_Ah=q_out, coulomb_deficit_Ah=q_in - q_out,
+                       V_store_start=float(v_relax[-1]), V_store_end=float(v_store[-1]),
+                       voltage_deficit_Ah=q_of_v(v_relax[-1]) - q_of_v(v_store[-1]),
+                       truth_leak_Ah=leak, truth_sei_Ah=sei)
+    a, b = runs[T1_h], runs[T2_h]
+    d_v = 1e3 * (b["voltage_deficit_Ah"] - a["voltage_deficit_Ah"])
+    d_c = 1e3 * (b["coulomb_deficit_Ah"] - a["coulomb_deficit_Ah"])
+    t_leak = 1e3 * (b["truth_leak_Ah"] - a["truth_leak_Ah"])
+    t_sei = 1e3 * (b["truth_sei_Ah"] - a["truth_sei_Ah"])
+    return dict(soc=soc, extra_storage_h=T2_h - T1_h, voltage_ledger_mAh=d_v, coulomb_ledger_mAh=d_c,
+                # 쿨롱 장부가 1 mAh 미만이면 비율은 뜻이 없다 (분모 ≈ 0)
+                ratio_voltage_over_coulomb=(d_v / d_c) if abs(d_c) > 1.0 else None,
+                truth_leak_mAh=t_leak, truth_sei_mAh=t_sei, runs={str(k): v for k, v in runs.items()})
+
+
 # ── P8 ────────────────────────────────────────────────────────────────
 def p8(kind, R_s, dsoc=0.05, cap_Ah=5.0, loops=3, rest_s=1800):
     out = {}
@@ -253,6 +312,11 @@ def main(argv=None):
         print(kind, json.dumps(res[kind], ensure_ascii=False))
     res["P2_MSC_rest_vs_soc"] = p2(R)
     # P5 의 SOC 의존: 전압 기반 결손이 MSC 와 SEI 를 각각 얼마나 잡는가 (흑연 평탄부 ↔ 기울기 구간)
+    ocv = pseudo_ocv_table()
+    res["two_ledgers"] = {f"{kind}@{soc}": two_ledgers(kind, R_s, ocv, soc=soc)
+                          for soc in (0.5, 0.2)
+                          for kind, R_s in (("base", None), ("R_up", None), ("D_down", None),
+                                            ("MSC", R), ("SEI", None), ("SEI+MSC", R))}
     res["P5_soc_scan"] = {f"{kind}@{soc}": p5(kind, R_s, dvdq[soc], soc=soc)
                           for soc in (0.2, 0.8) for kind, R_s in (("MSC", R), ("SEI", None))}
     out = dict(script="bms-balancing/scripts/msc_sign_table.py", model="PyBaMM SPMe", params="Chen2020 (public)",

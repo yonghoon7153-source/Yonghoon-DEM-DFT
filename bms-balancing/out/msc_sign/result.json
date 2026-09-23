@@ -932,6 +932,380 @@
     "dVdQ_mV_per_mAh": -0.045811772532136384
    }
   ],
+  "two_ledgers": {
+   "base@0.5": {
+    "soc": 0.5,
+    "extra_storage_h": 4.0,
+    "voltage_ledger_mAh": 4.8327743140674784e-05,
+    "coulomb_ledger_mAh": -3.255173908200959e-10,
+    "ratio_voltage_over_coulomb": null,
+    "truth_leak_mAh": 0.0,
+    "truth_sei_mAh": 0.0,
+    "runs": {
+     "1.0": {
+      "q_in_Ah": 2.5,
+      "q_out_Ah": 2.4999999955032903,
+      "coulomb_deficit_Ah": 4.4967096712866805e-09,
+      "V_store_start": 3.743405683807318,
+      "V_store_end": 3.7434062166615276,
+      "voltage_deficit_Ah": -2.875819055336848e-06,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.0
+     },
+     "5.0": {
+      "q_in_Ah": 2.5,
+      "q_out_Ah": 2.499999995503616,
+      "coulomb_deficit_Ah": 4.4963841538958604e-09,
+      "V_store_start": 3.743405683807318,
+      "V_store_end": 3.743406207706986,
+      "voltage_deficit_Ah": -2.827491312196173e-06,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.0
+     }
+    }
+   },
+   "R_up@0.5": {
+    "soc": 0.5,
+    "extra_storage_h": 4.0,
+    "voltage_ledger_mAh": 4.8366215921191724e-05,
+    "coulomb_ledger_mAh": 3.19300141882195e-10,
+    "ratio_voltage_over_coulomb": null,
+    "truth_leak_mAh": 0.0,
+    "truth_sei_mAh": 0.0,
+    "runs": {
+     "1.0": {
+      "q_in_Ah": 2.5,
+      "q_out_Ah": 2.499999995441158,
+      "coulomb_deficit_Ah": 4.558842192636803e-09,
+      "V_store_start": 3.7462368637944086,
+      "V_store_end": 3.7462373996378733,
+      "voltage_deficit_Ah": -2.878098099401427e-06,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.0
+     },
+     "5.0": {
+      "q_in_Ah": 2.5,
+      "q_out_Ah": 2.4999999954408385,
+      "coulomb_deficit_Ah": 4.559161492778685e-09,
+      "V_store_start": 3.7462368637944086,
+      "V_store_end": 3.7462373906330653,
+      "voltage_deficit_Ah": -2.8297318834802354e-06,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.0
+     }
+    }
+   },
+   "D_down@0.5": {
+    "soc": 0.5,
+    "extra_storage_h": 4.0,
+    "voltage_ledger_mAh": 0.35708420776314753,
+    "coulomb_ledger_mAh": 1.043417796608992e-06,
+    "ratio_voltage_over_coulomb": null,
+    "truth_leak_mAh": 0.0,
+    "truth_sei_mAh": 0.0,
+    "runs": {
+     "1.0": {
+      "q_in_Ah": 2.5,
+      "q_out_Ah": 2.500000041387455,
+      "coulomb_deficit_Ah": -4.1387454796648626e-08,
+      "V_store_start": 3.754442479319715,
+      "V_store_end": 3.752853101281927,
+      "voltage_deficit_Ah": 0.008466917127271767,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.0
+     },
+     "5.0": {
+      "q_in_Ah": 2.5,
+      "q_out_Ah": 2.500000040344037,
+      "coulomb_deficit_Ah": -4.0344037000039634e-08,
+      "V_store_start": 3.754442479319715,
+      "V_store_end": 3.752786102091105,
+      "voltage_deficit_Ah": 0.008824001335034914,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.0
+     }
+    }
+   },
+   "MSC@0.5": {
+    "soc": 0.5,
+    "extra_storage_h": 4.0,
+    "voltage_ledger_mAh": 148.6212823344135,
+    "coulomb_ledger_mAh": 142.69603105679886,
+    "ratio_voltage_over_coulomb": 1.0415235885240295,
+    "truth_leak_mAh": 142.6580981604368,
+    "truth_sei_mAh": 0.0,
+    "runs": {
+     "1.0": {
+      "q_in_Ah": 2.5,
+      "q_out_Ah": 2.236551563191994,
+      "coulomb_deficit_Ah": 0.2634484368080061,
+      "V_store_start": 3.7143930365997853,
+      "V_store_end": 3.7081897036757856,
+      "voltage_deficit_Ah": 0.037312587073881076,
+      "truth_leak_Ah": 0.34788015452160603,
+      "truth_sei_Ah": 0.0
+     },
+     "5.0": {
+      "q_in_Ah": 2.5,
+      "q_out_Ah": 2.093855532135195,
+      "coulomb_deficit_Ah": 0.40614446786480496,
+      "V_store_start": 3.7143930365997853,
+      "V_store_end": 3.6851262469715778,
+      "voltage_deficit_Ah": 0.1859338694082946,
+      "truth_leak_Ah": 0.4905382526820428,
+      "truth_sei_Ah": 0.0
+     }
+    }
+   },
+   "SEI@0.5": {
+    "soc": 0.5,
+    "extra_storage_h": 4.0,
+    "voltage_ledger_mAh": 4.082406212272627,
+    "coulomb_ledger_mAh": 137.31701307064225,
+    "ratio_voltage_over_coulomb": 0.029729791822463016,
+    "truth_leak_mAh": 0.0,
+    "truth_sei_mAh": 139.21797209624444,
+    "runs": {
+     "1.0": {
+      "q_in_Ah": 2.5,
+      "q_out_Ah": 2.3463375705989247,
+      "coulomb_deficit_Ah": 0.15366242940107533,
+      "V_store_start": 3.7477689856074137,
+      "V_store_end": 3.747646575870362,
+      "voltage_deficit_Ah": 0.0006561154421458326,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.1810959329954019
+     },
+     "5.0": {
+      "q_in_Ah": 2.5,
+      "q_out_Ah": 2.2090205575282824,
+      "coulomb_deficit_Ah": 0.2909794424717176,
+      "V_store_start": 3.7477689856074137,
+      "V_store_end": 3.746885425623463,
+      "voltage_deficit_Ah": 0.004738521654418459,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.3203139050916463
+     }
+    }
+   },
+   "SEI+MSC@0.5": {
+    "soc": 0.5,
+    "extra_storage_h": 4.0,
+    "voltage_ledger_mAh": 180.17608255707617,
+    "coulomb_ledger_mAh": 263.5860212771199,
+    "ratio_voltage_over_coulomb": 0.6835570478437811,
+    "truth_leak_mAh": 138.45140700228086,
+    "truth_sei_mAh": 126.82172203572578,
+    "runs": {
+     "1.0": {
+      "q_in_Ah": 2.5,
+      "q_out_Ah": 2.0992152139016524,
+      "coulomb_deficit_Ah": 0.40078478609834756,
+      "V_store_start": 3.7177659716942584,
+      "V_store_end": 3.7110002544205045,
+      "voltage_deficit_Ah": 0.04013440853257766,
+      "truth_leak_Ah": 0.34241703359538533,
+      "truth_sei_Ah": 0.1675887000060196
+     },
+     "5.0": {
+      "q_in_Ah": 2.5,
+      "q_out_Ah": 1.8356291926245325,
+      "coulomb_deficit_Ah": 0.6643708073754675,
+      "V_store_start": 3.7177659716942584,
+      "V_store_end": 3.6829931825490747,
+      "voltage_deficit_Ah": 0.22031049108965384,
+      "truth_leak_Ah": 0.4808684405976662,
+      "truth_sei_Ah": 0.2944104220417454
+     }
+    }
+   },
+   "base@0.2": {
+    "soc": 0.2,
+    "extra_storage_h": 4.0,
+    "voltage_ledger_mAh": 2.851701008665941e-05,
+    "coulomb_ledger_mAh": 5.96189764223709e-11,
+    "ratio_voltage_over_coulomb": null,
+    "truth_leak_mAh": 0.0,
+    "truth_sei_mAh": 0.0,
+    "runs": {
+     "1.0": {
+      "q_in_Ah": 1.0,
+      "q_out_Ah": 0.9999998643297426,
+      "coulomb_deficit_Ah": 1.356702573618307e-07,
+      "V_store_start": 3.4860994941843453,
+      "V_store_end": 3.486099756206206,
+      "voltage_deficit_Ah": -1.6975263710250488e-06,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.0
+     },
+     "5.0": {
+      "q_in_Ah": 1.0,
+      "q_out_Ah": 0.999999864329683,
+      "coulomb_deficit_Ah": 1.3567031698080712e-07,
+      "V_store_start": 3.4860994941843453,
+      "V_store_end": 3.48609975180446,
+      "voltage_deficit_Ah": -1.6690093609383894e-06,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.0
+     }
+    }
+   },
+   "R_up@0.2": {
+    "soc": 0.2,
+    "extra_storage_h": 4.0,
+    "voltage_ledger_mAh": 2.851681024651498e-05,
+    "coulomb_ledger_mAh": -2.631228568361621e-11,
+    "ratio_voltage_over_coulomb": null,
+    "truth_leak_mAh": 0.0,
+    "truth_sei_mAh": 0.0,
+    "runs": {
+     "1.0": {
+      "q_in_Ah": 1.0,
+      "q_out_Ah": 0.9999998486149141,
+      "coulomb_deficit_Ah": 1.51385085911393e-07,
+      "V_store_start": 3.48845263060068,
+      "V_store_end": 3.4884528929416407,
+      "voltage_deficit_Ah": -1.6974956651427675e-06,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.0
+     },
+     "5.0": {
+      "q_in_Ah": 1.0,
+      "q_out_Ah": 0.9999998486149404,
+      "coulomb_deficit_Ah": 1.513850595991073e-07,
+      "V_store_start": 3.48845263060068,
+      "V_store_end": 3.488452888534485,
+      "voltage_deficit_Ah": -1.6689788548962525e-06,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.0
+     }
+    }
+   },
+   "D_down@0.2": {
+    "soc": 0.2,
+    "extra_storage_h": 4.0,
+    "voltage_ledger_mAh": 0.20513326088433814,
+    "coulomb_ledger_mAh": 0.0003249832236651429,
+    "ratio_voltage_over_coulomb": null,
+    "truth_leak_mAh": 0.0,
+    "truth_sei_mAh": 0.0,
+    "runs": {
+     "1.0": {
+      "q_in_Ah": 1.0,
+      "q_out_Ah": 1.0002054614990832,
+      "coulomb_deficit_Ah": -0.00020546149908318156,
+      "V_store_start": 3.4946903772536393,
+      "V_store_end": 3.493927129981385,
+      "voltage_deficit_Ah": 0.004866878744189673,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.0
+     },
+     "5.0": {
+      "q_in_Ah": 1.0,
+      "q_out_Ah": 1.0002051365158595,
+      "coulomb_deficit_Ah": -0.00020513651585951642,
+      "V_store_start": 3.4946903772536393,
+      "V_store_end": 3.4938949862767084,
+      "voltage_deficit_Ah": 0.005072012005074011,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.0
+     }
+    }
+   },
+   "MSC@0.2": {
+    "soc": 0.2,
+    "extra_storage_h": 4.0,
+    "voltage_ledger_mAh": 133.67761557365498,
+    "coulomb_ledger_mAh": 133.4089220408502,
+    "ratio_voltage_over_coulomb": 1.0020140596947669,
+    "truth_leak_mAh": 133.42672352100587,
+    "truth_sei_mAh": 0.0,
+    "runs": {
+     "1.0": {
+      "q_in_Ah": 1.0,
+      "q_out_Ah": 0.8450762175920267,
+      "coulomb_deficit_Ah": 0.15492378240797333,
+      "V_store_start": 3.469429549377086,
+      "V_store_end": 3.4634287069842498,
+      "voltage_deficit_Ah": 0.03387692996987468,
+      "truth_leak_Ah": 0.2388899597896031,
+      "truth_sei_Ah": 0.0
+     },
+     "5.0": {
+      "q_in_Ah": 1.0,
+      "q_out_Ah": 0.7116672955511765,
+      "coulomb_deficit_Ah": 0.28833270444882353,
+      "V_store_start": 3.469429549377086,
+      "V_store_end": 3.4311786168808123,
+      "voltage_deficit_Ah": 0.16755454554352966,
+      "truth_leak_Ah": 0.37231668331060896,
+      "truth_sei_Ah": 0.0
+     }
+    }
+   },
+   "SEI@0.2": {
+    "soc": 0.2,
+    "extra_storage_h": 4.0,
+    "voltage_ledger_mAh": 11.434149570589858,
+    "coulomb_ledger_mAh": 27.604248516791884,
+    "ratio_voltage_over_coulomb": 0.41421702038490105,
+    "truth_leak_mAh": 0.0,
+    "truth_sei_mAh": 27.995193529722545,
+    "runs": {
+     "1.0": {
+      "q_in_Ah": 1.0,
+      "q_out_Ah": 0.980700663601484,
+      "coulomb_deficit_Ah": 0.019299336398515998,
+      "V_store_start": 3.4877055425601684,
+      "V_store_end": 3.4872645964254345,
+      "voltage_deficit_Ah": 0.0028557240289164287,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.04484113526645514
+     },
+     "5.0": {
+      "q_in_Ah": 1.0,
+      "q_out_Ah": 0.9530964150846921,
+      "coulomb_deficit_Ah": 0.04690358491530788,
+      "V_store_start": 3.4877055425601684,
+      "V_store_end": 3.4854995732321243,
+      "voltage_deficit_Ah": 0.014289873599506286,
+      "truth_leak_Ah": 0.0,
+      "truth_sei_Ah": 0.07283632879617769
+     }
+    }
+   },
+   "SEI+MSC@0.2": {
+    "soc": 0.2,
+    "extra_storage_h": 4.0,
+    "voltage_ledger_mAh": 156.97477731976238,
+    "coulomb_ledger_mAh": 151.21678586796105,
+    "ratio_voltage_over_coulomb": 1.0380777267467454,
+    "truth_leak_mAh": 132.74647209904882,
+    "truth_sei_mAh": 18.670534523902603,
+    "runs": {
+     "1.0": {
+      "q_in_Ah": 1.0,
+      "q_out_Ah": 0.8292948068939414,
+      "coulomb_deficit_Ah": 0.17070519310605858,
+      "V_store_start": 3.47081026034429,
+      "V_store_end": 3.4640899717778053,
+      "voltage_deficit_Ah": 0.03845398727478744,
+      "truth_leak_Ah": 0.23760175106781573,
+      "truth_sei_Ah": 0.040557694382612385
+     },
+     "5.0": {
+      "q_in_Ah": 1.0,
+      "q_out_Ah": 0.6780780210259804,
+      "coulomb_deficit_Ah": 0.32192197897401964,
+      "V_store_start": 3.47081026034429,
+      "V_store_end": 3.42449825848509,
+      "voltage_deficit_Ah": 0.19542876459454983,
+      "truth_leak_Ah": 0.37034822316686455,
+      "truth_sei_Ah": 0.05922822890651499
+     }
+    }
+   }
+  },
   "P5_soc_scan": {
    "MSC@0.2": {
     "R_fit_mOhm": 31.661440846828143,
