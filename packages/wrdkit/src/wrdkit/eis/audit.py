@@ -471,17 +471,52 @@ def _suggest_without(circuit: str, names: Sequence[str]) -> str:
     return "-".join(parts)
 
 
-def _compatible(alternatives: Iterable[str], ends: set[str], current: str) -> list[str]:
-    """The offered circuits whose low-frequency end is one of ``ends``."""
-    out: list[str] = []
-    for alternative in alternatives:
+def _compatible(alternatives: Iterable[str], ends: set[str], current: str, *,
+                arcs: int | None = None, exact: bool = False) -> list[str]:
+    """The offered circuits whose low-frequency end is one of ``ends``, best first.
+
+    Best is: a cable inductor in it (the lab's sulfide pellets were off by
+    11–30 % at the top of the band without one), then the arc count closest to
+    ``arcs`` (the arcs worth keeping), then the smaller circuit.  ``exact``
+    keeps only that many arcs.  In offered order the first blocking circuit had
+    no inductor: 27 of the lab's tail-mimicking fits were told to go to it.
+    """
+    ranked: list[tuple[tuple, int, str]] = []
+    for position, alternative in enumerate(alternatives):
         try:
-            end = circuit_end(alternative)
+            model = parse_circuit(alternative)
+            end = circuit_end(model)
         except CircuitError:
             continue
-        if end in ends and alternative != current and alternative not in out:
-            out.append(alternative)
-    return out
+        if end not in ends or alternative == current or \
+                alternative in [one for _, _, one in ranked]:
+            continue
+        kinds = {name.partition("_")[0].rstrip("0123456789")
+                 for name in model.parameter_names}
+        distance = abs(len(model.capacitive_arcs()) - arcs) if arcs is not None else 0
+        if exact and distance:
+            continue
+        ranked.append(((0 if "L" in kinds else 1, distance,
+                        len(model.parameter_names)), position, alternative))
+    return [one for _, _, one in sorted(ranked)]
+
+
+def _arcs_to_keep(arcs: Sequence[ArcCapacitance], claims: dict[str, str | None],
+                  statuses: dict[str, str], drop: set[str]) -> int:
+    """How many arcs a refit should keep: not ``drop`` (a cause explained them
+    away), and not an arc named bulk / grain boundary whose capacitance is the
+    electrode's -- the refit would give it the same wrong name (the names go
+    by position, `derive.label_arcs`)."""
+    undetermined = {name for name, status in statuses.items() if status == "undetermined"}
+    keep = 0
+    for arc in arcs:
+        if arc.resistor in drop:
+            continue
+        if claims.get(arc.resistor) in ("bulk", "grain_boundary") and \
+                size_class(arc, spread=spread_for(arc, undetermined)) == FACE:
+            continue
+        keep += 1
+    return keep
 
 
 def _suggest(candidates: Iterable[str], limit: int = 3) -> str:
@@ -619,7 +654,8 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
         # 실수축으로 돌아오는 끝만 권한다 — 반무한 W 도 -45° 로 끝없이 발산해
         # 돌아오지 않는다 (``LASIA1999.semi-infinite-warburg``).
         suggestion = _suggest([_suggest_without(fit.circuit, blockers)]
-                              + _compatible(alternatives, {"resistive"}, fit.circuit))
+                              + _compatible(alternatives, {"resistive"}, fit.circuit,
+                                            arcs=len(arcs)))
         out.findings.append(Finding(
             PROBLEM, "blocking_element_on_open_cell",
             f"스펙트럼은 저주파에서 실수축으로 내려오는데 (위상 {_deg(phase)}) "
@@ -632,7 +668,11 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
 
     if blocking is True and out.end == "resistive":
         tail = _tail_arc(arcs, low_edge, railed)
-        suggestion = _suggest(_compatible(alternatives, {"blocking"}, fit.circuit))
+        # 꼬리를 흉내 낸 아크는 아크가 아니다 — 권하는 회로는 그만큼 아크가 적다.
+        suggestion = _suggest(_compatible(
+            alternatives, {"blocking"}, fit.circuit,
+            arcs=_arcs_to_keep(arcs, claims, statuses,
+                               {tail.resistor} if tail is not None else set())))
         if tail is not None:
             explained.add(tail.resistor)
             quiet.update({tail.resistor, f"{tail.element}_Q", f"{tail.element}_n",
@@ -680,9 +720,15 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
             crossing = (real_axis_crossing(spectrum.frequency_hz, spectrum.z_re,
                                            spectrum.z_im)
                         if spectrum is not None and len(spectrum) else None)
+            # 전극 쪽 아크를 남기면 다시 맞춰도 같은 이름(벌크·입계)이 붙는다 —
+            # 이름이 맞는 것은 아크가 없는 회로다.  아크가 정말 보이는 셀에는
+            # 아크 하나짜리를 따로 적는다.
             out.findings.append(_hidden_bulk_finding(
                 face, boundary, labels, r0, crossing,
-                _suggest(_compatible(alternatives, {"blocking"}, fit.circuit))))
+                _suggest(_compatible(alternatives, {"blocking"}, fit.circuit,
+                                     arcs=0, exact=True)),
+                _suggest(_compatible(alternatives, {"blocking"}, fit.circuit,
+                                     arcs=1, exact=True), limit=1)))
 
     if sym_solid and blocking is False and arcs:
         out.findings.append(Finding(
@@ -875,7 +921,8 @@ def _hidden_bulk(arcs: list[ArcCapacitance], claims: dict[str, str | None],
 
 def _hidden_bulk_finding(face: list[ArcCapacitance], boundary: list[ArcCapacitance],
                          labels: dict[str, str], r0: float | None,
-                         crossing: float | None, suggestion: str) -> Finding:
+                         crossing: float | None, suggestion: str,
+                         with_arc: str = "") -> Finding:
     def named(arc: ArcCapacitance) -> str:
         label = labels.get(arc.resistor, "")
         return f"{arc.resistor}" + (f" ({label})" if label else "")
@@ -891,7 +938,10 @@ def _hidden_bulk_finding(face: list[ArcCapacitance], boundary: list[ArcCapacitan
             + (f": 전해질 저항 ≈ R0 = {r0:.4g} Ω" if r0 is not None else "")
             + where + ". 이 아크들로 낸 벌크·입계 σ 는 쓰지 마세요"
             + (f"; {suggestion} 로 다시 맞추면 이름이 맞습니다" if suggestion
-               else ""))
+               else "")
+            + (f". 꼬리 앞에 아크가 정말 보여 그것으로 안 그려지면 {with_arc} — "
+               f"그 아크는 전극 계면입니다 (화면의 σ 는 이미 R0 로 냅니다)"
+               if suggestion and with_arc else ""))
     sides = ([f"{named(arc)} 는 입계 쪽(C·l/A {_fmt(arc.per_length, 'F/cm')})"
               for arc in boundary]
              + [f"{named(arc)} 는 전극 쪽(C/A {_fmt(arc.per_area, 'F/cm²')})"

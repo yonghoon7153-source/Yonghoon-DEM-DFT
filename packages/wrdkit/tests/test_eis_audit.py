@@ -752,6 +752,34 @@ def test_a_scan_at_one_temperature_draws_no_line():
     assert "sweep_off_the_line" not in [f.code for f in found]
 
 
+PRESETS = ["R0-TL1", "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3", "L1-R0-CPE1",
+           "L1-R0-p(R1,CPE1)-CPE2", "L1-R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"]
+
+
+def test_the_refit_offered_first_has_the_cable_and_the_arcs_worth_keeping():
+    """실측: 꼬리를 흉내 낸 27 개 맞춤에 L 없는 두 아크 회로를 첫 줄로 권했다.
+    L 이 든 것, 그리고 남길 만한 아크 수가 먼저다.
+
+    전극 쪽 크기의 아크는 남길 만하지 않다 — 다시 맞춰도 자리 순서로 같은
+    이름(벌크·입계)이 붙어 같은 문제가 뜬다.  이름이 맞는 것은 아크가 없는
+    회로이고, 아크가 정말 보이는 셀을 위한 아크 하나짜리는 따로 적는다."""
+    audit = audit_fit(Fit(B14_CIRCUIT, B14), b14_spectrum(), kind=SOLID,
+                      config=SYMMETRIC, thickness_cm=850e-4, area_cm2=AREA_CM2,
+                      band=(10.0, 1.71e5), alternatives=PRESETS)
+    (merged,) = [f for f in audit.findings if f.code == "arcs_are_electrode"]
+    assert "; `L1-R0-CPE1` 로 다시 맞추면 이름이 맞습니다" in merged.message
+    assert "안 그려지면 `L1-R0-p(R1,CPE1)-CPE2` — 그 아크는 전극 계면" in merged.message
+    assert "`L1-R0-p(R1,CPE1)-p(R2,CPE2)-CPE3`" not in merged.message
+
+    fit = Fit("R0-p(R1,CPE1)", [P("R0", 7.89), P("R1", 1.37e5), P("CPE1_Q", 1.95e-6),
+                                P("CPE1_n", 0.856)])
+    audit = audit_fit(fit, sulfide_pellet(), kind=SOLID, config=SYMMETRIC,
+                      thickness_cm=PELLET_CM, area_cm2=AREA_CM2, band=SULFIDE_BAND,
+                      alternatives=PRESETS)
+    (tail,) = [f for f in audit.findings if f.code == "tail_mimicked_by_arc"]
+    assert ". `L1-R0-CPE1` 또는" in tail.message      # 꼬리는 아크가 아니다
+
+
 def test_noise_just_above_the_axis_at_the_end_is_not_drift():
     """실수축으로 내려온 셀의 마지막 점들은 잡음만으로도 축 위에 선다 — |Z| 의
     1 % 는 넘어야 센다."""
