@@ -95,6 +95,9 @@
   · ✅ **gabia GPU 예외 (1저자 "이거 하돼")** `D-2026-09-23-gabia-gpu-exception-sese` — 러너 `tools/wad/run_sese_gpu.sh`: li2s 시드 종료 대기(PID·cmdline) ·
     합계 VRAM < 40 GB 시작 · > 44 GB 즉시 중단(우리 PID 만) · 호스트 여유 ≥ 16 GB 시작 · < 4 GB 중단 · `ALLOW_UMA_COEXIST=1` 필수. CLAUDE.md gabia 절에 한 줄.
     ⏭ gabia: worktree `/data/work/repo_wad` → `DRY_RUN=1` 로 li2s 시드 PID 확인 → tmux 발사 (`WAIT_PIDS=…`).
+  · 📨 **DEM 회신 수령 (2026-09-23 저녁)** — 정정 넷 전부 수용 · w = W · 헤드라인 = 고정기하 W_sep (+ DFT@UMA 값도 → G_c 띠) · 종결 두 면 그대로 ·
+    🆕 **P2 LPSCl|graphite(0001) 을 P1 우선순위로** 요청(Ag 5.7 vol% · 16배 규칙) · 같은 SE 슬랩 요구 · 848원자 5점 비용 요청.
+    원문·읽기·**회신 2 초안** `kb/projects/wad_dem_reply_draft_2026_09_23.md`. ⏳ **1저자**: P2 범위 확장 확인 · 회신 2 발송.
   · ✅ **문헌 3편 인입·병합** (1저자 제공 PDF · 수치는 메인이 PDF 텍스트로 재대조): `pustorino2025_…`(LPSCl 파괴에너지 = 2γ · (100) 화학량론 벽개 ≈ 0.47 · (110) 0.37 J/m²) ·
     `maurer2015_…`(Ag|그래핀 분산 7방법 0.19–0.45 J/m² — 0.3 경계를 가로지른다) · `giovannetti2008_…`(Ag 약결합군 · LSDA · 화학흡착 Pd ≈ 0.52 J/m² = "구간 ≠ 기전").
     ⚠ 05:38 턴 중단 때 첫 실행 셋이 **같이 취소**됐다(그림만 남음) → 재실행. 도는 동안 Esc 금지.

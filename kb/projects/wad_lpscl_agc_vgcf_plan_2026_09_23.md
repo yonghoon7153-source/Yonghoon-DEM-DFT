@@ -165,11 +165,23 @@ evidenceScope: multi-source-mixed
 4. 혼입 · PS₄ 변화 · 통계 집합을 **기계적으로** 정의하고, 선별 DFT 표본과 전체 분포를 구분.
 5. 흑연 대조의 분리 과정과 **실제 DEM 입력법칙** 특정.
 
+### DEM 회신 반영 (2026-09-23 저녁 · 원문 `kb/projects/wad_dem_reply_draft_2026_09_23.md` §받은 회신)
+- DEM 이 우리 정정 넷(Pustorino 0.20 → 0.37–0.47 · Maurer 0.26 / 0.19–0.45 · "구간 ≠ 기전" · 옛 NCM 숫자 폐기)을 **전부 수용**하고 트랙 문서를 고쳤다.
+- **전달 값은 둘**: `W_sep(DFT · 고정기하)` 헤드라인 + `W(DFT@UMA-이완 슬랩 단일점)`. DEM 은 두 값으로 G_c **띠**를 낸다. 후자에 "하한 보장 아님" 라벨.
+- **종결**: S 바깥 + Li·PS₄ 바깥 두 면 그대로 · 음이온 자리바꿈 변형은 **만들지 않는다** · DEM 도 (가) 대칭 두 장 선호 — 결정 `D-2026-09-23-wad-se-termination-symmetric` 과 일치.
+- **P2 요청**: LPSCl|graphite(0001) 먼저 · 비정질 탄소 뒤 · **P1 과 같은 SE 슬랩**(면적 가중 합산용). P3 은 뒤로(하면 LiAg|LPSCl 부터).
+- **DEM 조합식 가정** — W_total ≈ Σ(구성 쌍 W × 접촉 면적비) · 면적비 ≈ 부피비. 우리는 W 만 낸다; 이 가정은 DEM 쪽 라벨이다.
+- **SE 값 사다리** (DEM 정리): 화학량론 벽개 0.37–0.47 (Pustorino) ↔ 파괴인성 환산 G_c 3–6 (Song·Fan) ↔ 실측 박리 Γ 9–41 J/m² (Liao 2025 · Ag 없음).
+  DEM 은 *"박리 상한 = W_ad 와 SE 벽개 중 약한 쪽"* 을 **철회**했다. 우리 SE|SE 앵커 0.47 은 **경보용**(`D-2026-09-23-wad-sese-alarm-band`) — 박리·G_c 와 값 대 값 비교 금지 유지.
+- **DEM 이 기다리는 것**: ① 848원자 DFT 단일점 5개의 **실측 비용** (그 뒤 DEM 박리 일정) ② P2 가 P1 과 같은 SE 슬랩인지 확인 → 회신 2 초안에 답 (같은 슬랩 · 정합 규칙 동일 조건).
+- 카드 넷은 이미 브랜치에 있다: `liao2025_interfacial_adhesion_li_plating_carbon_interlayer` · `song2025_porous_argyrodite_modulus_fracture_toughness` · `spencerjolly2023_ag_graphite_interlayer_operando_xrd` · `tabakovic2026_…`(SSRN · 수치 인용 금지).
+
 ### 결정 필요 (1저자 — 이 트랙의 1저자는 사용자)
 1. **SE 종결** — (가) #1 · #2 대칭 슬랩 두 장 vs (나) #3 화학량론 한 장(쌍극자 보정) · DEM 의 "Cl 쪽" 을 (a) #2 로 부를지 (b) 자리바꿈 변형을 만들지 · SE\|SE 경보 운영값 (위 *SE 종결 선택지* — Pustorino 2025 반영).
 2. **LiNiO₂(001) 종결·두께** — 1L 조건부 모델로 갈지, 어떤 종결(Li 층 바깥 / O 바깥)인지.
 3. **NCM 상태 정책** — FM-conditional vs 3 초기화 최저 · U 6.2 eV 고정 여부.
-4. **DEM 쪽 문의** — LIGGGHTS 에서 실제로 쓰는 접촉법칙과 입력 필드(γ 인지 W 인지).
+4. ~~**DEM 쪽 문의** — LIGGGHTS 에서 실제로 쓰는 접촉법칙과 입력 필드(γ 인지 W 인지).~~ ✅ 회신 받음 (2026-09-23 저녁): JKR pull-off `F = 1.5πR*·w` 의 **w = W** (γ 아님) · 헤드라인 = **고정기하 W_sep** 으로 받음 · DFT@UMA 값도 이름표 붙여 → G_c **띠**.
+6. 🆕 **P2 LPSCl|graphite(0001) 을 P1 과 같은 우선순위로** (DEM 요청 · Ag 5.7 vol% → LPSCl|Ag 가 LPSCl|C 의 16배 이상이어야 Ag 항이 지배) — **1저자 확인 필요** (범위 확장). 받으면: 같은 SE 슬랩 · 격자 정합 규칙을 P1·P2 에 동일하게 · 흑연 두께 · registry ≥ 4 · D3 필수.
 5. ~~Codex 원문 두 칸~~ ✅ 받음 (표본별 ≤ 0.10 J/m² · 대칭 비등가 registry ≥ 4) — 회신 파일 §보충 원문.
 
 ---
