@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
+sources: [raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md, raw/papers/santhosha2019_indium-lithium-electrode-phase-formation-redox-potential.md, raw/papers/nam2018_three-electrode-assb-failure-modes-li-in-depletion.md, raw/papers/ikezawa2020_lto-reference-electrode-assb-three-electrode-eis.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -523,6 +523,20 @@ shift less than 3 mV"*. `[추론]` WE·CE 가 **둘 다 2상 평탄에 고정**�
 - **⑦ 같은 축 이름, 다른 기준** (SI Fig. S3): 두 조성(공칭 0.62 ↔ "<0.2 V"(외삽 — 적정은 58 at% 에서 멈춤))의 CuS 셀을 같은 "V, Li⁺/Li-In" 축 · 같은 0.7–3.0 V 창에 그렸다. `[재현]` 200 mAh g⁻¹ 중점 ≈1.54 ↔ ≈1.57 V — 기대 이동(≥+0.4 V)이 **안 보인다**. 저자는 차이를 "hysteresis" 로 읽는다 — 기준 이동과 분극을 가르지 않고.
 - **⑧ 누설 · 드리프트 0.** `leak` · `drift` · `assum*` **0 회**. 대칭셀 중점 `[도표]` ≈−1 mV(7–200 h, ±1.5 mV) — 두 전극 **상대** 표류 상한일 뿐(공통 모드 불가시, ⑤ 가 해석을 흔든다). **누설 직접 측정 0/42.**
 - ⇒ 계보: … → 상호 증언(40호) → 기준극 교체 대조(41호, 2018) → **다른 전해질의 원전(42호, 2019-03)**. `[해석]` "0.62 V 의 출생지" 는 이제 **"실온 · 조성 분해 · Li 대비 측정의 출생지 — 액체셀"** 이다. 0.6 V 자체는 `[인쇄]` [17] Wen–Huggins 1980(415 °C 0.5 V) · [18] Takada 1996 · [19] Webb 2014 가 앞서고, 41호의 Jung 2008 경로와 이 편은 **서로를 인용하지 않는다**.
+
+### ★★★ `assb` 43호 (Fukunishi et al. 2023 *ACS AEM*) — **열아홉 번째 형태: 공통 모드 표류 판독** (R-LTO 가지 첫 표류 값)
+
+`raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md`
+(*ACS Appl. Energy Mater.* **6** (2023) 10908, Tokyo Tech Arai — **18호와 다른 논문**, 흑연 \| LPSI \| R-LTO 메시 \| LPSI \| Li-In, 110 MPa, RT 1 C × 500 → 같은 셀 333 K × 50).
+
+- **① 값은 또 인용이다.** `[인쇄]` "**Suppose** the R-LTO reference electrode shows a redox potential of 1.55 V vs Li/Li⁺ for Li₇Ti₅O₁₂/Li₄Ti₅O₁₂,⁴⁰,⁴¹" — [40] Colbow 1989 · [41] Ohzuku 1995 = **18호 경로**(40호 원전의 Costard 경로가 아니다). 수입 경로는 여전히 셋.
+- **② 증인이 둘 — 하나는 새 종류.** (i) **작업전극 자신의 흑연 단계 평탄 셋**: GITT 준-OCP 0.195 · 0.110 · 0.068 V, `[인쇄]` "roughly consistent with the literature values [42,43]" — **비교 문헌값을 인쇄하지 않아** 이 증인의 분해능을 지면에서 못 잰다. (ii) **Li-In 0.60 V**, `[인쇄]` "agrees with the literature value⁴⁴" — [44] = 42호 Santhosha, **그 원전 인쇄값은 0.62 / 0.622**. `[도표]` Fig. 1b Li-In ≈0.604 V vs Li(= −0.946 vs R-LTO) ⇒ `[재현]` 0.622 를 넣으면 R-LTO ≈**1.568 V** — 40호 1.5745 · 41호 ≈1.575 에 이은 **세 번째 ≈1.57**(SE · 셀 다름, 판정 아님).
+- **③ ★★★ 표류 값이 처음 인쇄된다.** `[인쇄]` "There was a small potential shift of ca. **10 mV** (negative direction) seen in **both** the graphite and Li−In electrodes, which **could be caused by the change of the R-LTO reference electrode potential**, but the influence was limited"(333 K 가속 뒤, 298 K 0.05 C). `[도표]` Fig. 4d 흑연 dQ/dV 봉우리 **리튬화 · 탈리튬화 둘 다** −13 … −21 mV, Fig. 4a Li-In 중점 **0.609 → 0.593 V(−16 mV)**. `[재현]` 저항 증가는 두 방향을 반대로 민다 ⇒ **공통 모드 ≈−14 mV**. SI Fig. S8c(333 K 사이클 중)도 봉우리가 양방향 같이 왼쪽으로 진행 — **표류가 가속 사이클 동안 쌓였다**(정성).
+  ⇒ 21호 ④(두 고정 전극 → 기준극 표류가 공통 모드로 보인다, < 3 mV / 28 일)의 논리를 **R-LTO 가지에서 값과 함께 처음 적용**한 표본이고, 값은 **열 스트레스 뒤**다. 40 · 18 · 19호의 "드리프트 0" 이 여기서 처음 깨진다.
+- **④ 같은 지면 안의 긴장.** 안정성은 `[인쇄]` SI Fig. S2(d–f) 합 일치(흑연 + Li-In ≈ 셀)가 "**proves** the stability of the R-LTO reference electrode" — 합 일치는 기준극의 **DC 전위**를 보지 않는다(18호 K–K · 19호 진폭 비의존성과 같은 범주 오류, 이 연구실 세 번째). 그리고 3.5 절이 같은 셀에서 ≈10 mV 를 R-LTO 탓일 수 있다고 적는다.
+- **⑤ 부호 오기, 계보 세 번째.** 2전극 입도 셀 컷오프 `[인쇄]` "0.60 and −0.40 V vs the Li−In counter electrode (0 and 1.00 V vs Li/Li⁺)" ↔ SI Fig. S4 축은 흑연 − Li-In(바닥 ≈−0.58) ⇒ −0.60 · +0.40 이어야 한다(40호 D1 "−0.60" · 41호 D2 컷오프 부호에 이어).
+- **⑥ 평탄 조건 대조**: (1) Li-In 치수가 18호와 같다 — `[재현]` x_Li ≈37.7 at%, 흑연 0.6 mg 이론 0.22 mAh ↔ Li ≈4.0 mAh(재고 ≈18 배) ✓ · (4) 상대극 분극: `[도표]` Li-In 히스테리시스 ≈5 → ≈17 mV(가속 뒤), SI Fig. S2(f) Li-In 호 ×≈4 — **상대극도 열화했다**(원문 무언급) · 누설 · `drift` 낱말 0 — **누설 직접 측정 0/43**.
+- ⇒ 계보: … → 상호 증언(40호) → 기준극 교체 대조(41호) → 다른 전해질의 원전(42호) → **공통 모드 표류 판독(43호)**. `[해석]` R-LTO 가지는 **값(1.55)을 한 번도 재지 않은 채 표류(≈10 mV)를 먼저 얻었다** — 증인 둘이 같이 움직이면 표류는 보이지만, 증인 값 자체(0.60 ↔ 0.62)가 ≈20 mV 흔들려 절대값은 여전히 못 정한다.
 
 ## ★★ 평탄이 유지되는 조건 (현재까지의 정리)
 

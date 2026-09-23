@@ -101,6 +101,14 @@
    "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf"
   ]
  },
+ "fukunishi2023_graphite-three-electrode-impedance-cyclability": {
+  "figures": 16,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "acccdf4d-5._Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "d52fd06e-5._Sup_Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf"
+  ]
+ },
  "fukunishi2023_ncm523-three-electrode-impedance-degradation": {
   "figures": 13,
   "generated": "2026-09-22",

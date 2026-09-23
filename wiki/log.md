@@ -2296,3 +2296,16 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **6 장 전부 봤다(Fig. 1–3 · S1–S3)**, 원본 래스터 화소 판독 Fig. 1 · 2a · 3; 표 3 장은 텍스트로.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른여덟 번째 · 새 제약 · Status Log) · [[assb-li-in-reference-potential-window]](42호 절 · 정의표 ② · 조건 (1) · P11 · 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]](스물다섯 번째 적용). 큐 §6-3-g 43 행 · 지문 표 · 각주 ⁸.
 - 후속(서지 기준, 미열람 — 큐 44–59 인용 0): Takada, Aotani, Iwamoto, Kondo 1996 *SSI* 86–88, 877 (ref 18) · Wen, Huggins 1980 *Mater. Res. Bull.* 15, 1225 (ref 17) · Webb, Baggetto, Bridges, Veith 2014 *JPS* 248, 1105 (ref 19) · Sangster, Pelton 1991 *J. Phase Equilib.* 12, 37 (ref 12a).
+
+## [2026-09-23] ingest | assb 43호 — Fukunishi et al. 2023, Impedance Analysis and Cyclability Evaluation of Graphite Composite Electrodes with All-Solid-State Three-Electrode Cells (ACS Appl. Energy Mater. 6, 10908)
+- raw: `raw/papers/fukunishi2023_graphite-three-electrode-impedance-cyclability.md` (sha256 봉인 — 본문 · SI PDF 해시 frontmatter `pdf_sha256` · `si_sha256`) · 그림 `raw/figures/fukunishi2023_graphite-three-electrode-impedance-cyclability/` (16 장). 큐 44번(2차 묶음 다섯째 편). ⚠ 18호(NCM523 *JPS*)와 다른 논문 — 같은 연구실의 흑연 음극 판.
+- ★★★★ **음극 열화 배정**: 저항 분해 = 측정(Table 3 `R` · CPE-T · CPE-P 노화 전후 ± · Table 2 `Ea` 전후) · 용량 → `LAM` = 해석(dQ/dV 높이 한 문장). 반쪽전지라 `LLI` 가 WE 용량에 없다 ⇒ 음극 곱 `(1−LAM_NE)(1−u)` 순수. `[재현]` `R_CT` 면적 서명(`C` ×0.43 ≈ 1/`R` ×0.47) > 용량 손실(`[도표]` ×0.75–0.78) · 3-a 는 반대(`Ea` 22 → 27.5) · 노화 뒤 세 `Ea` 27.5 수렴.
+- ★★★ **Q5 판정**: 1.55 V 또 인용("Suppose" + Colbow · Ohzuku) · 증인 = 흑연 GITT 평탄 셋 + Li-In "0.60"(원전 0.62) · **R-LTO 가지 첫 표류 값 ≈10 mV(인쇄) / 공통 모드 ≈−14 · −16 mV(`[도표]`)** · 안정성은 합 일치로 "proves"(범주 오류) · `[재현]` R-LTO ≈1.568.
+- **채움표 43호 행 — 누적 ≈18.5 → ≈19.0 (Q5 +0.5, 열아홉 번째 형태 "공통 모드 표류 판독").** Q2 반 칸 검토 후 접음 · Q4 0/43 서른다섯 번째 성질 "채널별 명명" · Q3 층 하나.
+- 곱 축퇴 처방 **스물여섯 번째 적용(음극 첫)**: 1단계 완비 · 3-a 충돌 · 3-b ❌(×270–3,200) · 4단계 ✅(복합체 질량 읽기) · 새 줄 "면적 서명 ↔ 저율 용량 비 대조(반쪽전지 음극)".
+- 카드: Evidence 서른아홉 번째 절 · 새 제약 6.
+- ⚠ 어긋남 15 건(D4 CPE_X-T "decrease" ↔ ×5.2 · D5 `Ea` "nearly unchanged" · D7 컷오프 부호 · D10 RT 1 C −21 % · D11 0.21 V 봉우리 ×1.03 · D13 0.60 ↔ 0.62 외).
+- 낱말 지문: `MPa` 2(SI 0) 외 11 열 전부 0 · `LAM` 0 이지만 구절 "loss of the active material" 1 · `Suppos*` 1 · `drift` · `leak` 0.
+- 그림: **13 장 중 9 장 봤다(Fig. 1 · 2 · 4 · 5 · S2 · S4 · S5 · S7 · S8)**, 화소 판독 1b · 4a · 4b · 4d · S7a; fig_S7 은 크로퍼가 띠만 잘라 SI 8 쪽을 따로 렌더. 안 본 것 Fig. 3 · S1 · S3 · S6.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른아홉 번째 · 새 제약 · Status Log) · [[assb-li-in-reference-potential-window]](43호 절) · [[assb-lampe-contact-product-degeneracy]](스물여섯 번째 적용 · 처방 표 새 줄 · 주장하지 않는 것). 큐 문서 §6-3-g 44 행 · 지문 행 · 각주 ⁹.
+- 후속(서지 기준, 미열람 — 큐 45–59 인용 0): Kuratani … Kobayashi 2020 *ACS AEM* 3, 5472 (ref 24) · Otoyama … Tatsumisago 2018 *SSI* 323, 123 (ref 25) · Lee … Ahn 2022 *ACS AEM* 5, 5227 (ref 26) · Höltschi … Novák 2020 *JES* 167, 110558 (ref 27) · Yu … Fukutsuka 2022 *Electrochemistry* 90, 037003 (ref 30).

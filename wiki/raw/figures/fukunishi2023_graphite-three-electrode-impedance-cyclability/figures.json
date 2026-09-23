@@ -1,0 +1,332 @@
+{
+ "slug": "fukunishi2023_graphite-three-electrode-impedance-cyclability",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "acccdf4d-5._Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+  "d52fd06e-5._Sup_Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Charge−discharge characteristics of the initial cycles. Profiles of (a) graphite working and (b) Li−In counter electrodes, (c) derivative plot dQ dP−1 of (a, d) enlarged view of panel (c). was swept from the initial value (ca. 2.0 V vs Li/Li+) to −1.55 V (0 V vs Li/Li+) vs the R-LTO electrode with a scan rate of 23 μV s−1, which allows the total time of the LSV measurement to be almost the same as that of the first charge step at 0.05C of the graphite electrode. somewhat asymmetric, which is similar to that observed with the liquid systems,45 suggesting that this is the general feature of the lithiation and delithiation processes in the graphite electrodes. The obtained quasi-open-circuit potential curve shown in Figure S1(b) indicates that the potentials at stage1 ⇄ stage4, stage2L ⇄stage2 and stage2 ⇄stage1 are 0.195, 0.110, and 0.068 V vs Li/Li+, respectively. Subsequently, ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    339.0
+   ],
+   "w": 2151,
+   "h": 1187,
+   "dpi": 300,
+   "src": "acccdf4d-5._Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Potential dependencies of graphite impedance, (b) enlarged view of panels (a, c) equivalent circuit for curve fitting, and (d) potential dependencies of fitting parameters (blue: RSE, green: Rx, red: RCT).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    416.4
+   ],
+   "w": 2151,
+   "h": 1509,
+   "dpi": 300,
+   "src": "acccdf4d-5._Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Temperature dependencies of (a) graphite working electrode impedance measured in the lithiated state, and (b) Arrhenius plots of each component (blue: RSE, green: Rx, red: RCT). gradual semicircle formation occurred at 0.3 V vs Li/Li+",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    443.4,
+    561.5,
+    605.9
+   ],
+   "w": 2151,
+   "h": 678,
+   "dpi": 300,
+   "src": "acccdf4d-5._Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Charge−discharge cycle characteristics at room temperature at 0.050C measured before and after cycle durability tests at 333 K for 50 cycles at 1.0C. (a) Li−In counter and (b) graphite working electrode profiles (c) differential plots of (b), and (d) enlarged view of panel (c).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    344.8
+   ],
+   "w": 2151,
+   "h": 1211,
+   "dpi": 300,
+   "src": "acccdf4d-5._Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Comparison of impedance characteristics at room temperature before and after accelerated degradation test. (a) Nyquist plot and (b) Arrhenius plot (blue: RSE, green: Rx, red: RCT). electrolyte interface, SEI) formed at the graphite/solid electrolyte interface, (iii) RCT, the resistance associated with charge-transfer at the graphite/solid electrolyte interface, and (iv) WO, the resistance associated with diffusion presumably occurring inside the secondary graphite particles. Although this study mainly focuses on the fundamental electrochemical analysis rather than optimization of the composite electrode fabrication, it is expected that the analytical results obtained here is applied to different samples to optimize various electrode fabrication factors such as the particle size, mixing ratio, and mixing method and to establish high-capacity and durable graphite electrodes for a",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    373.5,
+    561.5,
+    521.4
+   ],
+   "w": 2151,
+   "h": 617,
+   "dpi": 300,
+   "src": "acccdf4d-5._Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1 (a) GITT curves of graphite working electrode and (b) OCP curve obtained from GITT test.",
+   "rotated_deg": 0,
+   "bbox": [
+    61.0,
+    115.3,
+    522.5,
+    292.6
+   ],
+   "w": 1924,
+   "h": 740,
+   "dpi": 300,
+   "src": "d52fd06e-5._Sup_Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2 Cell impedance, graphite working electrode, Li-In counter electrode and their combined impedance in all-solid-state three-electrode cells (after initial cycle test) measured at (a) 273 K, (b) 283 K and (c) 293 K, and those after degradation tests measured at (d) 273 K, (e) 283 K and (f) 293 K. - S3 -",
+   "rotated_deg": 0,
+   "bbox": [
+    17.0,
+    190.2,
+    562.2,
+    641.1
+   ],
+   "w": 2272,
+   "h": 1880,
+   "dpi": 300,
+   "src": "d52fd06e-5._Sup_Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3 (a) LSV response (controlled potential vs. response current) and (b) Change in Nyquist plot before and after LSV test. The blue arrow in (a) shows the direction of potential scanning.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    113.4,
+    543.9,
+    325.6
+   ],
+   "w": 1988,
+   "h": 885,
+   "dpi": 300,
+   "src": "d52fd06e-5._Sup_Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4 Charge-discharge characteristics of graphite working electrodes with different graphite particle sizes (D50=5.0, 11.0, 30.0 μm) at 0.050C in (a) the first and (b) the third cycles, which were measured with two-electrode cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.0,
+    96.9,
+    509.1,
+    665.0
+   ],
+   "w": 1826,
+   "h": 2368,
+   "dpi": 300,
+   "src": "d52fd06e-5._Sup_Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5 Change in graphite impedance during the first lithiation process (potential dependencies) in LPSI systems.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    96.9,
+    487.2,
+    332.9
+   ],
+   "w": 1701,
+   "h": 984,
+   "dpi": 300,
+   "src": "d52fd06e-5._Sup_Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6 Changes in (a) charge-discharge characteristics and (b) Nyquist plots of graphite working electrodes during the initial lithium insertion process in a system using LGPS as solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    96.9,
+    518.8,
+    343.5
+   ],
+   "w": 1833,
+   "h": 1029,
+   "dpi": 300,
+   "src": "d52fd06e-5._Sup_Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7 Charge-discharge cycle characteristics at room temperature (1.0C x 500 cycles) (a) 1.0C cycle characteristics, (b) Nyquist plot change, (c) 0.050C cycle characteristics, (d) differential plot of (c).",
+   "rotated_deg": 0,
+   "bbox": [
+    79.0,
+    424.3,
+    532.4,
+    518.0
+   ],
+   "w": 1890,
+   "h": 392,
+   "dpi": 300,
+   "src": "d52fd06e-5._Sup_Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8 (a) Charge/discharge curves of graphite working electrode, (b) Li-In counter electrode during charge/discharge cycle durability test at 333 K and (c) derivative profiles of curves shown in (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    77.2,
+    96.9,
+    529.8,
+    577.3
+   ],
+   "w": 1887,
+   "h": 2003,
+   "dpi": 300,
+   "src": "d52fd06e-5._Sup_Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. Comparison of Irreversible Capacity Loss of Active Material with Different Particle Size",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    364.2,
+    296.5,
+    413.9
+   ],
+   "w": 1043,
+   "h": 208,
+   "dpi": 300,
+   "src": "acccdf4d-5._Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.67
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "Table 2. Comparison of Activation Energy Before and After Acceleration Cycle Durability Test",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    635.7,
+    296.5,
+    685.4
+   ],
+   "w": 1043,
+   "h": 208,
+   "dpi": 300,
+   "src": "acccdf4d-5._Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.671
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 6,
+   "file": "tab_3.png",
+   "caption": "Table 3. Change in Fitting Parameters Before and After Charge−Discharge Cycle Test at 333 K before after RSE/Ω@293 K 29.4(2) 47.0(2) RX/Ω@293 K 4.50(7) 39.9(8) CPEX-T/F@293 K 6.7(4)E-6 3.5(6)E-5 CPEX-P/1@293 K 0.74(4) 0.48(1) RCT/Ω@293 K 22.8(7) 48.95(8) CPECT-T/F@293 K 0.045(6) 0.020(5) CPECT-P/1@293 K 0.45(4) 0.72(1)",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    520.2,
+    296.5,
+    646.8
+   ],
+   "w": 1043,
+   "h": 528,
+   "dpi": 300,
+   "src": "acccdf4d-5._Impedance_analysis_and_cyclability_evaluation_of_graphite_composite_electrodes_with_all-solid-state_three-electrode_cells.pdf",
+   "blank": 0.822
+  }
+ ]
+}
