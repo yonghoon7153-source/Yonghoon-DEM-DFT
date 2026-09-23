@@ -2321,3 +2321,17 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **11 장 전부 봤다**, 화소 판독 Fig. 6 인셋.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-lampe-contact-product-degeneracy]] · [[assb-li-in-reference-potential-window]] · 큐 문서 §6-3-g 45 행 + 지문 ¹⁰.
 - 후속(서지 기준, 미열람 — 큐 46–59 인용 0): Park … Lim 2014 *JJAP* 53, 08NK02 (ref 20) · Liu … Wu 2005 *JPS* 140, 149 (ref 30) · Shen … 2013 *JES* 160, A1842 (ref 29) · Hayashi … Minami 2001 *J. Am. Ceram. Soc.* 84, 477 (ref 28) · Asl … Kim 2012 *Electrochim. Acta* 79, 8 (ref 17).
+
+## [2026-09-23] ingest | assb 45호 — Hertle et al. 2023, Miniaturization of Reference Electrodes for Solid-State Lithium-Ion Batteries (J. Electrochem. Soc. 170, 040519)
+- raw: `raw/papers/hertle2023_micro-reference-electrode-lithiated-gold-wire-assb.md` (sha256 봉인 — 본문 · SI PDF 해시 frontmatter `pdf_sha256` · `si_sha256`) · 그림 `raw/figures/hertle2023_micro-reference-electrode-lithiated-gold-wire-assb/` (21 장). 큐 46번(2차 묶음 일곱째 편) — 원장 ★★★ "μ-RE 원본, Q5 최대 공백" · 16 · 21호 지목. JLU Giessen(Janek) + BASF.
+- ★★★★ **Q5 판정**: 0 V = **도금 Li 상 정체**(Li 금속 대조 셀 없음) · Fig. 7 측정 축 −618 mV vs In/InLi(계보 첫 ASSB 안 인쇄 수) · `[도표]` 사다리 AuLi/AuLi₃ 개방회로 −0.485 ↔ 도금 −0.618 ⇒ 0.133 ↔ 문헌 0.134 V · 안정성 "≥8 일"(그림 · mV 0) · 점검 = 실험 사이 In/InLi 대비 + "refresh" · 누설 0/45 · `[재현]` 소진 가정 소비 ≈39 nA → (5′) ≥10 은 ≤ ≈19 h. **스물한 번째 형태 "셀 안 도금 Li — 영점을 상 정체로, 기준극을 소모품으로"**.
+- ★★★★ **16호 이식 = 조건 밖**(∅25 ↔ 10 µm · 면적당 0.27 ↔ 2.55 mAh cm⁻² · NMC 상대 · 평탄 무) · `[해석]` 16호 0.11 V 새 후보 = AuLi/AuLi₃ 칸(+0.133 V)으로의 계단 이동.
+- ★★★ 합 일치(3E 합 ≈ 2E) = 범주 오류 계열 — DC · 위치 artifact 둘 다 합에서 상쇄 · >10 kHz 원인 원문 0 · 검증 셀 ≠ 분석 셀(`[재현]`). 2E 적합 비유일성 인쇄(`R_Anode` 14 ↔ 3.9) → S7 이 Fit 1(우리 판독). 율 시험: 2E 방전 부족 = LTO 상대극 Li 소진(0.1 C 165 ↔ 193).
+- **채움표 45호 행 — 누적 ≈19.0 → ≈19.5 (Q5 +0.5).** Q2 반 칸 검토 후 접음 · Q4 0/45 서른일곱 번째 성질 · Q3 층 하나.
+- 곱 축퇴 처방 **스물여덟 번째 적용**: 3-b ✅ 호 #1 "SE separator" 배정 실패(≈10 nF ↔ 10–100 pF) · 새 줄 "합 일치는 분배를 검증하지 않는다".
+- 카드: Evidence 마흔한 번째 절 · 새 제약 5 · Status Log.
+- ⚠ 어긋남 19 건(D1 방전 순서 · D2 컷오프 · D3 Li 두께 · D5 Chang ×10 · D11 SE ×3.3 · D12 검증 셀 ≠ 분석 셀 외). 21호 `[추론]` "Schlenker → Hertle" 계보는 인용 목록에서 지지 안 됨.
+- 낱말 지문: `MPa` 7(SI 0) 외 10 열 전부 0 · `leak` · `drift` · `calibrat` · `0.62` 0 · `stable` 16(μ-RE 11, 수치 판정 0).
+- 그림: **20 장 중 15 장 봤다**(Fig. 1 · 3–13 · S1 · S5 · S7), 화소 판독 Fig. 7 · 10 · 13. 안 본 것 Fig. 2 · S2 · S3 · S4 · S6.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-li-in-reference-potential-window]](45호 절 · 조건 (9) · P10 · P11) · [[assb-lampe-contact-product-degeneracy]](스물여덟 번째 적용 · 처방 표 새 줄) · 큐 문서 §6-3-g 46 행 + 지문 ¹¹.
+- 후속(서지 기준, 미열람 — 큐 47–59 인용은 48 하나): Solchenbach … Gasteiger 2016 *JES* 163, A2265 (ref 20, 큐 48) · Bach … Renner 2015 *Electrochim. Acta* 164, 81 (ref 33) · Braun … Ivers-Tiffée 2018 *JPS* 393, 119 (ref 38) · Klink … La Mantia 2012 *Electrochem. Commun.* 22, 120 (ref 19).

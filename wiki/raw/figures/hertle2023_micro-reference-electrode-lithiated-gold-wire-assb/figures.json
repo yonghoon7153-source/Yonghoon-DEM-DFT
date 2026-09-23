@@ -1,0 +1,432 @@
+{
+ "slug": "hertle2023_micro-reference-electrode-lithiated-gold-wire-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "hertle2023_main.pdf",
+  "hertle2023_sup.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Simpliﬁed cross section geometries of 3E setups found in literature. (a) This work. The (gold) microwire μ-RE covers less than 0.13% of the cell’s cross-section leading to a negligible perturbation of the current ﬂow between cathode and anode. (b) Arrangement reported by Chang et al.;30 the indium strip covers about 1.26% of the cross-sectional area of the cell. (c) Arrangement by Ikezawa et al.;28 the nickel net has an open area of about 90%. The net is covered with an LTO slurry leading to an area coverage of about 49% (estimated from a picture published by the authors of the electrode by automated pixel counting). Note that the thicknesses of the REs and the cell diameters are not shown to scale.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    163.1
+   ],
+   "w": 1080,
+   "h": 427,
+   "dpi": 300,
+   "src": "hertle2023_main.pdf",
+   "blank": 0.739
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. SSB cell in a brass housing and an aluminium frame for pressure- controlled electrochemical measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.9,
+    405.6,
+    290.0,
+    729.8
+   ],
+   "w": 1081,
+   "h": 1351,
+   "dpi": 300,
+   "src": "hertle2023_main.pdf",
+   "blank": 0.671
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Geometry and description of the voltages and connections of the three different cell setups used in this work. (a) Conventional 2E pellet-type setup with three layers, i.e. anode (d ≈120 μm), SE separator (d ≈400 μm) and composite cathode (d ≈60 μm). (b) 3E setup based on the geometry of the 2E setup using a top-sided reference electrode out of In/InLi (d ≈120 μm ) separated by a SE layer (d ≈200 μm). (C) 3E setup based on the 2E setup with a μ-RE in the middle of the separator. The geometry is essentially unchanged compared to the 2E setup. (D) Cell voltages U and potentials E used in this work. All potentials are given vs E(Li+/Li) = 0 V if not stated otherwise. Note that the color code in this graph applies to all electrochemical data shown in this work. dual-source column for depth-proﬁling with up to 2 keV using + O2 or Cs+. Additionally, craters were milled with a focused",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    231.7
+   ],
+   "w": 2202,
+   "h": 713,
+   "dpi": 300,
+   "src": "hertle2023_main.pdf",
+   "blank": 0.787
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Rate test performed with a conventional 2E setup at θ = 25 °C. A strong decrease in capacity from 0.1 C to 1.0 C is observed. From these data alone it is not clear whether this capacity decrease is mainly due to the kinetics of the cathode or the anode.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    278.9
+   ],
+   "w": 1080,
+   "h": 909,
+   "dpi": 300,
+   "src": "hertle2023_main.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Impedance data analysis for 2E cells showing the ambiguity of data analysis due to the overlap of anode and cathode contributions. Both ﬁts in (a) and (b) match the experimental data well with the same equivalent circuit used. Deciding which ﬁt represents the system more accurately requires additional experiments. The detailed ﬁt parameters and a separated ﬁt for the anode are given in Table SI and Fig. S7 in the SI.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    60.9,
+    557.1,
+    199.4
+   ],
+   "w": 1081,
+   "h": 578,
+   "dpi": 300,
+   "src": "hertle2023_main.pdf",
+   "blank": 0.791
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Charge and discharge curves of a cell with TSRE. (a) Full cell voltage vs capacity. Both the charge and discharge show sharp voltage ﬂuctuations. The cell is clearly not performing as intended. (b) Cathode vs TSRE. The same voltage rises and drops are visible here indicating a problem on the cathode side. (c) Flat charge and discharge curves are present in the anode vs TSRE pseudo-reference indicating no problems on the anode side as this cycling proﬁle shows no voltage ﬂuctuations.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    265.9,
+    557.1,
+    484.4
+   ],
+   "w": 1081,
+   "h": 911,
+   "dpi": 300,
+   "src": "hertle2023_main.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Top - Voltage measurement during lithiation of a gold-plated tungsten wire in a solid-state cell, measured between the μ-RE and the In/ InLi anode. The plateaus of the Au/AuLi and Au/AuLi3 two-phase systems are well visible. As shown in the top graph it is also possible to stop the lithiation at the AuLi3 potential plateau and observe a stable OCV. As the required amount of lithium is quite small even minor side reactions can lead to an unstable potential of the RE. Therefore, lithium metal is plated on the μ-RE, as can be seen by the potential in both graphs leading to a stable potential of –618 mV vs In/InLi. Bottom—faster lithiation showing the same plateaus as observed on the top graph.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    272.3
+   ],
+   "w": 1080,
+   "h": 882,
+   "dpi": 300,
+   "src": "hertle2023_main.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Figure 8. (a) SEM images of the gold-wire lying on top of the solid electrolyte after breaking the pellet in halves. Both the morphology of the wire itself and the FIB-craters are visible. (b) Secondary electron image of the lithiated gold-wire embedded in Li6PS5Cl. (c) Backscattered electron image of the lithiated μ-RE. The different materials are distinguishable with the tungsten core in the middle surrounded by the AuLi3 and the lithium phase. Delamination is visible in some places. This does not pose a problem as the SE holds the phases tightly in place.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    60.9,
+    557.1,
+    328.9
+   ],
+   "w": 1081,
+   "h": 1118,
+   "dpi": 300,
+   "src": "hertle2023_main.pdf",
+   "blank": 0.357
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Figure 9. ToF-SIMS images of the lithiated μ-RE embedded in the solid electrolyte matrix (cross section after FIB cut). All signals are normalized to the total ion signal. (a), (b) S−and Cl−mass signals corresponding to Li6PS5Cl. The homogeneous distribution and the grain structure of the material are visible. (c) The − PO3 signal is assigned to oxidative degradation products of Li6PS5Cl. (d) The − WOx signal is assigned to W metal in the μ-RE core. The dimension of the wire is nicely visible. (e) The − Au signal is assigned to gold or gold alloys. The gold layer is distributed around the tungsten but the layer appears to be not fully dense. (f) − Li 6 and − Li 7 signals are assigned to lithium rich degradation products of Li6PS5Cl. These species are present around the tungsten as well. The thickness is on the order of magnitude that is expected. (g) Overlay of the signals above. We like",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    616.8
+   ],
+   "w": 2201,
+   "h": 2318,
+   "dpi": 300,
+   "src": "hertle2023_main.pdf",
+   "blank": 0.468
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Comparison of impedance data obtained from a 2E cell and a 3E cell. (a) Real part of the impedance of the 2E cell in comparison to the sum of the individual anode and cathode impedances obtained in a 3E cell. Even at high frequencies the 2E and 3E results are almost identical. The residuals are shown as grey squares. (b) Imaginary part of the impedances with similar color code. Even at high frequencies the 2E and 3E results are almost identical. At high frequencies above 100 kHz slight deviations are visible but still under 1% in the real part.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    250.7
+   ],
+   "w": 1080,
+   "h": 792,
+   "dpi": 300,
+   "src": "hertle2023_main.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Separate cathode impedance in a In/InLi | Li6PS5Cl | NCM851005/Li6PS5Cl cell in 3E setup. Only the composite cathode and a part of the separator form the impedance spectrum. (a) Fit with a TLM, that describes the experimental data very well. The ﬁrst dark grey semicircle (#1) is caused by the SE separator. The middle grey contribution (#2) is caused by the composite cathode. The light grey contribution (#3) is due to lithium diffusion in the NCM851005. (b) Fit with a series of 3 R-CPE elements and a CPE. The dark grey semicircle (#1) is again caused by the SE separator. The two middle grey semicircles (#2 and #3) are caused by the composite cathode. One of the resulting semicircles shown in grey (#2) is very depressed, indicating that the equivalent is badly suited for this data. The light grey contribution (#4) is due to lithium diffusion in the NCM851005. (measured each vs t",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    334.9,
+    290.0,
+    501.4
+   ],
+   "w": 1085,
+   "h": 695,
+   "dpi": 300,
+   "src": "hertle2023_main.pdf",
+   "blank": 0.713
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 8,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Fitted impedance data of an individual NCM851005/Li6PS5Cl composite cathode impedance obtained in a 3E cell, relative to a μ-RE. Top: Bode plot; the symbols show the measured data; the line shows the respective ﬁt. Bottom: Relative residuals for this dataset for the real and imaginary part. Nyquist plot of the ﬁtted impedance with the transmission line model.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    60.9,
+    557.1,
+    270.3
+   ],
+   "w": 1081,
+   "h": 874,
+   "dpi": 300,
+   "src": "hertle2023_main.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 9,
+   "file": "fig_13.png",
+   "caption": "Figure 13. Rate test performed with NCM851005 | Li6PS5Cl and Li4Ti5O12. (a) The cycling results for the 2E cell (top) show massive decrease in capacity for high currents whereas the decrease in capacity is drastically reduced for the 3E cell where only the cathode side (middle) is evaluated for the cut-off of the cycling. The simultaneously recorded data for the anode (bottom) explains why the capacity decrease is so severe for the 2E cell. (b) Charge and discharge capacities for the 2E and 3E cell at various currents. overpotentials are observed and the anode is not inﬂuencing the performance of the cathode signiﬁcantly during charge. During the discharge, the voltage is at ﬁrst also only deviating very little from 1.55 V indicating small overpotentials. At around 160 mAh g−1, however, the voltage of the anode UA-RE is rising suddenly to as high as 3.2 V. This is lowering the full cell ",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.1,
+    228.0
+   ],
+   "w": 2202,
+   "h": 697,
+   "dpi": 300,
+   "src": "hertle2023_main.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Positioning of the μ-RE. The gold wire is attached to the PEEK inlet with KAPTON tape providing a linear RE spanning the whole diameter of the separator.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    78.7,
+    526.8,
+    239.7
+   ],
+   "w": 1921,
+   "h": 672,
+   "dpi": 300,
+   "src": "hertle2023_sup.pdf",
+   "blank": 0.682
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 1,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: EDS images of the lithiated gold-wire embedded in the solid electrolyte matrix. The gold wire is visible in the middle as a bright spot. a) Secondary-electron image. The morphology created by the FIB commonly referred to as curtaining is well visible. b) Sulphur EDS is showing a homogenous distribution. c) The tungsten EDS is only showing a significant signal at the top of the gold wire. d) The gold EDS only shows a significant signal on the top as well.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.2,
+    283.5,
+    526.5,
+    465.6
+   ],
+   "w": 1898,
+   "h": 760,
+   "dpi": 300,
+   "src": "hertle2023_sup.pdf",
+   "blank": 0.536
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 2,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Detailed rate rest as described in figure Error! Reference source not found. showing charge and discharge curves for 0.2 and 0.5 additionally. a) Charge/discharge curves for the 2E setup. b) Charge/discharge curves for the cathode in the 3E setup. c) Charge/discharge curves for the anode in the 3E setup.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.4,
+    66.0,
+    534.2,
+    273.9
+   ],
+   "w": 1930,
+   "h": 867,
+   "dpi": 300,
+   "src": "hertle2023_sup.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Equivalent circuit used for fitting impedance data shown in figure Error! Reference source not found.. The solid separator is fitted with a resistor. The anode is fitted with an (R)(CPE) element. The cathode is fitted with a Z-type TLM where the ion conducting pathway and the electron conducting pathway are both fitted with resistors Rion and Rel, respectively. The interface is modelled with an (R)(CPE)-CPE element modelling the charge-transfer and the diffusion in the active material.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    533.4,
+    260.5
+   ],
+   "w": 1948,
+   "h": 811,
+   "dpi": 300,
+   "src": "hertle2023_sup.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 3,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Residuals e of the fits shown in figure Error! Reference source not found.. The residuals for both fits are below 1 % for Re(Z) and below 5 % for -Im(Z). a) Residuals corresponding to impedance data and fit in figure Error! Reference source not found.a). b) Residuals corresponding to impedance data and fit in figure Error! Reference source not found.b).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    358.2,
+    532.2,
+    666.2
+   ],
+   "w": 1943,
+   "h": 1284,
+   "dpi": 300,
+   "src": "hertle2023_sup.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Cell connection for the TSRE setup. The TSRE is used as pseudo-reference electrode allowing separation of cathode (UC-RE), anode (UA-RE) and full cell voltages (UC-A).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    93.0,
+    532.1,
+    227.3
+   ],
+   "w": 1942,
+   "h": 560,
+   "dpi": 300,
+   "src": "hertle2023_sup.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 5,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Fit of a separated anode with a R-(R)(CPE) circuit. The second contribution at low frequencies",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    303.6,
+    500.1,
+    443.2
+   ],
+   "w": 1809,
+   "h": 583,
+   "dpi": 300,
+   "src": "hertle2023_sup.pdf",
+   "blank": 0.971
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Fit parameters for a 2E impedance measurement. The fit parameters are ambiguous due to the overlap of anode and cathode contributions. The element ZCAM is comprised of the element (R)(CPE)-CPE. Parameter Fit 1 Fit 2 SE separator RSE (Ωcm2) 98 97 RAnode (Ωcm2) 14 3.9 QAnode (Ωsα) 4.49*10-2 3.3*10-2 Anode αAnode 0.60 0.68 Rion (Ωcm2) 9.07*103 12.6*103 RCAM (Ωcm2) 0.24 0.27 QCAM (Ωsα) 3.87*10-2 5.18*10-2 Cathode αCAM (Ωcm2) 0.74 0.73 Qdiff (Ωsα) 9.07 7.66 αdiff 0.45 0.37",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.4,
+    531.1,
+    339.5
+   ],
+   "w": 1934,
+   "h": 1135,
+   "dpi": 300,
+   "src": "hertle2023_sup.pdf",
+   "blank": 0.93
+  }
+ ]
+}
