@@ -45,6 +45,7 @@
 | [0039](adr/0039-symmetric-cells-are-their-own-part.md) | 대칭셀은 자기 파트다: 온도는 사람이 적고, 저항은 사람이 고른다 | 온도별 PEIS 가 담긴 `.mpt` — 파일에 온도 열이 없어 사람이 적고(ADR 0038 과 같은 규칙), **저항은 기계가 고르지 않는다**: 실측 `B12` 에서 읽는 방법 셋(실수축 교점 · 맞춤 R0 · `-Im` 최솟값)이 2 % 안에서 같았지만 그것은 아크가 7 MHz 위에 있어서이고, 맞춤의 총저항은 교점의 4710~8193배로 틀렸다. 기계는 제안만 하고 사람이 고른다. Origin 의 Linear Fit 보고서를 통째로 옮겼다 |
 | [0040](adr/0040-audit-every-spectrum-where-the-data-lives.md) | EIS 검수: 데이터가 있는 기계에서, 읽기만 하고, 글로 낸다 | DB 는 랩 PC 에 있다 — `bml audit` 가 그 기계에서 저장된 스펙트럼 전부를 훑어 **글**로 낸다. 고치지 않는다 (무엇이 틀렸는지가 지워진다). 아크 이름은 커패시턴스로 **검사만** 한다: 벌크·입계는 `C·l/A`, 계면·반응은 `C/A` 로 규격화해 Irvine–Sinclair–West 의 후보를 내고, 이름이 말하는 과정이 후보에서 빠졌을 때만 `문제` 로 적는다 |
 | [0041](adr/0041-capacitance-outranks-the-arc-name.md) | 커패시턴스가 아크 이름을 이긴다: 막는 펠릿의 전해질은 고주파 절편이다 | 실측 검수 131 스펙트럼: 황화물 블로킹 펠릿의 "벌크·입계" 아크가 전부 µF 대(전극 이중층)였고 R0 가 실수축 교점과 같았다. 아크를 커패시턴스로 벌크/입계/면으로 가르고(×3, 미결정 ×10 에도 같은 쪽), 면 쪽은 빼고, 벌크 쪽이 없으면 전체 σ 를 R0 + 입계 쪽 아크로 낸다 (Irvine–Sinclair–West 그림 4b, `total_from`). 꼬리의 C 는 Brug 식. 대칭셀 보기에 `L1-R0-CPE1` 등. 검수는 원인 하나를 한 줄로 (`tail_mimicked_by_arc`, `arcs_are_electrode`, `bulk_above_window`, `inductance_missing`) |
+| [0042](adr/0042-paper-knowledge-behind-every-finding.md) | 논문 지식 DB: 검수의 판정마다 근거를 쪽까지 | 논문 여섯 편을 기록 191개로 (`wrdkit.eis.knowledge`, 우리 말 요약 + 인쇄 쪽). 원문은 코드가 인용하는 기록에만 25 단어까지 — 시험이 강제. 판정 코드 → 기록은 `audit.REFERENCES`, `bml audit` 글 끝에 쪽 번호가 든 근거 목록 |
 
 ## 리뷰 (외부 교차검증)
 
@@ -107,6 +108,22 @@
 - [`raw/specs/biologic-mpr-format.md`](raw/specs/biologic-mpr-format.md) —
   BioLogic `.mpr`/`.mpt`/`.mps` 구조. EIS 리더 구현의 근거.
 
+## 논문 (읽은 기록)
+
+에이전트가 PDF 를 읽고 쓴 노트 — 불변. 기계용 기록은 `wrdkit/eis/knowledge/*.json`
+(ADR 0042). PDF 는 넣지 않는다.
+
+- [`raw/papers/ISW1990.md`](raw/papers/ISW1990.md) — Irvine·Sinclair·West 1990, 커패시턴스로 아크 가르기 (표 1, 그림 4b)
+- [`raw/papers/HIRSCHORN2010.md`](raw/papers/HIRSCHORN2010.md) — CPE 에서 유효 커패시턴스, 어느 저항을 넣나
+- [`raw/papers/SCHOENLEBER2014.md`](raw/papers/SCHOENLEBER2014.md) — lin-KK 검사의 크기를 μ 로
+- [`raw/papers/VADHVA2021.md`](raw/papers/VADHVA2021.md) — 전고체 EIS 리뷰 (황화물의 R0, 진폭, KK)
+- [`raw/papers/LASIA1999.md`](raw/papers/LASIA1999.md) — Lasia 의 EIS 장 (KK, 가중, CPE, 다공 전극)
+- [`raw/papers/ECSIF2019.md`](raw/papers/ECSIF2019.md) — ECS Interface 2019 여름호 (Bio-Logic 품질 지표, Gupta·Sakamoto)
+
+## 종합
+
+- [[eis-paper-knowledge]] — 여섯 편에서 무엇을 배웠고 어디에 썼나, 논문이 권하는데 아직 없는 것, 옮기면 틀리는 곳
+
 ## 가이드
 
 - [[whats-new]] — **이번에 바뀐 것 쓰는 법.** 띄우는 법부터 SOC 스캔·knee 두 점까지
@@ -135,4 +152,4 @@
 
 `.claude/commands/` — `/sync` `/check` `/wrap` `/adr` `/verify` `/status`
 
-Total pages: 8
+Total pages: 9

@@ -19,7 +19,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import PlainTextResponse
 from sqlmodel import Session, select
 
-from wrdkit.eis import SOLID, Spectrum, UnknownColumn, ionic_conductivity
+from wrdkit.eis import SOLID, Spectrum, UnknownColumn, ionic_conductivity, knowledge
 from wrdkit.eis.audit import (
     CHECK,
     NOTE,
@@ -45,6 +45,7 @@ from ..db import get_session
 from ..models import SpectrumFit, SpectrumRecord
 from ..schemas import (
     AuditFindingOut,
+    AuditReferenceOut,
     AuditScanOut,
     AuditSpectrumOut,
     EisAuditOut,
@@ -71,7 +72,21 @@ router = APIRouter(prefix="/api/eis", tags=["eis"])
 
 def _finding_out(one: Finding) -> AuditFindingOut:
     return AuditFindingOut(severity=one.severity, label=one.label, code=one.code,
-                           message=one.message)
+                           message=one.message, refs=list(one.refs))
+
+
+def _references(findings) -> list[AuditReferenceOut]:
+    """판정들이 인용한 논문 기록 — 처음 나온 순서로, 한 번씩 (ADR 0042)."""
+    seen: dict[str, AuditReferenceOut] = {}
+    for finding in findings:
+        for record_id in finding.refs:
+            if record_id in seen:
+                continue
+            record = knowledge.record(record_id)
+            seen[record_id] = AuditReferenceOut(
+                id=record_id, citation=knowledge.cite(record_id),
+                claim_ko=record.claim_ko, quote=record.quote)
+    return list(seen.values())
 
 
 class _Originals:
@@ -353,8 +368,11 @@ def build_report(session: Session) -> EisAuditOut:
     counts["clean"] = 0
     for one in spectra:
         counts[one.worst or "clean"] += 1
+    every = [f for one in spectra for f in one.findings] + [
+        f for scan in scans for f in scan.findings]
     return EisAuditOut(generated_at=datetime.now(timezone.utc), total=len(spectra),
-                       counts=counts, spectra=spectra, scans=scans)
+                       counts=counts, spectra=spectra, scans=scans,
+                       references=_references(every))
 
 
 @router.get("/audit", response_model=EisAuditOut)
@@ -409,7 +427,24 @@ def _headline(one: AuditSpectrumOut) -> str:
     return f"#{one.id}  {one.name}  ({' · '.join(bits)})"
 
 
-def _block(one: AuditSpectrumOut) -> list[str]:
+class _Numbers:
+    """글 속 근거 번호 — 처음 인용된 순서로 [1], [2], …"""
+
+    def __init__(self) -> None:
+        self.order: list[str] = []
+
+    def suffix(self, finding: AuditFindingOut) -> str:
+        if not finding.refs:
+            return ""
+        numbers = []
+        for record_id in finding.refs:
+            if record_id not in self.order:
+                self.order.append(record_id)
+            numbers.append(str(self.order.index(record_id) + 1))
+        return f"  [근거 {'·'.join(numbers)}]"
+
+
+def _block(one: AuditSpectrumOut, numbers: _Numbers) -> list[str]:
     lines = [_headline(one)]
     geometry = []
     if one.thickness_um is not None:
@@ -445,11 +480,11 @@ def _block(one: AuditSpectrumOut) -> list[str]:
                      f"{_g(arc['resistance_ohm'])} Ω · C {_e(arc['capacitance_f'])} F"
                      f" · f₀ {_e(arc['peak_hz'])} Hz {where}".rstrip())
     for finding in one.findings:
-        lines.append(f"    [{finding.label}] {finding.message}")
+        lines.append(f"    [{finding.label}] {finding.message}{numbers.suffix(finding)}")
     return lines
 
 
-def _scan_block(scan: AuditScanOut) -> list[str]:
+def _scan_block(scan: AuditScanOut, numbers: _Numbers) -> list[str]:
     kind = "대칭셀" if scan.symmetric else "스캔"
     lines = [f"{scan.name}  ({kind} · 스윕 {scan.sweeps}"
              + (f" · {scan.purpose}" if scan.purpose else "") + ")"]
@@ -471,7 +506,7 @@ def _scan_block(scan: AuditScanOut) -> list[str]:
                          f"{_g(row['typed_ohm'], 4):>9}  {_g(row['crossing_ohm'], 4):>14}"
                          f"  {span:<16} {shown_phase:>6}  {rest:>8}")
     for finding in scan.findings:
-        lines.append(f"    [{finding.label}] {finding.message}")
+        lines.append(f"    [{finding.label}] {finding.message}{numbers.suffix(finding)}")
     return lines
 
 
@@ -507,13 +542,14 @@ def render_text(report: EisAuditOut) -> str:
            f"참고만 {counts.get(NOTE, 0)} · 깨끗 {counts.get('clean', 0)}",
            "(문제 = 화면의 수가 틀렸거나 이름이 틀렸을 가능성이 높다 · "
            "확인 = 사람이 한 번 봐야 한다 · 참고 = 알고 있으면 좋다)"]
+    numbers = _Numbers()
     for severity in (PROBLEM, CHECK):
         chosen = [one for one in report.spectra if one.worst == severity]
         if not chosen:
             continue
         out += ["", f"━━ {SEVERITY_LABELS[severity]} ({len(chosen)}) " + "━" * 40]
         for one in chosen:
-            out += [""] + _block(one)
+            out += [""] + _block(one, numbers)
     noted = [one for one in report.spectra if one.worst == NOTE]
     if noted:
         out += ["", f"━━ 참고만 ({len(noted)}) " + "━" * 40]
@@ -534,7 +570,14 @@ def render_text(report: EisAuditOut) -> str:
     if flagged:
         out += ["", f"━━ 스캔 ({len(flagged)}) " + "━" * 40]
         for scan in flagged:
-            out += [""] + _scan_block(scan)
+            out += [""] + _scan_block(scan, numbers)
+    if numbers.order:
+        # 판정의 근거 — 논문 기록 (ADR 0042).  같은 판정이 백 번 나와도 근거는
+        # 한 번만 적는다.
+        out += ["", f"━━ 근거 ({len(numbers.order)}) " + "━" * 40]
+        for number, record_id in enumerate(numbers.order, start=1):
+            record = knowledge.record(record_id)
+            out.append(f"[{number}] {knowledge.cite(record_id)} — {record.claim_ko}")
     return "\n".join(out) + "\n"
 
 

@@ -1,0 +1,821 @@
+{
+ "sources": [
+  {
+   "key": "VADHVA2021",
+   "short": "Vadhva 외 2021",
+   "authors": "Pooja Vadhva, Ji Hu, Michael J. Johnson, Richard Stocker, Michele Braglia, Dan J. L. Brett, Alexander J. E. Rettie",
+   "title": "Electrochemical Impedance Spectroscopy for All-Solid-State Batteries: Theory, Methods and Future Outlook",
+   "venue": "ChemElectroChem",
+   "year": 2021,
+   "volume": "8",
+   "pages": "1930–1947",
+   "doi": "10.1002/celc.202100108"
+  }
+ ],
+ "records": [
+  {
+   "id": "VADHVA2021.small-amplitude-linearity",
+   "source": "VADHVA2021",
+   "kind": "criterion",
+   "topics": [
+    "amplitude",
+    "linearity",
+    "kramers-kronig",
+    "measurement-practice"
+   ],
+   "claim_ko": "PEIS 교류 진폭은 보통 50 mV 미만으로 작게 잡아야 입력·출력이 같은 꼴의 선형 관계를 유지하고(고조파 회피, 비가역 변화 최소화), 이 조건은 Kramers–Kronig 관계로 확인할 수 있다.",
+   "claim": "PEIS should use a small perturbation (typically below 50 mV) so that input and output keep the same form and a linear relation, avoiding higher harmonics and minimizing irreversible changes, and these conditions can be verified with the Kramers–Kronig relations.",
+   "page": 1932,
+   "where": "Section 2 Theory, Methods and Analysis, text after Eq. (2)",
+   "values": {
+    "amplitude_typical_max_mV": 50
+   },
+   "conditions": "Any PEIS measurement; stated generally, not per material. The review separately notes that the original LGPS data were taken at 100–500 mV, which may be non-linear and were not K–K checked (p. 1938).",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.blocking-cell-circuit-r0-offset",
+   "source": "VADHVA2021",
+   "kind": "model",
+   "topics": [
+    "blocking-electrode",
+    "symmetric-cell",
+    "equivalent-circuit",
+    "series-resistance",
+    "ionic-conductivity"
+   ],
+   "claim_ko": "이온 블로킹 셀의 이상 회로는 R0–(R1‖C1)–C2 로, 나이퀴스트에서 아크 하나가 R0(배선·접촉 저항을 포함할 수 있음)만큼 원점에서 떨어져 있고 꼭지 주파수가 τ = R1·C1 을, C2 가 저주파 수직선을 주며, SE 전도가 순수 이온 전도라고 가정한다.",
+   "claim": "The idealized ion-blocking cell is R0 in series with (R1‖C1) and a blocking capacitor C2: one arc offset from the origin by R0 (which may include wire and contact resistances), an apex frequency giving τ = R1·C1, and a vertical low-frequency line from C2, assuming purely ionic conduction in the SE.",
+   "page": 1933,
+   "where": "Section 2.1 Impedance Plots, Figure 2a–b",
+   "math": "Z(ω) = R0 + R1/(1 + jω·R1·C1) + 1/(jω·C2);  τ1 = R1·C1 = 1/(2π·f_apex)",
+   "conditions": "Ion-blocking electrodes (Pt, stainless steel, Au), SE with negligible electronic conductivity, and the SE arc inside the measured frequency band.",
+   "confidence": "high",
+   "quote": "an offset from the origin on the x-axis corresponding to the resistance, R0, which may include resistances from wires and contacts"
+  },
+  {
+   "id": "VADHVA2021.electrode-types",
+   "source": "VADHVA2021",
+   "kind": "definition",
+   "topics": [
+    "blocking-electrode",
+    "reversible-electrode",
+    "electronic-blocking",
+    "symmetric-cell",
+    "cell-design"
+   ],
+   "claim_ko": "전극은 이온 블로킹(전자만 통과: Pt·SUS·Au), 전자 블로킹(이온만 통하는 SE 층으로 혼합전도체·복합전극의 이온 성분 분리), 가역(Li 금속, Li–In 합금, 삽입 전극)으로 나뉘며 어느 경우든 시료에 대해 불활성·안정해야 한다.",
+   "claim": "Electrodes are ion-blocking (conduct electrons but not Li+; e.g., Pt, stainless steel, Au), electron-blocking (a highly ion-conducting, electronically insulating SE that isolates the ionic part of MIECs and composites) or reversible (Li metal, Li–In alloys, intercalation electrodes), and in all cases the contact should be inert and stable against the sample.",
+   "page": 1933,
+   "where": "Section 2.2 Cell Design",
+   "conditions": "General; maps to SS|SE|SS (ion-blocking), Li|SE|Li or In–Li|SE|In–Li (reversible) and SE|composite|SE (electron-blocking) cells.",
+   "confidence": "high",
+   "quote": "Ion-blocking electrodes do not accept or provide Li-ions but do allow the passage of electrons."
+  },
+  {
+   "id": "VADHVA2021.sigma-from-total-electrolyte-resistance",
+   "source": "VADHVA2021",
+   "kind": "formula",
+   "topics": [
+    "ionic-conductivity",
+    "blocking-electrode",
+    "symmetric-cell",
+    "grain-boundary"
+   ],
+   "claim_ko": "블로킹 대칭 2전극 셀의 이온전도도는 σ_ion = l/(R_total·A) 이고, R_total 은 전해질 전체 저항(그림 2a 의 R1 — R0 오프셋이 아님)으로 결정립과 입계·상계면 기여를 함께 담을 수 있으며, 전극·계면 임피던스도 스펙트럼에 함께 나타난다.",
+   "claim": "The ionic conductivity from a symmetric ion-blocking two-electrode cell is σ_ion = l/(R_total·A), where R_total is the electrolyte's total resistance (R1 of Fig. 2a, not the R0 offset) and may include grain and grain/phase-boundary contributions, while electrode and interface impedances also appear in the spectrum.",
+   "page": 1934,
+   "where": "Section 2.2 Cell Design, Eq. (6)",
+   "math": "sigma_ion = l / (R_total * A)",
+   "conditions": "Two-electrode cell with symmetric ion-blocking electrodes; R_total must be the electrolyte's bulk + boundary resistance.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.stray-capacitance-small-geometric-capacitance",
+   "source": "VADHVA2021",
+   "kind": "caveat",
+   "topics": [
+    "stray-capacitance",
+    "cabling",
+    "four-point",
+    "geometry",
+    "measurement-practice"
+   ],
+   "claim_ko": "긴 케이블·추가 연결의 부유 커패시턴스는 시료의 기하 커패시턴스가 작을 때(원기둥 펠릿보다 막대형 4전극 시료) 측정에 영향을 준다.",
+   "claim": "Stray capacitances from long cabling or additional connections can affect measurements when the sample's geometric capacitance is small, as in the bar-shaped four-electrode geometry compared with cylindrical pellets.",
+   "page": 1934,
+   "where": "Section 2.2 Cell Design, Figure 3",
+   "conditions": "Cells whose geometric capacitance is small compared with lead/fixture capacitance; the review's example is a 4-electrode bar sample (Fig. 3).",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.reference-electrode-artefacts",
+   "source": "VADHVA2021",
+   "kind": "caveat",
+   "topics": [
+    "reference-electrode",
+    "three-electrode",
+    "sulfide",
+    "cell-design"
+   ],
+   "claim_ko": "기준전극은 위치·재료·형상이 인공물을 만들 수 있어 전지에서 논란이 있고, 황화물 SE 에 Li 기준전극을 가장자리에 두려면 SE 층이 1 mm 이상이어야 하며(사이에 SE 층을 더 넣으면 얇게 가능), Li 대신 Li–In·부분 리튬화 삽입전극이 제안된다.",
+   "claim": "Reference electrodes are controversial in batteries because RE position, material and geometry can create artefacts; for soft sulfide SEs with a Li RE, an edge-mounted RE needs an SE layer at least 1 mm thick, an extra SE layer between RE and working electrode allows thinner cells, and Li–In or partially lithiated intercalation electrodes are proposed instead of Li.",
+   "page": 1934,
+   "where": "Section 2.2 Cell Design, Figure 4",
+   "values": {
+    "min_SE_thickness_mm_edge_RE_design": 1
+   },
+   "conditions": "Three-electrode solid-state cells; sulfide SE with Li reference (Fig. 4).",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.relax-to-ocp-before-eis",
+   "source": "VADHVA2021",
+   "kind": "procedure",
+   "topics": [
+    "full-cell",
+    "soc",
+    "ocv-drift",
+    "stationarity",
+    "measurement-practice"
+   ],
+   "claim_ko": "풀셀은 두 전극·부품·계면의 특징이 섞이므로 충·방전을 멈추고 개방회로전위로 충분히 이완시킨 뒤 스펙트럼을 잰다.",
+   "claim": "For full cells, charge or discharge is interrupted and the cell is allowed to relax to open-circuit potential before the spectrum is acquired, because complete devices mix features of both electrodes, cell components and interfaces.",
+   "page": 1934,
+   "where": "Section 2.2 Cell Design",
+   "conditions": "Full cells (and by extension half cells) in SOC scans.",
+   "confidence": "high",
+   "quote": "the charge or discharge is interrupted, and the cell is given sufficient time to relax to open circuit potential before data is acquired"
+  },
+  {
+   "id": "VADHVA2021.complementary-symmetric-cells",
+   "source": "VADHVA2021",
+   "kind": "procedure",
+   "topics": [
+    "symmetric-cell",
+    "full-cell",
+    "assignment",
+    "blocking-electrode",
+    "reversible-electrode"
+   ],
+   "claim_ko": "풀셀 스펙트럼은 블로킹 전극 둘 또는 가역 전극 둘로 만든 보완 대칭셀과 비교해 각 기여를 떼어 해석하는 것이 강력한 방법이다.",
+   "claim": "Full-cell spectra are best interpreted by comparison with complementary symmetric cells having two blocking or two reversible contacts, which isolate each contribution.",
+   "page": 1934,
+   "where": "Section 2.2 Cell Design",
+   "conditions": "Any full or half cell whose SE and counter electrode can also be built as symmetric cells; the summary repeats this as the transferable approach (p. 1944).",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.inductance-negligible-lab-scale",
+   "source": "VADHVA2021",
+   "kind": "caveat",
+   "topics": [
+    "inductance",
+    "frequency-range",
+    "cabling",
+    "short-circuit"
+   ],
+   "claim_ko": "리뷰는 실험실 규모 전고체 셀이 저항이 크고 부품이 적어 수 MHz 까지도 인덕턴스가 크게 작용하지 않는다고(하드 쇼트는 예외) 적었다.",
+   "claim": "The review states that, owing to relatively high resistance and few components, inductance does not play a significant role in the EIS of laboratory-scale ASBs even up to several MHz, the exception being a hard short-circuit.",
+   "page": 1934,
+   "where": "Section 2.2 Cell Design (sentence continues on p. 1935)",
+   "conditions": "Lab-scale ASB cells; a general statement not tied to any instrument, cable or holder.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.hard-short-inductive",
+   "source": "VADHVA2021",
+   "kind": "criterion",
+   "topics": [
+    "short-circuit",
+    "inductance",
+    "li-metal",
+    "dendrite"
+   ],
+   "claim_ko": "Li 덴드라이트가 음·양극을 직접 이은 하드 쇼트에서는 임피던스가 유도성으로 나타난다.",
+   "claim": "A hard short-circuit, in which Li dendrites have made direct electrical contact between anode and cathode, shows inductive behaviour in the impedance of lab-scale ASBs.",
+   "page": 1935,
+   "where": "Section 2.2 Cell Design",
+   "conditions": "Cells with Li-metal or Li-depositing electrodes, typically after cycling.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.arrhenius-prefactor-t-inverse",
+   "source": "VADHVA2021",
+   "kind": "formula",
+   "topics": [
+    "activation-energy",
+    "arrhenius",
+    "ionic-conductivity",
+    "temperature"
+   ],
+   "claim_ko": "이온전도도는 σ_ion(T) = A(T)·exp(−Ea/RT) 로 다루며, 전지수 A(T) 에 들어 있는 T⁻¹ 항을 반영해야(곧 ln(σT) 대 1/T) Ea 가 정확히 나온다.",
+   "claim": "σ_ion(T) = A(T)·exp(−Ea/RT) is the common Arrhenius-like form, and its model-dependent prefactor A(T) contains a T⁻¹ term that must be incorporated to extract Ea accurately.",
+   "page": 1935,
+   "where": "Section 2.2 Cell Design, Eq. (7)",
+   "math": "sigma(T) = A(T) * exp(-Ea/(R*T)),  A(T) ∝ 1/T  =>  ln(sigma*T) = const - Ea/(R*T)",
+   "conditions": "Thermally activated ionic conduction in SEs; R is the gas constant (Ea per mole).",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.arrhenius-range-one-decade",
+   "source": "VADHVA2021",
+   "kind": "criterion",
+   "topics": [
+    "activation-energy",
+    "arrhenius",
+    "temperature",
+    "automation"
+   ],
+   "claim_ko": "Arrhenius 파라미터를 확실히 정하려면 충분한 온도 범위가 필요하며 리뷰는 '최소 1 decade' 라고만 적어 무엇의 한 자릿수인지는 밝히지 않았다.",
+   "claim": "Robust determination of all Arrhenius parameters requires a sufficiently wide temperature range, stated as 'at least 1 decade' without saying a decade of which quantity.",
+   "page": 1935,
+   "where": "Section 2.2 Cell Design, after Eq. (7)",
+   "values": {
+    "min_span_decades": 1,
+    "unit": "not stated (most plausibly conductivity)"
+   },
+   "conditions": "Temperature-dependent conductivity measurements.",
+   "confidence": "medium"
+  },
+  {
+   "id": "VADHVA2021.electronic-conductivity-dc-polarization",
+   "source": "VADHVA2021",
+   "kind": "procedure",
+   "topics": [
+    "electronic-conductivity",
+    "blocking-electrode",
+    "four-point",
+    "dc-polarization"
+   ],
+   "claim_ko": "SE 는 σ_ion ≫ σ_eon 이라 EIS 로 전자전도를 떼기 어렵고, σ_eon 은 이온 블로킹 대칭셀에 DC 전압을 걸어 누설전류가 정상상태(24 h 이상)에 이를 때까지 보거나 Hebb–Wagner 셀(Li 안정성 필요)로 재며, 2전극 DC 는 접촉저항 때문에 과소평가하므로 4단자가 필요하다.",
+   "claim": "Because σ_ion ≫ σ_eon in SEs, EIS cannot easily separate electronic conduction; σ_eon is estimated by DC polarization of a symmetric ion-blocking cell until the leakage current is steady (>24 h) or with Hebb–Wagner cells (which need stability against Li), and two-electrode DC measurements underestimate σ_eon because of contact resistances, so four-point measurements are needed.",
+   "page": 1935,
+   "where": "Section 2.2 Cell Design",
+   "values": {
+    "leakage_steady_state_time_h": ">24"
+   },
+   "conditions": "SEs with σ_ion ≫ σ_eon; symmetric ion-blocking cells.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.kk-validation-before-modelling",
+   "source": "VADHVA2021",
+   "kind": "criterion",
+   "topics": [
+    "kramers-kronig",
+    "data-quality",
+    "linearity",
+    "stationarity",
+    "automation"
+   ],
+   "claim_ko": "EIS 데이터는 선형성·안정성·인과성을 만족해야 하며, 저품질 데이터를 맞추고 틀린 파라미터를 내는 일을 피하려면 모델링 전에 Kramers–Kronig 관계(인용된 Lin-KK 도구 등)로 검사하라고 권한다.",
+   "claim": "EIS data must satisfy linearity, stability and causality, and checking them with the Kramers–Kronig relations (e.g., the cited Lin-KK tool) is recommended before modelling to avoid fitting low-quality data and estimating erroneous parameters.",
+   "page": 1935,
+   "where": "Section 2.2 Cell Design (end)",
+   "conditions": "Every spectrum, before ECM fitting or DRT.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.simplest-ecm",
+   "source": "VADHVA2021",
+   "kind": "criterion",
+   "topics": [
+    "equivalent-circuit",
+    "model-selection",
+    "cnls"
+   ],
+   "claim_ko": "CNLS 는 좋은 초기값이 필요하고 해가 유일하지 않으며 소자를 늘리면 늘 더 잘 맞으므로, 물리·화학적 의미를 지키는 가장 단순한 회로를 써야 한다.",
+   "claim": "Since CNLS needs good starting values, no ECM solution is unique and more elements tend to improve the fit, the simplest ECM with the fewest elements that keeps physical and chemical meaning should be used.",
+   "page": 1935,
+   "where": "Section 2.3 Modelling",
+   "conditions": "Any equivalent-circuit fitting.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.ocv-drift-low-frequency",
+   "source": "VADHVA2021",
+   "kind": "caveat",
+   "topics": [
+    "ocv-drift",
+    "stationarity",
+    "soc",
+    "frequency-range",
+    "assignment"
+   ],
+   "claim_ko": "시간상수의 개수와 배정은 주관적이기 쉽고, 큰 셀에서는 인덕턴스가 고주파를, 측정 중 작은 용량 변화에 따른 OCV 변화(시작·끝 SoC 차이)가 저주파를 가릴 수 있다.",
+   "claim": "How many time constants a spectrum holds and what they are is often hard to decide and can be highly subjective, and features can be hidden: inductance can obscure high frequencies in larger cells, and OCV drift from small capacity changes during the sweep (different SoC at start and end) can distort the low-frequency range.",
+   "page": 1935,
+   "where": "Section 2.3 Modelling",
+   "conditions": "Cells that are not fully at rest during the sweep, notably SOC scans of half/full cells.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.capacitance-order-of-magnitude-assignment",
+   "source": "VADHVA2021",
+   "kind": "criterion",
+   "topics": [
+    "capacitance-assignment",
+    "grain-boundary",
+    "bulk",
+    "equivalent-circuit"
+   ],
+   "claim_ko": "커패시턴스의 자릿수로 결정립/입계 같은 특징을 배정할 수 있다(Irvine 등)고 하지만, 이 리뷰에는 수치 범위표가 없다.",
+   "claim": "Order-of-magnitude evaluation of fitted capacitances can assign features such as grain vs. grain boundary, following Irvine et al., but this review itself gives no numerical capacitance ranges.",
+   "page": 1935,
+   "where": "Section 2.3 Modelling",
+   "conditions": "Ceramic-type SEs; numerical ranges must come from Irvine, Sinclair & West (Adv. Mater. 1990), not from this review.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.drt-ill-posed-needs-kk",
+   "source": "VADHVA2021",
+   "kind": "caveat",
+   "topics": [
+    "drt",
+    "regularization",
+    "kramers-kronig",
+    "data-quality"
+   ],
+   "claim_ko": "DRT 는 회로 선택을 돕지만 다소 임의적인 전처리로 데이터를 잘라야 하고 역변환이 비적정이라 정칙화가 필요하며 실험 오차에 매우 민감해 K–K 검증이 필수다.",
+   "claim": "DRT can guide ECM selection, but the data must be bounded by somewhat arbitrary preprocessing, the inversion is ill-posed and needs regularization, and it is very sensitive to experimental errors, making K–K validation essential.",
+   "page": 1936,
+   "where": "Section 2.3 Modelling",
+   "conditions": "Any DRT inversion.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.aic-rank-ecms",
+   "source": "VADHVA2021",
+   "kind": "procedure",
+   "topics": [
+    "model-selection",
+    "equivalent-circuit",
+    "automation"
+   ],
+   "claim_ko": "AIC 같은 정보 기준으로 경쟁 회로의 순위를 매길 수 있지만, 당시엔 모의 데이터에만 적용돼 전고체 실측 검증이 필요했다.",
+   "claim": "Information criteria such as AIC can rank competing ECMs, although at the time this had only been applied to simulated immittance data and needed validation on ASB experiments.",
+   "page": 1936,
+   "where": "Section 2.3 Modelling",
+   "conditions": "Choosing among candidate ECMs for one spectrum.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.tlm-for-composite-electrodes",
+   "source": "VADHVA2021",
+   "kind": "model",
+   "topics": [
+    "tlm",
+    "composite-electrode",
+    "equivalent-circuit"
+   ],
+   "claim_ko": "다공성 전극은 전송선 모델(TLM)로 모델링할 수 있으며, 복합전극 전고체 셀에 적용된 것은 최근이다.",
+   "claim": "A transmission-line model can be introduced to model a porous electrode, and it had only recently been applied to ASBs with composite electrodes.",
+   "page": 1936,
+   "where": "Section 2.3 Modelling",
+   "conditions": "Porous or composite electrodes (active material + SE + carbon).",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.table1-element-meanings",
+   "source": "VADHVA2021",
+   "kind": "definition",
+   "topics": [
+    "cpe",
+    "warburg",
+    "inductance",
+    "equivalent-circuit"
+   ],
+   "claim_ko": "표 1 에 따르면 R 은 SE 벌크·입계·SE/전극 전하이동 저항, C 는 상경계와 SE/전극 계면의 전하 축적, CPE 의 α 는 0(저항)~1(이상 커패시터)이고 α≈0.5 는 무한 확산 Warburg, W 는 저주파에서 두드러진 확산, L 은 고주파에선 감긴 배선·연결, 저주파에선 열화 과정이다.",
+   "claim": "Per Table 1, R may be SE bulk, grain-boundary or SE/electrode charge-transfer resistance; C is charge accumulation across phase boundaries and at the SE/electrode interface; a CPE's exponent α runs from 0 (resistor) to 1 (ideal capacitor) with α ≈ 0.5 describing an infinite-diffusion Warburg; W is diffusion, prominent at low frequency; and L is wound wires/connections at high frequency and degradation processes at low frequency.",
+   "page": 1936,
+   "where": "Table 1",
+   "values": {
+    "cpe_alpha_resistor": 0,
+    "cpe_alpha_ideal_capacitor": 1,
+    "cpe_alpha_infinite_warburg": 0.5
+   },
+   "conditions": "General ASB equivalent-circuit vocabulary.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.sulfide-blocking-model-r0-rq-q",
+   "source": "VADHVA2021",
+   "kind": "model",
+   "topics": [
+    "sulfide",
+    "blocking-electrode",
+    "symmetric-cell",
+    "equivalent-circuit",
+    "ionic-conductivity"
+   ],
+   "claim_ko": "Au 블로킹 전극의 LGPS 펠릿은 반원 하나와 가파른 저주파 꼬리를 보여 R0(RQ)1Q2 로 맞추며, 이 하나의 (RQ)1 이 결정립 내부 R_b 와 입계 R_gb 를 합친 전해질 저항 전체를 담는다.",
+   "claim": "LGPS pellets with Au ion-blocking electrodes show a single semicircle plus a sharply rising low-frequency tail, modelled as R0(RQ)1Q2, where the single (RQ)1 carries the whole electrolyte resistance R_b + R_gb.",
+   "page": 1938,
+   "where": "Section 4 Sulfide Electrolytes, Figure 7",
+   "math": "Z = R0 + R1/(1 + R1·Q1·(jω)^n1) + 1/(Q2·(jω)^n2),  R1 = R_b + R_gb",
+   "conditions": "Sulfide SE (LGPS), cold-pressed polycrystalline pellet, Au ion-blocking electrodes, 2-probe, −110…110 °C.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.sulfide-bulk-gb-overlap",
+   "source": "VADHVA2021",
+   "kind": "caveat",
+   "topics": [
+    "sulfide",
+    "grain-boundary",
+    "bulk",
+    "frequency-range",
+    "blocking-electrode"
+   ],
+   "claim_ko": "황화물 등 무른 SE 는 R_b 와 R_gb 가 강하게 겹치고 둘 다 시료 기하에 비례하며 보통 주파수 범위에서 데이터가 제한적이어서 분리하기 어렵고, 그림 7 의 LGPS 도 27–110 °C 에서는 데이터가 제한적이며 −45…15 °C 에서야 아크가 보인다.",
+   "claim": "In sulfides and other soft SEs R_b and R_gb are hard to resolve because they overlap strongly, both scale with sample geometry and only limited EIS data may be available in typical frequency ranges, as the 27–110 °C LGPS spectra in Fig. 7 (lower inset) illustrate, while arcs appear in the −45…15 °C spectra (upper inset).",
+   "page": 1938,
+   "where": "Section 4 Sulfide Electrolytes, Figure 7 insets",
+   "values": {
+    "fig7_upper_inset_T_C": [
+     -45,
+     -35,
+     -15,
+     0,
+     15
+    ],
+    "fig7_lower_inset_T_C": [
+     27,
+     45,
+     65,
+     85,
+     110
+    ],
+    "fig7_LGPS_Ea_kJ_per_mol": 24
+   },
+   "conditions": "Sulfide cold-pressed SEs near room temperature with typical instrument upper frequencies (MHz); the review says halides and phosphides behave similarly (p. 1939).",
+   "confidence": "high",
+   "quote": "In the sulfides and other soft materials, Rb and Rgb can be difficult to resolve as they overlap strongly"
+  },
+  {
+   "id": "VADHVA2021.sulfide-gb-resolved-only-cold",
+   "source": "VADHVA2021",
+   "kind": "example",
+   "topics": [
+    "sulfide",
+    "grain-boundary",
+    "temperature",
+    "equivalent-circuit"
+   ],
+   "claim_ko": "Bron 등은 일부 황화물에서만, 저온(그림 8 은 −130/−140 °C)에서 두 번째 (RQ)gb 를 넣어 R_gb 를 찾았고 이를 상온까지 추적해 벌크 전도도를 검증했으며 전극 분극은 CPE 하나로 두었다.",
+   "claim": "Bron et al. resolved R_gb only in some sulfides and at low temperature (Fig. 8 spectra at −130 °C and −140 °C) by adding a second (RQ)gb unit, then tracked it up to room temperature to validate the bulk conductivity, with electrode polarization modelled by a single CPE.",
+   "page": 1938,
+   "where": "Section 4 Sulfide Electrolytes, Figure 8",
+   "values": {
+    "fig8_temperatures_C": [
+     -130,
+     -140
+    ],
+    "gb_arc_resolved": [
+     "Li10.3Al0.3Sn0.7P2S12",
+     "Li10GeP2S12",
+     "Li10SiP2S12"
+    ],
+    "grain_only": [
+     "Li10Si0.3Sn0.7P2S12",
+     "Li10SnP2S12"
+    ]
+   },
+   "conditions": "LGPS-type sulfide SEs at cryogenic temperature with blocking electrodes.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.sulfide-sigma-pressure",
+   "source": "VADHVA2021",
+   "kind": "range",
+   "topics": [
+    "pressure",
+    "sulfide",
+    "ionic-conductivity",
+    "reproducibility"
+   ],
+   "claim_ko": "제조·작동 압력은 황화물에 중요해서, Li6PS5X(Cl, Br)·LPS 유리 펠릿 전도도는 상온 ~120 MPa(가한 최대 압력)에서 포화하는 듯했지만 Li6PS5Cl 은 ~400 MPa 까지 계속 오른다는 관찰도 있다.",
+   "claim": "Pressure during fabrication and operation matters for sulfides: the conductivity of Li6PS5X (X = Cl, Br) and LPS glass pellets appeared to level off at ~120 MPa (the highest pressure applied) at room temperature, whereas Li6PS5Cl has been observed to keep increasing up to ~400 MPa.",
+   "page": 1938,
+   "where": "Section 4 Sulfide Electrolytes",
+   "values": {
+    "level_off_MPa": 120,
+    "keeps_increasing_up_to_MPa": 400
+   },
+   "conditions": "Cold-pressed argyrodite and LPS-glass pellets at room temperature.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.sulfide-round-robin-error",
+   "source": "VADHVA2021",
+   "kind": "range",
+   "topics": [
+    "reproducibility",
+    "sulfide",
+    "ionic-conductivity",
+    "reporting"
+   ],
+   "claim_ko": "황화물 5종 라운드로빈에서 1 mS/cm 초과 시료의 상대 중앙오차는 22 %, 그 미만은 ~10 % 였고(제한된 EIS 데이터 피팅과 미세구조 이완 탓), 접촉 전극·시료 치수의 완전한 보고, 3회 반복, 1 mS/cm 초과 값의 외부 검증을 권했다.",
+   "claim": "A five-compound sulfide round-robin found a relative median error of 22 % for σ > 1 mS cm⁻¹ versus ~10 % below, attributed partly to fitting limited EIS data and microstructural relaxation, and recommended full reporting of contacting electrodes and sample dimensions, triplicate data and external validation of σ > 1 mS cm⁻¹.",
+   "page": 1938,
+   "where": "Section 4 Sulfide Electrolytes",
+   "values": {
+    "median_rel_error_sigma_above_1_mS_cm": 0.22,
+    "median_rel_error_sigma_below_1_mS_cm": 0.1,
+    "threshold_mS_cm": 1,
+    "replicates_recommended": 3
+   },
+   "conditions": "Sulfide pellet conductivities measured in different labs. The text cites [85] (Kraft et al., JACS 2018) for this; the round-robin paper in the reference list is [191] (Ohno et al., ACS Energy Lett. 2020, 5, 910–915).",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.li-se-interphase-time-resolved",
+   "source": "VADHVA2021",
+   "kind": "criterion",
+   "topics": [
+    "interphase",
+    "li-metal",
+    "symmetric-cell",
+    "sulfide",
+    "time-series"
+   ],
+   "claim_ko": "황화물은 Li 금속과 닿거나 도금·박리 중 환원되므로 그 계면상 임피던스는 작고 안정해야 하며, Li|SE|Li 셀의 시간분해 EIS 에서 계면 임피던스가 계속 커지면 바람직하지 않은 혼합전도 계면상이다.",
+   "claim": "Sulfides are reduced by Li metal on contact or during plating/stripping; the interphase impedance should be low and stable, it can be studied in Li|SE|Li cells, and a continuous increase of interfacial impedance with time in time-resolved EIS identifies an undesirable mixed-conducting interphase.",
+   "page": 1938,
+   "where": "Section 4 Sulfide Electrolytes",
+   "conditions": "Li|sulfide|Li symmetric cells measured repeatedly over hours to days.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.li-symmetric-model-rb-series",
+   "source": "VADHVA2021",
+   "kind": "model",
+   "topics": [
+    "li-metal",
+    "symmetric-cell",
+    "sulfide",
+    "equivalent-circuit",
+    "series-resistance"
+   ],
+   "claim_ko": "Whiteley 등은 Li|Li10SiP2S12|Li 대칭셀을 직렬 R_b + RQ 둘(계면상, 전하이동) + 가역 전극 속 확산 Warburg 로 모델링했다.",
+   "claim": "Whiteley et al. modelled a Li|Li10SiP2S12|Li symmetric cell as a series bulk resistance R_b followed by two RQ units (interphase, then charge transfer) and a Warburg element for diffusion through the reversible electrodes.",
+   "page": 1938,
+   "where": "Section 4 Sulfide Electrolytes",
+   "math": "Z = R_b + (R_int ‖ Q_int) + (R_ct ‖ Q_ct) + W",
+   "conditions": "Reversible (Li) symmetric cell with a sulfide SE.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.composite-tlm-and-electron-blocking-cells",
+   "source": "VADHVA2021",
+   "kind": "example",
+   "topics": [
+    "tlm",
+    "composite-electrode",
+    "electronic-blocking",
+    "effective-conductivity",
+    "sulfide"
+   ],
+   "claim_ko": "Kaiser 등은 티탄산리튬/Li7P2S8I 복합전극의 유효 이온 굴곡도·전도도를 TLM 과 전자 블로킹 대칭셀 두 방법으로 구했고, SE 가 5 mS/cm 를 넘으면 액체 Li-ion 과 대등하거나 나은 출력밀도가 가능하다고 추정했다.",
+   "claim": "Kaiser et al. (printed 'Kasier') obtained effective ionic tortuosities and conductivities of lithium titanate/Li7P2S8I composite electrodes at several volume fractions from both a TLM and electronic-blocking symmetric cells, and estimated that an SE with σ_ion > 5 mS cm⁻¹ would give power densities comparable to or better than liquid-electrolyte Li-ion cells.",
+   "page": 1938,
+   "where": "Section 4 Sulfide Electrolytes",
+   "values": {
+    "sigma_SE_target_mS_cm": 5
+   },
+   "conditions": "Composite electrodes with a sulfide SE.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.full-cell-generic-ecm-lma",
+   "source": "VADHVA2021",
+   "kind": "model",
+   "topics": [
+    "full-cell",
+    "equivalent-circuit",
+    "li-metal",
+    "sulfide",
+    "assignment"
+   ],
+   "claim_ko": "Li 금속 음극 전고체 풀셀은 예외를 빼면 고주파부터 (RQ)b(RQ)gb(RQ)anode(RQ)cathode 와 전극 속 확산용 CPE 또는 Warburg 로 모델링한다.",
+   "claim": "With some exceptions, a Li-metal-anode ASB full cell is modelled from high to low frequency as (RQ)b(RQ)gb(RQ)anode(RQ)cathode followed by a CPE or Warburg element for diffusion into the electrodes.",
+   "page": 1939,
+   "where": "Section 4 Sulfide Electrolytes",
+   "math": "Z = (R_b‖Q_b) + (R_gb‖Q_gb) + (R_an‖Q_an) + (R_cat‖Q_cat) + [CPE or W]",
+   "conditions": "Full cells with a Li-metal anode (sulfide SE literature).",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.final-cpe-instead-of-warburg",
+   "source": "VADHVA2021",
+   "kind": "criterion",
+   "topics": [
+    "cpe",
+    "warburg",
+    "full-cell",
+    "half-cell",
+    "diffusion"
+   ],
+   "claim_ko": "전극 속 확산을 나타내는 마지막 소자는 확산이 비이상적이고 더 용량성으로 보이면 Warburg 대신 CPE 로 둘 수 있다.",
+   "claim": "The terminal element for diffusion into the electrodes can be a CPE instead of a Warburg element when non-ideal diffusion and more capacitive behaviour are seen.",
+   "page": 1939,
+   "where": "Section 4 Sulfide Electrolytes",
+   "conditions": "Full (and half) cells with intercalation electrodes.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.in-li-full-cell-assignment",
+   "source": "VADHVA2021",
+   "kind": "example",
+   "topics": [
+    "full-cell",
+    "in-li",
+    "sulfide",
+    "assignment",
+    "soc",
+    "series-resistance"
+   ],
+   "claim_ko": "직렬 R_SE,bulk + HF·MF·LF R‖CPE + CPE_W 로 맞춘 In|LGPS|LCO(LNTO 코팅) 셀에서 중주파 아크(꼭지 1 kHz)는 양극 계면, 저주파 아크(꼭지 1 Hz)는 In 음극 계면으로 Li 금속 풀셀과 순서가 반대이고, 양극 계면 저항은 충전 중에, 음극 계면 저항은 방전 말기에 커졌다.",
+   "claim": "In an In|LGPS|LCO (LiNb0.5Ta0.5O3-coated LCO) cell modelled as a series R_SE,bulk plus HF, MF and LF R‖CPE units and CPE_W, the mid-frequency arc (apex marked 1 kHz) is the cathode interface and the low-frequency arc (apex marked 1 Hz) the In-anode interface, opposite to Li-metal full cells, and the cathode-interface resistance grew on charge while the anode-interface resistance grew toward the end of discharge.",
+   "page": 1939,
+   "where": "Section 4 Sulfide Electrolytes, Figure 9a–c",
+   "math": "Z = R_SE,bulk + (R_HF‖CPE_HF) + (R_MF‖CPE_MF) + (R_LF‖CPE_LF) + CPE_W",
+   "values": {
+    "series_element_label": "R_SE,bulk",
+    "MF_apex_Hz": 1000,
+    "LF_apex_Hz": 1
+   },
+   "conditions": "Sulfide full cell with an In (In–Li) anode, SOC-dependent spectra (Fig. 9, reprinted from ref. [97]).",
+   "confidence": "high",
+   "quote": "The low-frequency semicircle is assigned to the anode interface resistance with the electrolyte, while the mid-frequency semicircle is assigned to the cathode interface resistance."
+  },
+  {
+   "id": "VADHVA2021.llzo-bulk-arc-at-mhz",
+   "source": "VADHVA2021",
+   "kind": "example",
+   "topics": [
+    "oxide",
+    "bulk",
+    "grain-boundary",
+    "frequency-range"
+   ],
+   "claim_ko": "그림 10b(핫프레스 LLZO, 비저항 단위)의 벌크 아크 꼭지는 9.2 MHz·13.9 MHz 로 표시되고 벌크–입계 경계 근처에 344/434 kHz 표지가 있으며 측정점은 벌크 아크의 저주파 쪽만 덮고, 산화물은 상온에서도 입계 아크가 보인다.",
+   "claim": "In the reprinted hot-pressed LLZO spectra (Fig. 10b, resistivity units) the bulk-arc apexes are marked at 9.2 MHz and 13.9 MHz with 344/434 kHz markers near the bulk–grain-boundary junction, the measured points cover only the low-frequency side of the bulk arc, and oxides show a grain-boundary arc even at room temperature.",
+   "page": 1940,
+   "where": "Section 5 Oxide Electrolytes, Figure 10b",
+   "values": {
+    "bulk_apex_MHz": [
+     9.2,
+     13.9
+    ],
+    "bulk_gb_junction_kHz": [
+     344,
+     434
+    ],
+    "low_frequency_markers_kHz": [
+     6.8,
+     21.3
+    ],
+    "bulk_arc_width_ohm_cm_approx": 2500
+   },
+   "conditions": "Garnet LLZO at room temperature (figure reprinted from ref. [119]); the arc width is a figure reading.",
+   "confidence": "medium"
+  },
+  {
+   "id": "VADHVA2021.soft-short-rleak",
+   "source": "VADHVA2021",
+   "kind": "criterion",
+   "topics": [
+    "short-circuit",
+    "li-metal",
+    "dendrite",
+    "time-series",
+    "electronic-conductivity"
+   ],
+   "claim_ko": "Li|LLZO 셀의 작동 중 GEIS 에서 전자전도 증가를 R_leak 로 넣었더니 덴드라이트가 자라며 R_leak 과 R_b 가 줄다가 하드 쇼트가 났고, 사이클 중 R_b·R_gb 가 안정하면 소프트 쇼트가 없다는 표시였다.",
+   "claim": "In operando GEIS of Li|LLZO cells an R_leak element accounted for rising partial electronic conductivity, and as dendrites grew R_leak and R_b decreased until a hard short, whereas stable R_b and R_gb during cycling indicated the absence of a soft short.",
+   "page": 1941,
+   "where": "Section 5 Oxide Electrolytes",
+   "conditions": "Li-metal cells during plating/stripping (oxide SE example); soft shorts precede hard shorts.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.drt-limited-to-rc",
+   "source": "VADHVA2021",
+   "kind": "caveat",
+   "topics": [
+    "drt",
+    "inductance",
+    "regularization",
+    "automation",
+    "temperature",
+    "soc"
+   ],
+   "claim_ko": "DRT 는 특성 시간상수를 찾아 주지만 R–C 요소에 한정되고 전처리와 신중한 정칙화 선택이 필요하며, R–L 을 포함한 일반화 DRT·베이지안 역변환·온도/SoC 2D 단일 DRT 가 자동 일괄 처리를 향한 단계로 소개된다.",
+   "claim": "DRT identifies characteristic time constants but is limited to resistive–capacitive elements and needs preprocessing and a careful regularization choice; generalized DRT with resistive–inductive elements, Bayesian inversion and single-step DRT over 2D data (Z vs temperature or SoC) are presented as steps toward automated batch processing.",
+   "page": 1943,
+   "where": "Section 7 Emerging EIS-related Techniques",
+   "conditions": "DRT of battery spectra; the techniques are from Li-ion work.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.ml-assurance-deviation",
+   "source": "VADHVA2021",
+   "kind": "procedure",
+   "topics": [
+    "outlook",
+    "automation",
+    "short-circuit",
+    "anomaly-detection"
+   ],
+   "claim_ko": "온도·SoC 에 걸친 EIS 로 학습한 ML 이 셀 종류가 예상대로 동작하는지 보는 보증 알고리즘이 되어 큰 이탈을 손상·내부 단락 신호로 삼을 수 있지만, 블랙박스라 가끔 예측 불가하게 틀릴 수 있다.",
+   "claim": "Future ML models trained on EIS over temperature and SoC could act as an assurance algorithm that checks whether a cell type behaves as expected, with significant deviations indicating cell damage or internal shorts, although black-box models may occasionally and unpredictably be wrong.",
+   "page": 1943,
+   "where": "Section 7 Emerging EIS-related Techniques",
+   "conditions": "Outlook item; needs large datasets.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.qss-low-frequency-cutoff",
+   "source": "VADHVA2021",
+   "kind": "criterion",
+   "topics": [
+    "stationarity",
+    "frequency-range",
+    "kramers-kronig",
+    "inductance",
+    "operando"
+   ],
+   "claim_ko": "일반 EIS 는 안정성이 필요해 전류가 흐르는 중 측정은 원칙상 배제되며, 작동 중 Li-ion EIS 의 저주파 유도성 특징이 준정상상태 위반의 인공물로 결론난 만큼 저주파 하한은 계의 변화 속도에 맞춰 정하고 K–K 나 DRT 로 품질을 확인해야 한다.",
+   "claim": "Conventional EIS requires stability, which strictly excludes measurement under current, and because a low-frequency inductive feature in in-situ Li-ion EIS turned out to be an artefact of violating quasi-steady state, the low-frequency cut-off must be chosen relative to the system's rate of change and checked with K–K or DRT as data-quality criteria.",
+   "page": 1944,
+   "where": "Section 7 Emerging EIS-related Techniques",
+   "conditions": "Cells that change during the sweep (drift, current flow, not yet equilibrated); the stability statement is on p. 1943.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.arc-order-and-lowest-arc-rule",
+   "source": "VADHVA2021",
+   "kind": "criterion",
+   "topics": [
+    "assignment",
+    "full-cell",
+    "li-metal",
+    "in-li",
+    "equivalent-circuit"
+   ],
+   "claim_ko": "전고체 셀 배정은 Li-ion 과 비슷해 고주파 아크가 전해질(미세구조 기여 포함 가능), 이어서 계면, 끝이 CPE/Warburg 확산이고 중·저주파는 단정하기 어려우며, Li 금속 음극 + 삽입형 양극 풀셀은 가장 낮은 주파수 아크를 SE|양극 계면으로, In–Li 음극 셀은 SE|음극 계면으로 배정한다.",
+   "claim": "Device studies assign ASB spectra much like LiBs (the high-frequency arc characterizes the electrolyte, possibly with a microstructural contribution, then interfacial losses, then CPE/Warburg diffusion) with the mid-to-low-frequency range hard to prescribe, and full cells with a Li-metal anode and intercalation cathode typically assign the lowest-frequency arc to the SE|cathode interface whereas In–Li-anode cells assign it to the SE|anode interface.",
+   "page": 1944,
+   "where": "Section 8 Summary and Outlook",
+   "conditions": "Based on a handful of device studies (refs. [62,70,97,126,188]); the 'HF arc = electrolyte' part assumes the SE arc is inside the band.",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.four-point-and-accuracy-above-5-mS",
+   "source": "VADHVA2021",
+   "kind": "procedure",
+   "topics": [
+    "four-point",
+    "reporting",
+    "sulfide",
+    "outlook",
+    "reference-electrode"
+   ],
+   "claim_ko": "전망은 공정·측정 조건의 표준 보고를 요구하고, 복합양극용으로 5 mS/cm 초과 SE 가 필요하지만 황화물은 이 범위에서 측정 정확도가 떨어지므로 4단자 측정·이온선택 전극이 유용할 수 있으며, 적절한 기준전극 재료와 3전극 설계가 필요하다고 한다.",
+   "claim": "The outlook calls for standardized reporting of processing and measurement conditions, notes that SEs above 5 mS cm⁻¹ are needed for composite cathodes while measurement accuracy is known to drop in that range for sulfides, so four-point measurements and ion-selective electrodes may help, and asks for suitable reference-electrode materials and three-electrode designs.",
+   "page": 1944,
+   "where": "Section 8 Summary and Outlook, direction 1",
+   "values": {
+    "sigma_threshold_mS_cm": 5
+   },
+   "conditions": "Outlook direction 1; the accuracy statement cites ref. [191].",
+   "confidence": "high"
+  },
+  {
+   "id": "VADHVA2021.characteristic-frequencies-above-1-khz",
+   "source": "VADHVA2021",
+   "kind": "range",
+   "topics": [
+    "frequency-range",
+    "assignment",
+    "drt",
+    "outlook",
+    "temperature",
+    "pressure",
+    "soc"
+   ],
+   "claim_ko": "전망은 온도·압력·SoC 다변수 시험과 DRT 로 회로를 세우고 특성 주파수로 배정·비교할 것을 권하며, 전고체의 SE·계면 특성 주파수가 Li-ion 보다 훨씬 높다(>1 kHz 대 <1 kHz)고 적었다.",
+   "claim": "The outlook recommends DRT with multi-variable (temperature, pressure, SoC) testing to build ECMs, notes that characteristic frequencies aid assignment and cross-study comparison, and states that SE and interface characteristic frequencies are significantly higher in ASBs than in LiBs (>1 kHz vs <1 kHz).",
+   "page": 1944,
+   "where": "Section 8 Summary and Outlook, direction 2",
+   "values": {
+    "asb_characteristic_frequency_Hz": ">1000",
+    "lib_characteristic_frequency_Hz": "<1000"
+   },
+   "conditions": "A broad generalization: the review's own Fig. 9 shows an In-anode interface arc with its apex near 1 Hz, so it is not a hard bound.",
+   "confidence": "medium"
+  }
+ ]
+}

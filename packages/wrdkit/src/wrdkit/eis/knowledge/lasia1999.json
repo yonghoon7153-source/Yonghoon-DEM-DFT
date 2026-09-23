@@ -1,0 +1,794 @@
+{
+ "sources": [
+  {
+   "key": "LASIA1999",
+   "short": "Lasia 1999",
+   "authors": "A. Lasia",
+   "title": "Electrochemical Impedance Spectroscopy and its Applications",
+   "venue": "Modern Aspects of Electrochemistry No. 32 (Conway, Bockris, White, eds.), Kluwer",
+   "year": 1999,
+   "volume": "32",
+   "pages": "143-248"
+  }
+ ],
+ "records": [
+  {
+   "id": "LASIA1999.cnls-weighted-sum-of-squares",
+   "source": "LASIA1999",
+   "kind": "formula",
+   "topics": [
+    "fitting",
+    "cnls",
+    "weighting"
+   ],
+   "claim_ko": "CNLS 피팅은 모든 측정 주파수에서 실수부·허수부 잔차의 가중 제곱합 S 를 최소화하며, 보통 반복형 Marquardt–Levenberg 알고리즘을 쓴다.",
+   "claim": "Complex nonlinear least-squares (CNLS) fitting minimizes the weighted sum of squared real- and imaginary-part residuals over all N measured frequencies, S = sum_i {w'_i [Z'_i - Z'_i,calc]^2 + w''_i [Z''_i - Z''_i,calc]^2}, most often with the iterative Marquardt-Levenberg algorithm; magnitude/phase or admittance data can be fitted the same way.",
+   "page": 236,
+   "where": "Eq. (241), Section VII.2(i) CNLS Method",
+   "math": "S = sum_{i=1..N} { w'_i*[Z'_i - Z'_i,calc]^2 + w''_i*[Z''_i - Z''_i,calc]^2 }",
+   "conditions": "Any equivalent-circuit or model fit of impedance (or admittance, or modulus/phase) data; the chapter calls CNLS the best way to analyse, e.g., Randles-type spectra (p. 187).",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.statistical-weights-unit-vs-variance",
+   "source": "LASIA1999",
+   "kind": "criterion",
+   "topics": [
+    "weighting",
+    "fitting",
+    "error-structure"
+   ],
+   "claim_ko": "단위 가중치를 쓰면 가장 큰 임피던스만 제곱합에 기여해 작은 시정수를 놓칠 수 있고, 가장 좋은 가중치는 반복 측정으로 얻은 분산의 역수지만 실무에서는 드물게 쓴다.",
+   "claim": "With unit weights (w_i = 1) only the largest impedances contribute to S, because |Z| spans orders of magnitude over a spectrum, so small time constants may be overlooked; the best weights are inverse variances w'_i = (sigma'_i)^-2 and w''_i = (sigma''_i)^-2 estimated from repeated experiments, but that is time-consuming and rarely done.",
+   "page": 237,
+   "where": "Section VII.2(ii) Statistical Weights",
+   "math": "best: w'_i = (sigma'_i)^-2, w''_i = (sigma''_i)^-2; unit weights w_i = 1 not recommended",
+   "conditions": "Whenever |Z| varies over orders of magnitude across the spectrum.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.proportional-vs-modulus-weighting",
+   "source": "LASIA1999",
+   "kind": "definition",
+   "topics": [
+    "weighting",
+    "fitting",
+    "terminology"
+   ],
+   "claim_ko": "비례 가중(1/Z_i² 또는 1/Z_calc²)은 실수부·허수부 정밀도가 서로 독립이라는 가정이며, 두 성분을 같은 감도로 재는 실제 장비에는 두 성분에 같은 가중 1/(Z'²+Z''²)을 주는 모듈러스 가중이 더 나을 수 있다.",
+   "claim": "Macdonald's proportional weighting takes weights inversely proportional to the squared measured or calculated impedances (w_i = 1/Z_i^2 or w_i = 1/Z_i,calc^2), which the chapter says treats the real and imaginary parts as independently determined with independent precisions; since instruments usually measure both parts with the same sensitivity, modulus weighting w_i = 1/(Z'_i^2 + Z''_i^2), one weight for both parts, may be the better procedure.",
+   "page": 238,
+   "where": "Section VII.2(ii), pp. 237-238",
+   "math": "proportional (as printed): w_i = 1/Z_i^2 or w_i = 1/Z_i,calc^2; modulus: w_i = 1/(Z'_i^2 + Z''_i^2) = 1/|Z_i|^2 for both parts",
+   "conditions": "Weight choice when replicate-based variances are unavailable (pp. 237-238).",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.error-structure-equal-real-imag",
+   "source": "LASIA1999",
+   "kind": "model",
+   "topics": [
+    "error-structure",
+    "weighting",
+    "instrumentation"
+   ],
+   "claim_ko": "Solartron FRA 측정에서 실수부와 허수부의 표준편차는 같았고 σ_i = α|Z'|+β|Z''|+γ|Z|²/R_m 로 기술되며, 이 오차구조는 밀리옴부터 메가옴 크기의 오차까지 확인되었다.",
+   "claim": "Orazem and co-workers found, for impedances measured with a Solartron frequency-response analyser, that the standard deviations of the real and imaginary parts are identical and follow sigma_i = alpha|Z'_i| + beta|Z''_i| + gamma|Z_i|^2/R_m, with alpha, beta, gamma constants of the instrumental system and R_m the current-measuring resistor; the structure was verified for solid-state and electrochemical systems and for errors from milliohms to megaohms.",
+   "page": 238,
+   "where": "Eq. (243)",
+   "math": "sigma_i = alpha*|Z'_i| + beta*|Z''_i| + gamma*|Z_i|^2/R_m ; sigma'_i = sigma''_i",
+   "values": {
+    "instrument": "Solartron frequency-response analyser",
+    "errors_verified_range": "milliohms to megaohms"
+   },
+   "conditions": "Empirical; alpha, beta, gamma must be determined for a given instrumental system.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.local-and-flat-minima",
+   "source": "LASIA1999",
+   "kind": "procedure",
+   "topics": [
+    "fitting",
+    "cnls",
+    "initial-values",
+    "determinacy"
+   ],
+   "claim_ko": "CNLS 는 초기값에 민감해 단순 모델→고정→추가→전체 해제 순으로 진행해도 국소 최소에 빠질 수 있으므로 여러 초기값에서 다시 맞춰 χ² 를 비교해야 하며, 평평한 최소는 큰 상대 표준편차로 드러난다.",
+   "claim": "Because the Marquardt-Levenberg search is iterative, starting values must lie close to the true ones or CNLS may diverge; the usual practice (fit a simpler model, keep those parameters constant while adding new ones, finally free all) can end in local minima, so the fit should be repeated from different starting values and the weighted sums of squares (chi-square) of the minima compared; very flat minima give large relative standard deviations of the parameters.",
+   "page": 236,
+   "where": "Section VII.2(i)",
+   "conditions": "Any nonlinear equivalent-circuit fit.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.f-test-added-parameters",
+   "source": "LASIA1999",
+   "kind": "criterion",
+   "topics": [
+    "model-selection",
+    "fitting",
+    "statistics"
+   ],
+   "claim_ko": "파라미터 수는 최소로 두고, k 개를 추가했을 때 제곱합 감소가 F-검정으로 유의할 때만 받아들이며, 한 번에 추가하는 파라미터는 가능한 한 적게 한다.",
+   "claim": "The number of adjustable parameters should be kept minimal: start with the fewest, add parameters, and accept the addition only if the decrease of S is statistically significant by an F-test, F_exp = {[S(N-p) - S(N-p-k)]/k} / {S(N-p)/(N-p)}, compared with the tabulated F at confidence alpha; the test should be used with prudence and with the smallest possible number k of added parameters.",
+   "page": 236,
+   "where": "Eq. (242), pp. 236-237",
+   "math": "F_exp = ([S(N-p) - S(N-p-k)]/k) / (S(N-p)/(N-p)); reject the (p+k)-parameter model if F_exp < F_table(alpha)",
+   "conditions": "N = number of points, p = parameters of the smaller model, k = added parameters. The printed text names the reference as F(k, N-p, alpha) and in the next sentence as F(k, N-k): the degrees of freedom are stated inconsistently. Workbench note: for complex data the residual-count convention (N vs 2N) must be fixed before use.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.residuals-should-be-random",
+   "source": "LASIA1999",
+   "kind": "criterion",
+   "topics": [
+    "validation",
+    "fitting",
+    "residuals",
+    "bode"
+   ],
+   "claim_ko": "제곱합 외에도 나이퀴스트·보드 그림으로 비교해야 하고(위상 보드가 시정수 검출에 특히 민감), 모델이 맞으면 잔차는 무작위여야 하며 체계적 경향은 모델이 틀렸다는 신호다.",
+   "claim": "Besides S, data and fit should be compared in complex-plane and Bode plots (the phase-angle Bode plot is particularly sensitive in detecting time constants), and, following Boukamp, the residuals left after subtracting the model should vary randomly; systematic tendencies mean the model is not correct and further elements may be needed, provided the variations are statistically significant.",
+   "page": 237,
+   "where": "Section VII.2(i)",
+   "conditions": "Residual trends must be statistically significant relative to noise.",
+   "confidence": "high",
+   "quote": "If the model is valid, the residuals should behave randomly."
+  },
+  {
+   "id": "LASIA1999.noise-propagation-simulation",
+   "source": "LASIA1999",
+   "kind": "procedure",
+   "topics": [
+    "determinacy",
+    "fitting",
+    "uncertainty"
+   ],
+   "claim_ko": "시뮬레이션 스펙트럼에 잡음을 더해 CNLS 로 다시 맞추면 임피던스 오차가 각 파라미터로 어떻게 전달되는지(잡음 민감도)를 알 수 있다.",
+   "claim": "Macdonald assessed parameter precision by adding noise to simulated impedance data and refitting with CNLS, which shows how impedance errors are transferred to each parameter depending on the parameters' relative values.",
+   "page": 237,
+   "where": "Section VII.2(i)",
+   "conditions": "Needs a realistic noise level / error structure.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.measurement-model-first-minimal-parameters",
+   "source": "LASIA1999",
+   "kind": "procedure",
+   "topics": [
+    "model-selection",
+    "identifiability"
+   ],
+   "claim_ko": "먼저 측정 모델로 원소의 수와 종류를 정한 뒤 과정 모델을 세워야 하며, 스펙트럼이 단순하면 메커니즘 모델 대신 시정수 하나짜리 단순 모델을 써야 한다.",
+   "claim": "Ideally a measurement (formal) model is fitted first to establish the number and nature of the circuit elements, and only then a process model with physicochemical parameters is built; a mechanism-derived model can have more parameters than a simple spectrum supports (one adsorbed species can predict two semicircles while often only one is observed), in which case a simpler one-time-constant model should be used.",
+   "page": 232,
+   "where": "Section VII.1, pp. 231-232",
+   "conditions": "Section VII.1; EIS does not directly measure physical phenomena and needs complementary experiments and physical knowledge (p. 231).",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.equivalent-circuits-indistinguishable",
+   "source": "LASIA1999",
+   "kind": "caveat",
+   "topics": [
+    "identifiability",
+    "model-selection",
+    "equivalent-circuit"
+   ],
+   "claim_ko": "서로 다른 회로 구조(사다리·Voigt·혼합, Maxwell)가 적절한 값에서 모든 주파수에 같은 스펙트럼을 내므로, 데이터만으로는 회로 구조를 가를 수 없다.",
+   "claim": "Different circuit topologies can reproduce the same data exactly: R1-(R2||C2) and R2||(R1-C2) give admittances of the same one-time-constant form, and for two time constants the ladder, Voigt and mixed circuits give the same spectrum at all frequencies for suitably chosen parameters; Voigt, Maxwell and ladder circuits are experimentally indistinguishable.",
+   "page": 234,
+   "where": "Eqs. (238)-(240), Figs. 43-45, pp. 232-234",
+   "math": "one loop: Y = (a1*jw + a0)/(jw + b0) for both circuits; two loops: Y = (a2*(jw)^2 + a1*jw + a0)/((jw)^2 + b1*jw + b0) for ladder, Voigt and mixed",
+   "conditions": "Any number of time constants; the parameter values differ between topologies.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.model-ambiguity-needs-condition-series",
+   "source": "LASIA1999",
+   "kind": "procedure",
+   "topics": [
+    "identifiability",
+    "model-selection",
+    "validation"
+   ],
+   "claim_ko": "같은 찌그러진 반원을 여러 회로가 똑같이 잘 맞출 수 있어 모델 식별의 모호성이 가장 큰 난제이며, 전위·온도·농도 등을 바꾼 일련의 측정으로 모델을 뒷받침해야 한다.",
+   "claim": "Orazem et al. found that a depressed semicircle caused by nonuniform current distribution could be approximated well both by Rs + (R||CPE) and by three two-time-constant circuits, and stated that such ambiguity is common and the greatest challenge in impedance analysis; a porous electrode can be described by a Voigt circuit with enough R-C elements or by de Levie's equation, so model identification should be supported by measurements at different potentials, temperatures, concentrations, etc.",
+   "page": 235,
+   "where": "Section VII.1",
+   "conditions": "General; the example is a rotating-disk electrode with nonuniform current and potential distribution.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.kinetic-parameter-permutation-identifiability",
+   "source": "LASIA1999",
+   "kind": "caveat",
+   "topics": [
+    "identifiability",
+    "determinacy"
+   ],
+   "claim_ko": "흡착 중간체 하나인 반응에서는 속도상수를 맞바꾼 두 파라미터 집합이 똑같은 곡선을 주므로, 곡선이 같다고 파라미터가 유일하게 정해지는 것은 아니다.",
+   "claim": "For a reaction with one adsorbed intermediate, two different sets of kinetic parameters (permuting k1<->k2, k-1<->k-2, beta1<->beta2) give the same dc current, charge-transfer resistance and impedance parameters, i.e., identical experimental curves; identifiability and distinguishability of electrode processes is a problem in its own right.",
+   "page": 196,
+   "where": "Section IV.2",
+   "math": "k1 <-> k2, k-1 <-> k-2, beta1 <-> beta2 leave i_dc, Rct, B and C unchanged",
+   "conditions": "Langmuir adsorption, one adsorbed species (Section IV.2).",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.low-frequency-pseudo-inductive-loop",
+   "source": "LASIA1999",
+   "kind": "model",
+   "topics": [
+    "inductive-loop",
+    "adsorption",
+    "artefact",
+    "equivalent-circuit"
+   ],
+   "claim_ko": "흡착 중간체가 있으면 저주파에서 실수축 아래로 내려가는 유사 유도성 루프가 생길 수 있고, 이때의 R·C·L 은 실제 소자가 아니라 속도상수·전위의 함수다.",
+   "claim": "An adsorbed intermediate can make the faradaic impedance Rct in parallel with a series Ro-L branch, producing a low-frequency pseudo-inductive loop below the real axis with Rp = Rct*Ro/(Rct + Ro); with two adsorbed species the plots range from two capacitive semicircles through capacitive-plus-inductive loops to two inductive loops. These R, C and L are not real circuit elements but functions of rate constants, potential, concentrations, etc.",
+   "page": 195,
+   "where": "Eqs. (144)-(146), Fig. 25",
+   "math": "Z_f = [1/Rct + 1/(Ro + jwL)]^-1 with Ro = C/B, L = 1/B (B > 0); Rp = Rct*Ro/(Rct + Ro)",
+   "values": {
+    "figure_25_parameters": {
+     "Rct_ohm": 100,
+     "Ro_ohm": 40,
+     "L_H": 0.2,
+     "Cdl_F": 2e-05,
+     "Rs_ohm": 10
+    }
+   },
+   "conditions": "Faradaic reaction with one adsorbed species and B > 0 (Section IV.2, pp. 194-195); two adsorbed species on p. 199.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.impedance-range-artefacts",
+   "source": "LASIA1999",
+   "kind": "range",
+   "topics": [
+    "instrumentation",
+    "artefact",
+    "inductance",
+    "accuracy"
+   ],
+   "claim_ko": "1–10^5 Ω, 5×10^4 Hz 이하에서는 정밀 측정이 비교적 쉽지만, 고임피던스에서는 포텐쇼스탯 입력 임피던스(측정값의 100배 이상 필요) 때문에, 저임피던스에서는 배선·전류측정 저항의 직렬 인덕턴스 때문에 고주파 왜곡이 생긴다.",
+   "claim": "Good precision is relatively easy for impedances between 1 and 10^5 ohm at frequencies below 5x10^4 Hz; outside this window distortions appear: at high impedance the finite potentiostat input impedance causes errors (it should be at least 100 times the measured impedance, otherwise calibrate), and at very low impedance a series inductance from the leads and the current-measuring resistor appears at high frequencies as large positive imaginary impedances (reduced by shortening cables and shielding the reference electrode).",
+   "page": 240,
+   "where": "Section VIII, pp. 240-242",
+   "values": {
+    "good_precision_impedance_ohm": [
+     1,
+     100000.0
+    ],
+    "good_precision_below_hz": 50000.0,
+    "min_input_impedance_over_measured": 100
+   },
+   "conditions": "Instrumentation of the late 1990s (the chapter notes some systems already reached MHz, p. 239).",
+   "confidence": "high",
+   "quote": "Such resistance should be at least 100 times larger than the measured impedance; if not, a calibration procedure is necessary."
+  },
+  {
+   "id": "LASIA1999.frequency-plan",
+   "source": "LASIA1999",
+   "kind": "range",
+   "topics": [
+    "frequency-range",
+    "instrumentation",
+    "measurement-design"
+   ],
+   "claim_ko": "모든 시정수를 보려면 넓은 대역을 보통 decade 당 10점으로 재야 하고, 하한(보통 1 mHz)은 장시간 측정 중 전극 변화로 제한되며, 적분 10주기·decade 당 5점 이상이면 FRA 스윕 과도오차는 무시할 수 있다.",
+   "claim": "EIS should cover a wide frequency range to identify all time constants, usually 10 frequencies per decade; the upper limit is set by the potentiostat's high-frequency phase shift and the stray capacitance/inductance of cables and cell (typically 20-50 kHz, sometimes MHz), the lowest frequency is typically 10^-3 Hz because the electrode may change during long measurements (five periods at 1 mHz take 1 h 23 min), and FRA frequency-sweep transients are negligible with 10 integration cycles and at least 5 steps per decade.",
+   "page": 239,
+   "where": "Section VIII, pp. 239-240",
+   "values": {
+    "points_per_decade_usual": 10,
+    "upper_limit_typical_hz": [
+     20000.0,
+     50000.0
+    ],
+    "lowest_typical_hz": 0.001,
+    "time_five_periods_at_1mHz": "1 h 23 min",
+    "fra_transient_negligible_if": {
+     "integration_cycles": 10,
+     "min_steps_per_decade": 5
+    },
+    "fra_transient_negligible_above_hz_solartron": 10
+   },
+   "conditions": "Late-1990s instrumentation; the transient criterion refers to FRA frequency sweeps (Solartron example).",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.stationarity-repeat-and-up-down-scans",
+   "source": "LASIA1999",
+   "kind": "procedure",
+   "topics": [
+    "stationarity",
+    "drift",
+    "validation"
+   ],
+   "claim_ko": "임피던스는 시간에 따라 변하지 않아야 하며, 스펙트럼을 반복 측정해 보드 그림이 같은지, 또 주파수를 올리며/내리며 잰 결과가 같은지로 시간에 따른 변화를 검출한다.",
+   "claim": "The measured impedance must be stationary (not time dependent); this is checked by recording the spectrum repeatedly, whose Bode plots should then be identical, and comparing log 'up' and log 'down' frequency scans helps detect systematic changes of the response with time.",
+   "page": 226,
+   "where": "Section VI.1 (stability), footnote p. 240",
+   "conditions": "Part of the stability condition (pp. 225-226); the up/down comparison is from the footnote on p. 240.",
+   "confidence": "high",
+   "quote": "This condition may be easily checked by repetitive recording of the impedance spectra; then the Bode plots obtained should be identical."
+  },
+  {
+   "id": "LASIA1999.four-validity-conditions",
+   "source": "LASIA1999",
+   "kind": "criterion",
+   "topics": [
+    "validation",
+    "linearity",
+    "causality",
+    "stability",
+    "finiteness"
+   ],
+   "claim_ko": "임피던스는 선형성·인과성·안정성·유한성을 만족할 때만 유효하며, 선형성은 교류 진폭을 절반으로 줄여도 임피던스가 같은지로 간단히 확인한다.",
+   "claim": "An impedance is valid only if the system is linear, causal, stable and finite; linearity means the response is independent of the perturbation amplitude and is checked simply by halving the ac amplitude and confirming the impedance is unchanged (linear systems also show no hysteresis at w = 0), and causality means the response is determined entirely by the applied perturbation (the system generates no noise independent of the signal).",
+   "page": 224,
+   "where": "Section VI.1, pp. 224-225",
+   "values": {
+    "linearity_test_amplitude_factor": 0.5
+   },
+   "conditions": "General prerequisite for fitting and for Kramers-Kronig validation (Section VI.1).",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.stability-no-negative-resistance",
+   "source": "LASIA1999",
+   "kind": "criterion",
+   "topics": [
+    "stability",
+    "validation",
+    "cpe",
+    "bounds"
+   ],
+   "claim_ko": "안정성 조건은 ω→0 에서 Z 가 실수이고 Re Z ≥ 0 이어서 계에 음의 저항이 없어야 한다는 것이다.",
+   "claim": "Stability requires that Z(s) is real when s is real (w -> 0) and Re[Z(s)] >= 0 for nu >= 0 (s = nu + jw), which ensures there are no negative resistances; the system cannot supply power, and the measured impedance must also be stationary.",
+   "page": 225,
+   "where": "Section VI.1",
+   "math": "Z(s) real for real s; Re[Z(s)] >= 0 for nu >= 0, s = nu + jw",
+   "conditions": "Passive, stable electrochemical systems.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.linearity-amplitude-limit",
+   "source": "LASIA1999",
+   "kind": "range",
+   "topics": [
+    "linearity",
+    "measurement-design"
+   ],
+   "claim_ko": "EIS 는 전류-전위 관계의 선형화에 기대므로 인가 진폭은 작아야 하며, 기준은 피크-투-피크 ΔE < 8/n mV(n: 교환 전자 수)이다.",
+   "claim": "Impedance rests on linearizing the current-potential-concentration relation (keeping only first-order Taylor terms), so the applied amplitude must be small: Delta E < 8/n mV peak-to-peak, where n is the number of electrons exchanged; analysis of higher harmonics has also been described.",
+   "page": 168,
+   "where": "Section III.2, after Eq. (42)",
+   "math": "Delta E_peak-to-peak < 8/n mV",
+   "values": {
+    "max_amplitude_peak_to_peak_mV": "8/n",
+    "n": "number of electrons exchanged in the reaction"
+   },
+   "conditions": "Derived for a faradaic redox reaction with exponential rate-potential dependence (Section III.2); the value is attributed to the chapter's Ref. 6.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.kk-relations",
+   "source": "LASIA1999",
+   "kind": "formula",
+   "topics": [
+    "kramers-kronig",
+    "validation"
+   ],
+   "claim_ko": "네 조건이 성립하면 크라머스–크로니히 관계로 실수부↔허수부, 허수부만으로 분극저항, 모듈러스로부터 위상을 계산할 수 있다.",
+   "claim": "If the four conditions hold, the Kramers-Kronig relations connect the real and imaginary parts: Z'' can be computed from Z', Z' from Z'' when Z'(inf) or Z'(0) is known, the polarization resistance from Z'' alone, and the phase angle from the modulus.",
+   "page": 226,
+   "where": "Eqs. (229)-(233), pp. 226-227",
+   "math": "Z''(w) = -(2w/pi) * int_0^inf [Z'(x) - Z'(w)]/(x^2 - w^2) dx  (229); Z'(w) = Z'(inf) + (2/pi) * int_0^inf [x*Z''(x) - w*Z''(w)]/(x^2 - w^2) dx  (230); Z'(w) = Z'(0) + (2w/pi) * int_0^inf [(w/x)*Z''(x) - Z''(w)]/(x^2 - w^2) dx  (231); Z'(inf) - Z'(0) = (2/pi) * int_0^inf Z''(x)/x dx  (232); phi(w) = (2w/pi) * int_0^inf ln|Z(x)|/(x^2 - w^2) dx  (233)",
+   "conditions": "Needs linearity, causality, stability, finiteness and data over 0 < w < inf. Eq. (230) is printed with the numerator 'zZ''(w) - wZ''(w)'; the standard form x*Z''(x) - w*Z''(w) is given here. Eq. (232) is printed as R_p = Z'(inf) - Z'(0) = (2/pi) int Z''(x)/x dx; with the chapter's convention (Z'' < 0 for capacitive systems) both sides equal -R_p.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.kk-finite-frequency-range",
+   "source": "LASIA1999",
+   "kind": "caveat",
+   "topics": [
+    "kramers-kronig",
+    "validation",
+    "frequency-range"
+   ],
+   "claim_ko": "KK 적분은 0~∞ 구간이 필요하지만 데이터는 유한 대역뿐이라, KK 불일치는 네 조건 위반뿐 아니라 적분·외삽 오차에서도 생길 수 있다.",
+   "claim": "The main difficulty with KK relations is that the integrals run from zero to infinity while data exist only over a finite range, so discrepancies may come from integration (truncation/extrapolation) errors as well as from violating the four conditions; proposed remedies include assuming a symmetric arc (one time constant only), polynomial fits (unreliable when extrapolated far), asymptotic extrapolation (Z'' proportional to w as w -> 0 and to 1/w as w -> inf, Z' -> Rs), and continuing the integration three to four decades below the lowest measured frequency.",
+   "page": 227,
+   "where": "Section VI.2",
+   "values": {
+    "extension_below_lowest_frequency_decades": [
+     3,
+     4
+    ]
+   },
+   "conditions": "Direct numerical KK integration.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.kk-linear-voigt-test",
+   "source": "LASIA1999",
+   "kind": "procedure",
+   "topics": [
+    "kramers-kronig",
+    "validation",
+    "measurement-model"
+   ],
+   "claim_ko": "측정 주파수의 역수로 고정한 τ_k(decade 당 6–7개)에 R_k 만 선형으로 맞추는 Voigt 근사로 KK 적합성을 검사하고, 상대 잔차 그림에서 KK 를 어기는 점을 골라낸다(R_k 부호는 자유, τ_k 는 양수).",
+   "claim": "KK compliance can be tested by fitting a Voigt series of R-C elements, which is transformable element by element (Orazem; negative resistances allowed for inductive loops; data that cannot be approximated are not transformable); Boukamp fixed the time constants at tau_k = 1/w_k of the measured frequencies so the fit becomes linear in R_k (a single matrix inversion, robust to the choice of tau_k), recommended six to seven time constants per decade, and used relative residual plots to isolate non-compliant points; R_k may be negative but tau_k must stay positive, since negative tau_k could mask non-KK behaviour. KK transforms are a very sensitive validity criterion.",
+   "page": 229,
+   "where": "Eqs. (234)-(235), pp. 227-229",
+   "math": "Z'(w) = Rs + sum_k R_k/(1 + (w*tau_k)^2);  Z''(w) = -sum_k w*R_k*tau_k/(1 + (w*tau_k)^2);  tau_k = 1/w_k fixed",
+   "values": {
+    "time_constants_per_decade": [
+     6,
+     7
+    ],
+    "measured_frequencies_per_decade_typical": [
+     5,
+     10
+    ]
+   },
+   "conditions": "Measurement-model approach avoids explicit integration; blocking systems need the admittance form or a shunt (see LASIA1999.kk-blocking-systems).",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.kk-blocking-systems",
+   "source": "LASIA1999",
+   "kind": "procedure",
+   "topics": [
+    "kramers-kronig",
+    "finiteness",
+    "blocking"
+   ],
+   "claim_ko": "저주파에서 임피던스가 발산하는 계(차단 전극, CPE, 반무한 확산)는 유한성 조건을 어기므로 어드미턴스로 KK 를 하거나 적당한 병렬 저항을 더한 뒤 변환해야 한다.",
+   "claim": "Finiteness requires the impedance to tend to constant real values as w -> 0 and w -> inf; when it instead diverges at low frequency (blocking electrodes, CPE, semi-infinite mass transfer), the KK transformation should be applied to the admittance, or a suitable parallel (shunt) resistance added to the system so that the impedance is real and equal to that resistance at w = 0 before transforming.",
+   "page": 229,
+   "where": "Section VI.2 (with pp. 226-227)",
+   "conditions": "Blocking or capacitive low-frequency behaviour (finiteness p. 226, diverging cases p. 227, remedies p. 229).",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.cpe-definition",
+   "source": "LASIA1999",
+   "kind": "formula",
+   "topics": [
+    "cpe",
+    "definition"
+   ],
+   "claim_ko": "CPE 는 Z = 1/[T(jω)^φ] 인 '새는' 커패시터로, φ=1 일 때만 T 가 이중층 용량과 같고 용량성 직선이 90°(1−φ) 만큼 기운다.",
+   "claim": "The constant phase element is Z_CPE = 1/[T(jw)^phi] = [cos(phi*pi/2) - j*sin(phi*pi/2)]/(T*w^phi), a 'leaking' capacitor with nonzero real and imaginary parts; T has units F cm^-2 s^(phi-1), a purely capacitive line is rotated by alpha = 90 deg*(1 - phi), and only for phi = 1 is T identical to Cdl.",
+   "page": 204,
+   "where": "Eqs. (177)-(178), pp. 203-204",
+   "math": "Z_CPE = 1/[T*(jw)^phi] = (1/(T*w^phi))*[cos(phi*pi/2) - j*sin(phi*pi/2)];  alpha = 90 deg * (1 - phi)",
+   "values": {
+    "T_units": "F cm^-2 s^(phi-1)"
+   },
+   "conditions": "Section V.2; distributed time constants on solid electrodes.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.cpe-exponent-limits",
+   "source": "LASIA1999",
+   "kind": "range",
+   "topics": [
+    "cpe",
+    "bounds",
+    "warburg"
+   ],
+   "claim_ko": "CPE 는 φ=1 이면 커패시터, 0.5 면 반무한 Warburg, 0 이면 저항, −1 이면 인덕터가 된다.",
+   "claim": "The CPE reduces to a pure capacitance for phi = 1, the semi-infinite (infinite) Warburg impedance for phi = 0.5, a pure resistance for phi = 0 and a pure inductance for phi = -1.",
+   "page": 205,
+   "where": "Section V.2",
+   "values": {
+    "phi=1": "capacitor",
+    "phi=0.5": "semi-infinite Warburg",
+    "phi=0": "resistor",
+    "phi=-1": "inductor"
+   },
+   "conditions": "Eq. (177).",
+   "confidence": "high",
+   "quote": "infinite Warburg impedance for φ = 0.5, pure resistance for φ = 0, and pure inductance for φ = –1"
+  },
+  {
+   "id": "LASIA1999.cpe-origin-not-only-roughness",
+   "source": "LASIA1999",
+   "kind": "caveat",
+   "topics": [
+    "cpe",
+    "interpretation"
+   ],
+   "claim_ko": "CPE 는 흔히 표면 거칠기 탓으로 여겨졌지만, 다결정 금속 수준의 거칠기는 관측보다 훨씬 높은 주파수에서만 CPE 를 만들며 실제 분산은 특이흡착 등 계면 현상과 관련된 경우가 많다.",
+   "claim": "CPE behaviour was historically attributed to surface roughness, but Pajkossy et al. found that roughness typical of polycrystalline metals would give CPE behaviour only at much higher frequencies than observed, that increasing the roughness of polycrystalline Pt did not change phi, and that Au(111)/Au(100) showed dispersion only with specific (halide) adsorption, attributed to slow adsorption and diffusion of the ions and surface reconstructions.",
+   "page": 206,
+   "where": "Section V.2, pp. 205-206",
+   "conditions": "Blocking metal electrodes in aqueous electrolytes; p. 203 lists both roughness-induced coupling of Rs with the surface capacitance and interfacial capacitance dispersion (slow adsorption, chemical inhomogeneity) as possible causes.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.brug-cpe-capacitance",
+   "source": "LASIA1999",
+   "kind": "formula",
+   "topics": [
+    "cpe",
+    "capacitance",
+    "conversion"
+   ],
+   "claim_ko": "Brug 식은 CPE 의 T·φ 로부터 평균 이중층 용량을 구하며, 차단 전극에서는 Rs 를, 패러데이 반응이 있으면 Rs 와 Rct 의 병렬 합성 저항을 쓴다.",
+   "claim": "Brug et al. estimate the average double-layer capacitance from CPE parameters: for a blocking electrode (Rs + CPE) T = Cdl^phi * Rs^-(1-phi); with a faradaic reaction whose impedance is a simple resistance Rct (rotated semicircle) T = Cdl^phi * (Rs^-1 + Rct^-1)^(1-phi). For hydrogen evolution on Ni, T and phi varied with potential while Cdl from this formula stayed constant at about 38 uF cm^-2.",
+   "page": 205,
+   "where": "Eqs. (179)-(181)",
+   "math": "blocking (Eq. 180): Cdl = (T*Rs^(1-phi))^(1/phi);  faradaic (Eq. 181): Cdl = [T*(1/Rs + 1/Rct)^(phi-1)]^(1/phi)",
+   "values": {
+    "example_Cdl_uF_per_cm2": 38,
+    "example_system": "hydrogen evolution on polycrystalline Ni in 1 M NaOH (Lasia and Rami)"
+   },
+   "conditions": "Assumes a Cole-Cole distribution of time constants at the electrode surface with the solution resistance in series (Eq. 179); the faradaic case assumes the faradaic impedance is a pure resistance.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.drt-inversion-ill-posed",
+   "source": "LASIA1999",
+   "kind": "caveat",
+   "topics": [
+    "drt",
+    "distribution-of-relaxation-times",
+    "noise"
+   ],
+   "claim_ko": "CPE 형 데이터에서 시정수 분포 G(τ)를 뽑는 것은 부적정 문제라 푸리에 역변환은 부적합하고 결과는 실험 잡음에 매우 민감하다.",
+   "claim": "Extracting the time-constant distribution function G(tau) from CPE-type data is an ill-posed problem: VanderNoot found Fourier inversion unsuitable and maximum-entropy deconvolution relatively good, with results very sensitive to experimental noise.",
+   "page": 205,
+   "where": "Section V.2",
+   "math": "(eps* - eps_inf)/(eps_s - eps_inf) = int_0^inf G(tau)/(1 + j*w*tau) dtau  (Eq. 173, the relation being inverted)",
+   "conditions": "Distribution-of-relaxation-times inversion from impedance data.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.cole-cole-rotated-semicircle",
+   "source": "LASIA1999",
+   "kind": "formula",
+   "topics": [
+    "cpe",
+    "distribution-of-relaxation-times",
+    "drt"
+   ],
+   "claim_ko": "Cole–Cole 식 1/[1+(jωτ0)^φ] 는 (1−φ)90° 기울어진 반원이며, ln(τ/τ0) 에 대해 대칭인 하나의 넓은 분포에 해당하고 φ=1 이면 델타함수가 된다.",
+   "claim": "The Cole-Cole relaxation 1/[1 + (j*w*tau0)^phi] (0 < phi <= 1) is a semicircle rotated by (1 - phi)*90 deg in the complex plane and corresponds to a single broad distribution G(tau) symmetric in ln(tau/tau0) that becomes a Dirac delta at phi = 1.",
+   "page": 202,
+   "where": "Eqs. (175)-(176), Fig. 27",
+   "math": "(eps* - eps_inf)/(eps_s - eps_inf) = 1/[1 + (j*w*tau0)^phi];  G(tau) = (1/(2*pi*tau)) * sin[(1-phi)*pi] / {cosh[phi*ln(tau/tau0)] - cos[(1-phi)*pi]}",
+   "conditions": "Written for dielectric relaxation (Eqs. 175-176); mathematically R/[1 + R*T*(jw)^phi] (an R||CPE arc) has the same form.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.semi-infinite-warburg",
+   "source": "LASIA1999",
+   "kind": "formula",
+   "topics": [
+    "warburg",
+    "diffusion"
+   ],
+   "claim_ko": "반무한 선형 확산의 Warburg 임피던스는 Z_W = σω^−½(1−j) 로 위상이 −45° 이며, 유한한 R·C 조합으로는 표현할 수 없는 분포 소자다.",
+   "claim": "For semi-infinite linear diffusion with a dc-reversible reaction the mass-transfer (Warburg) impedance is Z_W = sigma*w^-1/2 - j*sigma*w^-1/2 with sigma = (RT/(n^2 F^2 sqrt2))[1/(sqrt(D_O) C_O(0)) + 1/(sqrt(D_R) C_R(0))]; real and imaginary parts are equal (phase -45 deg), and the element is distributed: it cannot be represented by a finite connection of R and C elements.",
+   "page": 171,
+   "where": "Eqs. (62)-(63); phase on p. 172; distributed-element remark on p. 173",
+   "math": "Z_W = sigma*w^(-1/2) - j*sigma*w^(-1/2);  sigma = (RT/(n^2*F^2*sqrt(2)))*[1/(sqrt(D_O)*C_O(0)) + 1/(sqrt(D_R)*C_R(0))]",
+   "values": {
+    "phase_deg": -45
+   },
+   "conditions": "Semi-infinite planar diffusion of both redox forms with Nernstian surface concentrations.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.finite-transmissive-warburg",
+   "source": "LASIA1999",
+   "kind": "formula",
+   "topics": [
+    "warburg",
+    "finite-diffusion",
+    "diffusion"
+   ],
+   "claim_ko": "투과 경계 유한 확산은 Z_W = (σ/√ω)tanh(√(jω/D)l)(1−j) 이고, 저주파에서 실수 √2σl/√D 로 수렴해 전체 임피던스가 Rs+Rct+√2σl/√D 가 된다.",
+   "claim": "For finite-length diffusion with a transmissive boundary (C(l) = 0 at distance l, e.g., the diffusion layer of a rotating disk), Z_W = (sigma/sqrt(w))*tanh(sqrt(jw/D)*l)*(1 - j); at low frequency tanh(x) ~ x, so Z_W becomes real and frequency independent, Z_W(w -> 0) = sqrt2*sigma*l/sqrt(D), and the total electrode impedance tends to Rs + Rct + sqrt2*sigma*l/sqrt(D).",
+   "page": 180,
+   "where": "Eqs. (92)-(94), pp. 179-181",
+   "math": "Z_W = (sigma/sqrt(w))*tanh(sqrt(jw/D)*l)*(1 - j);  Z_W(w->0) = sqrt(2)*sigma*l/sqrt(D);  Z(w->0) = Rs + Rct + sqrt(2)*sigma*l/sqrt(D)",
+   "conditions": "Equal diffusion coefficients of O and R assumed for Eq. (92); boundary definition on p. 179.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.finite-reflective-warburg",
+   "source": "LASIA1999",
+   "kind": "formula",
+   "topics": [
+    "warburg",
+    "finite-diffusion",
+    "blocking",
+    "diffusion"
+   ],
+   "claim_ko": "반사 경계 유한 확산은 coth 형이며, 저주파에서 직렬 R_W=√2σl/(3√D) 와 C_W=l/(√(2D)σ) 가 되어 허수부는 발산하고 실수부는 Rs+Rct+√2σl/(3√D) 로 가는 순수 용량성 거동을 보인다.",
+   "claim": "For a reflective boundary (dC/dx = 0 at x = l, e.g., conducting polymers), Z_W = (sigma/sqrt(w))*coth(sqrt(jw/D)*l)*(1 - j); at low frequency coth(x) ~ 1/x + x/3 gives Z_W ~ sqrt2*sigma*l/(3 sqrt(D)) - j*sqrt(2D)*sigma/(w*l), a series resistance R_W = sqrt2*sigma*l/(3 sqrt(D)) and capacitance C_W = l/(sqrt(2D)*sigma): the imaginary part diverges, the real part tends to a constant, no charge passes at low frequency, and the total real part tends to Rs + Rct + sqrt2*sigma*l/(3 sqrt(D)).",
+   "page": 181,
+   "where": "Eqs. (99)-(101), pp. 181-182",
+   "math": "Z_W = (sigma/sqrt(w))*coth(sqrt(jw/D)*l)*(1 - j);  w->0: Z_W ~ sqrt(2)*sigma*l/(3*sqrt(D)) - j*sqrt(2*D)*sigma/(w*l);  R_W = sqrt(2)*sigma*l/(3*sqrt(D)), C_W = l/(sqrt(2*D)*sigma);  Z'(w->0) = Rs + Rct + sqrt(2)*sigma*l/(3*sqrt(D))",
+   "conditions": "Equal diffusion coefficients assumed for Eq. (99).",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.generalized-warburg-exponent-unclear",
+   "source": "LASIA1999",
+   "kind": "caveat",
+   "topics": [
+    "warburg",
+    "finite-diffusion",
+    "interpretation"
+   ],
+   "claim_ko": "지수를 일반화한 유한길이 Warburg(tanh/coth 형)는 데이터를 잘 맞출 수 있지만, φ<0.5 에서 그 파라미터의 물리적 의미는 분명하지 않다.",
+   "claim": "Macdonald's generalized finite-length Warburg Z = [Rs/(A0*Rs*(jw)^phi)]*tanh[A0*Rs*(jw)^phi] was introduced for nonuniform diffusion (e.g., a distance-dependent diffusion coefficient) and reduces to finite-length diffusion for phi = 0.5 with A0 = l/(Rs*sqrt(D)); Stoynov stated that it represents uniform finite-length diffusion rather than the nonuniform case, a coth version (Inzelt and Lang) described reflective diffusion in conducting polymers with few parameters, and the physical significance of A0 for phi < 0.5 is not clear.",
+   "page": 224,
+   "where": "Eq. (226), pp. 223-224",
+   "math": "Z = [Rs/(A0*Rs*(jw)^phi)]*tanh[A0*Rs*(jw)^phi];  phi = 0.5 and A0 = l/(Rs*sqrt(D)) give finite-length diffusion",
+   "conditions": "Section V.5, pp. 223-224.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.de-levie-porous-electrode",
+   "source": "LASIA1999",
+   "kind": "model",
+   "topics": [
+    "porous-electrode",
+    "transmission-line",
+    "de-levie"
+   ],
+   "claim_ko": "de Levie 원통 기공 모델은 Z = √(RZ)coth(√(R/Z)l) 로 고주파 45° 직선 뒤 반원을 보이며, 침투깊이 λ≫l 이면 평면 전극처럼, λ≪l 이면 Z∝Z_el^½ 로 프랙털(φ=0.5) 모델과 구분되지 않는다.",
+   "claim": "de Levie's cylindrical-pore model (pore-wall impedance independent of depth, no net dc current) gives Z_por = sqrt(R*Z)*coth(sqrt(R/Z)*l) = (R_Omega,p/Lambda^1/2)*coth(Lambda^1/2) with R_Omega,p = rho*l/(pi r^2) and Lambda = (2 rho l^2/r)/Z_el; it predicts a 45 deg line at high frequency followed by a semicircle, a real dc limit R_p = sqrt(rho*Rct/(2 pi^2 r^3))*coth(sqrt(2 rho/(r*Rct))*l), flat-electrode behaviour when the penetration depth lambda >> l, and Z proportional to Z_el^1/2 (a deformed semicircle) when lambda << l, the latter formally identical to the fractal model with phi = 0.5 and indistinguishable from it.",
+   "page": 214,
+   "where": "Eqs. (194)-(200), pp. 212-215",
+   "math": "Z_por = sqrt(R*Z)*coth(sqrt(R/Z)*l) = (R_Omega,p/Lambda^(1/2))*coth(Lambda^(1/2));  R_Omega,p = rho*l/(pi*r^2);  Lambda = (2*rho*l^2/r)/Z_el;  lambda = (r*Z_el/(2*rho))^(1/2);  lambda >> l: Z_por = Z_el/(2*pi*r*l);  lambda << l: Z = (rho/(2*pi^2*r^3))^(1/2)*Z_el^(1/2);  w = 0: R_p = sqrt(rho*Rct/(2*pi^2*r^3))*coth(sqrt(2*rho/(r*Rct))*l)",
+   "conditions": "Pore-wall impedance independent of depth (no net dc current), excess supporting electrolyte. As printed, 'Lambda = l/lambda'; with the chapter's own definitions the consistent relation is Lambda^(1/2) = l/lambda.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.de-levie-cpe-hides-inadequacy",
+   "source": "LASIA1999",
+   "kind": "caveat",
+   "topics": [
+    "porous-electrode",
+    "transmission-line",
+    "cpe",
+    "model-selection"
+   ],
+   "claim_ko": "직류 분극 하에서는 기공 속 전위가 깊이에 따라 변해 de Levie 식은 근사일 뿐이며, 이중층을 CPE 로 바꾸면 피팅은 좋아지지만(φ=0.91–0.93) 모델의 부적합을 가릴 뿐이다.",
+   "claim": "Under dc polarization the potential varies with pore depth, so de Levie's model is only an approximation: the rigorously computed dc resistance was twice de Levie's, CNLS fits of the exact impedances to de Levie's equation showed systematic deviations, and replacing Cdl by a CPE made the fit look good (phi = 0.91-0.93) while only hiding the inadequacy of the model.",
+   "page": 217,
+   "where": "Section V.4(i)(b), Fig. 37",
+   "values": {
+    "Rp_rigorous_over_de_Levie": 2,
+    "cpe_phi_when_fitting_de_Levie_with_CPE": [
+     0.91,
+     0.93
+    ],
+    "figure_37_parameters": {
+     "l_cm": 0.05,
+     "r_cm": 0.0001,
+     "rho_ohm_cm": 10,
+     "j0_A_per_cm2": 1e-06,
+     "eta0_V": [
+      0.025,
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5
+     ]
+    }
+   },
+   "conditions": "Butler-Volmer kinetics under dc overpotential (Fig. 37); in Fig. 37 the gap between the rigorous and de Levie curves grows with overpotential.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.pore-shape-hf-deviation",
+   "source": "LASIA1999",
+   "kind": "caveat",
+   "topics": [
+    "porous-electrode",
+    "transmission-line",
+    "interpretation"
+   ],
+   "claim_ko": "고주파 45° 직선은 원통 기공의 특성이며, 다른 기공 모양에서는 고주파에 호·평탄부·반원이 대신 나타날 수 있다.",
+   "claim": "The 45 deg high-frequency line is specific to cylindrical pores: for other pore geometries (V-grooves, arbitrarily shaped pores) arcs, plateaus or a semicircle can appear at high frequencies instead, and real electrodes have pore-size distributions and unknown morphology.",
+   "page": 222,
+   "where": "Section V.4(iii), Fig. 40",
+   "conditions": "Blocking single pores (Keiser et al., Fig. 40) and grooves (de Levie; Gunning).",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.nyquist-hides-frequency",
+   "source": "LASIA1999",
+   "kind": "caveat",
+   "topics": [
+    "plots",
+    "nyquist",
+    "bode",
+    "interpretation"
+   ],
+   "claim_ko": "나이퀴스트 그림은 주파수를 보여주지 않아 용량이 달라도 똑같은 반원이 나오므로, 모든 정보를 담은 보드 그림을 함께 봐야 한다.",
+   "claim": "Complex-plane (Nyquist) plots do not show frequency: identical semicircles are obtained for different capacitances, differing only in which frequency each point corresponds to; Bode plots contain all the necessary information, which is why they are mainly used in circuit analysis, while Nyquist plots relate easily to the electrical model.",
+   "page": 154,
+   "where": "Section I.3, pp. 154-155",
+   "conditions": "General.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.phase-max-not-arc-apex",
+   "source": "LASIA1999",
+   "kind": "formula",
+   "topics": [
+    "plots",
+    "bode",
+    "time-constant"
+   ],
+   "claim_ko": "Rs+(Rct∥Cdl) 에서 −Z'' 최대(반원 꼭지)는 ω=1/(RctCdl) 이지만 위상 최대는 ω=(1/RctCdl)√((Rs+Rct)/Rs) 로 서로 다르다.",
+   "claim": "For Rs + (Rct||Cdl) the maximum of -Z'' (the semicircle apex at Z' = Rs + Rct/2) occurs at w = 1/(Rct*Cdl), but the phase-angle maximum occurs at w = (1/(Rct*Cdl))*sqrt((Rs + Rct)/Rs); for Rs = 10 ohm, Rct = 100 ohm, Cdl = 20 uF these are 500 s^-1 and 1658 s^-1.",
+   "page": 156,
+   "where": "Eqs. (27)-(28)",
+   "math": "w(-Z'' max) = 1/(Rct*Cdl);  w(phase max) = (1/(Rct*Cdl))*sqrt((Rs + Rct)/Rs)",
+   "values": {
+    "example": {
+     "Rs_ohm": 10,
+     "Rct_ohm": 100,
+     "Cdl_F": 2e-05,
+     "omega_apex_per_s": 500,
+     "omega_phase_max_per_s": 1658
+    }
+   },
+   "conditions": "Single R||C arc with a series resistance.",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.vandernoot-time-constant-ratio",
+   "source": "LASIA1999",
+   "kind": "criterion",
+   "topics": [
+    "fitting",
+    "determinacy",
+    "warburg",
+    "randles"
+   ],
+   "claim_ko": "Randles 회로에서 전하이동 시정수와 확산 시정수의 비 2σ²Cdl/Rct 가 30 이하일 때 CNLS 로 속도론 정보를 뽑을 수 있다.",
+   "claim": "For poorly separated charge-transfer and diffusion processes (Randles circuit), VanderNoot found that CNLS can extract kinetic information when the ratio of the charge-transfer time constant t_f = Rct*Cdl to the diffusion time constant t_d = Rct^2/(2 sigma^2), t_f/t_d = 2 sigma^2 Cdl/Rct, is lower than or equal to 30.",
+   "page": 173,
+   "where": "Section III.2, pp. 173-174",
+   "math": "t_f = Rct*Cdl;  t_d = Rct^2/(2*sigma^2);  t_f/t_d = 2*sigma^2*Cdl/Rct <= 30",
+   "values": {
+    "max_tf_over_td": 30
+   },
+   "conditions": "Semi-infinite Warburg in series with Rct, both parallel to Cdl (Randles).",
+   "confidence": "high"
+  },
+  {
+   "id": "LASIA1999.low-frequency-noise-higher",
+   "source": "LASIA1999",
+   "kind": "caveat",
+   "topics": [
+    "noise",
+    "error-structure",
+    "measurement-design"
+   ],
+   "claim_ko": "같은 진폭이면 저주파에서 응답은 약하고 잡음은 커서 저주파 점들의 오차가 상대적으로 크다.",
+   "claim": "Electrochemical cells respond more weakly at low frequencies and, for the same perturbation amplitude, show higher noise there; choosing per-frequency amplitudes that keep the response nearly constant makes the signal much less noise-sensitive (multi-sine FFT example).",
+   "page": 165,
+   "where": "Section II.5(iii), Figs. 9-10",
+   "conditions": "Discussed for sum-of-sines FFT measurements; the statement about low-frequency response and noise concerns the cell.",
+   "confidence": "high"
+  }
+ ]
+}

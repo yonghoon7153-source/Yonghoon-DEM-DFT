@@ -1,0 +1,750 @@
+{
+ "sources": [
+  {
+   "key": "ISW1990",
+   "short": "Irvine–Sinclair–West 1990",
+   "authors": "John T. S. Irvine, Derek C. Sinclair, Anthony R. West",
+   "title": "Electroceramics: Characterization by Impedance Spectroscopy",
+   "venue": "Advanced Materials",
+   "year": 1990,
+   "volume": "2",
+   "pages": "132-138",
+   "doi": "10.1002/adma.19900020304"
+  }
+ ],
+ "records": [
+  {
+   "id": "ISW1990.parallel-rc-time-constant",
+   "source": "ISW1990",
+   "kind": "model",
+   "topics": [
+    "equivalent-circuit",
+    "time-constant"
+   ],
+   "claim_ko": "세라믹 시료의 각 영역은 보통 병렬로 놓인 저항과 커패시턴스로 나타내며, 그 이완시간은 τ = RC 이다 (식 1).",
+   "claim": "Each region of a ceramic sample is represented by a resistance and a capacitance, usually in parallel, whose relaxation time is tau = RC (Eq. 1).",
+   "page": 133,
+   "where": "Sect. 2.1 Theory, Eq. (1)",
+   "math": "tau = R*C  (Eq. 1)",
+   "conditions": "Ideal parallel RC element; the paper uses no constant-phase elements. Measurements span 'typically 10^-2 to 10^7 Hz' (pp. 132-133).",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.omega-max-rc-equals-one",
+   "source": "ISW1990",
+   "kind": "formula",
+   "topics": [
+    "time-constant",
+    "arc-apex",
+    "effective-capacitance"
+   ],
+   "claim_ko": "임피던스 스펙트럼의 최대 손실 주파수에서 ω_max·R·C = 1 (식 2) 이 성립하며, 이 관계 때문에 RC 요소들을 주파수 영역에서 분리할 수 있다.",
+   "claim": "At the frequency of maximum loss in the impedance spectrum, omega_max*R*C = 1 (Eq. 2), which is what makes RC elements separable in the frequency domain.",
+   "page": 133,
+   "where": "Sect. 2.1 Theory, Eq. (2)",
+   "math": "omega_max * R * C = 1  (Eq. 2),  omega = 2*pi*f",
+   "conditions": "Ideal parallel RC; omega_max is the top of the Z'' vs Z' semicircle.",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.r-from-intercepts-c-from-apex",
+   "source": "ISW1990",
+   "kind": "procedure",
+   "topics": [
+    "fitting-procedure",
+    "arc-apex",
+    "capacitance"
+   ],
+   "claim_ko": "R 은 Z′ 축 교점에서 읽고, C 는 각 반원 꼭대기의 주파수에 식 2 를 적용해 구한다.",
+   "claim": "R values are read from the arc intercepts on the Z' axis and C values by applying Eq. 2 to the frequency at the maximum of each semicircle.",
+   "page": 133,
+   "where": "Sect. 2.1 Theory, text on Fig. 1a",
+   "math": "R = difference of the semicircle's Z' intercepts;  C = 1/(omega_max * R)",
+   "conditions": "Needs the apex and both intercepts of the arc inside the measured window (see ISW1990.bulk-arc-off-scale).",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.impedance-sign-convention",
+   "source": "ISW1990",
+   "kind": "definition",
+   "topics": [
+    "convention",
+    "modulus"
+   ],
+   "claim_ko": "논문은 Z* = Z′ − jZ″ (j = √−1, ω = 2πf) 로 두고 Z″ 대 Z′ 를 그리므로, 용량성 응답에서 Z″ 가 양수다.",
+   "claim": "The paper plots Z'' against Z' with Z* = Z' - jZ'' (j = sqrt(-1), omega = 2*pi*f), so its Z'' is positive for a capacitive response.",
+   "page": 134,
+   "where": "Fig. 1 caption",
+   "math": "Z* = Z' - j*Z''  =>  paper's Z'' = -Im(Z) = -z_im in our physics convention",
+   "conditions": "Applies to every Z'' and M'' statement in the paper (Z''max = R/2, M* = j*omega*C0*Z*).",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.assign-by-capacitance-magnitude",
+   "source": "ISW1990",
+   "kind": "criterion",
+   "topics": [
+    "arc-assignment",
+    "capacitance"
+   ],
+   "claim_ko": "R 과 C 를 구한 뒤, 각 RC 요소를 시료의 어느 영역에 대응시킬지는 커패시턴스의 크기(표 1)로 정한다.",
+   "claim": "Once R and C are extracted, the RC elements are assigned to regions of the sample on the basis of the magnitudes of their capacitances (Table 1).",
+   "page": 133,
+   "where": "Sect. 2.1 Theory",
+   "conditions": "Magnitude-based and hedged: Table 1 is a 'possible interpretation' and the distinction is 'usually fairly straightforward' except with ferroelectrics (p. 134; ISW1990.ferroelectric-overlap-caveat). The paper also says the effects are 'characterized by their relative capacitance values' (p. 134).",
+   "confidence": "high",
+   "quote": "The assignment is based on the magnitudes of the capacitances (Table 1)."
+  },
+  {
+   "id": "ISW1990.parallel-plate-capacitance",
+   "source": "ISW1990",
+   "kind": "formula",
+   "topics": [
+    "capacitance",
+    "permittivity",
+    "geometry"
+   ],
+   "claim_ko": "면적 A, 간격 l, 유전율 ε′ 인 평행판 축전기의 커패시턴스는 C = ε′·e₀·A/l (식 3) 이고 e₀ = 8.854 × 10⁻¹⁴ F cm⁻¹ 이다.",
+   "claim": "For a parallel-plate capacitor of area A, plate separation l and permittivity eps', C = eps'*e0*A/l (Eq. 3), with e0 = 8.854 x 10^-14 F cm^-1.",
+   "page": 133,
+   "where": "Sect. 2.1 Theory, Eq. (3)",
+   "math": "C = eps_r * e0 * A / l,  e0 = 8.854e-14 F/cm   =>   eps_r = (C * l/A) / e0",
+   "values": [
+    {
+     "label": "e0, permittivity of free space",
+     "value": 8.854e-14,
+     "unit": "F/cm"
+    }
+   ],
+   "conditions": "eps' is the relative permittivity (dimensionless). Eq. 3 is also the basis of the brickwork relation (Eq. 4) and of C0 = e0*A/l in Eq. 5.",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.bulk-capacitance-unit-cell-constant",
+   "source": "ISW1990",
+   "kind": "range",
+   "topics": [
+    "capacitance",
+    "cell-constant",
+    "bulk",
+    "permittivity"
+   ],
+   "claim_ko": "셀 상수 l/A = 1 cm⁻¹ 과 전형적 유전율 ~10 이면 커패시턴스는 ~1 × 10⁻¹² F 이고, 논문은 이것을 시료의 전형적인 벌크 커패시턴스로 본다.",
+   "claim": "For a unit cell constant (l/A = 1 cm^-1) and a typical permittivity of ~10, a capacitance of ~1 x 10^-12 F is expected, which the paper takes as the typical bulk capacitance of a sample.",
+   "page": 133,
+   "where": "Sect. 2.1 Theory, text after Eq. (3)",
+   "math": "C = eps_r*e0*(A/l) = 10 * 8.854e-14 F/cm * 1 cm = 8.9e-13 F, i.e. ~1e-12 F (arithmetic ours)",
+   "values": [
+    {
+     "label": "bulk",
+     "value": 1e-12,
+     "unit": "F",
+     "note": "for l/A = 1 cm^-1 and eps_r ~ 10; equivalently C*l/A ~ 1e-12 F/cm"
+    },
+    {
+     "label": "typical permittivity",
+     "value": 10,
+     "unit": "dimensionless"
+    }
+   ],
+   "conditions": "This is the only sentence in the paper that states a cell constant, and it is attached to the bulk estimate, not to Table 1 as a whole. Non-ferroelectric material.",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.table1-capacitance-interpretation",
+   "source": "ISW1990",
+   "kind": "range",
+   "topics": [
+    "capacitance",
+    "arc-assignment",
+    "table"
+   ],
+   "claim_ko": "표 1 은 커패시턴스(F)와 그 가능한 해석을 나열한다: 10⁻¹² bulk, 10⁻¹¹ minor, second phase, 10⁻¹¹–10⁻⁸ grain boundary, 10⁻¹⁰–10⁻⁹ bulk ferroelectric, 10⁻⁹–10⁻⁷ surface layer, 10⁻⁷–10⁻⁵ sample-electrode interface, 10⁻⁴ electrochemical reactions.",
+   "claim": "Table 1 lists capacitances in F with their possible interpretation: 10^-12 bulk; 10^-11 minor, second phase; 10^-11-10^-8 grain boundary; 10^-10-10^-9 bulk ferroelectric; 10^-9-10^-7 surface layer; 10^-7-10^-5 sample-electrode interface; 10^-4 electrochemical reactions.",
+   "page": 134,
+   "where": "Table 1",
+   "values": [
+    {
+     "label": "bulk",
+     "value": 1e-12,
+     "unit": "F"
+    },
+    {
+     "label": "minor, second phase",
+     "value": 1e-11,
+     "unit": "F"
+    },
+    {
+     "label": "grain boundary",
+     "low": 1e-11,
+     "high": 1e-08,
+     "unit": "F"
+    },
+    {
+     "label": "bulk ferroelectric",
+     "low": 1e-10,
+     "high": 1e-09,
+     "unit": "F"
+    },
+    {
+     "label": "surface layer",
+     "low": 1e-09,
+     "high": 1e-07,
+     "unit": "F"
+    },
+    {
+     "label": "sample-electrode interface",
+     "low": 1e-07,
+     "high": 1e-05,
+     "unit": "F"
+    },
+    {
+     "label": "electrochemical reactions",
+     "value": 0.0001,
+     "unit": "F"
+    }
+   ],
+   "conditions": "Column header 'Capacitance [F]': plain farads. Neither caption nor table states a cell constant, an electrode area or any normalisation. Three rows are single order-of-magnitude values, not ranges. Rows overlap (grain boundary spans the whole bulk-ferroelectric row and the lowest decade of the surface-layer row) and leave a gap between 10^-5 and 10^-4 F. Written for ceramics/glasses with metal electrodes.",
+   "confidence": "high",
+   "quote": "Table 1. Capacitance values and their possible interpretation."
+  },
+  {
+   "id": "ISW1990.worked-example-ca12al14o33",
+   "source": "ISW1990",
+   "kind": "model",
+   "topics": [
+    "arc-assignment",
+    "equivalent-circuit",
+    "capacitance",
+    "test-fixture"
+   ],
+   "claim_ko": "Ca₁₂Al₁₄O₃₃ (312 °C) 의 두 아크는 ~1 × 10⁻¹² F·0.45 MΩ (벌크) 와 4 × 10⁻⁹ F·1.15 MΩ (입계) 이며, 벌크·입계 병렬 RC 두 개를 직렬로 이은 회로로 해석한다.",
+   "claim": "For Ca12Al14O33 (312 degC) the two arcs give ~1 x 10^-12 F with 0.45 MOhm (bulk) and 4 x 10^-9 F with 1.15 MOhm (grain boundary), interpreted with bulk and grain-boundary parallel RC elements in series.",
+   "page": 133,
+   "where": "Sect. 2.1 text; Fig. 1a with its circuit on p. 134",
+   "math": "(Rb||Cb)-(Rgb||Cgb):  Rb = 0.45 MOhm, Cb ~ 1e-12 F;  Rgb = 1.15 MOhm, Cgb ~ 4e-9 F",
+   "values": [
+    {
+     "label": "C bulk",
+     "value": 1e-12,
+     "unit": "F"
+    },
+    {
+     "label": "R bulk",
+     "value": 450000.0,
+     "unit": "ohm"
+    },
+    {
+     "label": "C grain boundary",
+     "value": 4e-09,
+     "unit": "F"
+    },
+    {
+     "label": "R grain boundary",
+     "value": 1150000.0,
+     "unit": "ohm"
+    },
+    {
+     "label": "temperature",
+     "value": 312,
+     "unit": "degC",
+     "note": "Fig. 1a panel label, p. 134"
+    }
+   ],
+   "conditions": "Sample thickness and area are not given, so these capacitances cannot be normalised. Fig. 1a (p. 134) marks 10^4, 100 and 1 Hz on the arcs.",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.equivalent-circuits-used",
+   "source": "ISW1990",
+   "kind": "model",
+   "topics": [
+    "equivalent-circuit"
+   ],
+   "claim_ko": "논문의 등가회로는 모두 이상적인 R, C (그리고 L) 로만 되어 있다: 벌크·입계 병렬 RC 의 직렬 (그림 1a, 5a), 블로킹 전극용 벌크 RC + 이중층 C 직렬 (그림 3b), 강유전 LiTaO₃ 의 5소자 회로 (그림 6a), 단일 RC (그림 6b), 페라이트의 병렬 RL 두 쌍 (그림 7a).",
+   "claim": "All of the paper's equivalent circuits use ideal R, C (and L) elements: bulk and grain-boundary parallel RC elements in series (Figs. 1a, 5a), a bulk RC in series with a double-layer capacitor for blocking electrodes (Fig. 3b), a five-element circuit for ferroelectric LiTaO3 (Fig. 6a), a single RC (Fig. 6b) and two parallel RL pairs for a ferrite (Fig. 7a).",
+   "page": 134,
+   "where": "Fig. 1 caption (circuits also in Figs. 3b, 5a, 6a-b, 7a)",
+   "math": "Fig.1a (Rb||Cb)-(Rgb||Cgb);  Fig.3b (Rb||Cb)-Cdl;  Fig.5a (R1||C1)-(R2||C2);  Fig.6b R||C;  Fig.7a (R1||L1)-(R2||L2)",
+   "conditions": "No constant-phase element and no separate series resistance appear; in Fig. 1a the bulk arc starts at the origin.",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.brickwork-model",
+   "source": "ISW1990",
+   "kind": "model",
+   "topics": [
+    "brickwork",
+    "grain-boundary",
+    "geometry",
+    "capacitance"
+   ],
+   "claim_ko": "크기 l₁ 인 정육면체 결정립이 두께 l₂ 인 입계로 나뉜 이상화된 brickwork 모델에서 C_b/C_gb = l₂/l₁ (식 4) 이며, 이는 식 3 의 두께-커패시턴스 반비례에서 나온다.",
+   "claim": "In the idealised brickwork model of cube-shaped grains of size l1 separated by boundaries of thickness l2, Cb/Cgb = l2/l1 (Eq. 4), which follows from the inverse relation between thickness and capacitance in Eq. 3.",
+   "page": 134,
+   "where": "Sect. 2.1, Fig. 2 and Eq. (4)",
+   "math": "C_b / C_gb = l2 / l1  (Eq. 4)",
+   "conditions": "Idealised: cubic grains, uniform boundaries and, implicitly through Eq. 3, similar permittivity in grain and boundary. Fig. 2 also labels a gap l3 next to the electrode that the text never defines.",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.grain-boundary-range-and-sintering",
+   "source": "ISW1990",
+   "kind": "range",
+   "topics": [
+    "grain-boundary",
+    "capacitance",
+    "microstructure"
+   ],
+   "claim_ko": "입계 커패시턴스는 보통 10⁻¹¹–10⁻⁸ F 이며, 큰 값은 입계가 얇은 잘 소결된 세라믹, 작은 값은 constriction 저항이나 좁은 neck 으로만 닿은 덜 소결된 시료에서 나온다.",
+   "claim": "Grain-boundary capacitances usually lie between 10^-11 and 10^-8 F: high values occur in well-sintered ceramics with narrow intergranular regions, low values in poorly sintered samples with constriction resistances or narrow contacting necks.",
+   "page": 134,
+   "where": "Sect. 2.1, text after Eq. (4)",
+   "values": [
+    {
+     "label": "grain boundary",
+     "low": 1e-11,
+     "high": 1e-08,
+     "unit": "F",
+     "note": "empirical ('it is found'); no cell constant stated"
+    }
+   ],
+   "conditions": "'usually', empirical over 'a wide variety of ceramic microstructures'. In the Fig. 1 example the large Cgb indicates good sintering, yet the boundaries carry 2-3 times the grain resistance (p. 134).",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.arrhenius-format",
+   "source": "ISW1990",
+   "kind": "procedure",
+   "topics": [
+    "arrhenius",
+    "conductivity",
+    "temperature"
+   ],
+   "claim_ko": "저항의 온도 의존성은 Arrhenius 형식으로 그린다: 그림 1b 는 벌크와 입계를 따로 log₁₀(σT) (ohm⁻¹ cm⁻¹ K) 대 1000/T 로, LiTaO₃ 자료는 log R 대 1000/T 로 그린다.",
+   "claim": "The temperature dependence of resistance is plotted in Arrhenius format: Fig. 1b shows log10(sigma*T) (ohm^-1 cm^-1 K) against 1000/T separately for bulk and grain boundary, and the LiTaO3 data are plotted as log R against 1000/T.",
+   "page": 134,
+   "where": "Sect. 2.2 Applications; Fig. 1b axis label",
+   "math": "log10(sigma*T) vs 1000/T  (Fig. 1b);   log R vs 1000/T  (Figs. 6d, 6e)",
+   "conditions": "The paper prints no activation-energy formula, no Ea values and no sigma = l/(R*A); the sigma*T form is visible only in the Fig. 1b axis label. Linearity is used qualitatively (a leakage or single-RC resistance 'gives a linear Arrhenius plot', pp. 137-138).",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.bulk-and-gb-have-different-activation",
+   "source": "ISW1990",
+   "kind": "caveat",
+   "topics": [
+    "arrhenius",
+    "grain-boundary",
+    "temperature"
+   ],
+   "claim_ko": "그림 1b 에서 벌크와 입계의 Arrhenius 직선은 기울기가 달라 서로 교차하므로, 어느 쪽 기여가 더 큰지가 온도에 따라 바뀐다.",
+   "claim": "In Fig. 1b the bulk and grain-boundary Arrhenius lines have different slopes and cross, so which contribution is larger changes with temperature.",
+   "page": 134,
+   "where": "Fig. 1b",
+   "values": [
+    {
+     "label": "crossing point",
+     "value": 1.3,
+     "unit": "1000/K",
+     "note": "approximate, read from the figure by us"
+    }
+   ],
+   "conditions": "Read from the figure (the grain-boundary line is the steeper one); the text does not comment on the crossing.",
+   "confidence": "medium"
+  },
+  {
+   "id": "ISW1990.ferroelectric-overlap-caveat",
+   "source": "ISW1990",
+   "kind": "caveat",
+   "topics": [
+    "capacitance",
+    "permittivity",
+    "arc-assignment",
+    "temperature"
+   ],
+   "claim_ko": "커패시턴스로 성분을 가르는 것은 보통 쉽지만, 벌크 유전율이 10³–10⁵ 인 강유전 성분이 있으면 예외이고, 그때는 커패시턴스의 온도 의존성으로 강유전 성분과 비강유전 얇은 층을 가른다.",
+   "claim": "Telling components apart by capacitance is usually straightforward unless a ferroelectric component with bulk permittivity 10^3-10^5 is present; then ferroelectric and non-ferroelectric thin-layer capacitances are told apart by their temperature dependence.",
+   "page": 134,
+   "where": "Sect. 2.2 Applications, last paragraph",
+   "values": [
+    {
+     "label": "ferroelectric bulk permittivity",
+     "low": 1000.0,
+     "high": 100000.0,
+     "unit": "dimensionless"
+    }
+   ],
+   "conditions": "Materials with a ferroelectric phase (BaTiO3, LiTaO3 in the paper).",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.surface-layer-on-glass",
+   "source": "ISW1990",
+   "kind": "range",
+   "topics": [
+    "surface-layer",
+    "capacitance",
+    "arc-assignment"
+   ],
+   "claim_ko": "Li₂Si₂O₅ 유리의 수화/탄산화 표면층은 벌크 아크(~4 × 10⁻¹² F)와 전극 응답(~1 × 10⁻⁶ F) 사이에 C ~1 × 10⁻⁸ F 의 잘 분리되지 않은 반원을 하나 더 만들고, 표면층이 없는 유리는 벌크 아크와 전극 스파이크(~1 × 10⁻⁵ F)만 보인다.",
+   "claim": "A hydrated/carbonated surface layer on Li2Si2O5 glass shows up as an additional, poorly-resolved semicircle with C ~1 x 10^-8 F between the bulk arc (~4 x 10^-12 F) and the electrode response (~1 x 10^-6 F); the layer-free glass shows only the bulk arc and an electrode spike (~1 x 10^-5 F).",
+   "page": 135,
+   "where": "Sect. 2.2 text; Fig. 3a,b annotations and caption",
+   "values": [
+    {
+     "label": "surface layer",
+     "value": 1e-08,
+     "unit": "F"
+    },
+    {
+     "label": "bulk (glass)",
+     "value": 4e-12,
+     "unit": "F"
+    },
+    {
+     "label": "electrode, with surface layer",
+     "value": 1e-06,
+     "unit": "F"
+    },
+    {
+     "label": "electrode, no surface layer",
+     "value": 1e-05,
+     "unit": "F"
+    },
+    {
+     "label": "temperature",
+     "value": 130,
+     "unit": "degC"
+    }
+   ],
+   "conditions": "Numbers are figure annotations (Fig. 3a,b) in absolute F, geometry not given; the layer forms by atmospheric attack while the melt cools.",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.blocking-electrode-spike",
+   "source": "ISW1990",
+   "kind": "criterion",
+   "topics": [
+    "blocking",
+    "electrode",
+    "low-frequency"
+   ],
+   "claim_ko": "이온을 막는 금속 전극에서는 저주파 응답이 전극에 전하가 쌓이는 것을 뜻하는 거의 수직인 스파이크(전하이동 없는 순수 용량성 계면)이며, 벌크 RC 와 이중층 커패시턴스의 직렬로 나타낸다.",
+   "claim": "With ion-blocking metal electrodes the low-frequency response is a nearly vertical spike representing charge build-up at the electrodes (a purely capacitive interface, no charge transfer), modelled as the bulk RC in series with a double-layer capacitance.",
+   "page": 135,
+   "where": "Sect. 2.2; Fig. 3b",
+   "math": "(Rb||Cb)-Cdl  (Fig. 3b)",
+   "values": [
+    {
+     "label": "electrode double layer (glass, Fig. 3b)",
+     "value": 1e-05,
+     "unit": "F"
+    }
+   ],
+   "conditions": "Ionic conductor with metal electrodes that block the mobile ion.",
+   "confidence": "high",
+   "quote": "a nearly vertical, low frequency 'spike' representing charge build-up at the blocking metal electrodes"
+  },
+  {
+   "id": "ISW1990.no-spike-means-electronic",
+   "source": "ISW1990",
+   "kind": "criterion",
+   "topics": [
+    "blocking",
+    "electronic-conduction",
+    "electrode"
+   ],
+   "claim_ko": "금속 전극을 단 시료가 반원 하나(LiGaSiO₄ 는 2 × 10⁻¹² F)만 보이고 저주파 전극 스파이크가 없으면, 전극에서 전하이동 장벽이 없고 전도 종은 전자라고 결론짓는다.",
+   "claim": "When a sample with metal electrodes shows a single semicircle (2 x 10^-12 F for LiGaSiO4) and no low-frequency electrode spike, there is no barrier to charge transfer at the electrode and the conducting species are electrons.",
+   "page": 135,
+   "where": "Sect. 2.2; Fig. 4a",
+   "values": [
+    {
+     "label": "bulk C, LiGaSiO4 at 530 degC",
+     "value": 2e-12,
+     "unit": "F"
+    }
+   ],
+   "conditions": "Metal electrodes that would block ions: ions would pile up (spike), electrons pass freely (no spike).",
+   "confidence": "high",
+   "quote": "no impedance barrier to charge transfer between the metal electrode and the ceramic and that the conducting species were electrons"
+  },
+  {
+   "id": "ISW1990.bulk-arc-off-scale",
+   "source": "ISW1990",
+   "kind": "caveat",
+   "topics": [
+    "frequency-window",
+    "bulk",
+    "arc-assignment",
+    "series-resistance"
+   ],
+   "claim_ko": "온도가 높아지면 벌크 반원이 계측기 주파수 범위 밖으로 나가 고주파 교점(R_b 로 표시)만 보이고, 더 높은 온도에서는 입계 반원도 범위를 벗어난다.",
+   "claim": "At higher temperatures the bulk semicircle lies outside the instrument's frequency range, so only its high-frequency intercept (labelled R_b) is seen; at still higher temperatures the grain-boundary semicircle goes off scale too.",
+   "page": 135,
+   "where": "Sect. 2.2; Fig. 4b,c",
+   "math": "Fig. 4b (512 degC): Z' intercepts Rb, Rb+Rgb, Rb+Rgb+Rct;  Fig. 4c (1169 degC): Rb+Rgb+Rct only",
+   "values": [
+    {
+     "label": "temperature, Fig. 4b",
+     "value": 512,
+     "unit": "degC"
+    },
+    {
+     "label": "temperature, Fig. 4c",
+     "value": 1169,
+     "unit": "degC"
+    },
+    {
+     "label": "typical upper measuring frequency",
+     "value": 10000000.0,
+     "unit": "Hz",
+     "note": "p. 133"
+    }
+   ],
+   "conditions": "Happens whenever the bulk relaxation frequency exceeds the top of the sweep. Ca12Al14O33 with partially blocking electrodes.",
+   "confidence": "high",
+   "quote": "the semicircle corresponding to the bulk impedance is out with respect to the frequency scale of the instrumentation in both (b) and (c)"
+  },
+  {
+   "id": "ISW1990.charge-transfer-capacitance",
+   "source": "ISW1990",
+   "kind": "range",
+   "topics": [
+    "electrode",
+    "charge-transfer",
+    "capacitance",
+    "arc-assignment"
+   ],
+   "claim_ko": "부분적으로 막는 전극에서 C = 2.2 × 10⁻⁶ F 인 작고 잘 분리되지 않은 반원은 전극-세라믹 계면의 전자 이동으로 배정되며, 여기서 전하이동 저항을 구할 수 있다.",
+   "claim": "With a partially blocking electrode, a small, poorly resolved semicircle with C = 2.2 x 10^-6 F is assigned to electron transfer at the electrode-ceramic interface, from which a charge-transfer resistance can be determined.",
+   "page": 135,
+   "where": "Sect. 2.2; Fig. 4b",
+   "values": [
+    {
+     "label": "charge transfer, electrode-ceramic interface",
+     "value": 2.2e-06,
+     "unit": "F",
+     "note": "Ca12Al14O33 at 512 degC; electrode area not given"
+    }
+   ],
+   "conditions": "Oxide-ion conductor with metal electrodes; absolute F.",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.diffusion-spike-45-degrees",
+   "source": "ISW1990",
+   "kind": "criterion",
+   "topics": [
+    "diffusion",
+    "warburg",
+    "low-frequency"
+   ],
+   "claim_ko": "45° 로 기운 저주파 스파이크는 확산에 해당하고, 그것이 반원 모양으로 꺾여 내려오면 유한 두께 층을 통한 확산이다.",
+   "claim": "A low-frequency spike inclined at 45 degrees is associated with diffusion, and when it turns over into a semicircle the diffusion is through a layer of finite thickness.",
+   "page": 135,
+   "where": "Sect. 2.2; Fig. 4b,c",
+   "values": [
+    {
+     "label": "diffusion spike inclination",
+     "value": 45,
+     "unit": "degree"
+    }
+   ],
+   "conditions": "Oxygen diffusion through the electrode in the paper's example; the turn-over appears at higher temperature (Fig. 4c) when charge transfer becomes negligible.",
+   "confidence": "high",
+   "quote": "the inclined spike turns over in the form of a semicircle, indicating that the diffusion is through a layer of finite thickness."
+  },
+  {
+   "id": "ISW1990.electric-modulus",
+   "source": "ISW1990",
+   "kind": "formula",
+   "topics": [
+    "modulus",
+    "geometry"
+   ],
+   "claim_ko": "복소 전기 모듈러스는 M* = jωC₀Z* (C₀ = e₀·A/l) 이며, 임피던스 평면에 아크가 하나만 보여도 이 형식으로 보면 입계와 벌크 응답이 모두 드러날 수 있다.",
+   "claim": "The complex electric modulus is M* = j*omega*C0*Z* with C0 = e0*A/l, and presenting data in this formalism can reveal both grain-boundary and bulk responses when the impedance plane shows a single arc.",
+   "page": 136,
+   "where": "Sect. 2.3 Data Processing, Eq. (5)",
+   "math": "M* = j*omega*C0*Z*,  C0 = e0*A/l  (Eq. 5);  with Z* = Z' - jZ'':  M' = omega*C0*Z'',  M'' = omega*C0*Z'  (expansion ours)",
+   "conditions": "Needs the sample geometry (A, l); C0 is the empty-cell (vacuum) capacitance.",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.impedance-peak-height",
+   "source": "ISW1990",
+   "kind": "formula",
+   "topics": [
+    "impedance-peak",
+    "resistance",
+    "spectroscopic-plot"
+   ],
+   "claim_ko": "RC 요소의 Z″ 스펙트럼 피크 높이는 R/2 이므로, Z″ 그림은 시료에서 저항이 가장 큰 요소를 두드러지게 보여 준다.",
+   "claim": "The Z'' spectroscopic peak of an RC element has height R/2, so Z'' plots pick out the most resistive elements of the sample.",
+   "page": 136,
+   "where": "Sect. 2.3 Data Processing",
+   "math": "Z''max = R/2, at omega_max*R*C = 1 (Eq. 2)",
+   "conditions": "Ideal parallel RC element whose peak is not overlapped by another element's.",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.modulus-peak-height",
+   "source": "ISW1990",
+   "kind": "formula",
+   "topics": [
+    "modulus",
+    "capacitance",
+    "spectroscopic-plot",
+    "bulk"
+   ],
+   "claim_ko": "요소의 M″ 스펙트럼 피크 높이는 e₀/2C 이므로, 모듈러스 그림은 커패시턴스가 가장 작은 요소(벌크)를 두드러지게 보여 준다.",
+   "claim": "The M'' spectroscopic peak of an element has height e0/2C, so modulus plots pick out the elements with the smallest capacitance (the bulk).",
+   "page": 136,
+   "where": "Sect. 2.3 Data Processing",
+   "math": "M''max = e0/(2C);  with C0 = e0*A/l this is C0/(2C) = e0/(2*C*l/A), so C*l/A = e0/(2*M''max) and eps_r = 1/(2*M''max)  (rearrangement ours)",
+   "conditions": "The paper gives the height, not the position; for one ideal RC element the M'' peak also sits at omega*R*C = 1 (standard result, not printed here). With e0 in F/cm, M'' is dimensionless only if C is per unit cell constant (F/cm) — the nF.cm^-1 axis of Fig. 5c.",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.single-arc-can-hide-bulk",
+   "source": "ISW1990",
+   "kind": "caveat",
+   "topics": [
+    "modulus",
+    "hidden-element",
+    "arc-assignment"
+   ],
+   "claim_ko": "입계 저항이 지배하는 거의 이상적인 반원 하나가 벌크 요소를 숨길 수 있으며, 그 벌크는 더 높은 주파수의 두 번째 M″ 피크로 드러난다 — Z″ 그림은 피크 하나, M″ 그림은 둘.",
+   "claim": "A single, nearly ideal impedance-plane semicircle dominated by the grain-boundary resistance can hide a bulk element that appears as a second, higher-frequency M'' peak: the Z'' plot has one peak while the M'' plot has two.",
+   "page": 136,
+   "where": "Sect. 2.3 Data Processing; Fig. 5a,b",
+   "values": [
+    {
+     "label": "temperature (doped BaTiO3, Fig. 5a,b)",
+     "value": 327,
+     "unit": "degC"
+    }
+   ],
+   "conditions": "Electrically inhomogeneous material in which the grain-boundary resistance dominates; the only hint in the Z* plane is a slight non-ideality at high frequency.",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.capacitance-per-cell-constant-and-permittivity",
+   "source": "ISW1990",
+   "kind": "definition",
+   "topics": [
+    "capacitance",
+    "cell-constant",
+    "permittivity",
+    "geometry"
+   ],
+   "claim_ko": "M″ 피크에서 얻은 커패시턴스는 셀 상수로 규격화해 nF·cm⁻¹ 로 그리고(그림 5c), ε′ = C/C₀ 로 유전율로 바꾸며(그림 6c), 1/ε′ 로 Curie–Weiss 그림을 그린다(그림 5d).",
+   "claim": "Capacitances obtained from M'' peaks are reported per unit cell constant in nF.cm^-1 (Fig. 5c) and converted to permittivity as eps' = C/C0 (Fig. 6c), with a Curie-Weiss plot of 1/eps' (Fig. 5d).",
+   "page": 136,
+   "where": "Fig. 5c y-axis label and caption (also Fig. 6c, p. 137)",
+   "math": "C*l/A in F/cm (Fig. 5c axis);  eps_r = C/C0 = C*l/(e0*A)  (Fig. 6c curves labelled C1/C0, C2/C0)",
+   "values": [
+    {
+     "label": "C1, grain boundary of doped BaTiO3",
+     "value": 2.6e-09,
+     "unit": "F/cm",
+     "note": "approximate, read from Fig. 5c by us; temperature independent"
+    }
+   ],
+   "conditions": "Shown only in figure axes and labels; the text never states the normalisation in words.",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.thin-layer-capacitance-temperature-independent",
+   "source": "ISW1990",
+   "kind": "criterion",
+   "topics": [
+    "capacitance",
+    "temperature",
+    "grain-boundary"
+   ],
+   "claim_ko": "비강유전 입계 커패시턴스는 온도에 무관하고 강유전 벌크 커패시턴스는 퀴리 온도로 갈수록 점근적으로 커지므로, 이것으로 둘을 가른다.",
+   "claim": "The non-ferroelectric grain-boundary capacitance is temperature independent, whereas the ferroelectric bulk capacitance rises asymptotically towards the Curie temperature, which separates the two.",
+   "page": 136,
+   "where": "Sect. 2.3; Fig. 5c",
+   "conditions": "Doped BaTiO3 (PTCR). The LiTaO3 lattice-polarisation capacitance is likewise 'essentially temperature independent' away from Tc (p. 137).",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.double-layer-typical-value",
+   "source": "ISW1990",
+   "kind": "range",
+   "topics": [
+    "electrode",
+    "double-layer",
+    "capacitance",
+    "blocking"
+   ],
+   "claim_ko": "Li⁺ 를 막는 금 전극을 단 LiTaO₃ 결정에서 직렬 커패시턴스 ~2 × 10⁻⁶ F 는 결정-전극 계면의 이중층이며, 전형적인 이중층 값이라고 한다.",
+   "claim": "For a LiTaO3 crystal with Li+-blocking gold electrodes, a series capacitance of ~2 x 10^-6 F is assigned to the double layer at the crystal-electrode interface and called a typical double-layer value.",
+   "page": 137,
+   "where": "Sect. 3 Single Crystal Studies, item (v)",
+   "values": [
+    {
+     "label": "double layer, Au on LiTaO3 (Li+ blocking)",
+     "value": 2e-06,
+     "unit": "F",
+     "note": "electrode area not given"
+    }
+   ],
+   "conditions": "Blocking electrodes; the element is in series with the rest of the circuit (Fig. 6a).",
+   "confidence": "high"
+  },
+  {
+   "id": "ISW1990.bulk-capacitance-across-examples",
+   "source": "ISW1990",
+   "kind": "range",
+   "topics": [
+    "bulk",
+    "capacitance",
+    "permittivity"
+   ],
+   "claim_ko": "논문의 예에서 비강유전 고체의 벌크 커패시턴스는 10⁻¹² F 급(Ca₁₂Al₁₄O₃₃, LiGaSiO₄, Li₂Si₂O₅ 유리, 비강유전 방향의 LiTaO₃)이고, 강유전 LiTaO₃ 의 격자 분극 커패시턴스는 10⁻¹⁰–10⁻⁹ F 이다.",
+   "claim": "Across the paper's examples, bulk capacitances of non-ferroelectric solids are of order 10^-12 F (Ca12Al14O33, LiGaSiO4, Li2Si2O5 glass, non-ferroelectric LiTaO3), while the lattice-polarisation capacitance of ferroelectric LiTaO3 is 10^-10-10^-9 F.",
+   "page": 138,
+   "where": "Sect. 3 (values also on pp. 133, 135, 137)",
+   "values": [
+    {
+     "label": "Ca12Al14O33 bulk",
+     "value": 1e-12,
+     "unit": "F",
+     "note": "p. 133"
+    },
+    {
+     "label": "LiGaSiO4 bulk",
+     "value": 2e-12,
+     "unit": "F",
+     "note": "p. 135"
+    },
+    {
+     "label": "Li2Si2O5 glass bulk",
+     "value": 4e-12,
+     "unit": "F",
+     "note": "Fig. 3 annotation, p. 135"
+    },
+    {
+     "label": "LiTaO3, non-ferroelectric orientation",
+     "value": 1e-12,
+     "unit": "F",
+     "note": "p. 138"
+    },
+    {
+     "label": "LiTaO3, ferroelectric orientation, lattice polarisation C2",
+     "low": 1e-10,
+     "high": 1e-09,
+     "unit": "F",
+     "note": "p. 137"
+    }
+   ],
+   "conditions": "Absolute F; sample geometries are not given, so none of these is normalised.",
+   "confidence": "high"
+  }
+ ]
+}

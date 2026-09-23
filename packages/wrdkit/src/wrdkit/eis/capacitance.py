@@ -13,14 +13,25 @@ same place is::
 
     C = (Q · R^{1-n})^{1/n}
 
-(Hsu & Mansfeld, *Corrosion* 57, 747 (2001) -- also the parallel case in
-Hirschorn et al., *Electrochim. Acta* 55, 6218 (2010)).  ``n = 1`` gives
-``C = Q``, as it must.
+(Hsu & Mansfeld, *Corrosion* 57, 747 (2001) -- Hirschorn et al.,
+*Electrochim. Acta* 55, 6218 (2010), Eq. (18),
+``HIRSCHORN2010.hsu-mansfeld-normal-eq18``).  ``n = 1`` gives ``C = Q``, as it
+must.
+
+That formula assumes the time constants are spread **through the thickness**
+(a "normal" distribution) -- right for a bulk or a grain-boundary arc, and the
+reading under which "can this arc be the bulk?" is asked.  An interface whose
+time constants are spread **along the surface** takes Brug's formula with the
+ohmic resistance instead, and Eq. (18) is then off by −70 % to +100 %
+(``HIRSCHORN2010.eq18-on-surface-distribution-wrong``).  That is why a side is
+only named when it survives ``DETERMINED_SPREAD`` (below), and why a blocking
+tail's capacitance is Brug's (`audit._blocking_capacitance`).
 
 **Which process.**  Irvine, Sinclair & West, *Adv. Mater.* 2, 132 (1990),
-tabulated the capacitances that identify each process in a ceramic -- for a
-cell constant ``l/A = 1 cm⁻¹``.  A real pellet is not that cell, and the two
-kinds of process scale **differently**:
+tabulated the capacitances that identify each process in a ceramic
+(``ISW1990.table1-capacitance-interpretation``: a column of farads, derived
+for a cell constant ``l/A = 1 cm⁻¹``, so ``C·l/A`` is in F·cm⁻¹).  A real
+pellet is not that cell, and the two kinds of process scale **differently**:
 
 * bulk and grain boundary are capacitors *across the thickness* -- they go as
   ``A/l``, so the comparable number is ``C · l/A``;

@@ -76,6 +76,27 @@ def test_the_cell_that_started_it_is_named_a_problem(client):
     assert all(arc["capacitance_f"] for arc in arcs.values())
 
 
+def test_each_finding_says_which_paper_it_rests_on(client):
+    """판정이 기대는 논문 기록 (ADR 0042) — 판정은 id 를, 보고서는 쪽까지."""
+    out = user_cell(client)
+    report = audit(client)
+    item = entry(report, out["id"])
+    (open_cell,) = [f for f in item["findings"]
+                    if f["code"] == "blocking_element_on_open_cell"]
+    assert "ISW1990.no-spike-means-electronic" in open_cell["refs"]
+    cited = {ref["id"]: ref for ref in report["references"]}
+    assert cited["ISW1990.no-spike-means-electronic"]["citation"].startswith(
+        "Irvine–Sinclair–West 1990, p. 135")
+    assert cited["ISW1990.no-spike-means-electronic"]["quote"]
+    # 같은 기록은 한 번만.
+    assert len(cited) == len(report["references"])
+
+    text = client.get("/api/eis/audit", params={"format": "text"}).text
+    assert "[근거 1" in text
+    assert "━━ 근거 (" in text
+    assert "[1] " in text.split("━━ 근거 (")[1]
+
+
 def test_a_real_blocking_cell_fitted_right_has_no_problem(client):
     """산화물 펠릿처럼 두 아크가 다 보이는 블로킹 셀 (700 µm, 10 mm).
 

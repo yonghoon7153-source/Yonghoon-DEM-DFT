@@ -1,0 +1,782 @@
+{
+ "sources": [
+  {
+   "key": "HIRSCHORN2010",
+   "short": "Hirschorn 외 2010",
+   "authors": "Bryan Hirschorn, Mark E. Orazem, Bernard Tribollet, Vincent Vivier, Isabelle Frateur, Marco Musiani",
+   "title": "Determination of effective capacitance and film thickness from constant-phase-element parameters",
+   "venue": "Electrochimica Acta",
+   "year": 2010,
+   "volume": "55",
+   "pages": "6218-6227",
+   "doi": "10.1016/j.electacta.2009.10.065"
+  }
+ ],
+ "records": [
+  {
+   "id": "HIRSCHORN2010.cpe-impedance-convention",
+   "source": "HIRSCHORN2010",
+   "kind": "definition",
+   "topics": [
+    "cpe",
+    "definition",
+    "faradaic"
+   ],
+   "claim_ko": "논문은 CPE 가 있는 패러데이 반응을 Z = R_e + R_t/(1 + (jω)^α Q R_t) 로 쓰며 (CPE 임피던스 1/((jω)^α Q)), α = 1 이면 Q 가 계면 커패시턴스(µF/cm²)다.",
+   "claim": "The paper writes a Faradaic reaction with CPE dispersion as Z = R_e + R_t/(1 + (jω)^α Q R_t), i.e. a CPE impedance of 1/((jω)^α Q), and for α = 1 the parameter Q is the interfacial capacitance (µF/cm²).",
+   "page": 6218,
+   "where": "Eq. (1), Section 1",
+   "math": "Z(omega) = R_e + R_t / (1 + (j*omega)^alpha * Q * R_t)",
+   "conditions": "Faradaic reaction without diffusion; R_e = Ohmic resistance, R_t = charge-transfer resistance; alpha and Q independent of frequency. Q and R are per unit area in the paper.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.blocking-electrode-re-plus-cpe",
+   "source": "HIRSCHORN2010",
+   "kind": "definition",
+   "topics": [
+    "cpe",
+    "blocking-electrode",
+    "series-cpe"
+   ],
+   "claim_ko": "블로킹 전극의 임피던스는 옴 저항과 CPE 의 직렬, Z = R_e + 1/((jω)^α Q) 이며, α = 1 이면 Q 가 계면의 미분 용량이다.",
+   "claim": "For a blocking electrode the impedance is the Ohmic resistance in series with a CPE, Z = R_e + 1/((jω)^α Q), where Q is the differential capacity of the interface when α = 1.",
+   "page": 6218,
+   "where": "Eq. (2), Section 1",
+   "math": "Z(omega) = R_e + 1 / ((j*omega)^alpha * Q)",
+   "conditions": "Blocking (non-Faradaic) interface; the R_t -> infinity form of Eq. (1).",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.q-is-not-a-capacitance",
+   "source": "HIRSCHORN2010",
+   "kind": "caveat",
+   "topics": [
+    "cpe",
+    "effective-capacitance"
+   ],
+   "claim_ko": "α < 1 이면 CPE 의 Q 는 커패시턴스가 아니며 변환식이 필요하다.",
+   "claim": "When α < 1 the CPE parameter Q does not represent a capacitance, so a conversion formula is required.",
+   "page": 6218,
+   "where": "Section 1",
+   "conditions": "Any CPE with alpha < 1. At alpha = 1, Q is the capacitance.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.q-as-capacitance-500pct-error",
+   "source": "HIRSCHORN2010",
+   "kind": "example",
+   "topics": [
+    "cpe",
+    "effective-capacitance",
+    "error-magnitude",
+    "disk-electrode"
+   ],
+   "claim_ko": "원판 전극 시뮬레이션에서 Q_eff 를 그대로 계면 커패시턴스로 쓰면 K = 100 에서 약 500% 오차가 났다 (α 가 1 에 가까운 작은 J 에서도).",
+   "claim": "In disk-electrode simulations with geometry-induced dispersion, taking the CPE coefficient Q_eff as the interfacial capacitance gave errors of about 500% at K = 100, even for small J, where α is close to 1.",
+   "page": 6221,
+   "where": "Section 3.1, Fig. 3",
+   "math": "K = omega * C0 * r0 / kappa",
+   "values": {
+    "error_percent": 500,
+    "at_K": 100,
+    "source": "Fig. 3, taken from Huang et al. [13]"
+   },
+   "conditions": "Disk electrode; geometry-induced (surface) pseudo-CPE at high frequency.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.surface-vs-normal-distribution",
+   "source": "HIRSCHORN2010",
+   "kind": "definition",
+   "topics": [
+    "surface-distribution",
+    "normal-distribution",
+    "cpe"
+   ],
+   "claim_ko": "CPE 거동은 전극 표면을 따라 퍼진 시정수 분포(surface) 에서도, 표면에 수직인 막 두께 방향 분포(normal) 에서도 나올 수 있다.",
+   "claim": "CPE behaviour can come from a distribution of time constants along the electrode surface (surface distribution) or from one normal to the surface, e.g. through a film (normal distribution).",
+   "page": 6219,
+   "where": "Section 2",
+   "conditions": "Either type yields a CPE for an appropriate distribution function.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.surface-cpe-needs-ohmic-resistance",
+   "source": "HIRSCHORN2010",
+   "kind": "model",
+   "topics": [
+    "surface-distribution",
+    "ohmic-resistance",
+    "cpe"
+   ],
+   "claim_ko": "표면 분포에서는 국소 어드미턴스가 더해지고, 옴 저항이 없으면 1/R_eff = Σ1/R_i, C_eff = ΣC_i 인 이상적 RC 하나로 모인다 — 표면 분포가 CPE 를 만들려면 옴 저항이 필요하다.",
+   "claim": "In a surface distribution the local admittances add; without an Ohmic resistance they collapse to a single ideal RC with 1/R_eff = Σ1/R_i and C_eff = ΣC_i, so CPE behaviour from a surface distribution needs an Ohmic resistance.",
+   "page": 6219,
+   "where": "Section 2.1, Eqs. (3)-(5), Fig. 1",
+   "math": "no R_e: 1/R_eff = sum_i 1/R_i ; C_eff = sum_i C_i (Eqs. 3-4). With R_e: Y = sum_i (R_e,i + R_i/(1 + j*omega*R_i*C_i))^-1 (Eq. 5)",
+   "conditions": "Surface (lateral) distribution of local R_i, C_i; Fig. 1(a) with and 1(b) without Ohmic resistance.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.normal-cpe-needs-no-ohmic-resistance",
+   "source": "HIRSCHORN2010",
+   "kind": "model",
+   "topics": [
+    "normal-distribution",
+    "film",
+    "cpe",
+    "ohmic-resistance"
+   ],
+   "claim_ko": "층 두께 방향 분포에서는 국소 임피던스가 더해지고 (Voigt 직렬), CPE 가 나타나는 데 옴 저항이 필요 없으며, R_e 는 분산에 기여하지 않으므로 Z − R_e = R_f/(1 + (jω)^α Q R_f) (R_f = ΣR_i) 로 다룬다.",
+   "claim": "In a normal distribution through a layer the local impedances add (a Voigt series, Z = R_e + Σ R_i/(1 + jωR_iC_i)), the CPE needs no Ohmic resistance, and since R_e does not contribute to the dispersion the analysis uses Z − R_e = R_f/(1 + (jω)^α Q R_f) with R_f = ΣR_i.",
+   "page": 6219,
+   "where": "Section 2.2 (Eqs. (13)-(15) on p. 6220)",
+   "math": "Z = R_e + sum_i R_i/(1 + j*omega*R_i*C_i) (Eq. 13); Z - R_e = R_f/(1 + (j*omega)^alpha*Q*R_f) (Eq. 14); R_f = sum_i R_i (Eq. 15)",
+   "conditions": "Normal (through-thickness) distribution; needs both resistive and capacitive elements.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.brug-surface-faradaic-eq11",
+   "source": "HIRSCHORN2010",
+   "kind": "formula",
+   "topics": [
+    "effective-capacitance",
+    "brug",
+    "surface-distribution",
+    "faradaic"
+   ],
+   "claim_ko": "패러데이 반응이 있는 표면 분포에서 C_eff = Q^(1/α)·(R_eR_t/(R_e+R_t))^((1−α)/α) (= Q^(1/α)(1/R_e+1/R_t)^((α−1)/α)) 이며, Brug 의 식 (20) 을 이 논문의 CPE 정의로 쓴 것이다.",
+   "claim": "For a surface distribution with a Faradaic reaction, C_eff = Q^(1/α) (R_e R_t/(R_e + R_t))^((1−α)/α), equivalently Q^(1/α) (1/R_e + 1/R_t)^((α−1)/α), which is Brug's Eq. (20) written with this paper's CPE definition.",
+   "page": 6219,
+   "where": "Eqs. (6)-(11), Section 2.1",
+   "math": "C_eff = Q^(1/alpha) * (R_e*R_t/(R_e+R_t))^((1-alpha)/alpha) (Eq. 11); tau0 = (R_e*R_t/(R_e+R_t)) * C_eff (Eq. 8); tau0^alpha = Q*R_e*R_t/(R_e+R_t) (Eq. 9)",
+   "conditions": "Surface time-constant distribution with circuit R_e + (R_t ∥ CPE) (Eq. 1). tau0 is defined from the admittance form (Eqs. 6-7), not from the apex of the Nyquist arc.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.brug-surface-blocking-eq12",
+   "source": "HIRSCHORN2010",
+   "kind": "formula",
+   "topics": [
+    "effective-capacitance",
+    "brug",
+    "surface-distribution",
+    "blocking-electrode",
+    "series-cpe"
+   ],
+   "claim_ko": "R_t → ∞ (블로킹 전극) 극한에서 표면 분포 식은 C_eff = Q^(1/α)·R_e^((1−α)/α) (R_e = 옴 저항) 가 되며, Brug 의 블로킹 전극 식 (5) 와 같다.",
+   "claim": "In the limit R_t → ∞ (blocking electrode) the surface-distribution formula becomes C_eff = Q^(1/α) R_e^((1−α)/α), with R_e the Ohmic resistance, equivalent to Brug's Eq. (5) for a blocking electrode.",
+   "page": 6219,
+   "where": "Eq. (12), Section 2.1",
+   "math": "C_eff = Q^(1/alpha) * R_e^((1-alpha)/alpha)",
+   "conditions": "Blocking electrode Z = R_e + 1/((jω)^α Q) (Eq. 2) with a surface distribution. The paper says it 'applies strictly for a blocking electrode' (p. 6221).",
+   "confidence": "high",
+   "quote": "which is equivalent to Eq. (5) presented by Brug et al. [1] for a blocking electrode."
+  },
+  {
+   "id": "HIRSCHORN2010.hsu-mansfeld-normal-eq18",
+   "source": "HIRSCHORN2010",
+   "kind": "formula",
+   "topics": [
+    "effective-capacitance",
+    "hsu-mansfeld",
+    "normal-distribution",
+    "film"
+   ],
+   "claim_ko": "두께 방향(normal) 분포에서 C_eff = Q^(1/α)·R_f^((1−α)/α) (R_f = 막 저항, τ0^α = (R_f C_eff)^α = Q R_f) 이며, Hsu–Mansfeld 가 유도 없이 ω_max 로 쓴 식 (3) 과 같다.",
+   "claim": "For a normal distribution C_eff = Q^(1/α) R_f^((1−α)/α), with R_f the film resistance and τ0^α = (R_f C_eff)^α = Q R_f. The paper says this equals Hsu and Mansfeld's Eq. (3), which they gave without derivation in terms of ω_max.",
+   "page": 6220,
+   "where": "Eqs. (14)-(18), Section 2.2",
+   "math": "C_eff = Q^(1/alpha) * R_f^((1-alpha)/alpha) (Eq. 18); tau0^alpha = (R_f*C_eff)^alpha = Q*R_f (Eq. 17)",
+   "conditions": "Normal time-constant distribution; R_f = sum of R_i is the resistance in parallel with the CPE once R_e is removed (Eq. 14).",
+   "confidence": "high",
+   "quote": "Eq. (18) is equivalent to Eq. (3) presented without derivation by Hsu and Mansfeld [11] in terms of ωmax."
+  },
+  {
+   "id": "HIRSCHORN2010.same-form-only-resistance-differs",
+   "source": "HIRSCHORN2010",
+   "kind": "criterion",
+   "topics": [
+    "effective-capacitance",
+    "brug",
+    "hsu-mansfeld",
+    "model-selection"
+   ],
+   "claim_ko": "식 (11)·(12)·(18) 은 모두 C_eff = Q^(1/α)·R*^((1−α)/α) 꼴이고 R* 만 다르다: 표면·패러데이면 R_e∥R_t, 표면·블로킹이면 R_e, 두께 방향(normal)이면 R_f.",
+   "claim": "Eqs. (11), (12) and (18) all have the form C_eff = Q^(1/α) R*^((1−α)/α) and differ only in R*: R_e∥R_t for a Faradaic surface distribution, R_e for a blocking surface distribution, and R_f for a normal distribution.",
+   "page": 6220,
+   "where": "Section 2.2, text after Eq. (18)",
+   "math": "C_eff = Q^(1/alpha) * Rstar^((1-alpha)/alpha); Rstar = R_e*R_t/(R_e+R_t) (Eq. 11) | R_e (Eq. 12) | R_f (Eq. 18)",
+   "conditions": "R* is chosen by the distribution type, not by how the circuit is drawn.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.graphical-alpha-and-q",
+   "source": "HIRSCHORN2010",
+   "kind": "procedure",
+   "topics": [
+    "cpe",
+    "graphical-analysis",
+    "fit-check"
+   ],
+   "claim_ko": "α 와 Q 는 허수부에서 α = |d log|Z_j|/d log f|, Q_eff = sin(απ/2)·(−1/(Z_j ω^α)) 로 읽을 수 있고 회귀와 같은 값을 준다. 특성 주파수보다 한 decade 위 구간을 썼으며, α 는 기울기를 잰 주파수에 따라 달랐다.",
+   "claim": "α and Q can be read from the imaginary impedance as α = |d log|Z_j| / d log f| and Q_eff = sin(απ/2)·(−1/(Z_j ω^α)), giving the same values as regression. The analysis used frequencies a decade above the characteristic frequency, and α depended on where the slope was taken.",
+   "page": 6220,
+   "where": "Eqs. (19)-(20), Section 3.1",
+   "math": "alpha = |d log|Z_j| / d log f| (Eq. 19); Q_eff = sin(alpha*pi/2) * (-1/(Z_j * omega^alpha)) (Eq. 20)",
+   "values": {
+    "frequency_window": "frequencies one decade above the characteristic frequency (following Huang et al. [13])"
+   },
+   "conditions": "High-frequency CPE region of an arc. By our algebra it is exact at every frequency for a series R_e + CPE, where Z_j = −sin(απ/2)/(Q ω^α).",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.disk-dimensionless-frequency-k",
+   "source": "HIRSCHORN2010",
+   "kind": "definition",
+   "topics": [
+    "disk-electrode",
+    "surface-distribution",
+    "frequency-dispersion"
+   ],
+   "claim_ko": "원판 전극의 기하 유래(표면) 분산은 무차원 주파수 K = ωC0r0/κ 와 J = (4/π)R_e/R_t 로 나타낸다. J 가 크면 옴 저항이, 작으면 전하전달 저항이 지배한다.",
+   "claim": "Geometry-induced (surface) dispersion on a disk electrode is described by the dimensionless frequency K = ωC0r0/κ and by J = (4/π)R_e/R_t. Large J means the Ohmic resistance dominates; small J means charge transfer dominates.",
+   "page": 6220,
+   "where": "Section 3.1, definition of K (Eq. (24) for J on p. 6221)",
+   "math": "K = omega*C0*r0/kappa; J = (4/pi)*R_e/R_t (Eq. 24); linear kinetics: J = (alpha_a + alpha_c)*F*i0*r0/(R*T*kappa) (Eq. 21)",
+   "conditions": "Disk electrode embedded in an insulating plane (simulations of Huang et al.); r0 = disk radius, κ = electrolyte conductivity, C0 = interfacial capacitance.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.eq12-on-faradaic-fails-above-k5",
+   "source": "HIRSCHORN2010",
+   "kind": "example",
+   "topics": [
+    "effective-capacitance",
+    "brug",
+    "error-magnitude",
+    "disk-electrode"
+   ],
+   "claim_ko": "패러데이 원판 전극 시뮬레이션에서 블로킹 식 (12) 는 α 를 K < 5 에서 구하면 맞고 K > 5 에서는 틀렸으며, 오차는 K 와 J 모두에 달렸다.",
+   "claim": "On simulated Faradaic disk electrodes, the blocking-electrode formula Eq. (12) gave the correct capacitance when α was evaluated at K < 5 but failed for K > 5, with an error that depends on both K and J.",
+   "page": 6221,
+   "where": "Section 3.1, Fig. 4(a)",
+   "math": "C_eff = Q^(1/alpha) * R_e^((1-alpha)/alpha)",
+   "values": {
+    "correct_if_alpha_evaluated_at": "K < 5",
+    "fails_for": "K > 5",
+    "approx_max_Ceff_over_C0": 1.5,
+    "approx_note": "read from Fig. 4(a) for J = 10 at K of about 80-100; not printed as a number"
+   },
+   "conditions": "Surface (geometry-induced) distribution with a Faradaic reaction; alpha and Q_eff taken as functions of frequency (pseudo-CPE).",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.eq11-best-within-20pct",
+   "source": "HIRSCHORN2010",
+   "kind": "example",
+   "topics": [
+    "effective-capacitance",
+    "brug",
+    "error-magnitude"
+   ],
+   "claim_ko": "R_e 와 R_t 를 모두 보정한 식 (11) 은 J 의존성을 크게 줄여 오차를 20% 미만으로 지켰고, 분산이 클 때 시험한 식 가운데 가장 좋았다.",
+   "claim": "Correcting for both R_e and R_t (Eq. 11) greatly reduced the dependence on J and kept the capacitance error below 20%, making Eq. (11) the best of the tested relations when frequency dispersion is significant.",
+   "page": 6221,
+   "where": "Section 3.1, Fig. 4(b)",
+   "math": "C_eff = Q^(1/alpha) * (R_e*R_t/(R_e+R_t))^((1-alpha)/alpha)",
+   "values": {
+    "max_error_percent": 20,
+    "Rt_correction_important_for": "K > 5"
+   },
+   "conditions": "Simulated disk electrode with a Faradaic reaction (surface distribution).",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.eq18-on-surface-distribution-wrong",
+   "source": "HIRSCHORN2010",
+   "kind": "caveat",
+   "topics": [
+    "effective-capacitance",
+    "hsu-mansfeld",
+    "surface-distribution",
+    "error-magnitude"
+   ],
+   "claim_ko": "두께 방향 식 (18) 을 표면 분포 시뮬레이션에 쓰면 Q 를 그대로 쓰는 것보다는 낫지만 J·K 에 따라 −70% ~ +100% 틀렸다. 논문은 표면 분포 해석에 부적절하다고 본다.",
+   "claim": "Tested on the simulated surface distribution, the normal-distribution formula Eq. (18) improved on using Q directly but erred by −70% to +100% depending on J and K. The paper calls it not appropriate for surface time-constant distributions.",
+   "page": 6221,
+   "where": "Section 3.1, Fig. 5",
+   "math": "C_eff = Q^(1/alpha) * R_f^((1-alpha)/alpha)",
+   "values": {
+    "error_min_percent": -70,
+    "error_max_percent": 100
+   },
+   "conditions": "Disk-electrode simulations of Huang et al. [13], Fig. 5.",
+   "confidence": "high",
+   "quote": "Eq. (18), developed for a normal time-constant distribution, is not appropriate for interpretation of results affected by a surface time-constant distribution."
+  },
+  {
+   "id": "HIRSCHORN2010.nb-geometric-dispersion-outside-window",
+   "source": "HIRSCHORN2010",
+   "kind": "criterion",
+   "topics": [
+    "surface-distribution",
+    "normal-distribution",
+    "model-selection",
+    "disk-electrode"
+   ],
+   "claim_ko": "Nb 전극의 고주파 CPE (300 Hz 이상에서 기울기 −0.90) 는 산화막 탓으로 봤다. 기하 유래 표면 분산은 K = 1 (약 65 kHz) 근처에서야 나타나는데, 측정 최고 주파수가 63.1 kHz 였기 때문이다.",
+   "claim": "For the Nb electrode, the high-frequency CPE (slope −0.90 above 300 Hz) was attributed to the oxide film, because geometry-induced surface dispersion would only appear near K = 1, about 65 kHz, above the highest measured frequency of 63.1 kHz.",
+   "page": 6221,
+   "where": "Section 3.2.1, Fig. 6(b) (sentence continues on p. 6222)",
+   "math": "K = omega*C0*r0/kappa = 1",
+   "values": {
+    "alpha_from_slope": 0.9,
+    "slope_region": "f > 300 Hz",
+    "K_equals_1_at_kHz": 65,
+    "max_measured_kHz": 63.1
+   },
+   "conditions": "Nb rotating disk electrode, 0.25 cm², 0.1 M NH4F at pH 2, 6 V(SCE).",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.film-thickness-eq25",
+   "source": "HIRSCHORN2010",
+   "kind": "formula",
+   "topics": [
+    "film-thickness",
+    "dielectric-constant",
+    "normal-distribution"
+   ],
+   "claim_ko": "유전율이 위치에 무관한 normal 분포에서는 d_eff = εε0/C_eff (ε0 = 8.8542×10⁻¹⁴ F/cm, C_eff 는 단위면적당) 로 막 두께를 얻는다.",
+   "claim": "For normal distributions with a position-independent dielectric constant, the film thickness follows from d_eff = εε0/C_eff, with ε0 = 8.8542×10^-14 F/cm and C_eff per unit area.",
+   "page": 6222,
+   "where": "Eq. (25), Section 3.2.1",
+   "math": "C_eff = eps * eps0 / d_eff (Eq. 25); eps0 = 8.8542e-14 F/cm",
+   "values": {
+    "eps0_F_per_cm": 8.8542e-14,
+    "eps_Nb2O5": 42,
+    "eps_skin_assumed": 49
+   },
+   "conditions": "Normal time-constant distribution; uniform ε; C_eff from Eq. (18). Exact only in the infinite-frequency limit (HIRSCHORN2010.deff-between-lambda-and-delta).",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.nb-oxide-table1-anchor",
+   "source": "HIRSCHORN2010",
+   "kind": "example",
+   "topics": [
+    "test-anchor",
+    "hsu-mansfeld",
+    "film-thickness",
+    "normal-distribution"
+   ],
+   "claim_ko": "Nb2O5 막에서 식 (18) (그래프로 구한 α·Q, 루프 지름 R_f) 은 2·6·10 V(SCE) 에서 C_eff = 4.6·2.0·1.3 µF/cm², ε = 42 로 d_eff = 8·18·29 nm 를 주었다.",
+   "claim": "For Nb2O5 films, Eq. (18) with graphical α and Q and R_f taken as the loop diameter gave C_eff = 4.6, 2.0 and 1.3 µF/cm², and with ε = 42 gave d_eff = 8, 18 and 29 nm at 2, 6 and 10 V(SCE).",
+   "page": 6222,
+   "where": "Table 1",
+   "math": "C_eff = Q^(1/alpha) * R_f^((1-alpha)/alpha); d_eff = eps*eps0/C_eff",
+   "values": {
+    "units": {
+     "Q": "Ohm^-1 cm^-2 s^alpha",
+     "R_f": "kOhm cm^2",
+     "C_eff": "uF/cm^2",
+     "d_eff": "nm"
+    },
+    "eps": 42,
+    "eps0_F_per_cm": 8.8542e-14,
+    "rows": [
+     {
+      "E_V_SCE": 2,
+      "alpha": 0.95,
+      "Q": 5.9e-06,
+      "R_f": 1.3,
+      "C_eff": 4.6,
+      "d_eff": 8
+     },
+     {
+      "E_V_SCE": 6,
+      "alpha": 0.9,
+      "Q": 3.5e-06,
+      "R_f": 2.01,
+      "C_eff": 2.0,
+      "d_eff": 18
+     },
+     {
+      "E_V_SCE": 10,
+      "alpha": 0.88,
+      "Q": 2.5e-06,
+      "R_f": 3.65,
+      "C_eff": 1.3,
+      "d_eff": 29
+     }
+    ],
+    "recomputed_by_us_from_printed_inputs": {
+     "C_eff_uF_cm2": [
+      4.566,
+      2.018,
+      1.318
+     ],
+     "d_eff_nm": [
+      8.14,
+      18.43,
+      28.22
+     ],
+     "note": "our effective_capacitance(R_f*1e3, Q, alpha) gives the same C_eff; d_eff at 10 V recomputes to 28.2 nm against 29 printed, so use about 5% tolerance"
+    }
+   },
+   "conditions": "Normal distribution assumed (oxide film). R_f from the diameter of the high-frequency loop; alpha from the slope above 300 Hz (at 6 V).",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.nb-thickness-vs-literature",
+   "source": "HIRSCHORN2010",
+   "kind": "example",
+   "topics": [
+    "film-thickness",
+    "normal-distribution",
+    "validation"
+   ],
+   "claim_ko": "식 (18)+(25) 두께 (8·18·29 nm) 는 문헌값 (11/10/7, 22/19/15, 33/28/24 nm), 특히 비전기화학 측정값과 잘 맞았다.",
+   "claim": "The Eq. (18) + Eq. (25) thicknesses (8, 18, 29 nm) agreed very well with independent literature values (11/10/7, 22/19/15 and 33/28/24 nm), especially with non-electrochemical measurements.",
+   "page": 6222,
+   "where": "Table 2, Section 3.2.1",
+   "values": {
+    "E_V_SCE": [
+     2,
+     6,
+     10
+    ],
+    "d_eff_present_nm": [
+     8,
+     18,
+     29
+    ],
+    "delta_ref50_nm": [
+     11,
+     22,
+     33
+    ],
+    "delta_ref51_nm": [
+     10,
+     19,
+     28
+    ],
+    "delta_ref52_nm": [
+     7,
+     15,
+     24
+    ]
+   },
+   "conditions": "Ref. [51]: ellipsometry; Ref. [52]: TEM and impedance; Ref. [50]: review (method not stated).",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.nb-wrong-resistance-too-thick",
+   "source": "HIRSCHORN2010",
+   "kind": "example",
+   "topics": [
+    "effective-capacitance",
+    "error-magnitude",
+    "model-selection"
+   ],
+   "claim_ko": "Nb 막에 표면 식 (식 (11) 에서 R_t 대신 R_f; R_f ≫ R_e 라 식 (12) 와 같음) 을 쓰면 C_eff = 3.2·0.9·0.5 µF/cm², d_eff = 12·41·74 nm 로 8·18·29 nm 보다 두껍게 나왔고, 전위가 높을수록 더 벌어졌다.",
+   "claim": "Using the surface formula for the Nb film (Eq. 11 with R_t replaced by R_f, the same as Eq. 12 because R_f ≫ R_e) gave C_eff = 3.2, 0.9 and 0.5 µF/cm² and d_eff = 12, 41 and 74 nm, against 8, 18 and 29 nm, and the overestimate grew with potential.",
+   "page": 6222,
+   "where": "Section 3.2.1, last paragraph",
+   "math": "C_eff = Q^(1/alpha) * R_e^((1-alpha)/alpha)",
+   "values": {
+    "E_V_SCE": [
+     2,
+     6,
+     10
+    ],
+    "C_eff_eq12_uF_cm2": [
+     3.2,
+     0.9,
+     0.5
+    ],
+    "d_eff_eq12_nm": [
+     12,
+     41,
+     74
+    ],
+    "C_eff_eq18_uF_cm2": [
+     4.6,
+     2.0,
+     1.3
+    ],
+    "d_eff_eq18_nm": [
+     8,
+     18,
+     29
+    ],
+    "ratio_C18_over_C12_computed_from_printed": [
+     1.44,
+     2.22,
+     2.6
+    ],
+    "R_e": "not printed, so these rows cannot be used as input-to-output anchors for Eq. (12)"
+   },
+   "conditions": "A normal-distribution system (oxide film) evaluated with the surface formula.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.skin-table3-anchor",
+   "source": "HIRSCHORN2010",
+   "kind": "example",
+   "topics": [
+    "test-anchor",
+    "hsu-mansfeld",
+    "film-thickness"
+   ],
+   "claim_ko": "사람 각질층에서 식 (18) 은 C_eff 1.66–1.86×10⁻² µF/cm², ε = 49 로 d_eff 2.3–2.6 µm 를 주었는데, 이는 알려진 10–40 µm 보다 훨씬 작다.",
+   "claim": "For heat-separated human stratum corneum, Eq. (18) gave C_eff of 1.66–1.86×10^-2 µF/cm² and, with ε = 49, d_eff of 2.3–2.6 µm, far below the accepted 10–40 µm.",
+   "page": 6223,
+   "where": "Table 3, Section 3.2.2",
+   "math": "C_eff = Q^(1/alpha) * R_f^((1-alpha)/alpha); d_eff = eps*eps0/C_eff",
+   "values": {
+    "units": {
+     "Q": "Ohm^-1 cm^-2 s^alpha",
+     "R_f": "kOhm cm^2",
+     "C_eff": "uF/cm^2",
+     "d_eff": "um"
+    },
+    "eps": 49,
+    "rows": [
+     {
+      "time_h": 0.0,
+      "alpha": 0.824,
+      "Q": 6.13e-08,
+      "R_f": 60,
+      "C_eff": 0.0186,
+      "d_eff": 2.3
+     },
+     {
+      "time_h": 1.9,
+      "alpha": 0.834,
+      "Q": 5.36e-08,
+      "R_f": 51,
+      "C_eff": 0.0166,
+      "d_eff": 2.6
+     },
+     {
+      "time_h": 5.1,
+      "alpha": 0.838,
+      "Q": 5.4e-08,
+      "R_f": 42,
+      "C_eff": 0.0166,
+      "d_eff": 2.6
+     }
+    ],
+    "expected_thickness_um": [
+     10,
+     40
+    ],
+    "recomputed_by_us_from_printed_inputs": {
+     "C_eff_uF_cm2": [
+      0.01851,
+      0.01656,
+      0.01664
+     ],
+     "d_eff_um": [
+      2.34,
+      2.62,
+      2.61
+     ]
+    }
+   },
+   "conditions": "Normal distribution assumed; ε = 49 obtained from the Young-model comparison.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.skin-eq12-closer-for-wrong-reason",
+   "source": "HIRSCHORN2010",
+   "kind": "caveat",
+   "topics": [
+    "model-selection",
+    "effective-capacitance",
+    "validation"
+   ],
+   "claim_ko": "피부에서는 식 (12) 가 식 (18) 보다 기대 두께에 가까운 값 (9.6·12·14 µm) 을 줬지만, R_e 는 피부의 유전 성질과 무관하므로 겉보기 일치일 뿐이라고 논문은 강조한다.",
+   "claim": "For skin, Eq. (12) gave thicknesses (9.6, 12, 14 µm) closer to the expected value than Eq. (18) did, but the paper stresses that the agreement is only apparent, because R_e has no relation to the dielectric properties of skin.",
+   "page": 6223,
+   "where": "Section 3.2.2",
+   "math": "C_eff = Q^(1/alpha) * R_e^((1-alpha)/alpha)",
+   "values": {
+    "time_h": [
+     0.0,
+     1.9,
+     5.1
+    ],
+    "C_eff_eq12_uF_cm2": [
+     0.0045,
+     0.0037,
+     0.0031
+    ],
+    "d_eff_eq12_um": [
+     9.6,
+     12,
+     14
+    ]
+   },
+   "conditions": "Eq. (11) gave values close to Eq. (12) because R_f ≫ R_e. R_e itself is not printed.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.young-model-impedance",
+   "source": "HIRSCHORN2010",
+   "kind": "model",
+   "topics": [
+    "young-model",
+    "normal-distribution",
+    "resistivity-profile",
+    "film"
+   ],
+   "claim_ko": "유전율이 균일하고 저항률이 ρ(x) = ρ0 e^(−x/λ) 로 감소하는 막 (Young 모델) 의 임피던스는 Z = −(λ/(jωεε0)) ln[(1 + jωεε0ρ0 e^(−δ/λ))/(1 + jωεε0ρ0)] 이다. 저주파에서 ρ0λ(1 − e^(−δ/λ)), 고주파에서 커패시턴스 εε0/δ 로 가며, 분산은 고주파에서만 생긴다.",
+   "claim": "A film with uniform ε and resistivity decaying as ρ(x) = ρ0 e^(−x/λ) (the Young model) has Z = −(λ/(jωεε0)) ln[(1 + jωεε0ρ0 e^(−δ/λ))/(1 + jωεε0ρ0)]. Z tends to ρ0λ(1 − e^(−δ/λ)) at low frequency and to the capacitance εε0/δ at high frequency, and the dispersion appears only at high frequency.",
+   "page": 6224,
+   "where": "Section 3.2.3, Eqs. (33)-(35), Figs. 8-9 (Eqs. (26)-(32) on p. 6223)",
+   "math": "Z = -(lambda/(j*omega*eps*eps0)) * ln[(1 + j*omega*eps*eps0*rho0*exp(-delta/lambda)) / (1 + j*omega*eps*eps0*rho0)] (Eq. 33); Z(omega->0) = lambda*rho0*(1 - exp(-delta/lambda)) (Eq. 34); Z(omega->inf) = -j*delta/(omega*eps*eps0) (Eq. 35)",
+   "values": {
+    "cpe_like_region": "omega*eps*eps0*rho0 > 1",
+    "nyquist_shape_unchanged_for_delta_over_lambda_above": 5
+   },
+   "conditions": "Uniform dielectric constant; ρ0 is the maximum resistivity at x = 0 (oxide–electrolyte interface); λ = characteristic length; δ = thickness.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.young-analysed-as-rf-cpe",
+   "source": "HIRSCHORN2010",
+   "kind": "procedure",
+   "topics": [
+    "normal-distribution",
+    "hsu-mansfeld",
+    "fit-check"
+   ],
+   "claim_ko": "Young 임피던스를 CPE 로 읽기 위해 전해질 저항과 직렬인 R_f–CPE 병렬로 해석하고, ωεε0ρ0 = 1 이상의 각 주파수에서 Q·α 를 그래프로 구해 식 (18)·(25) 를 적용했다.",
+   "claim": "To relate the Young impedance to CPE parameters, the paper analysed it as an R_f–CPE parallel combination in series with the electrolyte resistance, took Q and α graphically at each frequency above ωεε0ρ0 = 1, and applied Eqs. (18) and (25).",
+   "page": 6224,
+   "where": "Section 3.2.3",
+   "math": "Z = R_e + R_f/(1 + (j*omega)^alpha*Q*R_f); C_eff = Q^(1/alpha) * R_f^((1-alpha)/alpha)",
+   "conditions": "Normal (through-thickness) resistivity distribution.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.deff-between-lambda-and-delta",
+   "source": "HIRSCHORN2010",
+   "kind": "caveat",
+   "topics": [
+    "film-thickness",
+    "young-model",
+    "frequency-window"
+   ],
+   "claim_ko": "Young 모델에서 식 (18)·(25) 의 d_eff 는 충분히 높은 주파수에서만 실제 두께 δ 와 같다. 유한한 측정 구간에서는 λ 와 δ 사이에 놓이며, δ/λ = 400 이면 ωεε0ρ0 = 10⁵ 에서도 δ 보다 두 자릿수 작다.",
+   "claim": "In the Young model, d_eff from Eqs. (18) and (25) equals the true thickness δ only at high enough frequency. Over a finite band it lies between λ and δ: for δ/λ = 400 it is two orders of magnitude below δ even at ωεε0ρ0 = 10^5.",
+   "page": 6225,
+   "where": "Section 3.2.3, Fig. 10",
+   "math": "lambda <= d_eff <= delta",
+   "values": {
+    "delta_over_lambda_400": "d_eff two orders of magnitude below delta up to omega*eps*eps0*rho0 = 1e5",
+    "delta_over_lambda_5": "d_eff approaches delta abruptly at omega*eps*eps0*rho0 = 1e2",
+    "delta_over_lambda_10": "abrupt approach at omega*eps*eps0*rho0 = 1e4"
+   },
+   "conditions": "Uniform ε, exponential resistivity, finite measurement band.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.only-most-resistive-part-probed",
+   "source": "HIRSCHORN2010",
+   "kind": "caveat",
+   "topics": [
+    "film-thickness",
+    "normal-distribution",
+    "frequency-window",
+    "resistivity-profile"
+   ],
+   "claim_ko": "막 안에서 국소 저항률이 크게 변하면 RC 주파수가 측정 구간보다 높은 부분은 순수 저항으로만 보여, 식 (18) 의 C_eff 가 가장 저항이 큰 부분만 보고 두께를 작게 낸다.",
+   "claim": "When local resistivity varies strongly through a film, elements whose RC frequency lies above the measured range act as pure resistances, so C_eff from Eq. (18) sees only the most resistive part and under-predicts the thickness.",
+   "page": 6225,
+   "where": "Section 4, Fig. 11",
+   "math": "f_RC,i = 1/(2*pi*R_i*C)",
+   "conditions": "Normal distribution with strongly position-dependent resistivity (Fig. 11). The unseen capacitances may sit at the metal/film or the film/electrolyte interface.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.misuse-gives-macroscopic-errors",
+   "source": "HIRSCHORN2010",
+   "kind": "caveat",
+   "topics": [
+    "effective-capacitance",
+    "model-selection",
+    "error-magnitude"
+   ],
+   "claim_ko": "C_eff 계산에 잘못된 유효 저항을 쓰면 전해질·전하전달·막 저항이 서로 크게 다를 수 있어 거시적인 오차가 난다.",
+   "claim": "Using an incorrect effective resistance in the C_eff calculation can cause macroscopic errors, because electrolyte, charge-transfer and film resistances can differ greatly.",
+   "page": 6226,
+   "where": "Section 5 (Conclusions)",
+   "math": "C_eff(R_a)/C_eff(R_b) = (R_a/R_b)^((1-alpha)/alpha) (our algebra from Eqs. 11, 12 and 18)",
+   "values": {
+    "derived_by_us_not_in_paper": [
+     {
+      "n": 0.9,
+      "resistance_ratio": 1000,
+      "capacitance_ratio": 2.15
+     },
+     {
+      "n": 0.8,
+      "resistance_ratio": 100,
+      "capacitance_ratio": 3.16
+     },
+     {
+      "n": 0.7,
+      "resistance_ratio": 100,
+      "capacitance_ratio": 7.2
+     },
+     {
+      "n": 0.6,
+      "resistance_ratio": 1000,
+      "capacitance_ratio": 100
+     }
+    ]
+   },
+   "conditions": "Any of Eqs. (11), (12) or (18) used with a resistance that does not match the distribution type.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.brug-surface-hsu-mansfeld-normal",
+   "source": "HIRSCHORN2010",
+   "kind": "criterion",
+   "topics": [
+    "brug",
+    "hsu-mansfeld",
+    "surface-distribution",
+    "normal-distribution",
+    "model-selection"
+   ],
+   "claim_ko": "Brug 식은 표면 분포에만, Hsu–Mansfeld 식은 두께 방향(normal) 분포에만 맞다.",
+   "claim": "The Brug relations are appropriate only for a surface distribution of time constants, and the Hsu–Mansfeld relation only for a normal distribution.",
+   "page": 6226,
+   "where": "Section 5 (Conclusions)",
+   "conditions": "The paper's main conclusion.",
+   "confidence": "high"
+  },
+  {
+   "id": "HIRSCHORN2010.choose-formula-from-system-knowledge",
+   "source": "HIRSCHORN2010",
+   "kind": "criterion",
+   "topics": [
+    "model-selection",
+    "surface-distribution",
+    "normal-distribution"
+   ],
+   "claim_ko": "공식은 계에 대한 독립적인 지식으로 골라야 한다. 국소 임피던스는 표면/두께 방향 불균일을, 분광법은 두께 방향으로 성질이 변하는 막의 존재를 보여 줄 수 있다.",
+   "claim": "The choice of formula should rest on independent knowledge of the system: local impedance can reveal surface or normal inhomogeneity, and spectroscopic methods can reveal films whose properties vary normal to the surface.",
+   "page": 6226,
+   "where": "Section 5 (Conclusions)",
+   "conditions": "Apart from the frequency-window argument in HIRSCHORN2010.nb-geometric-dispersion-outside-window, the paper offers no test that uses the global spectrum alone.",
+   "confidence": "high"
+  }
+ ]
+}

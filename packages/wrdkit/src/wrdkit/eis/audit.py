@@ -58,7 +58,7 @@ from .fit import edge_misfit
 from .spectrum import Spectrum
 
 __all__ = ["CHECK", "Finding", "FitAudit", "Misfit", "NOTE", "PROBLEM",
-           "SEVERITIES", "SEVERITY_LABELS", "audit_conductivity_scan",
+           "REFERENCES", "SEVERITIES", "SEVERITY_LABELS", "audit_conductivity_scan",
            "audit_fit", "audit_record", "circuit_end", "config_from_name",
            "misfit", "sort_findings", "thickness_from_name", "worst"]
 
@@ -103,6 +103,44 @@ EXPECTED_PROCESSES: dict[tuple[str, str], tuple[str | None, ...]] = {
 }
 
 
+#: 판정 코드마다 그 판정이 기대는 논문 기록 (ADR 0042, `wrdkit.eis.knowledge`).
+#: 근거가 없는 코드는 우리 규칙(경계 붙음, 점 수, 단위)이거나 실측에서 나온
+#: 것이다 — 그것도 사실이므로 없는 근거를 지어 붙이지 않는다.
+REFERENCES: dict[str, tuple[str, ...]] = {
+    # 아크의 이름과 커패시턴스
+    "label_contradicts_capacitance": ("ISW1990.table1-capacitance-interpretation",
+                                      "ISW1990.assign-by-capacitance-magnitude",
+                                      "HIRSCHORN2010.hsu-mansfeld-normal-eq18"),
+    "arcs_are_electrode": ("ISW1990.table1-capacitance-interpretation",
+                           "ISW1990.bulk-arc-off-scale",
+                           "VADHVA2021.sulfide-bulk-gb-overlap"),
+    "bulk_above_window": ("ISW1990.bulk-arc-off-scale",
+                          "ISW1990.table1-capacitance-interpretation",
+                          "VADHVA2021.in-li-full-cell-assignment"),
+    # 저주파 끝 — 막는가
+    "tail_mimicked_by_arc": ("ISW1990.blocking-electrode-spike",
+                             "HIRSCHORN2010.brug-surface-blocking-eq12"),
+    "open_end_on_blocking_cell": ("ISW1990.blocking-electrode-spike",
+                                  "VADHVA2021.blocking-cell-circuit-r0-offset"),
+    "blocking_element_on_open_cell": ("ISW1990.no-spike-means-electronic",
+                                      "VADHVA2021.electrode-types"),
+    "symmetric_cell_does_not_block": ("ISW1990.no-spike-means-electronic",
+                                      "VADHVA2021.electrode-types"),
+    "cpe_like_diffusion": ("LASIA1999.cpe-exponent-limits",
+                           "ISW1990.diffusion-spike-45-degrees"),
+    # 곡선이 점을 지나가나
+    "misfit_everywhere": ("LASIA1999.residuals-should-be-random",),
+    "misfit_somewhere": ("LASIA1999.residuals-should-be-random",),
+    "misfit_at_edge": ("LASIA1999.residuals-should-be-random",),
+    "inductance_missing": ("LASIA1999.impedance-range-artefacts",),
+    # 온도 스캔
+    "sweep_unlike_its_neighbours": ("ISW1990.blocking-electrode-spike",),
+    "short_rest_before_sweep": ("VADHVA2021.relax-to-ocp-before-eis",
+                                "LASIA1999.stationarity-repeat-and-up-down-scans"),
+    "first_sweep_suspect": ("LASIA1999.stationarity-repeat-and-up-down-scans",),
+}
+
+
 @dataclass(frozen=True)
 class Finding:
     severity: str
@@ -112,6 +150,11 @@ class Finding:
     @property
     def label(self) -> str:
         return SEVERITY_LABELS.get(self.severity, self.severity)
+
+    @property
+    def refs(self) -> tuple[str, ...]:
+        """The knowledge records this kind of finding rests on (``REFERENCES``)."""
+        return REFERENCES.get(self.code, ())
 
 
 def sort_findings(findings: Iterable[Finding]) -> list[Finding]:
@@ -750,8 +793,8 @@ def _blocking_capacitance(tail: ArcCapacitance, arcs: list[ArcCapacitance],
 
     A blocking interface is an ohmic resistance in series with a CPE, and its
     capacitance is Brug's -- Hirschorn et al., *Electrochim. Acta* 55, 6218
-    (2010), Eq. (12): ``C = Q^{1/n} · R_e^{(1-n)/n}`` with the **ohmic**
-    resistance ``R_e``.  The arc's own resistance is the wrong one: it is the
+    (2010), Eq. (12) (``HIRSCHORN2010.brug-surface-blocking-eq12``):
+    ``C = Q^{1/n} · R_e^{(1-n)/n}`` with the **ohmic** resistance ``R_e``.  The arc's own resistance is the wrong one: it is the
     fit's bound or an extrapolation, and with ``n < 1`` the number follows it
     (17 times too large at ``n = 0.85`` for 1e9 Ω against 100 Ω).  ``R_e`` is
     what is in series before the tail -- R0 and the faster arcs, which are

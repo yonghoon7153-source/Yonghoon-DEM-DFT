@@ -1540,6 +1540,19 @@ class AuditFindingOut(BaseModel):
     label: str
     code: str
     message: str
+    #: 이 판정이 기대는 논문 기록의 id (ADR 0042) — 내용은 ``references`` 에.
+    refs: list[str] = []
+
+
+class AuditReferenceOut(BaseModel):
+    """보고서가 인용한 논문 기록 하나."""
+
+    id: str
+    #: "Irvine–Sinclair–West 1990, p. 135 (Sect. 2.2; Fig. 4b,c)"
+    citation: str
+    claim_ko: str
+    #: 그 쪽에서 찾을 수 있는 원문 (25 단어까지).
+    quote: str = ""
 
 
 class AuditSpectrumOut(BaseModel):
@@ -1593,6 +1606,8 @@ class EisAuditOut(BaseModel):
     counts: dict[str, int]
     spectra: list[AuditSpectrumOut] = []
     scans: list[AuditScanOut] = []
+    #: 판정들이 인용한 논문 기록, 처음 나온 순서로.
+    references: list[AuditReferenceOut] = []
 
 
 class EisReparseChange(BaseModel):

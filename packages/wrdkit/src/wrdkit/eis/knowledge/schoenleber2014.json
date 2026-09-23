@@ -1,0 +1,568 @@
+{
+ "sources": [
+  {
+   "key": "SCHOENLEBER2014",
+   "short": "Schönleber 외 2014",
+   "authors": "M. Schönleber, D. Klotz, E. Ivers-Tiffée",
+   "title": "A Method for Improving the Robustness of linear Kramers-Kronig Validity Tests",
+   "venue": "Electrochimica Acta",
+   "year": 2014,
+   "volume": "131",
+   "pages": "20-27",
+   "doi": "10.1016/j.electacta.2014.01.034"
+  }
+ ],
+ "records": [
+  {
+   "id": "SCHOENLEBER2014.kk-requires-lti-causal",
+   "source": "SCHOENLEBER2014",
+   "kind": "definition",
+   "topics": [
+    "kramers-kronig",
+    "validation",
+    "linearity",
+    "time-invariance",
+    "causality"
+   ],
+   "claim_ko": "측정 스펙트럼을 더 해석하려면 선형·시불변·인과 시스템이어야 하고, KK 관계식(식 1–2)은 바로 그런 시스템에서 실수부와 허수부를 묶으므로 KK 를 어기는 스펙트럼은 셋 중 하나 이상을 어긴 것이다.",
+   "claim": "Further analysis of a measured spectrum is only valid if the spectrum represents a linear, time-invariant and causal system; the Kramers-Kronig relations (Eqs. 1-2) link real and imaginary parts for exactly such systems, so a spectrum that violates them fails at least one of the three properties.",
+   "page": 20,
+   "where": "Sec. 1 (Introduction), Eqs. (1)-(2)",
+   "math": "Z_Re(ω) = (2/π)·∫_0^∞ ω'·Z_Im(ω') / (ω² − ω'²) dω' ;  Z_Im(ω) = (−2/π)·∫_0^∞ ω·Z_Re(ω') / (ω² − ω'²) dω'",
+   "conditions": "Direct evaluation of Eqs. (1)-(2) needs data from 0 to infinity; extrapolation attempts left the missing-data problem unsolved (p. 21), which is why the paper uses the model-based lin-KK test instead.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.boukamp-lin-kk-manual-m",
+   "source": "SCHOENLEBER2014",
+   "kind": "caveat",
+   "topics": [
+    "kramers-kronig",
+    "lin-kk",
+    "boukamp-1995",
+    "model-order",
+    "over-fitting",
+    "under-fitting"
+   ],
+   "claim_ko": "Boukamp 1995 의 Lin-KK 는 시정수를 미리 정하고 저항만 맞춰 선형 문제로 만든다(시정수까지 맞추는 비선형 측정모델 [11–13]의 초기값·국소해 문제가 없음). 이 논문이 고치는 약점은 RC 개수 M 을 사용자가 정해야 해서 과소·과대적합으로 판정이 모호하거나 틀린다는 것이다.",
+   "claim": "The Lin-KK test of Boukamp 1995 (ref. [14]) fits only the ohmic resistances of a Voigt circuit with pre-set time constants, which makes the fit linear and avoids the initial-value and local-minimum problems of fitting time constants too (the nonlinear measurement-model approach, refs. [11-13]). Its weakness, which this paper fixes, is that the user must pre-set the number M of RC elements, so inexperienced users under- or over-fit and get ambiguous or wrong verdicts.",
+   "page": 21,
+   "where": "Sec. 1 (Introduction), right column",
+   "conditions": "Applies to any lin-KK implementation with a fixed, user-chosen M.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.voigt-model",
+   "source": "SCHOENLEBER2014",
+   "kind": "model",
+   "topics": [
+    "lin-kk",
+    "voigt-model",
+    "equivalent-circuit"
+   ],
+   "claim_ko": "lin-KK 피팅 모델은 옴 저항 하나와 RC 소자 M 개의 직렬: Ẑ(ω) = R̂_Ohm + Σ R̂_k/(1 + jωτ_k), C_k = τ_k/R_k (그림 1). 저항만 맞추며 부호는 제한하지 않는다(그 부호를 μ 가 잰다).",
+   "claim": "The lin-KK fit model is an ohmic resistor in series with M RC elements: Ẑ(ω) = R̂_Ohm + Σ_{k=1..M} R̂_k / (1 + jωτ_k), with C_k = τ_k / R_k (Fig. 1). Only the resistances are fitted and they may take either sign (the signs are what μ, Eq. 21, measures).",
+   "page": 21,
+   "where": "Sec. 2.1, Eq. (9), Fig. 1",
+   "math": "Zhat(ω) = R_ohm + Σ_{k=1}^{M} R_k / (1 + j·ω·τ_k) ;  C_k = τ_k / R_k",
+   "conditions": "ω is angular frequency. τ_k fixed by Eqs. (10)-(12). Optional series C and/or L (see optional-series-c-l).",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.optional-series-c-l",
+   "source": "SCHOENLEBER2014",
+   "kind": "model",
+   "topics": [
+    "lin-kk",
+    "voigt-model",
+    "capacitance",
+    "inductance"
+   ],
+   "claim_ko": "직렬 C 나 직렬 L 은 물리적으로 의미가 있거나, 측정 대역이 시스템 전체 스펙트럼 대역보다 좁을 때 선택적으로 더한다. 실측 리튬이온 스펙트럼에는 용량성 때문에 C 를, 유도성 효과 때문에 L 을 둘 다 더했다.",
+   "claim": "A series capacitor or a series inductance may be added to the Voigt model if physically meaningful, or (following Boukamp) if the measured frequency range is small compared with the frequency range of the system's full impedance spectrum. For the measured Li-ion spectra the authors added both: a capacitor because of their capacitive nature and an inductance for inductive effects.",
+   "page": 21,
+   "where": "Sec. 2.1 (applied in Sec. 3.2, p. 23)",
+   "math": "Zhat(ω) = R_ohm + Σ_k R_k/(1 + jωτ_k) [+ 1/(jωC)] [+ jωL]   (series terms written out by us; the paper names them in words only)",
+   "values": {
+    "measured_li_ion_IS2_IS3": {
+     "series_capacitor": true,
+     "series_inductance": true
+    }
+   },
+   "conditions": "Application stated in Sec. 3.2 (p. 23). Neither term has a real part, so they cannot be determined from a real-fit alone; the paper does not say how C and L are obtained in a real-fit.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.tau-distribution",
+   "source": "SCHOENLEBER2014",
+   "kind": "formula",
+   "topics": [
+    "lin-kk",
+    "time-constants"
+   ],
+   "claim_ko": "M 개의 시정수는 미리 고정하며, 측정 각주파수 범위의 역수 구간에 로그 등간격으로 둔다: τ_1 = 1/ω_max, τ_M = 1/ω_min, 그 사이 τ_k 는 식 (12).",
+   "claim": "The M time constants are fixed in advance, logarithmically equally spaced over the inverse range of angular frequencies of the tested spectrum: τ_1 = τ_min = 1/ω_max, τ_M = τ_max = 1/ω_min, and τ_k = 10^[log τ_min + (k−1)/(M−1)·log(τ_max/τ_min)] for k = 2..M−1.",
+   "page": 21,
+   "where": "Sec. 2.2, Eqs. (10)-(12)",
+   "math": "tau_min = tau_1 = 1/omega_max ;  tau_max = tau_M = 1/omega_min ;  tau_k = 10^( log10(tau_min) + (k−1)/(M−1) · log10(tau_max/tau_min) ),  k = 2..M−1 ;  omega = 2·pi·f",
+   "conditions": "ω = 2πf (the text says angular frequencies). log is base 10 (the formula raises 10 to it). For M = 1 the equations are undefined (τ_1 cannot equal both 1/ω_max and 1/ω_min; Eq. 12 divides by M−1), although the procedure starts at M = 1.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.cost-real-fit",
+   "source": "SCHOENLEBER2014",
+   "kind": "formula",
+   "topics": [
+    "lin-kk",
+    "weighting",
+    "real-fit"
+   ],
+   "claim_ko": "실수부 피팅(real-fit) 비용함수 J = Σ[(Z_Re − Ẑ_Re)/|Z|]² — 측정 |Z| 로 나눈 비례 가중. 실수부로 맞추고, 그 결과로 허수부를 예측해 측정값과 비교한다.",
+   "claim": "Real-fit cost function: J = Σ_{i=1..N} [(Z_Re(ω_i) − Ẑ_Re(ω_i)) / |Z(ω_i)|]², i.e. proportional weighting by the modulus of the measured impedance. The fitted real part is the training data; the imaginary part is predicted from it and compared with the measurement.",
+   "page": 22,
+   "where": "Sec. 2.3, Eq. (13)",
+   "math": "J_real = Σ_{i=1}^{N} [ (Z_Re(ω_i) − Zhat_Re(ω_i)) / |Z(ω_i)| ]^2",
+   "conditions": "N = number of frequency points; |Z| without a hat is the measured modulus. The training/test reading (real part fitted, imaginary part predicted) is stated in Sec. 4.2 (p. 24).",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.cost-complex-fit",
+   "source": "SCHOENLEBER2014",
+   "kind": "formula",
+   "topics": [
+    "lin-kk",
+    "weighting",
+    "complex-fit"
+   ],
+   "claim_ko": "복소 피팅(complex-fit) 비용함수는 실수부·허수부 오차를 같은 측정 |Z| 로 나눠 제곱해 함께 더한다.",
+   "claim": "Complex-fit cost function: J = Σ_{i=1..N} [(Z_Re(ω_i) − Ẑ_Re(ω_i)) / |Z(ω_i)|]² + [(Z_Im(ω_i) − Ẑ_Im(ω_i)) / |Z(ω_i)|]², i.e. real and imaginary parts are fitted jointly with the same |Z| weight.",
+   "page": 22,
+   "where": "Sec. 2.3, Eq. (14)",
+   "math": "J_complex = Σ_{i=1}^{N} [ (Z_Re(ω_i) − Zhat_Re(ω_i)) / |Z(ω_i)| ]^2 + [ (Z_Im(ω_i) − Zhat_Im(ω_i)) / |Z(ω_i)| ]^2",
+   "conditions": "Linear in R_ohm and R_k; (our note) with a series C or L it stays linear in the parameters 1/C and L, solved as one stacked real/imaginary least-squares system.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.imag-fit-discarded-with-capacitor",
+   "source": "SCHOENLEBER2014",
+   "kind": "caveat",
+   "topics": [
+    "lin-kk",
+    "imag-fit",
+    "capacitance"
+   ],
+   "claim_ko": "허수부만 맞추는 방식은 모델에 C 가 없을 때만 쓸 수 있고, 리튬이온처럼 C 가 필요하면 버린다 — RC 몫의 저주파 허수부가 C 로 잘못 배정되고, C 는 실수부가 없어 그만큼 실수부 오차가 된다.",
+   "claim": "Fitting only the imaginary part is an option when the model has no capacitor, but the authors discard it once a capacitor has to be included (as for Li-ion cells): low-frequency imaginary content that belongs to RC elements can be assigned to the capacitor, and because a capacitor has no real part the misassignment shows up as an error in the real part.",
+   "page": 22,
+   "where": "Sec. 2.3",
+   "conditions": "Applies when a series capacitor is part of the lin-KK model.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.residuals",
+   "source": "SCHOENLEBER2014",
+   "kind": "formula",
+   "topics": [
+    "lin-kk",
+    "residuals",
+    "validation"
+   ],
+   "claim_ko": "잔차는 실수부·허수부 따로, 측정 |Z| 대비 상대값이다: Δ_Re = (Z_Re − Ẑ_Re)/|Z|, Δ_Im = (Z_Im − Ẑ_Im)/|Z|. 그림은 % 단위로 주파수에 대해 그린다.",
+   "claim": "Residuals are defined separately for the real and imaginary parts, relative to the modulus of the measured impedance: Δ_Re(ω) = (Z_Re(ω) − Ẑ_Re(ω)) / |Z(ω)| and Δ_Im(ω) = (Z_Im(ω) − Ẑ_Im(ω)) / |Z(ω)|. The figures plot them in percent against frequency.",
+   "page": 22,
+   "where": "Sec. 2.4, Eqs. (15)-(16)",
+   "math": "Delta_Re(ω) = (Z_Re(ω) − Zhat_Re(ω)) / |Z(ω)| ;  Delta_Im(ω) = (Z_Im(ω) − Zhat_Im(ω)) / |Z(ω)|",
+   "values": {
+    "plot_unit": "%",
+    "plot_axis_percent_read_from_figs_3_4_10_11": [
+     -10,
+     10
+    ]
+   },
+   "conditions": "Sign convention is measured minus fitted. The ±10 % axis range is read from the figures, not stated as a criterion.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.no-numeric-residual-threshold",
+   "source": "SCHOENLEBER2014",
+   "kind": "caveat",
+   "topics": [
+    "validation",
+    "residuals",
+    "thresholds"
+   ],
+   "claim_ko": "논문은 유효/무효를 가르는 잔차 수치 기준을 두지 않는다 — ±10 % 축의 잔차 그림에서 '크다/매우 작다' 로 판정한다. 방법 안의 수치 문턱은 μ 의 c 하나뿐이다.",
+   "claim": "The paper defines no numeric residual limit for calling a spectrum valid or invalid: the verdict is read from the residual plots ('large' versus 'very small' residuals, drawn on ±10 % axes). The only numeric threshold in the method is c for μ.",
+   "page": 23,
+   "where": "Sec. 4.1",
+   "values": {
+    "numeric_residual_threshold": null
+   },
+   "conditions": "Checked against the full text of all eight pages.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.under-fitting",
+   "source": "SCHOENLEBER2014",
+   "kind": "definition",
+   "topics": [
+    "model-order",
+    "under-fitting",
+    "validation"
+   ],
+   "claim_ko": "과소적합: M 이 너무 작아 KK 를 만족하는 스펙트럼도 잔차가 커서 무효로 잘못 판정된다(시정수가 떨어진 RC 셋은 M=2 로 못 맞춘다). 정의상 RC 를 더하면 허수부 예측 오차가 아직 줄어드는 상태다.",
+   "claim": "Under-fitting: M is too small for the spectrum, so even a fully KK-compliant spectrum leaves large residuals and is falsely flagged as invalid; for example, three RC arcs with sufficiently separated time constants cannot be fitted with M = 2. Formally (Sec. 4.2), a spectrum is under-fitted if adding RC elements would still reduce the error between measured and predicted imaginary part.",
+   "page": 23,
+   "where": "Sec. 4.1",
+   "values": {
+    "example": {
+     "rc_arcs": 3,
+     "M": 2
+    }
+   },
+   "conditions": "Formal definition stated for the real-fit / predict-imaginary setting (Sec. 4.2, p. 24).",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.over-fitting",
+   "source": "SCHOENLEBER2014",
+   "kind": "definition",
+   "topics": [
+    "model-order",
+    "over-fitting",
+    "noise",
+    "inductance"
+   ],
+   "claim_ko": "과대적합: M 이 너무 커서 측정 잡음까지 맞춘다. 과대적합된 실수부에서 계산한 허수부에는 KK 변환된 잡음이 들어가 real-fit 이 유효한 스펙트럼도 무효로 판정하고, 그 오차 모양은 기생 인덕턴스 같은 흔한 측정 오류와 닮는다.",
+   "claim": "Over-fitting: M is too large, so the fit follows the measurement noise as well; the imaginary part computed from an over-fitted real part contains KK-transformed noise, so a real-fit flags even a valid spectrum as invalid. The resulting error structure resembles common measurement errors such as parasitic inductance. Formally (Sec. 4.2), adding RC elements then increases the imaginary-part prediction error.",
+   "page": 23,
+   "where": "Sec. 4.1",
+   "conditions": "Shown for the synthetic IS1a with a real-fit (Fig. 3, p. 24).",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.complex-fit-false-valid",
+   "source": "SCHOENLEBER2014",
+   "kind": "caveat",
+   "topics": [
+    "complex-fit",
+    "over-fitting",
+    "drift",
+    "validation"
+   ],
+   "claim_ko": "complex-fit 은 잔차가 실수·허수부에 번져 작은 오류가 덜 보이고, 과대적합되면 오류까지 재현한다 — 저주파 점이 적은 드리프트 스펙트럼 IS3b 가 유효한 IS2 만큼 잔차가 작게 나왔다(그림 4). 요약: 과소적합은 거짓 '무효', 과대적합은 real-fit 에서 거짓 '무효', complex-fit 에서 거짓 '유효'.",
+   "claim": "With a complex-fit, small errors are less visible because the residual is spread over real and imaginary parts, and an over-fitted complex-fit can reproduce the errors: the drifting spectrum IS3b (few low-frequency points) then shows residuals as small as the valid IS2 (Fig. 4). Summary: under-fitting gives false 'invalid'; over-fitting gives false 'invalid' with a real-fit and false 'valid' with a complex-fit.",
+   "page": 23,
+   "where": "Sec. 4.1 (Fig. 4 on p. 24)",
+   "conditions": "Worst when the low-frequency end is covered by few points (points thinned to save measurement time). The M used for Fig. 4 is not given.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.chi2-im-prediction-error",
+   "source": "SCHOENLEBER2014",
+   "kind": "formula",
+   "topics": [
+    "model-order",
+    "synthetic-data",
+    "unit-test-anchor"
+   ],
+   "claim_ko": "합성 데이터에서는 이상적 허수부를 알므로 real-fit 의 누적 예측오차 χ²_Im = (1/N)Σ[(Z_Im − Ẑ_Im)/|Z|]² 가 최소인 M 이 '이론적 최적' 이다(왼쪽은 과소, 오른쪽은 과대적합). 실측에서는 이상적 허수부를 몰라 계산할 수 없다.",
+   "claim": "On synthetic data, where the ideal imaginary part is known, the cumulated prediction error of a real-fit, χ²_Im = (1/N)·Σ[(Z_Im(ω_i) − Ẑ_Im(ω_i)) / |Z(ω_i)|]², is minimal at the optimal M (the 'theoretical optimum'): fewer elements under-fit, more over-fit. It cannot be computed for a real measurement because the ideal imaginary part is unknown.",
+   "page": 24,
+   "where": "Sec. 4.2, second Eq. (20), Fig. 5",
+   "math": "chi2_Im = (1/N) · Σ_{i=1}^{N} [ (Z_Im(ω_i) − Zhat_Im(ω_i)) / |Z(ω_i)| ]^2",
+   "values": {
+    "read_from_fig5_IS1a": {
+     "minimum_near_elements_per_decade": "≈3",
+     "log10_chi2_at_minimum": "≈-6",
+     "note": "approximate figure reading"
+    }
+   },
+   "conditions": "Printed as a second 'Eq. (20)' (duplicate number, see conflicts). Z_Im here is the actual noise-free imaginary part; Fig. 5 uses IS1a.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.no-oscillation-negative-r",
+   "source": "SCHOENLEBER2014",
+   "kind": "criterion",
+   "topics": [
+    "over-fitting",
+    "mu-criterion",
+    "voigt-model"
+   ],
+   "claim_ko": "이상적 스펙트럼은 실수부도 허수부도 주파수에 대해 진동하지 않으므로, 진동하는 피팅은 잡음·오류를 맞춘 과대적합이다(그림 6). lin-KK 는 R_k 만 정하고 RC 직렬은 음의 R_k 가 있어야만 진동하므로, 음의 R_k 의 영향을 제한하면 과대적합을 막는다.",
+   "claim": "Neither the real nor the imaginary part of an ideal spectrum oscillates over frequency, so a fitted spectrum that oscillates has been tuned to noise or errors, which is over-fitting (Fig. 6). Because lin-KK determines only the R_k and a series chain of RC elements can oscillate only if some R_k are negative, over-fitting is prevented by limiting the influence of negative R_k.",
+   "page": 25,
+   "where": "Sec. 4.3, Fig. 6",
+   "conditions": "Relies on the time constants being fixed and only the R_k being fitted. Alternating signs of the fitted R_k were already noted by Boukamp [14].",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.mu-definition",
+   "source": "SCHOENLEBER2014",
+   "kind": "formula",
+   "topics": [
+    "mu-criterion",
+    "over-fitting",
+    "model-order"
+   ],
+   "claim_ko": "μ = 1 − Σ_{R_k<0}|R_k| / Σ_{R_k≥0}|R_k| (식 21) 는 음의 RC 저항 합과 양의 RC 저항 합의 비다. 음의 저항이 작으면 1 이고(과대적합 위험 없음), 과대적합이 시작되면 0 을 향해 단조 감소한다(그림 7).",
+   "claim": "μ = 1 − Σ_{R_k<0}|R_k| / Σ_{R_k≥0}|R_k| (Eq. 21) compares the 'mass' of negative to positive fitted RC resistances. μ stays at 1 while negative resistances are small (no danger of over-fitting) and decreases monotonically towards 0 once over-fitting starts (Fig. 7).",
+   "page": 25,
+   "where": "Sec. 4.3, Eq. (21), Fig. 7",
+   "math": "mu = 1 − ( Σ_{k: R_k<0} |R_k| ) / ( Σ_{k: R_k≥0} |R_k| )",
+   "values": {
+    "read_from_fig7_IS1a": {
+     "mu_about_1_up_to_elements_per_decade": "≈2",
+     "mu_0p5_near_elements_per_decade": "≈4",
+     "mu_about_0_beyond_elements_per_decade": "≈6",
+     "note": "approximate figure reading"
+    }
+   },
+   "conditions": "Sums run over the M RC-element resistances R_k of Eq. (9); R_Ohm and any added C or L are not R_k. By the formula μ < 0 is possible when the negative mass exceeds the positive; the paper only shows values between 0 and 1.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.mu-threshold-c",
+   "source": "SCHOENLEBER2014",
+   "kind": "criterion",
+   "topics": [
+    "mu-criterion",
+    "thresholds",
+    "model-order"
+   ],
+   "claim_ko": "μ 기준: μ 가 처음으로 문턱 c 아래로 내려가는 M 을 쓴다. c 는 설계 변수이며 저자 경험상 c = 0.85 를 권하고, 그림 8 검증에도 이 값을 썼다.",
+   "claim": "μ-criterion: the appropriate number of RC elements is where μ first drops below a threshold c. c is a design parameter; the authors recommend c = 0.85 from experience, and it is the value used to validate the criterion in Fig. 8.",
+   "page": 26,
+   "where": "Sec. 4.5 (also Sec. 4.4, p. 25)",
+   "math": "M* = min{ M : mu(M) < c } ,  c = 0.85",
+   "values": {
+    "c": 0.85
+   },
+   "conditions": "Sec. 4.4 (p. 25) plots the M where μ 'first crosses a threshold of c = 0.85'. Validated on synthetic IS1a/b/c and on the measured Li-ion spectra.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.m-selection-procedure",
+   "source": "SCHOENLEBER2014",
+   "kind": "procedure",
+   "topics": [
+    "mu-criterion",
+    "model-order",
+    "lin-kk"
+   ],
+   "claim_ko": "M 자동 선택(4.5절, 그림 9): M=1 처럼 작은 값으로 lin-KK → 맞춘 값으로 μ 계산 → μ < c 이면 그 M 에서 멈추고 잔차로 판정 → 아니면 M 을 1 늘려 다시 맞추고 반복.",
+   "claim": "Automatic choice of M (Sec. 4.5, Fig. 9): (1) run the lin-KK fit with a sufficiently small M, e.g. M = 1; (2) compute μ from the fitted parameters; (3) if μ < c the μ-optimum is found: stop and evaluate the test (the residuals) at this M; (4) otherwise increase M by 1, repeat the lin-KK fit and return to (2).",
+   "page": 26,
+   "where": "Sec. 4.5, Fig. 9",
+   "math": "M = 1 ; loop { fit(M) ; mu = mu(R_1..R_M) ; if mu < c: break ; M = M + 1 } ; evaluate Delta_Re, Delta_Im at M",
+   "values": {
+    "M_start": 1,
+    "M_step": 1,
+    "c": 0.85,
+    "stop_condition": "mu < c (strict, per the Fig. 9 flow chart)",
+    "M_max": null,
+    "runtime_per_evaluation_fig10_s": "< 1 (stated on p. 27)"
+   },
+   "conditions": "The paper gives no upper limit for M and no rule for the case that μ never drops below c; M = 1 is given as an example ('e.g.').",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.mu-optimum-validated",
+   "source": "SCHOENLEBER2014",
+   "kind": "criterion",
+   "topics": [
+    "mu-criterion",
+    "synthetic-data",
+    "noise",
+    "unit-test-anchor"
+   ],
+   "claim_ko": "세 잡음 수준, 10년당 1–12 점의 합성 스펙트럼(real-fit) 모두에서 μ 가 처음 0.85 를 지나는 M 이 χ²_Im 최소(이론 최적)와 일치했다. 잡음이 클수록 잡음을 맞추기 쉬워 RC 개수가 적어진다.",
+   "claim": "On the synthetic spectra with three noise levels and 1-12 frequency points per decade (real-fit), the M where μ first crosses c = 0.85 coincided with the M that minimises χ²_Im (the theoretical optimum) in every case. More noise leads to fewer RC elements, because more noise tends to get fitted.",
+   "page": 25,
+   "where": "Sec. 4.4, Fig. 8",
+   "values": {
+    "read_from_fig8_elements_per_decade_at_high_point_density": {
+     "IS1c_sigma_absZ_over_10000": "≈4",
+     "IS1a_sigma_absZ_over_1000": "≈3",
+     "IS1b_sigma_absZ_over_100": "≈2"
+    },
+    "note": "approximate figure reading; at sparse point densities the optimum follows the line M per decade = N per decade"
+   },
+   "conditions": "Synthetic IS1 (Table 1), 1 µHz-10 MHz, real-fit, each (N, M) combination evaluated. The noise dependence is stated on p. 26.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.params-exceed-points",
+   "source": "SCHOENLEBER2014",
+   "kind": "caveat",
+   "topics": [
+    "over-fitting",
+    "model-order",
+    "frequency-points"
+   ],
+   "claim_ko": "10년당 RC 수가 10년당 주파수 점 수보다 많으면(파라미터 > 데이터 점) 명백한 과대적합이고 χ²_Im 이 매우 크다. 잡음을 맞출 만큼 RC 가 많지 않은 동안에는 μ 기준이 이 경계에서 멈춘다.",
+   "claim": "Using more RC elements per decade than frequency points per decade -- more model parameters than data points -- is an obvious case of over-fitting and always comes with very large χ²_Im; as long as there are too few RC elements to fit the noise, the μ-criterion stops at this border.",
+   "page": 26,
+   "where": "Sec. 4.4 (continued), Fig. 8",
+   "math": "M/decade ≤ N/decade",
+   "conditions": "Stated per decade (the dashed line in Fig. 8); the paper does not turn it into an explicit maximum M for the scan.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.example-is1-synthetic",
+   "source": "SCHOENLEBER2014",
+   "kind": "example",
+   "topics": [
+    "synthetic-data",
+    "unit-test-anchor",
+    "warburg",
+    "noise"
+   ],
+   "claim_ko": "합성 시험 스펙트럼 IS1(Boukamp 1995 와 동일): Z = R1 + R2/(1+jωR2C3) + R4·W5/(R4+W5), W5 = 1/(Y0√(jω)); R1=100 Ω, R2=200 Ω, C3=0.8 µF, R4=500 Ω, Y0=0.4 mS·s^0.5, 1 µHz–10 MHz. 실수·허수부에 서로 독립인 가우스 잡음(표준편차 |Z|/1000=IS1a, |Z|/100=IS1b, |Z|/10000=IS1c)을 더한다.",
+   "claim": "Synthetic test spectrum IS1 (the same as in Boukamp 1995): Z(ω) = R1 + R2/(1 + jωR2C3) + R4·W5/(R4 + W5) with W5(ω) = 1/(Y0·√(jω)), R1 = 100 Ω, R2 = 200 Ω, C3 = 0.8 µF, R4 = 500 Ω, Y0 = 0.4 mS·s^0.5, simulated from 1 µHz to 10 MHz. Two uncorrelated white Gaussian noise processes are added to the real and imaginary parts with standard deviation |Z|/1000 (IS1a, medium), |Z|/100 (IS1b, strong) or |Z|/10000 (IS1c, weak).",
+   "page": 22,
+   "where": "Sec. 3.1, Table 1, Eqs. (17)-(22)",
+   "math": "Z(ω) = R1 + R2/(1 + jωR2C3) + R4·W5(ω)/(R4 + W5(ω)) ;  W5(ω) = 1/(Y0·sqrt(jω)) ;  Z~ = [Z_Re + n_Re] + j[Z_Im + n_Im],  n_Re, n_Im ~ N(0, σ_η²) independent,  σ_η(ω) = |Z(ω)|/1000 (IS1a), /100 (IS1b), /10000 (IS1c)",
+   "values": {
+    "R1_ohm": 100,
+    "R2_ohm": 200,
+    "C3_F": 8e-07,
+    "R4_ohm": 500,
+    "Y0_S_s0p5": 0.0004,
+    "f_min_hz": 1e-06,
+    "f_max_hz": 10000000.0,
+    "noise_sigma_over_absZ": {
+     "IS1a": 0.001,
+     "IS1b": 0.01,
+     "IS1c": 0.0001
+    },
+    "points_per_decade": null
+   },
+   "conditions": "KK-compliant before noise. Noise levels: Eqs. (20)-(21) on p. 22 and Eq. (22) on p. 23. The number of points per decade used for Figs. 3, 5, 7 and 10 is not stated; Fig. 8 varies it from 1 to 12.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.example-is1a-under-over-fit",
+   "source": "SCHOENLEBER2014",
+   "kind": "example",
+   "topics": [
+    "synthetic-data",
+    "unit-test-anchor",
+    "under-fitting",
+    "over-fitting"
+   ],
+   "claim_ko": "IS1a(중간 잡음) real-fit: M=6 은 과소적합, M=104 는 과대적합이며 둘 다 유효한 스펙트럼을 무효로 잘못 판정한다(그림 3). μ 절차로는 유효로 맞게 판정되며(그림 10 왼쪽), 선택된 M 은 본문에 없고 그림 표시선은 약 37 이다.",
+   "claim": "IS1a (medium noise) tested with a real-fit: M = 6 under-fits and M = 104 over-fits, and both falsely flag the valid spectrum as invalid (Fig. 3). With the μ procedure IS1a is correctly found valid (Fig. 10, left); the chosen M is not stated in the text, and the marker in Fig. 10 sits at about 37.",
+   "page": 24,
+   "where": "Fig. 3 caption (text Sec. 4.1, p. 23); Fig. 10 on p. 26",
+   "values": {
+    "M_underfit": 6,
+    "M_overfit": 104,
+    "fit_mode": "real",
+    "M_mu_optimum_read_from_fig10": "≈37 (dashed marker; axis calibrated on tick labels)",
+    "residuals_read_from_fig3": "under-fit: beyond ±10 % over mid/high frequencies; over-fit: Δ_Im beyond ±10 % at both ends of the range, ≈0 in between (approximate)"
+   },
+   "conditions": "Frequency-point density not stated. The M ≈ 37 reading lies about 3 elements per decade over 13 decades, consistent with Fig. 8.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.example-measured-li-ion",
+   "source": "SCHOENLEBER2014",
+   "kind": "example",
+   "topics": [
+    "measurement",
+    "drift",
+    "time-variance",
+    "frequency-points"
+   ],
+   "claim_ko": "실측: 상용 2 Ah Kokam 파우치 셀, Zahner Zennium, 500 µHz–100 kHz 10점/decade(3 kHz 초과는 유도성 아티팩트로 버림), 10 mV, SOC 80 %, 스펙트럼당 13.5 h. IS2(유효)는 25 °C 고정, IS3(무효)는 측정 중 25→15 °C 선형 변화. IS3b 는 IS3a 에서 최저 6개 주파수 중 하나 걸러 지운 것.",
+   "claim": "Measured spectra: a commercial 2 Ah Li-ion pouch cell (Kokam), Zahner Zennium, 500 µHz-100 kHz at 10 points per decade with all points above 3 kHz discarded as inductive artifacts, 10 mV amplitude, SOC 80 %, 13.5 h per spectrum. IS2 (valid): climate chamber at constant 25 °C. IS3 (invalid): chamber temperature ramped linearly from 25 °C to 15 °C during the sweep. IS3b = IS3a with every second of the six lowest frequencies deleted.",
+   "page": 23,
+   "where": "Sec. 3.2, Tables 2-3",
+   "values": {
+    "f_min_hz": 0.0005,
+    "f_max_measured_hz": 100000.0,
+    "f_max_used_hz": 3000.0,
+    "points_per_decade": 10,
+    "amplitude_mV": 10,
+    "soc_percent": 80,
+    "duration_h": 13.5,
+    "IS2_temperature_C": 25,
+    "IS3_temperature_ramp_C": [
+     25,
+     15
+    ],
+    "IS3a_lowest_f_mHz": [
+     0.5,
+     0.63,
+     0.79,
+     1.0,
+     1.26,
+     1.59,
+     1.99
+    ],
+    "IS3b_lowest_f_mHz": [
+     0.5,
+     0.79,
+     1.26,
+     1.99
+    ]
+   },
+   "conditions": "Series C and L were added to the lin-KK model for IS2, IS3a and IS3b (Sec. 3.2). Table 2 lists the low-frequency points.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.example-is3b-mu-result",
+   "source": "SCHOENLEBER2014",
+   "kind": "example",
+   "topics": [
+    "drift",
+    "unit-test-anchor",
+    "mu-criterion",
+    "over-fitting"
+   ],
+   "claim_ko": "드리프트가 있는 IS3b 에 μ 절차는 M=16(10년당 2.4개; 성긴 저주파 구간은 10년당 6.7점 상당)을 골라 무효로 맞게 판정했다. 가장 성긴 구간 점 수보다 조금 적게 고르는 '직관적' 방식(10년당 6개, 총 40개)은 μ=0.02 로 잔차가 훨씬 덜 드러나 드리프트를 가린다. 각 평가는 1 초 미만.",
+   "claim": "For the drifting IS3b the μ procedure chose M = 16 (2.4 RC elements per decade; the thinned low-frequency part has 6.7 equivalent points per decade) and correctly flags it invalid. An 'intuitive' choice just below the sparsest point density -- 6 elements per decade, 40 in total -- has μ = 0.02 and gives much less pronounced residuals, i.e. over-fitting hides the drift. Each Fig. 10 evaluation took under 1 s on a standard PC.",
+   "page": 26,
+   "where": "Sec. 5, Fig. 10 (Fig. 11 and the runtime statement on p. 27)",
+   "values": {
+    "M_mu_optimum": 16,
+    "elements_per_decade": 2.4,
+    "equivalent_points_per_decade_low_f": 6.7,
+    "M_intuitive": 40,
+    "elements_per_decade_intuitive": 6,
+    "mu_intuitive": 0.02,
+    "runtime_s": "< 1",
+    "fit_mode": "not stated; the test repeats Fig. 4, which used a complex-fit"
+   },
+   "conditions": "Measured Li-ion data with series C and L; tested band 500 µHz-3 kHz.",
+   "confidence": "high"
+  },
+  {
+   "id": "SCHOENLEBER2014.drift-shows-at-low-frequency",
+   "source": "SCHOENLEBER2014",
+   "kind": "caveat",
+   "topics": [
+    "drift",
+    "time-variance",
+    "residuals",
+    "validation"
+   ],
+   "claim_ko": "시간변화(드리프트)는 큰 잔차로 나타날 것으로 본다. μ 로 고른 M 에서 IS3b 의 잔차는 저주파 끝에 몰린다 — 그림 10 오른쪽 판독으로 Δ_Re 가 1 mHz 부근 약 +6 %, Δ_Im 이 최저점에서 약 −9 %, 약 0.1 Hz 위로는 거의 0 이며, 이 대역은 측정 시간을 줄이려 점을 성기게 두는 곳이다.",
+   "claim": "Time-variance (drift) is expected to produce large residuals. In the drifting IS3b tested at the μ-chosen M the residuals are confined to the low-frequency end -- about +6 % in Δ_Re near 1 mHz and about −9 % in Δ_Im at the lowest point, near zero above roughly 0.1 Hz (read from Fig. 10, right) -- the range where points are often thinned to save measurement time.",
+   "page": 23,
+   "where": "Sec. 4.1 text; residual shape in Fig. 10 right (p. 26)",
+   "values": {
+    "read_from_fig10_right_IS3b_M16": {
+     "delta_re_peak_percent": "≈+6 near ≈1.2 mHz",
+     "delta_im_at_lowest_point_percent": "≈-9 at 0.5 mHz",
+     "residuals_near_zero_above_hz": "≈0.1"
+    },
+    "note": "approximate figure readings"
+   },
+   "conditions": "One example (temperature ramp 25 -> 15 °C over a 13.5 h sweep); the paper states no general rule for where drift appears. The thinning of low-frequency points is stated on p. 23.",
+   "confidence": "medium"
+  }
+ ]
+}
