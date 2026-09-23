@@ -40,7 +40,7 @@ from wrdkit.eis.conductivity import (
     conductivity_ms_cm,
     real_axis_crossing,
 )
-from wrdkit.eis.derive import blocking_verdict
+from wrdkit.eis.derive import BLOCKING_PHASE_DEG, blocking_verdict
 
 from .. import storage
 from ..db import get_session
@@ -472,7 +472,13 @@ def _block(one: AuditSpectrumOut, numbers: _Numbers) -> list[str]:
         if phase is not None:
             verdict = {True: "막음", False: "안 막음", None: "애매"}[
                 one.blocking.get("blocking")]
-            extra.append(f"저주파 위상 {round(phase)}° ({verdict})")
+            # 위상이 -60° 위면 판정은 꼬리의 각도도 보고 낸 것이다 — 같이 적는다.
+            # 실측 풀셀 #7 이 "저주파 위상 -5° (막음)" 으로 찍혀 수와 판정이 어긋나
+            # 보였다 (꼬리는 섰는데 저항이 커서 위상이 얕다, `blocking_verdict`).
+            tail = one.blocking.get("tail_deg")
+            rise = (f", 꼬리 {round(tail)}°" if tail is not None
+                    and phase > BLOCKING_PHASE_DEG else "")
+            extra.append(f"저주파 위상 {round(phase)}°{rise} ({verdict})")
         lines.append("    " + " · ".join(extra))
     if one.parameters:
         shown = []

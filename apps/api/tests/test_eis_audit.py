@@ -431,3 +431,24 @@ def test_the_file_name_is_not_taken_for_the_shown_name(client):
     notes = [f for f in item["findings"] if f["code"] == "file_name_differs"]
     assert notes and "Poly_60um_full_01.mpr" in notes[0]["message"]
     assert "config_differs_from_name" not in codes(item)
+
+
+def test_the_headline_names_the_tail_when_the_tail_decided():
+    """실측 풀셀 #7 이 "저주파 위상 -5° (막음)" 으로 찍혔다 — 판정은 꼬리(≥ 60°)가
+    냈는데 줄에는 위상만 있어, 수와 판정이 서로 어긋나 보였다."""
+    from app.routers.eis_audit import _block, _Numbers
+    from app.schemas import AuditSpectrumOut
+
+    def headline(**blocking):
+        one = AuditSpectrumOut(id=7, name="Dcell17", kind="solid", sha256="0" * 64,
+                               blocking=blocking)
+        return "\n".join(_block(one, _Numbers()))
+
+    assert "저주파 위상 -5°, 꼬리 72° (막음)" in headline(
+        blocking=True, phase_deg=-5.2, tail_deg=72.4)
+    assert "저주파 위상 -9°, 꼬리 45° (애매)" in headline(
+        blocking=None, phase_deg=-9.0, tail_deg=44.6)
+    # 위상만으로 막는 셀에는 꼬리를 적지 않는다 — 판정을 낸 수 하나면 된다.
+    assert "저주파 위상 -74° (막음)" in headline(
+        blocking=True, phase_deg=-74.0, tail_deg=80.0)
+    assert "저주파 위상 0° (안 막음)" in headline(blocking=False, phase_deg=0.2)
