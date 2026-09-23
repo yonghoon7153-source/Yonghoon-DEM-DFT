@@ -102,7 +102,10 @@
     ⏳ 회신 2 발송(사용자 · **정정본** — Ag 셀 표기·층수 가정·820원자는 GPU 불가 → KISTI) · 결정 7 격자 정합 규칙(어느 쪽을 변형) 봉인.
     ⛔ **SE|SE 슬랩은 gabia GPU 에 안 들어간다 (CPU 1랭크 추정 · 2026-09-23 밤)**: 벌크 6.7 GB · **S 바깥 슬랩 55.8 GB · Li 바깥 50.2 GB** (k 9) > A6000 48 GB.
     그대로 두면 슬랩 pw.x 가 수 초에 수십 GB 를 잡아 2 s 가드보다 빨리 b2o3 UMA 를 칠 수 있다 → gabia 러너(tmux wad_sese) 정지 블록 전달.
-    → **KISTI A100 4장 평면파 분산**으로 이전 제안 `D-2026-09-23-wad-sese-move-kisti` (**proposed · 1저자 비준 대기**) · 제출 스크립트 `tools/wad/sbatch_sese_kisti.sh`
+    → ~~KISTI A100 4장 평면파 분산으로 이전 제안~~ ⛔ **철회 (rejected)** — **KISTI 는 2026-09-15 에 접근 종료**. CLAUDE.md 계산 자원 절이 09-08 판이라 KISTI 가 살아 있었다 → 고침.
+    ⏭ **SE|SE = 4층(110/98원자) · 진공 15 Å · k 3×3×1 로 축소** (추정 6층의 0.40–0.48 · Pustorino 3층↔6층 차 0.02 J/m²) → CPU 추정 확인 → gabia GPU.
+    ⏭ **P1·P2 전체 계면 평면파 DFT 는 우리 기계로 불가** → (A) 작은 모델 DFT 로 UMA+D3 검증(li2s 선례 · MLIP 금지 규칙 예외 필요) vs (B) CP2K 가우스 기저 — **1저자 결정** (계획 §0′ *KISTI 없이*).
+    (스크립트 `tools/wad/sbatch_sese_kisti.sh` 는 기록으로 남김 — 쓰지 않는다)
     (러너에 NP · PSEUDO_DIR · NO_LOCK 추가, GPU 사용량은 장별 최댓값). gabia 예외는 **한 번도 발동하지 않은 채** 소멸.
   · ✅ **문헌 3편 인입·병합** (1저자 제공 PDF · 수치는 메인이 PDF 텍스트로 재대조): `pustorino2025_…`(LPSCl 파괴에너지 = 2γ · (100) 화학량론 벽개 ≈ 0.47 · (110) 0.37 J/m²) ·
     `maurer2015_…`(Ag|그래핀 분산 7방법 0.19–0.45 J/m² — 0.3 경계를 가로지른다) · `giovannetti2008_…`(Ag 약결합군 · LSDA · 화학흡착 Pd ≈ 0.52 J/m² = "구간 ≠ 기전").

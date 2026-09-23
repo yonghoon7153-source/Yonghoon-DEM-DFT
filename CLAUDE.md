@@ -71,9 +71,13 @@
 - 데이터 그림은 **Origin-ready CSV를 동시 출력**해 db/properties/에 등록 (열 이름 명시적).
 - .opju 자동화는 클라우드에선 불가 — 로컬 Windows Claude Code + originpro로 (CSV가 우리 쪽 절반).
 
-## 계산 자원 (최종 갱신 2026-09-08)
-- **KISTI** neuron(x3430a02): Slurm, QOS 제출 제한 — scancel 직후 재제출 금지(카운터 지연). pseudo는
-  /scratch/x3430a02/kgy/manuscript_support/pseudo.
+## 계산 자원 (최종 갱신 2026-09-23 — KISTI 종료 반영)
+- ⛔⛔ **KISTI neuron(x3430a02) — 접근 종료 (1저자 2026-09-15)**. 새 계산을 KISTI 로 계획하지 않는다.
+  ⚠ 2026-09-23 에 이 줄이 살아 있는 채로 남아 있어서 W_ad SE|SE 를 KISTI 로 옮기자고 제안했다가 1저자가 잡았다
+  (기록은 `db/properties/lpscl_li2s_layer1_closed_2026_09_15.json` 에만 있었다). **우리 기계는 전부 단일 노드**다 —
+  gabia A6000 48 GB · host 62 GB / kgy 3090 24 GB (공유) / V100 32 GB. MPI 분할은 노드 총량을 못 넘는다.
+  ⇒ QE 추정(`Estimated max dynamical RAM`)이 그 안에 안 들면 **질문·모델 크기를 바꾼다** (li2s 선례: 400 → 120 원자).
+  (옛 기록: Slurm · QOS 제출 제한 · scancel 직후 재제출 금지 · pseudo /scratch/x3430a02/kgy/manuscript_support/pseudo)
 - **kgy** (RTX3090, QE-GPU + uma env): ssh kgy@59.12.161.91.
   ⛔⛔ **QE-GPU 런타임은 추측하지 말고 `ldd` 로 바이너리에게 묻는다.** 2026-09-08 에
   같은 자리에서 **세 번** 틀렸다: ① conda mpirun 탓 → ② 런처를 뺐더니 `libgomp: TODO`
