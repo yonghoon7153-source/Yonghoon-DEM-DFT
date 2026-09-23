@@ -1,0 +1,39 @@
+{
+  "context": {
+    "schema": 2,
+    "stage": "deployment_binding",
+    "attempt_id": "inert",
+    "code_seal_sha256": "153dc165ac05410b13af8c72373575eb361ce87ddfaf2c5cab7f4697995a3dd0",
+    "reservation": {
+      "path": "inert.reservation.json",
+      "bytes": 575,
+      "sha256": "1b0f231fed012bdae581f440c666f7385fe039008f6b5b5c1015a6ee2278121b"
+    },
+    "limits": {
+      "stage": 300,
+      "overall": 7200
+    },
+    "clock_binding": {
+      "work_id": "INERT_empty",
+      "clock": {
+        "id": "INERT_CLOCK",
+        "source": "time.monotonic_ns",
+        "unit": "ns",
+        "monotonic": true
+      },
+      "origin": {
+        "path": "START_AND_RESOURCES.json",
+        "bytes": 258,
+        "sha256": "cf65045d04d0f5af0c8a7801105a7e1b2cd4c61e9cff42bd0055564c4c47f792"
+      },
+      "overall_start_ns": 1000000000,
+      "stage_start_ns": 2000000000
+    }
+  },
+  "status": "PASS",
+  "tests": [],
+  "failures": 0,
+  "errors": 0,
+  "subcase_count": 57,
+  "fixture_scope": "SYNTHETIC_REPORT_INPUT_NOT_ACTUAL_SUITE_LOG"
+}

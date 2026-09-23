@@ -1,0 +1,31 @@
+{
+  "id": "D13",
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "valid",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "ACCEPT",
+      "phase": "deployment_consumer",
+      "reason": "ACCEPT",
+      "observed_codes": [],
+      "result": {
+        "status": "PASS",
+        "phase": "deployment_consumer",
+        "reason": "ACCEPT"
+      }
+    },
+    {
+      "case": "post_report_overrun",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "STAGE_BUDGET",
+      "observed_codes": [
+        "STAGE_BUDGET"
+      ]
+    }
+  ]
+}

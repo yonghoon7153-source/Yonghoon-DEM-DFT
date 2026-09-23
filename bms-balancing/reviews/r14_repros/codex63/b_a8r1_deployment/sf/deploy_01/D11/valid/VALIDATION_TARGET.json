@@ -1,0 +1,10 @@
+{
+  "kind": "INDEPENDENT_DEPLOYMENT_TARGET",
+  "target_run_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006",
+  "target_run_id": "saved_solution_A8R1_b006",
+  "target_source_java": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/StoredSolutionRecoveryA.java",
+  "java_sha256": "5a9da0f9da79a6d5f848af5ee3ea9792b06918110a8fae8a54b5a4fc05db6c39",
+  "reference_A8_manifest_sha256": "590c188e46a29ae4aa2f1ae56eb6749df236da3f6d464464cb1baed3330e6112",
+  "B_approved": false,
+  "usable": false
+}

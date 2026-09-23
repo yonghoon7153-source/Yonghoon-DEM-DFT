@@ -1,0 +1,24 @@
+{
+  "schema": 2,
+  "stage": "delivery",
+  "attempt_id": "delivery",
+  "attempt": 1,
+  "stage_start_ns": 2000000000,
+  "work_id": "INERT_postwrite_reverse",
+  "clock": {
+    "id": "INERT_CLOCK",
+    "source": "time.monotonic_ns",
+    "unit": "ns",
+    "monotonic": true
+  },
+  "origin": {
+    "path": "START_AND_RESOURCES.json",
+    "bytes": 270,
+    "sha256": "71991a3a09077bbbc1756454866829f81e6596c18067e83aa5a0f378a282c3d7"
+  },
+  "code_seal_sha256": "87b4b197cd84fcee36c9a53a387c4933c75d109965319965e5739db10b6e89ee",
+  "limits": {
+    "stage": 600,
+    "overall": 7200
+  }
+}

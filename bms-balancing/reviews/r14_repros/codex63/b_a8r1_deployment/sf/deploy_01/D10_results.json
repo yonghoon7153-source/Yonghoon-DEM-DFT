@@ -1,0 +1,73 @@
+{
+  "id": "D10",
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "valid",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "ACCEPT",
+      "phase": "path_binding",
+      "reason": "ACCEPT",
+      "observed_codes": [],
+      "result": {
+        "status": "PASS",
+        "phase": "path_binding",
+        "reason": "ACCEPT",
+        "raw_contract_sha256": "45a63bf1a33039c6556f024e26592d01e4ec4db1594dd7ef28713354cdc49043",
+        "binding": {
+          "status": "STATIC_PATH_PASS",
+          "java_inverse_bytes_identical": true,
+          "numeric_contract_unchanged": true,
+          "user_approval_outside_runtime": true,
+          "B_approved": false,
+          "B_path_ready": false
+        }
+      }
+    },
+    {
+      "case": "other_field",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "raw_view",
+      "reason": "VIEW_DIFF",
+      "observed_codes": [
+        "VIEW_DIFF"
+      ]
+    },
+    {
+      "case": "type_change",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "raw_view",
+      "reason": "VIEW_DIFF",
+      "observed_codes": [
+        "VIEW_DIFF"
+      ]
+    },
+    {
+      "case": "approved_true",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "raw_view",
+      "reason": "RAW_CONTRACT_FLAGS",
+      "observed_codes": [
+        "RAW_CONTRACT_FLAGS"
+      ]
+    },
+    {
+      "case": "raw_bytes_changed",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "raw_view",
+      "reason": "RAW_CONTRACT_IDENTITY",
+      "observed_codes": [
+        "RAW_CONTRACT_IDENTITY"
+      ]
+    }
+  ]
+}

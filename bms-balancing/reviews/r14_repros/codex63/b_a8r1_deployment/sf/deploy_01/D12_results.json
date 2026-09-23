@@ -1,0 +1,130 @@
+{
+  "id": "D12",
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "valid",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "ACCEPT",
+      "phase": "deployment_consumer",
+      "reason": "ACCEPT",
+      "observed_codes": [],
+      "result": {
+        "status": "PASS",
+        "phase": "deployment_consumer",
+        "reason": "ACCEPT"
+      }
+    },
+    {
+      "case": "empty",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_ID_SET",
+      "observed_codes": [
+        "DEPLOYMENT_ID_SET"
+      ]
+    },
+    {
+      "case": "missing",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_ID_SET",
+      "observed_codes": [
+        "DEPLOYMENT_ID_SET"
+      ]
+    },
+    {
+      "case": "duplicate",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_ID_SET",
+      "observed_codes": [
+        "DEPLOYMENT_ID_SET"
+      ]
+    },
+    {
+      "case": "unknown",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_ID_SET",
+      "observed_codes": [
+        "DEPLOYMENT_ID_SET"
+      ]
+    },
+    {
+      "case": "failed",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_ID_FAILED",
+      "observed_codes": [
+        "DEPLOYMENT_ID_FAILED"
+      ]
+    },
+    {
+      "case": "skip",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_CASE_FAILED",
+      "observed_codes": [
+        "DEPLOYMENT_CASE_FAILED"
+      ]
+    },
+    {
+      "case": "missing_positive",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_CASE_SET",
+      "observed_codes": [
+        "DEPLOYMENT_CASE_SET"
+      ]
+    },
+    {
+      "case": "wrong_reason",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_CASE_REASON",
+      "observed_codes": [
+        "DEPLOYMENT_CASE_REASON"
+      ]
+    },
+    {
+      "case": "wrong_phase",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_CASE_PHASE",
+      "observed_codes": [
+        "DEPLOYMENT_CASE_PHASE"
+      ]
+    },
+    {
+      "case": "code_mismatch",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "CODE_IDENTITY",
+      "observed_codes": [
+        "CODE_IDENTITY"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schema": 2,
+  "stage": "deployment_binding",
+  "attempt_id": "inert",
+  "attempt": 1,
+  "stage_start_ns": 2000000000,
+  "work_id": "INERT_external_missing",
+  "clock": {
+    "id": "INERT_CLOCK",
+    "source": "time.monotonic_ns",
+    "unit": "ns",
+    "monotonic": true
+  },
+  "origin": {
+    "path": "START_AND_RESOURCES.json",
+    "bytes": 269,
+    "sha256": "0967bb0f54fc6e443aca3eb2d51649b510dc3e613333f6e6050c1efdb0d758a9"
+  },
+  "code_seal_sha256": "47b1fdb95284eab48dcfa64fb5fb533e919b0a07e141bdb5d811d0da48452c27",
+  "limits": {
+    "stage": 300,
+    "overall": 7200
+  }
+}

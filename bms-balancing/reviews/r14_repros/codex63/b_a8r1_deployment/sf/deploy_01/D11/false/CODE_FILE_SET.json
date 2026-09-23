@@ -1,0 +1,29 @@
+{
+  "kind": "EXACT_FINAL_CANDIDATE_CODE_AND_DEPENDENCY_SET",
+  "files": [
+    "B_PATH_BINDING.json",
+    "CASE_SPEC.json",
+    "CODE_FILE_SET.json",
+    "REFERENCE_A8_CONTRACT.json",
+    "REFERENCE_A8_JAVA.txt",
+    "START_AND_RESOURCES.json",
+    "StoredSolutionRecoveryA.java",
+    "VALIDATION_TARGET.json",
+    "analyzer.py",
+    "class_artifacts.py",
+    "completion_contract.py",
+    "contract.json",
+    "deployment_package.py",
+    "deployment_verify.py",
+    "evidence_metrics.py",
+    "execution_records.py",
+    "expected_solver.json",
+    "launcher.py",
+    "numerical_contract.py",
+    "offline_clock_contract.py",
+    "path_binding.py",
+    "status_reader.py",
+    "test_deployment_binding.py",
+    "winjob.py"
+  ]
+}

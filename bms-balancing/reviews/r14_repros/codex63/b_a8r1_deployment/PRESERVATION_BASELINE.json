@@ -1,0 +1,2693 @@
+{
+  "origin": "Prior read-only planning snapshot; fresh before values measured below",
+  "files": [
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/A2_java_body.txt",
+      "before": {
+        "bytes": 17129,
+        "sha256": "a79a82a5c24ef02cba87f99ce6bd55923c0fcc87dd439378b01afb48f96077f5"
+      },
+      "after": {
+        "bytes": 17129,
+        "sha256": "a79a82a5c24ef02cba87f99ce6bd55923c0fcc87dd439378b01afb48f96077f5"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/A_STAGE_AUTHORIZATION.json",
+      "before": {
+        "bytes": 956,
+        "sha256": "abafd75402d006b01ece4b8cdcc6a4b29623df1a0a9d0d6b28f90a4026b18286"
+      },
+      "after": {
+        "bytes": 956,
+        "sha256": "abafd75402d006b01ece4b8cdcc6a4b29623df1a0a9d0d6b28f90a4026b18286"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/analyzer.py",
+      "before": {
+        "bytes": 22371,
+        "sha256": "51c6c234cd250c7dbd19fb52584d262dcae5fb303d14b8522c73d01c028868bb"
+      },
+      "after": {
+        "bytes": 22371,
+        "sha256": "51c6c234cd250c7dbd19fb52584d262dcae5fb303d14b8522c73d01c028868bb"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/approval_review/LOCAL_CODEX_APPROVAL_DRAFT.md",
+      "before": {
+        "bytes": 4906,
+        "sha256": "415833a28825641c8fd1be29df99e651f5981f16f898c354d9cbd2e204ec834d"
+      },
+      "after": {
+        "bytes": 4906,
+        "sha256": "415833a28825641c8fd1be29df99e651f5981f16f898c354d9cbd2e204ec834d"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/approval_review/REVIEW_KO.md",
+      "before": {
+        "bytes": 9366,
+        "sha256": "f62b7d3884e3a64bcee65e20e98dc982664535a22539867e58ba8863e2f6a6ea"
+      },
+      "after": {
+        "bytes": 9366,
+        "sha256": "f62b7d3884e3a64bcee65e20e98dc982664535a22539867e58ba8863e2f6a6ea"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/approval_review/REVIEW_PACKAGE_MANIFEST.json",
+      "before": {
+        "bytes": 3292,
+        "sha256": "76de837d4a2e8ea5e01222a050d118e348278222cfb6459d45debad19c602eda"
+      },
+      "after": {
+        "bytes": 3292,
+        "sha256": "76de837d4a2e8ea5e01222a050d118e348278222cfb6459d45debad19c602eda"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/APPROVED_PLAN_KO.md",
+      "before": {
+        "bytes": 21198,
+        "sha256": "9b57a495dc3eecd885ca7d068047f70acd9ff8fefd3ff7922ac67c6bc2c4fd11"
+      },
+      "after": {
+        "bytes": 21198,
+        "sha256": "9b57a495dc3eecd885ca7d068047f70acd9ff8fefd3ff7922ac67c6bc2c4fd11"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/B_EXECUTION_APPROVAL_DRAFT.md",
+      "before": {
+        "bytes": 848,
+        "sha256": "5a35f7973feb2fd7a33da27d1714a04c844f728d8643ff26b32dcb88035cd346"
+      },
+      "after": {
+        "bytes": 848,
+        "sha256": "5a35f7973feb2fd7a33da27d1714a04c844f728d8643ff26b32dcb88035cd346"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/B_PATH_BINDING.json",
+      "before": {
+        "bytes": 8498,
+        "sha256": "09577ec200d8d6a1eebeb36d016b307e97c3f682c5ae7e3b9b1d5a9b6b9a5ac1"
+      },
+      "after": {
+        "bytes": 8498,
+        "sha256": "09577ec200d8d6a1eebeb36d016b307e97c3f682c5ae7e3b9b1d5a9b6b9a5ac1"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/class_artifacts.py",
+      "before": {
+        "bytes": 7442,
+        "sha256": "78576d19dc8758ffc642ea7e692adf4144bfb64067fa0bf9ab5aa0d8b4ea0069"
+      },
+      "after": {
+        "bytes": 7442,
+        "sha256": "78576d19dc8758ffc642ea7e692adf4144bfb64067fa0bf9ab5aa0d8b4ea0069"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/completion_contract.py",
+      "before": {
+        "bytes": 7699,
+        "sha256": "5807fb2c10d4f8e0c36270aa66b2a560c2dcee5deb6ed215712ff19cb2ed7048"
+      },
+      "after": {
+        "bytes": 7699,
+        "sha256": "5807fb2c10d4f8e0c36270aa66b2a560c2dcee5deb6ed215712ff19cb2ed7048"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/contract.json",
+      "before": {
+        "bytes": 61649,
+        "sha256": "2e84eaaeedd9471925089ff031a4ec66ece54c1e137dab5744a834ff710d6141"
+      },
+      "after": {
+        "bytes": 61649,
+        "sha256": "2e84eaaeedd9471925089ff031a4ec66ece54c1e137dab5744a834ff710d6141"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/evidence_metrics.py",
+      "before": {
+        "bytes": 3960,
+        "sha256": "1eea84cf2524b9839ff910ea2a09c950d5b121dca210a2ab5f21a366d957f026"
+      },
+      "after": {
+        "bytes": 3960,
+        "sha256": "1eea84cf2524b9839ff910ea2a09c950d5b121dca210a2ab5f21a366d957f026"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/execution_records.py",
+      "before": {
+        "bytes": 11109,
+        "sha256": "b4b9ea1626a8bb9756d6c6e5e935241ca33c7d39a6725878d172a894382dc3c4"
+      },
+      "after": {
+        "bytes": 11109,
+        "sha256": "b4b9ea1626a8bb9756d6c6e5e935241ca33c7d39a6725878d172a894382dc3c4"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/expected_solver.json",
+      "before": {
+        "bytes": 113985,
+        "sha256": "5bf4082faa3d83b482cb6bd61e24793a0d171c8bb72fcb84ca4a9565b6d16f92"
+      },
+      "after": {
+        "bytes": 113985,
+        "sha256": "5bf4082faa3d83b482cb6bd61e24793a0d171c8bb72fcb84ca4a9565b6d16f92"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/F_REUSE.json",
+      "before": {
+        "bytes": 6603,
+        "sha256": "779300a17f20b7cf124ae7912e5e820d1c21c56012b0c2ee2e2f0a2455981010"
+      },
+      "after": {
+        "bytes": 6603,
+        "sha256": "779300a17f20b7cf124ae7912e5e820d1c21c56012b0c2ee2e2f0a2455981010"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/file_observation.py",
+      "before": {
+        "bytes": 4574,
+        "sha256": "50813428b23b799517c97f4e86c31c67240e5e065ba64b4b11d6d1b5f73c425a"
+      },
+      "after": {
+        "bytes": 4574,
+        "sha256": "50813428b23b799517c97f4e86c31c67240e5e065ba64b4b11d6d1b5f73c425a"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/IMPLEMENTATION_COMPLETED.json",
+      "before": {
+        "bytes": 522,
+        "sha256": "730efccb0cf9bede28d27012b37e72b9fce178e8883d39a0428dc37a252568d3"
+      },
+      "after": {
+        "bytes": 522,
+        "sha256": "730efccb0cf9bede28d27012b37e72b9fce178e8883d39a0428dc37a252568d3"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/IMPLEMENTATION_NOTES.md",
+      "before": {
+        "bytes": 2156,
+        "sha256": "be01e06b9eb9995ce985351de9229555be243317a022d06c9e3b13894dcc1acc"
+      },
+      "after": {
+        "bytes": 2156,
+        "sha256": "be01e06b9eb9995ce985351de9229555be243317a022d06c9e3b13894dcc1acc"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/launcher.py",
+      "before": {
+        "bytes": 26453,
+        "sha256": "3a0008e0948a8ae8dc172504b40a308f27c6fd13d798f76b13fd3413b1a9a558"
+      },
+      "after": {
+        "bytes": 26453,
+        "sha256": "3a0008e0948a8ae8dc172504b40a308f27c6fd13d798f76b13fd3413b1a9a558"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/LEGACY_ASSERTIONS.json",
+      "before": {
+        "bytes": 1906,
+        "sha256": "460355ff43b8021362bbab15aaa1f2ad90679308d3dd8ea14305147c00f2728f"
+      },
+      "after": {
+        "bytes": 1906,
+        "sha256": "460355ff43b8021362bbab15aaa1f2ad90679308d3dd8ea14305147c00f2728f"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n5_recipient/STATIC_BUDGET_CASES.json",
+      "before": {
+        "bytes": 2254,
+        "sha256": "38bbd6a0a1822b54d720c5ed8136bcfd524c75369e563b26cafa2b961c936c4c"
+      },
+      "after": {
+        "bytes": 2254,
+        "sha256": "38bbd6a0a1822b54d720c5ed8136bcfd524c75369e563b26cafa2b961c936c4c"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n5_recipient/static_cases/F_post_write_timeout.json",
+      "before": {
+        "bytes": 3076,
+        "sha256": "ca5d0d243db05ae55c4c2598e804336460243aec7fc7e48e31c0cf2cf8933a95"
+      },
+      "after": {
+        "bytes": 3076,
+        "sha256": "ca5d0d243db05ae55c4c2598e804336460243aec7fc7e48e31c0cf2cf8933a95"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n5_recipient/static_cases/positive_control.json",
+      "before": {
+        "bytes": 2819,
+        "sha256": "d666d7bd4b8128f0fc091b1c27ae03c0cadbc8c2ff46519a65d11ada0cf0ac41"
+      },
+      "after": {
+        "bytes": 2819,
+        "sha256": "d666d7bd4b8128f0fc091b1c27ae03c0cadbc8c2ff46519a65d11ada0cf0ac41"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n5_recipient/static_cases/synthetic_after_completion_timeout.json",
+      "before": {
+        "bytes": 2967,
+        "sha256": "45e509fb6663ca04d7fec24b197f3f0540f5c2e1cc5a1bc9bd5f04521c600580"
+      },
+      "after": {
+        "bytes": 2967,
+        "sha256": "45e509fb6663ca04d7fec24b197f3f0540f5c2e1cc5a1bc9bd5f04521c600580"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n5_recipient/static_cases/synthetic_completion_not_consumed.json",
+      "before": {
+        "bytes": 3062,
+        "sha256": "5b7645210726c40f8dd17468dd4cf02ff8d90e80e64af567e238837635241da2"
+      },
+      "after": {
+        "bytes": 3062,
+        "sha256": "5b7645210726c40f8dd17468dd4cf02ff8d90e80e64af567e238837635241da2"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n6n7_recipient/DECISION_PROBES_ORIGINAL.json",
+      "before": {
+        "bytes": 19898,
+        "sha256": "beec253bba99bfca4b593988ae8616748ea13e9891c39f02c9f6f80e60382515"
+      },
+      "after": {
+        "bytes": 19898,
+        "sha256": "beec253bba99bfca4b593988ae8616748ea13e9891c39f02c9f6f80e60382515"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/n6n7_recipient/REPRO_README.md",
+      "before": {
+        "bytes": 2090,
+        "sha256": "d26c11a0c8e0d35b818d32dcbdcf8aa9352ae5ff31fe059b721ef548f221f865"
+      },
+      "after": {
+        "bytes": 2090,
+        "sha256": "d26c11a0c8e0d35b818d32dcbdcf8aa9352ae5ff31fe059b721ef548f221f865"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/numerical_contract.py",
+      "before": {
+        "bytes": 5037,
+        "sha256": "bdab6017b1fdac6998635a20fa3e57a9b497030d9286d943693216c37c0cd6b4"
+      },
+      "after": {
+        "bytes": 5037,
+        "sha256": "bdab6017b1fdac6998635a20fa3e57a9b497030d9286d943693216c37c0cd6b4"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/offline_clock_contract.py",
+      "before": {
+        "bytes": 7892,
+        "sha256": "5e5725e58e33f724d09e0f7489fad5222487f719239a40bc1639a80cf0a93f49"
+      },
+      "after": {
+        "bytes": 7892,
+        "sha256": "5e5725e58e33f724d09e0f7489fad5222487f719239a40bc1639a80cf0a93f49"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/offline_observation.py",
+      "before": {
+        "bytes": 9110,
+        "sha256": "704c8f50c33472b71ce259aed79695015589a95a36589edd3732b8140a923cbc"
+      },
+      "after": {
+        "bytes": 9110,
+        "sha256": "704c8f50c33472b71ce259aed79695015589a95a36589edd3732b8140a923cbc"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/path_binding.py",
+      "before": {
+        "bytes": 6298,
+        "sha256": "d85a425148f776ae45dda18af3ec8b3cf1d1e14c57a8af81317011c8c3502be0"
+      },
+      "after": {
+        "bytes": 6298,
+        "sha256": "d85a425148f776ae45dda18af3ec8b3cf1d1e14c57a8af81317011c8c3502be0"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prepare_revision.py",
+      "before": {
+        "bytes": 4943,
+        "sha256": "d430aaab0110ae4b68c30769e43d782e2e1a73740ab063b5b4f34511360caa41"
+      },
+      "after": {
+        "bytes": 4943,
+        "sha256": "d430aaab0110ae4b68c30769e43d782e2e1a73740ab063b5b4f34511360caa41"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/PRESERVATION_BEFORE.json",
+      "before": {
+        "bytes": 46712,
+        "sha256": "ced5a21cf050270cc70411fd1aa2f3a79d68afea682e5ab926bbaeb6a831e441"
+      },
+      "after": {
+        "bytes": 46712,
+        "sha256": "ced5a21cf050270cc70411fd1aa2f3a79d68afea682e5ab926bbaeb6a831e441"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/A7_ORIGINAL_PLAN.md",
+      "before": {
+        "bytes": 19939,
+        "sha256": "daa0b34e93df5f837ef24d2f935fef44faff177c21a753ee667f94ec1d78a3cc"
+      },
+      "after": {
+        "bytes": 19939,
+        "sha256": "daa0b34e93df5f837ef24d2f935fef44faff177c21a753ee667f94ec1d78a3cc"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/CODE_MANIFEST.json",
+      "before": {
+        "bytes": 16235,
+        "sha256": "f4806f524e269751ef179ebf568525ad286a300fcf17994117062a38a7f7b25b"
+      },
+      "after": {
+        "bytes": 16235,
+        "sha256": "f4806f524e269751ef179ebf568525ad286a300fcf17994117062a38a7f7b25b"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/contract.json",
+      "before": {
+        "bytes": 61829,
+        "sha256": "7bfd74bb45d50a9550ac2f599c75a682fe9fb2539a4e9b32c27e6542a9bf1c7f"
+      },
+      "after": {
+        "bytes": 61829,
+        "sha256": "7bfd74bb45d50a9550ac2f599c75a682fe9fb2539a4e9b32c27e6542a9bf1c7f"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/DELIVERY_RECEIPT.json",
+      "before": {
+        "bytes": 1154,
+        "sha256": "33c93e0e238560444384d61367193c7251f4ae712d79e2600b4ae72c942a2d7a"
+      },
+      "after": {
+        "bytes": 1154,
+        "sha256": "33c93e0e238560444384d61367193c7251f4ae712d79e2600b4ae72c942a2d7a"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-00_observation.json",
+      "before": {
+        "bytes": 951,
+        "sha256": "db61b503c5cd14f5ef0bcf739af3e4d137c18d90e12abac9b8cb03231d8a4f20"
+      },
+      "after": {
+        "bytes": 951,
+        "sha256": "db61b503c5cd14f5ef0bcf739af3e4d137c18d90e12abac9b8cb03231d8a4f20"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-01_observation.json",
+      "before": {
+        "bytes": 1469,
+        "sha256": "c8f3c0532d541ddd7549067ce4cd4a980b5830c16f8468109d7ed6b6601c08e7"
+      },
+      "after": {
+        "bytes": 1469,
+        "sha256": "c8f3c0532d541ddd7549067ce4cd4a980b5830c16f8468109d7ed6b6601c08e7"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-02_observation.json",
+      "before": {
+        "bytes": 1494,
+        "sha256": "f93d9629ece37df3986c095a5ca2a7c8d42a047856334e6b1e61ca6f165ce9d8"
+      },
+      "after": {
+        "bytes": 1494,
+        "sha256": "f93d9629ece37df3986c095a5ca2a7c8d42a047856334e6b1e61ca6f165ce9d8"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-03_observation.json",
+      "before": {
+        "bytes": 1515,
+        "sha256": "d36c36e6ca6f175b0b9cdd4961920865d9909161c7bf1f8ee57bc77fc3b77d29"
+      },
+      "after": {
+        "bytes": 1515,
+        "sha256": "d36c36e6ca6f175b0b9cdd4961920865d9909161c7bf1f8ee57bc77fc3b77d29"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-04_observation.json",
+      "before": {
+        "bytes": 159,
+        "sha256": "5d3cb3e04ace41042439c069579bbb7be2d199afc2ca9d289c8fead367807356"
+      },
+      "after": {
+        "bytes": 159,
+        "sha256": "5d3cb3e04ace41042439c069579bbb7be2d199afc2ca9d289c8fead367807356"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-05_observation.json",
+      "before": {
+        "bytes": 243,
+        "sha256": "e8b2ff1a01b14737f48617bad8b68aa53bff4a2ababc69fb4dea793be76b56fc"
+      },
+      "after": {
+        "bytes": 243,
+        "sha256": "e8b2ff1a01b14737f48617bad8b68aa53bff4a2ababc69fb4dea793be76b56fc"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-06_observation.json",
+      "before": {
+        "bytes": 330,
+        "sha256": "2ecd0d0bbc078e6c1ea4eb207b741a19c4a12104d206ab8423470fcaa9f4de07"
+      },
+      "after": {
+        "bytes": 330,
+        "sha256": "2ecd0d0bbc078e6c1ea4eb207b741a19c4a12104d206ab8423470fcaa9f4de07"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-07_observation.json",
+      "before": {
+        "bytes": 174,
+        "sha256": "806399e2dcbf3a890e9a7c134b28ed784312e8353290f1f340267ecee5b910f4"
+      },
+      "after": {
+        "bytes": 174,
+        "sha256": "806399e2dcbf3a890e9a7c134b28ed784312e8353290f1f340267ecee5b910f4"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/F-08_observation.json",
+      "before": {
+        "bytes": 318,
+        "sha256": "f9daf1db46f2fad42c5f44bdd7d96cdf110468646e41911e7fce1b8ad0324153"
+      },
+      "after": {
+        "bytes": 318,
+        "sha256": "f9daf1db46f2fad42c5f44bdd7d96cdf110468646e41911e7fce1b8ad0324153"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio.reservation.json",
+      "before": {
+        "bytes": 49,
+        "sha256": "9c341ce61e8805d8eecddc18a82c56254d2d857d834b99ffee7e86fdf8d03d1c"
+      },
+      "after": {
+        "bytes": 49,
+        "sha256": "9c341ce61e8805d8eecddc18a82c56254d2d857d834b99ffee7e86fdf8d03d1c"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/FILEIO_COMPLETION.json",
+      "before": {
+        "bytes": 395,
+        "sha256": "aaa0e46974cd494d060dd937612a99d7fc93154e33a70d22f0cea1573b2cfa4d"
+      },
+      "after": {
+        "bytes": 395,
+        "sha256": "aaa0e46974cd494d060dd937612a99d7fc93154e33a70d22f0cea1573b2cfa4d"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/FILEIO_EXTERNAL_OBSERVATION.json",
+      "before": {
+        "bytes": 554,
+        "sha256": "47ed770e7ac90c9c09f2f2095f23c8975a882daf7e82967bbca0be06fa9f0b85"
+      },
+      "after": {
+        "bytes": 554,
+        "sha256": "47ed770e7ac90c9c09f2f2095f23c8975a882daf7e82967bbca0be06fa9f0b85"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/FILEIO_RESULTS.json",
+      "before": {
+        "bytes": 9420,
+        "sha256": "a41e46be777fc765f6a922e10f7123da2d5531cc03b63a31de750d26cac27f09"
+      },
+      "after": {
+        "bytes": 9420,
+        "sha256": "a41e46be777fc765f6a922e10f7123da2d5531cc03b63a31de750d26cac27f09"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/collision/evidence/events/000001.json",
+      "before": {
+        "bytes": 8,
+        "sha256": "962f85a27854336f3286ad54b49321f62525043b5f3508b2ecc887fdd6e7550e"
+      },
+      "after": {
+        "bytes": 8,
+        "sha256": "962f85a27854336f3286ad54b49321f62525043b5f3508b2ecc887fdd6e7550e"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/collision/evidence/events/000001.pending",
+      "before": {
+        "bytes": 12,
+        "sha256": "62ea98a8eed09d9b683019cbefc41a278a5d50045cd448f963d7fadc3da28897"
+      },
+      "after": {
+        "bytes": 12,
+        "sha256": "62ea98a8eed09d9b683019cbefc41a278a5d50045cd448f963d7fadc3da28897"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/event_case/evidence/events/000001.json",
+      "before": {
+        "bytes": 440,
+        "sha256": "f1d621cbd9024199b4a124df95211d80a8fe0e1ec2fe5479df03cb45a5d7a640"
+      },
+      "after": {
+        "bytes": 440,
+        "sha256": "f1d621cbd9024199b4a124df95211d80a8fe0e1ec2fe5479df03cb45a5d7a640"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/exception_read.json",
+      "before": {
+        "bytes": 8,
+        "sha256": "7ccfa1fbf3940e6f0c0375d87c0f9235a50514e14cb427bdfaf5077987b26ccf"
+      },
+      "after": {
+        "bytes": 8,
+        "sha256": "7ccfa1fbf3940e6f0c0375d87c0f9235a50514e14cb427bdfaf5077987b26ccf"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-00_old.json",
+      "before": {
+        "bytes": 7,
+        "sha256": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a"
+      },
+      "after": {
+        "bytes": 7,
+        "sha256": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-01_new.json",
+      "before": {
+        "bytes": 7,
+        "sha256": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a"
+      },
+      "after": {
+        "bytes": 7,
+        "sha256": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-01_old.json",
+      "before": {
+        "bytes": 7,
+        "sha256": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91"
+      },
+      "after": {
+        "bytes": 7,
+        "sha256": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-02_new.json",
+      "before": {
+        "bytes": 7,
+        "sha256": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a"
+      },
+      "after": {
+        "bytes": 7,
+        "sha256": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-02_old.json",
+      "before": {
+        "bytes": 7,
+        "sha256": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91"
+      },
+      "after": {
+        "bytes": 7,
+        "sha256": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-03_new.json",
+      "before": {
+        "bytes": 7,
+        "sha256": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a"
+      },
+      "after": {
+        "bytes": 7,
+        "sha256": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/F-03_old.json",
+      "before": {
+        "bytes": 7,
+        "sha256": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91"
+      },
+      "after": {
+        "bytes": 7,
+        "sha256": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/flush_or_fsync/evidence/events/000001.pending",
+      "before": {
+        "bytes": 12,
+        "sha256": "62ea98a8eed09d9b683019cbefc41a278a5d50045cd448f963d7fadc3da28897"
+      },
+      "after": {
+        "bytes": 12,
+        "sha256": "62ea98a8eed09d9b683019cbefc41a278a5d50045cd448f963d7fadc3da28897"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/partial/evidence/events/000001.json",
+      "before": {
+        "bytes": 1,
+        "sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96"
+      },
+      "after": {
+        "bytes": 1,
+        "sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/readback/evidence/events/000001.json",
+      "before": {
+        "bytes": 422,
+        "sha256": "a3a6217f3ff35437aeffbbc8d6f00386419192094714b83b1eb5efba992a7610"
+      },
+      "after": {
+        "bytes": 422,
+        "sha256": "a3a6217f3ff35437aeffbbc8d6f00386419192094714b83b1eb5efba992a7610"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/fileio_scratch_evidence/readback/evidence/events/000001.pending",
+      "before": {
+        "bytes": 12,
+        "sha256": "62ea98a8eed09d9b683019cbefc41a278a5d50045cd448f963d7fadc3da28897"
+      },
+      "after": {
+        "bytes": 12,
+        "sha256": "62ea98a8eed09d9b683019cbefc41a278a5d50045cd448f963d7fadc3da28897"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A6/StoredSolutionRecoveryA.java",
+      "before": {
+        "bytes": 57966,
+        "sha256": "5542a0b2192f7ac61e08c29fd69124eff47ff8602f59831ae2d3aa16ac7ca083"
+      },
+      "after": {
+        "bytes": 57966,
+        "sha256": "5542a0b2192f7ac61e08c29fd69124eff47ff8602f59831ae2d3aa16ac7ca083"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A7/CODE_MANIFEST.json",
+      "before": {
+        "bytes": 26216,
+        "sha256": "e443962cf55551e26192c2c0e9a11a68998c13eb5ff1337ded7e02e390f0ab39"
+      },
+      "after": {
+        "bytes": 26216,
+        "sha256": "e443962cf55551e26192c2c0e9a11a68998c13eb5ff1337ded7e02e390f0ab39"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A7/delivery.reservation.json",
+      "before": {
+        "bytes": 224,
+        "sha256": "96161c768a8dbd75e8bee285a186781db5c1cd97e7ba331307e1b1c5c9547a96"
+      },
+      "after": {
+        "bytes": 224,
+        "sha256": "96161c768a8dbd75e8bee285a186781db5c1cd97e7ba331307e1b1c5c9547a96"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A7/DELIVERY_RECEIPT_ORIGINAL.json",
+      "before": {
+        "bytes": 628,
+        "sha256": "9c395ffe040518fa230155266e7920a0d2efadb893a136950468fe39da996d11"
+      },
+      "after": {
+        "bytes": 628,
+        "sha256": "9c395ffe040518fa230155266e7920a0d2efadb893a136950468fe39da996d11"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A7/FINAL_TOOL_RETURN_TRANSCRIPT.txt",
+      "before": {
+        "bytes": 2627,
+        "sha256": "a27f934b461a86016e4ce276bdadf6d61e05ebaf3c130d83773bafd522a41414"
+      },
+      "after": {
+        "bytes": 2627,
+        "sha256": "a27f934b461a86016e4ce276bdadf6d61e05ebaf3c130d83773bafd522a41414"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A7/START_AND_RESOURCES.json",
+      "before": {
+        "bytes": 399,
+        "sha256": "73e896a23e22bed9b08d0c9a4b6d3d2606b726013f0376c23dc95df112a04f51"
+      },
+      "after": {
+        "bytes": 399,
+        "sha256": "73e896a23e22bed9b08d0c9a4b6d3d2606b726013f0376c23dc95df112a04f51"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/prior_A7/test_run_01.json",
+      "before": {
+        "bytes": 94980,
+        "sha256": "e94be5a3bca5210b6387c4e21ce6a173a9c9d92bb25aea6b19b869d7014ac4ce"
+      },
+      "after": {
+        "bytes": 94980,
+        "sha256": "e94be5a3bca5210b6387c4e21ce6a173a9c9d92bb25aea6b19b869d7014ac4ce"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/PYTHON_RUNTIME_IDENTITY.json",
+      "before": {
+        "bytes": 1155,
+        "sha256": "f084fbf4bdb8f08c15b0003efa0f4af382492622edd09fdfbf2535dbdd3a15ca"
+      },
+      "after": {
+        "bytes": 1155,
+        "sha256": "f084fbf4bdb8f08c15b0003efa0f4af382492622edd09fdfbf2535dbdd3a15ca"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/READONLY_RECEPTION.json",
+      "before": {
+        "bytes": 571,
+        "sha256": "2a5f15ec0b2ebf8418883f665f34ce4a8dcf2a0e1507ac0b8c5968fd78116f50"
+      },
+      "after": {
+        "bytes": 571,
+        "sha256": "2a5f15ec0b2ebf8418883f665f34ce4a8dcf2a0e1507ac0b8c5968fd78116f50"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/A6_PLAN_REVIEW_KO.md",
+      "before": {
+        "bytes": 10357,
+        "sha256": "d628726158e730b914ced554fb036e6d1fbd289c531f69fa1f148d598adfdbed"
+      },
+      "after": {
+        "bytes": 10357,
+        "sha256": "d628726158e730b914ced554fb036e6d1fbd289c531f69fa1f148d598adfdbed"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/LOCAL_CODEX_REPLY.md",
+      "before": {
+        "bytes": 5032,
+        "sha256": "3ac5d4468f62f8205f585041fe7060af1af3bc7b733f95844a9ab2a2d8bfbf51"
+      },
+      "after": {
+        "bytes": 5032,
+        "sha256": "3ac5d4468f62f8205f585041fe7060af1af3bc7b733f95844a9ab2a2d8bfbf51"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/REVIEW_KO.md",
+      "before": {
+        "bytes": 18273,
+        "sha256": "24186723369aeafe3424f517b517c7124a9b2cf59d7fbcb8fe264671903ad3e9"
+      },
+      "after": {
+        "bytes": 18273,
+        "sha256": "24186723369aeafe3424f517b517c7124a9b2cf59d7fbcb8fe264671903ad3e9"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/batch_authorized.json",
+      "before": {
+        "bytes": 259,
+        "sha256": "a3eca92b6ca2d10a1f3e744e18f531685cacde420802d4510478f439f0f500f1"
+      },
+      "after": {
+        "bytes": 259,
+        "sha256": "a3eca92b6ca2d10a1f3e744e18f531685cacde420802d4510478f439f0f500f1"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/compile/StoredSolutionRecoveryA.class",
+      "before": {
+        "bytes": 75,
+        "sha256": "17989e18336efae1fdf3150595119715587f595c3178182b476ce17c182cd65c"
+      },
+      "after": {
+        "bytes": 75,
+        "sha256": "17989e18336efae1fdf3150595119715587f595c3178182b476ce17c182cd65c"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/compile/StoredSolutionRecoveryA.java",
+      "before": {
+        "bytes": 14,
+        "sha256": "8341c2a77ded0c3daf372d422a8d3ee106f0fcdd8da09a79fab59ecbeff8552f"
+      },
+      "after": {
+        "bytes": 14,
+        "sha256": "8341c2a77ded0c3daf372d422a8d3ee106f0fcdd8da09a79fab59ecbeff8552f"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/class_artifacts.json",
+      "before": {
+        "bytes": 558,
+        "sha256": "4a14ee4851959bc492efa523b46988b0e492e0da6eccec64030f59149e3d0f21"
+      },
+      "after": {
+        "bytes": 558,
+        "sha256": "4a14ee4851959bc492efa523b46988b0e492e0da6eccec64030f59149e3d0f21"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000001.json",
+      "before": {
+        "bytes": 699,
+        "sha256": "87ef000ad517fe5a5a76feb01f0f4294ff5c5111140d3bab9986d00a5c8bdc9e"
+      },
+      "after": {
+        "bytes": 699,
+        "sha256": "87ef000ad517fe5a5a76feb01f0f4294ff5c5111140d3bab9986d00a5c8bdc9e"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000002.json",
+      "before": {
+        "bytes": 487,
+        "sha256": "1d801e3c08552c4489ddaad6d543edefa0e60483c45ce6f921972f9efa2a0487"
+      },
+      "after": {
+        "bytes": 487,
+        "sha256": "1d801e3c08552c4489ddaad6d543edefa0e60483c45ce6f921972f9efa2a0487"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000003.json",
+      "before": {
+        "bytes": 498,
+        "sha256": "17eb8bfebc7fcb4251b2254125622ce27f07f0cdaefa3898f94d97e529a5cbf8"
+      },
+      "after": {
+        "bytes": 498,
+        "sha256": "17eb8bfebc7fcb4251b2254125622ce27f07f0cdaefa3898f94d97e529a5cbf8"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000004.json",
+      "before": {
+        "bytes": 471,
+        "sha256": "dc031d1cf6016c84b4d5b7af8baa89d0a43f92685d58caf65341218196f7fe25"
+      },
+      "after": {
+        "bytes": 471,
+        "sha256": "dc031d1cf6016c84b4d5b7af8baa89d0a43f92685d58caf65341218196f7fe25"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000005.json",
+      "before": {
+        "bytes": 759,
+        "sha256": "f4d6408cbce1979d469489f41023e755bfdde914c978c341a91cbb790166c0a8"
+      },
+      "after": {
+        "bytes": 759,
+        "sha256": "f4d6408cbce1979d469489f41023e755bfdde914c978c341a91cbb790166c0a8"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000006.json",
+      "before": {
+        "bytes": 710,
+        "sha256": "b977b9c6e4820be0fa112dfc47a6bdff5b592409abce02802d0731c977840e5c"
+      },
+      "after": {
+        "bytes": 710,
+        "sha256": "b977b9c6e4820be0fa112dfc47a6bdff5b592409abce02802d0731c977840e5c"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000007.json",
+      "before": {
+        "bytes": 489,
+        "sha256": "adbf16f3172e440ce406cc48e657cd210ec03abfc2d609a94b0f629af6ab15be"
+      },
+      "after": {
+        "bytes": 489,
+        "sha256": "adbf16f3172e440ce406cc48e657cd210ec03abfc2d609a94b0f629af6ab15be"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000008.json",
+      "before": {
+        "bytes": 500,
+        "sha256": "1478a9f48ac1c42048a2872a84757055fe3fae2cb07a9105e8aeaa42a4ae4df7"
+      },
+      "after": {
+        "bytes": 500,
+        "sha256": "1478a9f48ac1c42048a2872a84757055fe3fae2cb07a9105e8aeaa42a4ae4df7"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000009.json",
+      "before": {
+        "bytes": 473,
+        "sha256": "302c904af5f2a4ab2683e24b2956a772cbdcac05a0b3ee8623855f39d27ee086"
+      },
+      "after": {
+        "bytes": 473,
+        "sha256": "302c904af5f2a4ab2683e24b2956a772cbdcac05a0b3ee8623855f39d27ee086"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000010.json",
+      "before": {
+        "bytes": 762,
+        "sha256": "c6134307af2cbeea3a9b0f25bbd77a065f79d490c61a5a17384ae3b3e9714ce9"
+      },
+      "after": {
+        "bytes": 762,
+        "sha256": "c6134307af2cbeea3a9b0f25bbd77a065f79d490c61a5a17384ae3b3e9714ce9"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000011.json",
+      "before": {
+        "bytes": 700,
+        "sha256": "713f0b2f34b7028d35a41c10af746321c3bbc89f5841d8ce2ffd1373293ef67b"
+      },
+      "after": {
+        "bytes": 700,
+        "sha256": "713f0b2f34b7028d35a41c10af746321c3bbc89f5841d8ce2ffd1373293ef67b"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000012.json",
+      "before": {
+        "bytes": 488,
+        "sha256": "161e641c4dd42cc000f41cc1064f26bc9d55f26581db35c9463499c99146198a"
+      },
+      "after": {
+        "bytes": 488,
+        "sha256": "161e641c4dd42cc000f41cc1064f26bc9d55f26581db35c9463499c99146198a"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000013.json",
+      "before": {
+        "bytes": 499,
+        "sha256": "98ec9dbfc26d6c4c1ddeaa1cb2aea5a1ee542cc80e43ec82021880b411e713ab"
+      },
+      "after": {
+        "bytes": 499,
+        "sha256": "98ec9dbfc26d6c4c1ddeaa1cb2aea5a1ee542cc80e43ec82021880b411e713ab"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000014.json",
+      "before": {
+        "bytes": 472,
+        "sha256": "22db914dd11a48587abc7da8390e04a85e157f3d44b83f3002262c52bc5ca608"
+      },
+      "after": {
+        "bytes": 472,
+        "sha256": "22db914dd11a48587abc7da8390e04a85e157f3d44b83f3002262c52bc5ca608"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000015.json",
+      "before": {
+        "bytes": 760,
+        "sha256": "a763baf567d0ff0f4dbab734d31f57f25c952f79669af72273d5adbc7e75d443"
+      },
+      "after": {
+        "bytes": 760,
+        "sha256": "a763baf567d0ff0f4dbab734d31f57f25c952f79669af72273d5adbc7e75d443"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000016.json",
+      "before": {
+        "bytes": 702,
+        "sha256": "97ed2e766c64b62b7838a0166027038c1756e308be40300f7b9c6ffb4fe776cb"
+      },
+      "after": {
+        "bytes": 702,
+        "sha256": "97ed2e766c64b62b7838a0166027038c1756e308be40300f7b9c6ffb4fe776cb"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000017.json",
+      "before": {
+        "bytes": 490,
+        "sha256": "97aa59818350aeaceb40e4f5fdd8f8eafb45d4e4729683e8c67d5a09c3e33c2c"
+      },
+      "after": {
+        "bytes": 490,
+        "sha256": "97aa59818350aeaceb40e4f5fdd8f8eafb45d4e4729683e8c67d5a09c3e33c2c"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000018.json",
+      "before": {
+        "bytes": 501,
+        "sha256": "b81ed9aa3334ee757f7002db4040879bd0ed22bd466a5f8477bb5f82d8a1091e"
+      },
+      "after": {
+        "bytes": 501,
+        "sha256": "b81ed9aa3334ee757f7002db4040879bd0ed22bd466a5f8477bb5f82d8a1091e"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000019.json",
+      "before": {
+        "bytes": 474,
+        "sha256": "09d7a7946180066a4efbdb2183370a109ae8e92fe5249e6a6dfaf274351cfc08"
+      },
+      "after": {
+        "bytes": 474,
+        "sha256": "09d7a7946180066a4efbdb2183370a109ae8e92fe5249e6a6dfaf274351cfc08"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/events/000020.json",
+      "before": {
+        "bytes": 762,
+        "sha256": "ec05e1a53247bf53ac6f421ea75aed7168d69abfe54a37cd275ffa4092d39137"
+      },
+      "after": {
+        "bytes": 762,
+        "sha256": "ec05e1a53247bf53ac6f421ea75aed7168d69abfe54a37cd275ffa4092d39137"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/execution_context.json",
+      "before": {
+        "bytes": 850,
+        "sha256": "18c8a218eaf803cf9bc23cdcf522d58dade710b6a6da5cf3ba902017bdbf0e16"
+      },
+      "after": {
+        "bytes": 850,
+        "sha256": "18c8a218eaf803cf9bc23cdcf522d58dade710b6a6da5cf3ba902017bdbf0e16"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/policy_after.json",
+      "before": {
+        "bytes": 229,
+        "sha256": "4d08ecc26d91040874461f533ce75f40f3de71cc44df0cc50737cb0f5db83bd9"
+      },
+      "after": {
+        "bytes": 229,
+        "sha256": "4d08ecc26d91040874461f533ce75f40f3de71cc44df0cc50737cb0f5db83bd9"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/policy_applied.json",
+      "before": {
+        "bytes": 278,
+        "sha256": "98c0622c0c5ddaad3995a63b06a13a04337fc9ee1982bb3667896dcc0d8f6d65"
+      },
+      "after": {
+        "bytes": 278,
+        "sha256": "98c0622c0c5ddaad3995a63b06a13a04337fc9ee1982bb3667896dcc0d8f6d65"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/prior_pending_reconciliation.json",
+      "before": {
+        "bytes": 302,
+        "sha256": "c9809bf2f94300b049ecd6d2898f45d84aec5badf9571ccb59230d17b2bc7db8"
+      },
+      "after": {
+        "bytes": 302,
+        "sha256": "c9809bf2f94300b049ecd6d2898f45d84aec5badf9571ccb59230d17b2bc7db8"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/process_journal.jsonl",
+      "before": {
+        "bytes": 2632,
+        "sha256": "ac7f33a20771d0f3506be7bc932f40b3ede77f369c4f48efa860317acd308b89"
+      },
+      "after": {
+        "bytes": 2632,
+        "sha256": "ac7f33a20771d0f3506be7bc932f40b3ede77f369c4f48efa860317acd308b89"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/protected_after.json",
+      "before": {
+        "bytes": 520,
+        "sha256": "be5f9505cd6940ef9753eae18db2be7c5909d7a9c6f629123b8074ef9d5a1814"
+      },
+      "after": {
+        "bytes": 520,
+        "sha256": "be5f9505cd6940ef9753eae18db2be7c5909d7a9c6f629123b8074ef9d5a1814"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/evidence/protected_before.json",
+      "before": {
+        "bytes": 520,
+        "sha256": "be5f9505cd6940ef9753eae18db2be7c5909d7a9c6f629123b8074ef9d5a1814"
+      },
+      "after": {
+        "bytes": 520,
+        "sha256": "be5f9505cd6940ef9753eae18db2be7c5909d7a9c6f629123b8074ef9d5a1814"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/logs/apply_console.log",
+      "before": {
+        "bytes": 20,
+        "sha256": "47923dbf5e270a8d43bf9df0618ac8196b66f0696093f3bb5c356f448991556f"
+      },
+      "after": {
+        "bytes": 20,
+        "sha256": "47923dbf5e270a8d43bf9df0618ac8196b66f0696093f3bb5c356f448991556f"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/logs/batch.log",
+      "before": {
+        "bytes": 79,
+        "sha256": "14e56d8b568e2eeba5691661fb31ac114e5ce7c894bbd7f69a3c71a87d28171f"
+      },
+      "after": {
+        "bytes": 79,
+        "sha256": "14e56d8b568e2eeba5691661fb31ac114e5ce7c894bbd7f69a3c71a87d28171f"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/logs/batch_console.log",
+      "before": {
+        "bytes": 20,
+        "sha256": "47923dbf5e270a8d43bf9df0618ac8196b66f0696093f3bb5c356f448991556f"
+      },
+      "after": {
+        "bytes": 20,
+        "sha256": "47923dbf5e270a8d43bf9df0618ac8196b66f0696093f3bb5c356f448991556f"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/logs/compile_console.log",
+      "before": {
+        "bytes": 20,
+        "sha256": "47923dbf5e270a8d43bf9df0618ac8196b66f0696093f3bb5c356f448991556f"
+      },
+      "after": {
+        "bytes": 20,
+        "sha256": "47923dbf5e270a8d43bf9df0618ac8196b66f0696093f3bb5c356f448991556f"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/logs/restore_console.log",
+      "before": {
+        "bytes": 20,
+        "sha256": "47923dbf5e270a8d43bf9df0618ac8196b66f0696093f3bb5c356f448991556f"
+      },
+      "after": {
+        "bytes": 20,
+        "sha256": "47923dbf5e270a8d43bf9df0618ac8196b66f0696093f3bb5c356f448991556f"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/permission_token.txt",
+      "before": {
+        "bytes": 21,
+        "sha256": "57e7a53eaae932963f47f8df3b2888f04b95b44e0573e72023b93d60fb62d298"
+      },
+      "after": {
+        "bytes": 21,
+        "sha256": "57e7a53eaae932963f47f8df3b2888f04b95b44e0573e72023b93d60fb62d298"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/prefs/comsol.prefs",
+      "before": {
+        "bytes": 71,
+        "sha256": "d0abadb22b687e1b16d2ba381df5aafdbd05c413bc976738c8ae23b52d61c451"
+      },
+      "after": {
+        "bytes": 71,
+        "sha256": "d0abadb22b687e1b16d2ba381df5aafdbd05c413bc976738c8ae23b52d61c451"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/sf/2ecc5d908987/run/state.json",
+      "before": {
+        "bytes": 6833,
+        "sha256": "1aa74c3b7e72ec36a17e002294695b65d43555445280ec684cc78273c4e92549"
+      },
+      "after": {
+        "bytes": 6833,
+        "sha256": "1aa74c3b7e72ec36a17e002294695b65d43555445280ec684cc78273c4e92549"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/static_cases/restore_before_work.json",
+      "before": {
+        "bytes": 22687,
+        "sha256": "b87169353cbc6882c18d35e13d6852bc5a031b2efd3205057fe6ed2fc485012c"
+      },
+      "after": {
+        "bytes": 22687,
+        "sha256": "b87169353cbc6882c18d35e13d6852bc5a031b2efd3205057fe6ed2fc485012c"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/static_cases/success_without_resume.json",
+      "before": {
+        "bytes": 22126,
+        "sha256": "05e5e488b6a4b40e83aaa4a4f4b56f6da5b2d3b105b1e023d4d40df2d3c75170"
+      },
+      "after": {
+        "bytes": 22126,
+        "sha256": "05e5e488b6a4b40e83aaa4a4f4b56f6da5b2d3b105b1e023d4d40df2d3c75170"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/static_cases/wrong_reservation_cwd.json",
+      "before": {
+        "bytes": 22533,
+        "sha256": "7994dbd5b0572013cedf91cd88794da441d6c3951e768b810f878c4a97ceb8c5"
+      },
+      "after": {
+        "bytes": 22533,
+        "sha256": "7994dbd5b0572013cedf91cd88794da441d6c3951e768b810f878c4a97ceb8c5"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/STATIC_CASES_INDEX.json",
+      "before": {
+        "bytes": 716,
+        "sha256": "9190a3d5440872a1595fcf89a6e3a0c5d1311c3e5ff20ff18bcf236c8dbbc5cc"
+      },
+      "after": {
+        "bytes": 716,
+        "sha256": "9190a3d5440872a1595fcf89a6e3a0c5d1311c3e5ff20ff18bcf236c8dbbc5cc"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/recipient/STATIC_REPRO_REQUESTS.md",
+      "before": {
+        "bytes": 3202,
+        "sha256": "f83212ba9a56e25d546505418509d125c85e118c3d1e281c24c6ec432f1e7a45"
+      },
+      "after": {
+        "bytes": 3202,
+        "sha256": "f83212ba9a56e25d546505418509d125c85e118c3d1e281c24c6ec432f1e7a45"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/run_fileio_tests.py",
+      "before": {
+        "bytes": 10869,
+        "sha256": "c872e52aa4d42285b6d5094c2ca042875b22961d3a972cc1e759e3b7bf8e624c"
+      },
+      "after": {
+        "bytes": 10869,
+        "sha256": "c872e52aa4d42285b6d5094c2ca042875b22961d3a972cc1e759e3b7bf8e624c"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/run_tests.py",
+      "before": {
+        "bytes": 14237,
+        "sha256": "1a4dc50c588baeca397a4d46b7152b4dfc63a69e09ee097cc83718c8f60d8f49"
+      },
+      "after": {
+        "bytes": 14237,
+        "sha256": "1a4dc50c588baeca397a4d46b7152b4dfc63a69e09ee097cc83718c8f60d8f49"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/seal_preparation.py",
+      "before": {
+        "bytes": 11310,
+        "sha256": "e1f1f3f3ddb263e593ca5c03dbbd179c2338c29fc44178aeca964cc77a00a385"
+      },
+      "after": {
+        "bytes": 11310,
+        "sha256": "e1f1f3f3ddb263e593ca5c03dbbd179c2338c29fc44178aeca964cc77a00a385"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/START_AND_RESOURCES.json",
+      "before": {
+        "bytes": 1134,
+        "sha256": "69dc11dac7c5ff945d0ba598ef62854da227fcaa5fd8f9389e7dab48b0454938"
+      },
+      "after": {
+        "bytes": 1134,
+        "sha256": "69dc11dac7c5ff945d0ba598ef62854da227fcaa5fd8f9389e7dab48b0454938"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/STATIC_AUDIT.json",
+      "before": {
+        "bytes": 127988,
+        "sha256": "13f30a169f65a8ac4616714e8c944a4bca0585432509488d6aafd2e77ab3b61c"
+      },
+      "after": {
+        "bytes": 127988,
+        "sha256": "13f30a169f65a8ac4616714e8c944a4bca0585432509488d6aafd2e77ab3b61c"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/static_audit.py",
+      "before": {
+        "bytes": 4669,
+        "sha256": "3636992e394ac269b0fd7f6d73c5d0ae04b5625780ccf832d04d24f5ad12efac"
+      },
+      "after": {
+        "bytes": 4669,
+        "sha256": "3636992e394ac269b0fd7f6d73c5d0ae04b5625780ccf832d04d24f5ad12efac"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/static_contract_audit.py",
+      "before": {
+        "bytes": 7906,
+        "sha256": "d0a694e4e57b67eec2c45dd32f5a29cf589735f07f3ff35eaa6bb47e64128307"
+      },
+      "after": {
+        "bytes": 7906,
+        "sha256": "d0a694e4e57b67eec2c45dd32f5a29cf589735f07f3ff35eaa6bb47e64128307"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/STATIC_FAILURE_01.json",
+      "before": {
+        "bytes": 709,
+        "sha256": "84ecba0b19acc99801ea3b00d00f0f5e54a6de1d1c2cd41ab3d4bd8ddf142b6c"
+      },
+      "after": {
+        "bytes": 709,
+        "sha256": "84ecba0b19acc99801ea3b00d00f0f5e54a6de1d1c2cd41ab3d4bd8ddf142b6c"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/static_history/F_REUSE.json.01.previous",
+      "before": {
+        "bytes": 6800,
+        "sha256": "8070e0a4c8d912d12e23b67b86f79515c4c4e9318ae375e4064f269b751ddecb"
+      },
+      "after": {
+        "bytes": 6800,
+        "sha256": "8070e0a4c8d912d12e23b67b86f79515c4c4e9318ae375e4064f269b751ddecb"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/static_history/LEGACY_ASSERTIONS.json.01.previous",
+      "before": {
+        "bytes": 1982,
+        "sha256": "6b0e15401556b886c57d2727dcb27ce461f78cfe56333b99541467a1493151ad"
+      },
+      "after": {
+        "bytes": 1982,
+        "sha256": "6b0e15401556b886c57d2727dcb27ce461f78cfe56333b99541467a1493151ad"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/static_history/STATIC_AUDIT.json.01.previous",
+      "before": {
+        "bytes": 28138,
+        "sha256": "b55f77130886dc99776b3ae96cc8e7dc01d73509c817cc35c7ec7f010e25bfa2"
+      },
+      "after": {
+        "bytes": 28138,
+        "sha256": "b55f77130886dc99776b3ae96cc8e7dc01d73509c817cc35c7ec7f010e25bfa2"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/STATIC_INVOCATIONS.json",
+      "before": {
+        "bytes": 273,
+        "sha256": "706d77c7860c50e13b3b19a014acfa4fe7ce21957a70aa14636c855ed93db158"
+      },
+      "after": {
+        "bytes": 273,
+        "sha256": "706d77c7860c50e13b3b19a014acfa4fe7ce21957a70aa14636c855ed93db158"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/STATIC_PARSE_01.json",
+      "before": {
+        "bytes": 106,
+        "sha256": "b10892571047690436bf4b302918d6b2d23026a556835b5d64f1820a3813ab4a"
+      },
+      "after": {
+        "bytes": 106,
+        "sha256": "b10892571047690436bf4b302918d6b2d23026a556835b5d64f1820a3813ab4a"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/status_reader.py",
+      "before": {
+        "bytes": 2491,
+        "sha256": "d5f62d2dce22201d73a544706d503ba83501e4c8b3d0dc06ca56d6c3dce45258"
+      },
+      "after": {
+        "bytes": 2491,
+        "sha256": "d5f62d2dce22201d73a544706d503ba83501e4c8b3d0dc06ca56d6c3dce45258"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/StoredSolutionRecoveryA.java",
+      "before": {
+        "bytes": 57966,
+        "sha256": "aabb488c46aa5f4efe33baebc0ccff185193bdd70215f6a764c54c345797cd0e"
+      },
+      "after": {
+        "bytes": 57966,
+        "sha256": "aabb488c46aa5f4efe33baebc0ccff185193bdd70215f6a764c54c345797cd0e"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A3.py",
+      "before": {
+        "bytes": 10496,
+        "sha256": "a016dffb1653bafcc944e0984717aeee5a80c76a9d8add3d608a0f3ad5a8e153"
+      },
+      "after": {
+        "bytes": 10496,
+        "sha256": "a016dffb1653bafcc944e0984717aeee5a80c76a9d8add3d608a0f3ad5a8e153"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A4.py",
+      "before": {
+        "bytes": 10541,
+        "sha256": "63bfc1edb505bddb259ff43c34f2a3518b6620dd9680a7bf853aa36acb5cbdaf"
+      },
+      "after": {
+        "bytes": 10541,
+        "sha256": "63bfc1edb505bddb259ff43c34f2a3518b6620dd9680a7bf853aa36acb5cbdaf"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A5_class.py",
+      "before": {
+        "bytes": 5501,
+        "sha256": "b2b6e15486db2c65e75b37b5edcee4b407a9f5f0a1b5b2cd109b3ee0b2af1dce"
+      },
+      "after": {
+        "bytes": 5501,
+        "sha256": "b2b6e15486db2c65e75b37b5edcee4b407a9f5f0a1b5b2cd109b3ee0b2af1dce"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A5_cleanup.py",
+      "before": {
+        "bytes": 9477,
+        "sha256": "94fd62c15c2a193004701f3de1550dccfa6bd077740da077a95e591774f9ddae"
+      },
+      "after": {
+        "bytes": 9477,
+        "sha256": "94fd62c15c2a193004701f3de1550dccfa6bd077740da077a95e591774f9ddae"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A5_metrics.py",
+      "before": {
+        "bytes": 1623,
+        "sha256": "8a630d5cce414c91ccb705fa9dadae39ce8e0b32b119e80d2259f80fcfa577d7"
+      },
+      "after": {
+        "bytes": 1623,
+        "sha256": "8a630d5cce414c91ccb705fa9dadae39ce8e0b32b119e80d2259f80fcfa577d7"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A5_records.py",
+      "before": {
+        "bytes": 9809,
+        "sha256": "f448e3e1f45bd58105185daaae2b2da947c0ffc3380ce01b368dbd230e0f820e"
+      },
+      "after": {
+        "bytes": 9809,
+        "sha256": "f448e3e1f45bd58105185daaae2b2da947c0ffc3380ce01b368dbd230e0f820e"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A6.py",
+      "before": {
+        "bytes": 11700,
+        "sha256": "a531e2301b4b879bab2126e783bc6f25ee2a1c1325f8a59c7094db147c70fa47"
+      },
+      "after": {
+        "bytes": 11700,
+        "sha256": "a531e2301b4b879bab2126e783bc6f25ee2a1c1325f8a59c7094db147c70fa47"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A7.py",
+      "before": {
+        "bytes": 12409,
+        "sha256": "75a75f737d5fd9a7fc2c3c98c0910851ece3f85adade900450e76d842a06aa81"
+      },
+      "after": {
+        "bytes": 12409,
+        "sha256": "75a75f737d5fd9a7fc2c3c98c0910851ece3f85adade900450e76d842a06aa81"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_A8.py",
+      "before": {
+        "bytes": 10874,
+        "sha256": "115d3679c70ea1719f16b2a3fb557c7da97f5d8658f1953827ede5f43c0fa7c1"
+      },
+      "after": {
+        "bytes": 10874,
+        "sha256": "115d3679c70ea1719f16b2a3fb557c7da97f5d8658f1953827ede5f43c0fa7c1"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_offline.py",
+      "before": {
+        "bytes": 21370,
+        "sha256": "82122bef9f6aee71fd4e62095682346bfda0abee332e2a8b45b0876e33ce5109"
+      },
+      "after": {
+        "bytes": 21370,
+        "sha256": "82122bef9f6aee71fd4e62095682346bfda0abee332e2a8b45b0876e33ce5109"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/axes_profile_N.csv",
+      "before": {
+        "bytes": 36587737,
+        "sha256": "4af5bc5ddd80aa1f1f68091b769273036a5ffb2325d3be35d7bdd02ded7cfda8"
+      },
+      "after": {
+        "bytes": 36587737,
+        "sha256": "4af5bc5ddd80aa1f1f68091b769273036a5ffb2325d3be35d7bdd02ded7cfda8"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/axes_profile_P.csv",
+      "before": {
+        "bytes": 35440022,
+        "sha256": "0bef4fc6f7cb44880bb890e3ec5fed97fd80623467a9546648f6254b49f14c9a"
+      },
+      "after": {
+        "bytes": 35440022,
+        "sha256": "0bef4fc6f7cb44880bb890e3ec5fed97fd80623467a9546648f6254b49f14c9a"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/axes_runtime_settings.csv",
+      "before": {
+        "bytes": 1615,
+        "sha256": "7a6e8461e965c1d3643d5c1e027250526b9d6069337ae67cd0fcc5cb80634ddd"
+      },
+      "after": {
+        "bytes": 1615,
+        "sha256": "7a6e8461e965c1d3643d5c1e027250526b9d6069337ae67cd0fcc5cb80634ddd"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/equations_pce1_per1_Constraint.csv",
+      "before": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "after": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/equations_pce1_per1_Expression.csv",
+      "before": {
+        "bytes": 5444,
+        "sha256": "8fa9a0d0eaa8bc3ce84b006e9be50d6d6b11aa4637215868762f2e3df746203b"
+      },
+      "after": {
+        "bytes": 5444,
+        "sha256": "8fa9a0d0eaa8bc3ce84b006e9be50d6d6b11aa4637215868762f2e3df746203b"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/equations_pce1_per1_Weak.csv",
+      "before": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "after": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/equations_pce2_per1_Constraint.csv",
+      "before": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "after": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/equations_pce2_per1_Expression.csv",
+      "before": {
+        "bytes": 5446,
+        "sha256": "41581b938c4b59467d12d4ef57022f6bf13a789e7009364d4dd5c51956574c7c"
+      },
+      "after": {
+        "bytes": 5446,
+        "sha256": "41581b938c4b59467d12d4ef57022f6bf13a789e7009364d4dd5c51956574c7c"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/equations_pce2_per1_Weak.csv",
+      "before": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "after": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/preflight_boundary1.csv",
+      "before": {
+        "bytes": 246278,
+        "sha256": "cb3838a9d24d3913d3ae104ceabdbf185e92b210a7b604eea7d1d44827123aa8"
+      },
+      "after": {
+        "bytes": 246278,
+        "sha256": "cb3838a9d24d3913d3ae104ceabdbf185e92b210a7b604eea7d1d44827123aa8"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/preflight_boundary4.csv",
+      "before": {
+        "bytes": 254926,
+        "sha256": "0af97bde74d968363522c9bcad81bd4e55e6b82e7d7c416c43c2e5127257ef1b"
+      },
+      "after": {
+        "bytes": 254926,
+        "sha256": "0af97bde74d968363522c9bcad81bd4e55e6b82e7d7c416c43c2e5127257ef1b"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/preflight_global.csv",
+      "before": {
+        "bytes": 281101,
+        "sha256": "9d0025575ea17de8deb8c667576d73193e975b9ea19e46ef08b1d5fd4de2010a"
+      },
+      "after": {
+        "bytes": 281101,
+        "sha256": "9d0025575ea17de8deb8c667576d73193e975b9ea19e46ef08b1d5fd4de2010a"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/preflight_MaxLine_ce.csv",
+      "before": {
+        "bytes": 36018,
+        "sha256": "43d137869c4b56a1cc02c70db5b9c008d4597638c623ac09118d0fd8057eeedc"
+      },
+      "after": {
+        "bytes": 36018,
+        "sha256": "43d137869c4b56a1cc02c70db5b9c008d4597638c623ac09118d0fd8057eeedc"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/baseline/preflight_MinLine_ce.csv",
+      "before": {
+        "bytes": 36031,
+        "sha256": "789198cf3836090ab77c8b7f8306e6611164339ae3ae6529b37321d02d8aad4f"
+      },
+      "after": {
+        "bytes": 36031,
+        "sha256": "789198cf3836090ab77c8b7f8306e6611164339ae3ae6529b37321d02d8aad4f"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_reference/historical_b003_main.class.bin",
+      "before": {
+        "bytes": 69582,
+        "sha256": "f7b0184517a6f013ed6f8ddd776925e0815b97f7435f449a7ce9bb972379d4bd"
+      },
+      "after": {
+        "bytes": 69582,
+        "sha256": "f7b0184517a6f013ed6f8ddd776925e0815b97f7435f449a7ce9bb972379d4bd"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/test_revision.py",
+      "before": {
+        "bytes": 11168,
+        "sha256": "7cc9cbef875d2aaa50bd477cadb8d2a7c7468ab251ad1b43c314d913d5481a30"
+      },
+      "after": {
+        "bytes": 11168,
+        "sha256": "7cc9cbef875d2aaa50bd477cadb8d2a7c7468ab251ad1b43c314d913d5481a30"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/VALIDATION_TARGET.json",
+      "before": {
+        "bytes": 6908,
+        "sha256": "87900e5149db23532d3383f1ae86e7ae99820eb83480636c0ea833ae1e13c4d0"
+      },
+      "after": {
+        "bytes": 6908,
+        "sha256": "87900e5149db23532d3383f1ae86e7ae99820eb83480636c0ea833ae1e13c4d0"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/winjob.py",
+      "before": {
+        "bytes": 15851,
+        "sha256": "2f0bb76d1ff11b12402f79e15f03d6d3fa281644fa9db8c218f1f2213819fc65"
+      },
+      "after": {
+        "bytes": 15851,
+        "sha256": "2f0bb76d1ff11b12402f79e15f03d6d3fa281644fa9db8c218f1f2213819fc65"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/WORK_CONTRACT.md",
+      "before": {
+        "bytes": 1176,
+        "sha256": "fe67eee85bd01a6e591b058fbcf13166d3b2b8364888f01893e5c0a437a8a28d"
+      },
+      "after": {
+        "bytes": 1176,
+        "sha256": "fe67eee85bd01a6e591b058fbcf13166d3b2b8364888f01893e5c0a437a8a28d"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/CODE_MANIFEST.json",
+      "before": {
+        "bytes": 28847,
+        "sha256": "590c188e46a29ae4aa2f1ae56eb6749df236da3f6d464464cb1baed3330e6112"
+      },
+      "after": {
+        "bytes": 28847,
+        "sha256": "590c188e46a29ae4aa2f1ae56eb6749df236da3f6d464464cb1baed3330e6112"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/PRE_TEST_SEAL.json",
+      "before": {
+        "bytes": 54536,
+        "sha256": "cf20bacf3be8cb085f2a1ffe8265a33eab368e7182675d55c571cea5be675de1"
+      },
+      "after": {
+        "bytes": 54536,
+        "sha256": "cf20bacf3be8cb085f2a1ffe8265a33eab368e7182675d55c571cea5be675de1"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/COMSOL63_API_RECOVERY_PREPARATION_A8_20260923.zip",
+      "before": {
+        "bytes": 66836123,
+        "sha256": "32ce7ce29e77a860f7248ee2470520688d6d40e6075443213f433d771b90ebc9"
+      },
+      "after": {
+        "bytes": 66836123,
+        "sha256": "32ce7ce29e77a860f7248ee2470520688d6d40e6075443213f433d771b90ebc9"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/COMSOL63_A8_EXTERNAL_FINALIZATION_RECORDS_20260923.zip",
+      "before": {
+        "bytes": 6631,
+        "sha256": "14161bfa38d25ec7152438840cdfe786a17aa8d1a29d0ede3ba3394ac7bedd74"
+      },
+      "after": {
+        "bytes": 6631,
+        "sha256": "14161bfa38d25ec7152438840cdfe786a17aa8d1a29d0ede3ba3394ac7bedd74"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8/DELIVERY_RECEIPT.json",
+      "before": {
+        "bytes": 628,
+        "sha256": "bd220ac871399f47cdee3dfe6fe192fc8ce0c6ff021af5817a38a22685dc7fe1"
+      },
+      "after": {
+        "bytes": 628,
+        "sha256": "bd220ac871399f47cdee3dfe6fe192fc8ce0c6ff021af5817a38a22685dc7fe1"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A7/contract.json",
+      "before": {
+        "bytes": 61649,
+        "sha256": "2e84eaaeedd9471925089ff031a4ec66ece54c1e137dab5744a834ff710d6141"
+      },
+      "after": {
+        "bytes": 61649,
+        "sha256": "2e84eaaeedd9471925089ff031a4ec66ece54c1e137dab5744a834ff710d6141"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A7/B_PATH_BINDING.json",
+      "before": {
+        "bytes": 8498,
+        "sha256": "09577ec200d8d6a1eebeb36d016b307e97c3f682c5ae7e3b9b1d5a9b6b9a5ac1"
+      },
+      "after": {
+        "bytes": 8498,
+        "sha256": "09577ec200d8d6a1eebeb36d016b307e97c3f682c5ae7e3b9b1d5a9b6b9a5ac1"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A7/StoredSolutionRecoveryA.java",
+      "before": {
+        "bytes": 57966,
+        "sha256": "aabb488c46aa5f4efe33baebc0ccff185193bdd70215f6a764c54c345797cd0e"
+      },
+      "after": {
+        "bytes": 57966,
+        "sha256": "aabb488c46aa5f4efe33baebc0ccff185193bdd70215f6a764c54c345797cd0e"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A7/CODE_MANIFEST.json",
+      "before": {
+        "bytes": 26216,
+        "sha256": "e443962cf55551e26192c2c0e9a11a68998c13eb5ff1337ded7e02e390f0ab39"
+      },
+      "after": {
+        "bytes": 26216,
+        "sha256": "e443962cf55551e26192c2c0e9a11a68998c13eb5ff1337ded7e02e390f0ab39"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A7/launcher.py",
+      "before": {
+        "bytes": 26453,
+        "sha256": "3a0008e0948a8ae8dc172504b40a308f27c6fd13d798f76b13fd3413b1a9a558"
+      },
+      "after": {
+        "bytes": 26453,
+        "sha256": "3a0008e0948a8ae8dc172504b40a308f27c6fd13d798f76b13fd3413b1a9a558"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A7/winjob.py",
+      "before": {
+        "bytes": 15851,
+        "sha256": "2f0bb76d1ff11b12402f79e15f03d6d3fa281644fa9db8c218f1f2213819fc65"
+      },
+      "after": {
+        "bytes": 15851,
+        "sha256": "2f0bb76d1ff11b12402f79e15f03d6d3fa281644fa9db8c218f1f2213819fc65"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A7/execution_records.py",
+      "before": {
+        "bytes": 11109,
+        "sha256": "b4b9ea1626a8bb9756d6c6e5e935241ca33c7d39a6725878d172a894382dc3c4"
+      },
+      "after": {
+        "bytes": 11109,
+        "sha256": "b4b9ea1626a8bb9756d6c6e5e935241ca33c7d39a6725878d172a894382dc3c4"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A7/analyzer.py",
+      "before": {
+        "bytes": 22371,
+        "sha256": "51c6c234cd250c7dbd19fb52584d262dcae5fb303d14b8522c73d01c028868bb"
+      },
+      "after": {
+        "bytes": 22371,
+        "sha256": "51c6c234cd250c7dbd19fb52584d262dcae5fb303d14b8522c73d01c028868bb"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A7/numerical_contract.py",
+      "before": {
+        "bytes": 5037,
+        "sha256": "bdab6017b1fdac6998635a20fa3e57a9b497030d9286d943693216c37c0cd6b4"
+      },
+      "after": {
+        "bytes": 5037,
+        "sha256": "bdab6017b1fdac6998635a20fa3e57a9b497030d9286d943693216c37c0cd6b4"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/electrolyte_recovery/inputs/failed_normal_copy.mph",
+      "before": {
+        "bytes": 1266539803,
+        "sha256": "7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658"
+      },
+      "after": {
+        "bytes": 1266539803,
+        "sha256": "7fefc0cfdf6910d40f2fec8021d6efbc72250c4e8ff79ba4a9442233bc581658"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/axes_profile_N.csv",
+      "before": {
+        "bytes": 36587737,
+        "sha256": "4af5bc5ddd80aa1f1f68091b769273036a5ffb2325d3be35d7bdd02ded7cfda8"
+      },
+      "after": {
+        "bytes": 36587737,
+        "sha256": "4af5bc5ddd80aa1f1f68091b769273036a5ffb2325d3be35d7bdd02ded7cfda8"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/axes_profile_P.csv",
+      "before": {
+        "bytes": 35440022,
+        "sha256": "0bef4fc6f7cb44880bb890e3ec5fed97fd80623467a9546648f6254b49f14c9a"
+      },
+      "after": {
+        "bytes": 35440022,
+        "sha256": "0bef4fc6f7cb44880bb890e3ec5fed97fd80623467a9546648f6254b49f14c9a"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/axes_runtime_settings.csv",
+      "before": {
+        "bytes": 1615,
+        "sha256": "7a6e8461e965c1d3643d5c1e027250526b9d6069337ae67cd0fcc5cb80634ddd"
+      },
+      "after": {
+        "bytes": 1615,
+        "sha256": "7a6e8461e965c1d3643d5c1e027250526b9d6069337ae67cd0fcc5cb80634ddd"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce1_per1_Constraint.csv",
+      "before": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "after": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce1_per1_Expression.csv",
+      "before": {
+        "bytes": 5444,
+        "sha256": "8fa9a0d0eaa8bc3ce84b006e9be50d6d6b11aa4637215868762f2e3df746203b"
+      },
+      "after": {
+        "bytes": 5444,
+        "sha256": "8fa9a0d0eaa8bc3ce84b006e9be50d6d6b11aa4637215868762f2e3df746203b"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce1_per1_Weak.csv",
+      "before": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "after": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce2_per1_Constraint.csv",
+      "before": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "after": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce2_per1_Expression.csv",
+      "before": {
+        "bytes": 5446,
+        "sha256": "41581b938c4b59467d12d4ef57022f6bf13a789e7009364d4dd5c51956574c7c"
+      },
+      "after": {
+        "bytes": 5446,
+        "sha256": "41581b938c4b59467d12d4ef57022f6bf13a789e7009364d4dd5c51956574c7c"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/equations_pce2_per1_Weak.csv",
+      "before": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "after": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_boundary1.csv",
+      "before": {
+        "bytes": 246278,
+        "sha256": "cb3838a9d24d3913d3ae104ceabdbf185e92b210a7b604eea7d1d44827123aa8"
+      },
+      "after": {
+        "bytes": 246278,
+        "sha256": "cb3838a9d24d3913d3ae104ceabdbf185e92b210a7b604eea7d1d44827123aa8"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_boundary4.csv",
+      "before": {
+        "bytes": 254926,
+        "sha256": "0af97bde74d968363522c9bcad81bd4e55e6b82e7d7c416c43c2e5127257ef1b"
+      },
+      "after": {
+        "bytes": 254926,
+        "sha256": "0af97bde74d968363522c9bcad81bd4e55e6b82e7d7c416c43c2e5127257ef1b"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_global.csv",
+      "before": {
+        "bytes": 281101,
+        "sha256": "9d0025575ea17de8deb8c667576d73193e975b9ea19e46ef08b1d5fd4de2010a"
+      },
+      "after": {
+        "bytes": 281101,
+        "sha256": "9d0025575ea17de8deb8c667576d73193e975b9ea19e46ef08b1d5fd4de2010a"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_MaxLine_ce.csv",
+      "before": {
+        "bytes": 36018,
+        "sha256": "43d137869c4b56a1cc02c70db5b9c008d4597638c623ac09118d0fd8057eeedc"
+      },
+      "after": {
+        "bytes": 36018,
+        "sha256": "43d137869c4b56a1cc02c70db5b9c008d4597638c623ac09118d0fd8057eeedc"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/model_audit/5d1a87652ed54e6a945d4f2af4aeda70/preflight_MinLine_ce.csv",
+      "before": {
+        "bytes": 36031,
+        "sha256": "789198cf3836090ab77c8b7f8306e6611164339ae3ae6529b37321d02d8aad4f"
+      },
+      "after": {
+        "bytes": 36031,
+        "sha256": "789198cf3836090ab77c8b7f8306e6611164339ae3ae6529b37321d02d8aad4f"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/electrolyte_recovery/ElectrolyteRecovery300R320C16.java",
+      "before": {
+        "bytes": 19610,
+        "sha256": "610b7d7ebea32fdd6fc2d36dc9b7142e265338f3f99eca25dae80de48dddfd51"
+      },
+      "after": {
+        "bytes": 19610,
+        "sha256": "610b7d7ebea32fdd6fc2d36dc9b7142e265338f3f99eca25dae80de48dddfd51"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/electrolyte_guard/ElectrolyteGuard300R320C16Normal.java",
+      "before": {
+        "bytes": 68215,
+        "sha256": "40063efedfc95fae00b1d5df22636b3a7acddf40420074df98985d2027e810ce"
+      },
+      "after": {
+        "bytes": 68215,
+        "sha256": "40063efedfc95fae00b1d5df22636b3a7acddf40420074df98985d2027e810ce"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/.comsol-jobs/5d1a87652ed54e6a945d4f2af4aeda70/axes_generated.java",
+      "before": {
+        "bytes": 77893,
+        "sha256": "eab356119bdae3576b40a54c0dbb94173f6e297aaadf58f2cb8313c2515f195f"
+      },
+      "after": {
+        "bytes": 77893,
+        "sha256": "eab356119bdae3576b40a54c0dbb94173f6e297aaadf58f2cb8313c2515f195f"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/core16_control/Caps300R320H0125C16.java",
+      "before": {
+        "bytes": 65233,
+        "sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e"
+      },
+      "after": {
+        "bytes": 65233,
+        "sha256": "4db47e27dcf0d8d2977dc786dab2c3ba40e98a6adf42d7201bf1c66ab802537e"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/electrolyte_guard/results/normal_GATE.json",
+      "before": {
+        "bytes": 430,
+        "sha256": "47615801280388c0c9891e96f3253b3681346d3f0d4eadfafb2c815a2bcbe04e"
+      },
+      "after": {
+        "bytes": 430,
+        "sha256": "47615801280388c0c9891e96f3253b3681346d3f0d4eadfafb2c815a2bcbe04e"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/electrolyte_recovery/results/RECOVERY_GATE.json",
+      "before": {
+        "bytes": 1191,
+        "sha256": "2b55af054e4b592a12b0d94c298163cd7be30186e1d3a8c67ae3049d8a4a7f6a"
+      },
+      "after": {
+        "bytes": 1191,
+        "sha256": "2b55af054e4b592a12b0d94c298163cd7be30186e1d3a8c67ae3049d8a4a7f6a"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/.comsol/v63/comsol.prefs",
+      "before": {
+        "bytes": 22252,
+        "sha256": "064d190077d7533f9fff22b61460d377cb53fb314e5c0f32a0bd02e3fa28b651"
+      },
+      "after": {
+        "bytes": 22252,
+        "sha256": "064d190077d7533f9fff22b61460d377cb53fb314e5c0f32a0bd02e3fa28b651"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolbatch.ini",
+      "before": {
+        "bytes": 962,
+        "sha256": "07ebe2b30e5b77cfd2d30a05f3d5ec3910cab24ac1a172e2077041eff3e5aeea"
+      },
+      "after": {
+        "bytes": 962,
+        "sha256": "07ebe2b30e5b77cfd2d30a05f3d5ec3910cab24ac1a172e2077041eff3e5aeea"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsol.ini",
+      "before": {
+        "bytes": 1355,
+        "sha256": "97b298ce8afffa058bbb15b2e5eda61afd6f4eea2d4a396896d85ee6b34db20d"
+      },
+      "after": {
+        "bytes": 1355,
+        "sha256": "97b298ce8afffa058bbb15b2e5eda61afd6f4eea2d4a396896d85ee6b34db20d"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolmethodexec.ini",
+      "before": {
+        "bytes": 174,
+        "sha256": "7776109506881bfe2d12fc726ffbd43352672b3498c8983b7f27a3f94e7eec99"
+      },
+      "after": {
+        "bytes": 174,
+        "sha256": "7776109506881bfe2d12fc726ffbd43352672b3498c8983b7f27a3f94e7eec99"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A2/runtime/b001/state.json",
+      "before": {
+        "bytes": 2858,
+        "sha256": "1fbe76fe38191e530745eaf1ee83340d28746612a4b13ae479f2ff8baab69d11"
+      },
+      "after": {
+        "bytes": 2858,
+        "sha256": "1fbe76fe38191e530745eaf1ee83340d28746612a4b13ae479f2ff8baab69d11"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A2/runtime/b001/prefs/comsol.prefs",
+      "before": {
+        "bytes": 22252,
+        "sha256": "1e03f913b1505663cdb8187afc42c60117075baa0394eee7a0f2a60abd2b2c42"
+      },
+      "after": {
+        "bytes": 22252,
+        "sha256": "1e03f913b1505663cdb8187afc42c60117075baa0394eee7a0f2a60abd2b2c42"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A2/CODE_MANIFEST.json",
+      "before": {
+        "bytes": 4882,
+        "sha256": "df7d9f9d7385a65fee8507a4fc993b2504199bf6aa204938c9790fe65680cb85"
+      },
+      "after": {
+        "bytes": 4882,
+        "sha256": "df7d9f9d7385a65fee8507a4fc993b2504199bf6aa204938c9790fe65680cb85"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/personal_pc_start_plan_20260922/FINAL_RESULT.json",
+      "before": {
+        "bytes": 874,
+        "sha256": "9afd8f1532913bf301ed575b526c16ae3f6b57228bf7419b248bb8ef7f80cde9"
+      },
+      "after": {
+        "bytes": 874,
+        "sha256": "9afd8f1532913bf301ed575b526c16ae3f6b57228bf7419b248bb8ef7f80cde9"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/personal_pc_start_plan_20260922/runtime/start001/AFTER.json",
+      "before": {
+        "bytes": 4255,
+        "sha256": "66e563ad95a7a01ccb4eca21b7962c0ec213c9ed08e0b46c64a341139b74e966"
+      },
+      "after": {
+        "bytes": 4255,
+        "sha256": "66e563ad95a7a01ccb4eca21b7962c0ec213c9ed08e0b46c64a341139b74e966"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A3/CODE_MANIFEST.json",
+      "before": {
+        "bytes": 5464,
+        "sha256": "5061f9c15e04c431ab1b6ede50d2f547360c8a91ad431db4398f0e3d1776bd5c"
+      },
+      "after": {
+        "bytes": 5464,
+        "sha256": "5061f9c15e04c431ab1b6ede50d2f547360c8a91ad431db4398f0e3d1776bd5c"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A3/PACKAGE_MANIFEST.json",
+      "before": {
+        "bytes": 8784,
+        "sha256": "f11af05b4815a02fbb4b02142f15504f5f97d0fe40592c1c0003c59ec2956194"
+      },
+      "after": {
+        "bytes": 8784,
+        "sha256": "f11af05b4815a02fbb4b02142f15504f5f97d0fe40592c1c0003c59ec2956194"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A3/APPROVAL_B_TEMPLATE.json",
+      "before": {
+        "bytes": 674,
+        "sha256": "0362796a6ecdd4b80d31ac31285c2a63d81ec9e3247ffcc9f39ee31b6528b4ac"
+      },
+      "after": {
+        "bytes": 674,
+        "sha256": "0362796a6ecdd4b80d31ac31285c2a63d81ec9e3247ffcc9f39ee31b6528b4ac"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A3/DELIVERY_RECEIPT.json",
+      "before": {
+        "bytes": 816,
+        "sha256": "0895c1c1a6ffd55802cda30450c9db176b96efaadd6a009fdcb94f16b18d8eb3"
+      },
+      "after": {
+        "bytes": 816,
+        "sha256": "0895c1c1a6ffd55802cda30450c9db176b96efaadd6a009fdcb94f16b18d8eb3"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A3/COMSOL63_API_RECOVERY_PREPARATION_A3_20260922.zip",
+      "before": {
+        "bytes": 21405126,
+        "sha256": "93d3afa5caa3c4ad1b756566961d69de8048c06bc96ae3270748d76c226fa82f"
+      },
+      "after": {
+        "bytes": 21405126,
+        "sha256": "93d3afa5caa3c4ad1b756566961d69de8048c06bc96ae3270748d76c226fa82f"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A4_execution_b003/restore_only_001/README_KO.md",
+      "before": {
+        "bytes": 5207,
+        "sha256": "cfae9866433fc37e95fc35341babaae1a5b49ae149d06c922d81be31d7144a11"
+      },
+      "after": {
+        "bytes": 5207,
+        "sha256": "cfae9866433fc37e95fc35341babaae1a5b49ae149d06c922d81be31d7144a11"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A4_execution_b003/restore_only_001/AFTER_VERIFICATION.json",
+      "before": {
+        "bytes": 5177,
+        "sha256": "253b617baa94d8811a542de4f4b15af9f59ac1fdfecc0b7b31b6a0d1471f051b"
+      },
+      "after": {
+        "bytes": 5177,
+        "sha256": "253b617baa94d8811a542de4f4b15af9f59ac1fdfecc0b7b31b6a0d1471f051b"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/a8_recipient_acceptance_20260923/COMSOL63_A8_ACCEPTANCE_AND_RETURN_TRANSCRIPT_20260923.zip",
+      "before": {
+        "bytes": 375193,
+        "sha256": "7198da44e91e91598820f6cd4d2718a899f8fc75be92f94a44acd6fd789549f5"
+      },
+      "after": {
+        "bytes": 375193,
+        "sha256": "7198da44e91e91598820f6cd4d2718a899f8fc75be92f94a44acd6fd789549f5"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/a8_recipient_acceptance_20260923/SUPPLEMENT_DELIVERY_RECEIPT.json",
+      "before": {
+        "bytes": 614,
+        "sha256": "00d476d5eaf18b3f915659eb7cc49ed32b37b33fedb78c24153e01d9abe02ab6"
+      },
+      "after": {
+        "bytes": 614,
+        "sha256": "00d476d5eaf18b3f915659eb7cc49ed32b37b33fedb78c24153e01d9abe02ab6"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsol.exe",
+      "before": {
+        "bytes": 138728,
+        "sha256": "fed6a85ce1047fe04c89630b5dc223360745d89a493a0be0899dbe3fa0084054"
+      },
+      "after": {
+        "bytes": 138728,
+        "sha256": "fed6a85ce1047fe04c89630b5dc223360745d89a493a0be0899dbe3fa0084054"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolcompile.exe",
+      "before": {
+        "bytes": 962024,
+        "sha256": "a44b59db1a60d9b7dcac193ed8d6f1e8f9c0c18d5850eb872d24242ad95f497f"
+      },
+      "after": {
+        "bytes": 962024,
+        "sha256": "a44b59db1a60d9b7dcac193ed8d6f1e8f9c0c18d5850eb872d24242ad95f497f"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolbatch.exe",
+      "before": {
+        "bytes": 962024,
+        "sha256": "f4e74547dcb229db269f552f7535e78b3c7c24d77d25ef8242915051ce4b7bc2"
+      },
+      "after": {
+        "bytes": 962024,
+        "sha256": "f4e74547dcb229db269f552f7535e78b3c7c24d77d25ef8242915051ce4b7bc2"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "before": {
+        "bytes": 107312,
+        "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+      },
+      "after": {
+        "bytes": 107312,
+        "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+      },
+      "same": true
+    },
+    {
+      "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A4/runtime/b003/state.json",
+      "before": {
+        "bytes": 7432,
+        "sha256": "71fbd23754675be89988d5c4b029537d16eb2f1e21e7506af3c9bc95a11511e7"
+      },
+      "after": {
+        "bytes": 7432,
+        "sha256": "71fbd23754675be89988d5c4b029537d16eb2f1e21e7506af3c9bc95a11511e7"
+      },
+      "same": true
+    }
+  ]
+}

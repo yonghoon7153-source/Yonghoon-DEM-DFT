@@ -1,0 +1,16 @@
+{
+  "recipient": null,
+  "package": {
+    "path": "COMSOL63_B_A8R1_OFFLINE_DEPLOYMENT_20260924.zip",
+    "bytes": 1261072,
+    "sha256": "99923f2342c5c3fc66b3d5d4a71317ca5e76c8bfb0e3a9a2a4328a3a81cb87a1"
+  },
+  "code_manifest": {
+    "file": "CODE_MANIFEST.json",
+    "bytes": 4074,
+    "sha256": "fa5592734f4d082bfc7bcb7ceaf70ec1407cd35342dadee100bf939f8297329b"
+  },
+  "scope": "Offline deployment only, final external return pending",
+  "approved": false,
+  "usable": false
+}

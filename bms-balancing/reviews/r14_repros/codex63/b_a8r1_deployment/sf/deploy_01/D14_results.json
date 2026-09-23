@@ -1,0 +1,53 @@
+{
+  "id": "D14",
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "valid",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "ACCEPT",
+      "phase": "deployment_consumer",
+      "reason": "ACCEPT",
+      "observed_codes": [],
+      "result": {
+        "status": "PASS",
+        "phase": "deployment_consumer",
+        "reason": "ACCEPT"
+      }
+    },
+    {
+      "case": "outer_rc1",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "EXTERNAL_FAILED",
+      "observed_codes": [
+        "EXTERNAL_FAILED"
+      ]
+    },
+    {
+      "case": "outer_rc_missing",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "EXTERNAL_FAILED",
+      "observed_codes": [
+        "EXTERNAL_FAILED"
+      ]
+    },
+    {
+      "case": "external_missing",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "MISSING_EXTERNAL",
+      "observed_codes": [
+        "MISSING_EXTERNAL"
+      ]
+    }
+  ]
+}

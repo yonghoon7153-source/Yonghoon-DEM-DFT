@@ -1,0 +1,18 @@
+{
+  "scope": "Conservative preparation envelope: all elapsed wall time before delivery, including already separately charged static/suite/preservation; overlapping charges do not extend any budget",
+  "overall_start_ns": 678247812000000,
+  "pre_delivery_now_ns": 679736187000000,
+  "conservative_preparation_seconds": 1488.375,
+  "preparation_limit_seconds": 3600,
+  "pre_test_implementation_seconds": 1102.0,
+  "static_seconds": 0.641,
+  "suite_internal_seconds": 8.172,
+  "suite_host_wall_seconds": 9.3102872,
+  "suite_invocations": 1,
+  "suite_maximum": 2,
+  "second_suite": "NOT_RUN_FIRST_COMPLETE_PASS",
+  "preservation_cumulative_seconds": 17.938000000000002,
+  "delivery_clock": "Will be independently reserved by packager before packaging, no source changes afterward",
+  "B_approved": false,
+  "usable": false
+}

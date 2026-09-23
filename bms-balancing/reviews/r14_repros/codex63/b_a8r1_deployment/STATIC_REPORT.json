@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "checks": {
+    "unchanged_11": {
+      "launcher.py": true,
+      "winjob.py": true,
+      "execution_records.py": true,
+      "class_artifacts.py": true,
+      "status_reader.py": true,
+      "evidence_metrics.py": true,
+      "analyzer.py": true,
+      "numerical_contract.py": true,
+      "expected_solver.json": true,
+      "completion_contract.py": true,
+      "offline_clock_contract.py": true
+    },
+    "Java_inverse_bytes_identical": true,
+    "target_constant_only": true,
+    "target_pin": true,
+    "candidate_flags": true,
+    "source_java": true,
+    "expected_solver_copy_path": true,
+    "runtime_approval_absent": true,
+    "source_ast": {
+      "analyzer.py": true,
+      "class_artifacts.py": true,
+      "completion_contract.py": true,
+      "deployment_package.py": true,
+      "deployment_verify.py": true,
+      "evidence_metrics.py": true,
+      "execution_records.py": true,
+      "launcher.py": true,
+      "numerical_contract.py": true,
+      "offline_clock_contract.py": true,
+      "path_binding.py": true,
+      "status_reader.py": true,
+      "test_deployment_binding.py": true,
+      "winjob.py": true
+    },
+    "case_spec_ids": true,
+    "case_spec_subcases": true
+  },
+  "errors": [],
+  "elapsed_seconds": 0.641,
+  "limit_seconds": 300,
+  "scope": "AST and byte/data comparisons only. No module import/test execution.",
+  "raw_contract_sha256": "45a63bf1a33039c6556f024e26592d01e4ec4db1594dd7ef28713354cdc49043",
+  "code_manifest_sha256": "fa5592734f4d082bfc7bcb7ceaf70ec1407cd35342dadee100bf939f8297329b",
+  "future_TTY_preflight": "INCOMPLETE; launcher checks isatty after apply, no native test here"
+}

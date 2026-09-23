@@ -1,0 +1,37 @@
+{
+  "scope": "Delivery wrapper of immutable prepared packages and subsequent actual-return transcript; no tests or finalizer rerun",
+  "files": [
+    {
+      "file": "COMSOL63_B_A8R1_OFFLINE_DEPLOYMENT_20260924.zip",
+      "bytes": 1261072,
+      "sha256": "99923f2342c5c3fc66b3d5d4a71317ca5e76c8bfb0e3a9a2a4328a3a81cb87a1"
+    },
+    {
+      "file": "COMSOL63_B_A8R1_EXTERNAL_FINALIZATION_20260924.zip",
+      "bytes": 6519,
+      "sha256": "0332c2cd84ae8fdc13cf231862bf94b0eeda6cb66055fc98055aab221976ad20"
+    },
+    {
+      "file": "FINAL_TOOL_RETURN_TRANSCRIPT.json",
+      "bytes": 2182,
+      "sha256": "14bc2b5b45a4787047f4d17626aeab7869ca00fbd2c916d2c1416cb9c2a054ac"
+    },
+    {
+      "file": "FINAL_STDOUT_TRANSCRIPT.txt",
+      "bytes": 1884,
+      "sha256": "36195584ca5b595bada8d9f52957f9d6789c6ffbeee059a71d667c51c2815b1c"
+    },
+    {
+      "file": "TRANSCRIPT_PROVENANCE.json",
+      "bytes": 759,
+      "sha256": "424c10ae25640b4abb19a9267cd9a73b043d8c3b4c288d0fbc8e50fcb6bd6d07"
+    },
+    {
+      "file": "HANDOFF_README_KO.md",
+      "bytes": 2058,
+      "sha256": "03af6d392e74773b3f1f0ba0f35a6b5c141b44aed8cd37031821e6f58e161665"
+    }
+  ],
+  "approved": false,
+  "usable": false
+}

@@ -1,0 +1,40 @@
+{
+  "files": [
+    {
+      "file": "DELIVERY_RECEIPT.json",
+      "bytes": 479,
+      "sha256": "bd31551ace92768cd1187b2a800fe8300cf0387e15ec52334b6a9d774e50ab0e"
+    },
+    {
+      "file": "delivery.json",
+      "bytes": 2054,
+      "sha256": "4c30bf66f5b97359234fe763ba28d2e670e5f24f93a1353cf3f95c92822e3684"
+    },
+    {
+      "file": "delivery.completion.json",
+      "bytes": 1655,
+      "sha256": "489249e9e56882cc59b8e2bb48da450d5c22740fa3a523bb0210a711b568bea2"
+    },
+    {
+      "file": "delivery.external.json",
+      "bytes": 2033,
+      "sha256": "4718dedc69fb7bf5b2393fa283a0349b7464fab12227757ccc7da86efa46474f"
+    },
+    {
+      "file": "FINAL_OBSERVATION.json",
+      "bytes": 1666,
+      "sha256": "26c5a5c1fa2dcf2a8f8fd012148b8914f329b1725cc268506d2cc1ea1d919d32"
+    },
+    {
+      "file": "FINALIZER_RESULT.json",
+      "bytes": 1699,
+      "sha256": "7bf047f6e1011aa409c66c054db0b8be1eb782c0ebf4c4e37921730c09b9fa85"
+    },
+    {
+      "file": "deployment_evidence/HOST_PACKAGE.json",
+      "bytes": 1541,
+      "sha256": "b8eb5a7d97c3deffeb2dd1fa40643925eb63c586b92129fc25b488409422c044"
+    }
+  ],
+  "scope": "Final tool return is outside this ZIP"
+}

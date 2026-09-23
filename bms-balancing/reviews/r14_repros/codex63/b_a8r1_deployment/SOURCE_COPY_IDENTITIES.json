@@ -1,0 +1,99 @@
+{
+  "source": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_A8",
+  "unchanged_files": [
+    "launcher.py",
+    "winjob.py",
+    "execution_records.py",
+    "class_artifacts.py",
+    "status_reader.py",
+    "evidence_metrics.py",
+    "analyzer.py",
+    "numerical_contract.py",
+    "expected_solver.json",
+    "completion_contract.py",
+    "offline_clock_contract.py"
+  ],
+  "source_identities": [
+    {
+      "file": "launcher.py",
+      "bytes": 26453,
+      "sha256": "3a0008e0948a8ae8dc172504b40a308f27c6fd13d798f76b13fd3413b1a9a558"
+    },
+    {
+      "file": "winjob.py",
+      "bytes": 15851,
+      "sha256": "2f0bb76d1ff11b12402f79e15f03d6d3fa281644fa9db8c218f1f2213819fc65"
+    },
+    {
+      "file": "execution_records.py",
+      "bytes": 11109,
+      "sha256": "b4b9ea1626a8bb9756d6c6e5e935241ca33c7d39a6725878d172a894382dc3c4"
+    },
+    {
+      "file": "class_artifacts.py",
+      "bytes": 7442,
+      "sha256": "78576d19dc8758ffc642ea7e692adf4144bfb64067fa0bf9ab5aa0d8b4ea0069"
+    },
+    {
+      "file": "status_reader.py",
+      "bytes": 2491,
+      "sha256": "d5f62d2dce22201d73a544706d503ba83501e4c8b3d0dc06ca56d6c3dce45258"
+    },
+    {
+      "file": "evidence_metrics.py",
+      "bytes": 3960,
+      "sha256": "1eea84cf2524b9839ff910ea2a09c950d5b121dca210a2ab5f21a366d957f026"
+    },
+    {
+      "file": "analyzer.py",
+      "bytes": 22371,
+      "sha256": "51c6c234cd250c7dbd19fb52584d262dcae5fb303d14b8522c73d01c028868bb"
+    },
+    {
+      "file": "numerical_contract.py",
+      "bytes": 5037,
+      "sha256": "bdab6017b1fdac6998635a20fa3e57a9b497030d9286d943693216c37c0cd6b4"
+    },
+    {
+      "file": "expected_solver.json",
+      "bytes": 113985,
+      "sha256": "5bf4082faa3d83b482cb6bd61e24793a0d171c8bb72fcb84ca4a9565b6d16f92"
+    },
+    {
+      "file": "completion_contract.py",
+      "bytes": 7699,
+      "sha256": "5807fb2c10d4f8e0c36270aa66b2a560c2dcee5deb6ed215712ff19cb2ed7048"
+    },
+    {
+      "file": "offline_clock_contract.py",
+      "bytes": 7892,
+      "sha256": "5e5725e58e33f724d09e0f7489fad5222487f719239a40bc1639a80cf0a93f49"
+    },
+    {
+      "file": "StoredSolutionRecoveryA.java",
+      "bytes": 57966,
+      "sha256": "aabb488c46aa5f4efe33baebc0ccff185193bdd70215f6a764c54c345797cd0e"
+    },
+    {
+      "file": "path_binding.py",
+      "bytes": 6298,
+      "sha256": "d85a425148f776ae45dda18af3ec8b3cf1d1e14c57a8af81317011c8c3502be0"
+    },
+    {
+      "file": "contract.json",
+      "bytes": 61649,
+      "sha256": "2e84eaaeedd9471925089ff031a4ec66ece54c1e137dab5744a834ff710d6141"
+    },
+    {
+      "file": "B_PATH_BINDING.json",
+      "bytes": 8498,
+      "sha256": "09577ec200d8d6a1eebeb36d016b307e97c3f682c5ae7e3b9b1d5a9b6b9a5ac1"
+    }
+  ],
+  "new_java_sha256": "5a9da0f9da79a6d5f848af5ee3ea9792b06918110a8fae8a54b5a4fc05db6c39",
+  "target_sha256": "c3bc95bdeec31b183f67723ab65dc5047db23f4fa898754ab6d9587fa4e742d3",
+  "contract_raw_sha256": "45a63bf1a33039c6556f024e26592d01e4ec4db1594dd7ef28713354cdc49043",
+  "target_constant_only_change": true,
+  "B_approved": false,
+  "usable": false
+}

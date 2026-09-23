@@ -1,0 +1,88 @@
+{
+  "status": "AWAITING_EXTERNAL_FINALIZATION",
+  "path_checks": {
+    "status": "PASS",
+    "errors": [],
+    "phase": "deployment_consumer",
+    "common": {
+      "status": "PASS",
+      "errors": [],
+      "stage": "deployment_binding",
+      "attempt_id": "deployment_01"
+    },
+    "exact_ID_and_subcases_AND_common_completion": true
+  },
+  "final_manifest": {
+    "status": "PASS",
+    "code_manifest": {
+      "file": "CODE_MANIFEST.json",
+      "bytes": 4074,
+      "sha256": "fa5592734f4d082bfc7bcb7ceaf70ec1407cd35342dadee100bf939f8297329b"
+    },
+    "raw_contract": {
+      "file": "contract.json",
+      "bytes": 59746,
+      "sha256": "45a63bf1a33039c6556f024e26592d01e4ec4db1594dd7ef28713354cdc49043"
+    },
+    "code_files": 24,
+    "B_approved": false,
+    "usable": false
+  },
+  "B_path_ready": true,
+  "B_approved": false,
+  "usable": false,
+  "TTY_same_invocation_preflight": "INCOMPLETE",
+  "native_compatibility": "UNTESTED",
+  "suite_attempt": 1,
+  "general_IDs": [
+    "D01",
+    "D02",
+    "D03",
+    "D04",
+    "D05",
+    "D06",
+    "D07",
+    "D08",
+    "D09",
+    "D10",
+    "D11",
+    "D12",
+    "D13",
+    "D14",
+    "D15",
+    "D16"
+  ],
+  "actual_subcase_invocations": 57,
+  "preservation": 224,
+  "context": {
+    "schema": 2,
+    "stage": "delivery",
+    "attempt_id": "delivery",
+    "code_seal_sha256": "8447c0ae0e61e05ea6f8b2eeec665bcb616b8a89702a421e8aad85cdfae9d4d9",
+    "reservation": {
+      "path": "delivery.reservation.json",
+      "bytes": 609,
+      "sha256": "3392d681783a1a4aafc1bee234306e30272de22de9604f89e8ff1274bd85e694"
+    },
+    "limits": {
+      "stage": 600,
+      "overall": 7200
+    },
+    "clock_binding": {
+      "work_id": "deployment_A8R1_20260924",
+      "clock": {
+        "id": "deployment_A8R1_20260924_monotonic",
+        "unit": "ns",
+        "source": "time.monotonic_ns",
+        "monotonic": true
+      },
+      "origin": {
+        "path": "START_AND_RESOURCES.json",
+        "bytes": 735,
+        "sha256": "317eb2de575fd45756b6876e989c35c9c8753479398c8e030981a87a585a1e34"
+      },
+      "overall_start_ns": 678247812000000,
+      "stage_start_ns": 679922062000000
+    }
+  }
+}

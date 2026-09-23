@@ -1,0 +1,69 @@
+{
+  "context": {
+    "schema": 2,
+    "stage": "deployment_binding",
+    "attempt_id": "inert",
+    "code_seal_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "reservation": {
+      "path": "inert.reservation.json",
+      "bytes": 583,
+      "sha256": "04ed305c8126ddd9ddf4a0df69bf1af99c52400794938ae0d4480cd97c3799c4"
+    },
+    "limits": {
+      "stage": 300,
+      "overall": 7200
+    },
+    "clock_binding": {
+      "work_id": "INERT_code_mismatch",
+      "clock": {
+        "id": "INERT_CLOCK",
+        "source": "time.monotonic_ns",
+        "unit": "ns",
+        "monotonic": true
+      },
+      "origin": {
+        "path": "START_AND_RESOURCES.json",
+        "bytes": 266,
+        "sha256": "5bce414b02650062b9d9e338dc556e88c39a368de83bc2a2b5daaa7c62418d06"
+      },
+      "overall_start_ns": 1000000000,
+      "stage_start_ns": 2000000000
+    }
+  },
+  "report": {
+    "path": "inert.json",
+    "bytes": 18455,
+    "sha256": "36c3a423bc7ff52f0da23f903213f9a88eae0b8b4130906a607a854b186c6da4"
+  },
+  "completion": {
+    "path": "inert.completion.json",
+    "bytes": 1592,
+    "sha256": "0a94539323ad81b278a4883eba62b44f86f9a478f3a17cdbebef35d32c064b86"
+  },
+  "source": {
+    "kind": "tool_return",
+    "call_id": "INERT_FIXTURE",
+    "exit_observed": true
+  },
+  "tool_exit_code": 0,
+  "final_status": "PASS",
+  "errors": [],
+  "final_budget": {
+    "stage": "deployment_binding",
+    "now_ns": 13000000000,
+    "clock": {
+      "id": "INERT_CLOCK",
+      "source": "time.monotonic_ns",
+      "unit": "ns",
+      "monotonic": true
+    },
+    "work_id": "INERT_code_mismatch",
+    "context_sha256": "61e5f3c666949e9ade586ce98f0620fcaeea1f1e30a02c35bb2af0d6d69c9e39",
+    "stage_elapsed_seconds": 11.0,
+    "stage_limit_seconds": 300,
+    "overall_elapsed_seconds": 12.0,
+    "overall_limit_seconds": 7200,
+    "cooperative_only": true
+  },
+  "synthetic": true
+}

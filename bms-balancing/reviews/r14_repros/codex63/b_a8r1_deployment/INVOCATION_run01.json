@@ -1,0 +1,6 @@
+{
+  "attempt": 1,
+  "started_ns": 679380421000000,
+  "seal_sha256": "8447c0ae0e61e05ea6f8b2eeec665bcb616b8a89702a421e8aad85cdfae9d4d9",
+  "scope": "Counts this invocation even if its preflight fails"
+}

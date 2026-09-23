@@ -1,0 +1,51 @@
+{
+  "id": "D05",
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "valid",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "ACCEPT",
+      "phase": "path_binding",
+      "reason": "ACCEPT",
+      "observed_codes": [],
+      "result": {
+        "status": "PASS",
+        "phase": "path_binding",
+        "reason": "ACCEPT",
+        "raw_contract_sha256": "45a63bf1a33039c6556f024e26592d01e4ec4db1594dd7ef28713354cdc49043",
+        "binding": {
+          "status": "STATIC_PATH_PASS",
+          "java_inverse_bytes_identical": true,
+          "numeric_contract_unchanged": true,
+          "user_approval_outside_runtime": true,
+          "B_approved": false,
+          "B_path_ready": false
+        }
+      }
+    },
+    {
+      "case": "both_wrong_source",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "path_binding",
+      "reason": "CANONICAL_SOURCE_MISMATCH",
+      "observed_codes": [
+        "CANONICAL_SOURCE_MISMATCH"
+      ]
+    },
+    {
+      "case": "both_wrong_paths",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "path_binding",
+      "reason": "CANONICAL_PATHS_MISMATCH",
+      "observed_codes": [
+        "CANONICAL_PATHS_MISMATCH"
+      ]
+    }
+  ]
+}

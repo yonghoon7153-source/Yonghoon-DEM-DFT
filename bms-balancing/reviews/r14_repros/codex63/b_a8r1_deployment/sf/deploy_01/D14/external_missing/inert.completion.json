@@ -1,0 +1,57 @@
+{
+  "context": {
+    "schema": 2,
+    "stage": "deployment_binding",
+    "attempt_id": "inert",
+    "code_seal_sha256": "47b1fdb95284eab48dcfa64fb5fb533e919b0a07e141bdb5d811d0da48452c27",
+    "reservation": {
+      "path": "inert.reservation.json",
+      "bytes": 586,
+      "sha256": "3eb1be706c14ab0122c02cf763277e6ef70a2b744d2565ea17e1c8a38f93b682"
+    },
+    "limits": {
+      "stage": 300,
+      "overall": 7200
+    },
+    "clock_binding": {
+      "work_id": "INERT_external_missing",
+      "clock": {
+        "id": "INERT_CLOCK",
+        "source": "time.monotonic_ns",
+        "unit": "ns",
+        "monotonic": true
+      },
+      "origin": {
+        "path": "START_AND_RESOURCES.json",
+        "bytes": 269,
+        "sha256": "0967bb0f54fc6e443aca3eb2d51649b510dc3e613333f6e6050c1efdb0d758a9"
+      },
+      "overall_start_ns": 1000000000,
+      "stage_start_ns": 2000000000
+    }
+  },
+  "status": "PASS",
+  "errors": [],
+  "report": {
+    "path": "inert.json",
+    "bytes": 18458,
+    "sha256": "5e8e1d8dd371929590f70b404221a6c9050bc97a0b547363fd60ffb10f8aee2b"
+  },
+  "post_write_budget": {
+    "stage": "deployment_binding",
+    "now_ns": 12000000000,
+    "clock": {
+      "id": "INERT_CLOCK",
+      "source": "time.monotonic_ns",
+      "unit": "ns",
+      "monotonic": true
+    },
+    "work_id": "INERT_external_missing",
+    "context_sha256": "0c415139ea7f9d1e72cbfbe34581fdf99acb93d2ffe01054a9684ff8f1c90d49",
+    "stage_elapsed_seconds": 10.0,
+    "stage_limit_seconds": 300,
+    "overall_elapsed_seconds": 11.0,
+    "overall_limit_seconds": 7200,
+    "cooperative_only": true
+  }
+}

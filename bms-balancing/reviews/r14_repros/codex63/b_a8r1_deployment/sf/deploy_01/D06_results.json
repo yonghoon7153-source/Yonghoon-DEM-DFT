@@ -1,0 +1,40 @@
+{
+  "id": "D06",
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "valid",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "ACCEPT",
+      "phase": "path_binding",
+      "reason": "ACCEPT",
+      "observed_codes": [],
+      "result": {
+        "status": "PASS",
+        "phase": "path_binding",
+        "reason": "ACCEPT",
+        "raw_contract_sha256": "45a63bf1a33039c6556f024e26592d01e4ec4db1594dd7ef28713354cdc49043",
+        "binding": {
+          "status": "STATIC_PATH_PASS",
+          "java_inverse_bytes_identical": true,
+          "numeric_contract_unchanged": true,
+          "user_approval_outside_runtime": true,
+          "B_approved": false,
+          "B_path_ready": false
+        }
+      }
+    },
+    {
+      "case": "wrong_compile_cwd",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "path_binding",
+      "reason": "CWD_BINDING",
+      "observed_codes": [
+        "CWD_BINDING"
+      ]
+    }
+  ]
+}

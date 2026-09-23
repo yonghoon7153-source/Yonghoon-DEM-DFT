@@ -1,0 +1,53 @@
+{
+  "id": "D16",
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "valid",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "ACCEPT",
+      "phase": "finalizer",
+      "reason": "ACCEPT",
+      "observed_codes": [],
+      "result": {
+        "status": "PASS",
+        "phase": "finalizer",
+        "reason": "ACCEPT"
+      }
+    },
+    {
+      "case": "record_reverse",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "finalizer",
+      "reason": "FINAL_CLOCK_REVERSED",
+      "observed_codes": [
+        "FINAL_CLOCK_REVERSED"
+      ]
+    },
+    {
+      "case": "postwrite_reverse",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "finalizer",
+      "reason": "FINAL_CLOCK_REVERSED",
+      "observed_codes": [
+        "FINAL_CLOCK_REVERSED"
+      ]
+    },
+    {
+      "case": "record_identity",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "finalizer",
+      "reason": "FINAL_RECORD_IDENTITY",
+      "observed_codes": [
+        "FINAL_RECORD_IDENTITY"
+      ]
+    }
+  ]
+}

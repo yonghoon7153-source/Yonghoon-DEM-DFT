@@ -1,0 +1,731 @@
+{
+  "context": {
+    "schema": 2,
+    "stage": "deployment_binding",
+    "attempt_id": "inert",
+    "code_seal_sha256": "40df8bf5280a040f472448b7f82908ba90ada41efe5e6990d4941e2fde1033d9",
+    "reservation": {
+      "path": "inert.reservation.json",
+      "bytes": 577,
+      "sha256": "14e60e2e975623a0ee8c2686dbe23fa37ebe0aa19318b777d21036adecb9e333"
+    },
+    "limits": {
+      "stage": 300,
+      "overall": 7200
+    },
+    "clock_binding": {
+      "work_id": "INERT_unknown",
+      "clock": {
+        "id": "INERT_CLOCK",
+        "source": "time.monotonic_ns",
+        "unit": "ns",
+        "monotonic": true
+      },
+      "origin": {
+        "path": "START_AND_RESOURCES.json",
+        "bytes": 260,
+        "sha256": "6ba7bf4ae580de04eda5888911830ed8fce8534b83e53c538af74a94d0ac0385"
+      },
+      "overall_start_ns": 1000000000,
+      "stage_start_ns": 2000000000
+    }
+  },
+  "status": "PASS",
+  "tests": [
+    {
+      "id": "D01",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid_candidate",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "path_binding",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        }
+      ]
+    },
+    {
+      "id": "D02",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "path_binding",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "both_old_compile",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "path_binding",
+          "reason": "ARGV_COMPILE_SOURCE",
+          "observed_codes": [
+            "ARGV_COMPILE_SOURCE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D03",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "path_binding",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "both_default_prefs",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "path_binding",
+          "reason": "ARGV_PREFSDIR",
+          "observed_codes": [
+            "ARGV_PREFSDIR"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D04",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "path_binding",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "both_old_class",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "path_binding",
+          "reason": "ARGV_BATCH_INPUT",
+          "observed_codes": [
+            "ARGV_BATCH_INPUT"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D05",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "path_binding",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "both_wrong_source",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "path_binding",
+          "reason": "CANONICAL_SOURCE_MISMATCH",
+          "observed_codes": [
+            "CANONICAL_SOURCE_MISMATCH"
+          ]
+        },
+        {
+          "case": "both_wrong_paths",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "path_binding",
+          "reason": "CANONICAL_PATHS_MISMATCH",
+          "observed_codes": [
+            "CANONICAL_PATHS_MISMATCH"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D06",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "path_binding",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "wrong_compile_cwd",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "path_binding",
+          "reason": "CWD_BINDING",
+          "observed_codes": [
+            "CWD_BINDING"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D07",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "path_binding",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "approval_inside_run",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "path_binding",
+          "reason": "USER_APPROVAL_INSIDE_RUN",
+          "observed_codes": [
+            "USER_APPROVAL_INSIDE_RUN"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D08",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "path_binding",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "java_nonpath",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "path_binding",
+          "reason": "JAVA_NONPATH_CHANGED",
+          "observed_codes": [
+            "JAVA_NONPATH_CHANGED"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D09",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "path_binding",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "unit_changed",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "path_binding",
+          "reason": "NUMERICAL_CONTRACT_CHANGED",
+          "observed_codes": [
+            "NUMERICAL_CONTRACT_CHANGED"
+          ]
+        },
+        {
+          "case": "coordinate_changed",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "path_binding",
+          "reason": "NUMERICAL_CONTRACT_CHANGED",
+          "observed_codes": [
+            "NUMERICAL_CONTRACT_CHANGED"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D10",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "path_binding",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "other_field",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "raw_view",
+          "reason": "VIEW_DIFF",
+          "observed_codes": [
+            "VIEW_DIFF"
+          ]
+        },
+        {
+          "case": "type_change",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "raw_view",
+          "reason": "VIEW_DIFF",
+          "observed_codes": [
+            "VIEW_DIFF"
+          ]
+        },
+        {
+          "case": "approved_true",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "raw_view",
+          "reason": "RAW_CONTRACT_FLAGS",
+          "observed_codes": [
+            "RAW_CONTRACT_FLAGS"
+          ]
+        },
+        {
+          "case": "raw_bytes_changed",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "raw_view",
+          "reason": "RAW_CONTRACT_IDENTITY",
+          "observed_codes": [
+            "RAW_CONTRACT_IDENTITY"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D11",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "approval",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "absent",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "approval",
+          "reason": "APPROVAL_ABSENT",
+          "observed_codes": [
+            "APPROVAL_ABSENT"
+          ]
+        },
+        {
+          "case": "false",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "approval",
+          "reason": "Separate sealed B approval required",
+          "observed_codes": [
+            "Separate sealed B approval required"
+          ]
+        },
+        {
+          "case": "wrong_run",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "approval",
+          "reason": "Run/budget approval mismatch",
+          "observed_codes": [
+            "Run/budget approval mismatch"
+          ]
+        },
+        {
+          "case": "wrong_manifest",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "approval",
+          "reason": "Separate sealed B approval required",
+          "observed_codes": [
+            "Separate sealed B approval required"
+          ]
+        },
+        {
+          "case": "changed_contract",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "approval",
+          "reason": "Prepared code/dependency mismatch: contract.json",
+          "observed_codes": [
+            "Prepared code/dependency mismatch: contract.json"
+          ]
+        },
+        {
+          "case": "changed_dependency",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "approval",
+          "reason": "Prepared code/dependency mismatch: analyzer.py",
+          "observed_codes": [
+            "Prepared code/dependency mismatch: analyzer.py"
+          ]
+        },
+        {
+          "case": "missing_flag",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "approval",
+          "reason": "Missing explicit approval: no_solve",
+          "observed_codes": [
+            "Missing explicit approval: no_solve"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D12",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "deployment_consumer",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "empty",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "DEPLOYMENT_ID_SET",
+          "observed_codes": [
+            "DEPLOYMENT_ID_SET"
+          ]
+        },
+        {
+          "case": "missing",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "DEPLOYMENT_ID_SET",
+          "observed_codes": [
+            "DEPLOYMENT_ID_SET"
+          ]
+        },
+        {
+          "case": "duplicate",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "DEPLOYMENT_ID_SET",
+          "observed_codes": [
+            "DEPLOYMENT_ID_SET"
+          ]
+        },
+        {
+          "case": "unknown",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "DEPLOYMENT_ID_SET",
+          "observed_codes": [
+            "DEPLOYMENT_ID_SET"
+          ]
+        },
+        {
+          "case": "failed",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "DEPLOYMENT_ID_FAILED",
+          "observed_codes": [
+            "DEPLOYMENT_ID_FAILED"
+          ]
+        },
+        {
+          "case": "skip",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "DEPLOYMENT_CASE_FAILED",
+          "observed_codes": [
+            "DEPLOYMENT_CASE_FAILED"
+          ]
+        },
+        {
+          "case": "missing_positive",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "DEPLOYMENT_CASE_SET",
+          "observed_codes": [
+            "DEPLOYMENT_CASE_SET"
+          ]
+        },
+        {
+          "case": "wrong_reason",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "DEPLOYMENT_CASE_REASON",
+          "observed_codes": [
+            "DEPLOYMENT_CASE_REASON"
+          ]
+        },
+        {
+          "case": "wrong_phase",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "DEPLOYMENT_CASE_PHASE",
+          "observed_codes": [
+            "DEPLOYMENT_CASE_PHASE"
+          ]
+        },
+        {
+          "case": "code_mismatch",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "CODE_IDENTITY",
+          "observed_codes": [
+            "CODE_IDENTITY"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D13",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "deployment_consumer",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "post_report_overrun",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "STAGE_BUDGET",
+          "observed_codes": [
+            "STAGE_BUDGET"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D14",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "deployment_consumer",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "outer_rc1",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "EXTERNAL_FAILED",
+          "observed_codes": [
+            "EXTERNAL_FAILED"
+          ]
+        },
+        {
+          "case": "outer_rc_missing",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "EXTERNAL_FAILED",
+          "observed_codes": [
+            "EXTERNAL_FAILED"
+          ]
+        },
+        {
+          "case": "external_missing",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "deployment_consumer",
+          "reason": "MISSING_EXTERNAL",
+          "observed_codes": [
+            "MISSING_EXTERNAL"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D15",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "finalizer",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "reserved601_claim40",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "finalizer",
+          "reason": "STAGE_BUDGET_EXCEEDED",
+          "observed_codes": [
+            "STAGE_BUDGET_EXCEEDED"
+          ]
+        },
+        {
+          "case": "claim_origin_mismatch",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "finalizer",
+          "reason": "CLOCK_ELAPSED_ASSERTION",
+          "observed_codes": [
+            "CLOCK_ELAPSED_ASSERTION"
+          ]
+        },
+        {
+          "case": "anchor_mismatch",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "finalizer",
+          "reason": "CLOCK_ANCHOR_IDENTITY",
+          "observed_codes": [
+            "CLOCK_ANCHOR_IDENTITY"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D99",
+      "status": "PASS",
+      "cases": [
+        {
+          "case": "valid",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "ACCEPT",
+          "phase": "finalizer",
+          "reason": "ACCEPT",
+          "observed_codes": []
+        },
+        {
+          "case": "record_reverse",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "finalizer",
+          "reason": "FINAL_CLOCK_REVERSED",
+          "observed_codes": [
+            "FINAL_CLOCK_REVERSED"
+          ]
+        },
+        {
+          "case": "postwrite_reverse",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "finalizer",
+          "reason": "FINAL_CLOCK_REVERSED",
+          "observed_codes": [
+            "FINAL_CLOCK_REVERSED"
+          ]
+        },
+        {
+          "case": "record_identity",
+          "status": "PASS",
+          "invocations": 1,
+          "outcome": "REJECT",
+          "phase": "finalizer",
+          "reason": "FINAL_RECORD_IDENTITY",
+          "observed_codes": [
+            "FINAL_RECORD_IDENTITY"
+          ]
+        }
+      ]
+    }
+  ],
+  "failures": 0,
+  "errors": 0,
+  "subcase_count": 57,
+  "fixture_scope": "SYNTHETIC_REPORT_INPUT_NOT_ACTUAL_SUITE_LOG"
+}

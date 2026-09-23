@@ -1,0 +1,28 @@
+{
+  "schema": 2,
+  "work_id": "deployment_A8R1_20260924",
+  "overall_start_ns": 678247812000000,
+  "clock": {
+    "id": "deployment_A8R1_20260924_monotonic",
+    "unit": "ns",
+    "source": "time.monotonic_ns",
+    "monotonic": true
+  },
+  "limits": {
+    "overall": 7200
+  },
+  "observed_at": "2026-09-24T01:00:28.453653+09:00",
+  "resources": {
+    "available_ram_bytes": 7731372032,
+    "workspace_free_disk_bytes": 171085258752
+  },
+  "stages_seconds": {
+    "implementation": 3600,
+    "static": 300,
+    "suite": 600,
+    "preservation": 180,
+    "delivery": 600,
+    "cleanup": 60
+  },
+  "scope": "Limited offline deployment only. No real runtime, approval, token, COMSOL/native process/Job test."
+}

@@ -1,0 +1,319 @@
+{
+  "D01": {
+    "valid_candidate": {
+      "outcome": "ACCEPT",
+      "phase": "path_binding",
+      "reason": "ACCEPT"
+    }
+  },
+  "D02": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "path_binding",
+      "reason": "ACCEPT"
+    },
+    "both_old_compile": {
+      "outcome": "REJECT",
+      "phase": "path_binding",
+      "reason": "ARGV_COMPILE_SOURCE"
+    }
+  },
+  "D03": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "path_binding",
+      "reason": "ACCEPT"
+    },
+    "both_default_prefs": {
+      "outcome": "REJECT",
+      "phase": "path_binding",
+      "reason": "ARGV_PREFSDIR"
+    }
+  },
+  "D04": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "path_binding",
+      "reason": "ACCEPT"
+    },
+    "both_old_class": {
+      "outcome": "REJECT",
+      "phase": "path_binding",
+      "reason": "ARGV_BATCH_INPUT"
+    }
+  },
+  "D05": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "path_binding",
+      "reason": "ACCEPT"
+    },
+    "both_wrong_source": {
+      "outcome": "REJECT",
+      "phase": "path_binding",
+      "reason": "CANONICAL_SOURCE_MISMATCH"
+    },
+    "both_wrong_paths": {
+      "outcome": "REJECT",
+      "phase": "path_binding",
+      "reason": "CANONICAL_PATHS_MISMATCH"
+    }
+  },
+  "D06": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "path_binding",
+      "reason": "ACCEPT"
+    },
+    "wrong_compile_cwd": {
+      "outcome": "REJECT",
+      "phase": "path_binding",
+      "reason": "CWD_BINDING"
+    }
+  },
+  "D07": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "path_binding",
+      "reason": "ACCEPT"
+    },
+    "approval_inside_run": {
+      "outcome": "REJECT",
+      "phase": "path_binding",
+      "reason": "USER_APPROVAL_INSIDE_RUN"
+    }
+  },
+  "D08": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "path_binding",
+      "reason": "ACCEPT"
+    },
+    "java_nonpath": {
+      "outcome": "REJECT",
+      "phase": "path_binding",
+      "reason": "JAVA_NONPATH_CHANGED"
+    }
+  },
+  "D09": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "path_binding",
+      "reason": "ACCEPT"
+    },
+    "unit_changed": {
+      "outcome": "REJECT",
+      "phase": "path_binding",
+      "reason": "NUMERICAL_CONTRACT_CHANGED"
+    },
+    "coordinate_changed": {
+      "outcome": "REJECT",
+      "phase": "path_binding",
+      "reason": "NUMERICAL_CONTRACT_CHANGED"
+    }
+  },
+  "D10": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "path_binding",
+      "reason": "ACCEPT"
+    },
+    "other_field": {
+      "outcome": "REJECT",
+      "phase": "raw_view",
+      "reason": "VIEW_DIFF"
+    },
+    "type_change": {
+      "outcome": "REJECT",
+      "phase": "raw_view",
+      "reason": "VIEW_DIFF"
+    },
+    "approved_true": {
+      "outcome": "REJECT",
+      "phase": "raw_view",
+      "reason": "RAW_CONTRACT_FLAGS"
+    },
+    "raw_bytes_changed": {
+      "outcome": "REJECT",
+      "phase": "raw_view",
+      "reason": "RAW_CONTRACT_IDENTITY"
+    }
+  },
+  "D11": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "approval",
+      "reason": "ACCEPT"
+    },
+    "absent": {
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "APPROVAL_ABSENT"
+    },
+    "false": {
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "Separate sealed B approval required"
+    },
+    "wrong_run": {
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "Run/budget approval mismatch"
+    },
+    "wrong_manifest": {
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "Separate sealed B approval required"
+    },
+    "changed_contract": {
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "Prepared code/dependency mismatch: contract.json"
+    },
+    "changed_dependency": {
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "Prepared code/dependency mismatch: analyzer.py"
+    },
+    "missing_flag": {
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "Missing explicit approval: no_solve"
+    }
+  },
+  "D12": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "deployment_consumer",
+      "reason": "ACCEPT"
+    },
+    "empty": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_ID_SET"
+    },
+    "missing": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_ID_SET"
+    },
+    "duplicate": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_ID_SET"
+    },
+    "unknown": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_ID_SET"
+    },
+    "failed": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_ID_FAILED"
+    },
+    "skip": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_CASE_FAILED"
+    },
+    "missing_positive": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_CASE_SET"
+    },
+    "wrong_reason": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_CASE_REASON"
+    },
+    "wrong_phase": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "DEPLOYMENT_CASE_PHASE"
+    },
+    "code_mismatch": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "CODE_IDENTITY"
+    }
+  },
+  "D13": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "deployment_consumer",
+      "reason": "ACCEPT"
+    },
+    "post_report_overrun": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "STAGE_BUDGET"
+    }
+  },
+  "D14": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "deployment_consumer",
+      "reason": "ACCEPT"
+    },
+    "outer_rc1": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "EXTERNAL_FAILED"
+    },
+    "outer_rc_missing": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "EXTERNAL_FAILED"
+    },
+    "external_missing": {
+      "outcome": "REJECT",
+      "phase": "deployment_consumer",
+      "reason": "MISSING_EXTERNAL"
+    }
+  },
+  "D15": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "finalizer",
+      "reason": "ACCEPT"
+    },
+    "reserved601_claim40": {
+      "outcome": "REJECT",
+      "phase": "finalizer",
+      "reason": "STAGE_BUDGET_EXCEEDED"
+    },
+    "claim_origin_mismatch": {
+      "outcome": "REJECT",
+      "phase": "finalizer",
+      "reason": "CLOCK_ELAPSED_ASSERTION"
+    },
+    "anchor_mismatch": {
+      "outcome": "REJECT",
+      "phase": "finalizer",
+      "reason": "CLOCK_ANCHOR_IDENTITY"
+    }
+  },
+  "D16": {
+    "valid": {
+      "outcome": "ACCEPT",
+      "phase": "finalizer",
+      "reason": "ACCEPT"
+    },
+    "record_reverse": {
+      "outcome": "REJECT",
+      "phase": "finalizer",
+      "reason": "FINAL_CLOCK_REVERSED"
+    },
+    "postwrite_reverse": {
+      "outcome": "REJECT",
+      "phase": "finalizer",
+      "reason": "FINAL_CLOCK_REVERSED"
+    },
+    "record_identity": {
+      "outcome": "REJECT",
+      "phase": "finalizer",
+      "reason": "FINAL_RECORD_IDENTITY"
+    }
+  }
+}

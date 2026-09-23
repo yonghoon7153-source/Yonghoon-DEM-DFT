@@ -1,0 +1,101 @@
+{
+  "id": "D11",
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "valid",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "ACCEPT",
+      "phase": "approval",
+      "reason": "ACCEPT",
+      "observed_codes": [],
+      "result": {
+        "status": "PASS",
+        "phase": "approval",
+        "reason": "ACCEPT",
+        "native_boundary": {
+          "kind": "INERT_ONLY",
+          "calls": 1
+        }
+      }
+    },
+    {
+      "case": "absent",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "APPROVAL_ABSENT",
+      "observed_codes": [
+        "APPROVAL_ABSENT"
+      ]
+    },
+    {
+      "case": "false",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "Separate sealed B approval required",
+      "observed_codes": [
+        "Separate sealed B approval required"
+      ]
+    },
+    {
+      "case": "wrong_run",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "Run/budget approval mismatch",
+      "observed_codes": [
+        "Run/budget approval mismatch"
+      ]
+    },
+    {
+      "case": "wrong_manifest",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "Separate sealed B approval required",
+      "observed_codes": [
+        "Separate sealed B approval required"
+      ]
+    },
+    {
+      "case": "changed_contract",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "Prepared code/dependency mismatch: contract.json",
+      "observed_codes": [
+        "Prepared code/dependency mismatch: contract.json"
+      ]
+    },
+    {
+      "case": "changed_dependency",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "Prepared code/dependency mismatch: analyzer.py",
+      "observed_codes": [
+        "Prepared code/dependency mismatch: analyzer.py"
+      ]
+    },
+    {
+      "case": "missing_flag",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "approval",
+      "reason": "Missing explicit approval: no_solve",
+      "observed_codes": [
+        "Missing explicit approval: no_solve"
+      ]
+    }
+  ]
+}

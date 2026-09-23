@@ -1,0 +1,15 @@
+{
+  "schema": 2,
+  "work_id": "INERT_failed",
+  "clock": {
+    "id": "INERT_CLOCK",
+    "source": "time.monotonic_ns",
+    "unit": "ns",
+    "monotonic": true
+  },
+  "overall_start_ns": 1000000000,
+  "limits": {
+    "overall": 7200
+  },
+  "synthetic": true
+}

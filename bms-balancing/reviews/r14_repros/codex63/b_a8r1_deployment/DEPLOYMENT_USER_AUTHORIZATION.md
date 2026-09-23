@@ -1,0 +1,1 @@
+2026-09-24 사용자 후속 메시지 “그래서 뭐 안해/”와 전달한 조건부 승인 문안에 따라 제한 오프라인 배치 준비를 진행한다. D01–D16 정확 집합, 최종 raw 계약 시험 전 봉인, TTY 미완 명시를 포함한다. 실제 B/COMSOL 및 native process/Job/UI/prefs 변경은 미승인이다. 승인 범위/예산 원문은 받은 DEPLOYMENT_APPROVAL_DRAFT_REVIEWED.md를 그대로 보존한다.

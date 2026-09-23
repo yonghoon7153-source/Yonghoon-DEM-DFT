@@ -1,0 +1,53 @@
+{
+  "id": "D15",
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "valid",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "ACCEPT",
+      "phase": "finalizer",
+      "reason": "ACCEPT",
+      "observed_codes": [],
+      "result": {
+        "status": "PASS",
+        "phase": "finalizer",
+        "reason": "ACCEPT"
+      }
+    },
+    {
+      "case": "reserved601_claim40",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "finalizer",
+      "reason": "STAGE_BUDGET_EXCEEDED",
+      "observed_codes": [
+        "STAGE_BUDGET_EXCEEDED"
+      ]
+    },
+    {
+      "case": "claim_origin_mismatch",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "finalizer",
+      "reason": "CLOCK_ELAPSED_ASSERTION",
+      "observed_codes": [
+        "CLOCK_ELAPSED_ASSERTION"
+      ]
+    },
+    {
+      "case": "anchor_mismatch",
+      "status": "PASS",
+      "invocations": 1,
+      "outcome": "REJECT",
+      "phase": "finalizer",
+      "reason": "CLOCK_ANCHOR_IDENTITY",
+      "observed_codes": [
+        "CLOCK_ANCHOR_IDENTITY"
+      ]
+    }
+  ]
+}

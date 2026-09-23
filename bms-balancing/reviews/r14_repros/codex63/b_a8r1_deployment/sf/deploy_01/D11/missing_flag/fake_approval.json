@@ -1,0 +1,23 @@
+{
+  "phase": "B",
+  "approved": true,
+  "code_manifest_sha256": "fa5592734f4d082bfc7bcb7ceaf70ec1407cd35342dadee100bf939f8297329b",
+  "run_id": "saved_solution_A8R1_b006",
+  "budgets_seconds": {
+    "apply": 900,
+    "compile_batch": 1800,
+    "process_cleanup": 120,
+    "restore": 900,
+    "offline_analysis": 600
+  },
+  "scope": "INERT_SYNTHETIC_APPROVAL_FIXTURE_NOT_USER_AUTHORIZATION",
+  "all_files_scope_accepted": true,
+  "two_preferences_UI_sessions": true,
+  "no_elevation": true,
+  "no_solve": false,
+  "formal_command_approval_required": true,
+  "child_sequence_scope_accepted": true,
+  "prior_pending_preserved": true,
+  "current_prefs_source_accepted": true,
+  "owned_job_termination_accepted": true
+}

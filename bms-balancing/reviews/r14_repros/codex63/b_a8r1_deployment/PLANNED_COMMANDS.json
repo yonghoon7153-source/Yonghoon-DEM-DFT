@@ -1,0 +1,72 @@
+{
+  "kind": "DOCUMENTARY_EXTRACTION_FROM_SEALED_CONTRACT",
+  "contract_sha256": "45a63bf1a33039c6556f024e26592d01e4ec4db1594dd7ef28713354cdc49043",
+  "code_manifest_sha256": "fa5592734f4d082bfc7bcb7ceaf70ec1407cd35342dadee100bf939f8297329b",
+  "source_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1",
+  "run_root": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006",
+  "run_id": "saved_solution_A8R1_b006",
+  "native_phases": {
+    "apply": {
+      "argv": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsol.exe",
+        "-prefsdir",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/prefs",
+        "-configuration",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/config_apply",
+        "-data",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/data_apply"
+      ],
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006"
+    },
+    "compile": {
+      "argv": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolcompile.exe",
+        "-prefsdir",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/prefs",
+        "-configuration",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/config_compile",
+        "-data",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/data_compile",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/compile/StoredSolutionRecoveryA.java"
+      ],
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/compile"
+    },
+    "batch": {
+      "argv": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolbatch.exe",
+        "-prefsdir",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/prefs",
+        "-configuration",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/config_batch",
+        "-data",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/data_batch",
+        "-np",
+        "16",
+        "-classpathadd",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/compile",
+        "-inputfile",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/compile/StoredSolutionRecoveryA.class",
+        "-nosave",
+        "-batchlog",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/logs/batch.log"
+      ],
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006"
+    },
+    "restore": {
+      "argv": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsol.exe",
+        "-prefsdir",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/prefs",
+        "-configuration",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/config_restore",
+        "-data",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006/data_restore"
+      ],
+      "cwd": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/runtime/b006"
+    }
+  },
+  "future_user_approval_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/api_recovery_B_A8R1/approvals/saved_solution_A8R1_b006.json",
+  "B_approved": false,
+  "usable": false,
+  "TTY_preflight": "Not established on the same actual invocation path; existing launcher tests TTY after apply."
+}

@@ -1,0 +1,24 @@
+{
+  "schema": 2,
+  "stage": "delivery",
+  "attempt_id": "delivery",
+  "attempt": 1,
+  "stage_start_ns": 2000000000,
+  "work_id": "INERT_valid",
+  "clock": {
+    "id": "INERT_CLOCK",
+    "source": "time.monotonic_ns",
+    "unit": "ns",
+    "monotonic": true
+  },
+  "origin": {
+    "path": "START_AND_RESOURCES.json",
+    "bytes": 258,
+    "sha256": "52ae9635e135420a84f10c8fd8c649cedb603b9a25be4fa22cdaf5fa49e708aa"
+  },
+  "code_seal_sha256": "11ed0380d83742f5352dd00855a9b6fe951ec9906c8f918b38631160622a9701",
+  "limits": {
+    "stage": 600,
+    "overall": 7200
+  }
+}

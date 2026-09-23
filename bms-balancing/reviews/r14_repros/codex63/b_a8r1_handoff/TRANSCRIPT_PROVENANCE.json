@@ -1,0 +1,13 @@
+{
+  "kind": "post_return_transcription_of_actual_tool_response",
+  "source": "functions.exec / tools.exec_command returned object observed in this conversation",
+  "chunk_id": "de1ab7",
+  "exit_code": 0,
+  "call_wall_time_seconds": 1.3463208,
+  "output_boundary": "after_external_zip_verification",
+  "stdout_storage": "FINAL_STDOUT_TRANSCRIPT.txt is exactly output encoded as UTF-8, including final CRLF",
+  "limitations": "Subsequently serialized tool response; not a contemporaneous raw OS log or independently authenticated receipt. Actual host exit_code is outside stdout. The elapsed snapshot is immediately before finalizer output, not after the host response.",
+  "primary_and_external_zip_unchanged": true,
+  "B_approved": false,
+  "usable": false
+}
