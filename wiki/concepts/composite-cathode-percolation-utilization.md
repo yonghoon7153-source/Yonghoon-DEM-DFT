@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -425,7 +425,18 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - **잰 것**: FIB-SEM(화소 35.6 nm · 절편 100 nm · 55.9 × 38.9 × 58.1 µm) 부피분율 LCO 33.1 · SE 53.7 · void 13.2 %(void = 안정화 수지 + 잔류 void) · CLD 형태(μ/k). 분할이 조성비를 보존(0.616 ↔ 0.613).
 - **안 잰 것 — 이 페이지의 양 전부**: `θ_AM` · `θ_SE`(연결 분율) · `A_Spec`(계면 면적) · `p_c` · 고립 분율 **0**(`percolat*` · `connect*` · `surface area` 0). ⇒ 1호와 **같은 양의 대조는 불가능**하다.
 - **대조되는 것**: (a) **입자 형태** — `[인쇄]` `k_LCO` 3.64 ↔ 15 % RSD 구형이면 ≈12 → 1호의 단분산 구 가정과 어긋난다(평균 현은 `[재현]` 5 µm 구의 2d/3 = 3.33 ↔ 3.3 µm 로 크기는 맞는다) (b) **SE 는 입자가 아니라 연속 기질** — `[도표]` Fig. 4D · 6B, μ_SE 5.2 µm · k 1.54 (1호 SE 는 3 µm 구) (c) **굴곡도** — 1호가 `[인쇄]` "not explicitly treated" 로 뺀 항을 이 편이 준다(`τ` 1.74 실제 · 1.27 무공극, 굴곡도 인자).
-- ⇒ `[해석]` 1호와 55호는 대조 관계가 아니라 **서로의 빈 칸을 채우는 관계**다 — 1호는 연결(`θ`)만, 55호는 경로 폭(`τ`)만. 둘을 한 구조에서 같이 계산한 편은 아직 없다(큐 57 Bielefeld 2022 흡수 때 확인).
+- ⇒ `[해석]` 1호와 55호는 대조 관계가 아니라 **서로의 빈 칸을 채우는 관계**다 — 1호는 연결(`θ`)만, 55호는 경로 폭(`τ`)만. 둘을 한 구조에서 같이 계산한 편은 아직 없다(큐 57 Bielefeld 2022 흡수 때 확인). → **확인(56호): 없다** — 56호는 접촉(`φ`)만 계산했고 경로와 `θ` 는 0 · 1 로 고정했다(아래 절).
+
+## ★★★★ 1호 `p_c` 가 같은 저자의 후속에서 반례를 만났다 — 그리고 `θ` 는 손으로 1 이 됐다 (2026-09-23 추가, `assb` 56호)
+
+`raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md` (Bielefeld · Weber · Rueß · Glavas · Janek 2022 — 1호 저자 셋의 FEM 후속, NCM811/Li₆PS₅Cl, 탄소 없음).
+
+- **SI 한 단락이 1호를 직접 부른다** `[인쇄]`: 70/30 wt% + void 14 % = CAM **42 vol%** — "According to a percolation study on similar composites [**1호**], electronic percolation will **not** be achieved for randomly distributed spherical particles at this volume fraction". `[재현]` 1호 식 (8) `p_c(d) = 7.83 ln d + 36.67`: d 3 µm 45.3 · 5 µm 49.3 · 7 µm 51.9 vol% — 42 % 는 d ≈2.0 µm 아래에서만 문턱 위.
+- 그런데 실험 셀(Rueß 2020)은 `[인쇄]` "does not show major issues with electronic percolation" — **1호 예측과 실험이 어긋났다.**
+- 저자들의 처리: 1호를 고치지 않고 **구조를 맞췄다** — 볼록 다면체 placeholder(부피 40 %)로 CAM 을 좁은 공간에 몰아 겹치게 하고, `[인쇄]` "A first charge simulation is used to identify **isolated particles** which are then **moved manually** to assure connection of all CAM particles". ⇒ **`θ` 는 출력이 아니라 입력 1** 이다.
+- `[해석]` 이 페이지의 규율에 붙는 것 둘: (1) **`p_c` 는 무작위 단분산 구 가정의 값이다** — 실물은 그보다 낮은 부피분율에서 연결됐다(원인 후보: 비구형 · 넓은 분포(55호 `k_LCO` 3.64) · 압착 중 재배열 · 1호 유한 크기 폭). 어느 쪽인지 이 편은 묻지 않는다. (2) **합성 truth 에서 `θ` 를 퍼콜레이션 모델 하나의 출력으로 정하지 않는다** — 같은 연구실이 자기 모델을 실험 앞에서 손으로 덮었다.
+- 원장 · 14호가 이 편에 붙인 "pore(void) 문턱 → 저항 급증" 은 **이 편에 없다**(`threshold` · `surpass` 0 · void 부피 스윕 0). 이 편이 `p_c` 와 닿는 곳은 위 한 단락뿐이다 — 큐 58(Bielefeld 2020)에서 다시 찾는다.
+- void 는 **접촉(`φ`)으로만** 들어갔다(1-입자 모델 표면 반구) — `θ` · 경로와 다른 축이다. 55호(경로만)와 56호(접촉만)가 또 한 번 서로의 빈 칸이다.
 
 ## 이 페이지가 주장하지 않는 것
 

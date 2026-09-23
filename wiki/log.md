@@ -2466,3 +2466,16 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: 그림 8 장 전부 Read(Fig. 1 은 쪽 렌더), 표는 텍스트.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 55편 · Evidence 쉰 번째 · 새 제약 · Status Log · 비주장) · [[assb-lampe-contact-product-degeneracy]](서른여덟 번째 적용 · 처방 표 새 줄) · [[assb-tortuosity-factor-effective-conductivity-split]](여섯 번째 표본) · [[composite-cathode-percolation-utilization]](1호 ref 16 기대 판정) · 큐 문서 §6-3-g 56 행 + 지문 ²¹.
 - 후속(서지 기준, 미열람 — 큐 57–59 는 이 편보다 늦어 인용 0): Thorat … Wheeler 2009 *JPS* 188, 592 ([22]) · Landesfeind … Gasteiger 2016 *JES* 163, A1373 ([13]) · Siroma … Ioroi 2016 *JPS* 316, 215 ([19]) · Asano … Tatsumisago 2017 *JES* 164, A3960 ([20]) · Müllner … Tallarek 2014 *Mater. Today* 17, 404 ([31]) · 같은 권 Kaiser … Roling 2018 *JPS* 396, 175 (인용 0).
+
+## [2026-09-23] ingest | assb 56호 — Bielefeld, Weber, Rueß, Glavas, Janek 2022, Influence of Lithium Ion Kinetics, Particle Morphology and Voids on the Electrochemical Performance of Composite Cathodes for All-Solid-State Batteries (J. Electrochem. Soc. 169, 020539)
+- raw: `raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md` (sha256 봉인 — `pdf_sha256` · `si_sha256`) · 그림 `raw/figures/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem/` (자동 17 + SI 벡터 수동 2). 큐 57번(2차 묶음 열여덟째 편), 지목 4 회(02 · 14 · 50 · 53호). ⚠ FEM 모델 편 — 새 측정 0.
+- ★★★★ **판정**: void 는 **접촉(`φ`) 자리에만**(1-입자 표면 반구, 피복률 100 → ≈52 % · 크기 비 1.2–10) — 경로 효과 구성상 0, 검증 모델은 실험 void 14 % 를 SE 로 채움 · 둘을 갈랐나 ❌ · **`θ` 는 손으로 1**(SI: 01호대로면 42 vol% 는 문턱 아래 → placeholder + "moved manually") · **"pore 문턱 → 저항 급증"(원장 · 14호 [69]) 은 이 편에 없다**(`threshold` · `surpass` 0).
+- ★★★★ **`j₀` 는 입력** — Rueß 2020 `R_CT` → 식 (12), `A` 미정의 ⇒ 50호 "10⁻⁵ A cm⁻² ≈ NMC 0.11" 은 EIS ↔ EIS, 규약 판정 불가(`[재현]` ASR ≈112 ↔ ≈1520 Ω cm²). 실험 대조 = 남의 첫 충전 3 율, 오차 척도 0, 본문 "best" 는 상수 세트(결론과 어긋남).
+- ★★★ **모델 명제**: 피복은 0.02 C 에서 ≤ ≈7 mV · −3 %, 0.5 C 에서 −25 % · `φ` 70 % 고정에서 크기만으로 ×2.6–4.5 · `[재현]` BV 면적 몫 ≈44 % ⇒ 37호 `A_eff ↔ k` 항등이 3D 에서 부분 파괴. `θ`-전용 조작 ❌.
+- **채움표 56호 행 — 누적 ≈20.0 → ≈20.0 (새 칸 0).** Q1 층 하나(모델 명제) · Q3 층 하나 · Q4 0/56 마흔여덟 번째 성질 · Q8 층 하나(02호 `U₀` 경유지).
+- **곱 축퇴 처방 서른아홉 번째 적용**: 2단계 모델판 둘 · 율 스윕 줄 모델 확인 · 새 줄 "`φ` 고정 분포 스윕 — 3D 모델에서 `A_eff ↔ k` 항등의 파괴 검사".
+- ⚠ 어긋남 14 건(D2 "none fitted" ↔ PSD 선택 · D3 "best" ↔ "not capable" · D4 void 4 ↔ `[재현]` 5.8 µm · D5 0.5 C 점 없음 · D7 void 14 % ↔ 0 % · D12 · D13 계보 귀속 · D1 `T` 273.15 K 외).
+- 낱말 지문: 11 열 중 `uncertaint` 1 · `contact loss` 5 외 0 · `Achilles` 1 · `caution` 1 · `percolat*` 2/6 · `manual*` 0/2.
+- 그림: Read 11 장(Fig. 2 · 4 · 5 · 6 · 7 · 8 · 9 · 10 · S3 · S2 · S7) + S5 쪽 렌더, 안 봄 Fig. 1 · 3 · 11 · S1 · S4 · S6 · S8.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 56편 · Evidence 쉰한 번째 · 새 제약 · Status Log) · [[assb-lampe-contact-product-degeneracy]](서른아홉 번째 적용 · 처방 표 새 줄) · [[composite-cathode-percolation-utilization]](01호 `p_c` 반례 · 수작업 강제) · [[assb-apparent-capacity-decomposition]](`η(i)` 모델 표본) · 큐 문서 §6-3-g 57 행 + 지문 ²².
+- 후속(서지 기준, 미열람): Ruess … Janek 2020 *JES* 167, 100532 ([10] — 모든 입력의 원전) · Bielefeld · Weber · Janek 2020 *ACS AMI* 12, 12821 ([25] = 큐 58) · Minnmann … Janek 2021 *JES* 168, 040537 ([27]) · Neumann … Latz 2020 *ACS AMI* 12, 9277 ([38]) · Trevisanello … Janek 2021 *AEM* 11, 2003400 ([11]).

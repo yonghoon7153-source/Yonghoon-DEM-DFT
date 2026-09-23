@@ -1,0 +1,394 @@
+{
+ "slug": "bielefeld2022_voids-kinetics-morphology-composite-cathode-fem",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "9643df3b-18._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+  "c608870d-18._Sup_Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Procedure of geometry generation for the particle-type microstructures in GeoDict45 and Comsol46 linked by the corresponding Matlab interfaces.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    556.1,
+    285.7
+   ],
+   "w": 2193,
+   "h": 938,
+   "dpi": 300,
+   "src": "9643df3b-18._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.515
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. The 1-particle model featuring different void coverage from ideal to 50% CAM/SE contact aside a SEM-image of a composite electrode at a) an uncycled stage, b) after the 1st charge and c) after the 50th charge, adapted with permission from Koerver et al.8. Copyright (2017) American Chemical Society. the overpotential. Between 50 mAh g−1 ⩽capacity ⩽100 mAh g−1 and above 150 mAh g−1 the simulation overpotential is lower than the experimental one. The elevated charge rate of 0.5 C intensiﬁes these discrepancies between simulation and experiment. The simulated over- potential at the beginning of charge is too small, approaches the experimental result around 25 mAh g−1 and underestimates it between 50 and 100 mAh g−1. Indeed, the simulated voltage gradient increases signiﬁcantly around 4.0 V, so the overall cell charge capacity is close to the measured one. The charge proﬁle shape is",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    310.9,
+    558.0,
+    547.6
+   ],
+   "w": 2202,
+   "h": 987,
+   "dpi": 300,
+   "src": "9643df3b-18._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.415
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Schematic of electrode structuring and its realization in the model geometry compared to unstructured particle arrangements. The yellow box indicates the unit cell in the cone model.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    350.2
+   ],
+   "w": 2200,
+   "h": 1207,
+   "dpi": 300,
+   "src": "9643df3b-18._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.481
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Charge voltage (left) and differential capacity dQdV−1 (right) for different charge rates and three microstructures a), b) and c) that differ in their random seed in comparison to experimental data. For the simulation, the S-PSD has up to 11 μm-sized particles, the M-PSD features particle sizes below 14 μm and the L-particle arrangement contains particles with up to 20 μm in diameter. The occurrence of the particle sizes is displayed in Fig. 5a) and differences are difﬁcult to notice, because all PSDs are very similar below 11 μm. The few larger particles of the M- and L-PSDs are easily overlooked, but they occupy signiﬁcant volumes which has consequences for the electrode performance. The simulated voltage proﬁles of these PSDs are apposed in Figs. 5b–d): The larger the particles get, the higher the overvoltage gets and while the S-PSD results match the experimental data quite",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    381.0,
+    558.0,
+    564.2
+   ],
+   "w": 2202,
+   "h": 764,
+   "dpi": 300,
+   "src": "9643df3b-18._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) PSDs of the microstructure instances and the simulated charge voltage in comparison to experimental data for a PSD b) below 11 μm, c) below 14 μm and d) up to 20 μm. voltage gradient that we observed above 4 V for 0.5 C is even steeper in the L-PSD. volume fraction of the CAM is held constant and less volume is left for the smaller particles. Table I indicates what this entails for the amount of CAM particles and the CAM surface area for the different PSDs. The CAM surface area for the S-PSDs is around 0.17 m2g−1, the M-PSD has 0.14 m2g−1 and the L-PSD offers 0.11 m2g−1 which is equivalent to a loss of 35% surface area for the S-PSD to the L- PSD and around 50% less particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    61.0,
+    558.0,
+    359.6
+   ],
+   "w": 2201,
+   "h": 1245,
+   "dpi": 300,
+   "src": "9643df3b-18._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6, which shows the lithium concentration in the CAM of the model geometries at the end of a 0.2 C charge for all PSDs, delivers a possible explanation for these discrepancies: Even though the particle size histograms in Fig. 5a) look quite similar, the model geometries are clearly different. Although the larger particles occur comparably seldom, they consume a larger volume fraction than the smaller ones. This results in smaller surface area overall, because the",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    493.9,
+    504.8,
+    744.9
+   ],
+   "w": 1980,
+   "h": 1047,
+   "dpi": 300,
+   "src": "9643df3b-18._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.601
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. a) SOC-dependent input parameters: Lithium diffusion coefﬁcient in NCM811 ˜DLi(red) and exchange current density j0(green) and the constant values ˜ ˜ D D j , , Li,1 Li,2 0,1 and j0,2. b) Voltage proﬁle for the SOC-dependent input parameters and c)-f) voltage proﬁles for different combinations of constant input parameters whose values are indicated in a). The SOC-dependent ˜DLi in NCM811 is indeed difﬁcult to obtain from the typical two-electrode impedance measurements of full cells, because the impedance contribution of the anode interferes with the cathode contribution and the measured ˜DLi may therefore also contain inﬂuences from the anode. In domains where the exchange current is high, but the diffusion is comparably low, between 3.75 and 3.9 V, the composite will not be lithiated homogeneously which leads to an underestimation of ˜DLi. At elevated voltages, however, the m",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    59.4,
+    558.0,
+    598.8
+   ],
+   "w": 2202,
+   "h": 2248,
+   "dpi": 300,
+   "src": "9643df3b-18._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Figure 8. (left) Charge voltage proﬁles of different remaining void surface coverage in the 1-particle model at various charge rates and (right) the corresponding void overpotential at chosen capacities of 1.4 μm voids covering a 7 μm particle in darker coloring and a 5 μm particle in lighter coloring.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    61.0,
+    558.0,
+    301.9
+   ],
+   "w": 2200,
+   "h": 1004,
+   "dpi": 300,
+   "src": "9643df3b-18._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 11,
+   "file": "fig_9.png",
+   "caption": "Figure 9. (left) Charge voltage proﬁles of different void-to-particle-size-ratios in the 1-particle model, various charge rates and (right) the void overpotential at chosen capacities over the particle-to-void-size-ratio. The remaining CAM/SE interface is 70%. (Micro-)structured cathodes.—Highly tortuous ionic paths in composite cathodes for SSBs can have a crucial impact on the cell performance.25,27 One way to tune the electrode composite and to minimize the tortuosity effect is to structure the electrode as displayed in Fig. 3, either by laser perforation of a dense SE layer and inﬁltration of CAM, by growing CAM pillars or similar approaches. To compare the cone-type structure with its disabled tortuosity to the typical microstructure of composites with individual CAM particles as shown above and the corresponding experiments, we choose a cone-type structure with the same features: A",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    333.0,
+    558.0,
+    578.3
+   ],
+   "w": 2202,
+   "h": 1023,
+   "dpi": 300,
+   "src": "9643df3b-18._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 12,
+   "file": "fig_10.png",
+   "caption": "Figure 10. (left) Charge voltage of particle-type, unstructured microstructures and a cone-structured cathode with the same CAM/SE interface area and CAM/ SE composition in comparison to experimental data at various rates. (right) Active interface area of cone-type microstructures with 55 vol% CAM depending on the cone diameter a compared to the interface area of the particle-type microstructures presented above that feature 42 vol% CAM. generation even smaller channel sizes or other methods for SSB electrode structuring, such as the synthesis of NCM-microrods62,63 high CAM loading and we compare different current collector facing cone diameters a ∈{2, 5, 10, 20} μm. The corresponding smaller cone diameter b at the separator interface is calculated according to Eq. 9 in the supporting information. Figure 10 (right) illustrates how the active interface area changes with the cone diameters",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    255.4
+   ],
+   "w": 2202,
+   "h": 812,
+   "dpi": 300,
+   "src": "9643df3b-18._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 13,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Charge voltage proﬁles for different cone-type microstructures at 55 vol% CAM differing in current collector facing cone diameter a ∈{2, 5, 10, 20} µm at C-rates between 0.02 and 1 C. solve this issue. As an alternative to the polycrystalline NCM that we focused on in this study, one can use smaller, single crystal NCM particles.12–14 this publication are not necessarily those of Volkswagen Aktiengesellschaft. Jürgen Janek thanks the German Federal Ministry of Education and Research (BMBF) for funding within the Cluster of Competence ”FESTBATT” (03XP0177A). The authors acknowledge helpful discussion with Philip Minnmann (JLU) and the consortium of the ”ProFeLi” project (03XP0184C) funded by the German Federal Ministry of Education and Research (BMBF). Although rarely analyzed, there is broad agreement that the volume occupied by voids in SSB cathodes should be minimized. We fu",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    61.0,
+    558.0,
+    417.3
+   ],
+   "w": 2202,
+   "h": 1485,
+   "dpi": 300,
+   "src": "9643df3b-18._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Smooth step function for the applied external current density.",
+   "rotated_deg": 0,
+   "bbox": [
+    132.7,
+    423.3,
+    476.1,
+    640.6
+   ],
+   "w": 1432,
+   "h": 907,
+   "dpi": 300,
+   "src": "c608870d-18._Sup_Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Overview of the mathematical model, its equations and, highlighted in blue, their associated domains and boundaries, respectively. The illustrations are based on the particle-type geometry S-PSD a).",
+   "rotated_deg": 0,
+   "bbox": [
+    80.2,
+    105.5,
+    522.8,
+    706.4
+   ],
+   "w": 1845,
+   "h": 2505,
+   "dpi": 300,
+   "src": "c608870d-18._Sup_Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.817
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Schematic of the concept of overlapping cones in a structured cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.8,
+    79.0,
+    612.0,
+    290.1
+   ],
+   "w": 2335,
+   "h": 880,
+   "dpi": 300,
+   "src": "c608870d-18._Sup_Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Overview of the variables, parameters and constants for the electrochemical simulation mentioned in ﬁgure S3.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    59.6,
+    521.7,
+    743.2
+   ],
+   "w": 1895,
+   "h": 2849,
+   "dpi": 300,
+   "src": "c608870d-18._Sup_Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Parameter values for the electrochemical simulation; the right column indicates with model geometry uses the parameter with a • for the 1-particle model, ∗referring to the particle-type microstructure geometries and ⊙to the cone-type structures. Parameter Value Description Comment/ Reference Models 0 3 Acm−2 anode exchange current density, Li/Li6PS5Cl-interface ja Rueß et al. 1 •, ∗, ⊙",
+   "rotated_deg": 0,
+   "bbox": [
+    72.5,
+    59.6,
+    524.9,
+    552.7
+   ],
+   "w": 1886,
+   "h": 2056,
+   "dpi": 300,
+   "src": "c608870d-18._Sup_Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 7,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Geometrical microstructure reconstruction parameters Parameter Symbol Value Comment/ Reference Volume fraction νP 40% best practice Shape Convex polyhedra Size (enclosing ellipsoid diameters) (20 × 15 × 10) µm",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    59.6,
+    521.8,
+    724.6
+   ],
+   "w": 1896,
+   "h": 2772,
+   "dpi": 300,
+   "src": "c608870d-18._Sup_Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "fS2m",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2_manual_p2.png",
+   "caption": "Figure S2. Open circuit voltage of NCM811.",
+   "rotated_deg": 0,
+   "bbox": [
+    150,
+    425,
+    470,
+    665
+   ],
+   "w": 1334,
+   "h": 1001,
+   "dpi": 300,
+   "src": "c608870d-18._Sup_Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": null,
+   "note": "수동 크롭 — 벡터 그래프라 크로퍼가 '그래픽 없음'으로 제외"
+  },
+  {
+   "key": "fS7m",
+   "kind": "figure",
+   "label": "S7",
+   "page": 13,
+   "file": "fig_S7_manual_p13.png",
+   "caption": "Figure S7. Charge voltage profile for different C-rates in the 1-particle model with voids at the particle surface. 5 µm particle and 1.4 µm voids at varying void surface coverage.",
+   "rotated_deg": 0,
+   "bbox": [
+    80,
+    135,
+    500,
+    500
+   ],
+   "w": 1751,
+   "h": 1522,
+   "dpi": 300,
+   "src": "c608870d-18._Sup_Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "blank": null,
+   "note": "수동 크롭 — 벡터 그래프라 크로퍼가 '그래픽 없음'으로 제외"
+  }
+ ]
+}

@@ -34,6 +34,14 @@
    "6f88e8b3-01._Microstructural_Modeling_of_Composite_Cathodes_for_All-Solid-State_Batteries.pdf"
   ]
  },
+ "bielefeld2022_voids-kinetics-morphology-composite-cathode-fem": {
+  "figures": 19,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "9643df3b-18._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+   "c608870d-18._Sup_Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf"
+  ]
+ },
  "birkl2017_degradation-diagnostics-ocv": {
   "figures": 14,
   "generated": "2026-09-03",
@@ -140,7 +148,7 @@
   ]
  },
  "hlushkou2018_void-space-ion-transport-composite-cathode": {
-  "figures": 8,
+  "figures": 11,
   "generated": "2026-09-23",
   "pdfs": [
    "261a7d7a-17._The_influence_of_void_space_on_ion_transport_in_a_composite_cathode_for_all-solid-state_batteries.pdf",

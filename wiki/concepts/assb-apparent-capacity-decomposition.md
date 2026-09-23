@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -404,6 +404,15 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
 - ⚠ 3호(Liu)가 좁힌 처방(`Q_material` 도 율 의존)과는 **독립인 두 번째 좁힘**이다 — 3호는 고율이 재료를 깎는 문제, 29호는 저율이 창 밖인 문제.
 - **동역학 항 안에서** 29호는 저항성(SE, `n` → 1) ↔ 확산성(AM, `n` → 0.5)을 가르고, 확산성 결손을 **AM|SE 피복률 `φ`**(`√(D_app/D_LIB)`, 53 → 18 % · 85 → 3 %)로 돌린다 — 표면 일부 접촉 손실이 **용량이 아니라 `η`** 로 간다는 이 페이지 [[assb-tortuosity-factor-effective-conductivity-split]] 표 셋째 줄의 실측 판. ⚠ `φ` 는 가정 위의 비이고, `n` ≈0.5 는 catholyte 전송선(TLM)의 √t 와도 양립한다(판별 안 함).
 - 2전극 — 17호의 **네 번째 항(상대극 컷오프·과도)** 은 빠져 있다. 같은 음극 조성에서 17호가 CA 시작 `E_CE` ca. 0.9 V 를 인쇄했고, `n` 은 바로 그 첫 구간의 기울기다.
+
+## ★★ 2026-09-23 (`assb` 56호 Bielefeld 2022, **FEM 모델 · 새 측정 0**) — **표면 피복과 큰 입자, 둘 다 `η(i)` 항으로 들어간다 — 그리고 `θ_AM` 은 손으로 1 이었다**
+
+`raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md`. 모델 명제다(실측 0).
+
+- **표면 피복(void)은 `η(i)` 에만 산다** — `[도표]` 1-입자 모델 피복 손실 48 %: 0.02 C 컷오프 용량 −3 % · 0.5 C **−25 %**. 율 극한이 지운다 — 이 페이지 핵심 성질("율이 셋 중 하나만 지운다")의 3D 해상 모델 확인. 그러나 **같은 피복률에서 분포가 과전압을 ×2.6–4.5 바꾼다**(Fig. 9) — `η(i)` 가 피복률 한 스칼라의 함수가 아니다.
+- **큰 입자의 "not activated at all" 도 `η(i)` 다** — `[인쇄]` L-PSD(≤ 20 µm) 큰 입자 중심이 0.2 C 끝에 리튬화된 채 남는다(Fig. 6). 모든 입자가 연결돼 있으므로 `θ_AM` 이 아니고, `[도표]` 0.02 C 에서 L ≈178 ↔ S ≈188 mAh g⁻¹ 로 대부분 돌아온다.
+- **`θ_AM` 은 이 편에서 출력이 아니라 입력 1** — SI `[인쇄]` 42 vol% 무작위 구는 1호 모델대로면 퍼콜레이션 불가 → placeholder + 고립 입자 "moved manually". ⇒ 이 편의 모든 용량 차이는 설계상 `η(i)` 쪽이다 — 3 항 분해를 이 모델로 채점하면 `θ_AM` 칸은 비어 있다.
+- ⚠ 검증 모델은 실험 void 14 % 를 SE 로 채웠다 — 실험의 `η(i)` 에 들어 있을 void 몫이 모델에 없는데 "good agreement" 로 닫혔다.
 
 ## 이 페이지가 주장하지 않는 것
 
