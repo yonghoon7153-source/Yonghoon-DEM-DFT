@@ -408,7 +408,8 @@ def _railed(parameter, model: Circuit) -> str:
 
 def _rail_finding(name: str, value: float, side: str, *,
                   in_series: bool, ohmic: bool = False,
-                  taken_by: tuple[str, float, float] | None = None) -> Finding:
+                  taken_by: tuple[str, float, float] | None = None,
+                  bound: float | None = None) -> Finding:
     """What a parameter on its bound means, element by element.
 
     ``in_series``: the element sits in the top-level series path.  A vanishing
@@ -416,17 +417,27 @@ def _rail_finding(name: str, value: float, side: str, *,
     ``p(R,CPE)`` takes its whole arc with it.  ``ohmic``: the circuit's only
     series resistor -- the cell's ohmic resistance, which cannot be left out.
     ``taken_by``: what ``_intercept_taker`` found drawing its intercept.
+    ``bound``: the bound it sits on, when the circuit is known.
     """
     element, _, suffix = name.partition("_")
     kind = re.match(r"[A-Za-z]+", element).group(0) if element else ""
     shown = f"{value:.4g}"
+
+    def on(where: str, unit: str = "") -> str:
+        # 괄호에는 경계를 적는다.  실측 B17 재측정 #144 의 "TL1_n 이 상한(0.9963)"
+        # 은 경계가 0.9963 인 것처럼 읽혔다 — 맞춤은 경계의 1 % 안을 경계로 본다.
+        if bound is None:
+            return f"{where}에 붙었습니다 ({shown}{unit})"
+        edge = f"{bound:.4g}"
+        return (f"{where}({edge}{unit})에 붙었습니다"
+                + (f" (값 {shown}{unit})" if edge != shown else ""))
     if kind == "CPE" and suffix == "n" and side == "upper":
         return Finding(NOTE, "cpe_ideal",
                        f"{element} 의 n 이 1 에 붙었습니다 — 이상적인 축전기입니다 "
                        f"(틀린 것은 아닙니다)")
     if kind == "CPE" and suffix == "Q" and side == "upper":
         return Finding(CHECK, "element_vanishing",
-                       f"{element} 의 Q 가 상한({shown})에 붙었습니다 — 임피던스가 "
+                       f"{element} 의 Q 가 {on('상한')} — 임피던스가 "
                        f"0 이 되려는, 사라지려는 소자입니다. "
                        + ("이 소자 없이 맞춰 보세요" if in_series
                           else "그 아크 전체가 없어지려 합니다 — 아크 하나를 빼고 "
@@ -452,11 +463,11 @@ def _rail_finding(name: str, value: float, side: str, *,
                                "보세요"))
     if kind == "R" and side == "upper":
         return Finding(CHECK, "branch_open",
-                       f"{name} 이 상한({shown} Ω)에 붙었습니다 — 그 가지는 열린 "
+                       f"{name} 이 {on('상한', ' Ω')} — 그 가지는 열린 "
                        f"것과 같습니다")
     if kind == "CPE" and suffix == "n" and side == "lower":
         return Finding(CHECK, "at_bound",
-                       f"{element} 의 n 이 하한({shown})에 붙었습니다 — 반원도 꼬리도 "
+                       f"{element} 의 n 이 {on('하한')} — 반원도 꼬리도 "
                        f"아닌, 모양이 정해지지 않은 소자입니다")
     if kind == "L" and side == "lower":
         return Finding(NOTE, "no_inductance",
@@ -464,7 +475,7 @@ def _rail_finding(name: str, value: float, side: str, *,
                        f"안 보입니다")
     where = "하한" if side == "lower" else "상한"
     return Finding(CHECK, "at_bound",
-                   f"{name} 이 {where}({shown})에 붙었습니다 — 경계가 물리적으로 "
+                   f"{name} 이 {on(where)} — 경계가 물리적으로 "
                    f"맞는 값인지 보세요")
 
 
@@ -855,10 +866,13 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
         if not side or parameter.name in quiet or (element in vanishing
                                                    and suffix != "Q"):
             continue
+        edges = model.lower if side == "lower" else model.upper
+        bound = (float(edges[model.parameter_names.index(parameter.name)])
+                 if parameter.name in model.parameter_names else None)
         out.findings.append(_rail_finding(
             parameter.name, float(parameter.value), side,
             in_series=element in in_series,
-            ohmic=series_r == {element}, taken_by=taken_by))
+            ohmic=series_r == {element}, taken_by=taken_by, bound=bound))
     for name in model.parameter_names:
         element, _, suffix = name.partition("_")
         if suffix != "n" or not element.startswith("CPE") or element in vanishing \

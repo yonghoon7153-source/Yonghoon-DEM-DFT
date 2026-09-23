@@ -912,6 +912,34 @@ def test_a_transmission_line_is_not_told_its_end_closes():
                 "blocking_element_on_open_cell"} & set(codes(audit))
 
 
+def test_a_parameter_on_its_bound_shows_the_bound_not_itself():
+    """실측 B17 재측정 #144: "TL1_n 이 상한(0.9963)에 붙었습니다" — 괄호가 경계로
+    읽힌다.  맞춤은 경계의 1 % 안을 경계로 보므로 값과 경계가 다르다: n 의 상한은
+    1, Wr 의 상한은 1e9 Ω 이다.  괄호에는 경계를, 값은 따로 적는다."""
+    values = {"R0": 13.9, "TL1_Ri": 39.2, "TL1_Re": 39.3, "TL1_Rct": 1.13e3,
+              "TL1_Q": 3.96e-7, "TL1_n": 0.9963, "TL1_Wr": 9.984e8, "TL1_Wn": 0.704,
+              "TL1_Wt": 1e-6}
+    rails = {"TL1_n": "at_upper_bound", "TL1_Wr": "at_upper_bound",
+             "TL1_Wt": "at_lower_bound"}
+    fit = Fit("R0-TL1", [P(n, v, reason=rails.get(n, "")) for n, v in values.items()])
+    said = [f.message for f in audit_fit(fit, sulfide_pellet(), kind=SOLID,
+                                         config=SYMMETRIC).findings
+            if f.code == "at_bound"]
+    assert "TL1_n 이 상한(1)에 붙었습니다 (값 0.9963) — 경계가" in " / ".join(said)
+    assert "TL1_Wr 이 상한(1e+09)에 붙었습니다 (값 9.984e+08)" in " / ".join(said)
+    # 값이 경계와 같게 찍히면 한 번만 적는다.
+    assert "TL1_Wt 이 하한(1e-06)에 붙었습니다 — 경계가" in " / ".join(said)
+
+    # 실측 풀셀 #7: CPE1 의 n = 0.3001, 하한 0.3.
+    circuit = "R0-p(R1,CPE1)"
+    values = {"R0": 4.25, "R1": 16.4, "CPE1_Q": 2.29e-4, "CPE1_n": 0.3001}
+    fit = Fit(circuit, [P(n, v, reason="at_lower_bound" if n == "CPE1_n" else "")
+                        for n, v in values.items()])
+    (low,) = [f for f in audit_fit(fit, spectrum_of(circuit, values), kind=LIQUID,
+                                   band=BAND).findings if f.code == "at_bound"]
+    assert low.message.startswith("CPE1 의 n 이 하한(0.3)에 붙었습니다 (값 0.3001) — ")
+
+
 def test_noise_just_above_the_axis_at_the_end_is_not_drift():
     """실수축으로 내려온 셀의 마지막 점들은 잡음만으로도 축 위에 선다 — |Z| 의
     1 % 는 넘어야 센다."""
