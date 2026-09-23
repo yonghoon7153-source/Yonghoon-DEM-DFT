@@ -370,6 +370,70 @@ def unload_verdict(p, target, band=0.10):
     return 'in_band'
 
 
+def am_skeleton_stress(target, am_load_frac, floor_porosity=0.0, floor_engage=1.5, por=0.0):
+    """얼린 AM 골격이 지는 축응력 몫 (GPa).  SE 는 `target − 이 값` 만 지면 된다.
+
+    ★ 2026-09-23 (Codex R3-v2 `FAMV2-01`, 저자 비준 A) — 옛 코드는 이 값을 **scaffold 하강 분기
+      안에서만** 계산했다.  그래서 하강은 `(1−f)·target` 에서 멈추는데, 그 뒤의 기본 S-1 서보는
+      이 값을 모른 채 `target` 전체로 평형을 잡아 f 를 **조용히 되돌렸다**.  매니페스트는
+      `am_load_frac`·`se_target_GPa` 를 그대로 찍어 **도장은 적용, 물리는 미적용** 이었다 (규율 ⑤).
+      ⇒ 매 프레임 이 함수로 계산해 하강 문턱과 서보 설정점이 **같은 값**을 쓴다.
+    식은 옛 인라인과 **연산 순서까지** 같다 (`f·target·engage`) — f=0 이면 정확히 0.0 이라
+    f=0 인 기존 런(생산 전부)은 바이트 동일하다.
+    """
+    f = float(am_load_frac)
+    if float(floor_porosity) > 0.0 and f > 0.0:
+        engage = min(1.0, max(0.0, (float(floor_porosity) - float(por)) / max(float(floor_engage), 1e-6)))
+        return f * float(target) * engage
+    return f * float(target)
+
+
+def servo_setpoint(target, am_skel):
+    """S-1 서보가 SE 판독(wallP)을 맞출 설정점 = `target − am_skel` (FAMV2-01 A).
+
+    얼린 AM 의 wallP 기여는 실측 0.0 % 라(`--stop-freeze-probe` 가드 주석) 판독 p 는 **SE 몫뿐**이다.
+    하강 문턱 `_dsc_tgt` 와 같은 값이어야 한다 — 다르면 하강이 멈춘 자리에서 서보가 다시 누른다."""
+    return float(target) - float(am_skel)
+
+
+def servo_verdict(p, target, am_skel, band=0.10):
+    """S-1 서보 판정 ('above'|'in_band'|'below').  f=0 (am_skel=0.0) 이면 `unload_verdict(p, target)` 와 같다."""
+    return unload_verdict(p, servo_setpoint(target, am_skel), band)
+
+
+def am_load_guard_errors(a):
+    """`--am-load-frac > 0` 이 **실제로 적용되지 않거나 순환이 되는** 조합을 런 전에 거부한다.
+
+    ★ 2026-09-23 (Codex R3-v2 `FAMV2-01`, 저자 비준 B).  도장(`am_load_frac`·`se_target_GPa`)은
+      찍히는데 물리는 target 전체로 도는 조합 = 규율 ⑤ 의 false-green 이다.  GPU 를 잡기 **전에**
+      (taichi 초기화 전) 초 단위로 죽인다.
+    반환: 오류 문자열 리스트 (빈 리스트 = 통과).  **f=0 이면 항상 빈 리스트** — 생산 전부 무영향.
+    ⚠ hold + floor + f (06-26 corner 설계 · `run_wallp_multiP.sh`) 는 기존 조합이라 막지 않는다.
+      그 경로의 정지는 `stop_mode`(hard_floor) 로 산출물에 찍힌다.
+    """
+    f = float(getattr(a, 'am_load_frac', 0.0) or 0.0)
+    if f <= 0.0:
+        return []
+    errs = []
+    servo_path = (a.protocol == 'servo' and float(a.compact_to) <= 0.0)
+    if servo_path and a.servo_legacy:
+        errs.append('--servo-legacy 는 --am-load-frac > 0 과 함께 쓸 수 없습니다 (FAMV2-01 B).  옛 서보는 '
+                    'p 를 **target 전체**(1.02/0.98×target)로 평형시켜 하강이 멈춘 (1−f)·target 에서 SE 를 '
+                    '다시 누릅니다 — 매니페스트는 f 를 찍는데 물리는 f 를 안 씁니다.  옛 코퍼스 바이트 재현 '
+                    '전용 경로이므로 f=0 으로만 쓰십시오.')
+    if servo_path and not a.servo_legacy and float(a.floor_porosity) > 0.0:
+        errs.append('--protocol servo 에서 --am-load-frac 과 --floor-porosity 를 함께 쓸 수 없습니다 '
+                    '(FAMV2-01-b).  floor 는 DEM porosity 를 정지 입력으로 되돌려 넣습니다 — por=floor 에서 '
+                    'engage=0 · am_skel=0 · hard_floor=True 로 **기하 정지**가 나고(Codex 산술), 서보는 그 '
+                    'floor 를 모른 채 계속 움직입니다.  순수 응력-정지 시험이면 --floor-porosity 0 을, '
+                    'floor 설계(06-26 corner)를 쓰려면 --protocol hold 를 명시하십시오.')
+    if a.load_state:
+        errs.append('--load-state 재시작은 --am-load-frac > 0 과 함께 쓸 수 없습니다 (FAMV2-01 B).  '
+                    '재시작 제하(unload)는 target 전체로 판정하고 서보만 target − am_skel 을 쓰게 되어 '
+                    'f 가 **반쯤만** 적용됩니다.  검증된 적 없는 조합이라 막습니다.')
+    return errs
+
+
 def unload_next_z(z_now, z_lo, z_hi, wall0, step, floor_z=None):
     """Next platen height for the unload search, and the move kind.  Returns (z_next, kind).
 
@@ -1423,6 +1487,98 @@ def _selftest():
         not np.array_equal(np.random.default_rng([3, 2]).random(5),
                            np.random.default_rng([3, 4]).random(5)))
 
+    # ── ★ FAMV2-01 (2026-09-23, Codex R3-v2 · 저자 비준 C) — 서보는 SE 몫 `(1−f)·target` 에서 평형 ──
+    #    얼린 AM 은 wallP 에 0 을 기여하므로 판독 p 는 SE 몫뿐이다.  하강은 `p + am_skel ≥ target`
+    #    에서 멈추는데, 서보가 `target` 전체를 설정점으로 쓰면 그 뒤 SE 를 target 까지 **다시** 눌러
+    #    f 를 조용히 되돌린다.  합성 침대 p(z) = K·(z_c − z)⁺ 위에서 S-1 루프(판정 → ±step → 판정,
+    #    밴드 안 3연속 = 수렴)를 **main 이 쓰는 그 함수**로 돌린다.
+    def _servo_eq(f, start_p, T=0.30, K=40.0, zc=0.70, step=0.00004, band=0.02, n=20000):
+        skel = am_skeleton_stress(T, f)
+        z = zc - start_p / K
+        conv = 0
+        for _ in range(n):
+            p = max(0.0, K * (zc - z))
+            v = servo_verdict(p, T, skel, band)
+            if v == 'in_band':
+                conv += 1
+                if conv >= 3:
+                    return p
+            else:
+                conv = 0
+                z = z + step if v == 'above' else z - step
+        return None
+
+    _T = 0.30
+    for _f in (0.675, 0.794):                         # FAMV2-01 표의 두 규약값
+        _want = (1.0 - _f) * _T
+        _from_stop = _servo_eq(_f, _want)             # 하강이 멈춘 자리에서 서보 진입
+        _from_full = _servo_eq(_f, _T)                # 옛 평형(전체 target)에서 출발해도
+        chk(f'FAMV2-01: f={_f} 서보가 SE 몫 (1−f)·target = {_want:.4f} GPa 에서 평형 '
+            f'(하강 정지점에서 진입 → {_from_stop})',
+            _from_stop is not None and abs(_from_stop / _want - 1.0) <= 0.02)
+        chk(f'FAMV2-01: f={_f} 옛 평형(target 전체)에서 출발해도 (1−f)·target 로 돌아온다 '
+            f'(→ {_from_full})',
+            _from_full is not None and abs(_from_full / _want - 1.0) <= 0.02)
+    #    f=0 은 옛 경로와 **판정이 비트 동일**해야 한다 (생산 bimodal 전부 f=0).
+    _grid = [0.0, 0.1, 0.25, 0.269, 0.27, 0.2999, 0.30, 0.3001, 0.33, 0.331, 0.5, 1.2]
+    chk('FAMV2-01: f=0 이면 am_skel 이 정확히 0.0 이고 설정점이 target 과 비트 동일',
+        am_skeleton_stress(_T, 0.0) == 0.0 and am_skeleton_stress(_T, 0.0, 15.6, 1.5, 10.0) == 0.0
+        and servo_setpoint(_T, 0.0) == _T)
+    chk('FAMV2-01: f=0 이면 서보 판정이 옛 unload_verdict(p, target) 와 전 격자에서 같다',
+        all(servo_verdict(_p, _T, 0.0, _b) == unload_verdict(_p, _T, _b)
+            for _p in _grid for _b in (0.02, 0.10)))
+    #    옛 인라인 식과 **연산 순서까지** 같은가 (f·target·engage) — 하강 경로가 바이트 동일한 근거.
+    def _old_inline(f, T, floor, eng, por):
+        if floor > 0.0 and f > 0.0:
+            engage = min(1.0, max(0.0, (floor - por) / max(eng, 1e-6)))
+            return f * T * engage
+        return f * T
+    chk('FAMV2-01: am_skeleton_stress 가 옛 하강 분기의 인라인 식과 비트 동일',
+        all(am_skeleton_stress(_T, _f, _fl, 1.5, _pr) == _old_inline(_f, _T, _fl, 1.5, _pr)
+            for _f in (0.0, 0.517, 0.675, 0.794) for _fl in (0.0, 11.39, 15.6)
+            for _pr in (30.0, 15.6, 15.0, 14.1, 12.0)))
+    chk('FAMV2-01 (01-b): floor 와 같은 porosity 에서는 engage=0 → am_skel=0 (리뷰 산술 재현)',
+        am_skeleton_stress(_T, 0.675, 15.6, 1.5, 15.6) == 0.0
+        and am_skeleton_stress(_T, 0.794, 15.6, 1.5, 15.6) == 0.0)
+    #    ★ 배선 — 함수만 맞고 main 이 안 부르면 위 시험은 **조용히 초록**이다 (규율 ⑤).
+    import inspect as _insp
+    import re as _re2
+    _msrc = _insp.getsource(main)
+    chk('FAMV2-01 배선: 서보 판정 네 곳(프로브 now·외삽·판독·수렴게이트)이 servo_verdict(…, am_skel, …)',
+        len(_re2.findall(r'servo_verdict\([^)]*\bam_skel\b', _msrc)) >= 4)
+    chk('FAMV2-01 배선: 서보 경로에 target 직결 판정(unload_verdict(…, target, args.servo_band))이 0 곳',
+        not _re2.search(r'unload_verdict\([^)]*,\s*target\s*,\s*args\.servo_band\)', _msrc))
+    chk('FAMV2-01 배선: am_skel 은 프레임마다 am_skeleton_stress 로 **한 번** 계산되고 하강 분기에 인라인 식이 없다',
+        len(_re2.findall(r'am_skel\s*=\s*\(?\s*am_skeleton_stress\(', _msrc)) == 1
+        and not _re2.search(r'am_skel\s*=\s*args\.am_load_frac\s*\*', _msrc))
+
+    # ── ★ FAMV2-01 B (저자 비준) — f 가 적용 안 되거나 순환이 되는 조합을 **런 전에** 거부 ──────────
+    #    실제 파서로 인자를 만든다 (옵션 이름 오타·기본값 변화까지 같이 잡힌다).
+    def _g(*argv):
+        return am_load_guard_errors(parse_args(list(argv)))
+    _F = ('--am-load-frac', '0.675')
+    chk('FAMV2-01 B: f=0 이면 어떤 조합도 막지 않는다 (생산 무영향)',
+        not _g() and not _g('--servo-legacy') and not _g('--floor-porosity', '15.6')
+        and not _g('--load-state', 'x.npz') and not _g('--protocol', 'hold', '--floor-porosity', '15.6'))
+    chk('FAMV2-01 B1: servo-legacy + f>0 → 거부',
+        any('--servo-legacy' in e for e in _g(*_F, '--servo-legacy')))
+    chk('FAMV2-01 B2 (01-b): servo + f>0 + floor>0 → 거부',
+        any('01-b' in e for e in _g(*_F, '--floor-porosity', '15.6')))
+    chk('FAMV2-01 B2: hold + f>0 + floor>0 (06-26 corner · run_wallp_multiP.sh) 은 **막지 않는다**',
+        not _g(*_F, '--protocol', 'hold', '--floor-porosity', '11.39'))
+    chk('FAMV2-01 B: servo + f>0 (floor 없음) 은 A 이후 유효한 경로라 막지 않는다',
+        not _g(*_F) and not _g(*_F, '--stop-freeze-probe'))
+    chk('FAMV2-01 B3: load-state 재시작 + f>0 → 거부 (제하는 target 전체 · 서보만 target−am_skel = 반쯤 적용)',
+        any('--load-state' in e for e in _g(*_F, '--load-state', 'x.npz', '--protocol', 'hold')))
+    chk('FAMV2-01 B: compact-to (변위 구동) 는 서보 경로가 아니라 legacy 가드를 안 탄다',
+        not _g(*_F, '--compact-to', '15', '--servo-legacy'))
+    _i_guard = _msrc.find('am_load_guard_errors(args)')
+    _i_ti = _msrc.find('ti.init(')
+    chk('FAMV2-01 B 배선: main 이 가드를 **taichi 초기화 전에** 부른다 (GPU 를 잡기 전에 거부)',
+        0 <= _i_guard < _i_ti)
+    chk('FAMV2-01 A 도장: 산출물이 f 의 **실제 적용처**(am_load_applied_to)를 찍고, f=0 이면 키가 없다',
+        bool(_re2.search(r"'am_load_applied_to':[\s\S]{0,600}?if args\.am_load_frac > 0 else \{\}", _msrc)))
+
     print(f"selftest: {ok}/{ok + len(fail)} PASS" + (f"   FAILED: {fail}" if fail else ""))
     return 1 if fail else 0
 
@@ -1431,6 +1587,9 @@ def main(argv):
     args = parse_args(argv)
     if args.selftest:                                          # numpy-only; must run without taichi
         raise SystemExit(_selftest())
+    _amg = am_load_guard_errors(args)                          # ★ FAMV2-01 B — GPU 를 잡기 전에 거부
+    if _amg:
+        raise SystemExit('[am-load-frac] ' + '\n[am-load-frac] '.join(_amg))
     if args.load_state and args.restart_settle < 3:
         # Hard refusal, not a clamp: with no settle window the unload/compact decision is taken on frame 0,
         # where v and C have just been zeroed and the platen reaction still reads ≈0 — so an UNLOAD request
@@ -2770,6 +2929,7 @@ def main(argv):
               + (f"am_load_frac={args.am_load_frac:.3f}" + (f" floor_porosity={args.floor_porosity:.1f}% (engage {args.floor_engage:.1f}%)" if args.floor_porosity > 0 else f" → SE_target={target*(1.0-args.am_load_frac):.4f} GPa") + "  " if args.am_load_frac > 0 else "")
               + f"xy={'periodic' if PERIODIC else 'walls'}")
     reached = False; conv = 0; por_end = 0.0; p_end = 0.0; por_at_target = -1.0; por0 = 100.0; relax = 0
+    am_skel = 0.0          # ★ FAMV2-01 A — 루프 밖(수렴 게이트)에서도 정의돼 있게 (--frames 0 이면 루프가 안 돈다)
     # ★ conv 의 **단위**가 servo 경로에 따라 다르다 (2026-07-29 S-1 후속):
     #   legacy = 프레임당 1 (밴드 안 프레임 12개) / 정지-판독 = **프로브당 1** (각 프로브가
     #   최소 --restart-settle 프레임 + 이동을 먹는다).  같은 12 를 쓰면 프레임 기준으로 4배
@@ -2866,6 +3026,12 @@ def main(argv):
         _p_tail.append(p)
         if len(_p_tail) > 5:
             _p_tail.pop(0)
+        #  ★ FAMV2-01 A (2026-09-23) — 얼린 AM 골격 몫을 **매 프레임** 새로 계산한다 (0.0 에서 시작).
+        #    옛 코드는 scaffold 하강 분기 안에서만 정의해 하강 뒤의 S-1 서보가 그 값을 몰랐다 →
+        #    서보가 SE 를 target 전체까지 다시 눌러 f 를 되돌렸다.  하강 문턱과 서보 설정점이
+        #    이제 같은 `am_skel` 을 본다.  f=0 이면 0.0 이라 기존 전 런과 바이트 동일.
+        am_skel = (am_skeleton_stress(target, args.am_load_frac, args.floor_porosity,
+                                      args.floor_engage, por) if args.am_scaffold else 0.0)
         # servo platen to target σzz (descend until target, then fine bidirectional).
         # arm-after-compaction guard: a big rigid AM (preset/mix, AM = MATERIAL) hitting the
         # platen on first contact spikes wallP transiently → refuse to stop until the bed has
@@ -3013,11 +3179,8 @@ def main(argv):
                 # large over-compression near the DEM floor, keeping a small plastic increment.
                 # f_AM (=--am-load-frac) = AM-AM axial load share (scripts/dem_am_load_fraction.py).
                 # floor<=0 OR f_AM=0 → legacy (SE bears all = original validated behaviour).
-                if args.floor_porosity > 0.0 and args.am_load_frac > 0.0:
-                    engage = min(1.0, max(0.0, (args.floor_porosity - por) / max(args.floor_engage, 1e-6)))
-                    am_skel = args.am_load_frac * target * engage      # AM skeleton stress, engages below floor
-                else:
-                    am_skel = args.am_load_frac * target               # legacy flat (no floor)
+                # ★ am_skel 은 프레임 머리에서 `am_skeleton_stress()` 로 이미 계산됐다 (FAMV2-01 A) —
+                #   여기 있던 인라인 식(floor 가 있으면 f·target·engage, 없으면 f·target)과 비트 동일하다.
                 # ★ HARD AM-jamming stop (2026-06-27): the stress-share criterion alone lets a SOFT SE
                 # SLIP PAST the floor (SE-poor corners: SE meets its (1-f_AM)·target share only ~5-7%p
                 # below the floor → catastrophic over-compaction, e.g. 100_12 → 11.6 < floor 13.3).  The
@@ -3186,16 +3349,17 @@ def main(argv):
                     #   있다는 걸 알기 위해 정지까지 기다릴 필요는 없다.  드리프트를 외삽해도
                     #   **판정이 안 바뀌면** 그 판독은 행동하기에 충분하다.  반대로 "밴드 안"이라는
                     #   주장은 수렴 선언이므로 진짜 정지를 요구한다.
-                    _v_now = unload_verdict(p, target, args.servo_band)
+                    #  ★ FAMV2-01 A — 설정점은 `target − am_skel` (하강 문턱과 같은 값).  f=0 이면 target.
+                    _v_now = servo_verdict(p, target, am_skel, args.servo_band)
                     _slope = (_srv_win[-1] - _srv_win[-3]) / 2.0 if len(_srv_win) >= 3 else 0.0
-                    _v_ext = unload_verdict(p + 3.0 * _slope, target, args.servo_band)
+                    _v_ext = servo_verdict(p + 3.0 * _slope, target, am_skel, args.servo_band)
                     _stable = (_v_now == _v_ext) and _v_now != 'in_band'
                     if not (_qs or _stable) and len(_srv_win) < _settle_max_srv:
                         _srv_left = 1                            # 아직 울림 → 더 기다린다
                     else:                                        # ★ 이 프레임이 THE 판독
                         _srv_spread = float(_sp)
                         _srv_probes += 1
-                        _v = unload_verdict(p, target, args.servo_band)
+                        _v = servo_verdict(p, target, am_skel, args.servo_band)
                         if _v == 'in_band':
                             conv += 1
                         else:
@@ -3309,8 +3473,10 @@ def main(argv):
     #    ⚠ 제하 게이트는 `if args.load_state:` 안이라 **pristine 런에는 존재조차 않았다**(적대리뷰
     #    지적).  servo 발진은 제하와 무관하게 일어나므로(독립 재현 확인) 이 게이트는 밖에 둔다.
     if args.protocol == 'servo' and args.compact_to <= 0 and not args.servo_legacy:
+        #  ★ FAMV2-01 A — 수렴 게이트도 서보와 **같은 설정점**으로 본다 (다르면 제대로 수렴한 f>0 런을
+        #    "미수렴" 으로 거부하거나, 반대로 target 근처에 멈춘 런을 수렴으로 통과시킨다).
         _srv_ok = (conv >= SERVO_HOLD
-                   or unload_verdict(p_end, target, args.servo_band) == 'in_band')
+                   or servo_verdict(p_end, target, am_skel, args.servo_band) == 'in_band')
         _servo_status = ('converged' if _srv_ok else
                          ('not_converged_probe_not_at_rest'
                           if (_srv_spread is not None and _srv_spread > 0.15)
@@ -3321,7 +3487,9 @@ def main(argv):
                 f"  servo_status = {_servo_status}   프로브 {_srv_probes}회, "
                 f"마지막 창 스프레드 {('%.0f%%' % (_srv_spread*100)) if _srv_spread is not None else 'n/a'}\n"
                 f"  {args.readout}_end = {p_end:.4f} GPa vs 목표 {target:.4f} "
-                f"(밴드 ±{args.servo_band:.0%}), conv={conv}/12\n"
+                + (f"(SE 설정점 {servo_setpoint(target, am_skel):.4f} = target − am_skel, FAMV2-01) "
+                   if am_skel > 0.0 else "")
+                + f"(밴드 ±{args.servo_band:.0%}), conv={conv}/12\n"
                 f"  이 상태의 final_stress_GPa · porosity · provenance 도장은 수렴한 값이 아닙니다.\n"
                 f"  → --frames 를 늘리거나 --servo-band 를 넓히세요 (현재 ±{args.servo_band:.0%}).\n"
                 f"  → 의도적 실험이면 --allow-unconverged-servo 로 진행할 수 있습니다.")
@@ -3457,6 +3625,14 @@ def main(argv):
             'se_dump_src': (args.se_dump.rsplit('/', 1)[-1] if args.se_dump else None),
             'floor_porosity_pct': float(args.floor_porosity) if args.floor_porosity > 0 else None,
             'se_target_GPa': round(float(target * (1.0 - args.am_load_frac)), 4) if (args.am_load_frac > 0 and args.floor_porosity <= 0) else None,
+            # ★ FAMV2-01 A (2026-09-23) — f 가 **어디에 실제로** 적용됐는지.  옛 산출물은 am_load_frac ·
+            #   se_target_GPa 만 찍어, 서보가 f 를 되돌린 런도 "적용" 으로 보였다 (규율 ⑤).
+            #   ⚠ f=0 이면 키 자체가 없다 — 생산(f=0) 산출물은 바이트 동일.
+            **({'am_load_applied_to': ('not_applied: --compact-to 변위 정지' if args.compact_to > 0
+                                       else 'not_applied: --am-scaffold 아님' if not args.am_scaffold
+                                       else 'descend+servo_setpoint' if args.protocol == 'servo'
+                                       else 'descend_only (hold: 정지 후 플래튼 고정)')}
+               if args.am_load_frac > 0 else {}),
             'coverage_AM_P_pct': cov_out.get('AM_P'), 'coverage_AM_S_pct': cov_out.get('AM_S'),
             # additive(carbon/soft-fibre)-on-AM coverage (σ_e contact), SEPARATE from SE coverage above;
             # None for carbon-free runs.  SE keys are now SE-ONLY (were SE+additive conflated pre-2026-07-03).

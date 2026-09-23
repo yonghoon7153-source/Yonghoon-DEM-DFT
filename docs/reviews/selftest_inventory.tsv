@@ -43,7 +43,7 @@ scripts/check_doc_refs.py	--selftest	fast	both	claude	초록 0.1s (실측)
 scripts/check_method_discipline.py	--selftest	slow	both	claude	초록이나 60s (실측)
 scripts/check_review_findings.py	--selftest	slow	both	claude	초록이나 41s (실측)
 scripts/check_selftest_inventory.py	--selftest	fast	both	claude	초록 0.1s (실측)
-scripts/check_undefined_names.py	--selftest	fast	none	claude	초록 0.4s (실측)
+scripts/check_undefined_names.py	--selftest	fast	none	claude	초록 8/8 · 0.4 s (실측, 2026-09-23) — 직접 단계는 없고 fast 드라이버가 두 레인에서 돌린다.  ★ 2026-09-23 Lee STEP3 16팔 러너(`sdcp_gain_vox015_8arm.sh`)가 v100 conda env(pyflakes 없음)에서 이 검사기의 AST 대체 경로로 떨어져 **오탐 129 건**으로 GPU 를 잡기 전에 ABORT 했다 (pyflakes 로는 0 건).  원인 셋: 중첩 함수·lambda 의 **자기 인자**를 바깥 함수 기준으로 봄 · **클로저**(바깥 지역을 읽는 안쪽 함수) · import 될 때 `dir(__builtins__)` 가 dict 라 float·list 가 빠짐.  옛 ①~③ 은 작은 픽스처라 CI(대체 경로)에서도 이 부류를 못 봤다.  ④⑤⑤b⑥⑦ 이 `with_ast()` 를 직접 부르고 ⑦ 이 러너가 거는 실제 5 파일에서 오탐 0 을 단언한다 (먼저 빨간불 129 건 확인 후 수정).  외부 의존: 없음 (pyflakes 는 선택).
 scripts/comsol_export.py	--selftest	fast	none	claude	초록 1.0s (실측)
 scripts/comsol_ps_series_6mah.py	--selftest	fast	none	claude	초록 0.2s (실측)
 scripts/context_budget.py	--selftest	fast	none	claude	초록 0.1s (실측)
@@ -93,7 +93,7 @@ scripts/measure_bed_aspect.py	--selftest	fast	none	claude	초록 0.2s (실측) �
 scripts/measure_mixing_index.py	--selftest	fast	none	claude	초록 0.4s (실측) — §24 Lacey 혼합지수.  합성 구름(완전분리·반혼합·무작위)으로 S² 순서, 부피가중≠개수가중, 숫자순 프레임, 빈 칸 보고, 바닥 검사 거부, 덱 run 줄 파싱(실제 덱 36308×2/427062).
 scripts/check_contact_validity.py	--selftest	fast	none	claude	초록 0.3s (실측) — 순수 함수(임시 덤프 생성), 외부 데이터 불요.  점착을 올리면 접촉모델이 먼저 죽는다는 것을 통과(δ/r>50 %)·원자손실로 기각하고, 겹침을 **작은 쪽 반경**으로 재는 것을 변이 대조로 지킨다
 scripts/ml_design_structure.py	--selftest	fast	none	claude	초록 7.8s (실측)
-scripts/mpm3d_compaction.py	--selftest	fast	none	claude	초록 0.3s (실측)
+scripts/mpm3d_compaction.py	--selftest	fast	none	claude	초록 140/140 · 0.4 s (실측, 2026-09-23) — 직접 단계는 없고 **fast 드라이버(`--run-fast`)가 두 레인에서 돌린다**.  ⚠ 직접 CI 단계로 올리지 말 것: 진입점은 전체 AST 로 스캔돼 selftest 가 닿지 않는 main 안의 지연 `import taichi` 가 CI 의존으로 잡힌다 (09-23 실측). ★ Codex R3-v2 `FAMV2-01` (2026-09-23): 하강은 `(1−f)·target` 에서 멈추는데 기본 S-1 서보가 `target` 전체로 평형을 잡아 f 를 **조용히 되돌렸다** (매니페스트는 am_load_frac·se_target_GPa 를 찍어 도장만 적용).  재현 시험을 먼저 넣어 빨간불 7건(f=0.675 → SE 0.0975 에서 0.2943 으로 다시 눌림)을 확인한 뒤 고쳤다.  서보 네 곳이 `servo_verdict(…, am_skel, …)` 를 쓰는지 **소스 배선**까지 단언하고, f 가 적용 안 되는 조합(servo-legacy · servo+floor · load-state)의 런 전 거부는 가드를 빼면 정확히 세 건만 빨간불이 되는 음성 대조로 확인.  f=0 은 판정·설정점·옛 인라인 식 모두 비트 동일.  외부 의존: numpy.
 scripts/mpm_webapp_payload.py	--selftest-contract	fast	both	claude	초록 <1s — 순수 함수, 외부 데이터 불요 (PASL-04 계약 봉인 게이트)
 scripts/mpm_webapp_payload.py	--selftest-provenance	fast	both	claude	초록 <1s — git 을 가로채 재현, 외부 데이터 불요 (PASL-05)
 scripts/mpm_webapp_payload.py	--selftest-temperature	fast	both	claude	초록 0.9s (실측)

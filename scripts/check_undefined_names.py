@@ -49,7 +49,10 @@ def with_ast(path):
         tree = ast.parse(open(path, encoding='utf-8').read())
     except SyntaxError as ex:
         return [f'{path}: SyntaxError {ex}']
-    mod_names = set(dir(__builtins__)) | {'__file__', '__name__', '__doc__'}
+    #  ★ 2026-09-23 — `dir(__builtins__)` 는 이 파일이 **import 될 때** dict 라 `float`·`list` 가 빠진다
+    #    (스크립트로 돌 때만 모듈).  `builtins` 모듈을 직접 읽는다.
+    import builtins as _bi
+    mod_names = set(dir(_bi)) | {'__file__', '__name__', '__doc__'}
     for n in ast.walk(tree):
         if isinstance(n, (ast.Import, ast.ImportFrom)):
             for al in n.names:
@@ -58,27 +61,59 @@ def with_ast(path):
             mod_names.add(n.id)
         elif isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
             mod_names.add(n.name)
+    def _scope_bound(f):
+        """함수 노드 f 안에서 묶이는 이름 — 자기 인자 · 대입 · import · 정의 · except · 하위 스코프 인자 · match."""
+        b = set()
+        for a in list(f.args.args) + list(f.args.kwonlyargs) + list(f.args.posonlyargs):
+            b.add(a.arg)
+        if f.args.vararg:
+            b.add(f.args.vararg.arg)
+        if f.args.kwarg:
+            b.add(f.args.kwarg.arg)
+        for n in ast.walk(f):
+            if isinstance(n, ast.Name) and isinstance(n.ctx, (ast.Store, ast.Del)):
+                b.add(n.id)
+            elif isinstance(n, (ast.Import, ast.ImportFrom)):
+                for al in n.names:
+                    b.add((al.asname or al.name).split('.')[0])
+            elif isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                b.add(n.name)
+            elif isinstance(n, ast.ExceptHandler) and n.name:
+                b.add(n.name)
+            #  ★ 2026-09-23 (Lee 러너 실사고, 오탐 129 건) — `ast.walk(f)` 는 **중첩 함수·lambda 속까지**
+            #    내려가는데 그 **자기 인자**는 바인딩에 안 넣었다 → `def chk(c, m): … c …` 의 `c` 가 바깥
+            #    함수 기준으로 "미정의" 가 됐다.  스코프를 근사한다: 하위 스코프 인자는 바인딩으로 본다
+            #    (바깥 함수에서 같은 이름을 미정의로 쓰는 드문 경우는 놓친다 — 최소 검사의 한계로 적는다).
+            if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)) and n is not f:
+                _aa = n.args
+                for a in list(_aa.args) + list(_aa.kwonlyargs) + list(_aa.posonlyargs):
+                    b.add(a.arg)
+                for a in (_aa.vararg, _aa.kwarg):
+                    if a is not None:
+                        b.add(a.arg)
+            #  match 문 캡처 (3.10+) 도 Name Store 가 아니다.
+            elif isinstance(n, (ast.MatchAs, ast.MatchStar)) and n.name:
+                b.add(n.name)
+            elif isinstance(n, ast.MatchMapping) and n.rest:
+                b.add(n.rest)
+        return b
+
+    #  ★ 2026-09-23 — **클로저**: 안쪽 함수는 바깥 함수의 지역을 읽는다 (`_filt` 가 바깥의 `in_am` 을 읽는
+    #    additives.py:600 모양).  함수마다 **둘러싼 함수들의 바인딩**을 같이 본다.
+    parent = {}
+    for n in ast.walk(tree):
+        for ch in ast.iter_child_nodes(n):
+            parent[ch] = n
     out = []
     for fn in ast.walk(tree):
         if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
             continue
-        bound = set(mod_names)
-        for a in list(fn.args.args) + list(fn.args.kwonlyargs) + list(fn.args.posonlyargs):
-            bound.add(a.arg)
-        if fn.args.vararg:
-            bound.add(fn.args.vararg.arg)
-        if fn.args.kwarg:
-            bound.add(fn.args.kwarg.arg)
-        for n in ast.walk(fn):
-            if isinstance(n, ast.Name) and isinstance(n.ctx, (ast.Store, ast.Del)):
-                bound.add(n.id)
-            elif isinstance(n, (ast.Import, ast.ImportFrom)):
-                for al in n.names:
-                    bound.add((al.asname or al.name).split('.')[0])
-            elif isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-                bound.add(n.name)
-            elif isinstance(n, ast.ExceptHandler) and n.name:
-                bound.add(n.name)
+        bound = set(mod_names) | _scope_bound(fn)
+        up = parent.get(fn)
+        while up is not None:
+            if isinstance(up, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+                bound |= _scope_bound(up) if not isinstance(up, ast.Lambda) else set()
+            up = parent.get(up)
         for n in ast.walk(fn):
             if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load) and n.id not in bound:
                 out.append(f'{path}:{n.lineno}: undefined name {n.id!r} in {fn.name}')
@@ -119,6 +154,38 @@ def _selftest():
     chk(f'② 정상 파일은 오탐 없음: {len(e_good)} 건', len(e_good) == 0)
     e_real, _ = scan([real_p])
     chk(f'③ ★ 실사고 모양(_zt3 대입 누락)을 잡는다: {len(e_real)} 건', len(e_real) >= 1)
+    # ── ★ 2026-09-23 (Lee STEP3 러너 실사고) — **AST 대체 경로를 직접** 시험한다.  위 ①~③ 은
+    #    `scan()` 이라 pyflakes 가 있으면 대체 경로를 **한 번도 안 탄다**.  v100 conda env 에 pyflakes 가
+    #    없어 대체 경로로 떨어졌고, 중첩 함수·lambda 의 **자기 인자**를 바깥 함수 기준으로 봐서
+    #    runner 5 파일에 오탐 **129 건** → 러너가 GPU 를 잡기 전에 ABORT 했다 (pyflakes 로는 0 건).
+    nest_p = os.path.join(d, 'nest.py')
+    open(nest_p, 'w').write('def outer(xs):\n'
+                            '    def chk(c, m):\n'
+                            '        return c and m\n'
+                            '    ys = sorted(xs, key=lambda r: r[0])\n'
+                            '    return chk(float(len(ys)), list(ys))\n')
+    e_nest = with_ast(nest_p)
+    chk(f'④ AST 대체: 중첩 함수·lambda 의 **자기 인자**는 미정의가 아니다 (sr01:476 `chk(c, m)` 모양): '
+        f'{len(e_nest)} 건', len(e_nest) == 0)
+    nest_bad_p = os.path.join(d, 'nest_bad.py')
+    open(nest_bad_p, 'w').write('def outer():\n    def inner(a):\n        return a + _zt3\n    return inner(1)\n')
+    e_nb = with_ast(nest_bad_p)
+    chk(f'⑤ AST 대체: 중첩 함수 안의 **진짜** 미정의(_zt3)는 여전히 잡는다: {len(e_nb)} 건',
+        any("'_zt3'" in e for e in e_nb))
+    clo_p = os.path.join(d, 'clo.py')
+    open(clo_p, 'w').write('def outer():\n    k = 3\n    def inner(x):\n        return x + k\n    return inner(1)\n')
+    e_clo = with_ast(clo_p)
+    chk(f'⑤b AST 대체: 클로저 — 안쪽 함수가 바깥 지역(k)을 읽는 것은 미정의가 아니다: {len(e_clo)} 건',
+        len(e_clo) == 0)
+    e_real_ast = with_ast(real_p)
+    chk(f'⑥ AST 대체: 실사고 모양도 대체 경로에서 잡는다: {len(e_real_ast)} 건', len(e_real_ast) >= 1)
+    _runner = [os.path.join(ROOT, 'scripts', f) for f in
+               ('mpm_webapp_payload.py', 'step3_sigma.py', 'viz_mpm_continuum.py', 'additives.py',
+                'sr01_stamp_compare.py')]
+    if all(os.path.exists(p) for p in _runner):
+        e_run = [e for p in _runner for e in with_ast(p)]
+        chk(f'⑦ ★ AST 대체: 러너가 거는 실제 5 파일에서 오탐 0 (실사고 129 건): {len(e_run)} 건'
+            + (f' — 예: {e_run[:3]}' if e_run else ''), len(e_run) == 0)
     print(f'\ncheck_undefined_names selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
