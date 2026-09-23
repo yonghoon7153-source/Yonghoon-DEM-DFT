@@ -65,8 +65,14 @@ THICKNESS_RANGE_UM = (5.0, 5000.0)
 AREA_RANGE_CM2 = (0.01, 20.0)
 #: 이름이 말하는 두께와 적힌 두께가 이만큼(비율) 넘게 다르면 적는다.
 NAME_THICKNESS_TOLERANCE = 0.05
-#: 적은 저항과 실수축 교점의 비가 이 밖이면 적는다.  열 배는 소수점이다.
-TYPED_VS_CROSSING_LIMIT = 3.0
+#: 적은 저항이 그 스윕의 Re(Z) 가 지나간 범위를 이만큼 넘어 벗어나면 적는다.
+#:
+#: 처음에는 "실수축 교점의 세 배" 로 봤다.  틀렸다: 아크가 보이는 스윕에서
+#: 랩은 아크의 **오른쪽 끝**을 읽고, 그것은 고주파 교점보다 몇 배 크다 —
+#: 합성 온도 스캔에서 교점 2.0 Ω, 맞게 읽은 값 9.69 Ω.  제대로 읽은 값이면
+#: 무엇이든 **곡선 위의 점**이므로, 곡선이 지나간 Re 범위 안에 있어야 한다.
+#: 그 밖이면 소수점이거나 다른 스윕의 값이다.
+TYPED_OUTSIDE_SPAN_MARGIN = 0.10
 #: 점이 이보다 적으면 무엇을 맞춰도 파라미터보다 점이 모자란다.
 FEWEST_POINTS = 10
 
@@ -160,6 +166,12 @@ def audit_record(*, name: str, kind: str, config: str = "",
         out.append(Finding(CHECK, "config_missing",
                            "전고체인데 셀 구성이 비어 있습니다 — 아크를 벌크·입계로도 "
                            "계면으로도 부르지 못하고, 전도도도 안 나옵니다"))
+    if (kind, config) == (SOLID, SYMMETRIC) and (not thickness_um or not area_cm2):
+        missing = ("두께·면적이" if not thickness_um and not area_cm2
+                   else "두께가" if not thickness_um else "면적이")
+        out.append(Finding(NOTE, "geometry_missing",
+                           f"대칭셀인데 {missing} 없습니다 — σ 도, 커패시턴스로 아크 "
+                           f"이름을 검사하는 것도 안 나옵니다"))
     hinted = config_from_name(name)
     if hinted and hinted != (config or ""):
         out.append(Finding(CHECK, "config_differs_from_name",
@@ -320,6 +332,10 @@ def _rail_finding(name: str, value: float, side: str, *,
         return Finding(CHECK, "branch_open",
                        f"{name} 이 상한({shown} Ω)에 붙었습니다 — 그 가지는 열린 "
                        f"것과 같습니다")
+    if kind == "CPE" and suffix == "n" and side == "lower":
+        return Finding(CHECK, "at_bound",
+                       f"{element} 의 n 이 하한({shown})에 붙었습니다 — 반원도 꼬리도 "
+                       f"아닌, 모양이 정해지지 않은 소자입니다")
     if kind == "L" and side == "lower":
         return Finding(NOTE, "no_inductance",
                        f"{name} 이 0 에 붙었습니다 — 이 파일에는 배선 인덕턴스가 "
@@ -441,19 +457,35 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
 
     # -- 경계에 붙은 것, 미결정, 옛 행 -----------------------------------------
     in_series = {name for name, _ in model.series_element_kinds()}
+    railed = {p.name: _railed(p, model) for p in parameters}
+    # **사라지려는 소자의 나머지 파라미터는 말하지 않는다.**  CPE 의 Q 가
+    # 상한에 붙으면 그 임피던스는 n 과 상관없이 0 이고, n 은 아무 데나 떠서
+    # 경계에 붙는다 — 그것을 따로 적으면 한 가지 사실이 세 줄이 된다 (합성
+    # 쌍둥이에서 "Q 상한" · "n 하한" · "n = 0.30 확산" 이 함께 떴다).
+    vanishing = {name.partition("_")[0] for name, side in railed.items()
+                 if (side == "upper" and name.endswith("_Q"))}
     for parameter in parameters:
-        side = _railed(parameter, model)
-        if side:
-            out.findings.append(_rail_finding(
-                parameter.name, float(parameter.value), side,
-                in_series=parameter.name.partition("_")[0] in in_series))
+        side = railed.get(parameter.name, "")
+        element, _, suffix = parameter.name.partition("_")
+        if not side or (element in vanishing and suffix != "Q"):
+            continue
+        out.findings.append(_rail_finding(
+            parameter.name, float(parameter.value), side,
+            in_series=element in in_series))
     for name in model.parameter_names:
         element, _, suffix = name.partition("_")
-        if suffix == "n" and element.startswith("CPE") and values[name] <= LOWEST_N:
-            out.findings.append(Finding(
-                CHECK, "cpe_like_diffusion",
-                f"{element} 의 n = {values[name]:.2f} — 반원이 아니라 확산에 "
-                f"가깝습니다. 그 아크의 저항을 계면·입계 저항으로 읽기 어렵습니다"))
+        if suffix != "n" or not element.startswith("CPE") or element in vanishing:
+            continue
+        if values[name] > LOWEST_N:
+            continue
+        if element in in_series:
+            message = (f"{element} 의 n = {values[name]:.2f} — 막는 꼬리(수직)가 아니라 "
+                       f"확산 꼬리(45°)에 가깝습니다")
+        else:
+            message = (f"{element} 의 n = {values[name]:.2f} — 반원이 아니라 확산에 "
+                       f"가깝습니다. 그 아크의 저항을 계면·입계 저항으로 읽기 "
+                       f"어렵습니다")
+        out.findings.append(Finding(CHECK, "cpe_like_diffusion", message))
     undetermined = [name for name in model.parameter_names
                     if statuses.get(name) == "undetermined"]
     if undetermined:
@@ -560,9 +592,10 @@ def audit_conductivity_scan(sweeps: Sequence[dict], *,
                             reason: str = "") -> list[Finding]:
     """The per-sweep numbers a conductivity scan rests on.
 
-    ``sweeps`` items: ``{"index", "temperature_c", "typed_ohm", "crossing_ohm"}``.
-    ``warnings`` / ``reason`` are the activation energy's own (ADR 0039) --
-    repeated here so the report has them in one place.
+    ``sweeps`` items: ``{"index", "temperature_c", "typed_ohm", "re_min_ohm",
+    "re_max_ohm"}`` -- the last two are the range ``Re(Z)`` covered in that
+    sweep.  ``warnings`` / ``reason`` are the activation energy's own
+    (ADR 0039), repeated here so the report has them in one place.
     """
     out: list[Finding] = []
     blank = [str(one["index"]) for one in sweeps if one.get("temperature_c") is None]
@@ -580,16 +613,17 @@ def audit_conductivity_scan(sweeps: Sequence[dict], *,
         out.append(Finding(NOTE, "resistance_partly_missing",
                            "저항을 안 적은 스윕: " + ", ".join(untyped)))
     for one in sweeps:
-        typed, crossing = one.get("typed_ohm"), one.get("crossing_ohm")
-        if not typed or not crossing or typed <= 0 or crossing <= 0:
+        typed = one.get("typed_ohm")
+        low, high = one.get("re_min_ohm"), one.get("re_max_ohm")
+        if not typed or typed <= 0 or low is None or high is None:
             continue
-        ratio = typed / crossing
-        if ratio >= TYPED_VS_CROSSING_LIMIT or ratio <= 1 / TYPED_VS_CROSSING_LIMIT:
+        margin = TYPED_OUTSIDE_SPAN_MARGIN
+        if typed < low * (1 - margin) or typed > high * (1 + margin):
             out.append(Finding(
-                CHECK, "typed_far_from_crossing",
-                f"스윕 {one['index']}: 적은 저항 {typed:.4g} Ω 이 실수축 교점 "
-                f"{crossing:.4g} Ω 의 {ratio:.3g}배입니다 — 소수점을 보세요 (아크의 "
-                f"오른쪽 끝을 읽었다면 맞는 값입니다)"))
+                CHECK, "typed_outside_spectrum",
+                f"스윕 {one['index']}: 적은 저항 {typed:.4g} Ω 이 그 스윕의 Re(Z) "
+                f"범위({low:.4g}–{high:.4g} Ω) 밖입니다 — 곡선 위에 없는 값입니다. "
+                f"소수점이나 다른 스윕의 값을 적었는지 보세요"))
     for warning in warnings:
         out.append(Finding(CHECK, "activation_warning", warning))
     if reason:

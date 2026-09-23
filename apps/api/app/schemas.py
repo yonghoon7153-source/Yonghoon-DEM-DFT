@@ -1529,3 +1529,85 @@ class FeedbackNoteUpdate(BaseModel):
 
 class FeedbackReplyIn(BaseModel):
     body: str
+
+
+# -- EIS 검수 (ADR 0040) ---------------------------------------------------------
+
+class AuditFindingOut(BaseModel):
+    """판정 하나.  ``severity`` 는 기계가, ``label`` 은 사람이 읽는다."""
+
+    severity: str
+    label: str
+    code: str
+    message: str
+
+
+class AuditSpectrumOut(BaseModel):
+    """스펙트럼 하나의 검수 — 판정과, 판정을 다시 따져 볼 수 있는 수들."""
+
+    id: int
+    name: str
+    kind: str
+    cell_config: str = ""
+    purpose: str = ""
+    sweep_index: int = 1
+    sweep_count: int = 1
+    sha256: str
+    n_points: int = 0
+    thickness_um: float | None = None
+    area_cm2: float | None = None
+    circuit: str = ""
+    chi_squared: float | None = None
+    #: ``|Z_fit − Z| / |Z|`` — 맞춘 구간의 평균·최대, 그리고 최대가 난 주파수.
+    misfit_mean: float | None = None
+    misfit_max: float | None = None
+    misfit_at_hz: float | None = None
+    parameters: list[dict[str, Any]] = []
+    blocking: dict[str, Any] = {}
+    arcs: list[dict[str, Any]] = []
+    findings: list[AuditFindingOut] = []
+    #: 가장 무거운 판정 (``problem`` / ``check`` / ``note``), 없으면 ``None``.
+    worst: str | None = None
+
+
+class AuditScanOut(BaseModel):
+    """스윕 여럿이 든 파일 하나 — 스윕마다가 아니라 **파일로** 봐야 보이는 것."""
+
+    sha256: str
+    name: str
+    purpose: str = ""
+    sweeps: int
+    symmetric: bool = False
+    #: 대칭셀 스캔이면 스윕마다 ``{index, temperature_c, typed_ohm, crossing_ohm,
+    #: re_min_ohm, re_max_ohm}`` — 마지막 둘은 그 스윕의 Re(Z) 가 지나간 범위.
+    rows: list[dict[str, Any]] = []
+    findings: list[AuditFindingOut] = []
+    worst: str | None = None
+
+
+class EisAuditOut(BaseModel):
+    generated_at: datetime
+    total: int
+    #: 스펙트럼을 **가장 무거운 판정**으로 센 것 — ``problem`` / ``check`` /
+    #: ``note`` / ``clean``.
+    counts: dict[str, int]
+    spectra: list[AuditSpectrumOut] = []
+    scans: list[AuditScanOut] = []
+
+
+class EisReparseChange(BaseModel):
+    id: int
+    name: str
+    #: 무엇이 달라졌나 — 점 수, 주파수 범위, 가장 크게 달라진 |Z| 의 비율.
+    detail: str
+
+
+class EisReparseOut(BaseModel):
+    """EIS 원본을 전부 다시 읽은 결과 (ADR 0040).  실패는 이름을 적는다."""
+
+    total: int
+    reparsed: int
+    #: 옛 캐시와 **다른** 점이 나온 스펙트럼.  맞춤은 옛 점으로 한 것이므로
+    #: 다시 맞춰야 값과 점이 짝이 맞는다 — `bml reparse` 는 바로 이어서 한다.
+    changed: list[EisReparseChange] = []
+    failed: list[ReparseFailure] = []

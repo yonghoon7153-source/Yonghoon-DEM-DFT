@@ -100,13 +100,47 @@ def test_a_blocking_tail_on_a_cell_that_does_not_block_is_a_problem():
     assert "-0°" not in finding.message and "위상 0°" in finding.message
 
 
+def test_a_vanishing_cpe_is_one_finding_not_three():
+    """Q 가 상한이면 n 은 무엇이든 상관없다 — 합성 쌍둥이를 맞추면 n 이 하한
+    0.3 에 붙었고, "Q 상한" · "n 하한" · "n = 0.30 확산" 이 함께 떴다."""
+    parameters = [P(name, value) for name, value in USER.items()] + [
+        P("CPE3_Q", 1000.0, "undetermined", "at_upper_bound"),
+        P("CPE3_n", 0.3, "undetermined", "at_lower_bound")]
+    audit = audit_fit(Fit(USER_FIT.circuit, parameters), USER_SPECTRUM, kind=SOLID,
+                      config=SYMMETRIC, band=BAND)
+    about_cpe3 = [f.code for f in audit.findings
+                  if "CPE3" in f.message and f.code != "blocking_element_on_open_cell"]
+    assert about_cpe3 == ["element_vanishing", "undetermined"]
+
+
+def test_a_series_cpe_with_a_low_n_is_a_diffusion_tail_not_an_arc():
+    fit = Fit("R0-p(R1,CPE1)-CPE2", [P("R0", 5.0), P("R1", 20.0), P("CPE1_Q", 1e-9),
+                                     P("CPE1_n", 0.95), P("CPE2_Q", 1e-3),
+                                     P("CPE2_n", 0.5)])
+    audit = audit_fit(fit, None, kind=SOLID, config=SYMMETRIC)
+    (finding,) = [f for f in audit.findings if f.code == "cpe_like_diffusion"]
+    assert "꼬리" in finding.message and "아크" not in finding.message
+
+
 def test_the_vanishing_cpe_is_named_for_what_it_is_doing():
     audit = audit_user()
     vanishing = [f for f in audit.findings if f.code == "element_vanishing"]
     assert [f.severity for f in vanishing] == [CHECK]
     assert "CPE3" in vanishing[0].message and "없이" in vanishing[0].message
-    # n = 1 은 이상적인 축전기일 뿐이다 — 틀렸다고 하지 않는다.
-    assert "cpe_ideal" in codes(audit, NOTE)
+    # 사라지려는 소자의 n 은 뜻이 없다 — 따로 적지 않는다.
+    assert "cpe_ideal" not in codes(audit)
+
+
+def test_an_ideal_capacitor_that_stays_is_only_a_note():
+    """n = 1 에 붙은 것은 이상적인 축전기일 뿐이다 — 틀렸다고 하지 않는다."""
+    values = dict(BLOCKING, CPE3_n=1.0)
+    parameters = [P(n, v) for n, v in values.items() if n != "CPE3_n"]
+    parameters.append(P("CPE3_n", 1.0, "not_checked", "at_upper_bound"))
+    audit = audit_fit(Fit(BLOCKING_CIRCUIT, parameters),
+                      spectrum_of(BLOCKING_CIRCUIT, values), kind=SOLID,
+                      config=SYMMETRIC, band=BAND)
+    assert codes(audit) == ["cpe_ideal"]
+    assert audit.findings[0].severity == NOTE
 
 
 def test_both_names_are_ruled_out_by_the_capacitances():
@@ -344,6 +378,15 @@ def test_record_gaps_and_impossible_sizes():
                    "thickness_out_of_range", "area_out_of_range", "few_points"}
 
 
+def test_a_symmetric_cell_without_geometry_is_told_what_it_loses():
+    found = audit_record(name="pellet_sym_02", kind=SOLID, config=SYMMETRIC,
+                         thickness_um=None, area_cm2=0.785)
+    (finding,) = [f for f in found if f.code == "geometry_missing"]
+    assert finding.severity == NOTE and "두께가 없습니다" in finding.message
+    both = audit_record(name="pellet_sym_02", kind=SOLID, config=SYMMETRIC)
+    assert "두께·면적이 없습니다" in both[0].message
+
+
 def test_a_clean_record_says_nothing():
     assert audit_record(name="2600922_No1_55_sym_60um_#1", kind=SOLID,
                         config=SYMMETRIC, thickness_um=60.0, area_cm2=0.785,
@@ -354,16 +397,27 @@ def test_a_clean_record_says_nothing():
 
 def test_a_scan_with_a_decimal_slip_and_a_blank_temperature():
     sweeps = [
-        {"index": 1, "temperature_c": 60.0, "typed_ohm": 7.37, "crossing_ohm": 7.31},
-        {"index": 2, "temperature_c": None, "typed_ohm": 79.89, "crossing_ohm": 7.99},
-        {"index": 3, "temperature_c": 40.0, "typed_ohm": None, "crossing_ohm": 9.1},
+        {"index": 1, "temperature_c": 60.0, "typed_ohm": 7.37,
+         "re_min_ohm": 7.2, "re_max_ohm": 40.0},
+        {"index": 2, "temperature_c": None, "typed_ohm": 79.89,
+         "re_min_ohm": 7.9, "re_max_ohm": 45.0},
+        {"index": 3, "temperature_c": 40.0, "typed_ohm": None,
+         "re_min_ohm": 9.0, "re_max_ohm": 50.0},
     ]
     found = audit_scan(sweeps)
     got = [f.code for f in found]
-    assert got[:2] == ["temperatures_partly_missing", "typed_far_from_crossing"]
+    assert got[:2] == ["temperatures_partly_missing", "typed_outside_spectrum"]
     slip = found[1]
-    assert "스윕 2" in slip.message and "10배" in slip.message
+    assert "스윕 2" in slip.message and "7.9–45" in slip.message
     assert "resistance_partly_missing" in got
+
+
+def test_reading_the_right_end_of_a_visible_arc_is_not_a_slip():
+    """아크가 보이면 랩은 그 오른쪽 끝을 읽는다 — 고주파 교점의 몇 배다.
+    처음 규칙("교점의 세 배")은 이것을 소수점 실수로 적었다."""
+    sweeps = [{"index": 1, "temperature_c": 60.0, "typed_ohm": 9.69,
+               "crossing_ohm": 2.0, "re_min_ohm": 0.4, "re_max_ohm": 9.7}]
+    assert audit_scan(sweeps) == []
 
 
 def audit_scan(sweeps, **kwargs):
@@ -372,7 +426,7 @@ def audit_scan(sweeps, **kwargs):
 
 def test_the_activation_energy_warnings_come_along():
     sweeps = [{"index": 1, "temperature_c": 60.0, "typed_ohm": 7.0,
-               "crossing_ohm": 7.0}]
+               "re_min_ohm": 6.9, "re_max_ohm": 30.0}]
     found = audit_scan(sweeps, warnings=["직선이 점들을 설명하지 못합니다"],
                        reason="점이 모자랍니다")
     assert [f.code for f in found] == ["activation_warning", "activation_missing"]
@@ -380,7 +434,7 @@ def test_the_activation_energy_warnings_come_along():
 
 def test_a_scan_with_nothing_written_yet_is_only_noted():
     sweeps = [{"index": i, "temperature_c": None, "typed_ohm": None,
-               "crossing_ohm": 7.0} for i in (1, 2, 3)]
+               "re_min_ohm": 6.9, "re_max_ohm": 30.0} for i in (1, 2, 3)]
     found = audit_scan(sweeps)
     assert {f.severity for f in found} == {NOTE}
 
