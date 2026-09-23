@@ -2194,3 +2194,15 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **1/1 장 봤다**(Fig. 1, 수동 크롭). 본문과 어긋난 것: 라벨 2(D4) · 기간(D7).
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른 번째 · 제약 5 · Status Log) · [[assb-lampe-contact-product-degeneracy]](열일곱 번째 적용 · 처방 표 온보드 줄) · [[assb-sensitivity-sweep-vs-identifiability]](입력 설계판 줄).
 - 후속(제목 기준): Jiang·Tao·Lee·Moura 2026 *Joule*(ref 19, CRLB 한계) · Li·West·Preindl 2023 *JPS*(ref 24, 펄스 열화 특성화) · Tang 2023 *iScience*(ref 21, 10 Hz 재구성 EIS) · Yang 2024 *Science*(ref 29, 접촉 복원 펄스). 큐 34 · 35 는 인용되지 않는다.
+
+## [2026-09-23] ingest | assb 35호 — Roman et al. 2021, Machine learning pipeline for battery state-of-health estimation (Nat. Mach. Intell. 3, 447–456)
+- raw: `raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md` (sha256 봉인; 본문 + SI 두 PDF 해시) · 그림 `raw/figures/roman2021_ml-pipeline-soh-estimation-uncertainty/` (크로퍼 그림 18 + 표 11, 본문 Fig. 2 · 4 · 5 수동 크롭 + Fig. 1 재크롭). 큐 **34번**("Q3 — 08 Table 2 에서 유일하게 신뢰구간 보고"). Heriot-Watt + CALCE + TU Delft. ⚠ ML 방법 논문 — 1차 실험 0, 공개 액체 셀 179 개.
+- 큐 낱말 지문 재집계(NFKC 뒤 · 대소문자 구분 · 낱말): **11 열 중 10 열 일치, 합자 가림 0** — `calibrat` 39 는 대소문자 무시 수(규칙대로 36). **큐 35 번 `confidence interval` 0 → 6 을 35 번 원본에서 직접 확인**(여섯 개 전부 합자 `ﬁ`, pp. 18–19).
+- ★★★ **판정**: (a) 용량(Ah) 스칼라 하나 — 모드 분할 0(차원 1 ↔ ≥3) · (b) 특징 = 충전 상단 0.3 V 창 + CV 꼬리의 범함수 → `[해석]` α·β 의 함수, 특징 공간 LLI ↔ LAM 축퇴는 다루지 않음 · (c) 불확실성 = 예측 오차 보정(isotonic + 보정 전용 셀 + 90 % 적중률), 식별성 아님 · (d) 전부 실측, 역범죄 없음 — 대신 데이터셋 표지(`Nominal Capacity` · `Charge Current`)와 과거 라벨 합(`Lagged Cumulated Discharge Capacity`)이 선택된 입력. ASSB 0 → 도구 칸.
+- **채움표 35호 행 — 누적 ≈16.0 → ≈16.0 (새 칸 0).** Q4 ASSB 0 — 스물일곱 번째 성질 "불확실성을 보정했다 — 분해가 없는 스칼라 위에서" · Q3 층 하나(measured scalar label + held-out-recalibrated predictive interval).
+- ★★ **8호 원장 정정 둘**: "보정된 불확실성 0/8" → **1/8** · "RMSE 0.45 % (best)" → dNNe RMSPE, 최저는 RF 0.14 %.
+- 곱 축퇴 처방 **열여덟 번째 적용 — 적용 불가**, 경고 한 줄: 목표 주도 특징 선택은 분리 채널을 버린다(유일한 저항 채널이 세 그룹 모두 탈락).
+- ⚠ 어긋남 21 건: D1 그룹 ↔ 프로토콜 · D2 초록 "best 0.45 %" · D3 RMSPE 0.97 = 합 ÷ 2 · D4 Group I 분할 23/10/5/19 ↔ `[재현]` 24/11/5/18 · D5 셀 38 정체 · D6 PEP 97.71 ↔ Fig. 2d · D12 Fig. 1c 창 ≈0.09 V ↔ 0.3 V · D14 SI Fig. 10 캡션 a/b 외.
+- 그림: **9 장 봤다**(본문 Fig. 1–5 · SI Fig. 4 · 8 · 10 · SI Table 2 쪽); 안 본 것 SI Fig. 1 · 2 · 5 · 6 · 7 · 9 · 11 · 12 · 14 · 15 · 17 · 18.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 누적 · 서른한 번째 · 제약 5 · Status Log · 주장하지 않는 것) · [[assb-lampe-contact-product-degeneracy]](열여덟 번째 적용 · 처방 표 경고 줄) · [[assb-sensitivity-sweep-vs-identifiability]](예측 보정 줄 · 처방 10).
+- 후속(제목 기준): Kuleshov 2018 (ref 62) · Richardson 2018 *IEEE TII* (ref 32) · Birkl 2017 박사논문 (SI ref 22) · Saxena 2008 (ref 64). Q1 · Q4 · 곱 분리 1차 후보 0.

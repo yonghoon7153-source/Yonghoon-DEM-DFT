@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -29,6 +29,7 @@ evidenceScope: multi-source-primary
 | ↳ 첫 줄의 **전역판** (27호) | 사전 상자 전체에서 입력 여럿을 동시에 (Sobol 1·2·전차 + CI, 대리모형) | 설계 KPI 의 분산 분해 | **아니다** — 대상이 데이터가 아니다. 단 전차 지수 ≈0 은 그 출력에 대한 비식별의 **충분조건** |
 | **모델 불일치 민감도** (27호, 새 줄) | 두 모델(상위 충실도 ↔ 축약)에 같은 입력 | `d = Y_hi − Y_lo` 의 기울기 `|∇d|` | **아니다** — **모델 적합성**(model adequacy)의 도구. `|∇d| ≈ 0` 은 "차이가 상수라 보정이 흡수한다" 는 뜻 |
 | ↳ 셋째 줄의 **입력 설계판** (34호, 새 줄 · ⚠ 처방만) | **입력 `u`**(펄스 진폭 · 폭 · 순서)를, 파라미터는 고정 | `det FIM(u)`(D-optimality) · PE 조건 | **절반** — **실제적** 비식별(FIM 정칙, 조건수 큼)만 줄인다. **구조적** 비식별(모든 `u` 에서 FIM 특이 — 곱 축퇴)에서는 D-optimality = 0. 그리고 FIM 은 국소라 설계 뒤 **전역 폭**을 다시 재야 한다 — 근최적 폭 측정이 사후 검증 |
+| **예측 보정** (35호, 새 줄 · 표 밖) | 모델 출력 분포를 **보정 전용 셀**에 맞춰 재보정(isotonic) | 스칼라 예측의 적중률(`C_score` @90 %) · 날카로움 | **아니다** — 대상이 **예측**이지 파라미터가 아니다. 축퇴 방향에서 예측이 변하지 않으면 그 폭은 보정된 구간에 **안 보인다**. 모드 분해가 없는 목표(SOH 스칼라) 위에서만 정의된다 |
 
 `[해석]` 26호(Iwakiri 2024, `raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md`)의 제목 "sensitivity analysis" 는 **첫 줄**이다.
 그 편의 Table 1(ASSB 모델 10 편 비교)에서 "Sensitivity Analysis" 열의 값이 **Several / Temperature / Current / Diffusion / Conductivity** — **무엇을 스윕했나의 목록**이다.
@@ -143,6 +144,16 @@ evidenceScope: multi-source-primary
 `[재현]` `D` 불일치 SD 는 `2·√(0.26² + 0.076²) = 0.54` 로 거의 전부 `k`(√t 기울기) 불일치에서 오고, 그림 오차막대(회귀 SD)는 그 1/2–1/5 이다 — **회귀 SD 는 분석창 · 프로토콜 · 상수 선택을 안 본다.** 상수 선택(BET ↔ D50 구) 하나가 `D` 를 ×2.5 움직인다.
 ⇒ 처방 목록에 한 줄: **"방법들이 일치한다" 를 보면 두 방법이 같은 묶음을 보는지부터 확인한다 — 같은 묶음이면 일치는 식별의 증거가 아니다.**
 
+## ★★ 35호 — 표 밖의 다섯 번째 도구: **예측 보정 ≠ 식별성**
+
+`raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md` (Roman et al. 2021, *Nat. Mach. Intell.* 3, 447, ⚠ **액체 상용 셀 · ML 방법 논문 · ASSB 0**).
+이 편의 불확실성 도구는 이 계보에서 **가장 완비**돼 있다 — 예측 분포 `N(μ, σ²)`, 보정 전용 셀(5 · 10 · 1 개)에 isotonic 재보정, 시험 셀의 90 % 적중률 `C_score`,
+날카로움 Sh, 예측 띠 안 확률 질량 β, 조기 예측 비율 PEP. 그러나 목표는 **용량 스칼라 하나**다(`LLI` · `LAM` · `degradation mode` 0).
+`[해석]` 위 표의 어느 줄도 아니다: 스윕도 `J` 도 FIM 도 교차 방법 일치도 아니고, **예측이 측정 라벨을 얼마나 자주 덮는가**다. 곱 축퇴나 LLI ↔ LAM 축퇴는
+**데이터(그리고 용량)가 같은 값을 내는 방향**이라, 그 방향으로 해가 아무리 넓게 퍼져도 용량 예측과 그 적중률은 **변하지 않는다**. ⇒ 보정이 완벽해도 식별성에 대해 0 을 말한다.
+그리고 적중률은 **그룹 평균**이다 — `figure-read ≈` 한 시험 셀(Group II 셀 1)은 재보정 뒤 90 % 목표에서 ≈74 % 로 오히려 멀어졌다(Fig. 4b).
+⇒ 처방 목록에 한 줄: **"calibrated uncertainty" 를 보면 대상이 예측인지 파라미터인지부터 적는다 — 예측이면 식별성의 증거로 세지 않는다.**
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -162,6 +173,7 @@ evidenceScope: multi-source-primary
    그리고 사후 보정 손잡이(28호 ×0.78)가 **어느 묶음**에 걸리는지 본다 — 식별 집합에서 뺀 축이면 그 보정이 그 축의 추정이다.
 8. (29호) **적합 논문이면 파라미터 dependency/상관 행렬을 SI 에서 찾는다** — 둘째 줄의 수치다. 찾았으면 **진단이 경고한 셀이 결론에 쓰였는지** 추적한다(29호는 sc90 을 빼고 같은 문제의 sc84 로 결론을 냈다).
 9. (30호) **교과서 선형화 추출(b 값 · Randles–Ševčík · Dunn)이면 식별성 이전에 두 가지를 본다** — ① 같은 데이터가 식의 전제(b = 0.5 · 원점 통과)를 만족하는가 ② 인쇄된 값과 **라벨**(산화/환원 · 계)이 그 논문 자기 그림에서 다시 구한 값과 맞는가. 30호는 ② 에서 뒤집혀 있었다.
+10. (35호) **"calibrated uncertainty" · "confidence interval" 을 보면 대상이 예측(스칼라 목표의 오차)인지 파라미터(해 집합)인지 먼저 적는다.** 예측이면 Q4 근거가 아니다. 그리고 적중률 점수(`C_score`)는 **목표와의 거리**로 읽는다 — 90 % 목표에서 100 은 과소 확신이다. 이름도 대조한다: "α-accuracy · β"(예측 지표) ≠ 우리 α·β(전극 스케일 · 오프셋).
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -169,6 +181,7 @@ evidenceScope: multi-source-primary
 - **26호의 세 방향이 4 율 동시 적합에서도 전부 비식별이라고 하지 않는다** — 고율 곡선의 asinh 곡률(`[재현]` `i/2i₀` 1.9–2.3 @6C)이 `k` 쪽을 부분적으로 가를 수 있다. 확정된 것은 `D_e⁻` 의 한쪽 비식별(식 30의 극한) 하나다.
 - **"sensitivity = sweep" 이 ASSB 문헌 전체의 관행이라고 하지 않는다** — 26호 Table 1 한 표 근거다. 27호는 반례(전역 Sobol)이지만 역시 첫 줄이다.
 - **27호의 큰 `κ` 오프셋이 전부 접촉 손실이라고 단정하지 않는다** — 0.068 ↔ 0.07 일치와 바닥을 뺀 연결 입자 SOC 0.044 ↔ P2D 0.043 까지가 사실이고, `u` 가 부피 분율인지 · P2D 면적 과대(≈1.5 배)가 같은 자리에서 상쇄되는지는 모른다.
+- **35호의 보정된 구간이 쓸모없다고 하지 않는다** — 스칼라 SOH 를 운용하는 데는 이 계보에서 가장 정직한 불확실성 보고다. 주장은 **그것이 파라미터 식별성과 다른 물음에 답한다**는 것까지다.
 
 ## 관련
 

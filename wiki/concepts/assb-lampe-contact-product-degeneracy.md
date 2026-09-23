@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/bicer2025_ssb-chemistry-bms-thermal-assembly-critical-review.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -160,6 +160,7 @@ physical significance** of the parameters" 라고 쓴다.
 | ↳ **외부 기준 줄의 세 번째 배정 — 상수 입력** (2026-09-23, **31호에서**) | 기준 없이 `A` 를 **BET 상수**로 넣어 곱 전체를 `D` 에 준다. ★ 저자가 **고지**하고 비교 주장(두 방법 일치)을 `A` 약분 형태로 한정한 첫 표본 | ⚠ **31호**: 봉인은 사이클 추적 · operando 의 절대 주장에서 풀린다. `[재현]` BET ↔ D50 구 선택만으로 `D` ×2.52 — 방법 간 불일치 SD 0.56 보다 크다. 29호 `D_LIB` 가 바로 이런 액체 측정이다 ⇒ 29호 `φ` 는 **두 유효 면적의 비** |
 | ★★ **ICI `R/k` — 한 차단의 면적 소거 조합** (2026-09-23 후보, **31호에서**) | 정전류 중 짧은 차단의 절편 `R`(표면형 `∝ 1/A`) 과 √t 기울기 `k`(`∝ 1/(A√D)`) ⇒ `R/k ∝ √D/j₀` — **`A` 약분**. 면적 손실 = `R`·`k` 동배수(`R/k` 불변) · `D` 손실 = `k` 만 · `j₀` 손실 = `R` 만. 16호 `R·C` 의 **시간 영역 · 확산 판**, 처방 1단계를 `C` 없이 | ⚠ **31호는 비를 만들지 않았고 사이클 추적(Fig. 7·8)에 `k` 를 인쇄하지 않았다** — 지면에서 계산 불가(zenodo 원자료에는 있음). 조건: `R` 에서 면적 무관 `R0` 제거(31호 액체 ≈4–5 Ω ≪ 50 Ω; ASSB 는 SE 벌크 + 상대극이라 크다 → 3전극 전제) · 반무한 창 유효(31호 `[재현]` 창이 경계). **후보** |
 | ↳ **온보드 번역 — 한 펄스 이완이 1·4단계 + `R/k` 의 공통 입력** (2026-09-23, **34호에서**, `[해석]`) | 전류 계단 한 번의 응답 `R₀ + R_p(1−e^{−t/τ}) + k√t` 에서 `τ ∝ c_dl/j₀`(면적 약분) · `C = τ/R_p ∝ A`(면적 서명, 1단계 τ 형 = 21호) · `C` 상한 검사(4단계 = 20호) · `R_p/k ∝ √D/j₀`(31호). 능동 펄스 BMS 는 이 처방의 **자연 하드웨어** | ⚠ **34호(Comment)는 이것을 쓰지 않는다** — 대역 이름표 셋만, `C`·시상수 0, 등가 EIS 는 신경망 재구성. 조건 넷: τ ≫ 샘플 간격(계면 대역 τ ≈0.16 ms–0.16 s → kHz 급) · 단자 = 양극 + 상대극 합(17·20·25호) · `C ∝ A` 전제(18·19호에서 깨짐) · √t 창 분리(31호). **재구성 · 온도 불변 학습은 1단계 `C` 와 3-a `Ea` 를 지우는 방향** |
+| ↳ ⚠ **경고 — 목표 주도 특징 선택은 처방 입력을 버린다** (2026-09-23, **35호에서**, `[해석]`) | 용량(SOH)을 목표로 한 특징 선택(RFE · 중요도)은 **용량과 직교하는 채널**(저항 · 용량성 · 시상수)을 먼저 버린다 — 곱의 두 인자를 가르는 정보가 바로 그 방향이다 | 35호: 30 특징 중 유일한 저항 채널 `Lagged Pseudo Resistance`(`ΔV/I`)가 세 그룹 **모두** 탈락(`[인쇄]` SI Tables 3–5). 데이터 기반 BMS 에서 처방 입력을 찾을 때는 **선택 전 특징 목록**을 본다. 34호(사상이 지운다)에 이은 두 번째 경로 |
 
 ★ **`R_CT·C_dl` 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -1134,6 +1135,33 @@ R_p ∝ 1/(A·j₀) · C = c_dl·A · k ∝ 1/(A·√D)
 
 ① **재구성 경로**(펄스 → 신경망 → 등가 EIS, refs 21·22) — 처방은 적합된 `R_p` · τ 를 요구한다. ref 21 제목 "10 Hz sampling" 이면 나이퀴스트 5 Hz 위 계면 대역은 **사전이 채운다**. ② **불변 학습** — 온도(→ 3단계-a `Ea`) · 열화(→ α·β 화학량론 한계)를 지우는 사상이다.
 
+## ★★ 처방의 열여덟 번째 적용 (2026-09-23, `assb` 35호) — **적용 불가(물리 모델 0) · 대신 데이터 기반 BMS 가 처방 채널을 잃는 두 번째 경로: 선택**
+
+`raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md` (Roman et al. 2021, *Nat. Mach. Intell.* 3, 447 — ⚠ **ML 방법 논문, 1차 실험 0, 액체 상용 셀 179 개(공개 데이터), ASSB 0** — 도구 칸).
+목표는 용량(Ah) 스칼라 하나이고, `A_eff·ε_p/R_s` 가 들어갈 식이 없다. 입력 채널만 점검한다.
+
+### 입력 점검
+
+| 단계 | 요구 | 이 편 (`[인쇄]`) | 판정 |
+|---|---|---|---|
+| **1단계** (16호; τ 형 21호) | `R` 과 `C`(또는 τ) | `Lagged Pseudo Resistance [Ω]` = 방전 개시 `ΔV/I`(합) — `C` · τ 0. **그리고 세 그룹 모두 특징 선택에서 탈락** | ❌ |
+| **2단계** (18 · 25호) | 면적을 아는 대조군 | 0 | ❌ |
+| **3단계-a** (19호 `Ea`) | 여러 온도의 `R` | 온도 입력 0(`[인쇄]` 향후 과제) | ❌ |
+| **3단계-b · 4단계** | `C = τ/R` | 0 | ❌ |
+| **31호 `R/k`** | 같은 차단의 `R` · √t `k` | CV 전류 꼬리의 **모양 통계**(왜도 · 첨도 · 엔트로피 · Fréchet)는 있으나 √t 해석 0 | ❌ |
+
+### ★★ `[해석]` 선택이 지우는 이유
+
+RF-RFE-CV 의 점수는 **용량 예측 MSE** 다. 곱의 두 인자(면적 ↔ 활물질)가 **같은 용량 감소**를 낼 때 그 둘을 가르는 정보는 용량을 예측하는 데 쓸모가 없다 —
+정의상 목표와 직교하는 방향이다. 그러니 용량 목표의 특징 선택은 **분리 채널을 가장 먼저 버리도록** 설계돼 있다. 34호가 "재구성 · 불변 학습이 입력을
+**지운다**(사상)" 였다면, 35호는 "선택이 입력을 **버린다**" 다. 두 경로 모두 BMS 의 **정확도를 올리는 방향**으로 작동한다는 점이 같다.
+
+### 그리고 불확실성도 곱을 못 본다
+
+이 편은 계보에서 불확실성을 가장 제대로 다룬다(보정 전용 셀 · isotonic 재보정 · 90 % 적중률). 그러나 곱 축퇴 방향에서 **용량 예측은 변하지 않으므로**
+예측 구간은 그 방향의 폭을 볼 수 없다. **"보정된 SOH 구간이 좁다" 는 곱이 갈렸다는 근거가 되지 않는다** — 근최적 집합의 폭은 따로 잰다
+([[near-optimal-set-width-measurement]]).
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -1189,3 +1217,4 @@ R_p ∝ 1/(A·j₀) · C = c_dl·A · k ∝ 1/(A·√D)
 - ★ **2026-09-23 (32호)**: **"BMS 센서만 있으면 곱이 갈린다" 고 주장하지 않는다** — 위 대응표는 32호가 요구한 센서 이름과 처방 단계의 입력을 **나란히 놓은 것**이다. 32호는 그 채널로 무엇도 가르지 않았고, 실셀 BMS 가 `C` 를 보고할 만큼 EIS 대역·정밀도를 갖는지는 확인되지 않았다.
 - ★ **2026-09-23 (33호)**: **"상대극 ΔP 가 `A_eff(P)` 를 오염시킨다" 를 측정으로 주장하지 않는다** — 표의 ΔP 는 33호에 재수록된 네 원전의 그림 판독이고, 기저 20–45 MPa · 정변위 지그다. 주장은 **"재수록 원자료에서 상대극 ΔP 가 이 편 자신의 산업 운전 압력과 같은 자릿수다"** 까지다.
 - ★ **2026-09-23 (34호)**: **"능동 펄스 BMS 가 곱을 가른다" 고 주장하지 않는다** — 한 펄스의 약분표는 단일 RC + 반무한 확산 근사 위의 **우리 대수**이고, 34호는 `C` · 시상수 · 조합을 쓰지 않았다. 실셀 단자 펄스는 양극 + 상대극(+ SE) 호의 합이고, `C ∝ A` 전제는 18·19호에서 깨졌다. "OED 가 구조적 곱을 못 푼다" 는 FIM 의 정의에서 나오는 일반 명제이지 34호가 인쇄한 것이 아니다.
+- ★ **2026-09-23 (35호)**: **"용량 목표 특징 선택이 언제나 분리 채널을 버린다" 를 정리로 주장하지 않는다** — 근거는 35호 한 편에서 저항 채널 하나가 세 그룹 모두 탈락한 것과, 목표와 직교하는 정보는 목표 점수에 기여하지 않는다는 **일반 논리**다. 저항이 용량과 상관된 데이터(예: 같은 기구가 둘 다 움직이는 셀)에서는 선택될 수 있다. 그리고 35호는 액체 셀이라 접촉 손실 채널은 애초에 대상이 아니다.

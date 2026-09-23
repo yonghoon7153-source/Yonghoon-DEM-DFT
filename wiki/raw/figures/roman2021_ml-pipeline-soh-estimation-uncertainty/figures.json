@@ -1,0 +1,628 @@
+{
+ "slug": "roman2021_ml-pipeline-soh-estimation-uncertainty",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "2488b853-34._Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+  "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | The constant current−constant voltage (CC−CV) charge protocol and extracted ageing segment of the curves for a Li-ion pouch cell. a, Voltage during charge protocol. Vcut-off, cut-off voltage; Vh, upper voltage threshold; Vl, lower voltage threshold; VsoCH, start of charge voltage. b, Current during charge protocol. Icharge, charge current; Ih, upper current threshold; Il, lower current threshold; Icut-off, cut-off current. c, Extracted ageing voltage curve segments corresponding to marked grey area in a. d, Extracted ageing current curve segments corresponding to marked grey area in b. e, Heatmap of ageing with cycle number. See Methods for definitions of symbols.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.1,
+    69.5,
+    555.2,
+    312.1
+   ],
+   "w": 2160,
+   "h": 1012,
+   "dpi": 300,
+   "src": "2488b853-34._Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Illustration of the α-accuracy zone and probability mass β.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    46.4,
+    558.3,
+    437.7
+   ],
+   "w": 2177,
+   "h": 1631,
+   "dpi": 300,
+   "src": "2488b853-34._Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.514
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure 1: BHUMP ﬂowchart",
+   "rotated_deg": 0,
+   "bbox": [
+    49.3,
+    206.6,
+    545.9,
+    631.5
+   ],
+   "w": 2070,
+   "h": 1772,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure 2: The 2 step fast-charge protocol and extracted ageing segment of the curves for a Li-ion pouch cell. a Voltage during charge protcol. b Current during charge protocol, c Extracted ageing voltage curve segments corresponding to marked grey area, d Extracted ageing current curve segments corresponding to marked grey area, e Heatmap of ageing with cycle number.",
+   "rotated_deg": 0,
+   "bbox": [
+    61.4,
+    65.7,
+    533.9,
+    387.5
+   ],
+   "w": 1970,
+   "h": 1342,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure 3: Typical constant current - constant voltage charge protocol. Note: CCCT=constant voltage charge time, CVCT=constant voltage charge time Feature Target variable Nominal Capacity [Ah] Battery speciﬁc data Charge Current [A] Discharge Current [A] Cumulative (historical) data Cumulated Discharge Capacity [Ah] Cumulated Discharge Energy [Wh] 1 Cycle Lagged Data Lagged Cycle Time [s] Lagged Pseudo Resistance [Ω] Terminal Voltage @ Start of charge [V] Charge time of CC segment of charge curve [s] Charge time of CV segment of charge curve [s] Mean current during CC segment of the curve [A] Mean voltage during CV segment of the curve [A] Slope of CCCV-CCCT segment of the curve Slope of CVCC-CVCT segment of the curve Energy during CCCV-CCCT segment of the curve [Wh] Energy during CVCC-CVCT segment of the curve [Wh] Energy ratio CCCV-CCCT / CVCC-CVCT segment of the curve Energy Diﬀerence ",
+   "rotated_deg": 0,
+   "bbox": [
+    30.3,
+    26.0,
+    595.3,
+    298.1
+   ],
+   "w": 2355,
+   "h": 1134,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.976
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure 4: Typical constant current (CC) charge curve with associated reference line of equation y = mx + c",
+   "rotated_deg": 0,
+   "bbox": [
+    71.1,
+    286.4,
+    524.1,
+    495.7
+   ],
+   "w": 1888,
+   "h": 873,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.983
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure 5: Typical constant voltage (CV) charge curve with associated reference line of equation y = mx + c",
+   "rotated_deg": 0,
+   "bbox": [
+    71.2,
+    520.0,
+    524.1,
+    729.3
+   ],
+   "w": 1888,
+   "h": 873,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.984
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure 6: Example visualisation of derived features for Group I datasets cell no. 11.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.1,
+    94.7,
+    482.2,
+    732.3
+   ],
+   "w": 1539,
+   "h": 2658,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Figure 7: Example visualisation of derived features for Group 2 datasets cell no. 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.1,
+    94.5,
+    482.2,
+    732.5
+   ],
+   "w": 1539,
+   "h": 2659,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Figure 8: Automatic feature selection with RF-RFE-CV - Note: black triangle indicates selected no. of features. a 18 features selected for Group I. b 5 features selected for Group 2, c 5 features selected for Group 3.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    65.7,
+    558.8,
+    213.4
+   ],
+   "w": 2177,
+   "h": 617,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 11,
+   "file": "fig_S9.png",
+   "caption": "Figure 9: Increase in start of charge voltage between test cycles for a LiCoO2 prismatic battery. The cell underwent a full depth of discharge at a current value of 1 C-rate with constant current - constant voltage charging.",
+   "rotated_deg": 0,
+   "bbox": [
+    61.4,
+    192.1,
+    533.9,
+    542.4
+   ],
+   "w": 1970,
+   "h": 1461,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 12,
+   "file": "fig_S10.png",
+   "caption": "Figure 10: Training data outlier removal with RANSAC (red denotes outliers, blue denotes inlier). a Cylindrical A123 LFP/graphite training cell 11 Group II. b Pouch LCO cell 2 Group I, c Prismatic CS2 LCO training cell 34 Group I, d Prismatic CX2 LCO training cell 34 Group I.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    65.7,
+    558.8,
+    215.3
+   ],
+   "w": 2177,
+   "h": 625,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 15,
+   "file": "fig_S11.png",
+   "caption": "Figure 11: Prediction results with BRR Group I cell no. 38. a Prediction as a function of cycle numbers, b Actual vs. predicted capacity, c Calibration results.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    300.7,
+    558.8,
+    461.5
+   ],
+   "w": 2177,
+   "h": 671,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 15,
+   "file": "fig_S12.png",
+   "caption": "Figure 12: Prediction results with GPR Group I cell no. 38. a GPR prediction as a function of cycle numbers, b GPR actual vs. predicted capacity, c GPR calibration results.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    530.7,
+    558.8,
+    691.5
+   ],
+   "w": 2177,
+   "h": 671,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 16,
+   "file": "fig_S14.png",
+   "caption": "Figure 14: Prediction results with BRR Group II cell no. 1. a BRR prediction as a function of cycle numbers, b BRR actual vs. predicted capacity, c BRR calibration results.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    300.7,
+    558.8,
+    461.5
+   ],
+   "w": 2177,
+   "h": 671,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 16,
+   "file": "fig_S15.png",
+   "caption": "Figure 15: Prediction results with GPR Group II cell no. 1. a GPR prediction as a function of cycle numbers, b GPR actual vs. predicted capacity, c GPR calibration results.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    530.7,
+    558.8,
+    691.5
+   ],
+   "w": 2177,
+   "h": 671,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 17,
+   "file": "fig_S17.png",
+   "caption": "Figure 17: Prediction results with BRR Group III cell no. 5. a BRR prediction as a function of cycle numbers, b BRR actual vs. predicted capacity, c BRR calibration results.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    300.7,
+    558.8,
+    461.5
+   ],
+   "w": 2177,
+   "h": 671,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 17,
+   "file": "fig_S18.png",
+   "caption": "Figure 18: Prediction results with GPR Group III cell no. 5. a GPR prediction as a function of cycle numbers, b GPR actual vs. predicted capacity, c GPR calibration results.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    530.7,
+    558.8,
+    691.5
+   ],
+   "w": 2177,
+   "h": 671,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 | Overview of datasets Group* I I I I I II III Dataset CALCE CS2 CALCE CX2 CALCE PL NASA 5 NASA11 TRI Oxford Manufacturer Unknown Unknown Unknown LG Chem LG Chem A123 Systems Kokam Cathode*** LiCoO2 LiCoO2 LiCoO2 LiCoO2 LiCoO2 LiFePO4 LiCoO2/LiNiMnCoO2 Form factor Prismatic Prismatic Pouch 18650 Cylindrical 18650 Cylindrical 18650 Cylindrical Pouch Number of cells 6 6 2 8 25 124 8 Charge CC−CV CC−CV CC−CV CC−CV CC−CV Fast-charging CC Discharge 2 regimes 2 regimes 1 regime 2 regimes 7 regimes 1 regime 1 regime See Supplementary Note 4 for data sources. *Groups based on charge protocol; **Toyota Research Institute; ***Information from manufacturer, not verified.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.1,
+    385.3,
+    557.3,
+    540.4
+   ],
+   "w": 2169,
+   "h": 647,
+   "dpi": 300,
+   "src": "2488b853-34._Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.11
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2 | Results for Group I cell no. 38 and average results over Group I dataset MAPE RMSPE Cscore Sh α-accuracy β PEP a Results for Group I cell no. 38 BRR 1.52 2.49 84.49 0.021 70.00 0.57 68.92 GPR 1.49 2.24 92.23 0.025 65.00 0.48 71.76 RF 0.72 0.91 100 0.046 92.00 0.29 95.29 dNNe 0.65 0.92 88.01 0.0082 93.00 0.93 97.71 b Average results over Group I dataset BRR 4.65 5.54 89.16 0.104 25.76 0.25 36.57 GPR 3.70 4.51 83.62 0.089 32.04 0.29 60.07 RF 2.17 2.70 54.70 0.093 35.94 0.36 65.47 dNNe 3.30 4.26 86.28 0.043 32.14 0.58 63.26",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    380.9,
+    557.8,
+    561.7
+   ],
+   "w": 2168,
+   "h": 755,
+   "dpi": 300,
+   "src": "2488b853-34._Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.11
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 5,
+   "file": "tab_3.png",
+   "caption": "Table 3 | Results for Group II cell no. 1 and average results over Group II dataset MAPE RMSPE Cscore Sh α-accuracy β PEP a Results for Group II cell no. 1 BRR 0.72 0.90 65.49 0.005 89.00 98.00 20.70 GPR 1.23 1.63 69.94 0.011 65.00 85.00 22.16 RF 0.23 0.43 87.42 0.002 98.00 100 42.81 dNNe 0.34 0.48 71.31 0.002 98.00 100 31.50 b Average results over Group II dataset BRR 0.45 0.76 91.72 0.005 97.31 99.19 62.86 GPR 1.00 1.91 93.14 0.012 90.43 83.74 63.21 RF 0.11 0.14 79.72 0.001 99.84 99.96 58.77 dNNe 0.23 0.45 91.02 0.002 99.53 99.50 53.41",
+   "rotated_deg": 0,
+   "bbox": [
+    37.1,
+    47.4,
+    557.3,
+    228.2
+   ],
+   "w": 2169,
+   "h": 754,
+   "dpi": 300,
+   "src": "2488b853-34._Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.11
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 6,
+   "file": "tab_4.png",
+   "caption": "Table 4 | Results for Group III cell no. 5 and average results over Group III dataset MAPE RMSPE Cscore Sh α-accuracy β PEP a Results for Group III cell no. 5 BRR 0.11 0.15 95.55 0.89 100 100 31.11 GPR 0.16 0.19 71.11 1.21 100 100 15.55 RF 0.17 0.21 97.77 2.01 100 100 24.44 dNNe 0.20 0.25 100.00 2.93 100 100 6.67 b Average results over Group III dataset BRR 0.26 0.32 68.11 1.20 100 100 23.54 GPR 0.52 0.65 42.42 2.37 90.50 97.25 23.22 RF 0.36 0.44 72.62 2.16 88.5 100 25.44 dNNe 0.30 0.39 91.17 2.01 98.25 99.75 27.95",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    385.8,
+    557.8,
+    566.7
+   ],
+   "w": 2168,
+   "h": 755,
+   "dpi": 300,
+   "src": "2488b853-34._Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.109
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 5,
+   "file": "tab_S2.png",
+   "caption": "Table 2: Engineered features based on recorded parameters in Table 1. Note: CC = consatnt current, CV = constant voltage, CCCV = constant current charge voltage, CVCC = contant voltage charge current, CCCT = constant current charge time, CVCT = constant voltage charge time",
+   "rotated_deg": 0,
+   "bbox": [
+    37.7,
+    52.5,
+    557.6,
+    685.2
+   ],
+   "w": 2167,
+   "h": 2637,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 10,
+   "file": "tab_S3.png",
+   "caption": "Table 3: Selected features using RF-RFE-CV for Group I. Note: CC = consatnt current, CV = constant voltage, CCCV = constant current charge voltage, CVCC = contant voltage charge current, CCCT = constant current charge time, CVCT = constant voltage charge time",
+   "rotated_deg": 0,
+   "bbox": [
+    62.4,
+    495.8,
+    532.9,
+    615.9
+   ],
+   "w": 1961,
+   "h": 502,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 10,
+   "file": "tab_S4.png",
+   "caption": "Table 4: Selected features using RF-RFE-CV for Group 2. Note: CC = consatnt current, CV = constant voltage, CCCV = constant current charge voltage, CVCC = contant voltage charge current, CCCT = constant current charge time, CVCT = constant voltage charge time",
+   "rotated_deg": 0,
+   "bbox": [
+    67.4,
+    654.5,
+    527.9,
+    707.3
+   ],
+   "w": 1920,
+   "h": 221,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.98
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 11,
+   "file": "tab_S5.png",
+   "caption": "Table 5: Selected features using RF-RFE-CV for Group 3. Note: CC = consatnt current, CV = constant voltage, CCCV = constant current charge voltage, CVCC = contant voltage charge current, CCCT = constant current charge time, CVCT = constant voltage charge time",
+   "rotated_deg": 0,
+   "bbox": [
+    61.4,
+    192.1,
+    533.9,
+    542.4
+   ],
+   "w": 1970,
+   "h": 1461,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 13,
+   "file": "tab_S6.png",
+   "caption": "Table 6: Group I: CALCE battery data discharge conditions and train, calibration and test split. For complete details on test conditions access https://web.calce.umd.edu/batteries/data.htm.",
+   "rotated_deg": 0,
+   "bbox": [
+    62.4,
+    543.2,
+    532.9,
+    696.6
+   ],
+   "w": 1961,
+   "h": 640,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 14,
+   "file": "tab_S8.png",
+   "caption": "Table 8: Group I: NASA 11 battery data discharge conditions and train, calibration and test split. Note: batteries are discharged to 3.2V using a randomized sequence of discharging loads between 0.5A and 4A. For complete details on test conditions access https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.7,
+    392.6,
+    557.6,
+    604.9
+   ],
+   "w": 2167,
+   "h": 886,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 14,
+   "file": "tab_S9.png",
+   "caption": "Table 9: Group II: TRI dataset splitting for: feature selection, training, calibration and testing. For complete details on test conditions access https://data.matr.io/1/projects/5c48dd2bc625d700019f3204.",
+   "rotated_deg": 0,
+   "bbox": [
+    62.4,
+    605.7,
+    533.0,
+    734.7
+   ],
+   "w": 1961,
+   "h": 539,
+   "dpi": 300,
+   "src": "d0101b82-34._Sup_Machine_learning_pipeline_for_battery_stateof-health_estimation.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2_manual_p4.png",
+   "caption": "Fig. 2 | Prediction results with dNNe Group I cell number 38. a, dNNe prediction as a function of cycle. b, dNNE calibration results. c, dNNe actual versus predicted capacity. d, Histogram of percentage error.",
+   "note": "manual crop (extract_figures.py: 영역 없음) — 220 dpi, clip y 38–caption"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4_manual_p6.png",
+   "caption": "Fig. 4 | Prediction results with dNNe Group II cell number 1. a, dNNe prediction as a function of cycle. b, dNNE calibration results. c, dNNe actual versus predicted capacity; d, Histogram of percentage error.",
+   "note": "manual crop (extract_figures.py: 영역 없음) — 220 dpi, clip y 38–caption"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5_manual_p7.png",
+   "caption": "Fig. 5 | Prediction results with dNNe Group III cell no. 5. a, dNNe prediction as a function of cycle. b, dNNE calibration results. c, dNNe actual versus predicted capacity. d, Histogram of percentage error.",
+   "note": "manual crop (extract_figures.py: 영역 없음) — 220 dpi, clip y 38–caption"
+  },
+  {
+   "key": "f1m",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1_manual_p3.png",
+   "caption": "Fig. 1 | The constant current−constant voltage (CC−CV) charge protocol and extracted ageing segment of the curves for a Li-ion pouch cell. a, Voltage during charge protocol. Vcut-off, cut-off voltage; Vh, upper voltage threshold; Vl, lower voltage threshold; VsoCH, start of charge voltage. b, Current during charge protocol. Icharge, charge current; Ih, upper current threshold; Il, lower current threshold; Icut-off, cut-off current. c, Extracted ageing voltage curve segments corresponding to marked grey area in a. d, Extracted ageing current curve segments corresponding to marked grey area in b. e, Heatmap of ageing with cycle number. See Methods for definitions of symbols.",
+   "note": "manual re-crop — crop-tool fig_1.png clips the top of panels a/c"
+  }
+ ]
+}
