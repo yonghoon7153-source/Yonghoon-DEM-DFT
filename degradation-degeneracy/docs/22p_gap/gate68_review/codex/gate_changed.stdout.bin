@@ -1,0 +1,360 @@
+ degradation-degeneracy/docs/08_REVIEW_RESPONSE.md  |   59 +
+ .../docs/22p_gap/GATE68_REQUEST.md                 |  237 ++
+ .../22p_gap/gate67_review/codex/CLAUDE_REPLY.md    |   43 +
+ .../22p_gap/gate67_review/codex/FINAL_CHECK.json   |   40 +
+ .../gate67_review/codex/GATE67_REVIEW_KO.md        |  219 ++
+ .../22p_gap/gate67_review/codex/REPRO_README.md    |   85 +
+ .../gate67_review/codex/REVIEW_MANIFEST.json       | 1757 +++++++++++++++
+ .../gate67_review/codex/TARGET_IDENTITY.json       |   83 +
+ .../22p_gap/gate67_review/codex/audit_identity.py  |   36 +
+ .../explicit-namespace/sitecustomize.py            |    1 +
+ .../namespace_explicit_off/context.json            |   49 +
+ .../namespace_explicit_off/forged.json             |  102 +
+ .../namespace_explicit_off/observation.json        |   35 +
+ .../namespace_explicit_off/receipt.json            |  102 +
+ .../namespace_explicit_on/context.json             |   50 +
+ .../namespace_explicit_on/forged.json              |  179 ++
+ .../namespace_explicit_on/observation.json         |   39 +
+ .../namespace_explicit_on/receipt.json             |  179 ++
+ .../boundary-cases/premise_collection_only.json    |   12 +
+ .../boundary-cases/premise_pytest_usage_error.json |   12 +
+ .../codex/boundary-cases/summary.json              |  182 ++
+ .../boundary-cases/zip_module_remove_path.zip      |  Bin 0 -> 295 bytes
+ .../zip_module_remove_path/context.json            |   46 +
+ .../zip_module_remove_path/observation.json        |   26 +
+ .../zip_module_remove_path/receipt.json            |  100 +
+ .../codex/boundary-cases/zip_package_plain.zip     |  Bin 0 -> 171 bytes
+ .../boundary-cases/zip_package_plain/context.json  |   49 +
+ .../zip_package_plain/observation.json             |   26 +
+ .../boundary-cases/zip_package_plain/receipt.json  |  100 +
+ .../boundary-cases/zip_package_remove_path.zip     |  Bin 0 -> 330 bytes
+ .../zip_package_remove_path/context.json           |   48 +
+ .../zip_package_remove_path/observation.json       |   30 +
+ .../zip_package_remove_path/receipt.json           |  100 +
+ .../22p_gap/gate67_review/codex/collection.json    |   22 +
+ .../gate67_review/codex/collection.stderr.bin      |   51 +
+ .../gate67_review/codex/collection.stdout.bin      |    0
+ .../docs/22p_gap/gate67_review/codex/disabled.json |   26 +
+ .../gate67_review/codex/disabled.stderr.bin        |    0
+ .../gate67_review/codex/disabled.stdout.bin        |    2 +
+ .../docs/22p_gap/gate67_review/codex/disabled.xml  |    1 +
+ .../gate67_review/codex/finalize_package.py        |  137 ++
+ .../docs/22p_gap/gate67_review/codex/identity.json |   17 +
+ .../gate67_review/codex/identity.stderr.bin        |    0
+ .../gate67_review/codex/identity.stdout.bin        |    2 +
+ .../old-startup/cwd_on_pythonpath/observation.json |   89 +
+ .../old-startup/cwd_on_pythonpath/receipt.json     |  205 ++
+ .../cwd_on_pythonpath/startup/sitecustomize.py     |    1 +
+ .../cwd_on_pythonpath/startup/usercustomize.py     |    1 +
+ .../cwd_only_candidate/observation.json            |   89 +
+ .../old-startup/cwd_only_candidate/receipt.json    |  200 ++
+ .../cwd_only_candidate/startup/sitecustomize.py    |    1 +
+ .../cwd_only_candidate/startup/usercustomize.py    |    1 +
+ .../codex/old-startup/observations.json            |  445 ++++
+ .../codex/old-startup/plain/observation.json       |   88 +
+ .../codex/old-startup/plain/receipt.json           |  204 ++
+ .../old-startup/plain/startup/sitecustomize.py     |    1 +
+ .../old-startup/plain/startup/usercustomize.py     |    1 +
+ .../remove_loaded_path/observation.json            |   88 +
+ .../old-startup/remove_loaded_path/receipt.json    |  204 ++
+ .../remove_loaded_path/startup/sitecustomize.py    |    3 +
+ .../remove_loaded_path/startup/usercustomize.py    |    1 +
+ .../reorder_loaded_path/observation.json           |   89 +
+ .../reorder_loaded_path/other/sitecustomize.py     |    1 +
+ .../old-startup/reorder_loaded_path/receipt.json   |  204 ++
+ .../reorder_loaded_path/startup/sitecustomize.py   |    2 +
+ .../reorder_loaded_path/startup/usercustomize.py   |    1 +
+ .../22p_gap/gate67_review/codex/old_repro.json     |   31 +
+ .../gate67_review/codex/old_repro.stderr.bin       |    0
+ .../gate67_review/codex/old_repro.stdout.bin       |    5 +
+ ...-is-an-ordinary-import-g65.baseline.pytest.json |    1 +
+ ...t-is-an-ordinary-import-g65.baseline.stderr.bin |    0
+ ...t-is-an-ordinary-import-g65.baseline.stdout.bin |    2 +
+ .../explicit-import-is-an-ordinary-import-g65.json |   90 +
+ ...rt-is-an-ordinary-import-g65.mutant.pytest.json |    1 +
+ ...ort-is-an-ordinary-import-g65.mutant.stderr.bin |    0
+ ...ort-is-an-ordinary-import-g65.mutant.stdout.bin |   37 +
+ ...d-code-free-not-absent-g65.baseline.pytest.json |    1 +
+ ...ed-code-free-not-absent-g65.baseline.stderr.bin |    0
+ ...ed-code-free-not-absent-g65.baseline.stdout.bin |    2 +
+ ...mespace-is-loaded-code-free-not-absent-g65.json |   90 +
+ ...ded-code-free-not-absent-g65.mutant.pytest.json |    1 +
+ ...aded-code-free-not-absent-g65.mutant.stderr.bin |    0
+ ...aded-code-free-not-absent-g65.mutant.stdout.bin |   39 +
+ ...ares-the-loaded-origin-g66.baseline.pytest.json |    1 +
+ ...pares-the-loaded-origin-g66.baseline.stderr.bin |    0
+ ...pares-the-loaded-origin-g66.baseline.stdout.bin |    2 +
+ .../parent-compares-the-loaded-origin-g66.json     |  104 +
+ ...mpares-the-loaded-origin-g66.mutant.pytest.json |    1 +
+ ...ompares-the-loaded-origin-g66.mutant.stderr.bin |    0
+ ...ompares-the-loaded-origin-g66.mutant.stdout.bin |   88 +
+ ...n-uses-the-path-finder-g63.baseline.pytest.json |    1 +
+ ...on-uses-the-path-finder-g63.baseline.stderr.bin |    0
+ ...on-uses-the-path-finder-g63.baseline.stdout.bin |    2 +
+ ...ent-customization-uses-the-path-finder-g63.json |   84 +
+ ...ion-uses-the-path-finder-g63.mutant.pytest.json |    1 +
+ ...tion-uses-the-path-finder-g63.mutant.stderr.bin |    0
+ ...tion-uses-the-path-finder-g63.mutant.stdout.bin |    2 +
+ ...rom-the-replay-context-g65.baseline.pytest.json |    1 +
+ ...from-the-replay-context-g65.baseline.stderr.bin |    0
+ ...from-the-replay-context-g65.baseline.stdout.bin |    2 +
+ ...rch-path-comes-from-the-replay-context-g65.json |   97 +
+ ...-from-the-replay-context-g65.mutant.pytest.json |    1 +
+ ...s-from-the-replay-context-g65.mutant.stderr.bin |    0
+ ...s-from-the-replay-context-g65.mutant.stdout.bin |   58 +
+ .../codex/partial-mutations-final/summary.json     |  829 +++++++
+ ...e-measures-its-premise-g65.baseline.pytest.json |    1 +
+ ...re-measures-its-premise-g65.baseline.stderr.bin |    0
+ ...re-measures-its-premise-g65.baseline.stdout.bin |    2 +
+ .../the-fixture-measures-its-premise-g65.json      |   91 +
+ ...ure-measures-its-premise-g65.mutant.pytest.json |    1 +
+ ...ture-measures-its-premise-g65.mutant.stderr.bin |    0
+ ...ture-measures-its-premise-g65.mutant.stdout.bin |   26 +
+ ...-uses-a-controlled-env-g66.baseline.pytest.json |    1 +
+ ...e-uses-a-controlled-env-g66.baseline.stderr.bin |    0
+ ...e-uses-a-controlled-env-g66.baseline.stdout.bin |    2 +
+ .../the-premise-uses-a-controlled-env-g66.json     |   91 +
+ ...se-uses-a-controlled-env-g66.mutant.pytest.json |    1 +
+ ...ise-uses-a-controlled-env-g66.mutant.stderr.bin |    0
+ ...ise-uses-a-controlled-env-g66.mutant.stdout.bin |   34 +
+ ...ntext-is-measured-once-g66.baseline.pytest.json |    1 +
+ ...ontext-is-measured-once-g66.baseline.stderr.bin |    0
+ ...ontext-is-measured-once-g66.baseline.stdout.bin |    2 +
+ .../the-replay-context-is-measured-once-g66.json   |   90 +
+ ...context-is-measured-once-g66.mutant.pytest.json |    1 +
+ ...-context-is-measured-once-g66.mutant.stderr.bin |    0
+ ...-context-is-measured-once-g66.mutant.stdout.bin |   37 +
+ ...the-startup-activation-g64.baseline.pytest.json |    1 +
+ ...-the-startup-activation-g64.baseline.stderr.bin |    0
+ ...-the-startup-activation-g64.baseline.stdout.bin |    2 +
+ ...stomize-follows-the-startup-activation-g64.json |   90 +
+ ...s-the-startup-activation-g64.mutant.pytest.json |    1 +
+ ...ws-the-startup-activation-g64.mutant.stderr.bin |    0
+ ...ws-the-startup-activation-g64.mutant.stdout.bin |   36 +
+ ...-is-an-ordinary-import-g65.baseline.pytest.json |    1 +
+ ...t-is-an-ordinary-import-g65.baseline.stderr.bin |    0
+ ...t-is-an-ordinary-import-g65.baseline.stdout.bin |  125 ++
+ .../explicit-import-is-an-ordinary-import-g65.json |   82 +
+ ...rt-is-an-ordinary-import-g65.mutant.pytest.json |    1 +
+ ...ort-is-an-ordinary-import-g65.mutant.stderr.bin |    0
+ ...ort-is-an-ordinary-import-g65.mutant.stdout.bin |  125 ++
+ ...d-code-free-not-absent-g65.baseline.pytest.json |    1 +
+ ...ed-code-free-not-absent-g65.baseline.stderr.bin |    0
+ ...ed-code-free-not-absent-g65.baseline.stdout.bin |  125 ++
+ ...mespace-is-loaded-code-free-not-absent-g65.json |   82 +
+ ...ded-code-free-not-absent-g65.mutant.pytest.json |    1 +
+ ...aded-code-free-not-absent-g65.mutant.stderr.bin |    0
+ ...aded-code-free-not-absent-g65.mutant.stdout.bin |  125 ++
+ ...ares-the-loaded-origin-g66.baseline.pytest.json |    1 +
+ ...pares-the-loaded-origin-g66.baseline.stderr.bin |    0
+ ...pares-the-loaded-origin-g66.baseline.stdout.bin |  367 ++++
+ .../parent-compares-the-loaded-origin-g66.json     |   86 +
+ ...mpares-the-loaded-origin-g66.mutant.pytest.json |    1 +
+ ...ompares-the-loaded-origin-g66.mutant.stderr.bin |    0
+ ...ompares-the-loaded-origin-g66.mutant.stdout.bin |  367 ++++
+ ...n-uses-the-path-finder-g63.baseline.pytest.json |    1 +
+ ...on-uses-the-path-finder-g63.baseline.stderr.bin |    0
+ ...on-uses-the-path-finder-g63.baseline.stdout.bin |  125 ++
+ ...ent-customization-uses-the-path-finder-g63.json |   84 +
+ ...ion-uses-the-path-finder-g63.mutant.pytest.json |    1 +
+ ...tion-uses-the-path-finder-g63.mutant.stderr.bin |    0
+ ...tion-uses-the-path-finder-g63.mutant.stdout.bin |  125 ++
+ ...rom-the-replay-context-g65.baseline.pytest.json |    1 +
+ ...from-the-replay-context-g65.baseline.stderr.bin |    0
+ ...from-the-replay-context-g65.baseline.stdout.bin |  246 +++
+ ...rch-path-comes-from-the-replay-context-g65.json |   84 +
+ ...-from-the-replay-context-g65.mutant.pytest.json |    1 +
+ ...s-from-the-replay-context-g65.mutant.stderr.bin |    0
+ ...s-from-the-replay-context-g65.mutant.stdout.bin |  246 +++
+ .../codex/partial-mutations-isolated/summary.json  |  751 +++++++
+ ...e-measures-its-premise-g65.baseline.pytest.json |    1 +
+ ...re-measures-its-premise-g65.baseline.stderr.bin |    0
+ ...re-measures-its-premise-g65.baseline.stdout.bin |  246 +++
+ .../the-fixture-measures-its-premise-g65.json      |   85 +
+ ...ure-measures-its-premise-g65.mutant.pytest.json |    1 +
+ ...ture-measures-its-premise-g65.mutant.stderr.bin |    0
+ ...ture-measures-its-premise-g65.mutant.stdout.bin |    2 +
+ ...-uses-a-controlled-env-g66.baseline.pytest.json |    1 +
+ ...e-uses-a-controlled-env-g66.baseline.stderr.bin |    0
+ ...e-uses-a-controlled-env-g66.baseline.stdout.bin |    2 +
+ .../the-premise-uses-a-controlled-env-g66.json     |   82 +
+ ...se-uses-a-controlled-env-g66.mutant.pytest.json |    1 +
+ ...ise-uses-a-controlled-env-g66.mutant.stderr.bin |    0
+ ...ise-uses-a-controlled-env-g66.mutant.stdout.bin |    2 +
+ ...ntext-is-measured-once-g66.baseline.pytest.json |    1 +
+ ...ontext-is-measured-once-g66.baseline.stderr.bin |    0
+ ...ontext-is-measured-once-g66.baseline.stdout.bin |  125 ++
+ .../the-replay-context-is-measured-once-g66.json   |   82 +
+ ...context-is-measured-once-g66.mutant.pytest.json |    1 +
+ ...-context-is-measured-once-g66.mutant.stderr.bin |    0
+ ...-context-is-measured-once-g66.mutant.stdout.bin |  125 ++
+ ...the-startup-activation-g64.baseline.pytest.json |    1 +
+ ...-the-startup-activation-g64.baseline.stderr.bin |    0
+ ...-the-startup-activation-g64.baseline.stdout.bin |  125 ++
+ ...stomize-follows-the-startup-activation-g64.json |   82 +
+ ...s-the-startup-activation-g64.mutant.pytest.json |    1 +
+ ...ws-the-startup-activation-g64.mutant.stderr.bin |    0
+ ...ws-the-startup-activation-g64.mutant.stdout.bin |  125 ++
+ ...-is-an-ordinary-import-g65.baseline.pytest.json |    1 +
+ ...t-is-an-ordinary-import-g65.baseline.stderr.bin |   76 +
+ ...t-is-an-ordinary-import-g65.baseline.stdout.bin |    1 +
+ .../explicit-import-is-an-ordinary-import-g65.json |   88 +
+ ...rt-is-an-ordinary-import-g65.mutant.pytest.json |    1 +
+ ...ort-is-an-ordinary-import-g65.mutant.stderr.bin |   76 +
+ ...ort-is-an-ordinary-import-g65.mutant.stdout.bin |    1 +
+ ...d-code-free-not-absent-g65.baseline.pytest.json |    1 +
+ ...ed-code-free-not-absent-g65.baseline.stderr.bin |   76 +
+ ...ed-code-free-not-absent-g65.baseline.stdout.bin |    1 +
+ ...mespace-is-loaded-code-free-not-absent-g65.json |   88 +
+ ...ded-code-free-not-absent-g65.mutant.pytest.json |    1 +
+ ...aded-code-free-not-absent-g65.mutant.stderr.bin |   76 +
+ ...aded-code-free-not-absent-g65.mutant.stdout.bin |    1 +
+ ...ares-the-loaded-origin-g66.baseline.pytest.json |    1 +
+ ...pares-the-loaded-origin-g66.baseline.stderr.bin |   76 +
+ ...pares-the-loaded-origin-g66.baseline.stdout.bin |    1 +
+ .../parent-compares-the-loaded-origin-g66.json     |  102 +
+ ...mpares-the-loaded-origin-g66.mutant.pytest.json |    1 +
+ ...ompares-the-loaded-origin-g66.mutant.stderr.bin |   76 +
+ ...ompares-the-loaded-origin-g66.mutant.stdout.bin |    1 +
+ ...n-uses-the-path-finder-g63.baseline.pytest.json |    1 +
+ ...on-uses-the-path-finder-g63.baseline.stderr.bin |   76 +
+ ...on-uses-the-path-finder-g63.baseline.stdout.bin |    1 +
+ ...ent-customization-uses-the-path-finder-g63.json |   82 +
+ ...ion-uses-the-path-finder-g63.mutant.pytest.json |    1 +
+ ...tion-uses-the-path-finder-g63.mutant.stderr.bin |   76 +
+ ...tion-uses-the-path-finder-g63.mutant.stdout.bin |    1 +
+ ...rom-the-replay-context-g65.baseline.pytest.json |    1 +
+ ...from-the-replay-context-g65.baseline.stderr.bin |   76 +
+ ...from-the-replay-context-g65.baseline.stdout.bin |    1 +
+ ...rch-path-comes-from-the-replay-context-g65.json |   95 +
+ ...-from-the-replay-context-g65.mutant.pytest.json |    1 +
+ ...s-from-the-replay-context-g65.mutant.stderr.bin |   76 +
+ ...s-from-the-replay-context-g65.mutant.stdout.bin |    1 +
+ .../codex/partial-mutations-portable/summary.json  |  802 +++++++
+ ...e-measures-its-premise-g65.baseline.pytest.json |    1 +
+ ...re-measures-its-premise-g65.baseline.stderr.bin |   76 +
+ ...re-measures-its-premise-g65.baseline.stdout.bin |    1 +
+ .../the-fixture-measures-its-premise-g65.json      |   89 +
+ ...ure-measures-its-premise-g65.mutant.pytest.json |    1 +
+ ...ture-measures-its-premise-g65.mutant.stderr.bin |   76 +
+ ...ture-measures-its-premise-g65.mutant.stdout.bin |    1 +
+ ...-uses-a-controlled-env-g66.baseline.pytest.json |    1 +
+ ...e-uses-a-controlled-env-g66.baseline.stderr.bin |    0
+ ...e-uses-a-controlled-env-g66.baseline.stdout.bin |    2 +
+ .../the-premise-uses-a-controlled-env-g66.json     |   80 +
+ ...se-uses-a-controlled-env-g66.mutant.pytest.json |    1 +
+ ...ise-uses-a-controlled-env-g66.mutant.stderr.bin |    0
+ ...ise-uses-a-controlled-env-g66.mutant.stdout.bin |    2 +
+ ...ntext-is-measured-once-g66.baseline.pytest.json |    1 +
+ ...ontext-is-measured-once-g66.baseline.stderr.bin |   76 +
+ ...ontext-is-measured-once-g66.baseline.stdout.bin |    1 +
+ .../the-replay-context-is-measured-once-g66.json   |   88 +
+ ...context-is-measured-once-g66.mutant.pytest.json |    1 +
+ ...-context-is-measured-once-g66.mutant.stderr.bin |   76 +
+ ...-context-is-measured-once-g66.mutant.stdout.bin |    1 +
+ ...the-startup-activation-g64.baseline.pytest.json |    1 +
+ ...-the-startup-activation-g64.baseline.stderr.bin |   76 +
+ ...-the-startup-activation-g64.baseline.stdout.bin |    1 +
+ ...stomize-follows-the-startup-activation-g64.json |   88 +
+ ...s-the-startup-activation-g64.mutant.pytest.json |    1 +
+ ...ws-the-startup-activation-g64.mutant.stderr.bin |   76 +
+ ...ws-the-startup-activation-g64.mutant.stdout.bin |    1 +
+ ...-is-an-ordinary-import-g65.baseline.pytest.json |    1 +
+ ...t-is-an-ordinary-import-g65.baseline.stderr.bin |    0
+ ...t-is-an-ordinary-import-g65.baseline.stdout.bin |   16 +
+ .../explicit-import-is-an-ordinary-import-g65.json |   78 +
+ ...rt-is-an-ordinary-import-g65.mutant.pytest.json |    1 +
+ ...ort-is-an-ordinary-import-g65.mutant.stderr.bin |    0
+ ...ort-is-an-ordinary-import-g65.mutant.stdout.bin |   16 +
+ ...d-code-free-not-absent-g65.baseline.pytest.json |    1 +
+ ...ed-code-free-not-absent-g65.baseline.stderr.bin |    0
+ ...ed-code-free-not-absent-g65.baseline.stdout.bin |   16 +
+ ...mespace-is-loaded-code-free-not-absent-g65.json |   78 +
+ ...ded-code-free-not-absent-g65.mutant.pytest.json |    1 +
+ ...aded-code-free-not-absent-g65.mutant.stderr.bin |    0
+ ...aded-code-free-not-absent-g65.mutant.stdout.bin |   16 +
+ ...ares-the-loaded-origin-g66.baseline.pytest.json |    1 +
+ ...pares-the-loaded-origin-g66.baseline.stderr.bin |    0
+ ...pares-the-loaded-origin-g66.baseline.stdout.bin |   16 +
+ .../parent-compares-the-loaded-origin-g66.json     |   82 +
+ ...mpares-the-loaded-origin-g66.mutant.pytest.json |    1 +
+ ...ompares-the-loaded-origin-g66.mutant.stderr.bin |    0
+ ...ompares-the-loaded-origin-g66.mutant.stdout.bin |   16 +
+ ...n-uses-the-path-finder-g63.baseline.pytest.json |    1 +
+ ...on-uses-the-path-finder-g63.baseline.stderr.bin |    0
+ ...on-uses-the-path-finder-g63.baseline.stdout.bin |   16 +
+ ...ent-customization-uses-the-path-finder-g63.json |   80 +
+ ...ion-uses-the-path-finder-g63.mutant.pytest.json |    1 +
+ ...tion-uses-the-path-finder-g63.mutant.stderr.bin |    0
+ ...tion-uses-the-path-finder-g63.mutant.stdout.bin |   16 +
+ ...rom-the-replay-context-g65.baseline.pytest.json |    1 +
+ ...from-the-replay-context-g65.baseline.stderr.bin |    0
+ ...from-the-replay-context-g65.baseline.stdout.bin |   16 +
+ ...rch-path-comes-from-the-replay-context-g65.json |   80 +
+ ...-from-the-replay-context-g65.mutant.pytest.json |    1 +
+ ...s-from-the-replay-context-g65.mutant.stderr.bin |    0
+ ...s-from-the-replay-context-g65.mutant.stdout.bin |   16 +
+ .../codex/partial-mutations/summary.json           |  712 ++++++
+ ...e-measures-its-premise-g65.baseline.pytest.json |    1 +
+ ...re-measures-its-premise-g65.baseline.stderr.bin |    0
+ ...re-measures-its-premise-g65.baseline.stdout.bin |   16 +
+ .../the-fixture-measures-its-premise-g65.json      |   78 +
+ ...ure-measures-its-premise-g65.mutant.pytest.json |    1 +
+ ...ture-measures-its-premise-g65.mutant.stderr.bin |    0
+ ...ture-measures-its-premise-g65.mutant.stdout.bin |   16 +
+ ...-uses-a-controlled-env-g66.baseline.pytest.json |    1 +
+ ...e-uses-a-controlled-env-g66.baseline.stderr.bin |    0
+ ...e-uses-a-controlled-env-g66.baseline.stdout.bin |   16 +
+ .../the-premise-uses-a-controlled-env-g66.json     |   78 +
+ ...se-uses-a-controlled-env-g66.mutant.pytest.json |    1 +
+ ...ise-uses-a-controlled-env-g66.mutant.stderr.bin |    0
+ ...ise-uses-a-controlled-env-g66.mutant.stdout.bin |   16 +
+ ...ntext-is-measured-once-g66.baseline.pytest.json |    1 +
+ ...ontext-is-measured-once-g66.baseline.stderr.bin |    0
+ ...ontext-is-measured-once-g66.baseline.stdout.bin |   16 +
+ .../the-replay-context-is-measured-once-g66.json   |   78 +
+ ...context-is-measured-once-g66.mutant.pytest.json |    1 +
+ ...-context-is-measured-once-g66.mutant.stderr.bin |    0
+ ...-context-is-measured-once-g66.mutant.stdout.bin |   16 +
+ ...the-startup-activation-g64.baseline.pytest.json |    1 +
+ ...-the-startup-activation-g64.baseline.stderr.bin |    0
+ ...-the-startup-activation-g64.baseline.stdout.bin |   16 +
+ ...stomize-follows-the-startup-activation-g64.json |   78 +
+ ...s-the-startup-activation-g64.mutant.pytest.json |    1 +
+ ...ws-the-startup-activation-g64.mutant.stderr.bin |    0
+ ...ws-the-startup-activation-g64.mutant.stdout.bin |   16 +
+ .../gate67_review/codex/partial_mutations.py       |   47 +
+ .../22p_gap/gate67_review/codex/preimages.json     |   17 +
+ .../gate67_review/codex/preimages.stderr.bin       |    0
+ .../gate67_review/codex/preimages.stdout.bin       |    1 +
+ .../collect_only_clean.pytest.json                 |    1 +
+ .../collect_only_clean.stderr.bin                  |    0
+ .../collect_only_clean.stdout.bin                  |    4 +
+ .../collect_only_nousersite.pytest.json            |    1 +
+ .../collect_only_nousersite.stderr.bin             |    0
+ .../collect_only_nousersite.stdout.bin             |    4 +
+ .../codex/premise-no-execution/observations.json   |   62 +
+ .../usage_error_clean.stderr.bin                   |    5 +
+ .../usage_error_clean.stdout.bin                   |    0
+ .../usage_error_nousersite.stderr.bin              |    5 +
+ .../usage_error_nousersite.stdout.bin              |    0
+ .../gate67_review/codex/registry-audit.json        | 2301 ++++++++++++++++++++
+ .../docs/22p_gap/gate67_review/codex/replay.json   |   19 +
+ .../22p_gap/gate67_review/codex/replay.stderr.bin  |   33 +
+ .../22p_gap/gate67_review/codex/replay.stdout.bin  |   14 +
+ .../gate67_review/codex/repro_boundaries.py        |   70 +
+ .../codex/repro_premise_no_execution.py            |   28 +
+ .../gate67_review/codex/repro_startup_gate66.py    |   50 +
+ .../22p_gap/gate67_review/codex/reviewed-code.diff |  667 ++++++
+ .../docs/22p_gap/gate67_review/codex/run_checks.py |   31 +
+ .../docs/22p_gap/gate67_review/codex/targeted.json |   28 +
+ .../gate67_review/codex/targeted.stderr.bin        |    0
+ .../gate67_review/codex/targeted.stdout.bin        |    2 +
+ .../docs/22p_gap/gate67_review/codex/targeted.xml  |    1 +
+ ...84de3-GATE67_CODEX_REVIEW_cdc49e91_20260922.zip |  Bin 0 -> 533373 bytes
+ .../docs/22p_gap/mutation_replay.py                |  172 +-
+ .../docs/GATE66_WORKING_STATE.md                   |   12 +
+ .../docs/GATE67_WORKING_STATE.md                   |  148 ++
+ .../tests/test_gate66_defensive.py                 |  103 +-
+ .../tests/test_gate67_defensive.py                 |  384 ++++
+ 359 files changed, 21291 insertions(+), 37 deletions(-)

@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "git",
+    "log",
+    "-1",
+    "--format=%H",
+    "--",
+    "src",
+    "tools",
+    "configs",
+    "scripts",
+    "run.sh",
+    "requirements*.txt"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-gate68-a1979cdf\\degradation-degeneracy",
+  "rc": 0,
+  "timeout": false,
+  "seconds": 0.062000000005355105,
+  "stdout_sha256": "26699a7dd2e6fed3d5db952dd4165c372a5180b08fb4516fc728c11221dffcba",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

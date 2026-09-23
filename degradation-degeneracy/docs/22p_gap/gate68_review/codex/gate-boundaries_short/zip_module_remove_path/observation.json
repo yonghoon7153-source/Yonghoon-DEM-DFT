@@ -1,0 +1,26 @@
+{
+  "case": "zip_module_remove_path",
+  "mode": "off",
+  "sandbox": "C:\\Users\\Administrator\\Documents\\Codex\\g68_20260924_b2\\mutation_replay_vjlysafb\\degradation-degeneracy",
+  "pythonpath": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\gate-boundaries_short\\zip_module_remove_path.zip",
+  "executable": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\gate-boundaries_short\\venv-off\\Scripts\\python.exe",
+  "native_control": {
+    "rc": 0,
+    "stdout": "{\"user_site\": false, \"customization\": {\"sitecustomize\": {\"loaded\": true, \"origin\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\r17_gate68_review_20260924\\\\gate-boundaries_short\\\\zip_module_remove_path.zip\\\\sitecustomize.py\", \"locations\": []}, \"usercustomize\": {\"loaded\": false, \"origin\": null, \"locations\": []}}, \"sys_path\": [\"\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\python312.zip\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\DLLs\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\Lib\", \"C:\\\\Users\\\\Administrator\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\", \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\r17_gate68_review_20260924\\\\gate-boundaries_short\\\\venv-off\", \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\r17_gate68_review_20260924\\\\gate-boundaries_short\\\\venv-off\\\\Lib\\\\site-packages\"]}\r\n",
+    "stderr": ""
+  },
+  "complete": {
+    "result": "ACCEPTED"
+  },
+  "comparison": {
+    "result": "ACCEPTED"
+  },
+  "entry": {
+    "result": "ACCEPTED"
+  },
+  "customization": {
+    "site": "b39ab288cc7a6d0c",
+    "sitecustomize": "30a46b0dfd82aadb",
+    "usercustomize": "<absent>"
+  }
+}

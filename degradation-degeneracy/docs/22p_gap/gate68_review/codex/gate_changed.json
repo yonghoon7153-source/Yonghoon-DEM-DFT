@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "git",
+    "diff",
+    "--stat",
+    "cdc49e91",
+    "HEAD",
+    "--",
+    "degradation-degeneracy"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-gate68-a1979cdf",
+  "rc": 0,
+  "timeout": false,
+  "seconds": 0.7969999999913853,
+  "stdout_sha256": "adda1e191f2e8894b8d2e7e497384a15fcd19f6f7e743d64acbb3dac758e7a98",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

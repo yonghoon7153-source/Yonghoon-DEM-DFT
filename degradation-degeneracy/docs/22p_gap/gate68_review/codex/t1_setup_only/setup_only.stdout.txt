@@ -1,0 +1,14 @@
+
+SETUP    S tmp_path_factory
+        SETUP    F tmp_path (fixtures used: tmp_path_factory)
+        SETUP    F user_site[True]
+        tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True] (fixtures used: request, tmp_path, tmp_path_factory, user_site)
+        TEARDOWN F user_site[True]
+        TEARDOWN F tmp_path
+        SETUP    F tmp_path (fixtures used: tmp_path_factory)
+        SETUP    F user_site[False]
+        tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False] (fixtures used: request, tmp_path, tmp_path_factory, user_site)
+        TEARDOWN F user_site[False]
+        TEARDOWN F tmp_path
+TEARDOWN S tmp_path_factory
+15 deselected in 0.07s

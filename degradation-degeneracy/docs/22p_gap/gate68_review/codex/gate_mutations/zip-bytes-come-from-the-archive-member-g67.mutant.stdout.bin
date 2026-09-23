@@ -1,0 +1,114 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_g67_05_a_zip_package_that_removes_its_archive_is_accepted ________
+
+tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/g68_20260924_m1/pytest-of-User/pytest-7/test_g67_05_a_zip_package_that0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F18B4B6840>
+off = WindowsPath('C:/Users/Administrator/Documents/Codex/g68_20260924_m1/pytest-of-User/pytest-7/g67-off0/venv-user-site-off/Scripts/python.exe')
+
+    def test_g67_05_a_zip_package_that_removes_its_archive_is_accepted(tmp_path, monkeypatch, off):
+        """★ G67-N2 — **이번 라운드의 두 번째 P1.** 표준 ZIP *package* 가 정상 로드된 뒤 자기
+        archive 만 `sys.path` 에서 뺀다. 원본·archive·member 를 지우지 않았고 커스텀 loader 도 없다.
+        child 는 그 바이트를 읽어 영수증을 만들었는데 부모가 거부한다 (리뷰어 실측 REJECTED).
+    
+        원인: `dirname(origin)` 은 archive root 가 아니라 `archive.zip/sitecustomize` 이고, 거기서
+        top-level 이름 `sitecustomize` 를 다시 찾으면 그 package 가 아니다. archive root 는 이미
+        final path 에서 빠졌다. **일반 파일 분기를 고친 것이 ZIP package 분기까지 고친 것은 아니다.**
+        """
+        archive = _zip_startup(tmp_path, "pkg_clean", "sitecustomize/__init__.py", _CLEAN_PKG)
+        cwd = _replay_cwd(tmp_path)
+        use_interpreter(monkeypatch, off)
+        _pin(monkeypatch, {"PYTHONPATH": str(archive)})
+>       _entry(monkeypatch, cwd)          # 예외가 없으면 통과다
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_gate67_defensive.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_gate67_defensive.py:70: in _entry
+    return mr._execution_receipt()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+docs\22p_gap\mutation_replay.py:6255: in _execution_receipt
+    _assert_customization_matches_parent(got)
+docs\22p_gap\mutation_replay.py:6096: in _assert_customization_matches_parent
+    want = _parent_customization_view(ctx)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ctx = {'executable': 'C:\\Users\\Administrator\\Documents\\Codex\\g68_20260924_m1\\pytest-of-User\\pytest-7\\g67-off0\\venv-...odex\\bin\\73fd6465d9c76545;C:\\Users\\Administrator\\AppData\\Local\\OpenAI\\Codex\\bin\\247581e40ee272fb', ...}, ...}
+
+    def _parent_customization_view(ctx: dict | None = None) -> dict:
+        """부모가 **자기 프로세스에서** 잰 customization 의 **후보** (62차 자체 리뷰 F1).
+    
+        child 가 `sys.modules` 의 `site`·`sitecustomize`·`usercustomize` 를 해시하는 것을
+        부모는 **child 와 같은 검색 경로에서 resolver 로 파일을 찾아** 재현한다. 값은 child
+        가 그 이름을 올렸다면 적어야 하는 것 — hex16(파일·ZIP 바이트) · `<namespace>:hex16`
+        (코드 없는 표준 namespace) · `<absent>`(찾을 수 없다). **후보**다: 실제로 올라왔는지
+        는 이 함수가 아니라 `_assert_customization_matches_parent` 가 조건·이력과 함께
+        판정한다 (65차 N1a — 세 상태를 가른다).
+        """
+        def _d(p):
+            h = hashlib.sha256()
+            with open(p, "rb") as fh:
+                for c in iter(lambda: fh.read(1 << 16), b""):
+                    h.update(c)
+            return h.hexdigest()[:16]
+    
+        # ★ 63차 F3 — 탐색은 **Python 의 resolver 로** 한다. 62차 판은 각 root 의
+        #   `이름.py` 만 봤고 package(`이름/__init__.py`)를 안 봤다 — 앞 root 에
+        #   정상 package 를 두면 `PathFinder` 는 그것을 찾는데 부모는 뒤 root 의
+        #   시스템 `sitecustomize.py` digest 를 돌려줘 정상 환경을 불일치로 거부했다
+        #   (리뷰어 실측: package `2f10edcf…` vs 부모 `43d81125…`). 같은 순서의
+        #   path 목록을 `PathFinder.find_spec` 에 주면 `.py` · package · 앞/뒤 root
+        #   전부 child 와 같은 규칙이다. 파일이 아닌 origin(zip) 은 loader 에게 바이트를
+        #   묻고, 못 주면 지원하지 않는 loader 로 **거부**한다 — 모르는 것을 `<absent>`
+        #   로 적지 않는다.
+        # ★ 64차 N1 — 찾을 수 있는 모듈 ≠ startup 이 실행한 모듈. 그 조건(`ENABLE_USER_SITE`)
+        #   은 65차부터 재생 문맥의 필드(`ctx["user_site"]`)이고, 이 함수가 아니라 판정 함수가
+        #   쓴다 — 여기서 조건으로 `<absent>` 를 미리 넣으면 "비활성 = 미로드" 등식이 된다
+        #   (65차 N1a 가 그 등식을 깼다: 정상 `sitecustomize` 의 `import usercustomize`).
+        # ★ 65차 N1b — 검색 경로는 **재생 문맥**에서 온다. 64차 판은 재생 env 의 원시
+        #   `PYTHONPATH` 문자열(상대 항목은 부모 cwd 로 풀림) + **부모의 `sys.path`** 를
+        #   썼다 — child 는 sandbox cwd 에서 뜨고 pytest 가 부모에 얹은 자리를 보지 않는다.
+        # ★ 65차 N2b — namespace package(origin 없음, 검색 위치 있음)는 `<absent>` 가
+        #   아니라 `<namespace>:identity` 다. child 와 같은 규칙(`_namespace_identity`).
+        import importlib
+        from importlib.machinery import PathFinder as _PF
+    
+        ctx = ctx if ctx is not None else _replay_context()
+        # ★ 66차 G66-N1 — **사후 후보로 과거 import 를 판정하지 않는다.** 이제 기준은 문맥 탐침이
+        #   잰 **startup 후 관측한 module origin** 이고, 부모는 그 origin 의 **바이트를 직접 읽는다**.
+        #   ⚠ 67차 Q1 정정 — 이것을 *"로드 순간의 불변 기록"* 이라고 적으면 과한 주장이다 (리뷰어 지적).
+        #   탐침은 startup 이 끝난 뒤 `sys.modules` 의 `__file__`/`__spec__.origin` 을 읽고, Python 은
+        #   그 둘의 자동 동기화를 보장하지 않으며 런타임 수정도 가능하다. 그 이상(로드 시점의 봉인된
+        #   출처)은 trusted launcher / immutable input bundle 설계가 필요하고 **미착수**다. 탐침은
+        #   64차부터 선언한 그 신뢰 경계(같은 startup 코드를 도는 보조 인터프리터) 안에 있고,
+        #   부모가 독립적으로 믿는 것은 여전히 **자기가 읽은 바이트**다 — 바이트가 바뀌면 거부된다.
+        #   `PathFinder` 탐색은 더 이상 판정의 근거가 아니다 (사후 `sys.path` 는 startup 이 본 것이
+        #   아니다). 아래 `_measured` 가 그 자료이고, `search_path` 는 진단용으로만 남긴다.
+        importlib.invalidate_caches()             # 방금 생긴 디렉터리도 본다
+        _measured = dict(ctx.get("customization") or {})
+        out = {"site": _d(ctx["site_file"])}      # child 인터프리터의 site — 부모가 바이트를 읽는다
+        for n in ("sitecustomize", "usercustomize"):
+            rec = _measured.get(n) or {"loaded": False, "origin": None, "locations": None}
+            if not rec.get("loaded"):
+                out[n] = "<absent>"               # 그 이름은 startup 이 올리지 않았다
+                continue
+            origin, locs = rec.get("origin"), rec.get("locations")
+            if origin in ("built-in", "frozen"):
+                out[n] = "<%s>" % origin          # 대조할 바이트가 없다 — 판정 함수가 거부한다
+                continue
+            if origin and os.path.isfile(origin):
+                out[n] = _d(origin)               # **부모가 그 자리의 바이트를 직접 읽는다**
+                continue
+            if origin:
+                # 파일이 아닌 origin(표준 archive 안) — **archive 와 member 로 직접 읽는다.**
+                _spec = _PF.find_spec(n, [os.path.dirname(origin)] + list(ctx["search_path"]))
+                _gd = getattr(getattr(_spec, "loader", None), "get_data", None)
+                if _gd is None or getattr(_spec, "origin", None) != origin:
+>                   raise _ReplayError(f"부모가 {n} 의 origin 을 읽을 수 없다")
+E                   mutation_replay._ReplayError: 부모가 sitecustomize 의 origin 을 읽을 수 없다
+
+docs\22p_gap\mutation_replay.py:6011: _ReplayError
+=========================== short test summary info ===========================
+FAILED tests/test_gate67_defensive.py::test_g67_05_a_zip_package_that_removes_its_archive_is_accepted
+1 failed, 54 deselected in 0.92s

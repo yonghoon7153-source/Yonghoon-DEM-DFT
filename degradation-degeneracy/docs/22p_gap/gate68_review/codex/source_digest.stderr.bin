@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-14-gate-code-review-9qkx05-2\work\r17-gate68-a1979cdf\degradation-degeneracy\src\io.py", line 23, in <module>
+    import yaml
+ModuleNotFoundError: No module named 'yaml'

@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\repro_boundaries.py",
+    "--repo",
+    "C:\\Users\\Administrator\\Documents\\Codex\\r68_20260924\\degradation-degeneracy",
+    "--out",
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\gate-boundaries_short"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924",
+  "rc": 0,
+  "timeout": false,
+  "seconds": 17.234000000025844,
+  "stdout_sha256": "04585f0faf188f01ce7c9b80176c2a5e55c254bc04531cde29bd047fdda788e0",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

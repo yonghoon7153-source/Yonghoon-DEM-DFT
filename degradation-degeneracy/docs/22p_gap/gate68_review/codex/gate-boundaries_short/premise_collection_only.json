@@ -1,0 +1,14 @@
+{
+  "case": "premise_collection_only",
+  "env_extra": {
+    "PYTEST_ADDOPTS": "--collect-only"
+  },
+  "subprocess_rc": 0,
+  "stdout": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]\ntests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]\n\n2/17 tests collected (15 deselected) in 0.04s\n",
+  "stderr": "",
+  "committed_test_result": {
+    "result": "REJECTED",
+    "error_type": "AssertionError",
+    "error": "('기대한 두 전제 node 가 실제로 돌지 않았다 — 수집만 했거나 선택이 어긋났다 (G67-T1)', [], ['test_the_interpreter_fixture_measures_its_own_premise[False]', 'test_the_interpreter_fixture_measures_its_own_premise[True]'])"
+  }
+}

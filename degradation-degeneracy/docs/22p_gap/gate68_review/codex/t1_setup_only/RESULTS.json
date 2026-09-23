@@ -1,0 +1,131 @@
+[
+  {
+    "case": "control",
+    "actual_argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "C:\\Users\\Administrator\\Documents\\Codex\\r68_20260924\\degradation-degeneracy\\tests\\test_gate65_defensive.py",
+      "--noconftest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "-k",
+      "the_interpreter_fixture_measures_its_own_premise",
+      "--junitxml=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\t1_setup_only\\control.xml"
+    ],
+    "rc": 0,
+    "consumer": {
+      "accepted": true,
+      "unmeasured": []
+    },
+    "junit_outcomes": {
+      "test_the_interpreter_fixture_measures_its_own_premise[True]": "passed",
+      "test_the_interpreter_fixture_measures_its_own_premise[False]": "passed"
+    },
+    "json_summary": {
+      "passed": 2,
+      "total": 2,
+      "collected": 17,
+      "deselected": 15
+    },
+    "phases": [
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "outcome": "passed",
+        "phases": {
+          "setup": "passed",
+          "call": "passed",
+          "teardown": "passed"
+        }
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "outcome": "passed",
+        "phases": {
+          "setup": "passed",
+          "call": "passed",
+          "teardown": "passed"
+        }
+      }
+    ]
+  },
+  {
+    "case": "collect_only",
+    "actual_argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "C:\\Users\\Administrator\\Documents\\Codex\\r68_20260924\\degradation-degeneracy\\tests\\test_gate65_defensive.py",
+      "--noconftest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "-k",
+      "the_interpreter_fixture_measures_its_own_premise",
+      "--junitxml=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\t1_setup_only\\collect_only.xml"
+    ],
+    "rc": 0,
+    "consumer": {
+      "accepted": false,
+      "error": "AssertionError",
+      "message": "('기대한 두 전제 node 가 실제로 돌지 않았다 — 수집만 했거나 선택이 어긋났다 (G67-T1)', [], ['test_the_interpreter_fixture_measures_its_own_premise[False]', 'test_the_interpreter_fixture_measures_its_own_premise[True]'])"
+    },
+    "junit_outcomes": {},
+    "json_summary": {
+      "total": 0,
+      "collected": 17,
+      "deselected": 15
+    },
+    "phases": []
+  },
+  {
+    "case": "setup_only",
+    "actual_argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "C:\\Users\\Administrator\\Documents\\Codex\\r68_20260924\\degradation-degeneracy\\tests\\test_gate65_defensive.py",
+      "--noconftest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "-k",
+      "the_interpreter_fixture_measures_its_own_premise",
+      "--junitxml=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\r17_gate68_review_20260924\\t1_setup_only\\setup_only.xml"
+    ],
+    "rc": 0,
+    "consumer": {
+      "accepted": true,
+      "unmeasured": []
+    },
+    "junit_outcomes": {
+      "test_the_interpreter_fixture_measures_its_own_premise[True]": "passed",
+      "test_the_interpreter_fixture_measures_its_own_premise[False]": "passed"
+    },
+    "json_summary": {
+      "passed": 2,
+      "total": 2,
+      "collected": 17,
+      "deselected": 15
+    },
+    "phases": [
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "outcome": "passed",
+        "phases": {
+          "setup": "passed",
+          "teardown": "passed"
+        }
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "outcome": "passed",
+        "phases": {
+          "setup": "passed",
+          "teardown": "passed"
+        }
+      }
+    ]
+  }
+]

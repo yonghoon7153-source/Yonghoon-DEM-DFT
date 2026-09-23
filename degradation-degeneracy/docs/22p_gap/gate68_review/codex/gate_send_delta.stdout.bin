@@ -1,0 +1,31 @@
+diff --git a/degradation-degeneracy/docs/22p_gap/GATE68_REQUEST.md b/degradation-degeneracy/docs/22p_gap/GATE68_REQUEST.md
+index 3b7bf9c..071118b 100644
+--- a/degradation-degeneracy/docs/22p_gap/GATE68_REQUEST.md
++++ b/degradation-degeneracy/docs/22p_gap/GATE68_REQUEST.md
+@@ -30,6 +30,26 @@
+ `git diff cdc49e91..HEAD -- degradation-degeneracy` 는 이번 대응 **직전에 비어 있었다**(실측).
+ 그 사이 커밋 둘은 `wiki/`·큐 문서뿐이다.
+ 
++### 발송 전 재확인 (2026-09-23 — 이 요청문은 2026-09-22 `a31be7a9` 에서 쓰고 보류했다)
++
++보류하는 동안 브랜치에 커밋이 쌓였다(`bms-balancing/` MSC 작업 · `wiki/` · 문헌 원장). **degradation-degeneracy 는
++움직이지 않았다.** 아래는 발송 직전에 다시 잰 것이다.
++
++| 검사 | 명령 | 실측 |
++|---|---|---|
++| 요청문 커밋 이후 dd 변경 | `git diff --quiet a31be7a9 HEAD -- degradation-degeneracy` | **rc 0 (차이 없음)** |
++| dd·bms·wiki 밖 변경 | `git diff --stat a31be7a9..HEAD -- . ':!bms-balancing' ':!wiki'` | **빈 출력** |
++| RUN_SCOPE 마지막 커밋 | `git log -1 --format=%H -- src tools configs scripts run.sh requirements*.txt` | `743f65bead671bf353ce38027c2e8e457738ec08` (위 표와 같음) |
++| `source_digest` | 위 fetch 블록의 명령 | **`e9ee7475dea7de1d`** (위 표와 같음) |
++| 게이트 회귀 묶음 | `pytest tests/test_gate6{7,6,5,4,3}_defensive.py -q -p no:cacheprovider` | **77 passed · 1 xfailed** (23.06 s) EXIT=0 |
++
++- §2-3 의 "76 passed · 1 skipped" 에서 skip 1 은 `test_gate63_defensive.py:426` 이었다(dirty worktree 면 건너뛴다).
++  이번에는 **clean worktree 에서 돌아 통과했다** → 77 passed. 새로 고친 것이 아니라 실행 조건이 달라진 것이다.
++- **전체 pytest(41 분)와 strict smoke 는 다시 돌리지 않았다.** 대상 바이트가 같아서 §2-3 의 수치(`e834b01e` 에서 잰 것)를 그대로 쓴다.
++  리뷰어가 HEAD 에서 전체를 돌리면 그 수치와 비교할 수 있다.
++- 재실행 뒤 `git status --short` 는 빈 출력이다(미추적 0).
++- **검토할 HEAD** 는 이 블록을 담은 커밋이다. 발송 메시지에 SHA 를 적는다.
++
+ ---
+ 
+ ## §0 이번 라운드가 **하지 않은** 것

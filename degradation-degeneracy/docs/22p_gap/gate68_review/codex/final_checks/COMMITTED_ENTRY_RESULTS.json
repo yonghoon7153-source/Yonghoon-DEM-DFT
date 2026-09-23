@@ -1,0 +1,26 @@
+[
+  {
+    "case": "clean",
+    "env_extra": {},
+    "returned_normally": true,
+    "stdout": ""
+  },
+  {
+    "case": "setup_only",
+    "env_extra": {
+      "PYTEST_ADDOPTS": "--setup-only"
+    },
+    "returned_normally": true,
+    "stdout": ""
+  },
+  {
+    "case": "collect_only",
+    "env_extra": {
+      "PYTEST_ADDOPTS": "--collect-only"
+    },
+    "returned_normally": false,
+    "error": "AssertionError",
+    "message": "('기대한 두 전제 node 가 실제로 돌지 않았다 — 수집만 했거나 선택이 어긋났다 (G67-T1)', [], ['test_the_interpreter_fixture_measures_its_own_premise[False]', 'test_the_interpreter_fixture_measures_its_own_premise[True]'])",
+    "stdout": ""
+  }
+]

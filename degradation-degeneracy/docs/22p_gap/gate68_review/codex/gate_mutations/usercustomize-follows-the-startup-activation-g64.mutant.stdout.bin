@@ -1,0 +1,91 @@
+.FFF                                                                     [100%]
+================================== FAILURES ===================================
+__________ test_g66_05b_a_forged_absent_namespace_is_still_rejected ___________
+
+tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/g68_20260924_m1/pytest-of-User/pytest-1/test_g66_05b_a_forged_absent_n0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022BD9497530>
+on = WindowsPath('C:/Users/Administrator/Documents/Codex/g68_20260924_m1/pytest-of-User/pytest-1/g66-on0/venv-user-site-on/Scripts/python.exe')
+
+    def test_g66_05b_a_forged_absent_namespace_is_still_rejected(tmp_path, monkeypatch, on):
+        """대조군 — **이력에 파일로 잡히지 않는** customization(표준 namespace)을 child 가
+        `<absent>` 라 적으면 거부해야 한다.
+    
+        이력(`-X importtime -v` → 파일 있는 module) 은 namespace 를 `unfiled` 로 세므로 첫 분기
+        (`loaded_file`)가 안 잡는다. 부모가 **올라와 있다고 잰** 이름을 child 가 없다고 적는 것을
+        막는 두 번째 분기가 그 자리다 — 66차에서 `auto` 축이 옮겨 온 곳이다.
+        (`sitecustomize` 는 이 기계의 stdlib 자리 파일이 가리므로 자유로운 이름 `usercustomize` 로 만든다.)
+        """
+        site = tmp_path / "site"
+        (site / "usercustomize").mkdir(parents=True)
+        use_interpreter(monkeypatch, on)
+        _pin(monkeypatch, {"PYTHONPATH": str(site)})
+        mr = _mr()
+        cwd = tmp_path / "replay"
+        cwd.mkdir()
+        rec = _entry(monkeypatch, cwd)
+        assert rec["startup"]["customization"]["usercustomize"].startswith("<namespace>"), \
+            rec["startup"]["customization"]
+        rec["startup"]["customization"]["usercustomize"] = "<absent>"          # 세탁본
+>       with pytest.raises(mr._ReplayError, match="usercustomize"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE _ReplayError
+
+tests\test_gate66_defensive.py:188: Failed
+____ test_g67_01_a_forged_absent_namespace_is_rejected_with_user_site_off _____
+
+tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/g68_20260924_m1/pytest-of-User/pytest-1/test_g67_01_a_forged_absent_na0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022BD949B620>
+off = WindowsPath('C:/Users/Administrator/Documents/Codex/g68_20260924_m1/pytest-of-User/pytest-1/g67-off0/venv-user-site-off/Scripts/python.exe')
+
+    def test_g67_01_a_forged_absent_namespace_is_rejected_with_user_site_off(tmp_path, monkeypatch, off):
+        """★ G67-N1 — **이번 라운드의 P1.** user site 가 꺼져 있고 namespace 가 명시 import 로
+        올라온 상태에서, child 영수증의 `startup.customization.usercustomize` **한 칸만**
+        `<absent>` 로 바꾼다. 부모는 그것이 올라와 있다고 **이미 쟀는데**, 마지막 방어가
+        `elif auto and …` 라서 `auto=False` 인 이 조합을 빠져나간다 (리뷰어 실측 ACCEPTED).
+    
+        `auto` 는 "startup 이 자동으로 import 하는가" 이고, 지금 묻는 것은 "실제로 올라왔는가" 다.
+        """
+        start = _explicit_namespace(tmp_path)
+        cwd = _replay_cwd(tmp_path)
+        use_interpreter(monkeypatch, off)
+        _pin(monkeypatch, {"PYTHONPATH": str(start)})
+        mr = _mr()
+        ctx = mr._replay_context(cwd)
+        rec = _entry(monkeypatch, cwd)
+        assert rec["startup"]["customization"]["usercustomize"].startswith("<namespace>"), \
+            ("전제가 깨졌다 — user site OFF 에서 명시 import 한 namespace 가 안 올라왔다",
+             rec["startup"]["customization"])
+        forged = copy.deepcopy(rec)
+        forged["startup"]["customization"]["usercustomize"] = "<absent>"
+>       with pytest.raises(mr._ReplayError, match="usercustomize"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE _ReplayError
+
+tests\test_gate67_defensive.py:116: Failed
+_________ test_g67_04_the_same_forgery_is_rejected_with_user_site_on __________
+
+tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/g68_20260924_m1/pytest-of-User/pytest-1/test_g67_04_the_same_forgery_i0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022BD949F8F0>
+on = WindowsPath('C:/Users/Administrator/Documents/Codex/g68_20260924_m1/pytest-of-User/pytest-1/g67-on0/venv-user-site-on/Scripts/python.exe')
+
+    def test_g67_04_the_same_forgery_is_rejected_with_user_site_on(tmp_path, monkeypatch, on):
+        """대조군 — ON 에서는 전 판도 거부했다 (`auto=True`). 수정이 이 축을 잃지 않았는지."""
+        start = _explicit_namespace(tmp_path)
+        cwd = _replay_cwd(tmp_path)
+        use_interpreter(monkeypatch, on)
+        _pin(monkeypatch, {"PYTHONPATH": str(start)})
+        mr = _mr()
+        ctx = mr._replay_context(cwd)
+        rec = _entry(monkeypatch, cwd)
+        forged = copy.deepcopy(rec)
+        forged["startup"]["customization"]["usercustomize"] = "<absent>"
+>       with pytest.raises(mr._ReplayError, match="usercustomize"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE _ReplayError
+
+tests\test_gate67_defensive.py:157: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected
+FAILED tests/test_gate67_defensive.py::test_g67_01_a_forged_absent_namespace_is_rejected_with_user_site_off
+FAILED tests/test_gate67_defensive.py::test_g67_04_the_same_forgery_is_rejected_with_user_site_on
+3 failed, 1 passed, 51 deselected in 3.10s

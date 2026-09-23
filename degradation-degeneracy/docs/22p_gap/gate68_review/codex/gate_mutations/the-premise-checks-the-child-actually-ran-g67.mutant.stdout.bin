@@ -1,0 +1,67 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+___ test_g67_11_the_premise_regression_refuses_an_unrun_child[usage_error] ____
+
+tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/g68_20260924_m1/pytest-of-User/pytest-9/test_g67_11_the_premise_regres0')
+addopts = '--g67-option-does-not-exist'
+why = '사용법 오류 — pytest rc 4 · stdout 빈 문자열'
+
+    @pytest.mark.parametrize("addopts,why", [
+        ("--g67-option-does-not-exist", "사용법 오류 — pytest rc 4 · stdout 빈 문자열"),
+        ("--collect-only", "수집만 하고 실행 0건 — rc 0 이지만 call 단계가 없다"),
+    ], ids=["usage_error", "collect_only"])
+    def test_g67_11_the_premise_regression_refuses_an_unrun_child(tmp_path, addopts, why):
+        """★ G67-T1 — **실제 child pytest** 를 안 돌게 만들고, 전제 회귀의 검증부가 그것을 거부하는지
+        묻는다. `subprocess` 를 가짜로 만들지 않는다 — 리뷰어가 그렇게 재현했고 우리도 그렇게 고정한다.
+    
+        전 판의 검증은 `"failed" not in stdout` 하나였고 두 경우 모두 초록이었다. 리뷰어가 짚은 대로
+        **`rc 0` 검사만 더해도 `--collect-only` 는 남는다** — 그래서 정확한 두 node 가 call 단계를
+        지났다는 기계 판독 증거를 요구한다.
+    
+        옵션을 `env_extra` 로 주는 이유: 고친 `_premise_run` 은 바깥 `PYTEST_ADDOPTS` 를 **걷어낸다**
+        (그것이 G67-T1 의 다른 절반이고 `test_g67_13` 이 지킨다). 그래서 "안 돈 child" 를 만들려면
+        우리가 **명시적으로** 그 env 를 넘겨야 한다 — 통로가 하나뿐이라는 것 자체가 경계의 증거다.
+        """
+        import test_gate66_defensive as tm
+    
+        junit = tmp_path / "premise.xml"
+        r = tm._premise_run(sys.executable, {"PYTEST_ADDOPTS": addopts}, junit)
+>       with pytest.raises(AssertionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+tests\test_gate67_defensive.py:302: Failed
+___ test_g67_11_the_premise_regression_refuses_an_unrun_child[collect_only] ___
+
+tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/g68_20260924_m1/pytest-of-User/pytest-9/test_g67_11_the_premise_regres1')
+addopts = '--collect-only', why = '수집만 하고 실행 0건 — rc 0 이지만 call 단계가 없다'
+
+    @pytest.mark.parametrize("addopts,why", [
+        ("--g67-option-does-not-exist", "사용법 오류 — pytest rc 4 · stdout 빈 문자열"),
+        ("--collect-only", "수집만 하고 실행 0건 — rc 0 이지만 call 단계가 없다"),
+    ], ids=["usage_error", "collect_only"])
+    def test_g67_11_the_premise_regression_refuses_an_unrun_child(tmp_path, addopts, why):
+        """★ G67-T1 — **실제 child pytest** 를 안 돌게 만들고, 전제 회귀의 검증부가 그것을 거부하는지
+        묻는다. `subprocess` 를 가짜로 만들지 않는다 — 리뷰어가 그렇게 재현했고 우리도 그렇게 고정한다.
+    
+        전 판의 검증은 `"failed" not in stdout` 하나였고 두 경우 모두 초록이었다. 리뷰어가 짚은 대로
+        **`rc 0` 검사만 더해도 `--collect-only` 는 남는다** — 그래서 정확한 두 node 가 call 단계를
+        지났다는 기계 판독 증거를 요구한다.
+    
+        옵션을 `env_extra` 로 주는 이유: 고친 `_premise_run` 은 바깥 `PYTEST_ADDOPTS` 를 **걷어낸다**
+        (그것이 G67-T1 의 다른 절반이고 `test_g67_13` 이 지킨다). 그래서 "안 돈 child" 를 만들려면
+        우리가 **명시적으로** 그 env 를 넘겨야 한다 — 통로가 하나뿐이라는 것 자체가 경계의 증거다.
+        """
+        import test_gate66_defensive as tm
+    
+        junit = tmp_path / "premise.xml"
+        r = tm._premise_run(sys.executable, {"PYTEST_ADDOPTS": addopts}, junit)
+>       with pytest.raises(AssertionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+tests\test_gate67_defensive.py:302: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[usage_error]
+FAILED tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[collect_only]
+2 failed, 53 deselected in 1.45s

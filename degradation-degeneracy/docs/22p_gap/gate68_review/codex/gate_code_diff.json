@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "git",
+    "diff",
+    "cdc49e91",
+    "HEAD",
+    "--",
+    "degradation-degeneracy/docs/22p_gap/mutation_replay.py",
+    "degradation-degeneracy/tests/test_gate66_defensive.py",
+    "degradation-degeneracy/tests/test_gate67_defensive.py"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\r17-gate68-a1979cdf",
+  "rc": 0,
+  "timeout": false,
+  "seconds": 0.07899999999790452,
+  "stdout_sha256": "c2933c952f0c92d2ce657763f08607bee46d16a7346c9d37a7a089186c1ad5f3",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

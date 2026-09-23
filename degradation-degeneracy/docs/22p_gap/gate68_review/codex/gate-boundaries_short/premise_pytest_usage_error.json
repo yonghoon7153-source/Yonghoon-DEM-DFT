@@ -1,0 +1,14 @@
+{
+  "case": "premise_pytest_usage_error",
+  "env_extra": {
+    "PYTEST_ADDOPTS": "--g67-option-does-not-exist"
+  },
+  "subprocess_rc": 4,
+  "stdout": "",
+  "stderr": "ERROR: usage: python -m pytest [options] [file_or_dir] [file_or_dir] [...]\npython -m pytest: error: unrecognized arguments: --g67-option-does-not-exist\n  inifile: None\n  rootdir: C:\\Users\\Administrator\\Documents\\Codex\\r68_20260924\\degradation-degeneracy\n\n",
+  "committed_test_result": {
+    "result": "REJECTED",
+    "error_type": "AssertionError",
+    "error": "('child pytest 가 결과 파일을 남기지 않았다 — 무엇이 돌았는지 말할 수 없다 (G67-T1)', ('', 'ERROR: usage: python -m pytest [options] [file_or_dir] [file_or_dir] [...]\\npython -m pytest: error: unrecognized arguments: --g67-option-does-not-exist\\n  inifile: None\\n  rootdir: C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\r68_20260924\\\\degradation-degeneracy\\n\\n'))"
+  }
+}
