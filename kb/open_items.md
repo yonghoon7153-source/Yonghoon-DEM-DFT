@@ -143,6 +143,9 @@
     검증 7/7 · C2 9e-5 Å. jobs.json 에 경보 v2 · A′ 결정과 **PP 내용 해시** — 러너 ⑨ 게이트가 실행 기계 파일과 대조(불일치면 시작 안 함).
     ⏭ **실행 기계 = V100 (1저자 "v100은 비었어" · rsync)** — gabia 는 b2o3 UMA 가 GPU 를 쓰고 있고 공존 예외는 닫혔다.
     ⚠ V100 의 옛 계산(static_ab)은 PP 를 **밑줄 이름**으로 썼다 — 우리 입력은 점 이름. 내용 해시로 확인 후 점 이름 링크.
+    🔧 **V100 컨테이너가 다시 만들어져 QE-GPU·NVHPC·pseudo 가 없었다 (09-24)** → kgy 에서 NVHPC 13 GB·QE 소스·pseudo rsync ·
+    makelocalrc · configure ✓ (`-D__CUDA` · GPU_ARCH=70). ⏭ build → **빌드 검증** (static_ab/a 09-13 값 −1022.94654233 Ry · |ΔE| ≤ 1e-5)
+    → DRY_RUN (⑨ PP 해시 ×4) → tmux `wad4l` 실행 + 30 분 $STORE 백업. 레시피 `kb/platforms/v100_uma_setup_2026_09_14.md` 함정 ⑨.
     (러너에 NP · PSEUDO_DIR · NO_LOCK 추가, GPU 사용량은 장별 최댓값). gabia 예외는 **한 번도 발동하지 않은 채** 소멸.
   · ✅ **문헌 3편 인입·병합** (1저자 제공 PDF · 수치는 메인이 PDF 텍스트로 재대조): `pustorino2025_…`(LPSCl 파괴에너지 = 2γ · (100) 화학량론 벽개 ≈ 0.47 · (110) 0.37 J/m²) ·
     `maurer2015_…`(Ag|그래핀 분산 7방법 0.19–0.45 J/m² — 0.3 경계를 가로지른다) · `giovannetti2008_…`(Ag 약결합군 · LSDA · 화학흡착 Pd ≈ 0.52 J/m² = "구간 ≠ 기전").

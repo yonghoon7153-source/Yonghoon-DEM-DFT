@@ -7,6 +7,7 @@
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 245건)
+- 2026-09-24 · `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 일곱과 순서 · 완료
 - 2026-09-23 · `kb/concepts/cv_vs_dqdv_and_two_windows.md` — CV · dQ/dV · 그리고 두 개의 "안정창" — 처음 보는 사람을 위한 정리 · 진행 — 개념 정리. 우리 수치 주장은 담지 않는다(경로만 가리킨다)
 - 2026-09-23 · `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응 · 진단 정리 — 값은 citable:false (사전등록 게이트 미통과…
 - 2026-09-23 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
@@ -26,7 +27,6 @@
 - 2026-09-22 · `kb/reviews/li2s1a_BU_reply_variance_ratio_rule_2026_09_22.md` — BU 회신 — 판정 규칙을 분산비로 교체 · 내 IQR 초안은 두 번 틀렸다 · 블록 규칙 선박기 · 회신문-작성됨
 - 2026-09-20 · `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안) · 완료 (2026-09-20 · 다음 주 문서는 새 파일)
 - 2026-09-19 · `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적) · open
-- 2026-09-18 · `kb/methodology/amorphous_overlap_gate_lessons_2026_09_18.md` — 비정질 겹침 게이트 — 다음 캠페인 설계로 넘기는 것 셋 · 제안 (다음 캠페인 설계용 · 이번 판정 재해석 금지)
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -432,7 +432,7 @@
 ## platforms/ (3)
 - `kb/platforms/literature_db_tools.md` — Literature DB 자동화 도구
 - `kb/platforms/ml_automation_platforms.md` — ML / Automation Platform Survey
-- `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 일곱과 순서  (2026-09-14 · 완료)
+- `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 일곱과 순서  (2026-09-24 · 완료)
 
 ## descriptors/ (1)
 - `kb/descriptors/coating_descriptor_catalog.md` — 황화물 코팅 소재 Descriptor Catalog
