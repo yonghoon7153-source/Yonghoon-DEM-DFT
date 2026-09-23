@@ -23,7 +23,8 @@ evidenceScope: multi-source-primary
 - **받은 경로**: 1저자가 Codex 에서 받아 세션에 붙여 넣었다 (2026-09-23).
 - 아래 **§원문** 은 붙여 넣은 그대로다. 고치지 않는다. 우리 쪽 확인은 **§부록** 에 붙인다.
 - ⚠ **붙여넣기에서 표 두 칸이 잘렸다** (원문의 `|` 가 표 구분자와 섞인 것으로 보인다):
-  Q5 표 첫 행 *"검증 표본별 (|W^PBE − W^UMA|)"* 의 **문턱 숫자**, Q10 표 첫 행 *"Ag | 흑연 registry"* 의 **값**. 원문에서 다시 받아야 한다 — 추측으로 채우지 않는다.
+  Q5 표 첫 행 *"검증 표본별 (|W^PBE − W^UMA|)"* 의 **문턱 숫자**, Q10 표 첫 행 *"Ag | 흑연 registry"* 의 **값**.
+  → ✅ **같은 날 Codex 가 다시 보냈다 — 맨 아래 §보충 원문**(≤ 0.10 J/m² 표본별 · 대칭 비등가 registry ≥ 4 · 링크 7개).
 
 ---
 
@@ -221,3 +222,28 @@ Q11. 분포·제외·검정 — 일부 수정
 - Q5 표 첫 행의 **시료별 |W^PBE − W^UMA| 문턱 숫자** (붙여넣기에서 잘림).
 - Q10 표 첫 행 **Ag | 흑연 registry** 의 제안값 (붙여넣기에서 잘림).
 - Q1·Q4·Q6·Q10 의 외부 근거 링크("공식 접촉법칙 정의" · "UMA 공식 설명" · "MP 설정의 Ni U" · "원 논문")는 붙여넣기에 URL 이 없다 — 흑연 0.37/0.39 의 원 논문은 litdb 에 없다.
+
+---
+
+## 보충 원문 (같은 날 · Codex 후속 — 잘린 두 칸과 링크)
+
+1저자가 *"표 두 칸이 잘렸다, 문장으로 다시 · 링크 URL 도"* 를 요청해 받은 답이다. 붙여 넣은 그대로다.
+
+Q5 첫 행: **검증 표본마다 \(|W^{PBE} - W^{UMA}| \le 0.10\ \mathrm{J/m^2}\)**를 요구합니다. 모든 검증 표본에 각각 적용하는 문턱이며, 평균오차 문턱이 아닙니다.
+Q10 첫 행: Ag|흑연은 결과를 보기 전에 고정한, 서로 대칭적으로 비등가인 registry를 최소 4개 사용하자는 제안입니다.
+직전 회신의 링크는 중복을 제외하면 7개여서, 누락 없이 모두 다시 붙입니다.
+
+1. [NCM 생성기 — run_cathode_interface.py:56](https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/5687c4fa78e14c00731aed288414aedaea41d251/tools/doping/run_cathode_interface.py#L56)
+2. [SE 원본 구조 — comp1_V0_k444.cif](https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/5687c4fa78e14c00731aed288414aedaea41d251/db/structures/comp1_V0_k444.cif)
+3. [LAMMPS JKR·DMT 접촉법칙 공식 문서](https://docs.lammps.org/pair_granular.html)
+4. [UMA 공식 문서 — 조성 라우팅·학습 기준계](https://github.com/facebookresearch/fairchem/blob/main/docs/core/uma.md)
+5. [Materials Project 설정 — Ni의 Hubbard U](https://github.com/materialsproject/pymatgen/blob/v2025.6.14/src/pymatgen/io/vasp/MPRelaxSet.yaml)
+6. [기존 접착 계산 기록 — adhesion_final.md:70](https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/5687c4fa78e14c00731aed288414aedaea41d251/kb/results/adhesion_final.md#L70)
+7. [흑연 벽개에너지 원 논문 — Wang et al.](https://arxiv.org/abs/1506.00536)
+
+0.10 J/m²와 registry 최소 4개는 위 문헌에서 인용한 표준값이 아니라, 이번 파일럿에 제가 제안한 운영 기준입니다.
+
+### 우리 쪽 메모 (보충 원문 확인)
+- 링크 6 은 대상 커밋에서 `## NCM811 2-Layer Results (2026-04-14)` 절 머리다 — Q7 의 "기존 기록" 근거와 맞다.
+- 링크 7 (흑연 벽개 원 논문)은 **litdb 에 아직 없다** — 봉인 전에 PDF 로 인입한다.
+- 두 값(≤ 0.10 J/m² · registry ≥ 4)은 Codex 가 스스로 밝힌 대로 **운영 기준 제안**이다 — 카드에 "BV 제안 운영값" 으로 출처를 달아 봉인한다.
