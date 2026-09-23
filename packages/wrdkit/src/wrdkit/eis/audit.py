@@ -55,10 +55,11 @@ from .circuit import (
 from .conductivity import real_axis_crossing
 from .derive import SOLID, SYMMETRIC, blocking_verdict, label_arcs
 from .fit import edge_misfit
+from .kk import KKResult, lin_kk
 from .spectrum import Spectrum
 
 __all__ = ["CHECK", "Finding", "FitAudit", "Misfit", "NOTE", "PROBLEM",
-           "REFERENCES", "SEVERITIES", "SEVERITY_LABELS", "audit_conductivity_scan",
+           "REFERENCES", "SEVERITIES", "SpectrumAudit", "audit_spectrum", "SEVERITY_LABELS", "audit_conductivity_scan",
            "audit_fit", "audit_record", "circuit_end", "config_from_name",
            "misfit", "sort_findings", "thickness_from_name", "worst"]
 
@@ -138,6 +139,15 @@ REFERENCES: dict[str, tuple[str, ...]] = {
     "short_rest_before_sweep": ("VADHVA2021.relax-to-ocp-before-eis",
                                 "LASIA1999.stationarity-repeat-and-up-down-scans"),
     "first_sweep_suspect": ("LASIA1999.stationarity-repeat-and-up-down-scans",),
+    # 스펙트럼 자체 — Kramers–Kronig (ADR 0043)
+    "kk_violation": ("VADHVA2021.kk-validation-before-modelling",
+                     "SCHOENLEBER2014.residuals",
+                     "SCHOENLEBER2014.no-numeric-residual-threshold"),
+    "kk_outlier": ("LASIA1999.kk-linear-voigt-test", "SCHOENLEBER2014.residuals"),
+    "kk_high_frequency": ("LASIA1999.impedance-range-artefacts",
+                          "SCHOENLEBER2014.optional-series-c-l"),
+    "kk_noisy": ("SCHOENLEBER2014.residuals",
+                 "SCHOENLEBER2014.no-numeric-residual-threshold"),
 }
 
 
@@ -931,6 +941,125 @@ def _arc_findings(out: FitAudit, arc: ArcCapacitance, label: str,
         f"{process(claim).label}일 수 없습니다 — "
         + (f"{allowed}의 크기입니다" if allowed else "표의 어느 범위에도 안 듭니다")
         + (" (미결정 값이지만 범위에서 한 자릿수 넘게 벗어납니다)" if shaky else "")))
+
+
+# --------------------------------------------------------------------------
+# the spectrum itself: Kramers–Kronig (ADR 0043)
+# --------------------------------------------------------------------------
+
+#: KK 잔차(|Z| 대비)가 이만큼 넘고 **그리고** 잡음의 ``KK_NOISE_MULTIPLE`` 배도
+#: 넘어야 어긋남으로 본다.  논문에는 수치 기준이 없다
+#: (``SCHOENLEBER2014.no-numeric-residual-threshold``) — 우리 합성 시험에서 KK 를
+#: 만족하는 스펙트럼(잡음 0.1–0.5 %)은 최대 1.5 % 를 넘지 않았고, 한 점이 5 %
+#: 튀면 4.0 %, 10 Hz 아래가 5 % 계단으로 바뀌면 2.8 % 였다.
+KK_LIMIT = 0.02
+#: 잡음만으로도 점 백 개의 최대는 σ 의 3.5–4 배다 — 여섯 배면 잡음이 아니다.
+KK_NOISE_MULTIPLE = 6.0
+#: μ 가 decade 당 이보다 성긴 곳에서 멈추고 잔차가 ``KK_LIMIT`` 를 넘으면
+#: 판정하지 않는다.  날카로운 아크(n = 1)나 참 저주파 유도성 루프에서 μ 기준이
+#: 일찍 멈춘다 — 에이전트의 재현과 우리 시험에서 KK 를 만족하는데 잔차가
+#: 25–71 % 였다 (M = 4, decade 당 0.5).
+KK_EARLY_STOP_PER_DECADE = 1.5
+#: 잡음 자체가 이만큼이면 따로 적는다 — 파라미터의 오차 막대가 그만큼 크다.
+KK_NOISY = 0.01
+
+
+@dataclass
+class SpectrumAudit:
+    findings: list[Finding] = field(default_factory=list)
+    #: 화면·보고서에 적을 KK 의 수 — ``judged`` 가 거짓이면 ``reason``.
+    kk: dict = field(default_factory=dict)
+
+
+def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
+    """What the points say before any circuit is fitted: the linear KK test.
+
+    A spectrum that breaks Kramers–Kronig was not measured on a linear,
+    time-invariant system -- a jump, a point that flew, a cell that changed
+    under the sweep.  The finding says **where**, because that is what to cut
+    from the fit.  Smooth drift spread over a decade is a different matter:
+    the test cannot see it, and this does not pretend to (ADR 0043).
+    """
+    out = SpectrumAudit()
+    if spectrum is None or not len(spectrum):
+        out.kk = {"judged": False, "reason": "점이 없습니다"}
+        return out
+    result = lin_kk(spectrum.frequency_hz, spectrum.z_re, spectrum.z_im)
+    out.kk = _kk_summary(result)
+    if not out.kk["judged"]:
+        return out
+    out.findings = _kk_findings(result, out.kk)
+    out.findings = sort_findings(out.findings)
+    return out
+
+
+def _kk_summary(result: KKResult) -> dict:
+    if not result.judged:
+        return {"judged": False, "reason": result.reason}
+    parts = np.concatenate([result.residual_re, result.residual_im])
+    sigma = float(1.4826 * np.median(np.abs(parts)))
+    summary = {
+        "judged": True, "reason": "", "m": result.m,
+        "per_decade": result.per_decade, "mu": result.mu,
+        "max_residual": result.max_residual, "at_hz": result.at_hz,
+        "rms": result.rms, "sigma": sigma,
+        "with_capacitance": result.with_capacitance,
+        "with_inductance": result.with_inductance, "capped": result.capped,
+    }
+    if result.per_decade < KK_EARLY_STOP_PER_DECADE and result.rms >= KK_LIMIT:
+        summary["judged"] = False
+        summary["reason"] = (
+            f"μ 기준이 decade 당 {result.per_decade:.1f}개에서 멈췄는데 잔차가 "
+            f"{result.rms * 100:.0f} % 입니다 — 날카로운 아크나 저주파 유도성 "
+            f"루프에서 이 기준이 일찍 멈춥니다. 판정하지 않았습니다")
+    return summary
+
+
+def _kk_findings(result: KKResult, summary: dict) -> list[Finding]:
+    worst = summary["max_residual"]
+    sigma = summary["sigma"]
+    noisy = (Finding(NOTE, "kk_noisy",
+                     f"잡음이 큽니다 (KK 잔차의 σ ≈ {sigma * 100:.1f} %) — 어긋남은 "
+                     f"잡음 수준이지만 맞춘 값의 오차 막대도 그만큼 큽니다")
+             if sigma >= KK_NOISY else None)
+    if worst < KK_LIMIT or worst < KK_NOISE_MULTIPLE * sigma:
+        return [noisy] if noisy else []
+
+    frequency = result.frequency_hz
+    residual = result.residual
+    order = np.argsort(frequency)                   # 낮은 주파수부터
+    rank = int(np.where(order == int(np.argmax(residual)))[0][0])
+    floor = max(3.0 * sigma, KK_LIMIT / 2)
+    low = high = rank
+    while low > 0 and residual[order[low - 1]] > floor:
+        low -= 1
+    while high < len(order) - 1 and residual[order[high + 1]] > floor:
+        high += 1
+    f_low, f_high = float(frequency[order[low]]), float(frequency[order[high]])
+    size = f"최대 {worst * 100:.1f} %, 잡음 σ ≈ {sigma * 100:.2f} %"
+    if low == high:
+        return [Finding(NOTE, "kk_outlier",
+                        f"{summary['at_hz']:.3g} Hz 의 점 하나가 Kramers–Kronig 를 "
+                        f"어깁니다 ({size}) — 튄 점입니다. 맞춤에서 빼 보세요")]
+    span = f"{f_low:.3g}–{f_high:.3g} Hz"
+    if high == len(order) - 1:
+        if result.capped:
+            return []
+        return [Finding(NOTE, "kk_high_frequency",
+                        f"고주파 끝 {span} 가 Kramers–Kronig 를 어깁니다 ({size}) — "
+                        f"배선·기기의 한계입니다. 맞춤의 상한을 {f_low:.3g} Hz 아래로 "
+                        f"두세요")]
+    if low == 0:
+        above = float(frequency[order[high + 1]]) if high + 1 < len(order) else f_high
+        return [Finding(CHECK, "kk_violation",
+                        f"저주파 끝 {span} 가 Kramers–Kronig 를 어깁니다 ({size}) — "
+                        f"측정 중에 셀이 변했습니다 (온도가 덜 올라왔거나, 쉬지 않은 "
+                        f"셀). 그 점들로 정한 꼬리·저항은 믿지 말고, 하한을 "
+                        f"{above:.3g} Hz 로 두고 다시 맞추세요")]
+    return [Finding(CHECK, "kk_violation",
+                    f"{span} 에서 Kramers–Kronig 를 어깁니다 ({size}) — 그 사이에 "
+                    f"셀이나 접촉이 바뀌었습니다 (눌림, 온도, 접촉). 그 구간을 지나는 "
+                    f"아크의 값은 믿지 마세요")]
 
 
 # --------------------------------------------------------------------------

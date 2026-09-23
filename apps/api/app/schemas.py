@@ -1578,6 +1578,9 @@ class AuditSpectrumOut(BaseModel):
     parameters: list[dict[str, Any]] = []
     blocking: dict[str, Any] = {}
     arcs: list[dict[str, Any]] = []
+    #: 선형 Kramers–Kronig 검사 (ADR 0043) — ``judged``, 잔차 최대·그 주파수,
+    #: 잡음 σ, Voigt 수.  ``judged`` 가 거짓이면 ``reason``.
+    kk: dict[str, Any] = {}
     findings: list[AuditFindingOut] = []
     #: 가장 무거운 판정 (``problem`` / ``check`` / ``note``), 없으면 ``None``.
     worst: str | None = None

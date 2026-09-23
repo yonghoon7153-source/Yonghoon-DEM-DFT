@@ -45,19 +45,22 @@ from .derive import (
 from .drt import DrtPeak, DrtResult, lcurve_corner
 from .fit import EdgeMisfit, FitResult, Parameter, edge_misfit, fit_circuit
 from .guess import Arc, find_arcs, inductive_mask, initial_guess
+from .kk import KKResult, lin_kk
 from .spectrum import Spectrum
 
 __all__ = ["ACTIVATION_BASES", "Arc", "ArcCapacitance", "ActivationEnergy",
            "BOLTZMANN_EV_PER_K", "CONFIGS", "Circuit", "CircuitError",
            "ConductivityPoint", "DrtPeak", "DrtResult",
-           "EdgeMisfit", "FULL", "FitResult", "HALF", "LIQUID", "PROCESSES",
+           "EdgeMisfit", "FULL", "FitResult", "HALF", "KKResult", "LIQUID",
+           "PROCESSES",
            "Parameter", "Process", "SOLID",
            "SYMMETRIC", "Spectrum", "UnknownColumn", "activation_energy",
            "arc_capacitances", "candidate_processes",
            "conductivity", "conductivity_ms_cm", "drt",
            "edge_misfit", "effective_capacitance", "find_arcs", "fit_circuit", "inductive_mask",
            "initial_guess",
-           "ionic_conductivity", "label_arcs", "lcurve_corner", "parse_circuit",
+           "ionic_conductivity", "label_arcs", "lcurve_corner", "lin_kk",
+           "parse_circuit",
            "peak_frequency",
            "read_mpr_bytes", "read_mps_text", "read_mpt_text",
            "total_resistance"]

@@ -30,7 +30,8 @@
    "where": "Sec. 1 (Introduction), Eqs. (1)-(2)",
    "math": "Z_Re(ω) = (2/π)·∫_0^∞ ω'·Z_Im(ω') / (ω² − ω'²) dω' ;  Z_Im(ω) = (−2/π)·∫_0^∞ ω·Z_Re(ω') / (ω² − ω'²) dω'",
    "conditions": "Direct evaluation of Eqs. (1)-(2) needs data from 0 to infinity; extrapolation attempts left the missing-data problem unsolved (p. 21), which is why the paper uses the model-based lin-KK test instead.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "The validity of all further analysis, however, requires the measured spectrum to be a representation of a linear, time-invariant and causal system."
   },
   {
    "id": "SCHOENLEBER2014.boukamp-lin-kk-manual-m",
@@ -66,7 +67,8 @@
    "where": "Sec. 2.1, Eq. (9), Fig. 1",
    "math": "Zhat(ω) = R_ohm + Σ_{k=1}^{M} R_k / (1 + j·ω·τ_k) ;  C_k = τ_k / R_k",
    "conditions": "ω is angular frequency. τ_k fixed by Eqs. (10)-(12). Optional series C and/or L (see optional-series-c-l).",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "A sufficiently general model for fitting impedance spectra is given by a series connection of an ohmic resistor and M RC-elements"
   },
   {
    "id": "SCHOENLEBER2014.optional-series-c-l",
@@ -90,7 +92,8 @@
     }
    },
    "conditions": "Application stated in Sec. 3.2 (p. 23). Neither term has a real part, so they cannot be determined from a real-fit alone; the paper does not say how C and L are obtained in a real-fit.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "Optionally, an additional capacitor or an additional inductance might be added if physically meaningful"
   },
   {
    "id": "SCHOENLEBER2014.tau-distribution",
@@ -180,7 +183,8 @@
     ]
    },
    "conditions": "Sign convention is measured minus fitted. The ±10 % axis range is read from the figures, not stated as a criterion.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "a measure describing an according deviation, the residual, is defined as"
   },
   {
    "id": "SCHOENLEBER2014.no-numeric-residual-threshold",
@@ -199,7 +203,8 @@
     "numeric_residual_threshold": null
    },
    "conditions": "Checked against the full text of all eight pages.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "Thus large residuals are detected, thereby falsely indicating an invalid impedance spectrum."
   },
   {
    "id": "SCHOENLEBER2014.under-fitting",
@@ -340,7 +345,8 @@
     "c": 0.85
    },
    "conditions": "Sec. 4.4 (p. 25) plots the M where μ 'first crosses a threshold of c = 0.85'. Validated on synthetic IS1a/b/c and on the measured Li-ion spectra.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "The value of c is a design parameter, however from the author's experience c = 0.85 has proven to be an excellent choice."
   },
   {
    "id": "SCHOENLEBER2014.m-selection-procedure",

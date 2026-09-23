@@ -274,7 +274,8 @@
    "page": 1935,
    "where": "Section 2.2 Cell Design (end)",
    "conditions": "Every spectrum, before ECM fitting or DRT.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "An important check of data quality is to use Kronig-Kramers (K–K) relations"
   },
   {
    "id": "VADHVA2021.simplest-ecm",

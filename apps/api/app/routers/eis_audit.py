@@ -30,6 +30,7 @@ from wrdkit.eis.audit import (
     audit_conductivity_scan,
     audit_fit,
     audit_record,
+    audit_spectrum,
     sort_findings,
     worst,
 )
@@ -202,6 +203,10 @@ def _audit_spectrum(session: Session, record: SpectrumRecord,
         sha256=record.sha256,
         n_points=len(spectrum) if spectrum is not None else record.n_points,
         thickness_um=thickness_cm * 1e4 if thickness_cm else None, area_cm2=area)
+    # 점 자체 — 회로와 무관한 Kramers–Kronig 검사 (ADR 0043).
+    points = audit_spectrum(spectrum)
+    findings += points.findings
+    out.kk = points.kk
 
     best = _best_fit(session, record.id or 0)
     if best is None:
@@ -472,6 +477,13 @@ def _block(one: AuditSpectrumOut, numbers: _Numbers) -> list[str]:
             shown.append(f"{item['name']}={_g(item['value'])}{mark}")
         lines.append("    값 " + " ".join(shown) + ("   (?=미결정)" if any(
             s.endswith("?") for s in shown) else ""))
+    kk = one.kk or {}
+    if kk.get("judged"):
+        lines.append(f"    KK 잔차 최대 {kk['max_residual'] * 100:.2g} % "
+                     f"({_g(kk['at_hz'])} Hz) · 잡음 σ {kk['sigma'] * 100:.2g} % · "
+                     f"Voigt {kk['m']}개 (decade 당 {kk['per_decade']:.1f})")
+    elif kk.get("reason"):
+        lines.append(f"    KK 판정 안 함 — {kk['reason']}")
     for arc in one.arcs:
         where = ("→ " + " 또는 ".join(arc["candidate_labels"])
                  if arc.get("candidate_labels") else

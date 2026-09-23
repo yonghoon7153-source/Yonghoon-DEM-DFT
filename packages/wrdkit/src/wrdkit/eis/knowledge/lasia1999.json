@@ -438,7 +438,8 @@
     ]
    },
    "conditions": "Measurement-model approach avoids explicit integration; blocking systems need the admittance form or a shunt (see LASIA1999.kk-blocking-systems).",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "Through inspection of the relative residual plots, it is possible to isolate data that do not comply with the Kramers–Kronig transformations."
   },
   {
    "id": "LASIA1999.kk-blocking-systems",
@@ -454,7 +455,8 @@
    "page": 229,
    "where": "Section VI.2 (with pp. 226-227)",
    "conditions": "Blocking or capacitive low-frequency behaviour (finiteness p. 226, diverging cases p. 227, remedies p. 229).",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "For such electrodes, the admittance Kramers–Kronig transformation could be used."
   },
   {
    "id": "LASIA1999.cpe-definition",

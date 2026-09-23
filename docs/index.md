@@ -46,6 +46,7 @@
 | [0040](adr/0040-audit-every-spectrum-where-the-data-lives.md) | EIS 검수: 데이터가 있는 기계에서, 읽기만 하고, 글로 낸다 | DB 는 랩 PC 에 있다 — `bml audit` 가 그 기계에서 저장된 스펙트럼 전부를 훑어 **글**로 낸다. 고치지 않는다 (무엇이 틀렸는지가 지워진다). 아크 이름은 커패시턴스로 **검사만** 한다: 벌크·입계는 `C·l/A`, 계면·반응은 `C/A` 로 규격화해 Irvine–Sinclair–West 의 후보를 내고, 이름이 말하는 과정이 후보에서 빠졌을 때만 `문제` 로 적는다 |
 | [0041](adr/0041-capacitance-outranks-the-arc-name.md) | 커패시턴스가 아크 이름을 이긴다: 막는 펠릿의 전해질은 고주파 절편이다 | 실측 검수 131 스펙트럼: 황화물 블로킹 펠릿의 "벌크·입계" 아크가 전부 µF 대(전극 이중층)였고 R0 가 실수축 교점과 같았다. 아크를 커패시턴스로 벌크/입계/면으로 가르고(×3, 미결정 ×10 에도 같은 쪽), 면 쪽은 빼고, 벌크 쪽이 없으면 전체 σ 를 R0 + 입계 쪽 아크로 낸다 (Irvine–Sinclair–West 그림 4b, `total_from`). 꼬리의 C 는 Brug 식. 대칭셀 보기에 `L1-R0-CPE1` 등. 검수는 원인 하나를 한 줄로 (`tail_mimicked_by_arc`, `arcs_are_electrode`, `bulk_above_window`, `inductance_missing`) |
 | [0042](adr/0042-paper-knowledge-behind-every-finding.md) | 논문 지식 DB: 검수의 판정마다 근거를 쪽까지 | 논문 여섯 편을 기록 191개로 (`wrdkit.eis.knowledge`, 우리 말 요약 + 인쇄 쪽). 원문은 코드가 인용하는 기록에만 25 단어까지 — 시험이 강제. 판정 코드 → 기록은 `audit.REFERENCES`, `bml audit` 글 끝에 쪽 번호가 든 근거 목록 |
+| [0043](adr/0043-linear-kramers-kronig-before-the-circuit.md) | 회로보다 먼저 점을 본다: 선형 Kramers–Kronig 검사 | Schönleber 2014 의 lin-KK (복소 맞춤, μ < 0.85 에서 M 을 멈춤)를 스펙트럼마다. 논문에 없는 잔차 기준은 우리 것(2 % 그리고 잡음 6σ)이고 그렇다고 적는다. 한 점 = 참고, 구간 = 확인(어디서), μ 가 일찍 멈추면 판정 안 함. 매끄러운 드리프트는 못 본다 |
 
 ## 리뷰 (외부 교차검증)
 

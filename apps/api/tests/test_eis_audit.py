@@ -92,6 +92,7 @@ def test_each_finding_says_which_paper_it_rests_on(client):
     assert len(cited) == len(report["references"])
 
     text = client.get("/api/eis/audit", params={"format": "text"}).text
+    assert "KK 잔차 최대" in text
     assert "[근거 1" in text
     assert "━━ 근거 (" in text
     assert "[1] " in text.split("━━ 근거 (")[1]
@@ -113,6 +114,10 @@ def test_a_real_blocking_cell_fitted_right_has_no_problem(client):
     item = entry(audit(client), out["id"])
     assert item["blocking"]["blocking"] is True
     assert "problem" not in [f["severity"] for f in item["findings"]], item["findings"]
+    # 합성 점은 KK 를 만족한다 — 검사가 돌았고 아무 말도 하지 않는다 (ADR 0043).
+    assert item["kk"]["judged"] is True
+    assert item["kk"]["max_residual"] < 0.02
+    assert not [f for f in item["findings"] if f["code"].startswith("kk_")]
 
 
 def test_the_audit_writes_nothing(client):
