@@ -43,8 +43,8 @@ evidenceScope: multi-source-primary
 ## §1. 새 제약 — 클러스터가 없다 (실측)
 
 - **KISTI 접근은 2026-09-15 에 종료됐다.** 우리 기계는 전부 **단일 노드**다: gabia A6000 **48 GB** (가장 크다) / kgy 3090 24 GB (공유) / V100 32 GB.
-- ⭐ **1저자 (2026-09-23): 모든 작업은 GPU.** CPU 로 계산하지 않는다 ⇒ 메모리 상한 = **GPU 한 장 48 GB** (host RAM 62 GB 는 계산 예산이 아니다).
-  아래 추정치는 GPU 가 b2o3 MD 와 공유 중이라 **CPU pw.x 1랭크로 추정치만 읽고 수 초 안에 PID 로 죽인** 값이다 (계산 없음).
+- ⭐ **1저자 (2026-09-23): 이런 큰 계산은 GPU 로.** 큰 잡을 CPU(host RAM 62 GB)로 돌리지 않는다 ⇒ 큰 잡의 메모리 상한 = **GPU 한 장 48 GB**.
+  아래 추정치는 GPU 가 b2o3 MD 와 공유 중이라 **CPU pw.x 1랭크로 추정치만 읽고 수 초 안에 PID 로 죽인** 값이다 (계산 없음 · 1저자 허용).
 - QE `Estimated max dynamical RAM` (gabia CPU 1랭크 스크래치 프로브 · 2026-09-23 · GBRV USPP + P rrkjus · 52/520 Ry · gaussian 0.005 · D3):
 
 | 잡 | 원자 | k 점 | 추정 |
@@ -70,7 +70,7 @@ evidenceScope: multi-source-primary
 - DEM 전달값 = *"작은 모델 DFT 로 검증한 UMA+D3"* 이름표 · **검증 통과 시에만** — MLIP 금지 규칙의 **조건부 예외**가 필요하다.
 
 **(B) 가우스 기저 DFT (CP2K GPW · PBE-D3 · DZVP/TZV2P-MOLOPT)** — 진공에 비용을 안 내서 전체 계면 DFT 를 지키는 길이다.
-⚠ **GPU 전용 제약에서 약해졌다**: 처음 판단은 *"800원자가 host 62 GB 에 들어간다"* 였는데 그건 CPU 전제다. GPU 판 CP2K 는 설치·메모리 모형·검증이 전부 새로 필요하다.
+⚠ **"큰 계산은 GPU" 제약에서 약해졌다**: 처음 판단은 *"800원자가 host 62 GB 에 들어간다"* 였는데 그건 CPU 전제다. GPU 판 CP2K 는 설치·메모리 모형·검증이 전부 새로 필요하다.
 그 위에 새 코드 · 기저 수렴 · **BSSE(counterpoise)** · 우리 QE 기준선과 교차검증(SE\|SE 로)이 필요하다.
 
 ## §3. 질문

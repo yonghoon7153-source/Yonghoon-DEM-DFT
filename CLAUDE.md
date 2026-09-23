@@ -78,9 +78,9 @@
   gabia A6000 48 GB · host 62 GB / kgy 3090 24 GB (공유) / V100 32 GB. MPI 분할은 노드 총량을 못 넘는다.
   ⇒ QE 추정(`Estimated max dynamical RAM`)이 그 안에 안 들면 **질문·모델 크기를 바꾼다** (li2s 선례: 400 → 120 원자).
   (옛 기록: Slurm · QOS 제출 제한 · scancel 직후 재제출 금지 · pseudo /scratch/x3430a02/kgy/manuscript_support/pseudo)
-- ⭐⭐ **1저자 (2026-09-23): 모든 작업은 GPU.** CPU 로 계산을 계획하지 않는다 ⇒ 메모리 상한은 **GPU 한 장** (gabia 48 GB).
-  예외는 1저자가 그때그때 명시한다 (예: Nd k-탐침 gabia CPU 2026-09-23). host RAM 은 계산 예산이 아니다.
-  ⚠ 메모리 **추정치만** 읽고 수 초 안에 PID 로 죽이는 CPU pw.x 프로브(계산 없음)는 2026-09-23 에 썼다 — 이것도 막을지는 1저자 확인 대기.
+- ⭐⭐ **1저자 (2026-09-23): 큰 계산은 GPU 로.** W_ad DFT 같은 큰 잡을 CPU(host RAM)로 돌리는 계획을 세우지 않는다 ⇒
+  큰 잡의 메모리 상한은 **GPU 한 장** (gabia 48 GB). ✅ 메모리 **추정치 읽기** CPU pw.x 프로브(수 초 · PID 로 죽임)와
+  작은 작업은 CPU 로 해도 된다 (1저자 정정 *"ㄴㄴ 이런 큰작업은 gpu로 하라는 얘기였어"* — 처음에 내가 "모든 작업" 으로 넓혀 적었다).
 - **kgy** (RTX3090, QE-GPU + uma env): ssh kgy@59.12.161.91.
   ⛔⛔ **QE-GPU 런타임은 추측하지 말고 `ldd` 로 바이너리에게 묻는다.** 2026-09-08 에
   같은 자리에서 **세 번** 틀렸다: ① conda mpirun 탓 → ② 런처를 뺐더니 `libgomp: TODO`
