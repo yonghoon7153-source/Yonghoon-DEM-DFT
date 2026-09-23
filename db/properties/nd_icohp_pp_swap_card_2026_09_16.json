@@ -114,6 +114,11 @@
       "date": "2026-09-23",
       "by": "claude",
       "note": "판정량 정의 보충(결과 전): Nd79 의 가장 가까운 S 5개 평균. 4.0 Å 전체 평균은 참고. 문턱 불변."
+    },
+    {
+      "date": "2026-09-23",
+      "by": "claude",
+      "note": "LOBSTER 실행 중 실측(결과 전): 실제 기저 546 함수 — P/S/Cl 3d 미사용 · 사면체법 불가로 Gaussian smearing. nbnd 920 과다 교훈."
     }
   ],
   "ratification": {
@@ -131,5 +136,15 @@
     "참고로만": "4.0 Å 까지 전체 Nd–S 평균 · Nd2(NdO₂S₃Cl)의 가장 가까운 S 3개 평균 · 원소쌍 평균(P–S, Li–S 는 같은 런 안 대조군).",
     "라벨_확인": "Nd 라벨은 원자 순서로 붙는다. vc-relax 기록상 0-based Nd78 = NdS₅Cl · Nd1 = NdO₂S₃Cl ⇒ 1-based Nd79 · Nd2. 출력에서 배위(Nd–O 유무)로 한 번 더 확인한다 — 어긋나면 **배위로** 고른다.",
     "한계_미리_적음": "6월과 k 가 같은지 **미상** (D-2026-09-18-nd-icohp-kmesh enforcement ③). LOBSTER 가 PAW 밴드 547 이상을 무시한다고 알렸다 — ICOHP 는 점유 밴드(≈296)만 적분하므로 판정량에 직접 영향은 없다고 보지만 spilling 과 경고로 확인한다."
+  },
+  "2c_LOBSTER_실행_중_실측_2026_09_23_결과_전": {
+    "기저_실제로_쓰인_것": "lobster_run.out: O 2s2p · P 3s3p · S 3s3p · Cl 3s3p · Li 1s2s2p · Nd 5s6s5p6p5d ⇒ 12+40+164+64+240+26 = **546 함수**. lobsterin 은 P/S/Cl 에 `3s 3p 3d` 를 요청했지만 **3d 는 쓰이지 않았다** (pbeVaspFit2015 기저에서 빠진 것으로 보인다 — LOBSTER 가 경고 없이 넘어갔다).",
+    "그래서": [
+      "'PAW bands from 547 and upwards will be ignored' 의 이유 = 밴드 수를 기저 함수 수(546)에 맞춘 것 (LOBSTER INFO: orthonormalization·Hamiltonian reconstruction 보호).",
+      "9월 n5fu 런도 같은 빌더라 같은 식으로 3d 가 빠졌을 개연성이 크다 → 9월↔이번 비교의 기저 조건은 같을 것으로 본다 (n5fu lobsterout 으로 확인 필요). 6월 기저는 미상.",
+      "빌더의 nbnd = int(nbf·1.05)+10 은 3d 포함 nbf≈867 을 가정해 920 을 냈다. 실제 기저는 546 → **nscf 47 h 의 상당 부분이 쓰이지 않은 밴드**였다. 다음 LOBSTER 런은 던지기 전에 실제 기저 수로 nbnd 를 다시 잡는다 (CLAUDE.md '던지기 전에 nbnd·k 확인')."
+    ],
+    "k_적분": "LOBSTER WARNING: 사면체법 불가 → Gaussian smearing 으로 대체 (gaussianSmearingWidth 0.02). k 2×2×1 · nosym 조건. 판정량(ICOHP 적분)의 정의는 바뀌지 않지만 한계로 적는다.",
+    "판정에_주는_영향": "C1/C2/C3 문턱(−2.0/−1.0 eV)은 자릿수 판정이라 3d 분극 기저 유무보다 크다고 보지만, 그 크기를 잰 것은 아니다 — 판정문에 '3d 미사용 기저' 를 조건으로 적는다."
   }
 }
