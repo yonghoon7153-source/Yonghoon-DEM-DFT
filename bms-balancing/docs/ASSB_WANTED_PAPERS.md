@@ -8,7 +8,7 @@
 - 큐에 이미 있으면 그 번호를 적고 **"큐 안"** 으로 표시한다 (중복 요청을 막는다).
 - 서지가 불완전하면 불완전한 채로 적는다 — 추측으로 채우지 않는다.
 
-갱신: 2026-09-23 (22호까지 반영 — 큐 20~37 흡수가 끝날 때마다 덧붙인다).
+갱신: 2026-09-23 (23호까지 반영 — 큐 20~37 흡수가 끝날 때마다 덧붙인다).
 
 ## 1. 큐 밖 — 요청 대상
 
@@ -34,12 +34,17 @@
 | ★ | **Asheri 외 2023** — *Comput. Mater. Sci.* | 15 | 1 | Q3·Q4 | 15호가 아는 유일한 SSB-ML ("interface damage") |
 | ★ | **Li Q. 외 2025** — *Nat. Energy* · **Zhang 외 2025** — *Nat. Commun.* | 13 | 1 | Q6 | 무외압 Si 음극 — 저압 축 |
 | ★ | **Masias 외 2019** — *J. Mater. Sci.* **54**, 2585 | 21 | 1 | Q6·Q7 | Li creep 기계 물성 — 21호 Li 박 조립 방향의 기계 쪽 근거 |
-| ★★★ | **Zhang·Schröder·Arlt·…·Janek 2017** — *J. Mater. Chem. A* **5**, 9929−9936 | 22 | 1 | Q1·Q6 | 22호 셀 장치의 원전(양극 면적 미기재) + **충전 중 부피 수축 → 접촉 감소**를 압력으로 감시한 근거 — Q1 의 기구 쪽 입력 |
-| ★★★ | **Zhang·Weber·Weigand·…·Janek 2017** — *ACS Appl. Mater. Interfaces* **9**, 17835−17845 | 22 | 1 | Q1 | 7:3 조성의 근거 · **토모그래피** — 같은 연구망 복합체의 **공극률 실측** 후보 (01호와 22호가 둘 다 공극률을 안 쟀다) |
+| ★★★ | **Zhang·Schröder·Arlt·…·Janek 2017** — *J. Mater. Chem. A* **5**, 9929−9936 | 22 · 23 | **2** | Q1·Q6 | 22호 셀 장치의 원전(양극 면적 미기재) + **충전 중 부피 수축 → 접촉 감소**를 압력으로 감시한 근거 — Q1 의 기구 쪽 입력 |
+| ★★★★ | **Zhang·Weber·Weigand·…·Janek 2017** — *ACS Appl. Mater. Interfaces* **9**, 17835−17845 | 22 · 23 | **2** | Q1·Q2·Q5 | 7:3 조성의 근거 · **토모그래피** — 공극률 실측 후보. 23호(Koerver)의 **방법 원전**(본문 8회): 셀 기하·등가회로 배정·"In kinetic hindrance" 배정의 근거가 전부 여기로 간다 |
 | ★★ | **Koerver·Walther·Aygün·…·Janek 2017** — *J. Mater. Chem. A* **5**, 22750−22760 | 22 | 1 | Q2 | 산화 계면층 — 곱 축퇴의 **`j₀` 쪽** 원전 (큐 22 Koerver *Chem. Mater.* 와 **다른 논문**) |
 | ★★ | **Nam·Oh·Jung·Jung 2018** — *J. Power Sources* **375**, 93−101 | 22 | 1 | Q1 | 건식↔슬러리 혼합 복합전극 미세구조·분리. ⚠ 위의 **Nam 2018 *JMCA*** 와 **다른 논문** |
 | ★ | **de Biasi 외 2017** — *J. Phys. Chem. C* **121**, 26163 · **Kondrakov 외 2017** — *J. Phys. Chem. C* **121**, 24381 | 22 | 1 | Q8 | 격자상수 ↔ `x(Li)` 교정의 원전 — 22호가 `c(x)` 최대 근처에서 **두 가지로 갈리는** 자리의 기구 |
 | ★ | **Chen·He·Zhang·Wang·Ni 2013** — *Energies* **6**, 1632−1656 | 22 | 1 | Q1 | 22호가 기댄 "percolation theory" (SOFC) — 01호 모델과의 관계 |
+| ★★★ | **Kondrakov·Schmidt·Xu·…·Janek 2017** — *J. Phys. Chem. C* **121**, 3286−3294 | 23 | 1 | Q1 | **NCM811 부피 수축 %의 원전** — 23호 SEM 틈 폭으로 역산한 요구치(ΔV/V ≈3–20 %)를 닫을 값. 22호의 *JPCC* 121, 24381 과 **다른 논문** |
+| ★★ | **Zaghib·Simoneau·Armand·Gauthier 1999** — *J. Power Sources* **81−82**, 300−305 | 23 | 1 | Q5 | **LTO 1.55 V 가정의 뿌리** — 18호 "Assuming 1.55 V" 보다 이른 근거 (액체셀). Ikezawa 2020 과 함께 R-LTO 가지의 원전 쌍 |
+| ★★ | **Jung·Oh·Nam·Park 2015** — *Isr. J. Chem.* **55**, 472−485 | 23 | 1 | Q5 | In **0.6 V 가정**의 인용 근거(리뷰) — Santhosha 2019 와 함께 In 가지의 원전 쌍 |
+| ★ | **Ishidzu·Oka·Nakamura 2016** — *Solid State Ionics* **288**, 176−179 | 23 | 1 | Q1·Q8 | 조성별 격자 부피 변화 — "Ni 가 많을수록 수축이 크다" 의 근거 |
+| ★ | **Auvergniot·Cassel·Foix·…·Dedryvère 2017** — *Solid State Ionics* **300**, 78−85 | 23 | 1 | Q2 | XPS 산화종 배정(P₂S₅ 배제, S−Oₓ)의 참조 |
 
 ## 2. 구조적 공백 — "그 한 편" 이 아니라 **목록에 없는 종류**
 
@@ -54,7 +59,7 @@
 | 논문 | 지목 | 큐 |
 |---|---|---|
 | Sedlmeier 외 2023 — *JES* **170**, 030536 (μ-RE, In-Li) | 17 ("Li 박 방향 뒤집기 = 16↔17호 대질") | **20** (✅ 21호 `ac961cde`) |
-| Koerver 외 2017 — *Chem. Mater.* 29, 5574 | 18 ("큐 22번 당기기") · 21 (ref 29) · 22 (ref 9, 본문 4회 — 22호의 저 CE·부피 수축→접촉 감소 서술의 기구 원전) | **22** (다음 차례) |
+| Koerver 외 2017 — *Chem. Mater.* 29, 5574 | 18 ("큐 22번 당기기") · 21 (ref 29) · 22 (ref 9, 본문 4회) | **22** (✅ 23호 `492c1ff1`) — ⚠ "접촉 손실의 **실험** 원전" 은 맞지만 **정량** 원전은 아니다 (틈 치수·분율·용량 몫 0) |
 | Fukunishi 외 2023 — *JPS* 564 (NCM523 3전극) | 16 (ref 39) | 17 (✅ 18호) |
 
 ## 4. 갱신 기록
@@ -64,3 +69,4 @@
 | 2026-09-23 | 1~20호 | 씨앗 — `ASSB_TRANSFER_NOTE.md` §6 의 `후속 →` 절과 §6-3-b 에서 옮김 (큐 밖 17 · 구조적 공백 3 · 큐 안 3) |
 | 2026-09-23 | 21호 (큐 20 Sedlmeier) | Ikezawa 4→5 · Nam 2→3 · Santhosha 2→3 · Hertle 에 Schlenker 2020 병합(2회) · 신규 Solchenbach 2016 · Dugas 2021 · Masias 2019 · 누설/드리프트 공백 **절반 채움** · Sedlmeier 흡수 완료 |
 | 2026-09-23 | 22호 (큐 21 Strauss) | 신규 7 — Zhang 2017 *JMCA* (부피 수축→접촉) · Zhang 2017 *ACS AMI* (토모그래피·공극률) · Koerver 2017 *JMCA* (산화 계면층) · Nam 2018 *JPS* (≠ *JMCA*) · de Biasi/Kondrakov 2017 · Chen 2013. 큐 22 Koerver *Chem. Mater.* 지목 3회. 22호는 2018-03 게재라 Ikezawa·Nam *JMCA*·Santhosha·Sedlmeier 를 **인용할 수 없다** (지목 0 은 부재가 아니라 시점) |
+| 2026-09-23 | 23호 (큐 22 Koerver) | Zhang 2017 *JMCA*·*ACS AMI* 각 2회 (후자는 23호 방법 원전으로 ★★★★ 승격) · 신규 5 — Kondrakov 2017 *JPCC* 121 3286 (NCM811 부피 수축 원전) · Zaghib 1999 (LTO 1.55 V 뿌리) · Jung 2015 (In 0.6 V 근거) · Ishidzu 2016 · Auvergniot 2017. 23호는 2017-06 게재라 Ikezawa·Nam·Santhosha·Koerver *JMCA* 인용 불가 (시점) |
