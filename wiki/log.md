@@ -2391,3 +2391,16 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: **7 장 다 봤다**, 화소 판독 Fig. 5a · 5b · 6a · 7b.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-lampe-contact-product-degeneracy]](서른두 번째 적용 · 처방 표 새 줄) · [[assb-sensitivity-sweep-vs-identifiability]](49호 절 · 처방 13) · 큐 문서 §6-3-g 50 행 + 지문 ¹⁵.
 - 후속(서지 기준, 미열람 — 큐 51–59 인용 0): **Waag, Käbitz, Sauer 2013 *Applied Energy* 102, 885** (ref 8, 두 번째 지목) · Schweiger et al. 2010 *Sensors* 10, 5604 (ref 22) · Widanage et al. 2016 *JPS* 324, 61 · 70 (refs 21 · 20) · Barai et al. 2015 *JPS* 280, 74 (ref 18) · Smith & Wang 2006 *JPS* 161, 628 (ref 28).
+
+## [2026-09-23] ingest | assb 50호 — Miß, Ramanayagam, Roling 2022, Which Exchange Current Densities Can Be Achieved in Composite Cathodes of Bulk-Type All-Solid-State Batteries? A Comparative Case Study (ACS Appl. Mater. Interfaces 14, 38246)
+- raw: `raw/papers/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb.md` (sha256 봉인 — 본문 `pdf_sha256` · SI `si_sha256`) · 그림 `raw/figures/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb/` (15 장 + 표 4). 큐 51번(2차 묶음 열두째 편) — 16호 ref [30], 16호 TLM 방법의 원본.
+- ★★★★ **판정**: 면적 = 완전구 기하 `a_v = 3ε/r`(`[인쇄]` "in contact to SE" — 16호 문장의 출생지, `r_CAM` 2.5 µm 는 SEM 공칭 확인) — **`j₀` 와 면적을 가르지 않았다**. 두께 가변은 `R_ion` ↔ `R_CT/(a_v d)` 만(NMC 전이 통과 · LCO 전부 두꺼운 극한). `[재현]` 수정 (ii) `a_v·τd → a_v·d` = `j₀` ×τ 정확한 재척도(식 1 이면 LCO 25.8 → 4.2 · NMC 0.11 → 0.016 A m⁻²).
+- ★★★ **비교**: 같은 지면 LCO ↔ NMC τ_CT ×106(면적 서명 아님 — 견딘다) · 16호 ↔ 이 편 NMC τ ×1.28(면적 서명 — 16호 SE 전도도 서사가 곱을 안 가름) · 3-b ✅ 4.4 · 2.0 µF cm⁻².
+- ★★★ **16호 대조**: `r_CAM` 공칭 확인 · 초기값 문헌(Kaiser 2018 τ) + 1/30 C · `ε` 0.505/0.495 = 이 편 LCO 칸 · "기공 구조" 이유는 16호의 것 · 비교 대상 `j₀` = 0.11.
+- **채움표 50호 행 — 누적 ≈20.0 → ≈20.0 (새 칸 0).** Q4 0/50 마흔두 번째 성질 "면적 규약을 적합 개선으로 골랐다" · Q5 스물다섯 번째 형태 "대칭셀 반 빼기"(반 칸 검토 후 접음) · Q3 simulation-matched.
+- **곱 축퇴 처방 서른세 번째 적용**: 1단계 ✅(같은 지면 · 편 간) · 3-b ✅ · 새 줄 "면적 정규화 규약".
+- ⚠ 어긋남 14 건(D1 첫 방전 ≈170 ↔ "180−200" · D6 SI σ_ion ⇒ τ ≈3.0 ↔ 6.8 · D7 Fig. 5a 과차감 · D9 LCO 모형 두께 추세 "unclear" · D13 refs 30 = 33 외).
+- 낱말 지문: 11 열 중 `MPa` 8(SI 1) 외 0 · `simulat*` 19 · `fit*` 4(`j₀` 밖).
+- 그림: 15 장 중 **12 장 봤다**(Fig. 2–8 · S2 · S3 · S5 · S6 · S7), 안 본 것 Fig. 1 · S1 · S4 · 식은 쪽 렌더.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]] · [[assb-lampe-contact-product-degeneracy]](서른세 번째 적용 · 처방 표 새 줄) · [[spm-grouped-parameter-identifiability]](50호 두 행) · 큐 문서 §6-3-g 51 행 + 지문 ¹⁶.
+- 후속(서지 기준, 미열람 — 큐 52–59 인용: 57 Bielefeld 2022 만): Kaiser … Roling 2018 *JPS* 396, 175 (ref 24) · Cronau … Roling 2020 *Batter. Supercaps* 3, 611 (ref 36) · Hess … Cuniberti 2015 *JPS* 299, 156 (ref 31) · Minnmann … Janek 2021 *JES* 168, 040537 (SI ref 4) · Morasch … Suthar 2021 *JES* 168, 080519 (ref 34).

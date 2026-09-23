@@ -1,0 +1,392 @@
+{
+ "slug": "miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "da911736-12._Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+  "9a86abdc-12._Sup_Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic illustration of the cell configuration of (a) all- solid-state battery cells with variable thickness of the composite electrode (CompreCell, rhd instruments) and (b) symmetric In−Li | LPSI | In−Li cell (home-built).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    273.9,
+    297.5,
+    402.3
+   ],
+   "w": 1051,
+   "h": 536,
+   "dpi": 300,
+   "src": "da911736-12._Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.758
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. First galvanostatic charge/discharge cycle of (a) an ASSB with an LCO-based composite cathode (cathode thickness 52 μm) and (b) an ASSB with an NMC-based composite cathode (cathode thickness 57 μm). Both batteries were cycled at a rate of 0.1 C. https://doi.org/10.1021/acsami.2c06460 ACS Appl. Mater. Interfaces 2022, 14, 38246−38254 38248",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    578.3,
+    561.5,
+    724.4
+   ],
+   "w": 2151,
+   "h": 610,
+   "dpi": 300,
+   "src": "da911736-12._Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Impedance spectra of ASSBs with (a) LCO-based cathodes and (b) NMC-based cathodes of different thicknesses (given in the legend). The impedance spectra were taken in a frequency range from 0.1 MHz to 5 × 10−4 Hz at SOC50 during the second cycle. The high-frequency resistance, mainly caused by the separator resistance, was subtracted for a better comparability. higher and varies between 90 and 200 Ω cm2 (Figure 3b). In contrast to the LCO-based ASSBs, the high-frequency semicircle is virtually independent of the cathode thickness, while the low-frequency semicircle shrinks with increasing cathode thickness. Two semicircles in the impedance spectra of ASSBs have also been reported in the literature, however, the assignment of the semicircles to anode and cathode processes has not yet been clarified.42−44 Therefore, in order to differentiate between contribution of the anode and o",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    297.5,
+    394.7
+   ],
+   "w": 1051,
+   "h": 1419,
+   "dpi": 300,
+   "src": "da911736-12._Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Impedance spectrum of a symmetric In−Li | LPSI | In−Li cell in a frequency range from 0.1 MHz to 0.01 Hz. The In:Li molar ratio in the electrodes was chosen as 60:40. The high-frequency resistance caused by the LPSI layer was subtracted.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    54.4,
+    561.4,
+    160.6
+   ],
+   "w": 1051,
+   "h": 444,
+   "dpi": 300,
+   "src": "da911736-12._Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) Bode plot of the complex impedance of an LCO-based composite electrode (thickness 52 μm) before and after subtraction of 50% of the impedance of an In−Li | LPSI | In−Li cell. (b) Nyquist plot of the high-frequency impedance (0.1 MHz to 300 Hz) of LCO-based cathode with different thicknesses after subtraction of 50% of the impedance of an In−Li | LPSI | In−Li cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    209.2
+   ],
+   "w": 2151,
+   "h": 646,
+   "dpi": 300,
+   "src": "da911736-12._Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a) Bode plot of the complex impedance of an NMC-based composite electrode (thickness 57 μm) before and after subtraction of 50% of the impedance of an In−Li | LPSI | In−Li cell. (b) Nyquist plot of the impedance (frequency range from 0.1 MHz to 0.01 Hz) of NMC-based cathodes with different thicknesses after subtraction of 50% of the impedance of an In−Li | LPSI | In−Li cell. = R RT i y k jjj { zzz 2 i r tanh CAM Fj CT Y r FD D 0 (5) CAM CAM = CAM i y k jjj { zzz 2 2 i r i r CAM tanh CAM CAM A prerequisite for the applicability of the TLM is that the electronic resistance of the cathode is much lower than the ionic resistance. Since in our ASSBs the volume fraction of electronically conducting CAM particles is virtually identical to the volume fraction of the SE, the mentioned prerequisite is equivalent to the prerequisite that the electronic conductivity of the CAM particles i",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    248.5,
+    561.5,
+    399.7
+   ],
+   "w": 2151,
+   "h": 631,
+   "dpi": 300,
+   "src": "da911736-12._Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Comparison of the impedance spectra of the NMC-based cathodes with TLM-based simulations (frequency range from 0.1 MHz to 0.01 Hz). The simulation parameters are given in Tables. 1 and 2. experimental impedance spectra after subtraction of 50% of the impedance of an In−Li | LPSI | In−Li cell (as shown in Figure 6b). In order to account for the high-frequency interfacial impedance detected in the experimental spectra, we fitted this impedance contribution with a R || CPE element, see Figure S7, and added the fitted interfacial impedance in series to the simulated TLM impedance spectra of the cathode. Overall, there is a good agreement between simulated and experimental spectra for different thicknesses, see Figure 7. The results obtained for the variable simulation parameters are given in Table 2. The exchange current density is j0 = 0.11 A m−2. This",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    120.9,
+    561.5,
+    247.4
+   ],
+   "w": 1051,
+   "h": 528,
+   "dpi": 300,
+   "src": "da911736-12._Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Figure 8. TLM simulation of the thickness-dependent impedance spectra of LCO-based composite cathodes. The simulation parame- ters are given in Tables 1 and 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    293.8,
+    297.4,
+    416.4
+   ],
+   "w": 1051,
+   "h": 511,
+   "dpi": 300,
+   "src": "da911736-12._Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. First galvanostatic charge/discharge cycle of a) an ASSB with an LCO-based composite cathode and b) an ASSB with an NMC-based composite cathode. All batteries were cycled at a rate of 0.1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    88.8,
+    530.7,
+    288.1
+   ],
+   "w": 1942,
+   "h": 831,
+   "dpi": 300,
+   "src": "9a86abdc-12._Sup_Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Nyquist plot of the complex impedance of the cell metal | NMC composite cathode | metal in a frequency range of 0.1 MHz – 0.1 Hz.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    559.8,
+    533.5,
+    708.9
+   ],
+   "w": 1953,
+   "h": 622,
+   "dpi": 300,
+   "src": "9a86abdc-12._Sup_Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.974
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. SEM imaging of the cathode active material particles a) LCO and b) NMC.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    488.9,
+    523.7,
+    667.3
+   ],
+   "w": 1912,
+   "h": 744,
+   "dpi": 300,
+   "src": "9a86abdc-12._Sup_Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.172
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. a) SEM image of a cross section of the LCO-based composite cathode and b) – d) EDX images for Co, P and S.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    225.2,
+    527.6,
+    580.9
+   ],
+   "w": 1929,
+   "h": 1483,
+   "dpi": 300,
+   "src": "9a86abdc-12._Sup_Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.168
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. a) SEM image of a cross section of the NMC-based composite cathode and b) – f) EDX images for Co, Ni, Mn, P and S.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    110.8,
+    527.6,
+    622.4
+   ],
+   "w": 1929,
+   "h": 2133,
+   "dpi": 300,
+   "src": "9a86abdc-12._Sup_Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.185
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Galvanostatic cycle of the a) LCO composite cathode and b) the NMC composite cathode with a rate of 1/30 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    225.1,
+    530.3,
+    361.2
+   ],
+   "w": 1940,
+   "h": 567,
+   "dpi": 300,
+   "src": "9a86abdc-12._Sup_Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 7,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Impedance spectrum of the NMC-based cathodes with a thickness of 31 μm. Fitting results for the high-frequency interfacial impedance are shown as green semicircles.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    577.1,
+    533.5,
+    725.8
+   ],
+   "w": 1953,
+   "h": 620,
+   "dpi": 300,
+   "src": "9a86abdc-12._Sup_Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1. Fixed Parameters in the TLM Simulations parameter symbol value units ionic conductivity of SE σ 0.08 S m−1 temperature T 25 °C area of the ASSB cell A 1.13 × 10−4 m2",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    388.2,
+    296.5,
+    459.4
+   ],
+   "w": 1043,
+   "h": 298,
+   "dpi": 300,
+   "src": "da911736-12._Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.77
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2. Variable Parameters in the TLM Simulations parameter symbol LCO NMC units",
+   "rotated_deg": 0,
+   "bbox": [
+    310.4,
+    430.1,
+    560.5,
+    468.9
+   ],
+   "w": 1043,
+   "h": 162,
+   "dpi": 300,
+   "src": "da911736-12._Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.62
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 7,
+   "file": "tab_3.png",
+   "caption": "Table 3. Ion Transport Resistances Rion and Normalized Charge Transfer Resistances RCT/(avd) Obtained from the TLM Simulations",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    55.7,
+    296.5,
+    116.4
+   ],
+   "w": 1043,
+   "h": 253,
+   "dpi": 300,
+   "src": "da911736-12._Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.706
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Mass fractions 𝑥𝑖, mass densities of CAM materials 𝜌𝐶𝐴𝑀 as well as masses and thicknesses of the composite cathodes. LCO NMC 𝒙𝑪𝑨𝑴 0.695 0.7003 𝒙𝑺𝑬 0.305 0.2997 𝝆𝑪𝑨𝑴 5.01 g∙cm−3 (Ref. 2) 4.83 g∙cm−3 (Ref. 3) 𝒎𝟏 11.6 mg 11.3 mg 𝒎𝟐 19.1 mg 20.6 mg 𝒎𝟑 41.4 mg 39.2 mg 𝒎𝟒 80.2 mg 79.9 mg 𝒅𝟏 32 μm 31 μm 𝒅𝟐 52 μm 57 μm 𝒅𝟑 113 μm 108 μm 𝒅𝟒 219 μm 221 μm",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    334.5,
+    532.4,
+    589.8
+   ],
+   "w": 1945,
+   "h": 1065,
+   "dpi": 300,
+   "src": "9a86abdc-12._Sup_Which_exchange_current_densities_can_be_achieved_in_composite_cathodes_of_bulk-type_all-solid-state_batteries_A_comparative_case_study.pdf",
+   "blank": 0.921
+  }
+ ]
+}
