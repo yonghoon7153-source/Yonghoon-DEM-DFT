@@ -1,0 +1,673 @@
+{
+ "slug": "stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "4f280a0a-23._Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+  "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) The concept of an ASLB with a thick 110 μm cathode, with EDXRD data taken in six 20 μm slices to observe nonuniformity through the cathode thickness. (b) The structure of NMC111. (c) Operando EDXRD for a cell with a 50 μm thick cathode at C/10. Composition was 70% CAM with a coating.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    297.5,
+    383.0
+   ],
+   "w": 1051,
+   "h": 1370,
+   "dpi": 300,
+   "src": "4f280a0a-23._Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.81
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Operando EDXRD data for initial cycling of NMC111-LPSC cathodes as a function of cathode composition. (a) 80% cathode active material (CAM); (b) 70% CAM; (c) 40% CAM; (d) 70% CAM with an LLSTO-coated NMC. For each cell, local Li content (1 −x) is shown correlated to the voltage profile. loadings are reported in Table S1). All experiments were performed at room temperature with an applied stack compression of 50 MPa. To lessen degradation, no carbon additive was used.43 Operando EDXRD data was collected by dividing the cathode thickness into slices 20 μm thick. The “0− 20 μm” slice was closest to the SSE separator and was termed “slice 1”. Subsequent slices were each 20 μm deeper into the cathode until the final slice, which was next to the current collector foil. The 70% and 80% CAM cells were ∼110 μm thick and had six slices. The 40% CAM cell was ∼155 μm and had eight slices d",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    230.6
+   ],
+   "w": 2151,
+   "h": 735,
+   "dpi": 300,
+   "src": "4f280a0a-23._Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.652
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Lithiation profiles for each cell at the midpoint of charge 1. These profiles are marked by note 1 and dashed lines in Figure 2. (b−e) Spatially resolved total reaction amounts in Δx during each cycling stage for (b) 80% CAM; (c) 70% CAM; (d) 70% CAM with a cathode coating; and (e) 40% CAM.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    269.5,
+    561.5,
+    482.3
+   ],
+   "w": 1051,
+   "h": 888,
+   "dpi": 300,
+   "src": "4f280a0a-23._Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Effective electronic conductivity σel,eff and ionic conductivity σion,eff of composite cathodes as a function of mass% CAM. Open markers at 70 mass% are coated CAM data. (b) Fitted tortuosity factor of each phase as a function of phase fraction.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    54.4,
+    561.5,
+    381.8
+   ],
+   "w": 1051,
+   "h": 1365,
+   "dpi": 300,
+   "src": "4f280a0a-23._Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. COMSOL simulations during initial charge showing local Li content (1 −x) as a function of cathode depth: (a−c) 70% CAM cell with greater reaction at the current collector. (d−f) 80% CAM cell with greater reaction at the separator.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    282.7
+   ],
+   "w": 2151,
+   "h": 952,
+   "dpi": 300,
+   "src": "4f280a0a-23._Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.712
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Peak bifurcation of the NMC111 (003) reflection during charge 1, as a function of time and depth in the cathode. (a) 70% CAM with a coating. (b) Uncoated 70% CAM. Photon energies of the bifurcated peaks are shown, with the right and left peaks given by circles and squares. Peak magnitude is indicated by the marker size. Color-shaded regions show the weighted standard deviations of the photon energies. Dashed lines correspond to the times of the data in Figure S16. The conclusion is that peak bifurcation was more significant in the uncoated cell. channels were modified by eq 3 to simulate the effects of phase fraction and tortuosity factor on transport across the composite cathode. COMSOL model details are given in Tables S2−S4. Details of the EIS model used for Figure 4a results are given in Tables S5−S8. ionic transport can be enabled by increasing the size ratio of CAM partic",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    311.5,
+    561.5,
+    546.7
+   ],
+   "w": 2151,
+   "h": 981,
+   "dpi": 300,
+   "src": "4f280a0a-23._Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.81
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 8,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Specific energy and energy density calculations for ASLBs using NMC111 as the cathode active material (CAM). A Li metal foil anode is assumed for all cases. (a) Specific energy (Wh/kg) as a function of cathode thickness, mass% CAM in the cathode, and SSE electrolyte layer. N/P is constant at 0.2. (b) Specific energy (Wh/kg) as a function of cathode thickness, mass% CAM in the cathode, and N/P ratio. SSE layer thickness is constant at 20 μm. (c) Energy density (Wh/L) corresponding to the same conditions as panel a. All calculations used 3.8 V as the nominal voltage for NMC111 vs. Li/Li+. No binder or carbon was included in the composite cathode, and the cell housing and terminals are ignored, so calculations represent a \"best case\" scenario. The message of the calculations is that there is only one case in which a thicker composite cathode is not of high importance to achieve b",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.2,
+    548.8,
+    491.4
+   ],
+   "w": 2012,
+   "h": 1773,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 9,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Energy dispersive X-ray diffraction (EDXRD) of sulfide solid electrolyte batteries with NMC111- LPSC composite cathodes. (a) Schematic of the batteries within the compression jig used for cycling. (b) Picture of two batteries in the experimental hutch of beamline 6BM-A at APS. (c) Concept of EDXRD, using an incident white beam of photons 20-200 keV. This beam penetrates the cell, and diffracted photons are detected at a constant angle of 2θ. Diffraction data is from a well-defined gauge volume. By moving the cell, diffraction data can be obtained from different locations in the cell, enabling one to \"slice\" the cell components into different layers.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    377.0
+   ],
+   "w": 2012,
+   "h": 1296,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.62
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 10,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. EDXRD gauge volume size shown to scale with the composite cathodes. The gauge volume had dimensions of 2 mm by ~5.6 mm by 0.02 mm defined by collimation slits of di = 0.02 mm and ds = 0.2 mm. The y-dimension has been exaggerated 60x for the comparison of the vertical gauge volume and the cathode thickness. In these experiments, the gauge volume was 1.48% of the cathode volume.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    493.8
+   ],
+   "w": 2012,
+   "h": 1783,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 11,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Scanning electron microscopy images of the NMC111 used in this study under different magnifications. The average size was 9.3 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    222.9
+   ],
+   "w": 2012,
+   "h": 654,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.104
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 11,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Scanning electron microscopy images of the mixture of NMC111 and LPSC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    350.9,
+    546.0,
+    518.0
+   ],
+   "w": 2000,
+   "h": 697,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.105
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 12,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Demonstration of the method used to fit bifurcated NMC peaks. The NMC111 (003) is shown as an example. Red data is location 48 (EDXRD slice 3) in the middle of the 70% CAM cathode at time 6 (2.7 hours). It shows bifurcation, which was described by a double gaussian fit, shown in black. The left and right fitted peaks are shown in gray and blue dashed lines. Peak maxima are given in photon energy (keV). Peak heights are given in detector counts. The small peak at 63.8 keV is LPSC electrolyte in the composite cathode. The weighted average of photon energy (and therefore d-spacing) was calculated according to the following formula. Gaussian peaks all have the same area, so height of the peaks was used for weighting, as in Eq S14. Peak = energy1*(height1/(height1+ height2)) + energy2*(height2/(height1+ height2)) [S14] A similar process was used in Li, et al. Chem. Mater. 2020, 32,",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    55.5,
+    548.8,
+    313.8
+   ],
+   "w": 2012,
+   "h": 1077,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 13,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. (a) The concept of an ASLB with a ~50 μm cathode, with EDXRD data taken in three 20 μm slices to observe non-uniformity through the cathode thickness. (b-e) Operando EDXRD for the 50 μm cathode cell at C/10, showing spatially-resolved measurement of the (003) reflection. Composition was 70% CAM with a coating. (b) Slice 1, depth of 0-20 μm. (c) Slice 2, depth of 20-40 μm. (d) Slice 3, depth of 40-60 μm. Slice 1 was only partially in the composite cathode, and a prominent LPSC peak can also be seen at ~64 keV. (e) Voltage profile during operando cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    335.9
+   ],
+   "w": 2012,
+   "h": 1125,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.856
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 14,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Lithiation profiles (as (1 −𝑥) data) from operando EDXRD. During each cycling stage, colors follow the rainbow from initial time (red) to final time (black). (a) 80% CAM cell; (b) 70% CAM cell; (c) 70% CAM cell with LLSTO-coated NMC. For the 70% cells, the markers are EDXRD data while the lines are Legendre polynomial fits. For the 80% CAM cell, the markers are EDXRD data, with straight lines included to guide the eye. The (1 −𝑥) data in Fig S8 are shown plotted as time-dependent Li+ profiles through the cathode thickness. The sequential times during charge 1 are labeled, with each plotted as a different color on the spectrum from red to black. This is also shown for the eight times in the first discharge, second charge, and second discharge. For characterization of the Li+ gradients in the 70% CAM cells, the cathode thickness was normalized to a reduced depth ξ and fit to a s",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    521.9
+   ],
+   "w": 2013,
+   "h": 1900,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 15,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Lithiation profiles from EDXRD data for the 40% CAM cell. All conditions are as in Fig S8, except the 40% CAM cathode had a greater thickness.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    247.0,
+    538.2,
+    427.8
+   ],
+   "w": 1968,
+   "h": 754,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 16,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Local reaction rate or volumetric transfer current for initial cycling of NMC111-LPSC cathodes as a function of cathode composition. Cycling was at C/10. (a) 80% cathode active material (CAM); (b) 70% CAM; (c) 40% CAM; (d) 70% CAM with LLSTO-coated NMC. For each cell, local transfer current (in mA/mm3) is shown correlated to the voltage profile. (e) 40% CAM shown with a diverging colormap to emphasize current reversal (in blue). EDXRD slice 1 was near the separator, while the highest slice was near the current collector. In this study, cathode total mass was held constant at 30 mg and CAM mass% was varied. As all cycling was at C/10, this means the 80% CAM material experienced the highest current and 40% CAM the lowest. This was apparent in the results above, as expected. However, the times and locations of the most vigorous reaction in each cell varied significantly. During ",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    412.0
+   ],
+   "w": 2012,
+   "h": 1442,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.744
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 18,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Schematic of blocking cells used for EIS testing. (a) Ion-blocking cell, which measures electronic conductivity. (b) Electron-blocking cell, which measures ionic conductivity.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    89.0,
+    548.8,
+    230.3
+   ],
+   "w": 2012,
+   "h": 590,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.683
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 19,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. EIS of symmetric blocking cells. (a-d) Raw EIS results from the blocking cells in Fig S11, presented as Nyquist plots. The Nyquist plots are given an arbitrary y-axis offset to present multiple datasets on the same plot. Data at 1000, 1, and 0.01 Hz are emphasized. CAM percent is as indicated. (a) Ion-blocking cell, used to calculate electronic conductivity. (b) Detail from panel a. (c) Electron-blocking cell, used to calculate ionic conductivity. (d) Detail from panel c. (e-f) Model fitting results with open circles showing the fits. (e) Electron conducting/ion blocking. (f) Ion conducting/electron blocking.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    620.8
+   ],
+   "w": 2012,
+   "h": 2312,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 21,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Transmission line model (TLM) of: (a) ion conducting/electron blocking experiments; and (b) electronic conducting/ion blocking experiments. (c) Zint for all experiments. (d) Zp end elements for electron conducting/ion blocking experiments. Transmission line models (TLMs) For the ionic conducting/electron blocking data a T-type open-open TLM was used (Fig S13a), calculated with Eq S16. For the electronic conducting/ion blocking data a symmetric T-type PP TLM was used (Fig S13b), calculated by Eq S17. The interfacial impedance Zint describes the electrochemical reaction (Fig S13c). The end element impedance Zp (Fig S13d) describes the connection between the SSE and the metal current collectors. In both equations Zel and Rion have units of ohm/m and Zint has units of ohm m. ∙ cosh 2𝐿4𝑅\"# + 𝑅$%& 𝑍$&( −17 '+𝑧$&( L + 2 𝑅$%& 𝑍!!(ω) = 𝑅\"#𝑅$%& 𝑧$&( 7 [S16] ) ' 𝑅\"# + 𝑅$%& sinh 2𝐿4𝑅\"# +",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    260.8
+   ],
+   "w": 2012,
+   "h": 812,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.814
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 24,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Domain used for COMSOL modeling of the composite cathodes. CAM particles shown in green. Two rows of these represent the active material in the composite electrode. LPSC is modeled as a continuous single-ion conducting phase, show in in white. The current collector is on the left side of the domain, and the SSE separator is on the right. The SSE separator is assigned the bulk conductivity of LPSC 𝜎)=>(,VWXY. The two SSE channels across the composite cathode are assigned the effective conductivity of LPSC, 𝜎)=>(,Z[[, calculated from the LPSC phase fraction 𝜖)=>( and tortuosity factor 𝜏)=>( ! . The CAM particles are assigned the effective conductivity of NMC111 at the state of charge (SOC) of the local material, 𝜎&'(,Z[[, calculated from Eq S5, the NMC phase fraction 𝜖&'( and tortuosity factor 𝜏&'( ! . The dashed lines show a hypothetical transport path for electrons and Li ion",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    89.0,
+    548.9,
+    300.9
+   ],
+   "w": 2012,
+   "h": 884,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.776
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 25,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. COMSOL simulations performed as those in Fig 5 of the main text, with the 𝑖# expression used from Liu et al., ref 8, instead of the expression used in the main text from Park et al., ref 12. (a) COMSOL simulation of initial charge of a 70% CAM cell. (b) COMSOL simulation of initial charge of an 80% CAM cell. Results were similar regardless of the form of 𝑖# chosen, suggesting that the kinetic expression did not have a large impact on the lithiation gradients. These gradients were primarily a consequence of the effective conductivities across the composite cathode thickness, and therefore the phase fractions and tortuosity factors.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    292.0
+   ],
+   "w": 2013,
+   "h": 942,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.672
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 26,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Operando evolution of the NMC111 (003) reflection during charge 1, as a function of time and depth in the cathode. (a-e) 70% CAM with a coating. (f-j) uncoated 70% CAM. Data were collected dynamically while under load, and the arrows show the direction the peaks were moving in during the experiment. In each figure, the NMC111 (003) peak is shown at four times during charge 1 and at one time at the beginning of discharge 1. Markers show the raw EDXRD data, and the solid lines show a double Gaussian fit resolving the data into two distinct peaks. Depth through the cathode is shown by color, as EDXRD slices 1-6 go from red to purple. The times of these data are marked by dashed lines in Fig 6 of the main text. The conclusion is that peak bifurcation was more significant in the uncoated cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.9,
+    372.2
+   ],
+   "w": 2013,
+   "h": 1276,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 27,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Operando evolution of the NMC111 (003) reflection during charge 1, as a function of time and depth in the cathode for the 80% CAM cell. (a-e) A zoom of the peak is shown at five times, with raw data as transparent markers and a double Gaussian fit as a solid line: (a) 0 h; (b) 2.1 h; (c) 4.4 h; (d) 5.9 h; (e) 7.3 h, which was during discharge 1. Depth in the cathode is indicated by color. (f) On the voltage profile, the photon energies of the double peaks are shown, with the right and left peaks given by circles and squares. Peak magnitude is indicated by the marker size. Color-shaded regions show the weighted standard deviations of the peak photon energies. The marker for slice 1 is emphasized in this figure as solid red. The peak at this location showed only small peak bifurcation, and only from 2.1 hours to about 3.7 hours. In contrast, the peak at slice 6 remained bifurca",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.8,
+    306.9
+   ],
+   "w": 2012,
+   "h": 1004,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.777
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Areal loading of NMC. 30 mg cathode 40% CAM 9.5 mg/cm2 70% CAM 16.6 mg/cm2 80% CAM 19.0 mg/cm2",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    603.2,
+    419.0,
+    724.6
+   ],
+   "w": 1468,
+   "h": 507,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Tuned values for 𝑎 determined from EDXRD results 𝑎𝑁𝑀𝐶 2.0 𝑎𝐿𝑃𝑆𝐶 2.7 COMSOL’s Battery Design module was used to assemble the necessary equations to solve the electronic and ionic current flow across the cathode. Firstly, charge conservation and Ohm’s law were used to obtain Eq S8 and Eq S9, where 𝛽 was used to represent a given phase, namely NMC and LPSC. 𝛻∙𝑖D = 0 [S8] 𝑖D = −𝜎D𝛻𝜙D [S9] The electrode surface reaction was then defined by Eq S10, with the local current density of each finite element being assumed to be governed by Butler-Volmer kinetics, shown in Eq S11. 𝒏∙𝒊)=>( = −𝒏∙𝒊&'( = 𝑖\"#\"$% [S10] 𝑖%#E = 𝑖4 ^𝑒𝑥𝑝`𝛼$𝐹𝜂 𝑅𝑇f −𝑒𝑥𝑝`−𝛼E𝐹𝜂 𝑅𝑇fg [S11]",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    435.4,
+    547.8,
+    718.1
+   ],
+   "w": 2004,
+   "h": 1179,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 5,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Overview of expressions used to define exchange current density in relevant literature. Subscripts of 𝑆𝑆𝐸 denote a simplifying assumption that the expression i𝐶?%?E\"F#G\"? 𝐶?%?E\".,F?@ ⁄ j can be taken as unity when using a solid-state electrolyte. Equation for Exchange Current Density Reference (system) 4.6 𝑪𝑳𝒊 4.6 7 (NMC532, NMC811) 𝑖4,>>H = 96485 𝐶 𝑚𝑜𝑙∙101,, 𝑚 𝑠`49000 𝑚𝑜𝑙 𝑚- −𝑪𝑳𝒊f",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    147.6,
+    547.2,
+    587.8
+   ],
+   "w": 2002,
+   "h": 1835,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 6,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Brief description and value of the symbols involved in the model. Parameters with a dashed value entry are not explicitly defined and are computed by COMSOL. Symbol Description Value Ref. 𝜎'(),+,-. Bulk electronic conductivity of NMC Eq S5 7 𝜎//0,+,-. Bulk ionic conductivity of LPSC 2 ⋅101- 𝑆 𝑐𝑚 𝜎'(),122 Effective electronic conductivity of NMC Eq S6 𝜎//0,122 Effective ionic conductivity of LPSC Eq S7 𝜀'(),34)5( Volume fraction of NMC, 70CAM cathode 0.44 𝜀'(),64)5( Volume fraction of NMC, 80CAM cathode 0.56 𝜀789: Volume fraction of void 0.14 5 𝐷'() Li diffusivity in NMC Eq S4 7 12 and others 𝑖4 Exchange current density Eq S12 (see text) 𝑖'() Electronic current density - 𝑖;</) Ionic current density - 𝑖-8= Local current density - 𝑖>8>?- Total current density - 𝐼>8>?- Total charge current Eq S2",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    299.1,
+    539.2,
+    703.7
+   ],
+   "w": 1968,
+   "h": 1687,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 21,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Transmission line models (TLMs) used, in terms of elements in Siroma, et al. Model Type Zion Zel Zint End Fixed ZHFR= R and ZLiIn = Q/R IC T-type open-open Rion Rel R1/Q1 + Q2",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    626.7,
+    544.8,
+    722.8
+   ],
+   "w": 1991,
+   "h": 401,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 22,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Fit parameters for T-type open-open ionic conductivity fits.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.3,
+    272.9,
+    558.7,
+    412.3
+   ],
+   "w": 2106,
+   "h": 581,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 22,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Fit parameters for T-type PP electronic conductivity fits.",
+   "rotated_deg": 0,
+   "bbox": [
+    90.7,
+    437.3,
+    521.0,
+    622.3
+   ],
+   "w": 1793,
+   "h": 771,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 23,
+   "file": "tab_S8.png",
+   "caption": "Table S8. Conductivity and tortuosity factor values from Fig 4 in the main text. Electronic conductivity (EC) S/cm Tortuosity factor from EC Ionic conductivity (IC) S/cm",
+   "rotated_deg": 0,
+   "bbox": [
+    67.2,
+    67.2,
+    544.8,
+    325.2
+   ],
+   "w": 1990,
+   "h": 1075,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 23,
+   "file": "tab_S9.png",
+   "caption": "Table S9. All tortuosity factor values calculated in this work. Method: From EIS From fit of all EIS",
+   "rotated_deg": 0,
+   "bbox": [
+    48.7,
+    430.6,
+    563.0,
+    691.8
+   ],
+   "w": 2143,
+   "h": 1089,
+   "dpi": 300,
+   "src": "ffd3c0e4-23._Sup_Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "blank": 0.357
+  },
+  {
+   "key": "fTOC",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC_manual_p1.png",
+   "caption": "Table-of-contents graphic (no caption): white-beam EDXRD on a 110 µm Li(1-x)Ni1/3Mn1/3Co1/3O2 + Li6PS5Cl cathode; Li content (1-x) vs cathode depth during battery charge (delithiation), curves 1-13 (= Fig. S8b charge 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    350.0,
+    285.0,
+    560.0,
+    430.0
+   ],
+   "w": 1168,
+   "h": 806,
+   "dpi": 400,
+   "src": "4f280a0a-23._Lithiation_Gradients_and_Tortuosity_Factors_in_Thick_NMC111-Argyrodite_Solid-State_Cathodes.pdf",
+   "manual": true,
+   "note": "크로퍼가 놓친 초록 그래픽(캡션 없음) — 400 dpi 수동 크롭. 내용은 Fig. S8b 충전 1 의 재수록"
+  }
+ ]
+}

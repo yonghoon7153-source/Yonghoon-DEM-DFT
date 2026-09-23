@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
+sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -362,6 +362,25 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
 - ⚠ **`θ` 는 여기서도 값이 없다.** SEM 틈은 존재만, 그리고 원전 SI 의 양극 호 `C` 궤적은 EIS 창 안의 접촉 면적 변화를 보지 못한다
   ([[assb-interphase-vs-contact-loss-attribution]]). 이 표는 **"접촉 손실이 크다"** 의 근거가 아니라 **"원전이 정량한 경로로는 손실이 안 닫힌다"** 의 근거다.
 
+## ★★★★ 2026-09-23 (`assb` 24호 Stavola 2023, **실험 · operando 깊이 분해 EDXRD**) — **`η` 에 깊이 축이 붙고, 깊이 분해도 가중평균하면 `θ` 를 다시 합친다**
+
+`raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md`. NMC111–Li₆PS₅Cl 무탄소, 110 µm(40 % 는 155 µm), 50 MPa, C/10,
+20 µm 조각 6–8 개의 `(1−x)` 를 첫 두 사이클 내내. 22호가 **한쪽 면 · ex situ** 에서 한 일을 **깊이 전체 · operando** 에서 한다.
+
+- ★★★ **`η(i)` 는 `η(i, z)` 다.** 충전 1 중간점 깊이 방향 `[인쇄]` Δx 0.145–0.338(가역 용량의 29–67 %)이 **옴 강하로 생기는 이용 지연**이다 — 지연된 조각도 반응파로
+  따라잡고(Fig. S10), 40 % 셀 분리막 조각은 **방전 중에도 탈리튬**한다(`[인쇄]` 1.2 h, 0.79 → 0.74; 두 경로가 살아 있는 입자). 방향은 σ_el/σ_ion 이 정한다(70 % 집전체 쪽 ↔
+  80 % 분리막 쪽 "flip").
+- ★★★★ **관측 연산자**: 보고값 `(1−x̄)_k = (1 − f_k)(1 − x_active,k) + f_k(1 − x_stuck,k)` — `f_k` 는 조각별 `1 − θ`. 원전은 두 (003) 봉우리를 **높이 가중평균**(식 S14)으로
+  합친다. `[도표]` **80 % 셀 집전체 쪽 조각 6 의 한 봉우리가 충전 1 내내 pristine 근처**(Fig. S17) — 22호가 "불활성" 이라 부른 모집단이 **그림에 있고 숫자에 없다**.
+  ⚠ 자촉매 가짜 상분리(원전 ref 51)와도 양립 — `θ` 로 단정하지 않는다. ⇒ **분리 연산자 후보 셋째 — "깊이 분해" — 는 모집단별(scale 분율)로 풀어야 `θ` 가 떨어진다.**
+- ★★★ **첫 사이클 비가역은 깊이에 균일하다** (`[재현]` Fig. 3b–e): 조각별 충전 1 − 방전 1 ≈0.20–0.21(70·80 %) — 방전 1 끝 전 조각이 `(1−x)` ≈0.80 에 모인다.
+  ⇒ **비가역 ≈56 mAh g⁻¹(23호 52 와 같은 크기대)은 `η(z)` 가 아니다** — 입자 척도(고리튬 쪽 확산 둔화 · 계면층 · 동결 고립) 또는 **네 번째 항(상대극)**. In–Li 조성 미기재로
+  마지막 둘이 안 갈린다. ★ **코팅 쌍**(70 %, LLSTO)이 비가역을 **≈14 %** 만 줄인다(`[도표]`, n = 1 씩) — 23호 손실 예산("계면층 몫 ≲7 %, ≳85 % 미배정")과 같은 방향.
+- ★★ **22호의 표층 편향 크기**: `[도표]` 충전 1 끝 집전체 면 ↔ 전극 평균 **±0.08 `(1−x)`**(80 % 뒤처짐 · 40 % 앞섬), 부호는 σ_el/σ_ion. 한쪽 면 측정의 `η` 는 C/10 에서도 ±20 % 흔들린다.
+- ★★ 쿨롱 ↔ XRD 폐합 여섯 중 다섯이 ±7 %(`[재현]`) — 그러나 **둘 다 전 CAM 질량으로 나누므로 `θ` 를 못 본다.** 22호의 "용량 독립 대조" 도 같은 한계다.
+- ⚠ 모집단: 신품 2 사이클 · 셀 1 개/조건 · In–Li(조성 미상) · 기준극 0 · 율 C/10 한 점(율 연산자와 교차 불가). 수송 쪽 곱(`σ_eff = σ_bulk·ε/τ²`)은
+  [[assb-tortuosity-factor-effective-conductivity-split]].
+
 ## 이 페이지가 주장하지 않는 것
 
 - **3항 분해가 논문의 식이라고 주장하지 않는다.** 우리 해석이고, 위 G1 때문에 `C_norm` 이
@@ -391,6 +410,7 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
 
 ## 관련
 - [[assb-interphase-vs-contact-loss-attribution]] — 계면층 ↔ 접촉 손실(둘 다 `θ`·`η` 에 들어간다)의 분리. 23호 손실 예산의 근거.
+- [[assb-tortuosity-factor-effective-conductivity-split]] — `η(z)` 를 정하는 수송 곱 `σ_bulk·ε/τ²`; 부분 접촉 손실이 `τ²` 로 들어가는 자리(24호).
 - [[assb-contact-loss-vs-lampe]] — 닻 질문. 이 페이지가 그 미결 항목 1 의 **세 번째 항**을 추가한다.
 - [[composite-cathode-percolation-utilization]] — `θ_AM` 의 정의와 곱셈 축퇴. 이 페이지가 그 위에 `η` 를 얹는다.
 - [[assb-pressure-reapplication-separation-test]] — **두 번째 분리 연산자.** 율이 `η` 를

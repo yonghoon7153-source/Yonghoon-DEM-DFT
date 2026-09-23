@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md]
+sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -380,6 +380,23 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 ⇒ **순위는 맞고 크기는 3–15 배 어긋난다 — XRD 없이 용량만으로도 기각된다.** 1호의 "correlate well" 은
 **순위 일치**의 표현이다. ⚠ 1호 쪽 사정(SE 3 µm 고정 · 구형 무겹침 · 밀링 없음)이 이 복합체와 다르므로
 "모델이 틀렸다" 가 아니라 **"식 (8) 은 이 재료계의 불활성을 예측하지 못한다"** 까지다.
+
+## ★★★ 1호의 "두께 = 유한 크기 인공물" 과 실측 두께 구배 — 다른 양이다 (2026-09-23 추가, `assb` 24호)
+
+`raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md` (Stavola 2023)는 110 µm 복합양극의 깊이별 `(1−x)` 를 operando 로 재
+충전 1 중간점 `[인쇄]` Δx 0.145–0.338 의 **두께 방향 이용 지연**을 보인다. 1호의 `[인쇄]` "finite size effect" 문장과 대질하면:
+
+| | 1호 (이 페이지의 `θ`) | 24호 |
+|---|---|---|
+| 두께에 의존하는 것 | **클러스터 소속**(전자 클러스터가 집전체에서 자라 얇은 **모델 체적**에서 부풂) — 위상량, 전류 0 | **옴 강하가 만드는 반응 분포** — 연결된 경로의 **폭**(`σ_eff`) |
+| 인공물? | 예 — 체적을 잘라 생긴 통계 편향 | 아니오 — 실제 전극 |
+| 두께 변수 | 20–140 µm 7 종 | **스윕 없음**(110 · 155 µm 는 조성과 교락, 50 µm 한 셀 정량 0) |
+
+⇒ **반박도 지지도 아니다.** 1호는 같은 절에서 `[인쇄]` "tortuosity, and resulting effective conductivities … are not explicitly treated" 로 **24호가 재는 항을 뺐다.**
+"`θ` = 1(모두 연결)" 이어도 두께 방향으로 이용률이 갈린다 — **`θ` 는 필요조건이고 이용의 균일성은 `σ_eff` 가 정한다**
+([[assb-tortuosity-factor-effective-conductivity-split]]). 방향은 1호 논리와 맞는다(`[추론]`): 전자 퍼콜레이션이 약한 조성(24호 40 % = 20 vol% CAM)에서 **집전체에서 먼
+분리막 쪽**이 뒤처진다. ⚠ 24호는 1호를 인용하지 않는다(인용된 것은 **Bielefeld 2020 *ACS AMI* 12, 12821**).
+→ DEM 도메인 크기 수렴 시험(§13-5 의 규율)은 **그대로 필요**하고, 거기에 **"연결된 경로의 폭"** 을 내는 산출(유효 전도도)이 하나 더 필요하다.
 
 ## 이 페이지가 주장하지 않는 것
 

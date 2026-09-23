@@ -1,0 +1,114 @@
+---
+title: "ASSB 복합양극의 굴곡도 인자 — 측정되는 것은 σ_eff 하나이고 ε·τ² 분할은 가정이 정한다"
+description: "In ASSB composite cathodes the tortuosity factor tau^2 = eps x sigma_bulk / sigma_eff is not measured but obtained by dividing a measured effective conductivity by an assumed phase fraction; the only operando-plus-EIS paper in the lineage shows the same measured conductivities giving opposite tau^2 trends under two eps conventions, reads the mismatch between its EIS and model-fitted values as tortuosity evolution, and by its own definition places point-contact loss inside tau^2"
+created: 2026-09-23
+updated: 2026-09-23
+type: concept
+tags: [assb, battery, degradation, research]
+sources: [raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md]
+confidence: low
+explored: false
+verificationStatus: unverified
+claimType: interpretive
+evidenceScope: multi-source-primary
+---
+
+# ASSB 복합양극의 굴곡도 인자 — `σ_eff` 는 재고, `ε·τ²` 는 나눈다
+
+> `assb` 축의 개념 페이지. 닻은 [[assb-contact-loss-vs-lampe]].
+> [[assb-lampe-contact-product-degeneracy]] 가 **동역학 항**(`A_eff·ε_p/R_s`)의 곱 축퇴를 다뤘다면, 이 페이지는 **수송 항**(`σ_bulk·ε/τ²`)의
+> 곱 축퇴를 다룬다 — 그 페이지 ③ 채널(9호 `κ_eff = κ_se·ε_se^brug`)의 본체다.
+> 수치의 정본은 원문 PDF 이고, 이 페이지의 값은 **사본**이다.
+
+## 정의 — 인쇄된 식과 데이터가 보는 것
+
+24호(Stavola 2023, `raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md`)의 `[인쇄]` 식:
+
+```
+(2)  σ_i,eff = L / (R_i · A)                    ← 차단 셀 EIS(TLM) 의 R_i 에서
+(3)  τ_i²   = (σ_i,bulk / σ_i,eff) · ε_i         ← 굴곡도 인자의 정의
+(4)  τ_i²   = ε_i^(−a_i)                          ← 멱법칙 (a = 0.5 가 Bruggeman)
+S6·S7 σ_eff = σ_bulk · ε^(1+a)                   ← 모델 입력 (= (3)+(4))
+```
+
+`[해석]` 데이터가 보는 것은 **`σ_eff` 하나**다. `τ²` 는 그것을 **`ε`(와 `σ_bulk`)로 나눈 이름표**이고, `a` 는 그 이름표를 `ε` 의 함수로 적합한 것이다.
+`ε` 를 재지 않으면(24호: `[인쇄]` "assuming 14% of the cathode is void") **`τ²` 와 `ε` 는 곱으로만 식별된다.**
+
+`[인쇄]` 24호 SI p3 는 이 양의 뜻을 스스로 넓힌다: "the empirical tortuosity factor accounts not only for the length of conduction paths, but also their width,
+including cross-sectional areas and **point contacts**." ⇒ **부분 접촉 손실은 정의상 `τ²` 안에 들어간다.**
+
+## ★★★★ 같은 측정, 반대 추세 — `ε` 규약 하나로 (24호 Table S8, `[재현]`)
+
+| CAM wt% | σ_ion,eff `[인쇄]` (S cm⁻¹) | τ²_LPSC `[인쇄]` | ε_CAM 로 계산 | **ε_LPSC 로 계산** |
+|---|---|---|---|---|
+| 95 | 3.785e-6 | 392.44 | 391.6 | **40.2** |
+| 80 | 6.758e-5 | 15.62 | 15.74 | **8.43** |
+| 70 | 8.682e-5 | 9.63 | 9.63 | **9.19** |
+| 40 | 1.495e-4 | 2.49 | 2.54 | **8.39** |
+
+(σ_bulk = 1.9e-3, `[인쇄]` 0 % CAM 펠릿.) 인쇄값은 **4/4 가 CAM 분율로 ≤2 % 재현**되고, 식 (3) 이 요구하는 LPSC 분율로는 1.05–10 배 어긋난다.
+- 인쇄값으로는 70 → 80 % 에서 **×1.6 — `[인쇄]` "tipping point"**. 바른 `ε` 로는 **×0.92 — 40–80 % 에서 평탄(≈8.4–9.2)**, 95 % 에서만 급등.
+- 멱법칙 `ε^(−a)` 도 인쇄값으로는 a ≈2.2–2.6(95 % 점이 2.365 를 정함), 바른 `ε` 로는 점별 a = **1.46 / 1.77 / 2.56 / 5.12** — **형태 자체가 안 선다.**
+- ⇒ **측정(`σ_eff`)은 하나이고 결론(추세)은 가정이 정했다.** 이것이 이 페이지의 요지다.
+
+## ★★★ 두 경로의 불일치를 "진화" 로 읽는 자리
+
+24호는 `τ²` 를 **EIS(신품 차단 셀)** 와 **COMSOL 역적합(operando EDXRD 리튬화 구배)** 두 경로로 내고, 차이를 `[인쇄]` "the tortuosity factor **evolved** …
+Because NMC shrinks during delithiation, rearrangement of particle contacts is expected" 로 배정한다. `[재현]` `τ²` 가 아니라 **`σ_eff` 로** 비교하면:
+
+| | COMSOL / EIS 직접 | COMSOL / EIS 멱법칙 |
+|---|---|---|
+| LPSC 70 % | **0.93** | 0.75 |
+| LPSC 80 % | **0.34** | 0.67 |
+| NMC 70 % | 0.46 | **1.08** |
+| NMC 80 % | 0.29 | **0.95** |
+
+⇒ "두 조성 모두에서 SE 굴곡도 증가" 는 **80 % 셀 이온 전도도의 ≈3 배 저하 하나**로 줄어든다. 그 3 배의 후보:
+1. **제조 압력** — EIS 셀 50 MPa(이온 차단) · 150 MPa(전자 차단) ↔ operando 양극 100 MPa.
+2. **가정 `ε`** — `[재현]` 인쇄 두께가 함의하는 void ≈21–38 % ↔ 가정 14 %.
+3. **모델 구조** — 2열 단분산 입자 · NMC 연속상(입자 간 Li 확산 허용) · **OCP 없음** · 10 h 강제 충전.
+4. **접촉 손실** — 저자가 쓴 기구 그대로. 정의상 `τ²` 안.
+5. (그리고) 80 % 집전체 쪽 조각의 **거의 반응 안 하는 모집단**(`θ` 형 — [[assb-apparent-capacity-decomposition]] §24호).
+
+**24호는 1–5 를 가를 입력이 없고 4 를 골랐다.** 독립 경로 하나가 같은 셀을 가리킨다: `[재현]` 옴 강하 `i·L/(2σ_eff)` 와 (우리가 가정한) NMC111 OCP 기울기로
+구배 크기를 추정하면 70·40 % 는 차수가 맞고 **80 % 만 ≈3–5 배 모자란다**.
+
+## 왜 중요한가 — 접촉 손실의 **연속판**이 수송 인자의 이름으로 들어온다
+
+[[assb-apparent-capacity-decomposition]] 의 3항 분해에서:
+
+| 접촉 변화의 크기 | 어디로 가나 | 이름 |
+|---|---|---|
+| 입자가 **완전히** 끊김 | `θ` (쓰이지 않는 부피) | 불활성 · isolated (22호) |
+| 경로가 **좁아짐**(점 접촉 감소, 연결은 유지) | `σ_eff ↓` → `η(z)` (깊이 방향 이용 지연) | **"굴곡도 증가"** (24호) |
+| 계면 **면적**이 줄어듦 | `A_eff ↓` → `η(i)` (분극) | 접촉 손실 · `A_eff` (9·16호) |
+
+⇒ 14호(Oh 2025)가 보인 **"접촉 손실 → 용량 사상은 문턱형"** 과 짝이다(`[추론]`): 문턱 아래 몫은 용량(`θ`)으로 가지 않고 **`σ_eff`·`A_eff` 를 거쳐 율 의존 손실로** 간다.
+OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째는 **컷오프에 걸린 만큼만 겉보기 `LAM_PE`** 로 본다.
+
+그리고 1호(Bielefeld 2019)가 `[인쇄]` "tortuosity, and resulting effective conductivities … are **not explicitly treated**" 로 뺀 항이 바로 이것이다 — 1호의 `θ` 는
+첫째 줄만 계산한다([[composite-cathode-percolation-utilization]]).
+
+## 무엇을 재면 갈리나 (처방)
+
+1. **`ε` 를 잰다** — 단층촬영·밀도 · 적어도 인쇄 두께와 질량의 폐합. 못 재면 `τ²` 대신 **`σ_eff` 를 보고**한다.
+2. **두 경로(EIS ↔ operando 역적합)의 시편은 같은 제조 압력·같은 두께**로 — 아니면 차이가 압력 이력에 배정된다(곱 축퇴 처방 4단계의 조건).
+3. **같은 셀에서 첫 충전 전·후 차단 측정** — "진화" 는 두 시점의 측정으로만 주장할 수 있다.
+4. **역적합에서 `ε` 를 자유로 두고 `a` 와의 프로파일을 그린다** — `ε^(1+a) = const` 곡선이 평탄 계곡으로 나오면 분할은 비식별이다([[near-optimal-set-width-measurement]]).
+5. **모델에 OCP 를 넣는다** — 구배 크기는 `Δφ/(dU/dx)` 로 정해진다. OCP 없는 역적합은 무엇과 무엇이 교환됐는지 재현할 수 없다.
+
+## 이 페이지가 주장하지 않는 것
+
+- **"굴곡도가 진화하지 않았다" 고 하지 않는다** — `σ_eff` 로 보면 70 % 는 변화 없음, 80 % 는 ≈3 배이고, 그 3 배의 배정이 안 갈린다는 것까지다.
+- **D1(ε 규약)을 저자의 의도된 다른 정의로 볼 가능성을 배제하지 않는다** — 다만 본문 식 (3)의 `ε_i`(재료 i)와 모순된다.
+- **옴 강하 추정을 측정값으로 쓰지 않는다** — OCP 기울기는 우리 가정이고 1차원 균일 반응 근사다.
+- 근거 편수: **수송 곱을 숫자로 준 편은 24호 하나**다. 9호는 같은 식을 모델에 두고 값을 적합했을 뿐 `σ_eff` 를 재지 않았다. 1호는 이 항을 뺐다.
+
+## 관련
+
+- [[assb-lampe-contact-product-degeneracy]] — 동역학 곱(`A_eff·ε_p/R_s`)과 처방 표. 이 페이지는 그 ③ 채널(수송)의 본체. 24호가 **여덟 번째 적용**.
+- [[assb-apparent-capacity-decomposition]] — `θ`·`η(i)` 에 더해 **`η(z)`** (깊이 방향 이용 지연)가 들어오는 자리.
+- [[composite-cathode-percolation-utilization]] — 1호 `θ` 는 연결 여부만 본다; 연결된 경로의 폭은 이 페이지.
+- [[assb-interphase-vs-contact-loss-attribution]] — 두 비-LAM 기구에 **세 번째 이름("굴곡도 진화")** 이 붙는 자리.
+- [[assb-contact-loss-vs-lampe]] — 닻.
+- [[near-optimal-set-width-measurement]] — `(ε, a)` 평면의 평탄 계곡을 잴 기계.

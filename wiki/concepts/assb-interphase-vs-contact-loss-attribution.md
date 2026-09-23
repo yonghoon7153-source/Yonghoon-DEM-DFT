@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
+sources: [raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -42,6 +42,8 @@ evidenceScope: multi-source-primary
 | **전위 창 시점** | SE 산화 개시 전위(23호 `[인쇄]` 3.2–3.4 V vs In) | 격자 수축이 큰 구간 | ⚠ **첫 충전에서는 SOC 와 전위가 단조 동행**해 두 시점이 겹칠 수 있다 — 격자 곡선 `V(x)` 가 같은 지면에 있어야 쓸 수 있다 |
 | **가역성** | 비가역(층은 남는다) | 수축은 방전에서 되돌아옴 → 부분 가역 | ⚠ 첫 사이클 손실로 양극이 덜 리튬화되면 **수축도 비가역처럼 남는다**(23호 §4-2e) |
 | **무전류 이완** | 없음 (XPS 불변) | 기계 이완으로 **면적만** 변한다 | ★ **`C ∝ 면적` 전제의 양성 대조**로 쓴다 |
+| **회절 봉우리 이봉**(operando, 입자 모집단) | `[인쇄]` 24호: "reduced i₀ → increased bifurcation" — 비코팅에서 뚜렷 | 접촉이 끊긴·좁아진 입자가 뒤처져도 같은 이봉 | ⚠ 자촉매 가짜 상분리(동역학)도 같은 서명 — **코팅 쌍**이 있어야 화학 몫이 떨어진다 |
+| **유효 전도도 `σ_eff`**(차단 셀 EIS ↔ operando 역적합) | 입자 표면 층은 전극 척도 `σ_eff` 를 크게 안 바꾼다(`[추론]`) | **부분** 접촉 손실(점 접촉 감소)이 `σ_eff ↓` — 원전 이름은 "굴곡도 진화"(24호) | ⚠ `ε`·압력·모델과 곱 — [[assb-tortuosity-factor-effective-conductivity-split]] |
 
 ## 원전(23호)이 한 일 — 채널 분담 + 시간 분할 배정
 
@@ -65,6 +67,7 @@ evidenceScope: multi-source-primary
 | **18호 Fukunishi 2023** | `[인쇄]` "chemical composition **or** the contact area" — 갈림을 인쇄하고 남김; 원전을 **공간전하층**으로 인용(기구 치환) | ✅ `R`·`C` 두 상태 — 우리가 갈라 LPSI = 면적 + 화학, LPSCl = 화학 |
 | **9호 Huo 2025** | 원전 **초록**의 "contact loss … increased resistance" 를 인용하고 `A_eff` 하나로 적합 | ❌ 적합 파라미터 하나 |
 | **1호 Bielefeld 2019** | 원전을 "contact loss **throughout** the composite cathode" 로 강화 인용 | — (모델) |
+| **24호 Stavola 2023** | 이봉은 **계면층**(`[인쇄]` "decomposition products … a higher i₀ … less bifurcation"), 수송 저하는 **접촉**(`[인쇄]` "rearrangement of particle contacts")을 기구로 대고 **이름은 `τ`** 로 — 세 번째 이름 **"굴곡도 진화"** | ⚠ **코팅 쌍**(화학 대조, 계보 첫) — 이봉의 코팅 의존분은 화학 형; 첫 사이클 비가역은 코팅으로 ≈14 % 만 줄어듦(`[도표]`, n = 1) |
 
 ⇒ `[해석]` **원전이 "expected · suspect · suggests" 로 쓴 접촉 손실이 인용을 거치며 평서문이 되고, 원전 자신의 SI 는 EIS 창 안에서
 그 면적 변화를 보지 못한다.** 계면층 쪽은 XPS 라는 화학 증거가 있고 SI 궤적도 그쪽이다.
@@ -75,7 +78,8 @@ evidenceScope: multi-source-primary
 2. **무전류 기계 이완 대조를 같은 셀에서** — XPS 로 화학 불변을 확인하고 `R·C` 가 보존되는지 본다(전제의 양성 대조).
 3. **첫 충전 뒤 · 첫 방전 뒤 SEM(또는 단층촬영)을 같은 조건으로** — 틈이 재리튬화에서 닫히는지(23호 G7 공백).
 4. **격자 `V(x)` 곡선을 같은 지면에** — `ΔR` 급등 전위창이 격자 수축 구간과 겹치는지 떨어지는지(시점 판별).
-5. **코팅 유무 쌍** — 코팅은 계면층만 막고 수축은 그대로 둔다(`[추론]` — 이 계보에 아직 통제 쌍 0 편).
+5. **코팅 유무 쌍** — 코팅은 계면층만 막고 수축은 그대로 둔다(`[추론]`). ★ **2026-09-23 첫 표본 = 24호**(70 % NMC111, LLSTO 15–20 nm ↔ 비코팅): 이봉 약화 · 충전 1 구배 성격 불변 ·
+   첫 사이클 비가역 `[도표]` −14 % — **첫 사이클 손실의 대부분은 코팅으로 막히는 경로가 아니다**(23호 예산과 같은 방향). ⚠ n = 1 씩 · 코팅 행의 σ 가 표끼리 안 맞는다(24호 D17).
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -84,7 +88,7 @@ evidenceScope: multi-source-primary
 - **`C ∝ 면적` 전제가 섰다고 주장하지 않는다.** 18·19호에서 깨졌고, 23호의 양성 대조는 **두 호 중 하나**, 판 a ↔ c 크기 불일치(D10) 위다.
 - **손실 예산의 ≳85 % 를 접촉 손실로 돌리지 않는다** — `η(i)`(0.25 C 에서 이미 66 mAh g⁻¹)와 상대극 고갈(무 Li 상대극, 방전 끝 `C_anode`
   두 자릿수 붕괴)이 같은 칸에 있다.
-- 근거는 **실험 네 편**이고 그중 `R`·`C` 입력이 있는 것은 **두 편(18·23호)** 뿐이다.
+- 근거는 **실험 다섯 편**이고 그중 `R`·`C` 입력이 있는 것은 **두 편(18·23호)** 뿐이다. 24호는 `R`·`C` 대신 **코팅 쌍(화학 대조)** 을 준다 — 그 쌍은 n = 1 씩이다.
 
 ## 관련
 
@@ -93,3 +97,4 @@ evidenceScope: multi-source-primary
 - [[assb-apparent-capacity-decomposition]] — 두 기구가 `θ`·`η` 에 들어가는 자리; 23호 손실 예산.
 - [[composite-cathode-percolation-utilization]] — 완전 분리(`θ`) 쪽의 기하 모델.
 - [[assb-li-in-reference-potential-window]] — 23호 셀의 방전 끝을 상대극이 끊는 경로(용량 배정의 세 번째 후보).
+- [[assb-tortuosity-factor-effective-conductivity-split]] — 부분 접촉 손실이 `σ_eff`·`τ²` 로 들어가는 자리(24호의 "굴곡도 진화").

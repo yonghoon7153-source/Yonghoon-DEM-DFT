@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
+sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -148,6 +148,8 @@ physical significance** of the parameters" 라고 쓴다.
 | ★★★ **SOC 추종 상 분율** (2026-09-23 신설, **22호에서**) | 회절 2상 정련으로 **쓰이지 않은 부피(`θ·ε_p`)를 구조로** 잰다 ⇒ 곱에서 `ε_p·θ` 를 떼고 `A_eff·j₀` 만 남긴다 | ★★★ **22호가 신품에서 준다**: `[인쇄]` 불활성 2 / 27 / 31 %, 용량 독립 대조 ±7 %. ⚠ 반사 기하 = 한쪽 면 표층(`[재현]` ≈3–15 µm) · 열화 판은 **두 SOC** 가 필요 · `A_eff` ↔ `j₀` 는 여전히 안 갈린다 (아래 §22호) |
 | ★★★ **무전류 이완 = 전제 양성 대조** (2026-09-23 신설, **23호에서**) | 같은 셀·같은 복합체에서 **전류 없이** 기계 이완만 일어날 때(화학 불변을 XPS 로 확인) `R·C` 가 보존되는지 본다 ⇒ 보존되면 **그 호에 대해서는 `C ∝ 면적` 이 이 복합체에서 작동**한다 | ★★★ **23호 SI Fig. S3**: `[도표]` (`R₂`,`C₂`) ×1.6 ↔ ×0.65, `R₂·C₂` **+5 %** (면적 서명 통과) · (`R₃`,`C₃`) ×2.4 ↔ ×1.35 (실패). ⚠ 호 정체·셀 조건 미상, 판 a↔c 크기 ≈8 배 불일치 (아래 §23호) |
 | ★★ **상대극 교체 대조의 조건** (2026-09-23, **23호에서**) | In ↔ LTO 처럼 상대극을 바꿔 호의 전극 배정을 검사할 때 **두 상대극이 같은 결함(무 Li 조립 · 방전 끝 평탄 이탈)을 공유하지 않아야** 용량 배정까지 대조가 된다 | ⚠ **23호는 저항 배정만 검사** — 두 상대극 모두 방전 끝 `C_anode` 두 자릿수 붕괴 |
+| ★★★ **코팅 유무 쌍 = 화학 대조** (2026-09-23 신설, **24호에서**) | 계면 **화학만** 바꾸고(코팅이 계면층 경로를 막는다) 수축·접촉·수송은 그대로 둔 쌍 ⇒ 코팅으로 **안 변하는 몫**이 면적·수송·상대극 쪽의 상한 — **면적 대조(2단계)의 여집합** | ★★★ **24호**(70 %, LLSTO 15–20 nm): 첫 사이클 비가역 `[도표]` **−14 %** 만 · 충전 1 구배 `[인쇄]` "did not change the nature" · 이봉 약화. ⚠ n = 1 씩, 코팅 행이 표끼리 안 맞는다(24호 D17) — 코팅이 접촉 형태를 안 바꾼다는 전제 위 |
+| ★★ **두 영역 대조(4단계)의 시편 조건** (2026-09-23, **24호에서**) | 주파수 영역(EIS) 값과 시간 영역(operando/DC) 값을 비교할 때 두 시편은 **같은 제조 압력·같은 두께**여야 한다 | ⚠ **24호**: EIS 차단 셀 50 / 150 MPa ↔ operando 100 MPa — "굴곡도 진화" 가 압력 이력과 교락 |
 
 ★ **`R_CT·C_dl` 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -823,6 +825,39 @@ SI 가 한쪽만 남긴다.**
   ≲10–20 %** 라는 **약한 상한**이다(`[추론]`, 판독 분해능).
 - 전제 `C ∝ 면적` 은 **18·19호에서 깨졌고** 23호 양성 대조는 **한 호**뿐이다. 그리고 CPE → C 환산식이 인쇄되지 않았다.
 
+## ★★★★ 처방의 여덟 번째 적용 (2026-09-23, `assb` 24호) — **수송 곱 `σ_bulk·ε/τ²` 에서 4단계가 적용되고, 상태축 R·C 는 없다**
+
+`raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md` (Stavola 외 2023, *ACS Energy Lett.* 8, 1273−1280). 이 편의 곱은 **두 층**이다 —
+전극 척도 **수송** `σ_eff = σ_bulk·ε/τ²`(이 페이지 ③ 채널의 본체, 상세 [[assb-tortuosity-factor-effective-conductivity-split]]) · 입자 척도 **동역학** `A_eff·j₀`(봉우리 이봉 해석).
+
+### 입력 점검
+
+| 처방 단계 | 필요한 입력 | 24호 | 판정 |
+|---|---|---|---|
+| **1단계** (16호) | `R` 과 `C` 를 같이 | TLM `R1`·`Q1,a1`(+`Q2` / `Qp`) — **조성축**(40–95 %), 신품 차단 셀만. CPE 지수 `[인쇄]` 0.02–0.89 · Q 단위 "ohm cm" | ❌ **상태축 0** — 23호의 "같은 상태축 위 R·C" 를 적용할 궤적이 없다 |
+| **2단계** (18호) | + 면적을 아는 대조군 | 면적 대조 없음 · ★ **코팅 쌍 = 화학 대조**(계보 첫 통제 쌍) · 두께 쌍 50 ↔ 110 µm(한 셀, 정량 0) | ⚠ 여집합만 |
+| **3단계-a** (19호) | `Ea` | 실온 한 점 | ❌ |
+| **3단계-b** (19호) | `C` 물리 상한 | C 환산 불가 | ❌ |
+| **4단계** (20호) | 시간 영역 | ★ **같은 `σ_eff` 를 두 영역에서** — EIS(주파수, 신품 펠릿) ↔ operando 리튬화 구배 역적합(시간, DC) | ✅ `[재현]` LPSC **70 % 0.93(통과) · 80 % 0.34(실패)**; 옴 강하 차수로도 80 % 만 ≈3–5 배 부족 |
+
+### ★★★ 4단계 실패분의 배정 — 곱의 모든 인자 + 처방 표 밖의 하나
+
+80 % 셀의 ≈3 배는 `ε`(가정 14 % ↔ `[재현]` 두께 함의 21–38 %) · `τ²`(저자 선택 — "evolved") · 접촉(`[인쇄]` 정의상 `τ²` 안의 "point contacts") · **제조 압력(50/150 ↔ 100 MPa)**
+어느 쪽에도 들어간다. 원전은 **`τ²` 끝**을 고르고 기구로는 **접촉**("NMC shrinks … rearrangement of particle contacts")을 댄다 — **16·20·22호의 "한쪽 끝 선택" 이 수송 곱에서 반복된다.**
+⇒ 처방 표에 **"두 영역 대조의 시편 조건"** 줄을 더했다.
+
+### ★★ 23호 원칙("R·C 를 같은 상태축에서")의 자리 — 다른 채널로 나타난 같은 문제
+
+상태축 EIS 가 없어 R·C 분류는 못 한다. 그러나 **봉우리 이봉**(입자 모집단 이질성)의 원인이 `j₀`(계면층, `[인쇄]` 저자 배정) ↔ `A_eff`(접촉) ↔ 자촉매 동역학(원전 ref 51)으로
+같은 곱 위에 있고, **코팅 쌍이 첫째를 떼는 대조군**이다: `[인쇄]` 코팅에서 이봉이 약하다 ⇒ **이봉의 코팅 의존분은 화학 형** — 23호 SI 판정("양극 저항 증가는 화학 형")과 같은 방향.
+⚠ n = 1 씩, 코팅 행 내부 불일치(24호 D17).
+
+### ⚠ 이것이 곱을 푼 것은 아니다
+
+- 수송 곱의 **분할**(`ε` ↔ `τ²` ↔ 접촉)은 0 이다 — 원전 Table S8 이 **같은 `σ_eff` 에서 `ε` 규약만으로 반대 추세**를 낸다(24호 D1).
+- 동역학 곱(`A_eff·j₀`)은 이봉 해석에서 **코팅 의존분만** 화학으로 가고, 나머지는 안 갈린다.
+- 용량의 분할(`θ` ↔ `η` ↔ `Q_material` ↔ 상대극)도 0 — 첫 사이클 비가역 ≈0.2 Δx 는 깊이 균일이라 `η(z)` 는 아니라는 것까지다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -866,3 +901,5 @@ SI 가 한쪽만 남긴다.**
   정리했고, **고치지 않고 남겨 둔다**(그 절의 결론은 어느 기준으로도 같다).
 - ★ **2026-09-23 (23호)**: **23호의 `C` 비를 측정값으로 쓰지 않는다** — 로그 축 판독 · CPE 환산식 미상 · 호가 위상 ≤4° 에서 겹친다. 주장은
   **"여섯 비교 중 다섯에서 `C` 가 `R` 을 따라가지 않는다"** 까지이고, **"접촉 손실이 용량에 없었다"** 가 아니다.
+- ★ **2026-09-23 (24호)**: **σ_eff 비 0.93 / 0.34 를 측정값으로 쓰지 않는다** — COMSOL 쪽은 `ε` 14 % · `σ_bulk` 2e-3 가정 위의 모델 입력값이고 EIS 쪽은 다른 제조 압력의
+  펠릿이다. 주장은 **"`τ²` 대신 `σ_eff` 로 비교하면 '두 조성 모두 증가' 가 '80 % 셀 하나의 ≈3 배' 로 줄어든다"** 까지다.
