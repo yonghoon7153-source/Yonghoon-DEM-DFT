@@ -32,7 +32,7 @@
 | ★ | **Hlushkou 외 2018** — *J. Power Sources* **396**, 363−370 | 01 (ref 16) | 1 | Q1 | FIB-SEM **실측** 미시구조 — 합성 기하와 대조 |
 | ★★ | **Bielefeld·Weber·Rueß·Glavas·Janek 2022** — "Influence of Lithium Ion Kinetics, Particle Morphology and Voids on the Electrochemical Performance of Composite Cathodes for All-Solid-State Batteries", *J. Electrochem. Soc.* **169**, 020539, doi `10.1149/1945-7111/ac50df` (02호 ref 36 · 14호 ref [69] — 둘 다 제목 없음, 제목은 웹 검색으로 확인) | 02 · 14 | **2** | Q1 | pore(void) 문턱 → 1호 `p_c` 와 이어짐. ⚠ **정정: '실험판' 이 아니라 FEM 시뮬레이션** (1호 Bielefeld 2019 모델의 후속 — void 를 넣은 미세구조 모델) |
 | ★★★ | **Bielefeld·Weber·Janek 2020** — *ACS Appl. Mater. Interfaces* **12**, 12821−12833 | 15 · 24 | **2** | Q1·Q4 | 1호 직계 속편. 24호의 **14 % void 가정과 τ 정의의 출처** — 01호와 24호를 잇는 유일한 고리 |
-| ★ | **Asheri 외 2023** — *Comput. Mater. Sci.* | 15 | 1 | Q3·Q4 | 15호가 아는 유일한 SSB-ML ("interface damage") |
+| ★ | **Asheri·Fathidoost·Glavas·Rezaei·Xu 2023** — "Data-driven multiscale simulation of solid-state batteries via machine learning", *Comput. Mater. Sci.* **226**, 112186 (15호 ref [22] 제목·권·쪽 인쇄; 저자 전원은 웹 검색) | 15 | 1 | Q3·Q4 | 15호가 아는 유일한 SSB-ML ("interface damage"). 실체: 미세 스케일 화학-기계 시뮬(계면 박리 포함) 데이터로 학습한 **신경망 대리모형**을 2단 셀 모델에 넣어 박리→용량 손실 예측 — 측정 아님, 시뮬 대리 |
 | ★ | **Li Q. 외 2025** — *Nat. Energy* · **Zhang 외 2025** — *Nat. Commun.* | 13 | 1 | Q6 | 무외압 Si 음극 — 저압 축 |
 | ★ | **Masias 외 2019** — *J. Mater. Sci.* **54**, 2585 | 21 | 1 | Q6·Q7 | Li creep 기계 물성 — 21호 Li 박 조립 방향의 기계 쪽 근거 |
 | ★★★ | **Zhang·Schröder·Arlt·…·Janek 2017** — *J. Mater. Chem. A* **5**, 9929−9936 | 22 · 23 · 33 | **3** | Q1·Q6 | 22호 셀 장치의 원전(양극 면적 미기재) + **충전 중 부피 수축 → 접촉 감소**를 압력으로 감시한 근거 — Q1 의 기구 쪽 입력 |
