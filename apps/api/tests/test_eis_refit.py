@@ -6,6 +6,7 @@
 """
 
 import numpy as np
+import pytest
 import synthetic_eis as S
 
 from wrdkit.eis.circuit import parse_circuit
@@ -125,7 +126,9 @@ def test_the_text_streams_a_line_per_spectrum_and_ends_with_the_way_back(client)
 
     text = client.post("/api/eis/audit/refit", params={"format": "text"}).text
     assert "맞춘 스펙트럼 2개 중 대상 2개" in text
-    assert "[1/2] #1  B15_pellet  바꿈  R0-p(R1,CPE1) → L1-R0-CPE1 · 문제 1 → 0" in text
+    # σ 에 쓰는 저항도 옛것 → 새것으로 — 랩이 쓰는 것은 수다.
+    assert ("[1/2] #1  B15_pellet  바꿈  R0-p(R1,CPE1) → L1-R0-CPE1 · 문제 1 → 0 · "
+            "σ 저항 8.4") in text
     assert "[2/2] #2  B14_arc  그대로  (L1-R0-CPE1 · 기본 시작점에서 — 맞춤이" in text
     assert "━━ 바꾼 것 (1)" in text and "━━ 그대로 둔 것 (1)" in text
     assert "풀린 문제: 꼬리를 흉내 낸 아크" in text
@@ -254,6 +257,26 @@ def test_an_open_cell_counts_every_problem_not_only_the_one_that_offered_a_circu
     assert text.count("    남은 문제: 이름과 커패시턴스가 어긋남 — ") == 2
     # 막지 않는 셀은 σ 를 안 낸다 — 적을 저항이 없다.
     assert "σ 저항" not in text
+
+
+def test_a_refit_that_draws_worse_does_not_move_the_resistance_behind_sigma(client):
+    """전극 크기 아크(2 Ω)가 구간 안에 보이는 펠릿.  아크 없는 회로는 그것을 R0 로
+    삼키고도 평균 2.5 % 로 맞아 검수는 받아들인다 — σ 에 쓰는 저항은 8 → 9.65 Ω
+    (+21 %) 로 간다.  이름은 맞아지고 수는 틀려지는 경우라 받지 않는다."""
+    truth = ("L1-R0-p(R1,CPE1)-CPE2", {"L1": 1.7e-6, "R0": 8.0, "R1": 2.0, "CPE1_Q": 1e-5,
+                                        "CPE1_n": 0.85, "CPE2_Q": 1e-4, "CPE2_n": 0.9})
+    spectrum_id, _ = pellet(client, "B14_small_arc.mpr", truth, truth[0])
+    body = client.post("/api/eis/audit/refit").json()
+    assert (body["targets"], body["changed"], body["kept"]) == (1, 0, 1)
+    (one,) = body["spectra"]
+    assert one["old_sigma_ohm"] == pytest.approx(8.0, rel=1e-3)
+    assert [t["start"] for t in one["tries"]] == ["seeded", "default"]
+    for attempt in one["tries"]:
+        assert not attempt["accepted"]
+        assert attempt["sigma_ohm"] == pytest.approx(9.65, rel=1e-2)
+        assert attempt["reason"].startswith("σ 에 쓰는 저항이 8 → 9.651 Ω (+21 %) 로 옮겨 가는데")
+        assert "(오차 평균 < 0.01 → 2.5 %)" in attempt["reason"]
+    assert len(fits_of(client, spectrum_id)) == 1
 
 
 def test_only_the_problems_that_went_away_are_called_solved():

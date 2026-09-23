@@ -34,6 +34,7 @@ from wrdkit.eis.audit import PROBLEM, FitAudit, audit_spectrum
 from wrdkit.eis.refit import (
     Candidate,
     accept_refit,
+    moved_number,
     refit_candidates,
     remaining_problems,
     seed_values,
@@ -89,6 +90,7 @@ class _Target:
     audit: FitAudit
     reference: object
     candidates: list[Candidate]
+    conductivity: dict | None = None
 
 
 @dataclass
@@ -111,6 +113,14 @@ class _Progress:
 
 def _name(record: SpectrumRecord) -> str:
     return record.name or record.original_name
+
+
+def _sigma_ohm(conductivity: dict | None) -> float | None:
+    """σ 에 쓰는 저항 (Ω) — 막는 전고체 대칭셀에서 전체 σ 를 냈을 때만."""
+    if not conductivity or conductivity.get("total_s_cm") is None:
+        return None
+    value = conductivity.get("total_ohm")
+    return float(value) if value is not None else None
 
 
 def _announce() -> None:
@@ -153,10 +163,11 @@ def _targets(session: Session) -> tuple[int, list[_Target], list[RefitSkipOut], 
                                         reason=str(exc.detail)))
             continue
         reference = audit_spectrum(spectrum).reference
-        audit, _ = audit_of_fit(session, record, spectrum, best, reference)
+        audit, _, conductivity = audit_of_fit(session, record, spectrum, best, reference)
         candidates = refit_candidates(audit.findings)
         if candidates:
-            targets.append(_Target(record, best, spectrum, audit, reference, candidates))
+            targets.append(_Target(record, best, spectrum, audit, reference, candidates,
+                                   conductivity))
         elif any(one.severity == PROBLEM for one in audit.findings):
             unoffered += 1
     return total, targets, skipped, unoffered
@@ -165,7 +176,11 @@ def _targets(session: Session) -> tuple[int, list[_Target], list[RefitSkipOut], 
 def _refit_one(session: Session, target: _Target, origin: str,
                dry_run: bool) -> RefitSpectrumOut:
     """권한 회로를 차례로 맞춰 보고, 받아들여진 것 중 문제가 가장 적게 남는 것을
-    고른다 (같으면 권한 순서).  문제가 하나도 안 남는 것이 나오면 거기서 멈춘다."""
+    고른다 (같으면 권한 순서).  문제가 하나도 안 남는 것이 나오면 거기서 멈춘다.
+
+    검수가 받아들여도 모양을 덜 그리면서 σ 에 쓰는 저항을 옮기면 받지 않는다
+    (`moved_number`) — 이름은 맞아지고 수는 틀려지는 경우다.
+    """
     record, best, spectrum = target.record, target.fit, target.spectrum
     stored = json.loads(best.parameters_json) if best.parameters_json else []
     values = {row["name"]: float(row["value"]) for row in stored
@@ -174,16 +189,18 @@ def _refit_one(session: Session, target: _Target, origin: str,
     window = ((best.frequency_low_hz, best.frequency_high_hz)
               if best.frequency_low_hz is not None and best.frequency_high_hz is not None
               else None)
+    old_misfit = target.audit.misfit.mean if target.audit.misfit else None
+    old_sigma = _sigma_ohm(target.conductivity)
     out = RefitSpectrumOut(
         id=record.id or 0, name=_name(record), old_fit_id=best.id or 0,
         old_circuit=best.circuit, old_chi_squared=best.chi_squared,
-        old_misfit_mean=target.audit.misfit.mean if target.audit.misfit else None,
+        old_misfit_mean=old_misfit, old_sigma_ohm=old_sigma,
         problems=[_finding_out(one) for one in target.audit.findings
                   if one.severity == PROBLEM and one.circuits],
         old_problems=[_finding_out(one) for one in target.audit.findings
                       if one.severity == PROBLEM])
 
-    chosen: tuple[int, SpectrumFit, FitAudit] | None = None
+    chosen: tuple[int, SpectrumFit, FitAudit, float | None] | None = None
     for candidate in target.candidates:
         seed = seed_values(best.circuit, values, candidate.circuit, skip=railed)
         starts = ([("seeded", seed)] if seed else []) + [("default", None)]
@@ -202,28 +219,35 @@ def _refit_one(session: Session, target: _Target, origin: str,
                     circuit=row.circuit, start=start, converged=False,
                     reason="수렴하지 않았습니다" + (f" — {row.reason}" if row.reason else "")))
                 continue
-            audit, _ = audit_of_fit(session, record, spectrum, row, target.reference)
+            audit, _, conductivity = audit_of_fit(session, record, spectrum, row,
+                                                  target.reference)
+            misfit = audit.misfit.mean if audit.misfit else None
+            sigma = _sigma_ohm(conductivity)
             verdict = accept_refit(target.audit.findings, audit.findings,
                                    candidate.triggers, converged=True)
-            left = remaining_problems(audit.findings) if verdict.accepted else None
+            accepted, reason = verdict.accepted, verdict.reason
+            if accepted:
+                reason = moved_number(old_sigma, sigma, old_misfit, misfit)
+                accepted = not reason
+            left = remaining_problems(audit.findings) if accepted else None
             out.tries.append(RefitTryOut(
                 circuit=row.circuit, start=start, converged=True,
-                chi_squared=row.chi_squared,
-                misfit_mean=audit.misfit.mean if audit.misfit else None,
-                accepted=verdict.accepted, reason=verdict.reason, problems_left=left))
-            if verdict.accepted:
+                chi_squared=row.chi_squared, misfit_mean=misfit, sigma_ohm=sigma,
+                accepted=accepted, reason=reason, problems_left=left))
+            if accepted:
                 if chosen is None or left < chosen[0]:
-                    chosen = (left, row, audit)
+                    chosen = (left, row, audit, sigma)
                 break
         if chosen is not None and chosen[0] == 0:
             break
     if chosen is None:
         return out
 
-    _, row, audit = chosen
+    _, row, audit, sigma = chosen
     out.new_circuit = row.circuit
     out.new_chi_squared = row.chi_squared
     out.new_misfit_mean = audit.misfit.mean if audit.misfit else None
+    out.new_sigma_ohm = sigma
     out.new_problems = [_finding_out(one) for one in audit.findings
                         if one.severity == PROBLEM]
     if not dry_run:
@@ -349,6 +373,16 @@ def _clip(text: str, limit: int = 110) -> str:
     return text if len(text) <= limit else text[:limit - 1] + "…"
 
 
+def _sigma_change(old: float | None, new: float | None) -> str:
+    """``σ 저항 8.48 → 8.3 Ω (-2.2 %)`` — 둘 다 없으면 빈 문자열."""
+    if old is None and new is None:
+        return ""
+    if old is None or new is None or old <= 0:
+        return (f"σ 저항 {'—' if old is None else f'{old:.4g} Ω'} → "
+                f"{'—' if new is None else f'{new:.4g} Ω'}")
+    return f"σ 저항 {old:.4g} → {new:.4g} Ω ({(new - old) / old * 100:+.1f} %)"
+
+
 def _resolved(one: RefitSpectrumOut) -> list[str]:
     """실제로 풀린 문제의 코드 — 새 맞춤에서 그 코드의 수가 줄었다.
 
@@ -377,9 +411,10 @@ def _progress_line(event: _Progress) -> str:
     if one.new_circuit:
         # 문제는 **전부** 센다 — 회로를 실은 것만 세면 원래 있던 이름 판정이
         # 새로 생긴 것처럼 읽힌다 (실측 첫 맞춰 보기: "문제 1 → 2" 가 사실 3 → 2).
+        sigma = _sigma_change(one.old_sigma_ohm, one.new_sigma_ohm)
         return (f"{head} #{one.id}  {one.name}  바꿈  {one.old_circuit} → "
                 f"{one.new_circuit} · 문제 {len(one.old_problems)} → "
-                f"{len(one.new_problems)}")
+                f"{len(one.new_problems)}" + (f" · {sigma}" if sigma else ""))
     last = one.tries[-1] if one.tries else None
     why = _clip(_try_line(last)) if last is not None else "맞춰 볼 회로가 없습니다"
     return f"{head} #{one.id}  {one.name}  그대로  ({why})"
@@ -417,10 +452,12 @@ def render_refit_summary(out: EisRefitOut) -> str:
             chosen = next((t for t in one.tries if t.accepted
                            and t.circuit == one.new_circuit), None)
             start = f" ({_START_WORDS.get(chosen.start, chosen.start)})" if chosen else ""
+            sigma = _sigma_change(one.old_sigma_ohm, one.new_sigma_ohm)
             lines += [f"#{one.id}  {one.name}",
                       f"    {one.old_circuit} → {one.new_circuit}{start} · χ² "
                       f"{_e(one.old_chi_squared)} → {_e(one.new_chi_squared)} · 오차 평균 "
-                      f"{_percent(one.old_misfit_mean)} → {_percent(one.new_misfit_mean)}",
+                      f"{_percent(one.old_misfit_mean)} → {_percent(one.new_misfit_mean)}"
+                      + (f" · {sigma}" if sigma else ""),
                       "    풀린 문제: " + ", ".join(_words(code) for code in _resolved(one))]
             lines += [f"    남은 문제: {_words(p.code)} — {p.message}"
                       for p in one.new_problems]

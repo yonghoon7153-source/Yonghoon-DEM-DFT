@@ -225,8 +225,8 @@ def _audit_spectrum(session: Session, record: SpectrumRecord,
             out.blocking = blocking_verdict(spectrum.frequency_hz, spectrum.z_re,
                                             spectrum.z_im)
     else:
-        audit, parameters = audit_of_fit(session, record, spectrum, best,
-                                         points.reference)
+        audit, parameters, _ = audit_of_fit(session, record, spectrum, best,
+                                            points.reference)
         findings += audit.findings
         out.circuit = best.circuit
         out.chi_squared = best.chi_squared
@@ -245,12 +245,13 @@ def _audit_spectrum(session: Session, record: SpectrumRecord,
 
 
 def audit_of_fit(session: Session, record: SpectrumRecord, spectrum: Spectrum | None,
-                 fit: SpectrumFit, reference) -> tuple[FitAudit, list[dict]]:
+                 fit: SpectrumFit, reference) -> tuple[FitAudit, list[dict], dict | None]:
     """맞춤 하나 — 저장된 것이든 아직 안 된 것이든 — 을 검수가 읽는 대로.
 
     검수 글과 `bml refit` 이 같은 길을 지나야 "검수가 받아들인다" 가 같은 뜻이다
     (ADR 0045): 교환 대칭 정리, 전도도, 맞춘 주파수 창, 권할 회로, 점의 KK.
-    돌려주는 파라미터는 교환 대칭을 정리한 것이다 (글의 표가 쓴다).
+    돌려주는 파라미터는 교환 대칭을 정리한 것이다 (글의 표가 쓴다).  전도도는
+    전고체일 때만 있다 — `bml refit` 이 σ 에 쓰는 저항을 옛것과 견준다.
     """
     thickness_cm, area = _geometry(session, record)
     parameters = apply_exchangeable(
@@ -268,7 +269,7 @@ def audit_of_fit(session: Session, record: SpectrumRecord, spectrum: Spectrum | 
                       band=(fit.frequency_low_hz, fit.frequency_high_hz),
                       conductivity=conductivity, alternatives=_offered(record),
                       reference=reference)
-    return audit, parameters
+    return audit, parameters, conductivity
 
 
 def _offered(record: SpectrumRecord) -> list[str]:

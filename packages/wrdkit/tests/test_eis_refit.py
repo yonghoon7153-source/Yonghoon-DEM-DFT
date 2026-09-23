@@ -14,11 +14,12 @@ import synthetic_eis as S
 
 from wrdkit.eis.audit import CHECK, PROBLEM, Finding, audit_fit
 from wrdkit.eis.circuit import parse_circuit
-from wrdkit.eis.derive import SOLID, SYMMETRIC
+from wrdkit.eis.derive import SOLID, SYMMETRIC, blocking_verdict, ionic_conductivity
 from wrdkit.eis.fit import fit_circuit
 from wrdkit.eis.refit import (
     Candidate,
     accept_refit,
+    moved_number,
     refit_candidates,
     remaining_problems,
     seed_values,
@@ -211,3 +212,44 @@ def test_an_arc_that_is_really_there_is_not_refitted_away():
     assert not verdict.accepted
     assert "모양을 못 그립니다" in verdict.reason
     assert np.isfinite(result.chi_squared)
+
+
+# -- 수를 옮기는가 ----------------------------------------------------------------
+
+def test_a_worse_drawing_does_not_get_to_move_the_number():
+    """이름이 맞아지는 대신 σ 가 틀려지면 받지 않는다.  더 잘 그리면 받는다."""
+    moved = moved_number(8.0, 9.34, 0.0, 0.01)
+    assert moved.startswith("σ 에 쓰는 저항이 8 → 9.34 Ω (+17 %) 로 옮겨 가는데")
+    assert "오차 평균 < 0.01 → 1 %" in moved
+    assert moved_number(8.0, 9.34, 0.037, 0.0092) == ""        # 더 잘 그린다
+    assert moved_number(8.0, 8.3, 0.0, 0.01) == ""             # 4 % — 안 옮겼다
+    assert moved_number(None, 9.34, 0.0, 0.01) == ""           # σ 를 못 내는 셀
+    assert moved_number(8.0, 9.34, None, 0.01) == ""
+
+
+def test_an_electrode_arc_swallowed_into_r0_is_caught_even_when_the_audit_passes():
+    """작은 전극 크기 아크 — 아크 없는 회로가 그것을 R0 로 삼켜도 평균 오차는 1 %
+    라 검수는 받아들인다.  σ 에 쓰는 저항은 17 % 옮겨 간다."""
+    circuit = "L1-R0-p(R1,CPE1)-CPE2"
+    values = {"L1": 1.7e-6, "R0": 8.0, "R1": 1.5, "CPE1_Q": 5e-6, "CPE1_n": 0.85,
+              "CPE2_Q": 1e-5, "CPE2_n": 0.9}
+    spectrum = spectrum_of(circuit, values)
+    verdict = blocking_verdict(spectrum.frequency_hz, spectrum.z_re, spectrum.z_im)
+
+    def sigma(fit):
+        return ionic_conductivity(fit, thickness_cm=PELLET_CM, area_cm2=AREA_CM2,
+                                  config=SYMMETRIC, blocking=verdict)
+
+    old_fit = Fit(circuit, [P(name, value) for name, value in values.items()])
+    before = audit(old_fit, spectrum)
+    (only,) = refit_candidates(before.findings)
+    result = fit_circuit(spectrum, only.circuit,
+                         start_from=seed_values(circuit, values, only.circuit),
+                         frequency_range=BAND)
+    after = audit(result, spectrum)
+    assert accept_refit(before.findings, after.findings, only.triggers,
+                        converged=result.converged).accepted
+    assert sigma(old_fit)["total_ohm"] == 8.0                  # 아크는 전극 쪽이라 뺐다
+    moved = moved_number(sigma(old_fit)["total_ohm"], sigma(result)["total_ohm"],
+                         before.misfit.mean, after.misfit.mean)
+    assert "8 → 9.3" in moved and "(+17 %)" in moved

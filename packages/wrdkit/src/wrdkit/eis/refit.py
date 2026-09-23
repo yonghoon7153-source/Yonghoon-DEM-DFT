@@ -6,6 +6,7 @@
 - `refit_candidates` — 문제 판정이 실은 회로를 어떤 순서로 맞춰 볼지.
 - `seed_values` — 쓰는 맞춤의 값을 새 회로의 어느 파라미터로 옮길지.
 - `accept_refit` — 새 맞춤을 다시 검수한 결과를 받아들일지.
+- `moved_number` — 받아들여도, 모양을 덜 그리면서 σ 의 저항을 옮기면 안 받는다.
 - `remaining_problems` — 받아들여진 것이 여럿이면 무엇을 고를지.
 
 **받아들이는 잣대는 검수 자신이다.**  χ² 는 파라미터 수가 다른 회로를 견주지
@@ -24,6 +25,12 @@ import numpy as np
 
 from .audit import PROBLEM, Finding
 from .circuit import BLOCKING_KINDS, Circuit, CircuitError, parse_circuit
+
+#: σ 에 쓰는 저항이 이 비율보다 많이 움직이면서 맞춤이 더 어긋나면 받지 않는다
+#: (`moved_number`).  판단이다: 합성 펠릿에서 아크 없는 회로가 전극 크기 아크(1.5 Ω)를
+#: 삼키자 R0 가 8.0 → 9.34 Ω (+17 %) 로 갔고 오차는 1 % 라 검수는 받아들였다.
+#: 모양을 더 잘 그리는 맞춤은 이 문턱과 상관없이 받는다.
+RESISTANCE_SHIFT_LIMIT = 0.05
 
 #: 이것이 뜨면 받아들이지 않는다 — "회로가 이 스펙트럼의 모양을 못 그립니다".
 #: 이름을 고치려고 모양을 못 그리는 회로로 바꾸지 않는다.  심각도(확인)와
@@ -162,6 +169,35 @@ def accept_refit(old: Sequence[Finding], new: Sequence[Finding],
     if shape is not None:
         return Acceptance(False, shape.message)
     return Acceptance(True)
+
+
+def moved_number(old_ohm: float | None, new_ohm: float | None,
+                 old_misfit: float | None, new_misfit: float | None) -> str:
+    """모양을 덜 그리는 맞춤이 σ 의 저항을 옮기면 그 까닭 — 아니면 빈 문자열.
+
+    검수가 받아들이는 것은 **이름과 모양**이다.  σ 에 쓰는 저항(막는 대칭셀의
+    R0, 또는 R0 + 입계)은 따로 봐야 한다: 아크가 정말 보이는데 아크 없는 회로로
+    맞추면 그 아크가 R0 로 들어가도 평균 오차는 3 % 아래일 수 있다 (합성 펠릿:
+    +17 %, 오차 1 %).  이름은 맞아지고 수는 틀려진다 — 랩이 쓰는 것은 수다.
+
+    그래서 새 맞춤이 **더 어긋나면서** 그 저항을 `RESISTANCE_SHIFT_LIMIT` 넘게
+    옮기면 받지 않는다.  더 잘 그리면 옮겨도 받는다 — 옛 맞춤이 틀렸을 수 있다
+    (실측: 배선 L 없이 맞춘 펠릿은 새 맞춤이 오차를 3.7 → 0.92 % 로 줄였다).
+    값이 하나라도 없으면 (σ 를 못 내는 셀, 미결정) 판단하지 않는다.
+    """
+    if None in (old_ohm, new_ohm, old_misfit, new_misfit) or not old_ohm or old_ohm <= 0:
+        return ""
+    shift = (new_ohm - old_ohm) / old_ohm
+    if abs(shift) <= RESISTANCE_SHIFT_LIMIT or new_misfit <= old_misfit:
+        return ""
+    return (f"σ 에 쓰는 저항이 {old_ohm:.4g} → {new_ohm:.4g} Ω ({shift * 100:+.0f} %) 로 "
+            f"옮겨 가는데 맞춤은 더 어긋납니다 (오차 평균 {_percent(old_misfit)} → "
+            f"{_percent(new_misfit)} %) — 모양을 덜 그리는 회로가 수를 바꾸게 두지 않습니다")
+
+
+def _percent(fraction: float) -> str:
+    """``0.025`` → ``2.5``.  합성 셀은 2.4e-08 로 맞는다 — 그 자릿수는 읽을 거리가 아니다."""
+    return "< 0.01" if fraction * 100 < 0.01 else f"{fraction * 100:.2g}"
 
 
 def remaining_problems(findings: Iterable[Finding]) -> int:

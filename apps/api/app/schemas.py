@@ -1631,6 +1631,8 @@ class RefitTryOut(BaseModel):
     converged: bool
     chi_squared: float | None = None
     misfit_mean: float | None = None
+    #: σ 에 쓰는 저항 (Ω) — 전고체 막는 대칭셀에서만.
+    sigma_ohm: float | None = None
     accepted: bool = False
     #: 받아들이지 않은 까닭 — 검수의 문장 그대로.
     reason: str = ""
@@ -1647,6 +1649,8 @@ class RefitSpectrumOut(BaseModel):
     old_circuit: str
     old_chi_squared: float | None = None
     old_misfit_mean: float | None = None
+    #: 옛 맞춤의 σ 에 쓰는 저항 (Ω).  전고체 막는 대칭셀이 아니면 비었다.
+    old_sigma_ohm: float | None = None
     #: 이 스펙트럼을 대상으로 만든 문제 판정 — 회로를 실은 것.
     problems: list[AuditFindingOut] = []
     #: 옛 맞춤의 문제 판정 **전부** (회로를 안 실은 것까지) — 새 것과 견주는 수.
@@ -1658,6 +1662,7 @@ class RefitSpectrumOut(BaseModel):
     new_fit_id: int | None = None
     new_chi_squared: float | None = None
     new_misfit_mean: float | None = None
+    new_sigma_ohm: float | None = None
     #: 새 맞춤에 남은 문제 판정.
     new_problems: list[AuditFindingOut] = []
 
