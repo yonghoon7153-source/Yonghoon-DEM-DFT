@@ -300,6 +300,14 @@
    "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf"
   ]
  },
+ "neumann2021_garnet-3d-structure-grain-boundary-transport": {
+  "figures": 27,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf"
+  ]
+ },
  "oh2025_maxwell-protocol-nondestructive-assb-health": {
   "figures": 6,
   "generated": "2026-09-22",
@@ -338,7 +346,7 @@
   ]
  },
  "ren2023_oxide-ssb-composite-cathode-architecture-perspective": {
-  "figures": 13,
+  "figures": 15,
   "generated": "2026-09-23",
   "pdfs": [
    "3f209f78-15._Oxide_based_solid_state_batteries_a_perspective_on_composite_cathode_architecture.pdf",

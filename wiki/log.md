@@ -2442,3 +2442,15 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 그림: 15 장 중 Read 7(Fig. 1 · 4 · 5 · 7 · 9 · SI-1 · SI-2), 안 봄 Fig. 2 · 3 · 6 · 8, 표는 텍스트.
 - 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 53편 · Evidence 마흔여덟 번째 · 새 제약 · Status Log) · [[assb-lampe-contact-product-degeneracy]](서른여섯 번째 적용 · 처방 표 새 줄) · [[assb-interphase-vs-contact-loss-attribution]](계보 표 53호 행) · [[assb-sensitivity-sweep-vs-identifiability]](53호 절) · 큐 문서 §6-3-g 54 행 + 지문 ¹⁹.
 - 후속(서지 기준, 미열람 — 큐 55 · 57 · 58 인용, 56 · 59 0): Barai … Srinivasan 2021 *Chem. Mater.* 33, 5527 ([127]) · Ihrig … Guillon 2021 *JPS* 482, 228905 ([105]) · Tsai … Guillon 2019 *Sustain. Energy Fuels* 3, 280 ([83]) · Neumann … Latz 2020 *ACS AMI* 12, 9277 ([32]) · Finsterbusch, Danner … 2018 *ACS AMI* 10, 22329 ([12]).
+
+## [2026-09-23] ingest | assb 54호 — Neumann, Hamann, Danner, Hein, Becker-Steinberger, Wachsman, Latz 2021, Effect of the 3D Structure and Grain Boundaries on Lithium Transport in Garnet Solid Electrolytes (ACS Appl. Energy Mater. 4, 4786)
+- raw: `raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md` (sha256 봉인 — `pdf_sha256` · `si_sha256`) · 그림 `raw/figures/neumann2021_garnet-3d-structure-grain-boundary-transport/` (본문 12 + 표 1 + SI 9 + 표 5). 큐 55번(2차 묶음 열여섯째 편) — 지목 3 회(02호 ref 38 · 27호 ref 14 · 53호 [27]). ⚠ 양극 없음 — LLCZNO SE 자체, 모델(BEST) + 재사용 자료. ⚠ Neumann 2020 *ACS AMI* 와 다른 편.
+- ★★★★ **판정**: 굴곡도 = FIB-SEM 구조 계산(곱 `σ⁰·ε/τ²` 풀림) · 벌크 `σ⁰` = 외부 입력(벌크 절편 대역 밖, `f_C,B` 1.40e7 ↔ 상한 1.5e7) · 입계 `i₀₀^GB` · `C_DL^GB` = 재사용 치밀 펠릿 한 스펙트럼 위 손 보정(가정 입도 15 ± 6 µm). 남은 합 벌크 ↔ 입계는 원문이 "exact deconvolution … unfeasible" 두 번 인쇄.
+- ★★★★ **원장 "measured 라벨" ❌** — Table S4 범례 "measured by the authors [°]" 표시 0 개, 전부 "calculated". ★★★ 53호 `β_tort` 2.31 · `β_GB` 1.39 는 이 편에 없음 — `[재현]` 2.31 = 56 % 한 점, 1.39 는 치밀 정규화에서만 근처 → 53호 `σ⁰` 뜻 어긋남(×≈0.27).
+- **채움표 54호 행 — 누적 ≈20.0 → ≈20.0 (새 칸 0).** Q3 새 층(재사용 스펙트럼 위 손 보정) · Q4 0/54 마흔여섯 번째 성질.
+- **곱 축퇴 처방 서른일곱 번째 적용**: 1단계 `C` 두께 불가(`[재현]` 등가 ≈6.8 µm) · 3-a ❌ · 4단계 모델에만(ASR 1064 → 655) · 새 줄 "벌크 특성 주파수 ↔ 측정 대역 상한".
+- ⚠ 어긋남 20 건(D3 [°] 0 · D2 `R` = 뤼드베리 상수 · D1 "β-LPS" · D6 "25%" ↔ +33 % · D7 7.56e-5 ↔ 1.1e-4 · D15 `C` 단위 비교 · D19 "fluctuates" ↔ 단조 감소 외).
+- 낱말 지문: 11 열 중 `MPa` 1(문헌 Li 음극) 외 0 · `deconvol*` 1/1 · `unfeasible` 1/1 · `activation` · `Arrhenius` 0.
+- 그림: 27 장 중 Read 9(Fig. 4 · 5 · 6 · 7 · 8 · S1 · S4 · S5 + 표 S4), 안 봄 Fig. 1–3 · 9–12 · S2 · S3 · S6–S9, 나머지 표는 텍스트.
+- 컴파일: 새 개념 0 · 갱신 [[assb-contact-loss-vs-lampe]](채움표 · 54편 · Evidence 마흔아홉 번째 · 새 제약 · Status Log) · [[assb-lampe-contact-product-degeneracy]](서른일곱 번째 적용 · 처방 표 새 줄) · [[assb-tortuosity-factor-effective-conductivity-split]](다섯 번째 표본) · [[assb-sensitivity-sweep-vs-identifiability]](54호 절 · 처방 14) · 큐 문서 §6-3-g 55 행 + 지문 ²⁰.
+- 후속(서지 기준, 미열람 — 큐 56–59 인용 0): Hamann … Wachsman 2020 *Adv. Funct. Mater.* 30, 1910362 ([30]) · Han … Hu 2016 *Nat. Mater.* 16, 572 ([9]) · Fleig & Maier 1999 *J. Eur. Ceram. Soc.* 19, 693 ([63]) · Irvine 1990 *Adv. Mater.* 2, 132 ([61]) · Hein … Latz 2020 *JES* 167, 013546 ([34]).

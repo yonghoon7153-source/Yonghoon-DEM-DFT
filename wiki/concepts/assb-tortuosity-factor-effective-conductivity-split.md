@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -129,6 +129,15 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - `[재현]` `ε = τ·σ_eff/σ₀` 로 역산하면 조성마다 하나(**0.57 / 0.37 / 0.234 / 0.153**)이고 gran·sc·BM 에 공통 ⇒ **공칭 catholyte 분율**이다. 공극은 측정되지 않았고 **`τ` 로 들어간다** — 저자도 `τ` 를 "geometric and porosity-related effects" 로 부른다(24호 D1 과 달리 규약이 서술과 맞는다).
 - ⚠ sc73-BM 행만 `ε` 0.326 — `τ` 2.6 ↔ 정합값 2.9(같은 행 `φ` 도 불일치, 29호 D4).
 - `τ` 1.5 → 54.2 (한 자릿수 반). 29호는 `τ` 를 결론에 쓰지 않는다(SI Fig. S8 로만) — 병목 판정은 `σ_eff`·`D` 로 한다.
+
+## ★★★ 다섯 번째 표본 — 굴곡도를 **구조로 계산**해 곱을 풀고, 남은 합은 입력으로 닫았다 (2026-09-23, `assb` 54호)
+
+`raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md` (Neumann … Latz 2021, LLCZNO 다공층 56 · 42 · 25 %, 공극 = 공기). 앞 네 표본(24 · 25 · 27 · 29호)은 `σ_eff` 를 재고 `ε·τ²` 를 **나눴다**. 이 편은 반대 방향 — FIB-SEM 3D 재구성 위에서 수송을 풀어 `τ` 를 **계산**하고, `σ_eff` 는 모델이 낸다.
+
+- **이름**: Table 1 `τ` x/y/z(56 % 1.75/1.68/1.78 · 42 % 1.45/1.34/1.26 · 25 % 1.21/1.15/1.20)의 정의는 미인쇄. `[재현]` 구조-만 `σ_eff/σ⁰`(Fig. 8 판독) ≈ `ε/τ_x²` — 56 % 0.139 ↔ 0.139 · 42 % 0.273 ↔ 0.266 · 25 % 0.481 ↔ 0.512 ⇒ 표의 `τ` 는 **기하 굴곡도**이고 이 페이지의 `τ²` 가 그 제곱이다(27호 이름 충돌의 반대 짝).
+- **곱은 풀렸다, 합이 남는다**: 입계(`i₀₀^GB` · `C_DL^GB`)를 넣으면 56 % 에서 `σ_eff` 가 1.1e-4 → 8.6e-6(`[인쇄]`). 이 **추가 인자**는 벌크 `σ⁰` 저하와 같은 모양으로 스펙트럼을 움직이고(`[인쇄]` "an exact deconvolution of both contributions via EIS is unfeasible"), `σ⁰` 는 벌크 절편이 대역 밖이라 **입력**이다(문헌 범위 2.4–7.69e-4 의 윗끝).
+- **하류에서 지수가 된다**: 53호(Ren 2023)가 `σ_eff = σ⁰·ε^(β_GB+β_tort)`, `β_tort` 2.31 · `β_GB` 1.39 를 이 편 출처로 적었는데 이 편에 지수는 없다. `[재현]` 점별 구조-만 지수 2.54 · 2.23 · **2.31**(56 % 한 점) · 치밀 전 모형 정규화 입계 초과 지수 1.36 · 0.70 · 1.46 — **단일 멱법칙이 서지 않는다**(24호 "형태 자체가 안 선다" 와 같은 결론을 다른 경로로). 그 정규화면 곱하는 `σ⁰` 는 치밀 전 모형 2.1e-4 여야 하는데 53호는 8e-4 를 썼다(`[재현]` ×≈0.27 차 — 우리 재구성).
+- ⇒ 이 페이지 요지의 네 번째 판: **`σ_eff` 는 재거나 계산하고, `ε·τ²` 분할은 가정(24호)이거나 구조(54호)이며, 그 위에 얹히는 입계 · 2차상 인자는 EIS 로 벌크와 갈리지 않는다.** 펠릿 지수를 복합양극으로 옮길 때 `ε` 범위(0.43–0.75 → 0.25) · 입도(공극률과 교락) · `σ⁰` 의 뜻을 같이 옮긴다.
 
 ## 이 페이지가 주장하지 않는 것
 

@@ -1,0 +1,552 @@
+{
+ "slug": "neumann2021_garnet-3d-structure-grain-boundary-transport",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+  "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic overview of the work ﬂow and corresponding sections in the manuscript. Details on experimental data are given in refs 5, 7−9, 30. https://doi.org/10.1021/acsaem.1c00362 ACS Appl. Energy Mater. 2021, 4, 4786−4804 4787",
+   "rotated_deg": 0,
+   "bbox": [
+    298.4,
+    463.8,
+    570.5,
+    723.2
+   ],
+   "w": 1135,
+   "h": 1082,
+   "dpi": 300,
+   "src": "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Exemplary grain-resolved microstructure obtained via the image processing routine. Connected grains with diﬀerent colors deﬁne a homogeneous grain−grain interface and allow for the application of the grain ﬂux model. The color code is used as a guide for the eye, and despite the diﬀerent colors, all grains do have the same physical and chemical properties. (b) First-order approximation of the electrochemical potential distribution between intersecting grains in equilibrium (solid blue) and excitation (dotted red). The ﬁxed transition state between two grains deﬁnes the transport barrier induced by the unresolved GB.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.0,
+    570.5,
+    177.7
+   ],
+   "w": 1052,
+   "h": 479,
+   "dpi": 300,
+   "src": "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.746
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Exemplary trilayer microstructure used for the electrochemical simulations. The grain segmentation of the porous structure was omitted for a clearer representation. (b) Schematic for a sliced trilayer framework with lithium inﬁltration close to the current collector. Inset: lithium reaction mechanism for the transition from the metallic into the SE phase.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    164.3
+   ],
+   "w": 1051,
+   "h": 422,
+   "dpi": 300,
+   "src": "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.64
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Nyquist plot representation of the impedance response and (b) phase angle evolution in frequency space for the sample with 25% porosity: simulated (orange) and experiment (dotted gray). The open symbols mark the corresponding frequencies in the experimental data. and, therefore, increases the ionic resistance of the porous SE layer. This result is in agreement with the structural analysis in our previous work,30 and the simulated eﬀective conductivities are discussed in Section 4.3. general discussion and comparison of simulated and experimental impedance spectra. In our analysis, we assign features in the impedance spectra to physical and chemical processes described in our model and evaluate the eﬀect of GBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    187.4
+   ],
+   "w": 2151,
+   "h": 518,
+   "dpi": 300,
+   "src": "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Nyquist plot representation and (d) phase angle evolution in frequency space for the impedance response of all reconstructed samples: 56% (dark red), 42% (red), and 25% (orange) porosity. The open symbols mark the corresponding frequencies in the experimental data. characteristic frequency of bulk processes f C,B based on the eﬀective bulk permittivity εeff. and conductivity of the porous sample. The characteristic frequency can be calculated according to f C,B = σeff.,bulk(2πεeff.ε0)−1 with ε0 being the vacuum permittivity. We approximate the eﬀective permittivity εeff. by the Bruggeman mixing rule58 (cf. Supporting Information S6). In our consideration, we neglect contribu- tions of the GB due to their small thickness and comparably small volume fraction (<7 vol %). The LLCZNO bulk permittivity value is determined to be around 75.59,60 Instead, in our simulations, the GB proc",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    252.7
+   ],
+   "w": 2151,
+   "h": 791,
+   "dpi": 300,
+   "src": "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Nyquist plot representation of the impedance response with reduced bulk conductivity from 7.69 to 2.0 × 10−4 S/cm: (a) 42% porosity sample and (b) 56% porosity sample. Multiple studies on garnet SEs, such as LLZO,54−56 report lithium loss on the particle surface exposed to air during sintering, changing the composition and conductivity of the material. This change in lithium stoichiometry on the SE surface could modify the eﬀective bulk conductivity and the GB composition, leading to an overall reduced transport. With increasing porosity, deviations become signiﬁcant. This indicates that additional eﬀects in the samples with higher porosity contribute to the increase in impedance measured in the experiments. One aspect might be degradation phenomena during sintering due to the large speciﬁc surface area of the highly porous samples.30,60",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    182.3
+   ],
+   "w": 2151,
+   "h": 497,
+   "dpi": 300,
+   "src": "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Figure 7. (a) Phase angle evolution against frequency and (b) Nyquist plot representation of the impedance response for varying secondary-phase distribution: no secondary material (red), clustering (green), and reduced clustering/increased surface coverage (blue). (c) Schematic representation of the secondary-phase distribution in the porous sample. The open symbols mark the corresponding frequencies in the experimental data.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    230.7
+   ],
+   "w": 2151,
+   "h": 699,
+   "dpi": 300,
+   "src": "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Experimental ionic conductivity (gray symbols) taken from ref 30 and calculated ionic conductivity of the diﬀerent electrode samples for varying model conditions: structural model (dotted blue) and full model combining structural and GB transport (solid red). The red shaded area describes the lower limit for the eﬀective conductivity for the reduced LLCZNO bulk conductivity, as discussed in Section 4.2.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    217.7,
+    306.5,
+    406.2
+   ],
+   "w": 1050,
+   "h": 786,
+   "dpi": 300,
+   "src": "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 11,
+   "file": "fig_9.png",
+   "caption": "Figure 9. (a) Schematic representation of the four lithium inﬁltration scenarios investigated for the ASR and the current density distribution of the trilayer framework with 56% porosity. For all four scenarios, we assume an ideal 50% ﬁlling of both porous electrode sides close to the current collector. The surface coverage of the remaining pore space is gradually increased: (a1) 0% surface coverage, (a2) 32% surface coverage, (a3) 55% surface coverage, and (a4) 73% surface coverage. (b) Calculated ASR for the four diﬀerent lithiation scenarios at diﬀerent external currents from 0.1 to 10 mA/cm2. https://doi.org/10.1021/acsaem.1c00362 ACS Appl. Energy Mater. 2021, 4, 4786−4804 4796",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    570.0,
+    570.5,
+    703.2
+   ],
+   "w": 2151,
+   "h": 555,
+   "dpi": 300,
+   "src": "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.762
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 12,
+   "file": "fig_10.png",
+   "caption": "Figure 10. (a) On the left side, the simulated current density distribution inside the SE for varying lithium inﬁltration scenarios at ﬁxed 0.5 mA/ cm2 external current (dotted gray): 0% coverage (green), 32% coverage (red), 55% coverage (blue), and 73% coverage (orange). The histogram distribution is normalized, and the solid black lines are introduced to improve visualization. The included schematic indicates the spatial occurrence of the displayed current densities in the SE structure. On the right side, the respective current density distribution inside the SE phase after setting a threshold of Iext. = 0.5 mA/cm2: (b) surface coverage 0% (scenario 1) and (c) surface coverage 73%(scenario 4). predictions on the ASR of the porous samples in trilayer conﬁguration. distribution on the ASR of the trilayer. Thereby, we will also analyze the current density distribution and potential hotspo",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    66.4,
+    570.5,
+    230.8
+   ],
+   "w": 2151,
+   "h": 686,
+   "dpi": 300,
+   "src": "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.808
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 14,
+   "file": "fig_11.png",
+   "caption": "Figure 11. (a) Normalized SE current density distribution for the trilayer structure (scenario 4) at 10 mA/cm2 external current. (b) Respective spatial current density distribution after applying a Iext. = 0.5 mA/cm2 threshold ﬁlter. Inset: (c) normalized distribution for the estimated interface current densities: GB interface (light green) and SE−lithium interface (gray).",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    200.7
+   ],
+   "w": 2151,
+   "h": 574,
+   "dpi": 300,
+   "src": "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 15,
+   "file": "fig_12.png",
+   "caption": "Figure 12. (a) Normalized SE current density distribution for the standard (orange) and mixed (dark red) trilayer cells for inﬁltration scenario 4 at 10 mA/cm2 external current. (b) Spatial current distribution for the mixed trilayer structure after setting a 0.5 mA/cm2 threshold. (c) Evolution of the interface current density between the standard and mixed trilayer for scenario 4 at 10 mA/cm2. Inset: schematic for the modiﬁed structural design of the mixed trilayer cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    210.2
+   ],
+   "w": 2151,
+   "h": 613,
+   "dpi": 300,
+   "src": "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.856
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Normalized grain size distribution for the 56 % and 25 % sample resulting from the grain segmentation routine. The tted curves for the mean value estimation are given in solid black lines.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    423.1,
+    545.5,
+    662.7
+   ],
+   "w": 1998,
+   "h": 999,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Exemplary slice for an imaged sample volume with 56 % porosity taken via FIB- SEM. The pore space is given in black, SE phase in light grey and the secondary phase is marked in red. For a more detailed structure analysis for the presented porous samples can be found in Ref.1",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.9,
+    545.5,
+    295.6
+   ],
+   "w": 1999,
+   "h": 954,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.758
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Exemplary virtual electrode structure utilized for the impedance response sim- ulation under blocking condition: (a) electrode structure before and (b) after grain seg- mentation. Individual grains in the SE microstructure are marked by the di\u001berent colors introduced via the grain segmentation routine during sample reconstruction.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    172.5,
+    612.0,
+    453.0
+   ],
+   "w": 2550,
+   "h": 1170,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.777
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 13,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Nyquist representation for the impedance resposnse of a LLCZNO dense sample with 200 µm thickness: simulated (solid) and experimental (dotted grey). The obtained SE transport model parametrization is used for the presented study on the porous SE samples. The experimental data are taken from Ref. 15",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    64.7,
+    545.5,
+    303.1
+   ],
+   "w": 1999,
+   "h": 994,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.971
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 16,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Nyquist plot representation of the impedance response with reduced GB exchange current density by 25 % and 50 %: (a) 42 % porosity sample and (b) 56 % porosity sample.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    64.7,
+    545.5,
+    267.9
+   ],
+   "w": 1998,
+   "h": 848,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 19,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Normalized current distribution for the 56 % porosity sample for changing lithium in ltration scenario at 0.5 mA/cm2 external current: (a) GB interface current and (b) SE- lithium interface current.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    310.5,
+    545.7,
+    530.5
+   ],
+   "w": 1999,
+   "h": 918,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 21,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Spatial current distribution for the SE phase with changing lithium in ltration scenarios at 0.5 mA/cm2 external current:(a) 0 % surface coverage, (b) 32 % surface coverage, (c) 55 % surface coverage and (d) 73 % surface coverage.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    180.2,
+    612.0,
+    488.8
+   ],
+   "w": 2550,
+   "h": 1287,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.754
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 22,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Bode plot representation of the impedance response for all reconstructed samples: 56 % (dark red), 42 % (red) and 25 % (orange) porosity. (a) Phase angle evolution and (b) magnitude in frequency space.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    128.6,
+    545.5,
+    464.2
+   ],
+   "w": 1998,
+   "h": 1399,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 23,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Bode plot representation of the impedance response for varying secondary phase distribution: no secondary material (red), clustering (green), reduced clustering/increased surface coverage (blue). (a) Phase angle evolution and (b) magnitude in frequency space.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.9,
+    545.5,
+    357.0
+   ],
+   "w": 1998,
+   "h": 1210,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1. Structural Parameters Calculated Based on Segmented FIB-SEM Reconstructions of the Samples with Varying Porosity: Material Composition by vol %, SE Tortuosity, SE Speciﬁc Surface Area, Approximated GB Speciﬁc Surface Area, and Average Particle Size",
+   "rotated_deg": 0,
+   "bbox": [
+    319.5,
+    266.0,
+    569.5,
+    357.1
+   ],
+   "w": 1042,
+   "h": 380,
+   "dpi": 300,
+   "src": "327fbdbc-16._Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.66
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Structural parameters calculated based on segmented FIB-SEM reconstructions of the samples with varying porosity: material composition by SVF, SE tortuosity, SE speci c surface area, approximated GB speci c surface area and average particle size. parameter, unit Sample 56 Sample 42 Sample 25 Material composition, vol-% Pore space 56.61 42.6 25.0 LLCZNO 42.6 55.9 75.0 Secondary phase 0.77 1.7 0 Speci c surface area SE ASpec,SE, ×104 cm2/cm3 2.18 0.93 0.66 Speci c surface area GB ASpec,GB, ×104 cm2/cm3 1.37 1.08 1.35 SE tortuosity (direc.) x 1.75 1.45 1.21 y 1.68 1.34 1.15 z 1.78 1.26 1.20 Average particle diameter, µm ˜d 3.1 4.59 4.62",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    204.2,
+    598.6,
+    757.9
+   ],
+   "w": 2216,
+   "h": 2308,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 6,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Experimental cell parameters for the three characterized SE electrodes: electrode thickness, EIS electrode area parameter, unit Sample 56 Sample 42 Sample 25 Cell thickness, cm 0.03168 0.03591 0.02175 EIS Electrode area, cm2 0.221 0.122 0.279",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    65.7,
+    598.6,
+    688.2
+   ],
+   "w": 2216,
+   "h": 2595,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.842
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 7,
+   "file": "tab_S3.png",
+   "caption": "Table S3: The constitutive Equations for the solid state Li-Ion battery model used in this work. The subscripts are de ned as Solid electrolyte= SE, Active material= AM. Details of the derivation can be found in Ref.5\u00157 Phase Material balance Charge balance Electrolyte ∂cSE ∂t = −⃗∇·⃗NSE (2) 0 = −⃗∇·⃗jSE (3) Active material ∂cAM ∂t = −⃗∇·⃗NAM (4) 0 = −⃗∇·⃗jAM (5) Phase Lithium ux Charge ux Electrolyte⃗ NSE = −DSE⃗∇cSE + 1",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    65.7,
+    598.6,
+    587.8
+   ],
+   "w": 2216,
+   "h": 2177,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 14,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Simulation Parameters in BEST. Values are taken from the respective reference (superscript [# of REF]), measured by the authors (superscript [◦]), or calculated (superscript [*]). Simulation parameters speci ed by the value [-] are changing during simulation, all other parameters and their values are constant during the simulation. The parameter set was not modi ed for the di\u001berent samples with varying porosity. parameter, unit description value Electrolyte cSE,0 Li , mol/cm3 concentration of Li ions in β-LPS∗ 0.0384 σSE Li , S/cm Li-ion bulk conductivity 7.69 ×10−4 t+ Li transference number of Li ions ∗ 1 DSE Li , cm2/s Li-ion self di\u001busion coe cient ∗ 5.36×10−9 Li thermodynamic correction factor∗ 1.0 iGB f SE 00 , A /cm2 exchange current density factor ∗ 6.91×10−3 DL , F/cm2 double layer capacity ∗ 9.75×10−9 CGB α←, α→ symmetry factor 0.5 Li Metal κAM Li , S/cm electronic con",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    70.0,
+    598.6,
+    688.4
+   ],
+   "w": 2216,
+   "h": 2578,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 19,
+   "file": "tab_S5.png",
+   "caption": "Table S5: Calculated area-speci c resistance (ASR) values given in Ωcm2 for the di\u001berent applied external current densities at varying lithium in ltration scenarios: 0 % surface cov- erage (scenario 1), 32 % surface coverage (scenario 2), 55 % surface coverage (scenario 3) and 73 % surface coverage (scenario 4). Current Density, mA/cm2 Scenario 1 Scenario 2 Scenario 3 Scenario 4 0.1 1064 170 16 6 0.5 1053 170 15 6 1 1026 170 15 6 5 767 168 15 6 10 655 164 15 6",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    104.9,
+    544.9,
+    269.9
+   ],
+   "w": 1992,
+   "h": 689,
+   "dpi": 300,
+   "src": "c6222674-16._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf",
+   "blank": 0.929
+  }
+ ]
+}

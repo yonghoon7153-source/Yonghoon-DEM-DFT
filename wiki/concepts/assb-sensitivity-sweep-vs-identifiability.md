@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -195,6 +195,14 @@ evidenceScope: multi-source-primary
 3. **"CAM Li Diffusion Length (`D_Li`, `d50`)"** — `a`(비계면 면적)가 SI 에 정의되지 않았지만 구 기하(`3ε/r`)라면 `d50` 은 확산 길이와 계면 면적을 **같이** 움직인다. 이름표는 확산인데 이득의 일부는 면적이다(곱 축퇴 페이지 서른여섯 번째 적용).
 ⇒ 처방 목록에 덧붙임: **스파이더 · 토네이도 그림은 (i) 묶음이 파라미터를 공유하는지 (ii) 한 손잡이가 식에서 몇 군데에 들어가는지 (iii) 순서 의존을 인쇄했는지** 먼저 본다.
 
+## ★★ 54호 — 두 한-파라미터 스윕이 **같은 저주파 끝**에 닿는다: 저자가 "unfeasible" 을 인쇄한 그림 판
+
+`raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md` (Neumann 2021). 다공 시편(42 · 56 %) 불일치를 두 OAT 스윕으로 본다 — Fig. 6 `σ_bulk` 7.69 → 2.0 × 10⁻⁴(최적 42 % 3.0 · 56 % 2.0) · SI Fig. S5 `i₀₀^GB` × 0.75 · × 0.50(최적 42 % × 0.50 · 56 % × 0.75). `[도표]` 두 스윕 모두 첫 호 끝을 실험 골(≈1270 · ≈5.4 kΩ cm²)에 맞출 수 있고, 다른 것은 **고주파 절편**(벌크만 옮김, `[인쇄]` "We do not observe a shift in the bulk polarization contribution along the x-axis") — 그 절편은 **측정 대역 밖**이다. 저자 판정 `[인쇄]` "an exact deconvolution of both contributions via EIS is unfeasible without additional information on the GB composition" · 결론 "bulk **and/or** GB".
+
+- 이 페이지 처방 2("스윕 그림끼리 겹친다")를 **저자 자신이 문장으로 한** 표본 — 26호 · 53호와 달리 결론에서 지우지 않았다.
+- ⚠ 그러나 두 스윕은 **공동 적합 · 상관 · 폭 0** 이고, 최적 보정량이 시편마다 비단조(`i₀₀` × 0.50 ↔ × 0.75) — 저자는 편석 경로로 설명하지만 검증 0. 본문은 SI 스윕을 "by 25%" 로 옮긴다(× 0.75 = 저항 +33 %).
+- 교정 단계에서는 같은 벌크 ↔ 입계 분할을 **입력 `σ⁰`** 로 정했다 — 비식별 인쇄가 적용 단계에만 걸린다(카드 Q4 마흔여섯 번째 성질).
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -218,6 +226,7 @@ evidenceScope: multi-source-primary
 11. (36호) **"posterior" · "parameter uncertainty" · "epistemic" 을 보면 ① 무엇의 파라미터인지(물리 ↔ ML 가중치) ② 데이터를 늘리면 줄어드는 폭인지(실제적) 아닌지(구조적) ③ 공분산을 보고했는지(평균장 근사면 상관이 지워진다)를 적는다.** 셋 다 아니면 Q4 근거가 아니다.
 12. (37호) **OAT 스윕의 "둔감 · minimal" 을 보면 ① 출력이 용량(설계 KPI)인지 전압(데이터)인지 ② 그 파라미터와 곱으로만 들어가는 짝이 식에 있는지 ③ 짝이 적합에서 풀렸는지를 적는다.** 짝이 풀렸고 스윕 대상이 출처 없이 고정됐으면 그 값은 데이터가 정한 것이 아니다(37호 `A_eff` 0.4938 ↔ `k_p`).
 13. (49호) **"방법들이 시간 척도를 맞추면 일치한다" 를 보면 ① 일치하는 것이 총량인지 성분인지 ② 시간 ↔ 주파수 대응 규약과 그 대역의 \|Z\| 기울기(분해능) ③ 진폭이 같은지 ④ 적합된 직렬 파라미터가 여기 대역 위쪽 끝의 \|Z\| 와 같은지를 적는다.** 같으면 그 파라미터는 물리 성분이 아니라 대역 끝의 이름이다.
+14. (54호) **"unfeasible · not separable" 을 인쇄한 모델 편이면 ① 가르는 채널이 모델 안에 있는지(절편 · 온도 · 진폭) ② 그 채널이 측정 대역 · 조건 안에 있는지 ③ 교정 단계에서 같은 분할을 입력으로 정하지 않았는지를 적는다.** 54호: ① 있다(고주파 절편) ② 없다(`f_C,B` ≈ 장비 상한) ③ 정했다(`σ⁰` 문헌 윗끝).
 
 ## 이 페이지가 주장하지 않는 것
 
