@@ -96,7 +96,10 @@ echo "══ 4. manifest 찾기·자체 해시 대조 ════════�
 #   멈춘 것 자체는 옳다 — 엉뚱한 manifest 로 보존하면 무엇을 대조한 것인지 알 수 없다.
 #   넓히는 것은 **후보 집합**뿐이고, 고르는 것은 여전히 `--expect-manifest-sha` 다 (fail-closed 유지).
 #   이름에 manifest 가 들어간 것을 전부 담지는 않는다 (`normal_raw_csv_manifest.json` 같은 것이 있다).
-ALL_MAN="$(find "$TMP" \( -name package_manifest.json -o -name manifest.json \) -type f | sort)"
+# ⚠ 2026-09-24 — B_A8R1 은 세 겹이고 겹마다 이름이 다르다: HANDOFF_MANIFEST.json · PACKAGE_MANIFEST.json(대문자) ·
+#   EXTERNAL_PACKAGE_MANIFEST.json. CODE_MANIFEST.json(24 개 코드 파일의 부분 목록)은 후보가 아니다.
+#   회귀: tests/test_r15_open_items.py::test_the_manifest_search_also_finds_the_b_a8r1_three_layer_names
+ALL_MAN="$(find "$TMP" \( -name package_manifest.json -o -name manifest.json -o -name HANDOFF_MANIFEST.json -o -name PACKAGE_MANIFEST.json -o -name EXTERNAL_PACKAGE_MANIFEST.json \) -type f | sort)"
 [ -n "$ALL_MAN" ] || { echo "! package_manifest.json / manifest.json 을 못 찾았다" >&2; exit 1; }
 N_MAN="$(printf '%s\n' "$ALL_MAN" | wc -l)"
 if [ "$N_MAN" -gt 1 ]; then

@@ -369,6 +369,38 @@ def test_the_manifest_search_finds_both_bundle_conventions(tmp_path):
         "이름에 manifest 가 들어간 것을 전부 후보로 삼으면 골라야 할 것이 늘기만 한다", sorted(found))
 
 
+def test_the_manifest_search_also_finds_the_b_a8r1_three_layer_names(tmp_path):
+    """★ 2026-09-24 실측 — B_A8R1 묶음은 세 겹이고 manifest 이름이 겹마다 다르다: 겉 wrapper
+    `HANDOFF_MANIFEST.json` · 안쪽 배치 `PACKAGE_MANIFEST.json`(대문자) · 바깥 최종화
+    `EXTERNAL_PACKAGE_MANIFEST.json`. 기존 `find` 는 소문자 두 이름만 찾아 세 겹 **전부** 4 단계에서
+    멈춘다 (ZIP 크기·SHA 는 전달값과 정확히 일치했다).
+
+    멈춘 것은 옳다. 넓히는 것은 후보 집합뿐이고 고르는 것은 여전히 `--expect-manifest-sha` 다.
+    `CODE_MANIFEST.json`(24 개 코드 파일의 부분 목록)은 후보에 넣지 않는다 — 전체 묶음의 대조 기준이
+    아니라서, 이름만 보고 담으면 골라야 할 것이 늘기만 한다.
+    """
+    import re
+    import subprocess
+
+    src = (ROOT / "scripts" / "preserve_handoff.sh").read_text(encoding="utf-8")
+    m = re.search(r'ALL_MAN="\$\(find "\$TMP" (.+?) -type f \| sort\)"', src)
+    assert m, "manifest 후보를 찾는 줄의 모양이 바뀌었다 — 시험을 고칠 것"
+    expr = m.group(1)
+
+    (tmp_path / "dep").mkdir()
+    for name in ("HANDOFF_MANIFEST.json", "EXTERNAL_PACKAGE_MANIFEST.json"):
+        (tmp_path / name).write_text("{}", encoding="utf-8")
+    for name in ("PACKAGE_MANIFEST.json", "CODE_MANIFEST.json"):
+        (tmp_path / "dep" / name).write_text("{}", encoding="utf-8")
+    r = subprocess.run(["bash", "-c", f'find "$1" {expr} -type f | sort', "_", str(tmp_path)],
+                       capture_output=True, text=True, timeout=60)
+    assert r.returncode == 0, r.stderr[-400:]
+    found = {pathlib.Path(x).name for x in r.stdout.split()}
+    assert found >= {"HANDOFF_MANIFEST.json", "PACKAGE_MANIFEST.json", "EXTERNAL_PACKAGE_MANIFEST.json"}, (
+        "B_A8R1 세 겹의 manifest 이름 중 일부를 못 찾는다 — 그 겹은 4 단계에서 멈춘다", sorted(found))
+    assert "CODE_MANIFEST.json" not in found, ("부분 목록을 후보로 삼았다", sorted(found))
+
+
 # ── manifest 의 항목 목록 키가 묶음마다 다르다 (2026-09-15 실측) ─────────────────────────────
 
 def _hm():
@@ -394,6 +426,23 @@ def test_the_entry_list_key_differs_between_bundles():
     item = {"path": "a/b.json", "bytes": 3, "sha256": "0" * 64}
     for key in ("entries", "files", "payload"):
         assert hm.entry_list({key: [item]}) == [item], key
+
+
+def test_an_entry_may_name_its_path_with_the_key_file():
+    """★ 2026-09-24 실측 — B_A8R1 세 manifest 의 항목 키가 `file` · `bytes` · `sha256` 이다 (`path` 가
+    아니다). 기존 규칙은 이것을 "경로 없음" 으로 거부해 세 겹 전부 5 단계에서 멈춘다.
+
+    `file` 을 `path` 의 별칭으로 받되, 돌려주는 항목은 **`path` 로 정규화**한다 — 소비 자리 셋(5 단계 ·
+    6 단계 · 안내문)이 전부 `e["path"]` 를 읽기 때문이다. 둘 다 있는데 서로 다르면 어느 쪽을 대조한
+    것인지 알 수 없으므로 거부한다.
+    """
+    hm = _hm()
+    out = hm.entry_list({"files": [{"file": "a/b.json", "bytes": 3, "sha256": "0" * 64}]})
+    assert len(out) == 1 and out[0]["path"] == "a/b.json" and out[0]["sha256"] == "0" * 64, out
+    same = hm.entry_list({"files": [{"file": "a", "path": "a", "sha256": "0" * 64}]})
+    assert same[0]["path"] == "a"
+    with pytest.raises(ValueError):
+        hm.entry_list({"files": [{"file": "a", "path": "b", "sha256": "0" * 64}]})
 
 
 def test_an_entry_list_without_a_path_or_sha_is_refused():
