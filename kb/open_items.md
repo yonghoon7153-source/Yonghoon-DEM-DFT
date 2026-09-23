@@ -50,8 +50,12 @@
     `SYS=modelc_2x → b2o3` — 그대로 뒀어도 modelc_2x 영률은 시작되지 않았다(조용히 틀린 경로). 상태 저장 `/root/logs/elastic_runner_saved_0923.txt`.
     ⏭ b2o3 끝나면(≈5–6일) **`SYS=modelc_2x`** 를 명시해 재개한다 (수렴한 strain 은 러너가 건너뛴다).
 - ⏭ **새 캠페인: LPSCl | Ag–C | VGCF 점착일 (DEM 쪽 요청 · 트랙 = 우리 DFT → 1저자 = 사용자)** — **계산 0, 리뷰 대기.**
-  계획·카드 **v2** `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` · Codex 프롬프트 **BV v2**(`kb/reviews/codex_BV_prompt_wad_lpscl_ag_c_vgcf_2026_09_23.md`, **발송대기** — 1저자가 보낸다).
-  1저자 지시: **두 리뷰 받기 전에 파이프라인을 걸지 않는다.**
+  계획·카드 **v3** `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` (**§0′ 이 유효판**) · Codex **BV 회신 수령 = NO-GO** (`kb/reviews/codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md`).
+  1저자 지시: **두 리뷰 받기 전에 파이프라인을 걸지 않는다** → 두 리뷰 다 왔고 둘 다 NO-GO. 본 계산은 Codex 재개 조건 5묶음 뒤.
+  · 🔴 Codex 새 P0 두 건 — **우리 재계산으로 재현**: ① 러너 `build_ncm_1L` 은 LiNiO₂ 가 아니다 (R-centering 누락 → Ni–O 최단 3.667 Å · 2.5 Å 안 O 0개;
+    정상은 1.973 Å · 6) — v6 stage 11 이 이 빌더를 썼다. 러너 docstring ⛔ · `adhesion.json` 발견 블록 ② SE 단순 z 절단은 PS₄ 8/48 을 끊는다 —
+    PS₄ 보존 창 z = 1.26–3.78 · 6.28–8.80 Å 가 있으나 비대칭(Li 면 vs S 면) 슬랩이 된다.
+  · ⏭ **다음**: 구조 빌더·검증기(재개 조건 1) · 1저자 결정 5건(계획 §0′: SE 종결 · LiNiO₂ 종결·두께 · 상태 정책/U · DEM 접촉법칙 문의 · Codex 원문 잘린 두 칸).
   · 내부 리뷰(Fable) = **NO-GO (v1)** → `kb/reviews/internal_review_wad_agc_fable_2026_09_23.md`. P0 4건 원문 대조 확인 · v2 반영:
     ① 기준값은 **이완만 · uma-s-1p1** (v1 은 800 K MQA 로 읽었다 — 결과 문서 `kb/results/adhesion_final.md` 를 안 봤다)
     ② SE 는 **정방 20.11 Å** 인데 계면 셀은 육방 351.5 Å² — 빌더가 **wrap** (추정, 원본 유실) ⇒ 기준값 숫자 재사용 안 함, 정방 셀에서 NCM 부터 재계산

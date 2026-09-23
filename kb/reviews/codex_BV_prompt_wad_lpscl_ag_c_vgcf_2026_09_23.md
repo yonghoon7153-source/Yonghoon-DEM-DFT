@@ -3,7 +3,7 @@ title: "리뷰 BV 프롬프트 — LPSCl | Ag–C | VGCF 점착일: 기존 LPSCl
 date: 2026-09-23
 updated: 2026-09-23
 tags: [review, codex, adhesion, wad, interface, lpscl, silver, graphite, estimand, uma, dft-verification]
-status: 발송대기 — 1저자가 보낸다. 계획 v2 기준 (내부 Fable 리뷰 반영본)
+status: 발송됨 · 회신 수령 (NO-GO) → codex_BV_reply_wad_lpscl_ag_c_vgcf_2026_09_23.md
 confidence: medium
 verificationStatus: unverified
 explored: false

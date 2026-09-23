@@ -48,7 +48,16 @@ NCM_NX_DEFAULT = 5  # 5x5x1 for Li5.4 family (rhombo); 7 for Li6 cubic
 
 
 def build_ncm_1L(nx):
-    """LiNiO2 R-3m hexagonal, 1 layer slab. From v6 verbatim."""
+    """LiNiO2 R-3m hexagonal, 1 layer slab. From v6 verbatim.
+
+    ⛔ 2026-09-23 (Codex 리뷰 BV · 우리 재계산으로 재현): **이 함수는 LiNiO₂ 를 만들지 않는다.**
+       R-3m 의 R-centering((2/3,1/3,1/3)·(1/3,2/3,2/3))을 전개하지 않고 네 좌표를 그대로 넣어서
+       Li·Ni·O·O 가 전부 x = y = 0 기둥에 쌓인다 → 최단 Ni–O **3.667 Å**, Ni 주변 2.5 Å 안 O **0개**
+       (정상 모결정은 1.973 Å · 6배위). 이 함수로 만든 계면의 W 는 LiNiO₂ 표면의 값이 아니다.
+       동작은 **이력 보존을 위해 바꾸지 않았다** (paper #2 stage 11 이 이 경로를 썼다).
+       새 계산에 재사용하지 않는다 — kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md §0′.
+       아래 build_interface 도 이름과 달리 변형이 아니라 wrap 이다 (같은 문서 §1 ⚠1).
+    """
     from pymatgen.core import Structure, Lattice
     from pymatgen.io.ase import AseAtomsAdaptor
     a, c = 2.878, 14.19
