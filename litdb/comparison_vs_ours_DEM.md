@@ -977,6 +977,13 @@
   Eq 4 τ²=σ_0·φ/σ_eff = **우리 τ_Laplace,eff 정의 동일**(단 그들 = constriction 미포함 → 우리 Stage-E가 그
   constriction 포함 → 보정 lever). bulk LPSCl 1.6 mS/cm = 또 하나의 bulk 앵커. → **우리 σ_ionic·τ 의 최강
   same-material 실험 절대 검증점.** (그들 42 vol% NCM → 우리 φ_SE≈58 vol% 매핑 후.)
+- **★★ Schlautmann 2023 AEM (`schlautmann2023_se_particle_size_composite_transport`, 2026-09-23 추가) — Minnmann TLM 의 SE-입도판 · 무탄소 σ_e 밴드의 원문 · CL-81 전자판 실례**:
+  - **무엇**: Li₆PS₅Cl(AMG) **D50vol 4/11/20/40 µm** × NCM811(Ni₀.₈₃, D50 3.4 µm) **70:30 wt%, 탄소·바인더 0**. 이온차단/전자차단 대칭셀 **T-type TLM + DC**, 25 °C, 성형 3 t, 측정 50 MPa. `Table S4`: σ_ion,eff **0.254/0.199/0.153/0.165** · σ_el,eff **0.301/0.257/0.311/0.406 mS cm⁻¹**. 순수 SE σ 는 **2.2 mS cm⁻¹ 로 입도 무관**(L 2.8).
+  - **σ_ion (우리와 같은 방향)**: 작은 SE → σ_ion,eff↑, κ_ion↓ — 단 공극 **24.3 → 14.1 %** 가 같이 움직여 φ_SE 0.363 → 0.412(우리 산수)가 이득의 일부다. Bazzoun·Minnmann 에 이은 **세 번째 독립 "size = packing" 실측**. ⚠ 가장 고운 S 도 D50vol 4 µm — **우리 생산 r_SE 0.5 µm(⌀1.0)는 범위 밖**, Cronau 서브-µm 구간 미검정.
+  - **σ_e (동료 논쟁의 답)**: "0.38–0.40 mS cm⁻¹" 은 본문 p. 6 의 S·XL 값이고 **무탄소** 복합체다. 탄소 포함 문헌(Lee 2025 34 · Kim 2024 38.6–65.2)은 두 자릿수 위 ⇒ **CL-46 의 비교군 선택(탄소 포함 문헌만)이 맞다.** ⚠ 본문 S "0.38" 은 `Table S4`(0.301)·`Fig. 6a` 와 불일치(`Fig. S14` DC 값).
+  - **CL-38 방법 선례**: TLM 전자 레일 = `r_el,bulk + z_el,int(NCM–NCM R∥CPE)` (Eq. 2 `R_el = L(r_el,bulk + r_el,int)`), Eq. 1 의 DC 극한이 정확히 그 합(우리 검산)이고 `Fig. S14` 에서 **AC ≈ DC**. ⇒ *대칭셀 TLM 전자 레일은 입자 간 계면 요소를 담을 때만 관통 σ_e 와 같다.* **벌크/계면 몫은 미보고.**
+  - **CL-81 전자판 실례**: 접촉저항 없는 GeoDict voxel 전도가 σ_el 을 실측의 **2.54/2.98/2.04/1.06×**(우리 산수) — 추세도 반대(시뮬은 작은 SE 에서 ↑, 실측은 평평). 저자는 NCM 간 저항을 **가정**. ⚠ 크기는 출처 없는 σ_CAM 5.2 mS cm⁻¹ 에 선형 비례. **이온 채널은 오히려 시뮬 < 실측(0.63–0.76×)** ⇒ 모델 미세구조 오차(PSD 폭 오입력·vol% 모순·600 nm)가 접촉항보다 크다 = sim/exp 비를 계면항 척도로 쓰면 안 된다.
+  - **frame [5]**: 공극을 **실측에서 입력**하고 무작위 배치 + 겹침 3 % 까지 제거(역학 0, 강체 다면체) ⇒ 전달 절반만 있다. *"입도 → 공극 → σ"* 사슬을 입력 없이 푸는 것은 우리 DEM/MPM 쪽 부가가치.
 - **★⭐(우리-랩) Kim·Kang·Park·Lee 2025 (NCM811+LPSCl, 실험 EIS-modified-TLM) — σ_ionic *3번째* TLM 앵커 + GB 분리 측정**:
   - **bulk σ_ion LPSCl = 1.6 mS/cm = Minnmann 1.6 정확히 일치** → 같은 소재 두 독립 측정 일치 = 우리 bulk 앵커
     스프레드 {Cronau 3.0, Lee 2.19, **이 논문 1.6 = Minnmann 1.6**, Bazzoun 1.02} 의 신뢰 보강 (절대 직접대조 금지).

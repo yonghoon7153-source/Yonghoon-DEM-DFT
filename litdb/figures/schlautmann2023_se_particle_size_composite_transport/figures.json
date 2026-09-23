@@ -1,0 +1,652 @@
+{
+ "slug": "schlautmann2023_se_particle_size_composite_transport",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "55f48983-68._Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+  "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Scheme of a solid-state battery with tortuous charge transport pathways and microstructures of electrode composites with diﬀerent solid electrolyte particle sizes.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.2,
+    550.1,
+    326.7
+   ],
+   "w": 2118,
+   "h": 1070,
+   "dpi": 300,
+   "src": "55f48983-68._Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Characterization of Li6PS5Cl with diﬀerent particle sizes. a) Volumetric cumulative particle size distribution measured by a laser diﬀraction particle size analyzer. b) Impedance spectroscopy to determine the ionic conductivity, c) X-ray diﬀraction patterns, and d) pair distribution functions suggest no strong diﬀerences in the structure and transport at diﬀerent particle sizes.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.4,
+    552.9,
+    413.7
+   ],
+   "w": 2118,
+   "h": 1431,
+   "dpi": 300,
+   "src": "55f48983-68._Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. a) Scanning electron microscopy with EDS-mapping of the pressed composites with diﬀerent particle sizes of Li6PS5Cl and b) modeled microstructures indicate a more homogeneous distribution of solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.0,
+    255.7
+   ],
+   "w": 2118,
+   "h": 773,
+   "dpi": 300,
+   "src": "55f48983-68._Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.56
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Cell performance tests of composite electrodes with diﬀerent solid electrolyte particle sizes in half-cell setups. a) First cycle charge and discharge curves at 0.05 C (j = 0.107 mA cm−2). b) Charge and discharge curve at 1 C (j = 2.14 mA cm−2). c) Discharge capacities for 50 cycles at 0.1 C (j = 0.214 mA cm−2). d) Discharge capacities of rate-performance test. All data show that with decreasing particle size distribution, higher capacities and better rate-performance can be obtained.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.8,
+    552.9,
+    398.7
+   ],
+   "w": 2118,
+   "h": 1367,
+   "dpi": 300,
+   "src": "55f48983-68._Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.858
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Nyquist plots of impedance data of composites with diﬀerent particle sizes of Li6PS5Cl and the transmission line model. Impedance spec- tra measured in a) ionic blocking symmetric cells with electron-electron “T-type” connection for measuring the eﬀective electronic transport and in b) electronic blocking symmetric cells with “T-type” ion–ion connection for measuring the eﬀective ionic transport.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.6,
+    550.0,
+    323.7
+   ],
+   "w": 2118,
+   "h": 1055,
+   "dpi": 300,
+   "src": "55f48983-68._Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) Eﬀective electronic (blue) and ionic (yellow) conductivity of composites with diﬀerent particle sizes of Li6PS5Cl measured with impedance spectroscopy and compared to simulated conductivities. The electronic conductivity keeps constant while the ionic conductivity increases with smaller particle size. b) Capacity of composite electrodes at C/20 and 1 C versus the ratio of ionic and electronic conductivity measured by impedance spec- troscopy. The initial charge capacity is increasing when the ionic and electronic conductivity are more balanced. c) Comparison of the eﬀective ionic conductivity from the ﬂux-based simulation for all composites. The small Li6PS5Cl particles show a uniform current distribution, while the composite XL exhibits a localized ionic current ﬂow.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.3,
+    552.9,
+    388.7
+   ],
+   "w": 2118,
+   "h": 1328,
+   "dpi": 300,
+   "src": "55f48983-68._Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.799
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Scanning electron microscopy of LiNi0.83Co0.11Mn0.06O2 particles with a D50 value of 3.4 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.0,
+    237.0
+   ],
+   "w": 1953,
+   "h": 714,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.68
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Scanning electron microscope images of Li6PS5Cl samples with a) 4 µm, b) 11 µm c) 20 µm and d) 40 µm D50vol value of particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    322.3,
+    534.1,
+    637.8
+   ],
+   "w": 1952,
+   "h": 1316,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.301
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Arrhenius graph of Li6PS5Cl samples measured by temperature dependent impedance spectroscopy showing similar activation barriers for ionic transport.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    252.6
+   ],
+   "w": 1953,
+   "h": 779,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Rietveld refinements of Li6PS5Cl samples with a) 4 µm, b) 11 µm c) 20 µm and d) 40 µm D50vol value of particle size. No changes of the structure are observed for different particle sizes of Li6PS5Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    307.9,
+    534.1,
+    433.3
+   ],
+   "w": 1953,
+   "h": 524,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Pair distribution function analysis of of Li6PS5Cl samples with a) 4 µm, b) 11 µm c) 20 µm and d) 40 µm D50vol value of particle size. No changes of the local structure are observed for different particle sizes of Li6PS5Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    511.1,
+    534.1,
+    638.8
+   ],
+   "w": 1952,
+   "h": 533,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Raman Spectra of Li6PS5Cl samples with D50vol values of a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm for Li6PS5Cl particle size showing a sharp signal at 427 cm-1 which is characteristic for the PS43- unit.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    198.7
+   ],
+   "w": 1953,
+   "h": 555,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 5,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Scanning electron microscopy images with energy dispersive X-ray spectroscopy mapping of pressed composites with NCM811 (false color purple) and Li6PS5Cl (false color yellow) with D50vol values of a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm for Li6PS5Cl particle size. A more homogeneous distribution of Li6PS5Cl in the composite with smaller particle size is evident.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    268.6,
+    534.1,
+    455.8
+   ],
+   "w": 1952,
+   "h": 781,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.399
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 6,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Triplicates from charge and discharge capacities over 50 cycles at 0.1 C (j = 0.214 mA cm-2) and Coulombic efficiencies of composites with a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm D50vol value of Li6PS5Cl particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    292.1
+   ],
+   "w": 1953,
+   "h": 944,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 6,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Triplicates from charge and discharge capacities and Coulombic efficiencies of composites with a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm D50vol value of Li6PS5Cl particle size for C/20 (j = 0.107 mA cm-2), C/10 (j = 0.214 mA cm-2), C/5 (j = 0.428 mA cm-2), C/2 (j = 1.070 mA cm-2) and 1C (j = 2.140 mA cm-2).",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    391.9,
+    539.2,
+    620.9
+   ],
+   "w": 1973,
+   "h": 956,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 7,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: Triplicates of impedance spectroscopy measured in ionic blocking symmetric cell and analyzed with transmission line model of composites with a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm D50vol value of Li6PS5Cl particle size. At the particle sizes of 4 µm, a higher deviation in the triplicate measurements can be seen. This is assumed to be due to a slightly changing processing mechanics, which may be inferred from the slightly changed stickier haptics of the smaller particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    324.7
+   ],
+   "w": 1953,
+   "h": 1080,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 8,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Triplicates of impedance spectroscopy measured in electronic blocking symmetric cell and analyzed with transmission line model of composites with a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm D50vol value of Li6PS5Cl particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    326.2
+   ],
+   "w": 1953,
+   "h": 1086,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 8,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: DC polarization measurements in ionic blocking symmetric cell of composites with a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm D50vol value of Li6PS5Cl particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    396.1,
+    534.1,
+    631.1
+   ],
+   "w": 1953,
+   "h": 980,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 9,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: DC polarization measurements in electronic blocking symmetric cell of composites with a) 4 µm, b) 11 µm, c) 20 µm and d) 40 µm D50vol value of Li6PS5Cl particle size.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    304.1
+   ],
+   "w": 1953,
+   "h": 994,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 9,
+   "file": "fig_S14.png",
+   "caption": "Figure S14: Comparison of effective electronic (blue) and ionic conductivity (yellow) measured with DC polarization and impedance spectroscopy. No significant difference in measured conductivities shows validity of both approaches.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    354.5,
+    534.1,
+    604.6
+   ],
+   "w": 1953,
+   "h": 1043,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 10,
+   "file": "fig_S15.png",
+   "caption": "Figure S15: Comparison of observed and simulated tortuosity factor for a) ion transport and b) electron transport. Tortuosity factor for ion transport is decreasing with smaller particle size while tortuosity factor of electronic transport shows no trend.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    305.8
+   ],
+   "w": 1953,
+   "h": 1001,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 12,
+   "file": "fig_S16.png",
+   "caption": "Figure S16: Cumulative distribution functions based on volume a) and count b) for different Li6PS5Cl particle sizes.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    322.1
+   ],
+   "w": 1953,
+   "h": 1069,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 14,
+   "file": "fig_S17.png",
+   "caption": "Figure S17: Experimental cumulative distribution functions for different particle sizes (circles) together with the simulated CDFs with a) σa and b) s as the distribution width (DW).",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    322.7
+   ],
+   "w": 1953,
+   "h": 1071,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.858
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 15,
+   "file": "fig_S18.png",
+   "caption": "Figure S18: a) Experimental and fitted cumulative distribution function for the CAM. b) Scanning electron microscopy image of the particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    65.8,
+    534.1,
+    307.7
+   ],
+   "w": 1953,
+   "h": 1009,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.678
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 16,
+   "file": "fig_S19.png",
+   "caption": "Figure S19: Generation of an L-Microstructure used for the flux-based simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    301.6,
+    526.3,
+    674.0
+   ],
+   "w": 1921,
+   "h": 1553,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.535
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 17,
+   "file": "fig_S20.png",
+   "caption": "Figure S20: Top: Modelled microstructures, bottom: Scanning electron microscopy images with energy dispersive X-ray spectroscopy mapping of pressed a) S, b) M, c) L and d) XL composites.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.6,
+    65.8,
+    554.2,
+    255.4
+   ],
+   "w": 2062,
+   "h": 791,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.332
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 17,
+   "file": "fig_S21.png",
+   "caption": "Figure S21: Flux-based simulation of effective electronic conductivity for composite PSDs: a) S, b) M, c) L, and d) XL. Smaller particle sizes exhibit a more uniform current distribution, leading to higher effective conductivities until reaching a plateau. Composite a) and b) demonstrate similar electronic ionic conductivities. Note that the simulation of composite a) was performed with a potential difference of 0.3 V to scale the current density according to the different model sizes. Achieving the same conductivities in smaller models requires a higher current density, which would result in exceptionally high current density in composite a).",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    310.7,
+    534.1,
+    620.7
+   ],
+   "w": 1953,
+   "h": 1293,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.435
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 18,
+   "file": "fig_S22.png",
+   "caption": "Figure S22: Specific interface area between Li6PS5Cl and CAM for all modelled composites. The function “Surface Area” of the MatDict-module was used for the calculation. The specific",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    420.2,
+    534.1,
+    665.5
+   ],
+   "w": 1953,
+   "h": 1023,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.963
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 11,
+   "file": "tab_S1.png",
+   "caption": "Table ST1: Microstructure model parameters. Void space of the composite was calculated as Minnemann et al.[1] reported via density measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    130.0,
+    534.1,
+    375.0
+   ],
+   "w": 1952,
+   "h": 1022,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 13,
+   "file": "tab_S2.png",
+   "caption": "Table ST2: Statistical input for the Li6PS5Cl PSDs in GeoDict.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    209.0,
+    534.1,
+    362.0
+   ],
+   "w": 1952,
+   "h": 639,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 15,
+   "file": "tab_S3.png",
+   "caption": "Table ST3: Statistical input for the CAM PSD in GeoDict.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    474.6,
+    534.1,
+    577.0
+   ],
+   "w": 1952,
+   "h": 428,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 18,
+   "file": "tab_S4.png",
+   "caption": "Table ST4: Effective ionic and electronic conductivities for experiment and simulation, as well as the corresponding tortuosity factors κ.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    95.0,
+    534.1,
+    414.0
+   ],
+   "w": 1952,
+   "h": 1330,
+   "dpi": 300,
+   "src": "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "blank": 0.92
+  }
+ ]
+}

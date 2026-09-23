@@ -1613,6 +1613,14 @@
    "DEM 논문/08. Mechanical, Electrical, and Ionic Behavior of Lithium-IonBattery Electrodes via Discrete Element Method Simulations.pdf"
   ]
  },
+ "schlautmann2023_se_particle_size_composite_transport": {
+  "figures": 32,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "55f48983-68._Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf",
+   "ba169fe5-68._Sup_Impact_of_the_Solid_Electrolyte_Particle_Size_Distribution_in_Sulfide-Based_Solid-State_Battery_Composites.pdf"
+  ]
+ },
  "schlem2020_li3mcl6_cation_site_disorder": {
   "figures": 29,
   "generated": "2026-08-05",
