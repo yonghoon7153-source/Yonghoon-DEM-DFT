@@ -255,7 +255,7 @@ PI₃ 를 Li₂S 에 8 mol% 섞어 2 h 고에너지 밀링하면 LiI + 비정질
 - `Fig. S9`: Li–Na 는 Li–Li 와 같은 크기의 석출/탈리 전류를 내고, 탈리가 끝난 뒤 **≈0.37 V 에 큰 산화 봉우리(≈2.45 mA — 석출 전류보다 크다)** 가 나온다. 논문 귀속: *"parasitic oxidation of Na or Na-derived interphase species, indicating potential interfacial instability under high overpotential"*.
   · ✎ **우리 읽기**: E°(Na⁺/Na) −2.71 V(논문) − E°(Li⁺/Li) −3.04 V(교과서값 — 논문에 없음) = **+0.33 V vs Li⁺/Li**. 봉우리 위치가 이 값과 맞는다 ⇒ **Na 금속 자체의 산화**(Na → Na⁺, SE 로 들어감)로 설명된다. 부수적 계면종이 아니라 **집전체가 소모되는 반응**이다.
 - `Fig. S11`: Li₂S 양극 완전셀을 1.4 V 까지 방전하면 ≈265 mAh g⁻¹ 에서 **≈0.2 V 계단**(≈1.85 → ≈1.65 V) + dQ/dV ≈1.6 V 봉우리가 나온다. ✎ 이 계단은 "석출된 Li 가 바닥나 음극 전위가 Li → Na⁺/Na(+0.33 V)로 뛰는 순간" 과 정량적으로 맞는다 ⇒ **1.7 V 컷오프는 선택이 아니라 필수**이고, 무음극 셀에서는 **매 방전 끝이 이 경계에 닿는다**.
-- `Fig. 4a,b`: 과전압 10 vs 22 mV, Cu 의 핵생성 딥 ≈30 mV — Na 위에는 딥이 없다(= 핵생성 장벽이 작다; 해석은 ref 54 인용). CE 85.57 vs 76.49 %. Na 는 탈리 중 전압이 서서히 오르고 Cu 는 가파르게 오른다.
+- `Fig. 4a,b`: 과전압 10 vs 22 mV, Cu 의 핵생성 딥 ≈30 mV — Na 위에는 딥이 없다(= 핵생성 장벽이 작다; 해석은 ref 54 인용). CE 85.57 vs 76.49 %. 탈리 중 Na 는 `figure-read ≈`10 mV 로 거의 평탄하다가 끝(≈0.42 mAh cm⁻²)에서 급상승하고, Cu 는 ≈17 → ≈45 mV 로 전 구간에 걸쳐 오른 뒤 ≈0.38 mAh cm⁻² 에서 급상승한다 — 본문의 *"more gradual voltage increase"*(Na)는 "더 평탄하다" 로 읽어야 그림과 맞는다.
 - `Fig. 4c,d`: Li–Cu 초기 임피던스 ≳700 Ω cm²(강체 Cu 접촉 불량), 1 사이클 뒤 두 반원. Li–Na 는 Re 26–38 Ω cm² 범위에서 조금 움직인다.
 - `Fig. 4e,f`: Na 1000 사이클 · 2000 h 안정 vs Cu 연단락 → 단락.
 - `Fig. 4g,h`: ⚠ 본문 *"elemental maps confirming uniform Li distribution adjacent to the Na current collector"* — **실린 맵은 Na · S · Br 뿐**이고 Li 는 EDS 로 검출되지 않는다. "Li" 층은 SEM 대비로 그은 점선이다.
