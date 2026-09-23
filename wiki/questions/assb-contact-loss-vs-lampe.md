@@ -2,10 +2,10 @@
 title: ASSB 에서 OCV 적합이 LAM_PE 와 접촉 손실을 가를 수 있는가
 description: "In solid-state cells (Li-In / Li metal / anode-free), does OCV fitting separate true positive-electrode active material loss from contact/percolation loss"
 created: 2026-09-16
-updated: 2026-09-22
+updated: 2026-09-23
 type: research-question
 tags: [battery, degradation, research, assb]
-sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md]
+sources: [raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -255,6 +255,8 @@ ASSB 에서 **개념 자체가 없어진다.** 대신 싸움이 **`LAM_PE ↔ �
 
 | **★★★★ Chang, Choi, Kang, Park, Lim 2020 (`assb` 20호 — 첫 **매립형 기준극** · 첫 **전극별 전위 + 전극별 저항 동시** · 첫 **전극별 용량 손실 귀속** · **계보에서 시간이 가장 이르다(2019 접수)** · 창원대 + **RIST** + 세종대 · *Ionics* 26, 1555–1561, **Short Communication 7쪽, SI 없음**)** | **없다 — 0/20 유지.** `contact` 6회 중 **5회가 `contact resistance`**, `contact loss`·`θ`·`percolat*`·`tortuos*`·`porosit*`·`void` **전수 0회**. ★ 그래도 계보 최초의 **절대 Ω 예산 + 전극별 배분**이 나온다: `[인쇄]` σ = 1.8×10⁻⁴ S cm⁻¹ [12,26] ⇒ SE 자체 **448 Ω**, 측정 `R₀`(Cell) **810 Ω**, 차 **362 Ω** 을 *"layer-to-layer contact resistance"* 로 배정하고 `[인쇄]` **양극 쪽이 더 크다**(`R₀` 460 vs 355). `[재현]` **448 Ω 은 정확히 재현된다**(L=1240 µm, A=1.539 cm² ← `[도표]` Fig. 1a **⌀14 mm**) ⇒ 저자가 **In 박 110 µm 까지 SE 로 셌다**; 빼면 408 Ω ⇒ 접촉 몫 **402 Ω**(+11 %). ⚠⚠ **그러나 그 362 Ω 은 접촉이 아닐 수 있다**: 뺀 것은 분리막 슬래브뿐이고 남은 값에 `[도표]` **388 µm 양극 · 438 µm 음극 복합체 내부 이온 경로**가 통째로 들어 있다 — `[재현]` ε_SE=0.4·τ=2·평균 경로면 양극 복합체만 **≈350 Ω** ⇒ **접촉 없이 전부 설명된다**(G1 이 채워지면 확정). ⚠ 게다가 방향이 열화가 아니다 — 충전에서 `R₀` 가 **140 Ω 줄고** 이유는 `[인쇄]` *"not fully understood"* ⇒ **`R(방향)` 은 있고 `θ` 는 없다**, **20/20 편이 `θ` 를 어떤 축 위에서도 안 준다** | ★★ **+0.5 — 계보 최초의 *전극별 용량 손실 귀속*.** 관측은 **단일 정전류 스텝의 3시상수 분해**(`R₀` 순간 / `R_ct` 비선형 / `R_p` ~1 h 선형, 근거 ref [24] Barai 2018) × **3노드**(Cell·Cathode·Anode) × 2방향 = **18수**이고, **주파수 영역 없이 전극을 가른다**(본문 `impedance` **0회** — 5회 전부 참고문헌; `EIS`·`Nyquist`·`DRT` 0회). ★★★★ 그 관측으로 **첫 충전의 122 mAh g⁻¹(54 %) 손실을 양극이 아니라 음극에 배정**하고 `[인쇄]` *"the cause of the capacity fade … **could not have been elucidated without the three-electrode setup**"* 라고 적는다 ⇒ **17호 함정을 5년 먼저 명시적으로 피한 편**. ⚠ 다만 가르는 축이 **양극↔음극 · 옴↔비옴**이지 **접촉 손실↔LAM 이 아니다**(2사이클이라 가를 열화가 없다) ⇒ 반 칸 | ★ **새 층위 — `graphically-read-piecewise`.** measured 도 fitted 도 아니다: `fit*` **0회**, 잔차·공분산 없음, 값은 **Fig. 4 에 손으로 그은 점선 + 주황색 외삽 직선에서 읽은 것**이고 전부 **5 Ω 단위 반올림**이다. ⚠⚠ **정밀도**: `[재현]` 음극 `R_p`(방전) 60 Ω = **12 mV** 인데 패널 (c) 의 y 전폭이 **1.0 V** ⇒ **전폭의 1.2 %** 에서 읽었다(`R_ct` 135 Ω = 2.7 %) — **논문의 중심 주장(음극 `R_ct`·`R_p` 2~3배)이 여기 걸려 있고 오차 표기가 없다.** ★ 라벨의 절반은 **외부 문헌 상수 다섯 개**다(σ 1.8e-4 · `D_Li` 10⁻¹⁶→10⁻¹⁰→10⁻¹² · `D_anode` 10⁻⁸ · **0.62 V** · **2.5 V**) — 그런데 `assum*` 은 **0회** | **0 / 20.** `identifiab*`·`uniqu*`·`uncertaint*`·`degenerac*`·`condition number`·`error bar`·`n =`·`fit*` **전수 0회**(NFKC·대소문자 무시). ★ **열세 번째 성질 = "분해가 적합조차 아니어서 물을 대상이 없다"** — 적합을 안 했으므로 잔차도 공분산도 없고, **분해의 자유도가 데이터가 아니라 작도에 있다**(12호 "낱말이 없다" · 15호 "추정기가 없다" · 19호 "어휘 없이 기하로 물었다" 와 또 다르다). ⚠⚠⚠ **그리고 설계에 2요인 교락이 있다**: `[재현]` 방전 펄스는 **t=2.35 h(양극 x≈0.03, 음극 Li-rich 끝)**, 충전 펄스는 **t=70 h(양극 x≈0.95, 음극 Li-poor 끝)** ⇒ **방향(합금화↔탈합금화) ⊗ 조성이 완전 교락**, 셀은 1개. 저자 스스로 같은 쪽에서 `D_Li` 가 x 에 따라 **10⁶ 배** 움직인다고 적으므로 사소하지 않다 ⇒ `[인쇄]` "탈합금화가 합금화보다 빠르다" 는 **이 설계로 분리되지 않는다** | ★★ **+0.5 — 가정한다. 단 성질이 18호와 다르다.** `assum*` **0회** · `0.62` **2회** · `1.55` 0회. ★★★★ **가정이 문장이 아니라 *그림의 두 번째 축*으로 인쇄된다** — Fig. 2a·3b·4b,c,e,f 의 오른쪽 축 "Voltage (V vs. Li/Li⁺)" = 왼쪽 + 0.62 V ⇒ **낱말 지문으로는 절대 안 잡히는 가정**(우리 지문 관행에 남는 교훈). ① **0.62 V 의 출처가 확정된다**: ref [19] **Santhosha 2019** + ref [20] Takada 1996 = **17호가 "0.62 V 가 태어난 자리" 로 지목한 바로 그 논문**. ② 간접 확인은 **제3물질을 둘** 쓴다: `[인쇄]` `V₂`=1.904 V ↔ 문헌 TiS₂ 2.5 V − In 0.62 V = 1.88 ⇒ `[재현]` **24 mV 일치**(두 가정이 같은 방향으로 틀리면 통과한다). ③ ★★★★ **범주 오류 세 번째, 그러나 유일하게 판별력이 0 이 아니다**: `[인쇄]` *"V₁ was about the same as (V₂–V₃), **indicating that Li-In alloy may have been stably working as an embedded RE**"* — `V₂−V₃ = E_cat−E_an` 이므로 **`E_RE` 가 어떻게 표류해도 성립하는 항등식**이다(전위를 못 본다). **그런데** `[재현]` Fig. 2a 디지타이즈: **리튬화 전 `V₂−V₃` = 2.153 V vs `V₁` = 2.312 V ⇒ 159 mV 깨진다**, 리튬화 후 **5 mV** 로 닫힌다(논문 `[인쇄]` "~0.01 V") ⇒ **정정된 명제: 이 검사는 기준극의 *갈바닉 접촉*을 보지 *전위*를 보지 않는다.** ④ ★★★★ 그 159 mV 가 새 숫자를 준다: `[재현]` **신품(비리튬화) In 의 부유 전위 = 1.77–1.93 V vs Li/Li⁺ = In/LiIn 짝보다 1.15–1.31 V 높다** ⇒ **16호("설치·미검증")가 무엇을 위험에 뒀는지의 크기**. ⑤ ★★★★ **RE 재고 예산이라는 새 축**: `[재현]` 리튬화 20 µA×1 h = 0.020 mAh = **셀 용량의 1/675**, x̄ = **0.0053**(Fig. 2b 가 동정한 **In₁.₇Li₀.₃ = Li₀.₁₈In** 과 33배 차 ⇒ 리튬화가 **≈3.3 µm 표면층**에 갇힌 **구배 전극**). **190 h 실험에서 재고 90 % 를 지키려면 누설 < 10 nA** 여야 하고, **3전극은 기준극 표류를 공통 모드로 상쇄해 원리적으로 못 본다** ⇒ **19호 차분 설계의 물리적 근거가 20호 데이터 안에 있다.** ⑥ ★★ `[인쇄]` **배치가 관측 창을 정한다**는 계보 최초의 진술: 배면형(ref [10] Nam 2018)은 *"the contact resistance between layers … and the SE resistance itself … **were not incorporated into the voltage measurements**"* ⇒ 중앙 매립형은 옴 성분을 **창 안에** 넣는다. ⚠ 빼는 쪽: 전위를 **재지 않았고**, 동정된 상(In₁.₇Li₀.₃ 고용체 쪽)이 0.62 V 의 근거인 **In/LiIn 2상과 같지 않다**(G6). ⑦ **(ㄴ) 기준의 분모를 갈라야 한다**: 상대극이면 *이동 전하*, 참 기준극이면 ***누설 전하*** ⇒ **(ㄴ′) Li 재고 / (누설 × 시간) ≥ 10**, 계보 20/20 편이 누설을 안 쟀다 | **없다 — 0.** `pressure`·`MPa`·`kPa` **전수 0회**, `cold-pressed` 2회뿐 ⇒ **벌크형 황화물 ASSB 인데 압력 값이 한 개도 없다**(18호에 이은 **두 번째 완전 미보고**). ⚠ 이 편은 그 위에 **`R₀` 의 절대값을 접촉에 배정**하므로 미보고의 대가가 18호보다 크다 — 접촉 저항은 압력의 함수인데 압력이 없다 | **해당 없음** — 무음극 아님(Li₄.₄Si). `dendrit*`·`dead`·`isolat*`·`SEI`·`plating` **전수 0회**. ⚠⚠ **그러나** `[도표]` **1·2차 충전이 둘 다 음극 전위 ≈0.02–0.04 V vs Li/Li⁺ 에서 끝난다**(±30 mV, 저자의 0.62 V 축 위) ⇒ **Li 도금이 열역학적으로 열려 있는데 논문이 언급하지 않는다** — 계보에서 **합금 음극이 도금 전위까지 밀린 첫 기록** | ★ **+0.5 — 새 화학 TiS₂**(계보 최초의 황화물 양극). `[도표]` `E_cat(x)` 가 **x=0→0.95 에서 2.52 → 1.72 V, 전 구간 기울기 있음**(평탄역 없음) ⇒ **OCP 기울기가 큰 계열**. ★★ 그리고 **계보 최초로 두 전극의 전위 궤적이 같은 셀에서 동시에 인쇄된다** — 우리 α·β 가 요구하는 입력의 *형태* 그 자체다. `[도표]` 주요 눈금(Fig. 3b): 개방 `E_cat` 2.58 / `E_an` 0.18 → 1차 방전 끝 **1.72 / 0.442** → 1차 충전 끝 **2.396 / 0.019** → **1일 휴지 이완 2.243 / 0.148** → 2차 충전 끝 **2.408 / 0.043**. ★★★ `[재현]` **1일 휴지 뒤 `V₁` = 2.095 V 로 컷오프(2.4 V)보다 310 mV 아래** ⇒ **잘린 용량의 일부는 CC 전용 프로토콜의 산물이다**. ★★★ `[재현]` **면적용량 9.3 mAh cm⁻², 200 µA = C/72** — **극저율에서도 54 % 가 날아간다** ⇒ **`i→0` 이면 `η→0` 처방의 반례**(한계가 율이 아니라 두께·접근 분율에 걸려 있다). ⚠ 단 **통전 중 곡선(pOCV)** 이고 이완점은 3개뿐 · 용량은 `[인쇄]` 225 / 103 / ~105 mAh g⁻¹ · `[인쇄]` **셀을 일부러 최적화하지 않았다**(*"not intentionally optimized … so that the cell performance degradation could be readily observed"*) |
 
+| **★★★★ Sedlmeier, Schuster, Schramm, Gasteiger 2023 (`assb` 21호 — 첫 **미세 기준극(리튬화 금선, GWRE)** · 첫 **파우치 3전극** · 첫 **방향만 바꾼 통제 실험(P4)** · 첫 **동일 조건 셀 간 ±(n = 3)** · 첫 **두 Q5 가지의 뿌리(Ikezawa 2020 · Nam 2018 · Santhosha 2019)를 함께 인용**, 20호도 ref 12 · TUM(Gasteiger) · *J. Electrochem. Soc.* 170, 030536, **CC BY, 13쪽, SI 없음**)** | **없다 — 0/21.** `contact loss`·`θ`·`percolat*`·`tortuos*` **0 회**. `contact` 12 회 중 물리 접촉은 `[인쇄]` *"a combination of the **physical contact resistance and the SEI resistance**"* 로 **한 반원(720 Hz)에 합쳐** 이름만 붙는다. `[인쇄]` 높은 저항을 *"the low fabrication (∼70 MPa) and the low applied stack pressure (∼20 MPa)"* 탓으로 돌리지만 **스윕 0** ⇒ **스물한 번째 0 의 성질 = "접촉을 이름 붙여 SEI 와 한 반원에 합치고, 압력 가설로 넘겼다"**. `[재현]` 저자가 "electrode resistance" 라 부른 375 / 750 Ω cm² 의 **≈65 % / ≈33 % 가 분리막 절반(≈245 Ω cm²)** 이다 | ★★ **+0.5 — "물질은 있는데 접근 불가" 를 "접근 가능" 과 독립 관측 둘로 가른 첫 편, 그리고 OCV 가 그 둘을 못 가른다는 것을 같은 셀에서 보인 첫 편.** 같은 InLi 박(≈24 at%, 공칭 재고 ≈14 mAh cm⁻²)을 **어느 면을 분리막에 대느냐만** 바꿔: 개방회로는 **둘 다 0.62 V(28 일 < 3 mV)**, 그러나 `[인쇄]` 0.2 mA cm⁻² 탈리튬은 **InLi-(In) 9 초 · 0.39 ± 0.21 µAh cm⁻²(재고의 3×10⁻⁵)** ↔ **InLi-(Li) 15 h · 3.0 mAh cm⁻² 평탄**, 저주파 임피던스는 **꼬리 ↔ 반원**(n = 3 씩, 순수 In 대조군 포함). ★ 그리고 `[인쇄]` *"this interpretation of the cell impedance is **incorrect**"* — **2전극 스펙트럼 모양 해석이 3전극으로 반박된 것을 저자가 인쇄한 계보 첫 사례**. ⚠ 반 칸인 이유: 대상이 **음극 Li 재고**이지 양극 활물질이 아니고, 열화가 아니라 **제조 상태**다 | **층 추가 — measured + 셀 간 반복 ± (n = 3, mean ± SD)**, 계보 최초의 **동일 조건 셀 간 ±**(18·19호의 ± 는 회귀 표준오차). ⚠⚠ 9 개 중 1 개 오기: 순수 In 9단계 `[인쇄]` **38 ± 0.8 µAh cm⁻²** 인데 같은 줄의 11.5 ± 3.0 분 · CE 76 ± 20 % 와 맞는 값은 `[재현]` **±10**(Q = i·t) · 그리고 `[인쇄]` "each cell type yielded **identical results**" 라면서 CE ±20 %. 저항은 전부 **Nyquist 판독 ≈값**(`fit*`·`equivalent circuit` 0) | **0 / 21.** `identifiab*`·`uniqu*`·`uncertaint*`·`degenera*`·`error bar`·`fit*` **전수 0 회**. ★ **열네 번째 성질 = "값의 정확도를 검사하고 배정의 유일성으로 읽었다"** — 8단계 저항 차(전하이동 ≈320 ↔ ≈90 Ω cm²)에 **경쟁 설명 셋(정렬 어긋남 · SEI · 계면 Li 고갈)을 인쇄하고 가르지 않은 채**, AC 저항 = DC 과전압 일치(`[재현]` 3 % / 6 %, **계보 최초의 시간↔주파수 영역 일치**)로 `[인쇄]` *"the impedance measurements yield reliable values"*. ★ 우리 곱 축퇴 처방 1단계(τ 형)가 그 셋 중 **정렬 어긋남을 기각**한다(`[재현]` C_CE/C_WE ≳ 1.4 ↔ 면적 예측 0.28) — **논문의 데이터 안에 가를 입력이 있었다**(18호와 같은 구조) | ★★ **+0.5 — 잰다(한 번) · 옮긴다 · 그리고 장기 표류는 잰다.** ① ★★★★ **P4 통제 실험**: 17호 foil 조립(Li 뒷면) = InLi-(In) 은 **재고가 있어도 못 쓴다**, 16호 조립(순수 In) 은 전기화학 리튬화 뒤 InLi-(Li) 와 같은 부류 ⇒ **"LiIn 이 어디 있느냐가 전부" 가 한 변수만 바꾼 데이터로 지지된다** ② ★★★★ **"0.62 V ✓ ≠ 재고 ✓"** — Li-In 상대극의 **기준 역할과 원천 역할이 한 전극 안에서 갈린다**(Fig. 9 가 두 칸 표로 그린다) ③ ★★★★ `[인쇄]` *"in an NCM|In cell, the potential of the indium CE **cannot be assumed to stay invariant at 0.62 V** … as this would depend on the overall loss of cyclable lithium"* — **0.62 V 가정의 부정이 조건과 기구(`LLI`)를 달고 문장으로 나온 첫 편**, 17호 함정의 원인 쪽 ④ ★★★ `[인쇄]` **"all potentials shift less than 3 mV" over 28 days** — 두 전극이 2상 평탄에 고정돼 있어 **기준극 표류가 공통 모드로 보인다** ⇒ 20호 "3전극은 자기 표류를 원리적으로 못 본다" 가 **"고정 전극이 없으면" 으로 좁혀진다**; `[재현]` 재고 **3 µAh**(셀의 1/4,000–1/21,000)가 ≈703 h 를 버텨 **누설 < ≈4.3 nA**(간접 상한 — **21/21 편이 누설을 직접 재지 않았다**) ⑤ ★★★★ **여섯 번째 형태 = 교정 이식**: GWRE 0.31 V 는 **Li\|Li 교정 셀(3 MPa, 2 h)** 에서 Li 대비 **측정**, InLi 셀(20 MPa)에는 `[인쇄]` *"calculated based on a GWRE potential of +0.31 V"* 로 **옮겨진다**. `assum*` **4** 회(기준 전위에 대해 **0**) · `0.62` **18** · `0.31` **7** — ★ **20호 맹점의 세 겹 반복**: 가정이 **"calculated" 라는 낱말**로 · Fig. 4 **두 번째 축**으로 · Fig. 6·8 은 **측정 축 없이 환산 축만**. ★★ 그리고 `[도표]` **부록 Fig. A·1 은 축 이름("vs. InLi-(Li) CE")과 숫자(+0.31 V)가 정확히 0.62 V 어긋난다**(크로퍼가 놓친 그림, 수동 크롭) — 유력한 읽기면 **A·1 은 InLi = 0.62 를 가정해 GWRE = 0.31 을, Fig. 4 는 GWRE = 0.31 을 가정해 InLi = 0.62 를 보인다(순환이 두 그림에)**. ⚠ 16호와 대질: 같은 "리튬화 금선" 이 **0 V(16호) ↔ 0.31 V(21호)** 두 관례 — `[추론]` 21호 Fig. 2a 의 이완 경로(≈0 → 0.25 → 0.31 V)가 **16호 셀 간 0.11 V 어긋남의 후보 설명** | **보고·통제, 스윕 0 — 칸 이동 없음.** 압착 **≈60 MPa**(InLi, 본문 논의는 ∼70 으로 오기) · **≈70 MPa**(분리막) · 체결 **3 MPa(Li\|Li, Li creep 방지) · 20 MPa(InLi 셀)**, 스프링 224 N mm⁻¹ + PTFE 발포 균압. ⚠ Li\|Li 는 **압력과 분리막 두께(2배)가 교락**. `[인쇄]` 압력 가설(높이면 과전압 ↓, Ikezawa 2020 3배 압착 ≈110 Ω cm²)은 **미시험**. 부수 `[인쇄]`: 원통 펠릿에서는 반경 팽창이 막혀 **Li creep 가 Li 를 분리막 쪽에 보낼 수 있다** — 셀 형상이 음극 계면 상태를 정할 수 있다는 첫 진술 | **해당 없음** — 무음극 아님. `dead`·`plating`·`dendrit*` 0 회. ★ 부수: `SEI` 8 회 — **SEI 형성 시점 대조**가 있다: `[인쇄]` 순수 In(≈2.1 V, LPSCl 안정)은 **첫 리튬화에서 SEI** ⇒ 넣은 Li 의 CE **76 ± 20 %**, InLi-(In)(30 일 넘게 0.62 V, LPSCl 불안정)은 **SEI 기성** ⇒ **98 ± 1.6 %** | **해당 없음 — 양극 없음**(InLi\|InLi · In\|InLi 대칭형). 음극 쪽 전위 눈금만: `[인쇄]` In/In₁Li₁ **0.62 V**(≈1–50 at%) · LixAu **0.31 V**(0<x<1.2) · ≈0.25 V(x≈1.3) · `[도표]` 순수 In 부유 **≈2.08–2.10 V**, **완전 탈리튬 뒤 ≈0.96 V**(열역학 짝이 없어 고정점이 아니다; 20호 신품 In 1.77–1.93 V) |
+
 **1호 단독 1.5 → 2편 ≈2.5 → 3편 ≈3.0 → 4편 ≈5.5 → 5편 ≈6.5 → 6편 ≈7.0 → 7편 ≈7.0 → 8편 ≈7.0 → 9편 ≈7.5 → 10편 ≈8.0 → 11편 누적 ≈8.5 칸이다.** (12·13·14편 ≈8.5 유지 — 12·13호는 종설, 14호는 새 칸 대신 **층 셋**: Q1 "비파괴 대리량" · Q6 "압력 → OCV" · Q8 "OCV 축 열역학 도함수". **15편도 ≈8.5 유지 — 새 칸 0이고, 이 편은 Q1·Q4·Q6 에서 "안 쟀다" 가 아니라 "낱말이 없다" 여서 계보의 바닥을 찍는다.**
 **→ 16편 ≈9.5 — 14편 만에 칸이 움직였다**: **Q2 +0.5**(전극 분해 관측이 처음으로 들어왔고, 2E = 3E 합으로 **자기 검증**까지 있다) ·
 **Q5 +0.5**(기준극을 실제로 설치한 첫 편이고, 그 기준의 **셀 간 0.11 V 어긋남**을 지면이 인쇄한다).
@@ -282,6 +284,16 @@ R-LTO 의 절대값이 상쇄된다; `assum*` **0 회**, "1.55" **0 회** — 18
 로 스케일해 못 가르고, 결정적인 `d` 축은 **4 점 중 하나가 4.5 배 이상치**다).
 ⚠ **Q2 +0.5 를 검토했다가 접었다** — 19호에는 **활물질이 없어** `LAM_PE` ↔ 접촉 손실을
 가를 대상 자체가 없다. 준 것은 값이 아니라 **대조군의 형태**(계면 하나만 추가)다.
+**→ 20편 ≈12.5** (Q2·Q5·Q8 각 +0.5 — 전극별 용량 손실 귀속 · 가정이 축으로 들어가고 깨지는 모습 · TiS₂;
+Q1 0/20 · Q4 0/20 "작도다" · Q6 0).
+**→ 21편 ≈13.5 — Q2 +0.5 · Q5 +0.5**: **Q2** — 같은 InLi 박을 **어느 면을 분리막에 대느냐만** 바꿔
+**OCV 는 같고(0.62 V) 접근 가능 재고는 수 자릿수 다른** 두 전극을 **펄스 전하 + 저주파 임피던스 부류**로
+가른 첫 편(**반 칸** — 대상이 음극 Li 재고이고 제조 상태다). **Q5** — P4 통제 실험 · "0.62 V ✓ ≠ 재고 ✓" ·
+"0.62 V 를 가정할 수 없다" 의 조건·기구(`LLI`) 인쇄 · 기준극 표류 < 3 mV / 28 일 · **여섯 번째 형태 = 교정 이식**.
+**안 움직인 칸**: **Q1 0/21**("접촉을 이름 붙여 SEI 와 한 반원에 합치고 압력 가설로 넘겼다") ·
+**Q4 0/21**(열네 번째 성질 = **"값의 정확도를 검사하고 배정의 유일성으로 읽었다"**) ·
+**Q6 칸 이동 없음**(보고·통제, 스윕 0) · **Q7·Q8 해당 없음**(무음극 아님 · 양극 없음).
+Q3 은 칸 대신 **층** 하나(동일 조건 셀 간 ± n = 3, 단 1 건 오기).
 
 ## ★★★★ 2026-09-22 (19호 Yoshida et al. 2024) — **기준 전위를 재지도 가정하지도 않고 소거한 첫 편, 그리고 상대극이 관심 대역을 통째로 덮는다는 것을 저자가 인쇄한 첫 편**
 
@@ -1738,6 +1750,36 @@ interface areas**"*)이다. `[재현]` 음극은 **8.4배 과잉**이고 사이�
 1.2 %** 에서 읽혔다. ⇒ 19호가 보여 준 "점추정의 실제 폭" 아래에 **"추정이 아니라
 작도"** 라는 층이 하나 더 있다.
 
+### ★★★★ 열여덟 번째 — **For 에 붙는 음극 판 실측: OCV 가 같고 접근 가능 재고가 수 자릿수 다르다** (2026-09-23, Sedlmeier et al. 2023 · 실험, 미세 기준극 3전극 파우치, n = 3)
+
+`raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md`.
+
+**① 이 카드의 물음이 음극 Li 재고에서 구조 그대로 나타난다.** 접촉 손실은 "물질은 있는데
+접근 불가" 이고, 우리는 그것이 OCV 에서 진짜 손실과 갈리는지 묻는다. 21호는 **같은 InLi 박**
+(≈24 at%, 공칭 재고 ≈14 mAh cm⁻²)을 **어느 면을 분리막에 대느냐만** 바꿔 둘을 만든다:
+
+| | InLi-(In) (Li 박이 뒷면) | InLi-(Li) (Li 박 면이 분리막 쪽) |
+|---|---|---|
+| 개방회로 | `[인쇄]` **0.62 V**, 28 일 < 3 mV | `[인쇄]` **0.62 V** |
+| 0.2 mA cm⁻² 로 Li 빼기 | `[인쇄]` **9 초, 0.39 ± 0.21 µAh cm⁻²** | `[인쇄]` **15 h, 3.0 mAh cm⁻², 평탄** |
+| 저주파 임피던스 | Warburg 유사 꼬리 | ≈1 Hz 반원 |
+
+⇒ **OCV 채널로는 구별 불가, 펄스·임피던스로는 수 자릿수.** "물질이 있다" 와 "접근 가능하다" 가
+**열역학 채널에서 같은 값을 준다**는 것의 음극 판 실측이다. `[인쇄]` Fig. 9 가 이것을 두 칸
+표로 그린다 — **"✓ Potential ✗ Accessible Li reservoir"**.
+
+**② 그리고 `LLI` 가 상대극을 거쳐 `LAM_PE` 서명으로 나타나는 기구가 문장으로 있다.**
+`[인쇄]` *"in an NCM|In cell, the potential of the indium CE **cannot be assumed to stay invariant
+at 0.62 V** vs Li⁺/Li towards the end of discharge … as this would depend on the **overall loss of
+cyclable lithium**"*. ⇒ 17호(열네 번째)가 실증한 "겉보기 `LAM_PE` = 상대극" 의 **원인 쪽**이
+`LLI` 라는 것을 17호보다 앞서 인쇄한다(17호가 이 편을 ref 21 로 인용한다).
+`[추론]` **상대극 재고가 없거나 못 쓰는 조립에서는 `LLI` 가 끝 절단(= `LAM_PE` 서명)으로 새어 든다.**
+
+**③ ⚠ 이 편이 주지 않는 것.** 양극이 없고, 열화가 없고(신품·무사이클), 가르는 대상이
+**접촉 면적이 아니라 음극 계면의 Li 상태**다. **`θ` 는 21/21 편 0 이다.** 가져올 수 있는 것은
+**관측의 형태**(짧은 펄스 전하 + 저주파 부류)이고, 양극은 OCP 가 기울어 있어 그대로 옮겨지지
+않는다(`[추론]`).
+
 ### Against / 단서 — "독립 관측이 존재할 수 있다" 쪽
 
 - ★★★★ **세 번째 전극(전위 채널) — 이 계보에서 가장 직접적인 분리 관측**
@@ -2360,6 +2402,24 @@ state of interfacial contact **and** material properties." 9호의 곱 축퇴 `A
 6. ⚠ **잔차에 이름을 붙이지 않는다.** `[재현]` 이 편의 "접촉 저항 362 Ω" 은
    `R₀ − L/(σA)` 의 잔차이고, **복합전극 내부 이온 경로만으로 ≈350 Ω** 이 나온다.
    **뺄셈으로 만든 양에 물리 이름을 붙이려면 뺀 항의 완전성을 먼저 보인다.**
+
+### 새 제약 (2026-09-23, Sedlmeier 2023 — 미세 기준극 + 방향 통제 실험이 들어오면서 붙은 것)
+
+1. ★★★★ **개방회로 0.62 V 를 "상대극이 원천이다" 의 증거로 쓰지 않는다.** `[인쇄]` 같은 0.62 V 에서
+   꺼낼 수 있는 Li 가 **0.39 µAh cm⁻² ↔ 3.0 mAh cm⁻²**. ASSB 이식판에서 상대극을 평탄 상수로 둘 때
+   **조립 방향(Li 가 분리막 쪽인가)을 입력 메타데이터로 요구**한다. 모르면 `LLI` 가 `LAM_PE` 로 새는
+   통로를 열어 둔 채로 적합하는 것이다.
+2. ★★★ **3전극 자료의 기준 전위는 "같은 셀에서 잰 것인가, 옮긴 것인가" 를 먼저 본다.** 21호의 InLi
+   0.62 V 는 **잰 차 0.31 V + 옮긴 0.31 V** 이고, 그 이식이 `assum*` 이 아니라 **"calculated based on"**
+   으로 인쇄된다 ⇒ **낱말 지문에 "calculated/converted … based on" 을 추가**한다. 그리고 **축 이름과
+   숫자가 맞는지** 본다(21호 Fig. A·1 은 0.62 V 어긋난다).
+3. ★★★ **"과전압" 에서 분리막 IR 을 뺀다.** `[재현]` 21호의 375 / 750 Ω cm² 중 **≈245 Ω cm²**(33–65 %)가
+   분리막 절반이다. 3전극이라도 **WE–RE 구간의 옴은 측정 창 안**이다(17호 P3 와 같은 자리).
+4. ★★ **기준극 표류는 고정된 전극이 있으면 3전극으로도 보인다.** 20호의 "원리적으로 못 본다" 를
+   **"2상 평탄 전극이 옆에 없으면"** 으로 좁힌다. 21호는 그 조건에서 **< 3 mV / 28 일**, `[재현]` 누설
+   **< ≈4.3 nA**(간접 상한). ⇒ Q5 요구의 (ㄴ′) 를 보일 때 **고정 전극 대조를 기본 배선으로** 쓴다.
+5. ★★ **저주파 부류는 계면 서브마이크론 층이 정한다.** `[재현]` 50 µAh cm⁻²(≈0.35 µm LiIn, 재고의
+   0.36 %)로 꼬리 ↔ 반원이 뒤집힌다 ⇒ **음극 저주파 기여를 SOC·전류 방향 이력과 함께 적는다.**
 
 ## Status Log
 
@@ -3310,6 +3370,37 @@ state of interfacial contact **and** material properties." 9호의 곱 축퇴 `A
   (`R₀`/`R_ct`/`R_p` 작도법 원전, 제목이 **measurement timescale**).
   ⚠ **1–4순위 전부 큐에 없다.**
 
+- **2026-09-23** — `assb` **21호** 흡수 (큐 **20번**, Sedlmeier·Schuster·Schramm·Gasteiger 2023,
+  *J. Electrochem. Soc.* 170, 030536, **CC BY, 13쪽, SI 없음**, TUM Gasteiger).
+  `raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md`.
+  ★★★★ **17호가 지목한 후속(ref 21)이자 개념 페이지 처방 P4 의 통제 실험**: 같은 InLi 박을 방향만
+  바꿔(n = 3 씩) **"LiIn 이 분리막 면에 있느냐가 전부"** 를 지지한다 — 16↔17호 대질이 처음으로 한 변수만
+  바꾼 데이터를 얻었다. ★★★★ **"0.62 V ✓ ≠ 재고 ✓"**: InLi-(In) 은 28 일 0.62 V(< 3 mV)인데 0.2 mA cm⁻²
+  에서 **9 초 · 0.39 µAh cm⁻²**, InLi-(Li) 는 **15 h · 3.0 mAh cm⁻²**. ★★★★ `[인쇄]` **"cannot be assumed to
+  stay invariant at 0.62 V"** — 0.62 V 가정의 부정이 조건(NCM|In, 방전 끝)과 기구(`LLI`)를 달고 나온 첫 문장.
+  ★★★ **Q5 여섯 번째 형태 = 교정 이식**: GWRE 0.31 V 를 Li|Li 교정 셀에서 재고 InLi 셀로 옮긴다 —
+  `assum*` 4 회(기준 전위엔 0) · `0.62` 18 · `0.31` 7, 가정이 **"calculated based on"** 으로 · Fig. 4 두 번째 축으로 ·
+  Fig. 6·8 은 환산 축만으로 — 그리고 **크로퍼가 놓친 부록 Fig. A·1 의 축 이름과 숫자가 정확히 0.62 V
+  어긋난다**(순환이 두 그림에). ★★★ **기준극 표류 < 3 mV / 28 일**(고정 전극 두 개로 공통 모드가 보인다 —
+  20호 명제 정련), `[재현]` **누설 < ≈4.3 nA**(간접; 직접 측정 21/21 편 0).
+  ★★★ **곱 축퇴 처방 다섯 번째 적용**: 1단계를 **τ 형**으로(꼭짓점 주파수) — Li|Li 쌍은 **면적 서명 통과**,
+  InLi 쌍은 **정렬 어긋남 기각**(`[재현]` C 비 ≳1.4 ↔ 0.28); 3단계-b 로 **"전하이동" 저주파 호의 C ≈0.5–0.6 mF cm⁻²
+  = 이중층 비용량의 ≈50–64 배**(세 번째 실패, 단 관대한 상한 10⁻² F cm⁻² 로는 통과 — 개념 페이지의 두 기준값이
+  섞여 있음을 기록); 4단계로 6단계 "이중층 충전" 설명이 **10²–10³ 배** 실패.
+  ⚠⚠ `[재현]` **저자의 D ≥ 4.4×10⁻⁸ cm² s⁻¹ 와 1 at% 고용체는 9 초와 양립하지 않는다**(Sand ≈54 분 · ≈181 µAh cm⁻²,
+  ≈360–465 배) — OCV 가 c 를 1 at% 근처로 묶으므로 **틀린 쪽은 D**(1단계 과도는 WE 벌크 확산이 아니다).
+  ⚠ **어긋남 14 건**(D1 순수 In 38 ± 0.8 → ±10 · D2 A·1 0.62 V · D5 압착 60 ↔ 70 MPa · D14 "Warburg ⇒ 전하이동 없음").
+  **채움표 21호 행 — 누적 ≈12.5 → ≈13.5** (**Q2 +0.5** "있음 ↔ 접근 가능" 을 독립 관측 둘로 · **Q5 +0.5**).
+  **안 움직인 칸**: **Q1 0/21**(접촉을 이름 붙여 SEI 와 한 반원에 합치고 압력 가설로 넘겼다) · **Q4 0/21**(열네 번째
+  성질 = **"값의 정확도를 검사하고 배정의 유일성으로 읽었다"**) · **Q6 칸 이동 없음**(보고·통제, 스윕 0) ·
+  **Q7·Q8 해당 없음**. Q3 은 층 하나(계보 최초 동일 조건 셀 간 ± n = 3).
+  그림: 크로퍼 9장 + **부록 A·1 수동 400 dpi**, **10장 전부 봤다 — 안 본 것 0장**.
+  컴파일: **새 개념 0** — 기존 두 페이지 갱신: [[assb-li-in-reference-potential-window]](21호 절 · ③ 의 두 성질 ·
+  평탄 조건 정련 · P4 실행 · 16↔17호 대질 판정 · P11) · [[assb-lampe-contact-product-degeneracy]](다섯 번째 적용).
+  후속 1순위 = **Ikezawa 2020**(**다섯 번째 지목** — 21호가 InLi-(In) 조립의 예로도 인용해 **두 Q5 가지가 만나는 자리**) ·
+  2순위 = **Nam 2018 *JMCA***(세 번째 지목, 계면 고갈 원전) · 3순위 = **Santhosha 2019**(세 번째 지목) ·
+  4순위 = **Solchenbach 2016 *JES* 163, A2265**(GWRE · 0.31 V 원전). ⚠ **1–4순위 전부 큐에 없다.**
+
 ## 이 페이지가 주장하지 않는 것
 
 - ASSB 실셀 자료를 **본 적이 없다.**
@@ -3442,3 +3533,10 @@ state of interfacial contact **and** material properties." 9호의 곱 축퇴 `A
   초박형 전극, **0.54 mA cm⁻²(1.0 C)**, **333 K · 50 사이클**, **운전 압력 미상**이다.
   그리고 **압력에 대해 아무것도 주장하지 않는다**(`pressure` 0 회).
   ⑥ **Q4 는 0 / 18 이다.** 저자들이 갈림을 **인쇄했다**는 것이 **갈랐다**는 뜻은 아니다.
+- ★ **2026-09-23 (21호 Sedlmeier 2023) — 셋을 주장하지 않는다.**
+  ① **"OCV 로 접촉 손실을 못 가른다" 를 21호로 증명했다고 하지 않는다.** 21호가 보인 것은 **음극 Li 재고**에서
+  "있음 ↔ 접근 가능" 이 OCV 에서 같다는 것이고, 양극은 OCP 가 기울어 있어 **같은 논리가 그대로 서지 않는다.**
+  ② **Fig. A·1 이 틀렸다고 단정하지 않는다** — 축 이름대로면 Fig. 4 와 0.62 V 어긋난다는 것까지이고,
+  "숫자가 이미 환산된 것" 이라는 읽기는 `[추론]` 이다.
+  ③ **16호의 0.11 V 어긋남을 설명했다고 하지 않는다** — 리튬화 금선의 이완 경로는 **후보**이고, 16호의
+  측정 시점을 모른다.

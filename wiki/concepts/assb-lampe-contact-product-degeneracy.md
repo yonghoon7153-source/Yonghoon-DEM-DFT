@@ -2,10 +2,10 @@
 title: "복합양극 동역학 항의 곱 축퇴 — LAM_PE 와 접촉 손실이 A_eff·ε_p/R_s 한 조합으로만 들어간다"
 description: "In a published composite-cathode ASSB P2D model the Butler-Volmer denominator sees only the product A_eff x eps_p / R_s, so active-material loss, contact-area loss and particle radius are not separately identifiable from a discharge curve; a second, experimental paper (three-electrode EIS + transmission-line model) stands on the same product and assigns all of it to the exchange current density; a third one prints both the resistance and the capacitance and so lets the product be broken - by us, not by its authors"
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md]
+sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -672,6 +672,79 @@ DOD 는 **11.2 %** 인데, 그 11 % 에서 음극 전위가 **0.29 V** 움직여
 ⇒ **뺄셈 잔차에 물리 이름을 붙이려면 뺀 항의 완전성을 먼저 보여야 한다.**
 이 페이지의 곱 축퇴와 **같은 병**의 옴 판이다.
 
+## ★★★★ 처방의 다섯 번째 적용 (2026-09-23, `assb` 21호) — **`C` 없이 τ 로: 한 쌍 통과 · 한 쌍 기각, 그리고 "전하이동" 이 세 번째로 상한을 넘는다**
+
+`raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md`
+(Sedlmeier 외 2023, *J. Electrochem. Soc.* 170, 030536, CC BY). 리튬화 금선 미세 기준극으로 **Li|Li** 와
+**InLi|InLi** 대칭형 파우치의 두 전극 임피던스를 따로 잰다. **양극이 없다** — 곱의 자리는 **음극 계면**이다.
+
+### 입력 점검
+
+| 처방 단계 | 필요한 입력 | 21호 | 판정 |
+|---|---|---|---|
+| **1단계** (16호) | `R` 과 `C` 를 같이 | `capacitan*`·`equivalent circuit`·`fit*` **0 회** — `C` 는 없다. **그러나 꼭짓점 주파수가 인쇄되고(712 Hz · 0.5 Hz · 720 Hz · 1 Hz) 그림에 같은 주파수 마커가 있다** | ✅ **τ 형으로 적용** |
+| **2단계** (18호) | + 면적을 아는 대조군 | 4.0 cm² 공칭, 정렬 어긋남은 `[인쇄]` "cannot be excluded" | ❌ |
+| **3단계-a** (19호) | `Ea` | 25 °C 한 점 | ❌ |
+| **3단계-b** (19호) | `C` 가 물리 상한 안인가 | `C = 1/(2π f_apex R)` | ✅ **반원마다 판정이 갈린다** |
+| **4단계** (20호) | 시간 영역에도 같은 검사 | 6단계 소전하의 "이중층 충전" 설명 | ✅ **실패** |
+
+### ★★★ 1단계를 τ 로 — `C` 가 없어도 된다
+
+면적만 바뀌면 `R ∝ 1/A`, `C ∝ A` 라 **τ = RC 가 보존**되고, 동역학만 바뀌면 `C` 는 두고 `R` 만 움직여
+**τ 가 바뀐다.** ⇒ **같은 주파수 마커가 두 스펙트럼의 같은 자리(꼭짓점)에 있는가** 만 보면 된다.
+
+| 쌍 | `R` | τ | ⇒ `C` 비 | 면적 가설 | 판정 |
+|---|---|---|---|---|---|
+| **Li\|Li 계면 반원 WE ↔ CE** | `[도표]` ≈5.5 ↔ ≈2.5 kΩ cm² | `[인쇄]` 공통 **712 Hz** | 1/2.2 | 1/2.2 | ✅ **면적 서명** |
+| **InLi-(Li) CE ↔ InLi-(In) WE 저주파 호**(8단계) | `[인쇄]` ≈320 ↔ ≈90 Ω cm² | CE `[인쇄]` **1 Hz** · WE `[도표]` **1 Hz 에서 이미 Im ≈ 0** ⇒ 꼭짓점 **≳5 Hz**(이상 RC) | `[재현]` **≳1.4** | **0.28** | ❌ **정렬 어긋남 기각(≥5배)** |
+
+- 쌍 ①: 저자의 두 설명 — 스트리핑 **거칠어짐** · **정렬 어긋남** — 은 **둘 다 면적**이라 처방과 맞는다.
+  ⚠ **처방은 면적 ↔ 동역학을 가르지, 면적의 두 원인은 못 가른다.** `[재현]` 스트리핑 3 µAh 는 4 cm² 에
+  균일 **3.6 nm** — 거칠어짐으로 2.2배는 크기가 모자라 보인다(`[추론]`).
+- 쌍 ②: 저자는 경쟁 설명 셋(① 정렬 어긋남 ② SEI ③ 계면 Li 고갈)을 **인쇄하고 가르지 않는다.**
+  τ 가 **면적 가설을 지운다** — **18호 검사 B 에 이어, 논문 안에 가를 입력이 있었던 두 번째 사례**다.
+  ⚠ CPE 형 분포 호면 꼭짓점 하한 ≈5 Hz 가 흔들린다.
+
+### ★★★ 3단계-b — "전하이동" 이 세 번째로 상한을 넘는다
+
+| 반원 | `[인쇄]` 배정 | `[재현]` `C` | 10 µF cm⁻² 대비 | 판정 |
+|---|---|---:|---|---|
+| Li\|Li 712 Hz | SEI + 물리 접촉 | 0.04 / 0.09 µF cm⁻² | 10⁻² | 막·수축형과 **양립** |
+| InLi-(Li) 720 Hz | 물리 접촉 + SEI | ≈1 µF cm⁻²(R ≈235 추정) | 10⁻¹ | **양립** |
+| **InLi-(Li) 1 Hz** | **전하이동** | **≈0.50 mF cm⁻²** | **≈50배** | ❌ |
+| **Li\|Li 0.5 Hz** | **전하이동** | **≳0.64 mF cm⁻²** | **≳64배** | ❌ |
+
+⇒ 계보: **19호 `P2`(200–480배) → 20호 `R_ct`(시간 영역) → 21호 저주파 호(50–64배)**. 금속 박이라 실면적 ≈
+기하면적 — 거칠기로 50배를 채울 수 없다. `[추론]` **2상 평탄(In/In₁Li₁)의 dQ/dE 가 커서 화학용량이
+크다** ⇒ 이 호는 **Li 저장과 결합된 과정**이고, 저자의 ③(계면 Li 고갈)과 같은 쪽이다.
+
+⚠⚠ **기준값 정리(이 페이지의 부채)**: 19호 절은 이중층 **비용량 10 µF cm⁻²** 로 200–480배를 냈고, 20호 절의 표는
+**"이중층 상한 ≈10⁻² F cm⁻²"** 로 적고 1 F cm⁻² 를 **10²–10³배**라 했다 — **두 값은 10³ 배 다르다**(10 µF 기준이면
+20호는 10⁵배). **결론(20호 `R_ct` 는 전하이동이 아니다)은 어느 기준으로도 안 바뀐다.** 그러나 **21호의 0.5 mF cm⁻²
+는 관대한 상한(10⁻² F cm⁻²)으로는 통과한다** ⇒ **판정이 기준에 걸린다.** 이 절은 **비용량 10 µF cm⁻² × 거칠기
+(금속 박 ≲ 수 배)** 를 기준으로 쓴다.
+
+### 4단계 — "이중층 충전" 설명이 실패한다
+
+`[인쇄]` 6단계에서 InLi-(In) 0.39 µAh cm⁻²(ΔV 1.38 V) · 순수 In 0.32 µAh cm⁻²(ΔV ≈0.1 V) 의 출처 후보로
+"simple capacitive currents (i.e., double-layer charging)". `[재현]` `C = Q/ΔV` = **≈1.0 mF cm⁻²** · **≈11.5–23 mF cm⁻²**
+(분리막 IR 49 mV 를 빼면 뒤쪽) = **10²–10³배** ⇒ **실패.** 남는 것은 저자의 다른 둘(Li 불순물 · 고용체 Li).
+
+### 부수 — AC = DC 일치는 값이지 배정이 아니다
+
+`[인쇄]` 과전압 75 mV ↔ 375 Ω cm² vs 임피던스 365 · 150 mV ↔ 750 vs 800 ⇒ `[재현]` **3 % / 6 %** — 계보 최초의
+시간↔주파수 영역 **값** 일치(19호는 CV 114 ↔ Nyquist 183 Ω 로 어긋났다). 저자는 이것으로 *"reliable values"* 를
+말하지만 **경쟁 설명 셋은 그대로 남긴다** — Q4 열네 번째 성질. ⚠ `[재현]` 두 값 모두 **분리막 절반 ≈245 Ω cm²**
+(33–65 %)를 품는다.
+
+### 음극 판 곱 축퇴(20호)와의 연결
+
+20호는 진단(동역학) ↔ 처방(면적)이 어긋났다. 21호는 **높은 절대 저항**을 `[인쇄]` *"the low fabrication (∼70 MPa)
+and the low applied stack pressure (∼20 MPa)"* — **접촉 면적 쪽** — 으로 돌리고, **CE ↔ WE 의 차이**는 SEI · 고갈
+(**화학·농도 쪽**)으로 돌린다. **τ 처방은 뒤쪽(차이)에서 면적을 기각했고, 앞쪽(절대 크기)은 대조군이 없어 시험되지
+않는다.** ⇒ 같은 논문 안에서 **"면적" 과 "동역학" 이 다른 비교에 각각 배정**된다 — 처방이 걸 수 있는 곳은 **비교가
+있는 곳뿐**이다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - ★ **2026-09-22 (18호)**: **`C` 비 분해를 측정값으로 쓰지 않는다.** 로그 막대 판독 ·
@@ -709,3 +782,7 @@ DOD 는 **11.2 %** 인데, 그 11 % 에서 음극 전위가 **0.29 V** 움직여
   복합전극 내부 저항 추정은 **ε·τ 를 우리가 가정**한 것이고, 원전은 복합체
   조성을 인쇄하지 않았다(ref [12] 에 있다). 주장은 **잔차가 유일 해석을 갖지
   않는다**는 것까지다.
+- ★ **2026-09-23 (21호)**: **τ 형 1단계의 "≳1.4" 를 측정값으로 쓰지 않는다** — WE 꼭짓점 하한 ≈5 Hz 는 **이상 RC
+  가정 + 그림 판독(1 Hz 에서 Im ≈ 0)** 이다. 주장은 **"면적 가설이 예측하는 0.28 과 방향이 반대다"** 까지다.
+  그리고 **3단계-b 의 21호 판정이 기준값에 걸린다**는 것을 숨기지 않는다 — 20호 절 표의 "≈10⁻² F cm⁻²" 는 이 절에서
+  정리했고, **고치지 않고 남겨 둔다**(그 절의 결론은 어느 기준으로도 같다).

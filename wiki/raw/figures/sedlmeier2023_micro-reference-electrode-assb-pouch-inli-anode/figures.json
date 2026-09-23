@@ -1,0 +1,212 @@
+{
+ "slug": "sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "7e25418b-20._A_Micro-Reference_Electrode_for_Electrode-Resolved_Impedance_and_Potential_Measurements_in_All-Solid-State_Battery_Pouch_Cells_and_Its_Application_to_the_Study_of_Indium-Lithium_Anodes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Schematic illustration for the preparation of an InLi alloy by stacking and subsequent compression of Li and In foils, resulting in an average composition of In1Li0.32. The resulting electrode has two optically different faces: (b) the side, where the lithium foil was pressed onto the indium foil, further on referred to as “InLi-(Li)”; (c) the opposite side, further on referred to as “InLi-(In).” (d) SEM image of an ion-milled cross-section of the 50 μm diameter gold wire with a 7 μm polyimide insulation, embedded in an LPSCl/HNBR separator. The Au wire was sandwiched between two porous LPSCl/HNBR sheets (initial thickness ∼380 μm each, initial porosity ∼51%) and the entire stack was then compressed at ∼70 MPa, resulting in an overall separator thickness of 413 μm and a residual porosity of ∼15%. e) Picture of an ASSB pouch cell in a three-electrode conﬁguration, featuring ",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    301.8
+   ],
+   "w": 2202,
+   "h": 1005,
+   "dpi": 300,
+   "src": "7e25418b-20._A_Micro-Reference_Electrode_for_Electrode-Resolved_Impedance_and_Potential_Measurements_in_All-Solid-State_Battery_Pouch_Cells_and_Its_Application_to_the_Study_of_Indium-Lithium_Anodes.pdf",
+   "blank": 0.353
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Potential of the gold wire vs the Li counter electrode (CE) in a Li|Li cell (3 MPa cell pressure) during lithiation for 6 h at a current of 500 nA via the Li CE, followed by a 10 h OCV period (light blue line) as well as the corresponding current proﬁle (dashed black line). The gray dashed lines are a guide-to-the-eye. (b) Potentials of the Li CE (orange) and the Li WE (blue) recorded via the lithiated GWRE; the corresponding Li|Li cell potential is drawn in green. c) Nyquist plot of the individual electrode impedances of the Li WE (blue) and the Li CE (orange) recorded at OCV using the GWRE (lithiated via the Li CE), in a frequency range from 200 kHz–50 mHz with a 10 mV AC perturbation; the green dashed line represents the resulting sum of WE and CE impedances. The cell impedance (pink line) recorded between the Li WE and the Li CE from 1 MHz to 50 mHz at 10 mV AC perturba",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    60.9,
+    558.0,
+    482.0
+   ],
+   "w": 1085,
+   "h": 1756,
+   "dpi": 300,
+   "src": "7e25418b-20._A_Micro-Reference_Electrode_for_Electrode-Resolved_Impedance_and_Potential_Measurements_in_All-Solid-State_Battery_Pouch_Cells_and_Its_Application_to_the_Study_of_Indium-Lithium_Anodes.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Schematic illustration of the two cell setups used for evaluating InLi electrodes: (a) InLi-(In) WE (see Fig. 1c) paired with an InLi-(Li) CE (see Fig. 1b); (b) In WE paired with an InLi-(Li) CE. Both cell setups use an LPSCl/HNBR-separator and a GWRE. The electrodes are 20 × 20 mm and the separators are 25 × 25 mm (thickness ∼400 μm). (c) Experimental design to evaluate the properties of In, InLi-(In) and InLi-(Li) electrodes in the InLi-(In)|InLi-(Li) and In|InLi-(Li) cell conﬁgurations shown in a) and b): (1) 6 days of cell OCV monitoring; (2) GWRE lithiation via the InLi-(Li) CE at 500 nA for 6 h; (3) PEIS measurements of the cell impedance (7 MHz–50 mHz, 10 mV AC perturbation) and of the WE and CE impedance using the GWRE (100 kHz–50 mHz, 10 mV AC perturbation); (4) WE and CE OCV monitoring via the lithiated GWRE over 4 weeks; (5) repeated PEIS measurements of cell as well",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    412.5
+   ],
+   "w": 2202,
+   "h": 1466,
+   "dpi": 300,
+   "src": "7e25418b-20._A_Micro-Reference_Electrode_for_Electrode-Resolved_Impedance_and_Potential_Measurements_in_All-Solid-State_Battery_Pouch_Cells_and_Its_Application_to_the_Study_of_Indium-Lithium_Anodes.pdf",
+   "blank": 0.466
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Potential monitoring following the steps outlined in Fig. 3c (marked here in the squares) for the cells with GWRE shown in Figs. 3a and 3b: (a) InLi-(In)|InLi-(Li) (WE|CE); b) In|InLi-(Li) (WE|CE). Step 1(s1): cell OCV for 6 days prior to lithiation of the GWRE (light green). Steps 2&3: lithiation of the WEs via the InLi-(Li) CEs and PEIS measurements (indicated by the gray boxes). Step 4 (s4): WE (blue) and CE (orange) potentials measured via the lithiated GWRE over 4 weeks and plotted vs Li+/Li (right-hand axes, calculated based on a GWRE potential of +0.31 V vs Li+/Li); the cell potential, i.e., the sum of WE and CE potentials is plotted in green. The spikes in the WE and CE potentials resulted from an accidental touching of the cables. Note that the time between cell assembly and start of the potential monitoring in step 1 is <1 h. Step 5: PEIS measurements (indicated by th",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    330.0
+   ],
+   "w": 1081,
+   "h": 1123,
+   "dpi": 300,
+   "src": "7e25418b-20._A_Micro-Reference_Electrode_for_Electrode-Resolved_Impedance_and_Potential_Measurements_in_All-Solid-State_Battery_Pouch_Cells_and_Its_Application_to_the_Study_of_Indium-Lithium_Anodes.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Nyquist plots of the initial PEIS measurements (step 3 in Fig. 3c) for the cells with GWRE shown in Figs. 3a and 3b: (a) InLi-(In)|InLi-(Li) (WE|CE); (b) In|InLi-(Li) (WE|CE). The impedances of the WEs and of the InLi-(Li) CEs (orange) were recorded via the lithiated GWRE (100 kHz–50 mHz with 10 mV AC potential perturbation), and the green dashed line represents their vector sum. The cell impedance spectra (pink) were recorded without the use of the GWRE (7 MHz–50 mHz, 10 mV AC perturbation) The cell and the WE impedances are depicted until 5 Hz.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.9,
+    474.1,
+    290.0,
+    616.9
+   ],
+   "w": 1081,
+   "h": 596,
+   "dpi": 300,
+   "src": "7e25418b-20._A_Micro-Reference_Electrode_for_Electrode-Resolved_Impedance_and_Potential_Measurements_in_All-Solid-State_Battery_Pouch_Cells_and_Its_Application_to_the_Study_of_Indium-Lithium_Anodes.pdf",
+   "blank": 0.765
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. WE (blue) and CE (orange) potentials during galvanostatic (de) lithiation pulses (steps 6, 7, and 9 in Fig. 3c, marked in the squares) for the cells with GWRE shown in Figs. 3a and 3b: (a) InLi-(In)|InLi-(Li) (WE|CE); b) In|InLi-(Li) (WE|CE). Step 6: applying a delithiation current of 0.2 mA cm−2 to the WE for 15 min or until a WE cut-off potential of 2.0 V vs Li+/Li for (a) or 2.2 V vs Li+/Li for (b). Step 7: applying a lithiation current of 0.2 mA cm−2 to the WE for 15 min. Step 8: PEIS measurements (shown in Fig. 7), with a 30 min. OCV before and a 10 min. OCV afterwards. Step 9: repeated application of a delithiation current of 0.2 mA cm−2 to the WE, but this time for 30 min, with the same WE cut- off potentials as in step 6. Step 10: PEIS measurements (shown in Fig. 7), with the same OCV periods as in step 8. The gray lines at 0.62 V vs Li+/Li mark the OCV of the In/In1Li1",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    344.0
+   ],
+   "w": 1081,
+   "h": 1181,
+   "dpi": 300,
+   "src": "7e25418b-20._A_Micro-Reference_Electrode_for_Electrode-Resolved_Impedance_and_Potential_Measurements_in_All-Solid-State_Battery_Pouch_Cells_and_Its_Application_to_the_Study_of_Indium-Lithium_Anodes.pdf",
+   "blank": 0.819
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Nyquist plots of an InLi-(In)|InLi-(Li) (a), (b), (c) and of an In|InLi-(Li) (d), (e), (f) cell recorded at steps 5, 8, and 10 of the experimental procedure (see Fig. 3c, marked in the squares). The WE (blue) and CE (orange) impedance spectra were recorded via the lithiated GWRE (100 kHz–50 mHz with a 10 mV AC perturbation), whereby their vector sum is plotted in green. In step 5, the cell impedance was also measured directly without using the GWRE (pink; 7 MHz–50 mHz with a 10 mV AC perturbation). Points at speciﬁc frequencies are marked: circles at 120 kHz (only for cell impedances), triangles at 720 Hz, and diamonds at 1 Hz. Step 5, upper panels: impedance spectra (shown until 20 Hz) after 4 weeks of OCP monitoring (step 4) for the InLi-(In)|InLi-(Li) (a) and the In|InLi-(Li) (d) cell. Step 8, middle panels: impedance spectra after lithiation of the WEs (step 7) for the InLi",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    391.6
+   ],
+   "w": 2202,
+   "h": 1379,
+   "dpi": 300,
+   "src": "7e25418b-20._A_Micro-Reference_Electrode_for_Electrode-Resolved_Impedance_and_Potential_Measurements_in_All-Solid-State_Battery_Pouch_Cells_and_Its_Application_to_the_Study_of_Indium-Lithium_Anodes.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Figure 8. WE (blue) and CE (orange) potentials during galvanostatic (de) lithiation pulses (steps 6, 7, 9, and 10 in Fig. 3c, marked in the squares) for the cells with GWRE shown in Figs. 3a and 3b: (a) InLi-(In)|InLi-(Li) (WE| CE); (b) In|InLi-(Li) (WE|CE). Steps 6, 7, and 9: these are explained in Fig. 6. Step 11: applying a delithiation current of 0.2 mA cm−2 to the InLi- (Li) CE for 15 h, followed by monitoring the WE and CE potentials in OCV for 1.5 h (measured vs the GWRE and converted to the Li+/Li scale based on a GWRE potential of 0.31 V vs Li+/Li). The gray lines at 0.62 V vs Li+/Li mark the OCV of the In/In1Li1 two-phase region and serve as a guide-to-the- eye. Note that at the time of 0 h in this ﬁgure, the cell had been assembled for ∼35 days. In(δLi) phase sandwiched between the In1Li1 phase and the separator of the InLi-(In) electrode would provide a stable OCV of 0.62 V v",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    290.0,
+    344.3
+   ],
+   "w": 1085,
+   "h": 1182,
+   "dpi": 300,
+   "src": "7e25418b-20._A_Micro-Reference_Electrode_for_Electrode-Resolved_Impedance_and_Potential_Measurements_in_All-Solid-State_Battery_Pouch_Cells_and_Its_Application_to_the_Study_of_Indium-Lithium_Anodes.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 11,
+   "file": "fig_9.png",
+   "caption": "Figure 9. (a) Commonly used in situ preparation of an indium-lithium electrode of the nominal composition In1-xLix (x < 0.5; for our study: x = 0.24) by attaching a piece of lithium onto an indium foil that is already ﬁrmly attached to the solid electrolyte (SE) separator in an ASSB test cell. Our study suggests that the lithium will not distribute homogeneously within the indium-lithium electrode (upper arrow) even after months under compres- sion; instead, a deﬁned In1Li1 phase is formed at the backside of the separator that is in equilibrium with a solid solution phase with ∼1 at% Li dissolved in indium (In(δLi)) located at the interface towards the separator. The indium-lithium electrode features the stable In/In1Li1 potential of 0.62 V vs Li+/Li, but the Li reservoir is electrochemically not accessible (bottom arrow). b) Ex-situ preparation of an indium-lithium electrode by stacking",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    60.9,
+    557.1,
+    314.7
+   ],
+   "w": 1081,
+   "h": 1059,
+   "dpi": 300,
+   "src": "7e25418b-20._A_Micro-Reference_Electrode_for_Electrode-Resolved_Impedance_and_Potential_Measurements_in_All-Solid-State_Battery_Pouch_Cells_and_Its_Application_to_the_Study_of_Indium-Lithium_Anodes.pdf",
+   "blank": 0.706
+  },
+  {
+   "key": "fA1",
+   "kind": "figure",
+   "label": "A·1",
+   "page": 12,
+   "file": "fig_A1_manual_p12.png",
+   "caption": "Figure A·1. Potential of the GWRE versus the InLi-(Li) CE during the lithiation of the GWREs in the two different cell types shown in Figs. 3a and 3b: (a) InLi-(In)|InLi-(Li) (WE|CE); b) In|InLi-(Li) (WE|CE). The GWRE lithiation (step 2 in Fig. 3c) was done via the InLi-(Li) CE at a current of 500 nA over 6 h, followed by 2 h OCV for potential relaxation.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    560.1,
+    292.7,
+    732.4
+   ],
+   "w": 1404,
+   "h": 958,
+   "dpi": 400,
+   "src": "7e25418b-20._A_Micro-Reference_Electrode_for_Electrode-Resolved_Impedance_and_Potential_Measurements_in_All-Solid-State_Battery_Pouch_Cells_and_Its_Application_to_the_Study_of_Indium-Lithium_Anodes.pdf",
+   "manual": true,
+   "note": "크로퍼가 놓친 부록 그림(캡션이 'Figure A·1.' 이라 번호 규칙 탈락 추정) — 400 dpi 수동 크롭"
+  }
+ ]
+}
