@@ -220,7 +220,7 @@
   ]
  },
  "sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode": {
-  "figures": 9,
+  "figures": 10,
   "generated": "2026-09-23",
   "pdfs": [
    "7e25418b-20._A_Micro-Reference_Electrode_for_Electrode-Resolved_Impedance_and_Potential_Measurements_in_All-Solid-State_Battery_Pouch_Cells_and_Its_Application_to_the_Study_of_Indium-Lithium_Anodes.pdf"
@@ -240,6 +240,14 @@
   "pdfs": [
    "d441433b-07._Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf",
    "c8c1bac1-07._Sup2_Structural_changes_in_the_silver-carbon_composite_anode_interlayer_of_solid-state_batteries.pdf"
+  ]
+ },
+ "strauss2018_cathode-particle-size-inactive-fraction-assb": {
+  "figures": 12,
+  "generated": "2026-09-23",
+  "pdfs": [
+   "4f875f02-21._Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+   "76f03354-21._sup_Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf"
   ]
  },
  "su2024_drt-soh-health-features": {

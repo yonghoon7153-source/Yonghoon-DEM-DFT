@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md]
+sources: [raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md, raw/papers/chang2020_embedded-in-reference-electrode-assb-limiting-factors.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -145,6 +145,7 @@ physical significance** of the parameters" 라고 쓴다.
 | **`J^T J` 최소 고유벡터** | 이 곱이 실제로 null 방향인지 수치 확인 | [[fitting-degeneracy]] 의 "그리는 법" |
 | ★★★ **`R_CT · C_dl` 짝** (2026-09-22 신설, 16호에서) | **`R_CT·C` 는 접촉 면적이 소거되는 조합**(고유 시상수), **`C` 단독은 접촉 면적에 비례** ⇒ **둘을 같이 보면 `θ` 와 `j₀` 가 갈린다** | ★★ **16호가 두 값을 다 인쇄해 놓고 조합을 안 만든다** (아래 §16호) · ★★★★ **18호에서 실제로 갈렸다 — 단, 전제 `C∝θ` 를 먼저 검증해야 한다** (아래 §18호) · ❌ **19호에서 전제가 두 번째로 깨졌다** (아래 §19호) |
 | ★★★★ **`Ea`(노화 전후) — 면적-불변 채널** (2026-09-22 신설, **19호에서**) | `R(T) = A(θ)·exp(Ea/RT)` 에서 **`Ea` 는 접촉 면적과 직교한다** ⇒ **`Ea` 불변 + `R` 증가 = 면적 쪽과 양립 · `Ea` 증가 = 화학/장벽 쪽**. ★ **`C_dl ∝ θ` 라는 (두 번 깨진) 전제를 쓰지 않는다** | ★★★★ **19호가 실측으로 준다**: `[도표]` 압력 560→840 kPa 에서 `R₂` **−26 %** 인데 `[인쇄]` "the **physical state of the interface does not affect the Ea** but the resistance values … **Ea as the essential parameter**". ⚠ **충분조건은 아니다**(`A` 에 면적 외 항) — 19호 자신이 반례다(아래 §19호 검사 B). ★ **18호가 `Ea(노화 전후)` 를 쟀다면 검사 B 가 `C` 없이 독립 확인됐을 것이다** |
+| ★★★ **SOC 추종 상 분율** (2026-09-23 신설, **22호에서**) | 회절 2상 정련으로 **쓰이지 않은 부피(`θ·ε_p`)를 구조로** 잰다 ⇒ 곱에서 `ε_p·θ` 를 떼고 `A_eff·j₀` 만 남긴다 | ★★★ **22호가 신품에서 준다**: `[인쇄]` 불활성 2 / 27 / 31 %, 용량 독립 대조 ±7 %. ⚠ 반사 기하 = 한쪽 면 표층(`[재현]` ≈3–15 µm) · 열화 판은 **두 SOC** 가 필요 · `A_eff` ↔ `j₀` 는 여전히 안 갈린다 (아래 §22호) |
 
 ★ **`R_CT·C_dl` 줄이 우리가 바로 할 수 있는 것이다.** 필요한 입력은 두 가지뿐:
 반쪽전지 OCP 두 곡선(원전이 출처를 안 적었다)과 비공개 6 개 파라미터.
@@ -744,6 +745,40 @@ and the low applied stack pressure (∼20 MPa)"* — **접촉 면적 쪽** — �
 (**화학·농도 쪽**)으로 돌린다. **τ 처방은 뒤쪽(차이)에서 면적을 기각했고, 앞쪽(절대 크기)은 대조군이 없어 시험되지
 않는다.** ⇒ 같은 논문 안에서 **"면적" 과 "동역학" 이 다른 비교에 각각 배정**된다 — 처방이 걸 수 있는 곳은 **비교가
 있는 곳뿐**이다.
+
+## ★★★★ 처방의 여섯 번째 적용 (2026-09-23, `assb` 22호) — **주파수 영역 없음 · 대신 구조 채널이 곱의 한 인자를 뗀다**
+
+`raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md` (Strauss 외 2018, *ACS Energy Lett.* 3, 992−996).
+입자 크기(d₅₀ 4.0 / 8.3 / 15.6 µm)를 바꾸면 **면적(∝1/d)·접촉 분율·확산 길이가 같이** 움직인다 — 곱 축퇴의 교과서 설계다.
+
+### 입력 점검
+
+| 처방 단계 | 필요한 입력 | 22호 | 판정 |
+|---|---|---|---|
+| **1단계** (16호) | `R` 과 `C` | `impedan*`·`capacitan*` **본문·SI 0 회** | ❌ |
+| **2단계** (18호) | + 면적을 아는 대조군 | LIB 대조(같은 CAM, 크기 효과 없음) + **M ↔ L 같은 로트 체 분리 쌍**. ⚠ BET·밀링 후 입도 0; 액체는 2차 입자 기공을 적셔 SE 접촉 면적의 대조가 아니다 | ⚠ 부분 |
+| **3단계-a** (19호) | `Ea` | 25 °C 한 점 | ❌ |
+| **3단계-b** (19호) | `C` 물리 상한 | `C` 없음 | ❌ |
+| **4단계** (20호) | 시간 영역 상한 검사 | 전자 차단 DC 분극(Fig. S6b): `[도표]` τ ≈5–10 h · `[재현]` R ≈60 kΩ ⇒ **C ≈0.4–0.8 F cm⁻²** | ✅ **계면 아님** — 혼합전도체의 화학량 분극; `[도표]` 60 h 에도 전류 감소 ⇒ **σ_ion 은 상한** |
+
+### ★★★ 처방 표에 없던 채널 — "SOC 추종 상 분율"
+
+ex situ XRD 2상 Rietveld 가 **`ε_p` 쪽(쓰이는 부피)을 구조로 직접** 잰다(`[인쇄]` 불활성 2 / 27 / 31 %).
+곱 `A_eff · ε_p / R_s` 에서 `ε_p·θ` 가 떨어져 나가고, `R_s` 는 d₅₀ 로 알려져 있으므로 **남는 것은 `A_eff · j₀`** 다.
+그 나머지는 갈리지 않는다: `[도표]` 분극(dQ/dU 봉우리, LIB 대비) **+80 / +130 / +190 mV** ↔ `[재현]` 활성 CAM
+면적당 전류 비(∝ d/θ) **1 / 2.2 / 5.5** — 선형 동역학이면 면적 설명이 과잉, Tafel 영역이면 부족하지 않다.
+저자는 `[인쇄]` "deterioration of kinetics" + "insulating layer increases the kinetic barrier" 로 **`j₀` 쪽 끝**을 고른다
+(16·20호와 같은 한쪽 끝 선택, 식 없이).
+
+⇒ **처방 표에 한 줄을 더한다**: *"SOC 추종 상 분율(ex situ/operando 회절) — `θ·ε_p` 를 뗀다. 열화 판에서는 **두 SOC 에서**
+찍어 **SOC 를 따라가지 않는 상**의 분율을 쓴다(고립 당시 SOC 에 얼어붙은 상은 pristine 이 아닐 수 있다). 반사 기하의
+정보 깊이(수–수십 µm)와 측정 면(집전체/분리막)을 함께 적는다."*
+
+### 원인 배정도 곱 위에 있다
+
+`[인쇄]` 불활성의 원인 = "lack of **electronic** contact", 근거 = 별도 펠릿의 벌크 부분 전도도(Fig. 4). `[도표]`
+σ_e/σ_ion ≈550 / ≈50 / ≈1.5 인데 불활성은 M ≈ L; L 에서 σ_e ≈ σ_ion. ⇒ **전자 ↔ 이온 고립도 이 자료로 갈리지 않는다** —
+그리고 Fig. 4 의 두 y 축 자릿수 간격이 달라(5 ↔ 3) **그림 인상이 값과 반대**다.
 
 ## 이 페이지가 주장하지 않는 것
 

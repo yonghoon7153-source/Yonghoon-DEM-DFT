@@ -2,10 +2,10 @@
 title: ASSB 겉보기 용량의 3항 분해 — 재료 · 기하 · 동역학
 description: "Q_apparent = θ_AM · η(i) · Q_material — ASSB 복합양극에서 겉보기 LAM_PE 로 보이는 것의 세 기원과, 율(rate)이 그중 하나만 지우는 성질 (Clausnitzer 2023 + Bielefeld 2019)"
 created: 2026-09-16
-updated: 2026-09-22
+updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md]
+sources: [raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -321,6 +321,28 @@ Li-In 음극 셀의 것이다. **Li 금속·무음극에 그대로 옮기지 않
 그리고 17호는 **최대 5 사이클 · 신품 · 압력 한 점 · 조건당 셀 1 개**다 —
 **`E_CE(N)` 은 0 편**이라 이 항이 **사이클에 따라 어떻게 커지는지 모른다.**
 자세히는 [[assb-li-in-reference-potential-window]].
+
+## ★★★★ 2026-09-23 (`assb` 22호 Strauss 2018, **실험 · ex situ XRD**) — **`θ` 와 `η` 가 처음으로 따로 측정됐다**
+
+`raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md`. 첫 C/10 충전 뒤 2상 Rietveld 가 두 양을
+**한 측정에서** 준다: 불활성(pristine 격자) 상의 분율 → `θ`, 활성 상의 `x(Li)` → `η`(덜 충전된 정도).
+`[재현]` `η = (1.02 − x_active)/(1.02 − 0.31)` (분모 = LIB 4.4 V 까지의 Δx, 교정 곡선 끝점):
+
+| | θ `[인쇄]` 기반 | η `[재현]` | θ·η | ln θ | ln η |
+|---|---|---|---|---|---|
+| NCM-S (d₅₀ 4.0) | 0.98 | 0.79 | 0.77 | −0.02 | −0.24 |
+| NCM-M (8.3) | 0.73 | 0.65 | 0.47 | −0.31 | **−0.43** |
+| NCM-L (15.6) | 0.69 | 0.69 | 0.48 | **−0.37** | **−0.37** |
+
+- ★★★ **`Q_material` 은 그대로다** — 불활성 상의 격자가 pristine 과 같다(교정 분해능 안). 즉 이 셀에서
+  **겉보기 용량 결손 전부가 `θ` 와 `η`** 이고 진짜 `LAM_PE` 는 0 이다. OCV 적합이라면 L 에서 ≈31 % 의
+  `LAM_PE` 를 보고했을 것이다(`[추론]`).
+- ★★ **율 연산자는 극저율에서도 불완전하다** — `[인쇄]` L 은 C/50 에서도 110 mAh g⁻¹; `θ` 가 율 불변이라면
+  `[재현]` η(C/50) ≈ 110/(0.69 × 196) ≈ **0.81**. **또는 `θ` 자체가 율 의존**이다. 22호는 XRD 를 C/10 한 점에서만
+  찍어 **둘을 못 가른다** — 이 페이지의 "`θ_AM` 은 율 무관" 가정이 **처음으로 시험 가능한 형태**가 됐지만 시험되지 않았다.
+- ⚠ 17호 네 번째 항(`E_cut^eff`)과의 관계: `θ` 와 `x_active` 는 **양극 결정에서 직접** 읽었으므로 상대극 전위와 무관하다.
+  그러나 `η` 의 분모(무엇이 "완전 충전" 인가)와 ASSB 컷오프는 **0.6 V 가정** 위에 있다.
+- ⚠ 모집단: NCM622/β-Li₃PS₄ 무탄소 · In 음극 · 55 MPa · 신품 첫 충전 · 집전체 면 표층(정보 깊이 ≈3–15 µm).
 
 ## 이 페이지가 주장하지 않는 것
 

@@ -2013,3 +2013,17 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 후속 후보: ★★★★ 1 **Ikezawa 2020 *Electrochem. Commun.* 116, 106743** (다섯 번째 지목 — 21호가 InLi-(In) 조립의 예로도 인용) · ★★★★ 2 **Nam 2018 *JMCA* 6, 14867** (세 번째 — 탈리튬 후 계면 고갈의 원전) · ★★★ 3 **Santhosha 2019 *Batteries & Supercaps* 2, 524** (세 번째) · ★★★ 4 **Solchenbach 2016 *JES* 163, A2265** (GWRE · 0.31 V 원전) — **넷 다 큐에 없다.**
 - lint: **0 errors · 0 warnings**.
 
+
+## [2026-09-23] ingest | `assb` 22호 — Strauss, Bartsch, de Biasi, Kim, Janek, Hartmann, Brezesinski 2018, Impact of Cathode Material Particle Size on the Capacity of Bulk-Type All-Solid-State Batteries (*ACS Energy Lett.* 3, 992−996)
+
+- `raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md` (sha256 봉인). 큐 **21번**. KIT BELLA + JLU Giessen + BASF — **1호(Bielefeld 2019)의 ref 13**. 크로퍼가 본문 그림 4 + SI 그림 7 + SI 표 1 을 전부 잡았고 **그림 11장 전부 직접 봤다 — 안 본 것 0장**(표 S1 은 텍스트).
+- ★★★★ **Q1 이 `θ` 축에서 처음 움직였다**: ex situ XRD 2상 Rietveld 의 불활성 CAM 분율 **2 / 27 / 31 %**(d₅₀ 4.0 / 8.3 / 15.6 µm)는 **회절 상 분율의 측정**이고 용량은 독립 대조(±7 %)로만 쓰인다 ⇒ **역산이 아니다.** 그러나 등호도 아니다 — `1 − θ_AM` 의 **합집합 상한** · `[재현]` Cu Kα 반사 정보 깊이 ≈3–15 µm = **집전체 면 표층** · 신품 C/10 한 점 · n 미기재.
+- ★★★ **3항 분해의 첫 실측 분리**: `[재현]` NCM-L θ ≈0.69 · η ≈0.69 — 결손의 절반은 활성 입자의 덜 충전. 불활성 상 격자 = pristine ⇒ `Q_material` 그대로.
+- ★★★★ **1호 대질**: 인용 네 가지는 원문과 맞다(`poros*` 0 회). 그러나 `[재현]` **무공극 상한에서 1호 식 (8) 은 불활성 ≈23–40 / ≈95 / ≈95–97 % 를 예측** — 측정 2 / 27 / 31 %, 용량만의 상한 ≤3 / ≤39 / ≤44 % ⇒ "correlate well" 은 순위만 맞다.
+- ⚠⚠ **원인 배정("lack of electronic contact")은 병치**: `[도표]` σ_e/σ_ion ≈550 / ≈50 / ≈1.5, 불활성 M ≈ L; Fig. 4 두 y 축 자릿수 간격 불일치로 L 의 σ_e ≥ σ_ion 이 반대로 보인다.
+- ★★★ **곱 축퇴 처방 여섯 번째 적용**: 1·3단계 ❌ · 2단계 ⚠ · 4단계 ✅(DC 분극 과도 C ≈0.4–0.8 F cm⁻² = 화학량 분극 ⇒ σ_ion 상한). **처방 표에 새 줄 "SOC 추종 상 분율"** — `θ·ε_p` 를 뗀다, `A_eff·j₀` 는 남는다.
+- **17호 함정**: 주 주장(XRD)은 설계상 면제(양극을 전위 없이 읽은 첫 편), 용량·CE 축은 노출. **Q5 일곱 번째 형태** = "가정이 대조군 전압창을 정한다"(0.6 V, `[도표]` ±30 mV 정합).
+- **Q4 0/22** — 열다섯 번째 성질 "측정이 분할을 대신했고 원인은 병치됐다" + c(x) 가지 선택을 밟고 지나감.
+- **채움표 22호 행 — 누적 ≈13.5 → ≈14.5** (**Q1 +0.5 · Q2 +0.5**). 안 움직인 칸: Q4 · Q5 · Q6 · Q8(칸 이동 없음) · Q7(해당 없음). Q3 층 하나(방법 오차 예산을 인쇄한 첫 편).
+- 컴파일: **새 개념 0**. 갱신 — 닻 [[assb-contact-loss-vs-lampe]] (채움표 22호 행 + 누적 줄 + Against 새 첫 항목 + 새 제약 5개 + Status Log + 주장하지 않는 것) · [[composite-cathode-percolation-utilization]] (measured 라벨 + 1호 식 (8) 대질) · [[assb-apparent-capacity-decomposition]] (θ·η 첫 실측 분리) · [[assb-lampe-contact-product-degeneracy]] (여섯 번째 적용 + 처방 표 새 줄).
+- 후속 후보: ★★★★ 1 **Koerver 2017 *Chem. Mater.* 29, 5574** (큐 22, 이 편 ref 9, 본문 4 회) · ★★★ 2 **Zhang 2017 *JMCA* 5, 9929** (ref 18, 셀 장치·부피 수축→접촉 감소) · ★★★ 3 **Zhang 2017 *ACS AMI* 9, 17835** (ref 16, 같은 연구망 복합체 토모그래피 — 공극률 후보) · ★★ 4 **Nam, Oh, Jung, Jung 2018 *JPS* 375, 93** (ref 17, 건식/슬러리 혼합 — 원장의 Nam 2018 *JMCA* 와 다른 논문).

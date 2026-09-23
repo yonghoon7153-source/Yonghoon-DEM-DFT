@@ -2,10 +2,10 @@
 title: 복합양극 퍼콜레이션 이용률 (utilization level)
 description: "Bielefeld 2019 utilization level θ = V_c/V_ν as the geometric surrogate for ASSB composite-cathode contact loss, its units, closed forms, and its own irreducible width"
 created: 2026-09-16
-updated: 2026-09-22
+updated: 2026-09-23
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md]
+sources: [raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -341,6 +341,45 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 ⚠ **15호 자체는 이 페이지에 아무 수치도 더하지 않는다** — `contact`·`capacity`·
 `percolat*`·`θ` 가 전부 **0 회**인 6 쪽 회의록이고 1차 측정도 재인용 수치도 0 이다.
 여기 적히는 것은 **인용 관계**뿐이다.
+
+## ★★★★ measured 라벨이 왔다 — 그리고 1호 식 (8) 이 3–15 배 과대 예측한다 (2026-09-23 추가, `assb` 22호)
+
+`raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md` (Strauss 외 2018, *ACS Energy Lett.* 3, 992−996)
+— **1호가 이 `θ` 의 유일한 실험 대조로 인용한 ref 13** 이다.
+
+### 무엇을 쟀나 — 역산이 아니다
+
+첫 C/10 충전 뒤 복합양극을 ex situ XRD 로 찍어 **두 NCM 상**(충전된 상 `x ≈ 0.46–0.56` · pristine 격자 상)을
+동시 Rietveld 정련 → **상 분율(무게)** = `[인쇄]` 불활성 **2 / 27 / 31 %** (d₅₀ 4.0 / 8.3 / 15.6 µm).
+용량은 입력되지 않고 **나중에 독립 대조**로만 쓰인다(`[인쇄]` 90 / 92 / 153 ↔ 전기화학 84 / 95 / 162 mAh g⁻¹).
+⇒ **`θ` 형 양이 처음으로 측정된 양이 된다.**
+
+### 그러나 등호가 아니다 — 관측 연산자
+
+| 이 페이지의 `1 − θ_AM` | 22호의 `f_inactive` |
+|---|---|
+| 전자 퍼콜레이팅 클러스터 밖 AM 부피 (기하, 이진) | 첫 C/10 충전에서 `x` 가 움직이지 않은 결정 영역의 무게 분율 |
+| 이온 무관 | 전자 ∪ **이온** ∪ **SE 접촉 없음** ∪ **2차 입자 내부 코어** ∪ **율** |
+| 전극 평균 | `[재현]` **집전체 면 표층 가중** — Cu Kα 반사 1/e 깊이 ≈3 µm(003) – ≈15 µm(2θ 90°), 전극 90 µm |
+
+⇒ `f_inactive ≥ 1 − θ_AM^{elec}` (같은 자리에서). DEM `θ` 를 XRD 와 대려면 **(i) 깊이 가중 (ii) `θ_SE`
+(iii) 입자 내부 항 (iv) 율** 을 모델 쪽에 붙인 관측 연산자가 필요하다.
+
+### ★★★★ 1호 식 (8) 을 이 조성에 대면 — 공극률 없이도 비교된다 `[재현]`
+
+7:3 wt 의 AM 부피 분율(고체 중)은 1호 자신의 밀도비(1호 G4 `ρ_AM/ρ_SE ≈ 2.35–2.45`)로 **48.8–49.8 vol%**.
+**공극률은 이 값을 낮추기만** 하므로 무공극이 1호에 가장 유리한 상한이다.
+
+| | `p_c(d)` (식 8) | AM − p_c | 1호 예측 불활성 | **측정 (XRD)** | **용량만의 상한** |
+|---|---|---|---|---|---|
+| NCM-S (4.0 µm) | 47.5 | +1.3 ~ +2.3 | ≈23–40 % | **2 %** | ≤3 % (C/30) |
+| NCM-M (8.3 µm) | 53.2 | −3.4 ~ −4.4 | ≈95 % | **27 %** | ≤39 % (C/30) |
+| NCM-L (15.6 µm) | 58.2 | −8.4 ~ −9.4 | ≈95–97 % | **31 %** | ≤44 % (C/50) |
+
+(1호 5 µm 곡선을 `[인쇄]` "steepness … similar for all particle sizes" 에 기대 p_c 차만큼 옮겨 읽음.)
+⇒ **순위는 맞고 크기는 3–15 배 어긋난다 — XRD 없이 용량만으로도 기각된다.** 1호의 "correlate well" 은
+**순위 일치**의 표현이다. ⚠ 1호 쪽 사정(SE 3 µm 고정 · 구형 무겹침 · 밀링 없음)이 이 복합체와 다르므로
+"모델이 틀렸다" 가 아니라 **"식 (8) 은 이 재료계의 불활성을 예측하지 못한다"** 까지다.
 
 ## 이 페이지가 주장하지 않는 것
 

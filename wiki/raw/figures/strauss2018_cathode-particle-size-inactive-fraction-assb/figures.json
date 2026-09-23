@@ -1,0 +1,252 @@
+{
+ "slug": "strauss2018_cathode-particle-size-inactive-fraction-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-23",
+ "sources": [
+  "4f875f02-21._Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+  "76f03354-21._sup_Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a−c) Top-view SEM images of NCM622 powders of diﬀerent average particle size. NCM-L, NCM-M, and NCM-S are shown in parts a, b, and c, respectively. Initial charge−discharge curves at C/10 for (d) liquid electrolyte-based LIB half-cells and (e) ASSB cells using the large, medium, and small NCM622. The arrow indicates the increase in speciﬁc capacity with decreasing particle size. Coulombic eﬃciency of NCM-L (and NCM-M) ASSB cells is lower than for NCM-S is not yet fully understood but is most likely associated with diﬀerent chemo-mechanical eﬀects during cycling operation (note that the volume contraction during charging leads to a reduced electrical contact between the CAM particles and the SE).9,18 Because the NCM622 materials employed in this study do not possess a protective coating, oxidative decomposition of SE at the CAM/SE interface occurs and results in formation of an",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    279.6
+   ],
+   "w": 2151,
+   "h": 902,
+   "dpi": 300,
+   "src": "4f875f02-21._Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+   "blank": 0.731
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Initial charge−discharge curves at diﬀerent C-rates (C/10, C/30, and even C/50 for large NCM622) for ASSB cells using (a) NCM-S, (b) NCM-M, and (c) NCM-L. The arrows indicate the varying increase in speciﬁc capacity with decreasing C-rate.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    359.8
+   ],
+   "w": 1051,
+   "h": 1237,
+   "dpi": 300,
+   "src": "4f875f02-21._Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Rietveld plots of ex situ XRD data in the 2θ range of the 003 reﬂection of NCM622 for charged ASSB cathode composites using NCM-L, NCM-M, and NCM-S. The observed and calculated patterns are shown in black and orange, respectively. The asterisk indicates the 210 reﬂection of β-Li3PS4, and gray shaded areas represent active and inactive fractions of CAM. (b) Changes in lattice parameters a and c as a function of x(Li) during charging from Rietveld analysis of operando XRD data obtained on a liquid electrolyte-based NCM-M/Li pouch cell. The Li content was calculated from the electrochemical data. Reﬁned lattice parameters for the large, medium, and small NCM622 (ex situ XRD on ASSB cathodes) are indicated by color-coded crosses. The shaded areas represent the deviation in x(Li) between a and c.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    410.2,
+    306.5,
+    610.6
+   ],
+   "w": 1050,
+   "h": 836,
+   "dpi": 300,
+   "src": "4f875f02-21._Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Mean ionic and electronic partial conductivities of ASSB cathode composites using NCM-L, NCM-M, and NCM-S. ACS Energy Lett. 2018, 3, 992−996 994 DOI: 10.1021/acsenergylett.8b00275",
+   "rotated_deg": 0,
+   "bbox": [
+    300.5,
+    647.0,
+    570.5,
+    733.2
+   ],
+   "w": 1126,
+   "h": 359,
+   "dpi": 300,
+   "src": "4f875f02-21._Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+   "blank": 0.641
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Rietveld plot of XRD data for as-synthesized β-Li3PS4. The observed, calculated, and difference profiles are shown in black, orange, and blue, respectively. The vertical green ticks indicate the expected Bragg positions for both β-Li3PS4 (top ticks) and Li2S (bottom ticks).",
+   "rotated_deg": 0,
+   "bbox": [
+    86.5,
+    81.1,
+    527.7,
+    213.5
+   ],
+   "w": 1839,
+   "h": 552,
+   "dpi": 300,
+   "src": "76f03354-21._sup_Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+   "blank": 0.914
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Differential capacity plots of the initial charge/discharge cycle for ASSB cells using the large, medium, and small size NCM622. For comparison, the curve from on a liquid electrolyte-based NCM-M/Li pouch cell is also shown. Note that for the latter, the voltage is given with respect to In/InLi rather than Li+/Li (0.6 V difference).",
+   "rotated_deg": 0,
+   "bbox": [
+    86.5,
+    294.7,
+    527.7,
+    437.3
+   ],
+   "w": 1839,
+   "h": 594,
+   "dpi": 300,
+   "src": "76f03354-21._sup_Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Contour plot of operando XRD patterns for a liquid electrolyte-based NCM-M/Li pouch cell and the corresponding voltage profiles. The evolution of both reflection position and intensity during the initial cycle at C/10 is shown. S-5",
+   "rotated_deg": 0,
+   "bbox": [
+    86.5,
+    518.4,
+    527.7,
+    677.2
+   ],
+   "w": 1839,
+   "h": 662,
+   "dpi": 300,
+   "src": "76f03354-21._sup_Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+   "blank": 0.586
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Evolution of unit cell volume with lithium content from Rietveld refinement analysis of operando XRD data for a liquid electrolyte-based NCM-M/Li pouch cell. The lithium content was calculated from the electrochemical data.",
+   "rotated_deg": 0,
+   "bbox": [
+    86.5,
+    81.1,
+    527.7,
+    236.6
+   ],
+   "w": 1839,
+   "h": 648,
+   "dpi": 300,
+   "src": "76f03354-21._sup_Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Rietveld plots of XRD data for (a) pristine NCM622 materials (NCM-L, NCM-M, and NCM-S) and (b) charged ASSB cathode composites (ex situ). The observed, calculated, and difference profiles are shown in black, orange, and blue, respectively. The vertical green ticks indicate the expected Bragg positions for NCM622 (R3\u0002m h). Note that in (b) top ticks are charged species and bottom ticks are electrochemically inactive species. The 2θ regions around 28.5, 47, 56, 69.5, 76.5, and 88° containing reflections of the internal Si reference (Fd3\u0002m) were excluded in the Rietveld refinement process.",
+   "rotated_deg": 0,
+   "bbox": [
+    86.4,
+    303.5,
+    527.7,
+    561.4
+   ],
+   "w": 1839,
+   "h": 1075,
+   "dpi": 300,
+   "src": "76f03354-21._sup_Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Representative current response curves from room temperature DC polarization measurements on NCM622/β-Li3PS4 cathode composites using (a) ion-blocking and (b) electron-blocking electrode setups.",
+   "rotated_deg": 0,
+   "bbox": [
+    86.5,
+    315.2,
+    527.7,
+    616.2
+   ],
+   "w": 1839,
+   "h": 1255,
+   "dpi": 300,
+   "src": "76f03354-21._sup_Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Cross-sectional SEM images and corresponding sulfur EDX maps of uncycled ASSB cathode composites using (a and d) NCM-L, (b and e) NCM-M, and (c and f) NCM-S.",
+   "rotated_deg": 0,
+   "bbox": [
+    86.5,
+    81.1,
+    527.7,
+    370.8
+   ],
+   "w": 1839,
+   "h": 1207,
+   "dpi": 300,
+   "src": "76f03354-21._sup_Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+   "blank": 0.157
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 7,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Summary of Rietveld refinement results of (ex situ) XRD data obtained on large, medium, and small size NCM622. Refined cell parameters, phase fraction, and oxygen coordinate are shown for the charged, electrochemically inactive, and pristine materials. NCM622 a / Å c / Å V / Å3 Ratio / % z NCM-S charged 2.817(1) 14.501(1) 99.68(1) 98(1) 0.2483(4) inactive 2.869(1) 14.227(4) 101.43(5) 2(1) 0.258(9) pristine 2.869(1) 14.221(1) 101.38(1) 0.2596(1) NCM-M charged 2.823(1) 14.486(1) 100.00(1) 73(1) 0.2471(4) inactive 2.868(1) 14.229(1) 101.34(1) 27(1) 0.2517(8) pristine 2.868(1) 14.225(1) 101.36(1) 0.2576(2) NCM-L charged 2.823(1) 14.509(1) 100.10(1) 69(1) 0.2473(5) inactive 2.872(1) 14.240(1) 101.73(1) 31(1) 0.2539(8) pristine 2.870(1) 14.220(1) 101.44(1) 0.2553(2)",
+   "rotated_deg": 0,
+   "bbox": [
+    87.5,
+    83.8,
+    526.7,
+    665.6
+   ],
+   "w": 1831,
+   "h": 2425,
+   "dpi": 300,
+   "src": "76f03354-21._sup_Impact_of_Cathode_Material_Particle_Size_on_the_Capacity_of_Bulk-Type_All-Solid-State_Batteries.pdf",
+   "blank": 0.918
+  }
+ ]
+}
