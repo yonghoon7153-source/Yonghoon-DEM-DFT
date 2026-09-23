@@ -591,6 +591,28 @@ def parse_pw(out_path, calc, d3):
             "mTS_Ry": float(TS[-1]) if TS else None, "nat": int(nat[-1]) if nat else None}
 
 
+#: SE|SE 경보 운영값 — D-2026-09-23-wad-sese-alarm-band (1저자 봉인 · **결과 전** · 합격선이 아니다)
+ALARM = {"decision": "D-2026-09-23-wad-sese-alarm-band", "band_J_m2": (0.3, 0.7), "cut_suspect_above_J_m2": 1.0}
+
+
+def sese_alarms(w):
+    """봉인된 경보 규칙을 W 값에 건다. 경보 문장 목록 (빈 목록 = 경보 없음). 원인을 지정하지 않는다."""
+    out = []
+    rel = w.get("W_cleave_relaxed_PBE")
+    unr = w.get("W_sep_unrelaxed_PBE")
+    lo, hi = ALARM["band_J_m2"]
+    if rel is None:
+        out.append("판정 보류 — W_cleave_relaxed_PBE 없음 (이완 미완)")
+    elif rel > ALARM["cut_suspect_above_J_m2"]:
+        out.append(f"⚠ 경보: 이완 W_cleave {rel:.3f} > {ALARM['cut_suspect_above_J_m2']} J/m² — "
+                   "먼저 볼 것: PS₄ 절단·wrap (원인 확정 아님)")
+    elif not (lo <= rel <= hi):
+        out.append(f"⚠ 경보: 이완 W_cleave {rel:.3f} J/m² 가 운영 구간 {lo}–{hi} 밖 (원인 미분류)")
+    if rel is not None and unr is not None and unr < rel:
+        out.append(f"⚠ 경보: 무이완 W_sep {unr:.3f} < 이완 W_cleave {rel:.3f} (PBE 끼리) — 이완이 에너지를 올렸다")
+    return out
+
+
 def collect(run, qe_in=None):
     """<run>/<잡>/pw.out → W_sep(무이완 · PBE / PBE+D3 2체) · W_cleave(PBE 이완). J/m².
 
@@ -638,13 +660,18 @@ def collect(run, qe_in=None):
         b = res["01_bulk_scf"]
         out["W_J_m2"]["W_cleave_relaxed_PBE"] = W(res["03_s_outer_relax_pbe"]["E_pbe_Ry"],
                                                  res["03_li_outer_relax_pbe"]["E_pbe_Ry"], b["E_pbe_Ry"])
+    out["alarms"] = sese_alarms(out["W_J_m2"])
+    out["alarm_rule"] = {"decision": ALARM["decision"], "band_J_m2": list(ALARM["band_J_m2"]),
+                         "cut_suspect_above_J_m2": ALARM["cut_suspect_above_J_m2"],
+                         "뜻": "합격선이 아니라 경보다 — 구간 안이어도 물리적 타당성이 입증되지 않는다"}
     big_ts = {k: v["mTS_Ry"] for k, v in res.items() if v["mTS_Ry"] is not None and abs(v["mTS_Ry"]) > 1e-4}
     if big_ts:
         out["notes"].append(f"⚠ |−TS| > 1e-4 Ry 인 잡 {big_ts} — 표면 준위가 갭을 닫았을 수 있다 (절연체 가정 점검)")
     out["notes"] += [
         "문헌 대응: Pustorino 2025 (PBE · vdW 없음 · 이완) (0.74 + 0.20)/2 ≈ 0.47 J/m² → W_cleave_relaxed_PBE 와 비교",
         "무이완 W_sep 은 이완값보다 커야 정상이다 (계획 §0′)",
-        "경보 운영값 0.3–0.7 J/m² 는 **제안값 · 1저자 봉인 전** — 여기서 판정하지 않는다",
+        f"경보 운영값 {ALARM['band_J_m2'][0]}–{ALARM['band_J_m2'][1]} J/m² · >{ALARM['cut_suspect_above_J_m2']} "
+        f"PS₄ 절단 의심 — {ALARM['decision']} (결과 전 봉인 · 합격선 아님)",
         "ΔW_ATM (3체): 미계산 — 같은 기하에서 dftd3 후처리 (D-2026-09-23-wad-d3-twobody-atm-separate)",
         "개별 γ(s_outer)·γ(li_outer): μ_Li₂S 가 필요해 내지 않는다",
     ]
@@ -699,6 +726,16 @@ def _selftest_collect(ck):
         ck("집계: W_cleave 이완 = 이완 PBE − n·벌크 PBE", o["W_J_m2"].get("W_cleave_relaxed_PBE") == want_rel,
            o["W_J_m2"])
         ck("집계: 누락 0", not o["missing"], o["missing"])
+    # 경보 규칙 (봉인값) — 양성 1 · 음성 4
+    ck("경보: 0.47 · 무이완 0.6 → 경보 없음", sese_alarms({"W_cleave_relaxed_PBE": 0.47, "W_sep_unrelaxed_PBE": 0.6}) == [])
+    a1 = sese_alarms({"W_cleave_relaxed_PBE": 1.2, "W_sep_unrelaxed_PBE": 1.5})
+    ck("⛔경보: 1.2 → PS₄ 절단 먼저 보라", len(a1) == 1 and "PS₄" in a1[0], a1)
+    a2 = sese_alarms({"W_cleave_relaxed_PBE": 0.2, "W_sep_unrelaxed_PBE": 0.5})
+    ck("⛔경보: 0.2 → 구간 밖 (원인 미분류)", len(a2) == 1 and "구간" in a2[0], a2)
+    a3 = sese_alarms({"W_cleave_relaxed_PBE": 0.5, "W_sep_unrelaxed_PBE": 0.4})
+    ck("⛔경보: 무이완 < 이완 → 경보", len(a3) == 1 and "무이완" in a3[0], a3)
+    a4 = sese_alarms({"W_sep_unrelaxed_PBE": 0.5})
+    ck("경보: 이완값 없음 → 판정 보류 (0 으로 두지 않는다)", len(a4) == 1 and "보류" in a4[0], a4)
     with tempfile.TemporaryDirectory() as r:
         fake(r, no_d3=("02_s_outer_scf",))
         o = collect(r, qe_in)
@@ -874,8 +911,8 @@ def main():
         o = collect(a.collect, a.qe_in)
         with open(os.path.join(a.collect, "sese_result.json"), "w", encoding="utf-8") as f:
             json.dump(o, f, ensure_ascii=False, indent=1)
-        print(json.dumps({k: o[k] for k in ("W_J_m2", "missing", "area_A2", "n_bulk_cells")}, ensure_ascii=False,
-                         indent=1))
+        print(json.dumps({k: o[k] for k in ("W_J_m2", "alarms", "missing", "area_A2", "n_bulk_cells")},
+                         ensure_ascii=False, indent=1))
         for n_ in o["notes"]:
             print("  ·", n_)
         return 0

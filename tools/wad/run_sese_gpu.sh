@@ -39,7 +39,8 @@
 #     (D-2026-09-23-b2o3-framework-event-rate) b2o3 런이 죽으면 그 카드의 판정이 먼저다.
 #   · 수렴·물리 타당성은 안 본다 — 완료 판정은 JOB DONE + 수렴 줄(+ relax 면 최종 좌표)뿐.
 #   · γ·W 를 계산하지 않는다 — 집계는 `python3 tools/wad/se_sym_slab.py --collect <RUN>`.
-#   · 문턱 기본값은 gabia A6000 48 GB 기준이다. kgy(3090 24 GB)에 그대로 쓰지 않는다.
+#   · 문턱 기본값은 gabia A6000 48 GB 기준이다. 다른 기계는 문턱·PWX·EXCEPTION_ID 를 env 로 넘긴다
+#     (kgy 3090 24 GB 는 프로세스별 GPU 정보가 막혀 UMA 판정·ONLY_PIDS 가 무력하다 — 러너가 경고한다).
 #   · 한 잡이 실패하면 **뒤 잡을 돌리지 않는다** (체계적 원인일 수 있다 — 사람이 본다).
 # =============================================================================
 set -u
@@ -47,9 +48,16 @@ IN=${1:-}; RUN=${2:-}
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # ── 완료 판정 (한 곳에만 둔다 — 재개와 성공이 같은 기준이어야 한다) ─────────────
-_done() {   # $1 = pw.out · $2 = calc (scf|relax)
+_done() {   # $1 = pw.out · $2 = calc (scf|relax|probe)
   [ -f "$1" ] || return 1
   grep -aq "JOB DONE" "$1" || return 1
+  if [ "$2" = probe ]; then
+    # 비용 프로브(electron_maxstep 을 자른 SCF)는 수렴이 목적이 아니다 — iteration 이 실제로 돌았는지만 본다.
+    # ⛔ 이 갈래로 끝난 잡의 에너지는 값이 아니다 (build_neb_inputs.py --scf_probe 의 금지문).
+    grep -aqE "convergence (NOT achieved|has been achieved)" "$1" || return 1
+    grep -aq "total energy" "$1" || return 1
+    return 0
+  fi
   grep -aq "convergence has been achieved" "$1" || return 1
   if [ "$2" = relax ]; then
     grep -aqE "End final coordinates|bfgs converged" "$1" || return 1
@@ -84,6 +92,14 @@ if [ "$IN" = "--selftest" ]; then
   ck "⛔nstep 소진 relax → 미완료"        "! _done $T/m.out relax"
   printf "JOB DONE\n" > "$T/n.out"
   ck "⛔수렴 줄 없음 → 미완료"            "! _done $T/n.out scf"
+  printf "     total energy              =   -1.0 Ry\n     convergence NOT achieved after   3 iterations: stopping\nJOB DONE\n" > "$T/p.out"
+  ck "probe: maxstep 에서 멈춤 → 완료"    "_done $T/p.out probe"
+  ck "⛔같은 출력을 scf 로 보면 미완료"     "! _done $T/p.out scf"
+  ck "⛔probe 인데 iteration 흔적 없음"     "! _done $T/n.out probe"
+  printf "     total energy              =   -1.0 Ry\nJOB DONE\n" > "$T/q.out"
+  ck "⛔probe · 에너지 줄만 있고 수렴 판정 줄 없음" "! _done $T/q.out probe"
+  printf "     convergence NOT achieved after   3 iterations: stopping\nJOB DONE\n" > "$T/e.out"
+  ck "⛔probe · 판정 줄만 있고 에너지 줄 없음"     "! _done $T/e.out probe"
   ck "⛔파일 없음 → 미완료"               "! _done $T/없음.out scf"
   printf "  vdw_corr = 'grimme-d3'\n  dftd3_version = 4\n  dftd3_threebody = .false.\n" > "$T/a.in"
   ck "D3 + threebody 명시 → 통과"        "_d3_ok $T/a.in"
@@ -107,6 +123,8 @@ SAMPLE_S=${SAMPLE_S:-2}; START_WAIT_S=${START_WAIT_S:-3600}
 ALLOW_UMA_COEXIST=${ALLOW_UMA_COEXIST:-0}; DRY_RUN=${DRY_RUN:-0}; WAIT_PIDS=${WAIT_PIDS:-}
 HOST_START_MIB=${HOST_START_MIB:-16384}; HOST_KILL_MIB=${HOST_KILL_MIB:-4096}
 ONLY_PIDS=${ONLY_PIDS:-}
+# 공존 근거 — 기본은 gabia 예외 결정. 다른 기계에서 쓰면 그 근거를 적어 넘긴다 (예: kgy 1저자 승인 문구)
+EXCEPTION_ID=${EXCEPTION_ID:-D-2026-09-23-gabia-gpu-exception-sese}
 [ "$KILL_MIB" -gt "$START_MAX_MIB" ] || { echo "⛔ KILL_MIB($KILL_MIB) 는 START_MAX_MIB($START_MAX_MIB) 보다 커야 한다"; exit 1; }
 JOBS=${JOBS:-$(python3 -c "import json;print(' '.join(j['dir'] for j in json.load(open('$IN/jobs.json'))['jobs']))")}
 
@@ -122,7 +140,7 @@ self_mib() { gpu_apps | awk -F', *' -v p="$1" '$1==p{print $3}' | head -1; }
 host_avail() { awk '/^MemAvailable:/{printf "%d", $2/1024}' /proc/meminfo; }
 
 say "════ run_sese_gpu · IN=$IN · RUN=$RUN · JOBS=[$JOBS]"
-say "예외: D-2026-09-23-gabia-gpu-exception-sese · START<${START_MAX_MIB} MiB · KILL>${KILL_MIB} MiB · 표본 ${SAMPLE_S}s · UMA 공존 허용=${ALLOW_UMA_COEXIST} · 허용 PID=[${ONLY_PIDS:-제한 없음}]"
+say "공존 근거: ${EXCEPTION_ID} · START<${START_MAX_MIB} MiB · KILL>${KILL_MIB} MiB · 표본 ${SAMPLE_S}s · UMA 공존 허용=${ALLOW_UMA_COEXIST} · 허용 PID=[${ONLY_PIDS:-제한 없음}]"
 if [ "$ALLOW_UMA_COEXIST" = 1 ] && [ -z "$ONLY_PIDS" ]; then
   say "⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 'b2o3 만 남았을 때' 조건을 기계로 못 건다 (새 UMA 잡이 떠도 시작한다)"
 fi
@@ -160,8 +178,14 @@ while IFS= read -r L; do
 done <<< "$(gpu_apps)"
 if [ "$UMA" = 1 ] && [ "$ALLOW_UMA_COEXIST" != 1 ]; then
   say "⛔ GPU 에 python(UMA)이 있다. 규칙 기본값은 GPU pw.x ↔ UMA 동시 금지다 —"
-  say "   예외(D-2026-09-23-gabia-gpu-exception-sese)로 돌리려면 ALLOW_UMA_COEXIST=1 을 준다."
+  say "   예외(${EXCEPTION_ID})로 돌리려면 ALLOW_UMA_COEXIST=1 을 준다."
   exit 3
+fi
+# ⚠ 프로세스별 GPU 정보가 막힌 기계(kgy 실측)에서는 목록이 비어 나온다 — 그때 UMA 판정과
+#   ONLY_PIDS 는 **말없이 무력**하다. 사용량이 있는데 목록이 비면 그 사실을 드러낸다.
+if [ -z "$(gpu_apps)" ] && [ "$(gpu_used)" -gt 500 ] 2>/dev/null; then
+  say "⚠ GPU 사용량 $(gpu_used) MiB 인데 프로세스 목록이 비었다 — 프로세스별 정보가 막힌 기계다."
+  say "   UMA 판정·ONLY_PIDS 가 여기서는 **작동하지 않는다**. 남는 가드는 합계 VRAM·호스트 RAM 뿐이다."
 fi
 say "GPU 합계 사용량 지금 $(gpu_used) MiB · 호스트 MemAvailable $(host_avail) MiB (시작 문턱 ${HOST_START_MIB} · 중단 ${HOST_KILL_MIB})"
 

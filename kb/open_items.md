@@ -58,7 +58,10 @@
     → 넘으면 C1 판정의 한계에 *"k 2 2 1 → 조밀 k LOBSTER 필요"* 를 단다. 원 SCF 10 h 33 m.
 - ⏭ **kgy Li₂S P1 탐침 (li2s 셀수렴 카드 §3 · 공유 GPU 라 벽시계는 상한)** — worktree `~/lldvar_p1` @c8f0f2db ·
   GBRV 해시 kgy = gabia (Li `02cc4b38…` · S `84ad7318…`) · kgy `~/work/pseudo` 의 Li·S 는 GBRV 뿐(PAW 없음 → 전용 폴더 불요).
-  ⛔ kgy 에 Li₂S 이완본이 없어 빌더가 멈췄다 → gabia `sei_dft/li2s*/01_vcrelax.out` (sha `0bcb294b19b23c24`, v2 NEB 가 쓴 것)을 Windows 경유로 옮기는 중.
+  ⛔ kgy 에 Li₂S 이완본이 없어 빌더가 멈췄다 → gabia `sei_dft/li2s*/01_vcrelax.out` (sha `0bcb294b19b23c24`, v2 NEB 가 쓴 것)을 rsync 로 옮겼다
+  (`~/work/runs/sei_dft/li2s_mp-1153/`). ✅ 입력 생성 `~/work/runs/li2s_p1_probe_2026_09_23/li2s/scf_probe/scf_probe.in` —
+  4×4×4 · **191원자** · λ₁ 16.14 Å · 전자 766 · q −1 · k 2×2×2 · 60/480 · maxstep 3 · GBRV Li/S.
+  ⏭ 러너 `run_sese_gpu.sh` 를 `calc=probe` 로 재사용 (kgy 는 프로세스별 GPU 정보가 막혀 UMA 판정이 무력 — 합계 VRAM 가드만 남는다) → peak VRAM·벽시계를 카드 §3 에.
 - ✅ **결정 3건 비준** (`97edeb233` · 형식 복원 뒤 172줄 추가만): W_ad SE 대칭 두 장 · D3 2체 + ATM 따로 · QE D3 3체 표기. `vgcf_hbn_*.json` 표기 정정 · QE 생성기 4곳 `dftd3_threebody = .true.` 명시(결과 불변).
   ⏭ SDCP 옛 QE 기록(phaseB · wave1.5 — 닫힌 캠페인)의 같은 표기 정정은 **아직** (우선순위 낮음).
   ⚠ 내 실수: `decisions.json` 을 indent 2 로 다시 써서 7146줄 diff 를 냈다 → 원래 형식(indent 1)으로 복원. JSON 원장을 고칠 때는 **원래 형식을 먼저 재현**하고 쓴다.
@@ -81,7 +84,11 @@
     ⚠ 발견: comp1_V0_k444 는 **−4 축이 없다** (Li 정렬이 입방 대칭을 깬다 — 벌크에서 z 를 뒤집는 연산은 C2x 하나). 계획 §0′ 의 *"−4 회전반전이 z → −z"* 는 이 구조에 안 맞는다.
   · ✅ **SE|SE 대조 입력 5잡** `db/inputs/wad_sese_control_2026_09_23/` (벌크 SCF · 두 슬랩 SCF = 무이완 W_sep PBE/PBE+D3 2체 · 두 슬랩 PBE 이완 = Pustorino 대조)
     — comp1 정본 설정(GBRV Li/S/Cl + P rrkjus · 52/520 · 슬랩 k 4 4 1 · 벌크 k 4 4 4). 식은 결과 전에 코드로 고정: `se_sym_slab.py --collect <RUN>`
-    (W = [E_s + E_li − 6·E_bulk]/2A, μ 상쇄). ⏳ **경보 운영값 0.3–0.7 J/m² 봉인 = 1저자 (결과 전에)**.
+    (W = [E_s + E_li − 6·E_bulk]/2A, μ 상쇄). ✅ **경보 운영값 봉인 (결과 전 · 1저자 "너가 권장하는대로")** `D-2026-09-23-wad-sese-alarm-band`
+    — 이완 PBE W_cleave 0.3–0.7 J/m² 밖 = 원인 미분류 경보 · > 1 = PS₄ 절단·wrap 먼저 점검 · 무이완 < 이완 = 경보. **합격선 아님**. `--collect` 가 출력.
+  · 🟢 **gabia 러너 대기 중 (17:23:58 발사)** tmux `wad_sese` · worktree `/data/work/repo_wad` @265faeff · 로그 `/data/work/runs/wad_sese_2026_09_23/runner.log`
+    · `WAIT_PIDS` 3207227·3210946 (li2s 담금질 seed 3·4) · `ONLY_PIDS` 3322562 (b2o3) · 시작 때 GPU 15.3 GB · 호스트 27 GB.
+    ⛔ 도는 동안 `/data/work/repo_wad` 를 갱신하지 않는다. 집계는 다른 clone 에서 `se_sym_slab.py --collect`.
   · ✅ **gabia GPU 예외 (1저자 "이거 하돼")** `D-2026-09-23-gabia-gpu-exception-sese` — 러너 `tools/wad/run_sese_gpu.sh`: li2s 시드 종료 대기(PID·cmdline) ·
     합계 VRAM < 40 GB 시작 · > 44 GB 즉시 중단(우리 PID 만) · 호스트 여유 ≥ 16 GB 시작 · < 4 GB 중단 · `ALLOW_UMA_COEXIST=1` 필수. CLAUDE.md gabia 절에 한 줄.
     ⏭ gabia: worktree `/data/work/repo_wad` → `DRY_RUN=1` 로 li2s 시드 PID 확인 → tmux 발사 (`WAIT_PIDS=…`).

@@ -3717,6 +3717,64 @@
     "decision_digest": "sha256:da9fc08048b305340afbe393226d665a5336a408c5a3379b3ec4f0a170cd2b5b",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-23-wad-sese-alarm-band",
+   "schema_version": 2,
+   "kind": "gate",
+   "scope": "adhesion.wad_lpscl_agc.se_se_control.cleavage",
+   "slot": "wad_sese_cleavage_alarm_band",
+   "applies_to": {
+    "systems": [
+     "comp1"
+    ],
+    "tasks": [
+     "wad_se_se_control"
+    ],
+    "methods": [
+     "qe_pbe",
+     "qe_pbe_d3bj"
+    ],
+    "use_cases": [
+     "internal",
+     "diagnostic"
+    ]
+   },
+   "title": "SE|SE 대조 — 이완 PBE W_cleave 경보 운영값 0.3–0.7 J/m² (합격선 아님) · 1 J/m² 초과면 PS₄ 절단·wrap 을 먼저 본다 · 무이완 ≥ 이완",
+   "statement": "보고량은 W_cleave(Li 2|6, (001)) = γ(s_outer) + γ(li_outer) = [E(s_outer) + E(li_outer) − 6·E(벌크 52원자 셀)]/(2A) 이다 (Li₂S 과부족 +2/−2 상쇄 · μ 불요). 경보 운영값: 이완 PBE W_cleave 가 [0.3, 0.7] J/m² 밖이면 **원인 미분류 경보**, 1.0 J/m² 초과면 PS₄ 절단·wrap 을 **먼저 점검**(원인 확정 아님), 무이완 W_sep(PBE) < 이완 W_cleave(PBE) 면 경보. 구간 안이어도 물리적 타당성이 입증되지 않는다. 문헌 대응값 Pustorino 2025 의 (0.74 + 0.20)/2 ≈ 0.47 J/m² 는 우리 산술(μ 무관)이다.",
+   "rationale": "계획 §0′ 제안 운영값을 1저자가 그대로 봉인했다. 합격선이 아니라 경보인 이유: 비교 문헌은 한 편이고(Pustorino 2025 · VASP PAW · ENCUT 650 eV) 우리 설정(QE · USPP GBRV + P rrkjus · 52/520 Ry)과 코드·PP 가 달라 일치를 요구할 근거가 없다. 1 J/m² 는 PS₄ 절단 슬랩이 'very high' 라는 문헌 서술과 v6 러너 45–80 J/m² 사고를 걸러내는 선이다.",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": false,
+   "card": "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md",
+   "record": "tools/wad/se_sym_slab.py",
+   "evidence": [
+    "litdb/papers/pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament.md",
+    "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md"
+   ],
+   "method_ref": "tools/wad/se_sym_slab.py --collect (ALARM · sese_alarms)",
+   "reopen_criteria": [
+    "결과를 본 뒤에는 구간을 바꾸지 않는다 — 바꿀 근거가 생기면 **별도 ID** 로 새로 등록한다 (이 결정을 고쳐 쓰지 않는다)"
+   ],
+   "enforcement": "`se_sym_slab.py --collect` 가 경보 문장을 출력하고 원인을 지정하지 않는다. 결과 기록·DEM 회신에서 '통과/합격' 표현을 쓰지 않는다.",
+   "proposed_by": "claude-session-2026-09-23",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-23",
+     "state": "active",
+     "note": "1저자 봉인 — '너가 권장하는대로 하고'. 러너는 li2s 시드 대기 중이라 SE|SE DFT 결과 0 건(results_seen: false). 트랙 = 우리 DFT → 1저자 = 사용자."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-23T08:35:00Z",
+    "commit": "265faeff80ed21322d98c798788bdd9646153ea5",
+    "decision_digest": "sha256:63f6f7fc417ea540bddeb88c45ea9e417d9e4956bdd38f9060ebe76dd44b0f4f",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }
