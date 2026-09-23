@@ -10,6 +10,7 @@ bar swallows it, points dropped before fitting.  See ADR 0019.
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import json
 import math
@@ -29,9 +30,7 @@ from wrdkit.eis import (
     inductive_mask,
     ionic_conductivity,
     label_arcs,
-    read_mpr_bytes,
     read_mps_text,
-    read_mpt_text,
     total_resistance,
 )
 from wrdkit.eis.biologic import read_mpr_sweeps, read_mpt_sweeps
@@ -462,7 +461,7 @@ def _load_points(record: SpectrumRecord):
             409, f"{record.name}: 저장된 원본이 기록과 다릅니다 — "
                  f"파일을 다시 올려 주세요")
     try:
-        spectrum, _ = _parse(content, record.original_name or record.name)
+        spectrum = _sweep_spectrum(record, content)
     except HTTPException:
         raise
     except (UnknownColumn, ValueError) as exc:
@@ -470,6 +469,29 @@ def _load_points(record: SpectrumRecord):
                                  f"— {exc}") from exc
     storage.cache_spectrum(record.id, spectrum, record.sha256)
     return spectrum
+
+
+def _sweep_spectrum(record: SpectrumRecord, content: bytes) -> Spectrum:
+    """이 기록의 스윕을 원본 바이트에서 다시 읽는다 — **스윕 번호로** 고른다.
+
+    전에는 파일 전체를 한 스윕으로 읽었다 (`read_mpr_bytes`).  그 함수는 스윕이
+    여럿이면 일부러 거절하므로, 스캔의 캐시 하나가 사라지면 되살리는 길이
+    늘 409 로 끝났다 (ADR 0040).
+
+    오늘 파서가 센 스윕 수가 기록과 다르면 **고르지 않는다.**  번호가 가리키는
+    스윕이 바뀌었을 수 있고, 그때 조용히 고르면 다른 온도·다른 SOC 의 점이 이
+    이름으로 들어간다.
+    """
+    sweeps, _ = _parse_sweeps(content, record.original_name or record.name)
+    declared = record.sweep_count or 1
+    if len(sweeps) != declared:
+        raise ValueError(
+            f"원본에서 스윕이 {len(sweeps)}개 읽히는데 기록은 {declared}개입니다 — "
+            f"어느 스윕인지 확신할 수 없어 되살리지 않습니다")
+    index = (record.sweep_index or 1) - 1
+    if not 0 <= index < len(sweeps):
+        raise ValueError(f"스윕 번호 {record.sweep_index} 가 파일에 없습니다")
+    return sweeps[index].spectrum
 
 
 def _id_list(ids: str) -> list[int]:
@@ -1472,19 +1494,6 @@ def _parse_sweeps(content: bytes, filename: str):
         "EC-Lab 에서 저장한 원본이나 텍스트 내보내기를 올려 주세요")
 
 
-def _parse(content: bytes, filename: str) -> tuple[Spectrum, str]:
-    """The single sweep in an upload -- used by the cache-repair path."""
-    if content[:22] == b"BIO-LOGIC MODULAR FILE":
-        return read_mpr_bytes(content), "mpr"
-    text = content.decode("latin-1", errors="replace")
-    if "Nb header lines" in text:
-        return read_mpt_text(text), "mpt"
-    raise HTTPException(
-        422,
-        f"{filename!r} 은 BioLogic .mpr 도 EC-Lab .mpt 도 아닙니다 — "
-        "EC-Lab 에서 저장한 원본이나 텍스트 내보내기를 올려 주세요")
-
-
 def _normalised_stem(filename: str) -> str:
     """The experiment name a file belongs to: extension off, channel off.
 
@@ -1578,12 +1587,15 @@ async def upload_spectrum(
         # that returns before storing anything made that advice a lie (#23).
         storage.store_bytes(content, storage.spectrum_upload_path(
             digest, existing.source_format))
-        if storage.load_spectrum(existing.id, existing.sha256) is None:
-            try:
-                spectrum, _ = _parse(content, file.filename or "upload")
-                storage.cache_spectrum(existing.id, spectrum, existing.sha256)
-            except (HTTPException, UnknownColumn, ValueError):
-                pass          # the read paths will say what is wrong
+        # 스윕마다 캐시가 따로다 — 스캔이면 사라진 것을 **전부** 되살린다.
+        for twin in session.exec(select(SpectrumRecord).where(
+                SpectrumRecord.sha256 == digest)).all():
+            if storage.load_spectrum(twin.id, twin.sha256) is not None:
+                continue
+            # 못 읽으면 넘어간다 — 무엇이 틀렸는지는 읽는 길이 말한다.
+            with contextlib.suppress(HTTPException, UnknownColumn, ValueError):
+                storage.cache_spectrum(twin.id, _sweep_spectrum(twin, content),
+                                       twin.sha256)
         # Blank fields the first upload did not carry may be filled by a
         # later one -- filled ones are never overwritten (§0.3 spirit).
         # ``kind`` stays as it is: its default is a real value, so a repeat

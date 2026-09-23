@@ -170,12 +170,16 @@ SCAN_TAIL = [(880, 3), (469, 4)]
 
 
 def build_mpr_soc_scan(*, sweeps: int = 3, points: int = 8, cycling_rows: int = 25,
-                       trailer: int = 5, preamble: int = 1007) -> bytes:
+                       trailer: int = 5, preamble: int = 1007,
+                       resistance_step: float = 0.0) -> bytes:
     """A GCPL record with ``sweeps`` impedance sweeps measured along the way.
 
     ``trailer`` is how many bytes follow the row block inside the module -- the
     lab's file leaves five, and five bytes of shift turns every float into a
     different float that is still a float.
+
+    ``resistance_step`` 만큼 스윕마다 아크 저항을 키운다.  기본(0)은 스윕이
+    전부 같은 임피던스다 — **어느 스윕을 읽었는지**를 가려야 하는 시험만 준다.
     """
     layout = ([(i, f) for i, f in SCAN_FLAGS]
               + [(131, "<H"), (39, "<H"), (4, "<d"), (6, "<f"), (13, "<d"),
@@ -193,8 +197,9 @@ def build_mpr_soc_scan(*, sweeps: int = 3, points: int = 8, cycling_rows: int = 
                               ns=2 * sweep, capacity=0.5 * sweep)
             clock += 1.0
             n += 1
+        arc = 20.0 + resistance_step * sweep
         for f in frequency:                    # 스윕: 7 MHz → 0.1 Hz 하강
-            z = 5.0 + 20.0 / (1.0 + 1j * 2 * np.pi * f * 1e-3)
+            z = 5.0 + arc / (1.0 + 1j * 2 * np.pi * f * 1e-3)
             rows += _scan_row(clock, 3.6 + 0.1 * sweep, f, abs(z),
                               np.degrees(np.angle(z)), ns=2 * sweep + 1,
                               capacity=0.5 * sweep)

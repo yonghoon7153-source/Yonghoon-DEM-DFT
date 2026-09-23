@@ -488,6 +488,49 @@ def test_a_lost_cache_heals_from_the_immutable_original(client):
     assert storage.spectrum_points_path(out["id"]).exists()      # 다시 캐시됨
 
 
+def test_a_lost_cache_of_one_sweep_heals_as_that_sweep(client):
+    """스윕 여럿이 든 파일에서도 되살아나야 하고, **그 스윕으로** 되살아나야
+    한다.  되살리는 길이 파일 전체를 한 스윕으로 읽으려다 "스윕이 N개" 로
+    거절해서, 스캔의 캐시 하나가 사라지면 영영 409 였다."""
+    from app import storage
+    client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=3, resistance_step=5.0),
+                                "application/octet-stream")})
+    rows = client.get("/api/eis/spectra").json()
+    second = next(row for row in rows if row["sweep_index"] == 2)
+    before = client.get(f"/api/eis/spectra/{second['id']}/points").json()
+
+    storage.drop_spectrum_cache(second["id"])
+    after = client.get(f"/api/eis/spectra/{second['id']}/points")
+    assert after.status_code == 200, after.text
+    assert after.json()["z_re"] == pytest.approx(before["z_re"])
+    assert after.json()["z_im"] == pytest.approx(before["z_im"])
+    # 다른 스윕의 점이 아니다 — 스윕마다 저항이 다르게 만들어져 있다.
+    first = next(row for row in rows if row["sweep_index"] == 1)
+    other = client.get(f"/api/eis/spectra/{first['id']}/points").json()
+    assert other["z_re"] != pytest.approx(after.json()["z_re"])
+
+
+def test_reuploading_a_scan_restores_every_sweep_cache(client):
+    """다시 올리기가 되살리는 길이면 스캔의 스윕 **전부**를 되살려야 한다.
+    전에는 첫 기록 하나만 한 스윕으로 읽으려다 거절당하고 조용히 넘어갔다."""
+    from app import storage
+    content = scan_mpr(sweeps=3, resistance_step=5.0)
+    client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
+                files={"file": ("scan.mpr", content, "application/octet-stream")})
+    rows = client.get("/api/eis/spectra").json()
+    for row in rows:
+        storage.drop_spectrum_cache(row["id"])
+    storage.spectrum_upload_path(rows[0]["sha256"], "mpr").unlink()
+
+    again = client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
+                        files={"file": ("scan.mpr", content,
+                                        "application/octet-stream")})
+    assert again.status_code == 201
+    # 읽기 전에 이미 — 읽는 길이 스스로 되살리는 것과 구별하려고.
+    assert all(storage.spectrum_points_path(row["id"]).exists() for row in rows)
+
+
 def test_reuploading_known_bytes_restores_a_lost_original(client):
     """"다시 올려 주세요" 라는 안내가 실제로 통해야 한다 (#23).
 
