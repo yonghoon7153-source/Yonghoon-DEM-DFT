@@ -3,7 +3,7 @@
 > 세션이 바뀌어도 유지되는 미결 사항 추적. 닫을 때 날짜+근거를 남기고 ✅로 옮긴다.
 > 등록: 2026-07-27 (MAX 감사 후속).
 
-## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-23 저녁 — ⏭-NOW-w 가 최신 (SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면 fail-closed · box331 시드확장 규칙 A · b2o3 사건율 MD 발사 · W_ad 리뷰 NO-GO → 계획 v3 · 문헌 3편 · DEM 회신 · Nd LOBSTER · 밤: BW 결정 3건). 앞 블록 ⏭-NOW-v 는 09-22 낮(논문 4편 · 원장 정정 3건), ⏭-NOW-u 는 같은 날 오전**)
+## ⏭ 다음 세션이 **바로 이어서 할 것** (2026-08-28 등록 · **최종 갱신 2026-09-24 아침 — ⏭-NOW-w 가 최신 (li2s 유리 MD: seed5 · 파일럿 · final.xyz=relax 정오 · SE|SE V100 · b2o3 s6 kgy · Nd k-탐침 · webapp 점착 화면 · BW 결정 3건). 앞 블록 ⏭-NOW-v 는 09-22 낮(논문 4편 · 원장 정정 3건), ⏭-NOW-u 는 같은 날 오전**)
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 >
@@ -13,6 +13,15 @@
 
 ### ⏭-NOW-w. 2026-09-23 새벽 — **SDCP/PTFE 세미나 정리 · [Li26MCI] 병합 · 🔴 웹앱 cascade 화면이 어제부터 닫혀 있다**
 
+- 🟢 **li2s 소셀 유리 MD (⛔ 외부 1저자 트랙 · 사용자 'ㄲ' = 실행 승인만) — 2026-09-24 아침** · 카드 `lpscl_smallcell_glass_md_estimand_2026_09_21.json`
+  · 담금질: seed1·2 kgy ✅ · seed3·4 gabia ✅ (09-24 05:04 · 1050/1050 ps) · **seed5 gabia 발사 블록 전달** (tmux `q5` · `/data/work/repo` ·
+    도구 sha `d94403bc1d61fbce` = seed3·4 와 같은 코드) → ⏳ plan.json 대조 (seed3 대비 차이 = `seed` 하나여야).
+  · 🔴 **발견 — `final.xyz` 는 relax 본이다** (`run_melt_quench` 가 FIRE fmax 0.05 · 고정셀 **뒤에** 쓴다 · 개정 ③ 과 plan.json 은 원래 그렇게 적었다).
+    카드 해명 1 의 *"final.xyz = 원시 · 게이트 A 는 원시에서"* 가 틀렸다 → 정오 기록 `lpscl_smallcell_glass_md_gateA_erratum_2026_09_24.json`
+    (카드는 안 고친다 · 지문 1e35b1e7). seed1 기준값(ρ 1.6212 · PS₄ 1.0 · 최단 2.037 = P–S)도 relax 본 · 밀도 칸은 **문턱이 없다**.
+    ⇒ 게이트 A 는 **두 판 다 재고 판정은 외부 1저자에게** (Q1–Q5). 새 플래그 `melt_quench_uma.py --seed_gate` (원시·relax 두 판 · `md_init_raw.xyz`).
+  · ⏭ **파일럿 2런 kgy** (seed1 · 400/550 K · 400 ps · turbo · 초기구조 **원시 잠정** · `--seed 1` · T 별 out_root
+    `~/work/runs/lpscl_glass_md_2026_09_24/pilot/T{400,550}`) — 게이트 읽는 법은 결과 전에 정오 기록 §6 에 박았다 (STO · P-1 D비 < 2 · P-2 MSD@50 < 48.88).
 - ✅ **SDCP/PTFE (C-12 v41, 1저자 = 사용자)** — 사람용 정리 `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md`
   (숫자의 지위 · 1.83/2.54 Å 와 DFT 힘 · PTFE −0.79 크기 검증 · Kang 2025 대비 · 대기 12잡 · 세미나 멘트·예상 질문).
   수치 정본은 `db/properties/sdcp_c12_v41_eads_ungated_2026_09_21.json` §9 (D3 독립재현 0.5/2.6 meV · 분산모델 4종

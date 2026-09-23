@@ -35,7 +35,11 @@
 
   python3 tools/ionic/melt_quench_uma.py --system A --seed 1 --quench_rate 1e12 --out_root /data/work/runs/li2s_layer1
   python3 tools/ionic/melt_quench_uma.py --npt_control db/structures/sei_li2s_mp-1153.vasp --out_root /data/work/runs/li2s_layer1
+  python3 tools/ionic/melt_quench_uma.py --seed_gate <run_dir> [<run_dir> ...]   # 시드 게이트 입력 · 원시/relax 두 판 · md_init_raw.xyz
   python3 tools/ionic/melt_quench_uma.py --selftest
+
+⚠ final.xyz 는 **relax 본**이다 (④ · plan.json 게이트_입력.final_relax). 담금질 원시는 traj.xyz 마지막 프레임뿐이고,
+  `--seed_gate` 가 그것을 md_init_raw.xyz 로 뽑는다. (2026-09-24 — 카드 문구가 반대로 적은 적이 있다)
 """
 from __future__ import annotations
 import argparse, json, math, os, pathlib, re, sys, time
@@ -767,6 +771,155 @@ def gate_check(run, band_card=BAND_CARD, win_ps=10.0, p_tol=P_TOL_GPA, n_blocks=
         + ("G4 **경보**" if res["G4_fires"] else "밴드 안"))
     log("  ⛔ G4 는 **합격선이 아니라 적정성 경보**다 — 셀 오류·모델 오류·후보상 기각 중 아무것도 확정하지 않는다.")
     log("  ⛔ 위 수치는 **단기 안정성**이다. 밀도 이완·준비 이력 소멸·모델의 압력–부피 정확성은 확인되지 않았다.")
+    return res
+
+
+# ───────────────────────── --seed_gate: 시드 게이트 입력을 **원시·relax 두 판**으로 ─────────────────────────
+#: ⛔ 2026-09-24 발견 — 소셀 유리 MD 카드(`lpscl_smallcell_glass_md_estimand_2026_09_21.json`) 해명 1 은
+#:   *"final.xyz = 담금질 마지막 프레임, 원시 (relax 안 한다)"* 라고 적었다. **이 파일과 안 맞는다** —
+#:   `run_melt_quench` 는 FIRE(fmax 0.05 · 고정셀) **뒤에** final.xyz 를 쓴다 (FINAL_RELAX · 개정 ③ 이 이미 그렇게 적는다).
+#:   원시는 traj.xyz 의 **마지막 프레임**뿐이다. 그래서 이 모드는 두 판을 **나란히** 찍고, 게이트를 어느 판으로
+#:   잴지는 정하지 않는다 (카드·사람 몫 · 정오 기록 `lpscl_smallcell_glass_md_gateA_erratum_2026_09_24.json`).
+#:   MD 초기구조로 쓸 원시 판은 `md_init_raw.xyz` 로 떨군다 — 이름이 곧 내용이다.
+SEED_GATE_RAW = "md_init_raw.xyz"
+
+
+def _min_pair(sym, pos, cell, skip=()):
+    """최소상 최단 원자간 거리와 그 쌍의 원소. `skip` 의 원소쌍은 뺀다."""
+    sym = np.asarray(sym)
+    D = mic_dists(pos, pos, cell)
+    np.fill_diagonal(D, np.inf)
+    for a_el, b_el in skip:
+        ia, ib = sym == a_el, sym == b_el
+        D[np.ix_(ia, ib)] = np.inf
+        D[np.ix_(ib, ia)] = np.inf
+    i, j = np.unravel_index(np.argmin(D), D.shape)
+    return float(D[i, j]), "-".join(sorted((str(sym[i]), str(sym[j]))))
+
+
+def _gate_view(at):
+    """시드 게이트가 보는 값만 — PS₄ · 다리 S · P–P · 최단 원자간(전체 · P–S 제외) · 밀도."""
+    sym, pos, cell = at.get_chemical_symbols(), at.get_positions(), np.asarray(at.get_cell())
+    ind = indicators(sym, pos, cell)
+    v = {k: ind[k] for k in ("PS4_fraction", "P_S_coord_hist", "bridging_S_P2S7_like",
+                             "P_P_bonds_P2S6_like", "density_g_cm3", "n_atoms") if k in ind}
+    v["min_pair_A"], v["min_pair_kind"] = _min_pair(sym, pos, cell)
+    v["min_pair_excl_PS_A"], v["min_pair_excl_PS_kind"] = _min_pair(sym, pos, cell, skip=(("P", "S"),))
+    return v
+
+
+def _xyz_frames(path):
+    """extxyz 프레임 수 — 프레임마다 (원자수 + 2) 줄이라는 것만 쓴다. 안 맞으면 None (세지 못함 ≠ 0)."""
+    with open(path, encoding="utf-8", errors="replace") as f:
+        first = f.readline().strip()
+        n_lines = 1 + sum(1 for _ in f)
+    try:
+        nat = int(first)
+    except ValueError:
+        return None
+    return n_lines // (nat + 2) if n_lines % (nat + 2) == 0 else None
+
+
+def seed_gate(run, write_raw=True, log=print):
+    """시드 게이트의 **입력값**을 원시(traj 마지막 프레임)와 relax 본(final.xyz) 양쪽에서 찍는다.
+
+    ⛔ 이 함수가 못 하는 것
+      · 판정하지 않는다 — 어느 판으로 잴지, 문턱이 무엇인지는 카드·사람이 정한다.
+      · 원시가 없으면(traj.xyz 없음) **final.xyz 로 대신하지 않는다** — 원시 칸을 비우고 이유를 적는다.
+      · 마지막 프레임이 유지 구간 끝인지는 plan.json 길이와 **프레임 수로만** 대조한다 — traj 가 잘렸으면
+        경보하고 그대로 둔다 (버리지 않는다). 프레임 헤더에 t 가 없어서 시각을 직접 읽지는 못한다.
+      · `md_init_raw.xyz` 가 이미 있고 다르면 **덮어쓰지 않고 멈춘다** — 그 파일로 MD 가 이미 돌았을 수 있다.
+    """
+    import hashlib
+    from ase import Atoms
+    from ase.io import read, write
+    run = pathlib.Path(run)
+    res = {"run": str(run), "raw": None, "relaxed": None, "raw_vs_relaxed": None, "warnings": [],
+           "⛔": "판정 아님 — 게이트를 어느 판으로 잴지는 카드·사람 몫 (이 도구의 final.xyz 는 relax 본이다)"}
+    plan = json.loads((run / "plan.json").read_text(encoding="utf-8")) if (run / "plan.json").exists() else {}
+    fr = (plan.get("게이트_입력") or {}).get("final_relax")
+    res["final_xyz_is"] = ("relax 본 (plan.json 게이트_입력.final_relax: "
+                           + ", ".join(f"{k}={fr[k]}" for k in ("kind", "fmax_eV_A", "cell") if k in fr) + ")"
+                           if fr else "relax 본 (plan.json 에 기록 없음 — 2026-09-12 이전 런 · 코드상 FIRE 뒤에 쓴다)")
+    raw_at = None
+    traj = run / "traj.xyz"
+    if traj.exists():
+        n_fr = _xyz_frames(traj)
+        raw_at = read(str(traj), index=-1)
+        save_ps = plan.get("save_ps")
+        res["raw"] = {"source": "traj.xyz", "frame": (n_fr - 1) if n_fr else None,
+                      "t_ps": (n_fr - 1) * float(save_ps) if (n_fr and save_ps) else None, **_gate_view(raw_at)}
+        if n_fr and save_ps and all(k in plan for k in ("melt_ps", "quench_ps", "hold_ps")):
+            want = int(round((plan["melt_ps"] + plan["quench_ps"] + plan["hold_ps"]) / float(save_ps))) + 1
+            res["raw"]["frames_expected"] = want
+            if n_fr < want:
+                res["warnings"].append(f"traj 가 잘렸다 ({n_fr}/{want} 프레임) — 마지막 프레임이 유지 구간 끝이 아니다")
+        elif not n_fr:
+            res["warnings"].append("traj 프레임 수를 못 셌다 (줄 수가 원자수+2 의 배수가 아니다) — 시각 미상")
+    else:
+        res["raw_why"] = "traj.xyz 없음 — 원시를 못 구했다 (final.xyz 로 대신하지 않는다)"
+    rel_at = None
+    if (run / "final.xyz").exists():
+        rel_at = read(str(run / "final.xyz"))
+        res["relaxed"] = {"source": "final.xyz", **_gate_view(rel_at)}
+    else:
+        res["relaxed_why"] = "final.xyz 없음"
+    if raw_at is not None and rel_at is not None:
+        if raw_at.get_chemical_symbols() == rel_at.get_chemical_symbols():
+            cell = np.asarray(raw_at.get_cell())
+            d = (rel_at.get_positions() - raw_at.get_positions()) @ np.linalg.inv(cell)
+            d = np.linalg.norm((d - np.round(d)) @ cell, axis=1)
+            res["raw_vs_relaxed"] = {"disp_max_A": float(d.max()), "disp_rms_A": float(np.sqrt((d ** 2).mean())),
+                                     "cell_max_abs_diff_A": float(np.abs(cell - np.asarray(rel_at.get_cell())).max())}
+            if d.max() < 1e-6:
+                res["warnings"].append("final.xyz 가 원시와 같다 — relax 가 안 됐거나 다른 도구가 쓴 파일이다")
+        else:
+            res["raw_vs_relaxed_why"] = "원자 수·순서가 달라 변위를 못 쟀다"
+            res["warnings"].append(res["raw_vs_relaxed_why"])
+    if raw_at is not None and write_raw:
+        clean = Atoms(symbols=raw_at.get_chemical_symbols(), positions=raw_at.get_positions(),
+                      cell=raw_at.get_cell(), pbc=True)
+        clean.wrap()
+        clean.info = {"source": "traj.xyz", "frame": res["raw"]["frame"], "t_ps": res["raw"]["t_ps"],
+                      "raw": True, "wrapped": True, "made_by": "melt_quench_uma.py --seed_gate"}
+        out = run / SEED_GATE_RAW
+        if out.exists():
+            old = read(str(out))
+            same = (old.get_chemical_symbols() == clean.get_chemical_symbols()
+                    and np.abs(np.asarray(old.get_cell()) - np.asarray(clean.get_cell())).max() < 1e-8)
+            if same:
+                dd = (old.get_positions() - clean.get_positions()) @ np.linalg.inv(np.asarray(clean.get_cell()))
+                same = np.linalg.norm((dd - np.round(dd)) @ np.asarray(clean.get_cell()), axis=1).max() < 1e-6
+            if not same:
+                raise SystemExit(f"⛔ {out} 이 이미 있고 지금 뽑은 원시와 다르다 — 덮어쓰지 않는다 "
+                                 "(그 파일로 MD 가 이미 돌았을 수 있다. 사람이 확인한다)")
+            status = "이미 있음 · 같음"
+        else:
+            write(str(out), clean, format="extxyz")
+            status = "썼다"
+        res["md_init_raw"] = {"path": str(out), "status": status,
+                              "sha256": hashlib.sha256(out.read_bytes()).hexdigest()}
+
+    def _row(tag, v):
+        return (f"  {tag:<12s} {v['PS4_fraction']:.4f}  {v['bridging_S_P2S7_like']:>3d}  {v['P_P_bonds_P2S6_like']:>3d}"
+                f"   {v['min_pair_A']:.3f} ({v['min_pair_kind']:<5s})  {v['min_pair_excl_PS_A']:.3f} "
+                f"({v['min_pair_excl_PS_kind']:<5s})  {v['density_g_cm3']:.4f}")
+    log(f"[{run.parent.name}/{run.name}] final.xyz = {res['final_xyz_is']}")
+    log("               PS4   다리S  P–P   최단 (쌍)        최단·P–S 제외     ρ g/cm³")
+    if res["raw"]:
+        t = res["raw"]["t_ps"]
+        log(_row(f"원시 t={t:.0f}" if t is not None else "원시 t=?", res["raw"]))
+    else:
+        log(f"  원시         —  ({res['raw_why']})")
+    log(_row("relax", res["relaxed"]) if res["relaxed"] else f"  relax        —  ({res['relaxed_why']})")
+    if res["raw_vs_relaxed"]:
+        rv = res["raw_vs_relaxed"]
+        log(f"  원시↔relax 변위 max {rv['disp_max_A']:.3f} · rms {rv['disp_rms_A']:.3f} Å · "
+            f"셀 차 {rv['cell_max_abs_diff_A']:.1e} Å")
+    if res.get("md_init_raw"):
+        log(f"  → {SEED_GATE_RAW} {res['md_init_raw']['status']} (sha256 {res['md_init_raw']['sha256'][:16]})")
+    for w in res["warnings"]:
+        log(f"  ⚠ {w}")
     return res
 
 
@@ -1690,6 +1843,71 @@ def _selftest():
     chk(np.abs(_a_raw.get_positions() - _a_rel.get_positions()).max() > 1e-6,
         "⛔음성: 저장된 것이 **이완 후** 구조다 (원본을 그대로 복사하지 않는다)")
 
+    # ── --seed_gate: 원시(traj 마지막 프레임)·relax 본(final.xyz) 두 판 (2026-09-24) ──
+    import tempfile as _tf
+    from ase import Atoms as _At
+    from ase.io import write as _wsg, read as _rsg
+    _q = lambda *a, **k: None
+    _sym, _pos, _cell = build_random_cell("A", seed=3, n_fu=4)
+    _rng = np.random.default_rng(7)
+    _frames = [_At(_sym, positions=_pos + _rng.normal(0, 0.05, _pos.shape), cell=_cell, pbc=True) for _ in range(3)]
+    _frames[-1].positions[0] += _cell[0]        # 원시 NPT 궤적처럼 셀 밖 좌표 — 뽑을 때 감겨야 한다
+    _plan = {"melt_ps": 1.0, "quench_ps": 0.0, "hold_ps": 1.0, "save_ps": 1.0,
+             "게이트_입력": {"final_relax": FINAL_RELAX}}
+
+    def _mk_sg(name, traj=True, final="relaxed", plan=_plan):
+        d = pathlib.Path(_tf.mkdtemp()) / "A" / name
+        d.mkdir(parents=True)
+        if traj:
+            for f in _frames:
+                _wsg(str(d / "traj.xyz"), f, format="extxyz", append=True)
+        fin = _frames[-1].copy()
+        if final == "relaxed":
+            fin.positions += np.random.default_rng(11).normal(0, 0.03, _pos.shape)
+        _wsg(str(d / "final.xyz"), fin, format="extxyz")
+        (d / "plan.json").write_text(json.dumps(plan, ensure_ascii=False), encoding="utf-8")
+        return d
+
+    _d1 = _mk_sg("seed9")
+    _g1 = seed_gate(_d1, log=_q)
+    chk(bool(_g1["raw"]) and bool(_g1["relaxed"]), "--seed_gate: 원시·relax 두 판을 다 찍는다")
+    chk(_g1["raw"]["frame"] == 2 and _g1["raw"]["t_ps"] == 2.0 and not _g1["warnings"],
+        "--seed_gate: 원시 = traj **마지막** 프레임 (프레임 2 · t 2 ps · 길이 plan 과 일치)")
+    chk(_g1["raw_vs_relaxed"]["disp_max_A"] > 1e-3,
+        "⛔음성: relax 본과 원시를 **구분**한다 (변위 > 0 — final.xyz 를 원시로 읽으면 0 이 된다)")
+    _rf = _rsg(str(_d1 / SEED_GATE_RAW))
+    _dd = (_rf.get_positions() - _frames[-1].get_positions()) @ np.linalg.inv(_cell)
+    _sp = _rf.get_scaled_positions(wrap=False)
+    chk(np.linalg.norm((_dd - np.round(_dd)) @ _cell, axis=1).max() < 1e-6
+        and _sp.min() > -1e-9 and _sp.max() < 1 + 1e-9,
+        "--seed_gate: md_init_raw.xyz = 원시 마지막 프레임 (최소상 동일 · 셀 안으로 감김)")
+    chk(bool(_rf.info.get("raw")) and int(_rf.info.get("frame")) == 2,
+        "--seed_gate: md_init_raw.xyz 가 출처(원시 · 프레임 번호)를 달고 있다")
+    chk(_g1["raw"]["min_pair_excl_PS_kind"] != "P-S",
+        "--seed_gate: '최단·P–S 제외' 에 P–S 쌍이 안 들어간다")
+    _g1b = seed_gate(_d1, log=_q)
+    chk(_g1b["md_init_raw"]["status"] == "이미 있음 · 같음",
+        "--seed_gate: 다시 돌려도 같은 원시면 그대로 둔다 (멱등)")
+    _d2 = _mk_sg("seed8", traj=False)
+    _g2 = seed_gate(_d2, log=_q)
+    chk(_g2["raw"] is None and "대신하지 않는다" in _g2.get("raw_why", "") and not (_d2 / SEED_GATE_RAW).exists(),
+        "⛔음성: traj 가 없으면 원시 칸을 비운다 — final.xyz 를 원시로 쓰지도, md_init_raw.xyz 를 만들지도 않는다")
+    _g3 = seed_gate(_mk_sg("seed7", final="same"), log=_q)
+    chk(any("원시와 같다" in w for w in _g3["warnings"]),
+        "⛔음성: final.xyz 가 원시와 똑같으면 경보한다 (relax 본이어야 할 파일)")
+    _g4 = seed_gate(_mk_sg("seed6", plan=dict(_plan, hold_ps=8.0)), log=_q)
+    chk(any("잘렸다" in w for w in _g4["warnings"]),
+        "⛔음성: traj 가 plan 길이보다 짧으면 경보한다 (마지막 프레임 ≠ 유지 끝)")
+    _bad = _rf.copy()
+    _bad.positions[0] += 0.5
+    _wsg(str(_d1 / SEED_GATE_RAW), _bad, format="extxyz")
+    try:
+        seed_gate(_d1, log=_q)
+        _ok_ow = False
+    except SystemExit as e:
+        _ok_ow = "덮어쓰지 않는다" in str(e)
+    chk(_ok_ow, "⛔음성: 이미 있는 md_init_raw.xyz 가 다르면 덮어쓰지 않고 멈춘다")
+
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
 
@@ -1735,6 +1953,11 @@ def main():
     ap.add_argument("--dry_run", action="store_true", help="셀만 만들고 계획을 찍는다 (UMA 안 부름)")
     ap.add_argument("--gate_check", metavar="RUN_DIR",
                     help="plan.json 의 앙상블 선언 + thermo.csv 대조 + G4 밴드 (판정 아님, 기록 점검)")
+    ap.add_argument("--seed_gate", nargs="+", metavar="RUN_DIR",
+                    help="시드 게이트 입력(PS₄·다리 S·P–P·최단 원자간·밀도)을 **원시(traj 마지막 프레임)·relax 본"
+                         "(final.xyz)** 두 판으로 찍고, 원시 판을 md_init_raw.xyz 로 떨군다 (판정 안 함 · seed_gate.json)")
+    ap.add_argument("--no_write_raw", action="store_true",
+                    help="--seed_gate 에서 md_init_raw.xyz 를 쓰지 않는다 (읽기만)")
     ap.add_argument("--band_card", default=BAND_CARD, help="--gate_check G4 밴드 출처 카드")
     ap.add_argument("--gate_win_ps", type=float, default=10.0, help="--gate_check 평균 창 [ps]")
     ap.add_argument("--mode_stress", metavar="RUN_DIR",
@@ -1781,6 +2004,17 @@ def main():
         (pathlib.Path(a.gate_check) / "gate_check.json").write_text(
             json.dumps(r, ensure_ascii=False, indent=1), encoding="utf-8")
         raise SystemExit(0 if (r["record_has_gate_input"] and r["pressure_ok"]) else 2)
+    if a.seed_gate:
+        rows = []
+        for rd in a.seed_gate:
+            r = seed_gate(rd, write_raw=not a.no_write_raw)
+            (pathlib.Path(rd) / "seed_gate.json").write_text(json.dumps(r, ensure_ascii=False, indent=1),
+                                                             encoding="utf-8")
+            rows.append(r)
+            print()
+        print("⛔ 판정하지 않았다 — 게이트를 원시·relax 어느 판으로 잴지, 문턱이 무엇인지는 카드·사람 몫이다.")
+        #: 0 = 두 판 다 찍음 · 2 = 한 판이라도 비었음 (**비었음을 통과로 내보내지 않는다**)
+        raise SystemExit(0 if all(x["raw"] and x["relaxed"] for x in rows) else 2)
     if a.pcheck:
         from ase.io import read
         calc = make_calc(a.device, a.turbo)
