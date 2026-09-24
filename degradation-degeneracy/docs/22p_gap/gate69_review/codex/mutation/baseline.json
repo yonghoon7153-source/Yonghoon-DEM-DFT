@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "-m",
+    "pytest",
+    "tests/test_gate68_defensive.py",
+    "--noconftest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-k",
+    "refuses_a_setup_only_child or three_unrun_shapes_are_all_refused or without_a_call_record",
+    "--json-report",
+    "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate69_review_20260924\\mutation\\baseline.pytest.json"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\g69tmp_03\\mutation_replay_r_jnakh4\\degradation-degeneracy",
+  "rc": 0,
+  "seconds": 4.7039999999979045,
+  "stdout_sha256": "9be9e2a800ec2b58b90294825babe03103de835618656e4d59939bb54ee6e7d6",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

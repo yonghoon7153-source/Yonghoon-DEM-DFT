@@ -1,0 +1,37 @@
+{
+  "missing_call": {
+    "consumer": "REJECTED",
+    "exception": "AssertionError",
+    "reason": "('전제 node 가 call 단계를 지나지 않았다 — setup/teardown 만 돌았다 (`--setup-only` 모양) (G68-T1)', ['tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]', 'tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]'])"
+  },
+  "duplicate_call": {
+    "consumer": "REJECTED",
+    "exception": "AssertionError",
+    "reason": "('한 node 에 call 기록이 둘 이상이다 — 어느 것이 측정인지 알 수 없다 (G68-T1)', ['tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]'])"
+  },
+  "setup_failure": {
+    "consumer": "REJECTED",
+    "exception": "AssertionError",
+    "reason": "('전제 node 의 setup/teardown 이 실패했다 — call 결말과 무관하게 측정이 아니다 (G68-T1)', {'tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]': 'error'}, ('..                                                                       [100%]\\n2 passed, 15 deselected in 0.54s\\n', ''))"
+  },
+  "teardown_failure": {
+    "consumer": "REJECTED",
+    "exception": "AssertionError",
+    "reason": "('전제 node 의 setup/teardown 이 실패했다 — call 결말과 무관하게 측정이 아니다 (G68-T1)', {'tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]': 'error', 'tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]': 'error'}, ('..                                                                       [100%]\\n2 passed, 15 deselected in 0.54s\\n', ''))"
+  },
+  "wrong_node": {
+    "consumer": "REJECTED",
+    "exception": "AssertionError",
+    "reason": "('단계 증거의 node id 가 기대한 두 전제 node(exact full id)와 다르다 — 선택이 어긋났다 (G68-T1)', ['tests/alien.py::test_the_interpreter_fixture_measures_its_own_premise[False]', 'tests/alien.py::test_the_interpreter_fixture_measures_its_own_premise[True]'], ['tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]', 'tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]'])"
+  },
+  "bad_call_outcome": {
+    "consumer": "REJECTED",
+    "exception": "AssertionError",
+    "reason": "('물려받은 env 때문에 전제 시험이 실패했다 — 환경의 비활성을 fixture 구현 실패로 오판한다 (G66-T1)', {'tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]': 'unknown', 'tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]': 'unknown'}, ('..                                                                       [100%]\\n2 passed, 15 deselected in 0.54s\\n', ''))"
+  },
+  "empty": {
+    "consumer": "REJECTED",
+    "exception": "AssertionError",
+    "reason": "('단계 증거의 node id 가 기대한 두 전제 node(exact full id)와 다르다 — 선택이 어긋났다 (G68-T1)', [], ['tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]', 'tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]'])"
+  }
+}

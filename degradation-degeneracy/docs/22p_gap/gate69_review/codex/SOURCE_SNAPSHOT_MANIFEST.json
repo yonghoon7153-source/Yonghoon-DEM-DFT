@@ -1,0 +1,50 @@
+[
+  {
+    "path": "tests/phase_witness.py",
+    "bytes": 2427,
+    "sha256": "980a932a5df57b03d32fe9e6aa5ce30591ee4444d5f0d7f979ba84aa1d8b3bb2",
+    "working_bytes_same": true
+  },
+  {
+    "path": "tests/test_gate66_defensive.py",
+    "bytes": 24651,
+    "sha256": "c1eaf49d99751dfdfe786bb9865a7498dd7fbc5346468983a805c18add897b1a",
+    "working_bytes_same": true
+  },
+  {
+    "path": "tests/test_gate68_defensive.py",
+    "bytes": 10728,
+    "sha256": "7815d28101720a2bc1f60413d6a7084d3dc851cc43596f1cee1399d13c84733f",
+    "working_bytes_same": true
+  },
+  {
+    "path": "docs/22p_gap/mutation_replay.py",
+    "bytes": 424197,
+    "sha256": "c6539ca11b1f21bcea1c0d56402940222da4e2cf34fa5bc0d3e4a0be8f8da21a",
+    "working_bytes_same": true
+  },
+  {
+    "path": "tests/interpreter_fixture.py",
+    "bytes": 5682,
+    "sha256": "9911ea810e5159646a713ebc0fdf4ce5419771d2ec15604793306a4658fea77a",
+    "working_bytes_same": true
+  },
+  {
+    "path": "tests/test_gate65_defensive.py",
+    "bytes": 23939,
+    "sha256": "b40516e543af5ea028cc1fe43dba7e61fc945f7afea26d5780a544fcd4ee1b94",
+    "working_bytes_same": true
+  },
+  {
+    "path": "tests/test_gate67_defensive.py",
+    "bytes": 22128,
+    "sha256": "6bb251bc8ca913a860b1f858bb22ede86056a4d320c55c5a18cd87f77231602d",
+    "working_bytes_same": true
+  },
+  {
+    "path": "tests/conftest.py",
+    "bytes": 9025,
+    "sha256": "89b3bcafb8ca06ef21dea0b40609ad2646257fbd5b5a4e27d2944ad67a1a27ff",
+    "working_bytes_same": true
+  }
+]

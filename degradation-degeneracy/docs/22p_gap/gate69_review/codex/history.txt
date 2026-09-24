@@ -1,0 +1,12 @@
+e6ddcd1efb7df4be69849a4fd5b59c43cccff873 webapp: R17 closure, gate 65~68 status, MSC seminar model checks, ASSB literature ledger, COMSOL B_A8R1
+afab6485e00f79ed78d43c4b4d51bca1903ae1b3 dd: GATE68 received (partial accept / closing NO-GO, P2 1) and answered — GATE69 request
+b17105325458a50ca7240a45223c735d0a906069 dd: G68-T1 — the premise regression now requires call-phase evidence per exact node id (RED first)
+a9b846b34c8d2c8031ec29cd9e44774efc16945d dd: gate66_review — codex/ restored from the committed zip with original bytes under '-text !eol'
+c9a11a68a2936ef74aa339d0e3b883e9eb5f9e48 dd: gate67_review — codex/ restored from the committed zip with original bytes under '-text !eol'
+de51696dfc09803297e840e55dde6b16baaf9ce5 dd: gate68_review — codex/ re-added with original bytes under '-text !eol' (MANIFEST 141/141)
+90c766f8f590fd657c8366bff15fa84fee3b49a7 dd: .gitattributes — gate66/67/68 리뷰 패키지 원문 bytes 보존 규칙 (-text)
+0b115ca6ab1908e79d01ce1448b9b33017326f65 dd: GATE68 review package preserved (pinned a1979cdf) — zip bytes + codex/ unpacked, MANIFEST 141/141
+438d6b8a4ba1cf3131e80d9bc377fc2bedcc9094 bms: R17 follow-up 3 closed by the receiving re-review (pinned a1979cdf) — package preserved, identity sentence corrected
+994d1c0e6cf4a316c75d4b393646b10305906ab4 bms: .gitattributes — r17_followup3_recheck 리뷰 패키지 원문 bytes 보존 규칙 (묶기 **전에** 넣는다)
+0d235b6f9429d70797b2aa7f376c1becfbacadc9 bms(comsol): 25-9 — six review originals preserved and re-hashed; C2 detail and the two earlier replies' identities transcribed; P1-R1/R2/R3 still open
+984bafd66c52e6f129afd0664bef26e447d328da bms: b_a8r1_review_20260924 검토 정본 보존 — REVIEW_KO · LOCAL_CODEX_REPLY · PACKAGE_VERIFICATION · INDEPENDENT_CHECKS + 앞선 두 회신 (bytes 그대로)

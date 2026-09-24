@@ -1,0 +1,4 @@
+tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]
+tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]
+
+2/17 tests collected (15 deselected) in 0.05s

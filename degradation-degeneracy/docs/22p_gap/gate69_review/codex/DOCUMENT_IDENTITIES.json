@@ -1,0 +1,5 @@
+{
+  "D1_old_fixed_commit_difference": "20\t0\tdegradation-degeneracy/docs/22p_gap/GATE68_REQUEST.md\n",
+  "D1_old_code_excluding_request": "",
+  "attributes_before_readdition": "90c766f8f590fd657c8366bff15fa84fee3b49a7 dd: .gitattributes — gate66/67/68 리뷰 패키지 원문 bytes 보존 규칙 (-text)\nde51696dfc09803297e840e55dde6b16baaf9ce5 dd: gate68_review — codex/ re-added with original bytes under '-text !eol' (MANIFEST 141/141)\nc9a11a68a2936ef74aa339d0e3b883e9eb5f9e48 dd: gate67_review — codex/ restored from the committed zip with original bytes under '-text !eol'\na9b846b34c8d2c8031ec29cd9e44774efc16945d dd: gate66_review — codex/ restored from the committed zip with original bytes under '-text !eol'\n"
+}

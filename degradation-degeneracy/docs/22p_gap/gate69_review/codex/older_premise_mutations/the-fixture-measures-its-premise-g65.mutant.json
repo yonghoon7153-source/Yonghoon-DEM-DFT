@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "-m",
+    "pytest",
+    "tests/test_gate65_defensive.py",
+    "tests/test_gate66_defensive.py",
+    "tests/test_gate67_defensive.py",
+    "tests/test_gate68_defensive.py",
+    "--noconftest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-k",
+    "the_interpreter_fixture_measures_its_own_premise",
+    "--json-report",
+    "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate69_review_20260924\\older_premise_mutations\\the-fixture-measures-its-premise-g65.mutant.pytest.json"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\g69tmp_04\\mutation_replay_2fdzbnlt\\degradation-degeneracy",
+  "rc": 1,
+  "seconds": 1.4530000000086147,
+  "stdout_sha256": "49c77cf8a066685b1720833b800156da6ef545ea0fbc0178dded79fdcf22e077",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

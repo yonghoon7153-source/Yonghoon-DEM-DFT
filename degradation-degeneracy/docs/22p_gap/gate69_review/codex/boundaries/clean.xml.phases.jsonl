@@ -1,0 +1,6 @@
+{"nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]", "when": "setup", "outcome": "passed"}
+{"nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]", "when": "call", "outcome": "passed"}
+{"nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]", "when": "teardown", "outcome": "passed"}
+{"nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]", "when": "setup", "outcome": "passed"}
+{"nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]", "when": "call", "outcome": "passed"}
+{"nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]", "when": "teardown", "outcome": "passed"}

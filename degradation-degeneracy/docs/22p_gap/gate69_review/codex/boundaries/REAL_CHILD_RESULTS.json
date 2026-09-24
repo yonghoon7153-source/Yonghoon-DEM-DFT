@@ -1,0 +1,206 @@
+{
+  "clean": {
+    "child_rc": 0,
+    "seconds": 1.1710000000020955,
+    "records": [
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "setup",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "call",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "teardown",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "setup",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "call",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "teardown",
+        "outcome": "passed"
+      }
+    ],
+    "call_count": 2,
+    "consumer": "ACCEPTED",
+    "unmeasured": []
+  },
+  "nousersite": {
+    "child_rc": 0,
+    "seconds": 1.202999999979511,
+    "records": [
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "setup",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "call",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "teardown",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "setup",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "call",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "teardown",
+        "outcome": "passed"
+      }
+    ],
+    "call_count": 2,
+    "consumer": "ACCEPTED",
+    "unmeasured": []
+  },
+  "setup_only": {
+    "child_rc": 0,
+    "seconds": 0.7030000000086147,
+    "records": [
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "setup",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "teardown",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "setup",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "teardown",
+        "outcome": "passed"
+      }
+    ],
+    "call_count": 0,
+    "consumer": "REJECTED",
+    "exception": "AssertionError",
+    "reason": "('전제 node 가 call 단계를 지나지 않았다 — setup/teardown 만 돌았다 (`--setup-only` 모양) (G68-T1)', ['tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]', 'tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]'])"
+  },
+  "collect_only": {
+    "child_rc": 0,
+    "seconds": 0.7190000000118744,
+    "records": [],
+    "call_count": 0,
+    "consumer": "REJECTED",
+    "exception": "AssertionError",
+    "reason": "('기대한 두 전제 node 가 실제로 돌지 않았다 — 수집만 했거나 선택이 어긋났다 (G67-T1)', [], ['test_the_interpreter_fixture_measures_its_own_premise[False]', 'test_the_interpreter_fixture_measures_its_own_premise[True]'])"
+  },
+  "usage_error": {
+    "child_rc": 4,
+    "seconds": 0.46900000001187436,
+    "records": [],
+    "call_count": 0,
+    "consumer": "REJECTED",
+    "exception": "AssertionError",
+    "reason": "('child pytest 가 결과 파일을 남기지 않았다 — 무엇이 돌았는지 말할 수 없다 (G67-T1)', ('', 'ERROR: usage: python -m pytest [options] [file_or_dir] [file_or_dir] [...]\\npython -m pytest: error: unrecognized arguments: --g69-no-such-option\\n  inifile: None\\n  rootdir: C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\g69_20260924\\\\degradation-degeneracy\\n\\n'))"
+  },
+  "inherited_setup_only": {
+    "child_rc": 0,
+    "seconds": 1.2339999999967404,
+    "records": [
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "setup",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "call",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "teardown",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "setup",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "call",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "teardown",
+        "outcome": "passed"
+      }
+    ],
+    "call_count": 2,
+    "consumer": "ACCEPTED",
+    "unmeasured": []
+  },
+  "disable_autoload": {
+    "child_rc": 0,
+    "seconds": 1.1410000000032596,
+    "records": [
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "setup",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "call",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        "when": "teardown",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "setup",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "call",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[False]",
+        "when": "teardown",
+        "outcome": "passed"
+      }
+    ],
+    "call_count": 2,
+    "consumer": "ACCEPTED",
+    "unmeasured": []
+  }
+}

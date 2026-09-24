@@ -1,0 +1,172 @@
+[
+  {
+    "name": "the-fixture-measures-its-premise-g65",
+    "sandbox": "C:\\Users\\Administrator\\Documents\\Codex\\g69tmp_04\\mutation_replay_2fdzbnlt\\degradation-degeneracy",
+    "source_sha256": "9911ea810e5159646a713ebc0fdf4ce5419771d2ec15604793306a4658fea77a",
+    "phases": {
+      "baseline": {
+        "rc": 0,
+        "summary": {
+          "passed": 2,
+          "total": 2,
+          "collected": 58,
+          "deselected": 56
+        },
+        "expected": {
+          "fail": [
+            "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]"
+          ],
+          "witness": {
+            "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]": "AssertionError: assert False is True"
+          }
+        },
+        "failed": [],
+        "exact_failed_set": false,
+        "call_only": true,
+        "witnesses": {}
+      },
+      "mutant": {
+        "rc": 1,
+        "summary": {
+          "failed": 1,
+          "passed": 1,
+          "total": 2,
+          "collected": 58,
+          "deselected": 56
+        },
+        "expected": {
+          "fail": [
+            "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]"
+          ],
+          "witness": {
+            "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]": "AssertionError: assert False is True"
+          }
+        },
+        "failed": [
+          "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]"
+        ],
+        "exact_failed_set": true,
+        "call_only": true,
+        "witnesses": {
+          "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]": true
+        }
+      }
+    },
+    "original_unchanged": true
+  },
+  {
+    "name": "the-premise-uses-a-controlled-env-g66",
+    "sandbox": "C:\\Users\\Administrator\\Documents\\Codex\\g69tmp_04\\mutation_replay_5b8myqk8\\degradation-degeneracy",
+    "source_sha256": "9911ea810e5159646a713ebc0fdf4ce5419771d2ec15604793306a4658fea77a",
+    "phases": {
+      "baseline": {
+        "rc": 0,
+        "summary": {
+          "passed": 2,
+          "total": 2,
+          "collected": 58,
+          "deselected": 56
+        },
+        "expected": {
+          "fail": [
+            "tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]"
+          ],
+          "witness": {
+            "tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]": "AssertionError: ('물려받은 env 때문에 전제 시험이 실패했다 — 환경의 비활성을 fixture 구현 실패로 오판한다 (G66-T1)',"
+          }
+        },
+        "failed": [],
+        "exact_failed_set": false,
+        "call_only": true,
+        "witnesses": {}
+      },
+      "mutant": {
+        "rc": 1,
+        "summary": {
+          "passed": 1,
+          "failed": 1,
+          "total": 2,
+          "collected": 58,
+          "deselected": 56
+        },
+        "expected": {
+          "fail": [
+            "tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]"
+          ],
+          "witness": {
+            "tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]": "AssertionError: ('물려받은 env 때문에 전제 시험이 실패했다 — 환경의 비활성을 fixture 구현 실패로 오판한다 (G66-T1)',"
+          }
+        },
+        "failed": [
+          "tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]"
+        ],
+        "exact_failed_set": true,
+        "call_only": true,
+        "witnesses": {
+          "tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]": true
+        }
+      }
+    },
+    "original_unchanged": true
+  },
+  {
+    "name": "the-premise-checks-the-child-actually-ran-g67",
+    "sandbox": "C:\\Users\\Administrator\\Documents\\Codex\\g69tmp_04\\mutation_replay_g58cukvd\\degradation-degeneracy",
+    "source_sha256": "c1eaf49d99751dfdfe786bb9865a7498dd7fbc5346468983a805c18add897b1a",
+    "phases": {
+      "baseline": {
+        "rc": 0,
+        "summary": {
+          "passed": 2,
+          "total": 2,
+          "collected": 58,
+          "deselected": 56
+        },
+        "expected": {
+          "fail": [
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[collect_only]",
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[usage_error]"
+          ],
+          "witness": {
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[collect_only]": "Failed: DID NOT RAISE AssertionError",
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[usage_error]": "Failed: DID NOT RAISE AssertionError"
+          }
+        },
+        "failed": [],
+        "exact_failed_set": false,
+        "call_only": true,
+        "witnesses": {}
+      },
+      "mutant": {
+        "rc": 1,
+        "summary": {
+          "failed": 2,
+          "total": 2,
+          "collected": 58,
+          "deselected": 56
+        },
+        "expected": {
+          "fail": [
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[collect_only]",
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[usage_error]"
+          ],
+          "witness": {
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[collect_only]": "Failed: DID NOT RAISE AssertionError",
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[usage_error]": "Failed: DID NOT RAISE AssertionError"
+          }
+        },
+        "failed": [
+          "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[usage_error]",
+          "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[collect_only]"
+        ],
+        "exact_failed_set": true,
+        "call_only": true,
+        "witnesses": {
+          "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[usage_error]": true,
+          "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[collect_only]": true
+        }
+      }
+    },
+    "original_unchanged": true
+  }
+]

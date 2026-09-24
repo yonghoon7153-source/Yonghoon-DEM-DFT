@@ -1,0 +1,38 @@
+[
+  {
+    "gate": 66,
+    "raw_sha256": "aa2cde592d28c4cfd0654e1f968dc3ad66fca452388ded5acc4cc62978c0a0ec",
+    "entries": 108,
+    "exact_set": true,
+    "duplicate_names": false,
+    "case_collision": false,
+    "unsafe_paths_or_links": [],
+    "manifest_size_errors": [],
+    "CRC_bad": null,
+    "git_blob_size_errors": []
+  },
+  {
+    "gate": 67,
+    "raw_sha256": "3ab027349935843f8a2404a87b988b3e7264fa0a9d3266f2e3f20a757bd10220",
+    "entries": 351,
+    "exact_set": true,
+    "duplicate_names": false,
+    "case_collision": false,
+    "unsafe_paths_or_links": [],
+    "manifest_size_errors": [],
+    "CRC_bad": null,
+    "git_blob_size_errors": []
+  },
+  {
+    "gate": 68,
+    "raw_sha256": "6679445165c2fba82b1dacf5b3dd24228d23bbce512306e6248d8e5fd7f096eb",
+    "entries": 142,
+    "exact_set": true,
+    "duplicate_names": false,
+    "case_collision": false,
+    "unsafe_paths_or_links": [],
+    "manifest_size_errors": [],
+    "CRC_bad": null,
+    "git_blob_size_errors": []
+  }
+]

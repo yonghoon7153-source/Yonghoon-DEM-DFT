@@ -1,0 +1,66 @@
+{
+  "name": "the-premise-checks-the-call-phase-g68",
+  "sandbox": "C:\\Users\\Administrator\\Documents\\Codex\\g69tmp_03\\mutation_replay_r_jnakh4\\degradation-degeneracy",
+  "rows": {
+    "baseline": {
+      "rc": 0,
+      "summary": {
+        "passed": 5,
+        "total": 5,
+        "collected": 13,
+        "deselected": 8
+      },
+      "failed": [],
+      "expected": {
+        "fail": [
+          "tests/test_gate68_defensive.py::test_g68_01_the_premise_regression_refuses_a_setup_only_child",
+          "tests/test_gate68_defensive.py::test_g68_03_the_three_unrun_shapes_are_all_refused_with_a_reason[setup_only]",
+          "tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun"
+        ],
+        "witness": {
+          "tests/test_gate68_defensive.py::test_g68_01_the_premise_regression_refuses_a_setup_only_child": "Failed: DID NOT RAISE AssertionError",
+          "tests/test_gate68_defensive.py::test_g68_03_the_three_unrun_shapes_are_all_refused_with_a_reason[setup_only]": "Failed: DID NOT RAISE AssertionError",
+          "tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun": "Failed: DID NOT RAISE AssertionError"
+        }
+      },
+      "exact_failed_set": false,
+      "call_only": true,
+      "witnesses": {}
+    },
+    "mutant": {
+      "rc": 1,
+      "summary": {
+        "failed": 3,
+        "passed": 2,
+        "total": 5,
+        "collected": 13,
+        "deselected": 8
+      },
+      "failed": [
+        "tests/test_gate68_defensive.py::test_g68_01_the_premise_regression_refuses_a_setup_only_child",
+        "tests/test_gate68_defensive.py::test_g68_03_the_three_unrun_shapes_are_all_refused_with_a_reason[setup_only]",
+        "tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun"
+      ],
+      "expected": {
+        "fail": [
+          "tests/test_gate68_defensive.py::test_g68_01_the_premise_regression_refuses_a_setup_only_child",
+          "tests/test_gate68_defensive.py::test_g68_03_the_three_unrun_shapes_are_all_refused_with_a_reason[setup_only]",
+          "tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun"
+        ],
+        "witness": {
+          "tests/test_gate68_defensive.py::test_g68_01_the_premise_regression_refuses_a_setup_only_child": "Failed: DID NOT RAISE AssertionError",
+          "tests/test_gate68_defensive.py::test_g68_03_the_three_unrun_shapes_are_all_refused_with_a_reason[setup_only]": "Failed: DID NOT RAISE AssertionError",
+          "tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun": "Failed: DID NOT RAISE AssertionError"
+        }
+      },
+      "exact_failed_set": true,
+      "call_only": true,
+      "witnesses": {
+        "tests/test_gate68_defensive.py::test_g68_01_the_premise_regression_refuses_a_setup_only_child": true,
+        "tests/test_gate68_defensive.py::test_g68_03_the_three_unrun_shapes_are_all_refused_with_a_reason[setup_only]": true,
+        "tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun": true
+      }
+    }
+  },
+  "original_unchanged": true
+}

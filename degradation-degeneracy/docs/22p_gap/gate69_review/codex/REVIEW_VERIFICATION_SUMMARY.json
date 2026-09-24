@@ -1,0 +1,20 @@
+{
+  "verdict": "ACCEPT_G68_T1_AND_SCOPED_GATE69_CLOSURE_NOT_MAIN_RUN_GO",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "pytest": "9.1.1",
+  "head": "e6ddcd1efb7df4be69849a4fd5b59c43cccff873",
+  "new_blocking_findings": 0,
+  "targeted_pass": 41,
+  "real_premise_child_cases": 7,
+  "recipient_record_variants": 7,
+  "premise_registered_mutations": 4,
+  "git_manifest_counts": {
+    "66": 107,
+    "67": 350,
+    "68": 141
+  },
+  "product_source_modified": false,
+  "full_scientific_suite_run": false,
+  "main_run_authorized": false,
+  "comsol_runs": 0
+}

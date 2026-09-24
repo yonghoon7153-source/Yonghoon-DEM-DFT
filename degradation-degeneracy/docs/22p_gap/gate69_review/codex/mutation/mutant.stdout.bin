@@ -1,0 +1,60 @@
+F..FF                                                                    [100%]
+================================== FAILURES ===================================
+________ test_g68_01_the_premise_regression_refuses_a_setup_only_child ________
+
+tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/g69tmp_03/pytest-of-User/pytest-4/test_g68_01_the_premise_regres0')
+
+    def test_g68_01_the_premise_regression_refuses_a_setup_only_child(tmp_path):
+        """★ G68-T1 — 리뷰어 반례 그대로. 원본 `_premise_run` 의 명시 `env_extra` 로 `PYTEST_ADDOPTS=--setup-only`
+        를 준다. child 는 rc 0, JUnit 에는 정확한 두 testcase 가 failure/error/skipped 없이 적힌다. 실제 단계 관측에는
+        setup/teardown 만 있고 **call 0 개**다. 전 판의 `assert_premise_actually_ran` 은 이것을 ACCEPTED / 미측정 [] 로
+        돌려줬다 (리뷰어 `t1_setup_only/RESULTS.json`). 이제 **거부**해야 한다 — 그리고 그 거부는 `AssertionError`
+        여야 한다 (임의 예외는 증거가 아니다)."""
+        junit = tmp_path / "premise.xml"
+        r = tm._premise_run(sys.executable, {"PYTEST_ADDOPTS": "--setup-only"}, junit)
+        assert r.returncode == 0, ("반례의 전제가 깨졌다 — setup-only child 가 rc 0 이 아니다", r.returncode,
+                                   (r.stdout or "")[-400:], (r.stderr or "")[-400:])
+>       with pytest.raises(AssertionError) as ei:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+tests\test_gate68_defensive.py:46: Failed
+_ test_g68_03_the_three_unrun_shapes_are_all_refused_with_a_reason[setup_only] _
+
+tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/g69tmp_03/pytest-of-User/pytest-4/test_g68_03_the_three_unrun_sh2')
+addopts = '--setup-only'
+
+    @pytest.mark.parametrize("addopts", ["--collect-only", "--g68-option-does-not-exist", "--setup-only"],
+                             ids=["collect_only", "usage_error", "setup_only"])
+    def test_g68_03_the_three_unrun_shapes_are_all_refused_with_a_reason(tmp_path, addopts):
+        """G67-T1 의 두 모양(수집만 · 사용법 오류)에 **setup-only** 를 더해 셋을 한 자리에서 본다. 셋 다 `AssertionError`
+        이고, 사유 문장이 서로 다르다 — "안 돌았다" 하나로 뭉개면 변이 증인이 뭉개진다 (67차 T1-b 교훈)."""
+        junit = tmp_path / "premise.xml"
+        r = tm._premise_run(sys.executable, {"PYTEST_ADDOPTS": addopts}, junit)
+>       with pytest.raises(AssertionError) as ei:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+tests\test_gate68_defensive.py:70: Failed
+______________ test_g68_04_a_node_without_a_call_record_is_unrun ______________
+
+tmp_path = WindowsPath('C:/Users/Administrator/Documents/Codex/g69tmp_03/pytest-of-User/pytest-4/test_g68_04_a_node_without_a_c0')
+clean_child = (CompletedProcess(args=['C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\...n 0.54s\n', stderr=''), WindowsPath('C:/Users/Administrator/Documents/Codex/g69tmp_03/g68-clean-ewntpk35/premise.xml'))
+
+    def test_g68_04_a_node_without_a_call_record_is_unrun(tmp_path, clean_child):
+        """★ 핵심 — 한 node 의 `when=call` 줄만 지우면(setup/teardown 은 남긴다) 그 node 는 "돌지 않았다" 다.
+        JUnit 은 그대로 passed 라 **JUnit 만 보는 소비자는 못 잡는다** — 그것이 G68-T1 이다."""
+        r, junit = _copy_outputs(clean_child, tmp_path)
+        recs = _records(junit)
+        victim = next(x["nodeid"] for x in recs if x["when"] == "call")
+        _write(junit, [x for x in recs if not (x["nodeid"] == victim and x["when"] == "call")])
+>       with pytest.raises(AssertionError, match="G68-T1"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+tests\test_gate68_defensive.py:113: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_gate68_defensive.py::test_g68_01_the_premise_regression_refuses_a_setup_only_child
+FAILED tests/test_gate68_defensive.py::test_g68_03_the_three_unrun_shapes_are_all_refused_with_a_reason[setup_only]
+FAILED tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun
+3 failed, 2 passed, 8 deselected in 4.17s
