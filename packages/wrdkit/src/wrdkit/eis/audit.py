@@ -1460,7 +1460,6 @@ def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
         return out
     record = dc_record(spectrum)
     out.dc = _dc_summary(record)
-    out.findings += _dc_findings(record)
     inductive = _low_frequency_inductive(spectrum)
     if inductive is not None:
         count, below = inductive
@@ -1474,6 +1473,7 @@ def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
     switches = _range_switches(spectrum)
     if switches:
         out.kk["range_switches_hz"] = switches
+    region = None
     if out.kk["judged"]:
         out.findings += _kk_findings(chosen, out.kk, switches)
         region = _kk_region(chosen, out.kk)
@@ -1483,6 +1483,7 @@ def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
             low_limit_hz=(region.above if region is not None and region.at_bottom
                           and region.points > 1 else None),
             sigma=float(out.kk["sigma"]))
+    out.findings += _dc_findings(record, region)
     out.findings = sort_findings(out.findings)
     return out
 
@@ -1507,13 +1508,20 @@ def _dc_summary(record: DCRecord) -> dict:
     return out
 
 
-def _dc_findings(record: DCRecord) -> list[Finding]:
+def _dc_findings(record: DCRecord, region: _KKRegion | None = None) -> list[Finding]:
     """The cell was not at rest: its DC level moved, within a period, by more
     than ``DC_DRIFT_SHARE`` of the AC amplitude somewhere in the sweep.
 
     Says where, by how much, and what it does to the points when the
     instrument did not correct for it -- the part the KK test cannot see,
-    because a smooth drift leaks in as a smooth, KK-shaped error."""
+    because a smooth drift leaks in as a smooth, KK-shaped error.
+
+    ``region``: where the KK test broke, if it did.  When that is where the
+    level moved, the two are one cause and the sentence says so -- 실측 #11
+    (열네 번째 검수) 은 KK 가 저주파 끝 10.3 % 를 짚은 바로 밑에 "KK 로는 안
+    보입니다" 가 붙었다.  섞인 몫(``share / π``)으로 KK 의 어긋남을 나눠 갖지
+    않는다: 매끄러운 흐름은 KK 모델이 대부분 그려 내므로, 그 어긋남은 흐름보다
+    셀 자체가 변한 몫이 크다 (모의 측정: 5.8 % 틀어진 점의 KK 잔차 1.6 %)."""
     if not record.judged or record.share is None:
         return []
     over = record.share >= DC_DRIFT_SHARE
@@ -1531,13 +1539,20 @@ def _dc_findings(record: DCRecord) -> list[Finding]:
         word = "전류"
         start, end = record.current_ends_a
         level = f"{start * 1e6:.3g} → {end * 1e6:.3g} µA"
+    leak = f"기기가 드리프트를 보정하지 않았다면 그 점들이 약 {worst / math.pi * 100:.2g} % 틀어져"
+    if region is not None and low <= region.f_high and high >= region.f_low:
+        where = (f"{region.f_low:.3g} Hz" if region.points == 1
+                 else f"{region.f_low:.3g}–{region.f_high:.3g} Hz")
+        effect = (f"{leak} 있습니다. KK 가 {where} 에서 어긋남을 짚은 것과 한 뿌리입니다 "
+                  f"— 셀이 쉬지 않은 채 잰 것입니다")
+    else:
+        effect = f"{leak} 있고, 매끄럽게 틀어져 KK 로는 안 보입니다"
     return [Finding(
         NOTE, "dc_drift",
         f"직류 {word}가 스윕 동안 {level} 로 변했습니다 — 셀이 평형이 아니었습니다 "
         f"(쉬지 않은 셀). {span} 에서는 한 주기 동안 교류 진폭의 {worst * 100:.2g} % "
-        f"까지 움직였습니다: 기기가 드리프트를 보정하지 않았다면 그 점들이 약 "
-        f"{worst / math.pi * 100:.2g} % 틀어져 있고, 매끄럽게 틀어져 KK 로는 안 "
-        f"보입니다. 직류 {word}가 멈출 때까지 쉬게 한 뒤 다시 재세요")]
+        f"까지 움직였습니다: {effect}. 직류 {word}가 멈출 때까지 쉬게 한 뒤 다시 "
+        f"재세요")]
 
 
 def _range_switches(spectrum: Spectrum) -> list[float] | None:

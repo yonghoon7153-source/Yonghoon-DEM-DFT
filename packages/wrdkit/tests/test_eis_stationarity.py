@@ -63,6 +63,7 @@ def test_a_settling_cell_is_seen_in_its_dc_current_where_kk_sees_nothing():
     assert drift.severity == "note"
     assert drift.message.startswith("직류 전류가 스윕 동안 300 → 95.5 µA 로 변했습니다")
     assert "0.01–" in drift.message and "약 6 % 틀어져" in drift.message
+    assert "KK 로는 안 보입니다" in drift.message     # KK 는 판정이 없다
 
     record = dc_record(spectrum)
     assert record.judged and record.source == "current"
@@ -73,6 +74,22 @@ def test_a_settling_cell_is_seen_in_its_dc_current_where_kk_sees_nothing():
     assert 90e-6 < end < 100e-6
     assert record.at_hz == pytest.approx(0.01)
     assert 0.15 < record.max_share < 0.25
+
+
+def test_where_kk_breaks_too_the_two_are_named_as_one_cause():
+    """실측 #11: 직류 전류가 7.21 → -34.9 µA 로 뒤집혔고, KK 는 같은 저주파 끝을
+    10 % 로 짚었다.  그 밑에 "KK 로는 안 보입니다" 가 붙었었다.  셀의 임피던스
+    자체가 0.1 Hz 아래에서 decade 당 20 % 변하고 직류도 줄어드는 셀로 본다."""
+    f = sweep()
+    true = true_impedance(f)
+    ramp = np.clip(np.log10(0.1 / f), 0, None) * 0.20
+    spectrum = measured(measure_peis(f, true * (1 + ramp), dc_current_a=settling()))
+    audit = audit_spectrum(spectrum)
+    (kk,) = [one for one in audit.findings if one.code == "kk_violation"]
+    assert kk.message.startswith("저주파 끝 0.01")
+    (drift,) = [one for one in audit.findings if one.code == "dc_drift"]
+    assert "KK 로는 안 보입니다" not in drift.message
+    assert "KK 가 0.01–" in drift.message and "한 뿌리입니다" in drift.message
 
 
 def test_the_share_over_pi_is_the_error_a_lock_in_makes():
