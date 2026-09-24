@@ -58,7 +58,7 @@ from .fit import edge_misfit
 from .guess import inductive_mask
 from .kk import KKResult, lin_kk
 from .spectrum import Spectrum
-from .stationarity import DCRecord, dc_record
+from .stationarity import DCRecord, current_pair, dc_record, potential_pair
 
 __all__ = ["CHECK", "Finding", "FitAudit", "KKReference", "Misfit", "NOTE", "PROBLEM",
            "REFERENCES", "SEVERITIES", "SpectrumAudit", "audit_spectrum", "SEVERITY_LABELS", "audit_conductivity_scan",
@@ -1533,12 +1533,11 @@ def _dc_findings(record: DCRecord, region: _KKRegion | None = None) -> list[Find
     worst = float(record.max_share)
     if record.source == "potential":
         word = "전위"
-        start, end = record.potential_ends_v
-        level = (f"{start:.4f} → {end:.4f} V ({(end - start) * 1e3:+.1f} mV)")
+        pair, change = potential_pair(*record.potential_ends_v)
+        level = f"{pair} ({change})" if change else pair
     else:
         word = "전류"
-        start, end = record.current_ends_a
-        level = f"{start * 1e6:.3g} → {end * 1e6:.3g} µA"
+        level = current_pair(*record.current_ends_a)
     leak = f"기기가 드리프트를 보정하지 않았다면 그 점들이 약 {worst / math.pi * 100:.2g} % 틀어져"
     if region is not None and low <= region.f_high and high >= region.f_low:
         where = (f"{region.f_low:.3g} Hz" if region.points == 1

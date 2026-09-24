@@ -179,11 +179,9 @@ export function dcRows(dc: AuditDC | undefined): [string, string][] {
   const moved = potential ? Math.abs(potential[1] - potential[0]) >= MOVED_POTENTIAL_V : false
   const rows: [string, string][] = []
   if (potential && ((dc.source === 'potential' && !still) || (!current && moved))) {
-    const change = (potential[1] - potential[0]) * 1e3
-    rows.push(['직류 전위 (스윕 동안)', `${potential[0].toFixed(4)} → ${
-      potential[1].toFixed(4)} V (${change >= 0 ? '+' : ''}${change.toFixed(1)} mV, ${took})`])
+    rows.push(['직류 전위 (스윕 동안)', potentialPair(potential, took)])
   } else if (current) {
-    rows.push(['직류 전류 (스윕 동안)', `${num(current[0], 3)} → ${num(current[1], 3)} µA (${took})`])
+    rows.push(['직류 전류 (스윕 동안)', `${currentPair(current)} (${took})`])
   } else {
     return []
   }
@@ -192,6 +190,26 @@ export function dcRows(dc: AuditDC | undefined): [string, string][] {
       : `교류 진폭의 ${pct(share, share < 0.1 ? 1 : 0)} (${hertz(dc.at_hz ?? NaN)})`])
   }
   return rows
+}
+
+/** µA, 그 아래는 nA — 펠릿의 끝 전류가 `-0.0017 µA` 로 읽혔다 (`bml audit` 과 같다). */
+function currentPair([start, end]: [number, number]): string {
+  const unit = (value: number): [number, string] =>
+    value === 0 || Math.abs(value) >= 1 ? [value, 'µA'] : [value * 1e3, 'nA']
+  const [a, first] = unit(start)
+  const [b, second] = unit(end)
+  return first === second ? `${num(a, 3)} → ${num(b, 3)} ${first}`
+    : `${num(a, 3)} ${first} → ${num(b, 3)} ${second}`
+}
+
+/** 0 V 근처(대칭셀)는 mV — `0.0004 → 0.0002 V` 는 아무것도 말하지 않았다. */
+function potentialPair([start, end]: [number, number], took: string): string {
+  if (Math.max(Math.abs(start), Math.abs(end)) < 0.1) {
+    return `${num(start * 1e3, 3)} → ${num(end * 1e3, 3)} mV (${took})`
+  }
+  const change = (end - start) * 1e3
+  return `${start.toFixed(4)} → ${end.toFixed(4)} V (${change >= 0 ? '+' : ''}${
+    change.toFixed(1)} mV, ${took})`
 }
 
 function minutes(seconds: number | undefined): string {

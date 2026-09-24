@@ -47,7 +47,7 @@ from wrdkit.eis.conductivity import (
     real_axis_crossing,
 )
 from wrdkit.eis.derive import BLOCKING_PHASE_DEG, blocking_verdict
-from wrdkit.eis.stationarity import STILL_SHARE
+from wrdkit.eis.stationarity import STILL_SHARE, current_pair, potential_pair
 
 from .. import storage
 from ..db import get_session
@@ -539,10 +539,10 @@ def _dc_line(dc: dict) -> str:
              and abs(potential[1] - potential[0]) >= MOVED_POTENTIAL_V)
     if potential and ((dc.get("source") == "potential" and not still)
                       or (not current and moved)):
-        level = (f"직류 전위 {potential[0]:.4f} → {potential[1]:.4f} V "
-                 f"({(potential[1] - potential[0]) * 1e3:+.1f} mV, {took})")
+        pair, change = potential_pair(*potential)
+        level = f"직류 전위 {pair} ({change + ', ' if change else ''}{took})"
     elif current:
-        level = f"직류 전류 {_g(current[0])} → {_g(current[1])} µA ({took})"
+        level = f"직류 전류 {current_pair(current[0] * 1e-6, current[1] * 1e-6)} ({took})"
     else:
         # 전위만 있고 그대로다 — 전위를 잡고 쟀다면 늘 그렇다.  쉬었는지는 모른다.
         return ""

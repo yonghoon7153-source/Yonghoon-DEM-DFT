@@ -146,6 +146,15 @@ describe('dcRows — was the cell at rest (ADR 0043 보완 7)', () => {
       .toEqual(['직류 전위 (스윕 동안)', '3.7012 → 3.6921 V (-9.1 mV, 10.0 분)'])
   })
 
+  it('reads a pellet\'s last nanoamperes and a symmetric cell\'s millivolts', () => {
+    expect(dcRows({ judged: true, duration_s: 34, source: 'current',
+                    current_ua: [-2.65, -0.0017] })[0])
+      .toEqual(['직류 전류 (스윕 동안)', '-2.65 µA → -1.70 nA (34 초)'])
+    expect(dcRows({ judged: true, duration_s: 1044, source: 'potential',
+                    potential_v: [0.0004, 0.0002], share: 0.0011, at_hz: 0.0637 })[0])
+      .toEqual(['직류 전위 (스윕 동안)', '0.40 → 0.20 mV (17.4 분)'])
+  })
+
   it('says nothing when the file kept no record', () => {
     expect(dcRows(undefined)).toEqual([])
     expect(dcRows({ judged: false, reason: '파일에 점마다의 시각이 없습니다' })).toEqual([])

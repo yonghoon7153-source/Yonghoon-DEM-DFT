@@ -14,7 +14,7 @@ from synthetic_eis import measure_peis
 from wrdkit.eis.audit import audit_spectrum
 from wrdkit.eis.circuit import parse_circuit
 from wrdkit.eis.spectrum import Spectrum
-from wrdkit.eis.stationarity import dc_record
+from wrdkit.eis.stationarity import current_pair, dc_record, potential_pair
 
 #: 실측 풀셀 #15 (Dcell12_4_C06) 의 쓰는 맞춤 — 0.01 Hz 에서 |Z| ≈ 160 Ω.
 FULL_15 = ("L1-R0-p(R1,CPE1)-TL1",
@@ -172,3 +172,14 @@ def test_the_audit_carries_the_record():
     assert dc["duration_s"] == pytest.approx(dc_record(spectrum).duration_s)
     assert audit_spectrum(Spectrum(f, spectrum.z_re, spectrum.z_im)).dc == {
         "judged": False, "reason": "파일에 점마다의 시각이 없습니다"}
+
+
+def test_small_levels_are_written_in_units_that_show_them():
+    """열네 번째 검수: 펠릿의 끝 전류가 ``-0.0017 µA``, 대칭셀의 전위가
+    ``0.0004 → 0.0002 V`` 로 찍혔다 — 값이 단위에 묻혔다."""
+    assert current_pair(34.6e-6, 2.46e-6) == "34.6 → 2.46 µA"
+    assert current_pair(-2.65e-6, -1.7e-9) == "-2.65 µA → -1.7 nA"
+    assert current_pair(-0.193e-6, 7.79e-9) == "-193 → 7.79 nA"
+    assert potential_pair(0.0004, 0.0002) == ("0.4 → 0.2 mV", None)
+    assert potential_pair(3.7012, 3.6921) == ("3.7012 → 3.6921 V", "-9.1 mV")
+

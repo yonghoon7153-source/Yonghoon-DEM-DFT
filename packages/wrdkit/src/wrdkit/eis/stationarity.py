@@ -40,7 +40,7 @@ import numpy as np
 
 from .spectrum import Spectrum
 
-__all__ = ["DCRecord", "STILL_SHARE", "dc_record"]
+__all__ = ["DCRecord", "STILL_SHARE", "current_pair", "dc_record", "potential_pair"]
 
 #: Fewer points than this and there is no slope to take.
 FEWEST_POINTS = 3
@@ -182,3 +182,29 @@ def dc_record(spectrum: Spectrum | None) -> DCRecord:
         judged=True, time_s=time, frequency_hz=frequency,
         current_a=current, potential_v=potential,
         share=shares.get(source), source=source)
+
+
+def _amperes(value: float) -> tuple[float, str]:
+    """µA, or nA below a microampere -- a pellet's current at the end of its
+    sweep is a few nA and read ``-0.0017 µA`` (열네 번째 검수)."""
+    if value == 0 or abs(value) >= 1e-6:
+        return value * 1e6, "µA"
+    return value * 1e9, "nA"
+
+
+def current_pair(start_a: float, end_a: float) -> str:
+    """``34.6 → 2.46 µA``, or ``-2.65 µA → -1.7 nA`` when the units differ."""
+    (start, unit), (end, other) = _amperes(start_a), _amperes(end_a)
+    if unit == other:
+        return f"{start:.3g} → {end:.3g} {unit}"
+    return f"{start:.3g} {unit} → {end:.3g} {other}"
+
+
+def potential_pair(start_v: float, end_v: float) -> tuple[str, str | None]:
+    """``("3.7012 → 3.6921 V", "-9.1 mV")`` -- the change apart, since four
+    decimals of a volt hide it.  Near 0 V (a symmetric cell) the pair itself
+    is in mV and there is no second part: ``0.0004 → 0.0002 V`` said nothing
+    (열네 번째 검수, #142)."""
+    if max(abs(start_v), abs(end_v)) < 0.1:
+        return f"{start_v * 1e3:.3g} → {end_v * 1e3:.3g} mV", None
+    return f"{start_v:.4f} → {end_v:.4f} V", f"{(end_v - start_v) * 1e3:+.1f} mV"
