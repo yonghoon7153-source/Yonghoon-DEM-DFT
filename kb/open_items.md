@@ -188,6 +188,9 @@
     ⚠ 09-24 10:31 watch: runner.log 마지막 줄이 **03 S 바깥 이완 시작(02:07)** 이고 완료표에 03 이 없다 · GPU 30,834 MiB 점유 · 순간 0 % ·
     pw.out 1,625 줄 매치 ⇒ **끝난 것으로 안 읽는다** (사용자 '끝남' 보고 → 이온 스텝 수 · Total force · JOB DONE · GPU 표본 확인 블록 전달).
     ✅ 10:44 확인: **돌고 있다** — 이온 스텝 82 · Total force 0.019–0.024 Ry/Bohr · pw.out 13 초 전 수정 · GPU 86–98 % · 10.7 GB (nstep 200 · forc 1e-3).
+    ✅ **23:13 S 바깥 이완 끝** (rc 0 · 완료 판정 통과 · 21.1 h · 피크 **32,378 / 32,768 MiB = 98.8 %** — 여유 390 MiB) → **Li 바깥 이완 23:13 시작**
+    (30.3 GB · 89 % · 끝 ≈ 09-25 저녁 추정). 판정은 두 이완 뒤 `--collect`. ⏭ BFGS 스텝·마지막 힘·$STORE 백업 확인 블록 전달.
+    ⏭ 다 끝나면 `test_adhesion.py::test_missing_vram_is_dash_not_zero` 를 합성 원장 주입으로 (지금 전제 = 빈 VRAM 잡이 원장에 있다).
     🔴 **러너 결함**: 기록된 `pw.x PID 563677` 이 **없다** (ps 빈 줄) — `pgrep -P mpirun | head -1` 이 pw.x 가 아닌 자식을 잡았거나 사라진 PID 다.
     완료표 `peak_self_MiB` 가 **세 잡 모두 0** = 자기 VRAM 측정이 한 번도 안 됐다 (컨테이너 PID 공간 ≠ nvidia-smi PID 도 의심). 가드는 mpirun 을 죽이므로 안전은 유지 ·
     기록 필드가 거짓 0 이다 ('조용히 틀린 경로'). V100 진단: 트리 = 래퍼 563671 → mpirun 563691 → **pw.x 563705** · nvidia-smi 는 **호스트 PID 3312066**.
