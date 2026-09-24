@@ -239,6 +239,24 @@ def test_the_text_says_which_points_went_and_what_the_values_did(client):
             "(L1-R0-p(R1,CPE1)-p(R2,CPE2))") in undo
 
 
+def test_a_value_the_window_leaves_undetermined_is_named_without_a_guessed_cause():
+    """첫 실측 맞춰 보기 (2026-09-24 14:41 UTC): #33 의 R0 가 "뺀 점들이 정하던
+    값입니다" 로 적혔다.  고주파 절편은 저주파 점이 정하던 값이 아니다 — 아크와 TL 이
+    역할을 바꿔 미결정이 됐다.  까닭은 짐작하지 않고 사실만 적는다."""
+    from app.routers.eis_refit import _value_lines
+    from app.schemas import RefitSpectrumOut, RefitValueOut
+
+    one = RefitSpectrumOut(
+        id=33, name="260903_Poly(L&F)_60um_full_#01_C01", old_fit_id=1,
+        old_circuit=FULL[0], new_circuit=FULL[0],
+        values=[RefitValueOut(name="R0", old=3.02, new=2.9, determined=False),
+                RefitValueOut(name="R1", old=5.94, new=0.841),
+                RefitValueOut(name="CPE1_Q", old=0.0101, new=0.0101)])
+    assert _value_lines(one) == [
+        "    값: R1 5.94 → 0.841 (-86 %) · 나머지 1개는 1 % 안",
+        "    새로 미결정: R0 — 하한 위의 점만으로는 정해지지 않습니다"]
+
+
 def test_one_spectrum_that_breaks_does_not_stop_the_batch(client, monkeypatch):
     """스무 분짜리 묶음이 한 스펙트럼의 예외로 멈추면 나머지를 다시 기다려야 한다.
     멈춘 것은 이름과 까닭을 적고 넘어간다."""

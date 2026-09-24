@@ -626,7 +626,11 @@ MOVED_VALUE = 0.01
 def _value_lines(one: RefitSpectrumOut) -> list[str]:
     """같은 회로로 하한만 올렸을 때 — 정해진 값 중 1 % 넘게 움직인 것의 옛 → 새,
     그리고 이번에 정해지지 않게 된 값.  회로가 바뀌었으면 비었다 (같은 이름이
-    다른 소자다)."""
+    다른 소자다).
+
+    미결정이 된 까닭은 짐작하지 않는다.  첫 실측 맞춰 보기에서 #33 의 R0 (고주파
+    절편)가 "뺀 점들이 정하던 값" 으로 적혔다 — 저주파 점이 정하던 값이 아니라,
+    아크와 TL 이 역할을 바꾸며 미결정이 된 것이다."""
     if not one.values:
         return []
     moved, still = [], 0
@@ -647,7 +651,7 @@ def _value_lines(one: RefitSpectrumOut) -> list[str]:
         lines.append(f"    값: 정해진 {still}개 모두 1 % 안에서 그대로")
     if lost:
         lines.append("    새로 미결정: " + ", ".join(lost)
-                     + " — 뺀 점들이 정하던 값입니다")
+                     + " — 하한 위의 점만으로는 정해지지 않습니다")
     return lines
 
 
