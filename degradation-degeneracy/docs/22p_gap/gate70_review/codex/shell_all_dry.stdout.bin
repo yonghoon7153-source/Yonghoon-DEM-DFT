@@ -1,0 +1,4 @@
+--mode grid --config configs/base.yaml --nproc 1 --out results/receiver_unused --may-open --noise-seed 42
+--mode fit --in results/receiver_unused --nproc 1 --bounds expanded --reference grid --may-open
+--mode score --in results/receiver_unused
+--mode report --in results/receiver_unused

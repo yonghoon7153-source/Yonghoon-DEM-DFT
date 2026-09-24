@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "-m",
+    "pytest",
+    "tests/test_io_bookkeeping.py::test_source_digest_covers_full_run_scope",
+    "tests/test_io_bookkeeping.py::test_run_scope_matcher_shared_with_digest",
+    "tests/test_io_bookkeeping.py::test_scope_exclusion_helper_is_shared",
+    "tests/test_io_bookkeeping.py::test_tracked_dirty_is_conservative_for_excluded_paths",
+    "tests/test_io_bookkeeping.py::test_untracked_requirements_counts_as_critical",
+    "--noconftest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--json-report",
+    "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate70_review_20260924\\io_scope_tests.pytest.json"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\g70_synthetic_checks\\degradation-degeneracy",
+  "rc": 1,
+  "seconds": 3.702999999979511
+}

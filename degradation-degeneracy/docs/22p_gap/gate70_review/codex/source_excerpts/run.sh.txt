@@ -1,0 +1,327 @@
+# run.sh
+# Entire source SHA-256: 07ec2788373dce55befb94ac1814e31ed255803633ea99b116f3bb81c7f8afa4
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 15-65
+15: 
+16: # ---------------------------------------------------------------- defaults
+17: MODE=""
+18: CONFIG="configs/base.yaml"
+19: LEG="${LEG:-}"                    # 계획 index 의 다리 이름 (비우면 CANONICAL_RUN)
+20: # ★ 49차 P0-3 — 실행권의 **소유 증명 파일** 경로. 이 스크립트가 coordinator 다:
+21: #   한 번 발급해 여기 두고, grid·fit 하위 process 에 **경로로** 넘긴다 (token
+22: #   자체는 argv 에 절대 싣지 않는다 — `ps` 로 새어 나간다). 비우면 다리 이름에서
+23: #   유도한다. 48차에는 이 통로가 없어서 `--mode all` 이 grid 직후 fit 에서
+24: #   자기 자신의 claim 때문에 거부됐다.
+25: 
+26: # 열화 모드 축 — "start:stop:step" | "a,b,c" | "0.1" | "none"
+27: LLI="none"
+28: LAM_PE="none"
+29: LAM_NE="none"
+30: LAM_PE_TYPE="de"          # de | li | both
+31: LAM_NE_TYPE="de"
+32: 
+33: # 노이즈
+34: NOISE="0"
+35: NOISE_SET="false"                 # --noise 를 사용자가 직접 줬는가
+36: NOISE_SEED="42"
+37: 
+38: # fitting
+39: OBJECTIVE=""                      # 비우면 objectives.yaml 전체 (4종)
+40: BOUNDS_PRESET="expanded"          # expanded | original_33p
+41: N_RESTARTS="auto"                 # auto = objectives.yaml 의 n_restarts
+42: CLEAN="false"                     # true면 노이즈 없는 곡선으로 fitting
+43: ADAPTIVE="true"                   # false면 모든 조건이 정확히 n_restarts 번 (F66)
+44: WARM_START="true"
+45: LIMIT=""                          # 앞 N조건만 (스모크용)
+46: REFERENCE="grid"                  # grid (유도식) | halfcell (21p 식, 전 범위 반쪽셀)
+47: 
+48: # 가중치 sweep (Phase 6)
+49: W_GRID=""                         # 비우면 0:2:0.25
+50: W_STRIDE="2"                      # 격자 솎기 (2면 축당 11→6값)
+51: 
+52: # 실행 제어
+53: BACKEND="cpu"             # cpu | gpu
+54: NPROC="$(command -v nproc >/dev/null && nproc || echo 4)"
+55: CHUNK_SIZE="200"
+56: RESUME="false"
+57: DRY_RUN="false"
+58: 
+59: # 출력
+60: OUT="results/run_$(date +%Y%m%d_%H%M%S)"
+61: OUT_SET="false"                   # --out을 사용자가 직접 줬는가
+62: TAG=""
+63: LOG_LEVEL="INFO"
+64: 
+65: # ---------------------------------------------------------------- usage
+
+# Lines 161-235
+161: # ---------------------------------------------------------------- parse
+162: IN_DIR=""
+163: COMPARE_DIR=""
+164: HALFCELL_ARGS=()          # --halfcell-arg 는 여러 번 올 수 있다 (set -u 대비)
+165: while [[ $# -gt 0 ]]; do
+166:   case "$1" in
+167:     --mode)          MODE="$2"; shift 2 ;;
+168:     --leg)           LEG="$2"; export LEG; shift 2 ;;   # ★ 48차 P0-5 — export
+169:     --config)        CONFIG="$2"; shift 2 ;;
+170:     --lli)           LLI="$2"; shift 2 ;;
+171:     --lam-pe)        LAM_PE="$2"; shift 2 ;;
+172:     --lam-ne)        LAM_NE="$2"; shift 2 ;;
+173:     --lam-pe-type)   LAM_PE_TYPE="$2"; shift 2 ;;
+174:     --lam-ne-type)   LAM_NE_TYPE="$2"; shift 2 ;;
+175:     # ★ 10차 자체 리뷰 — 아래 셋은 파싱만 되고 어디에도 전달되지 않았다.
+176:     #   "바꿨다고 믿었는데 안 바뀐" 실험이 가장 위험하므로 즉시 실패한다.
+177:     --c-rate|--v-upper|--v-lower)
+178:       echo "지원 안 함: $1 — configs/*.yaml 의 experiment/cell 블록으로 지정하세요" >&2
+179:       exit 1 ;;
+180:     --noise)         NOISE="$2"; NOISE_SET="true"; shift 2 ;;
+181:     --noise-seed)    NOISE_SEED="$2"; shift 2 ;;
+182:     --objective)     OBJECTIVE="$2"; shift 2 ;;
+183:     --bounds)        BOUNDS_PRESET="$2"; shift 2 ;;
+184:     --n-restarts)    N_RESTARTS="$2"; shift 2 ;;
+185:     --no-adaptive)   ADAPTIVE="false"; shift ;;
+186:     --no-warm-start) WARM_START="false"; shift ;;
+187:     --clean)         CLEAN="true"; shift ;;
+188:     --limit)         LIMIT="$2"; shift 2 ;;
+189:     --reference)     REFERENCE="$2"; shift 2 ;;
+190:     --halfcell-method) HALFCELL_METHOD="$2"; shift 2 ;;
+191:     --halfcell-arg)  HALFCELL_ARGS+=("$2"); shift 2 ;;
+192:     --w-grid)        W_GRID="$2"; shift 2 ;;
+193:     --w-stride)      W_STRIDE="$2"; shift 2 ;;
+194:     --backend)       BACKEND="$2"; shift 2 ;;
+195:     --nproc)         NPROC="$2"; shift 2 ;;
+196:     --solver)
+197:       echo "지원 안 함: --solver — configs/*.yaml 의 solver 블록으로 지정하세요" >&2
+198:       echo "  (solver 는 완방상태 캐시·grid 서명에 봉인되므로 config 로만 바꿔야 한다)" >&2
+199:       exit 1 ;;
+200:     --chunk-size)    CHUNK_SIZE="$2"; shift 2 ;;
+201:     --resume)        RESUME="true"; shift ;;
+202:     --dry-run)       DRY_RUN="true"; shift ;;
+203:     --in)            IN_DIR="$2"; shift 2 ;;
+204:     --compare)       COMPARE_DIR="$2"; shift 2 ;;
+205:     --out)           OUT="$2"; OUT_SET="true"; shift 2 ;;
+206:     --tag)           TAG="$2"; shift 2 ;;
+207:     --log-level)     LOG_LEVEL="$2"; shift 2 ;;
+208:     -h|--help)       usage; exit 0 ;;
+209:     *) echo "알 수 없는 인자: $1" >&2; usage; exit 1 ;;
+210:   esac
+211: done
+212: 
+213: [[ -z "$MODE" ]] && { echo "--mode 필수" >&2; usage; exit 1; }
+214: 
+215: # ---------------------------------------------------------------- venv
+216: if [[ -d ".venv" && -z "${VIRTUAL_ENV:-}" ]]; then
+217:   # shellcheck disable=SC1091
+218:   source .venv/bin/activate
+219: fi
+220: 
+221: export PYTHONPATH="${REPO_ROOT}:${PYTHONPATH:-}"
+222: 
+223: #: ★ 19차 — `docs/RESULTS.md` 를 쓸 자격이 있는 **정본 실행**의 이름.
+224: #:   다른 실행은 `docs/RESULTS_<run>.md` 로 간다 (정본 덮어쓰기 방지).
+225: CANONICAL_RUN="${CANONICAL_RUN:-grid_fit_v4}"
+226: export MPLBACKEND="Agg"          # headless 강제
+227: 
+228: # ---------------------------------------------------------------- 실행 전 gate
+229: #: ★ 46차 P0-11 (계약 §13.4) — **비싼 실행은 계획 index 를 지나야 한다.**
+230: #:
+231: #:   그동안 보존 coverage 의 기준은 커밋된 투영이었다. 그래서 새 다리를 돌려도
+232: #:   투영을 만들기 전에는 아무 회귀도 깨지지 않았고, 2026-08-20 에 warm 7다리를
+233: #:   그렇게 돌렸다가 보존 없이 잃었다. 이제 `LEG_PRESERVATION.yaml` 의
+234: #:   `planned:` 에 사람이 적은 항목이 있어야 하고, 그 항목이 승인한 RUN_SCOPE
+235: #:   code identity 가 **지금과 같아야** 한다.
+
+# Lines 249-322
+249: #: blacklist 증설뿐이라 매 라운드 새 sink 가 하나씩 남았다 (56차 판정).
+250: #: 이제 자리는 `tools.preserve.attempts_root_for_ledger()` 가 원장에서
+251: #: 유도하고, 이름은 `attempt_path_for(leg)` 가 정한다. shell 이 넘기는 것은
+252: #: 다리 이름과 "내가 발급자다"(`--may-open`) 뿐이다.
+253: 
+254: plan_gate() {
+255:   local leg="${LEG:-$CANONICAL_RUN}"
+256:   # 면제는 **모든** 경로가 smoke namespace 안일 때만이다. 하나라도 밖이면
+257:   # 그 실행은 정본 산출을 만들 수 있으므로 gate 를 지난다 (읽기 전용 입력만
+258:   # 밖인 경우까지 막지만, 그 쪽으로 틀리는 편이 안전하다).
+259:   # ★ 47차 P0-3 — 면제 판정을 **정규 격리**로 옮긴다. 46차 shell `case` 는
+260:   #   문자열 prefix 라 `results/_smoke/../grid_fit_v4` 와 symlink 가 통과했다.
+261:   #   판정은 `tools.preserve.is_inside_namespace()` 하나이고 모듈 gate 도
+262:   #   같은 함수를 쓴다.
+263:   # ★ 49차 P0-3 — 사전검사는 **새 발급**과 **내가 가진 재개**를 구분해야 한다.
+264:   #   48차는 `assert_planned_leg()` 만 불렀고 그것은 `planned` 만 통과시켰다.
+265:   #   그래서 grid 가 계획을 `running` 으로 옮긴 직후 같은 pipeline 의 fit
+266:   #   사전검사가 **자기 자신 때문에** 거부됐다 — 정상 실행이 완주 불가였다.
+267:   python - "$leg" "$OUT" "${IN_DIR:-}" <<'PYGATE'
+268: import sys
+269: from src.io import source_digest
+270: from tools.preserve import (SMOKE_NAMESPACE, is_inside_namespace,
+271:                             precheck_leg_run, PreserveError)
+272: 
+273: leg, out, in_dir = sys.argv[1], sys.argv[2], sys.argv[3]
+274: paths = [p for p in (out, in_dir) if p]
+275: if paths and all(is_inside_namespace(p, SMOKE_NAMESPACE) for p in paths):
+276:     print("· 실행 전 gate 면제 — 모든 경로가 smoke namespace 안이다 (정규 격리)")
+277:     raise SystemExit(0)
+278: try:
+279:     e = precheck_leg_run(leg, source_digest())
+280: except PreserveError as exc:
+281:     print(f"❌ 실행 전 gate 거부 — {exc}", file=sys.stderr)
+282:     raise SystemExit(1)
+283: if e["kind"] == "new":
+284:     print(f"✅ 실행 전 gate 통과(사전 점검·새 발급) — {leg} · "
+285:           f"cohort {e['cohort_id']} · 승인 {e['recorded_on']}")
+286: else:
+287:     print(f"✅ 실행 전 gate 통과(사전 점검·소유한 재개) — {leg} · "
+288:           f"cohort {e['cohort_id']} · attempt {e['attempt_id'][:12]} · "
+289:           f"끝난 phase {e['phases_done'] or ['없음']}")
+290: PYGATE
+291: }
+292: 
+293: # ★ 49차 P0-3 — 실행이 끝난 다리를 **닫는다.** 48차는 `phase_done()` 과
+294: #   `finalize_leg()` 을 만들어 놓고 어느 production 경로도 부르지 않았다.
+295: #   그래서 계획은 `running` 에 영원히 남았고, "실행 전 승인 → 실행 → 실행
+296: #   기록" 의 마지막 변이 하나가 통째로 비어 있었다. lifecycle 은 닫히지
+297: #   않으면 lifecycle 이 아니라 그냥 열어 두기다.
+298: leg_finalize() {
+299:   local d="$1"
+300:   local leg="${LEG:-$CANONICAL_RUN}"
+301:   python - "$leg" "$d" <<'PYFIN'
+302: import sys
+303: from src.io import source_digest
+304: from tools.preserve import (SMOKE_NAMESPACE, is_inside_namespace,
+305:                             finalize_leg, inspect_leg_run, PreserveError)
+306: 
+307: leg, out = sys.argv[1], sys.argv[2]
+308: if is_inside_namespace(out, SMOKE_NAMESPACE):
+309:     print("· 실행 기록 닫기 면제 — smoke namespace 다 (정본 실행이 아니다)")
+310:     raise SystemExit(0)
+311: try:
+312:     view = inspect_leg_run(leg)
+313:     r = finalize_leg(leg, {"leg_source_digest": source_digest(),
+314:                            "cohorts": [view["cohort_id"]],
+315:                            "out": out})
+316: except PreserveError as exc:
+317:     print(f"\u274c 실행 기록을 닫지 못했다 — {exc}", file=sys.stderr)
+318:     raise SystemExit(1)
+319: print(f"\u2705 실행 기록을 닫았다 — {leg} · attempt {r['attempt_id'][:12]} · "
+320:       "preservation_status=preservation_pending "
+321:       "(보존 묶음 만들기·검증은 별도 단계다)")
+322: PYFIN
+
+# Lines 343-381
+343:     [[ "$CONFIG" == "configs/base.yaml" ]] && CONFIG="configs/sweep1d.yaml"
+344:     exec python -m src.sweep --config "$CONFIG" --out "$OUT" \
+345:       --log-level "$LOG_LEVEL"
+346:     ;;
+347: 
+348:   grid)       # Phase 3
+349:     [[ "$CONFIG" == "configs/base.yaml" ]] && CONFIG="configs/grid_coarse.yaml"
+350:     GRID_ARGS=(--config "$CONFIG"
+351:                --nproc "$NPROC" --chunk-size "$CHUNK_SIZE"
+352:                --out "$OUT" --log-level "$LOG_LEVEL")
+353:     [[ "$LLI"    != "none" ]] && GRID_ARGS+=(--lli "$LLI")
+354:     [[ "$LAM_PE" != "none" ]] && GRID_ARGS+=(--lam-pe "$LAM_PE")
+355:     [[ "$LAM_NE" != "none" ]] && GRID_ARGS+=(--lam-ne "$LAM_NE")
+356:     GRID_ARGS+=(--lam-pe-type "$LAM_PE_TYPE" --lam-ne-type "$LAM_NE_TYPE")
+357:     # ★ 10차 자체 리뷰 — `--noise 0` 을 명시해도 전달돼야 한다. 예전에는
+358:     #   "0 이면 생략"이라 config 의 noise 축이 조용히 대신 쓰였다.
+359:     [[ "$NOISE_SET" == "true" ]] && GRID_ARGS+=(--noise "$NOISE")
+360:     GRID_ARGS+=(--noise-seed "$NOISE_SEED")
+361:     [[ "$RESUME"  == "true" ]] && GRID_ARGS+=(--resume)
+362:     [[ "$DRY_RUN" == "true" ]] && GRID_ARGS+=(--dry-run)
+363:     [[ -n "$TAG" ]] && GRID_ARGS+=(--tag "$TAG")
+364:     if [[ "$BACKEND" == "gpu" ]]; then
+365:       echo "[경고] --backend gpu 는 아직 미구현 (Phase 7). CPU로 fallback." >&2
+366:     fi
+367:     # ★ 47차 P0-3 — dry-run 면제를 **없앴다.** 46차는 `--dry-run` 이면 gate 를
+368:     #   건너뛰었는데, `run_grid(dry_run=True)` 는 출력 디렉터리를 만들고
+369:     #   완방상태·baseline 을 계산한 뒤 최대 세 조건에 solver 를 실제로 부른다.
+370:     #   "flag 면제는 없다" 와 정면으로 어긋났다.
+371:     plan_gate
+372:     # ★ 49차 P0-3 — 실행권의 소유 증명을 **경로로** 넘긴다. 처음이면 grid 가
+373:     #   여기에 발급해 두고, fit 이 그 파일로 같은 실행에 붙는다.
+374:     GRID_ARGS+=(--may-open)          # ★ 57차 P0-1 — 발급자는 coordinator
+375:     exec python -m src.grid "${GRID_ARGS[@]}"
+376:     ;;
+377: 
+378:   fit)        # Phase 4
+379:     # halfcell 기준 + 기본 bound면 전용 preset으로 (리뷰 F3: 인덱스 패치는 버그였음)
+380:     [[ "$REFERENCE" == "halfcell" && "$BOUNDS_PRESET" == "expanded" ]] && BOUNDS_PRESET="halfcell"
+381:     FIT_ARGS=(--in "${IN_DIR:-$OUT}" --nproc "$NPROC"
+
+# Lines 404-419
+404:     [[ "$ADAPTIVE" == "false" ]] && FIT_ARGS+=(--no-adaptive)
+405:     [[ "$WARM_START" == "false" ]] && FIT_ARGS+=(--no-warm-start)
+406:     # ★ fit 의 인자 조립도 실행 없이 검사할 수 있어야 한다 (report·all 과 대칭).
+407:     #   없어서 --halfcell-method 전파를 회귀로 고정할 방법이 없었다.
+408:     if [[ "${RUN_SH_DRY:-0}" == "1" ]]; then
+409:       echo "${FIT_ARGS[*]}"
+410:       exit 0
+411:     fi
+412:     plan_gate                       # ★ 46차 P0-11
+413:     FIT_ARGS+=(--may-open)           # ★ 57차 P0-1
+414:     exec python -m src.fitting "${FIT_ARGS[@]}"
+415:     ;;
+416: 
+417:   finalize)   # ★ 49차 P0-3 — 다리를 **닫는다** (grid·fit 을 따로 돌렸을 때)
+418:     # `--mode all` 은 이 단계를 스스로 부른다. 두 phase 를 손으로 나눠 돌렸거나
+419:     # 중단 뒤 이어 돌린 경우에는 여기로 닫는다. 닫히지 않은 계획은 `running` 에
+
+# Lines 509-565
+509:   all)        # grid -> fit -> score -> report
+510:     # 18차 C — 예전에는 사용자가 준 protocol 옵션(--objective·--n-restarts·
+511:     #   --clean·--no-adaptive·--no-warm-start·noise 축)을 하위 단계로 넘기지
+512:     #   않아, all 이 기본 protocol 로 돌면서 그 사실이 아무 데도 안 적혔다.
+513:     # 18차 발견 7 — Hessian 은 인용 범위 밖 부록이라 기본 체인에서 뺀다.
+514:     D="$OUT"
+515:     RESUME_FLAG=()
+516:     [[ "$RESUME" == "true" ]] && RESUME_FLAG=(--resume)
+517: 
+518:     GRID_ARGS=(--mode grid --config "$CONFIG" --nproc "$NPROC" --out "$D")
+519:     # ★ 46차 P0-11 — 실행 전 gate 의 대상 다리를 하위 단계로 **전파**한다.
+520:     #   안 넘기면 하위 grid·fit 이 CANONICAL_RUN 으로 gate 를 보게 되어,
+521:     #   사용자가 지정한 다리와 다른 계획 항목으로 승인될 수 있다.
+522:     [[ -n "$LEG" ]] && GRID_ARGS+=(--leg "$LEG")
+523:     # ★ 49차 P0-3 — `all` 이 **coordinator** 다. 소유 증명 경로 하나를 정해
+524:     #   grid 와 fit 두 하위 호출에 똑같이 넘긴다. 이것이 없으면 grid 가 딴
+525:     #   실행권을 fit 이 이어받을 방법이 없어 pipeline 이 완주하지 못한다.
+526:     GRID_ARGS+=(--may-open)          # ★ 57차 P0-1
+527:     [[ "${NOISE_SET:-false}" == "true" ]] && GRID_ARGS+=(--noise "$NOISE")
+528:     [[ -n "${NOISE_SEED:-}" ]] && GRID_ARGS+=(--noise-seed "$NOISE_SEED")
+529:     GRID_ARGS+=("${RESUME_FLAG[@]}")
+530: 
+531:     FIT_ARGS=(--mode fit --in "$D" --nproc "$NPROC"
+532:               --bounds "$BOUNDS_PRESET" --reference "$REFERENCE")
+533:     # ★ all 모드도 half-cell 축을 넘겨야 한다. 안 넘기면 하위 fit 이 method
+534:     #   기본값 ocp 로 무왜곡 캐시를 읽고 **끝까지 성공**한다 — 어느 가드에도
+535:     #   안 걸려서, 민감도를 쟀다고 믿는 10시간 실행이 왜곡 0 이 된다.
+536:     [[ -n "${HALFCELL_METHOD:-}" ]] && FIT_ARGS+=(--halfcell-method "$HALFCELL_METHOD")
+537:     for _hca in "${HALFCELL_ARGS[@]:-}"; do
+538:       [[ -n "$_hca" ]] && FIT_ARGS+=(--halfcell-arg "$_hca")
+539:     done
+540:     [[ -n "$LEG" ]] && FIT_ARGS+=(--leg "$LEG")       # ★ 46차 P0-11
+541:     FIT_ARGS+=(--may-open)           # ★ 49차 P0-3 · 57차 P0-1
+542:     [[ -n "$OBJECTIVE" ]] && FIT_ARGS+=(--objective "$OBJECTIVE")
+543:     [[ "$N_RESTARTS" != "auto" ]] && FIT_ARGS+=(--n-restarts "$N_RESTARTS")
+544:     [[ "$CLEAN" == "true" ]] && FIT_ARGS+=(--clean)
+545:     [[ "$ADAPTIVE" == "false" ]] && FIT_ARGS+=(--no-adaptive)
+546:     [[ "$WARM_START" == "false" ]] && FIT_ARGS+=(--no-warm-start)
+547:     FIT_ARGS+=("${RESUME_FLAG[@]}")
+548: 
+549:     # 전파를 실제 실행 없이 검사할 수 있게 한다 (회귀: tests/test_runner.py)
+550:     if [[ "${RUN_SH_DRY:-0}" == "1" ]]; then
+551:       echo "${GRID_ARGS[*]}"
+552:       echo "${FIT_ARGS[*]}"
+553:       echo "--mode score --in $D"
+554:       echo "--mode report --in $D"
+555:       exit 0
+556:     fi
+557: 
+558:     "$0" "${GRID_ARGS[@]}"
+559:     "$0" "${FIT_ARGS[@]}"
+560:     # ★ 49차 P0-3 — **여기서 닫는다.** 48차는 `phase_done()`·`finalize_leg()`
+561:     #   을 만들어 놓고 어느 production 경로도 부르지 않았다. 그래서 계획은
+562:     #   `running` 에 영원히 남고, 그 다리는 다시 시작할 수도 닫을 수도 없었다.
+563:     leg_finalize "$D"
+564:     "$0" --mode score --in "$D"
+565:     exec "$0" --mode report --in "$D"

@@ -1,0 +1,88 @@
+# docs/22p_gap/make_receipt.py
+# Entire source SHA-256: 9c8cf71af310de03d2ee9a72d31fcc9172d8920af65fdf097277513c8106c07c
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 135-168
+135: def build(leg: str) -> dict:
+136:     """묶음 하나의 영수증을 만든다. 어느 단계든 어긋나면 SystemExit."""
+137:     from src.io import source_digest, validate_provenance
+138:     from tools.archive_bundle import check as bundle_check
+139:     from tools.archive_bundle import restore
+140: 
+141:     bundle = REPO / "artifacts" / leg
+142:     if not bundle.is_dir():
+143:         raise SystemExit(f"✗ 묶음이 없다: {bundle}")
+144: 
+145:     # ── 1. member 전수 재해시 ────────────────────────────────────────────
+146:     chk = bundle_check(bundle)
+147:     if not chk.get("ok"):
+148:         raise SystemExit(f"✗ archive_bundle.check 실패: {chk.get('missing')[:5]}")
+149:     members = sorted(p for p in bundle.rglob("*") if p.is_file())
+150:     payload_index = bundle / "payload_sha256.yaml"
+151: 
+152:     # ── 2. truly empty root 로 복원 ──────────────────────────────────────
+153:     root = Path(tempfile.mkdtemp(prefix=f"receipt_{leg}_"))
+154:     try:
+155:         res = restore(bundle, repo_root=root)
+156:         if not res.get("ok") or res.get("conflict"):
+157:             raise SystemExit(f"✗ empty-root 복원 실패: {res.get('conflict')[:3]}")
+158:         run_dir = Path(res["run_dir"])
+159: 
+160:         # ── 3. 복원본 검증 ──────────────────────────────────────────────
+161:         # ★ 26차 P1-5 — `os.chdir` 로는 검증 root 가 바뀌지 않는다. 검증기는
+162:         #   cwd 가 아니라 `src/io.py` 가 있는 저장소를 root 로 잡으므로
+163:         #   (`src/io.py:1328`), 봉인 입력을 **원본 checkout** 에서 풀었다.
+164:         #   그래서 이 컨테이너에서는 통과하고 리뷰어의 clean checkout 에서는
+165:         #   `producer_곡선일치`·`입력_digest_재해시` 로 실패했다.
+166:         v = validate_provenance(run_dir, repo_root=root)
+167:         if not v.get("ok"):
+168:             raise SystemExit(f"✗ 복원본 validate 실패: {v.get('fail')}")
+
+# Lines 193-239
+193:             "validation": {
+194:                 "validator": "src.io.validate_provenance",
+195:                 "ok": bool(v["ok"]),
+196:                 "fail": list(v["fail"]),
+197:                 "n_checks": len(v["checks"]),
+198:                 "checks": {k: str(v["checks"][k]) for k in sorted(v["checks"])},
+199:             },
+200:             "identity": {
+201:                 # validator 쪽 (현행 트리). 여기 있는 것은 전부 **소스 바이트**라
+202:                 # 재생성해도 같다 — commit·시각·dirty 는 stamp 로 뺐다.
+203:                 "validator_source_digest": source_digest(),
+204:                 "src_io_sha256": _sha(REPO / "src" / "io.py")[:16],
+205:                 "src_scoring_sha256": _sha(REPO / "src" / "scoring.py")[:16],
+206:                 "archive_bundle_sha256": _sha(REPO / "tools" / "archive_bundle.py")[:16],
+207:                 "make_receipt_sha256": _sha(Path(__file__).resolve())[:16],
+208:                 # ★ 27차 P1-6 — 정본 채점 경로가 여기 있는데 identity 에
+209:                 #   없었다. `docs/` 는 RUN_SCOPE 밖이라 source_digest 도 안 본다.
+210:                 "row_projection_sha256": _sha(
+211:                     REPO / "docs" / "22p_gap" / "row_projection.py")[:16],
+212:                 "row_projection_compute_sha256": _row_projection()._compute_sha256(),
+213:             },
+214:             "outputs": outputs,
+215:             # ★ 26차 P1-6 — 대조 **결과**를 적는다. 초판은 두 digest 를 나란히
+216:             #   두기만 하고 비교하지 않았고, 실제로 달랐다.
+217:             "outputs_agree": _outputs_agree(outputs),
+218:         }
+219:         return {
+220:             "schema_version": 2,
+221:             "_주의": ("이 파일은 손으로 쓰지 않는다. "
+222:                     "`python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 "
+223:                     "`--check` 가 **core 바이트 동일** 재생성을 확인한다."),
+224:             # ★ core 와 stamp 를 가르는 이유: commit SHA·실행 시각·dirty 여부는
+225:             #   영수증을 커밋하는 순간 바뀐다. 그것들을 core 에 두면 커밋된
+226:             #   영수증이 원리적으로 재생 불가능해진다. core 는 **묶음 바이트와
+227:             #   validator 소스에서만** 나오므로 언제 어디서 돌려도 같다.
+228:             "core_sha256": hashlib.sha256(
+229:                 _dump(core).encode("utf-8")).hexdigest(),
+230:             "core": core,
+231:             "stamp": {
+232:                 "_주의": "기록용. core 재생성 대조에서 제외된다.",
+233:                 "validator_commit": _git("rev-parse", "HEAD"),
+234:                 "validator_tree_dirty": bool(_git("status", "--porcelain")),
+235:                 "generated_at_utc": datetime.now(timezone.utc)
+236:                                     .strftime("%Y-%m-%dT%H:%M:%SZ"),
+237:                 "runtime": {"python": platform.python_version(),
+238:                             "platform": platform.platform()},
+239:             },

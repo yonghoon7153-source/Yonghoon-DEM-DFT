@@ -1,0 +1,577 @@
+# tools/preserve.py
+# Entire source SHA-256: eeeb805b6040e73f67dbeec632e17a538500e684c306e34637320bb240b98f55
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 2979-3017
+2979: _RECEIPT_KEYS = frozenset({
+2980:     "schema", "leg_id", "planned_id", "planned_envelope", "backend_uri",
+2981:     "backend_store_id",
+2982:     "payload_root_digest", "payload_manifest_digest", "n_members",
+2983:     "total_bytes", "validation", "outputs", "retention_days", "receipt_digest",
+2984: })
+2985: 
+2986: 
+2987: #: `planned_envelope` 의 닫힌 키 집합 (`PlannedLeg.envelope()` 와 같은 규격).
+2988: _ENVELOPE_KEYS = frozenset({
+2989:     "schema", "leg_id", "protocol_generation", "pairing_design_sha256",
+2990:     "source_digest", "objectives", "total_start_budget", "candidate_mode",
+2991:     "min_retention_days"})
+2992: _VALIDATION_KEYS = frozenset({"ok", "n_checks", "checks"})
+2993: 
+2994: #: planned envelope 의 **값 domain** (★ 30차 P1-2)
+2995: #:
+2996: #: 초판은 design SHA 하나만 봤다. JSON 으로 표현 가능한 다음이 오류 없이
+2997: #: transaction 에 도달했다 — 리뷰가 그대로 적었다:
+2998: #:
+2999: #:     protocol_generation = 7 · source_digest = 7 · objectives = [7]
+3000: #:     total_start_budget = -1 · candidate_mode = 7
+3001: _GENERATION_RE = re.compile(r"^v[0-9]+(_[a-z0-9]+)*$")
+3002: 
+3003: #: 계약 §3 의 후보 정책 표에서 mode 이름을 뽑는 정규식.
+3004: _MODE_ROW = re.compile(r"^\|\s*`([a-z][a-z0-9_]*)`\s*\|")
+3005: _CONTRACT = Path(__file__).resolve().parent.parent / "docs" / "22p_gap" \
+3006:     / "STAGE3_CONTRACT.md"
+3007: _MODE_CACHE: dict[str, frozenset] = {}
+3008: 
+3009: 
+3010: def candidate_modes() -> frozenset:
+3011:     """후보 정책 enum — **계약 §3 표가 정본**이다.
+3012: 
+3013:     ★ 31차 P1-3 — 30차판은 여기에 목록을 **옮겨 적었고** 그것이 계약과
+3014:       달랐다. validator 는 `warm_slot_replace · random_only · base_init_only`
+3015:       를 허용하고 계약의 `equal_start_count_base_retained · union` 을
+3016:       거부했다. 계약상 유효한 두 mode 를 거부하고 계약에 없는 세 mode 를
+3017:       허용한 것이다. 30차 회귀가 `whatever` 하나만 넣어 봐서 못 잡았다.
+
+# Lines 3245-3268
+3245:     # 3. receipt·manifest 를 **lease 가 담보한 pin 에서** 읽는다
+3246:     try:
+3247:         rec = load_canonical(backend.retrieve_retained(lease, r_obj))
+3248:     except PreserveError as ex:
+3249:         raise PreserveError(stage, f"pinned receipt 를 회수하지 못했다: {ex.msg}") from ex
+3250:     if not isinstance(rec, dict) or not _is_hex64(rec.get("payload_manifest_digest") or ""):
+3251:         raise PreserveError(stage, "receipt 에 payload_manifest_digest 가 없다")
+3252:     try:
+3253:         man = load_canonical(
+3254:             backend.retrieve_retained(lease, rec["payload_manifest_digest"]))
+3255:     except PreserveError as ex:
+3256:         raise PreserveError(stage, f"pinned manifest 를 회수하지 못했다: {ex.msg}") from ex
+3257:     mbad = check_manifest(man)
+3258:     if mbad:
+3259:         raise PreserveError(stage, "manifest 가 깨졌다: " + "; ".join(mbad[:3]))
+3260: 
+3261:     # 4. closed schema + 결속 (manifest 를 함께 넘겨 집계까지 본다)
+3262:     bad = check_receipt(rec, e, backend, manifest=man)
+3263:     if bad:
+3264:         raise PreserveError(stage, "; ".join(bad[:4]))
+3265: 
+3266:     # 5. expected graph 재유도 · journal · lease · 디스크가 **정확히** 같아야
+3267:     expected = reachable_objects(dict(rec, receipt_object=r_obj), man)
+3268:     if set(j["objects"]) != expected:
+
+# Lines 4335-4356
+4335: def exec_class_root_for_ledger(ledger=None) -> Path:
+4336:     """실행 class 등록부가 사는 곳 — claims·attempts 와 **같은 authority**.
+4337: 
+4338:     ★ 58차 P0-8 — 왜 run dir 안이 아니라 원장 옆인가.
+4339: 
+4340:     P0-8 의 요구는 "경로 무관 typed·sealed 실행 class marker" 다. 그런데
+4341:     marker 를 **run dir 안에** 두면 경로 의존만 옮겨 갈 뿐이다 — 바이트를 통째로
+4342:     복사한 사람이 그 파일도 같이 고칠 수 있기 때문이다. marker 가 진짜 marker 이려면
+4343:     **쓰는 쪽이 authority** 여야 하고, 그 자리는 이미 이 저장소에 있다:
+4344:     claim 과 attempt 가 사는 원장 옆이다 (54차 P0-1 · 57차 P0-1).
+4345: 
+4346:     등록부의 **키는 경로가 아니라 내용**(`run_content_id()`)이다. 그래서
+4347:     smoke 산출을 namespace 밖으로 옮겨도 같은 키로 같은 답이 나온다 — 그것이
+4348:     48~57차가 못 닫은 자리다 (`[재현]` 옮기기 전 거부 · 옮긴 뒤 통과).
+4349:     """
+4350:     return canonical_ledger(ledger).parent / "_exec_class"
+4351: 
+4352: 
+4353: def _dir_entries(d: Path, dir_fd) -> set:
+4354:     """이 디렉터리가 담은 **일반 파일**의 이름 (59차 M5).
+4355: 
+4356:     `dir_fd` 가 있으면 그 handle 로 본다 — 이름을 다시 해석하지 않으므로
+
+# Lines 4873-4888
+4873:     #   replace 가 authority 를 정했다 — 리뷰어가 canonical/smoke 로 실제 재현했고
+4874:     #   반복하면 이긴 쪽이 바뀌었다. "한 내용은 한 class" 가 경쟁 아래 깨진다.
+4875:     #
+4876:     #   `O_CREAT|O_EXCL` 은 커널이 보장하는 원자적 생성이다. 진 writer 는
+4877:     #   `FileExistsError` 를 받고, 그때 **읽어서 같은 class 인지 본다** —
+4878:     #   같으면 멱등 재시도이므로 성공, 다르면 거부. 이 순서라야 "먼저 만든
+4879:     #   쪽이 authority" 가 성립한다. 검사를 read 로 먼저 하면 그 사이가 창이다.
+4880:     rec = {
+4881:         "content_id": cid,
+4882:         "execution_class": cls,
+4883:         "evidence": str(evidence),
+4884:         "recorded_at": dt.datetime.now(dt.timezone.utc)
+4885:                          .strftime("%Y-%m-%dT%H:%M:%SZ"),
+4886:         "sealed": bool(sealed),                      # 62차 P0-1
+4887:     }
+4888:     body = (json.dumps(rec, sort_keys=True, ensure_ascii=False,
+
+# Lines 4950-5012
+4950: def _read_exec_class_at(p: Path, content_id: str) -> dict | None:
+4951:     if not p.is_file():
+4952:         return None
+4953:     # ★ 60차 P1-1 — **이름이 둘인 레코드는 authority 가 아니다.**
+4954:     #
+4955:     #   게시 경로를 아무리 고쳐도 crash 로 남은 alias 는 있을 수 있다. 그때
+4956:     #   읽는 쪽이 그것을 그대로 받으면 방어가 없는 것과 같다 — 두 번째 문으로
+4957:     #   내용을 바꾸고도 등록부가 authority 인 척한다. 층을 둘로 둔다.
+4958:     _st = os.stat(p, follow_symlinks=False)
+4959:     if _st.st_nlink != 1:
+4960:         raise PreserveError(
+4961:             "promote",
+4962:             f"등록 레코드의 이름이 {_st.st_nlink}개다 ({p}) — 같은 내용을 "
+4963:             "가리키는 두 번째 문이 있으면 그리로 쓴 값이 등록부의 답이 된다. "
+4964:             "authority 는 이름이 하나여야 한다 (60차 P1-1). 남은 alias 를 "
+4965:             "지우고 다시 읽으라")
+4966:     try:
+4967:         rec = json.loads(p.read_text(encoding="utf-8"))
+4968:     except (OSError, ValueError):
+4969:         return None
+4970:     if not isinstance(rec, dict) or rec.get("execution_class") not in EXEC_CLASSES:
+4971:         return None
+4972:     if rec.get("content_id") != content_id:
+4973:         return None            # 등록부 안에서 키와 내용이 어긋난다 — 못 믿는다
+4974:     return rec
+4975: 
+4976: 
+4977: def read_execution_class(content_id: str, ledger=None) -> dict | None:
+4978:     """**두 자리를 다 읽고, 어긋나면 멈춘다** (58차 L14 · 59차 M4).
+4979: 
+4980:     자리를 나눈 뒤에도 읽는 쪽은 하나여야 한다. 호출자가 "어느 등록부를
+4981:     볼까" 를 정하게 되면 그 선택 자체가 새 우회로가 된다 — 48~57차의 경로
+4982:     판정이 정확히 그 형태였다.
+4983: 
+4984:     ★ 59차 M4 — 58차판은 공유를 **먼저 찾으면 즉시 반환**했다. 주석은 "양쪽에
+4985:       있으면 `_record_execution_class()` 가 애초에 막는다" 였는데, 그 배타는
+4986:       **내용당 lock 으로 이 clone 안에서만** 성립한다. 리뷰어 반례: clone A 가
+4987:       local smoke 로, clone B 가 tracked canonical 로 각각 합법 등록한 뒤 B 의
+4988:       tracked record 가 평범한 VCS 동기화로 A 에 들어온다. lock 은 Git 을
+4989:       직렬화하지 못한다. 그러면 두 valid record 가 공존하고 reader 는 반대말을
+4990:       **안 읽은 채** canonical 을 돌려줬다 (`conflict_was_reported: false`).
+4991: 
+4992:       `[해석]` 우선순위는 충돌 **해결**이 아니라 충돌 **은폐**다. 어느 쪽이
+4993:       옳은지 이 함수는 모른다 — 모르는 것을 아는 척하지 않고 멈춘다.
+4994:     """
+4995:     name = _exec_class_path(content_id, ledger).name
+4996:     seen = {}
+4997:     for label, root in (("shared", exec_class_root_for_ledger(ledger)),
+4998:                         ("local", local_exec_class_root_for_ledger(ledger))):
+4999:         rec = _read_exec_class_at(root / name, content_id)
+5000:         if rec is not None:
+5001:             seen[label] = rec
+5002:     classes = {label: r.get("execution_class") for label, r in seen.items()}
+5003:     if len(set(classes.values())) > 1:
+5004:         raise PreserveError(
+5005:             "promote",
+5006:             f"내용 {content_id[:16]}… 의 실행 class 가 두 등록부에서 충돌한다: "
+5007:             + " · ".join(f"{k}={v!r}" for k, v in sorted(classes.items()))
+5008:             + " — 어느 쪽이 옳은지 이 자리에서 정할 수 없다. 한쪽은 다른 clone "
+5009:               "에서 왔을 수 있고 내용당 lock 은 Git 동기화를 직렬화하지 않는다. "
+5010:               "사람이 보고 하나를 지워야 한다 (fail-closed)")
+5011:     return seen.get("shared") or seen.get("local")
+5012: 
+
+# Lines 5076-5112
+5076: def resolve_execution_class(run_dir, ledger=None, *,
+5077:                             for_promotion: bool = False) -> dict:
+5078:     """이 산출이 무슨 class 인가. **경로를 보지 않는다.**
+5079: 
+5080:     등록부에 없으면 `PreserveError` 다 — fail-closed. 예전 산출(등록 이전에
+5081:     만들어진 것)은 `classify_legacy_run()` 으로 **한 번** 분류해야 하고, 그
+5082:     분류가 무엇을 보고 이뤄졌는지가 등록부에 남는다.
+5083: 
+5084:     `[해석]` 이것이 "migration 창" 을 **기간이 아니라 산출별 1회 행위**로 바꾼다.
+5085:     창을 열어 두면 그동안 경로 판정이 조용히 계속 살아 있지만, 이렇게 하면
+5086:     경로를 본 순간이 **영수증으로 남고** 그 뒤로는 다시 보지 않는다.
+5087: 
+5088:     ★ 62차 P0-1 — `for_promotion=True` 면 identity 를 `_promotion_content_id()`
+5089:       로 만든다 (낡은/모자란 봉인 거부 · `sealed` 레코드는 봉인 없이 거부).
+5090:       전이 조회(기본값)는 60차·61차의 관용을 그대로 둔다.
+5091:     """
+5092:     d = Path(run_dir)
+5093:     if for_promotion:
+5094:         cid, had_seal = _promotion_content_id(d)
+5095:     else:
+5096:         cid, had_seal = run_content_id(d), None
+5097:     rec = read_execution_class(cid, ledger=ledger)
+5098:     if rec is None:
+5099:         raise PreserveError(
+5100:             "promote",
+5101:             f"{d} 의 실행 class 가 등록돼 있지 않다 (내용 "
+5102:             f"{cid[:16]}…). 이 산출이 정본 실행인지 smoke 인지 **바이트만 보고는 "
+5103:             "알 수 없으므로** 승격을 거부한다. 예전 산출이면 "
+5104:             "`classify_legacy_run()` 으로 한 번 분류하라 — 무엇을 보고 정했는지가 "
+5105:             "등록부에 남는다")
+5106:     if for_promotion and not had_seal and rec.get("sealed"):
+5107:         raise PreserveError(
+5108:             "promote",
+5109:             f"{d} 의 내용 {cid[:16]}… 은 **봉인과 함께** 등록됐는데 지금 봉인"
+5110:             f"({RUN_SEAL_NAME})이 없다 — 봉인이 지워진 것이지 legacy 산출이 "
+5111:             "아니다. 봉인 없는 승격은 legacy 레코드에만 허용된다 (62차 P0-1)")
+5112:     return rec
+
+# Lines 5380-5394
+5380:     ok = False
+5381:     try:
+5382:         for x in [Path(p) for p in paths if p]:
+5383:             _assert_still_the_judged_dir(capability, x)
+5384:             # ★ 60차 P0-1 — **여기가 유일한 시간 봉인 지점이다.** 등록보다 먼저
+5385:             #   봉인해야 등록의 키와 이후 독자의 키가 같다.
+5386:             seal_run_identity(x, dir_fd=rec.dir_fd)
+5387:             _record_execution_class(
+5388:                 x, rec.execution_class,
+5389:                 evidence=(f"산출 완료 시점 등록 · leg={rec.leg_id} "
+5390:                           f"phase={rec.phase} class={rec.execution_class}"),
+5391:                 ledger=led, dir_fd=rec.dir_fd)
+5392:             done.append(x)
+5393:         ok = True
+5394:     finally:
+
+# Lines 5580-5599
+5580: 
+5581:     # ── ② ★ 58차 P0-8 — **내용 판정.** 여기서부터가 새 경계다.
+5582:     #
+5583:     #   ① 만 있던 동안은 **바이트를 옮기면 그만**이었다 (`[재현]` 같은 run dir 를
+5584:     #   namespace 밖으로 copytree 하면 ① 이 통과한다). 경로는 산출의 성질이 아니라
+5585:     #   **지금 어디 놓여 있는가** 이므로, 그것으로 정본 여부를 정하는 한 경계가
+5586:     #   아니라 관례다.
+5587:     #
+5588:     #   등록부는 원장 옆에 있고 키가 **내용**이라 옮겨도 따라온다. 등록이 없으면
+5589:     #   **거부**다 — "모르면 통과" 는 이 검사를 다시 관례로 만든다.
+5590:     for q in paths:
+5591:         if q is None:
+5592:             continue
+5593:         # ★ 62차 P0-1 — 승격은 봉인이 온전할 때만 identity 를 만든다.
+5594:         rec = resolve_execution_class(q, for_promotion=True)   # 없으면 PreserveError
+5595:         if rec["execution_class"] == EXEC_CLASS_SMOKE:
+5596:             raise PreserveError(
+5597:                 "promote",
+5598:                 f"{SMOKE_REFUSAL} — {sink} 로 올리려는 입력 {q} 의 **내용**이 "
+5599:                 f"smoke 로 등록돼 있다 (내용 {rec['content_id'][:16]}…, 근거: "
+
+# Lines 5750-5819
+5750:             if not isinstance(spec, dict):
+5751:                 raise PreserveError(
+5752:                     "plan", f"계획 항목 {e['leg_id']!r} 의 `run_spec` 이 mapping 이 "
+5753:                             f"아니다: {type(spec).__name__}")
+5754:             got = run_spec_digest(spec)
+5755:             if got != e["run_spec_digest"]:
+5756:                 raise PreserveError(
+5757:                     "plan",
+5758:                     f"계획 항목 {e['leg_id']!r} 의 `run_spec_digest` 가 선언한 "
+5759:                     f"`run_spec` 의 주소가 아니다 ({e['run_spec_digest'][:16]} ≠ "
+5760:                     f"{got[:16]}) — 승인 문서와 승인 주소가 다르다")
+5761:             if spec.get("leg_id") != e["leg_id"]:
+5762:                 raise PreserveError(
+5763:                     "plan", f"계획 항목 {e['leg_id']!r} 의 `run_spec.leg_id` 가 "
+5764:                             f"다르다: {spec.get('leg_id')!r}")
+5765:         # ★ 47차 P0-1 — **계획 roster 와 실행 roster 를 분리한다.** 46차는
+5766:         #   실행 roster 하나뿐이라, 계획된 leg 를 어디에 두든 gate·lint·
+5767:         #   publisher 중 하나가 반드시 깨졌다 (리뷰어의 4행 표). 계획 중인
+5768:         #   leg 는 `prospective_legs` 에, 끝난 leg 는 `legs` 에 있는다.
+5769:         coh = cohorts[e["cohort_id"]]
+5770:         want = "prospective_legs" if e["status"] in ("planned", "running") \
+5771:             else "legs"
+5772:         roster = coh.get(want) or []
+5773:         if not isinstance(roster, list) or e["leg_id"] not in roster:
+5774:             raise PreserveError(
+5775:                 "plan",
+5776:                 f"계획 항목 {e['leg_id']!r}(status={e['status']}) 이 cohort "
+5777:                 f"{e['cohort_id']!r} 의 `{want}` 에 없다: {roster!r} — 계획 "
+5778:                 "roster 와 실행 roster 는 분리돼 있고 둘 다 원장이 정본이다")
+5779:         out[e["leg_id"]] = dict(e, _cohort=coh)
+5780:     return out
+5781: 
+5782: 
+5783: def assert_planned_leg(leg_id: str, source_digest: str, ledger=None,
+5784:                        allow: tuple = ("planned",)) -> dict:
+5785:     """이 다리를 **지금 이 코드로** 돌려도 되는가 — 비싼 실행 앞의 gate.
+5786: 
+5787:     ★ 48차 P0-6 — `allow` 는 **어느 계획 상태를 승인으로 볼 것인가** 다.
+5788:       새 claim 은 `planned` 만 (`running` 이면 이미 누가 돌고 있다), 재개는
+5789:       `running` 도 (자기가 그 상태로 옮겨 놓았으니까). 기본값은 좁은 쪽이다.
+5790:     """
+5791:     idx = planned_index(ledger)
+5792:     e = idx.get(leg_id)
+5793:     if e is None:
+5794:         raise PreserveError(
+5795:             "plan",
+5796:             f"계획 index 에 없는 다리다: {leg_id!r} — 실행 전에 "
+5797:             "`LEG_PRESERVATION.yaml` 의 `planned:` 에 사람이 적어야 한다 "
+5798:             f"(현재 계획: {sorted(idx)})")
+5799:     if e["status"] not in allow:
+5800:         raise PreserveError(
+5801:             "plan",
+5802:             f"{leg_id!r} 의 계획 상태가 {e['status']!r} 이라 승인이 아니다 "
+5803:             f"(허용 {list(allow)}) — 실행 기록은 다음 실행의 승인이 아니고, "
+5804:             "이미 running 인 다리를 새로 시작할 수도 없다. 다시 돌리려면 새 "
+5805:             "계획 항목을 적어라")
+5806:     coh = e["_cohort"]
+5807:     if coh.get("status") != "active":
+5808:         raise PreserveError(
+5809:             "plan",
+5810:             f"{leg_id!r} 의 cohort {e['cohort_id']!r} 가 active 가 아니다 "
+5811:             f"({coh.get('status')!r}) — frozen cohort 에 새 다리를 더할 수 없다")
+5812:     if e["authorized_source_digest"] != source_digest:
+5813:         raise PreserveError(
+5814:             "plan",
+5815:             f"{leg_id!r} 의 승인 code identity 가 지금과 다르다 "
+5816:             f"(승인 source_digest {e['authorized_source_digest']} ≠ 현재 "
+5817:             f"{source_digest}) — 승인 이후 RUN_SCOPE 가 바뀌었다. 사람이 다시 "
+5818:             "승인해야 한다")
+5819:     return e
+
+# Lines 5883-5927
+5883: def leg_run_spec(leg_id: str, grid: dict, fit: dict) -> dict:
+5884:     """한 다리 **전체**의 승인 spec — 두 phase 가 같은 값을 만든다 (48차 P0-5).
+5885: 
+5886:     `_claim_planned_leg()` 은 `run_spec_digest` 로 승인을 내용 주소화한다. 그
+5887:     주소가 phase 마다 다르면 grid 와 fit 은 서로 다른 claim 을 갖게 되고, 그러면
+5888:     "이 다리 하나가 승인 아래 돌았다" 를 말할 수 없다. 그래서 spec 은 **다리
+5889:     단위**이고 각 phase 는 자기 몫을 채운 뒤 나머지는 계획에서 읽어 온다.
+5890: 
+5891:     key 집합은 **닫혀 있다** — 새 CLI 축이 생기면 여기 적히거나 거부되거나
+5892:     둘 중 하나다. 열려 있으면 축이 조용히 승인 밖으로 나간다.
+5893:     """
+5894:     check_id(leg_id)
+5895:     for name, got, want in (("grid", grid, LEG_SPEC_GRID_KEYS),
+5896:                             ("fit", fit, LEG_SPEC_FIT_KEYS)):
+5897:         if not isinstance(got, dict) or set(got) != set(want):
+5898:             raise PreserveError(
+5899:                 "plan",
+5900:                 f"leg run spec 의 {name} 축이 계약과 다르다 — 있어야 {sorted(want)}, "
+5901:                 f"받은 것 {sorted(got) if isinstance(got, dict) else type(got).__name__}")
+5902:     # ★ 49차 P0-5 — 중첩 dict 도 **닫힌** 집합이다. 안쪽이 열려 있으면 축
+5903:     #   하나(예: `n_restarts`)가 조용히 사라져도 아무도 모른다.
+5904:     for key, want in (("optimizer", LEG_SPEC_OPTIMIZER_KEYS),
+5905:                       ("halfcell_recipe", LEG_SPEC_HALFCELL_KEYS),
+5906:                       ("row_selection", LEG_SPEC_SELECTION_KEYS)):
+5907:         got = fit[key]
+5908:         if not isinstance(got, dict) or set(got) != set(want):
+5909:             raise PreserveError(
+5910:                 "plan",
+5911:                 f"leg run spec 의 fit.{key} 가 계약과 다르다 — 있어야 "
+5912:                 f"{sorted(want)}, 받은 것 "
+5913:                 f"{sorted(got) if isinstance(got, dict) else type(got).__name__}")
+5914:     # ★ 49차 P0-5 — 입력의 **내용 identity**. 경로만 봉인하면 같은 이름 아래
+5915:     #   다른 바이트가 들어와도 승인이 그대로다. 두 경우를 타입으로 가른다:
+5916:     #     · hex64 — 이 다리 **밖**에서 온 입력 (F70 의 분리 producer 구조).
+5917:     #               계획 시점에 실재하므로 사람이 그 digest 를 적는다.
+5918:     #     · None  — 이 다리의 grid 가 만든다. 계획 시점에는 알 수 없으므로
+5919:     #               런타임에 grid phase receipt 가 봉인한 값과 맞춘다
+5920:     #               (`assert_phase_input_binding()`).
+5921:     ind = fit["in_digest"]
+5922:     if ind is not None and not _is_hex64(ind):
+5923:         raise PreserveError(
+5924:             "plan",
+5925:             f"fit.in_digest 가 hex64 도 null 도 아니다: {ind!r} — 밖에서 온 "
+5926:             "입력이면 그 내용 digest 를, 이 다리의 grid 가 만들면 null 을 적는다")
+5927:     if fit["row_selection"]["mode"] not in LEG_SPEC_SELECTION_MODES:
+
+# Lines 6380-6410
+6380: 
+6381:       ① `lstat` 로 alias 를 거부한다 (symlink 이거나 디렉터리가 아니면 멈춘다).
+6382:       ② 없으면 `mkdir` 로 만든다 — 그 자리에 symlink 가 있으면 `EEXIST` 가 나고
+6383:         ①이 그것을 잡는다. 즉 "따라가서 만든다" 가 구조적으로 불가능하다.
+6384:       ③ 그리고 **얼린 좌표를 덮고 있으면** 거부한다. symlink 가 아닌 길
+6385:         (bind mount·이동)로도 같은 해악이 서기 때문이다 — 이름을 하나 더
+6386:         막는 대신 **대상의 좌표**를 묻는다 (58차 L5 가 세운 층을 여기서도 쓴다).
+6387:     """
+6388:     root = canonical_ledger(ledger).parent / name
+6389:     try:
+6390:         st = os.lstat(root)
+6391:     except FileNotFoundError:
+6392:         root.parent.mkdir(parents=True, exist_ok=True)
+6393:         try:
+6394:             os.mkdir(root, 0o755)
+6395:         except FileExistsError:                          # 경합 — 아래에서 다시 본다
+6396:             pass
+6397:         st = os.lstat(root)
+6398:     if stat.S_ISLNK(st.st_mode) or not stat.S_ISDIR(st.st_mode):
+6399:         raise PreserveError(
+6400:             "plan",
+6401:             f"lifecycle root {root} 가 디렉터리가 아니라 **alias** 다 — 이 자리를 "
+6402:             "따라가면 원장 밖(예: 얼린 cohort tree)에 token·claim 이 생긴다. "
+6403:             "마지막 성분만 보는 검사로는 부모 alias 가 안 막힌다 (60차 P0-5)")
+6404:     covering = frozen_coordinate_covering(root)
+6405:     if covering:
+6406:         raise PreserveError(
+6407:             "plan",
+6408:             f"lifecycle root {root} 가 얼린 cohort {covering!r} 의 좌표 안에 있다 "
+6409:             "— 얼린 tree 에는 아무것도 쓰지 않는다 (60차 P0-5)")
+6410:     return root
+
+# Lines 7248-7293
+7248: def precheck_leg_run(leg_id: str, source_digest: str, ledger=None) -> dict:
+7249:     """실행 **전** 사전 점검 — 새 발급인가, 내가 가진 재개인가 (49차 P0-3).
+7250: 
+7251:     48차 `run.sh` 사전검사는 `assert_planned_leg()` 만 불렀고 그것은 `planned`
+7252:     만 통과시켰다. 그래서 grid 가 계획을 `running` 으로 옮긴 뒤 **같은
+7253:     pipeline 의** fit 사전검사가 자기 자신 때문에 거부됐다. 사전검사가 두
+7254:     경우를 구분하지 못하면 사전검사가 곧 pipeline 을 막는 장치가 된다.
+7255: 
+7256:     아무 것도 바꾸지 않는다 — 발급은 실제 계산 직전
+7257:     (`assert_run_is_authorized()`)에서만 일어난다.
+7258:     """
+7259:     path = _claim_path(leg_id, claims_root_for_ledger(ledger))
+7260:     if path.is_file():
+7261:         # ★ 57차 P0-1 — 소유 증명의 자리를 lifecycle 이 정한다. 그것이 없으면
+7262:         #   이 claim 은 이 pipeline 의 것이 아니다 (또는 발급이 반쯤 죽었다).
+7263:         token_file = attempt_path_for(leg_id, ledger=ledger)
+7264:         if not token_file.is_file():
+7265:             raise PreserveError(
+7266:                 "plan",
+7267:                 f"{leg_id!r} 은 이미 실행 중이다 (claim: {path}) — 두 번째 "
+7268:                 f"실행을 시작할 수 없다. 이 실행의 소유 증명이 {token_file} 에 "
+7269:                 "없다: 다른 pipeline 의 실행이거나 발급이 중단된 것이다")
+7270:         claim = resume_claim(leg_id, token=read_token_file(token_file, leg_id),
+7271:                              ledger=ledger)
+7272:         if claim.source_digest != source_digest:
+7273:             raise PreserveError(
+7274:                 "plan",
+7275:                 f"{leg_id!r} 의 claim 이 다른 code identity 로 열렸다 "
+7276:                 f"({claim.source_digest} ≠ {source_digest}) — 실행 도중 "
+7277:                 "RUN_SCOPE 가 바뀌었다")
+7278:         return {"kind": "resume", "leg_id": leg_id,
+7279:                 "cohort_id": claim.cohort_id, "attempt_id": claim.attempt_id,
+7280:                 "phases_done": list(claim.phases_done())}
+7281:     e = assert_planned_leg(leg_id, source_digest, ledger=ledger)
+7282:     return {"kind": "new", "leg_id": leg_id, "cohort_id": e["cohort_id"],
+7283:             "recorded_on": e["recorded_on"], "phases_done": []}
+7284: 
+7285: 
+7286: #: 실행 기록의 보존 상태. **검증한 만큼만** 적는다 (48차 P0-4).
+7287: #:
+7288: #:   full_bundle          — clone 한 사람이 검증할 수 있는 묶음이 **실재한다**.
+7289: #:                          `_verify_declared_bundle()` 이 디스크에서 확인한
+7290: #:                          경우에만 붙는다.
+7291: #:   recorded_projection  — 투영·요약은 남았고 원자료 묶음은 없다.
+7292: #:   preservation_pending — 계산은 끝났고 보존 묶음을 **아직 만들지 않았다.**
+7293: #:   missing              — 원자료가 있었는데 잃었다.
+
+# Lines 7380-7398
+7380: def _verify_declared_bundle(evidence: dict, repo_root=None) -> list:
+7381:     """선언한 묶음을 **디스크에서** 확인한다 (48차 P0-4).
+7382: 
+7383:     47차 `finalize_leg()` 은 caller 의 dict 를 그대로 옮겨 적고
+7384:     `preservation_status: full_bundle` 을 붙였다. 그 상태의 뜻은 "clone 한
+7385:     사람이 이 결과를 검증할 수 있는 묶음이 실재한다"(계약 §8)인데 디스크를
+7386:     보지 않았다 — 아무 dict 나 주면 원장에 완전 묶음이 생겼다.
+7387: 
+7388:     원장은 이 저장소에서 **증거의 정본**이다. 거기에 검증되지 않은 주장을 쓰는
+7389:     함수는 증거를 만드는 것이 아니라 증거를 오염시킨다.
+7390: 
+7391:     회귀(`test_full_bundle_claims_are_backed_by_a_real_bundle`)가 원장 전체에
+7392:     대고 같은 검사를 한다 — 여기서 막지 않으면 그 회귀가 **나중에** 빨개진다.
+7393:     """
+7394:     root = Path(repo_root or Path(__file__).resolve().parents[1])
+7395:     bad: list = []
+7396:     present = [k for k in BUNDLE_EVIDENCE_KEYS if k in evidence]
+7397:     if not present:
+7398:         return bad                       # 묶음을 주장하지 않았다 — 그것도 사실이다
+
+# Lines 7464-7524
+7464:     if len(files) != evidence["bundle_files"]:
+7465:         bad.append(f"묶음 파일 수 {len(files)} ≠ 선언 {evidence['bundle_files']}")
+7466:     nbytes = sum(st.st_size for _x, st in files)
+7467:     if nbytes != evidence["payload_bytes"]:
+7468:         bad.append(f"묶음 바이트 {nbytes} ≠ 선언 {evidence['payload_bytes']}")
+7469:     idx = _repo_relative_or_refuse(root, evidence["payload_index"],
+7470:                                    "payload_index")
+7471:     if not idx.is_file():
+7472:         bad.append(f"payload index 가 없다: {evidence['payload_index']}")
+7473:         return bad
+7474:     got = hashlib.sha256(idx.read_bytes()).hexdigest()
+7475:     if got != evidence["payload_index_sha256"]:
+7476:         bad.append(f"payload index sha {got[:16]} ≠ 선언 "
+7477:                    f"{str(evidence['payload_index_sha256'])[:16]}")
+7478:     # ★ 60차 P0-8 — **index 는 묶음의 구성원이어야 한다.** 59차까지는 저장소
+7479:     #   안이기만 하면 됐고, 그래서 gitignore 된 `results/` 밑을 가리켜도
+7480:     #   `full_bundle` 이 됐다. 그러면 묶음만 받은 사람에게는 그것을 인증한다는
+7481:     #   목록이 **아예 없다** — `full_bundle` 의 뜻(계약 §8)이 성립하지 않는다.
+7482:     member_paths = {x for x, _st in files}
+7483:     if idx not in member_paths:
+7484:         bad.append(
+7485:             f"payload index 가 묶음 안에 없다: {evidence['payload_index']} — "
+7486:             "묶음만 받은 사람에게는 그것을 인증한다는 목록이 없다 (60차 P0-8)")
+7487:         return bad
+7488:     # ★ 60차 P0-8 — 그리고 index 가 이름한 것과 **실제로 걸은 것**이 양방향으로
+7489:     #   같아야 한다. 한쪽만 보면 "index 에 있는데 없는 파일" 이나 "묶음에 있는데
+7490:     #   index 가 모르는 파일" 이 통과한다 — 그 둘이 "완전 묶음" 이라는 말이
+7491:     #   무너지는 두 방향이다.
+7492:     declared = _declared_index_members(idx)
+7493:     if declared is not None:
+7494:         walked = {x.relative_to(d).as_posix() for x in member_paths
+7495:                   if x != idx}
+7496:         only_walk = sorted(walked - declared)
+7497:         only_index = sorted(declared - walked)
+7498:         if only_walk or only_index:
+7499:             bad.append(
+7500:                 f"index 와 실제 묶음이 다르다 — index 가 모르는 구성원 "
+7501:                 f"{only_walk}, 없는데 이름한 것 {only_index} (60차 P0-8)")
+7502:     return bad
+7503: 
+7504: 
+7505: def _declared_index_members(idx: Path) -> set | None:
+7506:     """payload index 가 이름한 구성원 집합 — 읽을 수 없으면 `None` (60차 P0-8).
+7507: 
+7508:     `None` 은 "이 index 형식은 구성원을 열거하지 않는다" 는 뜻이고, 그 경우
+7509:     양방향 대조는 건너뛴다. 형식을 억지로 해석해서 **틀린 집합**을 만드는 것보다
+7510:     "그 축은 이 index 로 못 묻는다" 를 그대로 두는 편이 정직하다.
+7511:     """
+7512:     try:
+7513:         body = json.loads(idx.read_text(encoding="utf-8"))
+7514:     except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+7515:         return None
+7516:     if isinstance(body, dict):
+7517:         for key in ("members", "files", "payload"):
+7518:             v = body.get(key)
+7519:             if isinstance(v, list) and all(isinstance(x, str) for x in v):
+7520:                 return set(v)
+7521:     elif isinstance(body, list) and all(isinstance(x, str) for x in body):
+7522:         return set(body)
+7523:     return None
+7524: 
+
+# Lines 7770-7786
+7770:     claims_root = claims_root_for_ledger(ledger)
+7771:     _assert_json_domain(evidence, "evidence")
+7772:     # ★ 48차 P0-4 — 묶음 주장을 **디스크에서** 확인한다. 확인 전에는 아무 것도
+7773:     #   쓰지 않는다 (거부하면서 기록을 남기면 그것이 곧 오염이다).
+7774:     bundle_bad = _verify_declared_bundle(evidence)
+7775:     if bundle_bad:
+7776:         raise PreserveError(
+7777:             "plan",
+7778:             f"{leg_id!r} 의 묶음 주장이 실물과 다르다 — 검증되지 않은 보존 "
+7779:             "상태를 원장에 쓸 수 없다:\n  " + "\n  ".join(bundle_bad))
+7780:     claimed_bundle = all(k in evidence for k in BUNDLE_EVIDENCE_KEYS)
+7781:     if claimed_bundle:
+7782:         # ★ 60차 P0-9 — **검증이 무엇을 봤는지를 값으로 남긴다.** dict 만
+7783:         #   굳히면 그 dict 가 **가리키는 묶음**은 안 굳는다 (리뷰어 실측: 검증
+7784:         #   직후 member 를 같은 길이의 다른 바이트로 갈아 끼워도 `full_bundle`).
+7785:         #   내용 주소를 봉인에 넣으면 나중에 바뀐 사실이 기록 자체에서 드러난다.
+7786:         #   창 자체는 mutable directory 인 한 남고, 그 한계는 신고한다.
+
+# Lines 7946-7962
+7946:             rec_evidence["attempt_verifier"] = _token_verifier(token)
+7947:             # ★ 49차 P0-4 — 계약 §8 은 **세 축의 튜플**을 요구한다. 48차는
+7948:             #   `preservation_status` 하나만 적고 나머지를 비웠으므로 그 기록은
+7949:             #   `test_registry_rejects_impossible_status_tuples` 를 통과할 수
+7950:             #   없었다 — production 이 쓴 원장을 자기 lint 가 거부하는 상태였다.
+7951:             #   묶음을 확인하지 못한 다리는 `preservation_pending` 이고, 나머지
+7952:             #   두 축은 계약 제약이 강제하는 바닥값이다.
+7953:             doc.setdefault("legs", []).append(
+7954:                 {"leg_id": leg_id,
+7955:                  "preservation_status": "full_bundle" if claimed_bundle
+7956:                  else "preservation_pending",
+7957:                  # 묶음을 확인했어도 **검증**은 별개 단계다 (validator 가 복원해
+7958:                  # 재채점한다). finalize 는 그것을 하지 않았으므로 unvalidated 다.
+7959:                  "validation_status": PENDING_VALIDATION_STATUS,
+7960:                  "inference_role": PENDING_INFERENCE_ROLE,
+7961:                  "evidence": rec_evidence})
+7962:             # 원장 write 는 원자적이고, 여기부터 claim 삭제 사이에 죽어도

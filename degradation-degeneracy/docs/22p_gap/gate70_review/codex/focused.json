@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "-m",
+    "pytest",
+    "tests/test_compare.py::test_f50b_start_file_check_ignores_git_commit_like_the_run_check",
+    "tests/test_compare.py::test_dirty_scope_ignores_unrelated_subproject",
+    "tests/test_compare.py::test_dirty_scope_bypasses_are_closed",
+    "tests/test_io_bookkeeping.py::test_source_digest_covers_full_run_scope",
+    "tests/test_io_bookkeeping.py::test_run_scope_matcher_shared_with_digest",
+    "tests/test_io_bookkeeping.py::test_scope_exclusion_helper_is_shared",
+    "tests/test_io_bookkeeping.py::test_tracked_dirty_is_conservative_for_excluded_paths",
+    "--noconftest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--json-report",
+    "--json-report-file=C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate70_review_20260924\\focused.pytest.json"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\g70_synthetic_checks\\degradation-degeneracy",
+  "rc": 4,
+  "seconds": 2.14000000001397,
+  "stdout_sha256": "e2e796bf4059b88160dae3fbf96e5b7917671bb018d4dbe91f8722530b81ae76",
+  "stderr_sha256": "f02abaee2a13b1a8d882e1c5e0e4de49b4762108d8029afb8864e681fabcf9e0"
+}

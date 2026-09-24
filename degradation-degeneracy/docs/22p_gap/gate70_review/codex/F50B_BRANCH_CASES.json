@@ -1,0 +1,56 @@
+{
+  "source_sha256": "25f79f0a740ea486b6c546185b4912b4779088bf57e09d67fa5761de10d46336",
+  "source_lines": [
+    1684,
+    1689
+  ],
+  "method": "Unchanged comparison AST nodes only; not complete validate_provenance or original pytest F50b test",
+  "cases": {
+    "same": {
+      "accepted": true,
+      "different_fields": []
+    },
+    "git_commit_only": {
+      "accepted": true,
+      "different_fields": []
+    },
+    "source_changed": {
+      "accepted": false,
+      "different_fields": [
+        "source_digest"
+      ]
+    },
+    "dirty_changed": {
+      "accepted": false,
+      "different_fields": [
+        "git_dirty"
+      ]
+    },
+    "dirty_null": {
+      "accepted": false,
+      "different_fields": [
+        "git_dirty"
+      ]
+    },
+    "environment_changed": {
+      "accepted": false,
+      "different_fields": [
+        "env"
+      ]
+    },
+    "input_changed": {
+      "accepted": false,
+      "different_fields": [
+        "input_sha256"
+      ]
+    },
+    "recipe_changed": {
+      "accepted": false,
+      "different_fields": [
+        "halfcell_recipe"
+      ]
+    }
+  },
+  "old_tuple_commit_only_rejected": true,
+  "whole_validator_pass_claimed": false
+}

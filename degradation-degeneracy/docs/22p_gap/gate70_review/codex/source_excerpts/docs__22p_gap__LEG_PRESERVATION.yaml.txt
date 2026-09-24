@@ -1,0 +1,147 @@
+# docs/22p_gap/LEG_PRESERVATION.yaml
+# Entire source SHA-256: 9a0e98aef93ce4c3b90de5a0fdd47b5d0f695f6faf03092f0bd5875b287b7cc0
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 620-644
+620:     compute_sha256: 14ff767d5fbd0d9d
+621:     row_projection_py_sha256: f85fc2b39e15d3d0
+622:     src_scoring_py_sha256: 69e69cb046f4b4ae
+623:     analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+624:     producer_semantic_sha256: 814278bfcb82fa2f
+625:   runtime:
+626:     python: 3.11.15
+627:     pandas: 3.0.5
+628:     pyarrow: 25.0.1
+629:     numpy: 2.4.6
+630:     yaml: 6.0.1
+631:   frozen_reason: 63차 게이트 리뷰(방어적 코드·회귀 검토)가 새 P1 3건·P2 1건과 증거 공백 둘을 냈고 전부 코드에서 닫혔다
+632:     (원장 §77·§78). producer analyzer 가 움직였다 — definition head 가 3.12 type_params 의
+633:     bound·default 를 열거한다 (E1). 활성 cohort 가 현행 트리를 안 따라가므로 다음 세대로 넘긴다. 계산식은 안 바뀌었다
+634:     — src_scoring_py_sha256 가 그대로다.
+635: - cohort_id: g18_2026_09_15
+636:   dir: docs/22p_gap/proj_g18
+637:   status: active
+638:   legs:
+639:   - paired_fixed5_v4
+640:   prospective_legs: []
+641:   cross_leg_comparison: not_applicable_single_leg
+642:   무엇이_달라졌나: 63차 게이트 리뷰(방어적 코드·회귀 검토)가 새 P1 3건 · P2 1건과 증거 공백 둘을 냈고 전부 코드에서 닫혔다
+643:     (원장 §77·§78). 이 cohort 의 pin 을 움직인 것은 E1 이다 — producer analyzer 의 definition head 가 3.12 `type_params`
+644:     의 bound(3.12)·default(3.13) 를 열거한다. bound 는 별도 annotation scope 에서 지연 평가되고 함수 매개변수를 못 보므로
+
+# Lines 654-768
+654:     analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+655:     producer_semantic_sha256: 1d6c0e76f18d63ed
+656:   runtime:
+657:     python: 3.11.15
+658:     pandas: 3.0.5
+659:     pyarrow: 25.0.1
+660:     numpy: 2.4.6
+661:     yaml: 6.0.1
+662: planned:
+663: - leg_id: paired_fixed5_v4
+664:   cohort_id: g2_2026_08_25
+665:   status: executed
+666:   authorization_kind: retrospective
+667:   run_spec_digest: retrospective:no-preauthorization
+668:   authorized_source_digest: d50295f980ccaa81
+669:   recorded_on: '2026-08-28'
+670:   근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+671:     원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+672: - leg_id: paired_fixed5_v4_nowarm_now
+673:   cohort_id: g1_2026_08_20
+674:   status: executed
+675:   authorization_kind: retrospective
+676:   run_spec_digest: retrospective:no-preauthorization
+677:   authorized_source_digest: a72c0f3a485c19bb
+678:   recorded_on: '2026-08-28'
+679:   근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+680:     원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+681: - leg_id: paired_fixed5_v4_warm
+682:   cohort_id: g1_2026_08_20
+683:   status: executed
+684:   authorization_kind: retrospective
+685:   run_spec_digest: retrospective:no-preauthorization
+686:   authorized_source_digest: a72c0f3a485c19bb
+687:   recorded_on: '2026-08-28'
+688:   근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+689:     원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+690: - leg_id: fit_22p_seed_404_hc
+691:   cohort_id: g1_2026_08_20
+692:   status: executed
+693:   authorization_kind: retrospective
+694:   run_spec_digest: retrospective:no-preauthorization
+695:   authorized_source_digest: 7250c6e689399381
+696:   recorded_on: '2026-08-28'
+697:   근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+698:     원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+699: - leg_id: fit_22p_seed_404_hc_nowarm
+700:   cohort_id: g1_2026_08_20
+701:   status: executed
+702:   authorization_kind: retrospective
+703:   run_spec_digest: retrospective:no-preauthorization
+704:   authorized_source_digest: a72c0f3a485c19bb
+705:   recorded_on: '2026-08-28'
+706:   근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+707:     원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+708: - leg_id: fit_22p_seed_404_hc_warm_now
+709:   cohort_id: g1_2026_08_20
+710:   status: executed
+711:   authorization_kind: retrospective
+712:   run_spec_digest: retrospective:no-preauthorization
+713:   authorized_source_digest: a72c0f3a485c19bb
+714:   recorded_on: '2026-08-28'
+715:   근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+716:     원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+717: - leg_id: fit_seed404_pe5mv
+718:   cohort_id: g1_2026_08_20
+719:   status: executed
+720:   authorization_kind: retrospective
+721:   run_spec_digest: retrospective:no-preauthorization
+722:   authorized_source_digest: d842894dbbc2a0f9
+723:   recorded_on: '2026-08-28'
+724:   근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+725:     원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+726: - leg_id: fit_seed404_pe5mv_nowarm
+727:   cohort_id: g1_2026_08_20
+728:   status: executed
+729:   authorization_kind: retrospective
+730:   run_spec_digest: retrospective:no-preauthorization
+731:   authorized_source_digest: a72c0f3a485c19bb
+732:   recorded_on: '2026-08-28'
+733:   근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+734:     원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+735: legs:
+736: - leg_id: paired_fixed5_v4
+737:   preservation_status: full_bundle
+738:   validation_status: historical_validated
+739:   inference_role: diagnostic
+740:   근거: '2026-08-16 백업 `v4_run_extras` 에서 복구. `validate_provenance` 34검사 전부 통과 (ok=True,
+741:     fail=[]). 다만 **현행 정본은 아니다**: run_spec 이 `source_digest: d50295f980ccaa81` 로 현행과
+742:     다르고, `코드_identity` 검사는 (`src/io.py:1514`) run_spec 이 digest 를 갖고 dirty 가 아닌지만
+743:     본다 — 현행 트리와의 일치를 보지 않는다. 그래서 `historical_validated` 다. 전이표도 현행 digest 짝과 다르다 (133/429/56/858,
+744:     Δ 0.252710 vs 131/436/55/854, Δ 0.258130) → 현행 1차 표의 대체물이 아니다.'
+745:   evidence:
+746:     bundle_uri: artifacts/paired_fixed5_v4
+747:     bundle_files: 26
+748:     payload_bytes: 23863555
+749:     payload_index: artifacts/paired_fixed5_v4/payload_sha256.yaml
+750:     payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716
+751:     member_rehash_by: tools.archive_bundle.check
+752:     verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
+753:     verification_receipt_core_sha256: 8914163772ddd806f6c22f7c55e6d73a49d065dff9a9e5ba934ade33740b4c14
+754:     verification_receipt_generator: docs/22p_gap/make_receipt.py
+755:     empty_root_restore: true
+756:     rescored_from_restored_fits: true
+757:     validator_identity:
+758:       source_digest: 5e660a8c73d5663a
+759:       n_checks: 34
+760:       ok: true
+761:     leg_source_digest: d50295f980ccaa81
+762:     fits_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+763:     fits_봉인일치: true
+764:     cohorts:
+765:     - g10_2026_09_01
+766:     - g11_2026_09_02
+767:     - g12_2026_09_03
+768:     - g13_2026_09_07

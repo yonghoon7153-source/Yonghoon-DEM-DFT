@@ -1,0 +1,241 @@
+# src/io.py
+# Entire source SHA-256: 25f79f0a740ea486b6c546185b4912b4779088bf57e09d67fa5761de10d46336
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 37-80
+37: RUN_SCOPE = ("src/", "tools/", "configs/", "scripts/", "run.sh",
+38:              "requirements*.txt")
+39: 
+40: 
+41: #: ★ 14차 3차 발견 3 — 제외 규칙의 **단일 출처**. digest 와 dirty 판정이 같은
+42: #:   파일 집합을 보려면 포함(`in_run_scope`)뿐 아니라 제외도 공유해야 한다.
+43: #:   예전 dirty 쪽 `_SKIP` 은 `.pyc` 를 이름 중간에 포함해도 제외해서,
+44: #:   `configs/model.pyconfig` 같은 실제 입력이 digest 에는 들어가고 dirty
+45: #:   판정에서는 빠질 수 있었다.
+46: _EXCLUDE_DIRS = ("__pycache__", ".ipynb_checkpoints")
+47: _EXCLUDE_SUFFIXES = (".pyc", ".pyo")
+48: 
+49: 
+50: def is_scope_excluded(rel: str) -> bool:
+51:     """캐시·바이트코드인가 (digest·dirty 공통 제외 규칙).
+52: 
+53:     디렉터리는 **경로 성분 단위**로, 확장자는 **suffix 로만** 판정한다.
+54:     """
+55:     parts = PurePath(rel).parts
+56:     if any(p in _EXCLUDE_DIRS for p in parts):
+57:         return True
+58:     return PurePath(rel).suffix in _EXCLUDE_SUFFIXES
+59: 
+60: 
+61: def in_run_scope(rel: str, scope: tuple = RUN_SCOPE) -> bool:
+62:     """저장소 상대경로가 RUN_SCOPE 안인가 (digest 범위와 동일 규칙).
+63: 
+64:     `*` 가 있는 항목은 root 파일 glob, `/` 로 끝나면 디렉터리 접두사,
+65:     나머지는 정확한 파일명이다.
+66:     """
+67:     from fnmatch import fnmatch
+68: 
+69:     for s in scope:
+70:         if s.endswith("/"):
+71:             if rel.startswith(s):
+72:                 return True
+73:         elif "*" in s:
+74:             if "/" not in rel and fnmatch(rel, s):
+75:                 return True
+76:         elif rel == s:
+77:             return True
+78:     return False
+79: 
+80: 
+
+# Lines 81-178
+81: def git_info(repo_dir: str | Path | None = None, save_diff_to=None,
+82:              scope: tuple = RUN_SCOPE) -> dict:
+83:     """현재 git commit / dirty 여부. git이 없어도 죽지 않는다.
+84: 
+85:     ★ F30 — dirty 실행이면 **diff를 같이 남긴다.**
+86:       `git_dirty: true`만 적혀 있으면 그 산출물을 만든 코드가 세상에 없다.
+87:       결과 parquet은 재집계할 수 있어도 독립 연구자가 같은 숫자를 만들 수 없어
+88:       인용 근거로 못 쓴다. 실제로 grid_fine_v2·halfcell_v1이 그 상태였다.
+89:     """
+90:     cwd = str(repo_dir) if repo_dir else None
+91:     try:
+92:         commit = subprocess.run(["git", "rev-parse", "HEAD"],
+93:                                 capture_output=True, text=True, cwd=cwd,
+94:                                 timeout=10).stdout.strip()
+95:         # ★ dirty = **추적 중인 파일의 수정**만. 무관한 untracked 파일(다른
+96:         #   프로젝트 산출물, venv 등)까지 세면 모든 실행이 영구히 dirty로 찍혀
+97:         #   플래그가 무의미해진다. untracked는 정보로만 남긴다.
+98:         dirty_txt = subprocess.run(["git", "status", "--porcelain",
+99:                                     "--untracked-files=no"],
+100:                                    capture_output=True, text=True, cwd=cwd,
+101:                                    timeout=10).stdout.strip()
+102:         # ★ F75/발견 4-b — `-z` 로 받는다. 기본 출력은 비ASCII 경로를
+103:         #   "src/\355\225\234..." 로 quoting 해서 `startswith("src/")` 가
+104:         #   실패했다 (한글 파일명 untracked 가 clean 으로 통과).
+105:         untracked = [x for x in subprocess.run(
+106:             ["git", "ls-files", "--others", "--exclude-standard", "-z"],
+107:             capture_output=True, text=True, cwd=cwd,
+108:             timeout=10).stdout.split("\0") if x]
+109:         # ★ F75/발견 4-c — **ignored 인데 실행 경로에 있는** 파일도 재현을 막는다.
+110:         #   source_digest 는 내용을 해시하지만, clean clone 에는 그 파일이 없어
+111:         #   재검증이 불가능하다 (반례: configs/lookup.parquet, src/settings.local).
+112:         ignored = [x for x in subprocess.run(
+113:             ["git", "ls-files", "--others", "--ignored", "--exclude-standard", "-z"],
+114:             capture_output=True, text=True, cwd=cwd,
+115:             timeout=10).stdout.split("\0") if x]
+116:         # ★ F37 — untracked를 **전부** 무시하면 false clean이 된다. 실행에 실제로
+117:         #   import되거나 읽히는 경로(src/tools/configs) 아래의 untracked
+118:         #   code/config는 재현을 막으므로 dirty로 센다. 그 밖(다른 프로젝트
+119:         #   산출물, venv 등)은 개수와 목록만 정보로 남긴다.
+120:         # ★ F47 — 확장자 allowlist 를 두면 `.toml`/`.ini`/`.cfg`/데이터 캐시 같은
+121:         #   새 입력이 추가될 때 조용히 false clean 이 된다. critical 디렉터리
+122:         #   아래는 **전부** dirty 로 센다 (캐시·바이트코드만 제외).
+123:         # ★ 14차 2차 발견 5 — 범위 판정을 digest 와 **같은 matcher** 로 한다.
+124:         #   예전에는 디렉터리 4개만 하드코딩해서, digest 가 읽는 root 파일
+125:         #   (`run.sh`·`requirements*.txt`)을 새로 만든 채 실행해도 clean 이었다.
+126:         crit = [u for u in untracked + ignored
+127:                 if in_run_scope(u, scope) and not is_scope_excluded(u)]
+128:         # ★ F73 — 수정된 tracked 파일을 **실행 범위 안/밖**으로 나눈다.
+129:         #   경로는 `--name-only` 로 받는다. porcelain 을 문자열 슬라이싱하면
+130:         #   상태 문자 폭·rename 표기·따옴표 때문에 첫 글자가 잘린다 (실측).
+131:         # ★ F75/발견 4-a — `--no-renames -z`. rename 탐지가 켜져 있으면
+132:         #   `--name-only` 가 **새 경로만** 줘서, 실행 범위 파일을 밖으로 rename
+133:         #   한 tracked 변경(git mv src/a.py other/)이 clean 으로 승인됐다.
+134:         #   -z 는 비ASCII quoting 도 막는다.
+135:         mod = [x for x in subprocess.run(
+136:             ["git", "diff", "--name-only", "--no-renames", "-z", "HEAD"],
+137:             capture_output=True, text=True, cwd=cwd,
+138:             timeout=10).stdout.split("\0") if x.strip()]
+139:         # ★ git 은 **저장소 root 기준** 경로를 준다. 이 프로젝트는 monorepo 의
+140:         #   하위 디렉터리이므로 그 접두사를 떼야 `src/` 로 매칭된다.
+141:         #   (실측: `src/io.py` 수정이 "범위 밖"으로 분류됐다)
+142:         prefix = subprocess.run(["git", "rev-parse", "--show-prefix"],
+143:                                 capture_output=True, text=True, cwd=cwd,
+144:                                 timeout=10).stdout.strip()
+145: 
+146:         def _local(x: str) -> str | None:
+147:             if not prefix:
+148:                 return x
+149:             return x[len(prefix):] if x.startswith(prefix) else None
+150: 
+151:         in_scope = [m for m in mod
+152:                     if (_l := _local(m)) is not None and in_run_scope(_l, scope)]
+153:         out_scope = [m for m in mod if m not in in_scope]
+154:         info = {"git_commit": commit or "unknown",
+155:                 "git_commit_short": commit[:8] if commit else "unknown",
+156:                 "git_dirty": bool(in_scope) or bool(crit),
+157:                 "git_dirty_tracked": bool(in_scope),
+158:                 "git_dirty_files_in_scope": in_scope[:50],
+159:                 # 판정에는 안 넣지만 반드시 기록한다 — 뺀 것을 숨기지 않는다
+160:                 "git_dirty_out_of_scope": out_scope[:50],
+161:                 "git_dirty_repo_wide": bool(mod) or bool(crit),
+162:                 "git_dirty_scope": list(scope),
+163:                 "git_untracked_count": len(untracked),
+164:                 "git_untracked_critical": crit[:50]}
+165:         if in_scope and save_diff_to is not None:
+166:             diff = subprocess.run(["git", "diff", "HEAD"], capture_output=True,
+167:                                   text=True, cwd=cwd, timeout=30).stdout
+168:             p = Path(save_diff_to)
+169:             p.parent.mkdir(parents=True, exist_ok=True)
+170:             p.write_text(diff, encoding="utf-8")
+171:             info["git_dirty_diff"] = str(p.name)
+172:             info["git_dirty_files"] = dirty_txt.splitlines()[:50]
+173:         return info
+174:     except Exception:  # noqa: BLE001
+175:         return {"git_commit": "unavailable", "git_dirty": None}
+176: 
+177: 
+178: # ★ 14차-2 — RUN_SCOPE (root CLAUDE.md 하드룰 3 과 1:1). 여기 파일이 바뀌면
+
+# Lines 194-230
+194: def source_digest(root=None, dirs=_SCOPE_DIRS,
+195:                   file_globs=_SCOPE_FILE_GLOBS) -> str:
+196:     """★ F49 — 실제로 import되는 source tree의 내용 해시.
+197: 
+198:     `run_sig` 에 코드 identity 가 없으면, **코드만 바꾸고 같은 output 에 resume 했을
+199:     때 서로 다른 코드로 만든 행이 같은 서명 아래 섞이고 병합 검사를 통과한다.**
+200:     (2026-08-07 5차 리뷰가 3조건 반례로 재현했다: OLD_CODE 행과 NEW_CODE 행이
+201:     같은 `run_sig` 79f2e9c798ee 로 병합되고 validator 가 ok=True 를 냈다.)
+202: 
+203:     git commit 만으로는 dirty 실행을 못 잡으므로 파일 내용을 직접 해시한다.
+204: 
+205:     ★ 14차-2 — (1) 경로 키·정렬을 POSIX 정규형으로 통일해 OS 간 digest 를
+206:     일치시키고, (2) 범위를 RUN_SCOPE 전체(`scripts/`·`run.sh`·
+207:     `requirements*.txt` 포함)로 넓혔다 — 이전엔 실행 진입점을 바꿔도
+208:     digest 가 안 변하는 identity 구멍이 있었다.
+209:     """
+210:     root = Path(root) if root else Path(__file__).resolve().parent.parent
+211:     entries: list[tuple[bytes, Path]] = []
+212:     for d in dirs:
+213:         base = root / d
+214:         if not base.exists():
+215:             continue
+216:         for f in base.rglob("*"):
+217:             # ★ 14차 3차 발견 3 — 제외 규칙을 dirty 판정과 공유한다
+218:             if not f.is_file() or is_scope_excluded(f.relative_to(root)):
+219:                 continue
+220:             entries.append((_digest_path_key(f.relative_to(root)), f))
+221:     for g in file_globs:
+222:         for f in root.glob(g):
+223:             if f.is_file():
+224:                 entries.append((_digest_path_key(f.relative_to(root)), f))
+225:     h = hashlib.sha256()
+226:     for key, f in sorted(entries):
+227:         h.update(key)
+228:         h.update(f.read_bytes())
+229:     return h.hexdigest()[:16]
+230: 
+
+# Lines 1670-1720
+1670:             att.exists(), f"attempts/manifest_start_{sp.get('attempt_id')}.yaml 없다")
+1671:         # ★ F72 — 세 필드만 보면, 나머지가 어긋난 축약본이 통과한다. **전체 문서**를
+1672:         #   비교한다 (리뷰: 축약된 start/attempt 파일로 통과가 재현됐다).
+1673:         if att.exists():
+1674:             a = yaml.safe_load(att.read_text(encoding="utf-8")) or {}
+1675:             adiff = sorted(k for k in set(a) | set(sp) if a.get(k) != sp.get(k))
+1676:             checks["attempt_파일_일치"] = (
+1677:                 not adiff, f"attempt 파일과 start_provenance가 다르다: {adiff[:4]}")
+1678:         # 대표 start 파일은 **최초 시도**의 기록이라 attempt_id 등이 다를 수 있다.
+1679:         # 그러나 코드·입력·환경은 같아야 한다 (다르면 다른 코드로 이어붙인 것이다).
+1680:         # ★ F50b (70차 E7) — 여기서도 판정 기준은 **실제로 돌아간 코드**(`source_digest`)다.
+1681:         #   `git_commit` 은 아래 `실행중_코드불변` 과 같은 이유로 뺀다: 문서만 커밋해도 바뀌어
+1682:         #   resume 이 다른 commit 에서 일어나면 이 검사 하나가 5 건으로 연쇄했다 (66차 §2-5 실측).
+1683:         #   commit 이동은 `_참고_git이동` 에 정보로 남는다. 회귀: test_compare.py::test_f50b_start_file_check_*
+1684:         sdiff = sorted(k for k in ("source_digest", "git_dirty",
+1685:                                    "env", "input_sha256", "halfcell_recipe")
+1686:                        if disk.get(k) != sp.get(k))
+1687:         checks["start_파일_일치"] = (
+1688:             not sdiff,
+1689:             f"manifest_start.yaml과 start_provenance의 {sdiff}가 다르다")
+1690:     # ★ F50b — 판정 기준은 **실제로 돌아간 코드가 바뀌었는가**(source_digest)다.
+1691:     #   `git_commit` 은 문서만 커밋해도 바뀌므로 그것까지 실패로 보면 무해한
+1692:     #   변경에 발목이 잡힌다 (실측: 실행 중 회답 문서를 커밋했더니 걸렸다).
+1693:     #   git commit 변경은 아래 별도 항목에 정보로만 남긴다.
+1694:     checks["실행중_코드불변"] = (
+1695:         man.get("source_digest_changed_during_run") is False,
+1696:         "실행 도중 src/tools/configs 내용이 바뀌었다")
+1697:     if man.get("git_commit_changed_during_run"):
+1698:         # 코드가 그대로면 실패는 아니지만, 읽는 쪽이 알아야 한다
+1699:         checks["_참고_git이동"] = (
+1700:             True, "실행 중 git commit이 바뀌었으나 source_digest는 그대로다")
+1701:     checks["시작종료_서명일치"] = (
+1702:         not sp or sp.get("source_digest") == spec0.get("source_digest"),
+1703:         "시작 시점 source_digest가 run_spec과 다르다")
+1704: 
+1705:     # ★ F72 — validator 가 `source_digest()` 를 **한 번도 다시 계산하지 않았다.**
+1706:     #   기록된 문자열끼리만 맞춰봤으므로, 그 문자열이 실제 코드와 무관해도 통과했다.
+1707:     #   같은 저장소·같은 commit·clean 상태일 때는 재계산해서 대조할 수 있다.
+1708:     _now = git_info(root)
+1709:     if (_now.get("git_commit") == spec0.get("git_commit")
+1710:             and _now.get("git_dirty") is False):
+1711:         checks["코드_재계산"] = (
+1712:             source_digest(root) == spec0.get("source_digest"),
+1713:             f"같은 commit·clean 인데 source_digest가 다르다 "
+1714:             f"(현재 {source_digest(root)}, 기록 {spec0.get('source_digest')})")
+1715:     else:
+1716:         # 다른 commit 에서 검증 중이면 재계산이 불가능하다 — 사실만 남긴다
+1717:         checks["_참고_코드재계산불가"] = (
+1718:             True, f"검증 시점 commit({str(_now.get('git_commit'))[:8]})이 "
+1719:                   f"기록({str(spec0.get('git_commit'))[:8]})과 달라 재계산을 건너뛴다")
+1720: 

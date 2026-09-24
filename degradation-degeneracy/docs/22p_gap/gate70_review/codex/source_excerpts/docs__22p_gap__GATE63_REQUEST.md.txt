@@ -1,0 +1,34 @@
+# docs/22p_gap/GATE63_REQUEST.md
+# Entire source SHA-256: 10fbcad4a305c424bdccc5a28a2ee18102655d6e9fc5277c4fd514058092e5d2
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 40-68
+40: 같은 이유로 빨갰다). 그리고 이번에 새로 하나 — E2 의 실제 planned lifecycle 시험
+41: `test_fit_phase_receipt_is_written_while_the_kernel_lock_is_held` 는 **clean 커밋에서만**
+42: 돈다 (dirty 면 skip, 사유를 출력한다): 진짜 producer 가 git 상태를 적고 fit 의
+43: producer 검증(F74/F85)이 dirty worktree 곡선을 거부하기 때문이다 — smoke 와 같은
+44: 규칙이고 위조하지 않는다. detached clean worktree 에서는 돈다.
+45: 
+46: ---
+47: 
+48: ## §0 먼저 — 이번 라운드가 **하지 않은** 것
+49: 
+50: | 조건 | 상태 |
+51: |---|---|
+52: | **P0-1** producer 결속 — 닫힌 typed manifest 파싱 · 두 payload 압축해제 재해시 · producer 발행 영수증 | **미착수** (49차부터 **열다섯 라운드째**) |
+53: | trusted launcher 의 source 측정 | **미착수** |
+54: | **P0-4** typed 보존 영수증 **소비** | **부분** |
+55: | 변이 증거의 **독립 replay** | **미착수** — 이번에도 checker 가 스스로 재생하지는 않는다. 리뷰어가 정적 대조로 확인한 것은 목록 정합성뿐이다 |
+56: | 묶음을 **immutable content-addressed object** 로 먼저 게시 | **미착수** |
+57: | 실행 class 5종 중 3종 미구현 · 등록부 삭제 절차 | **미착수** |
+58: | baseline·sweep1d·wsweep 계획 gate · 실물 object-lock adapter · power-loss 모델 · publisher 전용 OS principal | **미착수** |
+59: | 외적타당도 **#50** (`truth_provenance` 를 기계 계약에) | **미착수** |
+60: 
+61: 리뷰어 재심 조건 6("§0 독립 GO 전제를 구현·입증")은 **이번 묶음이 닫지 않는다.**
+62: 위 표의 "미착수" 는 신고이지 종결이 아니다 — 그것을 안다.
+63: 
+64: ### 이번 라운드가 스스로 신고하는 것 (**8건** — 직전 요청문 머리의 "5건" 은 본문 ①–⑦ 과 달랐다, 정정)
+65: 
+66: **①** 영수증 frame 의 한계 — child 의 startup 코드 전부는 못 막는다 (62차 §0-① 그대로).
+67: 부모 대조 층은 이번에 F3 로 **정상 package 까지** Python resolver 와 같은 규칙이 됐지만,
+68: 위조자가 자기 해시를 정직하게 적으면 여전히 못 막는다. 종결은 §0 표의 독립 replay 다.

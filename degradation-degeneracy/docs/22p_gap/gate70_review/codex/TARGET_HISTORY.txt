@@ -1,0 +1,8 @@
+8568f782db3acbf00d872ce5527147258c00bec7 dd: GATE70 request finalized — main-run GO request on f0dfaff3 (source_digest 5e660a8c73d5663a)
+eb5209cfd2aae4e57664197fd58fbd8c3d96a821 dd: paired_fixed5_v4 preservation receipt re-verified with the current validator (source_digest 5e660a8c73d5663a)
+f0dfaff3bea1e1caedcd7a34275e908284cc2d4f dd: F50b applied to start_파일_일치 (RUN_SCOPE) — git_commit dropped from the start-file comparison, RED first
+0ee7a9febb4d57598db7949c2504de07434b6644 dd: GATE69 accepted and closed (no main-run GO) — ledger 89, GATE69 working state, GATE70 GO-request draft
+9f585ced23ce0208f4e8073203412ae388bdd9c8 dd: GATE69 review package preserved (accepted/closed, no main-run GO) — zip bytes + codex/ under the -text rule, MANIFEST 119/119
+0c1cdc22d913ffaf2b849aaca19ec4875e254738 dd: .gitattributes — gate69 리뷰 패키지 원문 bytes 보존 규칙 (-text !eol), 묶기 전에
+e6ddcd1efb7df4be69849a4fd5b59c43cccff873 webapp: R17 closure, gate 65~68 status, MSC seminar model checks, ASSB literature ledger, COMSOL B_A8R1
+afab6485e00f79ed78d43c4b4d51bca1903ae1b3 dd: GATE68 received (partial accept / closing NO-GO, P2 1) and answered — GATE69 request

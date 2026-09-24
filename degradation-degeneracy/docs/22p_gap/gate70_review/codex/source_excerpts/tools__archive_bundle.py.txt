@@ -1,0 +1,61 @@
+# tools/archive_bundle.py
+# Entire source SHA-256: 5f7fc3c89dfe5dba5a6653c0f162c6615c1449808ba83f8e724683a0ed903d41
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 288-307
+288:     run_rel = _rel(run_dir, repo_root)
+289:     seal_bad = _seal_conflicts(stage, run_rel, nested, inputs_map)
+290:     if seal_bad:
+291:         shutil.rmtree(stage)
+292:         raise RuntimeError(
+293:             "봉인 불일치 — 이 실행 디렉터리는 기록과 다른 bytes 를 담고 있어 "
+294:             "묶지 않습니다 (기존 묶음은 그대로 둡니다):\n  "
+295:             + "\n  ".join(seal_bad))
+296: 
+297:     (stage / RESTORE_MAP).write_text(yaml.safe_dump(
+298:         {"run_dir": run_rel, "inputs": inputs_map, "nested": nested},
+299:         allow_unicode=True, sort_keys=False), encoding="utf-8")
+300:     (stage / PAYLOAD).write_text(yaml.safe_dump(
+301:         _payload_map(stage), allow_unicode=True, sort_keys=False), encoding="utf-8")
+302: 
+303:     if out_dir.exists():
+304:         shutil.rmtree(out_dir)
+305:     stage.rename(out_dir)
+306:     return {"copied": copied, "external": sorted(inputs_map.values()),
+307:             "missing": missing, "nested": nested}
+
+# Lines 362-395
+362:     rp, pp = b / RESTORE_MAP, b / PAYLOAD
+363:     meta = (yaml.safe_load(rp.read_text(encoding="utf-8")) or {}) if rp.is_file() else {}
+364:     if not rp.is_file():
+365:         missing.append(RESTORE_MAP)
+366:     rmap = meta.get("inputs") or {}
+367:     run_rel = str(meta.get("run_dir") or "")
+368: 
+369:     # ★ F71 — payload 재해시. 묶음 안에서 파일이 바뀌었으면 여기서 걸린다.
+370:     if not pp.is_file():
+371:         missing.append(PAYLOAD)
+372:     else:
+373:         rec = yaml.safe_load(pp.read_text(encoding="utf-8")) or {}
+374:         now = _payload_map(b)
+375:         for k in sorted(set(rec) | set(now)):
+376:             if rec.get(k) != now.get(k):
+377:                 missing.append(f"{k} (payload digest 불일치)")
+378: 
+379:     for sub in [""] + list(meta.get("nested") or []):
+380:         base = b / sub if sub else b
+381:         pre = f"{sub}/" if sub else ""
+382:         kind = artifact_kind(base)
+383:         missing += [pre + n for n in required_files(base) if not (base / n).is_file()]
+384:         mp = base / "manifest.yaml"
+385:         man = (yaml.safe_load(mp.read_text(encoding="utf-8")) or {}) if mp.is_file() else {}
+386:         if kind == "fit":
+387:             aid = (man.get("start_provenance") or {}).get("attempt_id")
+388:             if not aid:
+389:                 missing.append(f"{pre}manifest.start_provenance.attempt_id (F51 이전 실행)")
+390:             elif not (base / "attempts" / f"manifest_start_{aid}.yaml").is_file():
+391:                 missing.append(f"{pre}attempts/manifest_start_{aid}.yaml")
+392: 
+393:         for path_s in (man.get("input_sha256") or {}):
+394:             p = Path(path_s)
+395:             sub_rel = f"{run_rel}/{sub}" if sub else run_rel

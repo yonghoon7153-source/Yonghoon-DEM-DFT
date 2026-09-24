@@ -1,0 +1,70 @@
+# tests/conftest.py
+# Entire source SHA-256: 89b3bcafb8ca06ef21dea0b40609ad2646257fbd5b5a4e27d2944ad67a1a27ff
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 40-58
+40:     gap = ROOT / "docs" / "22p_gap"
+41:     if str(gap) not in sys.path:
+42:         sys.path.insert(0, str(gap))
+43:     import row_projection as R
+44: 
+45:     return R.seal_frozen_cohorts()
+46: 
+47: 
+48: def pytest_configure(config):
+49:     config.addinivalue_line(
+50:         "markers", "slow: 실제 PyBaMM solve가 필요한 테스트 (Phase 게이트에서 실행)")
+51:     sealed = _bootstrap_frozen_coordinate_seals()
+52:     if sealed:
+53:         print(f"\n[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort "
+54:               f"{len(sealed)}개의 좌표를 이 자리에서 봉인했다: {sealed}")
+55: @pytest.fixture(scope="session")
+56: def _isolated_discharged_cache(tmp_path_factory):
+57:     """★ 12차 발견 8 — slow 테스트가 **작업 디렉터리의 ambient 캐시**에 의존하면
+58:     안 된다. 옛 형식(solver·env 필드 없음) 캐시가 남아 있으면 fail-closed 로
+
+# Lines 145-194
+145:     base = ROOT / "results" / "_smoke" / "_unit"
+146:     base.mkdir(parents=True, exist_ok=True)
+147:     safe = re.sub(r"[^A-Za-z0-9_.-]", "_", request.node.name)[:40]
+148:     d = base / f"{safe}_{_uuid.uuid4().hex[:8]}"
+149:     d.mkdir()
+150:     yield d
+151:     shutil.rmtree(d, ignore_errors=True)
+152: 
+153: 
+154: @pytest.fixture(scope="session", autouse=True)
+155: def _exec_class_registry_is_not_polluted_by_tests():
+156:     """★ 58차 P0-8 후속 — **시험이 저장소의 실행 class 등록부를 늘리지 않는다.**
+157: 
+158:     P0-8 이 등록부를 만들자마자 이 결함이 생겼다: `_complete_artifact()` 가
+159:     산출을 합성할 때마다 **실물** `docs/22p_gap/_exec_class/` 에 파일을 하나씩
+160:     남겼고, 한 번의 전체 회귀로 93건이 쌓여 그대로 커밋됐다 (실측).
+161: 
+162:     `[해석]` 등록부는 **authority 데이터**다. 시험이 그것을 늘릴 수 있으면
+163:     "등록돼 있다" 는 사실의 값이 떨어진다 — 누가 언제 왜 넣었는지 모르는
+164:     항목이 섞이기 때문이다. 그래서 이 저장소에서 등록부에 남을 자격이 있는
+165:     것은 둘뿐이다: **실제 실행이 게이트를 지난 기록**과 **사람이 한 legacy 분류**.
+166: 
+167:     세션 시작 때 이름을 찍어 두고 끝나면 **새로 생긴 것을 지운다.** 시험을
+168:     고치는 대신 여기서 쓸어 담는 이유는, 이 pollution 이 fixture 하나의 문제가
+169:     아니라 **"시험이 production authority 를 만진다"** 는 부류이기 때문이다 —
+170:     새 시험이 같은 실수를 해도 여기서 걸린다.
+171: 
+172:     ★ 58차 L5 후속 — **authority 를 새로 만들면 이 목록에 같이 적는다.**
+173:       L5 가 얼린 좌표 봉인(`_frozen_coords/`)을 만들자마자 똑같은 일이
+174:       벌어졌다: 한 번의 회귀로 19건이 쌓였고 전부 `/tmp/pytest-of-root/...`
+175:       였다. 등록부가 하나 늘 때마다 이 목록도 늘어야 한다 — 그 사실을 여기
+176:       적어 두지 않으면 다음 authority 에서 또 반복된다.
+177:     """
+178:     regs = [ROOT / "docs" / "22p_gap" / "_exec_class",
+179:             ROOT / "docs" / "22p_gap" / "_frozen_coords"]
+180:     before = {r: ({q.name for q in r.glob("*.json")} if r.is_dir() else set())
+181:               for r in regs}
+182:     yield
+183:     for r in regs:
+184:         if not r.is_dir():
+185:             continue
+186:         for q in r.glob("*.json"):
+187:             if q.name not in before[r]:
+188:                 q.unlink(missing_ok=True)

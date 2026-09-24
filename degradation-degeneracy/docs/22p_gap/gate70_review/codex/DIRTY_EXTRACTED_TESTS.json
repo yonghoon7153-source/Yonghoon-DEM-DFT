@@ -1,0 +1,15 @@
+{
+  "tests": {
+    "test_dirty_scope_bypasses_are_closed": {
+      "status": "PASS",
+      "original_function_body_unchanged": true,
+      "fixture": "C:\\Users\\Administrator\\Documents\\Codex\\g70_synthetic_checks\\receiver_test_dirty_scope_bypasses_are_closed"
+    },
+    "test_dirty_scope_ignores_unrelated_subproject": {
+      "status": "PASS",
+      "original_function_body_unchanged": true,
+      "fixture": "C:\\Users\\Administrator\\Documents\\Codex\\g70_synthetic_checks\\receiver_test_dirty_scope_ignores_unrelated_subproject"
+    }
+  },
+  "scope": "Two original function bodies; not full pytest module collection"
+}

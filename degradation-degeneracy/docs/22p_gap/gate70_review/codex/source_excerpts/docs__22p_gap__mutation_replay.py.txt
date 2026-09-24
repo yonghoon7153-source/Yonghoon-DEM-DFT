@@ -1,0 +1,187 @@
+# docs/22p_gap/mutation_replay.py
+# Entire source SHA-256: c6539ca11b1f21bcea1c0d56402940222da4e2cf34fa5bc0d3e4a0be8f8da21a
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 6830-6883
+6830: def verify_receipts(path, scen: dict, binding: dict) -> int:
+6831:     """조각의 **실행 영수증**을 검사하고 판정을 다시 유도한다 (52차 P1-2).
+6832: 
+6833:     `check_coverage()` 에서 떼어 낸 것은 시험이 이 축만 따로 겨눌 수 있게 하기
+6834:     위해서다. `check_coverage()` 는 맨 앞에서 `check_preimages()` 를 부르므로,
+6835:     이 파일 자신을 변이시키면 **그 gate 가 먼저 걸려** 어떤 변이든 "거부됐다"
+6836:     로 보인다 — 물긴 하지만 **선언한 이유로 물지 않는다.** 그런 증인은 증거가
+6837:     아니다 (실측했다: witness 가 "정상 조각이 거부됐다" 였다).
+6838:     """
+6839:     rep_dir = pathlib.Path(path).parent / "reports" / \
+6840:         str(binding.get("reports_dir") or "")
+6841:     # ★ 53차 P1 — 어떤 scenario 가 **실행 가능한가** 는 등록부가 정한다.
+6842:     #   조각에 적힌 `class` 로 판단하면 "declared 라고 적으면 검사를 건너뛴다"
+6843:     #   가 된다 (조각은 검사 대상이지 authority 가 아니다).
+6844:     reg = _registry()
+6845:     for name, v in sorted(scen.items()):
+6846:         if (reg.get(name) or {}).get("class") != "executable":
+6847:             continue
+6848:         if not v.get("ran"):
+6849:             continue
+6850:         want_sha = str(v.get("report_sha256") or "")
+6851:         if not want_sha:
+6852:             print(f"✗ {path}: {name} 이 돌았다는데 실행 영수증이 없다 — "
+6853:                   "self-claim 은 증거가 아니다")
+6854:             return 1
+6855:         blob = {}
+6856:         for phase in ("before", "after"):
+6857:             f = rep_dir / f"{name}.{phase}.json"
+6858:             if not f.is_file():
+6859:                 print(f"✗ {path}: {name} 의 {phase} report 파일이 없다 ({f})")
+6860:                 return 1
+6861:             blob[phase] = f.read_bytes()
+6862:         blob_before, blob_after = blob["before"], blob["after"]
+6863:         if _receipt_digest(name, blob_before, blob_after) != want_sha:
+6864:             print(f"✗ {path}: {name} 의 report digest 가 다르다 — 결과를 "
+6865:                   "나중에 고쳤거나 **다른 변이의 영수증**을 붙였다")
+6866:             return 1
+6867:         if _report_identity_rc(path, name, rep_dir,
+6868:                                binding.get("execution")) != 0:
+6869:             return 1
+6870:         derived = _verdict_from_reports(name, rep_dir)
+6871:         # ★ 53차 P1 — **"모르겠다" 는 "물었다" 가 아니다.** 52차는 여기 앞에
+6872:         #   `derived is not None and` 를 두어 유도 실패를 건너뛰었고, 0바이트
+6873:         #   report 두 개면 어떤 scenario 든 통과했다 (리뷰어 실측:
+6874:         #   `new_pytest_runs=0`). 유도할 수 없으면 `None` 이 그대로 비교에
+6875:         #   들어가 어긋난다 — 그것이 fail-closed 다.
+6876:         if bool(v.get("bit")) != derived:
+6877:             print(f"✗ {path}: {name} 의 판정이 영수증과 다르다 "
+6878:                   f"(적힌 것 {v.get('bit')} ≠ report {derived})"
+6879:                   + (" — report 를 읽을 수 없거나 기대 node 가 없다"
+6880:                      if derived is None else ""))
+6881:             return 1
+6882:     return 0
+6883: 
+
+# Lines 6960-6986
+6960: def _verdict_from_reports(name: str, rep_dir) -> bool | None:
+6961:     """저장된 pytest report 에서 "물었는가" 를 **다시 유도한다** (52차 P1-2).
+6962: 
+6963:     runner 가 적은 값을 믿지 않는다. `EXPECT[name]["fail"]` 의 node 들이
+6964:     변이 **후** report 에서 call 단계에 실패로 나타나고 변이 **전** report 에서는
+6965:     안 나타나야 물었다.
+6966: 
+6967:     남은 한계: report 자체를 위조하면 통과한다. 그러나 그것은 "아무 것도 안 하고
+6968:     숫자만 적는 것" 과 다른 주장이고, report 는 committed·diffable 이다.
+6969:     """
+6970:     want = set((EXPECT.get(name) or {}).get("fail") or ())
+6971:     if not want:
+6972:         return None
+6973:     def _failed(phase):
+6974:         f = pathlib.Path(rep_dir) / f"{name}.{phase}.json"
+6975:         try:
+6976:             data = json.loads(f.read_text(encoding="utf-8"))
+6977:         except (OSError, json.JSONDecodeError):
+6978:             return None
+6979:         return {t["nodeid"] for t in data.get("tests", [])
+6980:                 if (t.get("call") or {}).get("outcome") == "failed"}
+6981:     before, after = _failed("before"), _failed("after")
+6982:     if before is None or after is None:
+6983:         return None
+6984:     return want.issubset(after) and not (want & before)
+6985: 
+6986: 
+
+# Lines 7106-7202
+7106: def check_coverage(paths) -> int:
+7107:     """조각 합집합이 **등록부 전체**를 덮었는가 (49차 P1).
+7108: 
+7109:     덮었다는 주장을 로그 눈대중이 아니라 파일로 답한다. 실행 가능한 scenario 는
+7110:     전부 한 번 이상 **돌았고 물었어야** 하고, 신고는 전부 신고로 나타나야 한다.
+7111:     """
+7112:     reg = _registry()
+7113:     # ★ 54차 P1 — 기록만 하고 안 보던 `head` 를 본다. 리뷰어는 모든 HEAD 를
+7114:     #   40개의 `0` 으로 바꾸고도 rc 0 을 받았다 — 적기만 하고 검사하지 않는
+7115:     #   값은 결속이 아니라 장식이다.
+7116:     if _assert_heads_are_real(paths) != 0:
+7117:         return 1
+7118:     if _assert_trees_are_current(paths) != 0:
+7119:         return 1
+7120:     if _assert_execution_is_current(paths) != 0:          # 57차 P1-1
+7121:         return 1
+7122:     # ★ 50차 P1 — 합집합을 세기 전에 **등록부 자체**가 성립하는지 본다.
+7123:     #   no-op 변이·죽은 지점·빈 기대 집합이 있으면 그 위에서 센 수는 뜻이 없다.
+7124:     if check_preimages() != 0:
+7125:         print("✗ 등록부의 변이 지점이 성립하지 않는다 — 합집합을 셀 수 없다")
+7126:         return 1
+7127:     empty = sorted(n for n, m in reg.items()
+7128:                    if m["class"] == "executable"
+7129:                    and not (EXPECT.get(n) or {}).get("fail"))
+7130:     if empty:
+7131:         print("✗ 실행 가능 변이인데 기대 실패 집합이 비었거나 없다: "
+7132:               + ", ".join(empty))
+7133:         return 1
+7134:     # ★ 51차 P1-E2 — 조각이 **지금 이 등록부·이 runner** 에서 나왔는지 먼저 본다.
+7135:     want = {"registry_digest": _registry_digest(),
+7136:             "expect_digest": _expect_digest(),
+7137:             "runner_digest": _runner_digest()}
+7138:     seen: dict = {}
+7139:     for path in paths:
+7140:         rec = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+7141:         if rec.get("schema") != "mutation-coverage/v3":
+7142:             print(f"✗ {path}: coverage schema 가 아니다: {rec.get('schema')!r} "
+7143:                   "(52차부터 v3 — 실행 영수증 없는 조각은 증거가 아니다)")
+7144:             return 1
+7145:         binding = rec.get("binding") or {}
+7146:         for key, w in want.items():
+7147:             if binding.get(key) != w:
+7148:                 print(f"✗ {path}: {key} 가 살아 있는 값과 다르다 "
+7149:                       f"({str(binding.get(key))[:16]} ≠ {w[:16]}) — 이 조각은 "
+7150:                       "지금 등록부/코드가 아닌 것에서 나왔다")
+7151:                 return 1
+7152:         scen = rec.get("scenarios") or {}
+7153:         if verify_receipts(path, scen, binding) != 0:
+7154:             return 1
+7155:         got = _transcript_digest(scen)
+7156:         if binding.get("transcript_digest") != got:
+7157:             print(f"✗ {path}: transcript_digest 가 담긴 결과와 다르다 "
+7158:                   f"({str(binding.get('transcript_digest'))[:16]} ≠ "
+7159:                   f"{got[:16]}) — 결과를 나중에 고쳤다")
+7160:             return 1
+7161:         for name, v in scen.items():
+7162:             cur = seen.setdefault(name, {"class": v["class"], "ran": False,
+7163:                                          "bit": None, "slices": []})
+7164:             if cur["class"] != v["class"]:
+7165:                 print(f"✗ {name}: 조각마다 분류가 다르다 "
+7166:                       f"({cur['class']} ≠ {v['class']})")
+7167:                 return 1
+7168:             cur["slices"].append(rec["selector"])
+7169:             if v.get("ran"):
+7170:                 cur["ran"] = True
+7171:                 cur["bit"] = bool(v.get("bit")) if cur["bit"] is None \
+7172:                     else (cur["bit"] and bool(v.get("bit")))
+7173: 
+7174:     bad = []
+7175:     for name, meta in sorted(reg.items()):
+7176:         got = seen.get(name)
+7177:         if got is None:
+7178:             bad.append(f"{name}: 어느 조각에도 나타나지 않았다 ({meta['class']})")
+7179:             continue
+7180:         if got["class"] != meta["class"]:
+7181:             bad.append(f"{name}: 분류가 등록부와 다르다 "
+7182:                        f"({got['class']} ≠ {meta['class']})")
+7183:         if meta["class"] == "executable" and not got["ran"]:
+7184:             bad.append(f"{name}: 실행 가능한데 어느 조각에서도 돌지 않았다")
+7185:         if meta["class"] == "executable" and got["ran"] and got["bit"] is False:
+7186:             bad.append(f"{name}: 돌았지만 물지 않았다")
+7187:     extra = sorted(set(seen) - set(reg))
+7188:     for name in extra:
+7189:         bad.append(f"{name}: 등록부에 없는 scenario 가 조각에 있다 (이름이 바뀌었나)")
+7190: 
+7191:     n_exec = sum(1 for m in reg.values() if m["class"] == "executable")
+7192:     n_decl = len(reg) - n_exec
+7193:     print(f"등록부 scenario {len(reg)} (executable {n_exec} · declared {n_decl}) · "
+7194:           f"조각 {len(paths)}개에서 관측 {len(seen)}")
+7195:     if bad:
+7196:         print("\n=== 덮이지 않은 것 ===")
+7197:         for b in bad:
+7198:             print(b)
+7199:         return 1
+7200:     print("조각 합집합이 등록부 전체를 정확히 덮었다")
+7201:     return 0
+7202: 

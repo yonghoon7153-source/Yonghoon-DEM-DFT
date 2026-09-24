@@ -1,0 +1,30 @@
+# tests/test_compare.py
+# Entire source SHA-256: 6e4d40c930dac631cce4a4a7ae92ae4a9577219339f4a22ec22cf1b07f3307c5
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 930-954
+930:         "input_sha256": sealed, "input_sha256_source": "sealed_at_start",
+931:         "input_sha256_at_end": dict(sealed), "inputs_changed_during_run": False,
+932:         "fits_seal": _seal,
+933:     }), encoding="utf-8")
+934:     # ★ 58차 P0-8 — 완성된 산출에는 **실행 class 등록**이 포함된다.
+935:     #   실물 경로에서는 실행 전 gate(`assert_run_is_authorized`)가 계획 통과를
+936:     #   근거로 등록한다. 이 fixture 는 gate 를 거치지 않고 산출만 합성하므로,
+937:     #   그 한 단계를 여기서 대신한다. 안 하면 이 fixture 가 만든 것은
+938:     #   "게이트를 통과한 적 없는데 승격되는 산출" 이고 — 그것이 바로 P0-8 이
+939:     #   막으려는 것이다.
+940:     from tools.preserve import (EXEC_CLASS_CANONICAL, _record_execution_class,
+941:                                 seal_run_identity)
+942:     # ★ 62차 α′ — `sign_producer` 가 grid 시점에 봉인했고 그 뒤에 fit manifest 를
+943:     #   더 썼다. 승격은 봉인이 지금 있는 실행 manifest 를 **다** 담을 때만
+944:     #   identity 를 만들므로 (P0-1), commit 과 같은 순서로 **다시 봉인한 뒤**
+945:     #   등록한다. 이 fixture 가 62차 전에 통과하던 것은 승격이 subset seal 을
+946:     #   관용했기 때문이다 — fixture 가 진실을 가리고 있었다 (규율 2).
+947:     seal_run_identity(d)
+948:     _record_execution_class(
+949:         d, EXEC_CLASS_CANONICAL,
+950:         evidence="시험 fixture `_complete_artifact` 가 정본 산출로 합성했다")
+951:     return d, sig
+952: 
+953: 
+954: def test_provenance_validator_rejects_forged_signature(tmp_path):

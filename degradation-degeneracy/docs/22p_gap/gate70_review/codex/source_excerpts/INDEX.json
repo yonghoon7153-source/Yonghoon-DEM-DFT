@@ -1,0 +1,344 @@
+{
+  "run.sh": {
+    "source_bytes": 28834,
+    "source_sha256": "07ec2788373dce55befb94ac1814e31ed255803633ea99b116f3bb81c7f8afa4",
+    "ranges": [
+      [
+        15,
+        65
+      ],
+      [
+        161,
+        235
+      ],
+      [
+        249,
+        322
+      ],
+      [
+        343,
+        381
+      ],
+      [
+        404,
+        419
+      ],
+      [
+        509,
+        565
+      ]
+    ],
+    "excerpt": "run.sh.txt"
+  },
+  "src/io.py": {
+    "source_bytes": 103359,
+    "source_sha256": "25f79f0a740ea486b6c546185b4912b4779088bf57e09d67fa5761de10d46336",
+    "ranges": [
+      [
+        37,
+        80
+      ],
+      [
+        81,
+        178
+      ],
+      [
+        194,
+        230
+      ],
+      [
+        1670,
+        1720
+      ]
+    ],
+    "excerpt": "src__io.py.txt"
+  },
+  "tools/preserve.py": {
+    "source_bytes": 446961,
+    "source_sha256": "eeeb805b6040e73f67dbeec632e17a538500e684c306e34637320bb240b98f55",
+    "ranges": [
+      [
+        2979,
+        3017
+      ],
+      [
+        3245,
+        3268
+      ],
+      [
+        4335,
+        4356
+      ],
+      [
+        4873,
+        4888
+      ],
+      [
+        4950,
+        5012
+      ],
+      [
+        5076,
+        5112
+      ],
+      [
+        5380,
+        5394
+      ],
+      [
+        5580,
+        5599
+      ],
+      [
+        5750,
+        5819
+      ],
+      [
+        5883,
+        5927
+      ],
+      [
+        6380,
+        6410
+      ],
+      [
+        7248,
+        7293
+      ],
+      [
+        7380,
+        7398
+      ],
+      [
+        7464,
+        7524
+      ],
+      [
+        7770,
+        7786
+      ],
+      [
+        7946,
+        7962
+      ]
+    ],
+    "excerpt": "tools__preserve.py.txt"
+  },
+  "tests/conftest.py": {
+    "source_bytes": 9025,
+    "source_sha256": "89b3bcafb8ca06ef21dea0b40609ad2646257fbd5b5a4e27d2944ad67a1a27ff",
+    "ranges": [
+      [
+        40,
+        58
+      ],
+      [
+        145,
+        194
+      ]
+    ],
+    "excerpt": "tests__conftest.py.txt"
+  },
+  "tests/test_runner.py": {
+    "source_bytes": 8147,
+    "source_sha256": "18cb0c46080fc3aa2920a0f3aa18ae8b10e411f5210f0e4749c1860f458d8204",
+    "ranges": [
+      [
+        51,
+        110
+      ]
+    ],
+    "excerpt": "tests__test_runner.py.txt"
+  },
+  "tests/test_docs_lint.py": {
+    "source_bytes": 606195,
+    "source_sha256": "cc3dd3fa76919e2840868f9b043c2633c7bc3306773a3201e41aa38fbf05295f",
+    "ranges": [
+      [
+        9185,
+        9228
+      ]
+    ],
+    "excerpt": "tests__test_docs_lint.py.txt"
+  },
+  "tests/test_compare.py": {
+    "source_bytes": 225343,
+    "source_sha256": "6e4d40c930dac631cce4a4a7ae92ae4a9577219339f4a22ec22cf1b07f3307c5",
+    "ranges": [
+      [
+        930,
+        954
+      ]
+    ],
+    "excerpt": "tests__test_compare.py.txt"
+  },
+  "scripts/smoke_e2e.sh": {
+    "source_bytes": 40941,
+    "source_sha256": "b188fc73fb32da6f6bb5e928450c0d8f8734c57fe92e4358e47799e064762ba9",
+    "ranges": [
+      [
+        118,
+        134
+      ],
+      [
+        214,
+        255
+      ]
+    ],
+    "excerpt": "scripts__smoke_e2e.sh.txt"
+  },
+  "scripts/archive_results.sh": {
+    "source_bytes": 18457,
+    "source_sha256": "dfadccd2808bae89ef953180c84c55b32d82b6a416576666c5d83f09f59c613b",
+    "ranges": [
+      [
+        135,
+        166
+      ]
+    ],
+    "excerpt": "scripts__archive_results.sh.txt"
+  },
+  "docs/22p_gap/LEG_PRESERVATION.yaml": {
+    "source_bytes": 59860,
+    "source_sha256": "9a0e98aef93ce4c3b90de5a0fdd47b5d0f695f6faf03092f0bd5875b287b7cc0",
+    "ranges": [
+      [
+        620,
+        644
+      ],
+      [
+        654,
+        768
+      ]
+    ],
+    "excerpt": "docs__22p_gap__LEG_PRESERVATION.yaml.txt"
+  },
+  "docs/22p_gap/GATE63_REQUEST.md": {
+    "source_bytes": 16829,
+    "source_sha256": "10fbcad4a305c424bdccc5a28a2ee18102655d6e9fc5277c4fd514058092e5d2",
+    "ranges": [
+      [
+        40,
+        68
+      ]
+    ],
+    "excerpt": "docs__22p_gap__GATE63_REQUEST.md.txt"
+  },
+  "docs/22p_gap/GATE49_REQUEST.md": {
+    "source_bytes": 14384,
+    "source_sha256": "092e95dcc9a06fe3bc4de655ba352e1369cfa01a6195ef1024932a04fe15630f",
+    "ranges": [
+      [
+        8,
+        26
+      ]
+    ],
+    "excerpt": "docs__22p_gap__GATE49_REQUEST.md.txt"
+  },
+  "docs/08_REVIEW_RESPONSE.md": {
+    "source_bytes": 506540,
+    "source_sha256": "d30e76a4e72bb61a9411ca10a0c236ca51a2c9e09c9b9f57770c2c93a02562b7",
+    "ranges": [
+      [
+        7080,
+        7110
+      ]
+    ],
+    "excerpt": "docs__08_REVIEW_RESPONSE.md.txt"
+  },
+  "docs/22p_gap/STAGE3_CONTRACT.md": {
+    "source_bytes": 97239,
+    "source_sha256": "b7825789a7f2ae672283ca880f7e60b0f1015cb771a3f7b629009d55c8fa580e",
+    "ranges": [
+      [
+        433,
+        443
+      ],
+      [
+        483,
+        490
+      ],
+      [
+        753,
+        767
+      ],
+      [
+        1222,
+        1277
+      ],
+      [
+        1500,
+        1525
+      ]
+    ],
+    "excerpt": "docs__22p_gap__STAGE3_CONTRACT.md.txt"
+  },
+  "docs/22p_gap/row_projection.py": {
+    "source_bytes": 290933,
+    "source_sha256": "b8eae978b9525c3e457e29ee712e16a978b7578ea27228ba569913aff899910d",
+    "ranges": [
+      [
+        2395,
+        2414
+      ],
+      [
+        2480,
+        2499
+      ],
+      [
+        3525,
+        3578
+      ]
+    ],
+    "excerpt": "docs__22p_gap__row_projection.py.txt"
+  },
+  "docs/22p_gap/mutation_replay.py": {
+    "source_bytes": 424197,
+    "source_sha256": "c6539ca11b1f21bcea1c0d56402940222da4e2cf34fa5bc0d3e4a0be8f8da21a",
+    "ranges": [
+      [
+        6830,
+        6883
+      ],
+      [
+        6960,
+        6986
+      ],
+      [
+        7106,
+        7202
+      ]
+    ],
+    "excerpt": "docs__22p_gap__mutation_replay.py.txt"
+  },
+  "tools/archive_bundle.py": {
+    "source_bytes": 29529,
+    "source_sha256": "5f7fc3c89dfe5dba5a6653c0f162c6615c1449808ba83f8e724683a0ed903d41",
+    "ranges": [
+      [
+        288,
+        307
+      ],
+      [
+        362,
+        395
+      ]
+    ],
+    "excerpt": "tools__archive_bundle.py.txt"
+  },
+  "docs/22p_gap/make_receipt.py": {
+    "source_bytes": 19016,
+    "source_sha256": "9c8cf71af310de03d2ee9a72d31fcc9172d8920af65fdf097277513c8106c07c",
+    "ranges": [
+      [
+        135,
+        168
+      ],
+      [
+        193,
+        239
+      ]
+    ],
+    "excerpt": "docs__22p_gap__make_receipt.py.txt"
+  }
+}

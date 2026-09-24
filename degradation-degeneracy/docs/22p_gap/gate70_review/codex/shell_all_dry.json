@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "C:/Program Files/Git/bin/bash.exe",
+    "--noprofile",
+    "--norc",
+    "run.sh",
+    "--mode",
+    "all",
+    "--out",
+    "results/receiver_unused",
+    "--nproc",
+    "1"
+  ],
+  "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\g70_synthetic_checks\\degradation-degeneracy",
+  "rc": 0,
+  "seconds": 0.21899999998277053
+}

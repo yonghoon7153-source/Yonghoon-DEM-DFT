@@ -1,0 +1,49 @@
+# tests/test_docs_lint.py
+# Entire source SHA-256: cc3dd3fa76919e2840868f9b043c2633c7bc3306773a3201e41aa38fbf05295f
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 9185-9228
+9185: 
+9186: # ─────────────────────────────────────────────────────────────────────────────
+9187: # 48차 P0-8 — smoke 산출이 **정본으로 승격될 수 있었다**
+9188: # ─────────────────────────────────────────────────────────────────────────────
+9189: 
+9190: #: 승격 거부의 **고유 표식**. 경로에 "smoke" 가 들어 있으므로 그 단어만으로는
+9191: #: 거부 이유를 증명하지 못한다 — sink 가 이 문장을 내야 한다.
+9192: _SMOKE_REFUSAL = "smoke namespace 산출은 승격 대상이 아니다"
+9193: 
+9194: 
+9195: def _smoke_run(tmp_path):
+9196:     """smoke namespace 안에 최소한의 '실행 결과' 를 만든다."""
+9197:     d = _REPO / "results" / "_smoke" / f"p08_{uuid.uuid4().hex[:8]}"
+9198:     d.mkdir(parents=True)
+9199:     (d / "manifest.yaml").write_text("run_spec: {}\n", encoding="utf-8")
+9200:     (d / "fits.parquet").write_bytes(b"not-really-parquet")
+9201:     return d
+9202: 
+9203: 
+9204: def test_a_smoke_run_cannot_be_promoted_to_a_canonical_report():
+9205:     """★ 48차 P0-8 — 47차는 smoke 를 **격리**했지 **승격 금지**하지 않았다.
+9206: 
+9207:     `results/_smoke/` 아래 실행은 계획 gate 를 면제받는다 (계약 §13.3.3). 그
+9208:     면제의 전제는 "그 산출이 정본이 되지 않는다" 인데, 47차에는 그것을 막는
+9209:     것이 아무 것도 없었다: `REPORT_OUT=docs/RESULTS.md` 로 `tools/make_results.py`
+9210:     를 부르면 gate 를 한 번도 안 지난 실행이 인용 대상 정본을 덮어썼다.
+9211: 
+9212:     면제와 승격 금지는 **같은 경계**여야 한다 — 한쪽만 있으면 우회로다.
+9213:     """
+9214:     from tools.preserve import assert_not_smoke_provenance, PreserveError
+9215: 
+9216:     d = _smoke_run(None)
+9217:     try:
+9218:         with pytest.raises(PreserveError) as ei:
+9219:             assert_not_smoke_provenance([d], "정본 보고서")
+9220:         assert _SMOKE_REFUSAL in str(ei.value), str(ei.value)
+9221:         # namespace 밖은 통과한다 (진행이 불가능하면 그것도 고장이다)
+9222:         assert_not_smoke_provenance([_REPO / "results" / "grid_fit_v4"], "정본 보고서")
+9223:     finally:
+9224:         shutil.rmtree(d, ignore_errors=True)
+9225: 
+9226: 
+9227: def test_the_report_writer_refuses_a_smoke_input():
+9228:     """★ 48차 P0-8 — 승격 금지가 **실제 sink** 에 배선돼 있어야 한다."""

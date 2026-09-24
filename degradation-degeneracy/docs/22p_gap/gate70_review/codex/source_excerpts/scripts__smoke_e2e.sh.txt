@@ -1,0 +1,66 @@
+# scripts/smoke_e2e.sh
+# Entire source SHA-256: b188fc73fb32da6f6bb5e928450c0d8f8734c57fe92e4358e47799e064762ba9
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 118-134
+118:         "관측조건_단일성", "관측조건_ID결합", "관측조건_행수",
+119:         "관측_x_norm_공통격자"}
+120: missing = need - set(v["checks"])
+121: print(f"   {'✅' if v['ok'] and not missing else '❌'} producer 독립 검증 (F74): "
+122:       + ("통과 (실패라벨 재검 포함)" if v["ok"] and not missing
+123:          else f"실패 — {v['fail']} / 누락 {sorted(missing)}"))
+124: sys.stdout.flush(); sys.stderr.flush()
+125: os._exit(0 if v["ok"] and not missing else 1)
+126: PYEOF
+127: [[ $? -eq 0 ]] || bad "producer 검증 실패"
+128: 
+129: # ★ F74 — 다른 config 로 resume 하면 서명 가드가 즉시 죽어야 한다
+130: _msg="$(./run.sh --mode grid --lli 0,0.05 --lam-pe 0 --lam-ne 0 --noise 0 \
+131:         --nproc 1 --resume --out "$CURVES" --log-level ERROR 2>&1)"
+132: if [[ $? -ne 0 ]] && grep -q "grid_run_sig" <<<"$_msg"; then
+133:   ok "다른 config 의 resume 혼합 차단 (F74)"
+134: else
+
+# Lines 214-255
+214: "$PY" -m src.halfcell --config configs/base.yaml --method ocp --force --verify \
+215:       --log-level WARNING >/dev/null \
+216:   && ok "--force --verify (운영 명령)" || bad "--force --verify 실패"
+217: 
+218: # ─────────────────────────────────────────────────────────────────── 4. fitting
+219: step "4. 같은 곡선을 두 기준으로 fitting"
+220: # ★ 11차 발견 5 — sweep 끝점(w=0 ≡ pocv_dvdq, w=1 ≡ pocv_dvdq_dqdv) 일치
+221: #   검사를 실제로 태우려면 본 실행에 **두 끝점 목적함수가 모두** 있어야 한다.
+222: FIT_OBJ="pocv_dvdq,pocv_dvdq_dqdv"
+223: ./run.sh --mode fit --in "$CURVES" --out "$GFIT" --reference grid \
+224:          --objective "$FIT_OBJ" --n-restarts 2 --nproc "$NPROC" --log-level WARNING >/dev/null \
+225:   && ok "Case 2 (grid 기준)" || bad "grid fit 실패"
+226: ./run.sh --mode fit --in "$CURVES" --out "$HFIT" --reference halfcell \
+227:          --objective "$FIT_OBJ" --n-restarts 2 --nproc "$NPROC" --log-level WARNING >/dev/null \
+228:   && ok "Case 1 (half-cell 기준)" || bad "halfcell fit 실패"
+229: 
+230: step "5. provenance — 두 산출물 모두 인용 가능한가"
+231: "$PY" - "$GFIT" "$HFIT" <<'PYEOF'
+232: import os, sys
+233: from src.io import validate_provenance
+234: # dirty worktree 에서는 이 둘이 정의상 실패한다 (본 실행은 clean 에서 해야 한다)
+235: SKIP = {"clean_worktree", "코드_identity"} if os.environ.get("SMOKE_DIRTY") == "1" else set()
+236: bad = 0
+237: for d in sys.argv[1:]:
+238:     v = validate_provenance(d)
+239:     left = [f for f in v["fail"] if f not in SKIP]
+240:     print(f"   {'✅' if not left else '❌'} {d}: "
+241:           + ("통과" if not left else f"실패 — {left}")
+242:           + (f"  (dirty 라 {sorted(SKIP)} 제외)" if SKIP and v["fail"] else ""))
+243:     bad += 0 if not left else 1
+244: sys.stdout.flush(); sys.stderr.flush()
+245: os._exit(1 if bad else 0)
+246: PYEOF
+247: [[ $? -eq 0 ]] || bad "provenance 검증 실패"
+248: 
+249: # ───────────────────────────────────────────── 6. adaptive off (paired 실행 가능)
+250: step "6. 공정 paired 실행 — 33p/34p 쌍 (F66/F81)"
+251: ./run.sh --mode fit --in "$CURVES" --out "$BASE/paired" --reference grid \
+252:          --objective pocv_dvdq,pocv_dvdq_dqdv --n-restarts 3 \
+253:          --no-adaptive --no-warm-start \
+254:          --nproc "$NPROC" --log-level WARNING >/dev/null
+255: "$PY" - "$BASE/paired" <<'PYEOF'

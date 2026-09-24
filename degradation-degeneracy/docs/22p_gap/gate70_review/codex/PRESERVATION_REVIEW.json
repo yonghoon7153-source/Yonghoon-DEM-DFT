@@ -1,0 +1,20 @@
+{
+  "head": "8568f782db3acbf00d872ce5527147258c00bec7",
+  "tracked_files_compared": 2374,
+  "changed": [],
+  "git_status_porcelain": "",
+  "registry_top_level_disk_json_count": 367,
+  "registry_tracked_matching_path_count": 367,
+  "original_checkout_side_effect": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\g70_20260924\\degradation-degeneracy\\docs\\22p_gap\\_claims",
+    "exists": true,
+    "members": [],
+    "cause": "Subagent precheck created lifecycle root before Windows mount check failed. No claim files; directory retained."
+  },
+  "scope": "Tracked DD file bytes and registry observation, not all OS writes or all processes. Review worktree/git administrative creation excluded from unchanged claim.",
+  "main_science_runs": 0,
+  "comsol_calls": 0,
+  "product_edits": 0,
+  "restorations": 0,
+  "historical_class_changes": 0
+}

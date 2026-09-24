@@ -1,0 +1,6 @@
+ERROR: found no collectors for C:\Users\Administrator\Documents\Codex\g70_synthetic_checks\degradation-degeneracy\tests\test_compare.py::test_f50b_start_file_check_ignores_git_commit_like_the_run_check
+
+ERROR: found no collectors for C:\Users\Administrator\Documents\Codex\g70_synthetic_checks\degradation-degeneracy\tests\test_compare.py::test_dirty_scope_ignores_unrelated_subproject
+
+ERROR: found no collectors for C:\Users\Administrator\Documents\Codex\g70_synthetic_checks\degradation-degeneracy\tests\test_compare.py::test_dirty_scope_bypasses_are_closed
+

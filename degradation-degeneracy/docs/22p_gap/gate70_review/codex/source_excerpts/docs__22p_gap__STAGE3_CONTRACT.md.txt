@@ -1,0 +1,129 @@
+# docs/22p_gap/STAGE3_CONTRACT.md
+# Entire source SHA-256: b7825789a7f2ae672283ca880f7e60b0f1015cb771a3f7b629009d55c8fa580e
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 433-443
+433: 연구 질문은 "dQ/dV 정보가 복원을 개선하는가" 다. 그렇다면 primary 는:
+434: 
+435: > **같은 reference · 같은 exact bounds · 같은 `p_ini` protocol 아래,
+436: > warm 없이 같은 `base` 와 같은 고정 random bank·같은 후보 수로
+437: > 33p 와 34p 를 비교한 optimizer-controlled paired contrast**
+438: 
+439: - reference 는 **grid** (`p_ini = null`) 를 쓴다 — half-cell 은 목적함수별
+440:   `p_ini` 가 따로 계산돼, 순수한 "dQ/dV 항 하나" 가 아니라 **objective-specific
+441:   calibration 을 포함한 pipeline contrast** 가 된다.
+442: - primary endpoint 는 aggregate 차이 **와** condition-level **transition table**
+443:   둘 다다 (§7.1).
+
+# Lines 483-490
+483: | `legacy_slot_replace` | 21차 실험 재현 — optimizer 초기화 민감도 ablation |
+484: | `equal_start_count_base_retained` | warm 을 넣는 대신 random 하나를 빼는 ablation |
+485: | `union` | 추가 후보까지 허용한 **운영 cascade** 성능 |
+486: 
+487: 운영 성능을 주 질문으로 바꾸면 `union` 이 primary 가 될 수 있다. 다만 그
+488: 결론은 "dQ/dV 정보 자체" 가 아니라 **warm 을 포함한 알고리즘 bundle** 의
+489: 성능이다. co-primary 로 두려면 두 가설·판정 규칙·다중성 처리를 **사전에**
+490: 적는다. 결과를 보고 유리한 쪽을 정본으로 고르지 않는다.
+
+# Lines 753-767
+753: 1. 현 warm 실험을 `legacy_slot_replace` 로 재분류 — **완료** (§0, 회귀 포함)
+754: 2. candidate mode 3종과 `N` 의 의미 확정 — **이 문서 §3**
+755: 3. 행 단위 pair mapping · exact bounds/parameter digest 스키마 — §4
+756: 4. 목적함수별 예산 또는 provider-solution map 고정 — §2·§4.4
+757: 5. truth-free plateau + sentinel panel — §6
+758: 6. primary/secondary estimand + transition endpoint 사전 등록 — §7
+759: 7. claim → leg coverage 표와 고유 재실행 목록 · 비용 재산정 — §9
+760: 8. 투영 생성기에 실제 fits SHA · validate · 전체 semantic 대조 — **완료** (v2)
+761: 9. claim registry 양방향 완전성 · fence 구조 검사 — **완료**
+762: 10. `/lean-review` detached/no-upstream — **완료**
+763: 11. **여기까지 문서·회귀 재심사** ← 지금 여기
+764: 12. **보존 체계 구축** — §10. ★ 2026-08-24 에 앞으로 당겼다
+765: 13. 그 다음에만 RUN_SCOPE 변경과 pilot 실행
+766: 
+767: 2~7 은 이 문서가 **정의만** 했고 구현은 없다.
+
+# Lines 1222-1277
+1222: #### 전제의 근거 — 실측 (2026-09-03)
+1223: 
+1224: 전제는 배포 형태에서 참일 때만 적을 수 있다. GO 를 받으려고 범위를 줄이는 것은
+1225: 게이트를 속이는 것이므로, 전제를 참으로 만드는 것을 **재고** 그 결과를 적는다.
+1226: 
+1227: | 물음 | 실측 | 명령 |
+1228: |---|---|---|
+1229: | 원장·claim·journal 을 쓸 수 있는 OS principal 이 하나인가 | **단일 principal** — 저장소는 `root:root 755` 이고, 쉘을 가진 다른 계정은 `ubuntu(1000)` 하나뿐이며 write 권한이 없다 | `stat -c '%U %G %a' .` · `awk -F: '$3>=1000 && $3<65534' /etc/passwd` |
+1230: | 본 실행이 네트워크 파일시스템 위에서 도는가 | **네트워크 파일시스템이 아니다** — `/dev/vda` 위 `ext4` (로컬 블록 장치). 그러므로 `flock` 전제가 참이다 | `findmnt -T . -o SOURCE,FSTYPE` |
+1231: | 위협이 사고인가 고의인가 | **사고** — 같은 컨테이너 안 같은 파이프라인의 동시 leg 가 서로를 덮는 것. write 권한을 가진 별개의 주체가 존재하지 않으므로 고의 위협은 상정할 대상이 없다 | 위 두 줄에서 따라 나온다 |
+1232: 
+1233: 이 셋이 깨지면 (원장을 공유 마운트에 두거나, 두 번째 principal 에게 write 를
+1234: 주거나) 이 전제는 그 자리에서 무효이고, 아래 어느 검사도 손실을 막지 못한다.
+1235: 배포 형태를 바꾸는 쪽이 이 절을 다시 재야 한다.
+1236: 
+1237: #### 전제가 면제하지 않는 것
+1238: 
+1239: 전제의 바깥만 적고 안쪽을 적지 않으면 이 선언은 GO 를 받는 지름길이 된다.
+1240: **공개 API 를 지나는 호출은 전부 범위 안이다.**
+1241: 
+1242: | | 안/밖 | 왜 |
+1243: |---|---|---|
+1244: | 공개 lifecycle API 가 caller 가 준 pathname 으로 authority 파일을 덮는다 | **안 (결함)** | 비협조적 writer 가 아니라 이 모듈이 낸 sink 다. 57차 P0-1 이 그 자리였고 전제로 빼지 않는다 |
+1245: | 공개 API 가 목적지 mount 를 잘못 식별해 frozen subtree 에 쓴다 | **안 (결함)** | 식별을 정확히 하면 닫힌다 — 전제의 문제가 아니다 |
+1246: | producer identity 가 import 시 실행되는 노드를 놓친다 | **안 (결함)** | 측정의 정확성 문제다 |
+1247: | 같은 principal 로 lock 없이 원장·claim·journal 을 직접 고치는 코드 | **밖 (전제)** | 검사 횟수로 닫히지 않는다 — §13.3.1 과 같은 형태 |
+1248: | 같은 uid 의 다른 process 가 0600 소유 증명을 읽는다 | **밖 (전제)** | 별도 OS principal 이 필요하고 배포 형태 밖이다 |
+1249: | 네트워크 파일시스템·컨테이너 밖의 동시 발급자 | **밖 (전제)** | `flock` 이 실효하지 않는다. provider CAS 가 필요하다 |
+1250: | `freezing` 을 원장에서 되돌린다 | **밖 (전제)** | 원장 직접 쓰기와 같은 뿌리 (54차에 durable 로 만든 것이지 위조 불가로 만든 것이 아니다) |
+1251: 
+1252: 전제로 빠지지 **않는** 두 축은 따로 있다. 이것들은 만들면 닫히므로 전제로 빼면
+1253: 주장 자체가 약해진다:
+1254: 
+1255: - **변이 증거의 독립 replay** — checker 가 pytest report 를 믿는 대신 스스로
+1256:   재생한다 (미착수).
+1257: - **trusted launcher** — 실행된 source bytes 를 측정하는 주체가 측정 대상
+1258:   밖에 있어야 한다 (요청문 §0 P0-8, 미착수).
+1259: 
+1260: ### 13.4 planned leg index — 실행 **전** gate (46차에 배선)
+1261: 
+1262: 45차까지 보존 원장의 coverage 기준은 **커밋된 투영**이었다. 그래서 새 다리를
+1263: 돌려도 투영을 만들기 전에는 아무 회귀도 깨지지 않았고, 2026-08-20 에 warm
+1264: 7다리를 그렇게 돌렸다가 보존 없이 잃었다. 이것이 "묶음 9 의 남은 절반" 이라고
+1265: 스스로 신고하던 자리다.
+1266: 
+1267: `LEG_PRESERVATION.yaml` 에 `planned:` 가 생겼다. 항목은 닫힌 schema 다:
+1268: 
+1269: ```
+1270: PLANNED_KEYS             = ("leg_id", "cohort_id", "status",
+1271:                             "authorization_kind", "authorized_source_digest",
+1272:                             "run_spec_digest", "recorded_on", "근거")
+1273: PLANNED_KEYS_PROSPECTIVE = PLANNED_KEYS + ("run_spec",)
+1274: PLANNED_STATUS           = ("planned", "running", "executed", "abandoned")
+1275: ```
+1276: 
+1277: `run_spec` 은 prospective 항목에만 있고 **없으면 시작하지 않는다.** 승인은
+
+# Lines 1500-1525
+1500: **승인의 종류를 기계가 구분한다.** `authorization_kind: prospective |
+1501: retrospective`. 소급 항목은 `run_spec_digest: "retrospective:no-preauthorization"`
+1502: 이고 claim 대상이 아니다. `planned_coverage()` 가 종류별로 세므로 "실행 전
+1503: gate 가 실제로 몇 번 작동했는가" 를 자유문자 근거를 읽지 않고 답할 수 있다.
+1504: **현재 값은 prospective 0 · retrospective 8 · gate_backed_executions 0 이다.**
+1505: 
+1506: **배선** (건너뛰는 환경변수·flag 는 두지 않는다 — 그런 문이 있으면 gate 가
+1507: 아니다):
+1508: 
+1509: - `run.sh` 의 `grid`·`fit` 은 `plan_gate` 를 지난다. `all` 은 `--leg` 를 하위
+1510:   단계로 전파한다. **`--dry-run` 면제는 47차에 없앴다** — `run_grid(dry_run=True)`
+1511:   는 출력 디렉터리를 만들고 완방상태·baseline 을 계산한 뒤 최대 세 조건에
+1512:   solver 를 실제로 부른다. 계산이 있으면 gate 도 있다.
+1513: - **모듈 자신이 gate 를 지난다.** 46차 gate 는 `run.sh` 안에만 있었고 `--leg`
+1514:   는 shell 이 소비했으므로 `python -m src.grid` 직접 호출은 계획을 전혀 보지
+1515:   않았다. gate 가 wrapper 에 있으면 wrapper 를 안 쓰면 그만이다.
+1516:   `src/grid.py` 는 **첫 부작용(`mkdir`) 보다 먼저** 공유 gate 를 부른다.
+1517: - `scripts/smoke_e2e.sh` 는 (a) 계획 index 가 일관하고 (b) 계획 밖 다리를
+1518:   gate 가 **실제로 거부**하며 (`--out` 이 smoke namespace 밖인 실제 호출로
+1519:   확인한다 — grep 만 보면 함수가 빈 껍데기여도 초록이다) (c) `run.sh` 에
+1520:   배선이 남아 있는지 본다.
+1521: 
+1522: **면제는 산출 namespace 하나뿐이고, 판정은 정규 격리다 (47차).**
+1523: `results/_smoke/` **안으로만** 읽고 쓰는 실행은 gate 를 지나지 않는다 (smoke
+1524: 자신이 pipeline 을 돌려야 하기 때문이다). 경로가 하나라도 그 밖이면 gate 를
+1525: 지난다.

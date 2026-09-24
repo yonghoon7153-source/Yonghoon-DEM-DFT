@@ -1,0 +1,24 @@
+# docs/22p_gap/GATE49_REQUEST.md
+# Entire source SHA-256: 092e95dcc9a06fe3bc4de655ba352e1369cfa01a6195ef1024932a04fe15630f
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 8-26
+8: 
+9: ## §0 먼저 — 이번 라운드가 **하지 않은** 것
+10: 
+11: 리뷰 시간을 아끼기 위해 먼저 적는다. 아래는 48차 조건 중 이번에 손대지 않은
+12: 것이고, 여기에 반례를 쓰는 것은 이미 아는 사실의 재확인이다.
+13: 
+14: | 48차 조건 | 상태 |
+15: |---|---|
+16: | **P0-1** producer 결속 — 닫힌 typed manifest 파싱 · 두 payload 압축해제 재해시 · `(leg, producer identity, manifest digest, projection digest, restart digest)` 를 묶는 producer 발행 영수증 | **미착수** |
+17: | **P0-8** 경로 무관 typed·sealed **실행 class marker** (primary·compare·nested·archive-external·전이 report source) | **미착수.** 판정은 여전히 `is_inside_namespace()` 의 정규 격리(경로 기반)다. 49-9 로 sink 두 곳의 **방향** 판정만 고쳤다 |
+18: | **P0-4** typed CAS/archive/restore/validation/retention 영수증 **소비** | **부분.** `preservation_pending` 중간 상태와 계약 §8 완전 튜플은 넣었고, 영수증 소비는 미착수 |
+19: | baseline·sweep1d·wsweep 의 계획 gate | **미착수** (grid·fit·finalize·release 만 배선) |
+20: | 실물 object-lock provider adapter · power-loss ordering fault model · publisher 전용 OS principal | **미구현** (별도 acceptance) |
+21: | 외적타당도 #48/#49/#50 | **미착수** |
+22: 
+23: **이번 라운드에 새로 열린 표면**도 먼저 적는다.
+24: 
+25: - `COHORT_LIFECYCLE.jsonl` / `.head` — 원장·journal·anchor **세 파일 모두**에
+26:   쓸 수 있는 주체는 역사를 다시 쓸 수 있다. 막는 것은 "조용한" 되돌림이고,

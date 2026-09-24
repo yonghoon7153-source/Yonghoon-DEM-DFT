@@ -1,0 +1,103 @@
+# docs/22p_gap/row_projection.py
+# Entire source SHA-256: b8eae978b9525c3e457e29ee712e16a978b7578ea27228ba569913aff899910d
+# Fixed HEAD: 8568f782db3acbf00d872ce5527147258c00bec7
+
+# Lines 2395-2414
+2395:     # ★ 27차 P1-8 — frozen 거부가 `main()` 에만 있었다. public `build(leg, out)`
+2396:     #   는 frozen `WARM` 을 그대로 받아 썼고 회귀도 CLI subprocess 만 봤다.
+2397:     #   검사를 **쓰기 지점**으로 내린다.
+2398:     _assert_writable(_out)
+2399:     _out.mkdir(parents=True, exist_ok=True)
+2400:     _stage = Path(tempfile.mkdtemp(prefix=f".stage_{leg}_", dir=_out))
+2401:     r_csv = _stage / f"{leg}.restarts.csv.gz"
+2402:     with gzip.GzipFile(r_csv, "wb", compresslevel=9, mtime=0) as fh:
+2403:         fh.write(r_text.encode("utf-8"))
+2404: 
+2405:     out_csv = _stage / f"{leg}.projection.csv.gz"
+2406:     # mtime=0 은 timestamp 만 고정한다. **deflate 구현 차이는 고정하지 않는다** —
+2407:     # 22차 리뷰가 zlib-ng 1.3.1 에서 다른 바이트를 실측했다 (zlib 1.3 끼리는 같다).
+2408:     # git noise 를 줄이는 효과는 있지만, 정본 앵커는 아래 `full_sha`(압축 전)다.
+2409:     with gzip.GzipFile(out_csv, "wb", compresslevel=9, mtime=0) as fh:
+2410:         fh.write(text.encode("utf-8"))
+2411: 
+2412:     # ── 재계산 검증: 봉인 summary **전체**와 대조 ──────────────────────────
+2413:     # ★ 22차 발견 5 — 초판은 `by_objective` 아래 **이미 있는 숫자만** 부분
+2414:     #   순회했다. key 집합·`by_objective_noise`·`overall_recoverable`·
+
+# Lines 2480-2499
+2480:         #     1 이라 어긋났다) · 타입 exact 대조 · restart fail-closed ·
+2481:         #     봉인 원본 digest. 2 는 실제 fits 바이트 SHA·전체 대조·restart
+2482:         #     투영까지, 1 은 그 셋이 없다.
+2483:         "projection_schema": 3,
+2484:         "leg_id": leg,
+2485:         "projection_file": out_csv.name,
+2486:         "n_rows": int(len(proj)),
+2487:         "projection_sha256": full_sha,
+2488:         "by_objective_sha256": per_obj,
+2489:         "restart_projection_file": r_csv.name,
+2490:         "restart_projection_sha256": r_sha,
+2491:         "n_restart_rows": len(rrows),
+2492:         "analysis_spec_sha256": _spec_sha256(),
+2493:         "analyzer": _analyzer_provenance(),
+2494:         "analysis_spec": ANALYSIS_SPEC,
+2495:         "재계산_검증": verdict,
+2496:         # ★ 23차 발견 5 — 투영 YAML 에 봉인 원본의 digest 가 없어, 회귀가
+2497:         #   "생성 당시 기록된 boolean" 을 다시 믿는 수밖에 없었다. 원본을
+2498:         #   해시해 남기면 리뷰어가 그 boolean 이 **어느 파일에 대한 것인지**
+2499:         #   독립 검산할 수 있다.
+
+# Lines 3525-3578
+3525:         raise SystemExit(f"✗ CURRENT 가 없는 generation 을 가리킨다: {gid[:16]}")
+3526:     # ★ 46차 #9 — 독자도 **자재화와 같은 validator** 를 지난다 (no-follow ·
+3527:     #   regular · `st_nlink == 1`). 45차 독자는 `is_file()` 이었으므로 바깥
+3528:     #   hardlink 로 바이트를 바꿀 수 있는 generation 을 immutable 로 읽었다.
+3529:     _ents = _generation_entries_by_id(out, gid)
+3530:     got = {n: _sha(b) for n, b in _ents.items()}
+3531:     if got != rec["files"]:
+3532:         raise SystemExit(f"✗ generation {gid[:16]} 의 실물이 CURRENT 와 다르다")
+3533:     if bind_ledger:
+3534:         # ★ 48차 P0-1 — 독자도 generation 안 **모든 leg** 의 producer 를 본다.
+3535:         assert_producer_binding(
+3536:             _ents, (_ledger_authority(cohort)["pin"] or {}).get(
+3537:                 "producer_semantic_sha256", ""), f"`{name}` 의 generation")
+3538:     # `.PENDING` 은 정의상 불완전할 수 있다 — 완전성은 `CURRENT` 의 계약이다.
+3539:     if complete:
+3540:         assert_cohort_complete(rec["files"], gid, expect_legs=expect_legs)
+3541:     return rec
+3542: 
+3543: 
+3544: def assert_producer_binding(entries: dict, want: str, where: str) -> None:
+3545:     """generation 의 **모든 leg 가 봉인된 producer 를 스스로 밝히는가** (48차 P0-1).
+3546: 
+3547:     47차는 `producer_semantic_sha256` 을 원장 봉인에 넣었지만 publisher 도
+3548:     reader 도 **파일 안**을 보지 않았다. 그래서 원장 pin 을 A 로 그대로 둔 채
+3549:     B 가 만든 세 파일을 넘기면 A+B generation 이 만들어졌다 — 봉인은 "무엇을
+3550:     승인했는가" 만 말하고 "실제로 무엇이 들어왔는가" 는 말하지 않았다.
+3551: 
+3552:     manifest 는 `<leg>.projection.yaml` 이고 `analyzer.producer_semantic_sha256`
+3553:     을 담아야 한다. 없으면 거부한다 — 밝히지 않은 것은 대조할 수 없다.
+3554:     """
+3555:     import yaml
+3556: 
+3557:     bad = []
+3558:     for name in sorted(entries):
+3559:         if not name.endswith(".projection.yaml"):
+3560:             continue
+3561:         try:
+3562:             doc = yaml.safe_load(entries[name].decode("utf-8"))
+3563:         except (ValueError, UnicodeDecodeError) as e:
+3564:             bad.append(f"{name}: manifest 를 읽을 수 없다 ({e})")
+3565:             continue
+3566:         got = ((doc or {}).get("analyzer") or {}).get("producer_semantic_sha256") \
+3567:             if isinstance(doc, dict) else None
+3568:         if not isinstance(got, str) or not got:
+3569:             bad.append(f"{name}: `analyzer.producer_semantic_sha256` 이 없다")
+3570:         elif got != want:
+3571:             bad.append(f"{name}: producer {got} ≠ 봉인 {want}")
+3572:     if bad:
+3573:         raise SystemExit(
+3574:             f"✗ {where} 의 producer 가 원장 봉인과 다르다 — 한 cohort 안에 "
+3575:             "서로 다른 producer 가 만든 leg 를 섞지 않는다:\n  "
+3576:             + "\n  ".join(bad))
+3577: 
+3578: 

@@ -1,0 +1,22 @@
+{
+  "review": "GATE70",
+  "head": "8568f782db3acbf00d872ce5527147258c00bec7",
+  "code_target": "f0dfaff3bea1e1caedcd7a34275e908284cc2d4f",
+  "source_digest_observed": "5e660a8c73d5663a",
+  "decision": "NO_GO_CURRENT_MAIN_RUN",
+  "new_findings": [{"id": "G70-N1", "priority": "P1", "summary": "all shell children reject their generated --may-open argument", "introduced_by_f50b": false}],
+  "E7": "F50B_LIMITED_ACCEPTANCE",
+  "E8": "PRIOR_SCOPED_CLOSURE_RETAINED",
+  "E1_E2_E4": "OPEN; may remain explicit assurance limitations if user accepts narrowed scope and selected paths do not require stronger guarantees",
+  "E3_E5": "EXISTING_TYPED_CONSUMER_GAPS_REMAIN; not counted as newly discovered defects",
+  "E6": "RUN_SPECIFIC_AUTHORITY_INTERFERENCE_CONTROL_REQUIRED; whole historical migration not required by this review",
+  "E9": "EXACT_EXECUTABLE_PROSPECTIVE_RUN_AND_ARCHIVE_PLAN_REQUIRED",
+  "E10": "FINAL_IDENTITY_AND_ACTUAL_SUPPORTED_ENVIRONMENT_REGRESSION_REQUIRED",
+  "future_go_automatic": false,
+  "main_run_authorized": false,
+  "product_modified": false,
+  "whole_linux_pipeline_rerun_by_receiver": false,
+  "source_tree_zero_filesystem_writes_claimed": false,
+  "side_effect": "Empty _claims directory created by precheck before Windows mount check failed; no claim/ledger/class file mutation; retained and disclosed",
+  "closure_scope": "Detailed Korean report section 5; existing conditions disposition, not an open-ended new security program"
+}

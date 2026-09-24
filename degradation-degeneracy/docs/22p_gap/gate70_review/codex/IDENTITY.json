@@ -1,0 +1,31 @@
+{
+  "head": "8568f782db3acbf00d872ce5527147258c00bec7",
+  "code_target": "f0dfaff3bea1e1caedcd7a34275e908284cc2d4f",
+  "base_review": "e6ddcd1efb7df4be69849a4fd5b59c43cccff873",
+  "status_before": "",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "executable": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\work\\gate65-venv\\Scripts\\python.exe",
+  "request_raw_equal": true,
+  "request_received_sha256": "fa0e8547f8eeb4242bafd56e1fad3875a0ade3f20f765f80574d4ba330bff311",
+  "request_blob_sha256": "fa0e8547f8eeb4242bafd56e1fad3875a0ade3f20f765f80574d4ba330bff311",
+  "RUN_SCOPE_DIFF": {
+    "bytes": 1419,
+    "sha256": "4fd681a43ce592ef2000f43d751af62840644814f9247b7c42dbf90facec9e87"
+  },
+  "CODE_TO_HEAD_SCOPE": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "RUN_SCOPE_HISTORY": {
+    "bytes": 967,
+    "sha256": "2660b98de9fa0bcfff713710baff6d93f04feadb581d56023c14a76db3c94083"
+  },
+  "TARGET_HISTORY": {
+    "bytes": 1195,
+    "sha256": "a690c61d4bf78b4c47b377fb953a693c91d9b9cd22c3dbcdc4df4f0727214401"
+  },
+  "RECEIPT_CHANGE": {
+    "bytes": 2789,
+    "sha256": "9edeac54475d9c986b1159cc54b8b1d37a6498359bd3997965d4382005738271"
+  }
+}

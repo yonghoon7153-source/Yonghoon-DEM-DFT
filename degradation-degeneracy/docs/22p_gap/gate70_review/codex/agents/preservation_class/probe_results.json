@@ -1,0 +1,24 @@
+{
+  "command": "bundled Python -B outputs/gate70_review_20260924/agents/preservation_class/probe.py",
+  "exit_code": 0,
+  "class_reader_minimal": {
+    "content_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "execution_class": "canonical"
+  },
+  "class_reader_illtyped": {
+    "content_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "execution_class": "canonical",
+    "sealed": [],
+    "evidence": 17,
+    "recorded_at": false,
+    "surplus": {"accepted": true}
+  },
+  "malformed_index_members": null,
+  "precheck_grid_fit_v4": {
+    "error_type": "BoundaryUnknown",
+    "reason": "Native Windows /proc/self/mountinfo unavailable; missing-leg rejection not exercised"
+  },
+  "cleaner_new_canonical_before_teardown": true,
+  "cleaner_new_canonical_after_teardown": false,
+  "cleaner_existing_record_retained": true
+}
