@@ -1,6 +1,6 @@
-# 70차 게이트 리뷰 요청 — **본 실행 GO 요청** (초안 · 69차 회신 뒤 확정)
+# 70차 게이트 리뷰 요청 — **본 실행 GO 요청**
 
-> **상태: 초안 (69차 회신 반영, 2026-09-24).** 남은 것은 §3 제안 B(F50b 적용 — RUN_SCOPE 변경, **사용자 결정 필요**: 기존 산출물 무효화) 와 §4 실측. 발송 전에 §4 를 커밋 뒤에 잰다.
+> **상태: 확정 (2026-09-24).** 사용자 결정 B — F50b 를 적용했다 (`src/io.py`, RUN_SCOPE). 기존 산출물의 무효화는 의도된 것이다.
 > 사용자 결정 (2026-09-24): **GO 요청문을 보내고, NO-GO 면 게이트를 계속 돈다** — 다만 종료 조건 표를 들고 돈다.
 
 읽는 쪽은 LLM 리뷰어다. 밀도 우선, 완충 문장 없음. **요청문은 증거가 아니다** — 아래 명령을 재실행해 검증하는 것을
@@ -16,7 +16,7 @@
 | 항목 | 값 |
 |---|---|
 | 브랜치 | 루트 `CLAUDE.md` 하드룰 1 의 작업 브랜치 |
-| **판정 대상 코드** | **(제안 B) F50b 를 적용한 새 커밋** `{F50B_SHA}` — `source_digest {F50B_DIGEST}`. (제안 A: 현재 `743f65bead671bf353ce38027c2e8e457738ec08` · `e9ee7475dea7de1d`, F50b 미적용.) 우리는 **B** 를 제안한다 — §3 |
+| **판정 대상 코드** | **`f0dfaff3bea1e1caedcd7a34275e908284cc2d4f`** — F50b 를 적용한 커밋 (RUN_SCOPE 를 마지막으로 건드린 커밋). `source_digest` **`5e660a8c73d5663a`** (64~69차의 `743f65be` · `e9ee7475dea7de1d` 에서 **이번에 움직였다** — §3) |
 | 검토할 HEAD | 이 요청문을 담은 커밋 (발송문에 SHA. 동일성 문장은 **커밋 뒤에** 잰다 — 68차 D1) |
 | 직전 판정 | 69차 **한정 범위 수용 / 종결** (2026-09-24) — 새 차단 발견 없음 · 본실행 GO 없음 · 리뷰어 검토 HEAD `e6ddcd1e` |
 | 접수·대응 원장 | `docs/GATE69_WORKING_STATE.md` · 원장 §89 · 리뷰 패키지 원본 `docs/22p_gap/gate69_review/` (zip sha256 `f44c13effce78ee667a2184a5b0cab551a4a8fbd5e10ab23edec2b1f3c96f9bf`, MANIFEST 119/119) |
@@ -37,10 +37,10 @@
 | E4 | **변이 증거의 독립 replay** — checker 가 스스로 재생 | 54차 | **미착수** | `mutation_replay.py --check-coverage` 가 조각 JSON 을 믿지 않고 sandbox 에서 표본 재생 (전수는 시간 초과 — 표본·seed 명시) | **결과 한정** |
 | E5 | **P0-8 경로 무관 typed·sealed 실행 class marker** | 52차 | **미착수** | `_exec_class` 레코드에 경로 대신 내용 identity 만 · 이동/복사 뒤에도 class 유지 · 회귀: 경로 바꾼 복사본의 class 일치 | **실행 차단 후보** — 본 실행 산출물의 class 등록이 이것에 걸린다 |
 | E6 | **⑩ 등록부 격리** (별도 계약; 복원·class 변경은 별도 승인) | 66차 | **미착수** — 68차 Q5: 읽기 전용 영향·의존성 지도 먼저 | 1 단계 읽기 전용 지도(`docs/22p_gap/registry_impact.md`) · 2 단계 격리 migration 은 별도 승인 | **결과 한정** (1 단계는 이번 라운드에 낸다) |
-| E7 | **F50b** — `start_파일_일치` 목록의 `git_commit` (RUN_SCOPE) | 66차 §2-5 | **(b) 보류** → **이번에 적용 (제안 B)** | `src/io.py` 비교 목록에서 `git_commit` 제거 (`실행중_코드불변` 과 같은 판단) · RED: 문서 커밋만으로 resume 이 깨지는 재현 → GREEN · 새 `source_digest` | **실행 차단** — 10 시간 실행 중 문서 커밋 한 번이면 resume 이 5 건 연쇄 실패한다 (66차 실측) |
+| E7 | **F50b** — `start_파일_일치` 목록의 `git_commit` (RUN_SCOPE) | 66차 §2-5 | **✔ 적용 (이 커밋)** — RED `test_compare.py::test_f50b_start_file_check_ignores_git_commit_like_the_run_check` 를 본 뒤 고침, 대조군(다른 `source_digest`) 유지 | `src/io.py` 비교 목록에서 `git_commit` 제거 (`실행중_코드불변` 과 같은 판단) · RED: 문서 커밋만으로 resume 이 깨지는 재현 → GREEN · 새 `source_digest` | **실행 차단** — 10 시간 실행 중 문서 커밋 한 번이면 resume 이 5 건 연쇄 실패한다 (66차 실측) |
 | E8 | 68차 G68-T1 (call-phase 증거) | 68차 | **✔ 69차 종결 수용** (신뢰 경계 답: 범위 타당, 추가 보안 설계 불요) | — | — |
 
-**질문 1 (예/아니오):** 위 표의 E1~E8 이 전부 ✔ 이면 `{F50B_SHA}` 에 GO 인가. **아니오면 빠진 조건을 표에 추가해 달라.**
+**질문 1 (예/아니오):** 위 표의 E1~E8 이 전부 ✔ 이면 `f0dfaff3` 에 GO 인가. **아니오면 빠진 조건을 표에 추가해 달라.**
 
 **질문 2:** 우리 분류 제안 — **실행 차단** = E3 · E5 · E7 (본 실행의 산출물·보존·class 등록에 직접 걸리는 것) ·
 **결과 한정** = E1 · E2 · E4 · E6 (제3자 독립 검증의 전제 — 미닫힘이면 결과 문서에 한정 조건으로 적는다). 이 분류에 동의하는가.
@@ -73,37 +73,40 @@
 
 ---
 
-## §3 제안 B — F50b 를 GO 대상 커밋에 묶는다
+## §3 F50b 를 GO 대상 커밋에 묶었다 (제안 B — 사용자 결정 2026-09-24)
 
 F50b 는 RUN_SCOPE(`src/io.py`) 변경이라 `source_digest` 가 움직이고 **기존 산출물이 무효화**된다. 그래서 66차 리뷰어가 "(b) 다음
 RUN_SCOPE 변경에 묶어라" 고 했고 우리는 보류했다. **본 실행이 곧 그 "다음" 이다** — 어차피 산출물을 새로 만드는 실행이므로,
 F50b 를 그 커밋에 넣어야 (i) 실행 중 문서 커밋 한 번에 resume 이 깨지는 66차 실측이 재발하지 않고 (ii) 실행 뒤 F50b 를 적용하려고
 10 시간을 한 번 더 쓰지 않는다. 변경은 한 줄의 목록에서 `git_commit` 하나를 빼는 것이고, `실행중_코드불변` 이 이미 같은 판단을 한다.
 
-- RED 먼저: 같은 `source_digest` 로 다른 commit 에서 resume → `start_파일_일치` 실패를 재현하는 시험 → 고친 뒤 GREEN.
-- 새 `source_digest` 는 발송 전에 §판정 대상에 적는다. 기존 산출물의 무효화는 **의도된 것**이고 본 실행이 다시 만든다.
+- RED 먼저: 같은 `source_digest` 로 start 파일의 `git_commit` 만 다른 artifact → `start_파일_일치` 실패 재현 (실측 사유: "코드는 같은데 git commit 이 다르다고 start 파일 대조가 실패했다") → 목록에서 `git_commit` 제거 → GREEN. 대조군: `source_digest` 가 다르면 여전히 실패.
+- 변경은 `src/io.py` 한 곳 — 비교 tuple 에서 `"git_commit"` 하나를 뺐고 주석을 달았다. `실행중_코드불변` 과 같은 판단이다. commit 이동은 `_참고_git이동` 에 정보로 남는다.
+- `source_digest` **`e9ee7475dea7de1d` → `5e660a8c73d5663a`**. 기존 산출물의 무효화는 **의도된 것**이고 본 실행이 다시 만든다. `--check-preimages` 는 변경 뒤에도 모든 지점 1 회.
+- **질문 6:** `git_dirty` 는 목록에 남겼다 (문서 작업만으로도 dirty 가 되지만, 코드 수정도 dirty 로 나타난다 — `source_digest` 가 그것을 따로 잡는다). 이것도 빼야 하는가, 남겨야 하는가.
 
 ---
 
 ## §4 실행 출력 (발송 직전 · 커밋 뒤 실측 — 채운다)
 
 ```
-pytest gate63~69                              {GATE_BUNDLE}
+pytest gate63~68 묶음                          90 passed · 1 xfailed  (22.25 s)  EXIT=0   (gate63~68 방어 회귀, gate68 13 node 포함)
 python3 -m pytest tests/ -q -p no:cacheprovider
-        {PYTEST}
+        1 failed · 1804 passed · 2 xfailed  in 2425.16s (0:40:25)   EXIT=1   (실패 1 = tests/test_docs_lint.py::test_a_smoke_run_cannot_be_promoted_to_a_canonical_report — 67~69차와 같은 기존 환경 실패: 이 컨테이너에 results/grid_fit_v4 가 없다. f0dfaff3 첫 회귀의 다른 실패 1 은 옛 검증기로 만든 보존 영수증이 '낡았다' 는 예상된 결과였고 make_receipt.py 재검증(34/34)으로 닫았다 — 영수증 커밋 eb5209cf)
 ./scripts/smoke_e2e.sh
-        {SMOKE}   (시작 HEAD = 끝 HEAD = {HEAD_RUN})
-source_digest                                 {F50B_DIGEST}   (제안 B 적용 뒤)
-등록부                                        tracked {TRACKED} · 디스크 {DISK} · 미추적 {UNTRACKED} · 삭제 {DELETED}
-mutation_replay --check-preimages · -k premise  {MUT}
+        ✅ pipeline smoke 통과   EXIT=0   (시작 HEAD = 끝 HEAD = eb5209cf)
+source_digest                                 5e660a8c73d5663a
+등록부                                        tracked 367 · 디스크 367 · 미추적 0 · 삭제 0
+mutation_replay --check-preimages · -k premise  check-preimages: 모든 변이 지점이 정확히 한 번 · -k premise: 4 건(g65·g66·g67·g68) 전부 기대 node 를 call 단계에서 물었다
 ```
 
 ---
 
-## §5 리뷰어에게 묻는 것 (§0 의 셋 + 둘)
+## §5 리뷰어에게 묻는 것 (§0 의 셋 + 셋)
 
 4. **F50b 를 GO 대상 커밋에 묶는 데 동의하는가** (66차 (b) 의 "다음 RUN_SCOPE 변경" = 이 실행).
 5. **결과 라벨 문구** — §1 의 "provenance: 자체 검증층 통과 · 독립 검증 전제 N/M 미닫힘" 이 충분한가. 부족하면 문구를 달라.
+6. **`git_dirty`** — §3 끝의 물음.
 
 ---
 
