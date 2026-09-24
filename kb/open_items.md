@@ -192,7 +192,7 @@
     (30.3 GB · 89 % · 끝 ≈ 09-25 저녁 추정). 판정은 두 이완 뒤 `--collect`. ⏭ BFGS 스텝·마지막 힘·$STORE 백업 확인 블록 전달.
     ⏭ 다 끝나면 `test_adhesion.py::test_missing_vram_is_dash_not_zero` 를 합성 원장 주입으로 (지금 전제 = 빈 VRAM 잡이 원장에 있다).
     ✅ S 바깥 수렴 내역: **199 bfgs 스텝 / nstep 200** (한 스텝 남기고) · Total force 0.0018 · 원자료 E(이완 · PBE) −2152.35487740 Ry (W 아님 · 원장·화면 미게재) ·
-    $STORE 백업 `/home/ubuntu/runyourai/1/runs/wad_sese_4L_2026_09_24` (pw.out 23:13:16 — 원본과 cmp 확인 전달).
+    $STORE 백업 `/home/ubuntu/runyourai/1/runs/wad_sese_4L_2026_09_24` (pw.out 23:13:16 — 원본과 **cmp 같음 ✅**).
     ⭐ **결과 전 선언**: Li 바깥이 nstep 200 에서 미수렴이면 마지막 좌표로 이어서 이완 1회 (verified-carry · 설정 불변) → 그래도 미수렴이면 멈추고 보고.
     집계 명령은 **`--qe_in db/inputs/wad_sese_control_4L_2026_09_24`** 필수 (collect 기본 입력은 6층 · 러너 끝 안내문도 고침 — V100 인스턴스는 옛 문구).
     🔴 **러너 결함**: 기록된 `pw.x PID 563677` 이 **없다** (ps 빈 줄) — `pgrep -P mpirun | head -1` 이 pw.x 가 아닌 자식을 잡았거나 사라진 PID 다.
