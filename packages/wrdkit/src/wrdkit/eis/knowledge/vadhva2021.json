@@ -310,7 +310,8 @@
    "page": 1935,
    "where": "Section 2.3 Modelling",
    "conditions": "Cells that are not fully at rest during the sweep, notably SOC scans of half/full cells.",
-   "confidence": "high"
+   "confidence": "high",
+   "quote": "OCV variation due to small capacity changes can affect the low-frequency range, due to the difference in SoC at the start and end"
   },
   {
    "id": "VADHVA2021.capacitance-order-of-magnitude-assignment",

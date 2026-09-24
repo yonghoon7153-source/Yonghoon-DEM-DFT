@@ -58,6 +58,7 @@ from .fit import edge_misfit
 from .guess import inductive_mask
 from .kk import KKResult, lin_kk
 from .spectrum import Spectrum
+from .stationarity import DCRecord, dc_record
 
 __all__ = ["CHECK", "Finding", "FitAudit", "KKReference", "Misfit", "NOTE", "PROBLEM",
            "REFERENCES", "SEVERITIES", "SpectrumAudit", "audit_spectrum", "SEVERITY_LABELS", "audit_conductivity_scan",
@@ -164,6 +165,10 @@ REFERENCES: dict[str, tuple[str, ...]] = {
                  "SCHOENLEBER2014.no-numeric-residual-threshold"),
     "low_frequency_inductive": ("VADHVA2021.qss-low-frequency-cutoff",
                                 "LASIA1999.low-frequency-pseudo-inductive-loop"),
+    # 스펙트럼 자체 — 셀이 쉬었나 (ADR 0043 보완 7)
+    "dc_drift": ("VADHVA2021.relax-to-ocp-before-eis",
+                 "VADHVA2021.ocv-drift-low-frequency",
+                 "LASIA1999.stationarity-repeat-and-up-down-scans"),
     # 기록
     "amplitude_large": ("VADHVA2021.small-amplitude-linearity",
                         "LASIA1999.linearity-amplitude-limit"),
@@ -1399,6 +1404,12 @@ MAINS_HZ = 50.0
 #: 저주파 끝의 +Im 은 |Z| 의 이만큼은 넘어야 센다 — 실수축으로 내려온 셀의
 #: 마지막 점들은 잡음만으로도 축 위에 설 수 있다.
 LOW_FREQUENCY_INDUCTIVE_SHARE = 0.01
+#: 직류 수준이 한 주기 동안 교류 진폭의 이만큼 넘게 움직이면 적는다 (ADR 0043
+#: 보완 7).  기기가 드리프트를 보정하지 않으면 그 점이 ``share / π`` 만큼, 곧
+#: KK 의 선(``KK_LIMIT``)만큼 틀어지는 자리다.  매끄럽게 틀어져 KK 로는 안
+#: 보인다 — 모의 측정에서 0.01 Hz 점이 6 % 틀어졌는데 KK 잔차는 1.6 % 였다.
+#: 이 랩 파일의 수를 보기 전이라 참고까지만 올린다.
+DC_DRIFT_SHARE = math.pi * KK_LIMIT
 
 
 @dataclass(frozen=True)
@@ -1429,6 +1440,9 @@ class SpectrumAudit:
     kk: dict = field(default_factory=dict)
     #: 판정했으면 점마다의 KK 잔차 — 맞춤 검수가 회로 탓과 점 탓을 가른다.
     reference: KKReference | None = None
+    #: 스윕 동안의 직류 전류·전위 (ADR 0043 보완 7) — 셀이 쉬었는지.  KK 가
+    #: 못 보는 매끄러운 드리프트를 파일이 적은 대로 보인다.  아직 판정은 없다.
+    dc: dict = field(default_factory=dict)
 
 
 def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
@@ -1444,6 +1458,9 @@ def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
     if spectrum is None or not len(spectrum):
         out.kk = {"judged": False, "reason": "점이 없습니다"}
         return out
+    record = dc_record(spectrum)
+    out.dc = _dc_summary(record)
+    out.findings += _dc_findings(record)
     inductive = _low_frequency_inductive(spectrum)
     if inductive is not None:
         count, below = inductive
@@ -1468,6 +1485,59 @@ def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
             sigma=float(out.kk["sigma"]))
     out.findings = sort_findings(out.findings)
     return out
+
+
+def _dc_summary(record: DCRecord) -> dict:
+    """The numbers the report and the screen print from the DC record: the
+    level at the start and the end of the sweep, how long it took, and where
+    the level moved most against the AC amplitude."""
+    if not record.judged:
+        return {"judged": False, "reason": record.reason}
+    out: dict = {"judged": True, "duration_s": record.duration_s,
+                 "source": record.source}
+    current = record.current_ends_a
+    if current is not None:
+        out["current_ua"] = [current[0] * 1e6, current[1] * 1e6]
+    potential = record.potential_ends_v
+    if potential is not None:
+        out["potential_v"] = list(potential)
+    if record.max_share is not None:
+        out["share"] = record.max_share
+        out["at_hz"] = record.at_hz
+    return out
+
+
+def _dc_findings(record: DCRecord) -> list[Finding]:
+    """The cell was not at rest: its DC level moved, within a period, by more
+    than ``DC_DRIFT_SHARE`` of the AC amplitude somewhere in the sweep.
+
+    Says where, by how much, and what it does to the points when the
+    instrument did not correct for it -- the part the KK test cannot see,
+    because a smooth drift leaks in as a smooth, KK-shaped error."""
+    if not record.judged or record.share is None:
+        return []
+    over = record.share >= DC_DRIFT_SHARE
+    if not np.any(over):
+        return []
+    band = record.frequency_hz[over]
+    low, high = float(band.min()), float(band.max())
+    span = f"{low:.3g} Hz" if low == high else f"{low:.3g}–{high:.3g} Hz"
+    worst = float(record.max_share)
+    if record.source == "potential":
+        word = "전위"
+        start, end = record.potential_ends_v
+        level = (f"{start:.4f} → {end:.4f} V ({(end - start) * 1e3:+.1f} mV)")
+    else:
+        word = "전류"
+        start, end = record.current_ends_a
+        level = f"{start * 1e6:.3g} → {end * 1e6:.3g} µA"
+    return [Finding(
+        NOTE, "dc_drift",
+        f"직류 {word}가 스윕 동안 {level} 로 변했습니다 — 셀이 평형이 아니었습니다 "
+        f"(쉬지 않은 셀). {span} 에서는 한 주기 동안 교류 진폭의 {worst * 100:.2g} % "
+        f"까지 움직였습니다: 기기가 드리프트를 보정하지 않았다면 그 점들이 약 "
+        f"{worst / math.pi * 100:.2g} % 틀어져 있고, 매끄럽게 틀어져 KK 로는 안 "
+        f"보입니다. 직류 {word}가 멈출 때까지 쉬게 한 뒤 다시 재세요")]
 
 
 def _range_switches(spectrum: Spectrum) -> list[float] | None:

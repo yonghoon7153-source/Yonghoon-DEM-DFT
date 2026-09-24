@@ -1594,6 +1594,11 @@ class AuditSpectrumOut(BaseModel):
     #: 선형 Kramers–Kronig 검사 (ADR 0043) — ``judged``, 잔차 최대·그 주파수,
     #: 잡음 σ, Voigt 수.  ``judged`` 가 거짓이면 ``reason``.
     kk: dict[str, Any] = {}
+    #: 스윕 동안의 직류 수준 (ADR 0043 보완 7) — 셀이 쉬었는지.  ``judged``,
+    #: 시작·끝의 ``current_ua`` (µA) · ``potential_v`` (V), ``duration_s``, 한
+    #: 주기 동안 교류 진폭 대비 가장 크게 움직인 몫 ``share`` 와 그 ``at_hz``.
+    #: ``judged`` 가 거짓이면 ``reason`` (파일에 그 열이 없다).  판정은 아직 없다.
+    dc: dict[str, Any] = {}
     findings: list[AuditFindingOut] = []
     #: 가장 무거운 판정 (``problem`` / ``check`` / ``note``), 없으면 ``None``.
     worst: str | None = None

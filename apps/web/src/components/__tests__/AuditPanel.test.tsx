@@ -15,7 +15,7 @@ vi.hoisted(() => {
   globalThis.matchMedia = globalThis.matchMedia ?? (media as never)
 })
 
-import { AuditPanel, residualSeries } from '../AuditPanel'
+import { AuditPanel, dcRows, residualSeries } from '../AuditPanel'
 import type { AuditFinding, SpectrumAuditDetail } from '../../lib/types'
 
 function finding(code: string, scope: AuditFinding['scope'], message: string,
@@ -117,6 +117,51 @@ describe('AuditPanel', () => {
     render(<AuditPanel spectrumId={1} />)
     await waitFor(() => expect(screen.getByText('KK 통과')).toBeTruthy())
     expect(screen.getByText('점 자체에 대한 판정은 없습니다.')).toBeTruthy()
+  })
+})
+
+describe('dcRows — was the cell at rest (ADR 0043 보완 7)', () => {
+  it('reads the current when the potential was held, and how far it moved in a period', () => {
+    expect(dcRows({ judged: true, duration_s: 968, source: 'current',
+                    current_ua: [300, 95.5], potential_v: [3.7, 3.7], share: 0.078,
+                    at_hz: 0.01 }))
+      .toEqual([['직류 전류 (스윕 동안)', '300 → 95.5 µA (16.1 분)'],
+                ['한 주기의 직류 변화', '교류 진폭의 7.8 % (10.0 mHz)']])
+  })
+
+  it('says a level that did not move did not move', () => {
+    expect(dcRows({ judged: true, duration_s: 44, source: 'current',
+                    current_ua: [0.012, 0.011], share: 2e-5, at_hz: 265 })[1])
+      .toEqual(['한 주기의 직류 변화', '교류 진폭의 0.01 % 미만'])
+  })
+
+  it('does not read a potential the instrument held as a cell at rest', () => {
+    expect(dcRows({ judged: true, duration_s: 44, source: 'potential',
+                    potential_v: [3.7, 3.7], share: 1e-9, at_hz: 265 })).toEqual([])
+  })
+
+  it('reads the potential when that is what moved (a galvanostatic sweep)', () => {
+    expect(dcRows({ judged: true, duration_s: 600, source: 'potential',
+                    potential_v: [3.7012, 3.6921], share: 0.1, at_hz: 0.01 })[0])
+      .toEqual(['직류 전위 (스윕 동안)', '3.7012 → 3.6921 V (-9.1 mV, 10.0 분)'])
+  })
+
+  it('says nothing when the file kept no record', () => {
+    expect(dcRows(undefined)).toEqual([])
+    expect(dcRows({ judged: false, reason: '파일에 점마다의 시각이 없습니다' })).toEqual([])
+  })
+
+  it('shows up among the numbers of the panel, and as a chip when it is a finding', async () => {
+    const settling = drifting([finding('dc_drift', 'points',
+      '직류 전류가 스윕 동안 300 → 95.5 µA 로 변했습니다 — 셀이 평형이 아니었습니다', 'note')])
+    settling.audit.dc = { judged: true, duration_s: 968, source: 'current',
+                          current_ua: [300, 95.5], share: 0.078, at_hz: 0.01 }
+    installFetch(settling)
+    render(<AuditPanel spectrumId={1} />)
+    await waitFor(() => expect(screen.getByText('직류 전류 (스윕 동안)')).toBeTruthy())
+    expect(screen.getByText('교류 진폭의 7.8 % (10.0 mHz)')).toBeTruthy()
+    const chips = screen.getByLabelText('점 자체의 판정')
+    expect(within(chips).getByText('셀이 안 쉼')).toBeTruthy()
   })
 })
 

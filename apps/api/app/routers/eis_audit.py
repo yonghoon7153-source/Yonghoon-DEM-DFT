@@ -47,6 +47,7 @@ from wrdkit.eis.conductivity import (
     real_axis_crossing,
 )
 from wrdkit.eis.derive import BLOCKING_PHASE_DEG, blocking_verdict
+from wrdkit.eis.stationarity import STILL_SHARE
 
 from .. import storage
 from ..db import get_session
@@ -239,6 +240,7 @@ def _audit_parts(session: Session, record: SpectrumRecord,
     points = audit_spectrum(spectrum)
     tagged += [(one, POINTS) for one in points.findings]
     out.kk = points.kk
+    out.dc = points.dc
     audited = _Audited(out=out, spectrum=spectrum, points=points)
 
     best = _best_fit(session, record.id or 0)
@@ -511,6 +513,47 @@ def _g(value, digits: int = 3) -> str:
     return f"{number:.{digits}g}"
 
 
+#: 전위만 적힌 파일에서 이만큼(V) 움직여야 적는다 — 그대로인 전위는 전위를 잡고
+#: 잰 것(PEIS)과 가를 수 없다.
+MOVED_POTENTIAL_V = 1e-4
+
+
+def _minutes(seconds) -> str:
+    if seconds is None or not np.isfinite(float(seconds)):
+        return "—"
+    seconds = float(seconds)
+    return f"{seconds / 60:.1f} 분" if seconds >= 60 else f"{seconds:.0f} 초"
+
+
+def _dc_line(dc: dict) -> str:
+    """셀이 쉬었는지 — 스윕 동안 직류 전류(전위를 잡고 잰 것)나 직류 전위(전류를
+    잡고 잰 것)가 어디서 어디로 갔나, 그리고 한 주기 동안 교류 진폭에 대어 가장
+    크게 움직인 곳 (ADR 0043 보완 7).  파일에 그 열이 없으면 적지 않는다."""
+    if not dc.get("judged"):
+        return ""
+    current, potential = dc.get("current_ua"), dc.get("potential_v")
+    share = dc.get("share")
+    still = share is not None and share < STILL_SHARE
+    took = f"스윕 {_minutes(dc.get('duration_s'))}"
+    moved = (potential is not None
+             and abs(potential[1] - potential[0]) >= MOVED_POTENTIAL_V)
+    if potential and ((dc.get("source") == "potential" and not still)
+                      or (not current and moved)):
+        level = (f"직류 전위 {potential[0]:.4f} → {potential[1]:.4f} V "
+                 f"({(potential[1] - potential[0]) * 1e3:+.1f} mV, {took})")
+    elif current:
+        level = f"직류 전류 {_g(current[0])} → {_g(current[1])} µA ({took})"
+    else:
+        # 전위만 있고 그대로다 — 전위를 잡고 쟀다면 늘 그렇다.  쉬었는지는 모른다.
+        return ""
+    if share is None:
+        return level
+    if still:
+        return f"{level} · 한 주기 동안 교류 진폭의 0.01 % 미만으로 변함"
+    return (f"{level} · 한 주기 동안 교류 진폭의 {share * 100:.2g} % 만큼 변함 "
+            f"({_g(dc.get('at_hz'))} Hz)")
+
+
 def _e(value) -> str:
     if value is None:
         return "—"
@@ -593,6 +636,9 @@ def _block(one: AuditSpectrumOut, numbers: _Numbers) -> list[str]:
             lines.append(f"      ({kk['reason']})")
     elif kk.get("reason"):
         lines.append(f"    KK 판정 안 함 — {kk['reason']}{cables}")
+    rest = _dc_line(one.dc or {})
+    if rest:
+        lines.append("    " + rest)
     for arc in one.arcs:
         where = ("→ " + " 또는 ".join(arc["candidate_labels"])
                  if arc.get("candidate_labels") else

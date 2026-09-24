@@ -1123,6 +1123,21 @@ export interface AuditResiduals {
   limit: number | null
 }
 
+export interface AuditDC {
+  judged?: boolean
+  reason?: string
+  duration_s?: number
+  /** 어느 쪽이 움직였나 — 전위를 잡고 재면 전류, 전류를 잡고 재면 전위. */
+  source?: 'current' | 'potential' | ''
+  /** 스윕의 시작과 끝 (µA). */
+  current_ua?: [number, number]
+  /** 스윕의 시작과 끝 (V). */
+  potential_v?: [number, number]
+  /** 한 주기 동안 교류 진폭에 대어 가장 크게 변한 몫 (비율), 그 주파수. */
+  share?: number | null
+  at_hz?: number | null
+}
+
 export interface SpectrumAuditDetail {
   audit: {
     id: number
@@ -1142,6 +1157,9 @@ export interface SpectrumAuditDetail {
       dropped_inductive?: number
       range_switches_hz?: number[]
     }
+    /** 스윕 동안의 직류 수준 (ADR 0043 보완 7) — 셀이 쉬었는지.  판정은 아직
+     *  없다.  `judged` 가 거짓이면 파일에 그 열이 없다 (`reason`). */
+    dc?: AuditDC
     findings: AuditFinding[]
     worst: 'problem' | 'check' | 'note' | null
   }

@@ -153,6 +153,32 @@ def test_a_current_range_switch_is_named_on_the_kk_line(client):
     assert f"· 전류 범위 바뀜 {expected:.3g} Hz" in text
 
 
+def test_the_dc_record_of_the_sweep_is_carried_and_printed(client):
+    """셀이 쉬었는지 — 파일의 ``<I>`` 가 스윕 동안 300 µA 에서 줄어든 셀 (ADR 0043
+    보완 7).  보고서의 JSON 과 스펙트럼 하나의 검수에 수가 오고, 자세히 적는
+    스펙트럼의 글에는 KK 줄 밑에 한 줄로 적힌다.  판정은 참고까지."""
+    frequency = S.log_sweep(7e6, 1e-2, 10)
+    columns = S.measure_peis(frequency, S.randles(frequency),
+                             dc_current_a=lambda t: 300e-6 * np.exp(-t / 600))
+    out = upload(client, S.build_mpr(columns), "B18_like_settling.mpr", cell_config="")
+    item = entry(audit(client), out["id"])
+    dc = item["dc"]
+    assert dc["judged"] and dc["source"] == "current"
+    assert dc["current_ua"][0] == pytest.approx(300, rel=0.01)
+    assert dc["at_hz"] == pytest.approx(0.01, rel=1e-3)
+    assert 0.05 < dc["share"] < 0.2
+    # 교류 진폭의 6.3 %(= π × KK 의 선) 를 넘었다 — 참고로 적는다.
+    assert codes(item, "note").count("dc_drift") == 1
+    assert "dc_drift" not in codes(item, "check") + codes(item, "problem")
+
+    detail = client.get(f"/api/eis/spectra/{out['id']}/audit").json()
+    assert detail["audit"]["dc"]["share"] == pytest.approx(dc["share"])
+    text = client.get("/api/eis/audit", params={"format": "text"}).text
+    line = next(one for one in text.splitlines() if "직류 전류" in one)
+    assert line.startswith("    직류 전류 300 → ")
+    assert f"한 주기 동안 교류 진폭의 {dc['share'] * 100:.2g} % 만큼 변함 (0.01 Hz)" in line
+
+
 def test_a_point_the_kk_test_cannot_draw_is_not_held_against_the_circuit(client):
     """맞춤 검수가 같은 스펙트럼의 KK 결과를 받는다 — 맞는 회로로 맞춘 셀에서 튄
     점 하나(33 Hz, +14 %)를 "그 주파수의 모양을 회로가 못 그립니다" 로 적지 않는다

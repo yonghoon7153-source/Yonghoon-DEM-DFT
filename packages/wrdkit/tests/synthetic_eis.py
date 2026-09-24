@@ -25,6 +25,8 @@ IDS = {
     "time/s": (4, "<d"),
     "<Ewe>/V": (77, "<f"),
     "<I>/mA": (76, "<f"),
+    "|Ewe|/V": (33, "<f"),
+    "|I|/A": (34, "<f"),
     "cycle number": (24, "<d"),
     "I Range": (39, "<H"),
     "Ns": (131, "<H"),
@@ -292,3 +294,52 @@ def _mpt_row(columns: dict[str, list[float]], t: float, freq: float,
     columns["time/s"].append(t)
     columns["Ewe/V"].append(0.0)
     columns["Ns"].append(float(sequence))
+
+
+def measure_peis(frequency_hz: np.ndarray, impedance: np.ndarray, *,
+                 amplitude_v: float = 0.01, periods: int = 2, samples: int = 256,
+                 dc_current_a=None, potential_v: float = 3.7) -> dict:
+    """A potentiostatic sweep measured the way a lock-in does it, with the DC
+    current a cell draws while it is still settling (ADR 0043 보완 7).
+
+    For each frequency, high to low: ``periods`` whole periods of
+    ``E = Va·sin ωt`` and ``I = Va/|Z|·sin(ωt + arg(1/Z)) + I_dc(t)``, sampled
+    ``samples`` times a period.  ``Z = E₁/I₁`` from the first harmonic of both
+    over the window -- the drift leaks into ``I₁`` exactly as it would on the
+    instrument with no drift correction.  ``<I>`` and ``<Ewe>`` are the window
+    means, ``|I|`` and ``|Ewe|`` the first-harmonic amplitudes, ``time/s`` the
+    end of the window.  ``dc_current_a`` is a function of time in seconds
+    (``None``: the cell is at rest, no DC current).
+
+    Returns EC-Lab's column names, ready for ``Spectrum(columns=...)`` or a
+    file writer.
+    """
+    rows: dict[str, list[float]] = {name: [] for name in (
+        "freq/Hz", "Re(Z)/Ohm", "-Im(Z)/Ohm", "|Z|/Ohm", "Phase(Z)/deg",
+        "time/s", "<Ewe>/V", "<I>/mA", "|Ewe|/V", "|I|/A")}
+    start = 0.0
+    for f, z in zip(frequency_hz, impedance, strict=True):
+        period = 1.0 / f
+        count = periods * samples
+        local = (np.arange(count) + 0.5) * (period / samples)     # 칸의 가운데
+        omega = 2.0 * np.pi * f
+        voltage = amplitude_v * np.sin(omega * local)
+        current = (amplitude_v / abs(z)) * np.sin(omega * local - np.angle(z))
+        if dc_current_a is not None:
+            current = current + dc_current_a(start + local)
+        basis = np.exp(-1j * omega * local)
+        e1 = 2.0 * np.mean(voltage * basis)
+        i1 = 2.0 * np.mean(current * basis)
+        measured = e1 / i1
+        rows["freq/Hz"].append(f)
+        rows["Re(Z)/Ohm"].append(measured.real)
+        rows["-Im(Z)/Ohm"].append(-measured.imag)
+        rows["|Z|/Ohm"].append(abs(measured))
+        rows["Phase(Z)/deg"].append(np.degrees(np.angle(measured)))
+        start += periods * period
+        rows["time/s"].append(start)
+        rows["<Ewe>/V"].append(potential_v + float(np.mean(voltage)))
+        rows["<I>/mA"].append(float(np.mean(current)) * 1e3)
+        rows["|Ewe|/V"].append(abs(e1))
+        rows["|I|/A"].append(abs(i1))
+    return {name: np.array(values, dtype=float) for name, values in rows.items()}

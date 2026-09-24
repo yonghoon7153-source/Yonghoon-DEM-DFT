@@ -15,9 +15,9 @@ import { useMemo } from 'react'
 import { Plot, PlotLegend, type PlotSeries } from './Plot'
 import { Alert, Card, KeyValues, Spinner } from './ui'
 import { api } from '../lib/api'
-import { seriesColor } from '../lib/format'
+import { num, seriesColor } from '../lib/format'
 import { useAsync } from '../lib/hooks'
-import type { AuditFinding, AuditReference, SpectrumAuditDetail } from '../lib/types'
+import type { AuditDC, AuditFinding, AuditReference, SpectrumAuditDetail } from '../lib/types'
 import { hertz } from '../pages/Eis'
 
 /** 점 자체의 판정 — 칩 하나에 한 사정.  문장은 아래 목록에 그대로 있다. */
@@ -28,6 +28,7 @@ const POINT_CHIPS: [string, string][] = [
   ['kk_high_frequency', '고주파 끝 어긋남'],
   ['low_frequency_inductive', '저주파 유도성'],
   ['kk_noisy', '잡음 큼'],
+  ['dc_drift', '셀이 안 쉼'],
 ]
 
 const SEVERITY_BADGE: Record<AuditFinding['severity'], string> = {
@@ -38,6 +39,11 @@ const SCOPES: [AuditFinding['scope'], string][] = [
   ['fit', '맞춤'],
   ['record', '기록'],
 ]
+
+/** 이보다 작으면 직류가 움직이지 않은 것 — wrdkit 의 `STILL_SHARE`. */
+const STILL_SHARE = 1e-4
+/** 전위만 적힌 파일에서 이만큼(V) 움직여야 적는다 — `bml audit` 과 같다. */
+const MOVED_POTENTIAL_V = 1e-4
 
 /** 비율을 % 로.  잔차는 비율로 온다 (0.054 = 5.4 %). */
 function pct(fraction: number | null | undefined, digits = 1): string {
@@ -112,6 +118,7 @@ export function AuditPanel({ spectrumId, refresh }: {
                 ? `꼭대기 ${kk.dropped_inductive}점 (배선 인덕턴스)` : '없음'],
               ['전류 범위 전환', kk.range_switches_hz?.length
                 ? kk.range_switches_hz.map(hertz).join(', ') : '—'],
+              ...dcRows(audit.dc),
             ]}
           />
         )}
@@ -155,6 +162,41 @@ export function AuditPanel({ spectrumId, refresh }: {
       </div>
     </Card>
   )
+}
+
+/** 셀이 쉬었는지 — `bml audit` 의 직류 줄과 같은 규칙 (ADR 0043 보완 7).
+ *
+ *  전위를 잡고 잰 스윕에서 셀이 아직 자리를 잡는 중이면 직류 전류가 계속
+ *  변한다.  KK 는 그 매끄러운 흐름을 못 본다.  전위만 적힌 파일에서 전위가
+ *  그대로면 적지 않는다 — 전위를 잡고 쟀다면 늘 그렇다. */
+export function dcRows(dc: AuditDC | undefined): [string, string][] {
+  if (!dc?.judged) return []
+  const share = dc.share ?? null
+  const still = share !== null && share < STILL_SHARE
+  const took = minutes(dc.duration_s)
+  const current = dc.current_ua
+  const potential = dc.potential_v
+  const moved = potential ? Math.abs(potential[1] - potential[0]) >= MOVED_POTENTIAL_V : false
+  const rows: [string, string][] = []
+  if (potential && ((dc.source === 'potential' && !still) || (!current && moved))) {
+    const change = (potential[1] - potential[0]) * 1e3
+    rows.push(['직류 전위 (스윕 동안)', `${potential[0].toFixed(4)} → ${
+      potential[1].toFixed(4)} V (${change >= 0 ? '+' : ''}${change.toFixed(1)} mV, ${took})`])
+  } else if (current) {
+    rows.push(['직류 전류 (스윕 동안)', `${num(current[0], 3)} → ${num(current[1], 3)} µA (${took})`])
+  } else {
+    return []
+  }
+  if (share !== null) {
+    rows.push(['한 주기의 직류 변화', still ? '교류 진폭의 0.01 % 미만'
+      : `교류 진폭의 ${pct(share, share < 0.1 ? 1 : 0)} (${hertz(dc.at_hz ?? NaN)})`])
+  }
+  return rows
+}
+
+function minutes(seconds: number | undefined): string {
+  if (seconds === undefined || !Number.isFinite(seconds)) return '—'
+  return seconds >= 60 ? `${(seconds / 60).toFixed(1)} 분` : `${seconds.toFixed(0)} 초`
 }
 
 function FindingList({ findings, numbering, empty }: {
