@@ -364,14 +364,21 @@ case "$MODE" in
     if [[ "$BACKEND" == "gpu" ]]; then
       echo "[경고] --backend gpu 는 아직 미구현 (Phase 7). CPU로 fallback." >&2
     fi
+    # ★ 49차 P0-3 — 실행권의 소유 증명을 **경로로** 넘긴다. 처음이면 grid 가
+    #   여기에 발급해 두고, fit 이 그 파일로 같은 실행에 붙는다.
+    GRID_ARGS+=(--may-open)          # ★ 57차 P0-1 — 발급자는 coordinator (Python 계층 플래그)
+    # ★ 70차 G70-N1 — grid 의 인자 조립도 실행 없이 검사할 수 있어야 한다 (fit·report·all 과 대칭).
+    #   `all` 이 만든 하위 argv 가 **이 parser 를 지나 Python argv 까지** 가는지를 회귀가 본다.
+    #   plan_gate **앞**이다 — dry 는 lifecycle/등록부를 건드리지 않아야 한다.
+    if [[ "${RUN_SH_DRY:-0}" == "1" ]]; then
+      echo "${GRID_ARGS[*]}"
+      exit 0
+    fi
     # ★ 47차 P0-3 — dry-run 면제를 **없앴다.** 46차는 `--dry-run` 이면 gate 를
     #   건너뛰었는데, `run_grid(dry_run=True)` 는 출력 디렉터리를 만들고
     #   완방상태·baseline 을 계산한 뒤 최대 세 조건에 solver 를 실제로 부른다.
-    #   "flag 면제는 없다" 와 정면으로 어긋났다.
+    #   "flag 면제는 없다" 와 정면으로 어긋났다. (RUN_SH_DRY 는 실행이 아니라 argv 출력이다.)
     plan_gate
-    # ★ 49차 P0-3 — 실행권의 소유 증명을 **경로로** 넘긴다. 처음이면 grid 가
-    #   여기에 발급해 두고, fit 이 그 파일로 같은 실행에 붙는다.
-    GRID_ARGS+=(--may-open)          # ★ 57차 P0-1 — 발급자는 coordinator
     exec python -m src.grid "${GRID_ARGS[@]}"
     ;;
 
@@ -405,12 +412,12 @@ case "$MODE" in
     [[ "$WARM_START" == "false" ]] && FIT_ARGS+=(--no-warm-start)
     # ★ fit 의 인자 조립도 실행 없이 검사할 수 있어야 한다 (report·all 과 대칭).
     #   없어서 --halfcell-method 전파를 회귀로 고정할 방법이 없었다.
+    FIT_ARGS+=(--may-open)           # ★ 57차 P0-1 (Python 계층 플래그 — 70차 G70-N1: dry 출력에도 보인다)
     if [[ "${RUN_SH_DRY:-0}" == "1" ]]; then
       echo "${FIT_ARGS[*]}"
       exit 0
     fi
     plan_gate                       # ★ 46차 P0-11
-    FIT_ARGS+=(--may-open)           # ★ 57차 P0-1
     exec python -m src.fitting "${FIT_ARGS[@]}"
     ;;
 
@@ -520,10 +527,13 @@ PYREL
     #   안 넘기면 하위 grid·fit 이 CANONICAL_RUN 으로 gate 를 보게 되어,
     #   사용자가 지정한 다리와 다른 계획 항목으로 승인될 수 있다.
     [[ -n "$LEG" ]] && GRID_ARGS+=(--leg "$LEG")
-    # ★ 49차 P0-3 — `all` 이 **coordinator** 다. 소유 증명 경로 하나를 정해
+    # ★ 49차 P0-3 — `all` 이 **coordinator** 다. 소유 증명 경로 하나(--leg · --out)를 정해
     #   grid 와 fit 두 하위 호출에 똑같이 넘긴다. 이것이 없으면 grid 가 딴
     #   실행권을 fit 이 이어받을 방법이 없어 pipeline 이 완주하지 못한다.
-    GRID_ARGS+=(--may-open)          # ★ 57차 P0-1
+    # ★ 70차 G70-N1 — `--may-open` 은 **Python 계층**의 플래그다. 여기서 하위 argv 에 붙이면 그 argv 는
+    #   `"$0"`(이 셸 스크립트)로 가고, 셸 parser 에는 그 옵션이 없어 `알 수 없는 인자` rc 1 로 계산 전에
+    #   죽었다 (57차부터 있던 결함 — dry 회귀는 출력에서 멈추고 strict smoke 는 개별 모드라 아무도 안 봤다).
+    #   grid/fit 분기가 Python 호출 직전에 붙인다. 회귀: tests/test_runner.py::test_g70_n1_*
     [[ "${NOISE_SET:-false}" == "true" ]] && GRID_ARGS+=(--noise "$NOISE")
     [[ -n "${NOISE_SEED:-}" ]] && GRID_ARGS+=(--noise-seed "$NOISE_SEED")
     GRID_ARGS+=("${RESUME_FLAG[@]}")
@@ -538,7 +548,7 @@ PYREL
       [[ -n "$_hca" ]] && FIT_ARGS+=(--halfcell-arg "$_hca")
     done
     [[ -n "$LEG" ]] && FIT_ARGS+=(--leg "$LEG")       # ★ 46차 P0-11
-    FIT_ARGS+=(--may-open)           # ★ 49차 P0-3 · 57차 P0-1
+    # (--may-open 은 fit 분기가 Python 에 붙인다 — 70차 G70-N1, 위 grid 주석)
     [[ -n "$OBJECTIVE" ]] && FIT_ARGS+=(--objective "$OBJECTIVE")
     [[ "$N_RESTARTS" != "auto" ]] && FIT_ARGS+=(--n-restarts "$N_RESTARTS")
     [[ "$CLEAN" == "true" ]] && FIT_ARGS+=(--clean)

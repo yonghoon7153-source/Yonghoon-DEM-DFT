@@ -73,6 +73,41 @@ def _dry_all(tmp_path, *extra):
     return [ln for ln in r.stdout.splitlines() if ln.startswith("--mode")]
 
 
+def _child_dry(root, argv, tmp_path):
+    """`all` 이 만든 하위 argv 를 **실제 하위 셸 parser** 에 넣는다 (RUN_SH_DRY=1 이라 Python 은 부르지 않는다)."""
+    import os
+    import subprocess
+
+    env = {**os.environ, "RUN_SH_DRY": "1"}
+    return subprocess.run(["bash", str(root / "run.sh"), *argv], cwd=root,
+                          capture_output=True, text=True, env=env)
+
+
+@pytest.mark.parametrize("mode", ["grid", "fit"])
+def test_g70_n1_mode_all_child_argv_is_accepted_by_the_shell_parser(tmp_path, mode):
+    """★ 70차 G70-N1 (P1) — `all` 은 grid/fit 하위 argv 에 `--may-open` 을 붙여 **같은 셸 스크립트**(`"$0"`)에
+    넘기는데, 셸 parser 에는 그 옵션이 없다 → `알 수 없는 인자: --may-open`, rc 1. 계산 전에 pipeline 이 죽는다.
+    grid/fit 분기는 Python 호출 때 그 플래그를 **이미** 붙이므로 플래그의 소비 계층이 잘못된 것이다 (리뷰어: 원본
+    dry argv 를 실제 하위 parser 에 넣어 grid·fit 둘 다 rc 1 재현; 57차부터 있던 결함, F50b 회귀가 아님).
+
+    기존 `_dry_all` 은 argv 를 **출력**하는 데서 멈추고 strict smoke 는 grid/fit 을 **개별 모드**로 부르므로 이 경계를
+    아무 시험도 안 봤다. 이 시험은 `all` 의 dry 출력 한 줄을 그대로 하위 셸에 넣어 **parser 를 지나 Python argv 조립까지**
+    가는지 본다 — 그리고 Python 이 받을 argv 에 `--may-open` 이 **정확히 한 번** 있어야 한다 (소유권 전달 유지).
+    """
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parent.parent
+    lines = _dry_all(tmp_path)
+    line = next(l for l in lines if l.startswith(f"--mode {mode} "))
+    r = _child_dry(root, line.split(), tmp_path)
+    assert r.returncode == 0, (f"`all` 이 만든 {mode} argv 를 하위 셸 parser 가 거부했다 (G70-N1)",
+                               line, r.stdout[-300:], r.stderr[-300:])
+    py_argv = [l for l in r.stdout.splitlines() if l.strip()]
+    assert py_argv, r.stdout
+    assert py_argv[-1].split().count("--may-open") == 1, (
+        "Python 이 받을 argv 에 --may-open 이 정확히 한 번 있어야 한다 (57차 P0-1 소유권 전달)", py_argv[-1])
+
+
 def test_mode_all_propagates_the_fit_protocol_flags(tmp_path):
     """★ 18차 C — `all` 이 protocol 옵션을 하위 단계로 넘기지 않았다.
 

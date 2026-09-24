@@ -46,6 +46,7 @@ ARCHIVE = ROOT / "tools" / "archive_bundle.py"                     # 62차 ζ′
 G63T = ROOT / "tests" / "test_gate63_defensive.py"                 # 64차 E2-R
 IF = ROOT / "tests" / "interpreter_fixture.py"                      # 65차 T1
 G66T = ROOT / "tests" / "test_gate66_defensive.py"                  # 67차 T1
+RUNSH = ROOT / "run.sh"                                              # 70차 G70-N1
 
 #: ★ 46차 #9 조건 9 — 변이는 **작업 트리에 손대지 않는다.** 45차 runner 는
 #:   실제 저장소 파일을 고쳤다가 `finally` 로 되돌렸다. 그러면 (a) 중단되면
@@ -1761,6 +1762,14 @@ MUTANTS = [
      '        elif not calls:\n'
      '            verdict[node] = "passed"',
      "refuses_a_setup_only_child or three_unrun_shapes_are_all_refused or without_a_call_record"),
+    # ── 70차 (G70-N1) ─────────────────────────────────────────────────────
+    #   N1: `all` 이 grid 하위 argv 에 `--may-open` 을 다시 붙인다 — 그 argv 는 셸 parser 로 가서 rc 1.
+    #   회귀는 `all` 의 dry 출력을 실제 하위 셸에 넣으므로 [grid] 가 parser 거부로 빨개진다 ([fit] 은 그대로).
+    ("mode-all-does-not-pass-may-open-to-the-shell-g70", RUNSH,              # G70-N1
+     '    #   grid/fit 분기가 Python 호출 직전에 붙인다. 회귀: tests/test_runner.py::test_g70_n1_*\n',
+     '    #   grid/fit 분기가 Python 호출 직전에 붙인다. 회귀: tests/test_runner.py::test_g70_n1_*\n'
+     '    GRID_ARGS+=(--may-open)\n',
+     "g70_n1_mode_all_child_argv_is_accepted_by_the_shell_parser"),
     ("the-replay-context-is-measured-once-g66", MR,                          # 정적 관측
      '    ctx = ctx if ctx is not None else _\u0072eplay_context()\n'
      '    want = _parent_customization_view(ctx)',
@@ -5239,6 +5248,15 @@ EXPECT: dict = {
                 "Failed: DID NOT RAISE AssertionError",
             "tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun":
                 "Failed: DID NOT RAISE AssertionError",
+        }
+    },
+    "mode-all-does-not-pass-may-open-to-the-shell-g70": {
+        "fail": [
+            "tests/test_runner.py::test_g70_n1_mode_all_child_argv_is_accepted_by_the_shell_parser[grid]",
+        ],
+        "witness": {
+            "tests/test_runner.py::test_g70_n1_mode_all_child_argv_is_accepted_by_the_shell_parser[grid]":
+                "`all` 이 만든 grid argv 를 하위 셸 parser 가 거부했다 (G70-N1)",
         }
     },
     "the-replay-context-is-measured-once-g66": {
