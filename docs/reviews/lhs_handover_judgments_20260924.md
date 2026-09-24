@@ -246,10 +246,37 @@
 - 생산 코퍼스와의 계통 차이 (바닥 재질) 는 인계표 README 에 적는다.
 - Codex 요청서: `docs/reviews/codex_request_lhs_porosity_thickness_20260924.md`.
 
+## J18. Codex 판정 (09-25, `docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md`) — 전부 수용 · 원장 `HND-01` ~ `HND-06` · (나) 가설 철회 · 인계표 = "명목 규약값 + 적격성 열"
+
+- 결론: 인계표를 **"물리적 전극 구조의 ML 타깃"** 으로 외부 배포하는 것은 HOLD — 130 행을 버리라는 뜻이 아니다.  주 두께 = 같은 프레임의 플래튼 − 바닥
+  간격 (ACCEPT, 한정) · (가) 는 **명목 구 부피 / 틀 간격 부피** 의 장부값으로 이름 붙여 보존 · (나) ≈ hard-bottom 은 REJECT · 관통 "기록만" REJECT ·
+  음수 처리 REVISE (원값 보존 + 타깃별 적격성) · 웹앱/코퍼스 REVISE (provenance 감사) · coverage · τ 도 경계에 걸림 (REVISE).
+- 내가 검증한 것 (09-25):
+  - `HND-03` 산술 재현 — LIGGGHTS hooke kn 식 · Y* 1,468,923.8 · q 3 · φf 0.01 → r 1 µm z −0.980075994 (JSON −0.980076) · r 0.5 µm −0.490018998
+    (JSON −0.490019).  q · φf 는 생산 덱 m6 (`coefficientMaxElasticStiffness`) · m8 (`coefficientPlasticityDepth`) 의 **AM–SE 칸**에 실재 (Codex 가 적은 "57 행" 은 m6
+    만이고 φf 는 67 행 m8).  ⇒ 9 건의 입자는 바닥 평면 **아래쪽에 점착으로 매달려** 있다 (윗면이 평면 위 0.02·r).  LHS 덱의 m6 · m8 이 같은지는 사용자 grep 대기.
+  - `HND-04` — `HANDOVER_EXTRA` 에 wall_record · deck_floor · 적격성 열이 없고 기본 수확 디렉터리가 20260919 인 것 실물 확인.  φ · porosity 상태를 수확기가 무조건
+    OK 로 두는 것도 확인.
+  - `HND-02` · `HND-05` · `HND-06` 은 코드 읽기로 확인 (min(z) · 쌍 렌즈 · z 평균).
+- 철회: J17 의 *"(나) ≈ 바닥이 단단했다면"* — (나) 의 공극 부피는 (다) 와 같고 (가) 보다 W 만큼 크다; 벽 재질 변경의 편향 방향은 모른다.  (나) 는
+  `*_pushback_equiv` 산술 지표로만 남긴다.  `LHS-14` 의 "의도된 설계" 는 유지하되 표현은 *"SE 접촉물성을 쓴 평면 바닥 proxy"* 까지.
+- ★ 새로 보인 것 — τ 의 아래 밴드 (LHS-08): 110/130 이 `ELECTRODE_BAND_EMPTY` 인데 **전부 아래 밴드가 빈 것**이고, 그 밴드는 min(z − r) = 벽 아래로 새어
+  나간 입자가 정한다 (lhs00_000: z_lo −1.905 µm, 밴드 [−1.905, −0.905] 에 SE 없음, SE 최저면 −0.658).  벽 (z = 0) 기준 밴드로 재진단하면 달라질 수 있다 —
+  규약 변경은 재측정 뒤 (LHS-08 그대로), 진단 열만 먼저.
+- 실행 계획 (**비준 대기** — 코드 변경 없음, 문서 · 원장만 커밋):
+  A. 수확기: `overlap_over_r` → `outside_cap_depth_over_r` · 상별 cap 부피 (AM/SE × floor/plate) · (다) clipped 값 · 상태 분리 (중심 통과 · 완전 이탈 · 정상 겹침) ·
+     STL 평판 검사 (`plate_planarity_span`) · `check_deck_floor` 문법 제한 (unfix · 재정의 = 마지막 활성 · group=all · 그 밖은 "검증 불가").  전부 빨간불 먼저.
+  B. 인계 생성기: 기본 = 20260924 · Codex 권고 열 (명목 alias · pushback_equiv · clipped · 외피 · 경계 QC · `calculation_status` / `physical_target_status` /
+     `hold_reason_codes` / `phi_sum_gt_one` · 규약 ID · 4 종 sha) · 음수 18 · 이탈 43 케이스로 end-to-end 회귀 · 130 행 원값 보존.
+  C. τ: 벽 기준 양쪽 밴드 **진단 열** (보고 τ 규약은 불변).
+  D. 결정 (저자): ① 이탈 43 케이스의 물리 타깃 = `HOLD_BOUNDARY` (Codex 권고) ② 음수 18 = 원값 + `physical_target_status=HOLD_NEGATIVE` ③ 인계표의 이름 =
+     "DEM 명목 규약 데이터셋" (실제 공극률 예측기라 소개하지 않음) ④ 기존 코퍼스 provenance 감사 (Q6) 는 별도 트랙.
+  E. 기전 확인 (저자 기계): LHS 덱 m6 · m8 grep → 같으면 HND-03 을 "재현됨 (조건부)" 로; 9 건의 마지막 프레임 몇 장은 ibb 에 있으면 나중에.
+
 ## 인계 판정 (지금)
 
 **보류 유지.**  사유 = J9 (97 건의 플래튼이 이른 시점) · J2 (분모 바닥 10 µm) · J3 (두께 측정값 부재).  J5 는 J9 로 대부분 설명됨.
 다음 = ✅ 97 건 메시 재반입 (J12) → ✅ 수확기 수정 (J13) → ⛔ 재수확 72/130 (J14 — 가드 과잉 거부) → ✅ J14 비준 · 가드 교체
-(덱 확인 + 벽 밖 기록) → ✅ 130 재수확 (J16) → Codex 리뷰 (실측 붙여, J15 · J16) → 인계표 재생성 ((가) 주 값 + (나) 옆 칸 ·
-J6 취급 반영) → lhsx 64 수확.
+(덱 확인 + 벽 밖 기록) → ✅ 130 재수확 (J16) → ✅ Codex 판정 (J18, HND-01~06) → 비준 → 수확기 A · 생성기 B · τ 진단 C →
+인계표 재생성 (명목 규약값 + 적격성 열 · 이탈 43 · 음수 18 HOLD) → lhsx 64 수확.
 순서: J2 수정 → 인계표 재생성 → J3 (a) → 재수확 band 진단 (J3 (b) · J5) → J6 취급 비준 → 인계.

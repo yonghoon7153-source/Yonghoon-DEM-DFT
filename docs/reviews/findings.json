@@ -4603,7 +4603,7 @@
    "found_by": "claude (사용자 요청 — 웹앱 porosity 코드 점검, 2026-09-24)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "웹앱 porosity 입력 가정 묶음 — 메시 없을 때 플래튼 = 최고 입자 **중심** · 바닥 0 가정 (덱 확인 없음) · 벽 겹침 부피 미집계 (ε_union 도 입자끼리만) · 음수 porosity 무경고 · 정사각형 가정",
-   "note": "`scripts/dem_analysis_core.py:125` (fallback 은 `plate_z_source = estimated_center` 로 라벨은 남는다 — 맨 윗줄 반쪽이 상자 밖이라 porosity 가 낮다) · `:69` (렌즈는 접촉 덤프의 입자쌍만) · `:1060` (`box_xy_val = box_x`) · `scripts/analyze_contacts.py:509` (25 % 초과만 경고).  LHS 수확기는 J13 · J14 로 이 가운데 바닥 · 벽 겹침을 막았다.  (판단 J15)",
+   "note": "`scripts/dem_analysis_core.py:125` (fallback 은 `plate_z_source = estimated_center` 로 라벨은 남는다 — 맨 윗줄 반쪽이 상자 밖이라 porosity 가 낮다) · `:69` (렌즈는 접촉 덤프의 입자쌍만) · `:1060` (`box_xy_val = box_x`) · `scripts/analyze_contacts.py:509` (25 % 초과만 경고).  LHS 수확기는 J13 · J14 로 이 가운데 바닥 · 벽 겹침을 막았다.  (판단 J15)\n★ Codex `HND-05` · `HND-06` (09-25) 이 항목 3 (무메시 fallback) · 5 (ε_union 쌍 렌즈) 를 실제 함수 반례로 확인.",
    "evidence_tests": [
     "scripts/dem_analysis_core.py",
     "scripts/analyze_contacts.py"
@@ -4679,7 +4679,7 @@
    "found_by": "claude (재수확 거부 사유 대조 09-24)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "4 건 (lhs00_056 · 079 · 107 · 110) 의 가장 깊은 입자 바닥이 **정확히 같은** −1.98008 µm 다 — 넷 다 r_AM_S = 1.0 µm, 107 · 110 은 입자 중심이 벽 아래 0.98 µm (벽 관통)",
-   "note": "독립 런 넷에서 같은 값은 우연일 수 없다 — 원인 미상 (후보: LIGGGHTS primitive 벽의 양면성 · 삽입 · 덤프 정밀도).  관통 입자 하나는 고체의 0.005–0.007 % (설계 추정 부피 기준) 라 (가) · (나) 어느 값에도 영향이 없다 — 제외 사유가 아니다.  재수확 `wall_record` (상 · z · 중심이 벽 밖인 수) 로 확인하고 Codex 리뷰에 묻는다 (판단 J14 · J15).\n★ 재수확 기록 (09-24, `wall_record`): 겹침/반지름이 **정확히 1.98** 인 가장 깊은 입자가 9 케이스 (r = 1 µm 7 · r = 0.5 µm 2) — 반지름에 비례하는 같은 자리다 (입자 윗면이 벽 위 0.02·r).  더 넓게는 중심이 바닥 아래인 입자가 있는 케이스 42 (AM_S 618 개 · SE 62 · AM 2) · 통째로 바닥 아래 15 케이스 (최대 21 개, 대부분 SE) · 통째로 플래튼 위 3 케이스 (SE).  바닥 벽 재질이 SE 인 것 (`LHS-14`) 과 함께 볼 것.  부피 몫은 무시할 만하다 (관통 입자 하나 = 고체의 0.005–0.007 %).",
+   "note": "독립 런 넷에서 같은 값은 우연일 수 없다 — 원인 미상 (후보: LIGGGHTS primitive 벽의 양면성 · 삽입 · 덤프 정밀도).  관통 입자 하나는 고체의 0.005–0.007 % (설계 추정 부피 기준) 라 (가) · (나) 어느 값에도 영향이 없다 — 제외 사유가 아니다.  재수확 `wall_record` (상 · z · 중심이 벽 밖인 수) 로 확인하고 Codex 리뷰에 묻는다 (판단 J14 · J15).\n★ 재수확 기록 (09-24, `wall_record`): 겹침/반지름이 **정확히 1.98** 인 가장 깊은 입자가 9 케이스 (r = 1 µm 7 · r = 0.5 µm 2) — 반지름에 비례하는 같은 자리다 (입자 윗면이 벽 위 0.02·r).  더 넓게는 중심이 바닥 아래인 입자가 있는 케이스 42 (AM_S 618 개 · SE 62 · AM 2) · 통째로 바닥 아래 15 케이스 (최대 21 개, 대부분 SE) · 통째로 플래튼 위 3 케이스 (SE).  바닥 벽 재질이 SE 인 것 (`LHS-14`) 과 함께 볼 것.  부피 몫은 무시할 만하다 (관통 입자 하나 = 고체의 0.005–0.007 %).\n★ Codex `HND-03` (09-25): 1.98 자리 = 양면 평면 아래쪽 점착–중력 평형 (hooke/hysteresis 포화 가지, q 3 · φf 0.01 — 생산 덱 m6 · m8 의 AM–SE 칸) 이 9 건 좌표를 재현.  `overlap_over_r` 는 오도 (접촉 겹침은 0.02r) → `outside_cap_depth_over_r` 로.  LHS 덱 m6 · m8 확인 대기.",
    "evidence_tests": [
     "scripts/lhs_phi_crosscheck.py"
    ]
@@ -4692,7 +4692,7 @@
    "found_by": "claude (재수확 덱 확인 09-24 — `deck_floor.wall_type`)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "LHS 덱의 바닥 벽 재질이 **SE** 다 (bimodal type 3 · mono type 2) — 생산 덱 real_4 는 type 1 (AM_P).  AM 이 무른 바닥에 깊게 박혀 벽 밖 부피가 ΣV 의 중앙 0.6 % · 최대 4.4 %",
-   "note": "`fix … wall/gran … primitive type N zplane 0.0` 의 N = 벽의 물성 type.  130/130 이 SE type 이다.  생산 덱 (`docs/data/phase_a_6mah/in.real_4.liggghts:83`) 은 `primitive type 1` (AM_P, E 1.4e8 sim).  무른 바닥이라 가장 큰 AM 이 반지름의 50–90 % 를 바닥에 묻는다 (`LHS-12` 의 깊이 분포) · (나) − (가) porosity 중앙 0.61 %p · 최대 2.53 %p (mono_AM_P 중앙 1.20).  의도 (예: 분리막 SE 층 표현) 인지 **저자 확인 필요** — 의도라면 기록만, 아니라면 LHS 값을 생산 코퍼스와 비교할 때 계통 차이로 라벨.  플래튼 메시의 type 은 아직 안 봤다.\n★ 덱 확인 (사용자 grep 09-24): 플래튼 메시는 `type 1` (AM) · 바닥은 SE type — 박힌 부피가 거의 다 바닥 쪽인 까닭 (바닥 0.60 % vs 플래튼 0.08 %).",
+   "note": "`fix … wall/gran … primitive type N zplane 0.0` 의 N = 벽의 물성 type.  130/130 이 SE type 이다.  생산 덱 (`docs/data/phase_a_6mah/in.real_4.liggghts:83`) 은 `primitive type 1` (AM_P, E 1.4e8 sim).  무른 바닥이라 가장 큰 AM 이 반지름의 50–90 % 를 바닥에 묻는다 (`LHS-12` 의 깊이 분포) · (나) − (가) porosity 중앙 0.61 %p · 최대 2.53 %p (mono_AM_P 중앙 1.20).  의도 (예: 분리막 SE 층 표현) 인지 **저자 확인 필요** — 의도라면 기록만, 아니라면 LHS 값을 생산 코퍼스와 비교할 때 계통 차이로 라벨.  플래튼 메시의 type 은 아직 안 봤다.\n★ 덱 확인 (사용자 grep 09-24): 플래튼 메시는 `type 1` (AM) · 바닥은 SE type — 박힌 부피가 거의 다 바닥 쪽인 까닭 (바닥 0.60 % vs 플래튼 0.08 %).\n★ Codex `HND-01` (09-25): `primitive type SE` 는 접촉 물성 선택이지 분리막 실체가 아니다 — \"SE 접촉물성을 쓴 평면 바닥 proxy\" 까지가 방어 가능.  판단 J17 의 (나) ≈ hard-bottom 해석은 철회 (판단 J18).",
    "evidence_tests": [
     "docs/data/lhs_descriptors_20260924/README.md",
     "scripts/lhs_descriptor_harvest.py"
@@ -4707,9 +4707,91 @@
    "found_by": "claude (재수확 뒤 판단 J6 재집계 09-24)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "ε_sphere porosity 가 **음수**인 케이스 18/130 (−2.43 … −0.09 %) — (나) 로 벽 밖 부피를 되돌려도 16 건 음수 ⇒ 입자끼리 겹침 과다.  φ_SE + φ_AM > 1 이 인계 타깃에 들어간다",
-   "note": "bimodal 14 · mono_AM_P 2 (118 · 121) · mono_AM_S 2 (100 · 106).  웹앱 규약 그대로의 값이다 (교차검사 SAME).  생산 코퍼스는 음수 ε_sphere 케이스를 코퍼스 밖에 둬 왔다 (CLAUDE.md E_SE 교정 절: \"those stay out of the production corpus\").  인계표 취급 — 표지만 달기 · 회귀 타깃에서 빼기 · ε_union 병기 — 는 **저자 결정** (판단 J6 · J16).  Codex 리뷰 질문에 포함.",
+   "note": "bimodal 14 · mono_AM_P 2 (118 · 121) · mono_AM_S 2 (100 · 106).  웹앱 규약 그대로의 값이다 (교차검사 SAME).  생산 코퍼스는 음수 ε_sphere 케이스를 코퍼스 밖에 둬 왔다 (CLAUDE.md E_SE 교정 절: \"those stay out of the production corpus\").  인계표 취급 — 표지만 달기 · 회귀 타깃에서 빼기 · ε_union 병기 — 는 **저자 결정** (판단 J6 · J16).  Codex 리뷰 질문에 포함.\n★ Codex `HND-04` (09-25): 현재 인계 경로가 이 18 건을 상태 OK · φ 합 > 1 로 내보낸다 — \"기록 전용\" 처방이 구현돼 있지 않았다.  처방은 HND-04.",
    "evidence_tests": [
     "docs/data/lhs_descriptors_20260924/_phi_crosscheck.tsv"
+   ]
+  },
+  {
+   "id": "HND-01",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
+   "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
+   "title": "(나) pushback 을 \"단단한 바닥이었다면\" 의 보정으로 해석한 것 (판단 J17) 은 성립하지 않는다 — 산술 변환이지 접촉역학의 반사실이 아니다.  (가) 도 틀 안 점유율이 아니라 **명목 구 부피 / 틀 간격 부피** 의 장부값",
+   "note": "A=LxLy·V=AH·S=ΣV·W=벽 밖 cap 합: (가) (V−S)/V · (나) (V+W−S)/(V+W) · (다) (V−S+W)/V.  (나) 의 공극 부피 = (다) 와 같고 (가) 보다 W 만큼 크다 — \"빈틈 보존\" 은 (다) 대비만 맞다.  반례: 구 하나가 틀 밖으로 통째로 나가도 (가) 는 불변 (73.82 %), (다) 는 100 %.  세 식 모두 구 부피 중복 합산이라 합집합 공극률이 아니다.  벽 재질 변경은 재배열 · 하중망 · 점착 · 압밀량까지 바꾸므로 W/A 를 hard-bottom 재압축의 하한으로 옮길 수 없다 (편향 방향 미상).  `primitive type SE` 는 접촉 물성 선택이지 두께 · 공극을 가진 분리막이 아니다 — 방어 가능한 표현은 \"SE 접촉물성을 쓴 평면 바닥 proxy\".\n★ 수용 (09-25, 판단 J18): J17 의 (나) ≈ hard-bottom 가설 **철회** · (가) 는 `*_spheresum_nominal_gap` 명목 규약값으로 이름 · (나) 는 `*_pushback_equiv` 산술 지표로만 · (다) clipped 는 ROI 보조 · 실험 공극률 인증은 셋 다 불가.",
+   "evidence_tests": [
+    "scripts/lhs_descriptor_harvest.py",
+    "docs/reviews/lhs_handover_judgments_20260924.md"
+   ]
+  },
+  {
+   "id": "HND-02",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
+   "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
+   "title": "`check_deck_floor` 가 발견한 모든 `primitive … zplane` 중 min(z) 를 고른다 — `unfix` 된 벽 · 재정의 전 벽 · 부분 group 벽이 전부 통과한다 (활성 벽 증명이 아니다)",
+   "note": "반례 (실제 함수): `fix floor all … zplane 0` + `unfix floor` → z=0 반환 (활성 바닥 없음) · zplane 0 → unfix → zplane 2 → z=0 반환 (최종은 2) · `fix floor AM_only …` → z=0 (전 상 구속 증거 없음).  현재 130 덱에 이 변이가 있다고 확인된 것은 아니다.  처방: 범용 해석기 대신 지원 문법을 제한 — fix id 생명주기 (unfix · 재정의) · group=all 요구 · wall type ↔ 상 사상 · restart/include/조건 분기는 \"검증 불가\" 로 분리.  바닥 좌표 확인과 관통 입자의 물리 적격성은 서로 다른 검사.",
+   "evidence_tests": [
+    "scripts/lhs_descriptor_harvest.py"
+   ]
+  },
+  {
+   "id": "HND-03",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
+   "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
+   "title": "겹침/반지름 1.98 자리 9 건 = **양면 평면 아래쪽의 점착–중력 평형** (hooke/hysteresis 포화 이력 가지) 후보 — 좌표를 소수 여섯째 자리까지 재현.  중심이 평면을 넘은 입자를 \"정상 압입\" 으로 기록만 하는 것은 불충분",
+   "note": "기하 깊이 d = r − z 와 접촉 겹침 δn = r − |z| 를 분리 — z = −0.98r 이면 d/r 1.98 이지만 접촉 겹침은 0.02r (필드명 `overlap_over_r` 은 오도).  포화 가지 Fn = k2(δn − 2φf r) 에서 평면 아래 정지: δn/r = 2φf − mg/(k2 r) ⇒ d/r = 2 − 2φf + mg/(k2 r).  q = 3 (`coefficientMaxElasticStiffness` AM–SE 칸) · φf = 0.01 (`coefficientPlasticityDepth` AM–SE 칸) 은 생산 덱 `docs/data/phase_a_6mah/in.real_4.liggghts` m6 · m8 에 실재 — ★ 09-25 재계산 (LIGGGHTS hooke kn 식, Y* 1,468,923.8): r 1 µm → z −0.980075994 (JSON −0.980076) · r 0.5 µm → −0.490018998 (JSON −0.490019).  LHS 덱의 m6 · m8 이 같은지는 **사용자 grep 대기**.  관통이 언제 (삽입 · 98.1 중력 · 시간간격) 일어났는지는 모른다 — 최종 좌표로 역확정하지 않는다.  처방: 상태 분리 (중심 통과 · 완전 이탈 · 정상 겹침) · 43 케이스의 물리 타깃 `HOLD_BOUNDARY` · \"부피가 작으니 무영향\" 을 해제 근거로 쓰지 않는다 (τ 밴드 · 접촉망은 극값에 걸린다).",
+   "evidence_tests": [
+    "docs/data/lhs_descriptors_20260924/README.md",
+    "scripts/lhs_descriptor_harvest.py"
+   ]
+  },
+  {
+   "id": "HND-04",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
+   "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
+   "title": "인계 생성기 `build_handover` 가 벽 진단 · 덱 확인 · 적격성을 **버리고** 음수 porosity · φ_SE + φ_AM > 1 을 `OK` 로 내보낸다 — \"기록 전용이라 학습 안전\" 은 현재 경로에서 거짓",
+   "note": "수확기가 φ · porosity 상태를 무조건 OK 로 두고 (`lhs_descriptor_harvest.harvest`), `HANDOVER_EXTRA` 에 wall_record · deck_floor · 이탈 수 · 적격성이 없으며, 기본 수확 디렉터리가 20260919 다 (`lhs_design_dataset.py:1238`).  반례 (실제 함수, lhs00_005): phi_se 0.5136 · phi_am 0.4996 · porosity −1.322 % · 상태 전부 OK · 벽 열 없음 ⇒ φ 합 1.0132 가 타깃으로 나간다.  처방: `calculation_status` 와 `physical_target_status` 분리 · `hold_reason_codes` · `phi_sum_gt_one` · 벽 QC · 규약 ID · 4 종 sha 를 CSV 로 · 최신 수확 명시 선택 · 음수/이탈 케이스로 end-to-end 회귀.  130 행 원값 보존 (0 접기 · 행 삭제 금지) · 양수 112 행만으로 성능 보고 금지 · 음수 제외해 온 생산 코퍼스와 통합 금지.",
+   "evidence_tests": [
+    "scripts/lhs_design_dataset.py",
+    "scripts/lhs_descriptor_harvest.py"
+   ]
+  },
+  {
+   "id": "HND-05",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
+   "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
+   "title": "웹앱 `calc_porosity_dual` 의 ε_union 은 쌍 렌즈만 뺀다 — 삼중 이상 교집합 · 완전 포함 · 벽 clipping 없음 ⇒ 합집합의 자명한 하한보다 작은 값도 낸다",
+   "note": "반례 (실제 함수): 반지름 1 구 3 개 · 쌍 거리 0.2 → V_union 1.8787 < 구 하나 4.1888.  동심 3 구 (d ≤ 0 쌍 건너뜀) → 12.566 (참값 4.189).  130 에 이 극단이 실재한다는 주장은 아니다 — \"union\" 이라는 이름으로 물리 라벨을 교체하면 안 된다는 계약 반례.  참 union 은 별도 계산 (해석/복셀 수렴 확인) + AM–SE 중첩의 상별 배분 정의 필요.  `SELF-49` 의 항목 5 와 같은 뿌리.",
+   "evidence_tests": [
+    "scripts/dem_analysis_core.py"
+   ]
+  },
+  {
+   "id": "HND-06",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
+   "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
+   "title": "`plate_z_from_stl` 이 꼭짓점 z 평균을 평판 검사 없이 높이로 받는다 — z = 0 과 2 의 삼각형을 섞어 넣어도 1 을 돌려준다",
+   "note": "실제 130 STL 이 그렇다는 주장은 아니다 (heckel 메시 실측: 6 꼭짓점 z 동일).  처방: `plate_planarity_span` · 법선 방향 · 유한값 · scale · timestep/출처 기록 · H_gap / H_envelope / H_pushback 분리 · 외피로의 조용한 fallback 금지.  `SELF-49` 항목 3 과 이웃.",
+   "evidence_tests": [
+    "scripts/lhs_descriptor_harvest.py",
+    "scripts/parse_liggghts.py"
    ]
   },
   {
