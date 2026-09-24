@@ -115,6 +115,36 @@ def test_an_arc_that_is_really_there_is_kept_with_the_reason(client):
     assert len(fits_of(client, spectrum_id)) == 1
 
 
+def test_the_undo_shows_what_it_would_remove_before_removing_it(client):
+    """첫 실측 `--dry-run` 뒤에 랩이 `--undo` 를 불렀다 — 저장한 묶음이 없었으니
+    마지막 묶음은 전날의 펠릿 묶음이었다.  되돌리기는 무엇을 지울지 먼저 보여 준다
+    (`GET`).  보여 주기는 같은 코드를 한 트랜잭션 안에서 돌리고 되돌린다."""
+    spectrum_id, old = pellet(client, "B15_pellet.mpr", BLOCKING, "R0-p(R1,CPE1)")
+    assert client.get("/api/eis/audit/refit/undo", params={"format": "text"}).text == (
+        "되돌릴 묶음이 없습니다 — `bml refit` 이 저장한 맞춤이 없습니다.\n")
+    done = client.post("/api/eis/audit/refit").json()
+
+    seen = client.get("/api/eis/audit/refit/undo").json()
+    assert seen["dry_run"] and (seen["origin"], seen["removed"]) == (done["origin"], 1)
+    (one,) = seen["spectra"]
+    assert (one["removed_circuit"], one["now_circuit"]) == ("L1-R0-CPE1", "R0-p(R1,CPE1)")
+    # 아무것도 안 지웠다 — 새 맞춤이 그대로 쓰는 맞춤이다.
+    fits = fits_of(client, spectrum_id)
+    assert len(fits) == 2
+    assert next(fit for fit in fits if fit["in_use"])["circuit"] == "L1-R0-CPE1"
+    assert client.get("/api/eis/spectra").json()[0]["last_circuit"] == "L1-R0-CPE1"
+    text = client.get("/api/eis/audit/refit/undo", params={"format": "text"}).text
+    when = done["origin"][len("refit-"):]
+    assert text.startswith(f"되돌리면 묶음 {done['origin']} ({when[:4]}-{when[4:6]}-"
+                           f"{when[6:8]} {when[9:11]}:{when[11:13]} UTC) 의 맞춤 1개를 지웁니다")
+    assert "아직 아무것도 지우지 않았습니다" in text
+    assert "#1  B15_pellet — L1-R0-CPE1 → R0-p(R1,CPE1)" in text
+
+    gone = client.post("/api/eis/audit/refit/undo").json()
+    assert not gone["dry_run"] and gone["spectra"] == seen["spectra"]
+    assert next(fit for fit in fits_of(client, spectrum_id) if fit["in_use"])["id"] == old["id"]
+
+
 def test_the_text_streams_a_line_per_spectrum_and_ends_with_the_way_back(client):
     pellet(client, "B15_pellet.mpr", BLOCKING, "R0-p(R1,CPE1)")
     pellet(client, "B14_arc.mpr", VISIBLE_ARC, VISIBLE_ARC[0])

@@ -17,7 +17,7 @@
 #   bml reparse    올려 둔 파일을 전부 다시 읽는다 (계산이 바뀌었을 때 — 원본은 그대로)
 #   bml audit      EIS 전부를 검수해 글로 찍는다 (읽기만 — 붙여 넣으면 된다)
 #   bml refit      검수가 권한 회로·하한으로 한꺼번에 다시 맞춘다 (옛 맞춤은 남긴다)
-#   bml refit --dry-run  맞춰 보기만 한다 — `--undo` 는 마지막 묶음을 되돌린다
+#   bml refit --dry-run  맞춰 보기만 한다 — `--undo` 는 지울 묶음을 보여 주고 물은 뒤 되돌린다
 #   bml host open  이 서버를 네트워크에 연다 (다른 기계가 보게) — `bml host local` 로 닫는다
 #   bml password <암호>  바깥에 열 때 쓸 공유 암호를 정한다
 #   bml share      임시 터널을 열어 다른 공유기에서도 접속하게 한다
@@ -5592,29 +5592,39 @@ stream_post() {
   return 0
 }
 
-#: `bml refit [--dry-run | --undo]` — 검수가 권한 회로·하한으로 한꺼번에 다시
-#: 맞춘다 (ADR 0045).
+#: `bml refit [--dry-run | --undo [--yes]]` — 검수가 권한 회로·하한으로 한꺼번에
+#: 다시 맞춘다 (ADR 0045).
 #:
 #: 회로를 실은 **문제** 판정이 있는 스펙트럼과, 저주파 끝이 KK 를 어겨 하한을
 #: 권한 스펙트럼(같은 회로를 그 하한부터, 보완 4)만 맞춘다.  검수가 받아들인 새
 #: 맞춤을 더하고 그것을 쓴다 — **옛 맞춤은 지우지 않는다.**  `--dry-run` 은 맞춰
 #: 보기만 하고, `--undo` 는 마지막 묶음의 맞춤만 지운다 (옛 맞춤으로 돌아간다).
 #:
+#: `--undo` 는 **지울 묶음을 먼저 보여 주고 묻는다** (보완 6).  마지막 묶음이 어느
+#: 것인지 사람은 모를 수 있다 — 첫 실측 `--dry-run` 뒤에 부른 `--undo` 가 그대로
+#: 지웠다면 전날의 펠릿 묶음이 지워졌다.  답이 없으면(터미널이 아니거나 빈 줄)
+#: 지우지 않는다.  `--yes` 면 묻지 않는다.  되돌리기는 맞추지 않으므로 서버가 옛
+#: 커밋이어도 막지 않는다 — 보여 주기 창구가 없는 옛 서버면 그렇다고 말한다.
+#:
 #: 글은 서버가 만들고 한 줄씩 흘려 보낸다 (`stream_post`).  끝나면 `bml audit`
 #: 처럼 데이터 폴더에 남긴다 — 그 글을 붙여 넣어 받는 쪽이 있다.
 cmd_refit() {
-  local url="${SERVER:-$URL}" mode endpoint body dir file stale code label
+  local url="${SERVER:-$URL}" mode=apply yes=no endpoint body dir file stale code label
+  local arg answer
   local -a auth=()
-  case "${1:-}" in
-    "")                          mode=apply ;;
-    --dry-run|dry-run|-n|미리보기) mode=dry ;;
-    --undo|undo|되돌리기)         mode=undo ;;
-    *) die "모르는 선택입니다: $1 — ${GREEN}bml refit${OFF} [--dry-run | --undo]" ;;
-  esac
+  for arg in "$@"; do
+    case "$arg" in
+      "")                          ;;
+      --dry-run|dry-run|-n|미리보기) mode=dry ;;
+      --undo|undo|되돌리기)         mode=undo ;;
+      --yes|-y)                    yes=yes ;;
+      *) die "모르는 선택입니다: $arg — ${GREEN}bml refit${OFF} [--dry-run | --undo] (묻지 않고 되돌리려면 --undo --yes)" ;;
+    esac
+  done
   if ! server_alive "$url" 8; then
     die "서버가 응답하지 않습니다: $url — 먼저 ${GREEN}bml${OFF} 로 띄우세요."
   fi
-  if stale="$(stale_server)"; then
+  if [ "$mode" != undo ] && stale="$(stale_server)"; then
     die "떠 있는 서버가 이전 커밋(${stale% *})의 것입니다 — 저장소는 ${stale#* } 입니다. 옛 판정으로 맞추게 됩니다: ${GREEN}bml${OFF} 로 새로 띄운 뒤 다시 ${GREEN}bml refit${OFF}."
   fi
   if [ -n "${WORKBENCH_PASSWORD:-}" ] && ! hold_gate_jar "$url"; then
@@ -5624,11 +5634,38 @@ cmd_refit() {
   body="$(mktemp "${TMPDIR:-/tmp}/bml-refit.XXXXXX")" || die "임시 파일을 만들지 못했습니다."
 
   if [ "$mode" = undo ]; then
-    step "마지막 묶음을 되돌리는 중 ${DIM}(그 묶음의 맞춤만 지웁니다 — 옛 맞춤은 그대로)${OFF}"
-    code="$(curl -sS -m 300 -X POST ${auth[@]+"${auth[@]}"} -o "$body" -w '%{http_code}' \
+    # 먼저 본다 (GET) — 무엇을 지우고 무엇으로 돌아가는지, 아무것도 지우지 않고.
+    code="$(curl -sS -m 120 ${auth[@]+"${auth[@]}"} -o "$body" -w '%{http_code}' \
             "$url/api/eis/audit/refit/undo?format=text" 2>/dev/null)" || code="000"
     STREAM_CODE="$code"
-    [ "$code" = 200 ] && { say ""; cat "$body"; }
+    if [ "$code" = 200 ]; then
+      say ""; cat "$body"
+      if grep -q '되돌릴 묶음이 없습니다' "$body"; then
+        rm -f "$body"; drop_gate_jar
+        return 0
+      fi
+      if [ "$yes" != yes ]; then
+        say ""
+        printf '  이 묶음을 지울까요? [y/N] '
+        answer=""
+        read -r answer || true
+        case "$answer" in
+          y|Y|yes|YES|ㅇ|ㅇㅇ|네|응) ;;
+          *)
+            [ -n "$answer" ] || printf '\n'
+            say "  그만둡니다 — 아무것도 지우지 않았습니다. 묻지 않고 지우려면 ${GREEN}bml refit --undo --yes${OFF}."
+            rm -f "$body"; drop_gate_jar
+            return 0
+            ;;
+        esac
+      fi
+      step "마지막 묶음을 되돌리는 중 ${DIM}(그 묶음의 맞춤만 지웁니다 — 옛 맞춤은 그대로)${OFF}"
+      : > "$body"
+      code="$(curl -sS -m 300 -X POST ${auth[@]+"${auth[@]}"} -o "$body" -w '%{http_code}' \
+              "$url/api/eis/audit/refit/undo?format=text" 2>/dev/null)" || code="000"
+      STREAM_CODE="$code"
+      [ "$code" = 200 ] && { say ""; cat "$body"; }
+    fi
   else
     if [ "$mode" = dry ]; then
       step "권한 회로·하한으로 맞춰 보는 중 ${DIM}(맞춰 보기만 — 아무것도 저장하지 않습니다)${OFF}"
@@ -5646,6 +5683,9 @@ cmd_refit() {
     200) ;;
     404|405)
       rm -f "$body"
+      if [ "$mode" = undo ]; then
+        die "서버가 되돌리기 전에 보여 주기를 모릅니다 (${STREAM_CODE}) — 옛 코드로 떠 있습니다. 아무것도 지우지 않았습니다: ${GREEN}bml${OFF} 로 새로 띄운 뒤 다시 ${GREEN}bml refit --undo${OFF}."
+      fi
       die "서버가 다시 맞추기를 모릅니다 (${STREAM_CODE}) — 옛 코드로 떠 있습니다. ${GREEN}bml restart${OFF} 로 새 코드를 띄운 뒤 다시."
       ;;
     401)
@@ -5653,6 +5693,10 @@ cmd_refit() {
       die "문에 막혔습니다 — 이 기계에 공유 암호가 안 적혀 있습니다: ${GREEN}bml password <암호>${OFF}"
       ;;
     000)
+      if [ "$mode" = undo ]; then
+        rm -f "$body"
+        die "서버와 연결이 끊겼습니다 — 지웠는지는 ${GREEN}bml refit --undo${OFF} 로 다시 보면 압니다 (지울 묶음을 먼저 보여 줍니다)."
+      fi
       # 받은 것이 있으면 도중에 끊긴 것이고, 서버는 거기까지 저장했다.  하나도
       # 없으면 닿지도 못한 것이다 — 둘을 같은 말로 하면 무를 것이 없는데 무르라고
       # 하게 된다.
@@ -6767,7 +6811,7 @@ main() {
     relay)             shift; cmd_relay "${1:-}" ;;
     reparse|재파싱)    shift; sync_repo; cmd_reparse ;;
     audit|검수)        shift; sync_repo; cmd_audit ;;
-    refit|다시맞춤)    shift; sync_repo; cmd_refit "${1:-}" ;;
+    refit|다시맞춤)    shift; sync_repo; cmd_refit "$@" ;;
     password|passwd)   shift; cmd_password "${1:-}" ;;
     share|tunnel)
       shift

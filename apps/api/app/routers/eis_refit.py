@@ -392,6 +392,56 @@ def refit_by_audit(dry_run: bool = Query(False),
     return out
 
 
+def _undo(session: Session, *, dry_run: bool) -> EisRefitUndoOut:
+    """마지막 묶음의 맞춤을 지운다 — ``dry_run`` 이면 같은 일을 한 트랜잭션 안에서
+    하고 되돌린다.  보여 주는 것과 실제로 하는 것이 같은 코드를 지나야, 미리 본
+    목록과 지운 목록이 어긋나지 않는다."""
+    origin = session.exec(
+        select(SpectrumFit.origin)
+        .where(SpectrumFit.origin.startswith(ORIGIN_PREFIX))   # type: ignore[attr-defined]
+        .order_by(SpectrumFit.origin.desc())                     # type: ignore[attr-defined]
+    ).first()
+    if not origin:
+        return EisRefitUndoOut(dry_run=dry_run)
+    rows = session.exec(select(SpectrumFit).where(SpectrumFit.origin == origin)
+                        .order_by(SpectrumFit.spectrum_id)).all()
+    removed = [(row.spectrum_id, row.circuit, row.frequency_low_hz) for row in rows]
+    for row in rows:
+        session.delete(row)
+    session.flush()
+    out = EisRefitUndoOut(origin=origin, removed=len(removed), dry_run=dry_run)
+    for spectrum_id, circuit, low in removed:
+        record = session.get(SpectrumRecord, spectrum_id)
+        now = _best_fit(session, spectrum_id)
+        if record is not None and now is not None:
+            record.last_circuit = now.circuit
+            session.add(record)
+        out.spectra.append(RefitUndoneOut(
+            id=spectrum_id, name=_name(record) if record else "",
+            removed_circuit=circuit, now_circuit=now.circuit if now else "",
+            removed_low_hz=low, now_low_hz=now.frequency_low_hz if now else None))
+    if dry_run:
+        session.rollback()
+    else:
+        session.commit()
+    return out
+
+
+@router.get("/audit/refit/undo", response_model=EisRefitUndoOut)
+def preview_undo(format: str = Query("json", pattern="^(json|text)$"),
+                 session: Session = Depends(get_session)):
+    """되돌리면 무엇이 지워지고 무엇으로 돌아가는지 — 아무것도 지우지 않는다.
+
+    `bml refit --undo` 가 먼저 이것을 보여 주고 묻는다.  마지막 묶음이 어느 것인지
+    사람은 모를 수 있다: 첫 실측 `--dry-run` 뒤에 `--undo` 를 부른 랩은 저장한
+    묶음이 없었으므로, 그대로 지웠다면 전날의 펠릿 묶음이 지워졌을 것이다.
+    """
+    out = _undo(session, dry_run=True)
+    if format == "text":
+        return PlainTextResponse(render_undo_text(out))
+    return out
+
+
 @router.post("/audit/refit/undo", response_model=EisRefitUndoOut)
 def undo_refit(format: str = Query("json", pattern="^(json|text)$"),
                session: Session = Depends(get_session)):
@@ -400,31 +450,7 @@ def undo_refit(format: str = Query("json", pattern="^(json|text)$"),
     옛 맞춤은 묶음이 지우지 않았으므로 그대로 있고, 고른 것 중 가장 최근 것
     (없으면 χ² 최소)이 다시 쓰는 맞춤이 된다.  묶음이 없으면 아무것도 안 한다.
     """
-    origin = session.exec(
-        select(SpectrumFit.origin)
-        .where(SpectrumFit.origin.startswith(ORIGIN_PREFIX))   # type: ignore[attr-defined]
-        .order_by(SpectrumFit.origin.desc())                     # type: ignore[attr-defined]
-    ).first()
-    out = EisRefitUndoOut()
-    if origin:
-        rows = session.exec(select(SpectrumFit).where(SpectrumFit.origin == origin)
-                            .order_by(SpectrumFit.spectrum_id)).all()
-        removed = [(row.spectrum_id, row.circuit, row.frequency_low_hz) for row in rows]
-        for row in rows:
-            session.delete(row)
-        session.commit()
-        out = EisRefitUndoOut(origin=origin, removed=len(removed))
-        for spectrum_id, circuit, low in removed:
-            record = session.get(SpectrumRecord, spectrum_id)
-            now = _best_fit(session, spectrum_id)
-            if record is not None and now is not None:
-                record.last_circuit = now.circuit
-                session.add(record)
-            out.spectra.append(RefitUndoneOut(
-                id=spectrum_id, name=_name(record) if record else "",
-                removed_circuit=circuit, now_circuit=now.circuit if now else "",
-                removed_low_hz=low, now_low_hz=now.frequency_low_hz if now else None))
-        session.commit()
+    out = _undo(session, dry_run=False)
     if format == "text":
         return PlainTextResponse(render_undo_text(out))
     return out
@@ -671,10 +697,25 @@ def _undone_line(one: RefitUndoneOut) -> str:
     return f"    #{one.id}  {one.name} — {change}"
 
 
+def _batch_time(origin: str) -> str:
+    """``refit-20260923T171818`` → ``2026-09-23 17:18 UTC`` — 이름이 곧 시각이다."""
+    try:
+        when = datetime.strptime(origin[len(ORIGIN_PREFIX):], "%Y%m%dT%H%M%S")
+    except ValueError:
+        return ""
+    return when.strftime("%Y-%m-%d %H:%M UTC")
+
+
 def render_undo_text(out: EisRefitUndoOut) -> str:
     if not out.origin:
         return "되돌릴 묶음이 없습니다 — `bml refit` 이 저장한 맞춤이 없습니다.\n"
-    lines = [f"묶음 {out.origin} 의 맞춤 {out.removed}개를 지웠습니다 — 그 스펙트럼들은 "
-             f"묶음 전의 맞춤으로 돌아갔습니다."]
+    when = _batch_time(out.origin)
+    batch = f"묶음 {out.origin}" + (f" ({when})" if when else "")
+    if out.dry_run:
+        lines = [f"되돌리면 {batch} 의 맞춤 {out.removed}개를 지웁니다 — 그 스펙트럼들은 "
+                 f"이렇게 돌아갑니다 (아직 아무것도 지우지 않았습니다):"]
+    else:
+        lines = [f"{batch} 의 맞춤 {out.removed}개를 지웠습니다 — 그 스펙트럼들은 "
+                 f"묶음 전의 맞춤으로 돌아갔습니다."]
     lines += [_undone_line(one) for one in out.spectra]
     return "\n".join(lines) + "\n"

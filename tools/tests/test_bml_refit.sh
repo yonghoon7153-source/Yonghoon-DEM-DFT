@@ -10,7 +10,9 @@
 #      첫 줄이 화면에 있어야 한다.
 #   2. 끝나면 데이터 폴더에 남긴다.  `--dry-run` 은 dry_run=true 로 부르고 이름도
 #      따로 남긴다.
-#   3. `--undo` 는 되돌리기 창구를 부르고 그 글을 찍는다.
+#   3. `--undo` 는 지울 묶음을 먼저 보여 주고(GET) 묻는다.  "아니" 이거나 답이
+#      없으면 지우는 창구(POST)를 부르지 않는다.  `--yes` 면 묻지 않는다.  서버가
+#      옛 커밋이어도 되돌리기는 막지 않는다 (맞추지 않으므로).
 #   4. 옛 서버(404)면 그렇다고 말하고, 404 본문을 결과처럼 흘리지 않는다.
 #   5. 서버가 옛 커밋으로 떠 있으면 맞추지 않는다 — 옛 판정으로 맞추게 된다.
 #   6. 모르는 선택은 막는다.
@@ -164,17 +166,38 @@ has "서버의 글을 찍는다" "$OUT" "아무것도 저장하지 않았습니�
 check "따로 남긴다" "$(ls "$TMP/data/audit"/eis-refit-dry-*.txt 2>/dev/null | wc -l | tr -d ' ')" "1"
 
 echo
-echo "bml refit --undo — 마지막 묶음만 지운다"
-# 같은 경로가 묶음(파일)과 되돌리기(`…/refit/undo`)의 앞이라 폴더로 바꾼다.
+echo "bml refit --undo — 지울 묶음을 보여 주고 묻는다"
+# 같은 경로가 묶음(파일)과 되돌리기(`…/refit/undo`)의 앞이라 폴더로 바꾼다.  가짜
+# 서버는 GET(보여 주기)과 POST(지우기)에 같은 글을 준다 — POST 만 `posted` 에 남는다.
 rm -f "$ENDPOINT"; mkdir -p "$ENDPOINT"
-printf '묶음 refit-20260923T160320 의 맞춤 1개를 지웠습니다 — 그 스펙트럼들은 묶음 전의 맞춤으로 돌아갔습니다.\n    #12  B15_pellet — L1-R0-CPE1 → R0-p(R1,CPE1)\n' \
+printf '되돌리면 묶음 refit-20260923T160320 (2026-09-23 16:03 UTC) 의 맞춤 1개를 지웁니다 — 그 스펙트럼들은 이렇게 돌아갑니다 (아직 아무것도 지우지 않았습니다):\n    #12  B15_pellet — L1-R0-CPE1 → R0-p(R1,CPE1)\n' \
   > "$ENDPOINT/undo"
-OUT="$( DATA_DIR="$TMP/data" cmd_refit --undo 2>&1 )"; rc=$?
-check "성공으로 끝난다" "$rc" "0"
-check "되돌리기 창구를 부른다" "$(tail -n 1 "$TMP/posted")" "/api/eis/audit/refit/undo?format=text"
-has "지운 것을 찍는다" "$OUT" "#12  B15_pellet — L1-R0-CPE1 → R0-p(R1,CPE1)"
+: > "$TMP/posted"
+OUT="$( printf 'n\n' | DATA_DIR="$TMP/data" cmd_refit --undo 2>&1 )"; rc=$?
+check "아니라고 하면 성공으로 끝난다" "$rc" "0"
+has "지울 묶음을 먼저 보여 준다" "$OUT" "#12  B15_pellet — L1-R0-CPE1 → R0-p(R1,CPE1)"
+has "묻는다" "$OUT" "이 묶음을 지울까요? [y/N]"
+has "지우지 않았다고 말한다" "$OUT" "아무것도 지우지 않았습니다"
+check "아니라고 하면 지우는 창구를 부르지 않는다" "$(wc -l < "$TMP/posted" | tr -d ' ')" "0"
+OUT="$( DATA_DIR="$TMP/data" cmd_refit --undo < /dev/null 2>&1 )"; rc=$?
+check "답이 없으면(터미널이 아니면) 지우지 않는다" "$(wc -l < "$TMP/posted" | tr -d ' ')" "0"
+OUT="$( printf 'ㅇㅇ\n' | DATA_DIR="$TMP/data" cmd_refit --undo 2>&1 )"; rc=$?
+check "그렇다고 하면 성공으로 끝난다" "$rc" "0"
+check "그렇다고 하면 되돌리기 창구를 부른다" "$(tail -n 1 "$TMP/posted")" \
+  "/api/eis/audit/refit/undo?format=text"
+: > "$TMP/posted"
+OUT="$( DATA_DIR="$TMP/data" cmd_refit --undo --yes < /dev/null 2>&1 )"; rc=$?
+check "--yes 면 묻지 않고 지운다" "$(tail -n 1 "$TMP/posted")" "/api/eis/audit/refit/undo?format=text"
+hasnt "--yes 면 묻지 않는다" "$OUT" "[y/N]"
 check "되돌리기는 파일로 남기지 않는다" \
   "$(ls "$TMP/data/audit"/eis-refit-*.txt 2>/dev/null | wc -l | tr -d ' ')" "2"
+printf '되돌릴 묶음이 없습니다 — `bml refit` 이 저장한 맞춤이 없습니다.\n' > "$ENDPOINT/undo"
+: > "$TMP/posted"
+OUT="$( DATA_DIR="$TMP/data" cmd_refit --undo 2>&1 )"; rc=$?
+check "묶음이 없으면 성공으로 끝난다" "$rc" "0"
+has "묶음이 없다고 말한다" "$OUT" "되돌릴 묶음이 없습니다"
+hasnt "묶음이 없으면 묻지 않는다" "$OUT" "[y/N]"
+check "묶음이 없으면 지우는 창구를 부르지 않는다" "$(wc -l < "$TMP/posted" | tr -d ' ')" "0"
 
 echo
 echo "옛 서버 · 옛 커밋 · 모르는 선택"
@@ -184,6 +207,11 @@ check "옛 서버면 실패로 끝난다" "$rc" "1"
 has "옛 코드라고 말한다" "$OUT" "옛 코드로 떠 있습니다"
 has "고칠 명령을 가리킨다" "$OUT" "bml restart"
 hasnt "404 본문을 결과처럼 찍지 않는다" "$OUT" "Not Found"
+: > "$TMP/posted"
+OUT="$( DATA_DIR="$TMP/data" cmd_refit --undo --yes 2>&1 )"; rc=$?
+check "보여 주기를 모르는 옛 서버면 되돌리기도 실패로 끝난다" "$rc" "1"
+has "아무것도 안 지웠다고 말한다" "$OUT" "아무것도 지우지 않았습니다"
+check "옛 서버에는 지우는 창구를 부르지 않는다" "$(wc -l < "$TMP/posted" | tr -d ' ')" "0"
 
 git -C "$REPO" init -q
 git -C "$REPO" -c user.name=t -c user.email=t@example.com commit -q --allow-empty -m one
@@ -193,6 +221,15 @@ OUT="$( DATA_DIR="$TMP/data" cmd_refit 2>&1 )"; rc=$?
 check "옛 커밋의 서버면 실패로 끝난다" "$rc" "1"
 has "어느 커밋이 떠 있는지 말한다" "$OUT" "이전 커밋(01234567)"
 check "아무것도 부르지 않는다" "$(wc -l < "$TMP/posted" | tr -d ' ')" "0"
+# 되돌리기는 맞추지 않는다 — 옛 커밋의 서버라고 막지 않는다.
+mkdir -p "$ENDPOINT"
+printf '되돌리면 묶음 refit-20260923T160320 (2026-09-23 16:03 UTC) 의 맞춤 1개를 지웁니다\n' \
+  > "$ENDPOINT/undo"
+OUT="$( DATA_DIR="$TMP/data" cmd_refit --undo --yes 2>&1 )"; rc=$?
+check "옛 커밋의 서버라도 되돌리기는 된다" "$rc" "0"
+check "옛 커밋의 서버라도 되돌리기 창구를 부른다" "$(tail -n 1 "$TMP/posted")" \
+  "/api/eis/audit/refit/undo?format=text"
+rm -rf "$ENDPOINT"
 rm -f "$HEAD_FILE"
 
 OUT="$( DATA_DIR="$TMP/data" cmd_refit --force 2>&1 )"; rc=$?

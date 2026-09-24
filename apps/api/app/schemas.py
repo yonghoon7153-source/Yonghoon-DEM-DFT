@@ -1777,11 +1777,14 @@ class RefitUndoneOut(BaseModel):
 
 
 class EisRefitUndoOut(BaseModel):
-    """마지막 묶음을 지운 결과.  묶음이 없으면 ``origin`` 이 비었다."""
+    """마지막 묶음을 지운 결과 — 또는 지우면 어떻게 되는지 (``dry_run``).
+    묶음이 없으면 ``origin`` 이 비었다."""
 
     origin: str = ""
     removed: int = 0
     spectra: list[RefitUndoneOut] = []
+    #: 보기만 했다 — 아무것도 지우지 않았다 (`GET …/refit/undo`).
+    dry_run: bool = False
 
 
 class EisReparseChange(BaseModel):
