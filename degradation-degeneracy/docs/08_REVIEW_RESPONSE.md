@@ -7811,3 +7811,186 @@ E8·과거 종결·독립 launcher 미구현을 "새 P0" 로 다시 세지 않�
 이고 §92 (E10) 에서 fixture 로 닫는다. rc 1 과 smoke rc 0 은 다른 결과다 — "full suite 전부 통과" 라 적지 않는다.
 
 **이 대응이 하지 않은 것:** E3·E5·E6·E9·E10 은 §92 이후 · E1/E2/E4 와 과학 목적은 사용자 결정 대기 · 본실행 시작 안 함 · 리뷰어 스크립트 미실행.
+
+## §92 70차 대응 (둘째 묶음) — E5 · E3 · E6 · E10 을 닫다 (`876429562f6a69b59793c70700cb5b375391ab67` · 영수증 `0e6348be9ec80919e0f84ae246294cb6336e9545`)
+
+리뷰어 §9 "다음 회신에서 받을 최소 묶음" ②③⑤ 에 해당한다. 전부 RED 를 먼저 보고 고쳤다 — 새 시험 파일
+`tests/test_gate70_defensive.py` 48 node 는 패치 전 **44 failed / 4 passed** (통과 4 는 목록형 index 양성 대조군 ·
+truthiness 로도 막히던 `sealed="yes"` 대조군 · E10 양성/음성 둘) 이었고, 패치 뒤 48 passed. 변이 3건 등록·관측 (`-k g70` 4/4 물림).
+
+### E5 — reader 를 닫힌 typed variant 로 (`tools/preserve.py`, RUN_SCOPE)
+
+- **발견 그대로:** `_read_exec_class_at()` 은 class enum 과 `content_id` 만 봤다. 리뷰어의 두 레코드 — (1) 두 키만, (2) `sealed=[]`·
+  `evidence=17`·`recorded_at=false`·임의 키 — 를 그대로 받았고 `resolve_execution_class` 는 `sealed` 의 truthiness 를 썼다.
+  RED: `test_g70_e5_01`·`e5_02` (두 레코드 그대로) · `e5_03` (필드별 타입 8 파라미터) — 전부 `DID NOT RAISE`.
+- **고침:** `EXEC_CLASS_RECORD_KEYS_MODERN` (5키: `content_id`·`execution_class`·`evidence`·`recorded_at`·`sealed`) /
+  `EXEC_CLASS_RECORD_KEYS_LEGACY` (4키, 62차 이전 — tracked 등록부의 16건이 이 형태) 두 variant 만 authority.
+  `_typed_exec_class_record()` 가 키 집합·타입(`content_id` hex64 = 조회 키 · class enum · `evidence` 비어 있지 않은 str ·
+  `recorded_at` UTC `%Y-%m-%dT%H:%M:%SZ` · `sealed` **bool 타입**) 을 닫고, 밖이면 `None`("없음") 이 아니라 **`PreserveError`**
+  — 등록부 안의 잘못된 레코드는 미등록이 아니라 authority 의 손상이다 (없음으로 읽으면 `classify_legacy_run` 류 "없으면 만든다" 가 그 위에 얹힌다).
+  읽을 수 없는 파일(`{`)도 같다. `resolve_execution_class` 는 `rec.get("sealed", False) is True`.
+- **seal 결속:** 봉인 digest 를 레코드에 따로 적지 않는다 — `content_id` 자체가 결속이다. 승격은 `_promotion_content_id()` 가
+  **봉인에서** identity 를 다시 만들어 이 키와 맞추므로(62차 P0-1) 봉인이 없거나 낡으면 레코드에 닿지 못한다. 같은 사실을 두 곳에 두지 않는다.
+- **과거 레코드 재작성 없음 (리뷰어 조건):** `test_g70_e5_06` 이 운영 등록부 tracked 367 건 전부가 두 variant 중 하나임을 **읽기만 하고** 확인한다
+  (modern 351 · legacy 16). writer→reader→promotion 회귀: `e5_05` (writer 레코드 통과 · legacy 4키 통과 · `schema` 키 하나 더 붙으면 거부 ·
+  legacy 는 봉인 없는 승격 허용 유지).
+- **fixture 가 진실을 가리고 있었다 (규율 2):** `tests/test_exec_class_capability_59.py::test_a_shared_local_class_conflict_is_fail_closed` 의
+  "다른 clone 에서 온 tracked record" 가 `"schema": "execution-class/v1"` 키를 하나 더 달고 있었고 옛 reader 는 그것을 그대로 읽었다.
+  typed reader 아래서는 충돌에 닿기 전에 형식에서 멈추므로, fixture 를 authority 형식(legacy 4키)으로 고쳤다 — 시험이 재는 것(충돌 fail-closed)은 그대로다.
+- 변이 `exec-class-reader-is-typed-g70` (60차 형태로 되돌림) → 12 node 실패 (`e5_01`·`e5_02`·`e5_03`×8·`e5_04`·`e5_05`), 전부 `DID NOT RAISE PreserveError`.
+  `sealed-records-need-their-seal-g62` 의 preimage 를 새 문장으로 옮겼다 (`--check-preimages` 전 지점 1회).
+
+### E3 — index fail-closed · YAML · 구성원 sha · typed 영수증 소비 (`tools/preserve.py`, RUN_SCOPE)
+
+- **발견 그대로 + 실물에 해당:** `_declared_index_members()` 는 JSON 만 읽고 나머지를 `None`("이 형식은 구성원을 열거하지 않는다") 으로 돌려줬으며
+  호출부는 그때 양방향 대조를 건너뛰었다. 실물 `artifacts/paired_fixed5_v4/payload_sha256.yaml` 은 **YAML** (`경로: sha256`) 이다 —
+  즉 production 묶음에서 index↔묶음 대조는 60차 이후 한 번도 돈 적이 없었다. RED: `test_g70_e3_01` (`{}` index → `[]` 통과) · `e3_02` (4 형식).
+- **고침:** `_declared_index()` 가 (a) mapping `{상대경로: hex64}` (production 형식, JSON 도 YAML 이라 함께), (b) 목록형 `{"members"|"files"|"payload": [...]}` / `[...]`
+  (60차 fixture 형식, sha 없음) 만 받고 그 밖은 `(None, 이유)` → `_verify_declared_bundle` 이 **거부**한다. index 가 sha 를 적었으면 구성원 바이트도 대조한다
+  (같은 길이의 다른 바이트 — 60차 P0-9 리뷰어 실측 — 가 `e3_03` 으로 잡힌다). 양성 대조군 `e3_06`: 실물 원장의 `full_bundle` 증거가 YAML 해석·양방향·구성원 sha 까지 **처음으로** 통과.
+- **fixture 가 진실을 가리고 있었다:** `tests/test_handle_carry_59.py::test_a_bundle_of_plain_files_still_passes` 의 index 가 `{}` 였고 그래서 초록이었다.
+  production 형식의 index 로 고쳤다.
+- **typed 영수증 소비 — 새 production 함수 `attach_bundle_evidence(leg_id, receipt_path, ledger=None, *, repo_root=None)`:**
+  지금까지 `preservation_pending → full_bundle` 전이는 **사람이 YAML 을 손으로 고치고** docs-lint 가 사후에 잡는 구조였다 (production writer 0곳 — 실측: `bundle_uri` 를 쓰는 곳은
+  검사기뿐). 이제 `read_verification_receipt()` 가 `make_receipt.py` 영수증을 닫힌 schema (최상위 5키 · core 7키 · bundle 8키 · restore 5키 · validation 5키 · identity 7키,
+  `schema_version == 2`) 로 읽고 — core_sha 자기 일관성 · `leg_id` 결속 · `validation.ok is True`·`fail == []`·`n_checks == len(checks)` · `restore.mode == empty_root`·`conflicts == 0` ·
+  `member_mismatches == 0` · `rescored_summary` 산출·semantic digest·`outputs_agree` · **`identity.validator_source_digest == 지금 source_digest()`** (낡은 영수증 거부) —
+  그 다음 영수증이 말하는 묶음을 `_verify_declared_bundle` 로 **디스크에서** 다시 확인하고 `fits.parquet` sha 를 대조한 뒤, 원장 lock 안에서 그 다리의 실행 기록이
+  정확히 하나 있고(`unperformed` = 0 이면 거부) `preservation_pending` 이고(`recorded_projection`·`missing` 거부) lifecycle 소유 키가 있을 때만
+  묶음·영수증·validator identity 키를 **더하고** `full_bundle` · `current_validated` 로 올린다. `inference_role` 불변. 같은 영수증 재적용은 멱등, 다른 영수증은 거부.
+  `claim_roles`·`근거` 는 사람의 문장이라 쓰지 않는다 (그 뒤 사람이 적어야 lint 가 초록 — 순서를 E9-3 에 적었다).
+  회귀 정상 1 (`e3_10`) · 부정 12+2 (`e3_11` 파라미터 12 · `e3_12` core sha/최상위 키) · 디스크 우선 (`e3_13`) · 상태 (`e3_14`·`e3_15`·`e3_16`) · 실물 영수증 양성 (`e3_17`).
+- 변이 `an-unreadable-index-is-not-full-coverage-g70` (60차 "대조 생략" 으로 되돌림) → 5 node 실패 (witness `AssertionError: []`) ·
+  `attach-requires-a-passing-validation-g70` (`validation.ok/fail` 검사 제거) → `e3_11` 의 "통과를 말하지 않는다" 2 파라미터 실패.
+- RUN_SCOPE 가 움직였다: `source_digest 86085232b7d8b21c → b705a21a1237ec73`. 영수증 재생성 (clean 트리 `876429562f6a69b59793c70700cb5b375391ab67`, 34/34, core `a8a05444c319b784`), 원장은 검증기 digest·core sha 두 값만 (`0e6348be9ec80919e0f84ae246294cb6336e9545`).
+  `d50295f980ccaa81` 불변.
+
+### E6 — 읽기 전용 영향 지도 + 시험 authority 격리 + 운영 불변 검사 (`docs/22p_gap/registry_impact.md` · `tests/conftest.py`)
+
+- **지도 (census, 기계가 센 값 — `test_g70_e6_03` 이 문서와 실물을 대조):** tracked 최상위 `_exec_class/*.json` **367 = legacy 분류 4 + re-key 12 + 시험 fixture
+  `_complete_artifact` 174 + 시험 leg `L` 177**. 실제 과학 실행을 가리키는 것은 16 이고 **351 은 시험이 남긴 synthetic canonical** 이다 — 리뷰어 문장("367 개 기록의 문구를 읽는
+  것만으로 실제 과학 실행의 canonical 367 개라고 확인할 수 없다") 을 확인해 주는 문서이지 지우는 문서가 아니다. 누가 읽고 쓰는가 · 새 본 실행의 delta 형태(정확히 +2, grid·fit,
+  둘 다 canonical·sealed) · 배타 운영 창 절차를 적었다.
+- **격리 (리뷰어 대안 a):** `tests/conftest.py::_isolate_test_authority` 가 세션 시작(좌표 봉인 bootstrap **앞**)에 RUN_SCOPE tree(`src tools configs scripts run.sh` +
+  `docs/22p_gap/*.py`) 를 바이트 그대로 복사하고 그 안에 원장의 바이트 복사본을 두어 `tools.preserve.DEFAULT_LEDGER` 를 거기로 돌린다. 기본 인자로 가는 모든 파생 root
+  (`_exec_class`·`_frozen_coords`·`_claims`·`_attempts`) 가 그 옆으로 간다. **환경변수 override 는 두지 않는다** — 자식 진입점(`scripts/archive_results.sh` 등)은 자기 `tools/preserve.py`
+  **위치**에서 원장을 유도하므로 격리 tree 의 스크립트를 부르면 in-process 와 같은 사본을 본다 (`isolated_tree()`; `test_lifecycle_e2e.py` 가 49차부터 쓰던 방식의 일반화).
+  `test_compare.py::test_archive_records_computation_commit_and_promotion_is_fail_closed` 가 그렇게 바뀌었다 — 운영 tree 의 wrapper 를 부르면 "등록돼 있지 않다" 로 거부되는데 그것이 맞다.
+- **삭제 → 불변 검사:** 58차의 "시작 때 없던 JSON 을 전부 지운다" 는 없어졌다. `_the_real_authority_is_untouched` 가 세션 시작·끝의 운영 최상위 `_exec_class/*.json`·`_frozen_coords/*.json`
+  이름+sha 를 대조해 다르면 **지우지 않고** 이름을 적어 빨갛게 만든다. 옛 fixture 는 시험 authority 쪽만 정리한다. 실측: 전체 회귀 뒤 `git status` 미추적 0 (58~69차는 매번 175+82).
+- 한계 (그대로 신고): 시험이 띄우는 자식은 운영 authority 를 본다 — smoke namespace 안에서 돌아 `_exec_class/local/`(gitignored) 에만 쓴다. 불변 검사가 세션마다 그것을 확인한다.
+  운영 창 절차(전용 checkout · 실행 중 pytest/commit 금지 · 전후 snapshot · delta +2) 는 E9-3 표.
+
+### E10 — 양성 경로를 ambient 디렉터리에서 떼다 (`tests/test_docs_lint.py`)
+
+- `test_a_smoke_run_cannot_be_promoted_to_a_canonical_report` 의 양성 경로가 `results/grid_fit_v4` 에 기대고 있었고 이 컨테이너에서는 그 디렉터리의 manifest 이름이 identity 규칙(61차 v4)
+  과 맞지 않아 `run_content_id` 가 거부 — 67~70차 회귀가 매번 여기서 빨갰다. 양성 경로는 이제 **격리 authority 에 canonical 로 등록·봉인된 fixture**(`_complete_artifact`) 다.
+  skip 도 가짜 class 레코드도 아니다 — 진짜 writer 가 진짜 등록부(시험 사본)에 쓴다. 음성(smoke) 경로 그대로. `test_g70_e10_01`·`e10_02` 가 같은 것을 독립 파일에서 잰다.
+- **실측 (`0e6348be9ec80919e0f84ae246294cb6336e9545`, clean tree, 시작 HEAD = 끝 HEAD):** 전체 pytest `0 failed · 1855 passed · 2 xfailed (43:10)` · strict smoke `EXIT 0`. 58~70차의 '알려진 실패 1'(E10) 이 없어졌다 — rc 0. 미추적 0 (58~69차는 매번 175+82 — E6 격리의 실측).
+
+### 이 묶음이 하지 않은 것
+
+E1/E2/E4 (사용자 결정 대기 — 구현 vs 한계 라벨) · E9 명세는 §93 · 본실행 시작 안 함 · 과거 351 시험 레코드 정리·class 변경 없음 · 리뷰어 스크립트 미실행.
+
+## §93 70차 대응 (셋째 묶음) — E9 실행 명세 (`plan_leg.py` · GATE71 §2 와 같은 내용)
+
+### 실행 명세 — 정확한 명령·계획·순서·실패 처리 (70차 리뷰 §5 E9 · §"당장 빠진 구체 사항")
+
+### E9-0 과학 목적 (고정 — **사용자 결정 2026-09-24 ("ㅇㅇ 그렇게 하고 71차 md 받자")**)
+
+**`기존 synthetic grid/fit 재실행`** 이다. Stage3 primary 비교가 아니다. 즉 `docs/RESULTS.md` 가 인용하는 격자
+(`configs/grid_fine.yaml`: LLI·LAM_PE·LAM_NE 각 0~0.2 step 0.02, noise {0, 0.001, 0.005}, seed 42 — 3993 조건 → 생성 성공 3069)
+와 같은 config·같은 fit protocol(4 목적함수 · expanded bounds · Nelder-Mead · restart 5 · adaptive · warm-start · reference grid)을
+**현행 code identity 로 다시 계산**해 gate·lifecycle·보존 계약이 실제 실행에서 완주하는지를 보이고, 그 산출을 현행 검증기로 검증·보존한다.
+새 셀 집단·새 C-rate·paired/fixed-bank 조건은 이 실행의 전제가 아니다 (리뷰어: "통상 재실행에 새 셀 집단·새 C-rate 자료를 갑자기 실행 전제로 추가하지 않는다").
+`execution_class`(canonical/smoke) · 보존 상태 · validator 상태 · 과학적 `inference_role` 은 서로 다른 축이다 — 이 실행이 올리는 것은 앞의 셋이고
+`inference_role` 은 사람이 결과를 보고 정한다 (바닥값 `diagnostic`).
+
+### E9-1 정확한 명령 (문자 그대로 — `./run.sh` 만으로는 `--mode` 필수 rc 1)
+
+```bash
+# 실행 전용 checkout · 최종 커밋 876429562f6a69b59793c70700cb5b375391ab67 · clean tree · 실행 중 커밋/pytest/smoke 금지 (E6-b 창)
+cd degradation-degeneracy
+./run.sh --mode all --leg grid_fit_v5 --config configs/grid_fine.yaml --nproc "$(nproc)" --out results/grid_fit_v5
+```
+
+| 인자 | 값 | 왜 |
+|---|---|---|
+| `--mode all` | grid → fit → **finalize** → score → report (`run.sh` :516–576). G70-N1 을 닫은 뒤 하위 argv 가 셸 parser 를 지난다 (`tests/test_runner.py::test_g70_n1_*`) | 한 coordinator 가 소유 증명(`--leg`·`--out`)을 두 phase 에 같이 넘긴다 (49차 P0-3) |
+| `--leg grid_fit_v5` | 계획 index 의 다리 이름. **새 이름** — `grid_fit_v4` 는 legacy roster(58차) 의 이름이고 그 디렉터리를 덮지 않는다 | `assert_planned_leg` 가 `planned:` 의 prospective 항목·active cohort·`authorized_source_digest` 를 본다 |
+| `--config configs/grid_fine.yaml` | RESULTS.md §재현의 격자 config 그대로 (`extends: base.yaml`) | `run.sh` 기본 `configs/base.yaml` 에는 `grid:` 절이 없어 1 조건이 된다 — 기본값으로는 그 실행이 아니다 |
+| `--out results/grid_fit_v5` | grid·fit 이 **같은** 디렉터리에 굳는다 (`all` 은 `--in "$D"` = `--out`). 기본 OUT 은 timestamp 경로(`results/run_YYYYmmdd_HHMMSS`)라 명시한다 | 계획 `run_spec.grid.out` = `run_spec.fit.out` = `run_spec.fit.in` = `results/grid_fit_v5` 와 문자 그대로 같아야 claim 이 열린다 |
+| fit 옵션 | 주지 않는다 → objectives.yaml 전체 4종 · `--bounds expanded` · `n_restarts` auto=5 · adaptive · warm-start · `--reference grid` · `--halfcell-method ocp` | RESULTS.md §재현의 fit 과 같은 protocol (그쪽은 `--objective` 네 이름과 `--n-restarts 5` 를 명시했지만 값이 기본과 같다) |
+| `--nproc $(nproc)` | 결과를 바꾸지 않는 축 — 승인 spec 에 없다 (48차 P0-5) | 기계마다 다르다 |
+| 환경변수 | `CANONICAL_RUN` 을 **주지 않는다** → 기본 `grid_fit_v4` → 보고서는 `docs/RESULTS_grid_fit_v5.md` 로 간다 (`run.sh` :492–495) | `docs/RESULTS.md`(인용 정본)를 실행이 덮지 않는다. 정본 교체는 사람이 결과를 보고 따로 한다 |
+
+### E9-2 계획 항목 (prospective) — 사람이 적고 커밋한다
+
+현재 원장: `planned` 8 = 전부 `executed`·`retrospective` (2026-08-20/25 이전 실행의 역사 목록) · cohort `g18_2026_09_15` 만 `active`, `prospective_legs: []`.
+**`grid_fit_v5` 항목은 없다** (리뷰어 지적 그대로). 절차:
+
+1. 최종 커밋(RUN_SCOPE 마지막 변경 뒤)에서, **실행할 기계에서**:
+   ```bash
+   python3 docs/22p_gap/plan_leg.py --leg grid_fit_v5 --cohort g18_2026_09_15 \
+       --config configs/grid_fine.yaml --out results/grid_fit_v5 \
+       --recorded-on 2026-09-25 --근거 "71차 게이트 — 현행 code identity 로 grid_fine 격자 grid/fit 재실행 (목적 E9-0)"
+   ```
+   이 도구는 production 과 **같은 함수**(`live_grid_axis`·`live_fit_axis`·`leg_run_spec`)로 `run_spec` 을 만들어 **출력만** 한다.
+   원장을 쓰지 않는다 — 리뷰어 제약("사용자 승인 없이 승인 JSON 을 true 로 바꾸지 않는다").
+2. 사람이 출력 블록을 `LEG_PRESERVATION.yaml` 의 `planned:` 에 붙이고 cohort `g18_2026_09_15` 의 `prospective_legs` 에 `grid_fit_v5` 를 더한다.
+   `authorized_source_digest` = 그 커밋의 `source_digest` (= b705a21a1237ec73). `discharged_cache_sha256` 은 그 기계의 `.cache/discharged_state/` 실재 여부를 담는다
+   (있으면 그 바이트, 없으면 `null` = 이 실행이 계산한다 · 캐시 읽기 금지).
+3. 그 커밋 = **승인 행위**. 이후 RUN_SCOPE 가 바뀌면 gate 가 거부한다 (의도).
+4. `assert_planned_index_consistent()` 가 통과하는지 `python3 -c "from tools.preserve import assert_planned_index_consistent as f; print(f())"` 로 본다.
+
+**이 컨테이너에서 실측한 dry 출력 (커밋 `87642956` 의 RUN_SCOPE, 2026-09-24 — 원장에 넣지 않았다):** 조건 3993 (= `grid_curves_v4` 의 `n_conditions` 3993 · 생성 성공 3069 은 실행이 정한다) ·
+목적함수 4 (`pocv`·`pocv_dvdq`·`pocv_dvdq_dqdv`·`dqdv_only`) · `bounds_preset expanded` · `Nelder-Mead`·restart 5·adaptive·warm_start · `use_noisy true` ·
+`reference grid`(`halfcell_cache_sha256 null`) · `row_selection full` · `in = out = results/grid_fit_v5` · `in_digest null` · `discharged_cache_sha256 872b80e1…`
+(이 기계의 `.cache/discharged_state/` 캐시를 결속 — 실행 기계에 그 바이트가 없으면 gate 가 거부하므로 **실행 기계에서 다시 뽑는다**) · `smoothing_backend banded_cache`
+(환경변수 `DD_SMOOTH_CACHE` 가 정한다 — 52차 P0-6 축; 계획을 뽑는 shell 과 실행 shell 의 환경이 같아야 한다) · `source_digest b705a21a1237ec73` ·
+`run_spec_digest 94105f53dd2ecc1c…`. 최종 커밋에서 다시 뽑으면 `authorized_source_digest` 만 달라진다 (RUN_SCOPE 가 더 안 바뀌면 같다).
+
+### E9-3 순서 — 실행 · 보존 · 영수증 · 원장 (한 프로세스가 아니다; 각 단계의 receipt/상태 전이)
+
+| # | 단계 | 명령 | 상태 전이 / receipt |
+|---|---|---|---|
+| 0 | 창 열기 (E6-b) | `git rev-parse HEAD` · `git status --porcelain` 빈 출력 · `registry_before.txt` (`_exec_class/*.json` 이름+sha) | — |
+| 1 | 실행 | `./run.sh --mode all --leg grid_fit_v5 --config configs/grid_fine.yaml --nproc "$(nproc)" --out results/grid_fit_v5` | plan `planned→running→executed` · claim 발급/소비/삭제 · `_exec_class` +2 (grid·fit, canonical, sealed) · `legs` 에 `preservation_status: preservation_pending` (`leg_finalize`, run.sh :298–320) · `docs/RESULTS_grid_fit_v5.md` |
+| 2 | 보관 | `ARCHIVE_DEST=artifacts ./scripts/archive_results.sh results/grid_fit_v5` (= `tools.archive_bundle bundle` + 승격 primitive `assert_promotable` + freshness) | `artifacts/grid_fit_v5/` (payload_sha256.yaml · fits · manifests · inputs) · `artifacts/artifact_index.yaml` 갱신 |
+| 3 | 영수증 | `python3 docs/22p_gap/make_receipt.py grid_fit_v5` | `docs/22p_gap/receipts/grid_fit_v5.validate.yaml` (empty-root 복원 · validate_provenance · 재채점 · core_sha) |
+| 4 | 원장 전이 (**typed 소비**, 70차 E3) | `python3 -c "from tools.preserve import attach_bundle_evidence as f; print(f('grid_fit_v5','docs/22p_gap/receipts/grid_fit_v5.validate.yaml'))"` | `preservation_pending → full_bundle` · `validation_status → current_validated` · evidence 에 묶음·영수증·validator identity · `inference_role` 불변(`diagnostic`) |
+| 5 | 사람 | `claim_roles`·`근거` 를 그 leg 에 적는다 (docs-lint 가 요구) | — |
+| 6 | 창 닫기 | `registry_after.txt` · delta = 정확히 +2 · 그 다음에야 `python -m pytest tests/ -q` + `./scripts/smoke_e2e.sh` | 커밋 (`artifacts/` · `docs/22p_gap/receipts/` · 원장 · 보고서) |
+
+`all` 은 archive 를 부르지 않고 finalize 출력이 `preservation_pending` 이라고 스스로 말한다 (run.sh :318). 2~4 는 별도 명령이고 각각 receipt 가 남는다.
+
+### E9-4 실패 처리
+
+| 어디서 | 무엇을 한다 | 무엇을 하지 않는다 |
+|---|---|---|
+| grid 도중 (28 분) | 로그 전문 보존 · claim 은 `running` 으로 남는다 → `precheck_leg_run` 의 resume 경로(같은 token·같은 source_digest)로 **같은 명령을 다시** 돌려 이어간다 (`--resume` 은 chunk 재개) | 계획 항목을 고치지 않는다 · RUN_SCOPE 를 고치지 않는다 (고치면 claim 이 거부) |
+| fit 도중 (10 h) | 같다 — chunk 단위 `fit_completed.jsonl` 재개 | 부분 fits 로 report/archive 하지 않는다 (finalize 가 phase 미완으로 거부한다) |
+| finalize 거부 | 사유 그대로 보존 (`phase 가 남았다` / `결속 없음`) → 코드 결함이면 **실행 실패로 기록**하고 게이트로 돌아간다 | 원장을 손으로 `executed` 로 만들지 않는다 |
+| archive/영수증/attach 거부 | 사유 보존 · `preservation_pending` 유지 | 영수증을 손으로 쓰지 않는다 (`_주의` 문장 그대로) |
+| 어느 단계든 | INCOMPLETE 라벨 — "실행 시작 SHA · 실패 단계 · rc · stderr 마지막 줄" 을 원장 §에 적는다 (COMSOL 갈래와 같은 규칙) | 실패를 성공으로 바꾸는 재실행을 조용히 하지 않는다 |
+
+### E9-5 Gate63 §0 적용성 표 (리뷰어 요구 — 한 번)
+
+| Gate63 §0 항목 | 이번에 사용 / 완료 근거 | 범위 제외 | 명시적으로 보증하지 않음 |
+|---|---|---|---|
+| P0-1 producer 결속 (`row_projection.py` projection/restart 압축 payload · typed manifest · producer receipt) — **E1** | — | — | ✔ 미구현. 라벨: "projection producer 독립 결속 미검증". 이 실행은 `row_projection.py` 의 강한 producer 주장을 쓰지 않는다 |
+| trusted launcher 의 source 측정 — **E2** | — | — | ✔ `source_digest` 는 실행 코드의 디스크 **자기 측정**이다. 독립 launcher attestation 없음 |
+| P0-4 typed 보존 영수증 **소비** — **E3** | ✔ `attach_bundle_evidence()` (70차) 가 `make_receipt.py` 영수증을 닫힌 schema 로 읽어 원장을 올린다 · `_verify_declared_bundle` 이 YAML index 를 해석하고 구성원 sha 를 대조한다 · 회귀 `test_gate70_defensive.py::test_g70_e3_*` | — | 영수증 서명은 없다 (같은 principal 이 만든다) |
+| 변이 증거의 독립 replay — **E4** | — | — | ✔ `mutation_replay.py` 는 우리가 돌리고 리뷰어는 정적 대조. 표본(premise 4건 + g70 1건)만 실행. "전수 독립 replay 완료" 라 적지 않는다 |
+| 묶음을 immutable content-addressed object 로 먼저 게시 | — | — | ✔ `artifacts/` 는 mutable directory + Git 이다. `bundle_content_id` 가 내용 주소를 기록하지만 object-lock 은 없다 |
+| 실행 class 5종 중 3종 미구현 · 등록부 삭제 절차 | 사용하는 것: `canonical`·`smoke` 둘 | ✔ 나머지 class · 삭제 절차는 이 실행이 부르지 않는다 (과거 351 시험 레코드 정리는 별건 — `registry_impact.md` §5) | — |
+| baseline·sweep1d·wsweep 계획 gate | — | ✔ `all` 체인은 wsweep/sweep1d/baseline 을 부르지 않는다. `docs/RESULTS_grid_fit_v5.md` 에는 wsweep 절이 없다 (RESULTS.md 의 §재현 wsweep 줄은 이 실행 밖) | — |
+| 실물 object-lock adapter · power-loss 모델 | — | — | ✔ 보증하지 않는다. `_mkdir_durable`·fsync 는 crash-consistency 의 **우리 쪽 최선**이고 전원 손실 모델을 증명한 것이 아니다 |
+| publisher 전용 OS principal | — | — | ✔ 단일 principal(같은 사용자)이 실행·보관·원장을 다 쓴다. 계약 §13.3 의 협조적 배포 경계 |
+| 외적타당도 #50 (`truth_provenance` 를 기계 계약에) | — | ✔ 이 실행의 truth 는 PyBaMM 합성이고 그 provenance 는 `curves_manifest.yaml`(producer 서명)에 있다. 실셀 truth 는 이 실행의 대상이 아니다 | — |
+| Gate63 §0 신고 ①~⑧ (영수증 frame · 되돌림 · F68 이전 manifest · sink freshness · nested wsweep · 시험 오염 · 저장소 밖 staging · PyBaMM 의존) | ⑥ 시험 오염 → **70차 E6 로 닫음** (시험 authority 격리 + 운영 불변 검사) | ⑤ nested wsweep (이 실행에 없음) · ⑦ 저장소 밖 입력 (입력은 `results/` 안) | ①②③④⑧ 그대로 신고 유지 |
+
+### E9-6 예산
+
+grid ≈ 28 분 · fit ≈ 10 시간 (이 기계, `nproc` 기준) · archive+영수증 ≈ 5 분 · 회귀+smoke ≈ 45 분. 실패 시 재개 1회까지 같은 계획 아래에서; 그 이상은 게이트로.
+
