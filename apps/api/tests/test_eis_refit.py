@@ -285,11 +285,32 @@ def test_a_value_the_window_leaves_undetermined_is_named_without_a_guessed_cause
     assert _value_lines(one) == [
         "    값: R1 5.94 → 0.841 (-86 %) · 나머지 1개는 1 % 안",
         "    새로 미결정: R0 — 하한 위의 점만으로는 정해지지 않습니다"]
-    # 맞춤이 저장한 사유는 옮긴다 — 쓰던 값과 데이터의 두 골짜기 (보완 4).
+    # 맞춤이 저장한 사유는 옮긴다 — 쓰던 값과 데이터의 두 골짜기 (보완 5).
     one.values[0].reason = "seed_spread"
     assert _value_lines(one)[1] == (
         "    새로 미결정: R0 (같은 χ² 에 시작점마다 다른 값) — 하한 위의 점만으로는 "
         "정해지지 않습니다")
+
+
+def test_a_value_that_was_not_measured_before_is_not_said_to_have_moved():
+    """두 번째 실측 맞춰 보기: #13 의 R0 가 "0.000372 → 19 (+5101431 %)" 로 찍혔다.
+    옛 R0 는 0 에 붙은 미결정 값이었다 — 측정이 아닌 수에서 몇 % 움직였다고 하지
+    않고, 새로 정해진 값으로 따로 적는다."""
+    from app.routers.eis_refit import _value_lines
+    from app.schemas import RefitSpectrumOut, RefitValueOut
+
+    one = RefitSpectrumOut(
+        id=13, name="Dcell11_4_2V_after400_rest_1h_0_C01", old_fit_id=1,
+        old_circuit=FULL[0], new_circuit=FULL[0],
+        values=[RefitValueOut(name="R0", old=0.000372, new=19.0, was_determined=False),
+                RefitValueOut(name="R1", old=258.0, new=262.0),
+                RefitValueOut(name="TL1_Q", old=1.73e-05, new=3.0e-05, determined=False,
+                              reason="relative_stderr")])
+    assert _value_lines(one) == [
+        "    값: R1 258 → 262 (+2 %)",
+        "    새로 정해짐: R0 19 — 옛 맞춤에서는 미결정이었습니다",
+        "    새로 미결정: TL1_Q (오차 막대가 값의 절반 넘음) — 하한 위의 점만으로는 "
+        "정해지지 않습니다"]
 
 
 def test_one_spectrum_that_breaks_does_not_stop_the_batch(client, monkeypatch):

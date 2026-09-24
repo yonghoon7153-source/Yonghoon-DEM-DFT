@@ -649,36 +649,59 @@ def _dropped(one: RefitSpectrumOut) -> str:
 #: 풀셀의 TL 회로는 파라미터가 열셋이라 전부 적으면 한 줄이 읽히지 않는다.
 MOVED_VALUE = 0.01
 
+#: 맞춤이 저장한 미결정 사유 (`wrdkit.eis.fit.Parameter.reason`, 정해진 어휘) — 글에
+#: 옮기는 말.  모르는 사유는 이름만 적는다.
+_UNDETERMINED_WORDS = {
+    "seed_spread": "같은 χ² 에 시작점마다 다른 값",
+    "relative_stderr": "오차 막대가 값의 절반 넘음",
+    "rank_deficient": "다른 값과 묶여 합만 정해짐",
+    "jacobian_insensitive": "바꿔도 곡선이 안 움직임",
+    "at_lower_bound": "하한에 붙음",
+    "at_upper_bound": "상한에 붙음",
+    "structural_alias": "회로상 짝과 못 가름",
+}
+
 
 def _value_lines(one: RefitSpectrumOut) -> list[str]:
-    """같은 회로로 하한만 올렸을 때 — 정해진 값 중 1 % 넘게 움직인 것의 옛 → 새,
-    그리고 이번에 정해지지 않게 된 값.  회로가 바뀌었으면 비었다 (같은 이름이
-    다른 소자다).
+    """같은 회로로 하한만 올렸을 때 — 값이 어떻게 됐나.  회로가 바뀌었으면 비었다
+    (같은 이름이 다른 소자다).
 
-    미결정이 된 까닭은 짐작하지 않는다.  첫 실측 맞춰 보기에서 #33 의 R0 (고주파
-    절편)가 "뺀 점들이 정하던 값" 으로 적혔다 — 저주파 점이 정하던 값이 아니라,
-    아크와 TL 이 역할을 바꾸며 미결정이 된 것이다.  맞춤이 **저장한** 사유만
-    옮긴다: ``seed_spread`` 는 쓰던 값과 데이터로 잡은 시작점이 같은 χ² 에 다른
-    값으로 닿았다는 뜻이다 (`fit_circuit` 의 ``start_from``)."""
+    - ``값``: 옛 맞춤과 새 맞춤 **둘 다 정한** 값 중 1 % 넘게 움직인 것.
+    - ``새로 정해짐``: 옛 맞춤에서는 미결정이던 값.  옛 수는 측정이 아니었으니
+      몇 % 움직였다고 하지 않는다 — 두 번째 실측 맞춰 보기에서 경계(0)에 붙어
+      있던 #13 의 R0 가 "0.000372 → 19 (+5101431 %)" 로 찍혔다.
+    - ``새로 미결정``: 옛 맞춤에서는 정했던 값, 맞춤이 저장한 사유와 함께.  사유를
+      짐작하지 않는다 — 첫 실측 맞춰 보기에서 #33 의 R0 (고주파 절편)가 "뺀 점들이
+      정하던 값" 으로 적혔는데, 저주파 점이 정하던 값이 아니었다.
+    """
     if not one.values:
         return []
-    moved, still = [], 0
+    moved, found, still = [], [], 0
     for v in one.values:
-        if not v.determined or v.old is None or v.new is None:
+        if not v.determined or v.new is None:
             continue
-        if v.old and abs(v.new - v.old) > MOVED_VALUE * abs(v.old):
+        if not v.was_determined or v.old is None:
+            found.append(f"{v.name} {_g(v.new)}")
+        elif v.old and abs(v.new - v.old) > MOVED_VALUE * abs(v.old):
             moved.append(f"{v.name} {_g(v.old)} → {_g(v.new)} "
                          f"({(v.new - v.old) / abs(v.old) * 100:+.0f} %)")
         elif v.old or v.new:
             still += 1
-    lost = [v.name + (" (같은 χ² 에 시작점마다 다른 값)" if v.reason == "seed_spread" else "")
-            for v in one.values if not v.determined and v.was_determined]
+    lost = []
+    for v in one.values:
+        if v.determined or not v.was_determined:
+            continue
+        why = _UNDETERMINED_WORDS.get(v.reason, "")
+        lost.append(f"{v.name} ({why})" if why else v.name)
     lines = []
     if moved:
         lines.append("    값: " + " · ".join(moved)
                      + (f" · 나머지 {still}개는 1 % 안" if still else ""))
     elif still:
         lines.append(f"    값: 정해진 {still}개 모두 1 % 안에서 그대로")
+    if found:
+        lines.append("    새로 정해짐: " + " · ".join(found)
+                     + " — 옛 맞춤에서는 미결정이었습니다")
     if lost:
         lines.append("    새로 미결정: " + ", ".join(lost)
                      + " — 하한 위의 점만으로는 정해지지 않습니다")
