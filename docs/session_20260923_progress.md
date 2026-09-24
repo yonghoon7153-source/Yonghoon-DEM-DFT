@@ -223,4 +223,6 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
   Codex 리뷰는 재수확 실측을 붙여서.  다음 = WSL 130 재수확.
 - ✅ J16 재수확 130/130 (`4ee1038c3`, WSL) — 교차검사 SAME 130 · exact 130 · 덱 바닥 0 130 → `docs/data/lhs_descriptors_20260924/` ·
   LHS-10 · 11 · 12 claimed_fixed.  새로: 바닥 벽 재질 SE (`LHS-14`) · 음수 ε_sphere 18 건 (`LHS-15`, J6).  다음 = Codex 리뷰 패키지.
+- J17 바닥 SE 는 **의도** (사용자: 양극 밑 SE 분리막 · 위 SUS 플런저) → `LHS-14` wontfix · (가) = LHS 고유 · (나) ≈ 단단한 바닥 (생산 덱 비교용, 가설).
+  Codex 요청서 `docs/reviews/codex_request_lhs_porosity_thickness_20260924.md` (Q1–Q7).  인계표는 판정까지 보류.
 

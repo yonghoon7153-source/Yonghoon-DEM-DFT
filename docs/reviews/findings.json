@@ -4687,16 +4687,17 @@
   {
    "id": "LHS-14",
    "severity": "P2",
-   "status": "open",
+   "status": "wontfix",
    "owner": "claude",
    "found_by": "claude (재수확 덱 확인 09-24 — `deck_floor.wall_type`)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "LHS 덱의 바닥 벽 재질이 **SE** 다 (bimodal type 3 · mono type 2) — 생산 덱 real_4 는 type 1 (AM_P).  AM 이 무른 바닥에 깊게 박혀 벽 밖 부피가 ΣV 의 중앙 0.6 % · 최대 4.4 %",
-   "note": "`fix … wall/gran … primitive type N zplane 0.0` 의 N = 벽의 물성 type.  130/130 이 SE type 이다.  생산 덱 (`docs/data/phase_a_6mah/in.real_4.liggghts:83`) 은 `primitive type 1` (AM_P, E 1.4e8 sim).  무른 바닥이라 가장 큰 AM 이 반지름의 50–90 % 를 바닥에 묻는다 (`LHS-12` 의 깊이 분포) · (나) − (가) porosity 중앙 0.61 %p · 최대 2.53 %p (mono_AM_P 중앙 1.20).  의도 (예: 분리막 SE 층 표현) 인지 **저자 확인 필요** — 의도라면 기록만, 아니라면 LHS 값을 생산 코퍼스와 비교할 때 계통 차이로 라벨.  플래튼 메시의 type 은 아직 안 봤다.",
+   "note": "`fix … wall/gran … primitive type N zplane 0.0` 의 N = 벽의 물성 type.  130/130 이 SE type 이다.  생산 덱 (`docs/data/phase_a_6mah/in.real_4.liggghts:83`) 은 `primitive type 1` (AM_P, E 1.4e8 sim).  무른 바닥이라 가장 큰 AM 이 반지름의 50–90 % 를 바닥에 묻는다 (`LHS-12` 의 깊이 분포) · (나) − (가) porosity 중앙 0.61 %p · 최대 2.53 %p (mono_AM_P 중앙 1.20).  의도 (예: 분리막 SE 층 표현) 인지 **저자 확인 필요** — 의도라면 기록만, 아니라면 LHS 값을 생산 코퍼스와 비교할 때 계통 차이로 라벨.  플래튼 메시의 type 은 아직 안 봤다.\n★ 덱 확인 (사용자 grep 09-24): 플래튼 메시는 `type 1` (AM) · 바닥은 SE type — 박힌 부피가 거의 다 바닥 쪽인 까닭 (바닥 0.60 % vs 플래튼 0.08 %).",
    "evidence_tests": [
     "docs/data/lhs_descriptors_20260924/README.md",
     "scripts/lhs_descriptor_harvest.py"
-   ]
+   ],
+   "decision_note": "의도된 모델 선택 (사용자 09-24): 실제 양극 가압에서 양극 밑은 SE 분리막, 위는 SUS 플런저다 — 플런저는 AM 물성으로 충분해 플래튼은 type 1, 바닥은 SE type 으로 뒀다.  ⇒ 바닥에 박힌 부피 = AM 이 분리막 SE 를 누르고 들어간 것 (크기는 연화 E 에 좌우).  결함이 아니라 **생산 덱 (바닥 AM) 과의 계통 차이**로 라벨한다.  (나) pushback 은 \"바닥이 단단했다면\" 에 가까운 값으로 읽을 수 있다 — 이 해석의 타당성은 Codex 리뷰 Q1 (판단 J17)."
   },
   {
    "id": "LHS-15",
