@@ -329,7 +329,8 @@ def _value_changes(old: list[dict], new: list[dict]) -> list[RefitValueOut]:
             name=str(row.get("name")), new=_number(row.get("value")),
             old=_number(was.get("value")) if was else None,
             determined=_determined(row),
-            was_determined=_determined(was) if was else False))
+            was_determined=_determined(was) if was else False,
+            reason=str(row.get("reason") or "")))
     return out
 
 
@@ -630,7 +631,9 @@ def _value_lines(one: RefitSpectrumOut) -> list[str]:
 
     미결정이 된 까닭은 짐작하지 않는다.  첫 실측 맞춰 보기에서 #33 의 R0 (고주파
     절편)가 "뺀 점들이 정하던 값" 으로 적혔다 — 저주파 점이 정하던 값이 아니라,
-    아크와 TL 이 역할을 바꾸며 미결정이 된 것이다."""
+    아크와 TL 이 역할을 바꾸며 미결정이 된 것이다.  맞춤이 **저장한** 사유만
+    옮긴다: ``seed_spread`` 는 쓰던 값과 데이터로 잡은 시작점이 같은 χ² 에 다른
+    값으로 닿았다는 뜻이다 (`fit_circuit` 의 ``start_from``)."""
     if not one.values:
         return []
     moved, still = [], 0
@@ -642,7 +645,8 @@ def _value_lines(one: RefitSpectrumOut) -> list[str]:
                          f"({(v.new - v.old) / abs(v.old) * 100:+.0f} %)")
         elif v.old or v.new:
             still += 1
-    lost = [v.name for v in one.values if not v.determined and v.was_determined]
+    lost = [v.name + (" (같은 χ² 에 시작점마다 다른 값)" if v.reason == "seed_spread" else "")
+            for v in one.values if not v.determined and v.was_determined]
     lines = []
     if moved:
         lines.append("    값: " + " · ".join(moved)

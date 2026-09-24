@@ -245,6 +245,38 @@ def test_a_flat_valley_is_undetermined_even_with_a_small_error_bar():
     assert "TL1_Rct" in result.undetermined
 
 
+def test_a_seed_does_not_hide_an_equally_good_valley():
+    """ADR 0045 보완 4 — 실측 풀셀 #33 의 쌍둥이를 `bml refit` 처럼 1.63 Hz 부터.
+
+    옛 맞춤의 값에서 시작하면 ``R1`` = 6.3 Ω, ``n`` 0.33 에, 데이터로 잡은
+    시작점에서는 0.55 Ω, ``n`` 0.97 에 닿고 chi^2 는 0.3 % 안에서 같다.  쓰던 값
+    둘레의 흩어짐(다섯 배, ``n`` ±0.15)은 두 번째 골짜기에 못 가서, 따로 맞추면
+    둘 다 제 ``R1`` 을 '결정됨' 이라 했다.  두 식구를 한 풀에 넣으면 흩어짐 검사가
+    둘을 본다."""
+    pytest.importorskip("scipy")
+    circuit = "L1-R0-p(R1,CPE1)-TL1"
+    old = {"L1": 4.1e-07, "R0": 3.02, "R1": 5.94, "CPE1_Q": 0.0101, "CPE1_n": 0.342,
+           "TL1_Ri": 20.3, "TL1_Re": 1e-3, "TL1_Rct": 0.0446, "TL1_Q": 5.87e-05,
+           "TL1_n": 0.993, "TL1_Wr": 2.02, "TL1_Wn": 0.716, "TL1_Wt": 14.7}
+    model = parse_circuit(circuit)
+    frequency = np.logspace(np.log10(7e6), -2, 90)
+    z = model.impedance([old[name] for name in model.parameter_names], frequency)
+    rng = np.random.default_rng(11)
+    z = z * (1 + rng.normal(0, 0.003, z.shape) + 1j * rng.normal(0, 0.003, z.shape))
+    data = Spectrum(frequency, z.real, z.imag)
+    window = (1.63, 1e7)
+
+    seeded = fit_circuit(data, circuit, frequency_range=window, start_from=old,
+                         restarts=4)
+    r1 = next(p for p in seeded.parameters if p.name == "R1")
+    assert r1.spread_low < 1.0 and r1.spread_high > 5.0      # 두 골짜기를 다 봤다
+    assert not r1.determined
+    # 데이터로 잡은 식구가 따로 돌았다 — 시작점이 한 식구보다 많다.
+    alone = fit_circuit(data, circuit, frequency_range=window, restarts=4)
+    assert seeded.starts > alone.starts
+    assert seeded.chi_squared <= alone.chi_squared * (1 + 1e-6)
+
+
 def test_the_scatter_check_does_not_downgrade_a_parameter_that_holds_still():
     """한쪽으로만 틀린다 — 못 보고 지나칠 수는 있어도 없는 흩어짐을 만들지 않는다."""
     circuit, data = _flat_valley_spectrum()

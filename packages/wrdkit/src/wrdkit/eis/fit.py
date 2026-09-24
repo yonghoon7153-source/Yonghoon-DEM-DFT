@@ -433,8 +433,18 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
 
     ``start_from`` overrides the data-driven guess for the parameters it names and
     leaves the rest to it -- how `bml refit` starts a new circuit from the old
-    fit's values (``wrdkit.eis.refit.seed_values``, ADR 0045).  The scattered
-    starts below then scatter around the seeded point.
+    fit's values (``wrdkit.eis.refit.seed_values``, ADR 0045).  The starts below
+    are then built around the seeded point **and, as a second family, around
+    the data-driven guess itself**; each family is polished as a fit of its
+    own and the answers are pooled.  A seed sits in the valley it was seeded
+    into, and the scatter around it (a factor of five, ``n`` by 0.15) does not
+    reach a second valley where an equally good answer may lie -- then the
+    seed-spread check below has nothing to compare and calls the seeded value
+    measured.  Twins of the lab's full cells #33 and #34, fitted from 1.63 and
+    2.05 Hz (ADR 0045 보완 4): from the old values ``R1`` = 6.3 ohm with ``n``
+    0.33, from the data 0.55 ohm with ``n`` 0.97, chi-square the same to
+    0.3 % -- and each fit alone called its own ``R1`` determined.  Pooled,
+    the check sees both.  Only seeded fits pay for the second search.
 
     ``restarts`` scatters extra starting points around the data-driven guess
     (a factor of a few on each parameter, log-uniform).  Left unset it depends
@@ -495,18 +505,19 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
                        dropped_inductive, dropped_range)
     weights = 1.0 / magnitude
 
-    start = np.asarray(guess, dtype=float) if guess is not None else \
-        initial_guess(working, model)
+    unseeded = np.clip(np.asarray(guess, dtype=float) if guess is not None else
+                       initial_guess(working, model),
+                       model.lower * 1.0001, model.upper * 0.9999)
+    start = unseeded
     if start_from:
-        start = start.astype(float, copy=True)
+        start = unseeded.astype(float, copy=True)
         for i, name in enumerate(model.parameter_names):
             value = start_from.get(name)
             if value is not None and np.isfinite(value):
                 start[i] = float(value)
-    start = np.clip(start, model.lower * 1.0001, model.upper * 0.9999)
+        start = np.clip(start, model.lower * 1.0001, model.upper * 0.9999)
 
     rng = np.random.default_rng(seed)
-    starts = [start]
 
     # 확산 파라미터는 **결정된 사다리**로도 훑는다.
     #
@@ -519,33 +530,47 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
     # 서로 비교 가능해진다.
     wide = [i for i, name in enumerate(model.parameter_names)
             if _is_wide(model, name)]
-    for i in wide:
-        for factor in (1e-2, 1e-1, 1e1, 1e2):
-            candidate = start.copy()
-            candidate[i] = float(np.clip(start[i] * factor,
-                                         model.lower[i] * 1.0001,
-                                         model.upper[i] * 0.9999))
-            starts.append(candidate)
 
-    # ZView 관행 한 판 — 고주파에서 앞쪽 원소부터 맞춰 나간 값.  답이 아니라
-    # 시작점 하나로 넣는다 (`_staged_start` 머리말).
-    staged = _staged_start(model, working.frequency_hz, z, weights, start,
-                           least_squares)
-    if staged is not None:
-        starts.append(staged)
+    def family(base: np.ndarray) -> list[np.ndarray]:
+        """``base``, its diffusion ladder, the staged start and the scatter."""
+        out = [base]
+        for i in wide:
+            for factor in (1e-2, 1e-1, 1e1, 1e2):
+                candidate = base.copy()
+                candidate[i] = float(np.clip(base[i] * factor,
+                                             model.lower[i] * 1.0001,
+                                             model.upper[i] * 0.9999))
+                out.append(candidate)
 
-    for _ in range(max(0, restarts)):
-        scatter = np.exp(rng.uniform(-np.log(5.0), np.log(5.0), size=n_params))
-        candidate = np.clip(start * scatter, model.lower * 1.0001,
-                            model.upper * 0.9999)
-        # Exponents are not scale-free; scattering 0.85 by a factor of five
-        # lands outside the physical range every time.
-        for i, name in enumerate(model.parameter_names):
-            if name.endswith("_n"):
-                candidate[i] = float(np.clip(start[i] + rng.uniform(-0.15, 0.15),
-                                             model.lower[i] + 1e-6,
-                                             model.upper[i] - 1e-6))
-        starts.append(candidate)
+        # ZView 관행 한 판 — 고주파에서 앞쪽 원소부터 맞춰 나간 값.  답이 아니라
+        # 시작점 하나로 넣는다 (`_staged_start` 머리말).
+        staged = _staged_start(model, working.frequency_hz, z, weights, base,
+                               least_squares)
+        if staged is not None:
+            out.append(staged)
+
+        for _ in range(max(0, restarts)):
+            scatter = np.exp(rng.uniform(-np.log(5.0), np.log(5.0), size=n_params))
+            candidate = np.clip(base * scatter, model.lower * 1.0001,
+                                model.upper * 0.9999)
+            # Exponents are not scale-free; scattering 0.85 by a factor of five
+            # lands outside the physical range every time.
+            for i, name in enumerate(model.parameter_names):
+                if name.endswith("_n"):
+                    candidate[i] = float(np.clip(base[i] + rng.uniform(-0.15, 0.15),
+                                                 model.lower[i] + 1e-6,
+                                                 model.upper[i] - 1e-6))
+            out.append(candidate)
+        return out
+
+    starts = family(start)
+    kin = [0] * len(starts)
+    # 쓰던 값에서 시작했으면 데이터로 잡은 시작점에서도 한 번 더 — 제 골짜기
+    # 밖의 같은 만큼 맞는 답을 흩어짐 검사가 보게 (``start_from`` 머리말).
+    if start_from and not np.allclose(start, unseeded):
+        more = family(unseeded)
+        starts += more
+        kin += [1] * len(more)
 
     def solve(candidate, budget):
         try:
@@ -585,7 +610,13 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
     # 출발했더니 같은 chi^2 에 다른 값이 나왔다" 를 볼 방법이 사라진다 — 오차
     # 막대는 한 점의 곡률이라 그것을 못 본다 (`Parameter.determined`).
     polished: list[tuple[float, np.ndarray]] = []
-    for _, index, polished_start in screened[:_POLISH_KEEP]:
+    # 식구마다 제 맞춤처럼 가장 나은 `_POLISH_KEEP` 개를 다듬는다 — 한 줄로
+    # 세우면 쓰던 값의 골짜기가 자리를 다 차지해 다른 골짜기는 다듬지도 않는다.
+    keep = sorted((item for group in sorted(set(kin))
+                   for item in [one for one in screened
+                                if kin[one[1]] == group][:_POLISH_KEEP]),
+                  key=lambda item: item[0])
+    for _, index, polished_start in keep:
         seen.add(index)
         solution = solve(polished_start, _POLISH_NFEV)
         if solution is None:

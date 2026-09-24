@@ -1691,6 +1691,8 @@ class RefitValueOut(BaseModel):
     determined: bool = True
     #: 옛 맞춤에서 정해졌었나.
     was_determined: bool = True
+    #: 새 맞춤이 저장한 미결정 사유 (``seed_spread`` 등, `wrdkit.eis.fit`).
+    reason: str = ""
 
 
 class RefitSpectrumOut(BaseModel):

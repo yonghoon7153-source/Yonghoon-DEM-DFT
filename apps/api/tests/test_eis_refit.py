@@ -255,6 +255,11 @@ def test_a_value_the_window_leaves_undetermined_is_named_without_a_guessed_cause
     assert _value_lines(one) == [
         "    값: R1 5.94 → 0.841 (-86 %) · 나머지 1개는 1 % 안",
         "    새로 미결정: R0 — 하한 위의 점만으로는 정해지지 않습니다"]
+    # 맞춤이 저장한 사유는 옮긴다 — 쓰던 값과 데이터의 두 골짜기 (보완 4).
+    one.values[0].reason = "seed_spread"
+    assert _value_lines(one)[1] == (
+        "    새로 미결정: R0 (같은 χ² 에 시작점마다 다른 값) — 하한 위의 점만으로는 "
+        "정해지지 않습니다")
 
 
 def test_one_spectrum_that_breaks_does_not_stop_the_batch(client, monkeypatch):
