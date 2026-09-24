@@ -273,6 +273,17 @@
      "DEM 명목 규약 데이터셋" (실제 공극률 예측기라 소개하지 않음) ④ 기존 코퍼스 provenance 감사 (Q6) 는 별도 트랙.
   E. ✅ 기전 확인 (사용자 grep 09-25): LHS 덱 m6 · m7 · m8 = 생산 덱과 동일 (AM–SE q 3.0 · φf 0.01 · kc 2.0e5) → HND-03 **재현됨 (조건부)**.
      9 건의 마지막 프레임 (관통 시점) 은 ibb 에 있으면 나중에.
+- ✅ 비준 (09-25 "ㅇㅇ ㄱ ㄱ") · 구현 (재현 먼저 — 수확기 20 · 생성기 3 빨간불 → 전부 초록):
+  - A 수확기: `plate_stl_info` + 평판 검사 (`PLATE_SPAN_TOL` 1e-7 sim, HND-06) · `check_deck_floor` = fix/unfix 생명주기 · 같은 id 재정의 = 교체 ·
+    group=all 요구 · 흐름 제어 (label/jump/if/next) 뒤의 벽 정의/삭제와 include/read_restart/python 은 "검증 불가" 거부 (HND-02; 생산 덱 real_4 는
+    벽 83 행 · `label loop_press` 180 행이라 통과) · `_wall_side` = 부호 있는 거리 → `outside_cap_depth_over_r` + `contact_overlap_over_r` (HND-03) ·
+    상별 cap 부피 · `clipped` (다) · `boundary` = `calculation_status` / `physical_target_status` / `hold_reason_codes` (BOUNDARY_CENTER_OUT ·
+    NEGATIVE_POROSITY) / `phi_sum_gt_one` · `handover_qc` 평면 (두께 µm · 명목 alias · pushback_equiv · clipped · 외피 · 부피 감사 · 경계 QC ·
+    적격성 · 규약 ID `harvest_v2_20260925/spheresum_nominal_gap/wall_z0/exact_step_mesh` · `boundary_model_id` · sha 넷).
+  - C τ 진단: `band_detail.wall_n_bot / wall_n_top / wall_n_span_components` (벽 z = 0 · 플래튼 기준) — 보고 τ · 규약 문자열 불변.
+  - B 생성기: `DEFAULT_HARVEST_DIR` = 20260924 · `HANDOVER_EXTRA` 에 위 QC · 적격성 · τ 진단 · 프로비넌스 열 46 개 · 음수 케이스 (lhs00_005 실측값)
+    end-to-end 회귀 (원값 보존 + HOLD 열).
+  - ⚠ 09-24 스냅샷 JSON 에는 `handover_qc` 가 없다 (옛 코드 산출) ⇒ **WSL 재수확 v2** (`docs/data/lhs_descriptors_20260925/`) 뒤 인계표 재생성.
 
 ## 인계 판정 (지금)
 

@@ -69,7 +69,7 @@ def compare(atom_path, plate_z, n_types):
                 floor_out_pct=fl.get('v_out_pct'), plate_out_pct=pl.get('v_out_pct'),
                 floor_center_out=fl.get('n_center_out'), plate_center_out=pl.get('n_center_out'),
                 floor_center_out_by_phase=fl.get('n_center_out_by_phase'),
-                floor_deepest_phase=fd.get('phase'), floor_deepest_over_r=fd.get('overlap_over_r'),
+                floor_deepest_phase=fd.get('phase'), floor_deepest_over_r=fd.get('outside_cap_depth_over_r'),
                 eps_pushback=pb.get('porosity_pct_RECORD_ONLY'), dH_pushback=pb.get('dH_sim'))
 
 

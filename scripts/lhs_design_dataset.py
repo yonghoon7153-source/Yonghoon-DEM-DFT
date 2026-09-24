@@ -518,7 +518,7 @@ DESCRIPTOR_FILL_EXPECTED = {           # 2026-09-19 실측.  움직이면 ⑭d �
                                   '물리인지 전극 밴드 규약인지 아직 안 갈렸다.  재측정 뒤 '
                                   '이 숫자가 움직일 수 있다 (그때 이 등록값도 같이 고친다).',
     },
-    'source': 'docs/data/lhs_descriptors_20260919/ (수확 130/130, 2026-09-19)',
+    'source': 'docs/data/lhs_descriptors_20260924/ (재수확 130/130, 2026-09-24 — 09-19 판은 LHS-10 · 11 로 폐기)',
     'manifest': 'docs/data/lhs_design_20260818_descriptor_manifest.json',
     'harvester': 'scripts/lhs_descriptor_harvest.py (selftest 전부 통과 2026-09-19)',
     'filler': 'scripts/lhs_design_dataset.py --fill-descriptors',
@@ -736,7 +736,10 @@ HANDOVER_HELD_BACK = {
     'tortuosity_dijkstra_SE': 'LHS-08 열림 — 130 중 14 만 값이 있고 `NOT_PERCOLATING` 이 '
                               '규약 실패와 물리 미관통을 **한 값으로 접는다**.  재수확 뒤 공급.',
 }
+#: 기본 수확 스냅샷 — ⛔ 옛 판 (20260919) 은 분모 바닥 · 이른 메시 (LHS-10 · 11) 로 폐기됐다.  조용히 옛 판을 가리키지 않는다 (HND-04).
+DEFAULT_HARVEST_DIR = 'docs/data/lhs_descriptors_20260924'
 #: 수확 JSON 에서 **추가로** 실어 보내는 것 (새 계산 0 — 이미 측정돼 있다).
+#: ★ HND-04 (Codex 09-25, 비준): 벽 QC · 적격성 · 규약 ID · sha 를 CSV 로 **실어 나른다** — JSON 에만 두고 CSV 에서 버리면 계약 실패.
 HANDOVER_EXTRA = (
     ('n_AM_P_measured',      ('phase_counts', 'AM_P'),                      '실측 입자수 (설계의 n_*_est 는 추정)'),
     ('n_AM_S_measured',      ('phase_counts', 'AM_S'),                      '실측 입자수'),
@@ -757,6 +760,63 @@ HANDOVER_EXTRA = (
     ('timestep',             ('timestep',),                                 '읽은 덤프 스텝'),
     ('area_channel',         ('area_channel',),                             'L1-04 — 피복 면적이 무엇인가'),
     ('atom_sha256',          ('raw', 'atom', 'sha256'),                     '원자료 추적'),
+    #  ── 두께 · 등록 alias 의 정본 의미 (Codex Q1 · Q2) ──
+    ('thickness_wall_gap_um', ('handover_qc', 'thickness_wall_gap_um'),     '주 두께 — 같은 프레임의 플래튼 − 바닥 (z = 0) 간격, sim × 1e3'),
+    ('phi_se_spheresum_nominal_gap', ('handover_qc', 'phi_se_spheresum_nominal_gap'), 'phi_se 의 정본 이름 — 명목 구 부피 / 틀 간격 부피 (장부값, 틀 안 점유율 아님)'),
+    ('phi_am_spheresum_nominal_gap', ('handover_qc', 'phi_am_spheresum_nominal_gap'), 'phi_am 의 정본 이름'),
+    ('porosity_spheresum_nominal_gap_pct', ('handover_qc', 'porosity_spheresum_nominal_gap_pct'), 'porosity 등록 열의 정본 이름 (독립 타깃 아님)'),
+    #  ── 보조 지표 — (나) 등가 산술값 · (다) ROI clipped (둘 다 합집합 점유율 아님) ──
+    ('thickness_pushback_equiv_um', ('handover_qc', 'thickness_pushback_equiv_um'), '(나) 벽 밖 부피를 두께에 더한 등가값 — hard-bottom 예측 아님 (HND-01)'),
+    ('porosity_pushback_equiv_pct', ('handover_qc', 'porosity_pushback_equiv_pct'), '(나) 등가 porosity'),
+    ('phi_se_clipped_spheresum_gap', ('handover_qc', 'phi_se_clipped_spheresum_gap'), '(다) 벽 밖 cap 을 뺀 ROI 값'),
+    ('phi_am_clipped_spheresum_gap', ('handover_qc', 'phi_am_clipped_spheresum_gap'), '(다) ROI 값'),
+    ('porosity_clipped_spheresum_gap_pct', ('handover_qc', 'porosity_clipped_spheresum_gap_pct'), '(다) ROI porosity'),
+    #  ── 외피 진단 (실험 두께의 자동 대체물 아님) ──
+    ('solid_bottom_um',      ('handover_qc', 'solid_bottom_um'),            'min(z − r) × 1e3'),
+    ('solid_top_um',         ('handover_qc', 'solid_top_um'),               'max(z + r) × 1e3'),
+    ('thickness_envelope_um', ('handover_qc', 'thickness_envelope_um'),     '외피 높이 — 극값 하나에 좌우될 수 있다'),
+    ('plate_minus_solid_top_um', ('handover_qc', 'plate_minus_solid_top_um'), '플래튼 − 고체 윗면 (같은 step 메시면 작다, LHS-11)'),
+    #  ── 부피 감사 (겹침 중복을 포함하는 구 합, µm³) ──
+    ('V_AM_full_um3',        ('handover_qc', 'V_AM_full_um3'),              'AM 명목 구 부피 합'),
+    ('V_SE_full_um3',        ('handover_qc', 'V_SE_full_um3'),              'SE 명목 구 부피 합'),
+    ('V_AM_out_floor_um3',   ('handover_qc', 'V_AM_out_floor_um3'),         'AM 바닥 밖 cap 부피'),
+    ('V_AM_out_plate_um3',   ('handover_qc', 'V_AM_out_plate_um3'),         'AM 플래튼 밖 cap 부피'),
+    ('V_SE_out_floor_um3',   ('handover_qc', 'V_SE_out_floor_um3'),         'SE 바닥 밖 cap 부피'),
+    ('V_SE_out_plate_um3',   ('handover_qc', 'V_SE_out_plate_um3'),         'SE 플래튼 밖 cap 부피'),
+    #  ── 경계 QC (HND-03) ──
+    ('n_floor_center_out',   ('handover_qc', 'n_floor_center_out'),         '중심이 바닥 평면 아래인 입자 수'),
+    ('n_floor_fully_out',    ('handover_qc', 'n_floor_fully_out'),          '통째로 바닥 아래인 입자 수'),
+    ('n_plate_center_out',   ('handover_qc', 'n_plate_center_out'),         '중심이 플래튼 위인 입자 수'),
+    ('n_plate_fully_out',    ('handover_qc', 'n_plate_fully_out'),          '통째로 플래튼 위인 입자 수'),
+    ('floor_out_pct',        ('handover_qc', 'floor_out_pct'),              '바닥 밖 부피 / ΣV (백분율)'),
+    ('plate_out_pct',        ('handover_qc', 'plate_out_pct'),              '플래튼 밖 부피 / ΣV (백분율)'),
+    ('floor_outside_cap_depth_over_r_max', ('handover_qc', 'floor_outside_cap_depth_over_r_max'), '가장 깊은 입자의 cap 깊이/r (접촉 겹침 아님)'),
+    ('floor_deepest_contact_overlap_over_r', ('handover_qc', 'floor_deepest_contact_overlap_over_r'), '그 입자의 접촉 겹침/r = (r − |dist|)/r'),
+    ('floor_deepest_phase',  ('handover_qc', 'floor_deepest_phase'),        '가장 깊은 입자의 상'),
+    ('floor_deepest_r_um',   ('handover_qc', 'floor_deepest_r_um'),         '그 입자의 반지름'),
+    ('floor_deepest_z_um',   ('handover_qc', 'floor_deepest_z_um'),         '그 입자의 중심 z'),
+    ('plate_outside_cap_depth_over_r_max', ('handover_qc', 'plate_outside_cap_depth_over_r_max'), '플래튼 쪽 가장 깊은 입자의 cap 깊이/r'),
+    ('boundary_state',       ('handover_qc', 'boundary_state'),             'INSIDE | CENTER_CROSSED | FULLY_OUT'),
+    #  ── 적격성 (HND-04) — 숫자 산출 성공과 물리/ML 용도 허용을 분리 ──
+    ('calculation_status',   ('handover_qc', 'calculation_status'),         '계산 상태 (명목 규약값)'),
+    ('physical_target_status', ('handover_qc', 'physical_target_status'),   'OK | HOLD — 물리적 전극 구조 타깃으로 쓸 수 있는가'),
+    ('hold_reason_codes',    ('handover_qc', 'hold_reason_codes'),          'BOUNDARY_CENTER_OUT · NEGATIVE_POROSITY (| 로 이음)'),
+    ('phi_sum_gt_one',       ('handover_qc', 'phi_sum_gt_one'),             'phi_se + phi_am > 1'),
+    #  ── τ 밴드 진단 (LHS-08 · Codex §8-3) — 보고 τ 는 여전히 보류 열 ──
+    ('tau_n_bot',            ('tau_detail', 'band_detail', 'n_bot'),        'solid_zrange 아래 밴드의 SE 인원'),
+    ('tau_n_top',            ('tau_detail', 'band_detail', 'n_top'),        'solid_zrange 위 밴드의 SE 인원'),
+    ('tau_wall_n_bot',       ('tau_detail', 'band_detail', 'wall_n_bot'),   '벽 (z = 0) 기준 아래 밴드의 SE 인원 (진단)'),
+    ('tau_wall_n_top',       ('tau_detail', 'band_detail', 'wall_n_top'),   '플래튼 기준 위 밴드의 SE 인원 (진단)'),
+    ('tau_wall_n_span_components', ('tau_detail', 'band_detail', 'wall_n_span_components'), '벽 밴드 둘을 잇는 SE 성분 수 (진단)'),
+    #  ── 프로비넌스 ──
+    ('measurement_protocol_id', ('handover_qc', 'measurement_protocol_id'), '측정 규약 ID'),
+    ('boundary_model_id',    ('handover_qc', 'boundary_model_id'),          '경계 모델 ID (바닥 primitive 의 물성 type · 플래튼 메시)'),
+    ('scale_sim_per_um',     ('handover_qc', 'scale_sim_per_um'),           'sim 단위 / µm'),
+    ('deck_floor_z_sim',     ('deck_floor', 'z'),                           '덱에서 읽은 활성 바닥 벽 z'),
+    ('deck_wall_type',       ('handover_qc', 'deck_wall_type'),             '바닥 벽의 물성 type (LHS: SE)'),
+    ('contact_sha256',       ('handover_qc', 'contact_sha256'),             '원자료 추적'),
+    ('deck_sha256',          ('handover_qc', 'deck_sha256'),                '원자료 추적'),
+    ('mesh_sha256',          ('handover_qc', 'mesh_sha256'),                '원자료 추적'),
 )
 
 
@@ -1025,6 +1085,33 @@ def _selftest():
         all(_rp['filled'][c] == 2 for c in DESCRIPTORS))
     chk('⑮ 값이 왕복 가능한 정밀도로 쓰인다 (반올림 손실 없음)',
         float(_r2[0]['phi_se']) == 0.2 and _r2[0]['phi_se_status'] == 'OK')
+    #  ── ⑰ HND-04 (Codex 09-25 · 비준 09-25): 인계표가 벽 QC · 적격성 · 규약 ID · sha 를 실어 나른다 · 음수도 원값 보존 ──
+    _hn = _h('c1', phi_se=0.5135813340456643, phi_am=0.4996409958699752,
+             porosity_sphere_pct_RECORD_ONLY=-1.3222329915639541)          # = lhs00_005 실측 (Codex 반례)
+    _hn['handover_qc'] = dict(calculation_status='OK', physical_target_status='HOLD',
+                              hold_reason_codes='NEGATIVE_POROSITY|BOUNDARY_CENTER_OUT', phi_sum_gt_one=True,
+                              thickness_wall_gap_um=45.9, n_floor_center_out=4,
+                              boundary_model_id='floor=primitive_zplane_type3|platen=mesh_stl',
+                              measurement_protocol_id='harvest_v2_20260925/spheresum_nominal_gap/wall_z0',
+                              deck_sha256='d' * 64, contact_sha256='b' * 64, mesh_sha256='m' * 64)
+    _hn['deck_floor'] = dict(z=0.0, wall_type=3)
+    try:
+        _on, _cn, _repn = build_handover([{'case_id': 'c1'}], {'c1': _hn})
+        _row = _on[0]
+    except Exception as e:                                                # noqa: BLE001
+        _row, _cn = {'_err': f'{type(e).__name__}: {e}'}, []
+    chk('⑰ HND-04: 음수 porosity · φ 합 > 1 도 **원값 그대로** 나간다 (0 접기 · 빈칸 아님)',
+        _row.get('phi_se') == repr(0.5135813340456643)
+        and _row.get('porosity_sphere_pct_RECORD_ONLY') == repr(-1.3222329915639541))
+    chk('⑰ HND-04: 계산 상태 OK 와 별도로 physical_target_status HOLD · 보류 코드 · phi_sum_gt_one 이 열로 나간다',
+        _row.get('phi_se_status') == 'OK' and _row.get('physical_target_status') == 'HOLD'
+        and 'NEGATIVE_POROSITY' in (_row.get('hold_reason_codes') or '') and _row.get('phi_sum_gt_one') == 'True')
+    chk('⑰ HND-04: 두께 µm · 벽 QC · 규약 ID · deck/contact/mesh sha · 덱 바닥 z 가 열에 있다',
+        _row.get('thickness_wall_gap_um') == '45.9' and _row.get('n_floor_center_out') == '4'
+        and bool(_row.get('boundary_model_id')) and bool(_row.get('measurement_protocol_id'))
+        and len(_row.get('deck_sha256') or '') == 64 and _row.get('deck_floor_z_sim') == '0.0')
+    chk('⑰ HND-04: 기본 수확 디렉터리 = 20260924 판 (09-19 판을 조용히 가리키지 않는다)',
+        'lhs_descriptors_20260924' in str(globals().get('DEFAULT_HARVEST_DIR', '')))
     #  ★ `DESC-09` — 반쪽 채움 금지 (양방향)
     _neg('⑮a DESC-09: 수확에 없는 설계가 있으면 거부',
          lambda: fill_descriptors([{'case_id': 'c1'}, {'case_id': 'zz'}], _hv))
@@ -1235,7 +1322,7 @@ if __name__ == '__main__':
         _dp = pathlib.Path(a.design or DESCRIPTOR_FILL_EXPECTED['path'])
         if not _dp.is_absolute():
             _dp = _root / _dp
-        _hd = pathlib.Path(a.harvest or (_root / 'docs/data/lhs_descriptors_20260919'))
+        _hd = pathlib.Path(a.harvest or (_root / DEFAULT_HARVEST_DIR))
         with _dp.open(encoding='utf-8-sig') as _fh:
             _rows = list(csv.DictReader(_fh))
         _harv = load_harvest(_hd)

@@ -214,8 +214,11 @@ def read_contact_dump(path):
             np.asarray(area, dtype=np.float64), tuple(headers))
 
 
-def plate_z_from_stl(path):
-    """`parse_liggghts.parse_mesh_stl` 과 **같은 정의** — 전 꼭짓점 z 평균."""
+PLATE_SPAN_TOL = 1e-7      # sim (= 0.1 nm 실물).  평판이면 꼭짓점 z 가 전부 같다 (실측: heckel 메시 6 꼭짓점 동일)
+
+
+def plate_stl_info(path):
+    """STL 꼭짓점 z 의 평균 · 폭 · 개수 — HND-06 (Codex 09-25): 평판인지 **검사**한다 (평균만 받지 않는다)."""
     zs = []
     with open(path, 'r', encoding='utf-8', errors='replace') as fh:
         for ln in fh:
@@ -224,7 +227,18 @@ def plate_z_from_stl(path):
                 zs.append(float(p[3]))
     if not zs:
         raise BedRefusal(f'{path}: STL 에 vertex 가 없다')
-    return float(np.mean(zs))
+    zmin, zmax = min(zs), max(zs)
+    return dict(z_mean_sim=float(np.mean(zs)), z_min_sim=zmin, z_max_sim=zmax,
+                span_sim=float(zmax - zmin), n_vertices=len(zs))
+
+
+def plate_z_from_stl(path):
+    """`parse_liggghts.parse_mesh_stl` 과 **같은 정의** — 전 꼭짓점 z 평균.  단 평판이 아니면 거부 (HND-06)."""
+    info = plate_stl_info(path)
+    if info['span_sim'] > PLATE_SPAN_TOL:
+        raise BedRefusal(f'{path}: 플래튼 STL 이 평판이 아니다 — 꼭짓점 z 폭 {info["span_sim"]:.3g} > {PLATE_SPAN_TOL} '
+                         f'(HND-06).  평균 {info["z_mean_sim"]:.6g} 을 높이로 받지 않는다')
+    return info['z_mean_sim']
 
 
 def phase_labels(types, n_types):
@@ -237,6 +251,8 @@ def phase_labels(types, n_types):
     return np.asarray([tmap[int(t)] for t in types], dtype=object), tmap
 
 
+SIM_TO_UM = 1e3    # LHS · 생산 덱의 길이 스케일 ×1000: sim 0.001 = 실물 1 µm (`parse_liggghts` 의 scale=1000 과 같은 규약)
+MEASUREMENT_PROTOCOL_ID = 'harvest_v2_20260925/spheresum_nominal_gap/wall_z0/exact_step_mesh'
 Z_FLOOR = 0.0      # 바닥 벽 — LHS 덱 `wall/gran … zplane 0.0`.  웹앱 `dem_analysis_core.calc_porosity` 의 V_box = L²·plate_z 와 같은 규약
 
 
@@ -262,11 +278,40 @@ def check_deck_floor(path):
             buf = ''
     if buf:
         logical.append(buf)
-    walls = []
+    #  ★ HND-02 (Codex 09-25): "발견한 모든 zplane 중 min" 은 활성 벽 증명이 아니다 — unfix · 재정의 · 부분 group 을
+    #    전부 통과시켰다.  지원 문법을 **제한**한다: fix id 생명주기를 따라가고 (unfix → 삭제 · 같은 id 재정의 → 교체),
+    #    group 은 `all` 이어야 하며, 벽 정의/삭제가 흐름 제어 (label · jump · if · next) **뒤**에 오거나 include · read_restart ·
+    #    python 이 있으면 "검증 불가" 로 거부한다 — 그 밖의 동적 규약은 여기서 검증하지 않는다.
+    active, seen, n_defs = {}, 0, 0
+    flow_seen = False
     for ln in logical:
         tok = ln.split()
-        if not tok or tok[0] != 'fix' or 'wall/gran' not in tok or 'primitive' not in tok or 'zplane' not in tok:
+        if not tok:
             continue
+        cmd = tok[0]
+        if cmd in ('include', 'read_restart', 'read_data', 'python'):
+            raise BedRefusal(f'{path}: `{cmd}` 가 있어 바닥 벽을 정적으로 검증할 수 없다 (HND-02 — 지원 밖 문법, 검증 불가)')
+        if cmd in ('label', 'jump', 'if', 'next'):
+            flow_seen = True
+            continue
+        if cmd == 'unfix' and len(tok) > 1:
+            if tok[1] in active:
+                if flow_seen:
+                    raise BedRefusal(f'{path}: 바닥 벽 `{tok[1]}` 의 unfix 가 흐름 제어 뒤에 있다 — 활성 여부를 정적으로 알 수 없다 (HND-02)')
+                active.pop(tok[1])
+            continue
+        if cmd != 'fix' or len(tok) < 3:
+            continue
+        fid, grp = tok[1], tok[2]
+        if fid in active and not ('wall/gran' in tok and 'primitive' in tok and 'zplane' in tok):
+            active.pop(fid)                      # 같은 id 를 다른 fix 로 재정의 → 벽은 사라진다
+            continue
+        if 'wall/gran' not in tok or 'primitive' not in tok or 'zplane' not in tok:
+            continue
+        if flow_seen:
+            raise BedRefusal(f'{path}: 바닥 벽 `{fid}` 정의가 흐름 제어 (label/jump/if) 뒤에 있다 — 검증 불가 (HND-02)')
+        if grp != 'all':
+            raise BedRefusal(f'{path}: 바닥 벽 `{fid}` 의 group 이 `{grp}` 다 — 모든 상을 구속한다는 증거가 없다 (HND-02)')
         kz, kp = tok.index('zplane'), tok.index('primitive')
         zs = tok[kz + 1] if kz + 1 < len(tok) else ''
         try:
@@ -274,32 +319,44 @@ def check_deck_floor(path):
         except ValueError:
             raise BedRefusal(f'{path}: 바닥 벽 zplane 값을 숫자로 못 읽는다 ({zs!r}) — 0 으로 치지 않는다 (LHS-12)')
         wt = tok[kp + 2] if kp + 2 < len(tok) and tok[kp + 1] == 'type' else ''
-        walls.append(dict(fix_id=tok[1] if len(tok) > 1 else '', z=z,
-                          wall_type=int(wt) if wt.isdigit() else None, line=' '.join(tok)))
-    if not walls:
-        raise BedRefusal(f'{path}: 바닥 벽 (`wall/gran … primitive … zplane`) 이 없다 — '
-                         f'벽 = {Z_FLOOR} 가정을 확인할 수 없다 (LHS-12)')
+        active[fid] = dict(fix_id=fid, z=z, wall_type=int(wt) if wt.isdigit() else None, line=' '.join(tok))
+        n_defs += 1
+    if not active:
+        raise BedRefusal(f'{path}: 활성 바닥 벽 (`wall/gran … primitive … zplane`, unfix 되지 않은 것) 이 없다 — '
+                         f'벽 = {Z_FLOOR} 가정을 확인할 수 없다 (LHS-12 · HND-02)')
+    walls = list(active.values())
     floor = min(walls, key=lambda w: w['z'])
     if floor['z'] != Z_FLOOR:
-        raise BedRefusal(f'{path}: 바닥 벽이 z = {floor["z"]} 다 — 웹앱 규약 (벽 = {Z_FLOOR}) 이 이 덱에 맞지 않는다 (LHS-12)')
+        raise BedRefusal(f'{path}: 활성 바닥 벽이 z = {floor["z"]} 다 — 웹앱 규약 (벽 = {Z_FLOOR}) 이 이 덱에 맞지 않는다 (LHS-12)')
     return dict(z=floor['z'], wall_type=floor['wall_type'], fix_id=floor['fix_id'],
-                n_zplane_walls=len(walls), line=floor['line'])
+                n_active_walls=len(walls), n_zplane_walls=n_defs, line=floor['line'],
+                grammar='static: fix/unfix lifecycle · group=all · 흐름 제어 앞에서만 (HND-02)')
 
 
-def _wall_side(labels, r, z, depth, center_out, fully_out, vsum):
-    """벽 한쪽 (바닥 또는 플래튼) 의 기록 — depth = 입자가 벽 밖으로 나간 깊이 (자르지 않은 값)."""
-    h = np.clip(depth, 0.0, 2.0 * r)                                  # 벽 밖 cap 높이
+def _wall_side(labels, r, z, dist, vsum):
+    """벽 한쪽 (바닥 또는 플래튼) 의 기록.  dist = 중심에서 벽까지의 **부호 있는** 거리 (상자 안쪽이 +).
+
+    HND-03 (Codex 09-25): 기하 깊이 (cap depth = r − dist) 와 솔버의 접촉 겹침 (r − |dist|) 은 중심이 평면을 넘으면
+    갈린다 — z = −0.98r 이면 cap 깊이 1.98r 이지만 접촉 겹침은 0.02r.  둘 다 따로 적는다 (옛 `overlap_over_r` 는 오도).
+    """
+    depth = r - dist                                                   # 벽 밖 cap 깊이 (자르지 않은 값)
+    h = np.clip(depth, 0.0, 2.0 * r)                                   # 벽 밖 cap 높이
     v_out = np.pi * h ** 2 * (3.0 * r - h) / 3.0                       # 구 cap 부피 π h²(3r − h)/3
+    center_out, fully_out, touch = dist < 0, dist < -r, depth > 0
     i = int(np.argmax(depth))
     deepest = None
     if depth[i] > 0:
         deepest = dict(phase=str(labels[i]), r_sim=float(r[i]), z_sim=float(z[i]),
-                       depth_sim=float(depth[i]), overlap_over_r=float(depth[i] / r[i]))
-    by_phase = {}
-    for lab in labels[center_out]:
-        by_phase[str(lab)] = by_phase.get(str(lab), 0) + 1
-    return dict(n_touch=int((depth > 0).sum()), n_center_out=int(center_out.sum()),
-                n_fully_out=int(fully_out.sum()), n_center_out_by_phase=by_phase,
+                       depth_sim=float(depth[i]), outside_cap_depth_over_r=float(depth[i] / r[i]),
+                       contact_overlap_over_r=float(max(0.0, r[i] - abs(dist[i])) / r[i]),
+                       center_out=bool(center_out[i]))
+    labs = sorted({str(l) for l in labels})
+    return dict(n_touch=int(touch.sum()), n_center_out=int(center_out.sum()),
+                n_fully_out=int(fully_out.sum()),
+                n_center_out_by_phase={l: int(sum(1 for q in labels[center_out] if str(q) == l)) for l in labs
+                                       if int(sum(1 for q in labels[center_out] if str(q) == l))},
+                n_touch_by_phase={l: int(sum(1 for q in labels[touch] if str(q) == l)) for l in labs},
+                v_out_by_phase={l: float(v_out[np.asarray([str(q) == l for q in labels])].sum()) for l in labs},
                 v_out_sim=float(v_out.sum()), v_out_pct=100.0 * float(v_out.sum()) / vsum,
                 deepest=deepest)
 
@@ -332,21 +389,41 @@ def volumes_and_phi(atoms, labels, box_lo, box_hi, plate_z):
     phi_am = float(v[is_am].sum() / v_box)
     eps = 100.0 * (1.0 - vsum / v_box)
 
-    floor = _wall_side(labels, r, z, Z_FLOOR - (z - r), z < Z_FLOOR, z + r < Z_FLOOR, vsum)
-    plate = _wall_side(labels, r, z, (z + r) - plate_z, z > plate_z, z - r > plate_z, vsum)
-    h_pb = h + (floor['v_out_sim'] + plate['v_out_sim']) / (lx * ly)
+    floor = _wall_side(labels, r, z, z - Z_FLOOR, vsum)
+    plate = _wall_side(labels, r, z, plate_z - z, vsum)
+    w_tot = floor['v_out_sim'] + plate['v_out_sim']
+    h_pb = h + w_tot / (lx * ly)
     v_box_pb = lx * ly * h_pb
+    w_se = floor['v_out_by_phase'].get('SE', 0.0) + plate['v_out_by_phase'].get('SE', 0.0)
+    w_am = sum(floor['v_out_by_phase'].get(k, 0.0) + plate['v_out_by_phase'].get(k, 0.0) for k in AM_LABELS)
+    n_co = floor['n_center_out'] + plate['n_center_out']
+    n_fo = floor['n_fully_out'] + plate['n_fully_out']
+    codes = []
+    if n_co:
+        codes.append('BOUNDARY_CENTER_OUT')       # HND-03: 중심이 평면을 넘은 입자 — 정상 압입과 구분 · 물리 타깃 보류
+    if eps < 0:
+        codes.append('NEGATIVE_POROSITY')         # HND-04 · LHS-15: φ 합 > 1 — 값은 그대로 내고 물리 타깃은 보류
     wall_record = dict(
         floor=floor, plate=plate,
         pushback=dict(H_sim=h_pb, dH_sim=h_pb - h, V_box_sim=v_box_pb,
                       phi_se=float(v[is_se].sum() / v_box_pb), phi_am=float(v[is_am].sum() / v_box_pb),
                       porosity_pct_RECORD_ONLY=100.0 * (1.0 - vsum / v_box_pb)),
-        convention='(가) 주 값 = 웹앱 ε_sphere (ΣV 전부 / L²·plate_z) · (나) pushback = 벽 밖 부피를 벽 안으로 '
-                   '되돌려 두께에 더한 값 (H′ = plate_z + V_out / L²) — 판단 J14')
+        clipped=dict(W_sim=w_tot, W_se_sim=w_se, W_am_sim=w_am,
+                     phi_se=float((v[is_se].sum() - w_se) / v_box), phi_am=float((v[is_am].sum() - w_am) / v_box),
+                     porosity_pct_RECORD_ONLY=100.0 * (1.0 - (vsum - w_tot) / v_box)),
+        convention='(가) 주 값 = 웹앱 ε_sphere = **명목 구 부피 / 틀 간격 부피** (ΣV 전부 / L²·plate_z, 장부값 — 틀 안 점유율이 아니다) · '
+                   '(나) pushback = 벽 밖 부피를 두께에 더한 등가 산술값 (hard-bottom 예측 아님, HND-01) · '
+                   '(다) clipped = 벽 밖 cap 을 뺀 ROI 값 (아직 합집합 점유율 아님) — 판단 J14 · J18')
+    boundary = dict(calculation_status='OK',
+                    n_center_out=n_co, n_fully_out=n_fo,
+                    boundary_state=('FULLY_OUT' if n_fo else 'CENTER_CROSSED' if n_co else 'INSIDE'),
+                    phi_sum_gt_one=bool(phi_se + phi_am > 1.0),
+                    hold_reason_codes=codes,
+                    physical_target_status=('HOLD' if codes else 'OK'))
     return dict(phi_se=phi_se, phi_am=phi_am,
                 porosity_sphere_pct_RECORD_ONLY=eps,
                 V_box_sim=v_box, H_sim=h, lx_sim=lx, ly_sim=ly, z_floor_sim=Z_FLOOR,
-                solid_bot_sim=zb, solid_top_sim=zt, wall_record=wall_record,
+                solid_bot_sim=zb, solid_top_sim=zt, wall_record=wall_record, boundary=boundary,
                 closure_residual=phi_se + phi_am + eps / 100.0 - 1.0)
 
 
@@ -498,6 +575,20 @@ def tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=N_TAU_PAIRS, seed=42,
         band['alt_n_top'] = int(np.count_nonzero(
             (xyz[:, 2] + rad) >= float(plate_z) - t))
         band['alt_plate_above_solid'] = bool(float(plate_z) >= z_hi)
+    #  ★ 벽 기준 밴드 진단 (Codex §8-3 · 판단 J18 C): solid 아래 밴드는 min(z − r) 가 정하는데 벽 아래로 샌 입자가 그것을
+    #    끌어내려 SE 가 비는 일이 130 중 110 건 — 바닥 (Z_FLOOR) · 플래튼 (plate_z) 기준 인원과 그 둘을 잇는 성분 수를 적는다.
+    #    보고 τ · tau_convention 은 solid_zrange 규약 **그대로** (LHS-08 규약 판단은 재측정 뒤).
+    wall_bot = set(np.flatnonzero((xyz[:, 2] - rad) <= Z_FLOOR + t).tolist())
+    band['wall_z_floor'] = Z_FLOOR
+    band['wall_n_bot'] = int(len(wall_bot))
+    if plate_z is not None:
+        wall_top = set(np.flatnonzero((xyz[:, 2] + rad) >= float(plate_z) - t).tolist())
+        band['wall_n_top'] = int(len(wall_top))
+        band['wall_n_span_components'] = int(sum(1 for comp in comps if (comp & wall_bot) and (comp & wall_top)))
+    else:
+        band['wall_n_top'] = None
+        band['wall_n_span_components'] = None
+    band['wall_note'] = '진단 전용 — 벽 (z = Z_FLOOR) · 플래튼 기준 밴드 인원 (Codex §8-3).  보고 τ 는 solid_zrange 규약 그대로.'
     if not bot or not top:
         base['status'] = STATUS_BAND_EMPTY      # ⓐ — 규약(밴드 정의)이 용의자
         return base
@@ -603,6 +694,54 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
         cs, ss = None, STATUS_ABSENT
         ct, st = (ca, sa)
 
+    wr, bd = phi['wall_record'], phi['boundary']
+    fl, pl, pb, cl = wr['floor'], wr['plate'], wr['pushback'], wr['clipped']
+    fd, pd_ = fl.get('deepest') or {}, pl.get('deepest') or {}
+    v_full = {k: float(atoms['radius'][labels == k].__pow__(3).sum() * (4.0 / 3.0) * np.pi) for k in tmap.values()}
+    handover_qc = dict(
+        #  등록 alias 의 정본 의미 (HND-01) — 같은 값, 이름만 규약을 말한다
+        phi_se_spheresum_nominal_gap=phi['phi_se'], phi_am_spheresum_nominal_gap=phi['phi_am'],
+        porosity_spheresum_nominal_gap_pct=phi['porosity_sphere_pct_RECORD_ONLY'],
+        #  두께 (µm) — 주 값은 같은 프레임의 플래튼 − 바닥 간격 (Q2 ACCEPT)
+        thickness_wall_gap_um=phi['H_sim'] * SIM_TO_UM,
+        thickness_pushback_equiv_um=pb['H_sim'] * SIM_TO_UM,
+        thickness_envelope_um=(phi['solid_top_sim'] - phi['solid_bot_sim']) * SIM_TO_UM,
+        solid_bottom_um=phi['solid_bot_sim'] * SIM_TO_UM, solid_top_um=phi['solid_top_sim'] * SIM_TO_UM,
+        plate_minus_solid_top_um=(float(plate_z) - phi['solid_top_sim']) * SIM_TO_UM,
+        #  보조 지표 — (나) 등가 산술값 · (다) ROI clipped
+        porosity_pushback_equiv_pct=pb['porosity_pct_RECORD_ONLY'],
+        phi_se_pushback_equiv=pb['phi_se'], phi_am_pushback_equiv=pb['phi_am'],
+        phi_se_clipped_spheresum_gap=cl['phi_se'], phi_am_clipped_spheresum_gap=cl['phi_am'],
+        porosity_clipped_spheresum_gap_pct=cl['porosity_pct_RECORD_ONLY'],
+        #  부피 감사 (µm³) — 겹침 중복을 포함하는 구 합
+        V_AM_full_um3=sum(v_full.get(k, 0.0) for k in AM_LABELS) * SIM_TO_UM ** 3,
+        V_SE_full_um3=v_full.get('SE', 0.0) * SIM_TO_UM ** 3,
+        V_AM_out_floor_um3=sum(fl['v_out_by_phase'].get(k, 0.0) for k in AM_LABELS) * SIM_TO_UM ** 3,
+        V_AM_out_plate_um3=sum(pl['v_out_by_phase'].get(k, 0.0) for k in AM_LABELS) * SIM_TO_UM ** 3,
+        V_SE_out_floor_um3=fl['v_out_by_phase'].get('SE', 0.0) * SIM_TO_UM ** 3,
+        V_SE_out_plate_um3=pl['v_out_by_phase'].get('SE', 0.0) * SIM_TO_UM ** 3,
+        #  경계 QC
+        n_floor_center_out=fl['n_center_out'], n_floor_fully_out=fl['n_fully_out'],
+        n_plate_center_out=pl['n_center_out'], n_plate_fully_out=pl['n_fully_out'],
+        floor_out_pct=fl['v_out_pct'], plate_out_pct=pl['v_out_pct'],
+        floor_outside_cap_depth_over_r_max=fd.get('outside_cap_depth_over_r'),
+        floor_deepest_phase=fd.get('phase'), floor_deepest_r_um=(None if fd.get('r_sim') is None else fd['r_sim'] * SIM_TO_UM),
+        floor_deepest_z_um=(None if fd.get('z_sim') is None else fd['z_sim'] * SIM_TO_UM),
+        floor_deepest_contact_overlap_over_r=fd.get('contact_overlap_over_r'),
+        plate_outside_cap_depth_over_r_max=pd_.get('outside_cap_depth_over_r'),
+        boundary_state=bd['boundary_state'],
+        #  적격성 — 계산 성공과 물리/ML 용도 허용을 분리 (HND-04)
+        calculation_status=bd['calculation_status'], physical_target_status=bd['physical_target_status'],
+        hold_reason_codes='|'.join(bd['hold_reason_codes']), phi_sum_gt_one=bd['phi_sum_gt_one'],
+        #  프로비넌스
+        measurement_protocol_id=MEASUREMENT_PROTOCOL_ID,
+        boundary_model_id=(f"floor=primitive_zplane_type{deck['wall_type']}" if deck else 'floor=unverified')
+                          + ('|platen=mesh_stl' if mesh_path else '|platen=cli_plate_z'),
+        scale_sim_per_um=1.0 / SIM_TO_UM, deck_floor_z_sim=(None if deck is None else deck['z']),
+        deck_wall_type=(None if deck is None else deck['wall_type']),
+        atom_sha256=raw['atom']['sha256'], contact_sha256=raw['contact']['sha256'],
+        deck_sha256=(raw.get('deck') or {}).get('sha256'), mesh_sha256=(raw.get('mesh') or {}).get('sha256'))
+
     return dict(
         case=case, timestep=ts_a, n_types=n_types, type_map=tmap,
         phase_counts={k: int(sum(1 for l in labels if l == k)) for k in tmap.values()},
@@ -612,7 +751,7 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
         closure_residual=phi['closure_residual'],
         z_floor_sim=phi['z_floor_sim'], H_sim=phi['H_sim'],
         solid_bot_sim=phi['solid_bot_sim'], solid_top_sim=phi['solid_top_sim'],
-        deck_floor=deck, wall_record=phi['wall_record'],
+        deck_floor=deck, wall_record=phi['wall_record'], boundary_qc=phi['boundary'], handover_qc=handover_qc,
         coverage_AM_P_hertz_pct=cp, coverage_AM_S_hertz_pct=cs,
         coverage_AM_total_hertz_pct=ct, coverage_AM_only_hertz_pct=ca,
         tortuosity_dijkstra_SE=tau['tau_mean'],
@@ -1025,9 +1164,9 @@ def selftest():
         _f, _p = _wc.get('floor') or {}, _wc.get('plate') or {}
         chk('⑭ 바닥 cap 부피 = π h²(3r − h)/3 (h 0.3)', abs((_f.get('v_out_sim') or -1.0) - _cap) < 1e-12)
         chk('⑭ 플래튼 cap 도 같은 식', abs((_p.get('v_out_sim') or -1.0) - _cap) < 1e-12)
-        chk('⑭ 가장 깊은 입자: 상 · 겹침/반지름 0.6 · 중심은 벽 위',
+        chk('⑭ 가장 깊은 입자: 상 · cap 깊이/반지름 0.6 (= 이 경우 접촉 겹침과 같다) · 중심은 벽 위',
             (_f.get('deepest') or {}).get('phase') == 'AM_P'
-            and abs(((_f.get('deepest') or {}).get('overlap_over_r') or -1.0) - 0.6) < 1e-12
+            and abs(((_f.get('deepest') or {}).get('outside_cap_depth_over_r') or -1.0) - 0.6) < 1e-12
             and _f.get('n_center_out') == 0 and _f.get('n_touch') == 1)
         #     덱에서 바닥을 **직접** 확인한다 (입자 깊이로 추정하지 않는다)
         def _deck(name, body):
@@ -1069,6 +1208,91 @@ def selftest():
         chk('⑭ 산출물에 덱 확인 · 벽 기록 · 덱 sha · 벽 z 가 남는다',
             (r14.get('deck_floor') or {}).get('z') == 0.0 and 'wall_record' in r14
             and 'deck' in (r14.get('raw') or {}) and r14.get('z_floor_sim') == 0.0)
+
+        # ── ⑮ Codex HND-01 · 02 · 03 · 04 · 06 (판정 09-25 · 비준 09-25 "ㅇㅇ ㄱ ㄱ") — 재현 먼저 ──
+        _wr14b = (v14b or {}).get('wall_record') or {}
+        _fd = (_wr14b.get('floor') or {}).get('deepest') or {}
+        chk('⑮ HND-03: 깊이 필드는 `outside_cap_depth_over_r` — `overlap_over_r` 는 없다 (접촉 겹침과 다른 양)',
+            'outside_cap_depth_over_r' in _fd and 'overlap_over_r' not in _fd)
+        chk('⑮ HND-03: 통째로 벽 아래인 입자의 접촉 겹침 = 0 (평면의 접촉 범위 밖)',
+            _fd.get('contact_overlap_over_r') == 0.0)
+        _fc = (_wc.get('floor') or {}).get('deepest') or {}
+        chk('⑮ HND-03: 부분 겹침 입자 (z 0.2 · r 0.5) 의 접촉 겹침 = (r − |dist|)/r = 0.6',
+            abs((_fc.get('contact_overlap_over_r') if _fc.get('contact_overlap_over_r') is not None else -1.0) - 0.6) < 1e-12)
+        _vbp = (_wr14b.get('floor') or {}).get('v_out_by_phase') or {}
+        chk('⑮ HND-01 (§8-1): 상별 벽 밖 부피 — 14b 바닥 = AM_P 구 하나 통째 · SE 0',
+            abs(_vbp.get('AM_P', -1.0) - _v1) < 1e-12 and _vbp.get('SE', -1.0) == 0.0)
+        _cl = _wr14b.get('clipped') or {}
+        chk('⑮ (다) clipped: porosity = 1 − (ΣV − W)/(L²·plate_z) — 14b 는 구 둘만 남는다',
+            abs((_cl.get('porosity_pct_RECORD_ONLY') if _cl.get('porosity_pct_RECORD_ONLY') is not None else -1.0)
+                - 100.0 * (1.0 - 2 * _v1 / 500.0)) < 1e-9)
+        chk('⑮ (다) clipped: phi_am = (V_AM − W_AM)/V — AM_S 하나만 남는다 (AM_P 는 통째로 밖)',
+            abs((_cl.get('phi_am') if _cl.get('phi_am') is not None else -1.0) - _v1 / 500.0) < 1e-12)
+        _bd = (v14b or {}).get('boundary') or {}
+        chk('⑮ HND-03/04 적격성: 중심이 벽 밖인 입자가 있으면 physical_target_status HOLD + BOUNDARY_CENTER_OUT (계산 상태는 OK)',
+            _bd.get('physical_target_status') == 'HOLD' and 'BOUNDARY_CENTER_OUT' in (_bd.get('hold_reason_codes') or [])
+            and _bd.get('calculation_status') == 'OK')
+        _bd14 = v14.get('boundary') or {}
+        chk('⑮ 적격성: 전부 안이면 OK (보류 코드 없음)',
+            _bd14.get('physical_target_status') == 'OK' and not _bd14.get('hold_reason_codes'))
+        at14n, lo14n, hi14n, _bc14n = read_atom_dump(_atom_file(
+            tmp, [(1, 5.0, 5.0, 2.5, 4.0, 1), (2, 5.0, 5.0, 2.5, 4.0, 3)], name='atom_14n.liggghts',
+            lo=(0.0, 0.0, 0.0), hi=(10.0, 10.0, 20.0)))
+        v14n = volumes_and_phi(at14n, phase_labels(at14n['type'], 3)[0], lo14n, hi14n, 5.0)
+        _bdn = v14n.get('boundary') or {}
+        chk('⑮ HND-04 적격성: porosity < 0 이면 HOLD + NEGATIVE_POROSITY · phi_sum_gt_one (값은 그대로 낸다)',
+            v14n['porosity_sphere_pct_RECORD_ONLY'] < 0 and 'NEGATIVE_POROSITY' in (_bdn.get('hold_reason_codes') or [])
+            and _bdn.get('phi_sum_gt_one') is True and _bdn.get('physical_target_status') == 'HOLD')
+        #  HND-06: STL 평판 검사
+        _np = os.path.join(tmp, 'nonplanar.stl')
+        with open(_np, 'w') as fh:
+            fh.write('solid p\nfacet normal 0 0 1\nouter loop\nvertex 0 0 0\nvertex 1 0 0\nvertex 0 1 2\nendloop\nendfacet\nendsolid p\n')
+        neg('⑮ HND-06: 평판이 아닌 STL (z 0 과 2) 은 거부 — 평균 1 을 높이로 받지 않는다', lambda: plate_z_from_stl(_np))
+        _psi = globals().get('plate_stl_info')
+        try:
+            _pi = _psi(_stl(tmp, z=7.0, name='flat.stl')) if _psi else {}
+        except Exception:                                                # noqa: BLE001
+            _pi = {}
+        chk('⑮ HND-06: 평판 STL 은 span 0 · 꼭짓점 수 · z 평균 기록',
+            _pi.get('span_sim') == 0.0 and _pi.get('n_vertices') == 3 and _pi.get('z_mean_sim') == 7.0)
+        #  HND-02: 덱의 **활성** 바닥 벽 — fix 생명주기 · group · 지원 밖 명령
+        _W = 'fix {id} {grp} wall/gran model hooke/hysteresis primitive type 1 zplane {z}\n'
+        neg('⑮ HND-02: unfix 된 바닥 (활성 벽 없음) 은 거부',
+            lambda: check_deck_floor(_deck('in.unfix', _W.format(id='floor', grp='all', z='0.0') + 'unfix floor\nrun 100\n')))
+        neg('⑮ HND-02: 재정의된 바닥 (마지막 활성 = 2) 은 거부',
+            lambda: check_deck_floor(_deck('in.redef', _W.format(id='floor', grp='all', z='0.0') + 'unfix floor\n'
+                                           + _W.format(id='floor', grp='all', z='2.0') + 'run 100\n')))
+        try:
+            _dr = check_deck_floor(_deck('in.redef0', _W.format(id='floor', grp='all', z='2.0') + 'unfix floor\n'
+                                         + _W.format(id='floor', grp='all', z='0.0')))
+        except Exception as e:                                           # noqa: BLE001
+            _dr = {'err': f'{type(e).__name__}: {e}'}
+        chk('⑮ HND-02: 재정의로 마지막 활성이 0 이면 통과 · 활성 벽 1', _dr.get('z') == 0.0 and _dr.get('n_active_walls') == 1)
+        neg('⑮ HND-02: group 이 all 이 아닌 바닥은 거부 (전 상 구속 증거 없음)',
+            lambda: check_deck_floor(_deck('in.grp', _W.format(id='floor', grp='AM_only', z='0.0'))))
+        neg('⑮ HND-02: include · jump · if · read_restart 가 있으면 "검증 불가" 로 거부',
+            lambda: check_deck_floor(_deck('in.inc', 'include other.in\n' + _W.format(id='floor', grp='all', z='0.0'))))
+        chk('⑮ HND-02: 기존 산출물 키 유지 (fix_id · wall_type)', _df.get('fix_id') == 'zwall_bot' and _df.get('wall_type') == 1)
+        #  HND-04: 인계용 평면 QC 가 산출물에 있다
+        _q = r14.get('handover_qc') or {}
+        chk('⑮ HND-04: `handover_qc` — 두께 µm (sim × 1e3) · 적격성 · 보류 코드 · 규약 ID · sha 셋',
+            abs((_q.get('thickness_wall_gap_um') if _q.get('thickness_wall_gap_um') is not None else -1.0) - 5000.0) < 1e-9
+            and _q.get('physical_target_status') == 'OK' and _q.get('hold_reason_codes') == ''
+            and _q.get('boundary_model_id') and _q.get('measurement_protocol_id')
+            and len(_q.get('deck_sha256') or '') == 64 and len(_q.get('contact_sha256') or '') == 64)
+        chk('⑮ HND-01: 등록 열의 명목 alias (`phi_se_spheresum_nominal_gap`) = phi_se 그대로',
+            _q.get('phi_se_spheresum_nominal_gap') == r14.get('phi_se') and _q.get('porosity_spheresum_nominal_gap_pct') == r14.get('porosity_sphere_pct_RECORD_ONLY'))
+
+        # ── ⑯ C (τ 진단, LHS-08 · Codex §8-3): 벽 기준 밴드 — 벽 아래로 샌 입자가 solid 아래 밴드를 비운다 ──
+        _c_rows2 = [(5.0, 5.0, 0.5 + 0.9 * k, 0.5, 'SE') for k in range(22)] + [(2.0, 2.0, -1.5, 0.5, 'AM_P')]
+        _tw = tortuosity_se(*_bed(_c_rows2), _lo8, _hi8, plate_z=20.0)
+        _bw = _tw.get('band_detail') or {}
+        chk('⑯ 벽 아래 입자 (z −1.5) 가 solid 아래 밴드를 [−2, −1] 로 끌어내려 SE 가 없다 (BAND_EMPTY 재현)',
+            _tw['status'] == STATUS_BAND_EMPTY and _bw.get('n_bot') == 0)
+        chk('⑯ 벽 기준 진단: 바닥 밴드 [0, t] 의 SE ≥ 1 · 플래튼 밴드 인원 · 벽 z 기록',
+            (_bw.get('wall_n_bot') or 0) >= 1 and _bw.get('wall_n_top') is not None and _bw.get('wall_z_floor') == 0.0)
+        chk('⑯ 벽 기준 진단: 벽 밴드 둘을 잇는 성분 수 (여기선 1)', _bw.get('wall_n_span_components') == 1)
+        chk('⑯ 보고 τ 규약은 불변 (solid_zrange 문자열 그대로)', 'solid_zrange' in _tw['tau_convention'])
 
     print()
     if _FAILS:
