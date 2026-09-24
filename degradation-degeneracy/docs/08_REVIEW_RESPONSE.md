@@ -7686,3 +7686,37 @@ gate64~67 portable 선택 suite 52 passed · 2 skipped(`fcntl.flock`) · 1 desel
 **하지 않은 것**: 본실행 (요청하지 않는다, F50b (b)) · N1/N2/T1-b 재설계 · P0-1/P0-4/등록부 격리/trusted launcher (Q5 순서대로
 읽기 전용 영향 확인 먼저) · 등록부 복원·class 변경.
 
+## §89 69차 접수 — **한정 범위 수용 / 종결** (새 차단 발견 없음 · 본실행 GO 없음)
+
+2026-09-24 접수. 리뷰어가 고정한 검토 HEAD `e6ddcd1efb7df4be69849a4fd5b59c43cccff873` · 요청문 포함 커밋 `afab6485` (그 사이
+dd diff 0 — 리뷰어 실측) · 받은 요청문 ↔ Git blob raw 동일 (sha256 `4b89b8f6…`) · RUN_SCOPE 마지막 커밋 `743f65be` ·
+`source_digest e9ee7475dea7de1d` 직접 계산. Windows / CPython 3.12.14 / pytest 9.1.1, 검토 시작·끝 status clean.
+패키지 원본 `docs/22p_gap/gate69_review/` (zip sha256 `f44c13effce78ee667a2184a5b0cab551a4a8fbd5e10ab23edec2b1f3c96f9bf`, MANIFEST 119 payload ·
+커밋 뒤 blob 대조 119/119 — 이번에는 `-text !eol` 규칙을 **먼저** 커밋했다).
+
+⚠ 리뷰어 지적 하나 (판정 아님): **발송문에 최종 브랜치 HEAD 가 없어** 리뷰어가 스스로 fetch 해 요청문 바이트로 고정했다.
+다음부터 발송문에 **요청문 커밋 SHA 와 브랜치 head SHA 를 둘 다** 적는다 (GATE70 §6).
+
+| 항목 | 판정 | 리뷰어가 직접 확인한 근거 |
+|---|---|---|
+| G68-T1 | **종결 수용** | 원본 `_premise_run` → 원본 소비자: setup-only rc 0 · call 0 → **AssertionError(G68-T1)**; clean · `PYTHONNOUSERSITE=1` call 2 → ACCEPTED; collect-only · usage error 는 G67-T1 사유 유지; 부모에만 `--setup-only` 상속 → child call 2 ACCEPTED(옵션 정리 경계 유지); 외부 plugin 자동 로딩 비활성 → ACCEPTED(내장 hook 경로) |
+| exact node id · 중복 · 오류 · skip · 교차 대조 | 요청 범위 수용 | 회귀 41 passed(26.78 s, `--noconftest`) + 수신 측 기록 변형 **7 건**(call 제거 · call 복제 · setup 실패 · teardown 실패 · 다른 파일 node · 알 수 없는 call outcome · 빈 단계 목록) 전부 AssertionError |
+| 변이 `the-premise-checks-the-call-phase-g68` | 수용 | baseline 5 PASS · mutant 지정 3 만 call 단계 실패 · witness 3/3 일치 |
+| 기존 premise 변이 3 (g65 · g66 · g67) | 회귀 유지 | baseline rc 0 · mutant rc 1 · 정확 실패 집합 · call · witness 일치. `--check-preimages` rc 0 (134.8 s) |
+| D1 · D2 · D3 | 수용 | 실행 코드 불변/문서 변경 구분 · 본실행 GO 부인 · 재실행 ≠ 바이트/역사 복원. `afab6485→e6ddcd1e` dd diff 0 별도 측정 |
+| 리뷰 원자료 Git blob 복원 | 수용 | `git show <HEAD>:<path>` 로 66/67/68 = **107/107 · 350/350 · 141/141**; 규칙 직전 커밋의 불일치 **82 · 174 · 64**; 원본 ZIP 집합·크기·SHA·CRC·경로 검사 통과. "과거 잘못 저장된 커밋이 소급 변경됐다는 뜻은 아니다" |
+| 등록부 | 확인 | tracked 367 · 디스크 367 · blob 불일치 0 · 직전 대비 diff 0 |
+| 본실행 GO | **판정 대상 아님 / 없음** | P0-1 · P0-4 · 등록부 격리 · trusted launcher · F50b(b) 경계 유지 |
+
+**신뢰 경계에 대한 답 (69차 요청문 §5-2):** "이번 수정의 주장 범위는 타당하다 — 정상 pytest 자식이 옵션·환경 탓에 test body 를
+수행하지 않은 경우를 구분하는 실행 관측이다. 자식이 쓰는 JSONL·JUnit 은 악의적 자식에 맞서는 독립 보안 증명이 아니고 coverage
+증명도 아니다. 이 범위를 지키는 한 새 권한 서명·샌드박스 설계를 G68-T1 종결 조건에 추가할 필요는 없다. skipped 는 측정 성공이
+아니다." — 그대로 받는다.
+
+**리뷰어가 하지 않은 것 (그대로 옮긴다):** 우리 `1803 passed / 1 failed / 2 xfailed` · strict smoke · 41 분 전체 회귀는 수신자가
+재실행한 수치가 아니다 · docs-lint 실패 1 은 `results/grid_fit_v4` 부재와 정합적이나 근본 원인을 별도 종결하지 않았다 ·
+공식 `mutation_replay.py -k premise` 체인 · Linux native locking · `/proc` 경로는 미실행.
+
+**다음:** "이 수용을 원장에 기록하는 일" (여기) · 같은 수정·같은 suite 재실행 요구 없음 · 본실행·미착수 과제는 별도 범위·검증·
+사용자 승인 — **GATE70 (`docs/22p_gap/GATE70_REQUEST.md`) 이 그 요청이다.**
+
