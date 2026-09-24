@@ -1,131 +1,154 @@
 {
-  "_id": "nd_icohp_frozen4f_result_2026_09_23",
-  "_kind": "result",
-  "_card": "db/properties/nd_icohp_pp_swap_card_2026_09_16.json",
-  "date": "2026-09-23",
-  "system": "modelc_nd_doped (Li48P10Nd2S41O3Cl16, 120 원자) · frozen-4f Nd PP vc-relax 기하",
-  "무엇": "카드 §1 의 측정 — Nd pseudopotential 하나만 바꿔(Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF, 4f-in-core) 잰 Nd–S ICOHP. 판정량과 문턱은 결과 전에 고정됐다 (카드 §2 · §2b).",
-  "실행": {
-    "기계": "gabia (CPU · qe-7.4.1-cpu · 8 랭크)",
-    "경로": "/data/work/runs/nd_ppswap_2026_09_16/lobster_frozen4f",
-    "SCF": "09-19 (10 h 33 m)",
-    "nscf": "09-23 14:33 JOB DONE (2 d 0 h 36 m · k 2 2 1 · nbnd 920 · nosym)",
-    "LOBSTER": "5.1.1 · 15:53 rc=0 · 1 h 11 m 57 s wall · OMP 8",
-    "abs_charge_spilling_pct": 1.19,
-    "기저": "546 함수 (O 2s2p · P/S/Cl 3s3p · Li 1s2s2p · Nd 5s6s5p6p5d) — 요청한 P/S/Cl 3d 는 쓰이지 않았다 (카드 §2c)",
-    "k_적분": "사면체법 불가 → Gaussian smearing 0.02 (카드 §2c)"
+ "_id": "nd_icohp_frozen4f_result_2026_09_23",
+ "_kind": "result",
+ "_card": "db/properties/nd_icohp_pp_swap_card_2026_09_16.json",
+ "date": "2026-09-23",
+ "system": "modelc_nd_doped (Li48P10Nd2S41O3Cl16, 120 원자) · frozen-4f Nd PP vc-relax 기하",
+ "무엇": "카드 §1 의 측정 — Nd pseudopotential 하나만 바꿔(Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF, 4f-in-core) 잰 Nd–S ICOHP. 판정량과 문턱은 결과 전에 고정됐다 (카드 §2 · §2b).",
+ "실행": {
+  "기계": "gabia (CPU · qe-7.4.1-cpu · 8 랭크)",
+  "경로": "/data/work/runs/nd_ppswap_2026_09_16/lobster_frozen4f",
+  "SCF": "09-19 (10 h 33 m)",
+  "nscf": "09-23 14:33 JOB DONE (2 d 0 h 36 m · k 2 2 1 · nbnd 920 · nosym)",
+  "LOBSTER": "5.1.1 · 15:53 rc=0 · 1 h 11 m 57 s wall · OMP 8",
+  "abs_charge_spilling_pct": 1.19,
+  "기저": "546 함수 (O 2s2p · P/S/Cl 3s3p · Li 1s2s2p · Nd 5s6s5p6p5d) — 요청한 P/S/Cl 3d 는 쓰이지 않았다 (카드 §2c)",
+  "k_적분": "사면체법 불가 → Gaussian smearing 0.02 (카드 §2c)"
+ },
+ "판정량_Nd79": {
+  "정의": "Nd79(NdS₅Cl) 의 가장 가까운 S 5개 ICOHP 평균 (카드 §2b · 결과 전 고정)",
+  "S_5": [
+   {
+    "d_A": 2.68,
+    "icohp_eV": -4.752
+   },
+   {
+    "d_A": 2.812,
+    "icohp_eV": -4.465
+   },
+   {
+    "d_A": 2.886,
+    "icohp_eV": -3.64
+   },
+   {
+    "d_A": 2.96,
+    "icohp_eV": -3.257
+   },
+   {
+    "d_A": 2.997,
+    "icohp_eV": -2.782
+   }
+  ],
+  "mean_eV": -3.779,
+  "배위": "S 5 (2.680–2.997 Å) + Cl 1 (2.722 Å) = NdS₅Cl — 6월 라벨과 같은 자리 (vc-relax 기록 · 이번 출력 둘 다)"
+ },
+ "★_판정": "**C1 — PP 가 원인이다.** Nd79 Nd–S −3.779 eV 는 문턱 −2.0 보다 강하다 (여유 1.78 eV). 같은 런의 대조군은 6월과 같다 — P–S −5.669 (6월 −5.672) · Li–S −1.658 (6월 −1.647) — 거리도 같은 대역(2.680–2.997 vs 2.695–3.004 Å)인데 **Nd–S 만 7.9 배** 바뀌었다 (6월 Nd79 −0.481). 9월 n5fu(같은 PP·다른 셀) −4.080 과는 7 % 차.",
+ "카드가_정한_C1_후속": [
+  "6월 Nd–S 값(−0.436 · −0.481)을 **영구 비인용** 으로 확정 — nd_icohp.json 에 표시 · citation_hazards.json 등재 (HZ-nd-icohp-june-nds-pp)",
+  "6월 Nd–S 그림을 근거로 쓰지 않는다"
+ ],
+ "참고로만": {
+  "원소쌍_평균_eV": {
+   "O-P": [
+    -8.317,
+    3
+   ],
+   "P-S": [
+    -5.669,
+    39
+   ],
+   "Cl-Nd": [
+    -4.126,
+    2
+   ],
+   "Nd-O": [
+    -3.39,
+    2
+   ],
+   "Nd-S(4.0 Å 전체)": [
+    -2.906,
+    11
+   ],
+   "Cl-Li": [
+    -2.136,
+    79
+   ],
+   "Li-S": [
+    -1.658,
+    198
+   ],
+   "Li-O": [
+    -0.87,
+    14
+   ],
+   "Nd-P": [
+    -0.525,
+    4
+   ],
+   "S-S": [
+    -0.104,
+    117
+   ]
   },
-  "판정량_Nd79": {
-    "정의": "Nd79(NdS₅Cl) 의 가장 가까운 S 5개 ICOHP 평균 (카드 §2b · 결과 전 고정)",
-    "S_5": [
-      {
-        "d_A": 2.68,
-        "icohp_eV": -4.752
-      },
-      {
-        "d_A": 2.812,
-        "icohp_eV": -4.465
-      },
-      {
-        "d_A": 2.886,
-        "icohp_eV": -3.64
-      },
-      {
-        "d_A": 2.96,
-        "icohp_eV": -3.257
-      },
-      {
-        "d_A": 2.997,
-        "icohp_eV": -2.782
-      }
+  "Nd2_NdO2S3Cl": {
+   "가장_가까운_S_3개_eV": [
+    -5.396,
+    -3.354,
+    -1.972
+   ],
+   "mean_eV": -3.574,
+   "O": [
+    [
+     2.439,
+     -3.689
     ],
-    "mean_eV": -3.779,
-    "배위": "S 5 (2.680–2.997 Å) + Cl 1 (2.722 Å) = NdS₅Cl — 6월 라벨과 같은 자리 (vc-relax 기록 · 이번 출력 둘 다)"
+    [
+     2.545,
+     -3.092
+    ]
+   ],
+   "Cl": [
+    2.774,
+    -3.966
+   ]
   },
-  "★_판정": "**C1 — PP 가 원인이다.** Nd79 Nd–S −3.779 eV 는 문턱 −2.0 보다 강하다 (여유 1.78 eV). 같은 런의 대조군은 6월과 같다 — P–S −5.669 (6월 −5.672) · Li–S −1.658 (6월 −1.647) — 거리도 같은 대역(2.680–2.997 vs 2.695–3.004 Å)인데 **Nd–S 만 7.9 배** 바뀌었다 (6월 Nd79 −0.481). 9월 n5fu(같은 PP·다른 셀) −4.080 과는 7 % 차.",
-  "카드가_정한_C1_후속": [
-    "6월 Nd–S 값(−0.436 · −0.481)을 **영구 비인용** 으로 확정 — nd_icohp.json 에 표시 · citation_hazards.json 등재 (HZ-nd-icohp-june-nds-pp)",
-    "6월 Nd–S 그림을 근거로 쓰지 않는다"
-  ],
-  "참고로만": {
-    "원소쌍_평균_eV": {
-      "O-P": [
-        -8.317,
-        3
-      ],
-      "P-S": [
-        -5.669,
-        39
-      ],
-      "Cl-Nd": [
-        -4.126,
-        2
-      ],
-      "Nd-O": [
-        -3.39,
-        2
-      ],
-      "Nd-S(4.0 Å 전체)": [
-        -2.906,
-        11
-      ],
-      "Cl-Li": [
-        -2.136,
-        79
-      ],
-      "Li-S": [
-        -1.658,
-        198
-      ],
-      "Li-O": [
-        -0.87,
-        14
-      ],
-      "Nd-P": [
-        -0.525,
-        4
-      ],
-      "S-S": [
-        -0.104,
-        117
-      ]
-    },
-    "Nd2_NdO2S3Cl": {
-      "가장_가까운_S_3개_eV": [
-        -5.396,
-        -3.354,
-        -1.972
-      ],
-      "mean_eV": -3.574,
-      "O": [
-        [
-          2.439,
-          -3.689
-        ],
-        [
-          2.545,
-          -3.092
-        ]
-      ],
-      "Cl": [
-        2.774,
-        -3.966
-      ]
-    },
-    "⚠": "출력의 'nearest-5' 는 Nd2 에서 두 번째 배위권(3.379 · 3.949 Å) S 를 섞는다 — Nd2 는 S 3개가 첫 배위권이라 3개 평균이 맞는 비교다 (참고값, 판정 대상 아님)."
+  "⚠": "출력의 'nearest-5' 는 Nd2 에서 두 번째 배위권(3.379 · 3.949 Å) S 를 섞는다 — Nd2 는 S 3개가 첫 배위권이라 3개 평균이 맞는 비교다 (참고값, 판정 대상 아님)."
+ },
+ "한계_판정문에_붙는다": [
+  "⚠ k 2 2 1 은 총에너지 1 meV/atom 수준에서 미수렴 — k-탐침 k 3 3 1 대비 −3.21 meV/atom (enforcement ④ · 2026-09-24) ⇒ 재개 조건 2 발화 · dense-k LOBSTER 재개 (k·기계·시점은 1저자)",
+  "6월과 k 가 같은지 **미상** (D-2026-09-18-nd-icohp-kmesh enforcement ③)",
+  "기저 546 — P/S/Cl 3d 미사용 (9월 n5fu 도 같은 빌더라 같은 조건으로 추정)",
+  "Gaussian smearing (사면체법 불가)",
+  "배치 1개 — 6월 UMA LOW-confidence 담금질 배치 조건부 (카드 §5)",
+  "vc-relax 기하 (카드 §1 '왜 이완인가')"
+ ],
+ "남은_것": [
+  "enforcement ④ k-탐침 SCF 1개 — |ΔE|/atom > 1 meV 면 dense-k LOBSTER 재개 (결정 재개 조건 2). k 값·실행은 1저자",
+  "원자료 회수: ICOHPLIST.lobster · ICOBILIST.lobster · lobsterout → db/raw/nd_lobster_frozen4f_2026_09_23/"
+ ],
+ "results_seen": true,
+ "citable": false,
+ "why_not_citable": "원인 규명 측정이다 (카드 §5-[3]) — 정본 물성을 만들지 않는다. 비율·방향 서술만.",
+ "enforcement_④_k_탐침_2026_09_24": {
+  "실행": "gabia CPU (qe-7.4.1-cpu · 8 랭크 · npool 2) · `/data/work/runs/nd_ppswap_2026_09_16/kprobe_k331` · 09-23 16:42 KST 발사 · SCF 15 iteration 수렴 · JOB DONE (09-24 10:31 KST watch 로 확인)",
+  "입력": "LOBSTER SCF 와 같은 입력 — 다른 줄 3 개 (prefix · outdir · K_POINTS 3 3 1). 원 SCF 는 k 2 2 1.",
+  "결과": {
+   "E_k221_Ry": -6399.18597654,
+   "dE_k331_minus_k221_Ry": -0.028316,
+   "dE_meV_per_atom": -3.21,
+   "nat": 120,
+   "문턱": "|ΔE| ≤ 1 meV/atom (0.0088 Ry) — 결과 전에 고정 (결정 재개 조건 2 · open_items 09-23)",
+   "⚠": "ΔE 는 watch 스크립트가 출력에서 계산한 값이다. `!` 줄 원문은 아직 회수 안 했다 — 회수하면 E_k331 을 여기에 적는다."
   },
-  "한계_판정문에_붙는다": [
-    "6월과 k 가 같은지 **미상** (D-2026-09-18-nd-icohp-kmesh enforcement ③)",
-    "기저 546 — P/S/Cl 3d 미사용 (9월 n5fu 도 같은 빌더라 같은 조건으로 추정)",
-    "Gaussian smearing (사면체법 불가)",
-    "배치 1개 — 6월 UMA LOW-confidence 담금질 배치 조건부 (카드 §5)",
-    "vc-relax 기하 (카드 §1 '왜 이완인가')"
-  ],
-  "남은_것": [
-    "enforcement ④ k-탐침 SCF 1개 — |ΔE|/atom > 1 meV 면 dense-k LOBSTER 재개 (결정 재개 조건 2). k 값·실행은 1저자",
-    "원자료 회수: ICOHPLIST.lobster · ICOBILIST.lobster · lobsterout → db/raw/nd_lobster_frozen4f_2026_09_23/"
-  ],
-  "results_seen": true,
-  "citable": false,
-  "why_not_citable": "원인 규명 측정이다 (카드 §5-[3]) — 정본 물성을 만들지 않는다. 비율·방향 서술만."
+  "판정": "**문턱의 3.2 배** ⇒ `D-2026-09-18-nd-icohp-kmesh` 재개 조건 2 가 발화했다: dense-k LOBSTER 를 **재개한다**. 사전등록 규칙이라 선택이 아니다. k 값 · 기계 · 시점은 1저자 (결정 문구 'k 값·실행은 1저자').",
+  "C1_판정에_미치는_것": "C1 은 **유지하고 한계를 붙인다**. 판정 여유 1.78 eV (−3.779 vs 문턱 −2.0 · 47 %) 는 같은 런쌍에서 셀·k 가 바꾼 P–S 10 % · Li–S 6 % 보다 크다 — 뒤집힐 크기로 보이지 않지만 **dense-k 결과 전까지는 예상**이다.",
+  "⚠_재사용할_것": "k-탐침 outdir (.save) 은 k 3 3 1 **SCF 전하밀도**다. dense-k 를 k 3 3 1 로 가면 SCF 를 다시 안 돌리고 nscf(nosym) 부터 간다. ⛔ 지우지 않는다.",
+  "⚠_다음_nscf_비용": "지난 nscf 는 nbnd 920 (실제 기저 546 · 시작 wfc 374 개가 난수) 이 값을 먹었다 (k 하나 ≈ 12 h · CPU 8 랭크). 다음은 실제 기저 수 근처 (≥ 546) 로 잡는다. k 3 3 1 nosym 은 k 점 9 개다 (k 2 2 1 은 4 개).",
+  "⚠_기계": "1저자 규칙 (2026-09-23) '큰 계산은 GPU 로' 아래 있다. 지금 GPU 는 gabia A6000 = b2o3 UMA (GPU pw.x 와 공존 금지 · 예외 없음) · V100 = SE|SE 4층 이완 중 · kgy = 공유·24 GB. 메모리 추정 (CPU pw.x 수 초 프로브) 은 CPU 로 해도 된다."
+ },
+ "남은_것_갱신_2026_09_24": [
+  "✅ enforcement ④ 실행 → 재개 조건 2 발화 (위 절). ⏳ dense-k LOBSTER — **1저자 결정 대기**: k 값 (권고 k 3 3 1 · 탐침 SCF 재사용) · 기계 (GPU 규칙) · 시점.",
+  "`!` 줄 원문 회수 (E_k331) → 위 절에 기입.",
+  "원자료 회수 (종전 항목 그대로): ICOHPLIST.lobster · ICOBILIST.lobster · lobsterout → db/raw/nd_lobster_frozen4f_2026_09_23/"
+ ]
 }
