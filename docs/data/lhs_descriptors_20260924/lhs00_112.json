@@ -1,0 +1,180 @@
+{
+ "case": "lhs00_112",
+ "timestep": 2120000,
+ "n_types": 2,
+ "type_map": {
+  "1": "AM",
+  "2": "SE"
+ },
+ "phase_counts": {
+  "AM": 12434,
+  "SE": 26525
+ },
+ "boundary": "경계 플래그 ('pp', 'pp', 'ff') = 규약",
+ "plate_z_sim": 0.03297250000000001,
+ "plate_z_source": "mesh_stl",
+ "phi_se": 0.16848534412307076,
+ "phi_am": 0.6318406842831324,
+ "porosity_sphere_pct_RECORD_ONLY": 19.967397159379672,
+ "closure_residual": 0.0,
+ "z_floor_sim": 0.0,
+ "H_sim": 0.03297250000000001,
+ "solid_bot_sim": -0.000973391,
+ "solid_top_sim": 0.0332751,
+ "deck_floor": {
+  "z": 0.0,
+  "wall_type": 2,
+  "fix_id": "zwall_bot",
+  "n_zplane_walls": 1,
+  "line": "fix zwall_bot all wall/gran model hooke/hysteresis tangential history rolling_friction cdt primitive type 2 zplane 0.0"
+ },
+ "wall_record": {
+  "floor": {
+   "n_touch": 1410,
+   "n_center_out": 0,
+   "n_fully_out": 0,
+   "n_center_out_by_phase": {},
+   "v_out_sim": 3.172865851914568e-07,
+   "v_out_pct": 0.48094219776630975,
+   "deepest": {
+    "phase": "AM",
+    "r_sim": 0.001,
+    "z_sim": 2.6609e-05,
+    "depth_sim": 0.000973391,
+    "overlap_over_r": 0.973391
+   }
+  },
+  "plate": {
+   "n_touch": 1652,
+   "n_center_out": 0,
+   "n_fully_out": 0,
+   "n_center_out_by_phase": {},
+   "v_out_sim": 2.7701137934743657e-08,
+   "v_out_pct": 0.0419893143321019,
+   "deepest": {
+    "phase": "SE",
+    "r_sim": 0.0005,
+    "z_sim": 0.0327751,
+    "depth_sim": 0.00030259999999999315,
+    "overlap_over_r": 0.6051999999999863
+   }
+  },
+  "pushback": {
+   "H_sim": 0.033110495089250486,
+   "dH_sim": 0.00013799508925047693,
+   "V_box_sim": 8.277623772312623e-05,
+   "phi_se": 0.16778314531761682,
+   "phi_am": 0.6292073527251263,
+   "porosity_pct_RECORD_ONLY": 20.300950195725687
+  },
+  "convention": "(가) 주 값 = 웹앱 ε_sphere (ΣV 전부 / L²·plate_z) · (나) pushback = 벽 밖 부피를 벽 안으로 되돌려 두께에 더한 값 (H′ = plate_z + V_out / L²) — 판단 J14"
+ },
+ "coverage_AM_P_hertz_pct": null,
+ "coverage_AM_S_hertz_pct": null,
+ "coverage_AM_total_hertz_pct": 11.445139738083366,
+ "coverage_AM_only_hertz_pct": 11.445139738083366,
+ "tortuosity_dijkstra_SE": null,
+ "status": {
+  "phi": "OK",
+  "porosity": "OK",
+  "coverage_AM_P": "N_A_PHASE_ABSENT",
+  "coverage_AM_S": "N_A_PHASE_ABSENT",
+  "coverage_AM_total": "OK",
+  "tortuosity": "ELECTRODE_BAND_EMPTY"
+ },
+ "tau_detail": {
+  "tau_mean": null,
+  "tau_median": null,
+  "tau_mean_untruncated": null,
+  "n_sampled": 0,
+  "n_valid": 0,
+  "n_truncated": 0,
+  "status": "ELECTRODE_BAND_EMPTY",
+  "tau_convention": "harvest_v1/solid_zrange/rSEmax/no_fallback/same_component",
+  "band_detail": {
+   "n_se": 26525,
+   "z_lo": -0.000973391,
+   "z_hi": 0.0332751,
+   "band_t": 0.0005,
+   "se_z_lo": -0.000338494,
+   "se_z_hi": 0.0332751,
+   "n_bot": 0,
+   "n_top": 1221,
+   "n_components": 4967,
+   "n_span_components": 0,
+   "largest_comp_frac": 0.05613572101790763,
+   "largest_comp_z_span_frac": 0.7822158646347368,
+   "alt_plate_z": 0.03297250000000001,
+   "alt_n_top": 1284,
+   "alt_plate_above_solid": false,
+   "alt_note": "진단 전용 (LHS-08) — 위 전극면을 plate_z 로 뒀을 때의 밴드 인원. 보고 τ 는 solid_zrange 규약 그대로이며 이 수는 τ 에 안 들어간다."
+  }
+ },
+ "coverage_detail": {
+  "n_capped": 0,
+  "n_free_surface_invalid": 0,
+  "counts": {
+   "AM_P": {
+    "n_particles": 0,
+    "n_valid": 0
+   },
+   "AM_S": {
+    "n_particles": 0,
+    "n_valid": 0
+   },
+   "AM": {
+    "n_particles": 12434,
+    "n_valid": 12434
+   }
+  },
+  "contact_headers": [
+   "c_cpl[1]",
+   "c_cpl[2]",
+   "c_cpl[3]",
+   "c_cpl[4]",
+   "c_cpl[5]",
+   "c_cpl[6]",
+   "c_cpl[7]",
+   "c_cpl[8]",
+   "c_cpl[9]",
+   "c_cpl[10]",
+   "c_cpl[11]",
+   "c_cpl[12]",
+   "c_cpl[13]",
+   "c_cpl[14]",
+   "c_cpl[15]",
+   "c_cpl[16]",
+   "c_cpl[17]",
+   "c_cpl[18]",
+   "c_cpl[19]",
+   "c_cpl[20]",
+   "c_cpl[21]",
+   "c_cpl[22]",
+   "c_cpl[23]",
+   "c_cpl[24]",
+   "c_cpl[25]",
+   "c_cpl[26]"
+  ]
+ },
+ "V_box_sim": 8.243125000000004e-05,
+ "raw": {
+  "atom": {
+   "path": "atom_2120000.liggghts",
+   "sha256": "6a3c3e10d7db3b51804278662541f5e949010c75d942774050df3304b4936ef4"
+  },
+  "contact": {
+   "path": "contact_2120000.liggghts",
+   "sha256": "8a29ab76b3b43db8682d9b18c8da7564b93c02cdccdb86e2a5d5a1c898c1d2e5"
+  },
+  "mesh": {
+   "path": "mesh_2120000.stl",
+   "sha256": "e2ced26231af0baf6f0c1c45534ce5dc74979ed4ce8f81749c3fcbfe8d9935ea"
+  },
+  "deck": {
+   "path": "input_lhs00_112.liggghts",
+   "sha256": "bd4dac3d618563c00834ddddf2ed66450a727d038554623e52cc140b95db9591"
+  }
+ },
+ "area_channel": "dem_geometric_c_cpl22 — LIGGGHTS 기하 교차 원판 pi(r d - d^2/4); Hertz 탄성 pi R* d 가 **아니다** (동일 반경 비 = 2 - d/(2r))",
+ "contract": "codex_verdict_lhs_descriptors_20260913 §7 (1~6)"
+}

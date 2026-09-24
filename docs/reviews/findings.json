@@ -4626,45 +4626,50 @@
   {
    "id": "LHS-10",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (LHS 인계 판단 검토, 2026-09-24)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "φ_SE · φ_AM · porosity 의 분모가 **바닥 벽(z = 0)이 아니라 덤프 상자 바닥(−10 µm)** 에서 잰 높이다 — 인계표 회귀 타깃이 케이스마다 0.757–0.875 배로 작다",
-   "note": "`lhs_descriptor_harvest.volumes_and_phi` 가 `H = plate_z − box_lo[2]` 를 쓰는데 `box_lo` 는 덤프 `BOX BOUNDS` 다.  같은 계열 덱은 상자 `region reg_box block … -0.01 1.0` · 바닥 벽 `wall/gran … zplane 0.0` ⇒ 분모에 입자가 없는 10 µm 층이 매번 들어간다.  실측: 인계 CSV 130/130 에서 `V_box_sim/rve²` = plate_z + **10.000 µm**.  φ 편향 인자 plate_z/(plate_z+10) = 0.757–0.875 (얇은 침대일수록 큼 = 설계 축과 얽힘).  porosity 중앙 47.2 % → 벽 기준 37.5 %, 벽 기준 음수 4 건 (겹침 과다).  DESC-07 항등식은 세 값이 같은 분모를 써서 **통과** — 자기일관 ≠ 옳음.\n처방: 수확기가 바닥을 덱의 `zplane` 에서 읽어 `z_floor` 로 남기고 인계표 재생성 (ΣV 불변이라 φ′ = φ·(plate_z+10 µm)/plate_z 로 정확히 확인 가능).  lhsx 확장 수확은 이 수정 뒤.  관련: `LHS-09` (두께 — 바닥 기준 부재) 와 같은 뿌리지만 이쪽은 **회귀 타깃**을 친다.\n★ 실측 확인 (09-24, WSL 130 덤프, `scripts/lhs_phi_crosscheck.py`): FLOOR_ONLY 130/130 · 바닥 틈 정확히 0.01 · 최대 잔차 5.5e-14 %p · 웹앱 porosity 중앙 37.54 %.\n★ 수정 (09-24, 판단 J13): 수확기 H = plate_z − 벽 (Z_FLOOR 0) + 벽 아래 입자 거부 · selftest ⑭ (빨간불 3 → 초록) · 교차검사 SAME 강제.  재수확으로 값이 확인되면 claimed_fixed.\n★ 재수확 (09-24, `0424795d6`): **72/130** — J13 가드 (½·r_max) 가 58 건을 거부 (`LHS-12`).  판단 J14 (비준 09-24) 로 가드 교체 = 덱 `zplane` 직접 확인 + 벽 밖 부피는 거부 대신 기록.  재수확 SAME 130 확인 뒤 claimed_fixed.",
+   "note": "`lhs_descriptor_harvest.volumes_and_phi` 가 `H = plate_z − box_lo[2]` 를 쓰는데 `box_lo` 는 덤프 `BOX BOUNDS` 다.  같은 계열 덱은 상자 `region reg_box block … -0.01 1.0` · 바닥 벽 `wall/gran … zplane 0.0` ⇒ 분모에 입자가 없는 10 µm 층이 매번 들어간다.  실측: 인계 CSV 130/130 에서 `V_box_sim/rve²` = plate_z + **10.000 µm**.  φ 편향 인자 plate_z/(plate_z+10) = 0.757–0.875 (얇은 침대일수록 큼 = 설계 축과 얽힘).  porosity 중앙 47.2 % → 벽 기준 37.5 %, 벽 기준 음수 4 건 (겹침 과다).  DESC-07 항등식은 세 값이 같은 분모를 써서 **통과** — 자기일관 ≠ 옳음.\n처방: 수확기가 바닥을 덱의 `zplane` 에서 읽어 `z_floor` 로 남기고 인계표 재생성 (ΣV 불변이라 φ′ = φ·(plate_z+10 µm)/plate_z 로 정확히 확인 가능).  lhsx 확장 수확은 이 수정 뒤.  관련: `LHS-09` (두께 — 바닥 기준 부재) 와 같은 뿌리지만 이쪽은 **회귀 타깃**을 친다.\n★ 실측 확인 (09-24, WSL 130 덤프, `scripts/lhs_phi_crosscheck.py`): FLOOR_ONLY 130/130 · 바닥 틈 정확히 0.01 · 최대 잔차 5.5e-14 %p · 웹앱 porosity 중앙 37.54 %.\n★ 수정 (09-24, 판단 J13): 수확기 H = plate_z − 벽 (Z_FLOOR 0) + 벽 아래 입자 거부 · selftest ⑭ (빨간불 3 → 초록) · 교차검사 SAME 강제.  재수확으로 값이 확인되면 claimed_fixed.\n★ 재수확 (09-24, `0424795d6`): **72/130** — J13 가드 (½·r_max) 가 58 건을 거부 (`LHS-12`).  판단 J14 (비준 09-24) 로 가드 교체 = 덱 `zplane` 직접 확인 + 벽 밖 부피는 거부 대신 기록.  재수확 SAME 130 확인 뒤 claimed_fixed.\n★ 재수확 확인 (09-24, `4ee1038c3` 위 WSL 130): 교차검사 SAME **130** · 최대 잔차 5.6e-14 %p · 바닥 틈 0 · 덱 바닥 z = 0 130/130 (`docs/data/lhs_descriptors_20260924/`).  수정 SHA = `0424795d6` (분모 바닥) — 가드 과잉 거부는 `LHS-12` 로 따로 고쳤다.",
    "evidence_tests": [
-    "docs/data/lhs_handover_20260919.csv",
-    "scripts/lhs_descriptor_harvest.py"
-   ]
+    "scripts/lhs_descriptor_harvest.py",
+    "scripts/lhs_phi_crosscheck.py",
+    "docs/data/lhs_descriptors_20260924/_phi_crosscheck.tsv"
+   ],
+   "claimed_fixed_sha": "0424795d654bfd1b4e2f9a0a1573ae9d71ae5b75"
   },
   {
    "id": "LHS-11",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (LHS 인계 판단 — 수확기 ↔ 웹앱 비교 준비 중, 2026-09-24)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "130 중 **97** 건의 플래튼 위치가 원자 덤프보다 **평균 150만 step 이른** 메시에서 나왔다 — 압축 중인 플래튼이라 porosity 가 부풀었다 (중앙 38.5 % vs 같은 step 11.0 %)",
-   "note": "`lhs_harvest_batch.pick_mesh` 가 같은 step 메시가 없으면 원자 step 이하의 최신 메시를 쓴다 (`latest_le`, 97 건).  step 차이 중앙 150만 · 최대 290.5만, LHS 런은 290만 step 에서도 압축 중이다.  벽 기준 porosity: `exact` 33 건 중앙 11.0 % · `latest_le` 97 건 중앙 38.5 % — 겹치지 않음, 메시 step 과 상관 −0.95.  `LHS-10` (분모 바닥 10 µm) 보다 크고, 판단 J5 (벽 기준으로도 높은 porosity) 의 주원인.  처방: 같은 step 메시를 원본에서 찾아 재수확 · 없으면 thermo 나 고체 윗면으로 대체하고 라벨 · `latest_le` 를 거부나 step 한도로 · `scripts/lhs_phi_crosscheck.py` 의 `plate_gap` 으로 실측 확인.\n★ 실측 확인 (09-24, WSL): 플래튼 − 고체 윗면 = exact 33 건 −1.2…−0.3 µm · latest_le 97 건 +8.1…+27.4 µm (중앙 +16.2).  처방 권고 = 판단 J10 (② 고체 윗면 정의).\n★ 원인 갱신 (09-24, 판단 J11): 덱은 메시를 끝까지 5000 step 마다 쓴다 — WSL `lhs_local` 에 99만대 세 장만 있는 것은 옮길 때 **문자열 정렬로 \"마지막 메시\"** 를 고른 흔적 (`mesh_995000` > `mesh_2425000`).  수확기 `pick_mesh` 는 정수 비교라 무관.  처방 = 같은 step 메시를 원본에서 숫자 순서로 재반입 → 웹앱 규약 그대로.\n★ 해소 확인 (09-24, 판단 J12): 같은 step 메시 재반입 뒤 exact 130/130 · 플래튼 − 고체 윗면 −1.21…−0.27 µm · 웹앱 규약 porosity 중앙 9.89 %.  재수확에 반영되면 닫는다.",
+   "note": "`lhs_harvest_batch.pick_mesh` 가 같은 step 메시가 없으면 원자 step 이하의 최신 메시를 쓴다 (`latest_le`, 97 건).  step 차이 중앙 150만 · 최대 290.5만, LHS 런은 290만 step 에서도 압축 중이다.  벽 기준 porosity: `exact` 33 건 중앙 11.0 % · `latest_le` 97 건 중앙 38.5 % — 겹치지 않음, 메시 step 과 상관 −0.95.  `LHS-10` (분모 바닥 10 µm) 보다 크고, 판단 J5 (벽 기준으로도 높은 porosity) 의 주원인.  처방: 같은 step 메시를 원본에서 찾아 재수확 · 없으면 thermo 나 고체 윗면으로 대체하고 라벨 · `latest_le` 를 거부나 step 한도로 · `scripts/lhs_phi_crosscheck.py` 의 `plate_gap` 으로 실측 확인.\n★ 실측 확인 (09-24, WSL): 플래튼 − 고체 윗면 = exact 33 건 −1.2…−0.3 µm · latest_le 97 건 +8.1…+27.4 µm (중앙 +16.2).  처방 권고 = 판단 J10 (② 고체 윗면 정의).\n★ 원인 갱신 (09-24, 판단 J11): 덱은 메시를 끝까지 5000 step 마다 쓴다 — WSL `lhs_local` 에 99만대 세 장만 있는 것은 옮길 때 **문자열 정렬로 \"마지막 메시\"** 를 고른 흔적 (`mesh_995000` > `mesh_2425000`).  수확기 `pick_mesh` 는 정수 비교라 무관.  처방 = 같은 step 메시를 원본에서 숫자 순서로 재반입 → 웹앱 규약 그대로.\n★ 해소 확인 (09-24, 판단 J12): 같은 step 메시 재반입 뒤 exact 130/130 · 플래튼 − 고체 윗면 −1.21…−0.27 µm · 웹앱 규약 porosity 중앙 9.89 %.  재수확에 반영되면 닫는다.\n★ 재수확 확인 (09-24): 메시 `exact` **130/130** (`latest_le` 폐지 `0424795d6` + 같은 step 메시 재반입) · 플래튼 − 고체 윗면 −1.21 … −0.27 µm (중앙 −0.52) — 모든 케이스에서 플래튼이 윗면 알을 살짝 누른 자리다.",
    "evidence_tests": [
-    "docs/data/lhs_descriptors_20260919/_batch_summary.json",
-    "scripts/lhs_phi_crosscheck.py"
-   ]
+    "scripts/lhs_harvest_batch.py",
+    "docs/data/lhs_descriptors_20260924/_batch_summary.json",
+    "docs/data/lhs_descriptors_20260924/_phi_crosscheck.tsv"
+   ],
+   "claimed_fixed_sha": "0424795d654bfd1b4e2f9a0a1573ae9d71ae5b75"
   },
   {
    "id": "LHS-12",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (WSL 재수확 09-24 — 수확 72/130, 교차검사 ERROR 58)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "J13 수확기 가드 (입자 바닥이 벽 아래 ½·r_max 를 넘으면 거부) 가 실제 130 중 **58** 건을 거부했다 — 가장 큰 AM 과 바닥 벽의 **깊은 겹침** 연속 분포를 문턱에서 자른 것",
-   "note": "58 = bimodal 31/100 · mono_AM_S 15/15 · mono_AM_P 12/15.  깊이 d = −min(z − r) 는 최대 입자 반지름을 따른다 (corr log 0.877 · SE 반지름 0.242) · d/r_max 0.50–0.97 이 문턱 바로 위에 몰린다 (0.5–0.6 에 24 건) = 연속 분포의 잘린 꼬리.  거부하면 설계 축과 얽힌 편향 (작은 AM_P · AM-rich · P 비중 높은 설계와 mono 27/30 이 빠진다).  문턱 ½ 은 J13 에서 근거 없이 고른 값이었다.\n수정 (판단 J14, 비준 09-24): 가드 삭제 · 바닥 위치는 덱의 `wall/gran … zplane` 으로 직접 확인 (`check_deck_floor`, CLI `--deck` 필수) · 벽 밖 부피 · 입자 수 · 가장 깊은 입자 · (나) 되돌려 놓은 두께/porosity 를 `wall_record` 로 기록.  selftest 빨간불 (수확기 12 · 배치 4 · 교차검사 4) 뒤 초록.  재수확 SAME 130 확인 뒤 claimed_fixed.",
+   "note": "58 = bimodal 31/100 · mono_AM_S 15/15 · mono_AM_P 12/15.  깊이 d = −min(z − r) 는 최대 입자 반지름을 따른다 (corr log 0.877 · SE 반지름 0.242) · d/r_max 0.50–0.97 이 문턱 바로 위에 몰린다 (0.5–0.6 에 24 건) = 연속 분포의 잘린 꼬리.  거부하면 설계 축과 얽힌 편향 (작은 AM_P · AM-rich · P 비중 높은 설계와 mono 27/30 이 빠진다).  문턱 ½ 은 J13 에서 근거 없이 고른 값이었다.\n수정 (판단 J14, 비준 09-24): 가드 삭제 · 바닥 위치는 덱의 `wall/gran … zplane` 으로 직접 확인 (`check_deck_floor`, CLI `--deck` 필수) · 벽 밖 부피 · 입자 수 · 가장 깊은 입자 · (나) 되돌려 놓은 두께/porosity 를 `wall_record` 로 기록.  selftest 빨간불 (수확기 12 · 배치 4 · 교차검사 4) 뒤 초록.  재수확 SAME 130 확인 뒤 claimed_fixed.\n★ 재수확 확인 (09-24): 성공 **130/130** (거부 0) · 덱 sha 대조 130 · 교차검사 SAME 130.",
    "evidence_tests": [
     "scripts/lhs_descriptor_harvest.py",
     "scripts/lhs_harvest_batch.py",
-    "scripts/lhs_phi_crosscheck.py"
-   ]
+    "docs/data/lhs_descriptors_20260924/_batch_summary.json"
+   ],
+   "claimed_fixed_sha": "4ee1038c3d66e6b9bb1ffe45ad1880604711d5fc"
   },
   {
    "id": "LHS-13",
@@ -4674,9 +4679,36 @@
    "found_by": "claude (재수확 거부 사유 대조 09-24)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "4 건 (lhs00_056 · 079 · 107 · 110) 의 가장 깊은 입자 바닥이 **정확히 같은** −1.98008 µm 다 — 넷 다 r_AM_S = 1.0 µm, 107 · 110 은 입자 중심이 벽 아래 0.98 µm (벽 관통)",
-   "note": "독립 런 넷에서 같은 값은 우연일 수 없다 — 원인 미상 (후보: LIGGGHTS primitive 벽의 양면성 · 삽입 · 덤프 정밀도).  관통 입자 하나는 고체의 0.005–0.007 % (설계 추정 부피 기준) 라 (가) · (나) 어느 값에도 영향이 없다 — 제외 사유가 아니다.  재수확 `wall_record` (상 · z · 중심이 벽 밖인 수) 로 확인하고 Codex 리뷰에 묻는다 (판단 J14 · J15).",
+   "note": "독립 런 넷에서 같은 값은 우연일 수 없다 — 원인 미상 (후보: LIGGGHTS primitive 벽의 양면성 · 삽입 · 덤프 정밀도).  관통 입자 하나는 고체의 0.005–0.007 % (설계 추정 부피 기준) 라 (가) · (나) 어느 값에도 영향이 없다 — 제외 사유가 아니다.  재수확 `wall_record` (상 · z · 중심이 벽 밖인 수) 로 확인하고 Codex 리뷰에 묻는다 (판단 J14 · J15).\n★ 재수확 기록 (09-24, `wall_record`): 겹침/반지름이 **정확히 1.98** 인 가장 깊은 입자가 9 케이스 (r = 1 µm 7 · r = 0.5 µm 2) — 반지름에 비례하는 같은 자리다 (입자 윗면이 벽 위 0.02·r).  더 넓게는 중심이 바닥 아래인 입자가 있는 케이스 42 (AM_S 618 개 · SE 62 · AM 2) · 통째로 바닥 아래 15 케이스 (최대 21 개, 대부분 SE) · 통째로 플래튼 위 3 케이스 (SE).  바닥 벽 재질이 SE 인 것 (`LHS-14`) 과 함께 볼 것.  부피 몫은 무시할 만하다 (관통 입자 하나 = 고체의 0.005–0.007 %).",
    "evidence_tests": [
     "scripts/lhs_phi_crosscheck.py"
+   ]
+  },
+  {
+   "id": "LHS-14",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (재수확 덱 확인 09-24 — `deck_floor.wall_type`)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "LHS 덱의 바닥 벽 재질이 **SE** 다 (bimodal type 3 · mono type 2) — 생산 덱 real_4 는 type 1 (AM_P).  AM 이 무른 바닥에 깊게 박혀 벽 밖 부피가 ΣV 의 중앙 0.6 % · 최대 4.4 %",
+   "note": "`fix … wall/gran … primitive type N zplane 0.0` 의 N = 벽의 물성 type.  130/130 이 SE type 이다.  생산 덱 (`docs/data/phase_a_6mah/in.real_4.liggghts:83`) 은 `primitive type 1` (AM_P, E 1.4e8 sim).  무른 바닥이라 가장 큰 AM 이 반지름의 50–90 % 를 바닥에 묻는다 (`LHS-12` 의 깊이 분포) · (나) − (가) porosity 중앙 0.61 %p · 최대 2.53 %p (mono_AM_P 중앙 1.20).  의도 (예: 분리막 SE 층 표현) 인지 **저자 확인 필요** — 의도라면 기록만, 아니라면 LHS 값을 생산 코퍼스와 비교할 때 계통 차이로 라벨.  플래튼 메시의 type 은 아직 안 봤다.",
+   "evidence_tests": [
+    "docs/data/lhs_descriptors_20260924/README.md",
+    "scripts/lhs_descriptor_harvest.py"
+   ]
+  },
+  {
+   "id": "LHS-15",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (재수확 뒤 판단 J6 재집계 09-24)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "ε_sphere porosity 가 **음수**인 케이스 18/130 (−2.43 … −0.09 %) — (나) 로 벽 밖 부피를 되돌려도 16 건 음수 ⇒ 입자끼리 겹침 과다.  φ_SE + φ_AM > 1 이 인계 타깃에 들어간다",
+   "note": "bimodal 14 · mono_AM_P 2 (118 · 121) · mono_AM_S 2 (100 · 106).  웹앱 규약 그대로의 값이다 (교차검사 SAME).  생산 코퍼스는 음수 ε_sphere 케이스를 코퍼스 밖에 둬 왔다 (CLAUDE.md E_SE 교정 절: \"those stay out of the production corpus\").  인계표 취급 — 표지만 달기 · 회귀 타깃에서 빼기 · ε_union 병기 — 는 **저자 결정** (판단 J6 · J16).  Codex 리뷰 질문에 포함.",
+   "evidence_tests": [
+    "docs/data/lhs_descriptors_20260924/_phi_crosscheck.tsv"
    ]
   },
   {
