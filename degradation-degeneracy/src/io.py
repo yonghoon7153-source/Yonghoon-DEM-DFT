@@ -1677,7 +1677,11 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
                 not adiff, f"attempt 파일과 start_provenance가 다르다: {adiff[:4]}")
         # 대표 start 파일은 **최초 시도**의 기록이라 attempt_id 등이 다를 수 있다.
         # 그러나 코드·입력·환경은 같아야 한다 (다르면 다른 코드로 이어붙인 것이다).
-        sdiff = sorted(k for k in ("source_digest", "git_commit", "git_dirty",
+        # ★ F50b (70차 E7) — 여기서도 판정 기준은 **실제로 돌아간 코드**(`source_digest`)다.
+        #   `git_commit` 은 아래 `실행중_코드불변` 과 같은 이유로 뺀다: 문서만 커밋해도 바뀌어
+        #   resume 이 다른 commit 에서 일어나면 이 검사 하나가 5 건으로 연쇄했다 (66차 §2-5 실측).
+        #   commit 이동은 `_참고_git이동` 에 정보로 남는다. 회귀: test_compare.py::test_f50b_start_file_check_*
+        sdiff = sorted(k for k in ("source_digest", "git_dirty",
                                    "env", "input_sha256", "halfcell_recipe")
                        if disk.get(k) != sp.get(k))
         checks["start_파일_일치"] = (

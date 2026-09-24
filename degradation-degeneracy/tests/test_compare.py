@@ -1093,6 +1093,43 @@ def test_validator_rejects_code_change_during_run(tmp_path):
     assert "시작_provenance" in validate_provenance(d2)["fail"]
 
 
+def test_f50b_start_file_check_ignores_git_commit_like_the_run_check(tmp_path):
+    """★ F50b 잔존 (66차 §2-5 자체 발견 · 70차 E7) — `실행중_코드불변` 은 F50b 로 `git_commit` 을 뺐는데
+    **옆 검사 `start_파일_일치` 의 비교 목록에는 남아 있었다.** 같은 코드(`source_digest` 동일)로 resume 이 다른
+    git commit 에서 일어나면 — 실행 중 문서 커밋 한 번이면 그렇다 — 그 하나가 5 건으로 연쇄했다 (66차 실측:
+    1회차 commit 3회 이동 → ❌ 5건, 2회차 0회 → ✅).
+
+    판정 기준은 **실제로 돌아간 코드가 바뀌었는가**(`source_digest`) 하나다. `git_commit` 은 정보로만 남긴다.
+    대조군: `source_digest` 가 다르면 여전히 실패해야 한다 (검사를 없앤 것이 아니다).
+    """
+    import yaml
+
+    from src.io import validate_provenance
+
+    d, _ = _complete_artifact(tmp_path)
+    ms = d / "manifest_start.yaml"
+    start = yaml.safe_load(ms.read_text(encoding="utf-8"))
+    assert start.get("source_digest") and start.get("git_commit"), start.keys()
+
+    # resume 이 다른 commit 에서 — start 파일(최초 시도)의 git_commit 만 다르고 코드는 같다
+    start["git_commit"] = "f50b" + "0" * 36
+    ms.write_text(yaml.safe_dump(start), encoding="utf-8")
+    m = yaml.safe_load((d / "manifest.yaml").read_text(encoding="utf-8"))
+    m["git_commit_changed_during_run"] = True
+    (d / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    r = validate_provenance(d)
+    assert "start_파일_일치" not in r["fail"], (
+        "코드는 같은데 git commit 이 다르다고 start 파일 대조가 실패했다 — F50b 가 옆 검사에 남아 있다", r["fail"])
+    assert r["ok"], r["fail"]
+    assert "_참고_git이동" in r["checks"]
+
+    # 대조군 — source_digest 가 다르면 여전히 잡는다
+    start["git_commit"] = m["start_provenance"]["git_commit"]
+    start["source_digest"] = "0123456789abcdef"
+    ms.write_text(yaml.safe_dump(start), encoding="utf-8")
+    assert "start_파일_일치" in validate_provenance(d)["fail"]
+
+
 def test_banner_stays_when_compared_artifact_fails_provenance(tmp_path):
     """★ F52b — 비교에 쓰인 half-cell artifact가 실패하면 배너가 남아야 한다.
 
