@@ -459,4 +459,6 @@ for J in $JOBS; do
     exit 6
   fi
 done
-say "✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect $RUN"
+# ⚠ --qe_in 을 같이 적는다 — collect 의 기본 입력은 6층(wad_sese_control_2026_09_23)이라 4층 런에 기본값을 쓰면
+#   nat 불일치로 전 잡이 missing 이 된다 (막히긴 하지만 사람이 원인을 한참 찾는다 · 2026-09-24).
+say "✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect $RUN --qe_in $IN"

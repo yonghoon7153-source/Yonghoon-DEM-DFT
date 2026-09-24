@@ -323,6 +323,11 @@
    "date": "2026-09-24",
    "stage": "dft",
    "text": "V100 **S 바깥 PBE 이완 끝** (rc 0 · 러너 완료 판정 통과 = 수렴 + BFGS 종료 · 벽시계 75,969 s = 21.1 h) · 피크 합계 **32,378 MiB / 32,768 = 98.8 % — 여유 390 MiB** (이 장비 최대치). **Li 바깥 이완 23:13 시작** (30,258 MiB · 89 %). 경보 v2 판정은 두 이완이 다 끝난 뒤 `--collect`. ⚠ 추정: 이 장비(32 GB)에서 **5층 이상 슬랩은 안 들어간다** — 4층이 사실상 상한."
+  },
+  {
+   "date": "2026-09-24",
+   "stage": "dft",
+   "text": "S 바깥 이완 수렴 내역: `bfgs converged in 200 scf cycles and 199 bfgs steps` — **nstep 200 에서 한 스텝 남기고** 수렴 · 마지막 Total force 0.0018 Ry/Bohr · $STORE 백업 확인 (`/home/ubuntu/runyourai/1/runs/wad_sese_4L_2026_09_24` · pw.out mtime 23:13:16). ⭐ **결과 전 선언 (재개 규칙)**: Li 바깥 이완이 nstep 200 에서 미수렴(`The maximum number of steps has been reached`)으로 끝나면 → 마지막 좌표로 **이어서 이완 1 회** (verified-carry · 물리 설정 불변 · nstep 200) · 그래도 미수렴이면 멈추고 1저자에게 보고. 집계는 `se_sym_slab.py --collect <RUN> --qe_in db/inputs/wad_sese_control_4L_2026_09_24` (기본 입력은 6층이다)."
   }
  ],
  "related_decisions": [
