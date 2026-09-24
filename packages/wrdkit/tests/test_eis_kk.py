@@ -307,6 +307,72 @@ def test_a_noisy_rising_tail_still_brings_its_capacitor():
     assert result.with_capacitance and result.max_residual < 0.03
 
 
+_TL = "L1-R0-p(R1,CPE1)-TL1"
+_TLR = "L1-R0-p(R1,CPE1)-TLR1"
+#: 실측 열두 번째 검수(2026-09-24)에서 "저주파 끝이 KK 를 어깁니다" 가 붙은 풀셀
+#: 열 개 중 #33·#1 을 뺀 여덟 — 각자의 쓰는 맞춤 값이다.  확산 꼬리가 대역
+#: 아래로 1–5 decade 더 가는 것(#9·#10·#13 의 Wt 수천 초, #8 은 상한)과 막는
+#: TLR(#49, n = 1)이 섞여 있다.
+FULL_CELLS = {
+    "#8": (_TL, {"L1": 5.53e-07, "R0": 21.5, "R1": 27.6, "CPE1_Q": 0.289, "CPE1_n": 1.0,
+                 "TL1_Ri": 1e-9, "TL1_Re": 117, "TL1_Rct": 120, "TL1_Q": 7.17e-05,
+                 "TL1_n": 0.731, "TL1_Wr": 145, "TL1_Wn": 0.1, "TL1_Wt": 1e6}),
+    "#9": (_TL, {"L1": 5.12e-07, "R0": 4.85, "R1": 22, "CPE1_Q": 0.000345, "CPE1_n": 0.3,
+                 "TL1_Ri": 90.1, "TL1_Re": 1.74, "TL1_Rct": 151, "TL1_Q": 3e-05,
+                 "TL1_n": 0.765, "TL1_Wr": 168, "TL1_Wn": 0.266, "TL1_Wt": 1.37e3}),
+    "#10": (_TL, {"L1": 4.24e-07, "R0": 14.1, "R1": 146, "CPE1_Q": 3.64e-05,
+                  "CPE1_n": 0.78, "TL1_Ri": 78.4, "TL1_Re": 4.22e-05, "TL1_Rct": 19.3,
+                  "TL1_Q": 5.77e-05, "TL1_n": 0.665, "TL1_Wr": 273, "TL1_Wn": 0.316,
+                  "TL1_Wt": 2.12e3}),
+    "#11": (_TLR, {"L1": 4.94e-07, "R0": 9.92, "R1": 432, "CPE1_Q": 0.00401,
+                   "CPE1_n": 0.683, "TLR1_Ri": 1.32e-09, "TLR1_Re": 27.8, "TLR1_Rct": 58,
+                   "TLR1_Q": 0.000716, "TLR1_n": 0.467}),
+    "#13": (_TL, {"L1": 4.22e-07, "R0": 0.000372, "R1": 258, "CPE1_Q": 3.01e-05,
+                  "CPE1_n": 0.748, "TL1_Ri": 25.1, "TL1_Re": 80.1, "TL1_Rct": 30.1,
+                  "TL1_Q": 1.73e-05, "TL1_n": 0.688, "TL1_Wr": 335, "TL1_Wn": 0.276,
+                  "TL1_Wt": 6.94e3}),
+    "#15": (_TL, {"L1": 5.46e-07, "R0": 0.000817, "R1": 120, "CPE1_Q": 0.000102,
+                  "CPE1_n": 0.669, "TL1_Ri": 34.9, "TL1_Re": 18.1, "TL1_Rct": 4.73,
+                  "TL1_Q": 7.61e-06, "TL1_n": 0.82, "TL1_Wr": 50.4, "TL1_Wn": 0.282,
+                  "TL1_Wt": 234}),
+    "#34": (_TL, {"L1": 5.27e-07, "R0": 2.29, "R1": 7.73, "CPE1_Q": 0.00294,
+                  "CPE1_n": 0.55, "TL1_Ri": 100, "TL1_Re": 0.0186, "TL1_Rct": 0.392,
+                  "TL1_Q": 0.00292, "TL1_n": 0.541, "TL1_Wr": 4.29, "TL1_Wn": 0.457,
+                  "TL1_Wt": 56.1}),
+    "#49": (_TLR, {"L1": 4.92e-07, "R0": 2.7, "R1": 12.5, "CPE1_Q": 0.0127,
+                   "CPE1_n": 0.331, "TLR1_Ri": 3.91, "TLR1_Re": 1.15e-09, "TLR1_Rct": 4.1,
+                   "TLR1_Q": 0.588, "TLR1_n": 1.0}),
+}
+
+
+@pytest.mark.parametrize("seed", range(2))
+@pytest.mark.parametrize("name", sorted(FULL_CELLS))
+def test_the_labs_full_cells_are_not_called_drifting_when_they_satisfy_kk(name, seed):
+    """"저주파 끝 어긋남" 이 KK 의 한계(대역 밖 확산 꼬리를 못 그림)에서 나온
+    거짓 경보인지 본다 — 회로가 KK 를 만족하니, 그 회로로 만든 스펙트럼은
+    통과해야 한다.  실측은 5–10 % 였고, 열 모양을 각자의 잡음으로 네 번씩
+    뽑으면 최대 0.5–2.2 % 였다: 실측의 어긋남은 측정 쪽의 것이다."""
+    f = sweep(7e6, 0.01)
+    z = noisy(build(*FULL_CELLS[name], f), 3e-3, seed)
+    audit = audit_spectrum(spectrum(f, z))
+    assert not [one for one in audit.findings if one.code.startswith("kk_")]
+
+
+@pytest.mark.parametrize("name", sorted(FULL_CELLS))
+def test_the_labs_full_cells_drifting_below_a_tenth_of_a_hertz_are_caught(name):
+    """같은 모양에 0.1 Hz 아래로 decade 당 20 % 씩 커지는 드리프트 (0.01 Hz 에서
+    20 %).  어긋난 구간은 드리프트가 시작한 곳보다 반 decade 쯤 위까지 잡힌다 —
+    KK 맞춤이 어긋남을 이웃에 나눠 지기 때문이고, 그래서 권하는 하한은 안전
+    쪽이다 (좋은 점을 조금 더 버린다)."""
+    f = sweep(7e6, 0.01)
+    ramp = np.clip(np.log10(0.1 / f), 0, None) * 0.20
+    z = noisy(build(*FULL_CELLS[name], f) * (1 + ramp), 3e-3, 1)
+    audit = audit_spectrum(spectrum(f, z))
+    (finding,) = [one for one in audit.findings if one.code.startswith("kk_")]
+    assert finding.code == "kk_violation" and finding.message.startswith("저주파 끝 0.01")
+    assert 0.1 < audit.reference.low_limit_hz < 1.0
+
+
 def test_a_step_at_a_current_range_switch_is_named_as_the_instrument():
     """100 Hz 에서 기기의 전류 범위가 바뀌며 이득이 4 % 뛴 스펙트럼.  EC-Lab 의
     ``I Range`` 가 있으면 그 자리를 짚고 (참고), 없으면 가운데의 어긋남이다."""
