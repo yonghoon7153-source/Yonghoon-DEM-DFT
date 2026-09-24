@@ -23,13 +23,16 @@
   · 🟢 **파일럿 2런 kgy 발사 (09-24 오전 · tmux `gp400` · `gp550`)** (seed1 · 400/550 K · 400 ps · turbo · 초기구조 **원시 잠정**
     `md_init_raw.xyz` sha `573371c2…` · `--seed 1` → 난수 401/551 · GPU 여유 ≥ 9 GB 가드 통과 · worktree `~/li2s_glass_src` @3b0338081)
     `~/work/runs/lpscl_glass_md_2026_09_24/pilot/T{400,550}` — ✅ **run_meta 무효조건 전건 통과** (PID 1760069 · 1760075 · turbo · free-S=0 Cl=12 ·
-    kgy 16.2/24.6 GB 100 %). ⚠ **seed5 는 아직 안 떴다** (09-24 gabia: plan.json·q5.log 없음) → 발사 블록 재전달.
-    ⚠ gabia seed3·4 `--seed_gate` 는 `git worktree add` 중 ^C (반쯤 만든 `/data/work/repo_seedgate` 정리 → 단일 파일 `git show` 로 재시도).
+    kgy 16.2/24.6 GB 100 %). ✅ **seed5 gabia 발사** (재전달 블록 · tmux `q5` · repo eed064c59 · 도구 sha `d94403bc…` = seed3·4 같은 코드 ·
+    watch `/data/work/runs/q5_watch.sh`) — ⏳ plan 줄 `120 원자 · turbo · 900 ps` 확인 대기.
+    ✅ seed3·4 `--seed_gate` (단일 파일 `git show c238f3cdf:` · sha 47c7e0aa): 원시 최단 P–S **1.965 · 1.964** · relax 2.006 · 2.032 ·
+    ρ 1.5933 · 1.5910 · 🟡 **seed3 다리 S 1** (P₂S₇ 형 · PS₄ 보존율은 1.0000) → **Q7**. ⇒ 네 시드 전부 원시 P–S < 2.0 (Q2 근거).
     게이트 읽는 법은 결과 전에 정오 기록 §6 (STO · P-1 D비 < 2 · P-2 MSD@50 < 48.88).
   · `--seed_gate` 실측 (kgy seed1·2): **seed1 relax 가 기준값 재현** (PS₄ 1.0000 · 2.037 P-S · ρ 1.6212) · 🔴 **원시 최단 P–S seed1 1.988 · seed2 1.943 < 2.0**
     (P–S 제외면 2.197 / 2.184) — 원시로 재면 기준 자신이 떨어진다 = Q2 실측 확인. seed2 ρ 1.5782 (−2.65 %). 원시↔relax 변위 rms 0.24–0.30 · max 0.59–0.67 Å
     (정오 기록의 '~0.1 Å' 추정 정정). 🟡 **Q6 새로**: 총상한 180 GPU-h 를 공유 GPU 에서 어떻게 세나 (cascade 선례 = 벽시계) → 시드별 wall_min 장부.
-    장부: seed1 **35.1 h** (카드 이전 런) · seed2 **47.0 h** (= 카드 담금질 4 시드 견적 60 h 의 78 %) → 벽시계로 세면 본 15런 전에 상한 근처 ⇒ **Q6 은 본 캠페인 전 필수**.
+    장부: seed1 **35.1 h** (카드 이전 런) · seed2 **47.0** · seed3 **28.7** · seed4 **28.9 h** → 카드 몫 지금까지 **104.6 h** (견적 60 h) + seed5 · 파일럿 진행 중
+    → 벽시계로 세면 본 15런 전에 상한 근처 ⇒ **Q6 은 본 캠페인 전 필수**. 외부 1저자 질문은 이제 **Q1–Q7** (정오 기록 §4).
 - ✅ **SDCP/PTFE (C-12 v41, 1저자 = 사용자)** — 사람용 정리 `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md`
   (숫자의 지위 · 1.83/2.54 Å 와 DFT 힘 · PTFE −0.79 크기 검증 · Kang 2025 대비 · 대기 12잡 · 세미나 멘트·예상 질문).
   수치 정본은 `db/properties/sdcp_c12_v41_eads_ungated_2026_09_21.json` §9 (D3 독립재현 0.5/2.6 meV · 분산모델 4종
@@ -185,7 +188,9 @@
     ✅ 10:44 확인: **돌고 있다** — 이온 스텝 82 · Total force 0.019–0.024 Ry/Bohr · pw.out 13 초 전 수정 · GPU 86–98 % · 10.7 GB (nstep 200 · forc 1e-3).
     🔴 **러너 결함**: 기록된 `pw.x PID 563677` 이 **없다** (ps 빈 줄) — `pgrep -P mpirun | head -1` 이 pw.x 가 아닌 자식을 잡았거나 사라진 PID 다.
     완료표 `peak_self_MiB` 가 **세 잡 모두 0** = 자기 VRAM 측정이 한 번도 안 됐다 (컨테이너 PID 공간 ≠ nvidia-smi PID 도 의심). 가드는 mpirun 을 죽이므로 안전은 유지 ·
-    기록 필드가 거짓 0 이다 ('조용히 틀린 경로') → 러너 수정 대기 (pw.x 는 comm·cmdline 으로 찾고, 못 재면 0 이 아니라 '—').
+    기록 필드가 거짓 0 이다 ('조용히 틀린 경로'). V100 진단: 트리 = 래퍼 563671 → mpirun 563691 → **pw.x 563705** · nvidia-smi 는 **호스트 PID 3312066**.
+    ✅ **러너 수정** (`run_sese_gpu.sh` ⑩): comm 으로 pw.x 찾기 · 트리 통째로 PID+comm 대조 정지 (종전엔 **래퍼만** TERM → pw.x 고아 · 죽은 PID 가 재사용되면 남의 프로세스) ·
+    못 잰 칸 '—'. selftest 48/0 · 돌연변이 5종 빨간불. ⚠ V100 의 **지금 인스턴스는 옛 코드** — 가드 발동 조건(44 GB · 호스트 4 GB)이 그 기계에서 사실상 안 걸려 재시작 안 함.
     📊 **중간값 (판정 보류 · 인용 금지)** `--collect`: 무이완 W_sep PBE **1.103** · PBE+D3(BJ) 2체 **1.518** J/m² (A 101.10 Å² · n 4.0) ·
     −TS 경고 없음. ⚠ 경보 v2 는 **이완 PBE W_cleave** 에만 건다 — 무이완 1.1 은 경보 대상 아님 (무이완 ≥ 이완 이 정상).
   · 🆕 **웹앱 `/adhesion` — 점착 파이프라인 섹션 (09-24 · 1저자 요청)**: 원장 `db/pipelines/adhesion_pipeline.json` 하나를 읽는다

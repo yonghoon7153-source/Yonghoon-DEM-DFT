@@ -22,14 +22,18 @@
 #   ② 시작 직전 GPU 합계 사용량 < START_MAX_MIB (기본 40960 = 40 GB). 넘으면 60 초마다 다시
 #      보고, START_WAIT_S (기본 3600) 안에 안 내려가면 **시작하지 않고** 끝낸다.
 #   ③ 도는 동안 SAMPLE_S (기본 2) 초마다 합계 사용량을 본다. KILL_MIB (기본 45056 = 44 GB) 를
-#      넘으면 **이 러너가 띄운 pw.x·mpirun 을 PID 로** TERM → 15 초 뒤 KILL 하고 러너를 멈춘다.
+#      넘으면 **이 러너가 띄운 트리(래퍼 → mpirun → pw.x)를 PID·comm 대조로** TERM → ≤ 15 초 →
+#      남은 것만 KILL 하고 러너를 멈춘다 (⑩).
 #      남의 프로세스(UMA)는 건드리지 않는다. 이름으로 죽이지 않는다 (CLAUDE.md: pkill 금지).
 #   ④ GPU 에 python(UMA)이 있으면 ALLOW_UMA_COEXIST=1 없이는 시작하지 않는다 —
 #      규칙의 기본값은 금지이고, 예외는 **켜야** 켜진다.
 #   ④′ 호스트 RAM — gabia 는 CPU 잡(Nd k-탐침 34 GB)과 RAM 을 나눈다. 시작은 MemAvailable ≥
 #      HOST_START_MIB (기본 16384), 도는 중 < HOST_KILL_MIB (기본 4096) 면 우리 잡만 멈춘다
 #      (OOM 킬러는 우리가 아니라 **가장 큰 잡**을 고른다 — 그게 k-탐침이나 b2o3 일 수 있다).
-#   ⑤ 잡마다 피크 합계 VRAM · 우리 pw.x 자기 사용량(읽히면) · 벽시계를 jobs_run.tsv 에 남긴다.
+#   ⑤ 잡마다 피크 합계 VRAM · 우리 pw.x 자기 사용량(읽히면 · **못 읽으면 '—'**, 0 이 아니다) · 벽시계를
+#      jobs_run.tsv 에 남긴다. 컨테이너 안에서는 nvidia-smi 가 호스트 PID 를 줘서 자기 사용량은 원리적으로 못 읽는다.
+#   ⑩ pw.x 는 **comm 이 pw.x 인 자손**으로 찾는다 — hpcx mpirun 은 래퍼라 첫 자식이 pw.x 가 아니다
+#      (2026-09-24 V100 실측: 기록된 PID 는 곧 사라진 보조였고, 가드가 죽은 PID 와 래퍼만 TERM 하게 돼 있었다).
 #   ⑦ KISTI 등 여러 GPU: NP=<랭크 수> (≤ 보이는 GPU 수 · 평면파를 랭크에 나눠 GPU 한 장당 메모리를 줄인다 —
 #      tools/sdcp/sbatch_phaseB_v3_kisti.sh 와 같은 방식) · PSEUDO_DIR=<그 기계 경로> (실행 폴더 복사본에서만
 #      바꾼다 — 원본 입력 해시는 그대로) · NO_LOCK=1 (Lustre 는 flock 이 안 될 수 있다 — 그러면 '이미 도는 중' 으로
@@ -103,6 +107,49 @@ _sub_pseudo() {  # $1 = pw.in · $2 = 새 경로
 _unexpected() {  # $1 = 지금 GPU PID 들 · $2 = 허용 PID 들 → 허용 밖 PID 를 한 줄씩
   local p q ok
   for p in $1; do ok=0; for q in $2; do [ "$p" = "$q" ] && ok=1; done; [ "$ok" = 1 ] || echo "$p"; done
+}
+
+# ── ⑩ 우리 프로세스 트리 · 우리 pw.x (2026-09-24 V100 실측으로 고침) ─────────────────
+#   종전: `PW=$(pgrep -P $MP | head -1)` — **첫 자식**을 pw.x 로 믿었다. hpcx 의 mpirun 은 래퍼라
+#   트리가 래퍼($MP) → [곧 사라지는 보조 · mpirun] → pw.x 로 한 단 더 깊다. V100 실측: 기록된
+#   pw.x PID 563677 은 **없었고** 실제 pw.x 563705 는 mpirun 563691 의 자식이었다.
+#   그 결과 ① 자기 VRAM 칸이 세 잡 모두 거짓 0 ② `_stop` 이 죽은 PID(재사용되면 **남의 프로세스**)와
+#   래퍼만 TERM — 래퍼(bash)만 죽으면 mpirun·pw.x 는 고아로 계속 돈다. 가드가 조용히 무력했다.
+#   ⇒ pw.x 는 **comm 이 pw.x 인 자손**으로 찾고, 멈출 때는 **트리 통째로** PID+comm 대조로 멈춘다.
+_descendants() {  # $1 = 뿌리 PID → 자손 PID 한 줄씩 (넓이 우선 · 최대 6 단)
+  local q="$1" next p k d=0
+  while [ -n "${q// /}" ] && [ "$d" -lt 6 ]; do
+    next=""
+    for p in $q; do for k in $(pgrep -P "$p" 2>/dev/null); do echo "$k"; next="$next $k"; done; done
+    q="$next"; d=$((d+1))
+  done
+}
+_find_pw() {  # $1 = 뿌리 PID → comm 이 pw.x 인 첫 자손 (없으면 빈 줄 · rc 1 — 아무 PID 나 채우지 않는다)
+  local k
+  for k in $(_descendants "$1"); do
+    [ "$(cat /proc/$k/comm 2>/dev/null)" = pw.x ] && { echo "$k"; return 0; }
+  done
+  return 1
+}
+_alive_as() {  # $1 = PID · $2 = comm → 0 = 살아 있고(좀비 아님) comm 이 그대로다 (PID 재사용 방지)
+  [ "$(cat /proc/$1/comm 2>/dev/null)" = "$2" ] || return 1
+  [ "$(sed 's/.*) //' /proc/$1/stat 2>/dev/null | cut -d' ' -f1)" != Z ]
+}
+_stop_tree() {  # $1 = 뿌리 PID → 트리(자손+뿌리) TERM → ≤ 15 초 → comm 이 그대로인 것만 KILL · 멈춘 목록을 stdout
+  local pairs="" p c x alive
+  for p in $(_descendants "$1") "$1"; do c=$(cat /proc/$p/comm 2>/dev/null) && pairs="$pairs $p:$c"; done
+  for x in $pairs; do kill -TERM "${x%%:*}" 2>/dev/null; done
+  for _ in $(seq 15); do
+    alive=0; for x in $pairs; do _alive_as "${x%%:*}" "${x#*:}" && alive=1; done
+    [ "$alive" = 0 ] && break; sleep 1
+  done
+  for x in $pairs; do _alive_as "${x%%:*}" "${x#*:}" && kill -KILL "${x%%:*}" 2>/dev/null; done
+  echo "${pairs# }"
+}
+# 자기 VRAM 칸: 한 번도 못 쟀으면 0 이 아니라 '—'. 컨테이너 안에서는 nvidia-smi 가 **호스트 PID** 를 준다
+#   (V100 실측: pw.x 563705 ↔ 목록 3312066) — 이름공간이 다르면 PID 로는 원리적으로 못 잰다.
+_self_field() {  # $1 = 잰 적 있음(0/1) · $2 = 피크 → 칸 값
+  if [ "$1" = 1 ]; then echo "$2"; else echo "—"; fi
 }
 
 # ── ⑨ PP 내용 해시 (jobs.json settings.pp_sha256 — 없으면 경고만) ──────────────────
@@ -190,6 +237,24 @@ if [ "$IN" = "--selftest" ]; then
   ck "⛔원장을 못 읽음 → 거부"                  "! _coexist_gate D-a $T/없음.json && [ \"\$(_exception_state D-a $T/없음.json)\" = unreadable ]"
   ck "결정 ID 아닌 근거 → 경고 갈래(2)"          '_coexist_gate "kgy 1저자 승인 문구" '"$T/dec.json"'; [ $? = 2 ]'
   ck "실제 원장: gabia 공존 예외는 철회됨"       "[ \"\$(_exception_state D-2026-09-23-gabia-gpu-exception-sese $HERE/../../db/governance/decisions.json)\" = retracted ]"
+  # ── ⑩ 트리: 래퍼 → [곧 사라지는 보조 · mpirun] → pw.x (V100 hpcx 실측 모양) ──
+  cp "$(command -v sleep)" "$T/pw.x"; cp "$(command -v sleep)" "$T/helper"
+  printf '#!/usr/bin/env bash\n"%s/pw.x" 30\n' "$T" > "$T/mpirun_fake"; chmod +x "$T/mpirun_fake"
+  printf '#!/usr/bin/env bash\n"%s/helper" 30 &\n"%s/mpirun_fake"\nwait\n' "$T" "$T" > "$T/wrapper"; chmod +x "$T/wrapper"
+  "$T/wrapper" & R0=$!; sleep 0.8
+  PWT=$(_find_pw "$R0")
+  ck "pw.x 는 comm 으로 찾는다 (두 단 아래)"      '[ -n "$PWT" ] && [ "$(cat /proc/$PWT/comm)" = pw.x ]'
+  ck "⛔옛 방식(첫 자식)은 pw.x 가 아닌 보조를 잡는다 — 고친 이유" '[ "$(cat /proc/$(pgrep -P "$R0" | head -1)/comm 2>/dev/null)" != pw.x ]'
+  ck "자손 셋 (보조 · mpirun · pw.x)"              '[ "$(_descendants "$R0" | wc -l)" = 3 ]'
+  ck "⛔comm 이 다르면 살아 있어도 '그 프로세스' 가 아니다 (PID 재사용)" '_alive_as "$PWT" pw.x && ! _alive_as "$PWT" helper'
+  "$T/helper" 30 & R1=$!
+  ck "⛔pw.x 없는 트리 → 빈 값 (아무 PID 나 안 채운다)" '! _find_pw "$R1" >/dev/null && [ -z "$(_find_pw "$R1")" ]'
+  _stop_tree "$R0" >/dev/null; sleep 0.3
+  ck "트리를 멈추면 pw.x 도 멈춘다 (래퍼만 죽이면 고아로 산다)" '! _alive_as "$PWT" pw.x'
+  ck "⛔트리 밖(다른 뿌리)은 안 건드린다"          '_alive_as "$R1" helper'
+  kill "$R1" 2>/dev/null; wait "$R0" "$R1" 2>/dev/null
+  ck "자기 VRAM 을 잰 적 있으면 그 값"             '[ "$(_self_field 1 2048)" = 2048 ]'
+  ck "⛔한 번도 못 쟀으면 0 이 아니라 —"            '[ "$(_self_field 0 0)" = "—" ]'
   rm -rf "$T"; echo "run_sese_gpu selftest: $n 통과 · $f 실패"; [ "$f" = 0 ]; exit $?
 fi
 
@@ -355,22 +420,26 @@ for J in $JOBS; do
   ( cd "$D" && exec "$QE_GPU_MPIRUN" $ROOTFLAG $MPI_MCA -np "$NP" "$PWX" -nk 1 -in pw.in > pw.out 2> pw.err ) &
   MP=$!
   PW=""
-  for _ in $(seq 60); do PW=$(pgrep -P "$MP" | head -1); [ -n "$PW" ] && break; kill -0 "$MP" 2>/dev/null || break; sleep 1; done
-  say "   mpirun PID $MP · pw.x PID ${PW:-?}"
-  peak=0; peak_self=0; killed=0; hmin=999999
-  _stop() {   # 우리 잡만 PID 로 — 이름으로 잡지 않는다
-    say "⛔ $J: $1 — 우리 pw.x(${PW:-?})·mpirun($MP) 을 PID 로 멈춘다"
-    kill -TERM ${PW:+$PW} "$MP" 2>/dev/null
-    for _ in $(seq 15); do kill -0 "$MP" 2>/dev/null || break; sleep 1; done
-    kill -KILL ${PW:+$PW} "$MP" 2>/dev/null
+  for _ in $(seq 60); do PW=$(_find_pw "$MP") && break; kill -0 "$MP" 2>/dev/null || break; sleep 1; done
+  say "   래퍼(mpirun) PID $MP · pw.x PID ${PW:-? — 60 초 안에 comm=pw.x 자손을 못 찾음 (자기 VRAM 은 '—')}"
+  peak=0; peak_self=0; self_seen=0; nsamp=0; killed=0; hmin=999999
+  _stop() {   # 우리 잡만 PID 로 — 이름으로 잡지 않는다 · 래퍼 아래 **트리 통째로** (⑩)
+    local what; what=$(_stop_tree "$MP")
+    say "⛔ $J: $1 — 우리 트리를 PID·comm 대조로 멈췄다 [${what}]"
     killed=1
   }
   while kill -0 "$MP" 2>/dev/null; do
-    U=$(gpu_used); H=$(host_avail)
+    U=$(gpu_used); H=$(host_avail); nsamp=$((nsamp+1))
     [ -n "$H" ] && [ "$H" -lt "$hmin" ] && hmin=$H
     if [ -n "$U" ]; then
       [ "$U" -gt "$peak" ] && peak=$U
-      if [ -n "$PW" ]; then S=$(self_mib "$PW"); [ -n "$S" ] && [ "$S" -gt "$peak_self" ] && peak_self=$S; fi
+      if [ -n "$PW" ]; then
+        S=$(self_mib "$PW")
+        if [ -n "$S" ]; then self_seen=1; [ "$S" -gt "$peak_self" ] && peak_self=$S; fi
+      fi
+      if [ "$nsamp" = 15 ] && [ "$self_seen" = 0 ]; then
+        say "   ⚠ nvidia-smi 목록에 우리 pw.x(${PW:-?}) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)"
+      fi
       if [ "$U" -gt "$KILL_MIB" ]; then _stop "GPU 합계 ${U} MiB > ${KILL_MIB}"; break; fi
     fi
     if [ -n "$H" ] && [ "$H" -lt "$HOST_KILL_MIB" ]; then _stop "호스트 MemAvailable ${H} MiB < ${HOST_KILL_MIB}"; break; fi
@@ -379,10 +448,11 @@ for J in $JOBS; do
   wait "$MP"; rc=$?
   wall=$(( $(date +%s) - t0 ))
   dn=0; _done "$D/pw.out" "$CALC" && dn=1
-  printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "$J" "$rc" "$dn" "$wall" "$peak" "$peak_self" "$killed" "$start" "$hmin" >> "$TSV"
+  PSF=$(_self_field "$self_seen" "$peak_self")
+  printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "$J" "$rc" "$dn" "$wall" "$peak" "$PSF" "$killed" "$start" "$hmin" >> "$TSV"
   # 파동함수는 우리 보고량에 안 쓴다 — 디스크만 먹는다 (전하밀도·xml 은 남긴다)
   find "$D/tmp" -name "wfc*.dat" -delete 2>/dev/null; find "$D/tmp" -name "*.wfc*" -delete 2>/dev/null
-  say "■ $J rc=$rc 완료=$dn 벽시계 ${wall}s · 피크 합계 ${peak} MiB · 자기 ${peak_self} MiB · 호스트 최저 ${hmin} MiB · 중단=$killed"
+  say "■ $J rc=$rc 완료=$dn 벽시계 ${wall}s · 피크 합계 ${peak} MiB · 자기 ${PSF} MiB · 호스트 최저 ${hmin} MiB · 중단=$killed"
   if [ "$killed" = 1 ]; then say "⛔ 가드로 멈췄다 — 러너를 끝낸다 (재시작은 사람이 판단)"; exit 5; fi
   if [ "$dn" != 1 ]; then
     say "⛔ $J 미완료 — 뒤 잡을 돌리지 않는다. 확인: tail -30 $D/pw.out ; cat $D/pw.err"
