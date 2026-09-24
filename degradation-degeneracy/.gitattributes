@@ -38,3 +38,4 @@ artifacts/** -text !eol
 docs/22p_gap/gate66_review/** -text !eol
 docs/22p_gap/gate67_review/** -text !eol
 docs/22p_gap/gate68_review/** -text !eol
+docs/22p_gap/gate69_review/** -text !eol
