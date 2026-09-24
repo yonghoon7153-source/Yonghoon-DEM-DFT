@@ -187,6 +187,39 @@ def test_small_levels_are_written_in_units_that_show_them():
     assert potential_pair(3.7012, 3.6921) == ("3.7012 → 3.6921 V", "-9.1 mV")
 
 
+def test_the_low_end_verdict_carries_its_bound_until_the_fit_starts_there():
+    """ADR 0045 보완 4: 판정이 하한을 수로 싣는다 — `bml refit` 이 문장을 긁지
+    않고 그것을 읽는다.  쓰는 맞춤이 그 하한부터 맞췄으면 할 일이 끝났다: 셀이
+    변한 것은 그대로 적되 참고로 내려가고, 하한은 싣지 않는다 (다시 대상이 되지
+    않는다)."""
+    f = sweep()
+    ramp = np.clip(np.log10(0.1 / f), 0, None) * 0.20
+    spectrum = measured(measure_peis(f, true_impedance(f) * (1 + ramp),
+                                     dc_current_a=settling()))
+    audit = audit_spectrum(spectrum)
+    (kk,) = [one for one in audit.findings if one.code == "kk_violation"]
+    assert kk.severity == "check"
+    assert kk.low_hz == audit.reference.low_limit_hz
+    assert kk.low_hz in spectrum.frequency_hz               # 권한 하한은 잰 점이다
+    assert f"하한을 {kk.low_hz:.3g} Hz 로 두고 다시 맞추세요" in kk.message
+
+    # 모든 점으로 맞춘 것 — 그대로 확인이다.
+    (still,) = [one for one in audit_spectrum(spectrum, fitted_from_hz=0.01).findings
+                if one.code == "kk_violation"]
+    assert still == kk
+
+    after = audit_spectrum(spectrum, fitted_from_hz=kk.low_hz)
+    (done,) = [one for one in after.findings if one.code == "kk_violation"]
+    assert done.severity == "note" and done.low_hz is None
+    assert done.message.startswith(kk.message.split(". 그 점들로")[0])
+    assert (f"쓰는 맞춤은 {kk.low_hz:.3g} Hz 부터 맞춰 그 점들을 쓰지 않았습니다"
+            in done.message)
+    assert "다시 맞추세요" not in done.message
+    # KK 판정 자체는 맞춤을 안 본다.
+    assert after.kk == audit.kk
+    assert after.reference.low_limit_hz == kk.low_hz
+
+
 def test_without_a_record_the_low_end_verdict_keeps_its_guess():
     """직류 기록이 없는 파일(텍스트 내보내기 등)은 전처럼 짐작을 적는다."""
     f = sweep()

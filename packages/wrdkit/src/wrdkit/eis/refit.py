@@ -3,7 +3,8 @@
 맞추기와 저장은 API 가 한다 (`POST /api/eis/audit/refit`, `bml refit`).  여기는
 그 사이의 판단만 둔다.
 
-- `refit_candidates` — 문제 판정이 실은 회로를 어떤 순서로 맞춰 볼지.
+- `refit_candidates` — 문제 판정이 실은 회로를 어떤 순서로, 어느 하한부터 맞춰
+  볼지.  저주파 끝이 KK 를 어겼으면 쓰는 회로도 그 하한부터 다시 맞춰 본다 (보완 4).
 - `seed_values` — 쓰는 맞춤의 값을 새 회로의 어느 파라미터로 옮길지.
 - `accept_refit` — 새 맞춤을 다시 검수한 결과를 받아들일지.
 - `moved_number` — 받아들여도, 모양을 덜 그리면서 σ 의 저항을 옮기면 안 받는다.
@@ -53,26 +54,44 @@ class Candidate:
 
     circuit: str
     #: 이 회로를 권한 **문제** 판정의 코드.  다시 맞춘 뒤 이것들이 없어야 한다.
+    #: 쓰는 회로를 하한만 올려 다시 맞추는 후보는 비었다 — 풀 문제 판정이 없다.
     triggers: tuple[str, ...]
+    #: 맞출 주파수 창의 하한 — 저주파 끝이 Kramers–Kronig 를 어겨 판정이 권한 것
+    #: (``Finding.low_hz``).  ``None`` 이면 쓰는 맞춤의 창 그대로다.
+    low_hz: float | None = None
 
 
-def refit_candidates(findings: Iterable[Finding]) -> list[Candidate]:
-    """문제 판정이 실은 회로들 — 판정이 권한 순서대로, 한 번씩.
+def refit_candidates(findings: Iterable[Finding], *,
+                     circuit: str = "") -> list[Candidate]:
+    """다시 맞춰 볼 것들 — 문제 판정이 권한 회로를 권한 순서대로 한 번씩, 그리고
+    하한이 권해졌으면 쓰는 회로(``circuit``)를 그 하한부터, 맨 끝에.
 
-    **문제**만 본다.  확인(``open_end_on_blocking_cell`` 등)은 사람이 보고 정할
-    일이라 한꺼번에 바꾸지 않는다 (ADR 0045).  같은 회로를 여러 판정이 권하면
-    한 후보로 합치고 그 판정들을 모두 적는다 — 다시 맞춘 뒤 그 모두가 풀려야
-    한다.
+    **문제**만 회로를 부른다.  확인(``open_end_on_blocking_cell`` 등)은 사람이 보고
+    정할 일이라 한꺼번에 바꾸지 않는다 (ADR 0045).  같은 회로를 여러 판정이 권하면
+    한 후보로 합치고 그 판정들을 모두 적는다 — 다시 맞춘 뒤 그 모두가 풀려야 한다.
+
+    예외가 하나다: 저주파 끝이 KK 를 어긴 판정(확인)이 싣는 하한(``low_hz``).
+    그 아래 점은 셀이 변하는 동안 잰 것이라 **어느 회로로 맞추든** 뺀다 — 권한
+    회로도 그 하한부터 맞춘다.  회로를 바꾸는 것이 아니라 점을 덜 쓰는 것이라
+    사람이 고를 것이 없다 (보완 4).  ``findings`` 에는 맞춤의 판정과 점의 판정을
+    같이 준다.
     """
     order: dict[str, list[str]] = {}
+    low_hz: float | None = None
     for finding in findings:
+        if finding.low_hz is not None:
+            # 한 스펙트럼에 하한은 하나다 (`KKReference.low_limit_hz`).
+            low_hz = finding.low_hz if low_hz is None else max(low_hz, finding.low_hz)
         if finding.severity != PROBLEM:
             continue
-        for circuit in finding.circuits:
-            codes = order.setdefault(circuit, [])
+        for offered in finding.circuits:
+            codes = order.setdefault(offered, [])
             if finding.code not in codes:
                 codes.append(finding.code)
-    return [Candidate(circuit, tuple(codes)) for circuit, codes in order.items()]
+    out = [Candidate(offered, tuple(codes), low_hz) for offered, codes in order.items()]
+    if low_hz is not None and circuit and circuit not in order:
+        out.append(Candidate(circuit, (), low_hz))
+    return out
 
 
 def _blocking_tail(model: Circuit) -> tuple[str, str] | None:

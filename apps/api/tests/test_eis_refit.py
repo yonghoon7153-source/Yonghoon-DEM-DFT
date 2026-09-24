@@ -143,6 +143,102 @@ def test_the_text_streams_a_line_per_spectrum_and_ends_with_the_way_back(client)
         "/api/eis/audit/refit/undo", params={"format": "text"}).text
 
 
+#: 막지 않는 풀셀 — 아크 둘.  0.1 Hz 아래에서 셀이 decade 당 20 % 변한다: 쉬지 않은
+#: 채 잰 셀 (실측 풀셀 열 개 — 200 사이클 뒤 SOC 100, ADR 0045 보완 4).
+FULL = ("L1-R0-p(R1,CPE1)-p(R2,CPE2)",
+        {"L1": 5e-7, "R0": 10.0, "R1": 120.0, "CPE1_Q": 1e-5, "CPE1_n": 0.8,
+         "R2": 300.0, "CPE2_Q": 5e-3, "CPE2_n": 0.7})
+FULL_SWEEP = S.log_sweep(1e6, 0.01, 10)
+
+
+def drifting_full_cell(client, name="Dcell_drift_C01.mpr"):
+    """올리고 모든 점으로 맞춘다 — 드리프트한 저주파 끝까지."""
+    model = parse_circuit(FULL[0])
+    z = model.impedance([FULL[1][name_] for name_ in model.parameter_names], FULL_SWEEP)
+    z = z * (1 + np.clip(np.log10(0.1 / FULL_SWEEP), 0, None) * 0.20)
+    created = client.post("/api/eis/spectra/upload",
+                          params={"kind": "solid", "cell_config": "full"},
+                          files={"file": (name, S.build_mpr(S.spectrum_columns(FULL_SWEEP, z)),
+                                          "application/octet-stream")})
+    assert created.status_code == 201, created.text
+    spectrum_id = created.json()["id"]
+    fit = client.post(f"/api/eis/spectra/{spectrum_id}/fit",
+                      params={"circuit": FULL[0]}).json()
+    assert fit["converged"], fit["reason"]
+    return spectrum_id, fit
+
+
+def test_a_drifting_low_end_is_fitted_again_from_the_bound_the_audit_asks(client):
+    """보완 4: KK 가 저주파 끝을 짚고 하한을 권했다.  같은 회로를 그 하한부터 다시
+    맞추면 드리프트가 끌어올린 R2 (참값 300 Ω) 가 돌아온다.  그 뒤 검수는 참고로
+    내려가 다시 대상이 되지 않고, 되돌리면 옛 창으로 돌아간다."""
+    spectrum_id, old = drifting_full_cell(client)
+    before, _ = audit_codes(client, spectrum_id)
+    (kk,) = [f for f in before["findings"] if f["code"] == "kk_violation"]
+    assert kk["severity"] == "check" and kk["scope"] == "points"
+    bound = kk["low_hz"]
+    assert 0.5 < bound < 1.0
+    assert f"하한을 {bound:.3g} Hz 로 두고 다시 맞추세요" in kk["message"]
+
+    dry = client.post("/api/eis/audit/refit", params={"dry_run": True}).json()
+    assert (dry["targets"], dry["windows"], dry["changed"]) == (1, 1, 1)
+    assert dry["spectra"][0]["new_fit_id"] is None
+    assert len(fits_of(client, spectrum_id)) == 1
+
+    done = client.post("/api/eis/audit/refit").json()
+    (one,) = done["spectra"]
+    assert one["old_fit_id"] == old["id"] and one["problems"] == []
+    assert one["new_circuit"] == one["old_circuit"] == FULL[0]
+    assert one["low_hz"] == pytest.approx(bound)
+    assert one["new_low_hz"] == pytest.approx(bound)
+    assert one["old_low_hz"] == pytest.approx(0.01)
+    sweep = FULL_SWEEP
+    gone = sweep[sweep < bound]
+    assert one["dropped_points"] == gone.size
+    assert one["dropped_band_hz"] == pytest.approx([gone.min(), gone.max()])
+    assert all(t["low_hz"] == pytest.approx(bound) for t in one["tries"])
+    r2 = next(v for v in one["values"] if v["name"] == "R2")
+    assert r2["old"] > 320                           # 드리프트가 끌어올린 값
+    assert r2["new"] == pytest.approx(300, rel=0.01) and r2["determined"]
+
+    (used,) = [fit for fit in fits_of(client, spectrum_id) if fit["in_use"]]
+    assert used["id"] == one["new_fit_id"] and used["origin"] == done["origin"]
+    assert used["frequency_low_hz"] == pytest.approx(bound)
+    after, _ = audit_codes(client, spectrum_id)
+    (note,) = [f for f in after["findings"] if f["code"] == "kk_violation"]
+    assert note["severity"] == "note" and note["low_hz"] is None
+    assert f"쓰는 맞춤은 {bound:.3g} Hz 부터 맞춰 그 점들을 쓰지 않았습니다" in note["message"]
+    # 할 일이 끝났다 — 다음 묶음의 대상이 아니다.
+    assert client.post("/api/eis/audit/refit").json()["targets"] == 0
+
+    undone = client.post("/api/eis/audit/refit/undo").json()
+    (back,) = undone["spectra"]
+    assert back["removed_circuit"] == back["now_circuit"] == FULL[0]
+    assert back["removed_low_hz"] == pytest.approx(bound)
+    assert back["now_low_hz"] == pytest.approx(0.01)
+    again, _ = audit_codes(client, spectrum_id)
+    assert [f["severity"] for f in again["findings"] if f["code"] == "kk_violation"] == [
+        "check"]
+
+
+def test_the_text_says_which_points_went_and_what_the_values_did(client):
+    drifting_full_cell(client)
+    text = client.post("/api/eis/audit/refit", params={"format": "text"}).text
+    assert "맞춘 스펙트럼 1개 중 대상 1개 — 회로를 권한 문제 판정이 있거나, 저주파 끝이" in text
+    assert "하한이 권해진 1개는 그 하한부터 맞춥니다" in text
+    assert "[1/1] #1  Dcell_drift_C01  바꿈  하한 0.01 → 0.794 Hz · 회로 그대로 · 오차 평균 " in text
+    assert "    하한 0.01 → 0.794 Hz · 회로 그대로 L1-R0-p(R1,CPE1)-p(R2,CPE2) (쓰던 값에서)" in text
+    assert "    뺀 점: 0.01–0.631 Hz 의 점 19개 — 저주파 끝이 KK 를 어긴 곳" in text
+    assert "풀린 문제:" not in text
+    (values,) = [line for line in text.splitlines() if line.startswith("    값: ")]
+    # 1 % 넘게 움직인 것만 — 드리프트가 끌어올린 R2 가 참값으로 돌아왔다.
+    assert "R2 358 → 300 (-16 %)" in values and "R1 " not in values
+    assert values.endswith("개는 1 % 안")
+    undo = client.post("/api/eis/audit/refit/undo", params={"format": "text"}).text
+    assert ("    #1  Dcell_drift_C01 — 하한 0.794 → 0.01 Hz "
+            "(L1-R0-p(R1,CPE1)-p(R2,CPE2))") in undo
+
+
 def test_one_spectrum_that_breaks_does_not_stop_the_batch(client, monkeypatch):
     """스무 분짜리 묶음이 한 스펙트럼의 예외로 멈추면 나머지를 다시 기다려야 한다.
     멈춘 것은 이름과 까닭을 적고 넘어간다."""
@@ -225,7 +321,7 @@ def test_a_problem_with_no_circuit_to_offer_is_counted_not_touched(client, monke
     from app.routers import eis_refit
 
     spectrum_id, _ = pellet(client, "B15_pellet.mpr", BLOCKING, "R0-p(R1,CPE1)")
-    monkeypatch.setattr(eis_refit, "refit_candidates", lambda findings: [])
+    monkeypatch.setattr(eis_refit, "refit_candidates", lambda findings, **_: [])
     body = client.post("/api/eis/audit/refit").json()
     assert (body["targets"], body["unoffered"]) == (0, 1)
     text = client.post("/api/eis/audit/refit", params={"format": "text"}).text

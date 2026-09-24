@@ -82,6 +82,27 @@ def test_only_problems_offer_circuits_and_each_circuit_is_tried_once():
     assert refit_candidates([findings[1], findings[3]]) == []
 
 
+def test_a_broken_low_end_moves_every_try_up_to_its_bound():
+    """보완 4: 저주파 끝이 KK 를 어긴 판정(확인)은 회로를 부르지 않고 하한을
+    싣는다.  그 아래 점은 셀이 변하는 동안 잰 것이라 권한 회로도 그 하한부터
+    맞추고, 쓰는 회로도 그 하한부터 한 번 — 문제 판정이 없어도, 맨 끝에."""
+    drift = Finding(CHECK, "kk_violation", "저주파 끝", low_hz=1.29)
+    tail = Finding(PROBLEM, "tail_mimicked_by_arc", "꼬리", circuits=("A",))
+    assert refit_candidates([drift], circuit="OLD") == [Candidate("OLD", (), 1.29)]
+    assert refit_candidates([tail, drift], circuit="OLD") == [
+        Candidate("A", ("tail_mimicked_by_arc",), 1.29),
+        Candidate("OLD", (), 1.29),
+    ]
+    # 쓰는 회로를 이미 권했으면 그 후보가 하한까지 맡는다 — 두 번 맞추지 않는다.
+    assert refit_candidates([tail, drift], circuit="A") == [
+        Candidate("A", ("tail_mimicked_by_arc",), 1.29)]
+    # 하한이 없으면 전과 같다.
+    assert refit_candidates([tail], circuit="OLD") == [
+        Candidate("A", ("tail_mimicked_by_arc",))]
+    # 쓰는 회로를 모르면 하한만으로는 맞춰 볼 것이 없다.
+    assert refit_candidates([drift]) == []
+
+
 # -- 어디서 시작할까 -------------------------------------------------------------
 
 OLD = "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"

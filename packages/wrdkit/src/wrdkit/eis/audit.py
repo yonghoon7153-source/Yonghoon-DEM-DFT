@@ -63,7 +63,7 @@ from .stationarity import STILL_SHARE, DCRecord, current_pair, dc_record, potent
 __all__ = ["CHECK", "Finding", "FitAudit", "KKReference", "Misfit", "NOTE", "PROBLEM",
            "REFERENCES", "SEVERITIES", "SpectrumAudit", "audit_spectrum", "SEVERITY_LABELS", "audit_conductivity_scan",
            "audit_fit", "audit_record", "circuit_end", "config_from_name",
-           "misfit", "sort_findings", "thickness_from_name", "worst"]
+           "fitted_above", "misfit", "sort_findings", "thickness_from_name", "worst"]
 
 PROBLEM = "problem"
 CHECK = "check"
@@ -190,6 +190,10 @@ class Finding:
     #: 적힌 회로라도 판정을 못 푸는 것(이름이 다시 "벌크" 가 되는 아크 하나짜리)
     #: 은 담지 않는다.  `bml refit` 이 문장을 긁지 않고 이것을 읽는다.
     circuits: tuple[str, ...] = ()
+    #: 다시 맞출 때 둘 주파수 하한 — 저주파 끝이 Kramers–Kronig 를 어긴 판정만
+    #: 싣는다 (ADR 0045 보완 4).  `bml refit` 이 같은 회로를 이 하한부터 다시
+    #: 맞춘다.  쓰는 맞춤이 이미 그 위에서 맞췄으면 비었다 — 할 일이 없다.
+    low_hz: float | None = None
 
     @property
     def label(self) -> str:
@@ -1445,7 +1449,8 @@ class SpectrumAudit:
     dc: dict = field(default_factory=dict)
 
 
-def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
+def audit_spectrum(spectrum: Spectrum | None, *,
+                   fitted_from_hz: float | None = None) -> SpectrumAudit:
     """What the points say before any circuit is fitted: the linear KK test.
 
     A spectrum that breaks Kramers–Kronig was not measured on a linear,
@@ -1453,6 +1458,11 @@ def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
     under the sweep.  The finding says **where**, because that is what to cut
     from the fit.  Smooth drift spread over a decade is a different matter:
     the test cannot see it, and this does not pretend to (ADR 0043).
+
+    ``fitted_from_hz`` is the lowest point the fit in use was fitted on, when
+    there is one.  The test does not look at it; it only decides whether a
+    broken low end still asks to be cut (``Finding.low_hz``, a check) or the
+    fit has already left it out (a note) -- ADR 0045 보완 4.
     """
     out = SpectrumAudit()
     if spectrum is None or not len(spectrum):
@@ -1475,7 +1485,8 @@ def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
         out.kk["range_switches_hz"] = switches
     region = None
     if out.kk["judged"]:
-        out.findings += _kk_findings(chosen, out.kk, switches, dc=record)
+        out.findings += _kk_findings(chosen, out.kk, switches, dc=record,
+                                     fitted_from_hz=fitted_from_hz)
         region = _kk_region(chosen, out.kk)
         out.reference = KKReference(
             frequency_hz=np.array(chosen.frequency_hz, dtype=float),
@@ -1728,13 +1739,31 @@ def _kk_region(result: KKResult, summary: dict) -> _KKRegion | None:
         above=float(frequency[order[high + 1]]) if high + 1 < len(order) else f_high)
 
 
+#: 맞춤의 하한은 파일의 점 하나다 (`fit_circuit` 이 쓴 가장 낮은 점).  권한 하한도
+#: 점 하나라 보통 같은 수다 — DB 를 오가며 생길 끝자리만 봐준다.
+_SAME_HZ = 1e-6
+
+
+def fitted_above(fitted_from_hz: float | None, low_hz: float | None) -> bool:
+    """The fit in use starts at ``low_hz`` or above -- it did not use the
+    points below the bound a KK finding asks for.  ``False`` when either is
+    unknown: a fit with no recorded window used every point."""
+    return (fitted_from_hz is not None and low_hz is not None
+            and fitted_from_hz >= low_hz * (1.0 - _SAME_HZ))
+
+
 def _kk_findings(result: KKResult, summary: dict,
                  switches: Sequence[float] | None = None,
-                 dc: DCRecord | None = None) -> list[Finding]:
+                 dc: DCRecord | None = None,
+                 fitted_from_hz: float | None = None) -> list[Finding]:
     """``switches``: where the current range changed (`_range_switches`) --
     ``None`` when the file does not record the range.  ``dc``: the file's DC
     record (`dc_record`) -- when the low end broke, what the cell's DC level
-    did is said instead of a guess at the cause (`_dc_context`)."""
+    did is said instead of a guess at the cause (`_dc_context`).
+    ``fitted_from_hz``: the lowest point the fit in use was fitted on -- when
+    the low end broke and the fit already starts at the bound asked for, the
+    finding says the fit left those points out and asks for nothing
+    (`fitted_above`, ADR 0045 보완 4)."""
     worst = summary["max_residual"]
     sigma = summary["sigma"]
     noisy = (Finding(NOTE, "kk_noisy",
@@ -1782,10 +1811,18 @@ def _kk_findings(result: KKResult, summary: dict,
         context = _dc_context(dc)
         changed = (f"측정 중에 셀이 변했습니다. {context}" if context else
                    "측정 중에 셀이 변했습니다 (온도가 덜 올라왔거나, 쉬지 않은 셀)")
+        head = f"저주파 끝 {span} 가 Kramers–Kronig 를 어깁니다 ({size}) — {changed}"
+        if fitted_above(fitted_from_hz, region.above):
+            # 셀이 변한 것은 그대로다.  맞춤이 할 일은 끝났다 — 확인이 아니라 참고.
+            return [Finding(NOTE, "kk_violation",
+                            f"{head}. 쓰는 맞춤은 {fitted_from_hz:.3g} Hz 부터 맞춰 그 "
+                            f"점들을 쓰지 않았습니다 — 그 아래의 꼬리가 필요하면 셀이 "
+                            f"쉰 뒤 다시 재야 합니다{also}")]
         return [Finding(CHECK, "kk_violation",
-                        f"저주파 끝 {span} 가 Kramers–Kronig 를 어깁니다 ({size}) — "
-                        f"{changed}. 그 점들로 정한 꼬리·저항은 믿지 말고, 하한을 "
-                        f"{region.above:.3g} Hz 로 두고 다시 맞추세요{also}")]
+                        f"{head}. 그 점들로 정한 꼬리·저항은 믿지 말고, 하한을 "
+                        f"{region.above:.3g} Hz 로 두고 다시 맞추세요{also}",
+                        # 구간 위에 점이 없으면(스펙트럼 전체) 둘 하한이 없다.
+                        low_hz=region.above if region.above > f_high else None)]
     # 측정 쪽 원인은 이 파일이 배제하지 못한 것만 적는다.  실측 아홉 번째 검수:
     # 펠릿 #83·#124·#138 의 102–258 Hz 에 "전류 범위 전환" 이 붙었는데 그 파일들의
     # `I Range` 는 그 근처에서 안 바뀌었고, 풀셀 #29 의 0.02–0.101 Hz 에 "전원

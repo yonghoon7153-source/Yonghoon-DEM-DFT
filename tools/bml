@@ -16,7 +16,7 @@
 #   bml data off   저장소 안의 data/ 로 되돌린다 (원본은 그 드라이브에 그대로)
 #   bml reparse    올려 둔 파일을 전부 다시 읽는다 (계산이 바뀌었을 때 — 원본은 그대로)
 #   bml audit      EIS 전부를 검수해 글로 찍는다 (읽기만 — 붙여 넣으면 된다)
-#   bml refit      검수가 권한 회로로 한꺼번에 다시 맞춘다 (옛 맞춤은 남긴다)
+#   bml refit      검수가 권한 회로·하한으로 한꺼번에 다시 맞춘다 (옛 맞춤은 남긴다)
 #   bml refit --dry-run  맞춰 보기만 한다 — `--undo` 는 마지막 묶음을 되돌린다
 #   bml host open  이 서버를 네트워크에 연다 (다른 기계가 보게) — `bml host local` 로 닫는다
 #   bml password <암호>  바깥에 열 때 쓸 공유 암호를 정한다
@@ -5592,10 +5592,11 @@ stream_post() {
   return 0
 }
 
-#: `bml refit [--dry-run | --undo]` — 검수가 권한 회로로 한꺼번에 다시 맞춘다
-#: (ADR 0045).
+#: `bml refit [--dry-run | --undo]` — 검수가 권한 회로·하한으로 한꺼번에 다시
+#: 맞춘다 (ADR 0045).
 #:
-#: 회로를 실은 **문제** 판정이 있는 스펙트럼만 맞춘다.  검수가 받아들인 새
+#: 회로를 실은 **문제** 판정이 있는 스펙트럼과, 저주파 끝이 KK 를 어겨 하한을
+#: 권한 스펙트럼(같은 회로를 그 하한부터, 보완 4)만 맞춘다.  검수가 받아들인 새
 #: 맞춤을 더하고 그것을 쓴다 — **옛 맞춤은 지우지 않는다.**  `--dry-run` 은 맞춰
 #: 보기만 하고, `--undo` 는 마지막 묶음의 맞춤만 지운다 (옛 맞춤으로 돌아간다).
 #:
@@ -5630,10 +5631,10 @@ cmd_refit() {
     [ "$code" = 200 ] && { say ""; cat "$body"; }
   else
     if [ "$mode" = dry ]; then
-      step "권한 회로로 맞춰 보는 중 ${DIM}(맞춰 보기만 — 아무것도 저장하지 않습니다)${OFF}"
+      step "권한 회로·하한으로 맞춰 보는 중 ${DIM}(맞춰 보기만 — 아무것도 저장하지 않습니다)${OFF}"
       endpoint="$url/api/eis/audit/refit?format=text&dry_run=true"
     else
-      step "검수가 권한 회로로 다시 맞추는 중 ${DIM}(옛 맞춤은 그대로 둡니다)${OFF}"
+      step "검수가 권한 회로·하한으로 다시 맞추는 중 ${DIM}(옛 맞춤은 그대로 둡니다)${OFF}"
       endpoint="$url/api/eis/audit/refit?format=text"
     fi
     say "  ${DIM}먼저 전부 검수하고, 대상마다 한 줄씩 찍습니다. 수 분에서 십수 분 걸립니다.${OFF}"

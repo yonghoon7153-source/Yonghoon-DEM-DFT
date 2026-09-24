@@ -1551,6 +1551,9 @@ class AuditFindingOut(BaseModel):
     #: 다시 맞추면 이 판정이 풀리는 회로, 권하는 순서로 (ADR 0045).  `bml refit`
     #: 이 이것을 맞춰 본다 — 문장에서 회로를 긁어내지 않는다.
     circuits: list[str] = []
+    #: 다시 맞출 때 둘 주파수 하한 (Hz) — 저주파 끝이 KK 를 어긴 판정만, 쓰는
+    #: 맞춤이 아직 그 아래 점을 쓸 때만 싣는다 (ADR 0045 보완 4).
+    low_hz: float | None = None
     #: 무엇에 대한 판정인가 (ADR 0046): ``points`` 는 점 자체(Kramers–Kronig ·
     #: 잡음 · 저주파 유도성 — 측정의 사정), ``fit`` 은 쓰는 맞춤, ``record`` 는
     #: 기록(두께·면적·원본).  스펙트럼 화면이 이것으로 칸을 나눈다.
@@ -1673,10 +1676,25 @@ class RefitTryOut(BaseModel):
     reason: str = ""
     #: 받아들였을 때 남은 문제 판정의 수.
     problems_left: int | None = None
+    #: 맞춘 창의 하한 (Hz) — 저주파 끝이 KK 를 어겨 판정이 권한 것 (보완 4).
+    #: 비면 쓰는 맞춤의 창 그대로다.
+    low_hz: float | None = None
+
+
+class RefitValueOut(BaseModel):
+    """같은 회로로 하한만 올려 다시 맞췄을 때, 파라미터 하나의 옛 값 → 새 값."""
+
+    name: str
+    old: float | None = None
+    new: float | None = None
+    #: 새 맞춤에서 정해졌나 — 검수 글의 ``?`` 와 같은 규칙.
+    determined: bool = True
+    #: 옛 맞춤에서 정해졌었나.
+    was_determined: bool = True
 
 
 class RefitSpectrumOut(BaseModel):
-    """스펙트럼 하나를 권한 회로로 다시 맞춰 본 결과."""
+    """스펙트럼 하나를 권한 회로·하한으로 다시 맞춰 본 결과."""
 
     id: int
     name: str
@@ -1690,6 +1708,10 @@ class RefitSpectrumOut(BaseModel):
     problems: list[AuditFindingOut] = []
     #: 옛 맞춤의 문제 판정 **전부** (회로를 안 실은 것까지) — 새 것과 견주는 수.
     old_problems: list[AuditFindingOut] = []
+    #: 옛 맞춤이 쓴 가장 낮은 점 (Hz).
+    old_low_hz: float | None = None
+    #: 저주파 끝이 KK 를 어겨 판정이 권한 하한 (Hz) — 비면 하한은 그대로 두었다.
+    low_hz: float | None = None
     tries: list[RefitTryOut] = []
     #: 고른 새 맞춤.  비면 아무것도 받아들여지지 않아 그대로 뒀다.
     new_circuit: str = ""
@@ -1700,6 +1722,14 @@ class RefitSpectrumOut(BaseModel):
     new_sigma_ohm: float | None = None
     #: 새 맞춤에 남은 문제 판정.
     new_problems: list[AuditFindingOut] = []
+    #: 새 맞춤이 쓴 가장 낮은 점 (Hz).
+    new_low_hz: float | None = None
+    #: 하한을 올려 맞춤에서 뺀 점의 수와 그 주파수 범위 ``[낮은, 높은]``.
+    dropped_points: int = 0
+    dropped_band_hz: list[float] = []
+    #: 회로가 그대로일 때 파라미터마다 옛 값 → 새 값.  회로가 바뀌면 이름이
+    #: 가리키는 소자가 달라 견주지 않는다 (비었다).
+    values: list[RefitValueOut] = []
 
 
 class RefitSkipOut(BaseModel):
@@ -1717,8 +1747,11 @@ class EisRefitOut(BaseModel):
     generated_at: datetime
     #: 쓰는 맞춤이 있는 스펙트럼 수 — 본 것.
     total: int
-    #: 회로를 실은 문제 판정이 있는 것 — 맞춰 본 것.
+    #: 회로를 실은 문제 판정이 있거나, 저주파 끝이 KK 를 어겨 하한이 권해진 것
+    #: — 맞춰 본 것.
     targets: int
+    #: 대상 중 하한이 권해진 것 (보완 4).  회로를 권한 문제도 있으면 둘 다 센다.
+    windows: int = 0
     #: 맞춤 판정에 문제가 있지만 권할 회로가 없는 것 — 건드리지 않았다.
     unoffered: int = 0
     changed: int = 0
@@ -1735,6 +1768,10 @@ class RefitUndoneOut(BaseModel):
     removed_circuit: str
     #: 이제 쓰는 맞춤의 회로 — 비면 쓸 맞춤이 없다.
     now_circuit: str = ""
+    #: 지운 맞춤과 이제 쓰는 맞춤이 쓴 가장 낮은 점 (Hz) — 하한만 올린 묶음은
+    #: 회로가 같아 이것으로 무엇이 돌아갔는지 적는다.
+    removed_low_hz: float | None = None
+    now_low_hz: float | None = None
 
 
 class EisRefitUndoOut(BaseModel):

@@ -1098,6 +1098,8 @@ export interface AuditFinding {
   message: string
   refs: string[]
   circuits: string[]
+  /** 다시 맞출 때 둘 주파수 하한 (Hz) — 저주파 끝이 KK 를 어긴 판정만 (ADR 0045 보완 4). */
+  low_hz?: number | null
   /** 무엇에 대한 판정인가: 점 자체(측정) · 쓰는 맞춤 · 기록. */
   scope: 'points' | 'fit' | 'record' | ''
 }

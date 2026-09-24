@@ -88,7 +88,7 @@ POINTS, FIT, RECORD = "points", "fit", "record"
 def _finding_out(one: Finding, scope: str = "") -> AuditFindingOut:
     return AuditFindingOut(severity=one.severity, label=one.label, code=one.code,
                            message=one.message, refs=list(one.refs),
-                           circuits=list(one.circuits), scope=scope)
+                           circuits=list(one.circuits), low_hz=one.low_hz, scope=scope)
 
 
 def _references(findings) -> list[AuditReferenceOut]:
@@ -236,14 +236,16 @@ def _audit_parts(session: Session, record: SpectrumRecord,
         sha256=record.sha256,
         n_points=len(spectrum) if spectrum is not None else record.n_points,
         thickness_um=thickness_cm * 1e4 if thickness_cm else None, area_cm2=area)
-    # 점 자체 — 회로와 무관한 Kramers–Kronig 검사 (ADR 0043).
-    points = audit_spectrum(spectrum)
+    # 점 자체 — 회로와 무관한 Kramers–Kronig 검사 (ADR 0043).  쓰는 맞춤의 하한은
+    # 저주파 끝 판정이 "그 하한부터 다시 맞추세요" 인지 "이미 뺐습니다" 인지만
+    # 가른다 (ADR 0045 보완 4).
+    best = _best_fit(session, record.id or 0)
+    points = audit_spectrum(spectrum, fitted_from_hz=_fitted_from(best))
     tagged += [(one, POINTS) for one in points.findings]
     out.kk = points.kk
     out.dc = points.dc
     audited = _Audited(out=out, spectrum=spectrum, points=points)
 
-    best = _best_fit(session, record.id or 0)
     if best is None:
         tried = session.exec(select(SpectrumFit).where(
             SpectrumFit.spectrum_id == record.id)).first()
@@ -277,6 +279,12 @@ def _audit_parts(session: Session, record: SpectrumRecord,
     out.findings = [_finding_out(one, scope) for one, scope in ordered]
     out.worst = worst([one for one, _ in ordered])
     return audited
+
+
+def _fitted_from(fit: SpectrumFit | None) -> float | None:
+    """쓰는 맞춤이 쓴 가장 낮은 점 (Hz) — 맞춤이 없거나 창을 안 적은 옛 행이면
+    ``None`` (모든 점을 쓴 것으로 본다)."""
+    return fit.frequency_low_hz if fit is not None else None
 
 
 def _residuals(audited: _Audited) -> AuditResidualsOut:
