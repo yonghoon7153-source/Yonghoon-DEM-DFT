@@ -22,10 +22,14 @@
     ⇒ 게이트 A 는 **두 판 다 재고 판정은 외부 1저자에게** (Q1–Q5). 새 플래그 `melt_quench_uma.py --seed_gate` (원시·relax 두 판 · `md_init_raw.xyz`).
   · 🟢 **파일럿 2런 kgy 발사 (09-24 오전 · tmux `gp400` · `gp550`)** (seed1 · 400/550 K · 400 ps · turbo · 초기구조 **원시 잠정**
     `md_init_raw.xyz` sha `573371c2…` · `--seed 1` → 난수 401/551 · GPU 여유 ≥ 9 GB 가드 통과 · worktree `~/li2s_glass_src` @3b0338081)
-    `~/work/runs/lpscl_glass_md_2026_09_24/pilot/T{400,550}` — ⏳ run_meta 무효조건 확인 블록 전달. 게이트 읽는 법은 결과 전에 정오 기록 §6 (STO · P-1 D비 < 2 · P-2 MSD@50 < 48.88).
+    `~/work/runs/lpscl_glass_md_2026_09_24/pilot/T{400,550}` — ✅ **run_meta 무효조건 전건 통과** (PID 1760069 · 1760075 · turbo · free-S=0 Cl=12 ·
+    kgy 16.2/24.6 GB 100 %). ⚠ **seed5 는 아직 안 떴다** (09-24 gabia: plan.json·q5.log 없음) → 발사 블록 재전달.
+    ⚠ gabia seed3·4 `--seed_gate` 는 `git worktree add` 중 ^C (반쯤 만든 `/data/work/repo_seedgate` 정리 → 단일 파일 `git show` 로 재시도).
+    게이트 읽는 법은 결과 전에 정오 기록 §6 (STO · P-1 D비 < 2 · P-2 MSD@50 < 48.88).
   · `--seed_gate` 실측 (kgy seed1·2): **seed1 relax 가 기준값 재현** (PS₄ 1.0000 · 2.037 P-S · ρ 1.6212) · 🔴 **원시 최단 P–S seed1 1.988 · seed2 1.943 < 2.0**
     (P–S 제외면 2.197 / 2.184) — 원시로 재면 기준 자신이 떨어진다 = Q2 실측 확인. seed2 ρ 1.5782 (−2.65 %). 원시↔relax 변위 rms 0.24–0.30 · max 0.59–0.67 Å
     (정오 기록의 '~0.1 Å' 추정 정정). 🟡 **Q6 새로**: 총상한 180 GPU-h 를 공유 GPU 에서 어떻게 세나 (cascade 선례 = 벽시계) → 시드별 wall_min 장부.
+    장부: seed1 **35.1 h** (카드 이전 런) · seed2 **47.0 h** (= 카드 담금질 4 시드 견적 60 h 의 78 %) → 벽시계로 세면 본 15런 전에 상한 근처 ⇒ **Q6 은 본 캠페인 전 필수**.
 - ✅ **SDCP/PTFE (C-12 v41, 1저자 = 사용자)** — 사람용 정리 `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md`
   (숫자의 지위 · 1.83/2.54 Å 와 DFT 힘 · PTFE −0.79 크기 검증 · Kang 2025 대비 · 대기 12잡 · 세미나 멘트·예상 질문).
   수치 정본은 `db/properties/sdcp_c12_v41_eads_ungated_2026_09_21.json` §9 (D3 독립재현 0.5/2.6 meV · 분산모델 4종
@@ -86,7 +90,9 @@
   ✅ **k-탐침 끝 (09-24 10:31 KST 확인 · SCF 15 iteration · JOB DONE)** — **ΔE(k331−k221) = −0.028316 Ry = −3.210 meV/atom > 문턱 1** ⇒
     `D-2026-09-18-nd-icohp-kmesh` **재개 조건 2 발화 · dense-k LOBSTER 재개** (규칙이라 선택 아님). C1 은 유지 + 한계 1줄 (여유 1.78 eV 는 뒤집힐 크기 아님 — 예상).
     ⏳ **1저자 결정 대기**: k 값 (권고 k 3 3 1 — 탐침 outdir 이 그 SCF 전하밀도라 SCF 생략 · ⛔ 지우지 말 것) · 기계 (GPU 규칙 09-23) · nbnd ≥ 546 (920 과다).
-    기록 `nd_icohp_frozen4f_result_2026_09_23.json` `enforcement_④_k_탐침_2026_09_24`. `!` 줄 원문(E_k331) 회수 전.
+    기록 `nd_icohp_frozen4f_result_2026_09_23.json` `enforcement_④_k_탐침_2026_09_24` · `!` 원문 **E_k331 −6399.21429237 Ry** (차 −0.02831583 Ry).
+    ✅ **1저자 결정 k 3 3 1** ('nd는 331로 하자') → `D-2026-09-24-nd-icohp-densek-k331` (active · 탐침 `tmp_kprobe` 4.4 GB **사본**에서 nscf · nbnd ≥ 546 선언 ·
+    기계는 상시 GPU 규칙 → V100 SE|SE 뒤 · 메모리 프로브 먼저). ⏭ 입력 생성 → 프로브.
   (옛 기록) 🟢 **k-탐침 도는 중 (enforcement ④ · 1저자 "이것도 진행하고" · k 3 3 1)** — gabia CPU `/data/work/runs/nd_ppswap_2026_09_16/kprobe_k331`
   · 16:42 KST 발사 · 8랭크 npool 2 · k 5개 · 총 RAM 34.2 GB (원 SCF 32.5) · pw.x PID 3364447–3364453·3364457 · 원본과 다른 줄 3줄(prefix·outdir·K_POINTS).
   · watch `kprobe_k331/kprobe_watch.sh` (PID 고정 · CPU 는 직전 표본 대비). 판정: 원 SCF **−6399.18597654 Ry** 대비 |ΔE| ≤ **0.0088 Ry (1 meV/atom · nat 120)**
@@ -176,6 +182,10 @@
     S 바깥 PBE 이완 02:07 시작 → Li 바깥 이완. 이완 도중 OOM 이면 diagonalization 만 ppcg 로 (물리 설정 불변).
     ⚠ 09-24 10:31 watch: runner.log 마지막 줄이 **03 S 바깥 이완 시작(02:07)** 이고 완료표에 03 이 없다 · GPU 30,834 MiB 점유 · 순간 0 % ·
     pw.out 1,625 줄 매치 ⇒ **끝난 것으로 안 읽는다** (사용자 '끝남' 보고 → 이온 스텝 수 · Total force · JOB DONE · GPU 표본 확인 블록 전달).
+    ✅ 10:44 확인: **돌고 있다** — 이온 스텝 82 · Total force 0.019–0.024 Ry/Bohr · pw.out 13 초 전 수정 · GPU 86–98 % · 10.7 GB (nstep 200 · forc 1e-3).
+    🔴 **러너 결함**: 기록된 `pw.x PID 563677` 이 **없다** (ps 빈 줄) — `pgrep -P mpirun | head -1` 이 pw.x 가 아닌 자식을 잡았거나 사라진 PID 다.
+    완료표 `peak_self_MiB` 가 **세 잡 모두 0** = 자기 VRAM 측정이 한 번도 안 됐다 (컨테이너 PID 공간 ≠ nvidia-smi PID 도 의심). 가드는 mpirun 을 죽이므로 안전은 유지 ·
+    기록 필드가 거짓 0 이다 ('조용히 틀린 경로') → 러너 수정 대기 (pw.x 는 comm·cmdline 으로 찾고, 못 재면 0 이 아니라 '—').
     📊 **중간값 (판정 보류 · 인용 금지)** `--collect`: 무이완 W_sep PBE **1.103** · PBE+D3(BJ) 2체 **1.518** J/m² (A 101.10 Å² · n 4.0) ·
     −TS 경고 없음. ⚠ 경보 v2 는 **이완 PBE W_cleave** 에만 건다 — 무이완 1.1 은 경보 대상 아님 (무이완 ≥ 이완 이 정상).
   · 🆕 **웹앱 `/adhesion` — 점착 파이프라인 섹션 (09-24 · 1저자 요청)**: 원장 `db/pipelines/adhesion_pipeline.json` 하나를 읽는다

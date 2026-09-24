@@ -4111,6 +4111,62 @@
     "decision_digest": "sha256:888128cba56f62f46b00582b662ef56b0e9821edd5f0fef8a631403e0be32206",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-24-nd-icohp-densek-k331",
+   "schema_version": 2,
+   "kind": "method",
+   "scope": "modelc_nd_doped.lobster_icohp.frozen4f.densek_2026_09_24",
+   "slot": "nd_icohp_kmesh_densek",
+   "applies_to": {
+    "systems": [
+     "modelc_nd_doped"
+    ],
+    "methods": [
+     "lobster_icohp"
+    ]
+   },
+   "title": "Nd frozen-4f dense-k LOBSTER 재개 — k 3 3 1 (k-탐침이 재개 조건 2 를 발화 · 탐침 SCF 재사용)",
+   "statement": "`D-2026-09-18-nd-icohp-kmesh` 재개 조건 2 가 발화했다 — k-탐침 SCF(k 3 3 1, E = −6399.21429237 Ry)가 k 2 2 1(−6399.18597654 Ry) 대비 ΔE = −0.02831583 Ry = **−3.210 meV/atom** (문턱 1 meV/atom). ⇒ dense-k LOBSTER 를 **k = 3 3 1 0 0 0** 으로 재개한다. SCF 는 다시 돌리지 않는다 — 탐침 outdir (`/data/work/runs/nd_ppswap_2026_09_16/kprobe_k331/tmp_kprobe`, 4.4 GB)의 전하밀도에서 **사본으로** nscf(nosym · k 점 9) → LOBSTER. 판정량·문턱(카드 §2b: Nd79 최근접 S 5 평균 · C1 < −2.0 / C2 > −1.0 eV)은 그대로다. nbnd 는 실제 기저 수(546) 이상으로 입력 생성 때 **선언**한다 (종전 920 은 과다). 기계는 새로 정하지 않는다 — 1저자 상시 규칙 '큰 계산은 GPU'(2026-09-23)를 따라 V100 이 SE|SE 4층을 끝낸 뒤, 메모리 추정 프로브(CPU 수 초)로 32 GB 적합을 먼저 확인하고, 안 들면 1저자에게 다시 올린다.",
+   "rationale": "재개는 원결정의 사전 규칙이라 선택이 아니다 (1저자가 고른 것은 k 값). k 3 3 1 은 탐침이 이미 SCF 를 가진 격자라 SCF(≈18 h CPU)를 아낀다. 더 조밀한 k(4 4 1)는 SCF·nscf 를 새로 요구하고, 원결정 ⛔ — '더 촘촘하면 더 정확하다' 는 재개 사유가 아니다.",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": false,
+   "results_seen_note": "k 2 2 1 ICOHP(C1)와 탐침 총에너지는 봤다 — dense-k ICOHP 는 안 봤다.",
+   "card": "db/properties/nd_icohp_pp_swap_card_2026_09_16.json",
+   "record": "db/properties/nd_icohp_frozen4f_result_2026_09_23.json",
+   "depends_on": [
+    "D-2026-09-18-nd-icohp-kmesh"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/properties/nd_icohp_frozen4f_result_2026_09_23.json",
+    "db/properties/nd_icohp_k_mesh_audit_2026_09_18.json"
+   ],
+   "method_ref": "tools/comp1_v3/build_lobster_paw_inputs.py --kpoints '3 3 1 0 0 0' (required 플래그 · 요약에 찍힌다) · nscf nosym · LOBSTER 5.1.1",
+   "reopen_criteria": [
+    "dense-k 판정이 C3(|ICOHP| 1.0–2.0 eV)로 떨어지면 k 를 다시 의심 목록에 올린다 — 그때 새 선언으로.",
+    "⛔ k 3 3 1 결과를 보고 k 를 더 올리지 않는다. k 3 3 1 자체의 수렴은 이 결정이 확인하지 않는다 (탐침 규칙은 k 2 2 1 에 걸린 것) — 결과 기록에 한계로 적는다."
+   ],
+   "enforcement": "① 던지기 전 grep — nscf 입력 K_POINTS 가 `3 3 1 0 0 0` · outdir 가 tmp_kprobe **사본**(원본 보존 — nscf 는 xml·wfc 를 덮어쓴다). ② nbnd 를 입력 요약에 찍는다 (≥ 546). ③ 결과 기록에 'k 3 3 1 수렴 미확인' 과 k 2 2 1 판정을 나란히 적는다. ④ GPU 규칙 — CPU 로 돌리려면 1저자 예외를 새로 받는다.",
+   "proposed_by": "claude-session-2026-09-24",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-24",
+     "state": "active",
+     "note": "1저자 결정 2026-09-24 — 'nd는 331로 하자' (k 값). 기계·시점은 새 결정이 아니라 1저자 상시 규칙(큰 계산은 GPU)을 따른 것이다 — 사용자가 다르게 정하면 개정. 트랙 = 우리 DFT 기준선 → 1저자 = 사용자."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-24T01:48:00Z",
+    "commit": "c238f3cdf10c261ed8090f90a884beaf5b990480",
+    "decision_digest": "sha256:9cc381e8700389a6c181258d664dbf0e10a4a8f6699eb253cd9b64597c0bdc9b",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }
