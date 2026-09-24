@@ -58,7 +58,7 @@ from .fit import edge_misfit
 from .guess import inductive_mask
 from .kk import KKResult, lin_kk
 from .spectrum import Spectrum
-from .stationarity import DCRecord, current_pair, dc_record, potential_pair
+from .stationarity import STILL_SHARE, DCRecord, current_pair, dc_record, potential_pair
 
 __all__ = ["CHECK", "Finding", "FitAudit", "KKReference", "Misfit", "NOTE", "PROBLEM",
            "REFERENCES", "SEVERITIES", "SpectrumAudit", "audit_spectrum", "SEVERITY_LABELS", "audit_conductivity_scan",
@@ -1475,7 +1475,7 @@ def audit_spectrum(spectrum: Spectrum | None) -> SpectrumAudit:
         out.kk["range_switches_hz"] = switches
     region = None
     if out.kk["judged"]:
-        out.findings += _kk_findings(chosen, out.kk, switches)
+        out.findings += _kk_findings(chosen, out.kk, switches, dc=record)
         region = _kk_region(chosen, out.kk)
         out.reference = KKReference(
             frequency_hz=np.array(chosen.frequency_hz, dtype=float),
@@ -1552,6 +1552,34 @@ def _dc_findings(record: DCRecord, region: _KKRegion | None = None) -> list[Find
         f"(쉬지 않은 셀). {span} 에서는 한 주기 동안 교류 진폭의 {worst * 100:.2g} % "
         f"까지 움직였습니다: {effect}. 직류 {word}가 멈출 때까지 쉬게 한 뒤 다시 "
         f"재세요")]
+
+
+def _dc_context(dc: DCRecord | None) -> str | None:
+    """What the file says the cell's DC level did over the sweep -- for a
+    verdict that the cell changed under it.  ``None`` when the file says
+    nothing, and then the verdict keeps its guess at the cause.
+
+    랩 (열네 번째 검수 뒤): 풀셀은 200 사이클 뒤 SOC 100 에서 잰 것이다.  "온도가
+    덜 올라왔거나" 는 온도 스캔의 펠릿에서 온 추측이고, 이 셀들은 스윕 동안 직류
+    전류가 µA 단위로 흘렀다 (시작 1–60 µA).  추측 대신 파일의 수를 적는다.  문턱은
+    두지 않는다 — 셀 크기에 따라 달라지는 절댓값이라, 비교할 기준(쉰 셀이면 0 근처)만
+    같이 적는다.  잡고 잰 전위가 그대로인 것은 쉬었다는 뜻이 아니므로 적지 않는다."""
+    if dc is None or not dc.judged:
+        return None
+    if dc.current_a is not None and dc.source != "potential":
+        return (f"파일의 직류 전류는 스윕 동안 {current_pair(*dc.current_ends_a)} "
+                f"였습니다 — 개방 전위에서 쉰 셀이면 0 근처입니다")
+    ends = dc.potential_ends_v
+    if ends is None:
+        return None
+    moved = ((dc.source == "potential" and dc.max_share is not None
+              and dc.max_share >= STILL_SHARE)
+             or (dc.current_a is None and abs(ends[1] - ends[0]) >= 1e-4))
+    if not moved:
+        return None
+    pair, change = potential_pair(*ends)
+    return (f"파일의 직류 전위는 스윕 동안 {pair}{f' ({change})' if change else ''} "
+            f"였습니다 — 쉰 셀이면 그대로입니다")
 
 
 def _range_switches(spectrum: Spectrum) -> list[float] | None:
@@ -1701,9 +1729,12 @@ def _kk_region(result: KKResult, summary: dict) -> _KKRegion | None:
 
 
 def _kk_findings(result: KKResult, summary: dict,
-                 switches: Sequence[float] | None = None) -> list[Finding]:
+                 switches: Sequence[float] | None = None,
+                 dc: DCRecord | None = None) -> list[Finding]:
     """``switches``: where the current range changed (`_range_switches`) --
-    ``None`` when the file does not record the range."""
+    ``None`` when the file does not record the range.  ``dc``: the file's DC
+    record (`dc_record`) -- when the low end broke, what the cell's DC level
+    did is said instead of a guess at the cause (`_dc_context`)."""
     worst = summary["max_residual"]
     sigma = summary["sigma"]
     noisy = (Finding(NOTE, "kk_noisy",
@@ -1748,10 +1779,12 @@ def _kk_findings(result: KKResult, summary: dict,
                         f"{span} 의 점 하나가 Kramers–Kronig 를 어깁니다 ({size}) — "
                         f"튄 점입니다. 맞춤에서 빼 보세요")]
     if at_bottom:
+        context = _dc_context(dc)
+        changed = (f"측정 중에 셀이 변했습니다. {context}" if context else
+                   "측정 중에 셀이 변했습니다 (온도가 덜 올라왔거나, 쉬지 않은 셀)")
         return [Finding(CHECK, "kk_violation",
                         f"저주파 끝 {span} 가 Kramers–Kronig 를 어깁니다 ({size}) — "
-                        f"측정 중에 셀이 변했습니다 (온도가 덜 올라왔거나, 쉬지 않은 "
-                        f"셀). 그 점들로 정한 꼬리·저항은 믿지 말고, 하한을 "
+                        f"{changed}. 그 점들로 정한 꼬리·저항은 믿지 말고, 하한을 "
                         f"{region.above:.3g} Hz 로 두고 다시 맞추세요{also}")]
     # 측정 쪽 원인은 이 파일이 배제하지 못한 것만 적는다.  실측 아홉 번째 검수:
     # 펠릿 #83·#124·#138 의 102–258 Hz 에 "전류 범위 전환" 이 붙었는데 그 파일들의

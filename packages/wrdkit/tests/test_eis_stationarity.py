@@ -87,6 +87,9 @@ def test_where_kk_breaks_too_the_two_are_named_as_one_cause():
     audit = audit_spectrum(spectrum)
     (kk,) = [one for one in audit.findings if one.code == "kk_violation"]
     assert kk.message.startswith("저주파 끝 0.01")
+    # 원인을 짐작하지 않고 파일의 수를 적는다 — 랩의 풀셀은 SOC 100 에서 잰 것이다.
+    assert "파일의 직류 전류는 스윕 동안 300 → 95.5 µA 였습니다" in kk.message
+    assert "온도가 덜 올라왔거나" not in kk.message
     (drift,) = [one for one in audit.findings if one.code == "dc_drift"]
     assert "KK 로는 안 보입니다" not in drift.message
     assert "KK 가 0.01–" in drift.message and "한 뿌리입니다" in drift.message
@@ -182,4 +185,14 @@ def test_small_levels_are_written_in_units_that_show_them():
     assert current_pair(-0.193e-6, 7.79e-9) == "-193 → 7.79 nA"
     assert potential_pair(0.0004, 0.0002) == ("0.4 → 0.2 mV", None)
     assert potential_pair(3.7012, 3.6921) == ("3.7012 → 3.6921 V", "-9.1 mV")
+
+
+def test_without_a_record_the_low_end_verdict_keeps_its_guess():
+    """직류 기록이 없는 파일(텍스트 내보내기 등)은 전처럼 짐작을 적는다."""
+    f = sweep()
+    ramp = np.clip(np.log10(0.1 / f), 0, None) * 0.20
+    z = true_impedance(f) * (1 + ramp)
+    (kk,) = [one for one in audit_spectrum(Spectrum(f, z.real, z.imag)).findings
+             if one.code == "kk_violation"]
+    assert "(온도가 덜 올라왔거나, 쉬지 않은 셀)" in kk.message
 
