@@ -3,7 +3,7 @@
 
     python3 scripts/lhs_descriptor_harvest.py --atom post/atom_2425000.liggghts \\
         --contact post/contact_2425000.liggghts --mesh post/mesh.stl \\
-        --n-types 3 --case lhs00_000
+        --deck input_lhs00_000.liggghts --n-types 3 --case lhs00_000
     python3 scripts/lhs_descriptor_harvest.py --selftest
 
 이 파일은 **판정문 §7 의 최소 계약 6개**를 도구에 고정한 것이다.
@@ -48,7 +48,7 @@ c_i = FREE_SURFACE_INVALID                                    [F_i ≤ 0]
 ⚠⚠ **`hertz` 라는 별칭은 물려받은 오해다** (`L1-04`, 2026-09-13 L1 판정).  공식 LIGGGHTS
 문서·구현에서 `contactArea` 는 역학 해가 아니라 **기하학적 교차 원판**이다:
 `A_LIGG = π(rδ − δ²/4)` vs `A_Hertz = πR*δ` ⇒ 동일 반경에서 비 = `2 − δ/(2r)`
-(r = 0.5 µm · δ/R\* = 0.05 에서 **1.9875배**, 이 리포에서 재현).  등록 별칭은 **바꾸지
+(r = 0.5 µm · δ/R* = 0.05 에서 **1.9875배**, 이 리포에서 재현).  등록 별칭은 **바꾸지
 않지만**(판정문: *"기존 키와 frozen feature 를 세대 표시 없이 바꾸면 안 된다"*) 매 행에
 `area_channel` 을 박아 **무엇을 센 값인지**를 남긴다.  권고 이름 구분은
 `A_dem_geometric` / `A_hertz_elastic` / `A_plastic_model` 이다.
@@ -240,32 +240,113 @@ def phase_labels(types, n_types):
 Z_FLOOR = 0.0      # 바닥 벽 — LHS 덱 `wall/gran … zplane 0.0`.  웹앱 `dem_analysis_core.calc_porosity` 의 V_box = L²·plate_z 와 같은 규약
 
 
+def check_deck_floor(path):
+    """LHS-12 (판단 J14): 바닥 벽 위치를 **덱에서 직접** 읽는다 — 입자 깊이로 추정하지 않는다.
+
+    `fix … wall/gran … primitive type N zplane Z` 를 찾아 가장 낮은 Z 가 `Z_FLOOR` 인지 본다.
+    주석 (`#` 뒤) 은 버리고 `&` 로 이어진 줄은 붙여 읽는다.  Z 를 숫자로 못 읽거나 (변수 등) 바닥 벽이 없거나
+    0 이 아니면 **거부**한다 — 못 읽은 값을 0 으로 치지 않는다.
+    ⛔ J13 판은 이 확인을 입자 깊이 (z − r < −½·r_max) 로 대신했다 — 실제 130 에서 가장 큰 AM 과 바닥의 **깊은 겹침**
+      (연속 분포) 을 문턱에서 잘라 58 건을 거부했다 (재수확 09-24).
+    """
+    if not path or not os.path.exists(path):
+        raise BedRefusal(f'{path}: 덱이 없다 — 바닥 벽 위치를 확인할 수 없다 (LHS-12)')
+    logical, buf = [], ''
+    with open(path, encoding='utf-8', errors='replace') as fh:
+        for raw in fh:
+            s = raw.split('#', 1)[0].rstrip()
+            if s.endswith('&'):
+                buf += s[:-1] + ' '
+                continue
+            logical.append(buf + s)
+            buf = ''
+    if buf:
+        logical.append(buf)
+    walls = []
+    for ln in logical:
+        tok = ln.split()
+        if not tok or tok[0] != 'fix' or 'wall/gran' not in tok or 'primitive' not in tok or 'zplane' not in tok:
+            continue
+        kz, kp = tok.index('zplane'), tok.index('primitive')
+        zs = tok[kz + 1] if kz + 1 < len(tok) else ''
+        try:
+            z = float(zs)
+        except ValueError:
+            raise BedRefusal(f'{path}: 바닥 벽 zplane 값을 숫자로 못 읽는다 ({zs!r}) — 0 으로 치지 않는다 (LHS-12)')
+        wt = tok[kp + 2] if kp + 2 < len(tok) and tok[kp + 1] == 'type' else ''
+        walls.append(dict(fix_id=tok[1] if len(tok) > 1 else '', z=z,
+                          wall_type=int(wt) if wt.isdigit() else None, line=' '.join(tok)))
+    if not walls:
+        raise BedRefusal(f'{path}: 바닥 벽 (`wall/gran … primitive … zplane`) 이 없다 — '
+                         f'벽 = {Z_FLOOR} 가정을 확인할 수 없다 (LHS-12)')
+    floor = min(walls, key=lambda w: w['z'])
+    if floor['z'] != Z_FLOOR:
+        raise BedRefusal(f'{path}: 바닥 벽이 z = {floor["z"]} 다 — 웹앱 규약 (벽 = {Z_FLOOR}) 이 이 덱에 맞지 않는다 (LHS-12)')
+    return dict(z=floor['z'], wall_type=floor['wall_type'], fix_id=floor['fix_id'],
+                n_zplane_walls=len(walls), line=floor['line'])
+
+
+def _wall_side(labels, r, z, depth, center_out, fully_out, vsum):
+    """벽 한쪽 (바닥 또는 플래튼) 의 기록 — depth = 입자가 벽 밖으로 나간 깊이 (자르지 않은 값)."""
+    h = np.clip(depth, 0.0, 2.0 * r)                                  # 벽 밖 cap 높이
+    v_out = np.pi * h ** 2 * (3.0 * r - h) / 3.0                       # 구 cap 부피 π h²(3r − h)/3
+    i = int(np.argmax(depth))
+    deepest = None
+    if depth[i] > 0:
+        deepest = dict(phase=str(labels[i]), r_sim=float(r[i]), z_sim=float(z[i]),
+                       depth_sim=float(depth[i]), overlap_over_r=float(depth[i] / r[i]))
+    by_phase = {}
+    for lab in labels[center_out]:
+        by_phase[str(lab)] = by_phase.get(str(lab), 0) + 1
+    return dict(n_touch=int((depth > 0).sum()), n_center_out=int(center_out.sum()),
+                n_fully_out=int(fully_out.sum()), n_center_out_by_phase=by_phase,
+                v_out_sim=float(v_out.sum()), v_out_pct=100.0 * float(v_out.sum()) / vsum,
+                deepest=deepest)
+
+
 def volumes_and_phi(atoms, labels, box_lo, box_hi, plate_z):
     """계약② — φ 는 **기하만**으로, τ·전도도 성공과 무관하게.
 
     ⛔ LHS-10 (2026-09-24): 옛 판은 분모 높이를 `plate_z − box_lo[2]` (덤프 상자 바닥) 로 쟀다.  덱 상자가 벽보다 10 µm 아래서
       시작해 (`region … -0.01 1.0`) 입자가 없는 층이 분모에 들어갔다 — φ 가 0.742–0.825 배, porosity 중앙 30.65 % (벽 기준 9.89 %).
-      이제 **벽 (Z_FLOOR)** 에서 잰다.  입자가 벽 아래 (z − r < Z_FLOOR − ½·r_max) 에 있으면 그 가정이 안 맞는 덱이라 거부한다.
+      이제 **벽 (Z_FLOOR)** 에서 잰다 — 벽 위치는 덱에서 확인한다 (`check_deck_floor`).
+    ★ LHS-12 (판단 J14, 비준 09-24): 벽 밖으로 나간 입자는 **거부하지 않는다**.  (가) 주 값은 웹앱 식 그대로
+      (ΣV 전부 / L²·plate_z — 벽 밖 부피도 벽 안 빈틈을 메운 것으로 센다) 이고, 벽 밖 부피 · 입자 수 · 가장 깊은 입자와
+      (나) 그 부피를 벽 안으로 되돌려 두께에 더한 값 (`wall_record.pushback`) 을 **기록**한다.
     """
     r = atoms['radius']
+    z = atoms['z']
     v = (4.0 / 3.0) * np.pi * r ** 3
     lx = float(box_hi[0] - box_lo[0])
     ly = float(box_hi[1] - box_lo[1])
-    zb = float((atoms['z'] - r).min())
-    if zb < Z_FLOOR - 0.5 * float(r.max()):
-        raise BedRefusal(f'입자가 벽 (z = {Z_FLOOR}) 아래에 있다: min(z − r) = {zb:.6g} — 벽 = 0 가정이 이 덱에 맞지 않는다 (LHS-10)')
+    zb = float((z - r).min())
+    zt = float((z + r).max())
     h = float(plate_z - Z_FLOOR)
     if not (lx > 0 and ly > 0 and h > 0):
         raise BedRefusal(f'전극 부피가 양수가 아니다: lx={lx} ly={ly} H={h}')
     v_box = lx * ly * h
+    vsum = float(v.sum())
     is_se = labels == 'SE'
     is_am = np.asarray([l in AM_LABELS for l in labels])
     phi_se = float(v[is_se].sum() / v_box)
     phi_am = float(v[is_am].sum() / v_box)
-    eps = 100.0 * (1.0 - float(v.sum()) / v_box)
+    eps = 100.0 * (1.0 - vsum / v_box)
+
+    floor = _wall_side(labels, r, z, Z_FLOOR - (z - r), z < Z_FLOOR, z + r < Z_FLOOR, vsum)
+    plate = _wall_side(labels, r, z, (z + r) - plate_z, z > plate_z, z - r > plate_z, vsum)
+    h_pb = h + (floor['v_out_sim'] + plate['v_out_sim']) / (lx * ly)
+    v_box_pb = lx * ly * h_pb
+    wall_record = dict(
+        floor=floor, plate=plate,
+        pushback=dict(H_sim=h_pb, dH_sim=h_pb - h, V_box_sim=v_box_pb,
+                      phi_se=float(v[is_se].sum() / v_box_pb), phi_am=float(v[is_am].sum() / v_box_pb),
+                      porosity_pct_RECORD_ONLY=100.0 * (1.0 - vsum / v_box_pb)),
+        convention='(가) 주 값 = 웹앱 ε_sphere (ΣV 전부 / L²·plate_z) · (나) pushback = 벽 밖 부피를 벽 안으로 '
+                   '되돌려 두께에 더한 값 (H′ = plate_z + V_out / L²) — 판단 J14')
     return dict(phi_se=phi_se, phi_am=phi_am,
                 porosity_sphere_pct_RECORD_ONLY=eps,
-                V_box_sim=v_box, H_sim=h, lx_sim=lx, ly_sim=ly, z_floor_sim=Z_FLOOR, solid_bot_sim=zb,
+                V_box_sim=v_box, H_sim=h, lx_sim=lx, ly_sim=ly, z_floor_sim=Z_FLOOR,
+                solid_bot_sim=zb, solid_top_sim=zt, wall_record=wall_record,
                 closure_residual=phi_se + phi_am + eps / 100.0 - 1.0)
 
 
@@ -467,10 +548,12 @@ def tortuosity_se(atoms, labels, box_lo, box_hi, n_pairs=N_TAU_PAIRS, seed=42,
 
 
 def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None,
-            allow_any_bc=False, n_pairs=N_TAU_PAIRS):
+            allow_any_bc=False, n_pairs=N_TAU_PAIRS, deck_path=None):
     for p in (atom_path, contact_path):
         if not os.path.exists(p):
             raise BedRefusal(f'{p}: 없다')
+    #  LHS-12: 바닥 벽 위치를 덱에서 확인한다 (CLI 는 --deck 필수 · 라이브러리 호출은 None 이면 '미확인' 으로 남긴다)
+    deck = check_deck_floor(deck_path) if deck_path is not None else None
     ts_a, ts_c = last_timestep(atom_path), last_timestep(contact_path)
     if ts_a != ts_c:
         raise BedRefusal(
@@ -508,6 +591,8 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
                            sha256=sha256_of(contact_path))}
     if mesh_path:
         raw['mesh'] = dict(path=os.path.basename(mesh_path), sha256=sha256_of(mesh_path))
+    if deck_path is not None:
+        raw['deck'] = dict(path=os.path.basename(deck_path), sha256=sha256_of(deck_path))
 
     cp, sp = cov['per_phase']['AM_P']
     cs, ss = cov['per_phase']['AM_S']
@@ -525,6 +610,9 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
         phi_se=phi['phi_se'], phi_am=phi['phi_am'],
         porosity_sphere_pct_RECORD_ONLY=phi['porosity_sphere_pct_RECORD_ONLY'],
         closure_residual=phi['closure_residual'],
+        z_floor_sim=phi['z_floor_sim'], H_sim=phi['H_sim'],
+        solid_bot_sim=phi['solid_bot_sim'], solid_top_sim=phi['solid_top_sim'],
+        deck_floor=deck, wall_record=phi['wall_record'],
         coverage_AM_P_hertz_pct=cp, coverage_AM_S_hertz_pct=cs,
         coverage_AM_total_hertz_pct=ct, coverage_AM_only_hertz_pct=ca,
         tortuosity_dijkstra_SE=tau['tau_mean'],
@@ -899,11 +987,88 @@ def selftest():
         _vs = 3 * (4.0 / 3.0) * np.pi * 0.5 ** 3
         chk('⑭ porosity = 1 − ΣV / (L²·plate_z) — 웹앱 calc_porosity 와 같은 식',
             abs(v14['porosity_sphere_pct_RECORD_ONLY'] - 100.0 * (1.0 - _vs / (10.0 * 10.0 * 5.0))) < 1e-9)
+        #  ── ⑭ LHS-12 (판단 J14, 비준 09-24): 벽 밖 입자는 **거부하지 않고 기록**한다 ──
+        #     J13 의 가드 (z − r < −½·r_max 면 거부) 가 실제 130 에서 58 건을 막았다 — 가장 큰 AM 이 바닥과
+        #     깊게 겹친 **연속 분포**를 문턱에서 자른 것이었다.  (가) 주 값은 웹앱 식 그대로 · (나) 되돌려 놓은 값은 기록.
+        _v1 = (4.0 / 3.0) * np.pi * 0.5 ** 3
         at14b, lo14b, hi14b, _bc14b = read_atom_dump(_atom_file(
             tmp, [(1, 2.0, 2.0, -0.9, 0.5, 1)] + rows14[1:], name='atom_14b.liggghts',
             lo=(0.0, 0.0, -1.0), hi=(10.0, 10.0, 20.0)))
-        neg('⑭ 입자가 벽 아래 (z − r = −1.4 < −½·r_max) 면 거부 — 벽 = 0 가정이 안 맞는 덱',
-            lambda: volumes_and_phi(at14b, phase_labels(at14b['type'], 3)[0], lo14b, hi14b, 5.0))
+        try:
+            v14b = volumes_and_phi(at14b, phase_labels(at14b['type'], 3)[0], lo14b, hi14b, 5.0)
+        except BedRefusal as e:
+            v14b = None
+            chk(f'⑭ LHS-12: 벽 아래 입자가 있어도 거부하지 않는다 (거부됨: {str(e)[:60]})', False)
+        if v14b is not None:
+            chk('⑭ LHS-12: 벽 아래 입자가 있어도 porosity 는 웹앱 식 그대로 (ΣV 전부 · L²·plate_z)',
+                abs(v14b['porosity_sphere_pct_RECORD_ONLY'] - 100.0 * (1.0 - _vs / (10.0 * 10.0 * 5.0))) < 1e-9)
+            _wf = (v14b.get('wall_record') or {}).get('floor') or {}
+            chk('⑭ 기록: 중심이 벽 아래인 입자 1 · 통째로 벽 아래 1',
+                _wf.get('n_center_out') == 1 and _wf.get('n_fully_out') == 1)
+            chk('⑭ 기록: 벽 아래 부피 = 구 하나 통째 = ΣV 의 1/3',
+                abs((_wf.get('v_out_pct') or -1.0) - 100.0 / 3.0) < 1e-9)
+            _pb = (v14b.get('wall_record') or {}).get('pushback') or {}
+            chk('⑭ (나) 되돌려 놓은 두께 = plate_z + 벽 밖 부피 / 면적',
+                abs((_pb.get('H_sim') or -1.0) - (5.0 + _v1 / 100.0)) < 1e-12)
+            chk('⑭ (나) porosity = 1 − ΣV / (L²·H′)',
+                abs((_pb.get('porosity_pct_RECORD_ONLY') or -1.0)
+                    - 100.0 * (1.0 - _vs / (100.0 * (5.0 + _v1 / 100.0)))) < 1e-9)
+        #     부분 겹침 — 바닥 cap (z 0.2, r 0.5 → h 0.3) · 플래튼 cap (z 4.8, plate 5 → h 0.3)
+        at14c, lo14c, hi14c, _bc14c = read_atom_dump(_atom_file(
+            tmp, [(1, 2.0, 2.0, 0.2, 0.5, 1), (2, 5.0, 5.0, 2.0, 0.5, 2), (3, 8.0, 3.0, 4.8, 0.5, 3)],
+            name='atom_14c.liggghts', lo=(0.0, 0.0, -1.0), hi=(10.0, 10.0, 20.0)))
+        _cap = np.pi * 0.3 ** 2 * (3 * 0.5 - 0.3) / 3.0
+        try:
+            _wc = volumes_and_phi(at14c, phase_labels(at14c['type'], 3)[0], lo14c, hi14c, 5.0).get('wall_record') or {}
+        except BedRefusal:
+            _wc = {}
+        _f, _p = _wc.get('floor') or {}, _wc.get('plate') or {}
+        chk('⑭ 바닥 cap 부피 = π h²(3r − h)/3 (h 0.3)', abs((_f.get('v_out_sim') or -1.0) - _cap) < 1e-12)
+        chk('⑭ 플래튼 cap 도 같은 식', abs((_p.get('v_out_sim') or -1.0) - _cap) < 1e-12)
+        chk('⑭ 가장 깊은 입자: 상 · 겹침/반지름 0.6 · 중심은 벽 위',
+            (_f.get('deepest') or {}).get('phase') == 'AM_P'
+            and abs(((_f.get('deepest') or {}).get('overlap_over_r') or -1.0) - 0.6) < 1e-12
+            and _f.get('n_center_out') == 0 and _f.get('n_touch') == 1)
+        #     덱에서 바닥을 **직접** 확인한다 (입자 깊이로 추정하지 않는다)
+        def _deck(name, body):
+            p = os.path.join(tmp, name)
+            open(p, 'w', encoding='utf-8').write(body)
+            return p
+        _wall = ('fix zwall_bot all wall/gran model hooke/hysteresis tangential history '
+                 'rolling_friction cdt primitive type 1 zplane {z}\n')
+        d_ok = _deck('in.ok', 'region reg_box block 0.0 0.05 0.0 0.05 -0.01 1.0 units box\n' + _wall.format(z='0.0'))
+        try:
+            _df = check_deck_floor(d_ok)
+        except Exception as e:                                           # noqa: BLE001
+            _df = {'err': f'{type(e).__name__}: {e}'}
+        chk('⑭ 덱: 바닥 zplane 0.0 · 벽 재질 type 1 을 읽는다',
+            _df.get('z') == 0.0 and _df.get('wall_type') == 1)
+        neg('⑭ 덱: 바닥이 0 이 아니면 (zplane −0.01) 거부',
+            lambda: check_deck_floor(_deck('in.shift', _wall.format(z='-0.01'))))
+        neg('⑭ 덱: 바닥 벽이 없으면 거부 (메시 바닥 등 — 가정을 확인할 수 없다)',
+            lambda: check_deck_floor(_deck('in.none', 'fix m1 all property/global youngsModulus peratomtype 1 2\n')))
+        neg('⑭ 덱: zplane 이 변수면 거부 (못 읽은 값을 0 으로 치지 않는다)',
+            lambda: check_deck_floor(_deck('in.var', _wall.format(z='${z0}'))))
+        try:
+            _dc = check_deck_floor(_deck('in.cont', '# fix old all wall/gran model hooke primitive type 2 zplane -5\n'
+                                           'fix zwall_bot all wall/gran model hooke/hysteresis &\n'
+                                           '    tangential history primitive type 1 zplane 0.0  # 바닥\n'))
+        except Exception:                                                # noqa: BLE001
+            _dc = {}
+        chk('⑭ 덱: 주석 줄은 무시 · `&` 로 이어진 줄은 붙여 읽는다', _dc.get('z') == 0.0 and _dc.get('wall_type') == 1)
+        #     CLI 는 덱 없이 돌지 않는다 · 산출물에 덱 확인 · 벽 기록 · 덱 sha 가 남는다
+        a14 = _atom_file(tmp, [(1, 2.0, 2.0, 1.0, 0.5, 1), (2, 5.0, 5.0, 2.0, 0.5, 2)], name='atom_140.liggghts', ts=140)
+        c14 = _contact_file(tmp, [(1, 2, 0.01)], name='contact_140.liggghts', ts=140)
+        neg('⑭ CLI: --deck 없이는 돌지 않는다 (바닥 확인 없이 수확하지 않는다)',
+            lambda: main(['--atom', a14, '--contact', c14, '--plate-z', '5.0', '--n-types', '2']), want=SystemExit)
+        try:
+            r14 = harvest(a14, c14, 2, 'deck', plate_z=5.0, deck_path=d_ok)
+        except TypeError as e:
+            r14 = {}
+            chk(f'⑭ harvest(deck_path=…) 를 받는다 ({e})', False)
+        chk('⑭ 산출물에 덱 확인 · 벽 기록 · 덱 sha · 벽 z 가 남는다',
+            (r14.get('deck_floor') or {}).get('z') == 0.0 and 'wall_record' in r14
+            and 'deck' in (r14.get('raw') or {}) and r14.get('z_floor_sim') == 0.0)
 
     print()
     if _FAILS:
@@ -925,6 +1090,7 @@ def main(argv=None):
     ap.add_argument('--plate-z', type=float, help='플래튼 높이 직접 지정 (--mesh 와 택일)')
     ap.add_argument('--n-types', type=int, choices=(2, 3),
                     help='필수 — 자동 추론은 거부한다 (AM_P 가 0개면 오사상된다)')
+    ap.add_argument('--deck', help='필수 — 이 케이스의 LIGGGHTS 덱.  바닥 벽 (`zplane`) 이 0 인지 확인한다 (LHS-12)')
     ap.add_argument('--case', default='')
     ap.add_argument('--allow-any-bc', action='store_true')
     ap.add_argument('--n-pairs', type=int, default=N_TAU_PAIRS)
@@ -934,12 +1100,12 @@ def main(argv=None):
 
     if a.selftest:
         return selftest()
-    if not (a.atom and a.contact and a.n_types):
-        ap.error('--atom · --contact · --n-types 는 필수다')
+    if not (a.atom and a.contact and a.n_types and a.deck):
+        ap.error('--atom · --contact · --n-types · --deck 는 필수다 (--deck: 바닥 벽 위치를 덱에서 확인한다, LHS-12)')
     try:
         r = harvest(a.atom, a.contact, a.n_types, a.case or os.path.basename(a.atom),
                     plate_z=a.plate_z, mesh_path=a.mesh,
-                    allow_any_bc=a.allow_any_bc, n_pairs=a.n_pairs)
+                    allow_any_bc=a.allow_any_bc, n_pairs=a.n_pairs, deck_path=a.deck)
     except BedRefusal as e:
         print(f'거부 — {e}', file=sys.stderr)
         return 2

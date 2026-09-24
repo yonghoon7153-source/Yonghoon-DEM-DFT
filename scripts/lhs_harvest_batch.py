@@ -109,9 +109,9 @@ def step_of(name: str) -> int | None:
 def pick_mesh(atom: Path):
     """플래튼 STL 을 고르고 **고른 근거를 같이 돌려준다**.
 
-    exact     — atom 과 같은 step 의 mesh 가 있다 (가장 좋다)
-    latest_le — 같은 step 이 없어 atom step **이하**의 최신 것을 썼다
-    none      — 없다 ⇒ 호출부가 이 케이스를 건너뛴다
+    exact     — atom 과 같은 step 의 mesh 가 있다 (유일하게 받는 경우)
+    none      — 같은 step 이 없다 ⇒ 호출부가 이 케이스를 건너뛴다
+                (⛔ 옛 `latest_le` — atom step 이하의 최신 것 — 은 LHS-11 로 폐지)
 
     ⛔ atom step **위**의 mesh 는 고르지 않는다 — 플래튼이 그 뒤로 더 내려갔을 수 있어
       침대와 다른 시점의 경계를 쓰게 된다.
@@ -162,9 +162,21 @@ def run_one(row, args, out_dir: Path):
             rec.update(status='MISSING_RAW', why=f'{label} 파일 없음: {p}')
             return rec
 
+    #  LHS-12 (판단 J14): 바닥 벽 위치는 **덱에서** 확인한다 — 수확기가 `--deck` 없이는 돌지 않는다
+    deck_s = (row.get('deck') or '').strip()
+    if not deck_s:
+        rec.update(status='MISSING_RAW', why='deck 경로가 코호트에 없다 — 바닥 벽 위치를 확인할 수 없다 (LHS-12)')
+        return rec
+    deck = remap(deck_s, args.root_from, args.root_to)
+    rec['deck'] = str(deck)
+    if not deck.is_file():
+        rec.update(status='MISSING_RAW', why=f'deck 파일 없음: {deck}')
+        return rec
+
     if args.verify_sha:
         for label, p, want in (('atom', atom, row.get('atom_sha256')),
-                               ('contact', contact, row.get('contact_sha256'))):
+                               ('contact', contact, row.get('contact_sha256')),
+                               ('deck', deck, row.get('deck_sha256'))):
             if not want:
                 rec.update(status='NO_SEAL_SHA', why=f'{label} sha 가 TSV 에 없다')
                 return rec
@@ -194,7 +206,7 @@ def run_one(row, args, out_dir: Path):
     out_json = out_dir / f'{case}.json'
     cmd = [sys.executable, str(HARVEST), '--case', case,
            '--atom', str(atom), '--contact', str(contact),
-           '--mesh', str(mesh), '--n-types', nt, '--out', str(out_json)]
+           '--mesh', str(mesh), '--deck', str(deck), '--n-types', nt, '--out', str(out_json)]
     if args.allow_any_bc:
         cmd.append('--allow-any-bc')
     rec['cmd'] = ' '.join(cmd)
@@ -288,9 +300,10 @@ def main(argv=None):
 
 def _selftest():
     import tempfile
-    fail = []
+    fail, ran = [], []
 
     def chk(name, cond, extra=''):
+        ran.append(name)
         (print if cond else (lambda s: (fail.append(name), print(s))[1]))(
             f'  {"✓" if cond else "✗"} {name}' + (f'   {extra}' if extra else ''))
 
@@ -350,15 +363,37 @@ def _selftest():
                        'contact_file': '/nope/contact_1.liggghts'}, A(), t)
         chk('★★ 원자료가 없으면 `MISSING_RAW` 로 **사유와 함께** 선다 (조용히 넘기지 않는다)',
             rec['status'] == 'MISSING_RAW' and 'atom' in rec['why'])
-        rec = run_one({'case': 'x', 'n_types': '9', 'design_family': 'bimodal',
+        #  ── LHS-12 (판단 J14): 바닥 위치는 **덱에서** 확인한다 — 덱이 없으면 수확하지 않는다 ──
+        deck = t / 'input_x.liggghts'
+        deck.write_text('fix zwall_bot all wall/gran model hooke/hysteresis tangential history '
+                        'primitive type 1 zplane 0.0\n', encoding='utf-8')
+        rec = run_one({'case': 'x', 'n_types': '9', 'design_family': 'bimodal', 'deck': str(deck),
                        'atom_file': str(atom), 'contact_file': str(atom)}, A(), t)
         chk('★ n_types 가 2·3 이 아니면 거부 (자동 추론하지 않는다)',
             rec['status'] == 'BAD_NTYPES')
         rec = run_one({'case': 'x', 'n_types': '3', 'design_family': 'bimodal',
                        'atom_file': str(atom), 'contact_file': str(atom)}, A(), t)
+        chk('★ LHS-12: 코호트에 덱이 없으면 `MISSING_RAW` (바닥을 확인할 수 없다)',
+            rec['status'] == 'MISSING_RAW' and 'deck' in rec.get('why', ''), rec.get('why', ''))
+        rec = run_one({'case': 'x', 'n_types': '3', 'design_family': 'bimodal', 'deck': str(t / 'nope.liggghts'),
+                       'atom_file': str(atom), 'contact_file': str(atom)}, A(), t)
+        chk('★ LHS-12: 덱 파일이 없으면 `MISSING_RAW`',
+            rec['status'] == 'MISSING_RAW' and 'deck' in rec.get('why', ''), rec.get('why', ''))
+        rec = run_one({'case': 'x', 'n_types': '3', 'design_family': 'bimodal', 'deck': str(deck),
+                       'atom_file': str(atom), 'contact_file': str(atom)}, A(), t)
         chk('★ 정상 입력은 DRY_RUN 까지 간다', rec['status'] == 'DRY_RUN', rec.get('why', ''))
+        chk('★ LHS-12: 수확기에 덱을 넘긴다 (`--deck`)', f'--deck {deck}' in rec.get('cmd', ''), rec.get('cmd', ''))
         chk('★★ sha 대조를 **안 했다는 사실**이 기록에 남는다', rec.get('sha_verified') is False)
-        chk('★ 고른 mesh 의 근거가 기록에 남는다', rec.get('mesh_pick') in ('exact', 'latest_le'))
+        chk('★ 고른 mesh 의 근거가 기록에 남는다 (같은 step 만)', rec.get('mesh_pick') == 'exact')
+
+        class A2(A):
+            verify_sha = True
+        _sa = sha256_of(atom)
+        rec = run_one({'case': 'x', 'n_types': '3', 'design_family': 'bimodal', 'deck': str(deck),
+                       'atom_file': str(atom), 'contact_file': str(atom),
+                       'atom_sha256': _sa, 'contact_sha256': _sa, 'deck_sha256': '0' * 64}, A2(), t)
+        chk('★ LHS-12: 봉인 대조는 덱도 한다 (덱 sha 가 다르면 `SHA_MISMATCH`)',
+            rec['status'] == 'SHA_MISMATCH' and 'deck' in rec.get('why', ''), rec.get('why', ''))
 
         #  ── ★★ 실사고 재현: 리포 밖에서 돌리면 수확기를 못 찾는다 ──
         #     dry-run 이 `127/127` 초록을 내고 본번이 127건 전부 죽은 사고 (2026-09-17).
@@ -398,7 +433,7 @@ def _selftest():
         chk('★★★ **dry-run 도** 같은 전제에서 선다 (리허설 false-green 차단)', stopped)
 
     print('\nlhs_harvest_batch SELFTEST %d PASS %s'
-          % (16 - len(fail), 'ALL GREEN' if not fail else f'FAIL {fail}'))
+          % (len(ran) - len(fail), 'ALL GREEN' if not fail else f'FAIL {fail}'))
     return 1 if fail else 0
 
 

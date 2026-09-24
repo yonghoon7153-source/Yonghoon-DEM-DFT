@@ -12,6 +12,10 @@
 덤으로 **플래튼 − 고체 윗면** (`plate_gap`) 을 잰다 — 수확기가 원자 step 보다 이른 메시를 쓰면 (`latest_le`)
 플래튼이 아직 높을 때의 위치라 이 틈이 커진다 (LHS-11).  같은 step 메시면 틈은 작아야 한다.
 
+★ LHS-12 (판단 J14, 09-24): 벽 밖으로 나간 입자는 수확기가 **거부하지 않고 기록**한다 — 이 도구도 그 기록을 칸으로
+낸다: 벽 밖 부피 (ΣV 대비 %) · 중심이 벽 밖인 입자 수 · 가장 깊은 입자의 겹침/반지름 · (나) 되돌려 놓은 porosity 와
+두께 증가.  ((가) 주 값 = 웹앱 식 그대로라 판정은 SAME 이어야 한다.)
+
 판정 (케이스마다):
     FLOOR_ONLY — ε_web == 100·(1 − (1 − ε_harv/100)·H_harv/H_web) (|잔차| < 1e-9 %p): 차이가 **바닥 하나로 전부** 설명된다
     SAME       — 두 값이 같다 (상자 바닥 = 벽)
@@ -55,10 +59,18 @@ def compare(atom_path, plate_z, n_types):
         verdict = 'OTHER'
     solid_top = float((atoms['z'] + atoms['radius']).max())
     solid_bot = float((atoms['z'] - atoms['radius']).min())
+    wr = h.get('wall_record') or {}
+    fl, pl, pb = wr.get('floor') or {}, wr.get('plate') or {}, wr.get('pushback') or {}
+    fd = fl.get('deepest') or {}
     return dict(plate_z=h_w, box_lo_z=float(lo[2]), floor_gap=h_h - h_w, lx=lx, ly=ly,
                 solid_top=solid_top, solid_bot=solid_bot, plate_gap=h_w - solid_top,
                 square=abs(lx - ly) < 1e-12, eps_harvest=eps_h, eps_webapp=eps_w,
-                phi_scale=h_w / h_h if h_h else None, resid=resid, verdict=verdict)
+                phi_scale=h_w / h_h if h_h else None, resid=resid, verdict=verdict,
+                floor_out_pct=fl.get('v_out_pct'), plate_out_pct=pl.get('v_out_pct'),
+                floor_center_out=fl.get('n_center_out'), plate_center_out=pl.get('n_center_out'),
+                floor_center_out_by_phase=fl.get('n_center_out_by_phase'),
+                floor_deepest_phase=fd.get('phase'), floor_deepest_over_r=fd.get('overlap_over_r'),
+                eps_pushback=pb.get('porosity_pct_RECORD_ONLY'), dH_pushback=pb.get('dH_sim'))
 
 
 def run_cohort(args):
@@ -83,7 +95,9 @@ def run_cohort(args):
         out.append(rec)
     keys = ['case', 'verdict', 'plate_z', 'box_lo_z', 'floor_gap', 'solid_top', 'solid_bot', 'plate_gap',
             'lx', 'ly', 'square', 'eps_harvest',
-            'eps_webapp', 'phi_scale', 'resid', 'mesh_pick', 'note']
+            'eps_webapp', 'phi_scale', 'resid', 'mesh_pick',
+            'floor_out_pct', 'plate_out_pct', 'floor_center_out', 'plate_center_out', 'floor_center_out_by_phase',
+            'floor_deepest_phase', 'floor_deepest_over_r', 'eps_pushback', 'dH_pushback', 'note']
     with open(args.out, 'w', newline='') as fh:
         w = csv.DictWriter(fh, fieldnames=keys, delimiter='\t', extrasaction='ignore')
         w.writeheader()
@@ -102,6 +116,22 @@ def run_cohort(args):
         for how in sorted({r.get('mesh_pick') for r in ok}):
             g = sorted(r['plate_gap'] for r in ok if r.get('mesh_pick') == how)
             print(f'플래튼 − 고체 윗면 ({how}, n={len(g)}): min {g[0]:.6g} · 중앙 {st.median(g):.6g} · max {g[-1]:.6g}')
+        #  LHS-12 (판단 J14) — 벽 밖 기록
+        wr = [r for r in ok if r.get('floor_out_pct') is not None]
+        if wr:
+            for side in ('floor', 'plate'):
+                vals = sorted((r[f'{side}_out_pct'], r['case']) for r in wr)
+                print(f'벽 밖 부피 / ΣV ({side}): 중앙 {st.median(v for v, _ in vals):.3f} % · '
+                      f'최대 {vals[-1][0]:.3f} % ({vals[-1][1]})')
+            thru = [r for r in wr if r['floor_center_out']]
+            print(f'중심이 바닥 아래인 입자가 있는 케이스 {len(thru)} 건'
+                  + (': ' + ' · '.join(f"{r['case']} {r['floor_center_out_by_phase']}" for r in thru[:8]) if thru else ''))
+            thru_p = [r for r in wr if r['plate_center_out']]
+            print(f'중심이 플래튼 위인 입자가 있는 케이스 {len(thru_p)} 건')
+            dd = sorted(r['eps_pushback'] - r['eps_webapp'] for r in wr)
+            dh = sorted(1e3 * r['dH_pushback'] for r in wr)
+            print(f'(나) − (가) porosity: 중앙 {st.median(dd):.3f} %p · 최대 {dd[-1]:.3f} %p  |  '
+                  f'(나) 두께 증가: 중앙 {st.median(dh):.3f} · 최대 {dh[-1]:.3f} (sim×1e3 = µm)')
     print(f'→ {args.out}')
     return 0 if not cnt['OTHER'] and not cnt['ERROR'] else 1
 
@@ -128,6 +158,20 @@ def selftest():
         # ② 음성 대조: 상자 바닥 = 벽 ⇒ 두 코드가 같은 값
         a2 = HV._atom_file(tmp, rows, name='atom_b.liggghts', lo=(0.0, 0.0, 0.0), hi=(10.0, 10.0, 20.0))
         chk('음성 대조: 상자 바닥 = 벽이면 SAME', compare(a2, 5.0, 3)['verdict'] == 'SAME')
+        # ③ LHS-12 (판단 J14): 벽 아래 입자가 있어도 **거부 없이** SAME — 벽 밖 부피는 기록으로 남긴다
+        #    (재수확 09-24: J13 가드가 58 건을 거부해 이 도구가 ERROR 58 을 냈다)
+        a3 = HV._atom_file(tmp, [(1, 2.0, 2.0, -0.9, 0.5, 1)] + rows[1:], name='atom_c.liggghts',
+                           lo=(0.0, 0.0, -1.0), hi=(10.0, 10.0, 20.0))
+        try:
+            r3 = compare(a3, 5.0, 3)
+        except Exception as e:                                   # noqa: BLE001
+            r3 = {'verdict': f'raised {type(e).__name__}'}
+        chk('★ LHS-12: 벽 아래 입자가 있어도 거부 없이 SAME', r3['verdict'] == 'SAME')
+        chk('벽 밖 부피가 기록된다 (바닥 = 구 하나 통째 = ΣV 의 1/3)',
+            abs((r3.get('floor_out_pct') or -1.0) - 100.0 / 3.0) < 1e-9)
+        chk('중심이 벽 아래인 입자 수가 기록된다', r3.get('floor_center_out') == 1)
+        chk('(나) 되돌려 놓은 porosity 가 기록된다 (주 값보다 크다)',
+            (r3.get('eps_pushback') or -1e9) > r3.get('eps_webapp', 1e9))
     print(f'\nselftest: {ok} 통과 / {fail} 실패')
     return 1 if fail else 0
 
