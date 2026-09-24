@@ -227,5 +227,5 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
   Codex 요청서 `docs/reviews/codex_request_lhs_porosity_thickness_20260924.md` (Q1–Q7).  인계표는 판정까지 보류.
 - ✅ Codex 판정 수신 (09-25) → `codex_verdict_lhs_porosity_thickness_20260924.md` 보존 · 원장 `HND-01~06` · J18.  (나) ≈ hard-bottom **철회** ·
   1.98 자리 = 바닥 평면 아래쪽 점착 평형 (q 3 · φf 0.01, 내가 재계산해 6 자리 일치) · 인계 생성기가 벽 QC 를 버리고 음수를 OK 로 냄 (HND-04).
-  실행 계획 A–E 비준 대기.
+  실행 계획 A–E 비준 대기.  ✅ E: LHS 덱 m6·m7·m8 = 생산 덱 (사용자 grep) → 1.98 기전 재현됨 (조건부).
 
