@@ -1433,7 +1433,8 @@ MUTANTS = [
      "    extra = sorted(present - covered)\n    if False:",
      "an_in_progress_fit_in_a_committed_grid_dir_is_not_promotable"),
     ("sealed-records-need-their-seal-g62", PRESERVE,                 # P0-1
-     '    if for_promotion and not had_seal and rec.get("sealed"):',
+     # (70차 E5 — reader 가 `sealed` 를 bool 로 닫아 여기는 `is True` 로 묻는다; preimage 를 따라 옮겼다)
+     '    if for_promotion and not had_seal and rec.get("sealed", False) is True:',
      "    if False:",
      "deleting_the_seal_does_not_reopen_the_prefix"),
     # ── ζ′ 승격 primitive (P0-8) ──
@@ -1770,6 +1771,24 @@ MUTANTS = [
      '    #   grid/fit 분기가 Python 호출 직전에 붙인다. 회귀: tests/test_runner.py::test_g70_n1_*\n'
      '    GRID_ARGS+=(--may-open)\n',
      "g70_n1_mode_all_child_argv_is_accepted_by_the_shell_parser"),
+    # ── 70차 E5 ── reader 가 class enum + content_id 만 보던 60차 형태로 되돌린다 (리뷰어 반례 둘이 다시 통과)
+    ("exec-class-reader-is-typed-g70", PRESERVE,                             # E5
+     '    return _typed_exec_class_record(rec, content_id, p)\n',
+     '    return (rec if isinstance(rec, dict) and rec.get("execution_class") in EXEC_CLASSES\n'
+     '            and rec.get("content_id") == content_id else None)\n',
+     "g70_e5"),
+    # ── 70차 E3 ── 해석 불가 index 를 60차처럼 "대조 생략" 으로 되돌린다 (실물 YAML index 가 빠지던 경로)
+    ("an-unreadable-index-is-not-full-coverage-g70", PRESERVE,               # E3
+     '    if declared is None:\n        bad.append(\n            f"payload index 를 해석할 수 없다',
+     '    if declared is None:\n        return bad\n        bad.append(\n            f"payload index 를 해석할 수 없다',
+     "g70_e3_0"),
+    # ── 70차 E3 ── 영수증 소비가 validation.ok/fail 을 안 보면 실패·부분 상태가 full_bundle 로 올라간다
+    ("attach-requires-a-passing-validation-g70", PRESERVE,                   # E3
+     '    if v["ok"] is not True or v["fail"] != []:\n        raise _bad(',
+     '    if False:\n        raise _bad(',
+     # e3_17 은 "현행 검증기의 영수증" 양성 대조군이라 preserve.py 의 **어떤** 변이에서도 digest 가 달라져
+     # 빨개진다 — 이 변이가 무는 node 가 아니므로 뺀다
+     "g70_e3_1 and not e3_17"),
     ("the-replay-context-is-measured-once-g66", MR,                          # 정적 관측
      '    ctx = ctx if ctx is not None else _\u0072eplay_context()\n'
      '    want = _parent_customization_view(ctx)',
@@ -5248,6 +5267,62 @@ EXPECT: dict = {
                 "Failed: DID NOT RAISE AssertionError",
             "tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun":
                 "Failed: DID NOT RAISE AssertionError",
+        }
+    },
+    "exec-class-reader-is-typed-g70": {
+        "fail": [
+            "tests/test_gate70_defensive.py::test_g70_e5_01_a_record_with_only_class_and_content_id_is_refused",
+            "tests/test_gate70_defensive.py::test_g70_e5_02_wrongly_typed_fields_and_extra_keys_are_refused",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[evidence--evidence]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[evidence-17-evidence]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[execution_class-canonical -execution_class]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[recorded_at-2026-09-24-recorded_at]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[recorded_at-False-recorded_at]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[sealed-1-bool]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[sealed-value2-bool]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[sealed-yes-bool]",
+            "tests/test_gate70_defensive.py::test_g70_e5_04_a_truthy_non_bool_sealed_cannot_pass_the_promotion_seal_rule",
+            "tests/test_gate70_defensive.py::test_g70_e5_05_the_writer_record_and_the_legacy_shape_are_the_two_accepted_variants",
+        ],
+        "witness": {
+            "tests/test_gate70_defensive.py::test_g70_e5_01_a_record_with_only_class_and_content_id_is_refused": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_02_wrongly_typed_fields_and_extra_keys_are_refused": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[evidence--evidence]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[evidence-17-evidence]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[execution_class-canonical -execution_class]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[recorded_at-2026-09-24-recorded_at]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[recorded_at-False-recorded_at]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[sealed-1-bool]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[sealed-value2-bool]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[sealed-yes-bool]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_04_a_truthy_non_bool_sealed_cannot_pass_the_promotion_seal_rule": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_05_the_writer_record_and_the_legacy_shape_are_the_two_accepted_variants": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "attach-requires-a-passing-validation-g70": {
+        "fail": [
+            "tests/test_gate70_defensive.py::test_g70_e3_11_a_receipt_that_does_not_say_full_current_validation_is_refused[<lambda>-\\ud1b5\\uacfc\\ub97c \\ub9d0\\ud558\\uc9c0 \\uc54a\\ub294\\ub2e4_0]",
+            "tests/test_gate70_defensive.py::test_g70_e3_11_a_receipt_that_does_not_say_full_current_validation_is_refused[<lambda>-\\ud1b5\\uacfc\\ub97c \\ub9d0\\ud558\\uc9c0 \\uc54a\\ub294\\ub2e4_1]",
+        ],
+        "witness": {
+            "tests/test_gate70_defensive.py::test_g70_e3_11_a_receipt_that_does_not_say_full_current_validation_is_refused[<lambda>-\\ud1b5\\uacfc\\ub97c \\ub9d0\\ud558\\uc9c0 \\uc54a\\ub294\\ub2e4_0]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e3_11_a_receipt_that_does_not_say_full_current_validation_is_refused[<lambda>-\\ud1b5\\uacfc\\ub97c \\ub9d0\\ud558\\uc9c0 \\uc54a\\ub294\\ub2e4_1]": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "an-unreadable-index-is-not-full-coverage-g70": {
+        "fail": [
+            "tests/test_gate70_defensive.py::test_g70_e3_01_an_index_that_enumerates_nothing_is_not_full_coverage",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[- 1\\n- 2\\n]",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[42\\n]",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[a.csv: notahex\\n]",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[not: [valid: yaml]",
+        ],
+        "witness": {
+            "tests/test_gate70_defensive.py::test_g70_e3_01_an_index_that_enumerates_nothing_is_not_full_coverage": "AssertionError: []",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[- 1\\n- 2\\n]": "AssertionError: []",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[42\\n]": "AssertionError: []",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[a.csv: notahex\\n]": "AssertionError: []",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[not: [valid: yaml]": "AssertionError: []",
         }
     },
     "mode-all-does-not-pass-may-open-to-the-shell-g70": {

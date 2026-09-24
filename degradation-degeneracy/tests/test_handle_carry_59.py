@@ -163,13 +163,21 @@ def test_a_bundle_of_plain_files_still_passes(tmp_path, monkeypatch):
     # ★ 60차 P0-8 — index 는 **묶음 안**에 있어야 한다. 밖에 두면 묶음만 받은
     #   사람에게 그것을 인증한다는 목록이 없다 (`full_bundle` 의 뜻이 성립하지
     #   않는다). 그래서 이 정상 묶음도 index 를 안에 둔다.
-    idx = bundle / "index.json"
-    idx.write_text("{}\n", encoding="utf-8")
+    # ★ 70차 E3 — 초판 index 는 `{}` 였다. 60차 reader 는 그것을 "구성원을 열거하지
+    #   않는 형식" 으로 보고 대조를 **건너뛰어** 통과시켰다 — 실물 `payload_sha256.yaml`
+    #   (YAML) 도 같은 경로로 빠졋다. 이제 열거하지 않는 index 는 거부이므로, 정상
+    #   묶음은 production 형식(`경로: sha256`)의 index 를 가진다. `{}` 로 초록이던
+    #   것은 fixture 가 진실을 가리고 있었다는 뜻이다.
+    import yaml
+    idx = bundle / "payload_sha256.yaml"
+    members = {"a.txt": hashlib.sha256(b"a\n").hexdigest(),
+               "sub/b.txt": hashlib.sha256(b"bb\n").hexdigest()}
+    idx.write_text(yaml.safe_dump(members, sort_keys=True), encoding="utf-8")
     ev = {
         "bundle_uri": "bundle",
         "bundle_files": 3,
-        "payload_bytes": 2 + 3 + 3,
-        "payload_index": "bundle/index.json",
+        "payload_bytes": 2 + 3 + idx.stat().st_size,
+        "payload_index": "bundle/payload_sha256.yaml",
         "payload_index_sha256": hashlib.sha256(idx.read_bytes()).hexdigest(),
     }
     assert P._verify_declared_bundle(ev, repo_root=root) == []

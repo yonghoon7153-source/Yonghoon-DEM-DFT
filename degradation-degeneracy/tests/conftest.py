@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
+import shutil
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -11,6 +14,72 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+#: ★ 70차 E6 — 운영 authority (tracked). 시험 세션은 여기에 **아무것도 쓰지 않고**, 끝날 때 불변을 확인한다.
+_REAL_LEDGER = ROOT / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+_REAL_AUTHORITY_DIRS = (ROOT / "docs" / "22p_gap" / "_exec_class",
+                        ROOT / "docs" / "22p_gap" / "_frozen_coords")
+_TEST_AUTHORITY: dict = {}
+
+
+def _isolate_test_authority() -> Path:
+    """시험 세션의 기본 원장을 **바이트 복사본**으로 바꾼다 (70차 E6).
+
+    리뷰어(70차 §4 E6): 시험이 운영 등록부에 synthetic canonical 을 만들 수 있고
+    (`tests/test_compare.py::_complete_artifact` 가 `ledger=None` 으로 등록), session cleanup 은
+    시작 때 없던 JSON 을 **소유권 구분 없이** 지웠다 — 다른 실행이 그 사이 합법적으로 만든 기록도
+    삭제 대상이었다. 62차 §0-⑥ 이 "다른 시험의 오염은 그대로다" 라고 신고한 그 항목이다.
+
+    `[해석]` 지우는 것으로는 못 닫는다 — 누가 만들었는지 파일이 말하지 않기 때문이다. 대신 **쓰는 자리를
+    옮긴다**: `tools.preserve.DEFAULT_LEDGER` 는 모듈 전역이고 `canonical_ledger(None)` 이 호출 시점에
+    읽으므로, 세션 시작(`pytest_configure`, 좌표 봉인 bootstrap **앞**)에 원장 사본을 세우면 기본
+    인자로 가는 모든 파생 root(`_exec_class`·`_frozen_coords`·`_claims`·`_attempts`)가 그 옆으로 간다.
+    환경변수 우회를 두지 않는다 — 그런 문은 gate 의 구멍이다 (`test_lifecycle_e2e.py` 머리의 이유와 같다).
+    명시적 `ledger=` 를 쓰는 시험(대다수)은 영향받지 않는다.
+
+    범위: **in-process** 호출. 시험이 띄우는 자식(`run.sh`·`python -m src.grid`)은 자기 `tools.preserve`
+    를 새로 import 하므로 운영 authority 를 본다 — 그것들은 smoke namespace 안에서 돌고 `_exec_class/local/`
+    (gitignored 운용 상태)에만 쓴다. 그 사실을 세션 끝의 불변 검사(`_the_real_authority_is_untouched`)가
+    확인한다: 최상위 `_exec_class/*.json` 과 `_frozen_coords/*.json` 은 이름도 바이트도 안 움직여야 한다.
+    """
+    import tools.preserve as P
+
+    # ★ 자식 진입점까지 같은 authority 를 보게 하는 방법은 **tree 복사** 하나다 (`test_lifecycle_e2e.py`
+    #   가 49차부터 쓰는 방식). 자식(`scripts/archive_results.sh` · `python -m tools.archive_bundle` …)은
+    #   자기 `tools/preserve.py` 의 **위치**에서 `DEFAULT_LEDGER` 를 유도하므로, RUN_SCOPE 를 바이트
+    #   그대로 복사한 tree 안의 스크립트를 부르면 in-process 와 자식이 같은 사본 원장을 본다 — 환경변수
+    #   같은 override 문을 production 에 뚫지 않고도 격리된다. `source_digest()` 도 같은 값을 낸다.
+    #   자식을 띄우는 시험은 `isolated_tree()` 의 스크립트를 부른다 (`test_compare.py` 의 archive wrapper 회귀).
+    tmp = Path(tempfile.mkdtemp(prefix="dd-test-authority-"))
+    for name in ("src", "tools", "configs", "scripts"):
+        shutil.copytree(ROOT / name, tmp / name, ignore=shutil.ignore_patterns("__pycache__"))
+    shutil.copy2(ROOT / "run.sh", tmp / "run.sh")
+    gap = tmp / "docs" / "22p_gap"
+    gap.mkdir(parents=True)
+    for q in (ROOT / "docs" / "22p_gap").glob("*.py"):       # row_projection 등 — 자식이 import 할 수 있다
+        shutil.copy2(q, gap / q.name)
+    led = gap / "LEG_PRESERVATION.yaml"
+    shutil.copyfile(_REAL_LEDGER, led)          # 계획·cohort·실행 기록은 그대로 보인다 (바이트 동일)
+    P.DEFAULT_LEDGER = led
+    _TEST_AUTHORITY.update(tmp=tmp, tree=tmp, ledger=led, real=_REAL_LEDGER)
+    return led
+
+
+def isolated_tree() -> Path:
+    """자식 프로세스를 띄우는 시험이 부를 **격리 tree** 의 뿌리 (70차 E6). RUN_SCOPE 바이트 동일 사본."""
+    tree = _TEST_AUTHORITY.get("tree")
+    assert tree is not None, "시험 authority 가 세워지지 않았다 (pytest_configure 앞에서 불렀는가)"
+    return Path(tree)
+
+
+def _authority_snapshot() -> dict:
+    out = {}
+    for d in _REAL_AUTHORITY_DIRS:
+        if not d.is_dir():
+            continue
+        for q in d.glob("*.json"):                # 최상위만 — `local/` 은 운용 scratch
+            out[str(q.relative_to(ROOT))] = hashlib.sha256(q.read_bytes()).hexdigest()
+    return out
 
 
 def _bootstrap_frozen_coordinate_seals() -> list:
@@ -48,10 +117,19 @@ def _bootstrap_frozen_coordinate_seals() -> list:
 def pytest_configure(config):
     config.addinivalue_line(
         "markers", "slow: 실제 PyBaMM solve가 필요한 테스트 (Phase 게이트에서 실행)")
+    # ★ 70차 E6 — 좌표 봉인 bootstrap 보다 **먼저**. 그래야 봉인도 시험 authority 로 간다.
+    led = _isolate_test_authority()
+    print(f"\n[conftest] 시험 authority: {led} (운영 원장의 바이트 복사본 — 70차 E6)")
     sealed = _bootstrap_frozen_coordinate_seals()
     if sealed:
         print(f"\n[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort "
-              f"{len(sealed)}개의 좌표를 이 자리에서 봉인했다: {sealed}")
+              f"{len(sealed)}개의 좌표를 시험 authority 에 봉인했다: {sealed}")
+
+
+def pytest_unconfigure(config):
+    tmp = _TEST_AUTHORITY.get("tmp")
+    if tmp is not None:
+        shutil.rmtree(tmp, ignore_errors=True)
 @pytest.fixture(scope="session")
 def _isolated_discharged_cache(tmp_path_factory):
     """★ 12차 발견 8 — slow 테스트가 **작업 디렉터리의 ambient 캐시**에 의존하면
@@ -152,6 +230,33 @@ def tmp_path(request, tmp_path):
 
 
 @pytest.fixture(scope="session", autouse=True)
+def _the_real_authority_is_untouched():
+    """★ 70차 E6 — 운영 authority 의 **불변을 확인한다. 지우지 않는다.**
+
+    58차 P0-8 후속의 이 fixture(`_exec_class_registry_is_not_polluted_by_tests`)는 세션 시작 때 없던
+    JSON 을 끝에서 전부 지웠다. 리뷰어(70차 E6): 그 삭제는 소유권을 보지 않으므로 다른 실행이 그 사이
+    합법적으로 만든 기록도 지운다 — archive/report 가 같은 권한 기록을 소비하므로 계산 후 증거·승격
+    경로의 실제 간섭 위험이다.
+
+    이제 쓰는 자리가 시험 authority 로 옮겨졌으므로(`_isolate_test_authority`) 운영 쪽에는 새 레코드가
+    생기지 **않아야** 한다. 생겼다면 어느 시험(또는 자식 진입점)이 격리 밖으로 썼다는 뜻이고, 그것은
+    지울 일이 아니라 **빨갛게 보고할 일**이다 — 이름을 전부 적고 사람이 본다. 바뀐 바이트·사라진
+    이름도 같다 (등록부는 authority 데이터다).
+    """
+    before = _authority_snapshot()
+    yield
+    after = _authority_snapshot()
+    added = sorted(set(after) - set(before))
+    removed = sorted(set(before) - set(after))
+    changed = sorted(k for k in set(before) & set(after) if before[k] != after[k])
+    assert not (added or removed or changed), (
+        "시험 세션이 운영 authority 를 건드렸다 (70차 E6) — 지우지 않았다, 사람이 본다:\n"
+        f"  새로 생김 {len(added)}: {added[:8]}{' …' if len(added) > 8 else ''}\n"
+        f"  사라짐   {len(removed)}: {removed[:8]}\n"
+        f"  바뀜     {len(changed)}: {changed[:8]}")
+
+
+@pytest.fixture(scope="session", autouse=True)
 def _exec_class_registry_is_not_polluted_by_tests():
     """★ 58차 P0-8 후속 — **시험이 저장소의 실행 class 등록부를 늘리지 않는다.**
 
@@ -174,9 +279,16 @@ def _exec_class_registry_is_not_polluted_by_tests():
       벌어졌다: 한 번의 회귀로 19건이 쌓였고 전부 `/tmp/pytest-of-root/...`
       였다. 등록부가 하나 늘 때마다 이 목록도 늘어야 한다 — 그 사실을 여기
       적어 두지 않으면 다음 authority 에서 또 반복된다.
+
+    ★ 70차 E6 — 이 fixture 는 이제 **시험 authority**(`_isolate_test_authority` 가 세운 사본 옆)만
+      정리한다. 운영 등록부는 건드리지 않는다 — 거기의 불변은 `_the_real_authority_is_untouched` 가
+      **확인**한다(삭제 아님). 시험 authority 는 세션마다 새 tempdir 이므로 이 정리는 사실상 멱등
+      안전망이고, `pytest_unconfigure` 가 디렉터리째 지운다.
     """
-    regs = [ROOT / "docs" / "22p_gap" / "_exec_class",
-            ROOT / "docs" / "22p_gap" / "_frozen_coords"]
+    led = Path(_TEST_AUTHORITY.get("ledger") or _REAL_LEDGER)
+    assert led.resolve() != _REAL_LEDGER.resolve(), (
+        "시험 authority 가 세워지지 않았다 — 운영 등록부를 정리 대상으로 삼지 않는다 (70차 E6)")
+    regs = [led.parent / "_exec_class", led.parent / "_frozen_coords"]
     before = {r: ({q.name for q in r.glob("*.json")} if r.is_dir() else set())
               for r in regs}
     yield

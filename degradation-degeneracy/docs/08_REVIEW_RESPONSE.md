@@ -7720,3 +7720,94 @@ dd diff 0 — 리뷰어 실측) · 받은 요청문 ↔ Git blob raw 동일 (sha
 **다음:** "이 수용을 원장에 기록하는 일" (여기) · 같은 수정·같은 suite 재실행 요구 없음 · 본실행·미착수 과제는 별도 범위·검증·
 사용자 승인 — **GATE70 (`docs/22p_gap/GATE70_REQUEST.md`) 이 그 요청이다.**
 
+
+## §90 70차 접수 — **현재 본 실행 NO-GO · 새 P1 1건(G70-N1) · 유한 종결 조건 E1~E10 고정**
+
+2026-09-24 접수. 62차 이후 첫 **본실행 GO 요청**(`GATE70_REQUEST.md`, 커밋 `8568f782` = 발송 시점 브랜치 head — 69차 교훈대로 둘 다 적었고
+같았다)에 대한 답. 리뷰어 고정 검토 HEAD `8568f782db3acbf00d872ce5527147258c00bec7` · 받은 요청문 ↔ Git blob 바이트 동일
+(sha256 `fa0e8547…`) · 판정 대상 코드 `f0dfaff3` · `source_digest 5e660a8c73d5663a` 직접 계산 rc 0 · 코드 대상→HEAD RUN_SCOPE diff 0 bytes ·
+직전 기준 이후 RUN_SCOPE 변경은 `src/io.py` 의 start 비교 tuple 에서 `git_commit` 제거만. Windows / CPython 3.12.14, 별도 detached worktree,
+DD 추적 파일 2,374 개 전후 크기/SHA 동일, 등록부 tracked/disk 367/367. 패키지 원본 `docs/22p_gap/gate70_review/`
+(zip sha256 `7d49836ead2546d54f54bb9a905e52695775230b61c28c4d38a3fcfe45327618`, MANIFEST 78 payload · 커밋 뒤 blob 대조 78/78 —
+`-text !eol` 규칙 `05a8026b` 를 먼저 커밋한 뒤 패키지 `4ed1a540`).
+
+**리뷰어의 결론 (그대로):** "제출된 명령·대상·보존 계약으로는 본 실행 NO-GO 다. 새 실행 결함은 G70-N1 [P1] 1건이다. 기존 E3/E5 의 미완을
+새 발견 수에 더하지 않는다. F50b(E7) 의 변경 방향과 국소 동작은 수용한다. E8 의 69차 종결을 다시 열지 않는다. **끝없는 게이트를 요구하지
+않는다.** 현재 목적·배포 경계에서의 종결 목록은 E1–E10 으로 고정한다. … 새로운 목적/진입점/배포 조건이나 구체적 반례가 없다면 임의의 추가
+보안 체계를 종결 조건으로 얹지 않는다. 조건이 닫힌 **최종 코드와 실행 명세를 확인한 뒤** GO 또는 명시적 조건부 GO 를 판단한다."
+`future_go_automatic: false` — 사용자가 정한 2라운드 예산은 존중하되 기한 경과가 GO 를 자동 발행하지 않는다.
+
+### 새 발견
+
+| ID | 등급 | 리뷰어가 직접 확인한 것 | 종결 조건 (리뷰어) |
+|---|---|---|---|
+| **G70-N1** | **P1** | `run.sh:526` `:541` 에서 `all` 이 grid/fit 하위 argv 에 `--may-open` 을 붙이고 `:558–559` 에서 그 argv 를 Python 이 아니라 **같은 셸 스크립트 `"$0"`** 에 넘긴다. 셸 parser `:165–211` 에는 그 옵션이 없어 `:209` 에서 `알 수 없는 인자: --may-open` rc 1. 개별 grid/fit 분기는 Python 호출 때 이미 붙인다(`:374–375` `:413–414`) → **플래그의 소비 계층이 잘못됐다.** 수신 측이 `all` 의 dry argv 를 얻어 grid·fit 각각 실제 하위 parser 에 넣었고 **둘 다 rc 1** (`ALL_CHILD_PARSER_RESULT.json`, `*_child_parser.*`). 계산 0회. 기존 `_dry_all` 회귀는 argv 출력 후 반환 경로만 보고 strict smoke 는 개별 모드라 기존 성공과 모순 아님. **57차부터 있었고 F50b 회귀가 아니다** | 하위 셸 parser 경계까지 통과하는 RED→GREEN 회귀와 제한 수정, 또는 실제로 검토된 별도 단계 명령. 어느 쪽이든 planned leg/소유권 전달/finalize/archive 단계 유지. `RUN_SH_DRY` 문자열 출력 성공만으로 닫지 않음 |
+
+### 기존 항목의 실제 상태와 정정 (리뷰 §4)
+
+- **E3** 미완 유지 — typed 검사기(`tools/preserve.py:2979` `:3245`)는 있으나 lifecycle finalize 는 bundle 선언 필드·파일 수/바이트/index SHA 만 쓴다(`:7464–7477` `:7774–7780` `:7955`). `_declared_index_members` 는 잘못된/미지원 index 에 `None` 을 돌려주고 호출부가 구성원 대조를 **건너뛴다**(`:7492–7523`, 리뷰어 fixture 재현). finalize 가 `unvalidated/diagnostic` 을 유지하는 점은 옳다 — 자동 승격 결함으로 과장하지 않는다. 미사용 retention/restore 는 `unperformed` 로 남긴다.
+- **E5** "미착수" 는 **부정확** (D 정정 대상) — identity·seal·capability·lock·read-back·충돌 거부는 있다. 남은 것은 reader(`:4950–4974`)가 class enum + content_id 만 보는 것: 두 키만 있는 레코드와 `sealed=[]`·`evidence=17`·`recorded_at=false`·임의 키 레코드를 `_read_exec_class_at` 이 수용했다. `resolve_execution_class` 는 `sealed` truthiness(`:5097–5111`). 운영 등록부 위조·promotion 성공은 주장하지 않음.
+- **E6** 결과 한정만으로 부족, 과거 전체 migration 은 필수 아님 — 약속한 `docs/22p_gap/registry_impact.md` 가 HEAD 에 없다. `tests/test_compare.py:940–950` 은 운영 등록부에 synthetic canonical 을 만들 수 있고 `tests/conftest.py:154–188` 은 시작 때 없던 JSON 을 소유권 구분 없이 지운다(리뷰어 소유 scratch 재현: snapshot 뒤 sentinel 삭제됨, 기존 sentinel 유지 — 운영 파일 미수정). archive/report 가 같은 권한 기록을 소비하므로 계산 후 증거·승격 경로의 실제 간섭 위험. 유한 대안: (a) 테스트/자식 진입점의 권한 쓰기를 전용 fixture 영역으로 격리 + 운영 영역 불변 검증, 또는 (b) 전용 checkout/권한 영역에서 배타적 운영 창 확정 + 시작/종료·class delta 보존 + smoke/후속 검증의 권한 목적지 명시. "367 개 기록을 읽는 것만으로 실제 과학 실행 canonical 367 이라 확인할 수 없다."
+- **E1/E2/E4** 한정 수용 가능, 닫힌 것은 아님 — **E1 수정 위치 정정**: 49차 원조건은 `row_projection.py` 의 projection/restart 두 압축 payload 와 leg/producer/manifest 결속이다(`archive_bundle.py` fit 묶음으로는 못 닫음; 내용 identity ≠ 운송 바이트 identity; 무조건 거부 회귀 아님). E2 의 `source_digest` 는 자기 측정, decoy selector 반례 종결 ≠ 독립 launcher attestation. E4 checker 는 보고서 재검산이지 변이 독립 재생 아님 — 표본 재생은 선택·seed·분모·미수행 범위를 가진 **표본 주장**만 닫는다. 단일 principal/local ext4/협조적 배포 경계에서 이 셋의 부재만으로 grid/fit 수치가 틀린다는 경로는 입증되지 않았다 — 좁히는 것은 **사용자 결정**이고 미구현을 완료로 바꾸는 허가가 아니다.
+
+### 여섯 질문의 답
+
+| Q | 답 |
+|---|---|
+| 1 E1~E8 전부 ✔ 이면 `f0dfaff3` 에 GO? | **아니오.** E9/E10 과 Gate63 §0 적용성 처리가 빠졌다. 대상은 최종 수정 commit — 유한 목록을 충족한 최종본 재검토 뒤 GO 판단 가능 |
+| 2 E3·E5·E7 차단 / E1·E2·E4·E6 결과 한정? | **부분 동의.** E1/E2/E4 는 주장 축소로 가능. E6 은 실행별 운영 조건 필요(전면 migration 은 아님) |
+| 3 E3·E5·E7 만 닫으면 조건부 GO? | **그 셋만으로는 아니오.** E6·E9·E10 을 더 닫으면 E1/E2/E4 를 명시한 **한정 실행 GO 경로**가 있다 |
+| 4 F50b 묶음? | **동의.** source_digest 변화와 과거 producer/현재 validator 구분 유지 |
+| 5 "자체 검증층 통과 · N/M 미닫힘" 충분? | **아니오.** 실제 통과/실패/미수행과 미닫힌 ID·영향을 적는다. `N/M` 은 보조 요약만 |
+| 6 `git_dirty` 빼는가? | **유지.** git_info 는 RUN_SCOPE 기준 — "범위 밖 문서 수정도 무조건 dirty" 라는 요청문 전제가 **틀렸다** (D 정정 대상) |
+
+### E9·E10 에서 당장 빠진 것
+
+`./run.sh` 는 `--mode` 필수 rc 1 · 기본 OUT 은 timestamp 경로(≠ `results/grid_fit_v4/`), "정본 config" 라는 말이 실제 config/protocol 을 대신하지 못함 ·
+planned index 8 개는 과거 executed, `grid_fit_v4` prospective 항목/활성 cohort 새 leg 없음 · `all` 체인은 grid→fit→finalize→score→report 이고
+**archive 를 부르지 않음**, finalize 는 `preservation_pending` · E3/E5/run.sh 가 바뀌면 RUN_SCOPE 도 바뀐다 → **최종 commit/source_digest 로 제출, `f0dfaff3` 소급 금지** ·
+E10: "1 failed / 1804 passed rc 1" 과 "smoke rc 0" 은 다른 결과 — full suite 전부 통과라 적지 않는다. `test_a_smoke_run_cannot_be_promoted_to_a_canonical_report` 의
+`results/grid_fit_v4` 양성 경로(`tests/test_docs_lint.py:9192–9222`) 부재는 **정상 승격 양성 근거의 공백** — 격리된 정상 fixture 로 양성·음성 대조를 확인해 닫는다.
+skip/가짜 class 레코드로 녹색 만들지 않음. 문서만 바뀐 커밋은 바이트 동일 근거로 기존 실행 증거 재사용 가능(40 분 시험을 문서 commit 마다 반복하라는 뜻 아님).
+
+**리뷰어가 하지 않은 것 (그대로):** 제품 수정 0 · 본 grid/fit·COMSOL·보관 복원·class migration 0회 · 전체 pytest / strict smoke / mutation replay 는
+수신 환경 미실행(요청자 보고와 구분) · `make_receipt.py` 미실행 · F50b 는 비교 AST 두 문장 8사례 + 예전 tuple 역변경 대조(전체 validator 아님) ·
+`test_io_bookkeeping` 5 passed rc 0(첫 시도는 pytest temp 정리 PermissionError 로 rc 1 — 둘 다 보존). **부수효과 1:** 부검토자가 `precheck_leg_run` 을
+불러 리뷰 worktree 에 빈 `docs/22p_gap/_claims/` 폴더가 생김(`_lifecycle_root` 가 mount 검사 전에 디렉터리를 만든다) → Windows 에서 `BoundaryUnknown` 으로 중지,
+claim/token/ledger/class 파일 변경 없음. 동봉 `agents/preservation_class/probe.py` 는 그 호출을 담고 있어 **원래 checkout 에서 재실행 금지.**
+
+**다음 회신에서 받을 최소 묶음 (리뷰 §9):** ① G70-N1 수정의 하위 parser 회귀 ② E3/E5 실제 소비 경로 + 정상·부정·부분 증거 ③ E6 실행별 격리/배타 운영 + 읽기 전용 영향 지도
+④ E9 정확 명령·prospective spec·archive 순서·과학 목적·Gate63 §0 적용성 표 ⑤ 최종 식별에 결속된 E10 회귀/작은 pipeline 증거와 남은 실패 처리 ⑥ E1/E2/E4 구현 vs 주장 축소 **사용자 결정**.
+E8·과거 종결·독립 launcher 미구현을 "새 P0" 로 다시 세지 않는다. 새 본 계산을 먼저 돌려야 통과한다는 요구도 아니다.
+
+## §91 70차 대응 — G70-N1: 플래그를 붙이는 계층을 바로잡다 (`ae3d3152` · 영수증 `6c02e66e`)
+
+**발견 그대로:** `all` 은 coordinator 로서 하위 grid/fit 을 `"$0" --mode grid …` 로 다시 부른다. 57차 P0-1 이 `GRID_ARGS+=(--may-open)` / `FIT_ARGS+=(--may-open)`
+을 `all` 에도 넣었는데, 그 배열은 Python 이 아니라 **셸 parser** 로 간다. parser 는 모르는 옵션에 `알 수 없는 인자` rc 1 이므로 `--mode all` 은 계산 전에
+죽는다. grid/fit 분기는 각자 `exec python` 직전에 같은 플래그를 붙이고 있었으니 `all` 의 두 줄은 처음부터 잉여이자 치명이었다.
+
+**RED 먼저.** `tests/test_runner.py::test_g70_n1_mode_all_child_argv_is_accepted_by_the_shell_parser[grid|fit]` — `all` 의 dry 출력에서 `--mode grid …` /
+`--mode fit …` 줄을 뽑아 **실제 하위 셸**(`bash run.sh <그 argv>`, `RUN_SH_DRY=1`) 에 넣고 rc 0 과 마지막 줄(Python argv)에 `--may-open` **정확히 1회**를 요구한다.
+수정 전 실측: 두 파라미터 모두 FAIL, stderr `알 수 없는 인자: --may-open` — 리뷰어 재현과 같다.
+
+**수정 (`run.sh`, RUN_SCOPE):**
+- `all` 분기의 `GRID_ARGS+=(--may-open)` (`:526`) · `FIT_ARGS+=(--may-open)` (`:541`) 삭제. 49차/57차 주석은 남기고 ★ 70차 G70-N1 설명을 붙였다.
+- grid 분기에 `RUN_SH_DRY` 경로를 **`plan_gate` 앞**에 추가 (fit·report·all 과 대칭, dry 는 lifecycle/등록부를 건드리지 않는다). 없었기 때문에 grid 의 인자 조립은 실행 없이 검사할 길이 없었다.
+- grid/fit 분기의 `--may-open` 추가를 dry 출력 **앞**으로 옮겨 dry 출력 = 실제 Python argv 가 되게 했다.
+- planned leg / 소유권 전달(`--leg` `--out`) / finalize / archive 단계는 건드리지 않았다 — 리뷰어 종결 조건.
+
+**GREEN:** `tests/test_runner.py` 10 passed (g70_n1 2 포함). **변이:** `mode-all-does-not-pass-may-open-to-the-shell-g70` (`all` 에 `GRID_ARGS+=(--may-open)` 재삽입)
+→ `[grid]` 만 빨개짐(`[fit]` 은 그대로 — 재삽입 위치가 grid 쪽이므로 정확), witness "`all` 이 만든 grid argv 를 하위 셸 parser 가 거부했다 (G70-N1)".
+`--emit-expect` 관측을 그대로 등록, `--check-preimages` 전 지점 1회.
+
+**RUN_SCOPE 가 움직였다:** `source_digest 5e660a8c73d5663a → 86085232b7d8b21c`. 그래서 `paired_fixed5_v4` 보존 영수증이 "낡았다"
+(`test_full_bundle_claims_are_backed_by_a_real_bundle` 실측 실패) → F50b 때(eb5209cf)와 같은 절차: clean 트리(`ae3d3152`, dirty false)에서 `make_receipt.py paired_fixed5_v4`
+재검증 34/34 · core_sha `a64313cb…`, 원장 `LEG_PRESERVATION.yaml` 은 검증기 digest 와 core sha **두 값만** 갱신, 산출물의 실행 digest `d50295f980ccaa81` 불변 (`6c02e66e`).
+
+**실측 (`6c02e66e`, clean tree, 회귀·smoke 도중 HEAD 불변 — 시작 HEAD = 끝 HEAD = `6c02e66e`):** 전체 pytest
+`1 failed · 1806 passed · 2 xfailed` (43:08, rc 1) · strict smoke `EXIT 0`. 리뷰어 Q5 대로 `N/M` 이 아니라 실제 결과를 적는다:
+실패 1 은 `tests/test_docs_lint.py::test_a_smoke_run_cannot_be_promoted_to_a_canonical_report` — E10 이 지목한 ambient
+`results/grid_fit_v4` 양성 경로(이 컨테이너에서는 그 디렉터리의 manifest 이름이 identity 규칙과 맞지 않아 `run_content_id` 가 거부)
+이고 §92 (E10) 에서 fixture 로 닫는다. rc 1 과 smoke rc 0 은 다른 결과다 — "full suite 전부 통과" 라 적지 않는다.
+
+**이 대응이 하지 않은 것:** E3·E5·E6·E9·E10 은 §92 이후 · E1/E2/E4 와 과학 목적은 사용자 결정 대기 · 본실행 시작 안 함 · 리뷰어 스크립트 미실행.

@@ -2676,7 +2676,13 @@ def test_archive_records_computation_commit_and_promotion_is_fail_closed(tmp_pat
         pytest.skip("bash 없음 — archive shell 회귀는 POSIX shell 환경에서만 "
                     "실행된다 (Windows 는 Git Bash wrapper 실측으로 대체)")
 
-    repo = Path(__file__).resolve().parent.parent
+    # ★ 70차 E6 — 이 fixture 의 canonical 등록은 **시험 authority**(격리 tree 의 원장 옆)에 있다.
+    #   wrapper 는 자식 프로세스라 자기 `tools/preserve.py` 위치에서 원장을 유도하므로, 같은 등록을
+    #   보려면 격리 tree 의 스크립트를 불러야 한다 (`tests.conftest.isolated_tree`). 운영 tree 의
+    #   wrapper 를 부르면 운영 등록부에는 이 산출이 없어 "등록돼 있지 않다" 로 거부된다 — 그것이
+    #   맞다: 시험 산출은 운영 authority 에 없어야 한다.
+    from tests.conftest import isolated_tree
+    repo = isolated_tree()
     d, _ = _complete_artifact(tmp_path)          # tmp_path/res
     dest = tmp_path / "arch"
 

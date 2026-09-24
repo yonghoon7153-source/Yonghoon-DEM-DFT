@@ -4947,6 +4947,71 @@ def _record_execution_class_locked(cid: str, cls: str, evidence, name: str,
     return _seal_exec_class_record(path, cid, cls)
 
 
+#: ★ 70차 E5 — 실행 class 등록 레코드의 **닫힌 typed variant** 둘.
+#:
+#:   modern — `_record_execution_class_locked()` 가 62차 P0-1 이후 쓰는 형태.
+#:            `sealed` 는 "봉인(`.run_identity.json`)과 함께 등록됐다" 는 사실이고,
+#:            그 결속은 `content_id` 자체다: 승격은 `_promotion_content_id()` 가
+#:            **봉인에서** identity 를 다시 만들어 이 키와 맞추므로, 봉인이 없거나
+#:            낡으면 이 레코드에 닿지 못한다 (62차 P0-1). 그래서 봉인 digest 를
+#:            레코드에 따로 적지 않는다 — 적으면 같은 사실을 두 곳에 두는 것이다.
+#:   legacy — 62차 이전(`sealed` 키가 생기기 전)의 레코드. 저장소의 tracked
+#:            등록부에 16건 있고(58차 legacy 분류 4 · re-key 12), 전부
+#:            2026-09-04~09-09 에 적혔다. **새로 만들어지지 않는다** — writer 는
+#:            항상 modern 을 쓴다.
+#:
+#:   리뷰어(70차)는 두 키(`content_id`·`execution_class`)만 있는 레코드와
+#:   `sealed=[]`·`evidence=17`·`recorded_at=false`·임의 추가 키가 있는 레코드를
+#:   원래 reader 가 **수용**하는 것을 실측했다. 그 reader 는 class enum 과
+#:   content_id 만 봤다. 여기서부터 키 집합·타입이 닫힌다.
+EXEC_CLASS_RECORD_KEYS_MODERN = frozenset(
+    {"content_id", "execution_class", "evidence", "recorded_at", "sealed"})
+EXEC_CLASS_RECORD_KEYS_LEGACY = frozenset(
+    {"content_id", "execution_class", "evidence", "recorded_at"})
+_EXEC_CLASS_RECORDED_AT = re.compile(r"\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z\Z")
+
+
+def _typed_exec_class_record(rec, content_id: str, where) -> dict:
+    """레코드가 닫힌 variant 중 하나인지 **타입까지** 확인한다 (70차 E5).
+
+    통과하면 그 dict 를 그대로 돌려주고, 아니면 `PreserveError` — `None` 이
+    아니다. 등록부 안의 잘못된 레코드는 "없음" 이 아니라 **authority 의 손상**
+    이고, 없음으로 읽으면 `classify_legacy_run()` 같은 "없으면 만든다" 경로가
+    그 위에 새 판단을 얹는다.
+    """
+    def _bad(why: str) -> PreserveError:
+        return PreserveError(
+            "promote",
+            f"실행 class 등록 레코드가 닫힌 typed variant 가 아니다 ({where}): "
+            f"{why} — modern {sorted(EXEC_CLASS_RECORD_KEYS_MODERN)} 또는 legacy "
+            f"{sorted(EXEC_CLASS_RECORD_KEYS_LEGACY)} 만 authority 다 (70차 E5). "
+            "class 를 정할 수 없으므로 거부한다")
+    if not isinstance(rec, dict):
+        raise _bad(f"dict 가 아니다 ({type(rec).__name__})")
+    keys = frozenset(rec)
+    if keys == EXEC_CLASS_RECORD_KEYS_MODERN:
+        variant = "modern"
+    elif keys == EXEC_CLASS_RECORD_KEYS_LEGACY:
+        variant = "legacy"
+    else:
+        raise _bad(f"키 집합 {sorted(keys)}")
+    if rec["execution_class"] not in EXEC_CLASSES:
+        raise _bad(f"execution_class={rec['execution_class']!r}")
+    if not _is_hex64(rec["content_id"]):
+        raise _bad("content_id 가 hex64 가 아니다")
+    if rec["content_id"] != content_id:
+        raise _bad(f"content_id {str(rec['content_id'])[:16]}… 가 조회 키 "
+                   f"{content_id[:16]}… 와 어긋난다")
+    if not (isinstance(rec["evidence"], str) and rec["evidence"].strip()):
+        raise _bad(f"evidence 가 비어 있지 않은 문자열이 아니다 ({type(rec['evidence']).__name__})")
+    if not (isinstance(rec["recorded_at"], str)
+            and _EXEC_CLASS_RECORDED_AT.match(rec["recorded_at"])):
+        raise _bad(f"recorded_at={rec['recorded_at']!r} (UTC `%Y-%m-%dT%H:%M:%SZ` 가 아니다)")
+    if variant == "modern" and type(rec["sealed"]) is not bool:
+        raise _bad(f"sealed={rec['sealed']!r} 는 bool 이 아니다 (truthiness 로 읽지 않는다)")
+    return rec
+
+
 def _read_exec_class_at(p: Path, content_id: str) -> dict | None:
     if not p.is_file():
         return None
@@ -4963,15 +5028,18 @@ def _read_exec_class_at(p: Path, content_id: str) -> dict | None:
             "가리키는 두 번째 문이 있으면 그리로 쓴 값이 등록부의 답이 된다. "
             "authority 는 이름이 하나여야 한다 (60차 P1-1). 남은 alias 를 "
             "지우고 다시 읽으라")
+    # ★ 70차 E5 — 읽을 수 없거나 형식이 닫힌 variant 밖이면 **`None` 이 아니라
+    #   오류**다. 60차까지는 `None`("없음")으로 접었고, 그래서 두 키만 있는
+    #   레코드·타입이 틀린 레코드가 통과했다 (리뷰어 실측). 파일이 있는데 못
+    #   읽는 것은 "없음" 과 다른 사실이다.
     try:
         rec = json.loads(p.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return None
-    if not isinstance(rec, dict) or rec.get("execution_class") not in EXEC_CLASSES:
-        return None
-    if rec.get("content_id") != content_id:
-        return None            # 등록부 안에서 키와 내용이 어긋난다 — 못 믿는다
-    return rec
+    except (OSError, ValueError) as exc:
+        raise PreserveError(
+            "promote",
+            f"실행 class 등록 레코드를 읽을 수 없다 ({p}): {exc} — 등록부의 "
+            "손상이지 미등록이 아니다 (70차 E5)") from exc
+    return _typed_exec_class_record(rec, content_id, p)
 
 
 def read_execution_class(content_id: str, ledger=None) -> dict | None:
@@ -5103,7 +5171,10 @@ def resolve_execution_class(run_dir, ledger=None, *,
             "알 수 없으므로** 승격을 거부한다. 예전 산출이면 "
             "`classify_legacy_run()` 으로 한 번 분류하라 — 무엇을 보고 정했는지가 "
             "등록부에 남는다")
-    if for_promotion and not had_seal and rec.get("sealed"):
+    # ★ 70차 E5 — typed reader 가 `sealed` 를 bool 로 닫았으므로 여기서는
+    #   `is True` 로 묻는다 (legacy variant 에는 키가 없다 → 봉인 없는 승격 허용,
+    #   62차 규칙 그대로). truthiness 는 `[]`·`"yes"`·`1` 을 다르게 읽는다.
+    if for_promotion and not had_seal and rec.get("sealed", False) is True:
         raise PreserveError(
             "promote",
             f"{d} 의 내용 {cid[:16]}… 은 **봉인과 함께** 등록됐는데 지금 봉인"
@@ -7489,38 +7560,301 @@ def _verify_declared_bundle(evidence: dict, repo_root=None) -> list:
     #   같아야 한다. 한쪽만 보면 "index 에 있는데 없는 파일" 이나 "묶음에 있는데
     #   index 가 모르는 파일" 이 통과한다 — 그 둘이 "완전 묶음" 이라는 말이
     #   무너지는 두 방향이다.
-    declared = _declared_index_members(idx)
-    if declared is not None:
-        walked = {x.relative_to(d).as_posix() for x in member_paths
-                  if x != idx}
-        only_walk = sorted(walked - declared)
-        only_index = sorted(declared - walked)
-        if only_walk or only_index:
-            bad.append(
-                f"index 와 실제 묶음이 다르다 — index 가 모르는 구성원 "
-                f"{only_walk}, 없는데 이름한 것 {only_index} (60차 P0-8)")
+    # ★ 70차 E3 — index 를 **해석할 수 없으면 거부**한다. 60차는 `None`("이
+    #   형식은 구성원을 열거하지 않는다")으로 양방향 대조를 건너뛰었고, 실물
+    #   `payload_sha256.yaml`(YAML `경로: sha256`)이 정확히 그 경로로 빠졌다 —
+    #   production 묶음에서 index↔묶음 대조는 한 번도 돈 적이 없었다 (리뷰어
+    #   E3: "알 수 없는 index 형식을 완전 coverage 로 간주하지 말아야 한다").
+    declared, why = _declared_index(idx)
+    if declared is None:
+        bad.append(
+            f"payload index 를 해석할 수 없다 ({evidence['payload_index']}): {why} "
+            "— 구성원을 열거하지 않는 index 는 `full_bundle` 의 근거가 아니다 "
+            "(70차 E3, fail-closed)")
+        return bad
+    walked = {x.relative_to(d).as_posix() for x in member_paths if x != idx}
+    only_walk = sorted(walked - set(declared))
+    only_index = sorted(set(declared) - walked)
+    if only_walk or only_index:
+        bad.append(
+            f"index 와 실제 묶음이 다르다 — index 가 모르는 구성원 "
+            f"{only_walk}, 없는데 이름한 것 {only_index} (60차 P0-8)")
+        return bad
+    # ★ 70차 E3 — index 가 sha 를 적었으면 **바이트도** 대조한다. 개수·합계
+    #   바이트·index 자신의 sha 만으로는 같은 길이의 다른 바이트를 못 잡는다
+    #   (60차 P0-9 리뷰어 실측). `make_receipt.py` 가 `archive_bundle.check` 로
+    #   같은 대조를 하지만 그것은 영수증 경로이고, 원장에 `full_bundle` 을 쓰는
+    #   이 자리가 스스로 봐야 한다.
+    mismatched = []
+    for rel, want in sorted(declared.items()):
+        if want is None:
+            continue                       # 목록형 index — 이름만 열거한다
+        got = hashlib.sha256((d / rel).read_bytes()).hexdigest()
+        if not secrets.compare_digest(got, want):
+            mismatched.append(f"{rel}: {got[:16]} ≠ index {want[:16]}")
+    if mismatched:
+        bad.append("묶음 구성원의 바이트가 index 와 다르다 (70차 E3): "
+                   + "; ".join(mismatched[:6]))
     return bad
 
 
-def _declared_index_members(idx: Path) -> set | None:
-    """payload index 가 이름한 구성원 집합 — 읽을 수 없으면 `None` (60차 P0-8).
+def _declared_index(idx: Path) -> tuple[dict | None, str | None]:
+    """payload index 가 이름한 구성원 → 선언 sha (없으면 `None`) (70차 E3).
 
-    `None` 은 "이 index 형식은 구성원을 열거하지 않는다" 는 뜻이고, 그 경우
-    양방향 대조는 건너뛴다. 형식을 억지로 해석해서 **틀린 집합**을 만드는 것보다
-    "그 축은 이 index 로 못 묻는다" 를 그대로 두는 편이 정직하다.
+    받는 형식 셋 — 그 밖은 `(None, 이유)` 이고 호출자는 **거부**한다:
+      · mapping `{상대경로: hex64}` — `tools/archive_bundle.py` 의
+        `payload_sha256.yaml` (YAML; JSON 도 YAML 이므로 함께 읽힌다).
+      · `{"members"|"files"|"payload": [상대경로, …]}` · `[상대경로, …]` — 이름만
+        열거하는 목록형 (60차 시험 fixture 형식). sha 는 `None`.
+    60차 `_declared_index_members()` 는 JSON 만 읽고 나머지를 `None` 으로
+    돌려줬다 — 그 `None` 이 "대조 생략" 이었다. 이제 `None` 은 거부 사유다.
     """
+    import yaml
     try:
-        body = json.loads(idx.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
-        return None
-    if isinstance(body, dict):
+        raw = idx.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        return None, f"읽을 수 없다: {exc}"
+    try:
+        body = yaml.safe_load(raw)
+    except yaml.YAMLError as exc:
+        return None, f"YAML/JSON 이 아니다: {str(exc).splitlines()[0]}"
+    if isinstance(body, dict) and body:
+        if all(isinstance(k, str) and k and _is_hex64(v) for k, v in body.items()):
+            return dict(body), None
         for key in ("members", "files", "payload"):
             v = body.get(key)
-            if isinstance(v, list) and all(isinstance(x, str) for x in v):
-                return set(v)
-    elif isinstance(body, list) and all(isinstance(x, str) for x in body):
-        return set(body)
-    return None
+            if isinstance(v, list) and v and all(isinstance(x, str) and x for x in v):
+                return {x: None for x in v}, None
+        return None, f"mapping 인데 `경로: hex64` 도 목록형 키({'members'!r}·{'files'!r}·{'payload'!r})도 아니다"
+    if isinstance(body, list) and body and all(isinstance(x, str) and x for x in body):
+        return {x: None for x in body}, None
+    return None, (f"구성원을 열거하지 않는다 ({type(body).__name__}"
+                  f"{' 비어 있음' if not body else ''})")
+
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# ★ 70차 E3 — 검증 영수증(`docs/22p_gap/make_receipt.py`)의 **typed 소비**
+# ═══════════════════════════════════════════════════════════════════════════
+#: 영수증의 닫힌 key 집합 — `make_receipt.py` 가 쓰는 그대로. 남거나 모자라면 거부.
+VERIFICATION_RECEIPT_KEYS = frozenset({"schema_version", "_주의", "core_sha256", "core", "stamp"})
+VERIFICATION_RECEIPT_CORE_KEYS = frozenset(
+    {"leg_id", "bundle", "restore", "validation", "identity", "outputs", "outputs_agree"})
+VERIFICATION_RECEIPT_BUNDLE_KEYS = frozenset(
+    {"uri", "files", "bytes", "payload_index", "payload_index_sha256",
+     "member_rehash", "member_mismatches", "fits_sha256"})
+VERIFICATION_RECEIPT_RESTORE_KEYS = frozenset(
+    {"mode", "command", "files_written", "run_dir_relative", "conflicts"})
+VERIFICATION_RECEIPT_VALIDATION_KEYS = frozenset(
+    {"validator", "ok", "fail", "n_checks", "checks"})
+VERIFICATION_RECEIPT_IDENTITY_KEYS = frozenset(
+    {"validator_source_digest", "src_io_sha256", "src_scoring_sha256",
+     "archive_bundle_sha256", "make_receipt_sha256", "row_projection_sha256",
+     "row_projection_compute_sha256"})
+VERIFICATION_RECEIPT_SCHEMA_VERSION = 2
+VERIFICATION_RECEIPT_GENERATOR = "docs/22p_gap/make_receipt.py"
+
+
+def _receipt_core_sha256(core: dict) -> str:
+    """`make_receipt.py::_dump` 와 **같은 바이트**로 core 를 굳혀 해시한다."""
+    import yaml
+    return hashlib.sha256(
+        yaml.safe_dump(core, allow_unicode=True, sort_keys=False, width=100)
+        .encode("utf-8")).hexdigest()
+
+
+def read_verification_receipt(path, leg_id: str, *, repo_root=None) -> dict:
+    """검증 영수증을 **닫힌 schema 로** 읽어 이 다리의 것인지 확인한다 (70차 E3).
+
+    돌려주는 것은 `core` (검증된 dict). 어긋나면 `PreserveError` — 부분 성공은
+    없다. 보는 것:
+      · 파일이 저장소 안의 정규 상대경로인가 (`_repo_relative_or_refuse`)
+      · 최상위·core·bundle·restore·validation·identity 의 key 집합이 정확히 닫혔는가
+      · `core_sha256` 이 core 바이트에서 다시 계산한 값과 같은가 (자기 일관성)
+      · `core.leg_id == leg_id`
+      · `validation.ok is True` · `fail == []` · `n_checks == len(checks)` · 검사 이름 정렬 unique
+      · `restore.mode == "empty_root"` · `conflicts == 0` · `bundle.member_mismatches == 0`
+      · `outputs` 에 `rescored_summary` 역할이 있고 모두 semantic digest 를 가졌으며 `outputs_agree is True`
+      · `identity.validator_source_digest` 가 **지금** `source_digest()` 와 같은가
+        (다른 검증기의 영수증은 "현행 검증" 이 아니다 — 낡은 영수증으로 원장을 올리지 않는다)
+    """
+    import yaml
+    from src.io import source_digest as _sd
+
+    root = Path(repo_root or REPO_ROOT)
+    rp = _repo_relative_or_refuse(root, path, "verification_receipt")
+    if not rp.is_file():
+        raise PreserveError("plan", f"검증 영수증이 없다: {path}")
+
+    def _bad(why: str) -> PreserveError:
+        return PreserveError(
+            "plan", f"{leg_id!r} 의 검증 영수증({path})이 typed schema 밖이다: {why} "
+                    "— 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)")
+
+    try:
+        rec = yaml.safe_load(rp.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
+        raise _bad(f"읽을 수 없다: {exc}") from exc
+    if not isinstance(rec, dict) or frozenset(rec) != VERIFICATION_RECEIPT_KEYS:
+        raise _bad(f"최상위 key 집합 {sorted(rec) if isinstance(rec, dict) else type(rec).__name__}")
+    if rec["schema_version"] != VERIFICATION_RECEIPT_SCHEMA_VERSION:
+        raise _bad(f"schema_version={rec['schema_version']!r}")
+    core = rec["core"]
+    if not isinstance(core, dict) or frozenset(core) != VERIFICATION_RECEIPT_CORE_KEYS:
+        raise _bad(f"core key 집합 {sorted(core) if isinstance(core, dict) else type(core).__name__}")
+    for name, want in (("bundle", VERIFICATION_RECEIPT_BUNDLE_KEYS),
+                       ("restore", VERIFICATION_RECEIPT_RESTORE_KEYS),
+                       ("validation", VERIFICATION_RECEIPT_VALIDATION_KEYS),
+                       ("identity", VERIFICATION_RECEIPT_IDENTITY_KEYS)):
+        got = core[name]
+        if not isinstance(got, dict) or frozenset(got) != want:
+            raise _bad(f"core.{name} key 집합 {sorted(got) if isinstance(got, dict) else type(got).__name__}")
+    if not (isinstance(rec["core_sha256"], str) and _is_hex64(rec["core_sha256"])):
+        raise _bad("core_sha256 이 hex64 가 아니다")
+    if not secrets.compare_digest(_receipt_core_sha256(core), rec["core_sha256"]):
+        raise _bad("core_sha256 이 core 바이트와 다르다")
+    if core["leg_id"] != leg_id:
+        raise _bad(f"다른 다리의 영수증이다 ({core['leg_id']!r})")
+    v = core["validation"]
+    if v["ok"] is not True or v["fail"] != []:
+        raise _bad(f"검증이 통과를 말하지 않는다 (ok={v['ok']!r}, fail={v['fail']!r}) — "
+                   "실패·부분 상태는 `full_bundle` 이 아니다")
+    if not isinstance(v["checks"], dict) or not v["checks"] \
+            or type(v["n_checks"]) is not int or v["n_checks"] != len(v["checks"]):
+        raise _bad(f"n_checks={v['n_checks']!r} 가 checks({type(v['checks']).__name__}) 와 안 맞는다")
+    r = core["restore"]
+    if r["mode"] != "empty_root" or r["conflicts"] != 0:
+        raise _bad(f"empty-root 복원 기록이 아니다 (mode={r['mode']!r}, conflicts={r['conflicts']!r})")
+    b = core["bundle"]
+    if b["member_mismatches"] != 0:
+        raise _bad(f"member 불일치 {b['member_mismatches']!r} 를 기록했다")
+    for k in ("files", "bytes"):
+        if type(b[k]) is not int or b[k] <= 0:
+            raise _bad(f"bundle.{k}={b[k]!r}")
+    for k in ("payload_index_sha256", "fits_sha256"):
+        if not _is_hex64(b[k]):
+            raise _bad(f"bundle.{k} 가 hex64 가 아니다")
+    outs = core["outputs"]
+    if not isinstance(outs, list) or not outs:
+        raise _bad("outputs 가 비었다")
+    roles = set()
+    for o in outs:
+        if not isinstance(o, dict) or not _nonempty_str(o.get("semantic_sha256") or "") \
+                or not _nonempty_str(o.get("canonicalizer") or ""):
+            raise _bad(f"산출 {o.get('role') if isinstance(o, dict) else o!r} 에 semantic digest/canonicalizer 없음")
+        roles.add(o.get("role"))
+    if "rescored_summary" not in roles:
+        raise _bad("복원본 재채점 산출(`rescored_summary`)이 없다")
+    if core["outputs_agree"] is not True:
+        raise _bad(f"outputs_agree={core['outputs_agree']!r}")
+    ident = core["identity"]
+    now = _sd()
+    if ident["validator_source_digest"] != now:
+        raise _bad(f"영수증이 낡았다 — validator {ident['validator_source_digest']!r} ≠ 현행 "
+                   f"{now!r}. `python3 {VERIFICATION_RECEIPT_GENERATOR} {leg_id}` 로 다시 만들라")
+    return core
+
+
+def attach_bundle_evidence(leg_id: str, receipt_path, ledger=None, *,
+                           repo_root=None) -> dict:
+    """finalize 된 다리(`preservation_pending`)를 **영수증을 소비해** `full_bundle` 로 올린다 (70차 E3).
+
+    순서 — 무엇 하나 어긋나면 원장에 아무것도 쓰지 않는다:
+      1. 영수증을 typed 로 읽는다 (`read_verification_receipt`).
+      2. 영수증이 말하는 묶음을 **디스크에서** 확인한다 (`_verify_declared_bundle`
+         — 개수·바이트·index sha·index↔묶음 양방향·구성원 sha).
+      3. 원장 lock 안에서: 이 다리의 실행 기록(`legs`)이 있어야 하고(finalize 먼저 —
+         `unperformed` 는 올릴 수 없다), 상태가 `preservation_pending` 이거나 같은
+         영수증으로 이미 `full_bundle` 이면 멱등, 다른 영수증이면 거부.
+      4. lifecycle 이 남긴 evidence(phases·attempt·…)는 **그대로** 두고 묶음·영수증·
+         검증기 identity 키만 더한다. `preservation_status=full_bundle`,
+         `validation_status=current_validated` (현행 검증기로 통과한 것만 여기 온다 —
+         계약 §8: current_validated ⇒ full_bundle). `inference_role` 은 건드리지
+         않는다 (사람이 증거를 보고 올린다).
+
+    `claim_roles`·`근거` 같은 사람의 문장은 쓰지 않는다 — docs-lint 가 그것을
+    따로 요구하므로, 이 함수 뒤에 사람이 적어야 lint 가 초록이 된다. 그 순서를
+    숨기지 않는다.
+    """
+    import yaml
+    check_id(leg_id)
+    root = Path(repo_root or REPO_ROOT)
+    core = read_verification_receipt(receipt_path, leg_id, repo_root=root)
+    b = core["bundle"]
+    bundle_ev = {
+        "bundle_uri": b["uri"],
+        "bundle_files": b["files"],
+        "payload_bytes": b["bytes"],
+        "payload_index": b["payload_index"],
+        "payload_index_sha256": b["payload_index_sha256"],
+    }
+    bad = _verify_declared_bundle(bundle_ev, repo_root=root)
+    if bad:
+        raise PreserveError(
+            "plan", f"{leg_id!r} 의 영수증이 말하는 묶음이 실물과 다르다 — 원장에 쓰지 않는다:\n  "
+                    + "\n  ".join(bad))
+    fits = _repo_relative_or_refuse(root, b["uri"], "bundle_uri") / "fits.parquet"
+    if not fits.is_file():
+        raise PreserveError("plan", f"{leg_id!r} 묶음에 fits.parquet 이 없다")
+    got_fits = hashlib.sha256(fits.read_bytes()).hexdigest()
+    if not secrets.compare_digest(got_fits, b["fits_sha256"]):
+        raise PreserveError(
+            "plan", f"{leg_id!r} 묶음의 fits.parquet sha {got_fits[:16]} ≠ 영수증 {b['fits_sha256'][:16]}")
+    rel_receipt = _repo_relative_or_refuse(root, receipt_path, "verification_receipt") \
+        .relative_to(root).as_posix()
+    core_sha = _receipt_core_sha256(core)
+
+    path = canonical_ledger(ledger)
+    with _ledger_lock(path):
+        doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        legs = [e for e in (doc.get("legs") or []) if e.get("leg_id") == leg_id]
+        if len(legs) != 1:
+            raise PreserveError(
+                "plan", f"{leg_id!r} 의 실행 기록이 원장에 {len(legs)}개다 — finalize 로 닫힌 다리 "
+                        "하나에만 묶음을 붙인다 (0 이면 `unperformed`: 먼저 실행·finalize 하라)")
+        leg = legs[0]
+        ev = dict(leg.get("evidence") or {})
+        status = leg.get("preservation_status")
+        if status == "full_bundle":
+            if ev.get("verification_receipt_core_sha256") == core_sha \
+                    and ev.get("verification_receipt") == rel_receipt:
+                return {"leg_id": leg_id, "preservation_status": "full_bundle",
+                        "idempotent": True, "receipt_core_sha256": core_sha}
+            raise PreserveError(
+                "plan", f"{leg_id!r} 은 이미 다른 영수증({str(ev.get('verification_receipt_core_sha256'))[:16]}…)"
+                        f"으로 `full_bundle` 이다 — 영수증을 갈아 끼우지 않는다 (사람이 원장을 본다)")
+        if status != "preservation_pending":
+            raise PreserveError(
+                "plan", f"{leg_id!r} 의 preservation_status={status!r} 에는 묶음을 붙이지 않는다 "
+                        "(`preservation_pending` 만 올린다; `recorded_projection`·`missing` 은 원자료가 없다)")
+        for k in LIFECYCLE_OWNED_EVIDENCE_KEYS:
+            if k not in ev:
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 실행 기록에 lifecycle 소유 키 {k!r} 가 없다 — "
+                            "finalize 가 남긴 기록이 아니므로 그 위에 묶음을 붙이지 않는다")
+        ev.update(bundle_ev)
+        ev.update({
+            "member_rehash_by": b["member_rehash"],
+            "fits_sha256": b["fits_sha256"],
+            "verification_receipt": rel_receipt,
+            "verification_receipt_core_sha256": core_sha,
+            "verification_receipt_generator": VERIFICATION_RECEIPT_GENERATOR,
+            "empty_root_restore": True,
+            "rescored_from_restored_fits": True,
+            "validator_identity": {
+                "source_digest": core["identity"]["validator_source_digest"],
+                "n_checks": core["validation"]["n_checks"],
+                "ok": True,
+            },
+        })
+        ev["bundle_content_id"] = bundle_content_id(ev, repo_root=root)
+        leg["evidence"] = ev
+        leg["preservation_status"] = "full_bundle"
+        leg["validation_status"] = "current_validated"
+        _atomic_write_text(path, yaml.safe_dump(doc, allow_unicode=True, sort_keys=False))
+    return {"leg_id": leg_id, "preservation_status": "full_bundle",
+            "validation_status": "current_validated", "idempotent": False,
+            "receipt_core_sha256": core_sha}
 
 
 def bundle_content_id(evidence: dict, repo_root=None) -> str:

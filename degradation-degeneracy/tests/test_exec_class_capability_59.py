@@ -240,10 +240,15 @@ def test_a_shared_local_class_conflict_is_fail_closed(tmp_path, monkeypatch):
     cid = P.run_content_id(out)
 
     # 다른 clone 에서 온 tracked canonical record 를 손으로 놓는다 (VCS 동기화)
+    # ★ 70차 E5 — 초판은 `"schema": "execution-class/v1"` 키를 하나 더 달았고, 원래
+    #   reader 는 그것을 그대로 읽었다 (키 집합을 안 봤다). typed reader 는 닫힌
+    #   variant 밖을 거부하므로, 이 시험이 재는 **충돌** 에 닿으려면 레코드가
+    #   authority 형식(legacy 4키 — 다른 clone 의 58~61차 레코드가 그 형태다)이어야
+    #   한다. 형식 위조를 시험이 기대하고 있었다 — fixture 가 진실을 가리고 있었다.
     shared = P.exec_class_root_for_ledger(led)
     shared.mkdir(parents=True, exist_ok=True)
     (shared / f"{cid}.json").write_text(json.dumps({
-        "schema": "execution-class/v1", "content_id": cid,
+        "content_id": cid,
         "execution_class": P.EXEC_CLASS_CANONICAL,
         "evidence": "다른 clone 에서 온 tracked record",
         "recorded_at": "2026-09-08T00:00:00Z"}), encoding="utf-8")

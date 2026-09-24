@@ -35,7 +35,7 @@
 | E2 | **trusted launcher** — 실행되는 source bytes 를 launcher 가 측정 | 53차 (조건 5) | **미착수** | `run.sh` 앞단에 측정 launcher: 실제 import 되는 모듈의 bytes 를 실행 **직전에** 재고 receipt 에 넣는다 (지금은 startup 뒤 관측) · 회귀: decoy 모듈 주입 거부 | **결과 한정** (P0-5③ decoy 반례는 이미 닫힘 — 경계만 남음) |
 | E3 | **P0-4 typed 보존 영수증 소비** | 49차 | **부분** | `tools/preserve.py` 소비자가 typed receipt 를 재귀 exact schema 로 읽고, 부분 필드는 `unperformed` 로 | **실행 차단 후보** — 보존 판정이 결과 정본에 직접 붙는다 |
 | E4 | **변이 증거의 독립 replay** — checker 가 스스로 재생 | 54차 | **미착수** | `mutation_replay.py --check-coverage` 가 조각 JSON 을 믿지 않고 sandbox 에서 표본 재생 (전수는 시간 초과 — 표본·seed 명시) | **결과 한정** |
-| E5 | **P0-8 경로 무관 typed·sealed 실행 class marker** | 52차 | **미착수** | `_exec_class` 레코드에 경로 대신 내용 identity 만 · 이동/복사 뒤에도 class 유지 · 회귀: 경로 바꾼 복사본의 class 일치 | **실행 차단 후보** — 본 실행 산출물의 class 등록이 이것에 걸린다 |
+| E5 | **P0-8 경로 무관 typed·sealed 실행 class marker** | 52차 | ~~**미착수**~~ **D4 정정 (70차 리뷰): 부분 구현** — 내용 identity·seal·capability·등록 lock·read-back·충돌 거부는 58~62차에 이미 있다. 남은 것은 reader(`_read_exec_class_at`)가 class enum + content_id 만 보는 것 (두 키만 있는 레코드·타입 틀린 레코드 수용 — 리뷰어 실측) → 71차 E5 로 닫음 | ~~`_exec_class` 레코드에 경로 대신 내용 identity 만 · 이동/복사 뒤에도 class 유지 · 회귀: 경로 바꾼 복사본의 class 일치~~ typed modern/legacy variant · content/seal 결속 · writer→reader→promotion 회귀 (리뷰어 §5) | **실행 차단 후보** — 본 실행 산출물의 class 등록이 이것에 걸린다 |
 | E6 | **⑩ 등록부 격리** (별도 계약; 복원·class 변경은 별도 승인) | 66차 | **미착수** — 68차 Q5: 읽기 전용 영향·의존성 지도 먼저 | 1 단계 읽기 전용 지도(`docs/22p_gap/registry_impact.md`) · 2 단계 격리 migration 은 별도 승인 | **결과 한정** (1 단계는 이번 라운드에 낸다) |
 | E7 | **F50b** — `start_파일_일치` 목록의 `git_commit` (RUN_SCOPE) | 66차 §2-5 | **✔ 적용 (이 커밋)** — RED `test_compare.py::test_f50b_start_file_check_ignores_git_commit_like_the_run_check` 를 본 뒤 고침, 대조군(다른 `source_digest`) 유지 | `src/io.py` 비교 목록에서 `git_commit` 제거 (`실행중_코드불변` 과 같은 판단) · RED: 문서 커밋만으로 resume 이 깨지는 재현 → GREEN · 새 `source_digest` | **실행 차단** — 10 시간 실행 중 문서 커밋 한 번이면 resume 이 5 건 연쇄 실패한다 (66차 실측) |
 | E8 | 68차 G68-T1 (call-phase 증거) | 68차 | **✔ 69차 종결 수용** (신뢰 경계 답: 범위 타당, 추가 보안 설계 불요) | — | — |
@@ -83,7 +83,7 @@ F50b 를 그 커밋에 넣어야 (i) 실행 중 문서 커밋 한 번에 resume 
 - RED 먼저: 같은 `source_digest` 로 start 파일의 `git_commit` 만 다른 artifact → `start_파일_일치` 실패 재현 (실측 사유: "코드는 같은데 git commit 이 다르다고 start 파일 대조가 실패했다") → 목록에서 `git_commit` 제거 → GREEN. 대조군: `source_digest` 가 다르면 여전히 실패.
 - 변경은 `src/io.py` 한 곳 — 비교 tuple 에서 `"git_commit"` 하나를 뺐고 주석을 달았다. `실행중_코드불변` 과 같은 판단이다. commit 이동은 `_참고_git이동` 에 정보로 남는다.
 - `source_digest` **`e9ee7475dea7de1d` → `5e660a8c73d5663a`**. 기존 산출물의 무효화는 **의도된 것**이고 본 실행이 다시 만든다. `--check-preimages` 는 변경 뒤에도 모든 지점 1 회.
-- **질문 6:** `git_dirty` 는 목록에 남겼다 (문서 작업만으로도 dirty 가 되지만, 코드 수정도 dirty 로 나타난다 — `source_digest` 가 그것을 따로 잡는다). 이것도 빼야 하는가, 남겨야 하는가.
+- **질문 6:** `git_dirty` 는 목록에 남겼다 (~~문서 작업만으로도 dirty 가 되지만,~~ **D5 정정 (70차 리뷰 Q6): 이 전제가 틀렸다 — `git_info` 는 RUN_SCOPE 기준이라 범위 밖 문서 수정은 dirty 가 아니다.** 코드 수정은 dirty 로 나타난다 — `source_digest` 가 그것을 따로 잡는다). 이것도 빼야 하는가, 남겨야 하는가. → **답: 유지한다** (리뷰어).
 
 ---
 
@@ -105,7 +105,7 @@ mutation_replay --check-preimages · -k premise  check-preimages: 모든 변이 
 ## §5 리뷰어에게 묻는 것 (§0 의 셋 + 셋)
 
 4. **F50b 를 GO 대상 커밋에 묶는 데 동의하는가** (66차 (b) 의 "다음 RUN_SCOPE 변경" = 이 실행).
-5. **결과 라벨 문구** — §1 의 "provenance: 자체 검증층 통과 · 독립 검증 전제 N/M 미닫힘" 이 충분한가. 부족하면 문구를 달라.
+5. **결과 라벨 문구** — §1 의 "provenance: 자체 검증층 통과 · 독립 검증 전제 N/M 미닫힘" 이 충분한가. 부족하면 문구를 달라. → **답: 아니오** — 실제 통과/실패/미수행과 미닫힌 ID·영향을 적는다, `N/M` 은 보조 요약만 (리뷰어 §6 라벨 예시를 GATE71 §1 이 그대로 받는다).
 6. **`git_dirty`** — §3 끝의 물음.
 
 ---

@@ -9201,7 +9201,7 @@ def _smoke_run(tmp_path):
     return d
 
 
-def test_a_smoke_run_cannot_be_promoted_to_a_canonical_report():
+def test_a_smoke_run_cannot_be_promoted_to_a_canonical_report(tmp_path):
     """★ 48차 P0-8 — 47차는 smoke 를 **격리**했지 **승격 금지**하지 않았다.
 
     `results/_smoke/` 아래 실행은 계획 gate 를 면제받는다 (계약 §13.3.3). 그
@@ -9210,16 +9210,28 @@ def test_a_smoke_run_cannot_be_promoted_to_a_canonical_report():
     를 부르면 gate 를 한 번도 안 지난 실행이 인용 대상 정본을 덮어썼다.
 
     면제와 승격 금지는 **같은 경계**여야 한다 — 한쪽만 있으면 우회로다.
+
+    ★ 70차 E10 — 양성 경로(namespace 밖은 통과한다)가 ambient `results/grid_fit_v4`
+      에 기대고 있었다. 그 디렉터리는 gitignored 라 checkout 마다 다르고, 이
+      컨테이너에서는 manifest 이름이 identity 규칙과 맞지 않아 67~70차 회귀가
+      매번 여기서 빨갰다 — 리뷰어: "폴더 부재는 smoke 승격이 성공했다는 반례가
+      아니지만 정상 승격 양성 근거의 공백이다." 양성 경로는 이제 **격리 authority
+      에 canonical 로 등록·봉인된 fixture**(`_complete_artifact`) 로 잰다. skip 도,
+      가짜 class 레코드도 아니다 — 진짜 writer 가 진짜 등록부(시험 사본)에 쓴다.
     """
-    from tools.preserve import assert_not_smoke_provenance, PreserveError
+    from tests.test_compare import _complete_artifact
+    from tools.preserve import (assert_not_smoke_provenance, is_inside_namespace,
+                                PreserveError, SMOKE_NAMESPACE)
 
     d = _smoke_run(None)
     try:
         with pytest.raises(PreserveError) as ei:
             assert_not_smoke_provenance([d], "정본 보고서")
         assert _SMOKE_REFUSAL in str(ei.value), str(ei.value)
-        # namespace 밖은 통과한다 (진행이 불가능하면 그것도 고장이다)
-        assert_not_smoke_provenance([_REPO / "results" / "grid_fit_v4"], "정본 보고서")
+        # namespace 밖 + 등록된 canonical 은 통과한다 (진행이 불가능하면 그것도 고장이다)
+        good, _sig = _complete_artifact(tmp_path)
+        assert not is_inside_namespace(good, SMOKE_NAMESPACE)
+        assert_not_smoke_provenance([good], "정본 보고서")
     finally:
         shutil.rmtree(d, ignore_errors=True)
 
