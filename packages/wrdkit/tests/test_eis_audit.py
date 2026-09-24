@@ -1003,6 +1003,49 @@ def test_a_parameter_on_its_bound_shows_the_bound_not_itself():
     assert low.message.startswith("CPE1 의 n 이 하한(0.3)에 붙었습니다 (값 0.3001) — ")
 
 
+def test_a_tail_cut_off_with_the_low_end_is_one_note_not_a_check_per_bound():
+    """ADR 0045 보완 7 — 실측 풀셀 #1 을 KK 가 권한 1.29 Hz 부터 다시 맞추자 확산
+    꼬리(TL1_Wr · Wn · Wt)가 경계로 갔고, 경계마다 "물리적으로 맞는 값인지
+    보세요" 가 붙었다.  까닭은 하나다: 꼬리는 맞춘 구간 밖이다.  꼬리가 아닌
+    TL1_Re 의 경계 붙음은 그대로 따로 본다."""
+    from wrdkit.eis.audit import KKReference
+
+    circuit = "L1-R0-p(R1,CPE1)-TL1"
+    values = {"L1": 3.28e-07, "R0": 9.65, "R1": 30.9, "CPE1_Q": 4.85e-05,
+              "CPE1_n": 0.85, "TL1_Ri": 10.7, "TL1_Re": 1e-09, "TL1_Rct": 48.1,
+              "TL1_Q": 0.0154, "TL1_n": 0.34, "TL1_Wr": 1e-09, "TL1_Wn": 0.1,
+              "TL1_Wt": 1e6}
+    rails = {"TL1_Re": "at_lower_bound", "TL1_Wr": "at_lower_bound",
+             "TL1_Wn": "at_lower_bound", "TL1_Wt": "at_upper_bound"}
+    fit = Fit(circuit, [P(name, value, reason=rails.get(name, ""),
+                          status="undetermined" if name in rails or name == "TL1_Ri"
+                          else "determined")
+                        for name, value in values.items()])
+    spectrum = spectrum_of(circuit, values)
+    cut = float(FREQUENCY[FREQUENCY >= 1.2].min())
+    reference = KKReference(frequency_hz=FREQUENCY, residual=np.zeros(FREQUENCY.size),
+                            low_limit_hz=cut, sigma=0.003)
+
+    cut_off = audit_fit(fit, spectrum, kind=SOLID, config=FULL,
+                        band=(cut, float(FREQUENCY.max())), reference=reference)
+    (tail,) = [f for f in cut_off.findings if f.code == "tail_outside_window"]
+    assert tail.severity == NOTE
+    assert tail.message.startswith("확산 꼬리 TL1_Wr, TL1_Wn, TL1_Wt 는 이 맞춤이 "
+                                   "정하지 않았습니다")
+    assert f"{cut:.3g} Hz 부터 맞춰" in tail.message
+    bounds = " / ".join(f.message for f in cut_off.findings if f.code == "at_bound")
+    assert "TL1_Re" in bounds and "TL1_W" not in bounds
+    (unsettled,) = [f for f in cut_off.findings if f.code == "undetermined"]
+    assert "TL1_W" not in unsettled.message and "TL1_Ri" in unsettled.message
+
+    # 모든 점으로 맞춘 것이면 꼬리는 구간 안에 있었다 — 경계마다 따로 본다.
+    whole = audit_fit(fit, spectrum, kind=SOLID, config=FULL, band=BAND,
+                      reference=reference)
+    assert "tail_outside_window" not in codes(whole)
+    bounds = " / ".join(f.message for f in whole.findings if f.code == "at_bound")
+    assert all(name in bounds for name in ("TL1_Wr", "TL1_Wn", "TL1_Wt"))
+
+
 def test_an_end_that_still_rises_gently_is_not_said_to_come_down():
     """실측 하프셀 #38: 끝이 26° 로 완만하게 오르는데 "실수축으로 내려오는데" 라고
     했다 — 헤더는 "꼬리 26°" 다.  30° 아래는 위상으로 판정하니 (ADR 0044) "안 막음"

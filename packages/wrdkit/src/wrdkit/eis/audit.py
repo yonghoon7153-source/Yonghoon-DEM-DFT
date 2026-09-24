@@ -425,6 +425,14 @@ def _railed(parameter, model: Circuit) -> str:
     return ""
 
 
+def _is_tail(name: str) -> bool:
+    """A parameter of the diffusion tail -- a Warburg element's (``W3``,
+    ``Ws4_R``, ``Wo5_tau``) or the finite Warburg inside a transmission line
+    (``TL1_Wr``, ``TL1_Wn``, ``TL1_Wt``)."""
+    element, _, suffix = name.partition("_")
+    return bool(re.fullmatch(r"W[so]?\d*", element)) or suffix in ("Wr", "Wn", "Wt")
+
+
 def _rail_finding(name: str, value: float, side: str, *,
                   in_series: bool, ohmic: bool = False,
                   taken_by: tuple[str, float, float] | None = None,
@@ -952,6 +960,23 @@ def audit_fit(fit, spectrum: Spectrum | None, *, kind: str, config: str = "",
     # 쌍둥이에서 "Q 상한" · "n 하한" · "n = 0.30 확산" 이 함께 떴다).
     vanishing = {name.partition("_")[0] for name, side in railed.items()
                  if (side == "upper" and name.endswith("_Q"))}
+    # **저주파 끝을 KK 때문에 뺀 맞춤이면 확산 꼬리는 맞춘 구간 밖이다** — 그
+    # 파라미터가 경계에 붙거나 미결정인 것은 한 까닭이다 (ADR 0045 보완 7).
+    # 경계마다 "물리적으로 맞는 값인지 보세요" 를 적으면 틀린 곳을 가리킨다:
+    # 실측 풀셀 #1 을 1.29 Hz 부터 맞추자 TL1_Wr · Wn · Wt 가 경계로 가서 그 말이
+    # 세 번 붙었다.  꼬리가 아닌 것(TL1_Re, R0)은 그대로 따로 본다.
+    cut = reference.low_limit_hz if reference is not None else None
+    if fitted_above(low_edge, cut):
+        outside = [name for name in model.parameter_names
+                   if _is_tail(name) and name not in quiet
+                   and (railed.get(name) or statuses.get(name) == "undetermined")]
+        if outside:
+            out.findings.append(Finding(
+                NOTE, "tail_outside_window",
+                f"확산 꼬리 {', '.join(outside)} 는 이 맞춤이 정하지 않았습니다 — "
+                f"저주파 끝(KK 를 어긴 곳)을 빼고 {low_edge:.3g} Hz 부터 맞춰 꼬리가 "
+                f"맞춘 구간 밖입니다. 경계에 붙은 것도 그 때문입니다"))
+            quiet.update(outside)
     for parameter in parameters:
         side = railed.get(parameter.name, "")
         element, _, suffix = parameter.name.partition("_")
