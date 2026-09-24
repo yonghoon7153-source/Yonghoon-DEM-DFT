@@ -3,7 +3,8 @@
 
 왜: 수확기 (`lhs_descriptor_harvest.volumes_and_phi`) 는 분모 높이를 덤프 `BOX BOUNDS` 바닥에서 잰다
     (H = plate_z − box_lo_z).  웹앱 (`dem_analysis_core.calc_porosity`) 은 벽 z = 0 에서 잰다 (V_box = L² · plate_z).
-    LHS 덱은 상자를 벽보다 10 µm 아래서 시작해 둘이 갈린다.  이 도구는 수식을 옮겨 적지 않고 **두 코드의 함수를
+    LHS 덱은 상자를 벽보다 10 µm 아래서 시작해 둘이 갈렸다 (옛 판).  ✅ 2026-09-24 수확기가 벽에서 재도록 고쳤다 —
+    이제 두 코드는 SAME 이어야 한다 (selftest 가 강제).  이 도구는 수식을 옮겨 적지 않고 **두 코드의 함수를
     호출**한다 — 바닥 말고 다른 차이 (plate_z 출처 · 반경 · 원자 수) 가 있어도 잔차로 드러난다.
     (웹앱 φ_SE 를 내는 `calc_effective_conductivity` 는 τ 가 없으면 None 이다 — `DESC-01` — 그래서 porosity 로 맞댄다.
     φ 는 porosity 와 같은 분모를 쓰므로 바닥 판정은 porosity 하나로 충분하다.)
@@ -120,10 +121,9 @@ def selftest():
         # ① LHS 덱 모양: 상자 바닥 −1, 벽 0, 플래튼 5 ⇒ 차이는 바닥 하나로 전부 설명된다
         a1 = HV._atom_file(tmp, rows, name='atom_a.liggghts', lo=(0.0, 0.0, -1.0), hi=(10.0, 10.0, 20.0))
         r1 = compare(a1, 5.0, 3)
-        chk('상자 바닥이 벽 아래면 FLOOR_ONLY (LHS-10 재현)', r1['verdict'] == 'FLOOR_ONLY')
-        chk('바닥 틈 = 1.0 (상자 −1 ↔ 벽 0)', abs(r1['floor_gap'] - 1.0) < 1e-12)
-        chk('수확기 porosity 가 웹앱보다 크다 (분모가 부푼다)', r1['eps_harvest'] > r1['eps_webapp'])
-        chk('φ 배율 = H_web / H_harv = 5/6', abs(r1['phi_scale'] - 5.0 / 6.0) < 1e-12)
+        chk('★ LHS-10 수정 뒤: 상자 바닥이 벽 아래여도 두 코드가 같다 (SAME)', r1['verdict'] == 'SAME')
+        chk('바닥 틈 = 0 (수확기도 벽에서 잰다)', abs(r1['floor_gap']) < 1e-12)
+        chk('φ 배율 = 1', abs(r1['phi_scale'] - 1.0) < 1e-12)
         chk('플래튼 − 고체 윗면 = 5 − 3.5 = 1.5 (가장 높은 알 z 3 + r 0.5)', abs(r1['plate_gap'] - 1.5) < 1e-12)
         # ② 음성 대조: 상자 바닥 = 벽 ⇒ 두 코드가 같은 값
         a2 = HV._atom_file(tmp, rows, name='atom_b.liggghts', lo=(0.0, 0.0, 0.0), hi=(10.0, 10.0, 20.0))

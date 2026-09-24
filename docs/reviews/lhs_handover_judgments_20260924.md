@@ -127,8 +127,28 @@
   고친다 → 기존 코퍼스와 같은 규약.  ② (고체 윗면) 는 검산 (`exact` 33 건 −1.2…−0.3 µm) 으로만 쓴다.  원본에 없는 케이스만 ② 로 대체 + 라벨.
 - 대기: ibb 원본에 `mesh_<원자 step>.stl` 이 있는지 (사용자 확인 중).
 
+## J12. 같은 step 메시 재반입 뒤 교차검사 (WSL 130 덤프, 09-24) — LHS-11 해소 · 남은 결함은 LHS-10 하나
+
+- 재반입: 코호트 원자 step 과 같은 `mesh_<step>.stl` 을 ibb 원본 (`/home/yonghoon/dem_test/lhs/<case>/post_<case>/`) 에서 숫자 그대로
+  (`--files-from` 목록 · rsync).  원본에는 메시가 끝까지 있었다 (예: `lhs00_034` 672 장).
+- `lhs_phi_crosscheck.py` 재실행: FLOOR_ONLY 130 · OTHER 0 · MISSING 1 · 바닥 틈 0.01 · 잔차 5.5e-14 %p ·
+  **플래튼 − 고체 윗면 = exact 130/130, −1.21 … −0.27 µm (중앙 −0.52)** — 전부 정상 눌림.
+- **웹앱 규약 porosity 중앙 9.89 %** (수확기 30.65 %) · φ 배율 0.7416–0.8246 ⇒ J5 (높은 porosity) 는 전부 LHS-11 이었다.
+- 남은 것 = **LHS-10 (바닥 10 µm) 하나**.  처방: 수확기 H = plate_z − z_floor, z_floor = 벽 0 (웹앱 규약) + 입자가 벽 아래에 없는지
+  (min(z − r) ≥ −허용) 거부 검사 + 교차검사 selftest 로 두 코드 일치 강제 → 130 재수확 + lhsx 64 수확 (메시는 원자 step 과 같은
+  것만, `latest_le` 는 거부) → 인계표 재생성 → J6 (음수 porosity) 건수를 새 값으로 다시 센다.
+
+## J13. ✅ 수확기 수정 (사용자 비준 09-24 "비준이야") — 재현 먼저, 세 곳
+
+- `lhs_descriptor_harvest.volumes_and_phi`: 분모 H = plate_z − `Z_FLOOR` (벽 0, 웹앱 규약) · 입자가 벽 아래 (z − r < −½·r_max) 면 거부 ·
+  산출에 `z_floor_sim` · `solid_bot_sim` 추가.  selftest ⑭ (상자 바닥 −1 인 덤프에서 H = 5 · porosity = 웹앱 식 · 벽 아래 입자 거부) —
+  수정 전 **3 건 빨간불** 확인 뒤 초록.
+- `lhs_harvest_batch.pick_mesh`: `latest_le` 폐지 — 같은 step 메시가 없으면 거부 (`none` → `NO_MESH`).  수정 전 빨간불 확인.
+- `lhs_phi_crosscheck`: 두 코드가 **SAME** 이어야 통과 (수정 전 3 건 빨간불).
+- 다음: WSL 에서 130 재수확 → 교차검사 SAME 130 확인 → 인계표 재생성 → LHS-10 · LHS-11 claimed_fixed → J6 (음수 porosity) 재집계.
+
 ## 인계 판정 (지금)
 
 **보류 유지.**  사유 = J9 (97 건의 플래튼이 이른 시점) · J2 (분모 바닥 10 µm) · J3 (두께 측정값 부재).  J5 는 J9 로 대부분 설명됨.
-다음 = (J11) 97 건 같은 step 메시 재반입 → 수확기 바닥 수정 (재현 테스트 먼저) → 130 재수확 + lhsx 64 수확 → 인계표 재생성.
+다음 = ✅ 97 건 메시 재반입 (J12) → ✅ 수확기 수정 (J13) → 130 재수확 + lhsx 64 수확 → 인계표 재생성.
 순서: J2 수정 → 인계표 재생성 → J3 (a) → 재수확 band 진단 (J3 (b) · J5) → J6 취급 비준 → 인계.

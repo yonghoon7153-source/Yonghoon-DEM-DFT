@@ -27,7 +27,7 @@
   (실측 대응: bimodal→3 97건 · mono_AM_S→2 15건 · mono_AM_P→2 15건).
 
 ⚠ **플래튼(mesh)은 TSV 에 없다** — 유일하게 이 스크립트가 고르는 값이다.  그래서
-  고른 근거를 **매 케이스마다 기록**한다 (`mesh_pick` = exact | latest_le | none).
+  고른 근거를 **매 케이스마다 기록**한다 (`mesh_pick` = exact | none — `latest_le` 는 LHS-11 로 폐지).
   ⛔ 못 찾으면 추측하지 않고 그 케이스를 **건너뛰고 사유를 남긴다**.
 
 사용 (저자 기계)
@@ -132,12 +132,14 @@ def pick_mesh(atom: Path):
             if s == a:
                 return p, 'exact', f'step {s}'
         le = [(s, p) for s, p in cand if s <= a]
+        #  ⛔ LHS-11 (2026-09-24): 옛 판은 여기서 `latest_le` 로 **조용히** 이른 메시를 썼다 — 97/130 건이 평균 150만 step
+        #    이른 (압축 중) 플래튼을 받아 porosity 가 부풀었다 (옮길 때 메시를 문자열 정렬로 골라 99만대만 넘어온 탓).
+        #    같은 step 이 없으면 **거부**한다 — 원본에서 같은 step 메시를 받아 올 것.
         if le:
             s, p = max(le)
-            return p, 'latest_le', f'atom step {a} · mesh step {s} (차 {a - s})'
+            return None, 'none', f'같은 step 메시 없음 — atom step {a} · 아래 최신 mesh step {s} (차 {a - s}) · 거부 (LHS-11)'
         return None, 'none', f'atom step {a} 이하의 mesh 가 없다'
-    s, p = max(cand)
-    return p, 'latest_le', f'atom step 미상 · mesh step {s}'
+    return None, 'none', 'atom step 미상 — 메시 시점을 맞출 수 없어 거부 (LHS-11)'
 
 
 def remap(path_str: str, frm: str, to: str) -> Path:
@@ -311,7 +313,7 @@ def _selftest():
         chk('mesh 가 없으면 `none` — 추측하지 않는다', pick_mesh(atom)[1] == 'none')
         (post / 'mesh_2420000.stl').write_text('x')
         m, pk, why = pick_mesh(atom)
-        chk('★ 같은 step 이 없으면 `latest_le` 로 내려간다', pk == 'latest_le', why)
+        chk('★ LHS-11: 같은 step 이 없으면 **거부** (`none`) — 이른 메시로 내려가지 않는다', pk == 'none' and m is None, why)
         (post / 'mesh_2425000.stl').write_text('x')
         m, pk, why = pick_mesh(atom)
         chk('★★ 같은 step 이 있으면 `exact` 를 고른다', pk == 'exact' and m.name == 'mesh_2425000.stl')
@@ -321,8 +323,7 @@ def _selftest():
             m.name == 'mesh_2425000.stl', m.name)
         atom2 = post / 'atom_2000000.liggghts'
         atom2.write_text('x')
-        chk('★ atom 보다 이른 mesh 만 있으면 `latest_le`', pick_mesh(atom2)[1] == 'none'
-            or pick_mesh(atom2)[1] == 'latest_le')
+        chk('★ atom 보다 이른 mesh 만 있어도 거부 (`none`)', pick_mesh(atom2)[1] == 'none')
 
         #  ── step 파서 ──
         chk('step 파서', step_of('atom_2425000.liggghts') == 2425000)

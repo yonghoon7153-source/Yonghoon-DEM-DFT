@@ -237,13 +237,24 @@ def phase_labels(types, n_types):
     return np.asarray([tmap[int(t)] for t in types], dtype=object), tmap
 
 
+Z_FLOOR = 0.0      # 바닥 벽 — LHS 덱 `wall/gran … zplane 0.0`.  웹앱 `dem_analysis_core.calc_porosity` 의 V_box = L²·plate_z 와 같은 규약
+
+
 def volumes_and_phi(atoms, labels, box_lo, box_hi, plate_z):
-    """계약② — φ 는 **기하만**으로, τ·전도도 성공과 무관하게."""
+    """계약② — φ 는 **기하만**으로, τ·전도도 성공과 무관하게.
+
+    ⛔ LHS-10 (2026-09-24): 옛 판은 분모 높이를 `plate_z − box_lo[2]` (덤프 상자 바닥) 로 쟀다.  덱 상자가 벽보다 10 µm 아래서
+      시작해 (`region … -0.01 1.0`) 입자가 없는 층이 분모에 들어갔다 — φ 가 0.742–0.825 배, porosity 중앙 30.65 % (벽 기준 9.89 %).
+      이제 **벽 (Z_FLOOR)** 에서 잰다.  입자가 벽 아래 (z − r < Z_FLOOR − ½·r_max) 에 있으면 그 가정이 안 맞는 덱이라 거부한다.
+    """
     r = atoms['radius']
     v = (4.0 / 3.0) * np.pi * r ** 3
     lx = float(box_hi[0] - box_lo[0])
     ly = float(box_hi[1] - box_lo[1])
-    h = float(plate_z - box_lo[2])
+    zb = float((atoms['z'] - r).min())
+    if zb < Z_FLOOR - 0.5 * float(r.max()):
+        raise BedRefusal(f'입자가 벽 (z = {Z_FLOOR}) 아래에 있다: min(z − r) = {zb:.6g} — 벽 = 0 가정이 이 덱에 맞지 않는다 (LHS-10)')
+    h = float(plate_z - Z_FLOOR)
     if not (lx > 0 and ly > 0 and h > 0):
         raise BedRefusal(f'전극 부피가 양수가 아니다: lx={lx} ly={ly} H={h}')
     v_box = lx * ly * h
@@ -254,7 +265,7 @@ def volumes_and_phi(atoms, labels, box_lo, box_hi, plate_z):
     eps = 100.0 * (1.0 - float(v.sum()) / v_box)
     return dict(phi_se=phi_se, phi_am=phi_am,
                 porosity_sphere_pct_RECORD_ONLY=eps,
-                V_box_sim=v_box, H_sim=h, lx_sim=lx, ly_sim=ly,
+                V_box_sim=v_box, H_sim=h, lx_sim=lx, ly_sim=ly, z_floor_sim=Z_FLOOR, solid_bot_sim=zb,
                 closure_residual=phi_se + phi_am + eps / 100.0 - 1.0)
 
 
@@ -878,6 +889,21 @@ def selftest():
             'full_metrics' not in src.split('"""')[2])
         chk('⑬ DESC-03: plastic_coverage 를 부르지 않는다',
             'plastic_coverage' not in src.split('"""')[2])
+
+        # ── ⑭ LHS-10 (2026-09-24): 분모 바닥 = 벽 z = 0 (웹앱 `V_box = L²·plate_z`) — 덤프 상자 바닥이 아니다 ──
+        rows14 = [(1, 2.0, 2.0, 1.0, 0.5, 1), (2, 5.0, 5.0, 2.0, 0.5, 2), (3, 8.0, 3.0, 3.0, 0.5, 3)]
+        at14, lo14, hi14, _bc14 = read_atom_dump(
+            _atom_file(tmp, rows14, name='atom_14.liggghts', lo=(0.0, 0.0, -1.0), hi=(10.0, 10.0, 20.0)))
+        v14 = volumes_and_phi(at14, phase_labels(at14['type'], 3)[0], lo14, hi14, 5.0)
+        chk('⑭ LHS-10: 상자 바닥이 −1 이어도 분모 높이 = plate_z − 벽 = 5', abs(v14['H_sim'] - 5.0) < 1e-12)
+        _vs = 3 * (4.0 / 3.0) * np.pi * 0.5 ** 3
+        chk('⑭ porosity = 1 − ΣV / (L²·plate_z) — 웹앱 calc_porosity 와 같은 식',
+            abs(v14['porosity_sphere_pct_RECORD_ONLY'] - 100.0 * (1.0 - _vs / (10.0 * 10.0 * 5.0))) < 1e-9)
+        at14b, lo14b, hi14b, _bc14b = read_atom_dump(_atom_file(
+            tmp, [(1, 2.0, 2.0, -0.9, 0.5, 1)] + rows14[1:], name='atom_14b.liggghts',
+            lo=(0.0, 0.0, -1.0), hi=(10.0, 10.0, 20.0)))
+        neg('⑭ 입자가 벽 아래 (z − r = −1.4 < −½·r_max) 면 거부 — 벽 = 0 가정이 안 맞는 덱',
+            lambda: volumes_and_phi(at14b, phase_labels(at14b['type'], 3)[0], lo14b, hi14b, 5.0))
 
     print()
     if _FAILS:
