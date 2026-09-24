@@ -1,0 +1,35 @@
+{
+ "schema": "closure/v1",
+ "record_kind": "closure",
+ "date": "2026-09-24",
+ "system": "modelc_nd_doped (Nd79 · NdS₅Cl)",
+ "track": "우리 DFT 기준선 → 1저자 = 사용자",
+ "decision": "D-2026-09-24-nd-icohp-close",
+ "card": "db/properties/nd_icohp_pp_swap_card_2026_09_16.json",
+ "result": "db/properties/nd_icohp_frozen4f_result_2026_09_23.json",
+ "질문": "6월 LOBSTER 의 Nd–S ICOHP 는 왜 그렇게 약했나",
+ "답": "**PP (pseudopotential) 때문이다** — 판정 C1.",
+ "확정값": {
+  "Nd79_최근접_S5_평균_ICOHP_eV": {"6월_옛_PP": -0.481, "9월_frozen4f_PAW": -3.779, "변화": "약 7.9 배 강해짐 (Δ −3.30 eV)"},
+  "같은_런_대조군_eV": {"P-S": {"6월": -5.672, "9월": -5.669}, "Li-S": {"6월": -1.647, "9월": -1.658},
+                     "뜻": "PP 를 안 바꾼 결합은 1 % 안으로 그대로다"}
+ },
+ "허용_서술_이대로만": [
+  "Nd PP 를 frozen-4f PAW 로 바꾸자 Nd79 의 Nd–S ICOHP(최근접 S 5 평균)가 −0.48 → −3.78 eV 로 약 8 배 강해졌고, 같은 계산의 P–S · Li–S 는 1 % 안으로 그대로였다 — 6월의 약한 Nd–S 는 PP 탓이다."
+ ],
+ "금지_서술": [
+  "−3.779 eV 를 Nd–S 결합 세기의 정본·절대값으로 인용 — 원인 규명 측정이고 k 2 2 1 이 미수렴이다 (citable: false)",
+  "6월 Nd–S 값(−0.436 · −0.481) 인용 — 영구 비인용 (HZ-nd-icohp-june-nds-pp)",
+  "'k 수렴됨' · 'dense-k 로 확인' 이라고 쓰기"
+ ],
+ "한계_그대로_남긴다": [
+  "k 2 2 1 — k-탐침 총에너지 차 3.2 meV/atom (문턱 1) 로 `D-2026-09-18-nd-icohp-kmesh` 재개 조건 2 가 발화했지만, 1저자가 **재개하지 않고 닫았다** (판정 여유 47 % · 원인 규명 목적 달성 · 그 이상은 과투자)",
+  "기저 546 (P/S/Cl 3d 미사용) · Gaussian smearing · 배치 1 개 · vc-relax 기하"
+ ],
+ "재개_조건_이것들만": [
+  "Nd–S ICOHP 를 **정량으로** 써야 하는 주장이 생기면 — 그때 dense-k 부터 (설계: k 3 3 1 · 탐침 SCF 재사용 · `D-2026-09-24-nd-icohp-densek-k331` 에 남아 있다)",
+  "⛔ 그 밖의 이유로 열지 않는다 ('더 촘촘하면 더 정확하다' 는 재개 사유가 아니다 — 원결정 문구)"
+ ],
+ "보관": "k-탐침 outdir gabia `/data/work/runs/nd_ppswap_2026_09_16/kprobe_k331/tmp_kprobe` (4.4 GB) — 재개하면 SCF(≈ 18 h)를 아낀다. 디스크가 필요하면 지워도 된다.",
+ "by": "1저자 2026-09-24 — 'b로 가자 · pseudo 바뀌니까 icohp 값이 변했고 약 이 정도로 바뀌었다 정도로만 원장에 박아놓고 닫으면' · '그 이상은 지금 nd 건은 과투자'"
+}

@@ -4129,7 +4129,7 @@
    "title": "Nd frozen-4f dense-k LOBSTER 재개 — k 3 3 1 (k-탐침이 재개 조건 2 를 발화 · 탐침 SCF 재사용)",
    "statement": "`D-2026-09-18-nd-icohp-kmesh` 재개 조건 2 가 발화했다 — k-탐침 SCF(k 3 3 1, E = −6399.21429237 Ry)가 k 2 2 1(−6399.18597654 Ry) 대비 ΔE = −0.02831583 Ry = **−3.210 meV/atom** (문턱 1 meV/atom). ⇒ dense-k LOBSTER 를 **k = 3 3 1 0 0 0** 으로 재개한다. SCF 는 다시 돌리지 않는다 — 탐침 outdir (`/data/work/runs/nd_ppswap_2026_09_16/kprobe_k331/tmp_kprobe`, 4.4 GB)의 전하밀도에서 **사본으로** nscf(nosym · k 점 9) → LOBSTER. 판정량·문턱(카드 §2b: Nd79 최근접 S 5 평균 · C1 < −2.0 / C2 > −1.0 eV)은 그대로다. nbnd 는 실제 기저 수(546) 이상으로 입력 생성 때 **선언**한다 (종전 920 은 과다). 기계는 새로 정하지 않는다 — 1저자 상시 규칙 '큰 계산은 GPU'(2026-09-23)를 따라 V100 이 SE|SE 4층을 끝낸 뒤, 메모리 추정 프로브(CPU 수 초)로 32 GB 적합을 먼저 확인하고, 안 들면 1저자에게 다시 올린다.",
    "rationale": "재개는 원결정의 사전 규칙이라 선택이 아니다 (1저자가 고른 것은 k 값). k 3 3 1 은 탐침이 이미 SCF 를 가진 격자라 SCF(≈18 h CPU)를 아낀다. 더 조밀한 k(4 4 1)는 SCF·nscf 를 새로 요구하고, 원결정 ⛔ — '더 촘촘하면 더 정확하다' 는 재개 사유가 아니다.",
-   "decision_state": "active",
+   "decision_state": "superseded",
    "record_kind": "prospective",
    "results_seen": false,
    "results_seen_note": "k 2 2 1 ICOHP(C1)와 탐침 총에너지는 봤다 — dense-k ICOHP 는 안 봤다.",
@@ -4150,12 +4150,18 @@
    ],
    "enforcement": "① 던지기 전 grep — nscf 입력 K_POINTS 가 `3 3 1 0 0 0` · outdir 가 tmp_kprobe **사본**(원본 보존 — nscf 는 xml·wfc 를 덮어쓴다). ② nbnd 를 입력 요약에 찍는다 (≥ 546). ③ 결과 기록에 'k 3 3 1 수렴 미확인' 과 k 2 2 1 판정을 나란히 적는다. ④ GPU 규칙 — CPU 로 돌리려면 1저자 예외를 새로 받는다.",
    "proposed_by": "claude-session-2026-09-24",
-   "status": "active",
+   "status": "superseded",
    "status_history": [
     {
      "at": "2026-09-24",
      "state": "active",
      "note": "1저자 결정 2026-09-24 — 'nd는 331로 하자' (k 값). 기계·시점은 새 결정이 아니라 1저자 상시 규칙(큰 계산은 GPU)을 따른 것이다 — 사용자가 다르게 정하면 개정. 트랙 = 우리 DFT 기준선 → 1저자 = 사용자."
+    },
+    {
+     "at": "2026-09-24",
+     "state": "superseded",
+     "by": "1저자",
+     "note": "같은 날 닫힘으로 대체 — 'b로 가자 … 그 이상은 지금 nd 건은 과투자'. dense-k 를 돌리지 않는다. 이 결정의 설계(k 3 3 1 · 탐침 SCF 재사용)는 닫힘 기록의 재개 조건이 가리키는 곳으로 남는다."
     }
    ],
    "ratification": {
@@ -4164,7 +4170,74 @@
     "actor_id": "yonghoon7153@gmail.com",
     "timestamp": "2026-09-24T01:48:00Z",
     "commit": "c238f3cdf10c261ed8090f90a884beaf5b990480",
-    "decision_digest": "sha256:9cc381e8700389a6c181258d664dbf0e10a4a8f6699eb253cd9b64597c0bdc9b",
+    "decision_digest": "sha256:62dcf2b5d0f8c3505dd4892adbe81418f80c7dacee5479b25aa5b7c6ef9e4ced",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "_원본_비준": {
+     "state": "ratified",
+     "role": "scientific_owner",
+     "actor_id": "yonghoon7153@gmail.com",
+     "timestamp": "2026-09-24T01:48:00Z",
+     "commit": "c238f3cdf10c261ed8090f90a884beaf5b990480",
+     "decision_digest": "sha256:9cc381e8700389a6c181258d664dbf0e10a4a8f6699eb253cd9b64597c0bdc9b",
+     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+    },
+    "_재봉인_사유": "2026-09-24 닫힘 결정으로 supersede 되어 **본문이 바뀌어** decision_digest 를 다시 계산했다. 사람이 승인한 내용(k 3 3 1)은 그대로이고, 바뀐 것은 decision_state·status·superseded_by·status_history 뿐이다. 원본 비준 기록은 `_원본_비준` 에 있다."
+   },
+   "superseded_by": "D-2026-09-24-nd-icohp-close"
+  },
+  {
+   "id": "D-2026-09-24-nd-icohp-close",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": "modelc_nd_doped.lobster_icohp.frozen4f.closure_2026_09_24",
+   "slot": "nd_icohp_pp_swap_closure",
+   "applies_to": {
+    "systems": [
+     "modelc_nd_doped"
+    ],
+    "methods": [
+     "lobster_icohp"
+    ]
+   },
+   "title": "Nd ICOHP PP 교체 — 닫음: 원인은 PP · Nd–S 약 8 배 (−0.48 → −3.78 eV) · dense-k 재개 안 함",
+   "statement": "질문(6월 Nd–S ICOHP 가 왜 약했나)에 답이 났다 — **PP 때문이다 (C1)**. frozen-4f PAW 로 바꾸자 Nd79 최근접 S 5 평균이 −0.481 → −3.779 eV (약 7.9 배) 로 바뀌었고 같은 런의 P–S · Li–S 는 1 % 안으로 그대로였다. 이것만 원장에 남기고 닫는다. k-탐침(3.2 meV/atom > 1)이 `D-2026-09-18-nd-icohp-kmesh` 재개 조건 2 를 발화시켰지만 **재개하지 않는다** — 1저자의 명시 결정이다. k 2 2 1 미수렴은 한계로 남는다.",
+   "rationale": "판정 여유 47 % (문턱 −2.0 eV) · 대조군 불변 — dense-k 가 C1 을 뒤집을 크기가 아니다. 얻는 것은 한계 한 줄 제거뿐이라 '그 이상은 과투자' (1저자).",
+   "decision_state": "active",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/nd_icohp_pp_swap_closed_2026_09_24.json",
+   "record": "db/properties/nd_icohp_frozen4f_result_2026_09_23.json",
+   "amends": [
+    "D-2026-09-18-nd-icohp-kmesh"
+   ],
+   "supersedes": [
+    "D-2026-09-24-nd-icohp-densek-k331"
+   ],
+   "evidence": [
+    "db/properties/nd_icohp_frozen4f_result_2026_09_23.json",
+    "db/properties/nd_icohp_pp_swap_closed_2026_09_24.json"
+   ],
+   "reopen_criteria": [
+    "Nd–S ICOHP 를 정량으로 써야 하는 주장이 생기면 — 그때 dense-k 부터 (설계는 D-2026-09-24-nd-icohp-densek-k331).",
+    "⛔ 그 밖의 이유로 열지 않는다."
+   ],
+   "enforcement": "① 닫힘 기록의 허용 서술 한 문장 밖으로 쓰지 않는다 — −3.779 를 정본·절대값으로 쓰지 않는다 ② 6월 값은 영구 비인용 (HZ-nd-icohp-june-nds-pp) ③ 'k 수렴' 이라고 쓰지 않는다.",
+   "proposed_by": "claude-session-2026-09-24",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-24",
+     "state": "active",
+     "note": "1저자 결정 — 선택지 (b) 'b로 가자 · pseudo 바뀌니까 icohp 값이 변했고 약 이 정도로 바뀌었다 정도로만 원장에 박아놓고 닫으면' · '그 이상은 지금 nd 건은 과투자'. 트랙 = 우리 DFT 기준선 → 1저자 = 사용자."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-24T02:30:00Z",
+    "commit": "98d9ee9c101b0865cd5a02f5c94d65a9ab67ca42",
+    "decision_digest": "sha256:6d5fd16fc06b61a8eb7ebeee72b2834dba53f567d3b175c4d1e9779094f7909d",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
   }

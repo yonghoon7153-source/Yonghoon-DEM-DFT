@@ -94,8 +94,10 @@
     `D-2026-09-18-nd-icohp-kmesh` **재개 조건 2 발화 · dense-k LOBSTER 재개** (규칙이라 선택 아님). C1 은 유지 + 한계 1줄 (여유 1.78 eV 는 뒤집힐 크기 아님 — 예상).
     ⏳ **1저자 결정 대기**: k 값 (권고 k 3 3 1 — 탐침 outdir 이 그 SCF 전하밀도라 SCF 생략 · ⛔ 지우지 말 것) · 기계 (GPU 규칙 09-23) · nbnd ≥ 546 (920 과다).
     기록 `nd_icohp_frozen4f_result_2026_09_23.json` `enforcement_④_k_탐침_2026_09_24` · `!` 원문 **E_k331 −6399.21429237 Ry** (차 −0.02831583 Ry).
-    ✅ **1저자 결정 k 3 3 1** ('nd는 331로 하자') → `D-2026-09-24-nd-icohp-densek-k331` (active · 탐침 `tmp_kprobe` 4.4 GB **사본**에서 nscf · nbnd ≥ 546 선언 ·
-    기계는 상시 GPU 규칙 → V100 SE|SE 뒤 · 메모리 프로브 먼저). ⏭ 입력 생성 → 프로브.
+    ✅ **닫음 (1저자 · 선택지 b · '그 이상은 지금 nd 건은 과투자')** → `D-2026-09-24-nd-icohp-close` · 기록 `nd_icohp_pp_swap_closed_2026_09_24.json`.
+    남긴 것 한 줄: *PP 를 frozen-4f PAW 로 바꾸자 Nd–S −0.48 → −3.78 eV (약 8 배) · 대조군 P–S·Li–S 1 % 안 그대로 ⇒ 6월 약한 Nd–S 는 PP 탓*.
+    dense-k 는 **안 돌린다** (k 3 3 1 결정은 같은 날 superseded) · k 2 2 1 미수렴은 한계로 · 재개 = Nd–S 를 정량으로 써야 할 때만.
+    탐침 outdir `tmp_kprobe` 4.4 GB 는 재개하면 SCF 를 아낀다 — 디스크 필요하면 지워도 됨.
   (옛 기록) 🟢 **k-탐침 도는 중 (enforcement ④ · 1저자 "이것도 진행하고" · k 3 3 1)** — gabia CPU `/data/work/runs/nd_ppswap_2026_09_16/kprobe_k331`
   · 16:42 KST 발사 · 8랭크 npool 2 · k 5개 · 총 RAM 34.2 GB (원 SCF 32.5) · pw.x PID 3364447–3364453·3364457 · 원본과 다른 줄 3줄(prefix·outdir·K_POINTS).
   · watch `kprobe_k331/kprobe_watch.sh` (PID 고정 · CPU 는 직전 표본 대비). 판정: 원 SCF **−6399.18597654 Ry** 대비 |ΔE| ≤ **0.0088 Ry (1 meV/atom · nat 120)**

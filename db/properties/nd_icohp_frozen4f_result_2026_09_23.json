@@ -150,8 +150,13 @@
   "탐침_outdir": "`kprobe_k331/tmp_kprobe` 4.4 GB — nscf 는 **사본**에서 (원본은 증거로 보존)"
  },
  "남은_것_갱신_2026_09_24": [
-  "✅ enforcement ④ 실행 → 재개 조건 2 발화 → **1저자 결정 k 3 3 1** (`D-2026-09-24-nd-icohp-densek-k331`). ⏳ 입력 생성 (nbnd ≥ 546 선언) → 메모리 프로브 → V100 (SE|SE 뒤).",
+  "✅ enforcement ④ 실행 → 재개 조건 2 발화 → **1저자가 재개하지 않고 닫음** (D-2026-09-24-nd-icohp-close · k 2 2 1 미수렴은 한계로).",
   "✅ `!` 줄 원문 회수 — E_k331 −6399.21429237 Ry.",
   "원자료 회수 (종전 항목 그대로): ICOHPLIST.lobster · ICOBILIST.lobster · lobsterout → db/raw/nd_lobster_frozen4f_2026_09_23/"
- ]
+ ],
+ "닫힘_2026_09_24": {
+  "결정": "D-2026-09-24-nd-icohp-close",
+  "기록": "db/properties/nd_icohp_pp_swap_closed_2026_09_24.json",
+  "dense_k": "돌리지 않는다 — 1저자 (b) '그 이상은 과투자'. k 3 3 1 결정(D-2026-09-24-nd-icohp-densek-k331)은 superseded · 재개 조건이 그 설계를 가리킨다."
+ }
 }
