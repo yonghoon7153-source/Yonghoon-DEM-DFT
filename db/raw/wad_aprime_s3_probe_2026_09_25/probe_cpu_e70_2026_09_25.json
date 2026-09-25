@@ -1,0 +1,61 @@
+{
+ "schema": "resource_probe/v1",
+ "date": "2026-09-25",
+ "stage": "S3 전 예외 ③ — CPU 추정 프로브 (gabia · qe-7.4.1-cpu · 4 랭크 · 70/700 Ry · 분리 셀 · scf · 추정 줄 뒤 PID kill · 계산 결과 없음)",
+ "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
+ "inputs": "db/inputs/wad_aprime_s3_2026_09_25/qe/probe_*",
+ "results": {
+  "probe_V4_s_outer_A_far_e70": {
+   "nat": 122,
+   "nbnd": 320,
+   "nk": 5,
+   "smearing": "gaussian 0.005",
+   "ram_per_proc_GB": 13.09,
+   "ram_total_GB": 52.37
+  },
+  "probe_V5_s_outer_A_far_e70": {
+   "nat": 200,
+   "nbnd": 1274,
+   "nk": 4,
+   "smearing": "mv 0.010",
+   "ram_per_proc_GB": 27.25,
+   "ram_total_GB": 108.99
+  },
+  "probe_V5_s_outer_B_far_e70": {
+   "nat": 200,
+   "nbnd": 1274,
+   "nk": 4,
+   "smearing": "mv 0.010",
+   "ram_per_proc_GB": 27.21,
+   "ram_total_GB": 108.83
+  },
+  "probe_V5_li_outer_A_far_e70": {
+   "nat": 176,
+   "nbnd": 1217,
+   "nk": 4,
+   "smearing": "mv 0.010",
+   "ram_per_proc_GB": 22.37,
+   "ram_total_GB": 89.47
+  },
+  "probe_V5_li_outer_B_far_e70": {
+   "nat": 176,
+   "nbnd": 1217,
+   "nk": 4,
+   "smearing": "mv 0.010",
+   "ram_per_proc_GB": 22.33,
+   "ram_total_GB": 89.33
+  }
+ },
+ "한도": {
+  "gabia": "48 GB (KILL 44,000 MiB)",
+  "V100": "32 GB (KILL 31,000 MiB)"
+ },
+ "⚠_추정의_뜻": "CPU `Estimated total dynamical RAM` 은 GPU VRAM 피크가 아니다 (BW) — SE|SE 4층 선례: CPU 추정 ~22–27 GB vs V100 GPU 피크 32 GB (≈1.2–1.45×). 통과 = GPU 시험 **허가**일 뿐.",
+ "판정_카드_규칙": {
+  "V5_전부": "**RESOURCE_BLOCKED (실측 근거)** — 70 Ry 에서 89–109 GB · 52 Ry 로 환산해도 ((52/70)^1.5 ≈ 0.64) 57–70 GB > 48 GB · GPU 피크는 그보다 크다 ⇒ 어느 기계에도 안 들어간다. 카드 갈래0: **G5 = NOT_TESTED** · 전체 계면 UMA 예측 = 내부 전용 · DEM 전달 없음 (넘기려면 별도 결정 + 라벨).",
+  "V4_s_outer_A_G4_e70": "70 Ry 에서 52.4 GB > 48 ⇒ **G4 e70 변형은 gabia 에서 RESOURCE_BLOCKED** → V4 군은 'ecut 미검증' 으로 남긴다 (k·smearing 변형은 별도 프로브)",
+  "V4_s_outer_A_기본_52Ry": "미프로브 — 다음 블록 (bound·far·G3 셀·G4 k1) · CPU 추정 ~34 GB 예상 → GPU 시험(electron_maxstep 2 · b2o3 s4 끝난 뒤 · UMA 공존 금지) 으로 피크 실측",
+  "V2": "프로브 불요 (≈3 GB · V100)"
+ },
+ "S4_실행_집합_잠정": "V2 relax 4 (+2단계) · V4_s_outer_A bound/far · G3 3 · G4 k1 2 · s05 2 (52 Ry 프로브·GPU 시험 통과 시) — V5 ×4 + ⑤ + V5 G3/G4 + V4 G4 e70 은 **제외 (RESOURCE_BLOCKED)**"
+}

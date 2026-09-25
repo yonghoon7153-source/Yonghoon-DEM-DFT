@@ -521,7 +521,7 @@
    "state": "결정"
   },
   {
-   "text": "A′ — S1 봉인 ✅ · **S2 끝** (UMA+D3 이완 12 · 후보 9 · INCOMPLETE 3 · `wad_aprime_s2_result_2026_09_25.json`) · **S3 패키지** `db/inputs/wad_aprime_s3_2026_09_25` (manifest sha 2a0e9a9b5f5fef4a… · QE 잡 38: V2 relax 4 · scf 11 · probe 5 · G3 6 · G4 12) → ⏳ **1저자 S3 비준** → S4 (V2 relax V100 · V4/V5 gabia 프로브 뒤). 예외 ②③ (D3 결박 검사 V100 · CPU 프로브 gabia) 는 비준 전 가능.",
+   "text": "A′ — S1 봉인 ✅ · **S2 끝** (UMA+D3 이완 12 · 후보 9 · INCOMPLETE 3 · `wad_aprime_s2_result_2026_09_25.json`) · **S3 패키지** `db/inputs/wad_aprime_s3_2026_09_25` (manifest sha 2a0e9a9b5f5fef4a… · QE 잡 38: V2 relax 4 · scf 11 · probe 5 · G3 6 · G4 12) → ⏳ **1저자 S3 비준** → S4 (V2 relax V100 · V4/V5 gabia 프로브 뒤). 예외 ②③ (D3 결박 검사 V100 · CPU 프로브 gabia) 는 비준 전 가능. 🔎 프로브: **V5 RESOURCE_BLOCKED (실측 89–109 GB @70 Ry)** → G5 NOT_TESTED · V4 G4 e70 불가 · V4 기본 52 Ry 프로브 다음.",
    "state": "S3 비준 대기"
   },
   {
@@ -693,6 +693,11 @@
    "date": "2026-09-25",
    "stage": "dft",
    "text": "**A′ S2 완료 → S3 패키지** — gabia UMA+D3 이완 12 모델 (default · simple-dftd3 1.6.0 설치 · MixedPBCError → 3축 pbc 수정 후 재실행) 전부 수렴. 카드 G2 후검: 후보 9 (V2×4 9스텝 · V4_s_outer_A · V5×4 변위 1.7–2.5 Å 깃발 0) · INCOMPLETE 3 (V3 두 종결 Ag₄ 결합 +15.7/+17.1 % 개방 · V4_li_outer Li 상승 1.46 Å < 1.5) — 세고 제외. gabia 가 산출물을 직접 커밋(30e1e90eb · 토큰) · repo 에서 sha 12/12 대조. `build_aprime_s3.py` (13/13 · 돌연변이 1): 끝점 재구성 · 표본 ⑤ · G3 (i)(ii) 셀 · G4 3변형 · V2 QE relax if_pos 제약 + 2단계 규칙 · 프로브 5 · QE 입력 38 · D3 결박 검사 입력 (외부 −0.5037974 Ry). ⏳ S3 비준 → S4."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**S3 전 예외 ③ CPU 프로브 (gabia · 70 Ry · 분리 셀)**: V5 ×4 = **89–109 GB** (밴드 1217–1274 · Ag 19 e) → 52 Ry 환산 57–70 GB > 48 ⇒ **V5 RESOURCE_BLOCKED (실측 근거)** → 카드 갈래0: **G5 NOT_TESTED** · UMA 전체 계면 예측 내부 전용. V4_s_outer_A far 70 Ry = 52.4 GB > 48 ⇒ G4 e70 변형 gabia 불가 ('ecut 미검증') · 기본 52 Ry 는 다음 프로브 (~34 GB 예상 · GPU 피크는 1.2–1.45×). V2 는 V100 (3 GB). 기록 `db/raw/wad_aprime_s3_probe_2026_09_25/`."
   }
  ],
  "related_decisions": [

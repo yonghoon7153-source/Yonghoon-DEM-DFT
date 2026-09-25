@@ -256,6 +256,7 @@
     📨 **DEM 회신 4 발송본** `kb/projects/wad_dem_reply_4_send_2026_09_25.md` (09-25 · 1저자 발송).
     ✅ **S2 끝 (09-25 22:40 gabia)** — UMA+D3 이완 12/12 수렴 (default · simple-dftd3 1.6.0 · 첫 발사는 MixedPBCError 로 전부 실패 → 3축 pbc 수정 `e472bef31` 재발사). 후검: **후보 9** (V2×4 · V4_s_outer_A · V5×4) · **INCOMPLETE 3** (V3×2 Ag₄ 개방 +16–17 % · V4_li_outer Li 1.46 Å). gabia 가 산출물 커밋 `30e1e90eb`.
     📦 **S3 패키지** `db/inputs/wad_aprime_s3_2026_09_25` (manifest sha 2a0e9a9b5f5fef4a… · 잡 38) + D3 결박 검사 입력 `wad_aprime_d3check_2026_09_25` (외부 −0.5037974 Ry). ⏭ **1저자 S3 비준** → S4 · 비준 전 가능: gabia CPU 프로브 5 (예외 ③) · V100 D3 결박 검사 (예외 ②).
+    🔎 **CPU 프로브 (09-25 밤 · gabia · 70 Ry · 분리 셀)** — V5 ×4 **89–109 GB** → **RESOURCE_BLOCKED (실측)** → G5 **NOT_TESTED** · UMA 예측 내부 전용 (갈래0). V4_s_outer_A 70 Ry 52.4 GB → G4 e70 불가 · 기본 52 Ry 프로브 다음 → GPU 시험은 b2o3 s4 뒤. `db/raw/wad_aprime_s3_probe_2026_09_25/`.
     📨 **DEM 4차 회신 수령** (라벨 수용 · 한 기하 성립 (a)(b) · 시나리오 i–iv 초안) → **회신 5 초안** (§회신 5): (i) 기준선은 V2 만 · SE 계면 V5 RESOURCE_BLOCKED 예상 → 미리 정정 · (iv) V2 가능 · (ii)(iii) 내부 전용 기본. 1저자 발송 대기.
     🟢 **Codex CB 조건부 GO (09-25 밤)** — 코드 차단 해제 · 조건 4 (UMA 결박 · 선행 값 · 빌더+registry 구현·시험 · registry 전역 d_min 동률/Σ∖{A} 차단) → 전부 이행: **`tools/wad/build_aprime_interfaces.py`** (V2·V3·V4·V5 · `registry_select` · `make_endpoints` · 20/20 · 돌연변이 4) ·
     **카드 v5 = S1 봉인 후보** `wad_aprime_pilot_prereg_v5_2026_09_25.json` (UMA·PP·D3·코드 sha 결박 · 선행 값 · registry 명세 · GPU 프로브 문구). ⏭ **1저자 비준** (카드 + 추론 모드 default) → content_digest 봉인 → **S2** (기하 생성 · 마스크/registry 기록 · UMA 이완 · interface_check · 프로브).
