@@ -1,0 +1,80 @@
+{
+  "prior_g71_zip_byte_identical": {
+    "bytes": 271500,
+    "sha256": "e65ab85ffc764f30a78ad12805651ba0392a6ce4a5b5bfd85c565ae61a620d8e"
+  },
+  "prior_manifest_verified_payloads": 37,
+  "registry_367_current_equals_g71_bytes": true,
+  "grid_fit_v5_exact_ledger_values": [],
+  "interpretation": "No prospective grid_fit_v5 entry observed; not authorizing plan creation",
+  "new_test_definitions_static_count": 14,
+  "new_test_definitions": [
+    {
+      "name": "test_g71_e3r_00_a_production_contract_receipt_is_consumed",
+      "line": 52
+    },
+    {
+      "name": "test_g71_e3r_04_a_receipt_without_the_sealed_summary_pair_is_refused",
+      "line": 63
+    },
+    {
+      "name": "test_g71_e3r_05_a_disagreeing_semantic_pair_is_refused_even_if_it_claims_agreement",
+      "line": 72
+    },
+    {
+      "name": "test_g71_e3r_05b_duplicate_roles_are_not_a_pair",
+      "line": 80
+    },
+    {
+      "name": "test_g71_e3r_06_rescored_source_fits_must_equal_the_bundle_fits",
+      "line": 89
+    },
+    {
+      "name": "test_g71_e3r_09_a_rescored_output_without_source_fits_is_refused",
+      "line": 96
+    },
+    {
+      "name": "test_g71_e3r_07_a_receipt_restored_into_another_run_dir_is_refused",
+      "line": 106
+    },
+    {
+      "name": "test_g71_e3r_07b_the_ledger_run_location_must_match_the_receipt",
+      "line": 113
+    },
+    {
+      "name": "test_g71_e3r_07c_a_bundle_without_a_restore_map_cannot_bind_the_run",
+      "line": 123
+    },
+    {
+      "name": "test_g71_e3r_11_the_sealed_summary_in_the_receipt_must_be_the_bundle_member",
+      "line": 139
+    },
+    {
+      "name": "test_g71_e3r_08_non_hex_semantic_digests_are_refused",
+      "line": 147
+    },
+    {
+      "name": "test_g71_e3r_10_null_identity_values_are_refused",
+      "line": 153
+    },
+    {
+      "name": "test_g71_e3r_12_the_real_receipt_satisfies_the_production_contract_checks",
+      "line": 161
+    },
+    {
+      "name": "test_g71_e6_the_isolated_tree_has_the_same_source_digest_as_the_checkout",
+      "line": 174
+    }
+  ],
+  "actual_existing_full_bundle_ledger_observations": [
+    {
+      "leg_id": "paired_fixed5_v4",
+      "out_present": false,
+      "out": null,
+      "receipt": "docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml"
+    }
+  ],
+  "tests_run": 0,
+  "restores": 0,
+  "class_changes": 0
+}

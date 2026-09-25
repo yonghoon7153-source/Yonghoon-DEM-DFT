@@ -1,0 +1,22 @@
+{
+  "head": "c4b77ccf71d736dec9162cd5a5377f60f66c0782",
+  "code_target": "82854571d0240951c929d4a9b90260e53ca38e88",
+  "source_digest_independent": "518d4f63076b77e3",
+  "scope_files": 57,
+  "status_before": "",
+  "tracked_DD_files": 2500,
+  "request": {
+    "bytes": 9561,
+    "sha256": "1db93f99f95a2b5ca61a811c44909000047151d338aefa0cbc1a3909b4697d05"
+  },
+  "request_blob_equals_checkout": true,
+  "code_to_head_scope_diff_bytes": 0,
+  "test_report_head": "b921333322f17a9ac5d92153865da441dc0c9bd7",
+  "test_report_to_head_names": [
+    "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+    "degradation-degeneracy/docs/22p_gap/GATE72_REQUEST.md",
+    "degradation-degeneracy/docs/GATE70_WORKING_STATE.md"
+  ],
+  "project_module_imports": 0,
+  "main_runs_restore_class_changes": 0
+}

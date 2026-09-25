@@ -1,0 +1,230 @@
+{
+  "scope": "Exact selected AST readers/helpers; source_digest stubbed to independent byte measurement. Attach body has explicit inert collaborators and intercepted write sink. Not full production attach/pytest/restore/class execution.",
+  "source_sha256": "8cfa50404335bde7d13739adb9ca546b9eb0b73e54224d905d407e0406f6e89c",
+  "selected_definitions": [
+    {
+      "name": "PreserveError",
+      "line": 125,
+      "end_line": 131
+    },
+    {
+      "name": "_is_hex64",
+      "line": 153,
+      "end_line": 155
+    },
+    {
+      "name": "_nonempty_str",
+      "line": 3042,
+      "end_line": 3043
+    },
+    {
+      "name": "_repo_relative_or_refuse",
+      "line": 7410,
+      "end_line": 7436
+    },
+    {
+      "name": "_receipt_core_sha256",
+      "line": 7671,
+      "end_line": 7676
+    },
+    {
+      "name": "read_verification_receipt",
+      "line": 7679,
+      "end_line": 7768
+    },
+    {
+      "name": "_receipt_output_pair",
+      "line": 7771,
+      "end_line": 7816
+    },
+    {
+      "name": "_assert_receipt_bound_to_bundle",
+      "line": 7819,
+      "end_line": 7852
+    },
+    {
+      "name": "attach_bundle_evidence",
+      "line": 7855,
+      "end_line": 7964
+    }
+  ],
+  "reader_and_bundle_cases": [
+    {
+      "id": "R00_real_receipt_control",
+      "sha256": "e46c052f627a175d6b3b5a2749a0d480fc620156bb3523ac55c0257a1062e64f",
+      "reader": "ACCEPTED",
+      "bound_run": "results/paired_fixed5_v4",
+      "bundle_binding": "ACCEPTED"
+    },
+    {
+      "id": "R01_wrong_leg_control",
+      "sha256": "f459f7d49f47662f61ee9abbdc75ac45c1dc44e14cd4ca7738cef14aaff4c803",
+      "reader": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 의 검증 영수증(R01_wrong_leg_control.yaml)이 typed schema 밖이다: 다른 다리의 영수증이다 ('different_leg') — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+    },
+    {
+      "id": "R03_validator_fail_control",
+      "sha256": "fd94efebb94eb08438c55db56d4e9fea01b4b2cea8c09df6bec443e220db5e29",
+      "reader": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 의 검증 영수증(R03_validator_fail_control.yaml)이 typed schema 밖이다: 검증이 통과를 말하지 않는다 (ok=False, fail=[]) — 실패·부분 상태는 `full_bundle` 이 아니다 — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+    },
+    {
+      "id": "R04_missing_sealed_summary",
+      "sha256": "b95ca189c481c73a4fbeb3817e1e1624a2c263895bb19860d1a8e92187ef71a8",
+      "reader": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 의 검증 영수증(R04_missing_sealed_summary.yaml)이 typed schema 밖이다: [plan] 비교 상대가 없다 — 산출 ['sealed_summary'] 이 없으면 '일치' 가 아니라 비교 불가다 (R04) — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+    },
+    {
+      "id": "R05_disagreeing_pair",
+      "sha256": "5d211d4b804a03e58122fb95c5fa73dba1add11b2b6f6c28765e783078ea2466",
+      "reader": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 의 검증 영수증(R05_disagreeing_pair.yaml)이 typed schema 밖이다: [plan] 같은 schema·canonicalizer 인데 semantic digest 가 갈렸다: [('degeneracy-summary/v5', 'score-semantic/v3')] — `outputs_agree` 주장과 무관하게 불일치다 (R05) — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+    },
+    {
+      "id": "R05b_duplicate_role",
+      "sha256": "9133baa75ef27104a6023087e2cd4bfbe3277d485b159a234d6806d1a182148c",
+      "reader": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 의 검증 영수증(R05b_duplicate_role.yaml)이 typed schema 밖이다: [plan] 산출 역할 'rescored_summary' 이 둘이다 — 역할마다 하나 (짝은 sealed_summary 다) — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+    },
+    {
+      "id": "R06_wrong_source_fits",
+      "sha256": "833590209f807c9b9ffec7c2bb531aaf4069eee7b97c21d389d6871fbb7894d5",
+      "reader": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 의 검증 영수증(R06_wrong_source_fits.yaml)이 typed schema 밖이다: rescored_summary.source_file_sha256 ≠ bundle.fits_sha256 — 재채점이 읽은 fits 가 이 묶음의 fits 가 아니므로 그 재채점은 이 묶음의 검증이 아니다 (R06) — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+    },
+    {
+      "id": "R07_wrong_restore_run",
+      "sha256": "0fac2ecb29470daa0079c4cf5b49cb57a2b33a7ee709de07b7e3c0d7ed10c959",
+      "reader": "ACCEPTED",
+      "bundle_binding": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 영수증의 복원 자리 restore.run_dir_relative='results/ANOTHER_RUN' 가 묶음의 restore_map.run_dir='results/paired_fixed5_v4' 와 다르다 — 다른 실행의 영수증이다 (R07)"
+    },
+    {
+      "id": "R08_nonhex_semantic",
+      "sha256": "bf5a438a4a885115719e35edeaea6f754b4a7b78766273e79519de34bad8ac93",
+      "reader": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 의 검증 영수증(R08_nonhex_semantic.yaml)이 typed schema 밖이다: [plan] 산출 'rescored_summary'.semantic_sha256 가 hex64 가 아니다 (R08) — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+    },
+    {
+      "id": "R09_missing_source_fits",
+      "sha256": "7b0d2f7e02f8b942b2e3ef8c7ccf8e5b42ef6ebece7e5f97df3737b3f557f20c",
+      "reader": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 의 검증 영수증(R09_missing_source_fits.yaml)이 typed schema 밖이다: [plan] 산출 'rescored_summary' 의 키 집합이 닫혀 있지 않다: 남음 [] · 모자람 ['source_file_sha256'] — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+    },
+    {
+      "id": "R10_identity_null",
+      "sha256": "430788ae2651bce818a0c495493a2869871170ff476e17b150515bbd83836f87",
+      "reader": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 의 검증 영수증(R10_identity_null.yaml)이 typed schema 밖이다: identity.make_receipt_sha256=None 는 hex16 이 아니다 (R10) — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+    },
+    {
+      "id": "R11_wrong_sealed_file",
+      "sha256": "54b7d9573d6d1640fb6bacc207b52bb922b7ac20098e1a1036bf9e46116b996a",
+      "reader": "ACCEPTED",
+      "bundle_binding": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 영수증의 sealed_summary.file_sha256 0000000000000000 ≠ 묶음 degeneracy_summary.yaml 020945db71731bf8 — 이 묶음의 봉인 summary 를 대조한 영수증이 아니다"
+    },
+    {
+      "id": "R12_wrong_canonicalizer",
+      "sha256": "4c993849600d635aa7ef9919c65c11a7cb33c42fde0c3c35807e774f05ea339d",
+      "reader": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 의 검증 영수증(R12_wrong_canonicalizer.yaml)이 typed schema 밖이다: [plan] 같은 schema·canonicalizer 의 짝이 없다: [('degeneracy-summary/v5', 'score-semantic/v3'), ('degeneracy-summary/v5', 'different')] — 비교 불가 (R04) — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+    },
+    {
+      "id": "R13_missing_restore_run",
+      "sha256": "9bb78618c41ae917c7417672e598d4e8dab926e24ffd8d58d3216241c9464f21",
+      "reader": "ACCEPTED",
+      "bundle_binding": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 영수증의 복원 자리 restore.run_dir_relative='.' 가 묶음의 restore_map.run_dir='results/paired_fixed5_v4' 와 다르다 — 다른 실행의 영수증이다 (R07)"
+    }
+  ],
+  "actual_bundle_index_members": 25,
+  "actual_bundle_set_size_sha_agree": true,
+  "attach_control_flow_cases": [
+    {
+      "id": "A00_pending_matching_out",
+      "original_fixture_sha256": "496237ec7eb15f96b0161d769f83e0e478530473f3cd42b0f9cc7ad34213845d",
+      "out_mode": "match",
+      "status": "preservation_pending",
+      "outcome": "REACHED_WRITE_SINK_NO_WRITE",
+      "proposed_preservation_status": "full_bundle",
+      "proposed_validation_status": "current_validated",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A01_pending_wrong_out",
+      "original_fixture_sha256": "5b65c8f78ef828be8193560097ae85b176fee3ffff808043b88a257e49fc9f4a",
+      "out_mode": "wrong",
+      "status": "preservation_pending",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 evidence.out='results/OTHER_RUN' 가 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A02_pending_missing_out",
+      "original_fixture_sha256": "b82c35a02311665857c7bf92c565a18e7443452c9ed37a9f9ad39cef40012f36",
+      "out_mode": "missing",
+      "status": "preservation_pending",
+      "outcome": "REACHED_WRITE_SINK_NO_WRITE",
+      "proposed_preservation_status": "full_bundle",
+      "proposed_validation_status": "current_validated",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A03_full_matching_out",
+      "original_fixture_sha256": "5291c4c4638c3b68178652041b22f8d625ece653ea76d397a4de2307ef38f60b",
+      "out_mode": "match",
+      "status": "full_bundle",
+      "outcome": "RETURNED",
+      "return_value": {
+        "leg_id": "paired_fixed5_v4",
+        "preservation_status": "full_bundle",
+        "idempotent": true,
+        "receipt_core_sha256": "84e4f4562e6ccde4457075991223d4f8ee345eedc952ab7b99d44127f825fb24"
+      },
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A04_full_wrong_out",
+      "original_fixture_sha256": "e18aaa740010e454739887a798381f718dad515f81bf00886cbb4c7effec287b",
+      "out_mode": "wrong",
+      "status": "full_bundle",
+      "outcome": "RETURNED",
+      "return_value": {
+        "leg_id": "paired_fixed5_v4",
+        "preservation_status": "full_bundle",
+        "idempotent": true,
+        "receipt_core_sha256": "84e4f4562e6ccde4457075991223d4f8ee345eedc952ab7b99d44127f825fb24"
+      },
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A05_full_missing_out",
+      "original_fixture_sha256": "92eca7bde0eb40d4add68504de6d708d0e4c1ece8745cc625ffc665fa7abc4a4",
+      "out_mode": "missing",
+      "status": "full_bundle",
+      "outcome": "RETURNED",
+      "return_value": {
+        "leg_id": "paired_fixed5_v4",
+        "preservation_status": "full_bundle",
+        "idempotent": true,
+        "receipt_core_sha256": "84e4f4562e6ccde4457075991223d4f8ee345eedc952ab7b99d44127f825fb24"
+      },
+      "fixture_bytes_unchanged": true
+    }
+  ],
+  "attach_stubs": [
+    "check_id",
+    "read_verification_receipt (already separately checked)",
+    "_verify_declared_bundle (data checked separately)",
+    "canonical_ledger",
+    "_ledger_lock",
+    "bundle_content_id",
+    "_atomic_write_text (raises before writing)"
+  ],
+  "project_module_imports": 0,
+  "subject_ledger_writes": 0,
+  "restores": 0,
+  "class_changes": 0,
+  "scientific_runs": 0
+}

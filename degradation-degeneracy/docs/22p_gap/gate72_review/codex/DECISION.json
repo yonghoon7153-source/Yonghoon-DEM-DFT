@@ -1,0 +1,31 @@
+{
+  "review": "Gate72",
+  "request_head": "c4b77ccf71d736dec9162cd5a5377f60f66c0782",
+  "code_target": "82854571d0240951c929d4a9b90260e53ca38e88",
+  "source_digest": "518d4f63076b77e3",
+  "limited_execution_go": "NO_GO",
+  "unrestricted_independent_go_requested": false,
+  "E3_R": "PARTIALLY_ACCEPTED_LEDGER_BINDING_REMAINS",
+  "E9_R": "ACCEPTED_FOR_STOP_CHECK_EXPLICIT_RESUME_ONCE_THEN_REAPPROVAL",
+  "wording_corrections": "ACCEPTED_USING_GATE72_AS_CURRENT_SPECIFICATION",
+  "findings": [
+    {
+      "id": "E3-R-LEDGER-BINDING",
+      "priority": 1,
+      "source": "degradation-degeneracy/tools/preserve.py",
+      "lines": [7917, 7921, 7929, 7936, 7959, 7961],
+      "summary": "Missing evidence.out skips the new promotion binding; idempotent success precedes binding and accepts absent or conflicting out.",
+      "evidence": "RECEIVER_CHECKS.json A02/A04/A05; exact selected body, inert prerequisites, write sink intercepted; not full production attach.",
+      "finite_remedy": "Mandatory valid out and run equality before promotion and idempotent success; normal/missing/conflicting cases and unchanged ledger on refusal; do not rewrite historical records."
+    }
+  ],
+  "reader_helper_cases": 14,
+  "inert_attach_control_flow_cases": 6,
+  "subject_ledger_writes": 0,
+  "project_module_imports": 0,
+  "scientific_analysis_COMSOL_restore_class_mutations": 0,
+  "full_pytest_smoke_runs": 0,
+  "prospective_present": false,
+  "prospective_creation_authorized": false,
+  "prior_accepted_items_reopened": false
+}

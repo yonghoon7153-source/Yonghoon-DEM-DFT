@@ -1,0 +1,101 @@
+schema_version: 2
+_주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**
+  재생성을 확인한다.
+core_sha256: 587f08dd2af93e53df77cf0c88bfbebb011fc5641aaef5976032ab092960ca7d
+core:
+  leg_id: paired_fixed5_v4
+  bundle:
+    uri: artifacts/paired_fixed5_v4
+    files: 26
+    bytes: 23863555
+    payload_index: artifacts/paired_fixed5_v4/payload_sha256.yaml
+    payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716
+    member_rehash: tools.archive_bundle.check
+    member_mismatches: 0
+    fits_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+  restore:
+    mode: empty_root
+    command: python3 -c "from tools.archive_bundle import restore; restore('artifacts/paired_fixed5_v4',
+      repo_root=<empty>)"
+    files_written: 24
+    run_dir_relative: results/paired_fixed5_v4
+    conflicts: 0
+  validation:
+    validator: src.io.validate_provenance
+    ok: true
+    fail: []
+    n_checks: 34
+    checks:
+      _참고_코드재계산불가: 통과
+      attempt_파일_일치: 통과
+      attempt_파일_존재: 통과
+      clean_worktree: 통과
+      config_hash: 통과
+      manifest_존재: 통과
+      manifest와_일치: 통과
+      optimizer_정책: 통과
+      producer_곡선일치: 통과
+      restart_예산_완주: 통과
+      restart_출처: 통과
+      run_signature_기록: 통과
+      run_signature_재계산: 통과
+      run_spec_schema: 통과
+      sig_version: 통과
+      start_파일_일치: 통과
+      start_파일_존재: 통과
+      곡선_producer_재검: 통과
+      단일_서명: 통과
+      목적함수_순서: 통과
+      시작_provenance: 통과
+      시작종료_서명일치: 통과
+      실행중_코드불변: 통과
+      입력_digest_재해시: 통과
+      입력_스냅샷: 통과
+      입력봉인_교차일치: 통과
+      조건집합_서명일치: 통과
+      채점파일_정본: 통과
+      출력_격자완전성: 통과
+      출력_완전성: 통과
+      출력봉인_재계산: 통과
+      코드_identity: 통과
+      필수_입력_존재: 통과
+      행별_서명: 통과
+  identity:
+    validator_source_digest: 518d4f63076b77e3
+    src_io_sha256: 25f79f0a740ea486
+    src_scoring_sha256: 69e69cb046f4b4ae
+    archive_bundle_sha256: 5f7fc3c89dfe5dba
+    make_receipt_sha256: 9c8cf71af310de03
+    row_projection_sha256: b8eae978b9525c3e
+    row_projection_compute_sha256: 150416386d3c0b93
+  outputs:
+  - role: rescored_summary
+    produced_from: restored fits.parquet only
+    source_file_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+    relative_path: _rescored_summary.yaml
+    byte_size: 8877
+    file_sha256: 0fd679bcee1d3c94028af8df7915daa31dac280056d8317294e48d83b395e276
+    n_rows: 6138
+    semantic_schema: degeneracy-summary/v5
+    canonicalizer: score-semantic/v3
+    semantic_view_drops:
+    - _채점원본
+    semantic_sha256: a644a692bf405372716db73d26d0bb4ad5b9e7d4f06781cf7fa6b7bd7aa795ef
+  - role: sealed_summary
+    relative_path: degeneracy_summary.yaml
+    byte_size: 9080
+    file_sha256: 020945db71731bf8019f8705085a5d20e84a4480bc9731f77f7610aa7722021c
+    semantic_schema: degeneracy-summary/v5
+    canonicalizer: score-semantic/v3
+    semantic_view_drops:
+    - _채점원본
+    semantic_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  outputs_agree: true
+stamp:
+  _주의: 기록용. core 재생성 대조에서 제외된다.
+  validator_commit: 82854571d0240951c929d4a9b90260e53ca38e88
+  validator_tree_dirty: false
+  generated_at_utc: '2026-09-25T08:16:33Z'
+  runtime:
+    python: 3.11.15
+    platform: Linux-6.18.44-fc-v37-x86_64-with-glibc2.39

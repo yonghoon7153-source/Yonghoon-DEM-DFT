@@ -1,0 +1,166 @@
+diff --git a/degradation-degeneracy/docs/08_REVIEW_RESPONSE.md b/degradation-degeneracy/docs/08_REVIEW_RESPONSE.md
+index 31bccb1e..e8657406 100644
+--- a/degradation-degeneracy/docs/08_REVIEW_RESPONSE.md
++++ b/degradation-degeneracy/docs/08_REVIEW_RESPONSE.md
+@@ -7997,3 +7997,59 @@ cd degradation-degeneracy
+ 
+ grid ≈ 28 분 · fit ≈ 10 시간 (이 기계, `nproc` 기준) · archive+영수증 ≈ 5 분 · 회귀+smoke ≈ 45 분. 실패 시 재개 1회까지 같은 계획 아래에서; 그 이상은 게이트로.
+ 
++## §94 71차 접수 — **한정 실행 GO 보류 · 잔여 둘 (E3-R P1 · E9-R P2)** · 그 밖은 수용
++
++2026-09-25 접수. 리뷰어 고정 요청/HEAD `4505b70c6e63453e0424239cac7d48488fee022a` · 코드 대상 `87642956` · 직접 계산 `source_digest b705a21a1237ec73`
++(RUN_SCOPE 57 파일 바이트로 별도 계산) · 코드 대상→HEAD RUN_SCOPE diff 0 · 요청문 blob 바이트 동일 (sha256 `9f8d453b…`) · `0e6348be → 4505b70c` 문서 3개만 ·
++등록부 tracked/disk 367, modern 351 / legacy 16, 문구 분류 4+12+174+177 일치 · 검토 checkout DD 추적 2,459 파일 전후 동일. 패키지 원본
++`docs/22p_gap/gate71_review/` (zip sha256 `e65ab85ffc764f30a78ad12805651ba0392a6ce4a5b5bfd85c565ae61a620d8e`, MANIFEST 37 payload · 커밋 뒤 blob 대조 37/37,
++`-text !eol` 규칙 먼저 커밋).
++
++**결론 (그대로):** "현재 제출본에 대한 한정 실행 판정: NO-GO. E1/E2/E4 의 명시된 한계를 수용해도, 선택한 보존 전이의 E3 와 실패 처리 명세 E9 가 남는다.
++무제한 독립 GO 를 요구해서 내린 판정이 아니다. … 기존 종료 목록 안의 잔여이며 새 보안 과제를 더한 것이 아니다."
++
++| ID | 판정 | 리뷰어가 직접 확인한 것 |
++|---|---|---|
++| G70-N1 | 수용 | 수정 + 하위 parser 회귀를 정적으로 확인 (shell/Python grid·fit 실행 안 함) |
++| E3 (index) | 수용 | YAML index fail-closed · 구성원 SHA — 실물 25 구성원 집합·SHA 를 데이터로 직접 대조해 일치 |
++| **E3-R** | **P1 미종결** | 새 `read_verification_receipt` 가 output 의 비어 있지 않은 semantic 문자열·canonicalizer·`rescored_summary` 존재·`outputs_agree is True` 만 본다. **대조하지 않는 것:** `sealed_summary` 비교 상대의 존재 · 같은 schema/canonicalizer 두 semantic SHA 의 실제 일치 · `rescored_summary.source_file_sha256 ↔ bundle.fits_sha256` (필드 유무 포함). `attach_bundle_evidence` 는 이를 재검사하지 않고 `current_validated`·`rescored_from_restored_fits=True` 를 적으며, 영수증 `restore.run_dir_relative` ↔ 원장 `evidence.out`/산출 식별 대조가 없다. 실측(실물 영수증을 소유 복사본에서 변형, core sha 재계산, 지정 AST 함수만 호출): R04 sealed_summary 제거 → reader **수용**/생산자 `_outputs_agree` 거부 · R05 두 SHA 불일치 → **수용**/거부 · R06 source fits 다름 · R09 필드 제거 → **수용** · R07 복원 경로 `results/ANOTHER_RUN` → **수용** · R08 비hex semantic · R10 identity null → 수용(넓은 typed 표현의 한계로만 기록). **원인:** 새 정상 fixture(`test_gate70_defensive.py:302–323`) 자체가 `rescored_summary` 하나 + `outputs_agree=True` — 생산자가 만들 수 없는 영수증을 정답으로 삼았다 |
++| E5 | **수용** | 지정 typed 함수 대조군 5 + 기존 367 JSON 형식 확인. 과거 class 변경 없음. writer→reader→promotion 전체 경로 재실행은 안 함 |
++| E6 | **이번 실행 한정 수용** | 격리 + 전용 checkout/배타 창/전후 delta. 과거 351 이관 승인 아님. 문구 정정: 격리 tree 가 `requirements*.txt` 를 복사하지 않아 "source_digest 동일" 주장 불성립 |
++| E7 · E8 | 유지 | — |
++| **E9-R** | **P2 실패 정책 보완** | E9-4 "같은 명령으로 재개" 인데 초기 argv 에 `--resume` 없음 · `run.sh:56 RESUME=false` · `:522–557` true 일 때만 하위 전달 · `grid.py:601–612`·`fitting.py:1524–1526` 은 resume 아니면 완료 집합을 안 읽는다 — **claim 소유권 재개와 chunk 건너뛰기는 다른 조건.** 종결: 명시적 `--resume` argv + 허용 횟수, 또는 실패 즉시 정지·재승인. 초기 명령·목적·별도 보관 순서는 수용 |
++| E10 | **보완 수용, 증거 출처 한정** | 양성 fixture 변경 + 최종 시험 코드 동일성 확인. 1855/2/smoke rc0/404 는 송신 실행 증거 (수신 재실행 아님 — 같은 suite 반복을 새 조건으로 추가하지 않음) |
++| E1/E2/E4 | 한계 라벨 수용 | E4 수량 정정: 8/5 문구 충돌 → 통일 |
++
++**함께 정정할 표현 (차단 항목 아님):** ① 실행 checkout 은 prospective 항목을 커밋한 **최종 승인 HEAD** (87642956 은 코드 기준) ② `CANONICAL_RUN` "주지 않음" ≠ 상속 제거 — shell 에서 unset 명시
++③ E4 수량 통일 ④ E6 격리 tree 의 `requirements*.txt`. §3 답: ① E3 아니오 / E5 예 / E6 예(한정) / E10 예(송신 증거 범위) ② 한계 라벨 예(수량 정정) ③ E9 부분 수용 ④ **현재 한정 GO 아니오.**
++"지금 prospective 계획 항목을 작성/커밋하거나 본 실행을 시작하라는 승인이 아니다." — 그대로 받는다: 계획 항목은 여전히 없다.
++
++## §95 71차 대응 — E3-R: 소비자가 주장을 읽지 않고 결과를 대조한다 (`82854571d0240951c929d4a9b90260e53ca38e88` · 영수증 `b921333322f17a9ac5d92153865da441dc0c9bd7`)
++
++**RED 먼저.** `tests/test_gate71_defensive.py` 14 node — 리뷰어 R04~R10 그대로 + 복원 지도·봉인 summary 결속 + 실물 양성 + E6 문구: 패치 전 **12 failed / 2 passed**
++(통과 2 = 생산 계약 양성 e3r_00 과 E6 requirements 시험 — 후자는 conftest 를 같이 고쳤다). 그리고 **fixture 를 먼저 생산 계약으로 되돌렸다** (규율 2): `_production_outputs()` 가
++`make_receipt._score_manifest` 그대로 `rescored_summary` + `sealed_summary` 한 쌍(같은 semantic · `source_file_sha256` = 묶음 fits)을 만들고, 묶음 fixture 에 `restore_map.yaml`·
++`degeneracy_summary.yaml` 이 들어갔다. 그 fixture 아래서 70차 시험 48 은 그대로 초록이었다 (패치 전 reader 가 통과시키던 것을 잰다 — 즉 초판이 무엇을 안 봤는지가 RED 12 로 드러난다).
++
++**고침 (`tools/preserve.py`, RUN_SCOPE):**
++- `VERIFICATION_RECEIPT_OUTPUT_KEYS` — 역할별 닫힌 키 집합 (rescored 11키 / sealed 8키). `_receipt_output_pair(core)`: 역할마다 정확히 하나 · 닫힌 키 · `semantic_sha256`·`file_sha256`·`source_file_sha256` hex64 ·
++  `byte_size` 양의 int · **같은 schema·canonicalizer 의 짝이 있고(없으면 비교 불가) semantic digest 가 전부 같아야** 한다 — `make_receipt._outputs_agree` 와 같은 판단을 소비 쪽에서 **다시** 한다.
++  `outputs_agree` 는 여전히 `True` 여야 하지만 그것만으로는 아무것도 통과하지 않는다.
++- `read_verification_receipt`: `rescored_summary.source_file_sha256 == bundle.fits_sha256` (R06/R09) · identity 7 값 전부 hex16 (R10).
++- `_assert_receipt_bound_to_bundle(core, bundle_dir, leg)`: 묶음의 `restore_map.yaml` `run_dir` == 영수증 `restore.run_dir_relative` (지도 없음·값 없음·불일치 전부 거부, R07) · 영수증 `sealed_summary.file_sha256` == 묶음 구성원
++  `degeneracy_summary.yaml` 의 sha (이 묶음의 봉인 summary 를 대조한 영수증인가).
++- `attach_bundle_evidence`: 디스크 대조 뒤 위 결속을 요구하고, 원장 `evidence.out` (run.sh `leg_finalize` 가 적는 실행 자리) 이 있으면 결속된 run_dir 와 같아야 한다 — 다른 실행 기록에 묶음을 붙이지 않는다.
++  거부 시 원장 불변 (모든 부정 시험이 바이트 대조).
++- GREEN: g71 14 + g70 48 = 62 (실물 양성 둘은 영수증 재생성 뒤). 변이 3 (`receipt-pair-agreement-is-recomputed-g71` · `receipt-restore-run-is-bound-to-the-bundle-g71` · `attach-binds-the-ledger-run-location-g71`) 관측 그대로 등록, `-k g71` 3/3.
++- **실물:** 재생성한 `paired_fixed5_v4` 영수증이 새 검사(두 산출 · 같은 semantic · source fits = bundle fits · `restore_map.run_dir = results/paired_fixed5_v4` · 봉인 summary sha) 를 지난다 (`e3r_12`, `e3_17`, docs-lint full_bundle).
++- **E6 문구:** 격리 tree 에 `requirements*.txt` 를 복사하고 `test_g71_e6_*` 가 자식 프로세스로 `source_digest` 동일을 잰다.
++- RUN_SCOPE: `source_digest b705a21a1237ec73 → 518d4f63076b77e3`. 영수증 재생성 (clean 트리 `82854571d0240951c929d4a9b90260e53ca38e88`, 34/34, core `84e4f4562e6ccde4`), 원장 두 값만 (`b921333322f17a9ac5d92153865da441dc0c9bd7`).
++
++**E9-R 와 문구 정정 (문서, D6~D9 — 취소선으로 원문 유지):** D6 실패 정책 = **실패 즉시 정지** → 사람이 같은 plan/token/source·부분 산출 확인 → 명시적 `--resume` argv **정확히 1회** → 2회째는 재승인;
++`--resume` 이 모든 실패를 복구한다고 보증하지 않는다. D7 실행 checkout = 최종 승인 HEAD (코드 기준 87642956 과 RUN_SCOPE diff 0 을 함께 적는다). D8 `unset CANONICAL_RUN LEG` 명시.
++D9 E4 표본 = premise 4 + g70 4 + g71 3 = 11 시나리오. `GATE71_REQUEST.md` §2 와 원장 §93 에 같은 정정.
++
++**실측 (`b921333322f17a9ac5d92153865da441dc0c9bd7`, clean tree, 시작 HEAD = 끝 HEAD):** 전체 pytest `0 failed · 1869 passed · 2 xfailed (34:59)` · strict smoke `EXIT 0` · 미추적 `0`.
++
++**하지 않은 것:** 계획 항목 작성/커밋 없음 · 본실행 없음 · 복원/재채점은 `make_receipt.py` 의 영수증 재생성(RUN_SCOPE 변경에 따른 검증기 identity 갱신, F50b·G70-N1·E5 때와 같은 절차)뿐 · 리뷰어 스크립트 미실행.
++
+diff --git a/degradation-degeneracy/docs/22p_gap/GATE72_REQUEST.md b/degradation-degeneracy/docs/22p_gap/GATE72_REQUEST.md
+new file mode 100644
+index 00000000..77c64ba1
+--- /dev/null
++++ b/degradation-degeneracy/docs/22p_gap/GATE72_REQUEST.md
+@@ -0,0 +1,80 @@
++# 72차 게이트 리뷰 요청 — 71차 잔여 둘(E3-R · E9-R)에 대한 답 · **한정 실행 GO 재요청**
++
++> **상태: 확정 (2026-09-25).** 71차 회신(한정 GO 보류 — E3-R [P1] 소비 계약 · E9-R [P2] 재개 명세)의 §5 "다음 회신에 필요한 최소 자료" ①②③ 에 답한다.
++> 범위는 리뷰어가 정한 대로 **E3-R + E9-R + 문구 정정** 이다. E1/E2/E4 전면 구현·과거 class 정리는 요구되지 않았고 하지 않았다.
++> 이 요청은 여전히 **한정 실행 GO** 를 묻는다 (무제한 독립 GO 아님). 계획 항목(prospective)은 아직 쓰지 않았다 — 리뷰어: "지금 prospective 계획 항목을 작성/커밋하거나 본 실행을 시작하라는 승인이 아니다."
++
++## 판정 대상 (이 블록이 정본이다)
++
++| 항목 | 값 |
++|---|---|
++| 요청문 커밋 | `(이 파일을 담은 커밋 — 발송문에 실측해 적는다)` (브랜치 head SHA 와 함께, 커밋 뒤 실측) |
++| **판정 대상 코드** | **`82854571d0240951c929d4a9b90260e53ca38e88`** — RUN_SCOPE 마지막 변경 커밋 (71차 E3-R, `tools/preserve.py`) · `source_digest` **`518d4f63076b77e3`** (71차 대상 `87642956` · `b705a21a1237ec73` → E3-R `82854571` · `518d4f63076b77e3`). 그 뒤 커밋은 영수증·원장·문서뿐 (RUN_SCOPE diff 0) |
++| 리뷰 원자료 | 71차 패키지 `docs/22p_gap/gate71_review/` (zip `e65ab85f…`, MANIFEST 37/37) — `-text !eol` 규칙 먼저 커밋 |
++| 발견 원장 | `docs/08_REVIEW_RESPONSE.md` §94(접수) · §95(E3-R 대응 + E9-R/D6~D9) · 작업 상태 `docs/GATE70_WORKING_STATE.md` |
++| 새 시험 | `tests/test_gate71_defensive.py` 14 node (RED 12 → GREEN 14) · 변이 3건 (`mutation_replay.py -k g71`) |
++
++## §0 71차 잔여에 대한 답
++
++| ID | 71차 판정 | 이번 상태 | 근거 |
++|---|---|---|---|
++| **E3-R** | P1 미종결 — 소비자가 비교 쌍·실제 일치·source fits·복원 자리를 안 봄 | **닫음** — `_receipt_output_pair()` (역할별 닫힌 키 · 역할마다 하나 · hex64 · 같은 schema·canonicalizer 의 짝 필수 · semantic digest **실제 일치** — 생산자 `_outputs_agree` 와 같은 판단을 소비 쪽에서 다시) · `rescored.source_file_sha256 == bundle.fits_sha256` · identity 7 값 hex16 · `_assert_receipt_bound_to_bundle()` (묶음 `restore_map.run_dir` == `restore.run_dir_relative` · `sealed_summary.file_sha256` == 묶음 `degeneracy_summary.yaml` 바이트) · attach 가 원장 `evidence.out` 과 대조. **fixture 를 생산 계약으로 되돌렸다** (두 산출 한 쌍 · restore_map · 봉인 summary). 거부 시 원장 불변(모든 부정 시험이 바이트 대조) | §95 · `test_gate71_defensive.py::test_g71_e3r_*` 13 node: 양성 1(e3r_00) · R04 · R05(+05b 중복 역할) · R06 · R09 · R07(+07b 원장 out · +07c 지도 없음) · 봉인 summary sha(e3r_11) · R08 · R10 · 실물 양성(e3r_12) · 변이 3 (`-k g71` 3/3) |
++| **E9-R** | P2 — "같은 명령" 은 chunk 재개가 아님 | **명세 고정 (D6):** 실패 **즉시 정지** → 사람이 같은 plan/token/`source_digest`(`precheck_leg_run` `kind == resume`) 와 부분 산출(chunk 기록·`fit_completed.jsonl`)을 확인 → **명시적 재개 argv 정확히 1회** `./run.sh --mode all --leg grid_fit_v5 --config configs/grid_fine.yaml --nproc "$(nproc)" --out results/grid_fit_v5 --resume` → 2회째 실패는 재승인(새 계획 항목). `--resume` 이 모든 실패를 복구한다고 보증하지 않는다 | `GATE71_REQUEST.md` §2 E9-4 (취소선 정정) · 원장 §93 같은 정정 · 이 요청문 §2 |
++| 문구 정정 | 차단 항목 아님 | **D7** 실행 checkout = prospective 항목을 커밋한 **최종 승인 HEAD** (코드 기준 `82854571` 과 RUN_SCOPE diff 0 을 함께 적는다) · **D8** `unset CANONICAL_RUN LEG` 명시 · **D9** E4 표본 = premise 4 + g70 4 + g71 3 = **11** 시나리오로 통일 · **E6** 격리 tree 에 `requirements*.txt` 복사, `test_g71_e6_*` 가 자식 프로세스로 `source_digest` 동일을 잰다 | `GATE71_REQUEST.md` §2 · `tests/conftest.py` |
++| E1/E2/E4 · E5 · E6(한정) · E7 · E8 · E10 · G70-N1 | 수용 (71차) | 변경 없음 — 다시 열지 않는다 | — |
++
++## §1 결과 라벨 (71차 §1 그대로 — E4 수량만 정정)
++
++> **실행 허용 범위:** 합의된 synthetic grid/fit 재실행 (E9-0), 계획 항목 `grid_fit_v5` (한정 GO 뒤 사람이 커밋 — 아직 없음).
++> **코드/입력/실행 식별:** 판정 대상 `82854571d0240951c929d4a9b90260e53ca38e88` · `source_digest 518d4f63076b77e3` · config `configs/grid_fine.yaml` · OUT `results/grid_fit_v5` · 실행 checkout = 최종 승인 HEAD (RUN_SCOPE diff 0 to `82854571`).
++> **현지 검증:** `python -m pytest tests/ -q` → 0 failed · 1869 passed · 2 xfailed (34:59) (rc 0) · `./scripts/smoke_e2e.sh` → rc 0 · `mutation_replay.py --check-preimages` 전 지점 1회 · `-k premise` 4/4 · `-k g70` 4/4 · `-k g71` 3/3.
++> **E1:** projection producer 독립 결속 미검증. **E2:** 실행 source 자기 측정, 독립 launcher attestation 미구현. **E4:** 변이 보고서 일관성 검사 + 표본 replay 11 시나리오(우리 실행), 독립 replay 범위 = 리뷰어 정적 대조.
++> **E6:** 이번 실행 권한 영역의 격리/배타 사용 근거 = 시험 authority 격리(RUN_SCOPE + requirements 복사 tree) + 운영 불변 검사 + 배타 운영 창(전후 snapshot, delta +2 기대); 과거 351 시험 레코드 이관은 별건.
++> **execution_class / 보존 / validation / inference_role:** 실행 뒤 실제 값으로 채운다 (기대: canonical·sealed / full_bundle / current_validated / diagnostic).
++> **archive / 복원 / retention:** archive_results.sh + make_receipt(empty-root 복원·재채점) 수행, `attach_bundle_evidence`(짝·일치·source fits·복원 자리·봉인 summary 결속) 수행; retention/object-lock/power-loss 는 **미수행·보증 안 함**.
++> **실패 처리:** 실패 즉시 정지 · 명시적 `--resume` 1회 · 그 뒤 재승인.
++> 이 한계는 더 강한 독립 provenance·외부 셀 타당성·미시험 내구성의 보증이 아니다.
++
++## §2 실행 명세 — 71차 §2 (= 원장 §93) 에 D6~D9 정정을 얹은 것이 정본이다. 바뀐 줄만 여기 다시 적는다
++
++```bash
++# 실행 전용 checkout · 사람이 prospective 항목을 커밋한 최종 승인 HEAD (RUN_SCOPE diff 0 to 82854571) · clean tree
++# 실행 중 커밋/pytest/smoke 금지 (E6-b 창)
++unset CANONICAL_RUN LEG          # 상속된 환경변수를 명시적으로 지운다 — 보고서는 docs/RESULTS_grid_fit_v5.md 로
++cd degradation-degeneracy
++./run.sh --mode all --leg grid_fit_v5 --config configs/grid_fine.yaml --nproc "$(nproc)" --out results/grid_fit_v5
++# 실패 시: 즉시 정지 → 확인(같은 plan/token/source_digest · 부분 산출 온전) → 아래를 정확히 1회 → 2회째는 재승인
++./run.sh --mode all --leg grid_fit_v5 --config configs/grid_fine.yaml --nproc "$(nproc)" --out results/grid_fit_v5 --resume
++```
++
++archive → `make_receipt.py grid_fit_v5` → `attach_bundle_evidence('grid_fit_v5', 'docs/22p_gap/receipts/grid_fit_v5.validate.yaml')` → 사람이 `claim_roles`·`근거` → 창 닫기 (71차 §2 E9-3 그대로).
++attach 는 이제 영수증의 두 산출 한 쌍·같은 semantic·`source_file_sha256 = bundle.fits_sha256`·`restore_map.run_dir`·봉인 summary 바이트·원장 `evidence.out` 을 대조한다.
++
++## §3 리뷰어에게 묻는 것
++
++1. **E3-R 종결 수용** — 예/아니오. 아니오면 남은 조건 한 줄.
++2. **E9-R 정책 수용** — "실패 즉시 정지 · 명시적 `--resume` 1회 · 그 뒤 재승인" 이 71차 §3 의 종결 조건을 만족하는가.
++3. **한정 실행 GO** — 위 둘이 예이면 `82854571d0240951c929d4a9b90260e53ca38e88` + (GO 뒤) 사람이 커밋한 계획 항목에 한정 실행 GO 인가 (예/아니오/조건부).
++
++## §4 실행 출력 (커밋 뒤 실측)
++
++```
++판정 대상 코드                                82854571d0240951c929d4a9b90260e53ca38e88
++source_digest                                 518d4f63076b77e3
++전체 pytest (tests/)                          0 failed · 1869 passed · 2 xfailed (34:59)   (시작 HEAD = 끝 HEAD = b921333322f17a9ac5d92153865da441dc0c9bd7 · 미추적 0)
++strict smoke (scripts/smoke_e2e.sh)           EXIT 0
++pytest gate63~71 묶음                          152 passed · 1 xfailed (gate63~68 + gate70 + gate71, 21.5 s)
++mutation_replay --check-preimages · -k premise · -k g70 · -k g71   전 지점 1회 · 4/4 · 4/4 · 3/3
++등록부                                        tracked 367 · 디스크 367 · 미추적 0
++```
++
++## §5 우리가 스스로 신고하는 것
++
++- 영수증 서명은 없다 (같은 principal 이 만들고 소비한다) — 71차 리뷰어가 요구하지 않은 것을 더하지 않았다.
++- `attach_bundle_evidence` 의 복원 자리 결속은 묶음의 `restore_map.yaml` 에 기댄다 — 그 지도는 `archive_bundle bundle` 이 쓰고 `check` 가 재해시하는 구성원이다(payload index 에 든다). 지도 자체의 독립 attestation 은 없다.
++- `test_g70_e3_17`·`test_g71_e3r_12` 는 현행 검증기의 실물 영수증 양성 대조군이라 RUN_SCOPE 가 바뀔 때마다 영수증을 다시 만든다 (이번에도 그랬다: `b9213333`).
++- 71차 §4 그대로: 1855/2/smoke rc0 류의 수치는 송신 실행 증거다.
++
++## §6 예산과 발송 규칙
++
++70차 §6 그대로. 이 요청문과 발송문은 같은 말을 한다: **한정 실행 GO 를 재요청한다.**
+diff --git a/degradation-degeneracy/docs/GATE70_WORKING_STATE.md b/degradation-degeneracy/docs/GATE70_WORKING_STATE.md
+index 1987c61c..80a1bb12 100644
+--- a/degradation-degeneracy/docs/GATE70_WORKING_STATE.md
++++ b/degradation-degeneracy/docs/GATE70_WORKING_STATE.md
+@@ -48,6 +48,10 @@ Q3 **그 셋만으로는 아니오** (E6·E9·E10 을 더 닫으면 E1/E2/E4 를
+ - RUN_SCOPE(`run.sh`)를 고치면 보존 영수증의 검증기 identity 가 낡는다 — F50b 때와 같은 절차(clean 트리에서 `make_receipt.py`, 원장은 검증기 digest·core sha 두 값만)로 닫는다. 산출물의 실행 digest(`d50295f9…`)는 안 움직인다.
+ - 라벨은 `N/M` 이 아니라 **미닫힌 ID 와 실제 명령·rc·실패/skip/xfail** 을 적는다.
+ 
++## 71차 회신 (2026-09-25) — 한정 GO 보류 · 잔여 E3-R(P1)·E9-R(P2) → 둘 다 닫음 (원장 §94·§95)
++
++E3-R: 소비자가 짝·실제 일치·source fits·복원 자리·봉인 summary 를 다시 대조 (`82854571`, `tests/test_gate71_defensive.py` 14, 변이 3). E9-R: 실패 즉시 정지 → 명시적 `--resume` 1회 → 재승인 (D6). D7 승인 HEAD · D8 `unset CANONICAL_RUN LEG` · D9 E4 = 11 · E6 requirements 복사. 판정 대상 `82854571` · `source_digest 518d4f63076b77e3`.
++
+ ## 다음
+ 
+-`docs/22p_gap/GATE71_REQUEST.md` — 판정 대상 `876429562f6a69b59793c70700cb5b375391ab67` · `source_digest b705a21a1237ec73` 로 **한정 실행 GO** 를 묻는다 (원장 §92·§93). 발송문은 요청문 SHA + 브랜치 head SHA, 커밋 뒤 실측.
++`docs/22p_gap/GATE72_REQUEST.md` (한정 실행 GO 재요청) · ~~`docs/22p_gap/GATE71_REQUEST.md`~~ — 판정 대상 `876429562f6a69b59793c70700cb5b375391ab67` · `source_digest b705a21a1237ec73` 로 **한정 실행 GO** 를 묻는다 (원장 §92·§93). 발송문은 요청문 SHA + 브랜치 head SHA, 커밋 뒤 실측.

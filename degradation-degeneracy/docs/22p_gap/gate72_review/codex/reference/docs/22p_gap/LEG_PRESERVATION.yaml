@@ -1,0 +1,919 @@
+schema_version: 3
+recorded: 2026-08-25
+recorded_on: 새 작업 기계 복구 조사 + 컨테이너 재검증
+cohorts:
+- cohort_id: g1_2026_08_20
+  dir: docs/22p_gap/warm_probe
+  status: frozen
+  prospective_legs: []
+  frozen_reason: 8다리 중 7다리의 원자료가 소실됐다. 이 cohort 는 다시 만들 수 없으므로 기록된 analyzer 바이트에 대고만
+    검증한다. 25차 발견 2 로 analyzer 가 g2 로 올라갔지만 이 cohort 는 g1 바이트 그대로 얼린다.
+  cross_leg_comparison: allowed_within_cohort
+  pin:
+    schema_version: 3
+    compute_sha256: 73c1ac4ba06e59dc
+    row_projection_py_sha256: bbb4744256e42b8f
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: f1898eb6117c89b8e43b9d7c76ba4c2abb1cc880f36ccbbdd8d6d329cf4cf727
+    producer_semantic_sha256: frozen:not-recorded
+  runtime:
+    python: 3.12.3
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.5.2
+    yaml: 6.0.1
+  legs:
+  - fit_22p_seed_404_hc
+  - fit_22p_seed_404_hc_nowarm
+  - fit_22p_seed_404_hc_warm_now
+  - fit_seed404_pe5mv
+  - fit_seed404_pe5mv_nowarm
+  - paired_fixed5_v4
+  - paired_fixed5_v4_nowarm_now
+  - paired_fixed5_v4_warm
+- cohort_id: g2_2026_08_25
+  dir: docs/22p_gap/proj_g2
+  status: frozen
+  frozen_reason: 48차에 `producer_semantic_sha256` 의 **정의**가 바뀌었다 (닫힘이 `src.scoring`
+    으로 넓어지고, decorator 가 정규형에 들어오고, 절단면이 봉인 preimage 에 들어가고, 정규형이 인터프리터 버전에서 풀렸다).
+    값은 `908503e65162e7d9` → `bbb1c4d6fc982610`. 계약 §13.3.2 대로 pin 은 cohort lifetime
+    동안 고정이므로 이 cohort 를 얼리고 `g3_2026_08_28` 로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity
+    의 정의다. 원자료(`results/paired_fixed5_v4/`)가 살아 있으므로 g1 과 달리 이 cohort 는 재생성 가능하지만,
+    얼린 것은 손대지 않는다.
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '계산 digest 를 손으로 고른 함수 목록이 아니라 **dependency closure** 에서 만든다 (25차 발견 2
+    — `_RESTART_SOURCES` 가 digest 밖에 있었다). 행 바이트는 안 움직였다: 이 cohort 의 `projection_sha256`
+    · `restart_projection_sha256` · `fits_sha256` 이 g1 과 바이트 동일하다.'
+  analysis_spec_이_g1과_다른_이유: '★ 29차 P1-4 — spec 이 **거짓을 선언하고 있었다.** 이력은 이렇다: 23차(`f49cd66e`)에는
+    비교기가 실제로 `{_채점원본, _F4_주의}` 둘 다 뗐고 spec 의 `skip_top_level_keys` 도 그대로였다 — 그때는 참이었다.
+    28차에 `SEMANTIC_SKIP = ("_채점원본",)` 로 비교기를 **좁혔지만 spec 선언은 그대로 뒀다.** 직전 커밋 `2e505317`
+    에서 확인된다: `_SKIP = set(SEMANTIC_SKIP)` 인데 spec 은 여전히 `[_채점원본, _F4_주의]` 였다. 즉 `analysis_spec_sha256`
+    이 실제 비교 규칙과 무관한 값을 앵커라고 부르고 있었다. 이제 spec 이 `SEMANTIC_SKIP` 을 그대로 읽으므로 선언과 구현이
+    한 값이고, 그 결과 digest 가 `f1898eb6…` → `43d74dd3…` 로 움직였다. 비교 규칙 자체는 28차 이후 그대로다 —
+    움직인 것은 **선언**이다. `_F4_주의` 의 인용 금지 flag 는 `make_receipt._citation_safety` 가 값으로
+    따로 검사한다. cross-cohort 비교는 어차피 금지다 (`cross_leg_comparison` 참조).'
+  pin:
+    schema_version: 3
+    compute_sha256: d6619c2c32438e65
+    row_projection_py_sha256: d0dbbd29ddd9fb2f
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: 908503e65162e7d9
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  legs:
+  - paired_fixed5_v4
+- cohort_id: g3_2026_08_28
+  dir: docs/22p_gap/proj_g3
+  status: frozen
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: "**행 바이트가 아니라 producer identity 의 정의가 바뀌었다.** 48차 게이트 리뷰(47차 조건 P0-2)가\
+    \ 47차 `producer_semantic_sha256` 의 네 구멍을 짚었고, 넷을 다 막으면서 값이 `908503e65162e7d9`\
+    \ → `bbb1c4d6fc982610` 로 움직였다:\n(1) 닫힘이 `row_projection.py` 안에서 멈춰 `src.scoring`\
+    \ 의 채점 함수를\n    안 봤다 — 채점 의미를 통째로 바꿔도 digest 가 안 움직였다.\n(2) `ast.get_source_segment`\
+    \ 이 `decorator_list` 를 버렸다 —\n    `@lru_cache` 를 붙이고 떼도 같은 값이었다.\n(3) `_PRODUCER_CUT`\
+    \ 이 **넓어지는** 것은 막히지 않았다 (좁아지는 것만\n    fail-closed 였다).\n(4) 정규형이 인터프리터 버전에 묶여\
+    \ 있었다. 실측: 같은 바이트에 대해\n    3.11 `908503e65162e7d9` · 3.12 `d4ae1c027b434e83` ·\n\
+    \    3.13 `aa1cf2cf045c41ea` — 세 값이었다. 지금은 3.10~3.13 이\n    같은 값을 낸다 (회귀가 이 기계에서\
+    \ 대조한다).\n\n계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 g2 를 얼리고 **새 cohort ID\
+    \ + 새 출력 디렉터리**로 간다. g2 의 바이트와 pin 은 그대로 두었다 — 얼린 것을 손대지 않는다."
+  행_바이트가_같은가: 같다. `projection_sha256` · `restart_projection_sha256` · `fits_sha256`
+    이 g2 와 바이트 동일하다 (48차 변경은 전부 identity 정의·게이트 배선이고 계산식이 아니다). 그래도 **cross-cohort
+    비교는 금지**다 — 같은 바이트라는 사실은 회귀가 확인하는 것이지 인용의 근거가 아니다.
+  pin:
+    schema_version: 3
+    compute_sha256: 6f44ae4a3ce50d4d
+    row_projection_py_sha256: 6f4d9d21d38947b9
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: bbb1c4d6fc982610
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  legs:
+  - paired_fixed5_v4
+  frozen_reason: '49차 게이트 리뷰(48차 조건 P0-2)가 producer 닫힘의 남은 구멍을 짚었다: 닫힘이 `from ...
+    import` **한 가지 문법만** 따라가 `import src.scoring as sc` + `sc.foo(...)` 를 통째로 놓쳤고,
+    풀리지 않는 참조가 조용히 닫힘을 좁혔으며, `globals()`·`getattr(module, …)`·`eval` 처럼 이름을 실행 시점에
+    푸는 코드가 닫힘 밖 계산을 만들 수 있었다. 셋을 다 막고 `_analyzer_provenance()` 의 `__import__(mod)`
+    를 정적 import 로 바꾸면서 `producer_semantic_sha256` 이 `bbb1c4d6fc982610` → `b4701aa33264a753`
+    로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 g3 을 얼리고 `g4_2026_08_28`
+    로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의 정의다. g3 의 바이트와 pin 은 그대로 둔다.'
+- cohort_id: g4_2026_08_28
+  dir: docs/22p_gap/proj_g4
+  status: frozen
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '49차 게이트 리뷰(48차 조건 P0-2)가 producer 닫힘의 남은 구멍을 짚었다: 닫힘이 `from ... import`
+    **한 가지 문법만** 따라가 `import src.scoring as sc` + `sc.foo(...)` 를 통째로 놓쳤고, 풀리지 않는
+    참조가 조용히 닫힘을 좁혔으며, `globals()`·`getattr(module, …)`·`eval` 처럼 이름을 실행 시점에 푸는 코드가
+    닫힘 밖 계산을 만들 수 있었다. 셋을 다 막고 `_analyzer_provenance()` 의 `__import__(mod)` 를 정적 import
+    로 바꾸면서 `producer_semantic_sha256` 이 `bbb1c4d6fc982610` → `b4701aa33264a753` 로
+    움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 g3 을 얼리고 `g4_2026_08_28` 로
+    간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의 정의다. g3 의 바이트와 pin 은 그대로 둔다.'
+  행_바이트가_같은가: 같다. `projection_sha256` · `restart_projection_sha256` · `fits_sha256`
+    이 g3 과 바이트 동일하다 (49차 변경은 전부 identity 정의·lifecycle 배선이고 계산식이 아니다). 그래도 **cross-cohort
+    비교는 금지**다 — 같은 바이트라는 사실은 회귀가 확인하는 것이지 인용의 근거가 아니다.
+  pin:
+    schema_version: 3
+    compute_sha256: fa21e7a3eae8e2ca
+    row_projection_py_sha256: d3df1defd9461a3f
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: b4701aa33264a753
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  legs:
+  - paired_fixed5_v4
+  frozen_reason: '50차 게이트 리뷰(49차 조건)가 producer 닫힘의 남은 구멍 셋과 게시 경로의 순서 결함 하나를 짚었다:
+    (1) `A, B = 1, 2` 로 정의한 module 상수가 닫힘 밖이었다 — `_module_defs()` 가 `ast.Name` target
+    만 담았고, 게다가 같은 walk 의 사본이 `_compute_closure()` 안에 하나 더 있어 한쪽만 고치면 약한 쪽이 실효 규칙이
+    됐다 (authority 를 하나로 합쳤다). (2) 정규형이 docstring 을 버리는데 계산이 `__doc__` 을 읽으면 그 산문이
+    의미가 된다 — 버린 것을 쓰는 코드는 fail-closed 다. (3) `SUPPORTED_PYTHON` 이 3.12 를 선언하는데 정규형이
+    3.12 에서 실제로 달랐다 (PEP 701 파서가 중첩 format spec 끝에 빈 `Constant('''')` 를 붙인다) — 정규형이
+    그 빈 조각을 흡수하게 했고 이제 3.11·3.12·3.13 이 같은 값을 낸다. (4) `build()` 의 frozen 목적지 판정이 원자료
+    존재 검사 뒤에 있었다 — 거절은 아무 일도 하기 전에 나야 하므로 맨 앞으로 옮겼다. 넷을 다 고치면서 `producer_semantic_sha256`
+    이 `b4701aa33264a753` → `0217b906f6b8bf42` 로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime
+    동안 고정이므로 g4 를 얼리고 `g5_2026_08_29` 로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의
+    정의다.'
+- cohort_id: g5_2026_08_29
+  dir: docs/22p_gap/proj_g5
+  status: frozen
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '50차 게이트 리뷰(49차 조건)가 producer 닫힘의 남은 구멍 셋과 게시 경로의 순서 결함 하나를 짚었다: (1) `A,
+    B = 1, 2` 로 정의한 module 상수가 닫힘 밖이었다 — `_module_defs()` 가 `ast.Name` target 만 담았고,
+    게다가 같은 walk 의 사본이 `_compute_closure()` 안에 하나 더 있어 한쪽만 고치면 약한 쪽이 실효 규칙이 됐다 (authority
+    를 하나로 합쳤다). (2) 정규형이 docstring 을 버리는데 계산이 `__doc__` 을 읽으면 그 산문이 의미가 된다 — 버린 것을
+    쓰는 코드는 fail-closed 다. (3) `SUPPORTED_PYTHON` 이 3.12 를 선언하는데 정규형이 3.12 에서 실제로 달랐다
+    (PEP 701 파서가 중첩 format spec 끝에 빈 `Constant('''')` 를 붙인다) — 정규형이 그 빈 조각을 흡수하게 했고
+    이제 3.11·3.12·3.13 이 같은 값을 낸다. (4) `build()` 의 frozen 목적지 판정이 원자료 존재 검사 뒤에 있었다
+    — 거절은 아무 일도 하기 전에 나야 하므로 맨 앞으로 옮겼다. 넷을 다 고치면서 `producer_semantic_sha256` 이 `b4701aa33264a753`
+    → `0217b906f6b8bf42` 로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 g4 를
+    얼리고 `g5_2026_08_29` 로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의 정의다.'
+  행_바이트가_같은가: 같다. `projection_sha256` · `restart_projection_sha256` · `fits_sha256`
+    이 g4 와 바이트 동일하다 (50차 변경은 전부 identity 정의·자격 검사·결속·순서이고 계산식이 아니다). 그래도 **cross-cohort
+    비교는 금지**다 — 같은 바이트라는 사실은 회귀가 확인하는 것이지 인용의 근거가 아니다.
+  pin:
+    schema_version: 3
+    compute_sha256: ac6ff10f3f1aaab9
+    row_projection_py_sha256: 0ee9b706436236c3
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: 0217b906f6b8bf42
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  legs:
+  - paired_fixed5_v4
+  frozen_reason: '51차 게이트 리뷰(50차 조건)가 producer 닫힘의 남은 구멍 둘을 짚었다: (1) `_module_defs()`
+    가 module scope 의 Function/Class/Assign/AnnAssign 네 형태만 담고 나머지를 조용히 지나쳤다 — 실제 파일의
+    `_RESTART_SOURCES = ...` 한 줄을 `for _RESTART_SOURCES in (...): pass` 로 바꾼 두 변형이
+    **동작이 다른데 sealed identity 가 같았다**. 이제 복합문 안으로 들어가고, 이름을 안 묶는 문은 지나가고, 그 밖은 fail-closed
+    다. (2) 정규형이 docstring 을 버리고 그것을 읽는 코드를 `.__doc__` 이라는 **철자**로 막았는데, `read = getattr`
+    alias 가 그 철자를 피해 갔다 — 계산값은 달라지고 digest 는 같았다. 철자 목록을 넓히는 것은 종결 조건이 아니므로 **버리는
+    것을 없앴다**: 정규형이 docstring 을 남긴다. 더해 lifecycle journal 이 cohort ID 뿐 아니라 목적지를 봉인하게
+    됐다 (P0-F). 셋을 다 고치면서 `producer_semantic_sha256` 이 `0217b906f6b8bf42` → `632232332b015def`
+    로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 g5 를 얼리고 `g6_2026_09_01`
+    로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의 정의다.'
+- cohort_id: g6_2026_09_01
+  dir: docs/22p_gap/proj_g6
+  status: frozen
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '51차 게이트 리뷰(50차 조건)가 producer 닫힘의 남은 구멍 둘을 짚었다: (1) `_module_defs()` 가
+    module scope 의 Function/Class/Assign/AnnAssign 네 형태만 담고 나머지를 조용히 지나쳤다 — 실제 파일의
+    `_RESTART_SOURCES = ...` 한 줄을 `for _RESTART_SOURCES in (...): pass` 로 바꾼 두 변형이
+    **동작이 다른데 sealed identity 가 같았다**. 이제 복합문 안으로 들어가고, 이름을 안 묶는 문은 지나가고, 그 밖은 fail-closed
+    다. (2) 정규형이 docstring 을 버리고 그것을 읽는 코드를 `.__doc__` 이라는 **철자**로 막았는데, `read = getattr`
+    alias 가 그 철자를 피해 갔다 — 계산값은 달라지고 digest 는 같았다. 철자 목록을 넓히는 것은 종결 조건이 아니므로 **버리는
+    것을 없앴다**: 정규형이 docstring 을 남긴다. 더해 lifecycle journal 이 cohort ID 뿐 아니라 목적지를 봉인하게
+    됐다 (P0-F). 셋을 다 고치면서 `producer_semantic_sha256` 이 `0217b906f6b8bf42` → `632232332b015def`
+    로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 g5 를 얼리고 `g6_2026_09_01`
+    로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의 정의다.'
+  행_바이트가_같은가: 같다. `projection_sha256` · `restart_projection_sha256` · `fits_sha256`
+    이 g5 와 바이트 동일하다 (51차 변경은 전부 자격·원자성·승인 축·결속·동결 대상·identity 정의이고 계산식이 아니다). 그래도
+    **cross-cohort 비교는 금지**다 — 같은 바이트라는 사실은 회귀가 확인하는 것이지 인용의 근거가 아니다.
+  pin:
+    schema_version: 3
+    compute_sha256: 730e673e74edb8ae
+    row_projection_py_sha256: 06e8dcfe58946e9e
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: 632232332b015def
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  legs:
+  - paired_fixed5_v4
+  frozen_reason: '52차 게이트 리뷰(51차 조건)가 producer 닫힘의 남은 구멍 둘과 동결의 대상 identity 를 짚었다:
+    (1) 이름 → **단일 node** 매핑이라 `TOL = 1` 다음의 `TOL += 9` 처럼 같은 이름을 여러 문이 건드릴 때 하나만 identity
+    에 들어갔다 — 이름 → 순서 있는 binding 목록으로 바꾸고 `AugAssign`·`Delete`·import·match capture
+    를 담는다. (2) 정규형이 버리는 raw source 를 `inspect.getsource()` 로 읽을 수 있었다. 51차 docstring
+    건과 같은 형태이고, `from inspect import getsource as _gs` 가 철자 blacklist 를 피해 갔다 — 철자가
+    아니라 **능력**을 닫는다 (`inspect`·`linecache`·`dis`·`traceback` 에 묶이는 이름을 닫힘 안에서 금지,
+    지역 import 포함). 그 guard 가 `_compute_closure()` 자신을 잡아 그쪽도 정규형으로 바꿨다. (3) 동결 봉인이
+    cohort ID(49차)·`dir`(51차) 이라는 **이름**이었고 bind mount 는 이름을 또 만든다 — 봉인 marker 를 대상
+    안(`.FROZEN`)에 둔다. 셋을 다 고치면서 `producer_semantic_sha256` 이 `632232332b015def` →
+    `92fa65b43a6352ce` 로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 g6 을 얼리고
+    `g7_2026_09_01` 로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의 정의다.'
+- cohort_id: g7_2026_09_01
+  dir: docs/22p_gap/proj_g7
+  status: frozen
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '52차 게이트 리뷰(51차 조건)가 producer 닫힘의 남은 구멍 둘과 동결의 대상 identity 를 짚었다: (1)
+    이름 → **단일 node** 매핑이라 `TOL = 1` 다음의 `TOL += 9` 처럼 같은 이름을 여러 문이 건드릴 때 하나만 identity
+    에 들어갔다 — 이름 → 순서 있는 binding 목록으로 바꾸고 `AugAssign`·`Delete`·import·match capture
+    를 담는다. (2) 정규형이 버리는 raw source 를 `inspect.getsource()` 로 읽을 수 있었다. 51차 docstring
+    건과 같은 형태이고, `from inspect import getsource as _gs` 가 철자 blacklist 를 피해 갔다 — 철자가
+    아니라 **능력**을 닫는다 (`inspect`·`linecache`·`dis`·`traceback` 에 묶이는 이름을 닫힘 안에서 금지,
+    지역 import 포함). 그 guard 가 `_compute_closure()` 자신을 잡아 그쪽도 정규형으로 바꿨다. (3) 동결 봉인이
+    cohort ID(49차)·`dir`(51차) 이라는 **이름**이었고 bind mount 는 이름을 또 만든다 — 봉인 marker 를 대상
+    안(`.FROZEN`)에 둔다. 셋을 다 고치면서 `producer_semantic_sha256` 이 `632232332b015def` →
+    `92fa65b43a6352ce` 로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 g6 을 얼리고
+    `g7_2026_09_01` 로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의 정의다.'
+  행_바이트가_같은가: 같다. `projection_sha256` · `restart_projection_sha256` · `fits_sha256`
+    이 g6 과 바이트 동일하다 (52차 변경은 전부 실행권·crash 회수·승인 축·동결 대상·identity 정의이고 계산식이 아니다). 그래도
+    **cross-cohort 비교는 금지**다 — 같은 바이트라는 사실은 회귀가 확인하는 것이지 인용의 근거가 아니다.
+  pin:
+    schema_version: 3
+    compute_sha256: fb702e8134a3cf79
+    row_projection_py_sha256: 2f01bf35a9d88af9
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: 92fa65b43a6352ce
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  legs:
+  - paired_fixed5_v4
+  frozen_reason: 53차 — producer identity 정의가 또 바뀌었다 (dunder allowlist · 컨테이너 결속).
+    g8 로 간다.
+- cohort_id: g8_2026_09_01
+  dir: docs/22p_gap/proj_g8
+  status: frozen
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '53차 게이트 리뷰(52차 조건)가 producer identity 의 남은 구멍 둘을 짚었다: (1) module scope
+    의 컨테이너 변형(`BOX[''value''] = …`)을 `_target_names()` 가 빈 목록으로 돌려주고 `_module_defs()`
+    가 조용히 지나쳤다 — 값이 바뀌어도 digest 가 같았다. 이제 컨테이너를 바꾸는 문은 그 뿌리 이름에 결속하고, 뿌리 이름이 없는 target
+    은 fail-closed 다. (2) `__loader__.get_source(__name__)` 은 import 없이 raw source
+    를 준다 — 52차의 모듈 넷 blacklist 밖이었다. 철자 목록이 끝나지 않는 이유는 blacklist 이기 때문이므로 dunder 를
+    **allowlist 로 뒤집고**, loader protocol 의 source 반환 method 와 `importlib` 을 능력 목록에
+    넣었다. 그러면서 `REPO`·provenance 파일 위치를 producer 절단면 뒤로 옮겼다 (checkout 위치는 producer
+    의미가 아니다). `producer_semantic_sha256` 이 `92fa65b43a6352ce` → `d7da84a9272924dd`
+    로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 g7 을 얼리고 `g8_2026_09_01`
+    로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의 정의다.'
+  행_바이트가_같은가: 같다. `projection_sha256` · `restart_projection_sha256` · `fits_sha256`
+    이 g7 과 바이트 동일하다 (53차 변경은 전부 실행권·동결 transaction·lifecycle 읽기·identity 정의이고 계산식이
+    아니다). 그래도 **cross-cohort 비교는 금지**다 — 같은 바이트라는 사실은 회귀가 확인하는 것이지 인용의 근거가 아니다.
+  pin:
+    schema_version: 3
+    compute_sha256: 7634dd2f0d4b4e4b
+    row_projection_py_sha256: 2bc69ab32c1e7a77
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: d7da84a9272924dd
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  legs:
+  - paired_fixed5_v4
+  frozen_reason: 54차 — producer identity 정의가 또 바뀌었다 (표현식 결속 · 문자열 dunder · 측정 대상 선택).
+    g9 로 간다.
+- cohort_id: g9_2026_09_01
+  dir: docs/22p_gap/proj_g9
+  status: frozen
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '54차 게이트 리뷰(53차 조건)가 producer identity 의 남은 구멍 셋을 짚었다: (1) module scope
+    의 `BOX.update(...)` 는 `Expr` 이라 통째로 무시됐다 — 값을 버리는 표현식을 **대상 이름에 결속**하고 뿌리 이름이
+    없으면 fail-closed 로 멈춘다. (2) `getattr(f, "__globals__")` 가 dunder allowlist 를 우회했다
+    — 이름이 인자로 건네지는 자리의 **문자열 상수**도 같은 규칙을 받는다. (3) 절단된 `_producer_source_files()`
+    가 pristine decoy 를 돌려주면 신고한 source 와 실행된 source 가 달라도 두 identity 가 그대로였다 — 무엇을
+    재는지 고르는 것은 바이트를 만들지는 않아도 **무엇을 주장하는지**를 정하므로 절단면에서 뺐다. 셋을 고치면서 `producer_semantic_sha256`
+    이 `d7da84a9272924dd` → `d4c3dc8ff856d31a` 로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime
+    동안 고정이므로 g8 을 얼리고 `g9_2026_09_01` 로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의
+    정의다.'
+  행_바이트가_같은가: 같다. `projection_sha256` · `restart_projection_sha256` · `fits_sha256`
+    이 g8 과 바이트 동일하다 (54차 변경은 전부 발급·동결 transaction·lock 순서·identity 정의이고 계산식이 아니다).
+    그래도 **cross-cohort 비교는 금지**다 — 같은 바이트라는 사실은 회귀가 확인하는 것이지 인용의 근거가 아니다.
+  pin:
+    schema_version: 3
+    compute_sha256: b12e9ff10385169e
+    row_projection_py_sha256: b99dee231d0f170e
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: d4c3dc8ff856d31a
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  legs:
+  - paired_fixed5_v4
+  frozen_reason: 55차 producer identity 정의가 또 바뀌었다 (P0-5 alias·동적 dunder) — pin 은 cohort
+    lifetime 동안 고정이므로 새 cohort 로 간다
+- cohort_id: g10_2026_09_01
+  dir: docs/22p_gap/proj_g10
+  status: frozen
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '55차 게이트 리뷰(54차 조건)가 producer identity 의 남은 문법 둘을 짚었다: (1) module-level
+    `Expr` 를 **쓰여 있는 이름**에 결속했으므로 `BOX={}; ALIAS=BOX; ALIAS.update(tol=…)` 처럼 별칭을
+    한 겹 끼우면 계산이 읽는 이름의 닫힘에서 빠졌다 (리뷰어 실측: digest 동일 · 0.02 → 0.09). 별칭 겹수는 이름 추적으로
+    이길 수 없으므로 방향을 뒤집어, docstring 이 아닌 module-level 표현식은 예약 이름 `MODULE_EFFECTS` 에 묶여
+    두 닫힘 walk 의 seed 에 **무조건** 들어간다. (2) dunder 검사가 직접 `Constant` 인자만 봤으므로 `getattr(f,
+    *["__globals__"])` · `getattr(f, ["__globals__"][0])` · `getattr(f, KEY)` 가 그대로
+    통과했다 (실측: digest 동일 · 1 → 9). 이름 인자 식에서 **정적으로 읽히는 문자열**(중첩 리터럴·module 상수 경유)을
+    모아 같은 규칙을 먹인다. 둘을 고치면서 `producer_semantic_sha256` 이 `d4c3dc8ff856d31a` → `effc3eef2e23fabd`
+    로, `compute_sha256` 이 `b12e9ff10385169e` → `0f59ad72af31703e` 로 움직였다. 계약 §13.3.2
+    대로 pin 은 cohort lifetime 동안 고정이므로 g9 을 얼리고 `g10_2026_09_01` 로 간다. **행 바이트는 안 움직였다**
+    — 움직인 것은 identity 의 정의다.'
+  행_바이트가_같은가: 같다. `projection_sha256` · `restart_projection_sha256` · `fits_sha256`
+    이 g9 과 바이트 동일하다 (55차 변경은 전부 lock 순서·원장 해석·mount 해석·identity 정의이고 계산식이 아니다). 그래도
+    **cross-cohort 비교는 금지**다 — 같은 바이트라는 사실은 회귀가 확인하는 것이지 인용의 근거가 아니다.
+  pin:
+    schema_version: 3
+    compute_sha256: 0f59ad72af31703e
+    row_projection_py_sha256: 969916b10e845036
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: effc3eef2e23fabd
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  legs:
+  - paired_fixed5_v4
+  frozen_reason: 56차 producer identity 정의가 또 바뀌었다 (P0-8 crossed module seed · P0-9
+    exact 상수 평가) — pin 은 cohort lifetime 동안 고정이므로 새 cohort 로 간다
+- cohort_id: g11_2026_09_02
+  dir: docs/22p_gap/proj_g11
+  status: frozen
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '56차 게이트 리뷰(55차 조건)가 producer identity 의 남은 축 둘을 짚었다: (1) `MODULE_EFFECTS`
+    를 primary module 에만 seed 해서 건너간 `src.scoring` 의 module 효과가 닫힘 밖이었다 (리뷰어 실측: alias
+    효과가 값을 1 → 9 로 바꿔도 digest 동일). 닫힘에 들어오는 **모든** module 을 같은 모델로 다룬다. (2) dunder
+    검사가 문자열 **조각을 모았을** 뿐이라 `"__" + "globals__"` · f-string · `join` 으로 조립하면 통과했다
+    (실측: digest 동일 · 1 → 9). 조각을 찾는 검사는 닫힌 규칙이 아니므로, 이름 인자를 exact 상수 평가(`_exact_const`)로
+    계산하고 계산할 수 없으면 멈춘다. 그러려면 producer 자신이 동적 `getattr` 을 쓰지 않아야 해서 `_ast_canon` 의
+    `node._fields` 루프와 `_module_defs` 의 `attr` 루프를 `ast.iter_fields`·명시 접근으로 바꿨다 —
+    55차엔 그 자리들 때문에 규칙을 좁혔고 그 틈이 이번 반례의 통로였다. 셋을 고치면서 `producer_semantic_sha256` 이
+    `effc3eef2e23fabd` → `eb4555abd9490dd0` 로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime
+    동안 고정이므로 g10 을 얼리고 `g11_2026_09_02` 로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity
+    의 정의다.'
+  행_바이트가_같은가: 같다. `projection_sha256` · `restart_projection_sha256` · `fits_sha256`
+    이 g10 과 바이트 동일하다 (56차 변경은 전부 경로 고정·mount 해석·복구 protocol·identity 정의이고 계산식이 아니다).
+    그래도 **cross-cohort 비교는 금지**다.
+  pin:
+    schema_version: 3
+    compute_sha256: 872ca5b9046ca703
+    row_projection_py_sha256: b9d895261c7a9df1
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: eb4555abd9490dd0
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  legs:
+  - paired_fixed5_v4
+  frozen_reason: 57차가 lifecycle 신뢰 경계·attempt 경로 sink·producer capability 닫힘·mount
+    정체·finalize 선형화를 고치면서 code identity 가 움직였다 (compute 872ca5b9046ca703 → 044a87204bfca078)
+    — 계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 새 cohort 로 간다
+- cohort_id: g12_2026_09_03
+  dir: docs/22p_gap/proj_g12
+  status: frozen
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '57차 게이트 리뷰(56차 조건)가 다섯 축을 짚었고 전부 **구조로** 닫았다. (1) B — lifecycle 신뢰 경계가
+    어디에도 적혀 있지 않아 `preserve.py` 의 `_TRUST_BOUNDARY` 와 계약 §13.3.4 로 선언했다. (2) P0-1
+    — caller 가 지정한 attempt 경로가 authority 를 덮는 sink 라, blacklist 를 늘리는 대신 **경로 인자를
+    없앴다** (`attempt_path_for()` 가 유도한다). 그러면서 도달 불가가 된 검사 둘을 실측하고 지웠다. (3) P0-5 —
+    55차 형태 durable state 에 `attempt_verifier` 가 없어 `migrate_legacy_finalized_leg()`
+    로 버전화했다. (4) P0-6/P0-7 — producer 닫힘이 **철자 blacklist** 였다. 이름이 아니라 capability
+    를 따라가도록 `_namespace_capabilities()` 로 뒤집고, import-time 계산(decorator·default·annotation·base)을
+    `_import_time_heads()` 로 닫힘에 넣었다. (5) P0-2/3/4·P1-4 — mount 정체를 mountinfo 행 순서와
+    pathname 깊이로 **추측**했다. 겹쳐 쌓인 mount 는 깊이가 같아 아래 것이 뽑혔다(반례 실측). 추측을 정교화하지 않고 없앴다:
+    `_kernel_mount_id()` 로 커널에 묻고 `_fs_identity()` 로 `(dev, filesystem 안의 경로)` 좌표에서
+    비교하며 `_names_for()` 는 창을 하나 고르지 않는다. (6) P1-2 — 재생이 보는 환경을 선언한 것만 남기고 지웠다(`replay_env()`).
+    (7) P1-3 — 멱등성 물음을 임계 구역 안으로 옮겨 finalize 를 선형화했다. 이 수정들로 `compute_sha256` 이 `872ca5b9046ca703`
+    → `044a87204bfca078`, `producer_semantic_sha256` 이 `eb4555abd9490dd0` → `ad36d111337abd39`
+    로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 g11 을 얼리고 `g12_2026_09_03`
+    로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의 정의다.'
+  행_바이트가_같은가: 같다. `projection_sha256` · `restart_projection_sha256` · `fits_sha256`
+    이 g11 과 바이트 동일하다 (57차 변경은 전부 신뢰 경계 선언·경로 유도·capability 닫힘·mount 좌표·환경 정화·임계 구역이고
+    계산식이 아니다). 그래도 **cross-cohort 비교는 금지**다 — 같은 바이트라는 사실은 회귀가 확인하는 것이지 인용의 근거가 아니다.
+  pin:
+    schema_version: 3
+    compute_sha256: 044a87204bfca078
+    row_projection_py_sha256: ad1349257095cbd1
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: ad36d111337abd39
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  legs:
+  - paired_fixed5_v4
+  frozen_reason: 58차 게이트 리뷰(57차 조건)가 13건을 짚었고 전부 코드에서 닫혔다. `tools/preserve.py`·`docs/22p_gap/row_projection.py`
+    가 움직여 code identity 가 이동했다 (compute 044a87204bfca078 → 0d3e1355383dda14 · producer_semantic
+    ad36d111337abd39 → 13def6a32e8d9536). 계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로
+    재생성이 아니라 새 cohort 로 간다.
+- cohort_id: g13_2026_09_07
+  dir: docs/22p_gap/proj_g13
+  status: frozen
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '58차 게이트 리뷰(57차 조건)가 13건(P0 9 · P1 4)을 짚었고 전부 코드에서 닫혔다. (1) L1 — production
+    진입점이 실행 class authority 에 **안 닿았다**. 진입점마다 호출을 추가하는 대신 면제를 말하는 함수 하나(`note_smoke_exemption()`)를
+    두고 조기 return 자리가 반드시 그것을 거치게 했다. (2) L2 — `run_content_id()` 가 first-present manifest
+    하나만 봐서 서로 다른 fit 이 같은 내용 identity 를 받았다. 후보 목록을 늘리지 않고 **적용되는 모든 manifest 를 담은
+    닫힌 typed descriptor**(`run-content-id/v2`)를 해시한다. (3) L3 — class 등록부가 last-writer-wins
+    였다. 내용당 lock + `O_CREAT|O_EXCL` 로 배타 지점을 class 와 무관한 한 자리에 뒀다. (4) L4·L5 — smoke
+    담김과 frozen guard 가 **이름**에 의존해 bind mount 로 뒤집혔다. 둘 다 커널 좌표 `(major:minor, filesystem
+    안의 경로)` 로 판정하고, frozen 은 얼리는 순간 그 좌표를 **봉인**한다. (5) L6 — 소비된 phase receipt 를 늦은
+    writer 가 덮어썼다. write-once 로 하고 finalize 가 producer-consumer 결속을 재검증한다. (6) L7·L10
+    — caller evidence 의 도메인을 닫았다: `root / absolute` 흡수를 담김 확인으로 바꾸고, lifecycle 소유
+    필드를 caller 가 쓰지 못하게 했다. (7) L8 — directory fsync 실패를 삼키고 발급이 성공했다. strict 로 전파한다.
+    (8) L9 — producer 닫힘이 이름 하나짜리 데코레이터·AnnAssign 우변·함수 지역 capability 별칭을 놓쳤다. 데코레이터는
+    **치환**이므로 무조건 묶고, 능력은 **부르는 자리 밖에 나타나면 거부**한다. (9) L11·L12 — 실행 증거가 실행 밖에 있었다.
+    영수증이 인터프리터에게 자기가 올린 것을 묻고, 재생이 자기 report 안에 환경을 증언하며, checker 는 그 바이트에서 유도한다.
+    (10) L13 — 이름이 강한 회귀가 배선을 안 불렀고 등록부에 신규 방어 anchor 가 없었다. top-level 소비자를 부르게 고치고
+    변이 등록부에 16축(`-g58`)을 심었다. 이 수정들이 code identity 를 움직여 `g12_2026_09_03` 을 얼리고 `g13_2026_09_07`
+    로 간다.'
+  pin:
+    schema_version: 3
+    compute_sha256: 0d3e1355383dda14
+    row_projection_py_sha256: f55f5ddd6fb7bd2f
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: 13def6a32e8d9536
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  legs:
+  - paired_fixed5_v4
+  frozen_reason: 59차 게이트 리뷰(P0 12 · P1 4 · P2 1)를 코드에서 닫으면서 analyzer 가 바뀌었다 — compute_sha256
+    · row_projection_py_sha256 · producer_semantic_sha256 이 전부 이동했다. 이 세대의 투영은 그때의
+    코드가 만든 것이므로 그대로 얼리고, 새 세대(g14)를 만든다.
+- cohort_id: g14_2026_09_08
+  dir: docs/22p_gap/proj_g14
+  status: frozen
+  legs:
+  - paired_fixed5_v4
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '59차 게이트 리뷰(58차 조건)가 17건(P0 12 · P1 4 · P2 1)을 짚었고 전부 코드에서 닫혔다. 판정은 세
+    형태였다: ① 새 primitive 가 production 의 **산출 commit 에 닿지 않는다** ② 판정은 한 시점의 이름·caller
+    객체를 보고 **쓰기·봉인은 나중의 것을 다시 연다** ③ "닫힌 집합" 이라고 부른 **입력이 실제 schema 보다 작다**. (1) M1
+    — gate 가 무시할 수 있는 목록 대신 **권한**(`ExecutionClassCapability`)을 발행하고, 산출을 굳히는 함수가
+    그것을 요구한다. raw class 를 받던 `record_run_outputs()` 는 삭제했다 (실호출 0곳이었다). (2) M3 — 등록
+    게시를 temp→write-all→fsync→**바이트 read-back**→`os.link()` no-replace CAS→parent fsync
+    로 뒤집었다. `O_EXCL` 은 이름 배타일 뿐 내용 완전성이 아니다. (3) M4 — 공유·국소 등록부를 **둘 다** 읽고 어긋나면 거부한다.
+    (4) M13 — 성공의 출구를 하나로 모아 멱등 재시도도 durability 를 다시 굳힌다. (5) M2 — 내용 identity 의 manifest
+    목록을 **production schema 선언**으로 승격하고, 구조 시험이 양방향 동일성을 강제하며 선언 밖 manifest 는 거부한다
+    (`run-content-id/v3`). (6) M7 — phase 순서를 강제하고 `consumed` 결속을 **필수**로 만들었다 (없으면
+    오류). (7) M5 — 권한이 gate 가 판정한 디렉터리의 handle 을 들고 가고, 굳히는 자리가 같은 커널 객체인지 확인한 뒤 그
+    handle 로 manifest 를 읽는다. (8) M6 — 좌표 봉인이 없는 frozen cohort 가 있으면 게시를 거부한다 (이 기계에서
+    12개 중 11개가 무봉인이었다 — 실측). (9) M8 — 묶음 구성원 walk 를 `lstat` 으로 바꿔 symlink 를 거부한다.
+    (10) M9 — finalize 가 진입 즉시 evidence 를 정규 바이트로 굳힌다. (11) M10 — raw 발급을 공개 표면에서
+    내리고 token 이 디스크에 굳어 있는지 확인한다. (12) M11·M12·M17 — producer identity 의 물음을 뒤집었다:
+    **실행된다**를 기본으로 두고 실행되지 않음을 증명할 수 있는 것만 뺀다. 능력 대상은 "module 이 아님을 증명할 수 있는가", module
+    scope 의 `assert`·`raise`·class base·metaclass·future flag 는 실행 슬라이스 안, `if __name__
+    == "__main__"` 만 증명으로 제외. 능력 escape 판정은 철자에서 **결속**으로. (13) M14·M15 — 탐침이 startup
+    에 올라온 module 전부를 재고, 증언 범위를 영수증 전체로 넓혔다. (14) M16 — 내 회귀 하나가 이 기계 고유 장치 번호를 하드코딩해
+    리뷰어 기계에서 자기 축을 실행하지 않았다.'
+  pin:
+    schema_version: 3
+    compute_sha256: c02b963e5d65bb55
+    row_projection_py_sha256: c9bdaa2b33ad6ed4
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: 1c768c143c35e43c
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  frozen_reason: '60차: producer analyzer 가 움직였다 (compound head · vararg 주석 · module
+    docstring · scope 별 shadow · 이름 공간 고정점) — 세대 전환'
+- cohort_id: g15_2026_09_08
+  dir: docs/22p_gap/proj_g15
+  status: frozen
+  legs:
+  - paired_fixed5_v4
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '60차 게이트 리뷰가 17건(P0 13 · P1 4)을 짚었고 전부 코드에서 닫혔다. 판정이 정리한 공통 형태는 넷이다: ①
+    capability 의 발급·소비 authority 가 안 닫혔다 ② handle 검사가 실제 쓰기가 끝난 뒤에 온다 ③ `lstat` 와
+    객체 snapshot 은 bind mount 와 referent 교체를 못 막는다 ④ producer 의 "실행된다가 기본" 에 매개변수 출처·중첩
+    scope·compound head·vararg 주석·module `__doc__` 가 빠졌다. 이 cohort 의 pin 을 움직인 것은
+    ④ 다 — analyzer 가 compound head 와 vararg/kwarg 주석을 실행 슬라이스에 넣고, shadow 를 scope
+    별로 가르고, 이름 공간 고정점을 기본값·`for`·`with as` 로 넓히고, module docstring 을 `__doc__` 로 묶는다.
+    **계산식은 안 바뀌었다** — 아래 행 바이트가 그 사실을 말한다.'
+  pin:
+    schema_version: 3
+    compute_sha256: 3b94bda70dc63869
+    row_projection_py_sha256: a425da3233253625
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: 6518c2fa47f1e8c4
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  frozen_reason: 61차 게이트 리뷰가 새 P0 2건·P1 4건·P2 1건을 냈고 전부 코드에서 닫혔다. producer analyzer
+    가 움직였다 — comprehension 을 자식 scope 로 다루고(P1-4), 그 과정에서 계산 경로가 바뀌었다. 활성 cohort 가
+    현행 트리를 안 따라가므로 다음 세대로 넘긴다.
+- cohort_id: g16_2026_09_09
+  dir: docs/22p_gap/proj_g16
+  status: frozen
+  legs:
+  - paired_fixed5_v4
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: 61차 게이트 리뷰가 새 P0 2건 · P1 4건 · P2 1건을 냈고 전부 코드에서 닫혔다. 가장 강한 반례 둘은 공격이 아니라
+    **정상 production 순서**였다 — ① 이미 report 가 있는 run 을 resume 하면 봉인이 그 옛 report 를 흡수하고,
+    이어지는 정상 report 갱신이 봉인을 stale 로 만들어 승격이 거부됐다. ② fit 이 논리 경로를 `/proc/self/fd/N`
+    으로 대체한 뒤 그것을 durable manifest·summary·phase receipt 에 적었고, 성공하면 그 경로가 사라졌다. 이
+    cohort 의 pin 을 움직인 것은 P1-4 다 — analyzer 가 comprehension 을 **자식 scope** 로 다루도록
+    고쳐졌다 (Python 3 에서 comprehension target 은 바깥에 안 샌다). **계산식은 안 바뀌었다** — `src_scoring_py_sha256`
+    가 그대로이고, 아래 행 바이트가 그 사실을 말한다.
+  pin:
+    schema_version: 3
+    compute_sha256: fa5b9324c01ab7f0
+    row_projection_py_sha256: 0e22767966646d49
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: 2e2ddce417ecf0db
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  frozen_reason: 62차 게이트 리뷰가 새 P0 8건·P1 6건·P2 2건을 냈고 전부 코드에서 닫혔다 (원장 §75·§76). producer
+    analyzer 가 움직였다 — definition head 는 바깥 scope, class 본문의 결속은 method 에 안 내려가고 함수·lambda
+    만 결속 shadow 를 주며, 건너간 module 은 자기 symbol table 로 분석하고 자기 이름 공간 접근을 따라간다 (P0-6·P0-7
+    + 자체 리뷰 sig 렌즈 3건). 활성 cohort 가 현행 트리를 안 따라가므로 다음 세대로 넘긴다. 계산식은 안 바뀌었다 — src_scoring_py_sha256
+    가 그대로다.
+- cohort_id: g17_2026_09_14
+  dir: docs/22p_gap/proj_g17
+  status: frozen
+  legs:
+  - paired_fixed5_v4
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: 62차 게이트 리뷰가 새 P0 8건 · P1 6건 · P2 2건을 냈고 전부 코드에서 닫혔다 (원장 §75·§76). 판정의
+    세 문장 — ① temporal seal 이 "등록된 실행의 고정 identity" 가 아니라 우연히 남은 과거의 prefix 로 되돌아간다
+    (승격 판정과 전이 조회를 갈랐다) ② run lock 발급이 원자적이지 않고 봉인·class 등록 전에 lock 을 놓는다 (flock token,
+    commit 까지 임계구역) ③ producer scope 모델이 Python 과 다르다. 이 cohort 의 pin 을 움직인 것은 ③ 이다
+    — definition head 는 바깥 scope, class 본문의 결속은 method 에 안 내려가고 함수·lambda 만 결속 shadow
+    를 주며, 건너간 module 은 자기 symbol table 로 분석하고 자기 이름 공간 접근(`import src.scoring as me`)을
+    따라간다 (P0-6·P0-7 + 자체 리뷰 sig-완전성 렌즈가 잡은 3건 — 전부 "digest 같고 출력 다름" 을 실물 module 로
+    재현했다). **계산식은 안 바뀌었다** — `src_scoring_py_sha256` 가 그대로이고, 아래 행 바이트가 그 사실을 말한다.
+  pin:
+    schema_version: 3
+    compute_sha256: 14ff767d5fbd0d9d
+    row_projection_py_sha256: f85fc2b39e15d3d0
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: 814278bfcb82fa2f
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+  frozen_reason: 63차 게이트 리뷰(방어적 코드·회귀 검토)가 새 P1 3건·P2 1건과 증거 공백 둘을 냈고 전부 코드에서 닫혔다
+    (원장 §77·§78). producer analyzer 가 움직였다 — definition head 가 3.12 type_params 의
+    bound·default 를 열거한다 (E1). 활성 cohort 가 현행 트리를 안 따라가므로 다음 세대로 넘긴다. 계산식은 안 바뀌었다
+    — src_scoring_py_sha256 가 그대로다.
+- cohort_id: g18_2026_09_15
+  dir: docs/22p_gap/proj_g18
+  status: active
+  legs:
+  - paired_fixed5_v4
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: 63차 게이트 리뷰(방어적 코드·회귀 검토)가 새 P1 3건 · P2 1건과 증거 공백 둘을 냈고 전부 코드에서 닫혔다
+    (원장 §77·§78). 이 cohort 의 pin 을 움직인 것은 E1 이다 — producer analyzer 의 definition head 가 3.12 `type_params`
+    의 bound(3.12)·default(3.13) 를 열거한다. bound 는 별도 annotation scope 에서 지연 평가되고 함수 매개변수를 못 보므로
+    매개변수 shadow 를 안 적용하는 head 자리가 맞다. type parameter 이름 자체는 shadow 로 세지 않는다 (fail-closed 쪽).
+    첫 수정판이 `getattr(tp, attr)` 로 이름을 계산해서 건네다 분석기 자신의 규칙에 걸렸고 리터럴 이름 둘로 풀었다 —
+    규칙이 자기 자신에게도 걸린다는 것을 실측했다. **계산식은 안 바뀌었다** — `src_scoring_py_sha256` 가 그대로이고,
+    아래 행 바이트가 그 사실을 말한다.
+  pin:
+    schema_version: 3
+    compute_sha256: 150416386d3c0b93
+    row_projection_py_sha256: b8eae978b9525c3e
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: 1d6c0e76f18d63ed
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.1
+planned:
+- leg_id: paired_fixed5_v4
+  cohort_id: g2_2026_08_25
+  status: executed
+  authorization_kind: retrospective
+  run_spec_digest: retrospective:no-preauthorization
+  authorized_source_digest: d50295f980ccaa81
+  recorded_on: '2026-08-28'
+  근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+    원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+- leg_id: paired_fixed5_v4_nowarm_now
+  cohort_id: g1_2026_08_20
+  status: executed
+  authorization_kind: retrospective
+  run_spec_digest: retrospective:no-preauthorization
+  authorized_source_digest: a72c0f3a485c19bb
+  recorded_on: '2026-08-28'
+  근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+    원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+- leg_id: paired_fixed5_v4_warm
+  cohort_id: g1_2026_08_20
+  status: executed
+  authorization_kind: retrospective
+  run_spec_digest: retrospective:no-preauthorization
+  authorized_source_digest: a72c0f3a485c19bb
+  recorded_on: '2026-08-28'
+  근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+    원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+- leg_id: fit_22p_seed_404_hc
+  cohort_id: g1_2026_08_20
+  status: executed
+  authorization_kind: retrospective
+  run_spec_digest: retrospective:no-preauthorization
+  authorized_source_digest: 7250c6e689399381
+  recorded_on: '2026-08-28'
+  근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+    원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+- leg_id: fit_22p_seed_404_hc_nowarm
+  cohort_id: g1_2026_08_20
+  status: executed
+  authorization_kind: retrospective
+  run_spec_digest: retrospective:no-preauthorization
+  authorized_source_digest: a72c0f3a485c19bb
+  recorded_on: '2026-08-28'
+  근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+    원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+- leg_id: fit_22p_seed_404_hc_warm_now
+  cohort_id: g1_2026_08_20
+  status: executed
+  authorization_kind: retrospective
+  run_spec_digest: retrospective:no-preauthorization
+  authorized_source_digest: a72c0f3a485c19bb
+  recorded_on: '2026-08-28'
+  근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+    원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+- leg_id: fit_seed404_pe5mv
+  cohort_id: g1_2026_08_20
+  status: executed
+  authorization_kind: retrospective
+  run_spec_digest: retrospective:no-preauthorization
+  authorized_source_digest: d842894dbbc2a0f9
+  recorded_on: '2026-08-28'
+  근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+    원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+- leg_id: fit_seed404_pe5mv_nowarm
+  cohort_id: g1_2026_08_20
+  status: executed
+  authorization_kind: retrospective
+  run_spec_digest: retrospective:no-preauthorization
+  authorized_source_digest: a72c0f3a485c19bb
+  recorded_on: '2026-08-28'
+  근거: 46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는 실행 전 gate 가 없던 시절에 돌았고, digest 는
+    원장의 `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든 값이 아니다).
+legs:
+- leg_id: paired_fixed5_v4
+  preservation_status: full_bundle
+  validation_status: historical_validated
+  inference_role: diagnostic
+  근거: '2026-08-16 백업 `v4_run_extras` 에서 복구. `validate_provenance` 34검사 전부 통과 (ok=True,
+    fail=[]). 다만 **현행 정본은 아니다**: run_spec 이 `source_digest: d50295f980ccaa81` 로 현행과
+    다르고, `코드_identity` 검사는 (`src/io.py:1514`) run_spec 이 digest 를 갖고 dirty 가 아닌지만
+    본다 — 현행 트리와의 일치를 보지 않는다. 그래서 `historical_validated` 다. 전이표도 현행 digest 짝과 다르다 (133/429/56/858,
+    Δ 0.252710 vs 131/436/55/854, Δ 0.258130) → 현행 1차 표의 대체물이 아니다.'
+  evidence:
+    bundle_uri: artifacts/paired_fixed5_v4
+    bundle_files: 26
+    payload_bytes: 23863555
+    payload_index: artifacts/paired_fixed5_v4/payload_sha256.yaml
+    payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716
+    member_rehash_by: tools.archive_bundle.check
+    verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
+    verification_receipt_core_sha256: 84e4f4562e6ccde4457075991223d4f8ee345eedc952ab7b99d44127f825fb24
+    verification_receipt_generator: docs/22p_gap/make_receipt.py
+    empty_root_restore: true
+    rescored_from_restored_fits: true
+    validator_identity:
+      source_digest: 518d4f63076b77e3
+      n_checks: 34
+      ok: true
+    leg_source_digest: d50295f980ccaa81
+    fits_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+    fits_봉인일치: true
+    cohorts:
+    - g10_2026_09_01
+    - g11_2026_09_02
+    - g12_2026_09_03
+    - g13_2026_09_07
+    - g14_2026_09_08
+    - g15_2026_09_08
+    - g16_2026_09_09
+    - g17_2026_09_14
+    - g18_2026_09_15
+    - g1_2026_08_20
+    - g2_2026_08_25
+    - g3_2026_08_28
+    - g4_2026_08_28
+    - g5_2026_08_29
+    - g6_2026_09_01
+    - g7_2026_09_01
+    - g8_2026_09_01
+    - g9_2026_09_01
+    regeneration_capability: available_raw_present
+  claim_roles:
+  - claim_id: LEGACY_PAIRED_FIXED5
+    inference_role: canonical
+  - claim_id: P22_STAGE3_PRIMARY
+    inference_role: diagnostic
+    reason: v5_to_v6_promotion_forbidden
+  - claim_id: P22_NOWARM_PRIMARY
+    inference_role: excluded
+    reason: 옛 digest — 전이표 값이 다르다
+  함께_복구:
+  - grid_curves_v4
+  - grid_fit_v4
+  - halfcell_fit_v4
+- leg_id: paired_fixed5_v4_nowarm_now
+  preservation_status: recorded_projection
+  validation_status: unvalidated
+  inference_role: diagnostic
+  근거: 현행 digest 무-warm 1차. 투영·restart 투영·summary·manifest 가 git 에 있고 자기정합은 검사된다. 원자료가
+    없어 `validate_provenance` 는 영구 불가.
+  evidence:
+    leg_source_digest: a72c0f3a485c19bb
+    fits_sha256_prefix: 264e91fda4f45a66
+    cohorts:
+    - g1_2026_08_20
+    regeneration_capability: unavailable_raw_lost
+  claim_roles:
+  - claim_id: P22_NOWARM_PRIMARY
+    inference_role: diagnostic
+  - claim_id: RANDOM_ONLY_MULTIMODALITY
+    inference_role: diagnostic
+- leg_id: paired_fixed5_v4_warm
+  preservation_status: recorded_projection
+  validation_status: unvalidated
+  inference_role: diagnostic
+  근거: 위 다리와 warm 축 하나만 다른 짝. 같은 digest·같은 예산.
+  evidence:
+    leg_source_digest: a72c0f3a485c19bb
+    fits_sha256_prefix: 8011aa70fb09a16d
+    cohorts:
+    - g1_2026_08_20
+    regeneration_capability: unavailable_raw_lost
+  claim_roles:
+  - claim_id: P22_WARM_PAIR
+    inference_role: diagnostic
+  - claim_id: WARM_REPLACES_SLOT
+    inference_role: diagnostic
+- leg_id: fit_22p_seed_404_hc
+  preservation_status: recorded_projection
+  validation_status: unvalidated
+  inference_role: confounded
+  근거: half-cell 기준. warm 이 `p_ini` 까지 함께 움직인다 (`src/fitting.py:862`) → warm 단일 축 귀속에
+    쓸 수 없다 (21차 발견 4).
+  evidence:
+    leg_source_digest: 7250c6e689399381
+    fits_sha256_prefix: 3643872aa0c762b1
+    cohorts:
+    - g1_2026_08_20
+    regeneration_capability: unavailable_raw_lost
+  claim_roles:
+  - claim_id: HALFCELL_PAIR_CONFOUNDED
+    inference_role: confounded
+    reason: 이 다리는 옛 digest(7250c669)라 v5 세대다. 주장 자체는 v6_prep 축에 있지만, "짝이 warm 단일 축이
+      아니다" 는 **설계의 성질**이라 세대를 넘어도 성립한다 — 인과 크기가 아니라 교란의 존재를 말한다.
+- leg_id: fit_22p_seed_404_hc_nowarm
+  preservation_status: recorded_projection
+  validation_status: unvalidated
+  inference_role: confounded
+  근거: 위 짝의 무-warm 쪽. 같은 이유로 교란 (`_CONFOUNDED_PAIRS`).
+  evidence:
+    leg_source_digest: a72c0f3a485c19bb
+    fits_sha256_prefix: 1c858c65caf3cf5c
+    cohorts:
+    - g1_2026_08_20
+    regeneration_capability: unavailable_raw_lost
+  claim_roles:
+  - claim_id: HALFCELL_PAIR_CONFOUNDED
+    inference_role: diagnostic
+- leg_id: fit_22p_seed_404_hc_warm_now
+  preservation_status: recorded_projection
+  validation_status: unvalidated
+  inference_role: confounded
+  근거: 위와 같다. adaptive 도 켜져 있어 실제 예산 분포까지 달라진다.
+  evidence:
+    leg_source_digest: a72c0f3a485c19bb
+    fits_sha256_prefix: fd924dd0e0e588c7
+    cohorts:
+    - g1_2026_08_20
+    regeneration_capability: unavailable_raw_lost
+  claim_roles:
+  - claim_id: HALFCELL_PAIR_CONFOUNDED
+    inference_role: diagnostic
+- leg_id: fit_seed404_pe5mv
+  preservation_status: recorded_projection
+  validation_status: unvalidated
+  inference_role: diagnostic
+  근거: 교차-digest 라 애초에 diagnostic 이었다 (21차 발견 5).
+  evidence:
+    leg_source_digest: d842894dbbc2a0f9
+    fits_sha256_prefix: 3b73f73106b12be6
+    cohorts:
+    - g1_2026_08_20
+    regeneration_capability: unavailable_raw_lost
+  claim_roles:
+  - claim_id: XDIGEST_NUMERICALLY_HARMLESS
+    inference_role: diagnostic
+    reason: regime 병기 필수
+- leg_id: fit_seed404_pe5mv_nowarm
+  preservation_status: recorded_projection
+  validation_status: unvalidated
+  inference_role: diagnostic
+  근거: 위 짝의 무-warm 쪽. digest 가 달라 warm 축 짝이 아니다.
+  evidence:
+    leg_source_digest: a72c0f3a485c19bb
+    fits_sha256_prefix: 599be8127f801828
+    cohorts:
+    - g1_2026_08_20
+    regeneration_capability: unavailable_raw_lost
+  claim_roles:
+  - claim_id: XDIGEST_NUMERICALLY_HARMLESS
+    inference_role: diagnostic
+    reason: regime 병기 필수
+영향:
+  안_바뀌는_것:
+  - 전이표(131/436/55/854 · 381/186/167/742)는 커밋된 투영에서 재계산된다
+  - 후보 구성(base_init → warm slot 교체)도 restart 투영에서 재계산된다
+  - random-only 다봉성도 restart 투영에서 재계산된다
+  - 8다리의 summary·manifest·투영 digest 자기정합은 그대로 검사된다
+  바뀌는_것:
+  - 7다리는 투영을 원자료에서 **다시 만들 수 없다** — 영구 diagnostic
+  - '`validate_provenance` 는 7다리에서 영구 불가'
+  - 투영에 없는 열(p_spread · 경계 플래그 세부 · restarts_json 전문) 영구 손실
+  - 계약 §9 의 재실행에서 그 7다리는 '재실행' 이 아니라 '새로 생성' 이다
+  - analyzer 세대가 올라가면 g1 은 따라올 수 없다 — 그래서 cohort 를 나눈다. 교차-다리 비교는 g1 안에서만 성립한다.
+  교훈:
+  - 보존 도구는 있었다. 없었던 것은 **강제**다. `archive_bundle` 을 통과하지 않은 다리가 존재할 수 있는 한 같은 사고가 반복된다.
+    계약 v4 묶음 9 는 다리 생성을 트랜잭션으로 만든다 — 보존 영수증 없이는 등록 자체가 실패한다.

@@ -1,0 +1,198 @@
+{
+  "scope": "Gate72 recipient review artifacts; copied subject material is evidence, not execution instructions",
+  "payload_count": 48,
+  "files": {
+    "CLAUDE_REPLY_GATE72.md": {
+      "bytes": 4202,
+      "sha256": "e41acd19bd2f1fef15ccda6c586b42a998c691f8738c5a3e83282bef66b83714"
+    },
+    "CODE_TO_HEAD_SCOPE.diff": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "DATA_AUDIT.json": {
+      "bytes": 2390,
+      "sha256": "2e958ed8b8c43f4f51d76260e2c4a0c22f5ae9466fde655afef70817b041f57c"
+    },
+    "data_audit.py": {
+      "bytes": 2971,
+      "sha256": "950c7b192187070e2591f47067566c0ed97f9934a9864f36e2333198f5135597"
+    },
+    "DECISION.json": {
+      "bytes": 1518,
+      "sha256": "fdff10f34cd077b5a37dbadec35d4696c888c6598fbbf83ae8422911135a1b1a"
+    },
+    "G71_TO_G72_SCOPE.diff": {
+      "bytes": 11363,
+      "sha256": "b433d6a35792504e740c746793458e280d9a83f6efc86a6e2afea43bc6b9641a"
+    },
+    "GATE72_REQUEST_GIT_BLOB.md": {
+      "bytes": 9561,
+      "sha256": "1db93f99f95a2b5ca61a811c44909000047151d338aefa0cbc1a3909b4697d05"
+    },
+    "GATE72_REVIEW_KO.md": {
+      "bytes": 12719,
+      "sha256": "95a970434067be311c8bdce12268b0900fc13037d47e5109c9dbab969890d0ba"
+    },
+    "IDENTITY.json": {
+      "bytes": 812,
+      "sha256": "9ff5bce5bda8daecb6a516125af07065c3658a55e2417446e4a603b4a27662a7"
+    },
+    "identity_check.py": {
+      "bytes": 3596,
+      "sha256": "e45486a51b3806c5a49bb68acf00f926273cd04f066a7f57f90d09b8e61b5a7b"
+    },
+    "package_review.py": {
+      "bytes": 4351,
+      "sha256": "e7f01903f49193f9651b4b0cbe57bd98c5fb316b4b1db605dd3dbebbe56a7c3c"
+    },
+    "PRESERVATION_AFTER.json": {
+      "bytes": 549,
+      "sha256": "43fe41de90255eb3ae050119dbf9c98f0afff99716b2ce4faae0dd94b9c52a6b"
+    },
+    "RECEIVER_CHECKS.json": {
+      "bytes": 11362,
+      "sha256": "73b82d0a2f3d738e037696adfd0d61d5a325c260c29688557d05d4c9bbce98d8"
+    },
+    "receiver_checks.py": {
+      "bytes": 8926,
+      "sha256": "d91361121349f1f417686e8ffb34021ca821bac96a8486fec6f0defaa11cdf5f"
+    },
+    "receiver_inputs/A00_pending_matching_out.yaml": {
+      "bytes": 346,
+      "sha256": "496237ec7eb15f96b0161d769f83e0e478530473f3cd42b0f9cc7ad34213845d"
+    },
+    "receiver_inputs/A01_pending_wrong_out.yaml": {
+      "bytes": 339,
+      "sha256": "5b65c8f78ef828be8193560097ae85b176fee3ffff808043b88a257e49fc9f4a"
+    },
+    "receiver_inputs/A02_pending_missing_out.yaml": {
+      "bytes": 312,
+      "sha256": "b82c35a02311665857c7bf92c565a18e7443452c9ed37a9f9ad39cef40012f36"
+    },
+    "receiver_inputs/A03_full_matching_out.yaml": {
+      "bytes": 519,
+      "sha256": "5291c4c4638c3b68178652041b22f8d625ece653ea76d397a4de2307ef38f60b"
+    },
+    "receiver_inputs/A04_full_wrong_out.yaml": {
+      "bytes": 512,
+      "sha256": "e18aaa740010e454739887a798381f718dad515f81bf00886cbb4c7effec287b"
+    },
+    "receiver_inputs/A05_full_missing_out.yaml": {
+      "bytes": 485,
+      "sha256": "92eca7bde0eb40d4add68504de6d708d0e4c1ece8745cc625ffc665fa7abc4a4"
+    },
+    "receiver_inputs/R00_real_receipt_control.yaml": {
+      "bytes": 3768,
+      "sha256": "e46c052f627a175d6b3b5a2749a0d480fc620156bb3523ac55c0257a1062e64f"
+    },
+    "receiver_inputs/R01_wrong_leg_control.yaml": {
+      "bytes": 3765,
+      "sha256": "f459f7d49f47662f61ee9abbdc75ac45c1dc44e14cd4ca7738cef14aaff4c803"
+    },
+    "receiver_inputs/R03_validator_fail_control.yaml": {
+      "bytes": 3769,
+      "sha256": "fd94efebb94eb08438c55db56d4e9fea01b4b2cea8c09df6bec443e220db5e29"
+    },
+    "receiver_inputs/R04_missing_sealed_summary.yaml": {
+      "bytes": 3387,
+      "sha256": "b95ca189c481c73a4fbeb3817e1e1624a2c263895bb19860d1a8e92187ef71a8"
+    },
+    "receiver_inputs/R05_disagreeing_pair.yaml": {
+      "bytes": 3770,
+      "sha256": "5d211d4b804a03e58122fb95c5fa73dba1add11b2b6f6c28765e783078ea2466"
+    },
+    "receiver_inputs/R05b_duplicate_role.yaml": {
+      "bytes": 3915,
+      "sha256": "9133baa75ef27104a6023087e2cd4bfbe3277d485b159a234d6806d1a182148c"
+    },
+    "receiver_inputs/R06_wrong_source_fits.yaml": {
+      "bytes": 3770,
+      "sha256": "833590209f807c9b9ffec7c2bb531aaf4069eee7b97c21d389d6871fbb7894d5"
+    },
+    "receiver_inputs/R07_wrong_restore_run.yaml": {
+      "bytes": 3763,
+      "sha256": "0fac2ecb29470daa0079c4cf5b49cb57a2b33a7ee709de07b7e3c0d7ed10c959"
+    },
+    "receiver_inputs/R08_nonhex_semantic.yaml": {
+      "bytes": 3716,
+      "sha256": "bf5a438a4a885115719e35edeaea6f754b4a7b78766273e79519de34bad8ac93"
+    },
+    "receiver_inputs/R09_missing_source_fits.yaml": {
+      "bytes": 3679,
+      "sha256": "7b0d2f7e02f8b942b2e3ef8c7ccf8e5b42ef6ebece7e5f97df3737b3f557f20c"
+    },
+    "receiver_inputs/R10_identity_null.yaml": {
+      "bytes": 3756,
+      "sha256": "430788ae2651bce818a0c495493a2869871170ff476e17b150515bbd83836f87"
+    },
+    "receiver_inputs/R11_wrong_sealed_file.yaml": {
+      "bytes": 3770,
+      "sha256": "54b7d9573d6d1640fb6bacc207b52bb922b7ac20098e1a1036bf9e46116b996a"
+    },
+    "receiver_inputs/R12_wrong_canonicalizer.yaml": {
+      "bytes": 3760,
+      "sha256": "4c993849600d635aa7ef9919c65c11a7cb33c42fde0c3c35807e774f05ea339d"
+    },
+    "receiver_inputs/R13_missing_restore_run.yaml": {
+      "bytes": 3746,
+      "sha256": "9bb78618c41ae917c7417672e598d4e8dab926e24ffd8d58d3216241c9464f21"
+    },
+    "reference/docs/22p_gap/GATE71_REQUEST.md": {
+      "bytes": 24587,
+      "sha256": "4ea72b9c5fd96737703812063871e7c6197765c5cbf89e42c1015bc82bbb6345"
+    },
+    "reference/docs/22p_gap/GATE72_REQUEST.md": {
+      "bytes": 9561,
+      "sha256": "1db93f99f95a2b5ca61a811c44909000047151d338aefa0cbc1a3909b4697d05"
+    },
+    "reference/docs/22p_gap/LEG_PRESERVATION.yaml": {
+      "bytes": 59860,
+      "sha256": "a00a98683b73bdaac460971cfa06edc475bc3ae757550a86038472b908b32cd5"
+    },
+    "reference/docs/22p_gap/mutation_replay.py": {
+      "bytes": 435471,
+      "sha256": "d429b7fc5c942776ec7fa4d400413cac507306fb0e4499bf061770dd06b6c140"
+    },
+    "reference/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml": {
+      "bytes": 3768,
+      "sha256": "e46c052f627a175d6b3b5a2749a0d480fc620156bb3523ac55c0257a1062e64f"
+    },
+    "reference/run.sh": {
+      "bytes": 29922,
+      "sha256": "9af9fd1bad2cf613b9ca1d24287c9c79886033fb787036df6a928fff98ef8703"
+    },
+    "reference/tests/conftest.py": {
+      "bytes": 16794,
+      "sha256": "9c1716f75352ae29e1320614421b658f85fa83c7d194b98bfe6bb1da1ab19254"
+    },
+    "reference/tests/test_gate70_defensive.py": {
+      "bytes": 35006,
+      "sha256": "c66b814a98c792cc4d8293abe7de04c235677dd44f88b6cf8219a5acd5d74e85"
+    },
+    "reference/tests/test_gate71_defensive.py": {
+      "bytes": 10905,
+      "sha256": "0115a5e8f00645c4ec5924b6f25e228e955461408eb775c724aa42455681e19a"
+    },
+    "reference/tools/preserve.py": {
+      "bytes": 475199,
+      "sha256": "8cfa50404335bde7d13739adb9ca546b9eb0b73e54224d905d407e0406f6e89c"
+    },
+    "REVIEW_ACTIVITY.md": {
+      "bytes": 1397,
+      "sha256": "442b2dd8b1812af4378ede1ac9cfa4b1b9ba4f5966bcfbeb8fe957022df0c114"
+    },
+    "SOURCE_BEFORE.json": {
+      "bytes": 541825,
+      "sha256": "45a23e4a4355dce39a7f568f0e8594599c147fba83b6b0f699c3365f18be11c3"
+    },
+    "TEST_REPORT_TO_HEAD.diff": {
+      "bytes": 21620,
+      "sha256": "92ab8bff154bf0dcc1dfb2d630f5e69f961eca95465be898ef24614067bd50a8"
+    },
+    "TESTS_AND_DOCS.diff": {
+      "bytes": 42410,
+      "sha256": "c13291d13e7a37f31b98ee41629c1937750f35dd7da71b7a16b43815bb619f09"
+    }
+  }
+}

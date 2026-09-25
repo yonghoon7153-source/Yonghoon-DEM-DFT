@@ -1,0 +1,13 @@
+{
+  "observed_at_utc": "2026-09-25T09:57:35.560264+00:00",
+  "scope": "Local Gate72 review checkout tracked degradation-degeneracy files; not remote process or entire user filesystem verification",
+  "head_before_and_after": "c4b77ccf71d736dec9162cd5a5377f60f66c0782",
+  "tracked_files_before_and_after": 2500,
+  "tracked_file_set_identical": true,
+  "bytes_and_sha256_unchanged": 2500,
+  "changed": [],
+  "git_status_porcelain": "",
+  "reference_copies_identical": 10,
+  "subject_ledger_writes": 0,
+  "scientific_COMSOL_restore_class_changes": 0
+}

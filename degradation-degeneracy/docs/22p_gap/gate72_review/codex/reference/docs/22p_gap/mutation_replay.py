@@ -1,0 +1,7337 @@
+#!/usr/bin/env python3
+"""변이 재생 — 각 불변식을 되돌리면 **정확히 그 시험**이 빨개지는가.
+
+★ 43차 리뷰 Q5 답변: 한 구조 변경이 여러 조건을 함께 닫았을 때, 조건마다
+  시간순 RED 커밋을 요구하지는 않는다. 대신 **격리·결정적·재생 가능한**
+  mutant artifact 가 있어야 한다. 44차 리뷰가 "prose-only 기록은 독립 replay
+  까지 못 간다" 고 했으므로 그 artifact 를 저장소에 둔다.
+
+  이 파일은 RUN_SCOPE 밖(`docs/`)이다 — code identity 를 움직이지 않는다.
+
+사용::
+
+    python3 docs/22p_gap/mutation_replay.py            # 전부
+    python3 docs/22p_gap/mutation_replay.py --list     # 목록만
+    python3 docs/22p_gap/mutation_replay.py -k warm    # 이름으로 고르기
+
+각 항목은 (불변식 이름, 파일, 되돌릴 조각, 되돌린 값, 빨개져야 하는 -k) 다.
+실행은 원본을 복원하고 끝난다 (실패해도 `finally` 로).
+"""
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import hashlib
+import json
+import os
+import pathlib
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import zipfile
+from typing import NamedTuple
+
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+PRESERVE = ROOT / "tools" / "preserve.py"
+RP = ROOT / "docs" / "22p_gap" / "row_projection.py"
+TDL = ROOT / "tests" / "test_docs_lint.py"
+GRID = ROOT / "src" / "grid.py"
+FITTING = ROOT / "src" / "fitting.py"
+BASELINE = ROOT / "src" / "baseline.py"
+IO = ROOT / "src" / "io.py"
+MR = ROOT / "docs" / "22p_gap" / "mutation_replay.py"
+ARCHIVE = ROOT / "tools" / "archive_bundle.py"                     # 62차 ζ′
+G63T = ROOT / "tests" / "test_gate63_defensive.py"                 # 64차 E2-R
+IF = ROOT / "tests" / "interpreter_fixture.py"                      # 65차 T1
+G66T = ROOT / "tests" / "test_gate66_defensive.py"                  # 67차 T1
+RUNSH = ROOT / "run.sh"                                              # 70차 G70-N1
+
+#: ★ 46차 #9 조건 9 — 변이는 **작업 트리에 손대지 않는다.** 45차 runner 는
+#:   실제 저장소 파일을 고쳤다가 `finally` 로 되돌렸다. 그러면 (a) 중단되면
+#:   변이된 트리가 남고 (b) 그 사이 다른 프로세스가 변이된 코드를 보고
+#:   (c) 복원이 text mode 를 지나 개행·인코딩이 접힐 수 있다. 이제 저장소를
+#:   임시 sandbox 로 복사해 **그 안에서만** 변이하고, 원본은 읽기만 한다.
+SANDBOX: pathlib.Path | None = None
+
+
+def _sandboxed(path: pathlib.Path) -> pathlib.Path:
+    """저장소 경로를 sandbox 안 같은 상대 위치로 옮긴다."""
+    return path if SANDBOX is None else SANDBOX / path.relative_to(ROOT)
+
+
+def _make_sandbox() -> pathlib.Path:
+    tmp = pathlib.Path(tempfile.mkdtemp(prefix="mutation_replay_"))
+    dst = tmp / ROOT.name
+    shutil.copytree(
+        ROOT, dst, symlinks=True,
+        ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache",
+                                      ".mypy_cache", "*.pyc", ".ruff_cache"))
+    return dst
+
+#: 단일 지점 변이 — (이름, 파일, old, new, 빨개져야 하는 -k)
+MUTANTS = [
+    # ── 48차 (게이트 47차 반증 조건) ──────────────────────────────────────
+    #   P0-2: producer 닫힘의 네 구멍. 각 자리를 47차 상태로 되돌린다.
+    ("producer-crossing-is-fail-closed", RP,
+     "    alias_missing = sorted({v for v in alias.values() if v not in sdefs})",
+     "    alias_missing = []",
+     "breaking_the_crossing_into_src_scoring_is_fail_closed"),
+    ("producer-cut-is-sealed", RP,
+     '                             "_PRODUCER_CUT": list(_PRODUCER_CUT),\n'
+     '                             "_PRODUCER_MODULES": list(_PRODUCER_MODULES)',
+     '                             "_PRODUCER_MODULES": list(_PRODUCER_MODULES)',
+     "widening_the_producer_cut_moves_the_digest"),
+    ("producer-canon-drops-empty-fields", RP,
+     "            if not isinstance(node, ast.Constant):\n"
+     "                if v is None or (isinstance(v, list) and not v):\n"
+     "                    continue\n",
+     "",
+     "producer_digest_is_the_same_on_every_python_here"),
+
+    # ── 47차 (게이트 46차 반증 조건) ──────────────────────────────────────
+    # ★ 48차 P0-7 — generation namespace 는 이제 **성분마다** 붙잡는다
+    #   (`_open_child_dir`). 그래서 옛 자리(`_open_dir_nofollow`)를 되돌려도
+    #   generation root 경로는 더 이상 그곳을 지나지 않아 아무 시험도 안 깨진다
+    #   — 변이가 **코드가 옮겨가 죽은** 경우다. 성질이 실제로 사는 자리로
+    #   옮긴다: 성분 열기에서 `O_NOFOLLOW` 를 뺀다.
+    ("generation-root-nofollow", RP,
+     "        return os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW,\n"
+     "                       dir_fd=dfd)",
+     "        return os.open(name, os.O_RDONLY | os.O_DIRECTORY, dir_fd=dfd)",
+     "generation_root_symlink_is_never_read_as_a_generation or "
+     "symlinked_gen_ancestor_never_holds_a_generation"),
+    ("producer-semantic-sealed", RP,
+     '_PIN_SEALED = ("schema_version", "analysis_spec_sha256",\n'
+     '               "producer_semantic_sha256")',
+     '_PIN_SEALED = ("schema_version", "analysis_spec_sha256")',
+     "producer_change_cannot_mix_two_producers or producer_semantic_identity_is_sealed"),
+    ("producer-cut-is-declared", RP,
+     '    cut_missing = [x for x in _PRODUCER_CUT if x not in defs]\n'
+     "    if cut_missing:",
+     "    cut_missing = []\n    if cut_missing:",
+     "producer_semantic_digest_excludes_the_publication_path"),
+    ("policy-binds-the-roster", RP,
+     '        elif k == "cross_leg_comparison" and v == "not_applicable_single_leg" \\\n'
+     "                and len(rec.get(\"legs\") or ()) != 1:",
+     "        elif False:",
+     "single_leg_policy_must_match_the_roster_cardinality"),
+    ("pre-write-authority", RP,
+     '    if _pre.get("status") != "active":',
+     "    if False:",
+     "frozen_cohort_publish_writes_nothing_before_it_refuses"),
+    ("complete-current-supersedes-pending", RP,
+     "    auth.pend_stale = auth.pend_raw is not None and auth.cur_raw is not None",
+     "    auth.pend_stale = False",
+     "complete_current_supersedes_a_leftover_pending"),
+    ("repair-source-uses-the-snapshot", PRESERVE,
+     "        for v in self._version_candidates(key, required=False):\n"
+     "            if self._bytes_match(key, v, dg):\n                return v",
+     "        for v in (self.provider.versions(key) or []):\n"
+     "            if self._bytes_match(key, v, dg):\n                return v",
+     "repair_lookups_go_through_the_validated_version_snapshot or "
+     "no_version_enumeration_bypasses_the_helper"),
+    ("claim-seals-the-run-spec", PRESERVE,
+     '    if e["run_spec_digest"] != want:',
+     "    if False:",
+     "claim_seals_the_exact_run_spec"),
+    ("claim-checks-the-whole-index", PRESERVE,
+     "    assert_planned_index_consistent(ledger)          # 전체가 먼저",
+     "    pass                                             # 전체가 먼저",
+     "whole_index_must_be_consistent_before_any_leg_is_claimed"),
+    ("plan-index-exact-equality", PRESERVE,
+     "    phantom = sorted(l for l, e in idx.items()\n"
+     '                     if e["status"] == "executed" and l not in set(executed))',
+     "    phantom = []",
+     "phantom_executed_plan_without_an_execution_record"),
+    ("plan-parser-dir-hygiene", PRESERVE,
+     "    if posixpath.isabs(raw) or posixpath.normpath(raw) != raw \\\n"
+     '            or ".." in raw.split("/"):',
+     "    if False:",
+     "plan_parser_requires_a_canonical_relative_dir or "
+     "plan_parser_refuses_a_cohort_dir_outside_the_repository"),
+    ("namespace-check-rejects-symlinks", PRESERVE,
+     "        if stat.S_ISLNK(st.st_mode):\n            return False                # alias 는",
+     "        if False:\n            return False                # alias 는",
+     "symlinked_path_is_not_inside_the_smoke_namespace or "
+     "namespace_check_is_fail_closed_on_a_symlinked_component"),
+    ("module-gate-before-side-effects", GRID,
+     # ★ 48차 P0-5 — gate 호출이 조건 집합·다리 이름을 넘기고 claim 을 돌려주도록
+     #   바뀌었다. 호출 지점을 통째로 지우는 것이 이 변이의 뜻이다.
+     # ★ 59차 M1 — gate 가 claim 과 **실행 class 권한**의 쌍을 돌려주게 되면서
+     #   원상이 한 번 더 바뀌었다. 원상을 안 고치면 이 변이는 preimage 0회로
+     #   죽고, 죽은 지점은 합집합을 못 세게 한다 (`check_coverage()` 가 거부).
+     "    _claim, _exec_cap = _assert_grid_authorized(cfg, out_dir,\n"
+     "                                                conditions=conditions,\n"
+     "                                                dry_run=dry_run, leg=leg,\n"
+     "                                                may_open=may_open)\n",
+     "    _claim, _exec_cap = None, None\n",
+     "run_grid_calls_the_gate_before_its_first_side_effect"),
+    # ── 46차 (게이트 45차 반증 조건) ──────────────────────────────────────
+    ("caller-stage-safe-read", RP,
+     "    fresh_bytes = _staging_entries(stage, out)\n"
+     "    fresh = set(fresh_bytes)",
+     "    fresh_bytes = {p.name: p.read_bytes()\n"
+     "                   for p in stage.iterdir() if p.is_file()}\n"
+     "    fresh = set(fresh_bytes)",
+     "dangling_symlink_in_the_caller"),
+    ("publisher-owns-the-merge-temp", RP,
+     "            _write_owned(work / name, merged[name])",
+     "            _write_owned(stage / name, merged[name])",
+     "caller_stage_is_untouched"),
+    ("reader-shares-the-validator", RP,
+     # ★ 48차 — 검증 통로가 helper 하나로 모였고 call site 가 셋이다. 한 자리만
+     #   되돌리면 나머지 둘이 성질을 지켜 시험이 초록이다 — 성질이 사는 곳은
+     #   이제 helper 자신이므로 그 body 를 되돌린다.
+     "    with _generation_dirfd(out, gid) as dfd:\n"
+     "        return _entries_from_dirfd(dfd, \"generation\")",
+     "    return {q.name: q.read_bytes()\n"
+     "            for q in sorted((Path(out) / \"gen\" / gid).iterdir()) if q.is_file()}",
+     "generation_reader_refuses_an_aliased"),
+    ("idempotent-shares-the-validator", RP, None, None, None),
+    ("generation-namespace-guard", RP,
+     "        hit = forbidden.get(key)\n        if hit is not None:",
+     "        hit = None\n        if hit is not None:",
+     "current_generation_cannot_be_used_as_its_own_staging"),
+    ("pointer-loss-is-terminal", RP,
+     "        if lost:\n            raise SystemExit(",
+     "        if False:\n            raise SystemExit(",
+     "losing_the_pointer_of_a_cohort"),
+    ("pin-is-publication-authority", RP,
+     '_LEDGER_AUTHORITY = ("cohort_id", "dir", "status", "legs",\n'
+     '                     "pin", "cross_leg_comparison")',
+     '_LEDGER_AUTHORITY = ("cohort_id", "dir", "status", "legs",\n'
+     '                     "cross_leg_comparison")',
+     "producer_pin_is_part"),
+    ("ledger-status-enum", RP,
+     '        elif k == "status" and v not in _LEDGER_STATUS:',
+     "        elif False:",
+     "status_is_an_exact_enum"),
+    ("ledger-dir-contained", RP,
+     "    if posixpath.isabs(raw) or posixpath.normpath(raw) != raw \\\n"
+     '            or ".." in raw.split("/"):',
+     "    if False:",
+     "dir_that_is_not_contained"),
+    ("version-candidates-typed", PRESERVE,
+     '        bad = [v for v in got if not _nonempty_str(v if isinstance(v, str) else "")]',
+     "        bad = []",
+     "every_enumerated_version_candidate or falsy_version_never_reaches_lock"),
+    ("planned-status-is-not-standing", PRESERVE,
+     '    if e["status"] not in allow:',
+     "    if False:",
+     "standing_authorization"),
+    ("planned-binds-the-code-identity", PRESERVE,
+     '    if e["authorized_source_digest"] != source_digest:',
+     "    if False:",
+     "plan_to_the_code_identity"),
+    ("planned-binds-the-execution-record", PRESERVE,
+     '        if e["authorized_source_digest"] != real:',
+     "        if False:",
+     "planned_index_is_bound_to_the_real"),
+    ("warm-edges-are-declared", TDL,
+     '    "test_warm_probe_records_the_protocol_axes": {"_warm_manifest"},',
+     "",
+     "warm_consumers_go_through_the_accessors"),
+    # ── 45차 (게이트 44차 반증 조건) ──────────────────────────────────────
+    ("authority-frozenset", RP,
+     "    auth.roster = frozenset(cohort.get(\"legs\") or ())",
+     "    auth.roster = set(cohort.get(\"legs\") or ())",
+     "frozen_authority_holds_only_immutable"),
+    ("sink-subset-of-roster", RP,
+     "    undeclared = sorted(seen - auth.roster)\n    if undeclared:",
+     "    undeclared = []\n    if undeclared:",
+     "complete_undeclared_leg_never_reaches_pending"),
+    ("staging-nlink-one", RP,
+     "        if st.st_nlink != 1:\n            bad.append(f\"{name}: 다른 이름과 inode 를 공유한다 \"",
+     "        if False:\n            bad.append(f\"{name}: 다른 이름과 inode 를 공유한다 \"",
+     "staging_aliases_never_become_an_immutable_generation"),
+    ("seal-exact-types", RP,
+     "    if t is list:",
+     "    if t in (list, tuple):",
+     "an_omap_and_a_list_of_lists_do_not_share_a_seal"),
+    ("seal-finite-floats", RP,
+     "        if not math.isfinite(node):",
+     "        if False:",
+     "seal_domain_is_exact_not_isinstance"),
+    ("pointer-binds-the-ledger", RP,
+     "        if rec[\"ledger_seal\"] != live:",
+     "        if False:",
+     "expanding_a_roster_over_an_active_cohort_requires_a_new_cohort"),
+    ("prelock-version-id-is-a-string", PRESERVE,
+     "            if not _nonempty_str(vid if isinstance(vid, str) else \"\"):",
+     "            if False:",
+     "falsy_version_id"),
+    ("trust-boundary-declared", RP,
+     "_TRUST_BOUNDARY = \"\"\"cohort 출력 디렉터리",
+     "_TRUST_BOUNDARY_DISABLED = \"\"\"cohort 출력 디렉터리",
+     "publisher_declares_its_trust_boundary"),
+    ("public-lifecycle-in-two-publisher-fixture", TDL,
+     "res = rp.promote_cohort_generation(stage, out, leg,\n"
+     "                                   roster=rp._ledger_roster(out))",
+     "res = (rp._promote_cohort_locked(stage, __import__('contextlib')\n"
+     "       .nullcontext(), leg) if False else\n"
+     "       rp.promote_cohort_generation(stage, out, leg,\n"
+     "                                    roster=rp._ledger_roster(out)))",
+     None),
+    ("warm-consumer-uses-accessor", TDL,
+     "    missing = [l for l, _ in _WARM_CLAIMS if not _warm_has_summary(l)]",
+     "    missing = [l for l, _ in _WARM_CLAIMS\n"
+     "               if not (_REPO / 'docs' / '22p_gap' / 'warm_probe'\n"
+     "                       / f'{l}.summary.yaml').is_file()]",
+     "warm_consumers_go_through_the_accessors"),
+    # ── 44차 (게이트 43차 반증 조건) ──────────────────────────────────────
+    ("sink-validates-itself", RP,
+     "    assert_cohort_complete(\n"
+     "        files, gid, expect_legs=auth.roster if seen == auth.roster else None)",
+     "    pass",
+     "sink_refuses_an_incomplete"),
+    ("authority-frozen", RP,
+     '        if getattr(self, "_sealed", False):',
+     "        if False:",
+     "frozen_authority_cannot_be_edited"),
+    ("seal-typed-input", RP,
+     "    _assert_sealable(cohort)\n    rec = {}",
+     "    rec = {}",
+     "types_differ_is_not_folded"),
+    ("recheck-before-rename", RP,
+     "    if auth is not None:\n        _Authority.assert_pointers_unmoved(auth)\n"
+     "    os.replace(tmp, out / name)",
+     "    os.replace(tmp, out / name)",
+     "rechecked_immediately_before_the_rename"),
+    ("proof-until-equals-lease", PRESERVE,
+     '            if proof.until != lease["retain_until_utc"]:',
+     "            if False:",
+     None),          # 계약 확인 — 아래 주석 참조
+    # ── 43차 (게이트 42차 반증 조건) ──────────────────────────────────────
+    ("proof-handoff-to-verify", PRESERVE,
+     "                lease_version=proof.lease_version,\n"
+     "                lease_content_version=proof.content_version)",
+     "                lease_version=self.recover_lease_version(leg_id, extra[0]),\n"
+     "                lease_content_version=self.recover_content_version(extra[0]))",
+     "repaired_proof_is_handed or pre_journal_finalize or journal_seals_the_content"),
+    ("prelock-digest-check", PRESERVE,
+     "            if hashlib.sha256(data).hexdigest() != dg:\n"
+     "                raise PreserveError(",
+     "            if False:\n                raise PreserveError(",
+     "wrong_bytes_are_never_locked"),
+    ("prelock-readback-check", PRESERVE,
+     "            if not self._bytes_match(key, vid, dg):\n"
+     "                raise PreserveError(",
+     "            if False:\n                raise PreserveError(",
+     "returns_the_wrong_version"),
+    ("authority-registry", RP,
+     "    if type(auth) is not _Authority or id(auth) not in _Authority._ACTIVE:",
+     "    if False:",
+     "raw_publisher_takes_no"),
+    ("both-pointers-checked", RP,
+     "        if live_cur != self.cur_raw or live_pend != self.pend_raw:",
+     "        if live_pend != self.pend_raw:",
+     "pointer_moved_by_another"),
+    ("guard-before-commit", RP,
+     "    _commit_guard()\n    _publish_pointer(out, rec, auth=auth)",
+     "    _publish_pointer(out, rec, auth=auth)",
+     "pathname_after_the_check or same_roster_ledger_change"),
+    ("inner-unbound-sentinel", RP,
+     "        _PublishLock._assert_plain_sentinel(self.fd)",
+     "        self._assert_plain_sentinel(self.fd)",
+     "blank_its_sentinel_check"),
+    ("inner-unbound-kernel", RP,
+     "        _PublishLock._reassert_kernel_lock(self)",
+     "        self._reassert_kernel_lock()",
+     "blank_its_own_inner_check"),
+    ("pending-base-generation", RP,
+     '        if pend["base_generation"] != auth.cur_gid:\n            raise SystemExit(',
+     "        if False:\n            raise SystemExit(",
+     "stale_bootstrap_pending"),
+    ("pending-closed-schema", RP,
+     "    if set(rec) != want_keys:",
+     "    if False:",
+     "stale_bootstrap_pending"),
+    ("warm-consumer-wiring", TDL,
+     '    assert {"_warm_summary", "_warm_manifest", "_warm_has_summary"} <= calls, (',
+     "    assert True or (",
+     None),          # 아래 주석 참조
+    # ── 49차 (게이트 48차 반증 조건) ──────────────────────────────────────
+    ("precheck-tells-new-from-resume", PRESERVE,
+     "    path = _claim_path(leg_id, claims_root_for_ledger(ledger))\n"
+     "    if path.is_file():",
+     "    path = _claim_path(leg_id, claims_root_for_ledger(ledger))\n"
+     "    if False:",
+     "precheck_tells_a_new_run_from_an_owned_resume"),
+    ("claim-stores-a-verifier-not-the-token", PRESERVE,
+     '           "attempt_id": attempt_id, "attempt_verifier": _token_verifier(token),',
+     '           "attempt_id": attempt_id, "attempt_verifier": token,',
+     "claim_file_never_stores_the_resume_credential"),
+    ("resume-compares-the-verifier", PRESERVE,
+     "        if not secrets.compare_digest(_token_verifier(token),\n"
+     '                                      str(rec["attempt_verifier"])):',
+     "        if False:",
+     # ★ 57차 — 옛 `finalize-requires-the-credential` 은 `token_file` 인자와
+     #   함께 사라졌고(P0-1), 남은 자리는 이 비교 하나다. 그 회귀를 여기에
+     #   합쳐 selector 로 함께 지킨다 — 자리가 하나면 변이도 하나다.
+     "phase_cannot_be_recorded_without_the_owner_token or "
+     "crash_after_grid_resumes_and_finalizes or "
+     "finalize_requires_the_owner_credential"),
+    ("diagnostic-hides-the-credential", PRESERVE,
+     "        if self._token is None:\n"
+     "            raise PreserveError(\n"
+     '                "plan", f"{self.leg_id!r} 의 claim 을 소유 증명 없이 열었다 — "\n'
+     '                        "진단용 읽기에는 재개 credential 이 없다")',
+     "        if False:\n"
+     "            raise PreserveError(\n"
+     '                "plan", f"{self.leg_id!r} 의 claim 을 소유 증명 없이 열었다 — "\n'
+     '                        "진단용 읽기에는 재개 credential 이 없다")',
+     "the_diagnostic_reader_never_hands_out_the_credential"),
+    # ★ 57차 P1-3 — 복구 분기가 정상 경로와 **한 임계 구역**으로 합쳐지면서
+    #   자리가 하나가 됐다. 그래서 옛 `finalize-recovery-holds-the-claim-lock`
+    #   과 `normal-finalize-holds-the-attempt-path` 를 은퇴시키고 그 회귀들을
+    #   이 하나의 selector 로 함께 지킨다 (자리가 하나면 변이도 하나다).
+    ("finalize-holds-the-claim-lock", PRESERVE,
+     "    with _lifecycle_locks(leg_id, token_file, claims_root) as cp:\n"
+     '        # \u2605 57\ucc28 P1-3',
+     "    if True:\n"
+     "        cp = _claim_path(leg_id, claims_root)\n"
+     '        # \u2605 57\ucc28 P1-3',
+     "canonical_lock_order_is_declared_and_finalize_holds_the_claim or "
+     "finalize_recovery_branch_holds_the_claim_lock"),
+    ("finalize-rechecks-in-the-ledger-lock", PRESERVE,
+     "            assert_planned_index_consistent(ledger)\n"
+     "            live = assert_planned_leg(leg_id, claim.source_digest,\n"
+     "                                      ledger=ledger,\n"
+     '                                      allow=("planned", "running"))',
+     '            live = {"cohort_id": claim.cohort_id,\n'
+     '                    "run_spec_digest": claim.run_spec_digest}',
+     "finalize_rechecks_the_whole_authority_inside_the_ledger_lock"),
+    ("crash-recovery-is-idempotent", PRESERVE,
+     "    done = _already_finalized(leg_id, token, ledger=ledger)",
+     "    done = None",
+     "finalize_is_idempotent_after_a_crash_before_cleanup"),
+    ("crash-recovery-needs-the-credential", PRESERVE,
+     '    if not secrets.compare_digest(want, str(rec["attempt_verifier"])):\n'
+     "        raise PreserveError(\n"
+     "            \"plan\",\n"
+     '            f"{leg_id!r} 은 이미 닫혔고, 그 실행의 소유 증명이 아니다 — "',
+     "    if False:\n"
+     "        raise PreserveError(\n"
+     "            \"plan\",\n"
+     '            f"{leg_id!r} 은 이미 닫혔고, 그 실행의 소유 증명이 아니다 — "',
+     "the_crash_recovery_needs_the_owner_credential"),
+    ("preservation-status-inside-the-contract", PRESERVE,
+     'PRESERVATION_STATUS = ("full_bundle", "recorded_projection",\n'
+     '                       "preservation_pending", "missing")',
+     'PRESERVATION_STATUS = ("full_bundle", "recorded_projection",\n'
+     '                       "no_bundle", "missing")',
+     "the_runtime_preservation_enum_is_inside_the_contract"),
+    ("finalize-writes-the-whole-tuple", PRESERVE,
+     '                 "validation_status": PENDING_VALIDATION_STATUS,\n'
+     '                 "inference_role": PENDING_INFERENCE_ROLE,',
+     "",
+     "finalize_writes_a_complete_contract_status_tuple"),
+    ("fit-axis-is-the-real-policy", PRESERVE,
+     'LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "objectives_digest",\n'
+     '                     "reference",\n'
+     '                     "halfcell_recipe", "halfcell_cache_sha256",\n'
+     '                     "base_config_digest", "bounds_preset", "bounds_digest",\n'
+     '                     "optimizer", "use_noisy", "smoothing_backend",\n'
+     '                     "row_selection",\n'
+     '                     "in", "in_digest", "out")',
+     'LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "out")',
+     "fit_axis_seals_every_intent_that_changes_the_answer"),
+    ("phase-input-binding", PRESERVE,
+     "        if not secrets.compare_digest(str(sealed), str(got)):",
+     "        if False:",
+     "fit_refuses_curves_that_its_grid_phase_did_not_produce"),
+    ("phase-input-binding-needs-a-receipt", PRESERVE,
+     "    rec = claim.phase_receipt(\"grid\")\n"
+     "    if rec is None:",
+     "    rec = claim.phase_receipt(\"grid\")\n"
+     "    if False:",
+     "fit_refuses_when_its_grid_phase_is_missing"),
+    ("release-returns-the-plan", PRESERVE,
+     "    _abandon_claim(claim, ledger=ledger, token_file=token_file, token=token)",
+     "    pass",
+     "released_run_returns_the_plan_to_planned"),
+    ("dry-run-releases-the-claim", GRID,
+     # ★ 62차 자체 리뷰 F1 — try 가 발행 직후로 올라가며 한 단 들어갔다.
+     "            if _claim is not None:\n"
+     "                from tools.preserve import release_leg_run",
+     "            if False:\n"
+     "                from tools.preserve import release_leg_run",
+     "dry_run_does_not_strand_the_plan_in_running"),
+    ("roster-is-a-set", RP,
+     "            dup = sorted({x for x in v if v.count(x) > 1})\n"
+     "            if dup:",
+     "            dup = []\n            if dup:",
+     "ledger_roster_is_a_set_not_a_multiset"),
+    ("thaw-transition-is-unrepresentable", RP,
+     "    if (frm, to) not in _LIFECYCLE_MOVES:",
+     "    if False:",
+     "frozen_cohort_cannot_be_thawed_and_published"),
+    ("lifecycle-chain-is-verified", RP,
+     '        if rec["prev"] != prev:',
+     "        if False:",
+     "the_lifecycle_journal_is_a_hash_chain"),
+    ("lifecycle-head-anchors-the-tip", RP,
+     "    if head != prev:",
+     "    if False:",
+     "the_lifecycle_journal_is_a_hash_chain"),
+    ("closure-unresolved-attr-is-fail-closed", RP,
+     "                if attr not in sdefs:\n"
+     "                    raise SystemExit(",
+     "                if False:\n"
+     "                    raise SystemExit(",
+     "unresolved_producer_module_reference_is_fail_closed"),
+    ("closure-refuses-dynamic-resolution", RP,
+     # ★ 59차 M11·M17 — 호출에 `targets`·`modnames` 가 붙어 원상이 낡았다.
+     # ★ 62차 P0-7 — table 이 module 별이 되면서 원상이 또 옮겨 갔다.
+     "        for node in nodes:\n"
+     "            _assert_no_dynamic_resolution(node, key, *tables[kind])",
+     "        pass",
+     "dynamic_name_resolution_inside_the_closure_is_fail_closed"),
+    ("interpreter-set-is-pinned", RP,
+     "    if sys.version_info[:2] not in SUPPORTED_PYTHON:",
+     "    if False:",
+     None),          # 아래 주석 참조
+    # ── 50차 (게이트 49차 반증 조건) ──────────────────────────────────────
+    ("phase-write-checks-the-credential", PRESERVE,
+     "            if not secrets.compare_digest(_token_verifier(self._token),\n"
+     '                                          str(rec["attempt_verifier"])):',
+     "            if False:",
+     "forged_claim_object_cannot_write_a_phase"),
+    ("phase-write-refuses-a-closed-claim", PRESERVE,
+     "            if not self.path.is_file():\n"
+     "                raise PreserveError(",
+     "            if False:\n"
+     "                raise PreserveError(",
+     "closed_run_cannot_be_resurrected_by_a_late_phase or "
+     "released_run_cannot_be_resurrected_by_a_late_phase"),
+    # ★ 59차 M10 이후 **무는 층이 바뀌었다.** 50차에는 claim 이 만들어지고 token 이
+    #   없는 상태가 실제로 생겨서 시험의 assert 가 그것을 봤다. 지금은 발급이
+    #   token 의 durable 여부를 스스로 확인하고 **claim 을 만들기 전에** 거부한다.
+    #   그러므로 이 축의 증인은 그 거부문이다 — 축은 그대로 "token 이 claim 보다
+    #   먼저 굳는가" 를 묻고, 답하는 층만 assert 에서 production 검사로 올라갔다.
+    ("token-is-written-before-the-claim", PRESERVE,
+     "        token = _new_token()\n"
+     "        attempt_hint = uuid.uuid4().hex\n"
+     "        write_token_file(token_file, token, leg_id, attempt_hint)",
+     "        token = _new_token()\n"
+     "        attempt_hint = uuid.uuid4().hex",
+     "crash_between_the_claim_and_the_token_leaves_nothing_stranded"),
+    ("fit-axis-seals-the-input-content", PRESERVE,
+     '                     "halfcell_recipe", "halfcell_cache_sha256",\n'
+     '                     "base_config_digest", "bounds_preset", "bounds_digest",',
+     '                     "halfcell_recipe", "bounds_preset", "bounds_digest",',
+     "fit_axis_seals_the_input_content_axes"),
+    ("row-selection-seals-its-content", PRESERVE,
+     'LEG_SPEC_SELECTION_KEYS = ("mode", "limit", "subset_sha256")',
+     'LEG_SPEC_SELECTION_KEYS = ("mode", "limit")',
+     "fit_axis_seals_the_row_selection_content"),
+    ("phase-input-binding-covers-the-package", PRESERVE,
+     'PHASE_INPUT_KEYS = ("curves_sha256", "curves_manifest_sha256",\n'
+     '                    "curves_manifest_start_sha256")',
+     'PHASE_INPUT_KEYS = ("curves_sha256",)',
+     "grid_receipt_binds_every_curve_input_not_just_the_parquet"),
+    ("missing-journal-with-a-live-anchor", RP,
+     "        if _lifecycle_head_path().is_file():\n"
+     "            raise SystemExit(",
+     "        if False:\n"
+     "            raise SystemExit(",
+     "deleting_the_journal_does_not_erase_the_freeze"),
+    ("module-defs-see-tuple-targets", RP,
+     "            if isinstance(node, ast.Assign):\n"
+     "                # ★ 50차 P0 — `A, B = 1, 2` · `(D,) = (4,)` · `[E, *F] = …` 도\n"
+     "                #   module 정의다. 49차는 `ast.Name` target 만 담았다.\n"
+     "                for t in node.targets:\n"
+     "                    for name in _target_names(t):\n"
+     "                        _bind(name, top or node)",
+     "            if isinstance(node, ast.Assign):\n"
+     "                for t in node.targets:\n"
+     "                    if isinstance(t, ast.Name):\n"
+     "                        _bind(t.id, top or node)",
+     "producer_closure_sees_tuple_targets or "
+     "producer_closure_follows_a_tuple_defined_constant"),
+    # ★ 51차 P0-I — 복합문 안으로 들어가지 않으면 `for X in ...` 이 묶은
+    #   계산 상수가 identity 밖이다 (리뷰어 반례).
+    ("module-defs-enter-compound-statements", RP,
+     "            elif kind in _MODULE_COMPOUND:",
+     "            elif kind in _MODULE_COMPOUND:\n"
+     "                continue\n"
+     "            elif False:",
+     "producer_closure_sees_every_module_binding_form"),
+    # ★ 51차 P0-I — 모르는 문을 조용히 지나치면 열거가 곧 구멍이다.
+    ("module-defs-fail-closed-on-unknown", RP,
+     "            else:\n"
+     "                raise SystemExit(\n"
+     "                    f\"✗ producer 소스의 module scope 에 모델링하지 않은 binding \"",
+     "            else:\n"
+     "                continue\n"
+     "            if False:\n"
+     "                raise SystemExit(\n"
+     "                    f\"✗ producer 소스의 module scope 에 모델링하지 않은 binding \"",
+     "unmodelled_module_binding_form_is_fail_closed"),
+    # ★ 51차 P0-I — docstring 을 버리면 alias 로 읽어 identity 를 우회한다.
+    ("canon-keeps-docstrings", RP,
+     "def _keep_docstrings(tree):",
+     "def _keep_docstrings(tree):\n"
+     "    import ast\n"
+     "    for node in ast.walk(tree):\n"
+     "        body = getattr(node, \"body\", None)\n"
+     "        if not isinstance(body, list) or not body:\n"
+     "            continue\n"
+     "        if not isinstance(node, (ast.Module, ast.FunctionDef,\n"
+     "                                 ast.AsyncFunctionDef, ast.ClassDef)):\n"
+     "            continue\n"
+     "        first = body[0]\n"
+     "        if isinstance(first, ast.Expr) \\\n"
+     "                and isinstance(first.value, ast.Constant) \\\n"
+     "                and isinstance(first.value.value, str):\n"
+     "            node.body = body[1:] or [ast.Pass()]\n"
+     "    return tree\n"
+     "def _unused_keep(tree):",
+     "docstring_the_computation_reads_is_inside_the_identity"),
+    # ─────────────────────────────────────────────────────────────────────
+    # 51차 방어
+    # ─────────────────────────────────────────────────────────────────────
+    # ★ P0-L1 — 발급이 살아 있는 claim 을 보기 **전에** token 을 덮으면, 두
+    #   번째 정상 호출이 owner 의 소유 증명을 파괴한다 (리뷰어 실측).
+    ("open-checks-the-live-claim-first", PRESERVE,
+     "        if cp.is_file():\n"
+     "            raise PreserveError(\n"
+     "                \"plan\",\n"
+     "                f\"{leg_id!r} 은 이미 실행 중이다 (claim: {cp}) — 두 번째 실행을 \"",
+     "        if False:\n"
+     "            raise PreserveError(\n"
+     "                \"plan\",\n"
+     "                f\"{leg_id!r} 은 이미 실행 중이다 (claim: {cp}) — 두 번째 실행을 \"",
+     "second_open_never_touches_the_live_owners_token"),
+    # ★ P0-L2 — 삭제는 상태 전이다. 경로만 보고 지우면 남의 generation 을 지운다.
+    ("token-unlink-is-generation-scoped", PRESERVE,
+     "    if not secrets.compare_digest(cur, str(token)):\n"
+     "        return False",
+     "    if False:\n"
+     "        return False",
+     "late_release_cleanup_cannot_delete_the_next_attempts_token"),
+    # ★ P0-L2 — mutator 가 쓰기 지점에서 live attempt 를 재확인하지 않으면
+    #   stale handle 과 위조 handle 이 남의 실행을 취소한다.
+    ("abandon-rechecks-the-live-attempt", PRESERVE,
+     "        _assert_live_attempt(json.loads(claim.path.read_text(encoding=\"utf-8\")),\n"
+     "                             claim, \"발급 되돌림\")",
+     "        pass",
+     "stale_claim_handle_cannot_cancel_the_next_attempt or "
+     "readonly_claim_cannot_abandon_the_live_owner"),
+    # ★ P0-L3 — claim 을 먼저 지우면 crash 가 회수 불가능한 running orphan 을
+    #   남긴다. 원장이 먼저여야 중간 상태가 재시도 가능하다.
+    ("release-moves-the-ledger-before-the-claim", PRESERVE,
+     "        # 원장이 `planned` 로 굳은 **뒤에만** claim 을 놓는다.\n"
+     "        claim.path.unlink(missing_ok=True)",
+     "        pass",
+     "crash_inside_release_leaves_a_recoverable_state"),
+    # ★ P0-L3 — `os.replace` 뒤의 오류를 미커밋으로 보면 claim/token 을 지운다.
+    # ★ 53차 P0-1 — 되돌림의 **기본값이 뒤집혔다.** 52차는 `except BaseException`
+    #   이 기본 되돌림이었고 불확실만 예외로 뺐다. 변이는 그 상태를 복원한다 —
+    #   "모르면 되돌린다" 로 돌아가면 lock exit 실패 하나가 orphan 을 만든다.
+    ("rollback-only-on-certain-non-commit", PRESERVE,
+     "    except PlanNotCommitted:",
+     "    except BaseException:",
+     "durability_error_after_the_ledger_commit_keeps_the_claim or "
+     "uncertain_ledger_write_never_discards_the_claim or "
+     "failure_while_leaving_the_ledger_lock_preserves_the_authority"),
+    # ★ P0-A1 — 목적함수 payload 가 승인 밖이면 같은 이름으로 다른 J 를 낸다.
+    ("fit-axis-seals-the-objective-payload", FITTING,
+     '        "objectives_digest": _dg({str(k): objectives[k]\n'
+     '                                  for k in sorted(objectives)}),',
+     '        "objectives_digest": "0" * 16,',
+     "objective_payload_is_inside_the_approval_digest"),
+    # ★ P0-A2 — leaf 만 해시하면 `extends` 부모로 행을 옮길 수 있다.
+    ("fit-axis-seals-the-config-closure", FITTING,
+     '        "base_config_digest": _config_closure_digest(\n'
+     '            base_config or "configs/base.yaml", repo_root=bytes_root),',
+     '        "base_config_digest": _file_digest16(\n'
+     '            base_config or "configs/base.yaml"),',
+     "base_config_parent_is_inside_the_approval_digest"),
+    # ★ P0-A3 — 검사한 pathname 을 나중에 다시 열면 그 사이가 무방비다.
+    ("fit-stages-its-inputs-before-the-gate", FITTING,
+     "    _staged = _stage_fit_inputs(in_dir, base_config, reference,\n"
+     "                                halfcell_method, halfcell_kw)",
+     "    _staged = {\"root\": None, \"in_dir\": Path(in_dir),\n"
+     "               \"base_config\": base_config,\n"
+     "               \"origin_in_dir\": str(in_dir),\n"
+     "               \"origin_base_config\": str(base_config)}",
+     "run_fit_hands_the_body_the_staged_copies_not_the_originals"),
+    # ★ P1-E1 — 외부 입력 분기가 곡선 하나만 보면 manifest 를 갈아 끼울 수 있다.
+    ("external-binding-covers-the-package", FITTING,
+     "    got = fit_input_package_digest(got_map)",
+     '    got = got_map["curves_sha256"]',
+     "external_input_binding_covers_the_whole_package"),
+    # ★ P0-A4 — 완방상태 캐시가 승인 밖이면 격자 truth 기준점이 조용히 움직인다.
+    ("grid-axis-seals-the-discharged-cache", GRID,
+     '        "discharged_cache_sha256": (\n'
+     "            _h.sha256(cache.read_bytes()).hexdigest()\n"
+     "            if use_cache and cache.is_file() else None),",
+     '        "discharged_cache_sha256": None,',
+     "grid_axis_binds_the_discharged_state_cache"),
+    # ★ P1-O — fail-closed 는 정지가 아니다. 남은 전이를 완주해야 한다.
+    ("freeze-completes-a-half-written-transition", RP,
+     "        if recorded == \"frozen\":\n"
+     "            if row.get(\"status\") in (\"active\", \"freezing\"):",
+     "        if recorded == \"frozen\":\n"
+     "            if False:",
+     "freeze_is_retryable_after_a_crash_between_its_two_writes"),
+        # ─────────────────────────────────────────────────────────────────────
+    # 52차 방어
+    # ─────────────────────────────────────────────────────────────────────
+    # ★ P0-1 — 비교와 삭제가 같은 임계 구역에 없으면 술어가 낡는다.
+    ("token-cleanup-is-inside-the-claim-lock", PRESERVE,
+     "        if token_file is not None and token is not None:\n"
+     "            _unlink_token_generation(token_file, token)",
+     "        pass",
+     "token_cleanup_happens_under_the_claim_lock"),
+    ("token-read-checks-the-leg", PRESERVE,
+     "    if leg_id is not None and rec[\"leg_id\"] and rec[\"leg_id\"] != str(leg_id):",
+     "    if False:",
+     "an_attempt_file_from_another_leg_is_refused"),
+    # ★ P0-7 — `AugAssign`·import 도 이름을 묶는다.
+    ("module-defs-track-mutating-bindings", RP,
+     "            elif isinstance(node, (ast.AnnAssign, ast.AugAssign)):",
+     "            elif isinstance(node, ast.AnnAssign):",
+     "producer_closure_tracks_mutating_and_import_bindings"),
+    ("module-defs-track-import-bindings", RP,
+     "            elif isinstance(node, (ast.Import, ast.ImportFrom)):\n"
+     "                # ★ 52차 P0-7 — import 도 이름을 묶는다. `from math import\n"
+     "                #   floor as TOL` 을 `ceil` 로 바꾸면 계산이 바뀐다.\n"
+     "                #   (`_crossed_*` 는 producer 모듈 **사이**를 따라가는 별개\n"
+     "                #   질문이고, 여기는 \"이 이름이 무엇에 묶였나\" 다.)\n"
+     "                for al in node.names:\n"
+     "                    _bind(al.asname or al.name.split(\".\")[0], top or node)",
+     "            elif isinstance(node, (ast.Import, ast.ImportFrom)):\n"
+     "                continue",
+     "producer_closure_tracks_mutating_and_import_bindings"),
+    # ★ P0-8 — 정규형이 버리는 raw source 를 계산이 읽으면 digest 가 거짓이다.
+    ("closure-refuses-source-reflection", RP,
+     "        if isinstance(sub, ast.Name) and sub.id in banned:",
+     "        if False:",
+     "reading_the_producers_raw_source_is_fail_closed"),
+    # ★ P0-4 — 봉인이 대상 **안**에 없으면 이름을 하나 더 만들어 빠져나간다.
+    # ★ P0-3 — 얼리기와 발급이 같은 transaction 에 없으면 얼린 안에서 자란다.
+    ("freeze-refuses-a-live-execution", RP,
+     "        live = _live_claims_for(cohort_id)\n"
+     "        if live:",
+     "        live = []\n"
+     "        if live:",
+     "freeze_refuses_while_an_execution_holds_the_cohort"),
+    # ★ P1-1 — 한 줄 앞선 partial commit 은 위조가 아니라 미완의 append 다.
+    ("lifecycle-completes-a-partial-append", RP,
+     "        if len(out) >= 1 and out[-1][\"prev\"] == head:\n"
+     "            return out",
+     "        pass",
+     "freeze_crash_between_journal_and_anchor_is_recoverable"),
+    # ★ P1-2 — checker 가 runner 의 self-claim 을 그대로 세면 증거가 아니다.
+    # ★ P0-6 — 승인 축과 환경 지문 **양쪽**이 담는다. 시험은 둘을 따로 본다
+    #   (OR 로 묶으면 한쪽을 지워도 다른 쪽이 가린다 — 실측했다).
+    ("fit-axis-seals-the-smoothing-backend", FITTING,
+     '        "smoothing_backend": _effective_smoothing_backend(),',
+     '        "smoothing_backend": "fixed",',
+     "effective_smoothing_backend_is_inside_the_approval"),
+    ("env-fingerprint-seals-the-smoothing-backend", IO,
+     '        out["smoothing_backend"] = effective_smoothing_backend()',
+     '        out["smoothing_backend"] = "fixed"',
+     "effective_smoothing_backend_is_inside_the_approval"),
+    ("canon-absorbs-the-pep701-empty-piece", RP,
+     "            if isinstance(node, ast.JoinedStr) and f == \"values\" \\\n"
+     "                    and isinstance(v, list):\n"
+     "                v = [x for x in v\n"
+     "                     if not (isinstance(x, ast.Constant) and x.value == \"\")]",
+     "            pass",
+     "canonical_form_agrees_on_every_supported_interpreter"),
+    # ─────────────────────────────────────────────────────────────────────
+    # 53차 방어 — 게이트 52 반례
+    # ─────────────────────────────────────────────────────────────────────
+    # ★ P0-1 — 불확실 구역은 **임계 구역 전체**다 (호출 하나가 아니다).
+    ("plan-uncertainty-covers-the-whole-critical-section", PRESERVE,
+     "            attempted = True",
+     "            attempted = False",
+     "failure_while_leaving_the_ledger_lock_preserves_the_authority or "
+     "uncertain_ledger_write_never_discards_the_claim"),
+    # ★ P0-2 — `write(2)` 는 요청한 만큼 쓴다고 약속하지 않는다.
+    ("claim-write-is-all-or-nothing", PRESERVE,
+     "            _write_all(fd, body, path)",
+     "            os.write(fd, body)",
+     "short_write_does_not_leave_a_truncated_claim"),
+    ("token-write-is-all-or-nothing", PRESERVE,
+     "        fd = os.open(tmp, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o600)\n"
+     "        try:\n"
+     "            _write_all(fd, body, tmp)",
+     "        fd = os.open(tmp, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o600)\n"
+     "        try:\n"
+     "            os.write(fd, body)",
+     "short_write_does_not_leave_a_truncated_claim"),
+    # ★ P0-2 — 반환값도 자기 보고다. 권한 파일은 실물에서 다시 읽는다.
+    ("claim-bytes-are-verified-on-disk", PRESERVE,
+     '        _assert_bytes_on_disk(path, body, "claim")',
+     "        pass",
+     "lying_write_is_caught_by_reading_the_bytes_back"),
+    # ★ P0-4 — 증거의 위치를 caller 가 고를 수 없다.
+    ("freeze-authority-is-not-caller-selected", RP,
+     "    root = claims_root_for_ledger(_ledger_path())",
+     '    root = REPO / "not-the-claims-root"',
+     "freeze_cannot_be_pointed_at_an_empty_claims_directory"),
+    # ★ P0-5 — 쓰기 직전에 다시 읽는다 (lock 밖에서 읽은 doc 을 되쓰면 증거가 사라진다).
+    ("freeze-rereads-the-ledger-before-writing", RP,
+     '    doc = yaml.safe_load(led.read_text(encoding="utf-8")) or {}\n'
+     "    row = next((c for c in doc.get(\"cohorts\") or []\n"
+     "                if c.get(\"cohort_id\") == cohort_id), None)\n"
+     "    if row is None:\n"
+     '        raise SystemExit(f"\u2717 \uc6d0\uc7a5\uc5d0 cohort {cohort_id!r} \uc774 \uc5c6\ub2e4")\n'
+     '    row["status"] = "frozen"',
+     '    doc = {"cohorts": (yaml.safe_load(led.read_text(encoding="utf-8"))\n'
+     '                       or {}).get("cohorts")}\n'
+     "    row = next((c for c in doc.get(\"cohorts\") or []\n"
+     "                if c.get(\"cohort_id\") == cohort_id), None)\n"
+     "    if row is None:\n"
+     '        raise SystemExit(f"\u2717 \uc6d0\uc7a5\uc5d0 cohort {cohort_id!r} \uc774 \uc5c6\ub2e4")\n'
+     '    row["status"] = "frozen"',
+     "freeze_does_not_erase_a_record_written_while_it_ran"),
+    # ★ P0-5 — 살아 있는 실행 검사가 **복구 분기보다 먼저** 온다.
+    ("freeze-checks-live-claims-before-recovery", RP,
+     "        live = _live_claims_for(cohort_id)\n"
+     "        if live:",
+     '        live = ([] if cohort_lifecycle_state(cohort_id) == "frozen"\n'
+     "                else _live_claims_for(cohort_id))\n"
+     "        if live:",
+     "freeze_recovery_branch_also_refuses_while_an_execution_is_live"),
+    # ★ P0-5 — 동결과 게시가 한 transaction 이다 (검사가 아니라 상호배제).
+    ("freeze-holds-the-publish-lock", RP,
+     "    with _PublishLock(dest), _preserve_ledger_lock(led):",
+     "    with _preserve_ledger_lock(led):",
+     "publication_cannot_land_after_the_cohort_was_frozen"),
+    # ★ P0-6 — 허용 전이는 **읽을 때** 검사한다 (writer 측 검사는 authority 가 아니다).
+    ("lifecycle-transitions-are-checked-when-read", RP,
+     '        if (rec["from"], rec["to"]) not in _LIFECYCLE_MOVES:',
+     "        if False:",
+     "lifecycle_reader_never_anchors_a_transition_it_did_not_make"),
+    # ★ P0-6 — 읽기는 쓰지 않는다.
+    ("lifecycle-reader-does-not-write", RP,
+     '        if len(out) >= 1 and out[-1]["prev"] == head:\n'
+     "            return out",
+     '        if len(out) >= 1 and out[-1]["prev"] == head:\n'
+     "            _write_head_anchor(prev)\n"
+     "            return out",
+     "lifecycle_reader_never_anchors_a_transition_it_did_not_make"),
+    # ★ P0-7 — module scope 의 컨테이너 변형도 그 이름의 상태를 정한다.
+    ("producer-binds-container-mutations", RP,
+     "        if isinstance(base, ast.Name):\n"
+     "            return [base.id]",
+     "        if isinstance(base, ast.Name):\n"
+     "            return []",
+     "module_scope_container_mutation_is_inside_producer_identity"),
+    # ★ P0-7 — 뿌리 이름이 없는 target 은 멈춘다 (빈 목록은 거짓말이다).
+    ("producer-fails-closed-on-rootless-targets", RP,
+     "        raise SystemExit(\n"
+     '            f"\u2717 producer \uc18c\uc2a4\uc758 module scope \uc5d0 \ubfcc\ub9ac \uc774\ub984\uc774 \uc5c6\ub294 \ub300\uc785 target \uc774 "',
+     "        return []\n"
+     "        raise SystemExit(\n"
+     '            f"\u2717 producer \uc18c\uc2a4\uc758 module scope \uc5d0 \ubfcc\ub9ac \uc774\ub984\uc774 \uc5c6\ub294 \ub300\uc785 target \uc774 "',
+     "unmodelled_assignment_target_is_fail_closed"),
+    # ★ P0-7 — dunder 는 allowlist 다 (blacklist 는 끝나지 않는다).
+    ("producer-dunder-is-an-allowlist", RP,
+     "            if _is_dunder(name) and name not in _DUNDER_ALLOWED:",
+     "            if False:",
+     "producer_cannot_reach_its_own_bytes_through_the_module_loader"),
+    # ★ P1 — 영수증은 **어느 변이의 것인지** 말해야 영수증이다.
+    ("receipt-is-bound-to-the-mutant", MR,
+     "    h.update(_scenario_binding(name))\n"
+     "    h.update(b\"\\x00\")",
+     "    pass",
+     "receipt_is_bound_to_the_exact_mutant"),
+    # ─────────────────────────────────────────────────────────────────────
+    # 54차 방어 — 게이트 53 반례
+    # ─────────────────────────────────────────────────────────────────────
+    # ★ P0-1 — 승인 commit 은 plan 한 줄이 아니라 그때의 authority 를 본다.
+    # ★ P0-1 — 동결의 **시작**이 발급자에게 보여야 한다.
+    ("freeze-linearizes-its-start", RP,
+     '        if row.get("status") == "active":\n'
+     '            _write_ledger_status(led, cohort_id, "freezing")',
+     "        pass",
+     "issuer_refuses_while_a_freeze_is_half_committed"),
+    # ★ P0-1 — claim 의 자리는 원장이 정한다 (caller 가 아니다).
+    # ★ 60차 P0-5 — 두 root 의 유도가 공유 helper 로 합쳐졌다 (`_lifecycle_root`).
+    #   축의 물음은 그대로다: **원장이 자리를 정하는가.** 원상을 그 helper 안의
+    #   유도 한 줄로 옮긴다.
+    ("claims-root-comes-from-the-ledger", PRESERVE,
+     "    root = canonical_ledger(ledger).parent / name",
+     "    root = canonical_ledger(None).parent / name",
+     "issuer_cannot_choose_where_its_claim_lives"),
+    # ★ P0-2 — 정리 경로도 같은 lock 순서를 쓴다.
+    # ★ 57차 — **declared** 로 내린다. 이 lock 순서는 그대로 지킬 규칙이지만,
+    #   그것을 물던 회귀(`release_cleanup_cannot_delete_another_legs_token`)는
+    #   cross-leg token 경로를 caller 가 고르는 상황을 겨눴고 P0-1 이 그 인자를
+    #   없애면서 지워졌다. 12조각 전수 재생이 `수집 rc 5`(고른 시험 0건)로
+    #   드러냈다. 표현 불가가 된 시나리오를 흉내 내는 시험을 새로 지어내는 것은
+    #   증거가 아니라 장식이므로, **회귀 없는 방어**임을 신고하고 남긴다.
+    ("release-cleanup-holds-the-attempt-path", PRESERVE,
+     "    with _lifecycle_locks(claim.leg_id, token_file, claim.path.parent):",
+     "    with _ledger_lock(claim.path):",
+     None),
+    # ★ P0-3 — 동결의 원장 쓰기도 원자적이어야 한다.
+    ("freeze-ledger-write-is-atomic", RP,
+     "    from tools.preserve import _atomic_write_text\n"
+     "\n"
+     "    _atomic_write_text(led, yaml.safe_dump(doc, allow_unicode=True,\n"
+     "                                           sort_keys=False))\n"
+     "\n"
+     "\n"
+     "def backfill_frozen_markers",
+     "    led.write_text(yaml.safe_dump(doc, allow_unicode=True,\n"
+     "                                  sort_keys=False), encoding=\"utf-8\")\n"
+     "\n"
+     "\n"
+     "def backfill_frozen_markers",
+     "partial_write_during_freeze_leaves_the_ledger_readable"),
+    # ★ P0-4 — 목적지의 frozen 은 단조다.
+    # ★ P0-5 — module scope 의 표현식도 상태를 정한다.
+    # ★ 55차 — **declared.** 55차 P0-5① 이 module-level 표현식을
+    #   `MODULE_EFFECTS` 로 무조건 닫힘에 넣으면서, 뿌리 이름에 결속하는 것은
+    #   더 이상 identity 를 지키는 **고유한 자리가 아니다** (아래 사유 참조).
+    ("module-expr-binds-its-target", RP,
+     "                root = _expr_root_name(node.value)",
+     "                root = None if True else _expr_root_name(node.value)",
+     None),
+    ("dunder-as-a-string-is-still-a-dunder", RP,
+     "            for arg in list(sub.args) + [k.value for k in sub.keywords]:\n"
+     "                if not (isinstance(arg, ast.Constant)\n"
+     "                        and isinstance(arg.value, str)):\n"
+     "                    continue",
+     "            for arg in []:\n"
+     "                if not (isinstance(arg, ast.Constant)\n"
+     "                        and isinstance(arg.value, str)):\n"
+     "                    continue",
+     "dunder_named_by_a_string_literal_is_still_a_dunder"),
+    # ★ P1 — 영수증이 어느 변이의 것인지 report 가 말해야 한다.
+    ("receipt-carries-the-mutant-marker", MR,
+     "        ids = {t.get(\"nodeid\") or \"\" for t in data.get(\"tests\", [])}\n"
+     "        if not any(f\"test_mutant_{mid}\" in n for n in ids):",
+     "        ids = {t.get(\"nodeid\") or \"\" for t in data.get(\"tests\", [])}\n"
+     "        if False:",
+     "genuine_report_from_another_mutant_is_refused"),
+    # ★ 54차 자체 발견 — 증인은 **의미 줄**에 있어야 한다. 본문 매칭이면
+    #   pytest 가 함께 찍는 시험 소스(주석·docstring)에 남은 옛 문자열이
+    #   증인으로 통과한다 — 실제로 여섯 라운드를 그렇게 살아남은 것이 있었다.
+    #   (등록부는 이 파일 자신이므로 preimage 를 **escape 한 채** 적는다 —
+    #    안 그러면 같은 바이트가 두 번 나타나 지점이 죽는다.)
+    ("witness-must-be-in-the-meaning-line", MR,
+     "    return str(want) in _last_line(longrepr or \"\")",
+     "    return str(want) in (longrepr or \"\")",
+     "witness_found_only_in_the_traceback_body_is_not_a_witness"),
+    # ★ 54차 P1 — **declared.** 이 검사는 git 역사가 있어야 물을 수 있는데
+    #   변이 sandbox 는 저장소 복사본이라 `.git` 이 없다. 그래서 sandbox 안에서
+    #   이 변이를 재생하면 baseline 자체가 빨갛다 (검사가 아니라 환경이 다르다).
+    #   회귀 자체는 실저장소에서 돌고 초록이다
+    #   (`..._recorded_head_must_exist_in_this_repository`).
+    # ── 55차 (게이트 54차 반증 조건) ─────────────────────────────────────
+    # ★ P0-2 — 원장 해석은 **한 자리**다. 두 벌이면 symlink 원장의 자기 쓰기가
+    #   그 사이를 벌린다.
+    ("ledger-is-resolved-once", PRESERVE,
+     '    path = Path(ledger or DEFAULT_LEDGER).resolve()',
+     '    path = Path(ledger or DEFAULT_LEDGER)',
+     "same_ledger_argument_always_names_the_same_claims_root"),
+    # ── 56차 (게이트 55차 반증 조건) ─────────────────────────────────────
+    # ★ P0-1 — 전달 통로의 alias 는 첫 부작용 앞에서 거부한다.
+    ("token-path-alias-is-refused", PRESERVE,
+     "        if exc.errno in (errno.ELOOP, errno.EMLINK):",
+     "        if False:",
+     "symlinked_token_path_cannot_split_the_attempt_lock"),
+    # ★ P0-2 — 원장의 이름이 여럿이면 정본을 정할 수 없다.
+    ("ledger-hardlink-is-refused", PRESERVE,
+     "    if stat.S_ISREG(st.st_mode) and st.st_nlink != 1:\n"
+     "        raise PreserveError(\n"
+     '            "plan",\n'
+     '            f"\uc6d0\uc7a5\uc5d0 \ub2e4\ub978 \uc774\ub984(hardlink)\uc774 \uc788\ub2e4: {path} (nlink={st.st_nlink}) \u2014 "',
+     "    if False:\n"
+     "        raise PreserveError(\n"
+     '            "plan",\n'
+     '            f"\uc6d0\uc7a5\uc5d0 \ub2e4\ub978 \uc774\ub984(hardlink)\uc774 \uc788\ub2e4: {path} (nlink={st.st_nlink}) \u2014 "',
+     "hardlinked_ledger_alias_cannot_fork_the_authority"),
+    # ★ P0-3 — claim 이 없어도 원장이 소유자를 인증한다.
+    ("ledger-seals-the-attempt-verifier", PRESERVE,
+     '            rec_evidence["attempt_verifier"] = _token_verifier(token)',
+     "            pass",
+     "crash_after_the_claim_unlink_can_still_be_finalized"),
+    # ★ P0-4 — 미완을 완주시키기 전에는 새 줄을 붙이지 않는다.
+    ("append-finishes-the-pending-anchor-first", RP,
+     "    _finish_pending_anchor()\n"
+     "    entries = read_lifecycle()",
+     "    entries = read_lifecycle()",
+     "two_consecutive_partial_appends_are_still_recoverable"),
+    # ★ P0-5 — mountinfo 의 octal escape 를 푼다.
+    # ★ 57차 P0-2 — mount 정체는 커널이 답한다 (행 순서로 추측하지 않는다).
+    #   56차의 `deepest-mount-is-chosen` 을 여기로 옮겼다: "가장 깊은 것을
+    #   고른다" 는 규칙 자체가 P0-2 반례(겹쳐 쌓으면 깊이가 같다)로 무너졌고,
+    #   그 규칙을 지키던 코드는 사라졌다. 지켜야 할 것은 **커널에게 묻는다** 다.
+    # ★ P0-7 — `root` 는 filesystem 안의 경로다 (namespace 절대경로가 아니다).
+    # ★ P0-8 — 건너간 module 에도 module 효과를 seed 한다.
+    ("crossed-module-effects-are-seeded", RP,
+     "    if MODULE_EFFECTS in sdefs:\n"
+     '        todo.append(("sc", MODULE_EFFECTS))',
+     "    if False:\n"
+     '        todo.append(("sc", MODULE_EFFECTS))',
+     "module_effects_are_seeded_in_every_crossed_module"),
+    # ★ P0-9 — 조립된 이름은 exact 평가로만 통과한다.
+    # ★ P1-1 — 증거의 이름은 저장소 상대다.
+    ("evidence-paths-are-repo-relative", MR,
+     "            key = fp.relative_to(root).as_posix\u0028\u0029",
+     "            key = str\u0028fp\u0029",
+     "evidence_tree_digest_does_not_depend_on_the_checkout_path"),
+    # ★ P1-2 — 환경·의존성도 증거 안이다.
+    # ★ P0-3 — journal·anchor 를 바꾸는 경로가 공유하는 임계 구역.
+    ("anchor-repair-holds-the-lifecycle-lock", RP,
+     "    with _lifecycle_lock():\n"
+     "        return _finish_pending_anchor()",
+     "    if True:\n"
+     "        return _finish_pending_anchor()",
+     "stale_anchor_repair_cannot_rewind_the_head"),
+    # ★ P1-1 — 검사는 **첫 부작용 앞**에 있어야 검사다.
+    ("freeze-checks-the-destination-first", RP,
+     "    _assert_dest_inside_repo(dest, cohort_id)\n"
+     "    # LOCK ORDER: publish → ledger.",
+     "    # LOCK ORDER: publish → ledger.",
+     "freeze_validates_the_destination_before_its_first_side_effect"),
+    # ★ P1-2 — 증거는 **시험한 트리**에 묶인다 (commit 실재는 아무 것도 안 묻는다).
+    ("coverage-is-bound-to-the-tested-tree", MR,
+     "        if got != now:\n"
+     "            return _refuse(",
+     "        if False:\n"
+     "            return _refuse(",
+     "coverage_is_bound_to_the_tree_it_actually_tested"),
+    ("coverage-checks-the-recorded-head", MR,
+     "    if _assert_heads_are_real(paths) != 0:\n"
+     "        return 1",
+     "    if False:\n"
+     "        return 1",
+     None),
+    # ── 58차 (게이트 57차 반증 조건) ─────────────────────────────────────
+    #   58차 L13: 등록부에 57·58차 **신규 방어의 anchor 가 하나도 없었다.**
+    #   그래서 "170/170 정확히 덮음" 은 참이지만 그것이 말하는 것은 현재
+    #   등록부의 완전성뿐이었다 — 새 방어에 대한 변이 증거가 아니다. 우리는
+    #   그 문장을 요청문에서 강한 증거처럼 제시했고, 그것은 과대 주장이었다.
+    #   여기서 축을 심는다: 각 발견마다 **고친 자리를 되돌리는** 변이 하나.
+    #   ★ anchor 는 **진입점이 실제로 지나는 자리**여야 한다. 처음엔 완료 시점
+    #     기록(`record_run_outputs`)에 걸었는데 변이가 "안 물었다" 로 나왔다 —
+    #     production gate 가 지나는 것은 `note_smoke_exemption()` 이다. L13 이
+    #     지적한 실패형을 등록부에서 되풀이할 뻔했고, 실행이 잡았다.
+    # ★ 59차 마감 — **축을 다시 겨눴다.** 58차 L1 의 원상은
+    #   `note_smoke_exemption()` 의 loop 였는데, M1 이 계약을 "gate 가 적는다"
+    #   에서 "gate 가 권한을 발행하고 굳는 자리가 적는다" 로 옮기면서 그 함수는
+    #   호출자가 0곳이 됐다 (그래서 삭제했다). 전수 재생의 조각 3 이 "안 물었다"
+    #   로 그것을 알려 줬다 — **죽은 축은 죽은 코드를 가리킨다.**
+    #   지금의 L1 명제는 "production 진입점의 면제 분기가 권한을 발행하는가" 다.
+    # ★ 60차 P0-2 — 원상이 한 줄로 줄었다. mint 가 더 이상 class 를 안 받으므로
+    #   (`EXEC_CLASS_SMOKE` 인자가 사라졌다) 그 인자를 담은 옛 원상은 파일에
+    #   없다. 축의 물음은 그대로다: **면제 분기가 권한을 발행하는가.**
+    ("smoke-gate-issues-the-execution-capability-g59", GRID,          # L1 → M1
+     "        return None, issue_execution_class(out_dir, leg, \"grid\", ledger=None)",
+     "        return None, None",
+     "production_smoke_gate_records_the_execution_class"),
+    # ★ 59차 M2 — descriptor 의 형식 표시가 상수에서 이름으로 바뀌었다
+    #   (`_CONTENT_ID_KIND`). 원상을 안 고치면 이 축이 죽는다.
+    ("content-id-hashes-every-manifest-g58", PRESERVE,                # L2
+     '    descriptor = json.dumps({"kind": _CONTENT_ID_KIND, "manifests": parts},',
+     '    descriptor = json.dumps({"kind": _CONTENT_ID_KIND, "manifests": parts[:1]},',
+     "two_fits_sharing_curves_do_not_share_a_content_id"),
+    ("smoke-containment-is-a-kernel-coordinate-g58", PRESERVE,        # L4
+     "    return p_fs == ns_fs or ns_fs in p_fs.parents",
+     "    return True",
+     "bind_mounted_outside_directory_is_not_inside_the_smoke_namespace or "
+     "an_unplanned_leg_under_a_bind_alias_is_not_exempted"),
+    ("phase-receipt-is-write-once-g58", PRESERVE,                     # L6
+     '                if _canon_json(prev.get("receipt")) != _canon_json(receipt):',
+     "                if False:",
+     "a_closed_phase_cannot_be_rewritten_with_a_different_receipt"),
+    ("bundle-uri-must-be-repo-relative-g58", PRESERVE,                # L7
+     '    d = _repo_relative_or_refuse(root, evidence["bundle_uri"], "bundle_uri")',
+     '    d = root / evidence["bundle_uri"]',
+     "an_absolute_bundle_uri_is_refused or "
+     "a_bundle_uri_that_escapes_the_repository_is_refused"),
+    #   ★ anchor 는 **호출 자리가 아니라 규칙 자신**이다. 처음엔 발급 경로의
+    #     호출 하나를 지웠는데 변이가 살았다 — 발급은 여러 directory 를 굳히고
+    #     남은 자리가 여전히 물었기 때문이다. 심층 방어를 한 겹만 벗기면
+    #     관측되지 않는다 (41·42·43차에 배운 것과 같다).
+    ("issuance-fsync-is-strict-g58", PRESERVE,                        # L8
+     "    if not _fsync_dir(d):\n"
+     "        raise PreserveError(",
+     "    if False:\n"
+     "        raise PreserveError(",
+     "issuance_fails_closed_when_a_directory_cannot_be_flushed"),
+    ("decorators-are-import-time-effects-g58", RP,                    # L9-a
+     # ★ 59차 M12 — 데코레이터 뒤에 base·keyword 가 같은 규칙으로 붙어
+     #   원상이 낡았다. 데코레이터 줄만 겨눈다 (이 축의 뜻 그대로).
+     '    out = [ast.copy_location(ast.Expr(value=d), d)\n'
+     '           for d in (getattr(node, "decorator_list", ()) or ())]\n',
+     '    out = []\n',
+     "a_name_only_decorator_changes_the_identity_when_its_body_changes"),
+    ("capability-can-not-leave-the-call-site-g58", RP,                # L9-b
+     "        if spelling in caps and is_load and id(sub) not in callees:",
+     "        if False:",
+     "a_capability_that_leaves_the_call_site_is_refused"),
+    # ★ 59차 M9 — 이 줄 **뒤에** deep snapshot 이 들어와 원상이 낡았다.
+    #   도메인 검사 한 줄만 지우는 것이 이 변이의 뜻이므로 그 줄만 원상으로 둔다.
+    ("lifecycle-owned-evidence-is-refused-g58", PRESERVE,             # L10
+     "    _assert_evidence_domain(evidence)\n",
+     "",
+     "normal_finalize_cannot_forge_the_migration_provenance or "
+     "lifecycle_owned_evidence_keys_are_refused_from_callers"),
+    # ★ 59차 M15 — 영수증을 탐침이 통째로 재게 되면서 원상이 옮겨졌다.
+    #   startup 결속을 지우는 뜻은 그대로다 (탐침의 `startup` 필드를 비운다).
+    ("execution-receipt-binds-the-startup-g58", MR,                   # L11
+     # 선언이 자기 자신의 preimage 로 세어지지 않게 철자를 escape 한다
+     # (이 파일이 자기 변이 대상이다).
+     '            \u0022inputs\u0022: inputs,\n'
+     '            \u0022startup\u0022: _env_fact\u0073(NAMES)}',
+     '            \u0022inputs\u0022: inputs,\n'
+     '            \u0022startup\u0022: {}}',
+     "the_execution_receipt_binds"),
+    ("report-attests-the-environment-g58", MR,                        # L12
+     "        if execution is not None:\n"
+     "            tag = environment_tag(execution)",
+     "        if False:\n"
+     "            tag = environment_tag(execution)",
+     "execution_evidence_can_not_be_laundered_without_the_reports or "
+     "a_report_that_attests_another_environment_is_refused"),
+    ("coverage-checks-the-execution-receipt-g58", MR,                 # L13-a
+     "    if _assert_execution_is_current(paths) != 0:          # 57차 P1-1\n"
+     "        return 1\n", "",
+     "the_top_level_checker_consumes_the_execution_receipt"),
+    ("replay-forces-the-declared-environment-g58", MR,                # L13-b
+     "            cwd=_sandboxed(ROOT), env=replay_env(),\n"
+     "            capture_output=True, text=True, timeout=1800)\n"
+     "        if rep.is_file() and rep.stat().st_size:",
+     "            cwd=_sandboxed(ROOT), env=None,\n"
+     "            capture_output=True, text=True, timeout=1800)\n"
+     "        if rep.is_file() and rep.stat().st_size:",
+     "the_replayed_run_itself_sees_only_a_declared_environment"),
+    ("smoke-registry-is-split-by-class-g58", PRESERVE,                # L14
+     "    return (local_exec_class_root_for_ledger(ledger) if cls == EXEC_CLASS_SMOKE\n"
+     "            else exec_class_root_for_ledger(ledger))",
+     "    return exec_class_root_for_ledger(ledger)",
+     "smoke_records_do_not_land_in_the_shared_registry"),
+    # ── 59차 (게이트 58차 반증 조건) ──────────────────────────────────────
+    #
+    #   17건을 닫으면서 붙인 방어의 축이다. 각 항목의 뜻은 "이 층을 지우면
+    #   그 층을 증명하는 시험이 빨개진다" 이고, 그것이 성립하지 않으면 그
+    #   방어는 시험에 결속돼 있지 않은 것이다.
+
+    # α — 실행 class 를 권한으로
+    # ★ 60차 P0-3 — 같은 철자가 두 자리가 됐다 (`discard_execution_capability()`
+    #   가 같은 문장으로 권한을 확인한다). 원상에 다음 줄까지 넣어 **굳히는
+    #   자리**를 가리킨다.
+    ("output-commit-requires-a-capability-g59", PRESERVE,             # M1
+     "    if not isinstance(capability, ExecutionClassCapability):\n"
+     "        raise PreserveError(\n"
+     "            \"promote\",\n"
+     "            \"산출을 굳히려면 gate 가 발행한 실행 class 권한이 필요하다 \"",
+     "    if False:\n"
+     "        raise PreserveError(\n"
+     "            \"promote\",\n"
+     "            \"산출을 굳히려면 gate 가 발행한 실행 class 권한이 필요하다 \"",
+     "committing_an_output_without_a_capability_is_refused"),
+    ("exec-class-record-is-read-back-g59", PRESERVE,                  # M3
+     "        got = _tmp.read_bytes()\n        if got != body:",
+     "        got = body\n        if got != body:",
+     "a_short_write_never_publishes_a_partial_record"),
+    ("exec-class-retry-reseals-durability-g59", PRESERVE,             # M13
+     "        return _seal_exec_class_record(root / name, cid, cls)",
+     "        return root / name",
+     "a_retry_after_a_failed_parent_fsync_redoes_the_durability_step"),
+
+    # γ — schema 를 하나로
+    ("run-content-id-refuses-unknown-manifests-g59", PRESERVE,        # M2
+     "    unknown = sorted(n for n in present\n"
+     "                     if _MANIFEST_NAME_RE.match(n)\n"
+     "                     and n not in RUN_MANIFEST_SCHEMA)",
+     "    unknown = []",
+     "an_undeclared_manifest_in_a_run_dir_is_refused"),
+    # ★ 61차 α 가 선언을 둘로 갈랐다 (identity / derived). 축의 물음은 그대로다
+    #   — **시작 manifest 가 내용 identity 안에 있는가.** 원상을 identity 선언
+    #   으로 다시 겨눈다 (죽은 축을 지우는 게 아니라 옮긴다).
+    ("run-manifest-schema-is-production-wide-g59", PRESERVE,          # M2
+     'RUN_IDENTITY_MANIFESTS = ("curves_manifest.yaml", "curves_manifest_start.yaml",\n'
+     '                          "manifest.yaml", "manifest_grid.yaml",\n'
+     '                          "manifest_start.yaml")',
+     'RUN_IDENTITY_MANIFESTS = ("curves_manifest.yaml", "manifest.yaml",\n'
+     '                          "manifest_grid.yaml")',
+     "the_start_manifest_takes_part_in_the_content_identity"),
+    ("phase-order-is-enforced-g59", PRESERVE,                         # M7
+     "                if _open:",
+     "                if False:",
+     "a_later_phase_can_not_close_before_its_predecessor"),
+    ("finalize-requires-the-consumed-binding-g59", PRESERVE,          # M7
+     "            if _missing:",
+     "            if False:",
+     "finalize_refuses_a_later_phase_with_no_recorded_predecessor"),
+
+    # β — handle 을 끝까지
+    ("capability-carries-the-judged-handle-g59", PRESERVE,            # M5
+     "            _assert_still_the_judged_dir(capability, x)",
+     "            pass",
+     "the_capability_is_bound_to_the_directory_the_gate_judged"),
+    ("bundle-members-are-not-followed-g59", PRESERVE,                 # M8
+     "            st = os.stat(x, follow_symlinks=False)",
+     "            st = os.stat(x)",
+     "a_bundle_member_symlink_can_not_smuggle_bytes_from_outside"),
+    ("finalize-snapshots-the-evidence-g59", PRESERVE,                 # M9
+     "    evidence = json.loads(_canon_json(evidence))",
+     "    evidence = dict(evidence)",
+     "finalize_seals_the_evidence_it_verified"),
+    ("frozen-publication-needs-a-local-seal-g59", RP,                 # M6
+     "    _unsealed = unsealed_frozen_cohorts()",
+     "    _unsealed = []",
+     "publication_is_refused_while_a_frozen_cohort_has_no_local_seal"),
+
+    # ζ — 발급 표면
+    ("issuance-requires-a-durable-token-g59", PRESERVE,               # M10
+     "    if _ondisk is None or not secrets.compare_digest(str(_ondisk), "
+     "str(token)):",
+     "    if False:",
+     "issuing_with_a_token_that_is_not_on_disk_is_refused"),
+
+    # δ — producer identity 를 실행 의미로
+    ("capability-target-must-be-provable-g59", RP,                    # M11
+     "    return isinstance(cur, ast.Name) and cur.id not in targets",
+     "    return True",
+     "wrapping_the_capability_target_does_not_escape"),
+    ("class-bases-are-substitution-g59", RP,                          # M12
+     '    out += [ast.copy_location(ast.Expr(value=b), b)\n'
+     '            for b in (getattr(node, "bases", ()) or ())]\n'
+     '    out += [ast.copy_location(ast.Expr(value=k.value), k.value)\n'
+     '            for k in (getattr(node, "keywords", ()) or ())]\n',
+     "",
+     "a_metaclass_body_change_moves_the_identity"),
+    ("future-flag-changes-the-model-g59", RP,                         # M12
+     '                if getattr(node, "module", None) == "__future__":',
+     "                if False:",
+     "the_future_annotations_flag_is_part_of_the_model"),
+
+    # ε — 증언의 범위
+    #   선언이 자기 자신의 preimage 로 세어지지 않게 철자를 escape 한다
+    #   (이 파일이 자기 변이 대상이다).
+    ("startup-binds-every-loaded-module-g59", MR,                     # M14
+     '            \u0022startup_module\u0073\u0022: loaded,\n', "",
+     # ★ 60차 마감 — node 를 넓혔다. P1-3·P1-4 가 층을 둘 더하면서
+     #   원래 증인(`..._what_sitecustomize_pulls_in`)은 이 필드를 지워도
+     #   **안 빨개진다** — 이력(`startup_history`)과 `PYTHONPATH` 자리의
+     #   바이트(`importable_roots`)가 같은 반례를 덮기 때문이다. 전수 재생
+     #   9조각이 그것을 드러냈다. 세 층이 갈라지는 자리(경로로 올려
+     #   `sys.modules` 에 심은, 이름으로는 못 찾는 module)를 겨누는 시험을
+     #   더해 이 필드의 **고유한** 증인을 되살린다.
+     "the_startup_probe_binds_what_sitecustomize_pulls_in or "
+     "a_module_with_no_findable_spec_is_still_bound"),
+    ("env-tag-covers-the-whole-receipt-g59", MR,                      # M15
+     "    body = j\u0073on.dumps(e, sort_keys=True, ensure_ascii=False)",
+     '    body = json.dumps(e.get("startup"), sort_keys=True, '
+     "ensure_ascii=False)",
+     "the_environment_tag_covers_the_whole_receipt"),
+    # ══ 60차 — 이 라운드가 세운 방어 ══════════════════════════════════════
+    #   판정 17건을 닫으면서 만든 층들이다. 축이 없으면 그 층은 "있는 척" 이
+    #   될 수 있고, 이 저장소는 그것을 세 라운드 연속 실측했다.
+    ("run-identity-is-sealed-at-commit-g60", PRESERVE,               # P0-1
+     "            seal_run_identity(x, dir_fd=rec.dir_fd)",
+     "            pass",
+     # ★ 61차 α 가 파생 manifest 를 identity 선언 밖으로 뺐으므로, 60차의
+     #   증인("굳힌 뒤 `analysis_manifest.yaml` 을 더해도 class 가 안 사라진다")
+     #   은 **봉인이 없어도** 초록이다 (마감 전수 재생 실측: 변이 rc 0).
+     #   봉인이 지금 지키는 것은 다른 자리다 — 굳힌 뒤 **실행** manifest 가
+     #   하나 더 생기는 정상 순서(grid 굳힘 → fit 의 첫 쓰기). 그리로 겨눈다.
+     "a_later_sanctioned_manifest_does_not_erase_the_registered_class or "
+     "an_execution_manifest_written_after_the_commit_keeps_the_class"),
+    ("class-is-decided-by-the-place-g60", PRESERVE,                  # P0-2
+     "    cls = _decide_execution_class(run_dir)",
+     "    cls = EXEC_CLASS_CANONICAL",
+     "the_gate_decides_the_class_and_the_caller_cannot_choose_it"),
+    ("a-consumed-capability-is-retired-g60", PRESERVE,               # P0-3
+     "            _retire_capability(capability.nonce)",
+     "            pass",
+     "a_capability_is_spent_by_a_successful_commit"),
+    ("the-gate-creates-the-judged-place-g60", PRESERVE,              # P0-4
+     "    Path(run_dir).mkdir(parents=True, exist_ok=True)",
+     "    pass",
+     "the_gate_creates_the_place_and_always_carries_a_handle"),
+    # ★ 겨누는 자리를 `write_curves_manifest()` 로 옮겼다 — 시험이 부르는 것이
+    #   그 함수이고, `run_grid` 의 같은 문장을 겨누면 축이 안 문다 (실측 rc 0).
+    ("grid-writes-under-the-handle-g60", GRID,                       # P0-4
+     "    out_dir = staged_root(capability) if capability is not None else named",
+     "    out_dir = named",
+     "production_grid_writes_through_the_capability"),
+    ("lifecycle-root-is-not-an-alias-g60", PRESERVE,                 # P0-5
+     "    if stat.S_ISLNK(st.st_mode) or not stat.S_ISDIR(st.st_mode):",
+     "    if False:",
+     "a_symlinked_claims_root_is_refused"),
+    ("journal-publish-reads-back-g60", RP,                           # P0-6
+     "        if got != body:",
+     "        if False:",
+     "a_short_journal_write_never_becomes_a_published_transition"),
+    ("bundle-members-share-the-root-mount-g60", PRESERVE,            # P0-7
+     "            if here_mnt != root_mnt:",
+     "            if False:",
+     # ★ bind-mount 시험은 `unshare` 가 되는 환경에서만 돈다 — 변이 재생의
+     #   sandbox 안에서는 건너뛰어지고, 건너뛴 시험은 방어를 안 지킨다
+     #   (실측 rc 0). 좌표 비교 자체를 겨누는 시험으로 축을 옮긴다.
+     "a_member_on_another_mount_is_refused"),
+    ("payload-index-is-a-bundle-member-g60", PRESERVE,               # P0-8
+     "    if idx not in member_paths:",
+     "    if False:",
+     "the_payload_index_must_be_a_member_of_the_bundle"),
+    ("finalize-seals-the-bundle-bytes-g60", PRESERVE,                # P0-9
+     '        evidence["bundle_content_id"] = bundle_content_id(evidence)',
+     "        pass",
+     "finalize_seals_the_bundle_content_id"),
+    ("phase-receipt-is-snapshotted-g60", PRESERVE,                   # P1-2
+     "        receipt = json.loads(_canon_json(receipt))",
+     "        pass",
+     "the_phase_receipt_is_snapshotted_at_entry"),
+    ("a-record-has-exactly-one-name-g60", PRESERVE,                  # P1-1
+     "    if _st.st_nlink != 1:",
+     "    if False:",
+     "a_record_with_two_names_is_refused_by_the_reader"),
+    ("module-docstring-is-bound-g60", RP,                            # P0-13
+     '        _bind("__doc__", _body[0])',
+     "        pass",
+     "the_module_docstring_is_inside_the_identity"),
+    ("a-caller-supplied-callee-is-refused-g60", RP,                  # P0-10
+     "            if isinstance(sub.func, ast.Name) and sub.func.id in shadows_at(sub):",
+     "            if False:",
+     "a_caller_supplied_binding_is_not_a_proof_of_non_namespace"),
+    # ζ — producer identity 의 평가 표면 (P0-11·P0-12).
+    #   §1 초안이 "cohort pin 이 움직인 것이 증거다" 로 두려 했던 자리다.
+    #   그것은 증거가 아니라 부작용이다 — 방어를 심었으면 축을 심는다.
+    ("compound-heads-are-import-time-g60", RP,                       # P0-12
+     """                for h in (getattr(node, "test", None),
+                          getattr(node, "iter", None),
+                          getattr(node, "subject", None)):
+                    if h is not None:
+                        _bind(MODULE_EFFECTS, here)""",
+     "                pass",
+     "compound_heads_and_vararg_annotations_are_import_time"),
+    ("vararg-annotations-are-import-time-g60", RP,                   # P0-12
+     """                  + [x for x in (getattr(args, "vararg", None),
+                                 getattr(args, "kwarg", None)) if x]):""",
+     "                  ):",
+     "compound_heads_and_vararg_annotations_are_import_time"),
+    ("shadows-are-scoped-g60", RP,                                   # P0-11
+     "    scope_of = {id(sub): sh for sub, sh in _scoped_shadows(node)}",
+     "    _flat = _binding_shadows(node)\n"
+     "    scope_of = {id(sub): _flat for sub in ast.walk(node)}",
+     # ★ **declared** 로 내린다 (아래 DECLARED_MASKED). scope 를 좁힌 것은
+     #   옳은 의미이지만, 평평한 shadow 와 결과가 갈라지는 모든 형태를 더
+     #   바깥의 규칙(58차 L9-b "능력을 값으로 옮긴다" · P0-10 둘째 층)이
+     #   먼저 문다 — 두 형태를 지어 실측했고 둘 다 변이 rc 0 이었다.
+     None),
+    # ══ 61차 — 이 라운드가 세운 방어 ══════════════════════════════════════
+    #   판정 7건을 닫으면서 만든 층들이다. 축이 없으면 그 층은 "있는 척" 이
+    #   될 수 있고, 이 저장소는 그것을 네 라운드 연속 실측했다.
+    ("derived-manifests-are-outside-the-identity-g61", PRESERVE,     # P0-1
+     "    for name in RUN_IDENTITY_MANIFESTS:\n"
+     "        if name not in present:",
+     "    for name in RUN_MANIFEST_SCHEMA:\n"
+     "        if name not in present:",
+     "a_resumed_run_survives_a_report_refresh or "
+     "the_derived_manifest_never_enters_the_identity"),
+    ("records-keep-the-logical-input-g61", FITTING,                  # P0-2
+     '        "run_type": "fit", "input": str(_log_in),',
+     '        "run_type": "fit", "input": str(in_dir),',
+     "the_sealed_input_path_exists_after_a_successful_fit"),
+    ("records-keep-the-logical-output-g61", FITTING,                 # P0-2
+     '        "fits_parquet": str(_log_out / path.relative_to(out_dir)),',
+     '        "fits_parquet": str(path),',
+     "the_sealed_output_path_exists_after_a_successful_fit or "
+     "no_durable_record_mentions_a_process_local_handle"),
+    ("the-run-lock-is-released-g61", FITTING,                        # P1-1
+     # ★ 62차 β′ — lock 이 token 이 되면서 원상이 옮겨 갔다 (경로 → token).
+     "        release_run_lock(tok)",
+     "        pass",
+     "the_run_lock_is_gone_after_a_successful_fit"),
+    ("lock-release-failure-is-not-swallowed-g61", IO,                # P1-1
+     # ★ 62차 β′ — 삭제가 `os.unlink(name, dir_fd=…)` 로 옮겨 갔다.
+     "        os.unlink(token.name, dir_fd=token.dir_fd)   # 실패하면 그대로 올린다",
+     "        try:\n            os.unlink(token.name, dir_fd=token.dir_fd)\n"
+     "        except OSError:\n            pass",
+     "a_failed_lock_release_is_not_swallowed"),
+    # ══ 62차 β′·γ′ — 잠금 · 임계구역 · capability 폐기 · 논리 locator · run_sig ══
+    #   리뷰어 반례가 전부 정상 interleaving/정상 순서였으므로 축도 정상 순서를
+    #   되돌리는 형태로 짓는다 — "옛 코드로 되돌리면 증인이 빨갛다".
+    ("run-lock-exclusivity-is-a-kernel-op-g62", IO,                  # P0-2
+     "                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)",
+     "                    pass",
+     "two_contenders_that_both_observe_absence_do_not_both_acquire or "
+     "eight_processes_racing_for_one_lock_yield_exactly_one_holder or "
+     "a_live_holder_in_another_process_is_refused_by_pid or "
+     "run_lock_blocks_concurrent_run"),
+    ("release-consumes-a-token-not-a-path-g62", IO,                  # P1-1
+     "    if not isinstance(token, RunLock):\n        raise TypeError(",
+     "    if False:\n        raise TypeError(",
+     "the_path_based_release_is_gone"),
+    ("release-refuses-a-replaced-inode-g62", IO,                     # P1-1
+     "    if (st.st_dev, st.st_ino) != (token.dev, token.ino):\n"
+     "        _close_lock_token(token)",
+     "    if False:\n        _close_lock_token(token)",
+     "release_refuses_a_lock_whose_name_now_points_at_another_inode or "
+     "releasing_a_missing_or_foreign_lock_is_loud_but_never_deletes"),
+    ("release-refuses-a-vanished-lock-g62", IO,                      # P1-1
+     "    except FileNotFoundError:\n        _close_lock_token(token)\n"
+     "        raise RuntimeError(\n            f\"내 lock 이 사라졌다:",
+     "    except FileNotFoundError:\n        _close_lock_token(token)\n"
+     "        return\n        raise RuntimeError(\n            f\"내 lock 이 사라졌다:",
+     "release_refuses_when_its_own_lock_has_vanished"),
+    ("fit-commits-inside-the-lock-g62", FITTING,                     # P0-3
+     # 옛 61차 순서 그대로 — commit 동안 lock 이 비어 있다.
+     "        from tools.preserve import commit_run_outputs\n"
+     "        commit_run_outputs(_exec_cap, [logical_out])",
+     "        release_run_lock(tok)\n"
+     "        from tools.preserve import commit_run_outputs\n"
+     "        commit_run_outputs(_exec_cap, [logical_out])\n"
+     '        tok = acquire_run_lock(logical_out, ".fit.lock")',
+     "fit_releases_the_lock_only_after_commit_and_receipt"),
+    ("grid-merges-inside-the-lock-g62", GRID,                        # P0-3
+     '        merged = merge_chunks(out_dir, "curves.parquet")',
+     "        release_run_lock(tok)\n"
+     '        merged = merge_chunks(out_dir, "curves.parquet")',
+     "grid_source_releases_the_lock_after_merge_manifest_commit_and_receipt"),
+    ("fit-failure-discards-the-capability-g62", FITTING,             # P1-2
+     "        discard_capability_on_abort(_exec_cap, log=log)\n        raise",
+     "        raise",
+     "fit_failure_before_commit_discards_the_capability"),
+    ("grid-dry-run-discards-the-capability-g62", GRID,               # P1-2
+     "            discard_capability_on_abort(_exec_cap, log=log)\n"
+     '            return {"dry_run": True',
+     '            return {"dry_run": True',
+     "grid_dry_run_discards_the_capability"),
+    ("grid-manifest-locator-is-the-name-g62", GRID,                  # P0-4
+     '        "curves_parquet": (str(Path(named_out) / Path(merged).name)\n'
+     "                           if merged else None),",
+     '        "curves_parquet": str(merged) if merged else None,',
+     "grid_manifest_payload_records_the_logical_curves_path"),
+    ("run-sig-has-no-staging-pathname-g62", FITTING,                 # P0-5
+     '        "base_config": _ck(base_config or "configs/base.yaml"),',
+     '        "base_config": str(base_config),',
+     "the_same_logical_fit_resumed_keeps_one_run_signature or "
+     "the_run_spec_does_not_carry_a_staging_pathname"),
+    # ── α′ 승격 판정 (P0-1) ──
+    ("promotion-refuses-a-stale-seal-g62", PRESERVE,                 # P0-1
+     "    sealed = _sealed_manifest_parts(d, dir_fd)\n"
+     "    if sealed is None:\n"
+     "        raise PreserveError(",
+     "    sealed = _sealed_manifest_parts(d, dir_fd)\n"
+     "    if sealed is None:\n"
+     "        return run_content_id(d, dir_fd=dir_fd), False\n"
+     "    if False:\n"
+     "        raise PreserveError(",
+     # ★ EXPECT 관측 — 앞 시험은 셋째 규칙(`sealed` 레코드는 봉인 없이 거부)이
+     #   먼저 걸려 첫 규칙의 증인이 아니었다. legacy 레코드(`sealed: false`)
+     #   위의 낡은 봉인만이 첫 규칙 홀로 막는 자리다.
+     "a_stale_seal_is_refused_even_when_a_legacy_record_matches"),
+    ("promotion-refuses-a-subset-seal-g62", PRESERVE,                # P0-1
+     "    extra = sorted(present - covered)\n    if extra:",
+     "    extra = sorted(present - covered)\n    if False:",
+     "an_in_progress_fit_in_a_committed_grid_dir_is_not_promotable"),
+    ("sealed-records-need-their-seal-g62", PRESERVE,                 # P0-1
+     # (70차 E5 — reader 가 `sealed` 를 bool 로 닫아 여기는 `is True` 로 묻는다; preimage 를 따라 옮겼다)
+     '    if for_promotion and not had_seal and rec.get("sealed", False) is True:',
+     "    if False:",
+     "deleting_the_seal_does_not_reopen_the_prefix"),
+    # ── ζ′ 승격 primitive (P0-8) ──
+    ("promotion-checks-derived-freshness-g62", ARCHIVE,              # P0-8
+     # 옛 코드 그대로 — smoke 판정만 하고 freshness 는 wrapper 에 맡긴다.
+     # (63차 F1 재조준: 본문이 `_body()` 안으로 들어갔다 — 판정 문장은 같다)
+     '            assert_promotable([a.run_dir], "보관 묶음", dest=a.out_dir)\n'
+     "            return bundle(a.run_dir, a.out_dir)",
+     "            from tools.preserve import assert_not_smoke_provenance\n"
+     '            assert_not_smoke_provenance([a.run_dir], "보관 묶음", dest=a.out_dir)\n'
+     "            return bundle(a.run_dir, a.out_dir)",
+     "direct_bundle_refuses_a_stale_derived_artifact or "
+     "the_promotion_primitive_is_one_function"),
+    # ── δ′ producer scope (P0-6 · P0-7) ──
+    ("definition-head-is-the-enclosing-scope-g62", RP,               # P0-6
+     "    yield from _walk_nodes(head, inherited, inherited)",
+     "    yield from _walk_nodes(head, here, here)",
+     "the_analyzer_does_not_shadow_the_default_with_the_parameter or "
+     "a_parameter_does_not_exempt_a_capability_in_the_head"),
+    ("class-locals-stay-in-the-class-body-g62", RP,                  # P0-6
+     "    nested = inherited if isinstance(node, ast.ClassDef) else here",
+     "    nested = here",
+     # ★ **declared** (아래 DECLARED_MASKED) — 자체 리뷰 F3 가 class 본문의 결속
+     #   shadow 를 아예 없앴으므로 class 의 `here == inherited` 이고 이 변이는
+     #   의미를 못 바꾼다. 방어는 `class-body-bindings-are-not-shadows-g62` 로
+     #   옮겨 갔다 (EXPECT 관측: fail 집합 비어 있음).
+     None),
+    ("crossed-module-uses-its-own-symbol-table-g62", RP,             # P0-7
+     '        "sc": (s_mods, _source_reflection_locals(_s_tree),\n'
+     "               _module_string_consts(_s_tree),\n"
+     "               _namespace_capabilities(scoring_src),\n"
+     "               _namespace_targets(scoring_src, s_mods),\n"
+     "               _imported_module_names(scoring_src)),",
+     '        "sc": (mods, reflect, consts, caps, targets, modnames),',
+     # ★ EXPECT 관측 — `a_capability_alias…` 는 seed 능력(`getattr`)의 값 흐름이라
+     #   어느 table 로도 거부돼 증인이 못 된다. 대상 판정(`targets`)이 갈리는
+     #   자리만 증인이다.
+     "a_namespace_alias_inside_the_scoring_module_is_refused or "
+     "from_import_aliases_are_namespace_targets"),
+    # ── ε′ 증거 영수증 (P1-3 ~ P1-6 · P2-1) ──
+    #   ★ 이 파일이 자기 변이 대상이다 — 선언이 자기 preimage 로 세어지지 않게
+    #     철자를 escape 한다.
+    ("receipt-is-framed-g62", MR,                                    # P1-3
+     "        return _parse_framed_receip\u0074(r.stdout, frame)       # noqa: F821",
+     "        return json.loads(r.stdout.strip().splitlines()[-1])",
+     "an_atexit_forgery_in_sitecustomize_is_refused"),
+    ("unreadable-bytes-fail-the-section-g62", MR,                    # P1-4
+     '            raise _Unreadabl\u0065("%s (%s)" % (p, _exc))',
+     '            return "<unreadable>"',
+     "an_unreadable_startup_byte_makes_the_section_failed"),
+    ("zip-origins-are-hashed-g62", MR,                               # P1-4
+     '            _mods[_nm] = _hash_origi\u006e(_o, getattr(_sp_, "loader", None))',
+     "            _unfiled += 1",
+     "a_zip_imported_startup_module_is_hashed_not_unfiled"),
+    ("packages-keep-the-first-distribution-g62", MR,                 # P1-5
+     "                if nm in pkgs:\n"
+     "                    shadowed.append([nm, _i, ver])\n"
+     "                else:\n"
+     "                    pkgs[nm] = ver\n"
+     "                    pos[nm] = _i",
+     "                pkgs[nm] = ver\n"
+     "                pos[nm] = _i",
+     "duplicate_distributions_keep_the_first_and_record_the_rest"),
+    ("coverage-records-the-snapshot-it-was-given-g62", MR,           # P1-6
+     "    snap = snapshot if snapshot is not None else take_receipt_snapsho\u0074()",
+     "    snap = take_receipt_snapshot()",
+     "write_coverage_records_exactly_the_snapshot"),
+    ("receipt-schema-is-exact-g62", MR,                              # P2-1
+     '    mismatch = _schema_mismatc\u0068(receipt, _RECEIPT_SCHEMA, "receipt")',
+     "    mismatch = None",
+     "a_receipt_that_only_says_measured_is_still_refused"),
+    # ── 62차 자체 리뷰 (`/self-review` 4 렌즈) 가 세운 방어 ──
+    ("capability-discarded-before-the-lock-g62", FITTING,           # TOCTOU F1
+     "    tok = None\n    try:\n"
+     '        _assert_fit_input_is_authorized(claim, _fit_axis, _staged["in_dir"])',
+     "    tok = None\n"
+     '    _assert_fit_input_is_authorized(claim, _fit_axis, _staged["in_dir"])\n'
+     "    try:",
+     "fit_failure_before_the_lock_discards_the_capability"),
+    ("grid-discards-before-the-lock-g62", GRID,                      # TOCTOU F1
+     "    except BaseException:\n"
+     "        # ★ 62차 P1-2 — commit 에 도달하지 못한 종료는 권한을 버린다. commit\n"
+     "        #   뒤의 예외에서는 이미 소비돼 있고 폐기는 멱등이다.\n"
+     "        from tools.preserve import discard_capability_on_abort\n"
+     "        discard_capability_on_abort(_exec_cap, log=log)",
+     "    except BaseException:\n"
+     "        from tools.preserve import discard_capability_on_abort\n"
+     "        if tok is not None:\n"
+     "            discard_capability_on_abort(_exec_cap, log=log)",
+     "grid_failure_before_the_lock_discards_the_capability or "
+     "grid_refused_by_a_live_lock_holder_discards_the_capability"),
+    ("promotion-holds-the-run-locks-g62", ARCHIVE,                   # TOCTOU F2
+     # (63차 F1 재조준: lock 이름 tuple 을 비우면 아무 lock 도 안 잡는다)
+     '        res = _bundle_under_run_locks(a.run_dir, (".fit.lock", ".run.lock"),',
+     "        res = _bundle_under_run_locks(a.run_dir, (),",
+     "direct_bundle_holds_the_run_locks_while_copying"),
+    ("class-body-bindings-are-not-shadows-g62", RP,                  # sig F3
+     "    if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):\n"
+     "        return out",
+     "    if False:\n        return out",
+     "a_class_body_binding_does_not_shadow_a_load_before_it or "
+     "a_module_compound_statement_binding_does_not_exempt_a_capability"),
+    ("from-imports-are-namespace-targets-g62", RP,                   # sig F2
+     "        elif isinstance(node, ast.ImportFrom):",
+     "        elif False:",
+     "from_import_aliases_are_namespace_targets"),
+    ("parent-package-import-is-refused-g62", RP,                     # sig F2
+     '                elif any(m.startswith(al.name + ".") for m in _PRODUCER_MODULES):',
+     "                elif False:",
+     "importing_the_parent_package_is_refused"),
+    ("crossed-module-self-alias-is-followed-g62", RP,                # sig F1
+     "                    and sub_node.value.id in tables[kind][0]:",
+     '                    and sub_node.value.id in tables["rp"][0]:',
+     "the_crossed_module_own_namespace_access_enters_the_closure"),
+    ("history-refuses-a-vanished-module-g62", MR,                    # receipt F2
+     '                return {"status": "failed",\n'
+     '                        "reason": "startup 이 올린 module %s 을 지금 찾을 수 "\n'
+     '                                  "없다 — 올렸다 지운 module 은 잴 수 없다" % _nm}',
+     "                _unfiled += 1\n                continue",
+     "a_startup_module_removed_after_import_is_a_failed_measurement"),
+    ("dist-info-bytes-are-in-the-receipt-g62", MR,                   # receipt F3
+     '            elif os.path.isdir(f) and (nm.endswith(".dist-info")\n'
+     '                                       or nm.endswith(".egg-info")):',
+     "            elif False:",
+     "dist_info_files_on_pythonpath_are_inside_the_receipt"),
+    ("parent-cross-checks-customization-g62", MR,                    # receipt F1
+     "    _assert_customization_matches_paren\u0074(got)",
+     "    pass",
+     "the_parent_cross_checks_the_customization_bytes"),
+    ("schema-refuses-empty-receipts-g62", MR,                        # receipt F5
+     '    if cross:\n        raise _ReplayErro\u0072(',
+     '    if False:\n        raise _ReplayError(',
+     "the_schema_refuses_empty_or_inconsistent_receipts"),
+
+    # γ (61차 P1-2·P1-3) — 이번 라운드가 세운 층.
+    #   선언 자신이 preimage 로 세어지지 않게 철자를 escape 한다.
+    ("importable-roots-keep-the-search-order-g61", MR,               # P1-2
+     '                reachable[\u0022%d/%s\u0022 % (_i, nm)] = _d(f)',
+     '                reachable[nm] = _d(f)',
+     "same_named_modules_in_two_roots_are_both_recorded or "
+     "the_receipt_says_which_root_python_would_import_from"),
+    ("history_failure_is_not_a_success-g61", MR,                     # P1-3
+     '        if _r.returncod\u0065 != 0:',
+     '        if False:',
+     "a_nonzero_history_child_is_a_failure"),
+    ("incomplete_receipt_is_refused-g61", MR,                        # P1-3
+     "    _assert_receipt_is_complet\u0065(got)",
+     "    pass",
+     "an_incomplete_receipt_is_refused_by_the_reader or "
+     "a_failed_package_listing_is_also_refused"),
+    # θ — 실행이 실제로 올린 byte 의 closure (P1-3·P1-4).
+    #   ★ 선언이 자기 자신의 preimage 로 세어지지 않게 철자를 escape 한다
+    #     (이 파일이 자기 변이 대상이다 — `startup-binds-every-loaded-module`
+    #     와 같은 이유).
+    #   ★ 증인은 세 층이 **갈라지는** 자리를 겨눈다. 최상위 module 을 쓰는
+    #     시험은 `importable_roots` 도 덮으므로 이력 층의 증인이 못 된다.
+    ("startup-history-is-measured-g60", MR,                          # P1-3
+     '            \u0022startup_histor\u0079\u0022: history,\n', "",
+     "a_dropped_submodule_is_measured_by_the_history"),
+    ("importable-roots-are-measured-g60", MR,                        # P1-4
+     '            \u0022importable_root\u0073\u0022: reachable,\n', "",
+     "a_module_imported_after_startup_is_inside_the_receipt"),
+
+    # ══ 63차 θ·ι·κ — 자원 정리 · 증거 3분 모델 · PathFinder · fullmatch · type_params ══
+    #   리뷰어 반례가 전부 정상 오류 상태·정상 입력이므로 축도 "옛 규칙으로
+    #   되돌리면 증인이 빨갛다" 모양이다. MR 자기 변이는 철자를 escape 한다.
+    ("archive-releases-the-first-lock-when-the-second-fails-g63", ARCHIVE,   # F1
+     "    except BaseException as body_err:\n        try:\n            _release_all()",
+     "    except BaseException as body_err:\n        try:\n            pass",
+     "partial_archive_acquisition_releases_prior_mock_resource or "
+     "archive_body_error_survives_a_cleanup_error"),
+    ("archive-cleanup-tries-every-lock-g63", ARCHIVE,                        # F1
+     "                if first_err is None:\n                    first_err = exc",
+     "                raise",
+     "archive_cleanup_attempts_every_mock_release"),
+    ("startup-history-runs-verbose-imports-g63", MR,                         # F2
+     '            _r = _sp.run([_py, "-X", "importtime", "-\u0076", *_extra, "-c", "pass"],',
+     '            _r = _sp.run([_py, "-X", "importtime", *_extra, "-c", "pass"],',
+     "an_ordinary_failed_optional_import_keeps_startup_measured"),
+    ("attempted-only-names-are-not-loaded-modules-g63", MR,                  # F2
+     '            if _nm not in _\u006coaded:\n                _attempt_only.append(_nm)',
+     '            if False:\n                _attempt_only.append(_nm)',
+     "an_ordinary_failed_optional_import_keeps_startup_measured"),
+    ("attempted-list-is-inside-the-receipt-g63", MR,                         # F2
+     '                            "\u0075nfiled": int, "attempted_not_loaded": _Seq(str)},',
+     '                            "unfiled": int},',
+     "the_schema_carries_the_attempted_list or a_full_receipt_matches_the_schema"),
+    #   66차 G66-N1 로 부모가 사후 탐색을 그만두고 **관측된 origin 의 바이트를 읽는다** —
+    #   이 축이 지키는 성질(부모가 정상 package 를 child 와 같게 본다)은 그대로이고 자리만 옮겼다.
+    ("parent-customization-uses-the-path-finder-g63", MR,                    # F3
+     '            out[n] = _\u0064(origin)               # **부모가 그 자리의 바이트를 직접 읽는다**',
+     '            out[n] = "<absent>"',
+     "parent_customization_lookup_supports_a_normal_package or "
+     "the_real_probe_agrees_with_the_parent_view"),
+    ("hex16-is-a-fullmatch-g63", MR,                                         # F4
+     '        return None i\u0066 (isinstance(value, str) and schema.fullmatch(value)) else',
+     '        return None if (isinstance(value, str) and schema.match(value)) else',
+     "hex16_scalar_does_not_accept_a_trailing_newline"),
+    ("type-params-bounds-are-definition-head-g63", RP,                       # E1
+     '        for tp in getattr(node, "type_params", ()) or ():',
+     '        for tp in ():',
+     "scope_walk_covers_the_bound_of_an_ordinary_generic_function or "
+     "a_type_parameter_bound_is_evaluated_outside_the_parameters"),
+
+    # ── 64차 (N1 · N2 · E2-R) ────────────────────────────────────────────
+    #   셋 다 **정상 입력**에서 우리 층이 거부하거나 실패한 축이다. 그래서 변이는
+    #   "옛 규칙으로 되돌리면 정상 사례가 다시 빨갛다" 모양이고, 증인도 정상
+    #   환경의 문구다. MR 자기 변이는 철자를 escape 한다.
+    #   65차: N1 의 지점은 `_parent_customization_view` 의 조건 분기에서 판정 함수의
+    #   `auto` 로 옮겨 갔다 (조건은 재생 문맥의 필드가 됐다). 변이는 "조건을 무시하고
+    #   항상 자동 import 를 기대한다" — 비활성+미로드 정상 영수증이 다시 거부된다.
+    #   66차 G66-N1 로 부모가 **실제 로드 여부**를 재므로, `auto` 가 지키던 성질(자동 import
+    #   대상이 아닌 이름을 기대하지 않는다)은 이제 측정이 지킨다. 그래서 이 축의 자리를
+    #   **"부모가 올렸다고 본 것을 child 가 <absent> 라 적으면 거부한다"** 로 옮긴다 —
+    #   비활성+미로드 정상 영수증이 거부되던 N1 의 반대쪽이자 살아 있는 보호다.
+    #   67차 G67-N1: `auto` 가 판정에서 **빠졌다** (부재 위조의 근거로 쓰면 안 된다는 리뷰어
+    #   Q3 의 답). 그래서 이 축의 preimage 가 또 사라졌고, 성질("부모가 올렸다고 잰 것을 child
+    #   가 <absent> 라 적으면 거부")은 이제 **측정과의 동일성 검사**가 지킨다 — 거기로 옮긴다.
+    #   변이는 그 동일성을 통과시키는 것이고, 위조 대조군 셋이 한꺼번에 빨개진다.
+    ("usercustomize-follows-the-startup-activation-g64", MR,                 # N1
+     '        if g != \u0063and:\n'
+     '            why = " (startup 이 자동 import 하는 이름이다)" if auto else ""',
+     '        if False:\n'
+     '            why = " (startup 이 자동 import 하는 이름이다)" if auto else ""',
+     "a_forged_absent_namespace_is_still_rejected or "
+     "a_forged_absent_is_still_rejected or "
+     "a_forged_absent_namespace_is_rejected_with_user_site_off or "
+     "the_same_forgery_is_rejected_with_user_site_on"),
+    ("customization-reads-origins-like-the-rest-g64", MR,                    # N2
+     '            cust[n] = _\u0068ash_origin(\n'
+     '                f, getattr(_spec, "loader", None) or getattr(m, "__loader__", None))',
+     '            cust[n] = _d(f)',
+     "a_zip_customization_is_measured_not_failed"),
+    ("the-probe-control-asserts-both-directions-g64", G63T,                  # E2-R
+     "    assert _kernel_lock_held_at(p) is False          # ★ 음성 대조군 (64차 E2-R)",
+     "    assert _kernel_lock_held_at(p) in (True, False)  # 음성 축을 지운다",
+     "the_committed_probe_control_asserts_both_directions"),
+
+    # ── 65차 (N1a · N1b · N2b · T1 · E2-R 후속) ─────────────────────────────
+    #   64차 종결의 **부분 수용** — 원 사례는 닫혔지만 고치면서 세운 등식이 틀렸다.
+    #   변이는 그 틀린 등식으로 되돌린다. 증인은 시험의 고정 문구다 (production 문구·
+    #   digest·경로를 담지 않는다 — 64차 ① 회차의 교훈).
+    #   67차: `auto` 가 판정에서 빠지면서 이 분기가 `elif` → `if` 로 바뀌었다 (동일성 검사가
+    #   앞에서 `continue` 한다). 축의 성질("명시 import 는 평범한 import 다")은 그대로이므로
+    #   같은 줄의 새 모양에 다시 겨눈다.
+    ("explicit-import-is-an-ordinary-import-g65", MR,                        # N1a
+     '            if not \u006coaded_file:\n'
+     '                bad.append(f"{n}: child 가 바이트를 냈는데 startup 이력에 없다")',
+     '            if not loaded_file or not auto:\n'
+     '                bad.append(f"{n}: child 가 바이트를 냈는데 startup 이력에 없다")',
+     "a_disabled_interpreter_with_an_explicit_import_is_accepted"),
+    #   66차: 부모 탐색이 없어졌으므로 이 축의 자리는 **문맥을 어느 cwd 에서 재는가** 로 옮겼다.
+    ("search-path-comes-from-the-replay-context-g65", MR,                    # N1b
+     '    r = subprocess.run([sys.executable, "-c", src], cwd=str(\u0063wd), env=replay_env(),',
+     '    r = subprocess.run([sys.executable, "-c", src], cwd=str(ROOT), env=replay_env(),',
+     # 66차: 부모가 사후 탐색을 그만뒀으므로 `the_parents_sys_path_is_not_the_childs_search_path`
+     # 는 cwd 를 바꿔도 안 빨개진다 (그 성질은 이제 origin 대조가 지킨다). 이 축이 실제로 무는
+     # 것은 **상대 경로를 어느 cwd 로 푸느냐** 이므로 거기로 좁힌다.
+     "a_relative_pythonpath_is_resolved_in_the_replay_cwd or "
+     "the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd"),
+    ("namespace-is-loaded-code-free-not-absent-g65", MR,                     # N2b
+     '        elif _locs is not None:\n'
+     '            cust[n] = "<namespace>:" + _\u006eamespace_identity(list(_locs))',
+     '        elif _locs is not None:\n'
+     '            cust[n] = "<absent>"',
+     "a_namespace_usercustomize_is_measured_and_accepted"),
+    #   T1 의 변이는 fixture 가 활성 조건을 **안 만드는** 것이다 — 64차 대조군이 하던 대로
+    #   "환경변수만 지우면 활성" 이라고 가정하는 셈. 전제 시험의 [True] 가 빨개져야 한다.
+    ("the-fixture-measures-its-premise-g65", IF,                             # T1
+     '        args.append("--system-site-packages")      # CPython site.venv(): 이것이 활성 조건이다',
+     '        pass      # 활성 조건을 만들지 않는다 (64차 대조군의 가정)',
+     "the_interpreter_fixture_measures_its_own_premise"),
+    #   token 음성을 지우면 g64 의 AST 대조군도 같이 빨개진다 (65차부터 탐침별로 센다).
+    # ── 66차 (G66-N1 · T1 · 문맥 1회 측정) ──────────────────────────────────
+    #   사후 resolver 후보로 과거 import 를 판정하던 등식을 되돌리는 변이다.
+    ("parent-compares-the-loaded-origin-g66", MR,                            # G66-N1
+     '        rec = _\u006deasured.get(n) or {"loaded": False, "origin": None, "locations": None}\n'
+     '        if not rec.get("loaded"):\n'
+     '            out[n] = "<absent>"               # 그 이름은 startup 이 올리지 않았다\n'
+     '            continue\n'
+     '        origin, locs = rec.get("origin"), rec.get("locations")',
+     '        spec = _PF.find_spec(n, list(ctx["search_path"]))\n'
+     '        if spec is None:\n'
+     '            out[n] = "<absent>"\n'
+     '            continue\n'
+     '        origin, locs = spec.origin, spec.submodule_search_locations',
+     "a_cwd_file_that_startup_never_imported_is_not_expected or "
+     "a_startup_that_cleans_its_own_path_is_still_accepted or "
+     "a_startup_that_prepends_another_candidate_is_still_accepted"),
+    ("the-premise-uses-a-controlled-env-g66", IF,                            # G66-T1
+     '    env = dict(os.environ)\n'
+     '    for k in _\u0045NV_KILLSWITCHES:\n'
+     '        env.pop(k, None)',
+     '    env = dict(os.environ)',
+     "the_premise_test_does_not_fail_on_an_inherited_env"),
+    # ── 67차 (G67-N1 은 위 g64 축이 옮겨 가 덮는다 · N2 · T1) ────────────────
+    #   N2: ZIP 분기의 **사후 검색 경로 재탐색**으로 되돌린다. 자기 archive 를 경로에서 뺀
+    #   정상 ZIP package 가 다시 거부된다 (리뷰어 반례 그대로).
+    ("zip-bytes-come-from-the-archive-member-g67", MR,                       # G67-N2
+     '            out[n] = _\u0061rchive_member_digest(n, origin)',
+     '            _spec = _PF.find_spec(n, [os.path.dirname(origin)] + list(ctx["search_path"]))\n'
+     '            _gd = getattr(getattr(_spec, "loader", None), "get_data", None)\n'
+     '            if _gd is None or getattr(_spec, "origin", None) != origin:\n'
+     '                raise _ReplayError(f"부모가 {n} 의 origin 을 읽을 수 없다")\n'
+     '            out[n] = hashlib.sha256(_gd(origin)).hexdigest()[:16]',
+     "a_zip_package_that_removes_its_archive_is_accepted"),
+    #   T1: 전제 회귀의 증거를 **stdout 문자열 하나**로 되돌린다. child 가 안 돌아도 초록이 된다.
+    #   변이는 **전 판의 증거**로 정확히 되돌린다 — `"failed" not in stdout` 이면 통과.
+    #   그러면 rc 4(사용법 오류)도 수집 0건도 다시 초록이 되고 두 반례가 한꺼번에 빨개진다.
+    ("the-premise-checks-the-child-actually-ran-g67", G66T,                  # G67-T1
+     '    assert junit.is_file(), (\n'
+     '        "child pytest 가 결과 파일을 남기지 않았다 — 무엇이 돌았는지 말할 수 없다 (G67-T1)", tail)',
+     '    if "failed" not in (r.stdout or "").lower():\n'
+     '        return []\n'
+     '    assert junit.is_file(), (\n'
+     '        "child pytest 가 결과 파일을 남기지 않았다 — 무엇이 돌았는지 말할 수 없다 (G67-T1)", tail)',
+     "the_premise_regression_refuses_an_unrun_child"),
+    # ── 68차 (G68-T1) ─────────────────────────────────────────────────────
+    #   T1: 단계 증거에서 **call 기록이 없는 node 를 통과로 읽는다** — JUnit 만 보던 전 판의 뜻이다.
+    #   그러면 `--setup-only` child(rc 0 · 정확한 두 testcase · 자식 없음 · call 0개)가 다시 ACCEPTED 되고,
+    #   실제 child 반례 둘(g68_01 · g68_03[setup_only])과 합성 반례(g68_04)가 한꺼번에 빨개진다.
+    #   변이는 판정 함수 `_call_evidence` 의 한 분기만 바꾼다 — 소비자의 다른 검사(중복·setup 오류·skip)는 그대로.
+    ("the-premise-checks-the-call-phase-g68", G66T,                           # G68-T1
+     '        elif not calls:\n'
+     '            verdict[node] = "unrun"',
+     '        elif not calls:\n'
+     '            verdict[node] = "passed"',
+     "refuses_a_setup_only_child or three_unrun_shapes_are_all_refused or without_a_call_record"),
+    # ── 70차 (G70-N1) ─────────────────────────────────────────────────────
+    #   N1: `all` 이 grid 하위 argv 에 `--may-open` 을 다시 붙인다 — 그 argv 는 셸 parser 로 가서 rc 1.
+    #   회귀는 `all` 의 dry 출력을 실제 하위 셸에 넣으므로 [grid] 가 parser 거부로 빨개진다 ([fit] 은 그대로).
+    ("mode-all-does-not-pass-may-open-to-the-shell-g70", RUNSH,              # G70-N1
+     '    #   grid/fit 분기가 Python 호출 직전에 붙인다. 회귀: tests/test_runner.py::test_g70_n1_*\n',
+     '    #   grid/fit 분기가 Python 호출 직전에 붙인다. 회귀: tests/test_runner.py::test_g70_n1_*\n'
+     '    GRID_ARGS+=(--may-open)\n',
+     "g70_n1_mode_all_child_argv_is_accepted_by_the_shell_parser"),
+    # ── 70차 E5 ── reader 가 class enum + content_id 만 보던 60차 형태로 되돌린다 (리뷰어 반례 둘이 다시 통과)
+    ("exec-class-reader-is-typed-g70", PRESERVE,                             # E5
+     '    return _typed_exec_class_record(rec, content_id, p)\n',
+     '    return (rec if isinstance(rec, dict) and rec.get("execution_class") in EXEC_CLASSES\n'
+     '            and rec.get("content_id") == content_id else None)\n',
+     "g70_e5"),
+    # ── 70차 E3 ── 해석 불가 index 를 60차처럼 "대조 생략" 으로 되돌린다 (실물 YAML index 가 빠지던 경로)
+    ("an-unreadable-index-is-not-full-coverage-g70", PRESERVE,               # E3
+     '    if declared is None:\n        bad.append(\n            f"payload index 를 해석할 수 없다',
+     '    if declared is None:\n        return bad\n        bad.append(\n            f"payload index 를 해석할 수 없다',
+     "g70_e3_0"),
+    # ── 70차 E3 ── 영수증 소비가 validation.ok/fail 을 안 보면 실패·부분 상태가 full_bundle 로 올라간다
+    ("attach-requires-a-passing-validation-g70", PRESERVE,                   # E3
+     '    if v["ok"] is not True or v["fail"] != []:\n        raise _bad(',
+     '    if False:\n        raise _bad(',
+     # e3_17 은 "현행 검증기의 영수증" 양성 대조군이라 preserve.py 의 **어떤** 변이에서도 digest 가 달라져
+     # 빨개진다 — 이 변이가 무는 node 가 아니므로 뺀다
+     "g70_e3_1 and not e3_17"),
+    # ── 71차 E3-R ── 소비자가 outputs_agree 주장을 믿던 70차 형태로 되돌린다 (semantic 재비교 제거)
+    ("receipt-pair-agreement-is-recomputed-g71", PRESERVE,                  # R05
+     '    split = [k for k, v in groups.items() if len(set(v)) > 1]\n    if split:',
+     '    split = [k for k, v in groups.items() if len(set(v)) > 1]\n    if False:',
+     "g71_e3r_05 and not 05b"),
+    # ── 71차 E3-R ── 복원 자리 결속 제거 (다른 실행의 영수증이 붙는다)
+    ("receipt-restore-run-is-bound-to-the-bundle-g71", PRESERVE,            # R07
+     '    if got != want:\n        raise PreserveError("plan", f"{leg_id!r} 영수증의 복원 자리',
+     '    if False:\n        raise PreserveError("plan", f"{leg_id!r} 영수증의 복원 자리',
+     "g71_e3r_07 and not 07b and not 07c"),
+    # ── 71차 E3-R ── 원장 evidence.out 대조 제거 (다른 실행 기록에 묶음이 붙는다)
+    ("attach-binds-the-ledger-run-location-g71", PRESERVE,                  # R07
+     '        if "out" in ev:\n            led_out = ',
+     '        if False:\n            led_out = ',
+     "g71_e3r_07b"),
+    ("the-replay-context-is-measured-once-g66", MR,                          # 정적 관측
+     '    ctx = ctx if ctx is not None else _\u0072eplay_context()\n'
+     '    want = _parent_customization_view(ctx)',
+     '    want = _parent_customization_view(ctx)\n'
+     '    ctx = ctx if ctx is not None else _replay_context()',
+     "the_replay_context_is_measured_once"),
+    ("the-token-probe-negative-is-asserted-g65", G63T,                       # E2-R 후속
+     "        assert _kernel_lock_held(tok) is False       # ★ token 판의 음성 (65차)",
+     "        assert _kernel_lock_held(tok) in (True, False)  # 음성 축을 지운다",
+     "the_committed_control_asserts_the_token_probe_negative or "
+     "a_constant_true_token_probe_is_caught_by_the_committed_control or "
+     "the_committed_probe_control_asserts_both_directions"),
+]
+
+#: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
+#: 다른 하나가 가린다). 41·42·43차에 실측했다.
+MULTI = [
+    # 두 자리가 **같은 성질**을 지킨다 (`_own_shadows` 는 안 묶고,
+    # `_scoped_shadows` 는 자식 scope 를 준다). 하나만 되돌리면 다른 하나가
+    # 덮으므로 함께 되돌린다.
+    ("comprehensions-are-their-own-scope-g61", RP, [                 # P1-4
+        # `_own_shadows` — 61차 이전의 문장을 그대로 되살린다. 단순히 `if False`
+        # 로 두면 comprehension 안으로 **들어가기만** 하고 target 은 안 묶여서
+        # 결함이 복원되지 않는다 (실측: 변이 rc 0). 축은 "지운 검사" 가 아니라
+        # **"고치기 전 코드"** 를 되돌려야 한다.
+        ("            if _is_comprehension(sub):\n"
+         "                # ★ 61차 P1-4 — comprehension 은 **자식 scope** 다. 그 target 은\n"
+         "                #   바깥에 안 샌다 (Python 3). 예전 판은 여기서 그것을 감싸는\n"
+         "                #   함수의 shadow 에 합쳤고, 그래서 분석기가 실제 Python 과\n"
+         "                #   반대를 말했다 (리뷰어 실측: `return value` 자리의 shadow 에\n"
+         "                #   comprehension target 이 들어 있었다).\n"
+         "                continue",
+         "            if isinstance(sub, ast.comprehension):\n"
+         "                out |= set(_target_names(sub.target))"),
+        # ★ 62차 P0-6 — `here` → `nested` (class 본문의 comprehension 은 class
+        #   이름을 못 본다). 원상만 따라간다.
+        ("        if _is_comprehension(sub):\n"
+         "            inner = frozenset(nested | _comprehension_targets(sub))",
+         "        if False:\n"
+         "            inner = frozenset(nested | _comprehension_targets(sub))"),
+     ], "the_analyzer_does_not_shadow_the_enclosing_scope or "
+        "the_target_is_still_shadowed_inside_the_comprehension or "
+        "the_outermost_iterable_is_evaluated_in_the_enclosing_scope"),
+    # ★ 55차 P0-4 · 57차 P0-4 — 얼린 tree 의 **자식**을 bind mount 한 별칭.
+    #   56차까지는 자리가 하나였다 (`real = _through_bind_mounts(dest)`).
+    #   57차가 목적지를 파일시스템 좌표로 옮기면서 자리가 **둘**이 됐다:
+    #   원장이 아는 frozen 디렉터리와의 좌표 비교, 그리고 원장 밖에서 얼린
+    #   tree 를 잡는 조상 marker 순회. 하나만 꺼도 다른 하나가 가린다 —
+    #   이 저장소가 반복해 만나는 심층 방어 형태이고, 답은 함께 되돌리는 것이다.
+    # ★ 58차 — L5 가 **얼릴 때 좌표를 봉인**하면서 이 변이가 안 물게 됐다:
+    #   좌표 비교 두 자리를 되돌려도 봉인 조회가 **먼저** 거부한다 (실측:
+    #   조각 2 가 "안 빨개짐" 으로 RC 1). 새 방어가 옛 변이를 가리는 이
+    #   저장소의 반복 패턴이고, 답은 방어를 지우는 것이 아니라 **함께
+    #   되돌리는** 것이다 (아래 56차 주석과 같은 처리).
+    ("destination-is-compared-in-filesystem-coordinates", RP, [
+        ("    _sealed = frozen_coordinate_covering(dest)", "    _sealed = None"),
+        ("        if fdev == dev and (ffs == fs or ffs in fs.parents):",
+         "        if False:"),
+        ("            if marker is not None and anc != fs:",
+         "            if False:"),
+     ], "bind_mounted_alias_of_a_frozen_child_is_not_writable"),
+    # ★ 56차 — 56차 P0-8 이 건너간 module 의 `MODULE_EFFECTS` 를 **무조건**
+    #   seed 하면서, 건너기 자체를 끊는 옛 변이 둘이 안 물게 됐다: seed 가
+    #   scoring 의 내용을 여전히 닫힘에 넣으므로 digest 가 움직인다. 새 방어가
+    #   옛 변이를 가리는 이 저장소의 반복 패턴이고(54차에도 만났다), 답은
+    #   방어를 지우는 것이 아니라 **함께 되돌리는** 것이다.
+    ("producer-crosses-into-scoring", RP, [
+        ('_PRODUCER_MODULES = ("src.scoring",)', "_PRODUCER_MODULES = ()"),
+        ("    if MODULE_EFFECTS in sdefs:\n"
+         '        todo.append(("sc", MODULE_EFFECTS))',
+         "    if False:\n"
+         '        todo.append(("sc", MODULE_EFFECTS))'),
+     ], "producer_digest_crosses_into_src_scoring"),
+    ("closure-follows-module-aliases", RP, [
+        # ★ 62차 자체 리뷰 (sig-완전성 F1) — 분기가 module 별 table 로 옮겨 갔다.
+        ("            if isinstance(sub_node, ast.Attribute) \\\n"
+         "                    and isinstance(sub_node.value, ast.Name) \\\n"
+         "                    and sub_node.value.id in tables[kind][0]:",
+         "            if False:"),
+        ("    if MODULE_EFFECTS in sdefs:\n"
+         '        todo.append(("sc", MODULE_EFFECTS))',
+         "    if False:\n"
+         '        todo.append(("sc", MODULE_EFFECTS))'),
+     ], "closure_follows_a_module_alias_attribute"),
+    # ★ 56차 P0-9 — 조립된 이름을 막는 것은 **평가 + fail-closed** 둘이다.
+    #   평가 분기 하나만 꺼도 그 식은 "정할 수 없다" 가 되어 fail-closed 가
+    #   잡는다 (실측했다). 넷을 함께 되돌려야 55차 상태가 복원된다.
+    ("assembled-names-are-exactly-evaluated", RP, [
+        ("                    if not ok:", "                    if False:"),
+        ("    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):",
+         "    if False:"),
+        ("    if isinstance(node, ast.JoinedStr):", "    if False:"),
+        ('            and node.func.attr == "join" and len(node.args) == 1:',
+         "            and False:"),
+     ], "assembled_dunder_name_is_refused"),
+    # ★ P1 — "모르겠다" 는 "물었다" 가 아니다. 54차에 자리가 **둘로 늘었다**:
+    #   빈 report 는 이제 신원 검사(`_report_identity_rc`)가 먼저 거부하므로,
+    #   fail-closed 비교만 되돌리면 시험이 여전히 초록이다 (53차에는 단일
+    #   변이로 물었다 — 실측하고 MULTI 로 옮겼다). 둘을 함께 되돌려야
+    #   "유도할 수 없는 영수증이 통과한다" 는 옛 상태가 복원된다.
+    ("receipt-verdict-is-fail-closed", MR, [
+        ("        if _report_identity_rc(path, name, rep_dir,\n"
+         "                               binding.get(\"execution\")) != 0:\n"
+         "            return 1",
+         "        if False:\n"
+         "            return 1"),
+        ("        if bool(v.get(\"bit\")) != derived:\n"
+         "            print(f\"✗ {path}: {name} 의 판정이 "
+         "영수증과 다르다 \"",
+         "        if derived is not None and bool(v.get(\"bit\")) != derived:\n"
+         "            print(f\"✗ {path}: {name} 의 판정이 "
+         "영수증과 다르다 \""),
+     ], "unreadable_receipt_is_not_a_pass"),
+    # ── 55차 (게이트 54차 반증 조건) ─────────────────────────────────────
+    # ★ P0-5① — module 효과의 뿌리는 **두 닫힘 walk 의 seed** 에 함께 있다.
+    #   하나만 되돌리면 다른 쪽이 여전히 값을 담아 digest 를 움직인다.
+    ("module-effects-are-an-unconditional-root", RP, [
+        ("    if MODULE_EFFECTS in defs:\n"
+         '        todo.append(("rp", MODULE_EFFECTS))\n'
+         "    if MODULE_EFFECTS in sdefs:\n"
+         '        todo.append(("sc", MODULE_EFFECTS))',
+         "    if False:\n"
+         '        todo.append(("rp", MODULE_EFFECTS))\n'
+         "    if False:\n"
+         '        todo.append(("sc", MODULE_EFFECTS))'),
+        ("    if MODULE_EFFECTS in defs:                            # 55차 P0-5①\n"
+         "        todo.append(MODULE_EFFECTS)",
+         "    if False:\n"
+         "        todo.append(MODULE_EFFECTS)"),
+     ], "module_effect_through_an_alias_still_moves_the_producer_digest"),
+    # ★ P0-5② — 감싼 이름을 정적으로 읽는 자리.
+    ("wrapped-dunder-names-are-refused", RP, [
+        ("                    ok, val = _exact_const(arg, consts)",
+         "                    ok, val = (True, None)"),
+        ("        elif isinstance(sub, ast.Name) and consts and sub.id in consts:\n"
+         "            out.append(consts[sub.id])",
+         "        elif False:\n"
+         "            out.append(consts[sub.id])"),
+     ], "dunder_named_indirectly_is_still_refused"),
+    # ★ 54차 P0-1 — 발급이 얼린 cohort 로 들어가는 것을 막는 자리가 둘이다:
+    #   commit 시점의 cohort 재검사(발급 쪽)와 살아 있는 실행권 검사(동결 쪽).
+    #   하나만 되돌리면 다른 하나가 여전히 막는다 — 함께 되돌려야 관측된다.
+    ("admission-rechecks-the-cohort-at-commit", PRESERVE, [
+        ("            _assert_cohort_admits(doc, row, leg_id)",
+         "            pass"),
+        ('    coh = e["_cohort"]\n'
+         '    if coh.get("status") != "active":',
+         '    coh = e["_cohort"]\n'
+         "    if False:"),
+     ], "issuer_cannot_admit_a_run_into_a_cohort_that_froze_meanwhile"),
+    # ★ 54차 P0-4 — 목적지의 frozen 단조는 두 자리가 함께 만든다: 읽을 때
+    #   다른 이름의 재개방을 거부하는 것과, 합집합에서 frozen 을 **빼지 않는**
+    #   것. 하나만 되돌리면 다른 하나가 여전히 막으므로 단일 변이는 안 문다
+    #   (심층 방어의 정상 신호다 — 53차에도 같은 형태를 만났다).
+    ("frozen-destination-is-monotonic", RP, [
+        ('        if d in frozen_dirs and frozen_dirs[d] != rec["cohort_id"]:',
+         "        if False:"),
+        ("        if rec[\"to\"] == \"frozen\":\n"
+         "            out.setdefault(str(d), rec[\"cohort_id\"])",
+         "        if rec[\"to\"] == \"frozen\":\n"
+         "            out[str(d)] = rec[\"cohort_id\"]\n"
+         "        else:\n"
+         "            out.pop(str(d), None)"),
+     ], "later_active_record_cannot_thaw_a_frozen_destination"),
+    # ★ 53차 P0-2 — 소유 증명의 read-back 은 두 자리다 (보이기 전 · 보인 뒤).
+    #   하나만 지우면 다른 하나가 같은 바이트를 잡으므로 단일 변이는 안 문다.
+    ("token-bytes-are-verified-on-disk", PRESERVE, [
+        ('        _assert_bytes_on_disk(tmp, body, "\uc18c\uc720 \uc99d\uba85")', "        pass"),
+        ('    _assert_bytes_on_disk(p, body, "\uc18c\uc720 \uc99d\uba85")', "    pass"),
+     ], "lying_write_is_caught_by_reading_the_bytes_back"),
+    # ★ 53차 P0-7 — loader 로 가는 길은 둘이다 (dunder 문 · importlib 능력).
+    #   dunder allowlist 가 `__loader__`/`__spec__` 을 먼저 막으므로, loader
+    #   protocol 이름만 지워도 그 두 반례는 여전히 거부된다 — 함께 되돌려야
+    #   `importlib.util.find_spec(...).loader.get_source(...)` 가 관측된다.
+    ("source-reflection-covers-the-loader-protocol", RP, [
+        ('                      "get_source", "get_data", "get_code", "source_to_code")',
+         "                      )"),
+        ('_SOURCE_REFLECTION_MODULES = ("inspect", "linecache", "dis", "traceback",\n'
+         '                              "importlib")',
+         '_SOURCE_REFLECTION_MODULES = ("inspect", "linecache", "dis", "traceback")'),
+     ], "producer_cannot_reach_its_own_bytes_through_the_module_loader"),
+    # ★ 48차 — 이것도 방벽이 둘이 됐다. 42차 버그(재확인이 `set(legs)` 만 본다)를
+    #   복원해도, 48차가 임계 구역에 넣은 **살아 있는 status 재조회**가 freeze 를
+    #   먼저 잡아 시험이 초록이다. 즉 내가 이번에 더한 검사가 이 변이를 가린다.
+    #   둘 다 남기고(하나는 record 전체의 digest, 하나는 현재 쓰기 권한) 변이는
+    #   47차 상태를 복원한다.
+    ("ledger-seal-record", RP, [
+        ("        if auth.ledger_seal_now() != auth.seal:",
+         "        if set(_ledger_cohort(out).get('legs') or ()) != auth.roster:"),
+        ("        if _live.get(\"status\") != \"active\":",
+         "        if False:"),
+     ], "same_roster_ledger_change"),
+    # ★ 48차 — `O_EXCL` **혼자로는** 더 이상 관측되지 않는다. 48차 P0-6 이
+    #   claim 뒤에 `planned → running` 전이를 더했고, 그 전이는 원장 lock 안에서
+    #   일어나므로 두 번째 claim 을 거기서 막는다. 즉 배타성을 지키는 것이 둘이
+    #   됐다 — 하나만 지우면 다른 하나가 시험을 초록으로 유지한다.
+    #
+    #   중복이라서 하나를 지우는 것이 아니다: `O_EXCL` 은 **원자적 primitive**
+    #   이고 상태 전이는 lock 에 기대는 두 번째 방벽이다. 둘 다 남기되, 변이는
+    #   47차 상태(둘 다 없음)를 복원해 그 쌍이 실제로 일하는지 본다.
+    # ★ 59차 마감 세 번째 자리 — M10 이 시험 22곳을 raw 발급에서 production
+    #   진입점(`open_leg_run()`)으로 옮기면서, 이 축이 **더 바깥 층에 먼저
+    #   막혔다.** `open_leg_run()` 은 임계 구역 안에서 살아 있는 claim 을 먼저
+    #   보고 거부한다 (51차 P0-L1 · 53차 P0-3). 그래서 claim 파일의 원자성을
+    #   지워도 두 번째 호출이 여전히 `PreserveError` 를 받아 시험이 초록이었다
+    #   (전수 재생 조각 10 의 실측). "배타가 하나 있으니 됐다" 가 아니라
+    #   **claim 자신이 원자적인가** 가 이 축의 물음이므로, 같은 성질을 구현하는
+    #   세 자리를 함께 되돌린다 (심층 방어의 정상 신호 — `thaw-…` 와 같은 형태).
+    ("claim-is-atomic", PRESERVE, [
+        ("        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o644)",
+         "        fd = os.open(path, os.O_CREAT | os.O_WRONLY | _O_BIN, 0o644)"),
+        ("        row[\"status\"] = \"running\"",
+         "        row[\"status\"] = \"planned\""),
+        ("        if cp.is_file():\n"
+         "            raise PreserveError(\n"
+         "                \"plan\",\n"
+         "                f\"{leg_id!r} 은 이미 실행 중이다",
+         "        if False:\n"
+         "            raise PreserveError(\n"
+         "                \"plan\",\n"
+         "                f\"{leg_id!r} 은 이미 실행 중이다"),
+     ], "exactly_one_attempt_enters_compute"),
+    # ★ 48차 P0-2 — decorator 축은 **정규형이 node 를 보는가**에 달렸다.
+    #   47차처럼 source segment 로 되돌리면 `FunctionDef.lineno` 가 `def`
+    #   줄이라 `decorator_list` 가 통째로 빠진다.
+    # ★ 51차 — 50차까지 이것은 단일 변이였다. P0-F 가 journal 의 목적지 봉인을
+    #   더하면서 같은 게시를 막는 자리가 둘이 됐다 (`assert_not_thawed()` 의 ID
+    #   조회 · `_frozen_cohort_dirs()` 의 journal 합집합). 하나만 지우면 다른
+    #   쪽이 여전히 거부하므로 단일 변이는 더 이상 안 문다 — 심층 방어의 정상
+    #   신호다. 함께 되돌려야 관측된다.
+    # ★ 59차 마감 — 58차 L5 축이 **단일 변이로는 더 이상 안 문다.** M6 이
+    #   `_assert_writable()` 의 맨 앞에 "얼린 자리를 알기는 하는가" 를 넣었고,
+    #   조상의 이름을 전부 덮으면 그 첫 층이 먼저 거부한다 (전수 재생 조각 7 의
+    #   실측: 봉인 조회를 지워도 guard 는 REFUSED). 좌표 봉인 자신이 판정에
+    #   쓰이는지 보려면 **두 층을 함께** 되돌려야 한다.
+    ("frozen-seal-is-consulted-first-g58", RP, [
+        ("    _sealed = frozen_coordinate_covering(dest)", "    _sealed = None"),
+        ("    _unsealed = unsealed_frozen_cohorts()", "    _unsealed = []"),
+     ], "hiding_every_name_of_a_frozen_ancestor_does_not_make_it_writable"),
+    ("thaw-is-refused-before-the-first-write", RP, [
+        ('    assert_not_thawed(_pre["cohort_id"])', "    pass"),
+        ("    for d, cid in frozen_dirs_from_journal().items():\n"
+         "        out.setdefault(cid, (REPO / d).resolve())",
+         "    pass"),
+     ], "publisher_refuses_a_thawed_cohort_before_the_first_write"),
+    # ★ 52차 P0-5 — 두 자리가 함께 막는다: 불일치 즉시 거부 · 재계산 경로 도달
+    #   자체를 거부. 하나만 지우면 다른 쪽이 여전히 raise 하므로 단일 변이는
+    #   안 문다 (심층 방어의 정상 신호).
+    ("approved-cache-bytes-are-authoritative", BASELINE, [
+        ("        if _mismatch is not None and cache_bytes is not None:",
+         "        if False:"),
+        ("    if cache_bytes is not None:\n"
+         "        raise RuntimeError(\n"
+         "            \"승인한 완방상태 바이트를 받고도 재계산 경로에 도달했습니다 — \"",
+         "    if False:\n"
+         "        raise RuntimeError(\n"
+         "            \"승인한 완방상태 바이트를 받고도 재계산 경로에 도달했습니다 — \""),
+     ], "approved_cache_bytes_are_authoritative"),
+    ("coverage-checker-derives-from-receipts", MR, [
+        ("        want_sha = str(v.get(\"report_sha256\") or \"\")\n"
+         "        if not want_sha:",
+         "        want_sha = str(v.get(\"report_sha256\") or \"\")\n"
+         "        if False:"),
+        ("        if bool(v.get(\"bit\")) != derived:\n"
+         "            print(f\"\u2717 {path}: {name} \uc758 \ud310\uc815\uc774 \uc601\uc218\uc99d\uacfc \ub2e4\ub974\ub2e4 \"",
+         "        if False:\n"
+         "            print(f\"\u2717 {path}: {name} \uc758 \ud310\uc815\uc774 \uc601\uc218\uc99d\uacfc \ub2e4\ub974\ub2e4 \""),
+        ("            if not f.is_file():\n"
+         "                print(f\"✗ {path}: {name} 의 {phase} report 파일이 없다 ({f})\")",
+         "            if False:\n"
+         "                print(f\"✗ {path}: {name} 의 {phase} report 파일이 없다 ({f})\")"),
+     ], "coverage_receipts_are_verified_independently"),
+    # ★ 51차 P0-F + 52차 P0-4 — 같은 게시를 막는 자리가 둘이 됐다: journal 이
+    #   기록한 목적지 합집합(51차)과 대상 안의 봉인 marker(52차). 하나만 지우면
+    #   다른 쪽이 여전히 거부하므로 함께 되돌려야 관측된다 (심층 방어의 정상
+    #   신호 — 변이 전수가 실측했다).
+    # ★ 58차 — L5 봉인이 먼저 거부해 안 물었다 (실측). 함께 되돌린다.
+    ("freeze-seals-the-output-directory", RP, [
+        ("    _sealed = frozen_coordinate_covering(dest)",
+         "    _sealed = None"),
+        ("    for d, cid in frozen_dirs_from_journal().items():\n"
+         "        out.setdefault(cid, (REPO / d).resolve())",
+         "    pass"),
+        ("    here = read_frozen_marker(dest)\n"
+         "    if here is not None:",
+         "    here = None\n"
+         "    if here is not None:"),
+     ], "frozen_directory_cannot_be_republished_under_a_new_cohort_id"),
+    # ★ 58차 — L9 가 데코레이터를 **무조건** MODULE_EFFECTS 에 묶으면서, 정규형이
+    #   데코레이터를 버려도 digest 가 그 경로로 움직인다. 즉 이 변이가 겨눈
+    #   "정규형이 데코레이터를 본다" 를 새 층이 가린다 (실측: 변이만 rc 0).
+    #   함께 되돌린다.
+    ("producer-normalizes-the-node", RP, [
+        # ★ 59차 M12 — 위와 같은 이유로 데코레이터 줄만 겨눈다.
+        ('    out = [ast.copy_location(ast.Expr(value=d), d)\n'
+         '           for d in (getattr(node, "decorator_list", ()) or ())]\n',
+         '    out = []\n'),
+        ("def _ast_normal_node(node) -> str:",
+         "def _ast_normal_node(node, _src=None) -> str:"),
+        # ★ 52차 — 47차 결함(decorator 를 못 본다)을 **reflection 없이**
+        #   재현한다. `ast.unparse` 를 쓰면 P0-8 guard 에 먼저 걸려 변이가
+        #   **선언한 이유가 아닌** 것으로 물었다 (실측했다).
+        ("    return _ast_canon(_keep_docstrings(copy.deepcopy(node)))",
+         "    body = copy.deepcopy(node)\n"
+         "    body.decorator_list = []\n"
+         "    return _ast_canon(_keep_docstrings(body))"),
+     ], "producer_digest_sees_decorators"),
+    # ★ 47차 — `dir_fd` 는 두 자리에 있다(`os.stat` · `os.open`). 하나만
+    #   되돌리면 다른 철자가 남아 구조 검사가 통과한다 — 실측했다.
+    ("children-read-through-dirfd", RP, [
+        ("        st = os.stat(name, dir_fd=dfd, follow_symlinks=False)",
+         "        st = os.stat(name, follow_symlinks=False)"),
+        ("        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)",
+         "        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW)"),
+     ], "holds_a_directory_fd_for_its_children"),
+    # ★ 47차 — 46차의 두 mutant 는 **옛 exploit 을 복원하지 않았다.**
+    #   `generation-owns-its-bytes` 는 이미 만들어진 tmp 안으로 stage 를
+    #   move 해서 중첩 디렉터리를 만들었고, 그 "extra directory" 오류가
+    #   성공 증인으로 승인됐다. `staging-regular-only` 는 predicate 만 지워도
+    #   `O_NOFOLLOW` 가 ELOOP 를 냈고 그 오류가 증인이 됐다. 둘 다 44차 이전
+    #   동작을 그대로 되살리는 multi-site 로 고친다.
+    # ★ 48차 — 신고 항목도 **scenario 로 등록**한다. 47차에는 `DECLARED_MASKED`
+    #   에 설명만 있고 registry 에 이름이 없어서, 이름으로 고르면 0건을 고르고
+    #   rc 0 이었다 (신고가 아니라 침묵이었다). `-k None` 은 "실행하지 않고
+    #   신고한다" 는 뜻이고, registry 에 있으므로 목록·집계·선택에 나타난다.
+    ("generation-owns-its-bytes", RP, [
+        ("        for name in sorted(entries):\n"
+         "            _write_owned(tmp / name, entries[name])",
+         "        shutil.move(str(stage), str(tmp))"),
+     ], None),
+    ("staging-regular-only", RP, [
+        ("        if not stat.S_ISREG(st.st_mode):        # symlink·FIFO·directory",
+         "        if False:"),
+        ("        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)",
+         "        fd = os.open(name, os.O_RDONLY, dir_fd=dfd)"),
+     ], "staging_aliases_never_become_an_immutable_generation"),
+    ("flock-two-publisher", RP, [
+        ("            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)\n"
+         "        except OSError:\n            os.close(fd)\n            raise SystemExit(",
+         "            pass\n"
+         "        except OSError:\n            os.close(fd)\n            raise SystemExit("),
+        ("            fcntl.flock(self.fd, fcntl.LOCK_EX | fcntl.LOCK_NB)\n"
+         "        except OSError as e:",
+         "            pass\n        except OSError as e:"),
+     ], "two_independent_publishers"),
+    # ★ 58차 L3 — 실행 class 등록의 배타는 **두 겹**이다: 내용당 flock 과
+    #   `O_CREAT|O_EXCL`. 한 겹만 벗기면 다른 겹이 가려서 관측되지 않는다
+    #   (실측: `O_EXCL` 만 지웠더니 시험이 초록이었다). 둘을 함께 되돌려야
+    #   last-writer-wins 이던 옛 상태가 복원된다.
+    ("execution-class-record-is-exclusive-g58", PRESERVE, [
+        ("    with _ledger_lock(_lk):\n"
+         "        return _record_execution_class_locked(",
+         "    if True:\n"
+         "        return _record_execution_class_locked("),
+        # ★ 59차 M3 — 배타 지점이 `O_EXCL` 에서 `os.link()` 로 옮겨졌다 (final
+        #   이름은 이제 완전한 temp inode 에 이름을 **붙여서** 생긴다). 그러므로
+        #   "create-if-absent 를 last-writer-wins 로 되돌린다" 는 이 변이의 뜻을
+        #   같은 자리에서 다시 쓴다: `link` 는 대상이 있으면 실패하고 `replace`
+        #   는 덮는다.
+        # ★ 60차 P1-1 — 배타 지점이 다시 옮겨졌다. `link` + `unlink` 는 잠깐
+        #   **이름을 둘** 만들었고, 그것이 P1-1 의 반례였다. 이제 게시는
+        #   `renameat2(RENAME_NOREPLACE)` 로 **옮긴다**. 변이의 뜻은 그대로다:
+        #   "무대체를 last-writer-wins 로 되돌린다."
+        ("            _moved = _rename_noreplace(_tmp, path)",
+         "            _moved = bool(os.replace(_tmp, path) or True)"),
+     ], "only_one_writer_can_create_an_execution_class"),
+    # ★ 58차 — L5 의 좌표 봉인이 `_assert_writable()` 의 **첫 층**이 되면서
+    #   그 아래 층을 겨눈 옛 변이들이 안 물게 됐다 (실측: 변이만 rc 0 ·
+    #   변이+봉인 되돌림 rc 1). 방어를 지우지 않고 **함께 되돌린다**.
+    ("frozen-target-carries-its-own-seal", RP, [
+        ("    _sealed = frozen_coordinate_covering(dest)",
+         "    _sealed = None"),
+        ("    here = read_frozen_marker(dest)\n"
+         "    if here is not None:",
+         "    here = None\n"
+         "    if here is not None:"),
+     ], "frozen_directory_carries_its_own_seal"),
+    # ★ 58차 — L5 의 좌표 봉인이 `_assert_writable()` 의 **첫 층**이 되면서
+    #   그 아래 층을 겨눈 옛 변이들이 안 물게 됐다 (실측: 변이만 rc 0 ·
+    #   변이+봉인 되돌림 rc 1). 방어를 지우지 않고 **함께 되돌린다**.
+    ("mountinfo-octal-escape-is-decoded", RP, [
+        ("    _sealed = frozen_coordinate_covering(dest)",
+         "    _sealed = None"),
+        ('                    "root": _mountinfo_unescape(f[3]),\n'
+         '                    "mp": _mountinfo_unescape(f[4])})',
+         '                    "root": f[3],\n'
+         '                    "mp": f[4]})'),
+     ], "frozen_alias_whose_path_has_a_space_is_not_writable"),
+    # ★ 58차 — L5 의 좌표 봉인이 첫 층이 되면서 이 변이가 안 물게 됐다
+    #   (실측: 변이만 rc 0 · 봉인 되돌리면 rc 1). 함께 되돌린다.
+    ("mount-identity-comes-from-the-kernel", RP, [
+        ("    _sealed = frozen_coordinate_covering(dest)",
+         "    _sealed = None"),
+        ("    for ln in info.splitlines():\n"
+         "        if ln.startswith(\"mnt_id:\"):\n"
+         "            return ln.split(\":\", 1)[1].strip()",
+         "    p = Path(path).resolve()\n"
+         "    for c in _mount_table():\n"
+         "        if p == Path(c[\"mp\"]) or Path(c[\"mp\"]) in p.parents:\n"
+         "            return c[\"id\"]"),
+     ], "a_stacked_mount_is_identified_by_the_kernel_not_by_row_order"),
+    # ★ 58차 — L5 의 좌표 봉인이 첫 층이 되면서 이 변이가 안 물게 됐다
+    #   (실측: 변이만 rc 0 · 봉인 되돌리면 rc 1). 함께 되돌린다.
+    ("mount-root-is-filesystem-relative", RP, [
+        ("    _sealed = frozen_coordinate_covering(dest)",
+         "    _sealed = None"),
+        ('    fs = Path(m["root"]) / rel if str(rel) != "." else Path(m["root"])',
+         '    fs = probe'),
+     ], "bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph"),
+    # ★ 58차 — L11 이 영수증에 `startup` 을 넣으면서 그 안의 `env` 가 환경을
+    #   **대신 증언한다**. `env` 를 비워도 digest 가 움직이므로 이 변이가 안
+    #   물었다 (실측: 변이만 rc 0 · 봉인과 무관). 둘을 함께 되돌린다.
+    # ★ 59차 M12 — **한 자리만 지우면 다른 자리가 가린다.** `_MODULE_EVALUATING`
+    #   만 비우면 `assert` 가 `_module_defs()` 의 마지막 `else` 로 떨어져
+    #   fail-closed 로 거부되고, 그 시험은 "거부도 정답" 이라 통과한다
+    #   (실측: 변이 rc 0). 58차 상태를 정확히 복원하려면 둘을 함께 되돌린다 —
+    #   evaluating 목록을 비우고 그 이름들을 nonbinding 으로 돌려놓는다.
+    ("module-assert-runs-at-import-g59", RP, [
+        ('_MODULE_EVALUATING = ("Raise", "Assert")',
+         "_MODULE_EVALUATING = ()"),
+        ('_MODULE_NONBINDING = ("Pass", "Global", "Nonlocal", "Break", "Continue",\n'
+         '                      "Return")',
+         '_MODULE_NONBINDING = ("Pass", "Raise", "Assert", "Global", "Nonlocal",\n'
+         '                      "Break", "Continue", "Return")'),
+     ], "the_import_time_slice_contains_everything_that_runs"),
+    # ★ 59차 M15 — 위와 같은 이유로 두 자리가 탐침 본문으로 옮겨졌다.
+    # ★ 61차 γ 가 두 가지를 드러냈다.
+    #   ① `packages` 가 typed 로 바뀌어 원상이 죽었다 → 새 문장으로 옮긴다.
+    #   ② 축을 쪼개 보니 receipt 의 `env` 하나만 비워서는 **안 빨개진다** —
+    #      `_env_facts()` 안에도 같은 결속이 있어 두 층이 같은 성질을 지킨다.
+    #      그러면 그 한 자리는 이 성질의 증인이 아니다. 방어를 지우는 변이는
+    #      **두 자리를 함께** 되돌려야 한다 (59차 `module-assert-…` 와 같은 형태).
+    ("evidence-binds-the-environment", MR, [
+        ('            \u0022packages\u0022: packages,\n'
+         '            \u0022env\u0022: {k: os.environ[k] '
+         'for k in NAMES if k in os.environ},',
+         '            \u0022packages\u0022: packages,\n'
+         '            \u0022env\u0022: {},'),
+        ('            \u0022env\u0022: {k: os.environ[k] '
+         'for k in NAMES if k in os.environ}}',
+         '            \u0022env\u0022: {}}'),
+     ], "evidence_binds_the_execution_environment"),
+]
+
+#: **관측되지 않는다고 신고하는** 항목. 왜 안 보이는지와 그래도 왜 남기는지를
+#: 여기 적는다 — "masked but retained" 를 조용히 두지 않는다.
+DECLARED_MASKED = {
+    "class-locals-stay-in-the-class-body-g62": (
+        "62차 자체 리뷰 F3 가 class 본문·module 문장의 결속 shadow 를 없애 "
+        "(`_own_shadows` 는 함수·lambda 만) class 의 `here == inherited` 가 됐다 — "
+        "`nested = here` 는 의미를 안 바꾼다. 같은 방어는 "
+        "`class-body-bindings-are-not-shadows-g62` 가 잰다. 축을 남기는 이유: "
+        "P0-6(a) 의 규칙(자식 scope 는 class 의 바깥 집합을 받는다)이 코드에 "
+        "그대로 있고, F3 가 되돌려지면 이 변이가 다시 물어야 한다."),
+    "shadows-are-scoped-g60":
+        "60차 P0-11 은 shadow 를 **scope 별**로 좁혔다 (59차는 `ast.walk` 로 "
+        "중첩 함수의 매개변수까지 한 set 에 합쳤다). 의미는 그것이 맞다. "
+        "그런데 평평한 shadow 와 결과가 **갈라지는** 형태를 두 벌 지어 "
+        "실측했더니 둘 다 변이 rc 0 이었다: ① 능력을 부르는 형태는 P0-10 의 "
+        "둘째 층(호출자가 준 이름을 부르는 것은 거부)이 평평한 shadow 아래서 "
+        "오히려 **더 넓게** 문다. ② 능력을 이름으로 들고 나오는 형태는 58차 "
+        "L9-b(`능력을 값으로 옮긴다`)가 shadow 와 무관하게 문다. 평평한 "
+        "shadow 는 좁힌 것보다 **더 허용적**인데, 더 허용된 자리를 전부 다른 "
+        "규칙이 이미 막고 있어 관측 가능한 차이가 비어 있다 — 48차 "
+        "`idempotent-shares-the-validator` 와 같은 형태다. 없는 자리를 "
+        "만들어 내는 대신 신고한다. 회귀"
+        "(`..._a_nested_scope_binding_does_not_exempt_the_outer_scope` 와 "
+        "`..._a_binding_still_shadows_inside_its_own_scope`)는 남긴다.",
+    "idempotent-shares-the-validator":
+        "48차 P0-7 이 generation 읽기를 helper 하나(`_generation_entries_by_id`)로 "
+        "모았다. 그래서 idempotent 분기에 **고유한** 검증 자리가 더 이상 없고, "
+        "그 성질은 `reader-shares-the-validator` 가 helper body 에서 이미 "
+        "관측한다. 호출 지점만 되돌려도 시험이 초록인 것은 시험이 약해서가 "
+        "아니라 **자리가 하나로 합쳐졌기** 때문이다. 없는 자리를 만들어 내는 "
+        "대신 신고한다 — 회귀"
+        "(`..._idempotent_branch_refuses_an_aliased_generation_file`)는 남긴다.",
+    "generation-owns-its-bytes":
+        "옛 exploit(스테이징 디렉터리를 통째로 rename)을 **복원할 수 없다**. "
+        "46차에 caller staging 이 sink 에 도달하지 않게 바뀌었고(병합은 "
+        "메모리, 자재화는 publisher 소유 temp), 그래서 sink 가 옮길 수 있는 "
+        "것은 이미 `_write_owned` 로 만든 owned 파일뿐이다. 47차에 2-site 로 "
+        "충실히 되살리려 했으나 결과가 여전히 owned inode 라 관측되지 않았다 "
+        "— 이것은 시험이 약한 것이 아니라 그 상태가 **표현 불가능**해진 "
+        "것이다. 회귀(`..._published_generation_owns_its_bytes`)는 남긴다.",
+    "public-lifecycle-in-two-publisher-fixture":
+        "이 mutant 는 fixture 를 내부 helper 직호출로 되돌리는 것인데, 그러면 "
+        "fixture 가 문법적으로 다른 코드가 되어 '같은 시험을 다른 코드로 "
+        "돌린' 것이 된다. 대신 `..._two_independent_publishers_lose_no_leg` 가 "
+        "두 child 가 **public entry 를 지났다는 marker** 를 남기는지 실행 중에 "
+        "확인하도록 시험을 보강했다 (45차).",
+    "proof-until-equals-lease":
+        "horizon 의 정본은 lease record 이고 verifier 가 exact ID 로 다시 "
+        "확인한다. 이 assert 는 필드가 이름만 갖지 않게 하는 계약이며, "
+        "현재 production 경로에서 둘이 갈라지는 반례가 없다.",
+    "interpreter-set-is-pinned":
+        "이 변이는 **지금 도는 인터프리터에서 관측할 수 없다.** 검사를 지우면 "
+        "지원 집합 밖 버전에서 identity 를 계산하게 되는데, 이 기계에는 그 "
+        "버전이 없다 — 관측하려면 지원 집합 밖 인터프리터를 하나 설치해 같은 "
+        "시험을 거기서 돌려야 한다. 대신 회귀"
+        "(`..._supported_interpreter_set_is_pinned_with_golden_vectors`)가 "
+        "(a) 지금 인터프리터가 선언 집합 안이고 (b) 대표 구문 넷의 정규형이 "
+        "golden 과 같음을 매번 확인한다. 즉 '정규형이 버전에 안 묶인다' 는 "
+        "주장이 깨지면 golden 이 먼저 빨개진다.",
+    "coverage-checks-the-recorded-head":
+        "이 변이는 **변이 sandbox 안에서 관측할 수 없다.** 검사(`git cat-file "
+        "-e <head>^{commit}`)는 git 역사가 있어야 물을 수 있는데, sandbox 는 "
+        "추적 파일만 복사한 사본이라 `.git` 이 없다. 그래서 sandbox 에서는 "
+        "변이 전 baseline 부터 이미 빨갛고(회귀가 '이 저장소에 없는 HEAD' 를 "
+        "만들 수 없다), 빨간 것은 검사가 지워져서가 아니라 **환경이 다르기** "
+        "때문이다 — 그런 빨강은 증거가 아니다. 대신 회귀"
+        "(`..._the_recorded_head_must_exist_in_this_repository`)가 실저장소에서 "
+        "매번 돌며, 모든 HEAD 를 40개의 `0` 으로 바꾼 조각이 `rc 1` 로 "
+        "거부되는지 확인한다 (리뷰어 반례를 그대로 고정한 것이다).",
+    "module-expr-binds-its-target":
+        "55차 P0-5① 이 module-level 표현식을 예약 이름 `MODULE_EFFECTS` 로 "
+        "**무조건** 닫힘에 넣었다. 그래서 뿌리 이름에 결속하는 것은 더 이상 "
+        "identity 를 지키는 **고유한 자리가 아니다** — 결속을 지워도 그 문은 "
+        "여전히 digest 안에 있고, 그것이 54차보다 강한 상태다 (54차는 뿌리를 "
+        "모르면 **멈췄고**, 지금은 **담는다**). 호출 지점만 되돌려도 시험이 "
+        "초록인 것은 시험이 약해서가 아니라 자리가 하나로 합쳐졌기 때문이다 "
+        "— 48차 `idempotent-shares-the-validator` 와 같은 형태다. 없는 자리를 "
+        "만들어 내는 대신 신고한다. 그 성질은 "
+        "`module-effects-are-an-unconditional-root` 가 관측하고, 회귀"
+        "(`..._module_scope_expression_statement_is_fail_closed`)는 뿌리를 "
+        "정할 수 없는 표현식도 digest 를 움직이는지 매번 확인한다.",
+    "warm-consumer-wiring":
+        "positive wiring 회귀는 배선이 **끊길 때** 빨개진다. assert 를 지우는 "
+        "변이는 그 시험 자신만 무력화하므로 다른 시험이 물지 않는다 — "
+        "이것은 회귀의 성질이지 결함이 아니다.",
+    "release-cleanup-holds-the-attempt-path":
+        "이 lock 순서(`LOCK_ORDER`: attempt_path → claim → ledger)는 그대로 "
+        "지킬 규칙이다. 그런데 그것을 물던 회귀"
+        "(`release_cleanup_cannot_delete_another_legs_token`)는 **caller 가 "
+        "다른 다리의 token 경로를 고르는** 상황을 겨눴고, 57차 P0-1 이 그 인자를 "
+        "없애면서 시나리오 자체가 표현 불가가 되어 지웠다. 12조각 전수 재생이 "
+        "이것을 `수집 rc 5`(고른 시험 0건)로 드러냈다 — 조각으로 나눠 돌리지 "
+        "않았으면 안 보였을 자리다. 표현 불가가 된 상황을 흉내 내는 시험을 새로 "
+        "지어내면 그것은 증거가 아니라 장식이므로, **회귀 없는 방어**임을 "
+        "신고하고 남긴다. 같은 lock 을 쓰는 다른 자리"
+        "(`finalize-holds-the-claim-lock`)는 여전히 executable 이다.",
+}
+
+
+def _nodes(kexpr: str) -> list[str]:
+    """`-k` 가 고르는 **정확한 node ID 목록** (실행하지 않고 수집만).
+
+    ★ 46차 — rc 를 **정확히** 본다. pytest 의 수집 성공은 rc 0 이고, rc 5 는
+      "아무것도 안 골랐다" 다. 45차는 `rc != 0` 만 봤으므로 5 와 2(중단)·
+      3(내부 오류)을 구별하지 못했다.
+    """
+    r = subprocess.run(
+        [sys.executable, "-m", "pytest", "tests/", "-q", "-k", kexpr,
+         "--collect-only", "-p", "no:randomly", "--no-header"],
+        cwd=_sandboxed(ROOT), env=replay_env(),
+        capture_output=True, text=True, timeout=1800)
+    if r.returncode != 0:
+        raise _ReplayError(f"수집 rc 가 0 이 아니다 ({r.returncode}): "
+                           f"{r.stdout[-400:]}")
+    return sorted(l.strip() for l in r.stdout.splitlines()
+                  if "::" in l and l.strip().startswith("tests/"))
+
+
+def _marker_id(name: str) -> str:
+    """이 변이만의 **표식 이름** (54차 P1).
+
+    report 바이트가 스스로 "나는 이 변이의 것" 이라고 말하게 만든다. 기대 node
+    도 증인도 같은 scenario 쌍이 실제로 있으므로(실측 9쌍), report 내용만으로는
+    구별할 수 없다 — 그래서 runner 가 그 실행에만 있는 node 를 하나 넣는다.
+    """
+    return "m" + hashlib.sha256(_scenario_binding(name)).hexdigest()[:16]
+
+
+def _write_marker(sandbox: pathlib.Path, name: str, tag: str | None = None) -> str:
+    """sandbox 에 이 변이만의 시험 node 를 하나 놓는다 (54차 P1).
+
+    ★ 58차 L12 — 환경 증언 node 도 같이 놓는다. 표식이 "누구의 report 인가" 를
+      말한다면 증언은 "**어느 환경에서** 나온 report 인가" 를 말한다. 조각 옆
+      필드는 나중에 다시 쓸 수 있지만 report 바이트 안의 이 node 는 그 실행이
+      실제로 돌지 않으면 생기지 않는다.
+    """
+    mid = _marker_id(name)
+    (sandbox / "tests" / f"test_mutation_marker_{mid}.py").write_text(
+        f'"""변이 표식 — 이 실행에만 있는 node (54차 P1)."""\n\n\n'
+        f"def test_mutant_{mid}():\n"
+        f"    assert True\n", encoding="utf-8")
+    # ★ 62차 P1-6 — tag 는 호출자가 든 **스냅샷**의 것이다. 안 주면 여기서 한 번
+    #   더 재게 되고, 그 값은 조각에 적힐 본문과 다른 측정이다.
+    _write_env_attestation(sandbox, tag if tag is not None else environment_tag())
+    return mid
+
+
+def _run(kexpr: str, marker: str = "", env_tag: str = "") -> dict:
+    """`-k` 를 실행하고 **node 별 결과**를 JSON report 로 돌려준다.
+
+    ★ 45차 — 44차 runner 는 baseline 없이 `rc != 0` 이면 전부 "물었다" 로
+      셌다. 그러면 다음이 모두 성공으로 보인다: 아무 시험도 안 골라진 rc=5,
+      syntax/collection/import 오류, 변이 **전부터** 있던 실패, 기대한 것이
+      아닌 다른 시험의 실패. 그래서 node 단위로 본다.
+    """
+    with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as fh:
+        rep = pathlib.Path(fh.name)
+    try:
+        r = subprocess.run(
+            [sys.executable, "-m", "pytest", "tests/", "-q", "-k",
+             # ★ 58차 L12 — 환경 증언 node 도 **같이 고른다**. sandbox 에 파일만
+             #   놓고 안 고르면 report 에 안 나타나고, 그러면 증언이 없다.
+             #   tag 는 심을 때 정해진 것을 **받아 쓴다** — 여기서 다시 재면
+             #   탐침을 한 번 더 띄우고, 그 사이 환경이 바뀌면 심은 것과 고르는
+             #   것이 어긋난다.
+             (f"({kexpr}) or test_mutant_{marker}"
+              + (f" or test_env_{env_tag}" if env_tag else "")) if marker
+             else kexpr,
+             "-p", "no:randomly", "--no-header",
+             "--json-report", f"--json-report-file={rep}"],
+            cwd=_sandboxed(ROOT), env=replay_env(),
+            capture_output=True, text=True, timeout=1800)
+        if rep.is_file() and rep.stat().st_size:
+            data = json.loads(rep.read_text(encoding="utf-8"))
+            # ★ 52차 P1-2 — 영수증으로 남기는 것은 **판정에 쓰이는 부분**이다.
+            #   pytest 의 `collectors` 는 1300여 시험의 수집 tree 라 파일 하나가
+            #   216 KB 이고 그 중 212 KB 가 이 질문과 무관하다 (조각 12개면
+            #   50 MB). `tests` 항목은 **그대로** 담고 나머지는 뺀다 — 줄인
+            #   것은 무엇을 담는가이지 어떻게 판정하는가가 아니다.
+            raw = json.dumps({"exitcode": data.get("exitcode"),
+                              "summary": data.get("summary"),
+                              "tests": data.get("tests", [])},
+                             ensure_ascii=False, sort_keys=True).encode("utf-8")
+            # ★ 52차 P1-2 — **원본 report 바이트**를 들고 나간다. 조각은 이것을
+            #   증거로 남기고, checker 는 이 바이트에서 판정을 다시 유도한다.
+            #   51차 artifact 는 runner 의 self-claim 만 담았고, checker 는 그
+            #   claim 을 다시 해시했을 뿐이다 (리뷰어 실측: `replay_calls=0` 으로
+            #   전수 인증).
+            out = {"rc": r.returncode, "nodes": {}, "collect_errors": [],
+                   "raw": raw}
+            # ★ 46차 — collector 오류를 **따로** 본다. 수집이 깨지면 test
+            #   node 가 아예 없고, 45차 판정은 그것을 "아무도 안 물었다" 와
+            #   구별하지 못했다 (둘 다 실패로 보이지만 원인이 전혀 다르다).
+            for c in data.get("collectors", []):
+                if c.get("outcome") != "passed":
+                    out["collect_errors"].append(
+                        f"{c.get('nodeid')}:{c.get('outcome')}")
+            for t in data.get("tests", []):
+                # ★ 54차 P1 — 표식 node 는 **영수증에만** 남는다 (`raw` 는 위에서
+                #   그대로 담았다). 판정 집합에 넣으면 baseline 수집 목록과
+                #   어긋나므로, 여기서는 뺀다 — 표식은 "누구의 report 인가" 를
+                #   말하는 것이지 "무엇이 물었는가" 가 아니다.
+                nid = t.get("nodeid") or ""
+                if "test_mutant_" in nid or "test_mutation_env_" in nid:
+                    continue
+                phases = {ph: t[ph]["outcome"] for ph in
+                          ("setup", "call", "teardown") if ph in t}
+                out["nodes"][t["nodeid"]] = {
+                    "outcome": t.get("outcome"), "phases": phases,
+                    "longrepr": str((t.get("call") or {}).get("longrepr") or "")}
+            return out
+        # json-report 플러그인이 없으면 **조용히 넘어가지 않는다**
+        raise _ReplayError(
+            "pytest-json-report 가 필요하다 — `pip install pytest-json-report` "
+            f"(rc={r.returncode})")
+    finally:
+        rep.unlink(missing_ok=True)
+
+
+class _ReplayError(RuntimeError):
+    pass
+
+
+def _check(name: str, kexpr: str, before: dict, after: dict,
+           nodes: list[str]) -> tuple[list[str], dict]:
+    """변이가 **정확히 선언한 node 들만** · **선언한 이유로** 빨개졌는가.
+
+    ★ 46차 #9 조건 9 — 45차 판정은 "call 단계에서 하나라도 빨개졌다" 였다.
+      그것으로는 두 가지를 구별할 수 없다:
+
+        · 기대한 시험이 물었는가, 아니면 **다른** 시험이 물었는가
+        · 물었다면 **그 불변식 때문에** 물었는가, 아니면 변이가 만든 엉뚱한
+          부수효과(다른 assert·다른 예외) 때문인가
+
+      그래서 mutant 마다 **기대 실패 집합**과 **의미 증인**(실패 메시지에
+      반드시 있어야 하는 문자열)을 선언하고 정확히 대조한다.
+    """
+    bad = []
+    observed = {"fail": [], "witness": {}}
+    base_fail = sorted(k for k, v in before["nodes"].items()
+                       if v["outcome"] != "passed")
+    if before["rc"] != 0:
+        bad.append(f"{name}: baseline rc 가 0 이 아니다 ({before['rc']})")
+    if before["collect_errors"]:
+        bad.append(f"{name}: baseline 수집 오류 — {before['collect_errors'][:3]}")
+    if base_fail:
+        bad.append(f"{name}: baseline 이 이미 빨갛다 — {base_fail[:3]}")
+    if sorted(before["nodes"]) != nodes:
+        bad.append(f"{name}: baseline 이 수집 목록과 다르다")
+    if bad:
+        return bad, observed
+    if after["collect_errors"]:
+        bad.append(f"{name}: 변이가 수집을 깼다 — {after['collect_errors'][:3]}")
+        return bad, observed
+    if sorted(after["nodes"]) != nodes:
+        bad.append(f"{name}: 변이 뒤 node 목록이 달라졌다 — "
+                   f"사라짐 {sorted(set(nodes) - set(after['nodes']))[:3]}")
+        return bad, observed
+    # pytest rc: 0 = 전부 통과 · 1 = 시험 실패 · 2 중단 · 3 내부 오류 · 5 미수집
+    if after["rc"] != 1:
+        bad.append(f"{name}: 변이 rc 가 1(시험 실패)이 아니다 ({after['rc']})")
+    failed, errored = [], []
+    for k, v in after["nodes"].items():
+        if v["outcome"] == "passed":
+            continue
+        if v["phases"].get("call") == "failed":
+            failed.append(k)
+            observed["witness"][k] = _last_line(v["longrepr"])
+        else:
+            errored.append(f"{k}:{v['phases']}")
+    observed["fail"] = sorted(failed)
+    if errored:
+        bad.append(f"{name}: call 단계가 아닌 실패가 있다 — {errored[:3]}")
+    exp = EXPECT.get(name)
+    if exp is None:
+        bad.append(f"{name}: 기대 실패 집합이 선언되지 않았다 "
+                   "(`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)")
+        return bad, observed
+    # ★ 50차 P1 — **빈 기대 집합**은 "아무 시험도 안 물어야 한다" 는 선언이고,
+    #   그것은 곧 "안 물었다" 다. 실행 가능 변이로 등록해 놓고 그렇게 적으면
+    #   전수 인증이 거짓이 된다 — 관측이 안 되면 `DECLARED_MASKED` 로 신고하라.
+    if not exp["fail"]:
+        bad.append(f"{name}: 기대 실패 집합이 비었다 — 실행 가능 변이는 반드시 "
+                   "무언가를 물어야 한다 (관측 안 되면 신고로 옮겨라)")
+        return bad, observed
+    if sorted(failed) != sorted(exp["fail"]):
+        bad.append(
+            f"{name}: 실패 집합이 선언과 다르다 — 더 빨개짐 "
+            f"{sorted(set(failed) - set(exp['fail']))[:3]} · 안 빨개짐 "
+            f"{sorted(set(exp['fail']) - set(failed))[:3]}")
+    # ★ 46차 — 증인은 **node 마다** 다르다. 한 mutant 가 여러 시험을 빨갛게
+    #   만들면 (parametrize·다중 대상) 그 메시지들은 서로 다른 문장이다.
+    #   증인 하나를 전부에 요구하면, 통과시키려고 증인을 가장 약한 공통
+    #   부분문자열로 깎게 된다 — 그러면 "그 이유로 물었다" 를 증명하지 못한다.
+    wit = exp["witness"]
+    if not isinstance(wit, dict):
+        bad.append(f"{name}: 증인이 node→문자열 map 이 아니다")
+        return bad, observed
+    for k in failed:
+        want = wit.get(k)
+        if want is None:
+            bad.append(f"{name}: {k} 의 증인이 선언되지 않았다")
+            continue
+        if not _witness_holds(after["nodes"][k]["longrepr"], want):
+            bad.append(
+                f"{name}: {k} 이 빨개졌지만 **선언한 이유**가 아니다 — "
+                f"증인 {want!r} 이 실패 메시지에 없다 "
+                f"({_last_line(after['nodes'][k]['longrepr'])!r})")
+    return bad, observed
+
+
+def _select(k: str):
+    """고른 scenario 를 **한 곳에서** 분류한다 (49차 P1).
+
+    48차는 `main()` 과 `_replay()` 가 각자 분류했고, `_replay()` 쪽만
+    `MULTI` 의 declared 항목을 빠뜨렸다. 그래서 declared MULTI 하나만 고르면
+    `scenario_declared 0 · ran 0` 에 rc 0, 그리고 "실행한 변이가 전부 물었다"
+    라는 성공 문장이 나왔다 — **아무 것도 돌지 않았는데** 통과 보고였다.
+    같은 분류를 두 곳에서 하면 약한 쪽이 실효 규칙이 된다.
+    """
+    items = [m for m in MUTANTS if k in m[0]]
+    multi = [m for m in MULTI if k in m[0]]
+    executed = [m for m in items if m[4] is not None]
+    declared = [m for m in items if m[4] is None] + \
+        [m for m in multi if m[3] is None]
+    return items, multi, executed, declared
+
+
+def _registry() -> dict:
+    """전체 등록부 — 이름 → 분류·site 수·selector. 조각 합집합의 대조 기준이다."""
+    reg: dict = {}
+    for name, path, _o, _n, kexpr in MUTANTS:
+        reg[name] = {"class": "executable" if kexpr is not None else "declared",
+                     "sites": 1, "kexpr": kexpr, "file": path.name}
+    for name, path, pairs, kexpr in MULTI:
+        reg[name] = {"class": "executable" if kexpr is not None else "declared",
+                     "sites": len(pairs), "kexpr": kexpr, "file": path.name}
+    dup = len(MUTANTS) + len(MULTI) - len(reg)
+    if dup:
+        raise SystemExit(
+            f"✗ 등록부에 같은 이름이 {dup}건 겹친다 — 뒤엣것이 앞엣것을 덮으므로 "
+            "조각 합집합이 전수를 덮었는지 셀 수 없다")
+    return reg
+
+
+def _print_counts(items, multi, executed, declared, ran=None) -> None:
+    """total · executable · declared site 를 **서로 다른 이름**으로 (48차).
+
+    47차는 `--list` 가 declared 까지 세어 61, full run 이 executable 만 세어 58
+    을 **같은 `site` 이름**으로 찍었다. 같은 단어가 두 값을 가리키면 요청문의
+    숫자를 믿을 수 없다.
+    """
+    exec_multi = [m for m in multi if m[3] is not None]
+    decl_multi = [m for m in multi if m[3] is None]
+    total_sites = len(items) + sum(len(m[2]) for m in multi)
+    exec_sites = len(executed) + sum(len(m[2]) for m in exec_multi)
+    line = (f"\nscenario_total {len(items) + len(multi)} · "
+            f"scenario_executable {len(executed) + len(exec_multi)} · "
+            f"scenario_declared {len(declared)} · "
+            f"site_total {total_sites} · site_executable {exec_sites} · "
+            f"site_declared {total_sites - exec_sites}")
+    if ran is not None:
+        line += f" · ran {ran}"
+    print(line)
+
+
+def _witness_holds(longrepr: str, want: str) -> bool:
+    """선언한 증인이 이 실패의 **의미 줄**에 있는가 (54차 자체 발견).
+
+    규칙이 둘이면 그 사이가 구멍이다 — 이 라운드가 여섯 번 만난 형태다.
+    실시간 재생(`_check`)은 `want in longrepr` 로 **본문 전체**를 봤고,
+    영수증 검사(`_report_identity_rc`)는 `_last_line()` 만 봤다. 그래서
+    `module-gate-before-side-effects` 의 증인 `KeyError: 'discharged_state'`
+    가 48차에 시험이 고쳐진 뒤로도 여섯 라운드를 살아남았다 — 그 문자열이
+    시험 **자신의 주석**에 남아 있고 pytest 가 실패 재현에 소스를 함께
+    찍기 때문이다. 본문 매칭은 우연한 텍스트에 걸린다.
+
+    그러므로 규칙은 하나이고, 그것은 더 엄격한 쪽(`_last_line`)이다.
+    """
+    return str(want) in _last_line(longrepr or "")
+
+
+def _last_line(text: str) -> str:
+    """실패의 **의미**를 담은 줄 — 위치 줄(`file.py:12: X`)이 아니다.
+
+    ★ 46차 — 증인이 위치 줄이면 편집 한 번에 줄 번호가 밀려 깨진다.
+      pytest 는 assert/예외 메시지를 `E ` 로 시작하는 줄에 찍는다.
+    """
+    lines = [l.rstrip() for l in (text or "").splitlines()]
+    for line in lines:
+        if line.startswith("E "):
+            return line[2:].strip()[:200]
+    for line in reversed(lines):
+        if line.strip():
+            return line.strip()[:200]
+    return ""
+
+
+#: ★ 46차 #9 조건 9 — mutant 마다 **기대 실패 node 집합**과 **의미 증인**.
+#:   `python3 docs/22p_gap/mutation_replay.py --emit-expect` 가 관측값을
+#:   그대로 찍어 준다. 선언이 없는 mutant 는 오류다 (조용히 통과시키지
+#:   않는다) — "물었다" 와 "**그 이유로** 물었다" 는 다른 주장이다.
+#:
+#:   `witness` 는 **node → 실패 메시지 부분문자열** map 이다. 시각·임시 경로
+#:   처럼 실행마다 달라지는 부분은 손으로 잘라 안정한 접두만 남긴다.
+EXPECT: dict = {
+    # ── 59차 (게이트 58차 반증 조건) — 전부 `--emit-expect` 로 관측한 값 ──
+    # ★ 60차 마감 — 선언이 하나 줄고 하나 늘었다. P0-12 가 `If.test` 를 실행
+    #   슬라이스에 넣으면서 `if` 문 자체가 (body 가 무엇이든) `MODULE_EFFECTS`
+    #   로 묶이게 됐고, 그래서 `if False: raise …` 는 `Raise` 규칙을 지워도
+    #   **안 빨개진다** — 층이 둘이 된 것은 좋지만 그 경우는 이 축의 증인이
+    #   아니게 됐다. 전수 재생이 "실패 집합이 선언과 다르다" 로 잡았다.
+    #   그래서 `Raise` 규칙을 **홀로** 지키는 자리를 하나 뒀다: `Try` 는
+    #   head 가 없어 `MODULE_EFFECTS` 로 안 묶이므로, 안의 `raise` 만이 그
+    #   문장을 슬라이스 안에 넣는다. 아래는 `--emit-expect` 로 관측한 값이다.
+    "module-assert-runs-at-import-g59": {
+        "fail": [
+            "tests/test_import_time_slice_59.py::test_the_import_time_slice_contains_everything_that_runs[assert True, str(sc.add_error_columns)\\n]",
+            "tests/test_import_time_slice_59.py::test_the_import_time_slice_contains_everything_that_runs[assert sc.add_error_columns is not None\\n]",
+            "tests/test_import_time_slice_59.py::test_the_import_time_slice_contains_everything_that_runs[try:\\n    raise RuntimeError(str(sc.add_error_columns))\\nexcept RuntimeError:\\n    pass\\n]",
+        ],
+        "witness": {
+            "tests/test_import_time_slice_59.py::test_the_import_time_slice_contains_everything_that_runs[assert True, str(sc.add_error_columns)\\n]":
+                "AssertionError: import 때 실행되는 문장을 더했는데 producer digest 가 그대로다 — 그 실행은 봉인 밖이다 (59차 M12)",
+            "tests/test_import_time_slice_59.py::test_the_import_time_slice_contains_everything_that_runs[assert sc.add_error_columns is not None\\n]":
+                "AssertionError: import 때 실행되는 문장을 더했는데 producer digest 가 그대로다 — 그 실행은 봉인 밖이다 (59차 M12)",
+            "tests/test_import_time_slice_59.py::test_the_import_time_slice_contains_everything_that_runs[try:\\n    raise RuntimeError(str(sc.add_error_columns))\\nexcept RuntimeError:\\n    pass\\n]":
+                "AssertionError: import 때 실행되는 문장을 더했는데 producer digest 가 그대로다 — 그 실행은 봉인 밖이다 (59차 M12)",
+        }
+    },
+    "output-commit-requires-a-capability-g59": {
+        "fail": [
+            "tests/test_exec_class_capability_59.py::test_committing_an_output_without_a_capability_is_refused",
+        ],
+        "witness": {
+            "tests/test_exec_class_capability_59.py::test_committing_an_output_without_a_capability_is_refused":
+                # 속성 이름은 refactor 로 바뀐다 (60차: `nonce` → `_record`).
+                # 축이 묻는 것은 "거부 대신 crash 가 난다" 이므로 거기까지만 적는다.
+                "AttributeError: 'NoneType' object has no attribute",
+        }
+    },
+    "bundle-members-are-not-followed-g59": {
+        "fail": [
+            "tests/test_handle_carry_59.py::test_a_bundle_member_symlink_can_not_smuggle_bytes_from_outside",
+        ],
+        "witness": {
+            "tests/test_handle_carry_59.py::test_a_bundle_member_symlink_can_not_smuggle_bytes_from_outside":
+                "AssertionError: 저장소 밖을 가리키는 link 가 묶음 구성원으로 통과했다 — clone 에는 그 바이트가 없다 (M8)",
+        }
+    },
+    "capability-carries-the-judged-handle-g59": {
+        "fail": [
+            "tests/test_handle_carry_59.py::test_the_capability_is_bound_to_the_directory_the_gate_judged",
+        ],
+        "witness": {
+            "tests/test_handle_carry_59.py::test_the_capability_is_bound_to_the_directory_the_gate_judged":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "capability-target-must-be-provable-g59": {
+        "fail": [
+            "tests/test_import_time_slice_59.py::test_wrapping_the_capability_target_does_not_escape[conditional]",
+            "tests/test_import_time_slice_59.py::test_wrapping_the_capability_target_does_not_escape[dict_value]",
+            "tests/test_import_time_slice_59.py::test_wrapping_the_capability_target_does_not_escape[identity_call]",
+            "tests/test_import_time_slice_59.py::test_wrapping_the_capability_target_does_not_escape[list_index]",
+            "tests/test_import_time_slice_59.py::test_wrapping_the_capability_target_does_not_escape[or_chain]",
+            "tests/test_import_time_slice_59.py::test_wrapping_the_capability_target_does_not_escape[tuple_index]",
+        ],
+        "witness": {
+            "tests/test_import_time_slice_59.py::test_wrapping_the_capability_target_does_not_escape[conditional]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_import_time_slice_59.py::test_wrapping_the_capability_target_does_not_escape[dict_value]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_import_time_slice_59.py::test_wrapping_the_capability_target_does_not_escape[identity_call]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_import_time_slice_59.py::test_wrapping_the_capability_target_does_not_escape[list_index]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_import_time_slice_59.py::test_wrapping_the_capability_target_does_not_escape[or_chain]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_import_time_slice_59.py::test_wrapping_the_capability_target_does_not_escape[tuple_index]":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "class-bases-are-substitution-g59": {
+        "fail": [
+            "tests/test_import_time_slice_59.py::test_a_metaclass_body_change_moves_the_identity",
+        ],
+        "witness": {
+            "tests/test_import_time_slice_59.py::test_a_metaclass_body_change_moves_the_identity":
+                "AssertionError: metaclass 구현을 바꿨는데 producer digest 가 같다 (59차 M12)",
+        }
+    },
+    "env-tag-covers-the-whole-receipt-g59": {
+        "fail": [
+            "tests/test_evidence_layer_59.py::test_the_environment_tag_covers_the_whole_receipt",
+        ],
+        "witness": {
+            "tests/test_evidence_layer_59.py::test_the_environment_tag_covers_the_whole_receipt":
+                "AssertionError: 영수증의 `interpreter` 를 바꿨는데 증언 tag 가 그대로다 — 그 필드는 실행이 증언하지 않는다 (M15)",
+        }
+    },
+    "exec-class-record-is-read-back-g59": {
+        "fail": [
+            "tests/test_exec_class_capability_59.py::test_a_short_write_never_publishes_a_partial_record",
+        ],
+        "witness": {
+            "tests/test_exec_class_capability_59.py::test_a_short_write_never_publishes_a_partial_record":
+                "tools.preserve.PreserveError: [promote] 내용",
+        }
+    },
+    "exec-class-retry-reseals-durability-g59": {
+        "fail": [
+            "tests/test_exec_class_capability_59.py::test_a_retry_after_a_failed_parent_fsync_redoes_the_durability_step",
+        ],
+        "witness": {
+            "tests/test_exec_class_capability_59.py::test_a_retry_after_a_failed_parent_fsync_redoes_the_durability_step":
+                "AssertionError: 같은 class 재시도가 등록부 이름을 다시 굳히지 않았다 — 첫 시도의 실패한 parent fsync 가 영원히 안 고쳐진다",
+        }
+    },
+    "finalize-requires-the-consumed-binding-g59": {
+        "fail": [
+            "tests/test_run_schema_binding_59.py::test_finalize_refuses_a_later_phase_with_no_recorded_predecessor",
+        ],
+        "witness": {
+            "tests/test_run_schema_binding_59.py::test_finalize_refuses_a_later_phase_with_no_recorded_predecessor":
+                "KeyError: 'grid'",
+        }
+    },
+    "finalize-snapshots-the-evidence-g59": {
+        "fail": [
+            "tests/test_handle_carry_59.py::test_finalize_seals_the_evidence_it_verified",
+        ],
+        "witness": {
+            "tests/test_handle_carry_59.py::test_finalize_seals_the_evidence_it_verified":
+                "AssertionError: 검증한 뒤 바뀐 값이 원장에 봉인됐다: {'seen': 'after'} — 검증한 것과 기록한 것이 다르면 검증은 아무것도 보장하지 않는다 (M9)",
+        }
+    },
+    "frozen-publication-needs-a-local-seal-g59": {
+        "fail": [
+            "tests/test_frozen_clean_clone_59.py::test_publication_is_refused_while_a_frozen_cohort_has_no_local_seal",
+        ],
+        "witness": {
+            "tests/test_frozen_clean_clone_59.py::test_publication_is_refused_while_a_frozen_cohort_has_no_local_seal":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "future-flag-changes-the-model-g59": {
+        "fail": [
+            "tests/test_import_time_slice_59.py::test_the_future_annotations_flag_is_part_of_the_model",
+        ],
+        "witness": {
+            "tests/test_import_time_slice_59.py::test_the_future_annotations_flag_is_part_of_the_model":
+                "AssertionError: `from __future__ import annotations` 를 더했는데 producer digest 가 그대로다 — 모델이 annotation 평가 의미를 바꾸는 줄을 안 본다 (M12)",
+        }
+    },
+    "issuance-requires-a-durable-token-g59": {
+        "fail": [
+            "tests/test_issuance_surface_59.py::test_issuing_with_a_token_that_is_not_on_disk_is_refused",
+        ],
+        "witness": {
+            "tests/test_issuance_surface_59.py::test_issuing_with_a_token_that_is_not_on_disk_is_refused":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "phase-order-is-enforced-g59": {
+        "fail": [
+            "tests/test_run_schema_binding_59.py::test_a_later_phase_can_not_close_before_its_predecessor",
+        ],
+        "witness": {
+            "tests/test_run_schema_binding_59.py::test_a_later_phase_can_not_close_before_its_predecessor":
+                "KeyError: 'grid'",
+        }
+    },
+    "run-content-id-refuses-unknown-manifests-g59": {
+        "fail": [
+            "tests/test_run_schema_binding_59.py::test_an_undeclared_manifest_in_a_run_dir_is_refused",
+        ],
+        "witness": {
+            "tests/test_run_schema_binding_59.py::test_an_undeclared_manifest_in_a_run_dir_is_refused":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "run-manifest-schema-is-production-wide-g59": {
+        "fail": [
+            "tests/test_run_schema_binding_59.py::test_the_start_manifest_takes_part_in_the_content_identity",
+        ],
+        "witness": {
+            "tests/test_run_schema_binding_59.py::test_the_start_manifest_takes_part_in_the_content_identity":
+                "에 schema 선언 밖의 manifest 가 있다: ['curves_manifest_start.yaml']",
+        }
+    },
+    # ★ 60차 마감 — 증인이 바뀌었다 (`--emit-expect` 관측값). 원래 증인은
+    #   P1-3(`startup_history`)·P1-4(`importable_roots`)가 같은 반례를 덮게
+    #   되면서 이 필드를 지워도 안 빨개진다. 새 증인은 세 층이 갈라지는
+    #   자리 — 경로로 올려 `sys.modules` 에 심은, 이름으로는 못 찾는 module —
+    #   을 겨눈다.
+    "startup-binds-every-loaded-module-g59": {
+        "fail": [
+            "tests/test_evidence_layer_59.py::test_a_module_with_no_findable_spec_is_still_bound",
+        ],
+        "witness": {
+            "tests/test_evidence_layer_59.py::test_a_module_with_no_findable_spec_is_still_bound":
+                "AssertionError: 경로로 올려 `sys.modules` 에 심은 module 의 바이트를 바꿨는데 시작 증언이 그대로다 — 이름으로 못 찾는 module 은 이력도 PYTHONPATH 도 못 보고, 올린 것을 직접 재는 층만 본다 (M14)",
+        }
+    },
+    # ★ 아래 셋은 **지역 실행**으로 쟀다. 전체 재생은 이 셋을 못 잰다 —
+    #   `check_coverage()` 가 모든 executable 변이의 EXPECT 를 요구하는데
+    #   이 셋의 증인이 바로 그 함수를 부르는 시험이라 순환이 생긴다.
+    #   순환을 깨는 것이지 근거를 바꾸는 것이 아니다: 값은 변이를 실제로
+    #   적용해 빨개진 node 와 그 assertion 줄 그대로다. 채운 뒤 전체
+    #   재생이 같은 값을 다시 확인한다.
+    "coverage-checks-the-execution-receipt-g58": {
+        "fail": [
+            "tests/test_evidence_layer_58.py::test_the_top_level_checker_consumes_the_execution_receipt",
+        ],
+        "witness": {
+            "tests/test_evidence_layer_58.py::test_the_top_level_checker_consumes_the_execution_receipt":
+                "AssertionError: 정상 조각이 거부됐다",
+        }
+    },
+    "report-attests-the-environment-g58": {
+        "fail": [
+            "tests/test_evidence_layer_58.py::test_a_report_that_attests_another_environment_is_refused",
+            "tests/test_evidence_layer_58.py::test_execution_evidence_can_not_be_laundered_without_the_reports",
+        ],
+        "witness": {
+            "tests/test_evidence_layer_58.py::test_a_report_that_attests_another_environment_is_refused":
+                "AssertionError: 정상 조각이 거부됐다",
+            "tests/test_evidence_layer_58.py::test_execution_evidence_can_not_be_laundered_without_the_reports":
+                "AssertionError: 정상 조각이 거부됐다",
+        }
+    },
+    "smoke-registry-is-split-by-class-g58": {
+        "fail": [
+            "tests/test_exec_class_registry_split_58.py::test_smoke_records_do_not_land_in_the_shared_registry",
+        ],
+        "witness": {
+            "tests/test_exec_class_registry_split_58.py::test_smoke_records_do_not_land_in_the_shared_registry":
+                "AssertionError: smoke 레코드 3건이 공유 등록부에 쌓였다 — smoke 를 돌릴 때마다 저장소가 더러워지고 등록부가 무한히 자란다 (L14)",
+        }
+    },
+
+    # ── 58차 축 (`-g58`) — 아래는 전부 `--emit-expect` **관측값**이다.
+    #   손으로 적지 않는다: "무엇으로 물었는가" 를 사람이 쓰면 그것은
+    #   증거가 아니라 주장이 된다.
+    "bundle-uri-must-be-repo-relative-g58": {
+        "fail": [
+            "tests/test_evidence_domain_58.py::test_a_bundle_uri_that_escapes_the_repository_is_refused[../escape]",
+            "tests/test_evidence_domain_58.py::test_a_bundle_uri_that_escapes_the_repository_is_refused[]",
+            "tests/test_evidence_domain_58.py::test_a_bundle_uri_that_escapes_the_repository_is_refused[docs/../../escape]",
+        ],
+        "witness": {
+            "tests/test_evidence_domain_58.py::test_a_bundle_uri_that_escapes_the_repository_is_refused[../escape]":
+                "AssertionError: Regex pattern did not match.",
+            "tests/test_evidence_domain_58.py::test_a_bundle_uri_that_escapes_the_repository_is_refused[]":
+                "AssertionError: Regex pattern did not match.",
+            "tests/test_evidence_domain_58.py::test_a_bundle_uri_that_escapes_the_repository_is_refused[docs/../../escape]":
+                "AssertionError: Regex pattern did not match.",
+        }
+    },
+    "capability-can-not-leave-the-call-site-g58": {
+        "fail": [
+            "tests/test_producer_closure_58.py::test_a_capability_that_leaves_the_call_site_is_refused[container]",
+            "tests/test_producer_closure_58.py::test_a_capability_that_leaves_the_call_site_is_refused[factory]",
+            "tests/test_producer_closure_58.py::test_a_capability_that_leaves_the_call_site_is_refused[partial]",
+        ],
+        "witness": {
+            "tests/test_producer_closure_58.py::test_a_capability_that_leaves_the_call_site_is_refused[container]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_producer_closure_58.py::test_a_capability_that_leaves_the_call_site_is_refused[factory]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_producer_closure_58.py::test_a_capability_that_leaves_the_call_site_is_refused[partial]":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "content-id-hashes-every-manifest-g58": {
+        "fail": [
+            "tests/test_execution_class_wiring_58.py::test_two_fits_sharing_curves_do_not_share_a_content_id",
+        ],
+        "witness": {
+            "tests/test_execution_class_wiring_58.py::test_two_fits_sharing_curves_do_not_share_a_content_id":
+                "AssertionError: 곡선이 같고 적합이 다른 두 실행이 같은 내용 identity 를 가졌다 — identity 가 적용되는 manifest 전부를 담지 않는다 (L2)",
+        }
+    },
+    "decorators-are-import-time-effects-g58": {
+        "fail": [
+            "tests/test_producer_closure_58.py::test_a_name_only_decorator_changes_the_identity_when_its_body_changes",
+        ],
+        "witness": {
+            "tests/test_producer_closure_58.py::test_a_name_only_decorator_changes_the_identity_when_its_body_changes":
+                "AssertionError: 데코레이터 구현을 바꿔 결과가 1 → 9 로 달라지는데 producer digest 가 같다 — 데코레이터 적용이 identity 밖에서 돈다 (58차 L9-a)",
+        }
+    },
+    "execution-class-record-is-exclusive-g58": {
+        "fail": [
+            "tests/test_execution_class_wiring_58.py::test_only_one_writer_can_create_an_execution_class",
+        ],
+        "witness": {
+            "tests/test_execution_class_wiring_58.py::test_only_one_writer_can_create_an_execution_class":
+                "AssertionError: 경쟁하는 두 등록이 둘 다 성공했다 (['ok:canonical', 'ok:smoke']) — read/check/replace 는 CAS 가 아니다 (L3)",
+        }
+    },
+    "execution-receipt-binds-the-startup-g58": {
+        "fail": [
+            "tests/test_evidence_layer_58.py::test_the_execution_receipt_binds_the_interpreter_itself",
+            "tests/test_evidence_layer_58.py::test_the_execution_receipt_binds_what_the_interpreter_actually_loads",
+        ],
+        "witness": {
+            "tests/test_evidence_layer_58.py::test_the_execution_receipt_binds_the_interpreter_itself":
+                "mutation_replay._ReplayError: 환경 영수증이 **불완전**하다 — 측정이 실패한 항목이 있다: startup: None · startup.startup_history: None . 못 잰 환경으로 만든 증거는 '같은 환경' 을 주장할 수 없다.",
+            "tests/test_evidence_layer_58.py::test_the_execution_receipt_binds_what_the_interpreter_actually_loads":
+                "mutation_replay._ReplayError: 환경 영수증이 **불완전**하다 — 측정이 실패한 항목이 있다: startup: None · startup.startup_history: None . 못 잰 환경으로 만든 증거는 '같은 환경' 을 주장할 수 없다.",
+        }
+    },
+    "frozen-seal-is-consulted-first-g58": {
+        "fail": [
+            "tests/test_frozen_coordinate_seal_58.py::test_hiding_every_name_of_a_frozen_ancestor_does_not_make_it_writable",
+        ],
+        "witness": {
+            "tests/test_frozen_coordinate_seal_58.py::test_hiding_every_name_of_a_frozen_ancestor_does_not_make_it_writable":
+                "AssertionError: frozen 조상의 이름을 덮었더니 guard 가 통과했다 — 판정이 '지금 볼 수 있는 이름' 에 의존한다 (L5)",
+        }
+    },
+    "issuance-fsync-is-strict-g58": {
+        "fail": [
+            "tests/test_issuance_durability_58.py::test_issuance_fails_closed_when_a_directory_cannot_be_flushed",
+        ],
+        "witness": {
+            "tests/test_issuance_durability_58.py::test_issuance_fails_closed_when_a_directory_cannot_be_flushed":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "lifecycle-owned-evidence-is-refused-g58": {
+        "fail": [
+            "tests/test_evidence_domain_58.py::test_lifecycle_owned_evidence_keys_are_refused_from_callers[attempt_id]",
+            "tests/test_evidence_domain_58.py::test_lifecycle_owned_evidence_keys_are_refused_from_callers[attempt_verifier]",
+            "tests/test_evidence_domain_58.py::test_lifecycle_owned_evidence_keys_are_refused_from_callers[phases]",
+            "tests/test_evidence_domain_58.py::test_lifecycle_owned_evidence_keys_are_refused_from_callers[run_spec_digest]",
+            "tests/test_evidence_domain_58.py::test_lifecycle_owned_evidence_keys_are_refused_from_callers[verifier_origin]",
+            "tests/test_evidence_domain_58.py::test_normal_finalize_cannot_forge_the_migration_provenance",
+        ],
+        "witness": {
+            "tests/test_evidence_domain_58.py::test_lifecycle_owned_evidence_keys_are_refused_from_callers[attempt_id]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_evidence_domain_58.py::test_lifecycle_owned_evidence_keys_are_refused_from_callers[attempt_verifier]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_evidence_domain_58.py::test_lifecycle_owned_evidence_keys_are_refused_from_callers[phases]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_evidence_domain_58.py::test_lifecycle_owned_evidence_keys_are_refused_from_callers[run_spec_digest]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_evidence_domain_58.py::test_lifecycle_owned_evidence_keys_are_refused_from_callers[verifier_origin]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_evidence_domain_58.py::test_normal_finalize_cannot_forge_the_migration_provenance":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "phase-receipt-is-write-once-g58": {
+        "fail": [
+            "tests/test_phase_receipt_immutability_58.py::test_a_closed_phase_cannot_be_rewritten_with_a_different_receipt",
+        ],
+        "witness": {
+            "tests/test_phase_receipt_immutability_58.py::test_a_closed_phase_cannot_be_rewritten_with_a_different_receipt":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "replay-forces-the-declared-environment-g58": {
+        "fail": [
+            "tests/test_evidence_layer_58.py::test_the_replayed_run_itself_sees_only_a_declared_environment",
+        ],
+        "witness": {
+            "tests/test_evidence_layer_58.py::test_the_replayed_run_itself_sees_only_a_declared_environment":
+                "AssertionError: 재생(`_run`)이 pytest 에 환경을 지정하지 않는다",
+        }
+    },
+    "smoke-containment-is-a-kernel-coordinate-g58": {
+        "fail": [
+            "tests/test_namespace_kernel_identity_58.py::test_a_bind_mounted_outside_directory_is_not_inside_the_smoke_namespace",
+            "tests/test_namespace_kernel_identity_58.py::test_an_unplanned_leg_under_a_bind_alias_is_not_exempted",
+        ],
+        "witness": {
+            "tests/test_namespace_kernel_identity_58.py::test_a_bind_mounted_outside_directory_is_not_inside_the_smoke_namespace":
+                "AssertionError: bind mount 한 외부 디렉터리를 smoke namespace 안이라고 판정했다 — 어휘·symlink 만 보고 mount 를 안 본다 (L4)",
+            "tests/test_namespace_kernel_identity_58.py::test_an_unplanned_leg_under_a_bind_alias_is_not_exempted":
+                "AssertionError: 계획에 없는 다리가 bind alias 아래에서 면제받았다 (exempted) — smoke 면제가 실물 경계를 안 본다 (L4)",
+        }
+    },
+    "smoke-gate-issues-the-execution-capability-g59": {
+        "fail": [
+            "tests/test_execution_class_wiring_58.py::test_production_smoke_gate_records_the_execution_class",
+        ],
+        "witness": {
+            "tests/test_execution_class_wiring_58.py::test_production_smoke_gate_records_the_execution_class":
+                "AssertionError: 면제 분기가 권한을 발행하지 않았다 (M1)",
+        }
+    },
+
+
+    "receipt-carries-the-mutant-marker": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_genuine_report_from_another_mutant_is_refused"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_genuine_report_from_another_mutant_is_refused": "이름으로 붙였는데 통과했다"
+        }
+    },
+
+    "admission-rechecks-the-cohort-at-commit": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_issuer_cannot_admit_a_run_into_a_cohort_that_froze_meanwhile"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_issuer_cannot_admit_a_run_into_a_cohort_that_froze_meanwhile": "AssertionError: 얼린 cohort(frozen) 안에서 실행이 시작됐다"
+        }
+    },
+    "freeze-ledger-write-is-atomic": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_partial_write_during_freeze_leaves_the_ledger_readable"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_partial_write_during_freeze_leaves_the_ledger_readable": "AssertionError: 원장의 최상위 구조가 깨졌다"
+        }
+    },
+
+    "claims-root-comes-from-the-ledger": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_issuer_cannot_choose_where_its_claim_lives"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_issuer_cannot_choose_where_its_claim_lives": "AssertionError: claim 의 자리가 원장에서 유도되지 않는다"
+        }
+    },
+    "dunder-as-a-string-is-still-a-dunder": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_dunder_named_by_a_string_literal_is_still_a_dunder"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_dunder_named_by_a_string_literal_is_still_a_dunder": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "freeze-linearizes-its-start": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_issuer_refuses_while_a_freeze_is_half_committed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_issuer_refuses_while_a_freeze_is_half_committed": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "frozen-destination-is-monotonic": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_later_active_record_cannot_thaw_a_frozen_destination"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_later_active_record_cannot_thaw_a_frozen_destination": "AssertionError: 허용 전이 한 줄로 frozen 목적지가 journal 에서 사라졌다"
+        }
+    },
+
+    "claim-bytes-are-verified-on-disk": {
+        "fail": [
+            "tests/test_preserve.py::test_a_lying_write_is_caught_by_reading_the_bytes_back"
+        ],
+        # 54차 — 증인이 낡아 있었다. claim 의 read-back 을 지워도 **멈추기는**
+        # 한다 (그 뒤 원장 쓰기가 같은 규칙으로 잡는다). 달라지는 것은 거짓말한
+        # 쓰기가 `os.replace` 까지 가서 **깨진 claim 이 자리에 남는다**는 것이고,
+        # 그것이 이 자리가 실제로 사는 이유다. 증인을 그 assert 로 옮긴다.
+        "witness": {
+            "tests/test_preserve.py::test_a_lying_write_is_caught_by_reading_the_bytes_back": "깨진 claim 이 남았다"
+        }
+    },
+    "claim-write-is-all-or-nothing": {
+        "fail": [
+            "tests/test_preserve.py::test_a_short_write_does_not_leave_a_truncated_claim"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_short_write_does_not_leave_a_truncated_claim": "tools.preserve.PreserveError: [write] claim 를 쓴 뒤 다시 읽었더니 바이트가 다르다"
+        }
+    },
+    "freeze-authority-is-not-caller-selected": {
+        "fail": [
+            "tests/test_docs_lint.py::test_freeze_cannot_be_pointed_at_an_empty_claims_directory"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_freeze_cannot_be_pointed_at_an_empty_claims_directory": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "freeze-checks-live-claims-before-recovery": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_freeze_recovery_branch_also_refuses_while_an_execution_is_live"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_freeze_recovery_branch_also_refuses_while_an_execution_is_live": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "freeze-holds-the-publish-lock": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_publication_cannot_land_after_the_cohort_was_frozen"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_publication_cannot_land_after_the_cohort_was_frozen": "SystemExit: ✗ 이 디렉터리는 `gX` 로 얼렸다"
+        }
+    },
+    "freeze-rereads-the-ledger-before-writing": {
+        "fail": [
+            "tests/test_docs_lint.py::test_freeze_does_not_erase_a_record_written_while_it_ran"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_freeze_does_not_erase_a_record_written_while_it_ran": "AssertionError: 동결이 그 사이에 굳은 실행 기록을 지웠다"
+        }
+    },
+    "lifecycle-reader-does-not-write": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_lifecycle_reader_never_anchors_a_transition_it_did_not_make"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_lifecycle_reader_never_anchors_a_transition_it_did_not_make": "AssertionError: 읽기가 anchor 를 옮겼다"
+        }
+    },
+    "lifecycle-transitions-are-checked-when-read": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_lifecycle_reader_never_anchors_a_transition_it_did_not_make"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_lifecycle_reader_never_anchors_a_transition_it_did_not_make": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "plan-uncertainty-covers-the-whole-critical-section": {
+        "fail": [
+            "tests/test_preserve.py::test_a_failure_while_leaving_the_ledger_lock_preserves_the_authority",
+            "tests/test_preserve.py::test_an_uncertain_ledger_write_never_discards_the_claim"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_failure_while_leaving_the_ledger_lock_preserves_the_authority": "AssertionError: 원장은 running 인데 claim 이 지워졌다",
+            "tests/test_preserve.py::test_an_uncertain_ledger_write_never_discards_the_claim": "AssertionError: 커밋 여부가 불확실한데 claim 을 버렸다"
+        }
+    },
+    "producer-binds-container-mutations": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_module_scope_container_mutation_is_inside_producer_identity"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_module_scope_container_mutation_is_inside_producer_identity": "AssertionError: module scope 의 컨테이너 변형이 계산 값을 바꿨는데 producer digest 가 그대로다"
+        }
+    },
+    "producer-dunder-is-an-allowlist": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_cannot_reach_its_own_bytes_through_the_module_loader"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_cannot_reach_its_own_bytes_through_the_module_loader": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "producer-fails-closed-on-rootless-targets": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_unmodelled_assignment_target_is_fail_closed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_unmodelled_assignment_target_is_fail_closed": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "receipt-is-bound-to-the-mutant": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_receipt_is_bound_to_the_exact_mutant"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_receipt_is_bound_to_the_exact_mutant": "AssertionError: 같은 바이트가"
+        }
+    },
+    "receipt-verdict-is-fail-closed": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_unreadable_receipt_is_not_a_pass"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_unreadable_receipt_is_not_a_pass": "AssertionError: 빈 영수증이 '물었다' 로 인증됐다"
+        }
+    },
+    "source-reflection-covers-the-loader-protocol": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_cannot_reach_its_own_bytes_through_the_module_loader"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_cannot_reach_its_own_bytes_through_the_module_loader": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "token-bytes-are-verified-on-disk": {
+        "fail": [
+            "tests/test_preserve.py::test_a_lying_write_is_caught_by_reading_the_bytes_back"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_lying_write_is_caught_by_reading_the_bytes_back": "json.decoder.JSONDecodeError: Unterminated string"
+        }
+    },
+    "token-write-is-all-or-nothing": {
+        "fail": [
+            "tests/test_preserve.py::test_a_short_write_does_not_leave_a_truncated_claim"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_short_write_does_not_leave_a_truncated_claim": "tools.preserve.PreserveError: [write] 소유 증명 를 쓴 뒤 다시 읽었더니 바이트가 다르다"
+        }
+    },
+    "authority-frozen": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_frozen_authority_cannot_be_edited_by_its_holder"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_frozen_authority_cannot_be_edited_by_its_holder": "Failed: DID NOT RAISE any of (SystemExit, AttributeError)"
+        }
+    },
+    "authority-frozenset": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_frozen_authority_holds_only_immutable_values"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_frozen_authority_holds_only_immutable_values": "AssertionError: authority 가 mutable 값을 들고 있다"
+        }
+    },
+    "authority-registry": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_raw_publisher_takes_no_caller_authority"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_raw_publisher_takes_no_caller_authority": "AssertionError: ✗ 명부에 없는 다리를 게시하려 한다: ['a'] (roster=['caller-chosen-leg']) — 원장을 먼저 고쳐라"
+        }
+    },
+    "both-pointers-checked": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_pointer_moved_by_another_writer_is_never_overwritten[ledger_seal]",
+            "tests/test_docs_lint.py::test_a_pointer_moved_by_another_writer_is_never_overwritten[writable]"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_pointer_moved_by_another_writer_is_never_overwritten[ledger_seal]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_a_pointer_moved_by_another_writer_is_never_overwritten[writable]": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "caller-stage-safe-read": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_dangling_symlink_in_the_caller_stage_never_creates_an_outside_file"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_dangling_symlink_in_the_caller_stage_never_creates_an_outside_file": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "approved-cache-bytes-are-authoritative": {
+        "fail": [
+            "tests/test_grid.py::test_the_approved_cache_bytes_are_authoritative"
+        ],
+        "witness": {
+            "tests/test_grid.py::test_the_approved_cache_bytes_are_authoritative": "Failed: DID NOT RAISE RuntimeError"
+        }
+    },
+    "closure-refuses-source-reflection": {
+        "fail": [
+            "tests/test_docs_lint.py::test_reading_the_producers_raw_source_is_fail_closed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_reading_the_producers_raw_source_is_fail_closed": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "env-fingerprint-seals-the-smoothing-backend": {
+        "fail": [
+            "tests/test_fitting.py::test_the_effective_smoothing_backend_is_inside_the_approval"
+        ],
+        "witness": {
+            "tests/test_fitting.py::test_the_effective_smoothing_backend_is_inside_the_approval": "AssertionError: smoothing backend 를 갈아도 **환경 지문**이 그대로다 — 결과를 바꾸는 축이 실행 서명 밖에 있다"
+        }
+    },
+    "fit-axis-seals-the-smoothing-backend": {
+        "fail": [
+            "tests/test_fitting.py::test_the_effective_smoothing_backend_is_inside_the_approval"
+        ],
+        "witness": {
+            "tests/test_fitting.py::test_the_effective_smoothing_backend_is_inside_the_approval": "AssertionError: smoothing backend 를 갈아도 **승인 축**이 그대로다 — 결과를 바꾸는 축이 승인 밖에 있다"
+        }
+    },
+    "freeze-refuses-a-live-execution": {
+        "fail": [
+            "tests/test_docs_lint.py::test_freeze_refuses_while_an_execution_holds_the_cohort"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_freeze_refuses_while_an_execution_holds_the_cohort": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "frozen-target-carries-its-own-seal": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_frozen_directory_carries_its_own_seal",
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_frozen_directory_carries_its_own_seal":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "lifecycle-completes-a-partial-append": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_freeze_crash_between_journal_and_anchor_is_recoverable"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_freeze_crash_between_journal_and_anchor_is_recoverable": "SystemExit: ✗ cohort lifecycle journal 의 사슬이 끊겼다"
+        }
+    },
+    "module-defs-track-import-bindings": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_closure_tracks_mutating_and_import_bindings"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_closure_tracks_mutating_and_import_bindings": "AssertionError: module-level import 가 묶는 이름을 바꿨는데 digest 가 그대로다"
+        }
+    },
+    "module-defs-track-mutating-bindings": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_closure_tracks_mutating_and_import_bindings"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_closure_tracks_mutating_and_import_bindings": "SystemExit: ✗ producer 소스의 module scope 에 모델링하지 않은 binding form 이 있다: `AugAssign`"
+        }
+    },
+    "rollback-only-on-certain-non-commit": {
+        "fail": [
+            "tests/test_preserve.py::test_a_durability_error_after_the_ledger_commit_keeps_the_claim",
+            "tests/test_preserve.py::test_a_failure_while_leaving_the_ledger_lock_preserves_the_authority",
+            "tests/test_preserve.py::test_an_uncertain_ledger_write_never_discards_the_claim"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_durability_error_after_the_ledger_commit_keeps_the_claim": "AssertionError: 커밋된 전이인데 claim 을 지웠다",
+            "tests/test_preserve.py::test_a_failure_while_leaving_the_ledger_lock_preserves_the_authority": "AssertionError: 원장은 running 인데 claim 이 지워졌다",
+            "tests/test_preserve.py::test_an_uncertain_ledger_write_never_discards_the_claim": "AssertionError: 커밋 여부가 불확실한데 claim 을 버렸다"
+        }
+    },
+    "token-cleanup-is-inside-the-claim-lock": {
+        "fail": [
+            "tests/test_preserve.py::test_the_token_cleanup_happens_under_the_claim_lock"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_token_cleanup_happens_under_the_claim_lock": "AssertionError: 소유 증명을 지우는 순간 claim lock 이 안 잡혀 있었다 — 그 사이에 정상 발급이 들어오면 새 attempt 의 credential 이 지워진다"
+        }
+    },
+    # ★ 57차 — guard 회귀를 다시 썼다. 53차 것은 caller 지정 경로를 겨눴고
+    #   P0-1 이 그 인자를 없애면서 지워졌다(전수 재생에서 `수집 rc 5` 로 드러남).
+    #   지금은 lifecycle 이 정한 **자리에 놓인** 남의 token 을 겨눈다.
+    "token-read-checks-the-leg": {
+        "fail": [
+            "tests/test_preserve.py::test_an_attempt_file_from_another_leg_is_refused"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_an_attempt_file_from_another_leg_is_refused": "DID NOT RAISE PreserveError"
+        }
+    },
+    "coverage-checker-derives-from-receipts": {
+        "fail": [
+            "tests/test_docs_lint.py::test_coverage_receipts_are_verified_independently"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_coverage_receipts_are_verified_independently": "AssertionError: 영수증이 '안 물었다' 인데 적힌 판정이 '물었다' 인 조각이 통과했다 — checker 가 영수증에서 판정을 다시 유도하지 않는다"
+        }
+    },
+    "canon-absorbs-the-pep701-empty-piece": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_canonical_form_agrees_on_every_supported_interpreter"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_canonical_form_agrees_on_every_supported_interpreter": "AssertionError: 정규형이 지원 선언한 인터프리터에서 golden 과 다르다:"
+        }
+    },
+    "children-read-through-dirfd": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_generation_reader_holds_a_directory_fd_for_its_children"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_generation_reader_holds_a_directory_fd_for_its_children": "AssertionError: child stat 이 dirfd 를 쓰지 않는다"
+        }
+    },
+    "claim-checks-the-whole-index": {
+        "fail": [
+            "tests/test_preserve.py::test_the_whole_index_must_be_consistent_before_any_leg_is_claimed"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_whole_index_must_be_consistent_before_any_leg_is_claimed": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "claim-is-atomic": {
+        "fail": [
+            "tests/test_preserve.py::test_exactly_one_attempt_enters_compute"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_exactly_one_attempt_enters_compute": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "claim-seals-the-run-spec": {
+        "fail": [
+            "tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "claim-stores-a-verifier-not-the-token": {
+        "fail": [
+            "tests/test_preserve.py::test_the_claim_file_never_stores_the_resume_credential"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_claim_file_never_stores_the_resume_credential": "AssertionError: claim 파일이 재개 credential 을 평문으로 담았다"
+        }
+    },
+    "closure-follows-module-aliases": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_closure_follows_a_module_alias_attribute"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_closure_follows_a_module_alias_attribute": "AssertionError: module alias 로 부른 채점 함수가 닫힘 밖이다 — `from ... import` 만 따라가면 문법 하나로 identity 를 빠져나간다"
+        }
+    },
+    "closure-refuses-dynamic-resolution": {
+        "fail": [
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[__import__('src.scoring').scoring.add_error_columns(df)]",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[eval('add_error_columns')(df)]",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[exec('pass')]",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[getattr(sc, 'add_error_columns')(df)]",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[globals()['add_error_columns'](df)]",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[vars(sc)['add_error_columns'](df)]"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[__import__('src.scoring').scoring.add_error_columns(df)]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[eval('add_error_columns')(df)]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[exec('pass')]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[getattr(sc, 'add_error_columns')(df)]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[globals()['add_error_columns'](df)]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[vars(sc)['add_error_columns'](df)]": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "canon-keeps-docstrings": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_docstring_the_computation_reads_is_inside_the_identity",
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_docstring_the_computation_reads_is_inside_the_identity":
+                "AssertionError: 직접 읽는 docstring 을 바꿨는데 producer digest 가 그대로다 — 계산이 쓰는 값이 identity 밖에 있다",
+        }
+    },
+    "external-binding-covers-the-package": {
+        "fail": [
+            "tests/test_fitting.py::test_the_external_input_binding_covers_the_whole_package"
+        ],
+        "witness": {
+            "tests/test_fitting.py::test_the_external_input_binding_covers_the_whole_package": "tools.preserve.PreserveError: [plan] 계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다"
+        }
+    },
+    "fit-axis-seals-the-config-closure": {
+        "fail": [
+            "tests/test_fitting.py::test_the_base_config_parent_is_inside_the_approval_digest"
+        ],
+        "witness": {
+            "tests/test_fitting.py::test_the_base_config_parent_is_inside_the_approval_digest": "AssertionError: `extends` 부모를 바꿔도 승인 digest 가 같다 — 승인은 실제로 읽히는 파일 전부를 담아야 한다"
+        }
+    },
+    "fit-axis-seals-the-objective-payload": {
+        "fail": [
+            "tests/test_fitting.py::test_the_objective_payload_is_inside_the_approval_digest"
+        ],
+        "witness": {
+            "tests/test_fitting.py::test_the_objective_payload_is_inside_the_approval_digest": "AssertionError: 같은 이름 아래 다른 가중치가 같은 승인 digest 를 냈다 — 승인한 것은 계산이 아니라 이름이다"
+        }
+    },
+    "fit-stages-its-inputs-before-the-gate": {
+        "fail": [
+            "tests/test_fitting.py::test_run_fit_hands_the_body_the_staged_copies_not_the_originals"
+        ],
+        "witness": {
+            "tests/test_fitting.py::test_run_fit_hands_the_body_the_staged_copies_not_the_originals": "AssertionError: 본체가 staging 뿌리를 못 받았다"
+        }
+    },
+    "freeze-completes-a-half-written-transition": {
+        "fail": [
+            "tests/test_docs_lint.py::test_freeze_is_retryable_after_a_crash_between_its_two_writes"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_freeze_is_retryable_after_a_crash_between_its_two_writes": "SystemExit: ✗ cohort 'gZ' 는 이미 frozen 으로 기록됐다 — 두 번 얼릴 수 없다"
+        }
+    },
+    "freeze-seals-the-output-directory": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_frozen_directory_cannot_be_republished_under_a_new_cohort_id",
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_frozen_directory_cannot_be_republished_under_a_new_cohort_id":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "grid-axis-seals-the-discharged-cache": {
+        "fail": [
+            "tests/test_grid.py::test_the_grid_axis_binds_the_discharged_state_cache"
+        ],
+        "witness": {
+            "tests/test_grid.py::test_the_grid_axis_binds_the_discharged_state_cache": "AssertionError: 완방상태 캐시를 갈아도 승인 digest 가 같다 — 승인 밖에서 격자 truth 의 기준점이 움직인다"
+        }
+    },
+    "module-defs-enter-compound-statements": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_closure_sees_every_module_binding_form"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_closure_sees_every_module_binding_form": "AssertionError: module-level `for` 이 묶은 계산 상수를 바꿨는데 producer digest 가 그대로다 — 그 문법으로 identity 밖에 나갈 수 있다"
+        }
+    },
+    "module-defs-fail-closed-on-unknown": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_unmodelled_module_binding_form_is_fail_closed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_unmodelled_module_binding_form_is_fail_closed": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "open-checks-the-live-claim-first": {
+        "fail": [
+            "tests/test_preserve.py::test_a_second_open_never_touches_the_live_owners_token"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_second_open_never_touches_the_live_owners_token": "AssertionError: 두 번째 발급이 살아 있는 owner 의 소유 증명을 덮었다"
+        }
+    },
+    "release-moves-the-ledger-before-the-claim": {
+        "fail": [
+            "tests/test_preserve.py::test_a_crash_inside_release_leaves_a_recoverable_state"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_crash_inside_release_leaves_a_recoverable_state": "AssertionError: assert not True"
+        }
+    },
+    "token-unlink-is-generation-scoped": {
+        "fail": [
+            "tests/test_preserve.py::test_a_late_release_cleanup_cannot_delete_the_next_attempts_token"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_late_release_cleanup_cannot_delete_the_next_attempts_token": "AssertionError: 옛 release 의 cleanup 이 새 attempt 의 token 을 지웠다"
+        }
+    },
+    "abandon-rechecks-the-live-attempt": {
+        "fail": [
+            "tests/test_preserve.py::test_a_readonly_claim_cannot_abandon_the_live_owner",
+            "tests/test_preserve.py::test_a_stale_claim_handle_cannot_cancel_the_next_attempt"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_readonly_claim_cannot_abandon_the_live_owner": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_preserve.py::test_a_stale_claim_handle_cannot_cancel_the_next_attempt": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "closure-unresolved-attr-is-fail-closed": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_unresolved_producer_module_reference_is_fail_closed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_unresolved_producer_module_reference_is_fail_closed": "KeyError: '그런것은없다'"
+        }
+    },
+    "complete-current-supersedes-pending": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_complete_current_supersedes_a_leftover_pending"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_complete_current_supersedes_a_leftover_pending": "SystemExit: ✗ 남아 있는 `.PENDING` 이 다른 base 위에서 만들어졌다 (pending base None ≠ 현재 70ec079e9fd6) — 승인되지 않은 구성을 이어받지 않는다. `.PENDING` 을 지우고 지금의 base 에서 다시 쌓아라"
+        }
+    },
+    "crash-recovery-is-idempotent": {
+        "fail": [
+            "tests/test_preserve.py::test_finalize_is_idempotent_after_a_crash_before_cleanup"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_finalize_is_idempotent_after_a_crash_before_cleanup": "tools.preserve.PreserveError: [plan] 'L' 의 계획 상태가 'executed' 이라 승인이 아니다 (허용 ['planned', 'running']) — 실행 기록은 다음 실행의 승인이 아니고, 이미 running 인 다리를 새로 시작할 수도 없다. 다시 돌리려면 새 계획 항목을 적어라"
+        }
+    },
+    "crash-recovery-needs-the-credential": {
+        "fail": [
+            "tests/test_preserve.py::test_the_crash_recovery_needs_the_owner_credential"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_crash_recovery_needs_the_owner_credential": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "diagnostic-hides-the-credential": {
+        "fail": [
+            "tests/test_preserve.py::test_the_diagnostic_reader_never_hands_out_the_credential"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_diagnostic_reader_never_hands_out_the_credential": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "dry-run-releases-the-claim": {
+        "fail": [
+            "tests/test_grid.py::test_a_dry_run_does_not_strand_the_plan_in_running"
+        ],
+        "witness": {
+            "tests/test_grid.py::test_a_dry_run_does_not_strand_the_plan_in_running": "AssertionError: dry-run 이 계획을 running 에 남겼다 — 그 다리는 다시 시작할 수도 닫을 수도 없다"
+        }
+    },
+    # ★ 57차 P1-3 — 복구 분기가 정상 경로와 한 임계 구역으로 합쳐지면서
+    #   옛 `finalize-recovery-holds-the-claim-lock` 을 은퇴시켰다. 그 회귀는
+    #   사라지지 않고 이 변이가 함께 지킨다 — 실측으로 둘이 같이 문다.
+    "finalize-holds-the-claim-lock": {
+        "fail": [
+            "tests/test_preserve.py::test_the_canonical_lock_order_is_declared_and_finalize_holds_the_claim",
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_canonical_lock_order_is_declared_and_finalize_holds_the_claim":
+                "AssertionError: finalize 가 claim lock 을 쥐지 않고 지나갔다 — 검사한 receipt 와 기록한 receipt 가 다를 수 있다",
+        }
+    },
+    "finalize-rechecks-in-the-ledger-lock": {
+        "fail": [
+            "tests/test_preserve.py::test_finalize_rechecks_the_whole_authority_inside_the_ledger_lock"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_finalize_rechecks_the_whole_authority_inside_the_ledger_lock": "AssertionError: 얼어붙은 cohort 에 실행 기록을 썼다: 'ok'"
+        }
+    },
+    "finalize-writes-the-whole-tuple": {
+        "fail": [
+            "tests/test_preserve.py::test_finalize_writes_a_complete_contract_status_tuple"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_finalize_writes_a_complete_contract_status_tuple": "AssertionError: 계약 §8 의 validation_status 축이 비었다 — 튜플이 불완전하다"
+        }
+    },
+    "fit-axis-is-the-real-policy": {
+        "fail": [
+            "tests/test_preserve.py::test_the_fit_axis_seals_every_intent_that_changes_the_answer"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_fit_axis_seals_every_intent_that_changes_the_answer": "tools.preserve.PreserveError: [plan] leg run spec 의 fit 축이 계약과 다르다"
+        }
+    },
+    "fit-axis-seals-the-input-content": {
+        "fail": [
+            "tests/test_preserve.py::test_the_fit_axis_seals_the_input_content_axes[base_config_digest-0000000000000000]",
+            "tests/test_preserve.py::test_the_fit_axis_seals_the_input_content_axes[halfcell_cache_sha256-0000000000000000000000000000000000000000000000000000000000000000]"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_fit_axis_seals_the_input_content_axes[base_config_digest-0000000000000000]": "AssertionError: base_config_digest 가 승인 축에 없다",
+            "tests/test_preserve.py::test_the_fit_axis_seals_the_input_content_axes[halfcell_cache_sha256-0000000000000000000000000000000000000000000000000000000000000000]": "AssertionError: halfcell_cache_sha256 가 승인 축에 없다"
+        }
+    },
+    "flock-two-publisher": {
+        "fail": [
+            "tests/test_docs_lint.py::test_two_independent_publishers_lose_no_leg"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_two_independent_publishers_lose_no_leg": "AssertionError: A 가 lock 을 든 동안 B 가 게시에 성공했다: {\"published\": false, \"public\": true}"
+        }
+    },
+    "generation-namespace-guard": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_current_generation_cannot_be_used_as_its_own_staging[nested]",
+            "tests/test_docs_lint.py::test_the_current_generation_cannot_be_used_as_its_own_staging[self]"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_current_generation_cannot_be_used_as_its_own_staging[nested]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_the_current_generation_cannot_be_used_as_its_own_staging[self]": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "generation-root-nofollow": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_symlinked_gen_ancestor_never_holds_a_generation"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_symlinked_gen_ancestor_never_holds_a_generation": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "guard-before-commit": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_same_roster_ledger_change_is_refused",
+            "tests/test_docs_lint.py::test_replacing_the_lock_pathname_after_the_check_refuses_the_commit"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_same_roster_ledger_change_is_refused": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_replacing_the_lock_pathname_after_the_check_refuses_the_commit": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "idempotent-shares-the-validator": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_idempotent_branch_refuses_an_aliased_generation_file"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_idempotent_branch_refuses_an_aliased_generation_file": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "inner-unbound-kernel": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_exact_lock_cannot_blank_its_own_inner_check"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_exact_lock_cannot_blank_its_own_inner_check": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "inner-unbound-sentinel": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_exact_lock_cannot_blank_its_sentinel_check"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_exact_lock_cannot_blank_its_sentinel_check": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "ledger-dir-contained": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_ledger_parser_refuses_a_dir_that_is_not_contained[./docs/22p_gap/coh]",
+            "tests/test_docs_lint.py::test_the_ledger_parser_refuses_a_dir_that_is_not_contained[docs//22p_gap/coh]",
+            "tests/test_docs_lint.py::test_the_ledger_parser_refuses_a_dir_that_is_not_contained[docs/22p_gap/../../outside]"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_ledger_parser_refuses_a_dir_that_is_not_contained[./docs/22p_gap/coh]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_the_ledger_parser_refuses_a_dir_that_is_not_contained[docs//22p_gap/coh]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_the_ledger_parser_refuses_a_dir_that_is_not_contained[docs/22p_gap/../../outside]": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "ledger-seal-record": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_same_roster_ledger_change_is_refused"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_same_roster_ledger_change_is_refused": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "ledger-status-enum": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_ledger_status_is_an_exact_enum[ACTIVE]",
+            "tests/test_docs_lint.py::test_the_ledger_status_is_an_exact_enum[Active]",
+            "tests/test_docs_lint.py::test_the_ledger_status_is_an_exact_enum[retired]"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_ledger_status_is_an_exact_enum[ACTIVE]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_the_ledger_status_is_an_exact_enum[Active]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_the_ledger_status_is_an_exact_enum[retired]": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "lifecycle-chain-is-verified": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_lifecycle_journal_is_a_hash_chain"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_lifecycle_journal_is_a_hash_chain": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "lifecycle-head-anchors-the-tip": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_lifecycle_journal_is_a_hash_chain"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_lifecycle_journal_is_a_hash_chain": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "missing-journal-with-a-live-anchor": {
+        "fail": [
+            "tests/test_docs_lint.py::test_deleting_the_journal_does_not_erase_the_freeze"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_deleting_the_journal_does_not_erase_the_freeze": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "module-defs-see-tuple-targets": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_closure_follows_a_tuple_defined_constant",
+            "tests/test_docs_lint.py::test_the_producer_closure_sees_tuple_targets"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_closure_follows_a_tuple_defined_constant": "AssertionError: tuple 로 정의한 계산 상수를 바꿨는데 producer digest 가 그대로다",
+            "tests/test_docs_lint.py::test_the_producer_closure_sees_tuple_targets": "AssertionError: ['C', 'G']"
+        }
+    },
+    "witness-must-be-in-the-meaning-line": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_witness_found_only_in_the_traceback_body_is_not_a_witness"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_witness_found_only_in_the_traceback_body_is_not_a_witness": "주석에만 있는 문자열이 증인으로 인정됐다"
+        }
+    },
+    "ledger-is-resolved-once": {
+        "fail": ["tests/test_preserve.py::test_the_same_ledger_argument_always_names_the_same_claims_root"],
+        "witness": {
+            "tests/test_preserve.py::test_the_same_ledger_argument_always_names_the_same_claims_root": "같은 실제 원장을 가리키는 두 이름이 다른 claims root"
+        }
+    },
+    "anchor-repair-holds-the-lifecycle-lock": {
+        "fail": ["tests/test_docs_lint.py::test_a_stale_anchor_repair_cannot_rewind_the_head"],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_stale_anchor_repair_cannot_rewind_the_head": "cohort lifecycle journal 의 사슬이 끊겼다"
+        }
+    },
+    # ★ 57차 P0-4 — 56차의 `destination-is-resolved-through-mounts` 를 대체한다.
+    #   목적지를 파일시스템 좌표로 옮기면서 자리가 둘이 됐으므로 MULTI 다.
+    "destination-is-compared-in-filesystem-coordinates": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_bind_mounted_alias_of_a_frozen_child_is_not_writable",
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_bind_mounted_alias_of_a_frozen_child_is_not_writable":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "freeze-checks-the-destination-first": {
+        "fail": ["tests/test_docs_lint.py::test_freeze_validates_the_destination_before_its_first_side_effect"],
+        "witness": {
+            "tests/test_docs_lint.py::test_freeze_validates_the_destination_before_its_first_side_effect": "거부했는데 저장소 밖에 파일을 만들었다"
+        }
+    },
+    "module-effects-are-an-unconditional-root": {
+        "fail": ["tests/test_docs_lint.py::test_a_module_effect_through_an_alias_still_moves_the_producer_digest"],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_module_effect_through_an_alias_still_moves_the_producer_digest": "alias 를 거친 module 효과가 계산 값을 바꿨는데 producer digest 가 그대로다"
+        }
+    },
+    "wrapped-dunder-names-are-refused": {
+        "fail": ["tests/test_docs_lint.py::test_a_dunder_named_indirectly_is_still_refused"],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_dunder_named_indirectly_is_still_refused": "DID NOT RAISE SystemExit"
+        }
+    },
+    "coverage-is-bound-to-the-tested-tree": {
+        "fail": ["tests/test_docs_lint.py::test_coverage_is_bound_to_the_tree_it_actually_tested"],
+        "witness": {
+            "tests/test_docs_lint.py::test_coverage_is_bound_to_the_tree_it_actually_tested": "지금 트리와 다른 코드에서 나온 증거가 통과했다"
+        }
+    },
+    # ★ 57차 — 회귀 자체를 다시 썼다. 56차 시험은 caller 지정 경로를 겨눴는데
+    #   P0-1 이 그 인자를 없애면서 **공허해졌다** (아무도 안 건드리는 symlink 를
+    #   두고 "안 바뀌었다" 를 단언). 이 변이가 안 무는 것으로 드러났다.
+    #   지금은 lifecycle 이 정한 자리에 심긴 symlink 를 겨누고, 증인은 커널이
+    #   직접 답한 ELOOP 다 — 임시 경로가 섞이므로 안정한 접두만 적는다.
+    "token-path-alias-is-refused": {
+        "fail": [
+            "tests/test_preserve.py::test_a_symlinked_token_path_cannot_split_the_attempt_lock"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_symlinked_token_path_cannot_split_the_attempt_lock": "OSError: [Errno 40] Too many levels of symbolic links"
+        }
+    },
+    "ledger-hardlink-is-refused": {
+        "fail": ["tests/test_preserve.py::test_a_hardlinked_ledger_alias_cannot_fork_the_authority"],
+        "witness": {
+            "tests/test_preserve.py::test_a_hardlinked_ledger_alias_cannot_fork_the_authority": "같은 leg 를 두 alias 로 각각 발급했다"
+        }
+    },
+    # ★ 57차 — 증인이 바뀌었다. P0-5 가 `attempt_verifier` 부재를 예외로 만들면서
+    #   봉인을 지우면 **더 이른 곳에서 더 강하게** 거부한다. 옛 증인('이어받을
+    #   claim 이 없다')은 그보다 뒤에서 나던 것이라 이제 도달하지 않는다.
+    "ledger-seals-the-attempt-verifier": {
+        "fail": [
+            "tests/test_preserve.py::test_a_crash_after_the_claim_unlink_can_still_be_finalized"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_crash_after_the_claim_unlink_can_still_be_finalized": "이미 executed 로 닫혔지만 원장에 `attempt_verifier` 가 없다"
+        }
+    },
+    "append-finishes-the-pending-anchor-first": {
+        "fail": ["tests/test_docs_lint.py::test_two_consecutive_partial_appends_are_still_recoverable"],
+        "witness": {
+            "tests/test_docs_lint.py::test_two_consecutive_partial_appends_are_still_recoverable": "미완을 완주시키지 않은 채 새 줄이 붙었다"
+        }
+    },
+    # ★ 57차 — 증인이 바뀌었다. 56차에는 escape 를 안 풀면 alias 가 **어떤
+    #   mount 와도 매치되지 않아** guard 가 그냥 통과했고(`DID NOT RAISE`),
+    #   57차는 커널이 준 mount 를 경로에 맞추다 실패해 **fail-closed 로 거부**
+    #   한다. 거부는 하지만 "얼린 tree 다" 판정은 못 하므로 시험이 문다.
+    #   임시 경로는 실행마다 다르므로 안정한 접두까지만 적는다.
+    "mountinfo-octal-escape-is-decoded": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_frozen_alias_whose_path_has_a_space_is_not_writable",
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_frozen_alias_whose_path_has_a_space_is_not_writable":
+            # ★ 임시 경로(`/tmp/pytest-of-root/pytest-<n>/…`)는 실행마다 다르다.
+            #   EXPECT 주석이 말한 대로 **안정한 접두만** 남긴다 (실측: 조각 8 이
+            #   session 번호 하나 때문에 RC 1 이었다).
+                "AssertionError: 거부는 했지만 '얼린 tree' 판정이 아니다 (fail-closed 거부일 수 있다): ✗ 커널이 답한 mount 를 목적지 경로에 맞출 수 없다",
+        }
+    },
+    # ★ 57차 P0-2 — 56차의 `deepest-mount-is-chosen` 을 대체한다. 지켜야 할
+    #   규칙이 "가장 깊은 것을 고른다" 에서 "커널에게 묻는다" 로 바뀌었다.
+    "mount-identity-comes-from-the-kernel": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_stacked_mount_is_identified_by_the_kernel_not_by_row_order",
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_stacked_mount_is_identified_by_the_kernel_not_by_row_order":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "crossed-module-effects-are-seeded": {
+        "fail": ["tests/test_docs_lint.py::test_module_effects_are_seeded_in_every_crossed_module"],
+        "witness": {
+            "tests/test_docs_lint.py::test_module_effects_are_seeded_in_every_crossed_module": "건너간 module 의 module 효과가 계산 값을 바꿨는데 producer digest 가 그대로다"
+        }
+    },
+    "evidence-paths-are-repo-relative": {
+        "fail": ["tests/test_docs_lint.py::test_the_evidence_tree_digest_does_not_depend_on_the_checkout_path"],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_evidence_tree_digest_does_not_depend_on_the_checkout_path": "같은 바이트를 다른 경로로 읽었더니 digest 가 달라졌다"
+        }
+    },
+    # ══ 61차 — `--emit-expect` 관측값. 실행마다 달라지는 꼬리는 손으로 잘라
+    #    안정한 접두만 남긴다.
+    "derived-manifests-are-outside-the-identity-g61": {
+            "fail": [
+                    "tests/test_temporal_seal_61.py::test_a_resumed_run_survives_a_report_refresh",
+                    "tests/test_temporal_seal_61.py::test_the_derived_manifest_never_enters_the_identity"
+            ],
+            "witness": {
+                    "tests/test_temporal_seal_61.py::test_a_resumed_run_survives_a_report_refresh": "tools.preserve.PreserveError: [promote]",
+                    "tests/test_temporal_seal_61.py::test_the_derived_manifest_never_enters_the_identity": "tools.preserve.PreserveError: [promote]"
+            }
+    },
+    "records-keep-the-logical-input-g61": {
+            "fail": [
+                    "tests/test_logical_paths_61.py::test_the_sealed_input_path_exists_after_a_successful_fit"
+            ],
+            "witness": {
+                    "tests/test_logical_paths_61.py::test_the_sealed_input_path_exists_after_a_successful_fit": "AssertionError: 봉인된 입력 경로가 성공 뒤에 존재하지 않는다"
+            }
+    },
+    "records-keep-the-logical-output-g61": {
+            "fail": [
+                    "tests/test_logical_paths_61.py::test_no_durable_record_mentions_a_process_local_handle",
+                    "tests/test_logical_paths_61.py::test_the_sealed_output_path_exists_after_a_successful_fit"
+            ],
+            "witness": {
+                    "tests/test_logical_paths_61.py::test_no_durable_record_mentions_a_process_local_handle": "AssertionError: 굳은 기록이 프로세스 지역 handle 경로를 담았다: ['manifest.yaml'] (61차 P0-2)",
+                    "tests/test_logical_paths_61.py::test_the_sealed_output_path_exists_after_a_successful_fit": "AssertionError: manifest.fits_parquet 이 handle 경로다"
+            }
+    },
+    "the-run-lock-is-released-g61": {
+            "fail": [
+                    "tests/test_logical_paths_61.py::test_the_run_lock_is_gone_after_a_successful_fit"
+            ],
+            "witness": {
+                    "tests/test_logical_paths_61.py::test_the_run_lock_is_gone_after_a_successful_fit": "AssertionError: 성공한 실행이 .fit.lock 을 남겼다"
+            }
+    },
+    "lock-release-failure-is-not-swallowed-g61": {
+            "fail": [
+                    "tests/test_logical_paths_61.py::test_a_failed_lock_release_is_not_swallowed"
+            ],
+            "witness": {
+                    "tests/test_logical_paths_61.py::test_a_failed_lock_release_is_not_swallowed": "Failed: DID NOT RAISE OSError"
+            }
+    },
+    "comprehensions-are-their-own-scope-g61": {
+            "fail": [
+                    "tests/test_scope_model_61.py::test_the_analyzer_does_not_shadow_the_enclosing_scope"
+            ],
+            "witness": {
+                    "tests/test_scope_model_61.py::test_the_analyzer_does_not_shadow_the_enclosing_scope": "AssertionError: 바깥 scope 의 load 가 comprehension target 으로 가려졌다: ['value'] — 분석기가 Python 과 반대를 말한다 (61차 P1-4)"
+            }
+    },
+    # γ (61차 P1-2·P1-3) — `--emit-expect` 관측값. 실행마다 달라지는 꼬리는
+    #   손으로 잘라 안정한 접두만 남긴다 (이 저장소의 규칙).
+    "importable-roots-keep-the-search-order-g61": {
+            "fail": [
+                    "tests/test_evidence_receipt_61.py::test_same_named_modules_in_two_roots_are_both_recorded",
+                    "tests/test_evidence_receipt_61.py::test_the_receipt_says_which_root_python_would_import_from"
+            ],
+            "witness": {
+                    "tests/test_evidence_receipt_61.py::test_same_named_modules_in_two_roots_are_both_recorded": "AssertionError: 두 root 의 동명 module 이 1개로 접혔다",
+                    "tests/test_evidence_receipt_61.py::test_the_receipt_says_which_root_python_would_import_from": "AssertionError: 검색 첫 자리의 항목을 못 찾겠다"
+            }
+    },
+    "history_failure_is_not_a_success-g61": {
+            "fail": [
+                    "tests/test_evidence_receipt_61.py::test_a_nonzero_history_child_is_a_failure"
+            ],
+            "witness": {
+                    "tests/test_evidence_receipt_61.py::test_a_nonzero_history_child_is_a_failure": "AssertionError: 손자가 nonzero 로 끝났는데 성공으로 적었다"
+            }
+    },
+    "incomplete_receipt_is_refused-g61": {
+        "fail": [
+            "tests/test_evidence_receipt_61.py::test_a_failed_package_listing_is_also_refused",
+            "tests/test_evidence_receipt_61.py::test_an_incomplete_receipt_is_refused_by_the_reader",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_61.py::test_a_failed_package_listing_is_also_refused":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_61.py::test_an_incomplete_receipt_is_refused_by_the_reader":
+                "Failed: DID NOT RAISE _ReplayError",
+        }
+    },
+    "evidence-binds-the-environment": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_evidence_binds_the_execution_environment",
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_evidence_binds_the_execution_environment":
+                "_mutation_replay_probe._ReplayError: 환경 영수증이 **불완전**하다 — 측정이 비었거나 서로 어긋난다: env 가 비었다 (62차 자체 리뷰 F5)",
+        }
+    },
+    "mount-root-is-filesystem-relative": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph",
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "assembled-names-are-exactly-evaluated": {
+        "fail": ["tests/test_docs_lint.py::test_an_assembled_dunder_name_is_refused"],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_assembled_dunder_name_is_refused": "DID NOT RAISE SystemExit"
+        }
+    },
+    "module-gate-before-side-effects": {
+        "fail": [
+            "tests/test_preserve.py::test_run_grid_calls_the_gate_before_its_first_side_effect"
+        ],
+        # 54차 자체 발견 — 증인이 **48차부터** 낡아 있었다. 47차의 시험은 gate
+        # 호출을 지우면 한참 뒤 `KeyError: 'discharged_state'` 로 죽었고 그것이
+        # 증인이 됐다. 48차가 "순서를 먼저 본다" 로 시험을 고치면서 실제 실패는
+        # 순서 assert 가 됐는데, 옛 증인은 시험 **주석에 남은 그 문자열** 덕에
+        # 계속 통과했다 (본문 매칭의 대가다 — `_witness_holds` 참조).
+        "witness": {
+            "tests/test_preserve.py::test_run_grid_calls_the_gate_before_its_first_side_effect": "gate 가 거부하기 전에 출력 디렉터리를 만들었다"
+        }
+    },
+    "namespace-check-rejects-symlinks": {
+        "fail": [
+            "tests/test_preserve.py::test_the_namespace_check_is_fail_closed_on_a_symlinked_component",
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_namespace_check_is_fail_closed_on_a_symlinked_component":
+                "AssertionError: symlink 성분을 지난 경로를 안으로 봤다 — 나중에 target 을 바꾸면 밖이다",
+        }
+    },
+    "pending-base-generation": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_stale_bootstrap_pending_is_refused_not_inherited[wrong_base]"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_stale_bootstrap_pending_is_refused_not_inherited[wrong_base]": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "pending-closed-schema": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_stale_bootstrap_pending_is_refused_not_inherited[missing_base_key]"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_stale_bootstrap_pending_is_refused_not_inherited[missing_base_key]": "KeyError: 'base_generation'"
+        }
+    },
+    "phase-input-binding": {
+        "fail": [
+            "tests/test_preserve.py::test_fit_refuses_curves_that_its_grid_phase_did_not_produce"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_fit_refuses_curves_that_its_grid_phase_did_not_produce": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "phase-input-binding-covers-the-package": {
+        "fail": [
+            "tests/test_preserve.py::test_the_grid_receipt_binds_every_curve_input_not_just_the_parquet"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_grid_receipt_binds_every_curve_input_not_just_the_parquet": "AssertionError: 결속 대상이 바뀌었다: ['curves_sha256'] — fit 이 읽는 입력이 늘거나 줄었다면 그 사실이 여기 보여야 한다"
+        }
+    },
+    "phase-input-binding-needs-a-receipt": {
+        "fail": [
+            "tests/test_preserve.py::test_fit_refuses_when_its_grid_phase_is_missing"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_fit_refuses_when_its_grid_phase_is_missing": "AttributeError: 'NoneType' object has no attribute 'get'"
+        }
+    },
+    "phase-write-checks-the-credential": {
+        "fail": [
+            "tests/test_preserve.py::test_a_forged_claim_object_cannot_write_a_phase"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_forged_claim_object_cannot_write_a_phase": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "phase-write-refuses-a-closed-claim": {
+        "fail": [
+            "tests/test_preserve.py::test_a_closed_run_cannot_be_resurrected_by_a_late_phase",
+            "tests/test_preserve.py::test_a_released_run_cannot_be_resurrected_by_a_late_phase"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_closed_run_cannot_be_resurrected_by_a_late_phase": "FileNotFoundError: [Errno 2] No such file or directory: '",
+            "tests/test_preserve.py::test_a_released_run_cannot_be_resurrected_by_a_late_phase": "FileNotFoundError: [Errno 2] No such file or directory: '"
+        }
+    },
+    "pin-is-publication-authority": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_pin_is_part_of_the_publication_authority"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_pin_is_part_of_the_publication_authority": "KeyError: 'pin'"
+        }
+    },
+    "plan-index-exact-equality": {
+        "fail": [
+            "tests/test_preserve.py::test_a_phantom_executed_plan_without_an_execution_record_is_refused"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_phantom_executed_plan_without_an_execution_record_is_refused": "AssertionError: [plan] 'Z' 의 계획 digest 가 실행 기록과 다르다 (계획 fedcba9876543210 ≠ 기록 aabbccddeeff0011) — 계획 index 가 실물을 가리키지 않으면 장식이다"
+        }
+    },
+    "plan-parser-dir-hygiene": {
+        "fail": [
+            "tests/test_preserve.py::test_the_plan_parser_requires_a_canonical_relative_dir[./docs/22p_gap/coh]",
+            "tests/test_preserve.py::test_the_plan_parser_requires_a_canonical_relative_dir[docs//22p_gap/coh]"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_plan_parser_requires_a_canonical_relative_dir[./docs/22p_gap/coh]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_preserve.py::test_the_plan_parser_requires_a_canonical_relative_dir[docs//22p_gap/coh]": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "planned-binds-the-code-identity": {
+        "fail": [
+            "tests/test_preserve.py::test_the_gate_binds_the_plan_to_the_code_identity"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_gate_binds_the_plan_to_the_code_identity": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "planned-binds-the-execution-record": {
+        "fail": [
+            "tests/test_preserve.py::test_the_planned_index_is_bound_to_the_real_execution_record"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_planned_index_is_bound_to_the_real_execution_record": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "planned-status-is-not-standing": {
+        "fail": [
+            "tests/test_preserve.py::test_an_already_executed_leg_is_not_a_standing_authorization"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_an_already_executed_leg_is_not_a_standing_authorization": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "pointer-binds-the-ledger": {
+        "fail": [
+            "tests/test_docs_lint.py::test_expanding_a_roster_over_an_active_cohort_requires_a_new_cohort"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_expanding_a_roster_over_an_active_cohort_requires_a_new_cohort": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "pointer-loss-is-terminal": {
+        "fail": [
+            "tests/test_docs_lint.py::test_losing_the_pointer_of_a_cohort_that_has_generations_is_terminal"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_losing_the_pointer_of_a_cohort_that_has_generations_is_terminal": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "policy-binds-the-roster": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_single_leg_policy_must_match_the_roster_cardinality"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_single_leg_policy_must_match_the_roster_cardinality": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "pre-write-authority": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_frozen_cohort_publish_writes_nothing_before_it_refuses"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_frozen_cohort_publish_writes_nothing_before_it_refuses": "AssertionError: 거부하기 전에 무언가를 만들었다: ['.publish.lock', 'gen']"
+        }
+    },
+    "precheck-tells-new-from-resume": {
+        "fail": [
+            "tests/test_preserve.py::test_the_precheck_tells_a_new_run_from_an_owned_resume"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_precheck_tells_a_new_run_from_an_owned_resume": "tools.preserve.PreserveError: [plan] 'L' 의 계획 상태가 'running' 이라 승인이 아니다 (허용 ['planned']) — 실행 기록은 다음 실행의 승인이 아니고, 이미 running 인 다리를 새로 시작할 수도 없다. 다시 돌리려면 새 계획 항목을 적어라"
+        }
+    },
+    "prelock-digest-check": {
+        "fail": [
+            "tests/test_preserve.py::test_wrong_bytes_are_never_locked"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_wrong_bytes_are_never_locked": "AssertionError: digest 와 다른 바이트로 version 을 만들었다"
+        }
+    },
+    "prelock-readback-check": {
+        "fail": [
+            "tests/test_preserve.py::test_a_provider_that_returns_the_wrong_version_locks_nothing"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_provider_that_returns_the_wrong_version_locks_nothing": "AssertionError: provider 가 신고한 version 을 확인 없이 잠갔다"
+        }
+    },
+    "prelock-version-id-is-a-string": {
+        "fail": [
+            "tests/test_preserve.py::test_a_falsy_version_id_from_put_is_refused[0]",
+            "tests/test_preserve.py::test_a_falsy_version_id_from_put_is_refused[None]",
+            "tests/test_preserve.py::test_a_falsy_version_id_from_put_is_refused[]"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_falsy_version_id_from_put_is_refused[0]": "AssertionError: falsy version ID 로 잠갔다",
+            "tests/test_preserve.py::test_a_falsy_version_id_from_put_is_refused[None]": "AssertionError: falsy version ID 로 잠갔다",
+            "tests/test_preserve.py::test_a_falsy_version_id_from_put_is_refused[]": "AssertionError: falsy version ID 로 잠갔다"
+        }
+    },
+    "preservation-status-inside-the-contract": {
+        "fail": [
+            "tests/test_preserve.py::test_the_runtime_preservation_enum_is_inside_the_contract"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_runtime_preservation_enum_is_inside_the_contract": "AssertionError: 계약 §8 에 없는 보존 상태를 runtime 이 쓴다: ['no_bundle'] — 어휘의 정본이 둘이면 원장이 자기 lint 를 통과하지 못한다"
+        }
+    },
+    "producer-canon-drops-empty-fields": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_digest_is_the_same_on_every_python_here"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_digest_is_the_same_on_every_python_here": "AssertionError: producer 의미 digest 가 인터프리터마다 다르다"
+        }
+    },
+    "producer-crosses-into-scoring": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_digest_crosses_into_src_scoring"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_digest_crosses_into_src_scoring": "AssertionError: src.scoring 의 채점 허용오차를 바꿨는데 producer digest 가 그대로다 — 닫힘이 모듈 경계에서 멈춰 있다"
+        }
+    },
+    "producer-crossing-is-fail-closed": {
+        "fail": [
+            "tests/test_docs_lint.py::test_breaking_the_crossing_into_src_scoring_is_fail_closed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_breaking_the_crossing_into_src_scoring_is_fail_closed": "KeyError: 'DEFAULT_TOL'"
+        }
+    },
+    "producer-cut-is-declared": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_semantic_digest_excludes_the_publication_path"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_semantic_digest_excludes_the_publication_path": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "producer-cut-is-sealed": {
+        "fail": [
+            "tests/test_docs_lint.py::test_widening_the_producer_cut_moves_the_digest"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_widening_the_producer_cut_moves_the_digest": "AssertionError: 절단면을 넓혔는데 producer digest 가 그대로다 — 절단면 정의가 봉인 preimage 밖이다"
+        }
+    },
+    "producer-normalizes-the-node": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_digest_sees_decorators",
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_digest_sees_decorators":
+                "AssertionError: 계산 함수에 decorator 를 붙였는데 producer digest 가 그대로다 — 정규형이 source segment 라 decorator 를 못 본다",
+        }
+    },
+    "producer-semantic-sealed": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_producer_change_cannot_mix_two_producers_in_one_generation",
+            "tests/test_docs_lint.py::test_the_producer_semantic_identity_is_sealed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_producer_change_cannot_mix_two_producers_in_one_generation": "SystemExit: ✗ 게시하려는 generation 의 producer 가 원장 봉인과 다르다 — 한 cohort 안에 서로 다른 producer 가 만든 leg 를 섞지 않는다:",
+            "tests/test_docs_lint.py::test_the_producer_semantic_identity_is_sealed": "AssertionError: producer 의미 identity 가 봉인 밖이다: ('schema_version', 'analysis_spec_sha256')"
+        }
+    },
+    "proof-handoff-to-verify": {
+        "fail": [
+            "tests/test_preserve.py::test_a_pre_journal_finalize_uses_the_repaired_pin_proof"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_pre_journal_finalize_uses_the_repaired_pin_proof": "tools.preserve.PreserveError: [retention] lease pin 의 기한이 짧다:"
+        }
+    },
+    "publisher-owns-the-merge-temp": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_caller_stage_is_untouched_when_the_final_guard_fails"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_caller_stage_is_untouched_when_the_final_guard_fails": "FileExistsError: [Errno 17] File exists:"
+        }
+    },
+    "reader-shares-the-validator": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_generation_reader_refuses_an_aliased_generation_file"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_generation_reader_refuses_an_aliased_generation_file": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "recheck-before-rename": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_pointer_is_rechecked_immediately_before_the_rename"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_pointer_is_rechecked_immediately_before_the_rename": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "release-returns-the-plan": {
+        "fail": [
+            "tests/test_preserve.py::test_a_released_run_returns_the_plan_to_planned"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_released_run_returns_the_plan_to_planned": "AssertionError: 되돌렸는데 계획이 running 에 남았다 — 그 다리는 영영 못 돌린다"
+        }
+    },
+    "repair-source-uses-the-snapshot": {
+        "fail": [
+            "tests/test_preserve.py::test_no_version_enumeration_bypasses_the_helper",
+            "tests/test_preserve.py::test_repair_lookups_go_through_the_validated_version_snapshot"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_no_version_enumeration_bypasses_the_helper": "AssertionError: version 열거 우회가 2곳 있다 (['self.provider.versions(', 'getattr(self.provider, \"versions\"']) — 모든 열거는 `_version_candidates()` 를 지나야 한다",
+            "tests/test_preserve.py::test_repair_lookups_go_through_the_validated_version_snapshot": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    # ★ 57차 — 옛 `finalize-requires-the-credential` 의 회귀를 흡수했다.
+    #   실측으로 이 변이 하나에 세 시험 중 둘이 함께 문다.
+    "resume-compares-the-verifier": {
+        "fail": [
+            "tests/test_preserve.py::test_a_crash_after_grid_resumes_and_finalizes",
+            "tests/test_preserve.py::test_finalize_requires_the_owner_credential"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_crash_after_grid_resumes_and_finalizes": "DID NOT RAISE PreserveError",
+            "tests/test_preserve.py::test_finalize_requires_the_owner_credential": "DID NOT RAISE PreserveError"
+        }
+    },
+    "roster-is-a-set": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_ledger_roster_is_a_set_not_a_multiset"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_ledger_roster_is_a_set_not_a_multiset": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "row-selection-seals-its-content": {
+        "fail": [
+            "tests/test_preserve.py::test_the_fit_axis_seals_the_row_selection_content"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_fit_axis_seals_the_row_selection_content": "AssertionError: 행 선택의 **내용**이 승인 밖이다 — 다른 표본으로 돌려도 같은 digest 다"
+        }
+    },
+    "seal-exact-types": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_omap_and_a_list_of_lists_do_not_share_a_seal"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_omap_and_a_list_of_lists_do_not_share_a_seal": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "seal-finite-floats": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_seal_domain_is_exact_not_isinstance[nonfinite]"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_seal_domain_is_exact_not_isinstance[nonfinite]": "AssertionError: ✗ 원장 cohort 의 `pin` 이 계약 필드 집합이 아니다: None — ['analysis_spec_sha256', 'compute_sha256', 'producer_semantic_sha256', 'row_projection_py_sha256', 'schema_version', 'src_scoring_py_sha256'"
+        }
+    },
+    "seal-typed-input": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_ledger_whose_types_differ_is_not_folded_into_one_seal[date_leg]",
+            "tests/test_docs_lint.py::test_a_ledger_whose_types_differ_is_not_folded_into_one_seal[date_scalar]"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_ledger_whose_types_differ_is_not_folded_into_one_seal[date_leg]": "AssertionError: ✗ 원장 cohort 의 `legs` 가 문자열 목록이 아니다: [datetime.date(2026, 8, 28)]",
+            "tests/test_docs_lint.py::test_a_ledger_whose_types_differ_is_not_folded_into_one_seal[date_scalar]": "AssertionError: ✗ 원장 cohort 의 `pin` 이 계약 필드 집합이 아니다: None — ['analysis_spec_sha256', 'compute_sha256', 'producer_semantic_sha256', 'row_projection_py_sha256', 'schema_version', 'src_scoring_py_sha256'"
+        }
+    },
+    "sink-subset-of-roster": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_complete_undeclared_leg_never_reaches_pending"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_complete_undeclared_leg_never_reaches_pending": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "sink-validates-itself": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_sink_refuses_an_incomplete_generation_with_a_genuine_authority"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_sink_refuses_an_incomplete_generation_with_a_genuine_authority": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "staging-nlink-one": {
+        "fail": [
+            "tests/test_docs_lint.py::test_staging_aliases_never_become_an_immutable_generation[hardlink]"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_staging_aliases_never_become_an_immutable_generation[hardlink]": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "staging-regular-only": {
+        "fail": [
+            "tests/test_docs_lint.py::test_staging_aliases_never_become_an_immutable_generation[symlink]"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_staging_aliases_never_become_an_immutable_generation[symlink]": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "thaw-is-refused-before-the-first-write": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_publisher_refuses_a_thawed_cohort_before_the_first_write"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_publisher_refuses_a_thawed_cohort_before_the_first_write": "AssertionError: 거부하면서 무언가를 만들었다 — 판정이 첫 write 뒤에 있다"
+        }
+    },
+    "thaw-transition-is-unrepresentable": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_frozen_cohort_cannot_be_thawed_and_published"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_frozen_cohort_cannot_be_thawed_and_published": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "token-is-written-before-the-claim": {
+        "fail": [
+            "tests/test_preserve.py::test_a_crash_between_the_claim_and_the_token_leaves_nothing_stranded"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_crash_between_the_claim_and_the_token_leaves_nothing_stranded": "소유 증명이 **디스크에 굳어 있지 않다**"
+        }
+    },
+    "trust-boundary-declared": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_publisher_declares_its_trust_boundary"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_publisher_declares_its_trust_boundary": "AssertionError: publisher 가 신뢰 경계를 선언하지 않는다"
+        }
+    },
+    "version-candidates-typed": {
+        "fail": [
+            "tests/test_preserve.py::test_a_falsy_version_never_reaches_lock",
+            "tests/test_preserve.py::test_every_enumerated_version_candidate_must_be_a_nonempty_string"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_falsy_version_never_reaches_lock": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_preserve.py::test_every_enumerated_version_candidate_must_be_a_nonempty_string": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "warm-consumer-uses-accessor": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_warm_consumers_go_through_the_accessors"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_warm_consumers_go_through_the_accessors": "AssertionError: warm 소비자 → accessor 배선이 선언과 다르다. 새 소비자를 넣거나 호출을 뺐다면 `_WARM_CONSUMER_EDGES` 를 함께 고쳐라 (그 diff 가 리뷰에 보여야 한다)."
+        }
+    },
+    "warm-edges-are-declared": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_warm_consumers_go_through_the_accessors"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_warm_consumers_go_through_the_accessors": "AssertionError: warm 소비자 → accessor 배선이 선언과 다르다. 새 소비자를 넣거나 호출을 뺐다면 `_WARM_CONSUMER_EDGES` 를 함께 고쳐라 (그 diff 가 리뷰에 보여야 한다)."
+        }
+    },
+
+    # ══ 60차 — 이 라운드가 세운 방어의 **관측된** 실패 집합 ═════════
+    "a-caller-supplied-callee-is-refused-g60": {
+            "fail": [
+                    "tests/test_producer_surface_60.py::test_a_caller_supplied_binding_is_not_a_proof_of_non_namespace[def score_canonical(df, namespace=None, GET=None):\\n    return GET(namespace, 'add_error_columns')(df)\\n]"
+            ],
+            "witness": {
+                    "tests/test_producer_surface_60.py::test_a_caller_supplied_binding_is_not_a_proof_of_non_namespace[def score_canonical(df, namespace=None, GET=None):\\n    return GET(namespace, 'add_error_columns')(df)\\n]": "Failed: DID NOT RAISE SystemExit"
+            }
+    },
+    "a-consumed-capability-is-retired-g60": {
+            "fail": [
+                    "tests/test_issuance_authority_60.py::test_a_capability_is_spent_by_a_successful_commit"
+            ],
+            "witness": {
+                    "tests/test_issuance_authority_60.py::test_a_capability_is_spent_by_a_successful_commit": "AssertionError: 소비한 권한의 일련번호가 살아 있다 (P0-3)"
+            }
+    },
+    "a-record-has-exactly-one-name-g60": {
+            "fail": [
+                    "tests/test_one_name_publish_60.py::test_a_record_with_two_names_is_refused_by_the_reader"
+            ],
+            "witness": {
+                    "tests/test_one_name_publish_60.py::test_a_record_with_two_names_is_refused_by_the_reader": "Failed: DID NOT RAISE PreserveError"
+            }
+    },
+    "bundle-members-share-the-root-mount-g60": {
+            "fail": [
+                    "tests/test_bundle_containment_60.py::test_a_member_on_another_mount_is_refused"
+            ],
+            "witness": {
+                    "tests/test_bundle_containment_60.py::test_a_member_on_another_mount_is_refused": "AssertionError: 다른 mount 에 있는 구성원이 통과했다: [] (P0-7)"
+            }
+    },
+    "class-is-decided-by-the-place-g60": {
+            "fail": [
+                    "tests/test_issuance_authority_60.py::test_the_gate_decides_the_class_and_the_caller_cannot_choose_it"
+            ],
+            "witness": {
+                    "tests/test_issuance_authority_60.py::test_the_gate_decides_the_class_and_the_caller_cannot_choose_it": "AssertionError: assert 'canonical' == 'smoke'"
+            }
+    },
+    "finalize-seals-the-bundle-bytes-g60": {
+            "fail": [
+                    "tests/test_bundle_containment_60.py::test_finalize_seals_the_bundle_content_id"
+            ],
+            "witness": {
+                    "tests/test_bundle_containment_60.py::test_finalize_seals_the_bundle_content_id": "AssertionError: 봉인이 검증한 바이트를 말하지 않는다: None (P0-9)"
+            }
+    },
+    "grid-writes-under-the-handle-g60": {
+            "fail": [
+                    "tests/test_staged_writes_60.py::test_production_grid_writes_through_the_capability"
+            ],
+            "witness": {
+                    "tests/test_staged_writes_60.py::test_production_grid_writes_through_the_capability": "AssertionError: production 이 이름으로 써서 밖의 디렉터리가 manifest 를 받았다 — 마지막 거부는 이미 나간 바이트를 못 되돌린다 (P0-4)"
+            }
+    },
+    "journal-publish-reads-back-g60": {
+            "fail": [
+                    "tests/test_lifecycle_durability_60.py::test_a_short_journal_write_never_becomes_a_published_transition"
+            ],
+            "witness": {
+                    "tests/test_lifecycle_durability_60.py::test_a_short_journal_write_never_becomes_a_published_transition": "AssertionError: 손상된 temp 가 journal 로 게시됐다 (P0-6)"
+            }
+    },
+    "lifecycle-root-is-not-an-alias-g60": {
+            "fail": [
+                    "tests/test_lifecycle_roots_60.py::test_a_symlinked_claims_root_is_refused"
+            ],
+            "witness": {
+                    "tests/test_lifecycle_roots_60.py::test_a_symlinked_claims_root_is_refused": "Failed: DID NOT RAISE PreserveError"
+            }
+    },
+    # θ (P1-3·P1-4) — `--emit-expect` 로 관측한 값.
+    "startup-history-is-measured-g60": {
+            "fail": [
+                    "tests/test_import_closure_60.py::test_a_dropped_submodule_is_measured_by_the_history"
+            ],
+            "witness": {
+                    "tests/test_import_closure_60.py::test_a_dropped_submodule_is_measured_by_the_history": "AssertionError: startup 이 올렸다 지운 **하위** module 의 바이트를 바꿨는데 영수증이 그대로다 — 최상위만 보는 층도 상태만 보는 층도 이것을 못 본다. 이력을 재는 층만이 잡는 자리다 (P1-3)"
+            }
+    },
+    "importable-roots-are-measured-g60": {
+            "fail": [
+                    "tests/test_import_closure_60.py::test_a_module_imported_after_startup_is_inside_the_receipt"
+            ],
+            "witness": {
+                    "tests/test_import_closure_60.py::test_a_module_imported_after_startup_is_inside_the_receipt": "AssertionError: PYTHONPATH 자리의 module 바이트를 바꿨는데 영수증이 그대로다 — 문자열만 담고 그것이 가리키는 바이트를 안 담았다 (P1-4)"
+            }
+    },
+    # ζ (P0-12) — `--emit-expect` 로 관측한 값.
+    "compound-heads-are-import-time-g60": {
+            "fail": [
+                    "tests/test_producer_surface_60.py::test_compound_heads_and_vararg_annotations_are_import_time[for _x in [sc.add_error_columns]:\\n    pass\\n]",
+                    "tests/test_producer_surface_60.py::test_compound_heads_and_vararg_annotations_are_import_time[if sc.add_error_columns:\\n    pass\\n]",
+                    "tests/test_producer_surface_60.py::test_compound_heads_and_vararg_annotations_are_import_time[while sc.add_error_columns is None:\\n    break\\n]"
+            ],
+            "witness": {
+                    "tests/test_producer_surface_60.py::test_compound_heads_and_vararg_annotations_are_import_time[for _x in [sc.add_error_columns]:\\n    pass\\n]": "AssertionError: import 때 평가되는 식을 더했는데 producer identity 가 그대로다 (P0-12)",
+                    "tests/test_producer_surface_60.py::test_compound_heads_and_vararg_annotations_are_import_time[if sc.add_error_columns:\\n    pass\\n]": "AssertionError: import 때 평가되는 식을 더했는데 producer identity 가 그대로다 (P0-12)",
+                    "tests/test_producer_surface_60.py::test_compound_heads_and_vararg_annotations_are_import_time[while sc.add_error_columns is None:\\n    break\\n]": "AssertionError: import 때 평가되는 식을 더했는데 producer identity 가 그대로다 (P0-12)"
+            }
+    },
+    "vararg-annotations-are-import-time-g60": {
+            "fail": [
+                    "tests/test_producer_surface_60.py::test_compound_heads_and_vararg_annotations_are_import_time[def _Trigger(*args: sc.add_error_columns):\\n    pass\\n]",
+                    "tests/test_producer_surface_60.py::test_compound_heads_and_vararg_annotations_are_import_time[def _Trigger2(**kw: sc.add_error_columns):\\n    pass\\n]"
+            ],
+            "witness": {
+                    "tests/test_producer_surface_60.py::test_compound_heads_and_vararg_annotations_are_import_time[def _Trigger(*args: sc.add_error_columns):\\n    pass\\n]": "AssertionError: import 때 평가되는 식을 더했는데 producer identity 가 그대로다 (P0-12)",
+                    "tests/test_producer_surface_60.py::test_compound_heads_and_vararg_annotations_are_import_time[def _Trigger2(**kw: sc.add_error_columns):\\n    pass\\n]": "AssertionError: import 때 평가되는 식을 더했는데 producer identity 가 그대로다 (P0-12)"
+            }
+    },
+    "module-docstring-is-bound-g60": {
+            "fail": [
+                    "tests/test_producer_surface_60.py::test_the_module_docstring_is_inside_the_identity"
+            ],
+            "witness": {
+                    "tests/test_producer_surface_60.py::test_the_module_docstring_is_inside_the_identity": "AssertionError: module 문서 문자열만 바꿨는데 producer identity 가 그대로다 — 계산이 그것을 읽는데도 identity 밖이다 (P0-13)"
+            }
+    },
+    "payload-index-is-a-bundle-member-g60": {
+            "fail": [
+                    "tests/test_bundle_containment_60.py::test_the_payload_index_must_be_a_member_of_the_bundle"
+            ],
+            "witness": {
+                    "tests/test_bundle_containment_60.py::test_the_payload_index_must_be_a_member_of_the_bundle": "AssertionError: 묶음 밖 index 가 통과했다 (P0-8)"
+            }
+    },
+    "phase-receipt-is-snapshotted-g60": {
+            "fail": [
+                    "tests/test_bundle_containment_60.py::test_the_phase_receipt_is_snapshotted_at_entry"
+            ],
+            "witness": {
+                    "tests/test_bundle_containment_60.py::test_the_phase_receipt_is_snapshotted_at_entry": "AssertionError: 검사한 값이 아니라 나중 값이 굳었다: {'v': '검사 뒤에 바꾼 값'} (P1-2)"
+            }
+    },
+    "run-identity-is-sealed-at-commit-g60": {
+            "fail": [
+                    "tests/test_temporal_seal_61.py::test_an_execution_manifest_written_after_the_commit_keeps_the_class"
+            ],
+            "witness": {
+                    "tests/test_temporal_seal_61.py::test_an_execution_manifest_written_after_the_commit_keeps_the_class": "AssertionError: 굳힌 뒤에 생긴 실행 manifest 가 내용 identity 를 갈아 치웠다 — 봉인이 그 순간의 목록을 안 얼렸다 (60차 P0-1)"
+            }
+    },
+    "the-gate-creates-the-judged-place-g60": {
+            "fail": [
+                    "tests/test_staged_writes_60.py::test_the_gate_creates_the_place_and_always_carries_a_handle"
+            ],
+            "witness": {
+                    "tests/test_staged_writes_60.py::test_the_gate_creates_the_place_and_always_carries_a_handle": "FileNotFoundError: [Errno 2] No such file or directory"
+            }
+    },
+    # ── 62차 — 접수 16건 + 자체 리뷰 4 렌즈의 축. 전부 `--emit-expect` 로 관측 ──
+    "capability-discarded-before-the-lock-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_fit_failure_before_the_lock_discards_the_capability",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_fit_failure_before_the_lock_discards_the_capability":
+                "AssertionError: lock 앞에서 죽은 fit 이 capability/fd 를 살려 뒀다 (62차 자체 리뷰 F1)",
+        }
+    },
+    "class-body-bindings-are-not-shadows-g62": {
+        "fail": [
+            "tests/test_scope_model_62.py::test_a_class_body_binding_does_not_shadow_a_load_before_it",
+            "tests/test_scope_model_62.py::test_a_module_compound_statement_binding_does_not_exempt_a_capability",
+        ],
+        "witness": {
+            "tests/test_scope_model_62.py::test_a_class_body_binding_does_not_shadow_a_load_before_it":
+                "AssertionError: class 본문의 for 결속이 그 앞의 load 를 가렸다 (62차 자체 리뷰 F3)",
+            "tests/test_scope_model_62.py::test_a_module_compound_statement_binding_does_not_exempt_a_capability":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "coverage-records-the-snapshot-it-was-given-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_write_coverage_records_exactly_the_snapshot",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_write_coverage_records_exactly_the_snapshot":
+                "AssertionError: 다시 쟀다",
+        }
+    },
+    "crossed-module-self-alias-is-followed-g62": {
+        "fail": [
+            "tests/test_scope_model_62.py::test_the_crossed_module_own_namespace_access_enters_the_closure",
+        ],
+        "witness": {
+            "tests/test_scope_model_62.py::test_the_crossed_module_own_namespace_access_enters_the_closure":
+                "AssertionError: 건너간 module 의 자기 이름 공간 접근을 안 따라갔다: ['src.scoring:<module-effects>', 'src.scoring:DEFAULT_TOL', 'src.scoring:MODES', 'src.scoring:add_error_columns', 'src.scoring:apply_bias_correction',",
+        }
+    },
+    "crossed-module-uses-its-own-symbol-table-g62": {
+        "fail": [
+            "tests/test_scope_model_62.py::test_a_namespace_alias_inside_the_scoring_module_is_refused",
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring as me-getattr(me, \"add_error_columns\")]",
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring-getattr(scoring, \"add_error_columns\")]",
+        ],
+        "witness": {
+            "tests/test_scope_model_62.py::test_a_namespace_alias_inside_the_scoring_module_is_refused":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring as me-getattr(me, \"add_error_columns\")]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring-getattr(scoring, \"add_error_columns\")]":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "definition-head-is-the-enclosing-scope-g62": {
+        "fail": [
+            "tests/test_scope_model_62.py::test_a_parameter_does_not_exempt_a_capability_in_the_head[\\nimport src.scoring as sc\\n\\ndef f(getattr, k=[getattr][0](sc, \"add_error_columns\")):\\n    h = getattr                      # \\ubcf8\\ubb38\\uc5d0\\uc11c\\ub294 \\ub9e4\\uac1c\\ubcc0\\uc218\\ub2e4\\n    return k                         # default \\ub294 \\uc815\\uc758 \\uc2dc\\uc810\\uc5d0 module \\uc744 \\uc5f4\\uc5c8\\ub2e4\\n-1]",
+            "tests/test_scope_model_62.py::test_a_parameter_does_not_exempt_a_capability_in_the_head[\\nimport src.scoring as sc\\n\\ndef keep(cap):\\n    def deco(fn):\\n        return fn\\n    return deco\\n\\n@keep([getattr][0](sc, \"add_error_columns\"))   # decorator \\uc778\\uc790\\ub3c4 \\ubc14\\uae65 scope \\ub2e4\\ndef f(getattr):\\n    return None\\n-2]",
+            "tests/test_scope_model_62.py::test_the_analyzer_does_not_shadow_the_default_with_the_parameter",
+        ],
+        "witness": {
+            "tests/test_scope_model_62.py::test_a_parameter_does_not_exempt_a_capability_in_the_head[\\nimport src.scoring as sc\\n\\ndef f(getattr, k=[getattr][0](sc, \"add_error_columns\")):\\n    h = getattr                      # \\ubcf8\\ubb38\\uc5d0\\uc11c\\ub294 \\ub9e4\\uac1c\\ubcc0\\uc218\\ub2e4\\n    return k                         # default \\ub294 \\uc815\\uc758 \\uc2dc\\uc810\\uc5d0 module \\uc744 \\uc5f4\\uc5c8\\ub2e4\\n-1]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_scope_model_62.py::test_a_parameter_does_not_exempt_a_capability_in_the_head[\\nimport src.scoring as sc\\n\\ndef keep(cap):\\n    def deco(fn):\\n        return fn\\n    return deco\\n\\n@keep([getattr][0](sc, \"add_error_columns\"))   # decorator \\uc778\\uc790\\ub3c4 \\ubc14\\uae65 scope \\ub2e4\\ndef f(getattr):\\n    return None\\n-2]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_scope_model_62.py::test_the_analyzer_does_not_shadow_the_default_with_the_parameter":
+                "AssertionError: 매개변수가 definition head 를 가렸다: ['getattr', 'k'] (62차 P0-6)",
+        }
+    },
+    "dist-info-bytes-are-in-the-receipt-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_dist_info_files_on_pythonpath_are_inside_the_receipt",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_dist_info_files_on_pythonpath_are_inside_the_receipt":
+                "AssertionError: entry_points.txt 를 바꿨는데 importable_roots 가 그대로다 (62차 자체 리뷰 F3)",
+        }
+    },
+    "fit-commits-inside-the-lock-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_fit_releases_the_lock_only_after_commit_and_receipt",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_fit_releases_the_lock_only_after_commit_and_receipt":
+                "AssertionError: fit 의 순서가 ['release', 'commit:free', 'receipt:held', 'release'] — commit·receipt 가 lock 안에 있고 release 가 마지막이어야 한다 (62차 P0-3)",
+        }
+    },
+    "fit-failure-discards-the-capability-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_fit_failure_before_commit_discards_the_capability",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_fit_failure_before_commit_discards_the_capability":
+                "AssertionError: 실패한 fit 이 capability 를 살려 뒀다: 1 vs 0 (62차 P1-2)",
+        }
+    },
+    "from-imports-are-namespace-targets-g62": {
+        "fail": [
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring as me-getattr(me, \"add_error_columns\")]",
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring-getattr(scoring, \"add_error_columns\")]",
+        ],
+        "witness": {
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring as me-getattr(me, \"add_error_columns\")]":
+                "Failed: DID NOT RAISE SystemExit",
+            "tests/test_scope_model_62.py::test_from_import_aliases_are_namespace_targets[from src import scoring-getattr(scoring, \"add_error_columns\")]":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "grid-discards-before-the-lock-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_grid_failure_before_the_lock_discards_the_capability[False]",
+            "tests/test_lock_lifetime_62.py::test_grid_failure_before_the_lock_discards_the_capability[True]",
+            "tests/test_lock_lifetime_62.py::test_grid_refused_by_a_live_lock_holder_discards_the_capability",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_grid_failure_before_the_lock_discards_the_capability[False]":
+                "AssertionError: lock 앞에서 죽은 grid(dry_run=False) 가 capability/fd 를 살려 뒀다 (62차 자체 리뷰 F1)",
+            "tests/test_lock_lifetime_62.py::test_grid_failure_before_the_lock_discards_the_capability[True]":
+                "AssertionError: lock 앞에서 죽은 grid(dry_run=True) 가 capability/fd 를 살려 뒀다 (62차 자체 리뷰 F1)",
+            "tests/test_lock_lifetime_62.py::test_grid_refused_by_a_live_lock_holder_discards_the_capability":
+                "AssertionError: lock 에 거부된 grid 가 capability/fd 를 살려 뒀다 (62차 자체 리뷰 F1)",
+        }
+    },
+    "grid-dry-run-discards-the-capability-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_grid_dry_run_discards_the_capability",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_grid_dry_run_discards_the_capability":
+                "AssertionError: dry-run 이 capability 를 살려 뒀다: 1 vs 0 (62차 P1-2)",
+        }
+    },
+    "grid-manifest-locator-is-the-name-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_grid_manifest_payload_records_the_logical_curves_path",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_grid_manifest_payload_records_the_logical_curves_path":
+                "AssertionError: handle 경로를 적었다: /proc/self/fd/3/curves.parquet (62차 P0-4)",
+        }
+    },
+    "grid-merges-inside-the-lock-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_grid_source_releases_the_lock_after_merge_manifest_commit_and_receipt",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_grid_source_releases_the_lock_after_merge_manifest_commit_and_receipt":
+                "AssertionError: run_grid 가 merge_chunks(line 769) 보다 먼저 lock 을 놓는다 (line 768) — 임계구역이 commit 을 못 덮는다 (62차 P0-3)",
+        }
+    },
+    "history-refuses-a-vanished-module-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_a_startup_module_removed_after_import_is_a_failed_measurement",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_a_startup_module_removed_after_import_is_a_failed_measurement":
+                "AssertionError: 올렸다 지운 module 이 unfiled 로 세탁됐다: measured (62차 자체 리뷰 F2)",
+        }
+    },
+    "packages-keep-the-first-distribution-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_duplicate_distributions_keep_the_first_and_record_the_rest",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_duplicate_distributions_keep_the_first_and_record_the_rest":
+                "AssertionError: 뒤 root 가 앞 root 를 덮었다: 2.0 (62차 P1-5)",
+        }
+    },
+    "parent-cross-checks-customization-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_the_parent_cross_checks_the_customization_bytes",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_the_parent_cross_checks_the_customization_bytes":
+                "Failed: DID NOT RAISE _ReplayError",
+        }
+    },
+    "parent-package-import-is-refused-g62": {
+        "fail": [
+            "tests/test_scope_model_62.py::test_importing_the_parent_package_is_refused",
+        ],
+        "witness": {
+            "tests/test_scope_model_62.py::test_importing_the_parent_package_is_refused":
+                "Failed: DID NOT RAISE SystemExit",
+        }
+    },
+    "promotion-checks-derived-freshness-g62": {
+        "fail": [
+            "tests/test_archive_freshness_62.py::test_direct_bundle_refuses_a_stale_derived_artifact",
+            "tests/test_archive_freshness_62.py::test_the_promotion_primitive_is_one_function",
+        ],
+        "witness": {
+            "tests/test_archive_freshness_62.py::test_direct_bundle_refuses_a_stale_derived_artifact":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_archive_freshness_62.py::test_the_promotion_primitive_is_one_function":
+                "AssertionError: archive_bundle.main 이 assert_promotable() 을 안 지난다 (62차 P0-8)",
+        }
+    },
+    "promotion-holds-the-run-locks-g62": {
+        "fail": [
+            "tests/test_archive_freshness_62.py::test_direct_bundle_holds_the_run_locks_while_copying",
+        ],
+        "witness": {
+            "tests/test_archive_freshness_62.py::test_direct_bundle_holds_the_run_locks_while_copying":
+                "AssertionError: 복사 중에 실행 lock 이 잡혀 있지 않다: {'.fit.lock': 'free', '.run.lock': 'free'} (62차 자체 리뷰 F2)",
+        }
+    },
+    "promotion-refuses-a-stale-seal-g62": {
+        "fail": [
+            "tests/test_promotion_seal_62.py::test_a_stale_seal_is_refused_even_when_a_legacy_record_matches",
+        ],
+        "witness": {
+            "tests/test_promotion_seal_62.py::test_a_stale_seal_is_refused_even_when_a_legacy_record_matches":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "promotion-refuses-a-subset-seal-g62": {
+        "fail": [
+            "tests/test_promotion_seal_62.py::test_an_in_progress_fit_in_a_committed_grid_dir_is_not_promotable",
+        ],
+        "witness": {
+            "tests/test_promotion_seal_62.py::test_an_in_progress_fit_in_a_committed_grid_dir_is_not_promotable":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "receipt-is-framed-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_an_atexit_forgery_in_sitecustomize_is_refused",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_an_atexit_forgery_in_sitecustomize_is_refused":
+                "Failed: DID NOT RAISE _ReplayError",
+        }
+    },
+    "receipt-schema-is-exact-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-\\ucd5c\\uc0c1\\uc704\\uc5d0 \\ubaa8\\ub974\\ub294 \\ud0a4]",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-digest \\uac00 hex16 \\uc774 \\uc544\\ub2c8\\ub2e4]",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-dists \\uac00 list]",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-history \\uc5d0 \\ubaa8\\ub974\\ub294 \\ud0a4]",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-inputs \\uc5d0 sentinel \\ubb38\\uc790\\uc5f4]",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-startup.pth \\uac00 \\uc5c6\\ub2e4]",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-unfiled \\uac00 \\ubb38\\uc790\\uc5f4]",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-\\ucd5c\\uc0c1\\uc704\\uc5d0 \\ubaa8\\ub974\\ub294 \\ud0a4]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-digest \\uac00 hex16 \\uc774 \\uc544\\ub2c8\\ub2e4]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-dists \\uac00 list]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-history \\uc5d0 \\ubaa8\\ub974\\ub294 \\ud0a4]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-inputs \\uc5d0 sentinel \\ubb38\\uc790\\uc5f4]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-startup.pth \\uac00 \\uc5c6\\ub2e4]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_a_receipt_that_only_says_measured_is_still_refused[<lambda>-unfiled \\uac00 \\ubb38\\uc790\\uc5f4]":
+                "TypeError: '<' not supported between instances of 'str' and 'int'",
+        }
+    },
+    "release-consumes-a-token-not-a-path-g62": {
+        "fail": [
+            "tests/test_run_lock_62.py::test_the_path_based_release_is_gone",
+        ],
+        "witness": {
+            "tests/test_run_lock_62.py::test_the_path_based_release_is_gone":
+                "AttributeError: 'PosixPath' object has no attribute 'released'",
+        }
+    },
+    "release-refuses-a-replaced-inode-g62": {
+        "fail": [
+            "tests/test_logical_paths_61.py::test_releasing_a_missing_or_foreign_lock_is_loud_but_never_deletes",
+            "tests/test_run_lock_62.py::test_release_refuses_a_lock_whose_name_now_points_at_another_inode",
+        ],
+        "witness": {
+            "tests/test_logical_paths_61.py::test_releasing_a_missing_or_foreign_lock_is_loud_but_never_deletes":
+                "Failed: DID NOT RAISE RuntimeError",
+            "tests/test_run_lock_62.py::test_release_refuses_a_lock_whose_name_now_points_at_another_inode":
+                "Failed: DID NOT RAISE RuntimeError",
+        }
+    },
+    "release-refuses-a-vanished-lock-g62": {
+        "fail": [
+            "tests/test_run_lock_62.py::test_release_refuses_when_its_own_lock_has_vanished",
+        ],
+        "witness": {
+            "tests/test_run_lock_62.py::test_release_refuses_when_its_own_lock_has_vanished":
+                "Failed: DID NOT RAISE RuntimeError",
+        }
+    },
+    "run-lock-exclusivity-is-a-kernel-op-g62": {
+        "fail": [
+            "tests/test_io_bookkeeping.py::test_run_lock_blocks_concurrent_run",
+            "tests/test_run_lock_62.py::test_a_live_holder_in_another_process_is_refused_by_pid",
+            "tests/test_run_lock_62.py::test_eight_processes_racing_for_one_lock_yield_exactly_one_holder",
+            "tests/test_run_lock_62.py::test_two_contenders_that_both_observe_absence_do_not_both_acquire",
+        ],
+        "witness": {
+            "tests/test_io_bookkeeping.py::test_run_lock_blocks_concurrent_run":
+                "Failed: DID NOT RAISE RuntimeError",
+            "tests/test_run_lock_62.py::test_a_live_holder_in_another_process_is_refused_by_pid":
+                "Failed: DID NOT RAISE RuntimeError",
+            "tests/test_run_lock_62.py::test_eight_processes_racing_for_one_lock_yield_exactly_one_holder":
+                "AssertionError: 동시에 잡은 프로세스가 둘 이상이다 (62차 P0-2)",
+            "tests/test_run_lock_62.py::test_two_contenders_that_both_observe_absence_do_not_both_acquire":
+                "AssertionError: 두 contender 의 결과가 ['acquired', 'acquired'] — 정확히 하나만 잡아야 한다 (62차 P0-2)",
+        }
+    },
+    "run-sig-has-no-staging-pathname-g62": {
+        "fail": [
+            "tests/test_lock_lifetime_62.py::test_the_run_spec_does_not_carry_a_staging_pathname",
+            "tests/test_lock_lifetime_62.py::test_the_same_logical_fit_resumed_keeps_one_run_signature",
+        ],
+        "witness": {
+            "tests/test_lock_lifetime_62.py::test_the_run_spec_does_not_carry_a_staging_pathname":
+                "AssertionError: manifest 에 staging 경로가 굳었다 (62차 P0-5)",
+            "tests/test_lock_lifetime_62.py::test_the_same_logical_fit_resumed_keeps_one_run_signature":
+                "AssertionError: 같은 논리 실행이 서명을 2 개 만들었다 — random staging pathname 이 run_spec 에 들어갔다 (62차 P0-5)",
+        }
+    },
+    "schema-refuses-empty-receipts-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-\\ube48 env]",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-\\ube48 startup_modules]",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-\\uc74c\\uc218 int]",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-startup.env \\u2260 env]",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-startup.version \\u2260 interpreter]",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-\\ube48 env]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-\\ube48 startup_modules]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-\\uc74c\\uc218 int]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-startup.env \\u2260 env]":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_evidence_receipt_62.py::test_the_schema_refuses_empty_or_inconsistent_receipts[<lambda>-startup.version \\u2260 interpreter]":
+                "Failed: DID NOT RAISE _ReplayError",
+        }
+    },
+    "sealed-records-need-their-seal-g62": {
+        "fail": [
+            "tests/test_promotion_seal_62.py::test_deleting_the_seal_does_not_reopen_the_prefix",
+        ],
+        "witness": {
+            "tests/test_promotion_seal_62.py::test_deleting_the_seal_does_not_reopen_the_prefix":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "unreadable-bytes-fail-the-section-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_an_unreadable_startup_byte_makes_the_section_failed",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_an_unreadable_startup_byte_makes_the_section_failed":
+                "AssertionError: 읽기 실패가 정상 값으로 적혔다",
+        }
+    },
+    "zip-origins-are-hashed-g62": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_a_zip_imported_startup_module_is_hashed_not_unfiled",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_a_zip_imported_startup_module_is_hashed_not_unfiled":
+                "AssertionError: {'reason': '이름은 받았는데 해시한 파일이 하나도 없다', 'status': 'failed'}",
+        }
+    },
+    # ══ 63차 θ·ι·κ — 전부 `--emit-expect` 관측값 (증인 문구는 기계 독립: 개수·repr·digest 없음) ══
+    "archive-cleanup-tries-every-lock-g63": {
+        "fail": [
+            "tests/test_gate63_defensive.py::test_archive_cleanup_attempts_every_mock_release",
+        ],
+        "witness": {
+            "tests/test_gate63_defensive.py::test_archive_cleanup_attempts_every_mock_release":
+                "AssertionError: a cleanup exception prevented release of the second resource",
+        }
+    },
+    "archive-releases-the-first-lock-when-the-second-fails-g63": {
+        "fail": [
+            "tests/test_gate63_defensive.py::test_archive_body_error_survives_a_cleanup_error",
+            "tests/test_gate63_defensive.py::test_partial_archive_acquisition_releases_prior_mock_resource",
+        ],
+        "witness": {
+            "tests/test_gate63_defensive.py::test_archive_body_error_survives_a_cleanup_error":
+                "AssertionError: 본문 오류 뒤 정리가 0개만 시도됐다 (기대 2) — 63차 F1",
+            "tests/test_gate63_defensive.py::test_partial_archive_acquisition_releases_prior_mock_resource":
+                "AssertionError: first acquired resource was not released after second acquisition failed",
+        }
+    },
+    "attempted-list-is-inside-the-receipt-g63": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_a_full_receipt_matches_the_schema",
+            "tests/test_gate63_defensive.py::test_the_schema_carries_the_attempted_list",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_a_full_receipt_matches_the_schema":
+                "mutation_replay._ReplayError: 환경 영수증이 **불완전**하다 — schema 에 안 맞는다: receipt.startup.startup_history: 키 집합이 다르다 (모르는 키 ['attempted_not_loaded'] · 없는 키 []) . `status` 만 measured 인 본문은 측정이 아니다 (62차 P2-1)",
+            "tests/test_gate63_defensive.py::test_the_schema_carries_the_attempted_list":
+                "mutation_replay._ReplayError: 환경 영수증이 **불완전**하다 — schema 에 안 맞는다: receipt.startup.startup_history: 키 집합이 다르다 (모르는 키 ['attempted_not_loaded'] · 없는 키 []) . `status` 만 measured 인 본문은 측정이 아니다 (62차 P2-1)",
+        }
+    },
+    "attempted-only-names-are-not-loaded-modules-g63": {
+        "fail": [
+            "tests/test_gate63_defensive.py::test_an_ordinary_failed_optional_import_keeps_startup_measured",
+        ],
+        "witness": {
+            "tests/test_gate63_defensive.py::test_an_ordinary_failed_optional_import_keeps_startup_measured":
+                "AssertionError: {'reason': 'startup 이 올린 module nope_optional_63 을 지금 찾을 수 없다 — 올렸다 지운 module 은 잴 수 없다', 'status': 'failed'}",
+        }
+    },
+    "hex16-is-a-fullmatch-g63": {
+        "fail": [
+            "tests/test_gate63_defensive.py::test_hex16_scalar_does_not_accept_a_trailing_newline",
+        ],
+        "witness": {
+            "tests/test_gate63_defensive.py::test_hex16_scalar_does_not_accept_a_trailing_newline":
+                "AssertionError: hex16 scalar validator accepted a 17-character string",
+        }
+    },
+    "parent-customization-uses-the-path-finder-g63": {
+        "fail": [
+            "tests/test_evidence_receipt_62.py::test_the_real_probe_agrees_with_the_parent_view",
+            "tests/test_gate63_defensive.py::test_parent_customization_lookup_supports_a_normal_package",
+        ],
+        "witness": {
+            "tests/test_evidence_receipt_62.py::test_the_real_probe_agrees_with_the_parent_view":
+                "AssertionError: child 와 부모의 customization 이 ['sitecustomize'] 에서 다르다 (62차 자체 리뷰 F1)",
+            "tests/test_gate63_defensive.py::test_parent_customization_lookup_supports_a_normal_package":
+                "AssertionError: parent lookup disagrees with Python on an ordinary package",
+        }
+    },
+    "startup-history-runs-verbose-imports-g63": {
+        "fail": [
+            "tests/test_gate63_defensive.py::test_an_ordinary_failed_optional_import_keeps_startup_measured",
+        ],
+        "witness": {
+            "tests/test_gate63_defensive.py::test_an_ordinary_failed_optional_import_keeps_startup_measured":
+                "AssertionError: {'reason': '손자 로그에서 module 이름을 해석하지 못했다 (importtime 줄 있음 · -v 줄 없음)', 'status': 'failed'}",
+        }
+    },
+    "type-params-bounds-are-definition-head-g63": {
+        "fail": [
+            "tests/test_gate63_defensive.py::test_a_type_parameter_bound_is_evaluated_outside_the_parameters",
+            "tests/test_gate63_defensive.py::test_scope_walk_covers_the_bound_of_an_ordinary_generic_function",
+        ],
+        "witness": {
+            "tests/test_gate63_defensive.py::test_a_type_parameter_bound_is_evaluated_outside_the_parameters":
+                "AssertionError: bound node 를 walker 가 방문하지 않았다 (63차 E1)",
+            "tests/test_gate63_defensive.py::test_scope_walk_covers_the_bound_of_an_ordinary_generic_function":
+                "AssertionError: type parameter bound was omitted by the scoped traversal",
+        }
+    },
+
+    # ── 64차 (N1 · N2 · E2-R) ────────────────────────────────────────────
+    #   증인은 전부 **기계 독립**이다 — 첫 관측에서 tmp 경로와 기계별 digest 가
+    #   들어와 그 자리를 시험 문구에서 걷어냈다 (62차 ① · 63차 ① 회차와 같은 교훈).
+    "customization-reads-origins-like-the-rest-g64": {
+        "fail": [
+            "tests/test_gate64_defensive.py::test_a_zip_customization_is_measured_not_failed",
+        ],
+        "witness": {
+            "tests/test_gate64_defensive.py::test_a_zip_customization_is_measured_not_failed":
+                "AssertionError: ('정상 ZIP customization 이 영수증을 실패시킨다 (N2)', 'failed')",
+        }
+    },
+    "the-probe-control-asserts-both-directions-g64": {
+        "fail": [
+            "tests/test_gate64_defensive.py::test_the_committed_probe_control_asserts_both_directions",
+        ],
+        "witness": {
+            "tests/test_gate64_defensive.py::test_the_committed_probe_control_asserts_both_directions":
+                "AssertionError: ('커밋된 대조군이 한쪽만 고정한다 — 원장 문구가 시험보다 강하다 (E2-R)', ['_kernel_lock_held_at'])",
+        }
+    },
+    "usercustomize-follows-the-startup-activation-g64": {
+        # 67차 G67-N1: 자리를 **측정과의 동일성 검사**로 옮겼다 (`auto` 가 판정에서 빠졌다).
+        # 위조 대조군 셋이 한꺼번에 빨개진다 — ON·OFF·이력에 안 잡히는 namespace.
+        "fail": [
+            "tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected",
+            "tests/test_gate67_defensive.py::test_g67_01_a_forged_absent_namespace_is_rejected_with_user_site_off",
+            "tests/test_gate67_defensive.py::test_g67_04_the_same_forgery_is_rejected_with_user_site_on",
+        ],
+        "witness": {
+            "tests/test_gate66_defensive.py::test_g66_05b_a_forged_absent_namespace_is_still_rejected":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_gate67_defensive.py::test_g67_01_a_forged_absent_namespace_is_rejected_with_user_site_off":
+                "Failed: DID NOT RAISE _ReplayError",
+            "tests/test_gate67_defensive.py::test_g67_04_the_same_forgery_is_rejected_with_user_site_on":
+                "Failed: DID NOT RAISE _ReplayError",
+        }
+    },
+
+    # ── 65차 (N1a · N1b · N2b · T1 · E2-R 후속) ─────────────────────────────
+    #   증인은 전부 시험의 **고정 문구**다 — production reason·digest·경로를 담지 않는다.
+    #   token 축은 g64 의 AST 대조군(탐침별로 센다)도 함께 빨개진다 — 선언에 넣었다.
+    "explicit-import-is-an-ordinary-import-g65": {
+        "fail": [
+            "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted",
+        ],
+        "witness": {
+            "tests/test_gate65_defensive.py::test_a_disabled_interpreter_with_an_explicit_import_is_accepted":
+                "AssertionError: user site 가 꺼졌어도 정상 sitecustomize 의 `import usercustomize` 는 평범한 import 다 — 부모가 그 영수증을 거부했다 (G65-N1a)",
+        }
+    },
+    "namespace-is-loaded-code-free-not-absent-g65": {
+        "fail": [
+            "tests/test_gate65_defensive.py::test_a_namespace_usercustomize_is_measured_and_accepted",
+        ],
+        "witness": {
+            "tests/test_gate65_defensive.py::test_a_namespace_usercustomize_is_measured_and_accepted":
+                "AssertionError: 정상 namespace customization 이 이력을 failed 로 만든다 (G65-N2b)",
+        }
+    },
+    "search-path-comes-from-the-replay-context-g65": {
+        "fail": [
+            "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd",
+            "tests/test_gate65_defensive.py::test_the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd",
+        ],
+        "witness": {
+            "tests/test_gate65_defensive.py::test_a_relative_pythonpath_is_resolved_in_the_replay_cwd":
+                "AssertionError: 부모가 상대 PYTHONPATH 를 호출자 cwd 로 풀었다 — 재생 문맥이 둘이다 (G65-N1b)",
+            "tests/test_gate65_defensive.py::test_the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd":
+                "AssertionError: 실제 진입점이 상대 PYTHONPATH 의 정상 영수증을 거부했다 (G65-N1b)",
+        }
+    },
+    "the-fixture-measures-its-premise-g65": {
+        "fail": [
+            "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]",
+        ],
+        "witness": {
+            "tests/test_gate65_defensive.py::test_the_interpreter_fixture_measures_its_own_premise[True]":
+                "AssertionError: assert False is True",
+        }
+    },
+    "the-token-probe-negative-is-asserted-g65": {
+        "fail": [
+            "tests/test_gate64_defensive.py::test_the_committed_probe_control_asserts_both_directions",
+            "tests/test_gate65_defensive.py::test_a_constant_true_token_probe_is_caught_by_the_committed_control",
+            "tests/test_gate65_defensive.py::test_the_committed_control_asserts_the_token_probe_negative",
+        ],
+        "witness": {
+            "tests/test_gate64_defensive.py::test_the_committed_probe_control_asserts_both_directions":
+                "AssertionError: ('커밋된 대조군이 한쪽만 고정한다 — 원장 문구가 시험보다 강하다 (E2-R)', ['_kernel_lock_held'])",
+            "tests/test_gate65_defensive.py::test_a_constant_true_token_probe_is_caught_by_the_committed_control":
+                "Failed: DID NOT RAISE AssertionError",
+            "tests/test_gate65_defensive.py::test_the_committed_control_asserts_the_token_probe_negative":
+                "AssertionError: ('커밋된 대조군이 token 탐침의 음성을 고정하지 않는다 (E2-R 후속)', [True, True])",
+        }
+    },
+
+    # ── 66차 (G66-N1 · T1 · 문맥 1회 측정) ─────────────────────────────────
+    #   증인은 전부 시험의 **고정 문구**다 — production reason·digest·경로를 담지 않는다.
+    "parent-compares-the-loaded-origin-g66": {
+        "fail": [
+            "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected",
+            "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted",
+            "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted",
+        ],
+        "witness": {
+            "tests/test_gate66_defensive.py::test_g66_01_a_cwd_file_that_startup_never_imported_is_not_expected":
+                "AssertionError: startup 이 읽지 않은 cwd 파일을 부모가 기대해 정상 영수증을 거부했다 (G66-N1 A)",
+            "tests/test_gate66_defensive.py::test_g66_02_a_startup_that_cleans_its_own_path_is_still_accepted":
+                "AssertionError: 자기 검색 경로를 정리한 정상 startup 의 영수증을 거부했다 (G66-N1 B)",
+            "tests/test_gate66_defensive.py::test_g66_03_a_startup_that_prepends_another_candidate_is_still_accepted":
+                "AssertionError: startup 이 앞에 넣은 다른 후보를 부모가 로드된 것으로 봤다 (G66-N1 C)",
+        }
+    },
+    "the-premise-uses-a-controlled-env-g66": {
+        "fail": [
+            "tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]",
+        ],
+        "witness": {
+            "tests/test_gate66_defensive.py::test_g66_08_the_premise_test_does_not_fail_on_an_inherited_env[nousersite]":
+            # ★ 67차 G67-T1-b — 전 판은 `stdout[-600:]` 에서 **우연히 잘린 꼬리**
+            #   (`'도 기대와 다르면 그때는`)를 담았다. 그 꼬리는 기계마다 다른 자리에서
+            #   시작하므로 리뷰어 환경에서는 `call_witness_matches=false` 였다 (실패 집합과
+            #   call 단계는 맞았다). 이제 시험이 **고정 문구로** 실패하므로 그것만 적는다.
+                "AssertionError: ('물려받은 env 때문에 전제 시험이 실패했다 — 환경의 비활성을 fixture 구현 실패로 오판한다 (G66-T1)',",
+        }
+    },
+    # ── 67차 (G67-N2 · T1) ────────────────────────────────────────────────
+    "zip-bytes-come-from-the-archive-member-g67": {
+        "fail": [
+            "tests/test_gate67_defensive.py::test_g67_05_a_zip_package_that_removes_its_archive_is_accepted",
+        ],
+        "witness": {
+            "tests/test_gate67_defensive.py::test_g67_05_a_zip_package_that_removes_its_archive_is_accepted":
+                "mutation_replay._ReplayError: 부모가 sitecustomize 의 origin 을 읽을 수 없다",
+        }
+    },
+    "the-premise-checks-the-child-actually-ran-g67": {
+        "fail": [
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[collect_only]",
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[usage_error]",
+        ],
+        "witness": {
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[collect_only]":
+                "Failed: DID NOT RAISE AssertionError",
+            "tests/test_gate67_defensive.py::test_g67_11_the_premise_regression_refuses_an_unrun_child[usage_error]":
+                "Failed: DID NOT RAISE AssertionError",
+        }
+    },
+    "the-premise-checks-the-call-phase-g68": {
+        "fail": [
+            "tests/test_gate68_defensive.py::test_g68_01_the_premise_regression_refuses_a_setup_only_child",
+            "tests/test_gate68_defensive.py::test_g68_03_the_three_unrun_shapes_are_all_refused_with_a_reason[setup_only]",
+            "tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun",
+        ],
+        "witness": {
+            "tests/test_gate68_defensive.py::test_g68_01_the_premise_regression_refuses_a_setup_only_child":
+                "Failed: DID NOT RAISE AssertionError",
+            "tests/test_gate68_defensive.py::test_g68_03_the_three_unrun_shapes_are_all_refused_with_a_reason[setup_only]":
+                "Failed: DID NOT RAISE AssertionError",
+            "tests/test_gate68_defensive.py::test_g68_04_a_node_without_a_call_record_is_unrun":
+                "Failed: DID NOT RAISE AssertionError",
+        }
+    },
+    "receipt-pair-agreement-is-recomputed-g71": {
+        "fail": [
+            "tests/test_gate71_defensive.py::test_g71_e3r_05_a_disagreeing_semantic_pair_is_refused_even_if_it_claims_agreement",
+        ],
+        "witness": {
+            "tests/test_gate71_defensive.py::test_g71_e3r_05_a_disagreeing_semantic_pair_is_refused_even_if_it_claims_agreement": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "receipt-restore-run-is-bound-to-the-bundle-g71": {
+        "fail": [
+            "tests/test_gate71_defensive.py::test_g71_e3r_07_a_receipt_restored_into_another_run_dir_is_refused",
+        ],
+        "witness": {
+            "tests/test_gate71_defensive.py::test_g71_e3r_07_a_receipt_restored_into_another_run_dir_is_refused": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "attach-binds-the-ledger-run-location-g71": {
+        "fail": [
+            "tests/test_gate71_defensive.py::test_g71_e3r_07b_the_ledger_run_location_must_match_the_receipt",
+        ],
+        "witness": {
+            "tests/test_gate71_defensive.py::test_g71_e3r_07b_the_ledger_run_location_must_match_the_receipt": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "exec-class-reader-is-typed-g70": {
+        "fail": [
+            "tests/test_gate70_defensive.py::test_g70_e5_01_a_record_with_only_class_and_content_id_is_refused",
+            "tests/test_gate70_defensive.py::test_g70_e5_02_wrongly_typed_fields_and_extra_keys_are_refused",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[evidence--evidence]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[evidence-17-evidence]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[execution_class-canonical -execution_class]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[recorded_at-2026-09-24-recorded_at]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[recorded_at-False-recorded_at]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[sealed-1-bool]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[sealed-value2-bool]",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[sealed-yes-bool]",
+            "tests/test_gate70_defensive.py::test_g70_e5_04_a_truthy_non_bool_sealed_cannot_pass_the_promotion_seal_rule",
+            "tests/test_gate70_defensive.py::test_g70_e5_05_the_writer_record_and_the_legacy_shape_are_the_two_accepted_variants",
+        ],
+        "witness": {
+            "tests/test_gate70_defensive.py::test_g70_e5_01_a_record_with_only_class_and_content_id_is_refused": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_02_wrongly_typed_fields_and_extra_keys_are_refused": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[evidence--evidence]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[evidence-17-evidence]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[execution_class-canonical -execution_class]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[recorded_at-2026-09-24-recorded_at]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[recorded_at-False-recorded_at]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[sealed-1-bool]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[sealed-value2-bool]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_03_each_field_is_typed_not_truthy[sealed-yes-bool]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_04_a_truthy_non_bool_sealed_cannot_pass_the_promotion_seal_rule": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e5_05_the_writer_record_and_the_legacy_shape_are_the_two_accepted_variants": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "attach-requires-a-passing-validation-g70": {
+        "fail": [
+            "tests/test_gate70_defensive.py::test_g70_e3_11_a_receipt_that_does_not_say_full_current_validation_is_refused[<lambda>-\\ud1b5\\uacfc\\ub97c \\ub9d0\\ud558\\uc9c0 \\uc54a\\ub294\\ub2e4_0]",
+            "tests/test_gate70_defensive.py::test_g70_e3_11_a_receipt_that_does_not_say_full_current_validation_is_refused[<lambda>-\\ud1b5\\uacfc\\ub97c \\ub9d0\\ud558\\uc9c0 \\uc54a\\ub294\\ub2e4_1]",
+        ],
+        "witness": {
+            "tests/test_gate70_defensive.py::test_g70_e3_11_a_receipt_that_does_not_say_full_current_validation_is_refused[<lambda>-\\ud1b5\\uacfc\\ub97c \\ub9d0\\ud558\\uc9c0 \\uc54a\\ub294\\ub2e4_0]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate70_defensive.py::test_g70_e3_11_a_receipt_that_does_not_say_full_current_validation_is_refused[<lambda>-\\ud1b5\\uacfc\\ub97c \\ub9d0\\ud558\\uc9c0 \\uc54a\\ub294\\ub2e4_1]": "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "an-unreadable-index-is-not-full-coverage-g70": {
+        "fail": [
+            "tests/test_gate70_defensive.py::test_g70_e3_01_an_index_that_enumerates_nothing_is_not_full_coverage",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[- 1\\n- 2\\n]",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[42\\n]",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[a.csv: notahex\\n]",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[not: [valid: yaml]",
+        ],
+        "witness": {
+            "tests/test_gate70_defensive.py::test_g70_e3_01_an_index_that_enumerates_nothing_is_not_full_coverage": "AssertionError: []",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[- 1\\n- 2\\n]": "AssertionError: []",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[42\\n]": "AssertionError: []",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[a.csv: notahex\\n]": "AssertionError: []",
+            "tests/test_gate70_defensive.py::test_g70_e3_02_unparseable_or_untyped_indexes_are_refused[not: [valid: yaml]": "AssertionError: []",
+        }
+    },
+    "mode-all-does-not-pass-may-open-to-the-shell-g70": {
+        "fail": [
+            "tests/test_runner.py::test_g70_n1_mode_all_child_argv_is_accepted_by_the_shell_parser[grid]",
+        ],
+        "witness": {
+            "tests/test_runner.py::test_g70_n1_mode_all_child_argv_is_accepted_by_the_shell_parser[grid]":
+                "`all` 이 만든 grid argv 를 하위 셸 parser 가 거부했다 (G70-N1)",
+        }
+    },
+    "the-replay-context-is-measured-once-g66": {
+        "fail": [
+            "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once",
+        ],
+        "witness": {
+            "tests/test_gate66_defensive.py::test_g66_07_the_replay_context_is_measured_once":
+                "AssertionError: ('한 번의 진입점 호출이 재생 문맥을 여러 번 쟀다', 2)",
+        }
+    },
+}
+
+
+def main() -> int:
+    global SANDBOX
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--list", action="store_true")
+    ap.add_argument("--emit-expect", action="store_true",
+                    help="관측한 기대 실패 집합·증인을 JSON 으로 찍는다")
+    ap.add_argument("--keep-sandbox", action="store_true")
+    ap.add_argument("-k", default="", help="이름 부분일치로 고른다")
+    ap.add_argument("--emit-coverage", default=None, metavar="PATH",
+                    help="이 조각이 덮은 scenario 를 기계 판독 JSON 으로 남긴다 "
+                         "(49차 P1 — 조각 합집합 증명용)")
+    ap.add_argument("--check-coverage", nargs="+", default=None, metavar="PATH",
+                    help="조각 JSON 들을 합쳐 등록부 전체를 덮었는지 답한다")
+    ap.add_argument("--slice", default=None, metavar="I/N",
+                    help="등록부를 이름순 N 조각으로 나눠 I 번째만 돈다 "
+                         "(1부터). 전수를 한 번에 돌리면 시간이 넘치므로 "
+                         "조각으로 나누고 `--check-coverage` 로 합집합을 "
+                         "증명한다")
+    ap.add_argument("--check-preimages", action="store_true",
+                    help="모든 변이 지점이 **정확히 한 번** 나타나는지만 본다 "
+                         "(pytest 를 돌리지 않는다 — 코드가 옮겨가 죽은 변이를 "
+                         "싸게 찾는다)")
+    a = ap.parse_args()
+
+    if a.check_coverage:
+        return check_coverage(a.check_coverage)
+    if a.check_preimages:
+        return check_preimages(a.k)
+
+    items, multi, executed, declared = _select(a.k)
+    if a.slice:
+        i, n = (int(x) for x in a.slice.split("/"))
+        if not (1 <= i <= n):
+            print(f"✗ --slice {a.slice} 가 범위 밖이다")
+            return 2
+        names = sorted(m[0] for m in items + multi)
+        keep = {nm for j, nm in enumerate(names) if j % n == i - 1}
+        items = [m for m in items if m[0] in keep]
+        multi = [m for m in multi if m[0] in keep]
+        executed = [m for m in items if m[4] is not None]
+        declared = [m for m in items if m[4] is None] + \
+            [m for m in multi if m[3] is None]
+    # ★ 48차 — **0건을 고르면 실패한다.** 47차 runner 는 `-k` 가 아무것도 고르지
+    #   않아도 "전부 물었다" 를 찍고 rc 0 이었다 — 오타 하나로 증거 전체가
+    #   조용히 사라지는 구조였다.
+    if not items and not multi:
+        print(f"✗ `-k {a.k}` 가 아무 scenario 도 고르지 않았다 — 이름을 "
+              "확인하라 (0건을 성공으로 세지 않는다)")
+        return 2
+    if a.list:
+        for name, path, _o, _n, kexpr in items:
+            tag = "  (관측 안 됨 — 신고)" if kexpr is None else ""
+            print(f"{name:30s} {path.name:20s} -k {kexpr}{tag}")
+        for name, path, _pairs, kexpr in multi:
+            print(f"{name:30s} {path.name:20s} -k {kexpr}  (2-site)")
+        _print_counts(items, multi, executed, declared)
+        return 0
+
+    bad, ran = [], 0
+    observed_all: dict = {}
+    plan = [(n, p, [(o, w)], k) for n, p, o, w, k in executed]
+    # ★ 48차 — `-k None` 인 MULTI 는 **신고**다. 실행 계획에 넣지 않는다.
+    plan += [(n, p, pairs, k) for n, p, pairs, k in multi if k is not None]
+
+    SANDBOX = _make_sandbox()
+    print(f"sandbox: {SANDBOX}\n")
+    try:
+        rc = _replay(plan, bad, observed_all, a,
+                     sel=(items, multi, executed, declared))
+    finally:
+        if a.keep_sandbox:
+            print(f"\nsandbox 를 남긴다: {SANDBOX}")
+        else:
+            shutil.rmtree(SANDBOX.parent, ignore_errors=True)
+    return rc
+
+
+def _is_semantic_noop(src: str, old: str, new: str) -> bool:
+    """이 치환이 **계산을 안 바꾸는가** (51차 P1-E2).
+
+    50차는 `old == new` 만 봤다 — 바이트 부등식이다. 리뷰어가 주석 한 줄만
+    더한 mutant 를 등록해 `check_preimages_rc=0` 를 받았다: 변이가 계산을 안
+    바꾸면 시험은 당연히 초록이고, 그것을 "물었다" 로 세면 전수 인증이 거짓이
+    된다.
+
+    정규형(AST → `ast.unparse`)이 같으면 그 치환은 주석·공백·따옴표 서식만
+    바꾼 것이다. 파싱이 안 되면 **변이로 인정한다** — 문법을 깨는 치환은
+    적어도 no-op 은 아니다 (그 경우는 재생이 잡는다).
+    """
+    import ast
+
+    if old not in src:
+        return False
+    try:
+        a = ast.unparse(ast.parse(src))
+        b = ast.unparse(ast.parse(src.replace(old, new, 1)))
+    except SyntaxError:
+        return False
+    return a == b
+
+
+def _registry_digest() -> str:
+    """등록부 **전체**의 내용 주소 — 이름·파일·preimage·기대 node 까지 (51차)."""
+    body = json.dumps(
+        [[n, p.name, o, w, k] for n, p, o, w, k in MUTANTS]
+        + [[n, p.name, list(map(list, pairs)), k] for n, p, pairs, k in MULTI],
+        ensure_ascii=False, sort_keys=True)
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+
+def _expect_digest() -> str:
+    return hashlib.sha256(json.dumps(EXPECT, ensure_ascii=False, sort_keys=True)
+                          .encode("utf-8")).hexdigest()
+
+
+def _runner_digest() -> str:
+    return hashlib.sha256(
+        pathlib.Path(__file__).read_bytes()).hexdigest()
+
+
+#: 시험 결과를 바꾸는 **환경변수** — 값이 바뀌면 증거도 바뀌어야 한다 (56차 P1-2).
+#: 목록은 `src/`·`tools/` 에서 실제로 읽는 것에서 왔다. 새 변수를 도입하면서
+#: 여기 안 적으면 `..._evidence_binds_the_execution_environment` 가 잡는다.
+BOUND_ENV = ("DD_SMOOTH_CACHE",)
+
+#: 프로세스가 **돌기 위해** 필요한 것 — 지우면 파이썬이 뜨지 않거나 정렬·인코딩이
+#: 기계마다 달라진다. 값은 부모에서 가져오되 **이름은 여기가 정본**이다.
+_PROCESS_ENV = ("PATH", "HOME", "TMPDIR", "LANG", "LC_ALL", "TZ",
+                "VIRTUAL_ENV", "PYTHONPATH", "PYTHONHASHSEED",
+                "SYSTEMROOT", "TEMP", "TMP")
+
+
+def replay_env() -> dict:
+    """재생이 sandbox pytest 에 주는 **환경 전부** (57차 P1-2).
+
+    ★ 왜 목록을 늘리지 않는가 — 56차는 `BOUND_ENV` 에 적힌 것만 영수증에 담았고,
+      정작 sandbox pytest 는 `env=` 없이 떠서 **부모 환경을 통째로** 물려받았다.
+      그래서 목록 밖 변수는 결과를 바꾸면서 증거를 안 움직였다. 실측으로 밖인
+      것: `src/grid.py` 의 `LEG`·`CANONICAL_RUN`, `scripts/smoke_e2e.sh` 의
+      `SMOKE_DIRTY`. 목록을 늘리면 다음 변수 하나가 다시 밖이다 — 56차 verdict
+      가 blacklist 증설을 두 번 거절한 것과 같은 형태다.
+
+      그러므로 목록을 **강제**로 바꾼다. 재생이 보는 환경에서 선언 밖의 것을
+      전부 지우면, 목록은 "이것이 중요하다" 는 주장이 아니라 "이것이 전부였다"
+      는 사실이 된다. 밖에 있는 변수는 증거를 안 움직이는 것이 아니라 **run 에
+      닿지 못한다**.
+
+    `PYTHONHASHSEED` 를 고정하는 것도 같은 이유다 — 재생이 해시 순서에 흔들리면
+    같은 코드가 다른 증거를 낸다.
+    """
+    import os
+
+    out = {k: os.environ[k] for k in _PROCESS_ENV if k in os.environ}
+    out.update({k: os.environ.get(k, "") for k in BOUND_ENV})
+    out.setdefault("PYTHONHASHSEED", "0")
+    return dict(sorted(out.items()))
+
+#: 시험이 소비하는 **비-Python 입력** (56차 P1-2).
+BOUND_INPUT_GLOBS = ("requirements*.txt", "configs/*.yaml", "scripts/*.sh",
+                     "run.sh", "pytest.ini", "conftest.py")
+
+#: 시작 시 **인터프리터가 실제로 올리는 것**을 재는 탐침 (58차 L11).
+#:
+#:   57차는 재생이 보는 환경을 선언한 변수만 남기도록 정화했다. 그런데 변수의
+#:   **값이 가리키는 바이트**는 여전히 목록 밖이었다: 같은 `PYTHONPATH` 문자열
+#:   아래 `sitecustomize.py` 만 바꾸자 child 결과가 ALPHA → BETA-LONG 으로
+#:   달라지는데 영수증 digest 는 그대로였다 (리뷰어 실측). 같은 `PATH` 문자열
+#:   아래 도구 바이트를 바꾼 경우도 같았다.
+#:
+#:   `[해석]` 목록을 늘리는 길은 여기서도 안 끝난다 (`usercustomize`, `.pth`,
+#:   인터프리터 자신, 그 다음 것). 그러므로 **환경이 무엇인지 우리가 적는 대신
+#:   시작한 인터프리터에게 자기가 무엇을 올렸는지 묻는다.**
+#:
+#:   재는 면을 `site`·`sitecustomize`·`usercustomize`·`.pth`·실행 파일로 좁힌
+#:   것은 그것이 **어느 프로세스에서 재도 같은** 면이기 때문이다. `sys.modules`
+#:   전체를 재면 `python -c` 와 pytest child 가 다른 값을 내고, 그러면 증언이
+#:   서로 대조될 수 없다 (그 대조가 L12 의 핵심이다).
+#: ★ 65차 N2b — namespace package 의 **identity**. 코드가 없는 module 이므로 바이트가
+#: 없다 — 대신 **종류 + 검색 위치**(`__path__` / `submodule_search_locations`, 절대
+#: 경로로 정규화)에 결속한다. 다른 자리의 빈 디렉터리는 다른 값이다. child(탐침)와
+#: 부모가 **같은 문자열**을 실행한다 — 규칙을 두 곳에 적으면 언젠가 어긋난다
+#: (`_FRAMED_PARSER_SRC` 와 같은 방식).
+_NAMESPACE_IDENTITY_SRC = '''
+def _namespace_identity(locs):
+    """namespace package 의 identity — `<namespace>:` 뒤에 붙는 hex16 (65차 N2b)."""
+    import hashlib as _hl, os as _os
+    _norm = [_os.path.normcase(_os.path.normpath(_os.path.abspath(str(p)))) for p in locs]
+    return _hl.sha256("\\n".join(_norm).encode("utf-8")).hexdigest()[:16]
+'''
+exec(_NAMESPACE_IDENTITY_SRC)     # noqa: S102 — 위 문자열이 정본이다 (부모도 같은 규칙)
+
+
+_ENV_PROBE_BODY = '''
+# ★ 59차 M14 — **시작 시 올라온 module 집합을 맨 먼저 찍는다.**
+#   이 본문은 `python -c` 스크립트의 첫 줄부터 실행되므로, 이 시점의
+#   `sys.modules` 가 곧 "인터프리터가 startup 에 올린 것 전부" 다
+#   (`sitecustomize` 가 끌어온 것도, 그것이 다시 끌어온 것도 여기 있다).
+#   이름 세 개를 세던 58차 목록으로는 겹수만큼 구멍이 남았다.
+_STARTUP_MODULES = sorted(__import__("sys").modules)
+''' + _NAMESPACE_IDENTITY_SRC + '''
+
+class _Unreadable(Exception):
+    """읽지 못한 바이트 — 그 섹션은 `measured` 가 아니다 (62차 P1-4)."""
+
+
+def _env_facts(NAMES):
+    # ★ 62차 P1-4 — 읽기 실패는 `"<unreadable>"` 이라는 **정상 문자열**이 아니라
+    #   섹션 전체의 `failed` 다. 예전 판은 그 문자열을 digest 자리에 넣었고,
+    #   reader 는 `status` 만 봤으므로 못 잰 환경이 "쟀다" 로 통과했다.
+    try:
+        return _env_facts_measured(NAMES)
+    except _Unreadable as _exc:
+        return {"status": "failed", "reason": "읽을 수 없는 바이트: %s" % _exc}
+
+
+def _env_facts_measured(NAMES):
+    import hashlib, os, site, sys
+
+    def _d(p):
+        try:
+            h = hashlib.sha256()
+            with open(p, "rb") as fh:
+                for c in iter(lambda: fh.read(1 << 16), b""):
+                    h.update(c)
+            return h.hexdigest()[:16]
+        except OSError as _exc:
+            raise _Unreadable("%s (%s)" % (p, _exc))
+
+    def _hash_origin(p, loader):
+        """origin 의 바이트 — 파일이면 읽고, 아니면(zip 등) loader 에게 묻는다
+        (62차 P1-4). 둘 다 안 되면 `_Unreadable` — `unfiled` 가 아니다."""
+        if os.path.isfile(p):
+            return _d(p)
+        _get = getattr(loader, "get_data", None)
+        if _get is None:
+            raise _Unreadable("%s (파일이 아니고 loader 가 바이트를 못 준다)" % p)
+        try:
+            return hashlib.sha256(_get(p)).hexdigest()[:16]
+        except Exception as _exc:                        # noqa: BLE001
+            raise _Unreadable("%s (loader: %r)" % (p, _exc))
+
+    # ★ 64차 N2 — customization 도 **같은 origin 규칙**으로 읽는다. 전 판은 여기만
+    #   `_d(f)` 였고 바로 아래 `loaded` 루프는 `_hash_origin` 이었다 — 같은 origin 을
+    #   두 규칙으로 읽고 있었던 것이다. 그래서 ZIP 안의 정상 `sitecustomize` package
+    #   (표준 zipimport) 를 OS 파일로 열려다 `[Errno 20] Not a directory` 로 죽고
+    #   영수증 전체가 `failed` 였다. 읽기 실패는 여전히 `_Unreadable` → typed
+    #   `failed` 다 — 예외를 `<absent>` 로 바꿔 정상으로 취급하지 않는다.
+    # ★ 65차 N2b — **상태를 넷으로 가른다**: 안 올라왔다(`<absent>`) · 올라왔고 바이트가
+    #   있다(hex16 — 파일·ZIP) · 올라왔는데 코드가 없다(`<namespace>:hex16` — 표준
+    #   namespace package, `__file__ None`) · 올라왔는데 origin 도 검색 위치도 없다
+    #   (`_Unreadable` → typed `failed`). 64차 판은 `__file__` 부재를 전부 `<absent>` 로
+    #   접었고, 아래 이력 검사가 "올렸다는데 <absent>" 를 모순으로 보아 **정상 namespace
+    #   customization 이 failed** 였다 (리뷰어 실측). "origin 없는 module 은 전부 정상"
+    #   으로 넓히지 않는다 — 넷째 상태는 여전히 못 잰 것이다.
+    cust = {}
+    for n in ("site", "sitecustomize", "usercustomize"):
+        m = sys.modules.get(n)
+        if m is None:
+            cust[n] = "<absent>"                    # 안 올라왔다
+            continue
+        _spec = getattr(m, "__spec__", None)
+        f = getattr(m, "__file__", None) or getattr(_spec, "origin", None)
+        _locs = getattr(_spec, "submodule_search_locations", None)
+        if f in ("built-in", "frozen"):
+            cust[n] = "<%s>" % f                   # 부모가 대조할 바이트가 없다 — 거부된다
+        elif f:
+            cust[n] = _hash_origin(
+                f, getattr(_spec, "loader", None) or getattr(m, "__loader__", None))
+        elif _locs is not None:
+            cust[n] = "<namespace>:" + _namespace_identity(list(_locs))
+        else:
+            raise _Unreadable("%s 은 올라와 있는데 origin 도 검색 위치도 없다 — "
+                              "무엇이 실행됐는지 잴 수 없다" % n)
+
+    dirs = []
+    for get in (getattr(site, "getsitepackages", None),
+                getattr(site, "getusersitepackages", None)):
+        if get is None:
+            continue
+        try:
+            got = get()
+        except Exception:
+            continue
+        dirs += [got] if isinstance(got, str) else list(got)
+    dirs += [p for p in os.environ.get("PYTHONPATH", "").split(os.pathsep) if p]
+    pth = []
+    for d in sorted(set(dirs)):
+        try:
+            names = sorted(os.listdir(d))
+        except OSError:
+            continue
+        for nm in names:
+            if nm.endswith(".pth"):
+                pth.append([os.path.join(d, nm), _d(os.path.join(d, nm))])
+
+    # ★ 59차 M14 — startup 에 올라온 **모든** module 의 바이트. 이름 목록이
+    #   아니라 인터프리터가 실제로 올린 것이므로, `sitecustomize` 가 몇 겹을
+    #   끌어오든 전부 여기 들어온다.
+    loaded = {}
+    for nm in _STARTUP_MODULES:
+        m = sys.modules.get(nm)
+        f = getattr(m, "__file__", None) if m is not None else None
+        if f:
+            loaded[nm] = _hash_origin(
+                f, getattr(getattr(m, "__spec__", None), "loader", None))
+    # ★ 60차 P1-3 — **상태가 아니라 이력을 잰다.** `sys.modules` 는 이 순간의
+    #   상태이고, startup 이 올렸다 **지운** module 은 거기 없다 (리뷰어 실측:
+    #   `sitecustomize` 가 payload 를 import 해 builtins 에 값을 남기고
+    #   `sys.modules` 에서 지우면, payload 바이트를 바꿔도 영수증이 안 움직였다).
+    #
+    #   `-X importtime` 은 인터프리터가 startup 에 **실제로 import 한** module 을
+    #   전부 stderr 로 찍는다 — 그 뒤 지워도 로그에는 남는다. 그래서 손자
+    #   프로세스를 하나 띄워 그 이력을 받고, 이름마다 파일을 찾아 해시한다.
+    # ★ 61차 P1-3 — 측정 결과를 **typed** 로 만든다. 예전 판은 손자의 return
+    #   code 를 안 보고, 해석 실패를 안 세고, 예외를 `{"<unmeasured>": "1"}`
+    #   이라는 **정상 dict** 로 바꿨다. 그러면 "쟀다" 와 "재려다 실패했다" 가
+    #   형식이 같아서 읽는 쪽이 구별할 수 없다 — 그것은 fail-closed 가 아니다
+    #   (리뷰어 실측: `history_probe_failure_child_rc: 0`).
+    #
+    #   파일이 없는 builtin/frozen 은 **실패가 아니다.** 그것을 실패로 세면
+    #   영수증이 언제나 실패가 되어 층이 마비된다. 따로 센다(`unfiled`).
+    # ★ 63차 F2 — **증거를 셋으로 가른다: 시도 · 성공 · 확인 불가.**
+    #   62차 판은 `-X importtime` 의 이름 목록을 "성공한 import" 로 읽었다. 그런데
+    #   importtime 은 **시도** 전부를 찍는다 — `site` 계열 코드의
+    #   `try: import apport_python_hook / except ImportError: pass` 처럼 실패한
+    #   선택적 import 도 한 줄 남긴다. 그 이름은 지금 `find_spec → None` 이므로
+    #   "올렸다 지운 module" 로 오분류돼 기본 Ubuntu 환경이 `failed` 였다 (리뷰어
+    #   실측: `apport_loaded=false` 인데 importtime 에 이름 존재). 이름 하나를
+    #   예외 목록에 넣는 수정은 안 한다 — 다음 선택적 import 가 또 밖이다.
+    #
+    #   그래서 손자를 `-X importtime -v` 로 띄운다. `-v` 의 `import 'X' # <loader>`
+    #   줄은 **성공한 로드만** 찍는다 (이 저장소 실측: 실패한 선택적 import 는
+    #   importtime 줄은 있고 `-v` 줄은 없다). 이름마다:
+    #     · `-v` 가 로드했다 → 지금 찾아 해시한다. 못 찾으면 **failed** (올렸다
+    #       지운 module — 62차 자체 리뷰 F2 의 성질 그대로).
+    #     · importtime 에만 있다 → **시도만 한 이름**. `attempted_not_loaded` 에
+    #       이름을 남기고 measured 를 유지한다 (목록은 영수증 안이라 digest 에
+    #       묶인다 — 세탁이 아니라 기록이다).
+    #     · `-v` 는 로드인데 `customization` 은 `<absent>` → 서로 어긋난 증거 →
+    #       failed.
+    def _measure_history():
+        try:
+            import subprocess as _sp
+
+            _py = os.environ.get("DD_HISTORY_PROBE_PYTHON") or sys.executable
+            _extra = [x for x in
+                      os.environ.get("DD_HISTORY_PROBE_ARGS", "").split() if x]
+            _r = _sp.run([_py, "-X", "importtime", "-v", *_extra, "-c", "pass"],
+                         capture_output=True, text=True, timeout=120)
+        except Exception as _exc:                        # noqa: BLE001
+            return {"status": "failed", "reason": f"손자를 못 띄웠다: {_exc!r}"}
+        if _r.returncode != 0:
+            return {"status": "failed",
+                    "reason": f"손자가 rc={_r.returncode} 로 끝났다: "
+                              f"{(_r.stderr or '')[-200:]}"}
+        import re as _re
+
+        _attempted, _loaded = set(), set()
+        _vline = _re.compile(r"^import '?([A-Za-z0-9_.]+)'? # ")
+        for _ln in (_r.stderr or "").splitlines():
+            # 자료 줄만 받는다 — 헤더 `import time: self [us] | cumulative |
+            #   imported package` 는 첫 칸이 숫자가 아니다 (62차 자체 리뷰 F2).
+            if _ln.startswith("import time:") and _ln.count("|") == 2:
+                _self, _cum, _nm_ = (x.strip() for x in
+                                     _ln[len("import time:"):].split("|"))
+                if _self.isdigit() and _cum.isdigit() and _nm_:
+                    _attempted.add(_nm_)
+                continue
+            _m = _vline.match(_ln)
+            if _m:
+                _loaded.add(_m.group(1))
+        if not _attempted or not _loaded:
+            # 이유 문구에 개수를 싣지 않는다 — 기계마다 startup module 수가
+            # 달라 변이 재생의 증인 문구가 흔들린다 (63차 실측: 27).
+            return {"status": "failed",
+                    "reason": "손자 로그에서 module 이름을 해석하지 못했다 "
+                              "(importtime 줄 %s · -v 줄 %s)"
+                              % ("있음" if _attempted else "없음",
+                                 "있음" if _loaded else "없음")}
+        from importlib import util as _u
+
+        _mods, _unfiled, _attempt_only = {}, 0, []
+        for _nm in sorted(_attempted | _loaded):
+            if _nm not in _loaded:
+                _attempt_only.append(_nm)          # 시도만 — 올라온 적이 없다
+                continue
+            if _nm in ("sitecustomize", "usercustomize") \
+                    and cust.get(_nm) == "<absent>":
+                return {"status": "failed",
+                        "reason": "손자는 %s 을 올렸다는데 customization 은 "
+                                  "<absent> 다 — 어긋난 증거" % _nm}
+            try:
+                _sp_ = _u.find_spec(_nm)
+            except (ImportError, ValueError, AttributeError) as _exc:
+                # ★ 62차 P1-4 — startup 에 올라온 이름을 지금 못 찾으면 그것은
+                #   "파일이 없는 정상" 이 아니라 **못 잰 것**이다.
+                return {"status": "failed",
+                        "reason": "startup module %s 의 spec 을 못 찾았다: %r"
+                                  % (_nm, _exc)}
+            _o = getattr(_sp_, "origin", None) if _sp_ is not None else None
+            if _sp_ is None:
+                # ★ 62차 자체 리뷰 (영수증 F2) — `-v` 가 로드를 증언한 이름을
+                #   지금 못 찾으면 **올렸다 지운** module 이다 (실측: 미측정
+                #   파일을 import 해 값을 남기고 sys.modules·파일을 지우면 digest
+                #   가 안 움직였다). 잴 수 없다.
+                return {"status": "failed",
+                        "reason": "startup 이 올린 module %s 을 지금 찾을 수 "
+                                  "없다 — 올렸다 지운 module 은 잴 수 없다" % _nm}
+            if _o in (None, "built-in", "frozen"):
+                _unfiled += 1           # builtin·frozen·namespace — 정상이다
+                continue
+            # ★ 62차 P1-4 — origin 이 파일이 아니면(zip 등) 예전 판은 builtin 과
+            #   같은 `unfiled` 로 셌다 — zip 안의 바이트가 통째로 영수증 밖이었다.
+            #   `_hash_origin` 이 loader 에게 바이트를 묻고, 못 주면 `_Unreadable`
+            #   로 startup 섹션 전체가 `failed` 다.
+            _mods[_nm] = _hash_origin(_o, getattr(_sp_, "loader", None))
+        if not _mods:
+            return {"status": "failed",
+                    "reason": "이름은 받았는데 해시한 파일이 하나도 없다"}
+        return {"status": "measured", "modules": _mods, "unfiled": _unfiled,
+                "attempted_not_loaded": _attempt_only}
+
+    history = _measure_history()
+
+    # ★ 60차 P1-4 — **문자열이 가리키는 바이트를 담는다.** 59차 영수증은
+    #   `PYTHONPATH` 를 문자열로만 담았고, 같은 문자열 아래 module 내용을 바꾸면
+    #   실행은 달라지는데 영수증은 그대로였다 (실측: `FIRST → OTHER`).
+    #
+    #   담는 범위는 그 자리의 **최상위 module** 이다 — startup 뒤에 import 되는
+    #   것을 이력으로는 못 보므로, "무엇이 import 될 수 있는가" 를 바이트로
+    #   답한다. 더 깊은 package 는 실제로 import 될 때 위 이력이 잡는다.
+    # ★ 61차 P1-2 — 키에 **검색 순서**를 담는다. 예전 판은 basename 하나를
+    #   키로 썼고, 그래서 두 root 에 같은 이름이 있으면 **뒤 root 가 앞 root 를
+    #   덮었다.** Python 의 import 는 앞 root 가 이기므로, 증언이 실제로
+    #   import 될 바이트의 **반대**를 적고 있었다. 그리고 순서가 사라져
+    #   순서만 다른 두 환경이 같은 값을 냈다 (리뷰어 실측:
+    #   `same_name_entry_count: 1`).
+    #
+    #   root 문자열 자체는 영수증의 `env.PYTHONPATH` 에 이미 있으므로 여기서
+    #   두 번 담지 않는다. 여기 필요한 것은 **어느 자리의 무엇인가** 다.
+    reachable = {}
+    for _i, d in enumerate(
+            [x for x in os.environ.get("PYTHONPATH", "").split(os.pathsep) if x]):
+        try:
+            names = sorted(os.listdir(d))
+        except OSError:
+            continue
+        for nm in names:
+            f = os.path.join(d, nm)
+            if nm.endswith(".py") and os.path.isfile(f):
+                reachable["%d/%s" % (_i, nm)] = _d(f)
+            elif os.path.isfile(os.path.join(f, "__init__.py")):
+                reachable["%d/%s/__init__.py" % (_i, nm)] = _d(
+                    os.path.join(f, "__init__.py"))
+            # ★ 62차 자체 리뷰 (영수증 F3) — distribution metadata 도 바이트다.
+            #   `*.dist-info/entry_points.txt` 하나로 pytest plugin 이 올라오는데
+            #   예전 판은 `.py` 만 담아 digest 가 같았다 (실측). dist-info /
+            #   egg-info 아래 파일 전부를 같은 키 공간에 담는다.
+            elif os.path.isdir(f) and (nm.endswith(".dist-info")
+                                       or nm.endswith(".egg-info")):
+                for fn in sorted(os.listdir(f)):
+                    fp = os.path.join(f, fn)
+                    if os.path.isfile(fp):
+                        reachable["%d/%s/%s" % (_i, nm, fn)] = _d(fp)
+
+    return {"status": "measured",                    # 62차 P1-4 — typed
+            "executable_sha256": _d(sys.executable),
+            "customization": cust,
+            "startup_modules": loaded,
+            "startup_history": history,
+            "importable_roots": reachable,
+            "pth": pth,
+            "version": "%d.%d.%d" % sys.version_info[:3],
+            "env": {k: os.environ[k] for k in NAMES if k in os.environ}}
+
+
+def _receipt_facts(NAMES, GLOBS, ROOT):
+    """이 실행의 **영수증 전체**. 부모와 자식이 같은 규칙으로 잰다 (59차 M15).
+
+    58차는 `startup` 만 자식이 증언했고 나머지는 조각 옆에 적힌 값이었다.
+    같은 본문을 부모(`_execution_receipt()`)와 심어 놓은 증언 node 가 **둘 다**
+    쓰면 범위가 영수증 전체로 넓어지고, 규칙이 갈릴 자리도 없어진다.
+    """
+    import glob as _g
+    import hashlib, os, sys
+
+    def _fd(p):
+        try:
+            h = hashlib.sha256()
+            with open(p, "rb") as fh:
+                for c in iter(lambda: fh.read(1 << 16), b""):
+                    h.update(c)
+            return h.hexdigest()[:16]
+        except OSError as _exc:
+            raise _Unreadable("입력 %s (%s)" % (p, _exc))
+
+    # ★ 62차 P1-4 — `inputs` 도 typed 다. 읽기 실패는 섹션의 `failed`.
+    try:
+        _files = {}
+        for pat in GLOBS:
+            for f in sorted(_g.glob(os.path.join(ROOT, pat))):
+                if os.path.isfile(f):
+                    _files[os.path.relpath(f, ROOT).replace(os.sep, "/")] = _fd(f)
+        inputs = {"status": "measured", "files": _files}
+    except _Unreadable as _exc:
+        inputs = {"status": "failed", "reason": "읽을 수 없는 입력: %s" % _exc}
+    # ★ 61차 P1-3 — `startup_history` 와 **같은 형태**의 결함이 여기에도 있었다:
+    #   실패를 `{"<unavailable>": ""}` 라는 정상 dict 로 바꾼다. 리뷰어는
+    #   history 만 짚었지만 규칙이 한 자리에 있지 않으면 남은 중복이 곧 다음
+    #   반례다. 그래서 같이 typed 로 만든다.
+    packages = {"status": "measured", "dists": {}}
+    try:
+        from importlib import metadata as _md
+
+        # ★ 62차 P1-5 — `sys.path` **순서대로** 훑고 같은 이름은 **처음 것**이
+        #   남는다 (Python 의 `importlib.metadata.version()` 이 고르는 것과
+        #   같다). 예전 판은 한 dict 에 덮어써서 뒤 root 가 이겼다 — 영수증이
+        #   실제로 import 될 것의 반대를 적었다 (61차 P1-2 와 같은 형태).
+        #   가려진 것은 `shadowed` 에 위치와 함께 남긴다 — 순서만 다른 두
+        #   환경이 같은 값을 내지 않게.
+        pkgs, pos, shadowed = {}, {}, []
+        for _i, _entry in enumerate(list(sys.path)):
+            for dist in _md.distributions(path=[_entry]):
+                nm = (dist.metadata or {}).get("Name")
+                if not nm:
+                    # ★ 62차 자체 리뷰 (영수증 F4) — Name 없는 dist 를 건너뛰면
+                    #   그 dist 를 지운 것과 digest 가 같다. Python 은 디렉터리
+                    #   stem 으로 찾으므로 (`noname-1.0.dist-info` → `noname`)
+                    #   같은 키를 쓴다. stem 도 없으면 측정 실패다.
+                    _p = getattr(dist, "_path", None)
+                    _stem = (os.path.basename(str(_p)).split("-")[0]
+                             if _p is not None else "")
+                    if not _stem:
+                        raise RuntimeError("이름을 정할 수 없는 distribution: %r" % (_p,))
+                    nm = _stem
+                nm, ver = str(nm).lower(), str(dist.version)
+                if nm in pkgs:
+                    shadowed.append([nm, _i, ver])
+                else:
+                    pkgs[nm] = ver
+                    pos[nm] = _i
+        packages = {"status": "measured", "dists": dict(sorted(pkgs.items())),
+                    "positions": dict(sorted(pos.items())),
+                    "shadowed": sorted(shadowed)}
+    except Exception as _exc:                            # noqa: BLE001
+        packages = {"status": "failed",
+                    "reason": f"설치 목록을 못 읽었다: {_exc!r}"}
+    return {"interpreter": "%d.%d.%d" % sys.version_info[:3],
+            "packages": packages,
+            "env": {k: os.environ[k] for k in NAMES if k in os.environ},
+            "inputs": inputs,
+            "startup": _env_facts(NAMES)}
+'''
+
+
+def _probe_names() -> tuple:
+    """탐침이 재구성할 환경변수 이름 — `replay_env()` 와 같은 정본에서 온다."""
+    return tuple(sorted(set(_PROCESS_ENV) | set(BOUND_ENV)))
+
+
+#: ★ 62차 P1-3 — 영수증은 **frame** 으로 감싸 찍는다.
+#:
+#:   리뷰어 반례: `sitecustomize` 가 `atexit` 에 영수증 모양의 JSON 을 등록하면
+#:   그것이 stdout 의 **마지막 줄**이 되고, reader 는 `splitlines()[-1]` 을
+#:   영수증으로 받았다. startup 코드가 자기 영수증을 쓸 수 있으면 영수증이
+#:   아니다.
+#:
+#:   frame 은 부모가 호출마다 새로 만드는 문자열이다. reader 는 stdout 이
+#:   **정확히 그 frame 하나**일 때만 받는다 — 앞이든 뒤든 다른 줄이 있으면,
+#:   frame 이 둘이면, 닫는 frame 이 없으면 거부. atexit 는 탐침의 print 뒤에
+#:   돌므로 그 출력은 언제나 "뒤에 더 있는 줄" 이다.
+#:
+#:   한계 (요청문에 적는다 — 62차 자체 리뷰가 실측했다): child 안에서 도는
+#:   startup 코드 **전부**가 위조자다 — `sys.stdout` 교체, fd 층(`dup2` 로 1 을
+#:   돌리고 원본에 write), `builtins.print` 교체는 진짜 frame 을 삼키고 세탁본을
+#:   낸다 (셋 다 ACCEPTED 로 실측). child 는 `sys.orig_argv` 로 자기 `-c` 소스를
+#:   읽어 frame 도 안다. 여기서 닫은 것은 "stdout 에 **덧붙이기**" (atexit ·
+#:   `os.write` 앞뒤) 뿐이다. 그래서 둘째 층을 둔다 — 부모가 **자기 프로세스에서**
+#:   `customization`(site · sitecustomize · usercustomize 바이트)을 재서 child 의
+#:   값과 대조한다 (`_assert_customization_matches_parent`). child 가 자기 위조
+#:   파일을 `<absent>` 로 세탁하면 거기서 걸린다. 위조자가 자기 해시를 정직하게
+#:   적는 경우는 여전히 못 막는다 — 환경을 그 환경 안에서 재는 층의 한계이고,
+#:   종결은 §0 의 독립 replay 다.
+_FRAME_PREFIX = "DD-RECEIPT-"
+
+#: parser 의 **소스** — 부모와 심어 놓은 증언 node 가 같은 문자열을 쓴다 (규칙을
+#: 두 곳에 적으면 언젠가 어긋나고, 어긋나면 대조가 무의미해진다). 부모는 아래서
+#: `exec` 로 정의하고 node 는 파일에 그대로 박는다.
+_FRAMED_PARSER_SRC = '''
+def _parse_framed_receipt(stdout, frame):
+    """stdout 이 **정확히 한 frame** 일 때만 그 안의 JSON (62차 P1-3)."""
+    import json as _json
+    body = (stdout or "").strip()
+    if (body.count(frame) != 2 or not body.startswith(frame)
+            or not body.endswith(frame) or len(body) < 2 * len(frame)
+            or "\\n" in body):
+        raise ValueError(
+            "영수증 stdout 이 정확히 한 frame 이 아니다 — 탐침의 print 앞뒤에 "
+            "다른 출력이 있거나 frame 이 둘이다 (startup 코드의 stdout 위조를 "
+            "받지 않는다, 62차 P1-3): %r" % body[:200])
+    return _json.loads(body[len(frame):-len(frame)])
+'''
+exec(_FRAMED_PARSER_SRC)          # noqa: S102 — 위 문자열이 정본이다
+
+
+def _new_frame() -> str:
+    import secrets
+
+    return _FRAME_PREFIX + secrets.token_hex(8)
+
+
+def _run_probe(tail_expr: str, cwd, what: str) -> dict:
+    """탐침을 띄워 `tail_expr` 의 값을 **framed** 로 받는다 (62차 P1-3)."""
+    frame = _new_frame()
+    src = _ENV_PROBE_BODY + (
+        "\nimport json\n"
+        f"print({frame!r} + json.dumps({tail_expr}, sort_keys=True, "
+        f"ensure_ascii=False) + {frame!r})\n")
+    r = subprocess.run([sys.executable, "-c", src],
+                       cwd=cwd, env=replay_env(),
+                       capture_output=True, text=True, timeout=600)
+    if r.returncode != 0 or not r.stdout.strip():
+        raise _ReplayError(
+            f"{what} 탐침이 실패했다 (rc={r.returncode}): {r.stderr[-300:]}")
+    try:
+        return _parse_framed_receipt(r.stdout, frame)       # noqa: F821
+    except ValueError as exc:
+        raise _ReplayError(f"{what} 탐침의 출력을 받을 수 없다: {exc}") from None
+
+
+def _replay_context(cwd=None) -> dict:
+    """탐침·재생·부모 대조가 **공유하는 하나의 재생 문맥** (65차 N1b · 64차 N1).
+
+    같은 실행 파일·같은 env 문자열만으로는 경로 해석 문맥이 같아지지 않는다 (리뷰어
+    실측): child 는 재생 cwd(sandbox) 에서 `-c` 로 뜨므로 `sys.path[0]` 은 **그 cwd** 고,
+    상대 `PYTHONPATH` 항목도 그 cwd 로 풀린다. 64차 판의 부모는 원시 상대 문자열을
+    **자기 cwd** 로 풀고, 거기에 **pytest 가 얹은 자기 `sys.path`** 를 child 의 검색
+    경로라고 가정했다 — 두 정상 영수증이 거부됐다.
+
+    그래서 문맥을 **한 번, 한 곳에서** 잰다: 재생이 실제로 띄우는 것과 같은 실행 파일 ·
+    같은 argv 모양(`-c`) · 같은 env · 같은 cwd 로 인터프리터를 하나 띄워
+    `site.ENABLE_USER_SITE` · `sys.path` · `os.getcwd()` · `site.__file__` 를 받고,
+    `sys.path` 를 그 cwd 기준 절대 경로로 정규화한다. 부모 프로세스의 어떤 값도 child
+    의 것이라고 가정하지 않는다 (부모는 pytest 가 온갖 플래그로 띄운 프로세스다).
+
+    영수증 child 의 자기 증언은 쓰지 않는다 — 그것을 믿으면 세탁 통로가 된다. 이 보조
+    인터프리터도 같은 startup 코드를 실행한다는 점은 64차와 같다: 부모가 **독립적으로**
+    믿는 것은 여기서 받은 경로 위의 **바이트를 부모가 직접 읽은 값**이고, 이 문맥은
+    그 바이트를 어디서 읽을지를 정한다.
+
+    못 재면 fail-closed — 문맥을 모르면 대조 규칙을 정할 수 없다.
+    """
+    cwd = pathlib.Path(cwd) if cwd is not None else _sandboxed(ROOT)
+    frame = _new_frame()
+    # ★ 66차 G66-N1 — **올라와 있는 module 의 origin 을 여기서 같이 잰다.** 65차 판은 `sys.path` 만 받고
+    #   부모가 거기서 `PathFinder.find_spec()` 를 다시 했다. 그런데 `python -c` 의
+    #   `sys.path[0]=''`(cwd)는 **초기화가 끝난 뒤** 붙으므로(CPython `main.c` 의 path0 추가),
+    #   startup 이 한 줄도 읽지 않은 cwd 파일이 "읽었어야 하는 후보" 로 소급됐다. 정상
+    #   `sitecustomize` 가 자기 경로를 지우거나 다른 후보를 앞에 넣어도 같은 거부가 났다
+    #   (리뷰어 실측 3건, 우리 Linux 재현). **찾을 수 있는 후보와 올렸던 origin 은 다른 자료다.**
+    src = ("import json, os, site, sys\n"
+           "def _cust():\n"
+           "    out = {}\n"
+           "    for n in ('site', 'sitecustomize', 'usercustomize'):\n"
+           "        m = sys.modules.get(n)\n"
+           "        if m is None:\n"
+           "            out[n] = {'loaded': False, 'origin': None, 'locations': None}\n"
+           "            continue\n"
+           "        sp = getattr(m, '__spec__', None)\n"
+           "        locs = getattr(sp, 'submodule_search_locations', None)\n"
+           "        out[n] = {'loaded': True,\n"
+           "                  'origin': getattr(m, '__file__', None) or getattr(sp, 'origin', None),\n"
+           "                  'locations': ([str(x) for x in locs] if locs is not None else None)}\n"
+           "    return out\n"
+           f"print({frame!r} + json.dumps({{'enabled': bool(site.ENABLE_USER_SITE), "
+           "'path': [p for p in sys.path if isinstance(p, str)], 'cwd': os.getcwd(), "
+           "'site_file': getattr(site, '__file__', None), 'customization': _cust()}) "
+           f"+ {frame!r})\n")
+    r = subprocess.run([sys.executable, "-c", src], cwd=str(cwd), env=replay_env(),
+                       capture_output=True, text=True, timeout=300)
+    if r.returncode != 0 or not r.stdout.strip():
+        raise _ReplayError(
+            "재생 문맥(user-site 활성 조건 · 검색 경로 · cwd)을 재지 못했다 "
+            f"(rc={r.returncode}): {r.stderr[-300:]} — 문맥을 모르면 customization "
+            "대조 규칙을 정할 수 없다 (64차 N1 · 65차 N1b)")
+    try:
+        got = _parse_framed_receipt(r.stdout, frame)       # noqa: F821
+        enabled, path, child_cwd, site_file = (
+            bool(got["enabled"]), list(got["path"]), str(got["cwd"]), got["site_file"])
+        cust = dict(got["customization"])
+    except (ValueError, KeyError, TypeError) as exc:
+        raise _ReplayError(
+            f"재생 문맥의 출력을 받을 수 없다: {exc} (64차 N1 · 65차 N1b)") from None
+    if not site_file or not os.path.isfile(site_file):
+        raise _ReplayError(
+            f"재생 인터프리터의 site 파일을 찾을 수 없다: {site_file!r} (65차 N1b)")
+    # `-c` 의 `sys.path[0]` 은 `''` — child 의 cwd 다. 상대 항목도 child 의 cwd 로 푼다.
+    search = []
+    for p in path:
+        q = child_cwd if p == "" else (p if os.path.isabs(p) else os.path.join(child_cwd, p))
+        search.append(os.path.normpath(q))
+    return {"executable": sys.executable, "argv": ["-c"], "cwd": child_cwd,
+            "env": replay_env(), "user_site": enabled, "search_path": search,
+            "site_file": site_file, "customization": cust}
+
+
+def _parent_user_site_enabled() -> bool:
+    """재생 인터프리터의 startup 이 `usercustomize` 를 **자동 import 하는가** (64차 N1).
+    65차부터는 재생 문맥의 한 필드다 — `_replay_context()["user_site"]`."""
+    return _replay_context()["user_site"]
+
+
+def _parent_customization_view(ctx: dict | None = None) -> dict:
+    """부모가 **자기 프로세스에서** 잰 customization 의 **후보** (62차 자체 리뷰 F1).
+
+    child 가 `sys.modules` 의 `site`·`sitecustomize`·`usercustomize` 를 해시하는 것을
+    부모는 **child 와 같은 검색 경로에서 resolver 로 파일을 찾아** 재현한다. 값은 child
+    가 그 이름을 올렸다면 적어야 하는 것 — hex16(파일·ZIP 바이트) · `<namespace>:hex16`
+    (코드 없는 표준 namespace) · `<absent>`(찾을 수 없다). **후보**다: 실제로 올라왔는지
+    는 이 함수가 아니라 `_assert_customization_matches_parent` 가 조건·이력과 함께
+    판정한다 (65차 N1a — 세 상태를 가른다).
+    """
+    def _d(p):
+        h = hashlib.sha256()
+        with open(p, "rb") as fh:
+            for c in iter(lambda: fh.read(1 << 16), b""):
+                h.update(c)
+        return h.hexdigest()[:16]
+
+    # ★ 63차 F3 — 탐색은 **Python 의 resolver 로** 한다. 62차 판은 각 root 의
+    #   `이름.py` 만 봤고 package(`이름/__init__.py`)를 안 봤다 — 앞 root 에
+    #   정상 package 를 두면 `PathFinder` 는 그것을 찾는데 부모는 뒤 root 의
+    #   시스템 `sitecustomize.py` digest 를 돌려줘 정상 환경을 불일치로 거부했다
+    #   (리뷰어 실측: package `2f10edcf…` vs 부모 `43d81125…`). 같은 순서의
+    #   path 목록을 `PathFinder.find_spec` 에 주면 `.py` · package · 앞/뒤 root
+    #   전부 child 와 같은 규칙이다. 파일이 아닌 origin(zip) 은 loader 에게 바이트를
+    #   묻고, 못 주면 지원하지 않는 loader 로 **거부**한다 — 모르는 것을 `<absent>`
+    #   로 적지 않는다.
+    # ★ 64차 N1 — 찾을 수 있는 모듈 ≠ startup 이 실행한 모듈. 그 조건(`ENABLE_USER_SITE`)
+    #   은 65차부터 재생 문맥의 필드(`ctx["user_site"]`)이고, 이 함수가 아니라 판정 함수가
+    #   쓴다 — 여기서 조건으로 `<absent>` 를 미리 넣으면 "비활성 = 미로드" 등식이 된다
+    #   (65차 N1a 가 그 등식을 깼다: 정상 `sitecustomize` 의 `import usercustomize`).
+    # ★ 65차 N1b — 검색 경로는 **재생 문맥**에서 온다. 64차 판은 재생 env 의 원시
+    #   `PYTHONPATH` 문자열(상대 항목은 부모 cwd 로 풀림) + **부모의 `sys.path`** 를
+    #   썼다 — child 는 sandbox cwd 에서 뜨고 pytest 가 부모에 얹은 자리를 보지 않는다.
+    # ★ 65차 N2b — namespace package(origin 없음, 검색 위치 있음)는 `<absent>` 가
+    #   아니라 `<namespace>:identity` 다. child 와 같은 규칙(`_namespace_identity`).
+    import importlib
+    from importlib.machinery import PathFinder as _PF
+
+    ctx = ctx if ctx is not None else _replay_context()
+    # ★ 66차 G66-N1 — **사후 후보로 과거 import 를 판정하지 않는다.** 이제 기준은 문맥 탐침이
+    #   잰 **startup 후 관측한 module origin** 이고, 부모는 그 origin 의 **바이트를 직접 읽는다**.
+    #   ⚠ 67차 Q1 정정 — 이것을 *"로드 순간의 불변 기록"* 이라고 적으면 과한 주장이다 (리뷰어 지적).
+    #   탐침은 startup 이 끝난 뒤 `sys.modules` 의 `__file__`/`__spec__.origin` 을 읽고, Python 은
+    #   그 둘의 자동 동기화를 보장하지 않으며 런타임 수정도 가능하다. 그 이상(로드 시점의 봉인된
+    #   출처)은 trusted launcher / immutable input bundle 설계가 필요하고 **미착수**다. 탐침은
+    #   64차부터 선언한 그 신뢰 경계(같은 startup 코드를 도는 보조 인터프리터) 안에 있고,
+    #   부모가 독립적으로 믿는 것은 여전히 **자기가 읽은 바이트**다 — 바이트가 바뀌면 거부된다.
+    #   `PathFinder` 탐색은 더 이상 판정의 근거가 아니다 (사후 `sys.path` 는 startup 이 본 것이
+    #   아니다). 아래 `_measured` 가 그 자료이고, `search_path` 는 진단용으로만 남긴다.
+    importlib.invalidate_caches()             # 방금 생긴 디렉터리도 본다
+    _measured = dict(ctx.get("customization") or {})
+    out = {"site": _d(ctx["site_file"])}      # child 인터프리터의 site — 부모가 바이트를 읽는다
+    for n in ("sitecustomize", "usercustomize"):
+        rec = _measured.get(n) or {"loaded": False, "origin": None, "locations": None}
+        if not rec.get("loaded"):
+            out[n] = "<absent>"               # 그 이름은 startup 이 올리지 않았다
+            continue
+        origin, locs = rec.get("origin"), rec.get("locations")
+        if origin in ("built-in", "frozen"):
+            out[n] = "<%s>" % origin          # 대조할 바이트가 없다 — 판정 함수가 거부한다
+            continue
+        if origin and os.path.isfile(origin):
+            out[n] = _d(origin)               # **부모가 그 자리의 바이트를 직접 읽는다**
+            continue
+        if origin:
+            # 파일이 아닌 origin(표준 archive 안) — **archive 와 member 로 직접 읽는다.**
+            out[n] = _archive_member_digest(n, origin)
+            continue
+        if locs is not None:
+            out[n] = "<namespace>:" + _namespace_identity(list(locs))    # noqa: F821
+            continue
+        raise _ReplayError(
+            f"부모가 잰 {n} 은 올라와 있는데 origin 도 검색 위치도 없다 — 무엇과 대조할지 "
+            f"정할 수 없다 (65차 N2b · 66차 G66-N1)")
+    return out
+
+
+def _archive_member_digest(name: str, origin: str) -> str:
+    """파일이 아닌 origin(표준 ZIP archive 안)의 바이트를 **부모가 직접** 읽는다.
+
+    ★ 67차 G67-N2 — 전 판은 `PathFinder.find_spec(name, [dirname(origin)] + search_path)` 로
+      **사후 `sys.path` 에서 이름을 다시 찾았다.** 두 가지가 틀렸다:
+
+        ① ZIP *package* 의 `dirname(origin)` 은 archive root 가 아니라 `archive.zip/sitecustomize`
+           다 — 거기서 top-level 이름을 다시 찾으면 그 package 가 아니다.
+        ② 정상 startup 이 자기 archive 를 `sys.path` 에서 빼면 root 도 final path 에 없다.
+
+      그래서 표준 ZIP package 하나가 자기 경로를 정리했다는 이유로 **정상 영수증이 거부**됐다
+      (리뷰어 실측 `zip_package_remove_path` REJECTED, 단일 module 과 경로 유지 package 는
+      ACCEPTED). 66차에 일반 파일 분기에서 걷어낸 "사후 후보로 과거를 판정한다" 가 ZIP 분기에
+      그대로 남아 있었던 것이다 — 주석의 "`search_path` 는 진단용" 과도 어긋났다.
+
+    이제 **origin 경로 자체**를 갈라 archive 파일과 member 이름을 얻고, `zipfile` 로 그 member 의
+    바이트를 읽는다. 사후 검색 경로를 안 쓰고, 임의 loader 를 부모가 실행하지도 않는다 —
+    부모가 믿는 것은 여전히 **자기가 읽은 바이트**다 (실행 뒤 archive 를 갈아 끼우면 거부된다).
+    """
+    parts = pathlib.PurePath(origin).parts
+    for i in range(len(parts) - 1, 0, -1):
+        cand = os.path.join(*parts[:i])
+        if not os.path.isfile(cand):
+            continue
+        member = "/".join(parts[i:])
+        if not zipfile.is_zipfile(cand):
+            raise _ReplayError(
+                f"부모가 {name} 의 origin {origin!r} 을 읽을 수 없다 — {cand!r} 은 표준 "
+                "archive 가 아니다. 지원하지 않는 loader 로는 child 와 대조할 수 없다 "
+                "(63차 F3 · 67차 G67-N2)")
+        try:
+            with zipfile.ZipFile(cand) as z:
+                data = z.read(member)
+        except (KeyError, OSError, zipfile.BadZipFile) as e:
+            raise _ReplayError(
+                f"부모가 {name} 의 origin {origin!r} 을 읽을 수 없다 — archive {cand!r} 에서 "
+                f"member {member!r} 를 못 읽었다 ({type(e).__name__}). 읽기 실패는 거부다 "
+                "(67차 G67-N2)")
+        return hashlib.sha256(data).hexdigest()[:16]
+    raise _ReplayError(
+        f"부모가 {name} 의 origin {origin!r} 에서 archive 파일을 찾지 못했다 — 파일도 "
+        "아니고 어느 조상도 실재하는 파일이 아니다. 대조할 바이트가 없다 (67차 G67-N2)")
+
+
+def _assert_customization_matches_parent(receipt: dict, ctx: dict | None = None) -> None:
+    """child 의 `customization` 이 부모의 시야와 **양립하는가** (62차 자체 리뷰 F1 ·
+    65차 N1a).
+
+    ★ 65차 N1a — **세 상태를 가른다.** 64차 판은 "user site 비활성 = `<absent>`" 라는
+    등식을 세웠다. 그런데 Python 의 `ENABLE_USER_SITE` 는 `site` 가 하는 **자동 import
+    시도**에만 걸리는 조건이다 — 정상 `sitecustomize` 의 `import usercustomize` 는
+    평범한 import 이고, 그러면 child 는 진짜 digest 를 낸다. 그 정상 영수증이 거부됐다
+    (리뷰어 실측: child `1cfeb13a…` · parent `<absent>`).
+
+    부모가 독립적으로 아는 것은 둘이다 — **조건**(startup 이 그 이름을 자동 import 하는가:
+    `sitecustomize` 는 항상, `usercustomize` 는 활성일 때) 과 **후보**(재생 검색 경로에서
+    resolver 가 찾는 바이트). 무엇이 실제로 올라왔는지는 영수증의 startup **이력**
+    (`-X importtime -v` 손자)이 증언한다. 그래서 이름마다:
+
+      · child `<absent>`  → 이력에 없어야 하고, 자동 import 대상에 후보가 있으면 거부
+                            (startup 이 올렸어야 한다 — 64차까지의 규칙 그대로)
+      · child hex16       → 후보와 **같아야** 하고, 이력이 올렸다고 해야 한다
+                            (비활성이어도 명시 import 면 정상 — 여기가 N1a)
+      · child namespace   → 후보와 같아야 한다 (코드 없는 module, 이력은 unfiled)
+      · 그 밖(`<built-in>`·`<frozen>`·모르는 값) → 대조할 바이트가 없다 → 거부
+
+    child 가 준 digest 를 정답으로 쓰지 않는다 — 후보와 같아야만 받고, 이력과 어긋나면
+    `<absent>` 도 받지 않는다 ("비활성 = absent" 등식을 다른 등식으로 바꾸는 것이 아니다).
+    """
+    # ★ 66차 (리뷰어 정적 관측) — 문맥은 **한 번만** 잰다. 전 판은 `ctx=None` 경로에서
+    #   `_parent_customization_view(None)` 가 한 번, 바로 다음 줄이 또 한 번 보조 인터프리터를
+    #   띄웠다 — "한 번 측정한 하나의 문맥" 이라고 적어 놓고 둘을 쟀다.
+    ctx = ctx if ctx is not None else _replay_context()
+    want = _parent_customization_view(ctx)
+    st = (receipt.get("startup") or {}) if isinstance(receipt, dict) else {}
+    got = st.get("customization") or {}
+    hist = ((st.get("startup_history") or {}).get("modules") or {})
+    bad = []
+    if got.get("site") != want["site"]:
+        bad.append(f"site: child={got.get('site')!r} parent={want['site']!r}")
+    for n in ("sitecustomize", "usercustomize"):
+        g, cand = got.get(n), want[n]
+        auto = n == "sitecustomize" or bool(ctx["user_site"])   # startup 이 자동 import 하는가
+        loaded_file = n in hist                                   # 이력: 파일 있는 module 로 올렸다
+        # ★ 67차 G67-N1 — **판정의 기준은 부모가 잰 것(`cand`) 하나다.** 전 판은 child 가
+        #   `<absent>` 라 적으면 ① 이력이 올렸다고 하는가 ② `auto` 인가 — 둘로만 막았다.
+        #   user site 가 꺼져 있으면 `auto=False` 이고, 표준 namespace 는 origin 이 없어 이력의
+        #   파일 목록에도 안 잡힌다. 그래서 **부모가 올라와 있다고 잰** 이름을 child 가 없다고
+        #   적어도 통과했다 (리뷰어 실측: OFF + 명시 import namespace 의 한 칸 위조가 ACCEPTED,
+        #   같은 위조가 ON 에서는 REJECTED).
+        #   `auto` 는 *startup 이 자동으로 import 하는가* 이고 지금 묻는 것은 *실제로 올라왔는가*
+        #   다 — 둘은 다른 사실이고, 65차 N1a 가 "비활성 = 미로드" 등식을 깬 것과 같은 종류의
+        #   혼동이었다. 이제 `auto` 는 **사유 문장**에만 쓰고 판정에는 쓰지 않는다.
+        if g != cand:
+            why = " (startup 이 자동 import 하는 이름이다)" if auto else ""
+            bad.append(f"{n}: child={g!r} parent={cand!r}{why}")
+            continue
+        # 여기부터는 child 표현 == 부모 측정이다. 남은 것은 **startup 이력과의 교차 확인**.
+        if g == "<absent>":
+            if loaded_file:
+                bad.append(f"{n}: child=<absent> 인데 startup 이력은 올렸다고 한다")
+        elif isinstance(g, str) and _HEX16.fullmatch(g):
+            if not loaded_file:
+                bad.append(f"{n}: child 가 바이트를 냈는데 startup 이력에 없다")
+        elif isinstance(g, str) and _NAMESPACE_ID.fullmatch(g):
+            if loaded_file:
+                bad.append(f"{n}: child 는 namespace 라는데 startup 이력은 파일로 올렸다고 한다")
+        else:
+            bad.append(f"{n}: 대조할 바이트가 없는 origin {g!r} — 지원하지 않는다")
+    if bad:
+        raise _ReplayError(
+            "환경 영수증의 customization 이 부모가 본 것과 양립하지 않는다: "
+            + " · ".join(bad)
+            + " — startup 코드가 자기 파일을 세탁했거나 검색 순서가 어긋났다. "
+            "못 믿는 영수증으로 증거를 만들지 않는다 (62차 자체 리뷰 F1 · 65차 N1a)")
+
+
+def _observed_receipt() -> dict:
+    """탐침을 띄워 **영수증 전체**를 받아 온다 (59차 M15).
+
+    실패하면 fail-closed — 환경을 못 재면 증거를 쓸 수 없다.
+    """
+    root = _sandboxed(ROOT)
+    return _run_probe(
+        f"_receipt_facts({_probe_names()!r}, {list(BOUND_INPUT_GLOBS)!r}, "
+        f"{str(root)!r})", root, "영수증")
+
+
+def environment_tag(execution: dict | None = None) -> str:
+    """실행이 **스스로 증언할 수 있는** 환경의 내용 주소 (58차 L11·L12).
+
+    조각 옆에 적힌 `binding.execution` 은 누구나 다시 계산해서 쓸 수 있다 —
+    `_execution_receipt()` 는 공개 함수다. 그러므로 그 필드는 "이 실행에서
+    나왔다" 를 증명하지 못한다 (L12 반례: report 를 안 건드리고 그 필드만 현재
+    값으로 갈아 끼우자 pytest 실행 0회로 170/170 통과).
+
+    증명할 수 있는 것은 실행이 **자기 report 안에 남긴 것**뿐이다. 그래서 재생은
+    sandbox 에 이 tag 를 이름에 담은 시험 node 를 하나 놓고, 그 node 는 자기
+    프로세스에서 환경을 **다시 재서** tag 와 대조한다. checker 는 조각이 주장한
+    환경에서 tag 를 유도해 report 바이트에 그 node 가 있는지 본다.
+    """
+    # ★ 59차 M15 — `startup` 하나가 아니라 **영수증 전체**를 해시한다.
+    e = execution if execution is not None else _execution_receipt()
+    body = json.dumps(e, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()[:16]
+
+
+def attestation_node_id(tag: str | None = None) -> str:
+    """환경 증언 node 의 ID — 이름 자체가 증언이다."""
+    t = tag or environment_tag()
+    return f"tests/test_mutation_env_{t}.py::test_env_{t}"
+
+
+def attestation_nodes(tag: str | None = None) -> list:
+    """정상 report 가 담아야 하는 증언 node (시험이 조각을 합성할 때 쓴다)."""
+    return [{"nodeid": attestation_node_id(tag),
+             "call": {"outcome": "passed", "longrepr": ""}}]
+
+
+def _write_env_attestation(sandbox: pathlib.Path, tag: str) -> str:
+    """sandbox 에 **자기 환경을 스스로 재는** 시험 node 를 놓는다 (58차 L12).
+
+    탐침 소스를 그대로 심으므로 부모와 자식이 같은 규칙으로 잰다 — 규칙을 두
+    곳에 적으면 언젠가 어긋나고, 어긋나면 대조가 무의미해진다.
+    """
+    # ★ 59차 M14·M15 — node 는 **탐침을 띄워서** 잰다.
+    #
+    #   (a) startup module 집합은 pytest 가 이미 온갖 것을 올린 이 프로세스에서
+    #       잴 수 없다 — 부모와 같은 것을 재려면 같은 방식으로 재야 한다.
+    #   (b) 범위가 영수증 전체로 넓어졌으므로 `_receipt_facts()` 를 부른다.
+    #       본문은 여전히 부모와 **같은 문자열**이다 (규칙을 두 곳에 적으면
+    #       언젠가 어긋나고, 어긋나면 대조가 무의미해진다).
+    # ★ 62차 P1-3 — node 도 **framed** 로 받는다. parser 소스는 부모와 같은
+    #   문자열(`_FRAMED_PARSER_SRC`)이고 frame 은 이 node 만의 것이다.
+    frame = _new_frame()
+    node = (
+        '"""환경 증언 — 이 report 가 어떤 환경에서 나왔는지 스스로 말한다 '
+        '(58차 L12 · 59차 M14·M15)."""\n'
+        "import hashlib as _h, json as _j, subprocess as _sp, sys as _sys\n"
+        "\n"
+        f"_BODY = {_ENV_PROBE_BODY!r}\n"
+        f"_NAMES = {_probe_names()!r}\n"
+        f"_GLOBS = {list(BOUND_INPUT_GLOBS)!r}\n"
+        f"_ROOT = {str(sandbox)!r}\n"
+        f"_TAG = {tag!r}\n"
+        f"_FRAME = {frame!r}\n"
+        f"{_FRAMED_PARSER_SRC}\n"
+        "\n"
+        f"def test_env_{tag}():\n"
+        "    src = _BODY + (\n"
+        "        \"\\nimport json\\n\"\n"
+        "        \"print(%r + json.dumps(_receipt_facts(%r, %r, %r), \"\n"
+        "        \"sort_keys=True, ensure_ascii=False) + %r)\\n\"\n"
+        "        % (_FRAME, _NAMES, _GLOBS, _ROOT, _FRAME))\n"
+        "    r = _sp.run([_sys.executable, '-c', src], cwd=_ROOT,\n"
+        "                capture_output=True, text=True, timeout=600)\n"
+        "    assert r.returncode == 0, r.stderr[-500:]\n"
+        "    facts = _parse_framed_receipt(r.stdout, _FRAME)\n"
+        "    body = _j.dumps(facts, sort_keys=True, ensure_ascii=False)\n"
+        "    got = _h.sha256(body.encode('utf-8')).hexdigest()[:16]\n"
+        "    assert got == _TAG, (\n"
+        "        '재생이 선언한 환경과 실제로 본 환경이 다르다: '\n"
+        "        + body[:400])\n")
+    (sandbox / "tests" / f"test_mutation_env_{tag}.py").write_text(
+        node, encoding="utf-8")
+    return tag
+
+
+def _execution_receipt() -> dict:
+    """이 증거가 **어떤 실행에서** 나왔는가 (56차 P1-2).
+
+    55차의 tree digest 는 `.py` 만 봤다. 그런데 리뷰어 실측대로
+    `requirements.txt` 를 바꿔도, `DD_SMOOTH_CACHE` 를 뒤집어도 (실제로
+    `src.objective._SMOOTH_CACHE_ENABLED` 가 `False/True` 로 바뀐다) digest 는
+    그대로였다. "어느 코드에서 나왔는가" 는 `.py` 만으로 답할 수 없다.
+
+    이것은 §0 에 신고한 **독립 replay** 를 대체하지 않는다 — checker 가 스스로
+    재생하지는 않는다. 다만 "같은 코드·같은 환경" 이라는 주장의 범위를 실제
+    소비하는 것까지 넓힌다.
+    """
+    # ★ 59차 M15 — **영수증 전체를 탐침이 잰다.** 58차는 `packages`·`env`·
+    #   `inputs` 를 이 프로세스에서 계산하고 `startup` 만 자식에게 물었다.
+    #   그러면 자식이 증언하는 범위가 `startup` 하나뿐이고 나머지는 다시
+    #   "조각 옆에 적힌 값" 이다 — L12 가 닫으려던 자리로 되돌아간다.
+    #
+    #   같은 본문(`_ENV_PROBE_BODY`)을 부모와 심어 놓은 증언 node 가 **둘 다**
+    #   쓰므로 규칙이 갈릴 자리가 없다.
+    got = _observed_receipt()
+    # ★ 61차 P1-3 — **불완전한 측정으로는 증거를 못 만든다.** 영수증에 실패가
+    #   적혀도 읽는 쪽이 그냥 받으면 층이 없는 것과 같다.
+    _assert_receipt_is_complete(got)
+    # ★ 62차 자체 리뷰 (영수증 F1) — 둘째 층: 부모가 잰 customization 과 대조.
+    _assert_customization_matches_parent(got)
+    return got
+
+
+#: 영수증 안에서 **측정 성패를 스스로 말하는** 자리 (61차 P1-3). 경로로 적는다 —
+#: 영수증은 중첩돼 있고, 위치를 틀리면 검사가 조용히 아무것도 안 본다.
+#: 하나 늘 때마다 여기 적는다.
+_TYPED_MEASUREMENTS = (("startup",), ("startup", "startup_history"),
+                       ("packages",), ("inputs",))
+
+
+#: ★ 62차 P2-1 — 영수증의 **재귀 exact schema.**
+#:
+#:   61차 reader 는 `_TYPED_MEASUREMENTS` 의 `status` 만 봤다. 그러면 본문이
+#:   무엇이든 — digest 자리에 `"<unreadable>"` 이든, `unfiled` 가 문자열이든,
+#:   모르는 키가 있든 — `measured` 라 적혀 있으면 받았다. discriminator 하나로는
+#:   "쟀다" 를 증명하지 못한다. 여기 것이 정본이고, 필드가 하나 늘면 여기도 는다
+#:   (`tests/receipt_fixture.py` 의 예시가 이 schema 를 그대로 만족한다).
+_HEX16 = re.compile(r"^[0-9a-f]{16}$")
+#: ★ 65차 N2b — 코드 없는 namespace customization 의 identity (종류 + 검색 위치).
+_NAMESPACE_ID = re.compile(r"^<namespace>:[0-9a-f]{16}$")
+#: 바이트를 댈 수 없는 origin — schema 는 받되 customization 대조가 **이름을 붙여** 거부한다.
+_UNSUPPORTED_ORIGIN = re.compile(r"^<(built-in|frozen)>$")
+
+
+class _Map:
+    """`{str: T}` — 키는 아무 문자열, 값은 전부 `T`."""
+    def __init__(self, value):
+        self.value = value
+
+
+class _Seq:
+    """`[shape, shape, …]` — 원소마다 `shape`. `shape` 가 list 면 고정 길이 tuple."""
+    def __init__(self, shape):
+        self.shape = shape
+
+
+class _Or:
+    def __init__(self, *alts):
+        self.alts = alts
+
+
+_RECEIPT_SCHEMA = {
+    "interpreter": str,
+    "packages": {"status": "measured", "dists": _Map(str),
+                 "positions": _Map(int), "shadowed": _Seq([str, int, str])},
+    "env": _Map(str),
+    "inputs": {"status": "measured", "files": _Map(_HEX16)},
+    "startup": {
+        "status": "measured",
+        "executable_sha256": _HEX16,
+        # ★ 62차 자체 리뷰 (영수증 F5) — 키 집합을 고정한다 (`_Map` 이면
+        #   `{"whatever": "<absent>"}` 도 통과했다).
+        "customization": {"site": _Or(_HEX16, "<absent>"),
+                          "sitecustomize": _Or(_HEX16, "<absent>", _NAMESPACE_ID,
+                                               _UNSUPPORTED_ORIGIN),
+                          "usercustomize": _Or(_HEX16, "<absent>", _NAMESPACE_ID,
+                                               _UNSUPPORTED_ORIGIN)},
+        "startup_modules": _Map(_HEX16),
+        # ★ 63차 F2 — 시도만 한 이름은 **영수증 안**이다 (digest 에 묶인다).
+        "startup_history": {"status": "measured", "modules": _Map(_HEX16),
+                            "unfiled": int, "attempted_not_loaded": _Seq(str)},
+        "importable_roots": _Map(_HEX16),
+        "pth": _Seq([str, _HEX16]),
+        "version": str,
+        "env": _Map(str),
+    },
+}
+
+
+def _schema_mismatch(value, schema, where: str) -> str | None:
+    """`value` 가 `schema` 에 정확히 맞으면 None, 아니면 첫 불일치의 설명."""
+    if isinstance(schema, str):
+        return None if value == schema else f"{where}: {value!r} ≠ {schema!r}"
+    if schema is int:
+        return None if (isinstance(value, int) and not isinstance(value, bool)) \
+            else f"{where}: int 가 아니다 ({type(value).__name__})"
+    if schema is str:
+        return None if isinstance(value, str) else \
+            f"{where}: str 가 아니다 ({type(value).__name__})"
+    if isinstance(schema, re.Pattern):
+        # ★ 63차 F4 — `match` + `$` 는 **마지막 개행 바로 앞**에도 맞는다 (Python
+        #   `re` 의 명시된 규칙). `"0123456789abcdef\n"` 17자가 hex16 으로
+        #   통과했다 (리뷰어 실측). 전체 문자열 일치만 받는다.
+        return None if (isinstance(value, str) and schema.fullmatch(value)) else \
+            f"{where}: {schema.pattern} 에 안 맞는다 ({value!r})"
+    if isinstance(schema, _Or):
+        errs = [_schema_mismatch(value, alt, where) for alt in schema.alts]
+        return None if any(e is None for e in errs) else " / ".join(errs)
+    if isinstance(schema, _Map):
+        if not isinstance(value, dict):
+            return f"{where}: dict 가 아니다 ({type(value).__name__})"
+        for k, v in value.items():
+            if not isinstance(k, str):
+                return f"{where}: 키 {k!r} 가 str 가 아니다"
+            e = _schema_mismatch(v, schema.value, f"{where}.{k}")
+            if e:
+                return e
+        return None
+    if isinstance(schema, _Seq):
+        if not isinstance(value, list):
+            return f"{where}: list 가 아니다 ({type(value).__name__})"
+        for i, item in enumerate(value):
+            if isinstance(schema.shape, list):
+                if not isinstance(item, list) or len(item) != len(schema.shape):
+                    return f"{where}[{i}]: 길이 {len(schema.shape)} 의 list 가 아니다"
+                for j, (x, sh) in enumerate(zip(item, schema.shape)):
+                    e = _schema_mismatch(x, sh, f"{where}[{i}][{j}]")
+                    if e:
+                        return e
+            else:
+                e = _schema_mismatch(item, schema.shape, f"{where}[{i}]")
+                if e:
+                    return e
+        return None
+    if isinstance(schema, dict):
+        if not isinstance(value, dict):
+            return f"{where}: dict 가 아니다 ({type(value).__name__})"
+        extra = sorted(set(value) - set(schema))
+        missing = sorted(set(schema) - set(value))
+        if extra or missing:
+            return f"{where}: 키 집합이 다르다 (모르는 키 {extra} · 없는 키 {missing})"
+        for k, sh in schema.items():
+            e = _schema_mismatch(value[k], sh, f"{where}.{k}")
+            if e:
+                return e
+        return None
+    return f"{where}: schema 항목을 모른다 ({schema!r})"          # pragma: no cover
+
+
+def _assert_receipt_is_complete(receipt: dict) -> None:
+    """측정이 끝난 영수증인가 — 아니면 거부한다 (61차 P1-3 · 62차 P2-1).
+
+    두 층이다: (1) typed 측정의 `status` 가 전부 `measured` 인가 — 실패 이유를
+    사람이 읽게 먼저 낸다. (2) 본문이 재귀 exact schema 에 맞는가 — `status`
+    만 맞춘 본문은 여기서 걸린다.
+    """
+    bad = []
+    for path in _TYPED_MEASUREMENTS:
+        got = receipt
+        for key in path:
+            got = got.get(key) if isinstance(got, dict) else None
+        where = ".".join(path)
+        if not isinstance(got, dict) or got.get("status") != "measured":
+            reason = got.get("reason") if isinstance(got, dict) else got
+            bad.append(f"{where}: {reason!r}")
+    if bad:
+        raise _ReplayError(
+            "환경 영수증이 **불완전**하다 — 측정이 실패한 항목이 있다: "
+            + " · ".join(bad)
+            + " . 못 잰 환경으로 만든 증거는 '같은 환경' 을 주장할 수 없다.")
+    mismatch = _schema_mismatch(receipt, _RECEIPT_SCHEMA, "receipt")
+    if mismatch:
+        raise _ReplayError(
+            "환경 영수증이 **불완전**하다 — schema 에 안 맞는다: " + mismatch
+            + " . `status` 만 measured 인 본문은 측정이 아니다 (62차 P2-1)")
+    # ★ 62차 자체 리뷰 (영수증 F5) — "아무것도 안 잰" 영수증과 교차 필드
+    #   불일치도 measured 가 아니다. 진짜 탐침은 startup module 을 반드시
+    #   올리고(`site` 자신), `replay_env` 는 `PYTHONHASHSEED` 를 반드시 넣으며,
+    #   `startup.env`·`startup.version` 은 같은 프로세스가 같은 규칙으로 잰다.
+    st = receipt["startup"]
+    cross = []
+    if not st["startup_modules"]:
+        cross.append("startup.startup_modules 가 비었다")
+    if not receipt["env"]:
+        cross.append("env 가 비었다")
+    if st["env"] != receipt["env"]:
+        cross.append("startup.env 가 env 와 다르다")
+    if st["version"] != receipt["interpreter"]:
+        cross.append("startup.version 이 interpreter 와 다르다")
+    if st["startup_history"]["unfiled"] < 0 \
+            or any(v < 0 for v in receipt["packages"]["positions"].values()) \
+            or any(s[1] < 0 for s in receipt["packages"]["shadowed"]):
+        cross.append("음수 위치/개수")
+    if cross:
+        raise _ReplayError(
+            "환경 영수증이 **불완전**하다 — 측정이 비었거나 서로 어긋난다: "
+            + " · ".join(cross) + " (62차 자체 리뷰 F5)")
+
+
+def _execution_receipt_digest(body: dict | None = None) -> str:
+    """영수증 본문의 digest. `body` 를 주면 **그것**을 해시한다 — 안 주면 탐침을
+    띄운다 (옛 호출자 호환; 재생·checker 는 스냅샷을 쓴다, 62차 P1-6)."""
+    e = body if body is not None else _execution_receipt()
+    return hashlib.sha256(json.dumps(e, sort_keys=True,
+                                     ensure_ascii=False).encode("utf-8")
+                          ).hexdigest()
+
+
+class ReceiptSnapshot(NamedTuple):
+    """한 번 잰 영수증 — 본문(직렬화된 문자열) · digest · 증언 tag (62차 P1-6).
+
+    셋은 **같은 바이트**에서 나온다: `digest = sha256(json_body)`, `tag =
+    digest[:16]` (`environment_tag()` 와 같은 직렬화). 문자열이라 불변이고,
+    `body()` 는 매번 새 dict 를 준다.
+    """
+    json_body: str
+    digest: str
+    tag: str
+
+    def body(self) -> dict:
+        return json.loads(self.json_body)
+
+
+def take_receipt_snapshot() -> ReceiptSnapshot:
+    """영수증을 **한 번** 재서 스냅샷으로 (62차 P1-6).
+
+    리뷰어: 한 재생 안에서 표식/선택(`environment_tag()`) · 본문
+    (`_execution_receipt()`) · digest(`_execution_receipt_digest()`) 가 각각
+    탐침을 다시 띄웠다. 그 사이 환경이 바뀌면 report 의 증언 node 와 조각의
+    `binding.execution` 이 서로 다른 환경을 적고, checker 는 둘을 따로 보므로
+    어느 쪽도 거짓을 못 잡는다. 재생과 checker 는 이 스냅샷 하나만 든다.
+    """
+    got = _execution_receipt()
+    jb = json.dumps(got, sort_keys=True, ensure_ascii=False)
+    digest = hashlib.sha256(jb.encode("utf-8")).hexdigest()
+    return ReceiptSnapshot(jb, digest, digest[:16])
+
+
+def _tested_tree_digest() -> str:
+    """**실제로 시험한 파일들**의 내용 digest (55차 P1-2).
+
+    54차의 결속은 `head` 뿐이었고 검사는 "그 commit 이 실재하는가" 만 물었다.
+    리뷰어는 12개 조각의 `binding.head` 를 저장소 **최초 commit** 으로 일괄
+    교체하고도 `rc 0 · 157/157 exact` 를 받았다 — 실재하기만 하면 무엇이든
+    통과하는 값은 결속이 아니라 장식이다 (54차에 죽은 head 를 되살렸는데,
+    되살린 것이 여전히 아무 것도 안 물었다).
+
+    물어야 하는 것은 "어느 commit 이냐" 가 아니라 **"이 증거가 가리키는 코드가
+    지금 이 트리의 코드와 같은가"** 다. 그래서 변이 대상 파일과 그 변이가
+    빨갛게 만든다고 선언한 시험 파일의 바이트를 직접 해시한다. 조각을 쓰는
+    쪽이 다시 계산할 수 있지만, 그러면 **그 시점의 트리**를 가리키게 되고
+    checker 가 지금 트리와 대조해 어긋남을 본다.
+    """
+    # ★ 55차 자체 발견 — 처음 판은 변이 대상 3파일과 EXPECT 가 이름한 시험
+    #   파일만 봤다. 그런데 시험 결과를 정하는 코드는 그보다 넓다:
+    #   `src/scoring.py`(producer 닫힘이 건너가는 곳) · `conftest.py` ·
+    #   `tools/` 의 나머지가 바뀌어도 digest 는 안 움직였다. "실제로 시험한
+    #   코드" 라고 부르려면 그 전부여야 한다.
+    files = {PRESERVE, RP, MR}
+    for sub in ("src", "tools", "tests"):
+        files.update((ROOT / sub).rglob("*.py"))
+    files = {f for f in files if "__pycache__" not in str(f)}
+    # ★ 56차 P1-1 — 이름은 **저장소 상대 POSIX 경로**로 해시한다. 55차는
+    #   `str(f)`(절대경로)를 넣었고, 그래서 같은 커밋을 다른 자리에 checkout
+    #   하면 커밋된 증거가 그 자리에서 거부됐다 (리뷰어 실측: clean checkout
+    #   에서 `check_coverage_rc=1`). 증거가 **어디에 놓였는가**에 반응하면
+    #   그것은 코드의 identity 가 아니다.
+    root = pathlib.Path(ROOT)
+    named = []
+    for f in files:
+        fp = pathlib.Path(f)
+        try:
+            key = fp.relative_to(root).as_posix()
+        except ValueError:                                # pragma: no cover
+            key = fp.name
+        named.append((key, fp))
+    h = hashlib.sha256()
+    for key, fp in sorted(named, key=lambda kv: kv[0]):
+        try:
+            body = fp.read_bytes()
+        except OSError:
+            body = b"<missing>"
+        h.update(key.encode("utf-8") + b"\0")
+        h.update(hashlib.sha256(body).digest())
+    return h.hexdigest()
+
+
+def _head() -> str:
+    """이 증거가 어느 트리에서 나왔는가. git 이 없으면 빈 문자열."""
+    import subprocess
+
+    try:
+        r = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True,
+                           text=True, cwd=str(pathlib.Path(__file__).parent))
+        return r.stdout.strip() if r.returncode == 0 else ""
+    except OSError:                                       # pragma: no cover
+        return ""
+
+
+def check_preimages(k: str = "") -> int:
+    """변이 지점이 **살아 있는가** — pytest 없이 (49차).
+
+    코드가 옮겨 가면 preimage 가 0번 또는 2번 나타나게 되고, 그 변이는 조용히
+    "지점불량" 이 된다. 전수 재생은 비싸므로 그 전에 싸게 훑는다.
+    """
+    bad = []
+    for name, path, old, new, kexpr in MUTANTS:
+        if k not in name:
+            continue
+        if kexpr is None:
+            continue                       # 신고 — 지점을 요구하지 않는다
+        # ★ 50차 P1 — **아무 것도 안 바꾸는 변이**를 거부한다. `old == new` 면
+        #   시험은 당연히 초록이고, 그것을 "물었다" 로 세면 전수 인증이 거짓이
+        #   된다 (49차 리뷰어 지적). 변이가 아닌 것을 변이로 셀 수 없다.
+        src = path.read_text(encoding="utf-8")
+        if old == new:
+            bad.append(f"{name:34s} {path.name:20s} 변이가 아무 것도 안 바꾼다")
+        elif _is_semantic_noop(src, old, new):
+            bad.append(f"{name:34s} {path.name:20s} 변이가 **의미**를 안 바꾼다 "
+                       "(주석·공백·문자열 서식만)")
+        c = src.count(old)
+        if c != 1:
+            bad.append(f"{name:34s} {path.name:20s} preimage {c}회")
+    for name, path, pairs, kexpr in MULTI:
+        if k not in name or kexpr is None:
+            continue
+        src = path.read_text(encoding="utf-8")
+        for i, (old, new) in enumerate(pairs):
+            if old == new:
+                bad.append(f"{name:34s} {path.name:20s} site {i} 변이가 아무 "
+                           "것도 안 바꾼다")
+            elif _is_semantic_noop(src, old, new):
+                bad.append(f"{name:34s} {path.name:20s} site {i} 변이가 "
+                           "**의미**를 안 바꾼다 (주석·공백만)")
+            c = src.count(old)
+            if c != 1:
+                bad.append(f"{name:34s} {path.name:20s} site {i} preimage {c}회")
+    if bad:
+        print("=== 죽은 변이 지점 ===")
+        for b in bad:
+            print(b)
+        return 1
+    print("모든 변이 지점이 정확히 한 번 나타난다")
+    return 0
+
+
+def _replay(plan, bad, observed_all, a, sel=None) -> int:
+    items, multi, executed, declared = sel or _select(a.k)
+    # ★ 62차 P1-6 — 영수증은 이 재생에서 **한 번** 잰다. 표식 tag · 조각의
+    #   본문 · digest 가 전부 이 스냅샷에서 나온다.
+    snap = take_receipt_snapshot()
+    receipts: dict = {}
+    ran = 0
+    bit: dict = {}
+
+    for name, repo_path, pairs, kexpr in plan:
+        path = _sandboxed(repo_path)
+        # ★ 46차 — **raw bytes** 로 읽고 쓴다. text mode 는 개행·인코딩을
+        #   접을 수 있어서 "원복이 바이트 동일하다" 를 증명할 수 없다.
+        src = path.read_bytes()
+        before_hash = hashlib.sha256(src).hexdigest()
+        mutated, miss = src, None
+        for old, new in pairs:
+            ob, nb = old.encode("utf-8"), new.encode("utf-8")
+            c = mutated.count(ob)
+            if c != 1:
+                miss = f"preimage 가 {c}번 나타난다"
+                break
+            mutated = mutated.replace(ob, nb, 1)
+        if miss:
+            print(f"{'★ 지점불량':10s} {name:30s} {miss}")
+            bad.append(f"{name}: {miss}")
+            continue
+        try:
+            nodes = _nodes(kexpr)
+            if not nodes:
+                raise _ReplayError(f"`-k {kexpr}` 가 아무 시험도 안 고른다")
+            # ★ 54차 P1 — 이 변이만의 표식 node 를 sandbox 에 놓는다.
+            #   report 바이트가 스스로 어느 변이의 것인지 말하게 된다.
+            mid = _write_marker(_sandboxed(ROOT), name, snap.tag)
+            # ★ 58차 L12 — 심은 증언의 tag 를 그대로 넘긴다 (아래 `_run` 주석).
+            etag = snap.tag
+            before = _run(kexpr, mid, etag)
+            path.write_bytes(mutated)
+            after = _run(kexpr, mid, etag)
+        except _ReplayError as e:
+            print(f"{'★ 실행오류':10s} {name:30s} {e}")
+            bad.append(f"{name}: {e}")
+            continue
+        finally:
+            path.write_bytes(src)
+        post = hashlib.sha256(path.read_bytes()).hexdigest()
+        if post != before_hash:
+            bad.append(f"{name}: 원복이 바이트 동일하지 않다")
+        errs, observed = _check(name, kexpr, before, after, nodes)
+        observed_all[name] = observed
+        ran += 1
+        bit[name] = not errs
+        # ★ 52차 P1-2 — **실행 영수증**을 들고 간다. 판정은 나중에 checker 가
+        #   이 바이트에서 다시 유도한다 (runner 의 self-claim 이 아니라).
+        receipts[name] = {"kexpr": kexpr, "before": before.get("raw") or b"",
+                          "after": after.get("raw") or b""}
+        print(f"{'물었다' if not errs else '★ 안 물었다':10s} {name:30s} "
+              f"node {len(nodes)} · -k {kexpr}")
+        bad += errs
+
+    for decl in declared:
+        name = decl[0]
+        reason = DECLARED_MASKED.get(name)
+        if not reason:
+            # 신고에 **이유가 없으면** 그것은 신고가 아니라 누락이다.
+            print(f"{'★ 사유없음':10s} {name:30s} — DECLARED_MASKED 에 항목이 없다")
+            bad.append(f"{name}: 신고인데 DECLARED_MASKED 에 사유가 없다")
+            continue
+        print(f"{'신고':10s} {name:30s} — {reason}")
+
+    if a.emit_expect:
+        print("\n=== 관측한 EXPECT (그대로 붙여 넣어라) ===")
+        print(json.dumps(
+            {k: {"fail": v["fail"], "witness": v["witness"]}
+             for k, v in sorted(observed_all.items())},
+            ensure_ascii=False, indent=4, sort_keys=True))
+
+    _print_counts(items, multi, executed, declared, ran=ran)
+
+    n_exec = len(executed) + len([m for m in multi if m[3] is not None])
+    # ★ 50차 P1 — **성공한 조각만** coverage 를 남긴다. 49차는 실패해도 파일을
+    #   썼으므로, rc 를 안 보는 사람에게는 "덮었다" 로 읽혔다. 증거 파일은
+    #   그 자체로 참이어야 한다.
+    if a.emit_coverage and not bad and ran == n_exec:
+        _write_coverage(a.emit_coverage, a.k, items, multi, declared, bit,
+                        receipts, snapshot=snap)
+
+    if bad:
+        print("\n=== 문제 ===")
+        for b in bad:
+            print(b)
+        return 1
+    # ★ 49차 P1 — **0건 실행을 성공으로 세지 않는다.** 48차는 실행 가능한
+    #   scenario 를 하나도 돌리지 않고도 "전부 물었다" 를 찍고 rc 0 이었다.
+    if ran != n_exec:
+        print(f"✗ 실행 가능한 scenario {n_exec}건 중 {ran}건만 돌았다 — "
+              "돌지 않은 것을 통과로 셀 수 없다")
+        return 1
+    if ran == 0:
+        print(f"이 조각에는 실행 가능한 변이가 없다 (신고 {len(declared)}건뿐) "
+              "— rc 0 이 '전부 물었다' 를 뜻하지 않는다")
+        return 0
+    print(f"실행한 변이 {ran}건이 전부 기대 node 를 call 단계에서 물었다")
+    return 0
+
+
+def _transcript_digest(scen: dict) -> str:
+    """조각이 담은 **결과**의 내용 주소 (52차 P1-2 — 영수증 digest 포함)."""
+    body = json.dumps(
+        [[n, bool(v.get("ran")),
+          (None if v.get("bit") is None else bool(v.get("bit"))),
+          str(v.get("report_sha256") or "")]
+         for n, v in sorted(scen.items())], ensure_ascii=False, sort_keys=True)
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+
+def _write_coverage(path, selector, items, multi, declared, bit,
+                    receipts: dict | None = None,
+                    snapshot: ReceiptSnapshot | None = None) -> None:
+    """이 조각이 **무엇을 덮었는지** 기계 판독 가능하게 남긴다 (49차 P1).
+
+    전수(64건)를 한 번에 돌리면 시간이 넘치므로 조각으로 나눠 돌린다. 그러면
+    "조각 합집합이 등록부 전체를 덮었는가" 를 사람이 로그를 눈으로 세어 답하게
+    되는데, 그것은 증거가 아니다. `--check-coverage` 가 이 파일들을 합쳐 답한다.
+    """
+    decl_names = {d[0] for d in declared}
+    scen = {}
+    for name, _p, _o, _n, kexpr in items:
+        scen[name] = {"class": "declared" if name in decl_names else "executable",
+                      "sites": 1, "kexpr": kexpr,
+                      "ran": name in bit, "bit": bit.get(name)}
+    for name, _p, pairs, kexpr in multi:
+        scen[name] = {"class": "declared" if name in decl_names else "executable",
+                      "sites": len(pairs), "kexpr": kexpr,
+                      "ran": name in bit, "bit": bit.get(name)}
+    # ★ 51차 P1-E2 — 증거를 **이 등록부·이 코드·이 실행**에 묶는다. 50차
+    #   artifact 는 아무 것에도 안 묶여 있어서, 과거 JSON 만으로 99/99 가
+    #   나왔다 (리뷰어 실측 `replay_calls=0`). "무엇을 덮었다" 가 아니라
+    #   "무엇이 실제로 돌았다" 가 증거다.
+    # ★ 52차 P1-2 — **실행 영수증**을 옆에 남긴다. 51차 artifact 는 runner 의
+    #   self-claim(`bit`)만 담았고 checker 는 그것을 다시 해시했으므로,
+    #   replay 를 한 번도 안 하고 전수 인증이 나왔다 (리뷰어 실측
+    #   `replay_calls=0 · forged_executable_bits=108 · rc=0`).
+    #
+    #   이제 조각마다 scenario 별 pytest report 원본을 저장하고, checker 는 그
+    #   바이트에서 판정을 **다시 유도한다**. 남은 한계는 명시한다: report 자체를
+    #   위조하면 여전히 통과한다. 그러나 그것은 "아무 것도 안 하고 숫자만 적는
+    #   것" 과 다른 종류의 주장이고, report 는 committed·diffable 이다.
+    p = pathlib.Path(path)
+    rep_dir = p.parent / "reports" / p.stem
+    # ★ 62차 P1-6 — 본문과 digest 는 **같은 스냅샷**에서 나온다. 예전 판은
+    #   `_execution_receipt()` 와 `_execution_receipt_digest()` 를 따로 불러
+    #   탐침을 두 번 띄웠다 — 둘이 다른 환경을 적을 수 있었다.
+    snap = snapshot if snapshot is not None else take_receipt_snapshot()
+    if receipts is not None:
+        import shutil as _sh
+        _sh.rmtree(rep_dir, ignore_errors=True)
+        rep_dir.mkdir(parents=True, exist_ok=True)
+        for name, r in sorted(receipts.items()):
+            for phase in ("before", "after"):
+                blob = r.get(phase) or b""
+                (rep_dir / f"{name}.{phase}.json").write_bytes(blob)
+            scen[name]["report_sha256"] = _receipt_digest(
+                name, r.get("before") or b"", r.get("after") or b"")
+    rec = {"schema": "mutation-coverage/v3",
+           "selector": selector,
+           "at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+           "binding": {
+               "registry_digest": _registry_digest(),
+               "expect_digest": _expect_digest(),
+               "runner_digest": _runner_digest(),
+               "head": _head(),
+               "tree_digest": _tested_tree_digest(),      # 55차 P1-2
+               "execution": snap.body(),                  # 56차 P1-2
+               "execution_digest": snap.digest,
+               "reports_dir": rep_dir.name if receipts is not None else "",
+               "transcript_digest": _transcript_digest(scen)},
+           "scenarios": scen}
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(rec, ensure_ascii=False, indent=2, sort_keys=True)
+                 + "\n", encoding="utf-8")
+    print(f"\ncoverage 조각을 남겼다: {p}")
+
+
+def _scenario_binding(name: str) -> bytes:
+    """이 scenario 의 **정확한 변이**를 바이트로 (53차 P1).
+
+    담는 것: 이름 · 대상 파일 · preimage/치환 쌍 전부 · 선택식 · 기대 node.
+    등록부에 없는 이름이면 빈 결속을 만들지 않는다 — 이름만 지어내면 통과하는
+    통로가 되기 때문이다.
+    """
+    for n, path, old, new, kexpr in MUTANTS:
+        if n == name:
+            sites = [[pathlib.Path(path).name, old, new]]
+            break
+    else:
+        for n, path, pairs, kexpr in MULTI:
+            if n == name:
+                sites = [[pathlib.Path(path).name, o, w] for o, w in pairs]
+                break
+        else:
+            raise SystemExit(
+                f"✗ 등록부에 없는 scenario 의 영수증을 만들 수 없다: {name!r}")
+    return json.dumps({"name": name, "sites": sites, "kexpr": kexpr,
+                       "expect": sorted((EXPECT.get(name) or {}).get("fail") or ())},
+                      sort_keys=True, ensure_ascii=False,
+                      separators=(",", ":")).encode("utf-8")
+
+
+def _receipt_digest(name: str, before: bytes, after: bytes) -> str:
+    """영수증 digest — **바이트 + 그 변이의 identity** (53차 P1).
+
+    52차는 `sha256(before + after)` 였다. 그러면 digest 는 바이트만의 함수이고,
+    기대 node 가 같은 scenario 사이에서 report 를 **이름만 바꿔** 옮길 수
+    있었다 (리뷰어 실측: 새 pytest 실행 0회로 두 칸이 채워졌다). 영수증은 어느
+    변이의 것인지 말해야 영수증이다.
+    """
+    h = hashlib.sha256()
+    h.update(_scenario_binding(name))
+    h.update(b"\x00")
+    h.update(before)
+    h.update(b"\x00")
+    h.update(after)
+    return h.hexdigest()
+
+
+def verify_receipts(path, scen: dict, binding: dict) -> int:
+    """조각의 **실행 영수증**을 검사하고 판정을 다시 유도한다 (52차 P1-2).
+
+    `check_coverage()` 에서 떼어 낸 것은 시험이 이 축만 따로 겨눌 수 있게 하기
+    위해서다. `check_coverage()` 는 맨 앞에서 `check_preimages()` 를 부르므로,
+    이 파일 자신을 변이시키면 **그 gate 가 먼저 걸려** 어떤 변이든 "거부됐다"
+    로 보인다 — 물긴 하지만 **선언한 이유로 물지 않는다.** 그런 증인은 증거가
+    아니다 (실측했다: witness 가 "정상 조각이 거부됐다" 였다).
+    """
+    rep_dir = pathlib.Path(path).parent / "reports" / \
+        str(binding.get("reports_dir") or "")
+    # ★ 53차 P1 — 어떤 scenario 가 **실행 가능한가** 는 등록부가 정한다.
+    #   조각에 적힌 `class` 로 판단하면 "declared 라고 적으면 검사를 건너뛴다"
+    #   가 된다 (조각은 검사 대상이지 authority 가 아니다).
+    reg = _registry()
+    for name, v in sorted(scen.items()):
+        if (reg.get(name) or {}).get("class") != "executable":
+            continue
+        if not v.get("ran"):
+            continue
+        want_sha = str(v.get("report_sha256") or "")
+        if not want_sha:
+            print(f"✗ {path}: {name} 이 돌았다는데 실행 영수증이 없다 — "
+                  "self-claim 은 증거가 아니다")
+            return 1
+        blob = {}
+        for phase in ("before", "after"):
+            f = rep_dir / f"{name}.{phase}.json"
+            if not f.is_file():
+                print(f"✗ {path}: {name} 의 {phase} report 파일이 없다 ({f})")
+                return 1
+            blob[phase] = f.read_bytes()
+        blob_before, blob_after = blob["before"], blob["after"]
+        if _receipt_digest(name, blob_before, blob_after) != want_sha:
+            print(f"✗ {path}: {name} 의 report digest 가 다르다 — 결과를 "
+                  "나중에 고쳤거나 **다른 변이의 영수증**을 붙였다")
+            return 1
+        if _report_identity_rc(path, name, rep_dir,
+                               binding.get("execution")) != 0:
+            return 1
+        derived = _verdict_from_reports(name, rep_dir)
+        # ★ 53차 P1 — **"모르겠다" 는 "물었다" 가 아니다.** 52차는 여기 앞에
+        #   `derived is not None and` 를 두어 유도 실패를 건너뛰었고, 0바이트
+        #   report 두 개면 어떤 scenario 든 통과했다 (리뷰어 실측:
+        #   `new_pytest_runs=0`). 유도할 수 없으면 `None` 이 그대로 비교에
+        #   들어가 어긋난다 — 그것이 fail-closed 다.
+        if bool(v.get("bit")) != derived:
+            print(f"✗ {path}: {name} 의 판정이 영수증과 다르다 "
+                  f"(적힌 것 {v.get('bit')} ≠ report {derived})"
+                  + (" — report 를 읽을 수 없거나 기대 node 가 없다"
+                     if derived is None else ""))
+            return 1
+    return 0
+
+
+def _refuse(msg: str) -> int:
+    print(msg)
+    return 1
+
+
+def _report_identity_rc(path, name: str, rep_dir, execution=None) -> int:
+    """저장된 report 가 **이 변이의 증인**을 담고 있는가 (54차 P1).
+
+    53차는 영수증 digest 를 exact mutant 에 결속했다. 그런데 `_receipt_digest()`
+    는 공개 함수이므로 조각을 쓰는 쪽이 다시 계산할 수 있고, 리뷰어는 다른
+    mutant 의 **진짜** report 를 그대로 옮긴 뒤 digest 와 transcript 만 다시
+    계산해 통과시켰다 (`new_pytest_runs=0`).
+
+    결속이 조각의 **밖**에 있어야 한다. 등록부는 scenario 마다 실패의 의미
+    증인을 이미 선언하고 있고(`EXPECT[name]["witness"]`), 그것은 기대 node 가
+    같은 쌍에서도 서로 다르다. 그러므로 report 바이트에서 그 증인을 다시
+    확인하면, 남의 report 는 자기 증인을 담고 있지 않아 걸린다.
+    """
+    # ★ 54차 P1 — 먼저 **표식**을 본다. 기대 node 도 증인도 같은 scenario 쌍이
+    #   실제로 있으므로(실측 9쌍) 증인만으로는 남의 report 를 구별할 수 없다.
+    mid = _marker_id(name)
+    for phase in ("before", "after"):
+        f = pathlib.Path(rep_dir) / f"{name}.{phase}.json"
+        try:
+            data = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            return _refuse(f"✗ {path}: {name} 의 {phase} report 를 읽을 수 "
+                             f"없다: {exc}")
+        ids = {t.get("nodeid") or "" for t in data.get("tests", [])}
+        if not any(f"test_mutant_{mid}" in n for n in ids):
+            return _refuse(
+                f"✗ {path}: {name} 의 {phase} report 에 이 변이의 표식이 없다 "
+                f"(test_mutant_{mid}) — 다른 변이의 report 를 이름만 바꿔 붙인 "
+                "것이 아닌지 본다")
+        # ★ 58차 L12 — **조각이 주장한 환경**에서 tag 를 유도해 report 바이트에서
+        #   찾는다. 조각 옆 필드만 현재 값으로 갈아 끼우면 유도된 tag 가 달라지고
+        #   report 에는 그 node 가 없다 (리뷰어 실측: reports_unchanged=true ·
+        #   pytest_runs=0 · rc=0 이던 경로가 여기서 막힌다).
+        if execution is not None:
+            tag = environment_tag(execution)
+            if not any(f"test_env_{tag}" in n for n in ids):
+                return _refuse(
+                    f"✗ {path}: {name} 의 {phase} report 가 조각이 주장하는 "
+                    f"환경을 증언하지 않는다 (test_env_{tag}) — 실행은 그대로 "
+                    "두고 실행 영수증만 갈아 끼운 것이 아닌지 본다")
+            for t in data.get("tests", []):
+                if f"test_env_{tag}" in (t.get("nodeid") or "") \
+                        and (t.get("call") or {}).get("outcome") != "passed":
+                    return _refuse(
+                        f"✗ {path}: {name} 의 {phase} report 에서 환경 증언이 "
+                        "실패했다 — 재생이 선언한 환경과 실제로 본 환경이 다르다")
+    exp = EXPECT.get(name) or {}
+    wit = exp.get("witness") or {}
+    if not wit:
+        return _refuse(
+            f"✗ {path}: {name} 의 의미 증인이 선언되지 않았다 — 무엇으로 물었는지"
+            " 말하지 않는 영수증은 영수증이 아니다")
+    f = pathlib.Path(rep_dir) / f"{name}.after.json"
+    try:
+        data = json.loads(f.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return _refuse(f"✗ {path}: {name} 의 after report 를 읽을 수 없다: {exc}")
+    seen = {t.get("nodeid"): ((t.get("call") or {}).get("longrepr")) or ""
+            for t in data.get("tests", [])}
+    for node, want in sorted(wit.items()):
+        got = seen.get(node)
+        if got is None or not _witness_holds(got, want):
+            return _refuse(
+                f"✗ {path}: {name} 의 report 가 이 변이의 증인을 담고 있지 "
+                f"않다 ({node}) — 기대 {str(want)[:60]!r} · 실제 "
+                f"{_last_line(got or '')[:60]!r}. 다른 변이의 report 를 이름만 "
+                "바꿔 붙인 것이 아닌지 본다")
+    return 0
+
+
+def _verdict_from_reports(name: str, rep_dir) -> bool | None:
+    """저장된 pytest report 에서 "물었는가" 를 **다시 유도한다** (52차 P1-2).
+
+    runner 가 적은 값을 믿지 않는다. `EXPECT[name]["fail"]` 의 node 들이
+    변이 **후** report 에서 call 단계에 실패로 나타나고 변이 **전** report 에서는
+    안 나타나야 물었다.
+
+    남은 한계: report 자체를 위조하면 통과한다. 그러나 그것은 "아무 것도 안 하고
+    숫자만 적는 것" 과 다른 주장이고, report 는 committed·diffable 이다.
+    """
+    want = set((EXPECT.get(name) or {}).get("fail") or ())
+    if not want:
+        return None
+    def _failed(phase):
+        f = pathlib.Path(rep_dir) / f"{name}.{phase}.json"
+        try:
+            data = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+        return {t["nodeid"] for t in data.get("tests", [])
+                if (t.get("call") or {}).get("outcome") == "failed"}
+    before, after = _failed("before"), _failed("after")
+    if before is None or after is None:
+        return None
+    return want.issubset(after) and not (want & before)
+
+
+def _assert_execution_is_current(paths) -> int:
+    """조각이 **지금 이 실행 환경**에서 나왔는가 (57차 P1-1).
+
+    56차는 `binding.execution` 과 `execution_digest` 를 적기만 하고 checker 는
+    registry/expect/runner digest 만 봤다. 리뷰어는 12개 조각에서 두 필드를
+    **전부 삭제하고도** rc 0 을 받았다 — 적기만 하고 검사하지 않는 값은 결속이
+    아니라 장식이다. 54차에 `head` 로 배운 것을 새 필드에서 되풀이했다.
+
+    셋을 본다: (1) 두 필드가 **있는가**, (2) 본문이 그 digest 로 해시되는가
+    (본문만 고치고 digest 를 안 맞추는 것을 막는다), (3) 지금 환경과 같은가.
+    """
+    # ★ 62차 P1-6 — 지금 환경도 **한 스냅샷**으로 잰다.
+    _snap = take_receipt_snapshot()
+    now_body, now = _snap.body(), _snap.digest
+    for pth in paths:
+        try:
+            rec = json.loads(pathlib.Path(pth).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            return _refuse(f"✗ {pth}: 조각을 읽을 수 없다: {exc}")
+        b = rec.get("binding") or {}
+        body, got = b.get("execution"), str(b.get("execution_digest") or "")
+        if body is None or not got:
+            return _refuse(
+                f"✗ {pth}: 실행 영수증이 없다 (execution·execution_digest) — "
+                "어떤 환경에서 돌았는지 말하지 않는 조각은 증거가 아니다")
+        recomputed = hashlib.sha256(
+            json.dumps(body, sort_keys=True,
+                       ensure_ascii=False).encode("utf-8")).hexdigest()
+        if recomputed != got:
+            return _refuse(
+                f"✗ {pth}: 실행 영수증 본문이 그 digest 와 다르다 "
+                f"({recomputed[:16]} ≠ {got[:16]}) — 본문을 나중에 고쳤다")
+        if got != now:
+            diff = sorted(k for k in set(body) | set(now_body)
+                          if body.get(k) != now_body.get(k))
+            return _refuse(
+                f"✗ {pth}: 증거가 가리키는 실행 환경이 지금과 다르다 "
+                f"(다른 항목: {diff}) — 그 환경에서 다시 재생해야 한다")
+    return 0
+
+
+def _assert_trees_are_current(paths) -> int:
+    """조각이 가리키는 코드가 **지금 트리의 코드**인가 (55차 P1-2).
+
+    54차의 `head` 결속은 "그 commit 이 실재하는가" 만 물었고, 리뷰어는 12조각의
+    `binding.head` 를 저장소 **최초 commit** 으로 일괄 교체하고도 `rc 0 ·
+    157/157 exact` 를 받았다. 실재하기만 하면 무엇이든 통과하는 값은 결속이
+    아니라 장식이다.
+
+    `check_coverage()` 에서 떼어 낸 것은 시험이 이 축만 따로 겨눌 수 있게 하기
+    위해서다 (52차에 `verify_receipts()` 를 뗀 것과 같은 이유). `check_coverage()`
+    는 맨 앞에서 `_assert_heads_are_real()` 을 부르는데 변이 sandbox 에는
+    `.git` 이 없어 그 검사가 **먼저** 거부한다 — 그러면 이 축의 변이가 "물긴
+    했지만 선언한 이유가 아닌" 상태가 된다 (실측했다).
+    """
+    now = _tested_tree_digest()
+    for pth in paths:
+        try:
+            rec = json.loads(pathlib.Path(pth).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            return _refuse(f"✗ {pth}: 조각을 읽을 수 없다: {exc}")
+        got = str((rec.get("binding") or {}).get("tree_digest") or "")
+        if not got:
+            return _refuse(
+                f"✗ {pth}: 시험한 트리 digest 가 없다 — 어느 코드에 대한 "
+                "증거인지 말하지 않는 조각은 증거가 아니다")
+        if got != now:
+            return _refuse(
+                f"✗ {pth}: 증거가 가리키는 트리가 지금 트리와 다르다 "
+                f"({got[:16]} ≠ {now[:16]}) — 그 코드는 다시 재생해야 한다")
+    return 0
+
+
+def _assert_heads_are_real(paths) -> int:
+    """조각이 적은 `head` 가 **이 저장소에 실재하는 commit** 인가 (54차 P1).
+
+    조각들은 같은 HEAD 에서 나와야 하고, 그 HEAD 는 이 저장소 역사 안에 있어야
+    한다. (증거를 담은 commit 자체는 그 뒤에 오므로 "현재 HEAD 와 같은가" 는
+    물을 수 없다 — 물을 수 있는 것은 "실재하는가" 와 "하나인가" 다.)
+    """
+    heads = set()
+    for p in paths:
+        try:
+            rec = json.loads(pathlib.Path(p).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            print(f"✗ {p}: 조각을 읽을 수 없다: {exc}")
+            return 1
+        heads.add(str((rec.get("binding") or {}).get("head") or ""))
+    if len(heads) != 1:
+        print(f"✗ 조각들이 서로 다른 HEAD 에서 나왔다: {sorted(heads)} — "
+              "합집합은 **한 코드 상태**에 대한 주장이어야 한다")
+        return 1
+    head = heads.pop()
+    if not re.fullmatch(r"[0-9a-f]{40}", head):
+        print(f"✗ 조각의 HEAD 가 commit 형식이 아니다: {head!r}")
+        return 1
+    # 이 검사는 **git 역사가 있는 맥락**에서만 물을 수 있다. 변이 sandbox 는
+    # 저장소 복사본이라 `.git` 이 없다 — 거기서는 형식과 일치만 본다. 그
+    # 경계를 §0 에 신고한다 (그래서 이 scenario 는 declared 로 등록한다).
+    try:
+        has_git = subprocess.run(["git", "rev-parse", "--git-dir"],
+                                 cwd=str(ROOT), capture_output=True).returncode
+    except OSError:                                       # pragma: no cover
+        has_git = 1
+    if has_git != 0:
+        return 0
+    try:
+        rc = subprocess.run(["git", "cat-file", "-e", head + "^{commit}"],
+                            cwd=str(ROOT), capture_output=True).returncode
+    except OSError as exc:                                # pragma: no cover
+        print(f"✗ HEAD 실재를 확인할 수 없다 ({exc})")
+        return 1
+    if rc != 0:
+        print(f"✗ 조각이 적은 HEAD 가 이 저장소에 없다: {head} — 기록만 하고 "
+              "검사하지 않는 값은 결속이 아니다")
+        return 1
+    return 0
+
+
+def check_coverage(paths) -> int:
+    """조각 합집합이 **등록부 전체**를 덮었는가 (49차 P1).
+
+    덮었다는 주장을 로그 눈대중이 아니라 파일로 답한다. 실행 가능한 scenario 는
+    전부 한 번 이상 **돌았고 물었어야** 하고, 신고는 전부 신고로 나타나야 한다.
+    """
+    reg = _registry()
+    # ★ 54차 P1 — 기록만 하고 안 보던 `head` 를 본다. 리뷰어는 모든 HEAD 를
+    #   40개의 `0` 으로 바꾸고도 rc 0 을 받았다 — 적기만 하고 검사하지 않는
+    #   값은 결속이 아니라 장식이다.
+    if _assert_heads_are_real(paths) != 0:
+        return 1
+    if _assert_trees_are_current(paths) != 0:
+        return 1
+    if _assert_execution_is_current(paths) != 0:          # 57차 P1-1
+        return 1
+    # ★ 50차 P1 — 합집합을 세기 전에 **등록부 자체**가 성립하는지 본다.
+    #   no-op 변이·죽은 지점·빈 기대 집합이 있으면 그 위에서 센 수는 뜻이 없다.
+    if check_preimages() != 0:
+        print("✗ 등록부의 변이 지점이 성립하지 않는다 — 합집합을 셀 수 없다")
+        return 1
+    empty = sorted(n for n, m in reg.items()
+                   if m["class"] == "executable"
+                   and not (EXPECT.get(n) or {}).get("fail"))
+    if empty:
+        print("✗ 실행 가능 변이인데 기대 실패 집합이 비었거나 없다: "
+              + ", ".join(empty))
+        return 1
+    # ★ 51차 P1-E2 — 조각이 **지금 이 등록부·이 runner** 에서 나왔는지 먼저 본다.
+    want = {"registry_digest": _registry_digest(),
+            "expect_digest": _expect_digest(),
+            "runner_digest": _runner_digest()}
+    seen: dict = {}
+    for path in paths:
+        rec = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+        if rec.get("schema") != "mutation-coverage/v3":
+            print(f"✗ {path}: coverage schema 가 아니다: {rec.get('schema')!r} "
+                  "(52차부터 v3 — 실행 영수증 없는 조각은 증거가 아니다)")
+            return 1
+        binding = rec.get("binding") or {}
+        for key, w in want.items():
+            if binding.get(key) != w:
+                print(f"✗ {path}: {key} 가 살아 있는 값과 다르다 "
+                      f"({str(binding.get(key))[:16]} ≠ {w[:16]}) — 이 조각은 "
+                      "지금 등록부/코드가 아닌 것에서 나왔다")
+                return 1
+        scen = rec.get("scenarios") or {}
+        if verify_receipts(path, scen, binding) != 0:
+            return 1
+        got = _transcript_digest(scen)
+        if binding.get("transcript_digest") != got:
+            print(f"✗ {path}: transcript_digest 가 담긴 결과와 다르다 "
+                  f"({str(binding.get('transcript_digest'))[:16]} ≠ "
+                  f"{got[:16]}) — 결과를 나중에 고쳤다")
+            return 1
+        for name, v in scen.items():
+            cur = seen.setdefault(name, {"class": v["class"], "ran": False,
+                                         "bit": None, "slices": []})
+            if cur["class"] != v["class"]:
+                print(f"✗ {name}: 조각마다 분류가 다르다 "
+                      f"({cur['class']} ≠ {v['class']})")
+                return 1
+            cur["slices"].append(rec["selector"])
+            if v.get("ran"):
+                cur["ran"] = True
+                cur["bit"] = bool(v.get("bit")) if cur["bit"] is None \
+                    else (cur["bit"] and bool(v.get("bit")))
+
+    bad = []
+    for name, meta in sorted(reg.items()):
+        got = seen.get(name)
+        if got is None:
+            bad.append(f"{name}: 어느 조각에도 나타나지 않았다 ({meta['class']})")
+            continue
+        if got["class"] != meta["class"]:
+            bad.append(f"{name}: 분류가 등록부와 다르다 "
+                       f"({got['class']} ≠ {meta['class']})")
+        if meta["class"] == "executable" and not got["ran"]:
+            bad.append(f"{name}: 실행 가능한데 어느 조각에서도 돌지 않았다")
+        if meta["class"] == "executable" and got["ran"] and got["bit"] is False:
+            bad.append(f"{name}: 돌았지만 물지 않았다")
+    extra = sorted(set(seen) - set(reg))
+    for name in extra:
+        bad.append(f"{name}: 등록부에 없는 scenario 가 조각에 있다 (이름이 바뀌었나)")
+
+    n_exec = sum(1 for m in reg.values() if m["class"] == "executable")
+    n_decl = len(reg) - n_exec
+    print(f"등록부 scenario {len(reg)} (executable {n_exec} · declared {n_decl}) · "
+          f"조각 {len(paths)}개에서 관측 {len(seen)}")
+    if bad:
+        print("\n=== 덮이지 않은 것 ===")
+        for b in bad:
+            print(b)
+        return 1
+    print("조각 합집합이 등록부 전체를 정확히 덮었다")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

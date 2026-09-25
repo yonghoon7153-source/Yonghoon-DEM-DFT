@@ -1,0 +1,14 @@
+legs:
+- leg_id: paired_fixed5_v4
+  preservation_status: full_bundle
+  evidence:
+    phases:
+    - grid
+    - fit
+    attempt_id: reviewer-inert
+    run_spec_digest: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    attempt_verifier: reviewer-inert
+    verifier_origin: reviewer-inert
+    out: results/paired_fixed5_v4
+    verification_receipt_core_sha256: 84e4f4562e6ccde4457075991223d4f8ee345eedc952ab7b99d44127f825fb24
+    verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
