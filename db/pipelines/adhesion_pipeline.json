@@ -380,6 +380,14 @@
    "prompt": "kb/reviews/codex_CA_prompt_wad_aprime_pilot_prereg_v3_2026_09_25.md",
    "reply": "kb/reviews/codex_CA_reply_wad_aprime_pilot_prereg_v3_2026_09_25.md",
    "response": "db/properties/wad_aprime_pilot_prereg_v4_2026_09_25.json"
+  },
+  {
+   "id": "CB",
+   "date": "2026-09-25",
+   "verdict": "조건부 GO — CA 코드 결함 해제 · registry 명세 2(전역 d_min 동률 · Σ∖{A} 차단) + S1 미완료(UMA 결박·선행 값·빌더) 채우면 S1 봉인 가능 · 본 계산 승인 아님",
+   "prompt": "kb/reviews/codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md",
+   "reply": "kb/reviews/codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md",
+   "response": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json"
   }
  ],
  "hazards": [
@@ -417,15 +425,15 @@
  "open": [
   {
    "state": "진행",
-   "text": "**파이프라인 v4** (`D-2026-09-25-wad-reference-state-policy`): ① P0 ✅ → ② 벌크 수치 민감도 ✅ → ③ A′ 카드 v1 → BY NO-GO → v2 → BZ NO-GO → v3 → CA NO-GO → **v4** ⏳ CB 재심·S1 봉인 → S2 기하 생성·프로브 → S3 좌표 봉인 → S4 DFT. ④ DEM 발송판 ✅ 발송·3차 회신 수령 (부탁 1 잔류 응력 GPa · 부탁 2 시나리오 초안은 DEM) → 회신 4 초안."
+   "text": "**파이프라인 v4** (`D-2026-09-25-wad-reference-state-policy`): ① P0 ✅ → ② 벌크 수치 민감도 ✅ → ③ A′ 카드 v1 → BY NO-GO → v2 → BZ NO-GO → v3 → CA NO-GO → v4 → CB 조건부 GO → **v5 봉인 후보** ⏳ 1저자 비준 → S1 봉인 → S2 기하 생성·프로브 → S3 좌표 봉인 → S4 DFT. ④ DEM 발송판 ✅ 발송·3차 회신 수령 (부탁 1 잔류 응력 GPa · 부탁 2 시나리오 초안은 DEM) → 회신 4 초안."
   },
   {
    "text": "✅ 격자 정합 규칙 = **(a) 흡착층을 SE 에 맞춘다** (`D-2026-09-25-wad-lattice-matching-rule-a` · 09-25) — SE 슬랩 한 기하 · 변형률 x·y·Å·원자당·면적당·밀도 병기",
    "state": "결정"
   },
   {
-   "text": "A′ 파일럿 사전등록 — v1 BY · v2 BZ · v3 **CA NO-GO** (BZ 이행 인정 · V2 측방 마스크 선택 입력 P0 · 인덱스 자동 변환 P1 · G3/G5 문구 · 프로브 예외 · registry 주기영상) → **v4** `db/properties/wad_aprime_pilot_prereg_v4_2026_09_25.json` (측방 마스크 V2 필수·전체 집합 · 인덱스 타입 검사(변환 없음) · G3 |ΔW|·끝점별 기록·허용 문구 · CPU/GPU 프로브 scf 한정·원출력 보존 · registry 최소영상·동률) · selftest 120/120 · 돌연변이 8 → **Codex CB** 재심 → S1 봉인 (UMA sha·선행 값·빌더 채운 뒤)",
-   "state": "재심"
+   "text": "A′ 파일럿 사전등록 — v1 BY · v2 BZ · v3 CA · v4 **CB 조건부 GO** → 조건 4 이행: UMA 결박(uma-s-1p1 sha 07068e9c…) · 선행 배치 값 · **빌더 `build_aprime_interfaces.py`** (V2·V3·V4·V5 · registry 규칙 · 끝점 · 20/20 · 돌연변이 4) · registry 명세 2 → **카드 v5 = S1 봉인 후보** `db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json` → 1저자 비준(추론 모드 default 포함) → content_digest 봉인 → S2",
+   "state": "비준 대기"
   },
   {
    "text": "D3 3체(ATM) 후처리 — 같은 기하에서 따로 보고",
@@ -576,6 +584,11 @@
    "date": "2026-09-25",
    "stage": "dft",
    "text": "**선행 배치 9 잡 끝** (V100 62 min · rc 0 · 깃발 0): Ag a₀ **PBE 4.1448 · PBE+D3 4.0705** (실험 4.086) · 그래핀 2.4668/2.4660 · 수렴 규칙 ✓ · Pulay ✓ · 내장 대조 ✓. **정합 변형률 (헤드라인 PBE+D3 격자 · 결정 7 시행)**: P1 Ag +0.85/−0.19 % · P2 흑연 +1.94/+0.89 % · V2 그래핀-on-Ag +1.08 % → 3 % 재개 규칙 미발동. **라벨 응력 PBE+D3** (GPa 인장+): 입방 고정 xx +0.71 · yy +2.65 · zz +2.66 · yz −1.11 · **p −2.01 (인장 정수압)** / 면내 고정·c 이완 c 9.40 Å (−6.5 %). ⚠ 지정 comp1 셀은 PBE 평형이라 D3 아래서 −2 GPa 인장 상태 — 라벨 조건 (참조 셀 변경은 새 결정). DEM 회신 4 표에 PBE+D3 줄 채움 · S1 결박 파일에 값 기록."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**Codex CB 조건부 GO** (CA 코드 결함 해제 · 본 계산 승인 아님): 남은 조건 = registry 전역 d_min 동률 집합 · Σ∖{A} 빔 차단 · GPU 프로브 문구 · 선언한 S1 미완료(UMA·선행 값·빌더). → **빌더 `tools/wad/build_aprime_interfaces.py`** 작성: V2 (Ag(111)√3 4층 + graphene 2×2 · registry 4 · 변형률 +1.08 %) · V3/V4 (Ag₄·C₆H₆ on 정본 4층 · registry A/B = 108/109 · 93/94) · V5 (SE 2층 1×2 116 + Ag 84 = 200 · +0.85/−0.19 %) · `registry_select` (전역 d_min · 이미지 열거 · 감기 · Σ∖{A} 차단) · `make_endpoints` (직접·영상 ≥ 8 · c · dipfield 구간) · 변형률 3 % 가드 · selftest 20/20 · 돌연변이 4 빨간불. **카드 v5 = S1 봉인 후보** (UMA·PP·D3·코드 sha 결박 · 선행 값 · registry 명세 · 추론 모드 default 제안) → 1저자 비준 대기."
   }
  ],
  "related_decisions": [

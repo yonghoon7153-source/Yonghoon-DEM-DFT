@@ -3,7 +3,7 @@ title: "리뷰 CB 프롬프트 — A′ 파일럿 사전등록 카드 v4: CA 최
 date: 2026-09-25
 updated: 2026-09-25
 tags: [review, codex, adhesion, wad, prereg, estimand, lpscl, silver, graphite, uma, d3, pilot, re-review]
-status: 발송 대기 (1저자) — 카드 v4 는 draft · 봉인 전 · 계산 0 (선행 배치는 카드 밖 · V100 진행 중)
+status: 발송 완료 · 회신 수령 2026-09-25 밤 **조건부 GO** (`codex_CB_reply_…`) → 조건 4 이행 → 카드 v5 봉인 후보 (1저자 비준 대기)
 confidence: medium
 verificationStatus: unverified
 explored: false
