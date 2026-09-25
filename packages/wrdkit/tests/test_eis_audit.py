@@ -1030,9 +1030,10 @@ def test_a_tail_cut_off_with_the_low_end_is_one_note_not_a_check_per_bound():
                         band=(cut, float(FREQUENCY.max())), reference=reference)
     (tail,) = [f for f in cut_off.findings if f.code == "tail_outside_window"]
     assert tail.severity == NOTE
-    assert tail.message.startswith("확산 꼬리 TL1_Wr, TL1_Wn, TL1_Wt 는 이 맞춤이 "
-                                   "정하지 않았습니다")
-    assert f"{cut:.3g} Hz 부터 맞춰" in tail.message
+    assert tail.message.startswith(
+        "확산 꼬리가 경계에 붙었습니다 (TL1_Wr, TL1_Wn, TL1_Wt) — 꼬리의 크기(TL1_Wr)가 "
+        "0 으로, 꼬리가 끝나는 곳(TL1_Wt)이 맞춘 구간 아래로 갔습니다")
+    assert f"{cut:.3g} Hz 부터라" in tail.message
     bounds = " / ".join(f.message for f in cut_off.findings if f.code == "at_bound")
     assert "TL1_Re" in bounds and "TL1_W" not in bounds
     (unsettled,) = [f for f in cut_off.findings if f.code == "undetermined"]
@@ -1044,6 +1045,68 @@ def test_a_tail_cut_off_with_the_low_end_is_one_note_not_a_check_per_bound():
     assert "tail_outside_window" not in codes(whole)
     bounds = " / ".join(f.message for f in whole.findings if f.code == "at_bound")
     assert all(name in bounds for name in ("TL1_Wr", "TL1_Wn", "TL1_Wt"))
+
+
+def test_the_tail_note_says_only_what_the_fit_did_to_the_tail():
+    """실측 검수 (2026-09-25 06:24) — 보완 7 의 한 줄이 경계에 붙은 꼬리가 없는 #9
+    (0.322 Hz 부터, TL1_Wr · Wt 는 미결정일 뿐) 에도 "꼬리가 맞춘 구간 밖입니다.
+    경계에 붙은 것도 그 때문입니다" 라고 했다.  한 줄은 맞춤이 꼬리를 밀어낸 것
+    — 크기 0 이나 시정수 상한 — 만 말하고 경계에 붙은 것만 묶는다."""
+    from wrdkit.eis.audit import KKReference
+
+    circuit = "L1-R0-p(R1,CPE1)-TL1"
+
+    def audit(values, rails, undetermined, above_hz):
+        fit = Fit(circuit, [P(name, value, reason=rails.get(name, ""),
+                              status="undetermined" if name in undetermined
+                              else "determined")
+                            for name, value in values.items()])
+        sweep = FREQUENCY
+        cut = float(sweep[sweep >= above_hz].min())
+        reference = KKReference(frequency_hz=sweep, residual=np.zeros(sweep.size),
+                                low_limit_hz=cut, sigma=0.003)
+        return audit_fit(fit, spectrum_of(circuit, values), kind=SOLID, config=FULL,
+                         band=(cut, float(sweep.max())), reference=reference)
+
+    def said(result, code):
+        return " / ".join(f.message for f in result.findings if f.code == code)
+
+    # #9: 꼬리는 미결정일 뿐 — 까닭을 모르니 미결정 목록에 둔다.
+    lone = audit({"L1": 5.22e-07, "R0": 4.44, "R1": 22.4, "CPE1_Q": 2.64e-4,
+                  "CPE1_n": 0.3, "TL1_Ri": 87.1, "TL1_Re": 0.211, "TL1_Rct": 156,
+                  "TL1_Q": 3.24e-05, "TL1_n": 0.754, "TL1_Wr": 66.4, "TL1_Wn": 0.332,
+                  "TL1_Wt": 40.0},
+                 {"CPE1_n": "at_lower_bound"},
+                 {"R0", "R1", "CPE1_Q", "CPE1_n", "TL1_Ri", "TL1_Re", "TL1_Wr", "TL1_Wt"},
+                 0.3)
+    assert "tail_outside_window" not in codes(lone)
+    assert "TL1_Wr" in said(lone, "undetermined") and "TL1_Wt" in said(lone, "undetermined")
+
+    # #33: 시정수가 상한 — 경계에 붙은 Wn · Wt 만 묶고, 미결정일 뿐인 Wr 는 목록에.
+    pushed = audit({"L1": 5.52e-07, "R0": 2.69e-06, "R1": 0.858, "CPE1_Q": 2.16e-3,
+                    "CPE1_n": 0.786, "TL1_Ri": 25.8, "TL1_Re": 1e-09, "TL1_Rct": 0.306,
+                    "TL1_Q": 6.79e-4, "TL1_n": 0.492, "TL1_Wr": 13.3, "TL1_Wn": 0.1,
+                    "TL1_Wt": 9.98e5},
+                   {"TL1_Wn": "at_lower_bound", "TL1_Wt": "at_upper_bound"},
+                   {"R0", "TL1_Ri", "TL1_Re", "TL1_Rct", "TL1_Q", "TL1_Wr", "TL1_Wn",
+                    "TL1_Wt"},
+                   1.6)
+    assert said(pushed, "tail_outside_window").startswith(
+        "확산 꼬리가 경계에 붙었습니다 (TL1_Wn, TL1_Wt) — 꼬리가 끝나는 곳(TL1_Wt)이 "
+        "맞춘 구간 아래로 갔습니다")
+    assert "TL1_W" not in said(pushed, "at_bound")
+    assert "TL1_Wr" in said(pushed, "undetermined")
+    assert "TL1_Wn" not in said(pushed, "undetermined")
+
+    # 하한을 올렸어도 꼬리 모양(Wn)만 경계면 맞춤이 꼬리를 밀어낸 것이 아니다 —
+    # 전처럼 경계마다 본다 (#16 의 Wn 0.8 모양).
+    shaped = audit({"L1": 3.63e-07, "R0": 18.1, "R1": 284, "CPE1_Q": 7.11e-05,
+                    "CPE1_n": 0.546, "TL1_Ri": 14.5, "TL1_Re": 14.5, "TL1_Rct": 1.17e3,
+                    "TL1_Q": 1.01e-4, "TL1_n": 0.576, "TL1_Wr": 34.8, "TL1_Wn": 0.8,
+                    "TL1_Wt": 8.28},
+                   {"TL1_Wn": "at_upper_bound"}, {"TL1_Ri", "TL1_Re", "TL1_Wn"}, 0.05)
+    assert "tail_outside_window" not in codes(shaped)
+    assert "TL1_Wn" in said(shaped, "at_bound")
 
 
 def test_an_end_that_still_rises_gently_is_not_said_to_come_down():
