@@ -61,6 +61,24 @@ frozen AM) 이 상한이므로 100 GPa 팔이 그것을 넘으면 코드 결함�
 - 원장: `CL-42` (ADD_E_SET) 에 결과 링크 · Methods 표 라벨 (`scripts/build_methods_docx.py`).
 - 코드: `--add-e-override` (`mpm3d_compaction.py`) — selftest 로 파서 · 적용 · 매니페스트 태그 · 거부 (미지 상 · 비수치 · 0 이하) 를 고정.
 
-## 7. 결과 (런 뒤 채운다)
+## 7. 결과 (런 진행 중 — 팔이 끝날 때마다 채운다)
 
-(비어 있음 — 런 전)
+### 7-1. 실행 환경 (kgy, 2026-09-25)
+- 코드 `9da8df0e7` 분리 워크트리 `~/dem-vgcfE` (kgy 의 `~/dem-mt` 는 이름만 같은 다른 히스토리 — 미사용) · 킷 `~/dem-vgcfE/kits/VGCF_PTFE_3_1_E{1,10,100}` ·
+  `kits/scripts → ~/dem-vgcfE/scripts` 심링크 · `MPM_NO_VENV=1 MPM_NO_PULL=1`.
+- 파이썬: 새 conda env `ti310` (Python 3.10 · taichi 1.7.3) — 기존 `~/Yonghoon-DEM-DFT/venv` (py3.13 taichi) 는 kgy glibc (Ubuntu 20.04, < 2.32) 에서 import 실패.
+- GPU: RTX 3090 24 GB (`--gpu-mem 20` 그대로).
+- ⚠ kgy 의 `~/pa/kits/VGCF_PTFE_3_1/run_mpm.sh` 는 **스모크 변형** (`--frames 150` · `--platen-mach` 없음 · align 0.665 · target 0.1585) 이었다 →
+  세 팔 모두 리포 등록본 `docs/data/phase_a_6mah/kits/VGCF_PTFE_3_1/run_mpm.sh` (2500 프레임 · mach 0.03 · 0.666 · 0.1589) 로 덮고 `--add-e-override` 만 추가.
+  scaffold CSV 두 개는 kgy 사본 그대로.
+
+### 7-2. 팔별 (mpm_metrics.json)
+
+| E_VGCF | 시작 → 마커 | override / E_anchor | additives.VGCF.E_GPa | porosity@target (%) | settled (%) | 두께 (µm) | wall_z | settled/target | wallP 정착 (GPa) | 유효 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| **1** | 13:32:49 → 15:09:36 (압밀 ~32 분 + payload ~65 분) | `VGCF=1` / `ADD_E_SET_20260818+override:VGCF=1.0GPa` | 1.0 | 14.749 | 14.749 | 121.669 | 2.2881 | 0.4662 | 0.1403 | ✅ (§4 충족: 태그 · 도달 non-None) |
+| 10 | 15:10:34 → (진행) | | | | | | | | | |
+| 100 | | | | | | | | | | |
+
+- 공통: `stop_mode legacy_moving` · `frames_budget 2500` · `wall_z_at_floor False`.  σ_e 는 STEP3 (§2 4) 뒤 추가.
+- 판정 (§3) 은 세 팔 완주 뒤.
