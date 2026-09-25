@@ -38,7 +38,7 @@
     🔎 **MTO 확정 (09-25 · traj 에서 되살림 · lag ≤ 200)**: c 상수(0.6–1.0) · m 상수 · β → 1.0 · D_inc ≈ 1.05e-06 일정 = **케이지 절편형** — STO 의 sub-diffusion 신호와 어긋남 (STO 늦은 창 요동 가능). C2 미통과는 두 곡선 다 같음(0.641/0.56). P-1 은 그대로 미통과 · Q8-④ 를 이 어긋남으로 갱신.
     ⇒ **P-1 미통과 · P-2 경계 통과 → 본 15런 보류 (잠정)** — 판정·갈래는 외부 1저자 (Q1–Q9 편지 `kb/projects/li2s_glass_external_first_author_letter_2026_09_25.md`).
     ✅ **seed5 담금질 끝 (09-25 20:12 · 33.0 h · plan 차이 seed 만)** — `--seed_gate`: **두 판 모두 PS₄ 0.9167** (12 P 중 1) · P–S 제외 최단 **S–S 2.031/2.099 Å** (S–S 결합 형성 의심) · ρ 1.6181 · 변위 max 1.03 → Q9 (기록·제외 vs 재담금질).
-    Q6 장부: seed2–5 + 파일럿 = **156.9 h** (견적 69 · 상한 180 의 87 %). ⏭ 편지 발송(사용자) → 외부 1저자 회신 대기. 우리 쪽 li2s 실행 큐는 비었다.
+    Q6 장부: seed2–5 + 파일럿 = **156.9 h** (견적 69 · 상한 180 의 87 %). ⏸ **추석 — 편지 발송·외부 1저자 회신은 연휴 뒤** (1저자 09-25). 우리 쪽 li2s 실행 큐는 비었다 · 회신 전 어떤 li2s 계산도 던지지 않는다.
     → 벽시계로 세면 본 15런 전에 상한 근처 ⇒ **Q6 은 본 캠페인 전 필수**. 외부 1저자 질문은 이제 **Q1–Q7** (정오 기록 §4).
 - ✅ **SDCP/PTFE (C-12 v41, 1저자 = 사용자)** — 사람용 정리 `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md`
   (숫자의 지위 · 1.83/2.54 Å 와 DFT 힘 · PTFE −0.79 크기 검증 · Kang 2025 대비 · 대기 12잡 · 세미나 멘트·예상 질문).
@@ -252,6 +252,8 @@
     🔴 **Codex CA NO-GO (09-25 밤)** — BZ 이행 인정 · 남은 것: V2 측방 마스크 **선택 입력**(생략·Ag 만·부분집합 통과 · P0) · `int(i)` 자동 변환(0.9·−0.9·True · P1) · G3 |ΔW|·끝점별 기록·문구 · G5 문구 종결별 · CPU 프로브 예외 누락·electron_maxstep · registry 중점 주기영상 반례.
     → 코드: 금속 기판 모드 측방 마스크 **필수 + 흡착층 전체 집합** · PS₄ 모델 측방 제약 깃발 · `_validate_idx` 타입 검사(변환 없음) · CLI 파싱/검증 분리 — **120/120** · CA 음성 10 · 돌연변이 8 빨간불 · CLI JSON 소수 rc 2. **카드 v4** `wad_aprime_pilot_prereg_v4_2026_09_25.json` (G3 기록·문구 · G5 종결별 · 프로브 CPU/GPU·scf·원출력 보존 · registry Σ·최소영상·동률·감기 · Ag₄ 정책 문구 · S1 빈 항목 봉인 불가).
     ⏭ **Codex CB** `codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md` (발송 대기). S1 결박값은 카드 밖 `db/properties/wad_aprime_s1_bindings_2026_09_25.json` 에 모은다 (재심 중 카드 SHA 불변):
+    🔒 **S1 봉인 (09-25 밤 · 1저자 '가장 권장하는거면 비준')** — 카드 v5 content_digest `126aa58ebdc4803b…` · 결정 `D-2026-09-25-wad-aprime-s1-seal` active · UMA 추론 모드 **default** 확정. 본문 불변 (정오·개정은 별도 파일). ⏭ **S2**: 빌더로 기하 생성 → 최적화 전 마스크·registry·좌표 sha 기록 → UMA+D3 이완(gabia uma env · b2o3 끝난 뒤 GPU) → `--interface_check` → 분리 셀 CPU 프로브 → GPU 프로브 → S3 봉인.
+    📨 **DEM 회신 4 발송본** `kb/projects/wad_dem_reply_4_send_2026_09_25.md` (09-25 · 1저자 발송).
     🟢 **Codex CB 조건부 GO (09-25 밤)** — 코드 차단 해제 · 조건 4 (UMA 결박 · 선행 값 · 빌더+registry 구현·시험 · registry 전역 d_min 동률/Σ∖{A} 차단) → 전부 이행: **`tools/wad/build_aprime_interfaces.py`** (V2·V3·V4·V5 · `registry_select` · `make_endpoints` · 20/20 · 돌연변이 4) ·
     **카드 v5 = S1 봉인 후보** `wad_aprime_pilot_prereg_v5_2026_09_25.json` (UMA·PP·D3·코드 sha 결박 · 선행 값 · registry 명세 · GPU 프로브 문구). ⏭ **1저자 비준** (카드 + 추론 모드 default) → content_digest 봉인 → **S2** (기하 생성 · 마스크/registry 기록 · UMA 이완 · interface_check · 프로브).
     ✅ **선행 배치 끝 (V100 09-25 21:21 · 9/9 rc 0 · 깃발 0)**: Ag a₀ PBE 4.1448 · **PBE+D3 4.0705** (실험 4.086) · 그래핀 2.4668/2.4660 · **정합 변형률(PBE+D3 격자)** P1 +0.85/−0.19 % · P2 +1.94/+0.89 % · V2 +1.08 % → 3 % 규칙 미발동 ·

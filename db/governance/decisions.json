@@ -4582,6 +4582,74 @@
     "decision_digest": "sha256:903172b11a572e3d73a1bdde4847b8373aba7d41928ccb040537539523832cbe",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-25-wad-aprime-s1-seal",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "adhesion.wad_lpscl_agc.aprime_pilot",
+   "slot": "wad_aprime_pilot_prereg_s1",
+   "applies_to": {
+    "systems": [
+     "comp1"
+    ],
+    "tasks": [
+     "wad_aprime_pilot"
+    ],
+    "methods": [
+     "qe_pbe_d3bj",
+     "uma_d3"
+    ],
+    "use_cases": [
+     "internal",
+     "dem_handoff"
+    ]
+   },
+   "title": "A′ 파일럿 사전등록 카드 v5 — S1 봉인 (설계·게이트·결박값) · UMA 추론 모드 default",
+   "statement": "`db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json` 를 S1 단계로 봉인한다 (content_digest sha256:126aa58ebdc4803b9615efe165619162fb087dccc201dd699f9c0a09a90e09b1). 봉인 내용 = 보고량·표본 V2–V5·게이트 G1–G6·갈래 0–3·허용/금지 문구·MoLE 끝점·registry 선택 규칙(전역 d_min 동률 · Σ∖{A} 차단)·마스크 규칙(far_half)·S3 전 예외 4·결박값(UMA uma-s-1p1 sha 07068e9c76702ca1… · fairchem.core 2.19.0 · **추론 모드 default** · D3 매개변수 · PP 7종 · 코드 3파일 sha · 선행 배치 값 · 결정 9개 내용 digest). 이 봉인은 **설계·선택 규칙·결박의 봉인**이며 본 계산(S4) 실행 승인이 아니다 — S2(기하 생성·프로브)는 S3 전 예외 목록 안에서만, S3 은 좌표·끝점·마스크 해시를 따로 봉인, S4 는 S3 뒤. Codex BW→BX→BY→BZ→CA→CB (조건부 GO) 를 거쳤다.",
+   "rationale": "Codex CB 조건부 GO 의 조건 4(UMA 결박 · 선행 값 · 빌더+registry 구현·시험 · registry 명세 2)를 채운 뒤 1저자가 '가장 권장하는거면 비준' 으로 비준. 트랙 W_ad → 1저자 = 사용자.",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": false,
+   "results_seen_note": "V2–V5 계산 0 · 기하 생성 0. 선행 배치(a₀·응력)·SE|SE·벌크 민감도는 카드 `S1_전에_이미_본_것` 에 값과 사용처를 적었다.",
+   "card": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
+   "record": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
+   "depends_on": [
+    "D-2026-09-25-wad-aprime-card-v2-choices",
+    "D-2026-09-25-wad-lattice-matching-rule-a-amend-1",
+    "D-2026-09-25-wad-reference-state-policy",
+    "D-2026-09-23-wad-a-prime-scope"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "kb/reviews/codex_CB_reply_wad_aprime_pilot_prereg_v4_2026_09_25.md",
+    "db/properties/wad_aprime_s1_bindings_2026_09_25.json",
+    "db/raw/wad_aprime_prep_2026_09_25/aprime_prep_result_2026_09_25.json"
+   ],
+   "method_ref": "tools/wad/build_aprime_interfaces.py · tools/wad/se_sym_slab.py (--interface_check · --mask_policy) · tools/wad/run_sese_gpu.sh",
+   "reopen_criteria": [
+    "S2 에서 Σ∖{A} 빔·변형률 > 3 %·프로브 실패가 나면 카드를 고치지 않고 **개정 파일**로 갈래를 선언한다 (결과 전 규칙)",
+    "S3 봉인 전 UMA 체크포인트·코드 sha 가 바뀌면 S1 재비준"
+   ],
+   "enforcement": "카드 v5 본문 불변 (digest) · `--interface_check` 실행 허가 조건 · 러너 ⑨ PP 해시 · S3 봉인에 S1 digest 참조",
+   "proposed_by": "claude-session-2026-09-25",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-25",
+     "state": "active",
+     "note": "1저자 비준 '가장 권장하는거면 비준' (카드 v5 전체 + 추론 모드 default)"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-25T13:45:00Z",
+    "commit": "b3ded5632ae7d4bbb3160a0a60776c13e85dedf7",
+    "decision_digest": "sha256:83b8601993049be46a215e6b844a0a87513277ae12a817ea791e646fbb89b90a",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }
