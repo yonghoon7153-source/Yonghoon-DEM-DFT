@@ -196,6 +196,65 @@
     "db/properties/wad_sese_4L_result_2026_09_25.json"
    ],
    "vram_note": "VRAM 은 nvidia-smi 의 MiB 그대로 적는다 (GB 로 바꾸면 1000·1024 가 섞인다 — 2026-09-24 실측 혼동)"
+  },
+  {
+   "id": "bulk_sens_v100_2026_09_25",
+   "system": "sese",
+   "machine": "V100 · QE 7.4.1 GPU (재빌드) · code_id e955365d0",
+   "check": "CODE_ID·도구 sha 커밋과 일치 · selftest 54/72 · PP ⑨ ×4 · DRY_RUN 통과 · 내장 대조 07_epi_e52_k3 = 05 (2e-8 Ry)",
+   "started": "2026-09-25 17:47",
+   "vram_total_mib": 32768,
+   "jobs": [
+    {
+     "dir": "06_cubic_e52_k4",
+     "state": "done",
+     "wall_s": 228,
+     "peak_vram_mib": 10518
+    },
+    {
+     "dir": "06_cubic_e70_k3",
+     "state": "done",
+     "wall_s": 147,
+     "peak_vram_mib": 15916
+    },
+    {
+     "dir": "06_cubic_e70_k4",
+     "state": "done",
+     "wall_s": 343,
+     "peak_vram_mib": 15920
+    },
+    {
+     "dir": "07_epi_e52_k3",
+     "state": "done",
+     "wall_s": 96,
+     "peak_vram_mib": 10314
+    },
+    {
+     "dir": "07_epi_e52_k4",
+     "state": "done",
+     "wall_s": 250,
+     "peak_vram_mib": 10332
+    },
+    {
+     "dir": "07_epi_e70_k3",
+     "state": "done",
+     "wall_s": 150,
+     "peak_vram_mib": 15416
+    },
+    {
+     "dir": "07_epi_e70_k4",
+     "state": "done",
+     "wall_s": 369,
+     "peak_vram_mib": 15660
+    }
+   ],
+   "verdict": "진단 (합격선 아님 · Codex BX Q5 권고 3): **R1 ✅** 입방 셀 전단 응력이 cutoff·k 에 무관하게 같다 (수치 아티팩트 아님) · **R2 ✅** 두 참조의 에너지 차가 네 설정에서 같다 (참조 변경 효과는 수치 설정에 강건). 슬랩 W 의 수렴 인증은 아니다. 값은 결과 기록.",
+   "values_policy": "응력·ΔW′ 숫자는 결과 기록 `점검_C` 에만 — 화면에는 판정 문장만",
+   "records": [
+    "db/inputs/wad_sese_bulk_sensitivity_2026_09_25/jobs.json",
+    "db/raw/wad_sese_4L_2026_09_25/bulk_sens_result_2026_09_25.json",
+    "db/properties/wad_sese_4L_result_2026_09_25.json"
+   ]
   }
  ],
  "reviews": [
@@ -263,7 +322,7 @@
  "open": [
   {
    "state": "진행",
-   "text": "**파이프라인 v4** (`D-2026-09-25-wad-reference-state-policy`): ① P0·원출력 확인 ✅ → ② 벌크 수치 민감도 7 SCF (V100 · 진단 R1·R2) ⏳ → ③ A′ 파일럿 사전등록 (참조 상태 라벨 · MoLE 끝점 · 정합 규칙 (a) 권고) → ④ DEM 에 Q6 서술. 5층·여러 Li 배열·슬랩 재계산은 지금 필수 아님."
+   "text": "**파이프라인 v4** (`D-2026-09-25-wad-reference-state-policy`): ① P0·원출력 확인 ✅ → ② 벌크 수치 민감도 7 SCF ✅ (R1·R2 통과 · 진단) → ③ **A′ 파일럿 사전등록** (참조 상태 라벨 · MoLE 끝점 · 정합 규칙 (a) 권고 · 표본·운영 기준) ⏳ → ④ DEM 에 Q6 서술 (1저자). 5층·여러 Li 배열·슬랩 재계산은 지금 필수 아님."
   },
   {
    "text": "격자 정합 규칙 (P1·P2 공통 · 결과 전 봉인) — 어느 쪽을 변형하나 · 변형률 보고 형식",
@@ -387,6 +446,11 @@
    "date": "2026-09-25",
    "stage": "dft",
    "text": "**파이프라인 v4** (1저자 '권장하는걸로 다시 짜자' → `D-2026-09-25-wad-reference-state-policy`): 참조·기판 **제약 상태 라벨** 의무 · SE|SE 두 참조 병기 · comp1 V0 정본 불변(응력은 조건) · P1·P2 = '지정 comp1 셀 조건부' · P0 규칙 명문화. P0 원출력 확인 ✅ (네 잡 마지막 실행 명시 수렴 · 성분별 힘 < 1e-3). 사후 아핀 분석: Li 바깥 가운데는 균일 전단으로 대부분 설명 · S 바깥 가운데 Li 는 아핀을 빼도 1.33 Å (Li 자리 이동). Q3″ 대조: 끝점 동일 ✅ · 같은 기판 상태는 정합 규칙 (a) 일 때 ✅(권고) · 조건 누락(잔류 응력)은 결정으로 명시. 다음: 벌크 수치 민감도 7 SCF (`--bulk_sens` · 진단 R1·R2) → A′ 사전등록."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**벌크 수치 민감도 7 SCF 끝** (V100 27 min · 새 러너 ⑩ 이 실제 pw.x PID 를 잡음). 내장 대조 ✅ (2e-8 Ry). **R1 ✅** 입방 셀 σ_yz 가 52/70 Ry × k3/k4 네 설정에서 같다 — 전단은 수치 아티팩트가 아니다. **R2 ✅** 두 참조의 에너지 차(ΔW′)가 네 설정에서 같다 (스프레드 0) — 참조 변경 효과는 수치 설정에 강건. 52 Ry/k3 는 이 벌크의 에너지 차·응력에 사실상 수렴 (70/k4 대비 −0.16 meV/atom). ⛔ 슬랩 W 수렴 인증은 아니다. v4 ② 끝 → ③ A′ 파일럿 사전등록으로."
   }
  ],
  "related_decisions": [

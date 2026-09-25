@@ -1,0 +1,182 @@
+{
+ "schema": "raw_result/v1",
+ "date": "2026-09-25",
+ "what": "벌크 수치 민감도 7 SCF — se_sym_slab.py --bulk_sens 출력 (V100 붙여넣기 · 전체 파일은 V100 $RUN/bulk_sens_result.json 과 $STORE/runs/ 사본)",
+ "run": "V100 /home/ubuntu/runs/wad_sese_bulk_sens_2026_09_25 · code_id e955365d052b800bc4a744b6a8d29373f16ddd3f · runner 27 min · 7/7 rc 0",
+ "jobs_run": [
+  {
+   "dir": "06_cubic_e52_k4",
+   "wall_s": 228,
+   "peak_total_MiB": 10518
+  },
+  {
+   "dir": "06_cubic_e70_k3",
+   "wall_s": 147,
+   "peak_total_MiB": 15916
+  },
+  {
+   "dir": "06_cubic_e70_k4",
+   "wall_s": 343,
+   "peak_total_MiB": 15920
+  },
+  {
+   "dir": "07_epi_e52_k3",
+   "wall_s": 96,
+   "peak_total_MiB": 10314
+  },
+  {
+   "dir": "07_epi_e52_k4",
+   "wall_s": 250,
+   "peak_total_MiB": 10332
+  },
+  {
+   "dir": "07_epi_e70_k3",
+   "wall_s": 150,
+   "peak_total_MiB": 15416
+  },
+  {
+   "dir": "07_epi_e70_k4",
+   "wall_s": 369,
+   "peak_total_MiB": 15660
+  }
+ ],
+ "table": {
+  "cubic_e52_k3": {
+   "E_Ry": -1022.94625093,
+   "stress_kbar": {
+    "xx": 12.98,
+    "yy": -6.54,
+    "zz": -6.61,
+    "yz": 10.8,
+    "P": -0.06
+   },
+   "source": "04_bulk_relax_pbe 첫 SCF (= 01 E_pbe)"
+  },
+  "cubic_e52_k4": {
+   "E_Ry": -1022.94625348,
+   "stress_kbar": {
+    "xx": 12.98,
+    "yy": -6.54,
+    "zz": -6.61,
+    "xy": 0.0,
+    "xz": 0.0,
+    "yz": 10.8,
+    "P": -0.06
+   },
+   "source": "06_cubic_e52_k4"
+  },
+  "cubic_e70_k3": {
+   "E_Ry": -1022.94684433,
+   "stress_kbar": {
+    "xx": 12.98,
+    "yy": -6.54,
+    "zz": -6.61,
+    "xy": 0.0,
+    "xz": 0.0,
+    "yz": 10.8,
+    "P": -0.05
+   },
+   "source": "06_cubic_e70_k3"
+  },
+  "cubic_e70_k4": {
+   "E_Ry": -1022.94684805,
+   "stress_kbar": {
+    "xx": 12.99,
+    "yy": -6.53,
+    "zz": -6.61,
+    "xy": 0.0,
+    "xz": 0.0,
+    "yz": 10.8,
+    "P": -0.05
+   },
+   "source": "06_cubic_e70_k4"
+  },
+  "epi_e52_k3": {
+   "E_Ry": -1022.96421632,
+   "stress_kbar": {
+    "xx": 13.85,
+    "yy": -3.57,
+    "zz": -0.07,
+    "xy": 0.0,
+    "xz": 0.0,
+    "yz": -0.15,
+    "P": 3.41
+   },
+   "source": "07_epi_e52_k3"
+  },
+  "epi_e52_k4": {
+   "E_Ry": -1022.96422062,
+   "stress_kbar": {
+    "xx": 13.85,
+    "yy": -3.57,
+    "zz": -0.07,
+    "xy": 0.0,
+    "xz": 0.0,
+    "yz": -0.15,
+    "P": 3.4
+   },
+   "source": "07_epi_e52_k4"
+  },
+  "epi_e70_k3": {
+   "E_Ry": -1022.96481536,
+   "stress_kbar": {
+    "xx": 13.85,
+    "yy": -3.56,
+    "zz": -0.06,
+    "xy": 0.0,
+    "xz": 0.0,
+    "yz": -0.15,
+    "P": 3.41
+   },
+   "source": "07_epi_e70_k3"
+  },
+  "epi_e70_k4": {
+   "E_Ry": -1022.96481981,
+   "stress_kbar": {
+    "xx": 13.86,
+    "yy": -3.56,
+    "zz": -0.06,
+    "xy": 0.0,
+    "xz": 0.0,
+    "yz": -0.15,
+    "P": 3.41
+   },
+   "source": "07_epi_e70_k4"
+  }
+ },
+ "diagnostics": {
+  "epi_control": {
+   "E_05_Ry": -1022.96421634,
+   "E_07_Ry": -1022.96421632,
+   "diff_Ry": 2e-08,
+   "ok": true
+  },
+  "R1": {
+   "sigma_yz_kbar": {
+    "e52_k3": 10.8,
+    "e52_k4": 10.8,
+    "e70_k3": 10.8,
+    "e70_k4": 10.8
+   },
+   "same_sign": true,
+   "min_abs_kbar": 10.8,
+   "read": "전단 성분은 기저·k 의 수치 아티팩트가 아니다 (원인 분류 아님)"
+  },
+  "R2": {
+   "dW_prime_J_m2": {
+    "e52_k3": 0.0775,
+    "e52_k4": 0.0775,
+    "e70_k3": 0.0775,
+    "e70_k4": 0.0775
+   },
+   "spread_J_m2": 0.0,
+   "read": "참조 변경 효과는 수치 설정에 강건하다 (≤ 0.02)"
+  },
+  "R3": {
+   "dE_70k4_minus_52k3_meV_per_atom": -0.16,
+   "dP_70_minus_52_same_cell_kbar": 0.01
+  }
+ },
+ "flags": [],
+ "missing": {}
+}

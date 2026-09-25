@@ -83,9 +83,12 @@ def test_screen_follows_the_ledger_not_a_copy(client):
         h = _html(client)
     assert "12,345 MiB" in h, "원장의 VRAM 값을 바꿨는데 화면이 안 바뀌었다"
     assert "시험용 로그 줄" in h, "원장에 덧붙인 로그가 화면에 없다"
-    # 최신이 위 — 2099 줄이 기존 최신 줄보다 먼저 나와야 한다
+    # 최신이 위 — 2099 줄이 기존 최신 줄보다 먼저 나와야 한다.
+    # ⚠ 로그 표 **안에서만** 본다 — 같은 글머리가 '열린 것' 절에도 나올 수 있다 (2026-09-25 실측: 원장 open 항목이
+    #   최신 로그와 같은 12자로 시작해 표 밖 자리를 먼저 잡았다 → 헛 빨간불).
     t = _txt(h)
-    assert t.index("시험용 로그 줄") < t.index(_plain(LEDGER["log"][-1]["text"])[:12]), "로그가 최신-위 순서가 아니다"
+    tl = t[t.index("누적 로그"):]
+    assert tl.index("시험용 로그 줄") < tl.index(_plain(LEDGER["log"][-1]["text"])[:12]), "로그가 최신-위 순서가 아니다"
 
 
 def test_missing_vram_is_dash_not_zero(client):
