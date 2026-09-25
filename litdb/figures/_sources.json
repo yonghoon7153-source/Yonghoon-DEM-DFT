@@ -244,10 +244,11 @@
   ]
  },
  "cronau2021_stack_pressure_ionic_conductivity": {
-  "figures": 5,
+  "figures": 13,
   "generated": "2026-08-05",
   "pdfs": [
-   "건식전극 논문/02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf"
+   "건식전극 논문/02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf",
+   "nz1c01299_si_001.pdf"
   ]
  },
  "cronau2022_wet_milling_particle_size_ionic_conductivity": {
@@ -382,6 +383,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/40. An electro-mechanical contact model for particulate systems.pdf"
+  ]
+ },
+ "endo2001_vgcf_basic_properties_battery_applications": {
+  "figures": 16,
+  "generated": "2026-09-25",
+  "pdfs": [
+   "37d2ae22-1-s2.0-S0008622300002955-main.pdf"
   ]
  },
  "famprikis2019_fundamentals_inorganic_sse": {

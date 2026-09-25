@@ -181,3 +181,13 @@ ketter2025_resistor_network_models_predict_transport_properties	56514
 #       → 상단을 임베디드 래스터 윗변(tab_S1 은 "Table S1" 캡션 윗변) −4 pt 로 내렸다
 #   [!] '--slug ketter2025_resistor_network_models_predict_transport_properties --clean' 을 돌리면 위 14장이 되돌아간다.
 #   ⭐ fig_3 panel d(σ_e·σ_ion vs φ_NCM) 와 tab_S3(입력 전도도 표) 가 이 카드의 근거다 — 수치는 Source Data(MOESM3) 로 확인했다.
+# 가드: 파일명이 출판사 해시(1-s2.0-S0008622300002955-main.pdf)라 제목 토큰이 안 겹친다 → PII 조각으로 잡는다.
+endo2001_vgcf_basic_properties_battery_applications	s0008622300002955
+#   ↑ 2026-09-25. **16장(Fig 1–15 + Table 1) 전부 손으로 다시 잘랐다** (figures.json 의 recrop / manual_crop, 전부 viewed).
+#   이 PDF 의 그림은 전부 **가는 래스터 띠 모자이크**(그림당 125–542 조각 · 쪽당 최대 881)이고 두 단에 그림이 **나란히** 놓인다.
+#   자동 크롭은 16개 중 **9개**만 잡고 Fig 2+3 · 5+6 · 10+12 · 11+13 을 **한 장씩으로 합쳤으며**, Table 1 은 **쪽 전체**를 잡았다.
+#   → 클립 = 그림 영역 안 래스터 조각의 합집합 + 백색 여백 제거(흰색 = 세 채널 > 244, 여백 8 px @300 dpi).
+#     Table 1 = 3쪽(0-based 2) clip (43.0, 55.0, 504.0, 215.0) — 텍스트 표라 래스터가 없다.
+#   [!] '--slug endo2001_vgcf_basic_properties_battery_applications --clean' 을 돌리면 16장이 사라지고 합쳐진 9장이 돌아온다.
+#       ('--inbox --run --skip-done' 은 안전.)
+#   ⭐ Fig 7 (0.8 g/cm³ 압분체 ≈0.012 Ω cm) · Fig 8 (밀도 스윕) · Fig 6 (탄성률 영역) 이 이 카드의 근거다.
