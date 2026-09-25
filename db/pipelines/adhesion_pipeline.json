@@ -1,7 +1,7 @@
 {
  "schema": "adhesion_pipeline/1",
  "title": "점착 파이프라인 — DFT → DEM (→ COMSOL)",
- "updated": "2026-09-25",
+ "updated": "2026-09-26",
  "purpose": "Ag–C 인터레이어·SE 계면의 점착일(W)을 DFT 에서 재서 DEM(JKR 접촉)으로 넘기는 흐름을 **한 곳에 누적**한다. 새 사실은 `log` 에 한 줄씩 덧붙이고, 상태가 바뀌면 해당 항목만 고친다.",
  "⛔_이_원장이_하지_않는_것": [
   "판정 전 물리값(W·γ)은 싣지 않는다 — 결과는 판정이 끝난 뒤 기록 파일에 따로 남기고 여기서는 경로만 건다 (인용 방지).",
@@ -521,7 +521,7 @@
    "state": "결정"
   },
   {
-   "text": "A′ — S1 봉인 ✅ · **S2 끝** (UMA+D3 이완 12 · 후보 9 · INCOMPLETE 3 · `wad_aprime_s2_result_2026_09_25.json`) · **S3 패키지** `db/inputs/wad_aprime_s3_2026_09_25` (manifest sha 2a0e9a9b5f5fef4a… · QE 잡 38: V2 relax 4 · scf 11 · probe 5 · G3 6 · G4 12) → ⏳ **1저자 S3 비준** → S4 (V2 relax V100 · V4/V5 gabia 프로브 뒤). 예외 ②③ (D3 결박 검사 V100 · CPU 프로브 gabia) 는 비준 전 가능. 🔎 프로브: **V5 RESOURCE_BLOCKED (실측 89–109 GB @70 Ry)** → G5 NOT_TESTED · V4 G4 e70 불가 · V4 기본 52 Ry 프로브 다음.",
+   "text": "A′ — S1 봉인 ✅ · **S2 끝** (UMA+D3 이완 12 · 후보 9 · INCOMPLETE 3 · `wad_aprime_s2_result_2026_09_25.json`) · **S3 패키지** `db/inputs/wad_aprime_s3_2026_09_25` (manifest sha 2a0e9a9b5f5fef4a… · QE 잡 38: V2 relax 4 · scf 11 · probe 5 · G3 6 · G4 12) → ⏳ **1저자 S3 비준** → S4 (V2 relax V100 · V4/V5 gabia 프로브 뒤). 예외 ②③ (D3 결박 검사 V100 · CPU 프로브 gabia) 는 비준 전 가능. 🔎 프로브: **V5 RESOURCE_BLOCKED (실측 89–109 GB @70 Ry)** → G5 NOT_TESTED · V4 G4 e70 불가 · V4 기본 52 Ry 프로브 다음. ⚠ D3 결박 검사 FAIL (5.2e-4 Ry) → 개정 1 proposed (D3 항 = QE 출력 · 문턱 불변).",
    "state": "S3 비준 대기"
   },
   {
@@ -703,6 +703,11 @@
    "date": "2026-09-25",
    "stage": "dft",
    "text": "CPU 프로브 (52 Ry · V4_s_outer_A 세트 7): bound/far/k1 **33.6 GB** · G3 c+2 셀 35.4 GB < 48 ⇒ GPU 시험 허가 (b2o3 s4 뒤 · 44 GB 한도가 실측으로 정한다). 잠정 S4 실행 집합 = V2 relax 4 (+2단계) + V4_s_outer_A 9 잡 (bound·far·G3 3·G4 k1 2·s05 2) · V5 전부·V4 e70 제외."
+  },
+  {
+   "date": "2026-09-26",
+   "stage": "dft",
+   "text": "**D3 결박 검사 FAIL** (S3 전 예외 ② · V100 20원자 255 s): QE `DFT-D3 Dispersion` **−0.50431702** vs simple-dftd3 **−0.5037974 Ry** → |Δ| 5.2e-4 (문턱 1e-5 의 52배). 컷오프 스캔(30–200 Bohr): 기본 60 Bohr 가 외부값 재현 · 200 Bohr 로 −0.50410 까지 접근 — 격차의 ~60 % 는 컷오프, **0.2 mRy 는 구현 차(미확정)**. 문턱 안 바꿈. → **개정 1 (proposed)**: UMA+D3 W 의 D3 항을 **QE 출력 D3(같은 끝점)** 로 정의 (W_UMA+D3 := W_UMA + ΔE_D3,QE) · 외부 D3 는 기하 생성 라벨 · 새 계산 0. 1저자 비준 대기 (S3 비준과 함께)."
   }
  ],
  "related_decisions": [

@@ -1,0 +1,20 @@
+{
+ "schema": "prereg_amendment/v1",
+ "record_kind": "amendment",
+ "date": "2026-09-26",
+ "amends": "db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json",
+ "amends_content_digest": "126aa58ebdc4803b9615efe165619162fb087dccc201dd699f9c0a09a90e09b1",
+ "title": "A′ 카드 v5 개정 1 (proposed) — D3 결박 검사 실패에 따른 UMA+D3 W 의 D3 항 정의 변경",
+ "trigger": "S3 전 예외 ② 결박 검사 FAIL: QE −0.50431702 vs simple-dftd3 −0.5037974 Ry (|Δ| 5.2e-4 > 1e-5) · 컷오프 스캔으로 ~60 % 설명 · 잔차 0.2 mRy 구현 차 (db/raw/wad_aprime_d3check_2026_09_25/d3_binding_check_2026_09_26.json)",
+ "변경": {
+  "이전(카드 §분산)": "UMA(omat) 쪽 D3 = 외부 dftd3 구현 · 같은 매개변수 · 결박 검사 ≤ 1e-5 Ry → W_PBE+D3 − W_UMA+D3 = W_PBE − W_UMA",
+  "이후": "**W_UMA+D3 := W_UMA + ΔE_D3,QE** — 같은 두 끝점(bound·far)의 QE 출력 `DFT-D3 Dispersion` 값을 UMA 에너지에 더한다. 외부 D3(simple-dftd3 1.6.0 · 60 Bohr) 는 **기하 생성(UMA+D3 이완)에만** 쓴 것으로 라벨하고 W 에는 쓰지 않는다. 결박 검사 항목은 '실패 · 기록' 으로 닫고, 대신 S4 에서 끝점 차 잔차 (ΔD3_QE − ΔD3_ext) 를 정보로 보고한다.",
+  "불변": "표본·게이트 문턱(G1–G6)·끝점 규칙·마스크·registry·S3 좌표 — 전부 그대로. 새 계산 없음.",
+  "허용_문구_영향": "'UMA+D3 로 생성한 지정 기하에서 평가한 PBE+D3(BJ) 고정기하 분리일' 은 그대로 · UMA 쪽 값의 이름은 **'UMA + QE-D3(같은 끝점)'** 로 적는다"
+ },
+ "왜_결과_뒤_변경이_정당한가": "바뀌는 것은 문턱이 아니라 **비교량의 구성**이다 — 두 방법에 같은 D3 숫자를 쓰는 것은 상쇄 가정을 정확하게 만드는 쪽이고, W 값을 어느 방향으로도 유리하게 만들지 않는다. UMA·DFT 에너지는 아직 하나도 보지 않았다 (S4 미착수).",
+ "status": "proposed — 1저자 비준 대기 (트랙 W_ad · 사용자)",
+ "ratification": {
+  "state": "proposed"
+ }
+}
