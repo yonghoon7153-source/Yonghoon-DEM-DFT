@@ -102,6 +102,21 @@ def test_a_broken_low_end_moves_every_try_up_to_its_bound():
     assert refit_candidates([drift]) == []
 
 
+def test_a_missing_cable_inductance_is_refitted_though_it_is_a_check():
+    """보완 8: 배선 L 이 빠졌다는 판정은 확인인데도 회로를 부른다 — 셀을 읽는
+    방식은 그대로이고 케이블의 소자 하나를 더할 뿐이다.  다른 확인은 그대로 사람
+    몫이다 (실측 08:07 검수: 확인 71 중 스물셋)."""
+    cable = Finding(CHECK, "inductance_missing", "고주파 끝", circuits=("L1-OLD",))
+    open_end = Finding(CHECK, "open_end_on_blocking_cell", "열린 끝", circuits=("D",))
+    assert refit_candidates([cable, open_end], circuit="OLD") == [
+        Candidate("L1-OLD", ("inductance_missing",))]
+    drift = Finding(CHECK, "kk_violation", "저주파 끝", low_hz=1.29)
+    assert refit_candidates([cable, drift], circuit="OLD") == [
+        Candidate("L1-OLD", ("inductance_missing",), 1.29),
+        Candidate("OLD", (), 1.29),
+    ]
+
+
 # -- 어디서 시작할까 -------------------------------------------------------------
 
 OLD = "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3"
@@ -204,6 +219,31 @@ def test_a_shape_the_old_fit_could_not_draw_either_does_not_block_the_same_model
     assert not accept_refit(old, [misfit], triggers, converged=True).accepted
 
 
+def test_a_wiring_refit_is_taken_only_when_the_top_end_is_drawn():
+    """L 이 있는 회로에는 배선 판정이 뜰 수 없어 "그 판정이 풀렸나" 는 늘 참이다.
+    그래서 판정이 본 증상 — 가장 크게 어긋난 점이 고주파 끝에서 문턱을 넘음 — 이
+    사라졌는지 보고, 소자 하나를 더했으니 평균이 나빠지지 않았는지 본다 (보완 8)."""
+    cable = Finding(CHECK, "inductance_missing", "고주파 끝", circuits=("L1-OLD",))
+    triggers = ("inductance_missing",)
+    assert accept_refit([cable], [], triggers, converged=True,
+                        old_misfit=0.021, new_misfit=0.008).accepted
+
+    top = accept_refit([cable], [], triggers, converged=True, old_misfit=0.021,
+                       new_misfit=0.018, new_top_misfit=(0.12, 2.15e5))
+    assert not top.accepted
+    assert top.reason == ("고주파 끝이 그대로입니다 — L 을 넣어도 2.15e+05 Hz 가 12 % "
+                          "어긋납니다. L 하나로는 그 끝을 못 그립니다")
+
+    worse = accept_refit([cable], [], triggers, converged=True,
+                         old_misfit=0.021, new_misfit=0.03)
+    assert not worse.accepted
+    assert worse.reason.startswith("오차 평균이 2.1 → 3 % 로 늘었습니다")
+    assert not accept_refit([cable], [], triggers, converged=True).accepted
+    # 문제 판정이 권한 회로는 전처럼 — 증상을 넘겨도 보지 않는다.
+    assert accept_refit([TAIL], [], ("tail_mimicked_by_arc",), converged=True,
+                        new_top_misfit=(0.12, 2.15e5)).accepted
+
+
 # -- 끝에서 끝까지 ----------------------------------------------------------------
 
 def pellet():
@@ -228,6 +268,30 @@ def test_a_tail_mimicked_by_an_arc_is_refitted_with_the_offered_circuit():
                         converged=result.converged).accepted
     assert remaining_problems(after.findings) == 0
     assert result.values()["R0"] == pytest.approx(8.3, rel=1e-3)
+
+
+def test_a_fit_without_the_cable_gets_l1_in_front_and_draws_the_top_end():
+    """보완 8: 배선 L 이 있는 펠릿을 L 없이 맞춘 것 — 실측 mid_Ni #38–#48 · B18
+    #133–#138 의 쌍둥이.  검수가 권한 `L1-` 회로로 맞추면 고주파 끝이 풀리고
+    받아들여진다."""
+    old = fit_circuit(pellet(), "R0-CPE1", frequency_range=BAND)
+    before = audit(old, pellet())
+    (cable,) = [f for f in before.findings if f.code == "inductance_missing"]
+    assert cable.severity == CHECK and cable.circuits == ("L1-R0-CPE1",)
+    assert before.top_misfit is not None and before.top_misfit[1] > BAND[1] / 2
+    (first,) = refit_candidates(before.findings, circuit=old.circuit)
+    assert first == Candidate("L1-R0-CPE1", ("inductance_missing",))
+
+    seeded = seed_values(old.circuit, old.values(), first.circuit)
+    assert "L1" not in seeded                     # 새 소자는 데이터로 잡은 시작점
+    result = fit_circuit(pellet(), first.circuit, start_from=seeded, frequency_range=BAND)
+    after = audit(result, pellet())
+    assert after.top_misfit is None
+    assert accept_refit(before.findings, after.findings, first.triggers,
+                        converged=result.converged, old_misfit=before.misfit.mean,
+                        new_misfit=after.misfit.mean,
+                        new_top_misfit=after.top_misfit).accepted
+    assert result.values()["L1"] == pytest.approx(1.73e-6, rel=1e-3)
 
 
 def test_an_arc_that_is_really_there_is_not_a_refit_target():

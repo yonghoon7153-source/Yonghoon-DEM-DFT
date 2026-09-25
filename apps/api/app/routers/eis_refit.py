@@ -14,6 +14,9 @@
 다시 맞춘다 (보완 4).  새 맞춤이 그 하한부터 맞췄으므로 다음 검수의 그 판정은
 참고로 내려가고 하한을 싣지 않는다 — 다음 `bml refit` 의 대상이 아니다.
 
+배선 인덕턴스가 빠진 스펙트럼(확인)은 쓰던 회로 앞에 ``L1-`` 를 붙여 맞춘다
+(보완 8).  고주파 끝이 풀리고 평균이 나빠지지 않을 때만 받는다.
+
 글(``format=text``)은 **흘려 보낸다.**  실측 82 건이면 십수 분이 걸릴 수 있는데,
 끝에 한꺼번에 찍으면 그동안 터미널이 말이 없다.  스펙트럼 하나가 끝날 때마다 한
 줄씩 나가고, 끝에 정리가 붙는다.  도중에 끊기면 거기까지 저장된 것이 남는다 —
@@ -38,6 +41,7 @@ from sqlmodel import Session, select
 from wrdkit.eis import Spectrum
 from wrdkit.eis.audit import PROBLEM, FitAudit, audit_spectrum
 from wrdkit.eis.refit import (
+    WIRING_CODES,
     Candidate,
     accept_refit,
     moved_number,
@@ -74,6 +78,7 @@ _PROBLEM_WORDS = {
     "arcs_are_electrode": "전극 크기 아크를 벌크·입계로 부름",
     "label_contradicts_capacitance": "이름과 커패시턴스가 어긋남",
     "blocking_element_on_open_cell": "안 막는 셀에 막는 소자",
+    "inductance_missing": "배선 인덕턴스 없음",
 }
 _START_WORDS = {"seeded": "쓰던 값에서", "default": "기본 시작점에서"}
 
@@ -117,6 +122,7 @@ class _Started:
     skipped: list[RefitSkipOut]
     unoffered: int = 0
     windows: int = 0
+    wiring: int = 0
 
 
 @dataclass
@@ -158,8 +164,9 @@ def _announce() -> None:
 
 def _targets(session: Session) -> tuple[int, list[_Target], list[RefitSkipOut], int]:
     """쓰는 맞춤을 전부 검수해, 회로를 실은 문제 판정이 있거나 저주파 끝의 하한이
-    권해진 것만 고른다 (보완 4).  점의 검수에 쓰는 맞춤의 하한을 넣는다 — 이미 그
-    하한부터 맞춘 스펙트럼은 하한을 싣지 않아 대상이 아니다.
+    권해졌거나 (보완 4) 배선 인덕턴스가 빠진 것 (보완 8) 만 고른다.  점의 검수에
+    쓰는 맞춤의 하한을 넣는다 — 이미 그 하한부터 맞춘 스펙트럼은 하한을 싣지 않아
+    대상이 아니다.
 
     넷째 값은 맞춤 판정에 문제가 있는데 **권할 회로가 없는** 스펙트럼의 수다.
     글 머리에 적는다 — 검수의 "문제 82" 와 여기의 "대상" 이 왜 다른지 묻지 않게.
@@ -227,6 +234,8 @@ def _refit_one(session: Session, target: _Target, origin: str,
                   if one.severity == PROBLEM and one.circuits],
         old_problems=[_finding_out(one) for one in target.audit.findings
                       if one.severity == PROBLEM],
+        checks=[_finding_out(one) for one in target.audit.findings
+                if one.code in WIRING_CODES and one.circuits],
         old_low_hz=old_low, low_hz=target.low_hz)
 
     chosen: tuple[int, SpectrumFit, FitAudit, float | None, list[dict]] | None = None
@@ -258,7 +267,8 @@ def _refit_one(session: Session, target: _Target, origin: str,
             sigma = _sigma_ohm(conductivity)
             verdict = accept_refit(target.audit.findings, audit.findings,
                                    candidate.triggers, converged=True,
-                                   old_misfit=old_misfit, new_misfit=misfit)
+                                   old_misfit=old_misfit, new_misfit=misfit,
+                                   new_top_misfit=audit.top_misfit)
             accepted, reason = verdict.accepted, verdict.reason
             if accepted:
                 reason = moved_number(old_sigma, sigma, old_misfit, misfit)
@@ -285,6 +295,8 @@ def _refit_one(session: Session, target: _Target, origin: str,
     out.new_sigma_ohm = sigma
     out.new_problems = [_finding_out(one) for one in audit.findings
                         if one.severity == PROBLEM]
+    out.new_checks = [_finding_out(one) for one in audit.findings
+                      if one.code in WIRING_CODES]
     out.new_low_hz = row.frequency_low_hz
     if out.new_low_hz is not None and out.new_low_hz > old_low:
         frequency = np.asarray(spectrum.frequency_hz, dtype=float)
@@ -334,6 +346,11 @@ def _value_changes(old: list[dict], new: list[dict]) -> list[RefitValueOut]:
     return out
 
 
+def _wired(candidates: Iterable[Candidate]) -> bool:
+    """배선 판정이 권한 회로가 후보에 있다 (보완 8)."""
+    return any(code in WIRING_CODES for one in candidates for code in one.triggers)
+
+
 def _run(dry_run: bool) -> Iterator[_Started | _Progress | EisRefitOut]:
     """한 묶음 — 시작, 스펙트럼마다 하나, 끝의 정리 순으로 내보낸다."""
     started = _now()
@@ -341,8 +358,9 @@ def _run(dry_run: bool) -> Iterator[_Started | _Progress | EisRefitOut]:
     with Session(engine) as session:
         total, targets, skipped, unoffered = _targets(session)
         windows = sum(1 for target in targets if target.low_hz is not None)
+        wiring = sum(1 for target in targets if _wired(target.candidates))
         yield _Started(origin, started, total, len(targets), list(skipped), unoffered,
-                       windows)
+                       windows, wiring)
         spectra: list[RefitSpectrumOut] = []
         for index, target in enumerate(targets, start=1):
             try:
@@ -363,7 +381,7 @@ def _run(dry_run: bool) -> Iterator[_Started | _Progress | EisRefitOut]:
             _announce()
         yield EisRefitOut(origin=origin, dry_run=dry_run, generated_at=started,
                           total=total, targets=len(targets), windows=windows,
-                          unoffered=unoffered, changed=changed,
+                          wiring=wiring, unoffered=unoffered, changed=changed,
                           kept=len(spectra) - changed, spectra=spectra, skipped=skipped)
 
 
@@ -500,6 +518,12 @@ def _resolved(one: RefitSpectrumOut) -> list[str]:
             if after[code] < before[code]]
 
 
+def _eased(one: RefitSpectrumOut) -> list[str]:
+    """풀린 배선 판정의 코드 — 새 맞춤의 검수에 그 코드가 없다 (보완 8)."""
+    left = {p.code for p in one.new_checks}
+    return [code for code in dict.fromkeys(p.code for p in one.checks) if code not in left]
+
+
 def _hz(value: float | None) -> str:
     return f"{_g(value)} Hz"
 
@@ -542,7 +566,12 @@ def _progress_line(event: _Progress) -> str:
             changes.append(f"회로 그대로 · 오차 평균 {_percent(one.old_misfit_mean)} → "
                            f"{_percent(one.new_misfit_mean)}")
         else:
-            changes.append(f"문제 {len(one.old_problems)} → {len(one.new_problems)}")
+            if one.old_problems or one.new_problems or not one.checks:
+                changes.append(f"문제 {len(one.old_problems)} → {len(one.new_problems)}")
+            if one.checks:
+                # 배선 L 만 더했다 (보완 8) — 문제 수는 0 → 0 이라 그림을 적는다.
+                changes.append(f"오차 평균 {_percent(one.old_misfit_mean)} → "
+                               f"{_percent(one.new_misfit_mean)}")
         return (f"{head} #{one.id}  {one.name}  바꿈  " + " · ".join(changes)
                 + (f" · {sigma}" if sigma else ""))
     last = one.tries[-1] if one.tries else None
@@ -557,11 +586,16 @@ def _render(events: Iterable[_Started | _Progress | EisRefitOut]) -> Iterator[st
             when = event.generated_at.strftime("%Y-%m-%d %H:%M UTC")
             lines = [f"EIS 다시 맞추기 — {when} · 묶음 {event.origin}",
                      f"맞춘 스펙트럼 {event.total}개 중 대상 {event.targets}개 — 회로를 "
-                     f"권한 문제 판정이 있거나, 저주파 끝이 KK 를 어겨 하한이 권해진 것"]
+                     f"권한 문제 판정이 있거나, 저주파 끝이 KK 를 어겨 하한이 권해졌거나, "
+                     f"배선 인덕턴스가 빠진 것"]
             if event.windows:
                 lines.append(f"하한이 권해진 {event.windows}개는 그 하한부터 맞춥니다 — 그 "
                              f"아래 점은 셀이 변하는 동안 잰 것입니다. 권한 회로가 없으면 "
                              f"쓰던 회로 그대로입니다")
+            if event.wiring:
+                lines.append(f"배선 L 이 빠진 {event.wiring}개는 쓰던 회로 앞에 `L1-` 를 "
+                             f"붙여 맞춥니다 — 아크는 그대로이고, 고주파 끝이 풀릴 때만 "
+                             f"바꿉니다")
             if event.unoffered:
                 lines.append(f"맞춤 판정에 문제가 있지만 권할 회로가 없는 {event.unoffered}개는 "
                              f"건드리지 않습니다 — `bml audit` 에 그대로 남습니다")
@@ -597,8 +631,11 @@ def render_refit_summary(out: EisRefitOut) -> str:
                       f"{_percent(one.old_misfit_mean)} → {_percent(one.new_misfit_mean)}"
                       + (f" · {sigma}" if sigma else "")]
             solved = _resolved(one)
-            if solved or not _lowered(one):
+            eased = _eased(one)
+            if solved or not (_lowered(one) or eased):
                 lines.append("    풀린 문제: " + ", ".join(_words(code) for code in solved))
+            if eased:
+                lines.append("    풀린 확인: " + ", ".join(_words(code) for code in eased))
             if _lowered(one):
                 lines.append(f"    뺀 점: {_dropped(one)} — 저주파 끝이 KK 를 어긴 곳")
             lines += _value_lines(one)
@@ -608,7 +645,7 @@ def render_refit_summary(out: EisRefitOut) -> str:
     if kept:
         lines += [f"━━ 그대로 둔 것 ({len(kept)}) " + "━" * 40]
         for one in kept:
-            aims = list(dict.fromkeys(_words(p.code) for p in one.problems))
+            aims = list(dict.fromkeys(_words(p.code) for p in [*one.problems, *one.checks]))
             if one.low_hz is not None:
                 aims.append(f"저주파 끝을 빼고 {_hz(one.low_hz)} 부터")
             lines.append(f"#{one.id}  {one.name}  ({one.old_circuit}) — "

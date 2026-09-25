@@ -5,6 +5,7 @@
 
 - `refit_candidates` — 문제 판정이 실은 회로를 어떤 순서로, 어느 하한부터 맞춰
   볼지.  저주파 끝이 KK 를 어겼으면 쓰는 회로도 그 하한부터 다시 맞춰 본다 (보완 4).
+  배선 인덕턴스가 빠졌으면 앞에 ``L1-`` 를 붙인 회로도 맞춰 본다 (보완 8).
 - `seed_values` — 쓰는 맞춤의 값을 새 회로의 어느 파라미터로 옮길지.
 - `accept_refit` — 새 맞춤을 다시 검수한 결과를 받아들일지.
 - `moved_number` — 받아들여도, 모양을 덜 그리면서 σ 의 저항을 옮기면 안 받는다.
@@ -47,6 +48,11 @@ MISFIT_TOLERANCE = 0.005
 #: 그린 것을 모양 탓으로 막았다.
 SHAPE_CODES = ("misfit_everywhere",)
 
+#: 확인인데도 실은 회로로 다시 맞추는 판정 (보완 8).  배선 소자를 더할 뿐이라 셀을
+#: 읽는 방식 — 아크의 수·이름, σ 에 쓰는 소자 — 이 그대로다.  사람이 고를 것이
+#: 없다.  다른 확인은 사람 몫이다 (결정 3).
+WIRING_CODES = ("inductance_missing",)
+
 
 @dataclass(frozen=True)
 class Candidate:
@@ -70,11 +76,15 @@ def refit_candidates(findings: Iterable[Finding], *,
     정할 일이라 한꺼번에 바꾸지 않는다 (ADR 0045).  같은 회로를 여러 판정이 권하면
     한 후보로 합치고 그 판정들을 모두 적는다 — 다시 맞춘 뒤 그 모두가 풀려야 한다.
 
-    예외가 하나다: 저주파 끝이 KK 를 어긴 판정(확인)이 싣는 하한(``low_hz``).
-    그 아래 점은 셀이 변하는 동안 잰 것이라 **어느 회로로 맞추든** 뺀다 — 권한
-    회로도 그 하한부터 맞춘다.  회로를 바꾸는 것이 아니라 점을 덜 쓰는 것이라
-    사람이 고를 것이 없다 (보완 4).  ``findings`` 에는 맞춤의 판정과 점의 판정을
-    같이 준다.
+    예외가 둘이다.  사람이 고를 것이 없는 것들이다.
+
+    - 저주파 끝이 KK 를 어긴 판정(확인)이 싣는 하한(``low_hz``).  그 아래 점은
+      셀이 변하는 동안 잰 것이라 **어느 회로로 맞추든** 뺀다 — 권한 회로도 그
+      하한부터 맞춘다.  회로를 바꾸는 것이 아니라 점을 덜 쓰는 것이다 (보완 4).
+    - 배선 인덕턴스가 빠졌다는 판정(`WIRING_CODES`, 확인)이 싣는 ``L1-`` 회로.
+      셀을 읽는 방식은 그대로이고 케이블의 소자 하나를 더한다 (보완 8).
+
+    ``findings`` 에는 맞춤의 판정과 점의 판정을 같이 준다.
     """
     order: dict[str, list[str]] = {}
     low_hz: float | None = None
@@ -82,7 +92,7 @@ def refit_candidates(findings: Iterable[Finding], *,
         if finding.low_hz is not None:
             # 한 스펙트럼에 하한은 하나다 (`KKReference.low_limit_hz`).
             low_hz = finding.low_hz if low_hz is None else max(low_hz, finding.low_hz)
-        if finding.severity != PROBLEM:
+        if finding.severity != PROBLEM and finding.code not in WIRING_CODES:
             continue
         for offered in finding.circuits:
             codes = order.setdefault(offered, [])
@@ -169,12 +179,14 @@ def _codes(findings: Iterable[Finding]) -> Counter:
 def accept_refit(old: Sequence[Finding], new: Sequence[Finding],
                  triggers: Iterable[str], *, converged: bool,
                  old_misfit: float | None = None,
-                 new_misfit: float | None = None) -> Acceptance:
+                 new_misfit: float | None = None,
+                 new_top_misfit: tuple[float, float] | None = None) -> Acceptance:
     """다시 맞춘 것을 받아들일까 — 넷 다 만족해야 한다 (ADR 0045).
 
     ``old``·``new`` 는 옛 맞춤과 새 맞춤을 **같은 점·같은 주파수 창**에서
     검수한 판정이다 (맞춤에 딸린 것만 — 점 자체의 KK 판정은 둘에 같다).
     ``old_misfit``·``new_misfit`` 는 두 맞춤의 평균 오차(비율)다.
+    ``new_top_misfit`` 는 새 맞춤의 `FitAudit.top_misfit` 이다.
 
     1. 수렴했다.
     2. 이 회로를 권한 판정(``triggers``)이 문제로 남지 않았다.
@@ -183,16 +195,37 @@ def accept_refit(old: Sequence[Finding], new: Sequence[Finding],
     4. 모양을 못 그린다는 판정(`SHAPE_CODES`)이 새로 생기지 않았다.  옛 맞춤에도
        있었으면 새 것이 더 어긋나지 않아야 한다 (`MISFIT_TOLERANCE` 안).  두
        오차를 모르면 막는다.
+
+    배선 판정(`WIRING_CODES`)이 권한 회로는 둘을 더 본다 (보완 8).  L 이 있는
+    회로에는 그 판정이 뜰 수 없어 2 가 늘 참이므로, 판정이 본 **증상**을 본다.
+
+    - 고주파 끝이 풀렸다: 가장 크게 어긋난 점이 더는 맞춘 구간의 고주파 끝에서
+      문턱을 넘지 않는다 (``new_top_misfit`` 가 비었다).
+    - 평균이 더 어긋나지 않았다.  옛 회로에 소자 하나를 더한 회로라 제대로 맞으면
+      늘 수 없다 — 늘었으면 다른 골짜기다.
     """
     if not converged:
         return Acceptance(False, "수렴하지 않았습니다")
+    triggers = tuple(dict.fromkeys(triggers))
     before = _codes(old)
     after = _codes(new)
-    left = [code for code in dict.fromkeys(triggers) if after[code]]
+    left = [code for code in triggers if after[code]]
     if left:
         message = next(f.message for f in new if f.code == left[0]
                        and f.severity == PROBLEM)
         return Acceptance(False, f"그 문제가 그대로입니다 — {message}")
+    if any(code in WIRING_CODES for code in triggers):
+        if new_top_misfit is not None:
+            share, hz = new_top_misfit
+            return Acceptance(False, f"고주파 끝이 그대로입니다 — L 을 넣어도 {hz:.3g} Hz 가 "
+                                     f"{share * 100:.0f} % 어긋납니다. L 하나로는 그 끝을 "
+                                     f"못 그립니다")
+        if old_misfit is None or new_misfit is None:
+            return Acceptance(False, "오차 평균을 몰라 옛 맞춤과 견줄 수 없습니다")
+        if not _no_worse(old_misfit, new_misfit):
+            return Acceptance(False, f"오차 평균이 {_percent(old_misfit)} → "
+                                     f"{_percent(new_misfit)} % 로 늘었습니다 — 소자 하나를 "
+                                     f"더했는데 더 어긋나면 다른 골짜기입니다")
     worse = [code for code in after if after[code] > before[code]]
     if worse:
         message = next(f.message for f in new if f.code == worse[0]

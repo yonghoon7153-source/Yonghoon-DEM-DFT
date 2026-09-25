@@ -399,6 +399,12 @@ class FitAudit:
     arcs: list[dict] = field(default_factory=list)
     blocking: dict | None = None
     end: str = ""
+    #: ``(비율, Hz)`` of the worst judged point, when it sits at the top of the
+    #: fitted band and over the single-point limit -- the symptom
+    #: ``inductance_missing`` names.  Kept for a circuit that has an L too:
+    #: `bml refit` asks whether the fit with ``L1-`` in front made it go away
+    #: (ADR 0045 보완 8).
+    top_misfit: tuple[float, float] | None = None
 
 
 def _status(parameter) -> str:
@@ -1153,13 +1159,19 @@ def _misfit_findings(out: FitAudit, summary: Misfit, used: Spectrum,
     # 거의 정해져 있다: 케이블·셀 홀더의 인덕턴스가 그 점들을 휘게 하고, 빼낸
     # 유도성 점 바로 아래가 이미 휘어 있다.  실측: 같은 스캔의 L1 있는 첫 스윕은
     # 최대 1.4–3.7 %, 없는 나머지는 11–30 % 였다 (B15–B17, 2026-09-23).
+    # 증상은 L 이 있어도 적는다 — `bml refit` 이 `L1-` 를 붙인 맞춤에서 그것이
+    # 사라졌는지 본다 (ADR 0045 보완 8).
+    if at_top and worst >= limit:
+        out.top_misfit = (worst, worst_hz)
     if at_top and not has_l and worst >= limit:
+        wired = _with_wiring(model)
         out.findings.append(Finding(
             CHECK, "inductance_missing",
             (f"{left_out} {summary.at_hz:.3g} Hz 를 빼면 " if left_out else "")
             + f"가장 크게 어긋난 곳({worst * 100:.0f} %)이 맞춘 구간의 고주파 "
             f"끝 {worst_hz:.3g} Hz 입니다 — 회로에 배선 인덕턴스가 없습니다. "
-            f"앞에 `L1-` 를 붙여 다시 맞춰 보세요"))
+            f"앞에 `{wired.partition('-')[0]}-` 를 붙여 다시 맞춰 보세요",
+            circuits=(wired,)))
         return
     # 오차가 **몰렸다**는 것만으로는 적지 않는다.  거의 완벽한 맞춤도 가장 작은
     # 오차들이 어딘가에는 몰려 있다 — 실측 셀의 합성 쌍둥이(최대 0.07 %)에서
@@ -1182,6 +1194,15 @@ def _misfit_findings(out: FitAudit, summary: Misfit, used: Spectrum,
             f"{worst_hz:.3g} Hz 에서 {worst * 100:.0f} % 어긋납니다 "
             f"(평균 {mean * 100:.1f} %) — 그 주파수의 모양을 회로가 "
             f"못 그립니다"))
+
+
+def _with_wiring(model: Circuit) -> str:
+    """``L1-<회로>`` — 배선 인덕턴스를 맨 앞에 직렬로.  이름은 비어 있는 가장
+    작은 L 번호다: 직렬에 L 이 없어도 병렬 가지 안에 ``L1`` 이 있을 수 있고,
+    같은 이름 둘은 회로가 못 읽는다."""
+    taken = {name.partition("_")[0] for name in model.parameter_names}
+    number = next(n for n in range(1, len(taken) + 2) if f"L{n}" not in taken)
+    return f"L{number}-{model.text}"
 
 
 def _tail_arc(arcs: list[ArcCapacitance], low_edge: float | None,

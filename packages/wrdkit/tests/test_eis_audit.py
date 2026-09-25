@@ -18,6 +18,7 @@ from wrdkit.eis.audit import (
     CHECK,
     NOTE,
     PROBLEM,
+    _with_wiring,
     audit_conductivity_scan,
     audit_fit,
     audit_record,
@@ -641,12 +642,38 @@ def test_a_missing_inductance_is_named_as_the_cause_of_the_top_misfit():
     (hint,) = [f for f in audit.findings if f.code == "inductance_missing"]
     assert "`L1-`" in hint.message
     assert "misfit_somewhere" not in codes(audit)
+    # `bml refit` 이 문장을 긁지 않고 이것으로 다시 맞춘다 (ADR 0045 보완 8).
+    assert hint.circuits == ("L1-R0-p(R1,CPE1)",)
+    share, hz = audit.top_misfit
+    assert share >= 0.10 and hz >= SULFIDE_BAND[1] / 2
 
     with_l = Fit("L1-R0-CPE1", [P("L1", 1.73e-6), P("R0", 8.3), P("CPE1_Q", 1.9e-6),
                                 P("CPE1_n", 0.86)])
     clean = audit_fit(with_l, sulfide_pellet(), kind=SOLID, config=SYMMETRIC,
                       thickness_cm=PELLET_CM, area_cm2=AREA_CM2, band=SULFIDE_BAND)
     assert clean.findings == []
+    assert clean.top_misfit is None
+
+
+def test_the_top_end_symptom_is_kept_when_the_circuit_has_an_l_that_does_nothing():
+    """L 이 0 이면 L 이 없는 것과 같다 — 판정(`inductance_missing`)은 L 이 있어 안
+    뜨지만 증상은 남는다.  `bml refit` 이 `L1-` 를 붙인 맞춤을 받을지 이것으로
+    본다 (ADR 0045 보완 8)."""
+    idle = Fit("L1-R0-CPE1", [P("L1", 1e-12), P("R0", 8.3), P("CPE1_Q", 1.9e-6),
+                              P("CPE1_n", 0.86)])
+    audit = audit_fit(idle, sulfide_pellet(), kind=SOLID, config=SYMMETRIC,
+                      band=SULFIDE_BAND)
+    assert "inductance_missing" not in codes(audit)
+    assert audit.top_misfit is not None and audit.top_misfit[0] >= 0.10
+
+
+def test_the_offered_inductor_takes_a_name_the_circuit_does_not_use():
+    """직렬에 L 이 없어도 병렬 가지 안에 L1 이 있을 수 있다 — 같은 이름 둘은
+    회로가 못 읽는다."""
+    assert _with_wiring(parse_circuit("R0-p(R1,CPE1)")) == "L1-R0-p(R1,CPE1)"
+    offered = _with_wiring(parse_circuit("R0-p(R1,L1)-CPE2"))
+    assert offered == "L2-R0-p(R1,L1)-CPE2"
+    parse_circuit(offered)
 
 
 def cold_pellet():

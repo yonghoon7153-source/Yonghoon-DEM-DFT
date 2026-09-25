@@ -185,9 +185,11 @@ def test_the_text_streams_a_line_per_spectrum_and_ends_with_the_way_back(client,
 
     text = client.post("/api/eis/audit/refit", params={"format": "text"}).text
     assert "맞춘 스펙트럼 2개 중 대상 2개" in text
-    # σ 에 쓰는 저항도 옛것 → 새것으로 — 랩이 쓰는 것은 수다.
+    # σ 에 쓰는 저항도 옛것 → 새것으로 — 랩이 쓰는 것은 수다.  L 없이 맞춘 옛
+    # 맞춤이라 배선 판정도 있었다 (보완 8) — 그림이 어떻게 됐는지도 적는다.
     assert ("[1/2] #1  B15_pellet  바꿈  R0-p(R1,CPE1) → L1-R0-CPE1 · 문제 1 → 0 · "
-            "σ 저항 8.4") in text
+            "오차 평균 3.2 % → < 0.01 % · σ 저항 8.4") in text
+    assert "    풀린 확인: 배선 인덕턴스 없음\n" in text
     assert "[2/2] #2  B14_arc  그대로  (L1-R0-CPE1 · 기본 시작점에서 — 맞춤이" in text
     assert "━━ 바꾼 것 (1)" in text and "━━ 그대로 둔 것 (1)" in text
     assert "풀린 문제: 꼬리를 흉내 낸 아크" in text
@@ -543,3 +545,35 @@ def test_the_same_model_named_right_is_not_refused_for_a_shape_the_old_fit_misse
     after, codes = audit_codes(client, spectrum_id)
     assert "tail_mimicked_by_arc" not in codes
     assert "misfit_everywhere" in codes                          # 그대로 적는다
+
+
+def test_a_fit_without_the_cable_is_refitted_with_l1_in_front(client):
+    """보완 8: 배선 L 이 빠졌다는 판정은 확인인데도 `bml refit` 이 맞춘다 — 실측
+    08:07 검수의 스물셋 (mid_Ni #38–#48, B18 #133–#138, 대칭셀 일곱)."""
+    spectrum_id, old = pellet(client, "B18_pellet.mpr", BLOCKING, "R0-CPE1")
+    before, codes = audit_codes(client, spectrum_id)
+    cable = next(f for f in before["findings"] if f["code"] == "inductance_missing")
+    assert cable["severity"] == "check" and cable["circuits"] == ["L1-R0-CPE1"]
+
+    done = client.post("/api/eis/audit/refit").json()
+    assert (done["targets"], done["wiring"], done["changed"]) == (1, 1, 1)
+    (one,) = done["spectra"]
+    assert one["new_circuit"] == "L1-R0-CPE1"
+    assert [p["code"] for p in one["checks"]] == ["inductance_missing"]
+    assert one["new_checks"] == []
+    assert one["new_misfit_mean"] < one["old_misfit_mean"]
+    after, codes = audit_codes(client, spectrum_id)
+    assert after["circuit"] == "L1-R0-CPE1" and "inductance_missing" not in codes
+    assert client.post("/api/eis/audit/refit").json()["targets"] == 0
+
+
+def test_the_text_says_what_the_cable_refit_did(client):
+    """문제 판정이 없으니 "문제 0 → 0" 은 읽을 거리가 아니다 — 그림이 어떻게 됐는지
+    적는다.  풀린 것은 확인이라 "풀린 확인" 이다."""
+    pellet(client, "B18_pellet.mpr", BLOCKING, "R0-CPE1")
+    text = client.post("/api/eis/audit/refit", params={"format": "text"}).text
+    assert "배선 L 이 빠진 1개는 쓰던 회로 앞에 `L1-` 를 붙여 맞춥니다" in text
+    assert "바꿈  R0-CPE1 → L1-R0-CPE1 · 오차 평균 " in text
+    assert "문제 0 → 0" not in text
+    assert "    풀린 확인: 배선 인덕턴스 없음\n" in text
+    assert "풀린 문제:" not in text
