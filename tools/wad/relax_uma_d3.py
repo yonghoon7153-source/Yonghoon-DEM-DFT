@@ -132,6 +132,10 @@ def relax(model_dir, out, calc_kind="uma", device="cuda", d3_kind="auto", fmax=0
     if calc_kind == "uma" and d3_kind == "none":
         raise SlabError("UMA 본 실행에서 --d3 none 은 허용되지 않는다 (카드 결박: PBE+D3 대조는 UMA+D3)")
     atoms = init.copy()
+    # ⛔ 2026-09-25 gabia 실측: fairchem UMA 계산기는 축마다 다른 pbc(T,T,F) 를 거부한다 (MixedPBCError).
+    #   계산기에 넘기는 동안만 **3축 주기**로 둔다 — 끝점 규칙으로 z 영상 간격이 ≥ 8 Å(빌더 기본 9 Å) 라 UMA 컷오프(6 Å)를 넘고,
+    #   QE 참조도 3축 주기라 D3 의 z-영상 합도 그쪽과 같은 관례다. 저장·구조 검사는 슬랩 관례(T,T,F) 그대로.
+    atoms.set_pbc((True, True, True))
     cons = [FixAtoms(indices=list(fixed))]
     if lateral:
         cons.append(FixedLine(indices=list(lateral), direction=[0, 0, 1]))
@@ -153,11 +157,14 @@ def relax(model_dir, out, calc_kind="uma", device="cuda", d3_kind="auto", fmax=0
     e1 = float(atoms.get_potential_energy())
     wall = time.time() - t0
     atoms.set_constraint()                               # 저장은 제약 없이 (좌표만)
+    atoms.calc = None
+    atoms.set_pbc((True, True, False))                   # 저장은 슬랩 관례로
     rp = os.path.join(out, "relaxed.extxyz")
     write(rp, atoms)
     chk = S.interface_check(init, atoms, ads_elements=ads_el, substrate_elements=sub_el, fixed_idx=fixed, lateral_fixed_idx=lateral)
     json.dump(chk, open(os.path.join(out, "interface_check.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
-    rec.update({"steps_taken": int(opt.get_number_of_steps()), "converged_fmax": converged, "fmax_free_final_eV_A": round(fmax_free, 5), "wall_s": round(wall, 1),
+    rec.update({"calculator_pbc": [True, True, True], "calculator_pbc_why": "UMA 는 균일 pbc 만 받는다 · z 영상 간격 ≥ 8 Å > UMA 컷오프 6 Å · QE 와 같은 3축 관례",
+                "steps_taken": int(opt.get_number_of_steps()), "converged_fmax": converged, "fmax_free_final_eV_A": round(fmax_free, 5), "wall_s": round(wall, 1),
                 "relaxed_sha256": _sha(rp), "disp_max_A": chk["disp_max_A"], "disp_rms_A": chk["disp_rms_A"], "interface_check_flags": chk["flags"],
                 "energies_raw_log_only": {"E_init_eV": e0, "E_final_eV": e1, "⛔": "원출력 기록용 — 결과표·W·후보 선택·게이트 조정에 쓰지 않는다 (카드 v5 S3 전 예외 규칙)"}})
     json.dump(rec, open(os.path.join(out, "relax_meta.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
@@ -189,6 +196,7 @@ def _selftest():
         fx, lat = meta["fixed_idx"], meta["lateral_fixed_idx"]
         ck("selftest(EMT): 고정 원자 변위 0", np.abs(x1[fx] - x0[fx]).max() < 1e-9, np.abs(x1[fx] - x0[fx]).max())
         ck("selftest(EMT): 측방 제약 원자 면내 변위 0 · z 는 움직임", np.abs(x1[lat][:, :2] - x0[lat][:, :2]).max() < 1e-9 and np.abs(x1[lat][:, 2] - x0[lat][:, 2]).max() > 1e-6, (np.abs(x1[lat][:, :2] - x0[lat][:, :2]).max(), np.abs(x1[lat][:, 2] - x0[lat][:, 2]).max()))
+        ck("selftest: 계산기 pbc 는 3축 주기로 기록 · 저장은 (T,T,F)", rec.get("calculator_pbc") == [True, True, True] and list(rel.get_pbc()) == [True, True, False], (rec.get("calculator_pbc"), list(rel.get_pbc())))
         ck("selftest(EMT): 산출 파일 셋 + interface_check 깃발 0 + 기록 필드", all(os.path.isfile(os.path.join(md, "relax", f)) for f in ("relaxed.extxyz", "relax_meta.json", "interface_check.json", "opt.log"))
            and not rec["interface_check_flags"] and rec["steps_taken"] >= 1 and "energies_raw_log_only" in rec and rec["preflight"]["mask_matches_policy"], rec.get("interface_check_flags"))
         # 사전 점검만
@@ -252,12 +260,12 @@ def main():
         return _selftest()
     if a.d3_energy:
         from ase.io import read
-        at = read(a.d3_energy); at.set_pbc((True, True, False))
+        at = read(a.d3_energy); at.set_pbc((True, True, True))   # QE 와 같은 3축 주기 (결박 검사는 같은 관례여야 한다)
         calc, info = make_calc("emt", a.device, a.d3)          # EMT 는 자리만 — D3 항만 따로 읽는다
         d3 = calc.mixer.calcs[1] if hasattr(calc, "mixer") else calc.calcs[1]
         at.calc = d3
         e = float(at.get_potential_energy())
-        print(json.dumps({"struct": os.path.abspath(a.d3_energy), "sha256": _sha(a.d3_energy), "n_atoms": len(at), "E_D3_eV": e, "E_D3_Ry": e / 13.605693122994, "d3": info["d3"],
+        print(json.dumps({"struct": os.path.abspath(a.d3_energy), "sha256": _sha(a.d3_energy), "n_atoms": len(at), "pbc": [True, True, True], "E_D3_eV": e, "E_D3_Ry": e / 13.605693122994, "d3": info["d3"],
                           "⛔": "QE 의 'DFT-D3 Dispersion' 줄과 대조하는 용도 — 총 에너지·W 에 쓰지 않는다"}, ensure_ascii=False, indent=1, default=float))
         return 0
     if not a.model_dir:
