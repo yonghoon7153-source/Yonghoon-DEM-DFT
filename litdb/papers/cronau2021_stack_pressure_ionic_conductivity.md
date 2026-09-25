@@ -45,6 +45,10 @@ single-crystal Li₆PS₅Cl 측정은 없다**(아래 PROVENANCE §0 참조).
 | Li₆PS₅**Cl** 자체를 측정했는가? | ✗ **아니오.** Cl-argyrodite는 **intro 인용**(ref 4 Feng, ref 13)으로만 언급. 측정한 argyrodite는 **Li₆PS₅Br** (Br!) 이다. 측정 6종: AM-Li₇P₃S₁₁, AM-80Li₂S·20P₂S₅, GC-Li₇P₃S₁₁, **GC-Li₆PS₅Br**, **µC-Li₆PS₅Br**, µC-Li₁₀GeP₂S₁₂. |
 | 연도 "Cronau **2022**" (우리 코드/baseline) 가 맞는가? | ✗ **틀림.** PDF 명시 = **2021** (Received 2021-06-23, ACS Energy Lett. 2021, 6, 3072). 우리 docs의 "Cronau 2022"는 **본 2021 논문의 연도 오기**이다 (별도 Cronau 논문이 아님 — DOI 1c01299 동일). |
 
+> ⛔ **정정 2026-09-25** (stoic-knuth 원장 `SELF-51`) — 위 행의 *"Cronau 2022 = 이 2021 논문의 연도 오기 (별도 논문이 아님)"* 판정은 **틀렸다**.  별도 논문이 실재한다: M. Cronau, M. Duchardt, M. Szabo, B. Roling, *Ionic Conductivity versus Particle Size of Ball-Milled Sulfide-Based Solid Electrolytes: Strategy Towards Optimized Composite Cathode Performance in All-Solid-State Batteries*, **Batteries & Supercaps 5 (2022) e202200041** (DOI 10.1002/batt.202200041 — 서지는 출판사 페이지 제목·검색으로 확인, **원문 미확인**; 초록상 대상은 습식 볼밀링한 **Li₅.₅PS₄.₅Cl₁.₅**).  stoic-knuth 코드가 2026-04-30 (`ceee1d812`) 에 입자 크기 보정 계수의 출처로 붙인 *"Cronau 2022"* 는 이 논문을 가리킨 것으로 보인다.
+> ⇒ **이 카드의 나머지 판정은 그대로다** — 이 2021 논문에 3.0 mS/cm 은 없고, 단결정 측정도 없고, 측정한 argyrodite 는 Li₆PS₅Br 다.  달라지는 것은 "2022 는 오기" 한 줄뿐이다: 어느 문서가 DOI `1c01299` 를 'Cronau 2022' 에 붙였다면 **그 DOI 표기**가 틀린 것이고, 크기 보정 계수값이 Cronau 2022 원문에 있는지는 **PDF 로 따로 확인해야 한다** (Li₆PS₅Cl 이 아니라 Li₅.₅PS₄.₅Cl₁.₅ 연구).
+
+
 **그렇다면 3.0 mS/cm 의 진짜 출처는?** 본 논문이 측정한 값들 중 우리 LPSCl에 가장
 가까운 µC-Li₆PS₅Br (Br-argyrodite, 미세결정) 의 **고압-plateau σ ≈ 2.0–2.4 mS/cm**
 (Fig 2e, 486 MPa 제작 + 고 stack pressure)이다. 즉 **3.0 은 "이 논문이 준 단결정
@@ -83,7 +87,7 @@ single-crystal Li₆PS₅Cl 측정은 없다**(아래 PROVENANCE §0 참조).
 > LOOCV +0.0043 의 실측 개선도 있으므로 — **유지하되 라벨/근거만 정직화**하면 된다.
 
 ### (C) 한 줄 요약
-- **연도:** 2021 (우리 "2022"는 오기, 같은 DOI).
+- **연도:** 2021 (우리 "2022"는 오기, 같은 DOI).  ⛔ 정정 2026-09-25: *"2022 는 오기"* 는 틀렸다 — 별도 Cronau 2022 (Batteries & Supercaps, Li₅.₅PS₄.₅Cl₁.₅) 가 실재한다 (§(A) 정정 참조).
 - **σ_grain=3.0:** single-crystal LPSCl 직접값 **아님**. 본 논문 µC-Li₆PS₅Br plateau(~2.4) + 타 LPSCl 문헌(1–6) 종합 채택값. 사용 자체는 합리적, **라벨만 부정확**.
 - **Cronau(r_SE):** sub-µm 반경 법칙은 본 논문에 **없음**. 본 논문은 **결정도-클래스·압력** 효과. 인자의 **방향(미세결정→σ↓)은 지지**, **breakpoint 수치는 미지지** → **(c) 느슨, 재명명 권고.**
 
