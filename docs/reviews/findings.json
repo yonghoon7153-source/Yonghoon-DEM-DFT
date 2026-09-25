@@ -4953,6 +4953,23 @@
    "evidence_tests": [
     "scripts/mpm3d_compaction.py"
    ]
+  },
+  {
+   "id": "SELF-51",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "강준희 (공저자 SI 검토, 2026-09-25 — S4 가 검색되지 않는다) + claude 재검토",
+   "opened_in": "docs/reviews/si_table_response_20260925.md",
+   "title": "원고 SI Table S2 의 `Ref.` 두 행이 둘 다 틀렸다 — S4 (NCM811 E 140 GPa) 는 실재가 확인되지 않는 인용, S5 (LPSCl σ_ion 3.0 mS/cm) 는 원문에 그 값이 없는 오귀속",
+   "note": "S4 = 'H. Wang et al., Elastic properties of layered lithium transition-metal oxides, J. Power Sources 470 (2020) 228413'.  이력: 04-29 b1c8262fe·0a040f2b0 이 확인 없이 'NCM hardness' 출처로 주석에 넣음 → 05-04 bd4d6fe0b 가 E_AM=140 출처로 역할 변경 → 08-23 c2670de6e 원고 표 → 08-24 9aa882135 가 원문 없이 제목을 붙임.  그 제목·저자는 웹 검색에 없고 DOI 는 이 컨테이너에서 해석 불가.  S5 = Cronau 2021 ACS Energy Lett. 6, 3072: 정본 카드 판정 — 3.0 이라는 숫자 없음 · 단결정 측정 없음 · 측정 argyrodite 는 Li6PS5Br.  값 자체 (140 GPa · 3.0 mS/cm) 는 측정 범위 안이라 재계산 불요 — 틀린 것은 출처다.  처방 (미비준): S4 → Sedlatschek et al., J. Power Sources 681 (2026) 240276 (다결정 NMC811 나노압입 138 ± 24 GPa — PDF 확인 뒤) · S5 → Assumed (grain interior) + 각주 · 원고 참고문헌 ↔ 정본 카드 게이트 · 내부 서지 점검 (si_table_response §7-4).  ⚠ 전파 (09-25 밤 전수 grep): 'Wang 2020' 이 NCM 경도 (fracture_model.py · build_literature_reference.py 웹앱 CSV) · NCM 영률 (Tabor_framework_reference.md · build.js S6) · LPSCl 영률 24 GPa (analyze_tabor_regime.py · Tabor_framework_reference.md · Reviewer_Defence_Notes.md · paper_brittle_caveat.md · webapp/templates/single.html 툴팁) 세 값의 출처로 쓰였다 — 지어진 인용의 강한 신호.  수정은 내부 서지 점검 (비준 뒤) 에서.",
+   "evidence_tests": [
+    "docs/manuscript_draft/build.js",
+    "scripts/analyze_tabor_regime.py",
+    "scripts/build_literature_reference.py",
+    "scripts/fracture_model.py",
+    "webapp/templates/single.html"
+   ]
   }
  ]
 }

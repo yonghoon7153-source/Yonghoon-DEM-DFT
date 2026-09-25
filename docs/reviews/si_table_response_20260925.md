@@ -141,9 +141,9 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
 - [ ] SI 그림 (CL-70 표로 지금 가능) · 각주 · Methods 문장을 사용자 docx 에 반영.  리포 `build.js` 는 08-23 판이라 라벨 동기화 필요 여부는 사용자 판단.
 - [x] 원고 생성기 메모 D14 정정 (모델 입력값 5 × 10⁻⁵ 를 "문헌 두 출처의 NMC bulk" 로 적은 것) — 이 커밋.
 
-## 2. LPSCl Poisson's ratio (DEM contact) — 0.3 · `Assumed` · ⬜
+## 2. LPSCl Poisson's ratio (DEM contact) — 0.3 · `Assumed` · ⏳ 판정은 §7 #6
 
-## 3. VGCF fiber diameter — 0.15 µm · `Measured` · ⬜ (이종기술 SEM 원본 대기)
+## 3. VGCF fiber diameter — 0.15 µm · `Measured` · ⬜ (이종기술 SEM 원본 대기) · 판정은 §7 #11
 
 ## 4. VGCF Young's modulus — 10 GPa · `Assumed` · ✅ 정리됨 (09-25 민감도 판정 h0) — 원고 반영 비준 대기
 
@@ -183,6 +183,68 @@ DBE/SBE 비 R̄ (8 origin 쌍대응 평균, vox 0.15 · centerline):
 - [ ] Ozkan 2010 PDF 확인 → 정본 카드 (각주에 문헌값을 넣을 경우).
 - [ ] 원장 `SELF-50` (metrics `dt` 가 요청값) — 결과 해석에는 영향 없음, 코드 수정은 비준 뒤.
 
-## 5. VGCF electronic conductivity (compressed powder) — 1.0 × 10² S cm⁻¹ · `Assumed` · ⬜
+## 5. VGCF electronic conductivity (compressed powder) — 1.0 × 10² S cm⁻¹ · `Assumed` · ⏳ 판정은 §7 #13
 
-## 6. VGCF electronic conductivity (voxel, diameter-preserving) — 78.5 S cm⁻¹ · `Calculated` · ⬜
+## 6. VGCF electronic conductivity (voxel, diameter-preserving) — 78.5 S cm⁻¹ · `Calculated` · ⏳ 판정은 §7 #14
+
+## 7. 표 전체 재검토 — 사용자 docx 판 14 행 · 참고문헌 무결성 (09-25 밤) · ⏳ 저자 결정 대기
+
+> 계기: 준희 — *"NCM811 Young's modulus 의 source 로 넣은 reference 가 검색해도 안 나온다"* (사용자 전달, docx Table S2 화면).
+> 확인 결과 **그 인용은 실재가 확인되지 않는다** — 이 리포의 자동 작성 커밋이 만든 인용이다 (7-1).  그래서 동그라미 6 행만이 아니라
+> **표 14 행 전부**를 원문 카드 · 코드와 다시 대조했다.
+> 표기: ✅ = 원문 PDF 카드 또는 코드와 대조함 · ⚠ = 대조 못 함 (**미확인 — 인용 전에 확인 필요**).
+> 가정: docx 의 `Ref. S4` = 생성기 `[S6]` ("Wang 2020, JPS 470, 228413"), `Ref. S5` = 생성기 `[S8]` (Cronau 2021).  번호 체계가 다르므로
+> (§0) docx 참고문헌 목록으로 확인할 것.
+
+### 7-1. S4 인용은 어떻게 생겼나 (리포 이력 — 전부 이 리포의 자동 작성 커밋)
+1. 04-29 `b1c8262fe` · `0a040f2b0` — 균열 모듈 (`scripts/fracture_model.py`) 과 문헌표 주석에 *"Wang 2020, J. Power Sources 470, 228413 —
+   NCM **hardness**"* 가 **출처 확인 없이** 들어갔다.  같은 코드에서 E_AM = 140 GPa 의 출처는 *"Xu 2017 / project-wide convention"* 이었다.
+2. 05-04 `bd4d6fe0b` — `docs/Tabor_framework_reference.md` 참고문헌표로 옮기며 역할이 *"NCM E_AM = 140 GPa"* 로 **바뀌었다**.
+3. 08-23 `c2670de6e` — 원고 SI 표 초안: `[36] H. Wang, et al., J. Power Sources 2020, 470, 228413` 을 E = 140 의 출처로.
+4. 08-24 `9aa882135` — S6 으로 번호를 바꾸며 제목 *"Elastic properties of layered lithium transition-metal oxides"* 를 **붙였다** — 원문을 본 적이 없다.
+- 검증: 그 제목·저자의 논문은 웹 검색에 나오지 않는다.  DOI `10.1016/j.jpowsour.2020.228413` 은 이 컨테이너에서 해석할 수 없다 (doi.org ·
+  Crossref · ScienceDirect 차단) — 그 번호가 어느 논문인지는 **미확인**이지만 어느 쪽이든 교체 대상이다.
+- 같은 04-29 목록의 다른 서지도 미확인이다 (예: *"Xu 2017 PRX 7, 041038"* — 실제 Xu 2017 은 *J. Electrochem. Soc.* **164**, A3333).
+- ⚠⚠ **"Wang 2020" 은 이미 세 가지 다른 값의 출처로 퍼져 있다** (09-25 밤 전수 grep — litdb 제외) — 한 논문이 NCM 경도 · NCM 영률 ·
+  LPSCl 영률을 모두 줄 리 없으므로 **지어진 인용이라는 강한 신호**다:
+  - NCM 경도 6.0 GPa — `scripts/fracture_model.py` · `scripts/build_literature_reference.py` (웹앱 문헌 CSV 의 `source` 열)
+  - NCM 영률 140 GPa — `docs/Tabor_framework_reference.md` 참고문헌표 · 원고 생성기 `docs/manuscript_draft/build.js` S6
+  - **LPSCl 영률 24 GPa** — `scripts/analyze_tabor_regime.py` 주석 · `docs/Tabor_framework_reference.md` · `docs/Reviewer_Defence_Notes.md`
+    (*"LPSCl 의 진짜 lab 값 (Wang 2020 nanoindentation)"*) · `docs/paper_brittle_caveat.md` · 웹앱 `webapp/templates/single.html` 배지 툴팁
+    (사용자에게 보이는 자리)
+  ⇒ 원고 밖에도 **반박 대응 노트 · 논문 초고 · 웹앱 UI** 에 남아 있다.  고치는 것은 7-4 의 내부 서지 점검 (비준 뒤) 에서 한 번에.
+- 원장 `SELF-51`.
+
+### 7-2. 행별 판정
+
+| # | 행 | 값 | docx 라벨 | 판정 | 조치 |
+|---|---|---|---|---|---|
+| 1 | NCM811 입자 반지름 | 2.5 µm | Experimental value | ⚠ 출처 기록이 리포에 없다 (본문: *"sized after the experimental powders"*) | 측정 방법 · D50 확인 → 측정이면 `Measured` 로 #4 와 통일, 공급사 값이면 `Supplier data`.  D14 (원고의 다결정 기술 ↔ 침대의 AM_S 클래스) 와 함께 |
+| 2 | NCM811 영률 | 140 GPa | Ref. S4 | ⛔ **인용 불성립** (7-1).  값 140 은 측정 범위 안 | **교체 문헌 (사용자 제공 서지, 09-25)**: T. Sedlatschek *et al.*, *Characterization of the grain boundary strength of polycrystalline NMC811 using in situ micro tensile tests*, *J. Power Sources* **681** (2026) 240276 — 다결정 NMC811 나노압입 E = 138 ± 24 GPa (압입 29 회).  ⚠ **이 수치는 검색 요약에서 본 것 — PDF 로 확인하기 전에는 원고에 인용하지 않는다** → PDF 받으면 정본 카드 |
+| 3 | NCM811 σ_e | 1.0 × 10⁻² S cm⁻¹ | Assumed | ✅ §1 (Wang 2018 원문 · Amin & Chiang 정본 카드) | `Assumed` 유지 + 각주 ᵃ — 결정 A/B 대기 |
+| 4 | LPSCl 입자 반지름 | 0.5 µm | Measured | ⚠ 출처 기록이 리포에 없다 | #1 과 같다 |
+| 5 | LPSCl 영률 (DEM 접촉) | 1.35 GPa | Calibrated | ✅ 보정값 (`docs/esse_calibration_2mAh_real_9.md`) | 각주에 보정 표적.  ⚠ docx 에서 `E (dense) 24 GPa` 행이 빠졌다 — 09-01 시트 §3-1 은 *"둘 다 남긴다 (지우면 연화 배수를 감춘다)"* 였다.  되살린다면 출처를 LPSCl 값으로 (Sakuda 2013 의 24 GPa 는 **75Li₂S·25P₂S₅ 유리**).  본문 *"(24 GPa)[34] is listed beside it in Table S2"* 도 표와 맞출 것 |
+| 6 | LPSCl ν (DEM 접촉) | 0.3 | Assumed | ✅ `Assumed` 가 맞다 — DEM 관례 입력 (LIGGGHTS `poissonsRatio` SE 0.30) | 각주: LPSCl 참고값 ≈ 0.33–0.37 (우리 DFT E_VRH·B₀ 쌍 → 0.360 · 문헌 DEM **입력** 0.33 / 0.37 — 측정 아님).  ν 는 Hertz 강성 E* = E/(1−ν²) 로 2 차로만 들어가고 (0.30 → 0.36: +4 %) E 1.35 가 이 ν 로 보정됐다.  ⚠ 진행 파일의 *"= Ref. (…)"* 메모는 모델 입력값을 측정처럼 묶은 것 — 쓰지 않는다.  ⊕ **NCM811 ν = 0.25** (DEM 입력) 행이 표에 없다 → 추가 (`Assumed`) |
+| 7 | LPSCl 영률 (MPM) | 1.53 GPa | Calibrated | ✅ 2D 보정값 (SEM 형태 + 순수 SE 다공도 — `docs/mpm3d_calibration.md`) | 각주에 보정 표적 |
+| 8 | LPSCl ν (MPM) | 0.49 | Calibrated | △ **무엇에** 맞췄는지가 빠졌다 — 체적탄성률 K = E/[3(1−2ν)] = 25.5 GPa 를 DFT B₀ 26.2 GPa 에 맞춘 선택 (+ ν 스윕: 0.45 → 0 % 과압축 · 0.49 → 6.3 %) | 각주: *"chosen so that the bulk modulus (25.5 GPa) matches the DFT value (26.2 GPa) while the shear modulus stays soft"* |
+| 9 | 항복강도 | 0.30 GPa | Calibrated | ✅ 순수 SE σ_y 스윕 (0.15 → 5.6 · 0.20 → 6.7 · 0.25 → 9.0 · **0.30 → 10.0 %**) — 표적 ~10 % @ 300 MPa | 각주: 표적은 LPSCl 직접 측정이 아니라 문헌 유도값 (본문과 같은 한정어) · 문헌 범위 0.05–0.30 GPa 의 상단.  ⚠ 이 보정 (06-16, servo · settled) 에 이후 플래튼 정지 논의 (`fam_platen_prereg_20260812`) 가 미치는 영향은 이 검토에서 보지 않았다 |
+| 10 | LPSCl σ_ion | 3.0 × 10⁻³ S cm⁻¹ | Ref. S5 | ⛔ **오귀속** — 정본 카드 `cronau2021_stack_pressure_ionic_conductivity` (원문 전수 정독): **3.0 이라는 숫자가 없다** · 단결정 측정 없음 · 측정한 argyrodite 는 Li₆PS₅**Br** (미세결정 고압 plateau ≈ 2.0–2.4 mS cm⁻¹) | `Assumed (grain interior, project value)` + 각주: 복셀 솔버에 입계·접촉저항 항이 없다 (`CL-81` CONTACT_FREE) · 비교값 = 이 원고 자신의 펠릿 3.57 mS cm⁻¹ (Figure 2h — ⚠ 측정 조건 미기록, `CL-62`) · 문헌 냉간압착 1–3 · 소결 3–6 mS cm⁻¹ (⚠ 초록 기반, 원문 미확인 — `docs/data/lpscl_electrolyte_params.md`).  행 이름에 *"(grain interior)"* 복원 (생성기 판에는 있었다) |
+| 11 | VGCF 직경 | 0.15 µm | Measured | ⚠ 측정 원자료가 리포에 없다 (§3 — 이종기술 SEM 원본 대기).  생성기 판 라벨은 `Supplier data` | SEM 원자료 (n · 평균 ± SD) 가 오면 `Measured (SEM)`, 아니면 `Supplier data (VGCF-H, 150 nm)` — 증빙과 같이 |
+| 12 | VGCF 영률 | 10 GPa | Assumed | ✅ §4 (민감도 h0, 1–100 GPa) | `Assumed` + 각주 ᵇ |
+| 13 | VGCF σ_e (압착 분말) | 1.0 × 10² S cm⁻¹ | Assumed | ✅ `Assumed` 가 맞다 — 09-01 시트 §3-1 R20 처분과 같다: 100 은 공급사 분말값 83 에서 **유도되지 않았다** (도입 커밋 `087d1a07` 의 order-of-magnitude hook — 83 감사보다 먼저) | ⛔ 각주에 *"83 을 반올림"* 이라 쓰지 말 것 (없던 근거를 만드는 것).  각주: 공급사 단섬유 10⁴ · 압착 분말 83 S cm⁻¹ (⚠ 카탈로그 원본이 리포에 없다) · 유효 망 계수 · 미보정.  행 이름 *"(compressed powder)"* 는 값이 분말 측정인 것처럼 읽힌다 → *"(effective network coefficient)"* |
+| 14 | VGCF σ_e (복셀) | 78.5 S cm⁻¹ | Calculated | ✅ 계산 맞음: σ·πd²/(4h²), d = h = 0.15 µm → 100·π/4 = 78.54 (`scripts/step3_sigma.py` 1153 행 `diameter_preserving_sigma`) | 재료 파라미터가 아니라 **격자 환산값** (h = 0.125 이면 113.1) → 09-01 권고대로 표에서 빼고 Methods 식으로.  남긴다면 `Calculated (Eq. Sx, h = 0.15 µm)` |
+
+### 7-3. 요약
+- ⛔ 고칠 것 2 — #2 (S4 인용 불성립) · #10 (S5 오귀속).  **표에 남은 `Ref.` 두 개가 둘 다 틀렸다.**
+- ⚠ 저자 측 자료 확인 3 — #1 · #4 (입자 반지름) · #11 (VGCF 직경).
+- △ 각주 보강 5 — #5 · #7 · #8 · #9 (보정 표적) · #6 (ν 참고범위 + NCM811 ν 행 추가).
+- ✅ 라벨 유지 4 — #3 · #12 · #13 · #14 (각주 · 위치만).
+- 본문 확인 1 — *"(24 GPa)[34] is listed beside it in Table S2"* 가 표와 맞는지.
+- 동그라미 6 행 (#3 · #6 · #11 · #12 · #13 · #14) 중 라벨이 **틀린** 것은 없다 — #11 만 증빙이 없다.  **틀린 것은 동그라미 밖의 `Ref.` 두 행이다.**
+
+### 7-4. 재발 방지 (제안 — 비준 대기)
+1. **원고 참고문헌 게이트** — 원고 (생성기 · docx 에서 뽑은 목록) 의 인용마다 원문을 확인한 litdb 정본 카드 (DOI) 에 연결하고, 연결 안 된
+   인용이 있으면 `check_all.sh` 가 실패한다.
+2. **내부 서지 점검** — 코드 주석 · docs 의 서지 (특히 04-29 균열 모듈 목록) 를 훑어 카드 없는 것에 `미확인` 표시.
+3. **작성 규율** — 원문을 보지 않은 서지는 제목 · 권호를 채우지 않고 `[미확인]` 으로 둔다.  CLAUDE.md 에 한 줄로 상주시킨다
+   (세션이 바뀌어도 남도록).
