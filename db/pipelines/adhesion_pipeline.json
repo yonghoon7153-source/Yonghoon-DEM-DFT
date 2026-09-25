@@ -698,6 +698,11 @@
    "date": "2026-09-25",
    "stage": "dft",
    "text": "**S3 전 예외 ③ CPU 프로브 (gabia · 70 Ry · 분리 셀)**: V5 ×4 = **89–109 GB** (밴드 1217–1274 · Ag 19 e) → 52 Ry 환산 57–70 GB > 48 ⇒ **V5 RESOURCE_BLOCKED (실측 근거)** → 카드 갈래0: **G5 NOT_TESTED** · UMA 전체 계면 예측 내부 전용. V4_s_outer_A far 70 Ry = 52.4 GB > 48 ⇒ G4 e70 변형 gabia 불가 ('ecut 미검증') · 기본 52 Ry 는 다음 프로브 (~34 GB 예상 · GPU 피크는 1.2–1.45×). V2 는 V100 (3 GB). 기록 `db/raw/wad_aprime_s3_probe_2026_09_25/`."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "CPU 프로브 (52 Ry · V4_s_outer_A 세트 7): bound/far/k1 **33.6 GB** · G3 c+2 셀 35.4 GB < 48 ⇒ GPU 시험 허가 (b2o3 s4 뒤 · 44 GB 한도가 실측으로 정한다). 잠정 S4 실행 집합 = V2 relax 4 (+2단계) + V4_s_outer_A 9 잡 (bound·far·G3 3·G4 k1 2·s05 2) · V5 전부·V4 e70 제외."
   }
  ],
  "related_decisions": [

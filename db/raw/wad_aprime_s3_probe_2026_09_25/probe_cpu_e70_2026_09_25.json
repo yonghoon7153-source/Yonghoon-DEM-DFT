@@ -54,8 +54,38 @@
  "판정_카드_규칙": {
   "V5_전부": "**RESOURCE_BLOCKED (실측 근거)** — 70 Ry 에서 89–109 GB · 52 Ry 로 환산해도 ((52/70)^1.5 ≈ 0.64) 57–70 GB > 48 GB · GPU 피크는 그보다 크다 ⇒ 어느 기계에도 안 들어간다. 카드 갈래0: **G5 = NOT_TESTED** · 전체 계면 UMA 예측 = 내부 전용 · DEM 전달 없음 (넘기려면 별도 결정 + 라벨).",
   "V4_s_outer_A_G4_e70": "70 Ry 에서 52.4 GB > 48 ⇒ **G4 e70 변형은 gabia 에서 RESOURCE_BLOCKED** → V4 군은 'ecut 미검증' 으로 남긴다 (k·smearing 변형은 별도 프로브)",
-  "V4_s_outer_A_기본_52Ry": "미프로브 — 다음 블록 (bound·far·G3 셀·G4 k1) · CPU 추정 ~34 GB 예상 → GPU 시험(electron_maxstep 2 · b2o3 s4 끝난 뒤 · UMA 공존 금지) 으로 피크 실측",
+  "V4_s_outer_A_기본_52Ry": "CPU 추정 **33.6 GB** (G3 c+2 셀 35.4 · k 4×4×1 도 33.6) < 48 ⇒ **GPU 시험 허가** (electron_maxstep 2 · scf · gabia · b2o3 s4 종료 뒤 · KILL 44,000 MiB). GPU 피크가 CPU 추정의 1.2–1.45× 면 40–51 GB 라 한도(44 GB)에 걸릴 수 있다 — 시험이 정한다. e70 변형만 제외 ('ecut 미검증').",
   "V2": "프로브 불요 (≈3 GB · V100)"
  },
- "S4_실행_집합_잠정": "V2 relax 4 (+2단계) · V4_s_outer_A bound/far · G3 3 · G4 k1 2 · s05 2 (52 Ry 프로브·GPU 시험 통과 시) — V5 ×4 + ⑤ + V5 G3/G4 + V4 G4 e70 은 **제외 (RESOURCE_BLOCKED)**"
+ "S4_실행_집합_잠정": "V2 relax 4 (+2단계) · V4_s_outer_A bound/far · G3 3 · G4 k1 2 · s05 2 (52 Ry 프로브·GPU 시험 통과 시) — V5 ×4 + ⑤ + V5 G3/G4 + V4 G4 e70 은 **제외 (RESOURCE_BLOCKED)**",
+ "results_52Ry_V4_s_outer_A": {
+  "V4_s_outer_A_bound": {
+   "nk": 5,
+   "ram_total_GB": 33.58
+  },
+  "V4_s_outer_A_far": {
+   "nk": 5,
+   "ram_total_GB": 33.58
+  },
+  "V4_s_outer_A_G3_c2_bound": {
+   "nk": 5,
+   "ram_total_GB": 35.4
+  },
+  "V4_s_outer_A_G3_c2_far_i": {
+   "nk": 5,
+   "ram_total_GB": 35.4
+  },
+  "V4_s_outer_A_G3_c2_far_ii": {
+   "nk": 5,
+   "ram_total_GB": 35.4
+  },
+  "V4_s_outer_A_G4_k1_bound": {
+   "nk": 10,
+   "ram_total_GB": 33.58
+  },
+  "V4_s_outer_A_G4_k1_far": {
+   "nk": 10,
+   "ram_total_GB": 33.58
+  }
+ }
 }
