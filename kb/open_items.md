@@ -254,6 +254,7 @@
     ⏭ **Codex CB** `codex_CB_prompt_wad_aprime_pilot_prereg_v4_2026_09_25.md` (발송 대기). S1 결박값은 카드 밖 `db/properties/wad_aprime_s1_bindings_2026_09_25.json` 에 모은다 (재심 중 카드 SHA 불변):
     🔒 **S1 봉인 (09-25 밤 · 1저자 '가장 권장하는거면 비준')** — 카드 v5 content_digest `126aa58ebdc4803b…` · 결정 `D-2026-09-25-wad-aprime-s1-seal` active · UMA 추론 모드 **default** 확정. 본문 불변 (정오·개정은 별도 파일). ⏭ **S2**: 빌더로 기하 생성 → 최적화 전 마스크·registry·좌표 sha 기록 → UMA+D3 이완(gabia uma env · b2o3 끝난 뒤 GPU) → `--interface_check` → 분리 셀 CPU 프로브 → GPU 프로브 → S3 봉인.
     📨 **DEM 회신 4 발송본** `kb/projects/wad_dem_reply_4_send_2026_09_25.md` (09-25 · 1저자 발송).
+    📨 **DEM 4차 회신 수령** (라벨 수용 · 한 기하 성립 (a)(b) · 시나리오 i–iv 초안) → **회신 5 초안** (§회신 5): (i) 기준선은 V2 만 · SE 계면 V5 RESOURCE_BLOCKED 예상 → 미리 정정 · (iv) V2 가능 · (ii)(iii) 내부 전용 기본. 1저자 발송 대기.
     🟢 **Codex CB 조건부 GO (09-25 밤)** — 코드 차단 해제 · 조건 4 (UMA 결박 · 선행 값 · 빌더+registry 구현·시험 · registry 전역 d_min 동률/Σ∖{A} 차단) → 전부 이행: **`tools/wad/build_aprime_interfaces.py`** (V2·V3·V4·V5 · `registry_select` · `make_endpoints` · 20/20 · 돌연변이 4) ·
     **카드 v5 = S1 봉인 후보** `wad_aprime_pilot_prereg_v5_2026_09_25.json` (UMA·PP·D3·코드 sha 결박 · 선행 값 · registry 명세 · GPU 프로브 문구). ⏭ **1저자 비준** (카드 + 추론 모드 default) → content_digest 봉인 → **S2** (기하 생성 · 마스크/registry 기록 · UMA 이완 · interface_check · 프로브).
     ✅ **선행 배치 끝 (V100 09-25 21:21 · 9/9 rc 0 · 깃발 0)**: Ag a₀ PBE 4.1448 · **PBE+D3 4.0705** (실험 4.086) · 그래핀 2.4668/2.4660 · **정합 변형률(PBE+D3 격자)** P1 +0.85/−0.19 % · P2 +1.94/+0.89 % · V2 +1.08 % → 3 % 규칙 미발동 ·

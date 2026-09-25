@@ -440,8 +440,8 @@
    "state": "미계산"
   },
   {
-   "text": "DEM 회신 4 발송본 `kb/projects/wad_dem_reply_4_send_2026_09_25.md` (부탁 1 PBE/PBE+D3 응력 · 부탁 2 수용 · 한 기하 뜻 확인 요청 · Ag 격자상수·변형률) — 1저자 발송 09-25 → DEM 확인(면적가중 가정) 대기",
-   "state": "발송"
+   "text": "DEM 4차 회신 수령 (라벨 PBE+D3 수용 · '한 기하' 성립 조건 (a) 종결별 W (b) 마스크 깊이 동일 · 시나리오 초안 i–iv) → **회신 5 초안** (`wad_dem_reply_draft_2026_09_23.md` §회신 5): (a)(b) 확인 · **(i) 범위 정정 — 직접 DFT W 소모델은 V2(Ag|그래핀)뿐 · SE 계면 V5 는 RESOURCE_BLOCKED 예상** · (iv) V2 가능 · (ii)(iii) 내부 전용 기본 — 1저자 발송",
+   "state": "회신 5"
   }
  ],
  "log": [
@@ -594,6 +594,11 @@
    "date": "2026-09-25",
    "stage": "dft",
    "text": "**A′ 카드 v5 S1 봉인** — 1저자 '가장 권장하는거면 비준' (카드 전체 + UMA 추론 모드 default). content_digest 126aa58ebdc4803b… · 결정 `D-2026-09-25-wad-aprime-s1-seal` (active). 설계·선택 규칙·결박의 봉인이며 본 계산 승인 아님 (CB). 다음 S2 = 빌더 기하 생성 → 최적화 전 기록 → UMA+D3 이완(default · gabia · b2o3 뒤) → interface_check → CPU/GPU 프로브(S3 전 예외 ③) → S3. **DEM 회신 4 발송본** 작성 (1저자 발송). li2s 는 추석 뒤."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**DEM 4차 회신** — PBE+D3 잔류 응력 라벨 수용(p 검산 일치) · '한 기하' 성립 (조건 (a) 종결별 W · (b) P1/P2 마스크 깊이 동일 — 둘 다 우리 카드와 같다) · UMA 미검증 값은 '작은 모델 대조 미실시' 라벨 · 시나리오 초안 (i) 소모델 직접 DFT W 기준 / (ii)(iii) 전체 UMA registry 최소·최대 / (iv) (i)−D3. → **회신 5 초안**: (i) 범위 정정 — 우리 카드에서 직접 DFT W 가 나오는 소모델은 V2(Ag|그래핀)뿐이고 SE 계면 V5 는 RESOURCE_BLOCKED 예상 → SE 계면엔 (i) 기준선이 없을 수 있음을 프로브 전에 알린다 · (iv) V2 가능 · (ii)(iii) 내부 전용 기본(재합의)."
   }
  ],
  "related_decisions": [
