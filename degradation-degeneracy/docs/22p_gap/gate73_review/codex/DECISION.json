@@ -1,0 +1,21 @@
+{
+  "request_head": "b0c0b9ca10743d83950c29322d30f581fecf884d",
+  "code_target": "7a7945564e6a94803b4d3bc72e8202534189ccdb",
+  "source_digest": "c2ef1a811e70bb4c",
+  "E3_R_closure": "ACCEPTED",
+  "limited_execution_review_decision": "CONDITIONAL_GO",
+  "blocking_findings_in_reviewed_scope": [],
+  "prospective_entry_currently_present": false,
+  "conditions": [
+    "Human commits current-machine prospective grid_fit_v5 plan bound to c2ef1a811e70bb4c",
+    "Final approved HEAD includes the plan and has RUN_SCOPE diff zero to 7a7945564e6a94803b4d3bc72e8202534189ccdb",
+    "Existing E6 exclusive window, identity/preflight and E9 bounded protocol and failure policy",
+    "Maintain E1/E2/E4 and scientific inference limitations"
+  ],
+  "receiver_exact_ast_inert_attach_cases": 16,
+  "receiver_full_pytest_smoke_mutation_runs": 0,
+  "receiver_project_module_imports": 0,
+  "receiver_subject_ledger_writes": 0,
+  "receiver_scientific_COMSOL_restore_class_changes": 0,
+  "this_turn_authorizes_or_performs_production_execution": false
+}

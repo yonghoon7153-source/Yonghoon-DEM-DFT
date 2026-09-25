@@ -1,0 +1,12 @@
+legs:
+- leg_id: paired_fixed5_v4
+  preservation_status: preservation_pending
+  evidence:
+    phases:
+    - grid
+    - fit
+    attempt_id: receiver-inert
+    run_spec_digest: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    attempt_verifier: receiver-inert
+    verifier_origin: receiver-inert
+    out: results/paired_fixed5_v4

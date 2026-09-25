@@ -1,0 +1,27 @@
+{
+  "head": "b0c0b9ca10743d83950c29322d30f581fecf884d",
+  "code_target": "7a7945564e6a94803b4d3bc72e8202534189ccdb",
+  "source_digest_independent": "c2ef1a811e70bb4c",
+  "scope_files": 57,
+  "status_before": "",
+  "tracked_DD_files": 2552,
+  "request": {
+    "bytes": 6735,
+    "sha256": "032cb437f39dc0e8ad9c337db20ae49b92a71d0dfd2545698deda7cc01fe7a53"
+  },
+  "request_blob_equals_checkout": true,
+  "code_to_head_scope_diff_bytes": 0,
+  "test_report_head": "cfacfe6b44a27ee34af536cc84f29806d916f392",
+  "test_report_to_head_names": [
+    "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+    "degradation-degeneracy/docs/22p_gap/GATE73_REQUEST.md",
+    "degradation-degeneracy/docs/GATE70_WORKING_STATE.md"
+  ],
+  "code_to_head_commits": [
+    "b0c0b9ca10743d83950c29322d30f581fecf884d dd: GATE73 요청문 — 72차 잔여 하나(E3-R 원장 evidence.out 결속) 답 · 한정 실행 GO 재요청 (원장 §96·§97, 작업 상태 갱신)",
+    "cfacfe6b44a27ee34af536cc84f29806d916f392 dd: test_issuance_authority_60 — 보존한 리뷰 패키지(docs/22p_gap/gate*_review/)를 raw-sink callsite 열거에서 뺀다",
+    "54d50763e2aa86b8b8558e95930ad067888cffbf dd: paired_fixed5_v4 보존 영수증을 72차 E3-R 잔여 수정 뒤의 검증기 identity 로 다시 만든다"
+  ],
+  "project_module_imports": 0,
+  "main_runs_restore_class_changes": 0
+}

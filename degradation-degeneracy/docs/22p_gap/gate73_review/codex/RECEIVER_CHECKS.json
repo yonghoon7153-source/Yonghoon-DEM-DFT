@@ -1,0 +1,247 @@
+{
+  "scope": "Exact selected helpers and attach AST body, inert lock/entry collaborators and blocked write sink. Not full Linux attach/pytest/OS concurrency validation.",
+  "source_sha256": "86f736f67ddd2ff8dd3bc9ae64b51f95560b9a7e91da08506991fb02ec1d2305",
+  "selected_definitions": [
+    {
+      "name": "PreserveError",
+      "line": 125,
+      "end_line": 131
+    },
+    {
+      "name": "_is_hex64",
+      "line": 153,
+      "end_line": 155
+    },
+    {
+      "name": "_nonempty_str",
+      "line": 3042,
+      "end_line": 3043
+    },
+    {
+      "name": "_repo_relative_or_refuse",
+      "line": 7410,
+      "end_line": 7436
+    },
+    {
+      "name": "_receipt_core_sha256",
+      "line": 7671,
+      "end_line": 7676
+    },
+    {
+      "name": "read_verification_receipt",
+      "line": 7679,
+      "end_line": 7768
+    },
+    {
+      "name": "_receipt_output_pair",
+      "line": 7771,
+      "end_line": 7816
+    },
+    {
+      "name": "_assert_receipt_bound_to_bundle",
+      "line": 7819,
+      "end_line": 7852
+    },
+    {
+      "name": "_assert_ledger_run_bound",
+      "line": 7855,
+      "end_line": 7875
+    },
+    {
+      "name": "attach_bundle_evidence",
+      "line": 7878,
+      "end_line": 7982
+    }
+  ],
+  "real_receipt_reader_and_bundle_control": "ACCEPTED",
+  "actual_bundle_index_members": 25,
+  "actual_bundle_set_size_sha_agree": true,
+  "attach_cases": [
+    {
+      "id": "A00",
+      "status": "preservation_pending",
+      "out_mode": "match",
+      "invalid_value": null,
+      "original_sha256": "b9dce47a6ec53fe79de650c188b37af97b65da624b0efe34e1b4edb9a37f669d",
+      "outcome": "REACHED_WRITE_SINK_NO_WRITE",
+      "proposed_status": "full_bundle",
+      "proposed_validation": "current_validated",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A01",
+      "status": "preservation_pending",
+      "out_mode": "wrong",
+      "invalid_value": null,
+      "original_sha256": "a672fc99973cace6d7a693764ed80dd1157c5db219c8d64a701249deb847dd75",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 evidence.out='results/OTHER_RUN' 가 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A02",
+      "status": "preservation_pending",
+      "out_mode": "missing",
+      "invalid_value": null,
+      "original_sha256": "b85f1254c54f4ce2654ddc4c6767828ad3162c9dc2c5b17f363de5594f42bdf6",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 실행 기록(preservation_status='preservation_pending')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A03",
+      "status": "full_bundle",
+      "out_mode": "match",
+      "invalid_value": null,
+      "original_sha256": "2060062cc53d8cae476e2a1d331a876a5724b47f30ad1dec8d1853e5cac41c41",
+      "outcome": "RETURNED",
+      "return_value": {
+        "leg_id": "paired_fixed5_v4",
+        "preservation_status": "full_bundle",
+        "idempotent": true,
+        "receipt_core_sha256": "5e26232e741b5e6888672dbb9a336057c0bd22bb8bbc71c309a9794baea36492"
+      },
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A04",
+      "status": "full_bundle",
+      "out_mode": "wrong",
+      "invalid_value": null,
+      "original_sha256": "f18b89d4fb6277f4695f979acba6b4408e91ab1feabd693e69197c1d1067f694",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 evidence.out='results/OTHER_RUN' 가 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 다르다 — 다른 실행 기록에 묶음을 붙이지 않는다 (R07)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A05",
+      "status": "full_bundle",
+      "out_mode": "missing",
+      "invalid_value": null,
+      "original_sha256": "4fe9ed154f9ce529e0806c82ef206c53bfaad93f9d91eb15077b688c852fb739",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A02b_preservation_pending_0",
+      "status": "preservation_pending",
+      "out_mode": "invalid",
+      "invalid_value": "",
+      "original_sha256": "ff492649322ee64445840d2c9bf4cffe639d71ac273fb5e0fc95d4bddc63bc35",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 실행 기록(preservation_status='preservation_pending')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A02b_preservation_pending_1",
+      "status": "preservation_pending",
+      "out_mode": "invalid",
+      "invalid_value": "   ",
+      "original_sha256": "8339f4bd69dbc7e693fbc363a8146167dc9aa56670c38f5c9a5b8a578de2ce4b",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 실행 기록(preservation_status='preservation_pending')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A02b_preservation_pending_2",
+      "status": "preservation_pending",
+      "out_mode": "invalid",
+      "invalid_value": 17,
+      "original_sha256": "16ac905a343cbfd1e664fb8094d1652574d81aa7795dcd6ca326e814cc2611ad",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 실행 기록(preservation_status='preservation_pending')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A02b_preservation_pending_3",
+      "status": "preservation_pending",
+      "out_mode": "invalid",
+      "invalid_value": [
+        "results/L"
+      ],
+      "original_sha256": "4de43a0a6223db9e6eeb5a60906f3a392133e6bd80c432036b4b9d2df6adf9e0",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 실행 기록(preservation_status='preservation_pending')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A02b_full_bundle_0",
+      "status": "full_bundle",
+      "out_mode": "invalid",
+      "invalid_value": "",
+      "original_sha256": "c2c90904ab9e25a6a8ca00e86d02ecd760970c94f71dbbed33f59efbbfc96ca4",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A02b_full_bundle_1",
+      "status": "full_bundle",
+      "out_mode": "invalid",
+      "invalid_value": "   ",
+      "original_sha256": "1e4da606be3814c07559b52d2af4e286e43b2552f337ccec7c7a09036c62fccc",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A02b_full_bundle_2",
+      "status": "full_bundle",
+      "out_mode": "invalid",
+      "invalid_value": 17,
+      "original_sha256": "fa113d538ad92b4d6709f4d5d4334944c2d78df9b2f23ec372caea29845b7537",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A02b_full_bundle_3",
+      "status": "full_bundle",
+      "out_mode": "invalid",
+      "invalid_value": [
+        "results/L"
+      ],
+      "original_sha256": "0cd713dc7d6dbc354fba1d67837386a2b08d11e5b924e91e2ce6f4d90dab2c7a",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A06_missing_out_different_receipt",
+      "status": "full_bundle",
+      "out_mode": "missing",
+      "invalid_value": null,
+      "original_sha256": "1cf918935b6b813c9822af3b1569a44d0266920c77a23c2e3201070cdaef7291",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)",
+      "fixture_bytes_unchanged": true
+    },
+    {
+      "id": "A07_actual_historical_copy",
+      "status": "full_bundle",
+      "out_mode": "missing",
+      "invalid_value": null,
+      "original_sha256": "f19bf86217db26f2a9787dec01e650fc45af294ffcd383962088ad4f86333497",
+      "outcome": "REJECTED",
+      "reason": "[plan] 'paired_fixed5_v4' 원장 실행 기록(preservation_status='full_bundle')에 실행 자리 evidence.out 이 없다 — 영수증·묶음의 복원 자리 'results/paired_fixed5_v4' 와 결속할 근거가 없으므로 **미결속**으로 거부한다 (72차 E3-R: 필드 부재는 skip 이 아니다; 역사적 기록은 소급해서 채우지 않는다)",
+      "fixture_bytes_unchanged": true
+    }
+  ],
+  "case_count": 16,
+  "stubs": [
+    "check_id",
+    "read_verification_receipt (real control checked separately)",
+    "_verify_declared_bundle (bytes checked independently)",
+    "canonical_ledger",
+    "_ledger_lock",
+    "bundle_content_id",
+    "_atomic_write_text (raises before writing)",
+    "src.io.source_digest (independent measured value)"
+  ],
+  "project_module_imports": 0,
+  "subject_ledger_writes": 0,
+  "restores": 0,
+  "class_changes": 0,
+  "scientific_COMSOL_runs": 0
+}

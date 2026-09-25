@@ -1,0 +1,223 @@
+diff --git a/degradation-degeneracy/docs/22p_gap/mutation_replay.py b/degradation-degeneracy/docs/22p_gap/mutation_replay.py
+index ab132f01..f19e3210 100644
+--- a/degradation-degeneracy/docs/22p_gap/mutation_replay.py
++++ b/degradation-degeneracy/docs/22p_gap/mutation_replay.py
+@@ -1800,10 +1800,16 @@ MUTANTS = [
+      '    if False:\n        raise PreserveError("plan", f"{leg_id!r} 영수증의 복원 자리',
+      "g71_e3r_07 and not 07b and not 07c"),
+     # ── 71차 E3-R ── 원장 evidence.out 대조 제거 (다른 실행 기록에 묶음이 붙는다)
+-    ("attach-binds-the-ledger-run-location-g71", PRESERVE,                  # R07
+-     '        if "out" in ev:\n            led_out = ',
+-     '        if False:\n            led_out = ',
+-     "g71_e3r_07b"),
++    ("attach-binds-the-ledger-run-location-g71", PRESERVE,                  # R07 (72차: helper 로 옮긴 자리를 겨냥)
++     '    led_out = Path(led_out).as_posix().strip("/")\n    if led_out != bound_run:',
++     '    led_out = Path(led_out).as_posix().strip("/")\n    if False:',
++     "g71_e3r_07b or g72_a04"),
++    # ── 72차 E3-R 잔여 ── 실행 자리 부재를 다시 skip 으로 (A02·A05 가 성공으로 돌아간다)
++    ("ledger-run-location-is-mandatory-g72", PRESERVE,                      # A02·A05
++     '    if not (isinstance(led_out, str) and led_out.strip()):\n        raise PreserveError(',
++     '    if False:\n        raise PreserveError(',
++     # a07 은 실물 영수증 양성이라 preserve.py 의 어떤 변이에서도 digest 가 달라져 빨개진다 — 이 변이가 무는 node 가 아니다
++     "g72_a02 or g72_a05 or g72_a06"),
+     ("the-replay-context-is-measured-once-g66", MR,                          # 정적 관측
+      '    ctx = ctx if ctx is not None else _\u0072eplay_context()\n'
+      '    want = _parent_customization_view(ctx)',
+@@ -5303,9 +5309,27 @@ EXPECT: dict = {
+     "attach-binds-the-ledger-run-location-g71": {
+         "fail": [
+             "tests/test_gate71_defensive.py::test_g71_e3r_07b_the_ledger_run_location_must_match_the_receipt",
++            "tests/test_gate72_defensive.py::test_g72_a04_idempotent_return_is_refused_when_out_disagrees",
+         ],
+         "witness": {
+             "tests/test_gate71_defensive.py::test_g71_e3r_07b_the_ledger_run_location_must_match_the_receipt": "Failed: DID NOT RAISE PreserveError",
++            "tests/test_gate72_defensive.py::test_g72_a04_idempotent_return_is_refused_when_out_disagrees": "Failed: DID NOT RAISE PreserveError",
++        }
++    },
++    "ledger-run-location-is-mandatory-g72": {
++        "fail": [
++            "tests/test_gate72_defensive.py::test_g72_a02_a_pending_record_without_out_cannot_be_lifted",
++            "tests/test_gate72_defensive.py::test_g72_a02b_an_out_that_is_not_a_nonempty_string_is_no_binding[17]",
++            "tests/test_gate72_defensive.py::test_g72_a02b_an_out_that_is_not_a_nonempty_string_is_no_binding[value3]",
++            "tests/test_gate72_defensive.py::test_g72_a05_idempotent_return_is_refused_when_out_is_missing",
++            "tests/test_gate72_defensive.py::test_g72_a06_the_binding_is_checked_before_the_receipt_identity_on_full_bundle",
++        ],
++        "witness": {
++            "tests/test_gate72_defensive.py::test_g72_a02_a_pending_record_without_out_cannot_be_lifted": "TypeError: expected str, bytes or os.PathLike object, not NoneType",
++            "tests/test_gate72_defensive.py::test_g72_a02b_an_out_that_is_not_a_nonempty_string_is_no_binding[17]": "TypeError: expected str, bytes or os.PathLike object, not int",
++            "tests/test_gate72_defensive.py::test_g72_a02b_an_out_that_is_not_a_nonempty_string_is_no_binding[value3]": "TypeError: expected str, bytes or os.PathLike object, not list",
++            "tests/test_gate72_defensive.py::test_g72_a05_idempotent_return_is_refused_when_out_is_missing": "TypeError: expected str, bytes or os.PathLike object, not NoneType",
++            "tests/test_gate72_defensive.py::test_g72_a06_the_binding_is_checked_before_the_receipt_identity_on_full_bundle": "TypeError: expected str, bytes or os.PathLike object, not NoneType",
+         }
+     },
+     "exec-class-reader-is-typed-g70": {
+diff --git a/degradation-degeneracy/tests/test_gate72_defensive.py b/degradation-degeneracy/tests/test_gate72_defensive.py
+new file mode 100644
+index 00000000..4ad7e3f6
+--- /dev/null
++++ b/degradation-degeneracy/tests/test_gate72_defensive.py
+@@ -0,0 +1,146 @@
++"""72차 게이트 (E3-R 잔여) — 원장 실행 자리(`evidence.out`) 결속은 **필수**이고 **멱등 반환보다 먼저**다.
++
++리뷰어(72차 §4)가 실제 `attach_bundle_evidence` 본문을 inert collaborators + 쓰기 차단 sink 로 6경우 확인했다:
++
++    | 상태                     | 일치 out            | 다른 out | out 누락            |
++    |--------------------------|---------------------|----------|---------------------|
++    | pending                  | 쓰기 지점 도달 (A00) | 거부 (A01) | **쓰기 지점 도달 (A02)** |
++    | full_bundle + 같은 영수증 | 멱등 성공 (A03)      | **멱등 성공 (A04)** | **멱등 성공 (A05)** |
++
++원인: `if "out" in ev:` — 필드가 없으면 대조를 **건너뛰고** 승격 쓰기 지점에 도달했고, full_bundle 의 멱등 반환이
++out 대조보다 앞에 있어 out 이 다르거나 없어도 성공을 돌려줬다. `LIFECYCLE_OWNED_EVIDENCE_KEYS` 에 `out` 이 없으므로
++앞의 lifecycle-key 검사도 누락을 막지 않았다. 새 회귀 `test_g71_e3r_07b` 는 "필드가 있는 불일치" 만 봤다.
++
++여기의 시험은 A02·A04·A05 를 그대로 RED 로 재현하고, 거부 시 원장 바이트 불변을 확인한다. 실물 `paired_fixed5_v4`
++원장에는 out 이 없다 — 그것은 **미결속**으로 거부되지 성공이 아니며, 소급해서 채우지 않는다.
++"""
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++import pytest
++import yaml
++
++REPO = Path(__file__).resolve().parent.parent
++if str(REPO) not in sys.path:
++    sys.path.insert(0, str(REPO))
++
++import tools.preserve as P                                      # noqa: E402
++from tests.test_gate70_defensive import _fixture_repo, _receipt_core, _write_receipt   # noqa: E402
++
++_REAL_LEDGER = REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
++
++
++def _attach(root, led, rp):
++    return P.attach_bundle_evidence("L", rp, ledger=led, repo_root=root)
++
++
++def _set_out(led: Path, value):
++    """원장 evidence.out 을 바꾸거나(문자열) 지운다(None)."""
++    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
++    ev = doc["legs"][0]["evidence"]
++    if value is None:
++        ev.pop("out", None)
++    else:
++        ev["out"] = value
++    led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False), encoding="utf-8")
++
++
++def _refused(root, led, rp, why: str):
++    before = led.read_bytes()
++    with pytest.raises(P.PreserveError) as ei:
++        _attach(root, led, rp)
++    assert why in str(ei.value), str(ei.value)
++    assert led.read_bytes() == before, "거부하면서 원장을 건드렸다"
++
++
++def _status(led: Path) -> str:
++    return yaml.safe_load(led.read_text(encoding="utf-8"))["legs"][0]["preservation_status"]
++
++
++# ── A00 · A01 은 71차 e3r_00 · e3r_07b 가 잰다. 여기서는 잔여 셋 + 멱등 양성 ─────────────
++def test_g72_a02_a_pending_record_without_out_cannot_be_lifted(tmp_path):
++    """★ A02 — 실행 자리가 **없으면** 결속할 수 없으므로 거부. 필드 부재는 skip 이 아니다."""
++    root, led, ev = _fixture_repo(tmp_path)
++    _set_out(led, None)
++    rp = _write_receipt(root, "L", _receipt_core(root, "L", ev))
++    _refused(root, led, rp, "evidence.out")
++    assert _status(led) == "preservation_pending"
++
++
++@pytest.mark.parametrize("value", ["", "   ", 17, ["results/L"]])
++def test_g72_a02b_an_out_that_is_not_a_nonempty_string_is_no_binding(tmp_path, value):
++    root, led, ev = _fixture_repo(tmp_path)
++    _set_out(led, value)
++    rp = _write_receipt(root, "L", _receipt_core(root, "L", ev))
++    _refused(root, led, rp, "evidence.out")
++
++
++def test_g72_a03_idempotent_success_only_with_a_matching_out(tmp_path):
++    """양성 — 같은 영수증 · 일치하는 out 이면 멱등 성공, 원장 바이트 불변."""
++    root, led, ev = _fixture_repo(tmp_path)
++    rp = _write_receipt(root, "L", _receipt_core(root, "L", ev))
++    assert _attach(root, led, rp)["idempotent"] is False
++    before = led.read_bytes()
++    assert _attach(root, led, rp)["idempotent"] is True
++    assert led.read_bytes() == before
++
++
++def test_g72_a04_idempotent_return_is_refused_when_out_disagrees(tmp_path):
++    """★ A04 — 같은 영수증을 가리켜도 지금 원장의 실행 자리가 다르면 그것은 성공이 아니라 **모순**이다."""
++    root, led, ev = _fixture_repo(tmp_path)
++    rp = _write_receipt(root, "L", _receipt_core(root, "L", ev))
++    _attach(root, led, rp)
++    _set_out(led, "results/OTHER")
++    _refused(root, led, rp, "evidence.out")
++    assert _status(led) == "full_bundle"                 # 거부는 상태를 되돌리지도 않는다
++
++
++def test_g72_a05_idempotent_return_is_refused_when_out_is_missing(tmp_path):
++    """★ A05 — full_bundle 인데 out 이 없다 = 미결속. 멱등 성공을 돌려주지 않는다."""
++    root, led, ev = _fixture_repo(tmp_path)
++    rp = _write_receipt(root, "L", _receipt_core(root, "L", ev))
++    _attach(root, led, rp)
++    _set_out(led, None)
++    _refused(root, led, rp, "미결속")
++
++
++def test_g72_a06_the_binding_is_checked_before_the_receipt_identity_on_full_bundle(tmp_path):
++    """full_bundle + **다른** 영수증 + out 누락 — 두 이유 다 거부이지만, 결속 검사가 먼저 나와야 한다
++    (영수증 identity 비교가 먼저면 "갈아 끼우지 않는다" 만 보이고 미결속은 숨는다)."""
++    root, led, ev = _fixture_repo(tmp_path)
++    rp = _write_receipt(root, "L", _receipt_core(root, "L", ev))
++    _attach(root, led, rp)
++    _set_out(led, None)
++    core2 = _receipt_core(root, "L", ev)
++    core2["validation"]["checks"] = {"a": "ok", "z": "ok"}
++    rec2 = {"schema_version": 2, "_주의": "시험", "core_sha256": P._receipt_core_sha256(core2), "core": core2, "stamp": {}}
++    rp2 = root / "docs" / "22p_gap" / "receipts" / "L.other.validate.yaml"
++    rp2.write_text(yaml.safe_dump(rec2, allow_unicode=True, sort_keys=False), encoding="utf-8")
++    _refused(root, led, rp2.relative_to(root).as_posix(), "미결속")
++
++
++def test_g72_a07_the_historical_full_bundle_leg_without_out_is_unbound_not_a_success():
++    """실물 원장 (읽기 전용) — `paired_fixed5_v4` 는 finalize 이전(소급 기록)이라 `out` 이 없다.
++    같은 영수증으로 attach 를 부르면 **미결속 거부**이지 멱등 성공이 아니고, 원장은 안 바뀐다.
++    (소급해서 out 을 채우지 않는다 — 리뷰어: "과거 자료 읽기와 신규 승격 성공을 구분")"""
++    import shutil
++    doc = yaml.safe_load(_REAL_LEDGER.read_text(encoding="utf-8"))
++    legs = [e for e in doc["legs"] if e.get("preservation_status") == "full_bundle" and "out" not in (e.get("evidence") or {})]
++    assert legs, "out 없는 역사적 full_bundle 다리가 없다 — 이 시험의 전제가 바뀌었다 (문서를 고쳐라)"
++    # 운영 원장에는 쓰지 않는다: 바이트 사본 위에서 부른다 (repo_root 는 실물 — 묶음·영수증은 읽기만)
++    import tempfile
++    tmp = Path(tempfile.mkdtemp(prefix="g72-hist-"))
++    try:
++        led = tmp / "LEG_PRESERVATION.yaml"
++        shutil.copyfile(_REAL_LEDGER, led)
++        before = led.read_bytes()
++        e = legs[0]
++        with pytest.raises(P.PreserveError) as ei:
++            P.attach_bundle_evidence(e["leg_id"], e["evidence"]["verification_receipt"], ledger=led, repo_root=REPO)
++        assert "미결속" in str(ei.value), str(ei.value)
++        assert led.read_bytes() == before
++        assert _REAL_LEDGER.read_bytes() == before
++    finally:
++        shutil.rmtree(tmp, ignore_errors=True)
+diff --git a/degradation-degeneracy/tests/test_issuance_authority_60.py b/degradation-degeneracy/tests/test_issuance_authority_60.py
+index c6f5ad53..882b2eab 100644
+--- a/degradation-degeneracy/tests/test_issuance_authority_60.py
++++ b/degradation-degeneracy/tests/test_issuance_authority_60.py
+@@ -87,6 +87,13 @@ def test_every_callsite_of_the_raw_sink_is_inside_the_publisher():
+         rel = py.relative_to(REPO).as_posix()
+         if rel == "tools/preserve.py":
+             continue
++        # ★ 72차 — 보존한 리뷰 패키지(`docs/22p_gap/gate*_review/`)는 **증거의 바이트 사본**이지 이 저장소의
++        #   코드가 아니다. 72차 패키지가 `codex/reference/tools/preserve.py` 전문을 담아 오자 그 안의 sink
++        #   정의·호출이 "publisher 밖의 callsite" 로 잡혔다 (실측: 54d50763 전체 회귀 1 failed). 패키지는
++        #   `-text !eol` 로 바이트를 굳혀 두는 자료이므로 고치지 않고, 여기서 코드 검사 대상에서 뺀다.
++        #   RUN_SCOPE(`src tools configs scripts run.sh`) 는 그대로 전부 본다.
++        if rel.startswith("docs/22p_gap/gate") and "_review/" in rel:
++            continue
+         try:
+             tree = ast.parse(py.read_text(encoding="utf-8"))
+         except (SyntaxError, UnicodeDecodeError):       # pragma: no cover
