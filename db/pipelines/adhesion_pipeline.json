@@ -326,6 +326,95 @@
     "db/raw/wad_aprime_prep_2026_09_25/aprime_prep_result_2026_09_25.json",
     "db/properties/wad_aprime_s1_bindings_2026_09_25.json"
    ]
+  },
+  {
+   "id": "aprime_s2_uma_relax_gabia_2026_09_25",
+   "system": "aprime_s2",
+   "machine": "gabia uma env · UMA uma-s-1p1 default + simple-dftd3 1.6.0",
+   "check": "sha·마스크 사전 점검 12/12 · 결박 기록 · gabia 커밋 30e1e90eb · repo 대조 12/12",
+   "started": "2026-09-25 22:27",
+   "vram_total_mib": 49140,
+   "jobs": [
+    {
+     "dir": "V2_bridge",
+     "state": "done",
+     "wall_s": 2.8,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V2_hollow_fcc",
+     "state": "done",
+     "wall_s": 3.1,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V2_top_fcc",
+     "state": "done",
+     "wall_s": 3.7,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V2_top_hcp",
+     "state": "done",
+     "wall_s": 3.0,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V3_li_outer_A",
+     "state": "incomplete",
+     "wall_s": 24.3,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V3_s_outer_A",
+     "state": "incomplete",
+     "wall_s": 34.9,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V4_li_outer_A",
+     "state": "incomplete",
+     "wall_s": 216.1,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V4_s_outer_A",
+     "state": "done",
+     "wall_s": 34.6,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V5_li_outer_A",
+     "state": "done",
+     "wall_s": 44.2,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V5_li_outer_B",
+     "state": "done",
+     "wall_s": 50.9,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V5_s_outer_A",
+     "state": "done",
+     "wall_s": 102.2,
+     "peak_vram_mib": null
+    },
+    {
+     "dir": "V5_s_outer_B",
+     "state": "done",
+     "wall_s": 98.8,
+     "peak_vram_mib": null
+    }
+   ],
+   "verdict": "UMA+D3 이완 12/12 수렴 · 카드 G2 후검: **S3 후보 9** (V2×4 · V4_s_outer_A · V5×4) · **INCOMPLETE 3** (V3 두 종결 Ag₄ 개방 +16–17 % · V4_li_outer Li 상승 1.46 Å) — 세고 제외. 에너지·W 미열람.",
+   "values_policy": "구조 지표(변위·간격)만 기록 · 에너지 없음",
+   "records": [
+    "db/properties/wad_aprime_s2_result_2026_09_25.json",
+    "db/inputs/wad_aprime_s3_2026_09_25/s3_manifest.json",
+    "db/raw/wad_aprime_s2_relax_2026_09_25"
+   ]
   }
  ],
  "reviews": [
@@ -432,8 +521,8 @@
    "state": "결정"
   },
   {
-   "text": "A′ 파일럿 사전등록 — **S1 봉인 (09-25 · 1저자 비준)** 카드 v5 `db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json` (content_digest 126aa58ebdc4803b… · `D-2026-09-25-wad-aprime-s1-seal`) · UMA 추론 모드 default · 빌더 `build_aprime_interfaces.py` 결박. ⏭ S2 (기하 생성 · 기록 · UMA 이완 · interface_check · 프로브 — S3 전 예외 목록만) → S3 좌표·끝점 봉인 → S4 DFT. 본 계산 승인 아님.",
-   "state": "S1 봉인"
+   "text": "A′ — S1 봉인 ✅ · **S2 끝** (UMA+D3 이완 12 · 후보 9 · INCOMPLETE 3 · `wad_aprime_s2_result_2026_09_25.json`) · **S3 패키지** `db/inputs/wad_aprime_s3_2026_09_25` (manifest sha 2a0e9a9b5f5fef4a… · QE 잡 38: V2 relax 4 · scf 11 · probe 5 · G3 6 · G4 12) → ⏳ **1저자 S3 비준** → S4 (V2 relax V100 · V4/V5 gabia 프로브 뒤). 예외 ②③ (D3 결박 검사 V100 · CPU 프로브 gabia) 는 비준 전 가능.",
+   "state": "S3 비준 대기"
   },
   {
    "text": "D3 3체(ATM) 후처리 — 같은 기하에서 따로 보고",
@@ -599,6 +688,11 @@
    "date": "2026-09-25",
    "stage": "dft",
    "text": "**DEM 4차 회신** — PBE+D3 잔류 응력 라벨 수용(p 검산 일치) · '한 기하' 성립 (조건 (a) 종결별 W · (b) P1/P2 마스크 깊이 동일 — 둘 다 우리 카드와 같다) · UMA 미검증 값은 '작은 모델 대조 미실시' 라벨 · 시나리오 초안 (i) 소모델 직접 DFT W 기준 / (ii)(iii) 전체 UMA registry 최소·최대 / (iv) (i)−D3. → **회신 5 초안**: (i) 범위 정정 — 우리 카드에서 직접 DFT W 가 나오는 소모델은 V2(Ag|그래핀)뿐이고 SE 계면 V5 는 RESOURCE_BLOCKED 예상 → SE 계면엔 (i) 기준선이 없을 수 있음을 프로브 전에 알린다 · (iv) V2 가능 · (ii)(iii) 내부 전용 기본(재합의)."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "**A′ S2 완료 → S3 패키지** — gabia UMA+D3 이완 12 모델 (default · simple-dftd3 1.6.0 설치 · MixedPBCError → 3축 pbc 수정 후 재실행) 전부 수렴. 카드 G2 후검: 후보 9 (V2×4 9스텝 · V4_s_outer_A · V5×4 변위 1.7–2.5 Å 깃발 0) · INCOMPLETE 3 (V3 두 종결 Ag₄ 결합 +15.7/+17.1 % 개방 · V4_li_outer Li 상승 1.46 Å < 1.5) — 세고 제외. gabia 가 산출물을 직접 커밋(30e1e90eb · 토큰) · repo 에서 sha 12/12 대조. `build_aprime_s3.py` (13/13 · 돌연변이 1): 끝점 재구성 · 표본 ⑤ · G3 (i)(ii) 셀 · G4 3변형 · V2 QE relax if_pos 제약 + 2단계 규칙 · 프로브 5 · QE 입력 38 · D3 결박 검사 입력 (외부 −0.5037974 Ry). ⏳ S3 비준 → S4."
   }
  ],
  "related_decisions": [
