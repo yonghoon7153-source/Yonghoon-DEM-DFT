@@ -68,6 +68,9 @@
   · **modelc** — 5시드 C3(09-18, A: compatible)의 C2b·C6 빈칸이 닫혔다. ⏳ **HOLD 해제·canonical 승격은 1저자 비준 대기**(사전등록 §3 A).
   · 러너 `--label modelc` 하드코딩 → `$SYS` (lpsocl s5·s6 run_meta label 이 'modelc' — 원본 보존, 원장에 정정 기록).
 - ⏭ **b2o3 MD — 전도도는 닫힌 채로, 질문을 바꿔 두 가지** (1저자 2026-09-23 "우선 해보자"):
+  · ✅ **09-25 s6 옮김 완료** (kgy 3/3 → gabia `s6.incoming` → 막는 파일(246 B) 치우고 mv · json 8개 sha 찍힘 — kgy 쪽 대조 대기) · gabia 는 지금 **s4**.
+  · ✅ **개정 2 (1저자 09-25 '바로 돌리자') — s5 도 kgy** → `b2o3_framework_event_rate_amendment_2_2026_09_25.json` + `D-2026-09-25-b2o3-eventrate-machine-amend-2`
+    (gabia OUTROOT 에 `s5` **파일**을 먼저 놓아 s4 뒤 멈춤 · kgy tmux `b2o3_s5` · worktree `~/b2o3_s6_src` · 끝나면 s6 과 같은 옮김). ⏳ 막는 파일 · 발사 블록 전달.
   · ✅ **kgy 분할 = s6 만 (1저자 09-24 선택)** → 개정문 `db/properties/b2o3_framework_event_rate_amendment_2026_09_24.json`
     (카드 원문·원결정 불변 · 카드 지문 e40a5ee5 를 가리킨다) + 결정 `D-2026-09-24-b2o3-eventrate-machine-amend`.
     s6 정본 = kgy 런 · 세 온도 끝나 `ensemble_results.json` 이 생기면 통째로 gabia `/root/work/runs/b2o3_221_eventrate_400ps/s6/` 로.
@@ -196,6 +199,9 @@
     ⭐ **결과 전 선언**: Li 바깥이 nstep 200 에서 미수렴이면 마지막 좌표로 이어서 이완 1회 (verified-carry · 설정 불변) → 그래도 미수렴이면 멈추고 보고.
     집계 명령은 **`--qe_in db/inputs/wad_sese_control_4L_2026_09_24`** 필수 (collect 기본 입력은 6층 · 러너 끝 안내문도 고침 — V100 인스턴스는 옛 문구).
     ✅ **09-25 08:12 Li 바깥 이완 끝** (rc 0 · 완료 판정 통과 · 9.0 h · 피크 30,274 MiB) ⇒ **5잡 전부 끝** → ⏳ collect 블록 전달 (경보 v2 판정).
+    ⚠ **집계 (09-25 · V100) — 경보 v2 발화**: 이완 PBE W_cleave **0.277** J/m² 가 운영 구간 0.3–0.7 **아래** (원인 미분류 · 합격선 아님) ·
+    무이완 PBE 1.103 · PBE+D3 2체 1.518 · 무이완 ≥ 이완 정상 · Li 바깥 105 BFGS · −TS 0 · missing 없음. 문헌 Pustorino 0.47 (= γ_rich + γ_def · **같은 정의** 검산) 보다 0.19 낮다.
+    이완이 W 를 75 % 낮췄다 (슬랩 속까지 움직였는지 미상). 결과 기록 `db/properties/wad_sese_4L_result_2026_09_25.json` (인용 불가 · 원인 후보 5 · 점검 제안 2 — 1저자 결정).
     🔴 **러너 결함**: 기록된 `pw.x PID 563677` 이 **없다** (ps 빈 줄) — `pgrep -P mpirun | head -1` 이 pw.x 가 아닌 자식을 잡았거나 사라진 PID 다.
     완료표 `peak_self_MiB` 가 **세 잡 모두 0** = 자기 VRAM 측정이 한 번도 안 됐다 (컨테이너 PID 공간 ≠ nvidia-smi PID 도 의심). 가드는 mpirun 을 죽이므로 안전은 유지 ·
     기록 필드가 거짓 0 이다 ('조용히 틀린 경로'). V100 진단: 트리 = 래퍼 563671 → mpirun 563691 → **pw.x 563705** · nvidia-smi 는 **호스트 PID 3312066**.
@@ -203,7 +209,7 @@
     못 잰 칸 '—'. selftest 48/0 · 돌연변이 5종 빨간불. ⚠ V100 의 **지금 인스턴스는 옛 코드** — 가드 발동 조건(44 GB · 호스트 4 GB)이 그 기계에서 사실상 안 걸려 재시작 안 함.
     ⛔ **정정 (09-25)**: 위 '가드 발동 조건이 사실상 안 걸린다' 는 **틀렸다** — V100 발사가 `KILL_MIB=32700` 이었고 S 바깥 이완 피크 32,378 MiB 는 **322 MiB** 차였다.
     발동했으면 옛 `_stop` 이 래퍼만 죽여 pw.x 가 고아로 남았다 (운이었다).
-    📊 **중간값 (판정 보류 · 인용 금지)** `--collect`: 무이완 W_sep PBE **1.103** · PBE+D3(BJ) 2체 **1.518** J/m² (A 101.10 Å² · n 4.0) ·
+    📊 (09-25 최종은 위 결과 기록) **중간값 (판정 보류 · 인용 금지)** `--collect`: 무이완 W_sep PBE **1.103** · PBE+D3(BJ) 2체 **1.518** J/m² (A 101.10 Å² · n 4.0) ·
     −TS 경고 없음. ⚠ 경보 v2 는 **이완 PBE W_cleave** 에만 건다 — 무이완 1.1 은 경보 대상 아님 (무이완 ≥ 이완 이 정상).
   · 🆕 **웹앱 `/adhesion` — 점착 파이프라인 섹션 (09-24 · 1저자 요청)**: 원장 `db/pipelines/adhesion_pipeline.json` 하나를 읽는다
     (단계 · DFT→DEM 인계 규약 · 계 · 실행 · 리뷰 · 위험 · 열린 것 · **누적 로그**) + 결정은 scope `adhesion.` 실시간.

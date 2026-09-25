@@ -1,7 +1,7 @@
 {
  "schema": "adhesion_pipeline/1",
  "title": "점착 파이프라인 — DFT → DEM (→ COMSOL)",
- "updated": "2026-09-24",
+ "updated": "2026-09-25",
  "purpose": "Ag–C 인터레이어·SE 계면의 점착일(W)을 DFT 에서 재서 DEM(JKR 접촉)으로 넘기는 흐름을 **한 곳에 누적**한다. 새 사실은 `log` 에 한 줄씩 덧붙이고, 상태가 바뀌면 해당 항목만 고친다.",
  "⛔_이_원장이_하지_않는_것": [
   "판정 전 물리값(W·γ)은 싣지 않는다 — 결과는 판정이 끝난 뒤 기록 파일에 따로 남기고 여기서는 경로만 건다 (인용 방지).",
@@ -82,12 +82,13 @@
    "role": "**경보 대조** (합격선 아님 · 경보 v2) — 벽개일 W_cleave = γ(S 바깥) + γ(Li 바깥), μ 상쇄",
    "cell": "4층 · S 바깥 110 / Li 바깥 98 원자 · 진공 15 Å · 슬랩 k 3×3×1 · 벌크 52 원자 k 3×3×3",
    "machine": "V100",
-   "state": "run",
-   "state_text": "실행 중 — SCF 3/5 끝 · PBE 이완 진행 · 판정 보류",
+   "state": "done",
+   "state_text": "5잡 끝 · ⚠ **경보 v2 발화** (이완 W_cleave 가 운영 구간 아래 · 원인 미분류) — 다음 점검은 1저자 결정",
    "records": [
     "db/inputs/wad_sese_control_4L_2026_09_24/jobs.json",
     "db/structures/wad_se_slabs_4L_2026_09_24/manifest.json",
-    "tools/wad/se_sym_slab.py"
+    "tools/wad/se_sym_slab.py",
+    "db/properties/wad_sese_4L_result_2026_09_25.json"
    ]
   },
   {
@@ -177,11 +178,12 @@
     }
    ],
    "vram_total_mib": 32768,
-   "verdict": "판정 보류 — 경보 v2 는 **이완 PBE W_cleave** 에만 건다 (이완 미완)",
+   "verdict": "⚠ **경보 v2 발화** — 이완 PBE W_cleave 가 운영 구간 **아래** · 원인 미분류 · 합격선이 아니다. 값·원인 후보·다음 점검 제안은 결과 기록 `db/properties/wad_sese_4L_result_2026_09_25.json` (인용 불가 · 대조 잡).",
    "values_policy": "무이완 중간값은 `kb/open_items.md` ⏭-NOW-w 에만 ‘중간 · 인용 금지’ 로 적었다 — 이 원장·화면에는 싣지 않는다",
    "records": [
     "kb/platforms/v100_uma_setup_2026_09_14.md",
-    "tools/wad/run_sese_gpu.sh"
+    "tools/wad/run_sese_gpu.sh",
+    "db/properties/wad_sese_4L_result_2026_09_25.json"
    ],
    "vram_note": "VRAM 은 nvidia-smi 의 MiB 그대로 적는다 (GB 로 바꾸면 1000·1024 가 섞인다 — 2026-09-24 실측 혼동)"
   }
@@ -338,6 +340,11 @@
    "date": "2026-09-25",
    "stage": "dft",
    "text": "⛔ **정정 (09-24 러너 결함 줄)**: *'V100 에선 VRAM 가드(44 GB)가 32 GB 장에서 안 걸려 발동 가능성이 낮다'* 는 **틀렸다**. V100 발사 명령이 `KILL_MIB=32700` 을 줬고 S 바깥 이완 피크 32,378 MiB 는 그 문턱에서 **322 MiB** 떨어져 있었다. 발동했으면 옛 `_stop` 이 래퍼만 TERM 해서 pw.x 는 고아로 남았을 것이다 — 운이었다. 러너는 ⑩ 으로 고쳤다 (트리 통째로 · PID+comm 대조)."
+  },
+  {
+   "date": "2026-09-25",
+   "stage": "dft",
+   "text": "SE|SE 4층 **집계 — 경보 v2 발화**: 이완 PBE W_cleave 가 운영 구간 0.3–0.7 J/m² **아래** (원인 미분류 · 합격선 아님). 무이완 ≥ 이완 조건은 정상 · missing 없음 · −TS 0 · Li 바깥 105 BFGS 스텝 수렴 · 백업 같음. 문헌 비교 기준(Pustorino γ_rich + γ_def)은 우리 W_cleave 와 같은 정의임을 검산했다. 원인 후보 5 개와 결과 전 문턱을 붙인 점검 제안 2 개(이완 좌표 PS₄·속층 변위 · 벌크 이완 1잡) → 결과 기록. 값은 원장·화면에 싣지 않는다."
   }
  ],
  "related_decisions": [

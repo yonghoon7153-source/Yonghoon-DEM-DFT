@@ -1,0 +1,103 @@
+{
+ "schema": "result/v1",
+ "record_kind": "result",
+ "date": "2026-09-25",
+ "system": "comp1 (001) SE|SE 대칭 슬랩 대조 — 4층 (S 바깥 110 · Li 바깥 98 원자)",
+ "track": "W_ad (우리 DFT) → 1저자 = 사용자",
+ "citable": false,
+ "why_not_citable": "대조 잡(control calculation)이다 — 방법을 점검하는 경보용 값이지 DEM 입력이 아니다 (A′ 경로). 그리고 **경보가 떴다**.",
+ "decisions": [
+  "D-2026-09-23-wad-sese-alarm-band-v2",
+  "D-2026-09-23-wad-se-termination-symmetric",
+  "D-2026-09-23-wad-d3-twobody-atm-separate"
+ ],
+ "계산": {
+  "기계": "V100 (Tesla V100-PCIE-32GB) · QE 7.4.1 GPU 재빌드 (NVHPC 24.11 · cc70) · pw.x sha256 912d8c8fdbfb3a8a…",
+  "입력": "db/inputs/wad_sese_control_4L_2026_09_24 (jobs.json sha 810a6700d04c6bb9… · ⑨ PP 내용 해시 ×4 기준과 같음)",
+  "설정": "PBE (이완은 D3 없음 · 무이완 SCF 는 D3(BJ) 2체 따로) · 4층 · 진공 15 Å · 슬랩 k 3×3×1 · 벌크 52 원자 k 3×3×3 · nstep 200 · forc 1e-3 · etot 1e-5",
+  "실행_폴더": "V100 /home/ubuntu/runs/wad_sese_4L_2026_09_24 · $STORE 백업 /home/ubuntu/runyourai/1/runs/wad_sese_4L_2026_09_24 (이완 두 pw.out cmp 같음 · sese_result.json 복사)",
+  "집계": "tools/wad/se_sym_slab.py --collect <RUN> --qe_in db/inputs/wad_sese_control_4L_2026_09_24 (sha 1cb1b60426ba524c · missing 없음 · n_bulk_cells 4.0 · A 101.1049 Å²)"
+ },
+ "잡": [
+  {
+   "dir": "01_bulk_scf",
+   "nat": 52,
+   "E_pbe_Ry": -1022.94625093,
+   "wall_s": 104,
+   "peak_vram_mib": 10350
+  },
+  {
+   "dir": "02_s_outer_scf",
+   "nat": 110,
+   "E_pbe_Ry": -2151.99722406,
+   "wall_s": 693,
+   "peak_vram_mib": 32038
+  },
+  {
+   "dir": "02_li_outer_scf",
+   "nat": 98,
+   "E_pbe_Ry": -1938.76457936,
+   "wall_s": 556,
+   "peak_vram_mib": 29724
+  },
+  {
+   "dir": "03_s_outer_relax_pbe",
+   "nat": 110,
+   "E_pbe_Ry": -2152.3548774,
+   "wall_s": 75969,
+   "peak_vram_mib": 32378,
+   "수렴": "bfgs converged in 200 scf cycles and 199 bfgs steps (nstep 200 — 한 스텝 남기고) · 마지막 Total force 0.0018"
+  },
+  {
+   "dir": "03_li_outer_relax_pbe",
+   "nat": 98,
+   "E_pbe_Ry": -1939.17321425,
+   "wall_s": 32355,
+   "peak_vram_mib": 30274,
+   "수렴": "bfgs converged in 106 scf cycles and 105 bfgs steps · 마지막 Total force 0.0023"
+  }
+ ],
+ "−TS": "다섯 잡 모두 0 — 절연체 가정 위반 없음",
+ "W_J_m2": {
+  "W_sep_unrelaxed_PBE": 1.103,
+  "W_sep_unrelaxed_PBE_D3BJ_2body": 1.5182,
+  "W_cleave_relaxed_PBE": 0.277
+ },
+ "W_정의": "W = [E(S 바깥) + E(Li 바깥) − n·E(벌크)] / 2A · n = (P_s + P_li)/4 = 4 → μ 상쇄. 이완 W_cleave = γ(S 바깥) + γ(Li 바깥) (한 번 쪼갤 때 생기는 두 면).",
+ "경보_v2": {
+  "결과": "⚠ **발화** — 이완 PBE W_cleave 0.277 J/m² 가 운영 구간 0.3–0.7 **아래** (원인 미분류). 무이완 ≥ 이완 조건은 정상 (1.103 > 0.277).",
+  "규칙": "D-2026-09-23-wad-sese-alarm-band-v2 — 결과 전 봉인 · **합격선이 아니라 경보** · 원인을 지정하지 않는다 · 결과를 보고 구간을 바꾸지 않는다"
+ },
+ "문헌_대응": {
+  "Pustorino_2025": "PBE · vdW 없음 · 이완 · 6층 · (F_rich 0.74 + F_def 0.20)/2 = **0.47 J/m²** (3층 0.50 · 두께 외삽 0.53). F = 2γ 이므로 이 값 = γ_rich + γ_def — **우리 W_cleave 와 같은 정의** (인자 2 문제 없음 · 2026-09-25 검산).",
+  "차": "우리 0.277 은 0.19 J/m² (약 40 %) 낮다.",
+  "⚠": "그 문헌 값도 조건값이다 — μ(Li₂S 포화) · 기준 벌크 48H (최저 48HR 로 잡으면 +0.16 J/m²) · litdb/papers/pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament.md"
+ },
+ "이완_에너지": {
+  "S_바깥_Ry": -0.35765334,
+  "Li_바깥_Ry": -0.40863489,
+  "W_감소_J_m2": 0.826,
+  "뜻": "이완이 W 를 **75 %** 낮췄다 (1.103 → 0.277). 표면만 이완했는지 슬랩 속까지 움직였는지는 **아직 모른다** — 원인 후보 ② 를 가르는 점검이다."
+ },
+ "원인_후보_미분류": [
+  "① 두께 4층 — Pustorino 3↔6층 차 ~0.03 J/m² 라 단독으로 0.19 를 설명하기 어렵다 (그 논문 기준)",
+  "② 기준 벌크 불일치 — 우리 벌크는 k 3×3×3 **SCF 만** (이완 안 함). 슬랩 속이 벌크 기준보다 더 안정한 배열로 이완하면 W 가 낮아진다 (Pustorino 도 같은 신호를 보고 · 민감도 ±0.16)",
+  "③ 표면 재배열 · PS₄ 회전·절단 — 이완 좌표 **미점검** (S 바깥이 199 스텝이나 걸렸다)",
+  "④ Li 배열 — comp1 V0 ≠ Pustorino 48H (다른 실현이라 같은 값이 나올 이유는 없다)",
+  "⑤ PP · ecut · k — GBRV US vs PAW 등"
+ ],
+ "한계": [
+  "4층 (문헌 6층)",
+  "k 3×3×1 (k 수렴 미점검)",
+  "진공 15 Å",
+  "D3 3체(ATM) 미계산 — 별도 후처리 결정",
+  "종결 한 쌍 (S 바깥 + Li 바깥) · 배치 1 개",
+  "벌크 기준 미이완"
+ ],
+ "다음_점검_제안_1저자_결정": {
+  "⚠": "제안이다 — 문턱은 결과 보기 전에 여기 적어 둔다. 돌릴지는 1저자.",
+  "A_읽기_전용_V100": "이완 좌표(pw.out 마지막 좌표)에서 ① 모든 P 가 2.5 Å 안 S 4 개 (빌더와 같은 규칙 · 하나라도 아니면 ③ 확인) ② 진공 쪽으로 빠진 원자 · wrap ③ **가운데 층** 원자 변위 max — 0.3 Å 넘으면 속층 이완 = ② 신호",
+  "B_벌크_이완_1잡": "벌크 52 원자를 같은 설정(k 3×3×3 · 같은 PP·ecut)으로 이완 → ΔE_bulk × n / 2A 가 0.05 J/m² 넘으면 ② 가 W 를 그만큼 설명 (V100 수 분 규모 · 새 잡이라 자원 확인 후)"
+ },
+ "by": "agent (2026-09-25) — 집계는 사용자 붙여넣기 (V100)"
+}

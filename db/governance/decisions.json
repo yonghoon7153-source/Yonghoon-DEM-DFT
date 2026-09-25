@@ -4240,6 +4240,68 @@
     "decision_digest": "sha256:6d5fd16fc06b61a8eb7ebeee72b2834dba53f567d3b175c4d1e9779094f7909d",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
+  },
+  {
+   "id": "D-2026-09-25-b2o3-eventrate-machine-amend-2",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "b2o3.uma_md.framework_site_escape.event_rate.amendment_2026_09_25_machine_2",
+   "slot": "framework_event_rate_machine_amendment_2",
+   "applies_to": {
+    "systems": [
+     "b2o3"
+    ],
+    "tasks": [
+     "framework_site_escape_census"
+    ],
+    "methods": [
+     "uma-s-1p1-omat__langevin-nvt"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "b2o3 사건빈도 — 기계 개정 2: 시드 5 도 kgy (gabia 는 s4 뒤 막는 파일로 멈춘다 · 결과 보기 전 · 카드 원문 보존)",
+   "statement": "시드 2–4 는 gabia A6000, **시드 5·6 은 kgy RTX 3090**. gabia OUTROOT 에 `s5` **파일**을 kgy 발사 전에 놓아 gabia 루프가 s4 뒤에 멈추게 한다. 총 15런·16번째 런 없음·설정·보고량·판정 문구·무효 조건은 카드 원문 그대로. s5 의 정본은 kgy 런이고, 세 온도가 다 끝나면 통째로 gabia `s5/` 로 옮긴다 (개정 1 과 같은 절차).",
+   "rationale": "kgy 가 s6 을 끝내 비었다 (런당 9.9 h). gabia 는 s4 까지만 돌면 된다 — 반나절~하루 단축 (추정). 개정 1 의 경합 우려는 막는 파일로 없앤다.",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": false,
+   "card": "db/properties/b2o3_framework_event_rate_prereg_2026_09_23.json",
+   "record": "db/properties/b2o3_framework_event_rate_amendment_2_2026_09_25.json",
+   "amends": [
+    "D-2026-09-23-b2o3-framework-event-rate"
+   ],
+   "depends_on": [
+    "D-2026-09-23-b2o3-framework-event-rate",
+    "D-2026-09-24-b2o3-eventrate-machine-amend"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/properties/b2o3_framework_event_rate_amendment_2_2026_09_25.json",
+    "db/properties/b2o3_framework_event_rate_amendment_2026_09_24.json"
+   ],
+   "method_ref": "tools/modelc_v3/run_box331_seed_extension.sh SYS=b2o3 SEEDS=5 (kgy · worktree ~/b2o3_s6_src · s6 과 같은 코드)",
+   "reopen_criteria": "원결정 그대로. 이 개정은 런을 더하지도 빼지도 않는다.",
+   "enforcement": "막는 파일을 kgy 발사 **전에** 놓는다 — gabia 가 이미 s5 를 시작했으면 이 개정은 무효로 두고 kgy s5 는 띄우지 않는다. 옮김은 ensemble_results.json 이 있을 때만 통째로.",
+   "proposed_by": "claude-session-2026-09-25",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-09-25",
+     "state": "active",
+     "note": "1저자 결정 2026-09-25 — 's5도 kgy에서 하는게 빠르려나' → 조건 셋 설명 뒤 '바로 돌리자'. 트랙 = b2o3 (우리 MLIP 기준선) → 1저자 = 사용자."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-25T06:45:00Z",
+    "commit": "25e9f2544e154a0c0e64017f363ea6e1b86e7a6a",
+    "decision_digest": "sha256:5267a2e0517c7dca2654328d4102675640f37202813dc03172ad79d6b8d7e865",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   }
  ]
 }
